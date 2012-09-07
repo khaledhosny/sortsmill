@@ -14860,10 +14860,29 @@ return( NULL );
 Py_RETURN( self );
 }
 
-static struct sflist *makesflist(PyObject *item,enum bitmapformat bf) {
-    struct sflist *ret = chunkalloc(sizeof( struct sflist ));
-    ret->sf  = ((PyFF_Font *) item)->fv->sf;
-    ret->map = ((PyFF_Font *) item)->fv->map;
+
+static void freesflist(struct sflist* list) {
+    struct sflist *next;
+    for( ; list != NULL; list=next ) {
+	next = list->next;
+
+	if ( list->sizes!=NULL )
+	    free(list->sizes);
+	chunkfree(list, sizeof(struct sflist));
+    }
+    return;
+}
+
+static struct sflist *makesflist(PyFF_Font *font,enum bitmapformat bf) {
+    struct sflist *ret;
+
+    if ( CheckIfFontClosed(font) )
+return(NULL);
+
+    ret = chunkalloc(sizeof( struct sflist ));
+    ret->sf  = font->fv->sf;
+    ret->map = font->fv->map;
+
     if ( bf==bf_ttf ) {
 	int cnt;
 	BDFFont *bdf;
@@ -14882,10 +14901,11 @@ static struct sflist *makesflist(PyObject *item,enum bitmapformat bf) {
 return( ret );
 }
 
-static PyObject *PyFFFont_GenerateTTC(PyObject *self, PyObject *args, PyObject *keywds) {
+static PyObject *PyFFFont_GenerateTTC(PyObject *object, PyObject *args, PyObject *keywds) {
+    PyFF_Font *self = (PyFF_Font*)object;
     char *filename;
     char *locfilename = NULL;
-    FontViewBase *fv = ((PyFF_Font *) self)->fv;
+    FontViewBase *fv;
     PyObject *flags=NULL, *ttcflags=NULL, *others=NULL;
     extern int old_sfnt_flags;
     int iflags = old_sfnt_flags;
@@ -14894,8 +14914,12 @@ static PyObject *PyFFFont_GenerateTTC(PyObject *self, PyObject *args, PyObject *
     NameList *rename_to = NULL;
     int layer = fv->active_layer;
     char *layer_str=NULL;
-    struct sflist *head, *last, *cur;
+    struct sflist *head=NULL, *last, *cur;
     enum bitmapformat bf = bf_none;
+
+    if ( CheckIfFontClosed(self) )
+return(NULL);
+    fv = self->fv;
 
     if ( !PyArg_ParseTupleAndKeywords(args, keywds, "esO|sOOsi", genttc_keywords,
 	    "UTF-8",&filename, &others, &bitmaptype, &flags, &ttcflags,
@@ -14956,7 +14980,12 @@ return( NULL );
     if ( others==Py_None )
 	/* Silly to have a ttc with just one font, but ok */;
     else if ( PyType_IsSubtype(&PyFF_FontType,((PyObject *)others)->ob_type) ) {
-	cur = makesflist(others,bf);
+	PyFF_Font* otherfont = (PyFF_Font*)others;
+	if ( CheckIfFontClosed(otherfont) ) {
+	    freesflist(head);
+return(NULL);
+	}
+	cur = makesflist(otherfont,bf);
 	last->next = cur;
 	last = cur;
     } else if ( PySequence_Check(others) ) {
@@ -14964,7 +14993,12 @@ return( NULL );
 	for ( i=0; i<subcnt; ++i ) {
 	    PyObject *item = PySequence_GetItem(others,i);
 	    if ( PyType_IsSubtype(&PyFF_FontType,((PyObject *)item)->ob_type) ) {
-		cur = makesflist(item,bf);
+		PyFF_Font* otherfont = (PyFF_Font*)item;
+		if( CheckIfFontClosed(otherfont) ) {
+		    freesflist(head);
+return(NULL);
+		}
+		cur = makesflist(otherfont,bf);
 		last->next = cur;
 		last = cur;
 	    } else {
@@ -14985,11 +15019,7 @@ return( NULL );
 	/* Don't return here, will return after memory is freed below */
     }
     free(locfilename);
-    for ( cur=head; cur!=NULL; cur=head ) {
-	head = cur->next;
-	free(cur->sizes);
-	chunkfree(cur,sizeof(struct sflist));
-    }
+    freesflist(head);
     if ( PyErr_Occurred() )
 return( NULL );
 Py_RETURN( self );
