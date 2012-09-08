@@ -214,6 +214,31 @@ static SplineSet *SSFromLayer(PyFF_Layer *);
 static PyFF_Layer *LayerFromSS(SplineSet *,PyFF_Layer *);
 static PyFF_Layer *LayerFromLayer(Layer *,PyFF_Layer *);
 
+
+/* ************************************************************************** */
+/* Find python objects corresponding to non-python structures */
+/* ************************************************************************** */
+static PyFF_Font* PyFF_FontForFV( FontViewBase *fv ) {
+    if ( fv==NULL )
+	return NULL;
+    return fv->python_fv_object;
+}
+static PyFF_Font* PyFF_FontForSF( SplineFont *sf ) {
+    if ( sf==NULL )
+	return NULL;
+    return PyFF_FontForFV( sf->fv );
+}
+static PyFF_Font* PyFF_FontForSC( SplineChar *sc ) {
+    if ( sc==NULL )
+	return NULL;
+    return PyFF_FontForSF( sc->parent );
+}
+static PyFF_Glyph* PyFF_GlyphForSC( SplineChar *sc ) {
+    if ( sc==NULL )
+	return NULL;
+    return sc->python_sc_object;
+}
+
 /* ************************************************************************** */
 /* Checks for closed fonts */
 /* ************************************************************************** */
@@ -388,6 +413,8 @@ return( NULL );
 }
 
 PyObject *PyFV_From_FV(FontViewBase *fv) {
+    if ( fv==NULL )
+Py_RETURN_NONE;
     if ( fv->python_fv_object==NULL ) {
 	fv->python_fv_object = PyFF_FontType.tp_alloc(&PyFF_FontType,0);
 	((PyFF_Font *) (fv->python_fv_object))->fv = fv;
@@ -1277,7 +1304,8 @@ static PyObject *PyFFPoint_richcompare(PyObject *a, PyObject *b, int op) {
 static PyObject *PyFFPoint_Repr(PyFF_Point *self) {
     char buffer[200];
 
-    sprintf(buffer,"fontforge.point(%g,%g,%s)", self->x, self->y, self->on_curve?"True":"False" );
+    sprintf(buffer,"%s(%g,%g,%s)", self->ob_type->tp_name, self->x, self->y,
+	    self->on_curve?"True":"False" );
 return( STRING_TO_PY(buffer));
 }
 
@@ -3103,7 +3131,6 @@ return -1;
     self->is_quadratic = (quad!=0);
 return 0;
 }
-
 static PyObject *PyFFLayer_Str(PyFF_Layer *self) {
     char *buffer, *pt;
     int cnt, i,j;
@@ -5087,6 +5114,22 @@ static PyObject *PyFFLayerArray_Str(PyFF_LayerArray *self) {
 return( STRING_FROM_FORMAT( "<Layers Array for %s>", self->sc->name ));
 }
 
+static PyObject *PyFF_LayerArray_get_font(PyFF_LayerArray *self, void *UNUSED(closure)) {
+    PyFF_Font *font = PyFF_FontForSC( self->sc );
+    if ( font==NULL )
+Py_RETURN_NONE;
+    Py_INCREF(font);
+    return (PyObject*)font;
+}
+
+static PyObject *PyFF_LayerArray_get_glyph(PyFF_LayerArray *self, void *UNUSED(closure)) {
+    PyFF_Glyph *glyph = PyFF_GlyphForSC( self->sc );
+    if ( glyph==NULL )
+Py_RETURN_NONE;
+    Py_INCREF(glyph);
+    return (PyObject*)glyph;
+}
+
 /* ************************************************************************** */
 /* ****************************** Layers Array ****************************** */
 /* ************************************************************************** */
@@ -5155,6 +5198,16 @@ return( -1 );
 return( PyFF_Glyph_set_a_layer((PyFF_Glyph *) PySC_From_SC(sc),value,NULL,layer));
 }
 
+static PyGetSetDef PyFF_LayerArray_getset[] = {
+    {"font",
+     (getter)PyFF_LayerArray_get_font, NULL,
+     "returns the font to which this object belongs", NULL},
+    {"glyph",
+     (getter)PyFF_LayerArray_get_glyph, NULL,
+     "returns the glyph to which this object belongs", NULL},
+    PYGETSETDEF_EMPTY  /* Sentinel */
+};
+
 static PyMappingMethods PyFF_LayerArrayMapping = {
     PyFF_LayerArrayLength,		/* length */
     PyFF_LayerArrayIndex,		/* subscript */
@@ -5200,7 +5253,7 @@ static PyTypeObject PyFF_LayerArrayType = {
     NULL,                      /* tp_iternext */
     NULL,                      /* tp_methods */
     NULL,                      /* tp_members */
-    NULL,                      /* tp_getset */
+    PyFF_LayerArray_getset,    /* tp_getset */
     NULL,                      /* tp_base */
     NULL,                      /* tp_dict */
     NULL,                      /* tp_descr_get */
@@ -5536,7 +5589,36 @@ static void PyFF_Glyph_dealloc(PyFF_Glyph *self) {
     ((PyObject *)self)->ob_type->tp_free((PyObject *) self);
 }
 
+static PyObject *PyFFGlyph_Repr(PyFF_Glyph *self) {
+    PyObject *ret;
+    char prefix[256];
+
+#ifdef DEBUG
+    snprintf(prefix,sizeof(prefix), "<%s at 0x%lx sc=0x%lx",
+	     self->ob_type->tp_name, (unsigned long)(self), (unsigned long)(self->sc));
+#else
+    snprintf(prefix,sizeof(prefix), "<%s at 0x%lx",
+	     self->ob_type->tp_name, (unsigned long)(self));
+#endif
+    if ( self->sc==NULL ) {
+	ret = STRING_FROM_FORMAT("%s CLOSED>",prefix);
+    }
+    else {
+	char codepoint[16];
+	if ( self->sc->unicodeenc < 0 )
+	    codepoint[0]='\0';
+	else
+	    snprintf(codepoint,sizeof(codepoint)," U+%04X",self->sc->unicodeenc);
+
+	ret = STRING_FROM_FORMAT("%s%s \"%s\">",
+				 prefix, codepoint, self->sc->name);
+    }
+    return( ret );
+}
+
 static PyObject *PyFFGlyph_Str(PyFF_Glyph *self) {
+    if ( self->sc==NULL || self->sc->parent==NULL )
+return( STRING_TO_PY("<Glyph from closed font>") );
 return( STRING_FROM_FORMAT( "<Glyph %s in font %s>", self->sc->name, self->sc->parent->fontname ));
 }
 
@@ -5715,6 +5797,14 @@ static PyObject *PyFF_Glyph_get_encoding(PyFF_Glyph *self, void *UNUSED(closure)
     EncMap *map = sc->parent->fv->map;
 
 return( Py_BuildValue("i", map->backmap[sc->orig_pos] ));
+}
+
+static PyObject *PyFF_Glyph_get_codepoint(PyFF_Glyph *self, void *UNUSED(closure)) {
+    char s[32];
+    if ( self->sc==NULL || self->sc->unicodeenc < 0 )
+Py_RETURN_NONE;
+    snprintf(s,sizeof(s),"U+%04X",self->sc->unicodeenc);
+return( STRING_TO_PY(s) );
 }
 
 static PyObject *PyFF_Glyph_get_unicode(PyFF_Glyph *self, void *UNUSED(closure)) {
@@ -6072,8 +6162,11 @@ return( 0 );
 }
 
 static PyObject *PyFF_Glyph_get_font(PyFF_Glyph *self, void *UNUSED(closure)) {
-
-return( PyFV_From_FV_I(self->sc->parent->fv));
+    PyFF_Font *font = PyFF_FontForSC(self->sc);
+    if ( font==NULL )
+Py_RETURN_NONE;
+    Py_INCREF(font);
+    return (PyObject*)font;
 }
 
 static PyObject *PyFF_Glyph_get_references(PyFF_Glyph *self, void *closure) {
@@ -6862,6 +6955,9 @@ static PyGetSetDef PyFF_Glyph_getset[] = {
     {"glyphname",
 	 (getter)PyFF_Glyph_get_glyphname, (setter)PyFF_Glyph_set_glyphname,
 	 "glyph name", NULL},
+    {"codepoint",
+	 (getter)PyFF_Glyph_get_codepoint, NULL,
+	 "Unicode code point for this glyph in U+XXXX format, or None (readonly)", NULL},
     {"unicode",
 	 (getter)PyFF_Glyph_get_unicode, (setter)PyFF_Glyph_set_unicode,
 	 "Unicode code point for this glyph, or -1", NULL},
@@ -8374,7 +8470,7 @@ static PyTypeObject PyFF_GlyphType = {
 #else
     (cmpfunc)PyFFGlyph_compare,/* tp_compare */
 #endif
-    NULL,                      /* tp_repr */
+    (reprfunc) PyFFGlyph_Repr, /* tp_repr */
     NULL,                      /* tp_as_number */
     NULL,                      /* tp_as_sequence */
     NULL,                      /* tp_as_mapping */
@@ -8543,6 +8639,16 @@ Py_RETURN( self );
 static PyObject *PyFFCvt_Str(PyFF_Cvt *self) {
 return( STRING_FROM_FORMAT( "<cvt table for font %s>", self->sf->fontname ));
 }
+
+
+static PyObject *PyFFCvt_get_font(PyFF_Cvt *self, void *UNUSED(closure)) {
+    PyFF_Font *font = PyFF_FontForSF( self->sf );
+    if ( font==NULL )
+Py_RETURN_NONE;
+    Py_INCREF(font);
+    return (PyObject*)font;
+}
+
 
 /* ************************************************************************** */
 /* Cvt sequence */
@@ -8774,6 +8880,13 @@ return( Py_BuildValue("i", i ));
 return( Py_BuildValue("i", -1 ));
 }
 
+static PyGetSetDef PyFFCvt_getset[] = {
+    {"font",
+     (getter)PyFFCvt_get_font, NULL,
+     "returns the font for this object", NULL},
+    PYGETSETDEF_EMPTY /* Sentinel */
+};
+
 static PyMethodDef PyFFCvt_methods[] = {
     { "find", PyFFCvt_find, METH_VARARGS, "Finds the index in the cvt table of the specified value" },
     PYMETHODDEF_EMPTY /* Sentinel */
@@ -8818,7 +8931,7 @@ static PyTypeObject PyFF_CvtType = {
     NULL,                      /* tp_iternext */
     PyFFCvt_methods,           /* tp_methods */
     NULL,                      /* tp_members */
-    NULL,                      /* tp_getset */
+    PyFFCvt_getset,            /* tp_getset */
     NULL,                      /* tp_base */
     NULL,                      /* tp_dict */
     NULL,                      /* tp_descr_get */
@@ -8862,6 +8975,14 @@ Py_RETURN( self );
 
 static PyObject *PyFFSelection_Str(PyFF_Selection *self) {
 return( STRING_FROM_FORMAT( "<Selection for %s>", self->fv->sf->fontname ));
+}
+
+static PyObject *PyFFSelection_get_font(PyFF_Selection *self, void *UNUSED(closure)) {
+    PyFF_Font *font = PyFF_FontForFV( self->fv );
+    if ( font==NULL )
+Py_RETURN_NONE;
+    Py_INCREF(font);
+    return (PyObject*)font;
 }
 
 static PyObject *PyFFSelection_ByGlyphs(PyFF_Selection *real_selection, void *UNUSED(closure)) {
@@ -9031,6 +9152,9 @@ static PyMethodDef PyFFSelection_methods[] = {
 };
 
 static PyGetSetDef PyFFSelection_getset[] = {
+    {"font",
+     (getter)PyFFSelection_get_font, NULL,
+     "returns the font for which this is a selection", NULL},
     {"byGlyphs",
 	 (getter)PyFFSelection_ByGlyphs, NULL,
 	 "returns a selection object whose iterator will return glyph objects (rather than encoding indices)", NULL},
@@ -9272,6 +9396,14 @@ return( STRING_FROM_FORMAT( "<LayerInfo %s,%d>",
 	self->sf->layers[self->layer].order2));
 }
 
+static PyObject *PyFF_LayerInfo_get_font(PyFF_LayerInfo *self, void *UNUSED(closure)) {
+    PyFF_Font *font = PyFF_FontForSF( self->sf );
+    if ( font==NULL )
+Py_RETURN_NONE;
+    Py_INCREF(font);
+    return (PyObject*)font;
+}
+
 static PyObject *PyFF_LayerInfo_get_name(PyFF_LayerInfo *self, void *UNUSED(closure)) {
 return( Py_BuildValue("s",self->sf->layers[self->layer].name));
 }
@@ -9325,6 +9457,9 @@ return( -1 );
 }
 
 static PyGetSetDef PyFF_LayerInfo_getset[] = {
+    {"font",
+	 (getter)PyFF_LayerInfo_get_font, NULL,
+	 "returns the font to which this object belongs", NULL},
     {"name",
 	 (getter)PyFF_LayerInfo_get_name, (setter)PyFF_LayerInfo_set_name,
 	 "arbitrary (non-persistent) user data (deprecated name for temporary)", NULL},
@@ -9406,6 +9541,14 @@ static void PyFF_LayerInfoArray_dealloc(PyFF_LayerInfoArray *self) {
 
 static PyObject *PyFFLayerInfoArray_Str(PyFF_LayerInfoArray *self) {
 return( STRING_FROM_FORMAT( "<Layer Info Array for %s>", self->sf->fontname ));
+}
+
+static PyObject *PyFFLayerInfoArray_get_font(PyFF_LayerInfoArray *self, void *UNUSED(closure)) {
+    PyFF_Font *font = PyFF_FontForSF( self->sf );
+    if ( font==NULL )
+Py_RETURN_NONE;
+    Py_INCREF(font);
+    return (PyObject*)font;
 }
 
 /* ************************************************************************** */
@@ -9518,6 +9661,13 @@ return( NULL );
 Py_RETURN(self);
 }
 
+static PyGetSetDef PyFF_LayerInfoArray_getset[] = {
+    {"font",
+     (getter)PyFFLayerInfoArray_get_font, NULL,
+     "returns the font for this object", NULL},
+    PYGETSETDEF_EMPTY  /* Sentinel */
+};
+
 static PyMethodDef PyFF_LayerInfoArray_methods[] = {
     { "add", PyFF_LayerInfoArray_add, METH_VARARGS, "Adds a new layer to the font" },
     PYMETHODDEF_EMPTY /* Sentinel */
@@ -9558,7 +9708,7 @@ static PyTypeObject PyFF_LayerInfoArrayType = {
     NULL,                      /* tp_iternext */
     PyFF_LayerInfoArray_methods, /* tp_methods */
     NULL,                      /* tp_members */
-    NULL,                      /* tp_getset */
+    PyFF_LayerInfoArray_getset, /* tp_getset */
     NULL,                      /* tp_base */
     NULL,                      /* tp_dict */
     NULL,                      /* tp_descr_get */
@@ -10293,6 +10443,26 @@ return( NULL );
     FontViewClose(fv);
     self->fv = NULL;
 Py_RETURN_NONE;
+}
+
+static PyObject *PyFFFont_Repr(PyFF_Font *self) {
+    PyObject *ret;
+    char prefix[256];
+#ifdef DEBUG
+    snprintf(prefix,sizeof(prefix), "<%s at 0x%lx fv=0x%lx sf=0x%lx",
+	     self->ob_type->tp_name,
+	     (unsigned long)(self),
+	     (unsigned long)(self->fv),
+	     (unsigned long)(self->fv ? self->fv->sf : 0) );
+#else
+    snprintf(prefix,sizeof(prefix), "<%s at 0x%lx",
+	     self->ob_type->tp_name, (unsigned long)(self) );
+#endif
+    if ( self->fv==NULL )
+	ret = STRING_FROM_FORMAT("%s CLOSED>",prefix);
+    else
+	ret = STRING_FROM_FORMAT("%s \"%s\">",prefix,self->fv->sf->fontname);
+    return( ret );
 }
 
 static PyObject *PyFFFont_Str(PyFF_Font *self) {
@@ -16368,7 +16538,7 @@ static PyTypeObject PyFF_FontType = {
     NULL,                      /* tp_getattr */
     NULL,                      /* tp_setattr */
     NULL,                      /* tp_compare */
-    NULL,                      /* tp_repr */
+    (reprfunc) PyFFFont_Repr,   /* tp_repr */
     NULL,                      /* tp_as_number */
     &PyFF_FontSequence,        /* tp_as_sequence */
     &PyFF_FontMapping,         /* tp_as_mapping */
