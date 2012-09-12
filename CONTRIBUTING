@@ -3,6 +3,9 @@ Advice on how to contribute.
 
 (This is a work in progress.)
 
+* We want freedom to break things in our development code. Eventually
+  ‘stable’ versions will be maintained in branches.
+
 * As of right now, we are going to use GNU Indent with the --gnu-style
   setting.
 
