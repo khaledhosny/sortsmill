@@ -44,3 +44,5 @@ Advice on how to contribute.
     space automatically on the stack. Try to avoid arbitrary sizes.
     (This includes even MAX_PATH; I believe that on GNU/Hurd there is
     no MAX_PATH.)
+
+  * Avoid bitfields in new code.
