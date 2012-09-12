@@ -1,0 +1,46 @@
+Advice on how to contribute.
+----------------------------
+
+(This is a work in progress.)
+
+* As of right now, we are going to use GNU Indent with the --gnu-style
+  setting.
+
+* New code should be written in small functions with low cyclomatic
+  complexity, preferably 10 or less. To measure complexity, use the
+  pmccabe program: http://packages.debian.org/unstable/devel/pmccabe
+
+  A Gentoo ebuild for pmccabe is here:
+  https://github.com/chemoelectric/chemoelectric-overlay/tree/master/dev-util/pmccabe
+
+* New code should be well structured. Roughly speaking, this means
+  avoiding a lot of C idioms. Following these practices will help
+  minimize the complexity. Do not worry too much about structured code
+  being inefficient compared to code employing zany C idioms.
+
+  * Avoid goto.
+
+  * Avoid continue.
+
+  * Avoid break from a loop.
+
+  * There should be one return from the function, at the bottom.
+
+  * Try to avoid any but the most simple and obvious for-loops. Use a
+    while-loop or do-while loop instead.
+
+  * Avoid assignment inside an expression.
+
+  * Avoid ++ and -- inside an expression.
+
+  * Avoid side effects as much as possible within the constraints of
+    the C language.
+
+  * Write switch and case statements nicely, each case having exactly
+    one break, at the bottom. (It is okay to include a break at the
+    bottom of the default branch.)
+
+  * Use C99. In particular, use variable-length arrays to allocate
+    space automatically on the stack. Try to avoid arbitrary sizes.
+    (This includes even MAX_PATH; I believe that on GNU/Hurd there is
+    no MAX_PATH.)
