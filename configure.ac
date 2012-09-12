@@ -29,7 +29,7 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 AC_PREREQ([2.68])
-AC_INIT([fontforge],[2.0.0_beta1],[fontforge-devel@lists.sourceforge.net])
+AC_INIT([sortsmill-fontforge],[2.0.0_alpha1],[https://github.com/sortsmill/fontforge/issues])
 AC_CONFIG_SRCDIR([Unicode/ArabicForms.c])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([config])
@@ -37,7 +37,7 @@ AC_CONFIG_TESTDIR([tests],[fontforge])
 AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
 AC_CONFIG_HEADERS([inc/config.h])
-AM_INIT_AUTOMAKE([subdir-objects foreign -Wall])
+AM_INIT_AUTOMAKE([subdir-objects -Wall])
 AM_MAINTAINER_MODE([enable])
 AC_USE_SYSTEM_EXTENSIONS
 
