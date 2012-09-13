@@ -49,21 +49,21 @@ return( ret );
 }
 
 RefChar *RefCharsCopyState(SplineChar *sc,int layer) {
-    RefChar *head=NULL, *last=NULL, *new, *crefs;
+    RefChar *head=NULL, *last=NULL, *new_, *crefs;
 
     if ( layer<0 || sc->layers[layer].refs==NULL )
 return( NULL );
     for ( crefs = sc->layers[layer].refs; crefs!=NULL; crefs=crefs->next ) {
-	new = RefCharCreate();
-	free(new->layers);
-	*new = *crefs;
-	new->layers = gcalloc(new->layer_cnt,sizeof(struct reflayer));
-	new->next = NULL;
+	new_ = RefCharCreate();
+	free(new_->layers);
+	*new_ = *crefs;
+	new_->layers = gcalloc(new_->layer_cnt,sizeof(struct reflayer));
+	new_->next = NULL;
 	if ( last==NULL )
-	    head = last = new;
+	    head = last = new_;
 	else {
-	    last->next = new;
-	    last = new;
+	    last->next = new_;
+	    last = new_;
 	}
     }
 return( head );
@@ -71,7 +71,7 @@ return( head );
 
 static SplinePointList *RefCharsCopyUnlinked(SplinePointList *sofar, SplineChar *sc,int layer) {
     RefChar *crefs;
-    SplinePointList *last = NULL, *new;
+    SplinePointList *last = NULL, *new_;
     int l;
 
     if ( layer<0 || sc->layers[layer].refs==NULL )
@@ -80,13 +80,13 @@ return( sofar );
 	for ( last=sofar; last->next!=NULL; last=last->next );
     for ( crefs = sc->layers[layer].refs; crefs!=NULL; crefs=crefs->next ) {
 	for ( l=0; l<crefs->layer_cnt; ++l ) {
-	    new = SplinePointListCopy(crefs->layers[l].splines);
+	    new_ = SplinePointListCopy(crefs->layers[l].splines);
 	    if ( sofar!=NULL ) {
-		last->next = new;
+		last->next = new_;
 		for ( ; last->next!=NULL; last=last->next );
 	    } else {
-		sofar = new;
-		if ( new!=NULL )
+		sofar = new_;
+		if ( new_!=NULL )
 		    for ( last=sofar; last->next!=NULL; last=last->next );
 	    }
 	}
@@ -1727,35 +1727,35 @@ void CopySelected(CharViewBase *cv,int doanchors) {
     else
 	copybuffer.u.state.splines = SplinePointListCopySelected(cv->layerheads[cv->drawmode]->splines);
     if ( cv->drawmode!=dm_grid ) {
-	RefChar *refs, *new;
+	RefChar *refs, *new_;
 	for ( refs = cv->layerheads[cv->drawmode]->refs; refs!=NULL; refs = refs->next ) if ( refs->selected ) {
-	    new = RefCharCreate();
-	    free(new->layers);
-	    *new = *refs;
-	    new->layers = NULL;
-	    new->layer_cnt = 0;
-	    new->orig_pos = new->sc->orig_pos;
-	    new->sc = NULL;
-	    new->next = copybuffer.u.state.refs;
-	    copybuffer.u.state.refs = new;
+	    new_ = RefCharCreate();
+	    free(new_->layers);
+	    *new_ = *refs;
+	    new_->layers = NULL;
+	    new_->layer_cnt = 0;
+	    new_->orig_pos = new_->sc->orig_pos;
+	    new_->sc = NULL;
+	    new_->next = copybuffer.u.state.refs;
+	    copybuffer.u.state.refs = new_;
 	}
 	if ( doanchors ) {
-	    AnchorPoint *ap, *new;
+	    AnchorPoint *ap, *new_;
 	    for ( ap=cv->sc->anchor; ap!=NULL; ap=ap->next ) if ( ap->selected ) {
-		new = chunkalloc(sizeof(AnchorPoint));
-		*new = *ap;
-		new->next = copybuffer.u.state.anchor;
-		copybuffer.u.state.anchor = new;
+		new_ = chunkalloc(sizeof(AnchorPoint));
+		*new_ = *ap;
+		new_->next = copybuffer.u.state.anchor;
+		copybuffer.u.state.anchor = new_;
 	    }
 	}
     }
     if ( cv->drawmode!=dm_grid && CVLayer(cv)!=ly_fore ) {
-	ImageList *imgs, *new;
+	ImageList *imgs, *new_;
 	for ( imgs = cv->layerheads[cv->drawmode]->images; imgs!=NULL; imgs = imgs->next ) if ( imgs->selected ) {
-	    new = chunkalloc(sizeof(ImageList));
-	    *new = *imgs;
-	    new->next = copybuffer.u.state.images;
-	    copybuffer.u.state.images = new;
+	    new_ = chunkalloc(sizeof(ImageList));
+	    *new_ = *imgs;
+	    new_->next = copybuffer.u.state.images;
+	    copybuffer.u.state.images = new_;
 	}
     }
     if ( cv->drawmode==dm_fore || cv->drawmode==dm_back ) {
@@ -1966,7 +1966,7 @@ return( false );
 static void PasteNonExistantRefCheck(SplineChar *sc,Undoes *paster,RefChar *ref,
 	int *refstate) {
     SplineChar *rsc=NULL, *fromsc;
-    SplineSet *new, *spl;
+    SplineSet *new_, *spl;
     int yes = 3;
 
     rsc = FindCharacter(sc->parent,paster->copied_from,ref,&fromsc);
@@ -2002,12 +2002,12 @@ static void PasteNonExistantRefCheck(SplineChar *sc,Undoes *paster,RefChar *ref,
 		*refstate |= 2;
 	}
 	if ( (*refstate&1) || yes<=1 ) {
-	    new = SplinePointListTransform(SplinePointListCopy(fromsc->layers[ly_fore].splines),ref->transform,tpt_AllPoints);
-	    SplinePointListSelect(new,true);
-	    if ( new!=NULL ) {
-		for ( spl = new; spl->next!=NULL; spl = spl->next );
+	    new_ = SplinePointListTransform(SplinePointListCopy(fromsc->layers[ly_fore].splines),ref->transform,tpt_AllPoints);
+	    SplinePointListSelect(new_,true);
+	    if ( new_!=NULL ) {
+		for ( spl = new_; spl->next!=NULL; spl = spl->next );
 		spl->next = sc->layers[ly_fore].splines;
-		sc->layers[ly_fore].splines = new;
+		sc->layers[ly_fore].splines = new_;
 	    }
 	}
     }
@@ -2355,13 +2355,13 @@ static void _PasteToSC(SplineChar *sc,Undoes *paster,FontViewBase *fv,int pastei
 	if ( !sc->searcherdummy )
 	    APMerge(sc,paster->u.state.anchor);
 	if ( paster->u.state.images!=NULL && sc->parent->multilayer ) {
-	    ImageList *new, *cimg;
+	    ImageList *new_, *cimg;
 	    for ( cimg = paster->u.state.images; cimg!=NULL; cimg=cimg->next ) {
-		new = galloc(sizeof(ImageList));
-		*new = *cimg;
-		new->selected = true;
-		new->next = sc->layers[layer].images;
-		sc->layers[layer].images = new;
+		new_ = galloc(sizeof(ImageList));
+		*new_ = *cimg;
+		new_->selected = true;
+		new_->next = sc->layers[layer].images;
+		sc->layers[layer].images = new_;
 	    }
 	    SCOutOfDateBackground(sc);
 	}
@@ -2395,7 +2395,7 @@ static void _PasteToSC(SplineChar *sc,Undoes *paster,FontViewBase *fv,int pastei
 	    }
 	}
 	if ( paster->u.state.refs!=NULL ) {
-	    RefChar *new, *refs;
+	    RefChar *new_, *refs;
 	    SplineChar *rsc;
 	    double scale = PasteFigureScale(sc->parent,paster->copied_from);
 	    for ( refs = paster->u.state.refs; refs!=NULL; refs=refs->next ) {
@@ -2415,17 +2415,17 @@ static void _PasteToSC(SplineChar *sc,Undoes *paster,FontViewBase *fv,int pastei
 		else if ( rsc!=NULL && SCDependsOnSC(rsc,sc))
 		    ff_post_error(_("Self-referential glyph"),_("Attempt to make a glyph that refers to itself"));
 		else if ( rsc!=NULL ) {
-		    new = RefCharCreate();
-		    free(new->layers);
-		    *new = *refs;
-		    new->transform[4] *= scale; new->transform[5] *= scale;
-		    new->transform[4] += xoff;  new->transform[5] += yoff;
-		    new->layers = NULL;
-		    new->layer_cnt = 0;
-		    new->sc = rsc;
-		    new->next = sc->layers[layer].refs;
-		    sc->layers[layer].refs = new;
-		    SCReinstanciateRefChar(sc,new,layer);
+		    new_ = RefCharCreate();
+		    free(new_->layers);
+		    *new_ = *refs;
+		    new_->transform[4] *= scale; new_->transform[5] *= scale;
+		    new_->transform[4] += xoff;  new_->transform[5] += yoff;
+		    new_->layers = NULL;
+		    new_->layer_cnt = 0;
+		    new_->sc = rsc;
+		    new_->next = sc->layers[layer].refs;
+		    sc->layers[layer].refs = new_;
+		    SCReinstanciateRefChar(sc,new_,layer);
 		    SCMakeDependent(sc,rsc);
 		} else {
 		    PasteNonExistantRefCheck(sc,paster,refs,refstate);
@@ -2943,26 +2943,26 @@ return;
 	    }
 	}
 	if ( paster->u.state.splines!=NULL ) {
-	    SplinePointList *spl, *new = SplinePointListCopy(paster->u.state.splines);
+	    SplinePointList *spl, *new_ = SplinePointListCopy(paster->u.state.splines);
 	    if ( paster->was_order2 != cv->layerheads[cv->drawmode]->order2 )
-		new = SplineSetsConvertOrder(new,cv->layerheads[cv->drawmode]->order2 );
-	    SplinePointListSelect(new,true);
-	    for ( spl = new; spl->next!=NULL; spl = spl->next );
+		new_ = SplineSetsConvertOrder(new_,cv->layerheads[cv->drawmode]->order2 );
+	    SplinePointListSelect(new_,true);
+	    for ( spl = new_; spl->next!=NULL; spl = spl->next );
 	    spl->next = cv->layerheads[cv->drawmode]->splines;
-	    cv->layerheads[cv->drawmode]->splines = new;
+	    cv->layerheads[cv->drawmode]->splines = new_;
 	}
 	if ( paster->undotype==ut_state && paster->u.state.images!=NULL ) {
 	    /* Can't paste images to foreground layer (unless type3 font) */
-	    ImageList *new, *cimg;
+	    ImageList *new_, *cimg;
 	    int ly = cvsc->parent->multilayer || cv->layerheads[cv->drawmode]->background ?
 		    CVLayer(cv) : ly_back;
 	    if ( ly==ly_grid ) ly = ly_back;
 	    for ( cimg = paster->u.state.images; cimg!=NULL; cimg=cimg->next ) {
-		new = galloc(sizeof(ImageList));
-		*new = *cimg;
-		new->selected = true;
-		new->next = cvsc->layers[ly].images;
-		cvsc->layers[ly].images = new;
+		new_ = galloc(sizeof(ImageList));
+		*new_ = *cimg;
+		new_->selected = true;
+		new_->next = cvsc->layers[ly].images;
+		cvsc->layers[ly].images = new_;
 	    }
 	    SCOutOfDateBackground(cvsc);
 	} else if ( paster->undotype==ut_statehint && cv->container==NULL &&
@@ -2984,7 +2984,7 @@ return;
 	if ( paster->u.state.anchor!=NULL && !cvsc->searcherdummy )
 	    APMerge(cvsc,paster->u.state.anchor);
 	if ( paster->u.state.refs!=NULL && cv->drawmode!=dm_grid ) {
-	    RefChar *new, *refs;
+	    RefChar *new_, *refs;
 	    SplineChar *sc;
 	    for ( refs = paster->u.state.refs; refs!=NULL; refs=refs->next ) {
 		if ( cv->container==NULL ) {
@@ -3001,16 +3001,16 @@ return;
 		if ( sc==(SplineChar *) -1 )
 		    /* Already complained */;
 		else if ( sc!=NULL ) {
-		    new = RefCharCreate();
-		    free(new->layers);
-		    *new = *refs;
-		    new->layers = NULL;
-		    new->layer_cnt = 0;
-		    new->sc = sc;
-		    new->selected = true;
-		    new->next = cvsc->layers[layer].refs;
-		    cvsc->layers[layer].refs = new;
-		    SCReinstanciateRefChar(cvsc,new,layer);
+		    new_ = RefCharCreate();
+		    free(new_->layers);
+		    *new_ = *refs;
+		    new_->layers = NULL;
+		    new_->layer_cnt = 0;
+		    new_->sc = sc;
+		    new_->selected = true;
+		    new_->next = cvsc->layers[layer].refs;
+		    cvsc->layers[layer].refs = new_;
+		    SCReinstanciateRefChar(cvsc,new_,layer);
 		    SCMakeDependent(cvsc,sc);
 		} else {
 		    PasteNonExistantRefCheck(cvsc,paster,refs,&refstate);
@@ -3022,7 +3022,7 @@ return;
 	    /*  (background contents I think) */
 	    RefChar *refs;
 	    SplineChar *sc;
-	    SplinePointList *new, *spl;
+	    SplinePointList *new_, *spl;
 	    for ( refs = paster->u.state.refs; refs!=NULL; refs=refs->next ) {
 		if ( cv->container==NULL )
 		    sc = FindCharacter(cvsc->parent,paster->copied_from,refs,NULL);
@@ -3032,12 +3032,12 @@ return;
 		else
 		    sc = NULL;
 		if ( sc!=NULL ) {
-		    new = SplinePointListTransform(SplinePointListCopy(sc->layers[ly_back].splines),refs->transform,tpt_AllPoints);
-		    SplinePointListSelect(new,true);
-		    if ( new!=NULL ) {
-			for ( spl = new; spl->next!=NULL; spl = spl->next );
+		    new_ = SplinePointListTransform(SplinePointListCopy(sc->layers[ly_back].splines),refs->transform,tpt_AllPoints);
+		    SplinePointListSelect(new_,true);
+		    if ( new_!=NULL ) {
+			for ( spl = new_; spl->next!=NULL; spl = spl->next );
 			spl->next = cvsc->layers[ly_back].splines;
-			cvsc->layers[ly_back].splines = new;
+			cvsc->layers[ly_back].splines = new_;
 		    }
 		}
 	    }

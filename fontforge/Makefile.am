@@ -69,7 +69,7 @@ sfddiff: sfddiff.pe
 #--------------------------------------------------------------------------
 
 noinst_HEADERS = fontforgeui.h sftextfieldP.h configure-fontforge.h	\
-	views.h is_LIGATURE.h flaglist.h
+	views.h is_LIGATURE.h flaglist.h namelist_data.h
 pkginclude_HEADERS = autowidth2.h configure-fontforge.h fontforge.h		\
 	libffstamp.h psfont.h stemdb.h autowidth.h delta.h fontforgevw.h	\
 	lookups.h savefont.h ttf.h baseviews.h fvmetrics.h mm.h				\
@@ -98,11 +98,11 @@ libfontforge_la_SOURCES = asmfpst.c autohint.c autosave.c autotrace.c	\
 	dumppfa.c effects.c encoding.c featurefile.c fontviewbase.c			\
 	freetype.c fvcomposite.c fvfonts.c fvimportbdf.c fvmetrics.c		\
 	glyphcomp.c http.c ikarus.c lookups.c macbinary.c macenc.c			\
-	mathconstants.c mm.c namelist.c nonlineartrans.c noprefs.c			\
-	nouiutil.c nowakowskittfinstr.c ofl.c othersubrs.c palmfonts.c		\
-	parsepdf.c parsepfa.c parsettfatt.c parsettfbmf.c parsettf.c		\
-	parsettfvar.c plugins.c print.c psread.c pua.c python.c				\
-	savefont.c scripting.c scstyles.c search.c sfd1.c sfd.c				\
+	mathconstants.c mm.c namelist.c namelist_data.c nonlineartrans.c	\
+	noprefs.c nouiutil.c nowakowskittfinstr.c ofl.c othersubrs.c		\
+	palmfonts.c parsepdf.c parsepfa.c parsettfatt.c parsettfbmf.c		\
+	parsettf.c parsettfvar.c plugins.c print.c psread.c pua.c			\
+	python.c savefont.c scripting.c scstyles.c search.c sfd1.c sfd.c	\
 	sflayout.c spiro.c splinechar.c splinefill.c splinefont.c			\
 	splineorder2.c splineoverlap.c splinesaveafm.c splinesave.c			\
 	splinestroke.c splineutil2.c splineutil.c start.c stemdb.c svg.c	\

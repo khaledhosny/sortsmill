@@ -183,16 +183,8 @@ i_do_have_native_callbacks="${fontforge_cv_native_callbacks}"
 # Checks for libraries.
 
 AC_SEARCH_LIBS([cos],[m])
-
-dnl FIXME: Is this needed, given we are using libltdl?
-dnl AC_SEARCH_LIBS([dlopen],[dl])
-
 FONTFORGE_CONFIG_X_LIBRARIES
-
-# zlib is a requirement. It is too commonly available to bother
-# leaving out.
 PKG_CHECK_MODULES([ZLIB],[zlib])
-
 FONTFORGE_ARG_WITH_CAIRO
 FONTFORGE_ARG_WITH_PANGO
 FONTFORGE_ARG_WITH_FREETYPE
@@ -260,6 +252,7 @@ FONTFORGE_COMPILER_FLAGS([WARNING_CFLAGS],
         [-Wunused -Wreturn-type
          -Wparentheses -Wformat -Wchar-subscripts
          -Wno-unused-but-set-variable -Wno-unused-result
+         -Wc++-compat
          -Werror=missing-prototypes
          -Werror=implicit])
 

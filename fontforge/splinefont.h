@@ -1728,6 +1728,7 @@ typedef struct splinefont {
     unsigned int multilayer: 1;			/* only applies if TYPE3 is set, means this font can contain strokes & fills */
 						/*  I leave it in so as to avoid cluttering up code with #ifdefs */
     unsigned int strokedfont: 1;
+//    unsigned int new_: 1;			/* A new and unsaved font */ <-- Switch to this later.
     unsigned int new: 1;			/* A new and unsaved font */
     unsigned int compacted: 1;			/* only used when opening a font */
     unsigned int backedup: 2;			/* 0=>don't know, 1=>no, 2=>yes */
@@ -1754,6 +1755,7 @@ typedef struct splinefont {
     char *origname;		/* filename of font file (ie. if not an sfd) */
     char *autosavename;
     int display_size;		/* a val <0 => Generate our own images from splines, a value >0 => find a bdf font of that size */
+//    struct psdict *private_;	/* read in from type1 file or provided by user */ <-- switch to this later.
     struct psdict *private;	/* read in from type1 file or provided by user */
     char *xuid;
     struct pfminfo pfminfo;
@@ -2635,7 +2637,7 @@ extern void FreeGlobalInstrCt( GlobalInstrCt *gic );
 extern void NowakowskiSCAutoInstr( GlobalInstrCt *gic,SplineChar *sc );
 extern void CVT_ImportPrivate(SplineFont *sf);
 
-extern void SCModifyHintMasksAdd(SplineChar *sc,int layer,StemInfo *new);
+extern void SCModifyHintMasksAdd(SplineChar *sc,int layer,StemInfo *new_);
 extern void SCClearHints(SplineChar *sc);
 extern void SCClearHintMasks(SplineChar *sc,int layer,int counterstoo);
 extern void SCFigureVerticalCounterMasks(SplineChar *sc);
@@ -2816,7 +2818,7 @@ extern char *PSDictHasEntry(struct psdict *dict, char *key);
 extern int PSDictSame(struct psdict *dict1, struct psdict *dict2);
 extern int PSDictRemoveEntry(struct psdict *dict, char *key);
 extern int PSDictChangeEntry(struct psdict *dict, char *key, char *newval);
-extern int SFPrivateGuess(SplineFont *sf,int layer, struct psdict *private,
+extern int SFPrivateGuess(SplineFont *sf,int layer, struct psdict *private_,
 	char *name, int onlyone);
 
 extern void SFRemoveLayer(SplineFont *sf,int l);
@@ -2896,9 +2898,9 @@ extern NameList *NameListByName(char *name);
 extern NameList *LoadNamelist(char *filename);
 extern void LoadNamelistDir(char *dir);
 extern const char *RenameGlyphToNamelist(char *buffer, SplineChar *sc,NameList *old,
-	NameList *new, char **sofar);
-extern void SFRenameGlyphsToNamelist(SplineFont *sf,NameList *new);
-extern char **SFTemporaryRenameGlyphsToNamelist(SplineFont *sf,NameList *new);
+	NameList *new_, char **sofar);
+extern void SFRenameGlyphsToNamelist(SplineFont *sf,NameList *new_);
+extern char **SFTemporaryRenameGlyphsToNamelist(SplineFont *sf,NameList *new_);
 extern void SFTemporaryRestoreGlyphNames(SplineFont *sf,char **former);
 
 extern void doversion(const char *);
@@ -3081,7 +3083,7 @@ extern void OTLookupsCopyInto(SplineFont *into_sf,SplineFont *from_sf,
 extern struct opentype_str *ApplyTickedFeatures(SplineFont *sf,uint32 *flist, uint32 script, uint32 lang,
 	int pixelsize, SplineChar **glyphs);
 extern int VerticalKernFeature(SplineFont *sf, OTLookup *otl, int ask);
-extern void SFGlyphRenameFixup(SplineFont *sf, char *old, char *new);
+extern void SFGlyphRenameFixup(SplineFont *sf, char *old, char *new_);
 
 struct sllk { uint32 script; int cnt, max; OTLookup **lookups; int lcnt, lmax; uint32 *langs; };
 extern void SllkFree(struct sllk *sllk,int sllk_cnt);

@@ -536,7 +536,7 @@ static int _SFFindExistingSlot(SplineFont *sf, int unienc, const char *name );
 
 static KernPair *KernsCopy(KernPair *kp,int *mapping,SplineFont *into,
 	struct sfmergecontext *mc) {
-    KernPair *head = NULL, *last=NULL, *new;
+    KernPair *head = NULL, *last=NULL, *new_;
     int index;
 
     while ( kp!=NULL ) {
@@ -544,15 +544,15 @@ static KernPair *KernsCopy(KernPair *kp,int *mapping,SplineFont *into,
 	    index =  _SFFindExistingSlot(into,kp->sc->unicodeenc,kp->sc->name);
 	if ( index>=0 && index<into->glyphcnt &&
 		into->glyphs[index]!=NULL ) {
-	    new = chunkalloc(sizeof(KernPair));
-	    new->off = kp->off;
-	    new->subtable = MCConvertSubtable(mc,kp->subtable);
-	    new->sc = into->glyphs[index];
+	    new_ = chunkalloc(sizeof(KernPair));
+	    new_->off = kp->off;
+	    new_->subtable = MCConvertSubtable(mc,kp->subtable);
+	    new_->sc = into->glyphs[index];
 	    if ( head==NULL )
-		head = new;
+		head = new_;
 	    else
-		last->next = new;
-	    last = new;
+		last->next = new_;
+	    last = new_;
 	}
 	kp = kp->next;
     }
@@ -628,7 +628,7 @@ static void GlyphHashCreate(SplineFont *sf) {
     int i, k, hash;
     SplineFont *_sf;
     struct glyphnamehash *gnh;
-    struct glyphnamebucket *new;
+    struct glyphnamebucket *new_;
 
     if ( sf->glyphnames!=NULL )
 return;
@@ -642,11 +642,11 @@ return;
 	/*  font than the others. If we build the list backwards then it will */
 	/*  be the top name in the bucket, and will be the one we return */
 	for ( i=_sf->glyphcnt-1; i>=0; --i ) if ( _sf->glyphs[i]!=NULL ) {
-	    new = chunkalloc(sizeof(struct glyphnamebucket));
-	    new->sc = _sf->glyphs[i];
-	    hash = hashname(new->sc->name);
-	    new->next = gnh->table[hash];
-	    gnh->table[hash] = new;
+	    new_ = chunkalloc(sizeof(struct glyphnamebucket));
+	    new_->sc = _sf->glyphs[i];
+	    hash = hashname(new_->sc->name);
+	    new_->next = gnh->table[hash];
+	    gnh->table[hash] = new_;
 	}
 	++k;
     } while ( k<sf->subfontcnt );
@@ -655,16 +655,16 @@ return;
 void SFHashGlyph(SplineFont *sf,SplineChar *sc) {
     /* sc just got added to the font. Put it in the lookup */
     int hash;
-    struct glyphnamebucket *new;
+    struct glyphnamebucket *new_;
 
     if ( sf->glyphnames==NULL )
 return;		/* No hash table, nothing to update */
 
-    new = chunkalloc(sizeof(struct glyphnamebucket));
-    new->sc = sc;
+    new_ = chunkalloc(sizeof(struct glyphnamebucket));
+    new_->sc = sc;
     hash = hashname(sc->name);
-    new->next = sf->glyphnames->table[hash];
-    sf->glyphnames->table[hash] = new;
+    new_->next = sf->glyphnames->table[hash];
+    sf->glyphnames->table[hash] = new_;
 }
 
 SplineChar *SFHashName(SplineFont *sf,const char *name) {
@@ -1370,7 +1370,7 @@ return( strcmp(sc1->name,sc2->name)==0 );
 }
 
 static KernPair *InterpKerns(KernPair *kp1, KernPair *kp2, real amount,
-	SplineFont *new, SplineChar *scnew) {
+	SplineFont *new_, SplineChar *scnew) {
     KernPair *head=NULL, *last, *nkp, *k;
 
     if ( kp1==NULL || kp2==NULL )
@@ -1380,9 +1380,9 @@ return( NULL );
 	if ( k!=NULL ) {
 	    if ( k==kp2 ) kp2 = kp2->next;
 	    nkp = chunkalloc(sizeof(KernPair));
-	    nkp->sc = new->glyphs[kp1->sc->orig_pos];
+	    nkp->sc = new_->glyphs[kp1->sc->orig_pos];
 	    nkp->off = kp1->off + amount*(k->off-kp1->off);
-	    nkp->subtable = SFSubTableFindOrMake(new,CHR('k','e','r','n'),
+	    nkp->subtable = SFSubTableFindOrMake(new_,CHR('k','e','r','n'),
 		    SCScriptFromUnicode(scnew),gpos_pair);
 	    if ( head==NULL )
 		head = nkp;
@@ -1534,17 +1534,17 @@ return( NULL );
 return( sc );
 }
 
-static void _SplineCharInterpolate(SplineFont *new, int orig_pos, SplineChar *base, SplineChar *other, real amount) {
+static void _SplineCharInterpolate(SplineFont *new_, int orig_pos, SplineChar *base, SplineChar *other, real amount) {
     SplineChar *sc;
 
-    sc = SplineCharInterpolate(base,other,amount,new);
+    sc = SplineCharInterpolate(base,other,amount,new_);
     if ( sc==NULL )
 return;
     sc->orig_pos = orig_pos;
-    new->glyphs[orig_pos] = sc;
-    if ( orig_pos+1>new->glyphcnt )
-	new->glyphcnt = orig_pos+1;
-    sc->parent = new;
+    new_->glyphs[orig_pos] = sc;
+    if ( orig_pos+1>new_->glyphcnt )
+	new_->glyphcnt = orig_pos+1;
+    sc->parent = new_;
 }
 
 static void IFixupSC(SplineFont *sf, SplineChar *sc,int i) {
@@ -1572,7 +1572,7 @@ static void InterpFixupRefChars(SplineFont *sf) {
 
 SplineFont *InterpolateFont(SplineFont *base, SplineFont *other, real amount,
 	Encoding *enc) {
-    SplineFont *new;
+    SplineFont *new_;
     int i, index, lc;
 
     if ( base==other ) {
@@ -1585,37 +1585,37 @@ return( NULL );
 	ff_post_error(_("Interpolating Problem"),_("Interpolating between fonts with different editing types (ie. between type3 and type1)"));
 return( NULL );
     }
-    new = SplineFontBlank(base->glyphcnt);
-    new->ascent = base->ascent + amount*(other->ascent-base->ascent);
-    new->descent = base->descent + amount*(other->descent-base->descent);
+    new_ = SplineFontBlank(base->glyphcnt);
+    new_->ascent = base->ascent + amount*(other->ascent-base->ascent);
+    new_->descent = base->descent + amount*(other->descent-base->descent);
     if ( (lc=base->layer_cnt)>other->layer_cnt )
 	lc = other->layer_cnt;
-    if ( lc!=new->layer_cnt ) {
-	new->layer_cnt = lc;
-	new->layers = grealloc(new->layers,lc*sizeof(LayerInfo));
+    if ( lc!=new_->layer_cnt ) {
+	new_->layer_cnt = lc;
+	new_->layers = grealloc(new_->layers,lc*sizeof(LayerInfo));
 	if ( lc>2 )
-	    memset(new->layers+2,0,(lc-2)*sizeof(LayerInfo));
+	    memset(new_->layers+2,0,(lc-2)*sizeof(LayerInfo));
 	for ( i=2; i<lc; ++i ) {
-	    new->layers[i].name = copy(base->layers[i].name);
-	    new->layers[i].background = base->layers[i].background;
-	    new->layers[i].order2 = base->layers[i].order2;
+	    new_->layers[i].name = copy(base->layers[i].name);
+	    new_->layers[i].background = base->layers[i].background;
+	    new_->layers[i].order2 = base->layers[i].order2;
 	}
     }
     for ( i=0; i<2; ++i ) {
-	new->layers[i].background = base->layers[i].background;
-	new->layers[i].order2 = base->layers[i].order2;
+	new_->layers[i].background = base->layers[i].background;
+	new_->layers[i].order2 = base->layers[i].order2;
     }
     for ( i=0; i<base->glyphcnt; ++i ) if ( base->glyphs[i]!=NULL ) {
 	index = SFFindExistingSlot(other,base->glyphs[i]->unicodeenc,base->glyphs[i]->name);
 	if ( index!=-1 && other->glyphs[index]!=NULL ) {
-	    _SplineCharInterpolate(new,i,base->glyphs[i],other->glyphs[index],amount);
-	    if ( new->glyphs[i]!=NULL )
-		new->glyphs[i]->kerns = InterpKerns(base->glyphs[i]->kerns,
-			other->glyphs[index]->kerns,amount,new,new->glyphs[i]);
+	    _SplineCharInterpolate(new_,i,base->glyphs[i],other->glyphs[index],amount);
+	    if ( new_->glyphs[i]!=NULL )
+		new_->glyphs[i]->kerns = InterpKerns(base->glyphs[i]->kerns,
+			other->glyphs[index]->kerns,amount,new_,new_->glyphs[i]);
 	}
     }
-    InterpFixupRefChars(new);
-    new->changed = true;
-    new->map = EncMapFromEncoding(new,enc);
-return( new );
+    InterpFixupRefChars(new_);
+    new_->changed = true;
+    new_->map = EncMapFromEncoding(new_,enc);
+return( new_ );
 }

@@ -55,7 +55,7 @@ int preferpotrace = false;
 
 static SplinePointList *localSplinesFromEntities(Entity *ent, Color bgcol, int ispotrace) {
     Entity *enext;
-    SplinePointList *head=NULL, *last, *test, *next, *prev, *new, *nlast, *temp;
+    SplinePointList *head=NULL, *last, *test, *next, *prev, *new_, *nlast, *temp;
     int clockwise;
     SplineChar sc;
     StrokeInfo si;
@@ -88,11 +88,11 @@ static SplinePointList *localSplinesFromEntities(Entity *ent, Color bgcol, int i
 		si.join = ent->u.splines.join;
 		si.cap = ent->u.splines.cap;
 		si.radius = ent->u.splines.stroke_width/2;
-		new = NULL;
+		new_ = NULL;
 		for ( test = ent->u.splines.splines; test!=NULL; test=test->next ) {
 		    temp = SplineSetStroke(test,&si,false);
-		    if ( new==NULL )
-			new=temp;
+		    if ( new_==NULL )
+			new_=temp;
 		    else
 			nlast->next = temp;
 		    for ( nlast=temp; nlast->next!=NULL; nlast=nlast->next );
@@ -100,14 +100,14 @@ static SplinePointList *localSplinesFromEntities(Entity *ent, Color bgcol, int i
 		SplinePointListsFree(ent->u.splines.splines);
 		ent->u.splines.fill.col = ent->u.splines.stroke.col;
 	    } else {
-		new = ent->u.splines.splines;
+		new_ = ent->u.splines.splines;
 	    }
 	    if ( head==NULL )
-		head = new;
+		head = new_;
 	    else
-		last->next = new;
+		last->next = new_;
 	    if ( ispotrace ) {
-		for ( test = new; test!=NULL; test=test->next ) {
+		for ( test = new_; test!=NULL; test=test->next ) {
 		    if ( test->first!=test->last &&
 			    RealNear(test->first->me.x,test->last->me.x) &&
 			    RealNear(test->first->me.y,test->last->me.y)) {
@@ -123,7 +123,7 @@ static SplinePointList *localSplinesFromEntities(Entity *ent, Color bgcol, int i
 		    last = test;
 		}
 	    } else {
-		for ( test = new; test!=NULL; test=test->next ) {
+		for ( test = new_; test!=NULL; test=test->next ) {
 		    clockwise = SplinePointListIsClockwise(test)==1;
 		    /* colors may get rounded a little as we convert from RGB to */
 		    /*  a postscript color and back. */
@@ -241,7 +241,7 @@ static char* add_arg(char* buffer, char* s)
 }
 void _SCAutoTrace(SplineChar *sc, int layer, char **args) {
     ImageList *images;
-    SplineSet *new, *last;
+    SplineSet *new_, *last;
     struct _GImage *ib;
     Color bgcol;
     int   ispotrace;
@@ -301,24 +301,24 @@ void _SCAutoTrace(SplineChar *sc, int layer, char **args) {
 
 	ps = fopen(tempname_out, "r");
 	if(ps){
-	    new = localSplinesFromEntities(EntityInterpretPS(ps,NULL),bgcol,ispotrace);
+	    new_ = localSplinesFromEntities(EntityInterpretPS(ps,NULL),bgcol,ispotrace);
 	    transform[0] = images->xscale; transform[3] = images->yscale;
 	    transform[1] = transform[2] = 0;
 	    transform[4] = images->xoff;
 	    transform[5] = images->yoff - images->yscale*ib->height;
-	    new = SplinePointListTransform(new,transform,tpt_AllPoints);
+	    new_ = SplinePointListTransform(new_,transform,tpt_AllPoints);
 	    if ( sc->layers[layer].order2 ) {
-		SplineSet *o2 = SplineSetsTTFApprox(new);
-		SplinePointListsFree(new);
-		new = o2;
+		SplineSet *o2 = SplineSetsTTFApprox(new_);
+		SplinePointListsFree(new_);
+		new_ = o2;
 	    }
-	    if ( new!=NULL ) {
+	    if ( new_!=NULL ) {
 		sc->parent->onlybitmaps = false;
 		if ( !changed )
 		    SCPreserveLayer(sc,layer,false);
-		for ( last=new; last->next!=NULL; last=last->next );
+		for ( last=new_; last->next!=NULL; last=last->next );
 		last->next = sc->layers[layer].splines;
-		sc->layers[layer].splines = new;
+		sc->layers[layer].splines = new_;
 		changed = true;
 	    }
 	    fclose(ps);
@@ -335,7 +335,7 @@ void _SCAutoTrace(SplineChar *sc, int layer, char **args) {
 void _SCAutoTrace(SplineChar *sc, int layer, char **args) {
     ImageList *images;
     char *prog, *pt;
-    SplineSet *new, *last;
+    SplineSet *new_, *last;
     struct _GImage *ib;
     Color bgcol;
     real transform[6];
@@ -417,24 +417,24 @@ return;
 	    waitpid(pid,&status,0);
 	    if ( WIFEXITED(status)) {
 		rewind(ps);
-		new = localSplinesFromEntities(EntityInterpretPS(ps,NULL),bgcol,ispotrace);
+		new_ = localSplinesFromEntities(EntityInterpretPS(ps,NULL),bgcol,ispotrace);
 		transform[0] = images->xscale; transform[3] = images->yscale;
 		transform[1] = transform[2] = 0;
 		transform[4] = images->xoff;
 		transform[5] = images->yoff - images->yscale*ib->height;
-		new = SplinePointListTransform(new,transform,tpt_AllPoints);
+		new_ = SplinePointListTransform(new_,transform,tpt_AllPoints);
 		if ( sc->layers[layer].order2 ) {
-		    SplineSet *o2 = SplineSetsTTFApprox(new);
-		    SplinePointListsFree(new);
-		    new = o2;
+		    SplineSet *o2 = SplineSetsTTFApprox(new_);
+		    SplinePointListsFree(new_);
+		    new_ = o2;
 		}
-		if ( new!=NULL ) {
+		if ( new_!=NULL ) {
 		    sc->parent->onlybitmaps = false;
 		    if ( !changed )
 			SCPreserveLayer(sc,layer,false);
-		    for ( last=new; last->next!=NULL; last=last->next );
+		    for ( last=new_; last->next!=NULL; last=last->next );
 		    last->next = sc->layers[layer].splines;
-		    sc->layers[layer].splines = new;
+		    sc->layers[layer].splines = new_;
 		    changed = true;
 		}
 	    }
