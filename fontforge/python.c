@@ -17526,30 +17526,6 @@ void PyFF_FreeSC(SplineChar *sc) {
     Py_XDECREF( (PyObject *) (sc->python_temporary));
 }
 
-//static void LoadFilesInPythonInitDir(char *dir) {
-//    DIR *diro;
-//    struct dirent *ent;
-//    char buffer[1025];
-//
-//    diro = opendir(dir);
-//    if ( diro==NULL )		/* It's ok not to have any python init scripts */
-//return;
-//
-//    while ( (ent = readdir(diro))!=NULL ) {
-//	char *pt = strrchr(ent->d_name,'.');
-//	if ( pt==NULL )
-//    continue;
-//	if ( strcmp(pt,".py")==0 ) {
-//	    sprintf( buffer, "%s/%s", dir, ent->d_name );
-//	    PyObject *fp = PyFile_FromString(buffer,"rb");
-//	    if ( fp==NULL )
-//    continue;
-//	    PyRun_SimpleFile(PyFile_AsFile(fp),buffer);
-//	}
-//    }
-//    closedir(diro);
-//}
-
 static const char py_init_script[] = "sys-init.py";
 
 void PyFF_ProcessInitFiles(void) {
