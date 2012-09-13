@@ -17571,28 +17571,6 @@ void PyFF_ProcessInitFiles(void) {
     }
 }
 
-//void PyFF_ProcessInitFiles(void) {
-//    static int done = false;
-//    char buffer[1025], *pt;
-//
-//    if ( done )
-//return;
-//    done = true;
-//
-//    pt = getFontForgeShareDir();
-//    if ( pt!=NULL ) {
-//	snprintf(buffer,sizeof(buffer),"%s/python", pt );
-//	/* Load the system directory */
-//	LoadFilesInPythonInitDir( buffer );
-//    }
-//    /* Load the user directory */
-//    if ( getPfaEditDir(buffer)!=NULL ) {
-//	strcpy(buffer,getPfaEditDir(buffer));
-//	strcat(buffer,"/python");
-//	LoadFilesInPythonInitDir(buffer);
-//    }
-//}
-
 void PyFF_CallDictFunc(PyObject *dict,char *key,char *argtypes, ... ) {
     PyObject *func, *arglist, *result;
     char *pt;
