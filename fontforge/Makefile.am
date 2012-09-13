@@ -234,5 +234,46 @@ clean-darwin-stuff:
 endif MACINTOSH
 
 #--------------------------------------------------------------------------
+#
+# FIXME: Get rid of the stamper.
+
+#######################################################################
+# The maintainer tools such as "stamper" are built if you configure   #
+# with --enable-maintainer-tools                                      #
+#######################################################################
+if MAINTAINER_TOOLS
+
+# You need to build the "fontforge" program to do the stamps for
+# release.
+if THE_PROGRAMS
+
+#######################################################################
+# Run "make stamps-for-release" with GNU Make before doing a release. #
+#######################################################################
+stamps-for-release: stamper $(LIBFFSTAMP_H_DEPENDS) $(STAMP_C_DEPENDS)
+	$(builddir)/stamper$(EXEEXT) > $(srcdir)/stamp.c
+	$(builddir)/stamper$(EXEEXT) -l > $(srcdir)/libffstamp.h
+
+noinst_PROGRAMS = stamper
+stamper_SOURCES = stamper.c
+
+LIBFFSTAMP_H_DEPENDS = \
+	$(filter-out libfontforge_la-stamp.lo, \
+		$(filter %.$(OBJEXT) %.lo, \
+			$(addprefix libfontforge_la-, $(LIBFF_C_SRCFILES:.c=.lo))))
+STAMP_C_DEPENDS = \
+	$(LIBFFSTAMP_H_DEPENDS) \
+	$(filter %.$(OBJEXT) %.lo, \
+		$(addprefix fontforge-, $(FF_C_SRCFILES:.c=.$(OBJEXT))) \
+		$(addprefix libfontforgeexe_la-, $(LIBFFEXE_C_SRCFILES:.c=.lo)) \
+		$(EXTRA_LIBFF_C_SRCFILES:.c=.lo))
+
+$(srcdir)/stamp.c: stamper $(STAMP_C_DEPENDS) 
+$(srcdir)/libffstamp.h: stamper $(LIBFFSTAMP_H_DEPENDS) 
+
+endif # THE_PROGRAMS
+endif # MAINTAINER_TOOLS
+
+#--------------------------------------------------------------------------
 
 -include $(top_srcdir)/git.mk

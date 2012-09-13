@@ -6,6 +6,8 @@ Advice on how to contribute.
 * We want freedom to break things in our development code. Eventually
   ‘stable’ versions will be maintained in branches.
 
+* Assume the Make program is GNU Make.
+
 * As of right now, we are going to use GNU Indent with the --gnu-style
   setting.
 

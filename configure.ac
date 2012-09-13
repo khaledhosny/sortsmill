@@ -37,7 +37,7 @@ AC_CONFIG_TESTDIR([tests],[fontforge])
 AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
 AC_CONFIG_HEADERS([inc/config.h])
-AM_INIT_AUTOMAKE([subdir-objects -Wall])
+AM_INIT_AUTOMAKE([subdir-objects -Wall -Wno-portability -Werror])
 AM_MAINTAINER_MODE([enable])
 AC_USE_SYSTEM_EXTENSIONS
 

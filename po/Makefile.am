@@ -58,4 +58,30 @@ uninstall-local:
 EXTRA_DIST = $(PO_FILES)
 MOSTLYCLEANFILES = $(MO_FILES)
 
+#--------------------------------------------------------------------------
+
+include $(top_builddir)/mk/xgettext_search.mk
+
+XGETTEXT_OPTIONS = --keyword=_ --keyword=N_ --keyword=S_ --keyword=U_	\
+--keyword=NU_ --keyword=P_:1,2 --add-comments=GT: --from-code=utf-8		\
+--language=C --sort-by-file
+
+# This potfile will be created in $(builddir). You can copy it to
+# $(srcdir) if you do outside-of-source builds and want it in the
+# source tree.
+MY_POTFILE = FontForge.pot
+
+$(MY_POTFILE): potfile
+
+potfile:
+	$(XGETTEXT) $(XGETTEXT_OPTIONS) --output=$(MY_POTFILE) $(xgettext_search_files)
+	$(SED) -i -e '1,4d' $(MY_POTFILE)
+	$(SED) -i -e "1i\
+\# Template of user interface strings for $(PACKAGE), in US English.\n\
+\# Copyright (C) 2000-2012 by George Williams.\n\
+\# This file is distributed under the same license as the $(PACKAGE) package.\n\
+\# The FontForge project, <https://github.com/fontforge/fontforge>, 2012." $(MY_POTFILE)
+
+#--------------------------------------------------------------------------
+
 -include $(top_srcdir)/git.mk
