@@ -30,7 +30,7 @@ import os
 # FIXME: Set this in the configure script or make invocation.
 user_config_dir = '.FontForge'
 
-user_init_file = 'user-init.py'
+user_init_file = 'user_init.py'
 
 try:
     home = os.environ['HOME']
@@ -39,9 +39,6 @@ except:
     home = None
     user_init = None
 
-if user_init is not None:
-    try:
-        execfile(user_init)
-    except:
-        pass
+if user_init is not None and os.path.exists(user_init):
+    execfile(user_init)
 

@@ -17526,7 +17526,7 @@ void PyFF_FreeSC(SplineChar *sc) {
     Py_XDECREF( (PyObject *) (sc->python_temporary));
 }
 
-static const char py_init_script[] = "sys-init.py";
+static const char py_init_script[] = "site_init.py";
 
 void PyFF_ProcessInitFiles(void) {
     static int done = false;
