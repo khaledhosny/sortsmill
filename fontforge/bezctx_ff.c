@@ -11,7 +11,6 @@
 #endif
 #include <math.h>
 
-
 typedef struct {
     bezctx base;
     int is_open;
