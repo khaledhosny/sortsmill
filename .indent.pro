@@ -2,7 +2,8 @@
 //
 // .indent.pro file for GNU Indent.
 
---gnu-style
+--k-and-r-style
+//--dont-format-comments
 
 -T FILE
 -T AnchorPoint
