@@ -161,12 +161,6 @@ FONTFORGE_ARG_ENABLE([tile-path],
                 [enable a 'tile path' command (a variant of 'expand stroke')])],
         [FONTFORGE_CONFIG_TILEPATH])
 
-FONTFORGE_ARG_ENABLE([gb12345],
-        [AS_HELP_STRING([--enable-gb12345],
-                [build the GB12345 encoding plugin])],
-        [FONTFORGE_CONFIG_GB12345])
-AM_CONDITIONAL([PLUGIN_GB12345],[test x"${i_do_have_gb12345}" = xyes])
-
 FONTFORGE_ARG_ENABLE([maintainer-tools],
         [AS_HELP_STRING([--enable-maintainer-tools],
                 [build programs used normally only by fontforge maintainers and developers])],
@@ -327,7 +321,6 @@ Summary of optional features:
   capslock for alt   ${i_do_have_capslock_for_alt}
   raw points mode    ${i_do_have_capslock_for_alt}
   tile path          ${i_do_have_tile_path}
-  gb12345 encoding   ${i_do_have_gb12345}
 
 Summary of optional dependencies:
 

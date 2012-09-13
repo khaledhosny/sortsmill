@@ -114,11 +114,8 @@ nodist_libfontforge_la_SOURCES = libstamp.c
 EXTRA_libfontforge_la_SOURCES = splinerefigure.c
 
 libfontforge_la_CPPFLAGS = $(AM_CPPFLAGS)
-libfontforge_la_LIBADD = splinerefigure.lo $(LIBADD)
-
-if PLUGIN_GB12345
-libfontforge_la_LIBADD += -dlopen $(top_builddir)/plugins/gb12345.la
-endif PLUGIN_GB12345
+libfontforge_la_LIBADD = splinerefigure.lo $(LIBADD) \
+	-dlopen $(top_builddir)/plugins/gb12345.la
 
 # Using -release instead of -version-info seems appropriate in the
 # absence of a well defined ABI.
