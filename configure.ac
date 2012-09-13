@@ -31,26 +31,29 @@
 AC_PREREQ([2.68])
 AC_INIT([sortsmill-fontforge],[2.0.0_alpha1],[https://github.com/sortsmill/fontforge/issues])
 AC_CONFIG_SRCDIR([Unicode/ArabicForms.c])
-AC_CONFIG_MACRO_DIR([m4])
-AC_CONFIG_AUX_DIR([config])
-AC_CONFIG_TESTDIR([tests],[fontforge])
-AC_CANONICAL_BUILD
-AC_CANONICAL_HOST
-AC_CONFIG_HEADERS([inc/config.h])
+
+AC_CONFIG_MACRO_DIR([m4])          dnl Where autoconf scripts go.
+AC_CONFIG_AUX_DIR([config])        dnl Where things like install-sh go.
+AC_CONFIG_TESTDIR([tests],[fontforge]) dnl Test suite setup.
+AC_CANONICAL_BUILD                 dnl On what platform are we compiling?
+AC_CANONICAL_HOST                  dnl For what platform are we compiling?
+AC_CONFIG_HEADERS([inc/config.h])  dnl Where autoheader puts macros.
+AC_USE_SYSTEM_EXTENSIONS           dnl Define such macros as _GNU_SOURCE.
+
 AM_INIT_AUTOMAKE([subdir-objects -Wall -Wno-portability -Werror])
 AM_MAINTAINER_MODE([enable])
-AC_USE_SYSTEM_EXTENSIONS
 
 # I am going to try enabling silent-rules by default, so builders are
 # more likely to see warnings. Use --disable-silent-rules or "make
 # V=1" if you need to see the rules.
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 
-m4_ifdef([AM_PROG_AR],[AM_PROG_AR])
-LT_CONFIG_LTDL_DIR([libltdl])
-LT_INIT([dlopen])
-LTDL_INIT([nonrecursive])
-FONTFORGE_CHECK_LTDL_VERSION
+# Libtool-related configuration.
+m4_ifdef([AM_PROG_AR],[AM_PROG_AR]) dnl Support for Microsoft linker.
+LT_CONFIG_LTDL_DIR([libltdl])       dnl Where libltdl source code goes.
+LT_INIT([dlopen])                   dnl Initialize libtool.
+LTDL_INIT([nonrecursive])           dnl Initialize libltdl.
+FONTFORGE_CHECK_LTDL_VERSION        dnl Check that libltdl is recent enough.
 
 AC_PATH_XTRA
 i_do_have_x="${have_x}"
