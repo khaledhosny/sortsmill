@@ -4,6 +4,7 @@ syntax: glob
 build
 build.*
 
+.gitignore
 aclocal.m4
 configure
 config.log
