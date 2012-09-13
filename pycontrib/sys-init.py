@@ -1,4 +1,3 @@
-# Copyright (C) 2000-2012 by George Williams
 # Copyright (C) 2012 by Barry Schwartz
 #
 # Redistribution and use in source and binary forms, with or without
@@ -25,9 +24,25 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-include $(top_srcdir)/mk/layout.am
+import ffContrib.excepthook
+import os
 
-dist_pkgpythondata_SCRIPTS = sys-init.py
-dist_pycontrib_SCRIPTS = __init__.py excepthook.py
+# FIXME: Set this in the configure script or make invocation.
+user_config_dir = '.FontForge'
 
--include $(top_srcdir)/git.mk
+user_init_file = 'user-init.py'
+
+try:
+    home = os.environ['HOME']
+    user_init = os.path.join(home, user_config_dir, user_init_file)
+except:
+    home = None
+    user_init = None
+
+if user_init is not None:
+    try:
+        execfile(user_init)
+    except:
+        pass
+
+

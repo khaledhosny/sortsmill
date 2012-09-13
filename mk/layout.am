@@ -49,8 +49,11 @@ htdocsdir = ${docdir}$(HTDOCS_SUBDIR)
 # Where pkg-config files go.
 pkgconfigdir = ${libdir}/pkgconfig
 
+# Where sys-init.py goes.
+pkgpythondatadir = ${pkgdatadir}/python
+
 # Where contributed Python scripts go.
-pkgpythondatadir = $(pkgdatadir)/python
+pycontribdir = ${pythondir}/ffContrib
 
 # Where plugin modules go.
 plugindir = ${pkglibdir}/plugins

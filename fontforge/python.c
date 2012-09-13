@@ -17526,51 +17526,72 @@ void PyFF_FreeSC(SplineChar *sc) {
     Py_XDECREF( (PyObject *) (sc->python_temporary));
 }
 
-static void LoadFilesInPythonInitDir(char *dir) {
-    DIR *diro;
-    struct dirent *ent;
-    char buffer[1025];
+//static void LoadFilesInPythonInitDir(char *dir) {
+//    DIR *diro;
+//    struct dirent *ent;
+//    char buffer[1025];
+//
+//    diro = opendir(dir);
+//    if ( diro==NULL )		/* It's ok not to have any python init scripts */
+//return;
+//
+//    while ( (ent = readdir(diro))!=NULL ) {
+//	char *pt = strrchr(ent->d_name,'.');
+//	if ( pt==NULL )
+//    continue;
+//	if ( strcmp(pt,".py")==0 ) {
+//	    sprintf( buffer, "%s/%s", dir, ent->d_name );
+//	    PyObject *fp = PyFile_FromString(buffer,"rb");
+//	    if ( fp==NULL )
+//    continue;
+//	    PyRun_SimpleFile(PyFile_AsFile(fp),buffer);
+//	}
+//    }
+//    closedir(diro);
+//}
 
-    diro = opendir(dir);
-    if ( diro==NULL )		/* It's ok not to have any python init scripts */
-return;
-
-    while ( (ent = readdir(diro))!=NULL ) {
-	char *pt = strrchr(ent->d_name,'.');
-	if ( pt==NULL )
-    continue;
-	if ( strcmp(pt,".py")==0 ) {
-	    sprintf( buffer, "%s/%s", dir, ent->d_name );
-	    PyObject *fp = PyFile_FromString(buffer,"rb");
-	    if ( fp==NULL )
-    continue;
-	    PyRun_SimpleFile(PyFile_AsFile(fp),buffer);
-	}
-    }
-    closedir(diro);
-}
+static const char py_init_script[] = "sys-init.py";
 
 void PyFF_ProcessInitFiles(void) {
     static int done = false;
-    char buffer[1025], *pt;
-
-    if ( done )
-return;
-    done = true;
-
-    pt = getFontForgeShareDir();
-    if ( pt!=NULL ) {
-	snprintf(buffer,sizeof(buffer),"%s/python", pt );
-	/* Load the system directory */
-	LoadFilesInPythonInitDir( buffer );
-    }
-    /* Load the user directory */
-    if ( getPfaEditDir(buffer)!=NULL ) {
-	strcpy(buffer,getPfaEditDir(buffer));
-	strcat(buffer,"/python");
-	LoadFilesInPythonInitDir(buffer);
+    if (!done) {
+	// FIXME: We need to make sure this "share dir" is not being
+	// broken by the prefs code.
+	char *share_dir = getFontForgeShareDir();
+	if (share_dir != NULL) {
+	    char init_script[strlen(share_dir) + strlen(py_init_script) + 20];
+	    strcpy(init_script, share_dir);
+	    strcat(init_script, "/python/");
+	    strcat(init_script, py_init_script);
+	    PyObject *fp = PyFile_FromString(init_script, "rb");
+	    if (fp != NULL)
+		PyRun_SimpleFile(PyFile_AsFile(fp), init_script);
+	}
+	done = true;
     }
 }
+
+//void PyFF_ProcessInitFiles(void) {
+//    static int done = false;
+//    char buffer[1025], *pt;
+//
+//    if ( done )
+//return;
+//    done = true;
+//
+//    pt = getFontForgeShareDir();
+//    if ( pt!=NULL ) {
+//	snprintf(buffer,sizeof(buffer),"%s/python", pt );
+//	/* Load the system directory */
+//	LoadFilesInPythonInitDir( buffer );
+//    }
+//    /* Load the user directory */
+//    if ( getPfaEditDir(buffer)!=NULL ) {
+//	strcpy(buffer,getPfaEditDir(buffer));
+//	strcat(buffer,"/python");
+//	LoadFilesInPythonInitDir(buffer);
+//    }
+//}
 
 void PyFF_CallDictFunc(PyObject *dict,char *key,char *argtypes, ... ) {
     PyObject *func, *arglist, *result;

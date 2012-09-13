@@ -29,7 +29,13 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 AC_PREREQ([2.68])
-AC_INIT([sortsmill-fontforge],[2.0.0_alpha1],[https://github.com/sortsmill/fontforge/issues])
+#AC_INIT([sortsmill-fontforge],[2.0.0_alpha1],[https://github.com/sortsmill/fontforge/issues])
+
+# FIXME: Go through the code and replace explicit ‘fontforge’ with the
+# configured package name, where appropriate. For now, call the
+# package fontforge.
+AC_INIT([fontforge],[2.0.0_alpha1],[https://github.com/sortsmill/fontforge/issues])
+
 AC_CONFIG_SRCDIR([Unicode/ArabicForms.c])
 
 AC_CONFIG_MACRO_DIR([m4])          dnl Where autoconf scripts go.

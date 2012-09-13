@@ -48,17 +48,17 @@ include libltdl/Makefile.inc
 
 #--------------------------------------------------------------------------
 
-SUBDIRS = inc
-SUBDIRS += Unicode gutils
+SUBDIRS = inc Unicode gutils
 
 if GRAPHICAL_USER_INTERFACE
 SUBDIRS += gdraw
 endif GRAPHICAL_USER_INTERFACE
 
-SUBDIRS += plugins
-SUBDIRS += fontforge po htdocs pycontrib
-SUBDIRS += cidmap
-SUBDIRS += tests
+SUBDIRS += plugins fontforge po htdocs cidmap tests
+
+if PYTHON_SCRIPTING
+SUBDIRS += pycontrib
+endif PYTHON_SCRIPTING
 
 if PYTHON_EXTENSION
 SUBDIRS += pyhook
