@@ -259,13 +259,14 @@ enum window_attr_mask { wam_events=0x2, wam_bordwidth=0x4,
 			wam_nocairo=0x200000, wam_verytransient=0x400000 };
 
 typedef struct gwindow_attrs {
-    enum window_attr_mask mask;
+//    enum window_attr_mask mask;
+    unsigned int mask;
     uint32 event_masks;			/* (1<<et_char) | (1<<et_mouseup) etc */
     int16 border_width;
     Color border_color;			/* Color_UNKNOWN if unspecified */
     Color background_color;
     GCursor cursor;
-	/* Remainder is only for top level windows */
+    /* Remainder is only for top level windows */
     const unichar_t *window_title;
     const unichar_t *icon_title;
     struct gwindow *icon;		/* A bitmap pixmap, or NULL */
@@ -492,8 +493,8 @@ extern void GDrawGrabSelection(GWindow w,enum selnames sel);
 extern void GDrawAddSelectionType(GWindow w,enum selnames sel,char *type,
 	void *data,int32 cnt,int32 unitsize,void *(*gendata)(void *,int32 *len),
 	void (*freedata)(void *));
-extern void *GDrawRequestSelection(GWindow w,enum selnames sn, char *typename, int32 *len);
-extern int GDrawSelectionHasType(GWindow w,enum selnames sn, char *typename);
+extern void *GDrawRequestSelection(GWindow w,enum selnames sn, char *typename_, int32 *len);
+extern int GDrawSelectionHasType(GWindow w,enum selnames sn, char *typename_);
 extern void GDrawBindSelection(GDisplay *disp,enum selnames sel, char *atomname);
 extern int GDrawSelectionOwned(GDisplay *disp,enum selnames sel);
 extern void GDrawPropertyToSelectionOwner(GDisplay *disp,enum selnames sel,

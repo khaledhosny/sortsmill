@@ -252,7 +252,6 @@ FONTFORGE_COMPILER_FLAGS([WARNING_CFLAGS],
         [-Wunused -Wreturn-type
          -Wparentheses -Wformat -Wchar-subscripts
          -Wno-unused-but-set-variable -Wno-unused-result
-         -Wc++-compat
          -Werror=missing-prototypes
          -Werror=implicit])
 

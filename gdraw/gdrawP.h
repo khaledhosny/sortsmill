@@ -227,8 +227,8 @@ struct displayfuncs {
     void (*addSelectionType)(GWindow w,enum selnames sel,char *type,
 	void *data,int32 cnt,int32 unitsize,void *(*gendata)(void *,int32 *len),
 	void (*freedata)(void *));
-    void *(*requestSelection)(GWindow w,enum selnames sn, char *typename, int32 *len);
-    int (*selectionHasType)(GWindow w,enum selnames sn, char *typename);
+    void *(*requestSelection)(GWindow w,enum selnames sn, char *typename_, int32 *len);
+    int (*selectionHasType)(GWindow w,enum selnames sn, char *typename_);
     void (*bindSelection)(GDisplay *disp,enum selnames sn, char *atomname);
     int (*selectionHasOwner)(GDisplay *disp,enum selnames sn);
 

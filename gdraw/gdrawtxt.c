@@ -165,12 +165,12 @@ static struct family_info *CreateFamily(FState *fs, unichar_t *requested_familie
 
     cnt = CountFamilyNames(requested_families);
 
-    fonts = galloc((cnt+1) * sizeof(struct font_name **));
+    fonts = (struct font_name **) galloc((cnt+1) * sizeof(struct font_name **));
     if ( fonts==NULL )
 return( NULL );
     fonts[cnt]=NULL;
     ft = FindFonts(fs,requested_families,fonts);
-    fam = galloc(sizeof(struct family_info));
+    fam = (struct family_info *) galloc(sizeof(struct family_info));
     if ( fam==NULL ) {
 	gfree(fonts);
 return( NULL );
@@ -190,22 +190,22 @@ return( NULL );
 return( fam );
 }
 
-static int FindFontDiff(struct font_data *try,FontRequest *rq) {
+static int FindFontDiff(struct font_data *try_,FontRequest *rq) {
     int diff, temp;
     /* this routine is inlined in FindBest */
 
-    if ( try->configuration_error )
+    if ( try_->configuration_error )
 return( 0x7ffffff );
-    if (( diff = try->weight - rq->weight )<0 ) diff = -diff;
+    if (( diff = try_->weight - rq->weight )<0 ) diff = -diff;
     diff *= 2;
-    if ( (try->style & fs_italic) != ( rq->style & fs_italic )) diff += 500;
-    if ( (try->style & fs_smallcaps) != ( rq->style & fs_smallcaps )) diff += 200;
-    if ( (try->style & fs_condensed) != ( rq->style & fs_condensed )) diff += 200;
-    if ( (try->style & fs_extended) != ( rq->style & fs_extended )) diff += 200;
-    if ( try->is_scalable )
+    if ( (try_->style & fs_italic) != ( rq->style & fs_italic )) diff += 500;
+    if ( (try_->style & fs_smallcaps) != ( rq->style & fs_smallcaps )) diff += 200;
+    if ( (try_->style & fs_condensed) != ( rq->style & fs_condensed )) diff += 200;
+    if ( (try_->style & fs_extended) != ( rq->style & fs_extended )) diff += 200;
+    if ( try_->is_scalable )
 	temp = 0;
-    else if ( (temp = try->point_size - rq->point_size)<0 ) temp = -temp;
-    if ( try->is_scalable || try->was_scaled )
+    else if ( (temp = try_->point_size - rq->point_size)<0 ) temp = -temp;
+    if ( try_->is_scalable || try_->was_scaled )
 	diff += 200;		/* A non-scaled font is better than a scaled one */
     diff += temp*200;
 return( diff );
@@ -213,24 +213,24 @@ return( diff );
 
 static struct font_data *FindBest(GDisplay *gdisp,struct font_name *fn,FontRequest *rq,int enc,
 	struct font_data *best, int *best_pos, int *best_val, int i) {
-    struct font_data *try;
+    struct font_data *try_;
     int diff, temp;
 
     if ( fn==NULL )
 return( best );
-    for ( try = fn->data[enc]; try!=NULL; try = try->next ) {
+    for ( try_ = fn->data[enc]; try_!=NULL; try_ = try_->next ) {
 	/* this is an inline version of FindFontDiff */
-	if ( try->configuration_error )
+	if ( try_->configuration_error )
     continue;
-	if (( diff = try->weight - rq->weight )<0 ) diff = -diff;
-	if ( (try->style & fs_italic) != ( rq->style & fs_italic )) diff += 500;
-	if ( (try->style & fs_smallcaps) != ( rq->style & fs_smallcaps )) diff += 200;
-	if ( (try->style & fs_condensed) != ( rq->style & fs_condensed )) diff += 200;
-	if ( (try->style & fs_extended) != ( rq->style & fs_extended )) diff += 200;
-	if ( try->is_scalable ) {
+	if (( diff = try_->weight - rq->weight )<0 ) diff = -diff;
+	if ( (try_->style & fs_italic) != ( rq->style & fs_italic )) diff += 500;
+	if ( (try_->style & fs_smallcaps) != ( rq->style & fs_smallcaps )) diff += 200;
+	if ( (try_->style & fs_condensed) != ( rq->style & fs_condensed )) diff += 200;
+	if ( (try_->style & fs_extended) != ( rq->style & fs_extended )) diff += 200;
+	if ( try_->is_scalable ) {
 	    temp = 0;
-	} else if ( (temp = try->point_size - rq->point_size)<0 ) temp = -temp;
-	if ( try->is_scalable || try->was_scaled ) {
+	} else if ( (temp = try_->point_size - rq->point_size)<0 ) temp = -temp;
+	if ( try_->is_scalable || try_->was_scaled ) {
 	    diff += 200;		/* A non-scaled font is better than a scaled one */
 	    if ( !gdisp->fontstate->allow_scaling )
     continue;
@@ -238,7 +238,7 @@ return( best );
 	diff += temp*200;
 	/* End inline version */
 	if ( diff+(i-*best_pos)*100< *best_val ) {
-	    best = try;
+	    best = try_;
 	    *best_val = diff;
 	    *best_pos = i;
 	}
@@ -246,13 +246,13 @@ return( best );
     if ( best==NULL )
 return( NULL );
 
-    try = best;
+    try_ = best;
     if ( best->is_scalable )
-	try = (gdisp->funcs->scaleFont)(gdisp,best,rq);
+	try_ = (gdisp->funcs->scaleFont)(gdisp,best,rq);
     else if ( best->style!=rq->style || best->weight!=rq->weight )
-	try = (gdisp->funcs->stylizeFont)(gdisp,best,rq);
-    if ( try!=best && try!=NULL ) {
-	best = try;
+	try_ = (gdisp->funcs->stylizeFont)(gdisp,best,rq);
+    if ( try_!=best && try_!=NULL ) {
+	best = try_;
 	best->was_scaled = true;
 	best->next = fn->data[enc]; fn->data[enc] = best;
 	*best_val = FindFontDiff(best,rq);
@@ -352,7 +352,7 @@ return(NULL);
 	if ( fd->point_size==ps && fd->screen_font==screen_font )
 return( fd );
 
-    fd = galloc(sizeof(struct font_data));
+    fd = (struct font_data *) galloc(sizeof(struct font_data));
     *fd = *screen_font;
     fd->next = fonts->StolenFromScreen;
     fonts->StolenFromScreen = fd;
@@ -392,7 +392,7 @@ return;
     }
     if ( sfi->unifonts!=NULL ) {
 	if ( fi->unifonts==NULL ) {
-	    fi->unifonts = gcalloc(fam_name_cnt+ft_max,sizeof(struct font_data *));
+	    fi->unifonts = (struct font_data **) gcalloc(fam_name_cnt+ft_max,sizeof(struct font_data *));
 	    for ( i=0; i<fam_name_cnt+ft_max; ++i ) {
 		if ( fi->unifonts[i]==NULL && sfi->unifonts[i]!=NULL )
 		    fi->unifonts[i] = MakeFontFromScreen(disp,rq->point_size,NULL,NULL,0,sfi->unifonts[i]);
@@ -445,7 +445,7 @@ static FontInstance *_GDrawBuildFontInstance(GDisplay *disp, FontRequest *rq,
     /*  we expect other fonts to be complete (ie. supply all of their charset) */
     /*  so we don't need alternates for them */
     if ( main[em_unicode]!=NULL &&
-	    (unifonts = gcalloc(fam->name_cnt+ft_max,sizeof(struct font_data *)))!=NULL )
+	 (unifonts = (struct font_data **) gcalloc(fam->name_cnt+ft_max,sizeof(struct font_data *)))!=NULL )
 	PickUnicodeFonts(disp,unifonts,fam,rq );
 
     if ( fi==NULL ) {

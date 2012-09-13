@@ -130,8 +130,8 @@ enum box_flags {
     box_gradient_bg = 0x80
     };
 typedef struct gbox {
-    unsigned char border_type;	
-    unsigned char border_shape;	
+    enum border_type border_type;
+    enum border_shape border_shape;	
     unsigned char border_width;	/* In points */
     unsigned char padding;	/* In points */
     unsigned char rr_radius;	/* In points */
@@ -209,7 +209,8 @@ typedef struct ggadgetdata {
 	Color col;
 	int radiogroup;
     } u;
-    enum gg_flags flags;
+//    enum gg_flags flags;
+    unsigned int flags;
     const unichar_t *popup_msg;		/* Brief help message */
     GGadgetHandler handle_controlevent;
 } GGadgetData;

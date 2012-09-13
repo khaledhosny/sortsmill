@@ -518,7 +518,7 @@ void _GWidget_SetPopupOwner(GGadget *g);
 void _GWidget_ClearPopupOwner(GGadget *g);
 
 extern void _GGadgetCopyDefaultBox(GBox *box);
-extern FontInstance *_GGadgetInitDefaultBox(char *class,GBox *box,FontInstance *deffont);
+extern FontInstance *_GGadgetInitDefaultBox(char *class_,GBox *box,FontInstance *deffont);
 extern void GGadgetInit(void);
 extern void _ggadget_underlineMnemonic(GWindow gw,int32 x,int32 y,unichar_t *label,
 	unichar_t mneumonic, Color fg,int ymax);

@@ -693,12 +693,12 @@ void GDrawAddSelectionType(GWindow w,enum selnames sel,char *type,
     (w->display->funcs->addSelectionType)(w,sel,type,data,cnt,unitsize,gendata,freedata);
 }
 
-void *GDrawRequestSelection(GWindow w,enum selnames sn, char *typename, int32 *len) {
-return( (w->display->funcs->requestSelection)(w,sn,typename,len));
+void *GDrawRequestSelection(GWindow w,enum selnames sn, char *typename_, int32 *len) {
+return( (w->display->funcs->requestSelection)(w,sn,typename_,len));
 }
 
-int GDrawSelectionHasType(GWindow w,enum selnames sn, char *typename) {
-return( (w->display->funcs->selectionHasType)(w,sn,typename));
+int GDrawSelectionHasType(GWindow w,enum selnames sn, char *typename_) {
+return( (w->display->funcs->selectionHasType)(w,sn,typename_));
 }
 
 void GDrawBindSelection(GDisplay *disp,enum selnames sel, char *atomname) {

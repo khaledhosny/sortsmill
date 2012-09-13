@@ -95,7 +95,7 @@ void _GIO_PostSuccess(GIOControl *gc) {
 }
 
 static void _GIO_AuthorizationWrapper(void *d) {
-    GIOControl *gc = d;
+    GIOControl *gc = (GIOControl *) d;
 
     (_GIO_stdfuncs.getauth)(gc);
     pthread_mutex_lock(&gc->threaddata->mutex);
