@@ -39,9 +39,7 @@
 #endif
 #include <stdlib.h>		/* for free */
 #include <limits.h>
-
-#define true 1
-#define false 0
+#include <stdbool.h>
 
 #define forever for (;;)
 
