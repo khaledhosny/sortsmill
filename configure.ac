@@ -194,8 +194,9 @@ AC_SEARCH_LIBS([cos],[m])
 FONTFORGE_CONFIG_X_LIBRARIES
 PKG_CHECK_MODULES([ZLIB],[zlib])
 
-# we delegate our text layout to pango, so it is not optional.
-PKG_CHECK_MODULES([PANGO],[pango >= 1.10 pangoxft])
+if test x"${i_do_have_gui}" = xyes; then
+   PKG_CHECK_MODULES([PANGO],[pango >= 1.10 pangoxft])
+fi
 
 FONTFORGE_ARG_WITH_CAIRO
 FONTFORGE_ARG_WITH_FREETYPE
