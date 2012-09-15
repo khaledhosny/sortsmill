@@ -1338,7 +1338,7 @@ static void _InterpretPS(IO *wrapper, EntityChar *ec, RetStack *rs) {
 			stack[sp++].u.str = copy("");
 		    else {
 			*gb.pt = '\0'; gb.pt = gb.base;
-			stack[sp++].u.str = copy(gb.base);
+			stack[sp++].u.str = copy((const char *) gb.base);
 		    }
 		}
 	    }
