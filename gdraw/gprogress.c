@@ -224,13 +224,14 @@ static void GProgressResInit(void) {
 }
 
 void GProgressStartIndicator(
-    int delay,			/* in tenths of seconds */
-    const unichar_t *win_title,	/* for the window decoration */
-    const unichar_t *line1,	/* First line of description */
-    const unichar_t *line2,	/* Second line */
-    int tot,			/* Number of sub-entities in the operation */
-    int stages			/* Number of stages, each processing tot sub-entities */
-) {
+    int delay,	// in tenths of seconds
+    const unichar_t *win_title, // for the window decoration
+    const unichar_t *line1, // First line of description
+    const unichar_t *line2, // Second line
+    int tot, // Number of sub-entities in the operation
+    int stages // Number of stages, each processing tot sub-entities
+    )
+{
     GProgress *new;
     FontRequest rq;
     GWindowAttrs wattrs;
@@ -241,84 +242,83 @@ void GProgressStartIndicator(
     struct timeval tv;
     GTextInfo label;
 
-    if ( screen_display==NULL )
-return;
+    if ( screen_display != NULL ) {
+	if ( !progress_init )
+	    GProgressResInit();
+	new = gcalloc(1,sizeof(GProgress));
+	new->line1 = u_copy(line1);
+	new->line2 = u_copy(line2);
+	new->tot = tot;
+	new->stages = stages;
+	new->prev = current;
 
-    if ( !progress_init )
-	GProgressResInit();
-    new = gcalloc(1,sizeof(GProgress));
-    new->line1 = u_copy(line1);
-    new->line2 = u_copy(line2);
-    new->tot = tot;
-    new->stages = stages;
-    new->prev = current;
+	root = GDrawGetRoot(NULL);
+	if ( progress_font == NULL ) {
+	    memset(&rq,'\0',sizeof(rq));
+	    rq.utf8_family_name = MONO_UI_FAMILIES;
+	    rq.point_size = 12;
+	    rq.weight = 400;
+	    progress_font = GDrawAttachFont(root,&rq);
+	}
+	GDrawWindowFontMetrics(root,new->font = progress_font,&as,&ds,&ld);
 
-    root = GDrawGetRoot(NULL);
-    if ( progress_font == NULL ) {
-	memset(&rq,'\0',sizeof(rq));
-	rq.utf8_family_name = MONO_UI_FAMILIES;
-	rq.point_size = 12;
-	rq.weight = 400;
-	progress_font = GDrawAttachFont(root,&rq);
-    }
-    GDrawWindowFontMetrics(root,new->font = progress_font,&as,&ds,&ld);
+	if ( new->line1!=NULL )
+	    new->l1width = GDrawGetTextWidth(root,new->line1,-1);
+	if ( new->line2!=NULL )
+	    new->l2width = GDrawGetTextWidth(root,new->line2,-1);
+	new->l1y = GDrawPointsToPixels(root,5) + as;
+	new->l2y = new->l1y + as+ds;
+	new->boxy = new->l2y + as+ds;
+	pos.width = (new->l1width>new->l2width)?new->l1width:new->l2width;
+	if ( pos.width<GDrawPointsToPixels(root,100) )
+	    pos.width = GDrawPointsToPixels(root,100);
+	pos.width += 2 * GDrawPointsToPixels(root,10);
+	pos.height = new->boxy + GDrawPointsToPixels(root,44);
+	new->width = pos.width;
 
-    if ( new->line1!=NULL )
-	new->l1width = GDrawGetTextWidth(root,new->line1,-1);
-    if ( new->line2!=NULL )
-	new->l2width = GDrawGetTextWidth(root,new->line2,-1);
-    new->l1y = GDrawPointsToPixels(root,5) + as;
-    new->l2y = new->l1y + as+ds;
-    new->boxy = new->l2y + as+ds;
-    pos.width = (new->l1width>new->l2width)?new->l1width:new->l2width;
-    if ( pos.width<GDrawPointsToPixels(root,100) )
-	pos.width = GDrawPointsToPixels(root,100);
-    pos.width += 2 * GDrawPointsToPixels(root,10);
-    pos.height = new->boxy + GDrawPointsToPixels(root,44);
-    new->width = pos.width;
-
-    memset(&wattrs,0,sizeof(wattrs));
-    wattrs.mask = wam_events|wam_cursor|(win_title!=NULL?wam_wtitle:0)|
+	memset(&wattrs,0,sizeof(wattrs));
+	wattrs.mask = wam_events|wam_cursor|(win_title!=NULL?wam_wtitle:0)|
 	    wam_centered|wam_restrict|wam_redirect|wam_isdlg|wam_backcol;
-    wattrs.event_masks = ~(1<<et_charup);
-    wattrs.cursor = ct_watch;
-    wattrs.window_title = u_copy(win_title);
-    wattrs.centered = true;
-    wattrs.restrict_input_to_me = true;
-    wattrs.redirect_chars_to_me = true;
-    wattrs.is_dlg = true;
-    wattrs.redirect_from = NULL;
-    wattrs.background_color = progress_background;
-    pos.x = pos.y = 0;
-    new->gw = GDrawCreateTopWindow(NULL,&pos,progress_eh,new,&wattrs);
-    free((void *) wattrs.window_title);
+	wattrs.event_masks = ~(1<<et_charup);
+	wattrs.cursor = ct_watch;
+	wattrs.window_title = u_copy(win_title);
+	wattrs.centered = true;
+	wattrs.restrict_input_to_me = true;
+	wattrs.redirect_chars_to_me = true;
+	wattrs.is_dlg = true;
+	wattrs.redirect_from = NULL;
+	wattrs.background_color = progress_background;
+	pos.x = pos.y = 0;
+	new->gw = GDrawCreateTopWindow(NULL,&pos,progress_eh,new,&wattrs);
+	free((void *) wattrs.window_title);
 
-    memset(&gd,'\0',sizeof(gd)); memset(&label,'\0',sizeof(label));
-    gd.pos.width = GDrawPointsToPixels(new->gw,50);
-    gd.pos.x = pos.width-gd.pos.width-10;
-    gd.pos.y = pos.height-GDrawPointsToPixels(new->gw,29);
-    gd.flags = gg_visible | gg_enabled | gg_pos_in_pixels | gg_pos_use0;
-    gd.mnemonic = 'S';
-    label.text = (unichar_t *) _("_Stop");
-    label.text_is_1byte = true;
-    label.text_in_resource = true;
-    gd.label = &label;
-    GButtonCreate( new->gw, &gd, NULL);
+	memset(&gd,'\0',sizeof(gd)); memset(&label,'\0',sizeof(label));
+	gd.pos.width = GDrawPointsToPixels(new->gw,50);
+	gd.pos.x = pos.width-gd.pos.width-10;
+	gd.pos.y = pos.height-GDrawPointsToPixels(new->gw,29);
+	gd.flags = gg_visible | gg_enabled | gg_pos_in_pixels | gg_pos_use0;
+	gd.mnemonic = 'S';
+	label.text = (unichar_t *) _("_Stop");
+	label.text_is_1byte = true;
+	label.text_in_resource = true;
+	gd.label = &label;
+	GButtonCreate( new->gw, &gd, NULL);
 
-    /* If there's another progress indicator up, it will not move and ours */
-    /*  won't be visible if we have a delay, so force delay to 0 here */
-    if ( current!=NULL ) delay = 0;
-    gettimeofday(&tv,NULL);
-    new->start_time = tv;
-    new->start_time.tv_usec += (delay%10)*100000;
-    new->start_time.tv_sec += delay/10;
-    if ( new->start_time.tv_usec >= 1000000 ) {
-	++new->start_time.tv_sec;
-	new->start_time.tv_usec -= 1000000;
+	/* If there's another progress indicator up, it will not move and ours */
+	/*  won't be visible if we have a delay, so force delay to 0 here */
+	if ( current!=NULL ) delay = 0;
+	gettimeofday(&tv,NULL);
+	new->start_time = tv;
+	new->start_time.tv_usec += (delay%10)*100000;
+	new->start_time.tv_sec += delay/10;
+	if ( new->start_time.tv_usec >= 1000000 ) {
+	    ++new->start_time.tv_sec;
+	    new->start_time.tv_usec -= 1000000;
+	}
+
+	current = new;
+	GProgressTimeCheck();
     }
-
-    current = new;
-    GProgressTimeCheck();
 }
 
 void GProgressStartIndicatorR( int delay, int win_titler, int line1r, int line2r,

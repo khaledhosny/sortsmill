@@ -1105,20 +1105,51 @@ int32 _GXPDraw_DoText(GWindow w, int32 x, int32 y,
 return(width);
 }
 
-void _GXPDraw_FontMetrics(GWindow gw, GFont *fi, int *as, int *ds, int *ld) {
+//-------------------------------------------------------------------------
+
+static PangoFont *load_font_without_cairo(GWindow gw, GFont *fi)
+{
     GXDisplay *gdisp = ((GXWindow) gw)->display;
+    return pango_font_map_load_font(gdisp->pango_fontmap,
+				    gdisp->pango_context,
+				    fi->pango_fd);
+}
+
+// FIXME: Change these _NO_LIBCAIRO, etc., macros to HAVE_CAIRO, etc.
+#ifndef _NO_LIBCAIRO
+
+static PangoFont *load_font_with_cairo(GWindow gw, GFont *fi)
+{
+    GXDisplay *gdisp = ((GXWindow) gw)->display;
+    return pango_font_map_load_font(gdisp->pangoc_fontmap,
+				    gdisp->pangoc_context,
+				    fi->pangoc_fd);
+}
+
+static inline PangoFont *load_font(GWindow gw, GFont *fi)
+{
+    return (gw->usecairo) ?
+	load_font_with_cairo(gw, fi) :
+	load_font_without_cairo(gw, fi);
+}
+
+#else // do not have cairo
+
+static inline PangoFont *load_font(GWindow gw, GFont *fi)
+{
+    return load_font_without_cairo(gw, fi);
+}
+
+#endif // do not have cairo
+
+//-------------------------------------------------------------------------
+
+void _GXPDraw_FontMetrics(GWindow gw, GFont *fi, int *as, int *ds, int *ld) {
     PangoFont *pfont;
     PangoFontMetrics *fm;
 
     _GXPDraw_configfont(gw, fi);
-# if !defined(_NO_LIBCAIRO)
-    if ( gw->usecairo )
-	pfont = pango_font_map_load_font(gdisp->pangoc_fontmap,gdisp->pangoc_context,
-		fi->pangoc_fd);
-    else
-#endif
-	pfont = pango_font_map_load_font(gdisp->pango_fontmap,gdisp->pango_context,
-		fi->pango_fd);
+    pfont = load_font(gw, fi);
     fm = pango_font_get_metrics(pfont,NULL);
     *as = pango_font_metrics_get_ascent(fm)/PANGO_SCALE;
     *ds = pango_font_metrics_get_descent(fm)/PANGO_SCALE;
