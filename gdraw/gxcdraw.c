@@ -1083,7 +1083,7 @@ int32 _GXPDraw_DoText(GWindow w, int32 x, int32 y,
 return(width);
 }
 
-static inline PangoFont *load_font(GWindow gw, GFont *fi)
+static PangoFont *load_font(GWindow gw, GFont *fi)
 {
     GXDisplay *gdisp = ((GXWindow) gw)->display;
     PangoFont *pfont;
