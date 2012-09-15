@@ -3201,7 +3201,6 @@ static GMenuItem2 dummyall[] = {
 /* Builds up a menu containing all the anchor classes */
 static void aplistbuild(GWindow base, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     MetricsView *mv = (MetricsView *) GDrawGetUserData(base);
-    extern void GMenuItemArrayFree(GMenuItem *mi);
 
     GMenuItemArrayFree(mi->sub);
     mi->sub = NULL;
@@ -3260,7 +3259,6 @@ static GMenuItem2 lylist[] = {
 static void lylistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
     SplineFont *sf = mv->fv->b.sf;
-    extern void GMenuItemArrayFree(GMenuItem *mi);
     int ly;
     GMenuItem *sub;
 
@@ -3518,8 +3516,6 @@ static void vwlistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     int i, j, base, aselection;
     BDFFont *bdf;
     char buffer[60];
-    extern void GMenuItemArrayFree(GMenuItem *mi);
-    extern GMenuItem *GMenuItem2ArrayCopy(GMenuItem2 *mi, uint16 *cnt);
 
     aselection = false;
     for ( j=0; j<mv->glyphcnt; ++j )
@@ -4726,11 +4722,11 @@ MetricsView *MetricsViewCreate(FontView *fv,SplineChar *sc,BDFFont *bdf) {
 	rq.utf8_family_name = SANS_UI_FAMILIES;
 	rq.point_size = -12;
 	rq.weight = 400;
-	mvfont = GDrawInstanciateFont(GDrawGetDisplayOfWindow(gw),&rq);
+	mvfont = GDrawInstanciateFont(gw,&rq);
 	mvfont = GResourceFindFont("MetricsView.Font",mvfont);
     }
     mv->font = mvfont;
-    GDrawFontMetrics(mv->font,&as,&ds,&ld);
+    GDrawWindowFontMetrics(gw,mv->font,&as,&ds,&ld);
     mv->fh = as+ds; mv->as = as;
 
     pt = buf;
