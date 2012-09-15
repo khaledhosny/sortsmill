@@ -1919,12 +1919,10 @@ void _GXDraw_Image( GWindow _w, GImage *image, GRect *src, int32 x, int32 y) {
     GImage *blended = NULL;
     int depth;
 
-#ifndef _NO_LIBCAIRO
     if ( gw->usecairo ) {
 	_GXCDraw_Image(gw,image,src,x,y);
 return;
     }
-#endif
 
     _GXDraw_SetClipFunc(gdisp,gw->ggc);
     depth = gdisp->pixel_size;
@@ -2013,12 +2011,10 @@ return;
 void _GXDraw_TileImage( GWindow _w, GImage *image, GRect *src, int32 x, int32 y) {
     struct _GImage *base = image->list_len==0?image->u.image:image->u.images[0];
 
-#ifndef _NO_LIBCAIRO
     if ( _w->usecairo ) {
 	_GXCDraw_TileImage((GXWindow) _w,image,src,x,y);
 return;
     }
-#endif
     if ( src->x/base->width == (src->x+src->width-1)/base->width &&
 	    src->y/base->height == (src->y+src->height-1)/base->height ) {
 	/* Ok, the exposed area is entirely covered by one instance of the image*/
@@ -2131,12 +2127,10 @@ void _GXDraw_Glyph( GWindow _w, GImage *image, GRect *src, int32 x, int32 y) {
     struct _GImage *base = image->list_len==0?image->u.image:image->u.images[0];
     Color fg = -1;
 
-#ifndef _NO_LIBCAIRO
     if ( gw->usecairo ) {
 	_GXCDraw_Glyph(gw,image,src,x,y);
 return;
     }
-#endif
 
     if ( base->image_type==it_index )
 	fg = base->clut->clut[base->clut->clut_len-1];
@@ -2242,12 +2236,10 @@ void _GXDraw_ImageMagnified(GWindow _w, GImage *image, GRect *magsrc,
     GImage *temp;
     GRect src;
 
-#ifndef _NO_LIBCAIRO
     if ( gw->usecairo ) {
 	_GXCDraw_ImageMagnified(gw,image,magsrc,x,y,width,height);
 return;
     }
-#endif
 
     _GXDraw_SetClipFunc(gdisp,gw->ggc);
     viewable = gw->ggc->clip;

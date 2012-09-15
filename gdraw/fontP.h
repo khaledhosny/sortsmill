@@ -176,10 +176,8 @@ struct font_name {
 
 struct font_instance {
     FontRequest rq;		/* identification of this instance */
-    PangoFontDescription *pango_fd;
-#ifndef _NO_LIBCAIRO
+    PangoFontDescription *pango_fd; // FIXME: Is this going to be needed after Cairo is "forced"?
     PangoFontDescription *pangoc_fd;
-#endif
 };
 
 typedef struct font_state {

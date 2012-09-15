@@ -9433,13 +9433,10 @@ static void swlistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
 	    mi->ti.checked = cv->showdebugchanges;
 	  break;
 	  case MID_SnapOutlines:
-#ifndef _NO_LIBCAIRO
 	    if ( GDrawHasCairo(cv->v)&gc_alpha ) {
 		mi->ti.checked = cv->snapoutlines;
 		mi->ti.disabled = false;
-	    } else
-#endif
-	    {
+	    } else {
 		mi->ti.checked = true;
 		mi->ti.disabled = true;
 	    }

@@ -43,24 +43,22 @@
 # include <sys/utsname.h>
 #endif
 
-#ifdef _NO_LIBCAIRO
-static int usecairo = false;
-#else
+// FIXME: Get rid of this.
 static int usecairo = true;
-#endif
 
+// FIXME: Get rid of this.
 void GDrawEnableCairo(int on) {
     usecairo=on;
     /* Obviously, if we have no library, enabling it will do nothing */
 }
 
-#ifndef _NO_LIBCAIRO
 /* ************************************************************************** */
 /* ***************************** Cairo Library ****************************** */
 /* ************************************************************************** */
 
+// FIXME: Get rid of this.
 int _GXCDraw_hasCairo(void) {
-    return ( usecairo );
+    return true;
 }
 
 /* ************************************************************************** */
@@ -848,12 +846,6 @@ void _GXCDraw_Flush(GXWindow gw) {
 void _GXCDraw_DirtyRect(GXWindow gw,double x, double y, double width, double height) {
     cairo_surface_mark_dirty_rectangle(gw->cs,x,y,width,height);
 }
-#else
-int _GXCDraw_hasCairo(void) {
-return(false);
-}
-
-#endif	/* ! _NO_LIBCAIRO */
 
 /* ************************************************************************** */
 /* ***************************** Pango Library ****************************** */
@@ -861,9 +853,7 @@ return(false);
 
 #  define GTimer GTimer_GTK
 #  include <pango/pangoxft.h>
-#  if !defined(_NO_LIBCAIRO)
-#   include <pango/pangocairo.h>
-#  endif
+#  include <pango/pangocairo.h>
 #  undef GTimer
 
 /* ************************************************************************** */
@@ -890,7 +880,6 @@ static void my_xft_render_layout(XftDraw *xftw,XftColor *fgcol,
     pango_layout_iter_free(iter);
 }
 
-# if !defined(_NO_LIBCAIRO)
 /* Strangely the equivalent routine was not part of the pangocairo library */
 /* Oh there's pango_cairo_layout_path but that's more restrictive and probably*/
 /*  less efficient */
@@ -917,7 +906,6 @@ static void my_cairo_render_layout(cairo_t *cc, Color fg,
     } while ( pango_layout_iter_next_run(iter));
     pango_layout_iter_free(iter);
 }
-#endif
 
 /* ************************************************************************** */
 /* ****************************** Pango Window ****************************** */
@@ -925,21 +913,18 @@ static void my_cairo_render_layout(cairo_t *cc, Color fg,
 void _GXPDraw_NewWindow(GXWindow nw) {
     GXDisplay *gdisp = nw->display;
 
-# if !defined(_NO_LIBCAIRO)
     if ( nw->usecairo ) {
 	/* using pango through cairo is different from using it on bare X */
 	if ( gdisp->pangoc_context==NULL ) {
 	    gdisp->pangoc_fontmap = pango_cairo_font_map_get_default();
 	    gdisp->pangoc_context = pango_font_map_create_context(
-		    PANGO_FONT_MAP (gdisp->pangoc_fontmap));
+		PANGO_FONT_MAP (gdisp->pangoc_fontmap));
 	    pango_cairo_context_set_resolution(gdisp->pangoc_context,
-		    gdisp->res);
+					       gdisp->res);
 	}
 	if (nw->pango_layout==NULL)
 	    nw->pango_layout = pango_layout_new(gdisp->pangoc_context);
-    } else
-# endif
-    {
+    } else {
 	if ( gdisp->pango_context==NULL ) {
 	    gdisp->pango_fontmap = pango_xft_get_font_map(gdisp->display,gdisp->screen);
 	    gdisp->pango_context = pango_xft_get_context(gdisp->display,gdisp->screen);
@@ -949,7 +934,7 @@ void _GXPDraw_NewWindow(GXWindow nw) {
 	if ( nw->pango_layout==NULL )
 	    nw->pango_layout = pango_layout_new(gdisp->pango_context);
     }
-return;
+    return;
 }
 
 void _GXPDraw_DestroyWindow(GXWindow nw) {
@@ -967,11 +952,7 @@ void _GXPDraw_DestroyWindow(GXWindow nw) {
 /* ************************************************************************** */
 PangoFontDescription *_GXPDraw_configfont(GWindow gw, GFont *font) {
     PangoFontDescription *fd;
-#ifdef _NO_LIBCAIRO
-    PangoFontDescription **fdbase = &font->pango_fd;
-#else
     PangoFontDescription **fdbase = ((GXWindow) gw)->usecairo ? &font->pangoc_fd : &font->pango_fd;
-#endif
 
     if ( *fdbase!=NULL )
 return( *fdbase );
@@ -1028,7 +1009,6 @@ int32 _GXPDraw_DoText8(GWindow w, int32 x, int32 y,
     pango_layout_set_text(gw->pango_layout,(char *) text,cnt);
     pango_layout_get_pixel_extents(gw->pango_layout,NULL,&rect);
     if ( drawit==tf_drawit ) {
-# if !defined(_NO_LIBCAIRO)
 	if ( gw->usecairo ) {
 	    my_cairo_render_layout(gw->cc,col,gw->pango_layout,x,y);
 #if 0
@@ -1038,9 +1018,7 @@ int32 _GXPDraw_DoText8(GWindow w, int32 x, int32 y,
 	    pango_cairo_layout_path(gw->cc,gw->pango_layout);
 	    cairo_fill(gw->cc);
 #endif
-	} else
-#endif
-	{
+	} else {
 	    XftColor fg;
 	    XRenderColor fgcol;
 	    XRectangle clip;
@@ -1105,44 +1083,21 @@ int32 _GXPDraw_DoText(GWindow w, int32 x, int32 y,
 return(width);
 }
 
-//-------------------------------------------------------------------------
-
-static PangoFont *load_font_without_cairo(GWindow gw, GFont *fi)
-{
-    GXDisplay *gdisp = ((GXWindow) gw)->display;
-    return pango_font_map_load_font(gdisp->pango_fontmap,
-				    gdisp->pango_context,
-				    fi->pango_fd);
-}
-
-// FIXME: Change these _NO_LIBCAIRO, etc., macros to HAVE_CAIRO, etc.
-#ifndef _NO_LIBCAIRO
-
-static PangoFont *load_font_with_cairo(GWindow gw, GFont *fi)
-{
-    GXDisplay *gdisp = ((GXWindow) gw)->display;
-    return pango_font_map_load_font(gdisp->pangoc_fontmap,
-				    gdisp->pangoc_context,
-				    fi->pangoc_fd);
-}
-
 static inline PangoFont *load_font(GWindow gw, GFont *fi)
 {
-    return (gw->usecairo) ?
-	load_font_with_cairo(gw, fi) :
-	load_font_without_cairo(gw, fi);
+    GXDisplay *gdisp = ((GXWindow) gw)->display;
+    PangoFont *pfont;
+
+    if (gw->usecairo)
+	pfont = pango_font_map_load_font(gdisp->pangoc_fontmap,
+					 gdisp->pangoc_context,
+					 fi->pangoc_fd);
+    else
+	pfont = pango_font_map_load_font(gdisp->pango_fontmap,
+					 gdisp->pango_context,
+					 fi->pango_fd);
+    return pfont;
 }
-
-#else // do not have cairo
-
-static inline PangoFont *load_font(GWindow gw, GFont *fi)
-{
-    return load_font_without_cairo(gw, fi);
-}
-
-#endif // do not have cairo
-
-//-------------------------------------------------------------------------
 
 void _GXPDraw_FontMetrics(GWindow gw, GFont *fi, int *as, int *ds, int *ld) {
     PangoFont *pfont;
@@ -1176,12 +1131,9 @@ void _GXPDraw_LayoutDraw(GWindow w, int32 x, int32 y, Color col) {
     GXWindow gw = (GXWindow) w;
     GXDisplay *gdisp = gw->display;
 
-# if !defined(_NO_LIBCAIRO)
     if ( gw->usecairo ) {
 	my_cairo_render_layout(gw->cc,col,gw->pango_layout,x,y);
-    } else
-#endif
-    {
+    } else {
 	XftColor fg;
 	XRenderColor fgcol;
 	XRectangle clip;

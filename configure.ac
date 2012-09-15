@@ -81,7 +81,6 @@ AC_SUBST([VERSION_PATCH])
 #
 # URLs for dependencies.
 
-cairo_url="http://www.cairographics.org/"
 freetype_url="http://www.freetype.org/"
 giflib_url="http://giflib.sourceforge.net/"
 libpng_url="http://www.libpng.org/"
@@ -195,10 +194,10 @@ FONTFORGE_CONFIG_X_LIBRARIES
 PKG_CHECK_MODULES([ZLIB],[zlib])
 
 if test x"${i_do_have_gui}" = xyes; then
-   PKG_CHECK_MODULES([PANGO],[pango >= 1.10 pangoxft])
+   PKG_CHECK_MODULES([CAIRO],[cairo >= 1.6])
+   PKG_CHECK_MODULES([PANGO],[pango >= 1.10 pangoxft pangocairo])
 fi
 
-FONTFORGE_ARG_WITH_CAIRO
 FONTFORGE_ARG_WITH_FREETYPE
 AC_ARG_VAR([FREETYPE_SOURCE],
         [directory where freetype source code is located for --enable-freetype-debugger;
@@ -212,10 +211,6 @@ FONTFORGE_ARG_WITH_LIBXML
 FONTFORGE_ARG_WITH_LIBSPIRO
 FONTFORGE_ARG_WITH_LIBUNICODENAMES
 FONTFORGE_ARG_WITH_ICONV
-
-if test x"${i_do_have_cairo}" = xyes; then
-   PKG_CHECK_MODULES([PANGOCAIRO],[pangocairo])
-fi
 
 FONTFORGE_CONFIG_FREETYPE_DEBUGGER
 
