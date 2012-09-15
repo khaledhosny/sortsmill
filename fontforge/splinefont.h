@@ -2173,6 +2173,11 @@ extern DStemInfo *DStemInfoCopy(DStemInfo *h);
 extern MinimumDistance *MinimumDistanceCopy(MinimumDistance *h);
 extern void SPChangePointType(SplinePoint *sp, int pointtype);
 
+static inline SplineFont *optional_cidmaster(SplineFont *sf)
+{
+    return (sf->cidmaster == NULL) ? sf : sf->cidmaster;
+}
+
 struct lookup_cvt { OTLookup *from, *to; int old;};
 struct sub_cvt { struct lookup_subtable *from, *to; int old;};
 struct ac_cvt { AnchorClass *from, *to; int old;};

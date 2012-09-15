@@ -6009,11 +6009,13 @@ return;
 	    english->names[ttf_version]=NULL;
 	}
     }
+    char *modifiers = SFGetModifiers(sf);
     if ( english->names[ttf_subfamily]!=NULL &&
-	    strcmp(english->names[ttf_subfamily],SFGetModifiers(sf))==0 ) {
+	    strcmp(english->names[ttf_subfamily], modifiers)==0 ) {
 	free(english->names[ttf_subfamily]);
 	english->names[ttf_subfamily]=NULL;
     }
+    gfree(modifiers);
 
     /* User should not be allowed any access to this one, not ever */
     free(english->names[ttf_postscriptname]);

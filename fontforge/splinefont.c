@@ -37,6 +37,8 @@
 #include "unicoderange.h"
 #include "psfont.h"
 #include <locale.h>
+#include <assert.h>
+#include <stdbool.h>
 
 void SFUntickAll(SplineFont *sf) {
     int i;
@@ -1342,8 +1344,85 @@ static const char *modifierlistfull[] = { "Italic", "Oblique", "Kursive", "Cursi
 static const char **mods[] = { knownweights, modifierlist, NULL };
 static const char **fullmods[] = { realweights, modifierlistfull, NULL };
 
-char *_GetModifiers(char *fontname, char *familyname,char *weight) {
-    char *pt, *fpt, *space;
+
+#if 0 // FIXME: Finish this replacement _GetModifiers() implementation.
+
+// FIXME: Put this somewhere extern and reusable.
+static size_t ascii_match_length(const char *s1, const char *s2) 
+{
+     size_t i = 0;
+     while (s1[i] == s2[i])
+	  i++;
+     return i;
+}
+
+static char *modifiers_p(char *fontname, char *familyname)
+{
+     assert(fontname != NULL && familyname != NULL);
+
+     int i = 0;
+     int j = 0;
+     while (fontname[i] != '\0' && familyname[j] != '\0') {
+	  size_t match_length = ascii_match_length(fontname + i, familyname + j);
+	  i += match_length;
+	  j += match_length;
+	  if (match_length == 0) {
+	       if (familyname[j] == ' ')
+		    // Try ignoring a space in the familyname.
+		    j++;
+	       else if (fontname[i] == ' ')
+		    // Try ignoring a space in the fontname.
+		    i++;
+	       else if (strchr("aeiou", familyname[j]) != NULL)
+		    // Try ignoring a vowel in the familyname.
+		    j++;
+	       else {
+		    // Exit the loop, with a mismatch.
+		    i = strlen(fontname);
+		    j = strlen(familyname);
+	       }
+	  }
+     }
+     return (fontname[i] != '\0' && familyname[j] == '\0') ? fontname + i : NULL;
+}
+
+static bool is_urw_style_fontname(const char *fontname) 
+{
+     // URW fontnames do not match the familyname; for example:
+     // "NimbusSanL-Regu" vs "Nimbus Sans L" (note "San" vs "Sans").
+     // So look for a '-' character.
+     char *hyphen_p = strchr(fontname, '-');
+     return (hyphen_p != NULL && *(hyphen_p + 1) != NULL);
+}
+
+static char *urw_modifiers(const char *fontname)
+{
+     assert(is_urw_style_fontname(fontname));
+
+     return strchr(fontname, '-') + 1;
+}
+
+// Search for something like "BoldItalic" in the font name.
+static char *modifiers_within_fontname(const char *fontname, const char *familyname)
+{
+     char *modifiers = NULL;
+     if (is_urw_style_fontname(fontname))
+	  modifiers = urw_modifiers(fontname);
+     else if (familyname != NULL)
+	  modifiers = modifiers_p(fontname, familyname);
+     return modifiers;
+}
+
+//char *_GetModifiers(char *fontname, char *familyname, char *weight) {
+//     const char *modifiers = modifiers_within_fontname(fontname, familyname);
+//     
+//}
+
+#endif // FIXME
+
+char *_GetModifiers(char *fontname, char *familyname, char *weight) {
+    char *pt, *fpt;
+    static char space[100];
     int i, j;
 
     /* URW fontnames don't match the familyname */
@@ -1365,7 +1444,7 @@ char *_GetModifiers(char *fontname, char *familyname,char *weight) {
 	    else if ( *fpt=='a' || *fpt=='e' || *fpt=='i' || *fpt=='o' || *fpt=='u' )
 		++fpt;	/* allow vowels to be omitted from family when in fontname */
 	    else
-	break;
+		break;
 	}
 	if ( *fpt=='\0' && *pt!='\0' )
 	    fpt = pt;
@@ -1374,94 +1453,98 @@ char *_GetModifiers(char *fontname, char *familyname,char *weight) {
     }
 
     if ( fpt == NULL ) {
-	for ( i=0; mods[i]!=NULL; ++i ) for ( j=0; mods[i][j]!=NULL; ++j ) {
-	    pt = strstr(fontname,mods[i][j]);
-	    if ( pt!=NULL && (fpt==NULL || pt<fpt))
-		fpt = pt;
-	}
+	for ( i=0; mods[i]!=NULL; ++i )
+	     for ( j=0; mods[i][j]!=NULL; ++j ) {
+		  pt = strstr(fontname,mods[i][j]);
+		  if ( pt!=NULL && (fpt==NULL || pt<fpt))
+		       fpt = pt;
+	     }
     }
     if ( fpt!=NULL ) {
-	for ( i=0; mods[i]!=NULL; ++i ) for ( j=0; mods[i][j]!=NULL; ++j ) {
-	    if ( strcmp(fpt,mods[i][j])==0 ) {
-		strcpy(space,fullmods[i][j]);
-return(space);
-	    }
-	}
+	for ( i=0; mods[i]!=NULL; ++i )
+	     for ( j=0; mods[i][j]!=NULL; ++j ) {
+		  if ( strcmp(fpt,mods[i][j])==0 ) {
+		       strcpy(space,fullmods[i][j]);
+		       return copy(space);
+		  }
+	     }
 	if ( strcmp(fpt,"BoldItal")==0 )
-return( "BoldItalic" );
+	     return copy( "BoldItalic" );
 	else if ( strcmp(fpt,"BoldObli")==0 )
-return( "BoldOblique" );
+	    return copy( "BoldOblique" );
 
-return( fpt );
+	return copy( fpt );
     }
 
-return( weight==NULL || *weight=='\0' ? "Regular": weight );
+    return copy( weight==NULL || *weight=='\0' ? "Regular": weight );
 }
 
 char *SFGetModifiers(SplineFont *sf) {
-return( _GetModifiers(sf->fontname,sf->familyname,sf->weight));
+     return _GetModifiers(sf->fontname,sf->familyname,sf->weight);
 }
 
 const unichar_t *_uGetModifiers(const unichar_t *fontname, const unichar_t *familyname,
-	const unichar_t *weight) {
-    const unichar_t *pt, *fpt;
-    static unichar_t regular[] = { 'R','e','g','u','l','a','r', 0 };
-    static unichar_t space[20];
-    int i,j;
+				const unichar_t *weight) {
+     const unichar_t *pt, *fpt;
+     static unichar_t regular[] = { 'R','e','g','u','l','a','r', 0 };
+     static unichar_t space[20];
+     int i,j;
 
-    /* URW fontnames don't match the familyname */
-    /* "NimbusSanL-Regu" vs "Nimbus Sans L" (note "San" vs "Sans") */
-    /* so look for a '-' if there is one and use that as the break point... */
+     /* URW fontnames don't match the familyname */
+     /* "NimbusSanL-Regu" vs "Nimbus Sans L" (note "San" vs "Sans") */
+     /* so look for a '-' if there is one and use that as the break point... */
 
-    if ( (fpt=u_strchr(fontname,'-'))!=NULL ) {
-	++fpt;
-	if ( *fpt=='\0' )
-	    fpt = NULL;
-    } else if ( familyname!=NULL ) {
-	for ( pt = fontname, fpt=familyname; *fpt!='\0' && *pt!='\0'; ) {
-	    if ( *fpt == *pt ) {
-		++fpt; ++pt;
-	    } else if ( *fpt==' ' )
-		++fpt;
-	    else if ( *pt==' ' )
-		++pt;
-	    else if ( *fpt=='a' || *fpt=='e' || *fpt=='i' || *fpt=='o' || *fpt=='u' )
-		++fpt;	/* allow vowels to be omitted from family when in fontname */
-	    else
-	break;
-	}
-	if ( *fpt=='\0' && *pt!='\0' )
-	    fpt = pt;
-	else
-	    fpt = NULL;
-    }
+     if ( (fpt=u_strchr(fontname,'-'))!=NULL ) {
+	  ++fpt;
+	  if ( *fpt=='\0' )
+	       fpt = NULL;
+     } else if ( familyname!=NULL ) {
+	  for ( pt = fontname, fpt=familyname; *fpt!='\0' && *pt!='\0'; ) {
+	       if ( *fpt == *pt ) {
+		    ++fpt; ++pt;
+	       } else if ( *fpt==' ' )
+		    ++fpt;
+	       else if ( *pt==' ' )
+		    ++pt;
+	       else if ( *fpt=='a' || *fpt=='e' || *fpt=='i' || *fpt=='o' || *fpt=='u' )
+		    ++fpt;	/* allow vowels to be omitted from family when in fontname */
+	       else
+		    break;
+	  }
+	  if ( *fpt=='\0' && *pt!='\0' )
+	       fpt = pt;
+	  else
+	       fpt = NULL;
+     }
 
-    if ( fpt==NULL ) {
-	for ( i=0; mods[i]!=NULL; ++i ) for ( j=0; mods[i][j]!=NULL; ++j ) {
-	    pt = uc_strstr(fontname,mods[i][j]);
-	    if ( pt!=NULL && (fpt==NULL || pt<fpt))
-		fpt = pt;
-	}
-    }
+     if ( fpt==NULL ) {
+	  for ( i=0; mods[i]!=NULL; ++i )
+	       for ( j=0; mods[i][j]!=NULL; ++j ) {
+		    pt = uc_strstr(fontname,mods[i][j]);
+		    if ( pt!=NULL && (fpt==NULL || pt<fpt))
+			 fpt = pt;
+	       }
+     }
 
-    if ( fpt!=NULL ) {
-	for ( i=0; mods[i]!=NULL; ++i ) for ( j=0; mods[i][j]!=NULL; ++j ) {
-	    if ( uc_strcmp(fpt,mods[i][j])==0 ) {
-		uc_strcpy(space,fullmods[i][j]);
-return( space );
-	    }
-	}
-	if ( uc_strcmp(fpt,"BoldItal")==0 ) {
-	    uc_strcpy(space,"BoldItalic");
-return( space );
-	} else if ( uc_strcmp(fpt,"BoldObli")==0 ) {
-	    uc_strcpy(space,"BoldOblique");
-return( space );
-	}
-return( fpt );
-    }
+     if ( fpt!=NULL ) {
+	  for ( i=0; mods[i]!=NULL; ++i )
+	       for ( j=0; mods[i][j]!=NULL; ++j ) {
+		    if ( uc_strcmp(fpt,mods[i][j])==0 ) {
+			 uc_strcpy(space,fullmods[i][j]);
+			 return( space );
+		    }
+	       }
+	  if ( uc_strcmp(fpt,"BoldItal")==0 ) {
+	       uc_strcpy(space,"BoldItalic");
+	       return( space );
+	  } else if ( uc_strcmp(fpt,"BoldObli")==0 ) {
+	       uc_strcpy(space,"BoldOblique");
+	       return( space );
+	  }
+	  return( fpt );
+     }
 
-return( weight==NULL || *weight=='\0' ? regular: weight );
+     return( weight==NULL || *weight=='\0' ? regular: weight );
 }
 
 int SFIsDuplicatable(SplineFont *sf, SplineChar *sc) {

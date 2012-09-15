@@ -3881,8 +3881,11 @@ void DefaultTTFEnglishNames(struct ttflangname *dummy, SplineFont *sf) {
 	dummy->names[ttf_copyright] = utf8_verify_copy(sf->copyright);
     if ( dummy->names[ttf_family]==NULL || *dummy->names[ttf_family]=='\0' )
 	dummy->names[ttf_family] = utf8_verify_copy(sf->familyname);
-    if ( dummy->names[ttf_subfamily]==NULL || *dummy->names[ttf_subfamily]=='\0' )
-	dummy->names[ttf_subfamily] = utf8_verify_copy(SFGetModifiers(sf));
+    if ( dummy->names[ttf_subfamily]==NULL || *dummy->names[ttf_subfamily]=='\0' ) {
+	char *modifiers = SFGetModifiers(sf);
+	dummy->names[ttf_subfamily] = utf8_verify_copy(modifiers);
+	gfree(modifiers);
+    }
     if ( dummy->names[ttf_uniqueid]==NULL || *dummy->names[ttf_uniqueid]=='\0' ) {
 	time(&now);
 	tm = localtime(&now);

@@ -78,10 +78,10 @@ char *copy(const char *str) {
     char *ret;
 
     if ( str==NULL )
-return( NULL );
+	return( NULL );
     ret = (char *) galloc(strlen(str)+1);
     strcpy(ret,str);
-return( ret );
+    return( ret );
 }
 
 char *copyn(const char *str,long n) {

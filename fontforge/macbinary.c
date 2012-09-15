@@ -703,19 +703,20 @@ return( stylecode );
 }
 
 uint16 MacStyleCode( SplineFont *sf, uint16 *psstylecode ) {
-    char *styles;
+    unsigned int style_code;
 
-    if ( sf->cidmaster!=NULL )
-	sf = sf->cidmaster;
+    sf = optional_cidmaster(sf);
 
     if ( sf->macstyle!=-1 ) {
 	if ( psstylecode!=NULL )
 	    *psstylecode = (sf->macstyle&0x3)|((sf->macstyle&0x6c)>>1);
-return( sf->macstyle );
+	style_code = sf->macstyle;
+    } else {
+	char *styles = SFGetModifiers(sf);
+	style_code = _MacStyleCode(styles,sf,psstylecode);
+	gfree(styles);
     }
-
-    styles = SFGetModifiers(sf);
-return( _MacStyleCode(styles,sf,psstylecode));
+    return style_code;
 }
 
 static uint32 SFToFOND(FILE *res,SplineFont *sf,uint32 id,int dottf,
@@ -2552,16 +2553,29 @@ return( copy(buffer));
 }
 
 static int GuessStyle(char *fontname,int *styles,int style_cnt) {
-    int which, style;
     char *stylenames = _GetModifiers(fontname,NULL,NULL);
+    int style = _MacStyleCode(stylenames,NULL,NULL);
+    gfree(stylenames);
 
-    style = _MacStyleCode(stylenames,NULL,NULL);
-    for ( which = style_cnt; which>=0; --which )
-	if ( styles[which] == style )
-return( which );
-
-return( -1 );
+    // FIXME: The old code that is commented out below appears to look
+    // outside the styles array. Is that the case? And is this new code
+    // correct?
+    int my_guess = style_cnt - 1;
+    while (0 <= my_guess && styles[my_guess] != style)
+	my_guess--;
+    return imax(-1, my_guess);
 }
+//static int GuessStyle(char *fontname,int *styles,int style_cnt) {
+//    int which, style;
+//    char *stylenames = _GetModifiers(fontname,NULL,NULL);
+//
+//    style = _MacStyleCode(stylenames,NULL,NULL);
+//    for ( which = style_cnt; which>=0; --which )
+//	if ( styles[which] == style )
+//	    return( which );
+//
+//    return( -1 );
+//}
 
 static FOND *PickFOND(FOND *fondlist,char *filename,char **name, int *style) {
     int i,j;
