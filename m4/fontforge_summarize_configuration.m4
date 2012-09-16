@@ -34,7 +34,6 @@ Optional features:
 
 Optional dependencies:
 
-  cairo              ${i_do_have_cairo}  	${cairo_url}
   freetype           ${i_do_have_freetype}  	${freetype_url}
   giflib             ${i_do_have_giflib}  	${giflib_url}
   libjpeg            ${i_do_have_libjpeg}  	${libjpeg_url}
