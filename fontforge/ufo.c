@@ -1785,7 +1785,7 @@ return( NULL );
 		    sf->pfminfo.weight = strtol((char *) valname,&end,10);
 		else if ( xmlStrcmp(keyname+11,(xmlChar *) "VendorID")==0 ) {
 		    char *temp = sf->pfminfo.os2_vendor + 3;
-		    strncpy(sf->pfminfo.os2_vendor,valname,4);
+		    strncpy(sf->pfminfo.os2_vendor, (const char *) valname, 4);
 		    while ( *temp == 0 && temp >= sf->pfminfo.os2_vendor ) *temp-- = ' ';
 		} else if ( xmlStrcmp(keyname+11,(xmlChar *) "TypoAscender")==0 ) {
 		    sf->pfminfo.typoascent_add = false;
