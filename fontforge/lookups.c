@@ -4639,7 +4639,7 @@ return( NULL );
     }
     if ( gb.pt>gb.base && gb.pt[-1]==' ' )
 	gb.pt[-1] = '\0';
-    ret = copy(gb.base);
+    ret = copy((const char *) gb.base);
     free(gb.base);
 return( ret );
 }

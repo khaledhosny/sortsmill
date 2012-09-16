@@ -716,8 +716,8 @@ static int FindOrBuildHintSubr(struct hintdb *hdb, uint8 mask[12], int round) {
     GrowBuf gb;
 
     for ( mh=hdb->sublist; mh!=NULL; mh=mh->next ) {
-	if ( memcmp(mask,mh->mask,sizeof(mask))==0 )
-return( mh->subr );
+	if ( memcmp(mask, mh->mask, 12*sizeof(uint8)) == 0 )
+	    return( mh->subr );
 #if 0
 	/* If we find a subr for which we have all the bits set (with extras */
 	/*  since we didn't match) then it is safe to replace the old subr */
@@ -727,9 +727,9 @@ return( mh->subr );
 	/*  about what hints imply about counters than I do */
 	for ( i=0; i<12; ++i )
 	    if ( (mh->mask[i]&mask[i])!=mh->mask[i] )
-	break;
+		break;
 	if ( i==12 )
-    break;
+	    break;
 #endif
     }
     SubrsCheck(hdb->subrs);
@@ -765,7 +765,7 @@ return( mh->subr );
     }
     free(gb.base);
 
-return( mh->subr );
+    return( mh->subr );
 }
 
 static void CallTransformedHintSubr(GrowBuf *gb,struct hintdb *hdb,

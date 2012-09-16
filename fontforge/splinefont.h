@@ -531,7 +531,14 @@ typedef struct anchorclass {
     struct anchorclass *next;
 } AnchorClass;
 
-enum anchor_type { at_mark, at_basechar, at_baselig, at_basemark, at_centry, at_cexit, at_max };
+enum anchor_type { at_mark,
+		   at_basechar,
+		   at_baselig,
+		   at_basemark,
+		   at_centry,
+		   at_cexit,
+		   at_max,
+		   at_illegal = 15 };
 typedef struct anchorpoint {
     AnchorClass *anchor;
     BasePoint me;

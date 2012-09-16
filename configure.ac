@@ -248,12 +248,17 @@ fi
 
 AX_PTHREAD
 
+WARNING_CFLAGS=""
 FONTFORGE_COMPILER_FLAGS([WARNING_CFLAGS],
         [-Wunused -Wreturn-type
          -Wparentheses -Wformat -Wchar-subscripts
          -Wno-unused-but-set-variable -Wno-unused-result
          -Werror=missing-prototypes
          -Werror=implicit])
+
+# Some clang flags to turn off for now.
+FONTFORGE_COMPILER_FLAGS([WARNING_CFLAGS],
+        [-Wno-switch -Wno-tautological-compare -Wno-conversion])
 
 #--------------------------------------------------------------------------
 # Checks for library functions.

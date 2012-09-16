@@ -3736,7 +3736,7 @@ return( lastap );
     ap->anchor = an;
     getreal(sfd,&ap->me.x);
     getreal(sfd,&ap->me.y);
-    ap->type = -1;
+    ap->type = at_illegal;
     if ( getname(sfd,tok)==1 ) {
 	if ( strcmp(tok,"mark")==0 )
 	    ap->type = at_mark;
@@ -3764,7 +3764,7 @@ return( lastap );
 	    ap->has_ttf_pt = true;
 	}
     }
-    if ( ap->anchor==NULL || ap->type==-1 ) {
+    if ( ap->anchor==NULL || ap->type==at_illegal ) {
 	LogError(_("Bad Anchor Point: %s"), sc->name );
 	AnchorPointsFree(ap);
 return( lastap );
@@ -6438,7 +6438,10 @@ static SplineFont *SFD_GetFont(FILE *sfd,SplineFont *cidmaster,char *tok,
 	} else if ( strmatch(tok,"UFODescent:")==0 ) {
 	    getreal(sfd,&sf->ufo_descent);
 	} else if ( strmatch(tok,"sfntRevision:")==0 ) {
-	    gethex(sfd,&sf->sfntRevision);
+	    // FIXME: Should sf->sfntRevision be unsigned int?
+	    uint32 revision;
+	    gethex(sfd, &revision);
+	    sf->sfntRevision = revision;
 	} else if ( strmatch(tok,"Order2:")==0 ) {
 	    getint(sfd,&old_style_order2);
 	    sf->grid.order2 = old_style_order2;
@@ -6649,7 +6652,9 @@ exit(1);
 	    sf->mark_classes[0] = NULL; sf->mark_class_names[0] = NULL;
 	    for ( i=1; i<sf->mark_class_cnt; ++i ) {	/* Class 0 is unused */
 		int temp;
-		while ( (temp=nlgetc(sfd))=='\n' || temp=='\r' ); ungetc(temp,sfd);
+		while ( (temp=nlgetc(sfd))=='\n' || temp=='\r' )
+		    ;
+		ungetc(temp,sfd);
 		sf->mark_class_names[i] = SFDReadUTF7Str(sfd);
 		getint(sfd,&temp);
 		sf->mark_classes[i] = galloc(temp+1); sf->mark_classes[i][temp] = '\0';
@@ -6662,7 +6667,9 @@ exit(1);
 	    sf->mark_set_names = galloc(sf->mark_set_cnt*sizeof(char *));
 	    for ( i=0; i<sf->mark_set_cnt; ++i ) {	/* Set 0 is used */
 		int temp;
-		while ( (temp=nlgetc(sfd))=='\n' || temp=='\r' ); ungetc(temp,sfd);
+		while ( (temp=nlgetc(sfd))=='\n' || temp=='\r' )
+		    ;
+		ungetc(temp,sfd);
 		sf->mark_set_names[i] = SFDReadUTF7Str(sfd);
 		getint(sfd,&temp);
 		sf->mark_sets[i] = galloc(temp+1); sf->mark_sets[i][temp] = '\0';
