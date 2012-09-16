@@ -255,9 +255,10 @@ FONTFORGE_COMPILER_FLAGS([WARNING_CFLAGS],
          -Wno-unused-but-set-variable -Wno-unused-result
          -Werror=missing-prototypes
          -Werror=implicit])
-# Some clang flags.
+
+# Some clang flags to turn off for now.
 FONTFORGE_COMPILER_FLAGS([WARNING_CFLAGS],
-        [-Wno-switch -Wno-tautological-compare])
+        [-Wno-switch -Wno-tautological-compare -Wno-conversion])
 
 #--------------------------------------------------------------------------
 # Checks for library functions.
