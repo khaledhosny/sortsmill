@@ -468,7 +468,7 @@ static void BuildFPSTRule(struct node *node,struct att_dlg *att) {
 			} else
 			    GrowBufferAddStr(&gb,fpst->bclassnames[r->u.class.bclasses[j]]);
 		    }
-		    lines[len].label = copy(gb.base);
+		    lines[len].label = copy((const char *) gb.base);
 		    lines[len].parent = node;
 		}
 		++len;
@@ -483,7 +483,7 @@ static void BuildFPSTRule(struct node *node,struct att_dlg *att) {
 		    } else
 			GrowBufferAddStr(&gb,fpst->nclassnames[r->u.class.nclasses[j]]);
 		}
-		lines[len].label = copy(gb.base);
+		lines[len].label = copy((const char *) gb.base);
 		lines[len].parent = node;
 	    }
 	    ++len;
@@ -498,7 +498,7 @@ static void BuildFPSTRule(struct node *node,struct att_dlg *att) {
 			} else
 			    GrowBufferAddStr(&gb,fpst->fclassnames[r->u.class.fclasses[j]]);
 		    }
-		    lines[len].label = copy(gb.base);
+		    lines[len].label = copy((const char *) gb.base);
 		    lines[len].parent = node;
 		}
 		++len;
