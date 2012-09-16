@@ -2676,16 +2676,16 @@ static void SVGFigureStyle(struct svg_state *st,char *name,
 	    if ( *name==';' ) ++name;
 
 	    if ( strcmp(namebuf,"color")==0 )
-		xmlParseColor(propbuf,&st->currentColor,NULL,st);
+		xmlParseColor((xmlChar *) propbuf,&st->currentColor,NULL,st);
 	    else if ( strcmp(namebuf,"fill")==0 )
-		st->dofill = xmlParseColor(propbuf,&st->fillcol,fill_colour_source,st);
+		st->dofill = xmlParseColor((xmlChar *) propbuf,&st->fillcol,fill_colour_source,st);
 	    else if ( strcmp(namebuf,"visibility")==0 )
 		st->isvisible = strcmp(propbuf,"hidden")!=0 &&
 			strcmp(propbuf,"colapse")!=0;
 	    else if ( strcmp(namebuf,"fill-opacity")==0 )
 		st->fillopacity = strtod(propbuf,NULL);
 	    else if ( strcmp(namebuf,"stroke")==0 )
-		st->dostroke = xmlParseColor(propbuf,&st->strokecol,stroke_colour_source,st);
+		st->dostroke = xmlParseColor((xmlChar *) propbuf,&st->strokecol,stroke_colour_source,st);
 	    else if ( strcmp(namebuf,"stroke-opacity")==0 )
 		st->strokeopacity = strtod((char *)propbuf,NULL);
 	    else if ( strcmp(namebuf,"stroke-width")==0 )
@@ -2714,7 +2714,7 @@ static void SVGFigureStyle(struct svg_state *st,char *name,
 		    if ( i<DASH_MAX ) st->dashes[i] = 0;
 		}
 	    } else if ( strcmp(namebuf,"stop-color")==0 )
-		xmlParseColor(propbuf,&st->stopColor,NULL,st);
+		xmlParseColor((xmlChar *) propbuf,&st->stopColor,NULL,st);
 	    else if ( strcmp(namebuf,"stop-opacity")==0 )
 		st->stopOpacity = strtod(propbuf,NULL);
 	    else {
