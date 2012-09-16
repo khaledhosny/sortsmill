@@ -106,10 +106,10 @@ return( true );
         }
         if (strm.avail_in == 0)
     break;
-        strm.next_in = in;
+        strm.next_in = (Bytef *) in;
         do {
             strm.avail_out = CHUNK;
-            strm.next_out = out;
+            strm.next_out = (Bytef *) out;
             ret = inflate(&strm, Z_NO_FLUSH);
 	    if ( ret!=Z_OK && ret!=Z_STREAM_END ) {
 		(void)inflateEnd(&strm);
@@ -171,10 +171,10 @@ return(0);
         }
         if (strm.avail_in == 0)
     break;
-        strm.next_in = in;
+        strm.next_in = (Bytef *) in;
         do {
             strm.avail_out = CHUNK;
-            strm.next_out = out;
+            strm.next_out = (Bytef *) out;
             ret = deflate(&strm, len==0 ? Z_FINISH : Z_NO_FLUSH);
 	    if ( ret==Z_STREAM_ERROR ) {
 		(void)deflateEnd(&strm);
@@ -347,7 +347,7 @@ return( NULL );
 	fread(temp,1,metaLenCompressed,woff);
 	sf->woffMetadata = galloc(metaLenUncompressed+1);
 	sf->woffMetadata[metaLenUncompressed] ='\0';
-	uncompress(sf->woffMetadata,&len,temp,metaLenCompressed);
+	uncompress((Bytef *) sf->woffMetadata,&len,(Bytef *) temp,metaLenCompressed);
 	sf->woffMetadata[len] ='\0';
 	free(temp);
     }
@@ -464,7 +464,7 @@ return( ret );
 	uLongf complen = 2*uncomplen;
 	char *temp=galloc(complen+1);
 	newoffset = ftell(woff);
-	compress(temp,&complen,sf->woffMetadata,uncomplen);
+	compress((Bytef *) temp,&complen,(Bytef *) sf->woffMetadata,uncomplen);
 	fwrite(temp,1,complen,woff);
 	free(temp);
 	if ( (ftell(woff)&3)!=0 ) {
