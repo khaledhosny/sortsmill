@@ -48,9 +48,7 @@ return( gw );
 			     cairo_pixmap->pos.height<rect->y+rect->height ) {
 	    if ( cairo_pixmap!=NULL )
 		GDrawDestroyWindow(cairo_pixmap);
-	    /* The 0x8000 on width is a hack to tell create pixmap to use*/
-	    /*  cairo convas */
-	    cairo_pixmap = GDrawCreatePixmap(gw->display,0x8000|gw->pos.width,gw->pos.height);
+	    cairo_pixmap = GDrawCreatePixmap(gw->display,gw->pos.width,gw->pos.height);
 	}
 	ours = cairo_pixmap;
 	cairo_pixmap = NULL;

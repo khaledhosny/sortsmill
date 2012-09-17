@@ -1203,7 +1203,6 @@ static void GXDrawSetZoom(GWindow w, GRect *pos, enum gzoom_flags flags) {
 
 static GWindow GXDrawCreatePixmap(GDisplay *gdisp, uint16 width, uint16 height) {
     GXWindow gw = gcalloc(1,sizeof(struct gxwindow));
-    int wamcairo = false;
 
     if ( gw==NULL )
 return( NULL );
@@ -1213,10 +1212,6 @@ return( NULL );
 	gfree(gw);
 return( NULL );
     }
-    if ( width&0x8000 ) {
-	width &= 0x7fff;
-	wamcairo = true;
-    }
     gw->display = (GXDisplay *) gdisp;
     gw->is_pixmap = 1;
     gw->parent = NULL;
@@ -1224,7 +1219,7 @@ return( NULL );
     gw->pos.width = width; gw->pos.height = height;
     gw->w = XCreatePixmap(gw->display->display, gw->display->root, width, height, gw->display->depth);
     /* Only do sub-pixel/anti-alias stuff if we've got truecolor */
-    if ( ((GXDisplay *) gdisp)->visual->class==TrueColor && wamcairo )
+    if ( ((GXDisplay *) gdisp)->visual->class==TrueColor )
 	_GXCDraw_NewWindow(gw);
     /* Must come after the cairo init so pango will know to use cairo or xft */
     /* I think we will always want to use pango, so it isn't conditional */
