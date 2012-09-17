@@ -111,11 +111,9 @@ static void _GIO_AuthorizationWrapper(void *d) {
 }
     
 void _GIO_RequestAuthorization(GIOControl *gc) {
-
     gc->return_code = 401;
-    if ( _GIO_stdfuncs.getauth==NULL )
-return;
-    _GIO_AuthorizationWrapper(gc);
+    if (_GIO_stdfuncs.getauth != NULL )
+	_GIO_AuthorizationWrapper(gc);
 }
 
 #endif // ! HAVE_PTHREAD_H
