@@ -21,7 +21,6 @@ test x"${i_do_have_libunicodenames}" = xyes && __pkg_deps="${__pkg_deps} libunic
 test x"${i_do_have_gui}" = xyes && __pkg_deps="${__pkg_deps} cairo"
 test x"${i_do_have_gui}" = xyes && __pkg_deps="${__pkg_deps} pango"
 test x"${i_do_have_gui}" = xyes && my_libs="${my_libs} pangocairo"
-test x"${i_do_have_gui}" = xyes && my_libs="${my_libs} pangoxft"
 test x"${i_do_have_freetype}" = xyes && __pkg_deps="${__pkg_deps} freetype2"
 __pkg_deps="${__pkg_deps} zlib"
 

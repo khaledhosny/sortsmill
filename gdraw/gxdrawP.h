@@ -73,13 +73,6 @@ John, it's not part of standard XFree yet).
 #  include <cairo/cairo-xlib.h>
 #  define GTimer GTimer_GTK
 #  include <ft2build.h>
-#  ifdef __VMS
-#   include <Xft/Xft.h>
-typedef pid_t GPid;
-#   define G_GNUC_INTERNAL
-#  else
-#   include <X11/Xft/Xft.h>
-#  endif
 #  include <pango/pango.h>
 #  undef GTimer
 #endif
