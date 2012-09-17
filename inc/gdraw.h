@@ -302,12 +302,6 @@ typedef struct gdeveventmask {
 } GDevEventMask;
 
 enum gzoom_flags { gzf_pos=1, gzf_size=2 };
-    /* bit flags for the hasCairo query */
-enum gcairo_flags { gc_buildpath=1,	/* Has build path commands (postscript, cairo) */
-		    gc_alpha=2,		/* Supports alpha channels & translucent colors (cairo, pdf) */
-		    gc_xor=4,		/* Cairo can't do the traditional XOR drawing that X11 does */
-		    gc_all = gc_buildpath|gc_alpha
-		    };
 
 typedef int (*GDrawEH)(GWindow,GEvent *);
 
@@ -466,7 +460,6 @@ extern void GDrawSetBuildCharHooks(void (*hook)(GDisplay *), void (*inshook)(GDi
 
 extern int GDrawRequestDeviceEvents(GWindow w,int devcnt,struct gdeveventmask *de);
 
-extern enum gcairo_flags GDrawHasCairo(GWindow w);
 extern void GDrawQueueDrawing(GWindow w,void (*)(GWindow,void *),void *);
 extern void GDrawPathStartNew(GWindow w);
 extern void GDrawPathStartSubNew(GWindow w);

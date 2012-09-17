@@ -803,20 +803,6 @@ void _GXCDraw_CopyArea( GXWindow from, GXWindow into, GRect *src, int32 x, int32
 }
 
 /* ************************************************************************** */
-/* **************************** Memory Buffering **************************** */
-/* ************************************************************************** */
-/* We can't draw with XOR in cairo. We can do all the cairo processing, copy */
-/*  cairo's data to the x window, and then do the xor drawing. But if the X */
-/*  window isn't available (if we are buffering cairo) then we must save the */
-/*  XOR drawing operations until we've popped the buffering */
-/* Mmm. Now we use pixmaps rather than groups and the issue isn't relevant -- I think */
-
-enum gcairo_flags _GXCDraw_CairoCapabilities( GXWindow gw) {
-    enum gcairo_flags flags = gc_all;
-
-return( flags|gc_xor );	/* If not buffered, we can emulate xor by having X11 do it in the X layer */
-}
-/* ************************************************************************** */
 /* **************************** Synchronization ***************************** */
 /* ************************************************************************** */
 void _GXCDraw_Flush(GXWindow gw) {

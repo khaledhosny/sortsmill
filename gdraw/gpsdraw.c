@@ -794,10 +794,6 @@ static void PSDrawFontMetrics(GWindow w, FontInstance *fi, int *as, int *ds, int
     GDrawWindowFontMetrics(w, fi, as, ds, ld);
 }
 
-static enum gcairo_flags PSDrawHasCairo(GWindow UNUSED(w)) {
-return( gc_buildpath );
-}
-
 static void PSDrawPathStartNew(GWindow w) {
     GPSWindow ps = (GPSWindow ) w;
     fprintf( ps->output_file,"  newpath\n" );
@@ -1413,8 +1409,6 @@ static struct displayfuncs psfuncs = {
     GPSPrinterEndJob,
 
     PSDrawFontMetrics,
-
-    PSDrawHasCairo,
 
     PSDrawPathStartNew,
     PSDrawPathClose,

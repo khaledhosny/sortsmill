@@ -2176,10 +2176,6 @@ static void GXDrawFillPoly(GWindow gw, GPoint *pts, int16 cnt, Color col) {
     _GXCDraw_FillPoly( gxw,pts,cnt);
 }
 
-static enum gcairo_flags GXDrawHasCairo(GWindow w) {
-return( _GXCDraw_CairoCapabilities( (GXWindow) w));
-}
-
 static void GXDrawPathStartNew(GWindow w) {
     _GXCDraw_PathStartNew(w);
 }
@@ -4274,7 +4270,6 @@ static struct displayfuncs xfuncs = {
 
     GXDrawFontMetrics,
 
-    GXDrawHasCairo,
     GXDrawPathStartNew,
     GXDrawPathClose,
     GXDrawPathMoveTo,

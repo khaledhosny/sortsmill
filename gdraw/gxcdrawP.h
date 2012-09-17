@@ -54,7 +54,6 @@ extern void _GXCDraw_ImageMagnified(GXWindow gw, GImage *image, GRect *magsrc,
 	int32 x, int32 y, int32 width, int32 height);
 extern void _GXCDraw_CopyArea( GXWindow from, GXWindow into, GRect *src, int32 x, int32 y);
 
-extern enum gcairo_flags _GXCDraw_CairoCapabilities( GXWindow );
 extern void _GXCDraw_PathStartNew(GWindow w);
 extern void _GXCDraw_PathStartSubNew(GWindow w);
 extern int _GXCDraw_FillRuleSetWinding(GWindow w);
