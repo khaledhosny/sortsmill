@@ -33,41 +33,8 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-#ifndef HAVE_PTHREAD_H
-void _GIO_ReportHeaders(char *format, ...) {
-    va_list args;
+#ifdef HAVE_PTHREAD_H
 
-    va_start(args,format);
-    vfprintf( stderr, format, args);
-    va_end(args);
-}
-
-void _GIO_PostError(GIOControl *gc) {
-    gc->receiveerror(gc);
-}
-
-void _GIO_PostInter(GIOControl *gc) {
-    gc->receiveintermediate(gc);
-}
-
-void _GIO_PostSuccess(GIOControl *gc) {
-    gc->receivedata(gc);
-}
-
-static void _GIO_AuthorizationWrapper(void *d) {
-    GIOControl *gc = d;
-
-    (_GIO_stdfuncs.getauth)(gc);
-}
-    
-void _GIO_RequestAuthorization(GIOControl *gc) {
-
-    gc->return_code = 401;
-    if ( _GIO_stdfuncs.getauth==NULL )
-return;
-    _GIO_AuthorizationWrapper(gc);
-}
-#else
 void _GIO_ReportHeaders(char *format, ...) {
     static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
     va_list args;
@@ -114,4 +81,41 @@ return;
     pthread_cond_wait(&gc->threaddata->cond,&gc->threaddata->mutex);
     pthread_mutex_unlock(&gc->threaddata->mutex);
 }
-#endif
+
+#else // ! HAVE_PTHREAD_H
+
+void _GIO_ReportHeaders(char *format, ...) {
+    va_list args;
+
+    va_start(args,format);
+    vfprintf( stderr, format, args);
+    va_end(args);
+}
+
+void _GIO_PostError(GIOControl *gc) {
+    gc->receiveerror(gc);
+}
+
+void _GIO_PostInter(GIOControl *gc) {
+    gc->receiveintermediate(gc);
+}
+
+void _GIO_PostSuccess(GIOControl *gc) {
+    gc->receivedata(gc);
+}
+
+static void _GIO_AuthorizationWrapper(void *d) {
+    GIOControl *gc = d;
+
+    (_GIO_stdfuncs.getauth)(gc);
+}
+    
+void _GIO_RequestAuthorization(GIOControl *gc) {
+
+    gc->return_code = 401;
+    if ( _GIO_stdfuncs.getauth==NULL )
+return;
+    _GIO_AuthorizationWrapper(gc);
+}
+
+#endif // ! HAVE_PTHREAD_H
