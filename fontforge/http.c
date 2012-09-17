@@ -30,6 +30,7 @@
 #include <gio.h>
 
 #if defined(__MINGW32__)
+
 int HasLicense(SplineFont *sf,FILE *tmp) {
     return true;
 }
@@ -45,6 +46,7 @@ FILE *URLToTempFile(char *url,void *_lock) {
 int URLFromFile(char *url,FILE *from) {
     return false;
 }
+
 #else
 
 #include <stdio.h>
@@ -62,7 +64,10 @@ int URLFromFile(char *url,FILE *from) {
 #include <stdlib.h>
 #include <time.h>
 #include <errno.h>
+
 #include <pthread.h>
+#define GC_THREADS 1
+#include <gc.h>
 
 struct siteinfo {
     int cookie_cnt;

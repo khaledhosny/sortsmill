@@ -26,7 +26,14 @@
  */
 
 #include "fontforge.h"
+#include <gc.h>
 
 int main( int argc, char **argv ) {
+
+    // Initialize the Boehm-Demers-Weiser garbage collector. (This
+    // should be done in the main program rather than in a dynamic
+    // library, and may or may not expand to a no-op.)
+    GC_INIT();
+
     return fontforge_main( argc, argv );
 }

@@ -37,6 +37,8 @@
 
 #if FREETYPE_HAS_DEBUGGER
 #include <pthread.h>
+#define GC_THREADS 1
+#include <gc.h>
 #if defined(__MINGW32__)
 # include <freetype/truetype/tterrors.h>
 #else

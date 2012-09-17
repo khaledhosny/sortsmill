@@ -39,7 +39,11 @@
 #endif
 
 #ifdef HAVE_PTHREAD_H
-#include <pthread.h>
+# include <pthread.h>
+# define GC_THREADS 1
+# include <gc.h>
+#else
+# include <gc.h>
 #endif
 
 struct stdfuncs {
