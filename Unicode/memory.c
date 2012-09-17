@@ -24,73 +24,49 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+#include <config.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "ustring.h"
+#include "xalloc.h"
 
-/* wrappers around standard memory routines so we can trap errors. */
-static void default_trap(void) {
-    fprintf(stderr, "Attempt to allocate memory failed.\n" );
-    abort();
+void *galloc(long size)
+{
+    // malloc(0) is allowed to return NULL, but galloc(0) is expected
+    // to return something non-NULL.
+    return xmalloc(size == 0 ? 1 : size);
 }
 
-static void (*trap)(void) = default_trap;
-
-void galloc_set_trap(void (*newtrap)(void)) {
-    if ( newtrap==NULL ) newtrap = default_trap;
-    trap = newtrap;
+void *gcalloc(int count, long size)
+{
+    return xcalloc(count, size);
 }
 
-#ifdef USE_OUR_MEMORY
-void *galloc(long size) {
-    void *ret;
-    /* Avoid malloc(0) as malloc is allowed to return NULL.
-     * If malloc fails, call trap() to allow it to possibly
-     * recover memory and try again.
-     */
-    while (( ret = malloc(size==0 ? sizeof(int) : size))==NULL )
-	trap();
-    memset(ret,0x3c,size);		/* fill with random junk for debugging */
-return( ret );
+void *grealloc(void *old, long size)
+{
+    return xrealloc(old, size);
 }
 
-void *gcalloc(int cnt,long size) {
-    void *ret;
-    while (( ret = calloc(cnt,size))==NULL )
-	trap();
-return( ret );
-}
-
-void *grealloc(void *old,long size) {
-    void *ret;
-    while (( ret = realloc(old,size))==NULL )
-	trap();
-return( ret );
-}
-
-void gfree(void *old) {
+void gfree(void *old)
+{
     free(old);
 }
-#endif /* USE_OUR_MEMORY */
 
-char *copy(const char *str) {
-    char *ret;
-
-    if ( str==NULL )
-	return( NULL );
-    ret = (char *) galloc(strlen(str)+1);
-    strcpy(ret,str);
-    return( ret );
+char *copy(const char *str)
+{
+    return (str == NULL) ? NULL : xstrdup(str);
 }
 
-char *copyn(const char *str,long n) {
-    char *ret;
-
-    if ( str==NULL )
-return( NULL );
-    ret = (char *) galloc(n+1);
-    memcpy(ret,str,n);
-    ret[n]='\0';
-return( ret );
+char *copyn(const char *str, long n)
+{
+    char *p = NULL;
+    if (str != NULL) {
+	p = (char *) xmalloc(n + 1);
+	memcpy(p, str, n);
+	p[n] = '\0';
+    }
+    return p;
 }

@@ -44,4 +44,3 @@ LIBADD = $(top_builddir)/Unicode/libgunicode.la	\
 	$(top_builddir)/gutils/libgioftp.la			\
 	$(top_builddir)/fontforge/libfontforge.la
 
--include $(top_srcdir)/git.mk

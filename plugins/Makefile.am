@@ -35,4 +35,3 @@ plugin_LTLIBRARIES = gb12345.la
 gb12345_la_SOURCES = gb12345.c
 gb12345_la_LDFLAGS = -module -avoid-version
 
--include $(top_srcdir)/git.mk

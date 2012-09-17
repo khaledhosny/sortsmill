@@ -30,4 +30,3 @@ include $(top_srcdir)/mk/layout.am
 dist_pkgpythondata_SCRIPTS = site_init.py
 dist_pycontrib_SCRIPTS = __init__.py excepthook.py
 
--include $(top_srcdir)/git.mk

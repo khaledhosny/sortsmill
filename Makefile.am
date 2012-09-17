@@ -48,7 +48,7 @@ include libltdl/Makefile.inc
 
 #--------------------------------------------------------------------------
 
-SUBDIRS = inc Unicode gutils
+SUBDIRS = lib inc Unicode gutils
 
 if GRAPHICAL_USER_INTERFACE
 SUBDIRS += gdraw
@@ -79,7 +79,7 @@ endif FONTTOOLS
 nodist_pkgconfig_DATA = libfontforge.pc libfontforgeexe.pc
 
 EXTRA_DIST += COPYING.permissive README-Mac.html README-MS.html	\
-	README-unix README-Unix.html Readme.VMS
+	README-unix README-Unix.html Readme.VMS m4/gnulib-cache.m4
 
 uninstall-local:
 	(cd desktop; $(MAKE) $(AM_MAKEFLAGS) uninstall)
@@ -197,4 +197,3 @@ shortcuts-template:
 
 #--------------------------------------------------------------------------
 
--include $(top_srcdir)/git.mk

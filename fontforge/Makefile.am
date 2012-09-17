@@ -119,7 +119,8 @@ libfontforge_la_LIBADD = splinerefigure.lo $(LIBADD) \
 
 # Using -release instead of -version-info seems appropriate in the
 # absence of a well defined ABI.
-libfontforge_la_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS) -release $(VERSION)
+libfontforge_la_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS) -release $(VERSION)	\
+	$(LTLIBINTL)
 
 EXTRA_SCRIPTS = generate_codepoint_selector.py
 
@@ -166,7 +167,8 @@ libfontforgeexe_la_LIBADD = libfontforge.la $(LTDLDEPS) $(LIBADD) $(GUILIBADD)
 
 # Using -release instead of -version-info seems appropriate in the
 # absence of a well defined ABI.
-libfontforgeexe_la_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS) -release $(VERSION)
+libfontforgeexe_la_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS) -release	\
+	$(VERSION) $(LTLIBINTL)
 
 #--------------------------------------------------------------------------
 
@@ -216,7 +218,7 @@ FontForge.app/Contents/Info.plist: $(srcdir)/MacFontForgeApp.zip $(srcdir)/stamp
 	$(UNZIP) $(srcdir)/MacFontForgeApp.zip
 	mkdir -p darwinsetup_tmpdir
 	cp FontForge.app/Contents/Info.plist darwinsetup_tmpdir
-	( VERSION=`$(GREP) source_version_str $(srcdir)/stamp.c | $(SED) 's/const char \*source_version_str = "//' | $(SED) 's/";//'` ; $(SED) s/20080810/$$VERSION/ < darwinsetup_tmpdir/Info.plist > FontForge.app/Contents/Info.plist )
+	( VERSION=`$(GREP) source_version_str $(srcdir)/stamp.c | $(SED) 's/const char \*source_version_str = "//' | $(SED) 's/";//'` ; $(SED) "s/20080810/$$VERSION/" < darwinsetup_tmpdir/Info.plist > FontForge.app/Contents/Info.plist )
 
 mostlyclean-local: clean-darwin-stuff
 
@@ -273,4 +275,3 @@ endif # MAINTAINER_TOOLS
 
 #--------------------------------------------------------------------------
 
--include $(top_srcdir)/git.mk

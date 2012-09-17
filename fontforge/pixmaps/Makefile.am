@@ -121,4 +121,3 @@ PNG_LIST = chooseraudio.png chooserback.png chooserbookmark.png			\
 
 dist_pixmaps_DATA = $(PNG_LIST)
 
--include $(top_srcdir)/git.mk

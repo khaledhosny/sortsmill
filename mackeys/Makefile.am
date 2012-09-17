@@ -50,4 +50,3 @@ uninstall-local:
 EXTRA_DIST = $(MACKEYS_PO_FILES)
 MOSTLYCLEANFILES = $(MACKEYS_MO_FILES)
 
--include $(top_srcdir)/git.mk

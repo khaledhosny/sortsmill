@@ -312,4 +312,3 @@ nobase_htdocs_DATA = $(INSTALLED_DOC_LIST) .htaccess
 
 EXTRA_DIST = $(DOC_LIST) .htaccess
 
--include $(top_srcdir)/git.mk

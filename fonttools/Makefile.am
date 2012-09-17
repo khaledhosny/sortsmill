@@ -38,4 +38,3 @@ dewoff_LDADD = $(ZLIB_LIBS)
 
 EXTRA_DIST = README-ttf2eps
 
--include $(top_srcdir)/git.mk

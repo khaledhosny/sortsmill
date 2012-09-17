@@ -104,6 +104,8 @@ libtiff_url="http://en.wikipedia.org/wiki/Libtiff"
 AC_PROG_AWK
 AC_PROG_CC
 AC_PROG_CC_C99
+gl_EARLY
+gl_INIT
 AM_PROG_CC_C_O
 AC_PROG_CPP
 AC_PROG_CXX
@@ -122,6 +124,8 @@ AC_PATH_PROG([UNZIP],[unzip],[unzip])
 AC_PATH_PROG([UPDATE_MIME_DATABASE],[update-mime-database],[update-mime-database])
 AC_PATH_PROG([UPDATE_DESKTOP_DATABASE],[update-desktop-database],[update-desktop-database])
 AC_PATH_PROG([PLUTIL],[plutil],[:])
+
+#--------------------------------------------------------------------------
 
 FONTFORGE_ARG_ENABLE_REAL
 
@@ -232,6 +236,7 @@ fi
 # Checks for typedefs, structures, and compiler characteristics.
 
 AC_C_BIGENDIAN
+AC_HEADER_ASSERT
 AC_HEADER_STDBOOL
 AC_TYPE_INT16_T
 AC_TYPE_INT32_T

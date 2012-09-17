@@ -48,7 +48,6 @@ libgdraw_la_LIBADD = $(top_builddir)/Unicode/libgunicode.la	\
 
 # Using -release instead of -version-info seems appropriate in the
 # absence of a well defined ABI.
-libgdraw_la_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS) -release $(VERSION)
+libgdraw_la_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS) -release $(VERSION)	\
+	$(LTLIBINTL)
 
-
--include $(top_srcdir)/git.mk

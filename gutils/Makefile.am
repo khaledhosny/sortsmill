@@ -45,7 +45,8 @@ libgutils_la_LIBADD = $(top_builddir)/Unicode/libgunicode.la
 
 # Using -release instead of -version-info seems appropriate in the
 # absence of a well defined ABI.
-libgutils_la_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS) -release $(VERSION)
+libgutils_la_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS) -release $(VERSION)	\
+	$(LTLIBINTL)
 
 #--------------------------------------------------------------------------
 
@@ -55,8 +56,8 @@ libgioftp_la_CPPFLAGS = "-I$(top_builddir)/inc" "-I$(top_srcdir)/inc"	\
 
 # Using -release instead of -version-info seems appropriate in the
 # absence of a well defined ABI.
-libgioftp_la_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS) -release $(VERSION)
+libgioftp_la_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS) -release $(VERSION)	\
+	$(LTLIBINTL)
 
 #--------------------------------------------------------------------------
 
--include $(top_srcdir)/git.mk
