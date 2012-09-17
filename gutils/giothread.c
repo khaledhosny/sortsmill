@@ -71,15 +71,14 @@ static void _GIO_AuthorizationWrapper(void *d) {
 }
     
 void _GIO_RequestAuthorization(GIOControl *gc) {
-
     gc->return_code = 401;
-    if ( _GIO_stdfuncs.getauth==NULL )
-return;
-    pthread_mutex_lock(&gc->threaddata->mutex);
-    if ( _GIO_stdfuncs.gdraw_sync_thread!=NULL )
-	(_GIO_stdfuncs.gdraw_sync_thread)(NULL,_GIO_AuthorizationWrapper,gc);
-    pthread_cond_wait(&gc->threaddata->cond,&gc->threaddata->mutex);
-    pthread_mutex_unlock(&gc->threaddata->mutex);
+    if ( _GIO_stdfuncs.getauth != NULL ) {
+	pthread_mutex_lock(&gc->threaddata->mutex);
+	if ( _GIO_stdfuncs.gdraw_sync_thread!=NULL )
+	    (_GIO_stdfuncs.gdraw_sync_thread)(NULL,_GIO_AuthorizationWrapper,gc);
+	pthread_cond_wait(&gc->threaddata->cond,&gc->threaddata->mutex);
+	pthread_mutex_unlock(&gc->threaddata->mutex);
+    }
 }
 
 #else // ! HAVE_PTHREAD_H
