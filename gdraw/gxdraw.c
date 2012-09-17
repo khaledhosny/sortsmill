@@ -1158,11 +1158,7 @@ return( NULL );
 	e.native_window = (void *) (intpt) nw->w;
 	(eh)((GWindow) nw,&e);
     }
-    /* Only do sub-pixel/anti-alias stuff if we've got truecolor */
-    if ( gdisp->visual->class==TrueColor && !(wattrs->mask&wam_nocairo) )
-	_GXCDraw_NewWindow(nw);
-    /* Must come after the cairo init so pango will know to use cairo or xft */
-    /* I think we will always want to use pango, so it isn't conditional on a wam */
+    _GXCDraw_NewWindow(nw);
     _GXPDraw_NewWindow(nw);
 return( (GWindow) nw );
 }
@@ -1218,11 +1214,7 @@ return( NULL );
     gw->pos.x = gw->pos.y = 0;
     gw->pos.width = width; gw->pos.height = height;
     gw->w = XCreatePixmap(gw->display->display, gw->display->root, width, height, gw->display->depth);
-    /* Only do sub-pixel/anti-alias stuff if we've got truecolor */
-    if ( ((GXDisplay *) gdisp)->visual->class==TrueColor )
-	_GXCDraw_NewWindow(gw);
-    /* Must come after the cairo init so pango will know to use cairo or xft */
-    /* I think we will always want to use pango, so it isn't conditional */
+    _GXCDraw_NewWindow(gw);
     _GXPDraw_NewWindow(gw);
 return( (GWindow) gw );
 }
@@ -1278,8 +1270,7 @@ static void GTimerRemoveWindowTimers(GXWindow gw);
 static void GXDrawDestroyWindow(GWindow w) {
     GXWindow gw = (GXWindow) w;
 
-    if ( gw->usecairo )
-	_GXCDraw_DestroyWindow(gw);
+    _GXCDraw_DestroyWindow(gw);
     _GXPDraw_DestroyWindow(gw);
 
     if ( gw->is_pixmap ) {
@@ -1985,51 +1976,38 @@ static void GXDrawPushClip(GWindow w, GRect *rct, GRect *old) {
 	w->ggc->clip.x = w->ggc->clip.y = -100;
 	w->ggc->clip.height = w->ggc->clip.width = 1;
     }
-    if ( ((GXWindow) w)->usecairo )
-	_GXCDraw_PushClip((GXWindow) w);
+    _GXCDraw_PushClip((GXWindow) w);
 }
 
 static void GXDrawPopClip(GWindow w, GRect *old) {
+    GXWindow gw = (GXWindow) w;
     w->ggc->clip = *old;
-    if ( ((GXWindow) w)->usecairo )
-	_GXCDraw_PopClip((GXWindow) w);
+    _GXCDraw_PopClip(gw);
 }
 
-static void GXDrawClear(GWindow gw, GRect *rect) {
-    GXWindow gxw = (GXWindow) gw;
-    if ( gxw->usecairo ) {
-	_GXCDraw_Clear(gxw,rect);
-    } else {
-	GXDisplay *display = (GXDisplay *) (gw->display);
-
-	if ( rect==NULL )
-	    XClearWindow(display->display,gxw->w);
-	else
-	    XClearArea(display->display,gxw->w,
-		    rect->x,rect->y,rect->width,rect->height, false );
-    }
+static void GXDrawClear(GWindow w, GRect *rect) {
+    GXWindow gw = (GXWindow) w;
+    _GXCDraw_Clear(gw,rect);
 }
 
 // FIXME: This routine was very hard to read with the #ifdef
 // stuff in it. Is it correct?
 static void GXDrawDrawLine(GWindow w, int32 x,int32 y, int32 xend,int32 yend, Color col) {
+    GXWindow gw = (GXWindow) w;
     w->ggc->fg = col;
 
-    if ( ((GXWindow) w)->usecairo && w->ggc->func==df_copy ) {
-	_GXCDraw_DrawLine((GXWindow) w,x,y,xend,yend);
+    if ( w->ggc->func==df_copy ) {
+	_GXCDraw_DrawLine(gw,x,y,xend,yend);
     } else {
-	if (((GXWindow) w)->usecairo )
-	    _GXCDraw_Flush((GXWindow) w);
+	_GXCDraw_Flush(gw);
 
 	GXDisplay *display = (GXDisplay *) (w->display);
 	GXDrawSetline(display,w->ggc);
-	XDrawLine(display->display,((GXWindow) w)->w,display->gcstate[w->ggc->bitmap_col].gc,x,y,xend,yend);
+	XDrawLine(display->display,gw->w,display->gcstate[w->ggc->bitmap_col].gc,x,y,xend,yend);
 
-	if (((GXWindow) w)->usecairo ) {
-	    if ( xend<x ) { int temp = x; x = xend; xend=temp;}
-	    if ( yend<y ) { int temp = y; y = yend; yend=temp;}
-	    _GXCDraw_DirtyRect((GXWindow) w,x,y,xend-x+1,yend-y+1);
-	}
+	if ( xend<x ) { int temp = x; x = xend; xend=temp;}
+	if ( yend<y ) { int temp = y; y = yend; yend=temp;}
+	_GXCDraw_DirtyRect(gw,x,y,xend-x+1,yend-y+1);
     }
 }
 
@@ -2061,7 +2039,8 @@ static void GXDrawDrawArrow(GWindow gw, int32 x,int32 y, int32 xend,int32 yend, 
     GXWindow gxw = (GXWindow) gw;
     GXDisplay *display = gxw->display;
 
-    if ( gxw->usecairo )
+    // FIXME
+    //if ( gxw->usecairo )
 	GDrawIError("DrawArrow not supported");
     gxw->ggc->fg = col;
     GXDrawSetline(display,gxw->ggc);
@@ -2078,19 +2057,17 @@ static void GXDrawDrawRect(GWindow gw, GRect *rect, Color col) {
     GXWindow gxw = (GXWindow) gw;
 
     gxw->ggc->fg = col;
-    if ( gxw->usecairo && gw->ggc->func==df_copy ) {
+    if ( gw->ggc->func==df_copy ) {
 	_GXCDraw_DrawRect(gxw,rect);
     } else {
-	if ( gxw->usecairo )
-	    _GXCDraw_Flush(gxw);
+	_GXCDraw_Flush(gxw);
 
 	GXDisplay *display = gxw->display;
 	GXDrawSetline(display,gxw->ggc);
 	XDrawRectangle(display->display,gxw->w,display->gcstate[gxw->ggc->bitmap_col].gc,rect->x,rect->y,
 		       rect->width,rect->height);
 
-	if ( gxw->usecairo )
-	    _GXCDraw_DirtyRect(gxw,rect->x,rect->y,rect->width,rect->height);
+	_GXCDraw_DirtyRect(gxw,rect->x,rect->y,rect->width,rect->height);
     }
 }
 
@@ -2100,19 +2077,17 @@ static void GXDrawFillRect(GWindow gw, GRect *rect, Color col) {
     GXWindow gxw = (GXWindow) gw;
 
     gxw->ggc->fg = col;
-    if ( gxw->usecairo && gw->ggc->func==df_copy ) {
+    if ( gw->ggc->func==df_copy ) {
 	_GXCDraw_FillRect( gxw,rect);
     } else {
-	if (gxw->usecairo )
-	    _GXCDraw_Flush(gxw);
+	_GXCDraw_Flush(gxw);
 
 	GXDisplay *display = gxw->display;
 	GXDrawSetcolfunc(display,gxw->ggc);
 	XFillRectangle(display->display,gxw->w,display->gcstate[gxw->ggc->bitmap_col].gc,rect->x,rect->y,
 		       rect->width,rect->height);
 
-	if (gxw->usecairo )
-	    _GXCDraw_DirtyRect(gxw,rect->x,rect->y,rect->width,rect->height);
+	_GXCDraw_DirtyRect(gxw,rect->x,rect->y,rect->width,rect->height);
     }
 }
 
@@ -2124,11 +2099,10 @@ static void GXDrawFillRoundRect(GWindow gw, GRect *rect, int radius, Color col) 
 
     gxw->ggc->fg = col;
 
-    if ( gxw->usecairo && gw->ggc->func==df_copy ) {
+    if ( gw->ggc->func==df_copy ) {
 	_GXCDraw_FillRoundRect( gxw,rect,rr );
     } else {
-	if (gxw->usecairo )
-	    _GXCDraw_Flush(gxw);
+	_GXCDraw_Flush(gxw);
 
 	GRect middle = {rect->x, rect->y + radius, rect->width, rect->height - 2 * radius};
 	int xend = rect->x + rect->width - 1;
@@ -2143,8 +2117,7 @@ static void GXDrawFillRoundRect(GWindow gw, GRect *rect, int radius, Color col) 
 	}
 	GXDrawFillRect(gw, &middle, col);
 
-	if (gxw->usecairo )
-	    _GXCDraw_DirtyRect(gxw,rect->x,rect->y,rect->width,rect->height);
+	_GXCDraw_DirtyRect(gxw,rect->x,rect->y,rect->width,rect->height);
     }
 }
 
@@ -2152,15 +2125,7 @@ static void GXDrawDrawElipse(GWindow gw, GRect *rect, Color col) {
     GXWindow gxw = (GXWindow) gw;
 
     gxw->ggc->fg = col;
-    if ( gxw->usecairo ) {
-	_GXCDraw_DrawEllipse( gxw,rect);
-    } else {
-	GXDisplay *display = gxw->display;
-
-	GXDrawSetline(display,gxw->ggc);
-	XDrawArc(display->display,gxw->w,display->gcstate[gxw->ggc->bitmap_col].gc,rect->x,rect->y,
-		rect->width,rect->height,0,360*64);
-    }
+    _GXCDraw_DrawEllipse( gxw,rect);
 }
 
 static void GXDrawDrawArc(GWindow gw, GRect *rect, int32 sangle, int32 tangle, Color col) {
@@ -2192,86 +2157,50 @@ static void GXDrawDrawArc(GWindow gw, GRect *rect, int32 sangle, int32 tangle, C
 
 static void GXDrawFillElipse(GWindow gw, GRect *rect, Color col) {
     GXWindow gxw = (GXWindow) gw;
-    GXDisplay *display = gxw->display;
 
     gxw->ggc->fg = col;
-    if ( gxw->usecairo ) {
-	_GXCDraw_FillEllipse( gxw,rect);
-    } else {
-	GXDrawSetcolfunc(display,gxw->ggc);
-	XFillArc(display->display,gxw->w,display->gcstate[gxw->ggc->bitmap_col].gc,rect->x,rect->y,
-		rect->width,rect->height,0,360*64);
-    }
+    _GXCDraw_FillEllipse( gxw,rect);
 }
 
 static void GXDrawDrawPoly(GWindow gw, GPoint *pts, int16 cnt, Color col) {
     GXWindow gxw = (GXWindow) gw;
-    GXDisplay *display = gxw->display;
 
     gxw->ggc->fg = col;
-    if ( gxw->usecairo ) {
-	_GXCDraw_DrawPoly( gxw,pts,cnt);
-    } else {
-	GXDrawSetline(display,gxw->ggc);
-	XDrawLines(display->display,gxw->w,display->gcstate[gxw->ggc->bitmap_col].gc,(XPoint *) pts,cnt,CoordModeOrigin);
-    }
+    _GXCDraw_DrawPoly( gxw,pts,cnt);
 }
 
 static void GXDrawFillPoly(GWindow gw, GPoint *pts, int16 cnt, Color col) {
     GXWindow gxw = (GXWindow) gw;
-    GXDisplay *display = gxw->display;
 
     gxw->ggc->fg = col;
-    if ( gxw->usecairo ) {
-	_GXCDraw_FillPoly( gxw,pts,cnt);
-    } else {
-	GXDrawSetline(display,gxw->ggc);		/* Polygons draw their borders too! so we need the line mode */
-	GXDrawSetcolfunc(display,gxw->ggc);	
-	XFillPolygon(display->display,gxw->w,display->gcstate[gxw->ggc->bitmap_col].gc,(XPoint *) pts,cnt,Complex,CoordModeOrigin);
-	XDrawLines(display->display,gxw->w,display->gcstate[gxw->ggc->bitmap_col].gc,(XPoint *) pts,cnt,CoordModeOrigin);
-    }
+    _GXCDraw_FillPoly( gxw,pts,cnt);
 }
 
 static enum gcairo_flags GXDrawHasCairo(GWindow w) {
-    if ( ((GXWindow) w)->usecairo )
 return( _GXCDraw_CairoCapabilities( (GXWindow) w));
-
-return( gc_xor );
 }
 
 static void GXDrawPathStartNew(GWindow w) {
-    if ( !((GXWindow) w)->usecairo )
-return;
     _GXCDraw_PathStartNew(w);
 }
 
 static void GXDrawPathStartSubNew(GWindow w) {
-    if ( !((GXWindow) w)->usecairo )
-return;
     _GXCDraw_PathStartSubNew(w);
 }
 
 static int GXDrawFillRuleSetWinding(GWindow w) {
-    if ( !((GXWindow) w)->usecairo )
-return 0;
     return _GXCDraw_FillRuleSetWinding(w);
 }
 
 static void GXDrawPathClose(GWindow w) {
-    if ( !((GXWindow) w)->usecairo )
-return;
     _GXCDraw_PathClose(w);
 }
 
 static void GXDrawPathMoveTo(GWindow w,double x, double y) {
-    if ( !((GXWindow) w)->usecairo )
-return;
     _GXCDraw_PathMoveTo(w,x,y);
 }
 
 static void GXDrawPathLineTo(GWindow w,double x, double y) {
-    if ( !((GXWindow) w)->usecairo )
-return;
     _GXCDraw_PathLineTo(w,x,y);
 }
 
@@ -2279,26 +2208,18 @@ static void GXDrawPathCurveTo(GWindow w,
 		    double cx1, double cy1,
 		    double cx2, double cy2,
 		    double x, double y) {
-    if ( !((GXWindow) w)->usecairo )
-return;
     _GXCDraw_PathCurveTo(w,cx1,cy1,cx2,cy2,x,y);
 }
 
 static void GXDrawPathStroke(GWindow w,Color col) {
-    if ( !((GXWindow) w)->usecairo )
-return;
     _GXCDraw_PathStroke(w,col);
 }
 
 static void GXDrawPathFill(GWindow w,Color col) {
-    if ( !((GXWindow) w)->usecairo )
-return;
     _GXCDraw_PathFill(w,col);
 }
 
 static void GXDrawPathFillAndStroke(GWindow w,Color fillcol, Color strokecol) {
-    if ( !((GXWindow) w)->usecairo )
-return;
     _GXCDraw_PathFillAndStroke(w,fillcol,strokecol);
 }
 
@@ -2357,7 +2278,6 @@ return;
 
 static void GXDrawScroll(GWindow _w, GRect *rect, int32 hor, int32 vert) {
     GXWindow gw = (GXWindow) _w;
-    GXDisplay *gdisp = gw->display;
     GRect temp, old;
 
     vert = -vert;
@@ -2370,32 +2290,7 @@ static void GXDrawScroll(GWindow _w, GRect *rect, int32 hor, int32 vert) {
     /*GDrawForceUpdate((GWindow) gw); */	/* need to make sure the screen holds what it should */
     /* but user has to do it, it's probably too late here */
     GDrawPushClip(_w,rect,&old);
-#ifdef _COMPOSITE_BROKEN
     GXDrawSendExpose(gw,0,0,gw->pos.width,gw->pos.height);
-#else
-    _GXDraw_SetClipFunc(gdisp,gw->ggc);
-    if ( gw->usecairo ) {
-	/* Cairo can happily scroll the window -- except it doesn't know about*/
-	/*  child windows, and so we don't get the requisit events to redraw */
-	/*  areas covered by children. Rats. */
-	GXDrawSendExpose(gw,rect->x,rect->y,rect->x+rect->width,rect->y+rect->height);
-	GXDrawPopClip(_w,&old);
-	return;
-	/* _GXCDraw_CopyArea(gw,gw,rect,rect->x+hor,rect->y+vert); */
-    } else {
-	XCopyArea(gdisp->display,gw->w,gw->w,gdisp->gcstate[gw->ggc->bitmap_col].gc,
-		  rect->x,rect->y,	rect->width,rect->height,
-		  rect->x+hor,rect->y+vert);
-    }
-    if ( hor>0 )
-	GXDrawSendExpose(gw,rect->x,rect->y, hor,rect->height);
-    else if ( hor<0 )
-	GXDrawSendExpose(gw,rect->x+rect->width+hor,rect->y,-hor,rect->height);
-    if ( vert>0 )
-	GXDrawSendExpose(gw,rect->x,rect->y,rect->width,vert);
-    else if ( vert<0 )
-	GXDrawSendExpose(gw,rect->x,rect->y+rect->height+vert,rect->width,-vert);
-#endif
     GXDrawPopClip(_w,&old);
 }
 
@@ -2412,7 +2307,7 @@ static void _GXDraw_Pixmap( GWindow _w, GWindow _pixmap, GRect *src, int32 x, in
 	_GXDraw_SetClipFunc(gdisp,gw->ggc);
 	/* FIXME: _GXCDraw_CopyArea makes the glyph dissabear in the class kern
 	 * dialog */
-	if ( 0 && gw->usecairo )
+	if ( 0 )
 	    _GXCDraw_CopyArea(pixmap,gw,src,x,y);
 	else
 	    XCopyArea(gdisp->display,pixmap->w,gw->w,gdisp->gcstate[gw->ggc->bitmap_col].gc,
@@ -2439,12 +2334,8 @@ static void _GXDraw_TilePixmap( GWindow _w, GWindow _pixmap, GRect *src, int32 x
 		XCopyPlane(gdisp->display,((GXWindow) pixmap)->w,gw->w,gdisp->gcstate[1].gc,
 			0,0,  pixmap->pos.width, pixmap->pos.height,
 			j,i,1);
-	    } else if ( gw->usecairo ) {
-		_GXCDraw_CopyArea(pixmap,gw,&pixmap->pos,j,i);
 	    } else {
-		XCopyArea(gdisp->display,((GXWindow) pixmap)->w,gw->w,gdisp->gcstate[0].gc,
-			0,0,  pixmap->pos.width, pixmap->pos.height,
-			j,i);
+		_GXCDraw_CopyArea(pixmap,gw,&pixmap->pos,j,i);
 	    }
 	}
     }
@@ -3161,8 +3052,7 @@ return;
 		gevent.u.expose.rect.y = subevent.xexpose.y;
 	    }
 	}
-	if ( ((GXWindow) gw)->usecairo )		/* X11 does this automatically. but cairo won't get the event */
-	    GXDrawClear(gw,&gevent.u.expose.rect);
+	GXDrawClear(gw,&gevent.u.expose.rect);
       break;
       case VisibilityNotify:
 	gevent.type = et_visibility;
@@ -3215,8 +3105,7 @@ return;
 	    gevent.u.resize.moved = true;
 	if ( gevent.u.resize.dwidth!=0 || gevent.u.resize.dheight!=0 ) {
 	    gevent.u.resize.sized = true;
-	    if ( ((GXWindow) gw)->usecairo )
-		_GXCDraw_ResizeWindow((GXWindow) gw, &gevent.u.resize.size);
+	    _GXCDraw_ResizeWindow((GXWindow) gw, &gevent.u.resize.size);
 	}
 	gw->pos = gevent.u.resize.size;
 	if ( !gdisp->top_offsets_set && ((GXWindow) gw)->was_positioned &&

@@ -103,7 +103,6 @@ struct gwindow {
     unsigned int is_dying: 1;
     unsigned int is_popup: 1;
     unsigned int disable_expose_requests: 1;
-    unsigned int usecairo: 1;		/* use a cairo context -- if meaningful */
 };
 
 struct ginput_context {

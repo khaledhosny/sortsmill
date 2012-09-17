@@ -40,15 +40,6 @@ change the protection on /dev/input/event0 so that it is world readable
 
 (there is now a working XFree driver for wacom, but you have to get it from
 John, it's not part of standard XFree yet).
-
-	_COMPOSITE_BROKEN
-on XFree with the composite extension active, scrolling windows with docket
-palletes may result in parts of the palettes duplicated outside their dock
-rectangles.
-
-Defining this macro forces redisplay of the entire window area, which is
-slightly slower, but should make no significant difference on a machine
-capable of using composite.
 */
 
 #ifndef _XDRAW_H
@@ -141,7 +132,6 @@ typedef struct gxwindow /* :GWindow */ {
     unsigned int is_dying: 1;
     unsigned int is_popup: 1;
     unsigned int disable_expose_requests: 1;
-    unsigned int usecairo: 1;		/* use a cairo context */
     unsigned int is_dlg: 1;
     unsigned int not_restricted: 1;
     unsigned int was_positioned: 1;
@@ -158,7 +148,6 @@ typedef struct gxwindow /* :GWindow */ {
     cairo_t *cc;
     cairo_surface_t *cs;
     struct gcstate cairo_state;
-    XftDraw *xft_w;
     Window transient_owner;
 } *GXWindow;
 
@@ -346,8 +335,6 @@ typedef struct gxdisplay /* : GDisplay */ {
     struct xkb xkb;
     PangoFontMap *pango_fontmap;
     PangoContext *pango_context;
-    PangoFontMap *pangoc_fontmap;
-    PangoContext *pangoc_context;
     Window last_nontransient_window;
 } GXDisplay;
 
