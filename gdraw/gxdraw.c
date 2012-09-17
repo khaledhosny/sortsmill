@@ -1159,7 +1159,7 @@ return( NULL );
 	(eh)((GWindow) nw,&e);
     }
     /* Only do sub-pixel/anti-alias stuff if we've got truecolor */
-    if ( gdisp->visual->class==TrueColor && !(wattrs->mask&wam_nocairo) &&_GXCDraw_hasCairo() )
+    if ( gdisp->visual->class==TrueColor && !(wattrs->mask&wam_nocairo) )
 	_GXCDraw_NewWindow(nw);
     /* Must come after the cairo init so pango will know to use cairo or xft */
     /* I think we will always want to use pango, so it isn't conditional on a wam */
@@ -1224,8 +1224,7 @@ return( NULL );
     gw->pos.width = width; gw->pos.height = height;
     gw->w = XCreatePixmap(gw->display->display, gw->display->root, width, height, gw->display->depth);
     /* Only do sub-pixel/anti-alias stuff if we've got truecolor */
-    if ( ((GXDisplay *) gdisp)->visual->class==TrueColor && wamcairo &&
-	    _GXCDraw_hasCairo() )
+    if ( ((GXDisplay *) gdisp)->visual->class==TrueColor && wamcairo )
 	_GXCDraw_NewWindow(gw);
     /* Must come after the cairo init so pango will know to use cairo or xft */
     /* I think we will always want to use pango, so it isn't conditional */

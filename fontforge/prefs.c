@@ -182,8 +182,6 @@ static int alwaysgenapple=false, alwaysgenopentype=false;
 static int gfc_showhidden, gfc_dirplace;
 static char *gfc_bookmarks=NULL;
 
-static int prefs_usecairo = true;
-
 static int pointless;
 
     /* These first three must match the values in macenc.c */
@@ -284,12 +282,6 @@ static struct prefs_list {
 	{ N_("FreeTypeInFontView"), pr_bool, &use_freetype_to_rasterize_fv, NULL, NULL, 'O', NULL, 0, N_("Use the FreeType rasterizer (when available)\nto rasterize glyphs in the font view.\nThis generally results in better quality.") },
 	{ N_("FreeTypeAAFillInOutlineView"), pr_bool, &use_freetype_with_aa_fill_cv, NULL, NULL, 'O', NULL, 0, N_("When filling using freetype in the outline view,\nhave freetype render the glyph antialiased.") },
 	{ N_("SplashScreen"), pr_bool, &splash, NULL, NULL, 'S', NULL, 0, N_("Show splash screen on start-up") },
-
-	//*****************************************************************************************************
-        // FIXME: Get rid of this.
-	{ N_("UseCairoDrawing"), pr_bool, &prefs_usecairo, NULL, NULL, '\0', NULL, 0, N_("Use the cairo library for drawing (if available)\nThis makes for prettier (anti-aliased) but slower drawing\nThis applies to any windows created AFTER this is set.\nAlready existing windows will continue as they are.") },
-	//*****************************************************************************************************
-
 	{ N_("ExportClipboard"), pr_bool, &export_clipboard, NULL, NULL, '\0', NULL, 0, N_( "If you are running an X11 clipboard manager you might want\nto turn this off. FF can put things into its internal clipboard\nwhich it cannot export to X11 (things like copying more than\none glyph in the fontview). If you have a clipboard manager\nrunning it will force these to be exported with consequent\nloss of data.") },
 	{ N_("AutoSaveFrequency"), pr_int, &AutoSaveFrequency, NULL, NULL, '\0', NULL, 0, N_( "The number of seconds between autosaves. If you set this to 0 there will be no autosaves.") },
 	PREFS_LIST_EMPTY
@@ -1155,7 +1147,6 @@ static void PrefsUI_LoadPrefs(void) {
     }
     LoadNamelistDir(NULL);
     ProcessFileChooserPrefs();
-    GDrawEnableCairo( prefs_usecairo );
 }
 
 static void PrefsUI_SavePrefs(int not_if_script) {
@@ -1796,7 +1787,6 @@ return( true );
 	}
 	if ( othersubrsfile!=NULL && ReadOtherSubrsFile(othersubrsfile)<=0 )
 	    fprintf( stderr, "Failed to read OtherSubrs from %s\n", othersubrsfile );
-	GDrawEnableCairo(prefs_usecairo);
     }
 return( true );
 }

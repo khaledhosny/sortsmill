@@ -43,23 +43,9 @@
 # include <sys/utsname.h>
 #endif
 
-// FIXME: Get rid of this.
-static int usecairo = true;
-
-// FIXME: Get rid of this.
-void GDrawEnableCairo(int on) {
-    usecairo=on;
-    /* Obviously, if we have no library, enabling it will do nothing */
-}
-
 /* ************************************************************************** */
 /* ***************************** Cairo Library ****************************** */
 /* ************************************************************************** */
-
-// FIXME: Get rid of this.
-int _GXCDraw_hasCairo(void) {
-    return true;
-}
 
 /* ************************************************************************** */
 /* ****************************** Cairo Window ****************************** */
@@ -67,9 +53,6 @@ int _GXCDraw_hasCairo(void) {
 void _GXCDraw_NewWindow(GXWindow nw) {
     GXDisplay *gdisp = nw->display;
     Display *display = gdisp->display;
-
-    if ( !usecairo || !_GXCDraw_hasCairo())
-return;
 
     nw->cs = cairo_xlib_surface_create(display,nw->w,gdisp->visual,
 	    nw->pos.width, nw->pos.height );
