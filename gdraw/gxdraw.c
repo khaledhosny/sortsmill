@@ -2713,8 +2713,9 @@ static void GXDrawCancelTimer(GTimer *timer) {
 	free(timer);
 }
 
-static void GXDrawSyncThread(GDisplay *gd, void (*func)(void *), void *data) {
 #ifdef HAVE_PTHREAD_H
+
+static void GXDrawSyncThread(GDisplay *gd, void (*func)(void *), void *data) {
     GXDisplay *gdisp = (GXDisplay *) gd;
     struct things_to_do *ttd;
 
@@ -2749,10 +2750,15 @@ static void GXDrawSyncThread(GDisplay *gd, void (*func)(void *), void *data) {
 	}
     }
     pthread_mutex_unlock(&gdisp->xthread.sync_mutex);
-#else
-    (func)(data);
-#endif
 }
+
+#else
+
+static void GXDrawSyncThread(GDisplay *gd, void (*func)(void *), void *data) {
+    (func)(data);
+}
+
+#endif
 
 static int GXDrawProcessTimerEvent(GXDisplay *gdisp,GTimer *timer) {
     struct gevent gevent;
@@ -2803,6 +2809,7 @@ static void GXDrawCheckPendingTimers(GXDisplay *gdisp) {
 }
 
 #ifdef HAVE_PTHREAD_H
+
 static void GXDrawDoThings(GXDisplay *gdisp) {
     char buffer[10];
     /* we enter and leave with the mutex locked */
@@ -2823,7 +2830,8 @@ static void GXDrawDoThings(GXDisplay *gdisp) {
 	pthread_mutex_lock(&gdisp->xthread.sync_mutex);
     }
 }
-#endif
+
+#endif // HAVE_PTHREAD_H
 
 static void GXDrawWaitForEvent(GXDisplay *gdisp) {
     struct timeval tv;
