@@ -24,6 +24,10 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+#include <config.h>
+
+#include <stdbool.h>
 #include "fontforgevw.h"
 #include <ustring.h>
 #include <utype.h>
@@ -4131,7 +4135,7 @@ static double BlueSearch(char *bluestring, double value, double bestvalue) {
     if ( *bluestring=='[' ) ++bluestring;
     if ( (bestdiff = bestvalue-value)<0 ) bestdiff = -bestdiff;
 
-    forever {
+    while (true) {
 	try = strtod(bluestring,&end);
 	if ( bluestring==end )
 return( bestvalue );

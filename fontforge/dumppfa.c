@@ -24,10 +24,14 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+#include <config.h>
+
 #include "fontforge.h"
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 #include <ustring.h>
 #include <utype.h>
@@ -1410,7 +1414,7 @@ static double FindMaxDiffOfBlues(char *pt, double max_diff) {
     double p1, p2;
 
     while ( *pt==' ' || *pt=='[' ) ++pt;
-    forever {
+    while (true) {
 	p1 = strtod(pt,&end);
 	if ( end==pt )
     break;

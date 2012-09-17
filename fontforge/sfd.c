@@ -24,6 +24,10 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+#include <config.h>
+
+#include <stdbool.h>
 #include "fontforge.h"
 #include "splinefont.h"
 #include "baseviews.h"
@@ -1433,7 +1437,7 @@ static void appendnames(char *dest,char *dir,char *dir_char,char *name,char *ext
     /* Windows, Mac & VMS all ignore case in the file system so we can't just */
     /* copy the glyph name blindly (else "A" and "a" would map to the same file */
     /* VMS also can't handle multiple "."s in a filename */
-    forever {
+    while (true) {
 	if ( strncmp(name,"uni",3)==0 && ishexdigit(name[3]) && ishexdigit(name[4]) &&
 		ishexdigit(name[5]) && ishexdigit(name[6])) {
 	    /* but in a name like uni00AD case is irrelevant. Even under unix its */
@@ -3262,7 +3266,7 @@ static void SFDGetHintMask(FILE *sfd,HintMask *hintmask) {
     int nibble = 0, ch;
 
     memset(hintmask,0,sizeof(HintMask));
-    forever {
+    while (true) {
 	ch = nlgetc(sfd);
 	if ( isdigit(ch))
 	    ch -= '0';
@@ -4973,7 +4977,7 @@ static void SFDFixupRefs(SplineFont *sf) {
 	sf = sf->subfonts[0];
 
     ff_progress_change_line2(_("Interpreting Glyphs"));
-    forever {
+    while (true) {
 	for ( i=0; i<sf->glyphcnt; ++i ) if ( sf->glyphs[i]!=NULL ) {
 	    SplineChar *sc = sf->glyphs[i];
 	    /* A changed character is one that has just been recovered */
@@ -5194,7 +5198,7 @@ static void SFDGetDesignSize(FILE *sfd,SplineFont *sf) {
 	    ungetc(ch,sfd);
 	getsint(sfd,(int16 *) &sf->design_range_top);
 	getsint(sfd,(int16 *) &sf->fontstyle_id);
-	forever {
+	while (true) {
 	    while ( (ch=nlgetc(sfd))==' ' );
 	    ungetc(ch,sfd);
 	    if ( !isdigit(ch))
@@ -5215,7 +5219,7 @@ static void SFDGetOtfFeatName(FILE *sfd,SplineFont *sf) {
 
     fn = chunkalloc(sizeof(struct otffeatname));
     fn->tag = gettag(sfd);
-    forever {
+    while (true) {
 	while ( (ch=nlgetc(sfd))==' ' );
 	ungetc(ch,sfd);
 	if ( !isdigit(ch))
@@ -5916,7 +5920,7 @@ static void SFDParseLookup(FILE *sfd,SplineFont *sf,OTLookup *otl) {
 	ch = nlgetc(sfd);
     if ( ch=='[' ) {
 	lastfl = NULL;
-	forever {
+	while (true) {
 	    while ( (ch=nlgetc(sfd))==' ' );
 	    if ( ch==']' )
 	break;
@@ -5938,7 +5942,7 @@ static void SFDParseLookup(FILE *sfd,SplineFont *sf,OTLookup *otl) {
 	    while ( (ch=nlgetc(sfd))==' ' );
 	    if ( ch=='(' ) {
 		lastsl = NULL;
-		forever {
+		while (true) {
 		    while ( (ch=nlgetc(sfd))==' ' );
 		    if ( ch==')' )
 		break;
@@ -5955,7 +5959,7 @@ static void SFDParseLookup(FILE *sfd,SplineFont *sf,OTLookup *otl) {
 		    while ( (ch=nlgetc(sfd))==' ' );
 		    if ( ch=='<' ) {
 			lcnt = 0;
-			forever {
+			while (true) {
 			    while ( (ch=nlgetc(sfd))==' ' );
 			    if ( ch=='>' )
 			break;
@@ -6089,7 +6093,7 @@ static OTLookup **SFDLookupList(FILE *sfd,SplineFont *sf) {
     int lcnt=0, lmax=100;
     char *name;
 
-    forever {
+    while (true) {
 	while ( (ch=nlgetc(sfd))==' ' );
 	if ( ch=='\n' || ch==EOF )
     break;

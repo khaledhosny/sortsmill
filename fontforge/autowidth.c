@@ -25,7 +25,11 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+#include <config.h>
+
 #include "fontforgevw.h"
+#include <stdbool.h>
 #include <math.h>
 #include <ustring.h>
 #include <utype.h>
@@ -1017,7 +1021,7 @@ static unichar_t *ugetstr(FILE *file,int format,unichar_t *buffer,int len) {
 		ungetc(ch,file);
 	}
     } else {
-	forever {
+	while (true) {
 	    ch = getc(file);
 	    ch2 = getc(file);
 	    if ( format==1 )

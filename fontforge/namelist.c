@@ -26,6 +26,9 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <config.h>
+
+#include <stdbool.h>
 #include "fontforgevw.h"
 #include "ustring.h"
 #include <utype.h>
@@ -300,7 +303,7 @@ return( 0 );
 	    real cutpoint;
 	    ocnt = 0;
 	    out[ocnt++] = alp[a++];
-	    forever {
+	    while (true) {
 		if ( a<acnt ) cutpoint = (alp[a]->transform[4]+3*alp[a-1]->transform[4])/4;
 		else		cutpoint = 1e30;
 		while ( r<rcnt && refs[r]->transform[4]<cutpoint )

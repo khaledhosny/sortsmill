@@ -25,6 +25,10 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+#include <config.h>
+
+#include <stdbool.h>
 #include "fontforge.h"
 #include <math.h>
 #include "ustring.h"
@@ -1300,7 +1304,7 @@ return( SplineMake3(from,to));
 	nocnt = 0;
 	curdiff = SigmaDeltas(spline,mid,cnt,&b,&db);
 	totcnt = 0;
-	forever {
+	while (true) {
 	    bigreal fadiff, fsdiff;
 	    bigreal tadiff, tsdiff;
 
@@ -3470,7 +3474,7 @@ Spline *SplineAddPointsOfInflection(Spline *s) {
     int cnt;
     SplinePoint *sp;
 
-    forever {
+    while (true) {
 	if ( s->knownlinear )
 return( s );
 	cnt = Spline2DFindPointsOfInflection(s,ts);
@@ -3714,7 +3718,7 @@ Spline *SplineAddExtrema(Spline *s,int always,real lenbound, real offsetbound,
     memset(rmfrom,0,sizeof(rmfrom));
     memset(rmto,0,sizeof(rmto));
 
-    forever {
+    while (true) {
 	if ( s->knownlinear )
 return(s);
 	p = 0;

@@ -24,6 +24,9 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+#include <config.h>
+
 #ifdef __VMS
 #include <vms_x_fix.h>
 #endif
@@ -31,6 +34,7 @@
 #include "gxdrawP.h"
 #include "gxcdrawP.h"
 
+#include <stdbool.h>
 #include <stdlib.h>
 #include <math.h>
 
@@ -1706,7 +1710,7 @@ static Window _GXDrawGetPointerWindow(GWindow w) {
     int x, y; unsigned int state;
 
     parent = gw->display->groot->w;
-    forever {
+    while (true) {
 	child = None;
 	if ( !XQueryPointer(display,parent,&wjunk,&child,&junk,&junk,&x,&y,&state))
     break;
@@ -2842,7 +2846,7 @@ static void GXDrawWaitForEvent(GXDisplay *gdisp) {
     fd_set read, write, except;
     int fd,ret;
 
-    forever {
+    while (true) {
 	gettimeofday(&tv,NULL);
 	GXDrawCheckPendingTimers(gdisp);
 
@@ -3766,7 +3770,7 @@ static int GXDrawWaitForNotifyEvent(GXDisplay *gdisp,XEvent *event, Window w) {
     gettimeofday(&giveup,NULL);
     giveup.tv_sec += gdisp->SelNotifyTimeout;
     
-    forever {
+    while (true) {
 	gettimeofday(&tv,NULL);
 	GXDrawCheckPendingTimers(gdisp);
 #ifdef _WACOM_DRV_BROKEN

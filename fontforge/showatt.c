@@ -25,6 +25,10 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+#include <config.h>
+
+#include <stdbool.h>
 #include "fontforgeui.h"
 #include <utype.h>
 #include <ustring.h>
@@ -2151,7 +2155,7 @@ return( lpos );
 }
 
 static struct node *NodeFindLPos(struct node *node,int lpos,int *depth) {
-    forever {
+    while (true) {
 	if ( node->lpos==lpos )
 return( node );
 	if ( node[1].label!=NULL && node[1].lpos<=lpos )
@@ -2170,7 +2174,7 @@ static struct node *NodeNext(struct node *node,int *depth) {
 	++*depth;
 return( node->children );
     }
-    forever {
+    while (true) {
 	if ( node[1].label )
 return( node+1 );
 	node = node->parent;
@@ -2913,7 +2917,7 @@ static void ReadKids(struct nested_file *nf,int desired_nest,struct node *parent
     int i=0, max=0, j, k;
 
     ReadNestedLine(nf);
-    forever {
+    while (true) {
 	if ( nf->read_nest < desired_nest )
     break;
 	if ( i>=max-1 ) {

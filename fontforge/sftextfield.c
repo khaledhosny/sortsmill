@@ -24,6 +24,10 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+#include <config.h>
+
+#include <stdbool.h>
 #include "fontforgeui.h"
 #include <gkeysym.h>
 #include <math.h>
@@ -121,7 +125,7 @@ static int PSTComponentCount(PST *pst) {
     int cnt=0;
     char *pt = pst->u.lig.components;
 
-    forever {
+    while (true) {
 	while ( *pt==' ' ) ++pt;
 	if ( *pt=='\0' )
 return( cnt );

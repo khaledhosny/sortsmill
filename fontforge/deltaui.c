@@ -24,6 +24,10 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+#include <config.h>
+
+#include <stdbool.h>
 #include "fontforgeui.h"
 #include <ustring.h>
 #include <chardata.h>
@@ -542,7 +546,7 @@ return;
 return;
 	}
     }
-    forever {
+    while (true) {
 	if ( where->parent->parent==NULL ) {
 	    where->parent = NULL;
 	    where->offset = -1;

@@ -25,11 +25,15 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+#include <config.h>
+
 #include "fontforgevw.h"
 #include "ttf.h"
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #ifdef __need_size_t
 /* This is a bug on the mac, someone defines this and leaves it defined */
 /*  that means when I load stddef.h it only defines size_t and doesn't */
@@ -2893,7 +2897,7 @@ return( NULL );
 	char *pt1, *start1, *pt2, *start2;
 	int v1, v2;
 
-	forever {
+	while (true) {
 	    fea_ParseTok(tok);
 	    if ( tok->type==tk_char && tok->tokbuf[0]==']' )
 	break;
@@ -3230,7 +3234,7 @@ static void fea_ParseDeviceTable(struct parseState *tok,DeviceTable *adjust)
     if ( tok->type!=tk_device )
 return;
 
-    forever {
+    while (true) {
 	fea_ParseTok(tok);
 	if ( first && tok->type==tk_NULL ) {
 	    fea_TokenMustBe(tok,tk_char,'>');
@@ -3747,7 +3751,7 @@ return( NULL );
     }
     lc_max = 8;
     cur->ligcomp = gcalloc(lc_max,sizeof(struct ligcomponent));
-    forever {
+    while (true) {
 	if ( cur->lc_cnt>=lc_max )
 	    cur->ligcomp = grealloc(cur->ligcomp,(lc_max+=5)*sizeof(struct ligcomponent));
 	lc = &cur->ligcomp[cur->lc_cnt++];
@@ -3800,7 +3804,7 @@ static struct markedglyphs *fea_ParseMarkedGlyphs(struct parseState *tok,
     struct mark_state mark_state;
 
     memset(&mark_state,0,sizeof(mark_state));
-    forever {
+    while (true) {
 	fea_ParseTok(tok);
 	cur = NULL;
 	if ( is_pos && tok->type == tk_cursive )
@@ -3923,7 +3927,7 @@ static struct feat_item *fea_AddAllLigPosibilities(struct parseState *tok,struct
     struct feat_item *item;
 
     start = glyphs->name_or_class;
-    forever {
+    while (true) {
 	while ( *start==' ' ) ++start;
 	if ( *start=='\0' )
     break;
@@ -3984,7 +3988,7 @@ static struct feat_item *fea_process_pos_single(struct parseState *tok,
     SplineChar *sc;
 
     start = glyphs->name_or_class;
-    forever {
+    while (true) {
 	while ( *start==' ' ) ++start;
 	if ( *start=='\0' )
     break;
@@ -4032,7 +4036,7 @@ static struct feat_item *fea_process_pos_pair(struct parseState *tok,
 
     if ( enumer || (glyphs->is_name && glyphs->next->is_name)) {
 	start = glyphs->name_or_class;
-	forever {
+	while (true) {
 	    while ( *start==' ' ) ++start;
 	    if ( *start=='\0' )
 	break;
@@ -4042,7 +4046,7 @@ static struct feat_item *fea_process_pos_pair(struct parseState *tok,
 	    *pt = ch; start = pt;
 	    if ( sc!=NULL ) {
 		start2 = glyphs->next->name_or_class;
-		forever {
+		while (true) {
 		    while ( *start2==' ' ) ++start2;
 		    if ( *start2=='\0' )
 		break;
@@ -4089,7 +4093,7 @@ static struct feat_item *fea_process_pos_cursive(struct parseState *tok,
     start = glyphs->name_or_class;
     if ( glyphs->anchors[1]!=NULL )
 	glyphs->anchors[1]->type = at_cexit;
-    forever {
+    while (true) {
 	while ( *start==' ' ) ++start;
 	if ( *start=='\0' )
     break;
@@ -4122,7 +4126,7 @@ static struct feat_item *fea_process_pos_markbase(struct parseState *tok,
     SplineChar *sc;
 
     start = glyphs->name_or_class;
-    forever {
+    while (true) {
 	while ( *start==' ' ) ++start;
 	if ( *start=='\0' )
     break;
@@ -4157,7 +4161,7 @@ static struct feat_item *fea_process_pos_ligature(struct parseState *tok,
     SplineChar *sc;
 
     start = glyphs->name_or_class;
-    forever {
+    while (true) {
 	while ( *start==' ' ) ++start;
 	if ( *start=='\0' )
     break;
@@ -4201,7 +4205,7 @@ static struct feat_item *fea_process_sub_single(struct parseState *tok,
 		++tok->err_count;
 return( sofar );
 	    }
-	    forever {
+	    while (true) {
 		while ( *start==' ' ) ++start;
 		if ( *start=='\0' )
 	    break;
@@ -4224,7 +4228,7 @@ return( sofar );
     } else if ( !glyphs->is_name ) {
 	start = glyphs->name_or_class;
 	start2 = rpl->name_or_class;
-	forever {
+	while (true) {
 	    while ( *start==' ' ) ++start;
 	    while ( *start2==' ' ) ++start2;
 	    if ( *start=='\0' && *start2=='\0' )
@@ -4494,7 +4498,7 @@ static void fea_ParseIgnore(struct parseState *tok) {
 	++tok->err_count;
 	is_pos = true;
     }
-    forever {
+    while (true) {
 	glyphs = fea_ParseMarkedGlyphs(tok,false/* don't parse value records, etc*/,
 		true/*allow marks*/,false/* no lookups */);
 	fpst = fea_markedglyphs_to_fpst(tok,glyphs,false,true,false);
@@ -4890,7 +4894,7 @@ return;
     tok->sofar = item;
 
     first_after_mark = NULL;
-    forever {
+    while (true) {
 	fea_ParseTok(tok);
 	if ( tok->err_count>100 )
     break;
@@ -5151,7 +5155,7 @@ static void fea_ParseFeatureNames(struct parseState *tok,uint32 tag) {
     struct feat_item *item;
     /* name [<string attibute>] string; */
 
-    forever {
+    while (true) {
 	fea_ParseTok(tok);
 	if ( tok->type != tk_name && strcmp(tok->tokbuf,"name")!=0 )	/* "name" is only a keyword here */
     break;
@@ -5222,7 +5226,7 @@ return;
 return;
     }
 
-    forever {
+    while (true) {
 	fea_ParseTok(tok);
 	if ( tok->err_count>100 )
     break;
@@ -5263,7 +5267,7 @@ return;
 		} else {
 		    item = fea_AddFeatItem(tok,type,tok->tag);
 		    if ( type==ft_lang ) {
-			forever {
+			while (true) {
 			    fea_ParseTok(tok);
 			    if ( tok->type==tk_include_dflt )
 				/* Unneeded */;
@@ -5354,7 +5358,7 @@ static void fea_ParseNameTable(struct parseState *tok) {
     struct feat_item *item;
     /* nameid <id> [<string attibute>] string; */
 
-    forever {
+    while (true) {
 	fea_ParseTok(tok);
 	if ( tok->type != tk_nameid )
     break;
@@ -5385,7 +5389,7 @@ static void fea_ParseTableKeywords(struct parseState *tok, struct tablekeywords 
     int i;
     struct feat_item *item;
 
-    forever {
+    while (true) {
 	fea_ParseTok(tok);
 	if ( tok->type != tk_name )
     break;
@@ -5505,7 +5509,7 @@ static void fea_ParseGDEFTable(struct parseState *tok) {
     struct feat_item *item;
     int16 *carets=NULL; int len=0, max=0;
 
-    forever {
+    while (true) {
 	fea_ParseTok(tok);
 	if ( tok->type!=tk_name )
     break;
@@ -5517,7 +5521,7 @@ static void fea_ParseGDEFTable(struct parseState *tok) {
 		++tok->err_count;
 		fea_skip_to_semi(tok);
 	    } else {
-		forever {
+		while (true) {
 		    fea_ParseTok(tok);
 		    if ( tok->type!=tk_int )
 		break;
@@ -5544,7 +5548,7 @@ static void fea_ParseGDEFTable(struct parseState *tok) {
 		fea_skip_to_semi(tok);
     continue;
 	    }
-	    forever {
+	    while (true) {
 		fea_ParseTok(tok);
 		if ( tok->type==tk_int )
 		    /* Not strictly cricket, but I'll accept it */;
@@ -5888,7 +5892,7 @@ static void fea_featitemFree(struct feat_item *item) {
 
 static void fea_ParseFeatureFile(struct parseState *tok) {
 
-    forever {
+    while (true) {
 	fea_ParseTok(tok);
 	if ( tok->err_count>100 )
     break;
@@ -6204,7 +6208,7 @@ static void fea_ApplyLookupListMark2(struct parseState *tok,
     for ( i=0; i<ac_cnt; ++i ) {
 	for ( sames=classes[i]; sames!=NULL; sames=sames->same ) {
 	    start = sames->glyphs;
-	    forever {
+	    while (true) {
 		while ( *start==' ' ) ++start;
 		if ( *start=='\0' )
 	    break;

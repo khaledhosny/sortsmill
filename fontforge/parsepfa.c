@@ -24,9 +24,13 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+#include <config.h>
+
 #include "fontforge.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 #include <ustring.h>
 #include <utype.h>
@@ -940,7 +944,7 @@ static char *getstring(char *start,FILE *in) {
     int parencnt=0, len=0;
     char buffer[512];
 
-    forever {
+    while (true) {
 	while ( *start!='\0' && *start!='(' ) ++start;
 	if ( *start=='\0' ) {
 	    if ( myfgetsNoNulls(buffer,sizeof(buffer),in)==NULL )
@@ -951,7 +955,7 @@ return( copy(""));
     }
     ++start;
     ret = NULL; len = 1;
-    forever {
+    while (true) {
 	for ( end = start; *end!='\0' && (*end!=')' || parencnt>0); ++end ) {
 	    if ( *end=='\\' && (end[1]=='(' || end[1]==')'))
 		++end;
@@ -1165,7 +1169,7 @@ static void AddValue(struct fontparse *fp, struct psdict *dict, char *line, char
 	ContinueValue(fp,dict,endtok);
 return;
     }
-    forever {
+    while (true) {
 	while ( pt-1>endtok && isspace(pt[-1])) --pt;
 	if ( pt-8>endtok && strncmp(pt-8,"noaccess",8)==0 )
 	    pt -= 8;
@@ -1273,7 +1277,7 @@ static void findnumbers(struct fontparse *fp,struct pschars *chars,char *str) {
     int val;
     char *end;
 
-    forever {
+    while (true) {
 	int index = chars->next;
 	char *namestrt;
 

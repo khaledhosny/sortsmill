@@ -24,6 +24,10 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+#include <config.h>
+
+#include <stdbool.h>
 #include "fontforgevw.h"
 #include <math.h>
 #include <ustring.h>
@@ -1376,7 +1380,7 @@ static SplineChar *RC_MakeNewGlyph(FontViewBase *fv,SplineChar *base, int index,
     SplineChar *ret;
 
     namebuf = galloc(strlen(base->name)+20);
-    forever {
+    while (true) {
 	sprintf(namebuf, "%s.ref%d", base->name, index++ );
 	if ( SFGetChar(sf,-1,namebuf)==NULL )
     break;

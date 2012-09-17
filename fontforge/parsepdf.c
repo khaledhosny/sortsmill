@@ -24,6 +24,10 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+#include <config.h>
+
+#include <stdbool.h>
 #include "fontforge.h"
 #include <chardata.h>
 #include <utype.h>
@@ -65,7 +69,7 @@ static long FindXRef(FILE *pdf) {
     long xrefpos;
 
     fseek(pdf,-5-2-8-2-10-2,SEEK_END);
-    forever {
+    while (true) {
 	while ( (ch=getc(pdf))!=EOF ) {
 	    if ( ch=='s' )
 	break;
@@ -108,7 +112,7 @@ static int findkeyword(FILE *pdf, char *keyword, char *end) {
     if ( ch==EOF )
 return( false );
     buffer[i] = 0;
-    forever {
+    while (true) {
 	if ( strcmp(buffer,keyword)==0 )
 return( true );
 	if ( strncmp(buffer,end,end_len)==0 )
@@ -184,7 +188,7 @@ return( NULL );
 return( FindObjectsFromXREFObject(pc,xrefpos));
     }
 
-    forever {
+    while (true) {
 	if ( start+num>cnt ) {
 	    ret = grealloc(ret,(start+num+1)*sizeof(long));
 	    memset(ret+cnt,-1,sizeof(long)*(start+num-cnt));
@@ -235,7 +239,7 @@ static void pdf_skipwhitespace(struct pdfcontext *pc) {
     FILE *pdf =  pc->compressed ? pc->compressed : pc->pdf;
     int ch;
 
-    forever {
+    while (true) {
 	ch = getc(pdf);
 	if( ch=='%' ) {
 	    while ( (ch=getc(pdf))!=EOF && ch!='\n' && ch!='\r' );
@@ -280,7 +284,7 @@ static char *pdf_getdictvalue(struct pdfcontext *pc) {
 
     pdf_skipwhitespace(pc);
     ch = getc(pdf);
-    forever {
+    while (true) {
 	if ( pt>=end ) {
 	    char *temp = grealloc(pc->tokbuf,(pc->tblen+=300));
 	    pt = temp + (pt-pc->tokbuf);
@@ -359,7 +363,7 @@ static int pdf_readdict(struct pdfcontext *pc) {
 return( false );
     getc(pdf);		/* Eat the second '<' */
 
-    forever {
+    while (true) {
 	key = copy(pdf_getname(pc));
 	if ( key==NULL ) {
 	    if ( pc->compressed!=NULL ) {	/* We've read the whole object*/
@@ -696,7 +700,7 @@ static void pdf_85filter(FILE *to,FILE *from) {
     int cnt;
 
     rewind(from);
-    forever {
+    while (true) {
 	while ( isspace(ch1=getc(from)));
 	if ( ch1==EOF || ch1=='~' )
     break;

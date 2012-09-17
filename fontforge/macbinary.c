@@ -24,8 +24,12 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+#include <config.h>
+
 #include "fontforgevw.h"
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 #include <unistd.h>
 #include <math.h>
@@ -277,7 +281,7 @@ static struct resource *PSToResources(FILE *res,FILE *pfbfile) {
     resstarts = gcalloc(cnt+1,sizeof(struct resource));
 
     cnt = 0;
-    forever {
+    while (true) {
 	if ( getc(pfbfile)!=0x80 ) {
 	    IError("We made a pfb file, but didn't get one. Hunh?" );
 return( NULL );

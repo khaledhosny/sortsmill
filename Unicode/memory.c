@@ -33,19 +33,19 @@
 #include "ustring.h"
 #include "xalloc.h"
 
-void *galloc(long size)
+void *galloc(size_t size)
 {
     // malloc(0) is allowed to return NULL, but galloc(0) is expected
     // to return something non-NULL.
     return xmalloc(size == 0 ? 1 : size);
 }
 
-void *gcalloc(int count, long size)
+void *gcalloc(size_t count, size_t size)
 {
     return xcalloc(count, size);
 }
 
-void *grealloc(void *old, long size)
+void *grealloc(void *old, size_t size)
 {
     return xrealloc(old, size);
 }
@@ -60,7 +60,7 @@ char *copy(const char *str)
     return (str == NULL) ? NULL : xstrdup(str);
 }
 
-char *copyn(const char *str, long n)
+char *copyn(const char *str, size_t n)
 {
     char *p = NULL;
     if (str != NULL) {

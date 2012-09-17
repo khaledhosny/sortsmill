@@ -25,6 +25,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <config.h>
+
 #include <stdio.h>
 #include "ustring.h"
 #include "fileutil.h"
@@ -32,6 +34,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>		/* for mkdir */
 #include <unistd.h>
+#include <stdbool.h>
 
 #ifdef _WIN32
 #define MKDIR(A,B) mkdir(A)
@@ -103,10 +106,10 @@ return dir;
 }
 
 static void savestrcpy(char *dest,const char *src) {
-    forever {
+    while (true) {
 	*dest = *src;
 	if ( *dest=='\0' )
-    break;
+	    break;
 	++dest; ++src;
     }
 }

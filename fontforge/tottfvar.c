@@ -24,6 +24,10 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+#include <config.h>
+
+#include <stdbool.h>
 #include "fontforge.h"
 #include "ttf.h"
 #include <math.h>
@@ -73,10 +77,10 @@ return( true );
 return( false );
     }
 	    
-    forever {
+    while (true) {
 	for ( i=0; i<=mm->instance_count; ++i )
 	    sp[i] = ss[i]->first;
-	forever {
+	while (true) {
 	    allavg = alllines = true;
 	    for ( i=0; i<=mm->instance_count; ++i ) {
 		if ( !RealNear(sp[i]->me.x,(sp[i]->nextcp.x+sp[i]->prevcp.x)/2) ||

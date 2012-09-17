@@ -24,6 +24,9 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#include <config.h>
+
+#include <stdbool.h>
 #include "fontforge.h"
 #include "splinefont.h"
 #include <math.h>
@@ -693,7 +696,7 @@ return;		/* Essentially colinear */ /* Won't be perfect because control points l
 	    vector.y = pp->left.y -center.y;
 	}
 	rot = incr_angle; was_neg = false;
-	forever {
+	while (true) {
 	    if ( c->cur >= c->max ) {
 		int extras = 400;
 		int off = pp-c->all;
@@ -2069,7 +2072,7 @@ return;
     nnsp = nsp->next->to;
     memset(&ndir,0,sizeof(ndir));
     removed = false;
-    forever {
+    while (true) {
 	if ( sp==nsp )
     break;
 	if ( nsp->next->knownlinear ) {

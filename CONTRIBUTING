@@ -8,10 +8,6 @@ Advice on how to contribute.
 
 * Assume the Make program is GNU Make.
 
-* As of right now, we are going to use GNU Indent with a (possibly
-  modified) --k-and-r-style setting, as this works well with the
-  original FontForge code.
-
 * New code should be written in small functions with low cyclomatic
   complexity, preferably 10 or less. To measure complexity, use the
   pmccabe program: http://packages.debian.org/unstable/devel/pmccabe

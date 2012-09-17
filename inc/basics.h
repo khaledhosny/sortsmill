@@ -27,22 +27,23 @@
 #ifndef _BASICS_H
 #define _BASICS_H
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
+#include <config.h>
 
-#include <stdio.h>		/* for NULL */
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+#include <stdbool.h>
+
+// FIXME: Use Gnulib to get stdint.h if it is not present. But first
+// we have to include config.h at the top of everything.
 #ifdef HAVE_STDINT_H
 # include <stdint.h>
 #else
 # include <inttypes.h>
 #endif
-#include <stdlib.h>		/* for free */
-#include <limits.h>
-#include <stdbool.h>
 
-#define forever for (;;)
-
+// FIXME: Use the standard names in the code; get rid of these
+// typedefs.
 typedef int32_t		int32;
 typedef uint32_t	uint32;
 typedef int16_t		int16;
@@ -50,14 +51,18 @@ typedef uint16_t	uint16;
 typedef int8_t		int8;
 typedef uint8_t		uint8;
 
-/* An integral type which can hold a pointer */
+// FIXME: Use the standard names in the code; get rid of this
+// typedef, too.
+//
+// An integral type which can hold a pointer.
 typedef intptr_t	intpt;
 
-typedef uint32 unichar_t;
+typedef uint32_t unichar_t;
 
-/* A macro to mark unused function parameters with. We often
- * have such parameters, because of extensive use of callbacks.
- */
+// FIXME: Consider using the unused-parameter snippet from Gnulib.
+//
+// A macro to mark unused function parameters with. We often
+// have such parameters, because of extensive use of callbacks.
 #ifdef UNUSED
 #elif defined(__GNUC__)
 # define UNUSED(x) UNUSED_ ## x __attribute__((unused))
@@ -67,10 +72,12 @@ typedef uint32 unichar_t;
 # define UNUSED(x) x
 #endif
 
-extern void *galloc(long size);
-extern void *gcalloc(int cnt, long size);
-extern void *grealloc(void *,long size);
+extern void *galloc(size_t size);
+extern void *gcalloc(size_t cnt, size_t size);
+extern void *grealloc(void *,size_t size);
 extern void gfree(void *);
+extern char *copy(const char *);
+extern char *copyn(const char *, size_t);
 
 static inline int imin(int a, int b)
 {

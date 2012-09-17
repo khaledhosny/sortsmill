@@ -24,6 +24,10 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+#include <config.h>
+
+#include <stdbool.h>
 #include "fontforgeui.h"
 #include <gkeysym.h>
 #include <string.h>
@@ -976,7 +980,7 @@ static SplineChar *AddAnchor(AnchorDlg *a, SplineFont *sf, AnchorClass *ac,
     int i;
 
     def = copy(".notdef");
-    forever {
+    while (true) {
 	ret = gwwv_ask_string(_("Provide a glyph name"),def,_("Please identify a glyph by name, and FontForge will add an anchor to that glyph."));
 	free(def);
 	if ( ret==NULL )

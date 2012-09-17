@@ -24,6 +24,10 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+#include <config.h>
+
+#include <stdbool.h>
 #include "fontforgevw.h"
 #include <unistd.h>
 #include <math.h>
@@ -695,7 +699,7 @@ return( 0 );
     else if ( !lig->subtable->lookup->store_in_afm )
 return( 0 );
     pt = lig->u.lig.components;
-    forever {
+    while (true) {
 	end = strchr(pt,' ');
 	if ( end!=NULL ) *end='\0';
 	sc = SFGetChar(sf,-1,pt);
@@ -2645,7 +2649,7 @@ static void SVGFigureStyle(struct svg_state *st,char *name,
     char *pt;
     char namebuf[200], propbuf[400];
 
-    forever {
+    while (true) {
 	while ( isspace(*name)) ++name;
 	if ( *name==':' ) {
 	    /* Missing prop name, skip the value */

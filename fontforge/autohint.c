@@ -24,8 +24,12 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+#include <config.h>
+
 #include "fontforge.h"
 #include <stdio.h>
+#include <stdbool.h>
 #include <math.h>
 #include "splinefont.h"
 #include "views.h"
@@ -2627,14 +2631,14 @@ static void SplResolveSplitHints(SplineChar *scs[MmMax], SplineSet *spl[MmMax],
     StemInfo *h[MmMax], *v[MmMax];
     int i, anymore;
 
-    forever {
+    while (true) {
 	for ( i=0; i<instance_count; ++i ) {
 	    if ( spl[i]!=NULL )
 		to[i] = spl[i]->first;
 	    else
 		to[i] = NULL;
 	}
-	forever {
+	while (true) {
 	    for ( i=0; i<instance_count; ++i ) {
 		h[i] = OnHHint(to[i],scs[i]->hstem);
 		v[i] = OnVHint(to[i],scs[i]->vstem);
@@ -2737,14 +2741,14 @@ static int SplFigureHintMasks(SplineChar *scs[MmMax], SplineSet *spl[MmMax],
 	inited = true;
     }
 
-    forever {
+    while (true) {
 	for ( i=0; i<instance_count; ++i ) {
 	    if ( spl[i]!=NULL )
 		to[i] = spl[i]->first;
 	    else
 		to[i] = NULL;
 	}
-	forever {
+	while (true) {
 	    TestHintMask(scs,to,instance_count,mask);
 	    anymore = false;
 	    for ( i=0; i<instance_count; ++i ) if ( to[i]!=NULL ) {
@@ -2814,7 +2818,7 @@ return;						/* In an MM font we may still need to resolve things like different
 	ref[i] = scs[i]->layers[layer].refs;
     }
     inited = SplFigureHintMasks(scs,spl,instance_count,mask,false);
-    forever {
+    while (true) {
 	for ( i=0; i<instance_count; ++i ) {
 	    if ( ref[i]!=NULL )
 		spl[i] = ref[i]->layers[0].splines;

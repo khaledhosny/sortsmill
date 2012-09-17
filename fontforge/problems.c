@@ -25,6 +25,10 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+#include <config.h>
+
+#include <stdbool.h>
 #include "fontforgeui.h"
 #include "ttf.h"
 #include <gwidget.h>
@@ -2026,7 +2030,7 @@ static int SCProblems(CharView *cv,SplineChar *sc,struct problems *p) {
     }
 
     if ( p->missinganchor && !p->finish ) {
-	forever {
+	while (true) {
 	    p->missinganchor_class = SCValidateAnchors(sc);
 	    if ( p->missinganchor_class == NULL )
 	break;

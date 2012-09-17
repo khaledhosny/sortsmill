@@ -24,6 +24,10 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+#include <config.h>
+
+#include <stdbool.h>
 #include "fontforgeui.h"
 #include "groups.h"
 #include "psfont.h"
@@ -4851,7 +4855,7 @@ return;				/* Cancelled */
 return;
     }
     pt = buffer;
-    forever {
+    while (true) {
 	ch = getc(file);
 	if ( ch!=EOF && !isspace(ch)) {
 	    if ( pt<buffer+sizeof(buffer)-1 )

@@ -25,6 +25,10 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+#include <config.h>
+
+#include <stdbool.h>
 #include "fontforgevw.h"
 #include "sflayoutP.h"
 #include <stdlib.h>
@@ -111,7 +115,7 @@ static void pdf_finishpage(PI *pi) {
 static int pfb_getsectionlength(FILE *pfb,int sec_type,int skip_sec) {
     int len=0, sublen, ch;
 
-    forever {
+    while (true) {
 	ch = getc(pfb);
 	if ( ch!=0x80 ) {
 	    ungetc(ch,pfb);

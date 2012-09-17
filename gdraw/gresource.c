@@ -24,9 +24,13 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+#include <config.h>
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <ustring.h>
 
 #include <gdraw.h>
@@ -58,7 +62,7 @@ int _GResource_FindResName(char *name) {
     if ( rcur==0 )
 return( -1 );
 
-    forever {
+    while (true) {
 	if ( top==bottom )
 return( -1 );
 	test = (top+bottom)/2;
@@ -89,7 +93,7 @@ return( -1 );
 
     plen = strlen(prefix);
 
-    forever {
+    while (true) {
 	test = (top+bottom)/2;
 	cmp = strncmp(prefix,_GResource_Res[test].res,plen);
 	if ( cmp==0 )
@@ -106,7 +110,7 @@ return( -1 );
     /* at this point the resource at test begins with the prefix */
     /* we want to find the first and last resources that do */
     oldtop = top; oldtest = top = test;		/* find the first resource */
-    forever {
+    while (true) {
 	test = (top+bottom)/2;
 	cmp = strncmp(prefix,_GResource_Res[test].res,plen);
 	if ( cmp<0 ) {
@@ -129,7 +133,7 @@ return( -1 );
     top = oldtop; bottom = oldtest+1;		/* find the last resource */
     if ( bottom == top )
 	test = top;
-    else forever {
+    else while (true) {
 	test = (top+bottom)/2;
 	cmp = strncmp(prefix,_GResource_Res[test].res,plen);
 	if ( cmp>0 ) {

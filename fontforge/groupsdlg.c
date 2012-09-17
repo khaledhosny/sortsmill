@@ -24,6 +24,10 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+#include <config.h>
+
+#include <stdbool.h>
 #include "fontforgeui.h"
 #include "groups.h"
 #include <unistd.h>
@@ -81,7 +85,7 @@ extern int _GScrollBar_Width;
 static Group *GroupFindLPos(Group *group,int lpos,int *depth) {
     int i;
 
-    forever {
+    while (true) {
 	if ( group->lpos==lpos )
 return( group );
 	if ( !group->open )
@@ -113,7 +117,7 @@ static Group *GroupNext(Group *group,int *depth) {
 	++*depth;
 return( group->kids[0] );
     }
-    forever {
+    while (true) {
 	int pos;
 	if ( group->parent==NULL )
 return( NULL );

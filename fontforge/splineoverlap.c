@@ -24,6 +24,10 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+#include <config.h>
+
+#include <stdbool.h>
 #include "fontforge.h"
 #include "splinefont.h"
 #include "edgelist2.h"
@@ -644,7 +648,7 @@ static int GradImproveInter(Monotonic *m1, Monotonic *m2,
     /* d/dt[12] (m1(t1).x-m2(t2).x)^2 + (m1(t1).y-m2(t2).y)^2 */
     /* d/dt[12] (m1(t1).x^2 -2m1(t1).x*m2(t2).x + m2(t2).x^2) + (m1(t1).y^2 -2m1(t1).y*m2(t2).y + m2(t2).y^2) */
 
-    forever {
+    while (true) {
 	x1 = ((s1->splines[0].a*t1 + s1->splines[0].b)*t1 + s1->splines[0].c)*t1 + s1->splines[0].d;
 	x2 = ((s2->splines[0].a*t2 + s2->splines[0].b)*t2 + s2->splines[0].c)*t2 + s2->splines[0].d;
 	y1 = ((s1->splines[1].a*t1 + s1->splines[1].b)*t1 + s1->splines[1].c)*t1 + s1->splines[1].d;
@@ -2582,7 +2586,7 @@ static SplinePoint *MonoFollowForward(Intersection **curil, MList *ml,
     SplinePoint *mid;
     Monotonic *m = ml->m, *mstart;
 
-    forever {
+    while (true) {
 	for ( mstart = m; m->s==mstart->s; m=m->next) {
 	    if ( !m->isneeded )
 		SOError( "Expected needed monotonic @(%g,%g) (%g,%g)->(%g,%g).\n", (*curil)->inter.x, (*curil)->inter.y,
@@ -2626,7 +2630,7 @@ static SplinePoint *MonoFollowBackward(Intersection **curil, MList *ml,
     SplinePoint *mid;
     Monotonic *m = ml->m, *mstart;
 
-    forever {
+    while (true) {
 	for ( mstart=m; m->s==mstart->s; m=m->prev) {
 	    if ( !m->isneeded )
 		SOError( "Expected needed monotonic (back) @(%g,%g) (%g,%g)->(%g,%g).\n", (double) (*curil)->inter.x, (double) (*curil)->inter.y,
@@ -2676,7 +2680,7 @@ static SplineSet *JoinAContour(Intersection *startil,MList *ml) {
 
     ss->first = last = SplinePointCreate(startil->inter.x,startil->inter.y);
     curil = startil;
-    forever {
+    while (true) {
 	if ( allexclude && !ml->m->exclude ) allexclude = false;
 	finalm = NULL;
 	if ( ml->m->start==curil ) {
@@ -2798,7 +2802,7 @@ static SplineSet *JoinAllNeeded(Intersection *ilist) {
 
     for ( il=ilist; il!=NULL; il=il->next ) {
 	/* Try to preserve direction */
-	forever {
+	while (true) {
 	    for ( ml=il->monos; ml!=NULL && (!ml->m->isneeded || ml->m->end==il); ml=ml->next );
 	    if ( ml==NULL )
 		for ( ml=il->monos; ml!=NULL && !ml->m->isneeded; ml=ml->next );

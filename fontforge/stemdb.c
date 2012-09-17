@@ -24,6 +24,10 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+#include <config.h>
+
+#include <stdbool.h>
 #include "fontforge.h"
 #include "edgelist2.h"
 #include "stemdb.h"
@@ -829,7 +833,7 @@ return( ret );
 static BasePoint PerturbAlongSpline( Spline *s,BasePoint *bp,double t ) {
     BasePoint perturbed;
     
-    forever {
+    while (true) {
 	perturbed.x = ((s->splines[0].a*t+s->splines[0].b)*t+s->splines[0].c)*t+s->splines[0].d;
 	perturbed.y = ((s->splines[1].a*t+s->splines[1].b)*t+s->splines[1].c)*t+s->splines[1].d;
 	if ( !RealWithin( perturbed.x,bp->x,.01 ) || !RealWithin( perturbed.y,bp->y,.01 ))

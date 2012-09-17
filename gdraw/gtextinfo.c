@@ -24,7 +24,11 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+#include <config.h>
+
 #include <stdlib.h>
+#include <stdbool.h>
 #include "gdraw.h"
 #include "ggadgetP.h"
 #include "utype.h"
@@ -843,7 +847,7 @@ return(0);
     initmods();
 
     mask = 0;
-    forever {
+    while (true) {
 	pt = strchr(sh,'+');
 	if ( pt==sh || *sh=='\0' )
 return( mask );

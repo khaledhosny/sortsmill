@@ -25,9 +25,9 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifdef HAVE_CONFIG_H
-# include "config.h"
-#endif
+#include <config.h>
+
+#include <stdbool.h>
 
 #ifndef _NO_PYTHON
 # include "Python.h"
@@ -446,7 +446,7 @@ return;
 
     fprintf( plist, "\t<key>postscript%s</key>\n", key );
     fprintf( plist, "\t<array>\n" );
-    forever {
+    while (true) {
 	fprintf( plist, "\t\t<integer>" );
 	skipping=0;
 	while ( *value!=']' && *value!='\0' && *value!=' ' ) {
@@ -839,7 +839,7 @@ static char *get_thingy(FILE *file,char *buffer,char *tag) {
     int ch;
     char *pt;
 
-    forever {
+    while (true) {
 	while ( (ch=getc(file))!='<' && ch!=EOF );
 	if ( ch==EOF )
 return( NULL );

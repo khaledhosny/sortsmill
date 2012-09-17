@@ -24,6 +24,10 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+#include <config.h>
+
+#include <stdbool.h>
 #include "fontforgevw.h"
 #include "ustring.h"
 #include "gfile.h"
@@ -430,7 +434,7 @@ return( NULL );
 	if (( *pt!='\n' && *pt!='\r') || (pt>buffer && pt[-1]=='\\') ||
 		(pt>buffer+1 && pt[-2]=='\\' && isspace(pt[-1])) ) {
 	    bpt = copy("");
-	    forever {
+	    while (true) {
 		loop = false;
 		if (( *pt!='\n' && *pt!='\r') || (pt>buffer && pt[-1]=='\\') ||
 			(pt>buffer+1 && pt[-2]=='\\' && isspace(pt[-1])) )
@@ -583,7 +587,7 @@ return( 0 );
     /*  as unencoded chars */
     /* We could just replace with splines, I suppose but that would make */
     /*  korean fonts huge */
-    forever {
+    while (true) {
 	extras = 0;
 	for ( i=0; i<temp.glyphcnt; ++i ) if ( temp.glyphs[i]!=NULL ) {
 	    for ( ref=temp.glyphs[i]->layers[ly_fore].refs; ref!=NULL; ref=ref->next )

@@ -24,6 +24,10 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+#include <config.h>
+
+#include <stdbool.h>
 #include "fontforgevw.h"
 #include "ttf.h"
 #include <chardata.h>
@@ -370,7 +374,7 @@ static struct contexttree *TreeNext(struct contexttree *cur) {
     if ( cur->branch_cnt!=0 )
 return( cur->branches[0].branch );
     else {
-	forever {
+	while (true) {
 	    p = cur->parent;
 	    if ( p==NULL )
 return( NULL );

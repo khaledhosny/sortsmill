@@ -25,6 +25,9 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <config.h>
+
+#include <stdbool.h>
 #include "fontforgeui.h"
 #include "annotations.h"
 #include <math.h>
@@ -2124,7 +2127,7 @@ static void FindQuickBounds(SplineSet *ss,BasePoint **bounds) {
 	sp = ss->first;
 	if ( sp->next==NULL || sp->next->to==sp )	/* Ignore contours with one point. Often tt points for moving references or anchors */
     continue;
-	forever {
+	while (true) {
 	    if ( bounds[0]==NULL )
 		bounds[0] = bounds[1] = bounds[2] = bounds[3] = &sp->me;
 	    else {
@@ -2152,7 +2155,7 @@ return;
 	sp = ss->first;
 	if ( sp->next==NULL || sp->next->to==sp )	/* Ignore contours with one point. Often tt points for moving references or anchors */
     continue;
-	forever {
+	while (true) {
 	    if ( *left==NULL )
 		*left = *right = sp;
 	    else {
@@ -8218,7 +8221,7 @@ return( true );
 	}
 	iosa->done = true;
 	CVPreserveState(&iosa->cv->b);
-	forever {
+	while (true) {
 	    sp = SplineBisect(iosa->s,ts[0]);
 	    SplinePointCatagorize(sp);
 	    if ( which==0 ) {

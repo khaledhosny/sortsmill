@@ -25,6 +25,9 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <config.h>
+
+#include <stdbool.h>
 #include "fontforgevw.h"
 #include <utype.h>
 #include <ustring.h>
@@ -894,7 +897,7 @@ static char *ForceFileToHaveName(FILE *file, char *exten) {
     static int try=0;
     FILE *newfile;
 
-    forever {
+    while (true) {
 	sprintf( tmpfilename, P_tmpdir "/fontforge%d-%d", getpid(), try++ );
 	if ( exten!=NULL )
 	    strcat(tmpfilename,exten);

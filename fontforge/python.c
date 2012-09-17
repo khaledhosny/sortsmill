@@ -26,10 +26,7 @@
  */
 /*			   Python Interface to FontForge		      */
 
-
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
+#include <config.h>
 
 #ifndef _NO_PYTHON
 #include "Python.h"
@@ -48,6 +45,7 @@
 #include <sys/types.h>
 #include <dirent.h>
 #include <stdarg.h>
+#include <stdbool.h>
 #if PY_MAJOR_VERSION >= 3
 #include <stdio.h>
 #include <wchar.h>
@@ -10082,7 +10080,7 @@ return( Py_BuildValue("d",strtod(value,NULL)) );
     if ( *value=='[' ) {
 	int cnt = 0;
 	pt = value+1;
-	forever {
+	while (true) {
 	    strtod(pt,&end);
 	    if ( pt==end )
 	break;
@@ -10094,7 +10092,7 @@ return( Py_BuildValue("d",strtod(value,NULL)) );
 	    tuple = PyTuple_New(cnt);
 	    cnt = 0;
 	    pt = value+1;
-	    forever {
+	    while (true) {
 		temp = strtod(pt,&end);
 		if ( pt==end )
 	    break;

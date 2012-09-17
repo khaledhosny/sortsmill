@@ -24,9 +24,13 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+#include <config.h>
+
 #define _DEFINE_SEARCHVIEW_
 #include "fontforgevw.h"
 #include <math.h>
+#include <stdbool.h>
 #include <ustring.h>
 #include <utype.h>
 
@@ -3565,7 +3569,7 @@ return;
 
     if ( copybuffer.undotype == ut_none ) {
 	j = -1;
-	forever {
+	while (true) {
 	    for ( i=0; i<fv->map->enccount; ++i ) if ( fv->selected[i] )
 		SCCheckXClipboard(SFMakeChar(sf,fv->map,i),ly_fore,!pasteinto);
 	    ++j;
@@ -3615,7 +3619,7 @@ return;
 	    if ( cur->undotype==ut_multiple )
 		cur = cur->u.multiple.mult;
 	}
-	forever {
+	while (true) {
 	    switch ( cur->undotype ) {
 	      case ut_noop:
 	      break;

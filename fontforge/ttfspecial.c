@@ -24,6 +24,10 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+#include <config.h>
+
+#include <stdbool.h>
 #include "fontforge.h"
 #include <math.h>
 #include <time.h>
@@ -1139,7 +1143,7 @@ return;
     offx = pfed_get_coord(ttf,COM_MOD(verb));
     offy = pfed_get_coord(ttf,COM_MOD(verb));
     ss->first = current = SplinePointCreate(offx,offy);
-    forever {
+    while (true) {
 	verb = getc(ttf);
 	v = COM_VERB(verb); m = COM_MOD(verb);
 	if ( m==3 ) {

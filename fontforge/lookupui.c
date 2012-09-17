@@ -25,6 +25,10 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+#include <config.h>
+
+#include <stdbool.h>
 #include "fontforgeui.h"
 #include <chardata.h>
 #include <utype.h>
@@ -4611,7 +4615,7 @@ int EditSubtable(struct lookup_subtable *sub,int isgpos,SplineFont *sf,
 	    sprintf( def, "%s-%d", sub->lookup->lookup_name, name_search++ );
 	} while ( SubtableNameInUse(def,sf,sub));
     }
-    forever {
+    while (true) {
 	def = gwwv_ask_string(_("Please name this subtable"),def,_("Please name this subtable"));
 	free(freeme);
 	if ( def==NULL )
