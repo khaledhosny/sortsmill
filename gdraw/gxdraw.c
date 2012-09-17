@@ -1160,7 +1160,7 @@ return( NULL );
     }
     /* Only do sub-pixel/anti-alias stuff if we've got truecolor */
     if ( gdisp->visual->class==TrueColor && !(wattrs->mask&wam_nocairo) &&_GXCDraw_hasCairo() )
-	_GXCDraw_NewWindow(nw,wattrs->background_color);
+	_GXCDraw_NewWindow(nw);
     /* Must come after the cairo init so pango will know to use cairo or xft */
     /* I think we will always want to use pango, so it isn't conditional on a wam */
     _GXPDraw_NewWindow(nw);
@@ -1226,7 +1226,7 @@ return( NULL );
     /* Only do sub-pixel/anti-alias stuff if we've got truecolor */
     if ( ((GXDisplay *) gdisp)->visual->class==TrueColor && wamcairo &&
 	    _GXCDraw_hasCairo() )
-	_GXCDraw_NewWindow(gw,gw->ggc->bg);
+	_GXCDraw_NewWindow(gw);
     /* Must come after the cairo init so pango will know to use cairo or xft */
     /* I think we will always want to use pango, so it isn't conditional */
     _GXPDraw_NewWindow(gw);

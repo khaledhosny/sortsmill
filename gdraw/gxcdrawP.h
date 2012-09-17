@@ -33,7 +33,7 @@
 // FIXME: Get rid of this.
 extern int _GXCDraw_hasCairo(void);
 
-extern void _GXCDraw_NewWindow(GXWindow nw,Color bg);
+extern void _GXCDraw_NewWindow(GXWindow nw);
 extern void _GXCDraw_ResizeWindow(GXWindow gw,GRect *rect);
 extern void _GXCDraw_DestroyWindow(GXWindow gw);
 
