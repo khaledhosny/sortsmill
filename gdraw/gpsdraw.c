@@ -321,10 +321,6 @@ static int  PSDrawRequestDeviceEvents(GWindow UNUSED(w), int UNUSED(devcnt),
 return( 0 );
 }
 
-static GImage *_PSDraw_CopyScreenToImage(GWindow UNUSED(w), GRect *UNUSED(rect)) {
-return( NULL );
-}
-
 static void _PSDraw_Pixmap( GWindow UNUSED(_w), GWindow UNUSED(_pixmap),
         GRect *UNUSED(src), int32 UNUSED(x), int32 UNUSED(y)) {
 }
@@ -1380,7 +1376,6 @@ static struct displayfuncs psfuncs = {
     _GPSDraw_TileImage,
     _GPSDraw_Image,
     _GPSDraw_ImageMagnified,
-    _PSDraw_CopyScreenToImage,
     _PSDraw_Pixmap,
     _PSDraw_TilePixmap,
 

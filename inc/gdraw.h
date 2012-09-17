@@ -425,7 +425,6 @@ extern void GDrawDrawImageMagnified(GWindow w, GImage *img, GRect *src, int32 x,
 extern void GDrawTileImage(GWindow w, GImage *img, GRect *src, int32 x, int32 y);
 extern void GDrawDrawPixmap(GWindow w, GWindow pixmap, GRect *src, int32 x, int32 y);
 extern void GDrawTilePixmap(GWindow w, GWindow pixmap, GRect *src, int32 x, int32 y);
-extern GImage *GDrawCopyScreenToImage(GWindow w, GRect *rect);
 
 extern void GDrawGrabSelection(GWindow w,enum selnames sel);
 extern void GDrawAddSelectionType(GWindow w,enum selnames sel,char *type,

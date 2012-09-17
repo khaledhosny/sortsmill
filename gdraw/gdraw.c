@@ -581,15 +581,6 @@ return;
     (w->display->funcs->drawImageMag)(w,img,dest,x,y, width, height);
 }
 
-GImage *GDrawCopyScreenToImage(GWindow w, GRect *rect) {
-    GRect temp;
-    if ( rect==NULL ) {
-	temp.x = 0; temp.y = 0; temp.width = w->pos.width; temp.height = w->pos.height;
-	rect = &temp;
-    }
-return( (w->display->funcs->copyScreenToImage)(w,rect) );
-}
-
 void GDrawWindowFontMetrics(GWindow w,FontInstance *fi,int *as, int *ds, int *ld) {
     (w->display->funcs->getFontMetrics)(w,fi,as,ds,ld);
 }

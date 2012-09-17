@@ -4236,7 +4236,6 @@ static struct displayfuncs xfuncs = {
     _GXDraw_TileImage,
     _GXDraw_Glyph,
     _GXDraw_ImageMagnified,
-    _GXDraw_CopyScreenToImage,
     _GXDraw_Pixmap,
     _GXDraw_TilePixmap,
 

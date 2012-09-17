@@ -359,7 +359,6 @@ extern void _GXDraw_Image(GWindow, GImage *, GRect *src, int32 x, int32 y);
 extern void _GXDraw_TileImage(GWindow, GImage *, GRect *src, int32 x, int32 y);
 extern void _GXDraw_Glyph(GWindow, GImage *, GRect *src, int32 x, int32 y);
 extern void _GXDraw_ImageMagnified(GWindow, GImage *, GRect *src, int32 x, int32 y, int32 width, int32 height);
-extern GImage *_GXDraw_CopyScreenToImage(GWindow, GRect *rect);
 
 extern void _GXDraw_SetClipFunc(GXDisplay *gdisp, GGC *mine);
 extern struct gcol *_GXDraw_GetScreenPixelInfo(GXDisplay *gdisp, int red, int green, int blue);
