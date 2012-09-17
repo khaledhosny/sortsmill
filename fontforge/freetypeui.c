@@ -52,7 +52,7 @@ struct debugger_context {
     FT_Library context;
     FTC *ftc;
     /* I use a thread because freetype doesn't return, it just has a callback */
-    /*  on each instruction. In actuallity only one thread should be executable*/
+    /*  on each instruction. In actuality only one thread should be executable*/
     /*  at a time (either main, or child) */
     pthread_t thread;
     pthread_mutex_t parent_mutex, child_mutex;
