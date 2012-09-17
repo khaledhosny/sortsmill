@@ -64,7 +64,7 @@ int _GXCDraw_hasCairo(void) {
 /* ************************************************************************** */
 /* ****************************** Cairo Window ****************************** */
 /* ************************************************************************** */
-void _GXCDraw_NewWindow(GXWindow nw,Color bg) {
+void _GXCDraw_NewWindow(GXWindow nw) {
     GXDisplay *gdisp = nw->display;
     Display *display = gdisp->display;
 
@@ -958,9 +958,17 @@ void _GXPDraw_DestroyWindow(GXWindow nw) {
 /* ************************************************************************** */
 /* ******************************* Pango Text ******************************* */
 /* ************************************************************************** */
-PangoFontDescription *_GXPDraw_configfont(GWindow gw, GFont *font) {
+PangoFontDescription *_GXPDraw_configfont(GWindow w, GFont *font) {
+    GXWindow gw = (GXWindow) w;
     PangoFontDescription *fd;
-    PangoFontDescription **fdbase = ((GXWindow) gw)->usecairo ? &font->pangoc_fd : &font->pango_fd;
+
+    /* initialize cairo and pango if not initialized, e.g. root window */
+    if (gw->pango_layout == NULL){
+	_GXCDraw_NewWindow(gw);
+	_GXPDraw_NewWindow(gw);
+    }
+
+    PangoFontDescription **fdbase = gw->usecairo ? &font->pangoc_fd : &font->pango_fd;
 
     if ( *fdbase!=NULL )
 return( *fdbase );
