@@ -1990,8 +1990,6 @@ static void GXDrawClear(GWindow w, GRect *rect) {
     _GXCDraw_Clear(gw,rect);
 }
 
-// FIXME: This routine was very hard to read with the #ifdef
-// stuff in it. Is it correct?
 static void GXDrawDrawLine(GWindow w, int32 x,int32 y, int32 xend,int32 yend, Color col) {
     GXWindow gw = (GXWindow) w;
     w->ggc->fg = col;
@@ -1999,6 +1997,7 @@ static void GXDrawDrawLine(GWindow w, int32 x,int32 y, int32 xend,int32 yend, Co
     if ( w->ggc->func==df_copy ) {
 	_GXCDraw_DrawLine(gw,x,y,xend,yend);
     } else {
+	// FIXME: We need to handle XOR with Cairo
 	_GXCDraw_Flush(gw);
 
 	GXDisplay *display = (GXDisplay *) (w->display);
@@ -2011,8 +2010,6 @@ static void GXDrawDrawLine(GWindow w, int32 x,int32 y, int32 xend,int32 yend, Co
     }
 }
 
-// FIXME: This routine was very hard to read with the #ifdef
-// stuff in it. Is it correct?
 static void GXDrawDrawRect(GWindow gw, GRect *rect, Color col) {
     GXWindow gxw = (GXWindow) gw;
 
@@ -2020,6 +2017,7 @@ static void GXDrawDrawRect(GWindow gw, GRect *rect, Color col) {
     if ( gw->ggc->func==df_copy ) {
 	_GXCDraw_DrawRect(gxw,rect);
     } else {
+	// FIXME: We need to handle XOR with Cairo
 	_GXCDraw_Flush(gxw);
 
 	GXDisplay *display = gxw->display;
@@ -2031,8 +2029,6 @@ static void GXDrawDrawRect(GWindow gw, GRect *rect, Color col) {
     }
 }
 
-// FIXME: This routine was very hard to read with the #ifdef
-// stuff in it. Is it correct?
 static void GXDrawFillRect(GWindow gw, GRect *rect, Color col) {
     GXWindow gxw = (GXWindow) gw;
 
@@ -2040,6 +2036,7 @@ static void GXDrawFillRect(GWindow gw, GRect *rect, Color col) {
     if ( gw->ggc->func==df_copy ) {
 	_GXCDraw_FillRect( gxw,rect);
     } else {
+	// FIXME: We need to handle XOR with Cairo
 	_GXCDraw_Flush(gxw);
 
 	GXDisplay *display = gxw->display;
@@ -2051,8 +2048,6 @@ static void GXDrawFillRect(GWindow gw, GRect *rect, Color col) {
     }
 }
 
-// FIXME: This routine was very hard to read with the #ifdef
-// stuff in it. Is it correct?
 static void GXDrawFillRoundRect(GWindow gw, GRect *rect, int radius, Color col) {
     GXWindow gxw = (GXWindow) gw;
     int rr = radius <= (rect->height+1)/2 ? (radius > 0 ? radius : 0) : (rect->height+1)/2;
@@ -2062,6 +2057,7 @@ static void GXDrawFillRoundRect(GWindow gw, GRect *rect, int radius, Color col) 
     if ( gw->ggc->func==df_copy ) {
 	_GXCDraw_FillRoundRect( gxw,rect,rr );
     } else {
+	// FIXME: We need to handle XOR with Cairo
 	_GXCDraw_Flush(gxw);
 
 	GRect middle = {rect->x, rect->y + radius, rect->width, rect->height - 2 * radius};
