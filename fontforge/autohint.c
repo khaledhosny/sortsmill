@@ -1952,8 +1952,6 @@ void SCClearHints(SplineChar *sc) {
     sc->hconflicts = sc->vconflicts = false;
     DStemInfosFree(sc->dstem);
     sc->dstem = NULL;
-    MinimumDistancesFree(sc->md);
-    sc->md = NULL;
     SCOutOfDateBackground(sc);
     if ( any )
 	SCHintsChanged(sc);
@@ -2920,7 +2918,6 @@ void _SplineCharAutoHint( SplineChar *sc, int layer, BlueData *bd, struct glyphd
     StemInfosFree(sc->vstem); sc->vstem=NULL;
     StemInfosFree(sc->hstem); sc->hstem=NULL;
     DStemInfosFree(sc->dstem); sc->dstem=NULL;
-    MinimumDistancesFree(sc->md); sc->md=NULL;
 
     free(sc->countermasks);
     sc->countermasks = NULL; sc->countermask_cnt = 0;

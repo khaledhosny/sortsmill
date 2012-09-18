@@ -38,8 +38,6 @@
 
 GDisplay *screen_display = NULL;
 GDisplay *printer_display = NULL;
-void (*_GDraw_BuildCharHook)(GDisplay *) = NULL;
-void (*_GDraw_InsCharHook)(GDisplay *,unichar_t) = NULL;
 
 #if 0
 void GDrawInit(GDisplay *disp) {
@@ -404,11 +402,6 @@ void GDrawClear(GWindow w, GRect *rect) {
 void GDrawDrawLine(GWindow w, int32 x,int32 y, int32 xend,int32 yend, Color col) {
     if ( col!=COLOR_UNKNOWN )
 	(w->display->funcs->drawLine)(w,x,y,xend,yend,col);
-}
-
-void GDrawDrawArrow(GWindow w, int32 x,int32 y, int32 xend,int32 yend, int arrows, Color col) {
-    if ( col!=COLOR_UNKNOWN )
-	(w->display->funcs->drawArrow)(w,x,y,xend,yend,arrows,col);
 }
 
 void GDrawDrawRect(GWindow w, GRect *rect, Color col) {
@@ -806,11 +799,6 @@ return( (w->display->funcs->endJob)(w,cancel) );
 
 int GDrawRequestDeviceEvents(GWindow w,int devcnt,struct gdeveventmask *de) {
 return( (w->display->funcs->requestDeviceEvents)(w,devcnt,de) );
-}
-
-void GDrawSetBuildCharHooks(void (*hook)(GDisplay *),void (*inshook)(GDisplay *,unichar_t)) {
-    _GDraw_BuildCharHook = hook;
-    _GDraw_InsCharHook = inshook;
 }
 
 /* We are in compose characters mode. The gdisp->mykey_state argument tells us*/

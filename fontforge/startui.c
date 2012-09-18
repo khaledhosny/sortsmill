@@ -147,14 +147,6 @@ struct delayed_event {
     void (*func)(void *);
 };
 
-static void BuildCharHook(GDisplay *gd) {
-    GWidgetCreateInsChar();
-}
-
-static void InsCharHook(GDisplay *gd,unichar_t ch) {
-    GInsCharSetChar(ch);
-}
-
 extern GImage splashimage;
 static GWindow splashw;
 static GTimer *autosave_timer, *splasht;
@@ -1076,7 +1068,6 @@ exit( 0 );
 	autosave_timer=GDrawRequestTimer(splashw,2*AutoSaveFrequency*1000,AutoSaveFrequency*1000,NULL);
 
     GDrawProcessPendingEvents(NULL);
-    GDrawSetBuildCharHooks(BuildCharHook,InsCharHook);
 
     any = 0;
     if ( recover==-1 )

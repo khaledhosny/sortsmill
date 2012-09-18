@@ -1821,7 +1821,6 @@ void SplinesRemoveBetween(SplineChar *sc, SplinePoint *from, SplinePoint *to,int
 	if ( np==to )
     break;
 	sp = np->next;
-	SplinePointMDFree(sc,np);
     }
     
     free(tp);
@@ -2144,14 +2143,12 @@ return( NULL );			/* Some one else should free it and reorder the spline set lis
 	while ( spl->first->selected ) {
 	    nextp = spl->first->next->to;
 	    SplineFree(spl->first->next);
-	    SplinePointMDFree(sc,spl->first);
 	    spl->first = nextp;
 	    nextp->prev = NULL;
 	}
 	while ( spl->last->selected ) {
 	    nextp = spl->last->prev->from;
 	    SplineFree(spl->last->prev);
-	    SplinePointMDFree(sc,spl->last);
 	    spl->last = nextp;
 	    nextp->next = NULL;
 	}
@@ -2362,7 +2359,6 @@ return( false );
 	for ( sp=afterfrom; sp!=to; sp=next ) {
 	    next = sp->next->to;
 	    SplineFree(sp->next);
-	    SplinePointMDFree(sc,sp);
 	}
 	SplinePointCatagorize(from);
 	SplinePointCatagorize(to);
@@ -2740,7 +2736,6 @@ static void SPLForceLines(SplineChar *sc,SplineSet *ss,bigreal bump_size) {
 			    if ( ss->first==ss->last ) ss->last = sp;
 			    ss->first = sp;
 			}
-			SplinePointMDFree(sc,s->from);
 			sp->next = s; s->from = sp;
 			SplineRefigure(s);
 			if ( sp->prev!=NULL )
@@ -2778,7 +2773,6 @@ static void SPLForceLines(SplineChar *sc,SplineSet *ss,bigreal bump_size) {
 			    if ( ss->first==ss->last ) ss->first = sp;
 			    ss->last = sp;
 			}
-			SplinePointMDFree(sc,s->to);
 			sp->prev = s; s->to = sp;
 			SplineRefigure(s);
 			if ( sp->next!=NULL )
@@ -3076,7 +3070,6 @@ return;
 		sp->nextcp = next->nextcp;
 		sp->nonextcp = next->nonextcp;
 		sp->nextcpdef = next->nextcpdef;
-		SplinePointMDFree(sc,next);
 		if ( sp->next!=NULL )
 		    next = sp->next->to;
 		else {
@@ -3125,7 +3118,6 @@ SplineSet *SplineCharSimplify(SplineChar *sc,SplineSet *head,
 		else
 		    prev->next = snext;
 		spl->next = NULL;
-		SplinePointListMDFree(sc,spl);
 	    } else
 		prev = spl;
 	}
@@ -3457,7 +3449,6 @@ SplineSet *SplineCharRemoveTiny(SplineChar *sc,SplineSet *head) {
 	snext = spl->next;
 	if ( spl->first->next==spl->first->prev ) {
 	    spl->next = NULL;
-	    SplinePointListMDFree(sc,spl);
 	    if ( pr==NULL )
 		head = snext;
 	    else

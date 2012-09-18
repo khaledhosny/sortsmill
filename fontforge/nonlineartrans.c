@@ -859,7 +859,6 @@ void FVPointOfView(FontViewBase *fv,struct pov_data *pov) {
 	    if ( pov->yorigin!=or_value )
 		pov->y = origin.y;
 
-	    MinimumDistancesFree(sc->md); sc->md = NULL;
 	    if ( sc->parent->multilayer ) {
 		first = ly_fore;
 		last = sc->layer_cnt-1;

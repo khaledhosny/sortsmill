@@ -2,7 +2,7 @@
 # Date : 28 April 2008
 
 libgdraw_OBJECTS =  choosericons.obj,drawboxborder.obj,\
- gaskdlg.obj,gbuttons.obj,gchardlg.obj,gcontainer.obj,gdraw.obj,\
+ gaskdlg.obj,gbuttons.obj,gcontainer.obj,gdraw.obj,\
  gdrawbuildchars.obj,gdrawerror.obj,gdrawtxt.obj,gdrawtxtinit.obj,\
  genkeysym.obj,gfilechooser.obj,gfiledlg.obj,ggadgets.obj,ggroupbox.obj,\
  gimageclut.obj,gimagecvt.obj,gimagepsdraw.obj,gdrawgimage.obj,\
@@ -32,7 +32,6 @@ choosericons.obj : choosericons.c
 drawboxborder.obj : drawboxborder.c
 gaskdlg.obj : gaskdlg.c
 gbuttons.obj : gbuttons.c
-gchardlg.obj : gchardlg.c
 gcontainer.obj : gcontainer.c
 gdraw.obj : gdraw.c
 gdrawbuildchars.obj : gdrawbuildchars.c

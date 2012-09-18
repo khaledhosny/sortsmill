@@ -1090,8 +1090,6 @@ return;
     sc->layers[layer].undoes = NULL;
     sc->layers[layer].redoes = NULL;
     sc->layers[layer].order2 = true;
-
-    MinimumDistancesFree(sc->md); sc->md = NULL;
 }
 
 void SCConvertToOrder2(SplineChar *sc) {
@@ -1185,8 +1183,6 @@ void SCConvertLayerToOrder3(SplineChar *sc,int layer) {
     sc->layers[layer].undoes = NULL;
     sc->layers[layer].redoes = NULL;
     sc->layers[layer].order2 = false;
-
-    MinimumDistancesFree(sc->md); sc->md = NULL;
 
     /* OpenType/PostScript fonts don't support point matching to position */
     /*  references or anchors */

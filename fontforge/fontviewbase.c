@@ -854,7 +854,6 @@ void FVOverlap(FontViewBase *fv,enum overlap_type ot) {
 	sc->ticked = true;
 	if ( !SCRoundToCluster(sc,ly_all,false,.03,.12))
 	    SCPreserveLayer(sc,fv->active_layer,false);
-	MinimumDistancesFree(sc->md);
 	if ( sc->parent->multilayer ) {
 	    first = ly_fore;
 	    last = sc->layer_cnt-1;

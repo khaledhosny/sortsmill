@@ -511,7 +511,6 @@ SplineChar *SplineCharCopy(SplineChar *sc,SplineFont *into,struct sfmergecontext
     nsc->hstem = StemInfoCopy(nsc->hstem);
     nsc->vstem = StemInfoCopy(nsc->vstem);
     nsc->dstem = DStemInfoCopy(nsc->dstem);
-    nsc->md = NULL;
     if ( sc->countermask_cnt!=0 ) {
 	nsc->countermasks = galloc(sc->countermask_cnt*sizeof(HintMask));
 	memcpy(nsc->countermasks,sc->countermasks,sc->countermask_cnt*sizeof(HintMask));

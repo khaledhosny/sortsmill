@@ -1996,8 +1996,6 @@ static void GXDrawClear(GWindow w, GRect *rect) {
     _GXCDraw_Clear(gw,rect);
 }
 
-// FIXME: This routine was very hard to read with the #ifdef
-// stuff in it. Is it correct?
 static void GXDrawDrawLine(GWindow w, int32 x,int32 y, int32 xend,int32 yend, Color col) {
     GXWindow gw = (GXWindow) w;
     w->ggc->fg = col;
@@ -2005,6 +2003,7 @@ static void GXDrawDrawLine(GWindow w, int32 x,int32 y, int32 xend,int32 yend, Co
     if ( w->ggc->func==df_copy ) {
 	_GXCDraw_DrawLine(gw,x,y,xend,yend);
     } else {
+	// FIXME: We need to handle XOR with Cairo
 	_GXCDraw_Flush(gw);
 
 	GXDisplay *display = (GXDisplay *) (w->display);
@@ -2017,48 +2016,6 @@ static void GXDrawDrawLine(GWindow w, int32 x,int32 y, int32 xend,int32 yend, Co
     }
 }
 
-static void _DrawArrow(GXWindow gxw, int32 x, int32 y, int32 xother, int32 yother ) {
-    GXDisplay *display = gxw->display;
-    XPoint points[3];
-    double a;
-    int off1, off2;
-    double len;
-
-    if ( x==xother && y==yother )
-return;
-    a = atan2(y-yother,x-xother);
-    len = sqrt((double) (x-xother)*(x-xother)+(y-yother)*(y-yother));
-    if ( len>20 ) len = 10; else len = 2*len/3;
-    if ( len<2 )
-return;
-
-    points[0].x = x; points[0].y = y;
-    off1 = len*sin(a+3.1415926535897932/8)+.5; off2 = len*cos(a+3.1415926535897932/8)+.5;
-    points[1].x = x-off2; points[1].y = y-off1;
-    off1 = len*sin(a-3.1415926535897932/8)+.5; off2 = len*cos(a-3.1415926535897932/8)+.5;
-    points[2].x = x-off2; points[2].y = y-off1;
-    XFillPolygon(display->display,gxw->w,display->gcstate[gxw->ggc->bitmap_col].gc,points,3,Complex,CoordModeOrigin);
-    XDrawLines(display->display,gxw->w,display->gcstate[gxw->ggc->bitmap_col].gc,points,3,CoordModeOrigin);
-}
-
-static void GXDrawDrawArrow(GWindow gw, int32 x,int32 y, int32 xend,int32 yend, int16 arrows, Color col) {
-    GXWindow gxw = (GXWindow) gw;
-    GXDisplay *display = gxw->display;
-
-    // FIXME
-    //if ( gxw->usecairo )
-	GDrawIError("DrawArrow not supported");
-    gxw->ggc->fg = col;
-    GXDrawSetline(display,gxw->ggc);
-    XDrawLine(display->display,gxw->w,display->gcstate[gxw->ggc->bitmap_col].gc,x,y,xend,yend);
-    if ( arrows&1 )
-	_DrawArrow(gxw,x,y,xend,yend);
-    if ( arrows&2 )
-	_DrawArrow(gxw,xend,yend,x,y);
-}
-
-// FIXME: This routine was very hard to read with the #ifdef
-// stuff in it. Is it correct?
 static void GXDrawDrawRect(GWindow gw, GRect *rect, Color col) {
     GXWindow gxw = (GXWindow) gw;
 
@@ -2066,6 +2023,7 @@ static void GXDrawDrawRect(GWindow gw, GRect *rect, Color col) {
     if ( gw->ggc->func==df_copy ) {
 	_GXCDraw_DrawRect(gxw,rect);
     } else {
+	// FIXME: We need to handle XOR with Cairo
 	_GXCDraw_Flush(gxw);
 
 	GXDisplay *display = gxw->display;
@@ -2077,8 +2035,6 @@ static void GXDrawDrawRect(GWindow gw, GRect *rect, Color col) {
     }
 }
 
-// FIXME: This routine was very hard to read with the #ifdef
-// stuff in it. Is it correct?
 static void GXDrawFillRect(GWindow gw, GRect *rect, Color col) {
     GXWindow gxw = (GXWindow) gw;
 
@@ -2086,6 +2042,7 @@ static void GXDrawFillRect(GWindow gw, GRect *rect, Color col) {
     if ( gw->ggc->func==df_copy ) {
 	_GXCDraw_FillRect( gxw,rect);
     } else {
+	// FIXME: We need to handle XOR with Cairo
 	_GXCDraw_Flush(gxw);
 
 	GXDisplay *display = gxw->display;
@@ -2097,8 +2054,6 @@ static void GXDrawFillRect(GWindow gw, GRect *rect, Color col) {
     }
 }
 
-// FIXME: This routine was very hard to read with the #ifdef
-// stuff in it. Is it correct?
 static void GXDrawFillRoundRect(GWindow gw, GRect *rect, int radius, Color col) {
     GXWindow gxw = (GXWindow) gw;
     int rr = radius <= (rect->height+1)/2 ? (radius > 0 ? radius : 0) : (rect->height+1)/2;
@@ -2108,6 +2063,7 @@ static void GXDrawFillRoundRect(GWindow gw, GRect *rect, int radius, Color col) 
     if ( gw->ggc->func==df_copy ) {
 	_GXCDraw_FillRoundRect( gxw,rect,rr );
     } else {
+	// FIXME: We need to handle XOR with Cairo
 	_GXCDraw_Flush(gxw);
 
 	GRect middle = {rect->x, rect->y + radius, rect->width, rect->height - 2 * radius};
@@ -2300,22 +2256,15 @@ static void _GXDraw_Pixmap( GWindow _w, GWindow _pixmap, GRect *src, int32 x, in
     GXWindow gw = (GXWindow) _w, pixmap = (GXWindow) _pixmap;
     GXDisplay *gdisp = gw->display;
 
-    if ( pixmap->ggc->bitmap_col ) {
-	GXDrawSetcolfunc(gdisp,gw->ggc);
-	XCopyPlane(gdisp->display,pixmap->w,gw->w,gdisp->gcstate[gw->ggc->bitmap_col].gc,
-		src->x,src->y,	src->width,src->height,
-		x,y,1);
-    } else {
-	_GXDraw_SetClipFunc(gdisp,gw->ggc);
-	/* FIXME: _GXCDraw_CopyArea makes the glyph dissabear in the class kern
-	 * dialog */
-	if ( 0 )
-	    _GXCDraw_CopyArea(pixmap,gw,src,x,y);
-	else
-	    XCopyArea(gdisp->display,pixmap->w,gw->w,gdisp->gcstate[gw->ggc->bitmap_col].gc,
-		    src->x,src->y,	src->width,src->height,
-		    x,y);
-    }
+    _GXDraw_SetClipFunc(gdisp,gw->ggc);
+    /* FIXME: _GXCDraw_CopyArea makes the glyph dissabear in the class kern
+     * dialog */
+    if ( 0 )
+	_GXCDraw_CopyArea(pixmap,gw,src,x,y);
+    else
+	XCopyArea(gdisp->display,pixmap->w,gw->w,gdisp->gcstate[gw->ggc->bitmap_col].gc,
+			src->x,src->y,src->width,src->height,
+			x,y);
 }
 
 static void _GXDraw_TilePixmap( GWindow _w, GWindow _pixmap, GRect *src, int32 x, int32 y) {
@@ -2332,13 +2281,7 @@ static void _GXDraw_TilePixmap( GWindow _w, GWindow _pixmap, GRect *src, int32 x
 	for ( j=x; j<gw->ggc->clip.x+gw->ggc->clip.width; j+=pixmap->pos.width ) {
 	    if ( j+pixmap->pos.width<gw->ggc->clip.x )
 	continue;
-	    if ( pixmap->ggc->bitmap_col ) {
-		XCopyPlane(gdisp->display,((GXWindow) pixmap)->w,gw->w,gdisp->gcstate[1].gc,
-			0,0,  pixmap->pos.width, pixmap->pos.height,
-			j,i,1);
-	    } else {
-		_GXCDraw_CopyArea(pixmap,gw,&pixmap->pos,j,i);
-	    }
+	    _GXCDraw_CopyArea(pixmap,gw,&pixmap->pos,j,i);
 	}
     }
     GDrawPopClip(_w,&old);
@@ -2949,8 +2892,6 @@ return;
 		gdisp->mykey_state = 0;
 		gevent.u.chr.chars[0] = '\0';
 		gevent.u.chr.keysym = '\0';
-		if ( !gdisp->mykeybuild && _GDraw_BuildCharHook!=NULL )
-		    (_GDraw_BuildCharHook)((GDisplay *) gdisp);
 	    } else if ( gdisp->mykeybuild )
 		_GDraw_ComposeChars((GDisplay *) gdisp,&gevent);
 	} else {
@@ -4231,7 +4172,6 @@ static struct displayfuncs xfuncs = {
 
     GXDrawClear,
     GXDrawDrawLine,
-    GXDrawDrawArrow,
     GXDrawDrawRect,
     GXDrawFillRect,
     GXDrawFillRoundRect,

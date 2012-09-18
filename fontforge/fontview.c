@@ -446,10 +446,6 @@ static void FVReselect(FontView *fv, int newpos) {
 	}
     }
     fv->end_pos = newpos;
-    if ( newpos>=0 && newpos<fv->b.map->enccount && (i = fv->b.map->map[newpos])!=-1 &&
-	    fv->b.sf->glyphs[i]!=NULL &&
-	    fv->b.sf->glyphs[i]->unicodeenc>=0 && fv->b.sf->glyphs[i]->unicodeenc<0x10000 )
-	GInsCharSetChar(fv->b.sf->glyphs[i]->unicodeenc);
 }
 
 static void FVFlattenAllBitmapSelections(FontView *fv) {
@@ -3389,37 +3385,6 @@ static void FVMenuClearHints(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *U
     FVClearHints(&fv->b);
 }
 
-#if 0
-static void FVMenuClearWidthMD(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
-    FontView *fv = (FontView *) GDrawGetUserData(gw);
-    int i, changed, gid;
-    MinimumDistance *md, *prev, *next;
-
-    for ( i=0; i<fv->b.map->enccount; ++i ) if ( fv->b.selected[i] &&
-	    (gid = fv->b.map->map[i])!=-1 && SCWorthOutputting(fv->b.sf->glyphs[gid]) ) {
-	SplineChar *sc = fv->b.sf->glyphs[gid];
-	prev=NULL; changed = false;
-	for ( md=sc->md; md!=NULL; md=next ) {
-	    next = md->next;
-	    if ( md->sp2==NULL ) {
-		if ( prev==NULL )
-		    sc->md = next;
-		else
-		    prev->next = next;
-		chunkfree(md,sizeof(MinimumDistance));
-		changed = true;
-	    } else
-		prev = md;
-	}
-	if ( changed ) {
-	    sc->manualhints = true;
-	    SCOutOfDateBackground(sc);
-	    SCUpdateAll(sc);
-	}
-    }
-}
-#endif
-
 static void FVMenuHistograms(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     FontView *fv = (FontView *) GDrawGetUserData(gw);
     SFHistogram(fv->b.sf, fv->b.active_layer, NULL,
@@ -5175,7 +5140,6 @@ static GMenuItem2 htlist[] = {
     { { (unichar_t *) N_("S_uggest Deltas..."), (GImage *) "menuempty.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'l' }, H_("Suggest Deltas|No Shortcut"), NULL, NULL, FVMenuDeltas, MID_Deltas },
     { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0' }, NULL, NULL, NULL, NULL, 0 }, /* line */
     { { (unichar_t *) N_("_Clear Hints"), (GImage *) "hintsclearvstems.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'C' }, H_("Clear Hints|No Shortcut"), NULL, NULL, FVMenuClearHints, MID_ClearHints },
-/*    { { (unichar_t *) N_("Clear _Width MD"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'C' }, H_("Clear Width MD|No Shortcut"), NULL, NULL, FVMenuClearWidthMD, MID_ClearWidthMD },*/
     { { (unichar_t *) N_("Clear Instructions"), (GImage *) "menuempty.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'C' }, H_("Clear Instructions|No Shortcut"), NULL, NULL, FVMenuClearInstrs, MID_ClearInstrs },
     { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0' }, NULL, NULL, NULL, NULL, 0 }, /* line */
     { { (unichar_t *) N_("Histograms"), (GImage *) "menuempty.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, '\0' }, NULL, histlist, NULL, NULL, 0 },

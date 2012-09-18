@@ -639,7 +639,6 @@ void CVMergeSplineSets(CharView *cv, SplinePoint *active, SplineSet *activess,
     merge->next = NULL;
     if ( mergess==activess ) {
 	activess->first = activess->last = active;
-	SplinePointMDFree(cv->b.sc,merge);
 	if ( activess->spiro_cnt!=0 ) {
 	    activess->spiros[0].ty = activess->spiros[activess->spiro_cnt-2].ty;
 	    activess->spiros[activess->spiro_cnt-2] = activess->spiros[activess->spiro_cnt-1];
@@ -662,7 +661,6 @@ void CVMergeSplineSets(CharView *cv, SplinePoint *active, SplineSet *activess,
 	    activess->spiro_cnt += mergess->spiro_cnt-2;
 	} else
 	    SplineSetSpirosClear(activess);
-	SplinePointListMDFree(cv->b.sc,mergess);
     }
     if (( active->pointtype==pt_curve || active->pointtype==pt_hvcurve ) &&
 	    !active->nonextcp && !active->noprevcp &&

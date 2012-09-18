@@ -401,7 +401,6 @@ extern void GDrawSetGIC(GWindow w,GIC *gic,int x, int y);
 
 extern void GDrawClear(GWindow w, GRect *rect);
 extern void GDrawDrawLine(GWindow w, int32 x,int32 y, int32 xend,int32 yend, Color col);
-extern void GDrawDrawArrow(GWindow w, int32 x,int32 y, int32 xend,int32 yend, int arrows, Color col);
 extern void GDrawDrawRect(GWindow w, GRect *rect, Color col);
 extern void GDrawFillRect(GWindow w, GRect *rect, Color col);
 extern void GDrawFillRoundRect(GWindow w, GRect *rect, int radius, Color col);

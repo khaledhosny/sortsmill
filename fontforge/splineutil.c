@@ -245,28 +245,6 @@ void SplinePointFree(SplinePoint *sp) {
     chunkfree(sp,sizeof(SplinePoint));
 }
 
-void SplinePointMDFree(SplineChar *sc, SplinePoint *sp) {
-    MinimumDistance *md, *prev, *next;
-
-    if ( sc!=NULL ) {
-	prev = NULL;
-	for ( md = sc->md; md!=NULL; md = next ) {
-	    next = md->next;
-	    if ( md->sp1==sp || md->sp2==sp ) {
-		if ( prev==NULL )
-		    sc->md = next;
-		else
-		    prev->next = next;
-		chunkfree(md,sizeof(MinimumDistance));
-	    } else
-		prev = md;
-	}
-    }
-
-    chunkfree(sp->hintmask,sizeof(HintMask));
-    chunkfree(sp,sizeof(SplinePoint));
-}
-
 void SplinePointsFree(SplinePointList *spl) {
     Spline *first, *spline, *next;
     int nonext;
@@ -329,39 +307,6 @@ return;
     free(spl->spiros);
     free(spl->contour_name);
     chunkfree(spl,sizeof(SplinePointList));
-}
-
-void SplinePointListMDFree(SplineChar *sc,SplinePointList *spl) {
-    Spline *first, *spline, *next;
-    int freefirst;
-
-    if ( spl==NULL )
-return;
-    if ( spl->first!=NULL ) {
-	first = NULL;
-	freefirst = ( spl->last!=spl->first || spl->first->next==NULL );
-	for ( spline = spl->first->next; spline!=NULL && spline!=first; spline = next ) {
-	    next = spline->to->next;
-	    SplinePointMDFree(sc,spline->to);
-	    SplineFree(spline);
-	    if ( first==NULL ) first = spline;
-	}
-	if ( freefirst )
-	    SplinePointMDFree(sc,spl->first);
-    }
-    free(spl->spiros);
-    free(spl->contour_name);
-    chunkfree(spl,sizeof(SplinePointList));
-}
-
-void SplinePointListsMDFree(SplineChar *sc,SplinePointList *spl) {
-    SplinePointList *next;
-
-    while ( spl!=NULL ) {
-	next = spl->next;
-	SplinePointListMDFree(sc,spl);
-	spl = next;
-    }
 }
 
 void SplinePointListsFree(SplinePointList *head) {
@@ -1583,7 +1528,6 @@ static SplinePointList *SplinePointListSplit(SplineChar *sc,SplinePointList *spl
 		SplineFree(start->next);
 	    } else
 		next = NULL;
-	    SplinePointMDFree(sc,start);
 	    start = next;
 	}
 	if ( start==NULL || start==first )
@@ -1644,7 +1588,6 @@ SplinePointList *SplinePointListRemoveSelected(SplineChar *sc,SplinePointList *b
 	    }
 	}
 	if ( allsel ) {
-	    SplinePointListMDFree(sc,base);
     continue;
 	}
 	if ( !sc->inspiro || !anysel || !hasspiro()) {
@@ -5346,23 +5289,6 @@ DStemInfo *DStemInfoCopy(DStemInfo *h) {
 return( head );
 }
 
-MinimumDistance *MinimumDistanceCopy(MinimumDistance *md) {
-    MinimumDistance *head=NULL, *last=NULL, *cur;
-
-    for ( ; md!=NULL; md = md->next ) {
-	cur = chunkalloc(sizeof(DStemInfo));
-	*cur = *md;
-	cur->next = NULL;
-	if ( head==NULL )
-	    head = last = cur;
-	else {
-	    last->next = cur;
-	    last = cur;
-	}
-    }
-return( head );
-}
-
 void KernPairsFree(KernPair *kp) {
     KernPair *knext;
     for ( ; kp!=NULL; kp = knext ) {
@@ -5815,16 +5741,6 @@ void FPSTFree(FPST *fpst) {
     }
 }
 
-void MinimumDistancesFree(MinimumDistance *md) {
-    MinimumDistance *next;
-
-    while ( md!=NULL ) {
-	next = md->next;
-	chunkfree(md,sizeof(MinimumDistance));
-	md = next;
-    }
-}
-
 void TTFLangNamesFree(struct ttflangname *l) {
     struct ttflangname *next;
     int i;
@@ -6062,7 +5978,6 @@ return;
     StemInfosFree(sc->hstem);
     StemInfosFree(sc->vstem);
     DStemInfosFree(sc->dstem);
-    MinimumDistancesFree(sc->md);
     KernPairsFree(sc->kerns);
     KernPairsFree(sc->vkerns);
     AnchorPointsFree(sc->anchor);

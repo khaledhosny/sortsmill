@@ -58,35 +58,6 @@ void SCClearRounds(SplineChar *sc,int layer) {
     }
 }
 
-void MDReplace(MinimumDistance *md,SplineSet *old,SplineSet *rpl) {
-    /* Replace all the old points with the ones in rpl in the minimum distance hints */
-    SplinePoint *osp, *rsp;
-    MinimumDistance *test;
-
-    if ( md==NULL )
-return;
-
-    while ( old!=NULL && rpl!=NULL ) {
-	osp = old->first; rsp = rpl->first;
-	while ( 1 ) {
-	    for ( test=md; test!=NULL ; test=test->next ) {
-		if ( test->sp1==osp )
-		    test->sp1 = rsp;
-		if ( test->sp2==osp )
-		    test->sp2 = rsp;
-	    }
-	    if ( osp->next==NULL || rsp->next==NULL )
-	break;
-	    osp = osp->next->to;
-	    rsp = rsp->next->to;
-	    if ( osp==old->first )
-	break;
-	}
-	old = old->next;
-	rpl = rpl->next;
-    }
-}
-
 RefChar *HasUseMyMetrics(SplineChar *sc,int layer) {
     RefChar *r;
 
@@ -454,7 +425,6 @@ return;
 	StemInfosFree(sc->hstem); sc->hstem = NULL;
 	StemInfosFree(sc->vstem); sc->vstem = NULL;
 	DStemInfosFree(sc->dstem); sc->dstem = NULL;
-	MinimumDistancesFree(sc->md); sc->md = NULL;
 	free(sc->ttf_instrs);
 	sc->ttf_instrs = NULL;
 	sc->ttf_instrs_len = 0;

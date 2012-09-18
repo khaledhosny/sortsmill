@@ -35,8 +35,6 @@
 #include "utype.h"
 #include <math.h>
 
-extern void (*_GDraw_InsCharHook)(GDisplay *,unichar_t);
-
 GBox _GGadget_gtextfield_box = GBOX_EMPTY; /* Don't initialize here */
 static GBox glistfield_box = GBOX_EMPTY; /* Don't initialize here */
 static GBox glistfieldmenu_box = GBOX_EMPTY; /* Don't initialize here */
@@ -1789,9 +1787,6 @@ return( true );
 	    if ( gt->sel_start==gt->sel_end )
 		GTextField_Show(gt,gt->sel_start);
 	    GTextFieldChanged(gt,-1);
-	    if ( gt->sel_start<gt->sel_end && _GDraw_InsCharHook!=NULL && !gt->donthook )
-		(_GDraw_InsCharHook)(GDrawGetDisplayOfWindow(gt->g.base),
-			gt->text[gt->sel_start]);
 	}
 	if ( gt->sel_end > u_strlen( gt->text ))
 	    fprintf( stderr, "About to crash\n" );
@@ -2715,8 +2710,6 @@ static GTextField *_GTextFieldCreate(GTextField *gt, struct gwindow *base, GGadg
 	gt->font = gd->label->font;
     if ( (gd->flags & gg_textarea_wrap) && gt->multi_line )
 	gt->wrap = true;
-    else if ( (gd->flags & gg_textarea_wrap) )	/* only used by gchardlg.c no need to make it look nice */
-	gt->donthook = true;
     GTextFieldFit(gt);
     _GGadget_FinalPosition(&gt->g,base,gd);
     GTextFieldRefigureLines(gt,0);
