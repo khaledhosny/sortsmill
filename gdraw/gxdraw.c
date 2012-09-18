@@ -2254,22 +2254,15 @@ static void _GXDraw_Pixmap( GWindow _w, GWindow _pixmap, GRect *src, int32 x, in
     GXWindow gw = (GXWindow) _w, pixmap = (GXWindow) _pixmap;
     GXDisplay *gdisp = gw->display;
 
-    if ( pixmap->ggc->bitmap_col ) {
-	GXDrawSetcolfunc(gdisp,gw->ggc);
-	XCopyPlane(gdisp->display,pixmap->w,gw->w,gdisp->gcstate[gw->ggc->bitmap_col].gc,
-		src->x,src->y,	src->width,src->height,
-		x,y,1);
-    } else {
-	_GXDraw_SetClipFunc(gdisp,gw->ggc);
-	/* FIXME: _GXCDraw_CopyArea makes the glyph dissabear in the class kern
-	 * dialog */
-	if ( 0 )
-	    _GXCDraw_CopyArea(pixmap,gw,src,x,y);
-	else
-	    XCopyArea(gdisp->display,pixmap->w,gw->w,gdisp->gcstate[gw->ggc->bitmap_col].gc,
-		    src->x,src->y,	src->width,src->height,
-		    x,y);
-    }
+    _GXDraw_SetClipFunc(gdisp,gw->ggc);
+    /* FIXME: _GXCDraw_CopyArea makes the glyph dissabear in the class kern
+     * dialog */
+    if ( 0 )
+	_GXCDraw_CopyArea(pixmap,gw,src,x,y);
+    else
+	XCopyArea(gdisp->display,pixmap->w,gw->w,gdisp->gcstate[gw->ggc->bitmap_col].gc,
+			src->x,src->y,src->width,src->height,
+			x,y);
 }
 
 static void _GXDraw_TilePixmap( GWindow _w, GWindow _pixmap, GRect *src, int32 x, int32 y) {
@@ -2286,13 +2279,7 @@ static void _GXDraw_TilePixmap( GWindow _w, GWindow _pixmap, GRect *src, int32 x
 	for ( j=x; j<gw->ggc->clip.x+gw->ggc->clip.width; j+=pixmap->pos.width ) {
 	    if ( j+pixmap->pos.width<gw->ggc->clip.x )
 	continue;
-	    if ( pixmap->ggc->bitmap_col ) {
-		XCopyPlane(gdisp->display,((GXWindow) pixmap)->w,gw->w,gdisp->gcstate[1].gc,
-			0,0,  pixmap->pos.width, pixmap->pos.height,
-			j,i,1);
-	    } else {
-		_GXCDraw_CopyArea(pixmap,gw,&pixmap->pos,j,i);
-	    }
+	    _GXCDraw_CopyArea(pixmap,gw,&pixmap->pos,j,i);
 	}
     }
     GDrawPopClip(_w,&old);
