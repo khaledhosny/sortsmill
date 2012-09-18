@@ -621,7 +621,6 @@ void CVPointOfView(CharView *cv,struct pov_data *pov) {
     if ( pov->yorigin!=or_value )
 	pov->y = origin.y;
 
-    MinimumDistancesFree(cv->b.sc->md); cv->b.sc->md = NULL;
     SPLPoV(cv->b.layerheads[cv->b.drawmode]->splines,pov,anysel);
     CVCharChangedUpdate(&cv->b);
 }

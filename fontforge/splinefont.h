@@ -1230,16 +1230,6 @@ typedef struct dsteminfo {
     HintInstance *where;	/* location(s) along the unit vector */
 } DStemInfo;
 
-typedef struct minimumdistance {
-    /* If either point is NULL it will be assumed to mean either the origin */
-    /*  or the width point (depending on which is closer). This allows user */
-    /*  to control metrics... */
-    SplinePoint *sp1, *sp2;
-    unsigned int x: 1;
-    unsigned int done: 1;
-    struct minimumdistance *next;
-} MinimumDistance;
-
 typedef struct layer /* : reflayer */{
     unsigned int background: 1;
     unsigned int order2: 1;
@@ -1392,7 +1382,6 @@ typedef struct splinechar {
     StemInfo *hstem;		/* hstem hints have a vertical offset but run horizontally */
     StemInfo *vstem;		/* vstem hints have a horizontal offset but run vertically */
     DStemInfo *dstem;		/* diagonal hints for ttf */
-    MinimumDistance *md;
     struct charviewbase *views;
     struct charinfo *charinfo;
     struct splinefont *parent;
@@ -2123,11 +2112,8 @@ extern void LinearApproxFree(LinearApprox *la);
 extern void SplineFree(Spline *spline);
 extern SplinePoint *SplinePointCreate(real x, real y);
 extern void SplinePointFree(SplinePoint *sp);
-extern void SplinePointMDFree(SplineChar *sc,SplinePoint *sp);
 extern void SplinePointsFree(SplinePointList *spl);
 extern void SplinePointListFree(SplinePointList *spl);
-extern void SplinePointListMDFree(SplineChar *sc,SplinePointList *spl);
-extern void SplinePointListsMDFree(SplineChar *sc,SplinePointList *spl);
 extern void SplinePointListsFree(SplinePointList *head);
 extern void SplineSetSpirosClear(SplineSet *spl);
 extern void SplineSetBeziersClear(SplineSet *spl);
@@ -2170,7 +2156,6 @@ extern uint16 PSTDefaultFlags(enum possub_type type,SplineChar *sc );
 extern int PSTContains(const char *components,const char *name);
 extern StemInfo *StemInfoCopy(StemInfo *h);
 extern DStemInfo *DStemInfoCopy(DStemInfo *h);
-extern MinimumDistance *MinimumDistanceCopy(MinimumDistance *h);
 extern void SPChangePointType(SplinePoint *sp, int pointtype);
 
 static inline SplineFont *optional_cidmaster(SplineFont *sf)
@@ -2210,7 +2195,6 @@ extern void AltUniFigure(SplineFont *sf,EncMap *map,int check_dups);
 extern void AltUniRemove(SplineChar *sc,int uni);
 extern void AltUniAdd(SplineChar *sc,int uni);
 extern void AltUniAdd_DontCheckDups(SplineChar *sc,int uni);
-extern void MinimumDistancesFree(MinimumDistance *md);
 extern void LayerDefault(Layer *);
 extern SplineChar *SplineCharCreate(int layer_cnt);
 extern SplineChar *SFSplineCharCreate(SplineFont *sf);
@@ -3106,7 +3090,6 @@ extern KernClass *SFFindVKernClass(SplineFont *sf,SplineChar *first,SplineChar *
 	int *index,int allow_zero);
 
 extern void SCClearRounds(SplineChar *sc,int layer);
-extern void MDReplace(MinimumDistance *md,SplineSet *old,SplineSet *rpl);
 extern void SCSynchronizeWidth(SplineChar *sc,real newwidth, real oldwidth,struct fontviewbase *fv);
 extern RefChar *HasUseMyMetrics(SplineChar *sc,int layer);
 extern void SCSynchronizeLBearing(SplineChar *sc,real off,int layer);

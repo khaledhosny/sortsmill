@@ -1703,8 +1703,6 @@ static void _PI_ShowHints(GIData *ci,int set) {
 static void PI_DoCancel(GIData *ci) {
     CharView *cv = ci->cv;
     ci->done = true;
-    if ( cv->b.drawmode==dm_fore )
-	MDReplace(cv->b.sc->md,cv->b.sc->layers[ly_fore].splines,ci->oldstate);
     SplinePointListsFree(cv->b.layerheads[cv->b.drawmode]->splines);
     cv->b.layerheads[cv->b.drawmode]->splines = ci->oldstate;
     CVRemoveTopUndo(&cv->b);

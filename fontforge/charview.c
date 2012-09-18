@@ -119,7 +119,6 @@ static Color metricslabelcol = 0x00000;
 static Color hintlabelcol = 0x00cccc;
 static Color bluevalstipplecol = 0x808080ff;	/* Translucent */
 static Color fambluestipplecol = 0x80ff7070;	/* Translucent */
-static Color mdhintcol = 0x80e04040;		/* Translucent */
 static Color dhintcol = 0x80d0a0a0;		/* Translucent */
 static Color hhintcol = 0x80a0d0a0;		/* Translucent */
 static Color vhintcol = 0x80c0c0ff;		/* Translucent */
@@ -1232,47 +1231,6 @@ static void CVShowDHint ( CharView *cv, GWindow pixmap, DStemInfo *dstem ) {
     }
 }
 
-static void CVShowMinimumDistance(CharView *cv, GWindow pixmap,MinimumDistance *md) {
-    int x1,y1, x2,y2;
-    int xa, ya;
-    int off = cv->xoff+cv->height-cv->yoff;
-
-    if (( md->x && !cv->showmdx ) || (!md->x && !cv->showmdy))
-return;
-    if ( md->sp1==NULL && md->sp2==NULL )
-return;
-    if ( md->sp1!=NULL ) {
-	x1 = cv->xoff + rint( md->sp1->me.x*cv->scale );
-	y1 = -cv->yoff + cv->height - rint(md->sp1->me.y*cv->scale);
-    } else {
-	x1 = cv->xoff + rint( cv->b.sc->width*cv->scale );
-	y1 = 0x80000000;
-    }
-    if ( md->sp2!=NULL ) {
-	x2 = cv->xoff + rint( md->sp2->me.x*cv->scale );
-	y2 = -cv->yoff + cv->height - rint(md->sp2->me.y*cv->scale);
-    } else {
-	x2 = cv->xoff + rint( cv->b.sc->width*cv->scale );
-	y2 = y1-8;
-    }
-    if ( y1==0x80000000 )
-	y1 = y2-8;
-    if ( md->x ) {
-	ya = (y1+y2)/2;
-	GDrawDrawArrow(pixmap, x1,ya, x2,ya, 2, mdhintcol);
-	GDrawSetDashedLine(pixmap,5,5,off);
-	GDrawDrawLine(pixmap, x1,ya, x1,y1, mdhintcol);
-	GDrawDrawLine(pixmap, x2,ya, x2,y2, mdhintcol);
-    } else {
-	xa = (x1+x2)/2;
-	GDrawDrawArrow(pixmap, xa,y1, xa,y2, 2, mdhintcol);
-	GDrawSetDashedLine(pixmap,5,5,off);
-	GDrawDrawLine(pixmap, xa,y1, x1,y1, mdhintcol);
-	GDrawDrawLine(pixmap, xa,y2, x2,y2, mdhintcol);
-    }
-    GDrawSetDashedLine(pixmap,0,0,0);
-}
-
 static void dtos(char *buf,real val) {
     char *pt;
 
@@ -1361,7 +1319,6 @@ static void CVShowHints(CharView *cv, GWindow pixmap) {
     int end;
     Color col;
     DStemInfo *dstem;
-    MinimumDistance *md;
     char *blues, *others;
     struct psdict *private = cv->b.sc->parent->private;
     char buf[20];
@@ -1492,9 +1449,6 @@ static void CVShowHints(CharView *cv, GWindow pixmap) {
 	}
     }
     GDrawSetDashedLine(pixmap,0,0,0);
-
-    for ( md=cv->b.sc->md; md!=NULL; md=md->next )
-	CVShowMinimumDistance(cv, pixmap,md);
 
     if ( cv->showvhints || cv->showhhints ) {
 	for ( spl=cv->b.layerheads[cv->b.drawmode]->splines; spl!=NULL; spl=spl->next ) {
@@ -5127,7 +5081,6 @@ return( true );
 #define MID_ReviewHints	2407
 #define MID_CreateHHint	2408
 #define MID_CreateVHint	2409
-#define MID_MinimumDistance	2410
 #define MID_AutoInstr	2411
 #define MID_ClearInstr	2412
 #define MID_EditInstructions 2413
@@ -6551,8 +6504,6 @@ static void CVDoClear(CharView *cv) {
     int anyimages;
 
     CVPreserveState(&cv->b);
-    if ( cv->b.drawmode==dm_fore )
-	SCRemoveSelectedMinimumDistances(cv->b.sc,2);
     cv->b.layerheads[cv->b.drawmode]->splines = SplinePointListRemoveSelected(cv->b.sc,
 	    cv->b.layerheads[cv->b.drawmode]->splines);
     for ( refs=cv->b.layerheads[cv->b.drawmode]->refs; refs!=NULL; refs = rnext ) {
@@ -7541,10 +7492,6 @@ static void _CVMenuOverlap(CharView *cv,enum overlap_type ot) {
     DoAutoSaves();
     if ( !SCRoundToCluster(cv->b.sc,layer,false,.03,.12))
 	CVPreserveState(&cv->b);	/* SCRound2Cluster does this when it makes a change, not otherwise */
-    if ( cv->b.drawmode==dm_fore ) {
-	MinimumDistancesFree(cv->b.sc->md);
-	cv->b.sc->md = NULL;
-    }
     cv->b.layerheads[cv->b.drawmode]->splines = SplineSetRemoveOverlap(cv->b.sc,cv->b.layerheads[cv->b.drawmode]->splines,ot);
     CVCharChangedUpdate(&cv->b);
 }

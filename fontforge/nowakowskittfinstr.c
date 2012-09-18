@@ -5086,7 +5086,6 @@ static uint8 *dogeninstructions(InstrCt *ct) {
     if ( ct->gd->hbundle!=NULL ) max += ct->ptcnt*8;
     if ( ct->gd->vbundle!=NULL ) max += ct->ptcnt*8+4;
     for ( dstem=ct->sc->dstem; dstem!=NULL; max+=7+4*6+100, dstem=dstem->next );
-    if ( ct->sc->md!=NULL ) max += ct->ptcnt*12;
     max += ct->ptcnt*6;			/* in case there are any rounds */
     max += ct->ptcnt*6;			/* paranoia */
     ct->instrs = ct->pt = galloc(max);
@@ -5210,7 +5209,7 @@ return;
 	    !sc->manualhints )
 	SplineCharAutoHint(sc,gic->layer,NULL);
 
-    if ( sc->vstem==NULL && sc->hstem==NULL && sc->dstem==NULL && sc->md==NULL)
+    if ( sc->vstem==NULL && sc->hstem==NULL && sc->dstem==NULL )
 return;
 
     /* TODO!

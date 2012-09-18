@@ -3014,7 +3014,6 @@ void SFSplinesFromLayers(SplineFont *sf,int tostroke) {
 	new[ly_fore].splines = splines;
 	new[ly_fore].refs = head;
 	for ( layer=ly_fore; layer<sc->layer_cnt; ++layer ) {
-	    SplinePointListsMDFree(sc,sc->layers[layer].splines);
 	    RefCharsFree(sc->layers[layer].refs);
 	    ImageListsFree(sc->layers[layer].images);
 	}

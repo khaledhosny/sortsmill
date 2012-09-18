@@ -2320,8 +2320,6 @@ static void _MVMenuOverlap(MetricsView *mv, enum overlap_type ot) {
 	SplineChar *sc = mv->glyphs[i].sc;
 	if ( !SCRoundToCluster(sc, mv->layer, false, 0.03, 0.12))
 	    SCPreserveLayer(sc, mv->layer, false);
-	MinimumDistancesFree(sc->md);
-	sc->md = NULL;
 	sc->layers[mv->layer].splines = SplineSetRemoveOverlap(sc, sc->layers[mv->layer].splines, ot);
 	SCCharChangedUpdate(sc, mv->layer);
     }

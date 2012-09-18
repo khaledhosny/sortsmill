@@ -810,8 +810,6 @@ static void DoReplaceIncomplete(SplineChar *sc,SearchData *s) {
 
     /* Total "fudge" amount should be spread evenly over each point */
     FudgeFigure(sc,s,path,&fudge);
-    if ( s->pointcnt!=s->rpointcnt )
-	MinimumDistancesFree(sc->md); sc->md = NULL;
 
     sc_p = s->matched_sp; p_p = path->first, r_p = rpath->first;
     if ( s->endpoints ) {
@@ -956,7 +954,6 @@ static void DoReplaceFull(SplineChar *sc,SearchData *s) {
 	    else
 		sprev->next = snext;
 	    spl->next = NULL;
-	    SplinePointListMDFree(sc,spl);
 	} else
 	    sprev = spl;
     }
