@@ -40,21 +40,23 @@ libgutils_la_SOURCES = divisors.c fsys.c gcol.c gimage.c				\
 	giohosts.c giomime.c giothread.c giotrans.c gimagebmpP.h			\
 	giofuncP.h gioP.h
 
-EXPORTED_LIBGUTILS_SYMBOLS = div_tables gColor2Hslrgb gColor2Hslrgba	\
-	GFileAppendFile GFileBuildName GFileExists							\
-	_GFile_find_program_dir GFileGetAbsoluteName GFileGetHomeDir		\
-	GFileIsAbsolute GFileIsDir GFileMakeAbsoluteName GFileMkDir			\
-	GFileNameTail GFileReadable GFileUnlink gHSL2RGB gHslrgb2Color		\
-	gHslrgba2Color gHSV2RGB GImageCreate GImageDestroy					\
-	GImageDrawImage GImageDrawRect GImageGetHeight						\
-	_GImageGetPixelColor GImageGetPixelRGBA GImageGetWidth GImageRead	\
-	GImageRead_Bmp GImageRead_Jpeg GImageRead_Png GImageWriteBmp		\
-	GImageWrite_Bmp GImageWrite_Jpeg GImageWritePng GImageWrite_Png		\
-	GImageWriteXbm GIOcancel GIOclose GIOCreate _GIO_decomposeURL		\
-	GIOdir GIOfileExists GIOgetDirData GIOguessMimeType GIOmkDir		\
-	GIO_PasswordCache GIO_SetThreadCallback gRGB2HSV sgettext			\
-	u_GFileAppendFile u_GFileGetAbsoluteName u_GFileGetHomeDir			\
-	u_GFileIsAbsolute u_GFileNameTail u_GFileNormalize
+EXPORTED_LIBGUTILS_SYMBOLS = GFileAppendFile GFileBuildName				\
+	GFileExists GFileGetAbsoluteName GFileGetHomeDir GFileIsAbsolute	\
+	GFileIsDir GFileMakeAbsoluteName GFileMkDir GFileNameTail			\
+	GFileReadable GFileUnlink GIOCreate GIO_PasswordCache				\
+	GIO_SetThreadCallback GIOcancel GIOclose GIOdir GIOfileExists		\
+	GIOgetDirData GIOguessMimeType GIOmkDir GImageCreate				\
+	GImageDestroy GImageDrawImage GImageDrawRect GImageGetHeight		\
+	GImageGetPixelRGBA GImageGetWidth GImageRead GImageRead_Bmp			\
+	GImageRead_Jpeg GImageRead_Png GImageWriteBmp GImageWritePng		\
+	GImageWriteXbm GImageWrite_Bmp GImageWrite_Jpeg GImageWrite_Png		\
+	_GFile_find_program_dir _GIO_decomposeURL _GImageGetPixelColor		\
+	div_tables gColor2Hslrgb gColor2Hslrgba gHSL2RGB gHSV2RGB			\
+	gHslrgb2Color gHslrgba2Color gRGB2HSV sgettext u_GFileAppendFile	\
+	u_GFileGetAbsoluteName u_GFileGetHomeDir u_GFileIsAbsolute			\
+	u_GFileNameTail u_GFileNormalize
+
+libgutils_la_CPPFLAGS = $(AM_CPPFLAGS)
 
 libgutils_la_LIBADD = $(top_builddir)/Unicode/libgunicode.la	\
 	$(top_builddir)/lib/libgnu.la
@@ -67,7 +69,7 @@ libgutils_la_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS) -release $(VERSION)	\
 libgutils_la_DEPENDENCIES = $(builddir)/libgutils.sym
 
 $(builddir)/libgutils.sym: $(builddir)/Makefile
-	echo $(EXPORTED_LIBGUTILS_SYMBOLS) | $(TR) ' ' '\n' > $@
+	echo $(EXPORTED_LIBGUTILS_SYMBOLS) | $(TR) ' ' '\n' | LC_ALL=C $(MY_SORT) > $@
 
 CLEANFILES += $(builddir)/libgutils.sym
 
@@ -76,6 +78,8 @@ CLEANFILES += $(builddir)/libgutils.sym
 libgioftp_la_SOURCES = gioftp.c gioftpP.h
 
 EXPORTED_LIBGIOFTP_SYMBOLS = GIO_dispatch
+
+libgioftp_la_CPPFLAGS = $(AM_CPPFLAGS)
 
 libgioftp_la_LIBADD = $(top_builddir)/Unicode/libgunicode.la	\
 	$(top_builddir)/lib/libgnu.la libgutils.la
@@ -88,7 +92,7 @@ libgioftp_la_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS) -release $(VERSION)	\
 libgioftp_la_DEPENDENCIES = $(builddir)/libgioftp.sym libgutils.la
 
 $(builddir)/libgioftp.sym: $(builddir)/Makefile
-	echo $(EXPORTED_LIBGIOFTP_SYMBOLS) | $(TR) ' ' '\n' > $@
+	echo $(EXPORTED_LIBGIOFTP_SYMBOLS) | $(TR) ' ' '\n' | LC_ALL=C $(MY_SORT) > $@
 
 CLEANFILES += $(builddir)/libgioftp.sym
 

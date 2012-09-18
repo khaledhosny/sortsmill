@@ -39,28 +39,28 @@ libgunicode_la_SOURCES = ArabicForms.c alphabet.c backtrns.c char.c		\
 EXPORTED_LIBGUNICODE_SYMBOLS = AllAscii ArabicForms StripToASCII		\
 	____codepointassigned ____tolower ____tomirror ____toupper			\
 	____utype ____utype2 alphabets_from_unicode big5_from_unicode		\
-	c_to_u copy copyn cu_copy cu_copyn cu_strcat cu_strcpy cu_strncat	\
-	cu_strncpy cu_strstartmatch def2u_copy def2u_strncpy				\
-	def2utf8_copy encoding2u_strncpy galloc gb2312_from_unicode			\
-	gcalloc gfree grealloc iconv_local_encoding_name jis_from_unicode	\
-	ksc5601_from_unicode latin1_2_utf8_copy latin1_2_utf8_strcpy		\
-	local_encoding strmatch strnmatch strstartmatch strstrmatch			\
-	u2def_copy u2def_strncpy u2encoding_strncpy u2utf8_copy				\
-	u2utf8_copyn u2utf8_strcpy uAllAscii u_concat u_copy u_copyn		\
-	u_endswith u_sprintf u_strcat u_strchr u_strcmp u_strcpy u_strlen	\
-	u_strmatch u_strncat u_strncmp u_strncpy u_strnmatch u_strrchr		\
-	u_strstartmatch u_strstr u_strstrmatch u_strtod u_strtol			\
-	u_strtoul u_to_c u_vsnprintf uc_copy uc_copyn uc_strcat uc_strcmp	\
-	uc_strcpy uc_strmatch uc_strncat uc_strncmp uc_strncpy				\
-	uc_strnmatch uc_strstr uc_strstrmatch unicode_alternates			\
+	c_to_u copy copyn cu_copy cu_copyn cu_strcat cu_strcpy cu_strncpy	\
+	cu_strstartmatch def2u_copy def2u_strncpy def2utf8_copy galloc		\
+	gb2312_from_unicode gcalloc gfree grealloc							\
+	iconv_local_encoding_name jis_from_unicode ksc5601_from_unicode		\
+	latin1_2_utf8_copy local_encoding strmatch strnmatch				\
+	strstartmatch strstrmatch u2def_copy u2def_strncpy					\
+	u2encoding_strncpy u2utf8_copy u2utf8_copyn u2utf8_strcpy			\
+	uAllAscii u_copy u_copyn u_endswith u_sprintf u_strcat u_strchr		\
+	u_strcmp u_strcpy u_strlen u_strmatch u_strncmp u_strncpy			\
+	u_strnmatch u_strrchr u_strstartmatch u_strstrmatch u_strtod		\
+	u_strtol u_strtoul u_to_c u_vsnprintf uc_copy uc_copyn uc_strcat	\
+	uc_strcmp uc_strcpy uc_strmatch uc_strncat uc_strncmp uc_strncpy	\
+	uc_strstr uc_strstrmatch unicode_alternates							\
 	unicode_from_alphabets unicode_from_big5 unicode_from_big5hkscs		\
 	unicode_from_gb2312 unicode_from_jis201 unicode_from_jis208			\
 	unicode_from_jis212 unicode_from_johab unicode_from_ksc5601			\
 	utf82U_strncpy utf82def_copy utf82u_copy utf82u_copyn				\
 	utf82u_strcat utf82u_strcpy utf82u_strlen utf8_2_latin1_copy		\
-	utf8_db utf8_ib utf8_idpb utf8_ildb utf8_strchr utf8_strlen			\
-	utf8_strncpy utf8_truncatevalid utf8_valid
+	utf8_idpb utf8_ildb utf8_strchr utf8_strlen utf8_strncpy			\
+	utf8_truncatevalid utf8_valid
 
+libgunicode_la_CPPFLAGS = $(AM_CPPFLAGS)
 libgunicode_la_LIBADD = $(top_builddir)/lib/libgnu.la
 
 # Using -release instead of -version-info seems appropriate in the
@@ -71,7 +71,7 @@ libgunicode_la_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS) -release $(VERSION)	\
 libgunicode_la_DEPENDENCIES = $(builddir)/libgunicode.sym
 
 $(builddir)/libgunicode.sym: $(builddir)/Makefile
-	echo $(EXPORTED_LIBGUNICODE_SYMBOLS) | $(TR) ' ' '\n' > $@
+	echo $(EXPORTED_LIBGUNICODE_SYMBOLS) | $(TR) ' ' '\n' | LC_ALL=C $(MY_SORT) > $@
 
 CLEANFILES = $(builddir)/libgunicode.sym
 
