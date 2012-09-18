@@ -38,21 +38,33 @@ libgutils_la_SOURCES = divisors.c fsys.c gcol.c gimage.c				\
 	giohosts.c giomime.c giothread.c giotrans.c gimagebmpP.h			\
 	giofuncP.h gioP.h
 
-libgutils_la_LIBADD = $(top_builddir)/Unicode/libgunicode.la
+libgutils_la_LIBADD = $(top_builddir)/Unicode/libgunicode.la	\
+	$(top_builddir)/lib/libgnu.la
 
 # Using -release instead of -version-info seems appropriate in the
 # absence of a well defined ABI.
 libgutils_la_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS) -release $(VERSION)	\
-	$(LTLIBINTL)
+	$(LTLIBINTL) -export-symbols $(srcdir)/libgutils.sym
+
+libgutils_la_DEPENDENCIES = $(srcdir)/libgutils.sym
+
+EXTRA_DIST = $(srcdir)/libgutils.sym
 
 #--------------------------------------------------------------------------
 
 libgioftp_la_SOURCES = gioftp.c gioftpP.h
 
+libgioftp_la_LIBADD = $(top_builddir)/Unicode/libgunicode.la	\
+	$(top_builddir)/lib/libgnu.la libgutils.la
+
 # Using -release instead of -version-info seems appropriate in the
 # absence of a well defined ABI.
 libgioftp_la_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS) -release $(VERSION)	\
-	$(LTLIBINTL)
+	$(LTLIBINTL) -export-symbols $(srcdir)/libgioftp.sym
+
+libgioftp_la_DEPENDENCIES = $(srcdir)/libgioftp.sym libgutils.la
+
+EXTRA_DIST += $(srcdir)/libgioftp.sym
 
 #--------------------------------------------------------------------------
 

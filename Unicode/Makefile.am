@@ -43,6 +43,8 @@ libgunicode_la_LIBADD = $(top_builddir)/lib/libgnu.la
 libgunicode_la_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS) -release $(VERSION)	\
 	$(LTLIBINTL) -export-symbols $(srcdir)/libgunicode.sym
 
+libgunicode_la_DEPENDENCIES = $(srcdir)/libgunicode.sym
+
 EXTRA_DIST = $(srcdir)/libgunicode.sym
 
 #--------------------------------------------------------------------------
