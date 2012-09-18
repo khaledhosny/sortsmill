@@ -1,3 +1,5 @@
+#include <config.h>
+
 static const int poses300[] = {
     _Above,
     _Above,

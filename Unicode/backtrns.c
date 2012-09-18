@@ -1,3 +1,5 @@
+#include <config.h>
+
 static const unsigned long l_allzeros[256] = { 0 };
 static const unsigned long unicode_backtrans_0[] = {
   0x0fffff, 0x0fffff, 0x0fffff, 0x0fffff, 0x0fffff, 0x0fffff, 0x0fffff, 0x0fffff,

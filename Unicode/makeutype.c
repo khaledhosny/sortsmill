@@ -122,10 +122,10 @@ unsigned short mytoupper[MAXC];
 unsigned short mytotitle[MAXC];
 unsigned char mynumericvalue[MAXC];
 unsigned short mymirror[MAXC];
-unsigned long flags[MAXC];			/* 32 binary flags for each unicode.org character */
-unsigned long flags2[MAXC];
+unsigned int flags[MAXC];			/* 32 binary flags for each unicode.org character */
+unsigned int flags2[MAXC];
 unichar_t alts[MAXC][MAXA+1];
-unsigned long assignedcodepoints[0x120000/32];	/* 32 characters represented per each long value */
+unsigned int assignedcodepoints[0x120000/32];	/* 32 characters represented per each int value */
 
 const char GeneratedFileMessage[] = "\n/* This file was generated using the program 'makeutype' */\n\n";
 const char CantReadFile[] = "Can't find or read file %s\n";		/* exit(1) */
@@ -141,11 +141,12 @@ static void FreeNamesMemorySpace() {
 }
 
 static void FigureAlternates(long index, char *apt, int normative) {
-    int alt, i;
+    int i;
+    int alt;
     char *end;
     int isisolated=0, iscircled=0;
 
-    for ( i=0; ; ++i ) {
+    for (i=0; ; ++i ) {
 	while ( *apt=='<' ) {
 	    isisolated = strncmp(apt,"<isolated>",strlen("<isolated>"))==0;
 	    iscircled = strncmp(apt,"<circle>",strlen("<circle>"))==0;
@@ -167,7 +168,7 @@ static void FigureAlternates(long index, char *apt, int normative) {
 	alts[index][++i] = 0;
     }
     if ( i>MAXA )
-	fprintf( stderr, "%d is too many alternates for U+%04X\n", i, index );
+	fprintf( stderr, "%d is too many alternates for U+%04X\n", i, (unsigned int) index );
     if ( i>0 && normative)
 	flags[index] |= _DecompositionNormative;
 
@@ -190,7 +191,7 @@ return;
 	first = index;
     } else if ( strstr(pt,", Last")!=NULL ) {			/* end of an extended charset */
 	if ( first==-1 || first > index )
-	    fprintf( stderr,"Something went wrong, first isn't defined at last. %x\n", index );
+	    fprintf( stderr,"Something went wrong, first isn't defined at last. %x\n", (unsigned int) index );
 	else if ( first>=0xd800 && first<=0xdfff )
 	    /* surrogate pairs. Not assigned really */;
 	else {
@@ -507,6 +508,8 @@ static void readin(void) {
     }
 }
 
+#if 0
+
 static void readcorpfile(char *prefix, char *corp) {
     char buffer[300+1], buf2[300+1], *pt, *end, *pt1;
     long index;
@@ -552,6 +555,8 @@ return;
     }
     fclose(fp);
 }
+
+#endif
 
 static int find(char *base, char *suffix) {
     char name[300+1];
@@ -617,6 +622,9 @@ static void dumparabicdata(FILE *header) {
 	exit(2);
     }
 
+    // Include config.h at the top, where Gnulib expects it.
+    fprintf( data, "#include <config.h>\n" );
+
     fprintf( data, "#include <utype.h>\n" );
 
     fprintf( data, GeneratedFileMessage );
@@ -658,6 +666,9 @@ static void dump() {
     fprintf( header, "#define _UTYPE_H\n" );
 
     fprintf( header, GeneratedFileMessage );
+
+    // Include config.h at the top, where Gnulib expects it.
+    fprintf( header, "#include <config.h>\n" );
 
     fprintf( header, "#include <ctype.h>\t\t/* Include here so we can control it. If a system header includes it later bad things happen */\n" );
     fprintf( header, "#include <basics.h>\t\t/* Include here so we can use pre-defined int types to correctly size constant data arrays. */\n" );
@@ -795,6 +806,9 @@ static void dump() {
 
     fprintf( header, "\n" );
 
+    // Include config.h at the top, where Gnulib expects it.
+    fprintf( data, "#include <config.h>\n" );
+
     fprintf( data, "#include \"utype.h\"\n" );
     fprintf( data, GeneratedFileMessage );
     fprintf( data, "const unsigned short ____tolower[]= { 0,\n" );
@@ -923,6 +937,9 @@ static void dump() {
 	exit( 1 );
     }
 
+    // Include config.h at the top, where Gnulib expects it.
+    fprintf( data, "#include <config.h>\n" );
+
     fprintf( data, "#include <stdio.h>\n" );
     fprintf( data, "#include <utype.h>\n" );
     fprintf( data, GeneratedFileMessage );
@@ -990,6 +1007,9 @@ static void dump_alttable() {
 	fprintf(stderr, CantSaveFile, "unialt.c" );
 return;
     }
+
+    // Include config.h at the top, where Gnulib expects it.
+    fprintf(file, "#include <config.h>\n" );
 
     fprintf(file, "#include <chardata.h>\n" );
 

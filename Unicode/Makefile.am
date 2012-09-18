@@ -25,29 +25,65 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+AM_CPPFLAGS = "-I$(top_builddir)/lib" "-I$(top_srcdir)/lib"			\
+		"-I$(top_builddir)/inc" "-I$(top_srcdir)/inc" $(MY_CFLAGS)
+
+#--------------------------------------------------------------------------
+
 lib_LTLIBRARIES = libgunicode.la
 
-libgunicode_la_SOURCES = ArabicForms.c alphabet.c backtrns.c char.c	\
-	 cjk.c ucharmap.c unialt.c ustring.c utype.c usprintf.c			\
+libgunicode_la_SOURCES = ArabicForms.c alphabet.c backtrns.c char.c		\
+	 cjk.c memory.c ucharmap.c unialt.c ustring.c utype.c usprintf.c	\
 	 gwwiconv.c combiners.h
-EXTRA_libgunicode_la_SOURCES = memory.c
 
-libgunicode_la_CPPFLAGS = "-I$(top_builddir)/inc"	\
-	"-I$(top_srcdir)/inc" $(MY_CFLAGS)
-
-libgunicode_la_LIBADD = memory.lo $(top_builddir)/lib/libgnu.la
+libgunicode_la_LIBADD = $(top_builddir)/lib/libgnu.la
 
 # Using -release instead of -version-info seems appropriate in the
 # absence of a well defined ABI.
 libgunicode_la_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS) -release $(VERSION)	\
 	$(LTLIBINTL) -export-symbols $(srcdir)/libgunicode.sym
 
-# For now compile this separately, with Gnulib support, until we have
-# "#include <config.h>" at the tops of all our sources and so can use
-# Gnulib headers freely.
-memory.lo: $(srcdir)/memory.c
-	$(LIBTOOL) --mode=compile $(CC) -g -DHAVE_CONFIG_H -c -o			\
-		memory.lo $(AM_CPPFLAGS) $(libgunicode_la_CPPFLAGS)				\
-		-I$(top_builddir)/lib -I$(top_srcdir)/lib $(srcdir)/memory.c
-
 EXTRA_DIST = $(srcdir)/libgunicode.sym
+
+#--------------------------------------------------------------------------
+
+if MAINTAINER_TOOLS
+
+generate-utype: LineBreak.txt NamesList.txt PropList.txt UnicodeData.txt makeutype
+	LC_ALL=C ./makeutype
+	mv utype.h $(top_srcdir)/inc
+	@if test '$(top_srcdir)' -ef '$(top_builddir)'; then \
+		:; \
+	else \
+		mv ArabicForms.c unialt.c utype.c $(srcdir); \
+		echo mv ArabicForms.c unialt.c utype.c $(srcdir); \
+	fi
+
+EXTRA_PROGRAMS = makeutype
+makeutype_SOURCES = makeutype.c
+
+LINEBREAK_URL = http://unicode.org/Public/UNIDATA/LineBreak.txt
+NAMESLIST_URL = http://unicode.org/Public/UNIDATA/NamesList.txt
+PROPLIST_URL = http://unicode.org/Public/UNIDATA/PropList.txt
+UNICODEDATA_URL = http://unicode.org/Public/UNIDATA/UnicodeData.txt
+
+LineBreak.txt:
+	$(WGET) '$(LINEBREAK_URL)'
+
+NamesList.txt:
+	$(WGET) '$(NAMESLIST_URL)'
+
+PropList.txt:
+	$(WGET) '$(PROPLIST_URL)'
+
+UnicodeData.txt:
+	$(WGET) '$(UNICODEDATA_URL)'
+
+MOSTLYCLEANFILES = makeutype
+DISTCLEANFILES = LineBreak.txt NamesList.txt PropList.txt	\
+	UnicodeData.txt
+
+endif MAINTAINER_TOOLS
+
+#--------------------------------------------------------------------------
+

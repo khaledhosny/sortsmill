@@ -253,8 +253,9 @@ stamps-for-release: stamper $(LIBFFSTAMP_H_DEPENDS) $(STAMP_C_DEPENDS)
 	$(builddir)/stamper$(EXEEXT) > $(srcdir)/stamp.c
 	$(builddir)/stamper$(EXEEXT) -l > $(srcdir)/libffstamp.h
 
-noinst_PROGRAMS = stamper
+EXTRA_PROGRAMS = stamper
 stamper_SOURCES = stamper.c
+stamper_LDADD = $(top_builddir)/Unicode/libgunicode.la
 
 LIBFFSTAMP_H_DEPENDS = \
 	$(filter-out libfontforge_la-stamp.lo, \

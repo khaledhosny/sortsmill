@@ -1,3 +1,4 @@
+#include <config.h>
 #include <chardata.h>
 
 /* This file was generated using the program 'makeutype' */
