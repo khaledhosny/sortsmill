@@ -27,6 +27,8 @@
 #ifndef _COLORP_H
 #define _COLORP_H
 
+#include <config.h>
+
     /* how to convert rgb to grey scale */
 #define LRD	3
 #define LGN	6

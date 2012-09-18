@@ -27,6 +27,8 @@
 #ifndef _FONTP_H
 #define _FONTP_H
 
+#include <config.h>
+
 #ifdef __VMS
 #include <vms_x_fix.h>
 #endif
