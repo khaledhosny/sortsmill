@@ -24,6 +24,9 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+#include <config.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -31,8 +34,8 @@
 
 /* figure out how to do divide, multiply, 1/4, 3/4 */
 #define forever for (;;)
-typedef unsigned short unichar_t;
-typedef unsigned int uint32;
+//typedef unsigned short unichar_t;
+//typedef unsigned int uint32;
 
 #define ACUTE		0x1
 #define GRAVE		0x2
@@ -342,7 +345,7 @@ struct transform {
     struct transform *next;
 } *info[95] = { 0 };
 
-int queuelen(struct transform *queue) {
+static int queuelen(struct transform *queue) {
     int len=0;
 
     while ( queue!=NULL ) {
@@ -353,7 +356,7 @@ return( len );
 }
 
 static char *Mask(char *buffer,int mask) {
-    int i,m;
+    int i;
     char *bpt = buffer;
 
     if ( mask==0 )
@@ -372,13 +375,17 @@ return("ANY");
 return( buffer );
 }
 
-void dumpinfo() {
+static void dumpinfo() {
     FILE *out;
     int i;
     struct transform *t;
     char buffer[400], buffer2[400];
 
     out = fopen("gdrawbuildchars.c","w");
+
+    // Include config.h at the top, where Gnulib expects it.
+    fprintf(out, "#include <config.h>\n");
+
     fprintf(out,"#include \"gdrawP.h\"\n\n" );
 
     for ( i=0; names[i].name!=NULL; ++i )
@@ -433,7 +440,7 @@ void dumpinfo() {
     fclose(out);
 }
 
-char *mygets(FILE *in,char *buffer) {
+static char *mygets(FILE *in,char *buffer) {
     char *bpt = buffer;
     int ch;
 
@@ -445,7 +452,7 @@ return( NULL );
 return(buffer );
 }
 
-void AddTransform(int ch, uint32 oldstate, uint32 newstate, unsigned short resch ) {
+static void AddTransform(int ch, uint32 oldstate, uint32 newstate, unsigned short resch ) {
     struct transform *trans;
 
     ch -= ' ';
@@ -464,7 +471,7 @@ void AddTransform(int ch, uint32 oldstate, uint32 newstate, unsigned short resch
     trans->resch = resch;
 }
 
-void ParseUnicodeFile(FILE *in) {
+static void ParseUnicodeFile(FILE *in) {
     char buffer[600];
     int ch, mask, base, lc, i;
     char *pt;
@@ -516,7 +523,7 @@ void ParseUnicodeFile(FILE *in) {
     fclose(in);
 }
 
-void AddPredefineds() {
+static void AddPredefineds() {
     int i;
 
     for ( i=0; predefined[i].ch!='\0'; ++i )
@@ -524,7 +531,7 @@ void AddPredefineds() {
 		predefined[i].newstate, predefined[i].result );
 }
 
-struct transform *RevQueue(struct transform *cur) {
+static struct transform *RevQueue(struct transform *cur) {
     struct transform *prev=NULL, *next;
 
     if ( cur==NULL )
@@ -540,7 +547,7 @@ return( NULL );
 return( cur );
 }
 
-main() {
+int main() {
     FILE *in;
     int i;
 
@@ -554,5 +561,6 @@ main() {
     for ( i=0; i<95; ++i )
 	info[i] = RevQueue(info[i]);
     dumpinfo();
-    exit(0);
+
+    return 0;
 }
