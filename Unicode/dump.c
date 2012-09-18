@@ -52,12 +52,13 @@
  * wget http://unicode.org/Public/MAPPINGS/OBSOLETE/EASTASIA/JIS/JIS0212.TXT
  */
 
+#include <config.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "../inc/charset.h"
-#include "../inc/basics.h"
+#include "charset.h"
+#include "basics.h"
 
 char *alphabets[] = { "8859-1.TXT", "8859-2.TXT", "8859-3.TXT", "8859-4.TXT",
     "8859-5.TXT", "8859-6.TXT", "8859-7.TXT", "8859-8.TXT", "8859-9.TXT",
@@ -99,7 +100,7 @@ const char CantSaveFile[] = "Can't open or write to output file %s\n";	/* exit(1
 const char NoMoreMemory[] = "Can't access more memory.\n";		/* exit(3) */
 const char LineLengthBg[] = "Error with %s. Found line too long: %s\n";	/* exit(4) */
 
-static add_data_comment_at_EOL(FILE *output, int counter) {
+static void add_data_comment_at_EOL(FILE *output, int counter) {
 /* append an EOL index locator marker to make it easier to search for table values */
     if ( (counter & 63)==0 )
 	fprintf( output, "\t/* 0x%04x */\n",counter);
@@ -114,6 +115,9 @@ static int dumpalphas(FILE *output, FILE *header) {
     unichar_t unicode[256];
     unsigned char *table[256], *plane;
     char buffer[200+1];
+
+    // Include config.h at the top, where Gnulib expects it.
+    fprintf(output, "#include <config.h>\n" );
 
     fprintf(output, "#include <chardata.h>\n\n" );
     fprintf(output, "const unsigned char c_allzeros[256] = { 0 };\n\n" );
@@ -1265,14 +1269,17 @@ static int dumpcjks(FILE *output,FILE *header) {
 
     fprintf( output, GeneratedFileMessage );
 
+    // Include config.h at the top, where Gnulib expects it.
+    fprintf( output, "#include <config.h>\n" );
+
     fprintf(output, "#include <chardata.h>\n\n" );
     fprintf(output, "const unsigned short u_allzeros[256] = { 0 };\n\n" );
 
-    if (i=dumpjis(output,header)) return( i );		/* aj16/cid2code.txt, aj20/cid2code.txt */
-    if (i=dumpbig5(output,header)) return( i );		/* ac15/cid2code.txt */
-    if (i=dumpbig5hkscs(output,header)) return( i );	/* Big5HKSCS.txt */
-    if (i=dumpWansung(output,header)) return( i );	/* ak12/cid2code.txt */
-    if (i=dumpgb2312(output,header)) return( i );	/* ag15/cid2code.txt */
+    if ((i=dumpjis(output,header))) return( i );	/* aj16/cid2code.txt, aj20/cid2code.txt */
+    if ((i=dumpbig5(output,header))) return( i );	/* ac15/cid2code.txt */
+    if ((i=dumpbig5hkscs(output,header))) return( i );	/* Big5HKSCS.txt */
+    if ((i=dumpWansung(output,header))) return( i );	/* ak12/cid2code.txt */
+    if ((i=dumpgb2312(output,header))) return( i );	/* ag15/cid2code.txt */
 return( 0 );
 }
 
@@ -1326,12 +1333,14 @@ return 1;
     fprintf( output, GeneratedFileMessage );
     fprintf( header, GeneratedFileMessage );
 
-    fprintf( header, "#include \"config.h\"\n\n" );
+    // Include config.h at the top, where Gnulib expects it.
+    fprintf( header, "#include <config.h>\n" );
+
     fprintf( header, "#include \"basics.h\"\n\n" );
     fprintf( header, "struct charmap {\n    int first, last;\n    unsigned char **table;\n    unichar_t *totable;\n};\n" );
     fprintf( header, "struct charmap2 {\n    int first, last;\n    unsigned short **table;\n    unichar_t *totable;\n};\n\n" );
 
-    if ( i=dumpalphas(output,header)) {	/* load files listed in alphabets[] */
+    if ( (i=dumpalphas(output,header)) ) { /* load files listed in alphabets[] */
 	fclose(header);
 	fclose(output);
 return( i );
@@ -1346,7 +1355,7 @@ return( i );
 return 1;
     }
 
-    if ( i=dumpcjks(output,header)) {	/* load files listed in cjk[] */
+    if ( (i=dumpcjks(output,header))) {	/* load files listed in cjk[] */
 	fclose(header);
 	fclose(output);
 return( i );

@@ -51,8 +51,10 @@
  * binary executable file makeutype as they are no longer needed now.
  */
 
-
 /* Build a ctype array out of the UnicodeData.txt and PropList.txt files */
+
+#include <config.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

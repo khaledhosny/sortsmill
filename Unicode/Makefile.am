@@ -59,8 +59,9 @@ generate-utype: LineBreak.txt NamesList.txt PropList.txt UnicodeData.txt makeuty
 		echo mv ArabicForms.c unialt.c utype.c $(srcdir); \
 	fi
 
-EXTRA_PROGRAMS = makeutype
+EXTRA_PROGRAMS = makeutype dump
 makeutype_SOURCES = makeutype.c
+dump_SOURCES = dump.c
 
 LINEBREAK_URL = http://unicode.org/Public/UNIDATA/LineBreak.txt
 NAMESLIST_URL = http://unicode.org/Public/UNIDATA/NamesList.txt
@@ -79,7 +80,7 @@ PropList.txt:
 UnicodeData.txt:
 	$(WGET) '$(UNICODEDATA_URL)'
 
-MOSTLYCLEANFILES = makeutype
+MOSTLYCLEANFILES = makeutype dump
 DISTCLEANFILES = LineBreak.txt NamesList.txt PropList.txt	\
 	UnicodeData.txt
 
