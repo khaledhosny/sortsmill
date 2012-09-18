@@ -401,11 +401,6 @@ void GDrawDrawLine(GWindow w, int32 x,int32 y, int32 xend,int32 yend, Color col)
 	(w->display->funcs->drawLine)(w,x,y,xend,yend,col);
 }
 
-void GDrawDrawArrow(GWindow w, int32 x,int32 y, int32 xend,int32 yend, int arrows, Color col) {
-    if ( col!=COLOR_UNKNOWN )
-	(w->display->funcs->drawArrow)(w,x,y,xend,yend,arrows,col);
-}
-
 void GDrawDrawRect(GWindow w, GRect *rect, Color col) {
     if ( col!=COLOR_UNKNOWN )
 	(w->display->funcs->drawRect)(w,rect,col);

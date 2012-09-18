@@ -633,46 +633,6 @@ static void PSDrawDrawLine(GWindow w, int32 x,int32 y,int32 xend,int32 yend,Colo
     PSLineTo(ps,xend,yend);
 }
 
-static void PSDrawArrow(GPSWindow ps, int32 x, int32 y, int32 xother, int32 yother ) {
-    GPoint points[3];
-    double a;
-    int off1, off2;
-    double len;
-    int line_width = ps->ggc->line_width;
-
-    if ( x==xother && y==yother )
-return;
-    a = atan2(y-yother,x-xother);
-    len = 72.0*sqrt((double) (x-xother)*(x-xother)+(y-yother)*(y-yother))/ps->res;
-    if ( len>30 ) len = 10+3*line_width/2; else len = (len+line_width)/3;
-    if ( len<2 )
-return;
-    len *= ps->res/72.0;
-
-    points[0].x = x; points[0].y = y;
-    if ( line_width!=0 ) {
-	points[0].x += line_width*1.3*cos(a); points[0].y += line_width*1.3*sin(a);
-    }
-    off1 = len*sin(a+3.1415926535897932/8)+.5; off2 = len*cos(a+3.1415926535897932/8)+.5;
-    points[1].x = x-off2; points[1].y = y-off1;
-    off1 = len*sin(a-3.1415926535897932/8)+.5; off2 = len*cos(a-3.1415926535897932/8)+.5;
-    points[2].x = x-off2; points[2].y = y-off1;
-    PSDrawDoPoly(ps,points,3,"fill");
-}
-
-static void PSDrawDrawArrowLine(GWindow w, int32 x,int32 y,int32 xend,int32 yend,int16 arrows,Color col) {
-    GPSWindow ps = (GPSWindow ) w;
-
-    ps->ggc->fg = col;
-    PSDrawSetline(ps);
-    PSMoveTo(ps,x,y);
-    PSLineTo(ps,xend,yend);
-    if ( arrows&1 )
-	PSDrawArrow(ps,x,y,xend,yend);
-    if ( arrows&2 )
-	PSDrawArrow(ps,xend,yend,x,y);
-}
-
 static void PSDrawDrawRect(GWindow w, GRect *rct,Color col) {
     GPSWindow ps = (GPSWindow ) w;
 
@@ -1357,7 +1317,6 @@ static struct displayfuncs psfuncs = {
     
     PSDrawClear,
     PSDrawDrawLine,
-    PSDrawDrawArrowLine,
     PSDrawDrawRect,
     PSDrawFillRect,
     PSDrawFillRoundRect,

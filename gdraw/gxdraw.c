@@ -2011,46 +2011,6 @@ static void GXDrawDrawLine(GWindow w, int32 x,int32 y, int32 xend,int32 yend, Co
     }
 }
 
-static void _DrawArrow(GXWindow gxw, int32 x, int32 y, int32 xother, int32 yother ) {
-    GXDisplay *display = gxw->display;
-    XPoint points[3];
-    double a;
-    int off1, off2;
-    double len;
-
-    if ( x==xother && y==yother )
-return;
-    a = atan2(y-yother,x-xother);
-    len = sqrt((double) (x-xother)*(x-xother)+(y-yother)*(y-yother));
-    if ( len>20 ) len = 10; else len = 2*len/3;
-    if ( len<2 )
-return;
-
-    points[0].x = x; points[0].y = y;
-    off1 = len*sin(a+3.1415926535897932/8)+.5; off2 = len*cos(a+3.1415926535897932/8)+.5;
-    points[1].x = x-off2; points[1].y = y-off1;
-    off1 = len*sin(a-3.1415926535897932/8)+.5; off2 = len*cos(a-3.1415926535897932/8)+.5;
-    points[2].x = x-off2; points[2].y = y-off1;
-    XFillPolygon(display->display,gxw->w,display->gcstate[gxw->ggc->bitmap_col].gc,points,3,Complex,CoordModeOrigin);
-    XDrawLines(display->display,gxw->w,display->gcstate[gxw->ggc->bitmap_col].gc,points,3,CoordModeOrigin);
-}
-
-static void GXDrawDrawArrow(GWindow gw, int32 x,int32 y, int32 xend,int32 yend, int16 arrows, Color col) {
-    GXWindow gxw = (GXWindow) gw;
-    GXDisplay *display = gxw->display;
-
-    // FIXME
-    //if ( gxw->usecairo )
-	GDrawIError("DrawArrow not supported");
-    gxw->ggc->fg = col;
-    GXDrawSetline(display,gxw->ggc);
-    XDrawLine(display->display,gxw->w,display->gcstate[gxw->ggc->bitmap_col].gc,x,y,xend,yend);
-    if ( arrows&1 )
-	_DrawArrow(gxw,x,y,xend,yend);
-    if ( arrows&2 )
-	_DrawArrow(gxw,xend,yend,x,y);
-}
-
 // FIXME: This routine was very hard to read with the #ifdef
 // stuff in it. Is it correct?
 static void GXDrawDrawRect(GWindow gw, GRect *rect, Color col) {
@@ -4215,7 +4175,6 @@ static struct displayfuncs xfuncs = {
 
     GXDrawClear,
     GXDrawDrawLine,
-    GXDrawDrawArrow,
     GXDrawDrawRect,
     GXDrawFillRect,
     GXDrawFillRoundRect,
