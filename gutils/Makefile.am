@@ -25,6 +25,8 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+CLEANFILES =
+
 lib_LTLIBRARIES = libgutils.la libgioftp.la
 
 #--------------------------------------------------------------------------
@@ -38,21 +40,42 @@ libgutils_la_SOURCES = divisors.c fsys.c gcol.c gimage.c				\
 	giohosts.c giomime.c giothread.c giotrans.c gimagebmpP.h			\
 	giofuncP.h gioP.h
 
+EXPORTED_LIBGUTILS_SYMBOLS = div_tables gColor2Hslrgb gColor2Hslrgba	\
+	GFileAppendFile GFileBuildName GFileExists							\
+	_GFile_find_program_dir GFileGetAbsoluteName GFileGetHomeDir		\
+	GFileIsAbsolute GFileIsDir GFileMakeAbsoluteName GFileMkDir			\
+	GFileNameTail GFileReadable GFileUnlink gHSL2RGB gHslrgb2Color		\
+	gHslrgba2Color gHSV2RGB GImageCreate GImageDestroy					\
+	GImageDrawImage GImageDrawRect GImageGetHeight						\
+	_GImageGetPixelColor GImageGetPixelRGBA GImageGetWidth GImageRead	\
+	GImageRead_Bmp GImageRead_Jpeg GImageRead_Png GImageWriteBmp		\
+	GImageWrite_Bmp GImageWrite_Jpeg GImageWritePng GImageWrite_Png		\
+	GImageWriteXbm GIOcancel GIOclose GIOCreate _GIO_decomposeURL		\
+	GIOdir GIOfileExists GIOgetDirData GIOguessMimeType GIOmkDir		\
+	GIO_PasswordCache GIO_SetThreadCallback gRGB2HSV sgettext			\
+	u_GFileAppendFile u_GFileGetAbsoluteName u_GFileGetHomeDir			\
+	u_GFileIsAbsolute u_GFileNameTail u_GFileNormalize
+
 libgutils_la_LIBADD = $(top_builddir)/Unicode/libgunicode.la	\
 	$(top_builddir)/lib/libgnu.la
 
 # Using -release instead of -version-info seems appropriate in the
 # absence of a well defined ABI.
 libgutils_la_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS) -release $(VERSION)	\
-	$(LTLIBINTL) -export-symbols $(srcdir)/libgutils.sym
+	$(LTLIBINTL) -export-symbols $(builddir)/libgutils.sym
 
-libgutils_la_DEPENDENCIES = $(srcdir)/libgutils.sym
+libgutils_la_DEPENDENCIES = $(builddir)/libgutils.sym
 
-EXTRA_DIST = $(srcdir)/libgutils.sym
+$(builddir)/libgutils.sym: $(builddir)/Makefile
+	echo $(EXPORTED_LIBGUTILS_SYMBOLS) | $(TR) ' ' '\n' > $@
+
+CLEANFILES += $(builddir)/libgutils.sym
 
 #--------------------------------------------------------------------------
 
 libgioftp_la_SOURCES = gioftp.c gioftpP.h
+
+EXPORTED_LIBGIOFTP_SYMBOLS = GIO_dispatch
 
 libgioftp_la_LIBADD = $(top_builddir)/Unicode/libgunicode.la	\
 	$(top_builddir)/lib/libgnu.la libgutils.la
@@ -60,11 +83,14 @@ libgioftp_la_LIBADD = $(top_builddir)/Unicode/libgunicode.la	\
 # Using -release instead of -version-info seems appropriate in the
 # absence of a well defined ABI.
 libgioftp_la_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS) -release $(VERSION)	\
-	$(LTLIBINTL) -export-symbols $(srcdir)/libgioftp.sym
+	$(LTLIBINTL) -export-symbols $(builddir)/libgioftp.sym
 
-libgioftp_la_DEPENDENCIES = $(srcdir)/libgioftp.sym libgutils.la
+libgioftp_la_DEPENDENCIES = $(builddir)/libgioftp.sym libgutils.la
 
-EXTRA_DIST += $(srcdir)/libgioftp.sym
+$(builddir)/libgioftp.sym: $(builddir)/Makefile
+	echo $(EXPORTED_LIBGIOFTP_SYMBOLS) | $(TR) ' ' '\n' > $@
+
+CLEANFILES += $(builddir)/libgioftp.sym
 
 #--------------------------------------------------------------------------
 
