@@ -233,7 +233,7 @@ enum window_attr_mask { wam_events=0x2, wam_bordwidth=0x4,
 			wam_isdlg=0x10000, wam_notrestricted=0x20000,
 			wam_transient=0x40000,
 			wam_utf8_wtitle=0x80000, wam_utf8_ititle=0x100000,
-			wam_nocairo=0x200000, wam_verytransient=0x400000 };
+			wam_verytransient=0x400000 };
 
 typedef struct gwindow_attrs {
 //    enum window_attr_mask mask;
@@ -302,12 +302,6 @@ typedef struct gdeveventmask {
 } GDevEventMask;
 
 enum gzoom_flags { gzf_pos=1, gzf_size=2 };
-    /* bit flags for the hasCairo query */
-enum gcairo_flags { gc_buildpath=1,	/* Has build path commands (postscript, cairo) */
-		    gc_alpha=2,		/* Supports alpha channels & translucent colors (cairo, pdf) */
-		    gc_xor=4,		/* Cairo can't do the traditional XOR drawing that X11 does */
-		    gc_all = gc_buildpath|gc_alpha
-		    };
 
 typedef int (*GDrawEH)(GWindow,GEvent *);
 
@@ -425,7 +419,6 @@ extern void GDrawDrawImageMagnified(GWindow w, GImage *img, GRect *src, int32 x,
 extern void GDrawTileImage(GWindow w, GImage *img, GRect *src, int32 x, int32 y);
 extern void GDrawDrawPixmap(GWindow w, GWindow pixmap, GRect *src, int32 x, int32 y);
 extern void GDrawTilePixmap(GWindow w, GWindow pixmap, GRect *src, int32 x, int32 y);
-extern GImage *GDrawCopyScreenToImage(GWindow w, GRect *rect);
 
 extern void GDrawGrabSelection(GWindow w,enum selnames sel);
 extern void GDrawAddSelectionType(GWindow w,enum selnames sel,char *type,
@@ -467,7 +460,6 @@ extern void GDrawSetBuildCharHooks(void (*hook)(GDisplay *), void (*inshook)(GDi
 
 extern int GDrawRequestDeviceEvents(GWindow w,int devcnt,struct gdeveventmask *de);
 
-extern enum gcairo_flags GDrawHasCairo(GWindow w);
 extern void GDrawQueueDrawing(GWindow w,void (*)(GWindow,void *),void *);
 extern void GDrawPathStartNew(GWindow w);
 extern void GDrawPathStartSubNew(GWindow w);
@@ -482,7 +474,6 @@ extern void GDrawPathCurveTo(GWindow w,
 extern void GDrawPathStroke(GWindow w,Color col);
 extern void GDrawPathFill(GWindow w,Color col);
 extern void GDrawPathFillAndStroke(GWindow w,Color fillcol, Color strokecol);
-extern void GDrawEnableCairo(int on);
 
 extern void GDrawLayoutInit(GWindow w, char *text, int cnt, GFont *fi);
 extern void GDrawLayoutDraw(GWindow w, int32 x, int32 y, Color fg);

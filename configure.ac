@@ -201,7 +201,7 @@ PKG_CHECK_MODULES([BOEHM_GC],[bdw-gc >= 7.1])
 
 if test x"${i_do_have_gui}" = xyes; then
    PKG_CHECK_MODULES([CAIRO],[cairo >= 1.6])
-   PKG_CHECK_MODULES([PANGO],[pango >= 1.10 pangoxft pangocairo])
+   PKG_CHECK_MODULES([PANGO],[pango >= 1.10 pangocairo])
 fi
 
 FONTFORGE_ARG_WITH_FREETYPE

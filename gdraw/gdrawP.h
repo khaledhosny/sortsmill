@@ -103,7 +103,6 @@ struct gwindow {
     unsigned int is_dying: 1;
     unsigned int is_popup: 1;
     unsigned int disable_expose_requests: 1;
-    unsigned int usecairo: 1;		/* use a cairo context -- if meaningful */
 };
 
 struct ginput_context {
@@ -209,7 +208,6 @@ struct displayfuncs {
     void (*tileImage)(GWindow, GImage *, GRect *src, int32 x, int32 y);
     void (*drawGlyph)(GWindow, GImage *, GRect *src, int32 x, int32 y);
     void (*drawImageMag)(GWindow, GImage *, GRect *src, int32 x, int32 y, int32 width, int32 height);
-    GImage *(*copyScreenToImage)(GWindow, GRect *rect);
     void (*drawPixmap)(GWindow, GWindow, GRect *src, int32 x, int32 y);
     void (*tilePixmap)(GWindow, GWindow, GRect *src, int32 x, int32 y);
 
@@ -249,8 +247,6 @@ struct displayfuncs {
     int (*endJob)(GWindow w,int cancel);
 
     void (*getFontMetrics)(GWindow,GFont *,int *,int *,int *);
-
-    enum gcairo_flags (*hasCairo)(GWindow w);
 
     void (*startNewPath)(GWindow w);
     void (*closePath)(GWindow w);

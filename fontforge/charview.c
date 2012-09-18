@@ -234,8 +234,9 @@ static double rpt(CharView *cv, double pt) {
     return cv->snapoutlines ? rint(pt) : pt;
 }
 
+// FIXME: do we want to suppport freetype fill mode?
 static int shouldShowFilledUsingCairo(CharView *cv) {
-    if ( cv->showfilled && GDrawHasCairo(cv->v)&gc_buildpath ) {
+    if ( cv->showfilled /*&& GDrawHasCairo(cv->v)&gc_buildpath*/ ) {
 	return 1;
     }
     return 0;
@@ -367,212 +368,6 @@ static void CVDrawBB(CharView *cv, GWindow pixmap, DBounds *bb) {
     GDrawSetDashedLine(pixmap,1,1,off);
     GDrawDrawRect(pixmap,&r,GDrawGetDefaultForeground(NULL));
     GDrawSetDashedLine(pixmap,0,0,0);
-}
-
-/* Sigh. I have to do my own clipping because at large magnifications */
-/*  things can easily exceed 16 bits */
-static int CVSplineOutside(CharView *cv, Spline *spline) {
-    int x[4], y[4];
-
-    x[0] =  cv->xoff + rint(spline->from->me.x*cv->scale);
-    y[0] = -cv->yoff + cv->height - rint(spline->from->me.y*cv->scale);
-
-    x[1] =  cv->xoff + rint(spline->to->me.x*cv->scale);
-    y[1] = -cv->yoff + cv->height - rint(spline->to->me.y*cv->scale);
-
-    if ( spline->from->nonextcp && spline->to->noprevcp ) {
-	if ( (x[0]<0 && x[1]<0) || (x[0]>=cv->width && x[1]>=cv->width) ||
-		(y[0]<0 && y[1]<0) || (y[0]>=cv->height && y[1]>=cv->height) )
-return( true );
-    } else {
-	x[2] =  cv->xoff + rint(spline->from->nextcp.x*cv->scale);
-	y[2] = -cv->yoff + cv->height - rint(spline->from->nextcp.y*cv->scale);
-	x[3] =  cv->xoff + rint(spline->to->prevcp.x*cv->scale);
-	y[3] = -cv->yoff + cv->height - rint(spline->to->prevcp.y*cv->scale);
-	if ( (x[0]<0 && x[1]<0 && x[2]<0 && x[3]<0) ||
-		(x[0]>=cv->width && x[1]>=cv->width && x[2]>=cv->width && x[3]>=cv->width ) ||
-		(y[0]<0 && y[1]<0 && y[2]<0 && y[3]<0 ) ||
-		(y[0]>=cv->height && y[1]>=cv->height && y[2]>=cv->height && y[3]>=cv->height) )
-return( true );
-    }
-
-return( false );
-}
-
-static int CVLinesIntersectScreen(CharView *cv, LinearApprox *lap) {
-    LineList *l;
-    int any = false;
-    int x,y;
-    int bothout;
-
-    for ( l=lap->lines; l!=NULL; l=l->next ) {
-	l->asend.x = l->asstart.x = cv->xoff + l->here.x;
-	l->asend.y = l->asstart.y = -cv->yoff + cv->height-l->here.y;
-	l->flags = 0;
-	if ( l->asend.x<0 || l->asend.x>=cv->width || l->asend.y<0 || l->asend.y>=cv->height ) {
-	    l->flags = cvli_clipped;
-	    any = true;
-	}
-    }
-    if ( !any ) {
-	for ( l=lap->lines; l!=NULL; l=l->next )
-	    l->flags = cvli_onscreen;
-	lap->any = true;
-return( true );
-    }
-
-    any = false;
-    for ( l=lap->lines; l->next!=NULL; l=l->next ) {
-	if ( !(l->flags&cvli_clipped) && !(l->next->flags&cvli_clipped) )
-	    l->flags = cvli_onscreen;
-	else {
-	    bothout = (l->flags&cvli_clipped) && (l->next->flags&cvli_clipped);
-	    if (( l->asstart.x<0 && l->next->asend.x>0 ) ||
-		    ( l->asstart.x>0 && l->next->asend.x<0 )) {
-		y = -(l->next->asend.y-l->asstart.y)*(double)l->asstart.x/(l->next->asend.x-l->asstart.x) +
-			l->asstart.y;
-		if ( l->asstart.x<0 ) {
-		    l->asstart.x = 0;
-		    l->asstart.y = y;
-		} else {
-		    l->next->asend.x = 0;
-		    l->next->asend.y = y;
-		}
-	    } else if ( l->asstart.x<0 && l->next->asend.x<0 )
-    continue;
-	    if (( l->asstart.x<cv->width && l->next->asend.x>cv->width ) ||
-		    ( l->asstart.x>cv->width && l->next->asend.x<cv->width )) {
-		y = (l->next->asend.y-l->asstart.y)*(double)(cv->width-l->asstart.x)/(l->next->asend.x-l->asstart.x) +
-			l->asstart.y;
-		if ( l->asstart.x>cv->width ) {
-		    l->asstart.x = cv->width;
-		    l->asstart.y = y;
-		} else {
-		    l->next->asend.x = cv->width;
-		    l->next->asend.y = y;
-		}
-	    } else if ( l->asstart.x>cv->width && l->next->asend.x>cv->width )
-    continue;
-	    if (( l->asstart.y<0 && l->next->asend.y>0 ) ||
-		    ( l->asstart.y>0 && l->next->asend.y<0 )) {
-		x = -(l->next->asend.x-l->asstart.x)*(double)l->asstart.y/(l->next->asend.y-l->asstart.y) +
-			l->asstart.x;
-		if (( x<0 || x>=cv->width ) && bothout )
-    continue;			/* Not on screen */;
-		if ( l->asstart.y<0 ) {
-		    l->asstart.y = 0;
-		    l->asstart.x = x;
-		} else {
-		    l->next->asend.y = 0;
-		    l->next->asend.x = x;
-		}
-	    } else if ( l->asstart.y<0 && l->next->asend.y< 0 )
-    continue;
-	    if (( l->asstart.y<cv->height && l->next->asend.y>cv->height ) ||
-		    ( l->asstart.y>cv->height && l->next->asend.y<cv->height )) {
-		x = (l->next->asend.x-l->asstart.x)*(double)(cv->height-l->asstart.y)/(l->next->asend.y-l->asstart.y) +
-			l->asstart.x;
-		if (( x<0 || x>=cv->width ) && bothout )
-    continue;			/* Not on screen */;
-		if ( l->asstart.y>cv->height ) {
-		    l->asstart.y = cv->height;
-		    l->asstart.x = x;
-		} else {
-		    l->next->asend.y = cv->height;
-		    l->next->asend.x = x;
-		}
-	    } else if ( l->asstart.y>cv->height && l->next->asend.y>cv->height )
-    continue;
-	    l->flags |= cvli_onscreen;
-	    any = true;
-	}
-    }
-    lap->any = any;
-return( any );
-}
-
-typedef struct gpl { struct gpl *next; GPoint *gp; int cnt; } GPointList;
-
-static void GPLFree(GPointList *gpl) {
-    GPointList *next;
-
-    while ( gpl!=NULL ) {
-	next = gpl->next;
-	free( gpl->gp );
-	free( gpl );
-	gpl = next;
-    }
-}
-
-/* Before we did clipping this was a single polygon. Now it is a set of */
-/*  sets of line segments. If no clipping is done, then we end up with */
-/*  one set which is the original polygon, otherwise we get the segments */
-/*  which are inside the screen. Each set of segments is contiguous */
-static GPointList *MakePoly(CharView *cv, SplinePointList *spl) {
-    int i, len;
-    LinearApprox *lap;
-    LineList *line, *prev;
-    Spline *spline, *first;
-    GPointList *head=NULL, *last=NULL, *cur;
-    int closed;
-
-    for ( i=0; i<2; ++i ) {
-	len = 0; first = NULL;
-	closed = true;
-	cur = NULL;
-	for ( spline = spl->first->next; spline!=NULL && spline!=first; spline=spline->to->next ) {
-	    if ( !CVSplineOutside(cv,spline) && !isnan(spline->splines[0].a) && !isnan(spline->splines[1].a)) {
-		lap = SplineApproximate(spline,cv->scale);
-		if ( i==0 )
-		    CVLinesIntersectScreen(cv,lap);
-		if ( lap->any ) {
-		    for ( prev = lap->lines, line=prev->next; line!=NULL; prev=line, line=line->next ) {
-			if ( !(prev->flags&cvli_onscreen) ) {
-			    closed = true;
-		    continue;
-			}
-			if ( closed || (prev->flags&cvli_clipped) ) {
-			    if ( i==0 ) {
-				cur = gcalloc(1,sizeof(GPointList));
-				if ( head==NULL )
-				    head = cur;
-				else {
-				    last->cnt = len;
-				    last->next = cur;
-				}
-				last = cur;
-			    } else {
-				if ( cur==NULL )
-				    cur = head;
-				else
-				    cur = cur->next;
-				cur->gp = galloc(cur->cnt*sizeof(GPoint));
-				cur->gp[0].x = prev->asstart.x;
-				cur->gp[0].y = prev->asstart.y;
-			    }
-			    len=1;
-			    closed = false;
-			}
-			if ( i!=0 ) {
-			    if ( len>=cur->cnt )
-				fprintf( stderr, "Clipping is screwed up, about to die %d (should be less than %d)\n", len, cur->cnt );
-			    cur->gp[len].x = line->asend.x;
-			    cur->gp[len].y = line->asend.y;
-			}
-			++len;
-			if ( line->flags&cvli_clipped )
-			    closed = true;
-		    }
-		} else
-		    closed = true;
-	    } else
-		closed = true;
-	    if ( first==NULL ) first = spline;
-	}
-	if ( i==0 && cur!=NULL )
-	    cur->cnt = len;
-    }
-return( head );
 }
 
 static void DrawTangentPoint(GWindow pixmap, int x, int y,
@@ -1133,7 +928,6 @@ void CVDrawSplineSetOutlineOnly(CharView *cv, GWindow pixmap, SplinePointList *s
 	GDrawFillRuleSetWinding(pixmap);
     }
     for ( spl = set; spl!=NULL; spl = spl->next ) {
-	if ( GDrawHasCairo(pixmap)&gc_buildpath ) {
 	    Spline *first, *spline;
 	    double x,y, cx1, cy1, cx2, cy2, dx,dy;
 	    GDrawPathStartSubNew(pixmap);
@@ -1185,12 +979,6 @@ void CVDrawSplineSetOutlineOnly(CharView *cv, GWindow pixmap, SplinePointList *s
 	    case sfm_nothing:
 		break;
 	    }
-	} else {
-	    GPointList *gpl = MakePoly(cv,spl), *cur;
-	    for ( cur=gpl; cur!=NULL; cur=cur->next )
-		GDrawDrawPoly(pixmap,cur->gp,cur->cnt,spl->is_clip_path ? clippathcol : fg);
-	    GPLFree(gpl);
-	}
     }
 
     Color c = fillcol;
@@ -2348,10 +2136,6 @@ static void CVExpose(CharView *cv, GWindow pixmap, GEvent *event ) {
     GDrawSetLineWidth(pixmap,0);
 
     if ( !cv->show_ft_results && cv->dv==NULL ) {
-
-	if ( cv->backimgs==NULL && !(GDrawHasCairo(cv->v)&gc_buildpath))
-	    cv->backimgs = GDrawCreatePixmap(GDrawGetDisplayOfWindow(cv->v),cv->width,cv->height);
-	if ( GDrawHasCairo(cv->v)&gc_buildpath ) {
 	    for ( layer = ly_back; layer<cv->b.sc->layer_cnt; ++layer ) if ( cv->b.sc->layers[layer].images!=NULL ) {
 		if (( sf->multilayer && ((( cv->showback[0]&1 || cvlayer==layer) && layer==ly_back ) ||
 			    ((cv->showfore || cvlayer==layer) && layer>ly_back)) ) ||
@@ -2365,32 +2149,10 @@ static void CVExpose(CharView *cv, GWindow pixmap, GEvent *event ) {
 	    cv->back_img_out_of_date = false;
 	    if ( cv->showhhints || cv->showvhints || cv->showdhints || cv->showblues || cv->showfamilyblues)
 		CVShowHints(cv,pixmap);
-	} else if ( cv->back_img_out_of_date ) {
-	    GDrawFillRect(cv->backimgs,NULL,view_bgcol);
-	    if ( cv->showhhints || cv->showvhints || cv->showdhints || cv->showblues || cv->showfamilyblues)
-		CVShowHints(cv,cv->backimgs);
-	    for ( layer = ly_back; layer<cv->b.sc->layer_cnt; ++layer ) if ( cv->b.sc->layers[layer].images!=NULL ) {
-		if (( sf->multilayer && ((( cv->showback[0]&1 || cvlayer==layer) && layer==ly_back ) ||
-			    ((cv->showfore || cvlayer==layer) && layer>ly_back)) ) ||
-		    ( !sf->multilayer && (((cv->showfore && cvlayer==layer) && layer==ly_fore) ||
-			    (((cv->showback[layer>>5]&(1<<(layer&31))) || cvlayer==layer) && layer!=ly_fore))) ) {
-		    /* This really should be after the grids, but then it would completely*/
-		    /*  hide them. */
-		    if ( cv->back_img_out_of_date )
-			DrawImageList(cv,cv->backimgs,cv->b.sc->layers[layer].images);
-		}
-	    }
-	    cv->back_img_out_of_date = false;
-	}
 	if ( cv->backimgs!=NULL ) {
 	    GRect r;
 	    r.x = r.y = 0; r.width = cv->width; r.height = cv->height;
 	    GDrawDrawPixmap(pixmap,cv->backimgs,&r,0,0);
-	} else if ( !(GDrawHasCairo(cv->v)&gc_buildpath) &&
-		( cv->showhhints || cv->showvhints || cv->showdhints || cv->showblues || cv->showfamilyblues)) {
-	    /* if we've got bg images (and we're showing them) then the hints live in */
-	    /*  the bg image pixmap (else they get overwritten by the pixmap) */
-	    CVShowHints(cv,pixmap);
 	}
 	if ( cv->showgrids || cv->b.drawmode==dm_grid ) {
 	    CVDrawSplineSet(cv,pixmap,cv->b.fv->sf->grid.splines,guideoutlinecol,
@@ -9436,13 +9198,8 @@ static void swlistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
 	    mi->ti.checked = cv->showdebugchanges;
 	  break;
 	  case MID_SnapOutlines:
-	    if ( GDrawHasCairo(cv->v)&gc_alpha ) {
-		mi->ti.checked = cv->snapoutlines;
-		mi->ti.disabled = false;
-	    } else {
-		mi->ti.checked = true;
-		mi->ti.disabled = true;
-	    }
+	    mi->ti.checked = cv->snapoutlines;
+	    mi->ti.disabled = false;
 	  break;
 	}
     }

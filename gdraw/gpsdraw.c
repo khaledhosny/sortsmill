@@ -321,10 +321,6 @@ static int  PSDrawRequestDeviceEvents(GWindow UNUSED(w), int UNUSED(devcnt),
 return( 0 );
 }
 
-static GImage *_PSDraw_CopyScreenToImage(GWindow UNUSED(w), GRect *UNUSED(rect)) {
-return( NULL );
-}
-
 static void _PSDraw_Pixmap( GWindow UNUSED(_w), GWindow UNUSED(_pixmap),
         GRect *UNUSED(src), int32 UNUSED(x), int32 UNUSED(y)) {
 }
@@ -796,10 +792,6 @@ static void PSDrawFillPoly(GWindow w, GPoint *pt, int16 cnt,Color col) {
 
 static void PSDrawFontMetrics(GWindow w, FontInstance *fi, int *as, int *ds, int *ld) {
     GDrawWindowFontMetrics(w, fi, as, ds, ld);
-}
-
-static enum gcairo_flags PSDrawHasCairo(GWindow UNUSED(w)) {
-return( gc_buildpath );
 }
 
 static void PSDrawPathStartNew(GWindow w) {
@@ -1380,7 +1372,6 @@ static struct displayfuncs psfuncs = {
     _GPSDraw_TileImage,
     _GPSDraw_Image,
     _GPSDraw_ImageMagnified,
-    _PSDraw_CopyScreenToImage,
     _PSDraw_Pixmap,
     _PSDraw_TilePixmap,
 
@@ -1418,8 +1409,6 @@ static struct displayfuncs psfuncs = {
     GPSPrinterEndJob,
 
     PSDrawFontMetrics,
-
-    PSDrawHasCairo,
 
     PSDrawPathStartNew,
     PSDrawPathClose,
