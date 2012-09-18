@@ -2935,8 +2935,6 @@ return;
 		gdisp->mykey_state = 0;
 		gevent.u.chr.chars[0] = '\0';
 		gevent.u.chr.keysym = '\0';
-		if ( !gdisp->mykeybuild && _GDraw_BuildCharHook!=NULL )
-		    (_GDraw_BuildCharHook)((GDisplay *) gdisp);
 	    } else if ( gdisp->mykeybuild )
 		_GDraw_ComposeChars((GDisplay *) gdisp,&gevent);
 	} else {

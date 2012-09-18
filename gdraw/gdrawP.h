@@ -277,7 +277,4 @@ extern void _GDraw_ComposeChars(GDisplay *gdisp,GEvent *gevent);
 extern void _GDraw_getimageclut(struct _GImage *base, struct gcol *clut);
 extern const GCol *_GImage_GetIndexedPixel(Color col,RevCMap *rev);
 extern const GCol *_GImage_GetIndexedPixelPrecise(Color col,RevCMap *rev);
-
-extern void (*_GDraw_BuildCharHook)(GDisplay *);
-extern void (*_GDraw_InsCharHook)(GDisplay *,unichar_t);
 #endif
