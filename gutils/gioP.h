@@ -27,6 +27,8 @@
 #ifndef _GIOP_H
 #define _GIOP_H
 
+#include <config.h>
+
 #include "gio.h"
 #include <sys/types.h>
 

@@ -27,6 +27,8 @@
 #ifndef _GIOFTP_H
 #define _GIOFTP_H
 
+#include <config.h>
+
 #include "gioP.h"
 
 struct ftpconnectiondata {

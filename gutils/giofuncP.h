@@ -27,6 +27,8 @@
 #ifndef _GIOFUNCP_H
 #define _GIOFUNCP_H
 
+#include <config.h>
+
 #include "gioP.h"
 
 extern void _GIO_localDispatch(GIOControl *gc);

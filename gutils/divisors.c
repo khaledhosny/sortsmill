@@ -1,3 +1,4 @@
+#include <config.h>
 #include "gdraw.h"
 
 /* divide data (division tricks for numbers<256) */

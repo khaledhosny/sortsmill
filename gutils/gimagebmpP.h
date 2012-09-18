@@ -27,6 +27,8 @@
 #ifndef _GIMAGEBMPP_H
 #define _GIMAGEBMPP_H
 
+#include <config.h>
+
 struct bmpheader {
     char b;		/* should contain 'B' */
     char m;		/* should contain 'M' */
