@@ -30,8 +30,6 @@ include $(top_srcdir)/mk/prep_symbols.mk
 
 #--------------------------------------------------------------------------
 
-CLEANFILES =
-
 if THE_PROGRAMS
 
 bin_PROGRAMS = fontforge
@@ -346,24 +344,17 @@ EXPORTED_LIBFONTFORGE_SYMBOLS = $(PLUGIN_HOOKS)							\
 
 libfontforge_la_CPPFLAGS = $(AM_CPPFLAGS)
 
-LIBFONTFORGE_PLUGINS = gb12345.la
-
 libfontforge_la_LIBADD = splinerefigure.lo $(LIBADD)	\
-	$(addprefix '-dlopen ',	$(LIBFONTFORGE_PLUGINS))	\
+	-dlopen $(top_builddir)/plugins/gb12345.la			\
 	$(top_builddir)/lib/libgnu.la
 
 # Using -release instead of -version-info seems appropriate in the
 # absence of a well defined ABI.
-libfontforge_la_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS) -release $(VERSION)	\
-	$(LTLIBINTL) -export-symbols $(builddir)/libfontforge.sym
-
-libfontforge_la_DEPENDENCIES = $(builddir)/libfontforge.sym	\
-	splinerefigure.lo
-
-$(builddir)/libfontforge.sym: $(builddir)/Makefile
-	$(call prep_symbols,EXPORTED_LIBFONTFORGE_SYMBOLS)
-
-CLEANFILES += $(builddir)/libfontforge.sym
+libfontforge_la_LDFLAGS =					\
+	-release $(VERSION)						\
+	$(MY_CFLAGS) $(MY_LIBS)	$(LTLIBINTL)	\
+	-export-symbols-regex					\
+	'$(call prep_symbols_regex,EXPORTED_LIBFONTFORGE_SYMBOLS)'
 
 EXTRA_SCRIPTS = generate_codepoint_selector.py
 
@@ -419,16 +410,11 @@ libfontforgeexe_la_LIBADD = libfontforge.la $(LTDLDEPS) $(LIBADD)	\
 
 # Using -release instead of -version-info seems appropriate in the
 # absence of a well defined ABI.
-libfontforgeexe_la_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS) -release	\
-	$(VERSION) $(LTLIBINTL) -export-symbols $(builddir)/libfontforgeexe.sym
-
-libfontforgeexe_la_DEPENDENCIES = $(builddir)/libfontforgeexe.sym	\
-	libfontforge.la
-
-$(builddir)/libfontforgeexe.sym: $(builddir)/Makefile
-	$(call prep_symbols,EXPORTED_LIBFONTFORGEEXE_SYMBOLS)
-
-CLEANFILES += $(builddir)/libfontforgeexe.sym
+libfontforgeexe_la_LDFLAGS = 				\
+	-release $(VERSION)						\
+	$(MY_CFLAGS) $(MY_LIBS)	$(LTLIBINTL)	\
+	-export-symbols-regex					\
+	'$(call prep_symbols_regex,EXPORTED_LIBFONTFORGEEXE_SYMBOLS)'
 
 #--------------------------------------------------------------------------
 

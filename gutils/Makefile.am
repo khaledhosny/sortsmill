@@ -27,8 +27,6 @@
 
 include $(top_srcdir)/mk/prep_symbols.mk
 
-CLEANFILES =
-
 lib_LTLIBRARIES = libgutils.la libgioftp.la
 
 #--------------------------------------------------------------------------
@@ -65,15 +63,11 @@ libgutils_la_LIBADD = $(top_builddir)/Unicode/libgunicode.la	\
 
 # Using -release instead of -version-info seems appropriate in the
 # absence of a well defined ABI.
-libgutils_la_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS) -release $(VERSION)	\
-	$(LTLIBINTL) -export-symbols $(builddir)/libgutils.sym
-
-libgutils_la_DEPENDENCIES = $(builddir)/libgutils.sym
-
-$(builddir)/libgutils.sym: $(builddir)/Makefile
-	$(call prep_symbols,EXPORTED_LIBGUTILS_SYMBOLS)
-
-CLEANFILES += $(builddir)/libgutils.sym
+libgutils_la_LDFLAGS =						\
+	-release $(VERSION)						\
+	$(MY_CFLAGS) $(MY_LIBS) $(LTLIBINTL)	\
+	-export-symbols-regex					\
+	'$(call prep_symbols_regex,EXPORTED_LIBGUTILS_SYMBOLS)'
 
 #--------------------------------------------------------------------------
 
@@ -88,15 +82,11 @@ libgioftp_la_LIBADD = $(top_builddir)/Unicode/libgunicode.la	\
 
 # Using -release instead of -version-info seems appropriate in the
 # absence of a well defined ABI.
-libgioftp_la_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS) -release $(VERSION)	\
-	$(LTLIBINTL) -export-symbols $(builddir)/libgioftp.sym
-
-libgioftp_la_DEPENDENCIES = $(builddir)/libgioftp.sym libgutils.la
-
-$(builddir)/libgioftp.sym: $(builddir)/Makefile
-	$(call prep_symbols,EXPORTED_LIBGIOFTP_SYMBOLS)
-
-CLEANFILES += $(builddir)/libgioftp.sym
+libgioftp_la_LDFLAGS =						\
+	-release $(VERSION)						\
+	$(MY_CFLAGS) $(MY_LIBS) $(LTLIBINTL)	\
+	-export-symbols-regex					\
+	'$(call prep_symbols_regex,EXPORTED_LIBGIOFTP_SYMBOLS)'
 
 #--------------------------------------------------------------------------
 

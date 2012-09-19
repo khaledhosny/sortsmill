@@ -35,6 +35,8 @@
 #
 #--------------------------------------------------------------------------
 
+# The sorting isn't necessary but seems useful for its side benefit of
+# providing a sorted list to import with your text editor.
 PREP_SYMBOLS = $(TR) ' ' '\n' | LC_ALL=C $(MY_SORT)
 
 prep_symbols_echo = echo "echo $($1) | $(PREP_SYMBOLS) > $@"
@@ -48,5 +50,9 @@ prep_symbols = \
 		echo 'Preparing global symbols listed in $1 for export...'; \
 		$(call prep_symbols_without_echo,$1); \
 	fi
+
+PREP_SYMBOLS_REGEX = $(SED) -e 's/ /|/g' -e 's/^/^/' -e 's/$$/$$/'
+
+prep_symbols_regex = $(shell echo $($1) | $(PREP_SYMBOLS_REGEX))
 
 #--------------------------------------------------------------------------

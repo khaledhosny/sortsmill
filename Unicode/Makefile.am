@@ -64,15 +64,11 @@ libgunicode_la_LIBADD = $(top_builddir)/lib/libgnu.la
 
 # Using -release instead of -version-info seems appropriate in the
 # absence of a well defined ABI.
-libgunicode_la_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS) -release $(VERSION)	\
-	$(LTLIBINTL) -export-symbols $(builddir)/libgunicode.sym
-
-libgunicode_la_DEPENDENCIES = $(builddir)/libgunicode.sym
-
-$(builddir)/libgunicode.sym: $(builddir)/Makefile
-	$(call prep_symbols,EXPORTED_LIBGUNICODE_SYMBOLS)
-
-CLEANFILES = $(builddir)/libgunicode.sym
+libgunicode_la_LDFLAGS = 					\
+	-release $(VERSION)						\
+	$(MY_CFLAGS) $(MY_LIBS)	$(LTLIBINTL)	\
+	-export-symbols-regex					\
+	'$(call prep_symbols_regex,EXPORTED_LIBGUNICODE_SYMBOLS)'
 
 #--------------------------------------------------------------------------
 
