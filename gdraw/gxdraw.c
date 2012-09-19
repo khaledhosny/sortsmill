@@ -2086,29 +2086,9 @@ static void GXDrawDrawElipse(GWindow gw, GRect *rect, Color col) {
 
 static void GXDrawDrawArc(GWindow gw, GRect *rect, int32 sangle, int32 tangle, Color col) {
     GXWindow gxw = (GXWindow) gw;
-    GXDisplay *display = gxw->display;
-#if 0
-    int cx, cy;
-    double sa, ea;
-
-    cx = rect->x + (rect->width)/2;
-    cy = rect->y + (rect->height)/2;
-    sa = atan2((double) (sx-cx),(double) (sy-cy));
-    ea = atan2((double) (ex-cx),(double) (ey-cy));
 
     gxw->ggc->fg = col;
-    GXDrawSetline(display,gxw->ggc);
-    XDrawArc(display->display,gxw->w,display->gcstate[w->ggc->bitmap_col].gc,rect->x,rect->y,
-	    rect->width,rect->height,
-	    (int) (sa*(360.*64./(2*3.1415926535897932))),
-	    (int) (ea*(360.*64./(2*3.1415926535897932))) );
-#else
-    gxw->ggc->fg = col;
-    GXDrawSetline(display,gxw->ggc);
-    XDrawArc(display->display,gxw->w,display->gcstate[gxw->ggc->bitmap_col].gc,rect->x,rect->y,
-	    rect->width,rect->height,
-	    sangle,tangle );
-#endif
+    _GXCDraw_DrawArc(gxw, rect, sangle, tangle);
 }
 
 static void GXDrawFillElipse(GWindow gw, GRect *rect, Color col) {

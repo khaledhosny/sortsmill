@@ -235,7 +235,7 @@ static void DrawULArc(GWindow gw, GRect *rect,int inset,int radius, Color col) {
     if ( inset>=radius )
 return;
     GetULRect(&r,rect,inset,radius);
-    GDrawDrawArc(gw,&r,90*64,90*64,col);
+    GDrawDrawArc(gw,&r,90,90,col);
 }
 
 static void DrawULArcs(GWindow gw, GRect *rect,int inset,int radius, Color col1, Color col2) {
@@ -244,10 +244,10 @@ static void DrawULArcs(GWindow gw, GRect *rect,int inset,int radius, Color col1,
 return;
     GetULRect(&r,rect,inset,radius);
     if ( col1==col2 )
-	GDrawDrawArc(gw,&r,90*64,90*64,col2);
+	GDrawDrawArc(gw,&r,90,90,col2);
     else {
-	GDrawDrawArc(gw,&r,135*64,45*64,col1);
-	GDrawDrawArc(gw,&r,90*64,45*64,col2);
+	GDrawDrawArc(gw,&r,135,45,col1);
+	GDrawDrawArc(gw,&r,90,45,col2);
     }
 }
 
@@ -261,7 +261,7 @@ static void DrawURArc(GWindow gw, GRect *rect,int inset,int radius, Color col) {
     if ( inset>=radius )
 return;
     GetURRect(&r,rect,inset,radius);
-    GDrawDrawArc(gw,&r,0*64,90*64,col);
+    GDrawDrawArc(gw,&r,0,90,col);
 }
 
 static void DrawURArcs(GWindow gw, GRect *rect,int inset,int radius, Color col1, Color col2) {
@@ -270,10 +270,10 @@ static void DrawURArcs(GWindow gw, GRect *rect,int inset,int radius, Color col1,
 return;
     GetURRect(&r,rect,inset,radius);
     if ( col1==col2 )
-	GDrawDrawArc(gw,&r,0*64,90*64,col2);
+	GDrawDrawArc(gw,&r,0,90,col2);
     else {
-	GDrawDrawArc(gw,&r,45*64,45*64,col1);
-	GDrawDrawArc(gw,&r,0*64,45*64,col2);
+	GDrawDrawArc(gw,&r,45,45,col1);
+	GDrawDrawArc(gw,&r,0,45,col2);
     }
 }
 
@@ -288,7 +288,7 @@ static void DrawLRArc(GWindow gw, GRect *rect,int inset,int radius, Color col) {
     if ( inset>=radius )
 return;
     GetLRRect(&r,rect,inset,radius);
-    GDrawDrawArc(gw,&r,-90*64,90*64,col);
+    GDrawDrawArc(gw,&r,-90,90,col);
 }
 
 static void DrawLRArcs(GWindow gw, GRect *rect,int inset,int radius, Color col1, Color col2) {
@@ -297,10 +297,10 @@ static void DrawLRArcs(GWindow gw, GRect *rect,int inset,int radius, Color col1,
 return;
     GetLRRect(&r,rect,inset,radius);
     if ( col1==col2 )
-	GDrawDrawArc(gw,&r,-90*64,90*64,col2);
+	GDrawDrawArc(gw,&r,-90,90,col2);
     else {
-	GDrawDrawArc(gw,&r,-45*64,45*64,col1);
-	GDrawDrawArc(gw,&r,-90*64,45*64,col2);
+	GDrawDrawArc(gw,&r,-45,45,col1);
+	GDrawDrawArc(gw,&r,-90,45,col2);
     }
 }
 
@@ -315,7 +315,7 @@ static void DrawLLArc(GWindow gw, GRect *rect,int inset,int radius, Color col) {
     if ( inset>=radius )
 return;
     GetLLRect(&r,rect,inset,radius);
-    GDrawDrawArc(gw,&r,-180*64,90*64,col);
+    GDrawDrawArc(gw,&r,-180,90,col);
 }
 
 static void DrawLLArcs(GWindow gw, GRect *rect,int inset,int radius, Color col1, Color col2) {
@@ -324,10 +324,10 @@ static void DrawLLArcs(GWindow gw, GRect *rect,int inset,int radius, Color col1,
 return;
     GetLLRect(&r,rect,inset,radius);
     if ( col1==col2 )
-	GDrawDrawArc(gw,&r,-180*64,90*64,col2);
+	GDrawDrawArc(gw,&r,-180,90,col2);
     else {
-	GDrawDrawArc(gw,&r,-135*64,45*64,col1);
-	GDrawDrawArc(gw,&r,-180*64,45*64,col2);
+	GDrawDrawArc(gw,&r,-135,45,col1);
+	GDrawDrawArc(gw,&r,-180,45,col2);
     }
 }
 
@@ -727,10 +727,10 @@ static int GBoxElipseBorder(GWindow gw,GRect *pos,GBox *design,
 	cur = *pos;
 	cur.x += inset+temp/2; cur.y += inset+temp/2;
 	cur.width -= 2*(inset+temp/2)+1; cur.height -= 2*(inset+temp/2)+1;
-	GDrawDrawArc(gw,&cur,90*64,90*64,cols[2]);
-	GDrawDrawArc(gw,&cur,0*64,90*64,cols[3]);
-	GDrawDrawArc(gw,&cur,-90*64,90*64,cols[0]);
-	GDrawDrawArc(gw,&cur,-180*64,90*64,cols[1]);
+	GDrawDrawArc(gw,&cur,90,90,cols[2]);
+	GDrawDrawArc(gw,&cur,0,90,cols[3]);
+	GDrawDrawArc(gw,&cur,-90,90,cols[0]);
+	GDrawDrawArc(gw,&cur,-180,90,cols[1]);
 	inset += scale + GDrawPointsToPixels(gw,2);
     }
 
@@ -761,10 +761,10 @@ static int GBoxElipseBorder(GWindow gw,GRect *pos,GBox *design,
 	cur = *pos;
 	cur.x += inset+bw/2; cur.y += inset+bw/2;
 	cur.width -= 2*(inset+bw/2)+1; cur.height -= 2*(inset+bw/2)+1;
-	GDrawDrawArc(gw,&cur,90*64,90*64,cols[0]);
-	GDrawDrawArc(gw,&cur,0*64,90*64,cols[1]);
-	GDrawDrawArc(gw,&cur,-90*64,90*64,cols[2]);
-	GDrawDrawArc(gw,&cur,-180*64,90*64,cols[3]);
+	GDrawDrawArc(gw,&cur,90,90,cols[0]);
+	GDrawDrawArc(gw,&cur,0,90,cols[1]);
+	GDrawDrawArc(gw,&cur,-90,90,cols[2]);
+	GDrawDrawArc(gw,&cur,-180,90,cols[3]);
       break;
       case bt_engraved: case bt_embossed:
 	bw &= ~1;
@@ -776,16 +776,16 @@ static int GBoxElipseBorder(GWindow gw,GRect *pos,GBox *design,
 	cur = *pos;
 	cur.x += inset+bw/4; cur.y += inset+bw/4;
 	cur.width -= 2*(inset+bw/4)+1; cur.height -= 2*(inset+bw/4)+1;
-	GDrawDrawArc(gw,&cur,90*64,90*64,cols[0]);
-	GDrawDrawArc(gw,&cur,0*64,90*64,cols[1]);
-	GDrawDrawArc(gw,&cur,-90*64,90*64,cols[2]);
-	GDrawDrawArc(gw,&cur,-180*64,90*64,cols[3]);
+	GDrawDrawArc(gw,&cur,90,90,cols[0]);
+	GDrawDrawArc(gw,&cur,0,90,cols[1]);
+	GDrawDrawArc(gw,&cur,-90,90,cols[2]);
+	GDrawDrawArc(gw,&cur,-180,90,cols[3]);
 	cur.x += bw/2; cur.y += bw/2;
 	cur.width -= bw; cur.height -= bw;
-	GDrawDrawArc(gw,&cur,90*64,90*64,cols[2]);
-	GDrawDrawArc(gw,&cur,0*64,90*64,cols[3]);
-	GDrawDrawArc(gw,&cur,-90*64,90*64,cols[0]);
-	GDrawDrawArc(gw,&cur,-180*64,90*64,cols[1]);
+	GDrawDrawArc(gw,&cur,90,90,cols[2]);
+	GDrawDrawArc(gw,&cur,0,90,cols[3]);
+	GDrawDrawArc(gw,&cur,-90,90,cols[0]);
+	GDrawDrawArc(gw,&cur,-180,90,cols[1]);
 	GDrawSetLineWidth(gw,scale);
       break;
       case bt_double: {
@@ -800,17 +800,17 @@ static int GBoxElipseBorder(GWindow gw,GRect *pos,GBox *design,
 	cur = *pos;
 	cur.x += inset+width/2; cur.y += inset+width/2;
 	cur.width -= 2*(inset+width/2)+1; cur.height -= 2*(inset+width/2)+1;
-	GDrawDrawArc(gw,&cur,90*64,90*64,cols[0]);
-	GDrawDrawArc(gw,&cur,0*64,90*64,cols[1]);
-	GDrawDrawArc(gw,&cur,-90*64,90*64,cols[2]);
-	GDrawDrawArc(gw,&cur,-180*64,90*64,cols[3]);
+	GDrawDrawArc(gw,&cur,90,90,cols[0]);
+	GDrawDrawArc(gw,&cur,0,90,cols[1]);
+	GDrawDrawArc(gw,&cur,-90,90,cols[2]);
+	GDrawDrawArc(gw,&cur,-180,90,cols[3]);
 	cur = *pos;
 	cur.x += inset+bw-(width+1)/2; cur.y += inset+bw-(width+1)/2;
 	cur.width -= 2*(inset+bw-(width+1)/2)+1; cur.height -= 2*(inset+bw-(width+1)/2)+1;
-	GDrawDrawArc(gw,&cur,90*64,90*64,cols[0]);
-	GDrawDrawArc(gw,&cur,0*64,90*64,cols[1]);
-	GDrawDrawArc(gw,&cur,-90*64,90*64,cols[2]);
-	GDrawDrawArc(gw,&cur,-180*64,90*64,cols[3]);
+	GDrawDrawArc(gw,&cur,90,90,cols[0]);
+	GDrawDrawArc(gw,&cur,0,90,cols[1]);
+	GDrawDrawArc(gw,&cur,-90,90,cols[2]);
+	GDrawDrawArc(gw,&cur,-180,90,cols[3]);
 	GDrawSetLineWidth(gw,scale);
       } break;
     }

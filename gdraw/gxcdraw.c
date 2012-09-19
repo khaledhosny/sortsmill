@@ -252,7 +252,32 @@ void _GXCDraw_FillRoundRect(GXWindow gw, GRect *rect, int radius) {
     cairo_arc(gw->cc, rect->x + radius, rect->y + radius, radius, 180 * degrees, 270 * degrees);
     cairo_close_path(gw->cc);
     cairo_fill(gw->cc);
+}
 
+void _GXCDraw_DrawArc(GXWindow gw, GRect *rect, int32 sangle, int32 tangle) {
+    int lwidth;
+    float cx, cy, width, height;
+    double degrees = M_PI / 180.0;
+
+    width = rect->width/2.0;
+    height = rect->height/2.0;
+    cx = rect->x + width;
+    cy = rect->y + height;
+
+    lwidth = GXCDrawSetline(gw, gw->ggc);
+    if ( lwidth&1 ) {
+	if (rint(width) == width)
+	    cx += .5;
+	if (rint(height) == height)
+	    cy += .5;
+    }
+
+    cairo_new_path(gw->cc);
+    if (tangle >= 0)
+	cairo_arc_negative(gw->cc, cx, cy, width, -sangle * degrees, -(sangle + tangle) * degrees);
+    else
+	cairo_arc(gw->cc, cx, cy, width, -sangle * degrees, -(sangle + tangle) * degrees);
+    cairo_stroke(gw->cc);
 }
 
 static void GXCDraw_EllipsePath(cairo_t *cc,double cx,double cy,double width,double height) {
