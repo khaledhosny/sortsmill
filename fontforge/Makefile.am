@@ -27,7 +27,6 @@
 
 include $(top_srcdir)/mk/layout.am
 include $(top_srcdir)/mk/flags.am
-include $(top_srcdir)/mk/prep_symbols.mk
 
 #--------------------------------------------------------------------------
 
@@ -344,18 +343,10 @@ EXPORTED_LIBFONTFORGE_SYMBOLS = $(PLUGIN_HOOKS)							\
 	xuid
 
 libfontforge_la_CPPFLAGS = $(AM_CPPFLAGS)
-
 libfontforge_la_LIBADD = splinerefigure.lo $(LIBADD)	\
 	-dlopen $(top_builddir)/plugins/gb12345.la			\
 	$(top_builddir)/lib/libgnu.la
-
-# Using -release instead of -version-info seems appropriate in the
-# absence of a well defined ABI.
-libfontforge_la_LDFLAGS =					\
-	-release $(VERSION)						\
-	$(MY_CFLAGS) $(MY_LIBS)	$(LTLIBINTL)	\
-	-export-symbols-regex					\
-	'$(call prep_symbols_regex,EXPORTED_LIBFONTFORGE_SYMBOLS)'
+libfontforge_la_LDFLAGS = $(call ldflags,EXPORTED_LIBFONTFORGE_SYMBOLS)
 
 EXTRA_SCRIPTS = generate_codepoint_selector.py
 
@@ -408,14 +399,7 @@ EXPORTED_LIBFONTFORGEEXE_SYMBOLS = fontforge_main
 libfontforgeexe_la_CPPFLAGS = $(AM_CPPFLAGS)
 libfontforgeexe_la_LIBADD = libfontforge.la $(LTDLDEPS) $(LIBADD)	\
 	$(GUILIBADD) $(top_builddir)/lib/libgnu.la
-
-# Using -release instead of -version-info seems appropriate in the
-# absence of a well defined ABI.
-libfontforgeexe_la_LDFLAGS = 				\
-	-release $(VERSION)						\
-	$(MY_CFLAGS) $(MY_LIBS)	$(LTLIBINTL)	\
-	-export-symbols-regex					\
-	'$(call prep_symbols_regex,EXPORTED_LIBFONTFORGEEXE_SYMBOLS)'
+libfontforgeexe_la_LDFLAGS = $(call ldflags,EXPORTED_LIBFONTFORGEEXE_SYMBOLS)
 
 #--------------------------------------------------------------------------
 

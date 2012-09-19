@@ -26,7 +26,6 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 include $(top_srcdir)/mk/flags.am
-include $(top_srcdir)/mk/prep_symbols.mk
 
 lib_LTLIBRARIES = libgdraw.la
 
@@ -167,16 +166,8 @@ EXPORTED_LIBGDRAW_SYMBOLS = GBoxBorderWidth GBoxDrawBackground			\
 	utf82u_mncopy
 
 libgdraw_la_CPPFLAGS = $(AM_CPPFLAGS)
-
 libgdraw_la_LIBADD = $(top_builddir)/Unicode/libgunicode.la				\
 	$(top_builddir)/gutils/libgutils.la $(top_builddir)/lib/libgnu.la
-
-# Using -release instead of -version-info seems appropriate in the
-# absence of a well defined ABI.
-libgdraw_la_LDFLAGS =						\
-	-release $(VERSION)						\
-	$(MY_CFLAGS) $(MY_LIBS)	$(LTLIBINTL)	\
-	-export-symbols-regex					\
-	'$(call prep_symbols_regex,EXPORTED_LIBGDRAW_SYMBOLS)'
+libgdraw_la_LDFLAGS = $(call ldflags,EXPORTED_LIBGDRAW_SYMBOLS)
 
 #--------------------------------------------------------------------------

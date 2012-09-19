@@ -26,7 +26,6 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 include $(top_srcdir)/mk/flags.am
-include $(top_srcdir)/mk/prep_symbols.mk
 
 lib_LTLIBRARIES = libgutils.la libgioftp.la
 
@@ -58,17 +57,9 @@ EXPORTED_LIBGUTILS_SYMBOLS = GFileAppendFile GFileBuildName				\
 	u_GFileNameTail u_GFileNormalize
 
 libgutils_la_CPPFLAGS = $(AM_CPPFLAGS)
-
 libgutils_la_LIBADD = $(top_builddir)/Unicode/libgunicode.la	\
 	$(top_builddir)/lib/libgnu.la
-
-# Using -release instead of -version-info seems appropriate in the
-# absence of a well defined ABI.
-libgutils_la_LDFLAGS =						\
-	-release $(VERSION)						\
-	$(MY_CFLAGS) $(MY_LIBS) $(LTLIBINTL)	\
-	-export-symbols-regex					\
-	'$(call prep_symbols_regex,EXPORTED_LIBGUTILS_SYMBOLS)'
+libgutils_la_LDFLAGS = $(call ldflags,EXPORTED_LIBGUTILS_SYMBOLS)
 
 #--------------------------------------------------------------------------
 
@@ -77,16 +68,8 @@ libgioftp_la_SOURCES = gioftp.c gioftpP.h
 EXPORTED_LIBGIOFTP_SYMBOLS = GIO_dispatch
 
 libgioftp_la_CPPFLAGS = $(AM_CPPFLAGS)
-
 libgioftp_la_LIBADD = $(top_builddir)/Unicode/libgunicode.la	\
 	$(top_builddir)/lib/libgnu.la libgutils.la
-
-# Using -release instead of -version-info seems appropriate in the
-# absence of a well defined ABI.
-libgioftp_la_LDFLAGS =						\
-	-release $(VERSION)						\
-	$(MY_CFLAGS) $(MY_LIBS) $(LTLIBINTL)	\
-	-export-symbols-regex					\
-	'$(call prep_symbols_regex,EXPORTED_LIBGIOFTP_SYMBOLS)'
+libgioftp_la_LDFLAGS = $(call ldflags,EXPORTED_LIBGIOFTP_SYMBOLS)
 
 #--------------------------------------------------------------------------
