@@ -31,16 +31,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <limits.h>
 #include <stdbool.h>
-
-// FIXME: Use Gnulib to get stdint.h if it is not present. But first
-// we have to include config.h at the top of everything.
-#ifdef HAVE_STDINT_H
-# include <stdint.h>
-#else
-# include <inttypes.h>
-#endif
+#include <stdint.h>
+#include <limits.h>
 
 // FIXME: Use the standard names in the code; get rid of these
 // typedefs.

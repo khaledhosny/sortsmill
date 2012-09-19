@@ -49,12 +49,14 @@ AC_DEFUN([gl_EARLY],
   # Code from module intprops:
   # Code from module msvc-inval:
   # Code from module msvc-nothrow:
+  # Code from module multiarch:
   # Code from module snippet/_Noreturn:
   # Code from module snippet/arg-nonnull:
   # Code from module snippet/c++defs:
   # Code from module snippet/warn-on-use:
   # Code from module ssize_t:
   # Code from module stddef:
+  # Code from module stdint:
   # Code from module stdlib:
   # Code from module strerror:
   # Code from module strerror-override:
@@ -101,8 +103,10 @@ AC_DEFUN([gl_INIT],
   if test $HAVE_MSVC_INVALID_PARAMETER_HANDLER = 1; then
     AC_LIBOBJ([msvc-nothrow])
   fi
+  gl_MULTIARCH
   gt_TYPE_SSIZE_T
   gl_STDDEF_H
+  gl_STDINT_H
   gl_STDLIB_H
   gl_FUNC_STRERROR
   if test $REPLACE_STRERROR = 1; then
@@ -273,6 +277,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/msvc-nothrow.c
   lib/msvc-nothrow.h
   lib/stddef.in.h
+  lib/stdint.in.h
   lib/stdlib.in.h
   lib/strerror-override.c
   lib/strerror-override.h
@@ -292,11 +297,14 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/gnulib-common.m4
   m4/include_next.m4
   m4/inline.m4
+  m4/longlong.m4
   m4/msvc-inval.m4
   m4/msvc-nothrow.m4
+  m4/multiarch.m4
   m4/off_t.m4
   m4/ssize_t.m4
   m4/stddef_h.m4
+  m4/stdint.m4
   m4/stdlib_h.m4
   m4/strerror.m4
   m4/string_h.m4
