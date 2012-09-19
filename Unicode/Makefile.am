@@ -25,8 +25,7 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-AM_CPPFLAGS = "-I$(top_builddir)/lib" "-I$(top_srcdir)/lib"			\
-		"-I$(top_builddir)/inc" "-I$(top_srcdir)/inc" $(MY_CFLAGS)
+include $(top_srcdir)/mk/prep_symbols.mk
 
 #--------------------------------------------------------------------------
 
@@ -71,7 +70,7 @@ libgunicode_la_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS) -release $(VERSION)	\
 libgunicode_la_DEPENDENCIES = $(builddir)/libgunicode.sym
 
 $(builddir)/libgunicode.sym: $(builddir)/Makefile
-	echo $(EXPORTED_LIBGUNICODE_SYMBOLS) | $(TR) ' ' '\n' | LC_ALL=C $(MY_SORT) > $@
+	$(call prep_symbols,EXPORTED_LIBGUNICODE_SYMBOLS)
 
 CLEANFILES = $(builddir)/libgunicode.sym
 
@@ -125,3 +124,7 @@ endif MAINTAINER_TOOLS
 
 #--------------------------------------------------------------------------
 
+AM_CPPFLAGS = "-I$(top_builddir)/lib" "-I$(top_srcdir)/lib"			\
+		"-I$(top_builddir)/inc" "-I$(top_srcdir)/inc" $(MY_CFLAGS)
+
+#--------------------------------------------------------------------------

@@ -25,6 +25,8 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+include $(top_srcdir)/mk/prep_symbols.mk
+
 lib_LTLIBRARIES = libgdraw.la
 
 libgdraw_la_SOURCES = choosericons.c ctlvalues.c drawboxborder.c		\
@@ -176,7 +178,7 @@ libgdraw_la_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS) -release $(VERSION)	\
 libgdraw_la_DEPENDENCIES = $(builddir)/libgdraw.sym
 
 $(builddir)/libgdraw.sym: $(builddir)/Makefile
-	echo $(EXPORTED_LIBGDRAW_SYMBOLS) | $(TR) ' ' '\n' | LC_ALL=C $(MY_SORT) > $@
+	$(call prep_symbols,EXPORTED_LIBGDRAW_SYMBOLS)
 
 CLEANFILES = $(builddir)/libgdraw.sym
 

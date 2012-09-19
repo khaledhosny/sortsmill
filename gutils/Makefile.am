@@ -25,6 +25,8 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+include $(top_srcdir)/mk/prep_symbols.mk
+
 CLEANFILES =
 
 lib_LTLIBRARIES = libgutils.la libgioftp.la
@@ -69,7 +71,7 @@ libgutils_la_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS) -release $(VERSION)	\
 libgutils_la_DEPENDENCIES = $(builddir)/libgutils.sym
 
 $(builddir)/libgutils.sym: $(builddir)/Makefile
-	echo $(EXPORTED_LIBGUTILS_SYMBOLS) | $(TR) ' ' '\n' | LC_ALL=C $(MY_SORT) > $@
+	$(call prep_symbols,EXPORTED_LIBGUTILS_SYMBOLS)
 
 CLEANFILES += $(builddir)/libgutils.sym
 
@@ -92,7 +94,7 @@ libgioftp_la_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS) -release $(VERSION)	\
 libgioftp_la_DEPENDENCIES = $(builddir)/libgioftp.sym libgutils.la
 
 $(builddir)/libgioftp.sym: $(builddir)/Makefile
-	echo $(EXPORTED_LIBGIOFTP_SYMBOLS) | $(TR) ' ' '\n' | LC_ALL=C $(MY_SORT) > $@
+	$(call prep_symbols,EXPORTED_LIBGIOFTP_SYMBOLS)
 
 CLEANFILES += $(builddir)/libgioftp.sym
 
