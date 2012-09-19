@@ -30,9 +30,6 @@
 #include <utype.h>
 #include <ustring.h>
 #include <math.h>
-#ifdef HAVE_IEEEFP_H
-# include <ieeefp.h>		/* Solaris defines isnan in ieeefp rather than math.h */
-#endif
 #include "nonlineartrans.h"
 
 static struct builtins { char *name; enum operator op; } builtins[] = {

@@ -34,9 +34,6 @@
 #include "psfont.h"
 #include "sd.h"
 #include "views.h"		/* For CharViewBase */
-#ifdef HAVE_IEEEFP_H
-# include <ieeefp.h>		/* Solaris defines isnan in ieeefp rather than math.h */
-#endif
 
 typedef struct _io {
     char *macro, *start;

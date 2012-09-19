@@ -33,6 +33,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <math.h>
 #include <limits.h>
 
 // FIXME: Use the standard names in the code; get rid of these

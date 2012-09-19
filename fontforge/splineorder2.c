@@ -34,9 +34,6 @@
 #include <utype.h>
 #include <ustring.h>
 #include <chardata.h>
-#ifdef HAVE_IEEEFP_H
-# include <ieeefp.h>		/* Solaris defines isnan in ieeefp rather than math.h */
-#endif
 
 /* This file contains utility routines for second order bezier splines   */
 /*  (ie. truetype)							 */

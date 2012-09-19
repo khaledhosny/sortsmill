@@ -40,13 +40,12 @@
 #include <gresedit.h>
 extern int _GScrollBar_Width;
 #include <gkeysym.h>
-#ifdef HAVE_IEEEFP_H
-# include <ieeefp.h>		/* Solaris defines isnan in ieeefp rather than math.h */
-#endif
 
-/* Barry wants to be able to redefine menu bindings only in the charview (I think) */
-/*  the menu parser will first check for something like "CV*Open|Ctl+O", and */
-/*  if that fails will strip off "CV*" and check for "Open|Ctl+O" */
+// Barry wants to be able to redefine menu bindings only in the charview
+//  (I think). (George was right! It is an accessibility feature for
+//  my hands disability. -- Barry.)
+//  the menu parser will first check for something like "CV*Open|Ctl+O", and
+//  if that fails will strip off "CV*" and check for "Open|Ctl+O"
 #undef H_
 #define H_(str) ("CV*" str)
 

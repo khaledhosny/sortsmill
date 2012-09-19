@@ -36,11 +36,8 @@
 #include "ustring.h"
 #include "utype.h"
 #include "views.h"		/* for FindSel structure */
-#ifdef HAVE_IEEEFP_H
-# include <ieeefp.h>		/* Solaris defines isnan in ieeefp rather than math.h */
-#endif
 
-/*#define DEBUG 1*/
+// #define DEBUG 1
 
 typedef struct quartic {
     bigreal a,b,c,d,e;

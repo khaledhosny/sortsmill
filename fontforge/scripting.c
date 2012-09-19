@@ -41,9 +41,6 @@
 #include <unistd.h>
 #include <time.h>
 #include <locale.h>
-#ifdef HAVE_IEEEFP_H
-# include <ieeefp.h>		/* Solaris defines isnan in ieeefp rather than math.h */
-#endif
 #include "ttf.h"
 #include "plugins.h"
 #include "scripting.h"
