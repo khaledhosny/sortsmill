@@ -72,7 +72,6 @@ John, it's not part of standard XFree yet).
 #  include <cairo/cairo.h>
 #  include <cairo/cairo-xlib.h>
 #  define GTimer GTimer_GTK
-#  include <ft2build.h>
 #  include <pango/pango.h>
 #  undef GTimer
 #endif
