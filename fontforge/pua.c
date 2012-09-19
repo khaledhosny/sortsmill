@@ -1,3 +1,5 @@
+#include <config.h>
+
 /* A number of encodings use the public use area to map to glyphs that are    */
 /*  defined in planes other than the BMP (chinese), or just multiple encodings*/
 /*  for the same glyph (ams)						      */

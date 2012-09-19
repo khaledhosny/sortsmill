@@ -1,3 +1,5 @@
+#include <config.h>
+
 /*
  * This program is used to create a 'release date' time stamp when it is time for the
  * next fontforge release build. See fontforge/GNUmakefile.in

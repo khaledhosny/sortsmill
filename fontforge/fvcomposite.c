@@ -1,3 +1,5 @@
+#include <config.h>
+
 /* -*- coding: utf-8 -*- */
 /* Copyright (C) 2000-2012 by George Williams */
 /*

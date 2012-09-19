@@ -1,3 +1,5 @@
+#include <config.h>
+
 /* Copyright (C) 2005-2012 by George Williams */
 /*
  * Redistribution and use in source and binary forms, with or without

@@ -1,3 +1,5 @@
+#include <config.h>
+
 /* This file written by George Williams to provide a gateway to fontforge */
 /* it it a modification of Raph's bezctx_ps.c */
 #include <basics.h>

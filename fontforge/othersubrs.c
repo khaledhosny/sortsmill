@@ -1,3 +1,5 @@
+#include <config.h>
+
 #include "fontforge.h"		/* For LogError */
 
 /* These subroutines are code by Adobe for this exact use (from T1_Spec.pdf) */

@@ -1,3 +1,5 @@
+#include <config.h>
+
 /* GWW: taken from http://www.ctan.org/tex-archive/tools/macutils/crc/ */
 /*  This is the output (slightly modified) of makecrc for the binhex case */
 

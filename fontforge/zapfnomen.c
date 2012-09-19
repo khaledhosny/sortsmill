@@ -1,3 +1,5 @@
+#include <config.h>
+
 /* Zapf dingbat info. Slot into unicode at 0x2700 */
 /* Taken from adobe's afm file */
 

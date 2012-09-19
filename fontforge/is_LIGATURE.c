@@ -1,3 +1,5 @@
+#include <config.h>
+
 /* This is a generated file. */
 
 #include <stdlib.h>

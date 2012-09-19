@@ -1,3 +1,5 @@
+#include <config.h>
+
 /* This file was generated using stamper.c to create the next version release.          */
 /* If you need to update this to the next release version, see fontforge/GNUmakefile.in */
 

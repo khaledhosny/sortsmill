@@ -1,3 +1,5 @@
+#include <config.h>
+
 /* This file contains the SIL Open Font License */
 /* See http://scripts.sil.org/OFL for all the details */
 /* Check the extensive FAQ as well */
