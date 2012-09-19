@@ -359,8 +359,8 @@ is_LIGATURE:
 		'LIGATURE|VULGAR FRACTION' \
 		is_LIGATURE_or_VULGAR_FRACTION > $(srcdir)/is_LIGATURE.c
 	$(CPROTO) $(srcdir)/is_LIGATURE.c > $(srcdir)/is_LIGATURE.h
-#	Add the '#include <config.h>' afterwards so we do not need to call
-#	pass preprocessor flags to cproto.
+#	Add the '#include <config.h>' after the call to cproto, so we do
+#	not need to pass preprocessor flags to cproto.
 	$(SED) -i -e '1i\
 \#include <config.h>\
 ' $(srcdir)/is_LIGATURE.c
