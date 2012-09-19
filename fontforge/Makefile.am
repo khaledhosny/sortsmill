@@ -414,7 +414,8 @@ nodist_libfontforgeexe_la_SOURCES = exelibstamp.c
 EXPORTED_LIBFONTFORGEEXE_SYMBOLS = fontforge_main
 
 libfontforgeexe_la_CPPFLAGS = $(AM_CPPFLAGS)
-libfontforgeexe_la_LIBADD = libfontforge.la $(LTDLDEPS) $(LIBADD) $(GUILIBADD)
+libfontforgeexe_la_LIBADD = libfontforge.la $(LTDLDEPS) $(LIBADD)	\
+	$(GUILIBADD) $(top_builddir)/lib/libgnu.la
 
 # Using -release instead of -version-info seems appropriate in the
 # absence of a well defined ABI.
