@@ -6,6 +6,7 @@
  * be overwritten during the next make process.
  */
 
+#include <config.h>
 #include "fontforge.h"
 #include "baseviews.h"
 #include "libffstamp.h"			/* FontForge version# date time stamps */

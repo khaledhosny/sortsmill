@@ -26,6 +26,7 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 include $(top_srcdir)/mk/layout.am
+include $(top_srcdir)/mk/flags.am
 include $(top_srcdir)/mk/prep_symbols.mk
 
 #--------------------------------------------------------------------------
@@ -429,11 +430,6 @@ GUILIBADD += $(top_builddir)/gdraw/libgdraw.la $(XINPUT_LIBS)	\
 endif GRAPHICAL_USER_INTERFACE
 
 LDADD = $(LIBADD) $(GUILIBADD)
-
-AM_CPPFLAGS = "-I$(top_builddir)/lib" "-I$(top_srcdir)/lib"		\
-	"-I$(top_builddir)/inc" "-I$(top_srcdir)/inc"				\
-	"-DSHAREDIR=\"${MY_SHAREDIR}\"" "-DDOCDIR=\"${MY_DOCDIR}\""	\
-	"-DPLUGINDIR=\"${MY_PLUGINDIR}\"" $(MY_CFLAGS)
 
 #--------------------------------------------------------------------------
 

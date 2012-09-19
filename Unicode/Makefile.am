@@ -25,6 +25,7 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+include $(top_srcdir)/mk/flags.am
 include $(top_srcdir)/mk/prep_symbols.mk
 
 #--------------------------------------------------------------------------
@@ -117,10 +118,5 @@ DISTCLEANFILES = LineBreak.txt NamesList.txt PropList.txt	\
 	UnicodeData.txt
 
 endif MAINTAINER_TOOLS
-
-#--------------------------------------------------------------------------
-
-AM_CPPFLAGS = "-I$(top_builddir)/lib" "-I$(top_srcdir)/lib"			\
-		"-I$(top_builddir)/inc" "-I$(top_srcdir)/inc" $(MY_CFLAGS)
 
 #--------------------------------------------------------------------------
