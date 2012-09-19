@@ -50,19 +50,11 @@ SUBDIRS = pixmaps
 
 FFSCRIPT_HEADER = "\#!$(bindir)/fontforge -lang=ff"
 
-fontimage: fontimage.pe
-	echo "${FFSCRIPT_HEADER}" | cat - "${srcdir}/fontimage.pe" > fontimage
-	chmod +x fontimage
+%: %.pe
+	echo "${FFSCRIPT_HEADER}" | cat - $< > $@
+	chmod +x $@
 
-fontlint: fontlint.pe
-	echo "${FFSCRIPT_HEADER}" | cat - "${srcdir}/fontlint.pe" > fontlint
-	chmod +x fontlint
-
-sfddiff: sfddiff.pe
-	echo "${FFSCRIPT_HEADER}" | cat - "${srcdir}/sfddiff.pe" > sfddiff
-	chmod +x sfddiff
-
-.pre.c:
+%.c: %.pre
 	$(SED) -e '1,$$ s/REPLACE_ME_WITH_MAJOR_VERSION/$(VERSION_MAJOR)/'	\
 	       -e '1,$$ s/REPLACE_ME_WITH_MINOR_VERSION/$(VERSION_MINOR)/'	\
 	    < $< > $@
