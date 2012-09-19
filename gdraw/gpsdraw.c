@@ -725,10 +725,10 @@ return;
 #else
     PSDrawNewpath(ps);
     if ( radx!=rady )
-	PSMyArc(ps,cx,cy,radx,rady,sa/64.0,ta/64.0);
+	PSMyArc(ps,cx,cy,radx,rady,sa,ta);
     else
 	fprintf( ps->output_file, "  %g %g %g %g %g arc", _GSPDraw_XPos(ps,cx), _GSPDraw_YPos(ps,cy), _GSPDraw_Distance(ps,radx),
-		    sa/64.0, (sa+ta)/64.0 );
+		    (double)sa, (double)sa+ta );
     fprintf( ps->output_file, " stroke\n" );
 #endif
     ps->pnt_cnt = 0;

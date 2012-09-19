@@ -42,6 +42,7 @@ extern void _GXCDraw_DrawLine(GXWindow gw, int32 x,int32 y, int32 xend,int32 yen
 extern void _GXCDraw_DrawRect(GXWindow gw, GRect *rect);
 extern void _GXCDraw_FillRect(GXWindow gw, GRect *rect);
 extern void _GXCDraw_FillRoundRect(GXWindow gw, GRect *rect, int radius);
+extern void _GXCDraw_DrawArc(GXWindow gw, GRect *rect, int32 sangle, int32 tangle);
 extern void _GXCDraw_DrawEllipse(GXWindow gw, GRect *rect);
 extern void _GXCDraw_FillEllipse(GXWindow gw, GRect *rect);
 extern void _GXCDraw_DrawPoly(GXWindow gw, GPoint *pts, int16 cnt);
