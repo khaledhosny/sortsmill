@@ -35,12 +35,14 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#if defined(__MINGW32__)
+#ifndef HAVE_PTHREAD_H
+
 void* GIO_dispatch(GIOControl* gc) { return 0;}
 void GIO_cancel(GIOControl* gc) {}
 void GIO_init(void* handle, struct stdfuncs* _stdfuncs, int index) {}
 void GIO_term(void) {}
-#else
+
+#else // HAVE_PTHREAD_H
 
 #include <sys/socket.h>
 
@@ -728,4 +730,5 @@ void GIO_init(void *handle,struct stdfuncs *_stdfuncs,int index) {
 
 void GIO_term(void) {
 }
-#endif /* !__MINGW32__ */
+
+#endif // HAVE_PTHREAD_H
