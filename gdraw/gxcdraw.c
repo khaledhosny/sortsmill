@@ -207,7 +207,10 @@ void _GXCDraw_Clear(GWindow w, GRect *rect) {
     cairo_fill(gw->cc);
 }
 
-void _GXCDraw_DrawLine(GXWindow gw, int32 x,int32 y, int32 xend,int32 yend) {
+void _GXCDraw_DrawLine(GWindow w, int32 x, int32 y, int32 xend, int32 yend, Color col) {
+    GXWindow gw = (GXWindow) w;
+    gw->ggc->fg = col;
+
     int width = GXCDrawSetline(gw,gw->ggc);
 
     cairo_new_path(gw->cc);
@@ -221,7 +224,10 @@ void _GXCDraw_DrawLine(GXWindow gw, int32 x,int32 y, int32 xend,int32 yend) {
     cairo_stroke(gw->cc);
 }
 
-void _GXCDraw_DrawRect(GXWindow gw, GRect *rect) {
+void _GXCDraw_DrawRect(GWindow w, GRect *rect, Color col) {
+    GXWindow gw = (GXWindow) w;
+    gw->ggc->fg = col;
+
     int width = GXCDrawSetline(gw,gw->ggc);
 
     cairo_new_path(gw->cc);
@@ -233,7 +239,10 @@ void _GXCDraw_DrawRect(GXWindow gw, GRect *rect) {
     cairo_stroke(gw->cc);
 }
 
-void _GXCDraw_FillRect(GXWindow gw, GRect *rect) {
+void _GXCDraw_FillRect(GWindow w, GRect *rect, Color col) {
+    GXWindow gw = (GXWindow) w;
+    gw->ggc->fg = col;
+
     GXCDrawSetcolfunc(gw,gw->ggc);
 
     cairo_new_path(gw->cc);
@@ -241,8 +250,10 @@ void _GXCDraw_FillRect(GXWindow gw, GRect *rect) {
     cairo_fill(gw->cc);
 }
 
-void _GXCDraw_FillRoundRect(GXWindow gw, GRect *rect, int radius) {
+void _GXCDraw_FillRoundRect(GWindow w, GRect *rect, int radius, Color col) {
     double degrees = M_PI / 180.0;
+    GXWindow gw = (GXWindow) w;
+    gw->ggc->fg = col;
 
     GXCDrawSetcolfunc(gw,gw->ggc);
 

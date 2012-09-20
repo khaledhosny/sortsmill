@@ -38,10 +38,10 @@ extern void _GXCDraw_PushClip(GXWindow gw);
 extern void _GXCDraw_PopClip(GXWindow gw);
 
 extern void _GXCDraw_Clear(GWindow w, GRect *rect);
-extern void _GXCDraw_DrawLine(GXWindow gw, int32 x,int32 y, int32 xend,int32 yend);
-extern void _GXCDraw_DrawRect(GXWindow gw, GRect *rect);
-extern void _GXCDraw_FillRect(GXWindow gw, GRect *rect);
-extern void _GXCDraw_FillRoundRect(GXWindow gw, GRect *rect, int radius);
+extern void _GXCDraw_DrawLine(GWindow w, int32 x,int32 y, int32 xend,int32 yend, Color col);
+extern void _GXCDraw_DrawRect(GWindow w, GRect *rect, Color col);
+extern void _GXCDraw_FillRect(GWindow w, GRect *rect, Color col);
+extern void _GXCDraw_FillRoundRect(GWindow w, GRect *rect, int radius, Color col);
 extern void _GXCDraw_DrawArc(GWindow w, GRect *rect, int32 sangle, int32 tangle, Color col);
 extern void _GXCDraw_DrawEllipse(GWindow w, GRect *rect, Color col);
 extern void _GXCDraw_FillEllipse(GWindow w, GRect *rect, Color col);
