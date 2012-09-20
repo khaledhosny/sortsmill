@@ -436,9 +436,6 @@ void GDrawFillElipse(GWindow w, GRect *rect, Color col) {
 	(w->display->funcs->fillElipse)(w,rect,col);
 }
 
-/* angles expressed as in X, in 64's of a degree with 0 angle at 3 o'clock */
-/*  and positive measured counter-clockwise (or the same way as in polar coords)*/
-/* tangle is NOT the end angle, it's the angle offset from the first to the end*/
 void GDrawDrawArc(GWindow w, GRect *rect, int32 sangle, int32 tangle, Color col) {
     if ( col!=COLOR_UNKNOWN )
 	(w->display->funcs->drawArc)(w,rect,sangle,tangle,col);
