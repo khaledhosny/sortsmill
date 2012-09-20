@@ -394,9 +394,8 @@ void _GXCDraw_PathStartSubNew(GWindow w) {
     cairo_new_sub_path( ((GXWindow) w)->cc );
 }
 
-int _GXCDraw_FillRuleSetWinding(GWindow w) {
+void _GXCDraw_FillRuleSetWinding(GWindow w) {
     cairo_set_fill_rule(((GXWindow) w)->cc,CAIRO_FILL_RULE_WINDING);
-    return 1;
 }
 
 void _GXCDraw_PathClose(GWindow w) {

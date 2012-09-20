@@ -574,8 +574,8 @@ void GDrawPathStartSubNew(GWindow w) {
     (w->display->funcs->startNewSubPath)(w);
 }
 
-int GDrawFillRuleSetWinding(GWindow w) {
-    return (w->display->funcs->fillRuleSetWinding)(w);
+void GDrawFillRuleSetWinding(GWindow w) {
+    (w->display->funcs->fillRuleSetWinding)(w);
 }
 
 void GDrawPathClose(GWindow w) {

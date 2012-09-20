@@ -263,7 +263,7 @@ struct displayfuncs {
     int  (*layoutLineCount)(GWindow w);
     int  (*layoutLineStart)(GWindow w,int line);
     void (*startNewSubPath)(GWindow w);
-    int  (*fillRuleSetWinding)(GWindow w);
+    void (*fillRuleSetWinding)(GWindow w);
 };
 
 extern GDisplay *_GXDraw_CreateDisplay(char *displayname,char *programname);
