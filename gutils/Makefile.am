@@ -65,7 +65,7 @@ libgutils_la_LDFLAGS = $(call ldflags,EXPORTED_LIBGUTILS_SYMBOLS)
 
 libgioftp_la_SOURCES = gioftp.c gioftpP.h
 
-EXPORTED_LIBGIOFTP_SYMBOLS = GIO_dispatch
+EXPORTED_LIBGIOFTP_SYMBOLS = GIO_cancel GIO_dispatch GIO_init GIO_term
 
 libgioftp_la_CPPFLAGS = $(AM_CPPFLAGS)
 libgioftp_la_LIBADD = $(top_builddir)/Unicode/libgunicode.la	\
