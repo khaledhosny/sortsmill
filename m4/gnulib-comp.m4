@@ -38,6 +38,9 @@ AC_DEFUN([gl_EARLY],
   m4_pattern_allow([^gl_LIBOBJS$])dnl a variable
   m4_pattern_allow([^gl_LTLIBOBJS$])dnl a variable
   AC_REQUIRE([gl_PROG_AR_RANLIB])
+  AC_REQUIRE([AM_PROG_CC_C_O])
+  # Code from module c-ctype:
+  # Code from module c-strcase:
   # Code from module errno:
   # Code from module error:
   # Code from module exitfail:
@@ -45,6 +48,11 @@ AC_DEFUN([gl_EARLY],
   AC_REQUIRE([gl_USE_SYSTEM_EXTENSIONS])
   # Code from module float:
   # Code from module gettext-h:
+  # Code from module gperf:
+  # Code from module havelib:
+  # Code from module iconv:
+  # Code from module iconv-h:
+  # Code from module iconv_open:
   # Code from module include_next:
   # Code from module inline:
   # Code from module intprops:
@@ -56,6 +64,7 @@ AC_DEFUN([gl_EARLY],
   # Code from module snippet/_Noreturn:
   # Code from module snippet/arg-nonnull:
   # Code from module snippet/c++defs:
+  # Code from module snippet/unused-parameter:
   # Code from module snippet/warn-on-use:
   # Code from module ssize_t:
   # Code from module stdbool:
@@ -71,6 +80,10 @@ AC_DEFUN([gl_EARLY],
   # Code from module strings:
   # Code from module sys_types:
   # Code from module unistd:
+  # Code from module unistr/base:
+  # Code from module unistr/u8-mbtoucr:
+  # Code from module unistr/u8-uctomb:
+  # Code from module unitypes:
   # Code from module verify:
   # Code from module xalloc:
   # Code from module xalloc-die:
@@ -109,6 +122,18 @@ AC_DEFUN([gl_INIT],
   fi
   AC_SUBST([LIBINTL])
   AC_SUBST([LTLIBINTL])
+  AM_ICONV
+  m4_ifdef([gl_ICONV_MODULE_INDICATOR],
+    [gl_ICONV_MODULE_INDICATOR([iconv])])
+  gl_ICONV_H
+  gl_FUNC_ICONV_OPEN
+  if test $REPLACE_ICONV_OPEN = 1; then
+    AC_LIBOBJ([iconv_open])
+  fi
+  if test $REPLACE_ICONV = 1; then
+    AC_LIBOBJ([iconv])
+    AC_LIBOBJ([iconv_close])
+  fi
   gl_INLINE
   gl_MATH_H
   gl_FUNC_MEMCHR
@@ -168,6 +193,12 @@ AC_DEFUN([gl_INIT],
   gl_SYS_TYPES_H
   AC_PROG_MKDIR_P
   gl_UNISTD_H
+  gl_LIBUNISTRING_LIBHEADER([0.9.2], [unistr.h])
+  gl_MODULE_INDICATOR([unistr/u8-mbtoucr])
+  gl_LIBUNISTRING_MODULE([0.9], [unistr/u8-mbtoucr])
+  gl_MODULE_INDICATOR([unistr/u8-uctomb])
+  gl_LIBUNISTRING_MODULE([0.9], [unistr/u8-uctomb])
+  gl_LIBUNISTRING_LIBHEADER([0.9], [unitypes.h])
   gl_XALLOC
   # End of code from modules
   m4_ifval(gl_LIBSOURCES_LIST, [
@@ -305,10 +336,17 @@ AC_DEFUN([gltests_LIBSOURCES], [
 # This macro records the list of files which have been installed by
 # gnulib-tool and may be removed by future gnulib-tool invocations.
 AC_DEFUN([gl_FILE_LIST], [
+  build-aux/config.rpath
   build-aux/snippet/_Noreturn.h
   build-aux/snippet/arg-nonnull.h
   build-aux/snippet/c++defs.h
+  build-aux/snippet/unused-parameter.h
   build-aux/snippet/warn-on-use.h
+  lib/c-ctype.c
+  lib/c-ctype.h
+  lib/c-strcase.h
+  lib/c-strcasecmp.c
+  lib/c-strncasecmp.c
   lib/errno.in.h
   lib/error.c
   lib/error.h
@@ -317,6 +355,15 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/float.c
   lib/float.in.h
   lib/gettext.h
+  lib/iconv.c
+  lib/iconv.in.h
+  lib/iconv_close.c
+  lib/iconv_open-aix.gperf
+  lib/iconv_open-hpux.gperf
+  lib/iconv_open-irix.gperf
+  lib/iconv_open-osf.gperf
+  lib/iconv_open-solaris.gperf
+  lib/iconv_open.c
   lib/intprops.h
   lib/itold.c
   lib/math.in.h
@@ -341,6 +388,11 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/strncasecmp.c
   lib/sys_types.in.h
   lib/unistd.in.h
+  lib/unistr.in.h
+  lib/unistr/u8-mbtoucr.c
+  lib/unistr/u8-uctomb-aux.c
+  lib/unistr/u8-uctomb.c
+  lib/unitypes.in.h
   lib/verify.h
   lib/xalloc-die.c
   lib/xalloc-oversized.h
@@ -352,8 +404,15 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/extensions.m4
   m4/float_h.m4
   m4/gnulib-common.m4
+  m4/iconv.m4
+  m4/iconv_h.m4
+  m4/iconv_open.m4
   m4/include_next.m4
   m4/inline.m4
+  m4/lib-ld.m4
+  m4/lib-link.m4
+  m4/lib-prefix.m4
+  m4/libunistring-base.m4
   m4/longlong.m4
   m4/math_h.m4
   m4/memchr.m4

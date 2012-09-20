@@ -27,6 +27,9 @@
 #ifndef _GRESOURCE_H
 #define _GRESOURCE_H
 
+#include <config.h>
+
+#include <gwwiconv.h>
 #include "gdraw.h"
 
 enum res_type { rt_int, rt_double, rt_bool/* int */, rt_color, rt_string };
@@ -44,10 +47,6 @@ typedef struct gresstruct {
 
 extern char *GResourceProgramName, *GResourceFullProgram, *GResourceProgramDir;
 extern int local_encoding;
-#if HAVE_ICONV_H
-# include <iconv.h>
-extern char *iconv_local_encoding_name;
-#endif
 
 void GResourceSetProg(char *prog);
 void GResourceAddResourceFile(char *filename,char *prog,int warn);

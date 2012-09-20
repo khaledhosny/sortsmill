@@ -39,9 +39,9 @@ AM_CPPFLAGS = -I$(top_builddir)/lib -I$(top_srcdir)/lib	\
 
 # Using -release instead of -version-info seems appropriate in the
 # absence of a well defined ABI.
-COMMON_LD_FLAGS = 							\
-	-release $(VERSION)						\
-	$(MY_CFLAGS) $(MY_LIBS)	$(LTLIBINTL)
+COMMON_LD_FLAGS = 										\
+	-release $(VERSION)									\
+	$(MY_CFLAGS) $(MY_LIBS) $(LTLIBICONV) $(LTLIBINTL)
 
 ldflags = $(COMMON_LD_FLAGS) \
 	$(if $($1), -export-symbols-regex '$(call prep_symbols_regex,$1)')
