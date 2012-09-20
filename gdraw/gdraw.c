@@ -34,7 +34,6 @@
 */
 
 GDisplay *screen_display = NULL;
-GDisplay *printer_display = NULL;
 
 #if 0
 void GDrawInit(GDisplay *disp) {
@@ -733,24 +732,6 @@ void GDrawSyncThread(GDisplay *gdisp, void (*func)(void *), void *data) {
     (gdisp->funcs->syncThread)(gdisp,func,data);
 }
 
-GWindow GPrinterStartJob(GDisplay *gdisp,void *user_data,GPrinterAttrs *attrs) {
-    if ( gdisp==NULL )
-	gdisp = printer_display;
-return( (gdisp->funcs->startJob)(gdisp,user_data,attrs) );
-}
-
-void GPrinterNextPage(GWindow w) {
-    if ( w==NULL )
-	w = printer_display->groot;
-    (w->display->funcs->nextPage)(w);
-}
-
-int GPrinterEndJob(GWindow w,int cancel) {
-    if ( w==NULL )
-	w = printer_display->groot;
-return( (w->display->funcs->endJob)(w,cancel) );
-}
-
 int GDrawRequestDeviceEvents(GWindow w,int devcnt,struct gdeveventmask *de) {
 return( (w->display->funcs->requestDeviceEvents)(w,devcnt,de) );
 }
@@ -837,7 +818,6 @@ return;
 void GDrawCreateDisplays(char *displayname,char *programname) {
     GIO_SetThreadCallback((void (*)(void *,void *,void *)) GDrawSyncThread);
     screen_display = _GXDraw_CreateDisplay(displayname,programname);
-    printer_display = _GPSDraw_CreateDisplay();
     if ( screen_display==NULL ) {
 	fprintf( stderr, "Could not open screen.\n" );
 #if __Mac

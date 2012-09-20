@@ -3836,20 +3836,6 @@ static void GXResourceInit(GXDisplay *gdisp,char *programname) {
     gdisp->twobmouse_win = tbf;
 }
 
-static GWindow GXPrinterStartJob(GDisplay *gdisp,void *user_data,GPrinterAttrs *attrs) {
-    fprintf(stderr, "Invalid call to GPrinterStartJob on X display\n" );
-return( NULL );
-}
-
-static void GXPrinterNextPage(GWindow w) {
-    fprintf(stderr, "Invalid call to GPrinterNextPage on X display\n" );
-}
-
-static int GXPrinterEndJob(GWindow w,int cancel) {
-    fprintf(stderr, "Invalid call to GPrinterEndJob on X display\n" );
-return( false );
-}
-
 static struct displayfuncs xfuncs = {
     GXDrawInit,
     GXDrawTerm,
@@ -3943,10 +3929,6 @@ static struct displayfuncs xfuncs = {
     GXDrawCancelTimer,
 
     GXDrawSyncThread,
-
-    GXPrinterStartJob,
-    GXPrinterNextPage,
-    GXPrinterEndJob,
 
     _GXPDraw_FontMetrics,
 

@@ -450,10 +450,6 @@ extern void GDrawCancelTimer(GTimer *timer);
 
 extern void GDrawSyncThread(GDisplay *gd, void (*func)(void *), void *data);
 
-extern GWindow GPrinterStartJob(GDisplay *gdisp,void *user_data,GPrinterAttrs *attrs);
-extern void GPrinterNextPage(GWindow w);
-extern int  GPrinterEndJob(GWindow w,int cancel);
-
 extern void GDrawSetBuildCharHooks(void (*hook)(GDisplay *), void (*inshook)(GDisplay *,unichar_t));
 
 extern int GDrawRequestDeviceEvents(GWindow w,int devcnt,struct gdeveventmask *de);

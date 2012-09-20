@@ -239,10 +239,6 @@ struct displayfuncs {
 
     void (*syncThread)(GDisplay *gd, void (*func)(void *), void *data);
 
-    GWindow (*startJob)(GDisplay *gdisp,void *user_data,GPrinterAttrs *attrs);
-    void (*nextPage)(GWindow w);
-    int (*endJob)(GWindow w,int cancel);
-
     void (*getFontMetrics)(GWindow,GFont *,int *,int *,int *);
 
     void (*stroke)(GWindow w, Color col);
@@ -261,7 +257,6 @@ struct displayfuncs {
 };
 
 extern GDisplay *_GXDraw_CreateDisplay(char *displayname,char *programname);
-extern GDisplay *_GPSDraw_CreateDisplay(void);
 extern void _GDraw_InitError(GDisplay *);
 extern void _GDraw_ComposeChars(GDisplay *gdisp,GEvent *gevent);
 
