@@ -350,7 +350,6 @@ extern int _GXDraw_WindowOrParentsDying(GXWindow gw);
 extern void _GXDraw_SetClipFunc(GXDisplay *gdisp, GGC *mine);
 extern struct gcol *_GXDraw_GetScreenPixelInfo(GXDisplay *gdisp, int red, int green, int blue);
 extern unsigned long _GXDraw_GetScreenPixel(GXDisplay *gdisp, Color col);
-extern GImage *_GImageExtract(struct _GImage *base,GRect *src,GRect *size, double xscale, double yscale);
 
 extern void _XSyncScreen(void);
 

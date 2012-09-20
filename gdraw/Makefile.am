@@ -32,7 +32,7 @@ libgdraw_la_SOURCES = choosericons.c ctlvalues.c drawboxborder.c		\
 	gdrawbuildchars.c gdrawerror.c gdrawtxt.c gdrawtxtinit.c			\
 	gfilechooser.c gfiledlg.c ggadgets.c ggroupbox.c gimageclut.c		\
 	gimagecvt.c gimagepsdraw.c gimagewriteeps.c gdrawgimage.c			\
-	gimagexdraw.c gkeysym.c glist.c gmenu.c gprogress.c gpsdraw.c		\
+	gkeysym.c glist.c gmenu.c gprogress.c gpsdraw.c		\
 	gpstxtinit.c gradio.c gresource.c gresourceimage.c gresedit.c		\
 	gsavefiledlg.c gscrollbar.c gtabset.c gtextfield.c gtextinfo.c		\
 	gwidgets.c gxdraw.c gxcdraw.c ghvbox.c gmatrixedit.c gdrawable.c	\
