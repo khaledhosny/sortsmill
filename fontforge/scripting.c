@@ -9058,7 +9058,10 @@ static void handlename(Context *c,Val *val) {
 		val->u.lval = &c->trace;
 	    } else if ( strcmp(name,"$version")==0 ) {
 		val->type = v_str;
-		sprintf(name,"%d", library_version_configuration.library_source_versiondate);
+		// FIXME: What do we really want to go here?
+		//
+		//sprintf(name,"%d", library_version_configuration.library_source_versiondate);
+		sprintf(name,"%s", PACKAGE_VERSION);
 		val->u.sval = copy(name);
 	    } else if ( strcmp(name,"$haspython")==0 ) {
 		val->type = v_int;

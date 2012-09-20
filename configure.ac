@@ -34,7 +34,8 @@ AC_PREREQ([2.68])
 # FIXME: Go through the code and replace explicit ‘fontforge’ with the
 # configured package name, where appropriate. For now, call the
 # package fontforge.
-AC_INIT([fontforge],[2.0.0_alpha1],[https://github.com/sortsmill/fontforge/issues])
+AC_INIT([fontforge],[2.0.0_alpha1],[https://github.com/sortsmill/fontforge/issues],
+        [],[https://github.com/sortsmill/fontforge])
 
 AC_CONFIG_SRCDIR([Unicode/ArabicForms.c])
 
@@ -174,16 +175,6 @@ FONTFORGE_ARG_ENABLE([tile-path],
         [AS_HELP_STRING([--enable-tile-path],
                 [enable a 'tile path' command (a variant of 'expand stroke')])],
         [FONTFORGE_CONFIG_TILEPATH])
-
-# FIXME: Get rid of this after making the Makefiles relatively secure
-# against corruption. (For instance, make sure noinst_PROGRAMS has
-# been replaced by EXTRA_PROGRAMS, and eliminate the stamper.)
-FONTFORGE_ARG_ENABLE([maintainer-tools],
-        [AS_HELP_STRING([--enable-maintainer-tools],
-                [build programs used normally only by fontforge maintainers and developers])],
-        [MAINTAINER_TOOLS])
-AM_CONDITIONAL([MAINTAINER_TOOLS],[test x"${i_do_have_maintainer_tools}" = xyes])
-AC_SUBST([MAINTAINER_TOOLS],["${i_do_have_maintainer_tools}"])
 
 # Enable this experimental feature via an obscure cache variable
 # rather than --enable.

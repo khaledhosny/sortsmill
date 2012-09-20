@@ -85,8 +85,7 @@ static int svg_outfontheader(FILE *file, SplineFont *sf,int layer) {
     }
     fprintf( file, "<svg>\n" );
     time(&now);
-    fprintf( file, "<metadata>\nCreated by FontForge %d at %s",
-	    library_version_configuration.library_source_versiondate, ctime(&now) );
+    fprintf( file, "<metadata>\nCreated by %s at %s", PACKAGE_STRING, ctime(&now) );
     if ( author!=NULL )
 	fprintf(file," By %s\n", author);
     else

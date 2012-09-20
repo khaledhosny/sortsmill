@@ -62,13 +62,13 @@ FFSCRIPT_HEADER = "\#!$(bindir)/fontforge -lang=ff"
 
 noinst_HEADERS = fontforgeui.h sftextfieldP.h configure-fontforge.h	\
 	views.h is_LIGATURE.h flaglist.h namelist_data.h chunkalloc.h
-pkginclude_HEADERS = autowidth2.h configure-fontforge.h fontforge.h		\
-	libffstamp.h psfont.h stemdb.h autowidth.h delta.h fontforgevw.h	\
-	lookups.h savefont.h ttf.h baseviews.h fvmetrics.h mm.h				\
-	scriptfuncs.h ttfinstrs.h edgelist2.h namehash.h scripting.h		\
-	uiinterface.h bezctx_ff.h edgelist.h groups.h nonlineartrans.h		\
-	sd.h unicoderange.h bitmapcontrol.h encoding.h ofl.h search.h		\
-	usermenu.h fffreetype.h PfEd.h sfd1.h ffpython.h import.h			\
+pkginclude_HEADERS = autowidth2.h configure-fontforge.h fontforge.h	\
+	psfont.h stemdb.h autowidth.h delta.h fontforgevw.h lookups.h	\
+	savefont.h ttf.h baseviews.h fvmetrics.h mm.h scriptfuncs.h		\
+	ttfinstrs.h edgelist2.h namehash.h scripting.h uiinterface.h	\
+	bezctx_ff.h edgelist.h groups.h nonlineartrans.h sd.h			\
+	unicoderange.h bitmapcontrol.h encoding.h ofl.h search.h		\
+	usermenu.h fffreetype.h PfEd.h sfd1.h ffpython.h import.h		\
 	plugins.h sflayoutP.h print.h splinefont.h annotations.h
 
 #--------------------------------------------------------------------------
@@ -100,9 +100,8 @@ libfontforge_la_SOURCES = asmfpst.c autohint.c autosave.c autotrace.c	\
 	splinestroke.c splineutil2.c splineutil.c start.c stemdb.c svg.c	\
 	tottfaat.c tottfgpos.c tottf.c tottfvar.c ttfinstrs.c				\
 	ttfspecial.c ufo.c unicoderange.c utils.c winfonts.c zapfnomen.c	\
-	groups.c langfreq.c ftdelta.c autowidth2.c woff.c stamp.c			\
-	activeinui.c pluginloading.c is_LIGATURE.c flaglist.c
-nodist_libfontforge_la_SOURCES = libstamp.c
+	groups.c langfreq.c ftdelta.c autowidth2.c woff.c activeinui.c		\
+	pluginloading.c is_LIGATURE.c flaglist.c
 EXTRA_libfontforge_la_SOURCES = splinerefigure.c
 
 PLUGIN_HOOKS = AddEncoding AddScriptingCommand
@@ -383,8 +382,6 @@ libfontforgeexe_la_SOURCES = startnoui.c
 
 endif !GRAPHICAL_USER_INTERFACE
 
-nodist_libfontforgeexe_la_SOURCES = exelibstamp.c
-
 EXPORTED_LIBFONTFORGEEXE_SYMBOLS = fontforge_main
 
 libfontforgeexe_la_CPPFLAGS = $(AM_CPPFLAGS)
@@ -417,11 +414,9 @@ splinerefigure.lo: $(srcdir)/splinerefigure.c $(srcdir)/splinefont.h
 
 #--------------------------------------------------------------------------
 
-EXTRA_DIST = fontimage.pe fontlint.pe sfddiff.pe libstamp.pre	\
-	exelibstamp.pre fontimage.1 fontlint.1 sfddiff.1			\
-	MacFontForgeApp.zip darwinsetup.in
-MOSTLYCLEANFILES = fontimage fontlint sfddiff libstamp.c	\
-	exelibstamp.c
+EXTRA_DIST = fontimage.pe fontlint.pe sfddiff.pe fontimage.1	\
+	fontlint.1 sfddiff.1 MacFontForgeApp.zip darwinsetup.in
+MOSTLYCLEANFILES = fontimage fontlint sfddiff
 
 #--------------------------------------------------------------------------
 
@@ -432,11 +427,12 @@ if MACINTOSH
 install-exec-local: FontForge.app/Contents/Info.plist
 	$(SHELL) -x darwinsetup
 
-FontForge.app/Contents/Info.plist: $(srcdir)/MacFontForgeApp.zip $(srcdir)/stamp.c clean-darwin-stuff
+FontForge.app/Contents/Info.plist: $(srcdir)/MacFontForgeApp.zip clean-darwin-stuff
 	$(UNZIP) $(srcdir)/MacFontForgeApp.zip
 	mkdir -p darwinsetup_tmpdir
 	cp FontForge.app/Contents/Info.plist darwinsetup_tmpdir
-	( VERSION=`$(GREP) source_version_str $(srcdir)/stamp.c | $(SED) 's/const char \*source_version_str = "//' | $(SED) 's/";//'` ; $(SED) "s/20080810/$$VERSION/" < darwinsetup_tmpdir/Info.plist > FontForge.app/Contents/Info.plist )
+# FIXME: What should go here?
+#	( VERSION=`$(GREP) source_version_str $(srcdir)/stamp.c | $(SED) 's/const char \*source_version_str = "//' | $(SED) 's/";//'` ; $(SED) "s/20080810/$$VERSION/" < darwinsetup_tmpdir/Info.plist > FontForge.app/Contents/Info.plist )
 
 mostlyclean-local: clean-darwin-stuff
 
@@ -449,47 +445,5 @@ clean-darwin-stuff:
 		echo rm -r -f __MACOSX; else :; fi
 
 endif MACINTOSH
-
-#--------------------------------------------------------------------------
-#
-# FIXME: Get rid of the stamper.
-
-#######################################################################
-# The maintainer tools such as "stamper" are built if you configure   #
-# with --enable-maintainer-tools                                      #
-#######################################################################
-if MAINTAINER_TOOLS
-
-# You need to build the "fontforge" program to do the stamps for
-# release.
-if THE_PROGRAMS
-
-#######################################################################
-# Run "make stamps-for-release" with GNU Make before doing a release. #
-#######################################################################
-stamps-for-release: stamper $(LIBFFSTAMP_H_DEPENDS) $(STAMP_C_DEPENDS)
-	$(builddir)/stamper$(EXEEXT) > $(srcdir)/stamp.c
-	$(builddir)/stamper$(EXEEXT) -l > $(srcdir)/libffstamp.h
-
-EXTRA_PROGRAMS = stamper
-stamper_SOURCES = stamper.c
-stamper_LDADD = $(top_builddir)/Unicode/libgunicode.la
-
-LIBFFSTAMP_H_DEPENDS = \
-	$(filter-out libfontforge_la-stamp.lo, \
-		$(filter %.$(OBJEXT) %.lo, \
-			$(addprefix libfontforge_la-, $(LIBFF_C_SRCFILES:.c=.lo))))
-STAMP_C_DEPENDS = \
-	$(LIBFFSTAMP_H_DEPENDS) \
-	$(filter %.$(OBJEXT) %.lo, \
-		$(addprefix fontforge-, $(FF_C_SRCFILES:.c=.$(OBJEXT))) \
-		$(addprefix libfontforgeexe_la-, $(LIBFFEXE_C_SRCFILES:.c=.lo)) \
-		$(EXTRA_LIBFF_C_SRCFILES:.c=.lo))
-
-$(srcdir)/stamp.c: stamper $(STAMP_C_DEPENDS) 
-$(srcdir)/libffstamp.h: stamper $(LIBFFSTAMP_H_DEPENDS) 
-
-endif # THE_PROGRAMS
-endif # MAINTAINER_TOOLS
 
 #--------------------------------------------------------------------------

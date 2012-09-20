@@ -708,7 +708,10 @@ return( ret );
 static PyObject *PyFF_Version(PyObject *UNUSED(self), PyObject *UNUSED(args)) {
     char buffer[20];
 
-    sprintf( buffer, "%d", library_version_configuration.library_source_versiondate);
+    // FIXME: What do we really want to go here?
+    //
+    //sprintf( buffer, "%d", library_version_configuration.library_source_versiondate);
+    sprintf( buffer, "%s", PACKAGE_VERSION);
 return( Py_BuildValue("s", buffer ));
 }
 
@@ -18243,32 +18246,24 @@ void FontForge_PythonInit(void) {
 /* ************************************************************************** */
 
 static void SetPythonModuleMetadata( PyObject *module ) {
-    char ver[32];
-    char isodate[32];
+    //char isodate[32];
     PyObject* pyver;
-    PyObject* pydate;
-    int dt = library_version_configuration.library_source_versiondate;
+    //PyObject* pydate;
+    //int dt = library_version_configuration.library_source_versiondate;
 
     /* Make __version__ string */
-    if ( library_version_configuration.major <= 1 )
-	snprintf(ver, sizeof(ver), "%u.%u.%d",
-		 library_version_configuration.major,
-		 library_version_configuration.minor,
-		 library_version_configuration.library_source_versiondate );
-    else
-	snprintf(ver, sizeof(ver), "%u.%u",
-		 library_version_configuration.major,
-		 library_version_configuration.minor );
-    pyver = STRING_TO_PY(ver);
+    pyver = STRING_TO_PY(PACKAGE_VERSION);
     Py_INCREF(pyver);
     PyModule_AddObject(module, "__version__", pyver);
 
+    // FIXME: What do we really want here?
+    //
     /* Make __date__ string */
-    snprintf(isodate, sizeof(isodate), "%04d-%02d-%02d",
-	     (dt / 10000), (dt / 100) % 100, dt % 100 );
-    pydate = STRING_TO_PY(isodate);
-    Py_INCREF(pydate);
-    PyModule_AddObject(module, "__date__", pydate);
+    //snprintf(isodate, sizeof(isodate), "%04d-%02d-%02d",
+    //         (dt / 10000), (dt / 100) % 100, dt % 100 );
+    //pydate = STRING_TO_PY(isodate);
+    //Py_INCREF(pydate);
+    //PyModule_AddObject(module, "__date__", pydate);
 }
 
 

@@ -124,8 +124,8 @@ static void _doscriptusage(void) {
     printf( "Any arguments after the script file will be passed to it.\n");
     printf( "If the first argument is an executable filename, and that file's first\n" );
     printf( "\tline contains \"fontforge\" then it will be treated as a scriptfile.\n\n" );
-    printf( "For more information see:\n\thttp://fontforge.sourceforge.net/\n" );
-    printf( "Send bug reports to:\tfontforge-devel@lists.sourceforge.net\n" );
+    printf( "For more information see:\n\t%s\n", PACKAGE_URL );
+    printf( "Submit bug reports at:\t%s\n", PACKAGE_BUGREPORT );
 }
 
 static void doscriptusage(void) {
@@ -140,11 +140,7 @@ exit(0);
 }
 
 int fontforge_main( int argc, char **argv ) {
-    extern const char *source_version_str;
-    extern const char *source_modtime_str;
-
-    fprintf( stderr, "Copyright (c) 2000-2012 by George Williams.\n Executable based on sources from %s"
-	    "-ML"
+    fprintf( stderr, "Copyright (c) 2000-2012 by George Williams and others.\n%s"
 #ifdef FREETYPE_HAS_DEBUGGER
 	    "-TtfDb"
 #endif
@@ -155,8 +151,7 @@ int fontforge_main( int argc, char **argv ) {
 	    "-D"
 #endif
 	    ".\n",
-	    source_modtime_str );
-    fprintf( stderr, " Library based on sources from %s.\n", library_version_configuration.library_source_modtime_string );
+	    PACKAGE_STRING );
 
     /* I don't bother to check that the exe's exectations of the library are */
     /*  valid. The exe only consists of this file, and so it doesn't care. */
@@ -182,8 +177,10 @@ int fontforge_main( int argc, char **argv ) {
 	    doscriptusage();
 	else if ( strcmp(pt,"-help")==0 )
 	    doscripthelp();
-	else if ( strcmp(pt,"-version")==0 )
-	    doversion(source_version_str);
+	else if ( strcmp(pt,"-version")==0 ) {
+	    printf("%s\n", PACKAGE_STRING);
+	    exit(0);
+	}
     }
 #  if defined(_NO_PYTHON)
     ProcessNativeScript(argc, argv,stdin);

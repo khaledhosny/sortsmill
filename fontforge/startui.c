@@ -129,8 +129,8 @@ static void _dousage(void) {
     printf( "\tscriptfile and give it any remaining arguments\n" );
     printf( "If the first argument is an executable filename, and that file's first\n" );
     printf( "\tline contains \"fontforge\" then it will be treated as a scriptfile.\n\n" );
-    printf( "For more information see:\n\thttp://fontforge.sourceforge.net/\n" );
-    printf( "Send bug reports to:\tfontforge-devel@lists.sourceforge.net\n" );
+    printf( "For more information see:\n\t%s\n", PACKAGE_URL );
+    printf( "Submit bug reports at:\t%s\n", PACKAGE_BUGREPORT );
 }
 
 static void dousage(void) {
@@ -172,10 +172,11 @@ void ShowAboutScreen(void) {
 
 static void SplashLayout() {
     unichar_t *start, *pt, *lastspace;
-    extern const char *source_modtime_str;
-    extern const char *source_version_str;
 
-    uc_strcpy(msg, "When my father finished his book on Renaissance printing (The Craft of Printing and the Publication of Shakespeare's Works) he told me that I would have to write the chapter on computer typography. This is my attempt to do so.");
+    uc_strcpy(msg, "When my father finished his book on Renaissance printing"
+	      " (The Craft of Printing and the Publication of Shakespeare's Works)"
+	      " he told me that I would have to write the chapter on"
+	      " computer typography. This is my attempt to do so.");
 
     GDrawSetFont(splashw,splash_font);
     linecnt = 0;
@@ -200,11 +201,8 @@ static void SplashLayout() {
     uc_strcpy(pt, " FontForge used to be named PfaEdit.");
     pt += u_strlen(pt);
     lines[linecnt++] = pt;
-    uc_strcpy(pt,"  Version: ");;
-    uc_strcat(pt,source_modtime_str);
-    uc_strcat(pt," (");
-    uc_strcat(pt,source_version_str);
-    uc_strcat(pt,"-ML");
+    uc_strcpy(pt,"  Version: ");
+    uc_strcat(pt, PACKAGE_VERSION);
 #ifdef FREETYPE_HAS_DEBUGGER
     uc_strcat(pt,"-TtfDb");
 #endif
@@ -214,12 +212,9 @@ static void SplashLayout() {
 #ifdef FONTFORGE_CONFIG_USE_DOUBLE
     uc_strcat(pt,"-D");
 #endif
-    uc_strcat(pt,")");
     pt += u_strlen(pt);
-    lines[linecnt++] = pt;
-    uc_strcpy(pt,"  Library Version: ");
-    uc_strcat(pt,library_version_configuration.library_source_modtime_string);
-    lines[linecnt++] = pt+u_strlen(pt);
+    lines[linecnt] = pt;
+    linecnt++;
     lines[linecnt] = NULL;
     is = u_strchr(msg,'(');
     ie = u_strchr(msg,')');
@@ -753,8 +748,6 @@ static void GrokNavigationMask(void) {
 }
 
 int fontforge_main( int argc, char **argv ) {
-    extern const char *source_modtime_str;
-    extern const char *source_version_str;
     const char *load_prefs = getenv("FONTFORGE_LOADPREFS");
     int i;
     int recover=2;
@@ -771,8 +764,7 @@ int fontforge_main( int argc, char **argv ) {
     int local_x;
 #endif
 
-    fprintf( stderr, "Copyright (c) 2000-2012 by George Williams.\n Executable based on sources from %s"
-	    "-ML"
+    fprintf( stderr, "Copyright (c) 2000-2012 by George Williams and others.\n%s"
 #ifdef FREETYPE_HAS_DEBUGGER
 	    "-TtfDb"
 #endif
@@ -783,8 +775,7 @@ int fontforge_main( int argc, char **argv ) {
 	    "-D"
 #endif
 	    ".\n",
-	    source_modtime_str );
-    fprintf( stderr, " Library based on sources from %s.\n", library_version_configuration.library_source_modtime_string );
+	    PACKAGE_STRING );
 
     /* Must be done before we cache the current directory */
     for ( i=1; i<argc; ++i ) if ( strcmp(argv[i],"-home")==0 && getenv("HOME")!=NULL )
@@ -984,9 +975,10 @@ int fontforge_main( int argc, char **argv ) {
 	    dohelp();
 	else if ( strcmp(pt,"-help")==0 )
 	    dousage();
-	else if ( strcmp(pt,"-version")==0 )
-	    doversion(source_version_str);
-	else if ( strcmp(pt,"-quit")==0 )
+	else if ( strcmp(pt,"-version")==0 ) {
+	    printf("%s\n", PACKAGE_STRING);
+	    exit(0);
+	} else if ( strcmp(pt,"-quit")==0 )
 	    quit_request = true;
 	else if ( strcmp(pt,"-home")==0 ) {
 	    if ( getenv("HOME")!=NULL )
@@ -1017,7 +1009,7 @@ int fontforge_main( int argc, char **argv ) {
     /*  open won't get our error messages, and it's an important one */
     /* Scripting doesn't care about a mismatch, because scripting interpretation */
     /*  all lives in the library */
-    check_library_version(&exe_library_version_configuration,true,false);
+    //check_library_version(&exe_library_version_configuration,true,false);
 
     /* the splash screen used not to have a title bar (wam_nodecor) */
     /*  but I found I needed to know how much the window manager moved */
