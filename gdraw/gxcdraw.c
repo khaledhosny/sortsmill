@@ -1207,3 +1207,8 @@ return( -1 );
 
 return( line->start_index );
 }
+
+cairo_t * _GXCDraw_GetCairo(GWindow w) {
+    GXWindow gw = (GXWindow) w;
+    return (gw->cc);
+}

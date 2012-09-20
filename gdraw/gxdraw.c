@@ -3968,7 +3968,8 @@ static struct displayfuncs xfuncs = {
     _GXPDraw_LayoutLineCount,
     _GXPDraw_LayoutLineStart,
     _GXCDraw_PathStartSubNew,
-    _GXCDraw_FillRuleSetWinding
+    _GXCDraw_FillRuleSetWinding,
+    _GXCDraw_GetCairo
 };
 
 static void GDrawInitXKB(GXDisplay *gdisp) {

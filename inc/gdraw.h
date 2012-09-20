@@ -28,6 +28,7 @@
 #define _GDRAW_H
 #include "gimage.h"
 #include "charset.h"
+#include <cairo/cairo.h>
 
 enum font_style { fs_none, fs_italic=1, fs_smallcaps=2, fs_condensed=4, fs_extended=8, fs_vertical=16 };
 enum font_type { ft_unknown, ft_serif, ft_sans, ft_mono, ft_cursive, ft_max };
@@ -480,6 +481,7 @@ extern void GDrawLayoutExtents(GWindow w, GRect *size);
 extern void GDrawLayoutSetWidth(GWindow w, int width);
 extern int  GDrawLayoutLineCount(GWindow w);
 extern int  GDrawLayoutLineStart(GWindow w,int line);
+extern cairo_t * GDrawGetCairo(GWindow w);
 
 extern void GDrawFatalError(const char *fmt,...);
 extern void GDrawIError(const char *fmt,...);

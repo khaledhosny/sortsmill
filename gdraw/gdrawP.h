@@ -264,6 +264,7 @@ struct displayfuncs {
     int  (*layoutLineStart)(GWindow w,int line);
     void (*startNewSubPath)(GWindow w);
     void (*fillRuleSetWinding)(GWindow w);
+    cairo_t *(*getCairo)(GWindow w);
 };
 
 extern GDisplay *_GXDraw_CreateDisplay(char *displayname,char *programname);

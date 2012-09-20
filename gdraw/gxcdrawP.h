@@ -90,5 +90,6 @@ extern void _GXPDraw_LayoutExtents(GWindow w, GRect *size);
 extern void _GXPDraw_LayoutSetWidth(GWindow w, int width);
 extern int  _GXPDraw_LayoutLineCount(GWindow w);
 extern int  _GXPDraw_LayoutLineStart(GWindow w,int l);
+extern cairo_t * _GXCDraw_GetCairo(GWindow w);
 
 #endif /* _GXCDRAWP_H */

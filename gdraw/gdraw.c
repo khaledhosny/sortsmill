@@ -638,6 +638,10 @@ int  GDrawLayoutLineStart(GWindow w,int line) {
 return( (w->display->funcs->layoutLineStart)(w,line) );
 }
 
+cairo_t * GDrawGetCairo(GWindow w) {
+    return ((w->display->funcs->getCairo)(w));
+}
+
 
 GIC *GDrawCreateInputContext(GWindow w,enum gic_style def_style) {
 return(w->display->funcs->createInputContext)(w,def_style);
