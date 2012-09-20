@@ -51,7 +51,7 @@ prep_symbols = \
 		$(call prep_symbols_without_echo,$1); \
 	fi
 
-PREP_SYMBOLS_REGEX = $(SED) -e 's/ /|/g' -e 's/^/^/' -e 's/$$/$$/'
+PREP_SYMBOLS_REGEX = $(SED) -e 's/ /|/g' -e 's/^/^(/' -e 's/$$/)$$/'
 
 prep_symbols_regex = $(shell echo $($1) | $(PREP_SYMBOLS_REGEX))
 
