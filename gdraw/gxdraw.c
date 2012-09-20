@@ -2126,27 +2126,6 @@ static void _GXDraw_Pixmap( GWindow _w, GWindow _pixmap, GRect *src, int32 x, in
 			x,y);
 }
 
-static void _GXDraw_TilePixmap( GWindow _w, GWindow _pixmap, GRect *src, int32 x, int32 y) {
-    GXWindow gw = (GXWindow) _w, pixmap = (GXWindow) _pixmap;
-    GXDisplay *gdisp = gw->display;
-    GRect old;
-    int i,j;
-
-    GDrawPushClip(_w,src,&old);
-    GXDrawSetcolfunc(gdisp,gw->ggc);
-    for ( i=y; i<gw->ggc->clip.y+gw->ggc->clip.height; i+=pixmap->pos.height ) {
-	if ( i+pixmap->pos.height<gw->ggc->clip.y )
-    continue;
-	for ( j=x; j<gw->ggc->clip.x+gw->ggc->clip.width; j+=pixmap->pos.width ) {
-	    if ( j+pixmap->pos.width<gw->ggc->clip.x )
-	continue;
-	    _GXCDraw_CopyArea(pixmap,gw,&pixmap->pos,j,i);
-	}
-    }
-    GDrawPopClip(_w,&old);
-}
-
-
 static GIC *GXDrawCreateInputContext(GWindow w,enum gic_style def_style) {
     static int styles[] = { XIMPreeditNone | XIMStatusNone,
 	    XIMPreeditNothing | XIMStatusNothing,
@@ -4030,11 +4009,9 @@ static struct displayfuncs xfuncs = {
     GXDrawScroll,
 
     _GXCDraw_Image,
-    _GXCDraw_TileImage,
     _GXCDraw_Glyph,
     _GXCDraw_ImageMagnified,
     _GXDraw_Pixmap,
-    _GXDraw_TilePixmap,
 
     GXDrawCreateInputContext,
     GXDrawSetGIC,

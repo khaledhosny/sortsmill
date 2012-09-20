@@ -449,57 +449,6 @@ static void PSDrawImage(GPSWindow ps,GImage *image, GRect *dest, GRect *src) {
     fprintf( ps->output_file, "  grestore\n" );
 }
 
-static int PSBuildImagePattern(GPSWindow ps,struct _GImage *base, char *pattern_name) {
-    GPSDisplay *gdisp = ps->display;
-    GRect src;
-    int factor = gdisp->scale_screen_by;
-
-    if ( !IsImageStringable(base,base->width*base->height,gdisp->do_color))
-return( false );
-    src.x = src.y = 0; src.width = base->width; src.height = base->height;
-
-    fprintf( ps->output_file, "  gsave %g %g scale\n",
-	    base->width*factor*72.0/ps->res,
-	    base->height*factor*72.0/ps->res );
-
-    if ( base->image_type!=it_mono && base->trans!=-1 ) {
-	/* Must build a secondary pattern through which the primary pattern */
-	/*  will mask */
-	fprintf( ps->output_file, "<< /PatternType 1\n" );
-	fprintf( ps->output_file, "   /PaintType 1\n" );	/* coloured pattern */
-	fprintf( ps->output_file, "   /TilingType 2\n" );	/* Allow PS to distort pattern to make it fit */
-	fprintf( ps->output_file, "   /BBox [0 0 1 1]\n" );
-	fprintf( ps->output_file, "   /XStep 1 /YStep 1\n" );
-	fprintf( ps->output_file, "   /PaintProc { pop " );
-	PSDrawImg(ps,base,&src,false);
-	fprintf( ps->output_file, "} >> matrix makepattern /%s_Secondary exch def\n", pattern_name );
-    }
-    fprintf( ps->output_file, "<< /PatternType 1\n" );
-    fprintf( ps->output_file, "   /PaintType 1\n" );	/* coloured pattern */
-    fprintf( ps->output_file, "   /TilingType 2\n" );	/* Allow PS to distort pattern to make it fit */
-    fprintf( ps->output_file, "   /BBox [0 0 1 1]\n" );
-    fprintf( ps->output_file, "   /XStep 1 /YStep 1\n" );
-    fprintf( ps->output_file, "   /PaintProc { pop " );
-    if ( base->image_type==it_mono ) {
-	PSDrawMonoImg(ps,base,&src,false);
-    } else if ( base->trans==COLOR_UNKNOWN || !gdisp->do_transparent ) {
-	/* Just draw the image, don't worry about if it's transparent */
-	PSDrawImg(ps,base,&src,false);
-    } else {
-	fprintf( ps->output_file, "    %s_Secondary setpattern\n", pattern_name);
-	fprintf(ps->output_file, "%d %d true [%d 0 0 %d 0 %d] <~",
-		(int) base->width, (int) base->height,  (int) base->width, (int) -base->height, (int) base->height);
-	if ( base->image_type==it_index )
-	    PSBuildImageClutMaskString(ps,base,&src);
-	else
-	    PSBuildImage24MaskString(ps,base,&src);
-	fprintf(ps->output_file, "imagemask \n" );
-    }
-    fprintf( ps->output_file, "} >> matrix makepattern /%s exch def\n", pattern_name );
-    fprintf( ps->output_file, "  grestore\n" );
-return( true );
-}
-
 void _GPSDraw_InitPatterns(GPSWindow ps) {
 
     /* Need to output pattern defn for dotted filling, background fill pattern??? */
@@ -513,36 +462,6 @@ void _GPSDraw_InitPatterns(GPSWindow ps) {
     fprintf( ps->init_file, "   /PaintProc { pop 0 0 moveto 1 0 rlineto 0 1 rlineto -1 0 rlineto closepath fill\n" );
     fprintf( ps->init_file, "\t\t    1 1 moveto 1 0 rlineto 0 1 rlineto -1 0 rlineto closepath fill }\n" );
     fprintf( ps->init_file, ">> matrix makepattern /DotPattern exch def\n\n" );
-}
-
-static int PSTileImage(GPSWindow ps,struct _GImage *base, long x, long y,
-	int repeatx, int repeaty ) {
-    char *pattern_name = NULL;
-    int factor = ps->display->scale_screen_by;
-
-    _GPSDraw_SetClip(ps);
-    {
-	if ( !IsImageStringable(base,base->width*base->height,ps->display->do_color) )
-return( false );
-	if ( repeatx==1 && repeaty==1 )
-return( false );		/* Not worth it for just one drawing */
-	fprintf( ps->output_file, "  save mark\t%% Create a temporary pattern for tiling the background\n");
-	pattern_name = "g_background_pattern";
-	PSBuildImagePattern(ps,base, pattern_name);
-    }
-
-    fprintf( ps->output_file, "  %s setpattern\n", pattern_name );
-    _GPSDraw_FlushPath(ps);
-    fprintf( ps->output_file, "  %g %g  %g %g  %g %g  %g %g g_quad fill\n",
-	    _GSPDraw_XPos(ps,x), _GSPDraw_YPos(ps,y+repeaty*base->height*factor),
-	    _GSPDraw_XPos(ps,x+repeatx*base->width*factor), _GSPDraw_YPos(ps,y+repeaty*base->height*factor),
-	    _GSPDraw_XPos(ps,x+repeatx*base->width*factor), _GSPDraw_YPos(ps,y),
-	    _GSPDraw_XPos(ps,x), _GSPDraw_YPos(ps,y));
-    if ( base->image_type!=it_mono && base->trans!=COLOR_UNKNOWN &&
-	    ps->display->do_transparent )
-	fprintf( ps->output_file, "  /g_background_pattern_Secondary /Pattern undefineresource\n" );
-    fprintf( ps->output_file, "  /g_background_pattern /Pattern undefineresource cleartomark restore\n" );
-return( true );
 }
 
 void _GPSDraw_Image(GWindow w, GImage *image, GRect *src, int32 x, int32 y) {
@@ -567,27 +486,4 @@ void _GPSDraw_ImageMagnified(GWindow w, GImage *image, GRect *dest, int32 x, int
     src.y = dest->y * (base->height/(double) height);
     temp.x = x; temp.y = y; temp.width = dest->width; temp.height = dest->height;
     PSDrawImage(ps,image,&temp,&src);
-}
-
-void _GPSDraw_TileImage(GWindow w, GImage *image, GRect *dest, int32 x, int32 y) {
-    GPSWindow ps = (GPSWindow) w;
-    struct _GImage *base = image->list_len==0?image->u.image:image->u.images[0];
-    int xstart, ystart, xend, yend;
-    int factor = ps->display->scale_screen_by;
-    int width = factor*base->width, height = factor*base->height;
-    int i,j;
-
-    xstart = (dest->x-x)/width; ystart = (dest->y-y)/height;
-    xend = (dest->x+dest->width-x)/width; yend = (dest->y+dest->height-y)/height;
-    if ( !PSTileImage(ps,base,
-	    x+xstart*width,y+ystart*height,
-	    xend-xstart+1,yend-ystart+1)) {
-	GRect src; src.x = src.y = 0; src.width = base->width; src.height = height;
-	for ( j=ystart; j<=yend; ++j ) for ( i=xstart; i<=xend; ++i ) {
-	    GRect dest;
-	    dest.x = x+i*width; dest.y = y+j*height;
-	    dest.width = width; dest.height = height;
-	    PSDrawImage(ps,image, &dest, &src);
-	}
-    }
 }

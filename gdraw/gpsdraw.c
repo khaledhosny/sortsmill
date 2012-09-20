@@ -325,10 +325,6 @@ static void _PSDraw_Pixmap( GWindow UNUSED(_w), GWindow UNUSED(_pixmap),
         GRect *UNUSED(src), int32 UNUSED(x), int32 UNUSED(y)) {
 }
 
-static void _PSDraw_TilePixmap( GWindow UNUSED(_w), GWindow UNUSED(_pixmap),
-        GRect *UNUSED(src), int32 UNUSED(x), int32 UNUSED(y)) {
-}
-
 /* ************************************************************************** */
 /* ******************************* Draw Stuff ******************************* */
 /* ************************************************************************** */
@@ -1328,11 +1324,9 @@ static struct displayfuncs psfuncs = {
     PSDrawScroll,
 
     _GPSDraw_Image,
-    _GPSDraw_TileImage,
     _GPSDraw_Image,
     _GPSDraw_ImageMagnified,
     _PSDraw_Pixmap,
-    _PSDraw_TilePixmap,
 
     PSDrawCreateInputContext,
     PSDrawSetGIC,

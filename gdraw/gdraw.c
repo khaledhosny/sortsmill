@@ -495,22 +495,9 @@ void GDrawDrawGlyph(GWindow w, GImage *img, GRect *src, int32 x, int32 y) {
     (w->display->funcs->drawGlyph)(w,img,src,x,y);
 }
 
-/* We got an expose event for the src rectangle. The image is supposed to be */
-/*  tiled across the window starting at (x,y) and continuing at least to the */
-/*  limit of the expose event. Figure out how to draw what bits of the image */
-/*  where and how many times */
-void GDrawTileImage(GWindow w, GImage *img, GRect *src, int32 x, int32 y) {
-    (w->display->funcs->tileImage)(w,img,src,x,y);
-}
-
 /* same as drawImage except with pixmaps */
 void GDrawDrawPixmap(GWindow w, GWindow pixmap, GRect *src, int32 x, int32 y) {
     (w->display->funcs->drawPixmap)(w,pixmap,src,x,y);
-}
-
-/* same as tileImage except with pixmaps */
-void GDrawTilePixmap(GWindow w, GWindow pixmap, GRect *src, int32 x, int32 y) {
-    (w->display->funcs->tilePixmap)(w,pixmap,src,x,y);
 }
 
 /* We assume the full image is drawn starting at (x,y) and scaled to (width,height) */

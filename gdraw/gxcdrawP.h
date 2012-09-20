@@ -49,7 +49,6 @@ extern void _GXCDraw_DrawPoly(GWindow w, GPoint *pts, int16 cnt, Color col);
 extern void _GXCDraw_FillPoly(GWindow w, GPoint *pts, int16 cnt, Color col);
 
 extern void _GXCDraw_Image(GWindow w, GImage *image, GRect *src, int32 x, int32 y);
-extern void _GXCDraw_TileImage(GWindow w, GImage *image, GRect *src, int32 x, int32 y);
 extern void _GXCDraw_Glyph(GWindow w, GImage *image, GRect *src, int32 x, int32 y);;
 extern void _GXCDraw_ImageMagnified(GWindow w, GImage *image, GRect *magsrc,
 	int32 x, int32 y, int32 width, int32 height);

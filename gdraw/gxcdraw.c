@@ -702,10 +702,6 @@ void _GXCDraw_Image(GWindow w, GImage *image, GRect *src, int32 x, int32 y) {
     gw->cairo_state.fore_col = COLOR_UNKNOWN;
 }
 
-void _GXCDraw_TileImage(GWindow w, GImage *image, GRect *src, int32 x, int32 y) {
-    //GXWindow gw = (GXWindow) w;
-}
-
 /* What we really want to do is use the grey levels as an alpha channel */
 void _GXCDraw_Glyph(GWindow w, GImage *image, GRect *src, int32 x, int32 y) {
     GXWindow gw = (GXWindow) w;
