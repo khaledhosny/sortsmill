@@ -204,11 +204,9 @@ struct displayfuncs {
     void (*scroll)(GWindow, GRect *rect, int32 hor, int32 vert);
 
     void (*drawImage)(GWindow, GImage *, GRect *src, int32 x, int32 y);
-    void (*tileImage)(GWindow, GImage *, GRect *src, int32 x, int32 y);
     void (*drawGlyph)(GWindow, GImage *, GRect *src, int32 x, int32 y);
     void (*drawImageMag)(GWindow, GImage *, GRect *src, int32 x, int32 y, int32 width, int32 height);
     void (*drawPixmap)(GWindow, GWindow, GRect *src, int32 x, int32 y);
-    void (*tilePixmap)(GWindow, GWindow, GRect *src, int32 x, int32 y);
 
     GIC *(*createInputContext)(GWindow, enum gic_style);
     void (*setGIC)(GWindow, GIC *, int x, int y);
@@ -265,7 +263,7 @@ struct displayfuncs {
     int  (*layoutLineCount)(GWindow w);
     int  (*layoutLineStart)(GWindow w,int line);
     void (*startNewSubPath)(GWindow w);
-    int  (*fillRuleSetWinding)(GWindow w);
+    void (*fillRuleSetWinding)(GWindow w);
 };
 
 extern GDisplay *_GXDraw_CreateDisplay(char *displayname,char *programname);

@@ -194,7 +194,8 @@ void _GXCDraw_PopClip(GXWindow gw) {
 /* ************************************************************************** */
 /* ***************************** Cairo Drawing ****************************** */
 /* ************************************************************************** */
-void _GXCDraw_Clear(GXWindow gw, GRect *rect) {
+void _GXCDraw_Clear(GWindow w, GRect *rect) {
+    GXWindow gw = (GXWindow) w;
     GRect *r = rect, temp;
     if ( r==NULL ) {
 	temp = gw->pos;
@@ -256,7 +257,10 @@ void _GXCDraw_FillRoundRect(GXWindow gw, GRect *rect, int radius) {
     cairo_fill(gw->cc);
 }
 
-void _GXCDraw_DrawArc(GXWindow gw, GRect *rect, int32 sangle, int32 tangle) {
+void _GXCDraw_DrawArc(GWindow w, GRect *rect, int32 sangle, int32 tangle, Color col) {
+    GXWindow gw = (GXWindow) w;
+    gw->ggc->fg = col;
+
     int lwidth;
     float cx, cy, width, height;
     double degrees = M_PI / 180.0;
@@ -304,9 +308,12 @@ static void GXCDraw_EllipsePath(cairo_t *cc,double cx,double cy,double width,dou
     cairo_close_path(cc);
 }
 
-void _GXCDraw_DrawEllipse(GXWindow gw, GRect *rect) {
+void _GXCDraw_DrawEllipse(GWindow w, GRect *rect, Color col) {
     /* It is tempting to use the cairo arc command and scale the */
     /*  coordinates to get an elipse, but that distorts the stroke width */
+    GXWindow gw = (GXWindow) w;
+    gw->ggc->fg = col;
+
     int lwidth = GXCDrawSetline(gw,gw->ggc);
     double cx, cy, width, height;
 
@@ -323,9 +330,12 @@ void _GXCDraw_DrawEllipse(GXWindow gw, GRect *rect) {
     cairo_stroke(gw->cc);
 }
 
-void _GXCDraw_FillEllipse(GXWindow gw, GRect *rect) {
+void _GXCDraw_FillEllipse(GWindow w, GRect *rect, Color col) {
     /* It is tempting to use the cairo arc command and scale the */
     /*  coordinates to get an elipse, but that distorts the stroke width */
+    GXWindow gw = (GXWindow) w;
+    gw->ggc->fg = col;
+
     double cx, cy, width, height;
 
     GXCDrawSetcolfunc(gw,gw->ggc);
@@ -337,7 +347,10 @@ void _GXCDraw_FillEllipse(GXWindow gw, GRect *rect) {
     cairo_fill(gw->cc);
 }
 
-void _GXCDraw_DrawPoly(GXWindow gw, GPoint *pts, int16 cnt) {
+void _GXCDraw_DrawPoly(GWindow w, GPoint *pts, int16 cnt, Color col) {
+    GXWindow gw = (GXWindow) w;
+    gw->ggc->fg = col;
+
     int width = GXCDrawSetline(gw,gw->ggc);
     double off = width&1 ? .5 : 0;
     int i;
@@ -349,7 +362,10 @@ void _GXCDraw_DrawPoly(GXWindow gw, GPoint *pts, int16 cnt) {
     cairo_stroke(gw->cc);
 }
 
-void _GXCDraw_FillPoly(GXWindow gw, GPoint *pts, int16 cnt) {
+void _GXCDraw_FillPoly(GWindow w, GPoint *pts, int16 cnt, Color col) {
+    GXWindow gw = (GXWindow) w;
+    gw->ggc->fg = col;
+
     GXCDrawSetcolfunc(gw,gw->ggc);
     int i;
 
@@ -380,9 +396,8 @@ void _GXCDraw_PathStartSubNew(GWindow w) {
     cairo_new_sub_path( ((GXWindow) w)->cc );
 }
 
-int _GXCDraw_FillRuleSetWinding(GWindow w) {
+void _GXCDraw_FillRuleSetWinding(GWindow w) {
     cairo_set_fill_rule(((GXWindow) w)->cc,CAIRO_FILL_RULE_WINDING);
-    return 1;
 }
 
 void _GXCDraw_PathClose(GWindow w) {
@@ -663,7 +678,8 @@ return( cairo_image_surface_create_for_data((uint8 *) idata,type,
 return( cs );
 }
 
-void _GXCDraw_Image( GXWindow gw, GImage *image, GRect *src, int32 x, int32 y) {
+void _GXCDraw_Image(GWindow w, GImage *image, GRect *src, int32 x, int32 y) {
+    GXWindow gw = (GXWindow) w;
     uint8 *data;
     cairo_surface_t *is = GImage2Surface(image,src,&data);
     struct _GImage *base = image->list_len==0?image->u.image:image->u.images[0];
@@ -687,16 +703,14 @@ void _GXCDraw_Image( GXWindow gw, GImage *image, GRect *src, int32 x, int32 y) {
     gw->cairo_state.fore_col = COLOR_UNKNOWN;
 }
 
-void _GXCDraw_TileImage( GXWindow gw, GImage *image, GRect *src, int32 x, int32 y) {
-}
-
 /* What we really want to do is use the grey levels as an alpha channel */
-void _GXCDraw_Glyph( GXWindow gw, GImage *image, GRect *src, int32 x, int32 y) {
+void _GXCDraw_Glyph(GWindow w, GImage *image, GRect *src, int32 x, int32 y) {
+    GXWindow gw = (GXWindow) w;
     struct _GImage *base = image->list_len==0?image->u.image:image->u.images[0];
     cairo_surface_t *is;
 
     if ( base->image_type!=it_index )
-	_GXCDraw_Image(gw,image,src,x,y);
+	_GXCDraw_Image(w,image,src,x,y);
     else {
 	int stride = cairo_format_stride_for_width(CAIRO_FORMAT_A8,src->width);
 	uint8 *basedata = galloc(stride*src->height),
@@ -731,8 +745,70 @@ void _GXCDraw_Glyph( GXWindow gw, GImage *image, GRect *src, int32 x, int32 y) {
     gw->cairo_state.fore_col = COLOR_UNKNOWN;
 }
 
-void _GXCDraw_ImageMagnified(GXWindow gw, GImage *image, GRect *magsrc,
+static GImage *_GImageExtract(struct _GImage *base,GRect *src,GRect *size,
+	double xscale, double yscale) {
+    static GImage temp;
+    static struct _GImage tbase;
+    static uint8 *data;
+    static int dlen;
+    int r,c;
+
+    memset(&temp,0,sizeof(temp));
+    tbase = *base;
+    temp.u.image = &tbase;
+    tbase.width = size->width; tbase.height = size->height;
+    if ( base->image_type==it_mono )
+	tbase.bytes_per_line = (size->width+7)/8;
+    else if ( base->image_type==it_index )
+	tbase.bytes_per_line = size->width;
+    else
+	tbase.bytes_per_line = 4*size->width;
+    if ( tbase.bytes_per_line*size->height>dlen )
+	data = grealloc(data,dlen = tbase.bytes_per_line*size->height );
+    tbase.data = data;
+
+    /* I used to use rint(x). Now I use floor(x). For normal images rint */
+    /*  might be better, but for text we need floor */
+
+    if ( base->image_type==it_mono ) {
+	memset(data,0,tbase.height*tbase.bytes_per_line);
+	for ( r=0; r<size->height; ++r ) {
+	    int or = ((int) floor( (r+size->y)/yscale ));
+	    uint8 *pt = data+r*tbase.bytes_per_line;
+	    uint8 *opt = base->data+or*base->bytes_per_line;
+	    for ( c=0; c<size->width; ++c ) {
+		int oc = ((int) floor( (c+size->x)/xscale));
+		if ( opt[oc>>3] & (0x80>>(oc&7)) )
+		    pt[c>>3] |= (0x80>>(c&7));
+	    }
+	}
+    } else if ( base->image_type==it_index ) {
+	for ( r=0; r<size->height; ++r ) {
+	    int or = ((int) floor( (r+size->y)/yscale ));
+	    uint8 *pt = data+r*tbase.bytes_per_line;
+	    uint8 *opt = base->data+or*base->bytes_per_line;
+	    for ( c=0; c<size->width; ++c ) {
+		int oc = ((int) floor( (c+size->x)/xscale));
+		*pt++ = opt[oc];
+	    }
+	}
+    } else {
+	for ( r=0; r<size->height; ++r ) {
+	    int or = ((int) floor( (r+size->y)/yscale ));
+	    uint32 *pt = (uint32 *) (data+r*tbase.bytes_per_line);
+	    uint32 *opt = (uint32 *) (base->data+or*base->bytes_per_line);
+	    for ( c=0; c<size->width; ++c ) {
+		int oc = ((int) floor( (c+size->x)/xscale));
+		*pt++ = opt[oc];
+	    }
+	}
+    }
+return( &temp );
+}
+
+void _GXCDraw_ImageMagnified(GWindow w, GImage *image, GRect *magsrc,
 	int32 x, int32 y, int32 width, int32 height) {
+    GXWindow gw = (GXWindow) w;
     struct _GImage *base = image->list_len==0?image->u.image:image->u.images[0];
     GRect full;
     double xscale, yscale;
@@ -774,7 +850,7 @@ return;
     GImage *temp = _GImageExtract(base,&full,&viewable,xscale,yscale);
     GRect src;
     src.x = src.y = 0; src.width = viewable.width; src.height = viewable.height;
-    _GXCDraw_Image( gw, temp, &src, x+viewable.x, y+viewable.y);
+    _GXCDraw_Image(w, temp, &src, x+viewable.x, y+viewable.y);
   }
 #else
   {

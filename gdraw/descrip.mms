@@ -7,7 +7,7 @@ libgdraw_OBJECTS =  choosericons.obj,drawboxborder.obj,\
  genkeysym.obj,gfilechooser.obj,gfiledlg.obj,ggadgets.obj,ggroupbox.obj,\
  gimageclut.obj,gimagecvt.obj,gimagepsdraw.obj,gdrawgimage.obj,\
  gimagewriteeps.obj,\
- gimagexdraw.obj,gkeysym.obj,glist.obj,\
+ gkeysym.obj,glist.obj,\
  gmenu.obj,gprogress.obj,gpsdraw.obj,gpstxtinit.obj,gradio.obj,gresource.obj,\
  gresourceimage.obj,gsavefiledlg.obj,gscrollbar.obj,gtabset.obj,\
  gtextfield.obj,gtextinfo.obj,gwidgets.obj,gxdraw.obj,ghvbox.obj,\
@@ -47,7 +47,6 @@ gimageclut.obj : gimageclut.c
 gimagecvt.obj : gimagecvt.c
 gimagepsdraw.obj : gimagepsdraw.c
 gimagewriteeps.obj : gimagewriteeps.c
-gimagexdraw.obj : gimagexdraw.c
 gkeysym.obj : gkeysym.c
 glist.obj : glist.c
 gmenu.obj : gmenu.c

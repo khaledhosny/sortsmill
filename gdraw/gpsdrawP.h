@@ -116,7 +116,6 @@ typedef struct gpsdisplay /* : GDisplay */ {
 } GPSDisplay;
 
 extern void _GPSDraw_Image(GWindow, GImage *, GRect *src, int32 x, int32 y);
-extern void _GPSDraw_TileImage(GWindow, GImage *, GRect *src, int32 x, int32 y);
 extern void _GPSDraw_ImageMagnified(GWindow, GImage *, GRect *src, int32 x, int32 y, int32 width, int32 height);
 
 extern void _GPSDraw_ProcessFont(GPSWindow ps, struct font_data *fd);

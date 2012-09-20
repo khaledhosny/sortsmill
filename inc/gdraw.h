@@ -415,9 +415,7 @@ extern void GDrawDrawGlyph(GWindow w, GImage *img, GRect *src, int32 x, int32 y)
 extern void GDrawDrawScaledImage(GWindow w, GImage *img, int32 x, int32 y);
 extern void GDrawDrawImageMagnified(GWindow w, GImage *img, GRect *src, int32 x, int32 y,
 	int32 width, int32 height);
-extern void GDrawTileImage(GWindow w, GImage *img, GRect *src, int32 x, int32 y);
 extern void GDrawDrawPixmap(GWindow w, GWindow pixmap, GRect *src, int32 x, int32 y);
-extern void GDrawTilePixmap(GWindow w, GWindow pixmap, GRect *src, int32 x, int32 y);
 
 extern void GDrawGrabSelection(GWindow w,enum selnames sel);
 extern void GDrawAddSelectionType(GWindow w,enum selnames sel,char *type,
@@ -462,7 +460,7 @@ extern int GDrawRequestDeviceEvents(GWindow w,int devcnt,struct gdeveventmask *d
 extern void GDrawQueueDrawing(GWindow w,void (*)(GWindow,void *),void *);
 extern void GDrawPathStartNew(GWindow w);
 extern void GDrawPathStartSubNew(GWindow w);
-extern int GDrawFillRuleSetWinding(GWindow w);
+extern void GDrawFillRuleSetWinding(GWindow w);
 extern void GDrawPathClose(GWindow w);
 extern void GDrawPathMoveTo(GWindow w,double x, double y);
 extern void GDrawPathLineTo(GWindow w,double x, double y);

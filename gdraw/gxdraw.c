@@ -1991,11 +1991,6 @@ static void GXDrawPopClip(GWindow w, GRect *old) {
     _GXCDraw_PopClip(gw);
 }
 
-static void GXDrawClear(GWindow w, GRect *rect) {
-    GXWindow gw = (GXWindow) w;
-    _GXCDraw_Clear(gw,rect);
-}
-
 static void GXDrawDrawLine(GWindow w, int32 x,int32 y, int32 xend,int32 yend, Color col) {
     GXWindow gw = (GXWindow) w;
     w->ggc->fg = col;
@@ -2083,116 +2078,6 @@ static void GXDrawFillRoundRect(GWindow gw, GRect *rect, int radius, Color col) 
     }
 }
 
-static void GXDrawDrawElipse(GWindow gw, GRect *rect, Color col) {
-    GXWindow gxw = (GXWindow) gw;
-
-    gxw->ggc->fg = col;
-    _GXCDraw_DrawEllipse( gxw,rect);
-}
-
-static void GXDrawDrawArc(GWindow gw, GRect *rect, int32 sangle, int32 tangle, Color col) {
-    GXWindow gxw = (GXWindow) gw;
-
-    gxw->ggc->fg = col;
-    _GXCDraw_DrawArc(gxw, rect, sangle, tangle);
-}
-
-static void GXDrawFillElipse(GWindow gw, GRect *rect, Color col) {
-    GXWindow gxw = (GXWindow) gw;
-
-    gxw->ggc->fg = col;
-    _GXCDraw_FillEllipse( gxw,rect);
-}
-
-static void GXDrawDrawPoly(GWindow gw, GPoint *pts, int16 cnt, Color col) {
-    GXWindow gxw = (GXWindow) gw;
-
-    gxw->ggc->fg = col;
-    _GXCDraw_DrawPoly( gxw,pts,cnt);
-}
-
-static void GXDrawFillPoly(GWindow gw, GPoint *pts, int16 cnt, Color col) {
-    GXWindow gxw = (GXWindow) gw;
-
-    gxw->ggc->fg = col;
-    _GXCDraw_FillPoly( gxw,pts,cnt);
-}
-
-static void GXDrawPathStartNew(GWindow w) {
-    _GXCDraw_PathStartNew(w);
-}
-
-static void GXDrawPathStartSubNew(GWindow w) {
-    _GXCDraw_PathStartSubNew(w);
-}
-
-static int GXDrawFillRuleSetWinding(GWindow w) {
-    return _GXCDraw_FillRuleSetWinding(w);
-}
-
-static void GXDrawPathClose(GWindow w) {
-    _GXCDraw_PathClose(w);
-}
-
-static void GXDrawPathMoveTo(GWindow w,double x, double y) {
-    _GXCDraw_PathMoveTo(w,x,y);
-}
-
-static void GXDrawPathLineTo(GWindow w,double x, double y) {
-    _GXCDraw_PathLineTo(w,x,y);
-}
-
-static void GXDrawPathCurveTo(GWindow w,
-		    double cx1, double cy1,
-		    double cx2, double cy2,
-		    double x, double y) {
-    _GXCDraw_PathCurveTo(w,cx1,cy1,cx2,cy2,x,y);
-}
-
-static void GXDrawPathStroke(GWindow w,Color col) {
-    _GXCDraw_PathStroke(w,col);
-}
-
-static void GXDrawPathFill(GWindow w,Color col) {
-    _GXCDraw_PathFill(w,col);
-}
-
-static void GXDrawPathFillAndStroke(GWindow w,Color fillcol, Color strokecol) {
-    _GXCDraw_PathFillAndStroke(w,fillcol,strokecol);
-}
-
-static void GXDrawLayoutInit(GWindow w, char *text, int cnt, GFont *fi) {
-    _GXPDraw_LayoutInit(w,text,cnt,fi);
-}
-
-static void GXDraw_LayoutDraw(GWindow w, int32 x, int32 y, Color fg) {
-    _GXPDraw_LayoutDraw(w,x,y,fg);
-}
-
-static void GXDraw_LayoutIndexToPos(GWindow w, int index, GRect *pos) {
-    _GXPDraw_LayoutIndexToPos(w,index,pos);
-}
-
-static int GXDraw_LayoutXYToIndex(GWindow w, int x, int y) {
-return( _GXPDraw_LayoutXYToIndex(w,x,y));
-}
-
-static void GXDraw_LayoutExtents(GWindow w, GRect *size) {
-    _GXPDraw_LayoutExtents(w,size);
-}
-
-static void GXDraw_LayoutSetWidth(GWindow w, int width) {
-    _GXPDraw_LayoutSetWidth(w,width);
-}
-
-static int GXDraw_LayoutLineCount(GWindow w) {
-return( _GXPDraw_LayoutLineCount(w));
-}
-
-static int GXDraw_LayoutLineStart(GWindow w, int l) {
-return( _GXPDraw_LayoutLineStart(w, l));
-}
-
 static void GXDrawSendExpose(GXWindow gw, int x,int y,int wid,int hei ) {
     if ( gw->eh!=NULL ) {
 	struct gevent event;
@@ -2246,31 +2131,6 @@ static void _GXDraw_Pixmap( GWindow _w, GWindow _pixmap, GRect *src, int32 x, in
 			src->x,src->y,src->width,src->height,
 			x,y);
 }
-
-static void _GXDraw_TilePixmap( GWindow _w, GWindow _pixmap, GRect *src, int32 x, int32 y) {
-    GXWindow gw = (GXWindow) _w, pixmap = (GXWindow) _pixmap;
-    GXDisplay *gdisp = gw->display;
-    GRect old;
-    int i,j;
-
-    GDrawPushClip(_w,src,&old);
-    GXDrawSetcolfunc(gdisp,gw->ggc);
-    for ( i=y; i<gw->ggc->clip.y+gw->ggc->clip.height; i+=pixmap->pos.height ) {
-	if ( i+pixmap->pos.height<gw->ggc->clip.y )
-    continue;
-	for ( j=x; j<gw->ggc->clip.x+gw->ggc->clip.width; j+=pixmap->pos.width ) {
-	    if ( j+pixmap->pos.width<gw->ggc->clip.x )
-	continue;
-	    _GXCDraw_CopyArea(pixmap,gw,&pixmap->pos,j,i);
-	}
-    }
-    GDrawPopClip(_w,&old);
-}
-
-static void GXDrawFontMetrics( GWindow w,GFont *fi,int *as, int *ds, int *ld) {
-    _GXPDraw_FontMetrics(w, fi, as, ds, ld);
-}
-    
 
 static GIC *GXDrawCreateInputContext(GWindow w,enum gic_style def_style) {
     static int styles[] = { XIMPreeditNone | XIMStatusNone,
@@ -2983,7 +2843,7 @@ return;
 		gevent.u.expose.rect.y = subevent.xexpose.y;
 	    }
 	}
-	GXDrawClear(gw,&gevent.u.expose.rect);
+	_GXCDraw_Clear(gw,&gevent.u.expose.rect);
       break;
       case VisibilityNotify:
 	gevent.type = et_visibility;
@@ -4150,24 +4010,22 @@ static struct displayfuncs xfuncs = {
     GXDrawPushClip,
     GXDrawPopClip,
 
-    GXDrawClear,
+    _GXCDraw_Clear,
     GXDrawDrawLine,
     GXDrawDrawRect,
     GXDrawFillRect,
     GXDrawFillRoundRect,
-    GXDrawDrawElipse,
-    GXDrawFillElipse,
-    GXDrawDrawArc,
-    GXDrawDrawPoly,
-    GXDrawFillPoly,
+    _GXCDraw_DrawEllipse,
+    _GXCDraw_FillEllipse,
+    _GXCDraw_DrawArc,
+    _GXCDraw_DrawPoly,
+    _GXCDraw_FillPoly,
     GXDrawScroll,
 
-    _GXDraw_Image,
-    _GXDraw_TileImage,
-    _GXDraw_Glyph,
-    _GXDraw_ImageMagnified,
+    _GXCDraw_Image,
+    _GXCDraw_Glyph,
+    _GXCDraw_ImageMagnified,
     _GXDraw_Pixmap,
-    _GXDraw_TilePixmap,
 
     GXDrawCreateInputContext,
     GXDrawSetGIC,
@@ -4202,27 +4060,27 @@ static struct displayfuncs xfuncs = {
     GXPrinterNextPage,
     GXPrinterEndJob,
 
-    GXDrawFontMetrics,
+    _GXPDraw_FontMetrics,
 
-    GXDrawPathStartNew,
-    GXDrawPathClose,
-    GXDrawPathMoveTo,
-    GXDrawPathLineTo,
-    GXDrawPathCurveTo,
-    GXDrawPathStroke,
-    GXDrawPathFill,
-    GXDrawPathFillAndStroke,
+    _GXCDraw_PathStartNew,
+    _GXCDraw_PathClose,
+    _GXCDraw_PathMoveTo,
+    _GXCDraw_PathLineTo,
+    _GXCDraw_PathCurveTo,
+    _GXCDraw_PathStroke,
+    _GXCDraw_PathFill,
+    _GXCDraw_PathFillAndStroke,
 
-    GXDrawLayoutInit,
-    GXDraw_LayoutDraw,
-    GXDraw_LayoutIndexToPos,
-    GXDraw_LayoutXYToIndex,
-    GXDraw_LayoutExtents,
-    GXDraw_LayoutSetWidth,
-    GXDraw_LayoutLineCount,
-    GXDraw_LayoutLineStart,
-    GXDrawPathStartSubNew,
-    GXDrawFillRuleSetWinding
+    _GXPDraw_LayoutInit,
+    _GXPDraw_LayoutDraw,
+    _GXPDraw_LayoutIndexToPos,
+    _GXPDraw_LayoutXYToIndex,
+    _GXPDraw_LayoutExtents,
+    _GXPDraw_LayoutSetWidth,
+    _GXPDraw_LayoutLineCount,
+    _GXPDraw_LayoutLineStart,
+    _GXCDraw_PathStartSubNew,
+    _GXCDraw_FillRuleSetWinding
 };
 
 static void GDrawInitXKB(GXDisplay *gdisp) {
