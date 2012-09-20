@@ -31,7 +31,7 @@
 #include <utype.h>
 #include <gio.h>
 
-#if defined(__MINGW32__)
+#ifndef HAVE_PTHREAD
 
 int HasLicense(SplineFont *sf,FILE *tmp) {
     return true;
@@ -49,7 +49,7 @@ int URLFromFile(char *url,FILE *from) {
     return false;
 }
 
-#else
+#else // HAVE_PTHREAD
 
 #include <stdio.h>
 #include <unistd.h>
@@ -68,8 +68,6 @@ int URLFromFile(char *url,FILE *from) {
 #include <errno.h>
 
 #include <pthread.h>
-#define GC_THREADS 1
-#include <gc.h>
 
 struct siteinfo {
     int cookie_cnt;
@@ -1519,4 +1517,4 @@ return( false );
     }
 }
 
-#endif /* !__MINGW32__ */
+#endif  // HAVE_PTHREAD

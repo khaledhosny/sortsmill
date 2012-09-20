@@ -193,7 +193,6 @@ i_do_have_native_callbacks="${fontforge_cv_native_callbacks}"
 AC_SEARCH_LIBS([cos],[m])
 FONTFORGE_CONFIG_X_LIBRARIES
 PKG_CHECK_MODULES([ZLIB],[zlib])
-PKG_CHECK_MODULES([BOEHM_GC],[bdw-gc >= 7.1])
 
 if test x"${i_do_have_gui}" = xyes; then
    PKG_CHECK_MODULES([CAIRO],[cairo >= 1.6])

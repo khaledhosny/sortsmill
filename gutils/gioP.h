@@ -42,9 +42,7 @@
 
 #ifdef HAVE_PTHREAD_H
 #include <pthread.h>
-#define GC_THREADS 1
 #endif
-#include <gc.h>
 
 struct stdfuncs {
     unichar_t *(*guessMimeType)(const unichar_t *path,int isdir);

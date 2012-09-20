@@ -112,10 +112,6 @@ static int nfnt_warned = false, post_warned = false;
 
 #ifdef HAVE_PTHREAD_H
 #include <pthread.h>
-#define GC_THREADS 1
-#include <gc.h>
-#else
-#include <gc.h>
 #endif
 
 struct gfc_data {

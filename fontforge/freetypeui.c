@@ -37,10 +37,11 @@
 /* ***************************** Debugger Stuff ***************************** */
 /******************************************************************************/
 
-#if FREETYPE_HAS_DEBUGGER
+#if FREETYPE_HAS_DEBUGGER && defined(HAVE_PTHREAD_H)
+
 #include <pthread.h>
-#define GC_THREADS 1
-#include <gc.h>
+
+// FIXME: What is this about?
 #if defined(__MINGW32__)
 # include <freetype/truetype/tterrors.h>
 #else
@@ -714,7 +715,8 @@ struct freetype_raster *DebuggerCurrentRaster(TT_ExecContext exc,int depth) {
 return( ret );
 }
     
-#else
+#else // ! FREETYPE_HAS_DEBUGGER
+
 struct debugger_context;
 
 void DebuggerTerminate(struct debugger_context *dc) {
@@ -765,4 +767,5 @@ return( NULL );
 int DebuggingFpgm(struct debugger_context *dc) {
 return( false );
 }
-#endif	/* FREETYPE_HAS_DEBUGGER */
+
+#endif	// !FREETYPE_HAS_DEBUGGER

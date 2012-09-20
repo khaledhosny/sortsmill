@@ -39,8 +39,6 @@
 #include "gfile.h"
 
 #include <pthread.h>
-#define GC_THREADS 1
-#include <gc.h>
 
 #ifndef __VMS
 # include <sched.h>

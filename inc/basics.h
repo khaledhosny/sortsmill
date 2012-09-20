@@ -83,5 +83,24 @@ static inline int imax(int a, int b)
     return (a < b) ? b : a;
 }
 
-#endif
+static inline unsigned int umin(unsigned int a, unsigned int b)
+{
+    return (a < b) ? a : b;
+}
 
+static inline unsigned int umax(unsigned int a, unsigned int b)
+{
+    return (a < b) ? b : a;
+}
+
+static inline size_t szmin(size_t a, size_t b)
+{
+    return (a < b) ? a : b;
+}
+
+static inline size_t szmax(size_t a, size_t b)
+{
+    return (a < b) ? b : a;
+}
+
+#endif
