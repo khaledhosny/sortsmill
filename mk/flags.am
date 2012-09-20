@@ -25,14 +25,17 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+include $(top_srcdir)/mk/layout.am
 include $(top_srcdir)/mk/prep_symbols.mk
 
 # FIXME: Get rid of __INTERNAL_TO_FONTFORGE__ when feasible.
-AM_CPPFLAGS = "-I$(top_builddir)/lib" "-I$(top_srcdir)/lib"		\
-	"-I$(top_builddir)/inc" "-I$(top_srcdir)/inc"				\
-	"-DSHAREDIR=\"${MY_SHAREDIR}\"" "-DDOCDIR=\"${MY_DOCDIR}\""	\
-	"-DPLUGINDIR=\"${MY_PLUGINDIR}\"" $(MY_CFLAGS)				\
-	-D__INTERNAL_TO_FONTFORGE__=1
+AM_CPPFLAGS = -I$(top_builddir)/lib -I$(top_srcdir)/lib	\
+	-I$(top_builddir)/inc -I$(top_srcdir)/inc			\
+	-DSHAREDIR=\"${MY_SHAREDIR}\" 						\
+	-DDOCDIR=\"${MY_DOCDIR}\"							\
+	-DPLUGINDIR=\"${MY_PLUGINDIR}\"						\
+	-D__INTERNAL_TO_FONTFORGE__=1						\
+	$(MY_CFLAGS)
 
 # Using -release instead of -version-info seems appropriate in the
 # absence of a well defined ABI.

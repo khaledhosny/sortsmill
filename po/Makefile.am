@@ -25,11 +25,6 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-if MAINTAINER_TOOLS
-noinst_PROGRAMS = toengb
-toengb_SOURCES = toengb.c
-endif MAINTAINER_TOOLS
-
 PO_FILES = ca.po el.po es.po it.po pl.po vi.po zh_TW.po de.po	\
 	en_GB.po fr.po ja.po ml.po ru.po uk.po zh_CN.po
 
@@ -83,4 +78,16 @@ potfile:
 \# The FontForge project, <https://github.com/fontforge/fontforge>, 2012." $(MY_POTFILE)
 
 #--------------------------------------------------------------------------
+#
+# An aid for making British English translation files. Few people will
+# have use for this.
 
+include $(top_srcdir)/mk/flags.am
+
+EXTRA_PROGRAMS = toengb
+toengb_SOURCES = toengb.c
+toengb_LDADD = $(top_builddir)/lib/libgnu.la
+
+DISTCLEANFILES = toengb
+
+#--------------------------------------------------------------------------

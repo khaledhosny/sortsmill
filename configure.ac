@@ -175,6 +175,9 @@ FONTFORGE_ARG_ENABLE([tile-path],
                 [enable a 'tile path' command (a variant of 'expand stroke')])],
         [FONTFORGE_CONFIG_TILEPATH])
 
+# FIXME: Get rid of this after making the Makefiles relatively secure
+# against corruption. (For instance, make sure noinst_PROGRAMS has
+# been replaced by EXTRA_PROGRAMS, and eliminate the stamper.)
 FONTFORGE_ARG_ENABLE([maintainer-tools],
         [AS_HELP_STRING([--enable-maintainer-tools],
                 [build programs used normally only by fontforge maintainers and developers])],
