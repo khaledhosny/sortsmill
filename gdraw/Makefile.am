@@ -29,7 +29,7 @@ lib_LTLIBRARIES = libgdraw.la
 
 libgdraw_la_SOURCES = choosericons.c ctlvalues.c drawboxborder.c		\
 	gaskdlg.c gbuttons.c gcolor.c gcontainer.c gdraw.c		\
-	gdrawbuildchars.c gdrawerror.c gdrawtxt.c gdrawtxtinit.c			\
+	gdrawbuildchars.c gdrawerror.c gdrawtxt.c			\
 	gfilechooser.c gfiledlg.c ggadgets.c ggroupbox.c gimageclut.c		\
 	gimagecvt.c gdrawgimage.c			\
 	gkeysym.c glist.c gmenu.c gprogress.c		\

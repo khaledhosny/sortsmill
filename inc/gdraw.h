@@ -27,7 +27,6 @@
 #ifndef _GDRAW_H
 #define _GDRAW_H
 #include "gimage.h"
-#include "charset.h"
 #include <cairo/cairo.h>
 
 enum font_style { fs_none, fs_italic=1, fs_smallcaps=2, fs_condensed=4, fs_extended=8, fs_vertical=16 };
@@ -265,37 +264,6 @@ typedef struct gwindow_attrs {
 
 #define GWINDOWATTRS_EMPTY { 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL }
 
-
-enum printer_attr_mask { pam_pagesize=1, pam_margins=2, pam_scale=4,
-			 pam_res=8, pam_copies=0x10, pam_thumbnails=0x20, pam_printername=0x40,
-			 pam_filename=0x80, pam_args=0x100, pam_color=0x200, pam_transparent=0x400,
-			 pam_lpr=0x800, pam_queue=0x1000, pam_eps=0x2000, pam_landscape=0x4000,
-			 pam_title=0x8000 };
-
-enum printer_units { pu_inches, pu_points, pu_mm };
-
-typedef struct gprinter_attrs {
-    enum printer_attr_mask mask;
-    float width, height;		/* paper size */
-    float lmargin, rmargin, tmargin, bmargin;
-    float scale;			/* 1.0 implies no scaling */
-    enum printer_units units;
-    int32 res;				/* printer resolution */
-    int16 num_copies;
-    int16 thumbnails;			/* linear count of number of thumbnail*/
-					/* pages per edge of real page */
-    unsigned int do_color: 1;
-    unsigned int do_transparent: 1;	/* try to get transparent images to work*/
-    unsigned int use_lpr: 1;
-    unsigned int donot_queue: 1;	/* ie. print to file */
-    unsigned int landscape: 1;
-    unsigned int eps: 1;		/* generate an eps file, not a full doc */
-    char *printer_name;			/* only if things are queued */
-    char *file_name;			/* only if things aren't queued */
-    char *extra_lpr_args;
-    unichar_t *title;
-    uint16 start_page, end_page;	/* Ignored by printer routines, for programmer */
-} GPrinterAttrs;
 
 typedef struct gdeveventmask {
     int event_mask;

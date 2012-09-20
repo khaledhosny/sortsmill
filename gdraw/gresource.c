@@ -40,7 +40,6 @@
 
 char *GResourceProgramName, *GResourceFullProgram, *GResourceProgramDir;
 char *usercharset_names;
-/* int local_encoding = e_iso8859_1;*/
 
 static int rcur, rmax=0;
 static int rbase = 0, rsummit=0, rskiplen=0;	/* when restricting a search */
@@ -268,13 +267,6 @@ return;
     rcur = rsummit = j;
     for ( i=0; i<j; ++i )
 	_GResource_Res[i].new = false;
-
-    if ( (i=_GResource_FindResName("LocalCharSet"))!=-1 ) {
-	local_encoding = _GDraw_ParseMapping(c_to_u(_GResource_Res[i].val));
-	if ( local_encoding==em_none )
-	    local_encoding = em_iso8859_1;
-	local_encoding += e_iso8859_1-em_iso8859_1;
-    }
 }
 
 void GResourceAddResourceFile(char *filename,char *prog,int warn) {

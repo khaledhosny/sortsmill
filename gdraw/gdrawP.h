@@ -125,7 +125,6 @@ struct gtimer {
 struct gdisplay {
     struct displayfuncs *funcs;
     void *semaphore;				/* To lock the display against multiple threads */
-    struct font_state *fontstate;
     int16 res;
     int16 scale_screen_by;			/* When converting screen pixels to printer pixels */
     GWindow groot;
@@ -140,8 +139,6 @@ struct gdisplay {
 #define PointTenthsToPixel(pointtenths,res)	((((pointtenths)*(res)+36)/72)/10)
 #define PixelToPoint(pixels,res)		(((pixels)*72+(res)/2)/(res))
 #define PixelToPointTenths(pixels,res)		(((pixels)*720+(res)/2)/(res))
-
-struct font_data;
 
 struct displayfuncs {
     void (*init)(GDisplay *);

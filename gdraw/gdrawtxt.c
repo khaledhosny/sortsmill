@@ -38,18 +38,13 @@ return( old );
 }
 
 FontInstance *GDrawInstanciateFont(GWindow gw, FontRequest *rq) {
-    GXDisplay *gdisp;
-    FState *fs;
     struct font_instance *fi;
 
     if (gw == NULL)
 	gw = GDrawGetRoot(NULL);
 
-    gdisp = ((GXWindow) gw)->display;
-    fs = gdisp->fontstate;
-
     if ( rq->point_size<0 )	/* It's in pixels, not points, convert to points */
-	rq->point_size = PixelToPoint(-rq->point_size,fs->res);
+	rq->point_size = PixelToPoint(-rq->point_size, ((GXWindow) gw)->display->res);
 
     fi = gcalloc(1,sizeof(struct font_instance));
     fi->rq = *rq;

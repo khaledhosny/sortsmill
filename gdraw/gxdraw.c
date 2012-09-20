@@ -73,18 +73,6 @@ static void GXDrawTransmitSelection(GXDisplay *gd,XEvent *event);
 static void GXDrawClearSelData(GXDisplay *gd,enum selnames sel);
 
 /* ************************************************************************** */
-/* ******************************* Font Stuff ******************************* */
-/* ************************************************************************** */
-
-static void _GXDraw_InitFonts(GXDisplay *gxdisplay) {
-    FState *fs = gcalloc(1,sizeof(FState));
-
-    /* In inches, because that's how fonts are measured */
-    gxdisplay->fontstate = fs;
-    fs->res = gxdisplay->res;
-}
-
-/* ************************************************************************** */
 /* ****************************** COLOR Stuff ******************************* */
 /* ************************************************************************** */
 
@@ -742,7 +730,6 @@ return(wind);
 static void GXDrawInit(GDisplay *gdisp) {
     _GXDraw_InitCols( (GXDisplay *) gdisp);
     _GXDraw_InitAtoms( (GXDisplay *) gdisp);
-    _GXDraw_InitFonts((GXDisplay *) gdisp);
 }
 
 static void GXDrawTerm(GDisplay *gdisp) {
