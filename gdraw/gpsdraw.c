@@ -750,37 +750,6 @@ static void PSDrawFontMetrics(GWindow w, FontInstance *fi, int *as, int *ds, int
     GDrawWindowFontMetrics(w, fi, as, ds, ld);
 }
 
-static void PSDrawPathStartNew(GWindow w) {
-    GPSWindow ps = (GPSWindow ) w;
-    fprintf( ps->output_file,"  newpath\n" );
-}
-
-static void PSDrawPathClose(GWindow w) {
-    GPSWindow ps = (GPSWindow ) w;
-    fprintf( ps->output_file,"  closepath\n" );
-}
-
-static void PSDrawPathMoveTo(GWindow w,double x, double y) {
-    GPSWindow ps = (GPSWindow ) w;
-    fprintf( ps->output_file,"  %g %g moveto\n", _GSPDraw_XPos(ps,x), _GSPDraw_YPos(ps,y) );
-}
-
-static void PSDrawPathLineTo(GWindow w,double x, double y) {
-    GPSWindow ps = (GPSWindow ) w;
-    fprintf( ps->output_file,"  %g %g lineto\n", _GSPDraw_XPos(ps,x), _GSPDraw_YPos(ps,y) );
-}
-
-static void PSDrawPathCurveTo(GWindow w,
-		    double cx1, double cy1,
-		    double cx2, double cy2,
-		    double x, double y) {
-    GPSWindow ps = (GPSWindow ) w;
-    fprintf( ps->output_file,"  %g %g %g %g %g %g curveto\n",
-	    _GSPDraw_XPos(ps,cx1), _GSPDraw_YPos(ps,cy1),
-	    _GSPDraw_XPos(ps,cx2), _GSPDraw_YPos(ps,cy2),
-	    _GSPDraw_XPos(ps,x), _GSPDraw_YPos(ps,y) );
-}
-
 static void PSDrawPathStroke(GWindow w,Color col) {
     GPSWindow ps = (GPSWindow ) w;
     ps->ggc->fg = col;
@@ -1363,18 +1332,11 @@ static struct displayfuncs psfuncs = {
 
     PSDrawFontMetrics,
 
-    PSDrawPathStartNew,
-    PSDrawPathClose,
-    PSDrawPathMoveTo,
-    PSDrawPathLineTo,
-    PSDrawPathCurveTo,
     PSDrawPathStroke,
     PSDrawPathFill,
     PSDrawPathFillAndStroke,
 
     NULL,		/* Pango layout */
-    NULL,
-    NULL,
     NULL,
     NULL,
     NULL,

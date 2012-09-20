@@ -459,16 +459,6 @@ extern void GDrawSetBuildCharHooks(void (*hook)(GDisplay *), void (*inshook)(GDi
 extern int GDrawRequestDeviceEvents(GWindow w,int devcnt,struct gdeveventmask *de);
 
 extern void GDrawQueueDrawing(GWindow w,void (*)(GWindow,void *),void *);
-extern void GDrawPathStartNew(GWindow w);
-extern void GDrawPathStartSubNew(GWindow w);
-extern void GDrawFillRuleSetWinding(GWindow w);
-extern void GDrawPathClose(GWindow w);
-extern void GDrawPathMoveTo(GWindow w,double x, double y);
-extern void GDrawPathLineTo(GWindow w,double x, double y);
-extern void GDrawPathCurveTo(GWindow w,
-		    double cx1, double cy1,
-		    double cx2, double cy2,
-		    double x, double y);
 extern void GDrawPathStroke(GWindow w,Color col);
 extern void GDrawPathFill(GWindow w,Color col);
 extern void GDrawPathFillAndStroke(GWindow w,Color fillcol, Color strokecol);

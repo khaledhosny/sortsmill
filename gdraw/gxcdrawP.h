@@ -54,16 +54,6 @@ extern void _GXCDraw_ImageMagnified(GWindow w, GImage *image, GRect *magsrc,
 	int32 x, int32 y, int32 width, int32 height);
 extern void _GXCDraw_CopyArea( GXWindow from, GXWindow into, GRect *src, int32 x, int32 y);
 
-extern void _GXCDraw_PathStartNew(GWindow w);
-extern void _GXCDraw_PathStartSubNew(GWindow w);
-extern void _GXCDraw_FillRuleSetWinding(GWindow w);
-extern void _GXCDraw_PathClose(GWindow w);
-extern void _GXCDraw_PathMoveTo(GWindow w,double x, double y);
-extern void _GXCDraw_PathLineTo(GWindow w,double x, double y);
-extern void _GXCDraw_PathCurveTo(GWindow w,
-		    double cx1, double cy1,
-		    double cx2, double cy2,
-		    double x, double y);
 extern void _GXCDraw_PathStroke(GWindow w,Color col);
 extern void _GXCDraw_PathFill(GWindow w,Color col);
 extern void _GXCDraw_PathFillAndStroke(GWindow w,Color fillcol, Color strokecol);

@@ -563,37 +563,6 @@ void GDrawWindowFontMetrics(GWindow w,FontInstance *fi,int *as, int *ds, int *ld
 }
 
 
-void GDrawPathStartNew(GWindow w) {
-    (w->display->funcs->startNewPath)(w);
-}
-
-void GDrawPathStartSubNew(GWindow w) {
-    (w->display->funcs->startNewSubPath)(w);
-}
-
-void GDrawFillRuleSetWinding(GWindow w) {
-    (w->display->funcs->fillRuleSetWinding)(w);
-}
-
-void GDrawPathClose(GWindow w) {
-    (w->display->funcs->closePath)(w);
-}
-
-void GDrawPathMoveTo(GWindow w,double x, double y) {
-    (w->display->funcs->moveto)(w,x,y);
-}
-
-void GDrawPathLineTo(GWindow w,double x, double y) {
-    (w->display->funcs->lineto)(w,x,y);
-}
-
-void GDrawPathCurveTo(GWindow w,
-		    double cx1, double cy1,
-		    double cx2, double cy2,
-		    double x, double y) {
-    (w->display->funcs->curveto)(w,cx1,cy1,cx2,cy2,x,y);
-}
-
 void GDrawPathStroke(GWindow w,Color col) {
     (w->display->funcs->stroke)(w,col);
 }

@@ -3950,11 +3950,6 @@ static struct displayfuncs xfuncs = {
 
     _GXPDraw_FontMetrics,
 
-    _GXCDraw_PathStartNew,
-    _GXCDraw_PathClose,
-    _GXCDraw_PathMoveTo,
-    _GXCDraw_PathLineTo,
-    _GXCDraw_PathCurveTo,
     _GXCDraw_PathStroke,
     _GXCDraw_PathFill,
     _GXCDraw_PathFillAndStroke,
@@ -3967,8 +3962,6 @@ static struct displayfuncs xfuncs = {
     _GXPDraw_LayoutSetWidth,
     _GXPDraw_LayoutLineCount,
     _GXPDraw_LayoutLineStart,
-    _GXCDraw_PathStartSubNew,
-    _GXCDraw_FillRuleSetWinding,
     _GXCDraw_GetCairo
 };
 

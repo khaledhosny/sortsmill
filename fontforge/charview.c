@@ -919,23 +919,24 @@ void CVDrawSplineSetOutlineOnly(CharView *cv, GWindow pixmap, SplinePointList *s
 				Color fg, int dopoints, DRect *clip, enum outlinesfm_flags strokeFillMode ) {
     SplinePointList *spl;
     int currentSplineCounter = 0;
+    cairo_t * cr = GDrawGetCairo(pixmap);
 
     if( strokeFillMode == sfm_fill ) {
-	GDrawFillRuleSetWinding(pixmap);
+	cairo_set_fill_rule(cr, CAIRO_FILL_RULE_WINDING);
     }
     for ( spl = set; spl!=NULL; spl = spl->next ) {
 	    Spline *first, *spline;
 	    double x,y, cx1, cy1, cx2, cy2, dx,dy;
-	    GDrawPathStartSubNew(pixmap);
+	    cairo_new_sub_path(cr);
 	    x = rpt(cv,  cv->xoff + spl->first->me.x*cv->scale);
 	    y = rpt(cv, -cv->yoff + cv->height - spl->first->me.y*cv->scale);
-	    GDrawPathMoveTo(pixmap,x+.5,y+.5);
+	    cairo_move_to(cr, x+.5, y+.5);
 	    currentSplineCounter++;
 	    for ( spline=spl->first->next, first=NULL; spline!=first && spline!=NULL; spline=spline->to->next ) {
 		x = rpt(cv,  cv->xoff + spline->to->me.x*cv->scale);
 		y = rpt(cv, -cv->yoff + cv->height - spline->to->me.y*cv->scale);
 		if ( spline->knownlinear )
-		    GDrawPathLineTo(pixmap,x+.5,y+.5);
+		    cairo_line_to(cr,x+.5,y+.5);
 		else if ( spline->order2 ) {
 		    dx = rint(spline->from->me.x*cv->scale) - spline->from->me.x*cv->scale;
 		    dy = rint(spline->from->me.y*cv->scale) - spline->from->me.y*cv->scale;
@@ -949,7 +950,7 @@ void CVDrawSplineSetOutlineOnly(CharView *cv, GWindow pixmap, SplinePointList *s
 		    dy = rint(spline->to->me.y*cv->scale) - spline->to->me.y*cv->scale;
 		    cx2 = cv->xoff + cx2*cv->scale + dx;
 		    cy2 = -cv->yoff + cv->height - cy2*cv->scale - dy;
-		    GDrawPathCurveTo(pixmap,cx1+.5,cy1+.5,cx2+.5,cy2+.5,x+.5,y+.5);
+		    cairo_curve_to(cr,cx1+.5,cy1+.5,cx2+.5,cy2+.5,x+.5,y+.5);
 		} else {
 		    dx = rint(spline->from->me.x*cv->scale) - spline->from->me.x*cv->scale;
 		    dy = rint(spline->from->me.y*cv->scale) - spline->from->me.y*cv->scale;
@@ -959,13 +960,13 @@ void CVDrawSplineSetOutlineOnly(CharView *cv, GWindow pixmap, SplinePointList *s
 		    dy = rint(spline->to->me.y*cv->scale) - spline->to->me.y*cv->scale;
 		    cx2 = cv->xoff + spline->to->prevcp.x*cv->scale + dx;
 		    cy2 = -cv->yoff + cv->height - spline->to->prevcp.y*cv->scale - dy;
-		    GDrawPathCurveTo(pixmap,cx1+.5,cy1+.5,cx2+.5,cy2+.5,x+.5,y+.5);
+		    cairo_curve_to(cr,cx1+.5,cy1+.5,cx2+.5,cy2+.5,x+.5,y+.5);
 		}
 		if ( first==NULL )
 		    first = spline;
 	    }
 	    if ( spline!=NULL )
-		GDrawPathClose(pixmap);
+		cairo_close_path(cr);
 
 	    switch( strokeFillMode ) {
 	    case sfm_stroke:

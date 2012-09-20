@@ -397,37 +397,6 @@ void _GXCDraw_FillPoly(GWindow w, GPoint *pts, int16 cnt, Color col) {
 /* ************************************************************************** */
 /* ****************************** Cairo Paths ******************************* */
 /* ************************************************************************** */
-void _GXCDraw_PathStartNew(GWindow w) {
-    cairo_new_path( ((GXWindow) w)->cc );
-}
-
-void _GXCDraw_PathStartSubNew(GWindow w) {
-    cairo_new_sub_path( ((GXWindow) w)->cc );
-}
-
-void _GXCDraw_FillRuleSetWinding(GWindow w) {
-    cairo_set_fill_rule(((GXWindow) w)->cc,CAIRO_FILL_RULE_WINDING);
-}
-
-void _GXCDraw_PathClose(GWindow w) {
-    cairo_close_path( ((GXWindow) w)->cc );
-}
-
-void _GXCDraw_PathMoveTo(GWindow w,double x, double y) {
-    cairo_move_to( ((GXWindow) w)->cc,x,y );
-}
-
-void _GXCDraw_PathLineTo(GWindow w,double x, double y) {
-    cairo_line_to( ((GXWindow) w)->cc,x,y );
-}
-
-void _GXCDraw_PathCurveTo(GWindow w,
-		    double cx1, double cy1,
-		    double cx2, double cy2,
-		    double x, double y) {
-    cairo_curve_to( ((GXWindow) w)->cc,cx1,cy1,cx2,cy2,x,y );
-}
-
 void _GXCDraw_PathStroke(GWindow w,Color col) {
     w->ggc->fg = col;
     GXCDrawSetline((GXWindow) w,w->ggc);
