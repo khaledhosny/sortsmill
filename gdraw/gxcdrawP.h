@@ -64,7 +64,6 @@ extern void _GXCDraw_DirtyRect(GXWindow gw,double x, double y, double width, dou
 extern void _GXPDraw_NewWindow(GXWindow nw);
 extern void _GXPDraw_DestroyWindow(GXWindow nw);
 
-extern PangoFontDescription *_GXPDraw_configfont(GWindow gw, GFont *font);
 extern int32 _GXPDraw_DoText8(GWindow w, int32 x, int32 y,
 	const char *text, int32 cnt, Color col,
 	enum text_funcs drawit, struct tf_arg *arg);

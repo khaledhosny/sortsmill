@@ -958,8 +958,7 @@ void _GXPDraw_DestroyWindow(GXWindow nw) {
 /* ************************************************************************** */
 /* ******************************* Pango Text ******************************* */
 /* ************************************************************************** */
-PangoFontDescription *_GXPDraw_configfont(GWindow w, GFont *font) {
-    GXWindow gw = (GXWindow) w;
+static PangoFontDescription *_GXPDraw_configfont(GXWindow gw, GFont *font) {
     PangoFontDescription *fd;
 
     /* initialize cairo and pango if not initialized, e.g. root window */
@@ -1020,7 +1019,7 @@ int32 _GXPDraw_DoText8(GWindow w, int32 x, int32 y,
     if (fi == NULL)
 	return(0);
 
-    fd = _GXPDraw_configfont(w, fi);
+    fd = _GXPDraw_configfont(gw, fi);
     pango_layout_set_font_description(gw->pango_layout,fd);
     pango_layout_set_text(gw->pango_layout,(char *) text,cnt);
     pango_layout_get_pixel_extents(gw->pango_layout,NULL,&rect);
@@ -1081,8 +1080,9 @@ int32 _GXPDraw_DoText(GWindow w, int32 x, int32 y,
 return(width);
 }
 
-void _GXPDraw_FontMetrics(GWindow gw, GFont *fi, int *as, int *ds, int *ld) {
-    GXDisplay *gdisp = ((GXWindow) gw)->display;
+void _GXPDraw_FontMetrics(GWindow w, GFont *fi, int *as, int *ds, int *ld) {
+    GXWindow gw = (GXWindow) w;
+    GXDisplay *gdisp = gw->display;
     PangoFont *pfont;
     PangoFontMetrics *fm;
 
@@ -1105,7 +1105,7 @@ void _GXPDraw_LayoutInit(GWindow w, char *text, int cnt, GFont *fi) {
     if ( fi==NULL )
 	fi = gw->ggc->fi;
 
-    fd = _GXPDraw_configfont(w, fi);
+    fd = _GXPDraw_configfont(gw, fi);
     pango_layout_set_font_description(gw->pango_layout,fd);
     pango_layout_set_text(gw->pango_layout,(char *) text,cnt);
 }
