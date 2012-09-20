@@ -64,8 +64,9 @@ libgunicode_la_LIBADD = $(top_builddir)/lib/libgnu.la
 libgunicode_la_LDFLAGS = $(call ldflags,EXPORTED_LIBGUNICODE_SYMBOLS)
 
 #--------------------------------------------------------------------------
-
-if MAINTAINER_TOOLS
+#
+# Targets for maintainers to use when a new version of Unicode is
+# adopted.
 
 generate-utype: LineBreak.txt NamesList.txt PropList.txt UnicodeData.txt makeutype
 	LC_ALL=C ./makeutype
@@ -108,7 +109,5 @@ UnicodeData.txt:
 MOSTLYCLEANFILES = makeutype dump makebuildtables
 DISTCLEANFILES = LineBreak.txt NamesList.txt PropList.txt	\
 	UnicodeData.txt
-
-endif MAINTAINER_TOOLS
 
 #--------------------------------------------------------------------------
