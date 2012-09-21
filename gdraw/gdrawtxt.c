@@ -67,14 +67,6 @@ GFont *GDrawNewFont(GWindow gw, char *family_name, int point_size, int weight, e
     return (GDrawInstanciateFont(gw, &rq));
 }
 
-FontInstance *GDrawAttachFont(GWindow gw, FontRequest *rq) {
-    struct font_instance *fi = GDrawInstanciateFont(gw,rq);
-
-    if ( fi!=NULL )
-	GDrawSetFont(gw, fi);
-return( fi );
-}
-
 FontRequest *GDrawDecomposeFont(FontInstance *fi, FontRequest *rq) {
     *rq = fi->rq;
 return( rq );

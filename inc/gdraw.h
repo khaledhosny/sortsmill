@@ -353,7 +353,6 @@ extern void GDrawSetBackground(GWindow w,Color col);
 
 extern GFont *GDrawSetFont(GWindow gw, GFont *fi);
 extern GFont *GDrawInstanciateFont(GWindow gw, FontRequest *rq);
-extern GFont *GDrawAttachFont(GWindow gw, FontRequest *rq);
 extern GFont *GDrawNewFont(GWindow gw, char *family_name, int point_size, int weight, enum font_style style);
 extern FontRequest *GDrawDecomposeFont(GFont *fi, FontRequest *rq);
 extern void GDrawGetFontMetrics(GWindow gw,GFont *fi,int *as, int *ds, int *ld);
