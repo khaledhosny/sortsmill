@@ -38,10 +38,10 @@ extern void _GXCDraw_PushClip(GXWindow gw);
 extern void _GXCDraw_PopClip(GXWindow gw);
 
 extern void _GXCDraw_Clear(GWindow w, GRect *rect);
-extern void _GXCDraw_DrawLine(GXWindow gw, int32 x,int32 y, int32 xend,int32 yend);
-extern void _GXCDraw_DrawRect(GXWindow gw, GRect *rect);
-extern void _GXCDraw_FillRect(GXWindow gw, GRect *rect);
-extern void _GXCDraw_FillRoundRect(GXWindow gw, GRect *rect, int radius);
+extern void _GXCDraw_DrawLine(GWindow w, int32 x,int32 y, int32 xend,int32 yend, Color col);
+extern void _GXCDraw_DrawRect(GWindow w, GRect *rect, Color col);
+extern void _GXCDraw_FillRect(GWindow w, GRect *rect, Color col);
+extern void _GXCDraw_FillRoundRect(GWindow w, GRect *rect, int radius, Color col);
 extern void _GXCDraw_DrawArc(GWindow w, GRect *rect, int32 sangle, int32 tangle, Color col);
 extern void _GXCDraw_DrawEllipse(GWindow w, GRect *rect, Color col);
 extern void _GXCDraw_FillEllipse(GWindow w, GRect *rect, Color col);
@@ -54,16 +54,6 @@ extern void _GXCDraw_ImageMagnified(GWindow w, GImage *image, GRect *magsrc,
 	int32 x, int32 y, int32 width, int32 height);
 extern void _GXCDraw_CopyArea( GXWindow from, GXWindow into, GRect *src, int32 x, int32 y);
 
-extern void _GXCDraw_PathStartNew(GWindow w);
-extern void _GXCDraw_PathStartSubNew(GWindow w);
-extern void _GXCDraw_FillRuleSetWinding(GWindow w);
-extern void _GXCDraw_PathClose(GWindow w);
-extern void _GXCDraw_PathMoveTo(GWindow w,double x, double y);
-extern void _GXCDraw_PathLineTo(GWindow w,double x, double y);
-extern void _GXCDraw_PathCurveTo(GWindow w,
-		    double cx1, double cy1,
-		    double cx2, double cy2,
-		    double x, double y);
 extern void _GXCDraw_PathStroke(GWindow w,Color col);
 extern void _GXCDraw_PathFill(GWindow w,Color col);
 extern void _GXCDraw_PathFillAndStroke(GWindow w,Color fillcol, Color strokecol);
@@ -74,7 +64,6 @@ extern void _GXCDraw_DirtyRect(GXWindow gw,double x, double y, double width, dou
 extern void _GXPDraw_NewWindow(GXWindow nw);
 extern void _GXPDraw_DestroyWindow(GXWindow nw);
 
-extern PangoFontDescription *_GXPDraw_configfont(GWindow gw, GFont *font);
 extern int32 _GXPDraw_DoText8(GWindow w, int32 x, int32 y,
 	const char *text, int32 cnt, Color col,
 	enum text_funcs drawit, struct tf_arg *arg);
@@ -90,5 +79,6 @@ extern void _GXPDraw_LayoutExtents(GWindow w, GRect *size);
 extern void _GXPDraw_LayoutSetWidth(GWindow w, int width);
 extern int  _GXPDraw_LayoutLineCount(GWindow w);
 extern int  _GXPDraw_LayoutLineStart(GWindow w,int l);
+extern cairo_t * _GXCDraw_GetCairo(GWindow w);
 
 #endif /* _GXCDRAWP_H */

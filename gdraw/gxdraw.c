@@ -79,18 +79,6 @@ static void GXDrawTransmitSelection(GXDisplay *gd,XEvent *event);
 static void GXDrawClearSelData(GXDisplay *gd,enum selnames sel);
 
 /* ************************************************************************** */
-/* ******************************* Font Stuff ******************************* */
-/* ************************************************************************** */
-
-static void _GXDraw_InitFonts(GXDisplay *gxdisplay) {
-    FState *fs = gcalloc(1,sizeof(FState));
-
-    /* In inches, because that's how fonts are measured */
-    gxdisplay->fontstate = fs;
-    fs->res = gxdisplay->res;
-}
-
-/* ************************************************************************** */
 /* ****************************** COLOR Stuff ******************************* */
 /* ************************************************************************** */
 
@@ -748,7 +736,6 @@ return(wind);
 static void GXDrawInit(GDisplay *gdisp) {
     _GXDraw_InitCols( (GXDisplay *) gdisp);
     _GXDraw_InitAtoms( (GXDisplay *) gdisp);
-    _GXDraw_InitFonts((GXDisplay *) gdisp);
 }
 
 static void GXDrawTerm(GDisplay *gdisp) {
@@ -1840,50 +1827,6 @@ void _GXDraw_SetClipFunc(GXDisplay *gdisp, GGC *mine) {
 	XChangeGC(gdisp->display,gcs->gc,mask,&vals);
 }
 
-static int GXDrawSetcolfunc(GXDisplay *gdisp, GGC *mine) {
-    XGCValues vals;
-    long mask=0;
-    GCState *gcs = &gdisp->gcstate[mine->bitmap_col];
-
-    _GXDraw_SetClipFunc(gdisp,mine);
-    if ( mine->fg!=gcs->fore_col || mine->func!=gcs->func || mine->func==df_xor ) {
-	if ( mine->bitmap_col ) {
-	    vals.foreground = mine->fg;
-	} else {
-	    vals.foreground = _GXDraw_GetScreenPixel(gdisp,mine->fg);
-	}
-	gcs->fore_col = mine->fg;
-	if ( mine->func==df_xor ) {
-	    vals.foreground ^= _GXDraw_GetScreenPixel(gdisp,mine->xor_base);
-	    gcs->fore_col = COLOR_UNKNOWN;
-	}
-	mask |= GCForeground;
-    }
-    if ( mine->bg!=gcs->back_col ) {
-	vals.background = _GXDraw_GetScreenPixel(gdisp,mine->bg);
-	mask |= GCBackground;
-	gcs->back_col = mine->bg;
-    }
-    if ( mine->ts != gcs->ts || mine->ts != 0 ||
-	    mine->ts_xoff != gcs->ts_xoff ||
-	    mine->ts_yoff != gcs->ts_yoff ) {
-	if ( mine->ts!=0 ) {
-	    vals.stipple = mine->ts==1?gdisp->grey_stipple: gdisp->fence_stipple;
-	    mask |= GCStipple;
-	}
-	vals.fill_style = (mine->ts?FillStippled:FillSolid);
-	vals.ts_x_origin = mine->ts_xoff;
-	vals.ts_y_origin = mine->ts_yoff;
-	mask |= GCTileStipXOrigin|GCTileStipYOrigin|GCFillStyle;
-	gcs->ts = mine->ts;
-	gcs->ts_xoff = mine->ts_xoff;
-	gcs->ts_yoff = mine->ts_yoff;
-    }
-    if ( mask!=0 )
-	XChangeGC(gdisp->display,gcs->gc,mask,&vals);
-return( true );
-}
-
 static int GXDrawSetline(GXDisplay *gdisp, GGC *mine) {
     XGCValues vals;
     long mask=0;
@@ -1992,13 +1935,13 @@ static void GXDrawPopClip(GWindow w, GRect *old) {
 }
 
 static void GXDrawDrawLine(GWindow w, int32 x,int32 y, int32 xend,int32 yend, Color col) {
-    GXWindow gw = (GXWindow) w;
-    w->ggc->fg = col;
-
     if ( w->ggc->func==df_copy ) {
-	_GXCDraw_DrawLine(gw,x,y,xend,yend);
+	_GXCDraw_DrawLine(w, x, y, xend, yend, col);
     } else {
 	// FIXME: We need to handle XOR with Cairo
+	GXWindow gw = (GXWindow) w;
+	w->ggc->fg = col;
+
 	_GXCDraw_Flush(gw);
 
 	GXDisplay *display = (GXDisplay *) (w->display);
@@ -2011,70 +1954,16 @@ static void GXDrawDrawLine(GWindow w, int32 x,int32 y, int32 xend,int32 yend, Co
     }
 }
 
-static void GXDrawDrawRect(GWindow gw, GRect *rect, Color col) {
-    GXWindow gxw = (GXWindow) gw;
-
-    gxw->ggc->fg = col;
-    if ( gw->ggc->func==df_copy ) {
-	_GXCDraw_DrawRect(gxw,rect);
+static void GXDrawDrawRect(GWindow w, GRect *rect, Color col) {
+    if (w->ggc->func == df_copy) {
+	_GXCDraw_DrawRect(w, rect, col);
     } else {
-	// FIXME: We need to handle XOR with Cairo
-	_GXCDraw_Flush(gxw);
-
-	GXDisplay *display = gxw->display;
-	GXDrawSetline(display,gxw->ggc);
-	XDrawRectangle(display->display,gxw->w,display->gcstate[gxw->ggc->bitmap_col].gc,rect->x,rect->y,
-		       rect->width,rect->height);
-
-	_GXCDraw_DirtyRect(gxw,rect->x,rect->y,rect->width,rect->height);
-    }
-}
-
-static void GXDrawFillRect(GWindow gw, GRect *rect, Color col) {
-    GXWindow gxw = (GXWindow) gw;
-
-    gxw->ggc->fg = col;
-    if ( gw->ggc->func==df_copy ) {
-	_GXCDraw_FillRect( gxw,rect);
-    } else {
-	// FIXME: We need to handle XOR with Cairo
-	_GXCDraw_Flush(gxw);
-
-	GXDisplay *display = gxw->display;
-	GXDrawSetcolfunc(display,gxw->ggc);
-	XFillRectangle(display->display,gxw->w,display->gcstate[gxw->ggc->bitmap_col].gc,rect->x,rect->y,
-		       rect->width,rect->height);
-
-	_GXCDraw_DirtyRect(gxw,rect->x,rect->y,rect->width,rect->height);
-    }
-}
-
-static void GXDrawFillRoundRect(GWindow gw, GRect *rect, int radius, Color col) {
-    GXWindow gxw = (GXWindow) gw;
-    int rr = radius <= (rect->height+1)/2 ? (radius > 0 ? radius : 0) : (rect->height+1)/2;
-
-    gxw->ggc->fg = col;
-
-    if ( gw->ggc->func==df_copy ) {
-	_GXCDraw_FillRoundRect( gxw,rect,rr );
-    } else {
-	// FIXME: We need to handle XOR with Cairo
-	_GXCDraw_Flush(gxw);
-
-	GRect middle = {rect->x, rect->y + radius, rect->width, rect->height - 2 * radius};
-	int xend = rect->x + rect->width - 1;
-	int yend = rect->y + rect->height - 1;
-	int precalc = rr * 2 - 1;
-	int i, xoff;
-
-	for (i = 0; i < rr; i++) {
-	    xoff = rr - lrint(sqrt( (double)(i * (precalc - i)) ));
-	    GXDrawDrawLine(gw, rect->x + xoff, rect->y + i, xend - xoff, rect->y + i, col);
-	    GXDrawDrawLine(gw, rect->x + xoff, yend - i, xend - xoff, yend - i, col);
-	}
-	GXDrawFillRect(gw, &middle, col);
-
-	_GXCDraw_DirtyRect(gxw,rect->x,rect->y,rect->width,rect->height);
+	// FIXME we draw XOR'ed rect using GXDrawDrawLine because it is the
+	// only remaining function with XOR support.
+	GXDrawDrawLine(w, rect->x, rect->y, rect->x, rect->y + rect->height, col);
+	GXDrawDrawLine(w, rect->x, rect->y, rect->x + rect->width, rect->y, col);
+	GXDrawDrawLine(w, rect->x, rect->y + rect->height, rect->x + rect->width, rect->y + rect->height, col);
+	GXDrawDrawLine(w, rect->x + rect->width, rect->y, rect->x + rect->width, rect->y + rect->height, col);
     }
 }
 
@@ -3948,20 +3837,6 @@ static void GXResourceInit(GXDisplay *gdisp,char *programname) {
     gdisp->twobmouse_win = tbf;
 }
 
-static GWindow GXPrinterStartJob(GDisplay *gdisp,void *user_data,GPrinterAttrs *attrs) {
-    fprintf(stderr, "Invalid call to GPrinterStartJob on X display\n" );
-return( NULL );
-}
-
-static void GXPrinterNextPage(GWindow w) {
-    fprintf(stderr, "Invalid call to GPrinterNextPage on X display\n" );
-}
-
-static int GXPrinterEndJob(GWindow w,int cancel) {
-    fprintf(stderr, "Invalid call to GPrinterEndJob on X display\n" );
-return( false );
-}
-
 static struct displayfuncs xfuncs = {
     GXDrawInit,
     GXDrawTerm,
@@ -4013,8 +3888,8 @@ static struct displayfuncs xfuncs = {
     _GXCDraw_Clear,
     GXDrawDrawLine,
     GXDrawDrawRect,
-    GXDrawFillRect,
-    GXDrawFillRoundRect,
+    _GXCDraw_FillRect,
+    _GXCDraw_FillRoundRect,
     _GXCDraw_DrawEllipse,
     _GXCDraw_FillEllipse,
     _GXCDraw_DrawArc,
@@ -4056,17 +3931,8 @@ static struct displayfuncs xfuncs = {
 
     GXDrawSyncThread,
 
-    GXPrinterStartJob,
-    GXPrinterNextPage,
-    GXPrinterEndJob,
-
     _GXPDraw_FontMetrics,
 
-    _GXCDraw_PathStartNew,
-    _GXCDraw_PathClose,
-    _GXCDraw_PathMoveTo,
-    _GXCDraw_PathLineTo,
-    _GXCDraw_PathCurveTo,
     _GXCDraw_PathStroke,
     _GXCDraw_PathFill,
     _GXCDraw_PathFillAndStroke,
@@ -4079,8 +3945,7 @@ static struct displayfuncs xfuncs = {
     _GXPDraw_LayoutSetWidth,
     _GXPDraw_LayoutLineCount,
     _GXPDraw_LayoutLineStart,
-    _GXCDraw_PathStartSubNew,
-    _GXCDraw_FillRuleSetWinding
+    _GXCDraw_GetCairo
 };
 
 static void GDrawInitXKB(GXDisplay *gdisp) {

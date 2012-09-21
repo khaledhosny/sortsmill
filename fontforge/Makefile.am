@@ -337,6 +337,8 @@ libfontforge_la_LIBADD = splinerefigure.lo $(LIBADD)	\
 	-dlopen $(top_builddir)/plugins/gb12345.la			\
 	$(top_builddir)/lib/libgnu.la
 libfontforge_la_LDFLAGS = $(call ldflags,EXPORTED_LIBFONTFORGE_SYMBOLS)
+libfontforge_la_DEPENDENCIES = splinerefigure.lo $(LIBADD)				\
+	$(top_builddir)/plugins/gb12345.la $(top_builddir)/lib/libgnu.la
 
 EXTRA_SCRIPTS = generate_codepoint_selector.py
 

@@ -62,6 +62,7 @@ EXPORTED_LIBGUNICODE_SYMBOLS = AllAscii ArabicForms StripToASCII		\
 libgunicode_la_CPPFLAGS = $(AM_CPPFLAGS)
 libgunicode_la_LIBADD = $(top_builddir)/lib/libgnu.la
 libgunicode_la_LDFLAGS = $(call ldflags,EXPORTED_LIBGUNICODE_SYMBOLS)
+libgunicode_la_DEPENDENCIES = Makefile $(libgunicode_la_LIBADD)
 
 #--------------------------------------------------------------------------
 #

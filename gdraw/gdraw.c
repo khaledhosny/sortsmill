@@ -37,7 +37,6 @@
 */
 
 GDisplay *screen_display = NULL;
-GDisplay *printer_display = NULL;
 
 #if 0
 void GDrawInit(GDisplay *disp) {
@@ -439,9 +438,6 @@ void GDrawFillElipse(GWindow w, GRect *rect, Color col) {
 	(w->display->funcs->fillElipse)(w,rect,col);
 }
 
-/* angles expressed as in X, in 64's of a degree with 0 angle at 3 o'clock */
-/*  and positive measured counter-clockwise (or the same way as in polar coords)*/
-/* tangle is NOT the end angle, it's the angle offset from the first to the end*/
 void GDrawDrawArc(GWindow w, GRect *rect, int32 sangle, int32 tangle, Color col) {
     if ( col!=COLOR_UNKNOWN )
 	(w->display->funcs->drawArc)(w,rect,sangle,tangle,col);
@@ -569,37 +565,6 @@ void GDrawWindowFontMetrics(GWindow w,FontInstance *fi,int *as, int *ds, int *ld
 }
 
 
-void GDrawPathStartNew(GWindow w) {
-    (w->display->funcs->startNewPath)(w);
-}
-
-void GDrawPathStartSubNew(GWindow w) {
-    (w->display->funcs->startNewSubPath)(w);
-}
-
-void GDrawFillRuleSetWinding(GWindow w) {
-    (w->display->funcs->fillRuleSetWinding)(w);
-}
-
-void GDrawPathClose(GWindow w) {
-    (w->display->funcs->closePath)(w);
-}
-
-void GDrawPathMoveTo(GWindow w,double x, double y) {
-    (w->display->funcs->moveto)(w,x,y);
-}
-
-void GDrawPathLineTo(GWindow w,double x, double y) {
-    (w->display->funcs->lineto)(w,x,y);
-}
-
-void GDrawPathCurveTo(GWindow w,
-		    double cx1, double cy1,
-		    double cx2, double cy2,
-		    double x, double y) {
-    (w->display->funcs->curveto)(w,cx1,cy1,cx2,cy2,x,y);
-}
-
 void GDrawPathStroke(GWindow w,Color col) {
     (w->display->funcs->stroke)(w,col);
 }
@@ -642,6 +607,10 @@ return( (w->display->funcs->layoutLineCount)(w) );
 
 int  GDrawLayoutLineStart(GWindow w,int line) {
 return( (w->display->funcs->layoutLineStart)(w,line) );
+}
+
+cairo_t * GDrawGetCairo(GWindow w) {
+    return ((w->display->funcs->getCairo)(w));
 }
 
 
@@ -766,24 +735,6 @@ void GDrawSyncThread(GDisplay *gdisp, void (*func)(void *), void *data) {
     (gdisp->funcs->syncThread)(gdisp,func,data);
 }
 
-GWindow GPrinterStartJob(GDisplay *gdisp,void *user_data,GPrinterAttrs *attrs) {
-    if ( gdisp==NULL )
-	gdisp = printer_display;
-return( (gdisp->funcs->startJob)(gdisp,user_data,attrs) );
-}
-
-void GPrinterNextPage(GWindow w) {
-    if ( w==NULL )
-	w = printer_display->groot;
-    (w->display->funcs->nextPage)(w);
-}
-
-int GPrinterEndJob(GWindow w,int cancel) {
-    if ( w==NULL )
-	w = printer_display->groot;
-return( (w->display->funcs->endJob)(w,cancel) );
-}
-
 int GDrawRequestDeviceEvents(GWindow w,int devcnt,struct gdeveventmask *de) {
 return( (w->display->funcs->requestDeviceEvents)(w,devcnt,de) );
 }
@@ -870,7 +821,6 @@ return;
 void GDrawCreateDisplays(char *displayname,char *programname) {
     GIO_SetThreadCallback((void (*)(void *,void *,void *)) GDrawSyncThread);
     screen_display = _GXDraw_CreateDisplay(displayname,programname);
-    printer_display = _GPSDraw_CreateDisplay();
     if ( screen_display==NULL ) {
 	fprintf( stderr, "Could not open screen.\n" );
 #if __Mac

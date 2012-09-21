@@ -95,7 +95,6 @@ typedef struct gcstate {
     int16 dash_offset;
     int16 ts;
     int32 ts_xoff, ts_yoff;
-    struct font_data *cur_font;
 } GCState;
 
 #ifndef X_DISPLAY_MISSING
@@ -246,7 +245,6 @@ struct xkb {
 typedef struct gxdisplay /* : GDisplay */ {
     struct displayfuncs *funcs;
     void *semaphore;				/* To lock the display against multiple threads */
-    struct font_state *fontstate;
     int16 res;
     int16 scale_screen_by;			/* When converting screen pixels to printer pixels: multiply by this then divide by 16 */
     GXWindow groot;

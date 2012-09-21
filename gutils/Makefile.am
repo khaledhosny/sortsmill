@@ -60,6 +60,7 @@ libgutils_la_CPPFLAGS = $(AM_CPPFLAGS)
 libgutils_la_LIBADD = $(top_builddir)/Unicode/libgunicode.la	\
 	$(top_builddir)/lib/libgnu.la
 libgutils_la_LDFLAGS = $(call ldflags,EXPORTED_LIBGUTILS_SYMBOLS)
+libgutils_la_DEPENDENCIES = Makefile $(libgutils_la_LIBADD)
 
 #--------------------------------------------------------------------------
 
@@ -71,5 +72,6 @@ libgioftp_la_CPPFLAGS = $(AM_CPPFLAGS)
 libgioftp_la_LIBADD = $(top_builddir)/Unicode/libgunicode.la	\
 	$(top_builddir)/lib/libgnu.la libgutils.la
 libgioftp_la_LDFLAGS = $(call ldflags,EXPORTED_LIBGIOFTP_SYMBOLS)
+libgioftp_la_DEPENDENCIES = Makefile $(libgioftp_la_LIBADD)
 
 #--------------------------------------------------------------------------

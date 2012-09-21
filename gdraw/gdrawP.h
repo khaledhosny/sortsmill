@@ -125,7 +125,6 @@ struct gtimer {
 struct gdisplay {
     struct displayfuncs *funcs;
     void *semaphore;				/* To lock the display against multiple threads */
-    struct font_state *fontstate;
     int16 res;
     int16 scale_screen_by;			/* When converting screen pixels to printer pixels */
     GWindow groot;
@@ -140,8 +139,6 @@ struct gdisplay {
 #define PointTenthsToPixel(pointtenths,res)	((((pointtenths)*(res)+36)/72)/10)
 #define PixelToPoint(pixels,res)		(((pixels)*72+(res)/2)/(res))
 #define PixelToPointTenths(pixels,res)		(((pixels)*720+(res)/2)/(res))
-
-struct font_data;
 
 struct displayfuncs {
     void (*init)(GDisplay *);
@@ -239,17 +236,8 @@ struct displayfuncs {
 
     void (*syncThread)(GDisplay *gd, void (*func)(void *), void *data);
 
-    GWindow (*startJob)(GDisplay *gdisp,void *user_data,GPrinterAttrs *attrs);
-    void (*nextPage)(GWindow w);
-    int (*endJob)(GWindow w,int cancel);
-
     void (*getFontMetrics)(GWindow,GFont *,int *,int *,int *);
 
-    void (*startNewPath)(GWindow w);
-    void (*closePath)(GWindow w);
-    void (*moveto)(GWindow w,double x, double y);
-    void (*lineto)(GWindow w,double x, double y);
-    void (*curveto)(GWindow w, double cx1,double cy1, double cx2,double cy2, double x, double y);
     void (*stroke)(GWindow w, Color col);
     void (*fill)(GWindow w, Color col);
     void (*fillAndStroke)(GWindow w, Color fillcol,Color strokecol);
@@ -262,12 +250,10 @@ struct displayfuncs {
     void (*layoutSetWidth)(GWindow w, int width);
     int  (*layoutLineCount)(GWindow w);
     int  (*layoutLineStart)(GWindow w,int line);
-    void (*startNewSubPath)(GWindow w);
-    void (*fillRuleSetWinding)(GWindow w);
+    cairo_t *(*getCairo)(GWindow w);
 };
 
 extern GDisplay *_GXDraw_CreateDisplay(char *displayname,char *programname);
-extern GDisplay *_GPSDraw_CreateDisplay(void);
 extern void _GDraw_InitError(GDisplay *);
 extern void _GDraw_ComposeChars(GDisplay *gdisp,GEvent *gevent);
 

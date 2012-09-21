@@ -209,7 +209,10 @@ void _GXCDraw_Clear(GWindow w, GRect *rect) {
     cairo_fill(gw->cc);
 }
 
-void _GXCDraw_DrawLine(GXWindow gw, int32 x,int32 y, int32 xend,int32 yend) {
+void _GXCDraw_DrawLine(GWindow w, int32 x, int32 y, int32 xend, int32 yend, Color col) {
+    GXWindow gw = (GXWindow) w;
+    gw->ggc->fg = col;
+
     int width = GXCDrawSetline(gw,gw->ggc);
 
     cairo_new_path(gw->cc);
@@ -223,7 +226,10 @@ void _GXCDraw_DrawLine(GXWindow gw, int32 x,int32 y, int32 xend,int32 yend) {
     cairo_stroke(gw->cc);
 }
 
-void _GXCDraw_DrawRect(GXWindow gw, GRect *rect) {
+void _GXCDraw_DrawRect(GWindow w, GRect *rect, Color col) {
+    GXWindow gw = (GXWindow) w;
+    gw->ggc->fg = col;
+
     int width = GXCDrawSetline(gw,gw->ggc);
 
     cairo_new_path(gw->cc);
@@ -235,7 +241,10 @@ void _GXCDraw_DrawRect(GXWindow gw, GRect *rect) {
     cairo_stroke(gw->cc);
 }
 
-void _GXCDraw_FillRect(GXWindow gw, GRect *rect) {
+void _GXCDraw_FillRect(GWindow w, GRect *rect, Color col) {
+    GXWindow gw = (GXWindow) w;
+    gw->ggc->fg = col;
+
     GXCDrawSetcolfunc(gw,gw->ggc);
 
     cairo_new_path(gw->cc);
@@ -243,8 +252,10 @@ void _GXCDraw_FillRect(GXWindow gw, GRect *rect) {
     cairo_fill(gw->cc);
 }
 
-void _GXCDraw_FillRoundRect(GXWindow gw, GRect *rect, int radius) {
+void _GXCDraw_FillRoundRect(GWindow w, GRect *rect, int radius, Color col) {
     double degrees = M_PI / 180.0;
+    GXWindow gw = (GXWindow) w;
+    gw->ggc->fg = col;
 
     GXCDrawSetcolfunc(gw,gw->ggc);
 
@@ -388,37 +399,6 @@ void _GXCDraw_FillPoly(GWindow w, GPoint *pts, int16 cnt, Color col) {
 /* ************************************************************************** */
 /* ****************************** Cairo Paths ******************************* */
 /* ************************************************************************** */
-void _GXCDraw_PathStartNew(GWindow w) {
-    cairo_new_path( ((GXWindow) w)->cc );
-}
-
-void _GXCDraw_PathStartSubNew(GWindow w) {
-    cairo_new_sub_path( ((GXWindow) w)->cc );
-}
-
-void _GXCDraw_FillRuleSetWinding(GWindow w) {
-    cairo_set_fill_rule(((GXWindow) w)->cc,CAIRO_FILL_RULE_WINDING);
-}
-
-void _GXCDraw_PathClose(GWindow w) {
-    cairo_close_path( ((GXWindow) w)->cc );
-}
-
-void _GXCDraw_PathMoveTo(GWindow w,double x, double y) {
-    cairo_move_to( ((GXWindow) w)->cc,x,y );
-}
-
-void _GXCDraw_PathLineTo(GWindow w,double x, double y) {
-    cairo_line_to( ((GXWindow) w)->cc,x,y );
-}
-
-void _GXCDraw_PathCurveTo(GWindow w,
-		    double cx1, double cy1,
-		    double cx2, double cy2,
-		    double x, double y) {
-    cairo_curve_to( ((GXWindow) w)->cc,cx1,cy1,cx2,cy2,x,y );
-}
-
 void _GXCDraw_PathStroke(GWindow w,Color col) {
     w->ggc->fg = col;
     GXCDrawSetline((GXWindow) w,w->ggc);
@@ -980,8 +960,7 @@ void _GXPDraw_DestroyWindow(GXWindow nw) {
 /* ************************************************************************** */
 /* ******************************* Pango Text ******************************* */
 /* ************************************************************************** */
-PangoFontDescription *_GXPDraw_configfont(GWindow w, GFont *font) {
-    GXWindow gw = (GXWindow) w;
+static PangoFontDescription *_GXPDraw_configfont(GXWindow gw, GFont *font) {
     PangoFontDescription *fd;
 
     /* initialize cairo and pango if not initialized, e.g. root window */
@@ -1042,7 +1021,7 @@ int32 _GXPDraw_DoText8(GWindow w, int32 x, int32 y,
     if (fi == NULL)
 	return(0);
 
-    fd = _GXPDraw_configfont(w, fi);
+    fd = _GXPDraw_configfont(gw, fi);
     pango_layout_set_font_description(gw->pango_layout,fd);
     pango_layout_set_text(gw->pango_layout,(char *) text,cnt);
     pango_layout_get_pixel_extents(gw->pango_layout,NULL,&rect);
@@ -1103,8 +1082,9 @@ int32 _GXPDraw_DoText(GWindow w, int32 x, int32 y,
 return(width);
 }
 
-void _GXPDraw_FontMetrics(GWindow gw, GFont *fi, int *as, int *ds, int *ld) {
-    GXDisplay *gdisp = ((GXWindow) gw)->display;
+void _GXPDraw_FontMetrics(GWindow w, GFont *fi, int *as, int *ds, int *ld) {
+    GXWindow gw = (GXWindow) w;
+    GXDisplay *gdisp = gw->display;
     PangoFont *pfont;
     PangoFontMetrics *fm;
 
@@ -1127,7 +1107,7 @@ void _GXPDraw_LayoutInit(GWindow w, char *text, int cnt, GFont *fi) {
     if ( fi==NULL )
 	fi = gw->ggc->fi;
 
-    fd = _GXPDraw_configfont(w, fi);
+    fd = _GXPDraw_configfont(gw, fi);
     pango_layout_set_font_description(gw->pango_layout,fd);
     pango_layout_set_text(gw->pango_layout,(char *) text,cnt);
 }
@@ -1197,4 +1177,9 @@ int _GXPDraw_LayoutLineStart(GWindow w, int l) {
 return( -1 );
 
 return( line->start_index );
+}
+
+cairo_t * _GXCDraw_GetCairo(GWindow w) {
+    GXWindow gw = (GXWindow) w;
+    return (gw->cc);
 }

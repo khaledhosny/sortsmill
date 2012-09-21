@@ -3,12 +3,11 @@
 
 libgdraw_OBJECTS =  choosericons.obj,drawboxborder.obj,\
  gaskdlg.obj,gbuttons.obj,gcontainer.obj,gdraw.obj,\
- gdrawbuildchars.obj,gdrawerror.obj,gdrawtxt.obj,gdrawtxtinit.obj,\
+ gdrawbuildchars.obj,gdrawerror.obj,gdrawtxt.obj,\
  genkeysym.obj,gfilechooser.obj,gfiledlg.obj,ggadgets.obj,ggroupbox.obj,\
- gimageclut.obj,gimagecvt.obj,gimagepsdraw.obj,gdrawgimage.obj,\
- gimagewriteeps.obj,\
+ gimageclut.obj,gimagecvt.obj,gdrawgimage.obj,\
  gkeysym.obj,glist.obj,\
- gmenu.obj,gprogress.obj,gpsdraw.obj,gpstxtinit.obj,gradio.obj,gresource.obj,\
+ gmenu.obj,gprogress.obj,gradio.obj,gresource.obj,\
  gresourceimage.obj,gsavefiledlg.obj,gscrollbar.obj,gtabset.obj,\
  gtextfield.obj,gtextinfo.obj,gwidgets.obj,gxdraw.obj,ghvbox.obj,\
  gmatrixedit.obj,gspacer.obj,ctlvalues.obj,gcolor.obj,gresedit.obj,\
@@ -37,7 +36,6 @@ gdraw.obj : gdraw.c
 gdrawbuildchars.obj : gdrawbuildchars.c
 gdrawerror.obj : gdrawerror.c
 gdrawtxt.obj : gdrawtxt.c
-gdrawtxtinit.obj : gdrawtxtinit.c
 genkeysym.obj : genkeysym.c
 gfilechooser.obj : gfilechooser.c
 gfiledlg.obj : gfiledlg.c
@@ -45,14 +43,10 @@ ggadgets.obj : ggadgets.c
 ggroupbox.obj : ggroupbox.c
 gimageclut.obj : gimageclut.c
 gimagecvt.obj : gimagecvt.c
-gimagepsdraw.obj : gimagepsdraw.c
-gimagewriteeps.obj : gimagewriteeps.c
 gkeysym.obj : gkeysym.c
 glist.obj : glist.c
 gmenu.obj : gmenu.c
 gprogress.obj : gprogress.c
-gpsdraw.obj : gpsdraw.c
-gpstxtinit.obj : gpstxtinit.c
 gradio.obj : gradio.c
 gresource.obj : gresource.c
 gresourceimage.obj : gresourceimage.c
