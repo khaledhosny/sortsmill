@@ -29,6 +29,9 @@ include $(top_srcdir)/mk/flags.am
 
 plugin_LTLIBRARIES = gb12345.la
 gb12345_la_SOURCES = gb12345.c
+gb12345_la_CPPFLAGS = 										\
+	-I$(top_builddir)/fontforge	-I$(top_srcdir)/fontforge	\
+	$(AM_CPPFLAGS)
 gb12345_la_LDFLAGS = -module -avoid-version \
 	-export-symbols-regex '^gb12345_LTX_FontForgeInit$$'
 gb12345_la_DEPENDENCIES = Makefile
