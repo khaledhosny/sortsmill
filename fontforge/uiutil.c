@@ -26,193 +26,42 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+#ifndef DOCDIR
+#error You must define DOCDIR.
+#endif
+
 #include "fontforgeui.h"
 #include <gfile.h>
+#include <assert.h>
 #include <stdarg.h>
+#include <stdbool.h>
 #include <unistd.h>
 #include <utype.h>
 #include <ustring.h>
 #include <sys/time.h>
 #include <gkeysym.h>
+#include <sys/types.h>
+#include <regex.h>
+#include "trim.h"
+#include "filename.h"
+#include "filenamecat.h"
+#include "findprog.h"
 
 extern GBox _ggadget_Default_Box;
 #define ACTIVE_BORDER   (_ggadget_Default_Box.active_border)
 #define MAIN_FOREGROUND (_ggadget_Default_Box.main_foreground)
 
-#if __CygWin
-extern void cygwin_conv_to_full_posix_path(const char *win,char *unx);
-extern void cygwin_conv_to_full_win32_path(const char *unx,char *win);
-#endif
-
 char *helpdir = NULL;
 
-#if __CygWin
-/* Try to find the default browser by looking it up in the windows registry */
-/* The registry is organized as a tree. We are interested in the subtree */
-/*  starting at HKEY_CLASSES_ROOT. This contains two different kinds of things*/
-/*  Extensions and Programs. First we look up the extension and it refers us */
-/*  to a program. So we look up the program, and look up shell->open->command */
-/*  in it. The value of command is a path followed by potential arguments */
-/*  viz: c:\program files\foobar "%1" */
+#if 0 // Japanese documentation code.
 
-/* Extensions seem to contain the ".", so ".html" not "html" */
-
-#include <w32api/wtypes.h>
-#include <w32api/winbase.h>
-#include <w32api/winreg.h>
-
-static char *win_program_from_extension(char *exten) {
-    DWORD type, dlen, err;
-    char programindicator[1000];
-    char programpath[1000];
-    HKEY hkey_prog, hkey_shell, hkey_open, hkey_exten, hkey_command;
-    char *pt;
-
-    if ( RegOpenKeyEx(HKEY_CLASSES_ROOT,exten,0,KEY_READ,&hkey_exten)!=ERROR_SUCCESS ) {
-	/*fprintf( stderr, "Failed to find extension \"%s\", did it have a period?\n", exten );*/
-return( NULL );
-    }
-    dlen = sizeof(programindicator);
-    if ( (err=RegQueryValueEx(hkey_exten,"",NULL,&type,(uint8 *)programindicator,&dlen))!=ERROR_SUCCESS ) {
-	LogError( _("Failed to default value of exten \"%s\".\n Error=%ld"), exten, err );
-	RegCloseKey(hkey_exten);
-return( NULL );
-    }
-    RegCloseKey(hkey_exten);
-
-    if ( RegOpenKeyEx(HKEY_CLASSES_ROOT,programindicator,0,KEY_READ,&hkey_prog)!=ERROR_SUCCESS ) {
-	LogError( _("Failed to find program \"%s\"\n"), programindicator );
-return( NULL );
-    }
-    if ( RegOpenKeyEx(hkey_prog,"shell",0,KEY_READ,&hkey_shell)!=ERROR_SUCCESS ) {
-	LogError( _("Failed to find \"%s->shell\"\n"), programindicator );
-	RegCloseKey(hkey_prog);
-return( NULL );
-    }
-    if ( RegOpenKeyEx(hkey_shell,"open",0,KEY_READ,&hkey_open)!=ERROR_SUCCESS ) {
-	LogError( _("Failed to find \"%s->shell->open\"\n"), programindicator );
-	RegCloseKey(hkey_prog); RegCloseKey(hkey_shell);
-return( NULL );
-    }
-    if ( RegOpenKeyEx(hkey_open,"command",0,KEY_READ,&hkey_command)!=ERROR_SUCCESS ) {
-	LogError( _("Failed to find \"%s->shell->open\"\n"), programindicator );
-	RegCloseKey(hkey_prog); RegCloseKey(hkey_shell); RegCloseKey(hkey_command);
-return( NULL );
-    }
-
-    dlen = sizeof(programpath);
-    if ( RegQueryValueEx(hkey_command,"",NULL,&type,(uint8 *)programpath,&dlen)!=ERROR_SUCCESS ) {
-	LogError( _("Failed to find default for \"%s->shell->open->command\"\n"), programindicator );
-	RegCloseKey(hkey_prog); RegCloseKey(hkey_shell); RegCloseKey(hkey_open); RegCloseKey(hkey_command);
-return( NULL );
-    }
-
-    RegCloseKey(hkey_prog); RegCloseKey(hkey_shell); RegCloseKey(hkey_open); RegCloseKey(hkey_command);
-
-    pt = strstr(programpath,"%1");
-    if ( pt!=NULL )
-	pt[1] = 's';
-return( copy(programpath));
-}
-
-static void do_windows_browser(char *fullspec) {
-    char *format, *start, *pt, ch, *temp, *cmd;
-
-    format = win_program_from_extension(".html");
-    if ( format==NULL )
-	format = win_program_from_extension(".htm");
-    if ( format==NULL ) {
-	gwwv_post_error(_("No Browser"),_("Could not find a browser. Set the BROWSER environment variable to point to one"));
-return;
-    }
-
-    if ( format[0]=='"' || format[0]=='\'' ) {
-	start = format+1;
-	pt = strchr(start,format[0]);
-    } else {
-	start = format;
-	pt = strchr(start,' ');
-    }
-    if ( pt==NULL ) pt = start+strlen(start);
-    ch = *pt; *pt='\0';
-
-    temp = galloc(strlen(start)+300+ (ch==0?0:strlen(pt+1)));
-    cygwin_conv_to_full_posix_path(start,temp+1);
-    temp[0]='"'; strcat(temp,"\" ");
-    if ( ch!='\0' )
-	strcat(temp,pt+1);
-    cmd = galloc(strlen(temp)+strlen(fullspec)+8);
-    if ( strstr("%s",temp)!=NULL )
-	sprintf( cmd, temp, fullspec );
-    else {
-	strcpy(cmd,temp);
-	strcat(cmd, " ");
-	strcat(cmd,fullspec);
-    }
-    strcat(cmd," &" );
-    system(cmd);
-    free( cmd ); free( temp ); free( format );
-}
-#endif
-
-static char browser[1025];
-
-static void findbrowser(void) {
-#if __CygWin
-    static char *stdbrowsers[] = { "netscape.exe", "opera.exe", "galeon.exe", "kfmclient.exe",
-	"chrome.exe", "mozilla.exe", "mosaic.exe", /*"grail",*/
-	"iexplore.exe",
-	/*"lynx.exe",*/
-#else
-/* Both xdg-open and htmlview are not browsers per se, but browser dispatchers*/
-/*  which try to figure out what browser the user intents. It seems no one */
-/*  uses (understands?) environment variables any more, so BROWSER is a bit */
-/*  old-fashioned */
-    static char *stdbrowsers[] = { "xdg-open", "x-www-browser", "htmlview",
-        "firefox", "mozilla", "konqueror", "opera", "google-chrome", "galeon",
-        "kfmclient", "netscape", "mosaic", /*"grail",*/ "lynx",
-#endif
-	NULL };
-    int i;
-    char *path;
-
-    if ( getenv("BROWSER")!=NULL ) {
-	strcpy(browser,getenv("BROWSER"));
-#if __CygWin			/* Get rid of any dos style names */
-	if ( isalpha(browser[0]) && browser[1]==':' && browser[2]=='\\' )
-	    cygwin_conv_to_full_posix_path(getenv("BROWSER"),browser);
-	else if ( strchr(browser,'/')==NULL ) {
-	    if ( strstrmatch(browser,".exe")==NULL )
-		strcat(browser,".exe");
-	    if ( (path=_GFile_find_program_dir(browser))!=NULL ) {
-		snprintf(browser,sizeof(browser),"%s/%s", path, getenv("BROWSER"));
-		free(path);
-	    }
-	}
-#endif
-	if ( strcmp(browser,"kde")==0 || strcmp(browser,"kfm")==0 ||
-		strcmp(browser,"konqueror")==0 || strcmp(browser,"kfmclient")==0 )
-	    strcpy(browser,"kfmclient openURL");
-return;
-    }
-    for ( i=0; stdbrowsers[i]!=NULL; ++i ) {
-	if ( (path=_GFile_find_program_dir(stdbrowsers[i]))!=NULL ) {
-	    if ( strcmp(stdbrowsers[i],"kfmclient")==0 )
-		strcpy(browser,"kfmclient openURL");
-	    else
-#if __CygWin
-		snprintf(browser,sizeof(browser),"%s/%s", path, stdbrowsers[i]);
-#else
-		strcpy(browser,stdbrowsers[i]);
-#endif
-	    free(path);
-return;
-	}
-    }
-#if __Mac
-    strcpy(browser,"open");	/* thanks to riggle */
-#endif
-}
+// FIXME: Support the Japanese documentation, if it is adequately up
+// to date and assuming we do not make massive changes to the
+// docs (which we definitely might do).
+//
+// Also, do not use this code to do it. I have left it here for
+// reference.
 
 static int SupportedLocale(char *fullspec,char *locale) {
     static char *supported[] = { "ja", NULL };
@@ -222,12 +71,13 @@ static int SupportedLocale(char *fullspec,char *locale) {
 	if ( strcmp(locale,supported[i])==0 ) {
 	    strcat(fullspec,locale);
 	    strcat(fullspec,"/");
-return( true );
+	    return( true );
 	}
     }
-return( false );
+    return( false );
 }
 
+// FIXME: Are these docs maintained?
 static void AppendSupportedLocale(char *fullspec) {
     /* KANOU has provided a japanese translation of the docs */
     /* Edward Lee is working on traditional chinese */
@@ -237,185 +87,114 @@ static void AppendSupportedLocale(char *fullspec) {
     if ( loc==NULL ) loc = getenv("LC_MESSAGES");
     if ( loc==NULL ) loc = getenv("LANG");
     if ( loc==NULL )
-return;
+	return;
     strncpy(buffer,loc,sizeof(buffer));
     if ( SupportedLocale(fullspec,buffer))
-return;
+	return;
     pt = strchr(buffer,'.');
     if ( pt!=NULL ) {
 	*pt = '\0';
 	if ( SupportedLocale(fullspec,buffer))
-return;
+	    return;
     }
     pt = strchr(buffer,'_');
     if ( pt!=NULL ) {
 	*pt = '\0';
 	if ( SupportedLocale(fullspec,buffer))
-return;
+	    return;
     }
 }
-    
-#if defined(__MINGW32__)
-#include <gresource.h>
-#include <Windows.h>
-void help(char *file) {
-    if(file){
-	char*  p_file  = copy(file);
-	char*  p_uri   = p_file;
-	char*  p_param = strrchr(p_file,'#');
 
-	if(p_param){
-	    *p_param = '\0';
-	}
-	if(! GFileIsAbsolute(p_file)){
-	    p_uri = (char*) galloc( 256 + strlen(GResourceProgramDir) + strlen(p_file) );
+#endif // Japanese documentation code.
 
-	    strcpy(p_uri, GResourceProgramDir); /*  doc/fontforge/ja/file  */
-	    strcat(p_uri, "/doc/fontforge/");
-	    AppendSupportedLocale(p_uri);
-	    strcat(p_uri, p_file);
+// See http://en.wikipedia.org/wiki/URI_scheme
+static const char *uri_pattern = "^([[:alpha:]][-+.[:alnum:]]*):(.*)$";
 
-	    if(!GFileReadable(p_uri)){
-		strcpy(p_uri, GResourceProgramDir);/*  doc/fontforge/file  */
-		strcat(p_uri, "/doc/fontforge/");
-		strcat(p_uri, p_file);
-
-		if(!GFileReadable(p_uri)){
-		    strcpy(p_uri, "http://fontforge.sourceforge.net/"); /*  http://host/ja/file  */
-		    AppendSupportedLocale(p_uri);
-		    strcat(p_uri, p_file);
-		}
-	    }
-	}
-	if(p_param){
-	    if(p_uri != p_file)
-		strcat(p_uri, p_param);
-	    else
-		*p_param = '#';
-	}
-
-	/* using default browser */
-	ShellExecute(NULL, "open", p_uri, NULL, NULL, SW_SHOWDEFAULT);
-
-	if(p_uri != p_file) gfree(p_uri);
-    }
+#ifndef NDEBUG
+static bool re_pattern_error(int error)
+{
+    return (error == REG_BADPAT ||
+	    error == REG_ECOLLATE ||
+	    error == REG_ECTYPE ||
+	    error == REG_EESCAPE ||
+	    error == REG_ESUBREG ||
+	    error == REG_EBRACK ||
+	    error == REG_EPAREN ||
+	    error == REG_EBRACE ||
+	    error == REG_BADBR ||
+	    error == REG_ERANGE ||
+	    error == REG_EEND ||
+	    error == REG_ESIZE);
 }
-#else
+#endif // ! NDEBUG
 
-void help(char *file) {
-    char fullspec[1024], *temp, *pt;
-    
-    if ( browser[0]=='\0' )
-	findbrowser();
-#ifndef __CygWin
-    if ( browser[0]=='\0' ) {
-	gwwv_post_error(_("No Browser"),_("Could not find a browser. Set the BROWSER environment variable to point to one"));
-return;
-    }
-#endif
+// FIXME: Put this in an URI-processing module.
+static bool looks_like_uri(const char *url)
+{
+    regex_t re;
+    int error = regcomp(&re, uri_pattern, REG_EXTENDED | REG_NOSUB);
+    assert(!re_pattern_error(error));
 
-    if ( strstr(file,"http://")==NULL ) {
-	memset(fullspec,0,sizeof fullspec);
-	if ( ! GFileIsAbsolute(file) ) {
-	    if ( helpdir==NULL || *helpdir=='\0' ) {
-#if defined(DOCDIR)
-		strncpy(fullspec,DOCDIR "/",sizeof fullspec - 1 - strlen(file));
-#elif defined(SHAREDIR)
-		strncpy(fullspec,SHAREDIR "/doc/fontforge/",sizeof fullspec - 1 - strlen(file));
-#else
-		strncpy(fullspec,"/usr/local/share/doc/fontforge/",sizeof fullspec - 1 - strlen(file));
-#endif
-	    } else {
-		strncpy(fullspec,helpdir,sizeof fullspec - 1);
-	    }
-	}
-	strcat(fullspec,file);
-	if (( pt = strrchr(fullspec,'#') )!=NULL ) *pt ='\0';
-	if ( !GFileReadable( fullspec )) {
-	    if ( *file!='/' ) {
-		strcpy(fullspec,"/usr/share/doc/fontforge/");
-		strcat(fullspec,file);
-		if (( pt = strrchr(fullspec,'#') )!=NULL ) *pt ='\0';
-	    }
-	}
-	if ( !GFileReadable( fullspec )) {
-	    strcpy(fullspec,"http://fontforge.sf.net/");
-	    AppendSupportedLocale(fullspec);
-	    strcat(fullspec,file);
-	} else if ( pt!=NULL )
-	    *pt = '#';
-    } else
-	strcpy(fullspec,file);
-#if __CygWin
-    if ( (strstrmatch(browser,"/cygdrive")!=NULL || browser[0]=='\0') &&
-		strstr(fullspec,":/")==NULL ) {
-	/* It looks as though the browser is a windows application, so we */
-	/*  should give it a windows file name */
-	char *pt, *tpt;
-	temp = galloc(1024);
-	cygwin_conv_to_full_win32_path(fullspec,temp);
-	for ( pt = fullspec, tpt = temp; *tpt && pt<fullspec+sizeof(fullspec)-3; *pt++ = *tpt++ )
-	    if ( *tpt=='\\' )
-		*pt++ = '\\';
-	*pt = '\0';
-	free(temp);
+    bool matched = false;
+    if (error == 0) {
+	int match_code = regexec(&re, url, 0, NULL, 0);
+	matched = (match_code == 0);
+	regfree(&re);
     }
-#endif
-#if __Mac
-    if ( strcmp(browser,"open")==0 )
-	/* open doesn't want "file:" prepended */;
+    return matched;
+}
+
+static char *absolute_help_file(const char *file)
+{
+    // FIXME: Maybe add support for the Japanese documentation.
+
+    char *abs_file;
+    if (IS_ABSOLUTE_PATH(file))
+	abs_file = xstrdup(file);
     else
-#endif
-    if ( strstr(fullspec,":/")==NULL ) {
-	char *t1 = galloc(strlen(fullspec)+strlen("file:")+20);
-#if __CygWin
-	sprintf( t1, "file:\\\\\\%s", fullspec );
-#else
-	sprintf( t1, "file:%s", fullspec);
-#endif
-	strcpy(fullspec,t1);
-	free(t1);
-    }
-#if 0 && __Mac
-    /* Starting a Mac application is weird... system() can't do it */
-    /* Thanks to Edward H. Trager giving me an example... */
-    if ( strstr(browser,".app")!=NULL ) {
-	*strstr(browser,".app") = '\0';
-	pt = strrchr(browser,'/');
-	if ( pt==NULL ) pt = browser-1;
-	++pt;
-	temp = galloc(strlen(pt)+strlen(fullspec) +
-		strlen( "osascript -l AppleScript -e \"Tell application \"\" to getURL \"\"\"" )+
-		20);
-	/* this doesn't work on Max OS X.0 (osascript does not support -e) */
-	sprintf( temp, "osascript -l AppleScript -e \"Tell application \"%s\" to getURL \"%s\"\"",
-	    pt, fullspec);
-	system(temp);
-	ff_post_notice(_("Leave X"),_("A browser is probably running in the native Mac windowing system. You must leave the X environment to view it. Try Cmd-Opt-A"));
-    } else {
-#elif __Mac
-    /* This seems a bit easier... Thanks to riggle */
-    if ( strcmp(browser,"open")==0 ) {
-	char *str = "DYLD_LIBRARY_PATH=\"\"; open ";
-	temp = galloc(strlen(str) + strlen(fullspec) + 20);
-	sprintf( temp, "%s \"%s\" &", str, fullspec );
-	system(temp);
-    } else {
-#elif __CygWin
-    if ( browser[0]=='\0' ) {
-	do_windows_browser(fullspec);
-	temp = NULL;
-    } else {
-#else
-    {
-#endif
-	temp = galloc(strlen(browser) + strlen(fullspec) + 20);
-	sprintf( temp, strcmp(browser,"kfmclient openURL")==0 ? "%s \"%s\" &" : "\"%s\" \"%s\" &", browser, fullspec );
-	system(temp);
-    }
-    free(temp);
+	abs_file = file_name_concat(DOCDIR, file, NULL);
+    return abs_file;
 }
-#endif
+
+static char *make_help_uri(char *uri_or_file)
+{
+    char *uri = trim(uri_or_file);
+    if (!looks_like_uri(uri)) {
+	char *abs_file = absolute_help_file(uri);
+	const char *scheme = "file://";
+	char *new_uri = xcalloc(strlen(scheme) + strlen(abs_file) + 1, sizeof (char));
+	strcat(new_uri, scheme);
+	strcat(new_uri, abs_file);
+	free(abs_file);
+	free(uri);
+	uri = new_uri;
+    }
+    return uri;
+}
+
+static const char *browser_dispatcher = "xdg-open";
+
+static char *find_browser(void)
+{
+    return (char *) find_in_path(browser_dispatcher);
+}
+
+void help(char *file)
+{
+    char *uri = make_help_uri(file);
+    char *browser = find_browser();
+    char *command = xcalloc(strlen(browser) + strlen(uri) + 10, sizeof (char));
+    strcat(command, browser);
+    strcat(command, " ");
+    strcat(command, uri);
+    strcat(command, " &");
+    system(command);
+    free(command);
+    free(browser);
+    free(uri);
+}
+
+//-------------------------------------------------------------------------
 
 static void UI_IError(const char *format,...) {
     va_list ap;

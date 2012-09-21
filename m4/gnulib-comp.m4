@@ -39,13 +39,25 @@ AC_DEFUN([gl_EARLY],
   m4_pattern_allow([^gl_LTLIBOBJS$])dnl a variable
   AC_REQUIRE([gl_PROG_AR_RANLIB])
   AC_REQUIRE([AM_PROG_CC_C_O])
+  # Code from module alloca-opt:
+  # Code from module btowc:
   # Code from module c-ctype:
   # Code from module c-strcase:
+  # Code from module concat-filename:
+  # Code from module configmake:
+  # Code from module dirname:
+  # Code from module dirname-lgpl:
+  # Code from module dosname:
+  # Code from module double-slash-root:
   # Code from module errno:
   # Code from module error:
   # Code from module exitfail:
   # Code from module extensions:
   AC_REQUIRE([gl_USE_SYSTEM_EXTENSIONS])
+  # Code from module filename:
+  # Code from module filenamecat:
+  # Code from module filenamecat-lgpl:
+  # Code from module findprog:
   # Code from module float:
   # Code from module gettext-h:
   # Code from module gperf:
@@ -56,11 +68,26 @@ AC_DEFUN([gl_EARLY],
   # Code from module include_next:
   # Code from module inline:
   # Code from module intprops:
+  # Code from module iswblank:
+  # Code from module langinfo:
+  # Code from module libunistring:
+  # Code from module localcharset:
+  # Code from module locale:
+  # Code from module localeconv:
+  # Code from module malloc-gnu:
+  # Code from module malloc-posix:
   # Code from module math:
+  # Code from module mbchar:
+  # Code from module mbiter:
+  # Code from module mbrtowc:
+  # Code from module mbsinit:
+  # Code from module mbtowc:
   # Code from module memchr:
   # Code from module msvc-inval:
   # Code from module msvc-nothrow:
   # Code from module multiarch:
+  # Code from module nl_langinfo:
+  # Code from module regex:
   # Code from module snippet/_Noreturn:
   # Code from module snippet/arg-nonnull:
   # Code from module snippet/c++defs:
@@ -71,23 +98,36 @@ AC_DEFUN([gl_EARLY],
   # Code from module stddef:
   # Code from module stdint:
   # Code from module stdlib:
+  # Code from module stpcpy:
   # Code from module strcase:
   # Code from module strcasestr:
   # Code from module strcasestr-simple:
+  # Code from module streq:
   # Code from module strerror:
   # Code from module strerror-override:
   # Code from module string:
   # Code from module strings:
+  # Code from module strndup:
+  # Code from module strnlen:
   # Code from module sys_types:
+  # Code from module trim:
   # Code from module unistd:
   # Code from module unistr/base:
   # Code from module unistr/u8-mbtoucr:
   # Code from module unistr/u8-uctomb:
   # Code from module unitypes:
+  # Code from module uniwidth/base:
+  # Code from module uniwidth/width:
   # Code from module verify:
+  # Code from module wchar:
+  # Code from module wcrtomb:
+  # Code from module wctype-h:
+  # Code from module wcwidth:
   # Code from module xalloc:
   # Code from module xalloc-die:
   # Code from module xalloc-oversized:
+  # Code from module xconcat-filename:
+  # Code from module xstrndup:
 ])
 
 # This macro should be invoked from ./configure.ac, in the section
@@ -104,6 +144,18 @@ AC_DEFUN([gl_INIT],
   m4_pushdef([gl_LIBSOURCES_DIR], [])
   gl_COMMON
   gl_source_base='lib'
+  gl_FUNC_ALLOCA
+  gl_FUNC_BTOWC
+  if test $HAVE_BTOWC = 0 || test $REPLACE_BTOWC = 1; then
+    AC_LIBOBJ([btowc])
+    gl_PREREQ_BTOWC
+  fi
+  gl_WCHAR_MODULE_INDICATOR([btowc])
+  gl_CONFIGMAKE_PREP
+  gl_DIRNAME
+  gl_MODULE_INDICATOR([dirname])
+  gl_DIRNAME_LGPL
+  gl_DOUBLE_SLASH_ROOT
   gl_HEADER_ERRNO_H
   gl_ERROR
   if test $ac_cv_lib_error_at_line = no; then
@@ -113,6 +165,10 @@ AC_DEFUN([gl_INIT],
   m4_ifdef([AM_XGETTEXT_OPTION],
     [AM_][XGETTEXT_OPTION([--flag=error:3:c-format])
      AM_][XGETTEXT_OPTION([--flag=error_at_line:5:c-format])])
+  gl_FILE_NAME_CONCAT
+  gl_MODULE_INDICATOR([filenamecat])
+  gl_FILE_NAME_CONCAT_LGPL
+  gl_FINDPROG
   gl_FLOAT_H
   if test $REPLACE_FLOAT_LDBL = 1; then
     AC_LIBOBJ([float])
@@ -135,7 +191,58 @@ AC_DEFUN([gl_INIT],
     AC_LIBOBJ([iconv_close])
   fi
   gl_INLINE
+  gl_FUNC_ISWBLANK
+  if test $HAVE_ISWCNTRL = 0 || test $REPLACE_ISWCNTRL = 1; then
+    :
+  else
+    if test $HAVE_ISWBLANK = 0 || test $REPLACE_ISWBLANK = 1; then
+      AC_LIBOBJ([iswblank])
+    fi
+  fi
+  gl_WCTYPE_MODULE_INDICATOR([iswblank])
+  gl_LANGINFO_H
+  gl_LIBUNISTRING
+  gl_LOCALCHARSET
+  LOCALCHARSET_TESTS_ENVIRONMENT="CHARSETALIASDIR=\"\$(abs_top_builddir)/$gl_source_base\""
+  AC_SUBST([LOCALCHARSET_TESTS_ENVIRONMENT])
+  gl_LOCALE_H
+  gl_FUNC_LOCALECONV
+  if test $REPLACE_LOCALECONV = 1; then
+    AC_LIBOBJ([localeconv])
+    gl_PREREQ_LOCALECONV
+  fi
+  gl_LOCALE_MODULE_INDICATOR([localeconv])
+  gl_FUNC_MALLOC_GNU
+  if test $REPLACE_MALLOC = 1; then
+    AC_LIBOBJ([malloc])
+  fi
+  gl_MODULE_INDICATOR([malloc-gnu])
+  gl_FUNC_MALLOC_POSIX
+  if test $REPLACE_MALLOC = 1; then
+    AC_LIBOBJ([malloc])
+  fi
+  gl_STDLIB_MODULE_INDICATOR([malloc-posix])
   gl_MATH_H
+  gl_MBCHAR
+  gl_MBITER
+  gl_FUNC_MBRTOWC
+  if test $HAVE_MBRTOWC = 0 || test $REPLACE_MBRTOWC = 1; then
+    AC_LIBOBJ([mbrtowc])
+    gl_PREREQ_MBRTOWC
+  fi
+  gl_WCHAR_MODULE_INDICATOR([mbrtowc])
+  gl_FUNC_MBSINIT
+  if test $HAVE_MBSINIT = 0 || test $REPLACE_MBSINIT = 1; then
+    AC_LIBOBJ([mbsinit])
+    gl_PREREQ_MBSINIT
+  fi
+  gl_WCHAR_MODULE_INDICATOR([mbsinit])
+  gl_FUNC_MBTOWC
+  if test $REPLACE_MBTOWC = 1; then
+    AC_LIBOBJ([mbtowc])
+    gl_PREREQ_MBTOWC
+  fi
+  gl_STDLIB_MODULE_INDICATOR([mbtowc])
   gl_FUNC_MEMCHR
   if test $HAVE_MEMCHR = 0 || test $REPLACE_MEMCHR = 1; then
     AC_LIBOBJ([memchr])
@@ -151,11 +258,27 @@ AC_DEFUN([gl_INIT],
     AC_LIBOBJ([msvc-nothrow])
   fi
   gl_MULTIARCH
+  gl_FUNC_NL_LANGINFO
+  if test $HAVE_NL_LANGINFO = 0 || test $REPLACE_NL_LANGINFO = 1; then
+    AC_LIBOBJ([nl_langinfo])
+  fi
+  gl_LANGINFO_MODULE_INDICATOR([nl_langinfo])
+  gl_REGEX
+  if test $ac_use_included_regex = yes; then
+    AC_LIBOBJ([regex])
+    gl_PREREQ_REGEX
+  fi
   gt_TYPE_SSIZE_T
   AM_STDBOOL_H
   gl_STDDEF_H
   gl_STDINT_H
   gl_STDLIB_H
+  gl_FUNC_STPCPY
+  if test $HAVE_STPCPY = 0; then
+    AC_LIBOBJ([stpcpy])
+    gl_PREREQ_STPCPY
+  fi
+  gl_STRING_MODULE_INDICATOR([stpcpy])
   gl_STRCASE
   if test $HAVE_STRCASECMP = 0; then
     AC_LIBOBJ([strcasecmp])
@@ -190,6 +313,17 @@ AC_DEFUN([gl_INIT],
   fi
   gl_HEADER_STRING_H
   gl_HEADER_STRINGS_H
+  gl_FUNC_STRNDUP
+  if test $HAVE_STRNDUP = 0 || test $REPLACE_STRNDUP = 1; then
+    AC_LIBOBJ([strndup])
+  fi
+  gl_STRING_MODULE_INDICATOR([strndup])
+  gl_FUNC_STRNLEN
+  if test $HAVE_DECL_STRNLEN = 0 || test $REPLACE_STRNLEN = 1; then
+    AC_LIBOBJ([strnlen])
+    gl_PREREQ_STRNLEN
+  fi
+  gl_STRING_MODULE_INDICATOR([strnlen])
   gl_SYS_TYPES_H
   AC_PROG_MKDIR_P
   gl_UNISTD_H
@@ -199,7 +333,23 @@ AC_DEFUN([gl_INIT],
   gl_MODULE_INDICATOR([unistr/u8-uctomb])
   gl_LIBUNISTRING_MODULE([0.9], [unistr/u8-uctomb])
   gl_LIBUNISTRING_LIBHEADER([0.9], [unitypes.h])
+  gl_LIBUNISTRING_LIBHEADER([0.9], [uniwidth.h])
+  gl_LIBUNISTRING_MODULE([0.9.4], [uniwidth/width])
+  gl_WCHAR_H
+  gl_FUNC_WCRTOMB
+  if test $HAVE_WCRTOMB = 0 || test $REPLACE_WCRTOMB = 1; then
+    AC_LIBOBJ([wcrtomb])
+    gl_PREREQ_WCRTOMB
+  fi
+  gl_WCHAR_MODULE_INDICATOR([wcrtomb])
+  gl_WCTYPE_H
+  gl_FUNC_WCWIDTH
+  if test $HAVE_WCWIDTH = 0 || test $REPLACE_WCWIDTH = 1; then
+    AC_LIBOBJ([wcwidth])
+  fi
+  gl_WCHAR_MODULE_INDICATOR([wcwidth])
   gl_XALLOC
+  gl_XSTRNDUP
   # End of code from modules
   m4_ifval(gl_LIBSOURCES_LIST, [
     m4_syscmd([test ! -d ]m4_defn([gl_LIBSOURCES_DIR])[ ||
@@ -342,16 +492,33 @@ AC_DEFUN([gl_FILE_LIST], [
   build-aux/snippet/c++defs.h
   build-aux/snippet/unused-parameter.h
   build-aux/snippet/warn-on-use.h
+  lib/alloca.in.h
+  lib/basename-lgpl.c
+  lib/basename.c
+  lib/btowc.c
   lib/c-ctype.c
   lib/c-ctype.h
   lib/c-strcase.h
   lib/c-strcasecmp.c
   lib/c-strncasecmp.c
+  lib/concat-filename.c
+  lib/concat-filename.h
+  lib/config.charset
+  lib/dirname-lgpl.c
+  lib/dirname.c
+  lib/dirname.h
+  lib/dosname.h
   lib/errno.in.h
   lib/error.c
   lib/error.h
   lib/exitfail.c
   lib/exitfail.h
+  lib/filename.h
+  lib/filenamecat-lgpl.c
+  lib/filenamecat.c
+  lib/filenamecat.h
+  lib/findprog.c
+  lib/findprog.h
   lib/float.c
   lib/float.in.h
   lib/gettext.h
@@ -365,76 +532,156 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/iconv_open-solaris.gperf
   lib/iconv_open.c
   lib/intprops.h
+  lib/iswblank.c
   lib/itold.c
+  lib/langinfo.in.h
+  lib/libunistring.valgrind
+  lib/localcharset.c
+  lib/localcharset.h
+  lib/locale.in.h
+  lib/localeconv.c
+  lib/malloc.c
   lib/math.in.h
+  lib/mbchar.c
+  lib/mbchar.h
+  lib/mbiter.h
+  lib/mbrtowc.c
+  lib/mbsinit.c
+  lib/mbtowc-impl.h
+  lib/mbtowc.c
   lib/memchr.c
   lib/memchr.valgrind
   lib/msvc-inval.c
   lib/msvc-inval.h
   lib/msvc-nothrow.c
   lib/msvc-nothrow.h
+  lib/nl_langinfo.c
+  lib/ref-add.sin
+  lib/ref-del.sin
+  lib/regcomp.c
+  lib/regex.c
+  lib/regex.h
+  lib/regex_internal.c
+  lib/regex_internal.h
+  lib/regexec.c
   lib/stdbool.in.h
   lib/stddef.in.h
   lib/stdint.in.h
   lib/stdlib.in.h
+  lib/stpcpy.c
   lib/str-two-way.h
   lib/strcasecmp.c
   lib/strcasestr.c
+  lib/streq.h
   lib/strerror-override.c
   lib/strerror-override.h
   lib/strerror.c
   lib/string.in.h
   lib/strings.in.h
+  lib/stripslash.c
   lib/strncasecmp.c
+  lib/strndup.c
+  lib/strnlen.c
   lib/sys_types.in.h
+  lib/trim.c
+  lib/trim.h
   lib/unistd.in.h
   lib/unistr.in.h
   lib/unistr/u8-mbtoucr.c
   lib/unistr/u8-uctomb-aux.c
   lib/unistr/u8-uctomb.c
   lib/unitypes.in.h
+  lib/uniwidth.in.h
+  lib/uniwidth/cjk.h
+  lib/uniwidth/width.c
   lib/verify.h
+  lib/wchar.in.h
+  lib/wcrtomb.c
+  lib/wctype.in.h
+  lib/wcwidth.c
   lib/xalloc-die.c
   lib/xalloc-oversized.h
   lib/xalloc.h
+  lib/xconcat-filename.c
   lib/xmalloc.c
+  lib/xstrndup.c
+  lib/xstrndup.h
   m4/00gnulib.m4
+  m4/absolute-header.m4
+  m4/alloca.m4
+  m4/btowc.m4
+  m4/codeset.m4
+  m4/configmake.m4
+  m4/dirname.m4
+  m4/double-slash-root.m4
+  m4/eaccess.m4
   m4/errno_h.m4
   m4/error.m4
   m4/extensions.m4
+  m4/fcntl-o.m4
+  m4/filenamecat.m4
+  m4/findprog.m4
   m4/float_h.m4
+  m4/glibc21.m4
   m4/gnulib-common.m4
   m4/iconv.m4
   m4/iconv_h.m4
   m4/iconv_open.m4
   m4/include_next.m4
   m4/inline.m4
+  m4/iswblank.m4
+  m4/langinfo_h.m4
   m4/lib-ld.m4
   m4/lib-link.m4
   m4/lib-prefix.m4
   m4/libunistring-base.m4
+  m4/libunistring.m4
+  m4/localcharset.m4
+  m4/locale-fr.m4
+  m4/locale-ja.m4
+  m4/locale-zh.m4
+  m4/locale_h.m4
+  m4/localeconv.m4
   m4/longlong.m4
+  m4/malloc.m4
   m4/math_h.m4
+  m4/mbchar.m4
+  m4/mbiter.m4
+  m4/mbrtowc.m4
+  m4/mbsinit.m4
+  m4/mbstate_t.m4
+  m4/mbtowc.m4
   m4/memchr.m4
   m4/mmap-anon.m4
   m4/msvc-inval.m4
   m4/msvc-nothrow.m4
   m4/multiarch.m4
+  m4/nl_langinfo.m4
   m4/off_t.m4
+  m4/regex.m4
   m4/ssize_t.m4
   m4/stdbool.m4
   m4/stddef_h.m4
   m4/stdint.m4
   m4/stdlib_h.m4
+  m4/stpcpy.m4
   m4/strcase.m4
   m4/strcasestr.m4
   m4/strerror.m4
   m4/string_h.m4
   m4/strings_h.m4
+  m4/strndup.m4
+  m4/strnlen.m4
   m4/sys_socket_h.m4
   m4/sys_types_h.m4
   m4/unistd_h.m4
   m4/warn-on-use.m4
+  m4/wchar_h.m4
   m4/wchar_t.m4
+  m4/wcrtomb.m4
+  m4/wctype_h.m4
+  m4/wcwidth.m4
+  m4/wint_t.m4
   m4/xalloc.m4
+  m4/xstrndup.m4
 ])
