@@ -1048,7 +1048,6 @@ static int TileAsk(struct tiledata *td,SplineFont *sf) {
     GGadgetCreateData gcd[24], boxes[5], *harray[8], *varray[5],
 	*rhvarray[4][5], *chvarray[4][5];
     GTextInfo label[24];
-    FontRequest rq;
     int as, ds, ld;
     int i,k;
     static GFont *font = NULL, *bold=NULL;
@@ -1070,21 +1069,15 @@ static int TileAsk(struct tiledata *td,SplineFont *sf) {
     tpd.gw = gw = GDrawCreateTopWindow(NULL,&pos,tpd_e_h,&tpd.cv_first,&wattrs);
 
     if ( font==NULL ) {
-	memset(&rq,0,sizeof(rq));
-	rq.utf8_family_name = SANS_UI_FAMILIES;
-	rq.point_size = 12;
-	rq.weight = 400;
-	font = GDrawInstanciateFont(NULL,&rq);
+	font = GDrawNewFont(NULL, SANS_UI_FAMILIES, 12, 400, fs_none);
 	font = GResourceFindFont("TilePath.Font",font);
 
-	GDrawDecomposeFont(font, &rq);
-	rq.weight = 700;
-	bold = GDrawInstanciateFont(NULL,&rq);
+	bold = GDrawNewFont(NULL, SANS_UI_FAMILIES, 12, 700, fs_none);
 	bold = GResourceFindFont("TilePath.BoldFont",bold);
     }
     tpd.plain = font;
     tpd.bold = bold;
-    GDrawWindowFontMetrics(tpd.gw,tpd.plain,&as,&ds,&ld);
+    GDrawGetFontMetrics(tpd.gw,tpd.plain,&as,&ds,&ld);
     tpd.fh = as+ds; tpd.as = as;
 
     memset(&label,0,sizeof(label));

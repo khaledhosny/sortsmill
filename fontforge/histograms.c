@@ -747,7 +747,6 @@ void SFHistogram(SplineFont *sf,int layer, struct psdict *private, uint8 *select
     GTextInfo label[17];
     int i,j;
     char binsize[20], barwidth[20], *primary, *secondary;
-    FontRequest rq;
     int as, ds, ld;
     static unichar_t n9999[] = { '9', '9', '9', '9', 0 };
     static GFont *font = NULL;
@@ -794,15 +793,11 @@ void SFHistogram(SplineFont *sf,int layer, struct psdict *private, uint8 *select
     hist.gw = gw = GDrawCreateTopWindow(NULL,&pos,hist_e_h,&hist,&wattrs);
 
     if ( font == NULL ) {
-	memset(&rq,0,sizeof(rq));
-	rq.utf8_family_name = SANS_UI_FAMILIES;
-	rq.point_size = 10;
-	rq.weight = 400;
-	font = GDrawInstanciateFont(NULL,&rq);
+	font = GDrawNewFont(NULL, SANS_UI_FAMILIES, 10, 400, fs_none);
 	font = GResourceFindFont("Histogram.Font",font);
     }
     hist.font = font;
-    GDrawWindowFontMetrics(gw,hist.font,&as,&ds,&ld);
+    GDrawGetFontMetrics(gw,hist.font,&as,&ds,&ld);
     hist.fh = as+ds; hist.as = as;
 
     GDrawSetFont(gw,hist.font);

@@ -5565,23 +5565,17 @@ return( base_sc );
 
 /* we style some glyph names differently, see FVExpose() */
 #define _uni_italic	0x2
-#define _uni_vertical	(1<<2)
+#define _uni_rotated	(1<<2)
 #define _uni_fontmax	(2<<2)
 
-static GFont *FVCheckFont(FontView *fv,int type) {
-    FontRequest rq;
-
+static GFont *FVCheckFont(FontView *fv, int type) {
     if ( fv->fontset[type]==NULL ) {
-	memset(&rq,0,sizeof(rq));
-	rq.utf8_family_name = fv_fontnames;
-	rq.point_size = fv_fontsize;
-	rq.weight = 400;
-	rq.style = 0;
+	int style = 0;
 	if (type&_uni_italic)
-	    rq.style |= fs_italic;
-	if (type&_uni_vertical)
-	    rq.style |= fs_vertical;
-	fv->fontset[type] = GDrawInstanciateFont(fv->v,&rq);
+	    style |= fs_italic;
+	if (type&_uni_rotated)
+	    style |= fs_rotated;
+	fv->fontset[type] = GDrawNewFont(fv->v, fv_fontnames, fv_fontsize, 400, style);
     }
 return( fv->fontset[type] );
 }
@@ -5605,7 +5599,7 @@ static void do_Adobe_Pua(unichar_t *buf,int sob,int uni) {
 }
 
 static void FVExpose(FontView *fv,GWindow pixmap, GEvent *event) {
-    int i, j, y, width, gid;
+    int i, j, width, gid;
     int changed;
     GRect old, old2, r;
     GClut clut;
@@ -5747,7 +5741,7 @@ static void FVExpose(FontView *fv,GWindow pixmap, GEvent *event) {
 			    *pt = '.';
 			}
 			if ( strstr(pt,".vert")!=NULL )
-			    styles = _uni_vertical;
+			    styles = _uni_rotated;
 			if ( buf[0]!='?' ) {
 			    fg = def_fg;
 			    if ( strstr(pt,".italic")!=NULL )
@@ -5764,7 +5758,7 @@ static void FVExpose(FontView *fv,GWindow pixmap, GEvent *event) {
 			fg = def_fg;
 		    } else if ( strncmp(sc->name,"vertcid_",8)==0 ||
 			    strncmp(sc->name,"vertuni",7)==0 ) {
-			styles = _uni_vertical;
+			styles = _uni_rotated;
 		    }
 		}
 	      break;
@@ -5830,11 +5824,7 @@ static void FVExpose(FontView *fv,GWindow pixmap, GEvent *event) {
 		    width = fv->cbw-1;
 		}
 		if ( sc->unicodeenc<0x80 || sc->unicodeenc>=0xa0 ) {
-		    y = i*fv->cbh+fv->lab_as+1;
-		    /* move rotated glyph up a bit to center it */
-		    if (styles&_uni_vertical)
-			y -= fv->lab_as/2;
-		    GDrawDrawText8(pixmap,j*fv->cbw+(fv->cbw-1-width)/2-size.lbearing,y,utf8_buf,-1,fg^fgxor);
+		    GDrawDrawText8(pixmap,j*fv->cbw+(fv->cbw-1-width)/2-size.lbearing,i*fv->cbh+fv->lab_as+1,utf8_buf,-1,fg^fgxor);
 		}
 		if ( width >= fv->cbw-1 )
 		    GDrawPopClip(pixmap,&old2);
@@ -5847,11 +5837,7 @@ static void FVExpose(FontView *fv,GWindow pixmap, GEvent *event) {
 		    width = fv->cbw-1;
 		}
 		if ( sc->unicodeenc<0x80 || sc->unicodeenc>=0xa0 ) {
-		    y = i*fv->cbh+fv->lab_as+1;
-		    /* move rotated glyph up a bit to center it */
-		    if (styles&_uni_vertical)
-			y -= fv->lab_as/2;
-		    GDrawDrawText(pixmap,j*fv->cbw+(fv->cbw-1-width)/2,y,buf,-1,fg^fgxor);
+		    GDrawDrawText(pixmap,j*fv->cbw+(fv->cbw-1-width)/2,i*fv->cbh+fv->lab_as+1,buf,-1,fg^fgxor);
 		}
 		if ( width >= fv->cbw-1 )
 		    GDrawPopClip(pixmap,&old2);
@@ -6906,7 +6892,6 @@ static void FVCreateInnards(FontView *fv,GRect *pos) {
     GWindow gw = fv->gw;
     GWindowAttrs wattrs;
     GGadgetData gd;
-    FontRequest rq;
     BDFFont *bdf;
     int as,ds,ld;
     extern int use_freetype_to_rasterize_fv;
@@ -6938,13 +6923,9 @@ static void FVCreateInnards(FontView *fv,GRect *pos) {
     GDrawSetGIC(fv->gw,fv->gic,0,20);
 
     fv->fontset = gcalloc(_uni_fontmax,sizeof(GFont *));
-    memset(&rq,0,sizeof(rq));
-    rq.utf8_family_name = fv_fontnames;
-    rq.point_size = fv_fontsize;
-    rq.weight = 400;
-    fv->fontset[0] = GDrawInstanciateFont(gw,&rq);
+    fv->fontset[0] = GDrawNewFont(gw, fv_fontnames, fv_fontsize, 400, fs_none);
     GDrawSetFont(fv->v,fv->fontset[0]);
-    GDrawWindowFontMetrics(fv->v,fv->fontset[0],&as,&ds,&ld);
+    GDrawGetFontMetrics(fv->v,fv->fontset[0],&as,&ds,&ld);
     fv->lab_as = as;
     fv->showhmetrics = default_fv_showhmetrics;
     fv->showvmetrics = default_fv_showvmetrics && sf->hasvmetrics;

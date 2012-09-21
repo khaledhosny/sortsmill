@@ -123,10 +123,9 @@ static void ProcessText(unichar_t *ubuf,char *buf, enum err_type et) {
 void _GDraw_InitError(GDisplay *gd) {
     GRect screen, pos;
     static unichar_t title[]= { 'E', 'r', 'r', 'o', 'r', '\0' };
-    static unichar_t courier[] = { 'c', 'o', 'u', 'r', 'i', 'e', 'r', '\0' };
     static GDisplay *static_gd;
     GWindowAttrs wattrs;
-    FontRequest rq;
+    GFont *font;
 
     if ( gd!=NULL )
 	static_gd = gd;
@@ -158,12 +157,8 @@ return;
 
     error = GDrawCreateTopWindow(gd,&pos,e_h,NULL,&wattrs);
 
-    memset(&rq,0,sizeof(rq));
-    rq.family_name = courier;
-    rq.point_size = -12;
-    rq.weight = 400;
-    rq.style = 0;
-    GDrawAttachFont(error,&rq);
+    font = GDrawNewFont(error, "courier", -12, 400, fs_none);
+    GDrawSetFont(error, font);
 }
 
 void GDrawIError(const char *fmt,...) {

@@ -2584,19 +2584,14 @@ static GWindow CharIcon(CharView *cv, FontView *fv) {
 	base.height = bdfc->ymax-bdfc->ymin+1;
 	GDrawDrawImage(icon,&gi,NULL,(r.width-base.width)/2,(r.height-base.height)/2);
     } else if ( sc->unicodeenc!=-1 ) {
-	FontRequest rq;
 	GFont *font;
 	unichar_t text[2];
 	int as, ds, ld, width;
 
-	memset(&rq,0,sizeof(rq));
-	rq.utf8_family_name = SERIF_UI_FAMILIES;
-	rq.point_size = 24;
-	rq.weight = 400;
-	font = GDrawInstanciateFont(NULL,&rq);
+	font = GDrawNewFont(NULL, SERIF_UI_FAMILIES, 24, 400, fs_none);
 	GDrawSetFont(icon,font);
 	text[0] = sc->unicodeenc; text[1] = 0;
-	GDrawWindowFontMetrics(icon,font,&as,&ds,&ld);
+	GDrawGetFontMetrics(icon,font,&as,&ds,&ld);
 	width = GDrawGetTextWidth(icon,text,1);
 	GDrawDrawText(icon,(r.width-width)/2,(r.height-as-ds)/2+as,text,1,0xffffff);
     }
@@ -10080,7 +10075,6 @@ static void _CharViewCreate(CharView *cv, SplineChar *sc, FontView *fv,int enc) 
     GWindowAttrs wattrs;
     GGadgetData gd;
     int sbsize;
-    FontRequest rq;
     int as, ds, ld;
     extern int updateflex;
     static char *infofamily=NULL;
@@ -10181,19 +10175,14 @@ static void _CharViewCreate(CharView *cv, SplineChar *sc, FontView *fv,int enc) 
 	    infofamily = SANS_UI_FAMILIES;
     }
 
-    memset(&rq,0,sizeof(rq));
-    rq.utf8_family_name = infofamily;
-    rq.point_size = GResourceFindInt("CharView.Rulers.FontSize", -10);
-    rq.weight = 400;
-    cv->small = GDrawInstanciateFont(cv->gw,&rq);
-    GDrawWindowFontMetrics(cv->gw,cv->small,&as,&ds,&ld);
+    cv->small = GDrawNewFont(cv->gw, infofamily, GResourceFindInt("CharView.Rulers.FontSize", -10), 400, fs_none);
+    GDrawGetFontMetrics(cv->gw,cv->small,&as,&ds,&ld);
     cv->sfh = as+ds; cv->sas = as;
     GDrawSetFont(cv->gw,cv->small);
     GDrawGetText8Bounds(cv->gw,"0123456789",10,&textbounds);
     cv->sdh = textbounds.as+textbounds.ds+1;
-    rq.point_size = 10;
-    cv->normal = GDrawInstanciateFont(cv->gw,&rq);
-    GDrawWindowFontMetrics(cv->gw,cv->normal,&as,&ds,&ld);
+    cv->normal = GDrawNewFont(cv->gw, infofamily, 10, 400, fs_none);
+    GDrawGetFontMetrics(cv->gw,cv->normal,&as,&ds,&ld);
     cv->nfh = as+ds; cv->nas = as;
 
     cv->height = pos.height; cv->width = pos.width;

@@ -394,13 +394,7 @@ FontInstance *_GGadgetInitDefaultBox(char *class,GBox *box, FontInstance *deffon
 	box->flags |= box_foreground_shadow_outer;
 
     if ( fi==NULL ) {
-	FontRequest rq;
-	memset(&rq,0,sizeof(rq));
-	rq.utf8_family_name = SANS_UI_FAMILIES;
-	rq.point_size = 10;
-	rq.weight = 400;
-	rq.style = 0;
-	fi = GDrawInstanciateFont(NULL,&rq);
+	fi = GDrawNewFont(NULL, SANS_UI_FAMILIES, 10, 400, fs_none);
 	if ( fi==NULL )
 	    GDrawFatalError("Cannot find a default font for gadgets");
     }
@@ -458,13 +452,7 @@ void GGadgetInit(void) {
 	res[0].val = &popup_font;
 	GResourceFind( res, "GGadget.Popup.");
 	if ( popup_font==NULL ) {
-	    FontRequest rq;
-	    memset(&rq,0,sizeof(rq));
-	    rq.utf8_family_name = SANS_UI_FAMILIES;
-	    rq.point_size = localeptsize();
-	    rq.weight = 400;
-	    rq.style = 0;
-	    popup_font = GDrawInstanciateFont(NULL,&rq);
+	    popup_font = GDrawNewFont(NULL, SANS_UI_FAMILIES, localeptsize(), 400, fs_none);
 	    if ( popup_font==NULL )
 		popup_font = _ggadget_default_font;
 	}
@@ -584,7 +572,7 @@ return( true );
 	    pt = ept+1;
 	} while ( ept!=NULL && *pt!='\0' );
     }
-    GDrawWindowFontMetrics(popup,popup_font,&as, &ds, &ld);
+    GDrawGetFontMetrics(popup,popup_font,&as, &ds, &ld);
     pos.width = width+2*GDrawPointsToPixels(popup,2);
     pos.height = lines*(as+ds) + img_height + 2*GDrawPointsToPixels(popup,2);
 
@@ -622,7 +610,7 @@ return( true );
 	    y += GImageGetHeight(popup_info.img);
 	}
 	if ( pt!=NULL ) {
-	    GDrawWindowFontMetrics(popup,popup_font,&as, &ds, &ld);
+	    GDrawGetFontMetrics(popup,popup_font,&as, &ds, &ld);
 	    fh = as+ds;
 	    y += as;
 	    do {

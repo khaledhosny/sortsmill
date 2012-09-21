@@ -2249,7 +2249,6 @@ BitmapView *BitmapViewCreate(BDFChar *bc, BDFFont *bdf, FontView *fv, int enc) {
     char buf[300];
     static GWindow icon = NULL;
     GTextInfo ti;
-    FontRequest rq;
     int as, ds, ld;
     static char *infofamily = NULL;
 
@@ -2364,12 +2363,8 @@ BitmapView *BitmapViewCreate(BDFChar *bc, BDFFont *bdf, FontView *fv, int enc) {
 	    infofamily = SANS_UI_FAMILIES;
     }
 
-    memset(&rq,0,sizeof(rq));
-    rq.utf8_family_name = infofamily;
-    rq.point_size = -7;
-    rq.weight = 400;
-    bv->small = GDrawInstanciateFont(gw,&rq);
-    GDrawWindowFontMetrics(gw,bv->small,&as,&ds,&ld);
+    bv->small = GDrawNewFont(gw, infofamily, -7, 400, fs_none);
+    GDrawGetFontMetrics(gw,bv->small,&as,&ds,&ld);
     bv->sfh = as+ds; bv->sas = as;
 
     BVFit(bv);

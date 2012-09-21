@@ -756,7 +756,6 @@ int fontforge_main( int argc, char **argv ) {
     GRect pos;
     GWindowAttrs wattrs;
     char *display = NULL;
-    FontRequest rq;
     int ds, ld;
     int openflags=0;
     int doopen=0, quit_request=0;
@@ -1039,18 +1038,13 @@ exit( 0 );
 	splashw = GDrawCreateTopWindow(NULL,&pos,splash_e_h,NULL,&wattrs);
     }
 
-    memset(&rq,0,sizeof(rq));
-    rq.utf8_family_name = SERIF_UI_FAMILIES;
-    rq.point_size = 12;
-    rq.weight = 400;
-    splash_font = GDrawInstanciateFont(NULL,&rq);
+    splash_font = GDrawNewFont(NULL, SERIF_UI_FAMILIES, 12, 400, fs_none);
     splash_font = GResourceFindFont("Splash.Font",splash_font);
-    GDrawDecomposeFont(splash_font, &rq);
-    rq.style = fs_italic;
-    splash_italic = GDrawInstanciateFont(NULL,&rq);
+
+    splash_italic = GDrawNewFont(NULL, SERIF_UI_FAMILIES, 12, 400, fs_italic);
     splash_italic = GResourceFindFont("Splash.ItalicFont",splash_italic);
     GDrawSetFont(splashw,splash_font);
-    GDrawWindowFontMetrics(splashw,splash_font,&as,&ds,&ld);
+    GDrawGetFontMetrics(splashw,splash_font,&as,&ds,&ld);
     fh = as+ds+ld;
     SplashLayout();
     localsplash = splash;

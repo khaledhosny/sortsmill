@@ -2128,12 +2128,8 @@ struct gfuncs sftextarea_funcs = {
 };
 
 static void SFTextAreaInit() {
-    FontRequest rq;
-
     GGadgetInit();
-    GDrawDecomposeFont(_ggadget_default_font,&rq);
-    rq.utf8_family_name = MONO_UI_FAMILIES;
-    sftextarea_font = GDrawInstanciateFont(NULL,&rq);
+    sftextarea_font = GDrawNewFont(NULL, MONO_UI_FAMILIES, 12, 400, fs_none);
     sftextarea_font = GResourceFindFont("SFTextArea.Font",sftextarea_font);
     _GGadgetCopyDefaultBox(&sftextarea_box);
     sftextarea_box.padding = 3;
@@ -2192,7 +2188,7 @@ static void SFTextAreaFit(SFTextArea *st) {
     { /* This doesn't mean much of anything */
 	FontInstance *old = GDrawSetFont(st->g.base,st->font);
 	(void) GDrawGetTextBounds(st->g.base,st->li.text, -1, &bounds);
-	GDrawWindowFontMetrics(st->g.base,st->font,&as, &ds, &ld);
+	GDrawGetFontMetrics(st->g.base,st->font,&as, &ds, &ld);
 	if ( as<bounds.as ) as = bounds.as;
 	if ( ds<bounds.ds ) ds = bounds.ds;
 	st->fh = fh = as+ds;

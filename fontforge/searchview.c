@@ -657,7 +657,6 @@ SearchView *SVCreate(FontView *fv) {
     GGadgetCreateData gcd[14], boxes[6], *butarray[14], *allowarray[6],
 	    *fudgearray[4], *halfarray[3], *varray[14];
     GTextInfo label[14];
-    FontRequest rq;
     int as, ds, ld;
     char fudgebuf[20];
     int k, sel_pos, efdo_pos;
@@ -689,19 +688,14 @@ return( NULL );
     SVSetTitle(sv);
 
     if ( plainfont==NULL ) {
-	memset(&rq,0,sizeof(rq));
-	rq.utf8_family_name = SANS_UI_FAMILIES;
-	rq.point_size = 12;
-	rq.weight = 400;
-	plainfont = GDrawInstanciateFont(NULL,&rq);
+	plainfont = GDrawNewFont(NULL, SANS_UI_FAMILIES, 12, 400, fs_none);
 	plainfont = GResourceFindFont("SearchView.Font",plainfont);
-	GDrawDecomposeFont(plainfont, &rq);
-	rq.weight = 700;
-	boldfont = GDrawInstanciateFont(NULL,&rq);
+
+	boldfont = GDrawNewFont(NULL, SANS_UI_FAMILIES, 12, 700, fs_none);
 	boldfont = GResourceFindFont("SearchView.BoldFont",boldfont);
     }
     sv->plain = plainfont; sv->bold = boldfont;
-    GDrawWindowFontMetrics(sv->gw,sv->plain,&as,&ds,&ld);
+    GDrawGetFontMetrics(sv->gw,sv->plain,&as,&ds,&ld);
     sv->fh = as+ds; sv->as = as;
 
     SVCharViewInits(sv);
