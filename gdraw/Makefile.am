@@ -60,9 +60,9 @@ EXPORTED_LIBGDRAW_SYMBOLS = GBoxBorderWidth GBoxDrawBackground			\
 	 GDrawGetWindowTitle GDrawGrabSelection GDrawIError					\
 	 GDrawInstanciateFont GDrawIsVisible GDrawKeyState					\
 	 GDrawLayoutDraw GDrawLayoutExtents GDrawLayoutIndexToPos			\
-	 GDrawLayoutInit GDrawLayoutXYToIndex GDrawMove GDrawMoveResize		\
-	 GDrawPathClose GDrawPathCurveTo GDrawPathFill GDrawPathLineTo		\
-	 GDrawPathMoveTo GDrawPathStartSubNew GDrawPathStroke				\
+	 GDrawLayoutInit GDrawLayoutXYToIndex GDrawNewFont GDrawMove GDrawMoveResize		\
+	 GDrawPathFill		\
+	 GDrawPathStroke				\
 	 GDrawPixelsToPoints GDrawPointsToPixels GDrawPopClip				\
 	 GDrawPostDragEvent GDrawPostEvent GDrawProcessOneEvent				\
 	 GDrawProcessPendingEvents GDrawPushClip GDrawRaise					\
@@ -76,7 +76,7 @@ EXPORTED_LIBGDRAW_SYMBOLS = GBoxBorderWidth GBoxDrawBackground			\
 	 GDrawSetWindowBorder GDrawSetWindowTitles GDrawSetWindowTitles8	\
 	 GDrawSetXORBase GDrawSetXORMode GDrawSetZoom						\
 	 GDrawSkipMouseMoveEvents GDrawSync GDrawTranslateCoordinates		\
-	 GDrawTrueMove GDrawWindowFontMetrics GDrawableCreate				\
+	 GDrawTrueMove GDrawGetCairo GDrawGetFontMetrics GDrawableCreate				\
 	 GDrawableGetWindow GFileChooserConnectButtons GFileChooserCreate	\
 	 GFileChooserDefFilter GFileChooserFileNameOfPos					\
 	 GFileChooserFilterEh GFileChooserGetBookmarks						\
