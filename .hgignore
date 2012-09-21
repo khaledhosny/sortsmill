@@ -64,5 +64,6 @@ syntax: regexp
 \.obj$
 \.gmo$
 ~$
+.orig$
 ^config$
 ^pyhook/config$
