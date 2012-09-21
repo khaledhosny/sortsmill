@@ -590,10 +590,6 @@ static int myerrorhandler(Display *disp, XErrorEvent *err) {
 	majorcode = "";
     if ( err->request_code==45 && lastfontrequest!=NULL )
 	fprintf( stderr, "Error attempting to load font:\n  %s\nThe X Server clained the font existed, but when I asked for it,\nI got this error instead:\n\n", lastfontrequest );
-#if 0		/* This varies. it is 146 on my machine, but not on everyone's */
-    else if ( err->request_code==146 && err->minor_code==3 )
-	fprintf( stderr, "Error connecting to wacom tablet. Sometimes linux fails to configure\n it properly. Try typing\n$ su\n# insmod wacom\n" );
-#endif
     XGetErrorText(disp,err->error_code,buffer,sizeof(buffer));
     fprintf( stderr, "X Error of failed request: %s\n", buffer );
     fprintf( stderr, "  Major opcode of failed request:  %d.%d (%s)\n",
@@ -2405,10 +2401,6 @@ static void GXDrawWaitForEvent(GXDisplay *gdisp) {
 	gettimeofday(&tv,NULL);
 	GXDrawCheckPendingTimers(gdisp);
 
-#ifdef _WACOM_DRV_BROKEN
-	_GXDraw_Wacom_TestEvents(gdisp);
-#endif
-
 	if ( XEventsQueued(display,QueuedAfterFlush))
 return;
 #ifdef HAVE_PTHREAD_H
@@ -2440,13 +2432,6 @@ return;
 	    if ( gdisp->xthread.sync_sock>fd )
 		fd = gdisp->xthread.sync_sock;
 	}
-#ifdef _WACOM_DRV_BROKEN
-	if ( gdisp->wacom_fd!=-1 ) {
-	    FD_SET(gdisp->wacom_fd,&read);
-	    if ( gdisp->wacom_fd>fd )
-		fd = gdisp->wacom_fd;
-	}
-#endif
 #ifndef __VMS
 	ret = select(fd+1,&read,&write,&except,timeout);
 #endif
@@ -3324,9 +3309,6 @@ static int GXDrawWaitForNotifyEvent(GXDisplay *gdisp,XEvent *event, Window w) {
     while (true) {
 	gettimeofday(&tv,NULL);
 	GXDrawCheckPendingTimers(gdisp);
-#ifdef _WACOM_DRV_BROKEN
-	_GXDraw_Wacom_TestEvents(gdisp);
-#endif
 #ifdef HAVE_PTHREAD_H
 	if ( gdisp->xthread.sync_sock!=-1 ) {
 	    pthread_mutex_lock(&gdisp->xthread.sync_mutex);
@@ -3372,13 +3354,6 @@ return( false );
 	    if ( gdisp->xthread.sync_sock>fd )
 		fd = gdisp->xthread.sync_sock;
 	}
-#ifdef _WACOM_DRV_BROKEN
-	if ( gdisp->wacom_fd!=-1 ) {
-	    FD_SET(gdisp->wacom_fd,&read);
-	    if ( gdisp->wacom_fd>fd )
-		fd = gdisp->wacom_fd;
-	}
-#endif
 #ifndef __VMS
 	ret = select(fd+1,&read,&write,&except,&offset);
 #endif
@@ -4077,10 +4052,6 @@ return( NULL );
 #endif
     XSetErrorHandler(/*gdisp->display,*/myerrorhandler);
     _GDraw_InitError((GDisplay *) gdisp);
-
-#ifdef _WACOM_DRV_BROKEN
-    _GXDraw_Wacom_Init(gdisp);
-#endif
 
     GDrawInitXKB(gdisp);
 

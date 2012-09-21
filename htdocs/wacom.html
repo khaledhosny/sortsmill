@@ -28,25 +28,5 @@ To install a wacom tablet on your (linux) machine you must do two things:
     Again the X11 driver that ships with X does not work for USB tablets. Again
     John's website provides a patched driver.
 </UL>
-<P>
-If you can't get the X11 driver to work, I have hacked a little mini-driver
-into FontForge (this can take the place of the X11 driver, it depends on
-the kernel driver working). Since the configure script can't detect that
-you have a non-working X11 driver on your machine (or a tablet) you must
-configure this option by hand. So after the normal configure script has run
-(and before typing make):
-<BLOCKQUOTE>
-  <PRE>
-$ su
-# chmod 644 /dev/input/event0
-# ^D
-$ cd gdraw
-$ vi Makefile
-</PRE>
-</BLOCKQUOTE>
-<P>
-Add <CODE>gdrawwacomdriver.lo</CODE> to the list of
-<CODE>libgdraw_OBJECTS</CODE> And add <CODE>-D_WACOM_DRV_BROKEN</CODE> to
-<CODE>CFLAGS</CODE>.
 </DIV>
 </BODY></HTML>

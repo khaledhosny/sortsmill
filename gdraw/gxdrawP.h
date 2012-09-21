@@ -25,23 +25,6 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/* There are two configurable option here that the configure script can't
-    figure out:
-
-	_WACOM_DRV_BROKEN
-on my system the XFree driver for the WACOM tablet sends no events. I don't
-understand the driver, so I'm not able to attempt fixing it. However thanks
-to John E. Joganic wacdump program I do know what the event stream on
-	/dev/input/event0
-looks like, and I shall attempt to simulate driver behavior from that
-
-So set macro this in your makefile if you have problems too, and then
-change the protection on /dev/input/event0 so that it is world readable
-
-(there is now a working XFree driver for wacom, but you have to get it from
-John, it's not part of standard XFree yet).
-*/
-
 #ifndef _XDRAW_H
 #define _XDRAW_H
 
@@ -317,10 +300,6 @@ typedef struct gxdisplay /* : GDisplay */ {
     XFontSet def_im_fontset;
     struct inputdevices *inputdevices;
     int n_inputdevices;
-# ifdef _WACOM_DRV_BROKEN
-    struct wacom_state *wacom_state;
-    int wacom_fd;
-# endif
     GXWindow default_icon;
     struct xkb xkb;
     PangoFontMap *pango_fontmap;
@@ -355,8 +334,4 @@ extern void _XSyncScreen(void);
 extern int GDrawKeyToXK(int keysym);
 #endif
 
-# ifdef _WACOM_DRV_BROKEN
-void _GXDraw_Wacom_Init(GXDisplay *gdisp);
-void _GXDraw_Wacom_TestEvents(GXDisplay *gdisp);
-# endif	/* Wacom fix */
 #endif
