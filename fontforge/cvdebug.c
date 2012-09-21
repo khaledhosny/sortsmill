@@ -2069,7 +2069,6 @@ void CVDebugReInit(CharView *cv,int restart_debug,int dbg_fpgm) {
     GWindowAttrs wattrs;
     GRect pos, size;
     TT_ExecContext exc;
-    FontRequest rq;
     int as,ds,ld;
     GGadgetCreateData gcd[9];
     GTextInfo label[9];
@@ -2212,11 +2211,7 @@ return;
 	dv->ii.instrdata = &dv->id;
 
 	if ( monofont==NULL ) {
-	    memset(&rq,0,sizeof(rq));
-	    rq.utf8_family_name = MONO_UI_FAMILIES;
-	    rq.point_size = -12;
-	    rq.weight = 400;
-	    monofont = GDrawInstanciateFont(cv->gw,&rq);
+	    monofont = GDrawNewFont(cv->gw, MONO_UI_FAMILIES, -12, 400, fs_none);
 	    monofont = GResourceFindFont("DebugView.Font",monofont);
 	}
 	dv->ii.gfont = monofont;

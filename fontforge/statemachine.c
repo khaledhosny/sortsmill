@@ -1334,7 +1334,6 @@ void StateMachineEdit(SplineFont *sf,ASM *sm,struct gfi_data *d) {
     GTextInfo label[20];
     int i, k, vk;
     int as, ds, ld, sbsize;
-    FontRequest rq;
     static unichar_t statew[] = { '1', '2', '3', '4', '5', 0 };
     static GFont *font = NULL;
     struct matrix_data *md;
@@ -1502,11 +1501,7 @@ void StateMachineEdit(SplineFont *sf,ASM *sm,struct gfi_data *d) {
     }
 
     if ( font==NULL ) {
-	memset(&rq,'\0',sizeof(rq));
-	rq.point_size = 12;
-	rq.weight = 400;
-	rq.utf8_family_name = MONO_UI_FAMILIES;
-	font = GDrawInstanciateFont(gw,&rq);
+	font = GDrawNewFont(gw, MONO_UI_FAMILIES, 12, 400, fs_none);
 	font = GResourceFindFont("StateMachine.Font",font);
     }
     smd.font = font;

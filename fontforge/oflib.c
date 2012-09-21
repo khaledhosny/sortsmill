@@ -1872,7 +1872,6 @@ void OFLibBrowse(void) {
 	    *barray[10], *varray[30], *hackarray[6];
     GTextInfo label[20];
     int j,k,l,fontlistl;
-    FontRequest rq;
     int as, ds, ld;
     static GFont *oflibfont=NULL;
 
@@ -1904,11 +1903,7 @@ return;
     active->gw = gw = GDrawCreateTopWindow(NULL,&pos,oflib_e_h,active,&wattrs);
 
     if ( oflibfont==NULL ) {
-	memset(&rq,0,sizeof(rq));
-	rq.utf8_family_name = SANS_UI_FAMILIES;
-	rq.point_size = 12;
-	rq.weight = 400;
-	oflibfont = GDrawInstanciateFont(gw,&rq);
+	oflibfont = GDrawNewFont(gw, SANS_UI_FAMILIES, 12, 400, fs_none);
 	oflibfont = GResourceFindFont("OFLib.Font",oflibfont);
     }
     active->font = oflibfont;

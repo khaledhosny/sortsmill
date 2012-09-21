@@ -745,7 +745,6 @@ return( true );
 
 static void CreateErrorWindow(void) {
     GWindowAttrs wattrs;
-    FontRequest rq;
     GRect pos,size;
     int as, ds, ld;
     GWindow gw;
@@ -767,11 +766,7 @@ static void CreateErrorWindow(void) {
     pos.y = size.height - pos.height - 30;
     errdata.gw = gw = GDrawCreateTopWindow(NULL,&pos,warnings_e_h,&errdata,&wattrs);
 
-    memset(&rq,0,sizeof(rq));
-    rq.utf8_family_name = SANS_UI_FAMILIES;
-    rq.point_size = 10;
-    rq.weight = 400;
-    errdata.font = GDrawInstanciateFont(NULL,&rq);
+    errdata.font = GDrawNewFont(NULL, SANS_UI_FAMILIES, 10, 400, fs_none);
     errdata.font = GResourceFindFont("Warnings.Font",errdata.font);
     GDrawWindowFontMetrics(errdata.gw,errdata.font,&as,&ds,&ld);
     errdata.as = as;

@@ -1033,7 +1033,10 @@ int32 _GXPDraw_DoText8(GWindow w, int32 x, int32 y,
     if (fi == NULL)
 	return(0);
 
-    fd = _GXPDraw_configfont(gw, fi);
+    fd = fi->pango_fd;
+    if (fd == NULL)
+	fd = _GXPDraw_configfont(gw, fi);
+
     pango_layout_set_font_description(gw->pango_layout,fd);
     pango_layout_set_text(gw->pango_layout,(char *) text,cnt);
     pango_layout_get_pixel_extents(gw->pango_layout,NULL,&rect);

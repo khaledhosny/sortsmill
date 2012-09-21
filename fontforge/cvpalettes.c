@@ -1216,7 +1216,6 @@ return( true );
 GWindow CVMakeTools(CharView *cv) {
     GRect r;
     GWindowAttrs wattrs;
-    FontRequest rq;
 
     if ( cvtools!=NULL )
 return( cvtools );
@@ -1243,11 +1242,7 @@ return( cvtools );
     }
 
     if ( toolsfont==NULL ) {
-	memset(&rq,0,sizeof(rq));
-	rq.utf8_family_name = SANS_UI_FAMILIES;
-	rq.point_size = -10;
-	rq.weight = 400;
-	toolsfont = GDrawInstanciateFont(NULL,&rq);
+	toolsfont = GDrawNewFont(NULL, SANS_UI_FAMILIES, -10, 400, fs_none);
 	toolsfont = GResourceFindFont("ToolsPalette.Font",toolsfont);
     }
 
@@ -1635,7 +1630,6 @@ static void CVMakeLayers2(CharView *cv) {
     GGadgetCreateData gcd[25];
     GTextInfo label[25];
     static GBox radio_box = { bt_none, bs_rect, 0, 0, 0, 0, 0, 0, 0, 0, COLOR_DEFAULT, COLOR_DEFAULT, 0, 0, 0, 0, 0, 0, 0 };
-    FontRequest rq;
     int i;
     extern int _GScrollBar_Width;
 
@@ -1664,11 +1658,7 @@ return;
     memset(&gcd,0,sizeof(gcd));
 
     if ( layersfont==NULL ) {
-	memset(&rq,'\0',sizeof(rq));
-	rq.utf8_family_name = SANS_UI_FAMILIES;
-	rq.point_size = -12;
-	rq.weight = 400;
-	layersfont = GDrawInstanciateFont(cvlayers2,&rq);
+	layersfont = GDrawNewFont(cvlayers2, SANS_UI_FAMILIES, -12, 400, fs_none);
 	layersfont = GResourceFindFont("LayersPalette.Font",layersfont);
     }
 
@@ -2800,7 +2790,6 @@ GWindow CVMakeLayers(CharView *cv) {
     GGadgetCreateData gcd[25];
     GTextInfo label[25];
     GGadget *gadget;
-    FontRequest rq;
     extern int _GScrollBar_Width;
     int i=0;
     int viscol=7;
@@ -2812,11 +2801,7 @@ return( cvlayers );
     if ( layerinfo.clut==NULL )
 	layerinfo.clut = _BDFClut(4);
     if ( layersfont==NULL ) {
-	memset(&rq,'\0',sizeof(rq));
-	rq.utf8_family_name = SANS_UI_FAMILIES;
-	rq.point_size = -12;
-	rq.weight = 400;
-	layersfont = GDrawInstanciateFont(cvlayers2,&rq);
+	layersfont = GDrawNewFont(cvlayers2, SANS_UI_FAMILIES, -12, 400, fs_none);
 	layersfont = GResourceFindFont("LayersPalette.Font",layersfont);
     }
     layerinfo.font = layersfont;
@@ -3314,7 +3299,6 @@ GWindow BVMakeLayers(BitmapView *bv) {
     GGadgetCreateData gcd[8], boxes[2], *hvarray[5][3];
     GTextInfo label[8];
     static GBox radio_box = { bt_none, bs_rect, 0, 0, 0, 0, 0, 0, 0, 0, COLOR_DEFAULT, COLOR_DEFAULT, 0, 0, 0, 0, 0, 0, 0 };
-    FontRequest rq;
     int i;
 
     if ( bvlayers!=NULL )
@@ -3341,11 +3325,7 @@ return(bvlayers);
     memset(&boxes,0,sizeof(boxes));
 
     if ( layersfont==NULL ) {
-	memset(&rq,'\0',sizeof(rq));
-	rq.utf8_family_name = SANS_UI_FAMILIES;
-	rq.point_size = -12;
-	rq.weight = 400;
-	layersfont = GDrawInstanciateFont(cvlayers2,&rq);
+	layersfont = GDrawNewFont(cvlayers2, SANS_UI_FAMILIES, -12, 400, fs_none);
 	layersfont = GResourceFindFont("LayersPalette.Font",layersfont);
     }
     for ( i=0; i<sizeof(label)/sizeof(label[0]); ++i )

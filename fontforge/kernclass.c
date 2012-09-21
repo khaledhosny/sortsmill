@@ -2516,7 +2516,6 @@ void KernClassD(KernClass *kc, SplineFont *sf, int layer, int isv) {
     KernClassDlg *kcd;
     int i, j, kc_width, vi;
     int as, ds, ld, sbsize;
-    FontRequest rq;
     static unichar_t kernw[] = { '-', '1', '2', '3', '4', '5', 0 };
     GWindow gw;
     char titlebuf[300];
@@ -2581,11 +2580,7 @@ return;
     kc_width = GDrawPixelsToPoints(NULL,pos.width*100/GGadgetScale(100));
 
     if ( font==NULL ) {
-	memset(&rq,'\0',sizeof(rq));
-	rq.point_size = 12;
-	rq.weight = 400;
-	rq.utf8_family_name = MONO_UI_FAMILIES;
-	font = GDrawInstanciateFont(gw,&rq);
+	font = GDrawNewFont(gw, MONO_UI_FAMILIES, 12, 400, fs_none);
 	font = GResourceFindFont("KernClass.Font",font);
     }
     kcd->font = font;

@@ -2537,9 +2537,7 @@ static void GTextFieldInit() {
     memset(&rq,0,sizeof(rq));
     GGadgetInit();
     GDrawDecomposeFont(_ggadget_default_font,&rq);
-    rq.family_name = NULL;
-    rq.utf8_family_name = MONO_UI_FAMILIES;
-    _gtextfield_font = GDrawInstanciateFont(NULL,&rq);
+    _gtextfield_font = GDrawNewFont(NULL, MONO_UI_FAMILIES, rq.point_size, rq.weight, rq.style);
     _GGadgetCopyDefaultBox(&_GGadget_gtextfield_box);
     _GGadget_gtextfield_box.padding = 3;
     /*_GGadget_gtextfield_box.flags = box_active_border_inner;*/
@@ -2603,30 +2601,11 @@ static void GTextFieldFit(GTextField *gt) {
     GRect inner, outer;
     int bp = GBoxBorderWidth(gt->g.base,gt->g.box);
 
-    {
-	FontInstance *old = GDrawSetFont(gt->g.base,gt->font);
-	FontRequest rq;
-	int tries;
-	for ( tries = 0; tries<2; ++tries ) {
-	    width = GDrawGetTextBounds(gt->g.base,gt->text, -1, &bounds);
-	    GDrawWindowFontMetrics(gt->g.base,gt->font,&as, &ds, &ld);
-#if 0 /* Alexej doesn't like this behavior, says textfields should be */
-/*  consistent no matter what's inside them. Hmm. */
-	    if ( as<bounds.as ) as = bounds.as;
-	    if ( ds<bounds.ds ) ds = bounds.ds;
-#endif
-	    if ( gt->g.r.height==0 || as+ds-3+2*bp<=gt->g.r.height || tries==1 )
-	break;
-	    /* Doesn't fit. Try a smaller size */
-	    GDrawDecomposeFont(gt->font,&rq);
-	    --rq.point_size;
-	    gt->font = GDrawInstanciateFont(gt->g.base,&rq);
-	}
-	gt->fh = as+ds;
-	gt->as = as;
-	gt->nw = GDrawGetTextWidth(gt->g.base,nstr, 1);
-	GDrawSetFont(gt->g.base,old);
-    }
+    width = GDrawGetTextBounds(gt->g.base,gt->text, -1, &bounds);
+    GDrawWindowFontMetrics(gt->g.base,gt->font,&as, &ds, &ld);
+    gt->fh = as+ds;
+    gt->as = as;
+    gt->nw = GDrawGetTextWidth(gt->g.base,nstr, 1);
 
     GTextFieldGetDesiredSize(&gt->g,&outer,&inner);
     if ( gt->g.r.width==0 ) {

@@ -5562,20 +5562,14 @@ return( base_sc );
 #define _uni_rotated	(1<<2)
 #define _uni_fontmax	(2<<2)
 
-static GFont *FVCheckFont(FontView *fv,int type) {
-    FontRequest rq;
-
+static GFont *FVCheckFont(FontView *fv, int type) {
     if ( fv->fontset[type]==NULL ) {
-	memset(&rq,0,sizeof(rq));
-	rq.utf8_family_name = fv_fontnames;
-	rq.point_size = fv_fontsize;
-	rq.weight = 400;
-	rq.style = 0;
+	int style = 0;
 	if (type&_uni_italic)
-	    rq.style |= fs_italic;
+	    style |= fs_italic;
 	if (type&_uni_rotated)
-	    rq.style |= fs_rotated;
-	fv->fontset[type] = GDrawInstanciateFont(fv->v,&rq);
+	    style |= fs_rotated;
+	fv->fontset[type] = GDrawNewFont(fv->v, fv_fontnames, fv_fontsize, 400, style);
     }
 return( fv->fontset[type] );
 }
@@ -6892,7 +6886,6 @@ static void FVCreateInnards(FontView *fv,GRect *pos) {
     GWindow gw = fv->gw;
     GWindowAttrs wattrs;
     GGadgetData gd;
-    FontRequest rq;
     BDFFont *bdf;
     int as,ds,ld;
     extern int use_freetype_to_rasterize_fv;
@@ -6924,11 +6917,7 @@ static void FVCreateInnards(FontView *fv,GRect *pos) {
     GDrawSetGIC(fv->gw,fv->gic,0,20);
 
     fv->fontset = gcalloc(_uni_fontmax,sizeof(GFont *));
-    memset(&rq,0,sizeof(rq));
-    rq.utf8_family_name = fv_fontnames;
-    rq.point_size = fv_fontsize;
-    rq.weight = 400;
-    fv->fontset[0] = GDrawInstanciateFont(gw,&rq);
+    fv->fontset[0] = GDrawNewFont(gw, fv_fontnames, fv_fontsize, 400, fs_none);
     GDrawSetFont(fv->v,fv->fontset[0]);
     GDrawWindowFontMetrics(fv->v,fv->fontset[0],&as,&ds,&ld);
     fv->lab_as = as;

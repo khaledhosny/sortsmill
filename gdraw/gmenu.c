@@ -108,14 +108,10 @@ static int menu_grabs=true;
 static struct gmenu *most_recent_popup_menu = NULL;
 
 static void GMenuInit() {
-    FontRequest rq;
     char *keystr, *end;
 
     GGadgetInit();
-    memset(&rq,0,sizeof(rq));
-    GDrawDecomposeFont(_ggadget_default_font,&rq);
-    rq.weight = 400;
-    menu_font = menubar_font = GDrawInstanciateFont(NULL,&rq);
+    menu_font = menubar_font = _ggadget_default_font;
     _GGadgetCopyDefaultBox(&menubar_box);
     _GGadgetCopyDefaultBox(&menu_box);
     menubar_box.border_shape = menu_box.border_shape = bs_rect;

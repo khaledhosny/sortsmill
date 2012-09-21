@@ -389,7 +389,6 @@ static void RulerPlace(CharView *cv, GEvent *event) {
     int i,h,w;
     GWindowAttrs wattrs;
     GRect pos;
-    FontRequest rq;
     int as, ds, ld;
 
     if ( cv->ruler_w==NULL ) {
@@ -404,11 +403,7 @@ static void RulerPlace(CharView *cv, GEvent *event) {
 	cv->ruler_w = GWidgetCreateTopWindow(NULL,&pos,ruler_e_h,cv,&wattrs);
 
 	if ( rvfont==NULL ) {
-	    memset(&rq,0,sizeof(rq));
-	    rq.utf8_family_name = FIXED_UI_FAMILIES;
-	    rq.point_size = -12;
-	    rq.weight = 400;
-	    rvfont = GDrawInstanciateFont(cv->ruler_w,&rq);
+	    rvfont = GDrawNewFont(cv->ruler_w, FIXED_UI_FAMILIES, -12, 400, fs_none);
 	    rvfont = GResourceFindFont("CharView.Measure.Font",rvfont);
 	}
 	cv->rfont = rvfont;
@@ -640,7 +635,6 @@ static void CpInfoPlace(CharView *cv, GEvent *event) {
     int h,w;
     GWindowAttrs wattrs;
     GRect pos;
-    FontRequest rq;
     int as, ds, ld;
     SplinePoint *sp;
 
@@ -656,11 +650,7 @@ static void CpInfoPlace(CharView *cv, GEvent *event) {
 	cv->ruler_w = GWidgetCreateTopWindow(NULL,&pos,cpinfo_e_h,cv,&wattrs);
 
 	if ( rvfont==NULL ) {
-	    memset(&rq,0,sizeof(rq));
-	    rq.utf8_family_name = FIXED_UI_FAMILIES;
-	    rq.point_size = -12;
-	    rq.weight = 400;
-	    rvfont = GDrawInstanciateFont(cv->ruler_w,&rq);
+	    rvfont = GDrawNewFont(cv->ruler_w, FIXED_UI_FAMILIES, -12, 400, fs_none);
 	    rvfont = GResourceFindFont("CharView.Measure.Font",rvfont);
 	}
 	cv->rfont = rvfont;

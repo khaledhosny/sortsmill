@@ -1849,7 +1849,6 @@ void DoPrefs(void) {
     static unichar_t nullstr[] = { 0 };
     struct prefs_list *pl;
     char *tempstr;
-    FontRequest rq;
     GFont *font;
 
     PrefsInit();
@@ -2355,11 +2354,7 @@ void DoPrefs(void) {
     for ( k=0; k<TOPICS; ++k )
 	GHVBoxSetExpandableRow(boxes[2*k].ret,gb_expandglue);
     
-    memset(&rq,0,sizeof(rq));
-    rq.utf8_family_name = MONO_UI_FAMILIES;
-    rq.point_size = 12;
-    rq.weight = 400;
-    font = GDrawInstanciateFont(gw,&rq);
+    font = GDrawNewFont(gw, MONO_UI_FAMILIES, 12, 400, fs_none);
     GGadgetSetFont(mfgcd[0].ret,font);
     GGadgetSetFont(msgcd[0].ret,font);
     GHVBoxFitWindow(mboxes[0].ret);

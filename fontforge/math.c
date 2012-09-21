@@ -1861,7 +1861,6 @@ void MathKernDialog(SplineChar *sc,int def_layer) {
     GGadgetCreateData cgcd[4][2], tabsetgcd[2];
     GTextInfo label[6];
     GTabInfo aspects[3], corners[5];
-    FontRequest rq;
     int as, ds, ld;
     int i,k;
     static GFont *mathfont = NULL, *mathbold=NULL;
@@ -1883,16 +1882,10 @@ void MathKernDialog(SplineChar *sc,int def_layer) {
     mkd.gw = gw = GDrawCreateTopWindow(NULL,&pos,mkd_e_h,&mkd.cv_topright,&wattrs);
 
     if ( mathfont==NULL ) {
-	memset(&rq,0,sizeof(rq));
-	rq.utf8_family_name = SANS_UI_FAMILIES;
-	rq.point_size = 12;
-	rq.weight = 400;
-	mathfont = GDrawInstanciateFont(NULL,&rq);
+	mathfont = GDrawNewFont(NULL, SANS_UI_FAMILIES, 12, 400, fs_none);
 	mathfont = GResourceFindFont("Math.Font",mathfont);
 
-	GDrawDecomposeFont(mathfont, &rq);
-	rq.weight = 700;
-	mathbold = GDrawInstanciateFont(NULL,&rq);
+	mathbold = GDrawNewFont(NULL, SANS_UI_FAMILIES, 12, 700, fs_none);
 	mathbold = GResourceFindFont("Math.BoldFont",mathbold);
     }
     mkd.plain = mathfont;

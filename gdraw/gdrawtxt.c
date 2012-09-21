@@ -54,6 +54,18 @@ FontInstance *GDrawInstanciateFont(GWindow gw, FontRequest *rq) {
 return( fi );
 }
 
+GFont *GDrawNewFont(GWindow gw, char *family_name, int point_size, int weight, enum font_style style) {
+    FontRequest rq;
+
+    memset(&rq,0,sizeof(rq));
+    rq.utf8_family_name = family_name;
+    rq.point_size = point_size;
+    rq.weight = weight;
+    rq.style = style;
+
+    return (GDrawInstanciateFont(gw, &rq));
+}
+
 FontInstance *GDrawAttachFont(GWindow gw, FontRequest *rq) {
     struct font_instance *fi = GDrawInstanciateFont(gw,rq);
 

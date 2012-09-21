@@ -5123,7 +5123,6 @@ static int kern_format_dlg( SplineFont *sf, int def_layer,
     struct kf_dlg kf;
     int i,j, guts_row;
     /* Returns are 0=>Pairs, 1=>Classes, 2=>Cancel */
-    FontRequest rq;
     int as, ds, ld;
     static GFont *plainfont = NULL, *boldfont=NULL;
 
@@ -5160,15 +5159,10 @@ static int kern_format_dlg( SplineFont *sf, int def_layer,
     kf.gw = GDrawCreateTopWindow(NULL,&pos,kf_e_h,&kf,&wattrs);
 
     if ( plainfont==NULL ) {
-	memset(&rq,0,sizeof(rq));
-	rq.utf8_family_name = SANS_UI_FAMILIES;
-	rq.point_size = 12;
-	rq.weight = 400;
-	plainfont = GDrawInstanciateFont(NULL,&rq);
+	plainfont = GDrawNewFont(NULL, SANS_UI_FAMILIES, 12, 400, fs_none);
 	plainfont = GResourceFindFont("KernFormat.Font",plainfont);
-	GDrawDecomposeFont(plainfont, &rq);
-	rq.weight = 700;
-	boldfont = GDrawInstanciateFont(NULL,&rq);
+
+	boldfont = GDrawNewFont(NULL, SANS_UI_FAMILIES, 12, 700, fs_none);
 	boldfont = GResourceFindFont("KernFormat.BoldFont",boldfont);
     }
     kf.plain = plainfont; kf.bold = boldfont;

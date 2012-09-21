@@ -718,7 +718,6 @@ static void InstrDlgCreate(struct instrdata *id,char *title) {
     GRect pos;
     GWindow gw;
     GWindowAttrs wattrs;
-    FontRequest rq;
     int as,ds,ld, lh;
     GGadgetCreateData gcd[11], *butarray[9], *harray[3], *varray[8];
     GTextInfo label[6];
@@ -856,11 +855,7 @@ static void InstrDlgCreate(struct instrdata *id,char *title) {
     GDrawSetVisible(iv->instrinfo.v,true);
 
     if ( font==NULL ) {
-	memset(&rq,0,sizeof(rq));
-	rq.utf8_family_name = MONO_UI_FAMILIES;
-	rq.point_size = -12;
-	rq.weight = 400;
-	font = GDrawInstanciateFont(gw,&rq);
+	font = GDrawNewFont(gw, MONO_UI_FAMILIES, -12, 400, fs_none);
 	font = GResourceFindFont("TTInstruction.Font",font);
     }
     iv->instrinfo.gfont = font;
@@ -1398,7 +1393,6 @@ static void cvtCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32 tag) {
     GRect pos, subpos, gsize;
     GWindow gw;
     GWindowAttrs wattrs;
-    FontRequest rq;
     int as,ds,ld, lh;
     GGadgetCreateData gcd[9], *butarray[8], *harray[4], *harray2[3], *varray[7];
     GTextInfo label[5], lab;
@@ -1548,11 +1542,7 @@ static void cvtCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32 tag) {
     GDrawSetVisible(sv->v,true);
 
     if ( font==NULL ) {
-	memset(&rq,0,sizeof(rq));
-	rq.utf8_family_name = MONO_UI_FAMILIES;
-	rq.point_size = -12;
-	rq.weight = 400;
-	font = GDrawInstanciateFont(gw,&rq);
+	font = GDrawNewFont(gw, MONO_UI_FAMILIES, -12, 400, fs_none);
 	font = GResourceFindFont("CVT.Font",font);
     }
     sv->gfont = font;

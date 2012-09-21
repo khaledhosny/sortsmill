@@ -2764,7 +2764,6 @@ static void ShowAttCreateDlg(struct att_dlg *att, SplineFont *sf, int which,
 	char *win_title) {
     GRect pos;
     GWindowAttrs wattrs;
-    FontRequest rq;
     int as, ds, ld;
     GGadgetCreateData gcd[5];
     GTextInfo label[4];
@@ -2791,16 +2790,10 @@ static void ShowAttCreateDlg(struct att_dlg *att, SplineFont *sf, int which,
     att->gw = GDrawCreateTopWindow(NULL,&pos,att_e_h,att,&wattrs);
 
     if ( propfont==NULL ) {
-	memset(&rq,'\0',sizeof(rq));
-	rq.utf8_family_name = SANS_UI_FAMILIES;
-	rq.point_size = 12;
-	rq.weight = 400;
-	propfont = GDrawInstanciateFont(att->gw,&rq);
+	propfont = GDrawNewFont(att->gw, SANS_UI_FAMILIES, 12, 400, fs_none);
 	propfont = GResourceFindFont("ShowATT.Font",propfont);
 
-	GDrawDecomposeFont(propfont, &rq);
-	rq.utf8_family_name = MONO_UI_FAMILIES;	/* I want to show tabluar data sometimes */
-	monofont = GDrawInstanciateFont(att->gw,&rq);
+	monofont = GDrawNewFont(att->gw, MONO_UI_FAMILIES, 12, 400, fs_none);
 	monofont = GResourceFindFont("ShowATT.MonoFont",monofont);
     }
     att->font = propfont;
