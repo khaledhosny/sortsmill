@@ -56,6 +56,7 @@
 #  include <cairo/cairo-xlib.h>
 #  define GTimer GTimer_GTK
 #  include <pango/pango.h>
+#  include <pango/pangocairo.h>
 #  undef GTimer
 #endif
 

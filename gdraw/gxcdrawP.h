@@ -49,7 +49,7 @@ extern void _GXCDraw_DrawPoly(GWindow w, GPoint *pts, int16 cnt, Color col);
 extern void _GXCDraw_FillPoly(GWindow w, GPoint *pts, int16 cnt, Color col);
 
 extern void _GXCDraw_Image(GWindow w, GImage *image, GRect *src, int32 x, int32 y);
-extern void _GXCDraw_Glyph(GWindow w, GImage *image, GRect *src, int32 x, int32 y);;
+extern void _GXCDraw_Glyph(GWindow w, GImage *image, GRect *src, int32 x, int32 y);
 extern void _GXCDraw_ImageMagnified(GWindow w, GImage *image, GRect *magsrc,
 	int32 x, int32 y, int32 width, int32 height);
 extern void _GXCDraw_CopyArea( GXWindow from, GXWindow into, GRect *src, int32 x, int32 y);
@@ -64,12 +64,6 @@ extern void _GXCDraw_DirtyRect(GXWindow gw,double x, double y, double width, dou
 extern void _GXPDraw_NewWindow(GXWindow nw);
 extern void _GXPDraw_DestroyWindow(GXWindow nw);
 
-extern int32 _GXPDraw_DoText8(GWindow w, int32 x, int32 y,
-	const char *text, int32 cnt, Color col,
-	enum text_funcs drawit, struct tf_arg *arg);
-extern int32 _GXPDraw_DoText(GWindow w, int32 x, int32 y,
-	const unichar_t *text, int32 cnt, Color col,
-	enum text_funcs drawit, struct tf_arg *arg);
 extern void _GXPDraw_FontMetrics(GWindow gw, GFont *fi, int *as, int *ds, int *ld);
 extern void _GXPDraw_LayoutInit(GWindow w, char *text, int cnt, GFont *fi);
 extern void _GXPDraw_LayoutDraw(GWindow w, int32 x, int32 y, Color fg);

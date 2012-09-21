@@ -30,7 +30,6 @@
 
 #include "gdrawP.h"
 #include "fontP.h"
-#include "gxcdrawP.h"
 #include "ustring.h"
 
 FontInstance *GDrawSetFont(GWindow gw, FontInstance *fi) {
@@ -80,55 +79,3 @@ FontRequest *GDrawDecomposeFont(FontInstance *fi, FontRequest *rq) {
     *rq = fi->rq;
 return( rq );
 }
-
-/* ************************************************************************** */
-
-int32 GDrawDrawText(GWindow gw, int32 x, int32 y, const unichar_t *text, int32 cnt, Color col) {
-    struct tf_arg arg;
-
-return( _GXPDraw_DoText(gw,x,y,text,cnt,col,tf_drawit,&arg));
-}
-
-int32 GDrawGetTextWidth(GWindow gw,const unichar_t *text, int32 cnt) {
-    struct tf_arg arg;
-
-return( _GXPDraw_DoText(gw,0,0,text,cnt,0x0,tf_width,&arg));
-}
-
-int32 GDrawGetTextBounds(GWindow gw,const unichar_t *text, int32 cnt, GTextBounds *bounds) {
-    int ret;
-    struct tf_arg arg;
-
-    memset(&arg,'\0',sizeof(arg));
-    arg.first = true;
-    ret = _GXPDraw_DoText(gw,0,0,text,cnt,0x0,tf_rect,&arg);
-    *bounds = arg.size;
-return( ret );
-}
-
-/* UTF8 routines */
-
-int32 GDrawDrawText8(GWindow gw, int32 x, int32 y, const char *text, int32 cnt, Color col) {
-    struct tf_arg arg;
-
-return( _GXPDraw_DoText8(gw,x,y,text,cnt,col,tf_drawit,&arg));
-}
-
-int32 GDrawGetText8Width(GWindow gw, const char *text, int32 cnt) {
-    struct tf_arg arg;
-
-return( _GXPDraw_DoText8(gw,0,0,text,cnt,0x0,tf_width,&arg));
-}
-
-int32 GDrawGetText8Bounds(GWindow gw,const char *text, int32 cnt, GTextBounds *bounds) {
-    int ret;
-    struct tf_arg arg;
-
-    memset(&arg,'\0',sizeof(arg));
-    arg.first = true;
-    ret = _GXPDraw_DoText8(gw,0,0,text,cnt,0x0,tf_rect,&arg);
-    *bounds = arg.size;
-return( ret );
-}
-
-/* End UTF8 routines */

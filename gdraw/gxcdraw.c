@@ -74,6 +74,11 @@ void _GXCDraw_DestroyWindow(GXWindow gw) {
     cairo_surface_destroy(gw->cs);
 }
 
+cairo_t * _GXCDraw_GetCairo(GWindow w) {
+    GXWindow gw = (GXWindow) w;
+    return (gw->cc);
+}
+
 /* ************************************************************************** */
 /* ******************************* Cairo State ****************************** */
 /* ************************************************************************** */
@@ -900,10 +905,6 @@ void _GXCDraw_DirtyRect(GXWindow gw,double x, double y, double width, double hei
 /* ***************************** Pango Library ****************************** */
 /* ************************************************************************** */
 
-#  define GTimer GTimer_GTK
-#  include <pango/pangocairo.h>
-#  undef GTimer
-
 /* ************************************************************************** */
 /* ****************************** Pango Render ****************************** */
 /* ************************************************************************** */
@@ -1024,7 +1025,7 @@ return( *fdbase );
 return( fd );
 }
 
-int32 _GXPDraw_DoText8(GWindow w, int32 x, int32 y,
+static int32 _GXPDraw_DoText8(GWindow w, int32 x, int32 y,
 	const char *text, int32 cnt, Color col,
 	enum text_funcs drawit, struct tf_arg *arg) {
     GXWindow gw = (GXWindow) w;
@@ -1090,7 +1091,7 @@ int32 _GXPDraw_DoText8(GWindow w, int32 x, int32 y,
 return( rect.width );
 }
 
-int32 _GXPDraw_DoText(GWindow w, int32 x, int32 y,
+static int32 _GXPDraw_DoText(GWindow w, int32 x, int32 y,
 	const unichar_t *text, int32 cnt, Color col,
 	enum text_funcs drawit, struct tf_arg *arg) {
     char *temp = cnt>=0 ? u2utf8_copyn(text,cnt) : u2utf8_copy(text);
@@ -1196,7 +1197,48 @@ return( -1 );
 return( line->start_index );
 }
 
-cairo_t * _GXCDraw_GetCairo(GWindow w) {
-    GXWindow gw = (GXWindow) w;
-    return (gw->cc);
+int32 GDrawDrawText(GWindow gw, int32 x, int32 y, const unichar_t *text, int32 cnt, Color col) {
+    struct tf_arg arg;
+
+return( _GXPDraw_DoText(gw,x,y,text,cnt,col,tf_drawit,&arg));
+}
+
+int32 GDrawGetTextWidth(GWindow gw,const unichar_t *text, int32 cnt) {
+    struct tf_arg arg;
+
+return( _GXPDraw_DoText(gw,0,0,text,cnt,0x0,tf_width,&arg));
+}
+
+int32 GDrawGetTextBounds(GWindow gw,const unichar_t *text, int32 cnt, GTextBounds *bounds) {
+    int ret;
+    struct tf_arg arg;
+
+    memset(&arg,'\0',sizeof(arg));
+    arg.first = true;
+    ret = _GXPDraw_DoText(gw,0,0,text,cnt,0x0,tf_rect,&arg);
+    *bounds = arg.size;
+return( ret );
+}
+
+int32 GDrawDrawText8(GWindow gw, int32 x, int32 y, const char *text, int32 cnt, Color col) {
+    struct tf_arg arg;
+
+return( _GXPDraw_DoText8(gw,x,y,text,cnt,col,tf_drawit,&arg));
+}
+
+int32 GDrawGetText8Width(GWindow gw, const char *text, int32 cnt) {
+    struct tf_arg arg;
+
+return( _GXPDraw_DoText8(gw,0,0,text,cnt,0x0,tf_width,&arg));
+}
+
+int32 GDrawGetText8Bounds(GWindow gw,const char *text, int32 cnt, GTextBounds *bounds) {
+    int ret;
+    struct tf_arg arg;
+
+    memset(&arg,'\0',sizeof(arg));
+    arg.first = true;
+    ret = _GXPDraw_DoText8(gw,0,0,text,cnt,0x0,tf_rect,&arg);
+    *bounds = arg.size;
+return( ret );
 }
