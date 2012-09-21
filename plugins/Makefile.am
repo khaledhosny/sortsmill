@@ -25,14 +25,11 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-plugindir = ${pkglibdir}/plugins
-
-AM_CPPFLAGS = "-I$(top_builddir)/lib" "-I$(top_srcdir)/lib"		\
-	"-I$(top_builddir)/inc" "-I$(top_srcdir)/inc"				\
-	"-I$(top_builddir)/fontforge" "-I$(top_srcdir)/fontforge"	\
-	$(MY_CFLAGS)
+include $(top_srcdir)/mk/flags.am
 
 plugin_LTLIBRARIES = gb12345.la
 gb12345_la_SOURCES = gb12345.c
-gb12345_la_LDFLAGS = -module -avoid-version
+gb12345_la_LDFLAGS = -module -avoid-version \
+	-export-symbols-regex '^gb12345_LTX_FontForgeInit$$'
+gb12345_la_DEPENDENCIES = Makefile
 
