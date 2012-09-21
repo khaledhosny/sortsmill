@@ -110,14 +110,10 @@ static int menu_grabs=true;
 static struct gmenu *most_recent_popup_menu = NULL;
 
 static void GMenuInit() {
-    FontRequest rq;
     char *keystr, *end;
 
     GGadgetInit();
-    memset(&rq,0,sizeof(rq));
-    GDrawDecomposeFont(_ggadget_default_font,&rq);
-    rq.weight = 400;
-    menu_font = menubar_font = GDrawInstanciateFont(NULL,&rq);
+    menu_font = menubar_font = _ggadget_default_font;
     _GGadgetCopyDefaultBox(&menubar_box);
     _GGadgetCopyDefaultBox(&menu_box);
     menubar_box.border_shape = menu_box.border_shape = bs_rect;
@@ -1261,7 +1257,7 @@ static GMenu *_GMenu_Create(GWindow owner,GMenuItem *mi, GPoint *where,
 
     m->w = GDrawCreateTopWindow(disp,&pos,gmenu_eh,m,&pattrs);
     m->gic = GDrawCreateInputContext(m->w,gic_root|gic_orlesser);
-    GDrawWindowFontMetrics(m->w,m->font,&m->as, &ds, &ld);
+    GDrawGetFontMetrics(m->w,m->font,&m->as, &ds, &ld);
     m->fh = m->as + ds + 1;		/* I need some extra space, else mneumonic underlines look bad */
     lh = m->fh;
 
@@ -1818,7 +1814,7 @@ static void GMenuBarFit(GMenuBar *mb,GGadgetData *gd) {
     }
     if ( mb->g.r.height == 0 ) {
 	int as,ds,ld;
-	GDrawWindowFontMetrics(mb->g.base,mb->font,&as, &ds, &ld);
+	GDrawGetFontMetrics(mb->g.base,mb->font,&as, &ds, &ld);
 	mb->g.r.height = as+ds+2*bp;
     }
     mb->g.inner.x = mb->g.r.x + bp;

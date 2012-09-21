@@ -912,24 +912,42 @@ void _GXCDraw_DirtyRect(GXWindow gw,double x, double y, double width, double hei
 /* Oh there's pango_cairo_layout_path but that's more restrictive and probably*/
 /*  less efficient */
 
-static void my_cairo_render_layout(cairo_t *cc, Color fg,
-	PangoLayout *layout,int x,int y) {
-    PangoRectangle rect, r2;
+static void render_layout(GXWindow gw, int x, int y, Color fg) {
+    GFont *fi = gw->ggc->fi;
+    cairo_t *cr = gw->cc;
+    PangoLayout *layout = gw->pango_layout;
+    PangoRectangle rect;
     PangoLayoutIter *iter;
 
     iter = pango_layout_get_iter(layout);
     do {
 	PangoLayoutRun *run = pango_layout_iter_get_run(iter);
 	if ( run!=NULL ) {	/* NULL runs mark end of line */
-	    pango_layout_iter_get_run_extents(iter,&r2,&rect);
-	    cairo_move_to(cc,x+(rect.x+PANGO_SCALE/2)/PANGO_SCALE, y+(rect.y+PANGO_SCALE/2)/PANGO_SCALE);
+	    int rx, ry;
+
+	    cairo_save(cr);
+
+	    pango_layout_iter_get_run_extents(iter, NULL, &rect);
+	    rx = x + (rect.x + PANGO_SCALE/2)/PANGO_SCALE;
+	    ry = y + (rect.y + PANGO_SCALE/2)/PANGO_SCALE;
+	    cairo_move_to(cr, rx, ry);
+
 	    if ( COLOR_ALPHA(fg)==0 )
-		cairo_set_source_rgba(cc,COLOR_RED(fg)/255.0,COLOR_GREEN(fg)/255.0,COLOR_BLUE(fg)/255.0,
-			1.0);
+		cairo_set_source_rgb(cr,COLOR_RED(fg)/255.0,COLOR_GREEN(fg)/255.0,COLOR_BLUE(fg)/255.0);
 	    else
-		cairo_set_source_rgba(cc,COLOR_RED(fg)/255.0,COLOR_GREEN(fg)/255.0,COLOR_BLUE(fg)/255.0,
+		cairo_set_source_rgba(cr,COLOR_RED(fg)/255.0,COLOR_GREEN(fg)/255.0,COLOR_BLUE(fg)/255.0,
 			COLOR_ALPHA(fg)/255.);
-	    pango_cairo_show_glyph_string(cc,run->item->analysis.font,run->glyphs);
+
+	    if (fi->rq.style&fs_rotated) {
+		// This is used to rotate labels for vertical glyph in
+		// fontview, not a full vertical layout.
+		cairo_move_to(cr, rx, ry - rect.width/PANGO_SCALE);
+		cairo_rotate(cr, M_PI/2.0);
+	    }
+
+	    pango_cairo_show_glyph_string(cr, run->item->analysis.font, run->glyphs);
+
+	    cairo_restore(cr);
 	}
     } while ( pango_layout_iter_next_run(iter));
     pango_layout_iter_free(iter);
@@ -995,10 +1013,6 @@ return( *fdbase );
 	    (font->rq.style&fs_extended )?  PANGO_STRETCH_EXPANDED  :
 					    PANGO_STRETCH_NORMAL);
 
-    if (font->rq.style&fs_vertical)
-	/* FIXME: not sure this is the right thing */
-	pango_font_description_set_gravity(fd, PANGO_GRAVITY_WEST);
-
     if ( font->rq.point_size<=0 )
 	GDrawIError( "Bad point size for pango" );	/* any negative (pixel) values should be converted when font opened */
 
@@ -1021,12 +1035,15 @@ int32 _GXPDraw_DoText8(GWindow w, int32 x, int32 y,
     if (fi == NULL)
 	return(0);
 
-    fd = _GXPDraw_configfont(gw, fi);
+    fd = fi->pango_fd;
+    if (fd == NULL)
+	fd = _GXPDraw_configfont(gw, fi);
+
     pango_layout_set_font_description(gw->pango_layout,fd);
     pango_layout_set_text(gw->pango_layout,(char *) text,cnt);
     pango_layout_get_pixel_extents(gw->pango_layout,NULL,&rect);
     if ( drawit==tf_drawit ) {
-        my_cairo_render_layout(gw->cc,col,gw->pango_layout,x,y);
+        render_layout(gw, x, y, col);
 #if 0
         cairo_move_to(gw->cc,x,y - fi->ascent);
         gw->ggc->fg = col;
@@ -1115,7 +1132,7 @@ void _GXPDraw_LayoutInit(GWindow w, char *text, int cnt, GFont *fi) {
 void _GXPDraw_LayoutDraw(GWindow w, int32 x, int32 y, Color col) {
     GXWindow gw = (GXWindow) w;
 
-    my_cairo_render_layout(gw->cc,col,gw->pango_layout,x,y);
+    render_layout(gw, x, y, col);
 }
 
 void _GXPDraw_LayoutIndexToPos(GWindow w, int index, GRect *pos) {

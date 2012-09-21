@@ -7467,7 +7467,6 @@ void FontInfo(SplineFont *sf,int deflayer,int defaspect,int sync) {
     int i,j,k,g, psrow;
     int mcs;
     char title[130];
-    FontRequest rq;
     int as, ds, ld;
     char **nlnames;
     char createtime[200], modtime[200];
@@ -10717,15 +10716,11 @@ return;
     OS2_CodePageChange(GWidgetGetControl(gw,CID_CodePageRanges),NULL);
 
     if ( fi_font==NULL ) {
-	memset(&rq,0,sizeof(rq));
-	rq.utf8_family_name = SANS_UI_FAMILIES;
-	rq.point_size = 12;
-	rq.weight = 400;
-	fi_font = GDrawInstanciateFont(gw,&rq);
+	fi_font = GDrawNewFont(gw, SANS_UI_FAMILIES, 12, 400, fs_none);
 	fi_font = GResourceFindFont("FontInfo.Font",fi_font);
     }
     d->font = fi_font;
-    GDrawWindowFontMetrics(gw,d->font,&as,&ds,&ld);
+    GDrawGetFontMetrics(gw,d->font,&as,&ds,&ld);
     d->as = as; d->fh = as+ds;
 
     GTextInfoListFree(namelistnames);

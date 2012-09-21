@@ -379,7 +379,7 @@ static void GTabSet_Remetric(GTabSet *gts) {
     int ni = GDrawPointsToPixels(gts->g.base,NEST_INDENT), in;
 
     GDrawSetFont(gts->g.base,gts->font);
-    GDrawWindowFontMetrics(gts->g.base,gts->font,&as,&ds,&ld);
+    GDrawGetFontMetrics(gts->g.base,gts->font,&as,&ds,&ld);
     gts->as = as; gts->fh = as+ds;
     gts->rowh = as+ds + bbp+GDrawPointsToPixels(gts->g.base,3);
     gts->ds = ds + bbp+GDrawPointsToPixels(gts->g.base,1);

@@ -963,7 +963,6 @@ static void StartDeltaDisplay(QGData *qg) {
 	    *varray[4];
     GTextInfo label[8];
     int i, k;
-    FontRequest rq;
     int as, ds, ld;
     static GFont *valfont=NULL;
     static int sorts_translated = 0;
@@ -991,15 +990,11 @@ static void StartDeltaDisplay(QGData *qg) {
     qg->done = false;
 
     if ( valfont==NULL ) {
-	memset(&rq,0,sizeof(rq));
-	rq.utf8_family_name = "Helvetica";
-	rq.point_size = 11;
-	rq.weight = 400;
-	valfont = GDrawInstanciateFont(gw,&rq);
+	valfont = GDrawNewFont(gw, SANS_UI_FAMILIES, 11, 400, fs_none);
 	valfont = GResourceFindFont("Validate.Font",valfont);
     }
     qg->font = valfont;
-    GDrawWindowFontMetrics(gw,qg->font,&as,&ds,&ld);
+    GDrawGetFontMetrics(gw,qg->font,&as,&ds,&ld);
     qg->fh = as+ds;
     qg->as = as;
 

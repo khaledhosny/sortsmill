@@ -548,7 +548,6 @@ return( true );
 }
 
 static void GroupWCreate(struct groupdlg *grp,GRect *pos) {
-    FontRequest rq;
     int as, ds, ld;
     GGadgetCreateData gcd[5];
     GTextInfo label[4];
@@ -557,15 +556,11 @@ static void GroupWCreate(struct groupdlg *grp,GRect *pos) {
     static GFont *font=NULL;
 
     if ( font==NULL ) {
-	memset(&rq,'\0',sizeof(rq));
-	rq.utf8_family_name = SANS_UI_FAMILIES;
-	rq.point_size = 12;
-	rq.weight = 400;
-	font = GDrawInstanciateFont(grp->gw,&rq);
+	font = GDrawNewFont(grp->gw, SANS_UI_FAMILIES, 12, 400, fs_none);
 	font = GResourceFindFont("Groups.Font",font);
     }
     grp->font = font;
-    GDrawWindowFontMetrics(grp->gw,grp->font,&as,&ds,&ld);
+    GDrawGetFontMetrics(grp->gw,grp->font,&as,&ds,&ld);
     grp->fh = as+ds; grp->as = as;
 
     grp->lines_page = (pos->height-grp->bmargin)/grp->fh;

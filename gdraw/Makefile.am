@@ -163,7 +163,7 @@ EXPORTED_LIBGDRAW_SYMBOLS = GBoxBorderWidth GBoxDrawBackground			\
 	 _ggadget_default_font _ggadget_destroy _ggadget_getinnersize		\
 	 _ggadget_getsize _ggadget_move _ggadget_redraw _ggadget_resize		\
 	 _ggadget_setenabled _ggadget_setvisible screen_display				\
-	 utf82u_mncopy
+	 utf82u_mncopy GDrawGetFontMetrics GDrawNewFont
 
 libgdraw_la_CPPFLAGS = $(AM_CPPFLAGS)
 libgdraw_la_LIBADD = $(top_builddir)/Unicode/libgunicode.la				\

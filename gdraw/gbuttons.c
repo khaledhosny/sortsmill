@@ -736,7 +736,7 @@ static void GButtonGetDesiredSize(GGadget *g, GRect *outer, GRect *inner) {
 	iwidth = GImageGetScaledWidth(gl->g.base,gl->image);
 	iheight = GImageGetScaledHeight(gl->g.base,gl->image);
     }
-    GDrawWindowFontMetrics(g->base,gl->font,&as, &ds, &ld);
+    GDrawGetFontMetrics(g->base,gl->font,&as, &ds, &ld);
     if ( gl->label!=NULL ) {
 	int lcnt;
 	unichar_t *ltxt = NULL;
@@ -1009,7 +1009,7 @@ static void GLabelFit(GLabel *gl) {
 	    gl->g.r.width += 6;
     }
 
-    GDrawWindowFontMetrics(gl->g.base,gl->font,&as, &ds, &ld);
+    GDrawGetFontMetrics(gl->g.base,gl->font,&as, &ds, &ld);
     gl->as = as;
     gl->fh = as+ds;
 

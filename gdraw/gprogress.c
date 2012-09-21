@@ -235,7 +235,6 @@ void GProgressStartIndicator(
     )
 {
     GProgress *new_;
-    FontRequest rq;
     GWindowAttrs wattrs;
     GWindow root;
     GGadgetData gd;
@@ -256,14 +255,11 @@ void GProgressStartIndicator(
 
 	root = GDrawGetRoot(NULL);
 	if ( progress_font == NULL ) {
-	    memset(&rq,'\0',sizeof(rq));
-	    rq.utf8_family_name = MONO_UI_FAMILIES;
-	    rq.point_size = 12;
-	    rq.weight = 400;
-	    progress_font = GDrawAttachFont(root,&rq);
+	    progress_font = GDrawNewFont(root, MONO_UI_FAMILIES, 12, 400, fs_none);
 	}
 	new_->font = progress_font;
-	GDrawWindowFontMetrics(root,new_->font,&as,&ds,&ld);
+	GDrawSetFont(root, progress_font);
+	GDrawGetFontMetrics(root,new_->font,&as,&ds,&ld);
 
 	if ( new_->line1!=NULL )
 	    new_->l1width = GDrawGetTextWidth(root,new_->line1,-1);

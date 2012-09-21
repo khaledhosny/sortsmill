@@ -4652,7 +4652,6 @@ MetricsView *MetricsViewCreate(FontView *fv,SplineChar *sc,BDFFont *bdf) {
     GGadgetData gd;
     GRect gsize;
     MetricsView *mv = gcalloc(1,sizeof(MetricsView));
-    FontRequest rq;
     static GWindow icon = NULL;
     extern int _GScrollBar_Width;
     char buf[120], *pt;
@@ -4719,15 +4718,11 @@ MetricsView *MetricsViewCreate(FontView *fv,SplineChar *sc,BDFFont *bdf) {
     mv->vsb = GScrollBarCreate(gw,&gd,mv);
 
     if ( mvfont==NULL ) {
-	memset(&rq,0,sizeof(rq));
-	rq.utf8_family_name = SANS_UI_FAMILIES;
-	rq.point_size = -12;
-	rq.weight = 400;
-	mvfont = GDrawInstanciateFont(gw,&rq);
+	mvfont = GDrawNewFont(gw, SANS_UI_FAMILIES, -12, 400, fs_none);
 	mvfont = GResourceFindFont("MetricsView.Font",mvfont);
     }
     mv->font = mvfont;
-    GDrawWindowFontMetrics(gw,mv->font,&as,&ds,&ld);
+    GDrawGetFontMetrics(gw,mv->font,&as,&ds,&ld);
     mv->fh = as+ds; mv->as = as;
 
     pt = buf;
