@@ -31,6 +31,10 @@
 #error You must define DOCDIR.
 #endif
 
+#ifndef BROWSER_DISPATCHER
+#define BROWSER_DISPATCHER "xdg-open"
+#endif
+
 #include "fontforgeui.h"
 #include <gfile.h>
 #include <assert.h>
@@ -172,7 +176,7 @@ static char *make_help_uri(char *uri_or_file)
     return uri;
 }
 
-static const char *browser_dispatcher = "xdg-open";
+static const char *browser_dispatcher = BROWSER_DISPATCHER;
 
 static char *find_browser(void)
 {
