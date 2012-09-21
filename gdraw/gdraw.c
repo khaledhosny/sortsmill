@@ -557,7 +557,7 @@ return;
     (w->display->funcs->drawImageMag)(w,img,dest,x,y, width, height);
 }
 
-void GDrawWindowFontMetrics(GWindow w,FontInstance *fi,int *as, int *ds, int *ld) {
+void GDrawGetFontMetrics(GWindow w,FontInstance *fi,int *as, int *ds, int *ld) {
     (w->display->funcs->getFontMetrics)(w,fi,as,ds,ld);
 }
 

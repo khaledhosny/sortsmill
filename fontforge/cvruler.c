@@ -407,7 +407,7 @@ static void RulerPlace(CharView *cv, GEvent *event) {
 	    rvfont = GResourceFindFont("CharView.Measure.Font",rvfont);
 	}
 	cv->rfont = rvfont;
-	GDrawWindowFontMetrics(cv->ruler_w,cv->rfont,&as,&ds,&ld);
+	GDrawGetFontMetrics(cv->ruler_w,cv->rfont,&as,&ds,&ld);
 	cv->rfh = as+ds; cv->ras = as;
     } else
 	GDrawRaise(cv->ruler_w);
@@ -654,7 +654,7 @@ static void CpInfoPlace(CharView *cv, GEvent *event) {
 	    rvfont = GResourceFindFont("CharView.Measure.Font",rvfont);
 	}
 	cv->rfont = rvfont;
-	GDrawWindowFontMetrics(cv->ruler_w,cv->rfont,&as,&ds,&ld);
+	GDrawGetFontMetrics(cv->ruler_w,cv->rfont,&as,&ds,&ld);
 	cv->rfh = as+ds; cv->ras = as;
     } else
 	GDrawRaise(cv->ruler_w);

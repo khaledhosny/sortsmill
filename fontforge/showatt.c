@@ -2798,7 +2798,7 @@ static void ShowAttCreateDlg(struct att_dlg *att, SplineFont *sf, int which,
     }
     att->font = propfont;
     att->monofont = monofont;
-    GDrawWindowFontMetrics(att->gw,att->font,&as,&ds,&ld);
+    GDrawGetFontMetrics(att->gw,att->font,&as,&ds,&ld);
     att->fh = as+ds; att->as = as;
 
     att->bmargin = GDrawPointsToPixels(NULL,32)+sbsize;

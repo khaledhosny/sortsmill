@@ -771,7 +771,7 @@ static void GMatrixEdit_SetFont(GGadget *g,FontInstance *new) {
     GMatrixEdit *gme = (GMatrixEdit *) g;
     int as, ds, ld;
     gme->font = new;
-    GDrawWindowFontMetrics(g->base,gme->font,&as, &ds, &ld);
+    GDrawGetFontMetrics(g->base,gme->font,&as, &ds, &ld);
     gme->font_as = gme->as = as;
     gme->font_fh = gme->fh = as+ds;
     GME_RecalcFH(gme);
@@ -1991,7 +1991,7 @@ GGadget *GMatrixEditCreate(struct gwindow *base, GGadgetData *gd,void *data) {
 
     gme->font = gmatrixedit_font;
     gme->titfont = gmatrixedit_titfont;
-    GDrawWindowFontMetrics(base,gme->font,&as, &ds, &ld);
+    GDrawGetFontMetrics(base,gme->font,&as, &ds, &ld);
     gme->font_as = gme->as = as;
     gme->font_fh = gme->fh = as+ds;
 

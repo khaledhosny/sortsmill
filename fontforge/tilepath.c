@@ -1075,7 +1075,7 @@ static int TileAsk(struct tiledata *td,SplineFont *sf) {
     }
     tpd.plain = font;
     tpd.bold = bold;
-    GDrawWindowFontMetrics(tpd.gw,tpd.plain,&as,&ds,&ld);
+    GDrawGetFontMetrics(tpd.gw,tpd.plain,&as,&ds,&ld);
     tpd.fh = as+ds; tpd.as = as;
 
     memset(&label,0,sizeof(label));

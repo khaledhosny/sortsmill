@@ -256,7 +256,7 @@ void GProgressStartIndicator(
 	    progress_font = GDrawNewFont(root, MONO_UI_FAMILIES, 12, 400, fs_none);
 	}
 	GDrawSetFont(root, progress_font);
-	GDrawWindowFontMetrics(root,new->font = progress_font,&as,&ds,&ld);
+	GDrawGetFontMetrics(root,new->font = progress_font,&as,&ds,&ld);
 
 	if ( new->line1!=NULL )
 	    new->l1width = GDrawGetTextWidth(root,new->line1,-1);

@@ -570,7 +570,7 @@ return( true );
 	    pt = ept+1;
 	} while ( ept!=NULL && *pt!='\0' );
     }
-    GDrawWindowFontMetrics(popup,popup_font,&as, &ds, &ld);
+    GDrawGetFontMetrics(popup,popup_font,&as, &ds, &ld);
     pos.width = width+2*GDrawPointsToPixels(popup,2);
     pos.height = lines*(as+ds) + img_height + 2*GDrawPointsToPixels(popup,2);
 
@@ -608,7 +608,7 @@ return( true );
 	    y += GImageGetHeight(popup_info.img);
 	}
 	if ( pt!=NULL ) {
-	    GDrawWindowFontMetrics(popup,popup_font,&as, &ds, &ld);
+	    GDrawGetFontMetrics(popup,popup_font,&as, &ds, &ld);
 	    fh = as+ds;
 	    y += as;
 	    do {

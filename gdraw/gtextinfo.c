@@ -71,7 +71,7 @@ int GTextInfoGetHeight(GWindow base,GTextInfo *ti,FontInstance *font) {
 
     if ( ti->font!=NULL )
 	font = ti->font;
-    GDrawWindowFontMetrics(base,font,&as, &ds, &ld);
+    GDrawGetFontMetrics(base,font,&as, &ds, &ld);
     if ( ti->text!=NULL ) {
 	GDrawSetFont(base,font);
 	GDrawGetTextBounds(base,ti->text, -1, &bounds);
@@ -108,7 +108,7 @@ int GTextInfoGetAs(GWindow base,GTextInfo *ti, FontInstance *font) {
     int height;
     GTextBounds bounds;
 
-    GDrawWindowFontMetrics(base,font,&as, &ds, &ld);
+    GDrawGetFontMetrics(base,font,&as, &ds, &ld);
     if ( ti->text!=NULL ) {
 	GDrawSetFont(base,font);
 	GDrawGetTextBounds(base,ti->text, -1, &bounds);
@@ -135,7 +135,7 @@ int GTextInfoDraw(GWindow base,int x,int y,GTextInfo *ti,
     GTextBounds bounds;
     GRect r, old;
 
-    GDrawWindowFontMetrics(base,font,&as, &ds, &ld);
+    GDrawGetFontMetrics(base,font,&as, &ds, &ld);
     if ( ti->text!=NULL ) {
 	if ( ti->font!=NULL )
 	    font = ti->font;

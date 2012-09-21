@@ -768,7 +768,7 @@ static void CreateErrorWindow(void) {
 
     errdata.font = GDrawNewFont(NULL, SANS_UI_FAMILIES, 10, 400, fs_none);
     errdata.font = GResourceFindFont("Warnings.Font",errdata.font);
-    GDrawWindowFontMetrics(errdata.gw,errdata.font,&as,&ds,&ld);
+    GDrawGetFontMetrics(errdata.gw,errdata.font,&as,&ds,&ld);
     errdata.as = as;
     errdata.fh = as+ds;
 

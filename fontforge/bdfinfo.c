@@ -781,7 +781,7 @@ return;
     bd.font = font;
     {
 	int as, ds, ld;
-	GDrawWindowFontMetrics(gw,bd.font,&as,&ds,&ld);
+	GDrawGetFontMetrics(gw,bd.font,&as,&ds,&ld);
 	bd.as = as; bd.fh = as+ds;
     }
 

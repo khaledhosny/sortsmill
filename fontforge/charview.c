@@ -2587,7 +2587,7 @@ static GWindow CharIcon(CharView *cv, FontView *fv) {
 	font = GDrawNewFont(NULL, SERIF_UI_FAMILIES, 24, 400, fs_none);
 	GDrawSetFont(icon,font);
 	text[0] = sc->unicodeenc; text[1] = 0;
-	GDrawWindowFontMetrics(icon,font,&as,&ds,&ld);
+	GDrawGetFontMetrics(icon,font,&as,&ds,&ld);
 	width = GDrawGetTextWidth(icon,text,1);
 	GDrawDrawText(icon,(r.width-width)/2,(r.height-as-ds)/2+as,text,1,0xffffff);
     }
@@ -10172,13 +10172,13 @@ static void _CharViewCreate(CharView *cv, SplineChar *sc, FontView *fv,int enc) 
     }
 
     cv->small = GDrawNewFont(cv->gw, infofamily, GResourceFindInt("CharView.Rulers.FontSize", -10), 400, fs_none);
-    GDrawWindowFontMetrics(cv->gw,cv->small,&as,&ds,&ld);
+    GDrawGetFontMetrics(cv->gw,cv->small,&as,&ds,&ld);
     cv->sfh = as+ds; cv->sas = as;
     GDrawSetFont(cv->gw,cv->small);
     GDrawGetText8Bounds(cv->gw,"0123456789",10,&textbounds);
     cv->sdh = textbounds.as+textbounds.ds+1;
     cv->normal = GDrawNewFont(cv->gw, infofamily, 10, 400, fs_none);
-    GDrawWindowFontMetrics(cv->gw,cv->normal,&as,&ds,&ld);
+    GDrawGetFontMetrics(cv->gw,cv->normal,&as,&ds,&ld);
     cv->nfh = as+ds; cv->nas = as;
 
     cv->height = pos.height; cv->width = pos.width;

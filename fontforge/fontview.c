@@ -6919,7 +6919,7 @@ static void FVCreateInnards(FontView *fv,GRect *pos) {
     fv->fontset = gcalloc(_uni_fontmax,sizeof(GFont *));
     fv->fontset[0] = GDrawNewFont(gw, fv_fontnames, fv_fontsize, 400, fs_none);
     GDrawSetFont(fv->v,fv->fontset[0]);
-    GDrawWindowFontMetrics(fv->v,fv->fontset[0],&as,&ds,&ld);
+    GDrawGetFontMetrics(fv->v,fv->fontset[0],&as,&ds,&ld);
     fv->lab_as = as;
     fv->showhmetrics = default_fv_showhmetrics;
     fv->showvmetrics = default_fv_showvmetrics && sf->hasvmetrics;

@@ -1890,7 +1890,7 @@ void MathKernDialog(SplineChar *sc,int def_layer) {
     }
     mkd.plain = mathfont;
     mkd.bold = mathbold;
-    GDrawWindowFontMetrics(mkd.gw,mkd.plain,&as,&ds,&ld);
+    GDrawGetFontMetrics(mkd.gw,mkd.plain,&as,&ds,&ld);
     mkd.fh = as+ds; mkd.as = as;
 
     memset(&label,0,sizeof(label));

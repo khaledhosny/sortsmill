@@ -106,7 +106,7 @@ return( l==first?1:lcnt );		/* if we can't even fit one line on, pretend it fits
     if ( height>0 ) {
 	if ( gl->fh==0 ) {
 	    int as, ds, ld;
-	    GDrawWindowFontMetrics(gl->g.base,gl->font,&as, &ds, &ld);
+	    GDrawGetFontMetrics(gl->g.base,gl->font,&as, &ds, &ld);
 	    gl->fh = as+ds;
 	    gl->as = as;
 	}
@@ -876,7 +876,7 @@ static void GListGetDesiredSize(GGadget *g,GRect *outer, GRect *inner) {
 	}
 	if ( i<4 ) {
 	    int as, ds, ld;
-	    GDrawWindowFontMetrics(g->base,gl->font,&as, &ds, &ld);
+	    GDrawGetFontMetrics(g->base,gl->font,&as, &ds, &ld);
 	    height += (4-i)*(as+ds);
 	}
     } else
@@ -1205,7 +1205,7 @@ GResInfo *_GListRIHead(void) {
     if ( !glist_inited )
 	GListInit();
     /* bp = GBoxBorderWidth(GDrawGetRoot(NULL),&list_box);*/	/* This gives bizarre values */
-    GDrawWindowFontMetrics(GDrawGetRoot(NULL),list_font,&as, &ds, &ld);	/* I don't have a window yet... */
+    GDrawGetFontMetrics(GDrawGetRoot(NULL),list_font,&as, &ds, &ld);	/* I don't have a window yet... */
     list_gcd[0].gd.pos.height = list_gcd[1].gd.pos.height = 2*(as+ds)+4;
 return( &glist_ri );
 }

@@ -2602,7 +2602,7 @@ static void GTextFieldFit(GTextField *gt) {
     int bp = GBoxBorderWidth(gt->g.base,gt->g.box);
 
     width = GDrawGetTextBounds(gt->g.base,gt->text, -1, &bounds);
-    GDrawWindowFontMetrics(gt->g.base,gt->font,&as, &ds, &ld);
+    GDrawGetFontMetrics(gt->g.base,gt->font,&as, &ds, &ld);
     gt->fh = as+ds;
     gt->as = as;
     gt->nw = GDrawGetTextWidth(gt->g.base,nstr, 1);

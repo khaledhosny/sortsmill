@@ -554,7 +554,7 @@ static void GroupWCreate(struct groupdlg *grp,GRect *pos) {
 	font = GResourceFindFont("Groups.Font",font);
     }
     grp->font = font;
-    GDrawWindowFontMetrics(grp->gw,grp->font,&as,&ds,&ld);
+    GDrawGetFontMetrics(grp->gw,grp->font,&as,&ds,&ld);
     grp->fh = as+ds; grp->as = as;
 
     grp->lines_page = (pos->height-grp->bmargin)/grp->fh;

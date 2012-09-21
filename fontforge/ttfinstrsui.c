@@ -861,7 +861,7 @@ static void InstrDlgCreate(struct instrdata *id,char *title) {
     iv->instrinfo.gfont = font;
     GDrawSetFont(iv->instrinfo.v,iv->instrinfo.gfont);
     GGadgetSetFont(iv->text,iv->instrinfo.gfont);
-    GDrawWindowFontMetrics(iv->instrinfo.v,iv->instrinfo.gfont,&as,&ds,&ld);
+    GDrawGetFontMetrics(iv->instrinfo.v,iv->instrinfo.gfont,&as,&ds,&ld);
     iv->instrinfo.as = as+1;
     iv->instrinfo.fh = iv->instrinfo.as+ds;
     iv->instrinfo.isel_pos = -1;
@@ -1548,7 +1548,7 @@ static void cvtCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32 tag) {
     sv->gfont = font;
     GDrawSetFont(sv->v,sv->gfont);
     GDrawSetFont(sv->gw,sv->gfont);
-    GDrawWindowFontMetrics(sv->gw,sv->gfont,&as,&ds,&ld);
+    GDrawGetFontMetrics(sv->gw,sv->gfont,&as,&ds,&ld);
     sv->as = as+1;
     sv->fh = sv->as+ds;
 

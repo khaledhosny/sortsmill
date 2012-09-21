@@ -1231,7 +1231,7 @@ return;
 	font = GResourceFindFont("Combinations.Font",font);
     }
     kpd.font = font;
-    GDrawWindowFontMetrics(gw,kpd.font,&as,&ds,&ld);
+    GDrawGetFontMetrics(gw,kpd.font,&as,&ds,&ld);
     kpd.fh = as+ds; kpd.as = as;
 
     kpd.uh = (4*kpd.bdf->pixelsize/3)+kpd.fh+6;

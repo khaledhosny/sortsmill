@@ -2216,7 +2216,7 @@ return;
 	}
 	dv->ii.gfont = monofont;
 	GDrawSetFont(dv->ii.v,dv->ii.gfont);
-	GDrawWindowFontMetrics(dv->ii.v,dv->ii.gfont,&as,&ds,&ld);
+	GDrawGetFontMetrics(dv->ii.v,dv->ii.gfont,&as,&ds,&ld);
 	dv->ii.as = as+1;
 	dv->ii.fh = dv->ii.as+ds;
 	dv->ii.isel_pos = -1;

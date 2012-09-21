@@ -10718,7 +10718,7 @@ return;
 	fi_font = GResourceFindFont("FontInfo.Font",fi_font);
     }
     d->font = fi_font;
-    GDrawWindowFontMetrics(gw,d->font,&as,&ds,&ld);
+    GDrawGetFontMetrics(gw,d->font,&as,&ds,&ld);
     d->as = as; d->fh = as+ds;
 
     GTextInfoListFree(namelistnames);

@@ -1255,7 +1255,7 @@ static GMenu *_GMenu_Create(GWindow owner,GMenuItem *mi, GPoint *where,
 
     m->w = GDrawCreateTopWindow(disp,&pos,gmenu_eh,m,&pattrs);
     m->gic = GDrawCreateInputContext(m->w,gic_root|gic_orlesser);
-    GDrawWindowFontMetrics(m->w,m->font,&m->as, &ds, &ld);
+    GDrawGetFontMetrics(m->w,m->font,&m->as, &ds, &ld);
     m->fh = m->as + ds + 1;		/* I need some extra space, else mneumonic underlines look bad */
     lh = m->fh;
 
@@ -1812,7 +1812,7 @@ static void GMenuBarFit(GMenuBar *mb,GGadgetData *gd) {
     }
     if ( mb->g.r.height == 0 ) {
 	int as,ds,ld;
-	GDrawWindowFontMetrics(mb->g.base,mb->font,&as, &ds, &ld);
+	GDrawGetFontMetrics(mb->g.base,mb->font,&as, &ds, &ld);
 	mb->g.r.height = as+ds+2*bp;
     }
     mb->g.inner.x = mb->g.r.x + bp;

@@ -215,7 +215,7 @@ return( NULL );
 
     GGadgetInit();
     GDrawSetFont(gw,_ggadget_default_font);
-    GDrawWindowFontMetrics(gw,_ggadget_default_font,&as,&ds,&ld);
+    GDrawGetFontMetrics(gw,_ggadget_default_font,&as,&ds,&ld);
     fh = as+ds;
     maxw = 0;
     for ( i=0; i<lb; ++i ) {
@@ -716,7 +716,7 @@ static GWindow ChoiceDlgCreate(struct dlg_info *d,const unichar_t *title,
     gw = GDrawCreateTopWindow(NULL,&pos,c_e_h,d,&wattrs);
 
     GDrawSetFont(gw,_ggadget_default_font);
-    GDrawWindowFontMetrics(gw,_ggadget_default_font,&as,&ds,&ld);
+    GDrawGetFontMetrics(gw,_ggadget_default_font,&as,&ds,&ld);
     fh = as+ds;
     maxw = 220;
     for ( i=0; i<lb; ++i ) {
@@ -1009,7 +1009,7 @@ return( NULL );
 
     GGadgetInit();
     GDrawSetFont(gw,_ggadget_default_font);
-    GDrawWindowFontMetrics(gw,_ggadget_default_font,&as,&ds,&ld);
+    GDrawGetFontMetrics(gw,_ggadget_default_font,&as,&ds,&ld);
     fh = as+ds;
     maxw = 0;
     for ( i=0; i<lb; ++i ) {
@@ -1405,7 +1405,7 @@ static GWindow ChoiceDlgCreate8(struct dlg_info *d,const char *title,
 
     GGadgetInit();
     GDrawSetFont(gw,_ggadget_default_font);
-    GDrawWindowFontMetrics(gw,_ggadget_default_font,&as,&ds,&ld);
+    GDrawGetFontMetrics(gw,_ggadget_default_font,&as,&ds,&ld);
     fh = as+ds;
     maxw = 220;
     for ( i=0; i<cnt; ++i) {
