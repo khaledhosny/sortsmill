@@ -65,5 +65,3 @@ syntax: regexp
 \.gmo$
 ~$
 .orig$
-^config$
-^pyhook/config$
