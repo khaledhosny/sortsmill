@@ -417,7 +417,7 @@ static void GTabSet_Remetric(GTabSet *gts) {
 	    while ( (r2 = GTabSetRCnt(gts,width-(r-1)*gts->offset_per_row))!=r )
 		r = r2;
 	free(gts->rowstarts);
-	gts->rowstarts = galloc((r+1)*sizeof(int16));
+	gts->rowstarts = xmalloc((r+1)*sizeof(int16));
 	gts->rcnt = r;
 	gts->rowstarts[r] = gts->tabcnt;
 	for ( i=r=0; i<gts->tabcnt; ++i ) {
@@ -853,7 +853,7 @@ GGadget *GTabSetCreate(struct gwindow *base, GGadgetData *gd,void *data) {
 
     for ( i=0; gd->u.tabs[i].text!=NULL; ++i );
     gts->tabcnt = i;
-    gts->tabs = galloc(i*sizeof(struct tabs));
+    gts->tabs = xmalloc(i*sizeof(struct tabs));
     for ( i=0; gd->u.tabs[i].text!=NULL; ++i ) {
 	if ( gd->u.tabs[i].text_in_resource )
 	    gts->tabs[i].name = u_copy(GStringGetResource((intpt) (gd->u.tabs[i].text),NULL));

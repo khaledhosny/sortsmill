@@ -690,7 +690,7 @@ return( true );
 	int len = u_strlen(event->u.chr.chars);
 	if ( sofar_pos+len >= gl->sofar_max ) {
 	    if ( gl->sofar_max == 0 )
-		gl->sofar = galloc((gl->sofar_max = len+10) * sizeof(unichar_t));
+		gl->sofar = xmalloc((gl->sofar_max = len+10) * sizeof(unichar_t));
 	    else
 		gl->sofar = xrealloc(gl->sofar,(gl->sofar_max = sofar_pos+len+10)*sizeof(unichar_t));
 	}

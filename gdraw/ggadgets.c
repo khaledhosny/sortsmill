@@ -887,7 +887,7 @@ GGadget *_GGadget_Create(GGadget *g, struct gwindow *base, GGadgetData *gd,void 
 	g->box = gd->box;
     else {
 	g->free_box = true;
-	g->box = galloc(sizeof(GBox));
+	g->box = xmalloc(sizeof(GBox));
 	*g->box = *gd->box;
     }
     g->state = !(gd->flags&gg_visible) ? gs_invisible :

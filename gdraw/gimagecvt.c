@@ -817,7 +817,7 @@ struct bounds {
 
 static struct bounds *FillBounds(int src_start, int src_end, int dest_start, int dest_end) {
     int i;
-    struct bounds *bounds = galloc((dest_end-dest_start)*sizeof(struct bounds));
+    struct bounds *bounds = xmalloc((dest_end-dest_start)*sizeof(struct bounds));
     struct bounds *bpt = bounds;
     double frac = (src_end-src_start)/(dest_end-dest_start);
     double temp;

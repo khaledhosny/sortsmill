@@ -98,7 +98,7 @@ return( copy(""));
     len += 6 /* point size */ + 1 +
 	    5 /* weight */ + 1 +
 	    10 /* style */;
-    fontname = galloc(len);
+    fontname = xmalloc(len);
     if ( rq.family_name!=NULL ) {
 	char *utf8_name = u2utf8_copy(rq.family_name);
 	sprintf( fontname, "%d %s%dpt %s", rq.weight,
@@ -2109,7 +2109,7 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 		    gcd[k++].creator = GLabelCreate;
 		    tofree[i].earray[hl][base] = &gcd[k-1];
 
-		    tofree[i].extradefs[l] = galloc(20);
+		    tofree[i].extradefs[l] = xmalloc(20);
 		    sprintf( tofree[i].extradefs[l], "%d", extras->orig.ival );
 		    lab[k].text = (unichar_t *) tofree[i].extradefs[l];
 		    lab[k].text_is_1byte = true;
@@ -2136,7 +2136,7 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 		    gcd[k++].creator = GLabelCreate;
 		    tofree[i].earray[hl][base] = &gcd[k-1];
 
-		    tofree[i].extradefs[l] = galloc(40);
+		    tofree[i].extradefs[l] = xmalloc(40);
 		    sprintf( tofree[i].extradefs[l], "%g", extras->orig.dval );
 		    lab[k].text = (unichar_t *) tofree[i].extradefs[l];
 		    lab[k].text_is_1byte = true;

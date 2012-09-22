@@ -467,7 +467,7 @@ GClut *GImageFindCLUT(GImage *image,GClut *clut,int clutmax) {
     char grey_clut[256];
 
     if ( clut==NULL )
-	clut = galloc(sizeof(GClut));
+	clut = xmalloc(sizeof(GClut));
     if ( clutmax<2 || clut==NULL )
 return( 0 );
 
@@ -688,7 +688,7 @@ return( old );
 }
 
 static struct revcol *addrevcol(struct revcol *copy,struct revcol *old, int dist) {
-    struct revcol *rc = galloc(sizeof(struct revcol));
+    struct revcol *rc = xmalloc(sizeof(struct revcol));
 
     *rc = *copy;
     rc->next = old;
@@ -836,7 +836,7 @@ RevCMap *GClutReverse(GClut *clut,int side_cnt) {
 	GCol *greys; int changed;
 	ret = xcalloc(1,sizeof(RevCMap));
 	ret->is_grey = 1;
-	greys = ret->greys = galloc(256*sizeof(GCol));
+	greys = ret->greys = xmalloc(256*sizeof(GCol));
 	for ( i=0; i<256; ++i ) greys[i].pixel = 0x1000;
 	for ( i=0; i<clut->clut_len; ++i ) {
 	    int g = clut->clut[i]&0xff;
@@ -859,7 +859,7 @@ return( ret );
     }
 
     for ( i=0; i<clut->clut_len; ++i ) {
-	struct revcol *rc = galloc(sizeof(struct revcol));
+	struct revcol *rc = xmalloc(sizeof(struct revcol));
 	rc->red = COLOR_RED(clut->clut[i]);
 	rc->green = COLOR_GREEN(clut->clut[i]);
 	rc->blue = COLOR_BLUE(clut->clut[i]);

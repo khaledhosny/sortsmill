@@ -210,7 +210,7 @@ return( height );
 
 unichar_t *utf82u_mncopy(const char *utf8buf,unichar_t *mn) {
     int len = strlen(utf8buf);
-    unichar_t *ubuf = galloc((len+1)*sizeof(unichar_t));
+    unichar_t *ubuf = xmalloc((len+1)*sizeof(unichar_t));
     unichar_t *upt=ubuf, *uend=ubuf+len;
     const uint8 *pt = (const uint8 *) utf8buf, *end = pt+strlen(utf8buf);
     int w;
@@ -256,7 +256,7 @@ return( ubuf );
 GTextInfo *GTextInfoCopy(GTextInfo *ti) {
     GTextInfo *copy;
 
-    copy = galloc(sizeof(GTextInfo));
+    copy = xmalloc(sizeof(GTextInfo));
     *copy = *ti;
     copy->text_is_1byte = false;
     if ( copy->fg == 0 && copy->bg == 0 ) {
@@ -311,7 +311,7 @@ static void ImagePathDefault(void) {
     extern char *_GGadget_ImagePath;
 
     if ( imagepath==NULL ) {
-	imagepath = galloc(2*sizeof(void *));
+	imagepath = xmalloc(2*sizeof(void *));
 	imagepath[0] = copy(imagedir);
 	imagepath[1] = NULL;
 	imagepathlenmax = strlen(imagedir);
@@ -349,7 +349,7 @@ static void ImageCacheReload(void) {
     /* Try to reload the cache from the new directory */
     /* If a file doesn't exist in the new dir when it did in the old then */
     /*  retain the old copy (people may hold pointers to it) */
-    pathlen = imagepathlenmax+270; path = galloc(pathlen);
+    pathlen = imagepathlenmax+270; path = xmalloc(pathlen);
     for ( i=0; i<IC_SIZE; ++i ) {
 	for ( bucket = imagecache[i]; bucket!=NULL; bucket=bucket->next ) {
 	    if ( strlen(bucket->filename)+imagepathlenmax+3 > pathlen ) {
@@ -408,7 +408,7 @@ static char *ImagePathFigureElement(char *start, int len) {
 return( imagedir );
     else if ( *start=='~' && start[1]=='/' && len>=2 && getenv("HOME")!=NULL ) {
 	int hlen = strlen(getenv("HOME"));
-	char *absname = galloc( hlen+len+8 );
+	char *absname = xmalloc( hlen+len+8 );
 	strcpy(absname,getenv("HOME"));
 	strncpy(absname+hlen,start+1,len-1);
 	absname[hlen+len-1] = '\0';
@@ -436,7 +436,7 @@ return;
 	free( imagepath );
     }
     for ( cnt=0, pt = path; (end = strchr(pt,PATH_SEPARATOR))!=NULL; ++cnt, pt = end+1 );
-    imagepath = galloc((cnt+2)*sizeof(char *));
+    imagepath = xmalloc((cnt+2)*sizeof(char *));
     for ( cnt=0, pt = path; (end = strchr(pt,PATH_SEPARATOR))!=NULL; ++cnt, pt = end+1 )
 	imagepath[cnt] = ImagePathFigureElement(pt,end-pt);
     imagepath[cnt] = ImagePathFigureElement(pt,strlen(pt));
@@ -468,7 +468,7 @@ return( bucket->image );
 
     ImagePathDefault();
 
-    path = galloc(strlen(filename)+imagepathlenmax+10 );
+    path = xmalloc(strlen(filename)+imagepathlenmax+10 );
     for ( k=0; imagepath[k]!=NULL; ++k ) {
 	sprintf( path,"%s/%s", imagepath[k], filename );
 	bucket->image = GImageRead(path);
@@ -527,7 +527,7 @@ return( ri );
     if ( *fname=='/' )
 	ret = GImageRead(fname);
     else if ( *fname=='~' && fname[1]=='/' && getenv("HOME")!=NULL ) {
-	char *absname = galloc( strlen(getenv("HOME"))+strlen(fname)+8 );
+	char *absname = xmalloc( strlen(getenv("HOME"))+strlen(fname)+8 );
 	strcpy(absname,getenv("HOME"));
 	strcat(absname,fname+1);
 	ret = GImageRead(absname);
@@ -582,10 +582,10 @@ GTextInfo **GTextInfoArrayFromList(GTextInfo *ti, uint16 *cnt) {
     if ( ti!=NULL )
 	for ( ; ti[i].text!=NULL || ti[i].image!=NULL || ti[i].line; ++i );
     if ( i==0 ) {
-	arr = galloc(sizeof(GTextInfo *));
+	arr = xmalloc(sizeof(GTextInfo *));
 	i =0;
     } else {
-	arr = galloc((i+1)*sizeof(GTextInfo *));
+	arr = xmalloc((i+1)*sizeof(GTextInfo *));
 	for ( i=0; ti[i].text!=NULL || ti[i].image!=NULL || ti[i].line; ++i )
 	    arr[i] = GTextInfoCopy(&ti[i]);
     }
@@ -599,11 +599,11 @@ GTextInfo **GTextInfoArrayCopy(GTextInfo **ti) {
     GTextInfo **arr;
 
     if ( ti==NULL || (ti[0]->image==NULL && ti[0]->text==NULL && !ti[0]->line) ) {
-	arr = galloc(sizeof(GTextInfo *));
+	arr = xmalloc(sizeof(GTextInfo *));
 	i =0;
     } else {
 	for ( i=0; ti[i]->text!=NULL || ti[i]->image!=NULL || ti[i]->line; ++i );
-	arr = galloc((i+1)*sizeof(GTextInfo *));
+	arr = xmalloc((i+1)*sizeof(GTextInfo *));
 	for ( i=0; ti[i]->text!=NULL || ti[i]->image!=NULL || ti[i]->line; ++i )
 	    arr[i] = GTextInfoCopy(ti[i]);
     }
@@ -686,7 +686,7 @@ return( NULL );
 	for ( i=0; i<len && array[i]!=NULL; ++i );
 	len = i;
     }
-    ti = galloc((i+1)*sizeof(GTextInfo *));
+    ti = xmalloc((i+1)*sizeof(GTextInfo *));
     for ( i=0; i<len; ++i ) {
 	ti[i] = xcalloc(1,sizeof(GTextInfo));
 	ti[i]->text = uc_copy(array[i]);
@@ -717,7 +717,7 @@ return( NULL );
     for ( i=0; mi[i].ti.text!=NULL || mi[i].ti.image!=NULL || mi[i].ti.line; ++i );
     if ( i==0 )
 return( NULL );
-    arr = galloc((i+1)*sizeof(GMenuItem));
+    arr = xmalloc((i+1)*sizeof(GMenuItem));
     for ( i=0; mi[i].ti.text!=NULL || mi[i].ti.image!=NULL || mi[i].ti.line; ++i ) {
 	arr[i] = mi[i];
 	GTextInfoImageLookup(&arr[i].ti);
@@ -1149,7 +1149,7 @@ return( 0 );
     free(strarray); free(smnemonics); free(intarray);
     strarray = xcalloc(scnt,sizeof(unichar_t *));
     smnemonics = xcalloc(scnt,sizeof(unichar_t));
-    intarray = galloc(icnt*sizeof(int));
+    intarray = xmalloc(icnt*sizeof(int));
     for ( i=0; i<icnt; ++i ) intarray[i] = 0x80000000;
     slen = ilen = 0;
 
@@ -1165,7 +1165,7 @@ return( 0 );
 	    smnemonics[i] = getushort(res);
 	    strlen &= ~0x8000;
 	}
-	strarray[i] = galloc((strlen+1)*sizeof(unichar_t));
+	strarray[i] = xmalloc((strlen+1)*sizeof(unichar_t));
 	for ( j=0; j<strlen; ++j )
 	    strarray[i][j] = getushort(res);
 	strarray[i][j] = '\0';
@@ -1226,7 +1226,7 @@ return( NULL );
 		if ( mnemonic!=NULL ) *mnemonic = temp;
 		strlen &= ~0x8000;
 	    }
-	    str = galloc((strlen+1)*sizeof(unichar_t));
+	    str = xmalloc((strlen+1)*sizeof(unichar_t));
 	    for ( j=0; j<strlen; ++j )
 		str[j] = getushort(res);
 	    str[j] = '\0';

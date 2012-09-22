@@ -780,8 +780,8 @@ static char*  u2acp_copy(const unichar_t* ustr){
     if(ustr){
 	int wlen = u_strlen(ustr);
 	if(wlen > 0){
-	    WCHAR* wcs = galloc(sizeof(WCHAR) * (wlen));
-	    char*  mbs = galloc(sizeof(char) * (wlen*3));
+	    WCHAR* wcs = xmalloc(sizeof(WCHAR) * (wlen));
+	    char*  mbs = xmalloc(sizeof(char) * (wlen*3));
 	    if(wcs && mbs){
 		WCHAR* w = wcs;
 		const unichar_t* u = ustr;
@@ -860,9 +860,9 @@ static unichar_t*  mingw_get_wm_name(Display* display, Window window){
 		alen += strlen(list[i]);
 	    }
 
-	    mbs  = galloc(sizeof(char)      * (alen+4));
-	    wcs  = galloc(sizeof(WCHAR)     * (alen+4));
-	    ustr = galloc(sizeof(unichar_t) * (alen+4));
+	    mbs  = xmalloc(sizeof(char)      * (alen+4));
+	    wcs  = xmalloc(sizeof(WCHAR)     * (alen+4));
+	    ustr = xmalloc(sizeof(unichar_t) * (alen+4));
 
 	    if(mbs && wcs && ustr){
 		m = mbs;
@@ -1754,7 +1754,7 @@ return( NULL );
     XFree(prop.value);
     for ( i=len=0; i<cnt; ++i )
 	len += strlen( propret[i]);
-    ret = galloc(len+1);
+    ret = xmalloc(len+1);
     for ( i=len=0; i<cnt; ++i ) {
 	strcpy(ret+len,propret[i]);
 	len += strlen( propret[i]);
@@ -2297,7 +2297,7 @@ static void GXDrawSyncThread(GDisplay *gd, void (*func)(void *), void *data) {
 	for ( ttd=gdisp->xthread.things_to_do; ttd!=NULL &&
 		(ttd->func!=func || ttd->data!=data); ttd = ttd->next );
 	if ( ttd==NULL ) {
-	    ttd = galloc(sizeof(struct things_to_do));
+	    ttd = xmalloc(sizeof(struct things_to_do));
 	    if ( gdisp->xthread.things_to_do==NULL )
 		send(gdisp->xthread.send_sock," ",1,0);
 	    ttd->func = func;
@@ -2575,7 +2575,7 @@ return;
 				charbuf, sizeof(charbuf), &keysym, &status);
 		pt = charbuf;
 		if ( status==XBufferOverflow ) {
-		    pt = galloc(len+1);
+		    pt = xmalloc(len+1);
 		    len = Xutf8LookupString(((GXWindow) gw)->gic->ic,(XKeyPressedEvent*)&event,
 				    pt, len, &keysym, &status);
 		}
@@ -3275,7 +3275,7 @@ return( 0 );
 	if ( cnt==0 )
 return(0);
 	if ( k==0 )
-	    classes = galloc(cnt*sizeof(XEventClass));
+	    classes = xmalloc(cnt*sizeof(XEventClass));
     }
     XSelectExtensionEvent(gdisp->display,((GXWindow) w)->w,classes,cnt);
     free(classes);
@@ -3427,7 +3427,7 @@ static void GXDrawAddSelectionType(GWindow w,enum selnames sel,char *type,
     for ( sd=gd->selinfo[sel].datalist; sd!=NULL && sd->typeatom!=typeatom;
 	    sd = sd->next );
     if ( sd==NULL ) {
-	sd = galloc(sizeof(struct seldata));
+	sd = xmalloc(sizeof(struct seldata));
 	sd->next = gd->selinfo[sel].datalist;
 	gd->selinfo[sel].datalist = sd;
 	sd->typeatom = typeatom;
@@ -3603,7 +3603,7 @@ static void *GXDrawRequestSelection(GWindow w,enum selnames sn, char *typename, 
 		    *len *= sd->unitsize;
 		} else {
 		    bytelen = sd->unitsize*sd->cnt;
-		    temp = galloc(bytelen+4);
+		    temp = xmalloc(bytelen+4);
 		    memcpy(temp,sd->data,bytelen);
 		    temp[bytelen] = '\0';
 		    temp[bytelen+1] = '\0';
@@ -3634,7 +3634,7 @@ return( NULL );
     }
 
     bytelen = nitems * (actual_format/8);
-    temp = galloc(bytelen+4);
+    temp = xmalloc(bytelen+4);
     memcpy(temp,prop,bytelen);
     temp[bytelen]='\0';
     temp[bytelen+1]='\0';		/* Nul terminate unicode strings too */

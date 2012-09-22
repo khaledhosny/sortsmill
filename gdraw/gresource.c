@@ -215,7 +215,7 @@ return;
     if ( rcur+cnt>=rmax ) {
 	if ( cnt<10 ) cnt = 10;
 	if ( rmax==0 )
-	    _GResource_Res = galloc(cnt*sizeof(struct _GResource_Res));
+	    _GResource_Res = xmalloc(cnt*sizeof(struct _GResource_Res));
 	else
 	    _GResource_Res = xrealloc(_GResource_Res,(rcur+cnt)*sizeof(struct _GResource_Res));
 	rmax += cnt;
