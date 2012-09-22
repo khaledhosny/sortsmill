@@ -30,8 +30,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "ustring.h"
 #include "xalloc.h"
+#include "basics.h"
 
 char *copy(const char *str)
 {
