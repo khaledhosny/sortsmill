@@ -987,7 +987,7 @@ return;
 		    sf->glyphs[i]->kerns = next;
 		else
 		    prev->next = next;
-		chunkfree(kp,sizeof(KernPair));
+		free(kp);
 	    }
 	}
     }

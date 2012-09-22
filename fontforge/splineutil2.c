@@ -1917,7 +1917,7 @@ SplineSet *SSRemoveZeroLengthSplines(SplineSet *base) {
 	if ( spl->first->next!=NULL && spl->first->next->to==spl->first &&
 		spl->first->nonextcp && spl->first->noprevcp ) {
 	    /* Turn it into a single point, rather than a zero length contour */
-	    chunkfree(spl->first->next,sizeof(Spline));
+	    free(spl->first->next);
 	    spl->first->next = spl->first->prev = NULL;
 	}
     }
@@ -2199,7 +2199,7 @@ void SplineCharMerge(SplineChar *sc,SplineSet **head,int type) {
 		*head = next;
 	    else
 		prev->next = next;
-	    chunkfree(spl,sizeof(*spl));
+	    free(spl);
 	} else
 	    prev = spl;
     }

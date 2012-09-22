@@ -587,7 +587,7 @@ static SplineSet *MergeLinesToBottoms(SplineSet *bottoms,SplineSet *lines) {
 	    bottoms->first = l->first;
 	    SplineFree(l->last->prev);
 	    SplinePointFree(l->last);
-	    chunkfree(l,sizeof(*l));
+	    free(l);
 	}
 	for ( prev=NULL, l=lines;
 		l!=NULL && (l->last->me.x!=bottoms->last->me.x || l->last->me.y!=bottoms->last->me.y);
@@ -602,7 +602,7 @@ static SplineSet *MergeLinesToBottoms(SplineSet *bottoms,SplineSet *lines) {
 	    l->first->next = NULL;
 	    SplineFree(l->last->prev);
 	    SplinePointFree(l->last);
-	    chunkfree(l,sizeof(*l));
+	    free(l);
 	}
 	bottoms = bottoms->next;
     }

@@ -1131,7 +1131,7 @@ void RevertedGlyphReferenceFixup(SplineChar *sc, SplineFont *sf) {
 		    sc->vkerns = knext;
 		else
 		    sc->kerns = knext;
-		chunkfree(kp,sizeof(KernPair));
+		free(kp);
 	    }
 	}
     }
@@ -2056,7 +2056,7 @@ return( false );
     if ( !changed )
 	CVPreserveState(cv);
     if ( sp1->next!=NULL ) {
-	chunkfree(sp1->next,sizeof(Spline));
+	free(sp1->next);
 	sp1->next = sp2->prev = NULL;
     }
     sp1->nextcp = spl->first->nextcp;
@@ -2391,7 +2391,7 @@ void _CVMenuMakeLine(CharViewBase *cv,int do_arc,int ellipse_to_back) {
 		    spl->next = spl2->next;
 		else
 		    cv->layerheads[cv->drawmode]->splines = spl2->next;
-		chunkfree(spl2,sizeof(*spl2));
+		free(spl2);
 		changed = true;
 	      break;
 	      case -1:
@@ -2404,7 +2404,7 @@ void _CVMenuMakeLine(CharViewBase *cv,int do_arc,int ellipse_to_back) {
 		    spl->next = spl1->next;
 		else
 		    cv->layerheads[cv->drawmode]->splines = spl1->next;
-		chunkfree(spl1,sizeof(*spl1));
+		free(spl1);
 		changed = true;
 	      break;
 	    }

@@ -5341,7 +5341,7 @@ static struct glyphvariants *ttf_math_read_gvtable(FILE *ttf,struct ttfinfo *inf
 	    if ( feof(ttf)) {
 		LogError( _("Bad glyph variant subtable of MATH table.\n") );
 		info->bad_ot = true;
-		chunkfree(gv,sizeof(*gv));
+		free(gv);
 return( NULL );
 	    }
 	    if ( justinuse==git_justinuse ) {
@@ -5384,7 +5384,7 @@ return( NULL );
 	}
     }
     if ( justinuse==git_justinuse ) {
-	chunkfree(gv,sizeof(*gv));
+	free(gv);
 return( NULL );
     }
 return( gv );

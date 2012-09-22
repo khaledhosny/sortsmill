@@ -8121,7 +8121,7 @@ return( NULL );
 	    if ( kpold!=NULL ) {
 		kp = kpold;
 	    } else {
-		chunkfree(temp.u.pair.vr,sizeof(struct vr [2]));
+		free(temp.u.pair.vr);
 		kp = (KernPair *) xzalloc(sizeof (KernPair));
 		if ( sub->vertical_kerning ) {
 		    kp->next = sc->vkerns;
@@ -8185,7 +8185,7 @@ return( NULL );
 	    old->u.pos = temp.u.pos;
 	  break;
 	  case gpos_pair:
-	    chunkfree(old->u.pair.vr,sizeof(struct vr [2]));
+	    free(old->u.pair.vr);
 	    free(old->u.pair.paired);
 	    old->u.pair = temp.u.pair;
 	  break;
@@ -15507,7 +15507,7 @@ static void freesflist(struct sflist* list) {
 
 	if ( list->sizes!=NULL )
 	    free(list->sizes);
-	chunkfree(list, sizeof(struct sflist));
+	free(list);
     }
     return;
 }

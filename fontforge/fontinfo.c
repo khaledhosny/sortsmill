@@ -5902,7 +5902,7 @@ void GFI_FinishContextNew(struct gfi_data *d,FPST *fpst, int success) {
 	    else
 		prev->next = sub->next;
 	    free(sub->subtable_name);
-	    chunkfree(sub,sizeof(struct lookup_subtable));
+	    free(sub);
 	}
 	fprev = NULL;
 	for ( ftest=d->sf->possub; ftest!=NULL && ftest!=fpst; fprev = ftest, ftest=ftest->next );
@@ -5913,7 +5913,7 @@ void GFI_FinishContextNew(struct gfi_data *d,FPST *fpst, int success) {
 		fprev->next = fpst->next;
 	}
 
-	chunkfree(fpst,sizeof(FPST));
+	free(fpst);
     }
 }
 
@@ -5934,7 +5934,7 @@ void GFI_FinishSMNew(struct gfi_data *d,ASM *sm, int success, int isnew) {
 	    else
 		prev->next = sub->next;
 	    free(sub->subtable_name);
-	    chunkfree(sub,sizeof(struct lookup_subtable));
+	    free(sub);
 	}
 	smprev = NULL;
 	for ( smtest=d->sf->sm; smtest!=NULL && smtest!=sm; smprev = smtest, smtest=smtest->next );
@@ -5944,7 +5944,7 @@ void GFI_FinishSMNew(struct gfi_data *d,ASM *sm, int success, int isnew) {
 	    else
 		smprev->next = sm->next;
 	}
-	chunkfree(sm,sizeof(ASM));
+	free(sm);
     }
 }
 
@@ -5994,7 +5994,7 @@ static int GFI_LookupAddLookup(GGadget *g, GEvent *e) {
 	otl->lookup_index = k;
 
 	if ( !EditLookup(otl,isgpos,gfi->sf)) {
-	    chunkfree(otl,sizeof(OTLookup));
+	    free(otl);
 return( true );
 	}
 	for ( i=lk->cnt-1; i>=0; --i ) {
@@ -6085,7 +6085,7 @@ return( true );
 	sub = (struct lookup_subtable *) xzalloc(sizeof (struct lookup_subtable));
 	sub->lookup = lk->all[i].lookup;
 	if ( !EditSubtable(sub,isgpos,gfi->sf,NULL,gfi->def_layer)) {
-	    chunkfree(sub,sizeof(struct lookup_subtable));
+	    free(sub);
 return( true );
 	}
 	if ( lk->all[i].subtable_cnt>=lk->all[i].subtable_max )

@@ -349,7 +349,7 @@ static int DoDelayedEvents(gpointer data) {
 
     if ( info!=NULL ) {
 	(info->func)(info->data);
-	chunkfree(info,sizeof(struct delayed_event));
+	free(info);
     }
 return( FALSE );		/* cancel timer */
 }

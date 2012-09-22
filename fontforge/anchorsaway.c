@@ -134,7 +134,7 @@ static void AnchorD_FreeAll(AnchorDlg *a) {
     free(a->yadjust.corrections);
     for ( old = a->orig_vals; old!=NULL; old=oldnext ) {
 	oldnext = old->next;
-	chunkfree(old,sizeof(struct state));
+	free(old);
     }
     AnchorD_FreeChar(a);
 }

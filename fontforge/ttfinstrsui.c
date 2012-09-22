@@ -1139,7 +1139,7 @@ return( true );
 		else
 		    sf->ttf_tables = tab->next;
 		free(sv->table->data);
-		chunkfree(sv->table,sizeof(struct ttf_table));
+		free(sv->table);
 		sv->table = NULL;
 	    }
 	} else {

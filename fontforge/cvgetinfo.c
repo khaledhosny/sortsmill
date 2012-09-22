@@ -1786,7 +1786,7 @@ static void PI_FigureHintMask(GIData *ci) {
     break;
 
     if ( i==len ) {
-	chunkfree(ci->cursp->hintmask,sizeof(HintMask));
+	free(ci->cursp->hintmask);
 	ci->cursp->hintmask = NULL;
     } else {
 	if ( ci->cursp->hintmask==NULL )

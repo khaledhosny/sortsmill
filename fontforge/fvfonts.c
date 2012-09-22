@@ -310,7 +310,7 @@ static AnchorPoint *AnchorPointsDuplicate(AnchorPoint *base,SplineChar *sc) {
 	cur->anchor = ac;
 	if ( ac==NULL ) {
 	    LogError(_("No matching AnchorClass for %s"), base->anchor->name);
-	    chunkfree(cur,sizeof(AnchorPoint));
+	    free(cur);
 	} else {
 	    if ( head==NULL )
 		head = cur;
@@ -605,7 +605,7 @@ return;
     for ( i=0; i<GN_HSIZE; ++i ) {
 	for ( test = hash->table[i]; test!=NULL; test = next ) {
 	    next = test->next;
-	    chunkfree(test,sizeof(struct glyphnamebucket));
+	    free(test);
 	}
     }
 }
@@ -950,7 +950,7 @@ static void MFixupSC(SplineFont *sf, SplineChar *sc,int i) {
 		} else {
 		    for ( prev=sc->layers[l].refs; prev->next!=ref; prev=prev->next );
 		    prev->next = ref->next;
-		    chunkfree(ref,sizeof(*ref));
+		    free(ref);
 		    ref = prev;
 		}
 	    } else {

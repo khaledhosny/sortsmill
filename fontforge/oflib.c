@@ -392,7 +392,7 @@ static void oflfiFreeContents(struct ofl_font_info *oflfi) {
 	next = du->next;
 	free(du->comment);
 	free(du->url);
-	chunkfree(du,sizeof(*du));
+	free(du);
     }
     free(oflfi->preview_filename);
     if ( oflfi->preview!=NULL )
@@ -1015,7 +1015,7 @@ static void PreviewThreadsKill(OFLibDlg *d) {
        pthread_join(cur->preview_thread,&status);
 	if ( cur->result!=NULL )
 	    fclose(cur->result);
-	chunkfree(cur,sizeof(*cur));
+	free(cur);
     }
     d->active = NULL;
 }
@@ -1228,7 +1228,7 @@ static void CheckPreviewActivity(OFLibDlg *d) {
 		d->active = next;
 	    else
 		prev->next = next;
-	    chunkfree(cur,sizeof(*cur));
+	    free(cur);
 	} else {
 	    prev = cur;
 	}

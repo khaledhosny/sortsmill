@@ -45,7 +45,7 @@ return;
     for ( i=0; i<g->kid_cnt; ++i )
 	GroupFree(g->kids[i]);
     free(g->kids);
-    chunkfree(g,sizeof(Group));
+    free(g);
 }
 
 Group *GroupCopy(Group *g) {

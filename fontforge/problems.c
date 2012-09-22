@@ -5317,7 +5317,7 @@ return( false );
     } else if ( event->type == et_destroy ) {
 	if ( vw->sf!=NULL )
 	    vw->sf->valwin = NULL;
-	chunkfree(vw,sizeof(*vw));
+	free(vw);
     }
 return( true );
 }

@@ -1942,7 +1942,7 @@ void SfListFree(struct sflist *sfs) {
 	sfi = sfs->next;
 	free(sfs->sizes);
 	EncMapFree(sfs->map);
-	chunkfree(sfs,sizeof(struct sflist));
+	free(sfs);
 	sfs = sfi;
     }
 }

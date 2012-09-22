@@ -1033,7 +1033,7 @@ void SFRemoveUnusedLookupSubTables(SplineFont *sf,
 			else
 			    prev->next = subnext;
 			free(sub->subtable_name);
-			chunkfree(sub,sizeof(*sub));
+			free(sub);
 		    } else
 			prev = sub;
 		}
@@ -1145,7 +1145,7 @@ void SFRemoveLookupSubTable(SplineFont *sf,struct lookup_subtable *sub) {
 	subprev->next = sub->next;
     free(sub->subtable_name);
     free(sub->suffix);
-    chunkfree(sub,sizeof(struct lookup_subtable));
+    free(sub);
 }
 	
 void SFRemoveLookup(SplineFont *sf,OTLookup *otl) {
@@ -5006,7 +5006,7 @@ return( copy( _("Bad FPST format")) );
 		rule->lookups[tot].seq = i-first;
 		rule->lookups[tot].lookup = ll->lookup;
 		++tot;
-		chunkfree(ll,sizeof(*ll));
+		free(ll);
 	    }
 	}
     }

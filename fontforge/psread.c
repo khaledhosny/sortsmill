@@ -102,7 +102,7 @@ static void garbagefree(struct garbage *all) {
 	    free(junk->entries[j]);
 	}
 	if ( junk!=all )
-	    chunkfree(junk,sizeof(struct garbage));
+	    free(junk);
     }
 }
 /**************************** PostScript Importer *****************************/
@@ -3472,9 +3472,9 @@ return;		/* The "path" is just a single point created by a moveto */
 	    cur->first->noprevcp = oldlast->noprevcp;
 	    oldlast->prev->from->next = NULL;
 	    cur->last = oldlast->prev->from;
-	    chunkfree(oldlast->prev,sizeof(*oldlast));
-	    chunkfree(oldlast->hintmask,sizeof(HintMask));
-	    chunkfree(oldlast,sizeof(*oldlast));
+	    free(oldlast->prev);
+	    free(oldlast->hintmask);
+	    free(oldlast);
 	}
 	CheckMake(cur->last,cur->first);
 	SplineMake3(cur->last,cur->first);
@@ -3484,7 +3484,7 @@ return;		/* The "path" is just a single point created by a moveto */
 
 static void UnblendFree(StemInfo *h ) {
     while ( h!=NULL ) {
-	chunkfree(h->u.unblended,sizeof(real [2][MmMax]));
+	free(h->u.unblended);
 	h->u.unblended = NULL;
 	h = h->next;
     }
@@ -3545,7 +3545,7 @@ static void HintsRenumber(SplineChar *sc) {
 	    mapping[h->hintnumber] = i;
 	    h->hintnumber = i++;
 	}
-	chunkfree(h->u.unblended,sizeof(real [2][MmMax]));
+	free(h->u.unblended);
 	h->u.unblended = NULL;
     }
     for ( h=sc->vstem; h!=NULL; h=h->next ) {
@@ -3553,7 +3553,7 @@ static void HintsRenumber(SplineChar *sc) {
 	    mapping[h->hintnumber] = i;
 	    h->hintnumber = i++;
 	}
-	chunkfree(h->u.unblended,sizeof(real [2][MmMax]));
+	free(h->u.unblended);
 	h->u.unblended = NULL;
     }
     max = i;
@@ -4651,7 +4651,7 @@ SplineChar *PSCharStringToSplines(uint8 *type1, int len, struct pscontext *conte
 	ret->countermask_cnt = cp;
 	for ( i=0; i<cp; ++i ) {
 	    memcpy(&ret->countermasks[i],counters[i],sizeof(HintMask));
-	    chunkfree(counters[i],sizeof(HintMask));
+	    free(counters[i]);
 	}
     }
 

@@ -1425,13 +1425,13 @@ static struct splinecharlist *DListRemove(struct splinecharlist *dependents,Spli
 return( NULL );
     else if ( dependents->sc==this_sc ) {
 	dlist = dependents->next;
-	chunkfree(dependents,sizeof(*dependents));
+	free(dependents);
 return( dlist );
     } else {
 	for ( pd=dependents, dlist = pd->next; dlist!=NULL && dlist->sc!=this_sc; pd=dlist, dlist = pd->next );
 	if ( dlist!=NULL ) {
 	    pd->next = dlist->next;
-	    chunkfree(dlist,sizeof(*dlist));
+	    free(dlist);
 	}
 return( dependents );
     }

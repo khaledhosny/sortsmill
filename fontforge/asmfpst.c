@@ -156,7 +156,7 @@ return;
 
     free( tree->branches );
     free( tree->rules );
-    chunkfree( tree,sizeof(*tree) );
+    free(tree);
 }
 
 static int TreeLabelState(struct contexttree *tree, int snum) {

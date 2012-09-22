@@ -1389,7 +1389,7 @@ static void AfmBuildMarkCombos(SplineChar *sc,AnchorPoint *ap, struct cc_contain
 	    --cc->cnt;
 	    for ( cca = this->accents; cca!=NULL; cca = next ) {
 		next = cca->next;
-		chunkfree(cca,sizeof(struct cc_accents));
+		free(cca);
 	    }
 	} else
 	    this->acnt = acnt;
@@ -1486,7 +1486,7 @@ return;
 	free(cc[i].name);
 	for ( cca = cc[i].accents; cca!=NULL; cca = next ) {
 	    next = cca->next;
-	    chunkfree(cca,sizeof(struct cc_accents));
+	    free(cca);
 	}
     }
     free( cc );
@@ -1761,11 +1761,11 @@ return;
 	    next = l->next;
 	    for ( scl = l->components; scl!=NULL; scl = sclnext ) {
 		sclnext = scl->next;
-		chunkfree(scl,sizeof(struct splinecharlist));
+		free(scl);
 	    }
 	    if ( l->lig->temporary ) {
 		free(l->lig->u.lig.components);
-		chunkfree(l->lig,sizeof(PST));
+		free(l->lig);
 	    }
 	    free( l );
 	}
@@ -1836,7 +1836,7 @@ void SFLigaturePrepare(SplineFont *sf) {
 	    } else {
 		while ( head!=NULL ) {
 		    last = head->next;
-		    chunkfree(head,sizeof(*head));
+		    free(head);
 		    head = last;
 		}
 	    }
@@ -1938,7 +1938,7 @@ return;
 		    sf->glyphs[i]->vkerns = n;
 		else
 		    sf->glyphs[i]->kerns = n;
-		chunkfree(kp,sizeof(*kp));
+		free(kp);
 	    } else
 		p = kp;
 	}

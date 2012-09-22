@@ -1195,7 +1195,7 @@ static void MMW_Close(MMW *mmw) {
     for ( i=0; i<4; ++i )
 	mmw->mm->axismaps[i].axisnames = NULL;
     MMSetFreeContents(mmw->mm);
-    chunkfree(mmw->mm,sizeof(MMSet));
+    free(mmw->mm);
     mmw->done = true;
 }
 
@@ -1916,7 +1916,7 @@ continue;
 	setto->instances[i]->fv = (FontViewBase *) fv;
     }
     free(dlgmm->instances);
-    chunkfree(dlgmm,sizeof(MMSet));
+    free(dlgmm);
     if ( origname!=NULL ) {
 	for ( i=0; i<setto->instance_count; ++i ) {
 	    free(setto->instances[i]->origname);

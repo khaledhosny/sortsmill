@@ -3915,7 +3915,7 @@ static void fea_markedglyphsFree(struct markedglyphs *gl) {
 	free(gl->ligcomp);
 	if ( gl->vr!=NULL ) {
 	    ValDevFree(gl->vr->adjust);
-	    chunkfree(gl->vr,sizeof(struct vr));
+	    free(gl->vr);
 	}
 	gl = next;
     }
@@ -5169,7 +5169,7 @@ static void fea_ParseFeatureNames(struct parseState *tok,uint32 tag) {
 		string->name = temp->utf8_str;
 		string->next = head;
 		head = string;
-		chunkfree(temp,sizeof(*temp));
+		free(temp);
 	    } else
 		NameIdFree(temp);
 	}
@@ -5436,7 +5436,7 @@ static void fea_ParseTableKeywords(struct parseState *tok, struct tablekeywords 
 		LogError(_("Expected string on line %d of %s"),
 			tok->line[tok->inc_depth], tok->filename[tok->inc_depth] );
 		++tok->err_count;
-		chunkfree(tv,sizeof(*tv));
+		free(tv);
 		tv = NULL;
 	    }
 	    fea_ParseTok(tok);
@@ -5445,7 +5445,7 @@ static void fea_ParseTableKeywords(struct parseState *tok, struct tablekeywords 
 		LogError(_("Expected integer on line %d of %s"),
 			tok->line[tok->inc_depth], tok->filename[tok->inc_depth] );
 		++tok->err_count;
-		chunkfree(tv,sizeof(*tv));
+		free(tv);
 		tv = NULL;
 		fea_ParseTok(tok);
 	    } else {
@@ -5479,7 +5479,7 @@ static void fea_ParseTableKeywords(struct parseState *tok, struct tablekeywords 
 		    tok->line[tok->inc_depth], tok->filename[tok->inc_depth] );
 	    ++tok->err_count;
 	    fea_skip_to_close_curly(tok);
-	    chunkfree(tv,sizeof(*tv));
+	    free(tv);
     break;
 	}
 	if ( tv!=NULL ) {
@@ -5798,7 +5798,7 @@ static void NameIdFree(struct nameid *nm) {
     while ( nm!=NULL ) {
 	nmnext = nm->next;
 	free( nm->utf8_str );
-	chunkfree(nm,sizeof(*nm));
+	free(nm);
 	nm = nmnext;
     }
 }
@@ -5808,7 +5808,7 @@ static void TableValsFree(struct tablevalues *tb) {
 
     while ( tb!=NULL ) {
 	tbnext = tb->next;
-	chunkfree(tb,sizeof(*tb));
+	free(tb);
 	tb = tbnext;
     }
 }
@@ -5850,7 +5850,7 @@ static void fea_featitemFree(struct feat_item *item) {
 	  case ft_gdefclasses:
 	    for ( i=0; i<4; ++i )
 		free(item->u1.gdef_classes[i]);
-	    chunkfree(item->u1.gdef_classes,sizeof(char *[4]));
+	    free(item->u1.gdef_classes);
 	  break;
 	  case ft_lcaret:
 	    free( item->u2.lcaret );
@@ -5887,7 +5887,7 @@ static void fea_featitemFree(struct feat_item *item) {
 	    IError("Don't know how to free a feat_item of type %d", item->type );
 	  break;
 	}
-	chunkfree(item,sizeof(*item));
+	free(item);
 	item = next;
     }
 }
@@ -6855,7 +6855,7 @@ static struct feat_item *fea_ApplyFeatureList(struct parseState *tok,
 	    if ( fn!=NULL ) {
 		OtfNameListFree(fn->names);
 		fn->names = f->u2.featnames->names;
-		chunkfree(f->u2.featnames,sizeof(struct otffeatname));
+		free(f->u2.featnames);
 		f->u2.featnames = NULL;
 	    } else {
 		f->u2.featnames->next = tok->sf->feat_names;
@@ -7053,17 +7053,17 @@ void SFApplyFeatureFile(SplineFont *sf,FILE *file,char *filename) {
     for ( gc = tok.classes; gc!=NULL; gc=gcnext ) {
 	gcnext = gc->next;
 	free(gc->classname); free(gc->glyphs);
-	chunkfree(gc,sizeof(struct glyphclasses));
+	free(gc);
     }
     for ( nap = tok.namedAnchors; nap!=NULL; nap=napnext ) {
 	napnext = nap->next;
 	free(nap->name); AnchorPointsFree(nap->ap);
-	chunkfree(nap,sizeof(*nap));
+	free(nap);
     }
     for ( nvr = tok.namedValueRs; nvr!=NULL; nvr=nvrnext ) {
 	nvrnext = nvr->next;
-	free(nvr->name); chunkfree(nvr->vr,sizeof(struct vr));
-	chunkfree(nvr,sizeof(*nvr));
+	free(nvr->name); free(nvr->vr);
+	free(nvr);
     }
     for ( j=0; j<2; ++j ) {
 	for ( i=0; i<tok.gm_cnt[j]; ++i ) {

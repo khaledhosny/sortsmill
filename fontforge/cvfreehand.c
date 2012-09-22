@@ -66,7 +66,7 @@ static void TraceDataFree(TraceData *td) {
 
     while ( td!=NULL ) {
 	next = td->next;
-	chunkfree(td,sizeof(TraceData));
+	free(td);
 	td = next;
 	if ( td==first )
     break;
@@ -844,7 +844,7 @@ static int TraceDataCleanup(CharView *cv) {
 	    prev = mid->prev;
 	    prev->next = next;
 	    next->prev = prev;
-	    chunkfree(mid,sizeof(TraceData));
+	    free(mid);
 	    --cnt;
 	}
 #endif

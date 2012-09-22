@@ -747,7 +747,7 @@ void BCRemoveDependent( BDFChar *dependent,BDFRefChar *ref ) {
 	    if ( dlist!=NULL )
 		pd->next = dlist->next;
 	}
-	chunkfree( dlist,sizeof( struct bdfcharlist ));
+	free(dlist);
     }
     free( ref );
 }

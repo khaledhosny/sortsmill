@@ -1127,7 +1127,7 @@ return( false );
 		    kpprev = kpcur;
 		}
 	    }
-	    chunkfree( kp,sizeof(KernPair) );
+	    free(kp);
 	    kp = mv->glyphs[which-1].kp = NULL;
 	} else if ( offset != 0 ) {
 	    if ( kp==NULL ) {

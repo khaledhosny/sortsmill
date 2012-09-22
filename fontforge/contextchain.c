@@ -1138,7 +1138,7 @@ return;
 		    free(msg);
 		    FPSTClassesFree(dummyfpst);
 		    FPSTRulesFree(dummyfpst->rules,dummyfpst->format,dummyfpst->rule_cnt);
-		    chunkfree(dummyfpst,sizeof(FPST));
+		    free(dummyfpst);
 return;
 		} else {
 		    ans = gwwv_ask(_("Warning"),
@@ -1148,7 +1148,7 @@ return;
 		    if ( ans==1 ) {
 			FPSTClassesFree(dummyfpst);
 			FPSTRulesFree(dummyfpst->rules,dummyfpst->format,dummyfpst->rule_cnt);
-			chunkfree(dummyfpst,sizeof(FPST));
+			free(dummyfpst);
 return;
 		    }
 		}
@@ -1164,7 +1164,7 @@ return;
 	    fpst->nclass = dummyfpst->nclass; fpst->bclass = dummyfpst->bclass; fpst->fclass = dummyfpst->fclass;
 	    fpst->nclassnames = dummyfpst->nclassnames; fpst->bclassnames = dummyfpst->bclassnames; fpst->fclassnames = dummyfpst->fclassnames;
 	}
-	chunkfree(dummyfpst,sizeof(FPST));
+	free(dummyfpst);
       } break;
       case aw_coverage_simple:
 	old = GMatrixEditGet(GWidgetGetControl(ccd->gw,CID_Covers),&len);
@@ -1469,7 +1469,7 @@ static int ccd_e_h(GWindow gw, GEvent *event) {
 	CCD_Close(ccd);
     } else if ( event->type==et_destroy ) {
 	struct contextchaindlg *ccd = GDrawGetUserData(gw);
-	chunkfree(ccd,sizeof(struct contextchaindlg));
+	free(ccd);
     } else if ( event->type==et_char ) {
 	if ( event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help ) {
 	    help("contextchain.html");

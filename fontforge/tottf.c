@@ -4143,7 +4143,7 @@ static void dumpnames(struct alltabs *at, SplineFont *sf,enum fontformat format)
 	for ( mn = on->mn; mn!=NULL ; mn = mn->next )
 	    AddMacName(&nt,mn,on->strid);
 	onn = on->next;
-	chunkfree(on,sizeof(*on));
+	free(on);
     }
     /* Wow, the GPOS 'size' feature uses the name table in a very mac-like way*/
     if ( at->fontstyle_name_strid!=0 && sf->fontstyle_name!=NULL ) {

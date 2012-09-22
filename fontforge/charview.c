@@ -5256,7 +5256,7 @@ return;
 	}
 	SplineCharFreeContents(cv->b.sc);
 	*cv->b.sc = *sc;
-	chunkfree(sc,sizeof(SplineChar));
+	free(sc);
 	cv->b.sc->parent = temp.parent;
 	cv->b.sc->dependents = temp.dependents;
 	for ( layer = 0; layer<lc && layer<cv->b.sc->layer_cnt; ++layer )
@@ -6536,7 +6536,7 @@ static void CVDoClear(CharView *cv) {
 		cv->b.layerheads[cv->b.drawmode]->images = next;
 	    else
 		prev->next = next;
-	    chunkfree(imgs,sizeof(ImageList));
+	    free(imgs);
 	    /* garbage collection of images????!!!! */
 	    anyimages = true;
 	}

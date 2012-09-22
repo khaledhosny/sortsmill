@@ -373,10 +373,10 @@ static void CI_AskCounters(CharInfo *ci,HintMask *old) {
     GDrawDestroyWindow(hi.gw);
 
     if ( !hi.ok ) {
-	if ( old==NULL ) chunkfree(cur,sizeof(HintMask));
+	if ( old==NULL ) free(cur);
 return;		/* Cancelled */
     } else if ( old==NULL && hi.empty ) {
-	if ( old==NULL ) chunkfree(cur,sizeof(HintMask));
+	if ( old==NULL ) free(cur);
 return;		/* Didn't add anything new */
     } else if ( old==NULL ) {
 	GListAddStr(list,CounterMaskLine(hi.sc,cur),cur);
@@ -387,7 +387,7 @@ return;
 return;
     } else {
 	GListDelSelected(list);
-	chunkfree(cur,sizeof(HintMask));
+	free(cur);
     }
 }
 
@@ -435,7 +435,7 @@ static int CI_DeleteCounter(GGadget *g, GEvent *e) {
 	new_[j] = (GTextInfo *) gcalloc(1,sizeof(GTextInfo));
 	if ( offset==600 ) {
 	    for ( i=0; i<len; ++i ) if ( old[i]->selected )
-		chunkfree(old[i]->userdata,sizeof(HintMask));
+		free(old[i]->userdata);
 	}
 	GGadgetSetList(list,new_,false);
 	GGadgetSetEnabled(GWidgetGetControl(GGadgetGetWindow(g),CID_Delete+offset),false);
@@ -549,7 +549,7 @@ static void CI_ParseCounters(CharInfo *ci) {
 	sc->countermasks = galloc(len*sizeof(HintMask));
 	for ( i=0; i<len; ++i ) {
 	    memcpy(sc->countermasks[i],ti[i]->userdata,sizeof(HintMask));
-	    chunkfree(ti[i]->userdata,sizeof(HintMask));
+	    free(ti[i]->userdata);
 	    ti[i]->userdata = NULL;
 	}
     }
@@ -1625,7 +1625,7 @@ static void CI_Finish(CharInfo *ci) {
     for ( scl=ci->changes; scl!=NULL; scl=next ) {
 	next = scl->next;
 	SplineCharFree(scl->sc);
-	chunkfree(scl,sizeof(*scl));
+	free(scl);
     }
     GDrawDestroyWindow(ci->gw);
 }
@@ -4070,7 +4070,7 @@ static void CI_DoCancel(CharInfo *ci) {
     GTextInfo **ti = GGadgetGetList(GWidgetGetControl(ci->gw,CID_List+600),&len);
 
     for ( i=0; i<len; ++i )
-	chunkfree(ti[i]->userdata,sizeof(HintMask));
+	free(ti[i]->userdata);
     CI_Finish(ci);
 }
 

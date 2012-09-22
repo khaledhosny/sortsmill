@@ -545,7 +545,7 @@ static void fontlistfree(struct fontlist *fl ) {
 	free(fl->feats);
 	free(fl->sctext);
 	free(fl->ottext);
-	chunkfree(fl,sizeof(struct fontlist));
+	free(fl);
     }
 }
 
@@ -634,7 +634,7 @@ return;
 	    fl->end = next->end;
 	    free(next->feats);
 	    free(next->ottext); free(next->sctext);
-	    chunkfree(next,sizeof(struct fontlist));
+	    free(next);
 	}
     }
     fontlistcheck(li);
@@ -715,7 +715,7 @@ return;
 	    next = test->next;
 	    free(test->feats);
 	    free(test->sctext); free(test->ottext);
-	    chunkfree(test,sizeof(struct fontlist));
+	    free(test);
 	}
 	fl->next = test;
 	if ( test!=NULL ) {
@@ -767,7 +767,7 @@ void LayoutInfo_Destroy(LayoutInfo *li) {
 	n = m->next;
 	SplineCharFree(m->fake_notdef);
 	EncMapFree(m->map);
-	chunkfree(m,sizeof(struct sfmaps));
+	free(m);
     }
     for ( fd=li->generated ; fd!=NULL; fd = nfd ) {
 	nfd = fd->next;

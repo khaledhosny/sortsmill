@@ -194,7 +194,7 @@ return;
     if ( temp!=NULL ) {
 	spl->first = temp->first;
 	spl->last = temp->last;
-	chunkfree(temp,sizeof(SplineSet));
+	free(temp);
     } else {
 	/* didn't converge... or something */
 	int i;

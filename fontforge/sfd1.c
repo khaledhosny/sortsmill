@@ -797,7 +797,7 @@ void SFD_AssignLookups(SplineFont1 *sf) {
 	for ( otl = isgpos ? sf->sf.gpos_lookups : sf->sf.gsub_lookups ;
 		otl != NULL; otl=otl->next ) {
 	    if ( otl->features!=NULL && otl->features->scripts==NULL ) {
-		chunkfree(otl->features,sizeof(FeatureScriptLangList));
+		free(otl->features);
 		otl->features = NULL;
 	    }
 	}

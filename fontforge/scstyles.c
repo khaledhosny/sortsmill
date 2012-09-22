@@ -5690,7 +5690,7 @@ return;
 
     SplineNextSplice(start,ss->first);
     SplinePrevSplice(end,ss->last);
-    chunkfree(ss,sizeof(*ss));
+    free(ss);
 }
 
 static void ReSerifBottomDStem(SplineChar *sc,int layer,DStemInfo *d,ItalicInfo *ii) {
@@ -5721,7 +5721,7 @@ return;
 
     SplineNextSplice(start,ss->first);
     SplinePrevSplice(end,ss->last);
-    chunkfree(ss,sizeof(*ss));
+    free(ss);
 }
 
 static void ReSerifXHeightDStem(SplineChar *sc,int layer,DStemInfo *d,ItalicInfo *ii) {
@@ -5752,7 +5752,7 @@ return;
 
     SplineNextSplice(start,ss->first);
     SplinePrevSplice(end,ss->last);
-    chunkfree(ss,sizeof(*ss));
+    free(ss);
 }
 
 static int NearBottomRightSide(DStemInfo *d,DBounds *b,ItalicInfo *ii) {
@@ -5873,7 +5873,7 @@ return;
 
     SplineNextSplice(start,ss->first);
     SplinePrevSplice(end,ss->last);
-    chunkfree(ss,sizeof(*ss));
+    free(ss);
 }
 
 static void AddTopItalicSerifs(SplineChar *sc,int layer,ItalicInfo *ii) {
@@ -6120,7 +6120,7 @@ return;
 		sc->layers[layer].splines = ss[1]->next;
 	    else
 		prev->next = ss[1]->next;
-	    chunkfree(ss[1],sizeof(SplineSet));
+	    free(ss[1]);
 	}
     }
 

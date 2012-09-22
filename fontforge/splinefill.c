@@ -1878,7 +1878,7 @@ return;
 	cur = head; head = head->next; free( cur );
     }
     free(bdfc->bitmap);
-    chunkfree(bdfc,sizeof(BDFChar));
+    free(bdfc);
 }
 
 void BDFPropsFree(BDFFont *bdf) {

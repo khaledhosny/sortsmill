@@ -542,7 +542,7 @@ static void morxfeaturesfree(struct feature *features) {
 
     for ( ; features!=NULL; features=n ) {
 	n = features->next;
-	chunkfree( features,sizeof(*features) );
+	free(features);
     }
 }
 
@@ -1314,7 +1314,7 @@ static struct feature *aat_dumpmorx_asm(struct alltabs *at, SplineFont *sf,
 	    putshort(temp,0);
 	cur->feature_len = ftell(temp)-cur->feature_start;
     } else
-	chunkfree(cur,sizeof(struct feature));
+	free(cur);
 return( features);
 }
 

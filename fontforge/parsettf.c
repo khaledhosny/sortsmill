@@ -2166,7 +2166,7 @@ return;
 	}
 	if ( cur->orig_pos>=info->glyph_cnt ) {
 	    LogError(_("Glyph %d attempts to reference glyph %d which is outside the font\n"), sc->orig_pos, cur->orig_pos );
-	    chunkfree(cur,sizeof(*cur));
+	    free(cur);
 	} else {
 	    if ( head==NULL )
 		head = cur;
@@ -5420,7 +5420,7 @@ return( false );
 		chars[i]->layers[ly_fore].refs = next;
 	    else
 		prev->next = next;
-	    chunkfree(ref,sizeof(RefChar));
+	    free(ref);
 	} else {
 	    ref->sc = chars[ref->orig_pos];
 	    ref->adobe_enc = getAdobeEnc(ref->sc->name);
@@ -6270,7 +6270,7 @@ static SplineFont *SFFillFromTTF(struct ttfinfo *info) {
 	    for ( i=0; i<sf->glyphcnt; ++i ) {
 		if ( (sc = _sf->glyphs[i])!=NULL && !sc->hconflicts && !sc->vconflicts &&
 			sc->layers[ly_fore].splines!=NULL ) {
-		    chunkfree( sc->layers[ly_fore].splines->first->hintmask,sizeof(HintMask) );
+		    free(sc->layers[ly_fore].splines->first->hintmask);
 		    sc->layers[ly_fore].splines->first->hintmask = NULL;
 		}
 	    }

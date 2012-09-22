@@ -1536,7 +1536,7 @@ static void SCGuessHintInstancesLight(SplineChar *sc, int layer, StemInfo *stem,
 	if ( w2==NULL ) {
 	    /* No match for t (or if there were it wasn't complete) get rid */
 	    /*  of what's left of t */
-	    chunkfree(t,sizeof(*t));
+	    free(t);
 	    if ( p==NULL )
 		s = n;
 	    else
@@ -1546,7 +1546,7 @@ static void SCGuessHintInstancesLight(SplineChar *sc, int layer, StemInfo *stem,
     }
     while ( w!=NULL ) {
 	n = w->next;
-	chunkfree(w,sizeof(*w));
+	free(w);
 	w=n;
     }
 
@@ -1971,7 +1971,7 @@ static void _SCClearHintMasks(SplineChar *sc,int layer, int counterstoo) {
 
     for ( spl = sc->layers[layer].splines; spl!=NULL; spl=spl->next ) {
 	for ( sp = spl->first ; ; ) {
-	    chunkfree(sp->hintmask,sizeof(HintMask));
+	    free(sp->hintmask);
 	    sp->hintmask = NULL;
 	    if ( sp->next==NULL )
 	break;
@@ -1984,7 +1984,7 @@ static void _SCClearHintMasks(SplineChar *sc,int layer, int counterstoo) {
     for ( ref = sc->layers[layer].refs; ref!=NULL; ref=ref->next ) {
 	for ( spl = ref->layers[0].splines; spl!=NULL; spl=spl->next ) {
 	    for ( sp = spl->first ; ; ) {
-		chunkfree(sp->hintmask,sizeof(HintMask));
+		free(sp->hintmask);
 		sp->hintmask = NULL;
 		if ( sp->next==NULL )
 	    break;
@@ -2348,7 +2348,7 @@ return;
 	}
     }
     for ( i=0; i<instance_count; ++i ) if ( to[i]!=NULL ) {
-	chunkfree(to[i]->hintmask,sizeof(HintMask));
+	free(to[i]->hintmask);
 	to[i]->hintmask = (HintMask *) xzalloc(sizeof (HintMask));
 	memcpy(to[i]->hintmask,mask,sizeof(HintMask));
     }
@@ -2563,7 +2563,7 @@ static int NumberMMH(MMH *mmh,int hstart,int instance_count) {
 
 	    for ( hi=h->where; hi!=NULL; hi=n ) {
 		n = hi->next;
-		chunkfree(hi,sizeof(HintInstance));
+		free(hi);
 	    }
 	    h->where = NULL;
 	    for ( coords=mmh->where; coords!=NULL; coords = coords->next ) {
@@ -2619,9 +2619,9 @@ static void MMHFreeList(MMH *mmh) {
 	mn = mmh->next;
 	for ( c=mmh->where; c!=NULL; c=n ) {
 	    n = c->next;
-	    chunkfree(c,sizeof(struct coords));
+	    free(c);
 	}
-	chunkfree(mmh,sizeof(struct coords));
+	free(mmh);
     }
 }
 

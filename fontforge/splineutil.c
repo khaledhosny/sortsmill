@@ -63,7 +63,7 @@ void LineListFree(LineList *ll) {
 
     while ( ll!=NULL ) {
 	next = ll->next;
-	chunkfree(ll,sizeof(LineList));
+	free(ll);
 	ll = next;
     }
 }
@@ -74,14 +74,14 @@ void LinearApproxFree(LinearApprox *la) {
     while ( la!=NULL ) {
 	next = la->next;
 	LineListFree(la->lines);
-	chunkfree(la,sizeof(LinearApprox));
+	free(la);
 	la = next;
     }
 }
 
 void SplineFree(Spline *spline) {
     LinearApproxFree(spline->approx);
-    chunkfree(spline,sizeof(Spline));
+    free(spline);
 }
 
 SplinePoint *SplinePointCreate(real x, real y) {
@@ -104,8 +104,8 @@ return( spline );
 }
 
 void SplinePointFree(SplinePoint *sp) {
-    chunkfree(sp->hintmask,sizeof(HintMask));
-    chunkfree(sp,sizeof(SplinePoint));
+    free(sp->hintmask);
+    free(sp);
 }
 
 void SplinePointsFree(SplinePointList *spl) {
@@ -169,7 +169,7 @@ return;
     }
     free(spl->spiros);
     free(spl->contour_name);
-    chunkfree(spl,sizeof(SplinePointList));
+    free(spl);
 }
 
 void SplinePointListsFree(SplinePointList *head) {
@@ -192,7 +192,7 @@ void ImageListsFree(ImageList *imgs) {
 
     while ( imgs!=NULL ) {
 	inext = imgs->next;
-	chunkfree(imgs,sizeof(ImageList));
+	free(imgs);
 	imgs = inext;
     }
 }
@@ -211,7 +211,7 @@ return;
 	PatternFree(ref->layers[i].stroke_pen.brush.pattern);
     }
     free(ref->layers);
-    chunkfree(ref,sizeof(RefChar));
+    free(ref);
 }
 
 RefChar *RefCharCreate(void) {
@@ -255,7 +255,7 @@ return;
 		 ( prev->here.y==next->here.y+1 || prev->here.y==next->here.y-1 )) ) {
 	    lines->here = next->here;
 	    lines->next = next->next;
-	    chunkfree(next,sizeof(*next));
+	    free(next);
 	} else {
 	    prev = lines;
 	    lines = next;
@@ -264,7 +264,7 @@ return;
     if ( prev!=NULL &&
 	    prev->here.x==lines->here.x && prev->here.y == lines->here.y ) {
 	prev->next = lines->next;
-	chunkfree(lines,sizeof(*lines));
+	free(lines);
 	lines = prev->next;
     }
 
@@ -276,7 +276,7 @@ return;
 	    if ( y == lines->here.y ) {
 		lines->here = next->here;
 		lines->next = next->next;
-		chunkfree(next,sizeof(*next));
+		free(next);
 	    } else
 		lines = next;
 	} else
@@ -1842,7 +1842,7 @@ SplinePointList *SPLCopyTranslatedHintMasks(SplinePointList *base,
 	    if ( pfirst==NULL ) pfirst = spt;
 	    TransformPoint(spt,transform);
 	    if ( spt2->hintmask ) {
-		chunkfree(spt->hintmask,sizeof(HintMask));
+		free(spt->hintmask);
 		spt->hintmask = HintMaskTransform(spt2->hintmask,transform,basesc,subsc);
 	    }
 	    if ( spt->next==NULL )
@@ -1876,7 +1876,7 @@ static SplinePointList *_SPLCopyTransformedHintMasks(SplineChar *subsc,int layer
 	    if ( pfirst==NULL ) pfirst = spt;
 	    TransformPoint(spt,transform);
 	    if ( spt2->hintmask ) {
-		chunkfree(spt->hintmask,sizeof(HintMask));
+		free(spt->hintmask);
 		spt->hintmask = HintMaskTransform(spt2->hintmask,transform,basesc,subsc);
 	    }
 	    if ( spt->next==NULL )
@@ -2370,7 +2370,7 @@ static void SplineFontFromType1(SplineFont *sf, FontDict *fd, struct pscontext *
     for ( i=0; i<sf->glyphcnt; ++i ) {
 	if ( (sc = sf->glyphs[i])!=NULL && !sc->hconflicts && !sc->vconflicts &&
 		sc->layers[ly_fore].splines!=NULL ) {
-	    chunkfree( sc->layers[ly_fore].splines->first->hintmask,sizeof(HintMask) );
+	    free(sc->layers[ly_fore].splines->first->hintmask);
 	    sc->layers[ly_fore].splines->first->hintmask = NULL;
 	}
     }
@@ -2595,10 +2595,10 @@ return( NULL );
 	break;
 	if ( item==mm->instance_count ) {	/* No conflicts */
 	    for ( item=0; item<mm->instance_count; ++item ) {
-		chunkfree( mm->instances[item]->glyphs[i]->layers[ly_fore].splines->first->hintmask, sizeof(HintMask) );
+		free(mm->instances[item]->glyphs[i]->layers[ly_fore].splines->first->hintmask);
 		mm->instances[item]->glyphs[i]->layers[ly_fore].splines->first->hintmask = NULL;
 	    }
-	    chunkfree( mm->normal->glyphs[i]->layers[ly_fore].splines->first->hintmask, sizeof(HintMask) );
+	    free(mm->normal->glyphs[i]->layers[ly_fore].splines->first->hintmask);
 	    mm->normal->glyphs[i]->layers[ly_fore].splines->first->hintmask = NULL;
 	}
     }
@@ -2693,7 +2693,7 @@ return( NULL );
 	for ( i=0; i<_sf->glyphcnt; ++i ) {
 	    if ( (sc = _sf->glyphs[i])!=NULL && !sc->hconflicts && !sc->vconflicts &&
 		    sc->layers[ly_fore].splines!=NULL ) {
-		chunkfree( sc->layers[ly_fore].splines->first->hintmask,sizeof(HintMask) );
+		free(sc->layers[ly_fore].splines->first->hintmask);
 		sc->layers[ly_fore].splines->first->hintmask = NULL;
 	    }
 	}
@@ -2945,7 +2945,7 @@ void SCRemoveDependent(SplineChar *dependent,RefChar *rf,int layer) {
 	    if ( dlist!=NULL )
 		pd->next = dlist->next;
 	}
-	chunkfree(dlist,sizeof(struct splinecharlist));
+	free(dlist);
     }
     RefCharFree(rf);
 }
@@ -5049,9 +5049,9 @@ void StemInfoFree(StemInfo *h) {
 
     for ( hi=h->where; hi!=NULL; hi=n ) {
 	n = hi->next;
-	chunkfree(hi,sizeof(HintInstance));
+	free(hi);
     }
-    chunkfree(h,sizeof(StemInfo));
+    free(h);
 }
 
 void StemInfosFree(StemInfo *h) {
@@ -5061,10 +5061,10 @@ void StemInfosFree(StemInfo *h) {
     for ( ; h!=NULL; h = hnext ) {
 	for ( hi=h->where; hi!=NULL; hi=n ) {
 	    n = hi->next;
-	    chunkfree(hi,sizeof(HintInstance));
+	    free(hi);
 	}
 	hnext = h->next;
-	chunkfree(h,sizeof(StemInfo));
+	free(h);
     }
 }
 
@@ -5073,9 +5073,9 @@ void DStemInfoFree(DStemInfo *h) {
 
     for ( hi=h->where; hi!=NULL; hi=n ) {
 	n = hi->next;
-	chunkfree(hi,sizeof(HintInstance));
+	free(hi);
     }
-    chunkfree(h,sizeof(DStemInfo));
+    free(h);
 }
 
 void DStemInfosFree(DStemInfo *h) {
@@ -5085,10 +5085,10 @@ void DStemInfosFree(DStemInfo *h) {
     for ( ; h!=NULL; h = hnext ) {
 	for ( hi=h->where; hi!=NULL; hi=n ) {
 	    n = hi->next;
-	    chunkfree(hi,sizeof(HintInstance));
+	    free(hi);
 	}
 	hnext = h->next;
-	chunkfree(h,sizeof(DStemInfo));
+	free(h);
     }
 }
 
@@ -5158,9 +5158,9 @@ void KernPairsFree(KernPair *kp) {
 	knext = kp->next;
 	if ( kp->adjust!=NULL ) {
 	    free(kp->adjust->corrections);
-	    chunkfree(kp->adjust,sizeof(DeviceTable));
+	    free(kp->adjust);
 	}
-	chunkfree(kp,sizeof(KernPair));
+	free(kp);
     }
 }
 
@@ -5218,7 +5218,7 @@ void SFRemoveAnchorClass(SplineFont *sf,AnchorClass *an) {
 		sf->anchor = test->next;
 	    else
 		prev->next = test->next;
-	    chunkfree(test,sizeof(AnchorClass));
+	    free(test);
     break;
 	} else
 	    prev = test;
@@ -5299,7 +5299,7 @@ void AnchorPointsFree(AnchorPoint *ap) {
 	anext = ap->next;
 	free(ap->xadjust.corrections);
 	free(ap->yadjust.corrections);
-	chunkfree(ap,sizeof(AnchorPoint));
+	free(ap);
     }
 }
 
@@ -5310,7 +5310,7 @@ return;
     free( adjust->yadjust.corrections );
     free( adjust->xadv.corrections );
     free( adjust->yadv.corrections );
-    chunkfree(adjust,sizeof(ValDevTab));
+    free(adjust);
 }
 
 ValDevTab *ValDevTabCopy(ValDevTab *orig) {
@@ -5337,7 +5337,7 @@ void DeviceTableFree(DeviceTable *dt) {
 return;
 
     free(dt->corrections);
-    chunkfree(dt,sizeof(DeviceTable));
+    free(dt);
 }
 
 DeviceTable *DeviceTableCopy(DeviceTable *orig) {
@@ -5417,13 +5417,13 @@ void PSTFree(PST *pst) {
 	    free(pst->u.pair.paired);
 	    ValDevFree(pst->u.pair.vr[0].adjust);
 	    ValDevFree(pst->u.pair.vr[1].adjust);
-	    chunkfree(pst->u.pair.vr,sizeof(struct vr [2]));
+	    free(pst->u.pair.vr);
 	} else if ( pst->type!=pst_position ) {
 	    free(pst->u.subs.variant);
 	} else if ( pst->type==pst_position ) {
 	    ValDevFree(pst->u.pos.adjust);
 	}
-	chunkfree(pst,sizeof(PST));
+	free(pst);
     }
 }
 
@@ -5599,7 +5599,7 @@ void FPSTFree(FPST *fpst) {
 	    FPSTRuleContentsFree( &fpst->rules[i],fpst->format );
 	}
 	free(fpst->rules);
-	chunkfree(fpst,sizeof(FPST));
+	free(fpst);
 	fpst = next;
     }
 }
@@ -5612,7 +5612,7 @@ void TTFLangNamesFree(struct ttflangname *l) {
 	next = l->next;
 	for ( i=0; i<ttf_namemax; ++i )
 	    free(l->names[i]);
-	chunkfree(l,sizeof(*l));
+	free(l);
 	l = next;
     }
 }
@@ -5622,7 +5622,7 @@ void AltUniFree(struct altuni *altuni) {
 
     while ( altuni ) {
 	next = altuni->next;
-	chunkfree(altuni,sizeof(struct altuni));
+	free(altuni);
 	altuni = next;
     }
 }
@@ -5684,7 +5684,7 @@ return;
     for ( i=0; i<gv->part_cnt; ++i )
 	free( gv->parts[i].component );
     free(gv->parts);
-    chunkfree(gv,sizeof(*gv));
+    free(gv);
 }
 
 struct glyphvariants *GlyphVariantsCopy(struct glyphvariants *gv) {
@@ -5746,14 +5746,14 @@ void MathKernFree(struct mathkern *mk) {
 return;
     for ( i=0; i<4; ++i )
 	MathKernVContentsFree( &(&mk->top_right)[i] );
-    chunkfree(mk,sizeof(*mk));
+    free(mk);
 }
 
 void SplineCharListsFree(struct splinecharlist *dlist) {
     struct splinecharlist *dnext;
     for ( ; dlist!=NULL; dlist = dnext ) {
 	dnext = dlist->next;
-	chunkfree(dlist,sizeof(struct splinecharlist));
+	free(dlist);
     }
 }
 
@@ -5776,7 +5776,7 @@ void PatternFree(struct pattern *pat) {
     if ( pat==NULL )
 return;
     free(pat->pattern);
-    chunkfree(pat,sizeof(struct pattern));
+    free(pat);
 }
 
 struct gradient *GradientCopy(struct gradient *old,real transform[6]) {
@@ -5801,7 +5801,7 @@ void GradientFree(struct gradient *grad) {
     if ( grad==NULL )
 return;
     free(grad->grad_stops);
-    chunkfree(grad,sizeof(struct gradient));
+    free(grad);
 }
 
 void BrushCopy(struct brush *into, struct brush *from, real transform[6]) {
@@ -5867,7 +5867,7 @@ void SplineCharFree(SplineChar *sc) {
     if ( sc==NULL )
 return;
     SplineCharFreeContents(sc);
-    chunkfree(sc,sizeof(SplineChar));
+    free(sc);
 }
 
 void AnchorClassesFree(AnchorClass *an) {
@@ -5875,7 +5875,7 @@ void AnchorClassesFree(AnchorClass *an) {
     for ( ; an!=NULL; an = anext ) {
 	anext = an->next;
 	free(an->name);
-	chunkfree(an,sizeof(AnchorClass));
+	free(an);
     }
 }
 
@@ -5885,7 +5885,7 @@ void TtfTablesFree(struct ttf_table *tab) {
     for ( ; tab!=NULL; tab = next ) {
 	next = tab->next;
 	free(tab->data);
-	chunkfree(tab,sizeof(struct ttf_table));
+	free(tab);
     }
 }
 
@@ -5921,7 +5921,7 @@ void ScriptLangListFree(struct scriptlanglist *sl) {
     while ( sl!=NULL ) {
 	next = sl->next;
 	free(sl->morelangs);
-	chunkfree(sl,sizeof(*sl));
+	free(sl);
 	sl = next;
     }
 }
@@ -5932,7 +5932,7 @@ void FeatureScriptLangListFree(FeatureScriptLangList *fl) {
     while ( fl!=NULL ) {
 	next = fl->next;
 	ScriptLangListFree(fl->scripts);
-	chunkfree(fl,sizeof(*fl));
+	free(fl);
 	fl = next;
     }
 }
@@ -5946,9 +5946,9 @@ void OTLookupFree(OTLookup *lookup) {
 	stnext = st->next;
 	free(st->subtable_name);
 	free(st->suffix);
-	chunkfree(st,sizeof(struct lookup_subtable));
+	free(st);
     }
-    chunkfree( lookup,sizeof(OTLookup) );
+    free(lookup);
 }
 
 void OTLookupListFree(OTLookup *lookup ) {
@@ -6011,7 +6011,7 @@ void KernClassListFree(KernClass *kc) {
     while ( kc ) {
 	KernClassFreeContents(kc);
 	n = kc->next;
-	chunkfree(kc,sizeof(KernClass));
+	free(kc);
 	kc = n;
     }
 }
@@ -6022,7 +6022,7 @@ void MacNameListFree(struct macname *mn) {
     while ( mn!=NULL ) {
 	next = mn->next;
 	free(mn->name);
-	chunkfree(mn,sizeof(struct macname));
+	free(mn);
 	mn = next;
     }
 }
@@ -6033,7 +6033,7 @@ void MacSettingListFree(struct macsetting *ms) {
     while ( ms!=NULL ) {
 	next = ms->next;
 	MacNameListFree(ms->setname);
-	chunkfree(ms,sizeof(struct macsetting));
+	free(ms);
 	ms = next;
     }
 }
@@ -6045,7 +6045,7 @@ void MacFeatListFree(MacFeat *mf) {
 	next = mf->next;
 	MacNameListFree(mf->featname);
 	MacSettingListFree(mf->settings);
-	chunkfree(mf,sizeof(MacFeat));
+	free(mf);
 	mf = next;
     }
 }
@@ -6070,7 +6070,7 @@ void ASMFree(ASM *sm) {
 	    free(sm->classes[i]);
 	free(sm->state);
 	free(sm->classes);
-	chunkfree(sm,sizeof(ASM));
+	free(sm);
 	sm = next;
     }
 }
@@ -6081,7 +6081,7 @@ void OtfNameListFree(struct otfname *on) {
     for ( ; on!=NULL; on = on_next ) {
 	on_next = on->next;
 	free(on->name);
-	chunkfree(on,sizeof(*on));
+	free(on);
     }
 }
 
@@ -6091,7 +6091,7 @@ void OtfFeatNameListFree(struct otffeatname *fn) {
     for ( ; fn!=NULL; fn = fn_next ) {
 	fn_next = fn->next;
 	OtfNameListFree(fn->names);
-	chunkfree(fn,sizeof(*fn));
+	free(fn);
     }
 }
 
@@ -6146,7 +6146,7 @@ return;
     free(map->map);
     free(map->backmap);
     free(map->remap);
-    chunkfree(map,sizeof(EncMap));
+    free(map);
 }
 
 EncMap *EncMapCopy(EncMap *map) {
@@ -6212,7 +6212,7 @@ void BaseLangFree(struct baselangextent *extent) {
     while ( extent!=NULL ) {
 	next = extent->next;
 	BaseLangFree(extent->features);
-	chunkfree(extent,sizeof(struct baselangextent));
+	free(extent);
 	extent = next;
     }
 }
@@ -6225,7 +6225,7 @@ void BaseScriptFree(struct basescript *bs) {
 	if ( bs->baseline_pos )
 	    free(bs->baseline_pos);
 	BaseLangFree(bs->langs);
-	chunkfree(bs,sizeof(struct basescript));
+	free(bs);
 	bs = next;
     }
 }
@@ -6236,7 +6236,7 @@ return;
 
     free(base->baseline_tags);
     BaseScriptFree(base->scripts);
-    chunkfree(base,sizeof(struct Base));
+    free(base);
 }
 
 static OTLookup **OTLListCopy(OTLookup **str) {
@@ -6296,7 +6296,7 @@ void JstfLangFree(struct jstf_lang *jl) {
 	    free(jp->maxExtend);
 	}
 	free(jl->prios);
-	chunkfree(jl,sizeof(*jl));
+	free(jl);
 	jl = next;
     }
 }
@@ -6308,7 +6308,7 @@ void JustifyFree(Justify *just) {
 	next = just->next;
 	free(just->extenders);
 	JstfLangFree(just->langs);
-	chunkfree(just,sizeof(*just));
+	free(just);
 	just = next;
     }
 }
@@ -6417,7 +6417,7 @@ void MMSetFree(MMSet *mm) {
     SplineFontFree(mm->normal);		/* EncMap gets freed here */
     MMSetFreeContents(mm);
 
-    chunkfree(mm,sizeof(*mm));
+    free(mm);
 }
 
 static int xcmp(const void *_p1, const void *_p2) {

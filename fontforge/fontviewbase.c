@@ -1787,7 +1787,7 @@ void FVRevertGlyph(FontViewBase *fv) {
 		}
 		SplineCharFreeContents(tsc);
 		*tsc = *sc;
-		chunkfree(sc,sizeof(SplineChar));
+		free(sc);
 		tsc->parent = sf;
 		tsc->dependents = temp.dependents;
 		tsc->views = temp.views;

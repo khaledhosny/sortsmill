@@ -113,7 +113,7 @@ static void psreinitnames(void) {
     for ( i=0; i<HASH_SIZE; ++i ) {
 	for ( cur = psbuckets[i]; cur!=NULL; cur=prev ) {
 	    prev = cur->prev;
-	    chunkfree(cur,sizeof(struct psbucket));
+	    free(cur);
 	}
 	psbuckets[i] = NULL;
     }
@@ -528,7 +528,7 @@ static void NameListFreeContents(NameList *nl) {
 
 static void NameListFree(NameList *nl) {
     NameListFreeContents(nl);
-    chunkfree(nl,sizeof(NameList));
+    free(nl);
 }
 /* ************************************************************************** */
 
@@ -663,7 +663,7 @@ return( NULL );
 	    NameListFreeContents(nl2);
 	    *nl2 = *nl;
 	    nl2->next = next;
-	    chunkfree(nl,sizeof(NameList));
+	    free(nl);
 	    psreinitnames();
 return( nl2 );
 	}

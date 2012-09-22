@@ -334,7 +334,7 @@ void RefCharsFreeRef(RefChar *ref) {
 	rnext = ref->next;
 	/* don't free the splines */
 	free(ref->layers);
-	chunkfree(ref,sizeof(RefChar));
+	free(ref);
 	ref = rnext;
     }
 }

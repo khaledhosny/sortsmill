@@ -55,7 +55,7 @@ return;
     nlt_exprfree(e->op1);
     nlt_exprfree(e->op2);
     nlt_exprfree(e->op3);
-    chunkfree(e,sizeof(*e));
+    free(e);
 }
 
 static int gettoken(struct context *c, real *val) {

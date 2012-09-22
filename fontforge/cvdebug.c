@@ -636,7 +636,7 @@ return( temp );
 	if ( ref->sc->ttf_instrs_len!=0 )
 return( ret );
     }
-    chunkfree(ret,sizeof(struct reflist));
+    free(ret);
 return( parent );
 }
 
@@ -662,7 +662,7 @@ static void ChangeCode(DebugView *dv,TT_ExecContext exc) {
 	    if ( dv->active_refs->ref==NULL ) {
 		temp = dv->active_refs;
 		dv->active_refs = temp->parent;
-		chunkfree(temp,sizeof(struct reflist));
+		free(temp);
 		if ( dv->active_refs==NULL ) {
 		    if ( dv->cv->b.sc->ttf_instrs_len!=0 )
 	break;

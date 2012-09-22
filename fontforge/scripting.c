@@ -1953,7 +1953,7 @@ static void bGenerateFamily(Context *c) {
     for ( cur=sfs; cur!=NULL; cur=sfs ) {
 	sfs = cur->next;
 	/* free(cur->sizes); */		/* Done inside GenerateScript */
-	chunkfree(cur,sizeof(struct sflist));
+	free(cur);
     }
 }
 
@@ -3168,7 +3168,7 @@ static void bRemovePreservedTable(Context *c) {
     else
 	prev->next = tab->next;
     free(tab->data);
-    chunkfree(tab,sizeof(*tab));
+    free(tab);
 }
 
 static void bHasPreservedTable(Context *c) {
@@ -5543,7 +5543,7 @@ static void bClearTable(Context *c) {
 	else
 	    prev->next = table->next;
 	free(table->data);
-	chunkfree(table,sizeof(*table));
+	free(table);
     } else {
 	prev = NULL;
 	for ( table = sf->ttf_tab_saved; table!=NULL; prev=table, table=table->next )
@@ -5556,7 +5556,7 @@ static void bClearTable(Context *c) {
 	    else
 		prev->next = table->next;
 	    free(table->data);
-	    chunkfree(table,sizeof(*table));
+	    free(table);
 	}
     }
 }

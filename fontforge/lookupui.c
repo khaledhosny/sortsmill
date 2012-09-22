@@ -1980,7 +1980,7 @@ static OTLookup *CreateAndSortNewLookupOfType(SplineFont *sf, int lookup_type) {
     newotl = (OTLookup *) xzalloc(sizeof (OTLookup));
     newotl->lookup_type = lookup_type;
     if ( !EditLookup(newotl,isgpos,sf)) {
-	chunkfree(newotl,sizeof(OTLookup));
+	free(newotl);
 return( NULL );
     }
     SortInsertLookup(sf, newotl);
@@ -4646,7 +4646,7 @@ static struct lookup_subtable *NewSubtable(OTLookup *otl,int isgpos,SplineFont *
     sub->separation = 15*(sf->ascent+sf->descent)/100;
     sub->minkern = sub->separation/10;
     if ( !EditSubtable(sub,isgpos,sf,sd,def_layer)) {
-	chunkfree(sub,sizeof(struct lookup_subtable));
+	free(sub);
 return( NULL );
     }
     if ( otl->subtables==NULL )

@@ -511,7 +511,7 @@ void UndoesFree(Undoes *undo) {
 	    IError( "Unknown undo type in UndoesFree: %d", undo->undotype );
 	  break;
 	}
-	chunkfree(undo,sizeof(Undoes));
+	free(undo);
 	undo = unext;
     }
 }
@@ -1862,7 +1862,7 @@ static Undoes *SCCopyAll(SplineChar *sc,int layer, enum fvcopy_type full) {
 	if ( sc==NULL ) {
 	    ret->undotype = ut_noop;
 	} else if ( full==ct_reference || full==ct_lookups || !sc->parent->multilayer ) {	/* Make a reference */
-	    chunkfree(ret,sizeof(Undoes));
+	    free(ret);
 	    ret = SCCopyAllLayer(sc,full,ly_fore );
 	} else {
 	    ret->undotype = ut_layers;
@@ -2552,7 +2552,7 @@ static void PSTInto(SplineChar *sc,PST *pst,PST *frompst, struct lookup_subtable
     } else {
 	if ( pst->type == pst_pair ) {
 	    free(pst->u.pair.paired);
-	    chunkfree(pst->u.pair.vr,sizeof(struct vr[2]));	/* We fail to free device tables */
+	    free(pst->u.pair.vr);	/* We fail to free device tables */
 	} else if ( pst->type == pst_substitution || pst->type == pst_alternate ||
 		pst->type == pst_multiple || pst->type == pst_ligature )
 	    free(pst->u.subs.variant);
@@ -3240,7 +3240,7 @@ void BCCopyReference(BDFChar *bc,int pixelsize,int depth) {
     tmp = BCCopyAll( bc,pixelsize,depth,ct_reference );
 
     memcpy( &copybuffer,tmp,sizeof( Undoes ));
-    chunkfree( tmp,sizeof( Undoes ));
+    free(tmp);
     XClipCheckEps();
 }
 

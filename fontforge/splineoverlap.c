@@ -1659,7 +1659,7 @@ static Intersection *TurnPreInter2Inter(Monotonic *ms) {
 		ilist = AddCloseIntersection(ilist,m1,m2,p->t1,p->t2,&p->inter);
 	    else
 		ilist = AddIntersection(ilist,m1,m2,p->t1,p->t2,&p->inter);
-	    chunkfree(p,sizeof(PreIntersection));
+	    free(p);
 	}
 	ms->pending = NULL;
     }
@@ -1708,13 +1708,13 @@ static void FigureProperMonotonicsAtIntersections(Intersection *ilist) {
 		if ( ml2!=NULL ) {
 		    if ( ml2==mlnext ) mlnext = ml2->next;
 		    p2->next = ml2->next;
-		    chunkfree(ml2,sizeof(*ml2));
+		    free(ml2);
 		}
 		if ( prev==NULL )
 		    ilist->monos = mlnext;
 		else
 		    prev->next = mlnext;
-		chunkfree(ml,sizeof(*ml));
+		free(ml);
 	    }
 	}
 #if 0
@@ -2886,7 +2886,7 @@ void FreeMonotonics(Monotonic *m) {
 
     while ( m!=NULL ) {
 	next = m->linked;
-	chunkfree(m,sizeof(*m));
+	free(m);
 	m = next;
     }
 }
@@ -2896,7 +2896,7 @@ static void FreeMList(MList *ml) {
 
     while ( ml!=NULL ) {
 	next = ml->next;
-	chunkfree(ml,sizeof(*ml));
+	free(ml);
 	ml = next;
     }
 }
@@ -2907,7 +2907,7 @@ static void FreeIntersections(Intersection *ilist) {
     while ( ilist!=NULL ) {
 	next = ilist->next;
 	FreeMList(ilist->monos);
-	chunkfree(ilist,sizeof(*ilist));
+	free(ilist);
 	ilist = next;
     }
 }

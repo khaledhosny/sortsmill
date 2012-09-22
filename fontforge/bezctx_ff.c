@@ -145,7 +145,7 @@ bezctx_ff_close(bezctx *z)
 	    ss->last = ss->first;
 	}
     }
-    chunkfree(bc,sizeof(bezctx_ff));
+    free(bc);
 return( ss );
 }
 #endif

@@ -3254,9 +3254,9 @@ static int SFDCloseCheck(SplinePointList *spl,int order2) {
 	spl->first->noprevcp = false;
 	oldlast->prev->from->next = NULL;
 	spl->last = oldlast->prev->from;
-	chunkfree(oldlast->prev,sizeof(*oldlast));
-	chunkfree(oldlast->hintmask,sizeof(HintMask));
-	chunkfree(oldlast,sizeof(*oldlast));
+	free(oldlast->prev);
+	free(oldlast->hintmask);
+	free(oldlast);
 	SplineMake(spl->last,spl->first,order2);
 	spl->last = spl->first;
 return( true );
@@ -5037,7 +5037,7 @@ static void SFDFixupRefs(SplineFont *sf) {
 			    sc->vkerns = next;
 			else
 			    sc->kerns = next;
-			chunkfree(kp,sizeof(KernPair));
+			free(kp);
 		    }
 		}
 	    }
@@ -5084,7 +5084,7 @@ static void SFRemoveDependencies(SplineFont *sf) {
     for ( i=0; i<sf->glyphcnt; ++i ) if ( sf->glyphs[i]!=NULL ) {
 	for ( dlist = sf->glyphs[i]->dependents; dlist!=NULL; dlist = dnext ) {
 	    dnext = dlist->next;
-	    chunkfree(dlist,sizeof(*dlist));
+	    free(dlist);
 	}
 	sf->glyphs[i]->dependents = NULL;
 	for ( kp=sf->glyphs[i]->kerns; kp!=NULL; kp=kp->next ) {
