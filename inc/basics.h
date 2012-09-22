@@ -53,18 +53,17 @@ typedef intptr_t	intpt;
 
 typedef uint32_t unichar_t;
 
-// FIXME: Consider using the unused-parameter snippet from Gnulib.
-//
 // A macro to mark unused function parameters with. We often
 // have such parameters, because of extensive use of callbacks.
-#ifdef UNUSED
-#elif defined(__GNUC__)
-# define UNUSED(x) UNUSED_ ## x __attribute__((unused))
+#if ! defined(UNUSED)
+#if defined(__GNUC__)
+#define UNUSED(x) UNUSED_ ## x _GL_UNUSED
 #elif defined(__LCLINT__)
-# define UNUSED(x) /*@unused@*/ x
+#define UNUSED(x) /*@unused@*/ x
 #else
-# define UNUSED(x) x
+#define UNUSED(x) x
 #endif
+#endif // ! UNUSED
 
 extern char *copy(const char *);
 extern char *copyn(const char *, size_t);
