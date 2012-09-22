@@ -30,8 +30,6 @@
 # Files to search through for translatable strings.
 
 fontforge_cfiles := $(wildcard $(top_srcdir)/fontforge/*.c)
-fontforge_prefiles := $(wildcard $(top_srcdir)/fontforge/*.pre)
 gdraw_cfiles = $(wildcard $(top_srcdir)/gdraw/*.c)
 
-xgettext_search_files := $(fontforge_cfiles) $(fontforge_prefiles)	\
-	$(gdraw_cfiles)
+xgettext_search_files := $(fontforge_cfiles) $(gdraw_cfiles)

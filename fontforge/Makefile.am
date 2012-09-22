@@ -53,11 +53,6 @@ FFSCRIPT_HEADER = "\#!$(bindir)/fontforge -lang=ff"
 	echo "${FFSCRIPT_HEADER}" | cat - $< > $@
 	chmod +x $@
 
-%.c: %.pre
-	$(SED) -e '1,$$ s/REPLACE_ME_WITH_MAJOR_VERSION/$(VERSION_MAJOR)/'	\
-	       -e '1,$$ s/REPLACE_ME_WITH_MINOR_VERSION/$(VERSION_MINOR)/'	\
-	    < $< > $@
-
 #--------------------------------------------------------------------------
 
 noinst_HEADERS = fontforgeui.h sftextfieldP.h configure-fontforge.h	\
