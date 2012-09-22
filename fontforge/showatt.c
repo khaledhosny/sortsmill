@@ -132,7 +132,7 @@ static void BuildMarkedLigatures(struct node *node,struct att_dlg *att) {
     for ( ap=sc->anchor; ap!=NULL ; ap=ap->next )
 	if ( ap->lig_index>max )
 	    max = ap->lig_index;
-    node->children = gcalloc(classcnt+1,sizeof(struct node));
+    node->children = xcalloc(classcnt+1,sizeof(struct node));
     for ( k=j=0; k<=max; ++k ) {
 	for ( ac=sf->anchor; ac!=NULL; ac=ac->next ) if ( ac->subtable==sub ) {
 	    for ( ap=sc->anchor; ap!=NULL && (ap->type!=at_baselig || ap->anchor!=ac || ap->lig_index!=k); ap=ap->next );
@@ -162,7 +162,7 @@ static void BuildMarkedChars(struct node *node,struct att_dlg *att) {
     for ( ap=sc->anchor; ap!=NULL; ap=ap->next )
 	if ( ap->anchor->subtable == sub )
 	    ++classcnt;
-    node->children = gcalloc(classcnt+1,sizeof(struct node));
+    node->children = xcalloc(classcnt+1,sizeof(struct node));
     for ( j=0, ac=sf->anchor; ac!=NULL; ac=ac->next ) if ( ac->subtable==sub ) {
 	for ( ap=sc->anchor; ap!=NULL && (!(ap->type==at_basechar || ap->type==at_basemark) || ap->anchor!=ac); ap=ap->next );
 	if ( ap!=NULL ) {
@@ -186,12 +186,12 @@ static void BuildBase(struct node *node,SplineChar **bases,enum anchor_type at, 
     for ( i=0; bases[i]!=NULL; ++i );
     if ( i==0 ) {
 	node->cnt = 1;
-	node->children = gcalloc(2,sizeof(struct node));
+	node->children = xcalloc(2,sizeof(struct node));
 	node->children[0].label = copy(_("Empty"));
 	node->children[0].parent = node;
     } else {
 	node->cnt = i;
-	node->children = gcalloc(i+1,sizeof(struct node));
+	node->children = xcalloc(i+1,sizeof(struct node));
 	for ( i=0; bases[i]!=NULL; ++i ) {
 	    node->children[i].label = copy(bases[i]->name);
 	    node->children[i].parent = node;
@@ -213,12 +213,12 @@ static void BuildMark(struct node *node,SplineChar **marks,AnchorClass *ac, stru
     for ( i=0; marks[i]!=NULL; ++i );
     if ( i==0 ) {
 	node->cnt = 1;
-	node->children = gcalloc(2,sizeof(struct node));
+	node->children = xcalloc(2,sizeof(struct node));
 	node->children[0].label = copy(_("Empty"));
 	node->children[0].parent = node;
     } else {
 	node->cnt = i;
-	node->children = gcalloc(i+1,sizeof(struct node));
+	node->children = xcalloc(i+1,sizeof(struct node));
 	for ( i=0; marks[i]!=NULL; ++i ) {
 	    for ( ap=marks[i]->anchor; ap!=NULL && (ap->type!=at_mark || ap->anchor!=ac); ap=ap->next );
 	    sprintf(buf,_("%.30s (%d,%d)"), marks[i]->name,
@@ -247,13 +247,13 @@ static void BuildAnchorLists(struct node *node,struct att_dlg *att) {
 	for ( ac = sf->anchor; ac!=NULL && ac->subtable!=sub; ac = ac->next );
 	entryexit = ac==NULL ? NULL : EntryExitDecompose(sf,ac,NULL);
 	if ( entryexit==NULL ) {
-	    node->children = gcalloc(2,sizeof(struct node));
+	    node->children = xcalloc(2,sizeof(struct node));
 	    node->cnt = 1;
 	    node->children[0].label = copy(_("Empty"));
 	    node->children[0].parent = node;
 	} else {
 	    for ( cnt=0; entryexit[cnt]!=NULL; ++cnt );
-	    node->children = gcalloc(cnt+1,sizeof(struct node));
+	    node->children = xcalloc(cnt+1,sizeof(struct node));
 	    node->cnt = cnt;
 	    for ( cnt=0; entryexit[cnt]!=NULL; ++cnt ) {
 		node->children[cnt].u.sc = entryexit[cnt];
@@ -271,7 +271,7 @@ static void BuildAnchorLists(struct node *node,struct att_dlg *att) {
 		    }
 		}
 		node->children[cnt].cnt = (ent!=NULL)+(ext!=NULL);
-		node->children[cnt].children = gcalloc((1+(ent!=NULL)+(ext!=NULL)),sizeof(struct node));
+		node->children[cnt].children = xcalloc((1+(ent!=NULL)+(ext!=NULL)),sizeof(struct node));
 		i = 0;
 		if ( ent!=NULL ) {
 		    snprintf(buf,sizeof(buf), _("Entry (%d,%d)"),
@@ -308,7 +308,7 @@ return;
 	subcnts = galloc(classcnt*sizeof(int));
 	AnchorClassDecompose(sf,ac,classcnt,subcnts,marks,&base,&lig,&mkmk,NULL);
 	node->cnt = classcnt+(base!=NULL)+(lig!=NULL)+(mkmk!=NULL);
-	node->children = gcalloc(node->cnt+1,sizeof(struct node));
+	node->children = xcalloc(node->cnt+1,sizeof(struct node));
 	i=0;
 	if ( base!=NULL )
 	    BuildBase(&node->children[i++],base,at_basechar,node);
@@ -343,7 +343,7 @@ static void BuildKC2(struct node *node,struct att_dlg *att) {
 	if ( kc->offsets[index*kc->second_cnt+i]!=0 && strlen(kc->seconds[i])!=0 )
 	    ++cnt;
 
-    node->children = seconds = gcalloc(cnt+1,sizeof(struct node));
+    node->children = seconds = xcalloc(cnt+1,sizeof(struct node));
     node->cnt = cnt;
     cnt = 0;
     for ( i=1; i<kc->second_cnt; ++i ) if ( kc->offsets[index*kc->second_cnt+i]!=0 && strlen(kc->seconds[i])!=0 ) {
@@ -373,7 +373,7 @@ static void BuildKC(struct node *node,struct att_dlg *att) {
 	    ++cnt;
     }
 
-    node->children = firsts = gcalloc(cnt+1,sizeof(struct node));
+    node->children = firsts = xcalloc(cnt+1,sizeof(struct node));
     node->cnt = cnt;
     for ( i=1,cnt=0; i<kc->first_cnt; ++i ) {
 	for ( j=1,cnt2=0 ; j<kc->second_cnt; ++j ) {
@@ -572,7 +572,7 @@ static void BuildFPSTRule(struct node *node,struct att_dlg *att) {
 	  break;
 	}
 	if ( i==0 ) {
-	    node->children = lines = gcalloc(len+1,sizeof(struct node));
+	    node->children = lines = xcalloc(len+1,sizeof(struct node));
 	    node->cnt = len;
 	}
     }
@@ -649,7 +649,7 @@ static void BuildFPST(struct node *node,struct att_dlg *att) {
 	    ++len;
 	}
 	if ( i==0 ) {
-	    node->children = lines = gcalloc(len+1,sizeof(struct node));
+	    node->children = lines = xcalloc(len+1,sizeof(struct node));
 	    node->cnt = len;
 	}
     }
@@ -765,7 +765,7 @@ static void BuildASM(struct node *node,struct att_dlg *att) {
 	    ++len;
 	}
 	if ( i==0 ) {
-	    node->children = lines = gcalloc(len+1,sizeof(struct node));
+	    node->children = lines = xcalloc(len+1,sizeof(struct node));
 	    node->cnt = len;
 	}
     }
@@ -840,7 +840,7 @@ static void BuildKern2(struct node *node,struct att_dlg *att) {
 	    }
 	}
 	if ( !doit ) {
-	    node->children = lines = gcalloc(cnt+1,sizeof(struct node));
+	    node->children = lines = xcalloc(cnt+1,sizeof(struct node));
 	    node->cnt = cnt;
 	} else
 	    qsort(lines,cnt,sizeof(struct node), node_alphabetize);
@@ -906,7 +906,7 @@ static void BuildKern(struct node *node,struct att_dlg *att) {
 	    }
 	}
 	if ( !doit ) {
-	    node->children = lines = gcalloc(cnt+1,sizeof(struct node));
+	    node->children = lines = xcalloc(cnt+1,sizeof(struct node));
 	    node->cnt = cnt;
 	} else
 	    qsort(lines,cnt,sizeof(struct node), node_alphabetize);
@@ -973,7 +973,7 @@ static void BuildPST(struct node *node,struct att_dlg *att) {
 	}
 	if ( !doit ) {
 	    lbuf = galloc(maxl*sizeof(unichar_t));
-	    node->children = lines = gcalloc(cnt+1,sizeof(struct node));
+	    node->children = lines = xcalloc(cnt+1,sizeof(struct node));
 	    node->cnt = cnt;
 	} else
 	    qsort(lines,cnt,sizeof(struct node), node_alphabetize);
@@ -1018,7 +1018,7 @@ static void BuildGSUBlookups(struct node *node,struct att_dlg *att) {
     int cnt;
 
     for ( sub = otl->subtables, cnt=0; sub!=NULL; sub=sub->next, ++cnt );
-    subslist = gcalloc(cnt+1,sizeof(struct node));
+    subslist = xcalloc(cnt+1,sizeof(struct node));
     for ( sub = otl->subtables, cnt=0; sub!=NULL; sub=sub->next, ++cnt ) {
 	subslist[cnt].parent = node;
 	subslist[cnt].u.sub = sub;
@@ -1071,7 +1071,7 @@ static void BuildGSUBfeatures(struct node *node,struct att_dlg *att) {
 	    }
 	}
 	if ( lookups == NULL )
-	    lookups = gcalloc(cnt+1,sizeof(struct node));
+	    lookups = xcalloc(cnt+1,sizeof(struct node));
     }
 
     node->children = lookups;
@@ -1090,7 +1090,7 @@ static void BuildGSUBlang(struct node *node,struct att_dlg *att) {
 
     featlist = SFFeaturesInScriptLang(_sf,!isgsub,script,lang);
     for ( j=0; featlist[j]!=0; ++j );
-    featnodes = gcalloc(j+1,sizeof(struct node));
+    featnodes = xcalloc(j+1,sizeof(struct node));
     for ( i=0; featlist[i]!=0; ++i ) {
 	featnodes[i].tag = featlist[i];
 	featnodes[i].parent = node;
@@ -1119,7 +1119,7 @@ static void BuildGSUBscript(struct node *node,struct att_dlg *att) {
     langlist = SFLangsInScript(sf,isgpos,node->tag);
     for ( j=0; langlist[j]!=0; ++j );
     lang_max = j;
-    langnodes = gcalloc(lang_max+1,sizeof(struct node));
+    langnodes = xcalloc(lang_max+1,sizeof(struct node));
     for ( i=0; langlist[i]!=0; ++i )
 	langnodes[i].tag = langlist[i];
     free( langlist );
@@ -1153,7 +1153,7 @@ static void BuildLookupList(struct node *node,struct att_dlg *att) {
     struct node *lookupnodes;
 
     for ( i=0; otll[i]!=NULL; ++i );
-    lookupnodes = gcalloc(i+1,sizeof(struct node));
+    lookupnodes = xcalloc(i+1,sizeof(struct node));
     for ( i=0; otll[i]!=NULL; ++i ) {
 	lookupnodes[i].label = copy(otll[i]->lookup_name);
 	lookupnodes[i].parent = node;
@@ -1186,9 +1186,9 @@ static void BuildJSTFlang(struct node *node,struct att_dlg *att) {
     struct node *prionodes, *kids;
     char buf[120];
 
-    prionodes = gcalloc(jlang->cnt+1,sizeof(struct node));
+    prionodes = xcalloc(jlang->cnt+1,sizeof(struct node));
     for ( i=0; i<jlang->cnt; ++i ) {
-	kids = gcalloc(7,sizeof(struct node));
+	kids = xcalloc(7,sizeof(struct node));
 	BuildJSTFPrio(&kids[0],&prionodes[i],jlang->prios[i].enableExtend,_("Lookups Enabled for Expansion"), _("No Lookups Enabled for Expansion"));
 	BuildJSTFPrio(&kids[1],&prionodes[i],jlang->prios[i].disableExtend,_("Lookups Disabled for Expansion"), _("No Lookups Disabled for Expansion"));
 	BuildJSTFPrio(&kids[2],&prionodes[i],jlang->prios[i].maxExtend,_("Lookups Limiting Expansion"), _("No Lookups Limiting Expansion"));
@@ -1221,7 +1221,7 @@ static void BuildJSTFscript(struct node *node,struct att_dlg *att) {
     SplineChar *sc;
 
     for ( jlang=jscript->langs, lang_max=0; jlang!=NULL; jlang=jlang->next, ++lang_max );
-    langnodes = gcalloc(lang_max+2,sizeof(struct node));
+    langnodes = xcalloc(lang_max+2,sizeof(struct node));
     gc =0;
     if ( jscript->extenders!=NULL ) {
 	for ( start= jscript->extenders; ; ) {
@@ -1234,7 +1234,7 @@ static void BuildJSTFscript(struct node *node,struct att_dlg *att) {
 	break;
 	    start = end;
 	}
-	extenders = gcalloc(gc+1,sizeof(struct node));
+	extenders = xcalloc(gc+1,sizeof(struct node));
 	gc=0;
 	for ( start= jscript->extenders; ; ) {
 	    for ( ; *start==',' || *start==' '; ++start );
@@ -1301,7 +1301,7 @@ static void BuildMClass(struct node *node,struct att_dlg *att) {
     int i;
     char *temp;
 
-    node->children = glyphs = gcalloc(_sf->mark_class_cnt,sizeof(struct node));
+    node->children = glyphs = xcalloc(_sf->mark_class_cnt,sizeof(struct node));
     node->cnt = _sf->mark_class_cnt-1;
     for ( i=1; i<_sf->mark_class_cnt; ++i ) {
 	glyphs[i-1].parent = node;
@@ -1330,7 +1330,7 @@ static void BuildLCarets(struct node *node,struct att_dlg *att) {
     if ( j==-1 )
 return;
     ++j;
-    node->children = lcars = gcalloc(j+1,sizeof(struct node));
+    node->children = lcars = xcalloc(j+1,sizeof(struct node));
     node->cnt = j;
     for ( j=i=0; j<pst->u.lcaret.cnt; ++j ) {
 	if ( pst->u.lcaret.carets[j]!=0 ) {
@@ -1379,7 +1379,7 @@ static void BuildLcar(struct node *node,struct att_dlg *att) {
     break;
 	if ( glyphs!=NULL )
     break;
-	node->children = glyphs = gcalloc(lcnt+1,sizeof(struct node));
+	node->children = glyphs = xcalloc(lcnt+1,sizeof(struct node));
 	node->cnt = lcnt;
     }
     if ( glyphs!=NULL )
@@ -1434,7 +1434,7 @@ static void BuildGdefs(struct node *node,struct att_dlg *att) {
     break;
 	if ( chars==NULL ) {
 	    node->cnt = ccnt;
-	    node->children = chars = gcalloc(ccnt+1,sizeof(struct node));
+	    node->children = chars = xcalloc(ccnt+1,sizeof(struct node));
 	}
     }
 }
@@ -1478,7 +1478,7 @@ static void BuildGDEF(struct node *node,struct att_dlg *att) {
     mclass = _sf->mark_class_cnt!=0;
 
     if ( gdef+lcar+mclass!=0 ) {
-	node->children = gcalloc(gdef+lcar+mclass+1,sizeof(struct node));
+	node->children = xcalloc(gdef+lcar+mclass+1,sizeof(struct node));
 	node->cnt = gdef+lcar+mclass;
 	if ( gdef ) {
 	    node->children[0].label = copy(_("Glyph Definition Sub-Table"));
@@ -1509,7 +1509,7 @@ static void BuildBaseLangs(struct node *node,struct att_dlg *att) {
 
     for ( lf = bl, cnt=0; lf!=NULL; lf=lf->next, ++cnt );
 
-    node->children = langs = gcalloc(cnt+1,sizeof(struct node));
+    node->children = langs = xcalloc(cnt+1,sizeof(struct node));
     node->cnt = cnt;
 
     for ( lf = bl, cnt=0; lf!=NULL; lf=lf->next, ++cnt ) {
@@ -1535,7 +1535,7 @@ static void BuildBASE(struct node *node,struct att_dlg *att) {
 
     for ( bs=base->scripts, cnt=0; bs!=NULL; bs=bs->next, ++cnt );
 
-    node->children = scripts = gcalloc(cnt+1,sizeof(struct node));
+    node->children = scripts = xcalloc(cnt+1,sizeof(struct node));
     node->cnt = cnt;
 
     for ( bs=base->scripts, cnt=0; bs!=NULL; bs=bs->next, ++cnt ) {
@@ -1575,7 +1575,7 @@ static void BuildBsLnTable(struct node *node,struct att_dlg *att) {
     baselines = PerGlyphDefBaseline(_sf,&def_baseline);
     FigureBaseOffsets(_sf,def_baseline&0x1f,offsets);
 
-    node->children = gcalloc(3+1,sizeof(struct node));
+    node->children = xcalloc(3+1,sizeof(struct node));
     node->cnt = 3;
 
     sprintf( buffer, _("Default Baseline: '%s'"),
@@ -1597,7 +1597,7 @@ static void BuildBsLnTable(struct node *node,struct att_dlg *att) {
 	node->children[2].label = copy(_("Per glyph baseline data"));
 	node->children[2].parent = node;
 	node->children[2].children_checked = true;
-	node->children[2].children = glyphs = gcalloc(_sf->glyphcnt+1,sizeof(struct node));
+	node->children[2].children = glyphs = xcalloc(_sf->glyphcnt+1,sizeof(struct node));
 	for ( gid=i=0; gid<_sf->glyphcnt; ++gid ) if ( (sc=_sf->glyphs[gid])!=NULL ) {
 	    sprintf( buffer, "%s: %s", sc->name,
 		    (baselines[gid])==0 ? "romn" :
@@ -1662,7 +1662,7 @@ static void BuildOpticalBounds(struct node *node,struct att_dlg *att) {
 	if ( ccnt==0 )
 return;
 	if ( chars==NULL ) {
-	    node->children = chars = gcalloc(ccnt+1,sizeof(struct node));
+	    node->children = chars = xcalloc(ccnt+1,sizeof(struct node));
 	    node->cnt = ccnt;
 	}
     }
@@ -1757,7 +1757,7 @@ static void BuildProperties(struct node *node,struct att_dlg *att) {
 	    props = props_array(_sf,&gi);
 	    if ( props==NULL )
 return;
-	    node->children = chars = gcalloc(ccnt+1,sizeof(struct node));
+	    node->children = chars = xcalloc(ccnt+1,sizeof(struct node));
 	}
 	node->cnt = ccnt;
     }
@@ -1792,7 +1792,7 @@ static void BuildKernTable(struct node *node,struct att_dlg *att) {
 	    }
 	}
 	if ( !doit ) {
-	    node->children = kerns = gcalloc(cnt+1,sizeof(struct node));
+	    node->children = kerns = xcalloc(cnt+1,sizeof(struct node));
 	    node->cnt = cnt;
 	}
     }
@@ -1829,7 +1829,7 @@ static void BuildMorxTable(struct node *node,struct att_dlg *att) {
 	    }
 	}
 	if ( !doit ) {
-	    node->children = lookups = gcalloc(cnt+1,sizeof(struct node));
+	    node->children = lookups = xcalloc(cnt+1,sizeof(struct node));
 	    node->cnt = cnt;
 	}
     }
@@ -1851,7 +1851,7 @@ static void BuildTable(struct node *node,struct att_dlg *att) {
 return;
     for ( i=0; scriptlist[i]!=0; ++i );
     script_max = i;
-    scriptnodes = gcalloc(script_max+1,sizeof(struct node));
+    scriptnodes = xcalloc(script_max+1,sizeof(struct node));
     for ( i=0; scriptlist[i]!=0; ++i )
 	scriptnodes[i].tag = scriptlist[i];
     free( scriptlist );
@@ -1892,7 +1892,7 @@ static void BuildJSTFTable(struct node *node,struct att_dlg *att) {
     extern GTextInfo scripts[];
 
     for ( sub_cnt=0, jscript=_sf->justify; jscript!=NULL; jscript=jscript->next, ++sub_cnt );
-    scriptnodes = gcalloc(sub_cnt+1,sizeof(struct node));
+    scriptnodes = xcalloc(sub_cnt+1,sizeof(struct node));
     for ( i=0, jscript=_sf->justify; jscript!=NULL; jscript=jscript->next, ++i ) {
 	scriptnodes[i].tag = jscript->script;
 	for ( j=0; scripts[j].text!=NULL && scriptnodes[i].tag!=(uint32) (intpt) scripts[j].userdata; ++j );
@@ -2003,16 +2003,16 @@ static void BuildTop(struct att_dlg *att) {
     hasjstf = ( _sf->justify!=NULL );
 
     if ( hasgsub+hasgpos+hasgdef+hasmorx+haskern+haslcar+hasopbd+hasprop+hasbase+hasjstf==0 ) {
-	tables = gcalloc(2,sizeof(struct node));
+	tables = xcalloc(2,sizeof(struct node));
 	tables[0].label = copy(_("No Advanced Typography"));
     } else {
-	tables = gcalloc((hasgsub||hasgpos||hasgdef||hasbase||hasjstf)+
+	tables = xcalloc((hasgsub||hasgpos||hasgdef||hasbase||hasjstf)+
 	    (hasmorx||haskern||haslcar||hasopbd||hasprop||hasbsln)+1,sizeof(struct node));
 	i=0;
 	if ( hasgsub || hasgpos || hasgdef || hasbase || hasjstf ) {
 	    tables[i].label = copy(_("OpenType Tables"));
 	    tables[i].children_checked = true;
-	    tables[i].children = gcalloc(hasgsub+hasgpos+hasgdef+hasbase+hasjstf+1,sizeof(struct node));
+	    tables[i].children = xcalloc(hasgsub+hasgpos+hasgdef+hasbase+hasjstf+1,sizeof(struct node));
 	    tables[i].cnt = hasgsub + hasgpos + hasgdef + hasbase + hasjstf;
 	    if ( hasbase ) {
 		int sub_cnt= (sf->horiz_base!=NULL) + (sf->vert_base!=NULL), j=0;
@@ -2020,7 +2020,7 @@ static void BuildTop(struct att_dlg *att) {
 		tables[i].children[0].tag = CHR('B','A','S','E');
 		tables[i].children[0].parent = &tables[i];
 		tables[i].children[0].children_checked = true;
-		tables[i].children[0].children = gcalloc(sub_cnt+1,sizeof(struct node));
+		tables[i].children[0].children = xcalloc(sub_cnt+1,sizeof(struct node));
 		tables[i].children[0].cnt = sub_cnt;
 		if ( _sf->horiz_base!=NULL ) {
 		    snprintf(buffer,sizeof(buffer),
@@ -2074,7 +2074,7 @@ static void BuildTop(struct att_dlg *att) {
 	    int j = 0;
 	    tables[i].label = copy(_("Apple Advanced Typography"));
 	    tables[i].children_checked = true;
-	    tables[i].children = gcalloc(hasmorx+haskern+haslcar+hasopbd+hasprop+hasvkern+haskc+hasvkc+hasbsln+1,sizeof(struct node));
+	    tables[i].children = xcalloc(hasmorx+haskern+haslcar+hasopbd+hasprop+hasvkern+haskc+hasvkc+hasbsln+1,sizeof(struct node));
 	    tables[i].cnt = hasmorx+haskern+hasopbd+hasprop+haslcar+hasvkern+haskc+hasvkc+hasbsln;
 	    if ( hasbsln ) {
 		tables[i].children[j].label = copy(_("'bsln' Horizontal Baseline Table"));
@@ -2896,7 +2896,7 @@ return( -1 );
 	if ( pt>=end ) {
 	    char *old = nf->linebuf;
 	    nf->linemax += 200;
-	    nf->linebuf = grealloc(nf->linebuf, nf->linemax);
+	    nf->linebuf = xrealloc(nf->linebuf, nf->linemax);
 	    pt = nf->linebuf + (pt-old);
 	    end = nf->linebuf + nf->linemax - 1;
 	}
@@ -2916,7 +2916,7 @@ static void ReadKids(struct nested_file *nf,int desired_nest,struct node *parent
 	if ( nf->read_nest < desired_nest )
     break;
 	if ( i>=max-1 ) {
-	    parent->children = grealloc(parent->children,(max+=10)*sizeof( struct node ));
+	    parent->children = xrealloc(parent->children,(max+=10)*sizeof( struct node ));
 	    memset(parent->children+i,0,(max-i)*sizeof(struct node));
 	}
 	parent->children[i].label = copy(nf->linebuf);
@@ -2926,7 +2926,7 @@ static void ReadKids(struct nested_file *nf,int desired_nest,struct node *parent
     }
     if ( i!=0 ) {
 	if ( i<max-1 )
-	    parent->children = grealloc(parent->children,(i+1)*sizeof(struct node));
+	    parent->children = xrealloc(parent->children,(i+1)*sizeof(struct node));
 	/* The reallocs can invalidate the parent field */
 	for ( j=0; j<i; ++j )
 	    for ( k=0; k<parent->children[j].cnt; ++k )
@@ -2940,7 +2940,7 @@ static void BuildFCmpNodes(struct att_dlg *att, SplineFont *sf1, SplineFont *sf2
     struct node *tables;
     struct nested_file nf;
 
-    att->tables = tables = gcalloc(2,sizeof(struct node));
+    att->tables = tables = xcalloc(2,sizeof(struct node));
     att->current = tables;
     if ( !CompareFonts(sf1,att->fv1->b.map,sf2,tmp,flags) && ftell(tmp)==0 ) {
 	tables[0].label = copy(_("No differences found"));

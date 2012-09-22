@@ -127,7 +127,7 @@ static void aw2_figure_all_sidebearing(AW_Data *all) {
     AW_Glyph *me, *other;
     real transform[6], half;
     int width, changed;
-    uint8 *rsel = gcalloc(all->fv->map->enccount,sizeof(char));
+    uint8 *rsel = xcalloc(all->fv->map->enccount,sizeof(char));
     real denom = (all->sf->ascent + all->sf->descent)/DENOM_FACTOR_OF_EMSIZE;
     int ldiff, rdiff;
 
@@ -381,8 +381,8 @@ static void aw2_dummyedges(AW_Glyph *flat,AW_Data *all) {
 	}
 	flat->imin_y = imin_y; flat->imax_y = imax_y;
     }
-    flat->left = gcalloc((flat->imax_y-flat->imin_y+1),sizeof(short));
-    flat->right = gcalloc((flat->imax_y-flat->imin_y+1),sizeof(short));
+    flat->left = xcalloc((flat->imax_y-flat->imin_y+1),sizeof(short));
+    flat->right = xcalloc((flat->imax_y-flat->imin_y+1),sizeof(short));
 }
 
 static void AWGlyphFree( AW_Glyph *me) {
@@ -407,7 +407,7 @@ static void aw2_handlescript(AW_Data *all) {
 
 SplineChar ***GlyphClassesFromNames(SplineFont *sf,char **classnames,
 	int class_cnt ) {
-    SplineChar ***classes = gcalloc(class_cnt,sizeof(SplineChar **));
+    SplineChar ***classes = xcalloc(class_cnt,sizeof(SplineChar **));
     int i, pass, clen;
     char *pt, *end, ch, *cn;
     SplineChar *sc;
@@ -483,10 +483,10 @@ void AutoWidth2(FontViewBase *fv,int separation,int min_side,int max_side,
 	    }
 	    if ( s==scnt ) {
 		if ( scnt>=smax )
-		    scripts = grealloc(scripts,(smax+=10)*sizeof(struct scriptlist));
+		    scripts = xrealloc(scripts,(smax+=10)*sizeof(struct scriptlist));
 		memset(&scripts[scnt],0,sizeof(struct scriptlist));
 		scripts[scnt].script = script;
-		scripts[scnt].glyphs = gcalloc(sf->glyphcnt+1,sizeof(AW_Glyph));
+		scripts[scnt].glyphs = xcalloc(sf->glyphcnt+1,sizeof(AW_Glyph));
 		++scnt;
 	    }
 	    i = scripts[s].gcnt;
@@ -635,7 +635,7 @@ void AutoKern2(SplineFont *sf, int layer,SplineChar **left,SplineChar **right,
 	if ( sc->ticked || sc->ticked2 )
 	    ++cnt;
 
-    glyphs = gcalloc(cnt+1,sizeof(AW_Glyph));
+    glyphs = xcalloc(cnt+1,sizeof(AW_Glyph));
     for ( cnt=i=0; i<sf->glyphcnt; ++i ) if ( (sc = sf->glyphs[i])!=NULL ) {
 	if ( sc->ticked || sc->ticked2 ) {
 	    SplineCharLayerFindBounds(sc,layer,&glyphs[cnt].bb);
@@ -752,7 +752,7 @@ void AutoKern2NewClass(SplineFont *sf,int layer,char **leftnames, char **rightna
 	if ( sc->ticked || sc->ticked2 )
 	    ++cnt;
 
-    glyphs = gcalloc(cnt+1,sizeof(AW_Glyph));
+    glyphs = xcalloc(cnt+1,sizeof(AW_Glyph));
     for ( cnt=i=0; i<sf->glyphcnt; ++i ) if ( (sc = sf->glyphs[i])!=NULL ) {
 	if ( sc->ticked || sc->ticked2 ) {
 	    SplineCharLayerFindBounds(sc,layer,&glyphs[cnt].bb);
@@ -890,7 +890,7 @@ return;
 	if ( sc->ticked || sc->ticked2 )
 	    ++cnt;
 
-    glyphs = gcalloc(cnt+1,sizeof(AW_Glyph));
+    glyphs = xcalloc(cnt+1,sizeof(AW_Glyph));
     for ( cnt=i=0; i<sf->glyphcnt; ++i ) if ( (sc = sf->glyphs[i])!=NULL ) {
 	if ( sc->ticked || sc->ticked2 ) {
 	    SplineCharLayerFindBounds(sc,layer,&glyphs[cnt].bb);
@@ -939,7 +939,7 @@ return;
     lclassnames = galloc((lcnt+2) * sizeof(char *));
     lclasscnt = 1;
     lclassnames[0] = NULL;
-    lused = gcalloc(lcnt,sizeof(int));
+    lused = xcalloc(lcnt,sizeof(int));
     for ( i=0; i<lcnt; ++i ) if ( leftglyphs[i]->ticked && !lused[i]) {
 	lused[i] = lclasscnt;
 	len = strlen(leftglyphs[i]->name)+1;
@@ -974,7 +974,7 @@ return;
     rclassnames = galloc((rcnt+2) * sizeof(char *));
     rclasscnt = 1;
     rclassnames[0] = NULL;
-    rused = gcalloc(rcnt,sizeof(int));
+    rused = xcalloc(rcnt,sizeof(int));
     for ( i=0; i<rcnt; ++i ) if ( rightglyphs[i]->ticked2 && !rused[i]) {
 	rused[i] = rclasscnt;
 	len = strlen(rightglyphs[i]->name)+1;
@@ -1006,8 +1006,8 @@ return;
     free(rused);
     free(visual_separation);
 	
-    kc->offsets = gcalloc(lclasscnt*rclasscnt,sizeof(int16));;
-    kc->adjusts = gcalloc(lclasscnt*rclasscnt,sizeof(DeviceTable));
+    kc->offsets = xcalloc(lclasscnt*rclasscnt,sizeof(int16));;
+    kc->adjusts = xcalloc(lclasscnt*rclasscnt,sizeof(DeviceTable));
 
     if ( autokern )
 	AutoKern2NewClass(sf,layer,kc->firsts, kc->seconds,

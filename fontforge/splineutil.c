@@ -217,7 +217,7 @@ return;
 RefChar *RefCharCreate(void) {
     RefChar *ref = (RefChar *) xzalloc(sizeof (RefChar));
     ref->layer_cnt = 1;
-    ref->layers = gcalloc(1,sizeof(struct reflayer));
+    ref->layers = xcalloc(1,sizeof(struct reflayer));
     ref->layers[0].fill_brush.opacity = ref->layers[0].stroke_pen.brush.opacity = 1.0;
     ref->layers[0].fill_brush.col = ref->layers[0].stroke_pen.brush.col = COLOR_INHERITED;
     ref->layers[0].stroke_pen.width = WIDTH_INHERITED;
@@ -2006,11 +2006,11 @@ return;
     if ( sf->multilayer ) {
 	int lbase = topref->layer_cnt;
 	if ( topref->layer_cnt==0 ) {
-	    topref->layers = gcalloc(rsc->layer_cnt-1,sizeof(struct reflayer));
+	    topref->layers = xcalloc(rsc->layer_cnt-1,sizeof(struct reflayer));
 	    topref->layer_cnt = rsc->layer_cnt-1;
 	} else {
 	    topref->layer_cnt += rsc->layer_cnt-1;
-	    topref->layers = grealloc(topref->layers,topref->layer_cnt*sizeof(struct reflayer));
+	    topref->layers = xrealloc(topref->layers,topref->layer_cnt*sizeof(struct reflayer));
 	    memset(topref->layers+lbase,0,(rsc->layer_cnt-1)*sizeof(struct reflayer));
 	}
 	for ( i=ly_fore; i<rsc->layer_cnt; ++i ) {
@@ -2024,7 +2024,7 @@ return;
 	}
     } else {
 	if ( topref->layer_cnt==0 ) {
-	    topref->layers = gcalloc(1,sizeof(struct reflayer));
+	    topref->layers = xcalloc(1,sizeof(struct reflayer));
 	    topref->layer_cnt = 1;
 	}
 	new = SplinePointListTransform(SplinePointListCopy(rsc->layers[layer].splines),transform,tpt_AllPoints);
@@ -2259,7 +2259,7 @@ static void _SplineFontFromType1(SplineFont *sf, FontDict *fd, struct pscontext 
 	sf->map = map = EncMapNew(256+CharsNotInEncoding(fd),sf->glyphcnt,fd->encoding_name);
     } else
 	map = sf->map;
-    sf->glyphs = gcalloc(map->backmax,sizeof(SplineChar *));
+    sf->glyphs = xcalloc(map->backmax,sizeof(SplineChar *));
     if ( istype3 )	/* We read a type3 */
 	sf->multilayer = true;
     if ( istype3 )
@@ -2438,7 +2438,7 @@ return( NULL );
 	ff_post_error(_("Bad Multiple Master Font"),_("This multiple master font has %1$d instance fonts, but it needs at least %2$d master fonts for %3$d axes. FontForge will not be able to edit this correctly"),mm->instance_count,1<<mm->axis_count,mm->axis_count);
     else if ( mm->instance_count > (1<<mm->axis_count) )
 	ff_post_error(_("Bad Multiple Master Font"),_("This multiple master font has %1$d instance fonts, but FontForge can only handle %2$d master fonts for %3$d axes. FontForge will not be able to edit this correctly"),mm->instance_count,1<<mm->axis_count,mm->axis_count);
-    mm->positions = gcalloc(mm->axis_count*mm->instance_count,sizeof(real));
+    mm->positions = xcalloc(mm->axis_count*mm->instance_count,sizeof(real));
     pt = fd->fontinfo->blenddesignpositions;
     while ( *pt==' ' ) ++pt;
     if ( *pt=='[' ) ++pt;
@@ -2470,7 +2470,7 @@ return( NULL );
 	    ++pt;
     }
     
-    mm->axismaps = gcalloc(mm->axis_count,sizeof(struct axismap));
+    mm->axismaps = xcalloc(mm->axis_count,sizeof(struct axismap));
     pt = fd->fontinfo->blenddesignmap;
     while ( *pt==' ' ) ++pt;
     if ( *pt=='[' ) ++pt;
@@ -2655,7 +2655,7 @@ return( NULL );
 
     map = FindCidMap(sf->cidregistry,sf->ordering,sf->supplement,sf);
 
-    chars = gcalloc(fd->cidcnt,sizeof(SplineChar *));
+    chars = xcalloc(fd->cidcnt,sizeof(SplineChar *));
     for ( i=0; i<fd->cidcnt; ++i ) if ( fd->cidlens[i]>0 ) {
 	j = fd->cidfds[i];		/* We get font indexes of 255 for non-existant chars */
 	uni = CID2NameUni(map,i,buffer,sizeof(buffer));
@@ -2675,7 +2675,7 @@ return( NULL );
 	ff_progress_next();
     }
     for ( i=0; i<fd->fdcnt; ++i )
-	sf->subfonts[i]->glyphs = gcalloc(sf->subfonts[i]->glyphcnt,sizeof(SplineChar *));
+	sf->subfonts[i]->glyphs = xcalloc(sf->subfonts[i]->glyphcnt,sizeof(SplineChar *));
     for ( i=0; i<fd->cidcnt; ++i ) if ( chars[i]!=NULL ) {
 	j = fd->cidfds[i];
 	if ( j<sf->subfontcnt ) {
@@ -2796,7 +2796,7 @@ return;
 	}
     
 	rf->layer_cnt = cnt;
-	rf->layers = gcalloc(cnt,sizeof(struct reflayer));
+	rf->layers = xcalloc(cnt,sizeof(struct reflayer));
 	cnt = 0;
 	for ( i=ly_fore; i<rsc->layer_cnt; ++i ) {
 	    if ( rsc->layers[i].splines!=NULL || rsc->layers[i].images!=NULL ) {
@@ -2844,7 +2844,7 @@ return;
 	    SplinePointListsFree(rf->layers[0].splines);
 	    rf->layers[0].splines = NULL;
 	}
-	rf->layers = gcalloc(1,sizeof(struct reflayer));
+	rf->layers = xcalloc(1,sizeof(struct reflayer));
 	rf->layer_cnt = 1;
 	rf->layers[0].dofill = true;
 	new = SplinePointListTransform(SplinePointListCopy(rf->sc->layers[layer].splines),rf->transform,tpt_AllPoints);
@@ -2973,7 +2973,7 @@ void SCRefToSplines(SplineChar *sc,RefChar *rf,int layer) {
 
     if ( sc->parent->multilayer ) {
 	Layer *old = sc->layers;
-	sc->layers = grealloc(sc->layers,(sc->layer_cnt+rf->layer_cnt)*sizeof(Layer));
+	sc->layers = xrealloc(sc->layers,(sc->layer_cnt+rf->layer_cnt)*sizeof(Layer));
 	for ( rlayer = 0; rlayer<rf->layer_cnt; ++rlayer ) {
 	    LayerDefault(&sc->layers[sc->layer_cnt+rlayer]);
 	    sc->layers[sc->layer_cnt+rlayer].splines = rf->layers[rlayer].splines;
@@ -5389,7 +5389,7 @@ return;
 	} else if ( size>=adjust->first_pixel_size &&
 		size<=adjust->last_pixel_size ) {
 	} else if ( size>adjust->last_pixel_size ) {
-	    adjust->corrections = grealloc(adjust->corrections,
+	    adjust->corrections = xrealloc(adjust->corrections,
 		    size-adjust->first_pixel_size);
 	    for ( i=len; i<size-adjust->first_pixel_size; ++i )
 		adjust->corrections[i] = 0;
@@ -5473,7 +5473,7 @@ static struct fpst_rule *RulesCopy(struct fpst_rule *from, int cnt,
     if ( cnt==0 )
 return( NULL );
 
-    to = gcalloc(cnt,sizeof(struct fpst_rule));
+    to = xcalloc(cnt,sizeof(struct fpst_rule));
     for ( i=0; i<cnt; ++i ) {
 	f = from+i; t = to+i;
 	switch ( format ) {
@@ -5649,7 +5649,7 @@ SplineChar *SplineCharCreate(int layer_cnt) {
     sc->orig_pos = 0xffff;
     sc->unicodeenc = -1;
     sc->layer_cnt = layer_cnt;
-    sc->layers = gcalloc(layer_cnt,sizeof(Layer));
+    sc->layers = xcalloc(layer_cnt,sizeof(Layer));
     for ( i=0; i<layer_cnt; ++i )
 	LayerDefault(&sc->layers[i]);
     sc->tex_height = sc->tex_depth = sc->italic_correction = sc->top_accent_horiz =
@@ -5698,7 +5698,7 @@ return( NULL );
     newgv->italic_adjusts = DeviceTableCopy(gv->italic_adjusts);
     newgv->part_cnt = gv->part_cnt;
     if ( gv->part_cnt!=0 ) {
-	newgv->parts = gcalloc(gv->part_cnt,sizeof(struct gv_part));
+	newgv->parts = xcalloc(gv->part_cnt,sizeof(struct gv_part));
 	memcpy(newgv->parts,gv->parts,gv->part_cnt*sizeof(struct gv_part));
 	for ( i=0; i<gv->part_cnt; ++i )
 	    newgv->parts[i].component = copy(gv->parts[i].component);
@@ -5718,7 +5718,7 @@ return( NULL );
 	struct mathkernvertex *mknewv = &(&mknew->top_right)[i];
 	mknewv->cnt = mkv->cnt;
 	if ( mknewv->cnt!=0 ) {
-	    mknewv->mkd = gcalloc(mkv->cnt,sizeof(struct mathkerndata));
+	    mknewv->mkd = xcalloc(mkv->cnt,sizeof(struct mathkerndata));
 	    for ( j=0; j<mkv->cnt; ++j ) {
 		mknewv->mkd[j].height = mkv->mkd[j].height;
 		mknewv->mkd[j].kern   = mkv->mkd[j].kern;
@@ -5976,7 +5976,7 @@ return( NULL );
 	new->firsts[i] = copy(kc->firsts[i]);
     for ( i=0; i<new->second_cnt; ++i )
 	new->seconds[i] = copy(kc->seconds[i]);
-    new->adjusts = gcalloc(new->first_cnt*new->second_cnt,sizeof(DeviceTable));
+    new->adjusts = xcalloc(new->first_cnt*new->second_cnt,sizeof(DeviceTable));
     memcpy(new->adjusts,kc->adjusts, new->first_cnt*new->second_cnt*sizeof(DeviceTable));
     for ( i=new->first_cnt*new->second_cnt-1; i>=0 ; --i ) {
 	if ( new->adjusts[i].corrections!=NULL ) {
@@ -6261,7 +6261,7 @@ struct jstf_lang *JstfLangsCopy(struct jstf_lang *jl) {
 	cur = (struct jstf_lang *) xzalloc(sizeof (*cur));
 	cur->lang = jl->lang;
 	cur->cnt = jl->cnt;
-	cur->prios = gcalloc(cur->cnt,sizeof(struct jstf_prio));
+	cur->prios = xcalloc(cur->cnt,sizeof(struct jstf_prio));
 	for ( i=0; i<cur->cnt; ++i ) {
 	    cur->prios[i].enableShrink = OTLListCopy( jl->prios[i].enableShrink );
 	    cur->prios[i].disableShrink = OTLListCopy( jl->prios[i].disableShrink );
@@ -7287,7 +7287,7 @@ void GrowBuffer(GrowBuf *gb) {
     } else {
 	int len = (gb->end-gb->base) + 400;
 	int off = gb->pt-gb->base;
-	gb->base = grealloc(gb->base,len);
+	gb->base = xrealloc(gb->base,len);
 	gb->end = gb->base + len;
 	gb->pt = gb->base+off;
     }
@@ -7300,7 +7300,7 @@ void GrowBufferAdd(GrowBuf *gb,int ch) {
     } else if ( gb->pt>=gb->end ) {
 	int len = (gb->end-gb->base) + 400;
 	int off = gb->pt-gb->base;
-	gb->base = grealloc(gb->base,len);
+	gb->base = xrealloc(gb->base,len);
 	gb->end = gb->base + len;
 	gb->pt = gb->base+off;
     }
@@ -7320,7 +7320,7 @@ return;
     } else if ( gb->pt+n+1>=gb->end ) {
 	int len = (gb->end-gb->base) + n+200;
 	int off = gb->pt-gb->base;
-	gb->base = grealloc(gb->base,len);
+	gb->base = xrealloc(gb->base,len);
 	gb->end = gb->base + len;
 	gb->pt = gb->base+off;
     }

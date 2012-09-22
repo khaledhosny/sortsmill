@@ -762,7 +762,7 @@ static void NOUI_LoadPrefs(void) {
 #if 0
 		else if ( strncmp(line,"FontFilterName:",strlen("FontFilterName:"))==0 ) {
 		    if ( fn>=filt_max )
-			user_font_filters = grealloc(user_font_filters,((filt_max+=10)+1)*sizeof( struct openfilefilters));
+			user_font_filters = xrealloc(user_font_filters,((filt_max+=10)+1)*sizeof( struct openfilefilters));
 		    user_font_filters[fn].filter = NULL;
 		    user_font_filters[fn++].name = copy(pt);
 		    user_font_filters[fn].name = NULL;
@@ -774,7 +774,7 @@ static void NOUI_LoadPrefs(void) {
 		else if ( strncmp(line,"MacMapCnt:",strlen("MacSetCnt:"))==0 ) {
 		    sscanf( pt, "%d", &msc );
 		    msp = 0;
-		    user_macfeat_otftag = gcalloc(msc+1,sizeof(struct macsettingname));
+		    user_macfeat_otftag = xcalloc(msc+1,sizeof(struct macsettingname));
 		} else if ( strncmp(line,"MacMapping:",strlen("MacMapping:"))==0 && msp<msc ) {
 		    ParseMacMapping(pt,&user_macfeat_otftag[msp++]);
 		} else if ( strncmp(line,"MacFeat:",strlen("MacFeat:"))==0 ) {

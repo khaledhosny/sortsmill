@@ -37,7 +37,7 @@
 #include "ttf.h"
 
 static uint16 *getAppleClassTable(FILE *ttf, int classdef_offset, int cnt, int sub, int div, struct ttfinfo *info) {
-    uint16 *class = gcalloc(cnt,sizeof(uint16));
+    uint16 *class = xcalloc(cnt,sizeof(uint16));
     int first, i, n;
     /* Apple stores its class tables as containing offsets. I find it hard to */
     /*  think that way and convert them to indeces (by subtracting off a base */
@@ -57,7 +57,7 @@ return( class );
 
 static char **ClassToNames(struct ttfinfo *info,int class_cnt,uint16 *class,int glyph_cnt) {
     char **ret = galloc(class_cnt*sizeof(char *));
-    int *lens = gcalloc(class_cnt,sizeof(int));
+    int *lens = xcalloc(class_cnt,sizeof(int));
     int i;
 
     ret[0] = NULL;
@@ -88,7 +88,7 @@ return( ret );
 static char *CoverageMinusClasses(uint16 *coverageglyphs,uint16 *classed,
 	struct ttfinfo *info ) {
     int i, j, len;
-    uint8 *glyphs = gcalloc(info->glyph_cnt,1);
+    uint8 *glyphs = xcalloc(info->glyph_cnt,1);
     char *ret;
 
     for ( i=0; coverageglyphs[i]!=0xffff; ++i )
@@ -252,7 +252,7 @@ return( NULL );
 	    }
 	}
     } else if ( format==2 ) {
-	glyphs = gcalloc((max=256),sizeof(uint16));
+	glyphs = xcalloc((max=256),sizeof(uint16));
 	rcnt = getushort(ttf); cnt = 0;
 	if ( ftell(ttf)+6*rcnt > info->g_bounds ) {
 	    LogError( _("coverage table extends beyond end of table\n") );
@@ -278,7 +278,7 @@ return( NULL );
 	    if ( ind+end-start+2 >= max ) {
 		int oldmax = max;
 		max = ind+end-start+2;
-		glyphs = grealloc(glyphs,max*sizeof(uint16));
+		glyphs = xrealloc(glyphs,max*sizeof(uint16));
 		memset(glyphs+oldmax,0,(max-oldmax)*sizeof(uint16));
 	    }
 	    for ( j=start; j<=end; ++j ) {
@@ -315,7 +315,7 @@ static uint16 *getClassDefTable(FILE *ttf, int classdef_offset, struct ttfinfo *
     uint32 g_bounds = info->g_bounds;
 
     fseek(ttf, classdef_offset, SEEK_SET);
-    glist = gcalloc(cnt,sizeof(uint16));	/* Class 0 is default */
+    glist = xcalloc(cnt,sizeof(uint16));	/* Class 0 is default */
     format = getushort(ttf);
     if ( format==1 ) {
 	start = getushort(ttf);
@@ -624,7 +624,7 @@ return;
 	    kc->first_cnt = c1_cnt; kc->second_cnt = c2_cnt;
 	    kc->subtable = subtable;
 	    kc->offsets = galloc(c1_cnt*c2_cnt*sizeof(int16));
-	    kc->adjusts = gcalloc(c1_cnt*c2_cnt,sizeof(DeviceTable));
+	    kc->adjusts = xcalloc(c1_cnt*c2_cnt,sizeof(DeviceTable));
 	    kc->firsts = ClassToNames(info,c1_cnt,class1,info->glyph_cnt);
 	    kc->seconds = ClassToNames(info,c2_cnt,class2,info->glyph_cnt);
 	    /* Now if the coverage table contains entries which are not in */
@@ -767,7 +767,7 @@ return;
 static AnchorClass **MarkGlyphsProcessMarks(FILE *ttf,int markoffset,
 	struct ttfinfo *info,struct lookup *l, struct lookup_subtable *subtable,uint16 *markglyphs,
 	int classcnt) {
-    AnchorClass **classes = gcalloc(classcnt,sizeof(AnchorClass *)), *ac;
+    AnchorClass **classes = xcalloc(classcnt,sizeof(AnchorClass *)), *ac;
     char buf[50];
     int i, cnt;
     struct mr { uint16 class, offset; } *at_offsets;
@@ -959,7 +959,7 @@ return;
 	readvaluerecord(&_vr,vf,ttf);
     } else {
 	cnt = getushort(ttf);
-	vr = gcalloc(cnt,sizeof(struct valuerecord));
+	vr = xcalloc(cnt,sizeof(struct valuerecord));
 	for ( i=0; i<cnt; ++i )
 	    readvaluerecord(&vr[i],vf,ttf);
     }
@@ -1088,7 +1088,7 @@ return;
 	info->possub = fpst;
 	subtable->fpst = fpst;
 
-	fpst->rules = rule = gcalloc(cnt,sizeof(struct fpst_rule));
+	fpst->rules = rule = xcalloc(cnt,sizeof(struct fpst_rule));
 	fpst->rule_cnt = cnt;
 
 	cnt = 0;
@@ -1237,7 +1237,7 @@ return;
 	info->possub = fpst;
 	subtable->fpst = fpst;
 
-	fpst->rules = rule = gcalloc(cnt,sizeof(struct fpst_rule));
+	fpst->rules = rule = xcalloc(cnt,sizeof(struct fpst_rule));
 	fpst->rule_cnt = cnt;
 
 	cnt = 0;
@@ -1293,7 +1293,7 @@ static void g___ContextSubTable2(FILE *ttf, int stoffset,
     coverage = getushort(ttf);
     classoff = getushort(ttf);
     rcnt = getushort(ttf);		/* class count in coverage table *//* == number of top level rules */
-    rules = gcalloc(rcnt,sizeof(struct rule));
+    rules = xcalloc(rcnt,sizeof(struct rule));
     for ( i=0; i<rcnt; ++i )
 	rules[i].offsets = getushort(ttf)+stoffset;
     cnt = 0;
@@ -1356,12 +1356,12 @@ return;
 	fpst->next = info->possub;
 	info->possub = fpst;
 
-	fpst->rules = rule = gcalloc(cnt,sizeof(struct fpst_rule));
+	fpst->rules = rule = xcalloc(cnt,sizeof(struct fpst_rule));
 	fpst->rule_cnt = cnt;
 	class = getClassDefTable(ttf, stoffset+classoff, info);
 	fpst->nccnt = ClassFindCnt(class,info->glyph_cnt);
 	fpst->nclass = ClassToNames(info,fpst->nccnt,class,info->glyph_cnt);
-	fpst->nclassnames = gcalloc(fpst->nccnt,sizeof(char *));
+	fpst->nclassnames = xcalloc(fpst->nccnt,sizeof(char *));
 
 	/* Just in case they used the coverage table to redefine class 0 */
 	glyphs = getCoverageTable(ttf,stoffset+coverage,info);
@@ -1425,7 +1425,7 @@ static void g___ChainingSubTable2(FILE *ttf, int stoffset,
     classoff = getushort(ttf);
     fclassoff = getushort(ttf);
     rcnt = getushort(ttf);		/* class count *//* == max number of top level rules */
-    rules = gcalloc(rcnt,sizeof(struct rule));
+    rules = xcalloc(rcnt,sizeof(struct rule));
     for ( i=0; i<rcnt; ++i ) {
 	offset = getushort(ttf);
 	rules[i].offsets = offset==0 ? 0 : offset+stoffset;
@@ -1510,13 +1510,13 @@ return;
 	fpst->next = info->possub;
 	info->possub = fpst;
 
-	fpst->rules = rule = gcalloc(cnt,sizeof(struct fpst_rule));
+	fpst->rules = rule = xcalloc(cnt,sizeof(struct fpst_rule));
 	fpst->rule_cnt = cnt;
 
 	class = getClassDefTable(ttf, stoffset+classoff, info);
 	fpst->nccnt = ClassFindCnt(class,info->glyph_cnt);
 	fpst->nclass = ClassToNames(info,fpst->nccnt,class,info->glyph_cnt);
-	fpst->nclassnames = gcalloc(fpst->nccnt,sizeof(char *));
+	fpst->nclassnames = xcalloc(fpst->nccnt,sizeof(char *));
 
 	/* Just in case they used the coverage table to redefine class 0 */
 	glyphs = getCoverageTable(ttf,stoffset+coverage,info);
@@ -1532,18 +1532,18 @@ return;
 	if ( bclassoff!=0 )
 	    class = getClassDefTable(ttf, stoffset+bclassoff, info);
 	else
-	    class = gcalloc(info->glyph_cnt,sizeof(uint16));
+	    class = xcalloc(info->glyph_cnt,sizeof(uint16));
 	fpst->bccnt = ClassFindCnt(class,info->glyph_cnt);
 	fpst->bclass = ClassToNames(info,fpst->bccnt,class,info->glyph_cnt);
-	fpst->bclassnames = gcalloc(fpst->bccnt,sizeof(char *));
+	fpst->bclassnames = xcalloc(fpst->bccnt,sizeof(char *));
 	free(class);
 	if ( fclassoff!=0 )
 	    class = getClassDefTable(ttf, stoffset+fclassoff, info);
 	else
-	    class = gcalloc(info->glyph_cnt,sizeof(uint16));
+	    class = xcalloc(info->glyph_cnt,sizeof(uint16));
 	fpst->fccnt = ClassFindCnt(class,info->glyph_cnt);
 	fpst->fclass = ClassToNames(info,fpst->fccnt,class,info->glyph_cnt);
-	fpst->fclassnames = gcalloc(fpst->fccnt,sizeof(char *));
+	fpst->fclassnames = xcalloc(fpst->fccnt,sizeof(char *));
 	free(class);
 
 	cnt = 0;
@@ -1621,7 +1621,7 @@ return;
 	fpst->next = info->possub;
 	info->possub = fpst;
 
-	fpst->rules = rule = gcalloc(1,sizeof(struct fpst_rule));
+	fpst->rules = rule = xcalloc(1,sizeof(struct fpst_rule));
 	fpst->rule_cnt = 1;
 	rule->u.coverage.ncnt = gcnt;
 	rule->u.coverage.ncovers = galloc(gcnt*sizeof(char **));
@@ -1707,7 +1707,7 @@ return;
 	fpst->next = info->possub;
 	info->possub = fpst;
 
-	fpst->rules = rule = gcalloc(1,sizeof(struct fpst_rule));
+	fpst->rules = rule = xcalloc(1,sizeof(struct fpst_rule));
 	fpst->rule_cnt = 1;
 
 	rule->u.coverage.bcnt = bcnt;
@@ -1931,7 +1931,7 @@ return;
 	}
 	if ( cnt>max ) {
 	    max = cnt+30;
-	    glyph2s = grealloc(glyph2s,max*sizeof(uint16));
+	    glyph2s = xrealloc(glyph2s,max*sizeof(uint16));
 	}
 	len = 0; bad = false;
 	for ( j=0; j<cnt; ++j ) {
@@ -2205,7 +2205,7 @@ return;		/* Don't understand this format type */
 	info->possub = fpst;
 	subtable->fpst = fpst;
 
-	fpst->rules = rule = gcalloc(1,sizeof(struct fpst_rule));
+	fpst->rules = rule = xcalloc(1,sizeof(struct fpst_rule));
 	fpst->rule_cnt = 1;
 
 	rule->u.rcoverage.always1 = 1;
@@ -2373,7 +2373,7 @@ return( NULL );
 return( NULL );
     }
 
-    scripts = gcalloc(cnt+1,sizeof(struct scripts));
+    scripts = xcalloc(cnt+1,sizeof(struct scripts));
     for ( i=0; i<cnt; ++i ) {
 	scripts[i].tag = getlong(ttf);
 	scripts[i].offset = getushort(ttf);
@@ -2384,7 +2384,7 @@ return( NULL );
 	lcnt = getushort(ttf);
 	lcnt += (deflang!=0);
 	scripts[i].langcnt = lcnt;
-	scripts[i].languages = gcalloc(lcnt+1,sizeof(struct language));
+	scripts[i].languages = xcalloc(lcnt+1,sizeof(struct language));
 	j = 0;
 	if ( deflang!=0 ) {
 	    scripts[i].languages[0].tag = CHR('d','f','l','t');
@@ -2448,7 +2448,7 @@ return( NULL );
 return( NULL );
     }
 
-    features = gcalloc(cnt+1,sizeof(struct feature));
+    features = xcalloc(cnt+1,sizeof(struct feature));
     for ( i=0; i<cnt; ++i ) {
 	features[i].tag = getlong(ttf);
 	features[i].offset = getushort(ttf);
@@ -2508,7 +2508,7 @@ return( NULL );
 return( NULL );
     }
 
-    lookups = gcalloc(cnt+1,sizeof(struct lookup));
+    lookups = xcalloc(cnt+1,sizeof(struct lookup));
     for ( i=0; i<cnt; ++i )
 	lookups[i].offset = getushort(ttf);
     for ( i=0; i<cnt; ++i ) {
@@ -3488,7 +3488,7 @@ return( NULL );
 return( info->badgids[i] );
 
     if ( info->badgid_cnt>=info->badgid_max )
-	info->badgids = grealloc(info->badgids,(info->badgid_max += 20)*sizeof(SplineChar *));
+	info->badgids = xrealloc(info->badgids,(info->badgid_max += 20)*sizeof(SplineChar *));
     fake = SplineCharCreate(2);
     fake->orig_pos = badgid;
     sprintf( name, "Out-Of-Range-GID-%d", badgid );
@@ -3912,7 +3912,7 @@ return;
 	readttf_applelookup(ttf,info,
 		mortclass_apply_values,mortclass_apply_value,NULL,NULL,true);
 	sm.smax = length/(2*sm.nClasses);
-	sm.states_in_use = gcalloc(sm.smax,sizeof(uint8));
+	sm.states_in_use = xcalloc(sm.smax,sizeof(uint8));
 	follow_morx_state(&sm,0,-1,info);
     } else {
 	sm.nClasses = memushort(sm.data,sm.length, 0);
@@ -3930,7 +3930,7 @@ return;
 	for ( i=0; i<cnt; ++i )
 	    sm.classes[first+i] = sm.data[sm.classOffset+2*sizeof(uint16)+i];
 	sm.smax = length/sm.nClasses;
-	sm.states_in_use = gcalloc(sm.smax,sizeof(uint8));
+	sm.states_in_use = xcalloc(sm.smax,sizeof(uint8));
 	follow_mort_state(&sm,sm.stateOffset,-1,info);
     }
     free(sm.data);
@@ -3958,7 +3958,7 @@ struct statetable {
 };
 
 static struct statetable *read_statetable(FILE *ttf, int ent_extras, int ismorx, struct ttfinfo *info) {
-    struct statetable *st = gcalloc(1,sizeof(struct statetable));
+    struct statetable *st = xcalloc(1,sizeof(struct statetable));
     uint32 here = ftell(ttf);
     int nclasses, class_off, state_off, entry_off;
     int state_max, ent_max, old_state_max, old_ent_max;
@@ -4139,7 +4139,7 @@ static char **ClassesFromStateTable(struct statetable *st,int ismorx,struct ttfi
     /* On the mac the first four classes should be left blank. only class 1 */
     /*  (out of bounds) is supposed to be used in the class array anyway */
     char **classes = galloc(st->nclasses*sizeof(char *));
-    int *lens = gcalloc(st->nclasses,sizeof(int));
+    int *lens = xcalloc(st->nclasses,sizeof(int));
     int i;
 
 
@@ -4235,7 +4235,7 @@ return;
 }
 
 static void RunStateFindKernDepth(ASM *as) {
-    uint8 *used = gcalloc(as->class_cnt);
+    uint8 *used = xcalloc(as->class_cnt);
     int i;
 
     for ( i=0; i<as->class_cnt*as->state_cnt; ++i ) {
@@ -4436,10 +4436,10 @@ return(NULL);
 	/*  from the substitution table (given that Apple's docs are often */
 	/*  wrong */ /* Apple's docs are right. not clear why that offset  */
 	/*  is there */
-	uint8 *classes_subbed = gcalloc(st->nclasses,1);
+	uint8 *classes_subbed = xcalloc(st->nclasses,1);
 	int lookup_max = -1, index, index_max;
 	int32 *lookups = galloc(st->nclasses*st->nstates*sizeof(int32));
-	uint8 *evermarked = gcalloc(st->nclasses*st->nstates,sizeof(uint8));
+	uint8 *evermarked = xcalloc(st->nclasses*st->nstates,sizeof(uint8));
 	uint8 *used;
 	OTLookup **subs;
 
@@ -4454,7 +4454,7 @@ return(NULL);
 		if ( index>index_max ) index_max = index;
 	    }
 	}
-	subs = gcalloc(index_max+1,sizeof(OTLookup *));
+	subs = xcalloc(index_max+1,sizeof(OTLookup *));
 
 	for ( i=0; i<st->nclasses*st->nstates; ++i ) {
 	    if ( as->state[i].u.context.mark_lookup!=NULL ) {
@@ -4467,7 +4467,7 @@ return(NULL);
 		as->state[i].u.context.cur_lookup = NewMacSubsLookup(info,otl,index,subs);
 	    }
 	}
-	used = gcalloc((subtab_len-st->extra_offsets[0]+1)/2,sizeof(uint8));
+	used = xcalloc((subtab_len-st->extra_offsets[0]+1)/2,sizeof(uint8));
 	/* first figure things that only appear in current subs */
 	/*  then go back and work on things that apply to things which are also in marked subs */
 	for ( j=0; j<2; ++j ) for ( i=0; i<=lookup_max; ++i ) if ( evermarked[i]==j ) {
@@ -4506,7 +4506,7 @@ return(NULL);
 	    }
 	}
 	++lookup_max;
-	subs = gcalloc(lookup_max,sizeof(OTLookup *));
+	subs = xcalloc(lookup_max,sizeof(OTLookup *));
 	for ( i=0; i<st->nclasses*st->nstates; ++i ) {
 	    if ( (intpt) as->state[i].u.context.mark_lookup!=0xffff ) {
 		as->state[i].u.context.mark_lookup = NewMacSubsLookup(info,otl,(intpt) as->state[i].u.context.mark_lookup,subs);
@@ -4755,7 +4755,7 @@ return;
     /*  removes the flag */
     if ( info->badgid_cnt!=0 ) {
 	/* Merge the fake glyphs in with the real ones */
-	info->chars = grealloc(info->chars,(info->glyph_cnt+info->badgid_cnt)*sizeof(SplineChar *));
+	info->chars = xrealloc(info->chars,(info->glyph_cnt+info->badgid_cnt)*sizeof(SplineChar *));
 	for ( i=0; i<info->badgid_cnt; ++i ) {
 	    info->chars[info->glyph_cnt+i] = info->badgids[i];
 	    info->badgids[i]->orig_pos = info->glyph_cnt+i;
@@ -4941,7 +4941,7 @@ return;
 			kc->first_cnt = class1[i];
 		++ kc->first_cnt;
 		kc->offsets = galloc(kc->first_cnt*kc->second_cnt*sizeof(int16));
-		kc->adjusts = gcalloc(kc->first_cnt*kc->second_cnt,sizeof(DeviceTable));
+		kc->adjusts = xcalloc(kc->first_cnt*kc->second_cnt,sizeof(DeviceTable));
 		fseek(ttf,begin_table+array,SEEK_SET);
 		for ( i=0; i<kc->first_cnt*kc->second_cnt; ++i )
 		    kc->offsets[i] = getushort(ttf);
@@ -4960,11 +4960,11 @@ return;
 			    gc, info->glyph_cnt );
 		    info->bad_gx = true;
 		}
-		class1 = gcalloc(gc>info->glyph_cnt?gc:info->glyph_cnt,sizeof(uint16));
-		class2 = gcalloc(gc>info->glyph_cnt?gc:info->glyph_cnt,sizeof(uint16));
+		class1 = xcalloc(gc>info->glyph_cnt?gc:info->glyph_cnt,sizeof(uint16));
+		class2 = xcalloc(gc>info->glyph_cnt?gc:info->glyph_cnt,sizeof(uint16));
 		kvs = galloc(kv*sizeof(int16));
 		kc->offsets = galloc(kc->first_cnt*kc->second_cnt*sizeof(int16));
-		kc->adjusts = gcalloc(kc->first_cnt*kc->second_cnt,sizeof(DeviceTable));
+		kc->adjusts = xcalloc(kc->first_cnt*kc->second_cnt,sizeof(DeviceTable));
 		for ( i=0; i<kv; ++i )
 		    kvs[i] = (int16) getushort(ttf);
 		for ( i=0; i<gc; ++i )
@@ -5098,7 +5098,7 @@ static void ttf_math_read_constants(FILE *ttf,struct ttfinfo *info, uint32 start
     uint16 off;
 
     fseek(ttf,start,SEEK_SET);
-    info->math = math = gcalloc(1,sizeof(struct MATH));
+    info->math = math = xcalloc(1,sizeof(struct MATH));
 
     for ( i=0; math_constants_descriptor[i].script_name!=NULL; ++i ) {
 	int16 *pos = (int16 *) (((char *) (math)) + math_constants_descriptor[i].offset );
@@ -5169,7 +5169,7 @@ static void ttf_math_read_mathkernv(FILE *ttf, uint32 start,struct mathkernverte
     /* There is one more width than height. I store the width count */
     /*  and guess a dummy height later */
     mkv->cnt = cnt = getushort(ttf)+1;
-    mkv->mkd = gcalloc(cnt,sizeof(struct mathkerndata));
+    mkv->mkd = xcalloc(cnt,sizeof(struct mathkerndata));
 
     for ( i=0; i<cnt-1; ++i ) {
 	mkv->mkd[i].height = getushort(ttf);
@@ -5330,7 +5330,7 @@ static struct glyphvariants *ttf_math_read_gvtable(FILE *ttf,struct ttfinfo *inf
 	ic_offset = getushort(ttf);
 	gv->part_cnt = pcnt = getushort(ttf);
 	if ( justinuse==git_normal )
-	    gv->parts = gcalloc(pcnt,sizeof(struct gv_part));
+	    gv->parts = xcalloc(pcnt,sizeof(struct gv_part));
 	for ( i=j=0; i<pcnt; ++i ) {
 	    int gid, start, end, full, flags;
 	    gid = getushort(ttf);
@@ -5399,7 +5399,7 @@ static void ttf_math_read_variants(FILE *ttf,struct ttfinfo *info, uint32 start,
 
     fseek(ttf,start,SEEK_SET);
     if ( info->math==NULL )
-	info->math = gcalloc(1,sizeof(struct MATH));
+	info->math = xcalloc(1,sizeof(struct MATH));
     info->math->MinConnectorOverlap = getushort(ttf);
     vcoverage = getushort(ttf);
     hcoverage = getushort(ttf);
@@ -5547,14 +5547,14 @@ return;
 	} else {
 	    fseek(ttf,info->base_start+axes[axis]+basetags,SEEK_SET);
 	    curBase->baseline_cnt = getushort(ttf);
-	    curBase->baseline_tags = gcalloc(curBase->baseline_cnt,sizeof(uint32));
+	    curBase->baseline_tags = xcalloc(curBase->baseline_cnt,sizeof(uint32));
 	    for ( i=0; i<curBase->baseline_cnt; ++i )
 		curBase->baseline_tags[i] = getlong(ttf);
 	}
 	if ( basescripts!=0 ) {
 	    fseek(ttf,info->base_start+axes[axis]+basescripts,SEEK_SET);
 	    basescriptcnt = getushort(ttf);
-	    bs = gcalloc(basescriptcnt,sizeof(struct tagoff));
+	    bs = xcalloc(basescriptcnt,sizeof(struct tagoff));
 	    for ( i=0; i<basescriptcnt; ++i ) {
 		bs[i].tag    = getlong(ttf);
 		bs[i].offset = getushort(ttf);
@@ -5570,7 +5570,7 @@ return;
 		basevalues = getushort(ttf);
 		defminmax  = getushort(ttf);
 		langsyscnt = getushort(ttf);
-		ls = gcalloc(langsyscnt,sizeof(struct tagoff));
+		ls = xcalloc(langsyscnt,sizeof(struct tagoff));
 		for ( j=0; j<langsyscnt; ++j ) {
 		    ls[j].tag    = getlong(ttf);
 		    ls[j].offset = getushort(ttf);
@@ -5598,8 +5598,8 @@ return;
 			if ( tot<curBase->baseline_cnt )
 			    tot = curBase->baseline_cnt;
 		    }
-		    coords = gcalloc(coordcnt,sizeof(int));
-		    curScript->baseline_pos = gcalloc(tot,sizeof(int16));
+		    coords = xcalloc(coordcnt,sizeof(int));
+		    curScript->baseline_pos = xcalloc(tot,sizeof(int16));
 		    for ( j=0; j<coordcnt; ++j )
 			coords[j] = getushort(ttf);
 		    for ( j=0; j<coordcnt; ++j ) if ( coords[j]!=0 ) {
@@ -5695,7 +5695,7 @@ return;
     }
 
     if ( format&1 ) {
-	info->bsln_values = values = gcalloc(info->glyph_cnt,sizeof(uint16));
+	info->bsln_values = values = xcalloc(info->glyph_cnt,sizeof(uint16));
 	readttf_applelookup(ttf,info,
 		bsln_apply_values,bsln_apply_value,
 		bsln_apply_default,(void *) (intpt) def, false);
@@ -5975,7 +5975,7 @@ return( NULL );
     ret = (struct jstf_lang *) xzalloc(sizeof (struct jstf_lang));
     ret->lang = info->jstf_lang = tag;
     ret->cnt = cnt;
-    ret->prios = gcalloc(cnt,sizeof(struct jstf_prio));
+    ret->prios = xcalloc(cnt,sizeof(struct jstf_prio));
     for ( i=0; i<cnt; ++i )
 	ret->prios[i].maxExtend = (void *) (intpt) getushort(ttf);
     for ( i=0; i<cnt; ++i ) {
@@ -6059,7 +6059,7 @@ return;
 	}
 
 	if ( lcnt>lmax )
-	    loff = grealloc(loff,(lmax=lcnt)*sizeof(struct tagoff));
+	    loff = xrealloc(loff,(lmax=lcnt)*sizeof(struct tagoff));
 	for ( j=0; j<lcnt; ++j ) {
 	    loff[j].tag    = getlong(ttf);
 	    loff[j].offset = getushort(ttf);

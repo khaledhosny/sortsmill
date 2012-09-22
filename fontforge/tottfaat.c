@@ -708,7 +708,7 @@ static void morx_dumpLigaFeature(FILE *temp,SplineChar **glyphs,int gcnt,
 	int ignoremarks) {
     LigList *l;
     struct splinecharlist *comp;
-    uint16 *used = gcalloc(at->maxp.numGlyphs,sizeof(uint16));
+    uint16 *used = xcalloc(at->maxp.numGlyphs,sizeof(uint16));
     SplineChar **cglyphs;
     uint16 *map;
     int i,j,k,class, state_max, state_cnt, base, last;
@@ -780,15 +780,15 @@ static void morx_dumpLigaFeature(FILE *temp,SplineChar **glyphs,int gcnt,
     /*  we will depend on that in the case of "ffl", "ffi", "ff" */
     state_max = 40; state_cnt = 2;
     states = galloc(state_max*sizeof(struct transition *));
-    states[0] = gcalloc(class,sizeof(struct transition));	/* Initial state */
-    states[1] = gcalloc(class,sizeof(struct transition));	/* other Initial state */
+    states[0] = xcalloc(class,sizeof(struct transition));	/* Initial state */
+    states[1] = xcalloc(class,sizeof(struct transition));	/* other Initial state */
     for ( i=0; i<gcnt; ++i ) {
 	if ( state_cnt>=state_max )
-	    states = grealloc(states,(state_max += 40)*sizeof(struct transition *));
+	    states = xrealloc(states,(state_max += 40)*sizeof(struct transition *));
 	base = state_cnt;
 	states[0][used[glyphs[i]->ttf_glyph]].next_state = state_cnt;
 	states[1][used[glyphs[i]->ttf_glyph]].next_state = state_cnt;
-	states[state_cnt++] = gcalloc(class,sizeof(struct transition));
+	states[state_cnt++] = xcalloc(class,sizeof(struct transition));
 	for ( l=glyphs[i]->ligofme; l!=NULL; l=l->next ) if ( l->lig->subtable==sub ) {
 	    if ( l->ccnt > maxccnt ) maxccnt = l->ccnt;
 	    last = base;
@@ -799,9 +799,9 @@ static void morx_dumpLigaFeature(FILE *temp,SplineChar **glyphs,int gcnt,
 		    else {
 			states[last][used[comp->sc->ttf_glyph]].next_state = state_cnt;
 			if ( state_cnt>=state_max )
-			    states = grealloc(states,(state_max += 40)*sizeof(struct transition *));
+			    states = xrealloc(states,(state_max += 40)*sizeof(struct transition *));
 			last = state_cnt;
-			states[state_cnt++] = gcalloc(class,sizeof(struct transition));
+			states[state_cnt++] = xcalloc(class,sizeof(struct transition));
 		    }
 		} else {
 		    last = states[last][used[comp->sc->ttf_glyph]].next_state;
@@ -1074,7 +1074,7 @@ static int morx_dumpASM(FILE *temp,ASM *sm, struct alltabs *at, SplineFont *sf )
     glyphs[gcnt] = NULL;
 
     /* Give each subs tab an index into the mac's substitution lookups */
-    transdata = gcalloc(sm->state_cnt*sm->class_cnt,sizeof(struct transdata));
+    transdata = xcalloc(sm->state_cnt*sm->class_cnt,sizeof(struct transdata));
     stcnt = 0;
     subslookups = NULL; subsins = NULL;
     if ( sm->type==asm_context ) {
@@ -1384,7 +1384,7 @@ static uint32 *FormedScripts(SplineFont *sf) {
 			for ( i=0; i<sl->lang_cnt; ++i ) {
 			    if ( (i<MAX_LANG ? sl->langs[i] : sl->morelangs[i-MAX_LANG])==DEFAULT_LANG ) {
 				if ( scnt<=smax )
-				    ret = grealloc(ret,(smax+=5)*sizeof(uint32));
+				    ret = xrealloc(ret,(smax+=5)*sizeof(uint32));
 				ret[scnt++] = sl->script;
 			    }
 			}
@@ -1396,7 +1396,7 @@ static uint32 *FormedScripts(SplineFont *sf) {
     if ( scnt==0 )
 return( NULL );
     if ( scnt<=smax )
-	ret = grealloc(ret,(smax+=1)*sizeof(uint32));
+	ret = xrealloc(ret,(smax+=1)*sizeof(uint32));
     ret[scnt] = 0;
 return( ret );
 }
@@ -2073,7 +2073,7 @@ uint16 *props_array(SplineFont *sf,struct glyphinfo *gi) {
     PST *pst;
     int p;
 
-    props = gcalloc(gi->gcnt+1,sizeof(uint16));
+    props = xcalloc(gi->gcnt+1,sizeof(uint16));
     props[gi->gcnt] = -1;
 
     for ( i=0; i<gi->gcnt; ++i ) if ( (p = gi->bygid==NULL ? i : gi->bygid[i])!=-1 ) {

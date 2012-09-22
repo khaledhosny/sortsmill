@@ -130,8 +130,8 @@ static void GHVBoxGatherSizeInfo(GHVBox *gb,struct sizeinfo *si) {
     int ten = GDrawPointsToPixels(gb->g.base,10);
 
     memset(si,0,sizeof(*si));
-    si->cols = gcalloc(gb->cols,sizeof(struct sizedata));
-    si->rows = gcalloc(gb->rows,sizeof(struct sizedata));
+    si->cols = xcalloc(gb->cols,sizeof(struct sizedata));
+    si->rows = xcalloc(gb->rows,sizeof(struct sizedata));
     for ( c=0; c<gb->cols; ++c ) si->cols[c].allglue = true;
     for ( r=0; r<gb->rows; ++r ) si->rows[r].allglue = true;
 
@@ -558,7 +558,7 @@ void GHVBoxSetPadding(GGadget *g,int hpad, int vpad) {
 
 static GHVBox *_GHVBoxCreate(struct gwindow *base, GGadgetData *gd,void *data,
 	int hcnt, int vcnt, GBox *def_box) {
-    GHVBox *gb = gcalloc(1,sizeof(GHVBox));
+    GHVBox *gb = xcalloc(1,sizeof(GHVBox));
     int i, h, v;
     GGadgetCreateData *label = (GGadgetCreateData *) (gd->label);
 

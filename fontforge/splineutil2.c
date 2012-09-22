@@ -3226,7 +3226,7 @@ return;
 return;
 
     changed = 0;
-    ci = gcalloc(contour_max,sizeof(struct contourinfo));
+    ci = xcalloc(contour_max,sizeof(struct contourinfo));
     for ( layer=ly_fore; layer<sc->layer_cnt; ++layer ) {
 	contour_cnt = 0;
 	for ( ss = sc->layers[layer].splines; ss!=NULL; ss=ss->next ) {
@@ -3394,7 +3394,7 @@ SplineSet *SplineSetJoin(SplineSet *start,int doall,real fudge,int *changed) {
 			    start = spl2->next;
 			if ( spl->spiros && spl2->spiros ) {
 			    if ( spl->spiro_cnt+spl2->spiro_cnt > spl->spiro_max )
-				spl->spiros = grealloc(spl->spiros,
+				spl->spiros = xrealloc(spl->spiros,
 					(spl->spiro_max = spl->spiro_cnt+spl2->spiro_cnt)*sizeof(spiro_cp));
 			    memcpy(spl->spiros+spl->spiro_cnt-1,
 				    spl2->spiros+1, (spl2->spiro_cnt-1)*sizeof(spiro_cp));
@@ -3984,7 +3984,7 @@ return;
 		    test = -1;
 		}
 		if ( ss->spiro_cnt>=ss->spiro_max )
-		    ss->spiros = grealloc(ss->spiros,(ss->spiro_max+=10)*sizeof(spiro_cp));
+		    ss->spiros = xrealloc(ss->spiros,(ss->spiro_max+=10)*sizeof(spiro_cp));
 		for ( k=ss->spiro_cnt; k>i; --k )
 		    ss->spiros[k] = ss->spiros[k-1];
 		ss->spiros[i].x = ((s->splines[0].a*extrema[j]+s->splines[0].b)*extrema[j]+s->splines[0].c)*extrema[j] + s->splines[0].d;
@@ -4035,7 +4035,7 @@ SplineFont *SplineFontEmpty(void) {
     time_t now;
     SplineFont *sf;
 
-    sf = gcalloc(1,sizeof(SplineFont));
+    sf = xcalloc(1,sizeof(SplineFont));
     sf->pfminfo.fstype = -1;
     sf->top_enc = -1;
     sf->macstyle = -1;
@@ -4059,7 +4059,7 @@ SplineFont *SplineFontEmpty(void) {
     sf->creationtime = sf->modificationtime = now;
 
     sf->layer_cnt = 2;
-    sf->layers = gcalloc(2,sizeof(LayerInfo));
+    sf->layers = xcalloc(2,sizeof(LayerInfo));
     sf->layers[0].name = copy(_("Back"));
     sf->layers[0].background = true;
     sf->layers[1].name = copy(_("Fore"));
@@ -4101,7 +4101,7 @@ SplineFont *SplineFontBlank(int charcnt) {
     sf->upos = -rint(new_em_size*.1); sf->uwidth = rint(new_em_size*.05);		/* defaults for cff */
     sf->glyphcnt = 0;
     sf->glyphmax = charcnt;
-    sf->glyphs = gcalloc(charcnt,sizeof(SplineChar *));
+    sf->glyphs = xcalloc(charcnt,sizeof(SplineChar *));
     sf->pfminfo.fstype = -1;
     sf->use_typo_metrics = true;
 return( sf );
@@ -5040,8 +5040,8 @@ SplineSet *SplineSetsCorrect(SplineSet *base,int *changed) {
 /* Give up if we are given unreasonable values (ie. if rounding errors might screw us up) */
     if ( es.mmin<1e5 && es.mmax>-1e5 && es.omin<1e5 && es.omax>-1e5 ) {
 	es.cnt = (int) (es.mmax-es.mmin) + 1;
-	es.edges = gcalloc(es.cnt,sizeof(Edge *));
-	es.interesting = gcalloc(es.cnt,sizeof(char));
+	es.edges = xcalloc(es.cnt,sizeof(Edge *));
+	es.interesting = xcalloc(es.cnt,sizeof(char));
 	es.sc = NULL;
 	es.major = 1; es.other = 0;
 	FindEdgesSplineSet(base,&es,false);

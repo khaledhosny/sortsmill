@@ -316,8 +316,8 @@ return( 0 );
     }
 
     if ( feof(file )) {		/* Did we get an incomplete file? */
-	if ( head->bitsperpixel>=16 ) gfree( head->int32_pixels );
-	else gfree( head->byte_pixels );
+	if ( head->bitsperpixel>=16 ) free( head->int32_pixels );
+	else free( head->byte_pixels );
 return( 0 );
     }
 
@@ -353,7 +353,7 @@ return( NULL );
 		l = bmp.height-1-i;
 		memcpy(base->data+l*base->bytes_per_line,bmp.int32_pixels+i*bmp.width,bmp.width*sizeof(uint32));
 	    }
-	    gfree( bmp.int32_pixels );
+	    free( bmp.int32_pixels );
 	} else if ( bmp.bitsperpixel!=1 ) {
 	    ret = GImageCreate(it_index,bmp.width, bmp.height);
 	    base = ret->u.image;
@@ -361,7 +361,7 @@ return( NULL );
 		l = bmp.height-1-i;
 		memcpy(base->data+l*base->bytes_per_line,bmp.byte_pixels+i*bmp.width,bmp.width);
 	    }
-	    gfree( bmp.byte_pixels );
+	    free( bmp.byte_pixels );
 	} else {
 	    ret = GImageCreate(it_mono,bmp.width, bmp.height);
 	    base = ret->u.image;
@@ -369,7 +369,7 @@ return( NULL );
 		l = bmp.height-1-i;
 		memcpy(base->data+l*base->bytes_per_line,bmp.byte_pixels+i*base->bytes_per_line,base->bytes_per_line);
 	    }
-	    gfree( bmp.byte_pixels );
+	    free( bmp.byte_pixels );
 	}
     }
     if ( ret->u.image->image_type==it_index ) {
@@ -377,7 +377,7 @@ return( NULL );
 	memcpy(ret->u.image->clut->clut,bmp.clut,bmp.colorsused*sizeof(Color));
 	ret->u.image->clut->trans_index = COLOR_UNKNOWN;
     } else if ( ret->u.image->image_type==it_mono && bmp.colorsused!=0 ) {
-	ret->u.image->clut = (GClut *) gcalloc(1,sizeof(GClut));
+	ret->u.image->clut = (GClut *) xcalloc(1,sizeof(GClut));
 	ret->u.image->clut->clut_len = bmp.colorsused;
 	memcpy(ret->u.image->clut->clut,bmp.clut,bmp.colorsused*sizeof(Color));
 	ret->u.image->clut->trans_index = COLOR_UNKNOWN;

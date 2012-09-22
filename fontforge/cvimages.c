@@ -46,7 +46,7 @@ void SCAppendEntityLayers(SplineChar *sc, Entity *ent) {
 return;
     EntityDefaultStrokeFill(ent);
 
-    sc->layers = grealloc(sc->layers,(sc->layer_cnt+cnt)*sizeof(Layer));
+    sc->layers = xrealloc(sc->layers,(sc->layer_cnt+cnt)*sizeof(Layer));
     for ( pos = sc->layer_cnt, e=ent; e!=NULL ; e=enext, ++pos ) {
 	enext = e->next;
 	LayerDefault(&sc->layers[pos]);
@@ -221,7 +221,7 @@ return;
 return;
 	}
 	if ( cnt>=max )
-	    spiros = grealloc(spiros,(max+=30)*sizeof(spiro_cp));
+	    spiros = xrealloc(spiros,(max+=30)*sizeof(spiro_cp));
 	spiros[cnt].x = spiros[cnt].y = 0;
 	spiros[cnt].ty = ch;
 	if ( ch=='z' ) {
@@ -249,7 +249,7 @@ return;
     if ( cnt!=0 ) {
 	/* This happens when we've got an open contour */
 	if ( cnt>=max )
-	    spiros = grealloc(spiros,(max+=30)*sizeof(spiro_cp));
+	    spiros = xrealloc(spiros,(max+=30)*sizeof(spiro_cp));
 	spiros[cnt].x = spiros[cnt].y = 0;
 	spiros[cnt].ty = 'z';
 	spiros[0].ty = '{';		/* Open contour mark */
@@ -890,7 +890,7 @@ return( image );
 
     clut = base->clut;
     if ( clut==NULL ) {
-	clut=base->clut = gcalloc(1,sizeof(GClut));
+	clut=base->clut = xcalloc(1,sizeof(GClut));
 	clut->clut_len = 2;
 	clut->clut[0] = 0x808080;
 	if ( !no_windowing_ui )

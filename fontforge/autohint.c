@@ -611,7 +611,7 @@ void ElFreeEI(EIList *el) {
 }
 
 static int EIAddEdge(Spline *spline, real tmin, real tmax, EIList *el) {
-    EI *new = gcalloc(1,sizeof(EI));
+    EI *new = xcalloc(1,sizeof(EI));
     real min, max, temp;
     Spline1D *s;
     real dxdtmin, dxdtmax, dydtmin, dydtmax;
@@ -787,8 +787,8 @@ void ELOrder(EIList *el, int major ) {
 
     el->low = floor(el->coordmin[major]); el->high = ceil(el->coordmax[major]);
     el->cnt = el->high-el->low+1;
-    el->ordered = gcalloc(el->cnt,sizeof(EI *));
-    el->ends = gcalloc(el->cnt,1);
+    el->ordered = xcalloc(el->cnt,sizeof(EI *));
+    el->ends = xcalloc(el->cnt,1);
 
     for ( ei = el->edges; ei!=NULL ; ei=ei->next ) {
 	pos = ceil(ei->coordmax[major])-el->low;

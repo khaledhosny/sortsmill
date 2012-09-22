@@ -356,7 +356,7 @@ a GPOS, but he says the GPOS won't work without a GSUB.)
 		    }
 		    if ( i==cnt ) {
 			if ( cnt>=tot )
-			    scripts = grealloc(scripts,(tot+=10)*sizeof(uint32));
+			    scripts = xrealloc(scripts,(tot+=10)*sizeof(uint32));
 			scripts[cnt++] = sl->script;
 		    }
 		}
@@ -371,7 +371,7 @@ return( NULL );
     qsort(scripts,cnt,sizeof(uint32),uint32_cmp);
     /* add a 0 entry to mark the end of the list */
     if ( cnt>=tot )
-	scripts = grealloc(scripts,(tot+1)*sizeof(uint32));
+	scripts = xrealloc(scripts,(tot+1)*sizeof(uint32));
     scripts[cnt] = 0;
 return( scripts );
 }
@@ -407,7 +407,7 @@ uint32 *SFLangsInScript(SplineFont *sf,int gpos,uint32 script) {
 			    }
 			    if ( i==cnt ) {
 				if ( cnt>=tot )
-				    langs = grealloc(langs,(tot+=10)*sizeof(uint32));
+				    langs = xrealloc(langs,(tot+=10)*sizeof(uint32));
 				langs[cnt++] = lang;
 			    }
 			}
@@ -425,7 +425,7 @@ uint32 *SFLangsInScript(SplineFont *sf,int gpos,uint32 script) {
 	/*  and hence no languages. It seems that Uniscribe doesn't like */
 	/*  that either. So give each such script a dummy default language */
 	/*  entry. This is what VOLT does */
-	langs = gcalloc(2,sizeof(uint32));
+	langs = xcalloc(2,sizeof(uint32));
 	langs[0] = DEFAULT_LANG;
 return( langs );
     }
@@ -434,7 +434,7 @@ return( langs );
     qsort(langs,cnt,sizeof(uint32),lang_cmp);
     /* add a 0 entry to mark the end of the list */
     if ( cnt>=tot )
-	langs = grealloc(langs,(tot+1)*sizeof(uint32));
+	langs = xrealloc(langs,(tot+1)*sizeof(uint32));
     langs[cnt] = 0;
 return( langs );
 }
@@ -464,7 +464,7 @@ uint32 *SFFeaturesInScriptLang(SplineFont *sf,int gpos,uint32 script,uint32 lang
 		    }
 		    if ( i==cnt ) {
 			if ( cnt>=tot )
-			    features = grealloc(features,(tot+=10)*sizeof(uint32));
+			    features = xrealloc(features,(tot+=10)*sizeof(uint32));
 			features[cnt++] = fl->featuretag;
 		    }
 		} else for ( sl=fl->scripts ; sl!=NULL; sl=sl->next ) {
@@ -490,7 +490,7 @@ uint32 *SFFeaturesInScriptLang(SplineFont *sf,int gpos,uint32 script,uint32 lang
 			    }
 			    if ( i==cnt ) {
 				if ( cnt>=tot )
-				    features = grealloc(features,(tot+=10)*sizeof(uint32));
+				    features = xrealloc(features,(tot+=10)*sizeof(uint32));
 				features[cnt++] = fl->featuretag;
 			    }
 			}
@@ -507,12 +507,12 @@ uint32 *SFFeaturesInScriptLang(SplineFont *sf,int gpos,uint32 script,uint32 lang
 	/*  gets a 'size' feature which contains no lookups but feature */
 	/*  params */
 	if ( cnt>=tot )
-	    features = grealloc(features,(tot+=2)*sizeof(uint32));
+	    features = xrealloc(features,(tot+=2)*sizeof(uint32));
 	features[cnt++] = CHR('s','i','z','e');
     }
 
     if ( cnt==0 )
-return( gcalloc(1,sizeof(uint32)) );
+return( xcalloc(1,sizeof(uint32)) );
 
     /* We don't care if our features are in alphabetical order here */
     /*  all that matters is whether the complete list of features is */
@@ -521,7 +521,7 @@ return( gcalloc(1,sizeof(uint32)) );
 
     /* add a 0 entry to mark the end of the list */
     if ( cnt>=tot )
-	features = grealloc(features,(tot+1)*sizeof(uint32));
+	features = xrealloc(features,(tot+1)*sizeof(uint32));
     features[cnt] = 0;
 return( features );
 }
@@ -548,7 +548,7 @@ OTLookup **SFLookupsInScriptLangFeature(SplineFont *sf,int gpos,uint32 script,ui
 				testlang = sl->morelangs[l-MAX_LANG];
 			    if ( testlang==lang ) {
 				if ( cnt>=tot )
-				    lookups = grealloc(lookups,(tot+=10)*sizeof(OTLookup *));
+				    lookups = xrealloc(lookups,(tot+=10)*sizeof(OTLookup *));
 				lookups[cnt++] = test;
 	goto found;
 			    }
@@ -566,7 +566,7 @@ return( NULL );
     /* lookup order is irrelevant here. might as well leave it in invocation order */
     /* add a 0 entry to mark the end of the list */
     if ( cnt>=tot )
-	lookups = grealloc(lookups,(tot+1)*sizeof(OTLookup *));
+	lookups = xrealloc(lookups,(tot+1)*sizeof(OTLookup *));
     lookups[cnt] = 0;
 return( lookups );
 }
@@ -610,7 +610,7 @@ return( true );
 }
 
 SplineChar **SFGlyphsWithPSTinSubtable(SplineFont *sf,struct lookup_subtable *subtable) {
-    uint8 *used = gcalloc(sf->glyphcnt,sizeof(uint8));
+    uint8 *used = xcalloc(sf->glyphcnt,sizeof(uint8));
     SplineChar **glyphs, *sc;
     int i, k, gid, cnt;
     KernPair *kp;
@@ -668,7 +668,7 @@ return( glyphs );
 }
 
 SplineChar **SFGlyphsWithLigatureinLookup(SplineFont *sf,struct lookup_subtable *subtable) {
-    uint8 *used = gcalloc(sf->glyphcnt,sizeof(uint8));
+    uint8 *used = xcalloc(sf->glyphcnt,sizeof(uint8));
     SplineChar **glyphs, *sc;
     int i, cnt;
     PST *pst;
@@ -1246,7 +1246,7 @@ void FListAppendScriptLang(FeatureScriptLangList *fl,uint32 script_tag,uint32 la
 	    sl->langs[l] = lang_tag;
 	else {
 	    if ( l%MAX_LANG == 0 )
-		sl->morelangs = grealloc(sl->morelangs,l*sizeof(uint32));
+		sl->morelangs = xrealloc(sl->morelangs,l*sizeof(uint32));
 		/* We've just allocated MAX_LANG-1 more than we need */
 		/*  so we don't do quite some many allocations */
 	    sl->morelangs[l-MAX_LANG] = lang_tag;
@@ -1771,7 +1771,7 @@ static void LangMerge(struct scriptlanglist *into, struct scriptlanglist *from) 
 	    if ( into->lang_cnt<MAX_LANG )
 		into->langs[into->lang_cnt++] = flang;
 	    else {
-		into->morelangs = grealloc(into->morelangs,(into->lang_cnt+1-MAX_LANG)*sizeof(uint32));
+		into->morelangs = xrealloc(into->morelangs,(into->lang_cnt+1-MAX_LANG)*sizeof(uint32));
 		into->morelangs[into->lang_cnt++-MAX_LANG] = flang;
 	    }
 	}
@@ -2451,7 +2451,7 @@ return( mc->lks[l].to );
     }
 
     if ( l>=mc->lmax )
-	mc->lks = grealloc(mc->lks,(mc->lmax += 20)*sizeof(struct lookup_cvt));
+	mc->lks = xrealloc(mc->lks,(mc->lmax += 20)*sizeof(struct lookup_cvt));
     mc->sf_to->changed = true;
 
     if ( l>=mc->lcnt ) {
@@ -2850,7 +2850,7 @@ static void ApplyAppleStateMachine(uint32 tag, OTLookup *otl,struct lookup_data 
 		cnt_cur = (entry->flags>>5)&0x1f;
 		cnt_mark = (entry->flags&0x1f);
 		if ( data->cnt + cnt_cur + cnt_mark >= data->max )
-		    data->str = grealloc(data->str,(data->max = data->cnt + cnt_cur + cnt_mark +20)*sizeof(struct opentype_str));
+		    data->str = xrealloc(data->str,(data->max = data->cnt + cnt_cur + cnt_mark +20)*sizeof(struct opentype_str));
 		if ( cnt_cur!=0 )
 		    cnt_cur = ApplyMacInsert(data,(entry->flags& 0x0800)? pos : pos+1,
 			    cnt_cur,entry->u.insert.cur_ins,data->str[pos].orig_index);
@@ -2915,7 +2915,7 @@ static void LigatureSearch(struct lookup_subtable *sub, struct lookup_data *data
 		if ( *pt==' ' )
 		    ++ccnt;
 	    if ( cnt>=data->lmax )
-		data->ligs = grealloc(data->ligs,(data->lmax+=100)*sizeof(SplineChar **));
+		data->ligs = xrealloc(data->ligs,(data->lmax+=100)*sizeof(SplineChar **));
 	    data->ligs[cnt] = galloc((ccnt+3)*sizeof(SplineChar *));
 	    data->ligs[cnt][0] = sc;
 	    ccnt = 1;
@@ -2936,7 +2936,7 @@ static void LigatureSearch(struct lookup_subtable *sub, struct lookup_data *data
 	}
     }
     if ( cnt>=data->lmax )
-	data->ligs = grealloc(data->ligs,(data->lmax+=1)*sizeof(SplineChar **));
+	data->ligs = xrealloc(data->ligs,(data->lmax+=1)*sizeof(SplineChar **));
     data->ligs[cnt] = NULL;
     data->lcnt = cnt;
 }
@@ -3223,7 +3223,7 @@ return( pos );
 return( pos+1 );
     } else {
 	if ( data->cnt+mcnt-1 >= data->max )
-	    data->str = grealloc(data->str,(data->max+=mcnt) * sizeof( struct opentype_str ));
+	    data->str = xrealloc(data->str,(data->max+=mcnt) * sizeof( struct opentype_str ));
 	for ( i=data->cnt-1; i>pos; --i )
 	    data->str[i+mcnt-1] = data->str[i];
 	memset(data->str+pos,0,mcnt*sizeof(struct opentype_str));
@@ -3670,7 +3670,7 @@ struct opentype_str *ApplyTickedFeatures(SplineFont *sf,uint32 *flist, uint32 sc
 
     memset(&data,0,sizeof(data));
     for ( cnt=0; glyphs[cnt]!=NULL; ++cnt );
-    data.str = gcalloc(cnt+1,sizeof(struct opentype_str));
+    data.str = xcalloc(cnt+1,sizeof(struct opentype_str));
     data.cnt = data.max = cnt;
     for ( cnt=0; glyphs[cnt]!=NULL; ++cnt ) {
 	data.str[cnt].sc = glyphs[cnt];
@@ -3703,7 +3703,7 @@ struct opentype_str *ApplyTickedFeatures(SplineFont *sf,uint32 *flist, uint32 sc
     LigatureFree(&data);
     free(data.ligs);
 
-    data.str = grealloc(data.str,(data.cnt+1)*sizeof(struct opentype_str));
+    data.str = xrealloc(data.str,(data.cnt+1)*sizeof(struct opentype_str));
     memset(&data.str[data.cnt],0,sizeof(struct opentype_str));
 return( data.str );
 }
@@ -4111,7 +4111,7 @@ static void AddOTLToSllk(struct sllk *sllk, OTLookup *otl, struct scriptlanglist
 	break;
 	if ( i==sllk->cnt ) {
 	    if ( sllk->cnt>=sllk->max )
-		sllk->lookups = grealloc(sllk->lookups,(sllk->max+=5)*sizeof(OTLookup *));
+		sllk->lookups = xrealloc(sllk->lookups,(sllk->max+=5)*sizeof(OTLookup *));
 	    sllk->lookups[sllk->cnt++] = otl;
 	    for ( l=0; l<sl->lang_cnt; ++l ) {
 		uint32 lang = l<MAX_LANG ? sl->langs[l] : sl->morelangs[l-MAX_LANG];
@@ -4120,7 +4120,7 @@ static void AddOTLToSllk(struct sllk *sllk, OTLookup *otl, struct scriptlanglist
 		break;
 		if ( j==sllk->lcnt ) {
 		    if ( sllk->lcnt>=sllk->lmax )
-			sllk->langs = grealloc(sllk->langs,(sllk->lmax+=sl->lang_cnt+MAX_LANG)*sizeof(uint32));
+			sllk->langs = xrealloc(sllk->langs,(sllk->lmax+=sl->lang_cnt+MAX_LANG)*sizeof(uint32));
 		    sllk->langs[sllk->lcnt++] = lang;
 		}
 	    }
@@ -4162,7 +4162,7 @@ static char *ComponentsFromPSTs(PST **psts,int pcnt) {
 	    break;
 	    if ( j==ncnt ) {
 		if ( ncnt>=nmax )
-		    names = grealloc(names,(nmax+=10)*sizeof(char *));
+		    names = xrealloc(names,(nmax+=10)*sizeof(char *));
 		names[ncnt++] = copy(start);
 	    }
 	    *pt = ch;
@@ -4219,7 +4219,7 @@ struct sllk *AddOTLToSllks( OTLookup *otl, struct sllk *sllk,
 	    break;
 	    if ( s==*_sllk_cnt ) {
 		if ( *_sllk_cnt>=*_sllk_max )
-		    sllk = grealloc(sllk,((*_sllk_max)+=10)*sizeof(struct sllk));
+		    sllk = xrealloc(sllk,((*_sllk_max)+=10)*sizeof(struct sllk));
 		memset(&sllk[*_sllk_cnt],0,sizeof(struct sllk));
 		sllk[(*_sllk_cnt)++].script = sl->script;
 	    }
@@ -4810,7 +4810,7 @@ return( ret );
 	/*  not on lookup invocations */
 	ch = *end; *end='\0';
 	if ( cnt>=max )
-	    parsed = grealloc(parsed,(max+=200)*sizeof(MatchStr));
+	    parsed = xrealloc(parsed,(max+=200)*sizeof(MatchStr));
 	memset(&parsed[cnt],'\0',sizeof(MatchStr));
 	parsed[cnt++].entity = copy(start);
 	*end = ch;
@@ -4866,11 +4866,11 @@ return( copy( _("A reverse contextual chaining lookup can only match one coverag
 	    else
 		flen += strlen(parsed[i].entity)+1;
 	}
-	rule->u.glyph.names = gcalloc(mlen+1,1);
+	rule->u.glyph.names = xcalloc(mlen+1,1);
 	if ( blen!=0 )
-	    rule->u.glyph.back = gcalloc(blen+1,1);
+	    rule->u.glyph.back = xcalloc(blen+1,1);
 	if ( flen!=0 )
-	    rule->u.glyph.fore = gcalloc(flen+1,1);
+	    rule->u.glyph.fore = xcalloc(flen+1,1);
 	for ( i=0; i<cnt; ++i ) {
 	    if ( i<first ) {
 		strcat(rule->u.glyph.back,parsed[i].entity);
@@ -4997,7 +4997,7 @@ return( copy( _("Bad FPST format")) );
 	    for ( ll=parsed[i].lookups; ll!=NULL; ll=ll->next )
 		++tot;
 	}
-	rule->lookups = gcalloc(tot,sizeof(struct seqlookup));
+	rule->lookups = xcalloc(tot,sizeof(struct seqlookup));
 	rule->lookup_cnt = tot;
 	tot = 0;
 	for ( i=first; i<=last; ++i ) {

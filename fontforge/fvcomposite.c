@@ -1658,7 +1658,7 @@ static void BCClearAndCopyBelow(BDFFont *bdf,int togid,int fromgid, int ymax) {
 static void BCAddReference( BDFChar *bc,BDFChar *rbc,int gid,int xoff,int yoff ) {
     BDFRefChar *bcref;
 
-    bcref = gcalloc( 1,sizeof( BDFRefChar ));
+    bcref = xcalloc( 1,sizeof( BDFRefChar ));
     bcref->bdfc = rbc; bcref->gid = gid;
     bcref->xoff = xoff; bcref->yoff = yoff;
     bcref->next = bc->refs; bc->refs = bcref;
@@ -2380,7 +2380,7 @@ static void BCMakeSpace(BDFFont *bdf, int gid, int width, int em) {
 	bc->ymax = 1;
 	bc->bytes_per_line = 1;
 	bc->width = rint(width*bdf->pixelsize/(real) em);
-	bc->bitmap = gcalloc(bc->bytes_per_line*(bc->ymax-bc->ymin+1),sizeof(char));
+	bc->bitmap = xcalloc(bc->bytes_per_line*(bc->ymax-bc->ymin+1),sizeof(char));
     }
 }
 

@@ -822,7 +822,7 @@ return( true );
 	}
 
 	DebuggerGetWatches(dv->dc,&n);
-	watches = gcalloc(n,sizeof(uint8));
+	watches = xcalloc(n,sizeof(uint8));
 
 	for ( ss = dv->cv->b.layerheads[dv->cv->b.drawmode]->splines; ss!=NULL; ss=ss->next ) {
 	    for ( sp=ss->first; ; ) {
@@ -1344,7 +1344,7 @@ return( DVChar(dv,event));
 	if ( i>=0 && exc!=NULL ) {
 	    watches = DebuggerGetWatchStores(dv->dc,&n);
 	    if ( watches==NULL ) {
-		watches = gcalloc(n,sizeof(uint8));
+		watches = xcalloc(n,sizeof(uint8));
 		DebuggerSetWatchStores(dv->dc,n,watches);
 	    }
 	    if ( i<n ) {
@@ -1434,7 +1434,7 @@ return( DVChar(dv,event));
 		    uint8 *watches;
 		    watches = DebuggerGetWatches(dv->dc,&n);
 		    if ( watches==NULL ) {
-			watches = gcalloc(n,sizeof(uint8));
+			watches = xcalloc(n,sizeof(uint8));
 			DebuggerSetWatches(dv->dc,n,watches);
 		    }
 		    if ( j<n ) {
@@ -1669,7 +1669,7 @@ return( DVChar(dv,event));
 	if ( i>=0 && exc!=NULL ) {
 	    watches = DebuggerGetWatchCvts(dv->dc,&n);
 	    if ( watches==NULL ) {
-		watches = gcalloc(n,sizeof(uint8));
+		watches = xcalloc(n,sizeof(uint8));
 		DebuggerSetWatchCvts(dv->dc,n,watches);
 	    }
 	    if ( i<n ) {
@@ -2091,7 +2091,7 @@ void CVDebugReInit(CharView *cv,int restart_debug,int dbg_fpgm) {
     } else if ( dv==NULL ) {
 	int sbsize = GDrawPointsToPixels(cv->gw,_GScrollBar_Width);
 	cv->show_ft_results = false;
-	cv->dv = dv = gcalloc(1,sizeof(DebugView));
+	cv->dv = dv = xcalloc(1,sizeof(DebugView));
 	dv->dwidth = 260;
 	dv->scalex = scalex;
 	dv->scaley = scaley;

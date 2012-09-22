@@ -187,8 +187,8 @@ static void gdef_markclasscheck(FILE *out,SplineFont *sf,OTLookup *otl) {
     if ( sf->mark_class_cnt==0 && sf->mark_set_cnt==0 )
 return;
 
-    needed = gcalloc(sf->mark_class_cnt,1);
-    setsneeded = gcalloc(sf->mark_set_cnt,1);
+    needed = xcalloc(sf->mark_class_cnt,1);
+    setsneeded = xcalloc(sf->mark_set_cnt,1);
     if ( otl!=NULL ) {
 	any = MarkNeeded(needed,setsneeded,otl);
     } else {
@@ -1072,7 +1072,7 @@ static void dump_anchors(FILE *out,SplineFont *sf,struct lookup_subtable *sub) {
 		    for ( ap=sc->anchor; ap!=NULL; ap=ap->next ) {
 			if ( ap->anchor==ac && ap->type==at_mark ) {
 			    if ( cnt>=max )
-				marks = grealloc(marks,(max+=20)*sizeof(struct amarks));
+				marks = xrealloc(marks,(max+=20)*sizeof(struct amarks));
 			    marks[cnt].sc = sc;
 			    marks[cnt].ap = ap;
 			    sc->ticked = false;
@@ -2763,7 +2763,7 @@ static int fea_AddGlyphs(char **_glyphs, int *_max, int cnt, char *contents ) {
 	cnt = *_max = len;
     } else {
 	if ( *_max-cnt <= len+1 )
-	    glyphs = grealloc(glyphs,(*_max+=200+len+1)+1);
+	    glyphs = xrealloc(glyphs,(*_max+=200+len+1)+1);
 	glyphs[cnt++] = ' ';
 	strcpy(glyphs+cnt,contents);
 	cnt += strlen(contents);
@@ -3026,7 +3026,7 @@ return( tok->gdef_mark[is_set][i].index << 8 );
     if ( glyphs==NULL )
 return( 0 );
     if ( tok->gm_cnt[is_set]>=tok->gm_max[is_set] ) {
-	tok->gdef_mark[is_set] = grealloc(tok->gdef_mark[is_set],(tok->gm_max[is_set]+=30)*sizeof(struct gdef_mark));
+	tok->gdef_mark[is_set] = xrealloc(tok->gdef_mark[is_set],(tok->gm_max[is_set]+=30)*sizeof(struct gdef_mark));
 	if ( tok->gm_pos[is_set]==0 ) {
 	    memset(&tok->gdef_mark[is_set][0],0,sizeof(tok->gdef_mark[is_set][0]));
 	    if ( is_set )
@@ -3176,7 +3176,7 @@ return;
     else if ( sl->lang_cnt<MAX_LANG )
 	sl->langs[sl->lang_cnt++] = lang;
     else {
-	sl->morelangs = grealloc(sl->morelangs,(sl->lang_cnt+1)*sizeof(uint32));
+	sl->morelangs = xrealloc(sl->morelangs,(sl->lang_cnt+1)*sizeof(uint32));
 	sl->morelangs[sl->lang_cnt++ - MAX_LANG] = lang;
     }
     fea_end_statement(tok);
@@ -3572,7 +3572,7 @@ static void fea_ParseBroket(struct parseState *tok,struct markedglyphs *last) {
 	    last->lookupname = copy(tok->tokbuf);
 	fea_TokenMustBe(tok,tk_char,'>');
     } else if ( tok->type==tk_anchor ) {
-	last->anchors = grealloc(last->anchors,(++last->ap_cnt)*sizeof(AnchorPoint *));
+	last->anchors = xrealloc(last->anchors,(++last->ap_cnt)*sizeof(AnchorPoint *));
 	last->anchors[last->ap_cnt-1] = fea_ParseAnchorClosed(tok);
     } else if ( tok->type==tk_NULL ) {
 	/* NULL value record. Adobe documents it and doesn't implement it */
@@ -3639,7 +3639,7 @@ return( NULL );
 return( NULL );
     }
     fea_TokenMustBe(tok,tk_anchor,' ');
-    cur->anchors = gcalloc(cur->ap_cnt=2,sizeof(AnchorPoint *));
+    cur->anchors = xcalloc(cur->ap_cnt=2,sizeof(AnchorPoint *));
     cur->anchors[0] = fea_ParseAnchorClosed(tok);
     fea_TokenMustBe(tok,tk_char,'<');
     fea_TokenMustBe(tok,tk_anchor,' ');
@@ -3689,10 +3689,10 @@ return( NULL );
 return( NULL );
     }
     apm_max = 5;
-    cur->apmark = gcalloc(apm_max,sizeof(struct apmark));
+    cur->apmark = xcalloc(apm_max,sizeof(struct apmark));
     while ( tok->type==tk_char && tok->tokbuf[0]=='<' ) {
 	if ( cur->apm_cnt>=apm_max )
-	    cur->apmark = grealloc(cur->apmark,(apm_max+=5)*sizeof(struct apmark));
+	    cur->apmark = xrealloc(cur->apmark,(apm_max+=5)*sizeof(struct apmark));
 	fea_TokenMustBe(tok,tk_anchor,' ');
 	cur->apmark[cur->apm_cnt].ap = fea_ParseAnchorClosed(tok);
 	fea_TokenMustBe(tok,tk_mark,' ');
@@ -3752,17 +3752,17 @@ return( NULL );
 return( NULL );
     }
     lc_max = 8;
-    cur->ligcomp = gcalloc(lc_max,sizeof(struct ligcomponent));
+    cur->ligcomp = xcalloc(lc_max,sizeof(struct ligcomponent));
     while (true) {
 	if ( cur->lc_cnt>=lc_max )
-	    cur->ligcomp = grealloc(cur->ligcomp,(lc_max+=5)*sizeof(struct ligcomponent));
+	    cur->ligcomp = xrealloc(cur->ligcomp,(lc_max+=5)*sizeof(struct ligcomponent));
 	lc = &cur->ligcomp[cur->lc_cnt++];
 	apm_max = 5;
 	lc->apm_cnt = 0;
-	lc->apmark = gcalloc(apm_max,sizeof(struct apmark));
+	lc->apmark = xcalloc(apm_max,sizeof(struct apmark));
 	while ( tok->type==tk_char && tok->tokbuf[0]=='<' ) {
 	    if ( lc->apm_cnt>=apm_max )
-		lc->apmark = grealloc(lc->apmark,(apm_max+=5)*sizeof(struct apmark));
+		lc->apmark = xrealloc(lc->apmark,(apm_max+=5)*sizeof(struct apmark));
 	    fea_TokenMustBe(tok,tk_anchor,' ');
 	    lc->apmark[lc->apm_cnt].ap = fea_ParseAnchorClosed(tok);
 	    /* This isn't documented, but Adobe gives an example of an */
@@ -4394,13 +4394,13 @@ static FPST *fea_markedglyphs_to_fpst(struct parseState *tok,struct markedglyphs
     fpst->type = is_reverse? pst_reversesub : is_pos ? pst_chainpos : pst_chainsub;
     fpst->format = is_reverse ? pst_reversecoverage : all_single ? pst_glyphs : pst_coverage;
     fpst->rule_cnt = 1;
-    fpst->rules = r = gcalloc(1,sizeof(struct fpst_rule));
+    fpst->rules = r = xcalloc(1,sizeof(struct fpst_rule));
     if ( is_ignore )
 	mmax = 0;
     if ( !is_pos && lookup_cnt==0 && mmax>1 )
 	mmax = 1;
     r->lookup_cnt = mmax;
-    r->lookups = gcalloc(mmax,sizeof(struct seqlookup));
+    r->lookups = xcalloc(mmax,sizeof(struct seqlookup));
     for ( i=0; i<mmax; ++i )
 	r->lookups[i].seq = i;
 
@@ -5073,7 +5073,7 @@ static struct nameid *fea_ParseNameId(struct parseState *tok,int strid) {
 	    if ( nm!=NULL ) {
 		if ( pt-start+3>=max ) {
 		    int off = pt-start;
-		    start = grealloc(start,(max+=100)+1);
+		    start = xrealloc(start,(max+=100)+1);
 		    pt = start+off;
 		}
 		pt = utf8_idpb(pt,value);
@@ -5558,7 +5558,7 @@ static void fea_ParseGDEFTable(struct parseState *tok) {
 		    fea_ParseCaret(tok);
 		else
 	    break;
-		carets = grealloc(carets,(max+=10)*sizeof(int16));
+		carets = xrealloc(carets,(max+=10)*sizeof(int16));
 		carets[len++] = tok->value;
 	    }
 	    if ( tok->type!=tk_char || tok->tokbuf[0]!=';' ) {
@@ -5681,7 +5681,7 @@ static void fea_ParseBaseTable(struct parseState *tok) {
 			active->scripts = cur;
 		    last = cur;
 		    cur->script = script_tag;
-		    cur->baseline_pos = gcalloc(cnt,sizeof(int16));
+		    cur->baseline_pos = xcalloc(cnt,sizeof(int16));
 		    memcpy(cur->baseline_pos,poses,i*sizeof(int16));
 		    for ( i=0; i<active->baseline_cnt; ++i ) {
 			if ( base_tag == active->baseline_tags[i] ) {
@@ -6161,8 +6161,8 @@ static void fea_ApplyLookupListMark2(struct parseState *tok,
 		if ( i==ac_cnt ) {
 		    ++ac_cnt;
 		    if ( ac_cnt>=ac_max ) {
-			classes = grealloc(classes,(ac_max+=10)*sizeof(struct gpos_mark *));
-			acs = grealloc(acs,ac_max*sizeof(AnchorClass *));
+			classes = xrealloc(classes,(ac_max+=10)*sizeof(struct gpos_mark *));
+			acs = xrealloc(acs,ac_max*sizeof(AnchorClass *));
 		    }
 		    classes[i] = lookup_data->mclass;
 		    acs[i] = (AnchorClass *) xzalloc(sizeof (AnchorClass));
@@ -6276,7 +6276,7 @@ static void fea_canonicalClassSet(struct class_set *set) {
         for ( j=i+1; j < set->cnt; ++j ) {
             if ( fea_classesIntersect(set->classes[i],set->classes[j]) ) {
                 if ( set->cnt>=set->max )
-                    set->classes = grealloc(set->classes,(set->max+=20)*sizeof(char *));
+                    set->classes = xrealloc(set->classes,(set->max+=20)*sizeof(char *));
                 set->classes[set->cnt++] = fea_classesSplit(set->classes[i],set->classes[j]);
             }
         }
@@ -6300,7 +6300,7 @@ static void KCFillDevTab(KernClass *kc,int index,DeviceTable *dt) {
     if ( dt==NULL || dt->corrections == NULL )
 return;
     if ( kc->adjusts == NULL )
-	kc->adjusts = gcalloc(kc->first_cnt*kc->second_cnt,sizeof(DeviceTable));
+	kc->adjusts = xcalloc(kc->first_cnt*kc->second_cnt,sizeof(DeviceTable));
     kc->adjusts[index] = *dt;
     kc->adjusts[index].corrections = galloc(dt->last_pixel_size-dt->first_pixel_size+1);
     memcpy(kc->adjusts[index].corrections,dt->corrections,dt->last_pixel_size-dt->first_pixel_size+1);
@@ -6485,8 +6485,8 @@ static void fea_ApplyLookupListPair(struct parseState *tok,
 	    for ( i=0; i<rights.cnt; ++i )
 		kc->seconds[i+1] = rights.classes[i];
 	    kc->subtable = sub;
-	    kc->offsets = gcalloc(kc->first_cnt*kc->second_cnt,sizeof(int16));
-	    kc->adjusts = gcalloc(kc->first_cnt*kc->second_cnt,sizeof(DeviceTable));
+	    kc->offsets = xcalloc(kc->first_cnt*kc->second_cnt,sizeof(int16));
+	    kc->adjusts = xcalloc(kc->first_cnt*kc->second_cnt,sizeof(DeviceTable));
 	    fea_fillKernClass(kc,first);
 	    if ( sub->vertical_kerning ) {
 		kc->next = tok->sf->vkerns;
@@ -6996,8 +6996,8 @@ static void fea_NameLookups(struct parseState *tok) {
     /* attach any new gdef mark classes */
     if ( tok->gm_pos[0]>sf->mark_class_cnt ) {
 	int i;
-	sf->mark_classes = grealloc(sf->mark_classes,tok->gm_pos[0]*sizeof(char *));
-	sf->mark_class_names = grealloc(sf->mark_class_names,tok->gm_pos[0]*sizeof(char *));
+	sf->mark_classes = xrealloc(sf->mark_classes,tok->gm_pos[0]*sizeof(char *));
+	sf->mark_class_names = xrealloc(sf->mark_class_names,tok->gm_pos[0]*sizeof(char *));
 	for ( i=0; i<tok->gm_cnt[0]; ++i ) if ( tok->gdef_mark[0][i].index>=sf->mark_class_cnt ) {
 	    int index = tok->gdef_mark[0][i].index;
 	    sf->mark_class_names[index] = copy(tok->gdef_mark[0][i].name+1);
@@ -7007,8 +7007,8 @@ static void fea_NameLookups(struct parseState *tok) {
     }
     if ( tok->gm_pos[1]>sf->mark_set_cnt ) {
 	int i;
-	sf->mark_sets = grealloc(sf->mark_sets,tok->gm_pos[1]*sizeof(char *));
-	sf->mark_set_names = grealloc(sf->mark_set_names,tok->gm_pos[1]*sizeof(char *));
+	sf->mark_sets = xrealloc(sf->mark_sets,tok->gm_pos[1]*sizeof(char *));
+	sf->mark_set_names = xrealloc(sf->mark_set_names,tok->gm_pos[1]*sizeof(char *));
 	for ( i=0; i<tok->gm_cnt[1]; ++i ) if ( tok->gdef_mark[1][i].index>=sf->mark_set_cnt ) {
 	    int index = tok->gdef_mark[1][i].index;
 	    sf->mark_set_names[index] = copy(tok->gdef_mark[1][i].name+1);

@@ -673,7 +673,7 @@ static void PfEd_Layer(SplineFont *sf, struct glyphinfo *gi, int layer, int dosp
 	}
 
     offset = ftell(layr);
-    glyph_data_offset_location = gcalloc(gi->gcnt,sizeof(uint32));
+    glyph_data_offset_location = xcalloc(gi->gcnt,sizeof(uint32));
     for ( j=0; j<4; ++j ) {
 	cnt = 0;
 	for ( i=0; i<gi->gcnt; ++i ) if ( (gid=gi->bygid[i])!=-1 && (sc=sf->glyphs[gid])!=NULL ) {
@@ -742,7 +742,7 @@ static void PfEd_Layers(SplineFont *sf, struct PfEd_subtabs *pfed,
     SplineChar *sc;
     FILE *layr;
 
-    otherlayers = gcalloc(sf->layer_cnt,sizeof(uint8));
+    otherlayers = xcalloc(sf->layer_cnt,sizeof(uint8));
 
     /* We don't need to check in bygid order. We just want to know existance */
     /* We don't check for refs because a reference to an empty glyph is empty too */
@@ -944,7 +944,7 @@ return( NULL );
 	pt = utf8_idpb(pt,uch);
     }
     *pt++ = 0;
-return( grealloc(str,pt-str) );
+return( xrealloc(str,pt-str) );
 }
 
 static char *pfed_read_utf8_len(FILE *ttf,uint32 offset,int len) {
@@ -1263,7 +1263,7 @@ static void pfed_read_spiro_contour(FILE *ttf,SplineSet *ss,
     break;
 	}
 	if ( ss->spiro_cnt>=ss->spiro_max )
-	    ss->spiros = grealloc(ss->spiros,(ss->spiro_max+=10)*sizeof(spiro_cp));
+	    ss->spiros = xrealloc(ss->spiros,(ss->spiro_max+=10)*sizeof(spiro_cp));
 	ss->spiros[ss->spiro_cnt].ty = ch;
 	if ( ch!=SPIRO_END ) {
 	    ss->spiros[ss->spiro_cnt].x = getlong(ttf)/256.0;
@@ -1280,7 +1280,7 @@ static void pfed_read_spiro_contour(FILE *ttf,SplineSet *ss,
 	if ( ss->spiros[ss->spiro_cnt-1].ty==SPIRO_CLOSE_CONTOUR )
 	    ss->spiros[ss->spiro_cnt-1].ty = SPIRO_G4;
 	if ( ss->spiro_cnt>=ss->spiro_max )
-	    ss->spiros = grealloc(ss->spiros,(ss->spiro_max+=2)*sizeof(spiro_cp));
+	    ss->spiros = xrealloc(ss->spiros,(ss->spiro_max+=2)*sizeof(spiro_cp));
 	ss->spiros[ss->spiro_cnt].ty = SPIRO_END;
 	ss->spiros[ss->spiro_cnt].x = 0;
 	ss->spiros[ss->spiro_cnt].y = 0;
@@ -1420,7 +1420,7 @@ static void pfed_redo_refs(SplineChar *sc,int layer) {
 
 static void pfed_read_layer(FILE *ttf,struct ttfinfo *info,int layer,int type, uint32 base,
 	uint32 start,int version) {
-    uint32 *loca = gcalloc(info->glyph_cnt,sizeof(uint32));
+    uint32 *loca = xcalloc(info->glyph_cnt,sizeof(uint32));
     int i,j;
     SplineChar *sc;
     int rcnt;
@@ -1496,7 +1496,7 @@ return;			/* Bad version number */
 
     if ( non_spiro_cnt!=0 ) {
 	info->layer_cnt = non_spiro_cnt+1;
-	info->layers = gcalloc(info->layer_cnt+1,sizeof(LayerInfo));
+	info->layers = xcalloc(info->layer_cnt+1,sizeof(LayerInfo));
 	info->layers[ly_back].background = true;
 	info->layers[ly_fore].order2 = info->to_order2;
 	info->layers[ly_fore].background = false;
@@ -1519,7 +1519,7 @@ return;			/* Bad version number */
 	}
 	if ( info->layer_cnt!=2 ) {
 	    for ( gid = 0; gid<info->glyph_cnt; ++gid ) if ((sc=info->chars[gid])!=NULL ) {
-		sc->layers = grealloc(sc->layers,info->layer_cnt*sizeof(Layer));
+		sc->layers = xrealloc(sc->layers,info->layer_cnt*sizeof(Layer));
 		memset(sc->layers+2,0,(info->layer_cnt-2)*sizeof(Layer));
 		sc->layer_cnt = info->layer_cnt;
 	    }
@@ -2130,7 +2130,7 @@ static int CheckForNewlines(BDFFont *bdf,int k) {
 return( k );
 
     bdf->prop_cnt += cnt;
-    bdf->props = grealloc(bdf->props, bdf->prop_cnt*sizeof( BDFProperties ));
+    bdf->props = xrealloc(bdf->props, bdf->prop_cnt*sizeof( BDFProperties ));
 
     pt = strchr(bdf->props[k].u.atom,'\n');
     *pt = '\0'; ++pt;

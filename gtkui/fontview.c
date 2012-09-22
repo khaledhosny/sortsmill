@@ -1886,7 +1886,7 @@ static void FVShowSubFont(FontView *fv,SplineFont *new) {
 	EncMapFree(fv->b.map);
 	fv->b.map = fv->b.normal;
 	fv->b.normal = NULL;
-	fv->b.selected = grealloc(fv->b.selected,fv->b.map->enccount);
+	fv->b.selected = xrealloc(fv->b.selected,fv->b.map->enccount);
 	memset(fv->b.selected,0,fv->b.map->enccount);
     }
     CIDSetEncMap((FontViewBase *) fv,new);
@@ -2607,7 +2607,7 @@ return;
     sf->display_antialias = fv->b.sf->display_antialias;
     sf->display_bbsized = fv->b.sf->display_bbsized;
     sf->display_size = fv->b.sf->display_size;
-    sf->private = gcalloc(1,sizeof(struct psdict));
+    sf->private = xcalloc(1,sizeof(struct psdict));
     PSDictChangeEntry(sf->private,"lenIV","1");		/* It's 4 by default, in CIDs the convention seems to be 1 */
     FVInsertInCID((FontViewBase *) fv,sf);
 }
@@ -2726,7 +2726,7 @@ static void FontViewMenu_Reencode(GtkMenuItem *menuitem, gpointer user_data) {
 	fv->b.map->enc = &custom;
     else {
 	map = EncMapFromEncoding(fv->b.sf,enc);
-	fv->b.selected = grealloc(fv->b.selected,map->enccount);
+	fv->b.selected = xrealloc(fv->b.selected,map->enccount);
 	memset(fv->b.selected,0,map->enccount);
 	EncMapFree(fv->b.map);
 	fv->b.map = map;
@@ -2762,7 +2762,7 @@ return;
     enc = FindOrMakeEncoding(user_data);
     SFForceEncoding(fv->b.sf,fv->b.map,enc);
     if ( oldcnt < fv->b.map->enccount ) {
-	fv->b.selected = grealloc(fv->b.selected,fv->b.map->enccount);
+	fv->b.selected = xrealloc(fv->b.selected,fv->b.map->enccount);
 	memset(fv->b.selected+oldcnt,0,fv->b.map->enccount-oldcnt);
     }
     if ( fv->b.normal!=NULL ) {
@@ -3093,9 +3093,9 @@ return;
 		for ( fvs=(FontView *) fv->b.sf->fv; fvs!=NULL; fvs=(FontView *) fvs->b.nextsame ) {
 		    EncMap *map = fvs->b.map;
 		    if ( map->enccount+1>=map->encmax )
-			map->map = grealloc(map->map,(map->encmax += 20)*sizeof(int));
+			map->map = xrealloc(map->map,(map->encmax += 20)*sizeof(int));
 		    map->map[map->enccount] = -1;
-		    fvs->b.selected = grealloc(fvs->b.selected,(map->enccount+1));
+		    fvs->b.selected = xrealloc(fvs->b.selected,(map->enccount+1));
 		    memset(fvs->b.selected+map->enccount,0,1);
 		    ++map->enccount;
 		    if ( sc==NULL ) {
@@ -5216,7 +5216,7 @@ static void FontViewOpenKids(FontView *fv) {
 }
 
 static FontView *__FontViewCreate(SplineFont *sf) {
-    FontView *fv = gcalloc(1,sizeof(FontView));
+    FontView *fv = xcalloc(1,sizeof(FontView));
     int i;
     int ps = sf->display_size<0 ? -sf->display_size :
 	     sf->display_size==0 ? default_fv_font_size : sf->display_size;
@@ -5260,7 +5260,7 @@ static FontView *__FontViewCreate(SplineFont *sf) {
 	if ( fv->b.nextsame==NULL ) EncMapFree(sf->map);
 	fv->b.map = EncMap1to1(sf->glyphcnt);
     }
-    fv->b.selected = gcalloc(fv->b.map->enccount,sizeof(char));
+    fv->b.selected = xcalloc(fv->b.map->enccount,sizeof(char));
     fv->user_requested_magnify = -1;
     fv->magnify = (ps<=9)? 3 : (ps<20) ? 2 : 1;
     fv->cbw = (ps*fv->magnify)+1;
@@ -5295,7 +5295,7 @@ static FontView *FontView_Create(SplineFont *sf, int hide) {
     if ( !done ) { FontViewInit(); done=true;}
 
     fv->gw = create_FontView();
-    fv->fontset = gcalloc(_uni_fontmax,sizeof(PangoFont *));
+    fv->fontset = xcalloc(_uni_fontmax,sizeof(PangoFont *));
     g_object_set_data (G_OBJECT (fv->gw), "ffdata", fv );
     fv->v = lookup_widget( fv->gw,"view" );
     fv->status = lookup_widget( fv->gw,"status" );

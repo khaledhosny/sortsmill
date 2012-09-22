@@ -216,7 +216,7 @@ static GDirEntry *parsedosdir(char *line, GDirEntry *last, int tzdiff) {
     struct tm when;
     char *pt, *end;
 
-    cur = gcalloc(1,sizeof(GDirEntry));
+    cur = xcalloc(1,sizeof(GDirEntry));
     cur->hasdir = 1;
     cur->hasexe = 0;
     cur->haslnk = 0;
@@ -280,7 +280,7 @@ drwxr-xr-x   7 1            512 Jul 19 22:12 Apple_Support_Area
     if ( strncmp(line,"total ",6)==0 && strtol(line+6,&end,10)>=0 && *end=='\0' )
 return( last );
 
-    cur = gcalloc(1,sizeof(GDirEntry));
+    cur = xcalloc(1,sizeof(GDirEntry));
     cur->hasdir = 1;
     cur->hasexe = 1;
     cur->haslnk = 1;
@@ -369,7 +369,7 @@ static GDirEntry *parseunix_Fdir(char *line, GDirEntry *last, int tzdiff) {
     GDirEntry *cur;
     char *pt;
 
-    cur = gcalloc(1,sizeof(GDirEntry));
+    cur = xcalloc(1,sizeof(GDirEntry));
     cur->hasdir = 1;
     cur->hasexe = 1;
     cur->haslnk = 1;
@@ -616,14 +616,14 @@ void *GIO_dispatch(GIOControl *gc) {
 	set_status(gc,"Bad Hostname: ",host);
 	(stdfuncs->PostError)(gc);
     } else {
-	ftp = gcalloc(1,sizeof(struct ftpconnectiondata));
+	ftp = xcalloc(1,sizeof(struct ftpconnectiondata));
 	gc->connectiondata = (struct gio_connectiondata *) ftp;
 	pthread_mutex_lock(&stdfuncs->hostacccess_mutex);
 	for ( had=(struct ftphostaccessdata *) (addr->had); had!=NULL &&
 		(had->port!=port || had->protocol_index!=ftp_protocol_index);
 		had=had->next );
 	if ( had==NULL ) {
-	    had = gcalloc(1,sizeof(struct ftphostaccessdata));
+	    had = xcalloc(1,sizeof(struct ftphostaccessdata));
 	    had->port = port;
 	    had->protocol_index = ftp_protocol_index;
 	    had->tzoff = -9999;

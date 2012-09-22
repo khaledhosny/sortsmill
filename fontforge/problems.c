@@ -2196,7 +2196,7 @@ static void mark_to_replace(struct problems *p,struct mgask_data *d, char *rpl) 
 	if ( p->rpl_max == 0 )
 	    p->mg = galloc((p->rpl_max = 30)*sizeof(struct mgrpl));
 	else
-	    p->mg = grealloc(p->mg,(p->rpl_max += 30)*sizeof(struct mgrpl));
+	    p->mg = xrealloc(p->mg,(p->rpl_max += 30)*sizeof(struct mgrpl));
     }
     ch = *d->end; *d->end = '\0';
     p->mg[p->rpl_cnt].search = copy( d->start );

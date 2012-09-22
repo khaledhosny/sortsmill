@@ -82,7 +82,7 @@ GTextInfo *BuildFontList(FontView *except) {
 
     for ( fv=fv_list; fv!=NULL; fv = (FontView *) (fv->b.next) )
 	++cnt;
-    tf = gcalloc(cnt+3,sizeof(GTextInfo));
+    tf = xcalloc(cnt+3,sizeof(GTextInfo));
     for ( fv=fv_list, cnt=0; fv!=NULL; fv = (FontView *) (fv->b.next) ) if ( fv!=except ) {
 	tf[cnt].fg = tf[cnt].bg = COLOR_DEFAULT;
 	tf[cnt].text = (unichar_t *) fv->b.sf->fontname;

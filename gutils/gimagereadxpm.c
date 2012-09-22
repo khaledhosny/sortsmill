@@ -158,7 +158,7 @@ static void freetab(union hash *tab, int nchars) {
 	    if ( tab[i].table!=NULL )
 		freetab(tab[i].table,nchars-1);
     }
-    gfree(tab);
+    free(tab);
 }
 	
 static int fillupclut(Color *clut, union hash *tab,int index,int nchars) {

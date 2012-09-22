@@ -153,13 +153,13 @@ static GTextInfo **KCLookupSubtableArray(SplineFont *sf,int isv) {
     else if ( sf->mm!=NULL ) sf = sf->mm->normal;
 
     for ( kc=head, cnt=0; kc!=NULL; kc=kc->next, ++cnt );
-    ti = gcalloc(cnt+1,sizeof(GTextInfo*));
+    ti = xcalloc(cnt+1,sizeof(GTextInfo*));
     for ( kc=head, cnt=0; kc!=NULL; kc=kc->next, ++cnt ) {
-	ti[cnt] = gcalloc(1,sizeof(GTextInfo));
+	ti[cnt] = xcalloc(1,sizeof(GTextInfo));
 	ti[cnt]->fg = ti[cnt]->bg = COLOR_DEFAULT;
 	ti[cnt]->text = utf82u_copy(kc->subtable->subtable_name);
     }
-    ti[cnt] = gcalloc(1,sizeof(GTextInfo));
+    ti[cnt] = xcalloc(1,sizeof(GTextInfo));
 return( ti );
 }
 
@@ -172,7 +172,7 @@ static GTextInfo *KCLookupSubtableList(SplineFont *sf,int isv) {
     else if ( sf->mm!=NULL ) sf = sf->mm->normal;
 
     for ( kc=head, cnt=0; kc!=NULL; kc=kc->next, ++cnt );
-    ti = gcalloc(cnt+1,sizeof(GTextInfo));
+    ti = xcalloc(cnt+1,sizeof(GTextInfo));
     for ( kc=head, cnt=0; kc!=NULL; kc=kc->next, ++cnt )
 	ti[cnt].text = utf82u_copy(kc->subtable->subtable_name);
 return( ti );
@@ -827,12 +827,12 @@ static void KCD_SetDevTab(KernClassDlg *kcd) {
 	char buffer[20];
 	GTextInfo **ti = galloc((len+1)*sizeof(GTextInfo *));
 	for ( i=0; i<len; ++i ) {
-	    ti[i] = gcalloc(1,sizeof(GTextInfo));
+	    ti[i] = xcalloc(1,sizeof(GTextInfo));
 	    sprintf( buffer, "%d", i+kcd->active_adjust.first_pixel_size);
 	    ti[i]->text = uc_copy(buffer);
 	    ti[i]->fg = ti[i]->bg = COLOR_DEFAULT;
 	}
-	ti[i] = gcalloc(1,sizeof(GTextInfo));
+	ti[i] = xcalloc(1,sizeof(GTextInfo));
 	GGadgetSetList(GWidgetGetControl(kcd->gw,CID_DisplaySize),ti,false);
 	if ( kcd->pixelsize>=kcd->active_adjust.first_pixel_size &&
 		kcd->pixelsize<=kcd->active_adjust.last_pixel_size ) {
@@ -948,14 +948,14 @@ static void KPD_BuildKernList(KernClassDlg *kcd) {
     if ( kcd->scf!=NULL )
 	for ( kp=kcd->isv?kcd->scf->vkerns:kcd->scf->kerns, len=0; kp!=NULL; kp=kp->next )
 	    ++len;
-    ti = gcalloc(len+1,sizeof(GTextInfo*));
+    ti = xcalloc(len+1,sizeof(GTextInfo*));
     if ( kcd->scf!=NULL )
 	for ( kp=kcd->isv?kcd->scf->vkerns:kcd->scf->kerns, len=0; kp!=NULL; kp=kp->next, ++len ) {
-	    ti[len] = gcalloc(1,sizeof(GTextInfo));
+	    ti[len] = xcalloc(1,sizeof(GTextInfo));
 	    ti[len]->fg = ti[len]->bg = COLOR_DEFAULT;
 	    ti[len]->text = uc_copy(kp->sc->name);
 	}
-    ti[len] = gcalloc(1,sizeof(GTextInfo));
+    ti[len] = xcalloc(1,sizeof(GTextInfo));
     GGadgetSetList(GWidgetGetControl(kcd->gw,CID_Second),ti,false);
 }
 
@@ -999,7 +999,7 @@ static GTextInfo **TiNamesFromClass(GGadget *list,int class_index) {
 	    break;
 		for ( end = pt; *end!='\0' && *end!=' '; ++end );
 		if ( k==1 ) {
-		    ti[i] = gcalloc(1,sizeof(GTextInfo));
+		    ti[i] = xcalloc(1,sizeof(GTextInfo));
 		    ti[i]->text = utf82u_copyn(pt,end-pt);
 		    ti[i]->bg = ti[i]->fg = COLOR_DEFAULT;
 		}
@@ -1012,7 +1012,7 @@ static GTextInfo **TiNamesFromClass(GGadget *list,int class_index) {
     }
     if ( i>0 )
 	ti[0]->selected = true;
-    ti[i] = gcalloc(1,sizeof(GTextInfo));
+    ti[i] = xcalloc(1,sizeof(GTextInfo));
 return( ti );
 }
 
@@ -2011,10 +2011,10 @@ static void KCD_FinishEdit(GGadget *g,int r, int c, int wasnew) {
     if ( wasnew ) {
 	autokern = GGadgetIsChecked(GWidgetGetControl(kcd->gw,CID_Autokern));
 	if ( is_first ) {
-	    kcd->offsets = grealloc(kcd->offsets,(kcd->first_cnt+1)*kcd->second_cnt*sizeof(int16));
+	    kcd->offsets = xrealloc(kcd->offsets,(kcd->first_cnt+1)*kcd->second_cnt*sizeof(int16));
 	    memset(kcd->offsets+kcd->first_cnt*kcd->second_cnt,
 		    0, kcd->second_cnt*sizeof(int16));
-	    kcd->adjusts = grealloc(kcd->adjusts,(kcd->first_cnt+1)*kcd->second_cnt*sizeof(DeviceTable));
+	    kcd->adjusts = xrealloc(kcd->adjusts,(kcd->first_cnt+1)*kcd->second_cnt*sizeof(DeviceTable));
 	    memset(kcd->adjusts+kcd->first_cnt*kcd->second_cnt,
 		    0, kcd->second_cnt*sizeof(DeviceTable));
 	    ++kcd->first_cnt;
@@ -2202,7 +2202,7 @@ static int AddClassList(GGadgetCreateData *gcd, GTextInfo *label, int k, int off
 	cnt=1;
 	classes = empty;
     }
-    md = gcalloc(cnt+10,sizeof(struct matrix_data));
+    md = xcalloc(cnt+10,sizeof(struct matrix_data));
     for ( i=0; i<cnt; ++i ) {
 	if ( i==0 && classes[i]==NULL ) {
 	    md[i+0].u.md_str = copy( _("{Everything Else}") );
@@ -2531,7 +2531,7 @@ void KernClassD(KernClass *kc, SplineFont *sf, int layer, int isv) {
 	GDrawRaise(kcd->gw);
 return;
     }
-    kcd = gcalloc(1,sizeof(KernClassDlg));
+    kcd = xcalloc(1,sizeof(KernClassDlg));
     kcd->orig = kc;
     kcd->subtable = kc->subtable;
     kcd->sf = sf;
@@ -2906,7 +2906,7 @@ static int KCL_Delete(GGadget *g, GEvent *e) {
 	kcld = GDrawGetUserData(GGadgetGetWindow(g));
 	list = GWidgetGetControl(kcld->gw,CID_List);
 	old = GGadgetGetList(list,&len);
-	new = gcalloc(len+1,sizeof(GTextInfo *));
+	new = xcalloc(len+1,sizeof(GTextInfo *));
 	p = NULL; kc = kcld->isv ? kcld->sf->vkerns : kcld->sf->kerns;
 	for ( i=j=0; i<len; ++i, kc = n ) {
 	    n = kc->next;
@@ -2930,7 +2930,7 @@ static int KCL_Delete(GGadget *g, GEvent *e) {
 		KernClassListFree(kc);
 	    }
 	}
-	new[j] = gcalloc(1,sizeof(GTextInfo));
+	new[j] = xcalloc(1,sizeof(GTextInfo));
 	GGadgetSetList(list,new,false);
 	GGadgetSetEnabled(GWidgetGetControl(GGadgetGetWindow(g),CID_Delete),false);
 	GGadgetSetEnabled(GWidgetGetControl(GGadgetGetWindow(g),CID_Edit),false);
@@ -3018,7 +3018,7 @@ return;
 return;
     }
 
-    kcld = gcalloc(1,sizeof(KernClassListDlg));
+    kcld = xcalloc(1,sizeof(KernClassListDlg));
     kcld->sf = sf;
     kcld->layer = layer;
     kcld->isv = isv;

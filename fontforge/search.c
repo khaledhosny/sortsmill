@@ -1176,8 +1176,8 @@ SearchData *SDFillup(SearchData *sv, FontViewBase *fv) {
     sv->sc_srch.orig_pos = 0; sv->sc_srch.unicodeenc = -1; sv->sc_srch.name = "Search";
     sv->sc_rpl.orig_pos = 1; sv->sc_rpl.unicodeenc = -1; sv->sc_rpl.name = "Replace";
     sv->sc_srch.layer_cnt = sv->sc_rpl.layer_cnt = 2;
-    sv->sc_srch.layers = gcalloc(2,sizeof(Layer));
-    sv->sc_rpl.layers = gcalloc(2,sizeof(Layer));
+    sv->sc_srch.layers = xcalloc(2,sizeof(Layer));
+    sv->sc_rpl.layers = xcalloc(2,sizeof(Layer));
     LayerDefault(&sv->sc_srch.layers[0]);
     LayerDefault(&sv->sc_srch.layers[1]);
     LayerDefault(&sv->sc_rpl.layers[0]);
@@ -1245,7 +1245,7 @@ void FVBReplaceOutlineWithReference( FontViewBase *fv, double fudge ) {
     int i, j, selcnt = 0, gid;
     SplineChar *checksc;
 
-    sv = SDFillup( gcalloc(1,sizeof(SearchData)), fv);
+    sv = SDFillup( xcalloc(1,sizeof(SearchData)), fv);
     sv->fudge_percent = .001;
     sv->fudge = fudge;
     sv->replaceall = true;
@@ -1253,7 +1253,7 @@ void FVBReplaceOutlineWithReference( FontViewBase *fv, double fudge ) {
 
     selected = galloc(fv->map->enccount);
     memcpy(selected,fv->selected,fv->map->enccount);
-    changed = gcalloc(fv->map->enccount,1);
+    changed = xcalloc(fv->map->enccount,1);
 
     selcnt = 0;
     for ( i=0; i<fv->map->enccount; ++i ) if ( selected[i] && (gid=fv->map->map[i])!=-1 &&
@@ -1295,7 +1295,7 @@ int FVReplaceAll( FontViewBase *fv, SplineSet *find, SplineSet *rpl, double fudg
     SearchData *sv;
     int ret;
 
-    sv = SDFillup( gcalloc(1,sizeof(SearchData)), fv);
+    sv = SDFillup( xcalloc(1,sizeof(SearchData)), fv);
     sv->fudge_percent = .001;
     sv->fudge = fudge;
     sv->replaceall = true;
@@ -1321,7 +1321,7 @@ return( ret );
 SearchData *SDFromContour( FontViewBase *fv, SplineSet *find, double fudge, int flags ) {
     SearchData *sv;
 
-    sv = SDFillup( gcalloc(1,sizeof(SearchData)), fv);
+    sv = SDFillup( xcalloc(1,sizeof(SearchData)), fv);
     sv->fudge_percent = .001;
     sv->fudge = fudge;
 

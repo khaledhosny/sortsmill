@@ -815,7 +815,7 @@ char *StripToASCII(const char *utf8_str) {
     while ( (ch= utf8_ildb(&utf8_str))!='\0' ) {
 	if ( pt>=end ) {
 	    int off = pt-newcr;
-	    newcr = (char *) grealloc(newcr,(off+10)+1);
+	    newcr = (char *) xrealloc(newcr,(off+10)+1);
 	    pt = newcr+off;
 	    end = pt+10;
 	}
@@ -827,7 +827,7 @@ char *StripToASCII(const char *utf8_str) {
 	    char *str = "(c)";
 	    if ( pt+strlen(str)>=end ) {
 		int off = pt-newcr;
-		newcr = (char *) grealloc(newcr,(off+10+strlen(str))+1);
+		newcr = (char *) xrealloc(newcr,(off+10+strlen(str))+1);
 		pt = newcr+off;
 		end = pt+10;
 	    }
@@ -838,7 +838,7 @@ char *StripToASCII(const char *utf8_str) {
 	    while ( *alt!='\0' ) {
 		if ( pt>=end ) {
 		    int off = pt-newcr;
-		    newcr = (char *) grealloc(newcr,(off+10)+1);
+		    newcr = (char *) xrealloc(newcr,(off+10)+1);
 		    pt = newcr+off;
 		    end = pt+10;
 		}

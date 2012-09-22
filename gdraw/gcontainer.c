@@ -763,9 +763,9 @@ static void MakeContainerWidget(GWindow gw) {
     if ( !widgets_initted )
 	gwidget_init();
     if ( gw->parent==NULL || gw->is_toplevel )
-	gd = gcalloc(1,sizeof(struct gtopleveldata));
+	gd = xcalloc(1,sizeof(struct gtopleveldata));
     else
-	gd = gcalloc(1,sizeof(struct gwidgetcontainerdata));
+	gd = xcalloc(1,sizeof(struct gwidgetcontainerdata));
     gw->widget_data = (struct gwidgetdata *) gd;
     gd->w = gw;
     gd->e_h = gw->eh;

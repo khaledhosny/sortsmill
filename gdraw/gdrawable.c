@@ -225,7 +225,7 @@ return( false );
 }
 
 GGadget *GDrawableCreate(struct gwindow *base, GGadgetData *gd,void *data) {
-    GDrawable *gdr = gcalloc(1,sizeof(GTabSet));
+    GDrawable *gdr = xcalloc(1,sizeof(GTabSet));
     int bp;
     GRect r;
     GWindowAttrs childattrs;

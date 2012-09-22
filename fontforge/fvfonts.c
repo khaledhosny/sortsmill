@@ -39,7 +39,7 @@ RefChar *RefCharsCopy(RefChar *ref) {
     while ( ref!=NULL ) {
 	cur = RefCharCreate();
 	{ struct reflayer *layers = cur->layers; int layer;
-	layers = grealloc(layers,ref->layer_cnt*sizeof(struct reflayer));
+	layers = xrealloc(layers,ref->layer_cnt*sizeof(struct reflayer));
 	memcpy(layers,ref->layers,ref->layer_cnt*sizeof(struct reflayer));
 	*cur = *ref;
 	cur->layers = layers;
@@ -133,8 +133,8 @@ return( sub );
 	    }
 	    if ( !doit ) {
 		mc->lcnt = lcnt; mc->scnt = scnt;
-		mc->lks = gcalloc(lcnt,sizeof(struct lookup_cvt));
-		mc->subs = gcalloc(scnt,sizeof(struct sub_cvt));
+		mc->lks = xcalloc(lcnt,sizeof(struct lookup_cvt));
+		mc->subs = xcalloc(scnt,sizeof(struct sub_cvt));
 	    }
 	}
     }
@@ -188,7 +188,7 @@ return( ac );		/* No translation needed */
 	    }
 	    if ( !doit ) {
 		mc->acnt = acnt;
-		mc->acs = gcalloc(acnt,sizeof(struct ac_cvt));
+		mc->acs = xcalloc(acnt,sizeof(struct ac_cvt));
 	    }
 	}
     }
@@ -633,7 +633,7 @@ static void GlyphHashCreate(SplineFont *sf) {
 
     if ( sf->glyphnames!=NULL )
 return;
-    sf->glyphnames = gnh = gcalloc(1,sizeof(*gnh));
+    sf->glyphnames = gnh = xcalloc(1,sizeof(*gnh));
     k = 0;
     do {
 	_sf = k<sf->subfontcnt ? sf->subfonts[k] : sf;
@@ -1011,12 +1011,12 @@ static void FVMergeRefigureMapSel(FontViewBase *fv,SplineFont *into,SplineFont *
 	}
 	if ( !doit ) {
 	    if ( into->glyphcnt+cnt>map->backmax ) {
-		map->backmap = grealloc(map->backmap,(into->glyphcnt+cnt)*sizeof(int));
+		map->backmap = xrealloc(map->backmap,(into->glyphcnt+cnt)*sizeof(int));
 		map->backmax = into->glyphcnt+cnt;
 	    }
 	    memset(map->backmap+into->glyphcnt,-1,cnt*sizeof(int));
 	    if ( map->enccount+extras>map->encmax ) {
-		map->map = grealloc(map->map,(map->enccount+extras)*sizeof(int));
+		map->map = xrealloc(map->map,(map->enccount+extras)*sizeof(int));
 		map->encmax = map->enccount+extras;
 	    }
 	    memset(map->map+map->enccount,-1,extras*sizeof(int));
@@ -1024,7 +1024,7 @@ static void FVMergeRefigureMapSel(FontViewBase *fv,SplineFont *into,SplineFont *
 	}
     }
     if ( extras!=0 ) {
-	fv->selected = grealloc(fv->selected,map->enccount);
+	fv->selected = xrealloc(fv->selected,map->enccount);
 	memset(fv->selected+map->enccount-extras,0,extras);
     }
 }
@@ -1069,11 +1069,11 @@ static void _MergeFont(SplineFont *into,SplineFont *other,struct sfmergecontext 
 	    }
 	    if ( !doit ) {
 		if ( emptypos+cnt >= into->glyphcnt && emptypos+cnt>0 ) {
-		    into->glyphs = grealloc(into->glyphs,(emptypos+cnt)*sizeof(SplineChar *));
+		    into->glyphs = xrealloc(into->glyphs,(emptypos+cnt)*sizeof(SplineChar *));
 		    memset(into->glyphs+emptypos,0,cnt*sizeof(SplineChar *));
 		    for ( bdf = bitmap_into->bitmaps; bdf!=NULL; bdf=bdf->next )
 			if ( emptypos+cnt > bdf->glyphcnt ) {
-			    bdf->glyphs = grealloc(bdf->glyphs,(emptypos+cnt)*sizeof(BDFChar *));
+			    bdf->glyphs = xrealloc(bdf->glyphs,(emptypos+cnt)*sizeof(BDFChar *));
 			    memset(bdf->glyphs+emptypos,0,cnt*sizeof(BDFChar *));
 			    bdf->glyphmax = bdf->glyphcnt = emptypos+cnt;
 			}
@@ -1155,12 +1155,12 @@ static void CIDMergeFont(SplineFont *into,SplineFont *other, int preserveCrossFo
 	i_sf = into->subfonts[k];
 	for ( i=o_sf->glyphcnt-1; i>=0 && o_sf->glyphs[i]==NULL; --i );
 	if ( i>=i_sf->glyphcnt ) {
-	    i_sf->glyphs = grealloc(i_sf->glyphs,(i+1)*sizeof(SplineChar *));
+	    i_sf->glyphs = xrealloc(i_sf->glyphs,(i+1)*sizeof(SplineChar *));
 	    for ( j=i_sf->glyphcnt; j<=i; ++j )
 		i_sf->glyphs[j] = NULL;
 	    for ( fvs = i_sf->fv; fvs!=NULL; fvs=fvs->nextsame )
 		if ( fvs->sf==i_sf ) {
-		    fvs->selected = grealloc(fvs->selected,i+1);
+		    fvs->selected = xrealloc(fvs->selected,i+1);
 		    for ( j=i_sf->glyphcnt; j<=i; ++j )
 			fvs->selected[j] = false;
 		}
@@ -1515,7 +1515,7 @@ return( NULL );
 	    if ( other->layer_cnt<lc ) lc = other->layer_cnt;
 	}
 	if ( lc>2 ) {
-	    sc->layers = grealloc(sc->layers,lc*sizeof(Layer));
+	    sc->layers = xrealloc(sc->layers,lc*sizeof(Layer));
 	    for ( i=ly_fore+1; i<lc; ++i )
 		LayerDefault(&sc->layers[i]);
 	}
@@ -1593,7 +1593,7 @@ return( NULL );
 	lc = other->layer_cnt;
     if ( lc!=new_->layer_cnt ) {
 	new_->layer_cnt = lc;
-	new_->layers = grealloc(new_->layers,lc*sizeof(LayerInfo));
+	new_->layers = xrealloc(new_->layers,lc*sizeof(LayerInfo));
 	if ( lc>2 )
 	    memset(new_->layers+2,0,(lc-2)*sizeof(LayerInfo));
 	for ( i=2; i<lc; ++i ) {

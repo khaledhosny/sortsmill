@@ -128,7 +128,7 @@ static void GSpacerInit() {
 }
 
 GGadget *GSpacerCreate(struct gwindow *base, GGadgetData *gd,void *data) {
-    GSpacer *gs = gcalloc(1,sizeof(GSpacer));
+    GSpacer *gs = xcalloc(1,sizeof(GSpacer));
 
     if ( !gspacer_inited )
 	GSpacerInit();

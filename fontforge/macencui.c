@@ -244,7 +244,7 @@ static GTextInfo *Pref_MacNamesList(struct macname *all) {
     initmaclangs();
 
     for ( i=0, mn=all; mn!=NULL; mn=mn->next, ++i );
-    ti = gcalloc(i+1,sizeof( GTextInfo ));
+    ti = xcalloc(i+1,sizeof( GTextInfo ));
 
     for ( i=0, mn=all; mn!=NULL; mn=mn->next, ++i ) {
 	temp = MacStrToUtf8(mn->name,mn->enc,mn->lang);
@@ -280,7 +280,7 @@ static GTextInfo *Pref_SettingsList(struct macsetting *all) {
     char buf[20];
 
     for ( i=0, ms=all; ms!=NULL; ms=ms->next, ++i );
-    ti = gcalloc(i+1,sizeof( GTextInfo ));
+    ti = xcalloc(i+1,sizeof( GTextInfo ));
 
     for ( i=0, ms=all; ms!=NULL; ms=ms->next, ++i ) {
 	temp = PickNameFromMacName(ms->setname);
@@ -308,7 +308,7 @@ static GTextInfo *Pref_FeaturesList(MacFeat *all) {
     char buf[20];
 
     for ( i=0, mf=all; mf!=NULL; mf=mf->next, ++i );
-    ti = gcalloc(i+1,sizeof( GTextInfo ));
+    ti = xcalloc(i+1,sizeof( GTextInfo ));
 
     for ( i=0, mf=all; mf!=NULL; mf=mf->next, ++i ) {
 	temp = PickNameFromMacName(mf->featname);

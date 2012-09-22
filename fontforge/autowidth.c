@@ -266,7 +266,7 @@ static void CheckOutOfBounds(WidthInfo *wi) {
 
 static void ApplyChanges(WidthInfo *wi) {
     EncMap *map = wi->fv->map;
-    uint8 *rsel = gcalloc(map->enccount,sizeof(char));
+    uint8 *rsel = xcalloc(map->enccount,sizeof(char));
     int i, width;
     real transform[6];
     struct charone *ch;
@@ -886,7 +886,7 @@ void AW_InitCharPairs(WidthInfo *wi) {
     wi->pcnt = wi->lcnt*wi->rcnt;
     wi->pairs = galloc(wi->pcnt*sizeof(struct charpair *));
     for ( i=0; i<wi->lcnt; ++i ) for ( j=0; j<wi->rcnt; ++j ) {
-	wi->pairs[i*wi->rcnt+j] = cp = gcalloc(1,sizeof(struct charpair));
+	wi->pairs[i*wi->rcnt+j] = cp = xcalloc(1,sizeof(struct charpair));
 	cp->left = wi->left[i];
 	cp->right = wi->right[j];
 	cp->nextasleft = cp->left->asleft;
@@ -945,7 +945,7 @@ int KernThreshold(SplineFont *sf, int cnt) {
 return(0);
 
     high = sf->ascent + sf->descent;
-    totals = gcalloc(high+1,sizeof(int));
+    totals = xcalloc(high+1,sizeof(int));
     tot=0;
     for ( i=0; i<sf->glyphcnt; ++i ) if ( sf->glyphs[i]!=NULL ) {
 	for ( kp = sf->glyphs[i]->kerns; kp!=NULL; kp = kp->next ) {
@@ -995,7 +995,7 @@ return;
 }
 
 struct charone *AW_MakeCharOne(SplineChar *sc) {
-    struct charone *ch = gcalloc(1,sizeof(struct charone));
+    struct charone *ch = xcalloc(1,sizeof(struct charone));
 
     ch->sc = sc;
     ch->newr = ch->newl = NOTREACHED;
@@ -1085,8 +1085,8 @@ return;
 		ks->ch1 = galloc(ks->max*sizeof(unichar_t));
 		ks->ch2s = galloc(ks->max*sizeof(unichar_t *));
 	    } else {
-		ks->ch1 = grealloc(ks->ch1,ks->max*sizeof(unichar_t));
-		ks->ch2s = grealloc(ks->ch2s,ks->max*sizeof(unichar_t *));
+		ks->ch1 = xrealloc(ks->ch1,ks->max*sizeof(unichar_t));
+		ks->ch2s = xrealloc(ks->ch2s,ks->max*sizeof(unichar_t *));
 	    }
 	}
 	for ( j=ks->cur; j>i; --j ) {
@@ -1099,7 +1099,7 @@ return;
 	++ks->cur;
     }
     if ( (u_strlen(ks->ch2s[i])+1)%50 == 0 )
-	ks->ch2s[i] = grealloc(ks->ch2s[i],(u_strlen(ks->ch2s[i])+50)*sizeof(unichar_t));
+	ks->ch2s[i] = xrealloc(ks->ch2s[i],(u_strlen(ks->ch2s[i])+50)*sizeof(unichar_t));
     for ( j=0 ; ks->ch2s[i][j]!=0 && buffer[1]>ks->ch2s[i][j]; ++j );
     if ( ks->ch2s[i][j]!=buffer[1] ) {
 	for ( k=u_strlen(ks->ch2s[i])+1; k>j; --k )
@@ -1188,7 +1188,7 @@ return( false );
 	for ( cpt=ks->ch2s[i]; *cpt; ++cpt ) {
 	    for ( j=0; j<wi->rcnt && wi->right[j]->sc->unicodeenc!=*cpt; ++j );
 	    if ( j<wi->rcnt ) {
-		wi->pairs[cnt++] = cp = gcalloc(1,sizeof(struct charpair));
+		wi->pairs[cnt++] = cp = xcalloc(1,sizeof(struct charpair));
 		cp->left = wi->left[lcnt];
 		cp->right = wi->right[j];
 		cp->nextasleft = cp->left->asleft;
@@ -1324,7 +1324,7 @@ return( NULL );
     cnt=1;
     for ( pt=names; (pt=strchr(pt,' '))!=NULL; ++pt )
 	++cnt;
-    list = gcalloc(cnt+1,sizeof(SplineChar *));
+    list = xcalloc(cnt+1,sizeof(SplineChar *));
 
     cnt = 0;
     for ( pt=names ; *pt ; pt = end ) {
@@ -1479,9 +1479,9 @@ return;
 
     for ( kc = sf->kerns; kc!=NULL; kc=kc->next ) {
 	firsts = galloc(kc->first_cnt*sizeof(SplineChar *));
-	map1 = gcalloc(kc->first_cnt,sizeof(int));
+	map1 = xcalloc(kc->first_cnt,sizeof(int));
 	seconds = galloc(kc->second_cnt*sizeof(SplineChar *));
-	map2 = gcalloc(kc->second_cnt,sizeof(int));
+	map2 = xcalloc(kc->second_cnt,sizeof(int));
 	any1=0;
 	for ( i=1; i<kc->first_cnt; ++i ) {
 	    if ( (firsts[i] = CharNamesToVertSC(sf,kc->firsts[i]))!=NULL )
@@ -1501,14 +1501,14 @@ return;
 	    sf->vkerns = vkc;
 	    vkc->first_cnt = any1+1;
 	    vkc->second_cnt = any2+1;
-	    vkc->firsts = gcalloc(any1+1,sizeof(char *));
+	    vkc->firsts = xcalloc(any1+1,sizeof(char *));
 	    for ( i=0; i<kc->first_cnt; ++i ) if ( map1[i]!=0 )
 		vkc->firsts[map1[i]] = SCListToName(firsts[i]);
-	    vkc->seconds = gcalloc(any2+1,sizeof(char *));
+	    vkc->seconds = xcalloc(any2+1,sizeof(char *));
 	    for ( i=0; i<kc->second_cnt; ++i ) if ( map2[i]!=0 )
 		vkc->seconds[map2[i]] = SCListToName(seconds[i]);
-	    vkc->offsets = gcalloc((any1+1)*(any2+1),sizeof(int16));
-	    vkc->adjusts = gcalloc((any1+1)*(any2+1),sizeof(DeviceTable));
+	    vkc->offsets = xcalloc((any1+1)*(any2+1),sizeof(int16));
+	    vkc->adjusts = xcalloc((any1+1)*(any2+1),sizeof(DeviceTable));
 	    for ( i=0; i<kc->first_cnt; ++i ) if ( map1[i]!=0 ) {
 		for ( j=0; j<kc->second_cnt; ++j ) if ( map2[j]!=0 ) {
 		    int n=map1[i]*vkc->second_cnt+map2[j], o = i*kc->second_cnt+j;

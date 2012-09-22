@@ -1073,7 +1073,7 @@ static void PrefsUI_LoadPrefs(void) {
 		    script_menu_names[mn++] = utf82u_copy(pt);
 		else if ( strncmp(line,"FontFilterName:",strlen("FontFilterName:"))==0 ) {
 		    if ( fn>=filt_max )
-			user_font_filters = grealloc(user_font_filters,((filt_max+=10)+1)*sizeof( struct openfilefilters));
+			user_font_filters = xrealloc(user_font_filters,((filt_max+=10)+1)*sizeof( struct openfilefilters));
 		    user_font_filters[fn].filter = NULL;
 		    user_font_filters[fn++].name = copy(pt);
 		    user_font_filters[fn].name = NULL;
@@ -1083,7 +1083,7 @@ static void PrefsUI_LoadPrefs(void) {
 		} else if ( strncmp(line,"MacMapCnt:",strlen("MacSetCnt:"))==0 ) {
 		    sscanf( pt, "%d", &msc );
 		    msp = 0;
-		    user_macfeat_otftag = gcalloc(msc+1,sizeof(struct macsettingname));
+		    user_macfeat_otftag = xcalloc(msc+1,sizeof(struct macsettingname));
 		} else if ( strncmp(line,"MacMapping:",strlen("MacMapping:"))==0 && msp<msc ) {
 		    ParseMacMapping(pt,&user_macfeat_otftag[msp++]);
 		} else if ( strncmp(line,"MacFeat:",strlen("MacFeat:"))==0 ) {
@@ -1285,7 +1285,7 @@ static GTextInfo *Pref_MappingList(int use_user) {
     char buf[60];
 
     for ( i=0; msn[i].otf_tag!=0; ++i );
-    ti = gcalloc(i+1,sizeof( GTextInfo ));
+    ti = xcalloc(i+1,sizeof( GTextInfo ));
 
     for ( i=0; msn[i].otf_tag!=0; ++i ) {
 	sprintf(buf,"%3d,%2d %c%c%c%c",
@@ -1301,13 +1301,13 @@ void GListAddStr(GGadget *list,unichar_t *str, void *ud) {
     GTextInfo **ti = GGadgetGetList(list,&len);
     GTextInfo **replace = galloc((len+2)*sizeof(GTextInfo *));
 
-    replace[len+1] = gcalloc(1,sizeof(GTextInfo));
+    replace[len+1] = xcalloc(1,sizeof(GTextInfo));
     for ( i=0; i<len; ++i ) {
 	replace[i] = galloc(sizeof(GTextInfo));
 	*replace[i] = *ti[i];
 	replace[i]->text = u_copy(ti[i]->text);
     }
-    replace[i] = gcalloc(1,sizeof(GTextInfo));
+    replace[i] = xcalloc(1,sizeof(GTextInfo));
     replace[i]->fg = replace[i]->bg = COLOR_DEFAULT;
     replace[i]->text = str;
     replace[i]->userdata = ud;
@@ -1325,7 +1325,7 @@ void GListReplaceStr(GGadget *list,int index, unichar_t *str, void *ud) {
 	if ( i!=index )
 	    replace[i]->text = u_copy(ti[i]->text);
     }
-    replace[i] = gcalloc(1,sizeof(GTextInfo));
+    replace[i] = xcalloc(1,sizeof(GTextInfo));
     replace[index]->text = str;
     replace[index]->userdata = ud;
     GGadgetSetList(list,replace,false);
@@ -2044,9 +2044,9 @@ void DoPrefs(void) {
     aspects[0].selected = true;
 
     for ( k=0; visible_prefs_list[k].tab_name!=0; ++k ) {
-	pgcd = gcalloc(gcnt[k]+4,sizeof(GGadgetCreateData));
-	plabel = gcalloc(gcnt[k]+4,sizeof(GTextInfo));
-	hvarray = gcalloc((gcnt[k]+6)*5+2,sizeof(GGadgetCreateData *));
+	pgcd = xcalloc(gcnt[k]+4,sizeof(GGadgetCreateData));
+	plabel = xcalloc(gcnt[k]+4,sizeof(GTextInfo));
+	hvarray = xcalloc((gcnt[k]+6)*5+2,sizeof(GGadgetCreateData *));
 
 	aspects[k].text = (unichar_t *) visible_prefs_list[k].tab_name;
 	aspects[k].text_is_1byte = true;
@@ -2147,7 +2147,7 @@ void DoPrefs(void) {
 		int cnt;
 		GTextInfo *namelistnames;
 		for ( cnt=0; nlnames[cnt]!=NULL; ++cnt);
-		namelistnames = gcalloc(cnt+1,sizeof(GTextInfo));
+		namelistnames = xcalloc(cnt+1,sizeof(GTextInfo));
 		for ( cnt=0; nlnames[cnt]!=NULL; ++cnt) {
 		    namelistnames[cnt].text = (unichar_t *) nlnames[cnt];
 		    namelistnames[cnt].text_is_1byte = true;
@@ -2594,9 +2594,9 @@ static void PrefsSubSetDlg(CharView *cv,char* windowTitle,struct prefs_list* pli
     }
 
     int itemCount = 100;
-    pgcd = gcalloc(itemCount,sizeof(GGadgetCreateData));
-    plabel = gcalloc(itemCount,sizeof(GTextInfo));
-    hvarray = gcalloc((itemCount)*5,sizeof(GGadgetCreateData *));
+    pgcd = xcalloc(itemCount,sizeof(GGadgetCreateData));
+    plabel = xcalloc(itemCount,sizeof(GTextInfo));
+    hvarray = xcalloc((itemCount)*5,sizeof(GGadgetCreateData *));
     memset(&p,'\0',sizeof(p));
     memset(&wattrs,0,sizeof(wattrs));
     memset(sgcd,0,sizeof(sgcd));
@@ -2722,7 +2722,7 @@ static void PrefsSubSetDlg(CharView *cv,char* windowTitle,struct prefs_list* pli
 		int cnt;
 		GTextInfo *namelistnames;
 		for ( cnt=0; nlnames[cnt]!=NULL; ++cnt);
-		namelistnames = gcalloc(cnt+1,sizeof(GTextInfo));
+		namelistnames = xcalloc(cnt+1,sizeof(GTextInfo));
 		for ( cnt=0; nlnames[cnt]!=NULL; ++cnt) {
 		    namelistnames[cnt].text = (unichar_t *) nlnames[cnt];
 		    namelistnames[cnt].text_is_1byte = true;

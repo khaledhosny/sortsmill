@@ -380,7 +380,7 @@ struct rangeinfo *SFUnicodeRanges(SplineFont *sf, enum ur_flags flags) {
 	    ++cnt;
     cnt+=2;		/* for nonunicode, unassigned codes */
 
-    ri = gcalloc(cnt+1,sizeof(struct rangeinfo));
+    ri = xcalloc(cnt+1,sizeof(struct rangeinfo));
 
     for (i=cnt=0; unicoderange[i].name!=NULL; ++i )
 	if ( unicoderange[i].display )

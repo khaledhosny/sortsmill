@@ -100,7 +100,7 @@ unichar_t *u_GFileGetHomeDir(void) {
     char* tmp = GFileGetHomeDir();
     if( tmp ) {
 	dir = uc_copy(tmp);
-	gfree(tmp);
+	free(tmp);
     }
 return dir;
 }
@@ -344,7 +344,7 @@ char *_GFile_find_program_dir(char *prog) {
 	    if(!pt1) break;
 	    path = pt1+1;
 	}
-	gfree(tmppath);
+	free(tmppath);
     }
 #else
     if ( (pt = strrchr(prog,'/'))!=NULL )
@@ -371,7 +371,7 @@ char *_GFile_find_program_dir(char *prog) {
     if ( program_dir==NULL )
 return( NULL );
     GFileGetAbsoluteName(program_dir,filename,sizeof(filename));
-    gfree(program_dir);
+    free(program_dir);
     program_dir = copy(filename);
 return( program_dir );
 }

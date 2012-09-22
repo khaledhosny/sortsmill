@@ -63,7 +63,7 @@ return( NULL );
 	new_ = RefCharCreate();
 	free(new_->layers);
 	*new_ = *crefs;
-	new_->layers = gcalloc(new_->layer_cnt,sizeof(struct reflayer));
+	new_->layers = xcalloc(new_->layer_cnt,sizeof(struct reflayer));
 	new_->next = NULL;
 	if ( last==NULL )
 	    head = last = new_;
@@ -819,7 +819,7 @@ return(NULL);
 	    bc->ymax-bc->ymin+1);
     undo->u.bmpstate.selection = BDFFloatCopy(bc->selection);
     for ( head=bc->refs; head!=NULL; head=head->next ) {
-	ref = gcalloc( 1,sizeof( BDFRefChar ));
+	ref = xcalloc( 1,sizeof( BDFRefChar ));
 	memcpy( ref,head,sizeof( BDFRefChar ));
 	if ( prev == NULL )
 	    undo->u.bmpstate.refs = ref;
@@ -1058,7 +1058,7 @@ static void BCUndoAct(BDFChar *bc,Undoes *undo) {
 
 	if ( !BDFRefCharsMatch( undo->u.bmpstate.refs,bc->refs )) {
 	    for ( head=bc->refs; head!=NULL; head=head->next ) {
-		ref = gcalloc( 1,sizeof( BDFRefChar ));
+		ref = xcalloc( 1,sizeof( BDFRefChar ));
 		memcpy( ref,head,sizeof( BDFRefChar ));
 		if ( prev != NULL )
 		    prev->next = ref;
@@ -1264,7 +1264,7 @@ return( false );
 	for ( ulayer = cur->u.multiple.mult, lcnt=0; ulayer!=NULL; ulayer=ulayer->next, ++lcnt);
 	dummy->layer_cnt = lcnt+1;
 	if ( lcnt!=1 )
-	    dummy->layers = gcalloc((lcnt+1),sizeof(Layer));
+	    dummy->layers = xcalloc((lcnt+1),sizeof(Layer));
 	for ( ulayer = cur->u.multiple.mult, lcnt=1; ulayer!=NULL; ulayer=ulayer->next, ++lcnt) {
 	    if ( ulayer->undotype==ut_state || ulayer->undotype==ut_statehint ) {
 		dummy->layers[lcnt].fill_brush = ulayer->u.state.fill_brush;
@@ -1466,7 +1466,7 @@ return( copy(""));
 	for ( ulayer = cur->u.multiple.mult, lcnt=0; ulayer!=NULL; ulayer=ulayer->next, ++lcnt);
 	dummy.layer_cnt = lcnt+1;
 	if ( lcnt!=1 )
-	    dummy.layers = gcalloc((lcnt+1),sizeof(Layer));
+	    dummy.layers = xcalloc((lcnt+1),sizeof(Layer));
 	for ( ulayer = cur->u.multiple.mult, lcnt=1; ulayer!=NULL; ulayer=ulayer->next, ++lcnt) {
 	    if ( ulayer->undotype==ut_state || ulayer->undotype==ut_statehint ) {
 		dummy.layers[lcnt].fill_brush = ulayer->u.state.fill_brush;
@@ -2499,7 +2499,7 @@ static void PasteToSC(SplineChar *sc,int layer,Undoes *paster,FontViewBase *fv,
 	} else
 	    start = sc->layer_cnt;
 	if ( start+lc > sc->layer_cnt ) {
-	    sc->layers = grealloc(sc->layers,(start+lc)*sizeof(Layer));
+	    sc->layers = xrealloc(sc->layers,(start+lc)*sizeof(Layer));
 	    for ( layer = sc->layer_cnt; layer<start+lc; ++layer )
 		LayerDefault(&sc->layers[layer]);
 	    sc->layer_cnt = start+lc;
@@ -2817,7 +2817,7 @@ return( NULL );
 	if ( !doit ) {
 	    ftot = cnt;
 	    choices = galloc((cnt+bcnt+2)*sizeof(char *));
-	    sel = gcalloc(cnt+bcnt+1,1);
+	    sel = xcalloc(cnt+bcnt+1,1);
 	    list1 = galloc(cnt*sizeof(OTLookup *));
 	    if ( bcnt==0 ) {
 		choices[cnt] = NULL;
@@ -3179,16 +3179,16 @@ static Undoes *BCCopyAll(BDFChar *bc,int pixelsize, int depth, enum fvcopy_type 
 	    cur->u.bmpstate.selection = BDFFloatCopy(bc->selection);
 	    
 	    for ( head = bc->refs; head != NULL; head = head->next ) {
-		ref = gcalloc( 1,sizeof( BDFRefChar ));
+		ref = xcalloc( 1,sizeof( BDFRefChar ));
 		memcpy( ref,head,sizeof( BDFRefChar ));
 		ref->next = cur->u.bmpstate.refs;
 		cur->u.bmpstate.refs = ref;
 	    }
 	} else {		/* Or just make a reference */
 	    cur->u.bmpstate.bytes_per_line = 1;
-	    cur->u.bmpstate.bitmap = gcalloc(1,sizeof(uint8));
+	    cur->u.bmpstate.bitmap = xcalloc(1,sizeof(uint8));
 
-	    ref = gcalloc(1,sizeof(BDFRefChar));
+	    ref = xcalloc(1,sizeof(BDFRefChar));
 	    ref->bdfc = bc;
 	    ref->xoff = 0; ref->yoff = 0;
 	    cur->u.bmpstate.refs = ref;
@@ -3212,7 +3212,7 @@ void BCCopySelected(BDFChar *bc,int pixelsize,int depth) {
     } else {
 	for ( head=bc->refs; head!=NULL; head=head->next ) if ( head->selected ) {
 	    has_selected_refs = true;
-	    ref = gcalloc( 1,sizeof( BDFRefChar ));
+	    ref = xcalloc( 1,sizeof( BDFRefChar ));
 	    memcpy( ref,head,sizeof( BDFRefChar ));
 	    ref->next = copybuffer.u.bmpstate.refs;
 	    copybuffer.u.bmpstate.refs = ref;
@@ -3221,7 +3221,7 @@ void BCCopySelected(BDFChar *bc,int pixelsize,int depth) {
 	    copybuffer.undotype = ut_bitmap;
 	    copybuffer.u.bmpstate.width = bc->width;
 	    copybuffer.u.bmpstate.bytes_per_line = 1;
-	    copybuffer.u.bmpstate.bitmap = gcalloc(1,sizeof(uint8));
+	    copybuffer.u.bmpstate.bitmap = xcalloc(1,sizeof(uint8));
 	    copybuffer.u.bmpstate.selection = NULL;
 	} else {
 	    copybuffer.undotype = ut_bitmapsel;
@@ -3274,7 +3274,7 @@ static void _PasteToBC(BDFChar *bc,int pixelsize, int depth, Undoes *paster, int
 	    if ( BCRefersToBC( bc,head->bdfc )) {
 		ff_post_error(_("Self-referential glyph"),_("Attempt to make a glyph that refers to itself"));
 	    } else {
-		cur = gcalloc( 1,sizeof( BDFRefChar ));
+		cur = xcalloc( 1,sizeof( BDFRefChar ));
 		memcpy( cur,head,sizeof( BDFRefChar ));
 		cur->next = bc->refs; bc->refs = cur;
 		BCMakeDependent( bc,head->bdfc );

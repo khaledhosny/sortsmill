@@ -306,7 +306,7 @@ return;
 }
 
 static void pushio(IO *wrapper, FILE *ps, char *macro, int cnt) {
-    _IO *io = gcalloc(1,sizeof(_IO));
+    _IO *io = xcalloc(1,sizeof(_IO));
 
     io->prev = wrapper->top;
     io->ps = ps;
@@ -326,7 +326,7 @@ static void pushio(IO *wrapper, FILE *ps, char *macro, int cnt) {
 }
 
 static void pushfogio(IO *wrapper, FILE *fog) {
-    _IO *io = gcalloc(1,sizeof(_IO));
+    _IO *io = xcalloc(1,sizeof(_IO));
 
     io->prev = wrapper->top;
     io->fog = fog;
@@ -614,7 +614,7 @@ static int AddEntry(struct pskeydict *dict,struct psstack *stack, int sp) {
 	    dict->entries = galloc(dict->max*sizeof(struct pskeyval));
 	} else {
 	    dict->max += 30;
-	    dict->entries = grealloc(dict->entries,dict->max*sizeof(struct pskeyval));
+	    dict->entries = xrealloc(dict->entries,dict->max*sizeof(struct pskeyval));
 	}
     }
     if ( sp<2 )
@@ -789,7 +789,7 @@ static void copyarray(struct pskeydict *to,struct pskeydict *from, struct garbag
     struct pskeyval *oldent = from->entries;
 
     *to = *from;
-    to->entries = gcalloc(to->cnt,sizeof(struct pskeyval));
+    to->entries = xcalloc(to->cnt,sizeof(struct pskeyval));
     for ( i=0; i<to->cnt; ++i ) {
 	to->entries[i] = oldent[i];
 	if ( to->entries[i].type==ps_string || to->entries[i].type==ps_instr ||
@@ -969,7 +969,7 @@ return(nsp);
 
 static Entity *EntityCreate(SplinePointList *head,int linecap,int linejoin,
 	real linewidth, real *transform, SplineSet *clippath) {
-    Entity *ent = gcalloc(1,sizeof(Entity));
+    Entity *ent = xcalloc(1,sizeof(Entity));
     ent->type = et_splines;
     ent->u.splines.splines = head;
     ent->u.splines.cap = linecap;
@@ -1204,7 +1204,7 @@ return( sp-5 );
     }
     free(data);
 
-    ent = gcalloc(1,sizeof(Entity));
+    ent = xcalloc(1,sizeof(Entity));
     ent->type = et_image;
     ent->u.image.image = gi;
     memcpy(ent->u.image.transform,transform,sizeof(real[6]));
@@ -2263,7 +2263,7 @@ printf( "-%s-\n", toknames[tok]);
 		struct pskeydict dict;
 		for ( i=0; i<DASH_MAX && dashes[i]!=0; ++i );
 		dict.cnt = dict.max = i;
-		dict.entries = gcalloc(i,sizeof(struct pskeyval));
+		dict.entries = xcalloc(i,sizeof(struct pskeyval));
 		for ( j=0; j<i; ++j ) {
 		    dict.entries[j].type = ps_num;
 		    dict.entries[j].u.val = dashes[j];
@@ -2637,7 +2637,7 @@ printf( "-%s-\n", toknames[tok]);
 	    else {
 		struct pskeydict dict;
 		dict.cnt = dict.max = i;
-		dict.entries = gcalloc(i,sizeof(struct pskeyval));
+		dict.entries = xcalloc(i,sizeof(struct pskeyval));
 		for ( j=0; j<i; ++j ) {
 		    dict.entries[j].type = stack[sp-i+j].type;
 		    dict.entries[j].u = stack[sp-i+j].u;
@@ -2654,7 +2654,7 @@ printf( "-%s-\n", toknames[tok]);
 	    if ( sp>=1 && stack[sp-1].type==ps_num ) {
 		struct pskeydict dict;
 		dict.cnt = dict.max = stack[sp-1].u.val;
-		dict.entries = gcalloc(dict.cnt,sizeof(struct pskeyval));
+		dict.entries = xcalloc(dict.cnt,sizeof(struct pskeyval));
 		/* all entries are inited to void */
 		stack[sp-1].type = ps_array;
 		stack[sp-1].u.dict = dict;
@@ -2789,7 +2789,7 @@ printf( "-%s-\n", toknames[tok]);
 	  case pt_stringop:	/* the string keyword, not the () thingy */
 	    if ( sp>=1 && stack[sp-1].type==ps_num ) {
 		stack[sp-1].type = ps_string;
-		stack[sp-1].u.str = gcalloc(stack[sp-1].u.val+1,1);
+		stack[sp-1].u.str = xcalloc(stack[sp-1].u.val+1,1);
 	    }
 	  break;
 
@@ -3006,7 +3006,7 @@ void SFSplinesFromLayers(SplineFont *sf,int tostroke) {
 		while ( last->next!=NULL ) last = last->next;
 	    sc->layers[layer].refs = NULL;
 	}
-	new = gcalloc(2,sizeof(Layer));
+	new = xcalloc(2,sizeof(Layer));
 	new[ly_back] = sc->layers[ly_back];
 	memset(&sc->layers[ly_back],0,sizeof(Layer));
 	LayerDefault(&new[ly_fore]);
@@ -3300,8 +3300,8 @@ void PSFontInterpretPS(FILE *ps,struct charprocs *cp,char **encoding) {
 	if ( tok==pt_namelit ) {
 	    if ( cp->next>=cp->cnt ) {
 		++cp->cnt;
-		cp->keys = grealloc(cp->keys,cp->cnt*sizeof(char *));
-		cp->values = grealloc(cp->values,cp->cnt*sizeof(char *));
+		cp->keys = xrealloc(cp->keys,cp->cnt*sizeof(char *));
+		cp->values = xrealloc(cp->values,cp->cnt*sizeof(char *));
 	    }
 	    if ( cp->next<cp->cnt ) {
 		sc = SplineCharCreate(2);
@@ -3421,13 +3421,13 @@ return( head );
 	}
 	if ( max!=-1 ) {
 	    if ( ++max<256 ) max = 256;
-	    item = gcalloc(1,sizeof(Encoding));
+	    item = xcalloc(1,sizeof(Encoding));
 	    item->enc_name = encname;
 	    item->char_cnt = max;
 	    item->unicode = galloc(max*sizeof(int32));
 	    memcpy(item->unicode,encs,max*sizeof(int32));
 	    if ( any && !codepointsonly ) {
-		item->psnames = gcalloc(max,sizeof(char *));
+		item->psnames = xcalloc(max,sizeof(char *));
 		memcpy(item->psnames,names,max*sizeof(char *));
 	    } else {
 		for ( i=0; i<max; ++i )

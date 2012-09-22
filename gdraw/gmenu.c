@@ -1225,7 +1225,7 @@ return( true );
 
 static GMenu *_GMenu_Create(GWindow owner,GMenuItem *mi, GPoint *where,
 	int awidth, int aheight, GFont *font, int disable) {
-    GMenu *m = gcalloc(1,sizeof(GMenu));
+    GMenu *m = xcalloc(1,sizeof(GMenu));
     GRect pos;
     GDisplay *disp = GDrawGetDisplayOfWindow(owner);
     GWindowAttrs pattrs;
@@ -1856,7 +1856,7 @@ static void MenuMaskInit(GMenuItem *mi) {
 }
 
 GGadget *GMenuBarCreate(struct gwindow *base, GGadgetData *gd,void *data) {
-    GMenuBar *mb = gcalloc(1,sizeof(GMenuBar));
+    GMenuBar *mb = xcalloc(1,sizeof(GMenuBar));
 
     if ( !gmenubar_inited )
 	GMenuInit();
@@ -1883,7 +1883,7 @@ return( &mb->g );
 }
 
 GGadget *GMenu2BarCreate(struct gwindow *base, GGadgetData *gd,void *data) {
-    GMenuBar *mb = gcalloc(1,sizeof(GMenuBar));
+    GMenuBar *mb = xcalloc(1,sizeof(GMenuBar));
 
     if ( !gmenubar_inited )
 	GMenuInit();

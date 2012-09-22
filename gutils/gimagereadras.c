@@ -83,7 +83,7 @@ return( NULL);
 	    else
 		*pt++ = 0;
     }
-    gfree(buf);
+    free(buf);
 
 return ret;
 }

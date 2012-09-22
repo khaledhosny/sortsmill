@@ -36,6 +36,11 @@
 #include <math.h>
 #include <limits.h>
 
+// FIXME: Get rid of this when feasible.
+#ifdef __INTERNAL_TO_FONTFORGE__
+#include "xalloc.h"
+#endif
+
 // FIXME: Use the standard names in the code; get rid of these
 // typedefs.
 typedef int32_t		int32;
@@ -67,9 +72,6 @@ typedef uint32_t unichar_t;
 #endif
 
 extern void *galloc(size_t size);
-extern void *gcalloc(size_t cnt, size_t size);
-extern void *grealloc(void *,size_t size);
-extern void gfree(void *);
 extern char *copy(const char *);
 extern char *copyn(const char *, size_t);
 

@@ -78,7 +78,7 @@ return( ret );
 		}
 	    }
 	} 
-	gfree(raster);
+	free(raster);
     }
     TIFFClose(tif);
 return( ret );

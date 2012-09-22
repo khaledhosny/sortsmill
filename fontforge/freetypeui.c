@@ -201,16 +201,16 @@ return( TT_Err_Execution_Too_Long );		/* Some random error code, says we're prob
 
     /* Set up for watch points */
     if ( dc->oldpts==NULL && exc->pts.n_points!=0 ) {
-	dc->oldpts = gcalloc(exc->pts.n_points,sizeof(FT_Vector));
+	dc->oldpts = xcalloc(exc->pts.n_points,sizeof(FT_Vector));
 	dc->n_points = exc->pts.n_points;
     }
     if ( dc->oldstore==NULL && exc->storeSize!=0 ) {
-	dc->oldstore = gcalloc(exc->storeSize,sizeof(FT_Long));
-	dc->storetouched = gcalloc(exc->storeSize,sizeof(uint8));
+	dc->oldstore = xcalloc(exc->storeSize,sizeof(FT_Long));
+	dc->storetouched = xcalloc(exc->storeSize,sizeof(uint8));
 	dc->storeSize = exc->storeSize;
     }
     if ( dc->oldcvt==NULL && exc->cvtSize!=0 )
-	dc->oldcvt = gcalloc(exc->cvtSize,sizeof(FT_Long));
+	dc->oldcvt = xcalloc(exc->cvtSize,sizeof(FT_Long));
     if ( !dc->initted_pts ) {
 	AtWp(dc,exc);
 	dc->found_wp = false;
@@ -392,7 +392,7 @@ struct debugger_context *DebuggerCreate(SplineChar *sc,int layer, real ptsizey,r
     if ( !hasFreeTypeDebugger())
 return( NULL );
 
-    dc = gcalloc(1,sizeof(struct debugger_context));
+    dc = xcalloc(1,sizeof(struct debugger_context));
     dc->sc = sc;
     dc->layer = layer;
     dc->debug_fpgm = dbg_fpgm;
@@ -663,7 +663,7 @@ struct freetype_raster *DebuggerCurrentRaster(TT_ExecContext exc,int depth) {
 	bitmap.num_grays = 0;
 	bitmap.pixel_mode = ft_pixel_mode_mono;
     }
-    bitmap.buffer = gcalloc(bitmap.pitch*bitmap.rows,sizeof(uint8));
+    bitmap.buffer = xcalloc(bitmap.pitch*bitmap.rows,sizeof(uint8));
 
     err = (FT_Outline_Get_Bitmap)(ff_ft_context,&outline,&bitmap);
 

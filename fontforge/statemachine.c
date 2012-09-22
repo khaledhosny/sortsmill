@@ -138,7 +138,7 @@ static void StatesFree(struct asm_state *old,int old_class_cnt,int old_state_cnt
 
 static struct asm_state *StateCopy(struct asm_state *old,int old_class_cnt,int old_state_cnt,
 	int new_class_cnt,int new_state_cnt, enum asm_type type,int freeold) {
-    struct asm_state *new = gcalloc(new_class_cnt*new_state_cnt,sizeof(struct asm_state));
+    struct asm_state *new = xcalloc(new_class_cnt*new_state_cnt,sizeof(struct asm_state));
     int i,j;
     int minclass = new_class_cnt<old_class_cnt ? new_class_cnt : old_class_cnt;
 
@@ -176,7 +176,7 @@ static void StateRemoveClasses(SMD *smd, int removeme ) {
     if ( removeme<4 )
 return;
 
-    new = gcalloc((smd->class_cnt-1)*smd->state_cnt,sizeof(struct asm_state));
+    new = xcalloc((smd->class_cnt-1)*smd->state_cnt,sizeof(struct asm_state));
     for ( i=0; i<smd->state_cnt ; ++i ) {
 	for ( j=k=0; j<smd->class_cnt; ++j ) {
 	    if ( j!=removeme )
@@ -1353,7 +1353,7 @@ void StateMachineEdit(SplineFont *sf,ASM *sm,struct gfi_data *d) {
     if ( smd.isnew ) {
 	smd.class_cnt = 4;			/* 4 built in classes */
 	smd.state_cnt = 2;			/* 2 built in states */
-	smd.states = gcalloc(smd.class_cnt*smd.state_cnt,sizeof(struct asm_state));
+	smd.states = xcalloc(smd.class_cnt*smd.state_cnt,sizeof(struct asm_state));
 	smd.states[1*4+2].next_state = 1;	/* deleted glyph is a noop */
     } else {
 	smd.class_cnt = sm->class_cnt;
@@ -1410,7 +1410,7 @@ void StateMachineEdit(SplineFont *sf,ASM *sm,struct gfi_data *d) {
     mi.col_init = class_ci;
 
     if ( sm->class_cnt<4 ) sm->class_cnt=4;
-    md = gcalloc(sm->class_cnt+1,sizeof(struct matrix_data));
+    md = xcalloc(sm->class_cnt+1,sizeof(struct matrix_data));
     for ( i=0; i<sm->class_cnt; ++i ) {
 	if ( i<4 ) {
 	    md[i+0].u.md_str = copy( _(specialclasses[i]) );

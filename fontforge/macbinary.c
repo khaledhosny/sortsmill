@@ -280,7 +280,7 @@ static struct resource *PSToResources(FILE *res,FILE *pfbfile) {
 
     fstat(fileno(pfbfile),&statb);
     cnt = 3*(statb.st_size+0x800)/(0x800-2)+1;		/* should be (usually) a vast over estimate */
-    resstarts = gcalloc(cnt+1,sizeof(struct resource));
+    resstarts = xcalloc(cnt+1,sizeof(struct resource));
 
     cnt = 0;
     while (true) {
@@ -386,7 +386,7 @@ static uint32 BDFToNFNT(FILE *res, BDFFont *bdf, EncMap *map) {
     if ( descentMax>bdf->descent ) descentMax = bdf->descent;
     ++width;			/* For the "undefined character */
     for ( k=0; k<bdf->pixelsize; ++k )
-	rows[k] = gcalloc((width+7)/8 + 4 , sizeof(uint8));
+	rows[k] = xcalloc((width+7)/8 + 4 , sizeof(uint8));
     for ( i=width=0; i<256 ; ++i ) {
 	locs[i] = width;
 	if ( i>=map->enccount || (gid=map->map[i])==-1 || gid>=bdf->glyphcnt || bdf->glyphs[gid]==NULL ||
@@ -516,7 +516,7 @@ static struct resource *SFToNFNTs(FILE *res, SplineFont *sf, int32 *sizes,
     if ( sf->cidmaster!=NULL ) sf = sf->cidmaster;
 
     for ( i=0; sizes[i]!=0; ++i );
-    resstarts = gcalloc(i+1,sizeof(struct resource));
+    resstarts = xcalloc(i+1,sizeof(struct resource));
 
     for ( i=0; sizes[i]!=0; ++i ) {
 	if ( (sizes[i]>>16)!=1 )
@@ -545,12 +545,12 @@ static struct resource *SFsToNFNTs(FILE *res, struct sflist *sfs,int baseresid) 
 	if ( sfi->sizes!=NULL ) {
 	    for ( i=0; sfi->sizes[i]!=0; ++i );
 	    cnt += i;
-	    sfi->ids = gcalloc(i+1,sizeof(int));
-	    sfi->bdfs = gcalloc(i+1,sizeof(BDFFont *));
+	    sfi->ids = xcalloc(i+1,sizeof(int));
+	    sfi->bdfs = xcalloc(i+1,sizeof(BDFFont *));
 	}
     }
 
-    resstarts = gcalloc(cnt+1,sizeof(struct resource));
+    resstarts = xcalloc(cnt+1,sizeof(struct resource));
 
     cnt = 0;
     for ( sfi=sfs; sfi!=NULL; sfi=sfi->next ) {
@@ -585,7 +585,7 @@ static struct resource *BuildDummyNFNTlist(FILE *res, SplineFont *sf,
     if ( sf->cidmaster!=NULL ) sf = sf->cidmaster;
 
     for ( i=0; sizes[i]!=0; ++i );
-    resstarts = gcalloc(i+1,sizeof(struct resource));
+    resstarts = xcalloc(i+1,sizeof(struct resource));
 
     for ( i=0; sizes[i]!=0; ++i ) {
 	if ( (sizes[i]>>16)!=1 )
@@ -615,12 +615,12 @@ static struct resource *BuildDummyNFNTfamilyList(FILE *res, struct sflist *sfs,
 	if ( sfi->sizes!=NULL ) {
 	    for ( i=0; sfi->sizes[i]!=0; ++i );
 	    cnt += i;
-	    sfi->ids = gcalloc(i+1,sizeof(int));
-	    sfi->bdfs = gcalloc(i+1,sizeof(BDFFont *));
+	    sfi->ids = xcalloc(i+1,sizeof(int));
+	    sfi->bdfs = xcalloc(i+1,sizeof(BDFFont *));
 	}
     }
 
-    resstarts = gcalloc(cnt+1,sizeof(struct resource));
+    resstarts = xcalloc(cnt+1,sizeof(struct resource));
 
     cnt = 0;
     for ( sfi=sfs; sfi!=NULL; sfi=sfi->next ) {
@@ -720,7 +720,7 @@ uint16 MacStyleCode( SplineFont *sf, uint16 *psstylecode ) {
     } else {
 	char *styles = SFGetModifiers(sf);
 	style_code = _MacStyleCode(styles,sf,psstylecode);
-	gfree(styles);
+	free(styles);
     }
     return style_code;
 }
@@ -952,7 +952,7 @@ static struct sflistlist *FondSplitter(struct sflist *sfs,int *fondcnt) {
 	break;
 	    MacStyleCode(sfi->sf,&psstyle);
 	}
-	cur = gcalloc(1,sizeof(struct sflistlist));
+	cur = xcalloc(1,sizeof(struct sflistlist));
 	cur->sfs = sfs;
 	last->next = NULL;
 	for ( last=sfi; last!=NULL; last=last->next )
@@ -981,7 +981,7 @@ static struct sflistlist *FondSplitter(struct sflist *sfs,int *fondcnt) {
 		MacStyleCode(sfi->sf,&psstyle);
 	    }
 	}
-	cur = gcalloc(1,sizeof(struct sflistlist));
+	cur = xcalloc(1,sizeof(struct sflistlist));
 	test = NULL;
 	if ( start->sf->fondname!=NULL ) {
 	    for ( test = sfsl; test!=NULL; test=test->next )
@@ -1880,7 +1880,7 @@ return( 0 );
 	    format==ff_otfciddfont || (format==ff_none && bf==bf_sfnt_dfont )) {
 	resources[r].tag = CHR('s','f','n','t');
 	for ( sfi=sfs, i=0; sfi!=NULL; sfi=sfi->next, ++i );
-	resources[r].res = gcalloc(i+1,sizeof(struct resource));
+	resources[r].res = xcalloc(i+1,sizeof(struct resource));
 	for ( sfi=sfs, i=0; sfi!=NULL; sfi=sfi->next, ++i ) {
 	    resources[r].res[i].pos = TTFToResource(res,sfi->tempttf);
 	    resources[r].res[i].id = sfi->id = id+i;
@@ -1899,7 +1899,7 @@ return( 0 );
     }
 
     sfsl = FondSplitter(sfs,&fondcnt);
-    rlist = gcalloc(fondcnt+1,sizeof(struct resource));
+    rlist = xcalloc(fondcnt+1,sizeof(struct resource));
     resources[r].tag = CHR('F','O','N','D');
     resources[r++].res = rlist;
     for ( i=0, sfli=sfsl; i<fondcnt && sfli!=NULL; ++i, sfli = sfli->next ) {
@@ -1968,8 +1968,8 @@ static SplineFont *SearchPostScriptResources(FILE *f,long rlistpos,int subcnt,lo
     SplineFont *sf;
 
     fseek(f,rlistpos,SEEK_SET);
-    rsrcids = gcalloc(subcnt,sizeof(short));
-    offsets = gcalloc(subcnt,sizeof(long));
+    rsrcids = xcalloc(subcnt,sizeof(short));
+    offsets = xcalloc(subcnt,sizeof(long));
     for ( i=0; i<subcnt; ++i ) {
 	rsrcids[i] = getushort(f);
 	tmp = (short) getushort(f);
@@ -2090,7 +2090,7 @@ static SplineFont *SearchTtfResources(FILE *f,long rlistpos,int subcnt,long rdat
 
     fseek(f,rlistpos,SEEK_SET);
     if ( subcnt>1 || (flags&ttf_onlynames) ) {
-	names = gcalloc(subcnt+1,sizeof(char *));
+	names = xcalloc(subcnt+1,sizeof(char *));
 	for ( i=0; i<subcnt; ++i ) {
 	    /* resource id = */ getushort(f);
 	    /* rname = (short) */ getushort(f);
@@ -2309,7 +2309,7 @@ static FOND *BuildFondList(FILE *f,long rlistpos,int subcnt,long rdata_pos,
 	/* mbz = */ getlong(f);
 	here = ftell(f);
 
-	cur = gcalloc(1,sizeof(FOND));
+	cur = xcalloc(1,sizeof(FOND));
 	cur->next = head;
 	head = cur;
 
@@ -2340,7 +2340,7 @@ static FOND *BuildFondList(FILE *f,long rlistpos,int subcnt,long rdata_pos,
 	/* internal & undefined, for international scripts = */ getlong(f);
 	/* version = */ getushort(f);
 	cur->assoc_cnt = getushort(f)+1;
-	cur->assoc = gcalloc(cur->assoc_cnt,sizeof(struct assoc));
+	cur->assoc = xcalloc(cur->assoc_cnt,sizeof(struct assoc));
 	for ( j=0; j<cur->assoc_cnt; ++j ) {
 	    cur->assoc[j].size = getushort(f);
 	    cur->assoc[j].style = getushort(f);
@@ -2350,7 +2350,7 @@ static FOND *BuildFondList(FILE *f,long rlistpos,int subcnt,long rdata_pos,
 	    fseek(f,widoff,SEEK_SET);
 	    cnt = getushort(f)+1;
 	    cur->stylewidthcnt = cnt;
-	    cur->stylewidths = gcalloc(cnt,sizeof(struct stylewidths));
+	    cur->stylewidths = xcalloc(cnt,sizeof(struct stylewidths));
 	    for ( j=0; j<cnt; ++j ) {
 		cur->stylewidths[j].style = getushort(f);
 		cur->stylewidths[j].widthtab = galloc((cur->last-cur->first+3)*sizeof(short));
@@ -2362,7 +2362,7 @@ static FOND *BuildFondList(FILE *f,long rlistpos,int subcnt,long rdata_pos,
 	    fseek(f,kernoff,SEEK_SET);
 	    cnt = getushort(f)+1;
 	    cur->stylekerncnt = cnt;
-	    cur->stylekerns = gcalloc(cnt,sizeof(struct stylekerns));
+	    cur->stylekerns = xcalloc(cnt,sizeof(struct stylekerns));
 	    for ( j=0; j<cnt; ++j ) {
 		cur->stylekerns[j].style = getushort(f);
 		cur->stylekerns[j].kernpairs = getushort(f);
@@ -2440,7 +2440,7 @@ static BDFChar *NFNTCvtBitmap(struct MacFontRec *font,int index,SplineFont *sf,i
     bdfc->width = font->offsetWidths[index]&0xff;
     bdfc->vwidth = font->ascent + font->descent;
     bdfc->bytes_per_line = ((bdfc->xmax-bdfc->xmin)>>3) + 1;
-    bdfc->bitmap = gcalloc(bdfc->bytes_per_line*font->fRectHeight,sizeof(uint8));
+    bdfc->bitmap = xcalloc(bdfc->bytes_per_line*font->fRectHeight,sizeof(uint8));
     bdfc->orig_pos = gid;
     bdfc->sc = sf->glyphs[gid];
 
@@ -2488,9 +2488,9 @@ static void LoadNFNT(FILE *f,long offset, SplineFont *sf, int size) {
     font.leading = getushort(f);
     font.rowWords = getushort(f);
     if ( font.rowWords!=0 ) {
-	font.fontImage = gcalloc(font.rowWords*font.fRectHeight,sizeof(short));
-	font.locs = gcalloc(font.lastChar-font.firstChar+3,sizeof(short));
-	font.offsetWidths = gcalloc(font.lastChar-font.firstChar+3,sizeof(short));
+	font.fontImage = xcalloc(font.rowWords*font.fRectHeight,sizeof(short));
+	font.locs = xcalloc(font.lastChar-font.firstChar+3,sizeof(short));
+	font.offsetWidths = xcalloc(font.lastChar-font.firstChar+3,sizeof(short));
 	for ( i=0; i<font.rowWords*font.fRectHeight; ++i )
 	    font.fontImage[i] = getushort(f);
 	for ( i=0; i<font.lastChar-font.firstChar+3; ++i )
@@ -2504,13 +2504,13 @@ static void LoadNFNT(FILE *f,long offset, SplineFont *sf, int size) {
 return;
 
     /* Now convert the FONT record to one of my BDF structs */
-    bdf = gcalloc(1,sizeof(BDFFont));
+    bdf = xcalloc(1,sizeof(BDFFont));
     bdf->sf = sf;
     bdf->next = sf->bitmaps;
     sf->bitmaps = bdf;
     bdf->glyphcnt = bdf->glyphmax = sf->glyphcnt;
     bdf->pixelsize = font.ascent+font.descent;
-    bdf->glyphs = gcalloc(sf->glyphcnt,sizeof(BDFChar *));
+    bdf->glyphs = xcalloc(sf->glyphcnt,sizeof(BDFChar *));
     bdf->ascent = font.ascent;
     bdf->descent = font.descent;
     bdf->res = 72;
@@ -2561,7 +2561,7 @@ return( copy(buffer));
 static int GuessStyle(char *fontname,int *styles,int style_cnt) {
     char *stylenames = _GetModifiers(fontname,NULL,NULL);
     int style = _MacStyleCode(stylenames,NULL,NULL);
-    gfree(stylenames);
+    free(stylenames);
 
     // FIXME: The old code that is commented out below appears to look
     // outside the styles array. Is that the case? And is this new code
@@ -2630,7 +2630,7 @@ return( test );
 	    }
 	}
 	if ( names==NULL ) {
-	    names = gcalloc(cnt+1,sizeof(char *));
+	    names = xcalloc(cnt+1,sizeof(char *));
 	    fonds = galloc(cnt*sizeof(FOND *));
 	    styles = galloc(cnt*sizeof(int));
 	}

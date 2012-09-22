@@ -124,7 +124,7 @@ static void freeptrtab(unsigned char **ptrtab,int tot) {
 	    for ( j=i+1; j<tot; ++j )
 		if ( ptrtab[j]==ptrtab[i] )
 		    ptrtab[j] = NULL;
-	    gfree(ptrtab[i]);
+	    free(ptrtab[i]);
 	}
 }
 
@@ -181,7 +181,7 @@ return( NULL );
 	    }
 	}
 	freeptrtab(ptrtab,tablen);
-	gfree(ptrtab); gfree(starttab); /*gfree(lengthtab);*/
+	free(ptrtab); free(starttab); /*free(lengthtab);*/
     } else {
 	if ( header.chans==1 && header.bpc==1 ) {
 	    for ( i=0; i<header.height; ++i ) {
@@ -218,7 +218,7 @@ return( NULL );
 		    *ipt++ = COLOR_CREATE(*rpt++*255L/header.pixmax,
 			    *gpt++*255L/header.pixmax,*bpt++*255L/header.pixmax);
 	    }
-	    gfree(r); gfree(g); gfree(b); gfree(a);
+	    free(r); free(g); free(b); free(a);
 	} else {
 	    unsigned char *r,*g,*b, *a=NULL;
 	    unsigned char *rpt, *gpt, *bpt;
@@ -243,7 +243,7 @@ return( NULL );
 		for ( iend=ipt+header.width; ipt<iend; )
 		    *ipt++ = COLOR_CREATE(*rpt++,*gpt++,*bpt++);
 	    }
-	    gfree(r); gfree(g); gfree(b); gfree(a);
+	    free(r); free(g); free(b); free(a);
 	}
     }
 	    

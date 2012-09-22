@@ -319,10 +319,10 @@ struct psdict *PSDictCopy(struct psdict *dict) {
     if ( dict==NULL )
 return( NULL );
 
-    ret = gcalloc(1,sizeof(struct psdict));
+    ret = xcalloc(1,sizeof(struct psdict));
     ret->cnt = dict->cnt; ret->next = dict->next;
-    ret->keys = gcalloc(ret->cnt,sizeof(char *));
-    ret->values = gcalloc(ret->cnt,sizeof(char *));
+    ret->keys = xcalloc(ret->cnt,sizeof(char *));
+    ret->values = xcalloc(ret->cnt,sizeof(char *));
     for ( i=0; i<dict->next; ++i ) {
 	ret->keys[i] = copy(dict->keys[i]);
 	ret->values[i] = copy(dict->values[i]);
@@ -408,8 +408,8 @@ return( -1 );
     if ( i==dict->next ) {
 	if ( dict->next>=dict->cnt ) {
 	    dict->cnt += 10;
-	    dict->keys = grealloc(dict->keys,dict->cnt*sizeof(char *));
-	    dict->values = grealloc(dict->values,dict->cnt*sizeof(char *));
+	    dict->keys = xrealloc(dict->keys,dict->cnt*sizeof(char *));
+	    dict->values = xrealloc(dict->values,dict->cnt*sizeof(char *));
 	}
 	dict->keys[dict->next] = copy(key);
 	dict->values[dict->next] = NULL;
@@ -1237,7 +1237,7 @@ static struct pschars *initsubrs(int needsflex,MMSet *mm) {
     int i;
     struct pschars *sub;
 
-    sub = gcalloc(1,sizeof(struct pschars));
+    sub = xcalloc(1,sizeof(struct pschars));
     sub->cnt = 10;
     sub->lens = galloc(10*sizeof(int));
     sub->values = galloc(10*sizeof(uint8 *));
@@ -2483,7 +2483,7 @@ static FILE *gencidbinarydata(SplineFont *cidmaster,struct cidbytes *cidbytes,
 
     memset(cidbytes,'\0',sizeof(struct cidbytes));
     cidbytes->fdcnt = cidmaster->subfontcnt;
-    cidbytes->fds = gcalloc(cidbytes->fdcnt,sizeof(struct fddata));
+    cidbytes->fds = xcalloc(cidbytes->fdcnt,sizeof(struct fddata));
     for ( i=0; i<cidbytes->fdcnt; ++i ) {
 	sf = cidmaster->subfonts[i];
 	fd = &cidbytes->fds[i];

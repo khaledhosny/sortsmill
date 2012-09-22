@@ -427,7 +427,7 @@ void LayoutInfoRefigureLines(LayoutInfo *li, int start_of_change,
 		fl=fl->next, start = 0 ) {
 	    if ( start<0 ) start = 0;
 	    if ( fl->end - fl->start >= fl->scmax )
-		fl->sctext = grealloc(fl->sctext,((fl->scmax = fl->end-fl->start+4)+1)*sizeof(SplineChar *));
+		fl->sctext = xrealloc(fl->sctext,((fl->scmax = fl->end-fl->start+4)+1)*sizeof(SplineChar *));
 	    for ( i=j=0; i<fl->end-fl->start; ++i ) {
 		SplineChar *sc = FDMap(fl->fd,li->text[fl->start+i]);
 		if ( sc!=NULL && sc!=(SplineChar *) -1 )
@@ -455,7 +455,7 @@ void LayoutInfoRefigureLines(LayoutInfo *li, int start_of_change,
     }
 
     if ( li->pmax <= li->pcnt+pcnt - (pe-ps+1) )
-	li->paras = grealloc(li->paras,(li->pmax = li->pcnt+30+pcnt-(pe-ps+1))*sizeof(struct paras));
+	li->paras = xrealloc(li->paras,(li->pmax = li->pcnt+30+pcnt-(pe-ps+1))*sizeof(struct paras));
     /* move any old paragraphs around */
     pdiff = pcnt-(pe-ps);
     for ( p=ps; p<pe; ++p )
@@ -497,8 +497,8 @@ void LayoutInfoRefigureLines(LayoutInfo *li, int start_of_change,
     li->pcnt += pdiff;
 
     if ( li->lmax <= li->lcnt+lcnt - (le-ls) + 1 ) {
-	li->lines = grealloc(li->lines,(li->lmax = li->lcnt+30+lcnt-(le-ls+1))*sizeof(struct openfont_str **));
-	li->lineheights = grealloc(li->lineheights,li->lmax*sizeof(struct lineheights));
+	li->lines = xrealloc(li->lines,(li->lmax = li->lcnt+30+lcnt-(le-ls+1))*sizeof(struct openfont_str **));
+	li->lineheights = xrealloc(li->lineheights,li->lmax*sizeof(struct lineheights));
     }
     /* move any old lines around */
     ldiff = lcnt-(le-ls);
@@ -916,7 +916,7 @@ FontData *LI_FindFontData(LayoutInfo *li, SplineFont *sf,
 		test->layer==layer )
 return( test );
 
-    ret = gcalloc(1,sizeof(FontData));
+    ret = xcalloc(1,sizeof(FontData));
     ret->sf = sf;
     ret->fonttype = fonttype;
     ret->pointsize = size;
@@ -936,7 +936,7 @@ static FontData *FontDataCopyNoBDF(LayoutInfo *print_li, FontData *source) {
     FontData *head=NULL, *last=NULL, *cur;
 
     while ( source ) {
-	cur = gcalloc(1,sizeof(FontData));
+	cur = xcalloc(1,sizeof(FontData));
 	cur->sf = source->sf;
 	cur->fonttype = source->fonttype;
 	cur->pointsize = source->pointsize;
@@ -978,7 +978,7 @@ return;
 }
 
 LayoutInfo *LIConvertToPrint(LayoutInfo *li, int width, int height, int dpi) {
-    LayoutInfo *print = gcalloc(1,sizeof(LayoutInfo));
+    LayoutInfo *print = xcalloc(1,sizeof(LayoutInfo));
     struct fontlist *fl;
     struct fontdata *fd1, *fd2;
 
@@ -1152,9 +1152,9 @@ static Array *SFDefaultScriptsLines(Array *arr,SplineFont *sf) {
 	  }
       }
 
-      ret = gcalloc(1,sizeof(Array));
+      ret = xcalloc(1,sizeof(Array));
       ret->argc = 2*lcnt;
-      ret->vals = gcalloc(2*lcnt,sizeof(Val));
+      ret->vals = xcalloc(2*lcnt,sizeof(Val));
       for ( i=0; i<lcnt; ++i ) {
 	  ret->vals[2*i+0].type = v_int;
 	  ret->vals[2*i+0].u.ival = pixelsize;
@@ -1166,7 +1166,7 @@ return( ret );
 }
 
 void FontImage(SplineFont *sf,char *filename,Array *arr,int width,int height) {
-    LayoutInfo *li = gcalloc(1,sizeof(LayoutInfo));
+    LayoutInfo *li = xcalloc(1,sizeof(LayoutInfo));
     int cnt, len, i,j, ret, p, x;
     struct fontlist *last;
     enum sftf_fonttype type = sf->layers[ly_fore].order2 ? sftf_ttf : sftf_otf;

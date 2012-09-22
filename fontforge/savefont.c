@@ -414,7 +414,7 @@ return( NULL );
 	if ( _sf->glyphcnt>cnt ) cnt = _sf->glyphcnt;
     } while ( k<sf->subfontcnt );
 
-    mapping = gcalloc(cnt+1,sizeof(int32));
+    mapping = xcalloc(cnt+1,sizeof(int32));
     memset(mapping,-1,(cnt+1)*sizeof(int32));
     mapping[cnt] = -2;
     *max = 0;
@@ -447,7 +447,7 @@ return( NULL );
 		    else if ( pt[-2]=='\\' )
 			pt[-2] = '\0';
 		}
-		bpt = grealloc(bpt,strlen(bpt)+strlen(buffer)+10);
+		bpt = xrealloc(bpt,strlen(bpt)+strlen(buffer)+10);
 		strcat(bpt,buffer);
 		if ( !loop )
 	    break;
@@ -598,7 +598,7 @@ return( 0 );
 	}
 	if ( extras == 0 )
     break;
-	newchars = gcalloc(temp.glyphcnt+extras,sizeof(SplineChar *));
+	newchars = xcalloc(temp.glyphcnt+extras,sizeof(SplineChar *));
 	memcpy(newchars,temp.glyphs,temp.glyphcnt*sizeof(SplineChar *));
 	if ( temp.glyphs!=chars ) free(temp.glyphs );
 	base = temp.glyphcnt;

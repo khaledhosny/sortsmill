@@ -183,7 +183,7 @@ static void DicaNewEntry(struct dictionary *dica,char *name,Val *val) {
 	dica->entries = galloc(dica->max*sizeof(struct dictentry));
     } else if ( dica->cnt>=dica->max ) {
 	dica->max += 10;
-	dica->entries = grealloc(dica->entries,dica->max*sizeof(struct dictentry));
+	dica->entries = xrealloc(dica->entries,dica->max*sizeof(struct dictentry));
     }
     dica->entries[dica->cnt].name = copy(name);
     dica->entries[dica->cnt].val.type = v_void;
@@ -1919,7 +1919,7 @@ static void bGenerateFamily(Context *c) {
 	}
 	if ( !added ) {
 	    if ( fondcnt>=fondmax )
-		familysfs = grealloc(familysfs,(fondmax+=10)*sizeof(SFArray));
+		familysfs = xrealloc(familysfs,(fondmax+=10)*sizeof(SFArray));
 	    memset(familysfs[fondcnt],0,sizeof(SFArray));
 	    familysfs[fondcnt++][psstyle] = fv->sf;
 	}
@@ -2318,7 +2318,7 @@ static void bPrintFont(Context *c) {
     if ( c->a.argc>=3 ) {
 	if ( c->a.vals[2].type==v_int ) {
 	    if ( c->a.vals[2].u.ival>0 ) { 
-		pointsizes = gcalloc(2,sizeof(int32));
+		pointsizes = xcalloc(2,sizeof(int32));
 		pointsizes[0] = c->a.vals[2].u.ival;
 	    }
 	} else if ( c->a.vals[2].type==v_arr ) {
@@ -2965,7 +2965,7 @@ static void bReencode(Context *c) {
 	SFReplaceEncodingBDFProps(c->curfv->sf,c->curfv->map);
     }
     free(c->curfv->selected);
-    c->curfv->selected = gcalloc(c->curfv->map->enccount,sizeof(char));
+    c->curfv->selected = xcalloc(c->curfv->map->enccount,sizeof(char));
     if ( !no_windowing_ui )
 	FontViewReformatAll(c->curfv->sf);
 /*
@@ -3007,10 +3007,10 @@ return;
 	if ( !no_windowing_ui )
 	    FVSetTitles(c->curfv->sf);
     } else {
-	c->curfv->selected = grealloc(c->curfv->selected,newcnt);
+	c->curfv->selected = xrealloc(c->curfv->selected,newcnt);
 	if ( newcnt>map->encmax ) {
 	    memset(c->curfv->selected+map->enccount,0,newcnt-map->enccount);
-	    map->map = grealloc(map->map,(map->encmax=newcnt+10)*sizeof(int));
+	    map->map = xrealloc(map->map,(map->encmax=newcnt+10)*sizeof(int));
 	    memset(map->map+map->enccount,-1,(newcnt-map->enccount)*sizeof(int));
 	}
     }
@@ -3280,7 +3280,7 @@ static void bSetGasp(Context *c) {
     free(sf->gasp);
     sf->gasp_cnt = (arr->argc-base)/2;
     if ( sf->gasp_cnt!=0 ) {
-	sf->gasp = gcalloc(sf->gasp_cnt,sizeof(struct gasp));
+	sf->gasp = xcalloc(sf->gasp_cnt,sizeof(struct gasp));
 	for ( i=base; i<arr->argc; i += 2 ) {
 	    int g = (i-base)/2;
 	    sf->gasp[g].ppem = arr->vals[i].u.ival;
@@ -3703,7 +3703,7 @@ static void bSetMaxpValue(Context *c) {
 	tab->tag = CHR('m','a','x','p');
     }
     if ( tab->len<32 ) {
-	tab->data = grealloc(tab->data,32);
+	tab->data = xrealloc(tab->data,32);
 	memset(tab->data+tab->len,0,32-tab->len);
 	tab->data[15] = 2;			/* Default zones to 2 */
 	tab->len = tab->maxlen = 32;
@@ -4093,8 +4093,8 @@ static void FVApplySubstitution(FontViewBase *fv,uint32 script, uint32 lang, uin
 
     /* I used to do replaces and removes as I went along, and then Werner */
     /*  gave me a font were "a" was replaced by "b" replaced by "a" */
-    replacements = gcalloc(sf->glyphcnt,sizeof(SplineChar *));
-    removes = gcalloc(sf->glyphcnt,sizeof(uint8));
+    replacements = xcalloc(sf->glyphcnt,sizeof(SplineChar *));
+    removes = xcalloc(sf->glyphcnt,sizeof(uint8));
 
     for ( i=0; i<map->enccount; ++i ) if ( fv->selected[i] &&
 	    (gid=map->map[i])!=-1 && (sc=sf->glyphs[gid])!=NULL ) {
@@ -4542,7 +4542,7 @@ static void _bMoveReference(Context *c,int position) {
 	ScriptError(c,"Bad argument type");
 
     refcnt = c->a.argc-3;
-    refnames = gcalloc(refcnt,sizeof(char *));
+    refnames = xcalloc(refcnt,sizeof(char *));
     refunis = galloc(refcnt*sizeof(int));
     memset(refunis,-1,refcnt*sizeof(int));
     for ( i=0; i<refcnt; ++i ) {
@@ -5710,10 +5710,10 @@ static void bSetCharCounterMask(Context *c) {
     sc = GetOneSelChar(c);
     if ( c->a.vals[1].u.ival>=sc->countermask_cnt ) {
 	if ( sc->countermask_cnt==0 ) {
-	    sc->countermasks = gcalloc(c->a.vals[1].u.ival+10,sizeof(HintMask));
+	    sc->countermasks = xcalloc(c->a.vals[1].u.ival+10,sizeof(HintMask));
 	    sc->countermask_cnt = c->a.vals[1].u.ival+1;
 	} else {
-	    sc->countermasks = grealloc(sc->countermasks,
+	    sc->countermasks = xrealloc(sc->countermasks,
 		    (c->a.vals[1].u.ival+1)*sizeof(HintMask));
 	    memset(sc->countermasks+sc->countermask_cnt,0,
 		    (c->a.vals[1].u.ival+1-sc->countermask_cnt)*sizeof(HintMask));
@@ -5738,7 +5738,7 @@ static void bReplaceCharCounterMasks(Context *c) {
 	ScriptError( c, "Bad argument type" );
     arr = c->a.vals[1].u.aval;
     cnt = arr->argc;
-    cm = gcalloc(cnt,sizeof(HintMask));
+    cm = xcalloc(cnt,sizeof(HintMask));
     for ( i=0; i<cnt; ++i ) {
 	if ( arr->vals[i].type!=v_arr || arr->vals[i].u.aval->argc>12 )
 	    ScriptError( c, "Argument must be array of array[12] of integers" );
@@ -5775,7 +5775,7 @@ static void bPrivateGuess(Context *c) {
 
     key = forceASCIIcopy(c,c->a.vals[1].u.sval);
     if ( sf->private==NULL ) {
-	sf->private = gcalloc(1,sizeof(struct psdict));
+	sf->private = xcalloc(1,sizeof(struct psdict));
     }
     SFPrivateGuess(sf,c->curfv->active_layer,sf->private,key,true);
     free(key);
@@ -5793,10 +5793,10 @@ static void bChangePrivateEntry(Context *c) {
     key = forceASCIIcopy(c,c->a.vals[1].u.sval);
     val = forceASCIIcopy(c,c->a.vals[2].u.sval);
     if ( sf->private==NULL ) {
-	sf->private = gcalloc(1,sizeof(struct psdict));
+	sf->private = xcalloc(1,sizeof(struct psdict));
 	sf->private->cnt = 10;
-	sf->private->keys = gcalloc(10,sizeof(char *));
-	sf->private->values = gcalloc(10,sizeof(char *));
+	sf->private->keys = xcalloc(10,sizeof(char *));
+	sf->private->values = xcalloc(10,sizeof(char *));
     }
     PSDictChangeEntry(sf->private,key,val);
     free(key); free(val);
@@ -6230,11 +6230,11 @@ static void bCIDChangeSubFont(Context *c) {
     MVDestroyAll(c->curfv->sf);
     if ( new->glyphcnt>sf->glyphcnt ) {
 	free(c->curfv->selected);
-	c->curfv->selected = gcalloc(new->glyphcnt,sizeof(char));
+	c->curfv->selected = xcalloc(new->glyphcnt,sizeof(char));
 	if ( new->glyphcnt>map->encmax )
-	    map->map = grealloc(map->map,(map->encmax = new->glyphcnt)*sizeof(int));
+	    map->map = xrealloc(map->map,(map->encmax = new->glyphcnt)*sizeof(int));
 	if ( new->glyphcnt>map->backmax )
-	    map->backmap = grealloc(map->backmap,(map->backmax = new->glyphcnt)*sizeof(int));
+	    map->backmap = xrealloc(map->backmap,(map->backmax = new->glyphcnt)*sizeof(int));
 	for ( i=0; i<new->glyphcnt; ++i )
 	    map->map[i] = map->backmap[i] = i;
 	map->enccount = new->glyphcnt;
@@ -7321,7 +7321,7 @@ static void FigureProfile(Context *c,SplineChar *sc,int pos,int xextrema) {
         for (m=0; m<j; m++)
           if (temp == val[m])
             goto skip1;
-        val = (double *) grealloc (val, (j + 1)*sizeof(double));
+        val = (double *) xrealloc (val, (j + 1)*sizeof(double));
         val[j] = temp;
         if ( j >= MAXSECT ) goto maxsect_reached;
         j++;
@@ -7359,7 +7359,7 @@ skip1:
             for (m=0; m<j; m++)
               if (temp == val[m])
                 goto skip2;
-            val = (double *) grealloc (val, (j + 1)*sizeof(double));
+            val = (double *) xrealloc (val, (j + 1)*sizeof(double));
             val[j] = temp;
             if ( j >= MAXSECT ) goto maxsect_reached;
             j++;
@@ -7587,19 +7587,19 @@ static void bGetAnchorPoints(Context *c) {
         ;
     ret = galloc(sizeof(Array));
     ret->argc = cnt;
-    ret->vals = gcalloc(cnt,sizeof(Val));
+    ret->vals = xcalloc(cnt,sizeof(Val));
     for ( ap=sc->anchor, cnt=0; ap!=NULL; ap=ap->next, ++cnt ) {
 	ret->vals[cnt].type = v_arr;
 	ret->vals[cnt].u.aval = temp = galloc(sizeof(Array));
 	if ( ap->type == at_baselig ) {
 	    temp->argc = 5;
-	    temp->vals = gcalloc(6,sizeof(Val));
+	    temp->vals = xcalloc(6,sizeof(Val));
 	    temp->vals[4].type = v_int;
 	    temp->vals[4].u.ival = ap->lig_index;
 	}
 	else {
 	    temp->argc = 4;
-	    temp->vals = gcalloc(5,sizeof(Val));
+	    temp->vals = xcalloc(5,sizeof(Val));
 	}
 	temp->vals[0].type = v_str;
 	temp->vals[0].u.sval = copy(ap->anchor->name);
@@ -7667,7 +7667,7 @@ static void bGetPosSub(Context *c) {
 		      break;
 		      case pst_position:
 			temp->argc = 6;
-			temp->vals = gcalloc(7,sizeof(Val));
+			temp->vals = xcalloc(7,sizeof(Val));
 			temp->vals[1].u.sval = copy("Position");
 			for ( k=2; k<6; ++k ) {
 			    temp->vals[k].type = v_int;
@@ -7677,7 +7677,7 @@ static void bGetPosSub(Context *c) {
 		      break;
 		      case pst_pair:
 			temp->argc = 11;
-			temp->vals = gcalloc(11,sizeof(Val));
+			temp->vals = xcalloc(11,sizeof(Val));
 			temp->vals[1].u.sval = copy("Pair");
 			temp->vals[2].type = v_str;
 			temp->vals[2].u.sval = copy(pst->u.pair.paired);
@@ -7689,7 +7689,7 @@ static void bGetPosSub(Context *c) {
 		      break;
 		      case pst_substitution:
 			temp->argc = 3;
-			temp->vals = gcalloc(4,sizeof(Val));
+			temp->vals = xcalloc(4,sizeof(Val));
 			temp->vals[1].u.sval = copy("Substitution");
 			temp->vals[2].type = v_str;
 			temp->vals[2].u.sval = copy(pst->u.subs.variant);
@@ -7704,7 +7704,7 @@ static void bGetPosSub(Context *c) {
 			    }
 			}
 			temp->argc = 2+subcnt;
-			temp->vals = gcalloc(2+subcnt,sizeof(Val));
+			temp->vals = xcalloc(2+subcnt,sizeof(Val));
 			temp->vals[1].u.sval = copy(pst->type==pst_alternate?"AltSubs":
 					    pst->type==pst_multiple?"MultSubs":
 			                    "Ligature");
@@ -7737,7 +7737,7 @@ static void bGetPosSub(Context *c) {
 			    ret->vals[cnt].type = v_arr;
 			    ret->vals[cnt].u.aval = temp = galloc(sizeof(Array));
 			    temp->argc = 11;
-			    temp->vals = gcalloc(temp->argc,sizeof(Val));
+			    temp->vals = xcalloc(temp->argc,sizeof(Val));
 			    temp->vals[0].type = v_str;
 			    temp->vals[0].u.sval = copy(kp->subtable->subtable_name);
 			    temp->vals[1].type = v_str;
@@ -7763,7 +7763,7 @@ static void bGetPosSub(Context *c) {
 	if ( i==0 ) {
 	    ret = galloc(sizeof(Array));
 	    ret->argc = cnt;
-	    ret->vals = gcalloc(cnt,sizeof(Val));
+	    ret->vals = xcalloc(cnt,sizeof(Val));
 	}
     }
     c->return_val.type = v_arrfree;
@@ -8315,7 +8315,7 @@ return( 2 );
 	}
 
     if ( ud_cnt >= ud_max )
-	userdefined = grealloc(userdefined,(ud_max+=20)*sizeof(struct builtins));
+	userdefined = xrealloc(userdefined,(ud_max+=20)*sizeof(struct builtins));
     userdefined[ud_cnt].name = copy(name);
     userdefined[ud_cnt].func = func;
     userdefined[ud_cnt].nofontok = !needs_font;
@@ -8839,7 +8839,7 @@ static void buildarray(Context *c,Val *val) {
 	body = NULL;
 	for ( cnt=0; tok!=tt_rbracket; ++cnt ) {
 	    if ( cnt>=max )
-		body = grealloc(body,(max+=20)*sizeof(Val));
+		body = xrealloc(body,(max+=20)*sizeof(Val));
 	    expr(c,&body[cnt]);
 	    dereflvalif(&body[cnt]);
 	    tok = ff_NextToken(c);
@@ -8854,7 +8854,7 @@ static void buildarray(Context *c,Val *val) {
 	val->type = v_arrfree;
 	val->u.aval = galloc(sizeof(Array));
 	val->u.aval->argc = cnt;
-	val->u.aval->vals = grealloc(body,cnt*sizeof(Val));
+	val->u.aval->vals = xrealloc(body,cnt*sizeof(Val));
     }
 }
 
@@ -9085,7 +9085,7 @@ static void handlename(Context *c,Val *val) {
 	    /* It's ok to create this as a new variable, we're going to assign to it */
 	    if ( *name=='@' ) {
 		if ( c->curfv->fontvars==NULL )
-		    c->curfv->fontvars = gcalloc(1,sizeof(struct dictionary));
+		    c->curfv->fontvars = xcalloc(1,sizeof(struct dictionary));
 		DicaNewEntry(c->curfv->fontvars,name,val);
 	    } else if ( *name=='_' ) {
 		DicaNewEntry(&globals,name,val);
@@ -9849,7 +9849,7 @@ void ProcessNativeScript(int argc, char *argv[], FILE *script) {
     memset( &c,0,sizeof(c));
     c.a.argc = argc-i;
     c.a.vals = galloc(c.a.argc*sizeof(Val));
-    c.dontfree = gcalloc(c.a.argc,sizeof(Array*));
+    c.dontfree = xcalloc(c.a.argc,sizeof(Array*));
     c.donteval = dry;
     for ( j=i; j<argc; ++j ) {
 	char *t;

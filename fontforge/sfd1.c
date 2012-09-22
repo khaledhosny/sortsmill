@@ -67,8 +67,8 @@ static void SFGuessScriptList(SplineFont1 *sf) {
     else if ( sf->sf.mm!=NULL ) sf=(SplineFont1 *) sf->sf.mm->normal;
     if ( sf->script_lang!=NULL )
 return;
-    sf->script_lang = gcalloc(2,sizeof(struct script_record *));
-    sf->script_lang[0] = gcalloc(scnt+1,sizeof(struct script_record));
+    sf->script_lang = xcalloc(2,sizeof(struct script_record *));
+    sf->script_lang[0] = xcalloc(scnt+1,sizeof(struct script_record));
     sf->sli_cnt = 1;
     for ( j=0; j<scnt; ++j ) {
 	sf->script_lang[0][j].script = scripts[j];
@@ -114,7 +114,7 @@ int SFAddScriptIndex(SplineFont1 *sf,uint32 *scripts,int scnt) {
 
     if ( sf->sf.cidmaster ) sf = (SplineFont1 *) sf->sf.cidmaster;
     if ( sf->script_lang==NULL )	/* It's an old sfd file */
-	sf->script_lang = gcalloc(1,sizeof(struct script_record *));
+	sf->script_lang = xcalloc(1,sizeof(struct script_record *));
     for ( i=0; sf->script_lang[i]!=NULL; ++i ) {
 	sr = sf->script_lang[i];
 	for ( j=0; sr[j].script!=0 && j<scnt &&
@@ -123,9 +123,9 @@ int SFAddScriptIndex(SplineFont1 *sf,uint32 *scripts,int scnt) {
 return( i );
     }
 
-    sf->script_lang = grealloc(sf->script_lang,(i+2)*sizeof(struct script_record *));
+    sf->script_lang = xrealloc(sf->script_lang,(i+2)*sizeof(struct script_record *));
     sf->script_lang[i+1] = NULL;
-    sr = sf->script_lang[i] = gcalloc(scnt+1,sizeof(struct script_record));
+    sr = sf->script_lang[i] = xcalloc(scnt+1,sizeof(struct script_record));
     for ( j = 0; j<scnt; ++j ) {
 	sr[j].script = scripts[j];
 	sr[j].langs = galloc(2*sizeof(uint32));
@@ -150,15 +150,15 @@ static int SFAddScriptLangIndex(SplineFont *_sf,uint32 script,uint32 lang) {
     if ( script==0 ) script=DEFAULT_SCRIPT;
     if ( lang==0 ) lang=DEFAULT_LANG;
     if ( sf->script_lang==NULL )
-	sf->script_lang = gcalloc(2,sizeof(struct script_record *));
+	sf->script_lang = xcalloc(2,sizeof(struct script_record *));
     for ( i=0; sf->script_lang[i]!=NULL; ++i ) {
 	if ( sf->script_lang[i][0].script==script && sf->script_lang[i][1].script==0 &&
 		sf->script_lang[i][0].langs[0]==lang &&
 		sf->script_lang[i][0].langs[1]==0 )
 return( i );
     }
-    sf->script_lang = grealloc(sf->script_lang,(i+2)*sizeof(struct script_record *));
-    sf->script_lang[i] = gcalloc(2,sizeof(struct script_record));
+    sf->script_lang = xrealloc(sf->script_lang,(i+2)*sizeof(struct script_record *));
+    sf->script_lang[i] = xcalloc(2,sizeof(struct script_record));
     sf->script_lang[i][0].script = script;
     sf->script_lang[i][0].langs = galloc(2*sizeof(uint32));
     sf->script_lang[i][0].langs[0] = lang;

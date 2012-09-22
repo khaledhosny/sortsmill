@@ -164,7 +164,7 @@ return;
 	}
     if ( i==bdf->prop_cnt ) {
 	if ( i>=bdf->prop_max )
-	    bdf->props = grealloc(bdf->props,(bdf->prop_max+=10)*sizeof(BDFProperties));
+	    bdf->props = xrealloc(bdf->props,(bdf->prop_max+=10)*sizeof(BDFProperties));
 	++bdf->prop_cnt;
 	bdf->props[i].name = copy(keyword);
     }
@@ -192,7 +192,7 @@ return;
 	}
     if ( i==bdf->prop_cnt ) {
 	if ( i>=bdf->prop_max )
-	    bdf->props = grealloc(bdf->props,(bdf->prop_max+=10)*sizeof(BDFProperties));
+	    bdf->props = xrealloc(bdf->props,(bdf->prop_max+=10)*sizeof(BDFProperties));
 	++bdf->prop_cnt;
 	bdf->props[i].name = copy(keyword);
     }
@@ -235,7 +235,7 @@ static void BDFPropAppendString(BDFFont *bdf,char *keyword,char *value) {
     int i = bdf->prop_cnt;
 
     if ( i>=bdf->prop_max )
-	bdf->props = grealloc(bdf->props,(bdf->prop_max+=10)*sizeof(BDFProperties));
+	bdf->props = xrealloc(bdf->props,(bdf->prop_max+=10)*sizeof(BDFProperties));
     ++bdf->prop_cnt;
     bdf->props[i].name = copy(keyword);
     if ( strcmp(keyword,"COMMENT")==0 )
@@ -914,7 +914,7 @@ return( NULL );
 
     if ( gid>=bdf->glyphcnt ) {
 	if ( gid>=bdf->glyphmax )
-	    bdf->glyphs = grealloc(bdf->glyphs,(bdf->glyphmax=sf->glyphmax)*sizeof(BDFChar *));
+	    bdf->glyphs = xrealloc(bdf->glyphs,(bdf->glyphmax=sf->glyphmax)*sizeof(BDFChar *));
 	for ( i=bdf->glyphcnt; i<=gid; ++i )
 	    bdf->glyphs[i] = NULL;
 	bdf->glyphcnt = sf->glyphcnt;

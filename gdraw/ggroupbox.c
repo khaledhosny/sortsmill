@@ -256,7 +256,7 @@ static void GGroupFit(GGadget *g) {
 }
 
 GGadget *GLineCreate(struct gwindow *base, GGadgetData *gd,void *data) {
-    GGadget *g = gcalloc(1,sizeof(GLine));
+    GGadget *g = xcalloc(1,sizeof(GLine));
 
     if ( !ggroup_inited )
 	_GGroup_Init();
@@ -271,7 +271,7 @@ return( g );
 }
 
 GGadget *GGroupCreate(struct gwindow *base, GGadgetData *gd,void *data) {
-    GGadget *g = gcalloc(1,sizeof(GGroup));
+    GGadget *g = xcalloc(1,sizeof(GGroup));
 
     if ( !ggroup_inited )
 	_GGroup_Init();

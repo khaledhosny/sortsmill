@@ -869,12 +869,12 @@ char *AdobeExpertEncoding[] = {
 static struct fontdict *MakeEmptyFont(void) {
     struct fontdict *ret;
 
-    ret = gcalloc(1,sizeof(struct fontdict));
-    ret->fontinfo = gcalloc(1,sizeof(struct fontinfo));
-    ret->chars = gcalloc(1,sizeof(struct pschars));
-    ret->private = gcalloc(1,sizeof(struct private));
-    ret->private->subrs = gcalloc(1,sizeof(struct pschars));
-    ret->private->private = gcalloc(1,sizeof(struct psdict));
+    ret = xcalloc(1,sizeof(struct fontdict));
+    ret->fontinfo = xcalloc(1,sizeof(struct fontinfo));
+    ret->chars = xcalloc(1,sizeof(struct pschars));
+    ret->private = xcalloc(1,sizeof(struct private));
+    ret->private->subrs = xcalloc(1,sizeof(struct pschars));
+    ret->private->private = xcalloc(1,sizeof(struct psdict));
     ret->private->leniv = 4;
     ret->encoding_name = &custom;
     ret->fontinfo->fstype = -1;
@@ -884,14 +884,14 @@ return( ret );
 static struct fontdict *PSMakeEmptyFont(void) {
     struct fontdict *ret;
 
-    ret = gcalloc(1,sizeof(struct fontdict));
-    ret->fontinfo = gcalloc(1,sizeof(struct fontinfo));
-    ret->chars = gcalloc(1,sizeof(struct pschars));
-    ret->private = gcalloc(1,sizeof(struct private));
-    ret->private->subrs = gcalloc(1,sizeof(struct pschars));
-    ret->private->private = gcalloc(1,sizeof(struct psdict));
+    ret = xcalloc(1,sizeof(struct fontdict));
+    ret->fontinfo = xcalloc(1,sizeof(struct fontinfo));
+    ret->chars = xcalloc(1,sizeof(struct pschars));
+    ret->private = xcalloc(1,sizeof(struct private));
+    ret->private->subrs = xcalloc(1,sizeof(struct pschars));
+    ret->private->private = xcalloc(1,sizeof(struct psdict));
     ret->private->leniv = 4;
-    ret->charprocs = gcalloc(1,sizeof(struct charprocs));
+    ret->charprocs = xcalloc(1,sizeof(struct charprocs));
     ret->encoding_name = &custom;
     ret->fontinfo->fstype = -1;
 return( ret );
@@ -968,7 +968,7 @@ return( copy(""));
 	    if ( ret==NULL )
 		ret = galloc(end-start+1);
 	    else
-		ret = grealloc(ret,len+end-start);
+		ret = xrealloc(ret,len+end-start);
 	    strncpy(ret+len-1,start,end-start);
 	    len += end-start;
 	    ret[len-1] = '\0';
@@ -1048,14 +1048,14 @@ static void InitDict(struct psdict *dict,char *line) {
     while ( !isspace(*line) && *line!='\0' ) ++line;
     dict->cnt += strtol(line,NULL,10);
     if ( dict->next>0 ) { int i;		/* Shouldn't happen, but did in a bad file */
-	dict->keys = grealloc(dict->keys,dict->cnt*sizeof(char *));
-	dict->values = grealloc(dict->values,dict->cnt*sizeof(char *));
+	dict->keys = xrealloc(dict->keys,dict->cnt*sizeof(char *));
+	dict->values = xrealloc(dict->values,dict->cnt*sizeof(char *));
 	for ( i=dict->next; i<dict->cnt; ++i ) {
 	    dict->keys[i] = NULL; dict->values[i] = NULL;
 	}
     } else {
-	dict->keys = gcalloc(dict->cnt,sizeof(char *));
-	dict->values = gcalloc(dict->cnt,sizeof(char *));
+	dict->keys = xcalloc(dict->cnt,sizeof(char *));
+	dict->values = xcalloc(dict->cnt,sizeof(char *));
     }
 }
 
@@ -1064,9 +1064,9 @@ static void InitChars(struct pschars *chars,char *line) {
     while ( !isspace(*line) && *line!='\0' ) ++line;
     chars->cnt = strtol(line,NULL,10);
     if ( chars->cnt>0 ) {
-	chars->keys = gcalloc(chars->cnt,sizeof(char *));
-	chars->values = gcalloc(chars->cnt,sizeof(char *));
-	chars->lens = gcalloc(chars->cnt,sizeof(int));
+	chars->keys = xcalloc(chars->cnt,sizeof(char *));
+	chars->values = xcalloc(chars->cnt,sizeof(char *));
+	chars->lens = xcalloc(chars->cnt,sizeof(int));
 	ff_progress_change_total(chars->cnt);
     }
 }
@@ -1076,8 +1076,8 @@ static void InitCharProcs(struct charprocs *cp, char *line) {
     while ( !isspace(*line) && *line!='\0' ) ++line;
     cp->cnt = strtol(line,NULL,10);
     if ( cp->cnt>0 ) {
-	cp->keys = gcalloc(cp->cnt,sizeof(char *));
-	cp->values = gcalloc(cp->cnt,sizeof(SplineChar *));
+	cp->keys = xcalloc(cp->cnt,sizeof(char *));
+	cp->values = xcalloc(cp->cnt,sizeof(SplineChar *));
 	ff_progress_change_total(cp->cnt);
     }
 }
@@ -1127,7 +1127,7 @@ return;
 	}
 	if ( fp->vpt>=fp->vmax ) {
 	    int len = fp->vmax-fp->vbuf+1000, off=fp->vpt-fp->vbuf;
-	    fp->vbuf = grealloc(fp->vbuf,len);
+	    fp->vbuf = xrealloc(fp->vbuf,len);
 	    fp->vpt = fp->vbuf+off;
 	    fp->vmax = fp->vbuf+len;
 	}
@@ -1153,8 +1153,8 @@ static void AddValue(struct fontparse *fp, struct psdict *dict, char *line, char
     if ( dict!=NULL ) {
 	if ( dict->next>=dict->cnt ) {
 	    dict->cnt += 10;
-	    dict->keys = grealloc(dict->keys,dict->cnt*sizeof(char *));
-	    dict->values = grealloc(dict->values,dict->cnt*sizeof(char *));
+	    dict->keys = xrealloc(dict->keys,dict->cnt*sizeof(char *));
+	    dict->values = xrealloc(dict->values,dict->cnt*sizeof(char *));
 	}
 	dict->keys[dict->next] = copyn(line+1,endtok-(line+1));
     }
@@ -1609,7 +1609,7 @@ return;
     } else if ( mycmp("Metrics",line+1,endtok)==0 ) {
 	fp->infi = fp->inprivate = fp->inbb = fp->inencoding = fp->inmetrics2 = false;
 	fp->inmetrics = true;
-	fp->fd->metrics = gcalloc(1,sizeof(struct psdict));
+	fp->fd->metrics = xcalloc(1,sizeof(struct psdict));
 	fp->fd->metrics->cnt = strtol(endtok,NULL,10);
 	fp->fd->metrics->keys = galloc(fp->fd->metrics->cnt*sizeof(char *));
 	fp->fd->metrics->values = galloc(fp->fd->metrics->cnt*sizeof(char *));
@@ -1617,14 +1617,14 @@ return;
 	fp->infi = fp->inbb = fp->inmetrics = fp->inmetrics2 = false;
 	fp->inprivate = fp->inblendprivate = fp->inblendfi = false;
 	fp->inblendprivate = 1;
-	fp->fd->blendprivate = gcalloc(1,sizeof(struct psdict));
+	fp->fd->blendprivate = xcalloc(1,sizeof(struct psdict));
 	InitDict(fp->fd->blendprivate,line);
 return;
     } else if ( strstr(line,"/FontInfo")!=NULL && strstr(line,"/Blend")!=NULL ) {
 	fp->infi = fp->inbb = fp->inmetrics = fp->inmetrics2 = false;
 	fp->inprivate = fp->inblendprivate = fp->inblendfi = false;
 	fp->inblendfi = 1;
-	fp->fd->blendfontinfo = gcalloc(1,sizeof(struct psdict));
+	fp->fd->blendfontinfo = xcalloc(1,sizeof(struct psdict));
 	InitDict(fp->fd->blendfontinfo,line);
 return;
     } else if ( fp->infi ) {
@@ -1778,7 +1778,7 @@ return;
 	    fp->inprivate = fp->inblendprivate = fp->inblendfi = false;
 	    if ( strstr(line,"/Blend")!=NULL ) {
 		fp->inblendprivate = 1;
-		fp->fd->blendprivate = gcalloc(1,sizeof(struct psdict));
+		fp->fd->blendprivate = xcalloc(1,sizeof(struct psdict));
 		InitDict(fp->fd->blendprivate,line);
 	    } else {
 		fp->inprivate = 1;
@@ -1790,7 +1790,7 @@ return;
 	    fp->infi = fp->inblendprivate = fp->inblendfi = false;
 	    if ( strstr(line,"/Blend")!=NULL ) {
 		fp->inblendfi = 1;
-		fp->fd->blendfontinfo = gcalloc(1,sizeof(struct psdict));
+		fp->fd->blendfontinfo = xcalloc(1,sizeof(struct psdict));
 		InitDict(fp->fd->blendfontinfo,line);
 	    } else {
 		fp->infi = 1;
@@ -1930,7 +1930,7 @@ return;
 	else if ( mycmp("FDArray",line+1,endtok)==0 ) { int i;
 	    fp->mainfd = fp->fd;
 	    fp->fd->fdcnt = strtol(endtok,NULL,10);
-	    fp->fd->fds = gcalloc(fp->fd->fdcnt,sizeof(struct fontdict *));
+	    fp->fd->fds = xcalloc(fp->fd->fdcnt,sizeof(struct fontdict *));
 	    for ( i=0; i<fp->fd->fdcnt; ++i )
 		fp->fd->fds[i] = MakeEmptyFont();
 	    fp->fdindex = 0;
@@ -2073,7 +2073,7 @@ return( 0 );
 	if ( pt>=end ) {
 	    char *old = buffer;
 	    int len = (end-buffer)+2000;
-	    buffer = grealloc(buffer,len);
+	    buffer = xrealloc(buffer,len);
 	    end = buffer+len;
 	    pt = buffer+(pt-old);
 	    if ( binstart!=NULL )
@@ -2397,8 +2397,8 @@ static void figurecids(struct fontparse *fp,FILE *temp) {
 		(sdbytes=strtol(ssdbytes,NULL,10))>0 &&
 		(subrcnt=strtol(ssubrcnt,NULL,10))>0 ) {
 	    private->subrs->cnt = subrcnt;
-	    private->subrs->values = gcalloc(subrcnt,sizeof(char *));
-	    private->subrs->lens = gcalloc(subrcnt,sizeof(int));
+	    private->subrs->values = xcalloc(subrcnt,sizeof(char *));
+	    private->subrs->lens = xcalloc(subrcnt,sizeof(int));
 	    leniv = private->leniv;
 	    offsets = galloc((subrcnt+1)*sizeof(int));
 	    fseek(temp,subroff,SEEK_SET);

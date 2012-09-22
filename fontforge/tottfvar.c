@@ -338,7 +338,7 @@ return( NULL );
     *_ptcnt = ptcnt = SCPointCount(mm->normal->glyphs[gid])+4;
     deltas = galloc(2*mm->instance_count*sizeof(int16 *));
     for ( i=0; i<2*mm->instance_count; ++i )
-	deltas[i] = gcalloc(ptcnt,sizeof(int16));
+	deltas[i] = xcalloc(ptcnt,sizeof(int16));
     for ( i=0; i<mm->instance_count; ++i ) {
 	for ( ss1=mm->normal->glyphs[gid]->layers[ly_fore].splines,
 		  ss2=mm->instances[i]->glyphs[gid]->layers[ly_fore].splines;
@@ -440,9 +440,9 @@ return( NULL );
 return( NULL );
 
     *_ptcnt = ptcnt = cvt->len/2;
-    deltas = gcalloc(mm->instance_count,sizeof(int16 *));
+    deltas = xcalloc(mm->instance_count,sizeof(int16 *));
     for ( i=0; i<mm->instance_count; ++i ) if ( (icvt=mm->instances[i]->ttf_tables)!=NULL ) {
-	deltas[i] = gcalloc(ptcnt,sizeof(int16));
+	deltas[i] = xcalloc(ptcnt,sizeof(int16));
 	for ( j=0; j<ptcnt; ++j )
 	    deltas[i][j] = memushort(icvt->data,icvt->len, sizeof(uint16)*j)-
 		    memushort(cvt->data,cvt->len, sizeof(uint16)*j);

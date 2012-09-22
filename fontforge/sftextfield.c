@@ -2264,7 +2264,7 @@ static SFTextArea *_SFTextAreaCreate(SFTextArea *st, struct gwindow *base, GGadg
 	st->sel_start = st->sel_end = st->sel_base = u_strlen(st->li.text);
     }
     if ( st->li.text==NULL )
-	st->li.text = gcalloc(1,sizeof(unichar_t));
+	st->li.text = xcalloc(1,sizeof(unichar_t));
     st->font = sftextarea_font;
     if ( gd->label!=NULL && gd->label->font!=NULL )
 	st->font = gd->label->font;
@@ -2281,7 +2281,7 @@ return( st );
 }
 
 GGadget *SFTextAreaCreate(struct gwindow *base, GGadgetData *gd,void *data) {
-    SFTextArea *st = gcalloc(1,sizeof(SFTextArea));
+    SFTextArea *st = xcalloc(1,sizeof(SFTextArea));
     st->multi_line = true;
     st->accepts_returns = true;
     st->li.wrap = true;

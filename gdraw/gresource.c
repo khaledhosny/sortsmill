@@ -164,7 +164,7 @@ void GResourceSetProg(char *prog) {
     if ( prog!=NULL ) {
 	if ( GResourceProgramName!=NULL && strcmp(prog,GResourceProgramName)==0 )
 return;
-	gfree(GResourceProgramName);
+	free(GResourceProgramName);
 	if (( pt=strrchr(prog,'/'))!=NULL )
 	    ++pt;
 	else
@@ -175,13 +175,13 @@ return;
     else
 return;
 
-    gfree(GResourceProgramDir);
+    free(GResourceProgramDir);
     GResourceProgramDir = _GFile_find_program_dir(prog);
     if ( GResourceProgramDir==NULL ) {
 	GFileGetAbsoluteName(".",filename,sizeof(filename));
 	GResourceProgramDir = copy(filename);
     }
-    gfree(GResourceFullProgram);
+    free(GResourceFullProgram);
     GResourceFullProgram = copy(
 	    GFileBuildName(GResourceProgramDir,GResourceProgramName,filename,sizeof(filename)));
 }
@@ -217,7 +217,7 @@ return;
 	if ( rmax==0 )
 	    _GResource_Res = galloc(cnt*sizeof(struct _GResource_Res));
 	else
-	    _GResource_Res = grealloc(_GResource_Res,(rcur+cnt)*sizeof(struct _GResource_Res));
+	    _GResource_Res = xrealloc(_GResource_Res,(rcur+cnt)*sizeof(struct _GResource_Res));
 	rmax += cnt;
     }
 
@@ -260,11 +260,11 @@ return;
 	for ( k=i+1; k<rcur && strcmp(_GResource_Res[j].res,_GResource_Res[k].res)==0; ++k ) {
 	    if (( !_GResource_Res[k].generic && (_GResource_Res[i].generic || _GResource_Res[i+1].new)) ||
 		    (_GResource_Res[k].generic && _GResource_Res[i].generic && _GResource_Res[i+1].new)) {
-		gfree(_GResource_Res[j].res); gfree(_GResource_Res[j].val);
+		free(_GResource_Res[j].res); free(_GResource_Res[j].val);
 		_GResource_Res[i].res=NULL;
 		_GResource_Res[j] = _GResource_Res[k];
 	    } else {
-		gfree(_GResource_Res[k].res); gfree(_GResource_Res[k].val);
+		free(_GResource_Res[k].res); free(_GResource_Res[k].val);
 		_GResource_Res[k].res=NULL;
 	    }
 	}

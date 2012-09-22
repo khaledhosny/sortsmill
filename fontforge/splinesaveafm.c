@@ -474,7 +474,7 @@ return;
 	bats[cnt++] = bits[2];
 
     (*gvbase)->part_cnt = cnt;
-    (*gvbase)->parts = gcalloc(cnt,sizeof(struct gv_part));
+    (*gvbase)->parts = xcalloc(cnt,sizeof(struct gv_part));
     for ( j=0; j<cnt; ++j ) {
 	DBounds b;
 	bigreal len;
@@ -520,13 +520,13 @@ return( 0 );
 	fclose(file);
 return( 0 );
     }
-    tfmd.kerntab = gcalloc(tfmd.kern_size,sizeof(int32));
-    tfmd.ligkerntab = gcalloc(tfmd.ligkern_size,sizeof(int32));
-    tfmd.ext = gcalloc(tfmd.esize,sizeof(int32));
-    tfmd.ictab = gcalloc(tfmd.italic_size,sizeof(int32));
-    tfmd.dptab = gcalloc(tfmd.depth_size,sizeof(int32));
-    tfmd.httab = gcalloc(tfmd.height_size,sizeof(int32));
-    tfmd.widtab = gcalloc(tfmd.width_size,sizeof(int32));
+    tfmd.kerntab = xcalloc(tfmd.kern_size,sizeof(int32));
+    tfmd.ligkerntab = xcalloc(tfmd.ligkern_size,sizeof(int32));
+    tfmd.ext = xcalloc(tfmd.esize,sizeof(int32));
+    tfmd.ictab = xcalloc(tfmd.italic_size,sizeof(int32));
+    tfmd.dptab = xcalloc(tfmd.depth_size,sizeof(int32));
+    tfmd.httab = xcalloc(tfmd.height_size,sizeof(int32));
+    tfmd.widtab = xcalloc(tfmd.width_size,sizeof(int32));
     tfmd.charlist = charlist;
 
     fseek( file,(6+1)*sizeof(int32),SEEK_SET);
@@ -697,7 +697,7 @@ return;
 	bats[cnt++] = bits[1];
 
     (*gvbase)->part_cnt = cnt;
-    (*gvbase)->parts = gcalloc(cnt,sizeof(struct gv_part));
+    (*gvbase)->parts = xcalloc(cnt,sizeof(struct gv_part));
     for ( j=0; j<cnt; ++j ) {
 	DBounds b;
 	bigreal len;
@@ -777,13 +777,13 @@ return( 0 );
 return( 0 );
     }
 
-    tfmd.kerntab = gcalloc(tfmd.kern_size,sizeof(int32));
-    tfmd.ligkerntab = gcalloc(tfmd.ligkern_size,2*sizeof(int32));
-    tfmd.ext = gcalloc(tfmd.esize,2*sizeof(int32));
-    tfmd.ictab = gcalloc(tfmd.italic_size,sizeof(int32));
-    tfmd.dptab = gcalloc(tfmd.depth_size,sizeof(int32));
-    tfmd.httab = gcalloc(tfmd.height_size,sizeof(int32));
-    tfmd.widtab = gcalloc(tfmd.width_size,sizeof(int32));
+    tfmd.kerntab = xcalloc(tfmd.kern_size,sizeof(int32));
+    tfmd.ligkerntab = xcalloc(tfmd.ligkern_size,2*sizeof(int32));
+    tfmd.ext = xcalloc(tfmd.esize,2*sizeof(int32));
+    tfmd.ictab = xcalloc(tfmd.italic_size,sizeof(int32));
+    tfmd.dptab = xcalloc(tfmd.depth_size,sizeof(int32));
+    tfmd.httab = xcalloc(tfmd.height_size,sizeof(int32));
+    tfmd.widtab = xcalloc(tfmd.width_size,sizeof(int32));
     fseek( file,(14+1)*sizeof(int32),SEEK_SET);
     sf->design_size = (5*getlong(file)+(1<<18))>>19;	/* TeX stores as <<20, adobe in decipoints */
     fseek( file,
@@ -1426,7 +1426,7 @@ return;
 	if ( ticks>AC_MAX || cnt>200 ) /* Too many selected. I fear combinatorial explosion */
 return;
 	if ( cc->cnt+cnt >= cc->max )
-	    cc->ccs = grealloc(cc->ccs,(cc->max += cnt+200)*sizeof(struct cc_data));
+	    cc->ccs = xrealloc(cc->ccs,(cc->max += cnt+200)*sizeof(struct cc_data));
 	AfmBuildMarkCombos(sc,sc->anchor,cc);
     }
 }
@@ -1443,16 +1443,16 @@ static struct cc_data *AfmFigureCCdata(SplineFont *sf,int *total) {
     cc.sf = sf;
     for ( ac=sf->anchor, ac_cnt=0; ac!=NULL; ac=ac->next, ++ac_cnt)
 	ac->ac_num = ac_cnt;
-    cc.mcnt = gcalloc(ac_cnt,sizeof(int));
-    cc.mpos = gcalloc(ac_cnt,sizeof(int));
-    mmax = gcalloc(ac_cnt,sizeof(int));
-    cc.marks = gcalloc(ac_cnt,sizeof(SplineChar **));
+    cc.mcnt = xcalloc(ac_cnt,sizeof(int));
+    cc.mpos = xcalloc(ac_cnt,sizeof(int));
+    mmax = xcalloc(ac_cnt,sizeof(int));
+    cc.marks = xcalloc(ac_cnt,sizeof(SplineChar **));
     for ( i=0; i<sf->glyphcnt; ++i ) if ( (sc = sf->glyphs[i])!=NULL ) {
 	for ( ap = sc->anchor; ap!=NULL; ap=ap->next ) if ( ap->type==at_mark )
 	    ++mmax[ap->anchor->ac_num];
     }
     for ( i=0; i<ac_cnt; ++i )
-	cc.marks[i] = gcalloc(mmax[i],sizeof(SplineChar *));
+	cc.marks[i] = xcalloc(mmax[i],sizeof(SplineChar *));
     for ( i=0; i<sf->glyphcnt; ++i ) if ( (sc = sf->glyphs[i])!=NULL ) {
 	for ( ap = sc->anchor; ap!=NULL; ap=ap->next ) if ( ap->type==at_mark )
 	    cc.marks[ap->anchor->ac_num][cc.mcnt[ap->anchor->ac_num]++] = sc;
@@ -1464,7 +1464,7 @@ static struct cc_data *AfmFigureCCdata(SplineFont *sf,int *total) {
 	    AfmBuildCombos(sc,sc->anchor,&cc);
 	}
     if ( cc.cnt+1 >= cc.max )
-	cc.ccs = grealloc(cc.ccs,(cc.max += 1)*sizeof(struct cc_data));
+	cc.ccs = xrealloc(cc.ccs,(cc.max += 1)*sizeof(struct cc_data));
     cc.ccs[cc.cnt].base = NULL;		/* End of list mark */
     for ( i=0; i<ac_cnt; ++i )
 	free(cc.marks[i]);
@@ -1847,7 +1847,7 @@ void SFLigaturePrepare(SplineFont *sf) {
 	/* Finally, order the list so that the longest ligatures are first */
 	if ( lcnt>1 ) {
 	    if ( lcnt>=lmax )
-		all = grealloc(all,(lmax=lcnt+30)*sizeof(LigList *));
+		all = xrealloc(all,(lmax=lcnt+30)*sizeof(LigList *));
 	    for ( ll=sc->ligofme, k=0; ll!=NULL; ll=ll->next, ++k )
 		all[k] = ll;
 	    for ( k=0; k<lcnt-1; ++k ) for ( j=k+1; j<lcnt; ++j )
@@ -2554,7 +2554,7 @@ struct extension {
 
 static struct ligkern *TfmAddKern(KernPair *kp,struct ligkern *last,double *kerns,
 	int *_kcnt, EncMap *map,int maxc) {
-    struct ligkern *new = gcalloc(1,sizeof(struct ligkern));
+    struct ligkern *new = xcalloc(1,sizeof(struct ligkern));
     int i;
 
     new->other_char = map->backmap[kp->sc->orig_pos];
@@ -2587,7 +2587,7 @@ return( last );
     if ( l->components==NULL ||  map->backmap[l->components->sc->orig_pos]>=maxc ||
 	    l->components->next!=NULL )
 return( last );
-    new = gcalloc(1,sizeof(struct ligkern));
+    new = xcalloc(1,sizeof(struct ligkern));
     new->other_char = map->backmap[l->components->sc->orig_pos];
     new->remainder = map->backmap[l->lig->u.lig.lig->orig_pos];
     new->next = last;
@@ -3180,7 +3180,7 @@ static int _OTfmSplineFont(FILE *tfm, SplineFont *sf, int formattype,EncMap *map
 	    lkcnt = lkcnt2;
 	}
     } else {
-	o_lkarray = gcalloc(lkcnt,sizeof(struct ligkern));
+	o_lkarray = xcalloc(lkcnt,sizeof(struct ligkern));
 	if ( sccnt<128 ) {
 	    lkcnt = 0;
 	    do {

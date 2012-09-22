@@ -70,7 +70,7 @@ static int AddProtocol(unichar_t *prefix,int len) {
 	if ( plen==0 ) {
 	    protocols = (struct protocols *) galloc(pmax*sizeof(struct protocols));
 	} else {
-	    protocols = (struct protocols *) grealloc(protocols,pmax*sizeof(struct protocols));
+	    protocols = (struct protocols *) xrealloc(protocols,pmax*sizeof(struct protocols));
 	}
     }
     memset(protocols+plen,0,sizeof(struct protocols));
@@ -260,7 +260,7 @@ void GIOclose(GIOControl *gc) {
 GIOControl *GIOCreate(unichar_t *path,void *userdata,
 	void (*receivedata)(struct giocontrol *),
 	void (*receiveerror)(struct giocontrol *)) {
-    GIOControl *gc = (GIOControl *) gcalloc(1,sizeof(GIOControl));
+    GIOControl *gc = (GIOControl *) xcalloc(1,sizeof(GIOControl));
 
     gc->path = u_copy(path);
     gc->userdata = userdata;

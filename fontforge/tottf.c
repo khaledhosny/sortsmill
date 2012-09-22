@@ -1319,7 +1319,7 @@ void SFDummyUpCIDs(struct glyphinfo *gi,SplineFont *sf) {
     if ( max == 0 )
 return;
 
-    sf->glyphs = gcalloc(max,sizeof(SplineChar *));
+    sf->glyphs = xcalloc(max,sizeof(SplineChar *));
     sf->glyphcnt = sf->glyphmax = max;
     for ( k=0; k<sf->subfontcnt; ++k )
 	for ( i=0; i<sf->subfonts[k]->glyphcnt; ++i ) if ( sf->subfonts[k]->glyphs[i]!=NULL )
@@ -1802,7 +1802,7 @@ static void dumpcffnames(SplineFont *sf,FILE *cfff) {
 static void dumpcffcharset(SplineFont *sf,struct alltabs *at) {
     int i;
 
-    at->gn_sid = gcalloc(at->gi.gcnt,sizeof(uint32));
+    at->gn_sid = xcalloc(at->gi.gcnt,sizeof(uint32));
     putc(0,at->charset);
     /* I always use a format 0 charset. ie. an array of SIDs in random order */
 
@@ -1985,8 +1985,8 @@ int SFFigureDefWidth(SplineFont *sf, int *_nomwid) {
     } else {
 	++maxw;
 	if ( maxw>65535 ) maxw = 3*(sf->ascent+sf->descent);
-	widths = gcalloc(maxw,sizeof(uint16));
-	cumwid = gcalloc(maxw,sizeof(uint32));
+	widths = xcalloc(maxw,sizeof(uint16));
+	cumwid = xcalloc(maxw,sizeof(uint32));
 	defwid = 0; cnt=0;
 	for ( i=0; i<sf->glyphcnt; ++i )
 	    if ( SCWorthOutputting(sf->glyphs[i]) &&
@@ -2686,7 +2686,7 @@ static int dumpcidglyphs(SplineFont *sf,struct alltabs *at) {
     at->fdarray = tmpfile();
     at->globalsubrs = tmpfile();
 
-    at->fds = gcalloc(sf->subfontcnt,sizeof(struct fd2data));
+    at->fds = xcalloc(sf->subfontcnt,sizeof(struct fd2data));
     for ( i=0; i<sf->subfontcnt; ++i ) {
 	at->fds[i].private = tmpfile();
 	ATFigureDefWidth(sf->subfonts[i],at,i);
@@ -3886,7 +3886,7 @@ void DefaultTTFEnglishNames(struct ttflangname *dummy, SplineFont *sf) {
     if ( dummy->names[ttf_subfamily]==NULL || *dummy->names[ttf_subfamily]=='\0' ) {
 	char *modifiers = SFGetModifiers(sf);
 	dummy->names[ttf_subfamily] = utf8_verify_copy(modifiers);
-	gfree(modifiers);
+	free(modifiers);
     }
     if ( dummy->names[ttf_uniqueid]==NULL || *dummy->names[ttf_uniqueid]=='\0' ) {
 	time(&now);
@@ -3955,7 +3955,7 @@ return;		/* Should not happen, but it did */
 	if ( nt->cur==0 )
 	    nt->entries = galloc((nt->max=100)*sizeof(NameEntry));
 	else
-	    nt->entries = grealloc(nt->entries,(nt->max+=100)*sizeof(NameEntry));
+	    nt->entries = xrealloc(nt->entries,(nt->max+=100)*sizeof(NameEntry));
     }
 
     ne = nt->entries + nt->cur;
@@ -4062,7 +4062,7 @@ static void AddMacName(NamTab *nt,struct macname *mn, int strid) {
 	if ( nt->cur==0 )
 	    nt->entries = galloc((nt->max=100)*sizeof(NameEntry));
 	else
-	    nt->entries = grealloc(nt->entries,(nt->max+=100)*sizeof(NameEntry));
+	    nt->entries = xrealloc(nt->entries,(nt->max+=100)*sizeof(NameEntry));
     }
 
     ne = nt->entries + nt->cur;
@@ -4401,7 +4401,7 @@ return( NULL );		/* Doesn't have the single byte entries */
 	subheads[i].first = lbase;
 	subheads[i].cnt = planesize;
     }
-    glyphs = gcalloc(subheadcnt*planesize+plane0size,sizeof(uint16));
+    glyphs = xcalloc(subheadcnt*planesize+plane0size,sizeof(uint16));
     subheads[0].rangeoff = 0;
     for ( i=0; i<plane0size && i<map->enccount; ++i )
 	if ( map->map[i]!=-1 && sf->glyphs[map->map[i]]!=NULL &&
@@ -4673,7 +4673,7 @@ static FILE *NeedsUCS2Table(SplineFont *sf,int *ucs2len,EncMap *map,int issymbol
 	} else if ( j!=-1 && avail[i]==0xffffffff )
 	    j = -1;
     }
-    cmapseg = gcalloc(segcnt+1,sizeof(struct cmapseg));
+    cmapseg = xcalloc(segcnt+1,sizeof(struct cmapseg));
     ranges = galloc(cnt*sizeof(int16));
     j = -1;
     for ( i=segcnt=0; i<65536; ++i ) {
@@ -4767,7 +4767,7 @@ static FILE *NeedsVariationSequenceTable(SplineFont *sf,int *vslen,EncMap *map) 
 			    vses = galloc((vs_max*=2)*sizeof(uint32));
 			    memcpy(vses,vsbuf,sizeof(vsbuf));
 			} else
-			    vses = grealloc(vses,(vs_max+=512)*sizeof(uint32));
+			    vses = xrealloc(vses,(vs_max+=512)*sizeof(uint32));
 		    }
 		    vses[vs_cnt++] = altuni->vs;
 		}
@@ -6556,12 +6556,12 @@ return( NULL );
 return( NULL );
     fcnt = cnt;
 
-    uhash = gcalloc(1,sizeof(UHash));
-    nhash = gcalloc(1,sizeof(NHash));
+    uhash = xcalloc(1,sizeof(UHash));
+    nhash = xcalloc(1,sizeof(NHash));
 
     *dummysf = *sfs->sf;
     dummysf->glyphmax = gcnt;
-    dummysf->glyphs = gcalloc(gcnt,sizeof(SplineChar *));
+    dummysf->glyphs = xcalloc(gcnt,sizeof(SplineChar *));
     dummysf->glyphcnt = 0;
     dummysf->hasvmetrics = anyvmetrics;
 
@@ -6591,7 +6591,7 @@ return( NULL );
     }
     dummysf->glyphcnt = format==ff_ttf ? 3 : 1;
 
-    ret = gcalloc(fcnt+2,sizeof(struct alltabs));
+    ret = xcalloc(fcnt+2,sizeof(struct alltabs));
     ATinit(&ret[fcnt],dummysf,sfs->map,flags&~ttf_flag_dummyDSIG,
 	    layer,format,bf,NULL);
     ret[fcnt].gi.ttc_composite_font = true;

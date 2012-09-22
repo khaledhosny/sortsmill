@@ -80,7 +80,7 @@ return( NULL );
     new->format = pst_class;
     new->subtable = fpst->subtable;
     new->rule_cnt = fpst->rule_cnt;
-    new->rules = gcalloc(fpst->rule_cnt,sizeof(struct fpst_rule));
+    new->rules = xcalloc(fpst->rule_cnt,sizeof(struct fpst_rule));
 
     max = 100; nextclass=1;
     names = galloc(max*sizeof(char *));
@@ -112,7 +112,7 @@ return( NULL );
 		    break;
 		    if ( k==nextclass ) {
 			if ( nextclass>=max )
-			    names = grealloc(names,(max+=100)*sizeof(char *));
+			    names = xrealloc(names,(max+=100)*sizeof(char *));
 			names[nextclass++] = copy(pt);
 		    }
 		    *end = ch;
@@ -127,15 +127,15 @@ return( NULL );
     }
     new->nccnt = nextclass;
     new->nclass = names;
-    new->nclassnames = gcalloc(nextclass,sizeof(char *));	/* Leave as NULL */
+    new->nclassnames = xcalloc(nextclass,sizeof(char *));	/* Leave as NULL */
     if ( fpst->type==pst_chainpos || fpst->type==pst_chainsub ) {
 	/* our class set has one "class" for each glyph used anywhere */
 	/*  all three class sets are the same */
 	new->bccnt = new->fccnt = nextclass;
 	new->bclass = classcopy(names,nextclass);
 	new->fclass = classcopy(names,nextclass);
-	new->bclassnames = gcalloc(nextclass,sizeof(char *));	/* Leave as NULL */
-	new->fclassnames = gcalloc(nextclass,sizeof(char *));	/* Leave as NULL */
+	new->bclassnames = xcalloc(nextclass,sizeof(char *));	/* Leave as NULL */
+	new->fclassnames = xcalloc(nextclass,sizeof(char *));	/* Leave as NULL */
     }
 return( new );
 }
@@ -267,7 +267,7 @@ static struct contexttree *_FPST2Tree(FPST *fpst,struct contexttree *parent,int 
     if ( fpst!=NULL ) {
 	me->depth = -1;
 	me->rule_cnt = fpst->rule_cnt;
-	me->rules = gcalloc(me->rule_cnt,sizeof(struct ct_subs));
+	me->rules = xcalloc(me->rule_cnt,sizeof(struct ct_subs));
 	for ( i=0; i<me->rule_cnt; ++i )
 	    me->rules[i].rule = &fpst->rules[i];
 	me->parent = NULL;
@@ -277,7 +277,7 @@ static struct contexttree *_FPST2Tree(FPST *fpst,struct contexttree *parent,int 
 	    if ( parent->rules[i].rule->u.class.allclasses[me->depth] == class )
 		++rcnt;
 	me->rule_cnt = rcnt;
-	me->rules = gcalloc(me->rule_cnt,sizeof(struct ct_subs));
+	me->rules = xcalloc(me->rule_cnt,sizeof(struct ct_subs));
 	for ( i=rcnt=0; i<parent->rule_cnt; ++i )
 	    if ( parent->rules[i].rule->u.class.allclasses[me->depth] == class )
 		me->rules[rcnt++].rule = parent->rules[i].rule;
@@ -298,7 +298,7 @@ static struct contexttree *_FPST2Tree(FPST *fpst,struct contexttree *parent,int 
 	}
     }
     me->branch_cnt = ccnt;
-    me->branches = gcalloc(ccnt,sizeof(struct ct_branch));
+    me->branches = xcalloc(ccnt,sizeof(struct ct_branch));
     for ( i=0; i<ccnt; ++i )
 	me->branches[i].classnum = classes[i];
     for ( i=0; i<ccnt; ++i ) {
@@ -574,7 +574,7 @@ return( NULL );
 	    :lookups[1]!=NULL ? lookups[1]->lookup_flags
 	    :lookups[2]!=NULL ? lookups[2]->lookup_flags
 	    :                   lookups[3]->lookup_flags);
-    classglyphs = gcalloc((sf->glyphcnt+1),sizeof(SplineChar *));
+    classglyphs = xcalloc((sf->glyphcnt+1),sizeof(SplineChar *));
     markglyphs = galloc((sf->glyphcnt+1)*sizeof(SplineChar *));
 
     mg = 0;
@@ -615,7 +615,7 @@ return( NULL );
     /* might already be formed. Might be a lig. Might be normal */
     /* Oh, if ignoremarks is true, then combining marks merit a class of their own */
     sm->class_cnt = (flags&pst_ignorecombiningmarks) ? 6 : 5;
-    sm->classes = gcalloc(sm->class_cnt,sizeof(char *));
+    sm->classes = xcalloc(sm->class_cnt,sizeof(char *));
 
     sm->classes[4] = GlyphListToNames(classglyphs);
     if ( flags&pst_ignorecombiningmarks )
@@ -627,7 +627,7 @@ return( NULL );
     /* State 2 means we have found one interesting letter, transformed current to 'init' and marked it (in case we need to make it isolated) */
     /* State 3 means we have found two interesting letters, transformed current to 'medi' and marked (in case we need to make it final) */
     sm->state_cnt = 4;
-    sm->state = gcalloc(sm->state_cnt*sm->class_cnt,sizeof(struct asm_state));
+    sm->state = xcalloc(sm->state_cnt*sm->class_cnt,sizeof(struct asm_state));
 
     /* State 0,1 (start), Class 4 (char in script) takes us to state 2 */
     sm->state[4].next_state = 2;
@@ -698,7 +698,7 @@ return( NULL );
 	for ( k=0; tables[i][k]!=NULL; ++k );
 	if ( k>max ) max=k;
     }
-    next = gcalloc(1<<match_len,sizeof(int));
+    next = xcalloc(1<<match_len,sizeof(int));
     temp = galloc((1<<match_len)*sizeof(SplineChar **));
 
     for ( i=0; i<sf->glyphcnt; ++i ) if ( sf->glyphs[i]!=NULL ) {
@@ -720,7 +720,7 @@ return( NULL );
 	}
     }
 
-    gall = gcalloc(gtot+1,sizeof(SplineChar *));
+    gall = xcalloc(gtot+1,sizeof(SplineChar *));
     class_cnt = gcnt = 0;
     for ( i=0; i<(1<<match_len); ++i ) {
 	if ( next[i]!=0 ) {
@@ -756,7 +756,7 @@ return( NULL );
     *gc = gcnt;
     *mp = map;
 
-    nc = gcalloc(match_len,sizeof(int));
+    nc = xcalloc(match_len,sizeof(int));
     *classes = galloc((match_len+1)*sizeof(int *));
     for ( i=0; i<match_len; ++i )
 	(*classes)[i] = galloc((class_cnt+1)*sizeof(int));
@@ -838,7 +838,7 @@ return( NULL );
     /*  any class which makes up the first coverage table. From the first */
     /*  to the second on any class which makes up the second ... */
     sm->state_cnt = match_len+1;
-    sm->state = gcalloc(sm->state_cnt*sm->class_cnt,sizeof(struct asm_state));
+    sm->state = xcalloc(sm->state_cnt*sm->class_cnt,sizeof(struct asm_state));
     for ( j=0; j<match_len; ++j ) {
 	int off = (j+1)*sm->class_cnt;
 	for ( i=0; i<class_cnt; ++i ) {
@@ -960,7 +960,7 @@ static ASM *ASMFromClassFPST(SplineFont *sf,FPST *fpst, struct contexttree *tree
 
     /* Now build the state machine */
     sm->state_cnt = tree->next_state;
-    sm->state = gcalloc(sm->state_cnt*sm->class_cnt,sizeof(struct asm_state));
+    sm->state = xcalloc(sm->state_cnt*sm->class_cnt,sizeof(struct asm_state));
     for ( cur=tree; cur!=NULL; cur = TreeNext(cur)) if ( cur->state!=0 ) {
 	int off = cur->state*sm->class_cnt;
 

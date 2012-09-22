@@ -354,7 +354,7 @@ static void ImageCacheReload(void) {
 	for ( bucket = imagecache[i]; bucket!=NULL; bucket=bucket->next ) {
 	    if ( strlen(bucket->filename)+imagepathlenmax+3 > pathlen ) {
 		pathlen = strlen(bucket->filename)+imagepathlenmax+20;
-		path = grealloc(path,pathlen);
+		path = xrealloc(path,pathlen);
 	    }
 	    for ( k=0; imagepath[k]!=NULL; ++k ) {
 		sprintf( path,"%s/%s", imagepath[k], bucket->filename );
@@ -461,7 +461,7 @@ static GImage *_GGadgetImageCache(char *filename, char **foundname) {
 return( bucket->image );
 	}
     }
-    bucket = gcalloc(1,sizeof(struct image_bucket));
+    bucket = xcalloc(1,sizeof(struct image_bucket));
     bucket->next = imagecache[index];
     imagecache[index] = bucket;
     bucket->filename = copy(filename);
@@ -518,7 +518,7 @@ GResImage *GGadgetResourceFindImage(char *name, GImage *def) {
     fname = GResourceFindString(name);
     if ( fname==NULL && def==NULL )
 return( NULL );
-    ri = gcalloc(1,sizeof(GResImage));
+    ri = xcalloc(1,sizeof(GResImage));
     ri->filename = fname;
     ri->image = def;
     if ( fname==NULL )
@@ -589,7 +589,7 @@ GTextInfo **GTextInfoArrayFromList(GTextInfo *ti, uint16 *cnt) {
 	for ( i=0; ti[i].text!=NULL || ti[i].image!=NULL || ti[i].line; ++i )
 	    arr[i] = GTextInfoCopy(&ti[i]);
     }
-    arr[i] = gcalloc(1,sizeof(GTextInfo));
+    arr[i] = xcalloc(1,sizeof(GTextInfo));
     if ( cnt!=NULL ) *cnt = i;
 return( arr );
 }
@@ -607,7 +607,7 @@ GTextInfo **GTextInfoArrayCopy(GTextInfo **ti) {
 	for ( i=0; ti[i]->text!=NULL || ti[i]->image!=NULL || ti[i]->line; ++i )
 	    arr[i] = GTextInfoCopy(ti[i]);
     }
-    arr[i] = gcalloc(1,sizeof(GTextInfo));
+    arr[i] = xcalloc(1,sizeof(GTextInfo));
 return( arr );
 }
 
@@ -620,8 +620,8 @@ return( i );
 
 void GTextInfoFree(GTextInfo *ti) {
     if ( !ti->text_in_resource )
-	gfree(ti->text);
-    gfree(ti);
+	free(ti->text);
+    free(ti);
 }
 
 void GTextInfoListFree(GTextInfo *ti) {
@@ -632,8 +632,8 @@ return;
 
     for ( i=0; ti[i].text!=NULL || ti[i].image!=NULL || ti[i].line; ++i )
 	if ( !ti[i].text_in_resource )
-	    gfree(ti[i].text);
-    gfree(ti);
+	    free(ti[i].text);
+    free(ti);
 }
 
 void GTextInfoArrayFree(GTextInfo **ti) {
@@ -644,7 +644,7 @@ return;
     for ( i=0; ti[i]->text || ti[i]->image || ti[i]->line; ++i )
 	GTextInfoFree(ti[i]);
     GTextInfoFree(ti[i]);	/* And free the null entry at end */
-    gfree(ti);
+    free(ti);
 }
 
 int GTextInfoCompare(GTextInfo *ti1, GTextInfo *ti2) {
@@ -688,11 +688,11 @@ return( NULL );
     }
     ti = galloc((i+1)*sizeof(GTextInfo *));
     for ( i=0; i<len; ++i ) {
-	ti[i] = gcalloc(1,sizeof(GTextInfo));
+	ti[i] = xcalloc(1,sizeof(GTextInfo));
 	ti[i]->text = uc_copy(array[i]);
 	ti[i]->fg = ti[i]->bg = COLOR_DEFAULT;
     }
-    ti[i] = gcalloc(1,sizeof(GTextInfo));
+    ti[i] = xcalloc(1,sizeof(GTextInfo));
 return( ti );
 }
 
@@ -705,7 +705,7 @@ return;
 	GMenuItemArrayFree(mi[i].sub);
 	free(mi[i].ti.text);
     }
-    gfree(mi);
+    free(mi);
 }
 
 GMenuItem *GMenuItemArrayCopy(GMenuItem *mi, uint16 *cnt) {
@@ -781,7 +781,7 @@ return;
 	GMenuItem2ArrayFree(mi[i].sub);
 	free(mi[i].ti.text);
     }
-    gfree(mi);
+    free(mi);
 }
 
 static char *shortcut_domain = "shortcuts";
@@ -955,7 +955,7 @@ return( NULL );
     for ( i=0; mi[i].ti.text!=NULL || mi[i].ti.image!=NULL || mi[i].ti.line; ++i );
     if ( i==0 )
 return( NULL );
-    arr = gcalloc((i+1),sizeof(GMenuItem));
+    arr = xcalloc((i+1),sizeof(GMenuItem));
     for ( i=0; mi[i].ti.text!=NULL || mi[i].ti.image!=NULL || mi[i].ti.line; ++i ) {
 	arr[i].ti = mi[i].ti;
 	GTextInfoImageLookup(&arr[i].ti);
@@ -1147,8 +1147,8 @@ return( 0 );
     if ( strarray!=NULL )
 	for ( i=0; i<slen; ++i ) free( strarray[i]);
     free(strarray); free(smnemonics); free(intarray);
-    strarray = gcalloc(scnt,sizeof(unichar_t *));
-    smnemonics = gcalloc(scnt,sizeof(unichar_t));
+    strarray = xcalloc(scnt,sizeof(unichar_t *));
+    smnemonics = xcalloc(scnt,sizeof(unichar_t));
     intarray = galloc(icnt*sizeof(int));
     for ( i=0; i<icnt; ++i ) intarray[i] = 0x80000000;
     slen = ilen = 0;

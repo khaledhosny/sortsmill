@@ -186,19 +186,19 @@ static SplineSet *ReadSplineSets(FILE *file,int flags,SplineSet *old,int closed)
 	readcoords(file,flags&1,&x1,&y1);
 	if ( (verb&0x3)==1 ) {		/* Move to */
 	    old = FinishSet(old,active,closed);
-	    active = gcalloc(1,sizeof(SplineSet));
-	    active->first = active->last = gcalloc(1,sizeof(SplinePoint));
+	    active = xcalloc(1,sizeof(SplineSet));
+	    active->first = active->last = xcalloc(1,sizeof(SplinePoint));
 	    active->first->me.x = x1; active->first->me.y = y1;
 	    active->first->nextcp = active->first->prevcp = active->first->me;
 	    active->first->nonextcp = active->first->noprevcp = true;
 	} else {
 	    if ( active==NULL ) {
 		fprintf( stderr, "No initial point, assuming 0,0\n" );
-		active = gcalloc(1,sizeof(SplineSet));
-		active->first = active->last = gcalloc(1,sizeof(SplinePoint));
+		active = xcalloc(1,sizeof(SplineSet));
+		active->first = active->last = xcalloc(1,sizeof(SplinePoint));
 		active->first->nonextcp = active->first->noprevcp = true;
 	    }
-	    next = gcalloc(1,sizeof(SplinePoint));
+	    next = xcalloc(1,sizeof(SplinePoint));
 	    if ( (verb&3)==2 ) {		/* Line to */
 		next->me.x = x1; next->me.y = y1;
 		next->nextcp = next->prevcp = next->me;
@@ -252,11 +252,11 @@ return( NULL );
 	sc->vwidth = (outline->yadvance[enc]*(sf->ascent+sf->descent))/1000;
 
     if ( flags&(1<<4) ) {
-	r1 = gcalloc(1,sizeof(RefChar));
+	r1 = xcalloc(1,sizeof(RefChar));
 	r1->transform[0] = r1->transform[3] = 1;
 	r1->orig_pos = readcharindex(file,flags&(1<<6));
 	if ( flags&(1<<5) ) {
-	    r2 = gcalloc(1,sizeof(RefChar));
+	    r2 = xcalloc(1,sizeof(RefChar));
 	    r2->transform[0] = r2->transform[3] = 1;
 	    r2->orig_pos = readcharindex(file,flags&(1<<6));
 	    readcoords(file,flags&1,&x,&y);
@@ -286,7 +286,7 @@ return(sc);
     }
     if ( verb!=EOF && verb&(1<<3)) {
 	while ( (ch=readcharindex(file,flags&(1<<6)))!=0 && !feof(file)) {
-	    r1 = gcalloc(1,sizeof(RefChar));
+	    r1 = xcalloc(1,sizeof(RefChar));
 	    r1->transform[0] = r1->transform[3] = 1;
 	    r1->orig_pos = ch;
 	    readcoords(file,flags&1,&x,&y);
@@ -528,7 +528,7 @@ return;
 	if ( mapping==0 )
 	    outline->xadvance = widths;
 	else {
-	    outline->xadvance = gcalloc(outline->metrics_n,sizeof(int));
+	    outline->xadvance = xcalloc(outline->metrics_n,sizeof(int));
 	    for ( i=0; i<m; ++i )
 		outline->xadvance[i] = widths[mapping[i]];
 	    free(widths);
@@ -541,7 +541,7 @@ return;
 	if ( mapping==0 )
 	    outline->yadvance = widths;
 	else {
-	    outline->yadvance = gcalloc(outline->metrics_n,sizeof(int));
+	    outline->yadvance = xcalloc(outline->metrics_n,sizeof(int));
 	    for ( i=0; i<m; ++i )
 		outline->yadvance[i] = widths[mapping[i]];
 	    free(widths);
@@ -564,7 +564,7 @@ return;
 	}
 	if ( kern_offset!=0 && !feof(file) && outline->metrics_n!=0 ) {
 	    fseek(file,kern_offset+table_base,SEEK_SET);
-	    outline->kerns = gcalloc(outline->metrics_n,sizeof(struct r_kern *));
+	    outline->kerns = xcalloc(outline->metrics_n,sizeof(struct r_kern *));
 	    if ( flags&(1<<6) ) {
 		/* 16 bit */
 		while ( (left=r_getshort(file))!=0 && !feof(file)) {
@@ -617,7 +617,7 @@ return;
     for ( i=0; i<outline->metrics_n; ++i ) {
 	gid1 = sf->map->map[i];
 	for ( kern = outline->kerns[i]; kern!=NULL; kern=kern->next ) {
-	    kp = gcalloc(1,sizeof(KernPair));
+	    kp = xcalloc(1,sizeof(KernPair));
 	    kp->off = em*kern->amount/1000;
 	    kp->subtable = subtable;
 	    gid2 = sf->map->map[kern->right];
@@ -811,8 +811,8 @@ return( NULL );
     outline.sf = SplineFontEmpty();
     outline.sf->glyphmax = outline.metrics_n;
     outline.sf->glyphcnt = 0;
-    outline.sf->glyphs = gcalloc(outline.sf->glyphmax,sizeof(SplineChar *));
-    outline.sf->map = gcalloc(1,sizeof(EncMap));
+    outline.sf->glyphs = xcalloc(outline.sf->glyphmax,sizeof(SplineChar *));
+    outline.sf->map = xcalloc(1,sizeof(EncMap));
     outline.sf->map->enc = &custom;
     outline.sf->map->encmax = outline.sf->map->enccount = outline.sf->map->backmax = outline.sf->glyphmax;
     outline.sf->map->map = galloc(outline.sf->glyphmax*sizeof(int32));

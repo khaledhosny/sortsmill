@@ -2174,7 +2174,7 @@ static GTextInfo *SFUsableLayerNames(SplineFont *sf,int def_layer) {
 	    def_layer = ly_fore;
     }
 
-    ti = gcalloc(cnt+1,sizeof(GTextInfo));
+    ti = xcalloc(cnt+1,sizeof(GTextInfo));
     cnt=0;
     for ( layer=0; layer<sf->layer_cnt; ++layer ) if ( sf->layers[layer].ticked ) {
 	ti[cnt].text = (unichar_t *) sf->layers[layer].name;
@@ -2296,7 +2296,7 @@ int SFGenerateFont(SplineFont *sf,int layer,int family,EncMap *map) {
 	    if ( fc==fondcnt ) {
 		/* Create a new fond containing just this font */
 		if ( fondcnt>=fondmax )
-		    familysfs = grealloc(familysfs,(fondmax+=10)*sizeof(SFArray));
+		    familysfs = xrealloc(familysfs,(fondmax+=10)*sizeof(SFArray));
 		memset(familysfs[fondcnt],0,sizeof(SFArray));
 		familysfs[fondcnt++][psstyle] = fv->b.sf;
 	    }
@@ -2618,7 +2618,7 @@ return( 0 );
     gcd[k].creator = GListButtonCreate;
     nlnames = AllNamelistNames();
     for ( cnt=0; nlnames[cnt]!=NULL; ++cnt);
-    namelistnames = gcalloc(cnt+3,sizeof(GTextInfo));
+    namelistnames = xcalloc(cnt+3,sizeof(GTextInfo));
     namelistnames[0].text = (unichar_t *) _("No Rename");
     namelistnames[0].text_is_1byte = true;
     if ( force_names_when_saving==NULL ) {

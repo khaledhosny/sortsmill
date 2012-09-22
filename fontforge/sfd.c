@@ -408,7 +408,7 @@ return( NULL );
 		pt = buffer = galloc(400);
 		end = buffer+400;
 	    } else {
-		char *temp = grealloc(buffer,end-buffer+400);
+		char *temp = xrealloc(buffer,end-buffer+400);
 		pt = temp+(pt-buffer);
 		end = temp+(end-buffer+400);
 		buffer = temp;
@@ -495,7 +495,7 @@ return( NULL );
 	    }
 	}
 	if ( pt+10>=end ) {
-	    char *temp = grealloc(buffer,end-buffer+400);
+	    char *temp = xrealloc(buffer,end-buffer+400);
 	    pt = temp+(pt-buffer);
 	    end = temp+(end-buffer+400);
 	    buffer = temp;
@@ -745,7 +745,7 @@ static uint8 *image2rle(struct _GImage *img, int *len) {
     *len = 0;
     if ( img->image_type!=it_mono || img->bytes_per_line<5 )
 return( NULL );
-    rle = gcalloc(max,sizeof(uint8)), pt = rle, end=rle+max-3;
+    rle = xcalloc(max,sizeof(uint8)), pt = rle, end=rle+max-3;
 
     for ( i=0; i<img->height; ++i ) {
 	if ( i!=0 ) {
@@ -1154,7 +1154,7 @@ return( NULL );
 	else {
 	    if ( pt>=end ) {
 		cnt = pt-buf;
-		buf = grealloc(buf,(max+=200)+1);
+		buf = xrealloc(buf,(max+=200)+1);
 		pt = buf+cnt;
 		end = buf+max;
 	    }
@@ -2688,7 +2688,7 @@ static char *getquotedeol(FILE *sfd) {
 	    /* So any other value of ch is assumed impossible. */
 	}
 	if ( pt>=end ) {
-	    pt = grealloc(str,end-str+101);
+	    pt = xrealloc(str,end-str+101);
 	    end = pt+(end-str)+100;
 	    str = pt;
 	    pt = end-100;
@@ -2983,7 +2983,7 @@ static ImageList *SFDGetImage(FILE *sfd) {
     gethex(sfd,&trans);
     image = GImageCreate(image_type,width,height);
     base = image->list_len==0?image->u.image:image->u.images[0];
-    img = gcalloc(1,sizeof(ImageList));
+    img = xcalloc(1,sizeof(ImageList));
     img->image = image;
     getreal(sfd,&img->xoff);
     getreal(sfd,&img->yoff);
@@ -2997,7 +2997,7 @@ static ImageList *SFDGetImage(FILE *sfd) {
     base->trans = trans;
     if ( clutlen!=0 ) {
 	if ( base->clut==NULL )
-	    base->clut = gcalloc(1,sizeof(GClut));
+	    base->clut = xcalloc(1,sizeof(GClut));
 	base->clut->clut_len = clutlen;
 	base->clut->trans_index = trans;
 	for ( i=0;i<clutlen; ++i ) {
@@ -3097,7 +3097,7 @@ static void SFDGetTtInstrs(FILE *sfd, SplineChar *sc) {
 
     while ( (ch=nlgetc(sfd))!=EOF ) {
 	if ( pt>=end ) {
-	    char *newbuf = grealloc(buf,(end-buf+200));
+	    char *newbuf = xrealloc(buf,(end-buf+200));
 	    pt = newbuf+(pt-buf);
 	    end = newbuf+(end+200-buf);
 	    buf = newbuf;
@@ -3181,7 +3181,7 @@ static struct ttf_table *SFDGetShortTable(FILE *sfd, SplineFont *sf,struct ttf_t
 	    ch = nlgetc(sfd);
 	    if ( ch==' ' ) {
 		if ( !started ) {
-		    sf->cvt_names = gcalloc(len+1,sizeof(char *));
+		    sf->cvt_names = xcalloc(len+1,sizeof(char *));
 		    sf->cvt_names[len] = END_CVT_NAMES;
 		    started = true;
 		}
@@ -3220,7 +3220,7 @@ static struct ttf_table *SFDGetTtTable(FILE *sfd, SplineFont *sf,struct ttf_tabl
 
     while ( (ch=nlgetc(sfd))!=EOF ) {
 	if ( pt>=end ) {
-	    char *newbuf = grealloc(buf,(end-buf+200));
+	    char *newbuf = xrealloc(buf,(end-buf+200));
 	    pt = newbuf+(pt-buf);
 	    end = newbuf+(end+200-buf);
 	    buf = newbuf;
@@ -3298,13 +3298,13 @@ static void SFDGetSpiros(FILE *sfd,SplineSet *cur) {
     while ( fscanf(sfd,"%lg %lg %c", &cp.x, &cp.y, &cp.ty )==3 ) {
 	if ( cur!=NULL ) {
 	    if ( cur->spiro_cnt>=cur->spiro_max )
-		cur->spiros = grealloc(cur->spiros,(cur->spiro_max+=10)*sizeof(spiro_cp));
+		cur->spiros = xrealloc(cur->spiros,(cur->spiro_max+=10)*sizeof(spiro_cp));
 	    cur->spiros[cur->spiro_cnt++] = cp;
 	}
     }
     if ( cur!=NULL && (cur->spiros[cur->spiro_cnt-1].ty&0x7f)!=SPIRO_END ) {
 	if ( cur->spiro_cnt>=cur->spiro_max )
-	    cur->spiros = grealloc(cur->spiros,(cur->spiro_max+=1)*sizeof(spiro_cp));
+	    cur->spiros = xrealloc(cur->spiros,(cur->spiro_max+=1)*sizeof(spiro_cp));
 	memset(&cur->spiros[cur->spiro_cnt],0,sizeof(spiro_cp));
 	cur->spiros[cur->spiro_cnt++].ty = SPIRO_END;
     }
@@ -3501,7 +3501,7 @@ static void SFDGetMinimumDistances(FILE *sfd, SplineChar *sc) {
 	    }
 	}
 	if ( mapping==NULL )
-	    mapping = gcalloc(pt,sizeof(SplinePoint *));
+	    mapping = xcalloc(pt,sizeof(SplinePoint *));
     }
 
     for ( ch=nlgetc(sfd); ch!=EOF && ch!='\n'; ch=nlgetc(sfd)) {
@@ -3855,7 +3855,7 @@ return;
     if ( orig_pos>=map->backmax ) {
 	int old = map->backmax;
 	map->backmax = orig_pos+10;
-	map->backmap = grealloc(map->backmap,map->backmax*sizeof(int));
+	map->backmap = xrealloc(map->backmap,map->backmax*sizeof(int));
 	memset(map->backmap+old,-1,(map->backmax-old)*sizeof(int));
     }
     if ( map->backmap[orig_pos] == -1 )		/* backmap will not be unique if multiple encodings come from same glyph */
@@ -3863,7 +3863,7 @@ return;
     if ( enc>=map->encmax ) {
 	int old = map->encmax;
 	map->encmax = enc+10;
-	map->map = grealloc(map->map,map->encmax*sizeof(int));
+	map->map = xrealloc(map->map,map->encmax*sizeof(int));
 	memset(map->map+old,-1,(map->encmax-old)*sizeof(int));
     }
     if ( enc>=map->enccount )
@@ -3905,7 +3905,7 @@ static struct glyphvariants *SFDParseGlyphComposition(FILE *sfd,
     if ( gv==NULL )
 	gv = (struct glyphvariants *) xzalloc(sizeof (struct glyphvariants));
     getint(sfd,&gv->part_cnt);
-    gv->parts = gcalloc(gv->part_cnt,sizeof(struct gv_part));
+    gv->parts = xcalloc(gv->part_cnt,sizeof(struct gv_part));
     for ( i=0; i<gv->part_cnt; ++i ) {
 	int temp, ch;
 	getname(sfd,tok);
@@ -3934,7 +3934,7 @@ static void SFDParseVertexKern(FILE *sfd, struct mathkernvertex *vertex) {
     int i,ch;
 
     getint(sfd,&vertex->cnt);
-    vertex->mkd = gcalloc(vertex->cnt,sizeof(struct mathkerndata));
+    vertex->mkd = xcalloc(vertex->cnt,sizeof(struct mathkerndata));
     for ( i=0; i<vertex->cnt; ++i ) {
 	SFDParseMathValueRecord(sfd,&vertex->mkd[i].height,&vertex->mkd[i].height_adjusts);
 	while ( (ch=nlgetc(sfd))==' ' );
@@ -3968,7 +3968,7 @@ static struct gradient *SFDParseGradient(FILE *sfd,char *tok) {
     grad->sm = i;
 
     getint(sfd,&grad->stop_cnt);
-    grad->grad_stops = gcalloc(grad->stop_cnt,sizeof(struct grad_stops));
+    grad->grad_stops = xcalloc(grad->stop_cnt,sizeof(struct grad_stops));
     for ( i=0; i<grad->stop_cnt; ++i ) {
 	while ( isspace(ch=nlgetc(sfd)));
 	if ( ch!='{' ) ungetc(ch,sfd);
@@ -4066,7 +4066,7 @@ return( NULL );
 		    sc->orig_pos = sf->glyphcnt;
 		if ( sc->orig_pos>=sf->glyphcnt ) {
 		    if ( sc->orig_pos>=sf->glyphmax )
-			sf->glyphs = grealloc(sf->glyphs,(sf->glyphmax = sc->orig_pos+10)*sizeof(SplineChar *));
+			sf->glyphs = xrealloc(sf->glyphs,(sf->glyphmax = sc->orig_pos+10)*sizeof(SplineChar *));
 		    memset(sf->glyphs+sf->glyphcnt,0,(sc->orig_pos+1-sf->glyphcnt)*sizeof(SplineChar *));
 		    sf->glyphcnt = sc->orig_pos+1;
 		}
@@ -4216,7 +4216,7 @@ return( NULL );
 	    sc->dstem = SFDReadDHints( sc->parent,sfd,false );
 	} else if ( strmatch(tok,"CounterMasks:")==0 ) {
 	    getsint(sfd,&sc->countermask_cnt);
-	    sc->countermasks = gcalloc(sc->countermask_cnt,sizeof(HintMask));
+	    sc->countermasks = xcalloc(sc->countermask_cnt,sizeof(HintMask));
 	    for ( i=0; i<sc->countermask_cnt; ++i ) {
 		int ch;
 		while ( (ch=nlgetc(sfd))==' ' );
@@ -4252,7 +4252,7 @@ return( NULL );
 	} else if ( strmatch(tok,"LayerCount:")==0 ) {
 	    getint(sfd,&temp);
 	    if ( temp>sc->layer_cnt ) {
-		sc->layers = grealloc(sc->layers,temp*sizeof(Layer));
+		sc->layers = xrealloc(sc->layers,temp*sizeof(Layer));
 		memset(sc->layers+sc->layer_cnt,0,(temp-sc->layer_cnt)*sizeof(Layer));
 	    }
 	    sc->layer_cnt = temp;
@@ -4266,7 +4266,7 @@ return( NULL );
 	    int i;
 	    getint(sfd,&layer);
 	    if ( layer>=sc->layer_cnt ) {
-		sc->layers = grealloc(sc->layers,(layer+1)*sizeof(Layer));
+		sc->layers = xrealloc(sc->layers,(layer+1)*sizeof(Layer));
 		memset(sc->layers+sc->layer_cnt,0,(layer+1-sc->layer_cnt)*sizeof(Layer));
 	    }
 	    if ( sc->parent->multilayer ) {
@@ -4721,7 +4721,7 @@ return( 0 );
 	bfc->byte_data = true;
 	bfc->depth = bdf->clut->clut_len==4 ? 2 : bdf->clut->clut_len==16 ? 4 : 8;
     }
-    bfc->bitmap = gcalloc((bfc->ymax-bfc->ymin+1)*bfc->bytes_per_line,sizeof(char));
+    bfc->bitmap = xcalloc((bfc->ymax-bfc->ymin+1)*bfc->bytes_per_line,sizeof(char));
 
     memset(&dec,'\0', sizeof(dec)); dec.pos = -1;
     dec.sfd = sfd;
@@ -4763,7 +4763,7 @@ return( 0 );
 return( 0 );
     while ( isspace( ch=nlgetc( sfd )) && ch!='\r' && ch!='\n' );
 
-    ref = gcalloc( 1,sizeof( BDFRefChar ));
+    ref = xcalloc( 1,sizeof( BDFRefChar ));
     ref->gid = rgid; ref->xoff = xoff, ref->yoff = yoff;
     if ( ch == 'S' ) ref->selected = true;
     for ( head = bc->refs; head != NULL && head->next!=NULL; head = head->next );
@@ -4802,7 +4802,7 @@ static int SFDGetBitmapFont(FILE *sfd,SplineFont *sf,int fromdir,char *dirname) 
     int pixelsize, ascent, descent, depth=1;
     int ch, enccount;
 
-    bdf = gcalloc(1,sizeof(BDFFont));
+    bdf = xcalloc(1,sizeof(BDFFont));
 
     if ( getint(sfd,&pixelsize)!=1 || pixelsize<=0 )
 return( 0 );
@@ -4836,7 +4836,7 @@ return( 0 );
     }
     bdf->sf = sf;
     bdf->glyphcnt = bdf->glyphmax = sf->glyphcnt;
-    bdf->glyphs = gcalloc(bdf->glyphcnt,sizeof(BDFChar *));
+    bdf->glyphs = xcalloc(bdf->glyphcnt,sizeof(BDFChar *));
 
     while ( getname(sfd,tok)==1 ) {
 	if ( strcmp(tok,"BDFStartProperties:")==0 )
@@ -5103,11 +5103,11 @@ static void SFDGetPrivate(FILE *sfd,SplineFont *sf) {
     char name[200];
     char *pt, *end;
 
-    sf->private = gcalloc(1,sizeof(struct psdict));
+    sf->private = xcalloc(1,sizeof(struct psdict));
     getint(sfd,&cnt);
     sf->private->next = sf->private->cnt = cnt;
-    sf->private->values = gcalloc(cnt,sizeof(char *));
-    sf->private->keys = gcalloc(cnt,sizeof(char *));
+    sf->private->values = xcalloc(cnt,sizeof(char *));
+    sf->private->keys = xcalloc(cnt,sizeof(char *));
     for ( i=0; i<cnt; ++i ) {
 	getname(sfd,name);
 	sf->private->keys[i] = copy(name);
@@ -5349,14 +5349,14 @@ static void SFDParseChainContext(FILE *sfd,SplineFont *sf,FPST *fpst, char *tok,
     fscanf(sfd, "%hu %hu %hu %hu", &fpst->nccnt, &fpst->bccnt, &fpst->fccnt, &fpst->rule_cnt );
     if ( fpst->nccnt!=0 || fpst->bccnt!=0 || fpst->fccnt!=0 ) {
 	fpst->nclass = galloc(fpst->nccnt*sizeof(char *));
-	fpst->nclassnames = gcalloc(fpst->nccnt,sizeof(char *));
+	fpst->nclassnames = xcalloc(fpst->nccnt,sizeof(char *));
 	if ( fpst->nccnt!=0 ) fpst->nclass[0] = NULL;
 	if ( fpst->bccnt!=0 || fpst->fccnt!=0 ) {
 	    fpst->bclass = galloc(fpst->bccnt*sizeof(char *));
-	    fpst->bclassnames = gcalloc(fpst->bccnt,sizeof(char *));
+	    fpst->bclassnames = xcalloc(fpst->bccnt,sizeof(char *));
 	    if (fpst->bccnt!=0 ) fpst->bclass[0] = NULL;
 	    fpst->fclass = galloc(fpst->fccnt*sizeof(char *));
-	    fpst->fclassnames = gcalloc(fpst->fccnt,sizeof(char *));
+	    fpst->fclassnames = xcalloc(fpst->fccnt,sizeof(char *));
 	    if (fpst->fccnt!=0 ) fpst->fclass[0] = NULL;
 	}
     }
@@ -5373,7 +5373,7 @@ static void SFDParseChainContext(FILE *sfd,SplineFont *sf,FPST *fpst, char *tok,
 	}
     }
 
-    fpst->rules = gcalloc(fpst->rule_cnt,sizeof(struct fpst_rule));
+    fpst->rules = xcalloc(fpst->rule_cnt,sizeof(struct fpst_rule));
     for ( i=0; i<fpst->rule_cnt; ++i ) {
 	switch ( fpst->format ) {
 	  case pst_glyphs:
@@ -5596,7 +5596,7 @@ return( head );
 }
 
 static char *SFDParseMMSubroutine(FILE *sfd) {
-    char buffer[400], *sofar=gcalloc(1,1);
+    char buffer[400], *sofar=xcalloc(1,1);
     const char *endtok = "EndMMSubroutine";
     int len = 0, blen, first=true;
 
@@ -5609,7 +5609,7 @@ static char *SFDParseMMSubroutine(FILE *sfd) {
     continue;
 	}
 	blen = strlen(buffer);
-	sofar = grealloc(sofar,len+blen+1);
+	sofar = xrealloc(sofar,len+blen+1);
 	strcpy(sofar+len,buffer);
 	len += blen;
     }
@@ -5640,12 +5640,12 @@ return;
 
 static void SFDSizeMap(EncMap *map,int glyphcnt,int enccnt) {
     if ( glyphcnt>map->backmax ) {
-	map->backmap = grealloc(map->backmap,glyphcnt*sizeof(int));
+	map->backmap = xrealloc(map->backmap,glyphcnt*sizeof(int));
 	memset(map->backmap+map->backmax,-1,(glyphcnt-map->backmax)*sizeof(int));
 	map->backmax = glyphcnt;
     }
     if ( enccnt>map->encmax ) {
-	map->map = grealloc(map->map,enccnt*sizeof(int));
+	map->map = xrealloc(map->map,enccnt*sizeof(int));
 	memset(map->map+map->backmax,-1,(enccnt-map->encmax)*sizeof(int));
 	map->encmax = map->enccount = enccnt;
     }
@@ -5689,7 +5689,7 @@ return( sf );
     if ( gc!=0 ) {
 	sf->glyphcnt = 0;
 	sf->glyphmax = gc;
-	sf->glyphs = gcalloc(gc,sizeof(SplineChar *));
+	sf->glyphs = xcalloc(gc,sizeof(SplineChar *));
 	ff_progress_change_total(gc);
 	if ( sf->cidmaster!=NULL ) {
 	    sf->map = sf->cidmaster->map;
@@ -5718,7 +5718,7 @@ return( sf );
     } else if ( sc!=0 ) {
 	int i=0;
 	sf->subfontcnt = sc;
-	sf->subfonts = gcalloc(sf->subfontcnt,sizeof(SplineFont *));
+	sf->subfonts = xcalloc(sf->subfontcnt,sizeof(SplineFont *));
 	sf->map = EncMap1to1(1000);
 	ff_progress_change_stages(2*sc);
 
@@ -5946,7 +5946,7 @@ static void SFDParseLookup(FILE *sfd,SplineFont *sf,OTLookup *otl) {
 			    if ( ch=='\'' ) {
 				ungetc(ch,sfd);
 			        if ( lcnt>=lmax )
-				    langs = grealloc(langs,(lmax+=10)*sizeof(uint32));
+				    langs = xrealloc(langs,(lmax+=10)*sizeof(uint32));
 				langs[lcnt++] = gettag(sfd);
 			    }
 			}
@@ -5974,7 +5974,7 @@ static void SFDParseMathItem(FILE *sfd,SplineFont *sf,char *tok) {
     struct MATH *math;
 
     if ( (math = sf->MATH) == NULL )
-	math = sf->MATH = gcalloc(1,sizeof(struct MATH));
+	math = sf->MATH = xcalloc(1,sizeof(struct MATH));
     for ( i=0; math_constants_descriptor[i].script_name!=NULL; ++i ) {
 	char *name = math_constants_descriptor[i].script_name;
 	int len = strlen( name );
@@ -6035,7 +6035,7 @@ return(NULL);
     bs->script = gettag(sfd);
     getint(sfd,&bs->def_baseline);
     if ( base->baseline_cnt!=0 ) {
-	bs->baseline_pos = gcalloc(base->baseline_cnt,sizeof(int16));
+	bs->baseline_pos = xcalloc(base->baseline_cnt,sizeof(int16));
 	for ( i=0; i<base->baseline_cnt; ++i )
 	    getsint(sfd, &bs->baseline_pos[i]);
     }
@@ -6087,7 +6087,7 @@ static OTLookup **SFDLookupList(FILE *sfd,SplineFont *sf) {
 		    buf = galloc((lmax=lcnt+50)*sizeof(OTLookup *));
 		    memcpy(buf,space,sizeof(space));
 		} else
-		    buf = grealloc(buf,(lmax+=50)*sizeof(OTLookup *));
+		    buf = xrealloc(buf,(lmax+=50)*sizeof(OTLookup *));
 	    }
 	    buf[lcnt++] = otl;
 	}
@@ -6134,12 +6134,12 @@ static void SFDParseJustify(FILE *sfd, SplineFont *sf, char *tok) {
 		p = -1;
 		getint(sfd,&jlang->cnt);
 		if ( jlang->cnt!=0 )
-		    jlang->prios = gcalloc(jlang->cnt,sizeof(struct jstf_prio));
+		    jlang->prios = xcalloc(jlang->cnt,sizeof(struct jstf_prio));
 	    } else if ( strcmp(tok,"JstfPrio:")==0 ) {
 		if ( jlang!=NULL ) {
 		    ++p;
 		    if ( p>= jlang->cnt ) {
-			jlang->prios = grealloc(jlang->prios,(p+1)*sizeof(struct jstf_prio));
+			jlang->prios = xrealloc(jlang->prios,(p+1)*sizeof(struct jstf_prio));
 			memset(jlang->prios+jlang->cnt,0,(p+1-jlang->cnt)*sizeof(struct jstf_prio));
 			jlang->cnt = p+1;
 		    }
@@ -6204,7 +6204,7 @@ static SplineFont *SFD_GetFont(FILE *sfd,SplineFont *cidmaster,char *tok,
     if ( sfdversion<2 ) {
 	/* If it's an old style sfd file with old style features we need some */
 	/*  extra data space to do the conversion from old to new */
-	sf = grealloc(sf,sizeof(SplineFont1));
+	sf = xrealloc(sf,sizeof(SplineFont1));
 	memset(((uint8 *) sf) + sizeof(SplineFont),0,sizeof(SplineFont1)-sizeof(SplineFont));
     }
     sf->sfd_version = sfdversion;
@@ -6439,14 +6439,14 @@ static SplineFont *SFD_GetFont(FILE *sfd,SplineFont *cidmaster,char *tok,
 	    had_layer_cnt = true;
 	    getint(sfd,&sf->layer_cnt);
 	    if ( sf->layer_cnt>2 ) {
-		sf->layers = grealloc(sf->layers,sf->layer_cnt*sizeof(LayerInfo));
+		sf->layers = xrealloc(sf->layers,sf->layer_cnt*sizeof(LayerInfo));
 		memset(sf->layers+2,0,(sf->layer_cnt-2)*sizeof(LayerInfo));
 	    }
 	} else if ( strmatch(tok,"Layer:")==0 ) {
 	    int layer, o2, bk;
 	    getint(sfd,&layer);
 	    if ( layer>=sf->layer_cnt ) {
-		sf->layers = grealloc(sf->layers,(layer+1)*sizeof(LayerInfo));
+		sf->layers = xrealloc(sf->layers,(layer+1)*sizeof(LayerInfo));
 		memset(sf->layers+sf->layer_cnt,0,((layer+1)-sf->layer_cnt)*sizeof(LayerInfo));
 		sf->layer_cnt = layer+1;
 	    }
@@ -6557,7 +6557,7 @@ static SplineFont *SFD_GetFont(FILE *sfd,SplineFont *cidmaster,char *tok,
 	} else if ( strmatch(tok,"RemapN:")==0 ) {
 	    int n;
 	    getint(sfd,&n);
-	    remap = gcalloc(n+1,sizeof(struct remap));
+	    remap = xcalloc(n+1,sizeof(struct remap));
 	    remap[n].infont = -1;
 	    mappos = 0;
 	    if ( sf->map!=NULL ) sf->map->remap = remap;
@@ -6696,7 +6696,7 @@ exit(1);
 	    kc->firsts = galloc(kc->first_cnt*sizeof(char *));
 	    kc->seconds = galloc(kc->second_cnt*sizeof(char *));
 	    kc->offsets = galloc(kc->first_cnt*kc->second_cnt*sizeof(int16));
-	    kc->adjusts = gcalloc(kc->first_cnt*kc->second_cnt,sizeof(DeviceTable));
+	    kc->adjusts = xcalloc(kc->first_cnt*kc->second_cnt,sizeof(DeviceTable));
 	    kc->firsts[0] = NULL;
 	    for ( i=classstart; i<kc->first_cnt; ++i ) {
 		getint(sfd,&temp);
@@ -6930,12 +6930,12 @@ exit( 1 );
 		mm->apple = temp;
 		getint(sfd,&mm->named_instance_count);
 	    }
-	    mm->instances = gcalloc(mm->instance_count,sizeof(SplineFont *));
+	    mm->instances = xcalloc(mm->instance_count,sizeof(SplineFont *));
 	    mm->positions = galloc(mm->instance_count*mm->axis_count*sizeof(real));
 	    mm->defweights = galloc(mm->instance_count*sizeof(real));
-	    mm->axismaps = gcalloc(mm->axis_count,sizeof(struct axismap));
+	    mm->axismaps = xcalloc(mm->axis_count,sizeof(struct axismap));
 	    if ( mm->named_instance_count!=0 )
-		mm->named_instances = gcalloc(mm->named_instance_count,sizeof(struct named_instance));
+		mm->named_instances = xcalloc(mm->named_instance_count,sizeof(struct named_instance));
 	} else if ( strmatch(tok,"MMAxis:")==0 ) {
 	    MMSet *mm = sf->mm;
 	    if ( mm!=NULL ) {
@@ -7013,7 +7013,7 @@ exit( 1 );
     break;
 	} else if ( strmatch(tok,"BeginSubFonts:")==0 ) {
 	    getint(sfd,&sf->subfontcnt);
-	    sf->subfonts = gcalloc(sf->subfontcnt,sizeof(SplineFont *));
+	    sf->subfonts = xcalloc(sf->subfontcnt,sizeof(SplineFont *));
 	    getint(sfd,&realcnt);
 	    sf->map = EncMap1to1(realcnt);
 	    ff_progress_change_stages(2);
@@ -7028,7 +7028,7 @@ exit( 1 );
 		++realcnt;		/* value saved is max glyph, not glyph cnt */
 	    ff_progress_change_total(realcnt);
 	    sf->glyphcnt = sf->glyphmax = realcnt;
-	    sf->glyphs = gcalloc(realcnt,sizeof(SplineChar *));
+	    sf->glyphs = xcalloc(realcnt,sizeof(SplineChar *));
 	    if ( cidmaster!=NULL ) {
 		sf->map = cidmaster->map;
 	    } else {
@@ -7262,7 +7262,7 @@ return( NULL );
 		had_layer_cnt = true;
 		getint(sfd,&sf.layer_cnt);
 		if ( sf.layer_cnt>2 ) {
-		    sf.layers = gcalloc(sf.layer_cnt,sizeof(LayerInfo));
+		    sf.layers = xcalloc(sf.layer_cnt,sizeof(LayerInfo));
 		}
 	    } else if ( strmatch(tok,"Layer:")==0 ) {
 		int layer, o2;
@@ -7347,7 +7347,7 @@ return( false );
     if ( strcmp(tok,"LayerCount:")==0 ) {
 	getint(asfd,&layercnt);
 	if ( layercnt>sf->layer_cnt ) {
-	    sf->layers = grealloc(sf->layers,layercnt*sizeof(LayerInfo));
+	    sf->layers = xrealloc(sf->layers,layercnt*sizeof(LayerInfo));
 	    memset(sf->layers+sf->layer_cnt,0,(layercnt-sf->layer_cnt)*sizeof(LayerInfo));
 	}
 	sf->layer_cnt = layercnt;
@@ -7383,7 +7383,7 @@ return(false);
 
     getint(asfd,&cnt);
     if ( cnt>sf->glyphcnt ) {
-	sf->glyphs = grealloc(sf->glyphs,cnt*sizeof(SplineChar *));
+	sf->glyphs = xrealloc(sf->glyphs,cnt*sizeof(SplineChar *));
 	for ( i=sf->glyphcnt; i<cnt; ++i )
 	    sf->glyphs[i] = NULL;
 	sf->glyphcnt = sf->glyphmax = cnt;

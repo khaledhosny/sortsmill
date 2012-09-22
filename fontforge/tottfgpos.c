@@ -307,7 +307,7 @@ static SplineChar **FindSubs(SplineChar *sc,struct lookup_subtable *sub) {
 			    space = galloc((max+=30)*sizeof(SplineChar *));
 			    memcpy(space,spc,(max-30)*sizeof(SplineChar *));
 			} else
-			    space = grealloc(space,(max+=30)*sizeof(SplineChar *));
+			    space = xrealloc(space,(max+=30)*sizeof(SplineChar *));
 		    }
 		    space[cnt++] = subssc;
 		}
@@ -545,7 +545,7 @@ SplineChar **SFGlyphsFromNames(SplineFont *sf,char *names) {
     SplineChar *sc, **glyphs;
 
     if ( names==NULL )
-return( gcalloc(1,sizeof(SplineChar *)) );
+return( xcalloc(1,sizeof(SplineChar *)) );
 
     cnt = 0;
     for ( pt = names; *pt; pt = end+1 ) {
@@ -979,7 +979,7 @@ static void dumpGPOSpairpos(FILE *gpos,SplineFont *sf,struct lookup_subtable *su
 		}
 	    }
 	    if ( k==0 ) {
-		seconds[cnt] = gcalloc(tot+1,sizeof(struct sckppst));
+		seconds[cnt] = xcalloc(tot+1,sizeof(struct sckppst));
 	    } else {
 		qsort(seconds[cnt],tot,sizeof(struct sckppst),cmp_gid);
 		seconds[cnt][0].tot = tot;
@@ -1104,7 +1104,7 @@ static void dumpGPOSpairpos(FILE *gpos,SplineFont *sf,struct lookup_subtable *su
 	}
 	if ( start_cnt!=0 || end_cnt!=cnt ) {
 	    if ( chunk_cnt>=chunk_max )
-		sub->extra_subtables = grealloc(sub->extra_subtables,((chunk_max+=10)+1)*sizeof(uint32));
+		sub->extra_subtables = xrealloc(sub->extra_subtables,((chunk_max+=10)+1)*sizeof(uint32));
 	    sub->extra_subtables[chunk_cnt++] = ftell(gpos);
 	    sub->extra_subtables[chunk_cnt] = -1;
 	}
@@ -1212,8 +1212,8 @@ uint16 *ClassesFromNames(SplineFont *sf,char **classnames,int class_cnt,
     SplineChar *sc, **gs=NULL;
     int offset = (apple_kc && classnames[0]!=NULL);
 
-    class = gcalloc(numGlyphs,sizeof(uint16));
-    if ( glyphs ) *glyphs = gs = gcalloc(numGlyphs,sizeof(SplineChar *));
+    class = xcalloc(numGlyphs,sizeof(uint16));
+    if ( glyphs ) *glyphs = gs = xcalloc(numGlyphs,sizeof(SplineChar *));
     for ( i=0; i<class_cnt; ++i ) {
 	if ( i==0 && classnames[0]==NULL )
     continue;
@@ -1821,7 +1821,7 @@ static void dumpGSUBligdata(FILE *gsub,SplineFont *sf,
 	putshort(gsub,pcnt);
 	if ( pcnt>=max ) {
 	    max = pcnt+100;
-	    ligoffsets = grealloc(ligoffsets,max*sizeof(int));
+	    ligoffsets = xrealloc(ligoffsets,max*sizeof(int));
 	}
 	lig_list_start = ftell(gsub);
 	for ( j=0; j<pcnt; ++j )
@@ -2332,8 +2332,8 @@ static void AnchorsAway(FILE *lfile,SplineFont *sf,
 	}
     }
     if ( classcnt>cmax ) {
-	marks = grealloc(marks,(cmax=classcnt+10)*sizeof(SplineChar **));
-	subcnts = grealloc(subcnts,cmax*sizeof(int));
+	marks = xrealloc(marks,(cmax=classcnt+10)*sizeof(SplineChar **));
+	subcnts = xrealloc(subcnts,cmax*sizeof(int));
     }
     AnchorClassDecompose(sf,acfirst,classcnt,subcnts,marks,&base,&lig,&mkmk,gi);
     switch ( sub->lookup->lookup_type ) {
@@ -2634,7 +2634,7 @@ return( i );
 	}
     }
     if ( ginfo->fcnt>=ginfo->fmax )
-	ginfo->feat_lookups = grealloc(ginfo->feat_lookups,(ginfo->fmax+=20)*sizeof(struct feat_lookups));
+	ginfo->feat_lookups = xrealloc(ginfo->feat_lookups,(ginfo->fmax+=20)*sizeof(struct feat_lookups));
     ginfo->feat_lookups[i].feature_id = i;
     ginfo->feat_lookups[i].tag = tag;
     ginfo->feat_lookups[i].lookups = lookups;
@@ -4319,7 +4319,7 @@ static void SFJstfSort(SplineFont *sf) {
 	for ( cnt=0, jlang=jscript->langs; jlang!=NULL; ++cnt, jlang=jlang->next );
 	if ( cnt>1 ) {
 	    if ( cnt>lmax )
-		langs = grealloc(langs,(lmax=cnt+10)*sizeof(struct jstf_lang *));
+		langs = xrealloc(langs,(lmax=cnt+10)*sizeof(struct jstf_lang *));
 	    for ( i=0, jlang=jscript->langs; jlang!=NULL; ++i, jlang=jlang->next )
 		langs[i] = jlang;
 	    qsort(langs,cnt,sizeof(Justify *),jlangsort);

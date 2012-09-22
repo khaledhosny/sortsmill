@@ -228,9 +228,9 @@ static GImage *GImage8to8(struct _GImage *base,GRect *src, GClut *nclut, RevCMap
 	const struct gcol *pos;
 
 	_GDraw_getimageclut(base,gclut);
-	red_dith = gcalloc(src->width,sizeof(short));
-	green_dith = gcalloc(src->width,sizeof(short));
-	blue_dith = gcalloc(src->width,sizeof(short));
+	red_dith = xcalloc(src->width,sizeof(short));
+	green_dith = xcalloc(src->width,sizeof(short));
+	blue_dith = xcalloc(src->width,sizeof(short));
 	for ( i=src->y; i<src->y+src->height; ++i ) {
 	    pt = (uint8 *) (base->data + i*base->bytes_per_line) + src->x;
 	    ipt = (uint8 *) (rbase->data) + (i-src->y)*rbase->bytes_per_line;
@@ -254,7 +254,7 @@ static GImage *GImage8to8(struct _GImage *base,GRect *src, GClut *nclut, RevCMap
 		}
 	    }
 	}
-	gfree(red_dith); gfree(green_dith); gfree(blue_dith);
+	free(red_dith); free(green_dith); free(blue_dith);
     }
 return( ret );
 }
@@ -280,9 +280,9 @@ static GImage *GImage32to8(struct _GImage *base,GRect *src, GClut *nclut, RevCMa
     *rbase->clut = *nclut;
     rbase->trans = nclut->trans_index;
 
-    red_dith = gcalloc(src->width,sizeof(short));
-    green_dith = gcalloc(src->width,sizeof(short));
-    blue_dith = gcalloc(src->width,sizeof(short));
+    red_dith = xcalloc(src->width,sizeof(short));
+    green_dith = xcalloc(src->width,sizeof(short));
+    blue_dith = xcalloc(src->width,sizeof(short));
     for ( i=src->y; i<src->y+src->height; ++i ) {
 	pt = (uint32 *) (base->data + i*base->bytes_per_line) + src->x;
 	ipt = (uint8 *) (ret->u.image->data) + (i-src->y)*ret->u.image->bytes_per_line;
@@ -305,7 +305,7 @@ static GImage *GImage32to8(struct _GImage *base,GRect *src, GClut *nclut, RevCMa
 	    }
 	}
     }
-    gfree(red_dith); gfree(green_dith); gfree(blue_dith);
+    free(red_dith); free(green_dith); free(blue_dith);
 return( ret );
 }
 
@@ -350,7 +350,7 @@ static GImage *GImage1to1(struct _GImage *base,GRect *src, GClut *nclut) {
     ret = GImageCreate(it_mono,src->width,src->height);
     rbase = ret->u.image;
     if ( nclut!=NULL ) {
-	rbase->clut = gcalloc(1,sizeof(GClut));
+	rbase->clut = xcalloc(1,sizeof(GClut));
 	*rbase->clut = *nclut;
 	rbase->trans = nclut->trans_index;
     }
@@ -409,7 +409,7 @@ static GImage *GImage8to1(struct _GImage *base,GRect *src, GClut *nclut) {
     ret = GImageCreate(it_mono,src->width,src->height);
     rbase = ret->u.image;
     if ( nclut!=NULL ) {
-	rbase->clut = gcalloc(1,sizeof(GClut));
+	rbase->clut = xcalloc(1,sizeof(GClut));
 	*rbase->clut = *nclut;
 	rbase->trans = nclut->trans_index;
     }
@@ -417,7 +417,7 @@ static GImage *GImage8to1(struct _GImage *base,GRect *src, GClut *nclut) {
     _GDraw_getimageclut(base,gclut);
     bright = MonoCols(nclut, &dark,&bright_col,&dark_col);
 
-    grey_dith = gcalloc(src->width,sizeof(short));
+    grey_dith = xcalloc(src->width,sizeof(short));
     for ( i=src->y; i<src->y+src->height; ++i ) {
 	pt = (uint8 *) (base->data + i*base->bytes_per_line) + src->x;
 	ipt = (uint8 *) (rbase->data) + (i-src->y)*rbase->bytes_per_line;
@@ -445,7 +445,7 @@ static GImage *GImage8to1(struct _GImage *base,GRect *src, GClut *nclut) {
 	    if (( bit>>=1 )==0 ) {bit=0x80; ++ipt;};
 	}
     }
-    gfree(grey_dith);
+    free(grey_dith);
 return( ret );
 }
 
@@ -471,13 +471,13 @@ static GImage *GImage32to1(struct _GImage *base,GRect *src, GClut *nclut) {
     ret = GImageCreate(it_mono,src->width,src->height);
     rbase = ret->u.image;
     if ( nclut!=NULL ) {
-	rbase->clut = gcalloc(1,sizeof(GClut));
+	rbase->clut = xcalloc(1,sizeof(GClut));
 	*rbase->clut = *nclut;
 	rbase->trans = nclut->trans_index;
     }
     bright = MonoCols(nclut,&dark,&bright_col,&dark_col);
 
-    grey_dith = gcalloc(src->width,sizeof(short));
+    grey_dith = xcalloc(src->width,sizeof(short));
     for ( i=src->y; i<src->y+src->height; ++i ) {
 	pt = (uint32 *) (base->data + i*base->bytes_per_line) + src->x;
 	ipt = (uint8 *) (rbase->data) + (i-src->y)*rbase->bytes_per_line;
@@ -504,7 +504,7 @@ static GImage *GImage32to1(struct _GImage *base,GRect *src, GClut *nclut) {
 	    if (( bit>>=1 )==0 ) {bit=0x80; ++ipt;}
 	}
     }
-    gfree(grey_dith);
+    free(grey_dith);
 return( ret );
 }
 
@@ -661,9 +661,9 @@ static void GImageInsert8to8(GImage *from,struct _GImage *tobase, GRect *src, Re
 	from_trans = fbase->trans;
 
     _GDraw_getimageclut(tobase,gclut);
-    red_dith = gcalloc(src->width,sizeof(short));
-    green_dith = gcalloc(src->width,sizeof(short));
-    blue_dith = gcalloc(src->width,sizeof(short));
+    red_dith = xcalloc(src->width,sizeof(short));
+    green_dith = xcalloc(src->width,sizeof(short));
+    blue_dith = xcalloc(src->width,sizeof(short));
     for ( i=src->y; i<src->y+src->height; ++i ) {
 	pt = (uint8 *) (fbase->data + i*fbase->bytes_per_line) + src->x;
 	ipt = (uint8 *) (tobase->data) + (i-src->y+to_y)*tobase->bytes_per_line+to_x;
@@ -690,7 +690,7 @@ static void GImageInsert8to8(GImage *from,struct _GImage *tobase, GRect *src, Re
 	    }
 	}
     }
-    gfree(red_dith); gfree(green_dith); gfree(blue_dith);
+    free(red_dith); free(green_dith); free(blue_dith);
 }
 
 static void GImageInsert32to32(GImage *from,struct _GImage *tobase, GRect *src,
@@ -906,13 +906,13 @@ void GImageResize(struct _GImage *tobase, struct _GImage *fbase,
 
     if ( tobase->image_type==it_index ) {
 	_GDraw_getimageclut(tobase,gclut);
-	red_dith = gcalloc(src->width,sizeof(short));
-	green_dith = gcalloc(src->width,sizeof(short));
-	blue_dith = gcalloc(src->width,sizeof(short));
+	red_dith = xcalloc(src->width,sizeof(short));
+	green_dith = xcalloc(src->width,sizeof(short));
+	blue_dith = xcalloc(src->width,sizeof(short));
 	if ( rev==NULL )
 	    rev = GClutReverse(tobase->clut,8);
     } else if ( tobase->image_type==it_mono ) {
-	green_dith = gcalloc(src->width,sizeof(short));
+	green_dith = xcalloc(src->width,sizeof(short));
 	bright = MonoCols(tobase->clut,&dark,&bright_col,&dark_col);
     }
 

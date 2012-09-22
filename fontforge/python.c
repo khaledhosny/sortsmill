@@ -844,7 +844,7 @@ return( NULL );
     if ( PyBytes_Check(tuple)) {
 	char *space; Py_ssize_t len;
 	PyBytes_AsStringAndSize(tuple,&space,&len);
-	instrs = gcalloc(len,sizeof(uint8));
+	instrs = xcalloc(len,sizeof(uint8));
 	icnt = len;
 	memcpy(instrs,space,len);
     } else {
@@ -996,7 +996,7 @@ return( NULL );
     Py_XINCREF(data);
 
     if ( ie_cnt>=ie_max )
-	py_ie = grealloc(py_ie,((ie_max += 10)+1)*sizeof(struct python_import_export));
+	py_ie = xrealloc(py_ie,((ie_max += 10)+1)*sizeof(struct python_import_export));
     py_ie[ie_cnt].import = import;
     py_ie[ie_cnt].export = export;
     py_ie[ie_cnt].data = data;
@@ -5482,7 +5482,7 @@ return( 0 );
 return( -1 );
     }
     cnt = PySequence_Size(value);
-    mkd = gcalloc(cnt,sizeof(struct mathkerndata));
+    mkd = xcalloc(cnt,sizeof(struct mathkerndata));
     for ( i=0; i<cnt; ++i ) {
 	PyObject *obj = PySequence_GetItem(value,i);
 	if ( i==cnt-1 && PyInt_Check(obj))
@@ -6242,11 +6242,11 @@ return( 0 );
     if ( PyBytes_Check(value)) {
 	char *space; Py_ssize_t len;
 	PyBytes_AsStringAndSize(value,&space,&len);
-	sc->ttf_instrs = gcalloc(len,sizeof(uint8));
+	sc->ttf_instrs = xcalloc(len,sizeof(uint8));
 	sc->ttf_instrs_len = len;
 	memcpy(sc->ttf_instrs,space,len);
     } else {
-	sc->ttf_instrs = gcalloc(cnt,sizeof(uint8));
+	sc->ttf_instrs = xcalloc(cnt,sizeof(uint8));
 	for ( i=0; i<cnt; ++i ) {
 	    int val = PyInt_AsLong(PySequence_GetItem(value,i));
 	    if ( PyErr_Occurred()!=NULL )
@@ -6751,7 +6751,7 @@ static struct gv_part *ParseComponentTuple(PyObject *tuple,int *_cnt) {
 return( NULL );
     }
     *_cnt = cnt = PySequence_Size(tuple);
-    parts = gcalloc(cnt+1,sizeof(struct gv_part));
+    parts = xcalloc(cnt+1,sizeof(struct gv_part));
     for ( i=0; i<cnt; ++i ) {
 	PyObject *obj = PySequence_GetItem(tuple,i);
 	int extender=0, start=0, end=0, full=0;
@@ -7817,7 +7817,7 @@ return( NULL );
 	    while ( *pt==' ' ) ++pt;
 	}
 	if ( cnt==0 )
-return( gcalloc(1,sizeof(SplineChar *)));
+return( xcalloc(1,sizeof(SplineChar *)));
 
 	ret = galloc((cnt+1)*sizeof(SplineChar *));
 	cnt = 0;
@@ -8758,7 +8758,7 @@ return( NULL );
 	self->cvt = BuildCvt(self->sf,(len1+len2)*2);
     cvt = self->cvt;
     if ( (len1+len2)*2 >= cvt->maxlen )
-	cvt->data = grealloc(cvt->data,cvt->maxlen = 2*(len1+len2)+10 );
+	cvt->data = xrealloc(cvt->data,cvt->maxlen = 2*(len1+len2)+10 );
     if ( is_cvt2 ) {
 	if ( len2!=0 )
 	    memcpy(cvt->data+len1*sizeof(uint16),c2->cvt->data, 2*len2);
@@ -8800,7 +8800,7 @@ return( -1 );
 return( -1 );
     }
     if ( 2*pos>=cvt->maxlen )
-	cvt->data = grealloc(cvt->data,cvt->maxlen = sizeof(uint16)*pos+10 );
+	cvt->data = xrealloc(cvt->data,cvt->maxlen = sizeof(uint16)*pos+10 );
     if ( 2*pos>=cvt->len )
 	cvt->len = sizeof(uint16)*pos;
     memputshort(cvt->data,sizeof(uint16)*pos,val);
@@ -9913,7 +9913,7 @@ static void setupMath(void) {
 
     for ( cnt=0; math_constants_descriptor[cnt].script_name!=NULL; ++cnt );
 
-    getset = gcalloc(cnt+1,sizeof(PyGetSetDef));
+    getset = xcalloc(cnt+1,sizeof(PyGetSetDef));
     for ( cnt=0; math_constants_descriptor[cnt].script_name!=NULL; ++cnt ) {
 	getset[cnt].name = math_constants_descriptor[cnt].script_name;
 	getset[cnt].get = (getter) PyFFMath_get;
@@ -10145,7 +10145,7 @@ return( -1 );
     if ( STRING_CHECK(index)) {
 	char *name = PyBytes_AsString(index);
 	if ( private==NULL )
-	    sf->private = private = gcalloc(1,sizeof(struct psdict));
+	    sf->private = private = xcalloc(1,sizeof(struct psdict));
 	PSDictChangeEntry(private,name,string);
     } else {
 	free(freeme);
@@ -10168,7 +10168,7 @@ static PyObject *PyFFPrivate_Guess(PyFF_Private *self, PyObject *args) {
     if ( !PyArg_ParseTuple(args,"s", &name) )
 return( NULL );
     if ( sf->private==NULL )
-	sf->private = gcalloc(1,sizeof(struct psdict));
+	sf->private = xcalloc(1,sizeof(struct psdict));
 
     SFPrivateGuess(sf,self->fv->active_layer,sf->private,name,true);
 Py_RETURN( self );
@@ -11071,7 +11071,7 @@ return( -1 );
     if ( cvt==NULL )
 	cvt = BuildCvt(sf,len2*2);
     if ( len2*2>=cvt->maxlen )
-	cvt->data = grealloc(cvt->data,cvt->maxlen = sizeof(uint16)*len2+10 );
+	cvt->data = xrealloc(cvt->data,cvt->maxlen = sizeof(uint16)*len2+10 );
     if ( is_cvt2 ) {
 	if ( len2!=0 )
 	    memcpy(cvt->data,c2->cvt->data,2*len2 );
@@ -12409,11 +12409,11 @@ return( -1 );
     MVDestroyAll(self->fv->sf);
     if ( sf->glyphcnt>self->fv->sf->glyphcnt ) {
 	free(self->fv->selected);
-	self->fv->selected = gcalloc(sf->glyphcnt,sizeof(char));
+	self->fv->selected = xcalloc(sf->glyphcnt,sizeof(char));
 	if ( sf->glyphcnt>map->encmax )
-	    map->map = grealloc(map->map,(map->encmax = sf->glyphcnt)*sizeof(int));
+	    map->map = xrealloc(map->map,(map->encmax = sf->glyphcnt)*sizeof(int));
 	if ( sf->glyphcnt>map->backmax )
-	    map->backmap = grealloc(map->backmap,(map->backmax = sf->glyphcnt)*sizeof(int));
+	    map->backmap = xrealloc(map->backmap,(map->backmax = sf->glyphcnt)*sizeof(int));
 	for ( i=0; i<sf->glyphcnt; ++i )
 	    map->map[i] = map->backmap[i] = i;
 	map->enccount = sf->glyphcnt;
@@ -12534,7 +12534,7 @@ return -1;
 	SFReplaceEncodingBDFProps(fv->sf,fv->map);
     }
     free(fv->selected);
-    fv->selected = gcalloc(fv->map->enccount,sizeof(char));
+    fv->selected = xcalloc(fv->map->enccount,sizeof(char));
     if ( !no_windowing_ui )
 	FontViewReformatAll(fv->sf);
     
@@ -12748,7 +12748,7 @@ return( -1 );
 	tab->tag = CHR('m','a','x','p');
     }
     if ( tab->len<32 ) {
-	tab->data = grealloc(tab->data,32);
+	tab->data = xrealloc(tab->data,32);
 	memset(tab->data+tab->len,0,32-tab->len);
 	if ( tab->len<16 )
 	    tab->data[15] = 2;			/* Default zones to 2 */
@@ -13360,7 +13360,7 @@ return( NULL );
     if ( PyBytes_Check(tuple)) {
 	char *space; Py_ssize_t len;
 	PyBytes_AsStringAndSize(tuple,&space,&len);
-	instrs = gcalloc(len,sizeof(uint8));
+	instrs = xcalloc(len,sizeof(uint8));
 	icnt = len;
 	memcpy(instrs,space,len);
     } else {
@@ -13636,7 +13636,7 @@ return( NULL );
     sf->display_antialias = fv->sf->display_antialias;
     sf->display_bbsized = fv->sf->display_bbsized;
     sf->display_size = fv->sf->display_size;
-    sf->private = gcalloc(1,sizeof(struct psdict));
+    sf->private = xcalloc(1,sizeof(struct psdict));
     PSDictChangeEntry(sf->private,"lenIV","1");		/* It's 4 by default, in CIDs the convention seems to be 1 */
     FVInsertInCID(fv,sf);
 Py_RETURN( self );
@@ -14051,7 +14051,7 @@ return( NULL );
 return( NULL );
 	    }
 	} else
-	    offs = gcalloc(cnt1*cnt2,sizeof(int16));
+	    offs = xcalloc(cnt1*cnt2,sizeof(int16));
     }
 
     sub = addLookupSubtable(sf, lookup, subtable, after_str);
@@ -14076,7 +14076,7 @@ return( NULL );
 	sub->kc->firsts = class1_strs;
 	sub->kc->seconds = class2_strs;
 	sub->kc->offsets = offs;
-	sub->kc->adjusts = gcalloc(cnt1*cnt2,sizeof(DeviceTable));
+	sub->kc->adjusts = xcalloc(cnt1*cnt2,sizeof(DeviceTable));
 	if ( offsets==NULL )
 	    pyAutoKernAll(fv,sub);
     } else {
@@ -14141,7 +14141,7 @@ return( NULL );
     sub->kc->firsts = class1_strs;
     sub->kc->seconds = class2_strs;
     sub->kc->offsets = offs;
-    sub->kc->adjusts = gcalloc(cnt1*cnt2,sizeof(DeviceTable));
+    sub->kc->adjusts = xcalloc(cnt1*cnt2,sizeof(DeviceTable));
 
 Py_RETURN( self );
 }
@@ -14695,11 +14695,11 @@ return (NULL);
 	    PyErr_Format(PyExc_EnvironmentError, "No lookup named %s exists in %s.", lookup_str, othersf->fontname );
 return( NULL );
 	}
-	list = gcalloc(2,sizeof(OTLookup *));
+	list = xcalloc(2,sizeof(OTLookup *));
 	list[0] = otl;
     } else if ( PySequence_Check(lookup_list)) {
 	int subcnt = PySequence_Size(lookup_list);
-	list = gcalloc(subcnt+1,sizeof(OTLookup *));
+	list = xcalloc(subcnt+1,sizeof(OTLookup *));
 	for ( i=0; i<subcnt; ++i ) {
 	    PyObject *str = PySequence_GetItem(lookup_list,i);
 	    if ( !STRING_CHECK(str)) {
@@ -15029,23 +15029,23 @@ return( NULL );
     fpst->bccnt = bcnt;
     fpst->bclass = backclasses;
     if ( backclasses!=NULL && backclassnames==NULL )
-	fpst->bclassnames = gcalloc(bcnt,sizeof(char *));
+	fpst->bclassnames = xcalloc(bcnt,sizeof(char *));
     else
 	fpst->bclassnames = backclassnames;
     fpst->nccnt = mcnt;
     fpst->nclass = matchclasses;
     if ( matchclasses!=NULL && matchclassnames==NULL )
-	fpst->nclassnames = gcalloc(mcnt,sizeof(char *));
+	fpst->nclassnames = xcalloc(mcnt,sizeof(char *));
     else
 	fpst->nclassnames = matchclassnames;
     fpst->fccnt = fcnt;
     fpst->fclass = forclasses;
     if ( forclasses!=NULL && forclassnames==NULL )
-	fpst->fclassnames = gcalloc(fcnt,sizeof(char *));
+	fpst->fclassnames = xcalloc(fcnt,sizeof(char *));
     else
 	fpst->fclassnames = forclassnames;
     fpst->rule_cnt = 1;
-    fpst->rules = gcalloc(1,sizeof(struct fpst_rule));
+    fpst->rules = xcalloc(1,sizeof(struct fpst_rule));
 
     msg = FPSTRule_From_Str( sf,fpst,fpst->rules,rule,&is_warning);
     if ( is_warning ) {
@@ -15990,7 +15990,7 @@ return( NULL );
 	if ( PyInt_Check(arg)) {
 	    int val = PyInt_AsLong(arg);
 	    if ( val>0 ) { 
-		pointsizes = gcalloc(2,sizeof(int32));
+		pointsizes = xcalloc(2,sizeof(int32));
 		pointsizes[0] = val;
 	    }
 	} else if ( PySequence_Check(arg) ) {
@@ -18290,7 +18290,7 @@ static wchar_t *copy_to_wide_string(const char *s) {
     ws = NULL;
     n = mbstowcs(NULL, s, 0) + 1;
     if (n != (size_t) -1) {
-        ws = gcalloc(n, sizeof(wchar_t));
+        ws = xcalloc(n, sizeof(wchar_t));
         mbstowcs(ws, s, n);
     }
     return ws;
@@ -18306,7 +18306,7 @@ void PyFF_Main(int argc,char **argv,int start) {
 
     PyFF_ProcessInitFiles();
 
-    newargv = gcalloc(argc + 1,sizeof(wchar_t *));
+    newargv = xcalloc(argc + 1,sizeof(wchar_t *));
     arg = argv[start];
     if ( *arg=='-' && arg[1]=='-' )
         ++arg;
@@ -18349,7 +18349,7 @@ void PyFF_Main(int argc,char **argv,int start) {
 
     PyFF_ProcessInitFiles();
 
-    newargv= gcalloc(argc+1,sizeof(char *));
+    newargv= xcalloc(argc+1,sizeof(char *));
     arg = argv[start];
     if ( *arg=='-' && arg[1]=='-' ) ++arg;
     if ( strcmp(arg,"-script")==0 )

@@ -256,7 +256,7 @@ return( NULL );
     if ( sf->multilayer || sf->strokedfont )
 return( NULL );
 
-    ftc = gcalloc(1,sizeof(FTC));
+    ftc = xcalloc(1,sizeof(FTC));
     if ( shared_ftc!=NULL ) {
 	*ftc = *(FTC *) shared_ftc;
 	ftc->face = NULL;
@@ -279,7 +279,7 @@ return( NULL );
 	notdefpos = SFFindNotdef(sf,-2);	/* Do this early */
 	if ( sc!=NULL || selected!=NULL ) {
 	    /* Build up a font consisting of those characters we actually use */
-	    new = gcalloc(sf->glyphcnt,sizeof(SplineChar *));
+	    new = xcalloc(sf->glyphcnt,sizeof(SplineChar *));
 	    if ( sc!=NULL )
 		TransitiveClosureAdd(new,old,sc,layer);
 	    else for ( i=0; i<map->enccount; ++i )
@@ -842,13 +842,13 @@ static void FillOutline(SplineSet *spl,FT_Outline *outline,int *pmax,int *cmax,
 		outline->n_points = pcnt;
 		if ( pcnt > *pmax || *pmax==0 ) {
 		    *pmax = pcnt==0 ? 1 : pcnt;
-		    outline->points = grealloc(outline->points,*pmax*sizeof(FT_Vector));
-		    outline->tags = grealloc(outline->tags,*pmax*sizeof(char));
+		    outline->points = xrealloc(outline->points,*pmax*sizeof(FT_Vector));
+		    outline->tags = xrealloc(outline->tags,*pmax*sizeof(char));
 		}
 		memset(outline->tags,0,pcnt);
 		if ( ccnt > *cmax || *cmax==0 ) {
 		    *cmax = ccnt==0 ? 1 : ccnt;
-		    outline->contours = grealloc(outline->contours,*cmax*sizeof(short));
+		    outline->contours = xrealloc(outline->contours,*cmax*sizeof(short));
 		}
 		outline->flags = ft_outline_none;
 	    }
@@ -890,13 +890,13 @@ static void FillOutline(SplineSet *spl,FT_Outline *outline,int *pmax,int *cmax,
 		outline->n_points = pcnt;
 		if ( pcnt > *pmax || *pmax==0 ) {
 		    *pmax = pcnt==0 ? 1 : pcnt;
-		    outline->points = grealloc(outline->points,*pmax*sizeof(FT_Vector));
-		    outline->tags = grealloc(outline->tags,*pmax*sizeof(char));
+		    outline->points = xrealloc(outline->points,*pmax*sizeof(FT_Vector));
+		    outline->tags = xrealloc(outline->tags,*pmax*sizeof(char));
 		}
 		memset(outline->tags,0,pcnt);
 		if ( ccnt > *cmax || *cmax==0 ) {
 		    *cmax = ccnt==0 ? 1 : ccnt;
-		    outline->contours = grealloc(outline->contours,*cmax*sizeof(short));
+		    outline->contours = xrealloc(outline->contours,*cmax*sizeof(short));
 		}
 		/* You might think we should set ft_outline_reverse_fill here */
 		/*  because this is a postscript font. But ff stores fonts */
@@ -1081,7 +1081,7 @@ return( NULL );
 	bitmap.num_grays = 256;
 	bitmap.pixel_mode = ft_pixel_mode_grays;
     }
-    bitmap.buffer = gcalloc(bitmap.pitch*bitmap.rows,sizeof(uint8));
+    bitmap.buffer = xcalloc(bitmap.pitch*bitmap.rows,sizeof(uint8));
     memset(&temp,0,sizeof(temp));
     if ( sc->parent->multilayer && !(sc->layer_cnt==2 &&
 	    !sc->layers[ly_fore].dostroke &&

@@ -158,7 +158,7 @@ static void BaseLangMatrixInit(struct matrixinit *mi,struct baselangextent *old,
 
     for ( cnt = 0, bl=old; bl!=NULL; bl=bl->next, ++cnt);
     mi->initial_row_cnt = cnt;
-    mi->matrix_data     = md = gcalloc(mi->col_cnt*cnt,sizeof(struct matrix_data));
+    mi->matrix_data     = md = xcalloc(mi->col_cnt*cnt,sizeof(struct matrix_data));
 
     for ( cnt = 0, bl=old; bl!=NULL; bl=bl->next, ++cnt) {
 	lang[0] = bl->lang>>24;
@@ -482,7 +482,7 @@ static void BaselineMatrixInit(struct matrixinit *mi,struct Base *old) {
     if ( old!=NULL )
 	for ( cnt=0, bs=old->scripts; bs!=NULL; bs=bs->next, ++cnt );
     mi->initial_row_cnt = cnt;
-    mi->matrix_data     = md = gcalloc(mi->col_cnt*cnt,sizeof(struct matrix_data));
+    mi->matrix_data     = md = xcalloc(mi->col_cnt*cnt,sizeof(struct matrix_data));
 
     if ( old!=NULL ) {
 	if ( old->baseline_cnt<sizeof(_maps)/sizeof(_maps[0]) )

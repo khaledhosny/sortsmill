@@ -209,7 +209,7 @@ static double GetCounterBlackSpace( GlyphData *gd, StemData **dstems, int dcnt,
     int i, j, icnt=0;
     
     bundle = x_dir ? gd->vbundle : gd->hbundle;
-    inters = gcalloc( dcnt + bundle->cnt,sizeof( struct segment ));
+    inters = xcalloc( dcnt + bundle->cnt,sizeof( struct segment ));
 
     for ( i=0; i<dcnt; i++ ) {
 	stem = dstems[i];
@@ -1670,7 +1670,7 @@ return;
     /* Have to prepare a DStem list before further operations, since they are needed */
     /* to properly calculate counters between vertical stems */
     if ( genchange->dstem_control ) {
-	dstems = gcalloc( gd->stemcnt,sizeof( StemData *));
+	dstems = xcalloc( gd->stemcnt,sizeof( StemData *));
 	dcnt = PrepareDStemList( gd,dstems );
     }
 
@@ -2197,7 +2197,7 @@ static void SmallCapsPlacePoints(SplineSet *ss,AnchorPoint *aps,
     AnchorPoint *ap;
 
     cnt = NumberLayerPoints(ss);
-    ptpos = gcalloc(cnt,sizeof(struct ptpos));
+    ptpos = xcalloc(cnt,sizeof(struct ptpos));
 
     /* Position any points which lie within a hint zone */
     order2 = false;
@@ -3165,7 +3165,7 @@ return;		/* It intersects something that's already there */
 
     /* Need to add */
     if ( ci->cnts[z]>=ci->maxes[z] )
-	ci->zones[z] = grealloc(ci->zones[z],(ci->maxes[z]+=10)*sizeof(struct ci_zones));
+	ci->zones[z] = xrealloc(ci->zones[z],(ci->maxes[z]+=10)*sizeof(struct ci_zones));
     for ( j=ci->cnts[z]; j>i; --j )
 	ci->zones[z][j] = ci->zones[z][j-1];
     ci->zones[z][i].start = ci->zones[z][i].moveto   = start;

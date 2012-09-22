@@ -221,7 +221,7 @@ static GTextInfo *PrinterList() {
 
     printcap = fopen("/etc/printcap","r");
     if ( printcap==NULL ) {
-	tis = gcalloc(2,sizeof(GTextInfo));
+	tis = xcalloc(2,sizeof(GTextInfo));
 	tis[0].text = uc_copy("<default>");
 return( tis );
     }
@@ -248,7 +248,7 @@ return( tis );
 	    fclose(printcap);
 return( tis );
 	}
-	tis = gcalloc((cnt+1),sizeof(GTextInfo));
+	tis = xcalloc((cnt+1),sizeof(GTextInfo));
 	tis[0].text = uc_copy("<default>");
 	rewind(printcap);
     }
@@ -766,7 +766,7 @@ static GTextInfo *FontNames(SplineFont *cur_sf, int insert_text) {
     for ( fv=fv_list, cnt=0; fv!=NULL; fv=(FontView *) (fv->b.next) )
 	if ( (FontView *) (fv->b.nextsame)==NULL )
 	    ++cnt;
-    ti = gcalloc(cnt+1,sizeof(GTextInfo));
+    ti = xcalloc(cnt+1,sizeof(GTextInfo));
     for ( fv=fv_list, cnt=0; fv!=NULL; fv=(FontView *) (fv->b.next) ) {
 	if ( (FontView *) (fv->b.nextsame)==NULL ) {
 	    sf = fv->b.sf;
@@ -968,7 +968,7 @@ static void DSP_ChangeFontCallback(void *context,SplineFont *sf,enum sftf_fontty
 	}
     ti = galloc((cnt+2)*sizeof(GTextInfo *));
     for ( i=0; tags[i]!=0; ++i ) {
-	ti[i] = gcalloc( 1,sizeof(GTextInfo));
+	ti[i] = xcalloc( 1,sizeof(GTextInfo));
 	ti[i]->fg = ti[i]->bg = COLOR_DEFAULT;
 	if ( (tags[i]>>24)<' ' || (tags[i]>>24)>0x7e )
 	    sprintf( buf, "<%d,%d>", tags[i]>>16, tags[i]&0xffff );
@@ -994,7 +994,7 @@ static void DSP_ChangeFontCallback(void *context,SplineFont *sf,enum sftf_fontty
 	    break;
 	    }
 	    if ( tags[j]==0 ) {
-		ti[cnt] = gcalloc( 1,sizeof(GTextInfo));
+		ti[cnt] = xcalloc( 1,sizeof(GTextInfo));
 		ti[cnt]->bg = COLOR_DEFAULT;
 		ti[cnt]->fg = COLOR_CREATE(0x70,0x70,0x70);
 		ti[cnt]->selected = true;
@@ -1003,7 +1003,7 @@ static void DSP_ChangeFontCallback(void *context,SplineFont *sf,enum sftf_fontty
 		ti[cnt++]->userdata = (void *) (intpt) feats[i];
 	    }
 	}
-    ti[cnt] = gcalloc(1,sizeof(GTextInfo));
+    ti[cnt] = xcalloc(1,sizeof(GTextInfo));
     /* These will become ordered because the list widget will do that */
     GGadgetSetList(GWidgetGetControl(di->gw,CID_Features),ti,false);
     free(tags);
@@ -1578,7 +1578,7 @@ return;
     if ( sf->cidmaster )
 	sf = sf->cidmaster;
 
-    active = gcalloc(1,sizeof(PD));
+    active = xcalloc(1,sizeof(PD));
     if ( isprint )
 	printwindow = active;
     active->fv = fv;

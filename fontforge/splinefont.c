@@ -2042,7 +2042,7 @@ return;
     
     l = sf->layer_cnt;
     ++sf->layer_cnt;
-    sf->layers = grealloc(sf->layers,(l+1)*sizeof(LayerInfo));
+    sf->layers = xrealloc(sf->layers,(l+1)*sizeof(LayerInfo));
     memset(&sf->layers[l],0,sizeof(LayerInfo));
     sf->layers[l].name = copy(name);
     sf->layers[l].order2 = order2;
@@ -2050,7 +2050,7 @@ return;
 
     for ( gid=0; gid<sf->glyphcnt; ++gid ) if ( (sc = sf->glyphs[gid])!=NULL ) {
 	Layer *old = sc->layers;
-	sc->layers = grealloc(sc->layers,(l+1)*sizeof(Layer));
+	sc->layers = xrealloc(sc->layers,(l+1)*sizeof(Layer));
 	memset(&sc->layers[l],0,sizeof(Layer));
 	LayerDefault(&sc->layers[l]);
 	sc->layers[l].order2 = order2;

@@ -9717,7 +9717,7 @@ static void ap2listbuild(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
 	    ++cnt;
 	}
 	if ( !k )
-	    sub = gcalloc(cnt+1,sizeof(GMenuItem));
+	    sub = xcalloc(cnt+1,sizeof(GMenuItem));
     }
     mi->sub = sub;
 }
@@ -9784,7 +9784,7 @@ return;
     }
 
     for ( cnt = 0; glyphs[cnt]!=NULL; ++cnt );
-    mit = gcalloc(cnt+2,sizeof(GMenuItem2));
+    mit = xcalloc(cnt+2,sizeof(GMenuItem2));
     mit[0] = aplist[0];
     mit[0].ti.text = (unichar_t *) copy( (char *) mit[0].ti.text );
     mit[0].ti.disabled = (cv->apmine==NULL);
@@ -9923,7 +9923,7 @@ static void mvlistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     if ( mm==NULL )
 	mml = mvlist;
     else {
-	mml = gcalloc(base+mm->instance_count+2,sizeof(GMenuItem2));
+	mml = xcalloc(base+mm->instance_count+2,sizeof(GMenuItem2));
 	memcpy(mml,mvlist,sizeof(mvlist));
 	mml[base-1].ti.fg = mml[base-1].ti.bg = COLOR_DEFAULT;
 	mml[base-1].ti.line = true;
@@ -9999,7 +9999,7 @@ static void mmlistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     if ( mm==NULL )
 	mml = mmlist;
     else {
-	mml = gcalloc(base+mm->instance_count+2,sizeof(GMenuItem2));
+	mml = xcalloc(base+mm->instance_count+2,sizeof(GMenuItem2));
 	memcpy(mml,mmlist,sizeof(mmlist));
 	mml[base-1].ti.fg = mml[base-1].ti.bg = COLOR_DEFAULT;
 	mml[base-1].ti.line = true;
@@ -10186,9 +10186,9 @@ static void _CharViewCreate(CharView *cv, SplineChar *sc, FontView *fv,int enc) 
     cv->nfh = as+ds; cv->nas = as;
 
     cv->height = pos.height; cv->width = pos.width;
-    cv->gi.u.image = gcalloc(1,sizeof(struct _GImage));
+    cv->gi.u.image = xcalloc(1,sizeof(struct _GImage));
     cv->gi.u.image->image_type = it_mono;
-    cv->gi.u.image->clut = gcalloc(1,sizeof(GClut));
+    cv->gi.u.image->clut = xcalloc(1,sizeof(GClut));
     cv->gi.u.image->clut->trans_index = cv->gi.u.image->trans = 0;
     cv->gi.u.image->clut->clut_len = 2;
     cv->gi.u.image->clut->clut[0] = view_bgcol;
@@ -10282,7 +10282,7 @@ void DefaultY(GRect *pos) {
 static void CharViewInit(void);
 
 CharView *CharViewCreate(SplineChar *sc, FontView *fv,int enc) {
-    CharView *cv = gcalloc(1,sizeof(CharView));
+    CharView *cv = xcalloc(1,sizeof(CharView));
     GWindowAttrs wattrs;
     GRect pos, zoom;
     GWindow gw;
@@ -10390,7 +10390,7 @@ void CharViewFree(CharView *cv) {
 	free(cv->former_names[i]);
 
     if ( cv->ruler_intersections )
-	gfree(cv->ruler_intersections);
+	free(cv->ruler_intersections);
 
     free(cv);
 }

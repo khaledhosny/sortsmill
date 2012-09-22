@@ -820,7 +820,7 @@ return( true );
 }
 
 GGadget *GTabSetCreate(struct gwindow *base, GGadgetData *gd,void *data) {
-    GTabSet *gts = gcalloc(1,sizeof(GTabSet));
+    GTabSet *gts = xcalloc(1,sizeof(GTabSet));
     int i, bp;
     GRect r;
     GWindowAttrs childattrs;
@@ -973,7 +973,7 @@ void GTabSetChangeTabName(GGadget *g, char *name, int pos) {
     GTabSet *gts = (GTabSet *) g;
 
     if ( pos==gts->tabcnt && gts->nowindow ) {
-	gts->tabs = grealloc(gts->tabs,(pos+1)*sizeof(struct tabs));
+	gts->tabs = xrealloc(gts->tabs,(pos+1)*sizeof(struct tabs));
 	memset(&gts->tabs[pos],0,sizeof(struct tabs));
 	++gts->tabcnt;
     }

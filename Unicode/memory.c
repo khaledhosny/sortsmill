@@ -40,21 +40,6 @@ void *galloc(size_t size)
     return xmalloc(size == 0 ? 1 : size);
 }
 
-void *gcalloc(size_t count, size_t size)
-{
-    return xcalloc(count, size);
-}
-
-void *grealloc(void *old, size_t size)
-{
-    return xrealloc(old, size);
-}
-
-void gfree(void *old)
-{
-    free(old);
-}
-
 char *copy(const char *str)
 {
     return (str == NULL) ? NULL : xstrdup(str);

@@ -350,7 +350,7 @@ struct mmcb {
 #define CID_Knowns		6005
 
 static GTextInfo *MMCB_KnownValues(MMSet *mm) {
-    GTextInfo *ti = gcalloc(mm->named_instance_count+2,sizeof(GTextInfo));
+    GTextInfo *ti = xcalloc(mm->named_instance_count+2,sizeof(GTextInfo));
     int i;
 
     ti[0].text = uc_copy(" --- ");
@@ -1608,7 +1608,7 @@ static GTextInfo *NamedDesigns(MMW *mmw) {
 return( NULL );
 
     cnt = mmw->old->named_instance_count;
-    ti = gcalloc((cnt+1),sizeof(GTextInfo));
+    ti = xcalloc((cnt+1),sizeof(GTextInfo));
     for ( i=0; i<mmw->old->named_instance_count; ++i ) {
 	pt = buffer; *pt++='[';
 	for ( j=0; j<mmw->old->axis_count; ++j ) {
@@ -1630,7 +1630,7 @@ return(ti);
 }
 
 static GTextInfo *TiFromFont(SplineFont *sf) {
-    GTextInfo *ti = gcalloc(1,sizeof(GTextInfo));
+    GTextInfo *ti = xcalloc(1,sizeof(GTextInfo));
     ti->text = uc_copy(sf->fontname);
     ti->fg = ti->bg = COLOR_DEFAULT;
     ti->userdata = sf;
@@ -1681,16 +1681,16 @@ static GTextInfo **FontList(MMW *mmw, int instance, int *sel) {
 	ti[cnt++] = TiFromFont( mmw->loaded[i]);
     }
     if ( pos==-1 ) pos=cnt;
-    ti[cnt] = gcalloc(1,sizeof(GTextInfo));
+    ti[cnt] = xcalloc(1,sizeof(GTextInfo));
     ti[cnt]->text = utf82u_copy(S_("Font|New"));
     ti[cnt]->bg = ti[cnt]->fg = COLOR_DEFAULT;
     ++cnt;
-    ti[cnt] = gcalloc(1,sizeof(GTextInfo));
+    ti[cnt] = xcalloc(1,sizeof(GTextInfo));
     ti[cnt]->text = utf82u_copy(_("Browse..."));
     ti[cnt]->bg = ti[cnt]->fg = COLOR_DEFAULT;
     ti[cnt]->userdata = (void *) (-1);
     ++cnt;
-    ti[cnt] = gcalloc(1,sizeof(GTextInfo));
+    ti[cnt] = xcalloc(1,sizeof(GTextInfo));
 
     ti[pos]->selected = true;
     *sel = pos;
@@ -1729,9 +1729,9 @@ static void MMW_ParseNamedStyles(MMSet *setto,MMW *mmw) {
 
     setto->named_instance_count = len;
     if ( len!=0 ) {
-	setto->named_instances = gcalloc(len,sizeof(struct named_instance));
+	setto->named_instances = xcalloc(len,sizeof(struct named_instance));
 	for ( i=0; i<len; ++i ) {
-	    setto->named_instances[i].coords = gcalloc(setto->axis_count,sizeof(real));
+	    setto->named_instances[i].coords = xcalloc(setto->axis_count,sizeof(real));
 	    upt = u_strchr(ti[i]->text,'[');
 	    if ( upt!=NULL ) {
 		for ( j=0, ++upt; j<setto->axis_count; ++j ) {
@@ -1872,7 +1872,7 @@ continue;
     for ( i=0; i<setto->axis_count; ++i )
 	setto->axes[i] = dlgmm->axes[i];
     setto->axismaps = dlgmm->axismaps;
-    setto->defweights = gcalloc(setto->instance_count,sizeof(real));
+    setto->defweights = xcalloc(setto->instance_count,sizeof(real));
     if ( !isapple )
 	memcpy(setto->defweights,weights,setto->instance_count*sizeof(real));
     free(dlgmm->defweights);
@@ -1883,7 +1883,7 @@ continue;
 		setto->axis_count*sizeof(real));
     }
     free(dlgmm->positions);
-    setto->instances = gcalloc(setto->instance_count,sizeof(SplineFont *));
+    setto->instances = xcalloc(setto->instance_count,sizeof(SplineFont *));
     for ( i=0; i<setto->instance_count; ++i ) {
 	if ( dlgmm->instances[i]!=NULL ) {
 	    int k = i<defpos ? i : i+1;
@@ -1901,7 +1901,7 @@ continue;
 	    char buffer[20];
 	    sprintf(buffer,"%g", (double) fbt );
 	    if ( oldprivate==NULL )
-		setto->normal->private = gcalloc(1,sizeof(struct psdict));
+		setto->normal->private = xcalloc(1,sizeof(struct psdict));
 	    PSDictChangeEntry(setto->normal->private,"ForceBoldThreshold",buffer);
 	}
     }
@@ -2379,7 +2379,7 @@ return(true);
 		    if ( mmw->lmax==0 )
 			mmw->loaded = galloc((mmw->lmax=10)*sizeof(SplineFont *));
 		    else
-			mmw->loaded = grealloc(mmw->loaded,(mmw->lmax+=10)*sizeof(SplineFont *));
+			mmw->loaded = xrealloc(mmw->loaded,(mmw->lmax+=10)*sizeof(SplineFont *));
 		}
 		mmw->loaded[mmw->lcnt++] = sf;
 		for ( i=0; i<mmw->instance_count; ++i ) {
@@ -2452,16 +2452,16 @@ static MMSet *MMCopy(MMSet *orig) {
     mm->axis_count = 4;
     for ( i=0; i<orig->axis_count; ++i )
 	mm->axes[i] = copy(orig->axes[i]);
-    mm->instances = gcalloc(AppleMmMax+1,sizeof(SplineFont *));
+    mm->instances = xcalloc(AppleMmMax+1,sizeof(SplineFont *));
     memcpy(mm->instances,orig->instances,orig->instance_count*sizeof(SplineFont *));
     if ( mm->apple )
 	mm->instances[orig->instance_count] = orig->normal;
-    mm->positions = gcalloc((AppleMmMax+1)*4,sizeof(real));
+    mm->positions = xcalloc((AppleMmMax+1)*4,sizeof(real));
     for ( i=0; i<orig->instance_count; ++i )
 	memcpy(mm->positions+i*4,orig->positions+i*orig->axis_count,orig->axis_count*sizeof(real));
-    mm->defweights = gcalloc(AppleMmMax+1,sizeof(real));
+    mm->defweights = xcalloc(AppleMmMax+1,sizeof(real));
     memcpy(mm->defweights,orig->defweights,orig->instance_count*sizeof(real));
-    mm->axismaps = gcalloc(4,sizeof(struct axismap));
+    mm->axismaps = xcalloc(4,sizeof(struct axismap));
     for ( i=0; i<orig->axis_count; ++i ) {
 	mm->axismaps[i].points = orig->axismaps[i].points;
 	mm->axismaps[i].blends = galloc(mm->axismaps[i].points*sizeof(real));
@@ -2514,10 +2514,10 @@ void MMWizard(MMSet *mm) {
 	mmw.axis_count = 1;
 	mmw.instance_count = 2;
 	mmw.mm->axis_count = 4; mmw.mm->instance_count = AppleMmMax+1;
-	mmw.mm->instances = gcalloc(AppleMmMax+1,sizeof(SplineFont *));
-	mmw.mm->positions = gcalloc((AppleMmMax+1)*4,sizeof(real));
-	mmw.mm->defweights = gcalloc(AppleMmMax+1,sizeof(real));
-	mmw.mm->axismaps = gcalloc(4,sizeof(struct axismap));
+	mmw.mm->instances = xcalloc(AppleMmMax+1,sizeof(SplineFont *));
+	mmw.mm->positions = xcalloc((AppleMmMax+1)*4,sizeof(real));
+	mmw.mm->defweights = xcalloc(AppleMmMax+1,sizeof(real));
+	mmw.mm->axismaps = xcalloc(4,sizeof(struct axismap));
 	mmw.isnew = true;
     }
 

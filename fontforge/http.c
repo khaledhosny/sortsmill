@@ -1296,7 +1296,7 @@ return( sofar );
 		if ( tot+1>*datalen ) {
 		    if ( lock!=NULL )
 			pthread_mutex_lock(lock);
-		    databuf = grealloc(databuf,*datalen = tot+10);
+		    databuf = xrealloc(databuf,*datalen = tot+10);
 		    if ( lock!=NULL )
 			pthread_mutex_unlock(lock);
 		}

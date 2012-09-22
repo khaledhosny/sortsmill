@@ -132,7 +132,7 @@ return( NULL );
 
   (void) jpeg_finish_decompress(&cinfo);
   jpeg_destroy_decompress(&cinfo);
-  gfree(rows[0]);
+  free(rows[0]);
 
 return( ret );
 }

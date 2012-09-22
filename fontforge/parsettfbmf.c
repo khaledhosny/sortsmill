@@ -127,7 +127,7 @@ return;
 	if ( gid>=info->glyph_cnt || info->chars[gid]==NULL ) {
 	    if ( gid>=info->glyph_cnt ) {
 		int i;
-	        info->chars = grealloc(info->chars,(gid+1)*sizeof(SplineChar *));
+	        info->chars = xrealloc(info->chars,(gid+1)*sizeof(SplineChar *));
 		for ( i=info->glyph_cnt; i<gid; ++i ) {
 		    info->chars[i] = SplineCharCreate(2);
 		    info->chars[i]->orig_pos = gid;
@@ -171,15 +171,15 @@ return;
 	bdfc->depth = bdf->clut->clut_len==4 ? 2 : bdf->clut->clut_len==16 ? 4 : 8;
     }
     if ( imageformat!=8 && imageformat!=9 )
-	bdfc->bitmap = gcalloc(metrics->height*bdfc->bytes_per_line,sizeof(uint8));
+	bdfc->bitmap = xcalloc(metrics->height*bdfc->bytes_per_line,sizeof(uint8));
 
     if ( imageformat==8 || imageformat==9 ) {
 	/* composite */
 	num = getushort(ttf);
-	bdfc->bitmap = gcalloc( 1,sizeof( uint8 ));
+	bdfc->bitmap = xcalloc( 1,sizeof( uint8 ));
 	bdfc->bytes_per_line = 1;
 	for ( i=0; i<num; ++i ) {
-	    ref = gcalloc( 1,sizeof( BDFRefChar ));
+	    ref = xcalloc( 1,sizeof( BDFRefChar ));
 	    ref->gid = getushort(ttf);
 	    ref->xoff = (int8) getc(ttf);
 	    ref->yoff = (int8) getc(ttf);
@@ -336,7 +336,7 @@ static void BdfCleanup(BDFFont *bdf,struct ttfinfo  *info) {
 	if ( info->glyph_cnt<bdf->glyphcnt ) {
 	    for ( i=info->glyph_cnt ; i<bdf->glyphcnt; ++i )
 		BDFCharFree(bdf->glyphs[i]);
-	    bdf->glyphs = grealloc(bdf->glyphs,info->glyph_cnt*sizeof(BDFChar *));
+	    bdf->glyphs = xrealloc(bdf->glyphs,info->glyph_cnt*sizeof(BDFChar *));
 	    bdf->glyphcnt = info->glyph_cnt;
 	}
     } else {
@@ -344,7 +344,7 @@ static void BdfCleanup(BDFFont *bdf,struct ttfinfo  *info) {
 	for ( i=0; i<info->subfontcnt; ++i )
 	    if ( info->subfonts[i]->glyphcnt > cnt )
 		cnt = info->subfonts[i]->glyphcnt;
-	glyphs = gcalloc(cnt,sizeof(BDFChar *));
+	glyphs = xcalloc(cnt,sizeof(BDFChar *));
 	for ( i=0; i<bdf->glyphcnt; ++i ) if ( (bdfc = bdf->glyphs[i])!=NULL ) {
 	    if ( bdfc->orig_pos<cnt )
 		glyphs[ bdfc->orig_pos ] = bdfc;
@@ -532,8 +532,8 @@ void TTFLoadBitmaps(FILE *ttf,struct ttfinfo *info,int onlyone) {
 return;
 
     /* Ask user which (if any) s/he is interested in */
-    choices = gcalloc(cnt+1,sizeof(char *));
-    sel = gcalloc(cnt,sizeof(char));
+    choices = xcalloc(cnt+1,sizeof(char *));
+    sel = xcalloc(cnt,sizeof(char));
     for ( i=0; i<cnt; ++i ) {
 	if ( sizes[i].depth==1 )
 	    sprintf(buf,"%d", sizes[i].ppem );
@@ -593,13 +593,13 @@ return;
 		glyphcnt = info->subfonts[i]->glyphcnt;
     }
     for ( i=0; i<cnt; ++i ) {
-	bdf = gcalloc(1,sizeof(BDFFont));
+	bdf = xcalloc(1,sizeof(BDFFont));
 	/* In cid fonts fontforge stores things by cid rather than gid */
 	bdf->glyphcnt = glyphcnt;
 	if ( sizes[i].endglyph > bdf->glyphcnt )
 	    bdf->glyphcnt = sizes[i].endglyph+1;	/* Important if we have reference glyphs */
 	bdf->glyphmax = bdf->glyphcnt;
-	bdf->glyphs = gcalloc(bdf->glyphcnt,sizeof(BDFChar *));
+	bdf->glyphs = xcalloc(bdf->glyphcnt,sizeof(BDFChar *));
 	bdf->pixelsize = sizes[i].ppem;
 	if ( sizes[i].ppem == sizes[i].ascent - sizes[i].descent )
 	    bdf->ascent = sizes[i].ascent;
@@ -684,14 +684,14 @@ static struct bdfcharlist *BDFAddDefaultGlyphs(BDFFont *bdf, int format) {
 	if ( BDFDepth(bdf)!=1 ) {
 	    glyph0.bytes_per_line = 1;	/* Needs to be 1 or BCRegularizeBitmap gets upset */
 	    glyph0.ymax = 1;
-	    glyph0.bitmap = gcalloc(8,1);
+	    glyph0.bitmap = xcalloc(8,1);
 	} else {
 	    glyph0.xmin = (w==4)?0:1;
 	    glyph0.xmax = w-1;
 	    glyph0.ymin = 0;
 	    glyph0.ymax = 8*bdf->ascent/10;
 	    glyph0.bytes_per_line = (glyph0.xmax-glyph0.xmin+8)/8;
-	    glyph0.bitmap = gcalloc((glyph0.ymax-glyph0.ymin+1)*glyph0.bytes_per_line,1);
+	    glyph0.bitmap = xcalloc((glyph0.ymax-glyph0.ymin+1)*glyph0.bytes_per_line,1);
 	    j = (glyph0.xmax-glyph0.xmin)>>3;
 	    bit = 0x80>>((glyph0.xmax-glyph0.xmin)&7);
 	    for ( i=0; i<=glyph0.ymax; ++i ) {
@@ -970,11 +970,11 @@ return( false );
 static void BCPreserveAndExpand( BDFChar *bc,IBounds *ib ) {
     int bmp_width = ( bc->ymax - bc->ymin + 1 );
     
-    bc->backup = gcalloc( 1,sizeof( BDFFloat ));
+    bc->backup = xcalloc( 1,sizeof( BDFFloat ));
     bc->backup->bytes_per_line = bc->bytes_per_line;
     bc->backup->xmin = bc->xmin; bc->backup->xmax = bc->xmax;
     bc->backup->ymin = bc->ymin; bc->backup->ymax = bc->ymax;
-    bc->backup->bitmap = gcalloc( bc->bytes_per_line * bmp_width,sizeof( uint8 ));
+    bc->backup->bitmap = xcalloc( bc->bytes_per_line * bmp_width,sizeof( uint8 ));
     memcpy( bc->backup->bitmap,bc->bitmap,bc->bytes_per_line * bmp_width );
     
     BCExpandBitmapToEmBox( bc,ib->minx,ib->miny,ib->maxx,ib->maxy );
@@ -1024,7 +1024,7 @@ static void DetectWidthGroups( struct glyphinfo *gi,BDFFont *bdf,int apple ) {
 
 static struct bitmapSizeTable *ttfdumpstrikelocs(FILE *bloc,FILE *bdat,
 	BDFFont *bdf, struct bdfcharlist *defs, struct glyphinfo *gi) {
-    struct bitmapSizeTable *size = gcalloc(1,sizeof(struct bitmapSizeTable));
+    struct bitmapSizeTable *size = xcalloc(1,sizeof(struct bitmapSizeTable));
     struct indexarray *cur, *last=NULL, *head=NULL;
     int i,j, final,cnt;
     FILE *subtables = tmpfile();

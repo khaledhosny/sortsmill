@@ -99,7 +99,7 @@ return( NULL );
       png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)NULL);
       if ( ret!=NULL ) {
 	  GImageDestroy(ret);
-	  gfree(row_pointers);
+	  free(row_pointers);
       }
       /* If we get here, we had a problem reading the file */
 return( NULL );
@@ -140,7 +140,7 @@ return( NULL );
 		png_get_image_width(png_ptr,info_ptr),png_get_image_height(png_ptr,info_ptr));
 	clut = ret->u.image->clut;
 	if ( clut==NULL )
-	    clut = ret->u.image->clut = (GClut *) gcalloc(1,sizeof(GClut));
+	    clut = ret->u.image->clut = (GClut *) xcalloc(1,sizeof(GClut));
 	clut->is_grey = true;
 	png_get_PLTE(png_ptr,info_ptr,&palette,&num_palette);
 	clut->clut_len = num_palette;
@@ -201,7 +201,7 @@ return( NULL );
     }
 
     png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
-    gfree(row_pointers);
+    free(row_pointers);
     /* Note png b&w images come out as indexed */
 return( ret );
 }

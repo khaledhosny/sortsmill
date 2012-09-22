@@ -506,7 +506,7 @@ return( false );
     PListOutputString(plist,"familyName",sf->familyname_with_timestamp ? sf->familyname_with_timestamp : sf->familyname);
     char *modifiers = SFGetModifiers(sf);
     PListOutputString(plist,"styleName",modifiers);
-    gfree(modifiers);
+    free(modifiers);
     PListOutputString(plist,"copyright",sf->copyright);
     PListOutputNameString(plist,"trademark",sf,ttf_trademark);
     PListOutputInteger(plist,"unitsPerEm",sf->ascent+sf->descent);
@@ -878,7 +878,7 @@ return( NULL );
     while ( get_thingy(info,buffer,"key")!=NULL ) {
 	if ( strcmp(buffer,"fontName")!=0 ) {
 	    if ( get_thingy(info,buffer,"string")!=NULL ) {
-		ret = gcalloc(2,sizeof(char *));
+		ret = xcalloc(2,sizeof(char *));
 		ret[0] = copy(buffer);
 		fclose(info);
 return( ret );
@@ -1453,7 +1453,7 @@ return;
 	    if ( sc!=NULL ) {
 		sc->parent = sf;
 		if ( sf->glyphcnt>=sf->glyphmax )
-		    sf->glyphs = grealloc(sf->glyphs,(sf->glyphmax+=100)*sizeof(SplineChar *));
+		    sf->glyphs = xrealloc(sf->glyphs,(sf->glyphmax+=100)*sizeof(SplineChar *));
 		sc->orig_pos = sf->glyphcnt;
 		sf->glyphs[sf->glyphcnt++] = sc;
 	    }

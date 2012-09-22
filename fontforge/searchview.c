@@ -671,7 +671,7 @@ return( searcher );
 return( NULL );
     }
 
-    searcher = sv = SVFillup( gcalloc(1,sizeof(SearchView)), fv );
+    searcher = sv = SVFillup( xcalloc(1,sizeof(SearchView)), fv );
 
     memset(&wattrs,0,sizeof(wattrs));
     wattrs.mask = wam_events|wam_cursor|wam_isdlg/*|wam_icon*/;

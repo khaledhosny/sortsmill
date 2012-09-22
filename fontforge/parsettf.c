@@ -654,7 +654,7 @@ static int PickCFFFont(char **fontnames) {
     int cnt, i, choice;
 
     for ( cnt=0; fontnames[cnt]!=NULL; ++cnt);
-    names = gcalloc(cnt+1,sizeof(unichar_t *));
+    names = xcalloc(cnt+1,sizeof(unichar_t *));
     for ( i=0; i<cnt; ++i )
 	names[i] = uc_copy(fontnames[i]);
     if ( no_windowing_ui )
@@ -681,7 +681,7 @@ return;
 	if ( *pt==',' )
 	    ++cnt;
     info->savecnt = cnt+1;
-    info->savetab = gcalloc(cnt+1,sizeof(struct savetab));
+    info->savetab = xcalloc(cnt+1,sizeof(struct savetab));
     for ( pt=spt=SaveTablesPref, cnt=0; ; ++pt ) {
 	if ( *pt==',' || *pt=='\0' ) {
 	    uint32 tag;
@@ -2272,7 +2272,7 @@ static void readttfglyphs(FILE *ttf,struct ttfinfo *info) {
 	    goffsets[i] = 2*getushort(ttf);
     }
 
-    info->chars = gcalloc(info->glyph_cnt,sizeof(SplineChar *));
+    info->chars = xcalloc(info->glyph_cnt,sizeof(SplineChar *));
     if ( !info->is_ttc || (info->openflags&of_all_glyphs_in_ttc)) {
 	/* read all the glyphs */
 	for ( i=0; i<info->glyph_cnt ; ++i ) {
@@ -2283,7 +2283,7 @@ static void readttfglyphs(FILE *ttf,struct ttfinfo *info) {
 	/* only read the glyphs we actually use in this font */
 	/* this is complicated by references (and substitutions), */
 	/* we can't just rely on the encoding to tell us what is used */
-	info->inuse = gcalloc(info->glyph_cnt,sizeof(char));
+	info->inuse = xcalloc(info->glyph_cnt,sizeof(char));
 	readttfencodings(ttf,info,git_justinuse);
 	if ( info->gsub_start!=0 )		/* Some glyphs may appear in substitutions and not in the encoding... */
 	    readttfgsubUsed(ttf,info);
@@ -2982,7 +2982,7 @@ return;
 
 static struct topdicts *readcfftopdict(FILE *ttf, char *fontname, int len,
 	struct ttfinfo *info) {
-    struct topdicts *td = gcalloc(1,sizeof(struct topdicts));
+    struct topdicts *td = xcalloc(1,sizeof(struct topdicts));
     long base = ftell(ttf);
     int ival, oval, sp, ret, i;
     real stack[50];
@@ -3517,7 +3517,7 @@ static void readcffset(FILE *ttf,struct topdicts *dict,struct ttfinfo *info) {
 }
 
 static uint8 *readfdselect(FILE *ttf,int numglyphs,struct ttfinfo *info) {
-    uint8 *fdselect = gcalloc(numglyphs,sizeof(uint8));
+    uint8 *fdselect = xcalloc(numglyphs,sizeof(uint8));
     int i, j, format, nr, first, end, fd;
 
     format = getc(ttf);
@@ -3681,7 +3681,7 @@ static SplineFont *cffsffillup(struct topdicts *subdict, char **strings,
     sf->strokedfont = subdict->painttype==2;
 
     if ( subdict->private_size>0 ) {
-	sf->private = gcalloc(1,sizeof(struct psdict));
+	sf->private = xcalloc(1,sizeof(struct psdict));
 	cffprivatefillup(sf->private,subdict);
     }
 return( sf );
@@ -3738,7 +3738,7 @@ static void cffinfofillup(struct ttfinfo *info, struct topdicts *dict,
     info->strokedfont = dict->painttype==2;
 
     if ( dict->private_size>0 ) {
-	info->private = gcalloc(1,sizeof(struct psdict));
+	info->private = xcalloc(1,sizeof(struct psdict));
 	cffprivatefillup(info->private,dict);
     }
     if ( dict->ros_registry!=-1 ) {
@@ -3774,7 +3774,7 @@ static void cfffigure(struct ttfinfo *info, struct topdicts *dict,
 	    subrs->cnt < 1240 ? 107 :
 	    subrs->cnt <33900 ? 1131 : 32768;
 
-    info->chars = gcalloc(info->glyph_cnt,sizeof(SplineChar *));
+    info->chars = xcalloc(info->glyph_cnt,sizeof(SplineChar *));
     for ( i=0; i<info->glyph_cnt; ++i ) {
 	info->chars[i] = PSCharStringToSplines(
 		dict->glyphs.values[i], dict->glyphs.lens[i],&pscontext,
@@ -3812,7 +3812,7 @@ static void cidfigure(struct ttfinfo *info, struct topdicts *dict,
 
     for ( j=0; subdicts[j]!=NULL; ++j );
     info->subfontcnt = j;
-    info->subfonts = gcalloc(j+1,sizeof(SplineFont *));
+    info->subfonts = xcalloc(j+1,sizeof(SplineFont *));
     for ( j=0; subdicts[j]!=NULL; ++j )  {
 	info->subfonts[j] = cffsffillup(subdicts[j],strings,scnt,info);
 	info->subfonts[j]->map = encmap;
@@ -3824,12 +3824,12 @@ static void cidfigure(struct ttfinfo *info, struct topdicts *dict,
 	/*if ( cid>=encmap->enccount ) encmap->enccount = cid+1;*/
     }
     for ( j=0; subdicts[j]!=NULL; ++j )
-	info->subfonts[j]->glyphs = gcalloc(info->subfonts[j]->glyphcnt,sizeof(SplineChar *));
+	info->subfonts[j]->glyphs = xcalloc(info->subfonts[j]->glyphcnt,sizeof(SplineChar *));
     /*encmap->encmax = encmap->enccount;*/
     /*encmap->map = galloc(encmap->enccount*sizeof(int));*/
     /*memset(encmap->map,-1,encmap->enccount*sizeof(int));*/
 
-    info->chars = gcalloc(info->glyph_cnt,sizeof(SplineChar *));
+    info->chars = xcalloc(info->glyph_cnt,sizeof(SplineChar *));
 
     /* info->chars provides access to the chars ordered by glyph, which the */
     /*  ttf routines care about */
@@ -4689,7 +4689,7 @@ return;
 
 	if ( format==0 ) {
 	    if ( justinuse==git_normal && map!=NULL && map->enccount<256 ) {
-		map->map = grealloc(map->map,256*sizeof(int));
+		map->map = xrealloc(map->map,256*sizeof(int));
 		memset(map->map,-1,(256-map->enccount)*sizeof(int));
 		map->enccount = map->encmax = 256;
 	    }
@@ -4714,7 +4714,7 @@ return;
 	    /* entrySelector = */ getushort(ttf);
 	    /* rangeShift = */ getushort(ttf);
 	    endchars = galloc(segCount*sizeof(uint16));
-	    used = gcalloc(65536,sizeof(uint8));
+	    used = xcalloc(65536,sizeof(uint8));
 	    for ( i=0; i<segCount; ++i )
 		endchars[i] = getushort(ttf);
 	    if ( getushort(ttf)!=0 )
@@ -5169,7 +5169,7 @@ static void readttfpostnames(FILE *ttf,struct ttfinfo *info) {
 	/* mem4 = */ getlong(ttf);
 	if ( format==0x00020000 ) {
 	    gc = getushort(ttf);
-	    indexes = gcalloc(65536,sizeof(uint16));
+	    indexes = xcalloc(65536,sizeof(uint16));
 	    /* the index table is backwards from the way I want to use it */
 	    gcbig = 0;
 	    for ( i=0; i<gc; ++i ) {
@@ -5521,7 +5521,7 @@ return( 0 );
     }
 
     if ( info->onlystrikes ) {
-	info->chars = gcalloc(info->glyph_cnt+1,sizeof(SplineChar *));
+	info->chars = xcalloc(info->glyph_cnt+1,sizeof(SplineChar *));
 	info->to_order2 = new_fonts_are_order2;
     } else if ( info->glyphlocations_start!=0 && info->glyph_start!=0 ) {
 	info->to_order2 = (!loaded_fonts_same_as_new ||
@@ -5882,8 +5882,8 @@ static void MMFillFromVAR(SplineFont *sf, struct ttfinfo *info) {
     mm->positions = galloc(v->tuple_count*v->axis_count*sizeof(real));
     for ( i=0; i<v->tuple_count; ++i ) for ( j=0; j<v->axis_count; ++j )
 	mm->positions[i*v->axis_count+j] = v->tuples[i].coords[j];
-    mm->defweights = gcalloc(v->tuple_count,sizeof(real));	/* Doesn't apply */
-    mm->axismaps = gcalloc(v->axis_count,sizeof(struct axismap));
+    mm->defweights = xcalloc(v->tuple_count,sizeof(real));	/* Doesn't apply */
+    mm->axismaps = xcalloc(v->axis_count,sizeof(struct axismap));
     for ( i=0; i<v->axis_count; ++i ) {
 	mm->axes[i] = AxisNameConvert(v->axes[i].tag);
 	mm->axismaps[i].min = v->axes[i].min;
@@ -5949,7 +5949,7 @@ static void PsuedoEncodeUnencoded(EncMap *map,struct ttfinfo *info) {
 	else
 	    base = map->enccount;
 	if ( base+extras>map->encmax ) {
-	    map->map = grealloc(map->map,(base+extras)*sizeof(int));
+	    map->map = xrealloc(map->map,(base+extras)*sizeof(int));
 	    memset(map->map+map->enccount,-1,(base+extras-map->enccount)*sizeof(int));
 	    map->encmax = base+extras;
 	}
@@ -6021,7 +6021,7 @@ return;
 	free(english->names[ttf_subfamily]);
 	english->names[ttf_subfamily]=NULL;
     }
-    gfree(modifiers);
+    free(modifiers);
 
     /* User should not be allowed any access to this one, not ever */
     free(english->names[ttf_postscriptname]);

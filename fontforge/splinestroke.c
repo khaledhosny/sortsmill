@@ -361,7 +361,7 @@ static void LineCap(StrokeContext *c,int isend) {
     if ( cnt<2 ) cnt = 2;
     if ( c->cur+2*cnt+10 >= c->max ) {
 	int extras = 2*cnt+200;
-	c->all = grealloc(c->all,(c->max+extras)*sizeof(StrokePoint));
+	c->all = xrealloc(c->all,(c->max+extras)*sizeof(StrokePoint));
 	memset(c->all+c->max,0,extras*sizeof(StrokePoint));
 	c->max += extras;
     }
@@ -420,7 +420,7 @@ static void LineCap(StrokeContext *c,int isend) {
 	{
 	    struct extrapoly *ep;
 	    if ( c->ecur>=c->emax )
-		c->ep = grealloc(c->ep,(c->emax+=40)*sizeof(struct extrapoly));
+		c->ep = xrealloc(c->ep,(c->emax+=40)*sizeof(struct extrapoly));
 	    ep = &c->ep[c->ecur++];
 	    ep->poly[0] = done.left;
 	    ep->poly[1].x = done.left.x + c->radius*slope.x;
@@ -538,7 +538,7 @@ return;		/* Essentially colinear */ /* Won't be perfect because control points l
     if ( cnt<6 ) cnt = 6;
     if ( c->cur+2*cnt+10 >= c->max ) {
 	int extras = 2*cnt+200;
-	c->all = grealloc(c->all,(c->max+extras)*sizeof(StrokePoint));
+	c->all = xrealloc(c->all,(c->max+extras)*sizeof(StrokePoint));
 	memset(c->all+c->max,0,extras*sizeof(StrokePoint));
 	c->max += extras;
     }
@@ -571,7 +571,7 @@ return;		/* Essentially colinear */ /* Won't be perfect because control points l
 	    cnt=3;
 	if ( c->cur+cnt+10 >= c->max ) {
 	    int extras = cnt+200;
-	    c->all = grealloc(c->all,(c->max+extras)*sizeof(StrokePoint));
+	    c->all = xrealloc(c->all,(c->max+extras)*sizeof(StrokePoint));
 	    memset(c->all+c->max,0,extras*sizeof(StrokePoint));
 	    c->max += extras;
 	}
@@ -607,7 +607,7 @@ return;		/* Essentially colinear */ /* Won't be perfect because control points l
 	{
 	    struct extrapoly *ep;
 	    if ( c->ecur>=c->emax )
-		c->ep = grealloc(c->ep,(c->emax+=40)*sizeof(struct extrapoly));
+		c->ep = xrealloc(c->ep,(c->emax+=40)*sizeof(struct extrapoly));
 	    ep = &c->ep[c->ecur++];
 	    ep->poly[0] = base;
 	    ep->poly[1] = inter;
@@ -632,7 +632,7 @@ return;		/* Essentially colinear */ /* Won't be perfect because control points l
 	    cnt1=3;
 	if ( c->cur+cnt+cnt1+2 >= c->max ) {
 	    int extras = cnt+cnt1+200;
-	    c->all = grealloc(c->all,(c->max+extras)*sizeof(StrokePoint));
+	    c->all = xrealloc(c->all,(c->max+extras)*sizeof(StrokePoint));
 	    memset(c->all+c->max,0,extras*sizeof(StrokePoint));
 	    c->max += extras;
 	}
@@ -702,7 +702,7 @@ return;		/* Essentially colinear */ /* Won't be perfect because control points l
 	    if ( c->cur >= c->max ) {
 		int extras = 400;
 		int off = pp-c->all;
-		c->all = grealloc(c->all,(c->max+extras)*sizeof(StrokePoint));
+		c->all = xrealloc(c->all,(c->max+extras)*sizeof(StrokePoint));
 		memset(c->all+c->max,0,extras*sizeof(StrokePoint));
 		c->max += extras;
 		pp = &c->all[off];
@@ -920,7 +920,7 @@ static void FindStrokePointsCircle(SplineSet *ss, StrokeContext *c) {
 	    StrokePoint *p;
 	    if ( c->cur >= c->max ) {
 		int extras = len+200;
-		c->all = grealloc(c->all,(c->max+extras)*sizeof(StrokePoint));
+		c->all = xrealloc(c->all,(c->max+extras)*sizeof(StrokePoint));
 		memset(c->all+c->max,0,extras*sizeof(StrokePoint));
 		c->max += extras;
 	    }
@@ -1075,7 +1075,7 @@ static void SquareCap(StrokeContext *c,int isend) {
     cnt = ceil(c->radius/c->resolution);
     if ( c->cur+2*cnt+10 >= c->max ) {
 	int extras = 2*cnt+200;
-	c->all = grealloc(c->all,(c->max+extras)*sizeof(StrokePoint));
+	c->all = xrealloc(c->all,(c->max+extras)*sizeof(StrokePoint));
 	memset(c->all+c->max,0,extras*sizeof(StrokePoint));
 	c->max += extras;
     }
@@ -1179,7 +1179,7 @@ return;		/* Slope changes, but not enough for us to flip to a new corner */
     if ( cnt<2 ) cnt = 2;
     if ( c->cur+3*cnt+10 >= c->max ) {
 	int extras = 3*cnt+200;
-	c->all = grealloc(c->all,(c->max+extras)*sizeof(StrokePoint));
+	c->all = xrealloc(c->all,(c->max+extras)*sizeof(StrokePoint));
 	memset(c->all+c->max,0,extras*sizeof(StrokePoint));
 	c->max += extras;
     }
@@ -1327,7 +1327,7 @@ static void FindStrokePointsSquare(SplineSet *ss, StrokeContext *c) {
 	/*  the end points, and there will be at least two internal points */
 	if ( c->cur+len+1+8*(cnt+2) >= c->max ) {
 	    int extras = len+8*cnt+200;
-	    c->all = grealloc(c->all,(c->max+extras)*sizeof(StrokePoint));
+	    c->all = xrealloc(c->all,(c->max+extras)*sizeof(StrokePoint));
 	    memset(c->all+c->max,0,extras*sizeof(StrokePoint));
 	    c->max += extras;
 	}
@@ -1336,7 +1336,7 @@ static void FindStrokePointsSquare(SplineSet *ss, StrokeContext *c) {
 	    StrokePoint *p;
 	    if ( c->cur >= c->max ) {
 		int extras = len+8*cnt+200;
-		c->all = grealloc(c->all,(c->max+extras)*sizeof(StrokePoint));
+		c->all = xrealloc(c->all,(c->max+extras)*sizeof(StrokePoint));
 		memset(c->all+c->max,0,extras*sizeof(StrokePoint));
 		c->max += extras;
 	    }
@@ -1523,7 +1523,7 @@ static void PolyCap(StrokeContext *c,int isend) {
     cnt = ceil(c->radius/c->resolution);
     if ( c->cur+cc*cnt+10 >= c->max ) {
 	int extras = cc*cnt+200;
-	c->all = grealloc(c->all,(c->max+extras)*sizeof(StrokePoint));
+	c->all = xrealloc(c->all,(c->max+extras)*sizeof(StrokePoint));
 	memset(c->all+c->max,0,extras*sizeof(StrokePoint));
 	c->max += extras;
     }
@@ -1667,7 +1667,7 @@ return;
     for ( nc=start+dir; ; nc+=dir ) {
 	if ( c->cur+cnt+10 >= c->max ) {
 	    int extras = 3*cnt+200;
-	    c->all = grealloc(c->all,(c->max+extras)*sizeof(StrokePoint));
+	    c->all = xrealloc(c->all,(c->max+extras)*sizeof(StrokePoint));
 	    memset(c->all+c->max,0,extras*sizeof(StrokePoint));
 	    c->max += extras;
 	}
@@ -1900,7 +1900,7 @@ static void FindStrokePointsPoly(SplineSet *ss, StrokeContext *c) {
 	/*  c->n on each side, and sides can change independently so 2*c->n */
 	if ( c->cur+len+1+(cnt+2)*2*c->n >= c->max ) {
 	    int extras = len+(cnt+2)*2*c->n+200;
-	    c->all = grealloc(c->all,(c->max+extras)*sizeof(StrokePoint));
+	    c->all = xrealloc(c->all,(c->max+extras)*sizeof(StrokePoint));
 	    memset(c->all+c->max,0,extras*sizeof(StrokePoint));
 	    c->max += extras;
 	}
@@ -1912,7 +1912,7 @@ static void FindStrokePointsPoly(SplineSet *ss, StrokeContext *c) {
 	    StrokePoint *p;
 	    if ( c->cur+2 >= c->max ) {
 		int extras = 200+len;
-		c->all = grealloc(c->all,(c->max+extras)*sizeof(StrokePoint));
+		c->all = xrealloc(c->all,(c->max+extras)*sizeof(StrokePoint));
 		memset(c->all+c->max,0,extras*sizeof(StrokePoint));
 		c->max += extras;
 		p = &c->all[c->cur-1];
@@ -3358,7 +3358,7 @@ static int InterpolateTPoints(StrokeContext *c,int start_pos,int end_pos,
 return( end_pos-start_pos );
 
     if ( 20 >= c->tmax )
-	c->tpt = grealloc(c->tpt,(c->tmax = 20+MAX_TPOINTS)*sizeof(TPoint));
+	c->tpt = xrealloc(c->tpt,(c->tmax = 20+MAX_TPOINTS)*sizeof(TPoint));
 
     if ( c->all[start_pos].line ) {
 	me = c->all[start_pos-1].me;
@@ -3523,7 +3523,7 @@ static SplineSet *ApproximateStrokeContours(StrokeContext *c) {
 		    tot = MAX_TPOINTS;
 		}
 		if ( tot >= c->tmax )
-		    c->tpt = grealloc(c->tpt,(c->tmax = tot+MAX_TPOINTS)*sizeof(TPoint));
+		    c->tpt = xrealloc(c->tpt,(c->tmax = tot+MAX_TPOINTS)*sizeof(TPoint));
 		/* There is really no point in having a huge number of data points */
 		/*  I don't need 1000 points to approximate the curve, 10 will probably */
 		/*  do. The extra points just slow us down (we need them for the */
@@ -3605,7 +3605,7 @@ static SplineSet *ApproximateStrokeContours(StrokeContext *c) {
 		    tot = MAX_TPOINTS;
 		}
 		if ( tot >= c->tmax )
-		    c->tpt = grealloc(c->tpt,(c->tmax = tot+MAX_TPOINTS)*sizeof(TPoint));
+		    c->tpt = xrealloc(c->tpt,(c->tmax = tot+MAX_TPOINTS)*sizeof(TPoint));
 		ipos = start_pos; skip_cnt=0;
 		for ( i=0; i<=tot; ++i ) {
 		    TPoint *tpt = c->tpt + i;

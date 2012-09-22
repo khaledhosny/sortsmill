@@ -124,14 +124,14 @@ return;
 return;
     }
 
-    bdf = gcalloc(1,sizeof(BDFFont));
+    bdf = xcalloc(1,sizeof(BDFFont));
     bdf->sf = sf;
     bdf->next = sf->bitmaps;
     sf->bitmaps = bdf;
     bdf->glyphcnt = sf->glyphcnt;
     bdf->glyphmax = sf->glyphmax;
     bdf->pixelsize = pixelsize;
-    bdf->glyphs = gcalloc(sf->glyphmax,sizeof(BDFChar *));
+    bdf->glyphs = xcalloc(sf->glyphmax,sizeof(BDFChar *));
     bdf->ascent = density*fn->ascent/72;
     bdf->descent = pixelsize - bdf->ascent;
     bdf->res = 72;
@@ -151,7 +151,7 @@ return;
 	    bdfc->width = density*fn->chars[index].width/72;
 	    bdfc->vwidth = pixelsize;
 	    bdfc->bytes_per_line = ((bdfc->xmax-bdfc->xmin)>>3) + 1;
-	    bdfc->bitmap = gcalloc(bdfc->bytes_per_line*(density*fn->frectheight)/72,sizeof(uint8));
+	    bdfc->bitmap = xcalloc(bdfc->bytes_per_line*(density*fn->frectheight)/72,sizeof(uint8));
 	    bdfc->orig_pos = gid;
 	    bdfc->sc = sf->glyphs[gid];
 	    bdf->glyphs[gid] = bdfc;
@@ -545,7 +545,7 @@ return( NULL );
 	*offsets = galloc((fn->lastChar-fn->firstChar+3)*sizeof(int));
 	*widths = galloc((fn->lastChar-fn->firstChar+3)*sizeof(int));
     }
-    image = gcalloc(bdf->pixelsize*rw,sizeof(uint16));
+    image = xcalloc(bdf->pixelsize*rw,sizeof(uint16));
     rbits = 0;
     for ( i=fn->firstChar; i<=fn->lastChar; ++i ) {
 	if ( offsets!=NULL )

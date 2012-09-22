@@ -320,13 +320,13 @@ return( false );
     if ( fntheader.italic )
 	sf->italicangle = 11.25;
 
-    bdf = gcalloc(1,sizeof(BDFFont));
+    bdf = xcalloc(1,sizeof(BDFFont));
     bdf->sf = sf;
     bdf->glyphcnt = sf->glyphcnt;
     bdf->glyphmax = sf->glyphmax;
     bdf->res = fntheader.vertres;
     bdf->pixelsize = rint(fntheader.pointsize*fntheader.vertres/72.27);
-    bdf->glyphs = gcalloc(sf->glyphmax,sizeof(BDFChar *));
+    bdf->glyphs = xcalloc(sf->glyphmax,sizeof(BDFChar *));
     bdf->ascent = rint(.8*bdf->pixelsize);		/* shouldn't use typographical ascent */
     bdf->descent = bdf->pixelsize-bdf->ascent;
     for ( i=fntheader.firstchar; i<=fntheader.lastchar; ++i ) if ( charinfo[i].width!=0 ) {
@@ -334,7 +334,7 @@ return( false );
 
 	if ( gid>=bdf->glyphcnt ) {
 	    if ( gid>=bdf->glyphmax )
-		bdf->glyphs = grealloc(bdf->glyphs,(bdf->glyphmax=sf->glyphmax)*sizeof(BDFChar *));
+		bdf->glyphs = xrealloc(bdf->glyphs,(bdf->glyphmax=sf->glyphmax)*sizeof(BDFChar *));
 	    memset(bdf->glyphs+bdf->glyphcnt,0,(sf->glyphcnt-bdf->glyphcnt)*sizeof(BDFChar *));
 	    bdf->glyphcnt = sf->glyphcnt;
 	}
@@ -348,7 +348,7 @@ return( false );
 	bdfc->width = charinfo[i].width;
 	bdfc->vwidth = bdf->pixelsize;
 	bdfc->bytes_per_line = (bdfc->xmax>>3)+1;
-	bdfc->bitmap = gcalloc(bdfc->bytes_per_line*fntheader.height,sizeof(uint8));
+	bdfc->bitmap = xcalloc(bdfc->bytes_per_line*fntheader.height,sizeof(uint8));
 	bdfc->orig_pos = gid;
 	bdfc->sc = sf->glyphs[gid];
 	bdfc->sc->widthset = true;

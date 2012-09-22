@@ -1183,7 +1183,7 @@ static xmlNodePtr *FindSVGFontNodes(xmlDocPtr doc) {
     xmlNodePtr *fonts=NULL;
     int cnt;
 
-    fonts = gcalloc(100,sizeof(xmlNodePtr));	/* If the file has more than 100 fonts in it then it's foolish to expect the user to pick out one, so let's limit ourselves to 100 */
+    fonts = xcalloc(100,sizeof(xmlNodePtr));	/* If the file has more than 100 fonts in it then it's foolish to expect the user to pick out one, so let's limit ourselves to 100 */
     cnt = _FindSVGFontNodes(xmlDocGetRootElement(doc),fonts,0,100,"svg");
     if ( cnt==0 ) {
 	free(fonts);
@@ -1677,7 +1677,7 @@ static SplineSet *SVGAddSpiros(xmlChar *path, SplineSet *base) {
 		} else
 		    cur->spiros[0].ty = SPIRO_CORNER;
 		if ( cur->spiro_cnt>=cur->spiro_max )
-		    cur->spiros = grealloc(cur->spiros,(cur->spiro_max++)*sizeof(spiro_cp));
+		    cur->spiros = xrealloc(cur->spiros,(cur->spiro_max++)*sizeof(spiro_cp));
 		cp.x = current.x; cp.y = current.y; cp.ty = SPIRO_END;
 		cur->spiros[cur->spiro_cnt++] = cp;
 		current.x = cur->spiros[0].x; current.y = cur->spiros[0].y;
@@ -1705,7 +1705,7 @@ static SplineSet *SVGAddSpiros(xmlChar *path, SplineSet *base) {
 	      break;
 	    }
 	    if ( cur->spiro_cnt>=cur->spiro_max )
-		cur->spiros = grealloc(cur->spiros,(cur->spiro_max+=10)*sizeof(spiro_cp));
+		cur->spiros = xrealloc(cur->spiros,(cur->spiro_max+=10)*sizeof(spiro_cp));
 	    cur->spiros[cur->spiro_cnt++] = cp;
 	    current.x = cp.x; current.y = cp.y;
 	}
@@ -2286,14 +2286,14 @@ static void xmlParseColorSource(xmlNodePtr top,char *name,DBounds *bbox,
 	    /* I'm not sure how to use the style stop-color, but I'm guessing */
 	    /*  this might be it */
 	    grad->stop_cnt = 1;
-	    grad->grad_stops = gcalloc(1,sizeof(struct grad_stops));
+	    grad->grad_stops = xcalloc(1,sizeof(struct grad_stops));
 	    grad->grad_stops[scnt].offset = 1;
 	    grad->grad_stops[scnt].col = st->stopColor;
 	    grad->grad_stops[scnt].opacity = st->stopOpacity;
 	    ++scnt;
 	} else {
 	    grad->stop_cnt = scnt;
-	    grad->grad_stops = gcalloc(scnt,sizeof(struct grad_stops));
+	    grad->grad_stops = xcalloc(scnt,sizeof(struct grad_stops));
 	    scnt = 0;
 	    for ( kid = colour_source->children; kid!=NULL; kid=kid->next ) if ( xmlStrcmp(kid->name,(xmlChar *) "stop")==0 ) {
 		grad->grad_stops[scnt].col = st->stopColor;
@@ -2625,7 +2625,7 @@ return( ent );
 }
 
 static Entity *EntityCreate(SplinePointList *head,struct svg_state *state) {
-    Entity *ent = gcalloc(1,sizeof(Entity));
+    Entity *ent = xcalloc(1,sizeof(Entity));
     ent->type = et_splines;
     ent->u.splines.splines = head;
     ent->u.splines.cap = state->lc;

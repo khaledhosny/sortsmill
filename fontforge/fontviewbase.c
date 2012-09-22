@@ -819,7 +819,7 @@ void FVReencode(FontViewBase *fv,Encoding *enc) {
 	fv->map->enc = &custom;
     else {
 	map = EncMapFromEncoding(fv->sf,enc);
-	fv->selected = grealloc(fv->selected,map->enccount);
+	fv->selected = xrealloc(fv->selected,map->enccount);
 	memset(fv->selected,0,map->enccount);
 	EncMapFree(fv->map);
 	fv->map = map;
@@ -1183,8 +1183,8 @@ void CIDSetEncMap(FontViewBase *fv, SplineFont *new ) {
     if ( fv->cidmaster!=NULL && gcnt!=fv->sf->glyphcnt ) {
 	int i;
 	if ( fv->map->encmax<gcnt ) {
-	    fv->map->map = grealloc(fv->map->map,gcnt*sizeof(int));
-	    fv->map->backmap = grealloc(fv->map->backmap,gcnt*sizeof(int));
+	    fv->map->map = xrealloc(fv->map->map,gcnt*sizeof(int));
+	    fv->map->backmap = xrealloc(fv->map->backmap,gcnt*sizeof(int));
 	    fv->map->backmax = fv->map->encmax = gcnt;
 	}
 	for ( i=0; i<gcnt; ++i )
@@ -1193,7 +1193,7 @@ void CIDSetEncMap(FontViewBase *fv, SplineFont *new ) {
 	    memset(fv->selected+gcnt,0,fv->map->enccount-gcnt);
 	else {
 	    free(fv->selected);
-	    fv->selected = gcalloc(gcnt,sizeof(char));
+	    fv->selected = xcalloc(gcnt,sizeof(char));
 	}
 	fv->map->enccount = gcnt;
     }
@@ -1439,17 +1439,17 @@ void FVAddUnencoded(FontViewBase *fv, int cnt) {
 	SplineFont *sf = fv->sf;
 	FontViewBase *fvs;
 	if ( sf->glyphcnt+cnt>=sf->glyphmax )
-	    sf->glyphs = grealloc(sf->glyphs,(sf->glyphmax = sf->glyphcnt+cnt+10)*sizeof(SplineChar *));
+	    sf->glyphs = xrealloc(sf->glyphs,(sf->glyphmax = sf->glyphcnt+cnt+10)*sizeof(SplineChar *));
 	memset(sf->glyphs+sf->glyphcnt,0,cnt*sizeof(SplineChar *));
 	for ( fvs=sf->fv; fvs!=NULL; fvs=fvs->nextsame ) {
 	    EncMap *map = fvs->map;
 	    if ( map->enccount+cnt>=map->encmax )
-		map->map = grealloc(map->map,(map->encmax += cnt+10)*sizeof(int));
+		map->map = xrealloc(map->map,(map->encmax += cnt+10)*sizeof(int));
 	    if ( sf->glyphcnt+cnt>=map->backmax )
-		map->backmap = grealloc(map->backmap,(map->backmax += cnt+10)*sizeof(int));
+		map->backmap = xrealloc(map->backmap,(map->backmax += cnt+10)*sizeof(int));
 	    for ( i=map->enccount; i<map->enccount+cnt; ++i )
 		map->map[i] = map->backmap[i] = i;
-	    fvs->selected = grealloc(fvs->selected,(map->enccount+cnt));
+	    fvs->selected = xrealloc(fvs->selected,(map->enccount+cnt));
 	    memset(fvs->selected+map->enccount,0,cnt);
 	    map->enccount += cnt;
 	}
@@ -1457,10 +1457,10 @@ void FVAddUnencoded(FontViewBase *fv, int cnt) {
 	FontViewReformatAll(fv->sf);
     } else {
 	if ( map->enccount+cnt>=map->encmax )
-	    map->map = grealloc(map->map,(map->encmax += cnt+10)*sizeof(int));
+	    map->map = xrealloc(map->map,(map->encmax += cnt+10)*sizeof(int));
 	for ( i=map->enccount; i<map->enccount+cnt; ++i )
 	    map->map[i] = -1;
-	fv->selected = grealloc(fv->selected,(map->enccount+cnt));
+	fv->selected = xrealloc(fv->selected,(map->enccount+cnt));
 	memset(fv->selected+map->enccount,0,cnt);
 	map->enccount += cnt;
 	FontViewReformatOne(fv);
@@ -1494,7 +1494,7 @@ void FVCompact(FontViewBase *fv) {
 	EncMapFree(fv->map);
 	fv->map = fv->normal;
 	fv->normal = NULL;
-	fv->selected = grealloc(fv->selected,fv->map->enccount);
+	fv->selected = xrealloc(fv->selected,fv->map->enccount);
 	memset(fv->selected,0,fv->map->enccount);
     } else {
 	/* We reduced the encoding, so don't really need to reallocate the selection */
@@ -1717,7 +1717,7 @@ return;
 	else
 	    map = EncMapFromEncoding(fv->sf,fv->map->enc);
 	if ( map->enccount>fvs->map->enccount ) {
-	    fvs->selected = grealloc(fvs->selected,map->enccount);
+	    fvs->selected = xrealloc(fvs->selected,map->enccount);
 	    memset(fvs->selected+fvs->map->enccount,0,map->enccount-fvs->map->enccount);
 	}
 	EncMapFree(fv->map);
@@ -1857,7 +1857,7 @@ void FVB_MakeNamelist(FontViewBase *fv, FILE *file) {
 /*                             FV Interface                                   */
 
 static FontViewBase *_FontViewBaseCreate(SplineFont *sf) {
-    FontViewBase *fv = gcalloc(1,sizeof(FontViewBase));
+    FontViewBase *fv = xcalloc(1,sizeof(FontViewBase));
     int i;
 
     fv->nextsame = sf->fv;
@@ -1895,7 +1895,7 @@ static FontViewBase *_FontViewBaseCreate(SplineFont *sf) {
 	if ( fv->nextsame==NULL ) EncMapFree(sf->map);
 	fv->map = EncMap1to1(sf->glyphcnt);
     }
-    fv->selected = gcalloc(fv->map->enccount,sizeof(char));
+    fv->selected = xcalloc(fv->map->enccount,sizeof(char));
 
 #ifndef _NO_PYTHON
     PyFF_InitFontHook(fv);

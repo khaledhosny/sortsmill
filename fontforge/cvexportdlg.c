@@ -496,7 +496,7 @@ static int _Export(SplineChar *sc,BDFChar *bc,int layer) {
 	    if ( py_ie[i].export!=NULL )
 		++extras;
 	if ( extras!=0 ) {
-	    cur_formats = gcalloc(extras+cnt+1,sizeof(GTextInfo));
+	    cur_formats = xcalloc(extras+cnt+1,sizeof(GTextInfo));
 	    for ( cnt=0; formats[cnt].text!=NULL; ++cnt ) {
 		cur_formats[cnt] = formats[cnt];
 		cur_formats[cnt].text = (unichar_t *) copy( (char *) formats[cnt].text );

@@ -163,7 +163,7 @@ static void SplitSpirosAndAddAndCut(SplineSet *spl,SplineSet *spl2,int spiro_ind
 	memcpy(spl2->spiros+1,spl->spiros+spiro_index+1,(spl->spiro_cnt-(spiro_index+1))*sizeof(spiro_cp));
 	spl2->spiro_cnt = spl->spiro_cnt-spiro_index;
 	if ( spiro_index+3>spl->spiro_max )
-	    spl->spiros = grealloc(spl->spiros,(spl->spiro_max=spiro_index+3)*sizeof(spiro_cp));
+	    spl->spiros = xrealloc(spl->spiros,(spl->spiro_max=spiro_index+3)*sizeof(spiro_cp));
 	memcpy(spl->spiros+spiro_index+1,spl2->spiros,sizeof(spiro_cp));
 	spl->spiros[spiro_index+1].ty = SPIRO_G4;
 	memcpy(spl->spiros+spiro_index+2,spl->spiros+spl->spiro_cnt-1,sizeof(spiro_cp));

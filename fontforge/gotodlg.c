@@ -39,7 +39,7 @@ return( strcmp((char *) (t1->text),(char *) (t2->text)));
 }
 
 static GTextInfo *AvailableRanges(SplineFont *sf,EncMap *map) {
-    GTextInfo *ret = gcalloc(unicoderange_cnt+3,sizeof(GTextInfo));
+    GTextInfo *ret = xcalloc(unicoderange_cnt+3,sizeof(GTextInfo));
     int i, cnt, ch, pos;
 
     for ( i=cnt=0; unicoderange[i].name!=NULL; ++i ) {

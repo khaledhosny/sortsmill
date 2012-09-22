@@ -424,7 +424,7 @@ static int CI_DeleteCounter(GGadget *g, GEvent *e) {
 	offset = GGadgetGetCid(g)-CID_Delete;
 	list = GWidgetGetControl(GGadgetGetWindow(g),CID_List+offset);
 	old = GGadgetGetList(list,&len);
-	new_ = gcalloc(len+1,sizeof(GTextInfo *));
+	new_ = xcalloc(len+1,sizeof(GTextInfo *));
 	for ( i=j=0; i<len; ++i )
 	    if ( !old[i]->selected ) {
 		new_[j] = (GTextInfo *) galloc(sizeof(GTextInfo));
@@ -432,7 +432,7 @@ static int CI_DeleteCounter(GGadget *g, GEvent *e) {
 		new_[j]->text = u_copy(new_[j]->text);
 		++j;
 	    }
-	new_[j] = (GTextInfo *) gcalloc(1,sizeof(GTextInfo));
+	new_[j] = (GTextInfo *) xcalloc(1,sizeof(GTextInfo));
 	if ( offset==600 ) {
 	    for ( i=0; i<len; ++i ) if ( old[i]->selected )
 		free(old[i]->userdata);
@@ -604,7 +604,7 @@ return( dv );
 	free(dv->corrections);
     dv->first_pixel_size = low;
     dv->last_pixel_size = high;
-    dv->corrections = gcalloc(high-low+1,1);
+    dv->corrections = xcalloc(high-low+1,1);
 
     for ( pt=dvstr; *pt; ) {
 	pixel = strtol(pt,&end,10);
@@ -1030,7 +1030,7 @@ struct glyphvariants *GV_ParseConstruction(struct glyphvariants *gv,
 	gv = (struct glyphvariants *) xzalloc(sizeof (struct glyphvariants));
 
     gv->part_cnt = rows;
-    gv->parts = gcalloc(rows,sizeof(struct gv_part));
+    gv->parts = xcalloc(rows,sizeof(struct gv_part));
     for ( i=0; i<rows; ++i ) {
 	gv->parts[i].component = copy(stuff[i*cols+0].u.md_str);
 	gv->parts[i].is_extender = stuff[i*cols+1].u.md_ival;
@@ -1500,7 +1500,7 @@ return( false );
 		ci->cachedsc->possub = pst;
 	    }
 	    if ( lc_cnt>pst->u.lcaret.cnt )
-		pst->u.lcaret.carets = grealloc(pst->u.lcaret.carets,lc_cnt*sizeof(int16));
+		pst->u.lcaret.carets = xrealloc(pst->u.lcaret.carets,lc_cnt*sizeof(int16));
 	    for ( i=pst->u.lcaret.cnt; i<lc_cnt; ++i )
 		pst->u.lcaret.carets[i] = 0;
 	    pst->u.lcaret.cnt = lc_cnt;
@@ -1794,7 +1794,7 @@ char *AdobeLigatureFormat(char *name) {
 	break;
 	    }
 	    next = StdGlyphName(buffer,uni,ui_none,(NameList *)-1);
-	    components = grealloc(components,strlen(components) + strlen(next) + 2);
+	    components = xrealloc(components,strlen(components) + strlen(next) + 2);
 	    if ( *components!='\0' )
 		strcat(components," ");
 	    strcat(components,next);
@@ -1976,9 +1976,9 @@ return;
 return;
     }
     if ( carets->u.lcaret.carets==NULL )
-	carets->u.lcaret.carets = (int16 *) gcalloc(lig_comp_max,sizeof(int16));
+	carets->u.lcaret.carets = (int16 *) xcalloc(lig_comp_max,sizeof(int16));
     else {
-	carets->u.lcaret.carets = (int16 *) grealloc(carets->u.lcaret.carets,lig_comp_max*sizeof(int16));
+	carets->u.lcaret.carets = (int16 *) xrealloc(carets->u.lcaret.carets,lig_comp_max*sizeof(int16));
 	for ( i=carets->u.lcaret.cnt; i<lig_comp_max; ++i )
 	    carets->u.lcaret.carets[i] = 0;
     }
@@ -2044,7 +2044,7 @@ return( true );
 }
 
 GTextInfo *TIFromName(const char *name) {
-    GTextInfo *ti = gcalloc(1,sizeof(GTextInfo));
+    GTextInfo *ti = xcalloc(1,sizeof(GTextInfo));
     ti->text = utf82u_copy(name);
     ti->fg = COLOR_DEFAULT;
     ti->bg = COLOR_DEFAULT;
@@ -2176,7 +2176,7 @@ static void DevTabMatrixInit(struct matrixinit *mi,char *dvstr) {
 	    }
 	}
 	if ( md==NULL )
-	    md = gcalloc(2*(cnt+10),sizeof(struct matrix_data));
+	    md = xcalloc(2*(cnt+10),sizeof(struct matrix_data));
     }
     mi->matrix_data = md;
     mi->initial_row_cnt = cnt;
@@ -2222,7 +2222,7 @@ return(true);
 	if ( low!=-1 ) {
 	    dvd->devtab.first_pixel_size = low;
 	    dvd->devtab.last_pixel_size = high;
-	    dvd->devtab.corrections = gcalloc(high-low+1,1);
+	    dvd->devtab.corrections = xcalloc(high-low+1,1);
 	    for ( i=0; i<rows; ++i ) {
 		if ( corrections[2*i+1].u.md_ival!=0 ) {
 		    dvd->devtab.corrections[ corrections[2*i+0].u.md_ival-low ] =
@@ -3650,7 +3650,7 @@ void GV_ToMD(GGadget *g, struct glyphvariants *gv) {
 	GMatrixEditSet(g, NULL,0,false);
 return;
     }
-    mds = gcalloc(gv->part_cnt*cols,sizeof(struct matrix_data));
+    mds = xcalloc(gv->part_cnt*cols,sizeof(struct matrix_data));
     for ( j=0; j<gv->part_cnt; ++j ) {
 	mds[j*cols+0].u.md_str = copy(gv->parts[j].component);
 	mds[j*cols+1].u.md_ival = gv->parts[j].is_extender;
@@ -3670,7 +3670,7 @@ static void GA_ToMD(GGadget *g, SplineChar *sc) {
 return;
     }
     for ( cnt=0, alt=sc->altuni; alt!=NULL; ++cnt, alt=alt->next );
-    mds = gcalloc(cnt*cols,sizeof(struct matrix_data));
+    mds = xcalloc(cnt*cols,sizeof(struct matrix_data));
     for ( cnt=0, alt=sc->altuni; alt!=NULL; ++cnt, alt=alt->next ) {
 	mds[cnt*cols+0].u.md_ival = alt->unienc;
 	mds[cnt*cols+1].u.md_ival = alt->vs==-1? 0 : alt->vs;
@@ -3719,7 +3719,7 @@ struct hslrgb *SFFontCols(SplineFont *sf,struct hslrgb fontcols[6]) {
     stds[4].color = 0xffff00;
     stds[5].color = 0x00ffff;
     stds[6].color = 0xff00ff;
-    colcount = gcalloc(sf->glyphcnt,sizeof(struct colcount));
+    colcount = xcalloc(sf->glyphcnt,sizeof(struct colcount));
 
     cnt = 0;
     for ( gid=0; gid<sf->glyphcnt; ++gid ) if ( (sc= sf->glyphs[gid])!=NULL ) {
@@ -3847,7 +3847,7 @@ static void CIFillup(CharInfo *ci) {
 	    ++cnts[pst_pair];
     }
     for ( i=pst_null+1; i<pst_max && i<pst_lcaret ; ++i )
-	mds[i] = gcalloc((cnts[i]+1)*mi[i-1].col_cnt,sizeof(struct matrix_data));
+	mds[i] = xcalloc((cnts[i]+1)*mi[i-1].col_cnt,sizeof(struct matrix_data));
     memset(cnts,0,sizeof(cnts));
     for ( pst = sc->possub; pst!=NULL; pst=pst->next ) if ( pst->type!=pst_lcaret ) {
 	j = (cnts[pst->type]++ * mi[pst->type-1].col_cnt);
@@ -3932,9 +3932,9 @@ static void CIFillup(CharInfo *ci) {
     ci->first = sc->comment==NULL;
 
     ti = galloc((sc->countermask_cnt+1)*sizeof(GTextInfo *));
-    ti[sc->countermask_cnt] = gcalloc(1,sizeof(GTextInfo));
+    ti[sc->countermask_cnt] = xcalloc(1,sizeof(GTextInfo));
     for ( i=0; i<sc->countermask_cnt; ++i ) {
-	ti[i] = gcalloc(1,sizeof(GTextInfo));
+	ti[i] = xcalloc(1,sizeof(GTextInfo));
 	ti[i]->text = CounterMaskLine(sc,&sc->countermasks[i]);
 	ti[i]->fg = ti[i]->bg = COLOR_DEFAULT;
 	ti[i]->userdata = (HintMask *) xzalloc(sizeof (HintMask));
@@ -4141,7 +4141,7 @@ void SCCharInfo(SplineChar *sc,int deflayer, EncMap *map,int enc) {
 return;
     }
 
-    ci = gcalloc(1,sizeof(CharInfo));
+    ci = xcalloc(1,sizeof(CharInfo));
     ci->sc = sc;
     ci->def_layer = deflayer;
     ci->done = false;
@@ -5167,7 +5167,7 @@ void FVSelectByPST(FontView *fv) {
 return;
 	}
 	if ( ti==NULL )
-	    ti = gcalloc(cnt+1,sizeof(GTextInfo));
+	    ti = xcalloc(cnt+1,sizeof(GTextInfo));
     }
 
     CharInfoInit();

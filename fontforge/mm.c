@@ -551,7 +551,7 @@ static struct psdict *BlendPrivate(struct psdict *private,MMSet *mm) {
 return( private );
 
     if ( private==NULL )
-	private = gcalloc(1,sizeof(struct psdict));
+	private = xcalloc(1,sizeof(struct psdict));
 
     i = PSDictFindEntry(private,"ForceBoldThreshold");
     if ( i!=-1 ) {
@@ -737,7 +737,7 @@ SplineFont *_MMNewFont(MMSet *mm,int index,char *familyname,real *normalized) {
 	free(sf->xuid);
 	sf->xuid = copy(base->xuid);
 	free(sf->glyphs);
-	sf->glyphs = gcalloc(base->glyphcnt,sizeof(SplineChar *));
+	sf->glyphs = xcalloc(base->glyphcnt,sizeof(SplineChar *));
 	sf->glyphcnt = sf->glyphmax = base->glyphcnt;
 	sf->new = base->new;
 	sf->ascent = base->ascent;

@@ -469,7 +469,7 @@ static extended *BottomFindIntersections(Spline *bottom,SplineSet *lines,SplineS
 		for ( i=0; i<25 && t1s[i]!=-1; ++i ) if ( t2s[i]>.001 && t2s[i]<.999 ) {
 		    if ( tcnt>=tmax ) {
 			tmax += 100;
-			ts = grealloc(ts,tmax*sizeof(extended));
+			ts = xrealloc(ts,tmax*sizeof(extended));
 		    }
 		    ts[tcnt++] = t1s[i];
 		}
@@ -485,7 +485,7 @@ static extended *BottomFindIntersections(Spline *bottom,SplineSet *lines,SplineS
 		for ( i=0; i<25 && t1s[i]!=-1; ++i ) if ( t2s[i]>.001 && t2s[i]<.999 ) {
 		    if ( tcnt>=tmax ) {
 			tmax += 100;
-			ts = grealloc(ts,tmax*sizeof(extended));
+			ts = xrealloc(ts,tmax*sizeof(extended));
 		    }
 		    ts[tcnt++] = t1s[i];
 		}

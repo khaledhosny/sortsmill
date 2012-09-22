@@ -519,7 +519,7 @@ return( false );
 	} else {
 	    if ( l>=lmax ) {
 		lmax += 100;
-		lines = grealloc(lines,lmax*sizeof(char *));
+		lines = xrealloc(lines,lmax*sizeof(char *));
 	    }
 	    lines[l++] = copy(buffer);
 	}
@@ -529,7 +529,7 @@ return( false );
     if ( sub_num<=0 )
 return( false );
     while ( sub_num<14 ) {
-	osubs[sub_num] = gcalloc(2,sizeof(char *));
+	osubs[sub_num] = xcalloc(2,sizeof(char *));
 	osubs[sub_num][0] = copy("{}");
 	++sub_num;
     }

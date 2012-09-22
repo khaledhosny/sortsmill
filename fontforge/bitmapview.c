@@ -2239,7 +2239,7 @@ return;
 }
 
 BitmapView *BitmapViewCreate(BDFChar *bc, BDFFont *bdf, FontView *fv, int enc) {
-    BitmapView *bv = gcalloc(1,sizeof(BitmapView));
+    BitmapView *bv = xcalloc(1,sizeof(BitmapView));
     GRect pos, zoom, size;
     GWindow gw;
     GWindowAttrs wattrs;

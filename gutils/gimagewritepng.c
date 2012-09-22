@@ -159,11 +159,11 @@ return(false);
 
     png_write_end(png_ptr, info_ptr);
 
-    if ( trans_alpha!=NULL ) gfree(trans_alpha);
-    if ( trans_color!=NULL ) gfree(trans_color);
-    if ( palette!=NULL ) gfree(palette);
+    if ( trans_alpha!=NULL ) free(trans_alpha);
+    if ( trans_color!=NULL ) free(trans_color);
+    if ( palette!=NULL ) free(palette);
     png_destroy_write_struct(&png_ptr, &info_ptr);
-    gfree(rows);
+    free(rows);
 return( 1 );
 }
 

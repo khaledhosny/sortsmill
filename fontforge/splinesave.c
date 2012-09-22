@@ -218,7 +218,7 @@ return;
     /* Store everything in the grow buf into the data/dlen of the next bit */
     if ( gi->bcnt==-1 ) gi->bcnt = 0;
     if ( gi->bcnt>=gi->bmax )
-	gi->bits = grealloc(gi->bits,(gi->bmax+=20)*sizeof(struct bits));
+	gi->bits = xrealloc(gi->bits,(gi->bmax+=20)*sizeof(struct bits));
     gi->bits[gi->bcnt].dlen = gb->pt-gb->base;
     gi->bits[gi->bcnt].data = galloc(gi->bits[gi->bcnt].dlen);
     gi->bits[gi->bcnt].psub_index = -1;
@@ -269,7 +269,7 @@ return;
     }
     if ( pi==-1 ) {
 	if ( gi->pcnt>=gi->pmax )
-	    gi->psubrs = grealloc(gi->psubrs,(gi->pmax+=gi->glyphcnt)*sizeof(struct potentialsubrs));
+	    gi->psubrs = xrealloc(gi->psubrs,(gi->pmax+=gi->glyphcnt)*sizeof(struct potentialsubrs));
 	ps = &gi->psubrs[gi->pcnt];
 	memset(ps,0,sizeof(*ps));	/* set cnt to 0 */
 	ps->idx = gi->pcnt++;
@@ -698,11 +698,11 @@ static void SubrsCheck(struct pschars *subrs) {
 
     if ( subrs->next>=subrs->cnt ) {
 	subrs->cnt += 100;
-	subrs->values = grealloc(subrs->values,subrs->cnt*sizeof(uint8 *));
-	subrs->lens = grealloc(subrs->lens,subrs->cnt*sizeof(int));
+	subrs->values = xrealloc(subrs->values,subrs->cnt*sizeof(uint8 *));
+	subrs->lens = xrealloc(subrs->lens,subrs->cnt*sizeof(int));
 	if ( subrs->keys!=NULL ) {
 	    int i;
-	    subrs->keys = grealloc(subrs->keys,subrs->cnt*sizeof(char *));
+	    subrs->keys = xrealloc(subrs->keys,subrs->cnt*sizeof(char *));
 	    for ( i=subrs->cnt-100; i<subrs->cnt; ++i )
 		subrs->keys[i] = NULL;
 	}
@@ -759,7 +759,7 @@ static int FindOrBuildHintSubr(struct hintdb *hdb, uint8 mask[12], int round) {
 	hdb->subrs->values[hdb->subrs->next] = (uint8 *) copyn((char *) gb.base,gb.pt-gb.base);
 	hdb->subrs->lens[hdb->subrs->next] = gb.pt-gb.base;
 
-	mh = gcalloc(1,sizeof(struct mhlist));
+	mh = xcalloc(1,sizeof(struct mhlist));
 	memcpy(mh->mask,mask,sizeof(mh->mask));
 	mh->subr = hdb->subrs->next++;
 	mh->next = hdb->sublist;
@@ -1705,7 +1705,7 @@ static BasePoint *FigureStartStop(SplineChar *sc, GlyphInfo *gi ) {
     /*  last point on the last path (will need to move from it */
     /*  for the next component) */
 
-    startstop = gcalloc(2*gi->instance_count,sizeof(BasePoint));
+    startstop = xcalloc(2*gi->instance_count,sizeof(BasePoint));
     for ( m=0; m<gi->instance_count; ++m ) {
 	if ( gi->instance_count==1 || sc->parent->mm==NULL )
 	    msc = sc;
@@ -1802,7 +1802,7 @@ static void SplineFont2FullSubrs1(int flags,GlyphInfo *gi) {
 				/* come back to it next pass when perhaps the */
 			        /* reference will be nicely ensconsed itself */
 		if ( gi->pcnt>=gi->pmax )
-		    gi->psubrs = grealloc(gi->psubrs,(gi->pmax+=gi->glyphcnt)*sizeof(struct potentialsubrs));
+		    gi->psubrs = xrealloc(gi->psubrs,(gi->pmax+=gi->glyphcnt)*sizeof(struct potentialsubrs));
 		ps = &gi->psubrs[gi->pcnt];
 		memset(ps,0,sizeof(*ps));	/* set cnt to 0 */
 		ps->idx = gi->pcnt++;
@@ -1927,8 +1927,8 @@ static void SetupType1Subrs(struct pschars *subrs,GlyphInfo *gi) {
 
     subrs->cnt = scnt;
     subrs->next = scnt;
-    subrs->lens = grealloc(subrs->lens,scnt*sizeof(int));
-    subrs->values = grealloc(subrs->values,scnt*sizeof(unsigned char *));
+    subrs->lens = xrealloc(subrs->lens,scnt*sizeof(int));
+    subrs->values = xrealloc(subrs->values,scnt*sizeof(unsigned char *));
 
     for ( i=0; i<gi->pcnt; ++i ) {
 	scnt = gi->psubrs[i].idx;
@@ -2037,7 +2037,7 @@ static void SetupType1Chrs(struct pschars *chrs,struct pschars *subrs,GlyphInfo 
 
 struct pschars *SplineFont2ChrsSubrs(SplineFont *sf, int iscjk,
 	struct pschars *subrs,int flags, enum fontformat format, int layer) {
-    struct pschars *chrs = gcalloc(1,sizeof(struct pschars));
+    struct pschars *chrs = xcalloc(1,sizeof(struct pschars));
     int i, cnt, instance_count;
     int fixed;
     int notdef_pos;
@@ -2083,7 +2083,7 @@ struct pschars *SplineFont2ChrsSubrs(SplineFont *sf, int iscjk,
     gi.sf = sf;
     gi.layer = layer;
     gi.glyphcnt = cnt;
-    gi.gb = gcalloc(cnt,sizeof(struct glyphbits));
+    gi.gb = xcalloc(cnt,sizeof(struct glyphbits));
     gi.pmax = 3*cnt;
     gi.psubrs = galloc(gi.pmax*sizeof(struct potentialsubrs));
     gi.instance_count = instance_count;
@@ -2093,7 +2093,7 @@ struct pschars *SplineFont2ChrsSubrs(SplineFont *sf, int iscjk,
 	dummynotdef.name = ".notdef";
 	dummynotdef.parent = sf;
 	dummynotdef.layer_cnt = sf->layer_cnt;
-	dummynotdef.layers = gcalloc(sf->layer_cnt,sizeof(Layer));
+	dummynotdef.layers = xcalloc(sf->layer_cnt,sizeof(Layer));
 	dummynotdef.width = SFOneWidth(sf);
 	if ( dummynotdef.width==-1 )
 	    dummynotdef.width = (sf->ascent+sf->descent)/2;
@@ -2144,7 +2144,7 @@ return( chrs );
 }
 
 struct pschars *CID2ChrsSubrs(SplineFont *cidmaster,struct cidbytes *cidbytes,int flags,int layer) {
-    struct pschars *chrs = gcalloc(1,sizeof(struct pschars));
+    struct pschars *chrs = xcalloc(1,sizeof(struct pschars));
     int i, cnt, cid;
     SplineFont *sf = NULL;
     struct fddata *fd;
@@ -2169,7 +2169,7 @@ struct pschars *CID2ChrsSubrs(SplineFont *cidmaster,struct cidbytes *cidbytes,in
 	dummynotdef.name = ".notdef";
 	dummynotdef.parent = cidmaster->subfonts[0];
 	dummynotdef.layer_cnt = layer+1;
-	dummynotdef.layers = gcalloc(layer+1,sizeof(Layer));;
+	dummynotdef.layers = xcalloc(layer+1,sizeof(Layer));;
 	dummynotdef.width = SFOneWidth(dummynotdef.parent);
 	if ( dummynotdef.width==-1 )
 	    dummynotdef.width = (dummynotdef.parent->ascent+dummynotdef.parent->descent);
@@ -2184,8 +2184,8 @@ struct pschars *CID2ChrsSubrs(SplineFont *cidmaster,struct cidbytes *cidbytes,in
     gi.layer = layer;
 
     chrs->cnt = cnt;
-    chrs->lens = gcalloc(cnt,sizeof(int));
-    chrs->values = gcalloc(cnt,sizeof(unsigned char *));
+    chrs->lens = xcalloc(cnt,sizeof(int));
+    chrs->values = xcalloc(cnt,sizeof(unsigned char *));
     cidbytes->fdind = galloc(cnt*sizeof(unsigned char *));
     memset(cidbytes->fdind,-1,cnt*sizeof(unsigned char *));
 
@@ -3157,7 +3157,7 @@ static void SplineFont2FullSubrs2(int flags,GlyphInfo *gi) {
 	    /* Put the */
 	    /*  character into a subr if it is referenced by other characters */
 	    if ( gi->pcnt>=gi->pmax )
-		gi->psubrs = grealloc(gi->psubrs,(gi->pmax+=gi->glyphcnt)*sizeof(struct potentialsubrs));
+		gi->psubrs = xrealloc(gi->psubrs,(gi->pmax+=gi->glyphcnt)*sizeof(struct potentialsubrs));
 	    ps = &gi->psubrs[gi->pcnt];
 	    memset(ps,0,sizeof(*ps));	/* set cnt to 0 */
 	    ps->idx = gi->pcnt++;
@@ -3187,7 +3187,7 @@ struct pschars *SplineFont2ChrsSubrs2(SplineFont *sf, int nomwid, int defwid,
     gi.layer = layer;
     gi.glyphcnt = cnt;
     gi.bygid = bygid;
-    gi.gb = gcalloc(cnt,sizeof(struct glyphbits));
+    gi.gb = xcalloc(cnt,sizeof(struct glyphbits));
     gi.pmax = 3*cnt;
     gi.psubrs = galloc(gi.pmax*sizeof(struct potentialsubrs));
     for ( i=0; i<cnt; ++i ) {
@@ -3198,7 +3198,7 @@ struct pschars *SplineFont2ChrsSubrs2(SplineFont *sf, int nomwid, int defwid,
 	    dummynotdef.name = ".notdef";
 	    dummynotdef.parent = sf;
 	    dummynotdef.layer_cnt = sf->layer_cnt;
-	    dummynotdef.layers = gcalloc(sf->layer_cnt,sizeof(Layer));
+	    dummynotdef.layers = xcalloc(sf->layer_cnt,sizeof(Layer));
 	    dummynotdef.width = SFOneWidth(sf);
 	    if ( dummynotdef.width==-1 )
 		dummynotdef.width = (sf->ascent+sf->descent)/2;
@@ -3237,7 +3237,7 @@ struct pschars *SplineFont2ChrsSubrs2(SplineFont *sf, int nomwid, int defwid,
 	else
 	    gi.psubrs[i].idx = -1;
     }
-    subrs = gcalloc(1,sizeof(struct pschars));
+    subrs = xcalloc(1,sizeof(struct pschars));
     subrs->cnt = scnt;
     subrs->next = scnt;
     subrs->lens = galloc(scnt*sizeof(int));
@@ -3254,7 +3254,7 @@ struct pschars *SplineFont2ChrsSubrs2(SplineFont *sf, int nomwid, int defwid,
 	}
     }
 
-    chrs = gcalloc(1,sizeof(struct pschars));
+    chrs = xcalloc(1,sizeof(struct pschars));
     chrs->cnt = cnt;
     chrs->next = cnt;
     chrs->lens = galloc(cnt*sizeof(int));
@@ -3406,7 +3406,7 @@ struct pschars *CID2ChrsSubrs2(SplineFont *cidmaster,struct fd2data *fds,
     gi.sf = sf;
     gi.glyphcnt = cnt;
     gi.bygid = NULL;
-    gi.gb = gcalloc(cnt,sizeof(struct glyphbits));
+    gi.gb = xcalloc(cnt,sizeof(struct glyphbits));
     gi.pmax = 3*cnt;
     gi.psubrs = galloc(gi.pmax*sizeof(struct potentialsubrs));
     gi.layer = layer;
@@ -3428,7 +3428,7 @@ struct pschars *CID2ChrsSubrs2(SplineFont *cidmaster,struct fd2data *fds,
 	    dummynotdef.name = ".notdef";
 	    dummynotdef.parent = sf;
 	    dummynotdef.layer_cnt = layer+1;
-	    dummynotdef.layers = gcalloc(layer+1,sizeof(Layer));
+	    dummynotdef.layers = xcalloc(layer+1,sizeof(Layer));
 	    dummynotdef.width = SFOneWidth(sf);
 	    if ( dummynotdef.width==-1 )
 		dummynotdef.width = (sf->ascent+sf->descent);
@@ -3452,14 +3452,14 @@ struct pschars *CID2ChrsSubrs2(SplineFont *cidmaster,struct fd2data *fds,
 	ff_progress_next();
     }
 
-    scnts = gcalloc( cidmaster->subfontcnt+1,sizeof(int));
+    scnts = xcalloc( cidmaster->subfontcnt+1,sizeof(int));
     for ( i=0; i<gi.pcnt; ++i ) {
 	gi.psubrs[i].idx = -1;
 	if ( gi.psubrs[i].cnt*gi.psubrs[i].len>(gi.psubrs[i].cnt*4)+gi.psubrs[i].len+1 )
 	    gi.psubrs[i].idx = scnts[gi.psubrs[i].fd+1]++;
     }
 
-    glbls = gcalloc(1,sizeof(struct pschars));
+    glbls = xcalloc(1,sizeof(struct pschars));
     glbls->cnt = scnts[0];
     glbls->next = scnts[0];
     glbls->lens = galloc(scnts[0]*sizeof(int));
@@ -3467,7 +3467,7 @@ struct pschars *CID2ChrsSubrs2(SplineFont *cidmaster,struct fd2data *fds,
     glbls->bias = scnts[0]<1240 ? 107 :
 		  scnts[0]<33900 ? 1131 : 32768;
     for ( fd=0; fd<cidmaster->subfontcnt; ++fd ) {
-	fds[fd].subrs = gcalloc(1,sizeof(struct pschars));
+	fds[fd].subrs = xcalloc(1,sizeof(struct pschars));
 	fds[fd].subrs->cnt = scnts[fd+1];
 	fds[fd].subrs->next = scnts[fd+1];
 	fds[fd].subrs->lens = galloc(scnts[fd+1]*sizeof(int));
@@ -3489,7 +3489,7 @@ struct pschars *CID2ChrsSubrs2(SplineFont *cidmaster,struct fd2data *fds,
     }
 
 
-    chrs = gcalloc(1,sizeof(struct pschars));
+    chrs = xcalloc(1,sizeof(struct pschars));
     chrs->cnt = cnt;
     chrs->next = cnt;
     chrs->lens = galloc(cnt*sizeof(int));

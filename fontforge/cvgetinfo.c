@@ -1024,14 +1024,14 @@ static GTextInfo **AnchorClassesLList(SplineFont *sf) {
     if ( sf->cidmaster ) sf=sf->cidmaster;
 
     for ( cnt=0, an=sf->anchor; an!=NULL; ++cnt, an=an->next );
-    ti = gcalloc(cnt+1,sizeof(GTextInfo*));
+    ti = xcalloc(cnt+1,sizeof(GTextInfo*));
     for ( cnt=0, an=sf->anchor; an!=NULL; ++cnt, an=an->next ) {
-	ti[cnt] = gcalloc(1,sizeof(GTextInfo));
+	ti[cnt] = xcalloc(1,sizeof(GTextInfo));
 	ti[cnt]->text = utf82u_copy(an->name);
 	ti[cnt]->fg = ti[cnt]->bg = COLOR_DEFAULT;
 	ti[cnt]->userdata = an;
     }
-    ti[cnt] = gcalloc(1,sizeof(GTextInfo));
+    ti[cnt] = xcalloc(1,sizeof(GTextInfo));
 return( ti );
 }
 
@@ -2570,7 +2570,7 @@ GTextInfo *SCHintList(SplineChar *sc,HintMask *hm) {
 
     for ( h=sc->hstem, i=0; h!=NULL; h=h->next, ++i );
     for ( h=sc->vstem     ; h!=NULL; h=h->next, ++i );
-    ti = gcalloc(i+1,sizeof(GTextInfo));
+    ti = xcalloc(i+1,sizeof(GTextInfo));
 
     for ( h=sc->hstem, i=0; h!=NULL; h=h->next, ++i ) {
 	ti[i].fg = ti[i].bg = COLOR_DEFAULT;
@@ -3745,7 +3745,7 @@ void SCRefBy(SplineChar *sc) {
 	if ( cnt==0 )
 return;
 	if ( i==0 )
-	    deps = gcalloc(cnt+1,sizeof(unichar_t *));
+	    deps = xcalloc(cnt+1,sizeof(unichar_t *));
 	tot = cnt-1;
     }
 
@@ -3842,7 +3842,7 @@ return;
 	if ( tot==0 )
 return;
 	if ( j==0 ) {
-	    deps = gcalloc(tot+1,sizeof(char *));
+	    deps = xcalloc(tot+1,sizeof(char *));
 	    depsc = galloc(tot*sizeof(SplineChar *));
 	}
     }

@@ -555,7 +555,7 @@ return( true );
 	    gwwv_post_error(_("Could not open image"),_("Could not open %s"), new );
 	    free( new );
 	} else if ( *ri==NULL ) {
-	    *ri = gcalloc(1,sizeof(GResImage));
+	    *ri = xcalloc(1,sizeof(GResImage));
 	    (*ri)->filename = new;
 	    (*ri)->image = newi;
 	    GGadgetSetTitle8(g,"...");
@@ -1009,8 +1009,8 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 
     for ( res=all, cnt=0; res!=NULL; res=res->next, ++cnt );
 
-    panes = gcalloc(cnt+1,sizeof(GTabInfo));
-    gre.tofree = tofree = gcalloc(cnt+1,sizeof(struct tofree));
+    panes = xcalloc(cnt+1,sizeof(GTabInfo));
+    gre.tofree = tofree = xcalloc(cnt+1,sizeof(struct tofree));
     cid = 0;
     for ( res=all, i=0; res!=NULL; res=res->next, ++i ) {
 	tofree[i].res = res;
@@ -1019,8 +1019,8 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 	cnt = 0;
 	if ( res->extras!=NULL )
 	    for ( extras=res->extras, cnt = 0; extras->name!=NULL; ++cnt, ++extras );
-	tofree[i].earray = gcalloc(cnt+1,sizeof(GGadgetCreateData[8]));
-	tofree[i].extradefs = gcalloc(cnt+1,sizeof(char *));
+	tofree[i].earray = xcalloc(cnt+1,sizeof(GGadgetCreateData[8]));
+	tofree[i].extradefs = xcalloc(cnt+1,sizeof(char *));
 	cnt *= 2;
 	if ( res->initialcomment!=NULL )
 	    ++cnt;
@@ -1036,8 +1036,8 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 		++cnt;
 	}
 
-	tofree[i].gcd = gcd = gcalloc(cnt,sizeof(GGadgetCreateData));
-	tofree[i].lab = lab = gcalloc(cnt,sizeof(GTextInfo));
+	tofree[i].gcd = gcd = xcalloc(cnt,sizeof(GGadgetCreateData));
+	tofree[i].lab = lab = xcalloc(cnt,sizeof(GTextInfo));
 
 	j=k=l=0;
 	if ( res->initialcomment!=NULL ) {
@@ -2561,7 +2561,7 @@ void GResEditFind( struct resed *resed, char *prefix) {
 
     for ( i=0; resed[i].name!=NULL; ++i );
 
-    info = gcalloc(i+1,sizeof(GResStruct));
+    info = xcalloc(i+1,sizeof(GResStruct));
     for ( i=0; resed[i].name!=NULL; ++i ) {
 	info[i].resname = resed[i].resname;
 	info[i].type = resed[i].type;

@@ -749,7 +749,7 @@ static GImage *_GImageExtract(struct _GImage *base,GRect *src,GRect *size,
     else
 	tbase.bytes_per_line = 4*size->width;
     if ( tbase.bytes_per_line*size->height>dlen )
-	data = grealloc(data,dlen = tbase.bytes_per_line*size->height );
+	data = xrealloc(data,dlen = tbase.bytes_per_line*size->height );
     tbase.data = data;
 
     /* I used to use rint(x). Now I use floor(x). For normal images rint */

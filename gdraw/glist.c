@@ -692,7 +692,7 @@ return( true );
 	    if ( gl->sofar_max == 0 )
 		gl->sofar = galloc((gl->sofar_max = len+10) * sizeof(unichar_t));
 	    else
-		gl->sofar = grealloc(gl->sofar,(gl->sofar_max = sofar_pos+len+10)*sizeof(unichar_t));
+		gl->sofar = xrealloc(gl->sofar,(gl->sofar_max = sofar_pos+len+10)*sizeof(unichar_t));
 	}
 	u_strcpy(gl->sofar+sofar_pos,event->u.chr.chars);
 	gl->sofar_pos = sofar_pos + len;
@@ -1051,7 +1051,7 @@ return( gl );
 }
 
 GGadget *GListCreate(struct gwindow *base, GGadgetData *gd,void *data) {
-    GList *gl = _GListCreate(gcalloc(1,sizeof(GList)),base,gd,data,&list_box);
+    GList *gl = _GListCreate(xcalloc(1,sizeof(GList)),base,gd,data,&list_box);
 
 return( &gl->g );
 }

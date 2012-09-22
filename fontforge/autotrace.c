@@ -299,7 +299,7 @@ void _SCAutoTrace(SplineChar *sc, int layer, char **args) {
 	cmd = add_arg(cmd, "\"");
 	/*fprintf(stdout, "---EXEC---\n%s\n----------\n", command);fflush(stdout);*/
 	system(command);
-	gfree(command);
+	free(command);
 
 	ps = fopen(tempname_out, "r");
 	if(ps){

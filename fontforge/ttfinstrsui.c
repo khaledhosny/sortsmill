@@ -716,7 +716,7 @@ return( true );
 }
 
 static void InstrDlgCreate(struct instrdata *id,char *title) {
-    InstrDlg *iv = gcalloc(1,sizeof(*iv));
+    InstrDlg *iv = xcalloc(1,sizeof(*iv));
     GRect pos;
     GWindow gw;
     GWindowAttrs wattrs;
@@ -921,7 +921,7 @@ return;
 	SCNumberPoints(sc,CVLayer((CharViewBase *) cv));
 	GDrawRequestExpose(cv->v,NULL,false);
     }
-    id = gcalloc(1,sizeof(*id));
+    id = xcalloc(1,sizeof(*id));
     id->instr_cnt = id->max = sc->ttf_instrs_len;
     id->sf = sc->parent;
     id->sc = sc;
@@ -1081,10 +1081,10 @@ return( false );
 	}
 	free(ret);
 	if ( val*2>sv->len ) {
-	    sv->edits = grealloc(sv->edits,val*2);
+	    sv->edits = xrealloc(sv->edits,val*2);
 	    for ( i=sv->len/2; i<val; ++i )
 		sv->edits[i] = 0;
-	    sv->comments = grealloc(sv->comments,val*sizeof(char *));
+	    sv->comments = xrealloc(sv->comments,val*sizeof(char *));
 	    for ( i=sv->len/2; i<val; ++i )
 		sv->comments[i] = NULL;
 	} else {
@@ -1390,7 +1390,7 @@ return( true );
 
 /* cvt table */
 static void cvtCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32 tag) {
-    ShortView *sv = gcalloc(1,sizeof(ShortView));
+    ShortView *sv = xcalloc(1,sizeof(ShortView));
     char title[60];
     GRect pos, subpos, gsize;
     GWindow gw;
@@ -1415,7 +1415,7 @@ static void cvtCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32 tag) {
     if ( tab!=NULL ) {
 	sv->len = tab->len;
 	sv->edits = galloc(tab->len+1);
-	sv->comments = gcalloc((tab->len/2+1),sizeof(char *));
+	sv->comments = xcalloc((tab->len/2+1),sizeof(char *));
 	for ( i=0; i<tab->len/2; ++i )
 	    sv->edits[i] = (tab->data[i<<1]<<8) | tab->data[(i<<1)+1];
 	if ( sf->cvt_names!=NULL )
@@ -1424,7 +1424,7 @@ static void cvtCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32 tag) {
     } else {
 	sv->edits = galloc(2);
 	sv->len = 0;
-	sv->comments = gcalloc(1,sizeof(char *));
+	sv->comments = xcalloc(1,sizeof(char *));
     }
 
     title[0] = (tag>>24)&0xff;
@@ -1683,13 +1683,13 @@ return( true );
 	    mp->tab = (struct ttf_table *) xzalloc(sizeof (struct ttf_table));
 	    mp->tab->tag = CHR('m','a','x','p');
 	    mp->tab->len = 32;
-	    mp->tab->data = gcalloc(32,1);
+	    mp->tab->data = xcalloc(32,1);
 	    mp->tab->next = mp->sf->ttf_tables;
 	    mp->sf->ttf_tables = mp->tab;
 	} else if ( mp->tab->len<32 ) {
 	    free(mp->tab->data);
 	    mp->tab->len = 32;
-	    mp->tab->data = gcalloc(32,1);
+	    mp->tab->data = xcalloc(32,1);
 	}
 	mp->tab->data[14] = zones>>8; mp->tab->data[15] = zones&0xff;
 	mp->tab->data[16] = tp>>8; mp->tab->data[17] = tp&0xff;
@@ -1970,7 +1970,7 @@ void SFEditTable(SplineFont *sf, uint32 tag) {
 return;
 	}
 
-	id = gcalloc(1,sizeof(*id));
+	id = xcalloc(1,sizeof(*id));
 	id->sf = sf;
 	id->tag = tag;
 	id->instr_cnt = id->max = tab==NULL ? 0 : tab->len;

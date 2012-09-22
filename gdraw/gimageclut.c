@@ -503,7 +503,7 @@ return( PickGreyClut(clut,clutmax,grey_clut,cnt));
 	cnt = image->u.image->clut->clut_len;
 
     memset(&transinf,'\0',sizeof(transinf));
-    clutinf = gcalloc(cnt,sizeof(struct clutinf));
+    clutinf = xcalloc(cnt,sizeof(struct clutinf));
     
     cnt = gimage_count8(image, clutinf, 0, &transinf);
     if ( cnt+(transinf.cnt!=0)<clutmax ) {
@@ -679,7 +679,7 @@ return( old );
 	}
     }
     if ( best!=old ) {
-	if ( old==NULL ) old = gcalloc(1,sizeof(struct revcol));
+	if ( old==NULL ) old = xcalloc(1,sizeof(struct revcol));
 	*old = *best;
 	old->next = NULL;
 	++old->dist;
@@ -704,7 +704,7 @@ static RevCMap *_GClutReverse(int side_cnt,int range,struct revcol *basecol,
     struct revcol *test;
     int changed, dmax, anynulls;
 
-    rev = gcalloc(1,sizeof(RevCMap));
+    rev = xcalloc(1,sizeof(RevCMap));
 
     rev->side_cnt = side_cnt;
     rev->range = range;
@@ -730,7 +730,7 @@ static RevCMap *_GClutReverse(int side_cnt,int range,struct revcol *basecol,
 	rev->div_shift = div_tables[side_cnt][1];
     }
 
-    rev->cube = gcalloc(side_cnt*side_cnt*side_cnt,sizeof(struct revitem));
+    rev->cube = xcalloc(side_cnt*side_cnt*side_cnt,sizeof(struct revitem));
     for ( test = cols; test!=NULL; test = test->next ) {
 	int pos, dist;
 	int r,g,b;
@@ -834,7 +834,7 @@ RevCMap *GClutReverse(GClut *clut,int side_cnt) {
 
     if ( GImageGreyClut(clut) ) {
 	GCol *greys; int changed;
-	ret = gcalloc(1,sizeof(RevCMap));
+	ret = xcalloc(1,sizeof(RevCMap));
 	ret->is_grey = 1;
 	greys = ret->greys = galloc(256*sizeof(GCol));
 	for ( i=0; i<256; ++i ) greys[i].pixel = 0x1000;
@@ -872,7 +872,7 @@ return( ret );
     ret = _GClutReverse(side_cnt,256,&basecol,base,base);
     while ( base!=NULL ) {
 	struct revcol *rc = base->next;
-	gfree(base);
+	free(base);
 	base = rc;
     }
 return( ret );

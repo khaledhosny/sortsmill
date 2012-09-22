@@ -807,7 +807,7 @@ static void MappingMatrixInit(struct matrixinit *mi,SplineFont *sf,
 
     if ( (b>1 && (b&1)==0) || (o>1 && (o&1)==0)) {
 	b>>=1; o>>=1;
-	md = gcalloc(3*(b+o),sizeof(struct matrix_data));
+	md = xcalloc(3*(b+o),sizeof(struct matrix_data));
 	mi->initial_row_cnt = b+o;
 	mi->matrix_data = md;
 
@@ -827,7 +827,7 @@ static void MappingMatrixInit(struct matrixinit *mi,SplineFont *sf,
 	    md[3*(i+j)+2].u.md_real = rint(scale*md[3*(i+j)+0].u.md_real);
 	}
     } else if ( xheight==0 && capheight==0 ) {
-	md = gcalloc(4,sizeof(struct matrix_data));
+	md = xcalloc(4,sizeof(struct matrix_data));
 	mi->initial_row_cnt = 0;
 	mi->matrix_data = md;
     } else {
@@ -836,7 +836,7 @@ static void MappingMatrixInit(struct matrixinit *mi,SplineFont *sf,
 	    ++cnt;
 	if ( capheight!=0 )
 	    ++cnt;
-	md = gcalloc(3*cnt,sizeof(struct matrix_data));
+	md = xcalloc(3*cnt,sizeof(struct matrix_data));
 	mi->initial_row_cnt = cnt;
 	mi->matrix_data = md;
 	md[3*0+1].u.md_real = -1;

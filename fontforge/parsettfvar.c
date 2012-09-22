@@ -125,11 +125,11 @@ return;
 return;
     }
 
-    info->variations = gcalloc(1,sizeof(struct variations));
+    info->variations = xcalloc(1,sizeof(struct variations));
     info->variations->axis_count = axis_count;
     info->variations->instance_count = instance_count;
-    info->variations->axes = gcalloc(axis_count,sizeof(struct taxis));
-    info->variations->instances = gcalloc(instance_count,sizeof(struct tinstance));
+    info->variations->axes = xcalloc(axis_count,sizeof(struct taxis));
+    info->variations->instances = xcalloc(instance_count,sizeof(struct tinstance));
     for ( i=0; i<instance_count; ++i )
 	info->variations->instances[i].coords = galloc(axis_count*sizeof(real));
 
@@ -569,7 +569,7 @@ return;
     }
 
     v->tuple_count = globaltc;
-    v->tuples = gcalloc(globaltc,sizeof(struct tuples));
+    v->tuples = xcalloc(globaltc,sizeof(struct tuples));
     fseek(ttf,tupoff,SEEK_SET);
     for ( i=0; i<globaltc; ++i ) {
 	v->tuples[i].coords = galloc(axiscount*sizeof(float));

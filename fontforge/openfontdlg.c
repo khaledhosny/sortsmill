@@ -165,7 +165,7 @@ static GTextInfo **StandardFilters(void) {
 	cnt = 0;
 	for ( i=0; def_font_filters[i].name!=NULL; ++i ) {
 	    if ( k ) {
-		ti[cnt] = gcalloc(1,sizeof(GTextInfo));
+		ti[cnt] = xcalloc(1,sizeof(GTextInfo));
 		ti[cnt]->userdata = def_font_filters[i].filter;
 		ti[cnt]->fg = ti[cnt]->bg = COLOR_DEFAULT;
 		if ( *(char *) def_font_filters[i].name == '-' )
@@ -177,7 +177,7 @@ static GTextInfo **StandardFilters(void) {
 	}
 	if ( user_font_filters!=NULL ) {
 	    if ( k ) {
-		ti[cnt] = gcalloc(1,sizeof(GTextInfo));
+		ti[cnt] = xcalloc(1,sizeof(GTextInfo));
 		ti[cnt]->fg = ti[cnt]->bg = COLOR_DEFAULT;
 		/* Don't translate this name */
 		ti[cnt]->line = true;
@@ -185,7 +185,7 @@ static GTextInfo **StandardFilters(void) {
 	    ++cnt;
 	    for ( i=0; user_font_filters[i].name!=NULL; ++i ) {
 		if ( k ) {
-		    ti[cnt] = gcalloc(1,sizeof(GTextInfo));
+		    ti[cnt] = xcalloc(1,sizeof(GTextInfo));
 		    ti[cnt]->userdata = user_font_filters[i].filter;
 		    ti[cnt]->fg = ti[cnt]->bg = COLOR_DEFAULT;
 		    /* Don't translate this name */
@@ -198,14 +198,14 @@ static GTextInfo **StandardFilters(void) {
 	    }
 	}
 	if ( k ) {
-	    ti[cnt] = gcalloc(1,sizeof(GTextInfo));
+	    ti[cnt] = xcalloc(1,sizeof(GTextInfo));
 	    ti[cnt]->fg = ti[cnt]->bg = COLOR_DEFAULT;
 	    ti[cnt++]->line = true;
-	    ti[cnt] = gcalloc(1,sizeof(GTextInfo));
+	    ti[cnt] = xcalloc(1,sizeof(GTextInfo));
 	    ti[cnt]->userdata = (void *) -1;
 	    ti[cnt]->fg = ti[cnt]->bg = COLOR_DEFAULT;
 	    ti[cnt++]->text = utf82u_copy(_("Edit Filter List"));
-	    ti[cnt] = gcalloc(1,sizeof(GTextInfo));
+	    ti[cnt] = xcalloc(1,sizeof(GTextInfo));
 	} else
 	    ti = galloc((cnt+3)*sizeof(GTextInfo *));
     }
@@ -343,7 +343,7 @@ static void FilterDlg(void) {
 	    }
 	}
 	if ( !k )
-	    md = gcalloc(2*cnt,sizeof(struct matrix_data));
+	    md = xcalloc(2*cnt,sizeof(struct matrix_data));
     }
     mi.initial_row_cnt = cnt;
     mi.matrix_data = md;
@@ -674,7 +674,7 @@ unichar_t *FVOpenFont(char *title, const char *defaultfile, int mult) {
     gcd[i].creator = GListButtonCreate;
     nlnames = AllNamelistNames();
     for ( cnt=0; nlnames[cnt]!=NULL; ++cnt);
-    namelistnames = gcalloc(cnt+3,sizeof(GTextInfo));
+    namelistnames = xcalloc(cnt+3,sizeof(GTextInfo));
     namelistnames[0].text = (unichar_t *) _("No Rename");
     namelistnames[0].text_is_1byte = true;
     if ( force_names_when_opening==NULL ) {

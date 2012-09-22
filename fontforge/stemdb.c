@@ -499,8 +499,8 @@ static void AssignStemToPoint( struct pointdata *pd,struct stemdata *stem,int is
 return;
     }
     
-    *stems = grealloc( *stems,( *stemcnt+1 )*sizeof( struct stemdata *));
-    *is_l  = grealloc( *is_l, ( *stemcnt+1 )*sizeof( int ));
+    *stems = xrealloc( *stems,( *stemcnt+1 )*sizeof( struct stemdata *));
+    *is_l  = xrealloc( *is_l, ( *stemcnt+1 )*sizeof( int ));
     (*stems)[*stemcnt] = stem;
     (*is_l )[*stemcnt] = left;
     (*stemcnt)++;
@@ -1623,7 +1623,7 @@ static struct stem_chunk *AddToStem( struct glyphdata *gd,struct stemdata *stem,
     }
 
     if ( i<0 ) {
-	stem->chunks = grealloc(stem->chunks,(stem->chunk_cnt+1)*sizeof(struct stem_chunk));
+	stem->chunks = xrealloc(stem->chunks,(stem->chunk_cnt+1)*sizeof(struct stem_chunk));
 	chunk = &stem->chunks[stem->chunk_cnt++];
 	chunk->parent = stem;
 
@@ -2876,7 +2876,7 @@ static void CheckPotential( struct glyphdata *gd,struct pointdata *pd,int is_nex
     
     stemcnt = ( is_next ) ? pd->nextcnt : pd->prevcnt;
     stems = ( is_next ) ? pd->nextstems : pd->prevstems;
-    vchunks = gcalloc( stemcnt,sizeof( VChunk ));
+    vchunks = xcalloc( stemcnt,sizeof( VChunk ));
     
     for ( i=0; i<stemcnt; i++ ) {
 	is_l = ( is_next ) ? pd->next_is_l[i] : pd->prev_is_l[i];
@@ -4291,8 +4291,8 @@ static void AssignPointsToBBoxHint( struct glyphdata *gd,DBounds *bounds,
     SplinePoint **lpoints, **rpoints;
     struct pointdata *pd, *pd1, *pd2;
     
-    lpoints = gcalloc( gd->pcnt,sizeof( SplinePoint *));
-    rpoints = gcalloc( gd->pcnt,sizeof( SplinePoint *));
+    lpoints = xcalloc( gd->pcnt,sizeof( SplinePoint *));
+    rpoints = xcalloc( gd->pcnt,sizeof( SplinePoint *));
     dir.x = !is_v; dir.y = is_v;
     for ( i=0; i<gd->pcnt; ++i ) if ( gd->points[i].sp!=NULL ) {
 	pd = &gd->points[i];
@@ -4896,7 +4896,7 @@ static void _DStemInfoToStemData( struct glyphdata *gd,DStemInfo *dsi,int *start
     struct stemdata *stem;
     
     if ( gd->stems == NULL ) {
-	gd->stems = gcalloc( 2*gd->pcnt,sizeof( struct stemdata ));
+	gd->stems = xcalloc( 2*gd->pcnt,sizeof( struct stemdata ));
 	gd->stemcnt = 0;
     }
     *startcnt = gd->stemcnt;
@@ -4924,7 +4924,7 @@ static void _StemInfoToStemData( struct glyphdata *gd,StemInfo *si,DBounds *boun
     
     dir.x = !is_v; dir.y = is_v;
     if ( gd->stems == NULL ) {
-	gd->stems = gcalloc( 2*gd->pcnt,sizeof( struct stemdata ));
+	gd->stems = xcalloc( 2*gd->pcnt,sizeof( struct stemdata ));
 	gd->stemcnt = 0;
     }
     *startcnt = gd->stemcnt;
@@ -5230,14 +5230,14 @@ static void LookForMasterHVStem( struct stemdata *stem,BlueData *bd ) {
     if ( smaster != NULL ) {
 	stem->master = smaster;
 	if ( smaster->dependent == NULL )
-	    smaster->dependent = gcalloc( bundle->cnt*2,sizeof( struct dependent_stem ));
+	    smaster->dependent = xcalloc( bundle->cnt*2,sizeof( struct dependent_stem ));
 	smaster->dependent[smaster->dep_cnt].stem = stem;
 	smaster->dependent[smaster->dep_cnt].dep_type = stype;
 	smaster->dependent[smaster->dep_cnt++].lbase = !is_x;
     } else if ( emaster != NULL ) {
 	stem->master = emaster;
 	if ( emaster->dependent == NULL )
-	    emaster->dependent = gcalloc( bundle->cnt*2,sizeof( struct dependent_stem ));
+	    emaster->dependent = xcalloc( bundle->cnt*2,sizeof( struct dependent_stem ));
 	emaster->dependent[emaster->dep_cnt  ].stem = stem;
 	emaster->dependent[emaster->dep_cnt  ].dep_type = etype;
 	emaster->dependent[emaster->dep_cnt++].lbase = is_x;
@@ -5348,21 +5348,21 @@ static void GDBundleStems( struct glyphdata *gd, int maxtoobig, int needs_deps )
 	}
     }
     
-    gd->hbundle = gcalloc( 1,sizeof( struct stembundle ));
-    gd->hbundle->stemlist = gcalloc( gd->stemcnt,sizeof( struct stemdata *));
+    gd->hbundle = xcalloc( 1,sizeof( struct stembundle ));
+    gd->hbundle->stemlist = xcalloc( gd->stemcnt,sizeof( struct stemdata *));
     gd->hbundle->unit.x = 1; gd->hbundle->unit.y = 0;
     gd->hbundle->l_to_r.x = 0; gd->hbundle->l_to_r.y = -1;
 
-    gd->vbundle = gcalloc( 1,sizeof( struct stembundle ));
-    gd->vbundle->stemlist = gcalloc( gd->stemcnt,sizeof( struct stemdata *));
+    gd->vbundle = xcalloc( 1,sizeof( struct stembundle ));
+    gd->vbundle->stemlist = xcalloc( gd->stemcnt,sizeof( struct stemdata *));
     gd->vbundle->unit.x = 0; gd->vbundle->unit.y = 1;
     gd->vbundle->l_to_r.x = 1; gd->vbundle->l_to_r.y = 0;
     
     if ( gd->has_slant && !gd->only_hv ) {
 	SplineCharFindBounds( gd->sc,&bounds );
 	
-	gd->ibundle = gcalloc( 1,sizeof( struct stembundle ));
-	gd->ibundle->stemlist = gcalloc( gd->stemcnt,sizeof( struct stemdata *));
+	gd->ibundle = xcalloc( 1,sizeof( struct stembundle ));
+	gd->ibundle->stemlist = xcalloc( gd->stemcnt,sizeof( struct stemdata *));
 	gd->ibundle->unit.x = gd->slant_unit.x; 
 	gd->ibundle->unit.y = gd->slant_unit.y;
 	gd->ibundle->l_to_r.x = -gd->ibundle->unit.y; 
@@ -5460,7 +5460,7 @@ return;
     
     refidx = ( lbase ) ? master->leftidx : master->rightidx;
     if ( refidx != -1 ) bpd = &gd->points[refidx];
-    master->serifs = grealloc(
+    master->serifs = xrealloc(
 	master->serifs,( scnt+1 )*sizeof( struct dependent_serif ));
     master->serifs[scnt].stem = slave;
     master->serifs[scnt].width = width;
@@ -5779,7 +5779,7 @@ struct glyphdata *GlyphDataInit( SplineChar *sc,int layer,double em_size,int onl
     if ( sc->layers[layer].splines==NULL )
 return( NULL );
 
-    gd = gcalloc( 1,sizeof( struct glyphdata ));
+    gd = xcalloc( 1,sizeof( struct glyphdata ));
     gd->only_hv = only_hv;
     gd->layer = layer;
     
@@ -5862,7 +5862,7 @@ return( NULL );
     gd->space = galloc((cnt+2)*sizeof(Monotonic*));
     gd->mcnt = cnt;
 
-    gd->points = gcalloc(gd->pcnt,sizeof(struct pointdata));
+    gd->points = xcalloc(gd->pcnt,sizeof(struct pointdata));
     for ( ss=sc->layers[layer].splines; ss!=NULL; ss=ss->next ) if ( ss->first->prev!=NULL ) {
 	for ( sp=ss->first; ; ) {
 	    PointInit( gd,sp,ss );
@@ -5946,7 +5946,7 @@ return( gd );
     }
     
     /* There will never be more stems than there are points (counting next/prev as separate) */
-    gd->stems = gcalloc( 2*gd->pcnt,sizeof( struct stemdata ));
+    gd->stems = xcalloc( 2*gd->pcnt,sizeof( struct stemdata ));
     gd->stemcnt = 0;			/* None used so far */
 
     if ( use_existing ) {

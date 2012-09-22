@@ -47,7 +47,7 @@ FontInstance *GDrawInstanciateFont(GWindow gw, FontRequest *rq) {
     if ( rq->point_size<0 )	/* It's in pixels, not points, convert to points */
 	rq->point_size = PixelToPoint(-rq->point_size, ((GXWindow) gw)->display->res);
 
-    fi = gcalloc(1,sizeof(struct font_instance));
+    fi = xcalloc(1,sizeof(struct font_instance));
     fi->rq = *rq;
     fi->rq.family_name = u_copy( fi->rq.family_name );
     fi->rq.utf8_family_name = copy( fi->rq.utf8_family_name );

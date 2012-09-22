@@ -267,15 +267,15 @@ return;
 	i=0;
 	while ( ( ept = strchr(pt,'\n'))!=NULL ) {
 	    if ( i>=gt->lmax ) {
-		gt->lines8 = grealloc(gt->lines8,(gt->lmax+=10)*sizeof(int32));
-		gt->lines = grealloc(gt->lines,gt->lmax*sizeof(int32));
+		gt->lines8 = xrealloc(gt->lines8,(gt->lmax+=10)*sizeof(int32));
+		gt->lines = xrealloc(gt->lines,gt->lmax*sizeof(int32));
 	    }
 	    gt->lines8[i++] = pt-utf8_text;
 	    pt = ept+1;
 	}
 	if ( i>=gt->lmax ) {
-	    gt->lines8 = grealloc(gt->lines8,(gt->lmax+=10)*sizeof(int32));
-	    gt->lines = grealloc(gt->lines,gt->lmax*sizeof(int32));
+	    gt->lines8 = xrealloc(gt->lines8,(gt->lmax+=10)*sizeof(int32));
+	    gt->lines = xrealloc(gt->lines,gt->lmax*sizeof(int32));
 	}
 	gt->lines8[i++] = pt-utf8_text;
 
@@ -291,8 +291,8 @@ return;
 	GDrawLayoutSetWidth(gt->g.base,gt->g.inner.width);
 	lcnt = GDrawLayoutLineCount(gt->g.base);
 	if ( lcnt+2>=gt->lmax ) {
-	    gt->lines8 = grealloc(gt->lines8,(gt->lmax=lcnt+10)*sizeof(int32));
-	    gt->lines = grealloc(gt->lines,gt->lmax*sizeof(int32));
+	    gt->lines8 = xrealloc(gt->lines8,(gt->lmax=lcnt+10)*sizeof(int32));
+	    gt->lines = xrealloc(gt->lines,gt->lmax*sizeof(int32));
 	}
 	pt = utf8_text; uc=0;
 	for ( i=0; i<lcnt; ++i ) {
@@ -325,7 +325,7 @@ return;
 	}
     }
     if ( i>=gt->lmax )
-	gt->lines = grealloc(gt->lines,(gt->lmax+=10)*sizeof(int32));
+	gt->lines = xrealloc(gt->lines,(gt->lmax+=10)*sizeof(int32));
     gt->lines8[i] = -1;
     gt->lines[i++] = -1;
 
@@ -2683,7 +2683,7 @@ static GTextField *_GTextFieldCreate(GTextField *gt, struct gwindow *base, GGadg
 	gt->sel_start = gt->sel_end = gt->sel_base = u_strlen(gt->text);
     }
     if ( gt->text==NULL )
-	gt->text = gcalloc(1,sizeof(unichar_t));
+	gt->text = xcalloc(1,sizeof(unichar_t));
     gt->font = _gtextfield_font;
     if ( gd->label!=NULL && gd->label->font!=NULL )
 	gt->font = gd->label->font;
@@ -2702,13 +2702,13 @@ return( gt );
 }
 
 GGadget *GTextFieldCreate(struct gwindow *base, GGadgetData *gd,void *data) {
-    GTextField *gt = _GTextFieldCreate(gcalloc(1,sizeof(GTextField)),base,gd,data,&_GGadget_gtextfield_box);
+    GTextField *gt = _GTextFieldCreate(xcalloc(1,sizeof(GTextField)),base,gd,data,&_GGadget_gtextfield_box);
 
 return( &gt->g );
 }
 
 GGadget *GPasswordCreate(struct gwindow *base, GGadgetData *gd,void *data) {
-    GTextField *gt = _GTextFieldCreate(gcalloc(1,sizeof(GTextField)),base,gd,data,&_GGadget_gtextfield_box);
+    GTextField *gt = _GTextFieldCreate(xcalloc(1,sizeof(GTextField)),base,gd,data,&_GGadget_gtextfield_box);
     gt->password = true;
     GTextFieldRefigureLines(gt, 0);
 
@@ -2716,7 +2716,7 @@ return( &gt->g );
 }
 
 GGadget *GNumericFieldCreate(struct gwindow *base, GGadgetData *gd,void *data) {
-    GTextField *gt = gcalloc(1,sizeof(GNumericField));
+    GTextField *gt = xcalloc(1,sizeof(GNumericField));
     gt->numericfield = true;
     _GTextFieldCreate(gt,base,gd,data,&gnumericfield_box);
 
@@ -2724,7 +2724,7 @@ return( &gt->g );
 }
 
 GGadget *GTextCompletionCreate(struct gwindow *base, GGadgetData *gd,void *data) {
-    GTextField *gt = gcalloc(1,sizeof(GCompletionField));
+    GTextField *gt = xcalloc(1,sizeof(GCompletionField));
     gt->accepts_tabs = true;
     gt->completionfield = true;
     gt->was_completing = true;
@@ -2736,7 +2736,7 @@ return( &gt->g );
 }
 
 GGadget *GTextAreaCreate(struct gwindow *base, GGadgetData *gd,void *data) {
-    GTextField *gt = gcalloc(1,sizeof(GTextField));
+    GTextField *gt = xcalloc(1,sizeof(GTextField));
     gt->multi_line = true;
     gt->accepts_returns = true;
     _GTextFieldCreate(gt,base,gd,data,&_GGadget_gtextfield_box);
@@ -2758,7 +2758,7 @@ return;
 }
 
 GGadget *GSimpleListFieldCreate(struct gwindow *base, GGadgetData *gd,void *data) {
-    GListField *ge = gcalloc(1,sizeof(GListField));
+    GListField *ge = xcalloc(1,sizeof(GListField));
 
     ge->gt.listfield = true;
     if ( gd->u.list!=NULL )
@@ -2801,7 +2801,7 @@ return( ret );
 }
 
 GGadget *GListFieldCreate(struct gwindow *base, GGadgetData *gd,void *data) {
-    GListField *ge = gcalloc(1,sizeof(GCompletionField));
+    GListField *ge = xcalloc(1,sizeof(GCompletionField));
 
     ge->gt.listfield = true;
     if ( gd->u.list!=NULL )
@@ -3011,7 +3011,7 @@ static void GTextFieldComplete(GTextField *gt,int from_tab) {
 				if ( ret[i][len]=='\0' )
 		    continue;
 				if ( c3==0 ) {
-				    ret2[c2] = gcalloc((len+MAXBRACKETS+2+4+1),sizeof(unichar_t));
+				    ret2[c2] = xcalloc((len+MAXBRACKETS+2+4+1),sizeof(unichar_t));
 				    memcpy(ret2[c2],ret[i],len*sizeof(unichar_t));
 				    ret2[c2][len] = '[';
 				}

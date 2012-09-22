@@ -29,11 +29,6 @@
 
 #include <config.h>
 
-// FIXME: Get rid of this when feasible.
-#ifdef __INTERNAL_TO_FONTFORGE__
-#include "xalloc.h"
-#endif
-
 #include "basics.h"
 #include "configure-fontforge.h"
 #include "gwwiconv.h"

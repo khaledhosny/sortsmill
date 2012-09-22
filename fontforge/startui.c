@@ -221,7 +221,7 @@ static void SplashLayout() {
 }
 
 void DelayEvent(void (*func)(void *), void *data) {
-    struct delayed_event *info = gcalloc(1,sizeof(struct delayed_event));
+    struct delayed_event *info = xcalloc(1,sizeof(struct delayed_event));
 
     info->data = data;
     info->func = func;
@@ -901,7 +901,7 @@ int fontforge_main( int argc, char **argv ) {
 	strcpy(path+len, "/share/fontforge/resources/fontforge.resource"); /* Resource File */
 	GResourceAddResourceFile(path, GResourceProgramName, false);
 
-	gfree(path);
+	free(path);
     }
 #elif defined(SHAREDIR)
     GGadgetSetImageDir(SHAREDIR "/pixmaps");

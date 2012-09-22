@@ -619,7 +619,7 @@ return( true );
 	    if ( grc->sofar_max == 0 )
 		grc->sofar = galloc((grc->sofar_max = len+10) * sizeof(unichar_t));
 	    else
-		grc->sofar = grealloc(grc->sofar,(grc->sofar_max = sofar_pos+len+10)*sizeof(unichar_t));
+		grc->sofar = xrealloc(grc->sofar,(grc->sofar_max = sofar_pos+len+10)*sizeof(unichar_t));
 	}
 	u_strcpy(grc->sofar+sofar_pos,event->u.chr.chars);
 	grc->sofar_pos = sofar_pos + len;
@@ -906,7 +906,7 @@ return( grc );
 }
 
 GGadget *GRowColCreate(struct gwindow *base, GGadgetData *gd,void *data) {
-    GRowCol *grc = _GRowColCreate(gcalloc(1,sizeof(GRowCol)),base,gd,data,&list_box);
+    GRowCol *grc = _GRowColCreate(xcalloc(1,sizeof(GRowCol)),base,gd,data,&list_box);
 
 return( &grc->g );
 }

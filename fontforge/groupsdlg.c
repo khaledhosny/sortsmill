@@ -1042,7 +1042,7 @@ return( true );
 	    GGadgetSetEnabled(grp->newsub,false);
 return( true );
 	}
-	grp->oldsel->kids = grealloc(grp->oldsel->kids,(++grp->oldsel->kid_cnt)*sizeof(Group *));
+	grp->oldsel->kids = xrealloc(grp->oldsel->kids,(++grp->oldsel->kid_cnt)*sizeof(Group *));
 	grp->oldsel->kids[grp->oldsel->kid_cnt-1] = new_grp = (Group *) xzalloc(sizeof (Group));
 	new_grp->parent = grp->oldsel;
 	new_grp->unique = grp->oldsel->unique;
@@ -1154,7 +1154,7 @@ void DefineGroups(FontView *fv) {
     GTextInfo label[19];
     int h, k,kk;
 
-    grp = gcalloc(1,sizeof(*grp));
+    grp = xcalloc(1,sizeof(*grp));
     grp->fv = fv;
     grp->select_many = grp->select_kids_too = false;
     grp->select_callback = GroupSelected;
@@ -1362,13 +1362,13 @@ return;
     if ( gid!=-1 && map->backmap[gid]==-1 )
 	map->backmap[gid] = map->enccount;
     if ( map->enccount>=map->encmax )
-	map->map = grealloc(map->map,(map->encmax+=100)*sizeof(int));
+	map->map = xrealloc(map->map,(map->encmax+=100)*sizeof(int));
     map->map[map->enccount++] = gid;
     if ( !compacted ) {
 	Encoding *enc = map->enc;
 	if ( enc->char_cnt>=enc->char_max ) {
-	    enc->unicode = grealloc(enc->unicode,(enc->char_max+=256)*sizeof(int));
-	    enc->psnames = grealloc(enc->psnames,enc->char_max*sizeof(char *));
+	    enc->unicode = xrealloc(enc->unicode,(enc->char_max+=256)*sizeof(int));
+	    enc->psnames = xrealloc(enc->psnames,enc->char_max*sizeof(char *));
 	}
 	if ( uni==-1 && name!=NULL ) {
 	    if ( gid!=-1 && sf->glyphs[gid]!=NULL )
@@ -1480,7 +1480,7 @@ static void EncodeToGroups(FontView *fv,Group *group, int compacted) {
     if ( compacted )
 	map = EncMapNew(0,sf->glyphcnt,&custom);
     else {
-	Encoding *enc = gcalloc(1,sizeof(Encoding));
+	Encoding *enc = xcalloc(1,sizeof(Encoding));
 	enc->enc_name = EncNameFromGroups(group);
 	enc->is_temporary = true;
 	enc->char_max = 256;
@@ -1496,7 +1496,7 @@ static void EncodeToGroups(FontView *fv,Group *group, int compacted) {
 	ff_post_error(_("Nothing Selected"),_("None of the glyphs in the current font match any names or code points in the selected groups"));
 	EncMapFree(map);
     } else {
-	fv->b.selected = grealloc(fv->b.selected,map->enccount);
+	fv->b.selected = xrealloc(fv->b.selected,map->enccount);
 	memset(fv->b.selected,0,map->enccount);
 	EncMapFree(fv->b.map);
 	fv->b.map = map;

@@ -246,7 +246,7 @@ void GProgressStartIndicator(
     if ( screen_display != NULL ) {
 	if ( !progress_init )
 	    GProgressResInit();
-	new_ = gcalloc(1,sizeof(GProgress));
+	new_ = xcalloc(1,sizeof(GProgress));
 	new_->line1 = u_copy(line1);
 	new_->line2 = u_copy(line2);
 	new_->tot = tot;

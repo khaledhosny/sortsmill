@@ -249,7 +249,7 @@ static struct ofl_font_info *ParseOFLFontPage(char *page, int *more) {
 return( NULL );
 
     index = 0;
-    block = gcalloc(21,sizeof(struct ofl_font_info));
+    block = xcalloc(21,sizeof(struct ofl_font_info));
 
     while ( (start=strstr(pt,"<div id=\"cc_record_listing\">"))!=NULL ) {
 	if ( (start = strstr(start,"<h2>"))==NULL )
@@ -428,7 +428,7 @@ return( false );
 		all->fonts[j-1].potential_gap_after_me = false;
 	    if ( j>=all->fcnt ) {
 		if ( all->fcnt+tot-i > all->fmax )
-		    all->fonts = grealloc(all->fonts,(all->fmax += (tot-i+70))*sizeof(struct ofl_font_info));
+		    all->fonts = xrealloc(all->fonts,(all->fmax += (tot-i+70))*sizeof(struct ofl_font_info));
 		memcpy(all->fonts+all->fcnt,block+i,(tot-i)*sizeof(struct ofl_font_info));
 		all->fcnt += (tot-i);
 return( anymatches );
@@ -441,7 +441,7 @@ return( anymatches );
 		    if ( block[k].date <= all->fonts[j].date )
 		break;
 		if ( all->fcnt+k-i > all->fmax )
-		    all->fonts = grealloc(all->fonts,(all->fmax += (k-i+70))*sizeof(struct ofl_font_info));
+		    all->fonts = xrealloc(all->fonts,(all->fmax += (k-i+70))*sizeof(struct ofl_font_info));
 		for ( l=all->fcnt-1; l>=j; --l )
 		    all->fonts[l+(k-i)] = all->fonts[l];
 		memcpy(all->fonts+j,block+i,(k-i)*sizeof(struct ofl_font_info));
@@ -488,7 +488,7 @@ static enum tok_type ofl_gettoken(FILE *ofl, struct tokbuf *tok) {
 	while ( (ch=getc(ofl))!=EOF && ch!='"' ) {
 	    if ( pt>=end ) {
 		int off = pt-tok->buf;
-		tok->buf = grealloc(tok->buf,tok->buf_max = (end-tok->buf)+200);
+		tok->buf = xrealloc(tok->buf,tok->buf_max = (end-tok->buf)+200);
 		pt = tok->buf+off;
 		end = tok->buf+tok->buf_max;
 	    }
@@ -496,7 +496,7 @@ static enum tok_type ofl_gettoken(FILE *ofl, struct tokbuf *tok) {
 	}
 	if ( pt>=end ) {
 	    int off = pt-tok->buf;
-	    tok->buf = grealloc(tok->buf,tok->buf_max = (pt-end)+200);
+	    tok->buf = xrealloc(tok->buf,tok->buf_max = (pt-end)+200);
 	    pt = tok->buf+off;
 	}
 	*pt++ = '\0';
@@ -507,7 +507,7 @@ static enum tok_type ofl_gettoken(FILE *ofl, struct tokbuf *tok) {
 	while ( ch!=EOF && ch!='"' && !isspace(ch) ) {
 	    if ( pt>=end ) {
 		int off = pt-tok->buf;
-		tok->buf = grealloc(tok->buf,tok->buf_max = (end-tok->buf)+200);
+		tok->buf = xrealloc(tok->buf,tok->buf_max = (end-tok->buf)+200);
 		pt = tok->buf+off;
 		end = tok->buf+tok->buf_max;
 	    }
@@ -516,7 +516,7 @@ static enum tok_type ofl_gettoken(FILE *ofl, struct tokbuf *tok) {
 	}
 	if ( pt>=end ) {
 	    int off = pt-tok->buf;
-	    tok->buf = grealloc(tok->buf,tok->buf_max = (pt-end)+200);
+	    tok->buf = xrealloc(tok->buf,tok->buf_max = (pt-end)+200);
 	    pt = tok->buf+off;
 	}
 	*pt++ = '\0';
@@ -574,7 +574,7 @@ return;
     break;
 	    all->fmax = tok.ival;
 	    all->fcnt = 0;
-	    all->fonts = gcalloc(all->fmax,sizeof(struct ofl_font_info));
+	    all->fonts = xcalloc(all->fmax,sizeof(struct ofl_font_info));
 	} else if ( strcmp(tok.buf,"Complete:")==0 ) {
 	    if ( ofl_gettoken(file,&tok)!= tok_int )
     break;
@@ -900,7 +900,7 @@ static void OFLibSortSearch(OFLibDlg *d) {
     char *end, *start, *found, ch;
 
     if ( d->smax<d->all.fcnt )
-	d->show = grealloc(d->show,(d->smax = d->all.fcnt+20)*sizeof(struct ofl_font_info *));
+	d->show = xrealloc(d->show,(d->smax = d->all.fcnt+20)*sizeof(struct ofl_font_info *));
     if ( st==st_license ) {
 	isofl = strcasecmp(search,"ofl")==0;
 	ispd  = strcasecmp(search,"pd")==0;
@@ -1889,7 +1889,7 @@ return;
     if ( !initted )
 	OFLibInit();
 
-    active = gcalloc(1,sizeof(OFLibDlg));
+    active = xcalloc(1,sizeof(OFLibDlg));
     active->background_preview_requests = oflib_automagic_preview;
     pthread_key_create(&jump_key,NULL);
     LoadOFLibState(&active->all);

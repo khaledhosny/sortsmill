@@ -161,7 +161,7 @@ return( NULL );
     for ( i=0 ; (ch=getc(file))!=EOF && ch!='"' ; ++i ) {
 	if ( i+1>=gc->bmax ) {
 	    gc->bmax += 100;
-	    gc->buffer = grealloc(gc->buffer,gc->bmax);
+	    gc->buffer = xrealloc(gc->buffer,gc->bmax);
 	}
 	gc->buffer[i] = ch;
     }
@@ -216,7 +216,7 @@ return( NULL );
 	for ( i=0 ;; ++i ) {
 	    if ( i>=gmax ) {
 		gmax += 10;
-		glist = grealloc(glist,gmax*sizeof(Group *));
+		glist = xrealloc(glist,gmax*sizeof(Group *));
 	    }
 	    glist[i] = _LoadGroupList(file, g, expected_indent+1, gc);
 	    if ( glist[i]==NULL )

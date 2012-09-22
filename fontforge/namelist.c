@@ -66,7 +66,7 @@ struct psbucket { const char *name; int uni; struct psbucket *prev; } *psbuckets
 
 static void psaddbucket(const char *name, int uni) {
     int hash = hashname(name);
-    struct psbucket *buck = gcalloc(1,sizeof(struct psbucket));
+    struct psbucket *buck = xcalloc(1,sizeof(struct psbucket));
 
     buck->name = name;
     buck->uni = uni;
@@ -598,7 +598,7 @@ return( NULL );
 return( NULL );
 	    }
 	    if ( rn_cnt>=rn_max-1 )
-		nl->renames = grealloc(nl->renames,(rn_max+=20)*sizeof(struct renames));
+		nl->renames = xrealloc(nl->renames,(rn_max+=20)*sizeof(struct renames));
 	    nl->renames[rn_cnt].from   = copy(pt);
 	    nl->renames[rn_cnt].to     = copy(test);
 	    nl->renames[++rn_cnt].from = NULL;		/* End mark */
@@ -640,9 +640,9 @@ return( NULL );
 	    ub = (uni&0xff00)>>8;
 	    uc = uni&0xff;
 	    if ( nl->unicode[up]==NULL )
-		nl->unicode[up] = gcalloc(256,sizeof(char **));
+		nl->unicode[up] = xcalloc(256,sizeof(char **));
 	    if ( nl->unicode[up][ub]==NULL )
-		nl->unicode[up][ub] = gcalloc(256,sizeof(char *));
+		nl->unicode[up][ub] = xcalloc(256,sizeof(char *));
 	    if ( nl->unicode[up][ub][uc]==NULL )
 		nl->unicode[up][ub][uc]=copy(pt);
 	    else {
@@ -1004,7 +1004,7 @@ char **SFTemporaryRenameGlyphsToNamelist(SplineFont *sf,NameList *new_) {
     if ( new_==NULL )
 return( NULL );
 
-    ret = gcalloc(sf->glyphcnt,sizeof(char *));
+    ret = xcalloc(sf->glyphcnt,sizeof(char *));
     for ( gid = 0; gid<sf->glyphcnt; ++gid ) if ( (sc=sf->glyphs[gid])!=NULL ) {
 	name = RenameGlyphToNamelist(buffer,sc,sf->for_new_glyphs,new_,ret);
 	if ( name!=sc->name ) {

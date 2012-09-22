@@ -113,7 +113,7 @@ return;
 	*ept++ = '/';
 
     while (( ent = readdir(dir))!=NULL ) {
-	cur = (GDirEntry *) gcalloc(1,sizeof(GDirEntry));
+	cur = (GDirEntry *) xcalloc(1,sizeof(GDirEntry));
 	cur->name = def2u_copy(ent->d_name);
 	strcpy(ept,ent->d_name);
 	stat(buffer,&statb);
@@ -137,7 +137,7 @@ return;
     /* Under cygwin we should give the user access to /cygdrive, even though */
     /*  a diropen("/") will not find it */
     if ( strcmp(path,"/")==0 ) {
-	cur = (GDirEntry *) gcalloc(1,sizeof(GDirEntry));
+	cur = (GDirEntry *) xcalloc(1,sizeof(GDirEntry));
 	cur->name = def2u_copy("cygdrive");
 	strcpy(ept,"cygdrive");
 	stat(buffer,&statb);
@@ -171,7 +171,7 @@ static void _gio_file_statfile(GIOControl *gc,char *path) {
     if ( stat(path,&statb)==-1 ) {
 	_GIO_reporterror(gc,errno);
     } else {
-	cur = (GDirEntry *) gcalloc(1,sizeof(GDirEntry));
+	cur = (GDirEntry *) xcalloc(1,sizeof(GDirEntry));
 	cur->name = uc_copy(GFileNameTail(path));
 	cur->hasdir = cur->hasexe = cur->hasmode = cur->hassize = cur->hastime = true;
 	cur->size    = statb.st_size;

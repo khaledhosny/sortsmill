@@ -469,7 +469,7 @@ return( NULL );
     break;
     }
     *len = icnt;
-return( grealloc(instrs,icnt==0?1:icnt));	/* some versions of realloc abort on 0 */
+return( xrealloc(instrs,icnt==0?1:icnt));	/* some versions of realloc abort on 0 */
 }
 
 int instr_typify(struct instrdata *id) {
