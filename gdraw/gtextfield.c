@@ -241,7 +241,7 @@ static void GTextFieldPangoRefigureLines(GTextField *gt, int start_of_change) {
 
     free(gt->utf8_text);
     if ( gt->lines8==NULL ) {
-	gt->lines8 = xmalloc(gt->lmax*sizeof(int32));
+	gt->lines8 = xmalloc(szmax(1, gt->lmax*sizeof(int32)));
 	gt->lines8[0] = 0;
 	gt->lines8[1] = -1;
     }

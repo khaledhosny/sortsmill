@@ -853,7 +853,7 @@ GGadget *GTabSetCreate(struct gwindow *base, GGadgetData *gd,void *data) {
 
     for ( i=0; gd->u.tabs[i].text!=NULL; ++i );
     gts->tabcnt = i;
-    gts->tabs = xmalloc(i*sizeof(struct tabs));
+    gts->tabs = xmalloc(szmax(1, i*sizeof(struct tabs)));
     for ( i=0; gd->u.tabs[i].text!=NULL; ++i ) {
 	if ( gd->u.tabs[i].text_in_resource )
 	    gts->tabs[i].name = u_copy(GStringGetResource((intpt) (gd->u.tabs[i].text),NULL));

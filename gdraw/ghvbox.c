@@ -580,7 +580,7 @@ static GHVBox *_GHVBoxCreate(struct gwindow *base, GGadgetData *gd,void *data,
 	gb->label->contained = true;
     }
 
-    gb->children = xmalloc(vcnt*hcnt*sizeof(GGadget *));
+    gb->children = xmalloc(szmax(1, vcnt*hcnt*sizeof(GGadget *)));
     for ( i=v=0; v<vcnt; ++v ) {
 	for ( h=0; h<hcnt && gd->u.boxelements[i]!=NULL; ++h, ++i ) {
 	    GGadgetCreateData *gcd = gd->u.boxelements[i];

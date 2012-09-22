@@ -1147,9 +1147,9 @@ return( 0 );
     if ( strarray!=NULL )
 	for ( i=0; i<slen; ++i ) free( strarray[i]);
     free(strarray); free(smnemonics); free(intarray);
-    strarray = xcalloc(scnt,sizeof(unichar_t *));
-    smnemonics = xcalloc(scnt,sizeof(unichar_t));
-    intarray = xmalloc(icnt*sizeof(int));
+    strarray = xcalloc(szmax(1, scnt),sizeof(unichar_t *));
+    smnemonics = xcalloc(szmax(1, scnt),sizeof(unichar_t));
+    intarray = xmalloc(szmax(1, icnt*sizeof(int)));
     for ( i=0; i<icnt; ++i ) intarray[i] = 0x80000000;
     slen = ilen = 0;
 

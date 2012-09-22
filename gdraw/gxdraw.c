@@ -3275,7 +3275,7 @@ return( 0 );
 	if ( cnt==0 )
 return(0);
 	if ( k==0 )
-	    classes = xmalloc(cnt*sizeof(XEventClass));
+	    classes = xmalloc(szmax(1, cnt*sizeof(XEventClass)));
     }
     XSelectExtensionEvent(gdisp->display,((GXWindow) w)->w,classes,cnt);
     free(classes);

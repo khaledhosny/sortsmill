@@ -470,7 +470,7 @@ return( cairo_image_surface_create_for_data((uint8 *) idata,type,
     }
 
     stride = cairo_format_stride_for_width(type,src->width);
-    *_data = data = xmalloc(umax(1, stride * src->height));
+    *_data = data = xmalloc(szmax(1, stride * src->height));
     cs = cairo_image_surface_create_for_data(data,type,
 		src->width, src->height,   stride);
     idata = (uint32 *) data;
@@ -699,7 +699,7 @@ void _GXCDraw_Glyph(GWindow w, GImage *image, GRect *src, int32 x, int32 y) {
 	_GXCDraw_Image(w,image,src,x,y);
     else {
 	int stride = cairo_format_stride_for_width(CAIRO_FORMAT_A8,src->width);
-	uint8 *basedata = xmalloc(umax(1,stride*src->height)),
+	uint8 *basedata = xmalloc(szmax(1,stride*src->height)),
 	       *data = basedata,
 		*srcd = base->data + src->y*base->bytes_per_line + src->x;
 	int factor = base->clut->clut_len==256 ? 1 :
