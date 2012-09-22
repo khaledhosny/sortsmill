@@ -1239,8 +1239,8 @@ static struct pschars *initsubrs(int needsflex,MMSet *mm) {
 
     sub = xcalloc(1,sizeof(struct pschars));
     sub->cnt = 10;
-    sub->lens = galloc(10*sizeof(int));
-    sub->values = galloc(10*sizeof(uint8 *));
+    sub->lens = xmalloc1(10*sizeof(int));
+    sub->values = xmalloc1(10*sizeof(uint8 *));
     for ( i=0; i<5; ++i ) {
 	++sub->next;
 	sub->values[i] = (uint8 *) copyn((const char *) subrs[i],subrslens[i]);
@@ -2578,7 +2578,7 @@ return( NULL );
 	    (subrtot+1) * cidbytes->gdbytes )
 	IError("SubrMap section the wrong length" );
 
-    buffer = galloc(8192);
+    buffer = xmalloc1(8192);
 
     rewind(subrs);
     while ( (len=fread(buffer,1,8192,subrs))>0 )

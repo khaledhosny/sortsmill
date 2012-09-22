@@ -165,7 +165,7 @@ static void find_fonts_callback(GtkFileChooser *dialog) {
 		    len += strlen( fonts[cnt][i])+2;
 	    }
 	}
-	pt = text = galloc(len+10);
+	pt = text = xmalloc1(len+10);
 	cnt = 0;
 	for ( test=files; test!=NULL; test=test->next, ++cnt) {
 	    if ( fonts[cnt]!=NULL ) {

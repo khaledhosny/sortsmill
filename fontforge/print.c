@@ -65,7 +65,7 @@ struct printdefaults pdefs[] = {
 static int pdf_addobject(PI *pi) {
     if ( pi->next_object==0 ) {
 	pi->max_object = 100;
-	pi->object_offsets = galloc(pi->max_object*sizeof(int));
+	pi->object_offsets = xmalloc1(pi->max_object*sizeof(int));
 	pi->object_offsets[pi->next_object++] = 0;	/* Object 0 is magic */
     } else if ( pi->next_object>=pi->max_object ) {
 	pi->max_object += 100;
@@ -79,7 +79,7 @@ return( pi->next_object-1 );
 static void pdf_addpage(PI *pi) {
     if ( pi->next_page==0 ) {
 	pi->max_page = 100;
-	pi->page_objects = galloc(pi->max_page*sizeof(int));
+	pi->page_objects = xmalloc1(pi->max_page*sizeof(int));
     } else if ( pi->next_page>=pi->max_page ) {
 	pi->max_page += 100;
 	pi->page_objects = xrealloc(pi->page_objects,pi->max_page*sizeof(int));
@@ -398,8 +398,8 @@ static void pdf_dump_type1(PI *pi,int sfid) {
 
     fd_obj = figure_fontdesc(pi, sfid, &fd,1,font_stream);
 
-    sfbit->our_font_objs = galloc((sfbit->map->enccount/256+1)*sizeof(int *));
-    sfbit->fonts = galloc((sfbit->map->enccount/256+1)*sizeof(int *));
+    sfbit->our_font_objs = xmalloc1((sfbit->map->enccount/256+1)*sizeof(int *));
+    sfbit->fonts = xmalloc1((sfbit->map->enccount/256+1)*sizeof(int *));
     for ( i=0; i<sfbit->map->enccount; i += 256 ) {
 	sfbit->fonts[i/256] = -1;
 	dump_pfb_encoding(pi,sfid,i,fd_obj);
@@ -995,8 +995,8 @@ static void pdf_gen_type3(PI *pi,int sfid) {
     }
 
     SplineFontFindBounds(sf,&bb);
-    sfbit->our_font_objs = galloc((map->enccount/256+1)*sizeof(int *));
-    sfbit->fonts = galloc((map->enccount/256+1)*sizeof(int *));
+    sfbit->our_font_objs = xmalloc1((map->enccount/256+1)*sizeof(int *));
+    sfbit->fonts = xmalloc1((map->enccount/256+1)*sizeof(int *));
     for ( i=0; i<map->enccount; i += 256 ) {
 	sfbit->fonts[i/256] = -1;
 	dump_pdf3_encoding(pi,sfid,i,&bb,notdefproc);
@@ -1060,7 +1060,7 @@ static void pdf_build_type0(PI *pi, int sfid) {
     } else
 	cidmax = cidmaster->glyphcnt + 2;	/* two extra useless glyphs in ttf */
 
-    widths = galloc(cidmax*sizeof(uint16));
+    widths = xmalloc1(cidmax*sizeof(uint16));
 
     for ( i=0; i<cidmax; ++i ) {
 	SplineChar *sc = NULL;
@@ -1110,7 +1110,7 @@ static void pdf_build_type0(PI *pi, int sfid) {
     fprintf( pi->out, "\n" );
 
     /* OK, now we've dumped up the CID part, we need to create a Type0 Font */
-    sfbit->our_font_objs = galloc(sizeof(int));
+    sfbit->our_font_objs = xmalloc1(sizeof(int));
     sfbit->our_font_objs[0] = pi->next_object;
     sfbit->next_font = 1;
     pdf_addobject(pi);
@@ -2843,7 +2843,7 @@ return( ret );
 	    /* Er... We didn't find anything?! */
 return( xcalloc(1,sizeof(unichar_t)));
 	}
-	ret = galloc((len+1)*sizeof(unichar_t));
+	ret = xmalloc1((len+1)*sizeof(unichar_t));
     }
 }
 
@@ -3039,7 +3039,7 @@ return( NULL );
 	format = 2;		/* byte-swapped ucs2 */
     else
 	rewind(file);
-    space = upt = galloc((max+1)*sizeof(unichar_t));
+    space = upt = xmalloc1((max+1)*sizeof(unichar_t));
     end = space+max;
     if ( format!=0 ) {
 	while ( upt<end ) {

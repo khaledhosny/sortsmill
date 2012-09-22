@@ -207,7 +207,7 @@ static GTextInfo **StandardFilters(void) {
 	    ti[cnt++]->text = utf82u_copy(_("Edit Filter List"));
 	    ti[cnt] = xcalloc(1,sizeof(GTextInfo));
 	} else
-	    ti = galloc((cnt+3)*sizeof(GTextInfo *));
+	    ti = xmalloc1((cnt+3)*sizeof(GTextInfo *));
     }
     ti[default_font_filter_index]->selected = true;
 return( ti );
@@ -250,7 +250,7 @@ static int Filter_OK(GGadget *g, GEvent *e) {
 	    if ( !md[2*i].frozen )
 		++cnt;
 	if ( cnt!=0 ) {
-	    user_font_filters = galloc((cnt+1)*sizeof(struct openfilefilters));
+	    user_font_filters = xmalloc1((cnt+1)*sizeof(struct openfilefilters));
 	    for ( i=cnt=0; i<rows; ++i ) if ( !md[2*i].frozen ) {
 		user_font_filters[cnt].name = copy(md[2*i].u.md_str);
 		user_font_filters[cnt].filter = copy(md[2*i+1].u.md_str);
@@ -543,7 +543,7 @@ return( true );
 	len = 0;
 	for ( cnt=0; fontnames[cnt]!=NULL; ++cnt )
 	    len += strlen(fontnames[cnt])+1;
-	msg = galloc((len+2)*sizeof(unichar_t));
+	msg = xmalloc1((len+2)*sizeof(unichar_t));
 	len = 0;
 	for ( cnt=0; fontnames[cnt]!=NULL; ++cnt ) {
 	    uc_strcpy(msg+len,fontnames[cnt]);

@@ -70,7 +70,7 @@ static GImage *ReadRasBitmap(GImage *ret,int width, int height, FILE *fp ) {
     unsigned char *pt, *buf;
 
     len = ((width+15)/16)*2;
-    buf = (unsigned char *) galloc(len);
+    buf = (unsigned char *) xmalloc1(len);
     for ( i=0; i<height; ++i ) {
 	if ( fread(buf,len,1,fp)==EOF ) {
 	    GImageDestroy(ret);

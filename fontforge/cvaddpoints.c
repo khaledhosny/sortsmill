@@ -391,7 +391,7 @@ return;			/* We clicked on the active point, that's a no-op */
 	ss = (SplineSet *) xzalloc(sizeof (SplineSet));
 	ss->next = cv->b.layerheads[cv->b.drawmode]->splines;
 	cv->b.layerheads[cv->b.drawmode]->splines = ss;
-	ss->spiros = galloc((ss->spiro_max=10)*sizeof(spiro_cp));
+	ss->spiros = xmalloc1((ss->spiro_max=10)*sizeof(spiro_cp));
 	cp = &ss->spiros[0];
 	cp->x = cv->p.cx;
 	cp->y = cv->p.cy;

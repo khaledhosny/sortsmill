@@ -1142,7 +1142,7 @@ return( NULL );
 	in = (char *) str;
 	inlen = strlen(in);
 	outlen = (inlen+1)*4;
-	out = (char *) (ret = galloc(outlen+2));
+	out = (char *) (ret = xmalloc1(outlen+2));
 	iconv(toutf8,&in,&inlen,&out,&outlen);
 	out[0] = '\0';
 	iconv_close(toutf8);
@@ -1158,7 +1158,7 @@ return( NULL );
     if ( table==NULL )
 return( NULL );
 
-    ret = galloc((strlen(str)+1)*3);
+    ret = xmalloc1((strlen(str)+1)*3);
     for ( rpt = ret; *ustr; ++ustr ) {
 	int ch = table[*ustr];
 	rpt = utf8_idpb(rpt,ch);
@@ -1193,7 +1193,7 @@ return( NULL );
 	in = (char *) ustr;
 	inlen = strlen(ustr);
 	outlen = sizeof(unichar_t)*strlen(ustr);
-	out = ret = galloc(outlen+sizeof(unichar_t));
+	out = ret = xmalloc1(outlen+sizeof(unichar_t));
 	iconv(fromutf8,&in,&inlen,&out,&outlen);
 	out[0] = out[1] = '\0';
 	out[2] = out[3] = '\0';
@@ -1219,7 +1219,7 @@ return( ret );
     if ( table==NULL )
 return( NULL );
 
-    ret = galloc(strlen(ustr)+1);
+    ret = xmalloc1(strlen(ustr)+1);
     for ( rpt = ret; (ch=utf8_ildb(&ustr)); ) {
 	for ( i=0; i<256; ++i )
 	    if ( table[i]==ch ) {

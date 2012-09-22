@@ -45,7 +45,7 @@ return;
     do {
 	fpt = strstr(file,"; ");
 	if ( fpt!=NULL ) *fpt = '\0';
-	full = galloc(strlen(filename)+1+strlen(file)+1);
+	full = xmalloc1(strlen(filename)+1+strlen(file)+1);
 	strcpy(full,filename); strcat(full,"/"); strcat(full,file);
 	sf = LoadSplineFont(full,0);
 	if ( sf!=NULL && sf->fv==NULL )

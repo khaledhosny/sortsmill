@@ -361,7 +361,7 @@ return( offset + bdfc->xmax-bdfc->xmin+1 );
 
 static uint32 BDFToNFNT(FILE *res, BDFFont *bdf, EncMap *map) {
     short widths[258], lbearings[258], locs[258]/*, idealwidths[256]*/;
-    uint8 **rows = galloc(bdf->pixelsize*sizeof(uint8 *));
+    uint8 **rows = xmalloc1(bdf->pixelsize*sizeof(uint8 *));
     int i, k, width, kernMax=1, descentMax=bdf->descent-1, rectMax=1, widMax=3;
     uint32 rlenpos = ftell(res), end, owloc, owpos;
     int gid;
@@ -1488,7 +1488,7 @@ return( false );
     ((FInfo *) (info.finderInfo))->fdCreator = mb->creator;
     pt = strrchr(fname,'/');
     filename = def2u_copy(pt==NULL?fname:pt+1);
-    { UniChar *ucs2fn = galloc((u_strlen(filename)+1) * sizeof(UniChar));
+    { UniChar *ucs2fn = xmalloc1((u_strlen(filename)+1) * sizeof(UniChar));
       int i;
 	for ( i=0; filename[i]!=0; ++i )
 	    ucs2fn[i] = filename[i];
@@ -1513,7 +1513,7 @@ return( false );
     FSSetForkSize(macfile,fsFromStart,0);/* Truncate it just in case it existed... */
     fseek(res,128,SEEK_SET);	/* Everything after the mac binary header in */
 	/* the temp file is resource fork */
-    buf = galloc(8*1024);
+    buf = xmalloc1(8*1024);
     while ( (len=fread(buf,1,8*1024,res))>0 )
 	FSWriteFork(macfile,fsAtMark,0,len,buf,&whocares);
     FSCloseFork(macfile);
@@ -1625,7 +1625,7 @@ return( 0 );
     free( resources[0].res );
 
 #if __Mac
-    header.macfilename = galloc(strlen(filename)+strlen(buffer)+1);
+    header.macfilename = xmalloc1(strlen(filename)+strlen(buffer)+1);
     strcpy(header.macfilename,filename);
     pt = strrchr(header.macfilename,'/');
     if ( pt==NULL ) pt=header.macfilename-1;
@@ -1733,7 +1733,7 @@ int WriteMacBitmaps(char *filename,SplineFont *sf, int32 *sizes, int is_dfont,
 
     /* The filename we've been given is for the outline font, which might or */
     /*  might not be stuffed inside a bin file */
-    binfilename = galloc(strlen(filename)+strlen(".bmap.dfont")+1);
+    binfilename = xmalloc1(strlen(filename)+strlen(".bmap.dfont")+1);
     strcpy(binfilename,filename);
     pt = strrchr(binfilename,'/');
     if ( pt==NULL ) pt = binfilename; else ++pt;
@@ -1816,13 +1816,13 @@ int WriteMacFamily(char *filename,struct sflist *sfs,enum fontformat format,
 #if !__Mac
 	    strcat(buffer,".bin");
 #endif
-	    tempname = galloc(strlen(filename)+strlen(buffer)+1);
+	    tempname = xmalloc1(strlen(filename)+strlen(buffer)+1);
 	    strcpy(tempname,filename);
 	    pt = strrchr(tempname,'/');
 	    if ( pt==NULL ) pt=tempname-1;
 	    strcpy(pt+1,buffer);
 	    if ( strcmp(tempname,filename)==0 ) {
-		char *tf = galloc(strlen(filename)+20);
+		char *tf = xmalloc1(strlen(filename)+20);
 		strcpy(tf,filename);
 		filename = tf;
 		freefilename = true;
@@ -2036,7 +2036,7 @@ return(NULL);
 	    free(buffer);
 	    max = rlen;
 	    if ( max<0x800 ) max = 0x800;
-	    buffer=galloc(max);
+	    buffer=xmalloc1(max);
 	    if ( buffer==NULL ) {
 		LogError( _("Out of memory\n") );
 		exit( 1 );
@@ -2353,7 +2353,7 @@ static FOND *BuildFondList(FILE *f,long rlistpos,int subcnt,long rdata_pos,
 	    cur->stylewidths = xcalloc(cnt,sizeof(struct stylewidths));
 	    for ( j=0; j<cnt; ++j ) {
 		cur->stylewidths[j].style = getushort(f);
-		cur->stylewidths[j].widthtab = galloc((cur->last-cur->first+3)*sizeof(short));
+		cur->stylewidths[j].widthtab = xmalloc1((cur->last-cur->first+3)*sizeof(short));
 		for ( k=cur->first; k<=cur->last+2; ++k )
 		    cur->stylewidths[j].widthtab[k] = getushort(f);
 	    }
@@ -2366,7 +2366,7 @@ static FOND *BuildFondList(FILE *f,long rlistpos,int subcnt,long rdata_pos,
 	    for ( j=0; j<cnt; ++j ) {
 		cur->stylekerns[j].style = getushort(f);
 		cur->stylekerns[j].kernpairs = getushort(f);
-		cur->stylekerns[j].kerns = galloc(cur->stylekerns[j].kernpairs*sizeof(struct kerns));
+		cur->stylekerns[j].kerns = xmalloc1(cur->stylekerns[j].kernpairs*sizeof(struct kerns));
 		for ( k=0; k<cur->stylekerns[j].kernpairs; ++k ) {
 		    cur->stylekerns[j].kerns[k].ch1 = getc(f);
 		    cur->stylekerns[j].kerns[k].ch2 = getc(f);
@@ -2385,10 +2385,10 @@ static FOND *BuildFondList(FILE *f,long rlistpos,int subcnt,long rdata_pos,
 	    for ( j=0; j<48; ++j )
 		stringoffsets[j] = getc(f);
 	    strcnt = getushort(f);
-	    strings = galloc(strcnt*sizeof(char *));
+	    strings = xmalloc1(strcnt*sizeof(char *));
 	    for ( j=0; j<strcnt; ++j ) {
 		stringlen = getc(f);
-		strings[j] = galloc(stringlen+2);
+		strings[j] = xmalloc1(stringlen+2);
 		strings[j][0] = stringlen;
 		strings[j][stringlen+1] = '\0';
 		for ( k=0; k<stringlen; ++k )
@@ -2405,7 +2405,7 @@ static FOND *BuildFondList(FILE *f,long rlistpos,int subcnt,long rdata_pos,
 		if ( format!=0 )
 		    for ( k=0; k<strings[format][0]; ++k )
 			stringlen += strings[ strings[format][k+1]-1 ][0];
-		pt = cur->psnames[j] = galloc(stringlen+1);
+		pt = cur->psnames[j] = xmalloc1(stringlen+1);
 		strcpy(pt,strings[ 0 ]+1);
 		pt += strings[ 0 ][0];
 		if ( format!=0 )
@@ -2631,8 +2631,8 @@ return( test );
 	}
 	if ( names==NULL ) {
 	    names = xcalloc(cnt+1,sizeof(char *));
-	    fonds = galloc(cnt*sizeof(FOND *));
-	    styles = galloc(cnt*sizeof(int));
+	    fonds = xmalloc1(cnt*sizeof(FOND *));
+	    styles = xmalloc1(cnt*sizeof(int));
 	}
     }
 
@@ -2804,7 +2804,7 @@ return( into );
 static SplineFont *MightBeTrueType(FILE *binary,int32 pos,int32 dlen,int flags,
 	enum openflags openflags) {
     FILE *temp = tmpfile();
-    char *buffer = galloc(8192);
+    char *buffer = xmalloc1(8192);
     int len;
     SplineFont *sf;
 
@@ -2813,7 +2813,7 @@ static SplineFont *MightBeTrueType(FILE *binary,int32 pos,int32 dlen,int flags,
 	char *temp = TTFGetFontName(binary,pos,pos);
 	if ( temp==NULL )
 return( NULL );
-	ret = galloc(2*sizeof(char *));
+	ret = xmalloc1(2*sizeof(char *));
 	ret[0] = temp;
 	ret[1] = NULL;
 return( (SplineFont *) ret );
@@ -2947,7 +2947,7 @@ static SplineFont *HasResourceFork(char *filename,int flags,enum openflags openf
 	tempfn = copy(filename);
 	tempfn[lparen-filename] = '\0';
     }
-    respath = galloc(strlen(tempfn)+strlen("/..namedfork/rsrc")+1);
+    respath = xmalloc1(strlen(tempfn)+strlen("/..namedfork/rsrc")+1);
     strcpy(respath,tempfn);
     strcat(respath,"/..namedfork/rsrc");
     resfork = fopen(respath,"r");

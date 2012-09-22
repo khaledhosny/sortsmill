@@ -1885,7 +1885,7 @@ return( NULL );
 return( copy(orig));
     }
 
-    npt = new = galloc(2*strlen(orig)+10);
+    npt = new = xmalloc1(2*strlen(orig)+10);
     dlen = strlen(decimal_point);
     /* now I want to change the number as little as possible. So if they use */
     /*  arabic numerals we can get by with just switching the decimal point */
@@ -2072,8 +2072,8 @@ static struct psdict *GFI_ParsePrivate(struct gfi_data *d) {
     int i,j;
 
     ret->cnt = rows;
-    ret->keys = galloc(rows*sizeof(char *));
-    ret->values = galloc(rows*sizeof(char *));
+    ret->keys = xmalloc1(rows*sizeof(char *));
+    ret->values = xmalloc1(rows*sizeof(char *));
     for ( i=j=0; i<rows; ++i ) {
 	if ( strings[i*cols+0].u.md_str!=NULL && strings[i*cols+1].u.md_str!=NULL ) {
 	    ret->keys[j] = copy(strings[i*cols+0].u.md_str);
@@ -2482,14 +2482,14 @@ void GListMoveSelected(GGadget *list,int offset) {
 	    if ( (j= i+offset)>=len ) j=len-1;
 	    while ( new[j] ) --j;
 	}
-	new[j] = galloc(sizeof(GTextInfo));
+	new[j] = xmalloc1(sizeof(GTextInfo));
 	*new[j] = *old[i];
 	new[j]->text = u_copy(new[j]->text);
 	if ( offset<0 ) ++j; else --j;
     }
     for ( i=j=0; i<len; ++i ) if ( !old[i]->selected ) {
 	while ( new[j] ) ++j;
-	new[j] = galloc(sizeof(GTextInfo));
+	new[j] = xmalloc1(sizeof(GTextInfo));
 	*new[j] = *old[i];
 	new[j]->text = u_copy(new[j]->text);
 	++j;
@@ -2505,7 +2505,7 @@ void GListDelSelected(GGadget *list) {
     old = GGadgetGetList(list,&len);
     new = xcalloc(len+1,sizeof(GTextInfo *));
     for ( i=j=0; i<len; ++i ) if ( !old[i]->selected ) {
-	new[j] = galloc(sizeof(GTextInfo));
+	new[j] = xmalloc1(sizeof(GTextInfo));
 	*new[j] = *old[i];
 	new[j]->text = u_copy(new[j]->text);
 	++j;
@@ -2521,7 +2521,7 @@ GTextInfo *GListChangeLine(GGadget *list,int pos, const unichar_t *line) {
     old = GGadgetGetList(list,&len);
     new = xcalloc(len+1,sizeof(GTextInfo *));
     for ( i=0; i<len; ++i ) {
-	new[i] = galloc(sizeof(GTextInfo));
+	new[i] = xmalloc1(sizeof(GTextInfo));
 	*new[i] = *old[i];
 	if ( i!=pos )
 	    new[i]->text = u_copy(new[i]->text);
@@ -2541,7 +2541,7 @@ GTextInfo *GListAppendLine(GGadget *list,const unichar_t *line,int select) {
     old = GGadgetGetList(list,&len);
     new = xcalloc(len+2,sizeof(GTextInfo *));
     for ( i=0; i<len; ++i ) {
-	new[i] = galloc(sizeof(GTextInfo));
+	new[i] = xmalloc1(sizeof(GTextInfo));
 	*new[i] = *old[i];
 	new[i]->text = u_copy(new[i]->text);
 	if ( select ) new[i]->selected = false;
@@ -2564,7 +2564,7 @@ GTextInfo *GListChangeLine8(GGadget *list,int pos, const char *line) {
     old = GGadgetGetList(list,&len);
     new = xcalloc(len+1,sizeof(GTextInfo *));
     for ( i=0; i<len; ++i ) {
-	new[i] = galloc(sizeof(GTextInfo));
+	new[i] = xmalloc1(sizeof(GTextInfo));
 	*new[i] = *old[i];
 	if ( i!=pos )
 	    new[i]->text = u_copy(new[i]->text);
@@ -2584,7 +2584,7 @@ GTextInfo *GListAppendLine8(GGadget *list,const char *line,int select) {
     old = GGadgetGetList(list,&len);
     new = xcalloc(len+2,sizeof(GTextInfo *));
     for ( i=0; i<len; ++i ) {
-	new[i] = galloc(sizeof(GTextInfo));
+	new[i] = xmalloc1(sizeof(GTextInfo));
 	*new[i] = *old[i];
 	new[i]->text = u_copy(new[i]->text);
 	if ( select ) new[i]->selected = false;
@@ -2880,14 +2880,14 @@ static int CheckActiveStyleTranslation(struct gfi_data *d,
 			free(strings[3*r+2].u.md_str);
 			if ( other_lang==0x415 ) {
 			    /* polish needs a word before the translation */
-			    strings[3*r+2].u.md_str = galloc(strlen("odmiana ")+strlen(stylelist[i][other_pos].str)+1);
+			    strings[3*r+2].u.md_str = xmalloc1(strlen("odmiana ")+strlen(stylelist[i][other_pos].str)+1);
 			    strcpy(strings[3*r+2].u.md_str,"odmiana ");
 			    strcat(strings[3*r+2].u.md_str,stylelist[i][other_pos].str);
 			} else
 			    strings[3*r+2].u.md_str = copy(stylelist[i][other_pos].str);
     return( true );
 		    }
-		    temp = galloc((strlen(new)
+		    temp = xmalloc1((strlen(new)
 			    + strlen(stylelist[i][other_pos].str)
 			    - strlen(stylelist[i][j].str)
 			    +1));
@@ -2906,7 +2906,7 @@ static int CheckActiveStyleTranslation(struct gfi_data *d,
 	free(strings[3*r+2].u.md_str);
 	if ( other_lang==0x415 ) {
 	    /* polish needs a word before the translation */
-	    strings[3*r+2].u.md_str = galloc(strlen("odmiana ")+strlen(new)+1);
+	    strings[3*r+2].u.md_str = xmalloc1(strlen("odmiana ")+strlen(new)+1);
 	    strcpy(strings[3*r+2].u.md_str,"odmiana ");
 	    strcat(strings[3*r+2].u.md_str,new);
 	    free(new);
@@ -3280,7 +3280,7 @@ static int GFI_AddOFL(GGadget *g, GEvent *e) {
 				len += strlen( bpt ) + 1;		/* for a new line */
 			}
 			if ( !m )
-			    newtns[j*3+2].u.md_str = all = pt = galloc(len+2);
+			    newtns[j*3+2].u.md_str = all = pt = xmalloc1(len+2);
 		    }
 		    if ( pt>all ) pt[-1] = '\0';
 		    else *pt = '\0';
@@ -4334,7 +4334,7 @@ return(true);
 	if ( gasprows==0 )
 	    sf->gasp = NULL;
 	else {
-	    sf->gasp = galloc(gasprows*sizeof(struct gasp));
+	    sf->gasp = xmalloc1(gasprows*sizeof(struct gasp));
 	    sf->gasp_version = GGadgetGetFirstListSelectedItem(GWidgetGetControl(gw,CID_GaspVersion));
 	    for ( i=0; i<gasprows; ++i ) {
 		sf->gasp[i].ppem = gasp[5*i].u.md_ival;
@@ -4518,8 +4518,8 @@ return(true);
 	/* Class 0 is unused */
 	MarkClassFree(sf->mark_class_cnt,sf->mark_classes,sf->mark_class_names);
 	sf->mark_class_cnt = mc_rows + 1;
-	sf->mark_classes     = galloc((mc_rows+1)*sizeof(char *));
-	sf->mark_class_names = galloc((mc_rows+1)*sizeof(char *));
+	sf->mark_classes     = xmalloc1((mc_rows+1)*sizeof(char *));
+	sf->mark_class_names = xmalloc1((mc_rows+1)*sizeof(char *));
 	sf->mark_classes[0] = sf->mark_class_names[0] = NULL;
 	for ( i=0; i<mc_rows; ++i ) {
 	    sf->mark_class_names[i+1] = copy(markclasses[2*i+0].u.md_str);
@@ -4529,8 +4529,8 @@ return(true);
 	/* Set 0 is used */
 	MarkSetFree(sf->mark_set_cnt,sf->mark_sets,sf->mark_set_names);
 	sf->mark_set_cnt = ms_rows;
-	sf->mark_sets      = galloc((ms_rows)*sizeof(char *));
-	sf->mark_set_names = galloc((ms_rows)*sizeof(char *));
+	sf->mark_sets      = xmalloc1((ms_rows)*sizeof(char *));
+	sf->mark_set_names = xmalloc1((ms_rows)*sizeof(char *));
 	for ( i=0; i<ms_rows; ++i ) {
 	    sf->mark_set_names[i] = copy(marksets[2*i+0].u.md_str);
 	    sf->mark_sets[i]      = GlyphNameListDeUnicode(marksets[2*i+1].u.md_str);
@@ -5168,7 +5168,7 @@ static void FigureUnicode(struct gfi_data *d) {
     else
 	for ( cnt=0; ri[cnt].range!=NULL; ++cnt );
 
-    ti = galloc((cnt+1) * sizeof( GTextInfo * ));
+    ti = xmalloc1((cnt+1) * sizeof( GTextInfo * ));
     for ( i=0; i<cnt; ++i ) {
 	if ( ri[i].range->first==-1 )
 	    snprintf( buffer, sizeof(buffer),
@@ -6437,7 +6437,7 @@ static int GFI_LookupImportLookup(GGadget *g, GEvent *e) {
 	if ( done==2 ) {
 	    int32 len;
 	    GTextInfo **ti = GGadgetGetList(gcd[1].ret,&len);
-	    OTLookup **list = galloc((len+1)*sizeof(OTLookup));
+	    OTLookup **list = xmalloc1((len+1)*sizeof(OTLookup));
 	    struct lkdata *lk = &gfi->tables[isgpos];
 	    OTLookup *before = NULL;
 
@@ -7206,7 +7206,7 @@ return;
 			if ( lk->all[i].selected )
 			    ++cnt;
 		    }
-		    list = galloc((cnt+1)*sizeof(OTLookup *));
+		    list = xmalloc1((cnt+1)*sizeof(OTLookup *));
 		    cnt=0;
 		    for ( i=0; i<lk->cnt; ++i ) {
 			if ( lk->all[i].deleted )

@@ -50,7 +50,7 @@ return( NULL );
     base->data = NULL;
     base->clut = NULL;
     base->trans = COLOR_UNKNOWN;
-    base->data = (uint8 *) galloc(height*base->bytes_per_line);
+    base->data = (uint8 *) xmalloc1(height*base->bytes_per_line);
     if ( base->data==NULL ) {
 	free(base);
 	free(gi);

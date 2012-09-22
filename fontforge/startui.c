@@ -592,7 +592,7 @@ return( true );
 }
 
 static void AddR(char *prog, char *name, char *val ) {
-    char *full = galloc(strlen(name)+strlen(val)+4);
+    char *full = xmalloc1(strlen(name)+strlen(val)+4);
     strcpy(full,name);
     strcat(full,": ");
     strcat(full,val);
@@ -703,7 +703,7 @@ return( sharedir );
 #if defined(__MINGW32__)
 
     len = strlen(GResourceProgramDir) + strlen("/share/locale") +1;
-    sharedir = galloc(len);
+    sharedir = xmalloc1(len);
     strcpy(sharedir, GResourceProgramDir);
     strcat(sharedir, "/share/locale");
     return sharedir;
@@ -721,7 +721,7 @@ return( sharedir = PREFIX "/share/locale" );
 #endif
     }
     len = (pt-GResourceProgramDir)+strlen("/share/locale")+1;
-    sharedir = galloc(len);
+    sharedir = xmalloc1(len);
     strncpy(sharedir,GResourceProgramDir,pt-GResourceProgramDir);
     strcpy(sharedir+(pt-GResourceProgramDir),"/share/locale");
 return( sharedir );
@@ -892,7 +892,7 @@ int fontforge_main( int argc, char **argv ) {
 #if defined(__MINGW32__)
     {
 	size_t len = strlen(GResourceProgramDir);
-	char*  path = galloc(len + 64);
+	char*  path = xmalloc1(len + 64);
 	strcpy(path, GResourceProgramDir);
 
 	strcpy(path+len, "/share/fontforge/pixmaps"); /* PixmapDir */
@@ -1109,7 +1109,7 @@ exit( 0 );
 		GFileGetAbsoluteName(argv[i],buffer,sizeof(buffer));
 	    if ( GFileIsDir(buffer) || (strstr(buffer,"://")!=NULL && buffer[strlen(buffer)-1]=='/')) {
 		char *fname;
-		fname = galloc(strlen(buffer)+strlen("/glyphs/contents.plist")+1);
+		fname = xmalloc1(strlen(buffer)+strlen("/glyphs/contents.plist")+1);
 		strcpy(fname,buffer); strcat(fname,"/glyphs/contents.plist");
 		if ( GFileExists(fname)) {
 		    /* It's probably a Unified Font Object directory */

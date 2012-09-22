@@ -2153,7 +2153,7 @@ static void mgreplace(char **base, char *str,char *end, char *new, SplineChar *s
 	else
 	    strcpy(str,end+1);	/* Skip the space */
     } else {
-	char *res = galloc(strlen(*base)+strlen(new)-(end-str)+1);
+	char *res = xmalloc1(strlen(*base)+strlen(new)-(end-str)+1);
 	strncpy(res,*base,str-*base);
 	strcpy(res+(str-*base),new);
 	strcat(res,end);
@@ -2194,7 +2194,7 @@ static void mark_to_replace(struct problems *p,struct mgask_data *d, char *rpl) 
 
     if ( p->rpl_cnt >= p->rpl_max ) {
 	if ( p->rpl_max == 0 )
-	    p->mg = galloc((p->rpl_max = 30)*sizeof(struct mgrpl));
+	    p->mg = xmalloc1((p->rpl_max = 30)*sizeof(struct mgrpl));
 	else
 	    p->mg = xrealloc(p->mg,(p->rpl_max += 30)*sizeof(struct mgrpl));
     }
@@ -4291,7 +4291,7 @@ char *VSErrorsFromMask(int mask, int private_mask) {
 	    len += strlen( _(vserrornames[m]))+2;
     if ( private_mask != 0 )
 	len += strlen( _("Bad Private Dictionary")) +2;
-    ret = galloc(len+1);
+    ret = xmalloc1(len+1);
     len = 0;
     for ( m=0, bit=(vs_known<<1) ; bit<=vs_last; ++m, bit<<=1 )
 	if ( (mask&bit) && vserrornames[m]!=NULL ) {

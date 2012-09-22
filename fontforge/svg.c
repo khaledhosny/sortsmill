@@ -1200,7 +1200,7 @@ static xmlNodePtr SVGPickFont(xmlNodePtr *fonts,char *filename) {
     int choice;
 
     for ( cnt=0; fonts[cnt]!=NULL; ++cnt);
-    names = galloc((cnt+1)*sizeof(char *));
+    names = xmalloc1((cnt+1)*sizeof(char *));
     for ( cnt=0; fonts[cnt]!=NULL; ++cnt) {
 	name = xmlGetProp(fonts[cnt],(xmlChar *) "id");
 	if ( name==NULL ) {
@@ -1655,7 +1655,7 @@ static SplineSet *SVGAddSpiros(xmlChar *path, SplineSet *base) {
 		cur = cur->next;
 	    if ( cur==NULL )
     break;
-	    cur->spiros = galloc((cur->spiro_max=10)*sizeof(spiro_cp));
+	    cur->spiros = xmalloc1((cur->spiro_max=10)*sizeof(spiro_cp));
 	    cp.x = strtod((char *) path,&end);
 	    end = skipcomma(end);
 	    cp.y = strtod(end,&end);
@@ -3122,7 +3122,7 @@ static void SVGLigatureFixupCheck(SplineChar *sc,xmlNodePtr glyph) {
 	} else if ( u[1]!='\0' ) {
 	    /* Normal ligature */
 	    for ( len=0; u[len]!=0; ++len );
-	    chars = galloc(len*sizeof(SplineChar *));
+	    chars = xmalloc1(len*sizeof(SplineChar *));
 	    for ( len=len2=0; u[len]!=0; ++len ) {
 		chars[len] = SFGetChar(sc->parent,u[len],NULL);
 		if ( chars[len]==NULL )
@@ -3133,7 +3133,7 @@ static void SVGLigatureFixupCheck(SplineChar *sc,xmlNodePtr glyph) {
 		}
 	    }
 	    if ( any==NULL ) any=sc;
-	    comp = pt = galloc(len2+1);
+	    comp = pt = xmalloc1(len2+1);
 	    *pt = '\0';
 	    for ( len=0; u[len]!=0; ++len ) {
 		if ( chars[len]!=NULL )
@@ -3195,7 +3195,7 @@ static char *SVGGetNames(SplineFont *sf,xmlChar *g,xmlChar *utf8,SplineChar **sc
 	    }
 	}
     }
-    names = pt = galloc(len+(g!=NULL?strlen((char *)g):0)+1);
+    names = pt = xmalloc1(len+(g!=NULL?strlen((char *)g):0)+1);
     if ( utf8!=NULL ) {
 	for ( i=0; u[i]!=0; ++i ) {
 	    temp = SFGetChar(sf,u[i],NULL);
@@ -3510,13 +3510,13 @@ return( NULL );
 
     /* Give ourselves an xuid, just in case they want to convert to PostScript*/
     if ( xuid!=NULL ) {
-	sf->xuid = galloc(strlen(xuid)+20);
+	sf->xuid = xmalloc1(strlen(xuid)+20);
 	sprintf(sf->xuid,"[%s %d]", xuid, (rand()&0xffffff));
     }
 
     ff_progress_change_total(cnt);
     sf->glyphcnt = sf->glyphmax = cnt;
-    sf->glyphs = galloc(cnt*sizeof(SplineChar *));
+    sf->glyphs = xmalloc1(cnt*sizeof(SplineChar *));
 
     cnt = 0;
     for ( kids = font->children; kids!=NULL; kids=kids->next ) {
@@ -3552,8 +3552,8 @@ return( NULL );
     map = (EncMap *) xzalloc(sizeof (EncMap));
     map->enccount = map->encmax = map->backmax = sf->glyphcnt;
     map->enc = FindOrMakeEncoding("Original");
-    map->map = galloc(sf->glyphcnt*sizeof(int));
-    map->backmap = galloc(sf->glyphcnt*sizeof(int));
+    map->map = xmalloc1(sf->glyphcnt*sizeof(int));
+    map->backmap = xmalloc1(sf->glyphcnt*sizeof(int));
     for ( i=0; i<sf->glyphcnt; ++i )
 	map->map[i] = map->backmap[i] = i;
     sf->map = map;
@@ -3777,7 +3777,7 @@ return( NULL );
     }
 
     for ( cnt=0; fonts[cnt]!=NULL; ++cnt);
-    ret = galloc((cnt+1)*sizeof(char *));
+    ret = xmalloc1((cnt+1)*sizeof(char *));
     for ( cnt=0; fonts[cnt]!=NULL; ++cnt) {
 	name = xmlGetProp(fonts[cnt],(xmlChar *) "id");
 	if ( name==NULL ) {

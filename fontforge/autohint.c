@@ -2078,7 +2078,7 @@ return;
 	    }
 	}
 	sc->countermask_cnt = 1;
-	sc->countermasks = galloc(sizeof(HintMask));
+	sc->countermasks = xmalloc1(sizeof(HintMask));
 	memcpy(sc->countermasks[0],mask,sizeof(HintMask));
 return;
     }
@@ -2160,7 +2160,7 @@ return;
     }
     if ( mc!=0 ) {
 	sc->countermask_cnt = mc;
-	sc->countermasks = galloc(mc*sizeof(HintMask));
+	sc->countermasks = xmalloc1(mc*sizeof(HintMask));
 	for ( i=0; i<mc ; ++i )
 	    memcpy(sc->countermasks[i],masks[i],sizeof(HintMask));
     }
@@ -2209,7 +2209,7 @@ return;
     }
     if ( mc!=0 ) {
 	sc->countermask_cnt = mc;
-	sc->countermasks = galloc(mc*sizeof(HintMask));
+	sc->countermasks = xmalloc1(mc*sizeof(HintMask));
 	for ( i=0; i<mc ; ++i )
 	    memcpy(sc->countermasks[i],masks[i],sizeof(HintMask));
     }

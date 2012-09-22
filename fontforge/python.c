@@ -849,7 +849,7 @@ return( NULL );
 	memcpy(instrs,space,len);
     } else {
 	icnt = PySequence_Size(tuple);
-	instrs = galloc(icnt);
+	instrs = xmalloc1(icnt);
 	for ( i=0; i<icnt; ++i ) {
 	    instrs[i] = PyInt_AsLong(PySequence_GetItem(tuple,i));
 	    if ( PyErr_Occurred()) {
@@ -1123,7 +1123,7 @@ return( NULL );
 return( NULL );
     }
     cnt = PySequence_Size(answero);
-    answers = galloc((cnt+1)*sizeof(char *));
+    answers = xmalloc1((cnt+1)*sizeof(char *));
     if ( cancel==-1 )
 	cancel = cnt-1;
     if ( cancel<0 || cancel>=cnt || def<0 || def>=cnt ) {
@@ -1173,7 +1173,7 @@ return( NULL );
 return( NULL );
     }
     cnt = PySequence_Size(answero);
-    answers = galloc((cnt+1)*sizeof(char *));
+    answers = xmalloc1((cnt+1)*sizeof(char *));
     if ( def<0 || def>=cnt ) {
 	PyErr_Format(PyExc_ValueError, "Value out of bounds for 4th argument");
 	free(title);
@@ -1594,7 +1594,7 @@ static PyObject *PyFFContour_Str(PyFF_Contour *self) {
     int i;
     PyObject *ret;
 
-    buffer=pt=galloc(self->pt_cnt*30+30);
+    buffer=pt=xmalloc1(self->pt_cnt*30+30);
     strcpy(buffer, self->is_quadratic? "<Contour(quadratic)\n":"<Contour(cubic)\n");
     pt = buffer+strlen(buffer);
     for ( i=0; i<self->pt_cnt; ++i ) {
@@ -1766,7 +1766,7 @@ return( -1 );
     }
     cnt = PySequence_Size(spirotuple);
     PyFFContour_ClearSpiros((PyFF_Contour *) self);
-    spiros = galloc((cnt+1)*sizeof(spiro_cp));
+    spiros = xmalloc1((cnt+1)*sizeof(spiro_cp));
     spiros[cnt].x = spiros[cnt].y = 0;
     spiros[cnt].ty = SPIRO_END;
     for ( i=0; i<cnt; ++i ) {
@@ -2120,12 +2120,12 @@ static PyObject *PyFFContour_dup(PyFF_Contour *self) {
     ret->is_quadratic = self->is_quadratic;
     ret->closed = self->closed;
     if ( ret->pt_cnt!=0 ) {
-	ret->points = galloc(ret->pt_cnt*sizeof(PyFF_Point *));
+	ret->points = xmalloc1(ret->pt_cnt*sizeof(PyFF_Point *));
 	for ( i=0; i<ret->pt_cnt; ++i )
 	    ret->points[i] = (PyFF_Point *) PyFFPoint_dup(self->points[i]);
     }
     if ( ret->spiro_cnt!=0 ) {
-	ret->spiros = galloc(ret->pt_cnt*sizeof(spiro_cp));
+	ret->spiros = xmalloc1(ret->pt_cnt*sizeof(spiro_cp));
 	memcpy(ret->spiros,self->spiros,self->spiro_cnt*sizeof(spiro_cp));
     }
 return( (PyObject *) ret );
@@ -2797,7 +2797,7 @@ return( NULL );
 	}
     } else {
 	if ( start!=0 ) {
-	    points = freeme = galloc(self->pt_cnt*sizeof(struct PyFF_Point *));
+	    points = freeme = xmalloc1(self->pt_cnt*sizeof(struct PyFF_Point *));
 	    for ( i=start; i<self->pt_cnt; ++i )
 		points[i-start] = self->points[i];
 	    off = i;
@@ -3143,7 +3143,7 @@ static PyObject *PyFFLayer_Str(PyFF_Layer *self) {
     cnt = 0;
     for ( i=0; i<self->cntr_cnt; ++i )
 	cnt += self->contours[i]->pt_cnt;
-    buffer=pt=galloc(cnt*30+self->cntr_cnt*30+30);
+    buffer=pt=xmalloc1(cnt*30+self->cntr_cnt*30+30);
     strcpy(buffer, self->is_quadratic? "<Layer(quadratic)\n":"<Layer(cubic)\n");
     pt = buffer+strlen(buffer);
     for ( i=0; i<self->cntr_cnt; ++i ) {
@@ -3399,7 +3399,7 @@ static PyObject *PyFFLayer_dup(PyFF_Layer *self) {
     ret->cntr_cnt = ret->cntr_max = self->cntr_cnt;
     ret->is_quadratic = self->is_quadratic;
     if ( ret->cntr_cnt!=0 ) {
-	ret->contours = galloc(ret->cntr_cnt*sizeof(PyFF_Contour *));
+	ret->contours = xmalloc1(ret->cntr_cnt*sizeof(PyFF_Contour *));
 	for ( i=0; i<ret->cntr_cnt; ++i )
 	    ret->contours[i] = (PyFF_Contour *) PyFFContour_dup(self->contours[i]);
     }
@@ -5615,7 +5615,7 @@ static PyObject *PyFFGlyph_Repr(PyFF_Glyph *self) {
 		space_needed += 9;
     }
     if ( space_needed >= sizeof(buf) )
-	repr = galloc( space_needed );
+	repr = xmalloc1( space_needed );
 
 #ifdef DEBUG
     at = sprintf(repr, "<%s at 0x%lx sc=0x%lx",
@@ -6145,7 +6145,7 @@ static int PyFF_Glyph_set_lcarets(PyFF_Glyph *self,PyObject *value, void *UNUSED
 return( -1 );
 
     if ( cnt > 0 )
-       carets = galloc( cnt*sizeof(int16) );
+       carets = xmalloc1( cnt*sizeof(int16) );
     for ( i=0; i<cnt; ++i ) {
        carets[i] = PyInt_AsLong( PySequence_GetItem(value,i) );
        if ( PyErr_Occurred())
@@ -6710,7 +6710,7 @@ return( NULL );
 return( NULL );
 	    }
 	}
-	pt = str = galloc(len+1);
+	pt = str = xmalloc1(len+1);
 	for ( i=0; i<cnt; ++i ) {
 	    PyObject *obj = PySequence_GetItem(value,i);
 	    PyFF_Glyph *g = (PyFF_Glyph *) obj;
@@ -7750,7 +7750,7 @@ return( NULL );
 	len += strlen(str)+1;
     }
 
-    ret = pt = galloc(len+1);
+    ret = pt = xmalloc1(len+1);
     for ( i=0; i<cnt; ++i ) {
 	PyObject *aglyph = PySequence_GetItem(glyphs,i);
 	if ( PyType_IsSubtype(&PyFF_GlyphType,((PyObject *)aglyph)->ob_type) ) {
@@ -7778,7 +7778,7 @@ static char **GlyphNameArrayFromTuple(PyObject *glyphs) {
 return(NULL );
     }
     cnt = PySequence_Size(glyphs);
-    ret = galloc((cnt+1)*sizeof(char *));
+    ret = xmalloc1((cnt+1)*sizeof(char *));
     for ( i=0; i<cnt; ++i ) {
 	PyObject *aglyph = PySequence_GetItem(glyphs,i);
 	if ( PyType_IsSubtype(&PyFF_GlyphType,((PyObject *)aglyph)->ob_type) ) {
@@ -7819,7 +7819,7 @@ return( NULL );
 	if ( cnt==0 )
 return( xcalloc(1,sizeof(SplineChar *)));
 
-	ret = galloc((cnt+1)*sizeof(SplineChar *));
+	ret = xmalloc1((cnt+1)*sizeof(SplineChar *));
 	cnt = 0;
 	for ( pt=str; *pt==' '; ++pt );
 	while ( *pt!='\0' ) {
@@ -7845,7 +7845,7 @@ return( ret );
 return(NULL );
     }
     cnt = PySequence_Size(glyphs);
-    ret = galloc((cnt+1)*sizeof(SplineChar *));
+    ret = xmalloc1((cnt+1)*sizeof(SplineChar *));
     for ( i=0; i<cnt; ++i ) {
 	PyObject *aglyph = PySequence_GetItem(glyphs,i);
 	if ( PyType_IsSubtype(&PyFF_GlyphType,((PyObject *)aglyph)->ob_type) ) {
@@ -8698,7 +8698,7 @@ static struct ttf_table *BuildCvt(SplineFont *sf,int initial_size) {
     cvt->next = sf->ttf_tables;
     sf->ttf_tables = cvt;
     cvt->tag = CHR('c','v','t',' ');
-    cvt->data = galloc(initial_size);
+    cvt->data = xmalloc1(initial_size);
     cvt->len = 0;
     cvt->maxlen = initial_size;
 return( cvt );
@@ -10128,7 +10128,7 @@ static int PyFF_PrivateIndexAssign( PyObject *self, PyObject *index, PyObject *v
 	string = buffer;
     } else if ( PySequence_Check(value)) {
 	int i; char *pt;
-	pt = string = freeme = galloc(PySequence_Size(value)*21+4);
+	pt = string = freeme = xmalloc1(PySequence_Size(value)*21+4);
 	*pt++ = '[';
 	for ( i=0; i<PySequence_Size(value); ++i ) {
 	    sprintf( pt, "%g", PyFloat_AsDouble(PySequence_GetItem(value,i)));
@@ -10779,7 +10779,7 @@ return(-1);
     cnt = PyTuple_Size(value);
     if ( PyErr_Occurred())
 return( -1 );
-    sizes = galloc((cnt+1)*sizeof(int));
+    sizes = xmalloc1((cnt+1)*sizeof(int));
     for ( i=0; i<cnt; ++i ) {
 	if ( !PyArg_ParseTuple(PyTuple_GetItem(value,i),"i", &sizes[i])) {
 	    free(sizes);
@@ -10853,7 +10853,7 @@ return( -1 );
     if ( cnt==0 )
 	gasp = NULL;
     else {
-	gasp = galloc(cnt*sizeof(struct gasp));
+	gasp = xmalloc1(cnt*sizeof(struct gasp));
 	for ( i=0; i<cnt; ++i ) {
 	    if ( !PyArg_ParseTuple(PyTuple_GetItem(value,i),"HO",
 				   &gasp[i].ppem, &flags )) {
@@ -11895,7 +11895,7 @@ return( -1 );
     }
     base = (struct Base *) xzalloc(sizeof (struct Base));
     base->baseline_cnt = basecnt;
-    base->baseline_tags = galloc(basecnt*sizeof(uint32));
+    base->baseline_tags = xmalloc1(basecnt*sizeof(uint32));
     base->scripts = NULL;
     for ( i=0; i<basecnt; ++i ) {
 	PyObject *str = PyTuple_GetItem(basetags,i);
@@ -11958,7 +11958,7 @@ return( -1 );
 return( -1 );
 	    }
 	    bs->def_baseline = i;
-	    bs->baseline_pos = galloc(basecnt*sizeof(int16));
+	    bs->baseline_pos = xmalloc1(basecnt*sizeof(int16));
 	    for ( i=0; i<basecnt; ++i ) {
 		if ( !PyInt_Check(PyTuple_GetItem(offsets,i))) {
 		    PyErr_Format(PyExc_TypeError, "Baseline positions must be integers");
@@ -12667,8 +12667,8 @@ return( -1 );
 return( 0 );
     }
 
-    names = galloc((cnt+1)*sizeof(char *));
-    classes = galloc((cnt+1)*sizeof(char *));
+    names = xmalloc1((cnt+1)*sizeof(char *));
+    classes = xmalloc1((cnt+1)*sizeof(char *));
     names[0] = classes[0] = NULL;
     /* Fill in names[] and classes[], starting at index 1 instead of 0 */
     for ( i=1; i<=cnt; ++i ) {
@@ -13319,11 +13319,11 @@ return;
 	}
     }
     if ( tab->data==NULL ) {
-	tab->data = galloc(icnt);
+	tab->data = xmalloc1(icnt);
 	memcpy(tab->data,instrs,icnt);
 	tab->len = icnt;
     } else {
-	uint8 *newi = galloc(icnt+tab->len);
+	uint8 *newi = xmalloc1(icnt+tab->len);
 	memcpy(newi,tab->data,tab->len);
 	memcpy(newi+tab->len,instrs,icnt);
 	free(tab->data);
@@ -13365,7 +13365,7 @@ return( NULL );
 	memcpy(instrs,space,len);
     } else {
 	icnt = PySequence_Size(tuple);
-	instrs = galloc(icnt);
+	instrs = xmalloc1(icnt);
 	for ( i=0; i<icnt; ++i ) {
 	    instrs[i] = PyInt_AsLong(PySequence_GetItem(tuple,i));
 	    if ( PyErr_Occurred())
@@ -13838,7 +13838,7 @@ static int ParseClassNames(PyObject *classes,char ***class_strs) {
     cnt = PySequence_Size(classes);
     if ( cnt==-1 )
 return( -1 );
-    *class_strs = cls = galloc(cnt*sizeof(char *));
+    *class_strs = cls = xmalloc1(cnt*sizeof(char *));
     for ( i=0; i<cnt; ++i ) {
 	PyObject *thingy = PySequence_GetItem(classes,i);
 	if ( i==0 && thingy==Py_None )
@@ -13887,7 +13887,7 @@ static SplineChar **GlyphsFromSelection(FontViewBase *fv) {
 return(NULL);
     }
 
-    glyphlist = galloc((selcnt+1)*sizeof(SplineChar *));
+    glyphlist = xmalloc1((selcnt+1)*sizeof(SplineChar *));
     selcnt=0;
     for ( enc=0; enc<map->enccount; ++enc ) {
 	if ( fv->selected[enc] && (gid=map->map[enc])!=-1 &&
@@ -14044,7 +14044,7 @@ return( NULL );
 		PyErr_Format(PyExc_ValueError, "There aren't enough kerning offsets for the number of kerning classes. Should be %d", cnt1*cnt2 );
 return( NULL );
 	    }
-	    offs = galloc(cnt1*cnt2*sizeof(int16));
+	    offs = xmalloc1(cnt1*cnt2*sizeof(int16));
 	    for ( i=0 ; i<cnt1*cnt2; ++i ) {
 		offs[i] = PyInt_AsLong(PySequence_GetItem(offsets,i));
 		if ( PyErr_Occurred())
@@ -14128,7 +14128,7 @@ return( NULL );
 	PyErr_Format(PyExc_ValueError, "There aren't enough kerning offsets for the number of kerning classes. Should be %d", cnt1*cnt2 );
 return( NULL );
     }
-    offs = galloc(cnt1*cnt2*sizeof(int16));
+    offs = xmalloc1(cnt1*cnt2*sizeof(int16));
     for ( i=0 ; i<cnt1*cnt2; ++i ) {
 	offs[i] = PyInt_AsLong(PySequence_GetItem(offsets,i));
 	if ( PyErr_Occurred())
@@ -14575,7 +14575,7 @@ return( BAD_FEATURE_LIST );
 	    } else {
 		sl->lang_cnt = PySequence_Size(langs);
 		if ( sl->lang_cnt>MAX_LANG )
-		    sl->morelangs = galloc((sl->lang_cnt-MAX_LANG)*sizeof(uint32));
+		    sl->morelangs = xmalloc1((sl->lang_cnt-MAX_LANG)*sizeof(uint32));
 		for ( l=0; l<sl->lang_cnt; ++l ) {
 		    uint32 lang = StrToTag(PyBytes_AsString(PySequence_GetItem(langs,l)),NULL);
 		    if ( lang==BAD_TAG ) {
@@ -15318,7 +15318,7 @@ return( NULL );
 	    SplineFont *sf = fv->cidmaster?fv->cidmaster:
 		    fv->sf->mm!=NULL?fv->sf->mm->normal:fv->sf;
 	    char *fn = sf->defbasefilename ? sf->defbasefilename : sf->fontname;
-	    locfilename = galloc((strlen(fn)+10));
+	    locfilename = xmalloc1((strlen(fn)+10));
 	    strcpy(locfilename,fn);
 	    if ( sf->defbasefilename!=NULL )
 		/* Don't add a default suffix, they've already told us what name to use */;
@@ -15527,7 +15527,7 @@ return(NULL);
 	BDFFont *bdf;
 	for ( cnt=0, bdf=ret->sf->bitmaps; bdf!=NULL; bdf=bdf->next, ++cnt );
 	if ( cnt!=0 ) {
-	    ret->sizes = galloc((cnt+1)*sizeof(int32));
+	    ret->sizes = xmalloc1((cnt+1)*sizeof(int32));
 	    ret->sizes[cnt] = 0;
 	    for ( cnt=0, bdf=ret->sf->bitmaps; bdf!=NULL; bdf=bdf->next, ++cnt ) {
 		if ( bdf->clut==NULL )
@@ -15995,7 +15995,7 @@ return( NULL );
 	    }
 	} else if ( PySequence_Check(arg) ) {
 	    int subcnt = PySequence_Size(arg);
-	    pointsizes = galloc((subcnt+1)*sizeof(int32));
+	    pointsizes = xmalloc1((subcnt+1)*sizeof(int32));
 	    for ( i=0; i<subcnt; ++i ) {
 		pointsizes[i] = PyInt_AsLong(PySequence_GetItem(arg,i));
 		if ( PyErr_Occurred()) {
@@ -16604,7 +16604,7 @@ return( NULL );
 	}
 	cnt = PySequence_Size(vMap);
 	genchange.m.cnt = cnt;
-	genchange.m.maps = galloc(cnt*sizeof(struct position_maps));
+	genchange.m.maps = xmalloc1(cnt*sizeof(struct position_maps));
 	for ( i=0; i<cnt; ++i ) {
 	    PyObject *subTuple = PySequence_GetItem(vMap,i);
 	    if ( subTuple==NULL || !PySequence_Check(subTuple) || STRING_CHECK(subTuple) || PySequence_Size(subTuple)!=3 ) {

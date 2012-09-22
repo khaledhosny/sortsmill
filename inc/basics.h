@@ -36,11 +36,6 @@
 #include <math.h>
 #include <limits.h>
 
-// FIXME: Get rid of this when feasible.
-#ifdef __INTERNAL_TO_FONTFORGE__
-#include "xalloc.h"
-#endif
-
 // FIXME: Use the standard names in the code; get rid of these
 // typedefs.
 typedef int32_t		int32;
@@ -71,7 +66,6 @@ typedef uint32_t unichar_t;
 # define UNUSED(x) x
 #endif
 
-extern void *galloc(size_t size);
 extern char *copy(const char *);
 extern char *copyn(const char *, size_t);
 
@@ -104,5 +98,26 @@ static inline size_t szmax(size_t a, size_t b)
 {
     return (a < b) ? b : a;
 }
+
+//-------------------------------------------------------------------------
+//
+// FIXME: Get rid of this when feasible. Move it to an internal-only
+// header.
+
+#ifdef __INTERNAL_TO_FONTFORGE__
+
+#include "xalloc.h"
+
+// Like xmalloc, but, if the allocation succeeds, xmalloc1 is
+// guaranteed to return a valid, non-null pointer, even if the
+// argument is zero.
+static inline void *xmalloc1(size_t s)
+{
+    return xmalloc(szmax(1, s));
+}
+
+#endif // __INTERNAL_TO_FONTFORGE__
+
+//-------------------------------------------------------------------------
 
 #endif

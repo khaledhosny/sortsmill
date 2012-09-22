@@ -966,7 +966,7 @@ static void DSP_ChangeFontCallback(void *context,SplineFont *sf,enum sftf_fontty
 	    if ( tags[j]==0 )
 		++cnt;
 	}
-    ti = galloc((cnt+2)*sizeof(GTextInfo *));
+    ti = xmalloc1((cnt+2)*sizeof(GTextInfo *));
     for ( i=0; tags[i]!=0; ++i ) {
 	ti[i] = xcalloc( 1,sizeof(GTextInfo));
 	ti[i]->fg = ti[i]->bg = COLOR_DEFAULT;
@@ -1417,7 +1417,7 @@ static int DSP_FeaturesChanged(GGadget *g, GEvent *e) {
 
 	for ( i=cnt=0; i<len; ++i )
 	    if ( ti[i]->selected ) ++cnt;
-	feats = galloc((cnt+1)*sizeof(uint32));
+	feats = xmalloc1((cnt+1)*sizeof(uint32));
 	for ( i=cnt=0; i<len; ++i )
 	    if ( ti[i]->selected )
 		feats[cnt++] = (intpt) ti[i]->userdata;

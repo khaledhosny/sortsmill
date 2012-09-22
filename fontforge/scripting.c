@@ -121,9 +121,9 @@ static Array *arraycopy(Array *a) {
     int i;
     Array *c;
 
-    c = galloc(sizeof(Array));
+    c = xmalloc1(sizeof(Array));
     c->argc = a->argc;
-    c->vals = galloc(c->argc*sizeof(Val));
+    c->vals = xmalloc1(c->argc*sizeof(Val));
     memcpy(c->vals,a->vals,c->argc*sizeof(Val));
     for ( i=0; i<a->argc; ++i ) {
 	if ( a->vals[i].type==v_str )
@@ -180,7 +180,7 @@ static void DicaNewEntry(struct dictionary *dica,char *name,Val *val) {
 
     if ( dica->entries==NULL ) {
 	dica->max = 10;
-	dica->entries = galloc(dica->max*sizeof(struct dictentry));
+	dica->entries = xmalloc1(dica->max*sizeof(struct dictentry));
     } else if ( dica->cnt>=dica->max ) {
 	dica->max += 10;
 	dica->entries = xrealloc(dica->entries,dica->max*sizeof(struct dictentry));
@@ -494,9 +494,9 @@ static void bArray(Context *c) {
     else if ( c->a.vals[1].u.ival<=0 )
 	ScriptError( c, "Argument must be positive" );
     c->return_val.type = v_arrfree;
-    c->return_val.u.aval = galloc(sizeof(Array));
+    c->return_val.u.aval = xmalloc1(sizeof(Array));
     c->return_val.u.aval->argc = c->a.vals[1].u.ival;
-    c->return_val.u.aval->vals = galloc(c->a.vals[1].u.ival*sizeof(Val));
+    c->return_val.u.aval->vals = xmalloc1(c->a.vals[1].u.ival*sizeof(Val));
     for ( i=0; i<c->a.vals[1].u.ival; ++i )
 	c->return_val.u.aval->vals[i].type = v_void;
 }
@@ -582,9 +582,9 @@ static void bStrSplit(Context *c) {
 	    if ( max!=-1 && cnt>max )
 		cnt = max;
 	    c->return_val.type = v_arrfree;
-	    c->return_val.u.aval = galloc(sizeof(Array));
+	    c->return_val.u.aval = xmalloc1(sizeof(Array));
 	    c->return_val.u.aval->argc = cnt;
-	    c->return_val.u.aval->vals = galloc(cnt*sizeof(Val));
+	    c->return_val.u.aval->vals = xmalloc1(cnt*sizeof(Val));
 	} else {
 	    if ( *pt!='\0' ) {
 		c->return_val.u.aval->vals[cnt].type = v_str;
@@ -622,7 +622,7 @@ static void bStrJoin(Context *c) {
 	}
 	if ( !k ) {
 	    c->return_val.type = v_str;
-	    c->return_val.u.sval = galloc(len+1);
+	    c->return_val.u.sval = xmalloc1(len+1);
 	}
     }
 }
@@ -1080,7 +1080,7 @@ static void bChr(Context *c) {
 	c->return_val.u.sval = copy(buf);
     } else if ( c->a.vals[1].type==v_arr || c->a.vals[1].type==v_arrfree ) {
 	Array *arr = c->a.vals[1].u.aval;
-	temp = galloc((arr->argc+1)*sizeof(char));
+	temp = xmalloc1((arr->argc+1)*sizeof(char));
 	for ( i=0; i<arr->argc; ++i ) {
 	    if ( arr->vals[i].type!=v_int )
 		ScriptError( c, "Bad type for argument" );
@@ -1110,7 +1110,7 @@ static void bUtf8(Context *c) {
 	c->return_val.u.sval = u2utf8_copy(buf);
     } else if ( c->a.vals[1].type==v_arr || c->a.vals[1].type==v_arrfree ) {
 	Array *arr = c->a.vals[1].u.aval;
-	temp = galloc((arr->argc+1)*sizeof(int32));
+	temp = xmalloc1((arr->argc+1)*sizeof(int32));
 	for ( i=0; i<arr->argc; ++i ) {
 	    if ( arr->vals[i].type!=v_int )
 		ScriptError( c, "Bad type for argument" );
@@ -1134,9 +1134,9 @@ static void bUCS4(Context *c) {
 	const char *pt = c->a.vals[1].u.sval;
 	int i, len = utf8_strlen(pt);
 	c->return_val.type = v_arrfree;
-	c->return_val.u.aval = galloc(sizeof(Array));
+	c->return_val.u.aval = xmalloc1(sizeof(Array));
 	c->return_val.u.aval->argc = len;
-	c->return_val.u.aval->vals = galloc(len*sizeof(Val));
+	c->return_val.u.aval->vals = xmalloc1(len*sizeof(Val));
 	for ( i=0; i<len; ++i ) {
 	    c->return_val.u.aval->vals[i].type = v_int;
 	    c->return_val.u.aval->vals[i].u.ival = utf8_ildb(&pt);
@@ -1158,9 +1158,9 @@ static void bOrd(Context *c) {
     } else {
 	int i, len = strlen(c->a.vals[1].u.sval);
 	c->return_val.type = v_arrfree;
-	c->return_val.u.aval = galloc(sizeof(Array));
+	c->return_val.u.aval = xmalloc1(sizeof(Array));
 	c->return_val.u.aval->argc = len;
-	c->return_val.u.aval->vals = galloc(len*sizeof(Val));
+	c->return_val.u.aval->vals = xmalloc1(len*sizeof(Val));
 	for ( i=0; i<len; ++i ) {
 	    c->return_val.u.aval->vals[i].type = v_int;
 	    c->return_val.u.aval->vals[i].u.ival = (uint8) c->a.vals[1].u.sval[i];
@@ -1257,13 +1257,13 @@ return( copy(val->u.sval) );
 	char **results, *ret, *pt;
 	int len;
 
-	results = galloc(val->u.aval->argc*sizeof(char *));
+	results = xmalloc1(val->u.aval->argc*sizeof(char *));
 	len = 0;
 	for ( j=0; j<val->u.aval->argc; ++j ) {
 	    results[j] = ToString(&val->u.aval->vals[j]);
 	    len += strlen(results[j])+2;
 	}
-	ret = pt = galloc(len+20);
+	ret = pt = xmalloc1(len+20);
 	*pt++ = '[';
 	if ( val->u.aval->argc>0 ) {
 	    strcpy(pt,results[0]); pt += strlen(pt);
@@ -1468,7 +1468,7 @@ static void bLoadFileToString(Context *c) {
 	fseek(f,0,SEEK_END);
 	len = ftell(f);
 	rewind(f);
-	c->return_val.u.sval = galloc(len+1);
+	c->return_val.u.sval = xmalloc1(len+1);
 	len = fread(c->return_val.u.sval,1,len,f);
 	c->return_val.u.sval[len]='\0';
 	fclose(f);
@@ -1583,7 +1583,7 @@ char **GetFontNames(char *filename) {
     char **ret = NULL;
 
     if ( GFileIsDir(filename)) {
-	char *temp = galloc(strlen(filename)+strlen("/glyphs/contents.plist")+1);
+	char *temp = xmalloc1(strlen(filename)+strlen("/glyphs/contents.plist")+1);
 	strcpy(temp,filename);
 	strcat(temp,"/glyphs/contents.plist");
 	if ( GFileExists(temp))
@@ -1652,9 +1652,9 @@ static void bFontsInFile(Context *c) {
     cnt = 0;
     if ( ret!=NULL ) for ( cnt=0; ret[cnt]!=NULL; ++cnt );
     c->return_val.type = v_arrfree;
-    c->return_val.u.aval = galloc(sizeof(Array));
+    c->return_val.u.aval = xmalloc1(sizeof(Array));
     c->return_val.u.aval->argc = cnt;
-    c->return_val.u.aval->vals = galloc((cnt==0?1:cnt)*sizeof(Val));
+    c->return_val.u.aval->vals = xmalloc1((cnt==0?1:cnt)*sizeof(Val));
     if ( ret!=NULL ) for ( cnt=0; ret[cnt]!=NULL; ++cnt ) {
 	c->return_val.u.aval->vals[cnt].type = v_str;
 	c->return_val.u.aval->vals[cnt].u.sval = ret[cnt];
@@ -1846,7 +1846,7 @@ static void bGenerateFamily(Context *c) {
     char *t;
     char *locfilename;
 
-    familysfs = galloc((fondmax=10)*sizeof(SFArray));
+    familysfs = xmalloc1((fondmax=10)*sizeof(SFArray));
 
     if ( c->a.argc!=5 )
 	ScriptError( c, "Wrong number of arguments");
@@ -2012,7 +2012,7 @@ static void Bitmapper(Context *c,int isavail) {
 	    ScriptError( c, "Bad type of argument");
 	rasterize = c->a.vals[2].u.ival;
     }
-    sizes = galloc((c->a.vals[1].u.aval->argc+1)*sizeof(int32));
+    sizes = xmalloc1((c->a.vals[1].u.aval->argc+1)*sizeof(int32));
     for ( i=0; i<c->a.vals[1].u.aval->argc; ++i ) {
 	sizes[i] = c->a.vals[1].u.aval->vals[i].u.ival;
 	if ( (sizes[i]>>16)==0 )
@@ -2323,7 +2323,7 @@ static void bPrintFont(Context *c) {
 	    }
 	} else if ( c->a.vals[2].type==v_arr ) {
 	    Array *a = c->a.vals[2].u.aval;
-	    pointsizes = galloc((a->argc+1)*sizeof(int32));
+	    pointsizes = xmalloc1((a->argc+1)*sizeof(int32));
 	    for ( i=0; i<a->argc; ++i ) {
 		if ( a->vals[i].type!=v_int )
 		    ScriptError( c, "Bad type for array contents");
@@ -3099,7 +3099,7 @@ static void bLoadTableFromFile(Context *c) {
     } else
 	free(tab->data);
     tab->len = len;
-    tab->data = galloc(len);
+    tab->data = xmalloc1(len);
     fread(tab->data,1,len,file);
     fclose(file);
 }
@@ -3654,9 +3654,9 @@ static void bGetOS2Value(Context *c) {
 	os2getint(sf->pfminfo.vlinegap,c);
     } else if ( strmatch(c->a.vals[1].u.sval,"Panose")==0 ) {
 	c->return_val.type = v_arrfree;
-	c->return_val.u.aval = galloc(sizeof(Array));
+	c->return_val.u.aval = xmalloc1(sizeof(Array));
 	c->return_val.u.aval->argc = 10;
-	c->return_val.u.aval->vals = galloc((10+1)*sizeof(Val));
+	c->return_val.u.aval->vals = xmalloc1((10+1)*sizeof(Val));
 	for ( i=0; i<10; ++i ) {
 	    c->return_val.u.aval->vals[i].type = v_int;
 	    c->return_val.u.aval->vals[i].u.ival = sf->pfminfo.panose[i];
@@ -3772,9 +3772,9 @@ static void bGetFontBoundingBox(Context *c) {
 
     SplineFontFindBounds(sf,&b);
     c->return_val.type = v_arrfree;
-    c->return_val.u.aval = galloc(sizeof(Array));
+    c->return_val.u.aval = xmalloc1(sizeof(Array));
     c->return_val.u.aval->argc = 4;
-    c->return_val.u.aval->vals = galloc(4*sizeof(Val));
+    c->return_val.u.aval->vals = xmalloc1(4*sizeof(Val));
     for ( i=0; i<4; ++i )
 	c->return_val.u.aval->vals[i].type = v_real;
     c->return_val.u.aval->vals[0].u.fval = b.minx;
@@ -4016,7 +4016,7 @@ return;
     layers = dest->layers;
     lc = dest->layer_cnt;
     *dest = *src;
-    dest->layers = galloc(dest->layer_cnt*sizeof(Layer));
+    dest->layers = xmalloc1(dest->layer_cnt*sizeof(Layer));
     memcpy(&dest->layers[ly_back],&layers[ly_back],sizeof(Layer));
     for ( layer=ly_fore; layer<dest->layer_cnt; ++layer ) {
 	memcpy(&dest->layers[layer],&src->layers[layer],sizeof(Layer));
@@ -4543,7 +4543,7 @@ static void _bMoveReference(Context *c,int position) {
 
     refcnt = c->a.argc-3;
     refnames = xcalloc(refcnt,sizeof(char *));
-    refunis = galloc(refcnt*sizeof(int));
+    refunis = xmalloc1(refcnt*sizeof(int));
     memset(refunis,-1,refcnt*sizeof(int));
     for ( i=0; i<refcnt; ++i ) {
 	if ( c->a.vals[3+i].type==v_str )
@@ -5317,11 +5317,11 @@ return;
 	sf->ttf_tables = tab;
     }
     if ( tab->data==NULL ) {
-	tab->data = galloc(icnt);
+	tab->data = xmalloc1(icnt);
 	memcpy(tab->data,instrs,icnt);
 	tab->len = icnt;
     } else {
-	uint8 *newi = galloc(icnt+tab->len);
+	uint8 *newi = xmalloc1(icnt+tab->len);
 	memcpy(newi,tab->data,tab->len);
 	memcpy(newi+tab->len,instrs,icnt);
 	free(tab->data);
@@ -5344,11 +5344,11 @@ static void GlyphAddInstrs(SplineChar *sc,int replace,
 return;
     if ( sc->ttf_instrs==NULL ) {
 	SCNumberPoints(sc,ly_fore);	/* If the point numbering is wrong then we'll just throw away the instructions when we notice it */
-	sc->ttf_instrs = galloc(icnt);
+	sc->ttf_instrs = xmalloc1(icnt);
 	memcpy(sc->ttf_instrs,instrs,icnt);
 	sc->ttf_instrs_len = icnt;
     } else {
-	uint8 *newi = galloc(icnt+sc->ttf_instrs_len);
+	uint8 *newi = xmalloc1(icnt+sc->ttf_instrs_len);
 	memcpy(newi,sc->ttf_instrs,sc->ttf_instrs_len);
 	memcpy(newi+sc->ttf_instrs_len,instrs,icnt);
 	free(sc->ttf_instrs);
@@ -6036,9 +6036,9 @@ static void bMMInstanceNames(Context *c) {
 	ScriptError( c, "Not a multiple master font" );
 
     c->return_val.type = v_arrfree;
-    c->return_val.u.aval = galloc(sizeof(Array));
+    c->return_val.u.aval = xmalloc1(sizeof(Array));
     c->return_val.u.aval->argc = mm->instance_count;
-    c->return_val.u.aval->vals = galloc(mm->instance_count*sizeof(Val));
+    c->return_val.u.aval->vals = xmalloc1(mm->instance_count*sizeof(Val));
     for ( i=0; i<mm->instance_count; ++i ) {
 	c->return_val.u.aval->vals[i].type = v_str;
 	c->return_val.u.aval->vals[i].u.sval = copy(mm->instances[i]->fontname);
@@ -6055,9 +6055,9 @@ static void bMMAxisNames(Context *c) {
 	ScriptError( c, "Not a multiple master font" );
 
     c->return_val.type = v_arrfree;
-    c->return_val.u.aval = galloc(sizeof(Array));
+    c->return_val.u.aval = xmalloc1(sizeof(Array));
     c->return_val.u.aval->argc = mm->axis_count;
-    c->return_val.u.aval->vals = galloc(mm->axis_count*sizeof(Val));
+    c->return_val.u.aval->vals = xmalloc1(mm->axis_count*sizeof(Val));
     for ( i=0; i<mm->axis_count; ++i ) {
 	c->return_val.u.aval->vals[i].type = v_str;
 	c->return_val.u.aval->vals[i].u.sval = copy(mm->axes[i]);
@@ -6079,9 +6079,9 @@ static void bMMAxisBounds(Context *c) {
     axis = c->a.vals[1].u.ival;
 
     c->return_val.type = v_arrfree;
-    c->return_val.u.aval = galloc(sizeof(Array));
+    c->return_val.u.aval = xmalloc1(sizeof(Array));
     c->return_val.u.aval->argc = mm->axis_count;
-    c->return_val.u.aval->vals = galloc(3*sizeof(Val));
+    c->return_val.u.aval->vals = xmalloc1(3*sizeof(Val));
     for ( i=0; i<3; ++i )
 	c->return_val.u.aval->vals[i].type = v_int;
     c->return_val.u.aval->vals[0].u.ival = mm->axismaps[axis].min * 65536;
@@ -6790,7 +6790,7 @@ static FeatureScriptLangList *ParseFeatureList(Context *c,Array *a) {
 	    } else {
 		sl->lang_cnt = langs->argc;
 		if ( langs->argc>MAX_LANG )
-		    sl->morelangs = galloc((langs->argc-MAX_LANG)*sizeof(uint32));
+		    sl->morelangs = xmalloc1((langs->argc-MAX_LANG)*sizeof(uint32));
 		for ( l=0; l<langs->argc; ++l ) {
 		    uint32 lang = ParseTag(c,&langs->vals[l],false,&wasmac);
 		    if ( l<MAX_LANG )
@@ -6952,9 +6952,9 @@ static void bGetLookupInfo(Context *c) {
     if ( otl==NULL )
 	ScriptErrorString(c,"Missing lookup",c->a.vals[1].u.sval);
     c->return_val.type = v_arrfree;
-    c->return_val.u.aval = galloc(sizeof(Array));
+    c->return_val.u.aval = xmalloc1(sizeof(Array));
     c->return_val.u.aval->argc = 3;
-    c->return_val.u.aval->vals = galloc(3*sizeof(Val));
+    c->return_val.u.aval->vals = xmalloc1(3*sizeof(Val));
     c->return_val.u.aval->vals[0].type = v_str;
     c->return_val.u.aval->vals[0].u.sval = copy(
 	    otl->lookup_type==gpos_single ? "GPOS_single" :
@@ -6979,33 +6979,33 @@ static void bGetLookupInfo(Context *c) {
     c->return_val.u.aval->vals[1].type = v_int;
     c->return_val.u.aval->vals[1].u.ival = otl->lookup_flags;
     c->return_val.u.aval->vals[2].type = v_arrfree;
-    c->return_val.u.aval->vals[2].u.aval = farray = galloc(sizeof(Array));
+    c->return_val.u.aval->vals[2].u.aval = farray = xmalloc1(sizeof(Array));
     for ( fl=otl->features, fcnt=0; fl!=NULL; fl=fl->next, ++fcnt );
     farray->argc = fcnt;
-    farray->vals = galloc(fcnt*sizeof(Val));
+    farray->vals = xmalloc1(fcnt*sizeof(Val));
     for ( fl=otl->features, fcnt=0; fl!=NULL; fl=fl->next, ++fcnt ) {
 	farray->vals[fcnt].type = v_arrfree;
-	farray->vals[fcnt].u.aval = galloc(sizeof(Array));
+	farray->vals[fcnt].u.aval = xmalloc1(sizeof(Array));
 	farray->vals[fcnt].u.aval->argc = 2;
-	farray->vals[fcnt].u.aval->vals = galloc(2*sizeof(Val));
+	farray->vals[fcnt].u.aval->vals = xmalloc1(2*sizeof(Val));
 	farray->vals[fcnt].u.aval->vals[0].type = v_str;
 	farray->vals[fcnt].u.aval->vals[0].u.sval = Tag2Str(fl->featuretag,fl->ismac);
 	farray->vals[fcnt].u.aval->vals[1].type = v_arrfree;
-	farray->vals[fcnt].u.aval->vals[1].u.aval = sarray = galloc(sizeof(Array));
+	farray->vals[fcnt].u.aval->vals[1].u.aval = sarray = xmalloc1(sizeof(Array));
 	for ( sl=fl->scripts, scnt=0; sl!=NULL; sl=sl->next, ++scnt );
 	sarray->argc = scnt;
-	sarray->vals = galloc(scnt*sizeof(Val));
+	sarray->vals = xmalloc1(scnt*sizeof(Val));
 	for ( sl=fl->scripts, scnt=0; sl!=NULL; sl=sl->next, ++scnt ) {
 	    sarray->vals[scnt].type = v_arrfree;
-	    sarray->vals[scnt].u.aval = galloc(sizeof(Array));
+	    sarray->vals[scnt].u.aval = xmalloc1(sizeof(Array));
 	    sarray->vals[scnt].u.aval->argc = 2;
-	    sarray->vals[scnt].u.aval->vals = galloc(2*sizeof(Val));
+	    sarray->vals[scnt].u.aval->vals = xmalloc1(2*sizeof(Val));
 	    sarray->vals[scnt].u.aval->vals[0].type = v_str;
 	    sarray->vals[scnt].u.aval->vals[0].u.sval = Tag2Str(sl->script,false);
 	    sarray->vals[scnt].u.aval->vals[1].type = v_arrfree;
-	    sarray->vals[scnt].u.aval->vals[1].u.aval = larray = galloc(sizeof(Array));
+	    sarray->vals[scnt].u.aval->vals[1].u.aval = larray = xmalloc1(sizeof(Array));
 	    larray->argc = sl->lang_cnt;
-	    larray->vals = galloc(sl->lang_cnt*sizeof(Val));
+	    larray->vals = xmalloc1(sl->lang_cnt*sizeof(Val));
 	    for ( l=0; l<sl->lang_cnt; ++l ) {
 		larray->vals[l].type = v_str;
 		larray->vals[l].u.sval = Tag2Str(l<MAX_LANG?sl->langs[l]:sl->morelangs[l-MAX_LANG],false);
@@ -7030,9 +7030,9 @@ static void bGetLookupSubtables(Context *c) {
     for ( sub=otl->subtables, cnt=0; sub!=NULL; sub=sub->next, ++cnt );
 
     c->return_val.type = v_arrfree;
-    c->return_val.u.aval = galloc(sizeof(Array));
+    c->return_val.u.aval = xmalloc1(sizeof(Array));
     c->return_val.u.aval->argc = cnt;
-    c->return_val.u.aval->vals = galloc(cnt*sizeof(Val));
+    c->return_val.u.aval->vals = xmalloc1(cnt*sizeof(Val));
     for ( sub=otl->subtables, cnt=0; sub!=NULL; sub=sub->next, ++cnt ) {
 	c->return_val.u.aval->vals[cnt].type = v_str;
 	c->return_val.u.aval->vals[cnt].u.sval = copy( sub->subtable_name );
@@ -7060,9 +7060,9 @@ static void bGetLookups(Context *c) {
 
     for ( otl=base, cnt=0; otl!=NULL; otl=otl->next, ++cnt );
     c->return_val.type = v_arrfree;
-    c->return_val.u.aval = galloc(sizeof(Array));
+    c->return_val.u.aval = xmalloc1(sizeof(Array));
     c->return_val.u.aval->argc = cnt;
-    c->return_val.u.aval->vals = galloc(cnt*sizeof(Val));
+    c->return_val.u.aval->vals = xmalloc1(cnt*sizeof(Val));
     for ( otl=base, cnt=0; otl!=NULL; otl=otl->next, ++cnt ) {
 	c->return_val.u.aval->vals[cnt].type = v_str;
 	c->return_val.u.aval->vals[cnt].u.sval = copy( otl->lookup_name );
@@ -7272,9 +7272,9 @@ static void FigureExtrema(Context *c,SplineChar *sc,int pos,int xextrema) {
     }
 
     c->return_val.type = v_arrfree;
-    c->return_val.u.aval = galloc(sizeof(Array));
+    c->return_val.u.aval = xmalloc1(sizeof(Array));
     c->return_val.u.aval->argc = 2;
-    c->return_val.u.aval->vals = galloc(2*sizeof(Val));
+    c->return_val.u.aval->vals = xmalloc1(2*sizeof(Val));
     c->return_val.u.aval->vals[0].type = v_int;
     c->return_val.u.aval->vals[1].type = v_int;
     if ( minmax[0]>1e10 ) {	/* Unset. Presumably pos is outside bounding box */
@@ -7382,9 +7382,9 @@ maxsect_reached:
     }
     
   c->return_val.type = v_arrfree;
-  c->return_val.u.aval = galloc(sizeof(Array));
+  c->return_val.u.aval = xmalloc1(sizeof(Array));
   c->return_val.u.aval->argc = j;
-  c->return_val.u.aval->vals = galloc(j*sizeof(Val));
+  c->return_val.u.aval->vals = xmalloc1(j*sizeof(Val));
   for (i = 0; i < j; i++){
     c->return_val.u.aval->vals[i].type = v_real;
     c->return_val.u.aval->vals[i].u.fval = val[i];
@@ -7506,9 +7506,9 @@ return;
 		for ( ref=sc->layers[layer].refs; ref!=NULL; ref=ref->next, ++i )
 		    ;
 	    c->return_val.type = v_arrfree;
-	    c->return_val.u.aval = galloc(sizeof(Array));
+	    c->return_val.u.aval = xmalloc1(sizeof(Array));
 	    c->return_val.u.aval->argc = i;
-	    c->return_val.u.aval->vals = galloc(i*sizeof(Val));
+	    c->return_val.u.aval->vals = xmalloc1(i*sizeof(Val));
 	    for ( i=0, layer=0; layer<sc->layer_cnt; ++layer ) {
 		for ( ref=sc->layers[layer].refs; ref!=NULL; ref=ref->next, ++i ) {
 		    c->return_val.u.aval->vals[i].u.sval = copy(ref->sc->name);
@@ -7520,15 +7520,15 @@ return;
 		for ( ref=sc->layers[layer].refs; ref!=NULL; ref=ref->next, ++i )
 		    ;
 	    c->return_val.type = v_arrfree;
-	    c->return_val.u.aval = galloc(sizeof(Array));
+	    c->return_val.u.aval = xmalloc1(sizeof(Array));
 	    c->return_val.u.aval->argc = i;
-	    c->return_val.u.aval->vals = galloc(i*sizeof(Val));
+	    c->return_val.u.aval->vals = xmalloc1(i*sizeof(Val));
 	    for ( i=0, layer=0; layer<sc->layer_cnt; ++layer ) {
 		for ( ref=sc->layers[layer].refs; ref!=NULL; ref=ref->next, ++i ) {
 		    c->return_val.u.aval->vals[i].type = v_arr;
-		    c->return_val.u.aval->vals[i].u.aval = galloc(sizeof(Array));
+		    c->return_val.u.aval->vals[i].u.aval = xmalloc1(sizeof(Array));
 		    c->return_val.u.aval->vals[i].u.aval->argc = 6;
-		    c->return_val.u.aval->vals[i].u.aval->vals = galloc(6*sizeof(Val));
+		    c->return_val.u.aval->vals[i].u.aval->vals = xmalloc1(6*sizeof(Val));
 		    for ( j=0; j<6; ++j ) {
 			c->return_val.u.aval->vals[i].u.aval->vals[j].type = v_real;
 			c->return_val.u.aval->vals[i].u.aval->vals[j].u.fval = ref->transform[j];
@@ -7548,9 +7548,9 @@ return;
 		    strmatch( c->a.vals[1].u.sval,"BoundingBox")==0 ||
 		    strmatch( c->a.vals[1].u.sval,"BB")==0 ) {
 		c->return_val.type = v_arrfree;
-		c->return_val.u.aval = galloc(sizeof(Array));
+		c->return_val.u.aval = xmalloc1(sizeof(Array));
 		c->return_val.u.aval->argc = 4;
-		c->return_val.u.aval->vals = galloc(4*sizeof(Val));
+		c->return_val.u.aval->vals = xmalloc1(4*sizeof(Val));
 		for ( i=0; i<4; ++i )
 		    c->return_val.u.aval->vals[i].type = v_real;
 		c->return_val.u.aval->vals[0].u.fval = b.minx;
@@ -7585,12 +7585,12 @@ static void bGetAnchorPoints(Context *c) {
 
     for ( ap=sc->anchor, cnt=0; ap!=NULL; ap=ap->next, ++cnt ) 
         ;
-    ret = galloc(sizeof(Array));
+    ret = xmalloc1(sizeof(Array));
     ret->argc = cnt;
     ret->vals = xcalloc(cnt,sizeof(Val));
     for ( ap=sc->anchor, cnt=0; ap!=NULL; ap=ap->next, ++cnt ) {
 	ret->vals[cnt].type = v_arr;
-	ret->vals[cnt].u.aval = temp = galloc(sizeof(Array));
+	ret->vals[cnt].u.aval = temp = xmalloc1(sizeof(Array));
 	if ( ap->type == at_baselig ) {
 	    temp->argc = 5;
 	    temp->vals = xcalloc(6,sizeof(Val));
@@ -7656,7 +7656,7 @@ static void bGetPosSub(Context *c) {
 	    if ( pst->subtable == sub || sub==NULL ) {
 		if ( i ) {
 		    ret->vals[cnt].type = v_arr;
-		    ret->vals[cnt].u.aval = temp = galloc(sizeof(Array));
+		    ret->vals[cnt].u.aval = temp = xmalloc1(sizeof(Array));
 		    switch ( pst->type ) {
 		      default:
 		        free(temp);
@@ -7735,7 +7735,7 @@ static void bGetPosSub(Context *c) {
 		    if ( sub==NULL || sub==kp->subtable ) {
 			if ( i ) {
 			    ret->vals[cnt].type = v_arr;
-			    ret->vals[cnt].u.aval = temp = galloc(sizeof(Array));
+			    ret->vals[cnt].u.aval = temp = xmalloc1(sizeof(Array));
 			    temp->argc = 11;
 			    temp->vals = xcalloc(temp->argc,sizeof(Val));
 			    temp->vals[0].type = v_str;
@@ -7761,7 +7761,7 @@ static void bGetPosSub(Context *c) {
 	    }
 	}
 	if ( i==0 ) {
-	    ret = galloc(sizeof(Array));
+	    ret = xmalloc1(sizeof(Array));
 	    ret->argc = cnt;
 	    ret->vals = xcalloc(cnt,sizeof(Val));
 	}
@@ -8789,7 +8789,7 @@ static void docall(Context *c,char *name,Val *val) {
 	} else {
 	    if ( strchr(name,'/')==NULL && strchr(c->filename,'/')!=NULL ) {
 		char *pt;
-		sub.filename = galloc(strlen(c->filename)+strlen(name)+1);
+		sub.filename = xmalloc1(strlen(c->filename)+strlen(name)+1);
 		strcpy(sub.filename,c->filename);
 		pt = strrchr(sub.filename,'/');
 		strcpy(pt+1,name);
@@ -8852,7 +8852,7 @@ static void buildarray(Context *c,Val *val) {
 	val->type = v_void;
     } else {
 	val->type = v_arrfree;
-	val->u.aval = galloc(sizeof(Array));
+	val->u.aval = xmalloc1(sizeof(Array));
 	val->u.aval->argc = cnt;
 	val->u.aval->vals = xrealloc(body,cnt*sizeof(Val));
     }
@@ -9015,9 +9015,9 @@ static void handlename(Context *c,Val *val) {
 		if ( sf->cidmaster!=NULL ) sf = sf->cidmaster;
 		for ( cnt=0, bdf=sf->bitmaps; bdf!=NULL; bdf=bdf->next ) ++cnt;
 		val->type = v_arrfree;
-		val->u.aval = galloc(sizeof(Array));
+		val->u.aval = xmalloc1(sizeof(Array));
 		val->u.aval->argc = cnt;
-		val->u.aval->vals = galloc((cnt+1)*sizeof(Val));
+		val->u.aval->vals = xmalloc1((cnt+1)*sizeof(Val));
 		for ( cnt=0, bdf=sf->bitmaps; bdf!=NULL; bdf=bdf->next, ++cnt) {
 		    val->u.aval->vals[cnt].type = v_int;
 		    val->u.aval->vals[cnt].u.ival = bdf->pixelsize;
@@ -9032,9 +9032,9 @@ static void handlename(Context *c,Val *val) {
 		sf = c->curfv->sf;
 		if ( sf->cidmaster!=NULL ) sf = sf->cidmaster;
 		val->type = v_arrfree;
-		val->u.aval = galloc(sizeof(Array));
+		val->u.aval = xmalloc1(sizeof(Array));
 		val->u.aval->argc = 10;
-		val->u.aval->vals = galloc((10+1)*sizeof(Val));
+		val->u.aval->vals = xmalloc1((10+1)*sizeof(Val));
 		SFDefaultOS2Info(&pfminfo,sf,sf->fontname);
 		for ( cnt=0; cnt<10; ++cnt ) {
 		    val->u.aval->vals[cnt].type = v_int;
@@ -9046,9 +9046,9 @@ static void handlename(Context *c,Val *val) {
 		if ( c->curfv==NULL ) ScriptError(c,"No current font");
 		map = c->curfv->map;
 		val->type = v_arrfree;
-		val->u.aval = galloc(sizeof(Array));
+		val->u.aval = xmalloc1(sizeof(Array));
 		val->u.aval->argc = map->enccount;
-		val->u.aval->vals = galloc((map->enccount+1)*sizeof(Val));
+		val->u.aval->vals = xmalloc1((map->enccount+1)*sizeof(Val));
 		for ( i=0; i<map->enccount; ++i) {
 		    val->u.aval->vals[i].type = v_int;
 		    val->u.aval->vals[i].u.ival = c->curfv->selected[i];
@@ -9321,7 +9321,7 @@ static void add(Context *c,Val *val) {
 		    temp = buffer;
 		} else
 		    temp = other.u.sval;
-		ret = galloc(strlen(val->u.sval)+strlen(temp)+1);
+		ret = xmalloc1(strlen(val->u.sval)+strlen(temp)+1);
 		strcpy(ret,val->u.sval);
 		strcat(ret,temp);
 		if ( other.type==v_str ) free(other.u.sval);
@@ -9329,12 +9329,12 @@ static void add(Context *c,Val *val) {
 		val->u.sval = ret;
 	    } else if ( val->type==v_arr || val->type==v_arrfree ) {
 		Array *arr;
-		arr = galloc(sizeof(Array));
+		arr = xmalloc1(sizeof(Array));
 		arr->argc = val->u.aval->argc +
 			((other.type==v_arr || other.type== v_arrfree)?
 			    other.u.aval->argc:
 			    1);
-		arr->vals = galloc(arr->argc*sizeof(Val));
+		arr->vals = xmalloc1(arr->argc*sizeof(Val));
 		array_copy_into(arr,0,val->u.aval);
 		if ( other.type==v_arr || other.type == v_arrfree ) {
 		    array_copy_into(arr,val->u.aval->argc,other.u.aval);
@@ -9549,7 +9549,7 @@ static void assign(Context *c,Val *val) {
 		    temp = buffer;
 		} else
 		    temp = other.u.sval;
-		ret = galloc(strlen(val->u.lval->u.sval)+strlen(temp)+1);
+		ret = xmalloc1(strlen(val->u.lval->u.sval)+strlen(temp)+1);
 		strcpy(ret,val->u.lval->u.sval);
 		strcat(ret,temp);
 		if ( other.type==v_str ) free(other.u.sval);
@@ -9578,7 +9578,7 @@ static void doforeach(Context *c) {
     if ( c->curfv==NULL )
 	ScriptError(c,"foreach requires an active font");
     selsize = c->curfv->map->enccount;
-    sel = galloc(selsize);
+    sel = xmalloc1(selsize);
     memcpy(sel,c->curfv->selected,selsize);
     memset(c->curfv->selected,0,selsize);
     i = 0;
@@ -9848,7 +9848,7 @@ void ProcessNativeScript(int argc, char *argv[], FILE *script) {
     }
     memset( &c,0,sizeof(c));
     c.a.argc = argc-i;
-    c.a.vals = galloc(c.a.argc*sizeof(Val));
+    c.a.vals = xmalloc1(c.a.argc*sizeof(Val));
     c.dontfree = xcalloc(c.a.argc,sizeof(Array*));
     c.donteval = dry;
     for ( j=i; j<argc; ++j ) {

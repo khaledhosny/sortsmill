@@ -311,7 +311,7 @@ return( NULL );
 	fclose(fp);
 return( NULL );
     }
-    line = (unsigned char *) galloc(lsiz = nchar*width+20);
+    line = (unsigned char *) xmalloc1(lsiz = nchar*width+20);
     tab = parse_colors(fp,line,lsiz,cols,nchar,getdata);
     if ( cols<=256 ) {
 	Color clut[257];

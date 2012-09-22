@@ -385,7 +385,7 @@ BDFProperties *BdfPropsCopy(BDFProperties *props, int cnt ) {
 
     if ( cnt==0 )
 return( NULL );
-    ret = galloc(cnt*sizeof(BDFProperties));
+    ret = xmalloc1(cnt*sizeof(BDFProperties));
     memcpy(ret,props,cnt*sizeof(BDFProperties));
     for ( i=0; i<cnt; ++i ) {
 	ret[i].name = copy(ret[i].name);

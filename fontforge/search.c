@@ -1251,7 +1251,7 @@ void FVBReplaceOutlineWithReference( FontViewBase *fv, double fudge ) {
     sv->replaceall = true;
     sv->replacewithref = true;
 
-    selected = galloc(fv->map->enccount);
+    selected = xmalloc1(fv->map->enccount);
     memcpy(selected,fv->selected,fv->map->enccount);
     changed = xcalloc(fv->map->enccount,1);
 
@@ -1378,7 +1378,7 @@ static SplineChar *RC_MakeNewGlyph(FontViewBase *fv,SplineChar *base, int index,
     int enc;
     SplineChar *ret;
 
-    namebuf = galloc(strlen(base->name)+20);
+    namebuf = xmalloc1(strlen(base->name)+20);
     while (true) {
 	sprintf(namebuf, "%s.ref%d", base->name, index++ );
 	if ( SFGetChar(sf,-1,namebuf)==NULL )
@@ -1393,7 +1393,7 @@ static SplineChar *RC_MakeNewGlyph(FontViewBase *fv,SplineChar *base, int index,
     ret->name = namebuf;
     SFHashGlyph(sf,ret);
 
-    ret->comment = galloc( strlen(reason)+strlen(ret->name)+strlen(morereason) + 2 );
+    ret->comment = xmalloc1( strlen(reason)+strlen(ret->name)+strlen(morereason) + 2 );
     sprintf( ret->comment, reason, base->name, morereason );
     ret->color = 0xff8080;
 return( ret );

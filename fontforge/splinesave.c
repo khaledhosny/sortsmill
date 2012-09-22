@@ -220,7 +220,7 @@ return;
     if ( gi->bcnt>=gi->bmax )
 	gi->bits = xrealloc(gi->bits,(gi->bmax+=20)*sizeof(struct bits));
     gi->bits[gi->bcnt].dlen = gb->pt-gb->base;
-    gi->bits[gi->bcnt].data = galloc(gi->bits[gi->bcnt].dlen);
+    gi->bits[gi->bcnt].data = xmalloc1(gi->bits[gi->bcnt].dlen);
     gi->bits[gi->bcnt].psub_index = -1;
     memcpy(gi->bits[gi->bcnt].data,gb->base,gi->bits[gi->bcnt].dlen);
     gb->pt = gb->base;
@@ -274,7 +274,7 @@ return;
 	memset(ps,0,sizeof(*ps));	/* set cnt to 0 */
 	ps->idx = gi->pcnt++;
 	ps->len = gb->pt-gb->base;
-	ps->data = galloc(ps->len);
+	ps->data = xmalloc1(ps->len);
 	memcpy(ps->data,gb->base,ps->len);
 	ps->next = gi->hashed[hash];
 	gi->hashed[hash] = ps->idx;
@@ -297,7 +297,7 @@ static void MoveSubrsToChar(GlyphInfo *gi) {
 return;
     active = gi->active;
     active->bcnt = gi->bcnt;
-    active->bits = galloc(active->bcnt*sizeof(struct bits));
+    active->bits = xmalloc1(active->bcnt*sizeof(struct bits));
     memcpy(active->bits,gi->bits,active->bcnt*sizeof(struct bits));
     gi->bcnt = 0;
 }
@@ -1935,7 +1935,7 @@ static void SetupType1Subrs(struct pschars *subrs,GlyphInfo *gi) {
 	if ( scnt==-1 || gi->psubrs[i].full_glyph_index != -1 )
     continue;
 	subrs->lens[scnt] = gi->psubrs[i].len+1;
-	subrs->values[scnt] = galloc(subrs->lens[scnt]);
+	subrs->values[scnt] = xmalloc1(subrs->lens[scnt]);
 	memcpy(subrs->values[scnt],gi->psubrs[i].data,gi->psubrs[i].len);
 	subrs->values[scnt][gi->psubrs[i].len] = 11;	/* Add a return to end of subr */
     }
@@ -1977,11 +1977,11 @@ static void SetupType1Chrs(struct pschars *chrs,struct pschars *subrs,GlyphInfo 
 	    if ( k==0 ) {
 		int si = gi->psubrs[ gb->sc->ttf_glyph ].idx;
 		subrs->lens[si] = len+1;
-		vals = subrs->values[si] = galloc(len+2);
+		vals = subrs->values[si] = xmalloc1(len+2);
 	    } else {
 		/* Don't need or want and endchar if we are using seac */
 		chrs->lens[i] = len + !gb->wasseac;
-		vals = chrs->values[i] = galloc(len+2); /* space for endchar and a final NUL (which is really meaningless, but makes me feel better) */
+		vals = chrs->values[i] = xmalloc1(len+2); /* space for endchar and a final NUL (which is really meaningless, but makes me feel better) */
 	    }
 
 	    len = 0;
@@ -2085,7 +2085,7 @@ struct pschars *SplineFont2ChrsSubrs(SplineFont *sf, int iscjk,
     gi.glyphcnt = cnt;
     gi.gb = xcalloc(cnt,sizeof(struct glyphbits));
     gi.pmax = 3*cnt;
-    gi.psubrs = galloc(gi.pmax*sizeof(struct potentialsubrs));
+    gi.psubrs = xmalloc1(gi.pmax*sizeof(struct potentialsubrs));
     gi.instance_count = instance_count;
 
     if ( notdef_pos==-1 ) {
@@ -2129,9 +2129,9 @@ return( NULL );
     SetupType1Subrs(subrs,&gi);
 
     chrs->cnt = cnt;
-    chrs->keys = galloc(cnt*sizeof(char *));
-    chrs->lens = galloc(cnt*sizeof(int));
-    chrs->values = galloc(cnt*sizeof(unsigned char *));
+    chrs->keys = xmalloc1(cnt*sizeof(char *));
+    chrs->lens = xmalloc1(cnt*sizeof(int));
+    chrs->values = xmalloc1(cnt*sizeof(unsigned char *));
 
     SetupType1Chrs(chrs,subrs,&gi,false);
 
@@ -2178,15 +2178,15 @@ struct pschars *CID2ChrsSubrs(SplineFont *cidmaster,struct cidbytes *cidbytes,in
     memset(&gi,0,sizeof(gi));
     gi.instance_count = 1;
     gi.glyphcnt = cnt;
-    gi.gb = galloc(cnt*sizeof(struct glyphbits));
+    gi.gb = xmalloc1(cnt*sizeof(struct glyphbits));
     gi.pmax = 3*cnt;
-    gi.psubrs = galloc(gi.pmax*sizeof(struct potentialsubrs));
+    gi.psubrs = xmalloc1(gi.pmax*sizeof(struct potentialsubrs));
     gi.layer = layer;
 
     chrs->cnt = cnt;
     chrs->lens = xcalloc(cnt,sizeof(int));
     chrs->values = xcalloc(cnt,sizeof(unsigned char *));
-    cidbytes->fdind = galloc(cnt*sizeof(unsigned char *));
+    cidbytes->fdind = xmalloc1(cnt*sizeof(unsigned char *));
     memset(cidbytes->fdind,-1,cnt*sizeof(unsigned char *));
 
     /* In a type1 CID-keyed font we must handle subroutines subfont by subfont*/
@@ -3189,7 +3189,7 @@ struct pschars *SplineFont2ChrsSubrs2(SplineFont *sf, int nomwid, int defwid,
     gi.bygid = bygid;
     gi.gb = xcalloc(cnt,sizeof(struct glyphbits));
     gi.pmax = 3*cnt;
-    gi.psubrs = galloc(gi.pmax*sizeof(struct potentialsubrs));
+    gi.psubrs = xmalloc1(gi.pmax*sizeof(struct potentialsubrs));
     for ( i=0; i<cnt; ++i ) {
 	int gid = bygid[i];
 	if ( i==0 && gid==-1 ) {
@@ -3240,15 +3240,15 @@ struct pschars *SplineFont2ChrsSubrs2(SplineFont *sf, int nomwid, int defwid,
     subrs = xcalloc(1,sizeof(struct pschars));
     subrs->cnt = scnt;
     subrs->next = scnt;
-    subrs->lens = galloc(scnt*sizeof(int));
-    subrs->values = galloc(scnt*sizeof(unsigned char *));
+    subrs->lens = xmalloc1(scnt*sizeof(int));
+    subrs->values = xmalloc1(scnt*sizeof(unsigned char *));
     subrs->bias = scnt<1240 ? 107 :
 		  scnt<33900 ? 1131 : 32768;
     for ( i=0; i<gi.pcnt; ++i ) {
 	if ( gi.psubrs[i].idx != -1 ) {
 	    scnt = gi.psubrs[i].idx;
 	    subrs->lens[scnt] = gi.psubrs[i].len+1;
-	    subrs->values[scnt] = galloc(subrs->lens[scnt]);
+	    subrs->values[scnt] = xmalloc1(subrs->lens[scnt]);
 	    memcpy(subrs->values[scnt],gi.psubrs[i].data,gi.psubrs[i].len);
 	    subrs->values[scnt][gi.psubrs[i].len] = 11;	/* Add a return to end of subr */
 	}
@@ -3257,9 +3257,9 @@ struct pschars *SplineFont2ChrsSubrs2(SplineFont *sf, int nomwid, int defwid,
     chrs = xcalloc(1,sizeof(struct pschars));
     chrs->cnt = cnt;
     chrs->next = cnt;
-    chrs->lens = galloc(cnt*sizeof(int));
-    chrs->values = galloc(cnt*sizeof(unsigned char *));
-    chrs->keys = galloc(cnt*sizeof(char *));
+    chrs->lens = xmalloc1(cnt*sizeof(int));
+    chrs->values = xmalloc1(cnt*sizeof(unsigned char *));
+    chrs->keys = xmalloc1(cnt*sizeof(char *));
     for ( i=0; i<cnt; ++i ) {
 	int len=0;
 	uint8 *vals;
@@ -3296,10 +3296,10 @@ struct pschars *SplineFont2ChrsSubrs2(SplineFont *sf, int nomwid, int defwid,
 	    if ( k==0 ) {
 		int si = gi.psubrs[ gb->sc->lsidebearing ].idx;
 		subrs->lens[si] = len+1;
-		vals = subrs->values[si] = galloc(len+2);
+		vals = subrs->values[si] = xmalloc1(len+2);
 	    } else {
 		chrs->lens[i] = len+1;
-		vals = chrs->values[i] = galloc(len+2); /* space for endchar and a final NUL (which is really meaningless, but makes me feel better) */
+		vals = chrs->values[i] = xmalloc1(len+2); /* space for endchar and a final NUL (which is really meaningless, but makes me feel better) */
 	    }
 
 	    len = 0;
@@ -3408,7 +3408,7 @@ struct pschars *CID2ChrsSubrs2(SplineFont *cidmaster,struct fd2data *fds,
     gi.bygid = NULL;
     gi.gb = xcalloc(cnt,sizeof(struct glyphbits));
     gi.pmax = 3*cnt;
-    gi.psubrs = galloc(gi.pmax*sizeof(struct potentialsubrs));
+    gi.psubrs = xmalloc1(gi.pmax*sizeof(struct potentialsubrs));
     gi.layer = layer;
 
     for ( cid = cnt = 0; cid<max; ++cid ) {
@@ -3462,16 +3462,16 @@ struct pschars *CID2ChrsSubrs2(SplineFont *cidmaster,struct fd2data *fds,
     glbls = xcalloc(1,sizeof(struct pschars));
     glbls->cnt = scnts[0];
     glbls->next = scnts[0];
-    glbls->lens = galloc(scnts[0]*sizeof(int));
-    glbls->values = galloc(scnts[0]*sizeof(unsigned char *));
+    glbls->lens = xmalloc1(scnts[0]*sizeof(int));
+    glbls->values = xmalloc1(scnts[0]*sizeof(unsigned char *));
     glbls->bias = scnts[0]<1240 ? 107 :
 		  scnts[0]<33900 ? 1131 : 32768;
     for ( fd=0; fd<cidmaster->subfontcnt; ++fd ) {
 	fds[fd].subrs = xcalloc(1,sizeof(struct pschars));
 	fds[fd].subrs->cnt = scnts[fd+1];
 	fds[fd].subrs->next = scnts[fd+1];
-	fds[fd].subrs->lens = galloc(scnts[fd+1]*sizeof(int));
-	fds[fd].subrs->values = galloc(scnts[fd+1]*sizeof(unsigned char *));
+	fds[fd].subrs->lens = xmalloc1(scnts[fd+1]*sizeof(int));
+	fds[fd].subrs->values = xmalloc1(scnts[fd+1]*sizeof(unsigned char *));
 	fds[fd].subrs->bias = scnts[fd+1]<1240 ? 107 :
 			      scnts[fd+1]<33900 ? 1131 : 32768;
     }
@@ -3482,7 +3482,7 @@ struct pschars *CID2ChrsSubrs2(SplineFont *cidmaster,struct fd2data *fds,
 	    struct pschars *subrs = gi.psubrs[i].fd==-1 ? glbls : fds[gi.psubrs[i].fd].subrs;
 	    int scnt = gi.psubrs[i].idx;
 	    subrs->lens[scnt] = gi.psubrs[i].len+1;
-	    subrs->values[scnt] = galloc(subrs->lens[scnt]);
+	    subrs->values[scnt] = xmalloc1(subrs->lens[scnt]);
 	    memcpy(subrs->values[scnt],gi.psubrs[i].data,gi.psubrs[i].len);
 	    subrs->values[scnt][gi.psubrs[i].len] = 11;	/* Add a return to end of subr */
 	}
@@ -3492,9 +3492,9 @@ struct pschars *CID2ChrsSubrs2(SplineFont *cidmaster,struct fd2data *fds,
     chrs = xcalloc(1,sizeof(struct pschars));
     chrs->cnt = cnt;
     chrs->next = cnt;
-    chrs->lens = galloc(cnt*sizeof(int));
-    chrs->values = galloc(cnt*sizeof(unsigned char *));
-    chrs->keys = galloc(cnt*sizeof(char *));
+    chrs->lens = xmalloc1(cnt*sizeof(int));
+    chrs->values = xmalloc1(cnt*sizeof(unsigned char *));
+    chrs->keys = xmalloc1(cnt*sizeof(char *));
     for ( i=0; i<cnt; ++i ) {
 	int len=0;
 	struct glyphbits *gb = &gi.gb[i];
@@ -3520,7 +3520,7 @@ struct pschars *CID2ChrsSubrs2(SplineFont *cidmaster,struct fd2data *fds,
 	    }
 	}
 	chrs->lens[i] = len+1;
-	chrs->values[i] = galloc(len+2); /* space for endchar and a final NUL (which is really meaningless, but makes me feel better) */
+	chrs->values[i] = xmalloc1(len+2); /* space for endchar and a final NUL (which is really meaningless, but makes me feel better) */
 
 	len = 0;
 	for ( j=0; j<gb->bcnt; ++j ) {

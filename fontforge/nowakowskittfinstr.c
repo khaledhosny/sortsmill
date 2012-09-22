@@ -288,7 +288,7 @@ int TTF__getcvtval(SplineFont *sf,int val) {
         cvt_tab = (struct ttf_table *) xzalloc(sizeof (struct ttf_table));
         cvt_tab->tag = CHR('c','v','t',' ');
         cvt_tab->maxlen = 200;
-        cvt_tab->data = galloc(100*sizeof(short));
+        cvt_tab->data = xmalloc1(100*sizeof(short));
         cvt_tab->next = sf->ttf_tables;
         sf->ttf_tables = cvt_tab;
     }
@@ -5090,7 +5090,7 @@ static uint8 *dogeninstructions(InstrCt *ct) {
     for ( dstem=ct->sc->dstem; dstem!=NULL; max+=7+4*6+100, dstem=dstem->next );
     max += ct->ptcnt*6;			/* in case there are any rounds */
     max += ct->ptcnt*6;			/* paranoia */
-    ct->instrs = ct->pt = galloc(max);
+    ct->instrs = ct->pt = xmalloc1(max);
 
     /* Initially no stem hints are done */
     if ( ct->gd->hbundle!=NULL ) {
@@ -5232,9 +5232,9 @@ return;
     for ( ss=sc->layers[gic->layer].splines; ss!=NULL; ss=ss->next, ++contourcnt );
     cnt = SSTtfNumberPoints(sc->layers[gic->layer].splines);
 
-    contourends = galloc((contourcnt+1)*sizeof(int));
+    contourends = xmalloc1((contourcnt+1)*sizeof(int));
     clockwise = xcalloc(contourcnt,1);
-    bp = galloc(cnt*sizeof(BasePoint));
+    bp = xmalloc1(cnt*sizeof(BasePoint));
     touched = xcalloc(cnt,1);
     affected = xcalloc(cnt,1);
 

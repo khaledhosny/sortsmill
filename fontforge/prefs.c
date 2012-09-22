@@ -516,7 +516,7 @@ static void ProcessFileChooserPrefs(void) {
     GFileChooserSetShowHidden(gfc_showhidden);
     GFileChooserSetDirectoryPlacement(gfc_dirplace);
     if ( gfc_bookmarks==NULL ) {
-	b = galloc(8*sizeof(unichar_t *));
+	b = xmalloc1(8*sizeof(unichar_t *));
 	i = 0;
 #ifdef __Mac
 	b[i++] = uc_copy("~/Library/Fonts/");
@@ -545,7 +545,7 @@ static void ProcessFileChooserPrefs(void) {
 	    start = pt+1;
 	}
 	start = gfc_bookmarks;
-	b = galloc((i+2)*sizeof(unichar_t *));
+	b = xmalloc1((i+2)*sizeof(unichar_t *));
 	for ( i=0; ; ++i ) {
 	    pt = strchr(start,';');
 	    if ( pt!=NULL )
@@ -575,7 +575,7 @@ static void GetFileChooserPrefs(void) {
 	int i,len=0;
 	for ( i=0; foo[i]!=NULL; ++i )
 	    len += 4*u_strlen(foo[i])+1;
-	gfc_bookmarks = galloc(len+10);
+	gfc_bookmarks = xmalloc1(len+10);
 	len = 0;
 	for ( i=0; foo[i]!=NULL; ++i ) {
 	    u2utf8_strcpy(gfc_bookmarks+len,foo[i]);
@@ -743,7 +743,7 @@ return( sharedir );
 #if defined(__MINGW32__)
 
     len = strlen(GResourceProgramDir) + strlen("/share/fontforge") +1;
-    sharedir = galloc(len);
+    sharedir = xmalloc1(len);
     strcpy(sharedir, GResourceProgramDir);
     strcat(sharedir, "/share/fontforge");
     return sharedir;
@@ -763,7 +763,7 @@ return( NULL );
 #endif
     }
     len = (pt-GResourceProgramDir)+strlen("/share/fontforge")+1;
-    sharedir = galloc(len);
+    sharedir = xmalloc1(len);
     strncpy(sharedir,GResourceProgramDir,pt-GResourceProgramDir);
     strcpy(sharedir+(pt-GResourceProgramDir),"/share/fontforge");
 return( sharedir );
@@ -1299,11 +1299,11 @@ return( ti );
 void GListAddStr(GGadget *list,unichar_t *str, void *ud) {
     int32 i,len;
     GTextInfo **ti = GGadgetGetList(list,&len);
-    GTextInfo **replace = galloc((len+2)*sizeof(GTextInfo *));
+    GTextInfo **replace = xmalloc1((len+2)*sizeof(GTextInfo *));
 
     replace[len+1] = xcalloc(1,sizeof(GTextInfo));
     for ( i=0; i<len; ++i ) {
-	replace[i] = galloc(sizeof(GTextInfo));
+	replace[i] = xmalloc1(sizeof(GTextInfo));
 	*replace[i] = *ti[i];
 	replace[i]->text = u_copy(ti[i]->text);
     }
@@ -1317,10 +1317,10 @@ void GListAddStr(GGadget *list,unichar_t *str, void *ud) {
 void GListReplaceStr(GGadget *list,int index, unichar_t *str, void *ud) {
     int32 i,len;
     GTextInfo **ti = GGadgetGetList(list,&len);
-    GTextInfo **replace = galloc((len+2)*sizeof(GTextInfo *));
+    GTextInfo **replace = xmalloc1((len+2)*sizeof(GTextInfo *));
 
     for ( i=0; i<len; ++i ) {
-	replace[i] = galloc(sizeof(GTextInfo));
+	replace[i] = xmalloc1(sizeof(GTextInfo));
 	*replace[i] = *ti[i];
 	if ( i!=index )
 	    replace[i]->text = u_copy(ti[i]->text);
@@ -1753,14 +1753,14 @@ return( true );
 
 	list = GGadgetGetList(GWidgetGetControl(gw,CID_Mapping),&len);
 	UserSettingsFree();
-	user_macfeat_otftag = galloc((len+1)*sizeof(struct macsettingname));
+	user_macfeat_otftag = xmalloc1((len+1)*sizeof(struct macsettingname));
 	user_macfeat_otftag[len].otf_tag = 0;
 	maxl = 0;
 	for ( i=0; i<len; ++i ) {
 	    t = u_strlen(list[i]->text);
 	    if ( t>maxl ) maxl = t;
 	}
-	str = galloc(maxl+3);
+	str = xmalloc1(maxl+3);
 	for ( i=0; i<len; ++i ) {
 	    u2encoding_strncpy(str,list[i]->text,maxl+1,e_mac);
 	    ParseMacMapping(str,&user_macfeat_otftag[i]);

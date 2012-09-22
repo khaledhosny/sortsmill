@@ -456,13 +456,13 @@ static const char **CopyLines(char **lines, int l,int is_copyright) {
     int i;
 
     if ( l==0 && !is_copyright ) {
-	ret = galloc(2*sizeof(char *));
+	ret = xmalloc1(2*sizeof(char *));
 	ret[0] = copy("{}");
 	ret[1] = NULL;
 return( ret );
     }
 
-    ret = galloc((l+1)*sizeof(char *));
+    ret = xmalloc1((l+1)*sizeof(char *));
     for ( i=0; i<l; ++i )
 	ret[i] = lines[i];
     ret[l] = NULL;

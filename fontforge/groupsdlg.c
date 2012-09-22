@@ -927,7 +927,7 @@ static int Group_FromSelection(GGadget *g, GEvent *e) {
 		len += strlen(sc->name)+1;
 		if ( fv->b.selected[i]>max ) max = fv->b.selected[i];
 	    }
-	    pt = vals = galloc((len+1)*sizeof(unichar_t));
+	    pt = vals = xmalloc1((len+1)*sizeof(unichar_t));
 	    *pt = '\0';
 	    for ( i=len=max=0; i<fv->b.map->enccount; ++i ) if ( fv->b.selected[i]) {
 		gid = fv->b.map->map[i];
@@ -978,7 +978,7 @@ static int Group_FromSelection(GGadget *g, GEvent *e) {
 		    len += strlen(buffer);
 		}
 		if ( !k )
-		    vals = galloc((len+1)*sizeof(unichar_t));
+		    vals = xmalloc1((len+1)*sizeof(unichar_t));
 		else if ( len!=0 )
 		    vals[len-1] = '\0';
 		else
@@ -1459,15 +1459,15 @@ static char *EncNameFromGroups(Group *group) {
       case 0:
 return( copy( _("No Groups")) );
       case 1:
-	ret = galloc(strlen(prefix) + strlen(first->name) + 3 );
+	ret = xmalloc1(strlen(prefix) + strlen(first->name) + 3 );
 	sprintf( ret, "%s: %s", prefix, first->name);
       break;
       case 2:
-	ret = galloc(strlen(prefix) + strlen(first->name) + strlen(second->name) + 5 );
+	ret = xmalloc1(strlen(prefix) + strlen(first->name) + strlen(second->name) + 5 );
 	sprintf( ret, "%s: %s, %s", prefix, first->name, second->name );
       break;
       default:
-	ret = galloc(strlen(prefix) + strlen(first->name) + strlen(second->name) + 9 );
+	ret = xmalloc1(strlen(prefix) + strlen(first->name) + strlen(second->name) + 9 );
 	sprintf( ret, "%s: %s, %s ...", prefix, first->name, second->name );
       break;
     }
@@ -1484,8 +1484,8 @@ static void EncodeToGroups(FontView *fv,Group *group, int compacted) {
 	enc->enc_name = EncNameFromGroups(group);
 	enc->is_temporary = true;
 	enc->char_max = 256;
-	enc->unicode = galloc(256*sizeof(int32));
-	enc->psnames = galloc(256*sizeof(char *));
+	enc->unicode = xmalloc1(256*sizeof(int32));
+	enc->psnames = xmalloc1(256*sizeof(char *));
 	map = EncMapNew(0,sf->glyphcnt,enc);
     }
 

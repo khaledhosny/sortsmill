@@ -132,7 +132,7 @@ return(false);
 	   png_set_packing(png_ptr);
 
        if ( base->trans!=-1 ) {
-	   trans_alpha = (png_bytep) galloc(1);
+	   trans_alpha = (png_bytep) xmalloc1(1);
 	   trans_alpha[0] = base->trans;
        }
    } else {

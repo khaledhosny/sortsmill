@@ -408,7 +408,7 @@ char **AllGlyphNames(int uni, NameList *for_this_font, SplineChar *sc) {
 	}
 	if ( rcnt>1 && alluni && (uni<0 || (uni>=0xe000 && uni<0xf900) || uni>=0xf0000 ) ) {
 	    if ( names ) {
-		names[cnt] = galloc(4+4*rcnt);
+		names[cnt] = xmalloc1(4+4*rcnt);
 		strcpy(names[cnt],"uni");
 		pt = names[cnt]+3;
 		for ( i=0; i<rcnt; ++i ) {
@@ -426,7 +426,7 @@ char **AllGlyphNames(int uni, NameList *for_this_font, SplineChar *sc) {
 	    if ( names ) {
 		for ( i=len=0; i<rcnt; ++i )
 		    len += strlen( refs[i]->name )+1;
-		names[cnt] = pt = galloc(len);
+		names[cnt] = pt = xmalloc1(len);
 		for ( i=len=0; i<rcnt; ++i ) {
 		    strcpy(pt,refs[i]->name);
 		    pt += strlen(pt);
@@ -442,7 +442,7 @@ char **AllGlyphNames(int uni, NameList *for_this_font, SplineChar *sc) {
 	    ++cnt;
 	}
 	if ( k==0 ) {
-	    names = galloc((cnt+1)*sizeof(char *));
+	    names = xmalloc1((cnt+1)*sizeof(char *));
 	    names[cnt] = NULL;
 	}
     }
@@ -464,7 +464,7 @@ char **AllNamelistNames(void) {
     char **names;
 
     for ( nl = &agl, cnt=0; nl!=NULL; nl=nl->next, ++cnt );
-    names = galloc((cnt+1) *sizeof(char *));
+    names = xmalloc1((cnt+1) *sizeof(char *));
     for ( nl = &agl, cnt=0; nl!=NULL; nl=nl->next, ++cnt )
 	names[cnt] = copy(_(nl->title));
     names[cnt] = NULL;
@@ -478,7 +478,7 @@ uint8 *AllNamelistUnicodes(void) {
     uint8 *uses;
 
     for ( nl = &agl, cnt=0; nl!=NULL; nl=nl->next, ++cnt );
-    uses = galloc((cnt+1) *sizeof(uint8));
+    uses = xmalloc1((cnt+1) *sizeof(uint8));
     for ( nl = &agl, cnt=0; nl!=NULL; nl=nl->next, ++cnt )
 	uses[cnt] = nl->uses_unicode;
     uses[cnt] = 0xff;
@@ -856,7 +856,7 @@ static char *DoReplacements(struct bits *bits,int bc,char **_src,char *start) {
 	}
     } else {
 	int totlen = strlen(*_src);
-	last = ret = galloc(totlen + diff + 1);
+	last = ret = xmalloc1(totlen + diff + 1);
 	last_orig = *_src;
 	for ( i=0; i<bc; ++i ) {
 	    if ( last_orig<bits[i].start ) {

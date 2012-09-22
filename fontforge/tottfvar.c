@@ -58,8 +58,8 @@ static int AssignPtNumbers(MMSet *mm,int gid) {
     int i;
     int allavg, alllines, stillmore, ret=true;
 
-    ss = galloc((mm->instance_count+1)*sizeof(SplineSet *));
-    sp = galloc((mm->instance_count+1)*sizeof(SplinePoint *));
+    ss = xmalloc1((mm->instance_count+1)*sizeof(SplineSet *));
+    sp = xmalloc1((mm->instance_count+1)*sizeof(SplinePoint *));
     for ( i=0; i<mm->instance_count; ++i )
 	ss[i] = mm->instances[i]->glyphs[gid]->layers[ly_fore].splines;
     ss[i] = mm->normal->glyphs[gid]->layers[ly_fore].splines;
@@ -336,7 +336,7 @@ return( NULL );
 return( NULL );
 
     *_ptcnt = ptcnt = SCPointCount(mm->normal->glyphs[gid])+4;
-    deltas = galloc(2*mm->instance_count*sizeof(int16 *));
+    deltas = xmalloc1(2*mm->instance_count*sizeof(int16 *));
     for ( i=0; i<2*mm->instance_count; ++i )
 	deltas[i] = xcalloc(ptcnt,sizeof(int16));
     for ( i=0; i<mm->instance_count; ++i ) {
@@ -532,7 +532,7 @@ return;
 	for ( j=pcnt=0; j<ptcnt; ++j )
 	    if ( deltas[i][j]!=0 )
 		++pcnt;
-	pts = galloc(pcnt*sizeof(uint16));
+	pts = xmalloc1(pcnt*sizeof(uint16));
 	for ( j=pcnt=0; j<ptcnt; ++j )
 	    if ( deltas[i][j]!=0 )
 		pts[pcnt++]=j;

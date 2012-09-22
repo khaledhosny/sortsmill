@@ -901,7 +901,7 @@ static void AnchorD_SetDevTabs(AnchorDlg *a) {
 	int i;
 	int len = max-min+1;
 	char buffer[20];
-	GTextInfo **ti = galloc((len+1)*sizeof(GTextInfo *));
+	GTextInfo **ti = xmalloc1((len+1)*sizeof(GTextInfo *));
 	for ( i=0; i<len; ++i ) {
 	    ti[i] = xcalloc(1,sizeof(GTextInfo));
 	    sprintf( buffer, "%d", i+min );
@@ -1184,13 +1184,13 @@ void AnchorControl(SplineChar *sc,AnchorPoint *ap,int layer) {
     if ( ap->xadjust.corrections!=NULL ) {
 	int len = ap->xadjust.last_pixel_size-ap->xadjust.first_pixel_size+1;
 	a.xadjust = ap->xadjust;
-	a.xadjust.corrections = galloc(len);
+	a.xadjust.corrections = xmalloc1(len);
 	memcpy(a.xadjust.corrections,ap->xadjust.corrections,len);
     }
     if ( ap->yadjust.corrections!=NULL ) {
 	int len = ap->yadjust.last_pixel_size-ap->yadjust.first_pixel_size+1;
 	a.yadjust = ap->yadjust;
-	a.yadjust.corrections = galloc(len);
+	a.yadjust.corrections = xmalloc1(len);
 	memcpy(a.yadjust.corrections,ap->yadjust.corrections,len);
     }
 

@@ -375,7 +375,7 @@ return( copyn( errdata.errlines[l]+s_c, e_c-s_c ));
 	cnt += strlen(errdata.errlines[l])+1;
     cnt += e_c;
 
-    ret = galloc(cnt+1);
+    ret = xmalloc1(cnt+1);
     strcpy( ret, errdata.errlines[s_l]+s_c );
     pt = ret+strlen( ret );
     *pt++ = '\n';

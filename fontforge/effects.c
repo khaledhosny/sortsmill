@@ -459,7 +459,7 @@ static extended *BottomFindIntersections(Spline *bottom,SplineSet *lines,SplineS
     int i,j;
 
     tmax = 100;
-    ts = galloc(tmax*sizeof(extended));
+    ts = xmalloc1(tmax*sizeof(extended));
     tcnt = 0;
 
     while ( spl!=NULL ) {

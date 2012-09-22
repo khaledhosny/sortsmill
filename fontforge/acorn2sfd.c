@@ -510,7 +510,7 @@ return;
     else
 	m = 256;
     if ( m!=0 ) {
-	mapping = galloc(m);
+	mapping = xmalloc1(m);
 	for ( i=0; i<m; ++i )
 	    mapping[i] = getc(file);
 	outline->metrics_n = m;
@@ -522,7 +522,7 @@ return;
 	    r_getshort(file);
     }
     if ( !(flags&2) ) {
-	widths = galloc(n*sizeof(int));
+	widths = xmalloc1(n*sizeof(int));
 	for ( i=0; i<n; ++i )
 	    widths[i] = r_getshort(file);
 	if ( mapping==0 )
@@ -535,7 +535,7 @@ return;
 	}
     }
     if ( !(flags&4) ) {
-	widths = galloc(n*sizeof(int));
+	widths = xmalloc1(n*sizeof(int));
 	for ( i=0; i<n; ++i )
 	    widths[i] = r_getshort(file);
 	if ( mapping==0 )
@@ -570,7 +570,7 @@ return;
 		while ( (left=r_getshort(file))!=0 && !feof(file)) {
 		    while ( (right=r_getshort(file))!=0 ) {
 			if ( !(flags&2) && !feof(file)) {
-			    kern = galloc(sizeof(struct r_kern));
+			    kern = xmalloc1(sizeof(struct r_kern));
 			    kern->amount = r_getshort(file);
 			    kern->right = right;
 			    kern->next = outline->kerns[left];
@@ -584,7 +584,7 @@ return;
 		while ( (left=getc(file))!=0 && !feof(file)) {
 		    while ( (right=getc(file))!=0 && !feof(file)) {
 			if ( !(flags&2) ) {
-			    kern = galloc(sizeof(struct r_kern));
+			    kern = xmalloc1(sizeof(struct r_kern));
 			    kern->amount = r_getshort(file);
 			    kern->right = right;
 			    kern->next = outline->kerns[left];
@@ -671,10 +671,10 @@ static void FindEncoding(SplineFont *sf,char *filename) {
     pt = strrchr(filename,'/');
     if ( pt!=NULL )
 	*pt = '\0';
-    otherdir = galloc(strlen(filename)+strlen("/../Encodings")+5);
+    otherdir = xmalloc1(strlen(filename)+strlen("/../Encodings")+5);
     strcpy(otherdir,filename);
     strcat(otherdir,"/../Encodings");
-    encfilename = galloc(strlen(otherdir)+strlen("base0encoding")+20);
+    encfilename = xmalloc1(strlen(otherdir)+strlen("base0encoding")+20);
 
     if ( dirfind(otherdir, pattern,encfilename) )
 	file = fopen(encfilename,"r");
@@ -815,8 +815,8 @@ return( NULL );
     outline.sf->map = xcalloc(1,sizeof(EncMap));
     outline.sf->map->enc = &custom;
     outline.sf->map->encmax = outline.sf->map->enccount = outline.sf->map->backmax = outline.sf->glyphmax;
-    outline.sf->map->map = galloc(outline.sf->glyphmax*sizeof(int32));
-    outline.sf->map->backmap = galloc(outline.sf->glyphmax*sizeof(int32));
+    outline.sf->map->map = xmalloc1(outline.sf->glyphmax*sizeof(int32));
+    outline.sf->map->backmap = xmalloc1(outline.sf->glyphmax*sizeof(int32));
     memset(outline.sf->map->map,-1,outline.sf->glyphmax*sizeof(int32));
     memset(outline.sf->map->backmap,-1,outline.sf->glyphmax*sizeof(int32));
     outline.sf->for_new_glyphs = namelist_for_new_fonts;

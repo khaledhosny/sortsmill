@@ -3811,8 +3811,8 @@ return( NULL );				/* That's an error, must be closed */
 	    if ( n>max )
 		max = n;
 	}
-	c.corners = galloc(max*sizeof(BasePoint));
-	c.slopes  = galloc(max*sizeof(BasePoint));
+	c.corners = xmalloc1(max*sizeof(BasePoint));
+	c.slopes  = xmalloc1(max*sizeof(BasePoint));
 	memset(trans,0,sizeof(trans));
 	trans[0] = trans[3] = 1;
 	if ( !c.leave_users_center ) {

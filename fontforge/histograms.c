@@ -92,7 +92,7 @@ static HistData *HistFindBlues(SplineFont *sf,int layer, uint8 *selected, EncMap
 	    ++ hist->hist[top-low].cnt;
 	    if ( hist->hist[top-low].char_cnt >= hist->hist[top-low].max ) {
 		if ( hist->hist[top-low].max==0 )
-		    hist->hist[top-low].chars = galloc(10*sizeof(SplineChar *));
+		    hist->hist[top-low].chars = xmalloc1(10*sizeof(SplineChar *));
 		else
 		    hist->hist[top-low].chars = xrealloc(hist->hist[top-low].chars,(hist->hist[top-low].max+10)*sizeof(SplineChar *));
 		hist->hist[top-low].max += 10;
@@ -112,7 +112,7 @@ static HistData *HistFindBlues(SplineFont *sf,int layer, uint8 *selected, EncMap
 	    ++ hist->hist[bottom-low].cnt;
 	    if ( hist->hist[bottom-low].char_cnt >= hist->hist[bottom-low].max ) {
 		if ( hist->hist[bottom-low].max==0 )
-		    hist->hist[bottom-low].chars = galloc(10*sizeof(SplineChar *));
+		    hist->hist[bottom-low].chars = xmalloc1(10*sizeof(SplineChar *));
 		else
 		    hist->hist[bottom-low].chars = xrealloc(hist->hist[bottom-low].chars,(hist->hist[bottom-low].max+10)*sizeof(SplineChar *));
 		hist->hist[bottom-low].max += 10;
@@ -125,7 +125,7 @@ static HistData *HistFindBlues(SplineFont *sf,int layer, uint8 *selected, EncMap
 	hist->low = hist->high = 0;
     }
     if ( low!=hist->low || high!=hist->high ) {
-	h = galloc((hist->high-hist->low+1)*sizeof(struct hentry));
+	h = xmalloc1((hist->high-hist->low+1)*sizeof(struct hentry));
 	memcpy(h,hist->hist + hist->low-low,(hist->high-hist->low+1)*sizeof(struct hentry));
 	free(hist->hist);
 	hist->hist = h;
@@ -174,7 +174,7 @@ static HistData *HistFindStemWidths(SplineFont *sf,int layer, uint8 *selected,En
 			hist->hist[val-low].chars[hist->hist[val-low].char_cnt-1]!=sc ) {
 		    if ( hist->hist[val-low].char_cnt >= hist->hist[val-low].max ) {
 			if ( hist->hist[val-low].max==0 )
-			    hist->hist[val-low].chars = galloc(10*sizeof(SplineChar *));
+			    hist->hist[val-low].chars = xmalloc1(10*sizeof(SplineChar *));
 			else
 			    hist->hist[val-low].chars = xrealloc(hist->hist[val-low].chars,(hist->hist[val-low].max+10)*sizeof(SplineChar *));
 			hist->hist[val-low].max += 10;
@@ -189,7 +189,7 @@ static HistData *HistFindStemWidths(SplineFont *sf,int layer, uint8 *selected,En
 	hist->low = hist->high = 0;
     }
     if ( low!=hist->low || high!=hist->high ) {
-	h = galloc((hist->high-hist->low+1)*sizeof(struct hentry));
+	h = xmalloc1((hist->high-hist->low+1)*sizeof(struct hentry));
 	memcpy(h,hist->hist + hist->low-low,(hist->high-hist->low+1)*sizeof(struct hentry));
 	free(hist->hist);
 	hist->hist = h;
@@ -348,7 +348,7 @@ static unichar_t *ArrayOrder(const unichar_t *old,int args,int val1,int val2) {
     }
 
     u_sprintf(ubuf,format,val1);
-    new = galloc(2*(u_strlen(ubuf)+u_strlen(old)+10)*sizeof(unichar_t));
+    new = xmalloc1(2*(u_strlen(ubuf)+u_strlen(old)+10)*sizeof(unichar_t));
 
     pt = new;
     *pt++ = '[';

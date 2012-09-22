@@ -278,7 +278,7 @@ return( NULL );
 		gv->parts[i].fullAdvance);
 	len += strlen( buffer );
     }
-    str = galloc(len+1);
+    str = xmalloc1(len+1);
     for ( i=len=0; i<gv->part_cnt; ++i ) {
 	strcpy(str+len,gv->parts[i].component);
 	len += strlen(gv->parts[i].component);
@@ -1246,7 +1246,7 @@ static void MKD_SetGlyphList(MathKernDlg *mkd, SplineChar *sc) {
 	    }
 	}
 	if ( !k )
-	    tis = galloc((cnt+1)*sizeof(GTextInfo *));
+	    tis = xmalloc1((cnt+1)*sizeof(GTextInfo *));
 	else
 	    tis[cnt] = xcalloc(1,sizeof(GTextInfo));
     }
@@ -1563,7 +1563,7 @@ static int MKD_Parse(MathKernDlg *mkd) {
 		    }
 		}
 		if ( !k )
-		    bases = galloc(cnt*sizeof(BasePoint *));
+		    bases = xmalloc1(cnt*sizeof(BasePoint *));
 	    }
 	    qsort(bases,cnt,sizeof(BasePoint *),bp_order_height);
 	    if ( cnt>mkv->cnt ) {

@@ -348,7 +348,7 @@ return( NULL );
 	    for ( k=0; k<sf->subfontcnt; ++k )
 		if ( sf->subfonts[k]->glyphcnt>max )
 		    max = sf->subfonts[k]->glyphcnt;
-	    ftc->glyph_indeces = galloc(max*sizeof(int));
+	    ftc->glyph_indeces = xmalloc1(max*sizeof(int));
 	    memset(ftc->glyph_indeces,-1,max*sizeof(int));
 	    for ( i=0; i<max; ++i ) {
 		for ( k=0; k<sf->subfontcnt; ++k ) {
@@ -360,7 +360,7 @@ return( NULL );
 		}
 	    }
 	} else {
-	    ftc->glyph_indeces = galloc(sf->glyphcnt*sizeof(int));
+	    ftc->glyph_indeces = xmalloc1(sf->glyphcnt*sizeof(int));
 	    memset(ftc->glyph_indeces,-1,sf->glyphcnt*sizeof(int));
 	    cnt = 1;
 	    if ( notdefpos!=-1 )
@@ -457,7 +457,7 @@ static BDFChar *BdfCFromBitmap(FT_Bitmap *bitmap, int bitmap_left,
     bdfc->bytes_per_line = bitmap->pitch;
     bdfc->refs = NULL; bdfc->dependents = NULL;
     if ( bdfc->bytes_per_line==0 ) bdfc->bytes_per_line = 1;
-    bdfc->bitmap = galloc((bdfc->ymax-bdfc->ymin+1)*bdfc->bytes_per_line);
+    bdfc->bitmap = xmalloc1((bdfc->ymax-bdfc->ymin+1)*bdfc->bytes_per_line);
     if ( bitmap->rows==0 || bitmap->width==0 )
 	memset(bdfc->bitmap,0,(bdfc->ymax-bdfc->ymin+1)*bdfc->bytes_per_line);
     else
@@ -785,7 +785,7 @@ return( NULL );
     if ( slot->bitmap.pixel_mode!=ft_pixel_mode_mono &&
 	    slot->bitmap.pixel_mode!=ft_pixel_mode_grays )
 return( NULL );
-    ret = galloc(sizeof(struct freetype_raster));
+    ret = xmalloc1(sizeof(struct freetype_raster));
 
     ret->rows = slot->bitmap.rows;
     ret->cols = slot->bitmap.width;
@@ -795,7 +795,7 @@ return( NULL );
     ret->num_greys = slot->bitmap.num_grays;
 	/* Can't find any description of freetype's bitendianness */
 	/* But the obvious seems to work */
-    ret->bitmap = galloc(ret->rows*ret->bytes_per_row);
+    ret->bitmap = xmalloc1(ret->rows*ret->bytes_per_row);
     memcpy(ret->bitmap,slot->bitmap.buffer,ret->rows*ret->bytes_per_row);
 return( ret );
 }
@@ -1090,7 +1090,7 @@ return( NULL );
 	    (sc->layers[ly_fore].fill_brush.col==COLOR_INHERITED ||
 	     sc->layers[ly_fore].fill_brush.col==0x000000)) ) {
 	temp = bitmap;
-	temp.buffer = galloc(bitmap.pitch*bitmap.rows);
+	temp.buffer = xmalloc1(bitmap.pitch*bitmap.rows);
     }
 
     memset(&outline,0,sizeof(outline));
@@ -1121,7 +1121,7 @@ return( NULL );
 		FillOutline(sc->layers[i].splines,&outline,&pmax,&cmax,
 			scale,&b,sc->layers[i].order2,2);
 		err |= (FT_Outline_Get_Bitmap)(ff_ft_context,&outline,&temp);
-		clipmask = galloc(bitmap.pitch*bitmap.rows);
+		clipmask = xmalloc1(bitmap.pitch*bitmap.rows);
 		memcpy(clipmask,temp.buffer,bitmap.pitch*bitmap.rows);
 	    }
 	    if ( sc->layers[i].dofill ) {

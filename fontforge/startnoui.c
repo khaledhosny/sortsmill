@@ -81,7 +81,7 @@ return( sharedir );
 #if defined(__MINGW32__)
 
     len = strlen(GResourceProgramDir) + strlen("/share/locale") +1;
-    sharedir = galloc(len);
+    sharedir = xmalloc1(len);
     strcpy(sharedir, GResourceProgramDir);
     strcat(sharedir, "/share/locale");
     return sharedir;
@@ -99,7 +99,7 @@ return( sharedir = PREFIX "/share/locale" );
 #endif
     }
     len = (pt-GResourceProgramDir)+strlen("/share/locale")+1;
-    sharedir = galloc(len);
+    sharedir = xmalloc1(len);
     strncpy(sharedir,GResourceProgramDir,pt-GResourceProgramDir);
     strcpy(sharedir+(pt-GResourceProgramDir),"/share/locale");
 return( sharedir );

@@ -384,7 +384,7 @@ static void readttfbitmapfont(FILE *ttf,struct ttfinfo *info,
 	offset = getlong(ttf);
 	switch ( indexformat ) {
 	  case 1: case 3:
-	    glyphoffsets = galloc((last-first+2)*sizeof(int32));
+	    glyphoffsets = xmalloc1((last-first+2)*sizeof(int32));
 	    for ( i=0; i<(last-first+2); ++i )
 		glyphoffsets[i] = indexformat==3?getushort(ttf):getlong(ttf);
 	    if ( indexformat==3 && ((last-first)&1) )
@@ -421,8 +421,8 @@ static void readttfbitmapfont(FILE *ttf,struct ttfinfo *info,
 	  break;
 	  case 4:
 	    num = getlong(ttf);
-	    glyphoffsets = galloc((num+1)*sizeof(int32));
-	    glyphs = galloc((num+1)*sizeof(int32));
+	    glyphoffsets = xmalloc1((num+1)*sizeof(int32));
+	    glyphs = xmalloc1((num+1)*sizeof(int32));
 	    for ( g=0; g<num+1; ++g ) {
 		glyphs[g] = getushort(ttf);
 		glyphoffsets[g] = getushort(ttf);
@@ -447,7 +447,7 @@ static void readttfbitmapfont(FILE *ttf,struct ttfinfo *info,
 	    big.vbearingY = (signed char) getc(ttf);
 	    big.vadvance = getc(ttf);
 	    num = getlong(ttf);
-	    glyphs = galloc((num+1)*sizeof(int32));
+	    glyphs = xmalloc1((num+1)*sizeof(int32));
 	    for ( g=0; g<num; ++g ) {
 		glyphs[g] = getushort(ttf);
 	    }
@@ -489,7 +489,7 @@ void TTFLoadBitmaps(FILE *ttf,struct ttfinfo *info,int onlyone) {
     fseek(ttf,info->bitmaploc_start,SEEK_SET);
     /* version = */ getlong(ttf);		/* Had better be 0x00020000, or 2.0 */
     cnt = getlong(ttf);
-    sizes = galloc(cnt*sizeof(struct ttfsizehead));
+    sizes = xmalloc1(cnt*sizeof(struct ttfsizehead));
     /* we may not like all the possible bitmaps. Some might be designed for */
     /*  non-square pixels, others might be color, others might be */
     /*  vertical data. So only pick out the ones we can use */
@@ -1068,7 +1068,7 @@ return(NULL);
 	    defs = defs->next;
 	    wasdef = true;
 	}
-	cur = galloc(sizeof(struct indexarray));
+	cur = xmalloc1(sizeof(struct indexarray));
 	cur->next = NULL;
 	if ( last==NULL ) head = cur;
 	else last->next = cur;

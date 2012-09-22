@@ -364,7 +364,7 @@ return;
 /**************************** Fig File Import *********************************/
 
 static BasePoint *slurppoints(FILE *fig,SplineFont *sf,int cnt ) {
-    BasePoint *bps = galloc((cnt+1)*sizeof(BasePoint));	/* spline code may want to add another point */
+    BasePoint *bps = xmalloc1((cnt+1)*sizeof(BasePoint));	/* spline code may want to add another point */
     int x, y, i, ch;
     real scale = sf->ascent/(8.5*1200.0);
     real ascent = 11*1200*sf->ascent/(sf->ascent+sf->descent);
@@ -759,7 +759,7 @@ static SplineSet * slurpspline(FILE *fig,SplineChar *sc, SplineSet *sofar) {
 	while ((ch=getc(fig))!='\n' && ch!=EOF);
     xs.n = cnt;
     xs.cp = slurppoints(fig,sc->parent,cnt);
-    xs.s = galloc((cnt+1)*sizeof(real));
+    xs.s = xmalloc1((cnt+1)*sizeof(real));
     xs.closed = (sub&1);
     for ( i=0; i<cnt; ++i )
 #ifdef FONTFORGE_CONFIG_USE_DOUBLE
@@ -918,7 +918,7 @@ void SCInsertImage(SplineChar *sc,GImage *image,real scale,real yoff,real xoff,
     ImageList *im;
 
     SCPreserveLayer(sc,layer,false);
-    im = galloc(sizeof(ImageList));
+    im = xmalloc1(sizeof(ImageList));
     im->image = image;
     im->xoff = xoff;
     im->yoff = yoff;

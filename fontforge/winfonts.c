@@ -287,12 +287,12 @@ return( false );
     fseek(fnt,base+fntheader.faceoffset,SEEK_SET);
     for ( i=0; (ch=getc(fnt))!=EOF && ch!=0; ++i );
     free(sf->familyname);
-    sf->familyname = galloc(i+2);
+    sf->familyname = xmalloc1(i+2);
     fseek(fnt,base+fntheader.faceoffset,SEEK_SET);
     for ( i=0; (ch=getc(fnt))!=EOF && ch!=0; ++i )
 	sf->familyname[i] = ch;
     sf->familyname[i] = '\0';
-    temp = galloc(i+50);
+    temp = xmalloc1(i+50);
     strcpy(temp,sf->familyname);
     if ( fntheader.weight<=300 && fntheader.weight>500 ) {
 	strcat(temp," ");
@@ -849,8 +849,8 @@ int FONFontDump(char *filename,SplineFont *sf, int32 *sizes,int resol,
     ff_progress_change_line1(_("Saving Bitmap Font(s)"));
     ff_progress_change_stages(i);
     num_files = i;
-    fntarray = galloc(num_files*sizeof(FILE **));
-    file_lens = galloc(num_files*sizeof(int));
+    fntarray = xmalloc1(num_files*sizeof(FILE **));
+    file_lens = xmalloc1(num_files*sizeof(int));
 
     for ( i=0; sizes[i]!=0; ++i ) {
 	for ( bdf=sf->bitmaps; bdf!=NULL &&

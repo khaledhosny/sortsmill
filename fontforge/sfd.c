@@ -314,7 +314,7 @@ return( NULL );
 		++len;
 	}
 	if ( i==0 )
-	    ostr = ret = galloc(len+1);
+	    ostr = ret = xmalloc1(len+1);
     }
     *ostr = '\0';
 return( ret );
@@ -405,7 +405,7 @@ return( NULL );
 	}
 	if ( pt+10>=end ) {
 	    if ( buffer==NULL ) {
-		pt = buffer = galloc(400);
+		pt = buffer = xmalloc1(400);
 		end = buffer+400;
 	    } else {
 		char *temp = xrealloc(buffer,end-buffer+400);
@@ -438,7 +438,7 @@ char *utf7toutf8_copy(const char *_str) {
 
     if ( str==NULL )
 return( NULL );
-    buffer = pt = galloc(400);
+    buffer = pt = xmalloc1(400);
     end = pt+400;
     while ( (ch1=*str++)!='\0' ) {
 	done = 0;
@@ -1508,7 +1508,7 @@ static int SFDDumpBitmapFont(FILE *sfd,BDFFont *bdf,EncMap *encm,int *newgids,
     for ( i=0; i<bdf->glyphcnt; ++i ) {
 	if ( bdf->glyphs[i]!=NULL ) {
 	    if ( todir ) {
-		char *glyphfile = galloc(strlen(dirname)+2*strlen(bdf->glyphs[i]->sc->name)+20);
+		char *glyphfile = xmalloc1(strlen(dirname)+2*strlen(bdf->glyphs[i]->sc->name)+20);
 		FILE *gsfd;
 		appendnames(glyphfile,dirname,"/",bdf->glyphs[i]->sc->name,BITMAP_EXT );
 		gsfd = fopen(glyphfile,"w");
@@ -2278,12 +2278,12 @@ static int SFD_Dump(FILE *sfd,SplineFont *sf,EncMap *map,EncMap *normal,
     if ( sf->subfontcnt!=0 ) {
 	if ( todir ) {
 	    for ( i=0; i<sf->subfontcnt; ++i ) {
-		char *subfont = galloc(strlen(dirname)+1+strlen(sf->subfonts[i]->fontname)+20);
+		char *subfont = xmalloc1(strlen(dirname)+1+strlen(sf->subfonts[i]->fontname)+20);
 		char *fontprops;
 		FILE *ssfd;
 		sprintf( subfont,"%s/%s" SUBFONT_EXT, dirname, sf->subfonts[i]->fontname );
 		GFileMkDir(subfont);
-		fontprops = galloc(strlen(subfont)+strlen("/" FONT_PROPS)+1);
+		fontprops = xmalloc1(strlen(subfont)+strlen("/" FONT_PROPS)+1);
 		strcpy(fontprops,subfont); strcat(fontprops,"/" FONT_PROPS);
 		ssfd = fopen( fontprops,"w");
 		if ( ssfd!=NULL ) {
@@ -2315,7 +2315,7 @@ static int SFD_Dump(FILE *sfd,SplineFont *sf,EncMap *map,EncMap *normal,
 	    for ( i=0; i<sf->glyphcnt; ++i ) if ( !SFDOmit(sf->glyphs[i]) )
 		++realcnt;
 	    if ( realcnt!=sf->glyphcnt ) {
-		newgids = galloc(sf->glyphcnt*sizeof(int));
+		newgids = xmalloc1(sf->glyphcnt*sizeof(int));
 		realcnt = 0;
 		for ( i=0; i<sf->glyphcnt; ++i )
 		    if ( SFDOmit(sf->glyphs[i]) )
@@ -2331,7 +2331,7 @@ static int SFD_Dump(FILE *sfd,SplineFont *sf,EncMap *map,EncMap *normal,
 		if ( !todir )
 		    SFDDumpChar(sfd,sf->glyphs[i],map,newgids,todir);
 		else {
-		    char *glyphfile = galloc(strlen(dirname)+2*strlen(sf->glyphs[i]->name)+20);
+		    char *glyphfile = xmalloc1(strlen(dirname)+2*strlen(sf->glyphs[i]->name)+20);
 		    FILE *gsfd;
 		    appendnames(glyphfile,dirname,"/",sf->glyphs[i]->name,GLYPH_EXT );
 		    gsfd = fopen(glyphfile,"w");
@@ -2363,12 +2363,12 @@ static int SFD_Dump(FILE *sfd,SplineFont *sf,EncMap *map,EncMap *normal,
 	ff_progress_change_line2(_("Saving Bitmaps"));
     for ( bdf = sf->bitmaps; bdf!=NULL; bdf=bdf->next ) {
 	if ( todir ) {
-	    char *strike = galloc(strlen(dirname)+1+20+20);
+	    char *strike = xmalloc1(strlen(dirname)+1+20+20);
 	    char *strikeprops;
 	    FILE *ssfd;
 	    sprintf( strike,"%s/%d" STRIKE_EXT, dirname, bdf->pixelsize );
 	    GFileMkDir(strike);
-	    strikeprops = galloc(strlen(strike)+strlen("/" STRIKE_PROPS)+1);
+	    strikeprops = xmalloc1(strlen(strike)+strlen("/" STRIKE_PROPS)+1);
 	    strcpy(strikeprops,strike); strcat(strikeprops,"/" STRIKE_PROPS);
 	    ssfd = fopen( strikeprops,"w");
 	    if ( ssfd!=NULL ) {
@@ -2390,7 +2390,7 @@ return( err );
 
 static int SFD_MIDump(SplineFont *sf,EncMap *map,EncMap *normal, char *dirname,
 	int mm_pos) {
-    char *instance = galloc(strlen(dirname)+1+10+20);
+    char *instance = xmalloc1(strlen(dirname)+1+10+20);
     char *fontprops;
     FILE *ssfd;
     int err = false;
@@ -2399,7 +2399,7 @@ static int SFD_MIDump(SplineFont *sf,EncMap *map,EncMap *normal, char *dirname,
     /*  crucial and I must enforce an ordering on them */
     sprintf( instance,"%s/mm%d" INSTANCE_EXT, dirname, mm_pos );
     GFileMkDir(instance);
-    fontprops = galloc(strlen(instance)+strlen("/" FONT_PROPS)+1);
+    fontprops = xmalloc1(strlen(instance)+strlen("/" FONT_PROPS)+1);
     strcpy(fontprops,instance); strcat(fontprops,"/" FONT_PROPS);
     ssfd = fopen( fontprops,"w");
     if ( ssfd!=NULL ) {
@@ -2509,7 +2509,7 @@ static void SFDirClean(char *filename) {
     dir = opendir(filename);
     if ( dir==NULL )
 return;
-    buffer = galloc(strlen(filename)+1+NAME_MAX+1);
+    buffer = xmalloc1(strlen(filename)+1+NAME_MAX+1);
     while ( (ent = readdir(dir))!=NULL ) {
 	if ( strcmp(ent->d_name,".")==0 || strcmp(ent->d_name,"..")==0 )
     continue;
@@ -2544,8 +2544,8 @@ static void SFFinalDirClean(char *filename) {
     dir = opendir(filename);
     if ( dir==NULL )
 return;
-    buffer = galloc(strlen(filename)+1+NAME_MAX+1);
-    markerfile = galloc(strlen(filename)+2+2*NAME_MAX+1);
+    buffer = xmalloc1(strlen(filename)+1+NAME_MAX+1);
+    markerfile = xmalloc1(strlen(filename)+2+2*NAME_MAX+1);
     while ( (ent = readdir(dir))!=NULL ) {
 	if ( strcmp(ent->d_name,".")==0 || strcmp(ent->d_name,"..")==0 )
     continue;
@@ -2581,7 +2581,7 @@ int SFDWrite(char *filename,SplineFont *sf,EncMap *map,EncMap *normal,int todir)
     if ( todir ) {
 	SFDirClean(filename);
 	GFileMkDir(filename);		/* this will fail if directory already exists. That's ok */
-	tempfilename = galloc(strlen(filename)+strlen("/" FONT_PROPS)+1);
+	tempfilename = xmalloc1(strlen(filename)+strlen("/" FONT_PROPS)+1);
 	strcpy(tempfilename,filename); strcat(tempfilename,"/" FONT_PROPS);
     }
 
@@ -2625,9 +2625,9 @@ int SFDWriteBak(SplineFont *sf,EncMap *map,EncMap *normal) {
     else {
 	if ( sf->cidmaster!=NULL )
 	    sf=sf->cidmaster;
-	buf = galloc(strlen(sf->filename)+10);
+	buf = xmalloc1(strlen(sf->filename)+10);
 	if ( sf->compression!=0 ) {
-	    buf2 = galloc(strlen(sf->filename)+10);
+	    buf2 = xmalloc1(strlen(sf->filename)+10);
 	    strcpy(buf2,sf->filename);
 	    strcat(buf2,compressors[sf->compression-1].ext);
 	    strcpy(buf,buf2);
@@ -2655,7 +2655,7 @@ int SFDWriteBak(SplineFont *sf,EncMap *map,EncMap *normal) {
 	ret = SFDWrite(sf->filename,sf,map,normal,false);
 	if ( ret && sf->compression!=0 ) {
 	    unlink(buf2);
-	    buf = galloc(strlen(sf->filename)+40);
+	    buf = xmalloc1(strlen(sf->filename)+40);
 	    sprintf( buf, "%s %s", compressors[sf->compression-1].recomp, sf->filename );
 	    if ( system( buf )!=0 )
 		sf->compression = 0;
@@ -2673,7 +2673,7 @@ static char *getquotedeol(FILE *sfd) {
     char *pt, *str, *end;
     int ch;
 
-    pt = str = galloc(101); end = str+100;
+    pt = str = xmalloc1(101); end = str+100;
     while ( isspace(ch = nlgetc(sfd)) && ch!='\r' && ch!='\n' );
     while ( ch!='\n' && ch!='\r' && ch!=EOF ) {
 	if ( ch=='\\' ) {
@@ -3077,7 +3077,7 @@ static void SFDGetTtfInstrs(FILE *sfd, SplineChar *sc) {
     dec.sfd = sfd;
 
     getint(sfd,&len);
-    sc->ttf_instrs = galloc(len);
+    sc->ttf_instrs = xmalloc1(len);
     sc->ttf_instrs_len = len;
     for ( i=0; i<len; ++i )
 	sc->ttf_instrs[i] = Dec85(&dec);
@@ -3136,7 +3136,7 @@ static struct ttf_table *SFDGetTtfTable(FILE *sfd, SplineFont *sf,struct ttf_tab
 	which = 1;
 
     getint(sfd,&len);
-    tab->data = galloc(len);
+    tab->data = xmalloc1(len);
     tab->len = len;
     for ( i=0; i<len; ++i )
 	tab->data[i] = Dec85(&dec);
@@ -3169,7 +3169,7 @@ static struct ttf_table *SFDGetShortTable(FILE *sfd, SplineFont *sf,struct ttf_t
     iscvt = tab->tag==CHR('c','v','t',' ');
 
     getint(sfd,&len);
-    pt = tab->data = galloc(2*len);
+    pt = tab->data = xmalloc1(2*len);
     tab->len = 2*len;
     started = false;
     for ( i=0; i<len; ++i ) {
@@ -3649,7 +3649,7 @@ return(NULL);
 	}
 	adjust->first_pixel_size = first;
 	adjust->last_pixel_size = last;
-	adjust->corrections = galloc(len);
+	adjust->corrections = xmalloc1(len);
 	for ( i=0; i<len; ++i ) {
 	    while ( (ch=nlgetc(sfd))==' ' );
 	    if ( ch!=',' ) ungetc(ch,sfd);
@@ -4572,7 +4572,7 @@ exit(1);
 	    } else if ( pst->type==pst_lcaret ) {
 		int i;
 		fscanf( sfd, " %d", &pst->u.lcaret.cnt );
-		pst->u.lcaret.carets = galloc(pst->u.lcaret.cnt*sizeof(int16));
+		pst->u.lcaret.carets = xmalloc1(pst->u.lcaret.cnt*sizeof(int16));
 		for ( i=0; i<pst->u.lcaret.cnt; ++i )
 		    fscanf( sfd, " %hd", &pst->u.lcaret.carets[i]);
 		geteol(sfd,tok);
@@ -4634,7 +4634,7 @@ static int SFDGetBitmapProps(FILE *sfd,BDFFont *bdf,char *tok) {
     if ( getint(sfd,&pcnt)!=1 || pcnt<=0 )
 return( 0 );
     bdf->prop_cnt = pcnt;
-    bdf->props = galloc(pcnt*sizeof(BDFProperties));
+    bdf->props = xmalloc1(pcnt*sizeof(BDFProperties));
     for ( i=0; i<pcnt; ++i ) {
 	if ( getname(sfd,tok)!=1 )
     break;
@@ -4860,7 +4860,7 @@ return( 0 );
 	dir = opendir(dirname);
 	if ( dir==NULL )
 return( 0 );
-	name = galloc(strlen(dirname)+NAME_MAX+3);
+	name = xmalloc1(strlen(dirname)+NAME_MAX+3);
 
 	while ( (ent=readdir(dir))!=NULL ) {
 	    char *pt = strrchr(ent->d_name,EXT_CHAR);
@@ -5113,7 +5113,7 @@ static void SFDGetPrivate(FILE *sfd,SplineFont *sf) {
 	sf->private->keys[i] = copy(name);
 	getint(sfd,&len);
 	nlgetc(sfd);	/* skip space */
-	pt = sf->private->values[i] = galloc(len+1);
+	pt = sf->private->values[i] = xmalloc1(len+1);
 	for ( end = pt+len; pt<end; ++pt )
 	    *pt = nlgetc(sfd);
 	*pt='\0';
@@ -5156,7 +5156,7 @@ static void SFDGetGasp(FILE *sfd,SplineFont *sf) {
     int i;
 
     getsint(sfd,(int16 *) &sf->gasp_cnt);
-    sf->gasp = galloc(sf->gasp_cnt*sizeof(struct gasp));
+    sf->gasp = xmalloc1(sf->gasp_cnt*sizeof(struct gasp));
     for ( i=0; i<sf->gasp_cnt; ++i ) {
 	getsint(sfd,(int16 *) &sf->gasp[i].ppem);
 	getsint(sfd,(int16 *) &sf->gasp[i].flags);
@@ -5348,14 +5348,14 @@ static void SFDParseChainContext(FILE *sfd,SplineFont *sf,FPST *fpst, char *tok,
     }
     fscanf(sfd, "%hu %hu %hu %hu", &fpst->nccnt, &fpst->bccnt, &fpst->fccnt, &fpst->rule_cnt );
     if ( fpst->nccnt!=0 || fpst->bccnt!=0 || fpst->fccnt!=0 ) {
-	fpst->nclass = galloc(fpst->nccnt*sizeof(char *));
+	fpst->nclass = xmalloc1(fpst->nccnt*sizeof(char *));
 	fpst->nclassnames = xcalloc(fpst->nccnt,sizeof(char *));
 	if ( fpst->nccnt!=0 ) fpst->nclass[0] = NULL;
 	if ( fpst->bccnt!=0 || fpst->fccnt!=0 ) {
-	    fpst->bclass = galloc(fpst->bccnt*sizeof(char *));
+	    fpst->bclass = xmalloc1(fpst->bccnt*sizeof(char *));
 	    fpst->bclassnames = xcalloc(fpst->bccnt,sizeof(char *));
 	    if (fpst->bccnt!=0 ) fpst->bclass[0] = NULL;
-	    fpst->fclass = galloc(fpst->fccnt*sizeof(char *));
+	    fpst->fclass = xmalloc1(fpst->fccnt*sizeof(char *));
 	    fpst->fclassnames = xcalloc(fpst->fccnt,sizeof(char *));
 	    if (fpst->fccnt!=0 ) fpst->fclass[0] = NULL;
 	}
@@ -5367,7 +5367,7 @@ static void SFDParseChainContext(FILE *sfd,SplineFont *sf,FPST *fpst, char *tok,
 	    if ( i==1 && j==0 && strcmp(tok,"Class0:")==0 )
 		i=0;
 	    getint(sfd,&temp);
-	    (&fpst->nclass)[j][i] = galloc(temp+1); (&fpst->nclass)[j][i][temp] = '\0';
+	    (&fpst->nclass)[j][i] = xmalloc1(temp+1); (&fpst->nclass)[j][i][temp] = '\0';
 	    nlgetc(sfd);	/* skip space */
 	    fread((&fpst->nclass)[j][i],1,temp,sfd);
 	}
@@ -5380,7 +5380,7 @@ static void SFDParseChainContext(FILE *sfd,SplineFont *sf,FPST *fpst, char *tok,
 	    for ( j=0; j<3; ++j ) {
 		getname(sfd,tok);
 		getint(sfd,&temp);
-		(&fpst->rules[i].u.glyph.names)[j] = galloc(temp+1);
+		(&fpst->rules[i].u.glyph.names)[j] = xmalloc1(temp+1);
 		(&fpst->rules[i].u.glyph.names)[j][temp] = '\0';
 		nlgetc(sfd);	/* skip space */
 		fread((&fpst->rules[i].u.glyph.names)[j],1,temp,sfd);
@@ -5390,7 +5390,7 @@ static void SFDParseChainContext(FILE *sfd,SplineFont *sf,FPST *fpst, char *tok,
 	    fscanf( sfd, "%d %d %d", &fpst->rules[i].u.class.ncnt, &fpst->rules[i].u.class.bcnt, &fpst->rules[i].u.class.fcnt );
 	    for ( j=0; j<3; ++j ) {
 		getname(sfd,tok);
-		(&fpst->rules[i].u.class.nclasses)[j] = galloc((&fpst->rules[i].u.class.ncnt)[j]*sizeof(uint16));
+		(&fpst->rules[i].u.class.nclasses)[j] = xmalloc1((&fpst->rules[i].u.class.ncnt)[j]*sizeof(uint16));
 		for ( k=0; k<(&fpst->rules[i].u.class.ncnt)[j]; ++k ) {
 		    getusint(sfd,&(&fpst->rules[i].u.class.nclasses)[j][k]);
 		}
@@ -5400,11 +5400,11 @@ static void SFDParseChainContext(FILE *sfd,SplineFont *sf,FPST *fpst, char *tok,
 	  case pst_reversecoverage:
 	    fscanf( sfd, "%d %d %d", &fpst->rules[i].u.coverage.ncnt, &fpst->rules[i].u.coverage.bcnt, &fpst->rules[i].u.coverage.fcnt );
 	    for ( j=0; j<3; ++j ) {
-		(&fpst->rules[i].u.coverage.ncovers)[j] = galloc((&fpst->rules[i].u.coverage.ncnt)[j]*sizeof(char *));
+		(&fpst->rules[i].u.coverage.ncovers)[j] = xmalloc1((&fpst->rules[i].u.coverage.ncnt)[j]*sizeof(char *));
 		for ( k=0; k<(&fpst->rules[i].u.coverage.ncnt)[j]; ++k ) {
 		    getname(sfd,tok);
 		    getint(sfd,&temp);
-		    (&fpst->rules[i].u.coverage.ncovers)[j][k] = galloc(temp+1);
+		    (&fpst->rules[i].u.coverage.ncovers)[j][k] = xmalloc1(temp+1);
 		    (&fpst->rules[i].u.coverage.ncovers)[j][k][temp] = '\0';
 		    nlgetc(sfd);	/* skip space */
 		    fread((&fpst->rules[i].u.coverage.ncovers)[j][k],1,temp,sfd);
@@ -5417,7 +5417,7 @@ static void SFDParseChainContext(FILE *sfd,SplineFont *sf,FPST *fpst, char *tok,
 	  case pst_class:
 	  case pst_coverage:
 	    getint(sfd,&fpst->rules[i].lookup_cnt);
-	    fpst->rules[i].lookups = galloc(fpst->rules[i].lookup_cnt*sizeof(struct seqlookup));
+	    fpst->rules[i].lookups = xmalloc1(fpst->rules[i].lookup_cnt*sizeof(struct seqlookup));
 	    for ( j=k=0; j<fpst->rules[i].lookup_cnt; ++j ) {
 		getname(sfd,tok);
 		getint(sfd,&fpst->rules[i].lookups[j].seq);
@@ -5430,7 +5430,7 @@ static void SFDParseChainContext(FILE *sfd,SplineFont *sf,FPST *fpst, char *tok,
 	  case pst_reversecoverage:
 	    getname(sfd,tok);
 	    getint(sfd,&temp);
-	    fpst->rules[i].u.rcoverage.replacements = galloc(temp+1);
+	    fpst->rules[i].u.rcoverage.replacements = xmalloc1(temp+1);
 	    fpst->rules[i].u.rcoverage.replacements[temp] = '\0';
 	    nlgetc(sfd);	/* skip space */
 	    fread(fpst->rules[i].u.rcoverage.replacements,1,temp,sfd);
@@ -5473,17 +5473,17 @@ static void SFDParseStateMachine(FILE *sfd,SplineFont *sf,ASM *sm, char *tok,int
     getusint(sfd,&sm->class_cnt);
     getusint(sfd,&sm->state_cnt);
 
-    sm->classes = galloc(sm->class_cnt*sizeof(char *));
+    sm->classes = xmalloc1(sm->class_cnt*sizeof(char *));
     sm->classes[0] = sm->classes[1] = sm->classes[2] = sm->classes[3] = NULL;
     for ( i=4; i<sm->class_cnt; ++i ) {
 	getname(sfd,tok);
 	getint(sfd,&temp);
-	sm->classes[i] = galloc(temp+1); sm->classes[i][temp] = '\0';
+	sm->classes[i] = xmalloc1(temp+1); sm->classes[i][temp] = '\0';
 	nlgetc(sfd);	/* skip space */
 	fread(sm->classes[i],1,temp,sfd);
     }
 
-    sm->state = galloc(sm->class_cnt*sm->state_cnt*sizeof(struct asm_state));
+    sm->state = xmalloc1(sm->class_cnt*sm->state_cnt*sizeof(struct asm_state));
     for ( i=0; i<sm->class_cnt*sm->state_cnt; ++i ) {
 	getusint(sfd,&sm->state[i].next_state);
 	getusint(sfd,&sm->state[i].flags);
@@ -5495,7 +5495,7 @@ static void SFDParseStateMachine(FILE *sfd,SplineFont *sf,ASM *sm, char *tok,int
 	    if ( temp==0 )
 		sm->state[i].u.insert.mark_ins = NULL;
 	    else {
-		sm->state[i].u.insert.mark_ins = galloc(temp+1); sm->state[i].u.insert.mark_ins[temp] = '\0';
+		sm->state[i].u.insert.mark_ins = xmalloc1(temp+1); sm->state[i].u.insert.mark_ins[temp] = '\0';
 		nlgetc(sfd);	/* skip space */
 		fread(sm->state[i].u.insert.mark_ins,1,temp,sfd);
 	    }
@@ -5503,7 +5503,7 @@ static void SFDParseStateMachine(FILE *sfd,SplineFont *sf,ASM *sm, char *tok,int
 	    if ( temp==0 )
 		sm->state[i].u.insert.cur_ins = NULL;
 	    else {
-		sm->state[i].u.insert.cur_ins = galloc(temp+1); sm->state[i].u.insert.cur_ins[temp] = '\0';
+		sm->state[i].u.insert.cur_ins = xmalloc1(temp+1); sm->state[i].u.insert.cur_ins[temp] = '\0';
 		nlgetc(sfd);	/* skip space */
 		fread(sm->state[i].u.insert.cur_ins,1,temp,sfd);
 	    }
@@ -5511,7 +5511,7 @@ static void SFDParseStateMachine(FILE *sfd,SplineFont *sf,ASM *sm, char *tok,int
 	    int j;
 	    getint(sfd,&sm->state[i].u.kern.kcnt);
 	    if ( sm->state[i].u.kern.kcnt!=0 )
-		sm->state[i].u.kern.kerns = galloc(sm->state[i].u.kern.kcnt*sizeof(int16));
+		sm->state[i].u.kern.kerns = xmalloc1(sm->state[i].u.kern.kcnt*sizeof(int16));
 	    for ( j=0; j<sm->state[i].u.kern.kcnt; ++j ) {
 		getint(sfd,&temp);
 		sm->state[i].u.kern.kerns[j] = temp;
@@ -5540,7 +5540,7 @@ static struct macname *SFDParseMacNames(FILE *sfd, char *tok) {
 	getint(sfd,&len);
 	cur->enc = enc;
 	cur->lang = lang;
-	cur->name = pt = galloc(len+1);
+	cur->name = pt = xmalloc1(len+1);
 
 	while ( (ch=nlgetc(sfd))==' ');
 	if ( ch=='"' )
@@ -5684,8 +5684,8 @@ return( sf );
 	    ++bc;
     }
     rewinddir(dir);
-    name = galloc(strlen(dirname)+NAME_MAX+3);
-    props = galloc(strlen(dirname)+2*NAME_MAX+4);
+    name = xmalloc1(strlen(dirname)+NAME_MAX+3);
+    props = xmalloc1(strlen(dirname)+2*NAME_MAX+4);
     if ( gc!=0 ) {
 	sf->glyphcnt = 0;
 	sf->glyphmax = gc;
@@ -5952,7 +5952,7 @@ static void SFDParseLookup(FILE *sfd,SplineFont *sf,OTLookup *otl) {
 			}
 			sl->lang_cnt = lcnt;
 			if ( lcnt>MAX_LANG )
-			    sl->morelangs = galloc((lcnt-MAX_LANG)*sizeof(uint32));
+			    sl->morelangs = xmalloc1((lcnt-MAX_LANG)*sizeof(uint32));
 			for ( i=0; i<lcnt; ++i ) {
 			    if ( i<MAX_LANG )
 				sl->langs[i] = langs[i];
@@ -6060,7 +6060,7 @@ static struct Base *SFDParseBase(FILE *sfd) {
 
     getint(sfd,&base->baseline_cnt);
     if ( base->baseline_cnt!=0 ) {
-	base->baseline_tags = galloc(base->baseline_cnt*sizeof(uint32));
+	base->baseline_tags = xmalloc1(base->baseline_cnt*sizeof(uint32));
 	for ( i=0; i<base->baseline_cnt; ++i )
 	    base->baseline_tags[i] = gettag(sfd);
     }
@@ -6084,7 +6084,7 @@ static OTLookup **SFDLookupList(FILE *sfd,SplineFont *sf) {
 	if ( otl!=NULL ) {
 	    if ( lcnt>lmax ) {
 		if ( buf==space ) {
-		    buf = galloc((lmax=lcnt+50)*sizeof(OTLookup *));
+		    buf = xmalloc1((lmax=lcnt+50)*sizeof(OTLookup *));
 		    memcpy(buf,space,sizeof(space));
 		} else
 		    buf = xrealloc(buf,(lmax+=50)*sizeof(OTLookup *));
@@ -6095,7 +6095,7 @@ static OTLookup **SFDLookupList(FILE *sfd,SplineFont *sf) {
     if ( lcnt==0 )
 return( NULL );
 
-    ret = galloc((lcnt+1)*sizeof(OTLookup *));
+    ret = xmalloc1((lcnt+1)*sizeof(OTLookup *));
     memcpy(ret,buf,lcnt*sizeof(OTLookup *));
     ret[lcnt] = NULL;
 return( ret );
@@ -6587,16 +6587,16 @@ exit(1);
 	    }
 	    getint(sfd,&imax);
 	    ((SplineFont1 *) sf)->sli_cnt = imax;
-	    ((SplineFont1 *) sf)->script_lang = galloc((imax+1)*sizeof(struct script_record *));
+	    ((SplineFont1 *) sf)->script_lang = xmalloc1((imax+1)*sizeof(struct script_record *));
 	    ((SplineFont1 *) sf)->script_lang[imax] = NULL;
 	    for ( i=0; i<imax; ++i ) {
 		getint(sfd,&jmax);
-		((SplineFont1 *) sf)->script_lang[i] = galloc((jmax+1)*sizeof(struct script_record));
+		((SplineFont1 *) sf)->script_lang[i] = xmalloc1((jmax+1)*sizeof(struct script_record));
 		((SplineFont1 *) sf)->script_lang[i][jmax].script = 0;
 		for ( j=0; j<jmax; ++j ) {
 		    ((SplineFont1 *) sf)->script_lang[i][j].script = gettag(sfd);
 		    getint(sfd,&kmax);
-		    ((SplineFont1 *) sf)->script_lang[i][j].langs = galloc((kmax+1)*sizeof(uint32));
+		    ((SplineFont1 *) sf)->script_lang[i][j].langs = xmalloc1((kmax+1)*sizeof(uint32));
 		    ((SplineFont1 *) sf)->script_lang[i][j].langs[kmax] = 0;
 		    for ( k=0; k<kmax; ++k ) {
 			((SplineFont1 *) sf)->script_lang[i][j].langs[k] = gettag(sfd);
@@ -6631,8 +6631,8 @@ exit(1);
 	    SFDParseLookup(sfd,sf,otl);
 	} else if ( strmatch(tok,"MarkAttachClasses:")==0 ) {
 	    getint(sfd,&sf->mark_class_cnt);
-	    sf->mark_classes = galloc(sf->mark_class_cnt*sizeof(char *));
-	    sf->mark_class_names = galloc(sf->mark_class_cnt*sizeof(char *));
+	    sf->mark_classes = xmalloc1(sf->mark_class_cnt*sizeof(char *));
+	    sf->mark_class_names = xmalloc1(sf->mark_class_cnt*sizeof(char *));
 	    sf->mark_classes[0] = NULL; sf->mark_class_names[0] = NULL;
 	    for ( i=1; i<sf->mark_class_cnt; ++i ) {	/* Class 0 is unused */
 		int temp;
@@ -6641,14 +6641,14 @@ exit(1);
 		ungetc(temp,sfd);
 		sf->mark_class_names[i] = SFDReadUTF7Str(sfd);
 		getint(sfd,&temp);
-		sf->mark_classes[i] = galloc(temp+1); sf->mark_classes[i][temp] = '\0';
+		sf->mark_classes[i] = xmalloc1(temp+1); sf->mark_classes[i][temp] = '\0';
 		nlgetc(sfd);	/* skip space */
 		fread(sf->mark_classes[i],1,temp,sfd);
 	    }
 	} else if ( strmatch(tok,"MarkAttachSets:")==0 ) {
 	    getint(sfd,&sf->mark_set_cnt);
-	    sf->mark_sets = galloc(sf->mark_set_cnt*sizeof(char *));
-	    sf->mark_set_names = galloc(sf->mark_set_cnt*sizeof(char *));
+	    sf->mark_sets = xmalloc1(sf->mark_set_cnt*sizeof(char *));
+	    sf->mark_set_names = xmalloc1(sf->mark_set_cnt*sizeof(char *));
 	    for ( i=0; i<sf->mark_set_cnt; ++i ) {	/* Set 0 is used */
 		int temp;
 		while ( (temp=nlgetc(sfd))=='\n' || temp=='\r' )
@@ -6656,7 +6656,7 @@ exit(1);
 		ungetc(temp,sfd);
 		sf->mark_set_names[i] = SFDReadUTF7Str(sfd);
 		getint(sfd,&temp);
-		sf->mark_sets[i] = galloc(temp+1); sf->mark_sets[i][temp] = '\0';
+		sf->mark_sets[i] = xmalloc1(temp+1); sf->mark_sets[i][temp] = '\0';
 		nlgetc(sfd);	/* skip space */
 		fread(sf->mark_sets[i],1,temp,sfd);
 	    }
@@ -6693,21 +6693,21 @@ exit(1);
 		    kc->subtable = NULL;
 		}
 	    }
-	    kc->firsts = galloc(kc->first_cnt*sizeof(char *));
-	    kc->seconds = galloc(kc->second_cnt*sizeof(char *));
-	    kc->offsets = galloc(kc->first_cnt*kc->second_cnt*sizeof(int16));
+	    kc->firsts = xmalloc1(kc->first_cnt*sizeof(char *));
+	    kc->seconds = xmalloc1(kc->second_cnt*sizeof(char *));
+	    kc->offsets = xmalloc1(kc->first_cnt*kc->second_cnt*sizeof(int16));
 	    kc->adjusts = xcalloc(kc->first_cnt*kc->second_cnt,sizeof(DeviceTable));
 	    kc->firsts[0] = NULL;
 	    for ( i=classstart; i<kc->first_cnt; ++i ) {
 		getint(sfd,&temp);
-		kc->firsts[i] = galloc(temp+1); kc->firsts[i][temp] = '\0';
+		kc->firsts[i] = xmalloc1(temp+1); kc->firsts[i][temp] = '\0';
 		nlgetc(sfd);	/* skip space */
 		fread(kc->firsts[i],1,temp,sfd);
 	    }
 	    kc->seconds[0] = NULL;
 	    for ( i=1; i<kc->second_cnt; ++i ) {
 		getint(sfd,&temp);
-		kc->seconds[i] = galloc(temp+1); kc->seconds[i][temp] = '\0';
+		kc->seconds[i] = xmalloc1(temp+1); kc->seconds[i][temp] = '\0';
 		nlgetc(sfd);	/* skip space */
 		fread(kc->seconds[i],1,temp,sfd);
 	    }
@@ -6894,7 +6894,7 @@ exit( 1 );
 	    ord = (struct table_ordering *) xzalloc(sizeof (struct table_ordering));
 	    ord->table_tag = gettag(sfd);
 	    getint(sfd,&temp);
-	    ord->ordered_features = galloc((temp+1)*sizeof(uint32));
+	    ord->ordered_features = xmalloc1((temp+1)*sizeof(uint32));
 	    ord->ordered_features[temp] = 0;
 	    for ( i=0; i<temp; ++i ) {
 		while ( isspace((ch=nlgetc(sfd))) );
@@ -6931,8 +6931,8 @@ exit( 1 );
 		getint(sfd,&mm->named_instance_count);
 	    }
 	    mm->instances = xcalloc(mm->instance_count,sizeof(SplineFont *));
-	    mm->positions = galloc(mm->instance_count*mm->axis_count*sizeof(real));
-	    mm->defweights = galloc(mm->instance_count*sizeof(real));
+	    mm->positions = xmalloc1(mm->instance_count*mm->axis_count*sizeof(real));
+	    mm->defweights = xmalloc1(mm->instance_count*sizeof(real));
 	    mm->axismaps = xcalloc(mm->axis_count,sizeof(struct axismap));
 	    if ( mm->named_instance_count!=0 )
 		mm->named_instances = xcalloc(mm->named_instance_count,sizeof(struct named_instance));
@@ -6962,8 +6962,8 @@ exit( 1 );
 		int index, points;
 		getint(sfd,&index); getint(sfd,&points);
 		mm->axismaps[index].points = points;
-		mm->axismaps[index].blends = galloc(points*sizeof(real));
-		mm->axismaps[index].designs = galloc(points*sizeof(real));
+		mm->axismaps[index].blends = xmalloc1(points*sizeof(real));
+		mm->axismaps[index].designs = xmalloc1(points*sizeof(real));
 		for ( i=0; i<points; ++i ) {
 		    getreal(sfd,&mm->axismaps[index].blends[i]);
 		    while ( (ch=nlgetc(sfd))!=EOF && isspace(ch));
@@ -6982,7 +6982,7 @@ exit( 1 );
 	    if ( mm!=NULL ) {
 		int index;
 		getint(sfd,&index);
-		mm->named_instances[index].coords = galloc(mm->axis_count*sizeof(real));
+		mm->named_instances[index].coords = xmalloc1(mm->axis_count*sizeof(real));
 		for ( i=0; i<mm->axis_count; ++i )
 		    getreal(sfd,&mm->named_instances[index].coords[i]);
 		lastnamedinstance = &mm->named_instances[index];
@@ -7610,7 +7610,7 @@ return( NULL );
 	    }
 	    if ( strmatch(tok,"FontName:")==0 ) {
 		getname(sfd,tok);
-		ret = galloc(2*sizeof(char*));
+		ret = xmalloc1(2*sizeof(char*));
 		ret[0] = copy(tok);
 		ret[1] = NULL;
 	break;

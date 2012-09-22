@@ -786,7 +786,7 @@ static void dump_contextpstcoverage(FILE *out,SplineFont *sf,
 		    char *start;
 		    for ( n=len=0; n<r->u.coverage.ncnt; ++n )
 			len += strlen(r->u.coverage.ncovers[n])+1;
-		    start = galloc(len+1);
+		    start = xmalloc1(len+1);
 		    for ( n=len=0; n<r->u.coverage.ncnt; ++n ) {
 			strcpy(start+len,r->u.coverage.ncovers[n]);
 			len += strlen(r->u.coverage.ncovers[n]);
@@ -1590,7 +1590,7 @@ static void dump_gdef(FILE *out,SplineFont *sf) {
     break;
 	if ( glyphs!=NULL )
     break;
-	glyphs = galloc((lcnt+1)*sizeof(struct lglyphs));
+	glyphs = xmalloc1((lcnt+1)*sizeof(struct lglyphs));
 	glyphs[lcnt].sc = NULL;
     }
 
@@ -1841,7 +1841,7 @@ static void preparenames(SplineFont *sf) {
 	    ++cnt;
     if ( cnt==0 )
 return;
-    names = galloc(cnt*sizeof(char *));
+    names = xmalloc1(cnt*sizeof(char *));
     featbuf[4] = scriptbuf[4] = 0;
     cnt = 0;
     for ( isgpos=0; isgpos<2; ++isgpos ) {
@@ -2015,7 +2015,7 @@ static char *fea_canonicalClassOrder(char *class) {
 	++name_cnt;
     }
 
-    names = galloc(name_cnt*sizeof(char *));
+    names = xmalloc1(name_cnt*sizeof(char *));
     name_cnt = 0;
     for ( pt = temp; ; ) {
 	while ( *pt==' ' ) ++pt;
@@ -2092,7 +2092,7 @@ static char *fea_classesSplit(char *class1, char *class2) {
     int match_found;
 
     if ( len2>len ) len = len2;
-    intersection = galloc(len+1);
+    intersection = xmalloc1(len+1);
     ix = 0;
 
     i = 0;
@@ -2709,7 +2709,7 @@ return( copy( test->glyphs) );
 	    char *ret, *pt;
 	    for ( sames=mtest; sames!=NULL; sames=sames->same )
 		len += strlen(sames->glyphs)+1;
-	    pt = ret = galloc(len+1);
+	    pt = ret = xmalloc1(len+1);
 	    for ( sames=mtest; sames!=NULL; sames=sames->same ) {
 		strcpy(pt,sames->glyphs);
 		pt += strlen(pt);
@@ -3274,7 +3274,7 @@ return;
 	int i;
 	adjust->first_pixel_size = min;
 	adjust->last_pixel_size = max;
-	adjust->corrections = galloc(max-min+1);
+	adjust->corrections = xmalloc1(max-min+1);
 	for ( i=min; i<=max; ++i )
 	    adjust->corrections[i-min] = values[i];
     }
@@ -3969,7 +3969,7 @@ static struct markedglyphs *fea_glyphs_to_names(struct markedglyphs *glyphs,
     len = 0;
     for ( g=glyphs, i=0; i<cnt; ++i, g=g->next )
 	len += strlen( g->name_or_class ) +1;
-    names = pt = galloc(len+1);
+    names = pt = xmalloc1(len+1);
     for ( g=glyphs, i=0; i<cnt; ++i, g=g->next ) {
 	strcpy(pt,g->name_or_class);
 	pt += strlen( pt );
@@ -4279,7 +4279,7 @@ static struct feat_item *fea_process_sub_ligature(struct parseState *tok,
 	char *space;
 	for ( g=glyphs; g!=NULL && g->mark_count==glyphs->mark_count; g=g->next )
 	    len += strlen(g->name_or_class)+1;
-	space = galloc(len+1);
+	space = xmalloc1(len+1);
 	sofar = fea_AddAllLigPosibilities(tok,glyphs,sc,space,space,sofar);
 	free(space);
     }
@@ -4297,7 +4297,7 @@ static char *fea_mergeTickedMarks(struct markedglyphs *g, int only_ticked) {
 		len += strlen(sames->glyphs)+1;
 	}
     }
-    pt = ret = galloc(len+1);
+    pt = ret = xmalloc1(len+1);
     for ( i=0; i<g->apm_cnt; ++i ) {
 	if ( !only_ticked || g->apmark[i].mark_count!=0 ) {
 	    for ( sames=g->apmark[i].mark_class; sames!=NULL; sames=sames->same ) {
@@ -4412,13 +4412,13 @@ static FPST *fea_markedglyphs_to_fpst(struct parseState *tok,struct markedglyphs
 	r->u.coverage.ncnt = ncnt;
 	r->u.coverage.bcnt = bcnt;
 	r->u.coverage.fcnt = fcnt;
-	r->u.coverage.ncovers = galloc(ncnt*sizeof(char*));
-	r->u.coverage.bcovers = galloc(bcnt*sizeof(char*));
-	r->u.coverage.fcovers = galloc(fcnt*sizeof(char*));
+	r->u.coverage.ncovers = xmalloc1(ncnt*sizeof(char*));
+	r->u.coverage.bcovers = xmalloc1(bcnt*sizeof(char*));
+	r->u.coverage.fcovers = xmalloc1(fcnt*sizeof(char*));
 
 	/* bcovers glyph classes should be in reverse order, but they */
 	/* are in natural order in the feature file, so we reverse them */
-	bcovers = galloc(bcnt*sizeof(char*));
+	bcovers = xmalloc1(bcnt*sizeof(char*));
 	for ( i=0, g=glyphs; i<bcnt; ++i, g=g->next )
 	    i = fea_AddAGlyphSet(bcovers,r->u.coverage.ncovers,i,g);
 	for ( j=0, k=bcnt-1; j<bcnt; j++ ) {
@@ -4596,7 +4596,7 @@ static void fea_ParseSubstitute(struct parseState *tok) {
 		    char *mult;
 		    for ( g=rpl; g!=NULL; g=g->next )
 			len += strlen(g->name_or_class)+1;
-		    mult = galloc(len+1);
+		    mult = xmalloc1(len+1);
 		    len = 0;
 		    for ( g=rpl; g!=NULL; g=g->next ) {
 			strcpy(mult+len,g->name_or_class);
@@ -5120,7 +5120,7 @@ static struct feat_item *fea_ParseParameters(struct parseState *tok, struct feat
 	feat->next = tok->sofar;
 	tok->sofar = feat;
     }
-    feat->u1.params = galloc(sizeof(params));
+    feat->u1.params = xmalloc1(sizeof(params));
     memcpy(feat->u1.params,params,sizeof(params));
 return( feat );
 }
@@ -5566,7 +5566,7 @@ static void fea_ParseGDEFTable(struct parseState *tok) {
 		++tok->err_count;
 		fea_skip_to_semi(tok);
 	    }
-	    item->u2.lcaret = galloc((len+1)*sizeof(int16));
+	    item->u2.lcaret = xmalloc1((len+1)*sizeof(int16));
 	    memcpy(item->u2.lcaret,carets,len*sizeof(int16));
 	    item->u2.lcaret[len] = 0;
 	} else if ( strcmp(tok->tokbuf,"GlyphClassDef")==0 ) {
@@ -5649,7 +5649,7 @@ static void fea_ParseBaseTable(struct parseState *tok) {
 		    baselines[cnt++] = tok->tag;
 	    }
 	    active->baseline_cnt = cnt;
-	    active->baseline_tags = galloc(cnt*sizeof(uint32));
+	    active->baseline_tags = xmalloc1(cnt*sizeof(uint32));
 	    memcpy(active->baseline_tags,baselines,cnt*sizeof(uint32));
 	} else if ( strcmp(tok->tokbuf+off,"BaseScriptList")==0 ) {
 	    last = NULL;
@@ -6133,8 +6133,8 @@ static void fea_ApplyLookupListMark2(struct parseState *tok,
     int ch;
     SplineChar *sc;
 
-    classes = galloc(ac_max*sizeof(struct gpos_mark *));
-    acs = galloc(ac_max*sizeof(AnchorClass *));
+    classes = xmalloc1(ac_max*sizeof(struct gpos_mark *));
+    acs = xmalloc1(ac_max*sizeof(AnchorClass *));
     ac_cnt = 0;
     while ( lookup_data != NULL && lookup_data->type!=ft_lookup_end ) {
 	struct feat_item *orig = lookup_data;
@@ -6184,7 +6184,7 @@ static void fea_ApplyLookupListMark2(struct parseState *tok,
 		    if ( classes[i]->name_used==0 )
 			acs[i]->name = copy(classes[i]->name+1);
 		    else {
-			acs[i]->name = galloc(strlen(classes[i]->name)+10);
+			acs[i]->name = xmalloc1(strlen(classes[i]->name)+10);
 			sprintf(acs[i]->name,"%s_%d", classes[i]->name+1, classes[i]->name_used);
 		    }
 		    ++(classes[i]->name_used);
@@ -6302,7 +6302,7 @@ return;
     if ( kc->adjusts == NULL )
 	kc->adjusts = xcalloc(kc->first_cnt*kc->second_cnt,sizeof(DeviceTable));
     kc->adjusts[index] = *dt;
-    kc->adjusts[index].corrections = galloc(dt->last_pixel_size-dt->first_pixel_size+1);
+    kc->adjusts[index].corrections = xmalloc1(dt->last_pixel_size-dt->first_pixel_size+1);
     memcpy(kc->adjusts[index].corrections,dt->corrections,dt->last_pixel_size-dt->first_pixel_size+1);
 
 }
@@ -6312,7 +6312,7 @@ static void KPFillDevTab(KernPair *kp,DeviceTable *dt) {
 return;
     kp->adjust = (DeviceTable *) xzalloc(sizeof (DeviceTable));
     *kp->adjust = *dt;
-    kp->adjust->corrections = galloc(dt->last_pixel_size-dt->first_pixel_size+1);
+    kp->adjust->corrections = xmalloc1(dt->last_pixel_size-dt->first_pixel_size+1);
     memcpy(kp->adjust->corrections,dt->corrections,dt->last_pixel_size-dt->first_pixel_size+1);
 }
 
@@ -6389,8 +6389,8 @@ static void fea_ApplyLookupListPair(struct parseState *tok,
     memset(&lefts,0,sizeof(lefts));
     memset(&rights,0,sizeof(rights));
     if ( kmax!=0 ) {
-	lefts.classes = galloc(kmax*sizeof(char *));
-	rights.classes = galloc(kmax*sizeof(char *));
+	lefts.classes = xmalloc1(kmax*sizeof(char *));
+	rights.classes = xmalloc1(kmax*sizeof(char *));
 	lefts.max = rights.max = kmax;
     }
     vkern = false;
@@ -6477,8 +6477,8 @@ static void fea_ApplyLookupListPair(struct parseState *tok,
 		SFKernClassRemoveFree(tok->sf,sub->kc);
 	    sub->kc = kc = (KernClass *) xzalloc(sizeof (KernClass));
 	    kc->first_cnt = lefts.cnt+1; kc->second_cnt = rights.cnt+1;
-	    kc->firsts = galloc(kc->first_cnt*sizeof(char *));
-	    kc->seconds = galloc(kc->second_cnt*sizeof(char *));
+	    kc->firsts = xmalloc1(kc->first_cnt*sizeof(char *));
+	    kc->seconds = xmalloc1(kc->second_cnt*sizeof(char *));
 	    kc->firsts[0] = kc->seconds[0] = NULL;
 	    for ( i=0; i<lefts.cnt; ++i )
 		kc->firsts[i+1] = lefts.classes[i];
@@ -6951,7 +6951,7 @@ static void fea_NameLookups(struct parseState *tok) {
 	otl->next = NULL;
 	if ( otl->lookup_name!=NULL && SFFindLookup(sf,otl->lookup_name)!=NULL ) {
 	    int cnt=0;
-	    char *namebuf = galloc(strlen( otl->lookup_name )+8 );
+	    char *namebuf = xmalloc1(strlen( otl->lookup_name )+8 );
 	    /* Name already in use, modify it */
 	    do {
 		sprintf(namebuf,"%s-%d", otl->lookup_name, cnt++ );

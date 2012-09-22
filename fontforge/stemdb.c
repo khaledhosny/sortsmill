@@ -878,11 +878,11 @@ static void MakeVirtualLine(struct glyphdata *gd,BasePoint *perturbed,
 	    }
 	    if ( !i ) {
 		gd->scnt = cnt;
-		gd->sspace = galloc((cnt+1)*sizeof(Spline *));
+		gd->sspace = xmalloc1((cnt+1)*sizeof(Spline *));
 	    } else
 		gd->sspace[cnt] = NULL;
 	}
-	gd->stspace = galloc((3*cnt+2)*sizeof(struct st));
+	gd->stspace = xmalloc1((3*cnt+2)*sizeof(struct st));
 	SplineCharFindBounds(gd->sc,&gd->size);
 	gd->size.minx -= 10; gd->size.miny -= 10;
 	gd->size.maxx += 10; gd->size.maxy += 10;
@@ -1109,7 +1109,7 @@ return( NULL );
     
     line = &gd->lines[gd->linecnt++];
     line->pcnt = pcnt+1;
-    line->points = galloc((pcnt+1)*sizeof(struct pointdata *));
+    line->points = xmalloc1((pcnt+1)*sizeof(struct pointdata *));
     line->points[0] = pd;
     line->unit = *dir;
     line->is_left = is_l;
@@ -3643,7 +3643,7 @@ static void FigureStemActive( struct glyphdata *gd, struct stemdata *stem ) {
 
     if ( acnt!=0 ) {
 	stem->activecnt = MergeSegmentsFinal( activespace,acnt );
-	stem->active = galloc(acnt*sizeof(struct segment));
+	stem->active = xmalloc1(acnt*sizeof(struct segment));
 	memcpy(stem->active,activespace,acnt*sizeof(struct segment));
     }
 
@@ -4526,7 +4526,7 @@ return;
     acnt = MergeSegments( activespace,acnt );
     stem->activecnt = acnt;
     if ( acnt!=0 ) {
-	stem->active = galloc(acnt*sizeof(struct segment));
+	stem->active = xmalloc1(acnt*sizeof(struct segment));
 	memcpy( stem->active,activespace,acnt*sizeof( struct segment ));
     }
 
@@ -4865,10 +4865,10 @@ static void AssignPointsToStems( struct glyphdata *gd,int startnum,DBounds *boun
 	    HalfStemNoOpposite( gd,pd,stem,&dir,2 );
 	}
     }
-    gd->lspace = galloc(gd->pcnt*sizeof(struct segment));
-    gd->rspace = galloc(gd->pcnt*sizeof(struct segment));
-    gd->bothspace = galloc(3*gd->pcnt*sizeof(struct segment));
-    gd->activespace = galloc(3*gd->pcnt*sizeof(struct segment));
+    gd->lspace = xmalloc1(gd->pcnt*sizeof(struct segment));
+    gd->rspace = xmalloc1(gd->pcnt*sizeof(struct segment));
+    gd->bothspace = xmalloc1(3*gd->pcnt*sizeof(struct segment));
+    gd->activespace = xmalloc1(3*gd->pcnt*sizeof(struct segment));
 #if GLYPH_DATA_DEBUG
     fprintf( stderr,"Going to calculate stem active zones for %s\n",gd->sc->name );
 #endif
@@ -5812,7 +5812,7 @@ return( NULL );
     gd->realcnt = gd->pcnt = SCNumberPoints( sc, layer );
     for ( i=0, ss=sc->layers[layer].splines; ss!=NULL; ss=ss->next, ++i );
     gd->ccnt = i;
-    gd->contourends = galloc((i+1)*sizeof(int));
+    gd->contourends = xmalloc1((i+1)*sizeof(int));
     for ( i=0, ss=sc->layers[layer].splines; ss!=NULL; ss=ss->next, ++i ) {
 	SplinePoint *last;
 	if ( ss->first->prev!=NULL )
@@ -5855,11 +5855,11 @@ return( NULL );
 	break;
 	}
     }
-    gd->pspace = galloc( gd->pcnt*sizeof( struct pointdata *));
+    gd->pspace = xmalloc1( gd->pcnt*sizeof( struct pointdata *));
 
     /*gd->ms = SSsToMContours(sc->layers[layer].splines,over_remove);*/	/* second argument is meaningless here */
     for ( m=gd->ms, cnt=0; m!=NULL; m=m->linked, ++cnt );
-    gd->space = galloc((cnt+2)*sizeof(Monotonic*));
+    gd->space = xmalloc1((cnt+2)*sizeof(Monotonic*));
     gd->mcnt = cnt;
 
     gd->points = xcalloc(gd->pcnt,sizeof(struct pointdata));
@@ -5929,7 +5929,7 @@ return( gd );
 	memcpy( &gd->bd,bd,sizeof( BlueData ));
 
     /* There will never be more lines than there are points (counting next/prev as separate) */
-    gd->lines = galloc( 2*gd->pcnt*sizeof( struct linedata ));
+    gd->lines = xmalloc1( 2*gd->pcnt*sizeof( struct linedata ));
     gd->linecnt = 0;
     for ( i=0; i<gd->pcnt; ++i ) if ( gd->points[i].sp!=NULL ) {
 	pd = &gd->points[i];
@@ -6010,10 +6010,10 @@ return( gd );
     /* Figure out active zones at the first order (as they are needed to */
     /* determine which stems are undesired and they don't depend from */
     /* the "potential" state of left/right points in chunks */
-    gd->lspace = galloc(gd->pcnt*sizeof(struct segment));
-    gd->rspace = galloc(gd->pcnt*sizeof(struct segment));
-    gd->bothspace = galloc(3*gd->pcnt*sizeof(struct segment));
-    gd->activespace = galloc(3*gd->pcnt*sizeof(struct segment));
+    gd->lspace = xmalloc1(gd->pcnt*sizeof(struct segment));
+    gd->rspace = xmalloc1(gd->pcnt*sizeof(struct segment));
+    gd->bothspace = xmalloc1(3*gd->pcnt*sizeof(struct segment));
+    gd->activespace = xmalloc1(3*gd->pcnt*sizeof(struct segment));
 #if GLYPH_DATA_DEBUG
     fprintf( stderr,"Going to calculate stem active zones for %s\n",gd->sc->name );
 #endif

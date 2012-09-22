@@ -33,13 +33,6 @@
 #include "ustring.h"
 #include "xalloc.h"
 
-void *galloc(size_t size)
-{
-    // malloc(0) is allowed to return NULL, but galloc(0) is expected
-    // to return something non-NULL.
-    return xmalloc(size == 0 ? 1 : size);
-}
-
 char *copy(const char *str)
 {
     return (str == NULL) ? NULL : xstrdup(str);

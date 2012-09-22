@@ -624,7 +624,7 @@ static void BVDrawRefName(BitmapView *bv,GWindow pixmap,BDFRefChar *ref,int fg) 
     char *refinfo;
     IBounds bb;
 
-    refinfo = galloc(strlen(ref->bdfc->sc->name) +  30);
+    refinfo = xmalloc1(strlen(ref->bdfc->sc->name) +  30);
     sprintf(refinfo,"%s XOff: %d YOff: %d", ref->bdfc->sc->name, ref->xoff, ref->yoff);
 
     bb.minx = ref->bdfc->xmin + ref->xoff;

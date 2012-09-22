@@ -1288,8 +1288,8 @@ return;
     if ( contourcnt>gi->maxp->maxContours ) gi->maxp->maxContours = contourcnt;
     if ( ptcnt>gi->maxp->maxPoints ) gi->maxp->maxPoints = ptcnt;
 
-    bp = galloc(ptcnt*sizeof(BasePoint));
-    fs = galloc(ptcnt);
+    bp = xmalloc1(ptcnt*sizeof(BasePoint));
+    fs = xmalloc1(ptcnt);
     ptcnt = contourcnt = 0;
     for ( ss=ttfss; ss!=NULL; ss=ss->next ) {
 	ptcnt = SSAddPoints(ss,ptcnt,bp,fs);
@@ -1328,7 +1328,7 @@ return;
     if ( gi==NULL )
 return;
 
-    bygid = galloc((sf->glyphcnt+3)*sizeof(int));
+    bygid = xmalloc1((sf->glyphcnt+3)*sizeof(int));
     memset(bygid,0xff, (sf->glyphcnt+3)*sizeof(int));
 
     j=1;
@@ -1372,7 +1372,7 @@ static void AssignNotdefNull(SplineFont *sf,int *bygid, int iscff) {
 }
 
 static int AssignTTFGlyph(struct glyphinfo *gi,SplineFont *sf,EncMap *map,int iscff) {
-    int *bygid = galloc((sf->glyphcnt+3)*sizeof(int));
+    int *bygid = xmalloc1((sf->glyphcnt+3)*sizeof(int));
     int i,j;
 
     memset(bygid,0xff, (sf->glyphcnt+3)*sizeof(int));
@@ -1411,7 +1411,7 @@ return j;
 static int AssignTTFBitGlyph(struct glyphinfo *gi,SplineFont *sf,EncMap *map,int32 *bsizes) {
     int i, j;
     BDFFont *bdf;
-    int *bygid = galloc((sf->glyphcnt+3)*sizeof(int));
+    int *bygid = xmalloc1((sf->glyphcnt+3)*sizeof(int));
 
     memset(bygid,0xff, (sf->glyphcnt+3)*sizeof(int));
 
@@ -1487,8 +1487,8 @@ static int dumpglyphs(SplineFont *sf,struct glyphinfo *gi) {
     }
 
     gi->maxp->numGlyphs = gi->gcnt;
-    gi->loca = galloc((gi->maxp->numGlyphs+1)*sizeof(uint32));
-    gi->pointcounts = galloc((gi->maxp->numGlyphs+1)*sizeof(int32));
+    gi->loca = xmalloc1((gi->maxp->numGlyphs+1)*sizeof(uint32));
+    gi->pointcounts = xmalloc1((gi->maxp->numGlyphs+1)*sizeof(int32));
     memset(gi->pointcounts,-1,(gi->maxp->numGlyphs+1)*sizeof(int32));
     gi->next_glyph = 0;
     gi->glyphs = tmpfile();
@@ -1580,7 +1580,7 @@ static void ttfdumphdmx(SplineFont *sf,struct alltabs *at,int *bsizes) {
 
     if ( bsizes!=NULL ) {
 	for ( i=0; bsizes[i]!=0; ++i );
-	strikes = galloc(i*sizeof(BDFFont *));
+	strikes = xmalloc1(i*sizeof(BDFFont *));
 	for ( i=j=0; bsizes[i]!=0; ++i ) {
 	    if ( i!=0 && (bsizes[i-1]&0xffff) == (bsizes[i]&0xffff))
 	continue;		/* Same pixel size, different depths */
@@ -3953,7 +3953,7 @@ return;		/* Should not happen, but it did */
 
     if ( nt->cur+6>=nt->max ) {
 	if ( nt->cur==0 )
-	    nt->entries = galloc((nt->max=100)*sizeof(NameEntry));
+	    nt->entries = xmalloc1((nt->max=100)*sizeof(NameEntry));
 	else
 	    nt->entries = xrealloc(nt->entries,(nt->max+=100)*sizeof(NameEntry));
     }
@@ -4039,7 +4039,7 @@ return;		/* Should not happen, but it did */
 	    else {
 		unichar_t *uin = utf82u_copy(utf8name);
 		outlen = 3*strlen(utf8name)+10;
-		out = space = galloc(outlen+2);
+		out = space = xmalloc1(outlen+2);
 		in = (char *) uin; inlen = 2*u_strlen(uin);
 		iconv(enc->fromunicode,NULL,NULL,NULL,NULL);	/* should not be needed, but just in case */
 		iconv(enc->fromunicode,&in,&inlen,&out,&outlen);
@@ -4060,7 +4060,7 @@ static void AddMacName(NamTab *nt,struct macname *mn, int strid) {
 
     if ( nt->cur+1>=nt->max ) {
 	if ( nt->cur==0 )
-	    nt->entries = galloc((nt->max=100)*sizeof(NameEntry));
+	    nt->entries = xmalloc1((nt->max=100)*sizeof(NameEntry));
 	else
 	    nt->entries = xrealloc(nt->entries,(nt->max+=100)*sizeof(NameEntry));
     }
@@ -4627,7 +4627,7 @@ return( format12 );
 static FILE *NeedsUCS2Table(SplineFont *sf,int *ucs2len,EncMap *map,int issymbol) {
     /* We always want a format 4 2byte unicode encoding map */
     /* But if it's symbol, only include encodings 0xff20 - 0xffff */
-    uint32 *avail = galloc(65536*sizeof(uint32));
+    uint32 *avail = xmalloc1(65536*sizeof(uint32));
     int i,j,l;
     int segcnt, cnt=0, delta, rpos;
     struct cmapseg { uint16 start, end; uint16 delta; uint16 rangeoff; } *cmapseg;
@@ -4674,7 +4674,7 @@ static FILE *NeedsUCS2Table(SplineFont *sf,int *ucs2len,EncMap *map,int issymbol
 	    j = -1;
     }
     cmapseg = xcalloc(segcnt+1,sizeof(struct cmapseg));
-    ranges = galloc(cnt*sizeof(int16));
+    ranges = xmalloc1(cnt*sizeof(int16));
     j = -1;
     for ( i=segcnt=0; i<65536; ++i ) {
 	if ( avail[i]!=0xffffffff && j==-1 ) {
@@ -4764,7 +4764,7 @@ static FILE *NeedsVariationSequenceTable(SplineFont *sf,int *vslen,EncMap *map) 
 		if ( i>=vs_cnt ) {
 		    if ( i>=vs_max ) {
 			if ( vses==vsbuf ) {
-			    vses = galloc((vs_max*=2)*sizeof(uint32));
+			    vses = xmalloc1((vs_max*=2)*sizeof(uint32));
 			    memcpy(vses,vsbuf,sizeof(vsbuf));
 			} else
 			    vses = xrealloc(vses,(vs_max+=512)*sizeof(uint32));
@@ -4792,7 +4792,7 @@ return( NULL );			/* No variation selectors */
 	}
     }
 
-    avail = galloc(unicode4_size*sizeof(uint32));
+    avail = xmalloc1(unicode4_size*sizeof(uint32));
 
     format14 = tmpfile();
     putshort(format14,14);
@@ -6050,7 +6050,7 @@ static void dumpttf(FILE *ttf,struct alltabs *at, enum fontformat format) {
 
 static void DumpGlyphToNameMap(char *fontname,SplineFont *sf) {
     char *d, *e;
-    char *newname = galloc(strlen(fontname)+10);
+    char *newname = xmalloc1(strlen(fontname)+10);
     FILE *file;
     int i,k,max;
     SplineChar *sc;
@@ -6565,7 +6565,7 @@ return( NULL );
     dummysf->glyphcnt = 0;
     dummysf->hasvmetrics = anyvmetrics;
 
-    bygid = galloc((gcnt+3)*sizeof(int));
+    bygid = xmalloc1((gcnt+3)*sizeof(int));
     memset(bygid,0xff, (gcnt+3)*sizeof(int));
     for ( sfitem= sfs; sfitem!=NULL; sfitem=sfitem->next ) {
 	AssignNotdefNull(sfitem->sf,bygid,false);
@@ -6601,7 +6601,7 @@ return( NULL );
 	sf = sfitem->sf;
 	ATinit(&ret[cnt],sf,sfitem->map,flags&~ttf_flag_dummyDSIG,
 		layer,format,bf,sfitem->sizes);
-	ret[cnt].gi.bygid = galloc((gcnt+3)*sizeof(int));
+	ret[cnt].gi.bygid = xmalloc1((gcnt+3)*sizeof(int));
 	memset(ret[cnt].gi.bygid,-1,(gcnt+3)*sizeof(int));
 	for ( i=0; i<sf->glyphcnt; ++i ) {
 	    if ( SCWorthOutputting(sc = sf->glyphs[i])) {

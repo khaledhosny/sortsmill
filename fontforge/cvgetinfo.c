@@ -3843,7 +3843,7 @@ return;
 return;
 	if ( j==0 ) {
 	    deps = xcalloc(tot+1,sizeof(char *));
-	    depsc = galloc(tot*sizeof(SplineChar *));
+	    depsc = xmalloc1(tot*sizeof(SplineChar *));
 	}
     }
 

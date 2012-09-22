@@ -881,7 +881,7 @@ static void pfed_readfontcomment(FILE *ttf,struct ttfinfo *info,uint32 base,
     if ( use_utf8!=0 && use_utf8!=1 )
 return;			/* Bad version number */
     len = getushort(ttf);
-    start = pt = galloc(len+1);
+    start = pt = xmalloc1(len+1);
 
     end = pt+len;
     if ( use_utf8 ) {
@@ -912,7 +912,7 @@ static char *pfed_read_utf8(FILE *ttf, uint32 start) {
     while ( (ch=getc(ttf))!='\0' && ch!=EOF )
 	++len;
     fseek( ttf, start, SEEK_SET);
-    str = pt = galloc(len+1);
+    str = pt = xmalloc1(len+1);
     while ( (ch=getc(ttf))!='\0' && ch!=EOF )
 	*pt++ = ch;
     *pt = '\0';
@@ -928,7 +928,7 @@ static char *pfed_read_ucs2_len(FILE *ttf,uint32 offset,int len) {
 return( NULL );
 
     len>>=1;
-    pt = str = galloc(3*len);
+    pt = str = xmalloc1(3*len);
     fseek(ttf,offset,SEEK_SET);
     for ( i=0; i<len; ++i ) {
 	uch = getushort(ttf);
@@ -954,7 +954,7 @@ static char *pfed_read_utf8_len(FILE *ttf,uint32 offset,int len) {
     if ( len<0 )
 return( NULL );
 
-    pt = str = galloc(len+1);
+    pt = str = xmalloc1(len+1);
     fseek(ttf,offset,SEEK_SET);
     for ( i=0; i<len; ++i )
 	*pt++ = getc(ttf);
@@ -971,8 +971,8 @@ static void pfed_readcvtcomments(FILE *ttf,struct ttfinfo *info,uint32 base ) {
 return;			/* Bad version number */
     count = getushort(ttf);
     
-    offsets = galloc(count*sizeof(uint16));
-    info->cvt_names = galloc((count+1)*sizeof(char *));
+    offsets = xmalloc1(count*sizeof(uint16));
+    info->cvt_names = xmalloc1((count+1)*sizeof(char *));
     for ( i=0; i<count; ++i )
 	offsets[i] = getushort(ttf);
     for ( i=0; i<count; ++i ) {
@@ -995,7 +995,7 @@ static void pfed_readglyphcomments(FILE *ttf,struct ttfinfo *info,uint32 base) {
     if ( use_utf8!=0 && use_utf8!=1 )
 return;			/* Bad version number */
     n = getushort(ttf);
-    grange = galloc(n*sizeof(struct grange));
+    grange = xmalloc1(n*sizeof(struct grange));
     for ( i=0; i<n; ++i ) {
 	grange[i].start = getushort(ttf);
 	grange[i].end = getushort(ttf);
@@ -1055,7 +1055,7 @@ static void pfed_readlookupnames(FILE *ttf,struct ttfinfo *info,uint32 base,
     if ( getushort(ttf)!=0 )
 return;			/* Bad version number */
     n = getushort(ttf);
-    ls = galloc(n*sizeof(struct lstruct));
+    ls = xmalloc1(n*sizeof(struct lstruct));
     for ( i=0; i<n; ++i ) {
 	ls[i].name_off = getushort(ttf);
 	ls[i].subs_off = getushort(ttf);
@@ -1068,7 +1068,7 @@ return;			/* Bad version number */
 	if ( ls[i].subs_off!=0 ) {
 	    fseek(ttf,base+ls[i].subs_off,SEEK_SET);
 	    s = getushort(ttf);
-	    ss = galloc(s*sizeof(struct lstruct));
+	    ss = xmalloc1(s*sizeof(struct lstruct));
 	    for ( j=0; j<s; ++j ) {
 		ss[j].name_off = getushort(ttf);
 		ss[j].subs_off = getushort(ttf);
@@ -1084,7 +1084,7 @@ return;			/* Bad version number */
 		    else {
 			fseek(ttf,base+ss[j].subs_off,SEEK_SET);
 			a = getushort(ttf);
-			as = galloc(a*sizeof(struct lstruct));
+			as = xmalloc1(a*sizeof(struct lstruct));
 			for ( k=0; k<a; ++k ) {
 			    as[k].name_off = getushort(ttf);
 			}
@@ -1301,7 +1301,7 @@ static void pfed_read_glyph_layer(FILE *ttf,struct ttfinfo *info,Layer *ly,
     if ( version==1 )
 	rc = getushort(ttf);		/* References */
     ic = getushort(ttf);		/* Images */
-    contours = galloc(cc*sizeof(struct contours));
+    contours = xmalloc1(cc*sizeof(struct contours));
     for ( i=0; i<cc; ++i ) {
 	contours[i].data_off = getushort(ttf);
 	contours[i].name_off = getushort(ttf);
@@ -1368,8 +1368,8 @@ return;			/* Bad version number */
 	pfed_read_glyph_layer(ttf,info,&info->guidelines,base+off,info->to_order2?2:3,version);
     } else {
 	struct npos { int pos; int offset; } *vs, *hs;
-	vs = galloc(v*sizeof(struct npos));
-	hs = galloc(h*sizeof(struct npos));
+	vs = xmalloc1(v*sizeof(struct npos));
+	hs = xmalloc1(h*sizeof(struct npos));
 	for ( i=0; i<v; ++i ) {
 	    vs[i].pos = (short) getushort(ttf);
 	    vs[i].offset = getushort(ttf);
@@ -1428,7 +1428,7 @@ static void pfed_read_layer(FILE *ttf,struct ttfinfo *info,int layer,int type, u
 
     fseek(ttf,start,SEEK_SET);
     rcnt = getushort(ttf);
-    ranges = galloc(rcnt*sizeof(struct range));
+    ranges = xmalloc1(rcnt*sizeof(struct range));
     for ( i=0; i<rcnt; ++i ) {
 	ranges[i].start  = getushort(ttf);
 	ranges[i].last   = getushort(ttf);
@@ -1466,7 +1466,7 @@ static void pfed_readotherlayers(FILE *ttf,struct ttfinfo *info,uint32 base) {
     if ( version>1 )
 return;			/* Bad version number */
     lcnt = getushort(ttf);
-    layers = galloc(lcnt*sizeof(struct layer_info));
+    layers = xmalloc1(lcnt*sizeof(struct layer_info));
     for ( i=0; i<lcnt; ++i ) {
 	layers[i].type     = getushort(ttf);
 	layers[i].name_off = getushort(ttf);
@@ -1987,7 +1987,7 @@ static char *MergeComments(BDFFont *bdf) {
     if ( len==0 )
 return( copy( "" ));
 
-    str = galloc( len+1 );
+    str = xmalloc1( len+1 );
     len = 0;
     for ( i=0; i<bdf->prop_cnt; ++i ) {
 	if ( strmatch(bdf->props[i].name,"COMMENT")==0 &&
@@ -2110,7 +2110,7 @@ static char *getstring(FILE *ttf,long start) {
     fseek(ttf,start,SEEK_SET);
     for ( len=1; (ch=getc(ttf))>0 ; ++len );
     fseek(ttf,start,SEEK_SET);
-    pt = str = galloc(len);
+    pt = str = xmalloc1(len);
     while ( (ch=getc(ttf))>0 )
 	*pt++ = ch;
     *pt = '\0';
@@ -2162,7 +2162,7 @@ return;
     strike_cnt = getushort(ttf);
     string_start = getlong(ttf) + info->bdf_start;
 
-    bdfinfo = galloc(strike_cnt*sizeof(struct bdfinfo));
+    bdfinfo = xmalloc1(strike_cnt*sizeof(struct bdfinfo));
     for ( i=0; i<strike_cnt; ++i ) {
 	int ppem, num_items;
 	ppem = getushort(ttf);
@@ -2179,7 +2179,7 @@ return;
 	    fseek(ttf,10*bdfinfo[i].cnt,SEEK_CUR);
 	else {
 	    bdf->prop_cnt = bdfinfo[i].cnt;
-	    bdf->props = galloc(bdf->prop_cnt*sizeof(BDFProperties));
+	    bdf->props = xmalloc1(bdf->prop_cnt*sizeof(BDFProperties));
 	    for ( j=k=0; j<bdfinfo[i].cnt; ++j, ++k ) {
 		long name = getlong(ttf);
 		int type = getushort(ttf);

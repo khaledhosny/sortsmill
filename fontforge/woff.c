@@ -343,11 +343,11 @@ return( NULL );
     }
 
     if ( sf!=NULL && metaOffset!=0 ) {
-	char *temp = galloc(metaLenCompressed+1);
+	char *temp = xmalloc1(metaLenCompressed+1);
 	uLongf len = metaLenUncompressed;
 	fseek(woff,metaOffset,SEEK_SET);
 	fread(temp,1,metaLenCompressed,woff);
-	sf->woffMetadata = galloc(metaLenUncompressed+1);
+	sf->woffMetadata = xmalloc1(metaLenUncompressed+1);
 	sf->woffMetadata[metaLenUncompressed] ='\0';
 	uncompress((Bytef *) sf->woffMetadata,&len,(Bytef *) temp,metaLenCompressed);
 	sf->woffMetadata[len] ='\0';
@@ -464,7 +464,7 @@ return( ret );
     if ( sf->woffMetadata!= NULL ) {
 	int uncomplen = strlen(sf->woffMetadata);
 	uLongf complen = 2*uncomplen;
-	char *temp=galloc(complen+1);
+	char *temp=xmalloc1(complen+1);
 	newoffset = ftell(woff);
 	compress((Bytef *) temp,&complen,(Bytef *) sf->woffMetadata,uncomplen);
 	fwrite(temp,1,complen,woff);

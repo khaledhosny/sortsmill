@@ -236,7 +236,7 @@ return;
 return;
 
     space[0] = copy(activedata[index].u.md_str);
-    others = galloc((ocnt+1)*sizeof(char *));
+    others = xmalloc1((ocnt+1)*sizeof(char *));
     for ( i=0; i<ocnt; ++i ) {
 	if ( i==0 && isEverythingElse(otherdata[0].u.md_str))
 	    others[i] = copy("");
@@ -283,14 +283,14 @@ return;
     if ( err )
 return;
 
-    firsts = galloc((fcnt+1)*sizeof(char *));
+    firsts = xmalloc1((fcnt+1)*sizeof(char *));
     for ( i=0; i<fcnt; ++i ) {
 	if ( i==0 && isEverythingElse(firstdata[0].u.md_str))
 	    firsts[i] = copy("");
 	else
 	    firsts[i] = copy(firstdata[i].u.md_str);
     }
-    seconds = galloc((scnt+1)*sizeof(char *));
+    seconds = xmalloc1((scnt+1)*sizeof(char *));
     for ( i=0; i<scnt; ++i ) {
 	if ( i==0 && isEverythingElse(seconddata[0].u.md_str))
 	    seconds[i] = copy("");
@@ -762,7 +762,7 @@ static int KCD_RevertKerning(GGadget *g, GEvent *e) {
 	if ( kcd->orig_adjust.corrections!=NULL ) {
 	    int len = kcd->orig_adjust.last_pixel_size-kcd->orig_adjust.first_pixel_size+1;
 	    kcd->active_adjust = kcd->orig_adjust;
-	    kcd->active_adjust.corrections = galloc(len);
+	    kcd->active_adjust.corrections = xmalloc1(len);
 	    memcpy(kcd->active_adjust.corrections,kcd->orig_adjust.corrections,len);
 	}
 	_KCD_DisplaySizeChanged(kcd);
@@ -825,7 +825,7 @@ static void KCD_SetDevTab(KernClassDlg *kcd) {
 	int i;
 	int len = kcd->active_adjust.last_pixel_size - kcd->active_adjust.first_pixel_size +1;
 	char buffer[20];
-	GTextInfo **ti = galloc((len+1)*sizeof(GTextInfo *));
+	GTextInfo **ti = xmalloc1((len+1)*sizeof(GTextInfo *));
 	for ( i=0; i<len; ++i ) {
 	    ti[i] = xcalloc(1,sizeof(GTextInfo));
 	    sprintf( buffer, "%d", i+kcd->active_adjust.first_pixel_size);
@@ -908,10 +908,10 @@ static void KPD_PairSearch(KernClassDlg *kcd) {
 	    if ( kp->adjust!=NULL ) {
 		int len = kp->adjust->last_pixel_size-kp->adjust->first_pixel_size+1;
 		kcd->active_adjust = *kp->adjust;
-		kcd->active_adjust.corrections = galloc(len);
+		kcd->active_adjust.corrections = xmalloc1(len);
 		memcpy(kcd->active_adjust.corrections,kp->adjust->corrections,len);
 		kcd->orig_adjust = *kp->adjust;
-		kcd->orig_adjust.corrections = galloc(len);
+		kcd->orig_adjust.corrections = xmalloc1(len);
 		memcpy(kcd->orig_adjust.corrections,kp->adjust->corrections,len);
 	    }
 	}
@@ -990,7 +990,7 @@ static GTextInfo **TiNamesFromClass(GGadget *list,int class_index) {
 
     if ( class_str==NULL || isEverythingElse(class_str) ) {
 	i=0;
-	ti = galloc((i+1)*sizeof(GTextInfo*));
+	ti = xmalloc1((i+1)*sizeof(GTextInfo*));
     } else {
 	for ( k=0 ; k<2; ++k ) {
 	    for ( i=0, pt=class_str; *pt; ) {
@@ -1007,7 +1007,7 @@ static GTextInfo **TiNamesFromClass(GGadget *list,int class_index) {
 		pt = end;
 	    }
 	    if ( k==0 )
-		ti = galloc((i+1)*sizeof(GTextInfo*));
+		ti = xmalloc1((i+1)*sizeof(GTextInfo*));
 	}
     }
     if ( i>0 )
@@ -1052,9 +1052,9 @@ static void KCD_EditOffset(KernClassDlg *kcd, int first, int second) {
 	kcd->orig_adjust = kcd->adjusts[kcd->st_pos];
 	if ( kcd->active_adjust.corrections!=NULL ) {
 	    int len = kcd->active_adjust.last_pixel_size - kcd->active_adjust.first_pixel_size +1;
-	    kcd->active_adjust.corrections = galloc(len);
+	    kcd->active_adjust.corrections = xmalloc1(len);
 	    memcpy(kcd->active_adjust.corrections,kcd->adjusts[kcd->st_pos].corrections,len);
-	    kcd->orig_adjust.corrections = galloc(len);
+	    kcd->orig_adjust.corrections = xmalloc1(len);
 	    memcpy(kcd->orig_adjust.corrections,kcd->adjusts[kcd->st_pos].corrections,len);
 	}
 	KCD_SetDevTab(kcd);
@@ -1155,8 +1155,8 @@ return( true );
 
 	kc->first_cnt = kcd->first_cnt;
 	kc->second_cnt = kcd->second_cnt;
-	kc->firsts = galloc(kc->first_cnt*sizeof(char *));
-	kc->seconds = galloc(kc->second_cnt*sizeof(char *));
+	kc->firsts = xmalloc1(kc->first_cnt*sizeof(char *));
+	kc->seconds = xmalloc1(kc->second_cnt*sizeof(char *));
 	kc->firsts[0] = kc->seconds[0] = NULL;
 	classes = GMatrixEditGet(GWidgetGetControl(kcd->gw,CID_ClassList),&len);
 	if ( !isEverythingElse(classes[0].u.md_str) )
@@ -2021,7 +2021,7 @@ static void KCD_FinishEdit(GGadget *g,int r, int c, int wasnew) {
 	    if ( autokern )
 		KCD_AutoKernAClass(kcd,kcd->first_cnt-1,true);
 	} else {
-	    int16 *new = galloc(kcd->first_cnt*(kcd->second_cnt+1)*sizeof(int16));
+	    int16 *new = xmalloc1(kcd->first_cnt*(kcd->second_cnt+1)*sizeof(int16));
 	    for ( i=0; i<kcd->first_cnt; ++i ) {
 		memcpy(new+i*(kcd->second_cnt+1),kcd->offsets+i*kcd->second_cnt,
 			kcd->second_cnt*sizeof(int16));
@@ -2030,7 +2030,7 @@ static void KCD_FinishEdit(GGadget *g,int r, int c, int wasnew) {
 	    free( kcd->offsets );
 	    kcd->offsets = new;
 	    {
-		DeviceTable *new = galloc(kcd->first_cnt*(kcd->second_cnt+1)*sizeof(DeviceTable));
+		DeviceTable *new = xmalloc1(kcd->first_cnt*(kcd->second_cnt+1)*sizeof(DeviceTable));
 		for ( i=0; i<kcd->first_cnt; ++i ) {
 		    memcpy(new+i*(kcd->second_cnt+1),kcd->adjusts+i*kcd->second_cnt,
 			    kcd->second_cnt*sizeof(DeviceTable));
@@ -2120,8 +2120,8 @@ static void KCD_DeleteClass(GGadget *g,int whichclass) {
 	}
 	-- kcd->first_cnt;
     } else {
-	int16 *newoffs = galloc(kcd->first_cnt*(kcd->second_cnt-1)*sizeof(int16));
-	DeviceTable *newadj = galloc(kcd->first_cnt*(kcd->second_cnt-1)*sizeof(DeviceTable));
+	int16 *newoffs = xmalloc1(kcd->first_cnt*(kcd->second_cnt-1)*sizeof(int16));
+	DeviceTable *newadj = xmalloc1(kcd->first_cnt*(kcd->second_cnt-1)*sizeof(DeviceTable));
 	for ( i=0; i<kcd->first_cnt; ++i )
 	    free(kcd->adjusts[i*kcd->second_cnt+whichclass].corrections);
 	for ( i=0; i<rows; ++i ) if ( i!=whichclass ) {
@@ -2543,14 +2543,14 @@ return;
 
     kcd->first_cnt = kc->first_cnt;
     kcd->second_cnt = kc->second_cnt;
-    kcd->offsets = galloc(kc->first_cnt*kc->second_cnt*sizeof(int16));
+    kcd->offsets = xmalloc1(kc->first_cnt*kc->second_cnt*sizeof(int16));
     memcpy(kcd->offsets,kc->offsets,kc->first_cnt*kc->second_cnt*sizeof(int16));
-    kcd->adjusts = galloc(kc->first_cnt*kc->second_cnt*sizeof(DeviceTable));
+    kcd->adjusts = xmalloc1(kc->first_cnt*kc->second_cnt*sizeof(DeviceTable));
     memcpy(kcd->adjusts,kc->adjusts,kc->first_cnt*kc->second_cnt*sizeof(DeviceTable));
     for ( i=0; i<kcd->first_cnt*kcd->second_cnt; ++i ) {
 	if ( kcd->adjusts[i].corrections!=NULL ) {
 	    int len = kcd->adjusts[i].last_pixel_size-kcd->adjusts[i].first_pixel_size+1;
-	    kcd->adjusts[i].corrections = galloc(len);
+	    kcd->adjusts[i].corrections = xmalloc1(len);
 	    memcpy(kcd->adjusts[i].corrections,kc->adjusts[i].corrections,len);
 	}
     }
@@ -2911,7 +2911,7 @@ static int KCL_Delete(GGadget *g, GEvent *e) {
 	for ( i=j=0; i<len; ++i, kc = n ) {
 	    n = kc->next;
 	    if ( !old[i]->selected ) {
-		new[j] = galloc(sizeof(GTextInfo));
+		new[j] = xmalloc1(sizeof(GTextInfo));
 		*new[j] = *old[i];
 		new[j]->text = u_copy(new[j]->text);
 		++j;

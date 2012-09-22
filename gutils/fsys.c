@@ -246,7 +246,7 @@ return( (char *)oldname );
 char *GFileAppendFile(char *dir,char *name,int isdir) {
     char *ret, *pt;
 
-    ret = (char *) galloc((strlen(dir)+strlen(name)+3));
+    ret = (char *) xmalloc1((strlen(dir)+strlen(name)+3));
     strcpy(ret,dir);
     pt = ret+strlen(ret);
     if ( pt>ret && pt[-1]!='/' )
