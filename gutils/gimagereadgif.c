@@ -109,7 +109,7 @@ return( NULL );
 return( NULL );
     }
 
-    images = (GImage **) xmalloc(gif->ImageCount*sizeof(GImage *));
+    images = (GImage **) xmalloc(szmax(1,gif->ImageCount*sizeof(GImage *)));
     for ( i=0; i<gif->ImageCount; ++i )
 	images[i] = ProcessSavedImage(gif,&gif->SavedImages[i]);
     if ( gif->ImageCount==1 )

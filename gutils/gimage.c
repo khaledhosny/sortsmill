@@ -108,7 +108,7 @@ void GImageDestroy(GImage *gi) {
 }
 
 GImage *GImageCreateAnimation(GImage **images, int n) {
-    struct _GImage **imgs = (struct _GImage **) xmalloc(n*sizeof(struct _GImage *));
+    struct _GImage **imgs = (struct _GImage **) xmalloc(szmax(1,n*sizeof(struct _GImage *)));
     GImage *gi = (GImage *) xcalloc(1,sizeof(GImage));
     int i;
 

@@ -163,7 +163,7 @@ return( NULL );
 	    base->clut->trans_index = base->trans = trans_alpha ? trans_alpha[0] : 0;
     }
 
-    row_pointers = (png_byte **) xmalloc(png_get_image_height(png_ptr,info_ptr)*sizeof(png_bytep));
+    row_pointers = (png_byte **) xmalloc(szmax(1,png_get_image_height(png_ptr,info_ptr)*sizeof(png_bytep)));
     for ( i=0; i<png_get_image_height(png_ptr,info_ptr); ++i )
 	row_pointers[i] = (png_bytep) (base->data + i*base->bytes_per_line);
 
