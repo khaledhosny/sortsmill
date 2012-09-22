@@ -31,7 +31,7 @@
 
 // FIXME: Get rid of this when feasible.
 #ifdef __INTERNAL_TO_FONTFORGE__
-#include "chunkalloc.h"
+#include "xalloc.h"
 #endif
 
 #include "basics.h"

@@ -61,7 +61,7 @@ FFSCRIPT_HEADER = "\#!$(bindir)/fontforge -lang=ff"
 #--------------------------------------------------------------------------
 
 noinst_HEADERS = fontforgeui.h sftextfieldP.h configure-fontforge.h	\
-	views.h is_LIGATURE.h flaglist.h namelist_data.h chunkalloc.h
+	views.h is_LIGATURE.h flaglist.h namelist_data.h
 pkginclude_HEADERS = autowidth2.h configure-fontforge.h fontforge.h	\
 	psfont.h stemdb.h autowidth.h delta.h fontforgevw.h lookups.h	\
 	savefont.h ttf.h baseviews.h fvmetrics.h mm.h scriptfuncs.h		\
