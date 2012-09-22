@@ -63,7 +63,7 @@ return( ret );
     TIFFGetField(tif, TIFFTAG_IMAGEWIDTH, &w);
     TIFFGetField(tif, TIFFTAG_IMAGELENGTH, &h);
     npixels = w * h;
-    raster = (uint32*) galloc(npixels * sizeof (uint32));
+    raster = (uint32*) xmalloc(npixels * sizeof (uint32));
     if (raster != NULL) {
 	if (TIFFReadRGBAImage(tif, w, h, raster, 0)) {
 	    ret = GImageCreate(it_true,w,h);

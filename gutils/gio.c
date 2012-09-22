@@ -68,7 +68,7 @@ static int AddProtocol(unichar_t *prefix,int len) {
     if ( plen>=pmax ) {
 	pmax += 20;		/* We're never going to support 20 protocols? */
 	if ( plen==0 ) {
-	    protocols = (struct protocols *) galloc(pmax*sizeof(struct protocols));
+	    protocols = (struct protocols *) xmalloc(pmax*sizeof(struct protocols));
 	} else {
 	    protocols = (struct protocols *) xrealloc(protocols,pmax*sizeof(struct protocols));
 	}
@@ -165,7 +165,7 @@ return;
 	    /* could put stuff here to queue functions if we get too many */
 	    /*  threads, or perhaps even a thread pool */
 	    uc_strcpy(gc->status,"Queued");
-	    gc->threaddata = (struct gio_threaddata *) galloc(sizeof(struct gio_threaddata));
+	    gc->threaddata = (struct gio_threaddata *) xmalloc(sizeof(struct gio_threaddata));
 	    gc->threaddata->mutex = initmutex;
 	    gc->threaddata->cond = initcond;
 	    if ( _GIO_stdfuncs.gdraw_sync_thread!=NULL )

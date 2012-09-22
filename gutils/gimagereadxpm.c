@@ -259,7 +259,7 @@ return 0;
 
 static union hash *parse_colors(FILE *fp,unsigned char *line, int lsiz, int ncols, int nchars,
 	int (*getdata)(unsigned char *,int,FILE *)) {
-    union hash *tab = (union hash *) galloc(256*sizeof(union hash));
+    union hash *tab = (union hash *) xmalloc(256*sizeof(union hash));
     union hash *sub;
     int i, j;
 
@@ -273,7 +273,7 @@ return( NULL );
 	sub = tab;
 	for ( j=0; j<nchars-1; ++j ) {
 	    if ( sub[line[j]].table==NULL ) {
-		sub[line[j]].table = (union hash *) galloc(256*sizeof(union hash));
+		sub[line[j]].table = (union hash *) xmalloc(256*sizeof(union hash));
 		if ( j==nchars-2 )
 		    memset(sub[line[j]].table,-1,256*sizeof(union hash));
 	    }

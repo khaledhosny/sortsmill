@@ -37,7 +37,7 @@ GImage *GImageCreate(enum image_type type, int32 width, int32 height) {
 return( NULL );
 
     gi = (GImage *) xcalloc(1,sizeof(GImage));
-    base = (struct _GImage *) galloc(sizeof(struct _GImage));
+    base = (struct _GImage *) xmalloc(sizeof(struct _GImage));
     if ( gi==NULL || base==NULL ) {
 	free(gi); free(base);
 return( NULL );
@@ -72,7 +72,7 @@ GImage *_GImage_Create(enum image_type type, int32 width, int32 height) {
 return( NULL );
 
     gi = (GImage *) xcalloc(1,sizeof(GImage));
-    base = (struct _GImage *) galloc(sizeof(struct _GImage));
+    base = (struct _GImage *) xmalloc(sizeof(struct _GImage));
     if ( gi==NULL || base==NULL ) {
 	free(gi); free(base);
 return( NULL );
@@ -108,7 +108,7 @@ void GImageDestroy(GImage *gi) {
 }
 
 GImage *GImageCreateAnimation(GImage **images, int n) {
-    struct _GImage **imgs = (struct _GImage **) galloc(n*sizeof(struct _GImage *));
+    struct _GImage **imgs = (struct _GImage **) xmalloc(n*sizeof(struct _GImage *));
     GImage *gi = (GImage *) xcalloc(1,sizeof(GImage));
     int i;
 
@@ -134,7 +134,7 @@ GImage *GImageAddImageBefore(GImage *dest, GImage *src, int pos) {
     enum image_type it;
 
     n = (src->list_len==0?1:src->list_len) + (dest->list_len==0?1:dest->list_len);
-    imgs = (struct _GImage **) galloc(n*sizeof(struct _GImage *));
+    imgs = (struct _GImage **) xmalloc(n*sizeof(struct _GImage *));
 
     i = 0;
     if ( dest->list_len==0 ) {

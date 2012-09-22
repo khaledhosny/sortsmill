@@ -115,7 +115,7 @@ return(false);
 		bit_depth, color_type, progressive,
 		PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
    if ( base->image_type==it_index || base->image_type==it_bitmap ) {
-       palette = (png_color *) galloc(num_palette*sizeof(png_color));
+       palette = (png_color *) xmalloc(num_palette*sizeof(png_color));
        if ( base->clut==NULL ) {
 	    palette[0].red = palette[0].green = palette[0].blue = 0;
 	    palette[1].red = palette[1].green = palette[1].blue = 0xff;
@@ -137,7 +137,7 @@ return(false);
        }
    } else {
        if ( base->trans!=-1 ) {
-	   trans_color = (png_color_16p) galloc(sizeof(png_color_16));
+	   trans_color = (png_color_16p) xmalloc(sizeof(png_color_16));
 	   trans_color->red = COLOR_RED(base->trans);
 	   trans_color->green = COLOR_GREEN(base->trans);
 	   trans_color->blue = COLOR_BLUE(base->trans);
@@ -151,7 +151,7 @@ return(false);
     if (color_type == PNG_COLOR_TYPE_RGB)
 	png_set_filler(png_ptr, '\0', PNG_FILLER_BEFORE);
 
-    rows = (png_byte **) galloc(base->height*sizeof(png_byte *));
+    rows = (png_byte **) xmalloc(base->height*sizeof(png_byte *));
     for ( i=0; i<base->height; ++i )
 	rows[i] = (png_byte *) (base->data + i*base->bytes_per_line);
 

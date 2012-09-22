@@ -161,9 +161,9 @@ return( NULL );
 	long tablen;
 
 	tablen = header.height*header.chans;
-	starttab = (unsigned long *)galloc(tablen*sizeof(long));
-	/*lengthtab = (unsigned long *)galloc(tablen*sizeof(long));*/
-	ptrtab = (unsigned char **)galloc(tablen*sizeof(unsigned char *));
+	starttab = (unsigned long *)xmalloc(tablen*sizeof(long));
+	/*lengthtab = (unsigned long *)xmalloc(tablen*sizeof(long));*/
+	ptrtab = (unsigned char **)xmalloc(tablen*sizeof(unsigned char *));
 	readlongtab(fp,starttab,tablen);
 	/*readlongtab(fp,lengthtab,tablen);*/
 	for ( i=0; i<tablen; ++i )
