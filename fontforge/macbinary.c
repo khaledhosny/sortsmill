@@ -2429,7 +2429,7 @@ static BDFChar *NFNTCvtBitmap(struct MacFontRec *font,int index,SplineFont *sf,i
     BDFChar *bdfc;
     int i,j, bits, bite, bit;
 
-    bdfc = chunkalloc(sizeof(BDFChar));
+    bdfc = (BDFChar *) xzalloc(sizeof (BDFChar));
     memset( bdfc,'\0',sizeof( BDFChar ));
     bdfc->xmin = (font->offsetWidths[index]>>8)+font->kernMax;
     bdfc->xmax = bdfc->xmin + font->locs[index+1]-font->locs[index]-1;
@@ -2785,7 +2785,7 @@ return( NULL );
 	break;
 	if ( kp==NULL ) {
 	    uint32 script;
-	    kp = chunkalloc(sizeof(KernPair));
+	    kp = (KernPair *) xzalloc(sizeof (KernPair));
 	    kp->sc = sc2;
 	    kp->next = sc1->kerns;
 	    sc1->kerns = kp;

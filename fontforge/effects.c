@@ -117,7 +117,7 @@ static SplineSet *SpMove(SplinePoint *sp,real offset,
     SplineSet *line;
     BasePoint test;
 
-    new = chunkalloc(sizeof(SplinePoint));
+    new = (SplinePoint *) xzalloc(sizeof (SplinePoint));
     *new = *sp;
     new->hintmask = NULL;
     new->me.x += offset;
@@ -136,7 +136,7 @@ static SplineSet *SpMove(SplinePoint *sp,real offset,
     test = sp->me;
     ++test.x;
     if ( !SSPointWithin(spl,&test)) {
-	line = chunkalloc(sizeof(SplineSet));
+	line = (SplineSet *) xzalloc(sizeof (SplineSet));
 	line->first = SplinePointCreate(sp->me.x,sp->me.y);
 	line->last = SplinePointCreate(new->me.x,new->me.y);
 	SplineMake(line->first,line->last,sp->next->order2);
@@ -264,7 +264,7 @@ return(NULL);
 		    sp->prevcp.x += shadow_length;
 		    SplineRefigure(sp->prev);
 		} else if ( sp->next->rightedge || sp->prev->rightedge ) {
-		    new = chunkalloc(sizeof(SplinePoint));
+		    new = (SplinePoint *) xzalloc(sizeof (SplinePoint));
 		    *new = *sp;
 		    new->hintmask = NULL;
 		    new->ticked = false; sp->ticked = false;
@@ -305,7 +305,7 @@ return(NULL);
 		if ( sp->next->rightedge && sp->prev->rightedge ) {
 		    lines = SpMove(sp,shadow_length,cur,lines,base);
 		} else if ( sp->next->rightedge ) {
-		    cur = chunkalloc(sizeof(SplineSet));
+		    cur = (SplineSet *) xzalloc(sizeof (SplineSet));
 		    if ( last==NULL )
 			head = cur;
 		    else
@@ -622,7 +622,7 @@ static SplineSet *ClipBottomTo3D(SplineSet *bottom,SplineSet *lines,SplineSet *s
 	cur = NULL;
 	for ( s=bottom->first->next; s!=NULL ; s = s->to->next ) {
 	    if ( LineAtPointCompletes(lines,&s->from->me) && cur==NULL ) {
-		cur = chunkalloc(sizeof(SplineSet));
+		cur = (SplineSet *) xzalloc(sizeof (SplineSet));
 		cur->first = cur->last = SplinePointCreate(s->from->me.x,s->from->me.y);
 		if ( head==NULL )
 		    head = cur;
@@ -653,7 +653,7 @@ static SplineSet *ClipBottomTo3D(SplineSet *bottom,SplineSet *lines,SplineSet *s
 		while ( ts[i]!=-1 ) {
 		    bigreal tend = ts[i+1]==-1 ? 1 : ts[i+1];
 		    if ( MidLineCompetes(s,(ts[i]+tend)/2,shadow_length,spl)) {
-			cur = chunkalloc(sizeof(SplineSet));
+			cur = (SplineSet *) xzalloc(sizeof (SplineSet));
 			cur->first = cur->last = SplinePointMidCreate(s,ts[i]);
 			if ( head==NULL )
 			    head = cur;

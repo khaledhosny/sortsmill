@@ -1462,7 +1462,7 @@ return( true );
 		start = end;
 	}
 	if ( gradient==NULL )
-	    gdd->active = gradient = chunkalloc(sizeof(struct gradient));
+	    gdd->active = gradient = (struct gradient *) xzalloc(sizeof (struct gradient));
 	gradient->start = start;
 	gradient->stop = end;
 	gradient->radius = radius;
@@ -1567,7 +1567,7 @@ static void GDDInit(GradientDlg *gdd,SplineFont *sf,Layer *ly,struct gradient *g
     if ( grad!=NULL ) {
 	SplineSet *ss1, *ss2;
 	SplinePoint *sp1, *sp2, *sp3;
-	ss1 = chunkalloc(sizeof(SplineSet));
+	ss1 = (SplineSet *) xzalloc(sizeof (SplineSet));
 	sp2 = SplinePointCreate(grad->stop.x,grad->stop.y);
 	if ( grad->radius==0 ) {
 	    sp1 = SplinePointCreate(grad->start.x,grad->start.y);
@@ -1578,7 +1578,7 @@ static void GDDInit(GradientDlg *gdd,SplineFont *sf,Layer *ly,struct gradient *g
 	    SplineMake(sp2,sp3,sf->layers[ly_fore].order2);
 	    ss1->first = sp2; ss1->last = sp3;
 	    if ( grad->start.x!=grad->stop.x || grad->start.y!=grad->stop.y ) {
-		ss2 = chunkalloc(sizeof(SplineSet));
+		ss2 = (SplineSet *) xzalloc(sizeof (SplineSet));
 		sp1 = SplinePointCreate(grad->start.x,grad->start.y);
 		ss2->first = ss2->last = sp1;
 		ss1->next = ss2;
@@ -2105,7 +2105,7 @@ return( true );
 return( true );
 
 	if ( ld->curpat == NULL )
-	    ld->curpat = chunkalloc(sizeof(struct pattern));
+	    ld->curpat = (struct pattern *) xzalloc(sizeof (struct pattern));
 	free( ld->curpat->pattern );
 	ld->curpat->pattern = name;
 	for ( i=0; i<6; ++i )

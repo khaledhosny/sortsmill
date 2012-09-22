@@ -553,7 +553,7 @@ struct fontlist *LI_fontlistcopy(struct fontlist *fl ) {
     struct fontlist *nfl, *nhead=NULL, *last=NULL;
 
     for ( ; fl!=NULL; fl=fl->next ) {
-	nfl = chunkalloc(sizeof(struct fontlist));
+	nfl = (struct fontlist *) xzalloc(sizeof (struct fontlist));
 	*nfl = *fl;
 	nfl->feats = LI_TagsCopy(fl->feats);
 	nfl->scmax = 0; nfl->sctext = NULL; nfl->ottext = NULL;
@@ -604,7 +604,7 @@ return;
 		if ( fl->next!=NULL && fl->next->start == pt+1-li->text )
 		    fl->end = pt-li->text;
 		else {
-		    next = chunkalloc(sizeof(struct fontlist));
+		    next = (struct fontlist *) xzalloc(sizeof (struct fontlist));
 		    *next = *fl;
 		    fl->next = next;
 		    fl->end = pt-li->text;
@@ -804,7 +804,7 @@ struct sfmaps *SFMapOfSF(LayoutInfo *li,SplineFont *sf) {
 	if ( sfmaps->sf==sf )
 return( sfmaps );
 
-    sfmaps = chunkalloc(sizeof(struct sfmaps));
+    sfmaps = (struct sfmaps *) xzalloc(sizeof (struct sfmaps));
     sfmaps->sf = sf;
     sfmaps->next = li->sfmaps;
     li->sfmaps = sfmaps;
@@ -964,7 +964,7 @@ return;
 	next = li->fontlist;
     } else {
 	for ( prev = li->fontlist; prev->next!=NULL; prev=prev->next );
-	next = chunkalloc(sizeof(struct fontlist));
+	next = (struct fontlist *) xzalloc(sizeof (struct fontlist));
 	*next = *prev;
 	next->scmax = 0; next->sctext = NULL; next->ottext = NULL;
 	next->feats = LI_TagsCopy(prev->feats);
@@ -1201,9 +1201,9 @@ void FontImage(SplineFont *sf,char *filename,Array *arr,int width,int height) {
     last = NULL;
     for ( i=0; i<cnt; ++i ) {
 	if ( last==NULL )
-	    last = li->fontlist = chunkalloc(sizeof(struct fontlist));
+	    last = li->fontlist = (struct fontlist *) xzalloc(sizeof (struct fontlist));
 	else {
-	    last->next = chunkalloc(sizeof(struct fontlist));
+	    last->next = (struct fontlist *) xzalloc(sizeof (struct fontlist));
 	    last = last->next;
 	}
 	last->fd = LI_FindFontData(li,sf,ly_fore,type,arr->vals[2*i].u.ival,true);
@@ -1333,7 +1333,7 @@ struct fontlist *LI_BreakFontList(LayoutInfo *li,int start,int end) {
     struct fontlist *new, *fl, *prev, *next, *first;
 
     if ( li->fontlist==NULL ) {
-	new = chunkalloc(sizeof(struct fontlist));
+	new = (struct fontlist *) xzalloc(sizeof (struct fontlist));
 	new->start = start;
 	new->end = end;
 	li->fontlist = new;
@@ -1344,7 +1344,7 @@ return( new );
     for ( fl=li->fontlist; fl!=NULL && fl->end<start; fl=fl->next )
 	prev = fl;
     if ( fl==NULL ) {
-	fl = chunkalloc(sizeof(struct fontlist));
+	fl = (struct fontlist *) xzalloc(sizeof (struct fontlist));
 	*fl = *prev;
 	fl->feats = LI_TagsCopy(prev->feats);
 	fl->start = prev->end;
@@ -1354,7 +1354,7 @@ return( new );
     if ( fl->start == start )
 	first = fl;
     else {
-	new = chunkalloc(sizeof(struct fontlist));
+	new = (struct fontlist *) xzalloc(sizeof (struct fontlist));
 	*new = *fl;
 	new->feats = LI_TagsCopy(fl->feats);
 	new->start = start;
@@ -1369,7 +1369,7 @@ return( new );
     if ( fl==NULL && prev->end<end )
 	prev->end = end;
     if ( prev->end>end ) {
-	new = chunkalloc(sizeof(struct fontlist));
+	new = (struct fontlist *) xzalloc(sizeof (struct fontlist));
 	*new = *prev;
 	new->feats = LI_TagsCopy(prev->feats);
 	new->start = end;

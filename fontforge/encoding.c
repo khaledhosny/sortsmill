@@ -393,7 +393,7 @@ return( NULL );
     if ( !make_it )
 return( NULL );
 
-    enc = chunkalloc(sizeof(Encoding));
+    enc = (Encoding *) xzalloc(sizeof (Encoding));
     *enc = temp;
     enc->enc_name = copy(name);
     if ( iconv_name!=name )
@@ -457,7 +457,7 @@ return( 0 );			/* Failure */
     if ( strmatch(name,"unicode4")==0 || strmatch(name,"ucs4")==0 )
 return( 0 );			/* Failure */
 
-    enc = chunkalloc(sizeof(Encoding));
+    enc = (Encoding *) xzalloc(sizeof (Encoding));
     enc->enc_name = copy(name);
     enc->next = enclist;
     enclist = enc;
@@ -826,7 +826,7 @@ struct altuni *CIDSetAltUnis(struct cidmap *map,int cid) {
 
     for ( alts=map->alts; alts!=NULL; alts=alts->next ) {
 	if ( alts->cid==cid ) {
-	    alt = chunkalloc(sizeof(struct altuni));
+	    alt = (struct altuni *) xzalloc(sizeof (struct altuni));
 	    alt->next = sofar;
 	    sofar = alt;
 	    alt->unienc = alts->uni;
@@ -978,7 +978,7 @@ struct cidmap *LoadMapFromFile(char *file,char *registry,char *ordering,
 		    ch = getc(f);
 		    while ( ch==',' ) {
 			if ( fscanf(f,"%x", (unsigned *) &uni )==1 ) {
-			    struct cidaltuni *alt = chunkalloc(sizeof(struct cidaltuni));
+			    struct cidaltuni *alt = (struct cidaltuni *) xzalloc(sizeof (struct cidaltuni));
 			    alt->next = ret->alts;
 			    ret->alts = alt;
 			    alt->uni = uni;
@@ -1980,7 +1980,7 @@ return( NULL );
 	}
     }
 
-    map = chunkalloc(sizeof(EncMap));
+    map = (EncMap *) xzalloc(sizeof (EncMap));
     map->enccount = map->encmax = base + extras;
     map->map = galloc(map->enccount*sizeof(int));
     memcpy(map->map,encoded,base*sizeof(int));

@@ -85,7 +85,7 @@ void SplineFree(Spline *spline) {
 }
 
 SplinePoint *SplinePointCreate(real x, real y) {
-    SplinePoint *sp = chunkalloc(sizeof(SplinePoint));
+    SplinePoint *sp = (SplinePoint *) xzalloc(sizeof (SplinePoint));
     sp->me.x = x; sp->me.y = y;
     sp->nextcp = sp->prevcp = sp->me;
     sp->nonextcp = sp->noprevcp = true;
@@ -95,7 +95,7 @@ return( sp );
 }
 
 Spline *SplineMake3(SplinePoint *from, SplinePoint *to) {
-    Spline *spline = chunkalloc(sizeof(Spline));
+    Spline *spline = (Spline *) xzalloc(sizeof (Spline));
 
     spline->from = from; spline->to = to;
     from->next = to->prev = spline;
@@ -215,7 +215,7 @@ return;
 }
 
 RefChar *RefCharCreate(void) {
-    RefChar *ref = chunkalloc(sizeof(RefChar));
+    RefChar *ref = (RefChar *) xzalloc(sizeof (RefChar));
     ref->layer_cnt = 1;
     ref->layers = gcalloc(1,sizeof(struct reflayer));
     ref->layers[0].fill_brush.opacity = ref->layers[0].stroke_pen.brush.opacity = 1.0;
@@ -376,7 +376,7 @@ return( last );
     diff = (end-start)/n;
     for ( t=start+diff, i=1; i<=n; ++i, t+=diff ) {
 	if ( i==n ) t = end;		/* Avoid rounding errors */
-	cur = chunkalloc(sizeof(LineList) );
+	cur = (LineList *) xzalloc(sizeof (LineList));
 	x = ((spline->splines[0].a*t+spline->splines[0].b)*t+spline->splines[0].c)*t + spline->splines[0].d;
 	y = ((spline->splines[1].a*t+spline->splines[1].b)*t+spline->splines[1].c)*t + spline->splines[1].d;
 	cur->here.x = rint(x*scale);
@@ -397,18 +397,18 @@ LinearApprox *SplineApproximate(Spline *spline, real scale) {
     if ( test!=NULL )
 return( test );
 
-    test = chunkalloc(sizeof(LinearApprox));
+    test = (LinearApprox *) xzalloc(sizeof (LinearApprox));
     test->scale = scale;
     test->next = spline->approx;
     spline->approx = test;
 
-    cur = chunkalloc(sizeof(LineList) );
+    cur = (LineList *) xzalloc(sizeof (LineList));
     cur->here.x = rint(spline->from->me.x*scale);
     cur->here.y = rint(spline->from->me.y*scale);
     test->lines = last = cur;
 
     if ( spline->knownlinear ) {
-	cur = chunkalloc(sizeof(LineList) );
+	cur = (LineList *) xzalloc(sizeof (LineList));
 	cur->here.x = rint(spline->to->me.x*scale);
 	cur->here.y = rint(spline->to->me.y*scale);
 	last->next = cur;
@@ -1086,21 +1086,21 @@ SplinePointList *SplinePointListCopy1(const SplinePointList *spl) {
     const SplinePoint *pt; SplinePoint *cpt;
     Spline *spline;
 
-    cur = chunkalloc(sizeof(SplinePointList));
+    cur = (SplinePointList *) xzalloc(sizeof (SplinePointList));
     cur->is_clip_path = spl->is_clip_path;
 
     for ( pt=spl->first; ;  ) {
-	cpt = chunkalloc(sizeof(SplinePoint));
+	cpt = (SplinePoint *) xzalloc(sizeof (SplinePoint));
 	*cpt = *pt;
 	if ( pt->hintmask!=NULL ) {
-	    cpt->hintmask = chunkalloc(sizeof(HintMask));
+	    cpt->hintmask = (HintMask *) xzalloc(sizeof (HintMask));
 	    memcpy(cpt->hintmask,pt->hintmask,sizeof(HintMask));
 	}
 	cpt->next = cpt->prev = NULL;
 	if ( cur->first==NULL )
 	    cur->first = cur->last = cpt;
 	else {
-	    spline = chunkalloc(sizeof(Spline));
+	    spline = (Spline *) xzalloc(sizeof (Spline));
 	    *spline = *pt->prev;
 	    spline->from = cur->last;
 	    cur->last->next = spline;
@@ -1117,7 +1117,7 @@ SplinePointList *SplinePointListCopy1(const SplinePointList *spl) {
     }
     if ( spl->first->prev!=NULL ) {
 	cpt = cur->first;
-	spline = chunkalloc(sizeof(Spline));
+	spline = (Spline *) xzalloc(sizeof (Spline));
 	*spline = *pt->prev;
 	spline->from = cur->last;
 	cur->last->next = spline;
@@ -1164,7 +1164,7 @@ static SplinePointList *SplinePointListCopySelected1(SplinePointList *spl) {
 	}
 	if ( start==NULL || start==first )
     break;
-	cur = chunkalloc(sizeof(SplinePointList));
+	cur = (SplinePointList *) xzalloc(sizeof (SplinePointList));
 	if ( head==NULL )
 	    head = cur;
 	else
@@ -1172,14 +1172,14 @@ static SplinePointList *SplinePointListCopySelected1(SplinePointList *spl) {
 	last = cur;
 
 	while ( start!=NULL && start->selected && start!=first ) {
-	    cpt = chunkalloc(sizeof(SplinePoint));
+	    cpt = (SplinePoint *) xzalloc(sizeof (SplinePoint));
 	    *cpt = *start;
 	    cpt->hintmask = NULL;
 	    cpt->next = cpt->prev = NULL;
 	    if ( cur->first==NULL )
 		cur->first = cur->last = cpt;
 	    else {
-		spline = chunkalloc(sizeof(Spline));
+		spline = (Spline *) xzalloc(sizeof (Spline));
 		*spline = *start->prev;
 		spline->from = cur->last;
 		cur->last->next = spline;
@@ -1399,7 +1399,7 @@ static SplinePointList *SplinePointListSplit(SplineChar *sc,SplinePointList *spl
 	    head = cur = spl;
 	    spl->first = spl->last = NULL;
 	} else {
-	    cur = chunkalloc(sizeof(SplinePointList));
+	    cur = (SplinePointList *) xzalloc(sizeof (SplinePointList));
 	    last->next = cur;
 	}
 	last = cur;
@@ -1480,7 +1480,7 @@ ImageList *ImageListCopy(ImageList *cimg) {
     ImageList *head=NULL, *last=NULL, *new;
 
     for ( ; cimg!=NULL; cimg=cimg->next ) {
-	new = chunkalloc(sizeof(ImageList));
+	new = (ImageList *) xzalloc(sizeof (ImageList));
 	*new = *cimg;
 	new->next = NULL;
 	if ( last==NULL )
@@ -1796,7 +1796,7 @@ static HintMask *HintMaskTransform(HintMask *oldhm,real transform[6],
     if ( transform[1]!=0 || transform[2]!=0 )
 return( NULL );
 
-    newhm = chunkalloc(sizeof(HintMask));
+    newhm = (HintMask *) xzalloc(sizeof (HintMask));
     for ( st = subsc->hstem,cnt = 0; st!=NULL; st=st->next, cnt++ ) {
 	if ( (*oldhm)[cnt>>3]&(0x80>>(cnt&7)) ) {
 	    start = st->start*transform[3] + transform[5];
@@ -1946,7 +1946,7 @@ return;
 
     for ( dlist=base->dependents; dlist!=NULL && dlist->sc!=dependent; dlist = dlist->next);
     if ( dlist==NULL ) {
-	dlist = chunkalloc(sizeof(struct splinecharlist));
+	dlist = (struct splinecharlist *) xzalloc(sizeof (struct splinecharlist));
 	dlist->sc = dependent;
 	dlist->next = base->dependents;
 	base->dependents = dlist;
@@ -2391,7 +2391,7 @@ static SplineFont *SplineFontFromMMType1(SplineFont *sf, FontDict *fd, struct ps
 return( NULL );
     }
 
-    mm = chunkalloc(sizeof(MMSet));
+    mm = (MMSet *) xzalloc(sizeof (MMSet));
 
     pt = fd->weightvector;
     while ( *pt==' ' || *pt=='[' ) ++pt;
@@ -5097,7 +5097,7 @@ StemInfo *StemInfoCopy(StemInfo *h) {
     HintInstance *hilast, *hicur, *hi;
 
     for ( ; h!=NULL; h = h->next ) {
-	cur = chunkalloc(sizeof(StemInfo));
+	cur = (StemInfo *) xzalloc(sizeof (StemInfo));
 	*cur = *h;
 	cur->next = NULL;
 	if ( head==NULL )
@@ -5108,7 +5108,7 @@ StemInfo *StemInfoCopy(StemInfo *h) {
 	}
 	cur->where = hilast = NULL;
 	for ( hi=h->where; hi!=NULL; hi=hi->next ) {
-	    hicur = chunkalloc(sizeof(StemInfo));
+	    hicur = (HintInstance *) xzalloc(sizeof (HintInstance));
 	    *hicur = *hi;
 	    hicur->next = NULL;
 	    if ( hilast==NULL )
@@ -5127,7 +5127,7 @@ DStemInfo *DStemInfoCopy(DStemInfo *h) {
     HintInstance *hilast, *hicur, *hi;
 
     for ( ; h!=NULL; h = h->next ) {
-	cur = chunkalloc(sizeof(DStemInfo));
+	cur = (DStemInfo *) xzalloc(sizeof (DStemInfo));
 	*cur = *h;
 	cur->next = NULL;
 	if ( head==NULL )
@@ -5138,7 +5138,7 @@ DStemInfo *DStemInfoCopy(DStemInfo *h) {
 	}
 	cur->where = hilast = NULL;
 	for ( hi=h->where; hi!=NULL; hi=hi->next ) {
-	    hicur = chunkalloc(sizeof(StemInfo));
+	    hicur = (HintInstance *) xzalloc(sizeof (HintInstance));
 	    *hicur = *hi;
 	    hicur->next = NULL;
 	    if ( hilast==NULL )
@@ -5271,7 +5271,7 @@ AnchorPoint *AnchorPointsCopy(AnchorPoint *alist) {
     AnchorPoint *head=NULL, *last, *ap;
 
     while ( alist!=NULL ) {
-	ap = chunkalloc(sizeof(AnchorPoint));
+	ap = (AnchorPoint *) xzalloc(sizeof (AnchorPoint));
 	*ap = *alist;
 	if ( ap->xadjust.corrections!=NULL ) {
 	    int len = ap->xadjust.last_pixel_size-ap->xadjust.first_pixel_size+1;
@@ -5319,7 +5319,7 @@ ValDevTab *ValDevTabCopy(ValDevTab *orig) {
 
     if ( orig==NULL )
 return( NULL );
-    new = chunkalloc(sizeof(ValDevTab));
+    new = (ValDevTab *) xzalloc(sizeof (ValDevTab));
     for ( i=0; i<4; ++i ) {
 	if ( (&orig->xadjust)[i].corrections!=NULL ) {
 	    int len = (&orig->xadjust)[i].last_pixel_size - (&orig->xadjust)[i].first_pixel_size + 1;
@@ -5346,7 +5346,7 @@ DeviceTable *DeviceTableCopy(DeviceTable *orig) {
 
     if ( orig==NULL )
 return( NULL );
-    new = chunkalloc(sizeof(DeviceTable));
+    new = (DeviceTable *) xzalloc(sizeof (DeviceTable));
     *new = *orig;
     len = orig->last_pixel_size - orig->first_pixel_size + 1;
     new->corrections = galloc(len);
@@ -5534,7 +5534,7 @@ FPST *FPSTCopy(FPST *fpst) {
     FPST *nfpst;
     int i;
 
-    nfpst = chunkalloc(sizeof(FPST));
+    nfpst = (FPST *) xzalloc(sizeof (FPST));
     *nfpst = *fpst;
     nfpst->next = NULL;
     if ( nfpst->nccnt!=0 ) {
@@ -5642,7 +5642,7 @@ void LayerDefault(Layer *layer) {
 }
 
 SplineChar *SplineCharCreate(int layer_cnt) {
-    SplineChar *sc = chunkalloc(sizeof(SplineChar));
+    SplineChar *sc = (SplineChar *) xzalloc(sizeof (SplineChar));
     int i;
 
     sc->color = COLOR_DEFAULT;
@@ -5693,7 +5693,7 @@ struct glyphvariants *GlyphVariantsCopy(struct glyphvariants *gv) {
 
     if ( gv==NULL )
 return( NULL );
-    newgv = chunkalloc(sizeof(struct glyphvariants));
+    newgv = (struct glyphvariants *) xzalloc(sizeof (struct glyphvariants));
     newgv->variants = copy(gv->variants);
     newgv->italic_adjusts = DeviceTableCopy(gv->italic_adjusts);
     newgv->part_cnt = gv->part_cnt;
@@ -5712,7 +5712,7 @@ struct mathkern *MathKernCopy(struct mathkern *mk) {
 
     if ( mk==NULL )
 return( NULL );
-    mknew = chunkalloc(sizeof(*mknew));
+    mknew = (struct mathkern *) xzalloc(sizeof (*mknew));
     for ( i=0; i<4; ++i ) {
 	struct mathkernvertex *mkv = &(&mk->top_right)[i];
 	struct mathkernvertex *mknewv = &(&mknew->top_right)[i];
@@ -5758,12 +5758,12 @@ void SplineCharListsFree(struct splinecharlist *dlist) {
 }
 
 struct pattern *PatternCopy(struct pattern *old, real transform[6]) {
-    struct pattern *pat = chunkalloc(sizeof(struct pattern));
+    struct pattern *pat = (struct pattern *) xzalloc(sizeof (struct pattern));
 
     if ( old==NULL )
 return( NULL );
 
-    pat = chunkalloc(sizeof(struct pattern));
+    pat = (struct pattern *) xzalloc(sizeof (struct pattern));
 
     *pat = *old;
     pat->pattern = copy( old->pattern );
@@ -5780,12 +5780,12 @@ return;
 }
 
 struct gradient *GradientCopy(struct gradient *old,real transform[6]) {
-    struct gradient *grad = chunkalloc(sizeof(struct gradient));
+    struct gradient *grad = (struct gradient *) xzalloc(sizeof (struct gradient));
 
     if ( old==NULL )
 return( NULL );
 
-    grad = chunkalloc(sizeof(struct gradient));
+    grad = (struct gradient *) xzalloc(sizeof (struct gradient));
 
     *grad = *old;
     grad->grad_stops = galloc(old->stop_cnt*sizeof(struct grad_stops));
@@ -5966,7 +5966,7 @@ KernClass *KernClassCopy(KernClass *kc) {
 
     if ( kc==NULL )
 return( NULL );
-    new = chunkalloc(sizeof(KernClass));
+    new = (KernClass *) xzalloc(sizeof (KernClass));
     *new = *kc;
     new->firsts = galloc(new->first_cnt*sizeof(char *));
     new->seconds = galloc(new->second_cnt*sizeof(char *));
@@ -6096,7 +6096,7 @@ void OtfFeatNameListFree(struct otffeatname *fn) {
 }
 
 EncMap *EncMapNew(int enccount,int backmax,Encoding *enc) {
-    EncMap *map = chunkalloc(sizeof(EncMap));
+    EncMap *map = (EncMap *) xzalloc(sizeof (EncMap));
     
     map->enccount = map->encmax = enccount;
     map->backmax = backmax;
@@ -6109,7 +6109,7 @@ return(map);
 }
 
 EncMap *EncMap1to1(int enccount) {
-    EncMap *map = chunkalloc(sizeof(EncMap));
+    EncMap *map = (EncMap *) xzalloc(sizeof (EncMap));
     /* Used for CID fonts where CID is same as orig_pos */
     int i;
     
@@ -6152,7 +6152,7 @@ return;
 EncMap *EncMapCopy(EncMap *map) {
     EncMap *new;
 
-    new = chunkalloc(sizeof(EncMap));
+    new = (EncMap *) xzalloc(sizeof (EncMap));
     *new = *map;
     new->map = galloc(new->encmax*sizeof(int));
     new->backmap = galloc(new->backmax*sizeof(int));
@@ -6194,7 +6194,7 @@ struct baselangextent *BaseLangCopy(struct baselangextent *extent) {
 
     last = head = NULL;
     for ( ; extent!=NULL; extent = extent->next ) {
-	cur = chunkalloc(sizeof(struct baselangextent));
+	cur = (struct baselangextent *) xzalloc(sizeof (struct baselangextent));
 	*cur = *extent;
 	cur->features = BaseLangCopy(cur->features);
 	if ( head==NULL )
@@ -6258,7 +6258,7 @@ struct jstf_lang *JstfLangsCopy(struct jstf_lang *jl) {
     int i;
 
     while ( jl!=NULL ) {
-	cur = chunkalloc(sizeof(*cur));
+	cur = (struct jstf_lang *) xzalloc(sizeof (*cur));
 	cur->lang = jl->lang;
 	cur->cnt = jl->cnt;
 	cur->prios = gcalloc(cur->cnt,sizeof(struct jstf_prio));
@@ -6830,7 +6830,7 @@ SplinePoint *SplineBisect(Spline *spline, extended t) {
     FigureSpline1(&ystart,0,t,ysp);
     FigureSpline1(&yend,t,1,ysp);
 
-    mid = chunkalloc(sizeof(SplinePoint));
+    mid = (SplinePoint *) xzalloc(sizeof (SplinePoint));
     mid->me.x = xstart.s1;	mid->me.y = ystart.s1;
     if ( order2 ) {
 	mid->nextcp.x = xend.sp.d + xend.sp.c/2;
@@ -6860,7 +6860,7 @@ SplinePoint *SplineBisect(Spline *spline, extended t) {
     old1->prevcpdef = false;
     SplineFree(spline);
 
-    spline1 = chunkalloc(sizeof(Spline));
+    spline1 = (Spline *) xzalloc(sizeof (Spline));
     spline1->splines[0] = xstart.sp;	spline1->splines[1] = ystart.sp;
     spline1->from = old0;
     spline1->to = mid;
@@ -6874,7 +6874,7 @@ SplinePoint *SplineBisect(Spline *spline, extended t) {
     }
     SplineRefigure(spline1);
 
-    spline2 = chunkalloc(sizeof(Spline));
+    spline2 = (Spline *) xzalloc(sizeof (Spline));
     spline2->splines[0] = xend.sp;	spline2->splines[1] = xend.sp;
     spline2->from = mid;
     spline2->to = old1;
@@ -6928,7 +6928,7 @@ return( spline );
 	if ( i==cnt )
 	    sp = spline->to;
 	else {
-	    sp = chunkalloc(sizeof(SplinePoint));
+	    sp = (SplinePoint *) xzalloc(sizeof (SplinePoint));
 	    sp->me.x = splines[0][i+1].sp.d;
 	    sp->me.y = splines[1][i+1].sp.d;
 	}

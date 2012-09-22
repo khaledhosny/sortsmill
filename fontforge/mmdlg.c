@@ -307,7 +307,7 @@ static void MakeAppleBlend(FontView *fv,MMSet *mm,real *blends,real *normalized)
     for ( i=0; i<sf->glyphcnt; ++i ) if ( sf->glyphs[i]!=NULL )
 	ttfFixupRef(sf->glyphs,i);
     for ( tab=base->ttf_tables; tab!=NULL; tab=tab->next ) {
-	cur = chunkalloc(sizeof(struct ttf_table));
+	cur = (struct ttf_table *) xzalloc(sizeof (struct ttf_table));
 	cur->tag = tab->tag;
 	cur->len = tab->len;
 	cur->data = galloc(tab->len);
@@ -1849,7 +1849,7 @@ continue;
 	MMSetFreeContents(setto);
 	memset(setto,0,sizeof(MMSet));
     } else
-	setto = chunkalloc(sizeof(MMSet));
+	setto = (MMSet *) xzalloc(sizeof (MMSet));
     setto->apple = isapple;
     setto->axis_count = mmw->axis_count;
     setto->instance_count = mmw->instance_count;
@@ -2446,7 +2446,7 @@ static MMSet *MMCopy(MMSet *orig) {
     /*  retain the proper counts in the mmw structure. This means we don't */
     /*  lose data when they shrink and then restore a value */
 
-    mm = chunkalloc(sizeof(MMSet));
+    mm = (MMSet *) xzalloc(sizeof (MMSet));
     mm->apple = orig->apple;
     mm->instance_count = AppleMmMax+1;
     mm->axis_count = 4;
@@ -2510,7 +2510,7 @@ void MMWizard(MMSet *mm) {
 	if ( mm->apple )
 	    ++mmw.instance_count;		/* Normal (default) design is a master in the mac format */
     } else {
-	mmw.mm = chunkalloc(sizeof(MMSet));
+	mmw.mm = (MMSet *) xzalloc(sizeof (MMSet));
 	mmw.axis_count = 1;
 	mmw.instance_count = 2;
 	mmw.mm->axis_count = 4; mmw.mm->instance_count = AppleMmMax+1;

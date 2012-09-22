@@ -86,7 +86,7 @@ return;
     CVClearSel(cv);
     CVPreserveState(&cv->b);
     CVSetCharChanged(cv,true);
-    cv->active_shape = chunkalloc(sizeof(SplineSet));
+    cv->active_shape = (SplineSet *) xzalloc(sizeof (SplineSet));
     cv->active_shape->next = cv->b.layerheads[cv->b.drawmode]->splines;
     cv->b.layerheads[cv->b.drawmode]->splines = cv->active_shape;
     cv->active_shape->first = last = SPMake(&cv->info,pt_corner);

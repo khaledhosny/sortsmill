@@ -722,7 +722,7 @@ return;
     s1 = sin(a1); s2 = sin(a2); c1 = cos(a1); c2 = cos(a2);
     temp.x = cx+r*c2; temp.y = cy+r*s2;
     base.x = cx+r*c1; base.y = cy+r*s1;
-    pt = chunkalloc(sizeof(SplinePoint));
+    pt = (SplinePoint *) xzalloc(sizeof (SplinePoint));
     Transform(&pt->me,&temp,transform);
     cp.x = temp.x-cplen*s2; cp.y = temp.y + cplen*c2;
     if ( (cp.x-base.x)*(cp.x-base.x)+(cp.y-base.y)*(cp.y-base.y) >
@@ -776,7 +776,7 @@ static void collectgarbage(struct garbage *tofrees,struct pskeydict *to) {
     if ( tofrees->cnt>=GARBAGE_MAX && tofrees->next!=NULL )
 	into = tofrees->next;
     if ( into->cnt>=GARBAGE_MAX ) {
-	into = chunkalloc(sizeof(struct garbage));
+	into = (struct garbage *) xzalloc(sizeof (struct garbage));
 	into->next = tofrees->next;
 	tofrees->next = into;
     }
@@ -2042,11 +2042,11 @@ printf( "-%s-\n", toknames[tok]);
 		    current.y = stack[sp-1].u.val;
 		    sp -= 2;
 		}
-		pt = chunkalloc(sizeof(SplinePoint));
+		pt = (SplinePoint *) xzalloc(sizeof (SplinePoint));
 		Transform(&pt->me,&current,transform);
 		pt->noprevcp = true; pt->nonextcp = true;
 		if ( tok==pt_moveto || tok==pt_rmoveto ) {
-		    SplinePointList *spl = chunkalloc(sizeof(SplinePointList));
+		    SplinePointList *spl = (SplinePointList *) xzalloc(sizeof (SplinePointList));
 		    spl->first = spl->last = pt;
 		    if ( cur!=NULL )
 			cur->next = spl;
@@ -2079,7 +2079,7 @@ printf( "-%s-\n", toknames[tok]);
 		    temp.x = stack[sp-6].u.val; temp.y = stack[sp-5].u.val;
 		    Transform(&cur->last->nextcp,&temp,transform);
 		    cur->last->nonextcp = false;
-		    pt = chunkalloc(sizeof(SplinePoint));
+		    pt = (SplinePoint *) xzalloc(sizeof (SplinePoint));
 		    temp.x = stack[sp-4].u.val; temp.y = stack[sp-3].u.val;
 		    Transform(&pt->prevcp,&temp,transform);
 		    Transform(&pt->me,&current,transform);
@@ -2105,7 +2105,7 @@ printf( "-%s-\n", toknames[tok]);
 		temp.y = cy+r*sin(a1/180 * 3.1415926535897932);
 		if ( temp.x!=current.x || temp.y!=current.y ||
 			!( cur!=NULL && cur->first!=NULL && (cur->first!=cur->last || cur->first->next==NULL) )) {
-		    pt = chunkalloc(sizeof(SplinePoint));
+		    pt = (SplinePoint *) xzalloc(sizeof (SplinePoint));
 		    Transform(&pt->me,&temp,transform);
 		    pt->noprevcp = true; pt->nonextcp = true;
 		    if ( cur!=NULL && cur->first!=NULL && (cur->first!=cur->last || cur->first->next==NULL) ) {
@@ -2113,7 +2113,7 @@ printf( "-%s-\n", toknames[tok]);
 			SplineMake3(cur->last,pt);
 			cur->last = pt;
 		    } else {	/* if no current point, then start here */
-			SplinePointList *spl = chunkalloc(sizeof(SplinePointList));
+			SplinePointList *spl = (SplinePointList *) xzalloc(sizeof (SplinePointList));
 			spl->first = spl->last = pt;
 			if ( cur!=NULL )
 			    cur->next = spl;
@@ -2148,7 +2148,7 @@ printf( "-%s-\n", toknames[tok]);
 			(current.x-x1)*(y2-y1) == (x2-x1)*(current.y-y1) ) {
 		    /* Degenerate case */
 		    current.x = x1; current.y = y1;
-		    pt = chunkalloc(sizeof(SplinePoint));
+		    pt = (SplinePoint *) xzalloc(sizeof (SplinePoint));
 		    Transform(&pt->me,&current,transform);
 		    pt->noprevcp = true; pt->nonextcp = true;
 		    CheckMake(cur->last,pt);
@@ -2181,7 +2181,7 @@ printf( "-%s-\n", toknames[tok]);
 		    if ( xt1!=current.x || yt1!=current.y ) {
 			DBasePoint temp;
 			temp.x = xt1; temp.y = yt1;
-			pt = chunkalloc(sizeof(SplinePoint));
+			pt = (SplinePoint *) xzalloc(sizeof (SplinePoint));
 			Transform(&pt->me,&temp,transform);
 			pt->noprevcp = true; pt->nonextcp = true;
 			CheckMake(cur->last,pt);
@@ -3505,7 +3505,7 @@ return( to );
 static StemInfo *HintNew(double start,double width) {
     StemInfo *h;
 
-    h = chunkalloc(sizeof(StemInfo));
+    h = (StemInfo *) xzalloc(sizeof (StemInfo));
     h->start = start;
     h->width = width;
 return( h );
@@ -3747,7 +3747,7 @@ SplineChar *PSCharStringToSplines(uint8 *type1, int len, struct pscontext *conte
 		hp->next->next->hintnumber = sameh!=NULL ? sameh->hintnumber : hint_cnt++;
 		if ( !is_type2 && hp->next->next->hintnumber<96 ) {
 		    if ( pending_hm==NULL )
-			pending_hm = chunkalloc(sizeof(HintMask));
+			pending_hm = (HintMask *) xzalloc(sizeof (HintMask));
 		    (*pending_hm)[hint->hintnumber>>3] |= 0x80>>(hint->hintnumber&0x7);
 		    (*pending_hm)[hint->next->hintnumber>>3] |= 0x80>>(hint->next->hintnumber&0x7);
 		    (*pending_hm)[hint->next->next->hintnumber>>3] |= 0x80>>(hint->next->next->hintnumber&0x7);
@@ -3783,7 +3783,7 @@ SplineChar *PSCharStringToSplines(uint8 *type1, int len, struct pscontext *conte
 		hp->next->next->hintnumber = sameh!=NULL ? sameh->hintnumber : hint_cnt++;
 		if ( !is_type2 && hp->next->next->hintnumber<96 ) {
 		    if ( pending_hm==NULL )
-			pending_hm = chunkalloc(sizeof(HintMask));
+			pending_hm = (HintMask *) xzalloc(sizeof (HintMask));
 		    (*pending_hm)[hint->hintnumber>>3] |= 0x80>>(hint->hintnumber&0x7);
 		    (*pending_hm)[hint->next->hintnumber>>3] |= 0x80>>(hint->next->hintnumber&0x7);
 		    (*pending_hm)[hint->next->next->hintnumber>>3] |= 0x80>>(hint->next->next->hintnumber&0x7);
@@ -3965,7 +3965,7 @@ SplineChar *PSCharStringToSplines(uint8 *type1, int len, struct pscontext *conte
 			    if ( cur!=NULL && cur->first!=NULL && (cur->first!=cur->last || cur->first->next==NULL) ) {
 				cur->last->nextcp = old_nextcp;
 				cur->last->nonextcp = false;
-				pt = chunkalloc(sizeof(SplinePoint));
+				pt = (SplinePoint *) xzalloc(sizeof (SplinePoint));
 			        pt->hintmask = pending_hm; pending_hm = NULL;
 				pt->prevcp = mid_prevcp;
 				pt->me = mid;
@@ -3974,7 +3974,7 @@ SplineChar *PSCharStringToSplines(uint8 *type1, int len, struct pscontext *conte
 			        CheckMake(cur->last,pt);
 				SplineMake3(cur->last,pt);
 				cur->last = pt;
-				pt = chunkalloc(sizeof(SplinePoint));
+				pt = (SplinePoint *) xzalloc(sizeof (SplinePoint));
 				pt->prevcp = end_prevcp;
 				pt->me = end;
 				pt->nonextcp = true;
@@ -3987,7 +3987,7 @@ SplineChar *PSCharStringToSplines(uint8 *type1, int len, struct pscontext *conte
 			    /* Um, something's wrong. Let's just draw a line */
 			    /* do the simple method, which consists of creating */
 			    /*  the appropriate line */
-			    pt = chunkalloc(sizeof(SplinePoint));
+			    pt = (SplinePoint *) xzalloc(sizeof (SplinePoint));
 			    pt->me.x = pops[1]; pt->me.y = pops[0];
 			    pt->noprevcp = true; pt->nonextcp = true;
 			    SplinePointListFree(oldcur->next); oldcur->next = NULL; spl = NULL;
@@ -4186,7 +4186,7 @@ SplineChar *PSCharStringToSplines(uint8 *type1, int len, struct pscontext *conte
 		    cur->last->nextcp.x = current.x; cur->last->nextcp.y = current.y;
 		    cur->last->nonextcp = false;
 		    current.x = rint((current.x+dx2)*1024)/1024; current.y = rint((current.y+dy2)*1024)/1024;
-		    pt = chunkalloc(sizeof(SplinePoint));
+		    pt = (SplinePoint *) xzalloc(sizeof (SplinePoint));
 		    pt->hintmask = pending_hm; pending_hm = NULL;
 		    pt->prevcp.x = current.x; pt->prevcp.y = current.y;
 		    current.x = rint((current.x+dx3)*1024)/1024; current.y = rint((current.y+dy3)*1024)/1024;
@@ -4200,7 +4200,7 @@ SplineChar *PSCharStringToSplines(uint8 *type1, int len, struct pscontext *conte
 		    cur->last->nextcp.x = current.x; cur->last->nextcp.y = current.y;
 		    cur->last->nonextcp = false;
 		    current.x = rint((current.x+dx5)*1024)/1024; current.y = rint((current.y+dy5)*1024)/1024;
-		    pt = chunkalloc(sizeof(SplinePoint));
+		    pt = (SplinePoint *) xzalloc(sizeof (SplinePoint));
 		    pt->prevcp.x = current.x; pt->prevcp.y = current.y;
 		    current.x = rint((current.x+dx6)*1024)/1024; current.y = rint((current.y+dy6)*1024)/1024;
 		    pt->me.x = current.x; pt->me.y = current.y;
@@ -4241,7 +4241,7 @@ SplineChar *PSCharStringToSplines(uint8 *type1, int len, struct pscontext *conte
 		hint = HintNew(stack[base]+coord,stack[base+1]);
 		hint->hintnumber = sameh!=NULL ? sameh->hintnumber : hint_cnt++;
 		if ( !is_type2 && context->instance_count!=0 ) {
-		    hint->u.unblended = chunkalloc(sizeof(real [2][MmMax]));
+		    hint->u.unblended = (_MMArray *) xzalloc(sizeof (real [2][MmMax]));
 		    memcpy(hint->u.unblended,unblended,sizeof(real [2][MmMax]));
 		}
 		if ( activeh==NULL )
@@ -4251,7 +4251,7 @@ SplineChar *PSCharStringToSplines(uint8 *type1, int len, struct pscontext *conte
 		hp = hint;
 		if ( !is_type2 && hint->hintnumber<96 ) {
 		    if ( pending_hm==NULL )
-			pending_hm = chunkalloc(sizeof(HintMask));
+			pending_hm = (HintMask *) xzalloc(sizeof (HintMask));
 		    (*pending_hm)[hint->hintnumber>>3] |= 0x80>>(hint->hintnumber&0x7);
 		}
 		base+=2;
@@ -4293,12 +4293,12 @@ SplineChar *PSCharStringToSplines(uint8 *type1, int len, struct pscontext *conte
 		    hint = HintNew(stack[base]+coord,stack[base+1]);
 		    hint->hintnumber = sameh!=NULL ? sameh->hintnumber : hint_cnt++;
 		    if ( !is_type2 && context->instance_count!=0 ) {
-			hint->u.unblended = chunkalloc(sizeof(real [2][MmMax]));
+			hint->u.unblended = (_MMArray *) xzalloc(sizeof (real [2][MmMax]));
 			memcpy(hint->u.unblended,unblended,sizeof(real [2][MmMax]));
 		    }
 		    if ( !is_type2 && hint->hintnumber<96 ) {
 			if ( pending_hm==NULL )
-			    pending_hm = chunkalloc(sizeof(HintMask));
+			    pending_hm = (HintMask *) xzalloc(sizeof (HintMask));
 			(*pending_hm)[hint->hintnumber>>3] |= 0x80>>(hint->hintnumber&0x7);
 		    }
 		    if ( activev==NULL )
@@ -4318,10 +4318,10 @@ SplineChar *PSCharStringToSplines(uint8 *type1, int len, struct pscontext *conte
 		    ret->hstem = HintsAppend(ret->hstem,activeh); activeh=NULL;
 		    ret->vstem = HintsAppend(ret->vstem,activev); activev=NULL;
 		    if ( pending_hm==NULL )
-			pending_hm = chunkalloc(sizeof(HintMask));
+			pending_hm = (HintMask *) xzalloc(sizeof (HintMask));
 		    memcpy(pending_hm,type1,bytes);
 		} else if ( cp<sizeof(counters)/sizeof(counters[0]) ) {
-		    counters[cp] = chunkalloc(sizeof(HintMask));
+		    counters[cp] = (HintMask *) xzalloc(sizeof (HintMask));
 		    memcpy(counters[cp],type1,bytes);
 		    ++cp;
 		}
@@ -4427,7 +4427,7 @@ SplineChar *PSCharStringToSplines(uint8 *type1, int len, struct pscontext *conte
 		}
 		++polarity;
 		current.x = rint((current.x+dx)*1024)/1024; current.y = rint((current.y+dy)*1024)/1024;
-		pt = chunkalloc(sizeof(SplinePoint));
+		pt = (SplinePoint *) xzalloc(sizeof (SplinePoint));
 		pt->hintmask = pending_hm; pending_hm = NULL;
 		pt->me.x = current.x; pt->me.y = current.y;
 		pt->noprevcp = true; pt->nonextcp = true;
@@ -4437,7 +4437,7 @@ SplineChar *PSCharStringToSplines(uint8 *type1, int len, struct pscontext *conte
 			cur->first->me.x = current.x; cur->first->me.y = current.y;
 			SplinePointFree(pt);
 		    } else {
-			SplinePointList *spl = chunkalloc(sizeof(SplinePointList));
+			SplinePointList *spl = (SplinePointList *) xzalloc(sizeof (SplinePointList));
 			spl->first = spl->last = pt;
 			if ( cur!=NULL )
 			    cur->next = spl;
@@ -4464,7 +4464,7 @@ SplineChar *PSCharStringToSplines(uint8 *type1, int len, struct pscontext *conte
 	    while ( sp>base+6 ) {
 		current.x = rint((current.x+stack[base++])*1024)/1024; current.y = rint((current.y+stack[base++])*1024)/1024;
 		if ( cur!=NULL ) {
-		    pt = chunkalloc(sizeof(SplinePoint));
+		    pt = (SplinePoint *) xzalloc(sizeof (SplinePoint));
 		    pt->hintmask = pending_hm; pending_hm = NULL;
 		    pt->me.x = current.x; pt->me.y = current.y;
 		    pt->noprevcp = true; pt->nonextcp = true;
@@ -4547,7 +4547,7 @@ SplineChar *PSCharStringToSplines(uint8 *type1, int len, struct pscontext *conte
 		    cur->last->nextcp.x = current.x; cur->last->nextcp.y = current.y;
 		    cur->last->nonextcp = false;
 		    current.x = rint((current.x+dx2)*1024)/1024; current.y = rint((current.y+dy2)*1024)/1024;
-		    pt = chunkalloc(sizeof(SplinePoint));
+		    pt = (SplinePoint *) xzalloc(sizeof (SplinePoint));
 		    pt->hintmask = pending_hm; pending_hm = NULL;
 		    pt->prevcp.x = current.x; pt->prevcp.y = current.y;
 		    current.x = rint((current.x+dx3)*1024)/1024; current.y = rint((current.y+dy3)*1024)/1024;
@@ -4562,7 +4562,7 @@ SplineChar *PSCharStringToSplines(uint8 *type1, int len, struct pscontext *conte
 	    if ( v==24 ) {
 		current.x = rint((current.x+stack[base++])*1024)/1024; current.y = rint((current.y+stack[base++])*1024)/1024;
 		if ( cur!=NULL ) {	/* In legal code, cur can't be null here, but I got something illegal... */
-		    pt = chunkalloc(sizeof(SplinePoint));
+		    pt = (SplinePoint *) xzalloc(sizeof (SplinePoint));
 		    pt->hintmask = pending_hm; pending_hm = NULL;
 		    pt->me.x = current.x; pt->me.y = current.y;
 		    pt->noprevcp = true; pt->nonextcp = true;

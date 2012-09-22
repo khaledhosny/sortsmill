@@ -2640,7 +2640,7 @@ return(false);
 	    buts[0] = _("_OK"); buts[1] = _("_Skip"); buts[2]="_Ignore"; buts[3] = NULL;
 	    ret = ff_ask(_("Missing Script"),(const char **) buts,0,1,buffer);
 	    if ( ret==0 ) {
-		sl = chunkalloc(sizeof(struct scriptlanglist));
+		sl = (struct scriptlanglist *) xzalloc(sizeof (struct scriptlanglist));
 		sl->script = script;
 		sl->lang_cnt = 1;
 		sl->langs[0] = DEFAULT_LANG;
@@ -5384,7 +5384,7 @@ return;
 	}
     }
 
-    valwin = chunkalloc(sizeof(struct val_data));
+    valwin = (struct val_data *) xzalloc(sizeof (struct val_data));
     valwin->sf = sf;
     valwin->mask = mask;
     valwin->needs_blue = needs_blue;

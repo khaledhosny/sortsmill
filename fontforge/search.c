@@ -740,7 +740,7 @@ static void AdjustAll(SplinePoint *change,BasePoint *rel,
 }
 
 static SplinePoint *RplInsertSP(SplinePoint *after,SplinePoint *nrpl,SplinePoint *rpl,SearchData *s, BasePoint *fudge) {
-    SplinePoint *new = chunkalloc(sizeof(SplinePoint));
+    SplinePoint *new = (SplinePoint *) xzalloc(sizeof (SplinePoint));
     real transform[6];
 
     SVBuildTrans(s,transform);

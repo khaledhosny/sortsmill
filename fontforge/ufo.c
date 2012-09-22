@@ -1082,7 +1082,7 @@ static StemInfo *GlifParseHints(xmlDocPtr doc,xmlNodePtr dict,char *hinttype) {
 				}
 			    }
 			    if ( pos!=-88888888 && width!=0 ) {
-				h = chunkalloc(sizeof(StemInfo));
+				h = (StemInfo *) xzalloc(sizeof (StemInfo));
 			        h->start = pos;
 			        h->width = width;
 			        if ( width==-20 || width==-21 )
@@ -1197,7 +1197,7 @@ return( NULL );
 		    BasePoint pre[2], init[4];
 		    int precnt=0, initcnt=0, open=0;
 
-		    ss = chunkalloc(sizeof(SplineSet));
+		    ss = (SplineSet *) xzalloc(sizeof (SplineSet));
 		    for ( points = contour->children; points!=NULL; points=points->next ) {
 			char *xs, *ys, *type;
 			double x,y;
@@ -1519,7 +1519,7 @@ return;
 		    valname = (char *) xmlNodeListGetString(doc,value->children,true);
 		    offset = strtol(valname,&end,10);
 		    if ( *end=='\0' ) {
-			kp = chunkalloc(sizeof(KernPair));
+			kp = (KernPair *) xzalloc(sizeof (KernPair));
 			kp->off = offset;
 			kp->sc = ssc;
 			if ( isv ) {
@@ -1551,7 +1551,7 @@ static void UFOAddName(SplineFont *sf,char *value,int strid) {
 
     for ( names=sf->names; names!=NULL && names->lang!=0x409; names=names->next );
     if ( names==NULL ) {
-	names = chunkalloc(sizeof(struct ttflangname));
+	names = (struct ttflangname *) xzalloc(sizeof (struct ttflangname));
 	names->next = sf->names;
 	names->lang = 0x409;
 	sf->names = names;
@@ -1563,7 +1563,7 @@ static void UFOAddPrivate(SplineFont *sf,char *key,char *value) {
     char *pt;
 
     if ( sf->private==NULL )
-	sf->private = chunkalloc(sizeof(struct psdict));
+	sf->private = (struct psdict *) xzalloc(sizeof (struct psdict));
     for ( pt=value; *pt!='\0'; ++pt ) {	/* Value might contain white space. turn into spaces */
 	if ( *pt=='\n' || *pt=='\r' || *pt=='\t' )
 	    *pt = ' ';

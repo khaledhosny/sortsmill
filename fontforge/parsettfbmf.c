@@ -122,7 +122,7 @@ return;
 	}
 return;
     }
-    bdfc = chunkalloc(sizeof(BDFChar));
+    bdfc = (BDFChar *) xzalloc(sizeof (BDFChar));
     if ( info->chars!=NULL ) {
 	if ( gid>=info->glyph_cnt || info->chars[gid]==NULL ) {
 	    if ( gid>=info->glyph_cnt ) {

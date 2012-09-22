@@ -77,7 +77,7 @@ return( NULL );
     if ( mc->lks[l].to!=NULL )
 return( mc->lks[l].to );
 
-    mc->lks[l].to = newotl = chunkalloc(sizeof(OTLookup));
+    mc->lks[l].to = newotl = (OTLookup *) xzalloc(sizeof (OTLookup));
     newotl->lookup_name = strconcat(mc->prefix,otl->lookup_name);
     newotl->lookup_type = otl->lookup_type;
     newotl->lookup_flags = otl->lookup_flags;
@@ -148,7 +148,7 @@ return( NULL );
     if ( mc->subs[s].to!=NULL )
 return( mc->subs[s].to );
 
-    mc->subs[s].to = newsub = chunkalloc(sizeof(struct lookup_subtable));
+    mc->subs[s].to = newsub = (struct lookup_subtable *) xzalloc(sizeof (struct lookup_subtable));
     newsub->subtable_name = strconcat(mc->prefix,sub->subtable_name);
     newsub->lookup = MCConvertLookup(mc,sub->lookup);
     newsub->anchor_classes = sub->anchor_classes;
@@ -202,7 +202,7 @@ return( NULL );
     if ( mc->acs[a].to!=NULL )
 return( mc->acs[a].to );
 
-    mc->acs[a].to = newac = chunkalloc(sizeof(AnchorClass));
+    mc->acs[a].to = newac = (AnchorClass *) xzalloc(sizeof (AnchorClass));
     newac->name = strconcat(mc->prefix,ac->name);
     newac->subtable = MCConvertSubtable(mc,ac->subtable);
     newac->next = mc->sf_to->anchor;
@@ -270,7 +270,7 @@ PST *PSTCopy(PST *base,SplineChar *sc,struct sfmergecontext *mc) {
     PST *head=NULL, *last=NULL, *cur;
 
     for ( ; base!=NULL; base = base->next ) {
-	cur = chunkalloc(sizeof(PST));
+	cur = (PST *) xzalloc(sizeof (PST));
 	*cur = *base;
 	cur->subtable = MCConvertSubtable(mc,base->subtable);
 	if ( cur->type==pst_ligature ) {
@@ -278,7 +278,7 @@ PST *PSTCopy(PST *base,SplineChar *sc,struct sfmergecontext *mc) {
 	    cur->u.lig.lig = sc;
 	} else if ( cur->type==pst_pair ) {
 	    cur->u.pair.paired = copy(cur->u.pair.paired);
-	    cur->u.pair.vr = chunkalloc(sizeof( struct vr [2]));
+	    cur->u.pair.vr = (struct vr *) xzalloc(sizeof (struct vr [2]));
 	    memcpy(cur->u.pair.vr,base->u.pair.vr,sizeof(struct vr [2]));
 	    cur->u.pair.vr[0].adjust = ValDevTabCopy(base->u.pair.vr[0].adjust);
 	    cur->u.pair.vr[1].adjust = ValDevTabCopy(base->u.pair.vr[1].adjust);
@@ -301,7 +301,7 @@ static AnchorPoint *AnchorPointsDuplicate(AnchorPoint *base,SplineChar *sc) {
     AnchorClass *ac;
 
     for ( ; base!=NULL; base = base->next ) {
-	cur = chunkalloc(sizeof(AnchorPoint));
+	cur = (AnchorPoint *) xzalloc(sizeof (AnchorPoint));
 	*cur = *base;
 	cur->next = NULL;
 	for ( ac=sc->parent->anchor; ac!=NULL; ac=ac->next )
@@ -338,7 +338,7 @@ static void AnchorClassesAdd(SplineFont *into, SplineFont *from, struct sfmergec
 	    last = iac;
 	}
 	if ( iac==NULL ) {
-	    cur = chunkalloc(sizeof(AnchorClass));
+	    cur = (AnchorClass *) xzalloc(sizeof (AnchorClass));
 	    *cur = *fac;
 	    cur->next = NULL;
 	    cur->name = copy(cur->name);
@@ -387,7 +387,7 @@ static void ASMsAdd(SplineFont *into, SplineFont *from,struct sfmergecontext *mc
     if ( into->sm!=NULL )
 	for ( last = into->sm; last->next!=NULL; last=last->next );
     for ( sm = from->sm; sm!=NULL; sm=sm->next ) {
-	nsm = chunkalloc(sizeof(ASM));
+	nsm = (ASM *) xzalloc(sizeof (ASM));
 	*nsm = *sm;
 	nsm->subtable = MCConvertSubtable(mc,sm->subtable);
 	nsm->subtable->sm = nsm;
@@ -462,7 +462,7 @@ struct altuni *AltUniCopy(struct altuni *altuni,SplineFont *noconflicts) {
 
     while ( altuni!=NULL ) {
 	if ( noconflicts==NULL || SFGetChar(noconflicts,altuni->unienc,NULL)==NULL ) {
-	    cur = chunkalloc(sizeof(struct altuni));
+	    cur = (struct altuni *) xzalloc(sizeof (struct altuni));
 	    cur->unienc = altuni->unienc;
 	    cur->vs = altuni->vs;
 	    cur->fid = altuni->fid;
@@ -545,7 +545,7 @@ static KernPair *KernsCopy(KernPair *kp,int *mapping,SplineFont *into,
 	    index =  _SFFindExistingSlot(into,kp->sc->unicodeenc,kp->sc->name);
 	if ( index>=0 && index<into->glyphcnt &&
 		into->glyphs[index]!=NULL ) {
-	    new_ = chunkalloc(sizeof(KernPair));
+	    new_ = (KernPair *) xzalloc(sizeof (KernPair));
 	    new_->off = kp->off;
 	    new_->subtable = MCConvertSubtable(mc,kp->subtable);
 	    new_->sc = into->glyphs[index];
@@ -643,7 +643,7 @@ return;
 	/*  font than the others. If we build the list backwards then it will */
 	/*  be the top name in the bucket, and will be the one we return */
 	for ( i=_sf->glyphcnt-1; i>=0; --i ) if ( _sf->glyphs[i]!=NULL ) {
-	    new_ = chunkalloc(sizeof(struct glyphnamebucket));
+	    new_ = (struct glyphnamebucket *) xzalloc(sizeof (struct glyphnamebucket));
 	    new_->sc = _sf->glyphs[i];
 	    hash = hashname(new_->sc->name);
 	    new_->next = gnh->table[hash];
@@ -661,7 +661,7 @@ void SFHashGlyph(SplineFont *sf,SplineChar *sc) {
     if ( sf->glyphnames==NULL )
 return;		/* No hash table, nothing to update */
 
-    new_ = chunkalloc(sizeof(struct glyphnamebucket));
+    new_ = (struct glyphnamebucket *) xzalloc(sizeof (struct glyphnamebucket));
     new_->sc = sc;
     hash = hashname(sc->name);
     new_->next = sf->glyphnames->table[hash];
@@ -1259,7 +1259,7 @@ return( head );
 }
 
 static void InterpPoint(SplineSet *cur, SplinePoint *base, SplinePoint *other, real amount ) {
-    SplinePoint *p = chunkalloc(sizeof(SplinePoint));
+    SplinePoint *p = (SplinePoint *) xzalloc(sizeof (SplinePoint));
     int order2 = base->prev!=NULL ? base->prev->order2 : base->next!=NULL ? base->next->order2 : false;
 
     p->me.x = base->me.x + amount*(other->me.x-base->me.x);
@@ -1298,7 +1298,7 @@ static void InterpPoint(SplineSet *cur, SplinePoint *base, SplinePoint *other, r
 }
     
 static SplineSet *InterpSplineSet(SplineSet *base, SplineSet *other, real amount, SplineChar *sc) {
-    SplineSet *cur = chunkalloc(sizeof(SplineSet));
+    SplineSet *cur = (SplineSet *) xzalloc(sizeof (SplineSet));
     SplinePoint *bp, *op;
 
     for ( bp=base->first, op = other->first; ; ) {
@@ -1380,7 +1380,7 @@ return( NULL );
 	for ( k=kp2; k!=NULL && !SCSameChar(k->sc,kp1->sc); k=k->next );
 	if ( k!=NULL ) {
 	    if ( k==kp2 ) kp2 = kp2->next;
-	    nkp = chunkalloc(sizeof(KernPair));
+	    nkp = (KernPair *) xzalloc(sizeof (KernPair));
 	    nkp->sc = new_->glyphs[kp1->sc->orig_pos];
 	    nkp->off = kp1->off + amount*(k->off-kp1->off);
 	    nkp->subtable = SFSubTableFindOrMake(new_,CHR('k','e','r','n'),

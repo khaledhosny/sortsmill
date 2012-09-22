@@ -1499,7 +1499,7 @@ return( NULL );
 	}
     }
 
-    bdfc = chunkalloc(sizeof(BDFChar));
+    bdfc = (BDFChar *) xzalloc(sizeof (BDFChar));
     memset( bdfc,'\0',sizeof( BDFChar ));
     bdfc->sc = sc;
     bdfc->xmin = rint(es.omin);

@@ -1209,7 +1209,7 @@ static FeatureScriptLangList *LK_ParseFL(struct matrix_data *strings, int rows )
 
     fhead = flast = NULL;
     for ( i=0; i<rows; ++i ) {
-	fl = chunkalloc(sizeof(FeatureScriptLangList));
+	fl = (FeatureScriptLangList *) xzalloc(sizeof (FeatureScriptLangList));
 	if ( sscanf(strings[2*i+0].u.md_str,"<%d,%d>", &feature, &setting )== 2 ) {
 	    fl->ismac = true;
 	    fl->featuretag = (feature<<16)|setting;
@@ -1229,7 +1229,7 @@ static FeatureScriptLangList *LK_ParseFL(struct matrix_data *strings, int rows )
 	    memset(foo,' ',sizeof(foo));
 	    for ( j=0,pt=start; *pt!='{' && *pt!='\0'; ++pt )
 		foo[j++] = *pt;
-	    sl = chunkalloc(sizeof( struct scriptlanglist ));
+	    sl = (struct scriptlanglist  *) xzalloc(sizeof (struct scriptlanglist ));
 	    sl->script = (foo[0]<<24) | (foo[1]<<16) | (foo[2]<<8) | foo[3];
 	    if ( slast==NULL )
 		fl->scripts = sl;
@@ -1977,7 +1977,7 @@ static OTLookup *CreateAndSortNewLookupOfType(SplineFont *sf, int lookup_type) {
     OTLookup *newotl;
     int isgpos = lookup_type>=gpos_start;
 
-    newotl = chunkalloc(sizeof(OTLookup));
+    newotl = (OTLookup *) xzalloc(sizeof (OTLookup));
     newotl->lookup_type = lookup_type;
     if ( !EditLookup(newotl,isgpos,sf)) {
 	chunkfree(newotl,sizeof(OTLookup));
@@ -2038,7 +2038,7 @@ static AnchorClass *SFAddAnchorClass(SplineFont *sf,struct lookup_subtable *sub,
 	char *name) {
     AnchorClass *ac;
 
-    ac = chunkalloc(sizeof(AnchorClass));
+    ac = (AnchorClass *) xzalloc(sizeof (AnchorClass));
     ac->name = copy(name);
     ac->type = sub->lookup->lookup_type == gpos_mark2base ? act_mark :
 		sub->lookup->lookup_type == gpos_mark2ligature ? act_mklg :
@@ -3736,7 +3736,7 @@ return( true );
 		break;
 		}
 		if ( pst==NULL ) {
-		    pst = chunkalloc(sizeof(PST));
+		    pst = (PST *) xzalloc(sizeof (PST));
 		    pst->type = _t;
 		    pst->subtable = pstkd->sub;
 		    pst->next = sc->possub;
@@ -4641,7 +4641,7 @@ static struct lookup_subtable *NewSubtable(OTLookup *otl,int isgpos,SplineFont *
     struct lookup_subtable *sub, *last;
     int i,j;
 
-    sub = chunkalloc(sizeof(struct lookup_subtable));
+    sub = (struct lookup_subtable *) xzalloc(sizeof (struct lookup_subtable));
     sub->lookup = otl;
     sub->separation = 15*(sf->ascent+sf->descent)/100;
     sub->minkern = sub->separation/10;
@@ -5432,7 +5432,7 @@ void _LookupSubtableContents(SplineFont *sf, struct lookup_subtable *sub,
 		lookup_type == gsub_reversecchain ||
 		lookup_type == gpos_context || lookup_type == gpos_contextchain) &&
 	    sub->fpst==NULL ) {
-	sub->fpst = chunkalloc(sizeof(FPST));
+	sub->fpst = (FPST *) xzalloc(sizeof (FPST));
 	sub->fpst->type = lookup_type == gsub_context ? pst_contextsub :
 		lookup_type == gsub_contextchain ? pst_chainsub :
 		lookup_type == gsub_reversecchain ? pst_reversesub :
@@ -5448,7 +5448,7 @@ void _LookupSubtableContents(SplineFont *sf, struct lookup_subtable *sub,
 		lookup_type == morx_insert ||
 		lookup_type == kern_statemachine) &&
 	    sub->sm==NULL ) {
-	sub->sm = chunkalloc(sizeof(ASM));
+	sub->sm = (ASM *) xzalloc(sizeof (ASM));
 	sub->sm->type = lookup_type == morx_indic ? asm_indic :
 		lookup_type == morx_context ? asm_context :
 		lookup_type == morx_insert ? asm_insert :
@@ -5504,7 +5504,7 @@ return;
 		    0,0,0,0, 0, NULL, NULL);
 	    }
 	} else {
-	    sub->kc = chunkalloc(sizeof(KernClass));
+	    sub->kc = (KernClass *) xzalloc(sizeof (KernClass));
 	    if ( sub->vertical_kerning ) {
 		sub->kc->next = sf->vkerns;
 		sf->vkerns = sub->kc;
@@ -5953,7 +5953,7 @@ return( true );
 		/*  attached to the source glyph */
 		for ( pst=sourcesc->possub; pst!=NULL && pst->subtable!=sub; pst=pst->next );
 		if ( pst==NULL ) {
-		    pst = chunkalloc(sizeof(PST));
+		    pst = (PST *) xzalloc(sizeof (PST));
 		    pst->next = sourcesc->possub;
 		    sourcesc->possub = pst;
 		    pst->subtable = sub;

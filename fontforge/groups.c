@@ -55,7 +55,7 @@ Group *GroupCopy(Group *g) {
     if ( g==NULL )
 return( NULL );
 
-    gp = chunkalloc(sizeof(Group));
+    gp = (Group *) xzalloc(sizeof (Group));
     gp->name = copy(g->name);
     gp->glyphs = copy(g->glyphs);
     if ( g->kid_cnt!=0 ) {
@@ -188,7 +188,7 @@ return( NULL );
     n = loadString(file,gc);
     if ( n==NULL )
 return( NULL );
-    g = chunkalloc(sizeof(Group));
+    g = (Group *) xzalloc(sizeof (Group));
     g->parent = parent;
     g->name = n;
     if ( (ch = getc(file))==':' )

@@ -35,7 +35,7 @@ bezctx_ff_moveto(bezctx *z, double x, double y, int is_open) {
 	x = y = 0;
     }
     if (!bc->is_open) {
-	SplineSet *ss = chunkalloc(sizeof(SplineSet));
+	SplineSet *ss = (SplineSet *) xzalloc(sizeof (SplineSet));
 	ss->next = bc->ss;
 	bc->ss = ss;
     }
@@ -111,7 +111,7 @@ bezctx_ff_curveto(bezctx *z, double x1, double y1, double x2, double y2,
 
 bezctx *
 new_bezctx_ff(void) {
-    bezctx_ff *result = chunkalloc(sizeof(bezctx_ff));
+    bezctx_ff *result = (bezctx_ff *) xzalloc(sizeof (bezctx_ff));
 
     result->base.moveto = bezctx_ff_moveto;
     result->base.lineto = bezctx_ff_lineto;

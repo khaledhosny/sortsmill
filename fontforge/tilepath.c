@@ -326,7 +326,7 @@ static SplineSet *SplinePointListTruncateAtY(SplineSet *spl,real y) {
 		    spline->from->next = NULL;
 		} else {
 		    /* Split into two splinesets and remove all between */
-		    ns = chunkalloc(sizeof(SplineSet));
+		    ns = (SplineSet *) xzalloc(sizeof (SplineSet));
 		    ns->first = next->from;
 		    ns->last = spl->last;
 		    spl->last = spline->from;
@@ -601,7 +601,7 @@ static SplinePoint *TDMakePoint(TD *td,Spline *old,real t) {
     SplinePoint *new;
 
     AdjustPoint(td,old,t,&tp);
-    new = chunkalloc(sizeof(SplinePoint));
+    new = (SplinePoint *) xzalloc(sizeof (SplinePoint));
     new->me.x = tp.x; new->me.y = tp.y;
     new->nextcp = new->me;
     new->prevcp = new->me;
@@ -634,7 +634,7 @@ static void AdjustSplineSet(TD *td,int order2) {
 	for ( last=td->result ; last->next!=NULL; last = last->next );
 
     for ( spl=td->tileset; spl!=NULL; spl=spl->next ) {
-	new = chunkalloc(sizeof(SplineSet));
+	new = (SplineSet *) xzalloc(sizeof (SplineSet));
 	if ( last==NULL )
 	    td->result = new;
 	else
@@ -1588,13 +1588,13 @@ return( true );
 	sp1 = SplinePointCreate(-1000,vsize);
 	sp2 = SplinePointCreate(2000,vsize);
 	SplineMake(sp1,sp2,ptd->sc_first.layers[ly_back].order2);
-	ss = chunkalloc(sizeof(SplineSet));
+	ss = (SplineSet *) xzalloc(sizeof (SplineSet));
 	ss->first = sp1; ss->last = sp2;
 	ptd->sc_first.layers[ly_back].splines = ss;
 	sp1 = SplinePointCreate(hsize,-1000);
 	sp2 = SplinePointCreate(hsize,2000);
 	SplineMake(sp1,sp2,ptd->sc_first.layers[ly_back].order2);
-	ss = chunkalloc(sizeof(SplineSet));
+	ss = (SplineSet *) xzalloc(sizeof (SplineSet));
 	ss->first = sp1; ss->last = sp2;
 	ptd->sc_first.layers[ly_back].splines->next = ss;
 	GDrawRequestExpose(ptd->cv_first.v,NULL,false);

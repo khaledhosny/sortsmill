@@ -1378,11 +1378,11 @@ static void _InterpretPdf(FILE *in, struct pdfcontext *pc, EntityChar *ec) {
 		current.x = stack[sp-2].u.val;
 		current.y = stack[sp-1].u.val;
 		sp -= 2;
-		pt = chunkalloc(sizeof(SplinePoint));
+		pt = (SplinePoint *) xzalloc(sizeof (SplinePoint));
 		Transform(&pt->me,&current,transform);
 		pt->noprevcp = true; pt->nonextcp = true;
 		if ( tok==pt_moveto ) {
-		    SplinePointList *spl = chunkalloc(sizeof(SplinePointList));
+		    SplinePointList *spl = (SplinePointList *) xzalloc(sizeof (SplinePointList));
 		    spl->first = spl->last = pt;
 		    if ( cur!=NULL )
 			cur->next = spl;
@@ -1421,7 +1421,7 @@ static void _InterpretPdf(FILE *in, struct pdfcontext *pc, EntityChar *ec) {
 		if ( cur!=NULL && cur->first!=NULL && (cur->first!=cur->last || cur->first->next==NULL) ) {
 		    Transform(&cur->last->nextcp,&ncp,transform);
 		    cur->last->nonextcp = false;
-		    pt = chunkalloc(sizeof(SplinePoint));
+		    pt = (SplinePoint *) xzalloc(sizeof (SplinePoint));
 		    Transform(&pt->prevcp,&pcp,transform);
 		    Transform(&pt->me,&current,transform);
 		    pt->nonextcp = true;
@@ -1433,7 +1433,7 @@ static void _InterpretPdf(FILE *in, struct pdfcontext *pc, EntityChar *ec) {
 	  break;
 	  case pt_rect:
 	    if ( sp>=4 ) {
-		SplinePointList *spl = chunkalloc(sizeof(SplinePointList));
+		SplinePointList *spl = (SplinePointList *) xzalloc(sizeof (SplinePointList));
 		SplinePoint *first, *second, *third, *fourth;
 		BasePoint temp1, temp2;
 		spl->first = spl->last = pt;

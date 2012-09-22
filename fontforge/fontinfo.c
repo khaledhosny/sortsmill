@@ -2453,7 +2453,7 @@ static struct otfname *OtfNameFromStyleNames(GGadget *me) {
     struct otfname *head=NULL, *last, *cur;
 
     for ( i=0; i<rows; ++i ) {
-	cur = chunkalloc(sizeof(struct otfname));
+	cur = (struct otfname *) xzalloc(sizeof (struct otfname));
 	cur->lang = strings[2*i  ].u.md_ival;
 	cur->name = copy(strings[2*i+1].u.md_str);
 	if ( head==NULL )
@@ -3738,7 +3738,7 @@ static void StoreTTFNames(struct gfi_data *d) {
     for ( i=0; i<rows; ++i ) {
 	for ( tln=sf->names; tln!=NULL && tln->lang!=strings[3*i].u.md_ival; tln=tln->next );
 	if ( tln==NULL ) {
-	    tln = chunkalloc(sizeof(struct ttflangname));
+	    tln = (struct ttflangname *) xzalloc(sizeof (struct ttflangname));
 	    tln->lang = strings[3*i].u.md_ival;
 	    tln->next = sf->names;
 	    sf->names = tln;
@@ -3812,12 +3812,12 @@ static void StoreSSNames(struct gfi_data *d) {
 	lang = strings[3*i].u.md_ival;
 	for ( fn=sf->feat_names; fn!=NULL && fn->tag!=tag; fn=fn->next );
 	if ( fn==NULL ) {
-	    fn = chunkalloc(sizeof(*fn));
+	    fn = (struct otffeatname *) xzalloc(sizeof (*fn));
 	    fn->tag = tag;
 	    fn->next = sf->feat_names;
 	    sf->feat_names = fn;
 	}
-	on = chunkalloc(sizeof(*on));
+	on = (struct otfname *) xzalloc(sizeof (*on));
 	on->next = fn->names;
 	fn->names = on;
 	on->lang = lang;
@@ -5985,7 +5985,7 @@ static int GFI_LookupAddLookup(GGadget *g, GEvent *e) {
 	int isgpos = GTabSetGetSel(GWidgetGetControl(gfi->gw,CID_Lookups));
 	struct lkdata *lk = &gfi->tables[isgpos];
 	int i,j,k,lcnt;
-	OTLookup *otl = chunkalloc(sizeof(OTLookup)), *test;
+	OTLookup *otl = (OTLookup *) xzalloc(sizeof (OTLookup)), *test;
 
 	k = 0;
 	for ( test = isgpos ? gfi->sf->gpos_lookups : gfi->sf->gsub_lookups;
@@ -6082,7 +6082,7 @@ static int GFI_LookupAddSubtable(GGadget *g, GEvent *e) {
 	if ( i==lk->cnt )
 return( true );
 
-	sub = chunkalloc(sizeof(struct lookup_subtable));
+	sub = (struct lookup_subtable *) xzalloc(sizeof (struct lookup_subtable));
 	sub->lookup = lk->all[i].lookup;
 	if ( !EditSubtable(sub,isgpos,gfi->sf,NULL,gfi->def_layer)) {
 	    chunkfree(sub,sizeof(struct lookup_subtable));
@@ -6666,7 +6666,7 @@ static void AddDFLT(OTLookup *otl) {
 	if ( hasDFLT	/* Already there */ ||
 		!hasdflt /* Shouldn't add it */ )
     continue;
-	sl = chunkalloc(sizeof(struct scriptlanglist));
+	sl = (struct scriptlanglist *) xzalloc(sizeof (struct scriptlanglist));
 	sl->script = DEFAULT_SCRIPT;
 	sl->lang_cnt = 1;
 	sl->langs[0] = DEFAULT_LANG;

@@ -4755,7 +4755,7 @@ static void CVAddGuide(CharView *cv,int is_v,int guide_pos) {
 	sp2 = SplinePointCreate(2*emsize,y);
     }
     SplineMake(sp1,sp2,sf->grid.order2);
-    ss = chunkalloc(sizeof(SplineSet));
+    ss = (SplineSet *) xzalloc(sizeof (SplineSet));
     ss->first = sp1; ss->last = sp2;
     ss->next = sf->grid.splines;
     sf->grid.splines = ss;
@@ -8746,7 +8746,7 @@ return;
     if ( mi->mid==MID_AddHHint ) {
 	if ( bp[0]->y==bp[1]->y )
 return;
-	h = chunkalloc(sizeof(StemInfo));
+	h = (StemInfo *) xzalloc(sizeof (StemInfo));
 	if ( bp[1]->y>bp[0]->y ) {
 	    h->start = bp[0]->y;
 	    h->width = bp[1]->y-bp[0]->y;
@@ -8759,7 +8759,7 @@ return;
     } else if ( mi->mid==MID_AddVHint ) {
 	if ( bp[0]->x==bp[1]->x )
 return;
-	h = chunkalloc(sizeof(StemInfo));
+	h = (StemInfo *) xzalloc(sizeof (StemInfo));
 	if ( bp[1]->x>bp[0]->x ) {
 	    h->start = bp[0]->x;
 	    h->width = bp[1]->x-bp[0]->x;
@@ -8774,7 +8774,7 @@ return;
 return;
 	/* No additional tests, as the points should have already been */
         /* reordered by PointsDiagonalable */
-        d = chunkalloc(sizeof(DStemInfo));
+        d = (DStemInfo *) xzalloc(sizeof (DStemInfo));
         d->where = NULL;
         d->left = *bp[0];
         d->right = *bp[1];

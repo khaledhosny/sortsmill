@@ -339,7 +339,7 @@ return( false );
 	    bdf->glyphcnt = sf->glyphcnt;
 	}
 
-	bdf->glyphs[gid] = bdfc = chunkalloc(sizeof(BDFChar));
+	bdf->glyphs[gid] = bdfc = (BDFChar *) xzalloc(sizeof (BDFChar));
 	memset( bdfc,'\0',sizeof( BDFChar ));
 	bdfc->xmin = 0;
 	bdfc->xmax = charinfo[i].width-1;

@@ -1448,7 +1448,7 @@ static SplineSet *SVGParsePath(xmlChar *path) {
 	    }
 	    sp = SplinePointCreate(x,y);
 	    current = sp->me;
-	    cur = chunkalloc(sizeof(SplineSet));
+	    cur = (SplineSet *) xzalloc(sizeof (SplineSet));
 	    if ( head==NULL )
 		head = cur;
 	    else
@@ -1477,7 +1477,7 @@ static SplineSet *SVGParsePath(xmlChar *path) {
 	} else {
 	    if ( cur==NULL ) {
 		sp = SplinePointCreate(current.x,current.y);
-		cur = chunkalloc(sizeof(SplineSet));
+		cur = (SplineSet *) xzalloc(sizeof (SplineSet));
 		if ( head==NULL )
 		    head = cur;
 		else
@@ -1795,7 +1795,7 @@ return( NULL );
     if ( 2*rx>width ) rx = width/2;
     if ( 2*ry>height ) ry = height/2;
 
-    cur = chunkalloc(sizeof(SplineSet));
+    cur = (SplineSet *) xzalloc(sizeof (SplineSet));
     if ( rx==0 ) {
 	cur->first = SplinePointCreate(x,y+height);
 	cur->last = SplinePointCreate(x+width,y+height);
@@ -1895,7 +1895,7 @@ static SplineSet *SVGParseLine(xmlNodePtr line) {
     sp1 = SplinePointCreate(x,y);
     sp2 = SplinePointCreate(x2,y2);
     SplineMake(sp1,sp2,false);
-    cur = chunkalloc(sizeof(SplineSet));
+    cur = (SplineSet *) xzalloc(sizeof (SplineSet));
     cur->first = sp1;
     cur->last = sp2;
 return( cur );
@@ -1945,7 +1945,7 @@ return( NULL );
     if ( rx<0 ) rx = -rx;
     if ( ry<0 ) ry = -ry;
 
-    cur = chunkalloc(sizeof(SplineSet));
+    cur = (SplineSet *) xzalloc(sizeof (SplineSet));
     cur->first = SplinePointCreate(cx-rx,cy);
     cur->last = SplinePointCreate(cx,cy+ry);
     cur->first->nextcp.x = cx-rx; cur->first->nextcp.y = cy+ry;
@@ -1987,7 +1987,7 @@ return( NULL );
     y = strtod(end,&end);
     while ( isspace(*end)) ++end;
 
-    cur = chunkalloc(sizeof(SplineSet));
+    cur = (SplineSet *) xzalloc(sizeof (SplineSet));
     cur->first = cur->last = SplinePointCreate(x,y);
     while ( *end ) {
 	x = strtod(end,&end);
@@ -2184,7 +2184,7 @@ static void xmlParseColorSource(xmlNodePtr top,char *name,DBounds *bbox,
 	LogError(_("Could not find Color Source with id %s."), name );
     else if ( (islinear = xmlStrcmp(colour_source->name,(xmlChar *) "linearGradient")==0) ||
 	    xmlStrcmp(colour_source->name,(xmlChar *) "radialGradient")==0 ) {
-	struct gradient *grad = chunkalloc(sizeof(struct gradient));
+	struct gradient *grad = (struct gradient *) xzalloc(sizeof (struct gradient));
 	int bbox_units;
 	*_grad = grad;
 
@@ -2612,7 +2612,7 @@ return( NULL );		/* I can only handle data URIs */
 return( NULL );
     base = img->list_len==0 ? img->u.image : img->u.images[0];
 
-    ent = chunkalloc(sizeof(Entity));
+    ent = (Entity *) xzalloc(sizeof (Entity));
     ent->type = et_image;
     ent->u.image.image = img;
     ent->u.image.transform[1] = ent->u.image.transform[2] = 0;
@@ -3113,7 +3113,7 @@ static void SVGLigatureFixupCheck(SplineChar *sc,xmlNodePtr glyph) {
 	    /* Problably a variant glyph marked with a variation selector */
 	    /* ... not a true ligature at all */
 	    /* http://babelstone.blogspot.com/2007/06/secret-life-of-variation-selectors.html */
-	    struct altuni *altuni = chunkalloc(sizeof(struct altuni));
+	    struct altuni *altuni = (struct altuni *) xzalloc(sizeof (struct altuni));
 	    altuni->unienc = u[0];
 	    altuni->vs = u[1];
 	    altuni->fid = 0;
@@ -3292,7 +3292,7 @@ return;
 	    if ( end2!=NULL ) *end2 = '\0';
 	    sc2 = SFGetChar(sf,-1,pt2);
 	    if ( sc2!=NULL ) {
-		KernPair *kp = chunkalloc(sizeof(KernPair));
+		KernPair *kp = (KernPair *) xzalloc(sizeof (KernPair));
 		kp->sc = sc2;
 		kp->off = off;
 		if ( isv ) {
@@ -3549,7 +3549,7 @@ return( NULL );
 	}
     }
 
-    map = chunkalloc(sizeof(EncMap));
+    map = (EncMap *) xzalloc(sizeof (EncMap));
     map->enccount = map->encmax = map->backmax = sf->glyphcnt;
     map->enc = FindOrMakeEncoding("Original");
     map->map = galloc(sf->glyphcnt*sizeof(int));

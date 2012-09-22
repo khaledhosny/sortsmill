@@ -761,7 +761,7 @@ static int AllocateStrId(struct alltabs *at,struct macname *mn) {
     if ( mn==NULL )
 return( 0 );
 
-    on = chunkalloc(sizeof(struct other_names));
+    on = (struct other_names *) xzalloc(sizeof (struct other_names));
     on->strid = at->next_strid++;
     on->mn = mn;
     on->next = at->other_names;

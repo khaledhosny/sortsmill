@@ -634,7 +634,7 @@ static void VaryCvt(struct tuples *tuple,int *points, int *deltas,
     int i;
 
     if ( (cvt = tuple->cvt)==NULL ) {
-	cvt = tuple->cvt = chunkalloc(sizeof(struct ttf_table));
+	cvt = tuple->cvt = (struct ttf_table *) xzalloc(sizeof (struct ttf_table));
 	cvt->tag = orig_cvt->tag;
 	cvt->len = cvt->maxlen = orig_cvt->len;
 	cvt->data = galloc(cvt->len);

@@ -1093,7 +1093,7 @@ return;
 	    ff_post_error(_("Missing rules"),_(" There must be at least one contextual rule"));
 return;
 	}
-	dummyfpst = chunkalloc(sizeof(FPST));
+	dummyfpst = (FPST *) xzalloc(sizeof (FPST));
 	*dummyfpst = *fpst;
 	dummyfpst->format = pst_glyphs;
 	if ( ccd->aw==aw_classes_simple ) {
@@ -2080,7 +2080,7 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
 	glyph_ci[0].title = S_(glyph_ci[0].title);
     }
 
-    ccd = chunkalloc(sizeof(struct contextchaindlg));
+    ccd = (struct contextchaindlg *) xzalloc(sizeof (struct contextchaindlg));
     ccd->gfi = gfi;
     ccd->sf = sf;
     ccd->fpst = fpst;

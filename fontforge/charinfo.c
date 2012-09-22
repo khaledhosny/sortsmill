@@ -273,7 +273,7 @@ return( true );
 }
 
 static void CI_AskCounters(CharInfo *ci,HintMask *old) {
-    HintMask *cur = old != NULL ? old : chunkalloc(sizeof(HintMask));
+    HintMask *cur = old != NULL ? old : (HintMask *) xzalloc(sizeof (HintMask));
     struct hi_data hi;
     GWindowAttrs wattrs;
     GGadgetCreateData hgcd[5], *varray[11], *harray[8], boxes[3];
@@ -599,7 +599,7 @@ DeviceTable *DeviceTableParse(DeviceTable *dv,char *dvstr) {
 return( dv );
     }
     if ( dv==NULL )
-	dv = chunkalloc(sizeof(DeviceTable));
+	dv = (DeviceTable *) xzalloc(sizeof (DeviceTable));
     else
 	free(dv->corrections);
     dv->first_pixel_size = low;
@@ -637,7 +637,7 @@ void VRDevTabParse(struct vr *vr,struct matrix_data *md) {
     any |= (DeviceTableParse(&adjust->xadv,md[4].u.md_str)!=NULL);
     any |= (DeviceTableParse(&adjust->yadv,md[6].u.md_str)!=NULL);
     if ( any && adjust==&temp ) {
-	vr->adjust = chunkalloc(sizeof(ValDevTab));
+	vr->adjust = (ValDevTab *) xzalloc(sizeof (ValDevTab));
 	*vr->adjust = temp;
     } else if ( !any && vr->adjust!=NULL ) {
 	ValDevFree(vr->adjust);
@@ -765,7 +765,7 @@ void KpMDParse(SplineChar *sc,struct lookup_subtable *sub,
 	    if ( kp==NULL ) {
 		/* If there's a pst, ignore it, it will not get ticked and will*/
 		/*  be freed later */
-		kp = chunkalloc(sizeof(KernPair));
+		kp = (KernPair *) xzalloc(sizeof (KernPair));
 		kp->subtable = sub;
 		kp->sc = other;
 		if ( newv ) {
@@ -784,12 +784,12 @@ void KpMDParse(SplineChar *sc,struct lookup_subtable *sub,
 	    if ( pst == NULL ) {
 		/* If there's a kp, ignore it, it will not get ticked and will*/
 		/*  be freed later */
-		pst = chunkalloc(sizeof(PST));
+		pst = (PST *) xzalloc(sizeof (PST));
 		pst->type = pst_pair;
 		pst->subtable = sub;
 		pst->next = sc->possub;
 		sc->possub = pst;
-		pst->u.pair.vr = chunkalloc(sizeof(struct vr [2]));
+		pst->u.pair.vr = (struct vr *) xzalloc(sizeof (struct vr [2]));
 		pst->u.pair.paired = copy(start);
 	    }
 	    VRDevTabParse(&pst->u.pair.vr[0],&possub[cols*i+PAIR_DX1+1]);
@@ -933,7 +933,7 @@ return( false );
 	    break;
 	    }
 	    if ( pst==NULL ) {
-		pst = chunkalloc(sizeof(PST));
+		pst = (PST *) xzalloc(sizeof (PST));
 		pst->type = pstt;
 		pst->subtable = (void *) possub[cols*i+0].u.md_ival;
 		pst->next = sc->possub;
@@ -956,7 +956,7 @@ return( false );
 	break;
 	}
 	if ( pst==NULL ) {
-	    pst = chunkalloc(sizeof(PST));
+	    pst = (PST *) xzalloc(sizeof (PST));
 	    pst->type = pst_position;
 	    pst->subtable = (void *) possub[cols*i+0].u.md_ival;
 	    pst->next = sc->possub;
@@ -1027,7 +1027,7 @@ struct glyphvariants *GV_ParseConstruction(struct glyphvariants *gv,
     int i;
 
     if ( gv==NULL )
-	gv = chunkalloc(sizeof(struct glyphvariants));
+	gv = (struct glyphvariants *) xzalloc(sizeof (struct glyphvariants));
 
     gv->part_cnt = rows;
     gv->parts = gcalloc(rows,sizeof(struct gv_part));
@@ -1056,7 +1056,7 @@ static struct glyphvariants *CI_ParseVariants(struct glyphvariants *gv,
 return( NULL );
     }
     if ( gv==NULL )
-	gv = chunkalloc(sizeof(struct glyphvariants));
+	gv = (struct glyphvariants *) xzalloc(sizeof (struct glyphvariants));
     free(gv->variants);
     if ( only_parts )
 	free(variants);
@@ -1150,7 +1150,7 @@ static void CI_ParseAltUnis(CharInfo *ci) {
     AltUniFree(sc->altuni); sc->altuni = NULL;
     for ( i=0; i<rows; ++i ) {
 	int uni = stuff[i*cols+0].u.md_ival, vs = stuff[i*cols+1].u.md_ival;
-	altuni = chunkalloc(sizeof(struct altuni));
+	altuni = (struct altuni *) xzalloc(sizeof (struct altuni));
 	altuni->unienc = uni;
 	altuni->vs = vs==0 ? -1 : vs;
 	altuni->fid = 0;
@@ -1166,7 +1166,7 @@ static KernPair *CI_KPCopy(KernPair *kp) {
     KernPair *head=NULL, *last=NULL, *newkp;
 
     while ( kp!=NULL ) {
-	newkp = chunkalloc(sizeof(KernPair));
+	newkp = (KernPair *) xzalloc(sizeof (KernPair));
 	*newkp = *kp;
 	newkp->adjust = DeviceTableCopy(kp->adjust);
 	newkp->next = NULL;
@@ -1184,13 +1184,13 @@ static PST *CI_PSTCopy(PST *pst) {
     PST *head=NULL, *last=NULL, *newpst;
 
     while ( pst!=NULL ) {
-	newpst = chunkalloc(sizeof(KernPair));
+	newpst = (PST *) xzalloc(sizeof (PST));
 	*newpst = *pst;
 	if ( newpst->type==pst_ligature ) {
 	    newpst->u.lig.components = copy(pst->u.lig.components);
 	} else if ( newpst->type==pst_pair ) {
 	    newpst->u.pair.paired = copy(pst->u.pair.paired);
-	    newpst->u.pair.vr = chunkalloc(sizeof( struct vr [2]));
+	    newpst->u.pair.vr = (struct vr *) xzalloc(sizeof (struct vr [2]));
 	    memcpy(newpst->u.pair.vr,pst->u.pair.vr,sizeof(struct vr [2]));
 	    newpst->u.pair.vr[0].adjust = ValDevTabCopy(pst->u.pair.vr[0].adjust);
 	    newpst->u.pair.vr[1].adjust = ValDevTabCopy(pst->u.pair.vr[1].adjust);
@@ -1213,7 +1213,7 @@ return( head );
 static SplineChar *CI_SCDuplicate(SplineChar *sc) {
     SplineChar *newsc;		/* copy everything we care about in this dlg */
 
-    newsc = chunkalloc(sizeof(SplineChar));
+    newsc = (SplineChar *) xzalloc(sizeof (SplineChar));
     newsc->name = copy(sc->name);
     newsc->unicodeenc = sc->unicodeenc;
     newsc->orig_pos = sc->orig_pos;
@@ -1305,7 +1305,7 @@ return( false );
 		/*  things that need changing */
 		if ( baduniscl==NULL ) {
 		    baduni = CI_SCDuplicate(baduni);
-		    baduniscl = chunkalloc(sizeof(struct splinecharlist));
+		    baduniscl = (struct splinecharlist *) xzalloc(sizeof (struct splinecharlist));
 		    baduniscl->sc = baduni;
 		    baduniscl->next = ci->changes;
 		    ci->changes = baduniscl;
@@ -1318,7 +1318,7 @@ return( false );
 return( false );
 		    if ( baduniscl==NULL ) {
 			baduni = CI_SCDuplicate(baduni);
-			baduniscl = chunkalloc(sizeof(struct splinecharlist));
+			baduniscl = (struct splinecharlist *) xzalloc(sizeof (struct splinecharlist));
 			baduniscl->sc = baduni;
 			baduniscl->next = ci->changes;
 			ci->changes = baduniscl;
@@ -1330,7 +1330,7 @@ return( false );
 return( false );
 		    if ( badnamescl==NULL ) {
 			badname = CI_SCDuplicate(badname);
-			badnamescl = chunkalloc(sizeof(struct splinecharlist));
+			badnamescl = (struct splinecharlist *) xzalloc(sizeof (struct splinecharlist));
 			badnamescl->sc = badname;
 			badnamescl->next = ci->changes;
 			ci->changes = badnamescl;
@@ -1426,10 +1426,10 @@ return( false );
     }
     if ( ci->cachedsc==NULL ) {
 	struct splinecharlist *scl;
-	ci->cachedsc = chunkalloc(sizeof(SplineChar));
+	ci->cachedsc = (SplineChar *) xzalloc(sizeof (SplineChar));
 	ci->cachedsc->orig_pos = ci->sc->orig_pos;
 	ci->cachedsc->parent = ci->sc->parent;
-	scl = chunkalloc(sizeof(struct splinecharlist));
+	scl = (struct splinecharlist *) xzalloc(sizeof (struct splinecharlist));
 	scl->sc = ci->cachedsc;
 	scl->next = ci->changes;
 	ci->changes = scl;
@@ -1494,7 +1494,7 @@ return( false );
 	    PSTFree(pst);
 	} else {
 	    if ( pst==NULL ) {
-		pst = chunkalloc(sizeof(PST));
+		pst = (PST *) xzalloc(sizeof (PST));
 		pst->type = pst_lcaret;
 		pst->next = ci->sc->possub;
 		ci->cachedsc->possub = pst;
@@ -1965,7 +1965,7 @@ return;
 return;
     }
     if ( carets==NULL ) {
-	carets = chunkalloc(sizeof(PST));
+	carets = (PST *) xzalloc(sizeof (PST));
 	carets->type = pst_lcaret;
 	carets->subtable = NULL;		/* Not relevant here */
 	carets->next = sc->possub;
@@ -3937,7 +3937,7 @@ static void CIFillup(CharInfo *ci) {
 	ti[i] = gcalloc(1,sizeof(GTextInfo));
 	ti[i]->text = CounterMaskLine(sc,&sc->countermasks[i]);
 	ti[i]->fg = ti[i]->bg = COLOR_DEFAULT;
-	ti[i]->userdata = chunkalloc(sizeof(HintMask));
+	ti[i]->userdata = (HintMask *) xzalloc(sizeof (HintMask));
 	memcpy(ti[i]->userdata,sc->countermasks[i],sizeof(HintMask));
     }
     GGadgetSetList(GWidgetGetControl(ci->gw,CID_List+600),ti,false);

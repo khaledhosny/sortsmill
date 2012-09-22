@@ -1933,7 +1933,7 @@ static void bGenerateFamily(Context *c) {
     sfs = lastsfs = NULL;
     for ( fc=0; fc<fondcnt; ++fc ) {
 	for ( j=0; j<48; ++j ) if ( familysfs[fc][j]!=NULL ) {
-	    cur = chunkalloc(sizeof(struct sflist));
+	    cur = (struct sflist *) xzalloc(sizeof (struct sflist));
 	    if ( sfs==NULL ) sfs = cur;
 	    else lastsfs->next = cur;
 	    lastsfs = cur;
@@ -3092,7 +3092,7 @@ static void bLoadTableFromFile(Context *c) {
 
     for ( tab=sf->ttf_tab_saved; tab!=NULL && tab->tag!=tag; tab=tab->next );
     if ( tab==NULL ) {
-	tab = chunkalloc(sizeof(struct ttf_table));
+	tab = (struct ttf_table *) xzalloc(sizeof (struct ttf_table));
 	tab->tag = tag;
 	tab->next = sf->ttf_tab_saved;
 	sf->ttf_tab_saved = tab;
@@ -3373,7 +3373,7 @@ static void bSetTTFName(Context *c) {
 	if ( u==NULL )
 return;
 	for ( prev = NULL, ln = sf->names; ln!=NULL && ln->lang<lang; prev = ln, ln = ln->next );
-	ln = chunkalloc(sizeof(struct ttflangname));
+	ln = (struct ttflangname *) xzalloc(sizeof (struct ttflangname));
 	ln->lang = lang;
 	if ( prev==NULL ) { ln->next = sf->names; sf->names = ln; }
 	else { ln->next = prev->next; prev->next = ln; }
@@ -3697,7 +3697,7 @@ static void bSetMaxpValue(Context *c) {
 
     tab = SFFindTable(sf,CHR('m','a','x','p'));
     if ( tab==NULL ) {
-	tab = chunkalloc(sizeof(struct ttf_table));
+	tab = (struct ttf_table *) xzalloc(sizeof (struct ttf_table));
 	tab->next = sf->ttf_tables;
 	sf->ttf_tables = tab;
 	tab->tag = CHR('m','a','x','p');
@@ -5311,7 +5311,7 @@ static void TableAddInstrs(SplineFont *sf, uint32 tag,int replace,
     if ( icnt==0 )
 return;
     if ( tab==NULL ) {
-	tab = chunkalloc(sizeof( struct ttf_table ));
+	tab = (struct ttf_table  *) xzalloc(sizeof (struct ttf_table ));
 	tab->tag = tag;
 	tab->next = sf->ttf_tables;
 	sf->ttf_tables = tab;
@@ -5606,7 +5606,7 @@ static void bAddDHint( Context *c ) {
 
     any = false;
     for ( i=0; i<map->enccount; ++i ) if ( (gid=map->map[i])!=-1 && (sc=sf->glyphs[gid])!=NULL && fv->selected[i] ) {
-        d = chunkalloc(sizeof(DStemInfo));
+        d = (DStemInfo *) xzalloc(sizeof (DStemInfo));
         d->where = NULL;
         d->left = left;
         d->right = right;
@@ -5655,7 +5655,7 @@ static void _AddHint(Context *c,int ish) {
 	ScriptError( c, "Bad hint width" );
     any = false;
     for ( i=0; i<map->enccount; ++i ) if ( (gid=map->map[i])!=-1 && (sc=sf->glyphs[gid])!=NULL && fv->selected[i] ) {
-	h = chunkalloc(sizeof(StemInfo));
+	h = (StemInfo *) xzalloc(sizeof (StemInfo));
 	h->start = start;
 	h->width = width;
 	if ( ish ) {
@@ -5980,7 +5980,7 @@ return;		/* It already has a kern==0 with everything */
 	    kp->off = kern;
 	    kp->subtable = local_sub;
 	} else {
-	    kp = chunkalloc(sizeof(KernPair));
+	    kp = (KernPair *) xzalloc(sizeof (KernPair));
 	    if ( isv ) {
 		kp->next = sc1->vkerns;
 		sc1->vkerns = kp;
@@ -6401,7 +6401,7 @@ static void bAddAnchorClass(Context *c) {
 	    c->a.vals[3].type!=v_str )
 	ScriptError( c, "Bad type for argument");
 
-    ac = chunkalloc(sizeof(AnchorClass));
+    ac = (AnchorClass *) xzalloc(sizeof (AnchorClass));
 
     ac->name = copy( c->a.vals[1].u.sval );
     for ( t=sf->anchor; t!=NULL; t=t->next )
@@ -6535,7 +6535,7 @@ static void bAddAnchorPoint(Context *c) {
     if ( ap!=NULL )
 	ScriptError(c,"This character already has an Anchor Point in the given anchor class" );
 
-    ap = chunkalloc(sizeof(AnchorPoint));
+    ap = (AnchorPoint *) xzalloc(sizeof (AnchorPoint));
     ap->anchor = t;
     ap->me.x = (c->a.vals[3].type==v_int)? c->a.vals[3].u.ival : rint(c->a.vals[3].u.fval);
     ap->me.y = (c->a.vals[4].type==v_int)? c->a.vals[4].u.ival : rint(c->a.vals[4].u.fval);
@@ -6612,7 +6612,7 @@ static void bAddPosSub(Context *c) {
 	temp.u.pos.v_adv_off = c->a.vals[5].u.ival;
     } else if ( temp.type==pst_pair ) {
 	temp.u.pair.paired = copy(c->a.vals[2].u.sval);
-	temp.u.pair.vr = chunkalloc(sizeof(struct vr [2]));
+	temp.u.pair.vr = (struct vr *) xzalloc(sizeof (struct vr [2]));
 	temp.u.pair.vr[0].xoff = c->a.vals[3].u.ival;
 	temp.u.pair.vr[0].yoff = c->a.vals[4].u.ival;
 	temp.u.pair.vr[0].h_adv_off = c->a.vals[5].u.ival;
@@ -6626,7 +6626,7 @@ static void bAddPosSub(Context *c) {
 	if ( temp.type==pst_ligature )
 	    temp.u.lig.lig = sc;
     }
-    pst = chunkalloc(sizeof(PST));
+    pst = (PST *) xzalloc(sizeof (PST));
     *pst = temp;
     pst->next = sc->possub;
     sc->possub = pst;
@@ -6756,7 +6756,7 @@ static FeatureScriptLangList *ParseFeatureList(Context *c,Array *a) {
 	else if (a->vals[f].u.aval->vals[0].type!=v_str ||
 		(a->vals[f].u.aval->vals[1].type!=v_arr && a->vals[f].u.aval->vals[1].type!=v_arrfree))
 	    ScriptError( c, "Bad type for argument");
-	fl = chunkalloc(sizeof(FeatureScriptLangList));
+	fl = (FeatureScriptLangList *) xzalloc(sizeof (FeatureScriptLangList));
 	fl->featuretag = ParseTag(c,&a->vals[f].u.aval->vals[0],true,&wasmac);
 	fl->ismac = wasmac;
 	if ( flhead==NULL )
@@ -6776,7 +6776,7 @@ static FeatureScriptLangList *ParseFeatureList(Context *c,Array *a) {
 	    else if (scripts->vals[s].u.aval->vals[0].type!=v_str ||
 		    (scripts->vals[s].u.aval->vals[1].type!=v_arr && scripts->vals[s].u.aval->vals[1].type!=v_arrfree))
 		ScriptError( c, "Bad type for argument");
-	    sl = chunkalloc(sizeof(struct scriptlanglist));
+	    sl = (struct scriptlanglist *) xzalloc(sizeof (struct scriptlanglist));
 	    sl->script = ParseTag(c,&scripts->vals[s].u.aval->vals[0],false,&wasmac);
 	    if ( sltail==NULL )
 		fl->scripts = sl;
@@ -6871,7 +6871,7 @@ static void bAddLookup(Context *c) {
 
     if ( sf->cidmaster ) sf = sf->cidmaster;
 
-    otl = chunkalloc(sizeof(OTLookup));
+    otl = (OTLookup *) xzalloc(sizeof (OTLookup));
     if ( after!=NULL ) {
 	otl->next = after->next;
 	after->next = otl;
@@ -7101,7 +7101,7 @@ static void bAddLookupSubtable(Context *c) {
 		    ScriptErrorString(c,"A lookup subtable with this name already exists", c->a.vals[2].u.sval);
 	}
     }
-    sub = chunkalloc(sizeof(struct lookup_subtable));
+    sub = (struct lookup_subtable *) xzalloc(sizeof (struct lookup_subtable));
     sub->lookup = otl;
     sub->subtable_name = copy(c->a.vals[2].u.sval);
     if ( after!=NULL ) {
@@ -7201,7 +7201,7 @@ static void bAddSizeFeature(Context *c) {
 		ScriptError( c,"Array must consist of lanuage-id, string pairs" );
 	    if ( subarr->vals[0].u.ival==0x409 )
 		found_english = true;
-	    cur = chunkalloc(sizeof(*cur));
+	    cur = (struct otfname *) xzalloc(sizeof (*cur));
 	    cur->lang = subarr->vals[0].u.ival;
 	    cur->name = copy(subarr->vals[1].u.sval);
 	    if ( last==NULL )

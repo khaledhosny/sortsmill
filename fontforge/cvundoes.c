@@ -563,7 +563,7 @@ Undoes *CVPreserveState(CharViewBase *cv) {
     if ( no_windowing_ui || maxundoes==0 )		/* No use for undoes in scripting */
 return(NULL);
 
-    undo = chunkalloc(sizeof(Undoes));
+    undo = (Undoes *) xzalloc(sizeof (Undoes));
 
     undo->undotype = ut_state;
     undo->was_modified = cv->sc->changed;
@@ -603,7 +603,7 @@ return(NULL);
     if ( !preserve_hint_undoes )
 return( NULL );
 
-    undo = chunkalloc(sizeof(Undoes));
+    undo = (Undoes *) xzalloc(sizeof (Undoes));
 
     undo->was_modified = sc->changed;
     undo->undotype = ut_hints;
@@ -624,7 +624,7 @@ return(NULL);
     if ( layer==ly_grid )
 	layer = ly_fore;
 
-    undo = chunkalloc(sizeof(Undoes));
+    undo = (Undoes *) xzalloc(sizeof (Undoes));
 
     undo->undotype = ut_state;
     undo->was_modified = sc->changed;
@@ -684,7 +684,7 @@ return( SCPreserveLayer(sc,ly_back,false));
 Undoes *_SFPreserveGuide(SplineFont *sf) {
     Undoes *undo;
 
-    undo = chunkalloc(sizeof(Undoes));
+    undo = (Undoes *) xzalloc(sizeof (Undoes));
 
     undo->undotype = ut_state;
     undo->was_modified = sf->changed;
@@ -745,7 +745,7 @@ Undoes *CVPreserveWidth(CharViewBase *cv,int width) {
     if ( no_windowing_ui || maxundoes==0 )		/* No use for undoes in scripting */
 return(NULL);
 
-    undo = chunkalloc(sizeof(Undoes));
+    undo = (Undoes *) xzalloc(sizeof (Undoes));
 
     undo->undotype = ut_width;
     undo->was_modified = cv->sc->changed;
@@ -760,7 +760,7 @@ Undoes *CVPreserveVWidth(CharViewBase *cv,int vwidth) {
     if ( no_windowing_ui || maxundoes==0 )		/* No use for undoes in scripting */
 return(NULL);
 
-    undo = chunkalloc(sizeof(Undoes));
+    undo = (Undoes *) xzalloc(sizeof (Undoes));
 
     undo->undotype = ut_vwidth;
     undo->was_modified = cv->sc->changed;
@@ -775,7 +775,7 @@ Undoes *SCPreserveWidth(SplineChar *sc) {
     if ( no_windowing_ui || maxundoes==0 )		/* No use for undoes in scripting */
 return(NULL);
 
-    undo = chunkalloc(sizeof(Undoes));
+    undo = (Undoes *) xzalloc(sizeof (Undoes));
 
     undo->undotype = ut_width;
     undo->was_modified = sc->changed;
@@ -790,7 +790,7 @@ Undoes *SCPreserveVWidth(SplineChar *sc) {
     if ( no_windowing_ui || maxundoes==0 )		/* No use for undoes in scripting */
 return(NULL);
 
-    undo = chunkalloc(sizeof(Undoes));
+    undo = (Undoes *) xzalloc(sizeof (Undoes));
 
     undo->undotype = ut_vwidth;
     undo->was_modified = sc->changed;
@@ -806,7 +806,7 @@ Undoes *BCPreserveState( BDFChar *bc ) {
     if ( no_windowing_ui || maxundoes==0 )		/* No use for undoes in scripting */
 return(NULL);
 
-    undo = chunkalloc(sizeof(Undoes));
+    undo = (Undoes *) xzalloc(sizeof (Undoes));
 
     undo->undotype = ut_bitmap;
     undo->u.bmpstate.width = bc->width;
@@ -1748,7 +1748,7 @@ void CopySelected(CharViewBase *cv,int doanchors) {
 	if ( doanchors ) {
 	    AnchorPoint *ap, *new_;
 	    for ( ap=cv->sc->anchor; ap!=NULL; ap=ap->next ) if ( ap->selected ) {
-		new_ = chunkalloc(sizeof(AnchorPoint));
+		new_ = (AnchorPoint *) xzalloc(sizeof (AnchorPoint));
 		*new_ = *ap;
 		new_->next = copybuffer.u.state.anchor;
 		copybuffer.u.state.anchor = new_;
@@ -1758,7 +1758,7 @@ void CopySelected(CharViewBase *cv,int doanchors) {
     if ( cv->drawmode!=dm_grid && CVLayer(cv)!=ly_fore ) {
 	ImageList *imgs, *new_;
 	for ( imgs = cv->layerheads[cv->drawmode]->images; imgs!=NULL; imgs = imgs->next ) if ( imgs->selected ) {
-	    new_ = chunkalloc(sizeof(ImageList));
+	    new_ = (ImageList *) xzalloc(sizeof (ImageList));
 	    *new_ = *imgs;
 	    new_->next = copybuffer.u.state.images;
 	    copybuffer.u.state.images = new_;
@@ -1803,7 +1803,7 @@ static Undoes *SCCopyAllLayer(SplineChar *sc,enum fvcopy_type full,int layer) {
     /* If full==ct_unlinkrefs copy the glyph, but unlink any references it contains */
     /*	so we end up with no references and a bunch of splines */
 
-    cur = chunkalloc(sizeof(Undoes));
+    cur = (Undoes *) xzalloc(sizeof (Undoes));
     if ( sc==NULL ) {
 	cur->undotype = ut_noop;
     } else {
@@ -1858,7 +1858,7 @@ static Undoes *SCCopyAll(SplineChar *sc,int layer, enum fvcopy_type full) {
     Undoes *ret, *cur, *last=NULL;
 
     if ( sc!=NULL && sc->parent!=NULL && sc->parent->multilayer ) {
-	ret = chunkalloc(sizeof(Undoes));
+	ret = (Undoes *) xzalloc(sizeof (Undoes));
 	if ( sc==NULL ) {
 	    ret->undotype = ut_noop;
 	} else if ( full==ct_reference || full==ct_lookups || !sc->parent->multilayer ) {	/* Make a reference */
@@ -2522,7 +2522,7 @@ static void DevTabInto(struct vr *vr) {
 
     if ( vr->adjust==NULL )
 return;		/* Nothing to do */
-    adjust = chunkalloc(sizeof(ValDevTab));
+    adjust = (ValDevTab *) xzalloc(sizeof (ValDevTab));
     *adjust = *vr->adjust;
     if ( adjust->xadjust.corrections!=NULL ) {
 	adjust->xadjust.corrections = galloc(adjust->xadjust.last_pixel_size-adjust->xadjust.first_pixel_size+1);
@@ -2544,7 +2544,7 @@ return;		/* Nothing to do */
 
 static void PSTInto(SplineChar *sc,PST *pst,PST *frompst, struct lookup_subtable *sub) {
     if ( pst==NULL ) {
-	pst = chunkalloc(sizeof(PST));
+	pst = (PST *) xzalloc(sizeof (PST));
 	*pst = *frompst;
 	pst->subtable = sub;
 	pst->next = sc->possub;
@@ -2565,7 +2565,7 @@ static void PSTInto(SplineChar *sc,PST *pst,PST *frompst, struct lookup_subtable
 	pst->u.lig.lig = sc;
     } else if ( pst->type==pst_pair ) {
 	pst->u.pair.paired = copy( frompst->u.pair.paired );
-	pst->u.pair.vr = chunkalloc(sizeof(struct vr[2]));
+	pst->u.pair.vr = (struct vr *) xzalloc(sizeof (struct vr[2]));
 	memcpy(pst->u.pair.vr,frompst->u.pair.vr,sizeof(struct vr[2]));
 	DevTabInto(&pst->u.pair.vr[0]);
 	DevTabInto(&pst->u.pair.vr[1]);
@@ -2578,7 +2578,7 @@ static void PSTInto(SplineChar *sc,PST *pst,PST *frompst, struct lookup_subtable
 static void APInto(SplineChar *sc,AnchorPoint *ap,AnchorPoint *fromap,
 	AnchorClass *ac) {
     if ( ap==NULL ) {
-	ap = chunkalloc(sizeof(AnchorPoint));
+	ap = (AnchorPoint *) xzalloc(sizeof (AnchorPoint));
 	*ap = *fromap;
 	ap->anchor = ac;
 	ap->next = sc->anchor;
@@ -2602,7 +2602,7 @@ static void APInto(SplineChar *sc,AnchorPoint *ap,AnchorPoint *fromap,
 static void KPInto(SplineChar *owner,KernPair *kp,KernPair *fromkp,int isv,
 	SplineChar *other, struct lookup_subtable *sub) {
     if ( kp==NULL ) {
-	kp = chunkalloc(sizeof(KernPair));
+	kp = (KernPair *) xzalloc(sizeof (KernPair));
 	*kp = *fromkp;
 	kp->subtable = sub;
 	if ( isv ) {
@@ -3160,7 +3160,7 @@ static Undoes *BCCopyAll(BDFChar *bc,int pixelsize, int depth, enum fvcopy_type 
     Undoes *cur;
     BDFRefChar *ref, *head;
 
-    cur = chunkalloc(sizeof(Undoes));
+    cur = (Undoes *) xzalloc(sizeof (Undoes));
     memset(&cur->u.bmpstate,'\0',sizeof( BDFChar ));
     if ( bc==NULL )
 	cur->undotype = ut_noop;
@@ -3323,7 +3323,7 @@ void FVCopyWidth(FontViewBase *fv,enum undotype ut) {
 
     for ( i=0; i<fv->map->enccount; ++i ) if ( fv->selected[i] ) {
 	any = true;
-	cur = chunkalloc(sizeof(Undoes));
+	cur = (Undoes *) xzalloc(sizeof (Undoes));
 	cur->undotype = ut;
 	if ( (gid=fv->map->map[i])!=-1 && (sc=fv->sf->glyphs[gid])!=NULL ) {
 	    switch ( ut ) {
@@ -3366,7 +3366,7 @@ void FVCopyAnchors(FontViewBase *fv) {
 
     for ( i=0; i<fv->map->enccount; ++i ) if ( fv->selected[i] ) {
 	any = true;
-	cur = chunkalloc(sizeof(Undoes));
+	cur = (Undoes *) xzalloc(sizeof (Undoes));
 	if ( (gid=fv->map->map[i])!=-1 && (sc=fv->sf->glyphs[gid])!=NULL ) {
 	    cur->undotype = ut_anchors;
 	    cur->u.state.anchor = AnchorPointsCopy(sc->anchor);
@@ -3420,7 +3420,7 @@ void FVCopy(FontViewBase *fv, enum fvcopy_type fullcopy) {
 		blast = bcur;
 	    }
 	    if ( bhead!=NULL || state!=NULL ) {
-		cur = chunkalloc(sizeof(Undoes));
+		cur = (Undoes *) xzalloc(sizeof (Undoes));
 		cur->undotype = ut_composit;
 		cur->u.composit.state = state;
 		cur->u.composit.bitmaps = bhead;
@@ -3472,7 +3472,7 @@ void MVCopyChar(FontViewBase *fv, BDFFont *mvbdf, SplineChar *sc, enum fvcopy_ty
 	    blast = bcur;
 	}
 	if ( bhead!=NULL || state!=NULL ) {
-	    cur = chunkalloc(sizeof(Undoes));
+	    cur = (Undoes *) xzalloc(sizeof (Undoes));
 	    cur->undotype = ut_composit;
 	    cur->u.composit.state = state;
 	    cur->u.composit.bitmaps = bhead;

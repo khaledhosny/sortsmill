@@ -341,7 +341,7 @@ return( NULL );
 	    test = skip_to_plain_text(test+1);
 	    if ( test==NULL )
 	break;
-	    ducur = chunkalloc(sizeof( struct ofl_download_urls ));
+	    ducur = (struct ofl_download_urls  *) xzalloc(sizeof (struct ofl_download_urls ));
 	    ducur->url = url;
 	    ptend = skip_over_plain_text(test);
 	    ducur->comment = copyn(test,ptend-test);
@@ -605,7 +605,7 @@ return;
 	    ++(all->fcnt);
 	    last = NULL;
 	} else if ( strcmp(tok.buf,"URL:")==0 ) {
-	    du = chunkalloc(sizeof( struct ofl_download_urls ));
+	    du = (struct ofl_download_urls  *) xzalloc(sizeof (struct ofl_download_urls ));
 	    if ( ofl_gettoken(file,&tok)!= tok_str )
     break;
 	    du->comment = copy(tok.buf);
@@ -1203,7 +1203,7 @@ return;
     if ( du==NULL )
 return;
 
-    newp = chunkalloc(sizeof(PreviewThread));
+    newp = (PreviewThread *) xzalloc(sizeof (PreviewThread));
     newp->fi = d->show[onefont];
     newp->fi->downloading_in_background = true;
     newp->active = du;

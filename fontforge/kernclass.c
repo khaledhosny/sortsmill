@@ -791,7 +791,7 @@ return(true);
 return(false);
 	}
 	if ( kp==NULL ) {
-	    kp = chunkalloc(sizeof(KernPair));
+	    kp = (KernPair *) xzalloc(sizeof (KernPair));
 	    kp->next = kcd->isv?kcd->scf->vkerns:kcd->scf->kerns;
 	    kp->sc = kcd->scs;
 	    if ( kcd->isv )
@@ -805,7 +805,7 @@ return(false);
 	    free(kp->adjust->corrections);
 	    *kp->adjust = kcd->active_adjust;
 	} else if ( kcd->active_adjust.corrections!=NULL ) {
-	    kp->adjust = chunkalloc(sizeof(DeviceTable));
+	    kp->adjust = (DeviceTable *) xzalloc(sizeof (DeviceTable));
 	    *kp->adjust = kcd->active_adjust;
 	} else if ( kp->adjust!=NULL ) {
 	    DeviceTableFree(kp->adjust);

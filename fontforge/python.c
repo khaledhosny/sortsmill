@@ -4234,7 +4234,7 @@ return( NULL );
     i = 0;
     next = start;
 
-    ss = chunkalloc(sizeof(SplineSet));
+    ss = (SplineSet *) xzalloc(sizeof (SplineSet));
     if ( c->spiro_cnt!=0 ) {
 	ss->spiro_cnt = ss->spiro_max = c->spiro_cnt;
 	ss->spiros = SpiroCPCopy(c->spiros,NULL);
@@ -4559,7 +4559,7 @@ return( NULL );
     }
     if ( ((PyFF_GlyphPen *) self)->replace )
 	GlyphClear(self);
-    ss = chunkalloc(sizeof(SplineSet));
+    ss = (SplineSet *) xzalloc(sizeof (SplineSet));
     ss->next = sc->layers[layer].splines;
     sc->layers[layer].splines = ss;
     ss->first = ss->last = SplinePointCreate(x,y);
@@ -4663,7 +4663,7 @@ return( NULL );
 	if ( !PyArg_ParseTuple(pt_tuple,"dd", &x0, &y0 ))
 return( NULL );
 
-	ss = chunkalloc(sizeof(SplineSet));
+	ss = (SplineSet *) xzalloc(sizeof (SplineSet));
 	ss->next = sc->layers[layer].splines;
 	sc->layers[layer].splines = ss;
 
@@ -5468,7 +5468,7 @@ static int PyFF_MathKern_set_kerns(PyFF_MathKern *self, PyObject *value, void *c
     if ( self->sc->mathkern==NULL ) {
 	if ( value==Py_None )
 return( 0 );
-	self->sc->mathkern = chunkalloc(sizeof(struct mathkern));
+	self->sc->mathkern = (struct mathkern *) xzalloc(sizeof (struct mathkern));
     }
     mkv = &self->sc->mathkern->top_right + (int) (intpt) closure;
     if ( value==Py_None ) {
@@ -5895,7 +5895,7 @@ return( -1 );
 		uni = PyInt_AsLong(obj);
 	    else if ( !PyArg_ParseTuple(obj,"i|ii", &uni, &vs, &fid))
 return( -1 );
-	    cur = chunkalloc(sizeof(struct altuni));
+	    cur = (struct altuni *) xzalloc(sizeof (struct altuni));
 	    if ( vs==0 ) vs=-1;		/* convention used in charinfo */
 	    cur->unienc = uni; cur->vs = vs; cur->fid = fid;
 	    if ( last == NULL )
@@ -6165,7 +6165,7 @@ return( -1 );
     }
 
     if ( lcar == NULL && cnt > 0 ) {
-       lcar = chunkalloc(sizeof(PST));
+       lcar = (PST *) xzalloc(sizeof (PST));
        lcar->type = pst_lcaret;
        lcar->next = sc->possub;
        sc->possub = lcar;
@@ -6352,7 +6352,7 @@ return( -1 );
     for ( i=0; i<cnt; ++i ) {
 	if ( !PyArg_ParseTuple(PySequence_GetItem(value,i),"dd", &start, &width ))
 return( -1 );
-	cur = chunkalloc(sizeof(StemInfo));
+	cur = (StemInfo *) xzalloc(sizeof (StemInfo));
 	if ( width==-20 || width==-21 )
 	    cur->ghost = true;
 	if ( width<0 ) {
@@ -6430,7 +6430,7 @@ return( -1 );
             LogError(_("Use the \'hhint\' property to specify a horizontal hint.\n"));
     continue;
         }
-	cur = chunkalloc(sizeof(DStemInfo));
+	cur = (DStemInfo *) xzalloc(sizeof (DStemInfo));
         len = sqrt( pow( ux,2 ) + pow( uy,2 ));
         ux /= len; uy /= len;
         if ( ux < 0 ) {
@@ -6620,7 +6620,7 @@ return( NULL );
 return( NULL );
     }
 
-    ap = chunkalloc(sizeof(AnchorPoint));
+    ap = (AnchorPoint *) xzalloc(sizeof (AnchorPoint));
     ap->anchor = ac;
     ap->type = aptype;
     ap->me.x = x;
@@ -6811,7 +6811,7 @@ static int PyFF_Glyph_set_horizontalCIC(PyFF_Glyph *self,PyObject *value, void *
     if ( PyErr_Occurred()!=NULL )
 return( -1 );
     if ( self->sc->horiz_variants == NULL )
-	self->sc->horiz_variants = chunkalloc(sizeof(struct glyphvariants));
+	self->sc->horiz_variants = (struct glyphvariants *) xzalloc(sizeof (struct glyphvariants));
     self->sc->horiz_variants->italic_correction = val;
 return( 0 );
 }
@@ -6830,7 +6830,7 @@ static int PyFF_Glyph_set_verticalCIC(PyFF_Glyph *self,PyObject *value, void *UN
     if ( PyErr_Occurred()!=NULL )
 return( -1 );
     if ( self->sc->vert_variants == NULL )
-	self->sc->vert_variants = chunkalloc(sizeof(struct glyphvariants));
+	self->sc->vert_variants = (struct glyphvariants *) xzalloc(sizeof (struct glyphvariants));
     self->sc->vert_variants->italic_correction = val;
 return( 0 );
 }
@@ -6855,7 +6855,7 @@ static int PyFF_Glyph_set_verticalVariants(PyFF_Glyph *self,PyObject *value, voi
 	if ( str==NULL )
 return( -1 );
 	if ( self->sc->vert_variants == NULL )
-	    self->sc->vert_variants = chunkalloc(sizeof(struct glyphvariants));
+	    self->sc->vert_variants = (struct glyphvariants *) xzalloc(sizeof (struct glyphvariants));
 	self->sc->vert_variants->variants = copy(str);
     }
 return( 0 );
@@ -6881,7 +6881,7 @@ static int PyFF_Glyph_set_horizontalVariants(PyFF_Glyph *self,PyObject *value, v
 	if ( str==NULL )
 return( -1 );
 	if ( self->sc->horiz_variants == NULL )
-	    self->sc->horiz_variants = chunkalloc(sizeof(struct glyphvariants));
+	    self->sc->horiz_variants = (struct glyphvariants *) xzalloc(sizeof (struct glyphvariants));
 	self->sc->horiz_variants->variants = copy(str);
     }
 return( 0 );
@@ -6908,7 +6908,7 @@ static int PyFF_Glyph_set_horizontalComponents(PyFF_Glyph *self,PyObject *value,
 return( -1 );
 	FreeGVParts(self->sc->horiz_variants);
 	if ( self->sc->horiz_variants == NULL )
-	    self->sc->horiz_variants = chunkalloc(sizeof(struct glyphvariants));
+	    self->sc->horiz_variants = (struct glyphvariants *) xzalloc(sizeof (struct glyphvariants));
 	self->sc->horiz_variants->part_cnt = cnt;
 	self->sc->horiz_variants->parts = parts;
     }
@@ -6936,7 +6936,7 @@ static int PyFF_Glyph_set_verticalComponents(PyFF_Glyph *self,PyObject *value, v
 return( -1 );
 	FreeGVParts(self->sc->vert_variants);
 	if ( self->sc->vert_variants == NULL )
-	    self->sc->vert_variants = chunkalloc(sizeof(struct glyphvariants));
+	    self->sc->vert_variants = (struct glyphvariants *) xzalloc(sizeof (struct glyphvariants));
 	self->sc->vert_variants->part_cnt = cnt;
 	self->sc->vert_variants->parts = parts;
     }
@@ -7421,7 +7421,7 @@ static PyObject *PyFFGlyph_addHint(PyObject *self, PyObject *args) {
     if ( !PyArg_ParseTuple(args,"idd", &is_v, &start, &width ) )
 return( NULL );
 
-    h = chunkalloc(sizeof(StemInfo));
+    h = (StemInfo *) xzalloc(sizeof (StemInfo));
     if ( width==-20 || width==-21 )
 	h->ghost = true;
     if ( width<0 ) {
@@ -8084,7 +8084,7 @@ return( NULL );
     } else if ( sub->lookup->lookup_type==gpos_pair ) {
 	int off =0x7fffffff;
 	temp.type = pst_pair;
-	temp.u.pair.vr = chunkalloc(sizeof(struct vr [2]));
+	temp.u.pair.vr = (struct vr *) xzalloc(sizeof (struct vr [2]));
 	if ( PyArg_ParseTuple(args,"ssi", &subname, &other, &off ))
 	    /* Good */;
 	else {
@@ -8122,7 +8122,7 @@ return( NULL );
 		kp = kpold;
 	    } else {
 		chunkfree(temp.u.pair.vr,sizeof(struct vr [2]));
-		kp = chunkalloc(sizeof(KernPair));
+		kp = (KernPair *) xzalloc(sizeof (KernPair));
 		if ( sub->vertical_kerning ) {
 		    kp->next = sc->vkerns;
 		    sc->vkerns = kp;
@@ -8195,7 +8195,7 @@ return( NULL );
 	  break;
 	}
     } else {
-	pst = chunkalloc(sizeof(PST));
+	pst = (PST *) xzalloc(sizeof (PST));
 	*pst = temp;
 	pst->next = sc->possub;
 	sc->possub = pst;
@@ -8694,7 +8694,7 @@ return( ((PyFF_Cvt *) self)->cvt->len/2 );
 static struct ttf_table *BuildCvt(SplineFont *sf,int initial_size) {
     struct ttf_table *cvt;
 
-    cvt = chunkalloc(sizeof(struct ttf_table));
+    cvt = (struct ttf_table *) xzalloc(sizeof (struct ttf_table));
     cvt->next = sf->ttf_tables;
     sf->ttf_tables = cvt;
     cvt->tag = CHR('c','v','t',' ');
@@ -10649,7 +10649,7 @@ return( 1 );	/* If they set it to the default, there's nothing to do */
 #endif /* PY_MAJOR_VERSION >= 3 */
 
     if ( names==NULL ) {
-	names = chunkalloc(sizeof( struct ttflangname ));
+	names = (struct ttflangname  *) xzalloc(sizeof (struct ttflangname ));
 	names->lang = lang;
 	names->next = sf->names;
 	sf->names = names;
@@ -11893,7 +11893,7 @@ return( -1 );
 	if ( basecnt<0 )
 return( -1 );
     }
-    base = chunkalloc(sizeof( struct Base));
+    base = (struct Base *) xzalloc(sizeof (struct Base));
     base->baseline_cnt = basecnt;
     base->baseline_tags = galloc(basecnt*sizeof(uint32));
     base->scripts = NULL;
@@ -11926,7 +11926,7 @@ return( -1 );
 	    BaseFree(base);
 return( -1 );
 	}
-	bs = chunkalloc(sizeof(struct basescript));
+	bs = (struct basescript *) xzalloc(sizeof (struct basescript));
 	if ( lastbs==NULL )
 	    base->scripts = bs;
 	else
@@ -11995,7 +11995,7 @@ return( -1 );
 		BaseFree(base);
 return( -1 );
 	    }
-	    ln = chunkalloc(sizeof(struct baselangextent));
+	    ln = (struct baselangextent *) xzalloc(sizeof (struct baselangextent));
 	    if ( lastln==NULL )
 		bs->langs = ln;
 	    else
@@ -12028,7 +12028,7 @@ return( -1 );
 		    BaseFree(base);
 return( -1 );
 		}
-		ft = chunkalloc(sizeof(struct baselangextent));
+		ft = (struct baselangextent *) xzalloc(sizeof (struct baselangextent));
 		if ( lastft==NULL )
 		    ln->features = ft;
 		else
@@ -12319,7 +12319,7 @@ return( -1 );
 	    OtfNameListFree(head);
 return( -1 );
 	}
-	cur = chunkalloc(sizeof( struct otfname ));
+	cur = (struct otfname  *) xzalloc(sizeof (struct otfname ));
 	cur->name = copy(string);
 	cur->lang = lang;
 	cur->next = NULL;
@@ -12742,7 +12742,7 @@ return( -1 );
 
     tab = SFFindTable(sf,CHR('m','a','x','p'));
     if ( tab==NULL ) {
-	tab = chunkalloc(sizeof(struct ttf_table));
+	tab = (struct ttf_table *) xzalloc(sizeof (struct ttf_table));
 	tab->next = sf->ttf_tables;
 	sf->ttf_tables = tab;
 	tab->tag = CHR('m','a','x','p');
@@ -13307,7 +13307,7 @@ static void TableAddInstrs(SplineFont *sf, uint32 tag,int replace,
     if ( icnt==0 )
 return;
     if ( tab==NULL ) {
-	tab = chunkalloc(sizeof( struct ttf_table ));
+	tab = (struct ttf_table  *) xzalloc(sizeof (struct ttf_table ));
 	tab->tag = tag;
 	if ( tag==CHR('p','r','e','p') || tag==CHR('f','p','g','m') ||
 		tag==CHR('c','v','t',' ') || tag==CHR('m','a','x','p') ) {
@@ -13714,7 +13714,7 @@ return( NULL );
 return( NULL );
     }
 
-    sub = chunkalloc(sizeof(struct lookup_subtable));
+    sub = (struct lookup_subtable *) xzalloc(sizeof (struct lookup_subtable));
     sub->lookup = otl;
     sub->subtable_name = copy(new_subtable);
     if ( after!=NULL ) {
@@ -13794,7 +13794,7 @@ return( NULL );
 	PyErr_Format(PyExc_EnvironmentError, "An anchor class named %s already exists", anchor_name );
 return( NULL );
     }
-    ac = chunkalloc(sizeof(AnchorClass));
+    ac = (AnchorClass *) xzalloc(sizeof (AnchorClass));
     ac->name = copy( anchor_name );
     ac->subtable = sub;
     ac->type = lookup_type==gpos_cursive        ? act_curs :
@@ -14068,7 +14068,7 @@ return( NULL );
 	sub->onlyCloser = only_closer;
 	sub->dontautokern = !autokern;
     }
-    sub->kc = chunkalloc(sizeof(KernClass));
+    sub->kc = (KernClass *) xzalloc(sizeof (KernClass));
     sub->kc->subtable = sub;
     if ( class1s!=NULL ) {
 	sub->kc->first_cnt = cnt1;
@@ -14504,7 +14504,7 @@ return( BAD_FEATURE_LIST );
 	    FeatureScriptLangListFree(flhead);
 return( BAD_FEATURE_LIST );
 	}
-	fl = chunkalloc(sizeof(FeatureScriptLangList));
+	fl = (FeatureScriptLangList *) xzalloc(sizeof (FeatureScriptLangList));
 	fl->featuretag = StrToTag(PyBytes_AsString(PySequence_GetItem(subs,0)),&wasmac);
 	if ( fl->featuretag == BAD_TAG ) {
 	    free(fl);
@@ -14544,7 +14544,7 @@ return( BAD_FEATURE_LIST );
 		FeatureScriptLangListFree(flhead);
 return( BAD_FEATURE_LIST );
 	    }
-	    sl = chunkalloc(sizeof(struct scriptlanglist));
+	    sl = (struct scriptlanglist *) xzalloc(sizeof (struct scriptlanglist));
 	    sl->script = StrToTag(PyBytes_AsString(PySequence_GetItem(scriptsubs,0)),NULL);
 	    if ( sl->script==BAD_TAG ) {
 		free(sl);
@@ -14641,7 +14641,7 @@ return( NULL );
 
     if ( sf->cidmaster ) sf = sf->cidmaster;
 
-    otl = chunkalloc(sizeof(OTLookup));
+    otl = (OTLookup *) xzalloc(sizeof (OTLookup));
     if ( after!=NULL ) {
 	otl->next = after->next;
 	after->next = otl;
@@ -15015,7 +15015,7 @@ return( NULL );
     new_subtable = addLookupSubtable(sf, lookup, subtable, after_str);
     if ( new_subtable==NULL )
 return( NULL );
-    fpst = chunkalloc(sizeof(FPST));
+    fpst = (FPST *) xzalloc(sizeof (FPST));
     fpst->subtable = new_subtable;
     new_subtable->fpst = fpst;
     fpst->format = format;
@@ -15518,7 +15518,7 @@ static struct sflist *makesflist(PyFF_Font *font,enum bitmapformat bf) {
     if ( CheckIfFontClosed(font) )
 return(NULL);
 
-    ret = chunkalloc(sizeof( struct sflist ));
+    ret = (struct sflist  *) xzalloc(sizeof (struct sflist ));
     ret->sf  = font->fv->sf;
     ret->map = font->fv->map;
 

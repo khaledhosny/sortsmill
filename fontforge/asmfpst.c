@@ -75,7 +75,7 @@ FPST *FPSTGlyphToClass(FPST *fpst) {
     if ( fpst->format!=pst_glyphs )
 return( NULL );
 
-    new = chunkalloc(sizeof(FPST));
+    new = (FPST *) xzalloc(sizeof (FPST));
     new->type = fpst->type;
     new->format = pst_class;
     new->subtable = fpst->subtable;
@@ -260,7 +260,7 @@ return( true );
 }
 
 static struct contexttree *_FPST2Tree(FPST *fpst,struct contexttree *parent,int class) {
-    struct contexttree *me = chunkalloc(sizeof(struct contexttree));
+    struct contexttree *me = (struct contexttree *) xzalloc(sizeof (struct contexttree));
     int i, rcnt, ccnt, k, thisclass;
     uint16 *classes;
 
@@ -605,7 +605,7 @@ return( NULL );
 	    classglyphs[cg++] = classglyphs[i];
     classglyphs[cg] = NULL;
 
-    sm = chunkalloc(sizeof(ASM));
+    sm = (ASM *) xzalloc(sizeof (ASM));
     sm->type = asm_context;
     sm->flags = (flags&pst_r2l) ? asm_descending : 0;
 	/* This is a temporary value. It should be replaced if we will retain */
@@ -822,7 +822,7 @@ return( NULL );
 	free(tables[i]);
     free(tables);
 
-    sm = chunkalloc(sizeof(ASM));
+    sm = (ASM *) xzalloc(sizeof (ASM));
     sm->type = asm_context;
     sm->flags = (fpst->subtable->lookup->lookup_flags&pst_r2l) ? asm_descending : 0;
     sm->class_cnt = class_cnt;
@@ -946,7 +946,7 @@ static ASM *ASMFromClassFPST(SplineFont *sf,FPST *fpst, struct contexttree *tree
     struct contexttree *cur;
     int i;
 
-    sm = chunkalloc(sizeof(ASM));
+    sm = (ASM *) xzalloc(sizeof (ASM));
     sm->type = asm_context;
     sm->flags = (fpst->subtable->lookup->lookup_flags&pst_r2l) ? asm_descending : 0;
     /* mac class sets have four magic classes, opentype sets only have one */

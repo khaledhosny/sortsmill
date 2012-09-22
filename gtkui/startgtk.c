@@ -355,7 +355,7 @@ return( FALSE );		/* cancel timer */
 }
 
 void DelayEvent(void (*func)(void *), void *data) {
-    struct delayed_event *info = chunkalloc(sizeof(struct delayed_event));
+    struct delayed_event *info = (struct delayed_event *) xzalloc(sizeof (struct delayed_event));
 
     info->data = data;
     info->func = func;
