@@ -36,7 +36,6 @@
 #include <sys/time.h>
 #include <locale.h>
 #include <unistd.h>
-#include <dynamic.h>
 #include <stdlib.h>		/* getenv,setenv */
 #ifdef _NO_LIBPNG
 #  define PNGLIBNAME	"libpng"
