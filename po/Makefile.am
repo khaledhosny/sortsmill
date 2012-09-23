@@ -40,14 +40,14 @@ install-data-local:
 	(for localefile in $(MO_FILES); do \
 		locale=`echo "$${localefile}" | $(SED) -e 's/\.mo$$//'`; \
 		$(MKDIR_P) "$(DESTDIR)$(localedir)/$${locale}/LC_MESSAGES"; \
-		$(INSTALL_DATA) "$${localefile}" "$(DESTDIR)$(localedir)/$${locale}/LC_MESSAGES/FontForge.mo"; \
+		$(INSTALL_DATA) "$${localefile}" "$(DESTDIR)$(localedir)/$${locale}/LC_MESSAGES/$(FF_TEXTDOMAIN).mo"; \
 	done)
 
 uninstall-local:
 	(for localefile in $(MO_FILES); do \
 		locale=`echo "$${localefile}" | $(SED) -e 's/\.mo$$//'`; \
 		$(MKDIR_P) "$(DESTDIR)$(localedir)/$${locale}/LC_MESSAGES"; \
-		rm -f "$(DESTDIR)$(localedir)/$${locale}/LC_MESSAGES/FontForge.mo"; \
+		rm -f "$(DESTDIR)$(localedir)/$${locale}/LC_MESSAGES/$(FF_TEXTDOMAIN).mo"; \
 	done)
 
 EXTRA_DIST = $(PO_FILES)
@@ -64,18 +64,19 @@ XGETTEXT_OPTIONS = --keyword=_ --keyword=N_ --keyword=S_ --keyword=U_	\
 # This potfile will be created in $(builddir). You can copy it to
 # $(srcdir) if you do outside-of-source builds and want it in the
 # source tree.
-MY_POTFILE = FontForge.pot
+MY_POTFILE = $(FF_TEXTDOMAIN).pot
 
 $(MY_POTFILE): potfile
 
 potfile:
-	$(XGETTEXT) $(XGETTEXT_OPTIONS) --output=$(MY_POTFILE) $(xgettext_search_files)
-	$(SED) -i -e '1,4d' $(MY_POTFILE)
-	$(SED) -i -e "1i\
-\# Template of user interface strings for $(PACKAGE), in US English.\n\
+	@echo Creating $(MY_POTFILE)...
+	@$(XGETTEXT) $(XGETTEXT_OPTIONS) --output=$(MY_POTFILE) $(xgettext_search_files)
+	@$(SED) -i -e '1,4d' $(MY_POTFILE)
+	@$(SED) -i -e "1i\
+\# Template of user interface strings for $(PACKAGE_NAME), in US English.\n\
 \# Copyright (C) 2000-2012 by George Williams.\n\
-\# This file is distributed under the same license as the $(PACKAGE) package.\n\
-\# The FontForge project, <https://github.com/fontforge/fontforge>, 2012." $(MY_POTFILE)
+\# This file is distributed under the same license as the $(PACKAGE_NAME) package.\n\
+\# $(PACKAGE_NAME), <$(PACKAGE_URL)>, 2012." $(MY_POTFILE)
 
 #--------------------------------------------------------------------------
 #

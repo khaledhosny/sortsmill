@@ -35,9 +35,7 @@
 #include <sys/time.h>
 #include <locale.h>
 #include <unistd.h>
-#ifdef __Mac
-# include <stdlib.h>		/* getenv,setenv */
-#endif
+#include <stdlib.h>		/* getenv,setenv */
 
 static char *GResourceProgramDir;
 
@@ -160,9 +158,9 @@ int fontforge_main( int argc, char **argv ) {
     FindProgDir(argv[0]);
     InitSimpleStuff();
 
-    bind_textdomain_codeset("FontForge","UTF-8");
-    bindtextdomain("FontForge", getLocaleDir());
-    textdomain("FontForge");
+    bind_textdomain_codeset(ff_textdomain(),"UTF-8");
+    bindtextdomain(ff_textdomain(), getLocaleDir());
+    textdomain(ff_textdomain());
 
     if ( default_encoding==NULL )
 	default_encoding=FindOrMakeEncoding("ISO8859-1");

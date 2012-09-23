@@ -65,9 +65,6 @@ typedef uint32_t unichar_t;
 #endif
 #endif // ! UNUSED
 
-//extern char *copy(const char *);
-//extern char *copyn(const char *, size_t);
-
 static inline int imin(int a, int b)
 {
     return (a < b) ? a : b;
@@ -105,6 +102,18 @@ static inline size_t szmax(size_t a, size_t b)
 
 #ifdef __INTERNAL_TO_FONTFORGE__
 
+#ifndef FF_TEXTDOMAIN
+#error You must define FF_TEXTDOMAIN.
+#endif
+
+#ifndef FF_SHORTCUTSDOMAIN
+#error You must define FF_SHORTCUTSDOMAIN.
+#endif
+
+#ifndef FF_MACSHORTCUTSDOMAIN
+#error You must define FF_MACSHORTCUTSDOMAIN.
+#endif
+
 #include "xalloc.h"
 #include "xstrndup.h"
 
@@ -124,6 +133,21 @@ static inline char *copy(const char *str)
 static inline char *copyn(const char *str, size_t n)
 {
     return (str == NULL) ? NULL : xstrndup(str, n);
+}
+
+static inline const char *ff_textdomain(void)
+{
+    return FF_TEXTDOMAIN;
+}
+
+static inline const char *ff_shortcutsdomain(void)
+{
+    return FF_SHORTCUTSDOMAIN;
+}
+
+static inline const char *ff_macshortcutsdomain(void)
+{
+    return FF_MACSHORTCUTSDOMAIN;
 }
 
 #endif // __INTERNAL_TO_FONTFORGE__

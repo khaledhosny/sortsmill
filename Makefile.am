@@ -103,7 +103,7 @@ XGETTEXT_OPTIONS = --keyword=H_ --from-code=utf-8 --language=C	\
 --sort-by-file
 
 # This potfile will be created in $(builddir).
-MY_POTFILE = FontForge-MenuShortCuts.pot
+MY_POTFILE = $(FF_SHORTCUTSDOMAIN).pot
 
 $(MY_POTFILE): shortcuts-template
 
@@ -114,9 +114,9 @@ shortcuts-template:
 	@echo Editing the file ...
 	@$(SED) -i -e '1,4d' $(MY_POTFILE)
 	@$(SED) -i -e "1i\
-\# Menu shortcuts for $(PACKAGE).\n\
+\# Menu shortcuts for $(PACKAGE_NAME).\n\
 \# Copyright (C) 2000-2012 by George Williams.\n\
-\# This file is distributed under the same license as the $(PACKAGE) package.\n\
+\# This file is distributed under the same license as the $(PACKAGE_NAME) package.\n\
 \# The FontForge project, <https://github.com/fontforge/fontforge>, 2012." $(MY_POTFILE)
 	@$(SED) -i -e 's|^\("Content-Type: text/plain; charset=\)CHARSET\(\\n"\)|\1UTF-8\2|' $(MY_POTFILE)
 	@$(SED) -i -e '/^"Content-Transfer-Encoding: 8bit\\n"/a\

@@ -784,9 +784,9 @@ return;
     free(mi);
 }
 
-static char *shortcut_domain = "shortcuts";
+static const char *shortcut_domain = "shortcuts";
 
-void GMenuSetShortcutDomain(char *domain) {
+void GMenuSetShortcutDomain(const char *domain) {
     shortcut_domain = domain;
 }
 

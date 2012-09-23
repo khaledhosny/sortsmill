@@ -65,6 +65,14 @@ MY_PLUGINDIR = ${plugindir}
 
 #--------------------------------------------------------------------------
 #
+# Locales.
+
+FF_TEXTDOMAIN = $(PACKAGE)
+FF_SHORTCUTSDOMAIN = $(PACKAGE)-shortcuts
+FF_MACSHORTCUTSDOMAIN = $(PACKAGE)-macshortcuts
+
+#--------------------------------------------------------------------------
+#
 # Layout of the freedesktop.org support.
 
 PACKAGEROOTDIR = ${datarootdir}

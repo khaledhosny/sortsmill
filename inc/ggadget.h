@@ -418,7 +418,7 @@ void GScrollBarGetBounds(GGadget *g, int32 *sb_min, int32 *sb_max, int32 *sb_pag
 void GMenuBarSetItemChecked(GGadget *g, int mid, int check);
 void GMenuBarSetItemEnabled(GGadget *g, int mid, int enabled);
 void GMenuBarSetItemName(GGadget *g, int mid, const unichar_t *name);
-void GMenuSetShortcutDomain(char *domain);
+void GMenuSetShortcutDomain(const char *domain);
 const char *GMenuGetShortcutDomain(void);
 int GMenuIsCommand(GEvent *event,char *shortcut);
 int GMenuMask(void);

@@ -868,25 +868,25 @@ int fontforge_main( int argc, char **argv ) {
 	    setenv("LC_MESSAGES","en_US.UTF-8",0);
 	}
 	/* Can we find a set of keybindings designed for the mac with cmd key? */
-	bind_textdomain_codeset("Mac-FontForge-MenuShortCuts","UTF-8");
-	bindtextdomain("Mac-FontForge-MenuShortCuts", getLocaleDir());
-	if ( *dgettext("Mac-FontForge-MenuShortCuts","Flag0x10+")!='F' ) {
-	    GMenuSetShortcutDomain("Mac-FontForge-MenuShortCuts");
+	bind_textdomain_codeset(ff_macshortcutsdomain(), "UTF-8");
+	bindtextdomain(ff_macshortcutsdomain(), getLocaleDir());
+	if ( *dgettext(ff_macshortcutsdomain(),"Flag0x10+")!='F' ) {
+	    GMenuSetShortcutDomain(ff_macshortcutsdomain());
 	    did_keybindings = 1;
 	}
     }
     if ( !did_keybindings ) {
 	/* Nope. we can't. Fall back to the normal stuff */
 #endif
-    GMenuSetShortcutDomain("FontForge-MenuShortCuts");
-    bind_textdomain_codeset("FontForge-MenuShortCuts","UTF-8");
-    bindtextdomain("FontForge-MenuShortCuts", getLocaleDir());
+	GMenuSetShortcutDomain(ff_shortcutsdomain());
+	bind_textdomain_codeset(ff_shortcutsdomain(), "UTF-8");
+	bindtextdomain(ff_shortcutsdomain(), getLocaleDir());
 #if defined(__Mac)
     }}
 #endif
-    bind_textdomain_codeset("FontForge","UTF-8");
-    bindtextdomain("FontForge", getLocaleDir());
-    textdomain("FontForge");
+    bind_textdomain_codeset(ff_textdomain(), "UTF-8");
+    bindtextdomain(ff_textdomain(), getLocaleDir());
+    textdomain(ff_textdomain());
     GResourceUseGetText();
 #if defined(__MINGW32__)
     {

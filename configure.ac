@@ -29,12 +29,11 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 AC_PREREQ([2.68])
-
-# FIXME: Go through the code and replace explicit ‘fontforge’ with the
-# configured PACKAGE name, where appropriate. For now, call the
-# package "fontforge" (in the tarfile name field).
-AC_INIT([Sorts Mill FontForge],[2.0.0_alpha1],[https://github.com/sortsmill/fontforge/issues],
-        [fontforge],[https://github.com/sortsmill/fontforge])
+AC_INIT([Sorts Mill FontForge],
+        [2.0.0_alpha1],
+        [https://github.com/sortsmill/fontforge/issues],
+        [sortsmill-fontforge],
+        [https://github.com/sortsmill/fontforge])
 
 AC_CONFIG_SRCDIR([fontforge/splinerefigure.c])
 
