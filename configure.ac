@@ -36,7 +36,7 @@ AC_PREREQ([2.68])
 AC_INIT([Sorts Mill FontForge],[2.0.0_alpha1],[https://github.com/sortsmill/fontforge/issues],
         [fontforge],[https://github.com/sortsmill/fontforge])
 
-AC_CONFIG_SRCDIR([Unicode/ArabicForms.c])
+AC_CONFIG_SRCDIR([fontforge/splinerefigure.c])
 
 AC_CONFIG_MACRO_DIR([m4])          dnl Where autoconf scripts go.
 AC_CONFIG_AUX_DIR([config])        dnl Where things like install-sh go.
