@@ -1,0 +1,56 @@
+\input texinfo   @c -*-texinfo-*-
+@c %**start of header
+@setfilename sortsmill-fontforge.info
+@settitle Sorts Mill FontForge
+@c @setchapternewpage off
+@c %**end of header
+
+@include version.texi
+
+@copying
+
+This manual is for Sorts Mill FontForge, a font editor.
+
+Copyright @copyright{} 2012 Barry Schwartz
+
+@end copying
+
+@dircategory Development
+@direntry
+* Sorts Mill FontForge: (sortsmill-fontforge).  A font editor.
+@end direntry
+
+@titlepage
+@title Sorts Mill FontForge
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+@end titlepage
+
+
+@ifnottex
+@node Top
+@top Sorts Mill FontForge
+
+@insertcopying
+
+@menu
+* Introduction::    What is Sorts Mill FontForge?
+* Installing::      How to install Sorts Mill FontForge.
+@end menu
+
+@end ifnottex
+
+
+@node Introduction
+@chapter What is Sorts Mill FontForge?
+
+Sorts Mill FontForge is a font editor.
+
+@node Installing
+@chapter Installing Sorts Mill FontForge
+
+For installation instructions, see the file @file{INSTALL} that
+accompanies the source code.
+
+@bye

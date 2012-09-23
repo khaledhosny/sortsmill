@@ -54,7 +54,7 @@ if GRAPHICAL_USER_INTERFACE
 SUBDIRS += gdraw
 endif GRAPHICAL_USER_INTERFACE
 
-SUBDIRS += plugins fontforge po htdocs cidmap tests
+SUBDIRS += plugins fontforge po doc htdocs cidmap tests
 
 if PYTHON_SCRIPTING
 SUBDIRS += pycontrib

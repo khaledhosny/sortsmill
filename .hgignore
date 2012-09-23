@@ -17,6 +17,8 @@ missing
 install-sh
 ltmain.sh
 ar-lib
+mdate-sh
+texinfo.tex
 autom4te.cache
 m4/libtool.m4
 m4/ltoptions.m4
@@ -51,6 +53,9 @@ systemspecific
 .libs
 .deps
 
+version.texi
+stamp-vti
+
 syntax: regexp
 
 \.la$
@@ -63,5 +68,6 @@ syntax: regexp
 \.dll$
 \.obj$
 \.gmo$
+\.info$
+\.orig$
 ~$
-.orig$
