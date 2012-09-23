@@ -40,25 +40,33 @@ AC_DEFUN([gl_EARLY],
   AC_REQUIRE([gl_PROG_AR_RANLIB])
   AC_REQUIRE([AM_PROG_CC_C_O])
   # Code from module alloca-opt:
+  # Code from module arpa_inet:
   # Code from module btowc:
   # Code from module c-ctype:
   # Code from module c-strcase:
+  # Code from module close:
   # Code from module concat-filename:
   # Code from module configmake:
+  # Code from module ctype:
   # Code from module dirname:
   # Code from module dirname-lgpl:
   # Code from module dosname:
   # Code from module double-slash-root:
+  # Code from module dup2:
   # Code from module errno:
   # Code from module error:
   # Code from module exitfail:
   # Code from module extensions:
   AC_REQUIRE([gl_USE_SYSTEM_EXTENSIONS])
+  # Code from module fcntl:
+  # Code from module fcntl-h:
+  # Code from module fd-hook:
   # Code from module filename:
   # Code from module filenamecat:
   # Code from module filenamecat-lgpl:
   # Code from module findprog:
   # Code from module float:
+  # Code from module getdtablesize:
   # Code from module gettext-h:
   # Code from module gperf:
   # Code from module havelib:
@@ -88,18 +96,30 @@ AC_DEFUN([gl_EARLY],
   # Code from module msvc-inval:
   # Code from module msvc-nothrow:
   # Code from module multiarch:
+  # Code from module netdb:
+  # Code from module netinet_in:
   # Code from module nl_langinfo:
   # Code from module regex:
+  # Code from module size_max:
   # Code from module snippet/_Noreturn:
   # Code from module snippet/arg-nonnull:
   # Code from module snippet/c++defs:
   # Code from module snippet/unused-parameter:
   # Code from module snippet/warn-on-use:
+  # Code from module snprintf:
+  # Code from module socklen:
   # Code from module ssize_t:
   # Code from module stdalign:
+  # Code from module stdarg:
+  dnl Some compilers (e.g., AIX 5.3 cc) need to be in c99 mode
+  dnl for the builtin va_copy to work.  With Autoconf 2.60 or later,
+  dnl gl_PROG_CC_C99 arranges for this.  With older Autoconf gl_PROG_CC_C99
+  dnl shouldn't hurt, though installers are on their own to set c99 mode.
+  gl_PROG_CC_C99
   # Code from module stdbool:
   # Code from module stddef:
   # Code from module stdint:
+  # Code from module stdio:
   # Code from module stdlib:
   # Code from module stpcpy:
   # Code from module strcase:
@@ -110,9 +130,15 @@ AC_DEFUN([gl_EARLY],
   # Code from module strerror-override:
   # Code from module string:
   # Code from module strings:
+  # Code from module strncat:
   # Code from module strndup:
   # Code from module strnlen:
+  # Code from module strstr:
+  # Code from module strstr-simple:
+  # Code from module sys_socket:
+  # Code from module sys_time:
   # Code from module sys_types:
+  # Code from module sys_uio:
   # Code from module trim:
   # Code from module unistd:
   # Code from module unistr/base:
@@ -121,7 +147,9 @@ AC_DEFUN([gl_EARLY],
   # Code from module unitypes:
   # Code from module uniwidth/base:
   # Code from module uniwidth/width:
+  # Code from module vasnprintf:
   # Code from module verify:
+  # Code from module vsnprintf:
   # Code from module wchar:
   # Code from module wcrtomb:
   # Code from module wctype-h:
@@ -130,6 +158,7 @@ AC_DEFUN([gl_EARLY],
   # Code from module xalloc-die:
   # Code from module xalloc-oversized:
   # Code from module xconcat-filename:
+  # Code from module xsize:
   # Code from module xstrndup:
 ])
 
@@ -148,17 +177,31 @@ AC_DEFUN([gl_INIT],
   gl_COMMON
   gl_source_base='lib'
   gl_FUNC_ALLOCA
+  gl_HEADER_ARPA_INET
+  AC_PROG_MKDIR_P
   gl_FUNC_BTOWC
   if test $HAVE_BTOWC = 0 || test $REPLACE_BTOWC = 1; then
     AC_LIBOBJ([btowc])
     gl_PREREQ_BTOWC
   fi
   gl_WCHAR_MODULE_INDICATOR([btowc])
+  gl_FUNC_CLOSE
+  if test $REPLACE_CLOSE = 1; then
+    AC_LIBOBJ([close])
+  fi
+  gl_UNISTD_MODULE_INDICATOR([close])
   gl_CONFIGMAKE_PREP
+  gl_CTYPE_H
   gl_DIRNAME
   gl_MODULE_INDICATOR([dirname])
   gl_DIRNAME_LGPL
   gl_DOUBLE_SLASH_ROOT
+  gl_FUNC_DUP2
+  if test $HAVE_DUP2 = 0 || test $REPLACE_DUP2 = 1; then
+    AC_LIBOBJ([dup2])
+    gl_PREREQ_DUP2
+  fi
+  gl_UNISTD_MODULE_INDICATOR([dup2])
   gl_HEADER_ERRNO_H
   gl_ERROR
   if test $ac_cv_lib_error_at_line = no; then
@@ -168,6 +211,12 @@ AC_DEFUN([gl_INIT],
   m4_ifdef([AM_XGETTEXT_OPTION],
     [AM_][XGETTEXT_OPTION([--flag=error:3:c-format])
      AM_][XGETTEXT_OPTION([--flag=error_at_line:5:c-format])])
+  gl_FUNC_FCNTL
+  if test $HAVE_FCNTL = 0 || test $REPLACE_FCNTL = 1; then
+    AC_LIBOBJ([fcntl])
+  fi
+  gl_FCNTL_MODULE_INDICATOR([fcntl])
+  gl_FCNTL_H
   gl_FILE_NAME_CONCAT
   gl_MODULE_INDICATOR([filenamecat])
   gl_FILE_NAME_CONCAT_LGPL
@@ -179,6 +228,12 @@ AC_DEFUN([gl_INIT],
   if test $REPLACE_ITOLD = 1; then
     AC_LIBOBJ([itold])
   fi
+  gl_FUNC_GETDTABLESIZE
+  if test $HAVE_GETDTABLESIZE = 0; then
+    AC_LIBOBJ([getdtablesize])
+    gl_PREREQ_GETDTABLESIZE
+  fi
+  gl_UNISTD_MODULE_INDICATOR([getdtablesize])
   AC_SUBST([LIBINTL])
   AC_SUBST([LTLIBINTL])
   AM_ICONV
@@ -263,6 +318,9 @@ AC_DEFUN([gl_INIT],
     AC_LIBOBJ([msvc-nothrow])
   fi
   gl_MULTIARCH
+  gl_HEADER_NETDB
+  gl_HEADER_NETINET_IN
+  AC_PROG_MKDIR_P
   gl_FUNC_NL_LANGINFO
   if test $HAVE_NL_LANGINFO = 0 || test $REPLACE_NL_LANGINFO = 1; then
     AC_LIBOBJ([nl_langinfo])
@@ -273,11 +331,18 @@ AC_DEFUN([gl_INIT],
     AC_LIBOBJ([regex])
     gl_PREREQ_REGEX
   fi
+  gl_SIZE_MAX
+  gl_FUNC_SNPRINTF
+  gl_STDIO_MODULE_INDICATOR([snprintf])
+  gl_MODULE_INDICATOR([snprintf])
+  gl_TYPE_SOCKLEN_T
   gt_TYPE_SSIZE_T
   gl_STDALIGN_H
+  gl_STDARG_H
   AM_STDBOOL_H
   gl_STDDEF_H
   gl_STDINT_H
+  gl_STDIO_H
   gl_STDLIB_H
   gl_FUNC_STPCPY
   if test $HAVE_STPCPY = 0; then
@@ -319,6 +384,12 @@ AC_DEFUN([gl_INIT],
   fi
   gl_HEADER_STRING_H
   gl_HEADER_STRINGS_H
+  gl_FUNC_STRNCAT
+  if test $REPLACE_STRNCAT = 1; then
+    AC_LIBOBJ([strncat])
+    gl_PREREQ_STRNCAT
+  fi
+  gl_STRING_MODULE_INDICATOR([strncat])
   gl_FUNC_STRNDUP
   if test $HAVE_STRNDUP = 0 || test $REPLACE_STRNDUP = 1; then
     AC_LIBOBJ([strndup])
@@ -330,7 +401,22 @@ AC_DEFUN([gl_INIT],
     gl_PREREQ_STRNLEN
   fi
   gl_STRING_MODULE_INDICATOR([strnlen])
+  gl_FUNC_STRSTR
+  if test $REPLACE_STRSTR = 1; then
+    AC_LIBOBJ([strstr])
+  fi
+  gl_FUNC_STRSTR_SIMPLE
+  if test $REPLACE_STRSTR = 1; then
+    AC_LIBOBJ([strstr])
+  fi
+  gl_STRING_MODULE_INDICATOR([strstr])
+  gl_HEADER_SYS_SOCKET
+  AC_PROG_MKDIR_P
+  gl_HEADER_SYS_TIME_H
+  AC_PROG_MKDIR_P
   gl_SYS_TYPES_H
+  AC_PROG_MKDIR_P
+  gl_HEADER_SYS_UIO
   AC_PROG_MKDIR_P
   gl_UNISTD_H
   gl_LIBUNISTRING_LIBHEADER([0.9.2], [unistr.h])
@@ -341,6 +427,9 @@ AC_DEFUN([gl_INIT],
   gl_LIBUNISTRING_LIBHEADER([0.9], [unitypes.h])
   gl_LIBUNISTRING_LIBHEADER([0.9], [uniwidth.h])
   gl_LIBUNISTRING_MODULE([0.9.4], [uniwidth/width])
+  gl_FUNC_VASNPRINTF
+  gl_FUNC_VSNPRINTF
+  gl_STDIO_MODULE_INDICATOR([vsnprintf])
   gl_WCHAR_H
   gl_FUNC_WCRTOMB
   if test $HAVE_WCRTOMB = 0 || test $REPLACE_WCRTOMB = 1; then
@@ -355,6 +444,7 @@ AC_DEFUN([gl_INIT],
   fi
   gl_WCHAR_MODULE_INDICATOR([wcwidth])
   gl_XALLOC
+  gl_XSIZE
   gl_XSTRNDUP
   # End of code from modules
   m4_ifval(gl_LIBSOURCES_LIST, [
@@ -499,6 +589,8 @@ AC_DEFUN([gl_FILE_LIST], [
   build-aux/snippet/unused-parameter.h
   build-aux/snippet/warn-on-use.h
   lib/alloca.in.h
+  lib/arpa_inet.in.h
+  lib/asnprintf.c
   lib/basename-lgpl.c
   lib/basename.c
   lib/btowc.c
@@ -507,26 +599,35 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/c-strcase.h
   lib/c-strcasecmp.c
   lib/c-strncasecmp.c
+  lib/close.c
   lib/concat-filename.c
   lib/concat-filename.h
   lib/config.charset
+  lib/ctype.in.h
   lib/dirname-lgpl.c
   lib/dirname.c
   lib/dirname.h
   lib/dosname.h
+  lib/dup2.c
   lib/errno.in.h
   lib/error.c
   lib/error.h
   lib/exitfail.c
   lib/exitfail.h
+  lib/fcntl.c
+  lib/fcntl.in.h
+  lib/fd-hook.c
+  lib/fd-hook.h
   lib/filename.h
   lib/filenamecat-lgpl.c
   lib/filenamecat.c
   lib/filenamecat.h
   lib/findprog.c
   lib/findprog.h
+  lib/float+.h
   lib/float.c
   lib/float.in.h
+  lib/getdtablesize.c
   lib/gettext.h
   lib/iconv.c
   lib/iconv.in.h
@@ -562,7 +663,13 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/msvc-inval.h
   lib/msvc-nothrow.c
   lib/msvc-nothrow.h
+  lib/netdb.in.h
+  lib/netinet_in.in.h
   lib/nl_langinfo.c
+  lib/printf-args.c
+  lib/printf-args.h
+  lib/printf-parse.c
+  lib/printf-parse.h
   lib/ref-add.sin
   lib/ref-del.sin
   lib/regcomp.c
@@ -571,10 +678,14 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/regex_internal.c
   lib/regex_internal.h
   lib/regexec.c
+  lib/size_max.h
+  lib/snprintf.c
   lib/stdalign.in.h
+  lib/stdarg.in.h
   lib/stdbool.in.h
   lib/stddef.in.h
   lib/stdint.in.h
+  lib/stdio.in.h
   lib/stdlib.in.h
   lib/stpcpy.c
   lib/str-two-way.h
@@ -588,9 +699,14 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/strings.in.h
   lib/stripslash.c
   lib/strncasecmp.c
+  lib/strncat.c
   lib/strndup.c
   lib/strnlen.c
+  lib/strstr.c
+  lib/sys_socket.in.h
+  lib/sys_time.in.h
   lib/sys_types.in.h
+  lib/sys_uio.in.h
   lib/trim.c
   lib/trim.h
   lib/unistd.in.h
@@ -602,7 +718,10 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/uniwidth.in.h
   lib/uniwidth/cjk.h
   lib/uniwidth/width.c
+  lib/vasnprintf.c
+  lib/vasnprintf.h
   lib/verify.h
+  lib/vsnprintf.c
   lib/wchar.in.h
   lib/wcrtomb.c
   lib/wctype.in.h
@@ -612,24 +731,33 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/xalloc.h
   lib/xconcat-filename.c
   lib/xmalloc.c
+  lib/xsize.h
   lib/xstrndup.c
   lib/xstrndup.h
   m4/00gnulib.m4
   m4/absolute-header.m4
   m4/alloca.m4
+  m4/arpa_inet_h.m4
   m4/btowc.m4
+  m4/close.m4
   m4/codeset.m4
   m4/configmake.m4
+  m4/ctype.m4
   m4/dirname.m4
   m4/double-slash-root.m4
+  m4/dup2.m4
   m4/eaccess.m4
   m4/errno_h.m4
   m4/error.m4
+  m4/exponentd.m4
   m4/extensions.m4
   m4/fcntl-o.m4
+  m4/fcntl.m4
+  m4/fcntl_h.m4
   m4/filenamecat.m4
   m4/findprog.m4
   m4/float_h.m4
+  m4/getdtablesize.m4
   m4/glibc21.m4
   m4/gnulib-common.m4
   m4/iconv.m4
@@ -637,8 +765,10 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/iconv_open.m4
   m4/include_next.m4
   m4/inline.m4
+  m4/intmax_t.m4
   m4/inttypes-pri.m4
   m4/inttypes.m4
+  m4/inttypes_h.m4
   m4/iswblank.m4
   m4/langinfo_h.m4
   m4/lib-ld.m4
@@ -666,14 +796,24 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/msvc-inval.m4
   m4/msvc-nothrow.m4
   m4/multiarch.m4
+  m4/netdb_h.m4
+  m4/netinet_in_h.m4
   m4/nl_langinfo.m4
   m4/off_t.m4
+  m4/printf.m4
   m4/regex.m4
+  m4/size_max.m4
+  m4/snprintf.m4
+  m4/socklen.m4
+  m4/sockpfaf.m4
   m4/ssize_t.m4
   m4/stdalign.m4
+  m4/stdarg.m4
   m4/stdbool.m4
   m4/stddef_h.m4
   m4/stdint.m4
+  m4/stdint_h.m4
+  m4/stdio_h.m4
   m4/stdlib_h.m4
   m4/stpcpy.m4
   m4/strcase.m4
@@ -681,11 +821,17 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/strerror.m4
   m4/string_h.m4
   m4/strings_h.m4
+  m4/strncat.m4
   m4/strndup.m4
   m4/strnlen.m4
+  m4/strstr.m4
   m4/sys_socket_h.m4
+  m4/sys_time_h.m4
   m4/sys_types_h.m4
+  m4/sys_uio_h.m4
   m4/unistd_h.m4
+  m4/vasnprintf.m4
+  m4/vsnprintf.m4
   m4/warn-on-use.m4
   m4/wchar_h.m4
   m4/wchar_t.m4
@@ -694,5 +840,6 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/wcwidth.m4
   m4/wint_t.m4
   m4/xalloc.m4
+  m4/xsize.m4
   m4/xstrndup.m4
 ])

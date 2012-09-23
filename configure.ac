@@ -209,7 +209,6 @@ FONTFORGE_ARG_WITH_LIBTIFF
 FONTFORGE_ARG_WITH_LIBXML
 FONTFORGE_ARG_WITH_LIBSPIRO
 FONTFORGE_ARG_WITH_LIBUNICODENAMES
-FONTFORGE_ARG_WITH_ICONV
 
 FONTFORGE_CONFIG_FREETYPE_DEBUGGER
 
@@ -217,12 +216,7 @@ FONTFORGE_CONFIG_FREETYPE_DEBUGGER
 #
 # Checks for header files.
 
-AC_CHECK_HEADERS([arpa/inet.h fcntl.h langinfo.h libintl.h limits.h locale.h])
-AC_CHECK_HEADERS([memory.h netdb.h netinet/in.h pthread.h stddef.h stdint.h stdlib.h])
-AC_CHECK_HEADERS([string.h strings.h sys/ioctl.h sys/socket.h sys/time.h unistd.h wchar.h])
-if test x"${i_do_want_iconv}" = xyes; then
-   AC_CHECK_HEADERS([iconv.h])
-fi
+AC_CHECK_HEADERS([libintl.h limits.h memory.h pthread.h])
 
 #--------------------------------------------------------------------------
 #
