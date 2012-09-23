@@ -38,12 +38,11 @@ libgunicode_la_SOURCES = ArabicForms.c alphabet.c backtrns.c char.c	\
 EXPORTED_LIBGUNICODE_SYMBOLS = AllAscii ArabicForms StripToASCII		\
 	____codepointassigned ____tolower ____tomirror ____toupper			\
 	____utype ____utype2 alphabets_from_unicode big5_from_unicode		\
-	c_to_u copy copyn cu_copy cu_copyn cu_strcat cu_strcpy cu_strncpy	\
-	cu_strstartmatch def2u_copy def2u_strncpy def2utf8_copy galloc		\
-	gb2312_from_unicode gcalloc gfree grealloc							\
-	iconv_local_encoding_name jis_from_unicode ksc5601_from_unicode		\
-	latin1_2_utf8_copy local_encoding strmatch strnmatch				\
-	strstartmatch strstrmatch u2def_copy u2def_strncpy					\
+	c_to_u cu_copy cu_copyn cu_strcat cu_strcpy cu_strncpy				\
+	cu_strstartmatch def2u_copy def2u_strncpy def2utf8_copy				\
+	gb2312_from_unicode iconv_local_encoding_name jis_from_unicode		\
+	ksc5601_from_unicode latin1_2_utf8_copy local_encoding strmatch		\
+	strnmatch strstartmatch strstrmatch u2def_copy u2def_strncpy		\
 	u2encoding_strncpy u2utf8_copy u2utf8_copyn u2utf8_strcpy			\
 	uAllAscii u_copy u_copyn u_endswith u_sprintf u_strcat u_strchr		\
 	u_strcmp u_strcpy u_strlen u_strmatch u_strncmp u_strncpy			\
