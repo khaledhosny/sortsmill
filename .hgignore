@@ -30,11 +30,9 @@ m4/ltdl.m4
 pyhook/aclocal.m4
 tests/package.m4
 tests/testsuite
-fontforge/exelibstamp.c
 fontforge/fontforge
 fontforge/fontimage
 fontforge/fontlint
-fontforge/libstamp.c
 fontforge.pc
 libfontforge.pc
 libfontforgeexe.pc

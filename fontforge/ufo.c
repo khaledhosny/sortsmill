@@ -503,10 +503,8 @@ static int UFOOutputFontInfo(char *basedir,SplineFont *sf, int layer) {
     if ( plist==NULL )
 return( false );
 /* Same keys in both formats */
-    PListOutputString(plist,"familyName",sf->familyname_with_timestamp ? sf->familyname_with_timestamp : sf->familyname);
-    char *modifiers = SFGetModifiers(sf);
-    PListOutputString(plist,"styleName",modifiers);
-    free(modifiers);
+    PListOutputString(plist,"familyName",sf->familyname);
+    PListOutputString(plist,"styleName",SFGetModifiers(sf));
     PListOutputString(plist,"copyright",sf->copyright);
     PListOutputNameString(plist,"trademark",sf,ttf_trademark);
     PListOutputInteger(plist,"unitsPerEm",sf->ascent+sf->descent);
