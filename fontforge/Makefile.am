@@ -393,8 +393,7 @@ libsortsmillff_fontforgeexe_la_LDFLAGS = \
 #--------------------------------------------------------------------------
 
 LIBADD = $(top_builddir)/auxiliary/libsortsmillff_aux.la	\
-	$(top_builddir)/gutils/libsortsmillff_gutils.la			\
-	$(top_builddir)/gutils/libsortsmillff_gioftp.la
+	$(top_builddir)/gutils/libsortsmillff_gutils.la
 
 GUILIBADD =
 if GRAPHICAL_USER_INTERFACE

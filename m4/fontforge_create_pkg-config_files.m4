@@ -25,7 +25,6 @@ test x"${i_do_have_freetype}" = xyes && __pkg_deps="${__pkg_deps} freetype2"
 __pkg_deps="${__pkg_deps} zlib"
 
 __private_deps=""
-__private_deps="${__private_deps} -lgioftp"
 __private_deps="${__private_deps} -lgutils"
 __private_deps="${__private_deps} -lgunicode"
 test x"${i_do_have_tifflib}" = xyes -a x"${__have_libtiff_pkg_config}" != xyes  && __private_deps="${__private_deps} ${LIBTIFF_LIBS}"

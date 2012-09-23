@@ -41,6 +41,5 @@ AM_LDFLAGS = -module -shared -avoid-version
 
 LIBADD = $(top_builddir)/auxiliary/libsortsmillff_aux.la	\
 	$(top_builddir)/gutils/libsortsmillff_gutils.la			\
-	$(top_builddir)/gutils/libsortsmillff_gioftp.la			\
 	$(top_builddir)/fontforge/libsortsmillff_fontforge.la
 
