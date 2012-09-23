@@ -39,7 +39,7 @@ AM_CPPFLAGS = -DLIBDIR='"$(libdir)"' $(PYTHON_CFLAGS)			\
 	$(MY_CFLAGS)
 AM_LDFLAGS = -module -shared -avoid-version
 
-LIBADD = $(top_builddir)/Unicode/libgunicode.la	\
+LIBADD = $(top_builddir)/auxiliary/libsortsmillff_aux.la	\
 	$(top_builddir)/gutils/libgutils.la			\
 	$(top_builddir)/gutils/libgioftp.la			\
 	$(top_builddir)/fontforge/libfontforge.la

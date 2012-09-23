@@ -200,8 +200,8 @@ static void SplashLayout() {
     uc_strcpy(pt, " FontForge used to be named PfaEdit.");
     pt += u_strlen(pt);
     lines[linecnt++] = pt;
-    uc_strcpy(pt,"  Version: ");
-    uc_strcat(pt, PACKAGE_VERSION);
+    uc_strcat(pt, " ");
+    uc_strcat(pt, PACKAGE_STRING);
 #ifdef FREETYPE_HAS_DEBUGGER
     uc_strcat(pt,"-TtfDb");
 #endif

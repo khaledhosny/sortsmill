@@ -29,13 +29,13 @@ include $(top_srcdir)/mk/flags.am
 
 #--------------------------------------------------------------------------
 
-lib_LTLIBRARIES = libgunicode.la
+lib_LTLIBRARIES = libsortsmillff_aux.la
 
-libgunicode_la_SOURCES = ArabicForms.c alphabet.c backtrns.c char.c	\
+libsortsmillff_aux_la_SOURCES = ArabicForms.c alphabet.c backtrns.c char.c	\
 	cjk.c ucharmap.c unialt.c ustring.c utype.c usprintf.c			\
 	combiners.h
 
-EXPORTED_LIBGUNICODE_SYMBOLS = AllAscii ArabicForms StripToASCII		\
+EXPORTED_AUX_SYMBOLS = AllAscii ArabicForms StripToASCII				\
 	____codepointassigned ____tolower ____tomirror ____toupper			\
 	____utype ____utype2 alphabets_from_unicode big5_from_unicode		\
 	c_to_u cu_copy cu_copyn cu_strcat cu_strcpy cu_strncpy				\
@@ -58,10 +58,10 @@ EXPORTED_LIBGUNICODE_SYMBOLS = AllAscii ArabicForms StripToASCII		\
 	utf8_idpb utf8_ildb utf8_strchr utf8_strlen utf8_strncpy			\
 	utf8_truncatevalid utf8_valid
 
-libgunicode_la_CPPFLAGS = $(AM_CPPFLAGS)
-libgunicode_la_LIBADD = $(top_builddir)/lib/libgnu.la
-libgunicode_la_LDFLAGS = $(call ldflags,EXPORTED_LIBGUNICODE_SYMBOLS)
-libgunicode_la_DEPENDENCIES = Makefile $(libgunicode_la_LIBADD)
+libsortsmillff_aux_la_CPPFLAGS = $(AM_CPPFLAGS)
+libsortsmillff_aux_la_LIBADD = $(top_builddir)/lib/libgnu.la
+libsortsmillff_aux_la_LDFLAGS = $(call ldflags,EXPORTED_AUX_SYMBOLS)
+libsortsmillff_aux_la_DEPENDENCIES = Makefile $(libsortsmillff_aux_la_LIBADD)
 
 #--------------------------------------------------------------------------
 #
@@ -87,7 +87,7 @@ dump_SOURCES = dump.c
 #
 #EXTRA_PROGRAMS += makebuildtables
 #makebuildtables_SOURCES = makebuildtables.c
-#makebuildtables_LDADD = libgunicode.la
+#makebuildtables_LDADD = libsortsmillff_aux.la
 
 LINEBREAK_URL = http://unicode.org/Public/UNIDATA/LineBreak.txt
 NAMESLIST_URL = http://unicode.org/Public/UNIDATA/NamesList.txt

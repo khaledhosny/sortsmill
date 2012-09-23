@@ -27,17 +27,17 @@
 
 include $(top_srcdir)/mk/flags.am
 
-lib_LTLIBRARIES = libgdraw.la
+lib_LTLIBRARIES = libsortsmillff_gdraw.la
 
-libgdraw_la_SOURCES = choosericons.c ctlvalues.c drawboxborder.c	\
-	gaskdlg.c gbuttons.c gcolor.c gcontainer.c gdraw.c				\
-	gdrawbuildchars.c gdrawerror.c gdrawtxt.c gfilechooser.c		\
-	gfiledlg.c ggadgets.c ggroupbox.c gimageclut.c gimagecvt.c		\
-	gdrawgimage.c gkeysym.c glist.c gmenu.c gprogress.c gradio.c	\
-	gresource.c gresourceimage.c gresedit.c gsavefiledlg.c			\
-	gscrollbar.c gtabset.c gtextfield.c gtextinfo.c gwidgets.c		\
-	gxdraw.c gxcdraw.c ghvbox.c gmatrixedit.c gdrawable.c gspacer.c	\
-	xkeysyms_unicode.c colorP.h gdrawP.h gimagebmpP.h gresourceP.h	\
+libsortsmillff_gdraw_la_SOURCES = choosericons.c ctlvalues.c			\
+	drawboxborder.c gaskdlg.c gbuttons.c gcolor.c gcontainer.c			\
+	gdraw.c gdrawbuildchars.c gdrawerror.c gdrawtxt.c gfilechooser.c	\
+	gfiledlg.c ggadgets.c ggroupbox.c gimageclut.c gimagecvt.c			\
+	gdrawgimage.c gkeysym.c glist.c gmenu.c gprogress.c gradio.c		\
+	gresource.c gresourceimage.c gresedit.c gsavefiledlg.c				\
+	gscrollbar.c gtabset.c gtextfield.c gtextinfo.c gwidgets.c			\
+	gxdraw.c gxcdraw.c ghvbox.c gmatrixedit.c gdrawable.c gspacer.c		\
+	xkeysyms_unicode.c colorP.h gdrawP.h gimagebmpP.h gresourceP.h		\
 	gxcdrawP.h fontP.h ggadgetP.h gwidgetP.h gxdrawP.h
 
 EXPORTED_LIBGDRAW_SYMBOLS = GBoxBorderWidth GBoxDrawBackground			\
@@ -60,9 +60,8 @@ EXPORTED_LIBGDRAW_SYMBOLS = GBoxBorderWidth GBoxDrawBackground			\
 	 GDrawGetWindowTitle GDrawGrabSelection GDrawIError					\
 	 GDrawInstanciateFont GDrawIsVisible GDrawKeyState					\
 	 GDrawLayoutDraw GDrawLayoutExtents GDrawLayoutIndexToPos			\
-	 GDrawLayoutInit GDrawLayoutXYToIndex GDrawNewFont GDrawMove GDrawMoveResize		\
-	 GDrawPathFill		\
-	 GDrawPathStroke				\
+	 GDrawLayoutInit GDrawLayoutXYToIndex GDrawNewFont GDrawMove		\
+	 GDrawMoveResize GDrawPathFill GDrawPathStroke						\
 	 GDrawPixelsToPoints GDrawPointsToPixels GDrawPopClip				\
 	 GDrawPostDragEvent GDrawPostEvent GDrawProcessOneEvent				\
 	 GDrawProcessPendingEvents GDrawPushClip GDrawRaise					\
@@ -76,7 +75,7 @@ EXPORTED_LIBGDRAW_SYMBOLS = GBoxBorderWidth GBoxDrawBackground			\
 	 GDrawSetWindowBorder GDrawSetWindowTitles GDrawSetWindowTitles8	\
 	 GDrawSetXORBase GDrawSetXORMode GDrawSetZoom						\
 	 GDrawSkipMouseMoveEvents GDrawSync GDrawTranslateCoordinates		\
-	 GDrawTrueMove GDrawGetCairo GDrawGetFontMetrics GDrawableCreate				\
+	 GDrawTrueMove GDrawGetCairo GDrawGetFontMetrics GDrawableCreate	\
 	 GDrawableGetWindow GFileChooserConnectButtons GFileChooserCreate	\
 	 GFileChooserDefFilter GFileChooserFileNameOfPos					\
 	 GFileChooserFilterEh GFileChooserGetBookmarks						\
@@ -165,10 +164,12 @@ EXPORTED_LIBGDRAW_SYMBOLS = GBoxBorderWidth GBoxDrawBackground			\
 	 _ggadget_setenabled _ggadget_setvisible screen_display				\
 	 utf82u_mncopy GDrawGetFontMetrics GDrawNewFont
 
-libgdraw_la_CPPFLAGS = $(AM_CPPFLAGS)
-libgdraw_la_LIBADD = $(top_builddir)/Unicode/libgunicode.la				\
-	$(top_builddir)/gutils/libgutils.la $(top_builddir)/lib/libgnu.la
-libgdraw_la_LDFLAGS = $(call ldflags,EXPORTED_LIBGDRAW_SYMBOLS)
-libgdraw_la_DEPENDENCIES = Makefile $(libgdraw_la_LIBADD)
+libsortsmillff_gdraw_la_CPPFLAGS = $(AM_CPPFLAGS)
+libsortsmillff_gdraw_la_LIBADD =					\
+	$(top_builddir)/auxiliary/libsortsmillff_aux.la	\
+	$(top_builddir)/gutils/libsortsmillff_gutils.la	\
+	$(top_builddir)/lib/libgnu.la
+libsortsmillff_gdraw_la_LDFLAGS = $(call ldflags,EXPORTED_LIBGDRAW_SYMBOLS)
+libsortsmillff_gdraw_la_DEPENDENCIES = Makefile $(libsortsmillff_gdraw_la_LIBADD)
 
 #--------------------------------------------------------------------------

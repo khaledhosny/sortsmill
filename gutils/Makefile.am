@@ -27,11 +27,11 @@
 
 include $(top_srcdir)/mk/flags.am
 
-lib_LTLIBRARIES = libgutils.la libgioftp.la
+lib_LTLIBRARIES = libsortsmillff_gutils.la libsortsmillff_gioftp.la
 
 #--------------------------------------------------------------------------
 
-libgutils_la_SOURCES = divisors.c fsys.c gcol.c gimage.c				\
+libsortsmillff_gutils_la_SOURCES = divisors.c fsys.c gcol.c gimage.c	\
 	gimagereadbmp.c gimageread.c gimagereadgif.c gimagereadjpeg.c		\
 	gimagereadpng.c gimagereadras.c gimagereadrgb.c gimagereadtiff.c	\
 	gimagereadxbm.c gimagereadxpm.c gimagewritebmp.c					\
@@ -40,38 +40,38 @@ libgutils_la_SOURCES = divisors.c fsys.c gcol.c gimage.c				\
 	giohosts.c giomime.c giothread.c giotrans.c gimagebmpP.h			\
 	giofuncP.h gioP.h
 
-EXPORTED_LIBGUTILS_SYMBOLS = GFileAppendFile GFileBuildName				\
-	GFileExists GFileGetAbsoluteName GFileGetHomeDir GFileIsAbsolute	\
-	GFileIsDir GFileMakeAbsoluteName GFileMkDir GFileNameTail			\
-	GFileReadable GFileUnlink GIOCreate GIO_PasswordCache				\
-	GIO_SetThreadCallback GIOcancel GIOclose GIOdir GIOfileExists		\
-	GIOgetDirData GIOguessMimeType GIOmkDir GImageCreate				\
-	GImageDestroy GImageDrawImage GImageDrawRect GImageGetHeight		\
-	GImageGetPixelRGBA GImageGetWidth GImageRead GImageRead_Bmp			\
-	GImageRead_Jpeg GImageRead_Png GImageWriteBmp GImageWritePng		\
-	GImageWriteXbm GImageWrite_Bmp GImageWrite_Jpeg GImageWrite_Png		\
+EXPORTED_GUTILS_SYMBOLS = GFileAppendFile GFileBuildName GFileExists	\
+	GFileGetAbsoluteName GFileGetHomeDir GFileIsAbsolute GFileIsDir		\
+	GFileMakeAbsoluteName GFileMkDir GFileNameTail GFileReadable		\
+	GFileUnlink GIOCreate GIO_PasswordCache GIO_SetThreadCallback		\
+	GIOcancel GIOclose GIOdir GIOfileExists GIOgetDirData				\
+	GIOguessMimeType GIOmkDir GImageCreate GImageDestroy				\
+	GImageDrawImage GImageDrawRect GImageGetHeight GImageGetPixelRGBA	\
+	GImageGetWidth GImageRead GImageRead_Bmp GImageRead_Jpeg			\
+	GImageRead_Png GImageWriteBmp GImageWritePng GImageWriteXbm			\
+	GImageWrite_Bmp GImageWrite_Jpeg GImageWrite_Png					\
 	_GFile_find_program_dir _GIO_decomposeURL _GImageGetPixelColor		\
 	div_tables gColor2Hslrgb gColor2Hslrgba gHSL2RGB gHSV2RGB			\
 	gHslrgb2Color gHslrgba2Color gRGB2HSV sgettext u_GFileAppendFile	\
 	u_GFileGetAbsoluteName u_GFileGetHomeDir u_GFileIsAbsolute			\
 	u_GFileNameTail u_GFileNormalize
 
-libgutils_la_CPPFLAGS = $(AM_CPPFLAGS)
-libgutils_la_LIBADD = $(top_builddir)/Unicode/libgunicode.la	\
+libsortsmillff_gutils_la_CPPFLAGS = $(AM_CPPFLAGS)
+libsortsmillff_gutils_la_LIBADD = $(top_builddir)/auxiliary/libsortsmillff_aux.la	\
 	$(top_builddir)/lib/libgnu.la
-libgutils_la_LDFLAGS = $(call ldflags,EXPORTED_LIBGUTILS_SYMBOLS)
-libgutils_la_DEPENDENCIES = Makefile $(libgutils_la_LIBADD)
+libsortsmillff_gutils_la_LDFLAGS = $(call ldflags,EXPORTED_GUTILS_SYMBOLS)
+libsortsmillff_gutils_la_DEPENDENCIES = Makefile $(libsortsmillff_gutils_la_LIBADD)
 
 #--------------------------------------------------------------------------
 
-libgioftp_la_SOURCES = gioftp.c gioftpP.h
+libsortsmillff_gioftp_la_SOURCES = gioftp.c gioftpP.h
 
-EXPORTED_LIBGIOFTP_SYMBOLS = GIO_cancel GIO_dispatch GIO_init GIO_term
+EXPORTED_GIOFTP_SYMBOLS = GIO_cancel GIO_dispatch GIO_init GIO_term
 
-libgioftp_la_CPPFLAGS = $(AM_CPPFLAGS)
-libgioftp_la_LIBADD = $(top_builddir)/Unicode/libgunicode.la	\
-	$(top_builddir)/lib/libgnu.la libgutils.la
-libgioftp_la_LDFLAGS = $(call ldflags,EXPORTED_LIBGIOFTP_SYMBOLS)
-libgioftp_la_DEPENDENCIES = Makefile $(libgioftp_la_LIBADD)
+libsortsmillff_gioftp_la_CPPFLAGS = $(AM_CPPFLAGS)
+libsortsmillff_gioftp_la_LIBADD = $(top_builddir)/auxiliary/libsortsmillff_aux.la	\
+	$(top_builddir)/lib/libgnu.la libsortsmillff_gutils.la
+libsortsmillff_gioftp_la_LDFLAGS = $(call ldflags,EXPORTED_GIOFTP_SYMBOLS)
+libsortsmillff_gioftp_la_DEPENDENCIES = Makefile $(libsortsmillff_gioftp_la_LIBADD)
 
 #--------------------------------------------------------------------------

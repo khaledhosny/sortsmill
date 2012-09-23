@@ -48,7 +48,7 @@ include libltdl/Makefile.inc
 
 #--------------------------------------------------------------------------
 
-SUBDIRS = lib inc Unicode gutils
+SUBDIRS = lib inc auxiliary gutils
 
 if GRAPHICAL_USER_INTERFACE
 SUBDIRS += gdraw

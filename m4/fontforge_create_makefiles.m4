@@ -7,7 +7,7 @@ AC_DEFUN([FONTFORGE_CREATE_MAKEFILES],
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([lib/Makefile])
 AC_CONFIG_FILES([inc/Makefile])
-AC_CONFIG_FILES([Unicode/Makefile])
+AC_CONFIG_FILES([auxiliary/Makefile])
 AC_CONFIG_FILES([gutils/Makefile])
 AC_CONFIG_FILES([gdraw/Makefile])
 AC_CONFIG_FILES([fontforge/Makefile])
