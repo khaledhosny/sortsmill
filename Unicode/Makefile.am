@@ -32,7 +32,7 @@ include $(top_srcdir)/mk/flags.am
 lib_LTLIBRARIES = libgunicode.la
 
 libgunicode_la_SOURCES = ArabicForms.c alphabet.c backtrns.c char.c	\
-	cjk.c memory.c ucharmap.c unialt.c ustring.c utype.c usprintf.c	\
+	cjk.c ucharmap.c unialt.c ustring.c utype.c usprintf.c			\
 	combiners.h
 
 EXPORTED_LIBGUNICODE_SYMBOLS = AllAscii ArabicForms StripToASCII		\

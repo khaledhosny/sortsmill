@@ -65,8 +65,8 @@ typedef uint32_t unichar_t;
 #endif
 #endif // ! UNUSED
 
-extern char *copy(const char *);
-extern char *copyn(const char *, size_t);
+//extern char *copy(const char *);
+//extern char *copyn(const char *, size_t);
 
 static inline int imin(int a, int b)
 {
@@ -106,6 +106,7 @@ static inline size_t szmax(size_t a, size_t b)
 #ifdef __INTERNAL_TO_FONTFORGE__
 
 #include "xalloc.h"
+#include "xstrndup.h"
 
 // Like xmalloc, but, if the allocation succeeds, xmalloc1 is
 // guaranteed to return a valid, non-null pointer, even if the
@@ -113,6 +114,16 @@ static inline size_t szmax(size_t a, size_t b)
 static inline void *xmalloc1(size_t s)
 {
     return xmalloc(szmax(1, s));
+}
+
+static inline char *copy(const char *str)
+{
+    return (str == NULL) ? NULL : xstrdup(str);
+}
+
+static inline char *copyn(const char *str, size_t n)
+{
+    return (str == NULL) ? NULL : xstrndup(str, n);
 }
 
 #endif // __INTERNAL_TO_FONTFORGE__
