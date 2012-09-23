@@ -25,8 +25,7 @@ fontforge_LIBOBJECTS6=start.obj,stemdb.obj,svg.obj,tottfaat.obj,tottfgpos.obj,to
  tottfvar.obj,ttfinstrs.obj,ttfspecial.obj,ufo.obj,utils.obj,\
  winfonts.obj,zapfnomen.obj,groups.obj,langfreq.obj
 
-fontforge_LIBOBJECTS7=libstamp.obj,exelibstamp.obj,images.obj,autowidth2.obj,\
-	woff.obj
+fontforge_LIBOBJECTS7=images.obj,autowidth2.obj,woff.obj
 
 fontforge_UIOBJECTS = alignment.obj,anchorsaway.obj,basedlg.obj,\
  bdfinfo.obj,bitmapdlg.obj,bitmapview.obj,charinfo.obj,charview.obj,clipui.obj,\
@@ -38,7 +37,7 @@ fontforge_UIOBJECTS = alignment.obj,anchorsaway.obj,basedlg.obj,\
  groupsdlg.obj,histograms.obj,kernclass.obj,layer2layer.obj,lookupui.obj,\
  macencui.obj,math.obj,metricsview.obj,mmdlg.obj,nonlineartransui.obj,openfontdlg.obj,\
  prefs.obj,problems.obj,pythonui.obj,savefontdlg.obj,scriptingdlg.obj,scstylesui.obj,\
- searchview.obj,sftextfield.obj,showatt.obj,simplifydlg.obj,splashimage.obj,stamp.obj,\
+ searchview.obj,sftextfield.obj,showatt.obj,simplifydlg.obj,splashimage.obj,\
  startui.obj,statemachine.obj,tilepath.obj,transform.obj,ttfinstrsui.obj,uiutil.obj
 
 fontforge_UIOBJECTS1=windowmenu.obj,oflib.obj,deltaui.obj,unicoderange.obj,\
@@ -155,7 +154,6 @@ splinesaveafm.obj : splinesaveafm.c
 splinestroke.obj : splinestroke.c
 splineutil.obj : splineutil.c
 splineutil2.obj : splineutil2.c
-stamp.obj : stamp.c
 start.obj : start.c
 tottf.obj : tottf.c
           $(CC) $(CFLAGS)/noop tottf
@@ -260,16 +258,6 @@ mmdlg.obj : mmdlg.c
 effectsui.obj : effectsui.c
 langfreq.obj :langfreq.c
 ttfinstrsui.obj : ttfinstrsui.c
-libstamp.obj : libstamp.pre
-	pipe gsed -e "s/REPLACE_ME_WITH_MAJOR_VERSION/1/"\
-	-e "s/REPLACE_ME_WITH_MINOR_VERSION/0/" < libstamp.pre > libstamp.c
-	cc $(CFLAGS) libstamp.c
-	delete libstamp.c;*
-exelibstamp.obj : exelibstamp.pre
-	pipe gsed -e "s/REPLACE_ME_WITH_MAJOR_VERSION/1/"\
-	-e "s/REPLACE_ME_WITH_MINOR_VERSION/0/" < exelibstamp.pre > exelibstamp.c
-	cc $(CFLAGS) exelibstamp.c
-	delete exelibstamp.c;*
 clipui.obj : clipui.c
 layer2layer.obj : layer2layer.c
 basedlg.obj : basedlg.c
