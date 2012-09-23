@@ -43,7 +43,7 @@
 pixmapsdir = ${pkgdatadir}/pixmaps
 
 # Where the FontForge help system goes.
-HTDOCS_SUBDIR =
+HTDOCS_SUBDIR = /htdocs
 htdocsdir = ${docdir}$(HTDOCS_SUBDIR)
 
 # Where pkg-config files go.

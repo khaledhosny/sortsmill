@@ -7,11 +7,11 @@ datarootdir=@datarootdir@
 mandir=@mandir@
 localedir=@localedir@
 
-Name: libfontforgeexe
+Name: libsortsmillff_fontforgeexe
 Description: for embedding the FontForge UI in a program.
 Version: @LIBFONTFORGEEXE_PKGCONFIG_VERSION@
 Requires: @LIBFONTFORGEEXE_PKGCONFIG_REQUIRES@
 Requires.private: @LIBFONTFORGEEXE_PKGCONFIG_REQUIRES_PRIVATE@
 Libs: @LIBFONTFORGEEXE_PKGCONFIG_LIBS@
 Libs.private: @LIBFONTFORGEEXE_PKGCONFIG_LIBS_PRIVATE@
-Cflags: -I${includedir}/fontforge
+Cflags: -I${includedir}/@PACKAGE@
