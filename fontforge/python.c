@@ -18025,38 +18025,11 @@ static void SetPythonModuleMetadata( PyObject *module );
 
 #if PY_MAJOR_VERSION >= 3 /*---------------------------------------------*/
 
-#include "dynamic.h"
-
 PyMODINIT_FUNC _PyInit_fontforge(void);
 PyMODINIT_FUNC _PyInit_psMat(void);
 PyMODINIT_FUNC _PyInit___FontForge_Internals___(void);
 PyMODINIT_FUNC PyInit_fontforge(void);
 PyMODINIT_FUNC PyInit_psMat(void);
-
-static int load_glibraries(void) {
-    DL_CONST void *lib;
-
-    if ( (lib = dlopen("libgunicode" SO_EXT,RTLD_LAZY))==NULL ) {
-#ifdef PREFIX
-        lib = dlopen( PREFIX "/lib/" "libgunicode" SO_EXT,RTLD_LAZY);
-#endif
-    }
-    if ( lib==NULL ) {
-        PyErr_Format(PyExc_SystemError,"Missing library: %s", "libgunicode");
-        return 1;
-    }
-
-    if ( (lib = dlopen("libgutils" SO_EXT,RTLD_LAZY))==NULL ) {
-#ifdef PREFIX
-        lib = dlopen( PREFIX "/lib/" "libgutils" SO_EXT,RTLD_LAZY);
-#endif
-    }
-    if ( lib==NULL ) {
-        PyErr_Format(PyExc_SystemError,"Missing library: %s", "libgutils");
-        return 1;
-    }
-    return 0;
-}
 
     /* See also initPyFontForge above for the version 3 case */
 PyMODINIT_FUNC _PyInit_fontforge(void) {
@@ -18125,8 +18098,6 @@ PyMODINIT_FUNC _PyInit___FontForge_Internals___(void) {
 }
 
 PyMODINIT_FUNC PyInit_fontforge(void) {
-    if ( load_glibraries() != 0 )
-        return NULL;
     doinitFontForgeMain();
     no_windowing_ui = running_script = true;
     PyImport_AppendInittab("psMat", _PyInit_psMat);
@@ -18135,8 +18106,6 @@ PyMODINIT_FUNC PyInit_fontforge(void) {
 }
 
 PyMODINIT_FUNC PyInit_psMat(void) {
-    if ( load_glibraries() != 0 )
-        return NULL;
     doinitFontForgeMain();
     no_windowing_ui = running_script = true;
     PyImport_AppendInittab("fontforge", _PyInit_fontforge);
