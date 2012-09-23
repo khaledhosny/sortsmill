@@ -245,6 +245,15 @@ if test x"${ac_cv_type_long_long_int}" = xyes; then
    AC_DEFINE([_HAS_LONGLONG],1,[Define if using 'long long int'.])
 fi
 
+# This only checks that an int requires 4 bytes of storage, not that
+# it actually uses all 32 bits. We actually require all 32 bits.
+AC_CHECK_SIZEOF([int])
+test 4 -le ${ac_cv_sizeof_int} || \
+     AC_MSG_ERROR([${PACKAGE_NAME} requires that 'int' be at least 32 bits wide.])
+AC_CHECK_SIZEOF([unsigned int])
+test 4 -le ${ac_cv_sizeof_unsigned_int} || \
+     AC_MSG_ERROR([${PACKAGE_NAME} requires that 'unsigned int' be at least 32 bits wide.])
+
 AX_PTHREAD
 
 WARNING_CFLAGS=""
