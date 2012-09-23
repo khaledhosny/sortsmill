@@ -27,7 +27,7 @@
 
 
 # Specification in the form of a command-line invocation:
-#   gnulib-tool --import --dir=. --lib=libgnu --source-base=lib --m4-base=m4 --doc-base=doc --tests-base=tests --aux-dir=config --no-conditional-dependencies --libtool --macro-prefix=gl --no-vc-files dirname filename filenamecat findprog iconv_open libunistring math regex stdint strcasestr trim unistd verify xalloc xconcat-filename xstrndup
+#   gnulib-tool --import --dir=. --lib=libgnu --source-base=lib --m4-base=m4 --doc-base=doc --tests-base=tests --aux-dir=config --no-conditional-dependencies --libtool --macro-prefix=gl --no-vc-files dirname filename filenamecat findprog iconv_open inttypes libunistring math regex stdalign stdint strcasestr trim unistd verify xalloc xconcat-filename xstrndup
 
 # Specification in the form of a few gnulib-tool.m4 macro invocations:
 gl_LOCAL_DIR([])
@@ -37,9 +37,11 @@ gl_MODULES([
   filenamecat
   findprog
   iconv_open
+  inttypes
   libunistring
   math
   regex
+  stdalign
   stdint
   strcasestr
   trim

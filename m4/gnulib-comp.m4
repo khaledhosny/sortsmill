@@ -68,6 +68,8 @@ AC_DEFUN([gl_EARLY],
   # Code from module include_next:
   # Code from module inline:
   # Code from module intprops:
+  # Code from module inttypes:
+  # Code from module inttypes-incomplete:
   # Code from module iswblank:
   # Code from module langinfo:
   # Code from module libunistring:
@@ -94,6 +96,7 @@ AC_DEFUN([gl_EARLY],
   # Code from module snippet/unused-parameter:
   # Code from module snippet/warn-on-use:
   # Code from module ssize_t:
+  # Code from module stdalign:
   # Code from module stdbool:
   # Code from module stddef:
   # Code from module stdint:
@@ -191,6 +194,8 @@ AC_DEFUN([gl_INIT],
     AC_LIBOBJ([iconv_close])
   fi
   gl_INLINE
+  gl_INTTYPES_H
+  gl_INTTYPES_INCOMPLETE
   gl_FUNC_ISWBLANK
   if test $HAVE_ISWCNTRL = 0 || test $REPLACE_ISWCNTRL = 1; then
     :
@@ -269,6 +274,7 @@ AC_DEFUN([gl_INIT],
     gl_PREREQ_REGEX
   fi
   gt_TYPE_SSIZE_T
+  gl_STDALIGN_H
   AM_STDBOOL_H
   gl_STDDEF_H
   gl_STDINT_H
@@ -532,6 +538,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/iconv_open-solaris.gperf
   lib/iconv_open.c
   lib/intprops.h
+  lib/inttypes.in.h
   lib/iswblank.c
   lib/itold.c
   lib/langinfo.in.h
@@ -564,6 +571,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/regex_internal.c
   lib/regex_internal.h
   lib/regexec.c
+  lib/stdalign.in.h
   lib/stdbool.in.h
   lib/stddef.in.h
   lib/stdint.in.h
@@ -629,6 +637,8 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/iconv_open.m4
   m4/include_next.m4
   m4/inline.m4
+  m4/inttypes-pri.m4
+  m4/inttypes.m4
   m4/iswblank.m4
   m4/langinfo_h.m4
   m4/lib-ld.m4
@@ -660,6 +670,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/off_t.m4
   m4/regex.m4
   m4/ssize_t.m4
+  m4/stdalign.m4
   m4/stdbool.m4
   m4/stddef_h.m4
   m4/stdint.m4
