@@ -78,9 +78,9 @@ static char *getPfaEditGroups(void) {
 
     if ( groupname!=NULL )
 return( groupname );
-    if ( getPfaEditDir(buffer)==NULL )
+    if ( getUserDataDir()==NULL )
 return( NULL );
-    sprintf(buffer,"%s/groups", getPfaEditDir(buffer));
+    sprintf(buffer,"%s/groups", getUserDataDir());
     groupname = copy(buffer);
 return( groupname );
 }

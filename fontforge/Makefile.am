@@ -302,7 +302,7 @@ EXPORTED_LIBFONTFORGE_SYMBOLS = $(PLUGIN_HOOKS)							\
 	ff_NextToken ff_VerboseCheck ff_backuptok ff_ft_context				\
 	ff_statement ff_ttf_instrnames force_names_when_opening				\
 	force_names_when_saving friendlies fv_active_in_ui fv_interface		\
-	gdefclass getPfaEditDir group_root hasFreeType						\
+	gdefclass getUserCacheDir getUserConfigDir getUserDataDir group_root hasFreeType						\
 	hasFreeTypeByteCode hasFreeTypeDebugger hascomposing haslrbounds	\
 	hasspiro hint_bounding_boxes hint_diagonal_ends						\
 	hint_diagonal_intersections instr_typify instrcheck					\

@@ -85,8 +85,8 @@ static void initlibltdl(void) {
 
     if (!plugins_are_initialized()) {
         init_plugins();
-        if (getPfaEditDir(buffer)!=NULL ) {
-            strcpy(buffer,getPfaEditDir(buffer));
+        if (getUserDataDir()!=NULL ) {
+            strcpy(buffer,getUserDataDir());
             strcat(buffer,"/plugins");
             lt_dladdsearchdir(strdup(buffer));
         }

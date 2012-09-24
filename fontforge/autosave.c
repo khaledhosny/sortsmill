@@ -44,45 +44,44 @@ int AutoSaveFrequency=30;
 # include <pwd.h>
 #endif
 
+// FIXME: move next 3 functions somewhere else
+char *
+getUserCacheDir (void)
+{
+  char *dir = GFileGetUserCacheDir ();
 
-char *getPfaEditDir(char *buffer) {
-    static char *editdir = NULL;
-    char *dir;
-    char olddir[1024];
+  if (dir == NULL)
+    return NULL;
+  if (access (dir, F_OK) == -1)
+    if (GFileMkDir (dir) == -1)
+      return NULL;
+  return dir;
+}
 
-    if ( editdir!=NULL )
-return( editdir );
+char *getUserConfigDir(void) {
+  char *dir = GFileGetUserConfigDir ();
 
-    dir = GFileGetHomeDir();
-    if ( dir==NULL )
-return( NULL );
-#ifdef __VMS
-   sprintf(buffer,"%s/_FontForge", dir);
-#else
-   sprintf(buffer,"%s/.FontForge", dir);
-#endif
-   /* We used to use .PfaEdit. So if we don't find a .FontForge look for that*/
-    /*  if there is a .PfaEdit, then rename it to .FontForge */
-    if ( access(buffer,F_OK)==-1 ) {
-#ifdef __VMS
-       snprintf(olddir,sizeof(olddir),"%s/_PfaEdit", dir);
-#else
-       snprintf(olddir,sizeof(olddir),"%s/.PfaEdit", dir);
-#endif
-       if ( access(olddir,F_OK)==0 )
-	    rename(olddir,buffer);
-    }
-    free(dir);
-    /* If we still can't find it, create it */
-    if ( access(buffer,F_OK)==-1 )
-	if ( GFileMkDir(buffer)==-1 )
-return( NULL );
-    editdir = copy(buffer);
-return( editdir );
+  if (dir == NULL)
+    return NULL;
+  if (access (dir, F_OK) == -1)
+    if (GFileMkDir (dir) == -1)
+      return NULL;
+  return dir;
+}
+
+char *getUserDataDir(void) {
+  char *dir = GFileGetUserDataDir ();
+
+  if (dir == NULL)
+    return NULL;
+  if (access (dir, F_OK) == -1)
+    if (GFileMkDir (dir) == -1)
+      return NULL;
+  return dir;
 }
 
 static char *getAutoDirName(char *buffer) {
-    char *dir=getPfaEditDir(buffer);
+    char *dir=getUserCacheDir();
 
     if ( dir==NULL )
 return( NULL );

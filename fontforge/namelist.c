@@ -34,6 +34,7 @@
 #include "fontforgevw.h"
 #include "ustring.h"
 #include <utype.h>
+#include <gfile.h>
 #include "namehash.h"
 #include "namelist_data.h"
 
@@ -686,13 +687,12 @@ return( false );
 }
 
 void LoadNamelistDir(char *dir) {
-    char prefdir[1024];
     DIR *diro;
     struct dirent *ent;
     char buffer[1025];
 
     if ( dir == NULL )
-	dir = getPfaEditDir(prefdir);
+	dir = getUserDataDir();
     if ( dir == NULL )
 return;
 

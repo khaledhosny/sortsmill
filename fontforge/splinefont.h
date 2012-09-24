@@ -2775,7 +2775,10 @@ extern int SFFindExistingSlot(SplineFont *sf, int unienc, const char *name );
 extern int SFCIDFindExistingChar(SplineFont *sf, int unienc, const char *name );
 extern int SFHasCID(SplineFont *sf, int cid);
 
-extern char *getPfaEditDir(char *buffer);
+extern char *getUserCacheDir(void);
+extern char *getUserConfigDir(void);
+extern char *getUserDataDir(void);
+
 extern void _DoAutoSaves(struct fontviewbase *);
 extern void CleanAutoRecovery(void);
 extern int DoAutoRecovery(int);

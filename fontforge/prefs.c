@@ -722,9 +722,9 @@ static char *getPfaEditPrefs(void) {
 
     if ( prefs!=NULL )
 return( prefs );
-    if ( getPfaEditDir(buffer)==NULL )
+    if ( getUserConfigDir()==NULL )
 return( NULL );
-    sprintf(buffer,"%s/prefs", getPfaEditDir(buffer));
+    sprintf(buffer,"%s/prefs", getUserConfigDir());
     prefs = copy(buffer);
 return( prefs );
 }
@@ -2449,7 +2449,7 @@ void LastFonts_Activate() {
 
 void LastFonts_End(int success) {
     char buffer[1024];
-    char *ffdir = getPfaEditDir(buffer);
+    char *ffdir = getUserCacheDir();
     FILE *preserve;
     int i;
 
