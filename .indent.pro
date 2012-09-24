@@ -12,6 +12,7 @@
 -T uint8_t
 -T uint16_t
 -T uint32_t
+-T unichar_t
 
 -T real
 -T AnchorPoint

@@ -182,8 +182,7 @@ return;
 	GResourceProgramDir = copy(filename);
     }
     free(GResourceFullProgram);
-    GResourceFullProgram = copy(
-	    GFileBuildName(GResourceProgramDir,GResourceProgramName,filename,sizeof(filename)));
+    GResourceFullProgram = copy(GFileBuildName(GResourceProgramDir,GResourceProgramName));
 }
 
 void GResourceAddResourceString(char *string,char *prog) {
