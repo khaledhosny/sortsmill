@@ -3433,7 +3433,7 @@ getprotectedname (FILE *sfd, char *tokbuf)
     ungetc (ch, sfd);
 
   *pt = '\0';
-  return (pt != tokbuf ? 1 : ch == EOF ? -1 : 0);
+  return (pt != tokbuf) ? 1 : (ch == EOF ? -1 : 0);
 }
 
 // Skip space and then call getprotectedname().
