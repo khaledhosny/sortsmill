@@ -42,20 +42,16 @@ inc/config.h.in
 inc/stamp-h1
 libtool
 libltdl
-GNUmakefile
-GNUmakefile.preamble
-GNUmakefile.postamble
 Makefile
 Makefile.in
-systemspecific
-.libs
-.deps
 
 version.texi
 stamp-vti
 
 syntax: regexp
 
+~$
+\.orig$
 \.la$
 \.lo$
 \.mo$
@@ -67,5 +63,6 @@ syntax: regexp
 \.obj$
 \.gmo$
 \.info$
-\.orig$
-~$
+^lib/
+^.libs/
+^.deps/
