@@ -93,37 +93,14 @@ GFileGetUserDataDir (void)
   return ret;
 }
 
-char *GFileGetHomeDir(void) {
-#if defined(__MINGW32__)
-    char* dir = getenv("HOME");
-    if(!dir)
-	dir = getenv("USERPROFILE");
-    if(dir){
-	char* buffer = copy(dir);
-	_backslash_to_slash(buffer);
-return buffer;
-    }
-return NULL;
-#else
-    static char *dir;
-    int uid;
-    struct passwd *pw;
+char *
+GFileGetHomeDir (void)
+{
+  char *ret;
 
-    dir = getenv("HOME");
-    if ( dir!=NULL )
-	return( copy(dir) );
+  ret = g_build_filename (g_get_home_dir (), NULL);
 
-    uid = getuid();
-    while ( (pw=getpwent())!=NULL ) {
-	if ( pw->pw_uid==uid ) {
-	    dir = copy(pw->pw_dir);
-	    endpwent();
-return( dir );
-	}
-    }
-    endpwent();
-return( NULL );
-#endif
+  return ret;
 }
 
 unichar_t *u_GFileGetHomeDir(void) {
