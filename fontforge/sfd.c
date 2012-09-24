@@ -320,21 +320,25 @@ return( NULL );
 return( ret );
 }
 
-/* Long lines can be broken by inserting \\\n (backslash newline) */
-/*  into the line. I don't think this is ever ambiguous as I don't */
-/*  think a line can end with backslash */
-/* UPDATE: it can... that's handled in getquotedeol() below. */
-static int nlgetc(FILE *sfd) {
-    int ch, ch2;
-
-    ch=getc(sfd);
-    if ( ch!='\\' )
-return( ch );
-    ch2 = getc(sfd);
-    if ( ch2=='\n' )
-return( nlgetc(sfd));
-    ungetc(ch2,sfd);
-return( ch );
+// Get the next character in a line.
+//
+// Long lines can be broken by inserting \\\n (backslash newline)
+// into the line. A line can end with a backslash, however; that case
+// is handled in getquotedeol().
+static int
+nlgetc(FILE *sfd)
+{
+  int c = getc (sfd);
+  if (c == '\\') 
+    {
+      int c1 = getc (sfd);
+      if (c1 == '\n')
+	// "\\\n" found: start reading from the next line.
+	return nlgetc (sfd);	// Tail recursion.
+      else
+	ungetc (c1, sfd);
+    }
+  return c;
 }
 
 static char *SFDReadUTF7Str(FILE *sfd) {
@@ -2720,28 +2724,38 @@ static int geteol(FILE *sfd, char *tokbuf) {
 return( pt!=tokbuf?1:ch==EOF?-1: 0 );
 }
 
-static int getprotectedname(FILE *sfd, char *tokbuf) {
-    char *pt=tokbuf, *end = tokbuf+100-2; int ch;
+static int
+getprotectedname(FILE *sfd, char *tokbuf)
+{
+  char *pt=tokbuf;
+  char *end = tokbuf+100-2;
+  int ch;
 
-    while ( (ch = nlgetc(sfd))==' ' || ch=='\t' );
-    while ( ch!=EOF && !isspace(ch) && ch!='[' && ch!=']' && ch!='{' && ch!='}' && ch!='<' && ch!='%' ) {
-	if ( pt<end ) *pt++ = ch;
-	ch = nlgetc(sfd);
-    }
-    if ( pt==tokbuf && ch!=EOF )
+  while ( (ch = nlgetc(sfd))==' ' || ch=='\t' )
+    ;
+  while ( ch!=EOF && !isspace(ch) && ch!='[' && ch!=']' && ch!='{' && ch!='}' && ch!='<' && ch!='%' )
+    {
+      if ( pt<end )
 	*pt++ = ch;
-    else
-	ungetc(ch,sfd);
-    *pt='\0';
-return( pt!=tokbuf?1:ch==EOF?-1: 0 );
+      ch = nlgetc(sfd);
+    }
+  if ( pt==tokbuf && ch!=EOF )
+    *pt++ = ch;
+  else
+    ungetc(ch,sfd);
+  *pt='\0';
+  return( pt!=tokbuf?1:ch==EOF?-1: 0 );
 }
 
-static int getname(FILE *sfd, char *tokbuf) {
-    int ch;
+// Skip space and then call getprotectedname().
+static int
+getname(FILE *sfd, char *tokbuf)
+{
+  int ch;
 
-    while ( isspace(ch = nlgetc(sfd)));
-    ungetc(ch,sfd);
-return( getprotectedname(sfd,tokbuf));
+  while ( isspace(ch = nlgetc(sfd)));
+  ungetc(ch,sfd);
+  return( getprotectedname(sfd,tokbuf));
 }
 
 static uint32 gettag(FILE *sfd) {
