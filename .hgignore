@@ -20,13 +20,6 @@ ar-lib
 mdate-sh
 texinfo.tex
 autom4te.cache
-m4/libtool.m4
-m4/ltoptions.m4
-m4/ltsugar.m4
-m4/ltversion.m4
-m4/lt~obsolete.m4
-m4/argz.m4
-m4/ltdl.m4
 pyhook/aclocal.m4
 tests/package.m4
 tests/testsuite
@@ -67,4 +60,4 @@ syntax: regexp
 ^.libs/
 ^.deps/
 ^m4/(?!gnulib-cache.m4)
-^config/snippet/
+^config/(?!config.rpath)
