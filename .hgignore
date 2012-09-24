@@ -66,3 +66,5 @@ syntax: regexp
 ^lib/
 ^.libs/
 ^.deps/
+^m4/(?!gnulib-cache.m4)
+^config/snippet/
