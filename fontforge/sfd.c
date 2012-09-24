@@ -27,8 +27,6 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <config.h>
-
 #include <stdbool.h>
 #include "fontforge.h"
 #include "splinefont.h"
@@ -421,6 +419,26 @@ nlgetc (FILE *sfd)
   return c;
 }
 
+static int
+getc_next_nonspace (FILE *f)
+{
+  int c;
+  do
+    c = getc (f);
+  while (isspace (c));
+  return c;
+}
+
+static int
+nlgetc_next_nonspace (FILE *f)
+{
+  int c;
+  do
+    c = nlgetc (f);
+  while (isspace (c));
+  return c;
+}
+
 static char *
 SFDReadUTF7Str (FILE *sfd)
 {
@@ -798,19 +816,13 @@ SFDDumpSplineSet (FILE *sfd, SplineSet * spl)
                      (double) sp->me.y);
 #endif
           fprintf (sfd, "%d",
-                   sp->pointtype | (sp->selected << 2) | (sp->
-                                                          nextcpdef << 3) |
-                   (sp->prevcpdef << 4) | (sp->roundx << 5) | (sp->
-                                                               roundy << 6) |
+                   sp->pointtype | (sp->
+                                    selected << 2) | (sp->nextcpdef << 3) |
+                   (sp->prevcpdef << 4) | (sp->
+                                           roundx << 5) | (sp->roundy << 6) |
                    (sp->ttfindex ==
-                    0xffff ? (1 << 7) : 0) | (sp->
-                                              dontinterpolate << 8) | ((sp->
-                                                                        prev
-                                                                        &&
-                                                                        sp->
-                                                                        prev->
-                                                                        acceptableextrema)
-                                                                       << 9));
+                    0xffff ? (1 << 7) : 0) | (sp->dontinterpolate << 8) |
+                   ((sp->prev && sp->prev->acceptableextrema) << 9));
           if (order2)
             {
               if (sp->ttfindex != 0xfffe && sp->nextcpindex != 0xfffe)
@@ -1693,8 +1705,8 @@ SFDDumpChar (FILE *sfd, SplineChar *sc, EncMap * map, int *newgids, int todir)
                 {
                   fprintf (sfd, " %d %d ",
                            newgids !=
-                           NULL ? newgids[kp->sc->orig_pos] : kp->sc->
-                           orig_pos, kp->off);
+                           NULL ? newgids[kp->sc->orig_pos] : kp->
+                           sc->orig_pos, kp->off);
                   SFDDumpUTF7Str (sfd, kp->subtable->subtable_name);
                   if (kp->adjust != NULL)
                     putc (' ', sfd);
@@ -2633,8 +2645,8 @@ SFD_Dump (FILE *sfd, SplineFont *sf, EncMap * map, EncMap * normal, int todir,
                   fprintf (sfd, "  SeqLookup: %d ",
                            fpst->rules[i].lookups[j].seq);
                   SFDDumpUTF7Str (sfd,
-                                  fpst->rules[i].lookups[j].lookup->
-                                  lookup_name);
+                                  fpst->rules[i].lookups[j].
+                                  lookup->lookup_name);
                   putc ('\n', sfd);
                 }
               break;
@@ -2682,15 +2694,15 @@ SFD_Dump (FILE *sfd, SplineFont *sf, EncMap * map, EncMap * normal, int todir,
                 putc ('~', sfd);
               else
                 SFDDumpUTF7Str (sfd,
-                                sm->state[i].u.context.mark_lookup->
-                                lookup_name);
+                                sm->state[i].u.context.
+                                mark_lookup->lookup_name);
               putc (' ', sfd);
               if (sm->state[i].u.context.cur_lookup == 0)
                 putc ('~', sfd);
               else
                 SFDDumpUTF7Str (sfd,
-                                sm->state[i].u.context.cur_lookup->
-                                lookup_name);
+                                sm->state[i].u.context.
+                                cur_lookup->lookup_name);
               putc (' ', sfd);
             }
           else if (sm->type == asm_insert)
@@ -3165,11 +3177,12 @@ SFFinalDirClean (char *filename)
   struct dirent *ent;
   char *buffer, *markerfile, *pt;
 
-  /* we did not unlink sub-directories in case they contained version control */
-  /*  files. We did remove all our files from them, however.  If the user */
-  /*  removed a bitmap strike or a cid-subfont those sub-dirs will now be */
-  /*  empty. If the user didn't remove them then they will contain our marker */
-  /*  files. So if we find a subdir with no marker files in it, remove it */
+  /* We did not unlink sub-directories, in case they contained version
+     control files. We did remove all our files from them, however.
+     If the user removed a bitmap strike or a cid-subfont those
+     sub-dirs will now be empty. If the user didn't remove them then
+     they will contain our marker files. So if we find a subdir with
+     no marker files in it, remove it. */
   dir = opendir (filename);
   if (dir == NULL)
     return;
@@ -3332,16 +3345,18 @@ getquotedeol (FILE *sfd)
     {
       if (ch == '\\')
         {
-          /* We can't use nlgetc() here, because it would misinterpret */
-          /* double backslash at the end of line. Multiline strings,   */
-          /* broken with backslash + newline, are just handled above.  */
+          /* We can't use nlgetc() here, because it would misinterpret
+             double backslash at the end of line. Multiline strings,
+             broken with backslash + newline, are just handled
+             above.  */
           ch = getc (sfd);
           if (ch == 'n')
             ch = '\n';
           /* else if ( ch=='\\' ) ch=='\\'; *//* second backslash of '\\' */
 
-          /* FontForge doesn't write other escape sequences in this context. */
-          /* So any other value of ch is assumed impossible. */
+          /* FontForge doesn't write other escape sequences in this
+             context.  So any other value of ch is assumed
+             impossible. */
         }
       if (pt >= end)
         {
@@ -3354,9 +3369,9 @@ getquotedeol (FILE *sfd)
       ch = nlgetc (sfd);
     }
   *pt = '\0';
-  /* these strings should be in utf8 now, but some old sfd files might have */
-  /* latin1. Not a severe problems because they SHOULD be in ASCII. So any */
-  /* non-ascii strings are erroneous anyway */
+  /* these strings should be in utf8 now, but some old sfd files might
+     have latin1. Not a severe problems because they SHOULD be in
+     ASCII. So any non-ascii strings are erroneous anyway */
   if (!utf8_valid (str))
     {
       pt = latin1_2_utf8_copy (str);
@@ -3413,7 +3428,7 @@ getname (FILE *sfd, char *tokbuf)
 {
   int ch;
 
-  while (isspace (ch = nlgetc (sfd)));
+  ch = nlgetc_next_nonspace (sfd);
   ungetc (ch, sfd);
   return (getprotectedname (sfd, tokbuf));
 }
@@ -3442,7 +3457,7 @@ getint (FILE *sfd, int *val)
   int ch;
   char *pt = tokbuf, *end = tokbuf + 100 - 2;
 
-  while (isspace (ch = nlgetc (sfd)));
+  ch = nlgetc_next_nonspace (sfd);
   if (ch == '-' || ch == '+')
     {
       *pt++ = ch;
@@ -3460,20 +3475,21 @@ getint (FILE *sfd, int *val)
   return (pt != tokbuf ? 1 : ch == EOF ? -1 : 0);
 }
 
+// FIXME: Do something about this.
 #ifdef _HAS_LONGLONG
-static int
-getlonglong (FILE *sfd, long long *val)
-{
+typedef long long __longlong;
 #else
-static int
-getlonglong (FILE *sfd, long *val)
-{
+typedef long __longlong;
 #endif
+
+static int
+getlonglong (FILE *sfd, __longlong *val)
+{
   char tokbuf[100];
   int ch;
   char *pt = tokbuf, *end = tokbuf + 100 - 2;
 
-  while (isspace (ch = nlgetc (sfd)));
+  ch = nlgetc_next_nonspace (sfd);
   if (ch == '-' || ch == '+')
     {
       *pt++ = ch;
@@ -3502,7 +3518,7 @@ gethex (FILE *sfd, uint32 * val)
   int ch;
   char *pt = tokbuf, *end = tokbuf + 100 - 2;
 
-  while (isspace (ch = nlgetc (sfd)));
+  ch = nlgetc_next_nonspace (sfd);
   if (ch == '#')
     ch = nlgetc (sfd);
   if (ch == '-' || ch == '+')
@@ -3577,8 +3593,9 @@ getreal (FILE *sfd, real * val)
   int ch;
   char *pt = tokbuf, *end = tokbuf + 100 - 2, *nend;
 
-  while (isspace (ch = nlgetc (sfd)));
-  if (ch != 'e' && ch != 'E')   /* real's can't begin with exponants */
+  ch = nlgetc_next_nonspace (sfd);
+  if (ch != 'e' && ch != 'E')   /* reals cannot begin with
+                                   exponents */
     while (isdigit (ch) || ch == '-' || ch == '+' || ch == 'e' || ch == 'E'
            || ch == '.' || ch == ',')
       {
@@ -3601,40 +3618,111 @@ getreal (FILE *sfd, real * val)
   return (pt != tokbuf && *nend == '\0' ? 1 : ch == EOF ? -1 : 0);
 }
 
-/* Don't use nlgetc here. We carefully control newlines when dumping in 85 */
-/*  but backslashes can occur at end of line. */
-static int
-Dec85 (struct enc85 *dec)
-{
-  int ch1, ch2, ch3, ch4, ch5;
-  unsigned int val;
+//-------------------------------------------------------------------------
+//
+// Decoding from Ascii85.
+//
+// See http://en.wikipedia.org/wiki/Ascii85
+//
 
-  if (dec->pos < 0)
+// Don't use nlgetc here. We carefully control newlines when dumping
+// in 85 but backslashes can occur at end of line.
+
+static int
+getc_enc85_char (FILE *f)
+{
+  int c = getc_next_nonspace (f);
+  return (('!' <= c && c <= 'u') || c == 'z') ? c : EOF;
+}
+
+// Read up to four chars into c[0..3]. Returns either the last byte or
+// EOF; in the latter case, the c[0..3] should be considered garbage.
+static int
+getc_four_enc85_chars (FILE *f, int *c)
+{
+  int ch = getc_enc85_char (f);
+  if (ch != EOF)
     {
-      while (isspace (ch1 = getc (dec->sfd)));
-      if (ch1 == 'z')
+      c[0] = ch;
+      ch = getc_enc85_char (f);
+      if (ch != EOF)
         {
-          dec->sofar[0] = dec->sofar[1] = dec->sofar[2] = dec->sofar[3] = 0;
-          dec->pos = 3;
+          c[1] = ch;
+          ch = getc_enc85_char (f);
+          if (ch != EOF)
+            {
+              c[2] = ch;
+              ch = getc_enc85_char (f);
+              if (ch != EOF)
+                c[3] = ch;
+            }
         }
-      else
+    }
+  return ch;
+}
+
+// Decode up to five chars of Ascii85 at a time, giving four bytes of
+// binary data in a buffer. Returns the last input char, which is EOF
+// if end of file or an error was detected. If that happens, the
+// buffer contents should be considered garbage.
+static int
+fill_enc85_buffer (struct enc85 *dec)
+{
+  int ch = getc_enc85_char (dec->sfd);
+  if (ch == EOF)
+    ;
+  else if (ch == 'z')
+    {
+      dec->sofar[0] = 0;
+      dec->sofar[1] = 0;
+      dec->sofar[2] = 0;
+      dec->sofar[3] = 0;
+      dec->pos = 3;
+    }
+  else
+    {
+      int c[4];
+      int last_ch = getc_four_enc85_chars (dec->sfd, c);
+      if (last_ch != EOF)
         {
-          while (isspace (ch2 = getc (dec->sfd)));
-          while (isspace (ch3 = getc (dec->sfd)));
-          while (isspace (ch4 = getc (dec->sfd)));
-          while (isspace (ch5 = getc (dec->sfd)));
-          val =
-            ((((ch1 - '!') * 85 + ch2 - '!') * 85 + ch3 - '!') * 85 + ch4 -
-             '!') * 85 + ch5 - '!';
+          unsigned int val =
+            ((((ch - '!') * 85 + (c[0] - '!')) * 85
+              + (c[1] - '!')) * 85 + (c[2] - '!')) * 85 + (c[3] - '!');
           dec->sofar[3] = val >> 24;
           dec->sofar[2] = val >> 16;
           dec->sofar[1] = val >> 8;
           dec->sofar[0] = val;
           dec->pos = 3;
         }
+      ch = last_ch;
     }
-  return (dec->sofar[dec->pos--]);
+  return ch;
 }
+
+// Get the next byte of binary data from a block encoded as Ascii85.
+// Returns -1 if end of file, an I/O error, or invalid data occurred.
+static int
+Dec85 (struct enc85 *dec)
+{
+  int next_byte = 0;
+
+  if (dec->pos < 0)
+    {
+      int ch = fill_enc85_buffer (dec);
+      if (ch == EOF)
+        next_byte = -1;
+    }
+
+  if (next_byte != -1)
+    {
+      next_byte = dec->sofar[dec->pos];
+      dec->pos--;
+    }
+
+  return next_byte;
+}
+
+//-------------------------------------------------------------------------
 
 static void
 rle2image (struct enc85 *dec, int rlelen, struct _GImage *base)
@@ -6923,8 +7011,7 @@ SFDParseStateMachine (FILE *sfd, SplineFont *sf, ASM * sm, char *tok, int old)
     asm_indic : strnmatch (tok, "MacContext", 10) == 0 ?
     asm_context : strnmatch (tok, "MacLigature", 11) == 0 ?
     asm_lig : strnmatch (tok, "MacSimple", 9) == 0 ?
-    asm_simple : strnmatch (tok, "MacKern", 7) == 0 ?
-    asm_kern : asm_insert;
+    asm_simple : strnmatch (tok, "MacKern", 7) == 0 ? asm_kern : asm_insert;
   if (old)
     {
       getusint (sfd, &((ASM1 *) sm)->feature);
