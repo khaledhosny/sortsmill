@@ -425,7 +425,7 @@ nlgetc (FILE *sfd)
       int c1 = getc (sfd);
       if (c1 == '\n')
         // "\\\n" found: start reading from the next line.
-        return nlgetc (sfd);    // Tail recursion.
+        c = nlgetc (sfd);
       else if (c1 != EOF)
         ungetc (c1, sfd);
       else
