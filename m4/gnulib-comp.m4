@@ -44,10 +44,12 @@ AC_DEFUN([gl_EARLY],
   # Code from module btowc:
   # Code from module c-ctype:
   # Code from module c-strcase:
+  # Code from module c-strtod:
   # Code from module close:
   # Code from module concat-filename:
   # Code from module configmake:
   # Code from module ctype:
+  # Code from module dirent:
   # Code from module dirname:
   # Code from module dirname-lgpl:
   # Code from module dosname:
@@ -125,6 +127,7 @@ AC_DEFUN([gl_EARLY],
   # Code from module strcase:
   # Code from module strcasestr:
   # Code from module strcasestr-simple:
+  # Code from module strdup-posix:
   # Code from module streq:
   # Code from module strerror:
   # Code from module strerror-override:
@@ -185,6 +188,7 @@ AC_DEFUN([gl_INIT],
     gl_PREREQ_BTOWC
   fi
   gl_WCHAR_MODULE_INDICATOR([btowc])
+  gl_C_STRTOD
   gl_FUNC_CLOSE
   if test $REPLACE_CLOSE = 1; then
     AC_LIBOBJ([close])
@@ -192,6 +196,7 @@ AC_DEFUN([gl_INIT],
   gl_UNISTD_MODULE_INDICATOR([close])
   gl_CONFIGMAKE_PREP
   gl_CTYPE_H
+  gl_DIRENT_H
   gl_DIRNAME
   gl_MODULE_INDICATOR([dirname])
   gl_DIRNAME_LGPL
@@ -370,6 +375,12 @@ AC_DEFUN([gl_INIT],
     gl_PREREQ_STRCASESTR
   fi
   gl_STRING_MODULE_INDICATOR([strcasestr])
+  gl_FUNC_STRDUP_POSIX
+  if test $ac_cv_func_strdup = no || test $REPLACE_STRDUP = 1; then
+    AC_LIBOBJ([strdup])
+    gl_PREREQ_STRDUP
+  fi
+  gl_STRING_MODULE_INDICATOR([strdup])
   gl_FUNC_STRERROR
   if test $REPLACE_STRERROR = 1; then
     AC_LIBOBJ([strerror])
@@ -599,11 +610,14 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/c-strcase.h
   lib/c-strcasecmp.c
   lib/c-strncasecmp.c
+  lib/c-strtod.c
+  lib/c-strtod.h
   lib/close.c
   lib/concat-filename.c
   lib/concat-filename.h
   lib/config.charset
   lib/ctype.in.h
+  lib/dirent.in.h
   lib/dirname-lgpl.c
   lib/dirname.c
   lib/dirname.h
@@ -691,6 +705,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/str-two-way.h
   lib/strcasecmp.c
   lib/strcasestr.c
+  lib/strdup.c
   lib/streq.h
   lib/strerror-override.c
   lib/strerror-override.h
@@ -739,10 +754,12 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/alloca.m4
   m4/arpa_inet_h.m4
   m4/btowc.m4
+  m4/c-strtod.m4
   m4/close.m4
   m4/codeset.m4
   m4/configmake.m4
   m4/ctype.m4
+  m4/dirent_h.m4
   m4/dirname.m4
   m4/double-slash-root.m4
   m4/dup2.m4
@@ -818,6 +835,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/stpcpy.m4
   m4/strcase.m4
   m4/strcasestr.m4
+  m4/strdup.m4
   m4/strerror.m4
   m4/string_h.m4
   m4/strings_h.m4
