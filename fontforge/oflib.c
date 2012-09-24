@@ -27,8 +27,6 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <config.h>
-
 #include <stdbool.h>
 #include "fontforgeui.h"
 #include <ustring.h>
@@ -38,7 +36,7 @@
 #include <sys/stat.h>
 #include "gfile.h"
 
-#include <pthread.h>
+#include "ffthread.h"
 
 #ifndef __VMS
 # include <sched.h>

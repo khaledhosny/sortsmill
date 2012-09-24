@@ -63,7 +63,7 @@
 #include "gdrawP.h"
 
 #ifdef HAVE_PTHREAD_H
-# include <pthread.h>
+# include "ffthread.h"
 #endif
 
 typedef struct gcstate {

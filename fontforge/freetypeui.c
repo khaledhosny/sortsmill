@@ -39,7 +39,7 @@
 
 #if FREETYPE_HAS_DEBUGGER && defined(HAVE_PTHREAD_H)
 
-#include <pthread.h>
+#include "ffthread.h"
 
 // FIXME: What is this about?
 #if defined(__MINGW32__)

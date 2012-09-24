@@ -67,7 +67,7 @@ int URLFromFile(char *url,FILE *from) {
 #include <time.h>
 #include <errno.h>
 
-#include <pthread.h>
+#include "ffthread.h"
 
 struct siteinfo {
     int cookie_cnt;

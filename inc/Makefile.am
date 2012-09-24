@@ -35,6 +35,6 @@ pkginclude_HEADERS = basics.h chardata.h charset.h config.h				\
 	gkeysym.h gprogress.h gresedit.h gresource.h gwidget.h gwwiconv.h	\
 	intl.h ustring.h utype.h annotations_base.h
 
-noinst_HEADERS = pluginloading.h
+noinst_HEADERS = pluginloading.h ffthread.h
 
 

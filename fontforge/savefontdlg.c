@@ -109,7 +109,7 @@ static int nfnt_warned = false, post_warned = false;
 #define CID_TTF_DummyDSIG	1117
 
 #ifdef HAVE_PTHREAD_H
-#include <pthread.h>
+#include "ffthread.h"
 #endif
 
 struct gfc_data {

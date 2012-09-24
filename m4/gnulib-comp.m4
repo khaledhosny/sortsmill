@@ -101,6 +101,7 @@ AC_DEFUN([gl_EARLY],
   # Code from module netdb:
   # Code from module netinet_in:
   # Code from module nl_langinfo:
+  # Code from module obstack:
   # Code from module regex:
   # Code from module size_max:
   # Code from module snippet/_Noreturn:
@@ -331,6 +332,8 @@ AC_DEFUN([gl_INIT],
     AC_LIBOBJ([nl_langinfo])
   fi
   gl_LANGINFO_MODULE_INDICATOR([nl_langinfo])
+  AC_FUNC_OBSTACK
+  dnl Note: AC_FUNC_OBSTACK does AC_LIBSOURCES([obstack.h, obstack.c]).
   gl_REGEX
   if test $ac_use_included_regex = yes; then
     AC_LIBOBJ([regex])
@@ -680,6 +683,8 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/netdb.in.h
   lib/netinet_in.in.h
   lib/nl_langinfo.c
+  lib/obstack.c
+  lib/obstack.h
   lib/printf-args.c
   lib/printf-args.h
   lib/printf-parse.c

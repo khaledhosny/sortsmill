@@ -27,7 +27,7 @@
 
 
 # Specification in the form of a command-line invocation:
-#   gnulib-tool --import --dir=. --lib=libgnu --source-base=lib --m4-base=m4 --doc-base=doc --tests-base=tests --aux-dir=config --no-conditional-dependencies --libtool --macro-prefix=gl --no-vc-files arpa_inet c-ctype c-strtod ctype dirent dirname errno fcntl filename filenamecat findprog gettext-h iconv_open inttypes langinfo libunistring locale math netdb netinet_in regex snprintf stdalign stdarg stddef stdint stdio stdlib strcase strcasestr strings strncat strstr sys_socket sys_time trim unistd verify vsnprintf wchar xalloc xconcat-filename xstrndup
+#   gnulib-tool --import --dir=. --lib=libgnu --source-base=lib --m4-base=m4 --doc-base=doc --tests-base=tests --aux-dir=config --no-conditional-dependencies --libtool --macro-prefix=gl --no-vc-files arpa_inet c-ctype c-strtod ctype dirent dirname errno fcntl filename filenamecat findprog gettext-h iconv_open inttypes langinfo libunistring locale math netdb netinet_in obstack regex snprintf stdalign stdarg stddef stdint stdio stdlib strcase strcasestr strings strncat strstr sys_socket sys_time trim unistd verify vsnprintf wchar xalloc xconcat-filename xstrndup
 
 # Specification in the form of a few gnulib-tool.m4 macro invocations:
 gl_LOCAL_DIR([])
@@ -52,6 +52,7 @@ gl_MODULES([
   math
   netdb
   netinet_in
+  obstack
   regex
   snprintf
   stdalign

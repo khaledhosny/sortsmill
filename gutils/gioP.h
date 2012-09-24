@@ -41,7 +41,7 @@
 #endif
 
 #ifdef HAVE_PTHREAD_H
-#include <pthread.h>
+#include "ffthread.h"
 #endif
 
 struct stdfuncs {

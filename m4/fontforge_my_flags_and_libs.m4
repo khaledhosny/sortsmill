@@ -10,6 +10,7 @@ if test x"${i_do_have_freetype_debugger}" != xno; then
    my_cflags="${my_cflags} -I${FREETYPE_SOURCE}/include"
    my_cflags="${my_cflags} -I${FREETYPE_SOURCE}/include/freetype"
 fi
+my_cflags="${my_cflags} ${BOEHM_GC_CFLAGS}"
 my_cflags="${my_cflags} ${ZLIB_CFLAGS}"
 my_cflags="${my_cflags} ${CAIRO_CFLAGS}"
 my_cflags="${my_cflags} ${PANGO_CFLAGS}"
@@ -46,6 +47,7 @@ test x"${i_do_have_gui}" = xyes && my_libs="${my_libs} ${PANGO_LIBS}"
 test x"${i_do_have_x}" = xyes && my_libs="${my_libs} ${X_PRE_LIBS} ${X_LIBS} ${X_EXTRA_LIBS}"
 my_libs="${my_libs} ${PTHREAD_LIBS}"
 my_libs="${my_libs} ${ZLIB_LIBS}"
+my_libs="${my_libs} ${BOEHM_GC_LIBS}"
 my_libs="${my_libs} ${LIBLTDL}"
 AC_SUBST([MY_LIBS],[${my_libs}])
 ])
