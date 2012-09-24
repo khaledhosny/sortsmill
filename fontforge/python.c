@@ -16795,7 +16795,7 @@ static PyObject *PyFFFont_AddExtrema(PyFF_Font *self, PyObject *UNUSED(args)) {
     if ( CheckIfFontClosed(self) )
 return (NULL);
     fv = self->fv;
-    FVAddExtrema(fv);
+    FVAddExtrema(fv, false);
 Py_RETURN( self );
 }
 
