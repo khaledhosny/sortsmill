@@ -82,8 +82,6 @@ extern unsigned long u_strtoul(const unichar_t *,unichar_t **,int);
 extern long   u_strtol(const unichar_t *,unichar_t **,int);
 extern double u_strtod(const unichar_t *,unichar_t **);
 
-extern char *strstart(const char *initial,const char *full);
-extern char *strstartmatch(const char *initial,const char *full);
 extern unichar_t *u_strstartmatch(const unichar_t *initial, const unichar_t *full);
 extern unichar_t *cu_strstartmatch(const char *initial, const unichar_t *full);
 
