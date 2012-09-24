@@ -30,6 +30,10 @@
 extern char* GFileGetHomeDir(void);
 extern unichar_t* u_GFileGetHomeDir(void);
 
+extern char* GFileGetUserConfigDir(void);
+extern char* GFileGetUserCacheDir(void);
+extern char* GFileGetUserDataDir(void);
+
 extern char *GFileGetAbsoluteName(char *name, char *result, int rsiz);
 extern char *GFileMakeAbsoluteName(char *name);
 extern char *GFileBuildName(char *dir,char *fname,char *buffer,int size);

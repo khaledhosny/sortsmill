@@ -35,6 +35,7 @@
 #include <sys/stat.h>		/* for mkdir */
 #include <unistd.h>
 #include <stdbool.h>
+#include <glib.h>
 
 #ifdef _WIN32
 #define MKDIR(A,B) mkdir(A)
@@ -61,6 +62,36 @@ static void _u_backslash_to_slash(unichar_t* c){
 	    *c = '/';
 }
 #endif
+
+char *
+GFileGetUserConfigDir (void)
+{
+  char *ret;
+
+  ret = g_build_filename (g_get_user_config_dir (), PACKAGE, NULL);
+
+  return ret;
+}
+
+char *
+GFileGetUserCacheDir (void)
+{
+  char *ret;
+
+  ret = g_build_filename (g_get_user_cache_dir (), PACKAGE, NULL);
+
+  return ret;
+}
+
+char *
+GFileGetUserDataDir (void)
+{
+  char *ret;
+
+  ret = g_build_filename (g_get_user_data_dir (), PACKAGE, NULL);
+
+  return ret;
+}
 
 char *GFileGetHomeDir(void) {
 #if defined(__MINGW32__)
