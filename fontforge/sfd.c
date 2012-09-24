@@ -43,6 +43,7 @@
 #include <sys/stat.h>
 #include <dirent.h>
 #include "c-strtod.h"
+#include "c-ctype.h"
 
 #include <limits.h>             /* For NAME_MAX or _POSIX_NAME_MAX */
 #ifndef NAME_MAX
@@ -3525,13 +3526,14 @@ gethex (FILE *sfd, uint32 * val)
     ch = nlgetc (sfd);
   if (ch == '-' || ch == '+')
     {
-      *pt++ = ch;
+      *pt = ch;
+      pt++;
       ch = nlgetc (sfd);
     }
   if (ch == '0')
     {
       ch = nlgetc (sfd);
-      if (ch == 'x' || ch == 'X')
+      if (c_tolower (ch) == 'x')
         ch = nlgetc (sfd);
       else
         {
@@ -3539,7 +3541,7 @@ gethex (FILE *sfd, uint32 * val)
           ch = '0';
         }
     }
-  while (isdigit (ch) || (ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F'))
+  while (c_isxdigit (ch))
     {
       if (pt < end)
         *pt++ = ch;
