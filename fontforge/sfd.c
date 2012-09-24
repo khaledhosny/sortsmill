@@ -42,6 +42,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <dirent.h>
+#include "c-strtod.h"
+
 #include <limits.h>             /* For NAME_MAX or _POSIX_NAME_MAX */
 #ifndef NAME_MAX
 #ifndef  _POSIX_NAME_MAX
@@ -3586,36 +3588,54 @@ getusint (FILE *sfd, uint16 * val)
   return (ret);
 }
 
-static int
-getreal (FILE *sfd, real * val)
+//-------------------------------------------------------------------------
+//
+// getreal()
+//
+
+static bool
+may_start_a_real (int c)
 {
+  return (isdigit (c) || strchr ("-+,.", c) != NULL);
+}
+
+static bool
+may_appear_in_real (int c)
+{
+  return (isdigit (c) || strchr ("-+,.eE", c) != NULL);
+}
+
+static int
+getreal (FILE *sfd, real *val)
+{
+  // This routine fills a buffer with characters that may appear in a
+  // 'real', and then tries to convert it to a result, *val.
+
+  // The pointer 'end' is a sentinel to prevent overflow of the
+  // fixed-length buffer 'tokbuf'.
+
   char tokbuf[100];
   int ch;
-  char *pt = tokbuf, *end = tokbuf + 100 - 2, *nend;
+  char *pt = tokbuf;
+  char *end = tokbuf + 100 - 2;
+  char *nend;
 
   ch = nlgetc_next_nonspace (sfd);
-  if (ch != 'e' && ch != 'E')   /* reals cannot begin with
-                                   exponents */
-    while (isdigit (ch) || ch == '-' || ch == '+' || ch == 'e' || ch == 'E'
-           || ch == '.' || ch == ',')
+  if (may_start_a_real (ch))
+    while (may_appear_in_real (ch))
       {
         if (pt < end)
-          *pt++ = ch;
+          {
+            // Convert to C locale.
+            *pt = (ch == ',') ? '.' : ch;
+            pt++;
+          }
         ch = nlgetc (sfd);
       }
   *pt = '\0';
   ungetc (ch, sfd);
-  *val = strtod (tokbuf, &nend);
-  /* Beware of different locals! */
-  if (*nend != '\0')
-    {
-      if (*nend == '.')
-        *nend = ',';
-      else if (*nend == ',')
-        *nend = '.';
-      *val = strtod (tokbuf, &nend);
-    }
-  return (pt != tokbuf && *nend == '\0' ? 1 : ch == EOF ? -1 : 0);
+  *val = c_strtod (tokbuf, &nend);
+  return (pt != tokbuf && *nend == '\0') ? 1 : (ch == EOF ? -1 : 0);
 }
 
 //-------------------------------------------------------------------------
