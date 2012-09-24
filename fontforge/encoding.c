@@ -483,9 +483,9 @@ static char *getPfaEditEncodings(void) {
 
     if ( encfile!=NULL )
 return( encfile );
-    if ( getPfaEditDir(buffer)==NULL )
+    if ( getUserDataDir()==NULL )
 return( NULL );
-    sprintf(buffer,"%s/Encodings.ps", getPfaEditDir(buffer));
+    sprintf(buffer,"%s/Encodings.ps", getUserDataDir());
     encfile = copy(buffer);
 return( encfile );
 }

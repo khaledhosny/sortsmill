@@ -600,7 +600,7 @@ static void AddR(char *prog, char *name, char *val ) {
 
 static int ReopenLastFonts(void) {
     char buffer[1024];
-    char *ffdir = getPfaEditDir(buffer);
+    char *ffdir = getUserCacheDir();
     FILE *old;
     int any = 0;
 

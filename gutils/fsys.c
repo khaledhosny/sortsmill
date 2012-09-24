@@ -35,6 +35,7 @@
 #include <sys/stat.h>		/* for mkdir */
 #include <unistd.h>
 #include <stdbool.h>
+#include <glib.h>
 
 #ifdef _WIN32
 #define MKDIR(A,B) mkdir(A)
@@ -62,37 +63,44 @@ static void _u_backslash_to_slash(unichar_t* c){
 }
 #endif
 
-char *GFileGetHomeDir(void) {
-#if defined(__MINGW32__)
-    char* dir = getenv("HOME");
-    if(!dir)
-	dir = getenv("USERPROFILE");
-    if(dir){
-	char* buffer = copy(dir);
-	_backslash_to_slash(buffer);
-return buffer;
-    }
-return NULL;
-#else
-    static char *dir;
-    int uid;
-    struct passwd *pw;
+char *
+GFileGetUserConfigDir (void)
+{
+  char *ret;
 
-    dir = getenv("HOME");
-    if ( dir!=NULL )
-	return( copy(dir) );
+  ret = g_build_filename (g_get_user_config_dir (), PACKAGE, NULL);
 
-    uid = getuid();
-    while ( (pw=getpwent())!=NULL ) {
-	if ( pw->pw_uid==uid ) {
-	    dir = copy(pw->pw_dir);
-	    endpwent();
-return( dir );
-	}
-    }
-    endpwent();
-return( NULL );
-#endif
+  return ret;
+}
+
+char *
+GFileGetUserCacheDir (void)
+{
+  char *ret;
+
+  ret = g_build_filename (g_get_user_cache_dir (), PACKAGE, NULL);
+
+  return ret;
+}
+
+char *
+GFileGetUserDataDir (void)
+{
+  char *ret;
+
+  ret = g_build_filename (g_get_user_data_dir (), PACKAGE, NULL);
+
+  return ret;
+}
+
+char *
+GFileGetHomeDir (void)
+{
+  char *ret;
+
+  ret = g_build_filename (g_get_home_dir (), NULL);
+
+  return ret;
 }
 
 unichar_t *u_GFileGetHomeDir(void) {

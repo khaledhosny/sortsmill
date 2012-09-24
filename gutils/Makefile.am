@@ -44,6 +44,7 @@ EXPORTED_GIOFTP_SYMBOLS = GIO_cancel GIO_dispatch GIO_init GIO_term
 
 EXPORTED_GUTILS_SYMBOLS = $(EXPORTED_GIOFTP_SYMBOLS) GFileAppendFile	\
 	GFileBuildName GFileExists GFileGetAbsoluteName GFileGetHomeDir		\
+	GFileGetUserConfigDir GFileGetUserCacheDir GFileGetUserDataDir		\
 	GFileIsAbsolute GFileIsDir GFileMakeAbsoluteName GFileMkDir			\
 	GFileNameTail GFileReadable GFileUnlink GIOCreate					\
 	GIO_PasswordCache GIO_SetThreadCallback GIOcancel GIOclose GIOdir	\

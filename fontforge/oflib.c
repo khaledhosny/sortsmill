@@ -528,9 +528,9 @@ static char *getOFLibDir(void) {
 
     if ( oflibdir!=NULL )
 return( oflibdir );
-    if ( getPfaEditDir(buffer)==NULL )
+    if ( getUserCacheDir()==NULL )
 return( NULL );
-    sprintf(buffer,"%s/OFLib", getPfaEditDir(buffer));
+    sprintf(buffer,"%s/OFLib", getUserCacheDir());
     if ( access(buffer,F_OK)==-1 )
 	if ( GFileMkDir(buffer)==-1 )
 return( NULL );
