@@ -44,15 +44,14 @@ libtool
 libltdl
 Makefile
 Makefile.in
-.libs
-.deps
-/lib
 
 version.texi
 stamp-vti
 
 syntax: regexp
 
+~$
+\.orig$
 \.la$
 \.lo$
 \.mo$
@@ -64,5 +63,6 @@ syntax: regexp
 \.obj$
 \.gmo$
 \.info$
-\.orig$
-~$
+^lib/
+^.libs/
+^.deps/
