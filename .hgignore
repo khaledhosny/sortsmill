@@ -42,14 +42,11 @@ inc/config.h.in
 inc/stamp-h1
 libtool
 libltdl
-GNUmakefile
-GNUmakefile.preamble
-GNUmakefile.postamble
 Makefile
 Makefile.in
-systemspecific
 .libs
 .deps
+/lib
 
 version.texi
 stamp-vti
