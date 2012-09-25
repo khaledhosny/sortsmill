@@ -609,6 +609,7 @@ return( pos );
 void GScrollBarSetMustShow(GGadget *g, int32 sb_min, int32 sb_max, int32 sb_pagesize,
 	int32 sb_mustshow ) {
     GScrollBar *gsb = (GScrollBar *) g;
+    int minsize;
 
     if ( sb_min>sb_max || sb_pagesize<=0 ) {
 	GDrawIError("Invalid scrollbar bounds min=%d max=%d, pagesize=%d",
@@ -622,8 +623,14 @@ return;
     gsb->thumbsize = (gsb->g.vert?gsb->g.inner.height:gsb->g.inner.width);
     if ( sb_max-sb_min > sb_pagesize )
 	gsb->thumbsize = (gsb->thumbsize*gsb->sb_pagesize)/(sb_max-sb_min);
-    if ( gsb->thumbsize<2*gsb->thumbborder+4 ) {
-	gsb->thumbsize = 2*gsb->thumbborder+6;
+
+    if (gsb->thumbborder > 0)
+	minsize = 2*gsb->thumbborder+6;
+    else
+	minsize = 20;
+
+    if ( gsb->thumbsize<minsize ) {
+	gsb->thumbsize = minsize;
 	if ( gsb->thumbsize>(gsb->g.vert?gsb->g.inner.height:gsb->g.inner.width) )
 	    gsb->thumbsize = (gsb->g.vert?gsb->g.inner.height:gsb->g.inner.width);
     }
