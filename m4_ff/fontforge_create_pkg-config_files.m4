@@ -24,6 +24,7 @@ test x"${i_do_have_gui}" = xyes && my_libs="${my_libs} pangocairo"
 test x"${i_do_have_freetype}" = xyes && __pkg_deps="${__pkg_deps} freetype2"
 __pkg_deps="${__pkg_deps} zlib"
 __pkg_deps="${__pkg_deps} bdw-gc"
+__pkg_deps="${__pkg_deps} guile-2.0"
 __pkg_deps="${__pkg_deps} glib-2.0"
 
 __private_deps=""

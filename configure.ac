@@ -192,6 +192,7 @@ AC_SEARCH_LIBS([cos],[m])
 FONTFORGE_CONFIG_X_LIBRARIES
 PKG_CHECK_MODULES([ZLIB],[zlib])
 PKG_CHECK_MODULES([GLIB],[glib-2.0 >= 2.6])
+PKG_CHECK_MODULES([GUILE],[guile-2.0])
 
 PKG_CHECK_MODULES([BOEHM_GC],[bdw-gc >= 7.1])
 AC_DEFINE([GC_THREADS],[1],[Define to 1 if Boehm GC has to co-exist with POSIX threads.])
