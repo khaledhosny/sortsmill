@@ -27,18 +27,14 @@
 import ffContrib.excepthook
 import os
 
-# FIXME: Set this in the configure script or make invocation.
-user_config_dir = '.FontForge'
+user_config_dir = os.environ.get('XDG_CONFIG_HOME', os.path.join(os.path.expanduser("~"), '.config'))
+
+package_name = '@PACKAGE@'
 
 user_init_file = 'user_init.py'
 
-try:
-    home = os.environ['HOME']
-    user_init = os.path.join(home, user_config_dir, user_init_file)
-except:
-    home = None
-    user_init = None
+user_init = os.path.join(user_config_dir, package_name, user_init_file)
 
-if user_init is not None and os.path.exists(user_init):
+if os.path.exists(user_init):
     execfile(user_init)
 
