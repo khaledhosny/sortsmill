@@ -27,9 +27,5 @@
 
 include $(top_srcdir)/mk/layout.am
 
-# FIXME: we should dist site_init.py.in not the generated site_init.py
-dist_pkgpythondata_SCRIPTS = site_init.py
+nodist_pkgpythondata_SCRIPTS = site_init.py
 dist_pycontrib_SCRIPTS = __init__.py excepthook.py
-
-site_init.py: site_init.py.in
-	$(AM_V_GEN) $(SED) -e "s|\@PACKAGE\@|$(PACKAGE)|" $(srcdir)/site_init.py.in > $(builddir)/site_init.py
