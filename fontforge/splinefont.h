@@ -34,15 +34,16 @@
 #include "gwwiconv.h"
 
 #ifdef FONTFORGE_CONFIG_USE_DOUBLE
-# define real		double
-# define bigreal	double
+typedef double real;
+typedef double bigreal;
 #else
-# define real		float
-# define bigreal	double
+typedef float real;
+typedef double bigreal;
 #endif
 
-#define extended	double
-	/* Solaris wants to define extended to be unsigned [3] unless we do this*/
+typedef double extended;
+
+/* Solaris wants to define extended to be unsigned [3] unless we do this*/
 #define _EXTENDED
 
 #define CHR(ch1,ch2,ch3,ch4) (((ch1)<<24)|((ch2)<<16)|((ch3)<<8)|(ch4))
