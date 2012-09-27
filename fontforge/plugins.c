@@ -34,22 +34,29 @@
 /* Load (or fake loading) a named plugin that is somewhere in the path
  * list for lt_dlopenext(). Returns 'true' on success; otherwise
  * returns 'false'. */
-int LoadPlugin(const char *dynamic_lib_name) {
-    lt_dlhandle plugin;
-    plugin = load_plugin(dynamic_lib_name, LogError);
-    return (plugin != NULL);
+int
+LoadPlugin (const char *dynamic_lib_name)
+{
+  lt_dlhandle plugin;
+  plugin = load_plugin (dynamic_lib_name, LogError);
+  return (plugin != NULL);
 }
 
 /* Callback function for LoadPluginDir(). */
-static int plugin_loading_callback(const char *dynamic_lib_name, void *UNUSED(data)) {
-    (void) LoadPlugin(dynamic_lib_name);
-    return 0;
+static int
+plugin_loading_callback (const char *dynamic_lib_name, void *UNUSED (data))
+{
+  (void) LoadPlugin (dynamic_lib_name);
+  return 0;
 }
 
 /* Load all the plugins in the given search_path, if search_path !=
    NULL.  Load plugins in the "user-defined" search path, if
    search_path == NULL. */
-void LoadPluginDir(const char *search_path) {
-    const char *path = (search_path == NULL) ? lt_dlgetsearchpath() : search_path;
-    (void) lt_dlforeachfile(path, plugin_loading_callback, NULL);
+void
+LoadPluginDir (const char *search_path)
+{
+  const char *path =
+    (search_path == NULL) ? lt_dlgetsearchpath () : search_path;
+  (void) lt_dlforeachfile (path, plugin_loading_callback, NULL);
 }
