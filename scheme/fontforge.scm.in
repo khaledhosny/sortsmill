@@ -34,7 +34,6 @@
          (nonoption-args (option-ref options '() '()))
          (argv0 (list (car args)))
          (passed-args (append argv0 help-args version-args nonoption-args)))
-    (write nonoption-args)
     (fontforge-main passed-args)))
 
 (main (command-line))
