@@ -58,6 +58,12 @@ pycontribdir = ${pythondir}/ffContrib
 # Where plugin modules go.
 plugindir = ${pkglibdir}/plugins
 
+# Where Guile shared-library extensions go.
+guileextensiondir = $(libdir)
+
+# Where Guile modules go.
+guilemoduledir = $(datarootdir)/guile/site/$(GUILE_API)/$(PACKAGE)
+
 # What gets passed as macros to the C sources.
 MY_SHAREDIR = ${pkgdatadir}
 MY_DOCDIR = ${htdocsdir}

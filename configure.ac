@@ -76,6 +76,9 @@ AC_SUBST([VERSION_MAJOR])
 AC_SUBST([VERSION_MINOR])
 AC_SUBST([VERSION_PATCH])
 
+GUILE_API="2.0"
+AC_SUBST([GUILE_API])
+
 #--------------------------------------------------------------------------
 #
 # URLs for dependencies.
@@ -115,7 +118,8 @@ AC_PROG_MAKE_SET
 AC_PROG_MKDIR_P
 AC_PROG_SED
 PKG_PROG_PKG_CONFIG
-AC_PATH_PROG([MY_SORT],[sort],[cat])
+#AX_PKG_SWIG([2.0.4],[],[AC_MSG_ERROR([SWIG is required to build ${PACKAGE}.])])
+AC_PATH_PROG([MY_SORT],[sort],[cat]) dnl FIXME: Should we get rid of this?
 AC_PATH_PROG([TR],[tr],[tr])
 AC_PATH_PROG([MSGFMT],[msgfmt],[msgfmt])
 AC_PATH_PROG([XGETTEXT],[xgettext],[xgettext])
@@ -126,6 +130,9 @@ AC_PATH_PROG([WGET],[wget],[wget])
 AC_PATH_PROG([UPDATE_MIME_DATABASE],[update-mime-database],[update-mime-database])
 AC_PATH_PROG([UPDATE_DESKTOP_DATABASE],[update-desktop-database],[update-desktop-database])
 AC_PATH_PROG([PLUTIL],[plutil],[:])
+
+GUILE_PROGS
+#GUILE_SITE_DIR
 
 #--------------------------------------------------------------------------
 
@@ -192,7 +199,7 @@ AC_SEARCH_LIBS([cos],[m])
 FONTFORGE_CONFIG_X_LIBRARIES
 PKG_CHECK_MODULES([ZLIB],[zlib])
 PKG_CHECK_MODULES([GLIB],[glib-2.0 >= 2.6])
-PKG_CHECK_MODULES([GUILE],[guile-2.0])
+PKG_CHECK_MODULES([GUILE],[guile-${GUILE_API}])
 
 PKG_CHECK_MODULES([BOEHM_GC],[bdw-gc >= 7.1])
 AC_DEFINE([GC_THREADS],[1],[Define to 1 if Boehm GC has to co-exist with POSIX threads.])
@@ -308,6 +315,7 @@ FONTFORGE_SET_MY_LIBS
 FONTFORGE_CREATE_MAKEFILES
 FONTFORGE_CREATE_PKGCONFIG_FILES
 FONTFORGE_CREATE_INDENT_PRO
+AC_CONFIG_FILES([scheme/fontforge.scm])
 AC_CONFIG_FILES([pycontrib/site_init.py])
 AC_CONFIG_FILES([fontforge/darwinsetup],[chmod +x fontforge/darwinsetup])
 FONTFORGE_CONFIG_TESTSUITE

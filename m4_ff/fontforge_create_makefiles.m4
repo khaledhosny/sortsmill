@@ -23,6 +23,7 @@ AC_CONFIG_FILES([plugins/Makefile])
 AC_CONFIG_FILES([tests/Makefile])
 AC_CONFIG_FILES([desktop/Makefile])
 AC_CONFIG_FILES([fonttools/Makefile])
+AC_CONFIG_FILES([scheme/Makefile])
 
 # Snippets for use with "include".
 AC_CONFIG_FILES([mk/xgettext_search.mk])
