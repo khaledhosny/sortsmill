@@ -35,8 +35,7 @@
 
 #include "plugins.h"
 
-static const unsigned short __gb12345_to_ucs[] =
-{
+static const unsigned short __gb12345_to_ucs[] = {
   0x3000, 0x3001, 0x3002, 0x30fb, 0x02c9, 0x02c7, 0x00a8, 0x3003,
   0x3005, 0x2015, 0xff5e, 0x2016, 0x2026, 0x2018, 0x2019, 0x201c,
   0x201d, 0x3014, 0x3015, 0x3008, 0x3009, 0x300a, 0x300b, 0x300c,
@@ -1077,6 +1076,7 @@ static const unsigned short __gb12345_to_ucs[] =
 /* ************************************************ */
 
 static const unsigned short __gb12345_from_ucs4_null[256] = { 0 };
+
 static const unsigned short __gb12345_from_ucs4_tab00[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -1111,6 +1111,7 @@ static const unsigned short __gb12345_from_ucs4_tab00[256] = {
   0x0000, 0x0000, 0x2830, 0x282e, 0x0000, 0x0000, 0x0000, 0x2142,
   0x0000, 0x2834, 0x2832, 0x0000, 0x2839
 };
+
 static const unsigned short __gb12345_from_ucs4_tab01[256] = {
   0x0000, 0x2821, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -1141,6 +1142,7 @@ static const unsigned short __gb12345_from_ucs4_tab01[256] = {
   0x282b, 0x0000, 0x282f, 0x0000, 0x2833, 0x0000, 0x2835, 0x0000,
   0x2836, 0x0000, 0x2837, 0x0000, 0x2838
 };
+
 static const unsigned short __gb12345_from_ucs4_tab02[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -1169,6 +1171,7 @@ static const unsigned short __gb12345_from_ucs4_tab02[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x2126,
   0x0000, 0x2125
 };
+
 static const unsigned short __gb12345_from_ucs4_tab03[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -1197,6 +1200,7 @@ static const unsigned short __gb12345_from_ucs4_tab03[256] = {
   0x2650, 0x2651, 0x0000, 0x2652, 0x2653, 0x2654, 0x2655, 0x2656,
   0x2657, 0x2658
 };
+
 static const unsigned short __gb12345_from_ucs4_tab04[256] = {
   0x0000, 0x2727, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -1210,6 +1214,7 @@ static const unsigned short __gb12345_from_ucs4_tab04[256] = {
   0x276a, 0x276b, 0x276c, 0x276d, 0x276e, 0x276f, 0x2770, 0x2771,
   0x0000, 0x2757
 };
+
 static const unsigned short __gb12345_from_ucs4_tab20[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -1220,6 +1225,7 @@ static const unsigned short __gb12345_from_ucs4_tab20[256] = {
   0x216b, 0x0000, 0x2164, 0x2165, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x2179
 };
+
 static const unsigned short __gb12345_from_ucs4_tab21[256] = {
   0x0000, 0x0000, 0x0000, 0x2166, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -1241,6 +1247,7 @@ static const unsigned short __gb12345_from_ucs4_tab21[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x217b, 0x217c, 0x217a, 0x217d
 };
+
 static const unsigned short __gb12345_from_ucs4_tab22[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x214a, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x2147,
@@ -1264,11 +1271,13 @@ static const unsigned short __gb12345_from_ucs4_tab22[256] = {
   0x0000, 0x2151, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x214d
 };
+
 static const unsigned short __gb12345_from_ucs4_tab23[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x2150
 };
+
 static const unsigned short __gb12345_from_ucs4_tab24[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -1291,6 +1300,7 @@ static const unsigned short __gb12345_from_ucs4_tab24[256] = {
   0x2239, 0x223a, 0x223b, 0x223c, 0x223d, 0x223e, 0x223f, 0x2240,
   0x2241, 0x2242, 0x2243, 0x2244
 };
+
 static const unsigned short __gb12345_from_ucs4_tab25[256] = {
   0x2924, 0x2925, 0x2926, 0x2927, 0x2928, 0x2929, 0x292a, 0x292b,
   0x292c, 0x292d, 0x292e, 0x292f, 0x2930, 0x2931, 0x2932, 0x2933,
@@ -1319,6 +1329,7 @@ static const unsigned short __gb12345_from_ucs4_tab25[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x2174, 0x2173,
   0x0000, 0x0000, 0x0000, 0x2170, 0x0000, 0x0000, 0x2172, 0x2171
 };
+
 static const unsigned short __gb12345_from_ucs4_tab26[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x216f, 0x216e, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -1330,6 +1341,7 @@ static const unsigned short __gb12345_from_ucs4_tab26[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x2162, 0x0000, 0x2161
 };
+
 static const unsigned short __gb12345_from_ucs4_tab30[256] = {
   0x2121, 0x2122, 0x2123, 0x2128, 0x0000, 0x2129, 0x0000, 0x0000,
   0x2134, 0x2135, 0x2136, 0x2137, 0x2138, 0x2139, 0x213a, 0x213b,
@@ -1364,6 +1376,7 @@ static const unsigned short __gb12345_from_ucs4_tab30[256] = {
   0x2570, 0x2571, 0x2572, 0x2573, 0x2574, 0x2575, 0x2576, 0x0000,
   0x0000, 0x0000, 0x0000, 0x2124
 };
+
 static const unsigned short __gb12345_from_ucs4_tab31[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x2845, 0x2846, 0x2847,
   0x2848, 0x2849, 0x284a, 0x284b, 0x284c, 0x284d, 0x284e, 0x284f,
@@ -1372,6 +1385,7 @@ static const unsigned short __gb12345_from_ucs4_tab31[256] = {
   0x2860, 0x2861, 0x2862, 0x2863, 0x2864, 0x2865, 0x2866, 0x2867,
   0x2868, 0x2869
 };
+
 static const unsigned short __gb12345_from_ucs4_tab32[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -1380,6 +1394,7 @@ static const unsigned short __gb12345_from_ucs4_tab32[256] = {
   0x2265, 0x2266, 0x2267, 0x2268, 0x2269, 0x226a, 0x226b, 0x226c,
   0x226d, 0x226e
 };
+
 static const unsigned short __gb12345_from_ucs4_tab4e[256] = {
   0x523b, 0x3621, 0x0000, 0x465f, 0x0000, 0x0000, 0x0000, 0x7871,
   0x5549, 0x487d, 0x494f, 0x4f42, 0x5822, 0x323b, 0x0000, 0x0000,
@@ -1414,6 +1429,7 @@ static const unsigned short __gb12345_from_ucs4_tab4e[256] = {
   0x5176, 0x0000, 0x5659, 0x5872, 0x0000, 0x5875, 0x3c7e, 0x7842,
   0x0000, 0x0000, 0x0000, 0x484e, 0x0000, 0x375d, 0x0000, 0x3742
 };
+
 static const unsigned short __gb12345_from_ucs4_tab4f[256] = {
   0x0000, 0x4673, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x5878, 0x5241, 0x0000, 0x0000, 0x4e69, 0x3c3f, 0x377c,
@@ -1448,6 +1464,7 @@ static const unsigned short __gb12345_from_ucs4_tab4f[256] = {
   0x0000, 0x3e63, 0x0000, 0x593d, 0x0000, 0x0000, 0x0000, 0x0000,
   0x593a, 0x0000, 0x3033, 0x0000, 0x0000, 0x0000, 0x5942
 };
+
 static const unsigned short __gb12345_from_ucs4_tab50[256] = {
   0x5876, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x4129, 0x0000,
   0x0000, 0x3256, 0x0000, 0x3876, 0x5944, 0x3136, 0x0000, 0x593f,
@@ -1482,6 +1499,7 @@ static const unsigned short __gb12345_from_ucs4_tab50[256] = {
   0x0000, 0x0000, 0x0000, 0x4b5b, 0x0000, 0x3d29, 0x0000, 0x0000,
   0x0000, 0x3c5b, 0x0000, 0x4627
 };
+
 static const unsigned short __gb12345_from_ucs4_tab51[256] = {
   0x5247, 0x0000, 0x592f, 0x0000, 0x525a, 0x0000, 0x5953, 0x5958,
   0x3f6b, 0x3c73, 0x0000, 0x5959, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -1516,6 +1534,7 @@ static const unsigned short __gb12345_from_ucs4_tab51[256] = {
   0x3b4b, 0x3f2d, 0x0000, 0x354a, 0x0000, 0x5b49, 0x5057, 0x0000,
   0x4d39, 0x303c, 0x3376, 0x0000, 0x5b4a, 0x3a2f
 };
+
 static const unsigned short __gb12345_from_ucs4_tab52[256] = {
   0x3536, 0x3573, 0x5856, 0x4850, 0x0000, 0x0000, 0x3756, 0x4750,
   0x5857, 0x0000, 0x3f2f, 0x0000, 0x0000, 0x0000, 0x5858, 0x0000,
@@ -1550,6 +1569,7 @@ static const unsigned short __gb12345_from_ucs4_tab52[256] = {
   0x5b44, 0x5b3d, 0x0000, 0x0000, 0x0000, 0x4078, 0x0000, 0x0000,
   0x4830, 0x5968, 0x4957, 0x0000, 0x0000, 0x0000, 0x3934, 0x4e70
 };
+
 static const unsigned short __gb12345_from_ucs4_tab53[256] = {
   0x5448, 0x0000, 0x0000, 0x0000, 0x0000, 0x307c, 0x3452, 0x0000,
   0x5059, 0x0000, 0x0000, 0x0000, 0x0000, 0x5969, 0x0000, 0x5e4b,
@@ -1584,6 +1604,7 @@ static const unsigned short __gb12345_from_ucs4_tab53[256] = {
   0x786b, 0x5f33, 0x4a37, 0x5352, 0x0000, 0x584f, 0x7878, 0x0000,
   0x4b3e, 0x0000, 0x0000, 0x5f37, 0x3570
 };
+
 static const unsigned short __gb12345_from_ucs4_tab54[256] = {
   0x0000, 0x5375, 0x0000, 0x3354, 0x3877, 0x0000, 0x5f3a, 0x0000,
   0x3a4f, 0x3c2a, 0x3575, 0x0000, 0x4d2c, 0x437b, 0x6161, 0x4074,
@@ -1618,6 +1639,7 @@ static const unsigned short __gb12345_from_ucs4_tab54[256] = {
   0x0000, 0x0000, 0x555c, 0x5f6e, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x3238, 0x0000, 0x3a5f, 0x5f6c, 0x0000, 0x5b41
 };
+
 static const unsigned short __gb12345_from_ucs4_tab55[256] = {
   0x0000, 0x5164, 0x0000, 0x0000, 0x5f42, 0x0000, 0x4b74, 0x343d,
   0x0000, 0x3026, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x5f71,
@@ -1652,6 +1674,7 @@ static const unsigned short __gb12345_from_ucs4_tab55[256] = {
   0x0000, 0x0000, 0x6047, 0x0000, 0x0000, 0x604c, 0x5f59, 0x603b,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x4b54, 0x6055
 };
+
 static const unsigned short __gb12345_from_ucs4_tab56[256] = {
   0x6056, 0x6052, 0x0000, 0x0000, 0x0000, 0x0000, 0x4c3e, 0x0000,
   0x6050, 0x3c4e, 0x0000, 0x0000, 0x6051, 0x6036, 0x3842, 0x5845,
@@ -1686,6 +1709,7 @@ static const unsigned short __gb12345_from_ucs4_tab56[256] = {
   0x4027, 0x3451, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x6072, 0x394c, 0x0000, 0x0000, 0x0000, 0x0000, 0x6073
 };
+
 static const unsigned short __gb12345_from_ucs4_tab57[256] = {
   0x0000, 0x0000, 0x0000, 0x4654, 0x6074, 0x0000, 0x0000, 0x6070,
   0x4826, 0x6076, 0x6075, 0x397a, 0x0000, 0x4e27, 0x0000, 0x0000,
@@ -1720,6 +1744,7 @@ static const unsigned short __gb12345_from_ucs4_tab57[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x5b7a, 0x0000, 0x0000, 0x5634,
   0x5b7c, 0x4560, 0x3b79, 0x0000, 0x0000, 0x5c23
 };
+
 static const unsigned short __gb12345_from_ucs4_tab58[256] = {
   0x5c25, 0x0000, 0x4c43, 0x0000, 0x0000, 0x3c61, 0x3651, 0x5d40,
   0x0000, 0x0000, 0x5b51, 0x5c21, 0x0000, 0x5c22, 0x0000, 0x0000,
@@ -1754,6 +1779,7 @@ static const unsigned short __gb12345_from_ucs4_tab58[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x523c, 0x3a78, 0x0000, 0x0000, 0x4a59
 };
+
 static const unsigned short __gb12345_from_ucs4_tab59[256] = {
   0x0000, 0x0000, 0x623a, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x4f44,
@@ -1788,6 +1814,7 @@ static const unsigned short __gb12345_from_ucs4_tab59[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x6631, 0x0000, 0x5276, 0x0000, 0x0000, 0x0000, 0x574b
 };
+
 static const unsigned short __gb12345_from_ucs4_tab5a[256] = {
   0x0000, 0x4d7e, 0x0000, 0x4d5e, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x6633, 0x0000, 0x0000, 0x6632, 0x0000, 0x0000, 0x0000,
@@ -1822,6 +1849,7 @@ static const unsigned short __gb12345_from_ucs4_tab5a[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x657c, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x6635
 };
+
 static const unsigned short __gb12345_from_ucs4_tab5b[256] = {
   0x6623, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x662c, 0x6652, 0x0000, 0x663f, 0x3d3f, 0x0000, 0x0000, 0x0000,
@@ -1856,6 +1884,7 @@ static const unsigned short __gb12345_from_ucs4_tab5b[256] = {
   0x653e, 0x0000, 0x0000, 0x0000, 0x0000, 0x3368, 0x3126, 0x0000,
   0x3467, 0x0000, 0x4b42
 };
+
 static const unsigned short __gb12345_from_ucs4_tab5c[256] = {
   0x0000, 0x3762, 0x0000, 0x0000, 0x4964, 0x0000, 0x0000, 0x3d2b,
   0x5728, 0x4e3e, 0x5770, 0x5130, 0x0000, 0x3654, 0x353c, 0x5021,
@@ -1890,6 +1919,7 @@ static const unsigned short __gb12345_from_ucs4_tab5c[256] = {
   0x3765, 0x0000, 0x0000, 0x0000, 0x612d, 0x0000, 0x353a, 0x0000,
   0x0000, 0x0000, 0x0000, 0x3e7e, 0x0000, 0x4f3f
 };
+
 static const unsigned short __gb12345_from_ucs4_tab5d[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x6147, 0x3367,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x6141, 0x4669, 0x0000,
@@ -1924,6 +1954,7 @@ static const unsigned short __gb12345_from_ucs4_tab5d[256] = {
   0x5b4f, 0x3c3a, 0x5251, 0x4b48, 0x304d, 0x0000, 0x0000, 0x4f6f,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x5963, 0x3d6d
 };
+
 static const unsigned short __gb12345_from_ucs4_tab5e[256] = {
   0x0000, 0x0000, 0x4a50, 0x323c, 0x0000, 0x0000, 0x372b, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x4f23, 0x0000, 0x0000, 0x0000,
@@ -1958,6 +1989,7 @@ static const unsigned short __gb12345_from_ucs4_tab5e[256] = {
   0x0000, 0x0000, 0x0000, 0x4c7c, 0x5b48, 0x0000, 0x5153, 0x4d22,
   0x0000, 0x0000, 0x3d28, 0x0000, 0x0000, 0x0000, 0x5e43, 0x5825
 };
+
 static const unsigned short __gb12345_from_ucs4_tab5f[256] = {
   0x0000, 0x5b4d, 0x526c, 0x0000, 0x452a, 0x0000, 0x0000, 0x0000,
   0x5e44, 0x0000, 0x3157, 0x5f2e, 0x0000, 0x0000, 0x0000, 0x4a3d,
@@ -1992,6 +2024,7 @@ static const unsigned short __gb12345_from_ucs4_tab5f[256] = {
   0x0000, 0x3340, 0x0000, 0x0000, 0x0000, 0x446e, 0x0000, 0x0000,
   0x626e, 0x0000, 0x0000, 0x5043, 0x0000, 0x3a76, 0x0000, 0x375e
 };
+
 static const unsigned short __gb12345_from_ucs4_tab60[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x6277, 0x0000, 0x0000, 0x6274, 0x5475, 0x6273,
@@ -2026,6 +2059,7 @@ static const unsigned short __gb12345_from_ucs4_tab60[256] = {
   0x3668, 0x4455, 0x6322, 0x4f6b, 0x6337, 0x0000, 0x3b4c, 0x0000,
   0x0000, 0x4847, 0x504a, 0x627c
 };
+
 static const unsigned short __gb12345_from_ucs4_tab61[256] = {
   0x6338, 0x336e, 0x0000, 0x0000, 0x0000, 0x0000, 0x6d29, 0x0000,
   0x537a, 0x5364, 0x0000, 0x0000, 0x0000, 0x6d2a, 0x6339, 0x5262,
@@ -2060,6 +2094,7 @@ static const unsigned short __gb12345_from_ucs4_tab61[256] = {
   0x0000, 0x0000, 0x334d, 0x0000, 0x0000, 0x6342, 0x4041, 0x3b33,
   0x507c, 0x0000, 0x6263, 0x0000, 0x3e65, 0x0000, 0x4965, 0x5c32
 };
+
 static const unsigned short __gb12345_from_ucs4_tab62[256] = {
   0x4135, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x6d30,
   0x386a, 0x0000, 0x4e6c, 0x0000, 0x5067, 0x4a79, 0x4856, 0x0000,
@@ -2094,6 +2129,7 @@ static const unsigned short __gb12345_from_ucs4_tab62[256] = {
   0x0000, 0x3930, 0x0000, 0x482d, 0x4b29, 0x0000, 0x5e59, 0x3f3d,
   0x0000, 0x0000, 0x0000, 0x0000, 0x4634, 0x5727, 0x4a30, 0x4443
 };
+
 static const unsigned short __gb12345_from_ucs4_tab63[256] = {
   0x0000, 0x3356, 0x3952, 0x0000, 0x0000, 0x0000, 0x0000, 0x5638,
   0x6a7c, 0x3034, 0x0000, 0x0000, 0x0000, 0x0000, 0x3f66, 0x0000,
@@ -2128,6 +2164,7 @@ static const unsigned short __gb12345_from_ucs4_tab63[256] = {
   0x0000, 0x0000, 0x5e69, 0x0000, 0x542e, 0x0000, 0x5e5e, 0x0000,
   0x5e6a
 };
+
 static const unsigned short __gb12345_from_ucs4_tab64[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x5e75, 0x5e78, 0x4b70, 0x0000, 0x322b,
@@ -2162,6 +2199,7 @@ static const unsigned short __gb12345_from_ucs4_tab64[256] = {
   0x4521, 0x3869, 0x5640, 0x0000, 0x4029, 0x0000, 0x0000, 0x5f22,
   0x0000, 0x0000, 0x305a, 0x4b53, 0x5f23, 0x0000, 0x4845
 };
+
 static const unsigned short __gb12345_from_ucs4_tab65[256] = {
   0x454a, 0x0000, 0x0000, 0x0000, 0x5e73, 0x0000, 0x446c, 0x0000,
   0x0000, 0x5f2b, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x4223,
@@ -2196,6 +2234,7 @@ static const unsigned short __gb12345_from_ucs4_tab65[256] = {
   0x6a3a, 0x3a35, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x4d7a
 };
+
 static const unsigned short __gb12345_from_ucs4_tab66[256] = {
   0x6a40, 0x0000, 0x303a, 0x6a3e, 0x0000, 0x0000, 0x4025, 0x0000,
   0x0000, 0x0000, 0x6a3b, 0x0000, 0x327d, 0x0000, 0x4377, 0x3b68,
@@ -2230,6 +2269,7 @@ static const unsigned short __gb12345_from_ucs4_tab66[256] = {
   0x543b, 0x0000, 0x477a, 0x5237, 0x387c, 0x0000, 0x0000, 0x6a42,
   0x4a69, 0x325c, 0x0000, 0x0000, 0x427c, 0x0000, 0x5478, 0x4c66
 };
+
 static const unsigned short __gb12345_from_ucs4_tab67[256] = {
   0x576e, 0x0000, 0x0000, 0x3b61, 0x0000, 0x0000, 0x0000, 0x0000,
   0x5442, 0x5350, 0x6b43, 0x4573, 0x0000, 0x377e, 0x0000, 0x0000,
@@ -2264,6 +2304,7 @@ static const unsigned short __gb12345_from_ucs4_tab67[256] = {
   0x684d, 0x5679, 0x0000, 0x4178, 0x3271, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x4a41
 };
+
 static const unsigned short __gb12345_from_ucs4_tab68[256] = {
   0x6859, 0x0000, 0x0000, 0x0000, 0x0000, 0x5524, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -2298,6 +2339,7 @@ static const unsigned short __gb12345_from_ucs4_tab68[256] = {
   0x6922, 0x4062, 0x465c, 0x0000, 0x0000, 0x3f43, 0x0000, 0x0000,
   0x0000, 0x687e, 0x3957, 0x0000, 0x687b
 };
+
 static const unsigned short __gb12345_from_ucs4_tab69[256] = {
   0x0000, 0x6924, 0x0000, 0x0000, 0x0000, 0x524e, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x6923, 0x0000, 0x5632, 0x5735, 0x6862,
@@ -2332,6 +2374,7 @@ static const unsigned short __gb12345_from_ucs4_tab69[256] = {
   0x0000, 0x0000, 0x694e, 0x3d30, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x325b, 0x0000, 0x6948
 };
+
 static const unsigned short __gb12345_from_ucs4_tab6a[256] = {
   0x0000, 0x572e, 0x4056, 0x0000, 0x0000, 0x6848, 0x0000, 0x0000,
   0x0000, 0x0000, 0x372e, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -2366,6 +2409,7 @@ static const unsigned short __gb12345_from_ucs4_tab6a[256] = {
   0x0000, 0x0000, 0x0000, 0x6850, 0x0000, 0x0000, 0x0000, 0x0000,
   0x6937, 0x0000, 0x0000, 0x5323
 };
+
 static const unsigned short __gb12345_from_ucs4_tab6b[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x4038, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x4828, 0x0000, 0x0000, 0x0000, 0x0000, 0x6921,
@@ -2400,6 +2444,7 @@ static const unsigned short __gb12345_from_ucs4_tab6b[256] = {
   0x0000, 0x0000, 0x0000, 0x6b25, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x6b28, 0x0000, 0x0000, 0x0000, 0x6b26, 0x0000, 0x6b27
 };
+
 static const unsigned short __gb12345_from_ucs4_tab6c[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x6b29, 0x6b2b, 0x0000,
   0x5531, 0x0000, 0x0000, 0x0000, 0x6b2a, 0x6b2c, 0x0000, 0x4a4f,
@@ -2433,6 +2478,7 @@ static const unsigned short __gb12345_from_ucs4_tab6c[256] = {
   0x5722, 0x0000, 0x4061, 0x6379, 0x0000, 0x0000, 0x637a, 0x637d,
   0x4c29, 0x6373, 0x0000, 0x533e, 0x0000, 0x3143
 };
+
 static const unsigned short __gb12345_from_ucs4_tab6d[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x6427, 0x0000, 0x0000, 0x6426,
   0x0000, 0x0000, 0x0000, 0x5173, 0x6423, 0x0000, 0x6429, 0x0000,
@@ -2467,6 +2513,7 @@ static const unsigned short __gb12345_from_ucs4_tab6d[256] = {
   0x0000, 0x496e, 0x0000, 0x343e, 0x0000, 0x5428, 0x6435, 0x3b6c,
   0x0000, 0x514d, 0x4733, 0x4c6d, 0x6d35
 };
+
 static const unsigned short __gb12345_from_ucs4_tab6e[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x4765, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x644b, 0x0000, 0x0000, 0x0000,
@@ -2501,6 +2548,7 @@ static const unsigned short __gb12345_from_ucs4_tab6e[256] = {
   0x0000, 0x0000, 0x4978, 0x0000, 0x354e, 0x0000, 0x0000, 0x4231,
   0x6430, 0x646f, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x427a
 };
+
 static const unsigned short __gb12345_from_ucs4_tab6f[256] = {
   0x0000, 0x5366, 0x462f, 0x0000, 0x0000, 0x0000, 0x4661, 0x0000,
   0x0000, 0x6475, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x4229,
@@ -2535,6 +2583,7 @@ static const unsigned short __gb12345_from_ucs4_tab6f[256] = {
   0x4e2b, 0x3175, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x3d26, 0x0000, 0x6378, 0x0000, 0x424b
 };
+
 static const unsigned short __gb12345_from_ucs4_tab70[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x645e, 0x6442, 0x0000,
   0x0000, 0x503a, 0x0000, 0x6449, 0x0000, 0x0000, 0x0000, 0x642f,
@@ -2569,6 +2618,7 @@ static const unsigned short __gb12345_from_ucs4_tab70[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x4c7e, 0x0000, 0x0000, 0x4d69,
   0x0000, 0x456b, 0x0000, 0x0000, 0x0000, 0x3769
 };
+
 static const unsigned short __gb12345_from_ucs4_tab71[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x5149, 0x3a38, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -2603,6 +2653,7 @@ static const unsigned short __gb12345_from_ucs4_tab71[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x3b62, 0x0000, 0x0000, 0x0000,
   0x0000, 0x6c5e, 0x0000, 0x0000, 0x3d7d, 0x0000, 0x6c62
 };
+
 static const unsigned short __gb12345_from_ucs4_tab72[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x312c, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x4b38, 0x0000, 0x0000,
@@ -2637,6 +2688,7 @@ static const unsigned short __gb12345_from_ucs4_tab72[256] = {
   0x0000, 0x0000, 0x0000, 0x617c, 0x6179, 0x0000, 0x0000, 0x617a,
   0x406a, 0x4f41, 0x617e, 0x6221, 0x4047, 0x3137
 };
+
 static const unsigned short __gb12345_from_ucs4_tab73[256] = {
   0x0000, 0x617b, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x6225, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -2671,6 +2723,7 @@ static const unsigned short __gb12345_from_ucs4_tab73[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x4f56
 };
+
 static const unsigned short __gb12345_from_ucs4_tab74[256] = {
   0x0000, 0x0000, 0x0000, 0x4772, 0x0000, 0x4045, 0x406d, 0x0000,
   0x0000, 0x4170, 0x6770, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -2705,6 +2758,7 @@ static const unsigned short __gb12345_from_ucs4_tab74[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x6a32, 0x0000, 0x463f, 0x3449,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x6a33
 };
+
 static const unsigned short __gb12345_from_ucs4_tab75[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x5567, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x6a31, 0x5d79, 0x0000, 0x6a34,
@@ -2739,6 +2793,7 @@ static const unsigned short __gb12345_from_ucs4_tab75[256] = {
   0x4c35, 0x7072, 0x0000, 0x0000, 0x3355, 0x0000, 0x0000, 0x0000,
   0x0000, 0x3154, 0x0000, 0x0000, 0x7073, 0x0000, 0x0000, 0x7074
 };
+
 static const unsigned short __gb12345_from_ucs4_tab76[256] = {
   0x7076, 0x3461, 0x7069, 0x7071, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x707a, 0x3768, 0x7078, 0x5171, 0x0000, 0x0000,
@@ -2773,6 +2828,7 @@ static const unsigned short __gb12345_from_ucs4_tab76[256] = {
   0x0000, 0x6d6c, 0x4324, 0x0000, 0x5631, 0x0000, 0x0000, 0x0000,
   0x4f60, 0x6d6f, 0x0000, 0x0000, 0x454e, 0x0000, 0x365c
 };
+
 static const unsigned short __gb12345_from_ucs4_tab77[256] = {
   0x0000, 0x4a21, 0x0000, 0x0000, 0x6d6d, 0x0000, 0x0000, 0x6d70,
   0x6d71, 0x433c, 0x0000, 0x3f34, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -2807,6 +2863,7 @@ static const unsigned short __gb12345_from_ucs4_tab77[256] = {
   0x0000, 0x0000, 0x0000, 0x4a2f, 0x0000, 0x0000, 0x0000, 0x0000,
   0x6d37, 0x0000, 0x0000, 0x0000, 0x0000, 0x4e79
 };
+
 static const unsigned short __gb12345_from_ucs4_tab78[256] = {
   0x0000, 0x0000, 0x4930, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x6d39, 0x0000, 0x0000, 0x4676, 0x3f33, 0x0000, 0x0000,
@@ -2841,6 +2898,7 @@ static const unsigned short __gb12345_from_ucs4_tab78[256] = {
   0x0000, 0x0000, 0x6d61, 0x0000, 0x6d63, 0x0000, 0x0000, 0x4157,
   0x0000, 0x0000, 0x3b47, 0x0000, 0x0000, 0x6d4d
 };
+
 static const unsigned short __gb12345_from_ucs4_tab79[256] = {
   0x0000, 0x3d38, 0x0000, 0x0000, 0x0000, 0x6d62, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x3421, 0x0000,
@@ -2875,6 +2933,7 @@ static const unsigned short __gb12345_from_ucs4_tab79[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x3d55, 0x0000, 0x0000, 0x5246
 };
+
 static const unsigned short __gb12345_from_ucs4_tab7a[256] = {
   0x4f21, 0x0000, 0x6f7c, 0x6f7b, 0x0000, 0x0000, 0x6f79, 0x0000,
   0x0000, 0x0000, 0x0000, 0x334c, 0x0000, 0x4954, 0x4b30, 0x0000,
@@ -2909,6 +2968,7 @@ static const unsigned short __gb12345_from_ucs4_tab7a[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x3e3a, 0x0000,
   0x0000, 0x5671, 0x7343, 0x0000, 0x0000, 0x7344, 0x0000, 0x384d
 };
+
 static const unsigned short __gb12345_from_ucs4_tab7b[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x7347, 0x0000, 0x304a, 0x0000,
   0x7345, 0x0000, 0x7349, 0x4b71, 0x0000, 0x0000, 0x0000, 0x734b,
@@ -2943,6 +3003,7 @@ static const unsigned short __gb12345_from_ucs4_tab7b[256] = {
   0x0000, 0x0000, 0x0000, 0x7359, 0x0000, 0x0000, 0x0000, 0x4571,
   0x0000, 0x0000, 0x0000, 0x0000, 0x737b, 0x0000, 0x737a
 };
+
 static const unsigned short __gb12345_from_ucs4_tab7c[256] = {
   0x7365, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x3458,
   0x0000, 0x0000, 0x0000, 0x737e, 0x7379, 0x4228, 0x0000, 0x737c,
@@ -2977,6 +3038,7 @@ static const unsigned short __gb12345_from_ucs4_tab7c[256] = {
   0x7870, 0x0000, 0x744f, 0x0000, 0x5961, 0x0000, 0x7450, 0x0000,
   0x7469, 0x6679, 0x0000, 0x4f35, 0x0000, 0x0000, 0x3e40
 };
+
 static const unsigned short __gb12345_from_ucs4_tab7d[256] = {
   0x3c4d, 0x0000, 0x667b, 0x0000, 0x543c, 0x3a6c, 0x667a, 0x667c,
   0x667d, 0x4852, 0x4e49, 0x4e46, 0x0000, 0x4449, 0x0000, 0x0000,
@@ -3011,6 +3073,7 @@ static const unsigned short __gb12345_from_ucs4_tab7d[256] = {
   0x0000, 0x6743, 0x673f, 0x0000, 0x4137, 0x0000, 0x6742, 0x0000,
   0x0000, 0x673e, 0x0000, 0x7924
 };
+
 static const unsigned short __gb12345_from_ucs4_tab7e[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x5d53, 0x6746, 0x674b, 0x6744, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -3033,6 +3096,7 @@ static const unsigned short __gb12345_from_ucs4_tab7e[256] = {
   0x0000, 0x0000, 0x0000, 0x5327, 0x7826, 0x0000, 0x4f4b, 0x0000,
   0x675a, 0x0000, 0x0000, 0x746e, 0x4042
 };
+
 static const unsigned short __gb12345_from_ucs4_tab7f[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -3067,6 +3131,7 @@ static const unsigned short __gb12345_from_ucs4_tab7f[256] = {
   0x3a32, 0x303f, 0x0000, 0x7468, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x474c, 0x0000, 0x372d, 0x526d
 };
+
 static const unsigned short __gb12345_from_ucs4_tab80[256] = {
   0x522b, 0x404f, 0x0000, 0x3f3c, 0x6b23, 0x555f, 0x6a48, 0x0000,
   0x0000, 0x0000, 0x0000, 0x7173, 0x3678, 0x4b23, 0x0000, 0x0000,
@@ -3101,6 +3166,7 @@ static const unsigned short __gb12345_from_ucs4_tab80[256] = {
   0x5248, 0x6b57, 0x6b5c, 0x386c, 0x6b58, 0x0000, 0x0000, 0x0000,
   0x5058, 0x0000, 0x3037, 0x0000, 0x6b5d, 0x445c
 };
+
 static const unsigned short __gb12345_from_ucs4_tab81[256] = {
   0x0000, 0x0000, 0x562c, 0x0000, 0x0000, 0x5032, 0x3460, 0x0000,
   0x0000, 0x4276, 0x3c39, 0x0000, 0x0000, 0x0000, 0x6b5b, 0x0000,
@@ -3135,6 +3201,7 @@ static const unsigned short __gb12345_from_ucs4_tab81[256] = {
   0x0000, 0x0000, 0x0000, 0x5641, 0x5642, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x4c28, 0x5569, 0x3e4a, 0x0000, 0x7427
 };
+
 static const unsigned short __gb12345_from_ucs4_tab82[256] = {
   0x5228, 0x7428, 0x7429, 0x0000, 0x742a, 0x3e4b, 0x0000, 0x536b,
   0x504b, 0x3e59, 0x3e49, 0x0000, 0x4960, 0x7867, 0x0000, 0x0000,
@@ -3169,6 +3236,7 @@ static const unsigned short __gb12345_from_ucs4_tab82[256] = {
   0x0000, 0x5322, 0x0000, 0x0000, 0x5c5a, 0x0000, 0x0000, 0x5c55,
   0x0000, 0x785c, 0x0000, 0x5c5e
 };
+
 static const unsigned short __gb12345_from_ucs4_tab83[256] = {
   0x0000, 0x5742, 0x432f, 0x7832, 0x4751, 0x4329, 0x5c62, 0x5c58,
   0x5c6b, 0x5c54, 0x0000, 0x0000, 0x5c5d, 0x0000, 0x0000, 0x0000,
@@ -3203,6 +3271,7 @@ static const unsigned short __gb12345_from_ucs4_tab83[256] = {
   0x5d54, 0x4162, 0x3746, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x5d4e, 0x5d4f, 0x0000, 0x0000, 0x0000, 0x5d44
 };
+
 static const unsigned short __gb12345_from_ucs4_tab84[256] = {
   0x0000, 0x5d3d, 0x0000, 0x5d4d, 0x4c51, 0x0000, 0x5d49, 0x5c49,
   0x0000, 0x0000, 0x4033, 0x5d42, 0x4348, 0x463c, 0x4e2e, 0x5d4c,
@@ -3237,6 +3306,7 @@ static const unsigned short __gb12345_from_ucs4_tab84[256] = {
   0x5d7b, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x5e24, 0x5c6a, 0x0000, 0x5e23
 };
+
 static const unsigned short __gb12345_from_ucs4_tab85[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x5d78, 0x0000, 0x0000, 0x0000,
@@ -3271,6 +3341,7 @@ static const unsigned short __gb12345_from_ucs4_tab85[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x544c, 0x0000, 0x5c42, 0x0000,
   0x0000, 0x302a, 0x5d7e, 0x5465, 0x0000, 0x0000, 0x0000, 0x5e3d
 };
+
 static const unsigned short __gb12345_from_ucs4_tab86[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x5e2d, 0x5e3f, 0x422b, 0x4b55,
   0x0000, 0x0000, 0x0000, 0x463b, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -3305,6 +3376,7 @@ static const unsigned short __gb12345_from_ucs4_tab86[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x7259, 0x533c, 0x724c, 0x0000, 0x0000, 0x0000, 0x366a
 };
+
 static const unsigned short __gb12345_from_ucs4_tab87[256] = {
   0x4a71, 0x0000, 0x3764, 0x7257, 0x0000, 0x0000, 0x7239, 0x7258,
   0x725a, 0x725d, 0x725b, 0x0000, 0x0000, 0x725c, 0x0000, 0x0000,
@@ -3339,6 +3411,7 @@ static const unsigned short __gb12345_from_ucs4_tab87[256] = {
   0x0000, 0x0000, 0x3366, 0x0000, 0x0000, 0x0000, 0x7249, 0x0000,
   0x0000, 0x5037, 0x0000, 0x524f, 0x0000, 0x0000, 0x7338
 };
+
 static const unsigned short __gb12345_from_ucs4_tab88[256] = {
   0x0000, 0x0000, 0x0000, 0x5979, 0x0000, 0x532c, 0x7232, 0x0000,
   0x0000, 0x0000, 0x7339, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -3373,6 +3446,7 @@ static const unsigned short __gb12345_from_ucs4_tab88[256] = {
   0x7156, 0x7151, 0x0000, 0x4951, 0x4561, 0x0000, 0x0000, 0x0000,
   0x4263, 0x397c, 0x0000, 0x0000, 0x7153, 0x7925, 0x7155
 };
+
 static const unsigned short __gb12345_from_ucs4_tab89[256] = {
   0x0000, 0x0000, 0x3953, 0x0000, 0x0000, 0x0000, 0x0000, 0x7834,
   0x0000, 0x0000, 0x715b, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -3407,6 +3481,7 @@ static const unsigned short __gb12345_from_ucs4_tab89[256] = {
   0x0000, 0x0000, 0x0000, 0x6c32, 0x757c, 0x0000, 0x7623, 0x0000,
   0x3425
 };
+
 static const unsigned short __gb12345_from_ucs4_tab8a[256] = {
   0x5154, 0x5a25, 0x3629, 0x383c, 0x0000, 0x0000, 0x0000, 0x596a,
   0x3c46, 0x0000, 0x5136, 0x0000, 0x5a27, 0x0000, 0x4c56, 0x0000,
@@ -3441,6 +3516,7 @@ static const unsigned short __gb12345_from_ucs4_tab8a[256] = {
   0x0000, 0x3b64, 0x0000, 0x5a4f, 0x0000, 0x0000, 0x5a48, 0x376d,
   0x566e, 0x0000, 0x5168, 0x0000, 0x5a4e, 0x0000, 0x4535
 };
+
 static const unsigned short __gb12345_from_ucs4_tab8b[256] = {
   0x4431, 0x5a4b, 0x4e3d, 0x0000, 0x4c5c, 0x565f, 0x0000, 0x6540,
   0x0000, 0x0000, 0x3b51, 0x0000, 0x0000, 0x0000, 0x4355, 0x0000,
@@ -3463,6 +3539,7 @@ static const unsigned short __gb12345_from_ucs4_tab8b[256] = {
   0x0000, 0x0000, 0x3277, 0x4843, 0x0000, 0x403e, 0x5a5f, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x5a54, 0x0000, 0x5a5d
 };
+
 static const unsigned short __gb12345_from_ucs4_tab8c[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -3497,6 +3574,7 @@ static const unsigned short __gb12345_from_ucs4_tab8c[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x4035, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x572c, 0x6a67, 0x393a, 0x487c, 0x5853
 };
+
 static const unsigned short __gb12345_from_ucs4_tab8d[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x6a5e, 0x5738, 0x0000, 0x0000,
   0x5479, 0x0000, 0x545e, 0x584d, 0x0000, 0x4944, 0x0000, 0x532e,
@@ -3531,6 +3609,7 @@ static const unsigned short __gb12345_from_ucs4_tab8d[256] = {
   0x0000, 0x0000, 0x0000, 0x4c78, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x3665, 0x0000, 0x0000, 0x7555
 };
+
 static const unsigned short __gb12345_from_ucs4_tab8e[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x753d, 0x0000, 0x0000,
   0x0000, 0x7554, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x4c24,
@@ -3565,6 +3644,7 @@ static const unsigned short __gb12345_from_ucs4_tab8e[256] = {
   0x0000, 0x0000, 0x696f, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x5661, 0x6972, 0x6977, 0x6970, 0x6973, 0x0000, 0x6978
 };
+
 static const unsigned short __gb12345_from_ucs4_tab8f[256] = {
   0x0000, 0x0000, 0x0000, 0x3d4f, 0x0000, 0x697b, 0x0000, 0x697a,
   0x0000, 0x5458, 0x6979, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -3599,6 +3679,7 @@ static const unsigned short __gb12345_from_ucs4_tab8f[256] = {
   0x4a76, 0x0000, 0x0000, 0x0000, 0x783c, 0x0000, 0x0000, 0x4354,
   0x3145, 0x3c23, 0x0000, 0x0000, 0x0000, 0x5737
 };
+
 static const unsigned short __gb12345_from_ucs4_tab90[256] = {
   0x4d4b, 0x4b4d, 0x0000, 0x4c53, 0x654c, 0x654b, 0x4466, 0x0000,
   0x0000, 0x0000, 0x0000, 0x654d, 0x0000, 0x6550, 0x0000, 0x4d38,
@@ -3633,6 +3714,7 @@ static const unsigned short __gb12345_from_ucs4_tab90[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x333b, 0x534a, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x363c, 0x5b31
 };
+
 static const unsigned short __gb12345_from_ucs4_tab91[256] = {
   0x0000, 0x0000, 0x3675, 0x0000, 0x5b32, 0x0000, 0x5b29, 0x0000,
   0x0000, 0x4f67, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -3667,6 +3749,7 @@ static const unsigned short __gb12345_from_ucs4_tab91[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x6e4e, 0x0000, 0x6e4a,
   0x0000, 0x6e4f, 0x4725
 };
+
 static const unsigned short __gb12345_from_ucs4_tab92[256] = {
   0x6e59, 0x6e55, 0x0000, 0x0000, 0x6e57, 0x0000, 0x0000, 0x0000,
   0x6e50, 0x4446, 0x0000, 0x0000, 0x0000, 0x365b, 0x3933, 0x0000,
@@ -3701,6 +3784,7 @@ static const unsigned short __gb12345_from_ucs4_tab92[256] = {
   0x6f2e, 0x6f2b, 0x0000, 0x0000, 0x0000, 0x0000, 0x6f33, 0x0000,
   0x3e62, 0x0000, 0x0000, 0x0000, 0x3856
 };
+
 static const unsigned short __gb12345_from_ucs4_tab93[256] = {
   0x0000, 0x6f3e, 0x0000, 0x0000, 0x0000, 0x0000, 0x6f3a, 0x6f42,
   0x6f43, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -3735,6 +3819,7 @@ static const unsigned short __gb12345_from_ucs4_tab93[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x6e7c, 0x0000, 0x6f64,
   0x0000, 0x6f6a
 };
+
 static const unsigned short __gb12345_from_ucs4_tab94[256] = {
   0x0000, 0x0000, 0x0000, 0x6e73, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x6f26, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -3753,6 +3838,7 @@ static const unsigned short __gb12345_from_ucs4_tab94[256] = {
   0x543f, 0x0000, 0x4f62, 0x0000, 0x0000, 0x0000, 0x0000, 0x4477,
   0x0000, 0x6f69, 0x0000, 0x0000, 0x4260, 0x576a, 0x7647, 0x5464
 };
+
 static const unsigned short __gb12345_from_ucs4_tab95[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -3784,6 +3870,7 @@ static const unsigned short __gb12345_from_ucs4_tab95[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x3958, 0x0000, 0x635b, 0x0000,
   0x0000, 0x327b, 0x785b, 0x0000, 0x0000, 0x634b
 };
+
 static const unsigned short __gb12345_from_ucs4_tab96[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -3818,6 +3905,7 @@ static const unsigned short __gb12345_from_ucs4_tab96[256] = {
   0x0000, 0x0000, 0x5446, 0x0000, 0x0000, 0x0000, 0x4163, 0x4057,
   0x0000, 0x3122, 0x0000, 0x3567
 };
+
 static const unsigned short __gb12345_from_ucs4_tab97[256] = {
   0x5068, 0x0000, 0x0000, 0x0000, 0x4f76, 0x0000, 0x762a, 0x5570,
   0x762c, 0x4339, 0x0000, 0x0000, 0x0000, 0x3b74, 0x762e, 0x762d,
@@ -3852,6 +3940,7 @@ static const unsigned short __gb12345_from_ucs4_tab97[256] = {
   0x0000, 0x0000, 0x0000, 0x5274, 0x0000, 0x544f, 0x4958, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x4f6c
 };
+
 static const unsigned short __gb12345_from_ucs4_tab98[256] = {
   0x0000, 0x5233, 0x3625, 0x476a, 0x0000, 0x4f6e, 0x4b33, 0x717c,
   0x506b, 0x0000, 0x676f, 0x0000, 0x4b4c, 0x0000, 0x717d, 0x717e,
@@ -3886,6 +3975,7 @@ static const unsigned short __gb12345_from_ucs4_tab98[256] = {
   0x0000, 0x0000, 0x527b, 0x0000, 0x6242, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x4b47, 0x3125, 0x4a4e
 };
+
 static const unsigned short __gb12345_from_ucs4_tab99[256] = {
   0x0000, 0x0000, 0x0000, 0x3d48, 0x0000, 0x317d, 0x0000, 0x0000,
   0x0000, 0x6243, 0x5178, 0x0000, 0x367c, 0x0000, 0x0000, 0x0000,
@@ -3920,6 +4010,7 @@ static const unsigned short __gb12345_from_ucs4_tab99[256] = {
   0x0000, 0x4266, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x3f25
 };
+
 static const unsigned short __gb12345_from_ucs4_tab9a[256] = {
   0x0000, 0x3352, 0x0000, 0x0000, 0x0000, 0x666d, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x666c, 0x466f, 0x666b,
@@ -3954,6 +4045,7 @@ static const unsigned short __gb12345_from_ucs4_tab9a[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x775b, 0x0000, 0x7759
 };
+
 static const unsigned short __gb12345_from_ucs4_tab9b[256] = {
   0x0000, 0x0000, 0x0000, 0x5757, 0x0000, 0x0000, 0x4b49, 0x0000,
   0x775c, 0x0000, 0x0000, 0x0000, 0x0000, 0x783a, 0x0000, 0x775d,
@@ -3988,6 +4080,7 @@ static const unsigned short __gb12345_from_ucs4_tab9b[256] = {
   0x7673, 0x0000, 0x0000, 0x0000, 0x7675, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x766a, 0x0000, 0x767d
 };
+
 static const unsigned short __gb12345_from_ucs4_tab9c[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x7678, 0x767c, 0x0000, 0x0000, 0x0000, 0x767a, 0x0000, 0x0000,
@@ -4021,6 +4114,7 @@ static const unsigned short __gb12345_from_ucs4_tab9c[256] = {
   0x0000, 0x702f, 0x0000, 0x0000, 0x596c, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x376f, 0x4379, 0x0000, 0x7030
 };
+
 static const unsigned short __gb12345_from_ucs4_tab9d[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x7032, 0x7031,
   0x0000, 0x513b, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -4055,6 +4149,7 @@ static const unsigned short __gb12345_from_ucs4_tab9d[256] = {
   0x0000, 0x0000, 0x7055, 0x7042, 0x0000, 0x0000, 0x0000, 0x0000,
   0x7056, 0x5325, 0x7058
 };
+
 static const unsigned short __gb12345_from_ucs4_tab9e[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x7057, 0x0000, 0x0000, 0x0000,
@@ -4089,6 +4184,7 @@ static const unsigned short __gb12345_from_ucs4_tab9e[256] = {
   0x0000, 0x0000, 0x7775, 0x0000, 0x7854, 0x0000, 0x0000, 0x7772,
   0x0000, 0x6d69, 0x0000, 0x6d6a, 0x6d6b, 0x763c, 0x0000, 0x763d
 };
+
 static const unsigned short __gb12345_from_ucs4_tab9f[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x763e, 0x0000, 0x0000, 0x0000, 0x0000, 0x3626, 0x0000,
@@ -4112,6 +4208,7 @@ static const unsigned short __gb12345_from_ucs4_tab9f[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x396a, 0x0000, 0x0000, 0x0000,
   0x595f
 };
+
 static const unsigned short __gb12345_from_ucs4_tabff[256] = {
   0x0000, 0x2321, 0x2322, 0x2323, 0x2167, 0x2325, 0x2326, 0x2327,
   0x2328, 0x2329, 0x232a, 0x232b, 0x232c, 0x232d, 0x232e, 0x232f,
@@ -4143,298 +4240,316 @@ static const unsigned short __gb12345_from_ucs4_tabff[256] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x2169, 0x216a, 0x0000, 0x237e, 0x0000, 0x2324
 };
+
 static const unsigned short *__gb12345_from_ucs4[] = {
-	__gb12345_from_ucs4_tab00,	/* U+0000-ff */
-	__gb12345_from_ucs4_tab01,	/* U+0100-ff */
-	__gb12345_from_ucs4_tab02,	/* U+0200-ff */
-	__gb12345_from_ucs4_tab03,	/* U+0300-ff */
-	__gb12345_from_ucs4_tab04,	/* U+0400-ff */
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_tab20,	/* U+2000-ff */
-	__gb12345_from_ucs4_tab21,	/* U+2100-ff */
-	__gb12345_from_ucs4_tab22,	/* U+2200-ff */
-	__gb12345_from_ucs4_tab23,	/* U+2300-ff */
-	__gb12345_from_ucs4_tab24,	/* U+2400-ff */
-	__gb12345_from_ucs4_tab25,	/* U+2500-ff */
-	__gb12345_from_ucs4_tab26,	/* U+2600-ff */
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_tab30,	/* U+3000-ff */
-	__gb12345_from_ucs4_tab31,	/* U+3100-ff */
-	__gb12345_from_ucs4_tab32,	/* U+3200-ff */
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_tab4e,	/* U+4e00-ff */
-	__gb12345_from_ucs4_tab4f,	/* U+4f00-ff */
-	__gb12345_from_ucs4_tab50,	/* U+5000-ff */
-	__gb12345_from_ucs4_tab51,	/* U+5100-ff */
-	__gb12345_from_ucs4_tab52,	/* U+5200-ff */
-	__gb12345_from_ucs4_tab53,	/* U+5300-ff */
-	__gb12345_from_ucs4_tab54,	/* U+5400-ff */
-	__gb12345_from_ucs4_tab55,	/* U+5500-ff */
-	__gb12345_from_ucs4_tab56,	/* U+5600-ff */
-	__gb12345_from_ucs4_tab57,	/* U+5700-ff */
-	__gb12345_from_ucs4_tab58,	/* U+5800-ff */
-	__gb12345_from_ucs4_tab59,	/* U+5900-ff */
-	__gb12345_from_ucs4_tab5a,	/* U+5a00-ff */
-	__gb12345_from_ucs4_tab5b,	/* U+5b00-ff */
-	__gb12345_from_ucs4_tab5c,	/* U+5c00-ff */
-	__gb12345_from_ucs4_tab5d,	/* U+5d00-ff */
-	__gb12345_from_ucs4_tab5e,	/* U+5e00-ff */
-	__gb12345_from_ucs4_tab5f,	/* U+5f00-ff */
-	__gb12345_from_ucs4_tab60,	/* U+6000-ff */
-	__gb12345_from_ucs4_tab61,	/* U+6100-ff */
-	__gb12345_from_ucs4_tab62,	/* U+6200-ff */
-	__gb12345_from_ucs4_tab63,	/* U+6300-ff */
-	__gb12345_from_ucs4_tab64,	/* U+6400-ff */
-	__gb12345_from_ucs4_tab65,	/* U+6500-ff */
-	__gb12345_from_ucs4_tab66,	/* U+6600-ff */
-	__gb12345_from_ucs4_tab67,	/* U+6700-ff */
-	__gb12345_from_ucs4_tab68,	/* U+6800-ff */
-	__gb12345_from_ucs4_tab69,	/* U+6900-ff */
-	__gb12345_from_ucs4_tab6a,	/* U+6a00-ff */
-	__gb12345_from_ucs4_tab6b,	/* U+6b00-ff */
-	__gb12345_from_ucs4_tab6c,	/* U+6c00-ff */
-	__gb12345_from_ucs4_tab6d,	/* U+6d00-ff */
-	__gb12345_from_ucs4_tab6e,	/* U+6e00-ff */
-	__gb12345_from_ucs4_tab6f,	/* U+6f00-ff */
-	__gb12345_from_ucs4_tab70,	/* U+7000-ff */
-	__gb12345_from_ucs4_tab71,	/* U+7100-ff */
-	__gb12345_from_ucs4_tab72,	/* U+7200-ff */
-	__gb12345_from_ucs4_tab73,	/* U+7300-ff */
-	__gb12345_from_ucs4_tab74,	/* U+7400-ff */
-	__gb12345_from_ucs4_tab75,	/* U+7500-ff */
-	__gb12345_from_ucs4_tab76,	/* U+7600-ff */
-	__gb12345_from_ucs4_tab77,	/* U+7700-ff */
-	__gb12345_from_ucs4_tab78,	/* U+7800-ff */
-	__gb12345_from_ucs4_tab79,	/* U+7900-ff */
-	__gb12345_from_ucs4_tab7a,	/* U+7a00-ff */
-	__gb12345_from_ucs4_tab7b,	/* U+7b00-ff */
-	__gb12345_from_ucs4_tab7c,	/* U+7c00-ff */
-	__gb12345_from_ucs4_tab7d,	/* U+7d00-ff */
-	__gb12345_from_ucs4_tab7e,	/* U+7e00-ff */
-	__gb12345_from_ucs4_tab7f,	/* U+7f00-ff */
-	__gb12345_from_ucs4_tab80,	/* U+8000-ff */
-	__gb12345_from_ucs4_tab81,	/* U+8100-ff */
-	__gb12345_from_ucs4_tab82,	/* U+8200-ff */
-	__gb12345_from_ucs4_tab83,	/* U+8300-ff */
-	__gb12345_from_ucs4_tab84,	/* U+8400-ff */
-	__gb12345_from_ucs4_tab85,	/* U+8500-ff */
-	__gb12345_from_ucs4_tab86,	/* U+8600-ff */
-	__gb12345_from_ucs4_tab87,	/* U+8700-ff */
-	__gb12345_from_ucs4_tab88,	/* U+8800-ff */
-	__gb12345_from_ucs4_tab89,	/* U+8900-ff */
-	__gb12345_from_ucs4_tab8a,	/* U+8a00-ff */
-	__gb12345_from_ucs4_tab8b,	/* U+8b00-ff */
-	__gb12345_from_ucs4_tab8c,	/* U+8c00-ff */
-	__gb12345_from_ucs4_tab8d,	/* U+8d00-ff */
-	__gb12345_from_ucs4_tab8e,	/* U+8e00-ff */
-	__gb12345_from_ucs4_tab8f,	/* U+8f00-ff */
-	__gb12345_from_ucs4_tab90,	/* U+9000-ff */
-	__gb12345_from_ucs4_tab91,	/* U+9100-ff */
-	__gb12345_from_ucs4_tab92,	/* U+9200-ff */
-	__gb12345_from_ucs4_tab93,	/* U+9300-ff */
-	__gb12345_from_ucs4_tab94,	/* U+9400-ff */
-	__gb12345_from_ucs4_tab95,	/* U+9500-ff */
-	__gb12345_from_ucs4_tab96,	/* U+9600-ff */
-	__gb12345_from_ucs4_tab97,	/* U+9700-ff */
-	__gb12345_from_ucs4_tab98,	/* U+9800-ff */
-	__gb12345_from_ucs4_tab99,	/* U+9900-ff */
-	__gb12345_from_ucs4_tab9a,	/* U+9a00-ff */
-	__gb12345_from_ucs4_tab9b,	/* U+9b00-ff */
-	__gb12345_from_ucs4_tab9c,	/* U+9c00-ff */
-	__gb12345_from_ucs4_tab9d,	/* U+9d00-ff */
-	__gb12345_from_ucs4_tab9e,	/* U+9e00-ff */
-	__gb12345_from_ucs4_tab9f,	/* U+9f00-ff */
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_null,
-	__gb12345_from_ucs4_tabff,	/* U+ff00-ff */
+  __gb12345_from_ucs4_tab00,    /* U+0000-ff */
+  __gb12345_from_ucs4_tab01,    /* U+0100-ff */
+  __gb12345_from_ucs4_tab02,    /* U+0200-ff */
+  __gb12345_from_ucs4_tab03,    /* U+0300-ff */
+  __gb12345_from_ucs4_tab04,    /* U+0400-ff */
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_tab20,    /* U+2000-ff */
+  __gb12345_from_ucs4_tab21,    /* U+2100-ff */
+  __gb12345_from_ucs4_tab22,    /* U+2200-ff */
+  __gb12345_from_ucs4_tab23,    /* U+2300-ff */
+  __gb12345_from_ucs4_tab24,    /* U+2400-ff */
+  __gb12345_from_ucs4_tab25,    /* U+2500-ff */
+  __gb12345_from_ucs4_tab26,    /* U+2600-ff */
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_tab30,    /* U+3000-ff */
+  __gb12345_from_ucs4_tab31,    /* U+3100-ff */
+  __gb12345_from_ucs4_tab32,    /* U+3200-ff */
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_tab4e,    /* U+4e00-ff */
+  __gb12345_from_ucs4_tab4f,    /* U+4f00-ff */
+  __gb12345_from_ucs4_tab50,    /* U+5000-ff */
+  __gb12345_from_ucs4_tab51,    /* U+5100-ff */
+  __gb12345_from_ucs4_tab52,    /* U+5200-ff */
+  __gb12345_from_ucs4_tab53,    /* U+5300-ff */
+  __gb12345_from_ucs4_tab54,    /* U+5400-ff */
+  __gb12345_from_ucs4_tab55,    /* U+5500-ff */
+  __gb12345_from_ucs4_tab56,    /* U+5600-ff */
+  __gb12345_from_ucs4_tab57,    /* U+5700-ff */
+  __gb12345_from_ucs4_tab58,    /* U+5800-ff */
+  __gb12345_from_ucs4_tab59,    /* U+5900-ff */
+  __gb12345_from_ucs4_tab5a,    /* U+5a00-ff */
+  __gb12345_from_ucs4_tab5b,    /* U+5b00-ff */
+  __gb12345_from_ucs4_tab5c,    /* U+5c00-ff */
+  __gb12345_from_ucs4_tab5d,    /* U+5d00-ff */
+  __gb12345_from_ucs4_tab5e,    /* U+5e00-ff */
+  __gb12345_from_ucs4_tab5f,    /* U+5f00-ff */
+  __gb12345_from_ucs4_tab60,    /* U+6000-ff */
+  __gb12345_from_ucs4_tab61,    /* U+6100-ff */
+  __gb12345_from_ucs4_tab62,    /* U+6200-ff */
+  __gb12345_from_ucs4_tab63,    /* U+6300-ff */
+  __gb12345_from_ucs4_tab64,    /* U+6400-ff */
+  __gb12345_from_ucs4_tab65,    /* U+6500-ff */
+  __gb12345_from_ucs4_tab66,    /* U+6600-ff */
+  __gb12345_from_ucs4_tab67,    /* U+6700-ff */
+  __gb12345_from_ucs4_tab68,    /* U+6800-ff */
+  __gb12345_from_ucs4_tab69,    /* U+6900-ff */
+  __gb12345_from_ucs4_tab6a,    /* U+6a00-ff */
+  __gb12345_from_ucs4_tab6b,    /* U+6b00-ff */
+  __gb12345_from_ucs4_tab6c,    /* U+6c00-ff */
+  __gb12345_from_ucs4_tab6d,    /* U+6d00-ff */
+  __gb12345_from_ucs4_tab6e,    /* U+6e00-ff */
+  __gb12345_from_ucs4_tab6f,    /* U+6f00-ff */
+  __gb12345_from_ucs4_tab70,    /* U+7000-ff */
+  __gb12345_from_ucs4_tab71,    /* U+7100-ff */
+  __gb12345_from_ucs4_tab72,    /* U+7200-ff */
+  __gb12345_from_ucs4_tab73,    /* U+7300-ff */
+  __gb12345_from_ucs4_tab74,    /* U+7400-ff */
+  __gb12345_from_ucs4_tab75,    /* U+7500-ff */
+  __gb12345_from_ucs4_tab76,    /* U+7600-ff */
+  __gb12345_from_ucs4_tab77,    /* U+7700-ff */
+  __gb12345_from_ucs4_tab78,    /* U+7800-ff */
+  __gb12345_from_ucs4_tab79,    /* U+7900-ff */
+  __gb12345_from_ucs4_tab7a,    /* U+7a00-ff */
+  __gb12345_from_ucs4_tab7b,    /* U+7b00-ff */
+  __gb12345_from_ucs4_tab7c,    /* U+7c00-ff */
+  __gb12345_from_ucs4_tab7d,    /* U+7d00-ff */
+  __gb12345_from_ucs4_tab7e,    /* U+7e00-ff */
+  __gb12345_from_ucs4_tab7f,    /* U+7f00-ff */
+  __gb12345_from_ucs4_tab80,    /* U+8000-ff */
+  __gb12345_from_ucs4_tab81,    /* U+8100-ff */
+  __gb12345_from_ucs4_tab82,    /* U+8200-ff */
+  __gb12345_from_ucs4_tab83,    /* U+8300-ff */
+  __gb12345_from_ucs4_tab84,    /* U+8400-ff */
+  __gb12345_from_ucs4_tab85,    /* U+8500-ff */
+  __gb12345_from_ucs4_tab86,    /* U+8600-ff */
+  __gb12345_from_ucs4_tab87,    /* U+8700-ff */
+  __gb12345_from_ucs4_tab88,    /* U+8800-ff */
+  __gb12345_from_ucs4_tab89,    /* U+8900-ff */
+  __gb12345_from_ucs4_tab8a,    /* U+8a00-ff */
+  __gb12345_from_ucs4_tab8b,    /* U+8b00-ff */
+  __gb12345_from_ucs4_tab8c,    /* U+8c00-ff */
+  __gb12345_from_ucs4_tab8d,    /* U+8d00-ff */
+  __gb12345_from_ucs4_tab8e,    /* U+8e00-ff */
+  __gb12345_from_ucs4_tab8f,    /* U+8f00-ff */
+  __gb12345_from_ucs4_tab90,    /* U+9000-ff */
+  __gb12345_from_ucs4_tab91,    /* U+9100-ff */
+  __gb12345_from_ucs4_tab92,    /* U+9200-ff */
+  __gb12345_from_ucs4_tab93,    /* U+9300-ff */
+  __gb12345_from_ucs4_tab94,    /* U+9400-ff */
+  __gb12345_from_ucs4_tab95,    /* U+9500-ff */
+  __gb12345_from_ucs4_tab96,    /* U+9600-ff */
+  __gb12345_from_ucs4_tab97,    /* U+9700-ff */
+  __gb12345_from_ucs4_tab98,    /* U+9800-ff */
+  __gb12345_from_ucs4_tab99,    /* U+9900-ff */
+  __gb12345_from_ucs4_tab9a,    /* U+9a00-ff */
+  __gb12345_from_ucs4_tab9b,    /* U+9b00-ff */
+  __gb12345_from_ucs4_tab9c,    /* U+9c00-ff */
+  __gb12345_from_ucs4_tab9d,    /* U+9d00-ff */
+  __gb12345_from_ucs4_tab9e,    /* U+9e00-ff */
+  __gb12345_from_ucs4_tab9f,    /* U+9f00-ff */
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_null,
+  __gb12345_from_ucs4_tabff,    /* U+ff00-ff */
 
 };
+
 /* ************************************************ */
 
-static int euc_gb12345_to_uni(int enc) {
-    int val;
+static int
+euc_gb12345_to_uni (int enc)
+{
+  int u;
 
-    if ( enc<0xa1 )
-return( enc );
-    if ( (enc>>8)<0xa1 || (enc&0xff)<0xa1 )
-return( -1 );
-    val = ((enc>>8)-0xa1)*94 + ((enc&0xff)-0xa1);
-    if ( val>=0x2058 )
-return( -1 );
-    if ( __gb12345_to_ucs[val]==0 )
-return( -1 );
-return( __gb12345_to_ucs[val] );
-}
-
-static int uni_to_euc_gb12345(int u) {
-    int val;
-    if ( u<0 || u>=65536 )
-return( -1 );
-    if ( u>=0x20 && u<0xa1 )
-return( u );
-    val = __gb12345_from_ucs4[u>>8][u&0xff];
-    if ( val==0 )
-return( -1 );
-return( val );
-}
-
-int FontForgeInit(void) {
-    if ( !AddEncoding("EUC-GB12345",euc_gb12345_to_uni,uni_to_euc_gb12345,65535) ) {
-	LogError("Failed to add EUC-GB12345" );
-return( 0 );
+  if (enc < 0xa1)
+    u = enc;
+  else if ((enc >> 8) < 0xa1 || (enc & 0xff) < 0xa1)
+    u = -1;
+  else
+    {
+      int val = ((enc >> 8) - 0xa1) * 94 + ((enc & 0xff) - 0xa1);
+      if (0x2058 <= val || __gb12345_to_ucs[val] == 0)
+        u = -1;
+      else
+        u = __gb12345_to_ucs[val];
     }
-return( 1 );
+  return u;
+}
+
+static int
+uni_to_euc_gb12345 (int u)
+{
+  int val;
+  if (u < 0 || 65536 <= u)
+    val = -1;
+  else if (0x20 <= u && u < 0xa1)
+    val = u;
+  else
+    {
+      val = __gb12345_from_ucs4[u >> 8][u & 0xff];
+      if (val == 0)
+        val = -1;
+    }
+  return val;
+}
+
+int
+FontForgeInit (void)
+{
+  int success = 1;
+  int code = AddEncoding ("EUC-GB12345", euc_gb12345_to_uni,
+                          uni_to_euc_gb12345, 65535);
+  if (code == 0)
+    {
+      success = 0;
+      LogError ("Failed to add EUC-GB12345");
+    }
+  return success;
 }
