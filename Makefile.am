@@ -51,7 +51,7 @@ include libltdl/Makefile.inc
 SUBDIRS = lib inc auxiliary gutils
 
 if GRAPHICAL_USER_INTERFACE
-SUBDIRS += gdraw
+SUBDIRS += gdraw desktop
 endif GRAPHICAL_USER_INTERFACE
 
 SUBDIRS += plugins fontforge po scheme doc htdocs cidmap tests
@@ -67,10 +67,6 @@ endif PYTHON_EXTENSION
 if MACINTOSH
 SUBDIRS += mackeys
 endif MACINTOSH
-
-if DESKTOP
-SUBDIRS += desktop
-endif DESKTOP
 
 if FONTTOOLS
 SUBDIRS += fonttools

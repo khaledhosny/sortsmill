@@ -307,7 +307,6 @@ AM_CONDITIONAL([MACINTOSH],[test x"${gww_ismac}" = xyes])
 # The following conditionals are always false, so the directories
 # never get built by default. Nevertheless, they will be included by
 # "make dist".
-AM_CONDITIONAL([DESKTOP],[test x != x])
 AM_CONDITIONAL([FONTTOOLS],[test x != x])
 
 FONTFORGE_SET_MY_CFLAGS
