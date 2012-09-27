@@ -102,13 +102,15 @@ EXTRA_libsortsmillff_fontforge_la_SOURCES = splinerefigure.c
 
 PLUGIN_HOOKS = AddEncoding AddScriptingCommand
 
+PYTHON_HOOKS = ff_init
+
 SYMBOLS_ASSOCIATED_WITH_OBSCURE_FEATURES = ClipBoardToSplineSet	\
 	RealApprox RealNearish RefCharsCopy SFUntickAll				\
 	SPLCatagorizePoints SplineSplit
 
 SYMBOLS_FOR_FONTFORGE_WITHOUT_GUI = PyFF_Stdin
 
-EXPORTED_LIBFONTFORGE_SYMBOLS = $(PLUGIN_HOOKS)							\
+EXPORTED_LIBFONTFORGE_SYMBOLS = $(PLUGIN_HOOKS) $(PYTHON_HOOKS)			\
 	$(SYMBOLS_ASSOCIATED_WITH_OBSCURE_FEATURES)							\
 	$(SYMBOLS_FOR_FONTFORGE_WITHOUT_GUI) AddOTLToSllks AllGlyphNames	\
 	AllNamelistNames AlreadyMSSymbolArea AltUniCopy AltUniFree			\
@@ -302,11 +304,11 @@ EXPORTED_LIBFONTFORGE_SYMBOLS = $(PLUGIN_HOOKS)							\
 	ff_NextToken ff_VerboseCheck ff_backuptok ff_ft_context				\
 	ff_statement ff_ttf_instrnames force_names_when_opening				\
 	force_names_when_saving friendlies fv_active_in_ui fv_interface		\
-	gdefclass getUserCacheDir getUserConfigDir getUserDataDir group_root hasFreeType						\
-	hasFreeTypeByteCode hasFreeTypeDebugger hascomposing haslrbounds	\
-	hasspiro hint_bounding_boxes hint_diagonal_ends						\
-	hint_diagonal_intersections instr_typify instrcheck					\
-	instruct_ball_terminals instruct_diagonal_stems						\
+	gdefclass getUserCacheDir getUserConfigDir getUserDataDir			\
+	group_root hasFreeType hasFreeTypeByteCode hasFreeTypeDebugger		\
+	hascomposing haslrbounds hasspiro hint_bounding_boxes				\
+	hint_diagonal_ends hint_diagonal_intersections instr_typify			\
+	instrcheck instruct_ball_terminals instruct_diagonal_stems			\
 	instruct_serif_stems interpolate_strong								\
 	is_LIGATURE_or_VULGAR_FRACTION joinsnap knownweights				\
 	layer_active_in_ui library_version_configuration					\
