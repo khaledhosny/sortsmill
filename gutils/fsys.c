@@ -273,27 +273,19 @@ char *_GFile_find_program_dir(char *prog) {
     char filename[2000];
 
 #if defined(__MINGW32__)
-    char* pt1 = strrchr(prog, '/');
-    char* pt2 = strrchr(prog, '\\');
-    if(pt1<pt2) pt1=pt2;
-    if(pt1)
-	program_dir = copyn(prog, pt1-prog);
-    else if( (path = getenv("PATH")) != NULL ){
-	char* tmppath = copy(path);
-	path = tmppath;
-	for(;;){
-	    pt1 = strchr(path, ';');
-	    if(pt1) *pt1 = '\0';
-	    sprintf(filename,"%s/%s", path, prog);
-	    if ( access(filename,1)!= -1 ) {
-		program_dir = copy(path);
-		break;
-	    }
-	    if(!pt1) break;
-	    path = pt1+1;
+    char  path[MAX_PATH+4];
+    char* c = path;
+    char* tail = 0;
+    unsigned int  len = GetModuleFileNameA(NULL, path, MAX_PATH);
+    path[len] = '\0';
+    for(; *c; *c++){
+	if(*c == '\\'){
+	    tail=c;
+	    *c = '/';
 	}
-	free(tmppath);
     }
+    if(tail) *tail='\0';
+    program_dir = copy(path);
 #else
     if ( (pt = strrchr(prog,'/'))!=NULL )
 	program_dir = copyn(prog,pt-prog);
@@ -317,8 +309,9 @@ char *_GFile_find_program_dir(char *prog) {
 #endif
 
     if ( program_dir==NULL )
-return( NULL );
-    GFileGetAbsoluteName(program_dir,filename,sizeof(filename));
+	GFileGetAbsoluteName(".",filename,sizeof(filename));
+    else
+	GFileGetAbsoluteName(program_dir,filename,sizeof(filename));
     free(program_dir);
     program_dir = copy(filename);
 return( program_dir );

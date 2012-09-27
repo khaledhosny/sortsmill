@@ -253,7 +253,7 @@ struct displayfuncs {
     cairo_t *(*getCairo)(GWindow w);
 };
 
-extern GDisplay *_GXDraw_CreateDisplay(char *displayname,char *programname);
+extern GDisplay *_GXDraw_CreateDisplay(char *displayname);
 extern void _GDraw_InitError(GDisplay *);
 extern void _GDraw_ComposeChars(GDisplay *gdisp,GEvent *gevent);
 

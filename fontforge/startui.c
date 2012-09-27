@@ -590,12 +590,12 @@ return( true );
 return( true );
 }
 
-static void AddR(char *prog, char *name, char *val ) {
+static void AddR(char *name, char *val) {
     char *full = xmalloc1(strlen(name)+strlen(val)+4);
     strcpy(full,name);
     strcat(full,": ");
     strcat(full,val);
-    GResourceAddResourceString(full,prog);
+    GResourceAddResourceString(full);
 }
 
 static int ReopenLastFonts(void) {
@@ -842,10 +842,10 @@ int fontforge_main( int argc, char **argv ) {
 	for(; *c; *c++) /* backslash to slash */
 	    if(*c == '\\')
 		*c = '/';
-	GResourceSetProg(path);
+	GResourceSetProg(path, "fontforge");
     }
 #else
-    GResourceSetProg(argv[0]);
+    GResourceSetProg(argv[0], "fontforge");
 #endif
 
 #if defined(__Mac)
@@ -898,13 +898,13 @@ int fontforge_main( int argc, char **argv ) {
 	GGadgetSetImageDir(path);
 
 	strcpy(path+len, "/share/fontforge/resources/fontforge.resource"); /* Resource File */
-	GResourceAddResourceFile(path, GResourceProgramName, false);
+	GResourceAddResourceFile(path, false);
 
 	free(path);
     }
 #elif defined(SHAREDIR)
     GGadgetSetImageDir(SHAREDIR "/pixmaps");
-    GResourceAddResourceFile(SHAREDIR "/resources/fontforge.resource",GResourceProgramName,false);
+    GResourceAddResourceFile(SHAREDIR "/resources/fontforge.resource", false);
 #endif
 
     if ( load_prefs!=NULL && strcasecmp(load_prefs,"Always")==0 )
@@ -926,17 +926,17 @@ int fontforge_main( int argc, char **argv ) {
 	if ( pt[0]=='-' && pt[1]=='-' )
 	    ++pt;
 	if ( strcmp(pt,"-sync")==0 )
-	    GResourceAddResourceString("Gdraw.Synchronize: true",argv[0]);
+	    GResourceAddResourceString("Gdraw.Synchronize: true");
 	else if ( strcmp(pt,"-depth")==0 && i<argc-1 )
-	    AddR(argv[0],"Gdraw.Depth", argv[++i]);
+	    AddR("Gdraw.Depth", argv[++i]);
 	else if ( strcmp(pt,"-vc")==0 && i<argc-1 )
-	    AddR(argv[0],"Gdraw.VisualClass", argv[++i]);
+	    AddR("Gdraw.VisualClass", argv[++i]);
 	else if ( (strcmp(pt,"-cmap")==0 || strcmp(pt,"-colormap")==0) && i<argc-1 )
-	    AddR(argv[0],"Gdraw.Colormap", argv[++i]);
+	    AddR("Gdraw.Colormap", argv[++i]);
 	else if ( (strcmp(pt,"-dontopenxdevices")==0) )
-	    AddR(argv[0],"Gdraw.DontOpenXDevices", "true");
+	    AddR("Gdraw.DontOpenXDevices", "true");
 	else if ( strcmp(pt,"-keyboard")==0 && i<argc-1 )
-	    AddR(argv[0],"Gdraw.Keyboard", argv[++i]);
+	    AddR("Gdraw.Keyboard", argv[++i]);
 	else if ( strcmp(pt,"-display")==0 && i<argc-1 )
 	    display = argv[++i];
 # if MyMemory

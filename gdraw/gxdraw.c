@@ -3745,7 +3745,7 @@ return( (void *) -1 );
 return( (void *) (intpt) (ret-1) );
 }
 
-static void GXResourceInit(GXDisplay *gdisp,char *programname) {
+static void GXResourceInit(GXDisplay *gdisp) {
     Atom rmatom, type;
     int format, i; unsigned long nitems, bytes_after;
     unsigned char *ret = NULL;
@@ -3771,7 +3771,7 @@ static void GXResourceInit(GXDisplay *gdisp,char *programname) {
 	    ret = NULL;
 	}
     }
-    GResourceAddResourceString((char *) ret,programname);
+    GResourceAddResourceString((char *) ret);
     if ( ret!=NULL ) XFree(ret);
 
     memset(res,0,sizeof(res));
@@ -3941,7 +3941,7 @@ static void GDrawInitXKB(GXDisplay *gdisp) {
 #endif
 }
 
-GDisplay *_GXDraw_CreateDisplay(char *displayname,char *programname) {
+GDisplay *_GXDraw_CreateDisplay(char *displayname) {
     GXDisplay *gdisp;
     Display *display;
     GXWindow groot;
@@ -4017,7 +4017,7 @@ return( NULL );
     groot->is_toplevel = true;
     groot->is_visible = true;
     
-    GXResourceInit(gdisp,programname);
+    GXResourceInit(gdisp);
 
     gdisp->bs.double_time = GResourceFindInt( "DoubleClickTime", gdisp->bs.double_time );
     gdisp->def_background = GResourceFindColor( "Background", COLOR_CREATE(0xf5,0xff,0xfa));
@@ -4098,7 +4098,7 @@ return ((key_map_stat[code >> 3] >> (code & 7)) & 1);
 
 #else	/* NO X */
 
-GDisplay *_GXDraw_CreateDisplay(char *displayname,char *programname) {
+GDisplay *_GXDraw_CreateDisplay(char *displayname) {
     fprintf( stderr, "This program was not compiled with X11, and cannot open the display\n" );
     exit(1);
 }

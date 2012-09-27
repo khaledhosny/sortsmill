@@ -39,31 +39,6 @@
 
 static char *GResourceProgramDir;
 
-static void FindProgDir(char *prog) {
-#if defined(__MINGW32__)
-    char  path[MAX_PATH+4];
-    char* c = path;
-    char* tail = 0;
-    unsigned int  len = GetModuleFileNameA(NULL, path, MAX_PATH);
-    path[len] = '\0';
-    for(; *c; *c++){
-	if(*c == '\\'){
-	    tail=c;
-	    *c = '/';
-	}
-    }
-    if(tail) *tail='\0';
-    GResourceProgramDir = copy(path);
-#else
-    GResourceProgramDir = _GFile_find_program_dir(prog);
-    if ( GResourceProgramDir==NULL ) {
-	char filename[1025];
-	GFileGetAbsoluteName(".",filename,sizeof(filename));
-	GResourceProgramDir = copy(filename);
-    }
-#endif
-}
-
 static char *getLocaleDir(void) {
     static char *sharedir=NULL;
     static int set=false;
@@ -155,7 +130,7 @@ int fontforge_main( int argc, char **argv ) {
     /*  as long as the library is self consistant, all should be well */
     /* check_library_version(&exe_library_version_configuration,true,false); */
 
-    FindProgDir(argv[0]);
+    GResourceProgramDir = _GFile_find_program_dir(argv[0]);
     InitSimpleStuff();
 
     bind_textdomain_codeset(ff_textdomain(),"UTF-8");

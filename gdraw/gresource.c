@@ -44,7 +44,7 @@
 
 #include "gresourceP.h"
 
-char *GResourceProgramName, *GResourceFullProgram, *GResourceProgramDir;
+char *GResourceProgramName, *GResourceProgramDir;
 char *usercharset_names;
 
 static int rcur, rmax=0;
@@ -157,41 +157,28 @@ return( -1 );
 return( 0 );
 }
 
-void GResourceSetProg(char *prog) {
-    char filename[1025], *pt;
+void GResourceSetProg(char *prog, char *name) {
+    char filename[1025];
     extern char *_GFile_find_program_dir(char *prog);
 
-    if ( prog!=NULL ) {
-	if ( GResourceProgramName!=NULL && strcmp(prog,GResourceProgramName)==0 )
-return;
-	free(GResourceProgramName);
-	if (( pt=strrchr(prog,'/'))!=NULL )
-	    ++pt;
-	else
-	    pt = prog;
-	GResourceProgramName = copy(pt);
-    } else if ( GResourceProgramName==NULL )
+    if ( name!=NULL )
+	GResourceProgramName = copy(name);
+    else if ( GResourceProgramName==NULL )
 	GResourceProgramName = copy("gdraw");
-    else
-return;
 
-    free(GResourceProgramDir);
     GResourceProgramDir = _GFile_find_program_dir(prog);
     if ( GResourceProgramDir==NULL ) {
 	GFileGetAbsoluteName(".",filename,sizeof(filename));
 	GResourceProgramDir = copy(filename);
     }
-    free(GResourceFullProgram);
-    GResourceFullProgram = copy(GFileBuildName(GResourceProgramDir,GResourceProgramName));
 }
 
-void GResourceAddResourceString(char *string,char *prog) {
+void GResourceAddResourceString(char *string) {
     char *pt, *ept, *next;
     int cnt, plen;
     struct _GResource_Res temp;
     int i,j,k, off;
 
-    GResourceSetProg(prog);
     plen = strlen(GResourceProgramName);
 
     if ( string==NULL )
@@ -274,7 +261,7 @@ return;
 	_GResource_Res[i].new = false;
 }
 
-void GResourceAddResourceFile(char *filename,char *prog,int warn) {
+void GResourceAddResourceFile(char *filename, int warn) {
     FILE *file;
     char buffer[1000];
 
@@ -285,7 +272,7 @@ void GResourceAddResourceFile(char *filename,char *prog,int warn) {
 return;
     }
     while ( fgets(buffer,sizeof(buffer),file)!=NULL )
-	GResourceAddResourceString(buffer,prog);
+	GResourceAddResourceString(buffer);
     fclose(file);
 }
 

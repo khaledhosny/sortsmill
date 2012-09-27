@@ -820,7 +820,7 @@ return;
 
 void GDrawCreateDisplays(char *displayname,char *programname) {
     GIO_SetThreadCallback((void (*)(void *,void *,void *)) GDrawSyncThread);
-    screen_display = _GXDraw_CreateDisplay(displayname,programname);
+    screen_display = _GXDraw_CreateDisplay(displayname);
     if ( screen_display==NULL ) {
 	fprintf( stderr, "Could not open screen.\n" );
 #if __Mac
