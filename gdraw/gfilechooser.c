@@ -945,8 +945,8 @@ static void GFCBookmark(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     GFileChooser *gfc = (GFileChooser *) (mi->ti.userdata);
     char *home;
 
-    if ( *bookmarks[mi->mid]=='~' && bookmarks[mi->mid][1]=='/' &&
-	    (home = getenv("HOME"))!=NULL ) {
+    if ( *bookmarks[mi->mid]=='~' && bookmarks[mi->mid][1]=='/' ) {
+	home = GFileGetHomeDir();
 	unichar_t *space;
 	space = xmalloc((strlen(home)+u_strlen(bookmarks[mi->mid])+2)*sizeof(unichar_t));
 	uc_strcpy(space,home);
@@ -961,8 +961,8 @@ static void GFCPath(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     GFileChooser *gfc = (GFileChooser *) (mi->ti.userdata);
     char *home;
 
-    if ( *gfc->paths[mi->mid]=='~' && gfc->paths[mi->mid][1]=='/' &&
-	    (home = getenv("HOME"))!=NULL ) {
+    if ( *gfc->paths[mi->mid]=='~' && gfc->paths[mi->mid][1]=='/' ) {
+	home = GFileGetHomeDir();
 	unichar_t *space;
 	space = xmalloc((strlen(home)+u_strlen(bookmarks[mi->mid])+2)*sizeof(unichar_t));
 	uc_strcpy(space,home);

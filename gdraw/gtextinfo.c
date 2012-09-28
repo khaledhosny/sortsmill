@@ -1,5 +1,3 @@
-#include <config.h>
-
 /* Copyright (C) 2000-2012 by George Williams */
 /*
  * Redistribution and use in source and binary forms, with or without
@@ -33,6 +31,7 @@
 #include <stdbool.h>
 #include "gdraw.h"
 #include "ggadgetP.h"
+#include "gfile.h"
 #include "utype.h"
 #include "ustring.h"
 #include "gresource.h"
@@ -406,10 +405,10 @@ void GGadgetSetImageDir(char *dir) {
 static char *ImagePathFigureElement(char *start, int len) {
     if ( *start=='=' && len==1 )
 return( imagedir );
-    else if ( *start=='~' && start[1]=='/' && len>=2 && getenv("HOME")!=NULL ) {
-	int hlen = strlen(getenv("HOME"));
+    else if ( *start=='~' && start[1]=='/' && len>=2 ) {
+	int hlen = strlen(GFileGetHomeDir());
 	char *absname = xmalloc( hlen+len+8 );
-	strcpy(absname,getenv("HOME"));
+	strcpy(absname,GFileGetHomeDir());
 	strncpy(absname+hlen,start+1,len-1);
 	absname[hlen+len-1] = '\0';
 return( absname );
@@ -526,9 +525,9 @@ return( ri );
 
     if ( *fname=='/' )
 	ret = GImageRead(fname);
-    else if ( *fname=='~' && fname[1]=='/' && getenv("HOME")!=NULL ) {
-	char *absname = xmalloc( strlen(getenv("HOME"))+strlen(fname)+8 );
-	strcpy(absname,getenv("HOME"));
+    else if ( *fname=='~' && fname[1]=='/' ) {
+	char *absname = xmalloc( strlen(GFileGetHomeDir())+strlen(fname)+8 );
+	strcpy(absname,GFileGetHomeDir());
 	strcat(absname,fname+1);
 	ret = GImageRead(absname);
 	free(fname);
