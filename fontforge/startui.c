@@ -543,8 +543,10 @@ GrokNavigationMask (void)
   navigation_mask = GMenuItemParseMask (H_ ("NavigationMask|None"));
 }
 
-int
-fontforge_main (int argc, char **argv)
+//-------------------------------------------------------------------------
+
+static int
+fontforge_main_in_guile_mode (int argc, char **argv)
 {
   const char *load_prefs = getenv ("FONTFORGE_LOADPREFS");
   int i;
@@ -875,3 +877,35 @@ fontforge_main (int argc, char **argv)
   uninm_names_db_close (names_db);
   return 0;
 }
+
+//-------------------------------------------------------------------------
+
+struct _my_args
+{
+  int argc;
+  char **argv;
+};
+
+static void *
+call_fontforge (void *args)
+{
+  struct _my_args a = *(struct _my_args *) args;
+  int *exit_status = xmalloc (sizeof (int));
+  *exit_status = fontforge_main_in_guile_mode (a.argc, a.argv);
+  return (void *) exit_status;
+}
+
+int
+fontforge_main (int argc, char **argv)
+{
+  // This looks complicated only because of the need to pass data
+  // around through void pointers.
+
+  struct _my_args args = { argc, argv };
+  int *exit_status = (int *) scm_with_guile (call_fontforge, (void *) &args);
+  int status = *exit_status;
+  free (exit_status);
+  return status;
+}
+
+//-------------------------------------------------------------------------

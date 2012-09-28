@@ -28,11 +28,9 @@
  */
 
 #include "fontforge.h"
-#include <gc.h>
 
 int
 main (int argc, char **argv)
 {
-  GC_INIT ();
   return fontforge_main (argc, argv);
 }
