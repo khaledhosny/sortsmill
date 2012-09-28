@@ -40,6 +40,10 @@
 #include <stdlib.h>
 #include <libguile.h>
 
+#ifndef SHAREDIR
+#error You must set SHAREDIR.
+#endif
+
 extern int AutoSaveFrequency;
 int splash = 1;
 static int localsplash;
@@ -138,7 +142,8 @@ struct delayed_event
 
 extern GImage splashimage;
 static GWindow splashw;
-static GTimer *autosave_timer, *splasht;
+static GTimer *autosave_timer;
+static GTimer *splasht;
 static GFont *splash_font, *splash_italic;
 static int as, fh, linecnt;
 static unichar_t msg[470];
@@ -339,206 +344,6 @@ start_splash_screen (void)
   localsplash = false;
 }
 
-#if defined(__Mac)
-static FILE *logfile;
-
-/* These are the four apple events to which we currently respond */
-static pascal OSErr
-OpenApplicationAE (const AppleEvent * theAppleEvent,
-                   AppleEvent * reply, SInt32 handlerRefcon)
-{
-  fprintf (logfile, "OPENAPP event received.\n");
-  fflush (logfile);
-  if (localsplash)
-    start_splash_screen ();
-  system
-    ("DYLD_LIBRARY_PATH=\"\"; osascript -e 'tell application \"X11\" to activate'");
-  if (fv_list == NULL)
-    MenuOpen (NULL, NULL, NULL);
-  fprintf (logfile, " event processed %d.\n", noErr);
-  fflush (logfile);
-  return (noErr);
-}
-
-static pascal OSErr
-ReopenApplicationAE (const AppleEvent * theAppleEvent,
-                     AppleEvent * reply, SInt32 handlerRefcon)
-{
-  fprintf (logfile, "ReOPEN event received.\n");
-  fflush (logfile);
-  if (localsplash)
-    start_splash_screen ();
-  system
-    ("DYLD_LIBRARY_PATH=\"\"; osascript -e 'tell application \"X11\" to activate'");
-  if (fv_list == NULL)
-    MenuOpen (NULL, NULL, NULL);
-  fprintf (logfile, " event processed %d.\n", noErr);
-  fflush (logfile);
-  return (noErr);
-}
-
-static pascal OSErr
-ShowPreferencesAE (const AppleEvent * theAppleEvent,
-                   AppleEvent * reply, SInt32 handlerRefcon)
-{
-  fprintf (logfile, "PREFS event received.\n");
-  fflush (logfile);
-  if (localsplash)
-    start_splash_screen ();
-  system
-    ("DYLD_LIBRARY_PATH=\"\"; osascript -e 'tell application \"X11\" to activate'");
-  DoPrefs ();
-  fprintf (logfile, " event processed %d.\n", noErr);
-  fflush (logfile);
-  return (noErr);
-}
-
-static pascal OSErr
-OpenDocumentsAE (const AppleEvent * theAppleEvent,
-                 AppleEvent * reply, SInt32 handlerRefcon)
-{
-  AEDescList docList;
-  FSRef theFSRef;
-  long index;
-  long count = 0;
-  OSErr err;
-  char buffer[2048];
-
-  fprintf (logfile, "OPEN event received.\n");
-  fflush (logfile);
-  if (localsplash)
-    start_splash_screen ();
-
-  err = AEGetParamDesc (theAppleEvent, keyDirectObject, typeAEList, &docList);
-  err = AECountItems (&docList, &count);
-  for (index = 1; index <= count; index++)
-    {
-      err = AEGetNthPtr (&docList, index, typeFSRef, NULL, NULL, &theFSRef, sizeof (theFSRef), NULL);   // 4
-      err =
-        FSRefMakePath (&theFSRef, (unsigned char *) buffer, sizeof (buffer));
-      ViewPostScriptFont (buffer, 0);
-      fprintf (logfile, " file: %s\n", buffer);
-    }
-  system
-    ("DYLD_LIBRARY_PATH=\"\"; osascript -e 'tell application \"X11\" to activate'");
-  AEDisposeDesc (&docList);
-  fprintf (logfile, " event processed %d.\n", err);
-  fflush (logfile);
-
-  return (err);
-}
-
-static void
-AttachErrorCode (AppleEvent * event, OSStatus err)
-{
-  OSStatus returnVal;
-
-  if (event == NULL)
-    return;
-
-  if (event->descriptorType != typeNull)
-    {
-      /* Check there isn't already an error attached */
-      returnVal = AESizeOfParam (event, keyErrorNumber, NULL, NULL);
-      if (returnVal != noErr)
-        {                       /* Add success if no previous error */
-          AEPutParamPtr (event, keyErrorNumber,
-                         typeSInt32, &err, sizeof (err));
-        }
-    }
-}
-
-static AppleEvent *quit_event = NULL;
-static void
-we_are_dead (void)
-{
-  AttachErrorCode (quit_event, noErr);
-  /* Send the reply (I hope) */
-  AESendMessage (quit_event, NULL, kAENoReply, kAEDefaultTimeout);
-  AEDisposeDesc (quit_event);
-  /* fall off the end of the world and die */
-  fprintf (logfile, " event succeded.\n");
-  fflush (logfile);
-}
-
-static pascal OSErr
-QuitApplicationAE (const AppleEvent * theAppleEvent,
-                   AppleEvent * reply, SInt32 handlerRefcon)
-{
-  static int first_time = true;
-
-  fprintf (logfile, "QUIT event received.\n");
-  fflush (logfile);
-  quit_event = reply;
-  if (first_time)
-    {
-      atexit (we_are_dead);
-      first_time = false;
-    }
-  MenuExit (NULL, NULL, NULL);
-  /* if we get here, they canceled the quit, so we return a failure */
-  quit_event = NULL;
-  fprintf (logfile, " event failed %d.\n", errAEEventFailed);
-  fflush (logfile);
-  return (errAEEventFailed);
-}
-
-/* Install event handlers for the Apple Events we care about */
-static OSErr
-install_apple_event_handlers (void)
-{
-  OSErr err;
-
-  err = AEInstallEventHandler (kCoreEventClass, kAEOpenApplication,
-                               NewAEEventHandlerUPP (OpenApplicationAE), 0,
-                               false);
-  require_noerr (err, CantInstallAppleEventHandler);
-
-  err = AEInstallEventHandler (kCoreEventClass, kAEReopenApplication,
-                               NewAEEventHandlerUPP (ReopenApplicationAE), 0,
-                               false);
-  require_noerr (err, CantInstallAppleEventHandler);
-
-  err = AEInstallEventHandler (kCoreEventClass, kAEOpenDocuments,
-                               NewAEEventHandlerUPP (OpenDocumentsAE), 0,
-                               false);
-  require_noerr (err, CantInstallAppleEventHandler);
-
-  err = AEInstallEventHandler (kCoreEventClass, kAEQuitApplication,
-                               NewAEEventHandlerUPP (QuitApplicationAE), 0,
-                               false);
-  require_noerr (err, CantInstallAppleEventHandler);
-
-  err = AEInstallEventHandler (kCoreEventClass, kAEShowPreferences,
-                               NewAEEventHandlerUPP (ShowPreferencesAE), 0,
-                               false);
-  require_noerr (err, CantInstallAppleEventHandler);
-
-  logfile = stderr;
-
-CantInstallAppleEventHandler:
-  return err;
-
-}
-
-static pascal void
-DoRealStuff (EventLoopTimerRef timer, void *ignored_data)
-{
-  GDrawProcessPendingEvents (NULL);
-}
-
-static void
-install_mac_timer (void)
-{
-  EventLoopTimerRef timer;
-
-  InstallEventLoopTimer (GetMainEventLoop (),
-                         .001 * kEventDurationSecond,
-                         .001 * kEventDurationSecond,
-                         NewEventLoopTimerUPP (DoRealStuff), NULL, &timer);
-}
-#endif
-
 static int
 splash_e_h (GWindow gw, GEvent * event)
 {
@@ -707,91 +512,6 @@ ReopenLastFonts (void)
   return (any);
 }
 
-#if defined(__Mac)
-/* Read a property from the x11 properties files */
-/* At the moment we want to know if we get the command key, or if the menubar */
-/*    eats it */
-static int
-get_mac_x11_prop (char *keystr)
-{
-  CFPropertyListRef ret;
-  CFStringRef key, appID;
-  int val;
-
-  appID =
-    CFStringCreateWithBytes (NULL, (uint8 *) "com.apple.x11",
-                             strlen ("com.apple.x11"),
-                             kCFStringEncodingISOLatin1, 0);
-  key =
-    CFStringCreateWithBytes (NULL, (uint8 *) keystr, strlen (keystr),
-                             kCFStringEncodingISOLatin1, 0);
-  ret = CFPreferencesCopyAppValue (key, appID);
-  if (ret == NULL)
-    {
-      /* Sigh. Apple uses a different preference file under 10.5.6 I really */
-      /*  wish they'd stop making stupid, unnecessary changes */
-      appID =
-        CFStringCreateWithBytes (NULL, (uint8 *) "org.x.X11",
-                                 strlen ("org.x.X11"),
-                                 kCFStringEncodingISOLatin1, 0);
-      ret = CFPreferencesCopyAppValue (key, appID);
-    }
-  if (ret == NULL)
-    return (-1);
-  if (CFGetTypeID (ret) != CFBooleanGetTypeID ())
-    return (-2);
-  val = CFBooleanGetValue (ret);
-  CFRelease (ret);
-  return (val);
-}
-
-static int
-uses_local_x (int argc, char **argv)
-{
-  int i;
-  char *arg;
-
-  for (i = 1; i < argc; ++i)
-    {
-      arg = argv[i];
-      if (*arg == '-')
-        {
-          if (arg[0] == '-' && arg[1] == '-')
-            ++arg;
-          if (strcmp (arg, "-display") == 0)
-            return (i + 1 < argc && strcmp (argv[i + 1], ":0") != 0
-                    && strcmp (argv[i + 1], ":0.0") != 0 ? 2 : 0);
-          if (strcmp (arg, "-c") == 0)
-            return (false);     /* we use a script string, no x display at all */
-          if (strcmp (arg, "-script") == 0)
-            return (false);     /* we use a script, no x display at all */
-          if (strcmp (arg, "-") == 0)
-            return (false);     /* script on stdin */
-        }
-      else
-        {
-          /* Is this argument a script file ? */
-          FILE *temp = fopen (argv[i], "r");
-          char buffer[200];
-          if (temp == NULL)
-            return (true);      /* not a script file, so need local local X */
-          buffer[0] = '\0';
-          fgets (buffer, sizeof (buffer), temp);
-          fclose (temp);
-          if (buffer[0] == '#' && buffer[1] == '!' &&
-              (strstr (buffer, "pfaedit") != NULL
-               || strstr (buffer, "fontforge") != NULL))
-            {
-              return (false);   /* is a script file, so no need for X */
-
-              return (true);    /* not a script, so needs X */
-            }
-        }
-    }
-  return (true);
-}
-#endif
-
 static char *
 getLocaleDir (void)
 {
@@ -805,49 +525,15 @@ getLocaleDir (void)
 
   set = true;
 
-#if defined(__MINGW32__)
-
-  len = strlen (GResourceProgramDir) + strlen ("/share/locale") + 1;
-  sharedir = xmalloc1 (len);
-  strcpy (sharedir, GResourceProgramDir);
-  strcat (sharedir, "/share/locale");
-  return sharedir;
-
-#else
-
   pt = strstr (GResourceProgramDir, "/bin");
   if (pt == NULL)
-    {
-#if defined(SHAREDIR)
-      return (sharedir = SHAREDIR "/../locale");
-#elif defined( PREFIX )
-      return (sharedir = PREFIX "/share/locale");
-#else
-      pt = GResourceProgramDir + strlen (GResourceProgramDir);
-#endif
-    }
+    return (sharedir = SHAREDIR "/../locale");
   len = (pt - GResourceProgramDir) + strlen ("/share/locale") + 1;
   sharedir = xmalloc1 (len);
   strncpy (sharedir, GResourceProgramDir, pt - GResourceProgramDir);
   strcpy (sharedir + (pt - GResourceProgramDir), "/share/locale");
   return (sharedir);
-
-#endif
 }
-
-#if defined(__Mac)
-static int
-hasquit (int argc, char **argv)
-{
-  int i;
-
-  for (i = 1; i < argc; ++i)
-    if (strcmp (argv[i], "-quit") == 0 || strcmp (argv[i], "--quit") == 0)
-      return (true);
-
-  return (false);
-}
-#endif
 
 static void
 GrokNavigationMask (void)
@@ -871,9 +557,6 @@ fontforge_main (int argc, char **argv)
   int ds, ld;
   int openflags = 0;
   int doopen = 0, quit_request = 0;
-#if defined(__Mac)
-  int local_x;
-#endif
 
   fprintf (stderr,
            "Copyright (c) 2000-2012 by George Williams and others.\n%s"
@@ -899,54 +582,6 @@ fontforge_main (int argc, char **argv)
         }
     }
 
-#if defined(__Mac)
-  /* Start X if they haven't already done so. Well... try anyway */
-  /* Must be before we change DYLD_LIBRARY_PATH or X won't start */
-  /* (osascript depends on a libjpeg which isn't found if we look in /sw/lib first */
-  local_x = uses_local_x (argc, argv);
-  if (local_x == 1 && getenv ("DISPLAY") == NULL)
-    {
-      /* Don't start X if we're just going to quit. */
-      /* if X exists, it isn't needed. If X doesn't exist it's wrong */
-      if (!hasquit (argc, argv))
-        {
-#if 1
-          /* This sequence is supposed to bring up an app without a window */
-          /*  but X still opens an xterm */
-          system ("osascript -e 'tell application \"X11\" to launch'");
-          system ("osascript -e 'tell application \"X11\" to activate'");
-#else
-          system ("open /Applications/Utilities/X11.app/");
-#endif
-        }
-      setenv ("DISPLAY", ":0.0", 0);
-    }
-  else if (local_x == 1 && *getenv ("DISPLAY") != '/'
-           && strcmp (getenv ("DISPLAY"), ":0.0") != 0
-           && strcmp (getenv ("DISPLAY"), ":0") != 0)
-    /* 10.5.7 uses a named socket or something "/tmp/launch-01ftWX:0" */
-    local_x = 0;
-#endif
-
-#if defined(__MINGW32__)
-  if (getenv ("DISPLAY") == NULL)
-    {
-      putenv ("DISPLAY=127.0.0.1:0.0");
-    }
-  if (getenv ("LC_ALL") == NULL)
-    {
-      char lang[8];
-      char env[32];
-      if (GetLocaleInfoA
-          (LOCALE_USER_DEFAULT, LOCALE_SISO639LANGNAME, lang, 8) > 0)
-        {
-          strcpy (env, "LC_ALL=");
-          strcat (env, lang);
-          putenv (env);
-        }
-    }
-#endif
-
   FF_SetUiInterface (&gdraw_ui_interface);
   FF_SetPrefsInterface (&gdraw_prefs_interface);
   FF_SetSCInterface (&gdraw_sc_interface);
@@ -962,85 +597,18 @@ fontforge_main (int argc, char **argv)
 
   InitSimpleStuff ();
 
-#if defined(__MINGW32__)
-  {
-    char path[MAX_PATH + 4];
-    char *c = path;
-    unsigned int len = GetModuleFileNameA (NULL, path, MAX_PATH);
-    path[len] = '\0';
-    for (; *c; *c++)            /* backslash to slash */
-      if (*c == '\\')
-        *c = '/';
-    GResourceSetProg (path, "fontforge");
-  }
-#else
   GResourceSetProg (argv[0], "fontforge");
-#endif
 
-#if defined(__Mac)
-  /* The mac seems to default to the "C" locale, LANG and LC_MESSAGES are not */
-  /*  defined. This means that gettext will not bother to look up any message */
-  /*  files -- even if we have a "C" or "POSIX" entry in the locale diretory */
-  /* Now if X11 gives us the command key, I want to force a rebinding to use */
-  /*  Cmd rather than Control key -- more mac-like. But I can't do that if   */
-  /*  there is no locale. So I force a locale if there is none specified */
-  /* I force the US English locale, because that's the what the messages are */
-  /*  by default so I'm changing as little as I can. I think. */
-  /* Now the locale command will treat a LANG which is "" as undefined, but */
-  /*  gettext will not. So I don't bother to check for null strings or "C"  */
-  /*  or "POSIX". If they've mucked with the locale perhaps they know what  */
-  /*  they are doing */
-  {
-    int did_keybindings = 0;
-    if (local_x && !get_mac_x11_prop ("enable_key_equivalents"))
-      {
-        /* Ok, we get the command key */
-        if (getenv ("LANG") == NULL && getenv ("LC_MESSAGES") == NULL)
-          {
-            setenv ("LC_MESSAGES", "en_US.UTF-8", 0);
-          }
-        /* Can we find a set of keybindings designed for the mac with cmd key? */
-        bind_textdomain_codeset (ff_macshortcutsdomain (), "UTF-8");
-        bindtextdomain (ff_macshortcutsdomain (), getLocaleDir ());
-        if (*dgettext (ff_macshortcutsdomain (), "Flag0x10+") != 'F')
-          {
-            GMenuSetShortcutDomain (ff_macshortcutsdomain ());
-            did_keybindings = 1;
-          }
-      }
-    if (!did_keybindings)
-      {
-        /* Nope. we can't. Fall back to the normal stuff */
-#endif
-        GMenuSetShortcutDomain (ff_shortcutsdomain ());
-        bind_textdomain_codeset (ff_shortcutsdomain (), "UTF-8");
-        bindtextdomain (ff_shortcutsdomain (), getLocaleDir ());
-#if defined(__Mac)
-      }
-  }
-#endif
+  GMenuSetShortcutDomain (ff_shortcutsdomain ());
+  bind_textdomain_codeset (ff_shortcutsdomain (), "UTF-8");
+  bindtextdomain (ff_shortcutsdomain (), getLocaleDir ());
   bind_textdomain_codeset (ff_textdomain (), "UTF-8");
   bindtextdomain (ff_textdomain (), getLocaleDir ());
   textdomain (ff_textdomain ());
   GResourceUseGetText ();
-#if defined(__MINGW32__)
-  {
-    size_t len = strlen (GResourceProgramDir);
-    char *path = xmalloc1 (len + 64);
-    strcpy (path, GResourceProgramDir);
 
-    strcpy (path + len, "/share/fontforge/pixmaps");    /* PixmapDir */
-    GGadgetSetImageDir (path);
-
-    strcpy (path + len, "/share/fontforge/resources/fontforge.resource");       /* Resource File */
-    GResourceAddResourceFile (path, false);
-
-    free (path);
-  }
-#elif defined(SHAREDIR)
   GGadgetSetImageDir (SHAREDIR "/pixmaps");
   GResourceAddResourceFile (SHAREDIR "/resources/fontforge.resource", false);
-#endif
 
   if (load_prefs != NULL && strcasecmp (load_prefs, "Always") == 0)
     LoadPrefs ();
@@ -1075,10 +643,6 @@ fontforge_main (int argc, char **argv)
         AddR ("Gdraw.Keyboard", argv[++i]);
       else if (strcmp (pt, "-display") == 0 && i < argc - 1)
         display = argv[++i];
-#if MyMemory
-      else if (strcmp (pt, "-memory") == 0)
-        __malloc_debug (5);
-#endif
       else if (strcmp (pt, "-nosplash") == 0)
         splash = 0;
       else if (strcmp (pt, "-unique") == 0)
@@ -1102,21 +666,13 @@ fontforge_main (int argc, char **argv)
             }
         }
       else if (strcmp (pt, "-recover=none") == 0)
-        {
-          recover = 0;
-        }
+        recover = 0;
       else if (strcmp (pt, "-recover=clean") == 0)
-        {
-          recover = -1;
-        }
+        recover = -1;
       else if (strcmp (pt, "-recover=auto") == 0)
-        {
-          recover = 1;
-        }
+        recover = 1;
       else if (strcmp (pt, "-recover=inquire") == 0)
-        {
-          recover = 2;
-        }
+        recover = 2;
       else if (strcmp (pt, "-docs") == 0)
         dohelp ();
       else if (strcmp (pt, "-help") == 0)
@@ -1130,17 +686,6 @@ fontforge_main (int argc, char **argv)
         quit_request = true;
       else if (strcmp (pt, "-home") == 0)
         /* already did a chdir earlier, don't need to do it again */ ;
-#if defined(__Mac)
-      else if (strncmp (pt, "-psn_", 5) == 0)
-        {
-          /* OK, I don't know what this really means, but to me it means */
-          /*  that we've been started on the mac from the FontForge.app  */
-          /*  structure, and the current directory is (shudder) "/" */
-          unique = 1;
-          chdir (GFileGetHomeDir ());
-          listen_to_apple_events = true;
-        }
-#endif
     }
 
   GDrawCreateDisplays (display, argv[0]);
@@ -1206,9 +751,9 @@ fontforge_main (int argc, char **argv)
     start_splash_screen ();
 
   if (AutoSaveFrequency > 0)
-    autosave_timer =
-      GDrawRequestTimer (splashw, 2 * AutoSaveFrequency * 1000,
-                         AutoSaveFrequency * 1000, NULL);
+    autosave_timer = GDrawRequestTimer (splashw,
+                                        2 * AutoSaveFrequency * 1000,
+                                        AutoSaveFrequency * 1000, NULL);
 
   GDrawProcessPendingEvents (NULL);
 
@@ -1278,10 +823,8 @@ fontforge_main (int argc, char **argv)
               || (strstr (buffer, "://") != NULL
                   && buffer[strlen (buffer) - 1] == '/'))
             {
-              char *fname;
-              fname =
-                xmalloc1 (strlen (buffer) +
-                          strlen ("/glyphs/contents.plist") + 1);
+              char *fname = xmalloc (strlen (buffer) +
+                                     strlen ("/glyphs/contents.plist") + 1);
               strcpy (fname, buffer);
               strcat (fname, "/glyphs/contents.plist");
               if (GFileExists (fname))
@@ -1325,21 +868,10 @@ fontforge_main (int argc, char **argv)
     }
   if (!any && !doopen)
     any = ReopenLastFonts ();
-#if defined(__Mac)
-  if (listen_to_apple_events)
-    {
-      install_apple_event_handlers ();
-      install_mac_timer ();
-      RunApplicationEventLoop ();
-    }
-  else
-#endif
   if (doopen || !any)
     MenuOpen (NULL, NULL, NULL);
   GDrawEventLoop (NULL);
 
   uninm_names_db_close (names_db);
-  lt_dlexit ();
-
-  return (0);
+  return 0;
 }

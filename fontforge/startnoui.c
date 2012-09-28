@@ -26,6 +26,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 #include "fontforgevw.h"
 #include "annotations.h"
 #include <gfile.h>
@@ -35,132 +36,138 @@
 #include <sys/time.h>
 #include <locale.h>
 #include <unistd.h>
-#include <stdlib.h>		/* getenv,setenv */
+#include <stdlib.h>
+#include <libguile.h>
 
+#ifndef SHAREDIR
+#error You must set SHAREDIR.
+#endif
+
+// FIXME: Get rid of this.
 static char *GResourceProgramDir;
 
-static char *getLocaleDir(void) {
-    static char *sharedir=NULL;
-    static int set=false;
-    char *pt;
-    int len;
+static char *
+getLocaleDir (void)
+{
+  static char *sharedir = NULL;
+  static int set = false;
+  char *pt;
+  int len;
 
-    if ( set )
-return( sharedir );
+  if (set)
+    return (sharedir);
 
-    set = true;
+  set = true;
 
-#if defined(__MINGW32__)
-
-    len = strlen(GResourceProgramDir) + strlen("/share/locale") +1;
-    sharedir = xmalloc1(len);
-    strcpy(sharedir, GResourceProgramDir);
-    strcat(sharedir, "/share/locale");
-    return sharedir;
-
-#else
-
-    pt = strstr(GResourceProgramDir,"/bin");
-    if ( pt==NULL ) {
-#if defined(SHAREDIR)
-return( sharedir = SHAREDIR "/../locale" );
-#elif defined( PREFIX )
-return( sharedir = PREFIX "/share/locale" );
-#else
-	pt = GResourceProgramDir + strlen(GResourceProgramDir);
-#endif
-    }
-    len = (pt-GResourceProgramDir)+strlen("/share/locale")+1;
-    sharedir = xmalloc1(len);
-    strncpy(sharedir,GResourceProgramDir,pt-GResourceProgramDir);
-    strcpy(sharedir+(pt-GResourceProgramDir),"/share/locale");
-return( sharedir );
-
-#endif
-}
-static void _doscriptusage(void) {
-    printf( "fontforge [options]\n" );
-    printf( "\t-usage\t\t\t (displays this message, and exits)\n" );
-    printf( "\t-help\t\t\t (displays this message, invokes a browser)\n\t\t\t\t  (Using the BROWSER environment variable)\n" );
-    printf( "\t-version\t\t (prints the version of fontforge and exits)\n" );
-    printf( "\t-lang=py\t\t use python to execute scripts\n" );
-    printf( "\t-lang=ff\t\t use fontforge's old language to execute scripts\n" );
-    printf( "\t-script scriptfile\t (executes scriptfile)\n" );
-    printf( "\t-c script-string\t (executes the argument as scripting cmds)\n" );
-    printf( "\n" );
-    printf( "If no scriptfile/string is given (or if it's \"-\") FontForge will read stdin\n" );
-    printf( "FontForge will read postscript (pfa, pfb, ps, cid), opentype (otf),\n" );
-    printf( "\ttruetype (ttf,ttc), macintosh resource fonts (dfont,bin,hqx),\n" );
-    printf( "\tand bdf and pcf fonts. It will also read its own format --\n" );
-    printf( "\tsfd files.\n" );
-    printf( "Any arguments after the script file will be passed to it.\n");
-    printf( "If the first argument is an executable filename, and that file's first\n" );
-    printf( "\tline contains \"fontforge\" then it will be treated as a scriptfile.\n\n" );
-    printf( "For more information see:\n\t%s\n", PACKAGE_URL );
-    printf( "Submit bug reports at:\t%s\n", PACKAGE_BUGREPORT );
+  pt = strstr (GResourceProgramDir, "/bin");
+  if (pt == NULL)
+    return (sharedir = SHAREDIR "/../locale");
+  len = (pt - GResourceProgramDir) + strlen ("/share/locale") + 1;
+  sharedir = xmalloc1 (len);
+  strncpy (sharedir, GResourceProgramDir, pt - GResourceProgramDir);
+  strcpy (sharedir + (pt - GResourceProgramDir), "/share/locale");
+  return (sharedir);
 }
 
-static void doscriptusage(void) {
-    _doscriptusage();
-exit(0);
+static void
+_doscriptusage (void)
+{
+  printf ("fontforge [options]\n");
+  printf ("\t-usage\t\t\t (displays this message, and exits)\n");
+  printf
+    ("\t-help\t\t\t (displays this message, invokes a browser)\n\t\t\t\t  (Using the BROWSER environment variable)\n");
+  printf ("\t-version\t\t (prints the version of fontforge and exits)\n");
+  printf ("\t-lang=py\t\t use python to execute scripts\n");
+  printf ("\t-lang=ff\t\t use fontforge's old language to execute scripts\n");
+  printf ("\t-script scriptfile\t (executes scriptfile)\n");
+  printf ("\t-c script-string\t (executes the argument as scripting cmds)\n");
+  printf ("\n");
+  printf
+    ("If no scriptfile/string is given (or if it's \"-\") FontForge will read stdin\n");
+  printf
+    ("FontForge will read postscript (pfa, pfb, ps, cid), opentype (otf),\n");
+  printf
+    ("\ttruetype (ttf,ttc), macintosh resource fonts (dfont,bin,hqx),\n");
+  printf ("\tand bdf and pcf fonts. It will also read its own format --\n");
+  printf ("\tsfd files.\n");
+  printf ("Any arguments after the script file will be passed to it.\n");
+  printf
+    ("If the first argument is an executable filename, and that file's first\n");
+  printf
+    ("\tline contains \"fontforge\" then it will be treated as a scriptfile.\n\n");
+  printf ("For more information see:\n\t%s\n", PACKAGE_URL);
+  printf ("Submit bug reports at:\t%s\n", PACKAGE_BUGREPORT);
 }
 
-static void doscripthelp(void) {
-    _doscriptusage();
-    /*help("overview.html");*/
-exit(0);
+static void
+doscriptusage (void)
+{
+  _doscriptusage ();
+  exit (0);
 }
 
-int fontforge_main( int argc, char **argv ) {
-    fprintf( stderr, "Copyright (c) 2000-2012 by George Williams and others.\n%s"
+static void
+doscripthelp (void)
+{
+  _doscriptusage ();
+  /*help("overview.html"); */
+  exit (0);
+}
+
+int
+fontforge_main (int argc, char **argv)
+{
+  fprintf (stderr,
+           "Copyright (c) 2000-2012 by George Williams and others.\n%s"
 #ifdef FREETYPE_HAS_DEBUGGER
-	    "-TtfDb"
+           "-TtfDb"
 #endif
 #ifdef _NO_PYTHON
-	    "-NoPython"
+           "-NoPython"
 #endif
 #ifdef FONTFORGE_CONFIG_USE_DOUBLE
-	    "-D"
+           "-D"
 #endif
-	    ".\n",
-	    PACKAGE_STRING );
+           ".\n", PACKAGE_STRING);
 
-    /* I don't bother to check that the exe's exectations of the library are */
-    /*  valid. The exe only consists of this file, and so it doesn't care. */
-    /*  as long as the library is self consistant, all should be well */
-    /* check_library_version(&exe_library_version_configuration,true,false); */
+  /* I don't bother to check that the exe's exectations of the library are */
+  /*  valid. The exe only consists of this file, and so it doesn't care. */
+  /*  as long as the library is self consistant, all should be well */
+  /* check_library_version(&exe_library_version_configuration,true,false); */
 
-    GResourceProgramDir = _GFile_find_program_dir(argv[0]);
-    InitSimpleStuff();
+  GResourceProgramDir = _GFile_find_program_dir (argv[0]);
+  InitSimpleStuff ();
 
-    bind_textdomain_codeset(ff_textdomain(),"UTF-8");
-    bindtextdomain(ff_textdomain(), getLocaleDir());
-    textdomain(ff_textdomain());
+  bind_textdomain_codeset (ff_textdomain (), "UTF-8");
+  bindtextdomain (ff_textdomain (), getLocaleDir ());
+  textdomain (ff_textdomain ());
 
-    if ( default_encoding==NULL )
-	default_encoding=FindOrMakeEncoding("ISO8859-1");
-    if ( default_encoding==NULL )
-	default_encoding=&custom;	/* In case iconv is broken */
-    CheckIsScript(argc,argv);		/* Will run the script and exit if it is a script */
-    if ( argc==2 ) {
-	char *pt = argv[1];
-	if ( *pt=='-' && pt[1]=='-' ) ++pt;
-	if ( strcmp(pt,"-usage")==0 )
-	    doscriptusage();
-	else if ( strcmp(pt,"-help")==0 )
-	    doscripthelp();
-	else if ( strcmp(pt,"-version")==0 ) {
-	    printf("%s\n", PACKAGE_STRING);
-	    exit(0);
-	}
+  if (default_encoding == NULL)
+    default_encoding = FindOrMakeEncoding ("ISO8859-1");
+  if (default_encoding == NULL)
+    default_encoding = &custom; /* In case iconv is broken */
+  CheckIsScript (argc, argv);   /* Will run the script and exit if it is a script */
+  if (argc == 2)
+    {
+      char *pt = argv[1];
+      if (*pt == '-' && pt[1] == '-')
+        ++pt;
+      if (strcmp (pt, "-usage") == 0)
+        doscriptusage ();
+      else if (strcmp (pt, "-help") == 0)
+        doscripthelp ();
+      else if (strcmp (pt, "-version") == 0)
+        {
+          printf ("%s\n", PACKAGE_STRING);
+          exit (0);
+        }
     }
-#  if defined(_NO_PYTHON)
-    ProcessNativeScript(argc, argv,stdin);
-#  else
-    PyFF_Stdin();
-#  endif
+#if defined(_NO_PYTHON)
+  ProcessNativeScript (argc, argv, stdin);
+#else
+  PyFF_Stdin ();
+#endif
 
-    uninm_names_db_close(names_db);
-    lt_dlexit();
-return( 0 );
+  uninm_names_db_close (names_db);
+  return 0;
 }
