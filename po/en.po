@@ -662,7 +662,7 @@ msgstr "Set Feature Extents"
 #: ../../fontforge/lookupui.c:695 ../../fontforge/showatt.c:1877
 #: ../../fontforge/showatt.c:1915
 msgid "writing system|Script"
-msgstr "writing system|Script"
+msgstr "Script"
 
 #: ../../fontforge/basedlg.c:415
 msgid "Default Baseline"
@@ -816,7 +816,7 @@ msgstr "Must be a number"
 #. GT:      <pfaedit@users.sourceforge.net>
 #: ../../fontforge/bdfinfo.c:539
 msgid "Property|New..."
-msgstr "Property|New..."
+msgstr "New..."
 
 #: ../../fontforge/bdfinfo.c:590 ../../fontforge/statemachine.c:216
 msgid "No Change"
@@ -1036,7 +1036,7 @@ msgstr "Skew..."
 #: ../../fontforge/metricsview.c:3073 ../../fontforge/metricsview.c:3077
 #: ../../fontforge/openfontdlg.c:718
 msgid "Font|_New"
-msgstr "Font|_New"
+msgstr "_New"
 
 #: ../../fontforge/bitmapview.c:2114 ../../fontforge/charview.c:9359
 #: ../../fontforge/fontview.c:4251 ../../fontforge/metricsview.c:3078
@@ -1389,12 +1389,12 @@ msgstr "Component"
 #: ../../fontforge/charinfo.c:150 ../../fontforge/fontview.c:4300
 #: ../../fontforge/fontview.c:4438 ../../fontforge/groupsdlg.c:50
 msgid "Color|Choose..."
-msgstr "Color|Choose..."
+msgstr "Choose..."
 
 #: ../../fontforge/charinfo.c:151 ../../fontforge/fontview.c:4301
 #: ../../fontforge/fontview.c:4439 ../../fontforge/groupsdlg.c:51
 msgid "Color|Default"
-msgstr "Color|Default"
+msgstr "Default"
 
 #: ../../fontforge/charinfo.c:163
 msgid "New Pair Position"
@@ -1750,7 +1750,7 @@ msgstr ""
 
 #: ../../fontforge/charinfo.c:2343
 msgid "PixelSize|New"
-msgstr "PixelSize|New"
+msgstr "New"
 
 #: ../../fontforge/charinfo.c:2368 ../../fontforge/charinfo.c:2373
 #: ../../fontforge/charinfo.c:2378 ../../fontforge/charinfo.c:2383
@@ -2032,7 +2032,7 @@ msgstr ""
 
 #: ../../fontforge/charinfo.c:4408
 msgid "CounterHint|_New..."
-msgstr "CounterHint|_New..."
+msgstr "_New..."
 
 #: ../../fontforge/charinfo.c:4420 ../../fontforge/cvgetinfo.c:1566
 #: ../../fontforge/encoding.c:1168 ../../fontforge/encoding.c:1604
@@ -3158,7 +3158,7 @@ msgstr "Clear _Background"
 
 #: ../../fontforge/charview.c:9426
 msgid "points|_Merge"
-msgstr "points|_Merge"
+msgstr "_Merge"
 
 #: ../../fontforge/charview.c:9428 ../../fontforge/fontview.c:4357
 #: ../../fontforge/metricsview.c:3112
@@ -3703,7 +3703,7 @@ msgstr "_Ligatures"
 
 #: ../../fontforge/charview.c:9820
 msgid "PointNumbers|_None"
-msgstr "PointNumbers|_None"
+msgstr "_None"
 
 #: ../../fontforge/charview.c:9821 ../../fontforge/openfontdlg.c:138
 #: ../../fontforge/savefontdlg.c:169
@@ -3866,11 +3866,11 @@ msgstr "Com_binations"
 
 #: ../../fontforge/charview.c:9914
 msgid "SubFonts|_All"
-msgstr "SubFonts|_All"
+msgstr "_All"
 
 #: ../../fontforge/charview.c:9915
 msgid "SubFonts|_None"
-msgstr "SubFonts|_None"
+msgstr "_None"
 
 #: ../../fontforge/charview.c:9976 ../../fontforge/mm.c:673
 #: ../../fontforge/mm.c:675 ../../fontforge/mm.c:986 ../../fontforge/mm.c:989
@@ -4141,15 +4141,15 @@ msgstr "The class name, %s, is already in use."
 
 #: ../../fontforge/contextchain.c:1932
 msgid "Section|Continue"
-msgstr "Section|Continue"
+msgstr "Continue"
 
 #: ../../fontforge/contextchain.c:1933
 msgid "Section|Start"
-msgstr "Section|Start"
+msgstr "Start"
 
 #: ../../fontforge/contextchain.c:1937 ../../fontforge/contextchain.c:1942
 msgid "Class|Name"
-msgstr "Class|Name"
+msgstr "Name"
 
 #: ../../fontforge/contextchain.c:1938 ../../fontforge/contextchain.c:1943
 #: ../../fontforge/fontinfo.c:1336
@@ -4347,7 +4347,7 @@ msgstr "Same as Match Classes"
 #. GT: contain spaces. Use an underscore or something similar instead
 #: ../../fontforge/contextchain.c:2825 ../../fontforge/contextchain.c:3002
 msgid "Glyphs|All_Others"
-msgstr "Glyphs|All_Others"
+msgstr "All_Others"
 
 #: ../../fontforge/contextchain.c:2865 ../../fontforge/contextchain.c:3040
 msgid "Match Classes"
@@ -4453,7 +4453,7 @@ msgstr "Current"
 
 #: ../../fontforge/cvdebug.c:1856
 msgid "Points|Original"
-msgstr "Points|Original"
+msgstr "Original"
 
 #: ../../fontforge/cvdebug.c:1864
 msgid "Grid"
@@ -4625,7 +4625,7 @@ msgstr "_Filter"
 #: ../../fontforge/cvexportdlg.c:574 ../../fontforge/savefontdlg.c:2392
 #: ../../gdraw/gsavefiledlg.c:272
 msgid "Directory|_New"
-msgstr "Directory|_New"
+msgstr "_New"
 
 #: ../../fontforge/cvexportdlg.c:585 ../../fontforge/cvimportdlg.c:725
 msgid "Format:"
@@ -4882,7 +4882,7 @@ msgstr "CursExit"
 
 #: ../../fontforge/cvgetinfo.c:1553
 msgid "AnchorPoint|_New"
-msgstr "AnchorPoint|_New"
+msgstr "_New"
 
 #: ../../fontforge/cvgetinfo.c:1978 ../../fontforge/cvgetinfo.c:1983
 #: ../../fontforge/cvruler.c:604
@@ -4969,7 +4969,7 @@ msgstr "Prev CP:"
 
 #: ../../fontforge/cvgetinfo.c:2766 ../../fontforge/cvgetinfo.c:2873
 msgid "ControlPoint|Default"
-msgstr "ControlPoint|Default"
+msgstr "Default"
 
 #: ../../fontforge/cvgetinfo.c:2777 ../../fontforge/cvgetinfo.c:2884
 #: ../../fontforge/displayfonts.c:623 ../../fontforge/fontinfo.c:8815
@@ -6853,7 +6853,7 @@ msgstr "Size, Glyph, Point"
 
 #: ../../fontforge/deltaui.c:411
 msgid "Sort|Alphabetic"
-msgstr "Sort|Alphabetic"
+msgstr "Alphabetic"
 
 #: ../../fontforge/deltaui.c:412
 msgid "Glyph Order"
@@ -7468,7 +7468,7 @@ msgstr "Custom"
 
 #: ../../fontforge/encodingui.c:450
 msgid "Encoding|Glyph Order"
-msgstr "Encoding|Glyph Order"
+msgstr "Glyph Order"
 
 #: ../../fontforge/encodingui.c:452
 msgid "ISO 8859-1  (Latin1)"
@@ -8247,7 +8247,7 @@ msgstr "Cannot open file"
 #. GT:  of "Interpretation"
 #: ../../fontforge/fontinfo.c:64
 msgid "Interpretation|None"
-msgstr "Interpretation|None"
+msgstr "None"
 
 #: ../../fontforge/fontinfo.c:67 ../../fontforge/fontinfo.c:899
 #: ../../fontforge/lookupui.c:443 ../../fontforge/macenc.c:2247
@@ -8273,31 +8273,31 @@ msgstr "Korean"
 
 #: ../../fontforge/fontinfo.c:75
 msgid "MacStyles|Bold"
-msgstr "MacStyles|Bold"
+msgstr "Bold"
 
 #: ../../fontforge/fontinfo.c:76
 msgid "MacStyles|Italic"
-msgstr "MacStyles|Italic"
+msgstr "Italic"
 
 #: ../../fontforge/fontinfo.c:77
 msgid "MacStyles|Condense"
-msgstr "MacStyles|Condense"
+msgstr "Condense"
 
 #: ../../fontforge/fontinfo.c:78
 msgid "MacStyles|Expand"
-msgstr "MacStyles|Expand"
+msgstr "Expand"
 
 #: ../../fontforge/fontinfo.c:79
 msgid "MacStyles|Underline"
-msgstr "MacStyles|Underline"
+msgstr "Underline"
 
 #: ../../fontforge/fontinfo.c:80
 msgid "MacStyles|Outline"
-msgstr "MacStyles|Outline"
+msgstr "Outline"
 
 #: ../../fontforge/fontinfo.c:81
 msgid "MacStyles|Shadow"
-msgstr "MacStyles|Shadow"
+msgstr "Shadow"
 
 #: ../../fontforge/fontinfo.c:85
 msgid "Ultra-Condensed (50%)"
@@ -8405,7 +8405,7 @@ msgstr "Monospace"
 #. GT: and the cursive handwriting style. Here we mean cursive handwriting.
 #: ../../fontforge/fontinfo.c:123
 msgid "cursive|Script"
-msgstr "cursive|Script"
+msgstr "Script"
 
 #: ../../fontforge/fontinfo.c:124
 msgid "Decorative"
@@ -8529,27 +8529,27 @@ msgstr "Slab Serifs"
 
 #: ../../fontforge/fontinfo.c:157
 msgid "Slab Serifs|SS Monotone"
-msgstr "Slab Serifs|SS Monotone"
+msgstr "SS Monotone"
 
 #: ../../fontforge/fontinfo.c:158
 msgid "Slab Serifs|SS Humanist"
-msgstr "Slab Serifs|SS Humanist"
+msgstr "SS Humanist"
 
 #: ../../fontforge/fontinfo.c:159
 msgid "Slab Serifs|SS Geometric"
-msgstr "Slab Serifs|SS Geometric"
+msgstr "SS Geometric"
 
 #: ../../fontforge/fontinfo.c:160
 msgid "Slab Serifs|SS Swiss"
-msgstr "Slab Serifs|SS Swiss"
+msgstr "SS Swiss"
 
 #: ../../fontforge/fontinfo.c:161
 msgid "Slab Serifs|SS Typewriter"
-msgstr "Slab Serifs|SS Typewriter"
+msgstr "SS Typewriter"
 
 #: ../../fontforge/fontinfo.c:162
 msgid "Slab Serifs|SS Miscellaneous"
-msgstr "Slab Serifs|SS Miscellaneous"
+msgstr "SS Miscellaneous"
 
 #: ../../fontforge/fontinfo.c:163
 msgid "Freeform Serifs"
@@ -8565,39 +8565,39 @@ msgstr "FS Miscellaneous"
 
 #: ../../fontforge/fontinfo.c:167
 msgid "Sans-Serif|SS IBM NeoGrotesque Gothic"
-msgstr "Sans-Serif|SS IBM NeoGrotesque Gothic"
+msgstr "SS IBM NeoGrotesque Gothic"
 
 #: ../../fontforge/fontinfo.c:168
 msgid "Sans-Serif|SS Humanist"
-msgstr "Sans-Serif|SS Humanist"
+msgstr "SS Humanist"
 
 #: ../../fontforge/fontinfo.c:169
 msgid "Sans-Serif|SS Low-x Round Geometric"
-msgstr "Sans-Serif|SS Low-x Round Geometric"
+msgstr "SS Low-x Round Geometric"
 
 #: ../../fontforge/fontinfo.c:170
 msgid "Sans-Serif|SS High-x Round Geometric"
-msgstr "Sans-Serif|SS High-x Round Geometric"
+msgstr "SS High-x Round Geometric"
 
 #: ../../fontforge/fontinfo.c:171
 msgid "Sans-Serif|SS NeoGrotesque Gothic"
-msgstr "Sans-Serif|SS NeoGrotesque Gothic"
+msgstr "SS NeoGrotesque Gothic"
 
 #: ../../fontforge/fontinfo.c:172
 msgid "Sans-Serif|SS Modified Grotesque Gothic"
-msgstr "Sans-Serif|SS Modified Grotesque Gothic"
+msgstr "SS Modified Grotesque Gothic"
 
 #: ../../fontforge/fontinfo.c:173
 msgid "Sans-Serif|SS Typewriter Gothic"
-msgstr "Sans-Serif|SS Typewriter Gothic"
+msgstr "SS Typewriter Gothic"
 
 #: ../../fontforge/fontinfo.c:174
 msgid "Sans-Serif|SS Matrix"
-msgstr "Sans-Serif|SS Matrix"
+msgstr "SS Matrix"
 
 #: ../../fontforge/fontinfo.c:175
 msgid "Sans-Serif|SS Miscellaneous"
-msgstr "Sans-Serif|SS Miscellaneous"
+msgstr "SS Miscellaneous"
 
 #: ../../fontforge/fontinfo.c:176
 msgid "Ornamentals"
@@ -8685,7 +8685,7 @@ msgstr "Sy Miscellaneous"
 
 #: ../../fontforge/fontinfo.c:200
 msgid "OS2Version|Automatic"
-msgstr "OS2Version|Automatic"
+msgstr "Automatic"
 
 #: ../../fontforge/fontinfo.c:201 ../../fontforge/fontinfo.c:209
 msgid "1"
@@ -8705,11 +8705,11 @@ msgstr "0"
 
 #: ../../fontforge/fontinfo.c:213
 msgid "PanoseFamily|Any"
-msgstr "PanoseFamily|Any"
+msgstr "Any"
 
 #: ../../fontforge/fontinfo.c:214
 msgid "PanoseFamily|No Fit"
-msgstr "PanoseFamily|No Fit"
+msgstr "No Fit"
 
 #: ../../fontforge/fontinfo.c:215
 msgid "Latin: Text & Display"
@@ -8721,7 +8721,7 @@ msgstr "Latin: Text & Display"
 #. GT: and the cursive handwriting style. Here we mean cursive handwriting.
 #: ../../fontforge/fontinfo.c:220
 msgid "cursive|Latin: Handwritten"
-msgstr "cursive|Latin: Handwritten"
+msgstr "Latin: Handwritten"
 
 #: ../../fontforge/fontinfo.c:221
 msgid "Latin: Decorative"
@@ -8733,11 +8733,11 @@ msgstr "Latin: Pictorial/Symbol"
 
 #: ../../fontforge/fontinfo.c:255
 msgid "PanoseSerifs|Any"
-msgstr "PanoseSerifs|Any"
+msgstr "Any"
 
 #: ../../fontforge/fontinfo.c:256
 msgid "PanoseSerifs|No Fit"
-msgstr "PanoseSerifs|No Fit"
+msgstr "No Fit"
 
 #: ../../fontforge/fontinfo.c:257 ../../fontforge/fontinfo.c:639
 msgid "Cove"
@@ -8757,11 +8757,11 @@ msgstr "Obtuse Square Cove"
 
 #: ../../fontforge/fontinfo.c:261 ../../fontforge/fontinfo.c:643
 msgid "PanoseSerivfs|Square"
-msgstr "PanoseSerivfs|Square"
+msgstr "Square"
 
 #: ../../fontforge/fontinfo.c:262 ../../fontforge/fontinfo.c:644
 msgid "PanoseSerifs|Thin"
-msgstr "PanoseSerifs|Thin"
+msgstr "Thin"
 
 #: ../../fontforge/fontinfo.c:263
 msgid "Bone"
@@ -8793,15 +8793,15 @@ msgstr "Flared"
 
 #: ../../fontforge/fontinfo.c:270 ../../fontforge/fontinfo.c:652
 msgid "PanoseSerivfs|Rounded"
-msgstr "PanoseSerivfs|Rounded"
+msgstr "Rounded"
 
 #: ../../fontforge/fontinfo.c:274
 msgid "PanoseWeight|Any"
-msgstr "PanoseWeight|Any"
+msgstr "Any"
 
 #: ../../fontforge/fontinfo.c:275
 msgid "PanoseWeight|No Fit"
-msgstr "PanoseWeight|No Fit"
+msgstr "No Fit"
 
 #: ../../fontforge/fontinfo.c:276
 msgid "Very Light"
@@ -8813,7 +8813,7 @@ msgstr "Light"
 
 #: ../../fontforge/fontinfo.c:278
 msgid "PanoseWeight|Thin"
-msgstr "PanoseWeight|Thin"
+msgstr "Thin"
 
 #: ../../fontforge/fontinfo.c:279
 msgid "Book"
@@ -8846,11 +8846,11 @@ msgstr "Nord"
 
 #: ../../fontforge/fontinfo.c:293
 msgid "PanoseProportion|Any"
-msgstr "PanoseProportion|Any"
+msgstr "Any"
 
 #: ../../fontforge/fontinfo.c:294
 msgid "PanoseProportion|No Fit"
-msgstr "PanoseProportion|No Fit"
+msgstr "No Fit"
 
 #: ../../fontforge/fontinfo.c:295
 msgid "Old Style"
@@ -8889,53 +8889,53 @@ msgstr "Monospaced"
 #: ../../fontforge/fontinfo.c:312 ../../fontforge/fontinfo.c:484
 #: ../../fontforge/fontinfo.c:618
 msgid "PanoseContrast|Any"
-msgstr "PanoseContrast|Any"
+msgstr "Any"
 
 #: ../../fontforge/fontinfo.c:313 ../../fontforge/fontinfo.c:485
 #: ../../fontforge/fontinfo.c:619
 msgid "PanoseContrast|No Fit"
-msgstr "PanoseContrast|No Fit"
+msgstr "No Fit"
 
 #: ../../fontforge/fontinfo.c:314 ../../fontforge/fontinfo.c:486
 #: ../../fontforge/fontinfo.c:620
 msgid "PanoseContrast|None"
-msgstr "PanoseContrast|None"
+msgstr "None"
 
 #: ../../fontforge/fontinfo.c:315
 msgid "PanoseContrast|Very Low"
-msgstr "PanoseContrast|Very Low"
+msgstr "Very Low"
 
 #: ../../fontforge/fontinfo.c:316
 msgid "PanoseContrast|Low"
-msgstr "PanoseContrast|Low"
+msgstr "Low"
 
 #: ../../fontforge/fontinfo.c:317
 msgid "PanoseContrast|Medium Low"
-msgstr "PanoseContrast|Medium Low"
+msgstr "Medium Low"
 
 #: ../../fontforge/fontinfo.c:318
 msgid "PanoseContrast|Medium"
-msgstr "PanoseContrast|Medium"
+msgstr "Medium"
 
 #: ../../fontforge/fontinfo.c:319
 msgid "PanoseContrast|Medium High"
-msgstr "PanoseContrast|Medium High"
+msgstr "Medium High"
 
 #: ../../fontforge/fontinfo.c:320
 msgid "PanoseContrast|High"
-msgstr "PanoseContrast|High"
+msgstr "High"
 
 #: ../../fontforge/fontinfo.c:321
 msgid "PanoseContrast|Very High"
-msgstr "PanoseContrast|Very High"
+msgstr "Very High"
 
 #: ../../fontforge/fontinfo.c:331
 msgid "PanoseStrokeVariation|Any"
-msgstr "PanoseStrokeVariation|Any"
+msgstr "Any"
 
 #: ../../fontforge/fontinfo.c:332
 msgid "PanoseStrokeVariation|No Fit"
-msgstr "PanoseStrokeVariation|No Fit"
+msgstr "No Fit"
 
 #: ../../fontforge/fontinfo.c:333
 msgid "Gradual/Diagonal"
@@ -8967,11 +8967,11 @@ msgstr "Instant/Vertical"
 
 #: ../../fontforge/fontinfo.c:350
 msgid "PanoseArmStyle|Any"
-msgstr "PanoseArmStyle|Any"
+msgstr "Any"
 
 #: ../../fontforge/fontinfo.c:351
 msgid "PanoseArmStyle|No Fit"
-msgstr "PanoseArmStyle|No Fit"
+msgstr "No Fit"
 
 #: ../../fontforge/fontinfo.c:352
 msgid "Straight Arms/Horizontal"
@@ -9015,11 +9015,11 @@ msgstr "Non-Straight Arms/Double Serif"
 
 #: ../../fontforge/fontinfo.c:369
 msgid "PanoseLetterform|Any"
-msgstr "PanoseLetterform|Any"
+msgstr "Any"
 
 #: ../../fontforge/fontinfo.c:370
 msgid "PanoseLetterform|No Fit"
-msgstr "PanoseLetterform|No Fit"
+msgstr "No Fit"
 
 #: ../../fontforge/fontinfo.c:371
 msgid "Normal/Contact"
@@ -9079,99 +9079,99 @@ msgstr "Oblique/Square"
 
 #: ../../fontforge/fontinfo.c:388
 msgid "PanoseMidline|Any"
-msgstr "PanoseMidline|Any"
+msgstr "Any"
 
 #: ../../fontforge/fontinfo.c:389
 msgid "PanoseMidline|No Fit"
-msgstr "PanoseMidline|No Fit"
+msgstr "No Fit"
 
 #: ../../fontforge/fontinfo.c:390
 msgid "PanoseMidline|Standard/Trimmed"
-msgstr "PanoseMidline|Standard/Trimmed"
+msgstr "Standard/Trimmed"
 
 #: ../../fontforge/fontinfo.c:391
 msgid "PanoseMidline|Standard/Pointed"
-msgstr "PanoseMidline|Standard/Pointed"
+msgstr "Standard/Pointed"
 
 #: ../../fontforge/fontinfo.c:392
 msgid "PanoseMidline|Standard/Serifed"
-msgstr "PanoseMidline|Standard/Serifed"
+msgstr "Standard/Serifed"
 
 #: ../../fontforge/fontinfo.c:393
 msgid "PanoseMidline|High/Trimmed"
-msgstr "PanoseMidline|High/Trimmed"
+msgstr "High/Trimmed"
 
 #: ../../fontforge/fontinfo.c:394
 msgid "PanoseMidline|High/Pointed"
-msgstr "PanoseMidline|High/Pointed"
+msgstr "High/Pointed"
 
 #: ../../fontforge/fontinfo.c:395
 msgid "PanoseMidline|High/Serifed"
-msgstr "PanoseMidline|High/Serifed"
+msgstr "High/Serifed"
 
 #: ../../fontforge/fontinfo.c:396
 msgid "PanoseMidline|Constant/Trimmed"
-msgstr "PanoseMidline|Constant/Trimmed"
+msgstr "Constant/Trimmed"
 
 #: ../../fontforge/fontinfo.c:397
 msgid "PanoseMidline|Constant/Pointed"
-msgstr "PanoseMidline|Constant/Pointed"
+msgstr "Constant/Pointed"
 
 #: ../../fontforge/fontinfo.c:398
 msgid "PanoseMidline|Constant/Serifed"
-msgstr "PanoseMidline|Constant/Serifed"
+msgstr "Constant/Serifed"
 
 #: ../../fontforge/fontinfo.c:399
 msgid "PanoseMidline|Low/Trimmed"
-msgstr "PanoseMidline|Low/Trimmed"
+msgstr "Low/Trimmed"
 
 #: ../../fontforge/fontinfo.c:400
 msgid "PanoseMidline|Low/Pointed"
-msgstr "PanoseMidline|Low/Pointed"
+msgstr "Low/Pointed"
 
 #: ../../fontforge/fontinfo.c:401
 msgid "PanoseMidline|Low/Serifed"
-msgstr "PanoseMidline|Low/Serifed"
+msgstr "Low/Serifed"
 
 #: ../../fontforge/fontinfo.c:407
 msgid "PanoseXHeight|Any"
-msgstr "PanoseXHeight|Any"
+msgstr "Any"
 
 #: ../../fontforge/fontinfo.c:408
 msgid "PanoseXHeight|No Fit"
-msgstr "PanoseXHeight|No Fit"
+msgstr "No Fit"
 
 #: ../../fontforge/fontinfo.c:409
 msgid "PanoseXHeight|Constant/Small"
-msgstr "PanoseXHeight|Constant/Small"
+msgstr "Constant/Small"
 
 #: ../../fontforge/fontinfo.c:410
 msgid "PanoseXHeight|Constant/Standard"
-msgstr "PanoseXHeight|Constant/Standard"
+msgstr "Constant/Standard"
 
 #: ../../fontforge/fontinfo.c:411
 msgid "PanoseXHeight|Constant/Large"
-msgstr "PanoseXHeight|Constant/Large"
+msgstr "Constant/Large"
 
 #: ../../fontforge/fontinfo.c:412
 msgid "PanoseXHeight|Ducking/Small"
-msgstr "PanoseXHeight|Ducking/Small"
+msgstr "Ducking/Small"
 
 #: ../../fontforge/fontinfo.c:413
 msgid "PanoseXHeight|Ducking/Standard"
-msgstr "PanoseXHeight|Ducking/Standard"
+msgstr "Ducking/Standard"
 
 #: ../../fontforge/fontinfo.c:414
 msgid "PanoseXHeight|Ducking/Large"
-msgstr "PanoseXHeight|Ducking/Large"
+msgstr "Ducking/Large"
 
 #: ../../fontforge/fontinfo.c:427
 msgid "PanoseTool|Any"
-msgstr "PanoseTool|Any"
+msgstr "Any"
 
 #: ../../fontforge/fontinfo.c:428
 msgid "PanoseTool|No Fit"
-msgstr "PanoseTool|No Fit"
+msgstr "No Fit"
 
 #: ../../fontforge/fontinfo.c:429
 msgid "Flat Nib"
@@ -9207,11 +9207,11 @@ msgstr "Wild Brush - Drips a lot"
 
 #: ../../fontforge/fontinfo.c:446
 msgid "PanoseSpacing|Any"
-msgstr "PanoseSpacing|Any"
+msgstr "Any"
 
 #: ../../fontforge/fontinfo.c:447
 msgid "PanoseSpacing|No Fit"
-msgstr "PanoseSpacing|No Fit"
+msgstr "No Fit"
 
 #: ../../fontforge/fontinfo.c:448
 msgid "Proportional Spaced"
@@ -9219,11 +9219,11 @@ msgstr "Proportional Spaced"
 
 #: ../../fontforge/fontinfo.c:465
 msgid "PanoseAspectRatio|Any"
-msgstr "PanoseAspectRatio|Any"
+msgstr "Any"
 
 #: ../../fontforge/fontinfo.c:466
 msgid "PanoseAspectRatio|No Fit"
-msgstr "PanoseAspectRatio|No Fit"
+msgstr "No Fit"
 
 #: ../../fontforge/fontinfo.c:487 ../../fontforge/fontinfo.c:621
 msgid "Very Low"
@@ -9251,11 +9251,11 @@ msgstr "Very High"
 
 #: ../../fontforge/fontinfo.c:503 ../../fontforge/fontinfo.c:696
 msgid "PanoseTopology|Any"
-msgstr "PanoseTopology|Any"
+msgstr "Any"
 
 #: ../../fontforge/fontinfo.c:504 ../../fontforge/fontinfo.c:697
 msgid "PanoseTopology|No Fit"
-msgstr "PanoseTopology|No Fit"
+msgstr "No Fit"
 
 #: ../../fontforge/fontinfo.c:505
 msgid "Roman Disconnected"
@@ -9295,11 +9295,11 @@ msgstr "Blackletter Connected"
 
 #: ../../fontforge/fontinfo.c:522
 msgid "PanoseForm|Any"
-msgstr "PanoseForm|Any"
+msgstr "Any"
 
 #: ../../fontforge/fontinfo.c:523
 msgid "PanoseForm|No Fit"
-msgstr "PanoseForm|No Fit"
+msgstr "No Fit"
 
 #: ../../fontforge/fontinfo.c:524
 msgid "Upright/No Wrapping"
@@ -9351,11 +9351,11 @@ msgstr "Exaggerated/Extreme Wrapping"
 
 #: ../../fontforge/fontinfo.c:541
 msgid "PanoseFinials|Any"
-msgstr "PanoseFinials|Any"
+msgstr "Any"
 
 #: ../../fontforge/fontinfo.c:542
 msgid "PanoseFinials|No Fit"
-msgstr "PanoseFinials|No Fit"
+msgstr "No Fit"
 
 #: ../../fontforge/fontinfo.c:543
 msgid "None/No loops"
@@ -9407,39 +9407,39 @@ msgstr "Round/Open loops"
 
 #: ../../fontforge/fontinfo.c:560
 msgid "PanoseXAscent|Any"
-msgstr "PanoseXAscent|Any"
+msgstr "Any"
 
 #: ../../fontforge/fontinfo.c:561
 msgid "PanoseXAscent|No Fit"
-msgstr "PanoseXAscent|No Fit"
+msgstr "No Fit"
 
 #: ../../fontforge/fontinfo.c:562
 msgid "PanoseXAscent|Very Low"
-msgstr "PanoseXAscent|Very Low"
+msgstr "Very Low"
 
 #: ../../fontforge/fontinfo.c:563
 msgid "PanoseXAscent|Low"
-msgstr "PanoseXAscent|Low"
+msgstr "Low"
 
 #: ../../fontforge/fontinfo.c:564
 msgid "PanoseXAscent|Medium"
-msgstr "PanoseXAscent|Medium"
+msgstr "Medium"
 
 #: ../../fontforge/fontinfo.c:565
 msgid "PanoseXAscent|High"
-msgstr "PanoseXAscent|High"
+msgstr "High"
 
 #: ../../fontforge/fontinfo.c:566
 msgid "PanoseXAscent|Very High"
-msgstr "PanoseXAscent|Very High"
+msgstr "Very High"
 
 #: ../../fontforge/fontinfo.c:580
 msgid "PanoseClass|Any"
-msgstr "PanoseClass|Any"
+msgstr "Any"
 
 #: ../../fontforge/fontinfo.c:581
 msgid "PanoseClass|No Fit"
-msgstr "PanoseClass|No Fit"
+msgstr "No Fit"
 
 #: ../../fontforge/fontinfo.c:582
 msgid "Derivative"
@@ -9487,11 +9487,11 @@ msgstr "Montage"
 
 #: ../../fontforge/fontinfo.c:599 ../../fontforge/fontinfo.c:754
 msgid "PanoseAspect|Any"
-msgstr "PanoseAspect|Any"
+msgstr "Any"
 
 #: ../../fontforge/fontinfo.c:600 ../../fontforge/fontinfo.c:755
 msgid "PanoseAspect|No Fit"
-msgstr "PanoseAspect|No Fit"
+msgstr "No Fit"
 
 #: ../../fontforge/fontinfo.c:601
 msgid "Super Condensed"
@@ -9527,11 +9527,11 @@ msgstr "Broken"
 
 #: ../../fontforge/fontinfo.c:637
 msgid "PanoseSerifVariant|Any"
-msgstr "PanoseSerifVariant|Any"
+msgstr "Any"
 
 #: ../../fontforge/fontinfo.c:638
 msgid "PanoseSerifVariant|No Fit"
-msgstr "PanoseSerifVariant|No Fit"
+msgstr "No Fit"
 
 #: ../../fontforge/fontinfo.c:645
 msgid "Oval"
@@ -9539,15 +9539,15 @@ msgstr "Oval"
 
 #: ../../fontforge/fontinfo.c:654
 msgid "PanoseSerivfs|Script"
-msgstr "PanoseSerivfs|Script"
+msgstr "Script"
 
 #: ../../fontforge/fontinfo.c:658
 msgid "PanoseTreatment|Any"
-msgstr "PanoseTreatment|Any"
+msgstr "Any"
 
 #: ../../fontforge/fontinfo.c:659
 msgid "PanoseTreatment|No Fit"
-msgstr "PanoseTreatment|No Fit"
+msgstr "No Fit"
 
 #: ../../fontforge/fontinfo.c:660
 msgid "Solid Fill"
@@ -9575,39 +9575,39 @@ msgstr "Drawn/Distressed"
 
 #: ../../fontforge/fontinfo.c:677
 msgid "PanoseLining|Any"
-msgstr "PanoseLining|Any"
+msgstr "Any"
 
 #: ../../fontforge/fontinfo.c:678
 msgid "PanoseLining|No Fit"
-msgstr "PanoseLining|No Fit"
+msgstr "No Fit"
 
 #: ../../fontforge/fontinfo.c:679
 msgid "PanoseLining|None"
-msgstr "PanoseLining|None"
+msgstr "None"
 
 #: ../../fontforge/fontinfo.c:680
 msgid "PanoseLining|Inline"
-msgstr "PanoseLining|Inline"
+msgstr "Inline"
 
 #: ../../fontforge/fontinfo.c:681
 msgid "PanoseLining|Outline"
-msgstr "PanoseLining|Outline"
+msgstr "Outline"
 
 #: ../../fontforge/fontinfo.c:682
 msgid "PanoseLining|Engraved (Multiple Lines)"
-msgstr "PanoseLining|Engraved (Multiple Lines)"
+msgstr "Engraved (Multiple Lines)"
 
 #: ../../fontforge/fontinfo.c:683
 msgid "PanoseLining|Shadow"
-msgstr "PanoseLining|Shadow"
+msgstr "Shadow"
 
 #: ../../fontforge/fontinfo.c:684
 msgid "PanoseLining|Relief"
-msgstr "PanoseLining|Relief"
+msgstr "Relief"
 
 #: ../../fontforge/fontinfo.c:685
 msgid "PanoseLining|Backdrop"
-msgstr "PanoseLining|Backdrop"
+msgstr "Backdrop"
 
 #: ../../fontforge/fontinfo.c:698
 msgid "Standard"
@@ -9667,11 +9667,11 @@ msgstr "Swash Variance"
 
 #: ../../fontforge/fontinfo.c:715
 msgid "PanoseCharRange|Any"
-msgstr "PanoseCharRange|Any"
+msgstr "Any"
 
 #: ../../fontforge/fontinfo.c:716
 msgid "PanoseCharRange|No Fit"
-msgstr "PanoseCharRange|No Fit"
+msgstr "No Fit"
 
 #: ../../fontforge/fontinfo.c:717
 msgid "Extended Collection"
@@ -9691,11 +9691,11 @@ msgstr "Small Caps"
 
 #: ../../fontforge/fontinfo.c:735
 msgid "PanoseKind|Any"
-msgstr "PanoseKind|Any"
+msgstr "Any"
 
 #: ../../fontforge/fontinfo.c:736
 msgid "PanoseKind|No Fit"
-msgstr "PanoseKind|No Fit"
+msgstr "No Fit"
 
 #: ../../fontforge/fontinfo.c:737
 msgid "Montages"
@@ -9818,7 +9818,7 @@ msgstr "Class9"
 #: ../../fontforge/fontinfo.c:778 ../../fontforge/fontinfo.c:780
 #: ../../fontforge/fontinfo.c:9037
 msgid "Panose|_Weight"
-msgstr "Panose|_Weight"
+msgstr "_Weight"
 
 #: ../../fontforge/fontinfo.c:776 ../../fontforge/fontinfo.c:9091
 msgid "Stroke _Variation"
@@ -9950,7 +9950,7 @@ msgstr "Albanian"
 #: ../../fontforge/fontinfo.c:792 ../../fontforge/lookupui.c:303
 #: ../../fontforge/macenc.c:2323 ../../fontforge/macencui.c:167
 msgid "Lang|Amharic"
-msgstr "Lang|Amharic"
+msgstr "Amharic"
 
 #: ../../fontforge/fontinfo.c:793
 msgid "Arabic (Saudi Arabia)"
@@ -10019,7 +10019,7 @@ msgstr "Arabic (Qatar)"
 #: ../../fontforge/fontinfo.c:809 ../../fontforge/lookupui.c:427
 #: ../../fontforge/macenc.c:2289 ../../fontforge/macencui.c:133
 msgid "Lang|Armenian"
-msgstr "Lang|Armenian"
+msgstr "Armenian"
 
 #: ../../fontforge/fontinfo.c:810 ../../fontforge/lookupui.c:307
 #: ../../fontforge/macenc.c:2306 ../../fontforge/macencui.c:150
@@ -10047,7 +10047,7 @@ msgstr "Byelorussian"
 #: ../../fontforge/fontinfo.c:815 ../../fontforge/lookupui.c:322
 #: ../../fontforge/macenc.c:2305 ../../fontforge/macencui.c:149
 msgid "Lang|Bengali"
-msgstr "Lang|Bengali"
+msgstr "Bengali"
 
 #: ../../fontforge/fontinfo.c:816
 msgid "Bengali Bangladesh"
@@ -10074,7 +10074,7 @@ msgstr "Cambodian"
 
 #: ../../fontforge/fontinfo.c:821 ../../fontforge/lookupui.c:349
 msgid "Lang|Cherokee"
-msgstr "Lang|Cherokee"
+msgstr "Cherokee"
 
 #: ../../fontforge/fontinfo.c:822
 msgid "Chinese (Taiwan)"
@@ -10213,7 +10213,7 @@ msgstr "Faeroese"
 
 #: ../../fontforge/fontinfo.c:854 ../../fontforge/lookupui.c:387
 msgid "Lang|Farsi"
-msgstr "Lang|Farsi"
+msgstr "Farsi"
 
 #: ../../fontforge/fontinfo.c:855
 msgid "Filipino"
@@ -10312,7 +10312,7 @@ msgstr "Galician"
 #: ../../fontforge/fontinfo.c:878 ../../fontforge/lookupui.c:451
 #: ../../fontforge/macenc.c:2290 ../../fontforge/macencui.c:134
 msgid "Lang|Georgian"
-msgstr "Lang|Georgian"
+msgstr "Georgian"
 
 #: ../../fontforge/fontinfo.c:879
 msgid "German German"
@@ -10338,7 +10338,7 @@ msgstr "German Liechtenstein"
 #: ../../fontforge/lookupui.c:377 ../../fontforge/macenc.c:2250
 #: ../../fontforge/macencui.c:94
 msgid "Lang|Greek"
-msgstr "Lang|Greek"
+msgstr "Greek"
 
 #: ../../fontforge/fontinfo.c:885 ../../fontforge/lookupui.c:411
 #: ../../fontforge/macenc.c:2338 ../../fontforge/macencui.c:182
@@ -10348,7 +10348,7 @@ msgstr "Guarani"
 #: ../../fontforge/fontinfo.c:886 ../../fontforge/lookupui.c:412
 #: ../../fontforge/macenc.c:2307 ../../fontforge/macencui.c:151
 msgid "Lang|Gujarati"
-msgstr "Lang|Gujarati"
+msgstr "Gujarati"
 
 #: ../../fontforge/fontinfo.c:887 ../../fontforge/lookupui.c:416
 msgid "Hausa"
@@ -10362,7 +10362,7 @@ msgstr "Hawaiian"
 #: ../../fontforge/lookupui.c:440 ../../fontforge/macenc.c:2246
 #: ../../fontforge/macencui.c:90
 msgid "Lang|Hebrew"
-msgstr "Lang|Hebrew"
+msgstr "Hebrew"
 
 #: ../../fontforge/fontinfo.c:890 ../../fontforge/langfreq.c:1829
 #: ../../fontforge/lookupui.c:420 ../../fontforge/macenc.c:2257
@@ -10412,7 +10412,7 @@ msgstr "Italian Swiss"
 #: ../../fontforge/fontinfo.c:900 ../../fontforge/lookupui.c:449
 #: ../../fontforge/macenc.c:2311 ../../fontforge/macencui.c:155
 msgid "Lang|Kannada"
-msgstr "Lang|Kannada"
+msgstr "Kannada"
 
 #: ../../fontforge/fontinfo.c:901 ../../fontforge/lookupui.c:470
 msgid "Kanuri"
@@ -10430,7 +10430,7 @@ msgstr "Kazakh"
 #: ../../fontforge/fontinfo.c:904 ../../fontforge/lookupui.c:457
 #: ../../fontforge/macenc.c:2316 ../../fontforge/macencui.c:160
 msgid "Lang|Khmer"
-msgstr "Lang|Khmer"
+msgstr "Khmer"
 
 #: ../../fontforge/fontinfo.c:905 ../../fontforge/lookupui.c:462
 #: ../../fontforge/macenc.c:2292 ../../fontforge/macencui.c:136
@@ -10458,7 +10458,7 @@ msgstr "Latvian"
 #: ../../fontforge/fontinfo.c:911 ../../fontforge/lookupui.c:500
 #: ../../fontforge/macenc.c:2336 ../../fontforge/macencui.c:180
 msgid "Lang|Latin"
-msgstr "Lang|Latin"
+msgstr "Latin"
 
 #: ../../fontforge/fontinfo.c:912 ../../fontforge/langfreq.c:1834
 #: ../../fontforge/lookupui.c:511 ../../fontforge/macenc.c:2260
@@ -10486,7 +10486,7 @@ msgstr "Malay (Brunei)"
 #: ../../fontforge/fontinfo.c:917 ../../fontforge/macenc.c:2310
 #: ../../fontforge/macencui.c:154
 msgid "Lang|Malayalam"
-msgstr "Lang|Malayalam"
+msgstr "Malayalam"
 
 #: ../../fontforge/fontinfo.c:918 ../../fontforge/lookupui.c:549
 #: ../../fontforge/macenc.c:2252 ../../fontforge/macencui.c:96
@@ -10535,7 +10535,7 @@ msgstr "Norwegian (Nynorsk)"
 #: ../../fontforge/fontinfo.c:928 ../../fontforge/lookupui.c:575
 #: ../../fontforge/macenc.c:2309 ../../fontforge/macencui.c:153
 msgid "Lang|Oriya"
-msgstr "Lang|Oriya"
+msgstr "Oriya"
 
 #: ../../fontforge/fontinfo.c:929 ../../fontforge/lookupui.c:576
 msgid "Oromo"
@@ -10641,7 +10641,7 @@ msgstr "Sindhi Pakistan"
 #: ../../fontforge/fontinfo.c:952 ../../fontforge/lookupui.c:619
 #: ../../fontforge/macenc.c:2314 ../../fontforge/macencui.c:158
 msgid "Lang|Sinhalese"
-msgstr "Lang|Sinhalese"
+msgstr "Sinhalese"
 
 #: ../../fontforge/fontinfo.c:953 ../../fontforge/lookupui.c:612
 #: ../../fontforge/macenc.c:2277 ../../fontforge/macencui.c:121
@@ -10763,12 +10763,12 @@ msgstr "Swedish (Finland)"
 
 #: ../../fontforge/fontinfo.c:982 ../../fontforge/lookupui.c:636
 msgid "Lang|Syriac"
-msgstr "Lang|Syriac"
+msgstr "Syriac"
 
 #: ../../fontforge/fontinfo.c:983 ../../fontforge/macenc.c:2320
 #: ../../fontforge/macencui.c:164
 msgid "Lang|Tagalog"
-msgstr "Lang|Tagalog"
+msgstr "Tagalog"
 
 #: ../../fontforge/fontinfo.c:984
 msgid "Tajik"
@@ -10785,7 +10785,7 @@ msgstr "Tamazight (Latin)"
 #: ../../fontforge/fontinfo.c:987 ../../fontforge/lookupui.c:639
 #: ../../fontforge/macenc.c:2312 ../../fontforge/macencui.c:156
 msgid "Lang|Tamil"
-msgstr "Lang|Tamil"
+msgstr "Tamil"
 
 #: ../../fontforge/fontinfo.c:988
 msgid "Tatar (Tatarstan)"
@@ -10794,12 +10794,12 @@ msgstr "Tatar (Tatarstan)"
 #: ../../fontforge/fontinfo.c:989 ../../fontforge/lookupui.c:642
 #: ../../fontforge/macenc.c:2313 ../../fontforge/macencui.c:157
 msgid "Lang|Telugu"
-msgstr "Lang|Telugu"
+msgstr "Telugu"
 
 #: ../../fontforge/fontinfo.c:990 ../../fontforge/lookupui.c:646
 #: ../../fontforge/macenc.c:2258 ../../fontforge/macencui.c:102
 msgid "Lang|Thai"
-msgstr "Lang|Thai"
+msgstr "Thai"
 
 #: ../../fontforge/fontinfo.c:991
 msgid "Tibetan (PRC)"
@@ -10839,7 +10839,7 @@ msgstr "Turkmen"
 #: ../../fontforge/fontinfo.c:999 ../../fontforge/macenc.c:2341
 #: ../../fontforge/macencui.c:185
 msgid "Lang|Uighur"
-msgstr "Lang|Uighur"
+msgstr "Uighur"
 
 #: ../../fontforge/fontinfo.c:1000 ../../fontforge/lookupui.c:662
 #: ../../fontforge/macenc.c:2283 ../../fontforge/macencui.c:127
@@ -10883,7 +10883,7 @@ msgstr "Xhosa"
 
 #: ../../fontforge/fontinfo.c:1009
 msgid "Lang|Yi"
-msgstr "Lang|Yi"
+msgstr "Yi"
 
 #: ../../fontforge/fontinfo.c:1010 ../../fontforge/lookupui.c:442
 #: ../../fontforge/macenc.c:2279 ../../fontforge/macencui.c:123
@@ -11824,23 +11824,23 @@ msgstr "Grid Fit w/ Sym-Smooth"
 
 #: ../../fontforge/fontinfo.c:1306
 msgid "Gasp|For Pixels Per EM <= Value"
-msgstr "Gasp|For Pixels Per EM <= Value"
+msgstr "For Pixels Per EM <= Value"
 
 #: ../../fontforge/fontinfo.c:1307
 msgid "Gasp|Grid Fit"
-msgstr "Gasp|Grid Fit"
+msgstr "Grid Fit"
 
 #: ../../fontforge/fontinfo.c:1308
 msgid "Gasp|Anti-Alias"
-msgstr "Gasp|Anti-Alias"
+msgstr "Anti-Alias"
 
 #: ../../fontforge/fontinfo.c:1309
 msgid "Gasp|Symmetric Smoothing"
-msgstr "Gasp|Symmetric Smoothing"
+msgstr "Symmetric Smoothing"
 
 #: ../../fontforge/fontinfo.c:1310
 msgid "Gasp|Grid Fit w/ Sym Smooth"
-msgstr "Gasp|Grid Fit w/ Sym Smooth"
+msgstr "Grid Fit w/ Sym Smooth"
 
 #: ../../fontforge/fontinfo.c:1313
 msgid "Cubic"
@@ -11853,11 +11853,11 @@ msgstr "Quadratic"
 #: ../../fontforge/fontinfo.c:1318 ../../fontforge/fontview.c:4938
 #: ../../fontforge/metricsview.c:3256
 msgid "Layer|Foreground"
-msgstr "Layer|Foreground"
+msgstr "Foreground"
 
 #: ../../fontforge/fontinfo.c:1319
 msgid "Layer|Background"
-msgstr "Layer|Background"
+msgstr "Background"
 
 #: ../../fontforge/fontinfo.c:1324
 msgid "Layer Name"
@@ -12336,7 +12336,7 @@ msgstr "Underline _Position:"
 
 #: ../../fontforge/fontinfo.c:4103 ../../fontforge/fontinfo.c:7928
 msgid "Underline|_Height:"
-msgstr "Underline|_Height:"
+msgstr "_Height:"
 
 #: ../../fontforge/fontinfo.c:4104
 msgid "_Em Size:"
@@ -12859,7 +12859,7 @@ msgstr "Contextual State Machine"
 
 #: ../../fontforge/fontinfo.c:6569 ../../fontforge/lookups.c:1526
 msgid "LookupType|Unknown"
-msgstr "LookupType|Unknown"
+msgstr "Unknown"
 
 #: ../../fontforge/fontinfo.c:6574
 msgid "(kerning class)\n"
@@ -13469,7 +13469,7 @@ msgstr ""
 
 #: ../../fontforge/fontinfo.c:8750
 msgid "SubscriptSuperUse|Default"
-msgstr "SubscriptSuperUse|Default"
+msgstr "Default"
 
 #: ../../fontforge/fontinfo.c:8930
 msgid "Pos"
@@ -13477,7 +13477,7 @@ msgstr "Pos"
 
 #: ../../fontforge/fontinfo.c:8978
 msgid "PanoseUse|Default"
-msgstr "PanoseUse|Default"
+msgstr "Default"
 
 #: ../../fontforge/fontinfo.c:8989
 msgid "http://panose.com/"
@@ -13485,7 +13485,7 @@ msgstr "http://panose.com/"
 
 #: ../../fontforge/fontinfo.c:9000
 msgid "Panose|_Family"
-msgstr "Panose|_Family"
+msgstr "_Family"
 
 #: ../../fontforge/fontinfo.c:9194
 msgid "Unicode Ranges:"
@@ -13521,7 +13521,7 @@ msgstr "Charsets"
 
 #: ../../fontforge/fontinfo.c:9356
 msgid "Gasp|_Version"
-msgstr "Gasp|_Version"
+msgstr "_Version"
 
 #: ../../fontforge/fontinfo.c:9378
 msgid "Optimized For ClearType"
@@ -13561,7 +13561,7 @@ msgstr ""
 
 #: ../../fontforge/fontinfo.c:9421
 msgid "Gasp|_Default"
-msgstr "Gasp|_Default"
+msgstr "_Default"
 
 #: ../../fontforge/fontinfo.c:9445
 msgid "_Language"
@@ -13573,7 +13573,7 @@ msgstr "_String Type"
 
 #: ../../fontforge/fontinfo.c:9466
 msgid "SortingScheme|Default"
-msgstr "SortingScheme|Default"
+msgstr "Default"
 
 #: ../../fontforge/fontinfo.c:9479
 msgid ""
@@ -13745,7 +13745,7 @@ msgstr "The size (in points) for which this face was designed"
 
 #: ../../fontforge/fontinfo.c:9894
 msgid "Size|Points"
-msgstr "Size|Points"
+msgstr "Points"
 
 #: ../../fontforge/fontinfo.c:9902
 msgid "Design Range"
@@ -13996,7 +13996,7 @@ msgstr "Mark Sets"
 
 #: ../../fontforge/fontinfo.c:10513
 msgid "OpenType|Lookups"
-msgstr "OpenType|Lookups"
+msgstr "Lookups"
 
 #: ../../fontforge/fontinfo.c:10520
 msgid "WOFF"
@@ -14012,15 +14012,15 @@ msgstr "Dates"
 
 #: ../../fontforge/fontinfo.c:10601
 msgid "TrueTypeName|New"
-msgstr "TrueTypeName|New"
+msgstr "New"
 
 #: ../../fontforge/fontinfo.c:10603
 msgid "gaspTableEntry|New"
-msgstr "gaspTableEntry|New"
+msgstr "New"
 
 #: ../../fontforge/fontinfo.c:10615
 msgid "PSPrivateDictKey|New"
-msgstr "PSPrivateDictKey|New"
+msgstr "New"
 
 #: ../../fontforge/fontview.c:481
 msgid "_Don't Save"
@@ -15042,7 +15042,7 @@ msgstr "Background color for the drawing area of all views"
 #: ../../fontforge/fontview.c:7186 ../../gdraw/ggadgets.c:95
 #: ../../gdraw/gprogress.c:193
 msgid "Color|Background"
-msgstr "Color|Background"
+msgstr "Background"
 
 #: ../../fontforge/fontview.c:7195
 msgid "View"
@@ -15701,7 +15701,7 @@ msgstr "Left Side Bearing does not change."
 
 #: ../../fontforge/fvmetricsdlg.c:49
 msgid "ThisSpaceIntentionallyLeftBlank-PleaseDoNotTranslate-LeaveThisOut|"
-msgstr "ThisSpaceIntentionallyLeftBlank-PleaseDoNotTranslate-LeaveThisOut|"
+msgstr ""
 
 #: ../../fontforge/fvmetricsdlg.c:49
 msgid "Top Bearing does not change."
@@ -16651,7 +16651,7 @@ msgstr "A list of glyph names"
 
 #: ../../fontforge/justifydlg.c:293
 msgid "GlyphName|New"
-msgstr "GlyphName|New"
+msgstr "New"
 
 #: ../../fontforge/justifydlg.c:432
 msgid "Lookups turned ON to extend a line"
@@ -16683,7 +16683,7 @@ msgstr "A list of lookup names"
 
 #: ../../fontforge/justifydlg.c:497
 msgid "LookupName|New"
-msgstr "LookupName|New"
+msgstr "New"
 
 #: ../../fontforge/justifydlg.c:588 ../../fontforge/justifydlg.c:604
 #: ../../fontforge/statemachine.c:384 ../../fontforge/statemachine.c:397
@@ -16713,7 +16713,7 @@ msgstr ""
 
 #: ../../fontforge/justifydlg.c:816
 msgid "Language|New"
-msgstr "Language|New"
+msgstr "New"
 
 #: ../../fontforge/justifydlg.c:949
 msgid "Justified Scripts"
@@ -16725,7 +16725,7 @@ msgstr "A list of scripts with special justification needs"
 
 #: ../../fontforge/justifydlg.c:1012
 msgid "Script|New"
-msgstr "Script|New"
+msgstr "New"
 
 #: ../../fontforge/kernclass.c:233 ../../fontforge/kernclass.c:281
 #: ../../fontforge/kernclass.c:1133 ../../fontforge/lookupui.c:3443
@@ -16976,7 +16976,7 @@ msgstr "VKern By Classes"
 
 #: ../../fontforge/kernclass.c:3065
 msgid "KernClass|_New Lookup..."
-msgstr "KernClass|_New Lookup..."
+msgstr "_New Lookup..."
 
 #: ../../fontforge/langfreq.c:1824 ../../fontforge/lookupui.c:378
 #: ../../fontforge/macenc.c:2236 ../../fontforge/macencui.c:80
@@ -17757,35 +17757,35 @@ msgstr "Contextual Positioning"
 #: ../../fontforge/lookups.c:1308 ../../fontforge/lookupui.c:174
 #: ../../fontforge/parsettf.c:4438
 msgid "Script|Arabic"
-msgstr "Script|Arabic"
+msgstr "Arabic"
 
 #: ../../fontforge/lookups.c:1309 ../../fontforge/lookupui.c:175
 msgid "Script|Aramaic"
-msgstr "Script|Aramaic"
+msgstr "Aramaic"
 
 #: ../../fontforge/lookups.c:1310 ../../fontforge/lookupui.c:176
 msgid "Script|Armenian"
-msgstr "Script|Armenian"
+msgstr "Armenian"
 
 #: ../../fontforge/lookups.c:1311 ../../fontforge/lookupui.c:177
 msgid "Script|Avestan"
-msgstr "Script|Avestan"
+msgstr "Avestan"
 
 #: ../../fontforge/lookups.c:1312 ../../fontforge/lookupui.c:178
 msgid "Script|Balinese"
-msgstr "Script|Balinese"
+msgstr "Balinese"
 
 #: ../../fontforge/lookups.c:1313 ../../fontforge/lookupui.c:179
 msgid "Script|Batak"
-msgstr "Script|Batak"
+msgstr "Batak"
 
 #: ../../fontforge/lookups.c:1314 ../../fontforge/lookupui.c:180
 msgid "Script|Bengali"
-msgstr "Script|Bengali"
+msgstr "Bengali"
 
 #: ../../fontforge/lookups.c:1315 ../../fontforge/lookupui.c:181
 msgid "Script|Bengali2"
-msgstr "Script|Bengali2"
+msgstr "Bengali2"
 
 #: ../../fontforge/lookups.c:1316 ../../fontforge/lookupui.c:182
 msgid "Bliss Symbolics"
@@ -17806,11 +17806,11 @@ msgstr "Braille"
 
 #: ../../fontforge/lookups.c:1320 ../../fontforge/lookupui.c:186
 msgid "Script|Buginese"
-msgstr "Script|Buginese"
+msgstr "Buginese"
 
 #: ../../fontforge/lookups.c:1321 ../../fontforge/lookupui.c:187
 msgid "Script|Buhid"
-msgstr "Script|Buhid"
+msgstr "Buhid"
 
 #: ../../fontforge/lookups.c:1322 ../../fontforge/lookupui.c:188
 msgid "Byzantine Music"
@@ -17826,11 +17826,11 @@ msgstr "Carian"
 
 #: ../../fontforge/lookups.c:1326 ../../fontforge/lookupui.c:190
 msgid "Script|Cham"
-msgstr "Script|Cham"
+msgstr "Cham"
 
 #: ../../fontforge/lookups.c:1327 ../../fontforge/lookupui.c:191
 msgid "Script|Cherokee"
-msgstr "Script|Cherokee"
+msgstr "Cherokee"
 
 #: ../../fontforge/lookups.c:1328 ../../fontforge/lookupui.c:192
 msgid "Cirth"
@@ -17842,7 +17842,7 @@ msgstr "CJK Ideographic"
 
 #: ../../fontforge/lookups.c:1330 ../../fontforge/lookupui.c:194
 msgid "Script|Coptic"
-msgstr "Script|Coptic"
+msgstr "Coptic"
 
 #: ../../fontforge/lookups.c:1331 ../../fontforge/lookupui.c:195
 msgid "Cypro-Minoan"
@@ -17859,7 +17859,7 @@ msgstr "Cyrillic"
 
 #: ../../fontforge/lookups.c:1334 ../../fontforge/lookupui.c:198
 msgid "Script|Default"
-msgstr "Script|Default"
+msgstr "Default"
 
 #: ../../fontforge/lookups.c:1335 ../../fontforge/lookupui.c:199
 msgid "Deseret (Mormon)"
@@ -17881,25 +17881,25 @@ msgstr "Devanagari2"
 #. { N_("Egyptian hieroglyphs"), CHR('e','g','y','p') },
 #: ../../fontforge/lookups.c:1345 ../../fontforge/lookupui.c:209
 msgid "Script|Ethiopic"
-msgstr "Script|Ethiopic"
+msgstr "Ethiopic"
 
 #: ../../fontforge/lookups.c:1346 ../../fontforge/lookupui.c:210
 msgid "Script|Georgian"
-msgstr "Script|Georgian"
+msgstr "Georgian"
 
 #: ../../fontforge/lookups.c:1349 ../../fontforge/lookupui.c:213
 #: ../../fontforge/parsettf.c:4438
 msgid "Script|Greek"
-msgstr "Script|Greek"
+msgstr "Greek"
 
 #: ../../fontforge/lookups.c:1350 ../../fontforge/lookupui.c:214
 #: ../../fontforge/parsettf.c:4442
 msgid "Script|Gujarati"
-msgstr "Script|Gujarati"
+msgstr "Gujarati"
 
 #: ../../fontforge/lookups.c:1351 ../../fontforge/lookupui.c:215
 msgid "Script|Gujarati2"
-msgstr "Script|Gujarati2"
+msgstr "Gujarati2"
 
 #: ../../fontforge/lookups.c:1353 ../../fontforge/lookupui.c:217
 msgid "Gurmukhi2"
@@ -17911,16 +17911,16 @@ msgstr "Hangul"
 
 #: ../../fontforge/lookups.c:1356 ../../fontforge/lookupui.c:220
 msgid "Script|Hanunóo"
-msgstr "Script|Hanunóo"
+msgstr "Hanunóo"
 
 #: ../../fontforge/lookups.c:1357 ../../fontforge/lookupui.c:221
 #: ../../fontforge/parsettf.c:4438
 msgid "Script|Hebrew"
-msgstr "Script|Hebrew"
+msgstr "Hebrew"
 
 #: ../../fontforge/lookups.c:1360 ../../fontforge/lookupui.c:224
 msgid "Script|Javanese"
-msgstr "Script|Javanese"
+msgstr "Javanese"
 
 #: ../../fontforge/lookups.c:1362 ../../fontforge/lookupui.c:226
 msgid "Hiragana & Katakana"
@@ -17932,27 +17932,27 @@ msgstr "Kharoṣṭhī"
 
 #: ../../fontforge/lookups.c:1364 ../../fontforge/lookupui.c:228
 msgid "Script|Kannada"
-msgstr "Script|Kannada"
+msgstr "Kannada"
 
 #: ../../fontforge/lookups.c:1365 ../../fontforge/lookupui.c:229
 msgid "Script|Kannada2"
-msgstr "Script|Kannada2"
+msgstr "Kannada2"
 
 #: ../../fontforge/lookups.c:1366 ../../fontforge/lookupui.c:230
 msgid "Script|Khmer"
-msgstr "Script|Khmer"
+msgstr "Khmer"
 
 #: ../../fontforge/lookups.c:1367 ../../fontforge/lookupui.c:231
 msgid "Script|Kharosthi"
-msgstr "Script|Kharosthi"
+msgstr "Kharosthi"
 
 #: ../../fontforge/lookups.c:1368 ../../fontforge/lookupui.c:232
 msgid "Script|Lao"
-msgstr "Script|Lao"
+msgstr "Lao"
 
 #: ../../fontforge/lookups.c:1369 ../../fontforge/lookupui.c:233
 msgid "Script|Latin"
-msgstr "Script|Latin"
+msgstr "Latin"
 
 #: ../../fontforge/lookups.c:1370 ../../fontforge/lookupui.c:234
 msgid "Lepcha (Róng)"
@@ -17960,7 +17960,7 @@ msgstr "Lepcha (Róng)"
 
 #: ../../fontforge/lookups.c:1371 ../../fontforge/lookupui.c:235
 msgid "Script|Limbu"
-msgstr "Script|Limbu"
+msgstr "Limbu"
 
 #: ../../fontforge/lookups.c:1372 ../../fontforge/lookupui.c:236
 msgid "Linear A"
@@ -17980,19 +17980,19 @@ msgstr "Lydian"
 
 #: ../../fontforge/lookups.c:1376 ../../fontforge/lookupui.c:238
 msgid "Script|Mandaean"
-msgstr "Script|Mandaean"
+msgstr "Mandaean"
 
 #: ../../fontforge/lookups.c:1378 ../../fontforge/lookupui.c:240
 msgid "Script|Malayālam"
-msgstr "Script|Malayālam"
+msgstr "Malayālam"
 
 #: ../../fontforge/lookups.c:1379 ../../fontforge/lookupui.c:241
 msgid "Script|Malayālam2"
-msgstr "Script|Malayālam2"
+msgstr "Malayālam2"
 
 #: ../../fontforge/lookups.c:1381 ../../fontforge/lookupui.c:243
 msgid "Script|Mongolian"
-msgstr "Script|Mongolian"
+msgstr "Mongolian"
 
 #: ../../fontforge/lookups.c:1382 ../../fontforge/lookupui.c:244
 msgid "Musical"
@@ -18000,7 +18000,7 @@ msgstr "Musical"
 
 #: ../../fontforge/lookups.c:1383 ../../fontforge/lookupui.c:245
 msgid "Script|Myanmar"
-msgstr "Script|Myanmar"
+msgstr "Myanmar"
 
 #: ../../fontforge/lookups.c:1388 ../../fontforge/lookupui.c:248
 msgid "Old Italic (Etruscan, Oscan, etc.)"
@@ -18008,7 +18008,7 @@ msgstr "Old Italic (Etruscan, Oscan, etc.)"
 
 #: ../../fontforge/lookups.c:1389 ../../fontforge/lookupui.c:249
 msgid "Script|Old Permic"
-msgstr "Script|Old Permic"
+msgstr "Old Permic"
 
 #: ../../fontforge/lookups.c:1390 ../../fontforge/lookupui.c:250
 msgid "Old Persian cuneiform"
@@ -18016,23 +18016,23 @@ msgstr "Old Persian cuneiform"
 
 #: ../../fontforge/lookups.c:1391 ../../fontforge/lookupui.c:251
 msgid "Script|Oriya"
-msgstr "Script|Oriya"
+msgstr "Oriya"
 
 #: ../../fontforge/lookups.c:1392 ../../fontforge/lookupui.c:252
 msgid "Script|Oriya2"
-msgstr "Script|Oriya2"
+msgstr "Oriya2"
 
 #: ../../fontforge/lookups.c:1394 ../../fontforge/lookupui.c:254
 msgid "Script|Pahlavi"
-msgstr "Script|Pahlavi"
+msgstr "Pahlavi"
 
 #: ../../fontforge/lookups.c:1395 ../../fontforge/lookupui.c:255
 msgid "Script|Phags-pa"
-msgstr "Script|Phags-pa"
+msgstr "Phags-pa"
 
 #: ../../fontforge/lookups.c:1396 ../../fontforge/lookupui.c:256
 msgid "Script|Phoenician"
-msgstr "Script|Phoenician"
+msgstr "Phoenician"
 
 #: ../../fontforge/lookups.c:1397 ../../fontforge/lookupui.c:257
 msgid "Phaistos"
@@ -18048,31 +18048,31 @@ msgstr "Rongorongo"
 
 #: ../../fontforge/lookups.c:1404 ../../fontforge/lookupui.c:262
 msgid "Script|Sinhala"
-msgstr "Script|Sinhala"
+msgstr "Sinhala"
 
 #: ../../fontforge/lookups.c:1405 ../../fontforge/lookupui.c:263
 msgid "Script|Sumero-Akkadian Cuneiform"
-msgstr "Script|Sumero-Akkadian Cuneiform"
+msgstr "Sumero-Akkadian Cuneiform"
 
 #: ../../fontforge/lookups.c:1406
 msgid "Script|Sundanese"
-msgstr "Script|Sundanese"
+msgstr "Sundanese"
 
 #: ../../fontforge/lookups.c:1407 ../../fontforge/lookupui.c:264
 msgid "Script|Syloti Nagri"
-msgstr "Script|Syloti Nagri"
+msgstr "Syloti Nagri"
 
 #: ../../fontforge/lookups.c:1408 ../../fontforge/lookupui.c:265
 msgid "Script|Syriac"
-msgstr "Script|Syriac"
+msgstr "Syriac"
 
 #: ../../fontforge/lookups.c:1409 ../../fontforge/lookupui.c:266
 msgid "Script|Tagalog"
-msgstr "Script|Tagalog"
+msgstr "Tagalog"
 
 #: ../../fontforge/lookups.c:1410 ../../fontforge/lookupui.c:267
 msgid "Script|Tagbanwa"
-msgstr "Script|Tagbanwa"
+msgstr "Tagbanwa"
 
 #: ../../fontforge/lookups.c:1412 ../../fontforge/lookupui.c:269
 msgid "Tai Lu"
@@ -18080,19 +18080,19 @@ msgstr "Tai Lu"
 
 #: ../../fontforge/lookups.c:1413 ../../fontforge/lookupui.c:270
 msgid "Script|Tamil"
-msgstr "Script|Tamil"
+msgstr "Tamil"
 
 #: ../../fontforge/lookups.c:1414 ../../fontforge/lookupui.c:271
 msgid "Script|Tamil2"
-msgstr "Script|Tamil2"
+msgstr "Tamil2"
 
 #: ../../fontforge/lookups.c:1415 ../../fontforge/lookupui.c:272
 msgid "Script|Telugu"
-msgstr "Script|Telugu"
+msgstr "Telugu"
 
 #: ../../fontforge/lookups.c:1416 ../../fontforge/lookupui.c:273
 msgid "Script|Telugu2"
-msgstr "Script|Telugu2"
+msgstr "Telugu2"
 
 #: ../../fontforge/lookups.c:1417 ../../fontforge/lookupui.c:274
 msgid "Tengwar"
@@ -18101,11 +18101,11 @@ msgstr "Tengwar"
 #: ../../fontforge/lookups.c:1419 ../../fontforge/lookupui.c:276
 #: ../../fontforge/parsettf.c:4444
 msgid "Script|Thai"
-msgstr "Script|Thai"
+msgstr "Thai"
 
 #: ../../fontforge/lookups.c:1420 ../../fontforge/lookupui.c:277
 msgid "Script|Tibetan"
-msgstr "Script|Tibetan"
+msgstr "Tibetan"
 
 #: ../../fontforge/lookups.c:1421 ../../fontforge/lookupui.c:278
 msgid "Tifinagh (Berber)"
@@ -18113,11 +18113,11 @@ msgstr "Tifinagh (Berber)"
 
 #: ../../fontforge/lookups.c:1422 ../../fontforge/lookupui.c:279
 msgid "Script|Ugaritic"
-msgstr "Script|Ugaritic"
+msgstr "Ugaritic"
 
 #: ../../fontforge/lookups.c:1423 ../../fontforge/lookupui.c:280
 msgid "Script|Vai"
-msgstr "Script|Vai"
+msgstr "Vai"
 
 #: ../../fontforge/lookups.c:1425 ../../fontforge/lookupui.c:282
 msgid "Cuneiform, Ugaritic"
@@ -18125,7 +18125,7 @@ msgstr "Cuneiform, Ugaritic"
 
 #: ../../fontforge/lookups.c:1426 ../../fontforge/lookupui.c:283
 msgid "Script|Yi"
-msgstr "Script|Yi"
+msgstr "Yi"
 
 #: ../../fontforge/lookups.c:1471
 msgid "Required Feature"
@@ -18393,7 +18393,7 @@ msgstr "Bad FPST format"
 
 #: ../../fontforge/lookupui.c:139 ../../fontforge/lookupui.c:154
 msgid "Lookup Type|Unspecified"
-msgstr "Lookup Type|Unspecified"
+msgstr "Unspecified"
 
 #: ../../fontforge/lookupui.c:146
 msgid "Reverse Chaining Substitution"
@@ -18482,7 +18482,7 @@ msgstr "Americanist IPA"
 #: ../../fontforge/lookupui.c:304 ../../fontforge/macenc.c:2248
 #: ../../fontforge/macencui.c:92
 msgid "Lang|Arabic"
-msgstr "Lang|Arabic"
+msgstr "Arabic"
 
 #: ../../fontforge/lookupui.c:305
 msgid "Aari"
@@ -18498,7 +18498,7 @@ msgstr "Athapaskan"
 
 #: ../../fontforge/lookupui.c:309
 msgid "Lang|Avar"
-msgstr "Lang|Avar"
+msgstr "Avar"
 
 #: ../../fontforge/lookupui.c:310
 msgid "Awadhi"
@@ -18531,7 +18531,7 @@ msgstr "Baule"
 
 #: ../../fontforge/lookupui.c:317
 msgid "Lang|Berber"
-msgstr "Lang|Berber"
+msgstr "Berber"
 
 #: ../../fontforge/lookupui.c:318
 msgid "Bench"
@@ -18652,7 +18652,7 @@ msgstr "Comorian"
 
 #: ../../fontforge/lookupui.c:352
 msgid "Lang|Coptic"
-msgstr "Lang|Coptic"
+msgstr "Coptic"
 
 #: ../../fontforge/lookupui.c:353
 msgid "Corsican"
@@ -18680,7 +18680,7 @@ msgstr "Dargwa"
 
 #: ../../fontforge/lookupui.c:361
 msgid "Lang|Default"
-msgstr "Lang|Default"
+msgstr "Default"
 
 #: ../../fontforge/lookupui.c:362
 msgid "Woods Cree"
@@ -18818,7 +18818,7 @@ msgstr "Garhwali"
 
 #: ../../fontforge/lookupui.c:405
 msgid "Lang|Ge'ez"
-msgstr "Lang|Ge'ez"
+msgstr "Ge'ez"
 
 #: ../../fontforge/lookupui.c:406
 msgid "Gilyak"
@@ -18911,7 +18911,7 @@ msgstr "Inari Sami"
 
 #: ../../fontforge/lookupui.c:441
 msgid "Lang|Javanese"
-msgstr "Lang|Javanese"
+msgstr "Javanese"
 
 #: ../../fontforge/lookupui.c:444
 msgid "Judezmo"
@@ -19106,7 +19106,7 @@ msgstr "Lambani"
 #: ../../fontforge/lookupui.c:499 ../../fontforge/macenc.c:2317
 #: ../../fontforge/macencui.c:161
 msgid "Lang|Lao"
-msgstr "Lang|Lao"
+msgstr "Lao"
 
 #: ../../fontforge/lookupui.c:501
 msgid "Laz"
@@ -19134,7 +19134,7 @@ msgstr "Low Mari"
 
 #: ../../fontforge/lookupui.c:507
 msgid "Lang|Limbu"
-msgstr "Lang|Limbu"
+msgstr "Limbu"
 
 #: ../../fontforge/lookupui.c:508
 msgid "Lomwe"
@@ -19198,7 +19198,7 @@ msgstr "Mbundu"
 
 #: ../../fontforge/lookupui.c:526
 msgid "Lang|Manchu"
-msgstr "Lang|Manchu"
+msgstr "Manchu"
 
 #: ../../fontforge/lookupui.c:527
 msgid "Moose Cree"
@@ -19239,7 +19239,7 @@ msgstr "Mandinka"
 
 #: ../../fontforge/lookupui.c:538
 msgid "Lang|Mongolian"
-msgstr "Lang|Mongolian"
+msgstr "Mongolian"
 
 #: ../../fontforge/lookupui.c:540
 msgid "Maninka"
@@ -19598,7 +19598,7 @@ msgstr "Tahitian"
 #: ../../fontforge/lookupui.c:648 ../../fontforge/macenc.c:2301
 #: ../../fontforge/macencui.c:145
 msgid "Lang|Tibetan"
-msgstr "Lang|Tibetan"
+msgstr "Tibetan"
 
 #: ../../fontforge/lookupui.c:650
 msgid "Temne"
@@ -19835,7 +19835,7 @@ msgstr ""
 
 #: ../../fontforge/lookupui.c:1187 ../../fontforge/lookupui.c:1959
 msgid "OpenTypeFeature|New"
-msgstr "OpenTypeFeature|New"
+msgstr "New"
 
 #: ../../fontforge/lookupui.c:1508
 msgid "You must choose a lookup type"
@@ -20594,7 +20594,7 @@ msgstr "Faroese (Icelandic)"
 #. GT: The msgstr should contain a translation of "Farsi/Persian"), ignore "Lang|"
 #: ../../fontforge/macenc.c:2269 ../../fontforge/macencui.c:113
 msgid "Lang|Farsi/Persian"
-msgstr "Lang|Farsi/Persian"
+msgstr "Farsi/Persian"
 
 #: ../../fontforge/macenc.c:2273 ../../fontforge/macencui.c:117
 msgid "Irish Gaelic"
@@ -20692,7 +20692,7 @@ msgstr "_Name:"
 
 #: ../../fontforge/macencui.c:656
 msgid "MacName|_New..."
-msgstr "MacName|_New..."
+msgstr "_New..."
 
 #: ../../fontforge/macencui.c:735
 msgid "This setting is already used"
@@ -20720,15 +20720,15 @@ msgstr "Settings"
 
 #: ../../fontforge/macencui.c:1175
 msgid "MacSetting|_New..."
-msgstr "MacSetting|_New..."
+msgstr "_New..."
 
 #: ../../fontforge/macencui.c:1367
 msgid "MacFeature|_New..."
-msgstr "MacFeature|_New..."
+msgstr "_New..."
 
 #: ../../fontforge/macencui.c:1403
 msgid "MacFeature|Default"
-msgstr "MacFeature|Default"
+msgstr "Default"
 
 #: ../../fontforge/math.c:40
 msgid "Constants"
@@ -22143,7 +22143,7 @@ msgstr "The %s list is not ordered"
 
 #: ../../fontforge/mmdlg.c:1685
 msgid "Font|New"
-msgstr "Font|New"
+msgstr "New"
 
 #: ../../fontforge/mmdlg.c:1766 ../../fontforge/mmdlg.c:3066
 msgid "Force Bold Threshold:"
@@ -22171,7 +22171,7 @@ msgstr "End:"
 
 #: ../../fontforge/mmdlg.c:2062
 msgid "AxisValue|Default"
-msgstr "AxisValue|Default"
+msgstr "Default"
 
 #: ../../fontforge/mmdlg.c:2070
 msgid "Axis range not valid"
@@ -22298,7 +22298,7 @@ msgstr "Master Designs"
 
 #: ../../fontforge/mmdlg.c:2964
 msgid "Design|_New..."
-msgstr "Design|_New..."
+msgstr "_New..."
 
 #: ../../fontforge/mmdlg.c:3002
 msgid "Normalize Design Vector Function:"
@@ -23574,7 +23574,7 @@ msgstr "Edit Font Filters"
 
 #: ../../fontforge/openfontdlg.c:419
 msgid "Filter|New"
-msgstr "Filter|New"
+msgstr "New"
 
 #: ../../fontforge/openfontdlg.c:640
 msgid "Filter:"
@@ -24699,45 +24699,45 @@ msgstr "GID out of range (%d) in format 14 'cmap' subtable\n"
 
 #: ../../fontforge/parsettf.c:4437
 msgid "Script|Japanese"
-msgstr "Script|Japanese"
+msgstr "Japanese"
 
 #: ../../fontforge/parsettf.c:4437
 msgid "Script|Korean"
-msgstr "Script|Korean"
+msgstr "Korean"
 
 #: ../../fontforge/parsettf.c:4437
 msgid "Script|Roman"
-msgstr "Script|Roman"
+msgstr "Roman"
 
 #: ../../fontforge/parsettf.c:4437
 msgid "Script|Traditional Chinese"
-msgstr "Script|Traditional Chinese"
+msgstr "Traditional Chinese"
 
 #. GT: Don't ask me what RSymbol means, I don't know either. It's in apple's
 #. GT:  docs though
 #: ../../fontforge/parsettf.c:4441
 msgid "Script|Cyrillic"
-msgstr "Script|Cyrillic"
+msgstr "Cyrillic"
 
 #: ../../fontforge/parsettf.c:4441
 msgid "Script|Devanagari"
-msgstr "Script|Devanagari"
+msgstr "Devanagari"
 
 #: ../../fontforge/parsettf.c:4441
 msgid "Script|RSymbol"
-msgstr "Script|RSymbol"
+msgstr "RSymbol"
 
 #: ../../fontforge/parsettf.c:4442
 msgid "Script|Gurmukhi"
-msgstr "Script|Gurmukhi"
+msgstr "Gurmukhi"
 
 #: ../../fontforge/parsettf.c:4444
 msgid "Script|Simplified Chinese"
-msgstr "Script|Simplified Chinese"
+msgstr "Simplified Chinese"
 
 #: ../../fontforge/parsettf.c:4445
 msgid "Script|Central European"
-msgstr "Script|Central European"
+msgstr "Central European"
 
 #: ../../fontforge/parsettf.c:4458
 msgid "Unicode 1.0"
@@ -26317,11 +26317,11 @@ msgstr "Preferences"
 
 #: ../../fontforge/prefs.c:1917
 msgid "MacMap|_New..."
-msgstr "MacMap|_New..."
+msgstr "_New..."
 
 #: ../../fontforge/prefs.c:1952
 msgid "MacMapping|Default"
-msgstr "MacMapping|Default"
+msgstr "Default"
 
 #: ../../fontforge/prefs.c:1976
 msgid "Menu Name"
@@ -26375,27 +26375,27 @@ msgstr "Off"
 #. GT: into which your text may extend if needed.
 #: ../../fontforge/prefs.c:2234
 msgid "Prefs_App|Normally FontForge will find applications by searching for"
-msgstr "Prefs_App|Normally FontForge will find applications by searching for"
+msgstr "Normally FontForge will find applications by searching for"
 
 #: ../../fontforge/prefs.c:2235
 msgid "Prefs_App|them in your PATH environment variable, if you want"
-msgstr "Prefs_App|them in your PATH environment variable, if you want"
+msgstr "them in your PATH environment variable, if you want"
 
 #: ../../fontforge/prefs.c:2236
 msgid "Prefs_App|to alter that behavior you may set an environment"
-msgstr "Prefs_App|to alter that behavior you may set an environment"
+msgstr "to alter that behavior you may set an environment"
 
 #: ../../fontforge/prefs.c:2237
 msgid "Prefs_App|variable giving the full path spec of the application."
-msgstr "Prefs_App|variable giving the full path spec of the application."
+msgstr "variable giving the full path spec of the application."
 
 #: ../../fontforge/prefs.c:2238
 msgid "Prefs_App|FontForge recognizes BROWSER, MF and AUTOTRACE."
-msgstr "Prefs_App|FontForge recognizes BROWSER, MF and AUTOTRACE."
+msgstr "FontForge recognizes BROWSER, MF and AUTOTRACE."
 
 #: ../../fontforge/prefs.c:2239
 msgid "Prefs_App| "
-msgstr "Prefs_App| "
+msgstr " "
 
 #: ../../fontforge/prefs.c:2270
 msgid "Features"
@@ -27906,51 +27906,51 @@ msgstr "No problems detected in %s"
 
 #: ../../fontforge/problems.c:4821
 msgid "problselect|Errors"
-msgstr "problselect|Errors"
+msgstr "Errors"
 
 #: ../../fontforge/problems.c:4822
 msgid "problselect|Open Contours"
-msgstr "problselect|Open Contours"
+msgstr "Open Contours"
 
 #: ../../fontforge/problems.c:4823
 msgid "problselect|Bad Direction"
-msgstr "problselect|Bad Direction"
+msgstr "Bad Direction"
 
 #: ../../fontforge/problems.c:4824
 msgid "problselect|Self Intersections"
-msgstr "problselect|Self Intersections"
+msgstr "Self Intersections"
 
 #: ../../fontforge/problems.c:4825
 msgid "problselect|Missing Extrema"
-msgstr "problselect|Missing Extrema"
+msgstr "Missing Extrema"
 
 #: ../../fontforge/problems.c:5020
 msgid "problfixup|Open Contours"
-msgstr "problfixup|Open Contours"
+msgstr "Open Contours"
 
 #: ../../fontforge/problems.c:5021
 msgid "problfixup|Self Intersections"
-msgstr "problfixup|Self Intersections"
+msgstr "Self Intersections"
 
 #: ../../fontforge/problems.c:5022
 msgid "problfixup|Mark for Overlap fix before Save"
-msgstr "problfixup|Mark for Overlap fix before Save"
+msgstr "Mark for Overlap fix before Save"
 
 #: ../../fontforge/problems.c:5023
 msgid "problfixup|Bad Directions"
-msgstr "problfixup|Bad Directions"
+msgstr "Bad Directions"
 
 #: ../../fontforge/problems.c:5024
 msgid "problfixup|Missing Extrema (cautiously)"
-msgstr "problfixup|Missing Extrema (cautiously)"
+msgstr "Missing Extrema (cautiously)"
 
 #: ../../fontforge/problems.c:5025
 msgid "problfixup|Missing Extrema"
-msgstr "problfixup|Missing Extrema"
+msgstr "Missing Extrema"
 
 #: ../../fontforge/problems.c:5026
 msgid "problfixup|Too Many Points"
-msgstr "problfixup|Too Many Points"
+msgstr "Too Many Points"
 
 #: ../../fontforge/problems.c:5031
 msgid "Close Open Contours"
@@ -35038,11 +35038,11 @@ msgstr "Remove selected bookmarks"
 
 #: ../../gdraw/gfilechooser.c:977
 msgid "Directory|Back"
-msgstr "Directory|Back"
+msgstr "Back"
 
 #: ../../gdraw/gfilechooser.c:978
 msgid "Directory|Forward"
-msgstr "Directory|Forward"
+msgstr "Forward"
 
 #: ../../gdraw/gfilechooser.c:980
 msgid "Bookmark Current Dir"
@@ -35102,7 +35102,7 @@ msgstr ""
 
 #: ../../gdraw/ggadgets.c:94 ../../gdraw/gprogress.c:191
 msgid "Color|Foreground"
-msgstr "Color|Foreground"
+msgstr "Foreground"
 
 #: ../../gdraw/ggadgets.c:94
 msgid "Text color for popup windows"
@@ -35263,7 +35263,7 @@ msgstr "Matrix Edit Continued"
 
 #: ../../gdraw/gmatrixedit.c:1644
 msgid "Row|New"
-msgstr "Row|New"
+msgstr "New"
 
 #: ../../gdraw/gmenu.c:70 ../../gdraw/gmenu.c:71
 msgid "Menu Bar"
@@ -35293,7 +35293,7 @@ msgstr "Color used to draw the progress bar"
 
 #: ../../gdraw/gprogress.c:192
 msgid "Color|FillColor"
-msgstr "Color|FillColor"
+msgstr "FillColor"
 
 #: ../../gdraw/gprogress.c:193
 msgid "Background color for progress windows"
@@ -35747,7 +35747,7 @@ msgstr "Save in _UCS2"
 #. GT: (in their translated forms of course).
 #: ../../gdraw/gtextinfo.c:1072
 msgid "GGadget|ButtonSize|55"
-msgstr "GGadget|ButtonSize|55"
+msgstr "55"
 
 #. GT: This is an unusual string. It is used to get around a limitation in
 #. GT: FontForge's widget set. You should put a number here (do NOT translate
@@ -35759,4 +35759,4 @@ msgstr "GGadget|ButtonSize|55"
 #. GT: might be 116*100/67 = 173
 #: ../../gdraw/gtextinfo.c:1084
 msgid "GGadget|ScaleFactor|100"
-msgstr "GGadget|ScaleFactor|100"
+msgstr "100"
