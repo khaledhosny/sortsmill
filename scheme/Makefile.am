@@ -28,11 +28,7 @@ include $(top_srcdir)/mk/flags.am
 
 #--------------------------------------------------------------------------
 
-############################################
-# FIXME: Build the Guile FFIs conditionally.
-############################################
-
-dist_guilemodule_DATA = fontforge-main.scm
+dist_guilemodule_DATA = fontforge-main.scm sfd.scm
 guileextension_LTLIBRARIES = libguile-sortsmillff_fontforgeexe.la
 
 libguile_sortsmillff_fontforgeexe_la_SOURCES = fontforgeexe_ffi.c

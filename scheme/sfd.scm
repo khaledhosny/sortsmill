@@ -1,7 +1,4 @@
-#! /usr/bin/guile \
---no-auto-compile -s
--*- coding: utf-8 -*-
-!#
+;; -*- coding: utf-8 -*-
 
 ;; Copyright (C) 2012 Barry Schwartz
 ;; 
@@ -18,10 +15,12 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-(use-modules (system base lalr))
+(define-module (sortsmill-fontforge sfd)
+  #:use-module (system base lalr)
+  #:export (sfd-test))
 
 ;; Like peek-char but skips past backslash-newline.
-(define (fontforge:sfd:peek-char input)
+(define (sfd:peek-char input)
   (let ((c (peek-char input)))
     (if (char=? #\\ c)
         (begin
@@ -29,14 +28,14 @@
           (if (char=? #\newline (peek-char input))
               (begin
                 (read-char input)
-                (fontforge:sfd:peek-char input))
+                (sfd:peek-char input))
               (begin
                 (unread-char c)
                 c)))
         c)))
 
 ;; Like peek-char but skips past backslash-newline.
-(define (fontforge:sfd:peek-char input)
+(define (sfd:peek-char input)
   (let ((c (peek-char input)))
     (if (char=? #\\ c)
         (begin
@@ -44,60 +43,61 @@
           (if (char=? #\newline (peek-char input))
               (begin
                 (read-char input)
-                (fontforge:sfd:peek-char input))
+                (sfd:peek-char input))
               (begin
                 (unread-char c)
                 c)))
         c)))
 
-(define (fontforge:sfd:skip-whitespace input)
-  (if (char-whitespace? (fontforge:sfd:peek-char input))
+(define (sfd:skip-whitespace input)
+  (if (char-whitespace? (sfd:peek-char input))
       (begin
         (read-char input)
-        (fontforge:sfd:skip-whitespace input))))
+        (sfd:skip-whitespace input))))
 
-(define fontforge:sfd:special-chars (string->char-set "[]{}<%"))
+(define sfd:special-chars (string->char-set "[]{}<%"))
 
-(define (fontforge:sfd:read-keyword input-name input)
+(define (sfd:read-keyword input-name input)
   (letrec ((scan-string
             (lambda (s)
               (let ((c (peek-char input)))
                 (cond ((or (eof-object? c)
                            (char-whitespace? c)
-                           (char-set-contains? fontforge:sfd:special-chars c))
+                           (char-set-contains? sfd:special-chars c))
                        s)
                       (else
                        (read-char input)
                        (scan-string (string-append s (string c)))))))))
-    (fontforge:sfd:skip-whitespace input)
+    (sfd:skip-whitespace input)
     (scan-string "")))
 
-(define (fontforge-sfd-read input-name input)
-  (display (read-char input))
-  (display (make-source-location input-name (port-line input) (port-column input) -1 -1))
-  (display (read-char input))
-  (display (make-source-location input-name (port-line input) (port-column input) -1 -1))
-  (display (read-char input))
-  (display (make-source-location input-name (port-line input) (port-column input) -1 -1))
-  (display (read-char input))
-  (display (make-source-location input-name (port-line input) (port-column input) -1 -1))
-  (display (read-char input))
-  (display (make-source-location input-name (port-line input) (port-column input) -1 -1))
-  (display (read-char input))
-  (display (make-source-location input-name (port-line input) (port-column input) -1 -1))
-  (display (read-char input))
-  (display (make-source-location input-name (port-line input) (port-column input) -1 -1))
-  (display (read-char input))
-  (display (make-source-location input-name (port-line input) (port-column input) -1 -1))
-  )
+;(define (fontforge-sfd-read input-name input)
+;  (display (read-char input))
+;  (display (make-source-location input-name (port-line input) (port-column input) -1 -1))
+;  (display (read-char input))
+;  (display (make-source-location input-name (port-line input) (port-column input) -1 -1))
+;  (display (read-char input))
+;  (display (make-source-location input-name (port-line input) (port-column input) -1 -1))
+;  (display (read-char input))
+;  (display (make-source-location input-name (port-line input) (port-column input) -1 -1))
+;  (display (read-char input))
+;  (display (make-source-location input-name (port-line input) (port-column input) -1 -1))
+;  (display (read-char input))
+;  (display (make-source-location input-name (port-line input) (port-column input) -1 -1))
+;  (display (read-char input))
+;  (display (make-source-location input-name (port-line input) (port-column input) -1 -1))
+;  (display (read-char input))
+;  (display (make-source-location input-name (port-line input) (port-column input) -1 -1))
+;  )
 
-(let ((input-file "/home/trashman/src/sortsmill/fanwood/Fanwood-Italic.sfd"))
-  (with-input-from-file input-file
-    (lambda ()
-      (write (fontforge:sfd:read-keyword input-file (current-input-port)))
-      (write (fontforge:sfd:read-keyword input-file (current-input-port)))
-      (write (fontforge:sfd:read-keyword input-file (current-input-port)))
-      (write (fontforge:sfd:read-keyword input-file (current-input-port)))
-      (write (fontforge:sfd:read-keyword input-file (current-input-port)))
-      (write (fontforge:sfd:read-keyword input-file (current-input-port)))
-      )))
+(define (sfd-test)
+  (let ((input-file "/home/trashman/src/sortsmill/fanwood/Fanwood-Italic.sfd"))
+    (with-input-from-file input-file
+      (lambda ()
+        (write (sfd:read-keyword input-file (current-input-port)))
+        (write (sfd:read-keyword input-file (current-input-port)))
+        (write (sfd:read-keyword input-file (current-input-port)))
+        (write (sfd:read-keyword input-file (current-input-port)))
+        (write (sfd:read-keyword input-file (current-input-port)))
+        (write (sfd:read-keyword input-file (current-input-port)))
+        ))))

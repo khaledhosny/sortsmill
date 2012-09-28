@@ -30,6 +30,7 @@
 #include "intl.h"
 #include "basics.h"
 #include "pluginloading.h"
+#include <string.h>
 
 static int inited = false;
 
@@ -81,7 +82,7 @@ load_plugin (const char *dynamic_lib_name,
   if (plugin == NULL)
     {
       if (logger != NULL)
-        logger (_("Failed to dlopen: %s\n%s"), dynamic_lib_name,
+        logger (_("Failed to dlopen: '%s'\nReason: %s"), dynamic_lib_name,
                 lt_dlerror ());
     }
   else
@@ -90,7 +91,7 @@ load_plugin (const char *dynamic_lib_name,
       if (init == NULL)
         {
           if (logger != NULL)
-            logger (_("Failed to find init function in %s"),
+            logger (_("Failed to find init function in '%s'"),
                     dynamic_lib_name);
           lt_dlclose (plugin);
           plugin = NULL;

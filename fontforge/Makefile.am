@@ -333,7 +333,7 @@ EXPORTED_LIBFONTFORGE_SYMBOLS = $(PLUGIN_HOOKS) $(PYTHON_HOOKS)			\
 libsortsmillff_fontforge_la_CPPFLAGS = $(AM_CPPFLAGS)
 libsortsmillff_fontforge_la_LIBADD = splinerefigure.lo $(LIBADD)	\
 	-dlopen $(top_builddir)/plugins/gb12345.la						\
-	$(top_builddir)/lib/libgnu.la
+	$(top_builddir)/lib/libgnu.la $(LIBLTDL)
 libsortsmillff_fontforge_la_LDFLAGS = \
 	 $(call ldflags,EXPORTED_LIBFONTFORGE_SYMBOLS)
 libsortsmillff_fontforge_la_DEPENDENCIES = splinerefigure.lo	\

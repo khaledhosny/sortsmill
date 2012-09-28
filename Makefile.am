@@ -44,11 +44,11 @@ noinst_LTLIBRARIES =
 lib_LTLIBRARIES =
 EXTRA_LTLIBRARIES =
 
-include libltdl/Makefile.inc
+#include libltdl/Makefile.inc
 
 #--------------------------------------------------------------------------
 
-SUBDIRS = lib inc auxiliary gutils
+SUBDIRS = lib libltdl inc auxiliary gutils
 
 if GRAPHICAL_USER_INTERFACE
 SUBDIRS += gdraw desktop

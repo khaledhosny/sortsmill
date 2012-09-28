@@ -52,6 +52,6 @@ my_libs="${my_libs} ${BOEHM_GC_LIBS}"
 my_libs="${my_libs} ${PTHREAD_LIBS}"
 my_libs="${my_libs} ${ZLIB_LIBS}"
 my_libs="${my_libs} ${GLIB_LIBS}"
-my_libs="${my_libs} ${LIBLTDL}"
+dnl my_libs="${my_libs} ${LIBLTDL}"
 AC_SUBST([MY_LIBS],[${my_libs}])
 ])
