@@ -65,7 +65,7 @@ pkginclude_HEADERS = autowidth2.h configure-fontforge.h fontforge.h	\
 	bezctx_ff.h edgelist.h groups.h nonlineartrans.h sd.h			\
 	unicoderange.h bitmapcontrol.h encoding.h ofl.h search.h		\
 	usermenu.h fffreetype.h PfEd.h sfd1.h ffpython.h import.h		\
-	plugins.h sflayoutP.h print.h splinefont.h annotations.h
+	sflayoutP.h print.h splinefont.h annotations.h
 
 #--------------------------------------------------------------------------
 
@@ -73,7 +73,8 @@ if THE_PROGRAMS
 
 fontforge_SOURCES = main.c
 fontforge_CPPFLAGS = $(AM_CPPFLAGS)
-fontforge_LDADD = libsortsmillff_fontforgeexe.la $(LDADD)
+fontforge_LDADD = libsortsmillff_fontforgeexe.la $(LDADD)	\
+	$(top_builddir)/lib/libgnu.la
 fontforge_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS) -export-dynamic
 
 endif THE_PROGRAMS
@@ -89,18 +90,16 @@ libsortsmillff_fontforge_la_SOURCES = asmfpst.c autohint.c autosave.c	\
 	macenc.c mathconstants.c mm.c namelist.c namelist_data.c			\
 	nonlineartrans.c noprefs.c nouiutil.c nowakowskittfinstr.c ofl.c	\
 	othersubrs.c palmfonts.c parsepdf.c parsepfa.c parsettfatt.c		\
-	parsettfbmf.c parsettf.c parsettfvar.c plugins.c print.c psread.c	\
-	pua.c python.c savefont.c scripting.c scstyles.c search.c sfd1.c	\
-	sfd.c sflayout.c spiro.c splinechar.c splinefill.c splinefont.c		\
+	parsettfbmf.c parsettf.c parsettfvar.c print.c psread.c pua.c		\
+	python.c savefont.c scripting.c scstyles.c search.c sfd1.c sfd.c	\
+	sflayout.c spiro.c splinechar.c splinefill.c splinefont.c			\
 	splineorder2.c splineoverlap.c splinesaveafm.c splinesave.c			\
 	splinestroke.c splineutil2.c splineutil.c start.c stemdb.c svg.c	\
 	tottfaat.c tottfgpos.c tottf.c tottfvar.c ttfinstrs.c				\
 	ttfspecial.c ufo.c unicoderange.c utils.c winfonts.c zapfnomen.c	\
 	groups.c langfreq.c ftdelta.c autowidth2.c woff.c activeinui.c		\
-	pluginloading.c is_LIGATURE.c flaglist.c
+	is_LIGATURE.c flaglist.c
 EXTRA_libsortsmillff_fontforge_la_SOURCES = splinerefigure.c
-
-PLUGIN_HOOKS = AddEncoding AddScriptingCommand
 
 PYTHON_HOOKS = ff_init
 
@@ -110,7 +109,7 @@ SYMBOLS_ASSOCIATED_WITH_OBSCURE_FEATURES = ClipBoardToSplineSet	\
 
 SYMBOLS_FOR_FONTFORGE_WITHOUT_GUI = PyFF_Stdin
 
-EXPORTED_LIBFONTFORGE_SYMBOLS = $(PLUGIN_HOOKS) $(PYTHON_HOOKS)			\
+EXPORTED_LIBFONTFORGE_SYMBOLS = $(PYTHON_HOOKS)							\
 	$(SYMBOLS_ASSOCIATED_WITH_OBSCURE_FEATURES)							\
 	$(SYMBOLS_FOR_FONTFORGE_WITHOUT_GUI) AddOTLToSllks AllGlyphNames	\
 	AllNamelistNames AlreadyMSSymbolArea AltUniCopy AltUniFree			\
@@ -184,7 +183,7 @@ EXPORTED_LIBFONTFORGE_SYMBOLS = $(PLUGIN_HOOKS) $(PYTHON_HOOKS)			\
 	LayoutInfoInitLangSys LayoutInfoRefigureLines LayoutInfoReplace		\
 	LayoutInfo_Destroy LoadGroupList LoadKerningDataFromMetricsFile		\
 	LoadMapFromFile LoadNamelist LoadNamelistDir LoadPfaEditEncodings	\
-	LoadPluginDir LoadSplineFont LookupInit LookupUsedNested MATHFree	\
+	LoadSplineFont LookupInit LookupUsedNested MATHFree	\
 	MMAxisUnmap MMBlendChar MMCreateBlendedFont MMKern MMMatchGlyphs	\
 	MMNewFont MMReblend MMSetFreeContents MMValid MMWeightsUnMap		\
 	MSLanguageFromLocale MVCopyChar MacEncFromMacLang MacFeatListFree	\
@@ -332,12 +331,10 @@ EXPORTED_LIBFONTFORGE_SYMBOLS = $(PLUGIN_HOOKS) $(PYTHON_HOOKS)			\
 
 libsortsmillff_fontforge_la_CPPFLAGS = $(AM_CPPFLAGS)
 libsortsmillff_fontforge_la_LIBADD = splinerefigure.lo $(LIBADD)	\
-	-dlopen $(top_builddir)/plugins/gb12345.la						\
-	$(top_builddir)/lib/libgnu.la $(LIBLTDL)
+	$(top_builddir)/lib/libgnu.la
 libsortsmillff_fontforge_la_LDFLAGS = \
-	 $(call ldflags,EXPORTED_LIBFONTFORGE_SYMBOLS)
+	$(call ldflags,EXPORTED_LIBFONTFORGE_SYMBOLS)
 libsortsmillff_fontforge_la_DEPENDENCIES = splinerefigure.lo	\
-	$(LIBADD) $(top_builddir)/plugins/gb12345.la				\
 	$(top_builddir)/lib/libgnu.la
 
 EXTRA_SCRIPTS = generate_codepoint_selector.py

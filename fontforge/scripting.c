@@ -42,7 +42,6 @@
 #include <time.h>
 #include <locale.h>
 #include "ttf.h"
-#include "plugins.h"
 #include "scripting.h"
 #include "scriptfuncs.h"
 #include "flaglist.h"
@@ -1502,36 +1501,33 @@ static void bWriteStringToFile(Context *c) {
     }
 }
 
-static void bLoadPlugin(Context *c) {
-    char *name, *_name;
-
-    if ( c->a.argc!=2 )
-	ScriptError( c, "Wrong number of arguments" );
-    else if ( c->a.vals[1].type!=v_str )
-	ScriptError( c, "Bad type of argument" );
-#if !defined(NOPLUGIN)
-    _name = script2utf8_copy(c->a.vals[1].u.sval);
-    name = utf82def_copy(_name); free(_name);
-    LoadPlugin(name);
-    free(name);
-#else
-    ScriptError(c,"This version of fontforge does not support plugins");
-#endif
+// FIXME: Plugins currently are not supported. Either remedy that
+// or deprecate this feature.
+static void bLoadPlugin(Context *c)
+{
+  if ( c->a.argc!=2 )
+    ScriptError( c, "Wrong number of arguments" );
+  else if ( c->a.vals[1].type!=v_str )
+    ScriptError( c, "Bad type of argument" );
+  ScriptError(c,"This version of fontforge does not support plugins");
 }
 
-static void bLoadPluginDir(Context *c) {
-    char *dir=NULL, *_dir;
+// FIXME: Plugins currently are not supported. Either remedy that
+// or deprecate this feature.
+static void bLoadPluginDir(Context *c)
+{
+  char *dir=NULL, *_dir;
 
-    if ( c->a.argc>2 )
-	ScriptError( c, "Wrong number of arguments" );
-    else if ( c->a.argc==2 ) {
-	if ( c->a.vals[1].type!=v_str )
-	    ScriptError( c, "Bad type of argument" );
-	_dir = script2utf8_copy(c->a.vals[1].u.sval);
-	dir = utf82def_copy(_dir); free(_dir);
-    }
-    LoadPluginDir(dir);
-    free(dir);
+  if ( c->a.argc>2 )
+    ScriptError( c, "Wrong number of arguments" );
+  else if ( c->a.argc==2 ) {
+    if ( c->a.vals[1].type!=v_str )
+      ScriptError( c, "Bad type of argument" );
+    _dir = script2utf8_copy(c->a.vals[1].u.sval);
+    dir = utf82def_copy(_dir); free(_dir);
+  }
+  ScriptError(c,"This version of fontforge does not support plugins");
+  free(dir);
 }
 
 static void bLoadNamelist(Context *c) {

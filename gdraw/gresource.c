@@ -44,7 +44,10 @@
 
 #include "gresourceP.h"
 
-char *GResourceProgramName, *GResourceProgramDir;
+// FIXME: Get rid of this.
+char *GResourceProgramDir;
+
+char *GResourceProgramName;
 char *usercharset_names;
 
 static int rcur, rmax=0;

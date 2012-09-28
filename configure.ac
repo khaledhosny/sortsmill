@@ -55,14 +55,7 @@ m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 
 # Libtool-related configuration.
 m4_ifdef([AM_PROG_AR],[AM_PROG_AR]) dnl Support for Microsoft linker.
-LT_CONFIG_LTDL_DIR([libltdl])       dnl Where libltdl source code goes.
 LT_INIT([dlopen])                   dnl Initialize libtool.
-LTDL_INIT([recursive convenience])  dnl Initialize libltdl.
-FONTFORGE_CHECK_LTDL_VERSION        dnl Check that libltdl is recent enough.
-
-# The following is mainly for the benefit of the libltdl Makefile,
-# which expects to find <inc/config.h>.
-CPPFLAGS="${CPPFLAGS} AS_ESCAPE([-I${top_builddir}])"
 
 AC_PATH_XTRA
 i_do_have_x="${have_x}"

@@ -27,7 +27,6 @@ my_cflags="${my_cflags} ${LIBXML_CFLAGS}"
 my_cflags="${my_cflags} ${PYTHON_CFLAGS}"
 my_cflags="${my_cflags} ${PTHREAD_CFLAGS}"
 test x"${SDK}" = x || my_cflags="${my_cflags} -I${SDK}"
-test x"${LTDLINCL}" = x || my_cflags="${my_cflags} -I${LTDLINCL}"
 AC_SUBST([MY_CFLAGS],[${my_cflags}])
 ])
 
@@ -52,6 +51,5 @@ my_libs="${my_libs} ${BOEHM_GC_LIBS}"
 my_libs="${my_libs} ${PTHREAD_LIBS}"
 my_libs="${my_libs} ${ZLIB_LIBS}"
 my_libs="${my_libs} ${GLIB_LIBS}"
-dnl my_libs="${my_libs} ${LIBLTDL}"
 AC_SUBST([MY_LIBS],[${my_libs}])
 ])

@@ -36,7 +36,6 @@
 #include <dirent.h>
 #include <gfile.h>
 #include <gresource.h>
-#include "plugins.h"
 #include "encoding.h"
 
 static GTextInfo *EncodingList(void) {

@@ -27,8 +27,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "fontforge.h"
+#include "baseviews.h"
 #include "groups.h"
-#include "plugins.h"
 #include <charset.h>
 #include <gfile.h>
 #include <ustring.h>
@@ -724,9 +724,6 @@ static void NOUI_LoadPrefs(void) {
     char *pt;
     struct prefs_list *pl;
 
-#if !defined(NOPLUGIN)
-    LoadPluginDir(NULL);
-#endif
     LoadPfaEditEncodings();
     LoadGroupList();
 

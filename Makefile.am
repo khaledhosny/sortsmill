@@ -31,30 +31,13 @@ include $(top_srcdir)/mk/layout.am
 
 #--------------------------------------------------------------------------
 
-AM_CPPFLAGS =
-AM_LDFLAGS =
-
-BUILT_SOURCES =
-EXTRA_DIST =
-CLEANFILES =
-MOSTLYCLEANFILES =
-
-include_HEADERS =
-noinst_LTLIBRARIES =
-lib_LTLIBRARIES =
-EXTRA_LTLIBRARIES =
-
-#include libltdl/Makefile.inc
-
-#--------------------------------------------------------------------------
-
-SUBDIRS = lib libltdl inc auxiliary gutils
+SUBDIRS = lib inc auxiliary gutils
 
 if GRAPHICAL_USER_INTERFACE
 SUBDIRS += gdraw desktop
 endif GRAPHICAL_USER_INTERFACE
 
-SUBDIRS += plugins fontforge po scheme doc htdocs cidmap tests
+SUBDIRS += fontforge po scheme doc htdocs cidmap tests
 
 if PYTHON_SCRIPTING
 SUBDIRS += pycontrib
@@ -75,7 +58,7 @@ endif FONTTOOLS
 nodist_pkgconfig_DATA = libsortsmillff_fontforge.pc	\
 	libsortsmillff_fontforgeexe.pc
 
-EXTRA_DIST += COPYING.permissive README-Mac.html README-MS.html	\
+EXTRA_DIST = COPYING.permissive README-Mac.html README-MS.html	\
 	README-unix README-Unix.html Readme.VMS m4/gnulib-cache.m4	\
 	INSTALL.git
 
