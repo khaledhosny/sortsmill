@@ -296,6 +296,19 @@ FONTFORGE_ICONV_CHOOSE_ENCODING([ICONV_UCS4LE],[UCS-4LE ucs-4le UCS4LE ucs4le UT
 FONTFORGE_ICONV_CHOOSE_ENCODING([ICONV_UCS4BE],[UCS-4BE ucs-4be UCS4BE ucs4be UTF-32BE utf-32be UTF32BE utf32be])
 FONTFORGE_ICONV_CHOOSE_ENCODING([ICONV_UTF8],[UTF-8 utf-8 UTF8 utf8])
 FONTFORGE_ICONV_CHOOSE_ENCODING([ICONV_UTF7],[UTF-7 utf-7 UTF7 utf7])
+FONTFORGE_ICONV_CHOOSE_ENCODING([ICONV_MAC],[MACINTOSH macintosh MAC mac])
+
+AH_BOTTOM(
+[/* The iconv encoding to use for the unichar_t type.
+   Note that we hope to get rid of that type. */
+#ifdef WORDS_BIGENDIAN
+# define ICONV_ENCODING_UNICHAR_T ICONV_UCS4BE
+# define ICONV_STRING_UNICHAR_T ICONV_UCS4BE_STRING
+#else
+# define ICONV_ENCODING_UNICHAR_T ICONV_UCS4LE
+# define ICONV_STRING_UNICHAR_T ICONV_UCS4LE_STRING
+#endif
+])
 
 #--------------------------------------------------------------------------
 
