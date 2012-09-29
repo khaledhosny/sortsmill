@@ -292,8 +292,7 @@ AC_CHECK_FUNCS([nl_langinfo pow putenv rint rmdir])
 AC_CHECK_FUNCS([select setenv setlocale snprintf socket sqrt])
 AC_CHECK_FUNCS([strcasecmp strchr strdup strerror])
 AC_CHECK_FUNCS([strncasecmp strpbrk strrchr strstr])
-AC_CHECK_FUNCS([strtol strtoul tzset uname])
-AC_CHECK_FUNC([tzset],[:],[AC_DEFINE([_NO_TZSET],1,[Define if not using tzset.])])
+AC_CHECK_FUNCS([strtol strtoul uname])
 FONTFORGE_ICONV_SUPPORTS_UTF7
 
 #--------------------------------------------------------------------------
