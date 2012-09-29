@@ -287,7 +287,13 @@ AC_FUNC_STRTOD
 AC_CHECK_FUNCS([endpwent])
 AC_CHECK_FUNCS([munmap])
 AC_CHECK_FUNCS([socket])
+
 FONTFORGE_ICONV_SUPPORTS_UTF7
+if test x"${fontforge_cv_lib_iconv_open_supports_utf7}" != xyes; then
+   AC_MSG_ERROR([iconv_open(3) does not support UTF-7.
+                 ${PACKAGE_NAME} cannot be built.
+                 Consider using GNU libiconv.])
+fi
 
 #--------------------------------------------------------------------------
 
