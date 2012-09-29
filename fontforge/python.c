@@ -45,12 +45,15 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <dirent.h>
+#include <stdio.h>
 #include <stdarg.h>
 #include <stdbool.h>
+#include <libguile.h>
+
 #if PY_MAJOR_VERSION >= 3
-#include <stdio.h>
 #include <wchar.h>
-#endif /* PY_MAJOR_VERSION >= 3 */
+#endif
+
 #include "ffpython.h"
 
 #define PYMETHODDEF_EMPTY  {NULL, NULL, 0, NULL}
@@ -18476,11 +18479,23 @@ return;
 }
 
 #if PY_MAJOR_VERSION < 3
-void ff_init(void) {
-    doinitFontForgeMain();
-    no_windowing_ui = running_script = true;
-    initPyFontForge();
+
+static void *
+ff_init_in_guile_mode (void *UNUSED(_))
+{
+  doinitFontForgeMain();
+  no_windowing_ui = true;
+  running_script = true;
+  initPyFontForge();
+  return NULL;
 }
+
+void
+ff_init (void)
+{
+  (void) scm_with_guile (ff_init_in_guile_mode, NULL);
+}
+
 #endif /* PY_MAJOR_VERSION < 3 */
 
 #else
