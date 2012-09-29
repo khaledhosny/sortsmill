@@ -205,6 +205,10 @@ if test x"${i_do_have_gui}" = xyes; then
    PKG_CHECK_MODULES([PANGO],[pango >= 1.10 pangocairo])
 fi
 
+if test x"${HAVE_LIBUNISTRING}" != xyes; then
+   AC_MSG_ERROR([Cannot find GNU libunistring. ${PACKAGE_NAME} cannot be built without it.])
+fi
+
 FONTFORGE_ARG_WITH_FREETYPE
 AC_ARG_VAR([FREETYPE_SOURCE],
         [directory where freetype source code is located for --enable-freetype-debugger;
@@ -288,12 +292,10 @@ AC_CHECK_FUNCS([endpwent])
 AC_CHECK_FUNCS([munmap])
 AC_CHECK_FUNCS([socket])
 
-FONTFORGE_ICONV_SUPPORTS_UTF7
-if test x"${fontforge_cv_lib_iconv_open_supports_utf7}" != xyes; then
-   AC_MSG_ERROR([iconv_open(3) does not support UTF-7.
-                 ${PACKAGE_NAME} cannot be built.
-                 Consider using GNU libiconv.])
-fi
+FONTFORGE_ICONV_CHOOSE_ENCODING([ICONV_UCS4LE],[UCS-4LE ucs-4le UCS4LE ucs4le UTF-32LE utf-32le UTF32LE utf32le])
+FONTFORGE_ICONV_CHOOSE_ENCODING([ICONV_UCS4BE],[UCS-4BE ucs-4be UCS4BE ucs4be UTF-32BE utf-32be UTF32BE utf32be])
+FONTFORGE_ICONV_CHOOSE_ENCODING([ICONV_UTF8],[UTF-8 utf-8 UTF8 utf8])
+FONTFORGE_ICONV_CHOOSE_ENCODING([ICONV_UTF7],[UTF-7 utf-7 UTF7 utf7])
 
 #--------------------------------------------------------------------------
 
