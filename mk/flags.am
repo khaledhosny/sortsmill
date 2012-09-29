@@ -40,12 +40,16 @@ AM_CPPFLAGS = -I$(top_builddir)/lib -I$(top_srcdir)/lib	\
 	-D__INTERNAL_TO_FONTFORGE__=1						\
 	$(MY_CFLAGS)
 
+GNULIB_LD_FLAGS = $(COS_LIBM) $(FLOOR_LIBM) $(GETHOSTNAME_LIB)	\
+	$(HOSTENT_LIB) $(LIBSOCKET) $(LIB_SELECT) $(LTLIBICONV)		\
+	$(LTLIBINTL) $(LTLIBTHREAD) $(LTLIBUNISTRING) $(POW_LIBM)	\
+	$(RINT_LIBM) $(SIN_LIBM) $(SQRT_LIBM) $(TAN_LIBM)			\
+	@INTL_MACOSX_LIBS@
+
 # Using -release instead of -version-info seems appropriate in the
 # absence of a well defined ABI.
-COMMON_LD_FLAGS = 										\
-	-release $(VERSION)									\
-	$(MY_CFLAGS) $(MY_LIBS) 							\
-	$(LTLIBICONV) $(LTLIBINTL) $(LTLIBUNISTRING)
+COMMON_LD_FLAGS = -release $(VERSION) $(MY_CFLAGS) $(MY_LIBS)	\
+	$(GNULIB_LD_FLAGS)
 
 ldflags = $(COMMON_LD_FLAGS) \
 	$(if $($1), -export-symbols-regex '$(call prep_symbols_regex,$1)')

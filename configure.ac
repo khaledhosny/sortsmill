@@ -192,7 +192,6 @@ i_do_have_native_callbacks="${fontforge_cv_native_callbacks}"
 #
 # Checks for libraries.
 
-AC_SEARCH_LIBS([cos],[m])
 FONTFORGE_CONFIG_X_LIBRARIES
 PKG_CHECK_MODULES([ZLIB],[zlib])
 PKG_CHECK_MODULES([GLIB],[glib-2.0 >= 2.6])
@@ -285,14 +284,9 @@ fi
 AC_FUNC_REALLOC
 AC_FUNC_STRCOLL
 AC_FUNC_STRTOD
-AC_CHECK_FUNCS([alarm atexit dup2 endpwent floor])
-AC_CHECK_FUNCS([getcwd gethostbyname gettimeofday])
-AC_CHECK_FUNCS([localeconv memmove memset mkdir munmap])
-AC_CHECK_FUNCS([nl_langinfo pow putenv rint rmdir])
-AC_CHECK_FUNCS([select setenv setlocale snprintf socket sqrt])
-AC_CHECK_FUNCS([strcasecmp strchr strdup strerror])
-AC_CHECK_FUNCS([strncasecmp strpbrk strrchr strstr])
-AC_CHECK_FUNCS([strtol strtoul uname])
+AC_CHECK_FUNCS([endpwent])
+AC_CHECK_FUNCS([munmap])
+AC_CHECK_FUNCS([socket])
 FONTFORGE_ICONV_SUPPORTS_UTF7
 
 #--------------------------------------------------------------------------

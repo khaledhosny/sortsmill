@@ -27,7 +27,7 @@
 
 
 # Specification in the form of a command-line invocation:
-#   gnulib-tool --import --dir=. --lib=libgnu --source-base=lib --m4-base=m4 --doc-base=doc --tests-base=tests --aux-dir=config --no-conditional-dependencies --libtool --macro-prefix=gl --no-vc-files arpa_inet c-ctype c-strtod ctype dirent dirname errno fcntl filename filenamecat findprog gettext-h gperf iconv_open ignore-value inttypes langinfo libunistring locale math netdb netinet_in obstack regex snprintf stdalign stdarg stddef stdint stdio stdlib strcase strcasestr strings strncat strstr sys_socket sys_time trim tzset unistd verify vsnprintf wchar xalloc xconcat-filename xstriconv xstrndup
+#   gnulib-tool --import --dir=. --lib=libgnu --source-base=lib --m4-base=m4 --doc-base=doc --tests-base=tests --aux-dir=config --no-conditional-dependencies --libtool --macro-prefix=gl --no-vc-files arpa_inet c-ctype c-strtod cos ctype dirent dirname dup2 errno fcntl filename filenamecat findprog floor getcwd gettext-h gettimeofday gperf hostent iconv_open ignore-value inttypes langinfo libunistring locale localeconv math mkdir netdb netinet_in nl_langinfo obstack pow putenv regex rint rmdir select setenv setlocale sin snprintf sqrt stdalign stdarg stddef stdint stdio stdlib strcase strcasestr string strings strncat strstr sys_socket sys_time tan trim tzset uname unistd verify vsnprintf wchar xalloc xconcat-filename xsetenv xstriconv xstrndup
 
 # Specification in the form of a few gnulib-tool.m4 macro invocations:
 gl_LOCAL_DIR([])
@@ -35,28 +35,46 @@ gl_MODULES([
   arpa_inet
   c-ctype
   c-strtod
+  cos
   ctype
   dirent
   dirname
+  dup2
   errno
   fcntl
   filename
   filenamecat
   findprog
+  floor
+  getcwd
   gettext-h
+  gettimeofday
   gperf
+  hostent
   iconv_open
   ignore-value
   inttypes
   langinfo
   libunistring
   locale
+  localeconv
   math
+  mkdir
   netdb
   netinet_in
+  nl_langinfo
   obstack
+  pow
+  putenv
   regex
+  rint
+  rmdir
+  select
+  setenv
+  setlocale
+  sin
   snprintf
+  sqrt
   stdalign
   stdarg
   stddef
@@ -65,19 +83,23 @@ gl_MODULES([
   stdlib
   strcase
   strcasestr
+  string
   strings
   strncat
   strstr
   sys_socket
   sys_time
+  tan
   trim
   tzset
+  uname
   unistd
   verify
   vsnprintf
   wchar
   xalloc
   xconcat-filename
+  xsetenv
   xstriconv
   xstrndup
 ])
