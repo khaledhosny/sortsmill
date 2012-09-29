@@ -872,26 +872,23 @@ struct compressors compressors[] = {
     COMPRESSORS_EMPTY
 };
 
-char *Decompress(char *name, int compression) {
-    char *dir = getenv("TMPDIR");
-    char buf[1500];
-    char *tmpfile;
+char *Decompress(char *name, int compression)
+{
+  char *dir = getenv("TMPDIR");
+  char buf[1500];
+  char *tmpfile;
 
-    if ( dir==NULL ) dir = P_tmpdir;
-    tmpfile = xmalloc1(strlen(dir)+strlen(GFileNameTail(name))+2);
-    strcpy(tmpfile,dir);
-    strcat(tmpfile,"/");
-    strcat(tmpfile,GFileNameTail(name));
-    *strrchr(tmpfile,'.') = '\0';
-#if defined( _NO_SNPRINTF ) || defined( __VMS )
-    sprintf( buf, "%s < %s > %s", compressors[compression].decomp, name, tmpfile );
-#else
-    snprintf( buf, sizeof(buf), "%s < %s > %s", compressors[compression].decomp, name, tmpfile );
-#endif
-    if ( system(buf)==0 )
-return( tmpfile );
-    free(tmpfile);
-return( NULL );
+  if ( dir==NULL ) dir = P_tmpdir;
+  tmpfile = xmalloc1(strlen(dir)+strlen(GFileNameTail(name))+2);
+  strcpy(tmpfile,dir);
+  strcat(tmpfile,"/");
+  strcat(tmpfile,GFileNameTail(name));
+  *strrchr(tmpfile,'.') = '\0';
+  snprintf( buf, sizeof(buf), "%s < %s > %s", compressors[compression].decomp, name, tmpfile );
+  if ( system(buf)==0 )
+    return( tmpfile );
+  free(tmpfile);
+  return( NULL );
 }
 
 static char *ForceFileToHaveName(FILE *file, char *exten) {

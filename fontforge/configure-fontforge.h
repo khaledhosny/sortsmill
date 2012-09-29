@@ -140,9 +140,6 @@
 /* If there is no jpeg library define _NO_LIBJPEG			      */
 /* If there is no tiff library define _NO_LIBTIFF			      */
 /* If there is no xml2 library define _NO_LIBXML			      */
-/* If there is no uninameslist library define _NO_LIBUNINAMESLIST	      */
-
-/* If there is no snprintf define _NO_SNPRINTF				      */
 
 /* If the XInput extension is not available define _NO_XINPUT		      */
 /* If the Xkb extension is not available define _NO_XKB			      */
