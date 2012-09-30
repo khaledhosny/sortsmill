@@ -35,6 +35,6 @@ pkginclude_HEADERS = basics.h chardata.h config.h fileutil.h gdraw.h	\
 	gresedit.h gresource.h gwidget.h intl.h ustring.h utype.h			\
 	annotations_base.h
 
-noinst_HEADERS = ffthread.h
+noinst_HEADERS = ffthread.h xuniconv.h
 
 

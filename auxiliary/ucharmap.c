@@ -35,7 +35,7 @@
 #include <utype.h>
 #include <chardata.h>
 #include <iconv.h>
-#include <uniconv.h>
+#include <xuniconv.h>
 
 static iconv_t to_unicode = (iconv_t) (-1);
 static iconv_t from_unicode = (iconv_t) (-1);
@@ -100,92 +100,23 @@ u2def_strncpy (char *to, const unichar_t *ufrom, int n)
 unichar_t *
 def2u_copy (const char *from)
 {
-  unichar_t *ret = NULL;
-  if (from != NULL)
-    {
-      my_iconv_setup ();
-
-      int len = strlen (from);
-      unichar_t *uto = (unichar_t *) xmalloc ((len + 1) * sizeof (unichar_t));
-      size_t in_left = len, out_left = sizeof (unichar_t) * len;
-      char *cto = (char *) uto;
-      iconv (to_unicode, (ICONV_CONST char **) &from, &in_left, &cto,
-             &out_left);
-      *cto++ = '\0';
-      *cto++ = '\0';
-      *cto++ = '\0';
-      *cto++ = '\0';
-      ret = uto;
-    }
-  return ret;
+  return (unichar_t *) x_u32_strconv_from_locale (from);
 }
 
 char *
 u2def_copy (const unichar_t *ufrom)
 {
-  char *ret = NULL;
-  if (ufrom != NULL)
-    {
-      my_iconv_setup ();
-
-      int len = u_strlen (ufrom);
-      size_t in_left = sizeof (unichar_t) * len, out_left = 3 * len;
-      char *cfrom = (char *) ufrom, *cto;
-      char *to = (char *) xmalloc (3 * len + 2);
-      cto = to;
-      iconv (from_unicode, (ICONV_CONST char **) &cfrom, &in_left, &cto,
-             &out_left);
-      *cto++ = '\0';
-      *cto++ = '\0';
-      *cto++ = '\0';
-      *cto++ = '\0';
-      ret = to;
-    }
-  return ret;
+  return x_u32_strconv_to_locale ((const uint32_t *) ufrom);
 }
 
 char *
 def2utf8_copy (const char *from)
 {
-  char *ret = NULL;
-  if (from != NULL)
-    {
-      my_iconv_setup ();
-
-      int len = strlen (from);
-      size_t in_left = len;
-      size_t out_left = 3 * (len + 1);
-      char *cto = (char *) xmalloc (3 * (len + 1));
-      char *cret = cto;
-      iconv (to_utf8, (ICONV_CONST char **) &from, &in_left, &cto, &out_left);
-      *cto++ = '\0';
-      *cto++ = '\0';
-      *cto++ = '\0';
-      *cto++ = '\0';
-      ret = cret;
-    }
-  return ret;
+  return (char *) x_u8_strconv_from_locale (from);
 }
 
 char *
 utf82def_copy (const char *ufrom)
 {
-  char *ret = NULL;
-  if (ufrom != NULL)
-    {
-      my_iconv_setup ();
-
-      int len = strlen (ufrom);
-      size_t in_left = len, out_left = 3 * len;
-      char *cfrom = (char *) ufrom, *cto, *to;
-      cto = to = (char *) xmalloc (3 * len + 2);
-      iconv (from_utf8, (ICONV_CONST char **) &cfrom, &in_left, &cto,
-             &out_left);
-      *cto++ = '\0';
-      *cto++ = '\0';
-      *cto++ = '\0';
-      *cto++ = '\0';
-      ret = to;
-    }
-  return ret;
+  return x_u8_strconv_to_locale ((const uint8_t *) ufrom);
 }
