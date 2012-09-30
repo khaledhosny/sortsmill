@@ -3023,44 +3023,45 @@ void PI_Init(PI *pi,FontViewBase *fv,SplineChar *sc) {
 /* ******************************** Scripting ******************************* */
 /* ************************************************************************** */
 
-static unichar_t *FileToUString(char *filename,int max) {
-    FILE *file;
-    int ch, ch2;
-    int format=0;
-    unichar_t *space, *upt, *end;
+static unichar_t *FileToUString(char *filename,int max)
+{
+  FILE *file;
+  int ch, ch2;
+  int format=0;
+  unichar_t *space, *upt, *end;
 
-    file = fopen( filename,"rb" );
-    if ( file==NULL )
-return( NULL );
-    ch = getc(file); ch2 = getc(file);
-    if ( ch==0xfe && ch2==0xff )
-	format = 1;		/* normal ucs2 */
-    else if ( ch==0xff && ch2==0xfe )
-	format = 2;		/* byte-swapped ucs2 */
-    else
-	rewind(file);
-    space = upt = xmalloc1((max+1)*sizeof(unichar_t));
-    end = space+max;
-    if ( format!=0 ) {
-	while ( upt<end ) {
-	    ch = getc(file); ch2 = getc(file);
-	    if ( ch2==EOF )
+  file = fopen( filename,"rb" );
+  if ( file==NULL )
+    return( NULL );
+  ch = getc(file); ch2 = getc(file);
+  if ( ch==0xfe && ch2==0xff )
+    format = 1;		/* normal ucs2 */
+  else if ( ch==0xff && ch2==0xfe )
+    format = 2;		/* byte-swapped ucs2 */
+  else
+    rewind(file);
+  space = upt = xmalloc1((max+1)*sizeof(unichar_t));
+  end = space+max;
+  if ( format!=0 ) {
+    while ( upt<end ) {
+      ch = getc(file); ch2 = getc(file);
+      if ( ch2==EOF )
 	break;
-	    if ( format==1 )
-		*upt ++ = (ch<<8)|ch2;
-	    else
-		*upt ++ = (ch2<<8)|ch;
-	}
-    } else {
-	char buffer[400];
-	while ( fgets(buffer,sizeof(buffer),file)!=NULL ) {
-	    def2u_strncpy(upt,buffer,end-upt);
-	    upt += u_strlen(upt);
-	}
+      if ( format==1 )
+	*upt ++ = (ch<<8)|ch2;
+      else
+	*upt ++ = (ch2<<8)|ch;
     }
-    *upt = '\0';
-    fclose(file);
-return( space );
+  } else {
+    char buffer[400];
+    while ( fgets(buffer,sizeof(buffer),file)!=NULL ) {
+      def2u_strncpy(upt,buffer,end-upt);
+      upt += u_strlen(upt);
+    }
+  }
+  *upt = 0;
+  fclose(file);
+  return( space );
 }
 
 void ScriptPrint(FontViewBase *fv,int type,int32 *pointsizes,char *samplefile,
