@@ -32,15 +32,12 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <ustring.h>
-#include <utype.h>
-#include <chardata.h>
 #include <iconv.h>
+#include <uniconv.h>
 #include <xuniconv.h>
 
 static iconv_t to_unicode = (iconv_t) (-1);
 static iconv_t from_unicode = (iconv_t) (-1);
-static iconv_t to_utf8 = (iconv_t) (-1);
-static iconv_t from_utf8 = (iconv_t) (-1);
 
 static const char *unicode_name = MY_ICONV_STRING_UNICHAR_T;
 static char *iconv_local_encoding_name = NULL;
@@ -50,9 +47,6 @@ my_iconv_setup (void)
 {
   if (iconv_local_encoding_name == NULL)
     iconv_local_encoding_name = xstrdup (locale_charset ());
-
-  to_utf8 = iconv_open ("UTF-8", iconv_local_encoding_name);
-  from_utf8 = iconv_open (iconv_local_encoding_name, "UTF-8");
 
   to_unicode = iconv_open (unicode_name, iconv_local_encoding_name);
   from_unicode = iconv_open (iconv_local_encoding_name, unicode_name);
