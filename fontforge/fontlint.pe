@@ -1,7 +1,8 @@
 
-if ( Strtol($version)<20070924 )
-  Error( "Please upgrade to a more recent version of fontforge" )
-endif
+# FIXME how to handle this with new versioning scheme
+#if ( Strtol($version)<20070924 )
+#  Error( "Please upgrade to a more recent version of fontforge" )
+#endif
 
 if ( $argc <= 1 )
   Print( "fontlint: {fontfile}" )

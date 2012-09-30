@@ -1,7 +1,8 @@
 
-if ( Strtol($version)<20080616 )
-  Error( "Please upgrade to a more recent version of fontforge" )
-endif
+# FIXME how to handle this with new versioning scheme
+#if ( Strtol($version)<20080616 )
+#  Error( "Please upgrade to a more recent version of fontforge" )
+#endif
 
 lines=[]
 width = -1
