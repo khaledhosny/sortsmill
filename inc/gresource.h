@@ -29,7 +29,7 @@
 
 #include <config.h>
 
-#include <gwwiconv.h>
+#include <iconv.h>
 #include "gdraw.h"
 
 enum res_type { rt_int, rt_double, rt_bool/* int */, rt_color, rt_string };

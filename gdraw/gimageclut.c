@@ -28,7 +28,6 @@
  */
 #include "gdrawP.h"
 #include "colorP.h"
-#include "charset.h"
 #include "ustring.h"
 
 struct clutinf {

@@ -27,26 +27,23 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <gwwiconv.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
 #include <stdbool.h>
 #include <ustring.h>
 #include <utype.h>
-#include <charset.h>
 #include <chardata.h>
+#include <iconv.h>
 #include <uniconv.h>
-
-enum encoding local_encoding = e_iso8859_1;
 
 static iconv_t to_unicode = (iconv_t) (-1);
 static iconv_t from_unicode = (iconv_t) (-1);
 static iconv_t to_utf8 = (iconv_t) (-1);
 static iconv_t from_utf8 = (iconv_t) (-1);
 
-static const char *unicode_name = ICONV_STRING_UNICHAR_T;
-char *iconv_local_encoding_name = NULL;
+static const char *unicode_name = MY_ICONV_STRING_UNICHAR_T;
+static char *iconv_local_encoding_name = NULL;
 
 static void
 my_iconv_setup (void)
@@ -68,7 +65,7 @@ def2u_strncpy (unichar_t *uto, const char *from, int n)
 
   size_t in_left = n, out_left = sizeof (unichar_t) * n;
   char *cto = (char *) uto;
-  iconv (to_unicode, (iconv_arg2_t) & from, &in_left, &cto, &out_left);
+  iconv (to_unicode, (ICONV_CONST char **) &from, &in_left, &cto, &out_left);
   if (cto < ((char *) uto) + 2 * n)
     *cto++ = '\0';
   if (cto < ((char *) uto) + 2 * n)
@@ -87,7 +84,8 @@ u2def_strncpy (char *to, const unichar_t *ufrom, int n)
 
   size_t in_left = sizeof (unichar_t) * n, out_left = n;
   char *cfrom = (char *) ufrom, *cto = to;
-  iconv (from_unicode, (iconv_arg2_t) & cfrom, &in_left, &cto, &out_left);
+  iconv (from_unicode, (ICONV_CONST char **) &cfrom, &in_left, &cto,
+         &out_left);
   if (cto < to + n)
     *cto++ = '\0';
   if (cto < to + n)
@@ -111,7 +109,8 @@ def2u_copy (const char *from)
       unichar_t *uto = (unichar_t *) xmalloc ((len + 1) * sizeof (unichar_t));
       size_t in_left = len, out_left = sizeof (unichar_t) * len;
       char *cto = (char *) uto;
-      iconv (to_unicode, (iconv_arg2_t) & from, &in_left, &cto, &out_left);
+      iconv (to_unicode, (ICONV_CONST char **) &from, &in_left, &cto,
+             &out_left);
       *cto++ = '\0';
       *cto++ = '\0';
       *cto++ = '\0';
@@ -134,7 +133,8 @@ u2def_copy (const unichar_t *ufrom)
       char *cfrom = (char *) ufrom, *cto;
       char *to = (char *) xmalloc (3 * len + 2);
       cto = to;
-      iconv (from_unicode, (iconv_arg2_t) & cfrom, &in_left, &cto, &out_left);
+      iconv (from_unicode, (ICONV_CONST char **) &cfrom, &in_left, &cto,
+             &out_left);
       *cto++ = '\0';
       *cto++ = '\0';
       *cto++ = '\0';
@@ -157,7 +157,7 @@ def2utf8_copy (const char *from)
       size_t out_left = 3 * (len + 1);
       char *cto = (char *) xmalloc (3 * (len + 1));
       char *cret = cto;
-      iconv (to_utf8, (iconv_arg2_t) & from, &in_left, &cto, &out_left);
+      iconv (to_utf8, (ICONV_CONST char **) &from, &in_left, &cto, &out_left);
       *cto++ = '\0';
       *cto++ = '\0';
       *cto++ = '\0';
@@ -179,7 +179,8 @@ utf82def_copy (const char *ufrom)
       size_t in_left = len, out_left = 3 * len;
       char *cfrom = (char *) ufrom, *cto, *to;
       cto = to = (char *) xmalloc (3 * len + 2);
-      iconv (from_utf8, (iconv_arg2_t) & cfrom, &in_left, &cto, &out_left);
+      iconv (from_utf8, (ICONV_CONST char **) &cfrom, &in_left, &cto,
+             &out_left);
       *cto++ = '\0';
       *cto++ = '\0';
       *cto++ = '\0';

@@ -31,7 +31,7 @@
 
 #include "basics.h"
 #include "configure-fontforge.h"
-#include "gwwiconv.h"
+#include <iconv.h>
 
 #ifdef FONTFORGE_CONFIG_USE_DOUBLE
 typedef double real;

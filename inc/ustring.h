@@ -34,7 +34,6 @@
 #include <string.h>
 #include <memory.h>
 #include "basics.h"
-#include "charset.h"
 
 extern unichar_t *u_copy(const unichar_t*);
 extern unichar_t *u_copyn(const unichar_t*, long);

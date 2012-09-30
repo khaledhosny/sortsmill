@@ -30,7 +30,6 @@
 
 #include "fontforgeui.h"
 #include "groups.h"
-#include <charset.h>
 #include <gfile.h>
 #include <gresource.h>
 #include <gresedit.h>
@@ -85,10 +84,10 @@ extern char *xuid;
 extern char *SaveTablesPref;
 static char *LastFonts[2 * RECENT_MAX];
 static int LastFontIndex = 0, LastFontsPreserving = 0;
-                                                                                                                                                                                                                                                                             /*struct cvshows CVShows = { 1, 1, 1, 1, 1, 0, 1 }; *//* in charview */
-                                                                                                                                                                                        /* int default_fv_font_size = 24; *//* in fontview */
-                                                                                                                                                                                                /* int default_fv_antialias = false *//* in fontview */
-                                                                                                                                                                                        /* int default_fv_bbsized = false *//* in fontview */
+                                                                                                                                                                                                                                                                                                                                                                                         /*struct cvshows CVShows = { 1, 1, 1, 1, 1, 0, 1 }; *//* in charview */
+                                                                                                                                                                                                                                                                /* int default_fv_font_size = 24; *//* in fontview */
+                                                                                                                                                                                                                                                                            /* int default_fv_antialias = false *//* in fontview */
+                                                                                                                                                                                                                                                                /* int default_fv_bbsized = false *//* in fontview */
 extern int default_fv_row_count;        /* in fontview */
 extern int default_fv_col_count;        /* in fontview */
 extern int default_fv_showhmetrics;     /* in fontview */
@@ -2257,13 +2256,14 @@ Prefs_Ok (GGadget * g, GEvent * e)
         }
       for (i = 0; i < len; ++i)
         {
-	  char *utf8 = u2utf8_copy (list[i]->text);
-	  if (utf8 == NULL)
-	    xalloc_die ();
-	  char *str = xstr_iconv (utf8, ICONV_UTF8_STRING, ICONV_MAC_STRING);
+          char *utf8 = u2utf8_copy (list[i]->text);
+          if (utf8 == NULL)
+            xalloc_die ();
+          char *str = xstr_iconv (utf8, MY_ICONV_UTF8_STRING,
+                                  MY_ICONV_MAC_STRING);
           ParseMacMapping (str, &user_macfeat_otftag[i]);
-	  free (str);
-	  free (utf8);
+          free (str);
+          free (utf8);
         }
 
       Prefs_ReplaceMacFeatures (GWidgetGetControl (gw, CID_Features));

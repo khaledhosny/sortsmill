@@ -38,7 +38,6 @@
 #include <gdraw.h>
 #include <gresource.h>
 #include <fileutil.h>
-#include "charset.h"
 #include "fontP.h"
 #include <utype.h>
 
