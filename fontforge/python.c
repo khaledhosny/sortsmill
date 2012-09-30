@@ -13954,7 +13954,13 @@ static void pyAutoKernAll(FontViewBase *fv,struct lookup_subtable *sub ) {
 
 static PyObject *PyFFFont_addKerningClass(PyFF_Font *self, PyObject *args) {
     FontViewBase *fv;
-    SplineFont *sf = fv->sf;
+    SplineFont *sf;
+
+    if ( CheckIfFontClosed(self) )
+return (NULL);
+
+    fv = self->fv;
+    sf = fv->sf;
     char *lookup, *subtable, *after_str=NULL;
     int i;
     struct lookup_subtable *sub;
@@ -16789,7 +16795,7 @@ static PyObject *PyFFFont_AddExtrema(PyFF_Font *self, PyObject *UNUSED(args)) {
     if ( CheckIfFontClosed(self) )
 return (NULL);
     fv = self->fv;
-    FVAddExtrema(fv);
+    FVAddExtrema(fv, false);
 Py_RETURN( self );
 }
 
@@ -16904,12 +16910,13 @@ return( Py_BuildValue("i", ret ));
 
 static PyObject *PyFFFont_validate(PyFF_Font *self, PyObject *args) {
     FontViewBase *fv;
-    SplineFont *sf = fv->sf;
+    SplineFont *sf;
     int force=false;
 
     if ( CheckIfFontClosed(self) )
 return (NULL);
     fv = self->fv;
+    sf = fv->sf;
     if ( !PyArg_ParseTuple(args,"|i",&force) )
 return( NULL );
 return( Py_BuildValue("i", SFValidate(sf,fv->active_layer,force)));
