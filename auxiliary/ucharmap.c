@@ -36,7 +36,6 @@
 #include <uniconv.h>
 #include <xuniconv.h>
 
-static iconv_t to_unicode = (iconv_t) (-1);
 static iconv_t from_unicode = (iconv_t) (-1);
 
 static const char *unicode_name = MY_ICONV_STRING_UNICHAR_T;
@@ -48,27 +47,7 @@ my_iconv_setup (void)
   if (iconv_local_encoding_name == NULL)
     iconv_local_encoding_name = xstrdup (locale_charset ());
 
-  to_unicode = iconv_open (unicode_name, iconv_local_encoding_name);
   from_unicode = iconv_open (iconv_local_encoding_name, unicode_name);
-}
-
-unichar_t *
-def2u_strncpy (unichar_t *uto, const char *from, int n)
-{
-  my_iconv_setup ();
-
-  size_t in_left = n, out_left = sizeof (unichar_t) * n;
-  char *cto = (char *) uto;
-  iconv (to_unicode, (ICONV_CONST char **) &from, &in_left, &cto, &out_left);
-  if (cto < ((char *) uto) + 2 * n)
-    *cto++ = '\0';
-  if (cto < ((char *) uto) + 2 * n)
-    *cto++ = '\0';
-  if (cto < ((char *) uto) + 4 * n)
-    *cto++ = '\0';
-  if (cto < ((char *) uto) + 4 * n)
-    *cto++ = '\0';
-  return (uto);
 }
 
 char *
@@ -94,23 +73,26 @@ u2def_strncpy (char *to, const unichar_t *ufrom, int n)
 unichar_t *
 def2u_copy (const char *from)
 {
-  return (unichar_t *) x_u32_strconv_from_locale (from);
+  return (from == NULL) ? NULL :
+    (unichar_t *) x_u32_strconv_from_locale (from);
 }
 
 char *
 u2def_copy (const unichar_t *ufrom)
 {
-  return x_u32_strconv_to_locale ((const uint32_t *) ufrom);
+  return (ufrom == NULL) ? NULL :
+    x_u32_strconv_to_locale ((const uint32_t *) ufrom);
 }
 
 char *
 def2utf8_copy (const char *from)
 {
-  return (char *) x_u8_strconv_from_locale (from);
+  return (from == NULL) ? NULL : (char *) x_u8_strconv_from_locale (from);
 }
 
 char *
 utf82def_copy (const char *ufrom)
 {
-  return x_u8_strconv_to_locale ((const uint8_t *) ufrom);
+  return (ufrom == NULL) ? NULL :
+    x_u8_strconv_to_locale ((const uint8_t *) ufrom);
 }
