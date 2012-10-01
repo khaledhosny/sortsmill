@@ -29,6 +29,8 @@
 
 #include <stdio.h>
 #include <stdarg.h>
+#include <xuniconv.h>
+#include <unistr.h>
 
 #include "gdrawP.h"
 #include "ustring.h"
@@ -88,36 +90,43 @@ static void RunError() {
     GDrawProcessPendingEvents(NULL);
 }
 
-static void ProcessText(unichar_t *ubuf,char *buf, enum err_type et) {
-    int max_len = 60, len;
-    char *pt, *ept, *last_space;
-    unichar_t *ue = ubuf;
-    int line=0;
+static void ProcessText(unichar_t *ubuf,char *buf, enum err_type et)
+{
+  int max_len = 60, len;
+  char *pt, *ept, *last_space;
+  unichar_t *ue = ubuf;
+  int line=0;
 
-    pt = buf;
-    for ( line=0; line<ERR_LINE_MAX && *pt; ++line ) {
-	last_space = NULL;
-	for ( ept = pt; *ept!='\n' && *ept!='\0' && ept-pt<max_len; ++ept )
-	    if ( *ept==' ' )
-		last_space = ept;
-	if ( *ept!='\n' && *ept!='\0' && last_space!=NULL )
-	    ept = last_space;
-	errinfo.lines[line] = def2u_strncpy(ue,pt,ept-pt);
-	ue[ept-pt] = '\0'; ue += (ept+1-pt);
-	if ( *ept=='\n' || *ept==' ' ) ++ept;
-	pt = ept;
+  pt = buf;
+  for ( line=0; line<ERR_LINE_MAX && *pt; ++line )
+    {
+      last_space = NULL;
+      for ( ept = pt; *ept!='\n' && *ept!='\0' && ept-pt<max_len; ++ept )
+	if ( *ept==' ' )
+	  last_space = ept;
+      if ( *ept!='\n' && *ept!='\0' && last_space!=NULL )
+	ept = last_space;
+      uint32 *utext = x_u32_strconv_from_locale (pt);
+      errinfo.lines[line] = u32_strncpy (ue, utext, ept - pt);
+      free (utext);
+      ue[ept-pt] = 0;
+      ue += (ept+1-pt);
+      if ( *ept=='\n' || *ept==' ' )
+	++ept;
+      pt = ept;
     }
-    for ( ; line<ERR_LINE_MAX ; ++line )
-	errinfo.lines[line] = NULL;
-    errinfo.err_type = et;
+  for ( ; line<ERR_LINE_MAX ; ++line )
+    errinfo.lines[line] = NULL;
+  errinfo.err_type = et;
 
-    max_len = 0;
-    for ( line = 0; line<ERR_LINE_MAX && errinfo.lines[line]!=NULL; ++line ) {
-	len = GDrawGetTextWidth(error,errinfo.lines[line],-1);
-	if ( len>max_len ) max_len = len;
+  max_len = 0;
+  for ( line = 0; line<ERR_LINE_MAX && errinfo.lines[line]!=NULL; ++line )
+    {
+      len = GDrawGetTextWidth(error,errinfo.lines[line],-1);
+      if ( len>max_len ) max_len = len;
     }
-    errinfo.width = max_len+30;
-    GDrawResize(error,max_len+30,15*line+50);
+  errinfo.width = max_len+30;
+  GDrawResize(error,max_len+30,15*line+50);
 }
 
 void _GDraw_InitError(GDisplay *gd) {
