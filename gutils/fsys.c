@@ -1,3 +1,5 @@
+#include <config.h>
+
 /* Copyright (C) 2000-2004 by George Williams */
 /*
  * Redistribution and use in source and binary forms, with or without
@@ -25,8 +27,6 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <config.h>
-
 #include <stdio.h>
 #include "ustring.h"
 #include "fileutil.h"
@@ -37,49 +37,55 @@
 #include <stdbool.h>
 #include <glib.h>
 #include <glib/gstdio.h>
+#include <stdarg.h>
+#include <xgc.h>
+#include <xuniconv.h>
 
 static char dirname_[1024];
 #if !defined(__MINGW32__)
- #include <pwd.h>
+#include <pwd.h>
 #else
- #include <Windows.h>
+#include <Windows.h>
 #endif
 
 #if defined(__MINGW32__)
 static void _backslash_to_slash(char* c){
-    for(; *c; c++)
-	if(*c == '\\')
-	    *c = '/';
+  for(; *c; c++)
+    if(*c == '\\')
+      *c = '/';
 }
 static void _u_backslash_to_slash(unichar_t* c){
-    for(; *c; c++)
-	if(*c == '\\')
-	    *c = '/';
+  for(; *c; c++)
+    if(*c == '\\')
+      *c = '/';
 }
 #endif
 
 char *
 GFileGetUserConfigDir (void)
 {
-  return g_build_filename (g_get_user_config_dir (), PACKAGE, NULL);
+  return x_gc_grabstr (g_build_filename (g_get_user_config_dir (),
+					 PACKAGE, NULL));
 }
 
 char *
 GFileGetUserCacheDir (void)
 {
-  return g_build_filename (g_get_user_cache_dir (), PACKAGE, NULL);
+  return x_gc_grabstr (g_build_filename (g_get_user_cache_dir (),
+					 PACKAGE, NULL));
 }
 
 char *
 GFileGetUserDataDir (void)
 {
-  return g_build_filename (g_get_user_data_dir (), PACKAGE, NULL);
+  return  x_gc_grabstr (g_build_filename (g_get_user_data_dir (),
+					 PACKAGE, NULL));
 }
 
 char *
 GFileGetHomeDir (void)
 {
-  return g_build_filename (g_get_home_dir (), NULL);
+  return x_gc_grabstr (g_build_filename (g_get_home_dir (), NULL));
 }
 
 unichar_t *
@@ -171,7 +177,7 @@ GFileMakeAbsoluteName (char *name)
 char *
 GFileBuildName (char *dir, char *file)
 {
-  return g_build_filename (dir, file, NULL);
+  return x_gc_grabstr (g_build_filename (dir, file, NULL));
 }
 
 /* Given a filename in a directory, pick the directory out of it, and */
@@ -179,13 +185,14 @@ GFileBuildName (char *dir, char *file)
 char *
 GFileReplaceName (char *oldname, char *file)
 {
-  return g_build_filename (g_path_get_dirname (oldname), file, NULL);
+  char *dirname = x_gc_grabstr (g_path_get_dirname (oldname));
+  return x_gc_grabstr (g_build_filename (dirname, file, NULL));
 }
 
 char *
 GFileNameTail (const char *file)
 {
-  return g_path_get_basename (file);
+  return x_gc_grabstr (g_path_get_basename (file));
 }
 
 char *GFileAppendFile(char *dir,char *name,int isdir) {
@@ -371,12 +378,12 @@ return(result);
 unichar_t *
 u_GFileNameTail (const unichar_t *file)
 {
-  char buffer[1024];
-  char *tmp;
-
-  u2def_strncpy (buffer, file, sizeof (buffer));
-  tmp = GFileNameTail (buffer);
-  return def2u_copy(tmp);
+  char *locale_file = x_u32_strconv_to_locale (file);
+  char *locale_base = g_path_get_basename (locale_file);
+  free (locale_file);
+  unichar_t *base = x_u32_strconv_from_locale (locale_base);
+  free (base);
+  return base;
 }
 
 unichar_t *u_GFileNormalize(unichar_t *name) {

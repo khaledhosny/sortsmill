@@ -31,8 +31,8 @@ include $(top_srcdir)/mk/flags.am
 
 lib_LTLIBRARIES = libsortsmillff_aux.la
 
-libsortsmillff_aux_la_SOURCES = ArabicForms.c alphabet.c backtrns.c char.c	\
-	cjk.c ucharmap.c unialt.c ustring.c utype.c usprintf.c			\
+libsortsmillff_aux_la_SOURCES = ArabicForms.c alphabet.c backtrns.c	\
+	char.c cjk.c ucharmap.c unialt.c ustring.c utype.c usprintf.c	\
 	combiners.h
 
 EXPORTED_AUX_SYMBOLS = AllAscii ArabicForms StripToASCII				\

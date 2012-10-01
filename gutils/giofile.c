@@ -1,3 +1,5 @@
+#include <config.h>
+
 /* Copyright (C) 2000-2012 by George Williams */
 /*
  * Redistribution and use in source and binary forms, with or without
@@ -25,8 +27,6 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <config.h>
-
 #include "basics.h"
 #include "giofuncP.h"
 #include "gfile.h"
@@ -37,6 +37,7 @@
 #include <unistd.h>
 #include <dirent.h>
 #include <errno.h>
+#include <xuniconv.h>
 
 /* the initial space is so that these guys will come first in ordered error */
 /*  lists in the file chooser */
@@ -114,7 +115,7 @@ return;
 
     while (( ent = readdir(dir))!=NULL ) {
 	cur = (GDirEntry *) xcalloc(1,sizeof(GDirEntry));
-	cur->name = def2u_copy(ent->d_name);
+	cur->name = x_u32_strconv_from_locale (ent->d_name);
 	strcpy(ept,ent->d_name);
 	stat(buffer,&statb);
 	cur->hasdir = cur->hasexe = cur->hasmode = cur->hassize = cur->hastime = true;
@@ -138,7 +139,7 @@ return;
     /*  a diropen("/") will not find it */
     if ( strcmp(path,"/")==0 ) {
 	cur = (GDirEntry *) xcalloc(1,sizeof(GDirEntry));
-	cur->name = def2u_copy("cygdrive");
+	cur->name = x_u32_strconv_from_locale("cygdrive");
 	strcpy(ept,"cygdrive");
 	stat(buffer,&statb);
 	cur->hasdir = cur->hasexe = cur->hasmode = cur->hassize = cur->hastime = true;
