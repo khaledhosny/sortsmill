@@ -36,10 +36,24 @@
 #include <config.h>
 
 #include <stdlib.h>
+#include <stdint.h>
 #include <gc.h>
 #include <xalloc.h>
 
-static inline void *
+inline void *x_gc_malloc (size_t sz);
+inline void *x_gc_malloc_atomic (size_t sz);
+inline void *x_gc_malloc_uncollectable (size_t sz);
+inline void *x_gc_realloc (void *old_pointer, size_t sz);
+inline void *x_gc_malloc_ignore_off_page (size_t sz);
+inline void *x_gc_malloc_atomic_ignore_off_page (size_t sz);
+inline void *x_gc_malloc_stubborn (size_t sz);
+inline char *x_gc_strdup (const char *s);
+inline char *x_gc_grabstr (char *s);
+uint8_t *x_gc_u8_grabstr (uint8_t *s);
+uint16_t *x_gc_u16_grabstr (uint16_t *s);
+uint32_t *x_gc_u32_grabstr (uint32_t *s);
+
+inline void *
 x_gc_malloc (size_t sz)
 {
   void *p = GC_MALLOC (sz);
@@ -48,7 +62,7 @@ x_gc_malloc (size_t sz)
   return p;
 }
 
-static inline void *
+inline void *
 x_gc_malloc_atomic (size_t sz)
 {
   void *p = GC_MALLOC_ATOMIC (sz);
@@ -57,7 +71,7 @@ x_gc_malloc_atomic (size_t sz)
   return p;
 }
 
-static inline void *
+inline void *
 x_gc_malloc_uncollectable (size_t sz)
 {
   void *p = GC_MALLOC_UNCOLLECTABLE (sz);
@@ -66,7 +80,7 @@ x_gc_malloc_uncollectable (size_t sz)
   return p;
 }
 
-static inline void *
+inline void *
 x_gc_realloc (void *old_pointer, size_t sz)
 {
   void *p = GC_REALLOC (old_pointer, sz);
@@ -75,7 +89,7 @@ x_gc_realloc (void *old_pointer, size_t sz)
   return p;
 }
 
-static inline void *
+inline void *
 x_gc_malloc_ignore_off_page (size_t sz)
 {
   void *p = GC_MALLOC_IGNORE_OFF_PAGE (sz);
@@ -84,7 +98,7 @@ x_gc_malloc_ignore_off_page (size_t sz)
   return p;
 }
 
-static inline void *
+inline void *
 x_gc_malloc_atomic_ignore_off_page (size_t sz)
 {
   void *p = GC_MALLOC_ATOMIC_IGNORE_OFF_PAGE (sz);
@@ -93,7 +107,7 @@ x_gc_malloc_atomic_ignore_off_page (size_t sz)
   return p;
 }
 
-static inline void *
+inline void *
 x_gc_malloc_stubborn (size_t sz)
 {
   void *p = GC_MALLOC_STUBBORN (sz);
@@ -102,7 +116,7 @@ x_gc_malloc_stubborn (size_t sz)
   return p;
 }
 
-static inline char *
+inline char *
 x_gc_strdup (const char *s)
 {
   char *p = GC_STRDUP (s);
@@ -112,7 +126,7 @@ x_gc_strdup (const char *s)
 }
 
 // Replace an allocated string with a garbage-collected copy of it.
-static inline void *
+inline char *
 x_gc_grabstr (char *s)
 {
   char *p = NULL;
