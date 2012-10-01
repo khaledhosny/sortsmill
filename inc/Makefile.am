@@ -25,16 +25,7 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
-# FIXME: The installed headers need to be reworked for better system
-# installation. In particular, they ought to have <> instead of "" and
-# they should require a "fontforge/" prefix.
-
-pkginclude_HEADERS = basics.h chardata.h config.h fileutil.h gdraw.h	\
-	gfile.h ggadget.h gicons.h gimage.h gio.h gkeysym.h gprogress.h		\
-	gresedit.h gresource.h gwidget.h intl.h ustring.h utype.h			\
-	annotations_base.h
-
-noinst_HEADERS = ffthread.h null_passthru.h xgc.h xuniconv.h
-
-
+noinst_HEADERS = basics.h chardata.h config.h fileutil.h gdraw.h	\
+	gfile.h ggadget.h gicons.h gimage.h gio.h gkeysym.h gprogress.h	\
+	gresedit.h gresource.h gwidget.h intl.h ustring.h utype.h		\
+	annotations_base.h ffthread.h null_passthru.h xgc.h xuniconv.h

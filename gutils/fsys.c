@@ -32,7 +32,7 @@
 #include "fileutil.h"
 #include "gfile.h"
 #include <sys/types.h>
-#include <sys/stat.h>		/* for mkdir */
+#include <sys/stat.h>
 #include <unistd.h>
 #include <stdbool.h>
 #include <glib.h>
@@ -50,14 +50,19 @@ static char dirname_[1024];
 #endif
 
 #if defined(__MINGW32__)
-static void _backslash_to_slash(char* c){
-  for(; *c; c++)
-    if(*c == '\\')
+static void
+_backslash_to_slash (char *c)
+{
+  for (; *c; c++)
+    if (*c == '\\')
       *c = '/';
 }
-static void _u_backslash_to_slash(unichar_t* c){
-  for(; *c; c++)
-    if(*c == '\\')
+
+static void
+_u_backslash_to_slash (unichar_t *c)
+{
+  for (; *c; c++)
+    if (*c == '\\')
       *c = '/';
 }
 #endif
@@ -66,21 +71,21 @@ char *
 GFileGetUserConfigDir (void)
 {
   return x_gc_grabstr (g_build_filename (g_get_user_config_dir (),
-					 PACKAGE, NULL));
+                                         PACKAGE, NULL));
 }
 
 char *
 GFileGetUserCacheDir (void)
 {
   return x_gc_grabstr (g_build_filename (g_get_user_cache_dir (),
-					 PACKAGE, NULL));
+                                         PACKAGE, NULL));
 }
 
 char *
 GFileGetUserDataDir (void)
 {
-  return  x_gc_grabstr (g_build_filename (g_get_user_data_dir (),
-					 PACKAGE, NULL));
+  return x_gc_grabstr (g_build_filename (g_get_user_data_dir (),
+                                         PACKAGE, NULL));
 }
 
 char *
@@ -102,68 +107,87 @@ u_GFileGetHomeDir (void)
   return dir;
 }
 
-static void savestrcpy(char *dest,const char *src) {
-    while (true) {
-	*dest = *src;
-	if ( *dest=='\0' )
-	    break;
-	++dest; ++src;
+static void
+savestrcpy (char *dest, const char *src)
+{
+  while (true)
+    {
+      *dest = *src;
+      if (*dest == '\0')
+        break;
+      ++dest;
+      ++src;
     }
 }
 
-char *GFileGetAbsoluteName(char *name, char *result, int rsiz) {
-    /* result may be the same as name */
-    char buffer[1000];
+char *
+GFileGetAbsoluteName (char *name, char *result, int rsiz)
+{
+  /* result may be the same as name */
+  char buffer[1000];
 
-     if ( ! GFileIsAbsolute(name) ) {
-	char *pt, *spt, *rpt, *bpt;
+  if (!GFileIsAbsolute (name))
+    {
+      char *pt, *spt, *rpt, *bpt;
 
-	if ( dirname_[0]=='\0' ) {
-	    getcwd(dirname_,sizeof(dirname_));
-	}
-	strcpy(buffer,dirname_);
-	if ( buffer[strlen(buffer)-1]!='/' )
-	    strcat(buffer,"/");
-	strcat(buffer,name);
-	#if defined(__MINGW32__)
-	_backslash_to_slash(buffer);
-	#endif
+      if (dirname_[0] == '\0')
+        {
+          getcwd (dirname_, sizeof (dirname_));
+        }
+      strcpy (buffer, dirname_);
+      if (buffer[strlen (buffer) - 1] != '/')
+        strcat (buffer, "/");
+      strcat (buffer, name);
+#if defined(__MINGW32__)
+      _backslash_to_slash (buffer);
+#endif
 
-	/* Normalize out any .. */
-	spt = rpt = buffer;
-	while ( *spt!='\0' ) {
-	    if ( *spt=='/' )  {
-		if ( *++spt=='\0' )
-	break;
-	    }
-	    for ( pt = spt; *pt!='\0' && *pt!='/'; ++pt );
-	    if ( pt==spt )	/* Found // in a path spec, reduce to / (we've*/
-		savestrcpy(spt,spt+1); /*  skipped past the :// of the machine name) */
-	    else if ( pt==spt+1 && spt[0]=='.' && *pt=='/' ) {	/* Noop */
-		savestrcpy(spt,spt+2);
-	    } else if ( pt==spt+2 && spt[0]=='.' && spt[1]=='.' ) {
-		for ( bpt=spt-2 ; bpt>rpt && *bpt!='/'; --bpt );
-		if ( bpt>=rpt && *bpt=='/' ) {
-		    savestrcpy(bpt,pt);
-		    spt = bpt;
-		} else {
-		    rpt = pt;
-		    spt = pt;
-		}
-	    } else
-		spt = pt;
-	}
-	name = buffer;
-	if ( rsiz>sizeof(buffer)) rsiz = sizeof(buffer);	/* Else valgrind gets unhappy */
+      /* Normalize out any .. */
+      spt = rpt = buffer;
+      while (*spt != '\0')
+        {
+          if (*spt == '/')
+            {
+              if (*++spt == '\0')
+                break;
+            }
+          for (pt = spt; *pt != '\0' && *pt != '/'; ++pt);
+          if (pt == spt)        /* Found // in a path spec, reduce to / (we've */
+            savestrcpy (spt, spt + 1);  /*  skipped past the :// of the machine name) */
+          else if (pt == spt + 1 && spt[0] == '.' && *pt == '/')
+            {                   /* Noop */
+              savestrcpy (spt, spt + 2);
+            }
+          else if (pt == spt + 2 && spt[0] == '.' && spt[1] == '.')
+            {
+              for (bpt = spt - 2; bpt > rpt && *bpt != '/'; --bpt);
+              if (bpt >= rpt && *bpt == '/')
+                {
+                  savestrcpy (bpt, pt);
+                  spt = bpt;
+                }
+              else
+                {
+                  rpt = pt;
+                  spt = pt;
+                }
+            }
+          else
+            spt = pt;
+        }
+      name = buffer;
+      if (rsiz > sizeof (buffer))
+        rsiz = sizeof (buffer); /* Else valgrind gets unhappy */
     }
-    if (result!=name) {
-	strncpy(result,name,rsiz);
-	result[rsiz-1]='\0';
-	#if defined(__MINGW32__)
-	_backslash_to_slash(result);
-	#endif
+  if (result != name)
+    {
+      strncpy (result, name, rsiz);
+      result[rsiz - 1] = '\0';
+#if defined(__MINGW32__)
+      _backslash_to_slash (result);
+#endif
     }
-return(result);
+  return (result);
 }
 
 char *
@@ -186,8 +210,9 @@ GFileBuildName (char *dir, char *file)
 char *
 GFileReplaceName (char *oldname, char *file)
 {
-  char *dirname = x_gc_grabstr (g_path_get_dirname (oldname));
-  return x_gc_grabstr (g_build_filename (dirname, file, NULL));
+  return
+    x_gc_grabstr (g_build_filename
+                  (x_gc_grabstr (g_path_get_dirname (oldname)), file, NULL));
 }
 
 char *
@@ -196,23 +221,27 @@ GFileNameTail (const char *file)
   return x_gc_grabstr (g_path_get_basename (file));
 }
 
-char *GFileAppendFile(char *dir,char *name,int isdir) {
-    char *ret, *pt;
+char *
+GFileAppendFile (char *dir, char *name, int isdir)
+{
+  char *ret, *pt;
 
-    ret = (char *) xmalloc1((strlen(dir)+strlen(name)+3));
-    strcpy(ret,dir);
-    pt = ret+strlen(ret);
-    if ( pt>ret && pt[-1]!='/' )
-	*pt++ = '/';
-    strcpy(pt,name);
-    if ( isdir ) {
-	pt += strlen(pt);
-	if ( pt>ret && pt[-1]!='/' ) {
-	    *pt++ = '/';
-	    *pt = '\0';
-	}
+  ret = (char *) xmalloc1 ((strlen (dir) + strlen (name) + 3));
+  strcpy (ret, dir);
+  pt = ret + strlen (ret);
+  if (pt > ret && pt[-1] != '/')
+    *pt++ = '/';
+  strcpy (pt, name);
+  if (isdir)
+    {
+      pt += strlen (pt);
+      if (pt > ret && pt[-1] != '/')
+        {
+          *pt++ = '/';
+          *pt = '\0';
+        }
     }
-return(ret);
+  return (ret);
 }
 
 bool
@@ -276,104 +305,125 @@ GFileUnlink (char *name)
   return g_unlink (name);
 }
 
-char *_GFile_find_program_dir(char *prog) {
-    char *pt, *path, *program_dir=NULL;
-    char filename[2000];
+char *
+_GFile_find_program_dir (char *prog)
+{
+  char *pt, *path, *program_dir = NULL;
+  char filename[2000];
 
 #if defined(__MINGW32__)
-    char  path[MAX_PATH+4];
-    char* c = path;
-    char* tail = 0;
-    unsigned int  len = GetModuleFileNameA(NULL, path, MAX_PATH);
-    path[len] = '\0';
-    for(; *c; *c++){
-	if(*c == '\\'){
-	    tail=c;
-	    *c = '/';
-	}
+  char path[MAX_PATH + 4];
+  char *c = path;
+  char *tail = 0;
+  unsigned int len = GetModuleFileNameA (NULL, path, MAX_PATH);
+  path[len] = '\0';
+  for (; *c; *c++)
+    {
+      if (*c == '\\')
+        {
+          tail = c;
+          *c = '/';
+        }
     }
-    if(tail) *tail='\0';
-    program_dir = copy(path);
+  if (tail)
+    *tail = '\0';
+  program_dir = copy (path);
 #else
-    if ( (pt = strrchr(prog,'/'))!=NULL )
-	program_dir = copyn(prog,pt-prog);
-    else if ( (path = getenv("PATH"))!=NULL ) {
-	while ((pt = strchr(path,':'))!=NULL ) {
-	  sprintf(filename,"%.*s/%s", (int)(pt-path), path, prog);
-	    /* Under cygwin, applying access to "potrace" will find "potrace.exe" */
-	    /*  no need for special check to add ".exe" */
-	    if ( access(filename,1)!= -1 ) {
-		program_dir = copyn(path,pt-path);
-	break;
-	    }
-	    path = pt+1;
-	}
-	if ( program_dir==NULL ) {
-	    sprintf(filename,"%s/%s", path, prog);
-	    if ( access(filename,1)!= -1 )
-		program_dir = copy(path);
-	}
+  if ((pt = strrchr (prog, '/')) != NULL)
+    program_dir = copyn (prog, pt - prog);
+  else if ((path = getenv ("PATH")) != NULL)
+    {
+      while ((pt = strchr (path, ':')) != NULL)
+        {
+          sprintf (filename, "%.*s/%s", (int) (pt - path), path, prog);
+          /* Under cygwin, applying access to "potrace" will find "potrace.exe" */
+          /*  no need for special check to add ".exe" */
+          if (access (filename, 1) != -1)
+            {
+              program_dir = copyn (path, pt - path);
+              break;
+            }
+          path = pt + 1;
+        }
+      if (program_dir == NULL)
+        {
+          sprintf (filename, "%s/%s", path, prog);
+          if (access (filename, 1) != -1)
+            program_dir = copy (path);
+        }
     }
 #endif
 
-    if ( program_dir==NULL )
-	GFileGetAbsoluteName(".",filename,sizeof(filename));
-    else
-	GFileGetAbsoluteName(program_dir,filename,sizeof(filename));
-    free(program_dir);
-    program_dir = copy(filename);
-return( program_dir );
+  if (program_dir == NULL)
+    GFileGetAbsoluteName (".", filename, sizeof (filename));
+  else
+    GFileGetAbsoluteName (program_dir, filename, sizeof (filename));
+  free (program_dir);
+  program_dir = copy (filename);
+  return (program_dir);
 }
 
-unichar_t *u_GFileGetAbsoluteName(unichar_t *name, unichar_t *result, int rsiz) {
-    /* result may be the same as name */
-    unichar_t buffer[1000];
+unichar_t *
+u_GFileGetAbsoluteName (unichar_t *name, unichar_t *result, int rsiz)
+{
+  /* result may be the same as name */
+  unichar_t buffer[1000];
 
-    if ( ! u_GFileIsAbsolute(name) ) {
-	unichar_t *pt, *spt, *rpt, *bpt;
+  if (!u_GFileIsAbsolute (name))
+    {
+      unichar_t *pt, *spt, *rpt, *bpt;
 
-	if ( dirname_[0]=='\0' ) {
-	    getcwd(dirname_,sizeof(dirname_));
-	}
-	uc_strcpy(buffer,dirname_);
-	if ( buffer[u_strlen(buffer)-1]!='/' )
-	    uc_strcat(buffer,"/");
-	u_strcat(buffer,name);
-	#if defined(__MINGW32__)
-	_u_backslash_to_slash(buffer);
-	#endif
+      if (dirname_[0] == '\0')
+        {
+          getcwd (dirname_, sizeof (dirname_));
+        }
+      uc_strcpy (buffer, dirname_);
+      if (buffer[u_strlen (buffer) - 1] != '/')
+        uc_strcat (buffer, "/");
+      u_strcat (buffer, name);
+#if defined(__MINGW32__)
+      _u_backslash_to_slash (buffer);
+#endif
 
-	/* Normalize out any .. */
-	spt = rpt = buffer;
-	while ( *spt!='\0' ) {
-	    if ( *spt=='/' ) ++spt;
-	    for ( pt = spt; *pt!='\0' && *pt!='/'; ++pt );
-	    if ( pt==spt )	/* Found // in a path spec, reduce to / (we've*/
-		u_strcpy(spt,pt); /*  skipped past the :// of the machine name) */
-	    else if ( pt==spt+1 && spt[0]=='.' && *pt=='/' )	/* Noop */
-		u_strcpy(spt,spt+2);
-	    else if ( pt==spt+2 && spt[0]=='.' && spt[1]=='.' ) {
-		for ( bpt=spt-2 ; bpt>rpt && *bpt!='/'; --bpt );
-		if ( bpt>=rpt && *bpt=='/' ) {
-		    u_strcpy(bpt,pt);
-		    spt = bpt;
-		} else {
-		    rpt = pt;
-		    spt = pt;
-		}
-	    } else
-		spt = pt;
-	}
-	name = buffer;
+      /* Normalize out any .. */
+      spt = rpt = buffer;
+      while (*spt != '\0')
+        {
+          if (*spt == '/')
+            ++spt;
+          for (pt = spt; *pt != '\0' && *pt != '/'; ++pt);
+          if (pt == spt)        /* Found // in a path spec, reduce to / (we've */
+            u_strcpy (spt, pt); /*  skipped past the :// of the machine name) */
+          else if (pt == spt + 1 && spt[0] == '.' && *pt == '/')        /* Noop */
+            u_strcpy (spt, spt + 2);
+          else if (pt == spt + 2 && spt[0] == '.' && spt[1] == '.')
+            {
+              for (bpt = spt - 2; bpt > rpt && *bpt != '/'; --bpt);
+              if (bpt >= rpt && *bpt == '/')
+                {
+                  u_strcpy (bpt, pt);
+                  spt = bpt;
+                }
+              else
+                {
+                  rpt = pt;
+                  spt = pt;
+                }
+            }
+          else
+            spt = pt;
+        }
+      name = buffer;
     }
-    if (result!=name) {
-	u_strncpy(result,name,rsiz);
-	result[rsiz-1]='\0';
-	#if defined(__MINGW32__)
-	_u_backslash_to_slash(result);
-	#endif
+  if (result != name)
+    {
+      u_strncpy (result, name, rsiz);
+      result[rsiz - 1] = '\0';
+#if defined(__MINGW32__)
+      _u_backslash_to_slash (result);
+#endif
     }
-return(result);
+  return (result);
 }
 
 unichar_t *
@@ -384,56 +434,74 @@ u_GFileNameTail (const unichar_t *file)
   return x_gc_u32_grabstr (x_u32_strconv_from_locale (locale_base));
 }
 
-unichar_t *u_GFileNormalize(unichar_t *name) {
-    unichar_t *pt, *base, *ppt;
+unichar_t *
+u_GFileNormalize (unichar_t *name)
+{
+  unichar_t *pt, *base, *ppt;
 
-    if ( (pt = uc_strstr(name,"://"))!=NULL ) {
-	base = u_strchr(pt+3,'/');
-	if ( base==NULL )
-return( name );
-	++base;
-    } else if ( *name=='/' )
-	base = name+1;
-    else
-	base = name;
-    for ( pt=base; *pt!='\0'; ) {
-	if ( *pt=='/' )
-	    u_strcpy(pt,pt+1);
-	else if ( uc_strncmp(pt,"./",2)==0 )
-	    u_strcpy(pt,pt+2);
-	else if ( uc_strncmp(pt,"../",2)==0 ) {
-	    for ( ppt=pt-2; ppt>=base && *ppt!='/'; --ppt );
-	    ++ppt;
-	    if ( ppt>=base ) {
-		u_strcpy(ppt,pt+3);
-		pt = ppt;
-	    } else
-		pt += 3;
-	} else {
-	    while ( *pt!='/' && *pt!='\0' ) ++pt;
-	    if ( *pt == '/' ) ++pt;
-	}
+  if ((pt = uc_strstr (name, "://")) != NULL)
+    {
+      base = u_strchr (pt + 3, '/');
+      if (base == NULL)
+        return (name);
+      ++base;
     }
-return( name );
+  else if (*name == '/')
+    base = name + 1;
+  else
+    base = name;
+  for (pt = base; *pt != '\0';)
+    {
+      if (*pt == '/')
+        u_strcpy (pt, pt + 1);
+      else if (uc_strncmp (pt, "./", 2) == 0)
+        u_strcpy (pt, pt + 2);
+      else if (uc_strncmp (pt, "../", 2) == 0)
+        {
+          for (ppt = pt - 2; ppt >= base && *ppt != '/'; --ppt);
+          ++ppt;
+          if (ppt >= base)
+            {
+              u_strcpy (ppt, pt + 3);
+              pt = ppt;
+            }
+          else
+            pt += 3;
+        }
+      else
+        {
+          while (*pt != '/' && *pt != '\0')
+            ++pt;
+          if (*pt == '/')
+            ++pt;
+        }
+    }
+  return (name);
 }
 
-unichar_t *u_GFileAppendFile(unichar_t *dir,unichar_t *name,int isdir) {
-    unichar_t *ret, *pt;
+unichar_t *
+u_GFileAppendFile (unichar_t *dir, unichar_t *name, int isdir)
+{
+  unichar_t *ret, *pt;
 
-    ret = (unichar_t *) xmalloc((u_strlen(dir)+u_strlen(name)+3)*sizeof(unichar_t));
-    u_strcpy(ret,dir);
-    pt = ret+u_strlen(ret);
-    if ( pt>ret && pt[-1]!='/' )
-	*pt++ = '/';
-    u_strcpy(pt,name);
-    if ( isdir ) {
-	pt += u_strlen(pt);
-	if ( pt>ret && pt[-1]!='/' ) {
-	    *pt++ = '/';
-	    *pt = '\0';
-	}
+  ret =
+    (unichar_t *) xmalloc ((u_strlen (dir) + u_strlen (name) + 3) *
+                           sizeof (unichar_t));
+  u_strcpy (ret, dir);
+  pt = ret + u_strlen (ret);
+  if (pt > ret && pt[-1] != '/')
+    *pt++ = '/';
+  u_strcpy (pt, name);
+  if (isdir)
+    {
+      pt += u_strlen (pt);
+      if (pt > ret && pt[-1] != '/')
+        {
+          *pt++ = '/';
+          *pt = '\0';
+        }
     }
-return(ret);
+  return (ret);
 }
 
 bool
