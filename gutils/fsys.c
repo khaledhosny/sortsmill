@@ -40,6 +40,7 @@
 #include <stdarg.h>
 #include <xgc.h>
 #include <xuniconv.h>
+#include <unistr.h>
 
 static char dirname_[1024];
 #if !defined(__MINGW32__)
@@ -378,11 +379,17 @@ return(result);
 unichar_t *
 u_GFileNameTail (const unichar_t *file)
 {
-  char *locale_file = x_u32_strconv_to_locale (file);
-  char *locale_base = g_path_get_basename (locale_file);
-  free (locale_file);
-  unichar_t *base = x_u32_strconv_from_locale (locale_base);
-  free (base);
+  char *locale_file = x_gc_grabstr (x_u32_strconv_to_locale (file));
+  char *locale_base = x_gc_grabstr (g_path_get_basename (locale_file));
+
+  // FIXME: Replace this verbiage with an x_gc_u32_grabstr() call
+  // after that reusable routine has been written.
+  uint32_t *base_malloced = x_u32_strconv_from_locale (locale_base);
+  uint32_t *base =
+    x_gc_malloc_atomic (u32_strlen (base_malloced) * sizeof (uint32_t));
+  u32_strcpy (base, base_malloced);
+  free (base_malloced);
+
   return base;
 }
 
