@@ -35,6 +35,7 @@
 #include <iconv.h>
 #include <uniconv.h>
 #include <xuniconv.h>
+#include <null_passthru.h>
 
 static iconv_t from_unicode = (iconv_t) (-1);
 
@@ -73,26 +74,25 @@ u2def_strncpy (char *to, const unichar_t *ufrom, int n)
 unichar_t *
 def2u_copy (const char *from)
 {
-  return (from == NULL) ? NULL :
-    (unichar_t *) x_u32_strconv_from_locale (from);
+  return (unichar_t *) NULL_PASSTHRU (from, x_u32_strconv_from_locale (from));
 }
 
 char *
 u2def_copy (const unichar_t *ufrom)
 {
-  return (ufrom == NULL) ? NULL :
-    x_u32_strconv_to_locale ((const uint32_t *) ufrom);
+  return NULL_PASSTHRU (ufrom,
+                        x_u32_strconv_to_locale ((const uint32_t *) ufrom));
 }
 
 char *
 def2utf8_copy (const char *from)
 {
-  return (from == NULL) ? NULL : (char *) x_u8_strconv_from_locale (from);
+  return (char *) NULL_PASSTHRU (from, x_u8_strconv_from_locale (from));
 }
 
 char *
 utf82def_copy (const char *ufrom)
 {
-  return (ufrom == NULL) ? NULL :
-    x_u8_strconv_to_locale ((const uint8_t *) ufrom);
+  return NULL_PASSTHRU (ufrom,
+                        x_u8_strconv_to_locale ((const uint8_t *) ufrom));
 }
