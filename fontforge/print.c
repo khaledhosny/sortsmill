@@ -39,6 +39,8 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include "print.h"
+#include <xuniconv.h>
+#include <unistr.h>
 
 int pagewidth = 0, pageheight = 0;      /* In points */
 char *printlazyprinter = NULL;
@@ -2983,10 +2985,6 @@ static char *_IAmACat[] = {
 /* Belorussian */
 static char *_belorussianjohn[] = {
   "У пачатку было Слова, і Слова было ў Бога, і Богам было Слова. Яно было ў пачатку ў Бога",
-#if 0                           /* told this is actually russian */
-  "Вначале было Слово, и Слово было у Бога, и Слово было Бог.",
-  "Оно было в начале у Бога.",
-#endif
   NULL
 };
 
@@ -3447,48 +3445,6 @@ PrtBuildDef (SplineFont *sf, void *tf,
             }
         }
 
-#if 0
-      /* If no matches then put in "the quick brown...", in russian too if the encoding suggests it... */
-      if (!ScriptInList (CHR ('l', 'a', 't', 'n'), scriptsdone, scnt)
-          && ScriptInList (CHR ('l', 'a', 't', 'n'), scriptsthere, therecnt))
-        {
-          for (j = 0; _simple[j] != NULL; ++j)
-            {
-              if (ret)
-                utf82u_strcpy (ret + len, _simple[j]);
-              len += utf8_strlen (_simple[j]);
-              if (ret)
-                ret[len] = '\n';
-              ++len;
-              if (ret)
-                ret[len] = '\n';
-              ++len;
-              if (ret && langsyscallback != NULL)
-                (langsyscallback) (tf, len, CHR ('l', 'a', 't', 'n'),
-                                   CHR ('E', 'N', 'G', ' '));
-            }
-        }
-      if (!ScriptInList (CHR ('c', 'y', 'r', 'l'), scriptsdone, scnt)
-          && ScriptInList (CHR ('c', 'y', 'r', 'l'), scriptsthere, therecnt))
-        {
-          for (j = 0; _simplecyrill[j] != NULL; ++j)
-            {
-              if (ret)
-                utf82u_strcpy (ret + len, _simplecyrill[j]);
-              len += utf8_strlen (_simplecyrill[j]);
-              if (ret)
-                ret[len] = '\n';
-              ++len;
-              if (ret)
-                ret[len] = '\n';
-              ++len;
-              if (ret && langsyscallback != NULL)
-                (langsyscallback) (tf, len, CHR ('c', 'y', 'r', 'l'),
-                                   CHR ('R', 'U', 'S', ' '));
-            }
-        }
-#endif
-
       rcnt = 0;
       for (s = 0; s < therecnt; ++s)
         if (!ScriptInList (scriptsthere[s], scriptsdone, scnt))
@@ -3812,7 +3768,8 @@ FileToUString (char *filename, int max)
     format = 2;                 /* byte-swapped ucs2 */
   else
     rewind (file);
-  space = upt = xmalloc1 ((max + 1) * sizeof (unichar_t));
+  space = xzalloc ((max + 1) * sizeof (unichar_t));
+  upt = space;
   end = space + max;
   if (format != 0)
     {
@@ -3830,10 +3787,12 @@ FileToUString (char *filename, int max)
     }
   else
     {
-      char buffer[400];
+      char buffer[512];
       while (fgets (buffer, sizeof (buffer), file) != NULL)
         {
-          def2u_strncpy (upt, buffer, end - upt);
+	  uint32_t *new_text = x_u32_strconv_from_locale (buffer);
+	  u32_strncpy (upt, new_text, end - upt);
+	  free (new_text);
           upt += u_strlen (upt);
         }
     }
