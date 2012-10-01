@@ -23,5 +23,9 @@
 -T KernPair
 -T KernPair1
 
+-T PyFF_Font
+-T PyFF_Glyph
+-T PyObject
+
 // Internal to sfd.c. FIXME: Get rid of this type.
 -T __longlong
