@@ -29,6 +29,7 @@
 
 #include "fontforgeui.h"
 #include "annotations.h"
+#include <xalloc.h>
 #include <gfile.h>
 #include <gresource.h>
 #include <ustring.h>
@@ -39,6 +40,10 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <libguile.h>
+
+#ifndef LOCALEDIR
+#error You must set LOCALEDIR.
+#endif
 
 #ifndef SHAREDIR
 #error You must set SHAREDIR.
@@ -515,24 +520,7 @@ ReopenLastFonts (void)
 static char *
 getLocaleDir (void)
 {
-  static char *sharedir = NULL;
-  static int set = false;
-  char *pt;
-  int len;
-
-  if (set)
-    return (sharedir);
-
-  set = true;
-
-  pt = strstr (GResourceProgramDir, "/bin");
-  if (pt == NULL)
-    return (sharedir = SHAREDIR "/../locale");
-  len = (pt - GResourceProgramDir) + strlen ("/share/locale") + 1;
-  sharedir = xmalloc1 (len);
-  strncpy (sharedir, GResourceProgramDir, pt - GResourceProgramDir);
-  strcpy (sharedir + (pt - GResourceProgramDir), "/share/locale");
-  return (sharedir);
+  return LOCALEDIR;
 }
 
 static void
@@ -695,6 +683,7 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   InitToolIconClut (default_background);
   InitToolIcons ();
   InitCursors ();
+
 #ifndef _NO_PYTHON
   PyFF_ProcessInitFiles ();
 #endif
@@ -768,7 +757,6 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   openflags = 0;
   for (i = 1; i < argc; ++i)
     {
-      char buffer[1025];
       char *pt = argv[i];
 
       GDrawProcessPendingEvents (NULL);
@@ -814,15 +802,28 @@ fontforge_main_in_guile_mode (int argc, char **argv)
         doopen = true;
       else
         {
-          if (strstr (argv[i], "://") != NULL)
-            {                   /* Assume an absolute URL */
-              strncpy (buffer, argv[i], sizeof (buffer));
-              buffer[sizeof (buffer) - 1] = '\0';
-            }
+	  char *buffer;
+
+          if (strstr (argv[i], "://") != NULL) /* FIXME: This is
+						  broken. There is
+						  regular expression
+						  code elsewhere to
+						  re-use here. */
+	    /* Assume an absolute URL */
+	    buffer = xstrdup (argv[i]);
           else
-            GFileGetAbsoluteName (argv[i], buffer, sizeof (buffer));
+	    {
+	      buffer = canonicalize_file_name (argv[i]);
+	      if (buffer == NULL)
+		xalloc_die ();
+	    }
+
           if (GFileIsDir (buffer)
-              || (strstr (buffer, "://") != NULL
+              || (strstr (buffer, "://") != NULL /* FIXME: This is
+						    broken. There is
+						    regular expression
+						    code elsewhere to
+						    re-use here. */
                   && buffer[strlen (buffer) - 1] == '/'))
             {
               char *fname = xmalloc (strlen (buffer) +
@@ -866,6 +867,7 @@ fontforge_main_in_guile_mode (int argc, char **argv)
             }
           else if (ViewPostScriptFont (buffer, openflags) != 0)
             any = 1;
+	  free (buffer);
         }
     }
   if (!any && !doopen)

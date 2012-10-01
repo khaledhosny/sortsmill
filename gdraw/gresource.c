@@ -34,17 +34,15 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <ustring.h>
+#include <xgetcwd.h>
 
 #include <gdraw.h>
 #include <gresource.h>
-#include <fileutil.h>
+#include <gfile.h>
 #include "fontP.h"
 #include <utype.h>
 
 #include "gresourceP.h"
-
-// FIXME: Get rid of this.
-char *GResourceProgramDir;
 
 char *GResourceProgramName;
 char *usercharset_names;
@@ -160,19 +158,10 @@ return( 0 );
 }
 
 void GResourceSetProg(char *prog, char *name) {
-    char filename[1025];
-    extern char *_GFile_find_program_dir(char *prog);
-
     if ( name!=NULL )
-	GResourceProgramName = copy(name);
+	GResourceProgramName = xstrdup (name);
     else if ( GResourceProgramName==NULL )
-	GResourceProgramName = copy("gdraw");
-
-    GResourceProgramDir = _GFile_find_program_dir(prog);
-    if ( GResourceProgramDir==NULL ) {
-	GFileGetAbsoluteName(".",filename,sizeof(filename));
-	GResourceProgramDir = copy(filename);
-    }
+	GResourceProgramName = xstrdup ("gdraw");
 }
 
 void GResourceAddResourceString(char *string) {

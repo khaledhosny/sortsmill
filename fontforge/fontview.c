@@ -43,6 +43,8 @@
 #include <math.h>
 #include <unistd.h>
 #include <xuniconv.h>
+#include <stdlib.h>
+#include <xalloc.h>
 
 int OpenCharsInNewWindow = 1;
 char *RecentFiles[RECENT_MAX] = { NULL };
@@ -7081,18 +7083,21 @@ return( true );
 return( false );
 }
 
-static SplineFont *FontOfFilename(const char *filename) {
-    char buffer[1025];
-    FontView *fv;
+static SplineFont *FontOfFilename(const char *filename)
+{
+  FontView *fv;
 
-    GFileGetAbsoluteName((char *) filename,buffer,sizeof(buffer)); 
-    for ( fv=fv_list; fv!=NULL ; fv=(FontView *) (fv->b.next) ) {
-	if ( fv->b.sf->filename!=NULL && strcmp(fv->b.sf->filename,buffer)==0 )
-return( fv->b.sf );
-	else if ( fv->b.sf->origname!=NULL && strcmp(fv->b.sf->origname,buffer)==0 )
-return( fv->b.sf );
-    }
-return( NULL );
+  char *abs_file = canonicalize_file_name (filename);
+  if (abs_file == NULL)
+    xalloc_die ();
+  for ( fv=fv_list; fv!=NULL ; fv=(FontView *) (fv->b.next) ) {
+    if ( fv->b.sf->filename!=NULL && strcmp(fv->b.sf->filename,abs_file)==0 )
+      return( fv->b.sf );
+    else if ( fv->b.sf->origname!=NULL && strcmp(fv->b.sf->origname,abs_file)==0 )
+      return( fv->b.sf );
+  }
+  free (abs_file);
+  return( NULL );
 }
 
 static void FVExtraEncSlots(FontView *fv, int encmax) {

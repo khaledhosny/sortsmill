@@ -45,7 +45,7 @@ typedef struct gresstruct {
 #define GRESSTRUCT_EMPTY { NULL, 0, NULL, NULL, 0 }
 
 
-extern char *GResourceProgramName, *GResourceProgramDir;
+extern char *GResourceProgramName;
 extern int local_encoding;
 
 void GResourceSetProg(char *prog, char *name);

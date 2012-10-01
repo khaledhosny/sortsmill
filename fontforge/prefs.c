@@ -1,6 +1,5 @@
-#include <config.h>
+#include <config.h>		/* -*- coding: utf-8 -*- */
 
-/* -*- coding: utf-8 -*- */
 /* Copyright (C) 2000-2012 by George Williams */
 /*
  * Redistribution and use in source and binary forms, with or without
@@ -1200,27 +1199,7 @@ getPfaEditPrefs (void)
 static char *
 PrefsUI_getFontForgeShareDir (void)
 {
-  static char *sharedir = NULL;
-  static int set = false;
-  char *pt;
-  int len;
-
-  if (set)
-    return (sharedir);
-
-  set = true;
-
-  pt = strstr (GResourceProgramDir, "/bin");
-  if (pt == NULL)
-    {
-      sharedir = copy (SHAREDIR "/fontforge");
-      return (sharedir);
-    }
-  len = (pt - GResourceProgramDir) + strlen ("/share/fontforge") + 1;
-  sharedir = xmalloc1 (len);
-  strncpy (sharedir, GResourceProgramDir, pt - GResourceProgramDir);
-  strcpy (sharedir + (pt - GResourceProgramDir), "/share/fontforge");
-  return (sharedir);
+  return SHAREDIR;
 }
 
 static void

@@ -41,6 +41,8 @@
 #include <unistd.h>
 #include <time.h>
 #include <locale.h>
+#include <stdlib.h>
+#include <xalloc.h>
 #include "ttf.h"
 #include "scripting.h"
 #include "scriptfuncs.h"
@@ -2060,8 +2062,11 @@ static void bImport(Context *c) {
 
     t = script2utf8_copy(c->a.vals[1].u.sval);
     locfilename = utf82def_copy(t);
-    filename = GFileMakeAbsoluteName(locfilename);
-    free(locfilename); free(t);
+    filename = canonicalize_file_name (locfilename);
+    if (filename == NULL)
+      xalloc_die ();
+    free(locfilename);
+    free(t);
 
     ext = strrchr(filename,'.');
     if ( ext==NULL ) {
@@ -7945,7 +7950,9 @@ static void bCompareFonts(Context *c) {
     t = script2utf8_copy(c->a.vals[1].u.sval);
     locfilename = utf82def_copy(t);
     free(t);
-    t = GFileMakeAbsoluteName(locfilename);
+    t = canonicalize_file_name (locfilename);
+    if (t == NULL)
+      xalloc_die ();
     free(locfilename);
     locfilename = t;
     sf2 = FontWithThisFilename(locfilename);

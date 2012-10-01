@@ -27,6 +27,11 @@
 #ifndef _GFILE_H
 #define _GFILE_H
 
+#include <config.h>
+
+#include <basics.h>
+#include <stdbool.h>
+
 extern char *GFileGetHomeDir (void);
 extern unichar_t *u_GFileGetHomeDir (void);
 
@@ -34,8 +39,6 @@ extern char *GFileGetUserConfigDir (void);
 extern char *GFileGetUserCacheDir (void);
 extern char *GFileGetUserDataDir (void);
 
-extern char *GFileGetAbsoluteName (char *name, char *result, int rsiz);
-extern char *GFileMakeAbsoluteName (char *name);
 extern char *GFileBuildName (char *dir, char *file);
 extern char *GFileReplaceName (char *oldname, char *file);
 extern char *GFileNameTail (const char *file);
@@ -49,7 +52,6 @@ extern bool GFileReadable (char *file);
 extern int GFileMkDir (char *name);
 extern int GFileRmDir (char *name);
 extern int GFileUnlink (char *name);
-extern char *_GFile_find_program_dir (char *prog);
 extern unichar_t *u_GFileGetAbsoluteName (unichar_t *name, unichar_t *result, int rsiz);
 extern unichar_t *u_GFileNameTail (const unichar_t *oldname);
 extern unichar_t *u_GFileNormalize (unichar_t *name);

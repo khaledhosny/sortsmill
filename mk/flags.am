@@ -33,6 +33,7 @@ AM_CPPFLAGS = -I$(top_builddir)/lib -I$(top_srcdir)/lib	\
 	-I$(top_builddir)/inc -I$(top_srcdir)/inc			\
 	-DSHAREDIR=\"${MY_SHAREDIR}\" 						\
 	-DDOCDIR=\"${MY_DOCDIR}\"							\
+	-DLOCALEDIR=\"${MY_LOCALEDIR}\"						\
 	-DPLUGINDIR=\"${MY_PLUGINDIR}\"						\
 	-DFF_TEXTDOMAIN=\"${FF_TEXTDOMAIN}\"				\
 	-DFF_SHORTCUTSDOMAIN=\"${FF_SHORTCUTSDOMAIN}\"		\

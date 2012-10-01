@@ -1,6 +1,5 @@
-#include <config.h>
+#include <config.h>		/* -*- coding: utf-8 -*- */
 
-/* -*- coding: utf-8 -*- */
 /* Copyright (C) 2000-2012 by George Williams */
 /*
  * Redistribution and use in source and binary forms, with or without
@@ -374,10 +373,7 @@ struct cidmap *AskUserForCIDMap(void) {
 	AddToBlock(&block,buffer,NULL);
     }
     FindMapsInDir(&block,".");
-    FindMapsInDir(&block,GResourceProgramDir);
-    FindMapsInNoLibsDir(&block,GResourceProgramDir);
-    FindMapsInDir(&block,getFontForgeShareDir());
-    FindMapsInDir(&block,"/usr/share/fontforge");
+    FindMapsInDir(&block, SHAREDIR);
 
     choices = xcalloc(block.cur+2,sizeof(unichar_t *));
     choices[0] = copy(_("Browse..."));

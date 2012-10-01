@@ -2943,8 +2943,6 @@ extern char *MMBlendChar(MMSet *mm, int gid);
 
 extern char *EnforcePostScriptName(char *old);
 
-extern char *ToAbsolute(char *filename);
-
 enum Compare_Ret {	SS_DiffContourCount	= 1,
 			SS_MismatchOpenClosed	= 2,
 			SS_DisorderedContours	= 4,

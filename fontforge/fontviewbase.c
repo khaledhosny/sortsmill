@@ -1,6 +1,5 @@
-#include <config.h>
+#include <config.h>		/* -*- coding: utf-8 -*- */
 
-/* -*- coding: utf-8 -*- */
 /* Copyright (C) 2000-2012 by George Williams */
 /*
  * Redistribution and use in source and binary forms, with or without
@@ -39,6 +38,8 @@
 #include <gresource.h>
 #include <math.h>
 #include <unistd.h>
+#include <stdlib.h>
+#include <xalloc.h>
 
 static FontViewBase *fv_list=NULL;
 
@@ -1978,18 +1979,21 @@ return( true );
 return( false );
 }
 
-static SplineFont *FontOfFilename(const char *filename) {
-    char buffer[1025];
-    FontViewBase *fv;
+static SplineFont *FontOfFilename(const char *filename)
+{
+  FontViewBase *fv;
 
-    GFileGetAbsoluteName((char *) filename,buffer,sizeof(buffer)); 
-    for ( fv=fv_list; fv!=NULL ; fv=fv->next ) {
-	if ( fv->sf->filename!=NULL && strcmp(fv->sf->filename,buffer)==0 )
-return( fv->sf );
-	else if ( fv->sf->origname!=NULL && strcmp(fv->sf->origname,buffer)==0 )
-return( fv->sf );
-    }
-return( NULL );
+  char *abs_file = canonicalize_file_name (filename);
+  if (abs_file == NULL)
+    xalloc_die ();
+  for ( fv=fv_list; fv!=NULL ; fv=fv->next ) {
+    if ( fv->sf->filename!=NULL && strcmp(fv->sf->filename,abs_file)==0 )
+      return( fv->sf );
+    else if ( fv->sf->origname!=NULL && strcmp(fv->sf->origname,abs_file)==0 )
+      return( fv->sf );
+  }
+  free (abs_file);
+  return( NULL );
 }
 
 static void FVExtraEncSlots(FontViewBase *fv, int encmax) {

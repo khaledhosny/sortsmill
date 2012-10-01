@@ -68,6 +68,7 @@ guilemoduledir = $(datarootdir)/guile/site/$(GUILE_API)/$(PACKAGE)
 MY_SHAREDIR = ${pkgdatadir}
 MY_DOCDIR = ${htdocsdir}
 MY_PLUGINDIR = ${plugindir}
+MY_LOCALEDIR = ${localedir}
 
 #--------------------------------------------------------------------------
 #

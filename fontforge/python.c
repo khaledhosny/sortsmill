@@ -56,6 +56,10 @@
 
 #include "ffpython.h"
 
+#ifndef SHAREDIR
+#error You must set SHAREDIR.
+#endif
+
 #define PYMETHODDEF_EMPTY  {NULL, NULL, 0, NULL}
 #define PYGETSETDEF_EMPTY { NULL, NULL, NULL, NULL, NULL }
 
@@ -18394,18 +18398,13 @@ static const char py_init_script[] = "site_init.py";
 void PyFF_ProcessInitFiles(void) {
     static int done = false;
     if (!done) {
-	// FIXME: We need to make sure this "share dir" is not being
-	// broken by the prefs code.
-	char *share_dir = getFontForgeShareDir();
-	if (share_dir != NULL) {
-	    char init_script[strlen(share_dir) + strlen(py_init_script) + 20];
-	    strcpy(init_script, share_dir);
-	    strcat(init_script, "/python/");
-	    strcat(init_script, py_init_script);
-	    PyObject *fp = PyFile_FromString(init_script, "rb");
-	    if (fp != NULL)
-		PyRun_SimpleFile(PyFile_AsFile(fp), init_script);
-	}
+	char init_script[strlen(SHAREDIR) + strlen(py_init_script) + 20];
+	strcpy(init_script, SHAREDIR);
+	strcat(init_script, "/python/");
+	strcat(init_script, py_init_script);
+	PyObject *fp = PyFile_FromString(init_script, "rb");
+	if (fp != NULL)
+	  PyRun_SimpleFile(PyFile_AsFile(fp), init_script);
 	done = true;
     }
 }

@@ -1,6 +1,5 @@
-#include <config.h>
+#include <config.h>		/* -*- coding: utf-8 -*- */
 
-/* -*- coding: utf-8 -*- */
 /* Copyright (C) 2000-2012 by George Williams */
 /*
  * Redistribution and use in source and binary forms, with or without
@@ -28,8 +27,6 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <config.h>
-
 #include <stdbool.h>
 #include "fontforge.h"
 #include <math.h>
@@ -38,6 +35,7 @@
 #include <unistd.h>
 #include <time.h>
 #include <stdlib.h>
+#include <xalloc.h>
 #include "views.h"		/* For SCCharChangedUpdate */
 
 int new_em_size = 1000;
@@ -4081,7 +4079,9 @@ SplineFont *SplineFontBlank(int charcnt) {
     sf->fullname = copy(sf->fontname);
     sf->familyname = copy(sf->fontname);
     sprintf( buffer, "%s.sfd", sf->fontname);
-    sf->origname = ToAbsolute(buffer);
+    sf->origname = canonicalize_file_name (buffer);
+    if (sf->origname == NULL)
+      xalloc_die ();
     sf->weight = copy("Medium");
     if ( author!=NULL )
 	sprintf( buffer, "Created by %.50s with FontForge 2.0 (http://fontforge.sf.net)", author );

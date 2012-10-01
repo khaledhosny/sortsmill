@@ -39,34 +39,18 @@
 #include <stdlib.h>
 #include <libguile.h>
 
+#ifndef LOCALEDIR
+#error You must set LOCALEDIR.
+#endif
+
 #ifndef SHAREDIR
 #error You must set SHAREDIR.
 #endif
 
-// FIXME: Get rid of this.
-static char *GResourceProgramDir;
-
 static char *
 getLocaleDir (void)
 {
-  static char *sharedir = NULL;
-  static int set = false;
-  char *pt;
-  int len;
-
-  if (set)
-    return (sharedir);
-
-  set = true;
-
-  pt = strstr (GResourceProgramDir, "/bin");
-  if (pt == NULL)
-    return (sharedir = SHAREDIR "/../locale");
-  len = (pt - GResourceProgramDir) + strlen ("/share/locale") + 1;
-  sharedir = xmalloc1 (len);
-  strncpy (sharedir, GResourceProgramDir, pt - GResourceProgramDir);
-  strcpy (sharedir + (pt - GResourceProgramDir), "/share/locale");
-  return (sharedir);
+  return LOCALEDIR;
 }
 
 static void
@@ -137,7 +121,6 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   /*  as long as the library is self consistant, all should be well */
   /* check_library_version(&exe_library_version_configuration,true,false); */
 
-  GResourceProgramDir = _GFile_find_program_dir (argv[0]);
   InitSimpleStuff ();
 
   bind_textdomain_codeset (ff_textdomain (), "UTF-8");

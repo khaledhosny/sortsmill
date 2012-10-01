@@ -1223,11 +1223,7 @@ static char *GetWernerSFDFile(SplineFont *sf,EncMap *map) {
 	if ( def!=NULL ) {
 	    ret = SearchDirForWernerFile(".",def);
 	    if ( ret==NULL )
-		ret = SearchDirForWernerFile(GResourceProgramDir,def);
-	    if ( ret==NULL )
-		ret = SearchDirForWernerFile(getFontForgeShareDir(),def);
-	    if ( ret==NULL )
-		ret = SearchNoLibsDirForWernerFile(GResourceProgramDir,def);
+		ret = SearchDirForWernerFile(SHAREDIR, def);
 	    if ( ret!=NULL )
 return( ret );
 	}

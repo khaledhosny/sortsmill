@@ -28,8 +28,8 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "ustring.h"
-#include "fileutil.h"
 #include "gfile.h"
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -38,9 +38,11 @@
 #include <glib.h>
 #include <glib/gstdio.h>
 #include <stdarg.h>
+#include <xalloc.h>
 #include <xgc.h>
 #include <xuniconv.h>
 #include <unistr.h>
+#include <xgetcwd.h>
 
 static char dirname_[1024];
 #if !defined(__MINGW32__)
@@ -105,98 +107,6 @@ u_GFileGetHomeDir (void)
       free (tmp);
     }
   return dir;
-}
-
-static void
-savestrcpy (char *dest, const char *src)
-{
-  while (true)
-    {
-      *dest = *src;
-      if (*dest == '\0')
-        break;
-      ++dest;
-      ++src;
-    }
-}
-
-char *
-GFileGetAbsoluteName (char *name, char *result, int rsiz)
-{
-  /* result may be the same as name */
-  char buffer[1000];
-
-  if (!GFileIsAbsolute (name))
-    {
-      char *pt, *spt, *rpt, *bpt;
-
-      if (dirname_[0] == '\0')
-        {
-          getcwd (dirname_, sizeof (dirname_));
-        }
-      strcpy (buffer, dirname_);
-      if (buffer[strlen (buffer) - 1] != '/')
-        strcat (buffer, "/");
-      strcat (buffer, name);
-#if defined(__MINGW32__)
-      _backslash_to_slash (buffer);
-#endif
-
-      /* Normalize out any .. */
-      spt = rpt = buffer;
-      while (*spt != '\0')
-        {
-          if (*spt == '/')
-            {
-              if (*++spt == '\0')
-                break;
-            }
-          for (pt = spt; *pt != '\0' && *pt != '/'; ++pt);
-          if (pt == spt)        /* Found // in a path spec, reduce to / (we've */
-            savestrcpy (spt, spt + 1);  /*  skipped past the :// of the machine name) */
-          else if (pt == spt + 1 && spt[0] == '.' && *pt == '/')
-            {                   /* Noop */
-              savestrcpy (spt, spt + 2);
-            }
-          else if (pt == spt + 2 && spt[0] == '.' && spt[1] == '.')
-            {
-              for (bpt = spt - 2; bpt > rpt && *bpt != '/'; --bpt);
-              if (bpt >= rpt && *bpt == '/')
-                {
-                  savestrcpy (bpt, pt);
-                  spt = bpt;
-                }
-              else
-                {
-                  rpt = pt;
-                  spt = pt;
-                }
-            }
-          else
-            spt = pt;
-        }
-      name = buffer;
-      if (rsiz > sizeof (buffer))
-        rsiz = sizeof (buffer); /* Else valgrind gets unhappy */
-    }
-  if (result != name)
-    {
-      strncpy (result, name, rsiz);
-      result[rsiz - 1] = '\0';
-#if defined(__MINGW32__)
-      _backslash_to_slash (result);
-#endif
-    }
-  return (result);
-}
-
-char *
-GFileMakeAbsoluteName (char *name)
-{
-  char buffer[1025];
-
-  GFileGetAbsoluteName (name, buffer, sizeof (buffer));
-  return (copy (buffer));
 }
 
 char *
@@ -305,64 +215,7 @@ GFileUnlink (char *name)
   return g_unlink (name);
 }
 
-char *
-_GFile_find_program_dir (char *prog)
-{
-  char *pt, *path, *program_dir = NULL;
-  char filename[2000];
-
-#if defined(__MINGW32__)
-  char path[MAX_PATH + 4];
-  char *c = path;
-  char *tail = 0;
-  unsigned int len = GetModuleFileNameA (NULL, path, MAX_PATH);
-  path[len] = '\0';
-  for (; *c; *c++)
-    {
-      if (*c == '\\')
-        {
-          tail = c;
-          *c = '/';
-        }
-    }
-  if (tail)
-    *tail = '\0';
-  program_dir = copy (path);
-#else
-  if ((pt = strrchr (prog, '/')) != NULL)
-    program_dir = copyn (prog, pt - prog);
-  else if ((path = getenv ("PATH")) != NULL)
-    {
-      while ((pt = strchr (path, ':')) != NULL)
-        {
-          sprintf (filename, "%.*s/%s", (int) (pt - path), path, prog);
-          /* Under cygwin, applying access to "potrace" will find "potrace.exe" */
-          /*  no need for special check to add ".exe" */
-          if (access (filename, 1) != -1)
-            {
-              program_dir = copyn (path, pt - path);
-              break;
-            }
-          path = pt + 1;
-        }
-      if (program_dir == NULL)
-        {
-          sprintf (filename, "%s/%s", path, prog);
-          if (access (filename, 1) != -1)
-            program_dir = copy (path);
-        }
-    }
-#endif
-
-  if (program_dir == NULL)
-    GFileGetAbsoluteName (".", filename, sizeof (filename));
-  else
-    GFileGetAbsoluteName (program_dir, filename, sizeof (filename));
-  free (program_dir);
-  program_dir = copy (filename);
-  return (program_dir);
-}
-
+// FIXME: Get rid of this.
 unichar_t *
 u_GFileGetAbsoluteName (unichar_t *name, unichar_t *result, int rsiz)
 {

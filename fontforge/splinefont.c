@@ -44,6 +44,8 @@
 #include <locale.h>
 #include <assert.h>
 #include <stdbool.h>
+#include <stdlib.h>
+#include <xalloc.h>
 
 void SFUntickAll(SplineFont *sf) {
     int i;
@@ -1252,13 +1254,6 @@ SplineFont *ReadSplineFont(char *filename,enum openflags openflags) {
 return( _ReadSplineFont(NULL,filename,openflags));
 }
 
-char *ToAbsolute(char *filename) {
-    char buffer[1025];
-
-    GFileGetAbsoluteName(filename,buffer,sizeof(buffer));
-return( copy(buffer));
-}
-
 SplineFont *LoadSplineFont(char *filename,enum openflags openflags) {
     SplineFont *sf;
     char *pt, *ept, *tobefreed1=NULL, *tobefreed2=NULL;
@@ -1319,7 +1314,11 @@ return( NULL );
     sf = NULL;
     sf = FontWithThisFilename(filename);
     if ( sf==NULL && *filename!='/' && strstr(filename,"://")==NULL )
-	filename = tobefreed2 = ToAbsolute(filename);
+      {
+	filename = tobefreed2 = canonicalize_file_name (filename);
+	if (filename == NULL)
+	  xalloc_die ();
+      }
 
     if ( sf==NULL )
 	sf = ReadSplineFont(filename,openflags);
