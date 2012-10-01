@@ -27,8 +27,6 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <config.h>
-
 #include <stdbool.h>
 #include "fontforgeui.h"
 #include "groups.h"
@@ -44,6 +42,7 @@
 #include <gresource.h>
 #include <math.h>
 #include <unistd.h>
+#include <xuniconv.h>
 
 int OpenCharsInNewWindow = 1;
 char *RecentFiles[RECENT_MAX] = { NULL };
@@ -905,11 +904,11 @@ char *GetPostScriptFontName(char *dir, int mult) {
     char *temp;
 
     u_dir = def2utf8_copy(dir);
-    ret = FVOpenFont(_("Open Font"), u_dir,mult);
+    ret = FVOpenFont(_("Open Font"), u_dir, mult);
     temp = u2def_copy(ret);
-
     free(ret);
-return( temp );
+    free(u_dir);
+    return( temp );
 }
 
 void MergeKernInfo(SplineFont *sf,EncMap *map) {
@@ -3469,31 +3468,36 @@ return;
 }
 
 static enum fchooserret CMapFilter(GGadget *g,GDirEntry *ent,
-	const unichar_t *dir) {
-    enum fchooserret ret = GFileChooserDefFilter(g,ent,dir);
-    char buf2[256];
-    FILE *file;
-    static char *cmapflag = "%!PS-Adobe-3.0 Resource-CMap";
+				   const unichar_t *dir)
+{
+  enum fchooserret ret = GFileChooserDefFilter(g,ent,dir);
+  char buf2[256];
+  FILE *file;
+  static char *cmapflag = "%!PS-Adobe-3.0 Resource-CMap";
 
-    if ( ret==fc_show && !ent->isdir ) {
-	int len = 3*(u_strlen(dir)+u_strlen(ent->name)+5);
-	char *filename = xmalloc1(len);
-	u2def_strncpy(filename,dir,len);
-	strcat(filename,"/");
-	u2def_strncpy(buf2,ent->name,sizeof(buf2));
-	strcat(filename,buf2);
-	file = fopen(filename,"r");
-	if ( file==NULL )
-	    ret = fc_hide;
-	else {
-	    if ( fgets(buf2,sizeof(buf2),file)==NULL ||
-		    strncmp(buf2,cmapflag,strlen(cmapflag))!=0 )
-		ret = fc_hide;
-	    fclose(file);
-	}
-	free(filename);
+  if ( ret==fc_show && !ent->isdir ) {
+    char *locale_dir = x_u32_strconv_to_locale (dir);
+    char *locale_base = x_u32_strconv_to_locale (ent->name);
+    char *filename =
+      xcalloc (strlen (locale_dir) + strlen (locale_base) + 2,
+	       sizeof (char));
+    strcat (filename, locale_dir);
+    strcat (filename, "/");
+    strcat (filename, locale_base);
+    free (locale_base);
+    free (locale_dir);
+    file = fopen(filename,"r");
+    if ( file==NULL )
+      ret = fc_hide;
+    else {
+      if ( fgets(buf2,sizeof(buf2),file)==NULL ||
+	   strncmp(buf2,cmapflag,strlen(cmapflag))!=0 )
+	ret = fc_hide;
+      fclose(file);
     }
-return( ret );
+    free(filename);
+  }
+  return( ret );
 }
 
 static void FVMenuConvertByCMap(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {

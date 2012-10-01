@@ -26,6 +26,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 #include "gdraw.h"
 #include "gkeysym.h"
 #include "gresource.h"
@@ -34,6 +35,8 @@
 #include "ustring.h"
 #include "utype.h"
 #include <math.h>
+#include <xuniconv.h>
+#include <unistr.h>
 
 GBox _GGadget_gtextfield_box = GBOX_EMPTY; /* Don't initialize here */
 static GBox glistfield_box = GBOX_EMPTY; /* Don't initialize here */
@@ -859,10 +862,12 @@ return( NULL );
 		*upt ++ = (ch2<<8)|ch;
 	}
     } else {
-	char buffer[400];
+	char buffer[512];
 	while ( fgets(buffer,sizeof(buffer),file)!=NULL ) {
-	    def2u_strncpy(upt,buffer,end-upt);
-	    upt += u_strlen(upt);
+	  uint32_t *new_text = x_u32_strconv_from_locale (buffer);
+	  u32_strncpy (upt, new_text, end - upt);
+	  free (new_text);
+          upt += u_strlen (upt);
 	}
     }
     *upt = '\0';

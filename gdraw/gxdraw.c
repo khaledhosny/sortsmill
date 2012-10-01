@@ -39,6 +39,8 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <math.h>
+#include <xuniconv.h>
+#include <unistr.h>
 
 #include <sys/types.h>		/* for timers & select */
 #include <sys/time.h>		/* for timers & select */
@@ -2560,8 +2562,10 @@ return;
 		len = XLookupString((XKeyEvent *) event,charbuf,sizeof(charbuf),&keysym,&gdisp->buildingkeys);
 		charbuf[len] = '\0';
 		gevent.u.chr.keysym = keysym;
-		def2u_strncpy(gevent.u.chr.chars,charbuf,
-			sizeof(gevent.u.chr.chars)/sizeof(gevent.u.chr.chars[0]));
+		uint32_t *utext = x_u32_strconv_from_locale (charbuf);
+		u32_strncpy (gevent.u.chr.chars, utext,
+			     sizeof(gevent.u.chr.chars)/sizeof(gevent.u.chr.chars[0]));
+		free (utext);
 	    } else {
 #ifdef X_HAVE_UTF8_STRING
 /* I think there's a bug in SCIM. If I leave the meta(alt/option) modifier */
@@ -2585,8 +2589,10 @@ return;
 		    keysym = 0;
 		pt[len] = '\0';
 		gevent.u.chr.keysym = keysym;
-		utf82u_strncpy(gevent.u.chr.chars,pt,
-			sizeof(gevent.u.chr.chars)/sizeof(gevent.u.chr.chars[0]));
+		uint32_t *utext = x_u32_strconv_from_locale (pt);
+		u32_strncpy (gevent.u.chr.chars, utext,
+			     sizeof(gevent.u.chr.chars)/sizeof(gevent.u.chr.chars[0]));
+		free (utext);
 		if ( pt!=charbuf )
 		    free(pt);
 #else
