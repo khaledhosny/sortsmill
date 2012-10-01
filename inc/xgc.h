@@ -115,14 +115,17 @@ x_gc_strdup (const char *s)
 static inline void *
 x_gc_grabstr (char *s)
 {
-  // Make the garbage-collected copy. Do not try to free this! Or, if
-  // you must, use GC_FREE(), not free().
-  char *p = x_gc_strdup (s);
+  char *p = NULL;
+  if (s != NULL)
+    {
+      // Make the garbage-collected copy. Do not try to free this! Or,
+      // if you must, use GC_FREE(), not free().
+      p = x_gc_strdup (s);
 
-  // Now free the memory in which the original string was stored. Do
-  // not use it anymore!
-  free (s);
-
+      // Now free the memory in which the original string was
+      // stored. Do not use it anymore!
+      free (s);
+    }
   return p;
 }
 
