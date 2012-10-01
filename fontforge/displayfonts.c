@@ -35,9 +35,7 @@
 #include <ustring.h>
 #include "utype.h"
 #include <sys/types.h>
-#if !defined(__MINGW32__)
 #include <sys/wait.h>
-#endif
 #include <gkeysym.h>
 #include "print.h"
 
@@ -323,13 +321,16 @@ static int PageSetup(PD *pi) {
     gcd[2].gd.mnemonic = 'g';
     gcd[2].gd.pos.x = gcd[0].gd.pos.x+50; gcd[2].gd.pos.y = gcd[0].gd.pos.y;
     gcd[2].gd.flags = gg_visible | gg_enabled | gg_rad_continueold;
-    if ( !progexists("ghostview") ) {
-	if ( progexists("gv") ) {
+    if ( !progexists("ghostview") )
+      {
+	if ( progexists("gv") )
+	  {
 	    label[2].text = (unichar_t *) "gv";
 	    use_gv = true;
-	} else
-	    gcd[2].gd.flags = gg_visible;
-    }
+	  }
+	else
+	  gcd[2].gd.flags = gg_visible;
+      }
     gcd[2].gd.cid = CID_ghostview;
     gcd[2].gd.handle_controlevent = PG_RadioSet;
     gcd[2].creator = GRadioCreate;
