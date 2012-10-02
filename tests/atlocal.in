@@ -2,6 +2,15 @@
 # @configure_input@
 # Configurable variable values for Autoconf test suite.
 
+PACKAGE="@PACKAGE@"
+PACKAGE_BUGREPORT="@PACKAGE_BUGREPORT@"
+PACKAGE_NAME="@PACKAGE_NAME@"
+PACKAGE_STRING="@PACKAGE_STRING@"
+PACKAGE_TARNAME="@PACKAGE_TARNAME@"
+PACKAGE_URL="@PACKAGE_URL@"
+PACKAGE_VERSION="@PACKAGE_VERSION@"
+
+bindir="@bindir@"
 srcdir="@srcdir@"
 builddir="@builddir@"
 top_srcdir="@top_srcdir@"

@@ -31,15 +31,26 @@
 
 #include <config.h>
 
+#include <assert.h>
 #include <stddef.h>
+#include <errno.h>
 #include <xalloc.h>
 
 inline void *xdie_on_null (void *p);
+inline void *xdie_on_enomem (void *p);
 
 inline void *
 xdie_on_null (void *p)
 {
   if (p == NULL)
+    xalloc_die ();
+  return p;
+}
+
+inline void *
+xdie_on_enomem (void *p)
+{
+  if (p == NULL && errno == ENOMEM)
     xalloc_die ();
   return p;
 }
@@ -51,6 +62,16 @@ xdie_on_null (void *p)
 #define XDIE_ON_NULL(p) ((typeof (p)) xdie_on_null ((void *) (p)))
 #else
 #define XDIE_ON_NULL xdie_on_null
+#endif
+
+// The macro XDIE_ON_ENOMEM tries to avoid implicit type-casting
+// between the type of p and (void *). This works with gcc, in
+// particular.
+//
+#ifdef HAVE_TYPEOF
+#define XDIE_ON_ENOMEM(p) ((typeof (p)) xdie_on_enomem ((void *) (p)))
+#else
+#define XDIE_ON_ENOMEM(p) xdie_on_enomem
 #endif
 
 #endif // _XDIE_ON_NULL_H

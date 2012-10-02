@@ -25,6 +25,8 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+include $(top_srcdir)/mk/flags.am
+
 # The `:;' works around a Bash 3.2 bug when the output is not writable.
 $(srcdir)/package.m4: $(top_srcdir)/configure.ac
 	:;{ \
@@ -57,9 +59,21 @@ clean-local:
 
 AUTOM4TE = $(SHELL) $(srcdir)/build-aux/missing --run autom4te
 AUTOTEST = $(AUTOM4TE) --language=autotest
-$(TESTSUITE): $(srcdir)/testsuite.at $(srcdir)/package.m4
+$(TESTSUITE): $(srcdir)/testsuite.at $(srcdir)/package.m4 $(MY_AT_FILES)
 	$(AUTOTEST) -I '$(srcdir)' -o $@.tmp $@.at
 	mv $@.tmp $@
+
+MY_AT_FILES = old_python_tests.at fsys_c.at
+
+TESTS_FSYS_C = test_GFileGetUserConfigDir
+
+check_PROGRAMS = $(TESTS_FSYS_C)
+
+AM_DEFAULT_SOURCE_EXT = .c
+LDADD = $(top_builddir)/fontforge/libsortsmillff_fontforgeexe.la	\
+	$(top_builddir)/fontforge/libsortsmillff_fontforge.la
+
+EXTRA_DIST += $(MY_AT_FILES)
 
 EXTRA_DIST += findoverlapbugs.py test0001.py test0101.py test1001.py	\
 	test1002.py test1003.py test1004.py test1005.py test1006.py			\
@@ -79,4 +93,3 @@ EXTRA_DIST += fonts/AddExtremaTest2.sfd fonts/ayn+meem.init.svg		\
 	fonts/SimplifyBugs.sfd
 
 DISTCLEANFILES = atconfig
-

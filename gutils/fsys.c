@@ -43,6 +43,8 @@
 #include <xuniconv.h>
 #include <unistr.h>
 #include <xgetcwd.h>
+#include <filenamecat.h>
+#include <dirname.h>
 
 char *
 GFileGetUserConfigDir (void)
@@ -100,26 +102,17 @@ GFileNameTail (const char *file)
 }
 
 char *
-GFileAppendFile (char *dir, char *name, int isdir)
+GFileAppendFile (char *dir, char *name, bool isdir)
 {
-  char *ret, *pt;
-
-  ret = (char *) xmalloc1 ((strlen (dir) + strlen (name) + 3));
-  strcpy (ret, dir);
-  pt = ret + strlen (ret);
-  if (pt > ret && pt[-1] != '/')
-    *pt++ = '/';
-  strcpy (pt, name);
-  if (isdir)
+  char *filename = file_name_concat (dir, name, NULL);
+  size_t length = strlen (filename);
+  if (isdir && !ISSLASH (filename[length - 1]))
     {
-      pt += strlen (pt);
-      if (pt > ret && pt[-1] != '/')
-        {
-          *pt++ = '/';
-          *pt = '\0';
-        }
+      filename = xrealloc (filename, (length + 2) * sizeof (char));
+      filename[length] = DIRECTORY_SEPARATOR;
+      filename[length + 1] = '\0';
     }
-  return (ret);
+  return filename;
 }
 
 bool
@@ -236,8 +229,9 @@ u_GFileNormalize (unichar_t *name)
   return (name);
 }
 
+// FIXME: Rewrite this, using UTF-8 and GFileAppendFile.
 unichar_t *
-u_GFileAppendFile (unichar_t *dir, unichar_t *name, int isdir)
+u_GFileAppendFile (unichar_t *dir, unichar_t *name, bool isdir)
 {
   unichar_t *ret, *pt;
 
@@ -271,7 +265,8 @@ bool
 u_GFileIsDir (const unichar_t *file)
 {
   char *locale_file = x_gc_grabstr (x_u32_strconv_to_locale (file));
-  char *dot_file = x_gc_malloc_atomic ((strlen (locale_file) + 10) * sizeof (char));
+  char *dot_file =
+    x_gc_malloc_atomic ((strlen (locale_file) + 10) * sizeof (char));
   strcpy (dot_file, locale_file);
   strcat (dot_file, "/.");
   return GFileIsDir (dot_file);

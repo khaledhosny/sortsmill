@@ -31,3 +31,5 @@
 
 // This should result in a non-inline version being generated.
 void *xdie_on_null (void *p);
+void *xdie_on_enomem (void *p);
+
