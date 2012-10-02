@@ -239,6 +239,7 @@ AC_CHECK_HEADERS([libintl.h limits.h memory.h pthread.h])
 #
 # Checks for typedefs, structures, and compiler characteristics.
 
+AC_C_TYPEOF
 AC_C_BIGENDIAN
 AC_HEADER_ASSERT
 AC_HEADER_STDBOOL

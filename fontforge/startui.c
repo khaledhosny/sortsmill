@@ -41,6 +41,7 @@
 #include <stdlib.h>
 #include <canonicalize.h>
 #include <libguile.h>
+#include <xdie_on_null.h>
 
 #ifndef LOCALEDIR
 #error You must set LOCALEDIR.
@@ -812,11 +813,9 @@ fontforge_main_in_guile_mode (int argc, char **argv)
             /* Assume an absolute URL */
             buffer = xstrdup (argv[i]);
           else
-            {
-              buffer = canonicalize_filename_mode (argv[i], CAN_MISSING);
-              if (buffer == NULL)
-                xalloc_die ();
-            }
+            buffer =
+              XDIE_ON_NULL (canonicalize_filename_mode
+                            (argv[i], CAN_MISSING));
 
           if (GFileIsDir (buffer) || (strstr (buffer, "://") != NULL    /* FIXME: This is
                                                                            broken. There is

@@ -42,6 +42,7 @@
 #include <sys/time.h>
 #include <stdlib.h>
 #include <xstriconv.h>
+#include <xdie_on_null.h>
 
 #include "ttf.h"
 
@@ -2235,9 +2236,7 @@ Prefs_Ok (GGadget * g, GEvent * e)
         }
       for (i = 0; i < len; ++i)
         {
-          char *utf8 = u2utf8_copy (list[i]->text);
-          if (utf8 == NULL)
-            xalloc_die ();
+          char *utf8 = XDIE_ON_NULL (u2utf8_copy (list[i]->text));
           char *str = xstr_iconv (utf8, MY_ICONV_UTF8_STRING,
                                   MY_ICONV_MAC_STRING);
           ParseMacMapping (str, &user_macfeat_otftag[i]);

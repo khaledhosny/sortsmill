@@ -1,6 +1,7 @@
+#include <config.h>
+
+/* Copyright (C) 2012 by Barry Schwartz */
 /*
- * Copyright (C) 2000-2012 by Barry Schwartz
-  
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
 
@@ -26,54 +27,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _FONTFORGE_XSTRCONV_H
-#define _FONTFORGE_XSTRCONV_H
-
-//
-// libunistring conversion routines combined with xalloc.
-//
-
-#include <config.h>
-
-#include <stdio.h>
-#include <uniconv.h>
-#include <xalloc.h>
 #include <xdie_on_null.h>
 
-static inline uint8_t *
-x_u8_strconv_from_locale (const char *string)
-{
-  return XDIE_ON_NULL (u8_strconv_from_locale (string));
-}
-
-static inline uint16_t *
-x_u16_strconv_from_locale (const char *string)
-{
-  return XDIE_ON_NULL (u16_strconv_from_locale (string));
-}
-
-static inline uint32_t *
-x_u32_strconv_from_locale (const char *string)
-{
-  return XDIE_ON_NULL (u32_strconv_from_locale (string));
-}
-
-static inline char *
-x_u8_strconv_to_locale (const uint8_t *string)
-{
-  return XDIE_ON_NULL (u8_strconv_to_locale (string));
-}
-
-static inline char *
-x_u16_strconv_to_locale (const uint16_t *string)
-{
-  return XDIE_ON_NULL (u16_strconv_to_locale (string));
-}
-
-static inline char *
-x_u32_strconv_to_locale (const uint32_t *string)
-{
-  return XDIE_ON_NULL (u32_strconv_to_locale (string));
-}
-
-#endif // _FONTFORGE_XSTRCONV_H
+// This should result in a non-inline version being generated.
+void *xdie_on_null (void *p);

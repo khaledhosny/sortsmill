@@ -43,6 +43,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <dirent.h>
+#include <xgc.h>
 
 #include <limits.h>             /* For NAME_MAX or _POSIX_NAME_MAX */
 #ifndef NAME_MAX
@@ -3459,9 +3460,7 @@ getprotectedname (FILE *sfd)
   if (c != EOF)
     {
       char *tok = obstack_finish (&obs);
-      token = GC_MALLOC_ATOMIC ((strlen (tok) + 1) * sizeof (char));
-      if (token == NULL)
-        xalloc_die ();
+      token = x_gc_malloc_atomic ((strlen (tok) + 1) * sizeof (char));
       strcpy (token, tok);
     }
 

@@ -46,6 +46,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <xalloc.h>
+#include <xdie_on_null.h>
 #include <canonicalize.h>
 
 void SFUntickAll(SplineFont *sf) {
@@ -1315,12 +1316,8 @@ return( NULL );
     sf = NULL;
     sf = FontWithThisFilename(filename);
     if ( sf==NULL && *filename!='/' && strstr(filename,"://")==NULL )
-      {
 	filename = tobefreed2 =
-	  canonicalize_filename_mode (filename, CAN_MISSING);
-	if (filename == NULL)
-	  xalloc_die ();
-      }
+	  XDIE_ON_NULL (canonicalize_filename_mode (filename, CAN_MISSING));
 
     if ( sf==NULL )
 	sf = ReadSplineFont(filename,openflags);

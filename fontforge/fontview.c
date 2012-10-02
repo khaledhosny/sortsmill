@@ -45,6 +45,7 @@
 #include <xuniconv.h>
 #include <stdlib.h>
 #include <xalloc.h>
+#include <xdie_on_null.h>
 #include <canonicalize.h>
 
 int OpenCharsInNewWindow = 1;
@@ -7088,9 +7089,7 @@ static SplineFont *FontOfFilename(const char *filename)
 {
   FontView *fv;
 
-  char *abs_file = canonicalize_filename_mode (filename, CAN_MISSING);
-  if (abs_file == NULL)
-    xalloc_die ();
+  char *abs_file = XDIE_ON_NULL (canonicalize_filename_mode (filename, CAN_MISSING));
   for ( fv=fv_list; fv!=NULL ; fv=(FontView *) (fv->b.next) ) {
     if ( fv->b.sf->filename!=NULL && strcmp(fv->b.sf->filename,abs_file)==0 )
       return( fv->b.sf );

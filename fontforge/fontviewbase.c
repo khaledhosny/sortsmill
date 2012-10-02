@@ -40,6 +40,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <xalloc.h>
+#include <xdie_on_null.h>
 #include <canonicalize.h>
 
 static FontViewBase *fv_list=NULL;
@@ -1984,9 +1985,7 @@ static SplineFont *FontOfFilename(const char *filename)
 {
   FontViewBase *fv;
 
-  char *abs_file = canonicalize_filename_mode (filename, CAN_MISSING);
-  if (abs_file == NULL)
-    xalloc_die ();
+  char *abs_file = XDIE_ON_NULL (canonicalize_filename_mode (filename, CAN_MISSING));
   for ( fv=fv_list; fv!=NULL ; fv=fv->next ) {
     if ( fv->sf->filename!=NULL && strcmp(fv->sf->filename,abs_file)==0 )
       return( fv->sf );

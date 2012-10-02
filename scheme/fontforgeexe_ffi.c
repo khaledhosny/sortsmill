@@ -17,6 +17,7 @@
 
 #include <stdio.h>
 #include <xalloc.h>
+#include <xdie_on_null.h>
 #include <fontforge.h>
 #include <libguile.h>
 
@@ -26,12 +27,10 @@ fontforge_main_wrapper (SCM args)
   // Convert the 'args' list to C-style argc and argv.
   int argc = scm_to_int (scm_length (args));
   char *argv[argc];
-  for (int i = 0; i < argc; i++) 
-    {
-      argv[i] = scm_to_locale_string (scm_list_ref (args, scm_from_int (i)));
-      if (argv[i] == NULL)
-	xalloc_die ();
-    }
+  for (int i = 0; i < argc; i++)
+    argv[i] =
+      xdie_on_null (scm_to_locale_string
+                    (scm_list_ref (args, scm_from_int (i))));
 
   // Run FontForge.
   int return_value = fontforge_main (argc, argv);
@@ -43,10 +42,10 @@ fontforge_main_wrapper (SCM args)
   return scm_from_int (return_value);
 }
 
-void sortsmillff_init_fontforge_main (void *UNUSED(unused));
+void sortsmillff_init_fontforge_main (void *UNUSED (unused));
 
 void
-sortsmillff_init_fontforge_main (void *UNUSED(unused))
+sortsmillff_init_fontforge_main (void *UNUSED (unused))
 {
   scm_c_define_gsubr ("fontforge-main", 1, 0, 0, fontforge_main_wrapper);
   scm_c_export ("fontforge-main", NULL);

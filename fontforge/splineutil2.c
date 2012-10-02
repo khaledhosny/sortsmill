@@ -36,6 +36,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include <xalloc.h>
+#include <xdie_on_null.h>
 #include <canonicalize.h>
 #include "views.h"		/* For SCCharChangedUpdate */
 
@@ -4080,9 +4081,7 @@ SplineFont *SplineFontBlank(int charcnt) {
     sf->fullname = copy(sf->fontname);
     sf->familyname = copy(sf->fontname);
     sprintf( buffer, "%s.sfd", sf->fontname);
-    sf->origname = canonicalize_filename_mode (buffer, CAN_MISSING);
-    if (sf->origname == NULL)
-      xalloc_die ();
+    sf->origname = XDIE_ON_NULL (canonicalize_filename_mode (buffer, CAN_MISSING));
     sf->weight = copy("Medium");
     if ( author!=NULL )
 	sprintf( buffer, "Created by %.50s with FontForge 2.0 (http://fontforge.sf.net)", author );

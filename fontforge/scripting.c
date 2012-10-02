@@ -48,6 +48,7 @@
 #include "scriptfuncs.h"
 #include "flaglist.h"
 #include <canonicalize.h>
+#include <xdie_on_null.h>
 
 int no_windowing_ui = false;
 int running_script = false;
@@ -2063,9 +2064,7 @@ static void bImport(Context *c) {
 
     t = script2utf8_copy(c->a.vals[1].u.sval);
     locfilename = utf82def_copy(t);
-    filename = canonicalize_filename_mode (locfilename, CAN_MISSING);
-    if (filename == NULL)
-      xalloc_die ();
+    filename = XDIE_ON_NULL (canonicalize_filename_mode (locfilename, CAN_MISSING));
     free(locfilename);
     free(t);
 
@@ -7951,9 +7950,7 @@ static void bCompareFonts(Context *c) {
     t = script2utf8_copy(c->a.vals[1].u.sval);
     locfilename = utf82def_copy(t);
     free(t);
-    t = canonicalize_filename_mode (locfilename, CAN_MISSING);
-    if (t == NULL)
-      xalloc_die ();
+    t = XDIE_ON_NULL (canonicalize_filename_mode (locfilename, CAN_MISSING));
     free(locfilename);
     locfilename = t;
     sf2 = FontWithThisFilename(locfilename);

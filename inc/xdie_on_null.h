@@ -26,54 +26,31 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _FONTFORGE_XSTRCONV_H
-#define _FONTFORGE_XSTRCONV_H
-
-//
-// libunistring conversion routines combined with xalloc.
-//
+#ifndef _XDIE_ON_NULL_H
+#define _XDIE_ON_NULL_H
 
 #include <config.h>
 
-#include <stdio.h>
-#include <uniconv.h>
+#include <stddef.h>
 #include <xalloc.h>
-#include <xdie_on_null.h>
 
-static inline uint8_t *
-x_u8_strconv_from_locale (const char *string)
+inline void *xdie_on_null (void *p);
+
+inline void *
+xdie_on_null (void *p)
 {
-  return XDIE_ON_NULL (u8_strconv_from_locale (string));
+  if (p == NULL)
+    xalloc_die ();
+  return p;
 }
 
-static inline uint16_t *
-x_u16_strconv_from_locale (const char *string)
-{
-  return XDIE_ON_NULL (u16_strconv_from_locale (string));
-}
+// The macro XDIE_ON_NULL tries to avoid implicit type-casting between
+// the type of p and (void *). This works with gcc, in particular.
+//
+#ifdef HAVE_TYPEOF
+#define XDIE_ON_NULL(p) ((typeof (p)) xdie_on_null ((void *) (p)))
+#else
+#define XDIE_ON_NULL xdie_on_null
+#endif
 
-static inline uint32_t *
-x_u32_strconv_from_locale (const char *string)
-{
-  return XDIE_ON_NULL (u32_strconv_from_locale (string));
-}
-
-static inline char *
-x_u8_strconv_to_locale (const uint8_t *string)
-{
-  return XDIE_ON_NULL (u8_strconv_to_locale (string));
-}
-
-static inline char *
-x_u16_strconv_to_locale (const uint16_t *string)
-{
-  return XDIE_ON_NULL (u16_strconv_to_locale (string));
-}
-
-static inline char *
-x_u32_strconv_to_locale (const uint32_t *string)
-{
-  return XDIE_ON_NULL (u32_strconv_to_locale (string));
-}
-
-#endif // _FONTFORGE_XSTRCONV_H
+#endif // _XDIE_ON_NULL_H

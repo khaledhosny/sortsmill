@@ -39,6 +39,7 @@
 #include <stdint.h>
 #include <gc.h>
 #include <xalloc.h>
+#include <xdie_on_null.h>
 
 inline void *x_gc_malloc (size_t sz);
 inline void *x_gc_malloc_atomic (size_t sz);
@@ -56,73 +57,49 @@ uint32_t *x_gc_u32_grabstr (uint32_t *s);
 inline void *
 x_gc_malloc (size_t sz)
 {
-  void *p = GC_MALLOC (sz);
-  if (p == NULL)
-    xalloc_die ();
-  return p;
+  return XDIE_ON_NULL (GC_MALLOC (sz));
 }
 
 inline void *
 x_gc_malloc_atomic (size_t sz)
 {
-  void *p = GC_MALLOC_ATOMIC (sz);
-  if (p == NULL)
-    xalloc_die ();
-  return p;
+  return XDIE_ON_NULL (GC_MALLOC_ATOMIC (sz));
 }
 
 inline void *
 x_gc_malloc_uncollectable (size_t sz)
 {
-  void *p = GC_MALLOC_UNCOLLECTABLE (sz);
-  if (p == NULL)
-    xalloc_die ();
-  return p;
+  return XDIE_ON_NULL (GC_MALLOC_UNCOLLECTABLE (sz));
 }
 
 inline void *
 x_gc_realloc (void *old_pointer, size_t sz)
 {
-  void *p = GC_REALLOC (old_pointer, sz);
-  if (p == NULL)
-    xalloc_die ();
-  return p;
+  return XDIE_ON_NULL (GC_REALLOC (old_pointer, sz));
 }
 
 inline void *
 x_gc_malloc_ignore_off_page (size_t sz)
 {
-  void *p = GC_MALLOC_IGNORE_OFF_PAGE (sz);
-  if (p == NULL)
-    xalloc_die ();
-  return p;
+  return XDIE_ON_NULL (GC_MALLOC_IGNORE_OFF_PAGE (sz));
 }
 
 inline void *
 x_gc_malloc_atomic_ignore_off_page (size_t sz)
 {
-  void *p = GC_MALLOC_ATOMIC_IGNORE_OFF_PAGE (sz);
-  if (p == NULL)
-    xalloc_die ();
-  return p;
+  return XDIE_ON_NULL (GC_MALLOC_ATOMIC_IGNORE_OFF_PAGE (sz));
 }
 
 inline void *
 x_gc_malloc_stubborn (size_t sz)
 {
-  void *p = GC_MALLOC_STUBBORN (sz);
-  if (p == NULL)
-    xalloc_die ();
-  return p;
+  return XDIE_ON_NULL (GC_MALLOC_STUBBORN (sz));
 }
 
 inline char *
 x_gc_strdup (const char *s)
 {
-  char *p = GC_STRDUP (s);
-  if (p == NULL)
-    xalloc_die ();
-  return p;
+  return XDIE_ON_NULL (GC_STRDUP (s));
 }
 
 // Replace an allocated string with a garbage-collected copy of it.

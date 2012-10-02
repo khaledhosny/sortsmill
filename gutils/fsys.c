@@ -360,18 +360,17 @@ u_GFileAppendFile (unichar_t *dir, unichar_t *name, int isdir)
 bool
 u_GFileIsAbsolute (const unichar_t *file)
 {
-  char buffer[1024];
-  u2def_strncpy (buffer, file, sizeof (buffer));
-  return GFileIsAbsolute (buffer);
+  return GFileIsAbsolute (x_gc_grabstr (x_u32_strconv_to_locale (file)));
 }
 
 bool
 u_GFileIsDir (const unichar_t *file)
 {
-  char buffer[1024];
-  u2def_strncpy (buffer, file, sizeof (buffer));
-  strcat (buffer, "/.");
-  return GFileIsDir (buffer);
+  char *locale_file = x_gc_grabstr (x_u32_strconv_to_locale (file));
+  char *dot_file = x_gc_malloc_atomic ((strlen (locale_file) + 10) * sizeof (char));
+  strcpy (dot_file, locale_file);
+  strcat (dot_file, "/.");
+  return GFileIsDir (dot_file);
 }
 
 bool
