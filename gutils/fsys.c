@@ -376,55 +376,41 @@ u_GFileIsDir (const unichar_t *file)
 bool
 u_GFileExists (const unichar_t *file)
 {
-  char buffer[1024];
-  u2def_strncpy (buffer, file, sizeof (buffer));
-  return GFileExists (buffer);
+  return GFileExists (x_gc_grabstr (x_u32_strconv_to_locale (file)));
 }
 
 bool
 u_GFileModifyable (const unichar_t *file)
 {
-  char buffer[1024];
-  u2def_strncpy (buffer, file, sizeof (buffer));
-  return GFileModifyable (buffer);
+  return GFileModifyable (x_gc_grabstr (x_u32_strconv_to_locale (file)));
 }
 
 bool
 u_GFileModifyableDir (const unichar_t *file)
 {
-  char buffer[1024];
-  u2def_strncpy (buffer, file, sizeof (buffer));
-  return GFileModifyableDir (buffer);
+  return GFileModifyableDir (x_gc_grabstr (x_u32_strconv_to_locale (file)));
 }
 
 bool
 u_GFileReadable (unichar_t *file)
 {
-  char buffer[1024];
-  u2def_strncpy (buffer, file, sizeof (buffer));
-  return GFileReadable (buffer);
+  return GFileReadable (x_gc_grabstr (x_u32_strconv_to_locale (file)));
 }
 
 int
 u_GFileMkDir (unichar_t *name)
 {
-  char buffer[1024];
-  u2def_strncpy (buffer, name, sizeof (buffer));
-  return GFileMkDir (buffer);
+  return GFileMkDir (x_gc_grabstr (x_u32_strconv_to_locale (name)));
 }
 
 int
 u_GFileRmDir (unichar_t *name)
 {
-  char buffer[1024];
-  u2def_strncpy (buffer, name, sizeof (buffer));
-  return GFileRmDir (buffer);
+  return GFileRmDir (x_gc_grabstr (x_u32_strconv_to_locale (name)));
 }
 
 int
 u_GFileUnlink (unichar_t *name)
 {
-  char buffer[1024];
-  u2def_strncpy (buffer, name, sizeof (buffer));
-  return GFileUnlink (buffer);
+  return GFileUnlink (x_gc_grabstr (x_u32_strconv_to_locale (name)));
 }
