@@ -55,9 +55,6 @@ if FONTTOOLS
 SUBDIRS += fonttools
 endif FONTTOOLS
 
-nodist_pkgconfig_DATA = libsortsmillff_fontforge.pc	\
-	libsortsmillff_fontforgeexe.pc
-
 EXTRA_DIST = COPYING.permissive README-Mac.html README-MS.html	\
 	README-unix README-Unix.html Readme.VMS m4/gnulib-cache.m4	\
 	INSTALL.git
