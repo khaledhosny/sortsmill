@@ -2,8 +2,17 @@ m4_defun([check_fsys_c],
 [
 AT_SETUP([$1])
 AT_KEYWORDS([gutils fsys_c unit])
-AT_CHECK_UNQUOTED(["${abs_builddir}/$1"],[$2],[$3],[$4])
+AT_CHECK_UNQUOTED([${abs_builddir}/$1],[$2],[$3],[$4])
 AT_CLEANUP
 ])
 
 check_fsys_c([test_GFileGetUserConfigDir],[0],[${HOME}/.config/${PACKAGE}],[ignore])
+check_fsys_c([test_GFileGetUserCacheDir],[0],[${HOME}/.cache/${PACKAGE}],[ignore])
+check_fsys_c([test_GFileGetUserDataDir],[0],[${HOME}/.local/share/${PACKAGE}],[ignore])
+check_fsys_c([test_GFileGetHomeDir],[0],[${HOME}],[ignore])
+check_fsys_c([test_u_GFileGetHomeDir],[0],[${HOME}],[ignore])
+check_fsys_c([test_GFileBuildName a b],[0],[a/b],[ignore])
+check_fsys_c([test_GFileBuildName a ''],[0],[a],[ignore])
+check_fsys_c([test_GFileBuildName '' b],[0],[b],[ignore])
+check_fsys_c([test_GFileBuildName a/ b],[0],[a/b],[ignore])
+check_fsys_c([test_GFileBuildName a /b],[0],[a/b],[ignore])

@@ -65,13 +65,16 @@ $(TESTSUITE): $(srcdir)/testsuite.at $(srcdir)/package.m4 $(MY_AT_FILES)
 
 MY_AT_FILES = old_python_tests.at fsys_c.at
 
-TESTS_FSYS_C = test_GFileGetUserConfigDir
+TESTS_FSYS_C = test_GFileGetUserConfigDir test_GFileGetUserCacheDir	\
+	test_GFileGetUserDataDir test_GFileGetHomeDir					\
+	test_u_GFileGetHomeDir test_GFileBuildName
 
 check_PROGRAMS = $(TESTS_FSYS_C)
 
 AM_DEFAULT_SOURCE_EXT = .c
 LDADD = $(top_builddir)/fontforge/libsortsmillff_fontforgeexe.la	\
 	$(top_builddir)/fontforge/libsortsmillff_fontforge.la
+AM_LDFLAGS = -export-dynamic -avoid-version
 
 EXTRA_DIST += $(MY_AT_FILES)
 
