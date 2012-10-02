@@ -71,7 +71,6 @@ noinst_HEADERS = fontforgeui.h sftextfieldP.h configure-fontforge.h		\
 if THE_PROGRAMS
 
 fontforge_SOURCES = main.c
-fontforge_CPPFLAGS = $(AM_CPPFLAGS)
 fontforge_LDADD = libsortsmillff_fontforgeexe.la $(LDADD)	\
 	$(top_builddir)/lib/libgnu.la
 fontforge_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS) -export-dynamic
@@ -328,7 +327,6 @@ EXPORTED_LIBFONTFORGE_SYMBOLS = $(PYTHON_HOOKS)							\
 	use_second_indic_scripts user_mac_feature_map user_macfeat_otftag	\
 	xuid
 
-libsortsmillff_fontforge_la_CPPFLAGS = $(AM_CPPFLAGS)
 libsortsmillff_fontforge_la_LIBADD = splinerefigure.lo $(LIBADD)	\
 	$(top_builddir)/lib/libgnu.la
 libsortsmillff_fontforge_la_LDFLAGS = \
@@ -382,7 +380,6 @@ endif !GRAPHICAL_USER_INTERFACE
 
 EXPORTED_LIBFONTFORGEEXE_SYMBOLS = fontforge_main
 
-libsortsmillff_fontforgeexe_la_CPPFLAGS = $(AM_CPPFLAGS)
 libsortsmillff_fontforgeexe_la_LIBADD = libsortsmillff_fontforge.la		\
 	$(LTDLDEPS) $(LIBADD) $(GUILIBADD) $(top_builddir)/lib/libgnu.la
 libsortsmillff_fontforgeexe_la_LDFLAGS = \

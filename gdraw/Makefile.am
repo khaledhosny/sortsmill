@@ -164,7 +164,6 @@ EXPORTED_LIBGDRAW_SYMBOLS = GBoxBorderWidth GBoxDrawBackground			\
 	 _ggadget_setenabled _ggadget_setvisible screen_display				\
 	 utf82u_mncopy GDrawGetFontMetrics GDrawNewFont
 
-libsortsmillff_gdraw_la_CPPFLAGS = $(AM_CPPFLAGS)
 libsortsmillff_gdraw_la_LIBADD =					\
 	$(top_builddir)/auxiliary/libsortsmillff_aux.la	\
 	$(top_builddir)/gutils/libsortsmillff_gutils.la	\

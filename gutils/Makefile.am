@@ -59,7 +59,6 @@ EXPORTED_GUTILS_SYMBOLS = $(EXPORTED_GIOFTP_SYMBOLS) GFileAppendFile	\
 	u_GFileAppendFile u_GFileGetAbsoluteName u_GFileGetHomeDir			\
 	u_GFileIsAbsolute u_GFileNameTail u_GFileNormalize
 
-libsortsmillff_gutils_la_CPPFLAGS = $(AM_CPPFLAGS)
 libsortsmillff_gutils_la_LIBADD = $(top_builddir)/auxiliary/libsortsmillff_aux.la	\
 	$(top_builddir)/lib/libgnu.la
 libsortsmillff_gutils_la_LDFLAGS = $(call ldflags,EXPORTED_GUTILS_SYMBOLS)
