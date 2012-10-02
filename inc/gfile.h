@@ -52,7 +52,6 @@ extern bool GFileReadable (char *file);
 extern int GFileMkDir (char *name);
 extern int GFileRmDir (char *name);
 extern int GFileUnlink (char *name);
-extern unichar_t *u_GFileGetAbsoluteName (unichar_t *name, unichar_t *result, int rsiz);
 extern unichar_t *u_GFileNameTail (const unichar_t *oldname);
 extern unichar_t *u_GFileNormalize (unichar_t *name);
 extern unichar_t *u_GFileAppendFile (unichar_t *dir, unichar_t *name, int isdir);

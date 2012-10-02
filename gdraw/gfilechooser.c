@@ -37,6 +37,9 @@
 #include "gicons.h"
 
 #include <stdlib.h>
+#include <xgetcwd.h>
+#include <xgc.h>
+#include <xuniconv.h>
 
 /* This isn't really a gadget, it's just a collection of gadgets with some glue*/
 /*  to make them work together. Therefore there are no expose routines here, */
@@ -1625,11 +1628,8 @@ GGadget *GFileChooserCreate(struct gwindow *base, GGadgetData *gd,void *data) {
     if ( gd->flags & gg_group_end )
 	_GGadgetCloseGroup(&gfc->g);
 
-    if ( lastdir==NULL ) {
-	static unichar_t dot[] = { '.', '\0' };
-	unichar_t buffer[1025];
-	lastdir = u_copy(u_GFileGetAbsoluteName(dot,buffer,sizeof(buffer)/sizeof(unichar_t)));
-    }
+    if ( lastdir==NULL )
+      lastdir = x_u32_strconv_from_locale (x_gc_grabstr (xgetcwd ()));
     if ( gd->label==NULL || gd->label->text==NULL )
 	GFileChooserSetTitle(&gfc->g,lastdir);
     else if ( u_GFileIsAbsolute(gd->label->text) )
