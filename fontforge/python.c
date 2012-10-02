@@ -13962,12 +13962,6 @@ static void pyAutoKernAll(FontViewBase *fv,struct lookup_subtable *sub ) {
 static PyObject *PyFFFont_addKerningClass(PyFF_Font *self, PyObject *args) {
     FontViewBase *fv;
     SplineFont *sf;
-
-    if ( CheckIfFontClosed(self) )
-return (NULL);
-
-    fv = self->fv;
-    sf = fv->sf;
     char *lookup, *subtable, *after_str=NULL;
     int i;
     struct lookup_subtable *sub;
@@ -13990,9 +13984,11 @@ return (NULL);
      * Third two lists of glyphs to be turned into classes and then autokerned cnt=6/8
      * Fourth turns the selection into a list of glyphs, to be used both left and right for two sets of classes to be autokerned cnt=4/6
      */
+
     if ( CheckIfFontClosed(self) )
 return (NULL);
     fv = self->fv;
+    sf = fv->sf;
     if ( (acnt = PySequence_Size(args))<4 ) {
 	PyErr_Format(PyExc_EnvironmentError, "Too few arguments.");
 return( NULL );
@@ -14106,6 +14102,74 @@ return( NULL );
     }
 
 Py_RETURN( self );
+}
+
+static PyObject *
+PyFFFont_addMarkClass (PyFF_Font *self, PyObject *args)
+{
+  SplineFont *sf;
+  PyObject *markclass;
+  char *name, *str = NULL;
+
+  if (CheckIfFontClosed (self))
+    return (NULL);
+
+  if (PySequence_Size (args) < 2)
+    {
+      PyErr_Format (PyExc_EnvironmentError, "Too few arguments.");
+      return (NULL);
+    }
+
+  sf = self->fv->sf;
+  if (!PyArg_ParseTuple (args, "sO", &name, &markclass))
+    return (NULL);
+
+  str = GlyphListToStr (markclass);
+  if (str == NULL)
+    {
+      PyErr_Format (PyExc_TypeError, "Bad mark class");
+      return (NULL);
+    }
+
+  sf->mark_class_names[sf->mark_class_cnt] = copy (name);
+  sf->mark_classes[sf->mark_class_cnt] = copy (str);
+  sf->mark_class_cnt += 1;
+
+  Py_RETURN (self);
+}
+
+static PyObject *
+PyFFFont_addMarkSet (PyFF_Font *self, PyObject *args)
+{
+  SplineFont *sf;
+  PyObject *markset;
+  char *name, *str = NULL;
+
+  if (CheckIfFontClosed (self))
+    return (NULL);
+
+  if (PySequence_Size (args) < 2)
+    {
+      PyErr_Format (PyExc_EnvironmentError, "Too few arguments.");
+      return (NULL);
+    }
+
+  sf = self->fv->sf;
+  if (!PyArg_ParseTuple (args, "sO", &name, &markset))
+    return (NULL);
+
+  str = GlyphListToStr (markset);
+  if (str == NULL)
+    {
+      PyErr_Format (PyExc_TypeError, "Bad mark set");
+      return (NULL);
+    }
+
+  sf->mark_set_names[sf->mark_set_cnt] = copy (name);
+  sf->mark_sets[sf->mark_set_cnt] = copy (str);
+  sf->mark_set_cnt += 1;
+
+  Py_RETURN (self);
 }
 
 static PyObject *PyFFFont_alterKerningClass(PyFF_Font *self, PyObject *args) {
@@ -16960,6 +17024,8 @@ static PyMethodDef PyFF_Font_methods[] = {
     { "addContextualSubtable", (PyCFunction) PyFFFont_addContextualSubtable, METH_VARARGS | METH_KEYWORDS, "Create a subtable in a contextual, contextual chaining or reverse contextual chaining lookup." },
     { "addAnchorClass", (PyCFunction) PyFFFont_addAnchorClass, METH_VARARGS, "Add a new anchor class to the subtable"},
     { "addKerningClass", (PyCFunction) PyFFFont_addKerningClass, METH_VARARGS, "Add a new subtable with a new kerning class to a lookup"},
+    { "addMarkClass", (PyCFunction) PyFFFont_addMarkClass, METH_VARARGS, "Add a new mark class"},
+    { "addMarkSet", (PyCFunction) PyFFFont_addMarkSet, METH_VARARGS, "Add a new mark set"},
     { "alterKerningClass", (PyCFunction) PyFFFont_alterKerningClass, METH_VARARGS, "Changes the existing kerning class in the named subtable"},
     { "autoKern", (PyCFunction) PyFFFont_autoKern, METH_VARARGS | METH_KEYWORDS, "Automatically generates kerning pairs between the specified sets of glyphs."},
     { "buildOrReplaceAALTFeatures", (PyCFunction) PyFFFont_buildOrReplaceAALTFeatures, METH_NOARGS, "Removes any existing 'aalt' features and builds new ones."},
