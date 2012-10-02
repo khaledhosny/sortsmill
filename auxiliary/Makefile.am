@@ -35,7 +35,7 @@ libsortsmillff_aux_la_SOURCES = ArabicForms.c alphabet.c backtrns.c	\
 	char.c cjk.c ucharmap.c unialt.c ustring.c utype.c usprintf.c	\
 	combiners.h xdie_on_null.c xgc.c
 
-EXPORTED_XDIE_ON_NULL_SYMBOLS = xdie_on_null
+EXPORTED_XDIE_ON_NULL_SYMBOLS = xdie_on_null xdie_on_enomem
 
 EXPORTED_XGC_SYMBOLS = x_gc_malloc_atomic x_gc_malloc_uncollectable	\
 	x_gc_realloc x_gc_malloc_ignore_off_page						\
