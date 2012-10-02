@@ -1155,20 +1155,6 @@ return( copy(buffer));
 return( NULL );
 }
 
-static char *SearchNoLibsDirForWernerFile(char *dir,char *filename) {
-    char *ret;
-
-    if ( dir==NULL || strstr(dir,"/.libs")==NULL )
-return( NULL );
-
-    dir = copy(dir);
-    *strstr(dir,"/.libs") = '\0';
-
-    ret = SearchDirForWernerFile(dir,filename);
-    free(dir);
-return( ret );
-}
-
 static enum fchooserret GFileChooserFilterWernerSFDs(GGadget *g,GDirEntry *ent,
 	const unichar_t *dir) {
     enum fchooserret ret = GFileChooserDefFilter(g,ent,dir);

@@ -345,18 +345,6 @@ return;
     closedir(d);
 }
 
-static void FindMapsInNoLibsDir(struct block *block,char *dir) {
-
-    if ( dir==NULL || strstr(dir,"/.libs")==NULL )
-return;
-
-    dir = copy(dir);
-    *strstr(dir,"/.libs") = '\0';
-
-    FindMapsInDir(block,dir);
-    free(dir);
-}
-
 struct cidmap *AskUserForCIDMap(void) {
     struct block block;
     struct cidmap *map = NULL;
