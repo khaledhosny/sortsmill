@@ -36,6 +36,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include <xalloc.h>
+#include <canonicalize.h>
 #include "views.h"		/* For SCCharChangedUpdate */
 
 int new_em_size = 1000;
@@ -4079,7 +4080,7 @@ SplineFont *SplineFontBlank(int charcnt) {
     sf->fullname = copy(sf->fontname);
     sf->familyname = copy(sf->fontname);
     sprintf( buffer, "%s.sfd", sf->fontname);
-    sf->origname = canonicalize_file_name (buffer);
+    sf->origname = canonicalize_filename_mode (buffer, CAN_MISSING);
     if (sf->origname == NULL)
       xalloc_die ();
     sf->weight = copy("Medium");

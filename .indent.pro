@@ -17,6 +17,8 @@
 -T real
 -T AnchorPoint
 -T BDFFont
+-T GImage
+-T GResStruct
 -T MMSet
 -T SplineChar
 -T SplineFont

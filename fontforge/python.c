@@ -763,29 +763,32 @@ static FontViewBase *SFAdd(SplineFont *sf,int hide) {
 return( sf->fv );
 }
 
-static PyObject *PyFF_OpenFont(PyObject *UNUSED(self), PyObject *args) {
-    char *filename, *locfilename;
-    int openflags = 0;
-    SplineFont *sf;
+static PyObject *
+PyFF_OpenFont(PyObject *UNUSED(self), PyObject *args)
+{
+  char *filename, *locfilename;
+  int openflags = 0;
+  SplineFont *sf;
 
-    if ( !PyArg_ParseTuple(args,"es|i", "UTF-8", &filename, &openflags ))
-return( NULL );
-    locfilename = utf82def_copy(filename);
-    free(filename);
+  if ( !PyArg_ParseTuple(args,"es|i", "UTF-8", &filename, &openflags ))
+    return( NULL );
+  locfilename = utf82def_copy(filename);
+  free(filename);
 
-    /* The actual filename opened may be different from the one passed
-     * to LoadSplineFont, so we can't report the filename on an
-     * error.
-     */
-    sf = LoadSplineFont(locfilename,openflags);
+  /* The actual filename opened may be different from the one passed
+   * to LoadSplineFont, so we can't report the filename on an
+   * error.
+   */
+  sf = LoadSplineFont(locfilename,openflags);
 
-    if ( sf==NULL ) {
-	PyErr_Format(PyExc_EnvironmentError, "Open failed");
-	free(locfilename);
-return( NULL );
+  if ( sf==NULL )
+    {
+      PyErr_Format(PyExc_EnvironmentError, "Open failed");
+      free(locfilename);
+      return( NULL );
     }
-    free(locfilename);
-return( PyFV_From_FV_I( SFAdd( sf, openflags&of_hidewindow )));
+  free(locfilename);
+  return( PyFV_From_FV_I( SFAdd( sf, openflags&of_hidewindow )));
 }
 
 static PyObject *PyFF_FontsInFile(PyObject *UNUSED(self), PyObject *args) {
@@ -18129,14 +18132,14 @@ PyMODINIT_FUNC PyInit_psMat(void) {
 }
 
 void FontForge_PythonInit(void) {
-    Py_SetProgramName(L"fontforge");
-    PyImport_AppendInittab("fontforge", _PyInit_fontforge);
-    PyImport_AppendInittab("psMat", _PyInit_psMat);
-    PyImport_AppendInittab("__FontForge_Internals___", _PyInit___FontForge_Internals___);
+  Py_SetProgramName(L"fontforge");
+  PyImport_AppendInittab("fontforge", _PyInit_fontforge);
+  PyImport_AppendInittab("psMat", _PyInit_psMat);
+  PyImport_AppendInittab("__FontForge_Internals___", _PyInit___FontForge_Internals___);
 #ifdef MAC
-    PyMac_Initialize();
+  PyMac_Initialize();
 #else
-    Py_Initialize();
+  Py_Initialize();
 #endif
 }
 
@@ -18323,29 +18326,34 @@ void PyFF_Main(int argc,char **argv,int start) {
     exit( exit_status );
 }
 
-#else /* PY_MAJOR_VERSION >= 3 -------------------------------------------------*/
+#else /* python 2.x */
 
-void PyFF_Main(int argc,char **argv,int start) {
-    char **newargv, *arg;
-    int i;
+void
+PyFF_Main(int argc,char **argv,int start)
+{
+  char **newargv, *arg;
+  int i;
 
-    no_windowing_ui = running_script = true;
+  no_windowing_ui = true;
+  running_script = true;
 
-    PyFF_ProcessInitFiles();
+  PyFF_ProcessInitFiles ();
 
-    newargv= xcalloc(argc+1,sizeof(char *));
-    arg = argv[start];
-    if ( *arg=='-' && arg[1]=='-' ) ++arg;
-    if ( strcmp(arg,"-script")==0 )
-	++start;
-    newargv[0] = argv[0];
-    for ( i=start; i<argc; ++i )
-	newargv[i-start+1] = argv[i];
-    newargv[i-start+1] = NULL;
-    exit( Py_Main( i-start+1,newargv ));
+  newargv = xcalloc (argc+1, sizeof(char *));
+  arg = argv[start];
+  if (arg[0] == '-' && arg[1] == '-')
+    ++arg;
+  if (strcmp(arg, "-script") ==0)
+    ++start;
+  newargv[0] = argv[0];
+  for (i=start; i<argc; ++i)
+    newargv[i-start+1] = argv[i];
+  newargv[i-start+1] = NULL;
+  int exit_status = Py_Main (i-start+1, newargv);
+  exit (exit_status);
 }
 
-#endif /* PY_MAJOR_VERSION >= 3 -------------------------------------------------*/
+#endif /* python 2.x */
 
 void PyFF_ScriptFile(FontViewBase *fv,SplineChar *sc, char *filename) {
     PyObject *fp = PyFile_FromString(filename,"rb");

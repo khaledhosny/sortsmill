@@ -29,6 +29,7 @@
 
 #include <config.h>
 
+#include <assert.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -44,7 +45,6 @@
 
 #include "gresourceP.h"
 
-char *GResourceProgramName;
 char *usercharset_names;
 
 static int rcur, rmax=0;
@@ -157,20 +157,11 @@ return( -1 );
 return( 0 );
 }
 
-void GResourceSetProg(char *prog, char *name) {
-    if ( name!=NULL )
-	GResourceProgramName = xstrdup (name);
-    else if ( GResourceProgramName==NULL )
-	GResourceProgramName = xstrdup ("gdraw");
-}
-
 void GResourceAddResourceString(char *string) {
     char *pt, *ept, *next;
-    int cnt, plen;
+    int cnt;
     struct _GResource_Res temp;
     int i,j,k, off;
-
-    plen = strlen(GResourceProgramName);
 
     if ( string==NULL )
 return;
@@ -182,7 +173,6 @@ return;
 	if ( next==NULL ) next = pt+strlen(pt);
 	else ++next;
 	if ( strncmp(pt,"Gdraw.",6)==0 ) ++cnt;
-	else if ( strncmp(pt,GResourceProgramName,plen)==0 && pt[plen]=='.' ) ++cnt;
 	else if ( strncmp(pt,"*",1)==0 ) ++cnt;
 	pt = next;
     }
@@ -202,17 +192,20 @@ return;
     while ( *pt!='\0' ) {
 	next = strchr(pt,'\n');
 	if ( next==NULL ) next = pt+strlen(pt);
-	if ( strncmp(pt,"Gdraw.",6)==0 || strncmp(pt,"*",1)==0 ||
-		(strncmp(pt,GResourceProgramName,plen)==0 && pt[plen]=='.' )) {
+	if ( strncmp(pt,"Gdraw.",6)==0 || strncmp(pt,"*",1)==0) {
 	    temp.generic = false;
-	    if ( strncmp(pt,"Gdraw.",6)==0 ) {
+	    if ( strncmp(pt,"Gdraw.",6)==0 )
+	      {
 		temp.generic = true;
 		off = 6;
-	    } else if ( strncmp(pt,"*",1)==0 ) {
+	      }
+	    else if ( strncmp(pt,"*",1)==0 )
+	      {
 		temp.generic = true;
 		off = 1;
-	    } else
-		off = plen+1;
+	      }
+	    else
+	      assert (false);
 	    ept = strchr(pt+off,':');
 	    if ( ept==NULL )
 	goto bad;

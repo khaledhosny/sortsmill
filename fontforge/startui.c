@@ -39,6 +39,7 @@
 #include <locale.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <canonicalize.h>
 #include <libguile.h>
 
 #ifndef LOCALEDIR
@@ -587,8 +588,6 @@ fontforge_main_in_guile_mode (int argc, char **argv)
 
   InitSimpleStuff ();
 
-  GResourceSetProg (argv[0], "fontforge");
-
   GMenuSetShortcutDomain (ff_shortcutsdomain ());
   bind_textdomain_codeset (ff_shortcutsdomain (), "UTF-8");
   bindtextdomain (ff_shortcutsdomain (), getLocaleDir ());
@@ -606,7 +605,9 @@ fontforge_main_in_guile_mode (int argc, char **argv)
     default_encoding = FindOrMakeEncoding ("ISO8859-1");
   if (default_encoding == NULL)
     default_encoding = &custom; /* In case iconv is broken */
+
   CheckIsScript (argc, argv);   /* Will run the script and exit if it is a script */
+
   /* If there is no UI, there is always a script */
   /*  and we will never return from the above */
   if (load_prefs == NULL || (strcasecmp (load_prefs, "Always") != 0 &&  /* Already loaded */
@@ -745,7 +746,6 @@ fontforge_main_in_guile_mode (int argc, char **argv)
     autosave_timer = GDrawRequestTimer (splashw,
                                         2 * AutoSaveFrequency * 1000,
                                         AutoSaveFrequency * 1000, NULL);
-
   GDrawProcessPendingEvents (NULL);
 
   any = 0;
@@ -802,29 +802,28 @@ fontforge_main_in_guile_mode (int argc, char **argv)
         doopen = true;
       else
         {
-	  char *buffer;
+          char *buffer;
 
-          if (strstr (argv[i], "://") != NULL) /* FIXME: This is
-						  broken. There is
-						  regular expression
-						  code elsewhere to
-						  re-use here. */
-	    /* Assume an absolute URL */
-	    buffer = xstrdup (argv[i]);
+          if (strstr (argv[i], "://") != NULL)  /* FIXME: This is
+                                                   broken. There is
+                                                   regular expression
+                                                   code elsewhere to
+                                                   re-use here. */
+            /* Assume an absolute URL */
+            buffer = xstrdup (argv[i]);
           else
-	    {
-	      buffer = canonicalize_file_name (argv[i]);
-	      if (buffer == NULL)
-		xalloc_die ();
-	    }
+            {
+              buffer = canonicalize_filename_mode (argv[i], CAN_MISSING);
+              if (buffer == NULL)
+                xalloc_die ();
+            }
 
-          if (GFileIsDir (buffer)
-              || (strstr (buffer, "://") != NULL /* FIXME: This is
-						    broken. There is
-						    regular expression
-						    code elsewhere to
-						    re-use here. */
-                  && buffer[strlen (buffer) - 1] == '/'))
+          if (GFileIsDir (buffer) || (strstr (buffer, "://") != NULL    /* FIXME: This is
+                                                                           broken. There is
+                                                                           regular expression
+                                                                           code elsewhere to
+                                                                           re-use here. */
+                                      && buffer[strlen (buffer) - 1] == '/'))
             {
               char *fname = xmalloc (strlen (buffer) +
                                      strlen ("/glyphs/contents.plist") + 1);
@@ -867,7 +866,7 @@ fontforge_main_in_guile_mode (int argc, char **argv)
             }
           else if (ViewPostScriptFont (buffer, openflags) != 0)
             any = 1;
-	  free (buffer);
+          free (buffer);
         }
     }
   if (!any && !doopen)

@@ -27,8 +27,6 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <config.h>
-
 #ifdef __VMS
 #include <vms_x_fix.h>
 #endif
@@ -247,9 +245,11 @@ static void _GXDraw_FindVisual(GXDisplay *gdisp) {
 	    ((pixel_size==16 || pixel_size==24 || pixel_size==32) && vc==TrueColor))
 	/* We can deal with it */;
     else if ( vc==TrueColor || ( vc==PseudoColor && pixel_size<8)) {
-       fprintf( stderr, "%s will not work well with this visual.  Colored images will be displayed as bitmaps\n", GResourceProgramName );
+       fprintf( stderr, "%s will not work well with this visual.  Colored images will be displayed as bitmaps\n",
+		PACKAGE_NAME );
     } else {
-       fprintf( stderr, "%s will not work with this visual.  Restart your X server with a TrueColor\n", GResourceProgramName );
+       fprintf( stderr, "%s will not work with this visual.  Restart your X server with a TrueColor\n",
+		PACKAGE_NAME );
        fprintf( stderr, " visual (You do this on an SGI by adding an argument \"-class TrueColor\" to\n" );
        fprintf( stderr, " the command which starts up X, which is probably in /var/X11/xdm/Xservers.\n" );
        fprintf( stderr, " On a sun you add \"-cc 4\" to the server start line, probably found in\n" );
@@ -1137,8 +1137,8 @@ return( NULL );
 	XChangeProperty(display,nw->w,gdisp->atoms.wm_protocols,XA_ATOM,32,
 		PropModeReplace,(unsigned char *) &gdisp->atoms.wm_del_window, 1);
     }
-    ch.res_class = GResourceProgramName;
-    ch.res_name = GResourceProgramName;
+    ch.res_class = "fontforge";
+    ch.res_name = "fontforge";
     XSetClassHint(display,nw->w,&ch);
     XSaveContext(display,nw->w,gdisp->mycontext,(void *) nw);
     if ( eh!=NULL ) {
@@ -4034,8 +4034,7 @@ return( NULL );
 #ifdef X_HAVE_UTF8_STRING	/* Don't even try without this. I don't want to have to guess encodings myself... */
     /* X Input method initialization */
     XSetLocaleModifiers("");
-    gdisp->im = XOpenIM(display, XrmGetDatabase(display),
-	    GResourceProgramName, GResourceProgramName);
+    gdisp->im = XOpenIM(display, XrmGetDatabase(display), "fontforge", "fontforge");
     /* The only reason this seems to fail is if XMODIFIERS contains an @im */
     /*  which points to something that isn't running. If XMODIFIERS is not */
     /*  defined we get some kind of built-in default method. If it doesn't */

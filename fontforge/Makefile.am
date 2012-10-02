@@ -182,9 +182,9 @@ EXPORTED_LIBFONTFORGE_SYMBOLS = $(PYTHON_HOOKS)							\
 	LayoutInfoInitLangSys LayoutInfoRefigureLines LayoutInfoReplace		\
 	LayoutInfo_Destroy LoadGroupList LoadKerningDataFromMetricsFile		\
 	LoadMapFromFile LoadNamelist LoadNamelistDir LoadPfaEditEncodings	\
-	LoadSplineFont LookupInit LookupUsedNested MATHFree	\
-	MMAxisUnmap MMBlendChar MMCreateBlendedFont MMKern MMMatchGlyphs	\
-	MMNewFont MMReblend MMSetFreeContents MMValid MMWeightsUnMap		\
+	LoadSplineFont LookupInit LookupUsedNested MATHFree MMAxisUnmap		\
+	MMBlendChar MMCreateBlendedFont MMKern MMMatchGlyphs MMNewFont		\
+	MMReblend MMSetFreeContents MMValid MMWeightsUnMap					\
 	MSLanguageFromLocale MVCopyChar MacEncFromMacLang MacFeatListFree	\
 	MacNameCopy MacNameListFree MacSettingListFree MacStrToUtf8			\
 	MacStyleCode MakeCIDMaster MakeItalic MarkClassFree MarkSetFree		\
