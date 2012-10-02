@@ -14110,6 +14110,8 @@ PyFFFont_addMarkClass (PyFF_Font *self, PyObject *args)
   SplineFont *sf;
   PyObject *markclass;
   char *name, *str = NULL;
+  char **mark_classes, **mark_class_names;
+  int cnt;
 
   if (CheckIfFontClosed (self))
     return (NULL);
@@ -14131,9 +14133,24 @@ PyFFFont_addMarkClass (PyFF_Font *self, PyObject *args)
       return (NULL);
     }
 
-  sf->mark_class_names[sf->mark_class_cnt] = copy (name);
-  sf->mark_classes[sf->mark_class_cnt] = copy (str);
-  sf->mark_class_cnt += 1;
+  cnt = sf->mark_class_cnt;
+  mark_classes = xmalloc ((cnt + 1) * sizeof (char *));
+  mark_class_names = xmalloc ((cnt + 1) * sizeof (char *));
+
+  for (int i = 0; i < cnt; ++i)
+    {
+      mark_classes[i] = copy (sf->mark_classes[i]);
+      mark_class_names[i] = copy (sf->mark_class_names[i]);
+    }
+
+  mark_classes[cnt] = copy (str);
+  mark_class_names[cnt] = copy (name);
+
+  MarkClassFree (sf->mark_class_cnt, sf->mark_classes, sf->mark_class_names);
+
+  sf->mark_class_cnt = cnt + 1;
+  sf->mark_classes = mark_classes;
+  sf->mark_class_names = mark_class_names;
 
   Py_RETURN (self);
 }
@@ -14144,6 +14161,8 @@ PyFFFont_addMarkSet (PyFF_Font *self, PyObject *args)
   SplineFont *sf;
   PyObject *markset;
   char *name, *str = NULL;
+  char **mark_sets, **mark_set_names;
+  int cnt;
 
   if (CheckIfFontClosed (self))
     return (NULL);
@@ -14165,9 +14184,24 @@ PyFFFont_addMarkSet (PyFF_Font *self, PyObject *args)
       return (NULL);
     }
 
-  sf->mark_set_names[sf->mark_set_cnt] = copy (name);
-  sf->mark_sets[sf->mark_set_cnt] = copy (str);
-  sf->mark_set_cnt += 1;
+  cnt = sf->mark_set_cnt;
+  mark_sets = xmalloc ((cnt + 1) * sizeof (char *));
+  mark_set_names = xmalloc ((cnt + 1) * sizeof (char *));
+
+  for (int i = 0; i < cnt; ++i)
+    {
+      mark_sets[i] = copy (sf->mark_sets[i]);
+      mark_set_names[i] = copy (sf->mark_set_names[i]);
+    }
+
+  mark_sets[cnt] = copy (str);
+  mark_set_names[cnt] = copy (name);
+
+  MarkSetFree (sf->mark_set_cnt, sf->mark_sets, sf->mark_set_names);
+
+  sf->mark_set_cnt = cnt + 1;
+  sf->mark_sets = mark_sets;
+  sf->mark_set_names = mark_set_names;
 
   Py_RETURN (self);
 }
