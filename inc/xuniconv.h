@@ -26,8 +26,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _FONTFORGE_XSTRCONV_H
-#define _FONTFORGE_XSTRCONV_H
+#ifndef _FONTFORGE_XUNICONV_H
+#define _FONTFORGE_XUNICONV_H
 
 //
 // libunistring conversion routines combined with xalloc and the Boehm
@@ -58,37 +58,37 @@ inline char *x_gc_u32_strconv_to_locale (const uint32_t *string);
 inline uint8_t *
 x_u8_strconv_from_locale (const char *string)
 {
-  return XDIE_ON_NULL (u8_strconv_from_locale (string));
+  return XDIE_ON_ENOMEM (u8_strconv_from_locale (string));
 }
 
 inline uint16_t *
 x_u16_strconv_from_locale (const char *string)
 {
-  return XDIE_ON_NULL (u16_strconv_from_locale (string));
+  return XDIE_ON_ENOMEM (u16_strconv_from_locale (string));
 }
 
 inline uint32_t *
 x_u32_strconv_from_locale (const char *string)
 {
-  return XDIE_ON_NULL (u32_strconv_from_locale (string));
+  return XDIE_ON_ENOMEM (u32_strconv_from_locale (string));
 }
 
 inline char *
 x_u8_strconv_to_locale (const uint8_t *string)
 {
-  return XDIE_ON_NULL (u8_strconv_to_locale (string));
+  return XDIE_ON_ENOMEM (u8_strconv_to_locale (string));
 }
 
 inline char *
 x_u16_strconv_to_locale (const uint16_t *string)
 {
-  return XDIE_ON_NULL (u16_strconv_to_locale (string));
+  return XDIE_ON_ENOMEM (u16_strconv_to_locale (string));
 }
 
 inline char *
 x_u32_strconv_to_locale (const uint32_t *string)
 {
-  return XDIE_ON_NULL (u32_strconv_to_locale (string));
+  return XDIE_ON_ENOMEM (u32_strconv_to_locale (string));
 }
 
 inline uint8_t *
@@ -127,4 +127,4 @@ x_gc_u32_strconv_to_locale (const uint32_t *string)
   return x_gc_grabstr (x_u32_strconv_to_locale (string));
 }
 
-#endif // _FONTFORGE_XSTRCONV_H
+#endif // _FONTFORGE_XUNICONV_H

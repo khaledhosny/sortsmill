@@ -28,6 +28,7 @@
  */
 #include <stdlib.h>
 #include <string.h>
+#include <xuniconv.h>
 #include "ustring.h"
 #include "gfile.h"
 #include "gdraw.h"
@@ -159,7 +160,7 @@ static int GFD_NewDir(GGadget *g, GEvent *e) {
 	    newdir = GWidgetAskStringR(_STR_Createdir,NULL,_STR_Dirname);
 	if ( newdir==NULL )
 return( true );
-	if ( !u_GFileIsAbsolute(newdir)) {
+	if ( !GFileIsAbsolute(x_gc_u32_strconv_to_locale(newdir))) {
 	    unichar_t *temp = u_GFileAppendFile(GFileChooserGetDir(d->gfc),newdir,false);
 	    free(newdir);
 	    newdir = temp;

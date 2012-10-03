@@ -1,6 +1,9 @@
 AT_INIT
 AT_COPYRIGHT([Copyright (C) 2012 by George Williams])
 
+AT_BANNER([auxiliary])
+m4_include([xunistr_h.at])
+
 AT_BANNER([gutils])
 m4_include([fsys_c.at])
 

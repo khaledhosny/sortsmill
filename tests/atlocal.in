@@ -31,4 +31,7 @@ abs_top_builddir="@abs_top_builddir@"
 MKDIR_P="@MKDIR_P@"
 GUILE="@GUILE@"
 
+LOCALE_FR_UTF8="@LOCALE_FR_UTF8@"
+
+utf8_locale="${LOCALE_FR_UTF8}"
 skip_python="test x@i_do_have_python_scripting@ != xyes"

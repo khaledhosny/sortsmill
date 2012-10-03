@@ -1114,7 +1114,7 @@ return;
 	gfc->wildcard = u_copy(slashpt);
     } else if ( gfc->lastname==NULL )
 	gfc->lastname = u_copy(slashpt);
-    if( u_GFileIsAbsolute(spt) )
+    if( GFileIsAbsolute (x_gc_u32_strconv_to_locale(spt)) )
 	dir = u_copyn(spt,slashpt-spt);
     else {
 	unichar_t *curdir = GFileChooserGetCurDir(gfc,-1);
@@ -1209,7 +1209,7 @@ return;
     free(gfc->lastname);
     gfc->lastname = NULL;
 
-    if ( u_GFileIsAbsolute(tit) ){
+    if ( GFileIsAbsolute( x_gc_u32_strconv_to_locale(tit)) ){
 	base = uc_strstr(tit, "://");
 	if(!base) base = (unichar_t*) tit;
 	if(pt > base && pt[1] && (pt[1]!='.' || pt[2]!='\0')){
@@ -1254,7 +1254,7 @@ static unichar_t *GFileChooserGetTitle(GGadget *g) {
     unichar_t *spt, *curdir, *file;
 
     spt = (unichar_t *) _GGadgetGetTitle(&gfc->name->g);
-    if ( u_GFileIsAbsolute(spt) )
+    if ( GFileIsAbsolute(x_gc_u32_strconv_to_locale (spt)) )
 	file = u_copy(spt);
     else {
 	curdir = GFileChooserGetCurDir(gfc,-1);
@@ -1635,7 +1635,7 @@ GGadget *GFileChooserCreate(struct gwindow *base, GGadgetData *gd,void *data) {
       lastdir = x_u32_strconv_from_locale (x_gc_grabstr (xgetcwd ()));
     if ( gd->label==NULL || gd->label->text==NULL )
 	GFileChooserSetTitle(&gfc->g,lastdir);
-    else if ( u_GFileIsAbsolute(gd->label->text) )
+    else if ( GFileIsAbsolute(x_gc_u32_strconv_to_locale(gd->label->text)) )
 	GFileChooserSetTitle(&gfc->g,gd->label->text);
     else {
 	unichar_t *temp = u_GFileAppendFile(lastdir,gd->label->text,false);

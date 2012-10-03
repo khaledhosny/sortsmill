@@ -46,20 +46,19 @@ EXPORTED_FSYS_SYMBOLS = GFileGetUserConfigDir GFileGetUserCacheDir		\
 	GFileGetUserDataDir GFileGetHomeDir GFileBuildName GFileBaseName	\
 	GFileAppendFile GFileIsAbsolute GFileIsDir GFileExists				\
 	GFileReadable GFileMkDir GFileUnlink u_GFileBaseName				\
-	u_GFileNormalize u_GFileAppendFile u_GFileIsAbsolute
+	u_GFileNormalize u_GFileAppendFile
 
-EXPORTED_GUTILS_SYMBOLS = $(EXPORTED_FSYS_SYMBOLS)						\
-	$(EXPORTED_GIOFTP_SYMBOLS) GFileMakeAbsoluteName GIOCreate			\
-	GIO_PasswordCache GIO_SetThreadCallback GIOcancel GIOclose GIOdir	\
-	GIOfileExists GIOgetDirData GIOguessMimeType GIOmkDir				\
-	GImageCreate GImageDestroy GImageDrawImage GImageDrawRect			\
-	GImageGetHeight GImageGetPixelRGBA GImageGetWidth GImageRead		\
-	GImageRead_Bmp GImageRead_Jpeg GImageRead_Png GImageWriteBmp		\
-	GImageWritePng GImageWriteXbm GImageWrite_Bmp GImageWrite_Jpeg		\
-	GImageWrite_Png _GFile_find_program_dir _GIO_decomposeURL			\
-	_GImageGetPixelColor div_tables gColor2Hslrgb gColor2Hslrgba		\
-	gHSL2RGB gHSV2RGB gHslrgb2Color gHslrgba2Color gRGB2HSV sgettext	\
-	u_GFileGetAbsoluteName
+EXPORTED_GUTILS_SYMBOLS = $(EXPORTED_FSYS_SYMBOLS)					\
+	$(EXPORTED_GIOFTP_SYMBOLS) GIOCreate GIO_PasswordCache			\
+	GIO_SetThreadCallback GIOcancel GIOclose GIOdir GIOfileExists	\
+	GIOgetDirData GIOguessMimeType GIOmkDir GImageCreate			\
+	GImageDestroy GImageDrawImage GImageDrawRect GImageGetHeight	\
+	GImageGetPixelRGBA GImageGetWidth GImageRead GImageRead_Bmp		\
+	GImageRead_Jpeg GImageRead_Png GImageWriteBmp GImageWritePng	\
+	GImageWriteXbm GImageWrite_Bmp GImageWrite_Jpeg GImageWrite_Png	\
+	_GIO_decomposeURL _GImageGetPixelColor div_tables gColor2Hslrgb	\
+	gColor2Hslrgba gHSL2RGB gHSV2RGB gHslrgb2Color gHslrgba2Color	\
+	gRGB2HSV sgettext
 
 libsortsmillff_gutils_la_LIBADD = $(top_builddir)/auxiliary/libsortsmillff_aux.la	\
 	$(top_builddir)/lib/libgnu.la

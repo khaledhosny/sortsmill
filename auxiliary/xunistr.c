@@ -1,4 +1,6 @@
-/* Copyright (C) 2000-2012 by George Williams */
+#include <config.h>
+
+/* Copyright (C) 2012 by Barry Schwartz */
 /*
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -24,29 +26,61 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef _GFILE_H
-#define _GFILE_H
 
-#include <config.h>
+#include <xunistr.h>
 
-#include <basics.h>
-#include <stdbool.h>
+// Generate non-inline versions of these functions.
+uint16_t *x_gc_u8_to_u16 (const uint8_t *string);
+uint32_t *x_gc_u8_to_u32 (const uint8_t *string);
+uint8_t *x_gc_u16_to_u8 (const uint16_t *string);
+uint32_t *x_gc_u16_to_u32 (const uint16_t *string);
+uint8_t *x_gc_u32_to_u8 (const uint32_t *string);
+uint16_t *x_gc_u32_to_u16 (const uint32_t *string);
 
-extern char *GFileGetUserConfigDir (void);
-extern char *GFileGetUserCacheDir (void);
-extern char *GFileGetUserDataDir (void);
-extern char *GFileGetHomeDir (void);
-extern char *GFileBuildName (char *dir, char *file);
-extern char *GFileBaseName (const char *file);
-extern char *GFileAppendFile (char *dir, char *name, bool isdir);
-extern bool GFileIsAbsolute (const char *file);
-extern bool GFileIsDir (const char *file);
-extern bool GFileExists (const char *file);
-extern bool GFileReadable (char *file);
-extern int GFileMkDir (char *name);
-extern int GFileUnlink (char *name);
-extern unichar_t *u_GFileBaseName (const unichar_t *oldname);
-extern unichar_t *u_GFileNormalize (unichar_t *name);
-extern unichar_t *u_GFileAppendFile (unichar_t *dir, unichar_t *name, bool isdir);
+uint16_t *
+x_u8_to_u16 (const uint8_t *string)
+{
+  size_t length;
+  return
+    XDIE_ON_ENOMEM (u8_to_u16 (string, u8_strlen (string), NULL, &length));
+}
 
-#endif
+uint32_t *
+x_u8_to_u32 (const uint8_t *string)
+{
+  size_t length;
+  return
+    XDIE_ON_ENOMEM (u8_to_u32 (string, u8_strlen (string), NULL, &length));
+}
+
+uint8_t *
+x_u16_to_u8 (const uint16_t *string)
+{
+  size_t length;
+  return
+    XDIE_ON_ENOMEM (u16_to_u8 (string, u16_strlen (string), NULL, &length));
+}
+
+uint32_t *
+x_u16_to_u32 (const uint16_t *string)
+{
+  size_t length;
+  return
+    XDIE_ON_ENOMEM (u16_to_u32 (string, u16_strlen (string), NULL, &length));
+}
+
+uint8_t *
+x_u32_to_u8 (const uint32_t *string)
+{
+  size_t length;
+  return
+    XDIE_ON_ENOMEM (u32_to_u8 (string, u32_strlen (string), NULL, &length));
+}
+
+uint16_t *
+x_u32_to_u16 (const uint32_t *string)
+{
+  size_t length;
+  return
+    XDIE_ON_ENOMEM (u32_to_u16 (string, u32_strlen (string), NULL, &length));
+}

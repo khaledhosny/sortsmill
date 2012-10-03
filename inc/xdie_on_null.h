@@ -52,6 +52,7 @@ xdie_on_enomem (void *p)
 {
   if (p == NULL && errno == ENOMEM)
     xalloc_die ();
+  assert (p != NULL);  // May fail if strings have not been validated.
   return p;
 }
 

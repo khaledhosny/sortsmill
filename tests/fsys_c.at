@@ -2,7 +2,8 @@ m4_defun([check_fsys_c],
 [
 AT_SETUP([$1])
 AT_KEYWORDS([gutils fsys_c unit])
-AT_CHECK_UNQUOTED([${abs_builddir}/$1],[$2],[$3],[$4])
+AT_SKIP_IF([test x"${utf8_locale}" = x])
+AT_CHECK_UNQUOTED([LC_ALL="${utf8_locale}" LANGUAGE="${utf8_locale}" "${abs_builddir}"/$1],[$2],[$3],[$4])
 AT_CLEANUP
 ])
 
