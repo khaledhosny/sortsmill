@@ -330,7 +330,7 @@ static void GFileChooserFillList(GFileChooser *gfc,GDirEntry *first,
 	GGadgetSetList(&gfc->files->g,ti,false);
     }
 
-    GGadgetScrollListToText(&gfc->files->g,u_GFileBaseName(_GGadgetGetTitle(&gfc->name->g)),true);
+    GGadgetScrollListToText(&gfc->files->g,u32_GFileBaseName(_GGadgetGetTitle(&gfc->name->g)),true);
 }
 
 static void GFileChooserIntermediateDir(GIOControl *gc) {
@@ -388,7 +388,7 @@ static void GFileChooserScanDir(GFileChooser *gfc,unichar_t *dir) {
     int cnt, tot=0;
     unichar_t *pt, *ept, *freeme;
 
-    dir = u_GFileNormalize(dir);
+    dir = u32_GFileNormalize(dir);
     while ( 1 ) {
 	ept = dir;
 	cnt = 0;
@@ -697,7 +697,7 @@ return(true);
 	free(val);
     } else if ( ti->checked /* it's a directory */ ) {
 	dir = GFileChooserGetCurDir(gfc,-1);
-	newdir = u_GFileAppendFile(dir,ti->text,true);
+	newdir = u32_GFileAppendFile(dir,ti->text,true);
 	GFileChooserScanDir(gfc,newdir);
 	free(dir); free(newdir);
     } else {
@@ -826,7 +826,7 @@ static int GFileChooserUpDirButton(GGadget *g, GEvent *e) {
 	unichar_t *dir, *newdir;
 	static unichar_t dotdot[] = { '.', '.',  0 };
 	dir = GFileChooserGetCurDir(gfc,-1);
-	newdir = u_GFileAppendFile(dir,dotdot,true);
+	newdir = u32_GFileAppendFile(dir,dotdot,true);
 	GFileChooserScanDir(gfc,newdir);
 	free(dir); free(newdir);
     }
@@ -1120,10 +1120,10 @@ return;
 	unichar_t *curdir = GFileChooserGetCurDir(gfc,-1);
 	if ( slashpt!=spt ) {
 	    temp = u_copyn(spt,slashpt-spt);
-	    dir = u_GFileAppendFile(curdir,temp,true);
+	    dir = u32_GFileAppendFile(curdir,temp,true);
 	    free(temp);
 	} else if ( wasdir && *pt=='\0' )
-	    dir = u_GFileAppendFile(curdir,spt,true);
+	    dir = u32_GFileAppendFile(curdir,spt,true);
 	else
 	    dir = curdir;
 	if ( dir!=curdir )
@@ -1229,7 +1229,7 @@ return;
     } else {
 	curdir = GFileChooserGetCurDir(gfc,-1);
 	temp = u_copyn(tit,pt-tit);
-	dir = u_GFileAppendFile(curdir,temp,true);
+	dir = u32_GFileAppendFile(curdir,temp,true);
 	free(temp); free(curdir);
 	free(gfc->lastname);
 	if ( pt[1]!='\0' )
@@ -1258,7 +1258,7 @@ static unichar_t *GFileChooserGetTitle(GGadget *g) {
 	file = u_copy(spt);
     else {
 	curdir = GFileChooserGetCurDir(gfc,-1);
-	file = u_GFileAppendFile(curdir,spt,gfc->lastname!=NULL);
+	file = u32_GFileAppendFile(curdir,spt,gfc->lastname!=NULL);
 	free(curdir);
     }
 return( file );
@@ -1638,8 +1638,8 @@ GGadget *GFileChooserCreate(struct gwindow *base, GGadgetData *gd,void *data) {
     else if ( GFileIsAbsolute(x_gc_u32_strconv_to_locale(gd->label->text)) )
 	GFileChooserSetTitle(&gfc->g,gd->label->text);
     else {
-	unichar_t *temp = u_GFileAppendFile(lastdir,gd->label->text,false);
-	temp = u_GFileNormalize(temp);
+	unichar_t *temp = u32_GFileAppendFile(lastdir,gd->label->text,false);
+	temp = u32_GFileNormalize(temp);
 	GFileChooserSetTitle(&gfc->g,temp);
 	free(temp);
     }
@@ -1702,7 +1702,7 @@ unichar_t *GFileChooserFileNameOfPos(GGadget *g, int pos) {
 return( NULL );
 
     curdir = GFileChooserGetCurDir(gfc,-1);
-    file = u_GFileAppendFile(curdir,ti->text,false);
+    file = u32_GFileAppendFile(curdir,ti->text,false);
     free(curdir);
 return( file );
 }

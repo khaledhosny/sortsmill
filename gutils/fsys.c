@@ -143,7 +143,7 @@ GFileUnlink (char *name)
 }
 
 unichar_t *
-u_GFileBaseName (const unichar_t *file)
+u32_GFileBaseName (const unichar_t *file)
 {
   // FIXME: Convert to utf-8 instead of locale.
   char *locale_file = x_gc_u32_strconv_to_locale (file);
@@ -152,7 +152,7 @@ u_GFileBaseName (const unichar_t *file)
 }
 
 unichar_t *
-u_GFileNormalize (unichar_t *name)
+u32_GFileNormalize (unichar_t *name)
 {
   unichar_t *pt, *base, *ppt;
 
@@ -198,7 +198,7 @@ u_GFileNormalize (unichar_t *name)
 
 // FIXME: Rewrite this, using UTF-8 and GFileAppendFile.
 unichar_t *
-u_GFileAppendFile (unichar_t *dir, unichar_t *name, bool isdir)
+u32_GFileAppendFile (unichar_t *dir, unichar_t *name, bool isdir)
 {
   unichar_t *ret, *pt;
 

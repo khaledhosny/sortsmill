@@ -45,8 +45,8 @@ EXPORTED_GIOFTP_SYMBOLS = GIO_cancel GIO_dispatch GIO_init GIO_term
 EXPORTED_FSYS_SYMBOLS = GFileGetUserConfigDir GFileGetUserCacheDir		\
 	GFileGetUserDataDir GFileGetHomeDir GFileBuildName GFileBaseName	\
 	GFileAppendFile GFileIsAbsolute GFileIsDir GFileExists				\
-	GFileReadable GFileMkDir GFileUnlink u_GFileBaseName				\
-	u_GFileNormalize u_GFileAppendFile
+	GFileReadable GFileMkDir GFileUnlink u32_GFileBaseName				\
+	u32_GFileNormalize u32_GFileAppendFile
 
 EXPORTED_GUTILS_SYMBOLS = $(EXPORTED_FSYS_SYMBOLS)					\
 	$(EXPORTED_GIOFTP_SYMBOLS) GIOCreate GIO_PasswordCache			\

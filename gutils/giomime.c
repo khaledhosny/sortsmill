@@ -108,7 +108,7 @@ unichar_t *GIOguessMimeType(const unichar_t *path,int isdir) {
 
     if ( isdir )
 return( dir );
-    path = u_GFileBaseName(path);
+    path = u32_GFileBaseName(path);
     pt = u_strrchr(path,'.');
 
     if ( pt==NULL ) {

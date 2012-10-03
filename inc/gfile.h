@@ -45,8 +45,8 @@ extern bool GFileExists (const char *file);
 extern bool GFileReadable (char *file);
 extern int GFileMkDir (char *name);
 extern int GFileUnlink (char *name);
-extern unichar_t *u_GFileBaseName (const unichar_t *oldname);
-extern unichar_t *u_GFileNormalize (unichar_t *name);
-extern unichar_t *u_GFileAppendFile (unichar_t *dir, unichar_t *name, bool isdir);
+extern unichar_t *u32_GFileBaseName (const unichar_t *oldname);
+extern unichar_t *u32_GFileNormalize (unichar_t *name);
+extern unichar_t *u32_GFileAppendFile (unichar_t *dir, unichar_t *name, bool isdir);
 
 #endif
