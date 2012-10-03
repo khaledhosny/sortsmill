@@ -160,17 +160,9 @@ typedef struct gmenu {
     struct gmenu *parent, *child;
     struct gmenubar *menubar;
     GWindow owner;
-    GTimer *scrollit;		/* No longer in use, see comment below */
     FontInstance *font;
     void (*donecallback)(GWindow owner);
     GIC *gic;
-    /* The code below still contains the old code for using up/down arrows */
-    /*  in the menu instead of a scrollbar. If vsb==NULL and the menu doesn't */
-    /*  fit on the screen, then the old code will be implemented (normally */
-    /*  that won't happen, but if I ever want to re-enable it, this is how */
-    /* The up arrow was placed at the top of the menu IFF there were lines off */
-    /*  the top, similarly for the bottom. Clicking on either one would scroll */
-    /*  in the indicated directions */
     GGadget *vsb;
 } GMenu;
 
@@ -311,87 +303,60 @@ static int GMenuMacIconsWidth(struct gmenu *m, int mask ) {
 return( x );
 }
 	
-static void GMenuDrawCheckMark(struct gmenu *m, Color fg, int ybase, int r2l) {
-    int as = m->as;
-    int pt = GDrawPointsToPixels(m->w,1);
-    int x = r2l ? m->width-m->tioff+2*pt : m->tickoff;
+static void
+GMenuDrawCheckMark (struct gmenu *m, Color fg, int ybase, int r2l)
+{
+  int as = m->as;
+  int pt = GDrawPointsToPixels (m->w, 1);
+  int x = r2l ? m->width - m->tioff + 2 * pt : m->tickoff;
 
-    while ( pt>1 && 2*pt>=as/3 ) --pt;
-    GDrawSetLineWidth(m->w,pt);
-    GDrawDrawLine(m->w,x+2*pt,ybase-as/3,x+as/3,ybase-2*pt,fg);
-    GDrawDrawLine(m->w,x+2*pt,ybase-as/3-pt,x+as/3,ybase-3*pt,fg);
-    GDrawDrawLine(m->w,x+as/3,ybase-2*pt,x+as/3+as/5,ybase-2*pt-as/4,fg);
-    GDrawDrawLine(m->w,x+as/3+as/5,ybase-2*pt-as/4,x+as/3+2*as/5,ybase-2*pt-as/3-as/7,fg);
-    GDrawDrawLine(m->w,x+as/3+2*as/5,ybase-2*pt-as/3-as/7,x+as/3+3*as/5,ybase-2*pt-as/3-as/7-as/8,fg);
+  while (pt > 1 && 2 * pt >= as / 3)
+    --pt;
+  GDrawSetLineWidth (m->w, 2 * pt);
+  GDrawDrawLine (m->w, x + pt, ybase - as / 2, x + as / 3, ybase - 2 * pt,
+                 fg);
+  GDrawDrawLine (m->w, x + as / 3, ybase - 2 * pt, x + as, ybase - 8 * pt,
+                 fg);
 }
 
-static void GMenuDrawUncheckMark(struct gmenu *m, Color fg, int ybase, int r2l) {
+static void
+GMenuDrawUncheckMark (struct gmenu *m, Color fg, int ybase, int r2l)
+{
 }
 
-static void GMenuDrawArrow(struct gmenu *m, int ybase, int r2l) {
-    int pt = GDrawPointsToPixels(m->w,1);
-    int as = 2*(m->as/2);
-    int x = r2l ? m->bp+2*pt : m->rightedge-2*pt;
-    GPoint p[3];
+static void
+GMenuDrawArrow (struct gmenu *m, Color fg, int ybase, int r2l)
+{
+  int pt = GDrawPointsToPixels (m->w, 1);
+  int as = 2 * (m->as / 3);
+  int x = r2l ? m->bp + 2 * pt : m->rightedge - 2 * pt;
+  GPoint p[3];
 
-    GDrawSetLineWidth(m->w,pt);
-    if ( r2l ) {
-	p[0].x = x;			p[0].y = ybase-as/2;
-	p[1].x = x+1*(as/2);		p[1].y = ybase;
-	p[2].x = p[1].x;		p[2].y = ybase-as;
+  GDrawSetLineWidth (m->w, 2 * pt);
+  if (r2l)
+    {
+      p[0].x = x;
+      p[0].y = ybase - as / 2;
+      p[1].x = x + 1 * (as / 2);
+      p[1].y = ybase;
+      p[2].x = p[1].x;
+      p[2].y = ybase - as;
 
-	GDrawDrawLine(m->w,p[0].x,p[0].y,p[2].x,p[2].y,m->box->border_brighter);
-	GDrawDrawLine(m->w,p[0].x+pt,p[0].y,p[2].x+pt,p[2].y+pt,m->box->border_brighter);
-	GDrawDrawLine(m->w,p[1].x,p[1].y,p[0].x,p[0].y,m->box->border_darkest);
-	GDrawDrawLine(m->w,p[1].x+pt,p[1].y-pt,p[0].x-pt,p[0].y,m->box->border_darkest);
-    } else {
-	p[0].x = x;			p[0].y = ybase-as/2;
-	p[1].x = x-1*(as/2);		p[1].y = ybase;
-	p[2].x = p[1].x;		p[2].y = ybase-as;
-
-	GDrawDrawLine(m->w,p[0].x,p[0].y,p[2].x,p[2].y,m->box->border_brighter);
-	GDrawDrawLine(m->w,p[0].x-pt,p[0].y,p[2].x+pt,p[2].y+pt,m->box->border_brighter);
-	GDrawDrawLine(m->w,p[1].x,p[1].y,p[0].x,p[0].y,m->box->border_darkest);
-	GDrawDrawLine(m->w,p[1].x+pt,p[1].y-pt,p[0].x-pt,p[0].y,m->box->border_darkest);
+      GDrawDrawLine (m->w, p[0].x, p[0].y, p[2].x, p[2].y, fg);
+      GDrawDrawLine (m->w, p[1].x, p[1].y, p[0].x, p[0].y, fg);
     }
-}
+  else
+    {
+      p[0].x = x;
+      p[0].y = ybase - as / 2;
+      p[1].x = x - 1 * (as / 2);
+      p[1].y = ybase;
+      p[2].x = p[1].x;
+      p[2].y = ybase - as;
 
-static void GMenuDrawUpArrow(struct gmenu *m, int ybase) {
-    int pt = GDrawPointsToPixels(m->w,1);
-    int x = (m->rightedge+m->tickoff)/2;
-    int as = 2*(m->as/2);
-    GPoint p[3];
-
-    p[0].x = x;			p[0].y = ybase - as;
-    p[1].x = x-as;		p[1].y = ybase;
-    p[2].x = x+as;		p[2].y = ybase;
-
-    GDrawSetLineWidth(m->w,pt);
-    GDrawDrawLine(m->w,p[0].x,p[0].y,p[1].x,p[1].y,m->box->border_brightest);
-    GDrawDrawLine(m->w,p[0].x,p[0].y+pt,p[1].x+pt,p[1].y,m->box->border_brightest);
-    GDrawDrawLine(m->w,p[1].x,p[1].y,p[2].x,p[2].y,m->box->border_darker);
-    GDrawDrawLine(m->w,p[1].x+pt,p[1].y,p[2].x-pt,p[2].y,m->box->border_darker);
-    GDrawDrawLine(m->w,p[2].x,p[2].y,p[0].x,p[0].y,m->box->border_darkest);
-    GDrawDrawLine(m->w,p[2].x-pt,p[2].y,p[0].x,p[0].y+pt,m->box->border_darkest);
-}
-
-static void GMenuDrawDownArrow(struct gmenu *m, int ybase) {
-    int pt = GDrawPointsToPixels(m->w,1);
-    int x = (m->rightedge+m->tickoff)/2;
-    int as = 2*(m->as/2);
-    GPoint p[3];
-
-    p[0].x = x;			p[0].y = ybase;
-    p[1].x = x-as;		p[1].y = ybase - as;
-    p[2].x = x+as;		p[2].y = ybase - as;
-
-    GDrawSetLineWidth(m->w,pt);
-    GDrawDrawLine(m->w,p[0].x,p[0].y,p[1].x,p[1].y,m->box->border_darker);
-    GDrawDrawLine(m->w,p[0].x,p[0].y+pt,p[1].x+pt,p[1].y,m->box->border_darker);
-    GDrawDrawLine(m->w,p[1].x,p[1].y,p[2].x,p[2].y,m->box->border_brightest);
-    GDrawDrawLine(m->w,p[1].x+pt,p[1].y,p[2].x-pt,p[2].y,m->box->border_brightest);
-    GDrawDrawLine(m->w,p[2].x,p[2].y,p[0].x,p[0].y,m->box->border_darkest);
-    GDrawDrawLine(m->w,p[2].x-pt,p[2].y,p[0].x,p[0].y+pt,m->box->border_darkest);
+      GDrawDrawLine (m->w, p[0].x, p[0].y, p[2].x, p[2].y, fg);
+      GDrawDrawLine (m->w, p[1].x, p[1].y, p[0].x, p[0].y, fg);
+    }
 }
 
 static int GMenuDrawMenuLine(struct gmenu *m, GMenuItem *mi, int y,GWindow pixmap) {
@@ -433,7 +398,7 @@ static int GMenuDrawMenuLine(struct gmenu *m, GMenuItem *mi, int y,GWindow pixma
     }
 
     if ( mi->sub!=NULL )
-	GMenuDrawArrow(m,ybase,r2l);
+	GMenuDrawArrow(m,fg,ybase,r2l);
     else if ( mi->shortcut!=0 && (mi->short_mask&0xffe0)==0 && mac_menu_icons ) {
 	_shorttext(mi->shortcut,0,shortbuf);
 	width = GDrawGetTextWidth(pixmap,shortbuf,-1) + GMenuMacIconsWidth(m,mi->short_mask);
@@ -472,13 +437,8 @@ static int gmenu_expose(struct gmenu *m, GEvent *event,GWindow pixmap) {
     for ( i = event->u.expose.rect.y/m->fh+m->offtop; i<m->mcnt &&
 	    i<=(event->u.expose.rect.y+event->u.expose.rect.height)/m->fh+m->offtop;
 	    ++i ) {
-	if ( i==m->offtop && m->offtop!=0 && m->vsb==NULL )
-	    GMenuDrawUpArrow(m, m->bp+m->as);
-	else if ( m->lcnt!=m->mcnt && i==m->lcnt+m->offtop-1 && i!=m->mcnt-1 ) {
-	    if ( m->vsb==NULL )
-		GMenuDrawDownArrow(m, m->bp+(i-m->offtop)*m->fh+m->as);
-	    else
-		GMenuDrawMenuLine(m, &m->mi[i], m->bp+(i-m->offtop)*m->fh, pixmap);
+	if ( m->lcnt!=m->mcnt && i==m->lcnt+m->offtop-1 && i!=m->mcnt-1 ) {
+	    GMenuDrawMenuLine(m, &m->mi[i], m->bp+(i-m->offtop)*m->fh, pixmap);
     break;	/* Otherwise we get bits of the line after the last */
 	} else
 	    GMenuDrawMenuLine(m, &m->mi[i], m->bp+(i-m->offtop)*m->fh, pixmap);
@@ -669,10 +629,6 @@ return( true );
     p.x = event->u.mouse.x; p.y = event->u.mouse.y;
 
     for ( testm=m; testm->child!=NULL; testm = testm->child );
-    if ( testm->scrollit && testm!=m ) {
-	GDrawCancelTimer(testm->scrollit);
-	testm->scrollit = NULL;
-    }
     for ( ; testm!=NULL; testm=testm->parent )
 	if ( GDrawEventInWindow(testm->w,event) )
     break;
@@ -710,21 +666,9 @@ return( true );
 	    event->type == et_mousedown ) {
 	int l = (event->u.mouse.y-m->bp)/m->fh;
 	int i = l + m->offtop;
-	if ( m->scrollit!=NULL )
-	    ;
-	else if ( event->u.mouse.y<m->bp && event->type==et_mousedown )
+	if ( event->u.mouse.y<m->bp && event->type==et_mousedown )
 	    GMenuDismissAll(m);
-	else if ( l==0 && m->offtop!=0 && m->vsb==NULL ) {
-	    GMenuChangeSelection(m,-1,event);
-	    if ( m->scrollit==NULL )
-		m->scrollit = GDrawRequestTimer(m->w,1,_GScrollBar_RepeatTime,m);
-	    m->scrollup = true;
-	} else if ( l>=m->lcnt-1 && m->offtop+m->lcnt<m->mcnt && m->vsb==NULL ) {
-	    GMenuChangeSelection(m,-1,event);
-	    if ( m->scrollit==NULL )
-		m->scrollit = GDrawRequestTimer(m->w,1,_GScrollBar_RepeatTime,m);
-	    m->scrollup = false;
-	} else if ( event->type == et_mousedown && m->child!=NULL &&
+	else if ( event->type == et_mousedown && m->child!=NULL &&
 		i == m->line_with_mouse ) {
 	    GMenuChangeSelection(m,-1,event);
 	} else if ( i >= m->mcnt ){
@@ -740,10 +684,7 @@ return( true );
 #if 0
  printf("\nActivate menu\n");
 #endif
-	if ( m->scrollit!=NULL ) {
-	    GDrawCancelTimer(m->scrollit);
-	    m->scrollit = NULL;
-	} else if ( event->u.mouse.y>=m->bp && event->u.mouse.x>=0 &&
+	if ( event->u.mouse.y>=m->bp && event->u.mouse.x>=0 &&
 		event->u.mouse.y<m->height-m->bp &&
 		event->u.mouse.x < m->width &&
 		!MParentInitialPress(m)) {
@@ -775,24 +716,12 @@ static int gmenu_timer(struct gmenu *m, GEvent *event) {
 	if ( m->offtop==0 )
 return(true);
 	if ( --m->offtop<0 ) m->offtop = 0;
-#if 0			/* If we were to put this in, then someone who was clicking through the menu to scroll it would find that his last click would both scroll and then invoke */
-	if ( m->offtop == 0 ) {
-	    GDrawCancelTimer(m->scrollit);
-	    m->scrollit = NULL;
-	}
-#endif
     } else {
 	if ( m->offtop == m->mcnt-m->lcnt )
 return( true );
 	++m->offtop;
 	if ( m->offtop + m->lcnt > m->mcnt )
 	    m->offtop = m->mcnt-m->lcnt;
-#if 0
-	if ( m->offtop == m->mcnt-m->lcnt ) {
-	    GDrawCancelTimer(m->scrollit);
-	    m->scrollit = NULL;
-	}
-#endif
     }
     GDrawRequestExpose(m->w, NULL, false);
 return( true );

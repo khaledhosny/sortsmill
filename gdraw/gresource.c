@@ -27,9 +27,6 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <config.h>
-
-#include <assert.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -173,6 +170,9 @@ return;
 	if ( next==NULL ) next = pt+strlen(pt);
 	else ++next;
 	if ( strncmp(pt,"Gdraw.",6)==0 ) ++cnt;
+	else if ( strncmp(pt,"FontForge.",10)==0 ) ++cnt;
+	// for backword compatability with old resources
+	else if ( strncmp(pt,"fontforge.",10)==0 ) ++cnt;
 	else if ( strncmp(pt,"*",1)==0 ) ++cnt;
 	pt = next;
     }
@@ -192,7 +192,10 @@ return;
     while ( *pt!='\0' ) {
 	next = strchr(pt,'\n');
 	if ( next==NULL ) next = pt+strlen(pt);
-	if ( strncmp(pt,"Gdraw.",6)==0 || strncmp(pt,"*",1)==0) {
+	if ( strncmp(pt,"Gdraw.",6)==0 || strncmp(pt,"*",1)==0 ||
+	     strncmp(pt,"FontForge.",10)==0 ||
+	     // for backword compatability with old resources
+	     strncmp(pt,"fontforge.",10)==0) {
 	    temp.generic = false;
 	    if ( strncmp(pt,"Gdraw.",6)==0 )
 	      {
@@ -205,7 +208,7 @@ return;
 		off = 1;
 	      }
 	    else
-	      assert (false);
+		off = 10;
 	    ept = strchr(pt+off,':');
 	    if ( ept==NULL )
 	goto bad;
