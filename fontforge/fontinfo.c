@@ -1,6 +1,5 @@
-#include <config.h>
+#include <config.h>		/* -*- coding: utf-8 -*- */
 
-/* -*- coding: utf-8 -*- */
 /* Copyright (C) 2000-2012 by George Williams */
 /*
  * Redistribution and use in source and binary forms, with or without
@@ -35,6 +34,8 @@
 #include "unicoderange.h"
 #include <locale.h>
 #include "lookups.h"
+#include <null_passthru.h>
+#include <xuniconv.h>
 
 extern int _GScrollBar_Width;
 extern GBox _ggadget_Default_Box;
@@ -10334,10 +10335,13 @@ return;
 
     t = sf->creationtime;
     tm = localtime(&t);
-    if(!tm) strcpy(createtime, "error");
-    else    strftime(createtime,sizeof(createtime),"%c",tm);
-    tmpcreatetime = def2u_copy(createtime);
-    dgcd[1].gd.pos.x = 115; dgcd[1].gd.pos.y = dgcd[0].gd.pos.y;
+    if(!tm)
+      strcpy(createtime, "error");
+    else
+      strftime(createtime,sizeof(createtime),"%c",tm);
+    tmpcreatetime = NULL_PASSTHRU (createtime, x_u32_strconv_from_locale (createtime));
+    dgcd[1].gd.pos.x = 115;
+    dgcd[1].gd.pos.y = dgcd[0].gd.pos.y;
     dgcd[1].gd.flags = gg_visible | gg_enabled;
     dlabel[1].text = tmpcreatetime;
     dgcd[1].gd.label = &dlabel[1];
@@ -10353,10 +10357,13 @@ return;
 
     t = sf->modificationtime;
     tm = localtime(&t);
-    if(!tm) strcpy(modtime, "error");
-    else    strftime(modtime,sizeof(modtime),"%c",tm);
-    tmpmodtime = def2u_copy(modtime);
-    dgcd[3].gd.pos.x = 115; dgcd[3].gd.pos.y = dgcd[2].gd.pos.y;
+    if(!tm)
+      strcpy(modtime, "error");
+    else
+      strftime(modtime,sizeof(modtime),"%c",tm);
+    tmpmodtime = NULL_PASSTHRU (modtime, x_u32_strconv_from_locale (modtime));
+    dgcd[3].gd.pos.x = 115;
+    dgcd[3].gd.pos.y = dgcd[2].gd.pos.y;
     dgcd[3].gd.flags = gg_visible | gg_enabled;
     dlabel[3].text = tmpmodtime;
     dgcd[3].gd.label = &dlabel[3];

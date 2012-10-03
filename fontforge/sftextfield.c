@@ -27,18 +27,15 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <config.h>
-
 #include <stdbool.h>
 #include "fontforgeui.h"
 #include <gkeysym.h>
 #include <math.h>
-
-
 #include "sftextfieldP.h"
 #include <ustring.h>
 #include <utype.h>
 #include <chardata.h>
+#include <xuniconv.h>
 
 static GBox sftextarea_box = GBOX_EMPTY; /* Don't initialize here */
 static int sftextarea_inited = false;
@@ -369,13 +366,14 @@ static void *ddgenunicodedata(void *_gt,int32 *len) {
 return( temp );
 }
 
-static void *genlocaldata(void *_gt,int32 *len) {
-    SFTextArea *st = _gt;
-    unichar_t *temp =u_copyn(st->li.text+st->sel_start,st->sel_end-st->sel_start);
-    char *ret = u2def_copy(temp);
-    free(temp);
-    *len = strlen(ret);
-return( ret );
+static void *genlocaldata(void *_gt, int32 *len)
+{
+  SFTextArea *st = _gt;
+  unichar_t *temp = u_copyn(st->li.text+st->sel_start,st->sel_end-st->sel_start);
+  char *ret = u2def_copy(temp);
+  free(temp);
+  *len = strlen(ret);
+  return( ret );
 }
 
 static void *ddgenlocaldata(void *_gt,int32 *len) {
@@ -558,14 +556,14 @@ static void SFTextAreaPaste(SFTextArea *st,enum selnames sel) {
 	}
 	free(temp2);
     } else if ( GDrawSelectionHasType(st->g.base,sel,"STRING")) {
-	unichar_t *temp; char *ctemp;
+	char *ctemp;
 	int32 len;
 	ctemp = GDrawRequestSelection(st->g.base,sel,"STRING",&len);
-	if ( ctemp!=NULL ) {
-	    temp = def2u_copy(ctemp);
-	    SFTextArea_Replace(st,temp);
-	    free(ctemp); free(temp);
-	}
+	if ( ctemp!=NULL )
+	  {
+	    SFTextArea_Replace(st, x_gc_u32_strconv_from_locale (ctemp));
+	    free(ctemp);
+	  }
     }
 }
 

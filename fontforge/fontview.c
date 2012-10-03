@@ -47,6 +47,7 @@
 #include <xalloc.h>
 #include <xdie_on_null.h>
 #include <canonicalize.h>
+#include <xuniconv.h>
 
 int OpenCharsInNewWindow = 1;
 char *RecentFiles[RECENT_MAX] = { NULL };
@@ -547,90 +548,98 @@ static int SaveAs_FormatChange(GGadget *g, GEvent *e) {
 return( true );
 }
 
-int _FVMenuSaveAs(FontView *fv) {
-    char *temp;
-    char *ret;
-    char *filename;
-    int ok;
-    int s2d = fv->b.cidmaster!=NULL ? fv->b.cidmaster->save_to_dir :
-		fv->b.sf->mm!=NULL ? fv->b.sf->mm->normal->save_to_dir :
-		fv->b.sf->save_to_dir;
-    GGadgetCreateData gcd;
-    GTextInfo label;
+int _FVMenuSaveAs(FontView *fv)
+{
+  char *temp;
+  char *ret;
+  char *filename;
+  int ok;
+  int s2d = fv->b.cidmaster!=NULL ? fv->b.cidmaster->save_to_dir :
+    fv->b.sf->mm!=NULL ? fv->b.sf->mm->normal->save_to_dir :
+    fv->b.sf->save_to_dir;
+  GGadgetCreateData gcd;
+  GTextInfo label;
 
-    if ( fv->b.cidmaster!=NULL && fv->b.cidmaster->filename!=NULL )
-	temp=def2utf8_copy(fv->b.cidmaster->filename);
-    else if ( fv->b.sf->mm!=NULL && fv->b.sf->mm->normal->filename!=NULL )
-	temp=def2utf8_copy(fv->b.sf->mm->normal->filename);
-    else if ( fv->b.sf->filename!=NULL )
-	temp=def2utf8_copy(fv->b.sf->filename);
-    else {
-	SplineFont *sf = fv->b.cidmaster?fv->b.cidmaster:
-		fv->b.sf->mm!=NULL?fv->b.sf->mm->normal:fv->b.sf;
-	char *fn = sf->defbasefilename ? sf->defbasefilename : sf->fontname;
-	temp = xmalloc1((strlen(fn)+10));
-	strcpy(temp,fn);
-	if ( sf->defbasefilename!=NULL )
-	    /* Don't add a default suffix, they've already told us what name to use */;
-	else if ( fv->b.cidmaster!=NULL )
-	    strcat(temp,"CID");
-	else if ( sf->mm==NULL )
-	    ;
-	else if ( sf->mm->apple )
-	    strcat(temp,"Var");
-	else
-	    strcat(temp,"MM");
+  if ( fv->b.cidmaster!=NULL && fv->b.cidmaster->filename!=NULL )
+    temp=def2utf8_copy(fv->b.cidmaster->filename);
+  else if ( fv->b.sf->mm!=NULL && fv->b.sf->mm->normal->filename!=NULL )
+    temp=def2utf8_copy(fv->b.sf->mm->normal->filename);
+  else if ( fv->b.sf->filename!=NULL )
+    temp=def2utf8_copy(fv->b.sf->filename);
+  else
+    {
+      SplineFont *sf = fv->b.cidmaster?fv->b.cidmaster:
+	fv->b.sf->mm!=NULL?fv->b.sf->mm->normal:fv->b.sf;
+      char *fn = sf->defbasefilename ? sf->defbasefilename : sf->fontname;
+      temp = xmalloc1((strlen(fn)+10));
+      strcpy(temp,fn);
+      if ( sf->defbasefilename!=NULL )
+	/* Don't add a default suffix, they've already told us what name to use */;
+      else if ( fv->b.cidmaster!=NULL )
+	strcat(temp,"CID");
+      else if ( sf->mm==NULL )
+	;
+      else if ( sf->mm->apple )
+	strcat(temp,"Var");
+      else
+	strcat(temp,"MM");
 #ifdef VMS
-	strcat(temp,save_to_dir ? "_sfdir" : ".sfd");
+      strcat(temp,save_to_dir ? "_sfdir" : ".sfd");
 #else
-	strcat(temp,save_to_dir ? ".sfdir" : ".sfd");
+      strcat(temp,save_to_dir ? ".sfdir" : ".sfd");
 #endif
-	s2d = save_to_dir;
+      s2d = save_to_dir;
     }
 
-    memset(&gcd,0,sizeof(gcd));
-    memset(&label,0,sizeof(label));
-    gcd.gd.flags = s2d ? (gg_visible | gg_enabled | gg_cb_on) : (gg_visible | gg_enabled);
-    label.text = (unichar_t *) _("Save as _Directory");
-    label.text_is_1byte = true;
-    label.text_in_resource = true;
-    gcd.gd.label = &label;
-    gcd.gd.handle_controlevent = SaveAs_FormatChange;
-    gcd.data = &s2d;
-    gcd.creator = GCheckBoxCreate;
+  memset(&gcd,0,sizeof(gcd));
+  memset(&label,0,sizeof(label));
+  gcd.gd.flags = s2d ? (gg_visible | gg_enabled | gg_cb_on) : (gg_visible | gg_enabled);
+  label.text = (unichar_t *) _("Save as _Directory");
+  label.text_is_1byte = true;
+  label.text_in_resource = true;
+  gcd.gd.label = &label;
+  gcd.gd.handle_controlevent = SaveAs_FormatChange;
+  gcd.data = &s2d;
+  gcd.creator = GCheckBoxCreate;
 
-    ret = gwwv_save_filename_with_gadget(_("Save as..."),temp,NULL,&gcd);
-    free(temp);
-    if ( ret==NULL )
-return( 0 );
-    filename = utf82def_copy(ret);
-    free(ret);
-    FVFlattenAllBitmapSelections(fv);
-    fv->b.sf->compression = 0;
-    ok = SFDWrite(filename,fv->b.sf,fv->b.map,fv->b.normal,s2d);
-    if ( ok ) {
-	SplineFont *sf = fv->b.cidmaster?fv->b.cidmaster:fv->b.sf->mm!=NULL?fv->b.sf->mm->normal:fv->b.sf;
-	free(sf->filename);
-	sf->filename = filename;
-	sf->save_to_dir = s2d;
-	free(sf->origname);
-	sf->origname = copy(filename);
-	sf->new = false;
-	if ( sf->mm!=NULL ) {
-	    int i;
-	    for ( i=0; i<sf->mm->instance_count; ++i ) {
-		free(sf->mm->instances[i]->filename);
-		sf->mm->instances[i]->filename = filename;
-		free(sf->mm->instances[i]->origname);
-		sf->mm->instances[i]->origname = copy(filename);
-		sf->mm->instances[i]->new = false;
+  ret = gwwv_save_filename_with_gadget(_("Save as..."),temp,NULL,&gcd);
+  free(temp);
+  if ( ret==NULL )
+    return( 0 );
+  filename = utf82def_copy(ret);
+  free(ret);
+  FVFlattenAllBitmapSelections(fv);
+  fv->b.sf->compression = 0;
+  ok = SFDWrite(filename,fv->b.sf,fv->b.map,fv->b.normal,s2d);
+  if ( ok )
+    {
+      // FIXME: What does this mean?! :)
+      SplineFont *sf = fv->b.cidmaster?fv->b.cidmaster:fv->b.sf->mm!=NULL?fv->b.sf->mm->normal:fv->b.sf;
+
+      free(sf->filename);
+      sf->filename = filename;
+      sf->save_to_dir = s2d;
+      free(sf->origname);
+      sf->origname = copy(filename);
+      sf->new = false;
+      if ( sf->mm!=NULL )
+	{
+	  int i;
+	  for ( i=0; i<sf->mm->instance_count; ++i )
+	    {
+	      free(sf->mm->instances[i]->filename);
+	      sf->mm->instances[i]->filename = filename;
+	      free(sf->mm->instances[i]->origname);
+	      sf->mm->instances[i]->origname = copy(filename);
+	      sf->mm->instances[i]->new = false;
 	    }
 	}
-	SplineFontSetUnChanged(sf);
-	FVSetTitles(fv->b.sf);
-    } else
-	free(filename);
-return( ok );
+      SplineFontSetUnChanged(sf);
+      FVSetTitles(fv->b.sf);
+    }
+  else
+    free(filename);
+  return( ok );
 }
 
 static void FVMenuSaveAs(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
@@ -3401,7 +3410,7 @@ static void FVMenuHistograms(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)
 }
 
 static void FontViewSetTitle(FontView *fv) {
-    unichar_t *title, *ititle, *temp;
+    unichar_t *title, *ititle;
     char *file=NULL;
     char *enc;
     int len;
@@ -3424,12 +3433,10 @@ return;
     title = xmalloc1((len+1)*sizeof(unichar_t));
     uc_strcpy(title,fv->b.sf->fontname);
     if ( fv->b.sf->changed )
-	uc_strcat(title,"*");
+	uc_strcat (title, "*");
     if ( file!=NULL ) {
-	uc_strcat(title,"  ");
-	temp = def2u_copy(GFileBaseName(file));
-	u_strcat(title,temp);
-	free(temp);
+	uc_strcat (title, "  ");
+	u_strcat (title, x_gc_u32_strconv_from_locale (GFileBaseName (file)));
     }
     uc_strcat(title, " (" );
     if ( fv->b.normal ) { utf82u_strcat(title,_("Compact")); uc_strcat(title," "); }

@@ -41,6 +41,7 @@
 #include <ustring.h>
 #include "ttf.h"
 #include "psfont.h"
+#include <xuniconv.h>
 #if __Mac
 # include <ctype.h>
 # include <Developer/Headers/FlatCarbon/Files.h>
@@ -1487,7 +1488,7 @@ return( false );
     ((FInfo *) (info.finderInfo))->fdType = mb->type;
     ((FInfo *) (info.finderInfo))->fdCreator = mb->creator;
     pt = strrchr(fname,'/');
-    filename = def2u_copy(pt==NULL?fname:pt+1);
+    filename = x_u32_strconv_from_locale (pt==NULL?fname:pt+1);
     { UniChar *ucs2fn = xmalloc1((u_strlen(filename)+1) * sizeof(UniChar));
       int i;
 	for ( i=0; filename[i]!=0; ++i )

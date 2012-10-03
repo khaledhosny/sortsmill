@@ -700,16 +700,16 @@ static void GTextFieldPaste(GTextField *gt,enum selnames sel) {
 	}
 	free(temp2);
     } else if ( GDrawSelectionHasType(gt->g.base,sel,"STRING")) {
-	unichar_t *temp; char *ctemp;
+	char *ctemp;
 	int32 len;
 	ctemp = GDrawRequestSelection(gt->g.base,sel,"STRING",&len);
 	if ( ctemp==NULL || len==0 )
-	    ctemp = GDrawRequestSelection(gt->g.base,sel,"text/plain;charset=UTF-8",&len);
-	if ( ctemp!=NULL ) {
-	    temp = def2u_copy(ctemp);
-	    GTextField_Replace(gt,temp);
-	    free(ctemp); free(temp);
-	}
+	  ctemp = GDrawRequestSelection(gt->g.base,sel,"text/plain;charset=UTF-8",&len);
+	if ( ctemp!=NULL )
+	  {
+	    GTextField_Replace(gt, x_gc_u32_strconv_from_locale (ctemp));
+	    free(ctemp);
+	  }
     }
 }
 

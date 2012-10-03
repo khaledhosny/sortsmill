@@ -31,6 +31,8 @@
 #include <stdarg.h>
 #include "ustring.h"
 #include "utype.h"
+#include <null_passthru.h>
+#include <xuniconv.h>
 
 /* unicode printf. Expect arguments to be given using <num>$ notation */
 /* But there's no way I'm going to implement all of printf now. I'll do what I */
@@ -184,16 +186,21 @@ return;
 	padvalue(state,arg,pt+1,fieldwidth);
       break;
       case 's':
-	if ( state->args[arg].uval == NULL ) {
+	if ( state->args[arg].uval == NULL )
+	  {
 	    static unichar_t null[] = { '<','n','u','l','l','>', '\0' };
 	    padstr(state,arg,null,fieldwidth,precision);
-	} else if ( state->args[arg].is_short ) {
-	    unichar_t *temp = def2u_copy((char *) (state->args[arg].uval));
+	  }
+	else if ( state->args[arg].is_short )
+	  {
+	    uint32_t *temp =
+	      NULL_PASSTHRU (state->args[arg].uval,
+			     x_gc_u32_strconv_from_locale ((char *) state->args[arg].uval));
 	    padstr(state,arg,temp,fieldwidth,precision);
-	    free(temp);
-	} else
-	    padstr(state,arg,state->args[arg].uval,fieldwidth,precision);
-      break;
+	  }
+	else
+	  padstr(state,arg,state->args[arg].uval,fieldwidth,precision);
+	break;
       case 'e': case 'E': case 'f': case 'F': case 'g': case 'G': case 'a': case 'A':
 	/* This doesn't really do a good job!!!! */
 	switch ( state->args[arg].format ) {

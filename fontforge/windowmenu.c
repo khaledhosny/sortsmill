@@ -26,10 +26,12 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-# include "fontforgeui.h"
-# include <gfile.h>
-# include "splinefont.h"
-#  include "ustring.h"
+#include "fontforgeui.h"
+#include <gfile.h>
+#include "splinefont.h"
+#include "ustring.h"
+#include <null_passthru.h>
+#include <xuniconv.h>
 
 static void WindowSelect(GWindow base,struct gmenuitem *mi,GEvent *e) {
     GDrawRaise(mi->ti.userdata);
@@ -154,7 +156,9 @@ return;
 	    mi->ti.userdata = RecentFiles[i];
 	    mi->ti.bg = mi->ti.fg = COLOR_DEFAULT;
 	    mi->invoke = RecentSelect;
-	    mi->ti.text = def2u_copy(GFileBaseName(RecentFiles[i]));
+	    mi->ti.text =
+	      NULL_PASSTHRU (GFileBaseName(RecentFiles[i]),
+			     x_u32_strconv_from_locale (GFileBaseName(RecentFiles[i])));
 	}
     }
     if ( cnt!=cnt1 )

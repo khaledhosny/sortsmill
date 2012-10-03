@@ -78,7 +78,11 @@ check_PROGRAMS = $(TESTS_XUNICONV_H) $(TESTS_XUNISTR_H)	\
 
 AM_DEFAULT_SOURCE_EXT = .c
 LDADD = $(top_builddir)/fontforge/libsortsmillff_fontforgeexe.la	\
-	$(top_builddir)/fontforge/libsortsmillff_fontforge.la
+	$(top_builddir)/gdraw/libsortsmillff_gdraw.la					\
+	$(top_builddir)/fontforge/libsortsmillff_fontforge.la			\
+	$(top_builddir)/gutils/libsortsmillff_gutils.la					\
+	$(top_builddir)/auxiliary/libsortsmillff_aux.la					\
+	$(top_builddir)/lib/libgnu.la
 AM_LDFLAGS = -export-dynamic -avoid-version
 
 EXTRA_DIST += $(MY_AT_FILES)

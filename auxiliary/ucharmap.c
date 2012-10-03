@@ -71,12 +71,6 @@ u2def_strncpy (char *to, const unichar_t *ufrom, int n)
   return (to);
 }
 
-unichar_t *
-def2u_copy (const char *from)
-{
-  return (unichar_t *) NULL_PASSTHRU (from, x_u32_strconv_from_locale (from));
-}
-
 char *
 u2def_copy (const unichar_t *ufrom)
 {

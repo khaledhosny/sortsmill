@@ -37,6 +37,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <math.h>
+#include <null_passthru.h>
 #include <xuniconv.h>
 #include <unistr.h>
 
@@ -1710,27 +1711,28 @@ return( NULL );
 
 static char *GXDrawGetWindowTitle8(GWindow w);
 
-static unichar_t *GXDrawGetWindowTitle(GWindow w) {
+static unichar_t *GXDrawGetWindowTitle(GWindow w)
+{
 #if defined(__MINGW32__)
-    GXWindow gw = (GXWindow) w;
-    return mingw_get_wm_name(gw->display->display, gw->w);
+  GXWindow gw = (GXWindow) w;
+  return mingw_get_wm_name(gw->display->display, gw->w);
 #else
 #if X_HAVE_UTF8_STRING
-    char *ret1 = GXDrawGetWindowTitle8(w);
-    unichar_t *ret = utf82u_copy(ret1);
+  char *ret1 = GXDrawGetWindowTitle8(w);
+  unichar_t *ret = utf82u_copy(ret1);
 
-    free(ret1);
-return( ret );
+  free(ret1);
+  return( ret );
 #else
-    GXWindow gw = (GXWindow) w;
-    Display *display = gw->display->display;
-    char *pt;
-    unichar_t *ret;
+  GXWindow gw = (GXWindow) w;
+  Display *display = gw->display->display;
+  char *pt;
+  unichar_t *ret;
 
-    XFetchName(display,gw->w,&pt);
-    ret = def2u_copy(pt);
-    XFree(pt);
-return( ret );
+  XFetchName(display,gw->w,&pt);
+  ret = NULL_PASSTHRU (pt, x_u32_strconv_from_locale (pt));
+  XFree(pt);
+  return( ret );
 #endif
 #endif
 }
