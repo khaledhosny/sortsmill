@@ -67,7 +67,7 @@ MY_AT_FILES = old_python_tests.at fsys_c.at
 
 TESTS_FSYS_C = test_GFileGetUserConfigDir test_GFileGetUserCacheDir		\
 	test_GFileGetUserDataDir test_GFileGetHomeDir test_GFileBuildName	\
-	test_GFileBaseName
+	test_GFileBaseName test_GFileAppendFile
 
 check_PROGRAMS = $(TESTS_FSYS_C)
 

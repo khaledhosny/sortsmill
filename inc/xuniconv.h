@@ -30,7 +30,8 @@
 #define _FONTFORGE_XSTRCONV_H
 
 //
-// libunistring conversion routines combined with xalloc.
+// libunistring conversion routines combined with xalloc and the Boehm
+// garbage collector.
 //
 
 #include <config.h>
@@ -39,41 +40,91 @@
 #include <uniconv.h>
 #include <xalloc.h>
 #include <xdie_on_null.h>
+#include <xgc.h>
 
-static inline uint8_t *
+inline uint8_t *x_u8_strconv_from_locale (const char *string);
+inline uint16_t *x_u16_strconv_from_locale (const char *string);
+inline uint32_t *x_u32_strconv_from_locale (const char *string);
+inline char *x_u8_strconv_to_locale (const uint8_t *string);
+inline char *x_u16_strconv_to_locale (const uint16_t *string);
+inline char *x_u32_strconv_to_locale (const uint32_t *string);
+inline uint8_t *x_gc_u8_strconv_from_locale (const char *string);
+inline uint16_t *x_gc_u16_strconv_from_locale (const char *string);
+inline uint32_t *x_gc_u32_strconv_from_locale (const char *string);
+inline char *x_gc_u8_strconv_to_locale (const uint8_t *string);
+inline char *x_gc_u16_strconv_to_locale (const uint16_t *string);
+inline char *x_gc_u32_strconv_to_locale (const uint32_t *string);
+
+inline uint8_t *
 x_u8_strconv_from_locale (const char *string)
 {
   return XDIE_ON_NULL (u8_strconv_from_locale (string));
 }
 
-static inline uint16_t *
+inline uint16_t *
 x_u16_strconv_from_locale (const char *string)
 {
   return XDIE_ON_NULL (u16_strconv_from_locale (string));
 }
 
-static inline uint32_t *
+inline uint32_t *
 x_u32_strconv_from_locale (const char *string)
 {
   return XDIE_ON_NULL (u32_strconv_from_locale (string));
 }
 
-static inline char *
+inline char *
 x_u8_strconv_to_locale (const uint8_t *string)
 {
   return XDIE_ON_NULL (u8_strconv_to_locale (string));
 }
 
-static inline char *
+inline char *
 x_u16_strconv_to_locale (const uint16_t *string)
 {
   return XDIE_ON_NULL (u16_strconv_to_locale (string));
 }
 
-static inline char *
+inline char *
 x_u32_strconv_to_locale (const uint32_t *string)
 {
   return XDIE_ON_NULL (u32_strconv_to_locale (string));
+}
+
+inline uint8_t *
+x_gc_u8_strconv_from_locale (const char *string)
+{
+  return x_gc_u8_grabstr (x_u8_strconv_from_locale (string));
+}
+
+inline uint16_t *
+x_gc_u16_strconv_from_locale (const char *string)
+{
+  return x_gc_u16_grabstr (x_u16_strconv_from_locale (string));
+}
+
+inline uint32_t *
+x_gc_u32_strconv_from_locale (const char *string)
+{
+  return x_gc_u32_grabstr (x_u32_strconv_from_locale (string));
+}
+
+inline char *
+x_gc_u8_strconv_to_locale (const uint8_t *string)
+{
+  return x_gc_grabstr (x_u8_strconv_to_locale (string));
+}
+
+inline char *
+x_gc_u16_strconv_to_locale (const uint16_t *string)
+{
+  return x_gc_grabstr (x_u16_strconv_to_locale (string));
+}
+
+inline char *
+x_gc_u32_strconv_to_locale (const uint32_t *string)
+{
+  return x_gc_grabstr (x_u32_strconv_to_locale (string));
 }
 
 #endif // _FONTFORGE_XSTRCONV_H

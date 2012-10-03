@@ -33,7 +33,7 @@ lib_LTLIBRARIES = libsortsmillff_aux.la
 
 libsortsmillff_aux_la_SOURCES = ArabicForms.c alphabet.c backtrns.c	\
 	char.c cjk.c ucharmap.c unialt.c ustring.c utype.c usprintf.c	\
-	combiners.h xdie_on_null.c xgc.c
+	combiners.h xdie_on_null.c xgc.c xuniconv.c
 
 EXPORTED_XDIE_ON_NULL_SYMBOLS = xdie_on_null xdie_on_enomem
 
@@ -43,28 +43,37 @@ EXPORTED_XGC_SYMBOLS = x_gc_malloc_atomic x_gc_malloc_uncollectable	\
 	x_gc_strdup x_gc_grabstr x_gc_u8_grabstr x_gc_u16_grabstr		\
 	x_gc_u32_grabstr
 
+EXPORTED_XUNICONV_SYMBOLS = x_u8_strconv_from_locale			\
+	x_u16_strconv_from_locale x_u32_strconv_from_locale			\
+	x_u8_strconv_to_locale x_u16_strconv_to_locale				\
+	x_u32_strconv_to_locale x_gc_u8_strconv_from_locale			\
+	x_gc_u16_strconv_from_locale x_gc_u32_strconv_from_locale	\
+	x_gc_u8_strconv_to_locale x_gc_u16_strconv_to_locale		\
+	x_gc_u32_strconv_to_locale
+
 EXPORTED_AUX_SYMBOLS = $(EXPORTED_XDIE_ON_NULL_SYMBOLS)					\
-	$(EXPORTED_XGC_SYMBOLS) AllAscii ArabicForms StripToASCII			\
-	____codepointassigned ____tolower ____tomirror ____toupper			\
-	____utype ____utype2 alphabets_from_unicode big5_from_unicode		\
-	c_to_u cu_copy cu_copyn cu_strcat cu_strcpy cu_strncpy				\
-	cu_strstartmatch def2u_copy def2u_strncpy def2utf8_copy				\
-	gb2312_from_unicode iconv_local_encoding_name jis_from_unicode		\
-	ksc5601_from_unicode latin1_2_utf8_copy local_encoding strmatch		\
-	strnmatch strstrmatch u2def_copy u2def_strncpy u2utf8_copy			\
-	u2utf8_copyn u2utf8_strcpy uAllAscii u_copy u_copyn u_endswith		\
-	u_sprintf u_strcat u_strchr u_strcmp u_strcpy u_strlen u_strmatch	\
-	u_strncmp u_strncpy u_strnmatch u_strrchr u_strstartmatch			\
-	u_strstrmatch u_strtod u_strtol u_strtoul u_to_c u_vsnprintf		\
-	uc_copy uc_copyn uc_strcat uc_strcmp uc_strcpy uc_strmatch			\
-	uc_strncat uc_strncmp uc_strncpy uc_strstr uc_strstrmatch			\
-	unicode_alternates unicode_from_alphabets unicode_from_big5			\
-	unicode_from_big5hkscs unicode_from_gb2312 unicode_from_jis201		\
-	unicode_from_jis208 unicode_from_jis212 unicode_from_johab			\
-	unicode_from_ksc5601 utf82U_strncpy utf82def_copy utf82u_copy		\
-	utf82u_copyn utf82u_strcat utf82u_strcpy utf82u_strlen				\
-	utf8_2_latin1_copy utf8_idpb utf8_ildb utf8_strchr utf8_strlen		\
-	utf8_strncpy utf8_truncatevalid utf8_valid x_gc_malloc				\
+	$(EXPORTED_XGC_SYMBOLS) $(EXPORTED_XUNICONV_SYMBOLS) AllAscii		\
+	ArabicForms StripToASCII ____codepointassigned ____tolower			\
+	____tomirror ____toupper ____utype ____utype2						\
+	alphabets_from_unicode big5_from_unicode c_to_u cu_copy cu_copyn	\
+	cu_strcat cu_strcpy cu_strncpy cu_strstartmatch def2u_copy			\
+	def2u_strncpy def2utf8_copy gb2312_from_unicode						\
+	iconv_local_encoding_name jis_from_unicode ksc5601_from_unicode		\
+	latin1_2_utf8_copy local_encoding strmatch strnmatch strstrmatch	\
+	u2def_copy u2def_strncpy u2utf8_copy u2utf8_copyn u2utf8_strcpy		\
+	uAllAscii u_copy u_copyn u_endswith u_sprintf u_strcat u_strchr		\
+	u_strcmp u_strcpy u_strlen u_strmatch u_strncmp u_strncpy			\
+	u_strnmatch u_strrchr u_strstartmatch u_strstrmatch u_strtod		\
+	u_strtol u_strtoul u_to_c u_vsnprintf uc_copy uc_copyn uc_strcat	\
+	uc_strcmp uc_strcpy uc_strmatch uc_strncat uc_strncmp uc_strncpy	\
+	uc_strstr uc_strstrmatch unicode_alternates							\
+	unicode_from_alphabets unicode_from_big5 unicode_from_big5hkscs		\
+	unicode_from_gb2312 unicode_from_jis201 unicode_from_jis208			\
+	unicode_from_jis212 unicode_from_johab unicode_from_ksc5601			\
+	utf82U_strncpy utf82def_copy utf82u_copy utf82u_copyn				\
+	utf82u_strcat utf82u_strcpy utf82u_strlen utf8_2_latin1_copy		\
+	utf8_idpb utf8_ildb utf8_strchr utf8_strlen utf8_strncpy			\
+	utf8_truncatevalid utf8_valid x_gc_malloc							\
 	libsortsmillff_aux_la_CPPFLAGS = $(AM_CPPFLAGS)
 libsortsmillff_aux_la_LIBADD = $(top_builddir)/lib/libgnu.la
 libsortsmillff_aux_la_LDFLAGS = $(call ldflags,EXPORTED_AUX_SYMBOLS)

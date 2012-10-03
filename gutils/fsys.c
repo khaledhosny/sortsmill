@@ -145,9 +145,9 @@ GFileUnlink (char *name)
 unichar_t *
 u_GFileBaseName (const unichar_t *file)
 {
-  char *locale_file = x_gc_grabstr (x_u32_strconv_to_locale (file));
+  char *locale_file = x_gc_u32_strconv_to_locale (file);
   char *locale_base = x_gc_grabstr (g_path_get_basename (locale_file));
-  return x_gc_u32_grabstr (x_u32_strconv_from_locale (locale_base));
+  return x_gc_u32_strconv_from_locale (locale_base);
 }
 
 unichar_t *
@@ -224,5 +224,5 @@ u_GFileAppendFile (unichar_t *dir, unichar_t *name, bool isdir)
 bool
 u_GFileIsAbsolute (const unichar_t *file)
 {
-  return GFileIsAbsolute (x_gc_grabstr (x_u32_strconv_to_locale (file)));
+  return GFileIsAbsolute (x_gc_u32_strconv_to_locale (file));
 }
