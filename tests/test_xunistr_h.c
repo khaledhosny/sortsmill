@@ -18,7 +18,7 @@ main (int argc, char **argv)
   uint8_t *s8_16_8 = x_gc_u16_to_u8 (s8_16);
   uint8_t *s8_32_8 = x_gc_u32_to_u8 (s8_32);
   uint32_t *s8_16_32 = x_gc_u16_to_u32 (s8_16);
-  uint32_t *s8_32_16 = x_gc_u32_to_u16 (s8_32);
+  uint16_t *s8_32_16 = x_gc_u32_to_u16 (s8_32);
 
   ulc_fprintf (stdout, "%U\n", s8);
   ulc_fprintf (stdout, "%lU\n", s8_16);
