@@ -311,7 +311,7 @@ static void GFD_exists(GIOControl *gio) {
     rcb[1] =  _("_Cancel");
 
     if ( gwwv_ask(_("File Exists"),(const char **) rcb,0,1,_("File, %s, exists. Replace it?"),
-	    temp = u2utf8_copy(u_GFileNameTail(gio->path)))==0 ) {
+	    temp = u2utf8_copy(u_GFileBaseName(gio->path)))==0 ) {
 	DoExport(d,gio->path);
     }
     free(temp);
@@ -392,7 +392,7 @@ static void GFD_dircreatefailed(GIOControl *gio) {
     char *temp;
 
     ff_post_notice(_("Couldn't create directory"),_("Couldn't create directory: %s"),
-		temp = u2utf8_copy(u_GFileNameTail(gio->path)));
+		temp = u2utf8_copy(u_GFileBaseName(gio->path)));
     free(temp);
     GFileChooserReplaceIO(d->gfc,NULL);
     GFileChooserReplaceIO(d->gfc,NULL);

@@ -1633,7 +1633,7 @@ static int RevertAskChanged(char *fontname,char *filename) {
     char *buts[3];
 
     if ( filename==NULL ) filename = "untitled.sfd";
-    filename = GFileNameTail(filename);
+    filename = GFileBaseName(filename);
     buts[0] = _("_Revert");
     buts[1] = _("_Cancel");
     buts[2] = NULL;

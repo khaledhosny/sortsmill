@@ -42,11 +42,14 @@ libsortsmillff_gutils_la_SOURCES = divisors.c fsys.c gcol.c gimage.c	\
 
 EXPORTED_GIOFTP_SYMBOLS = GIO_cancel GIO_dispatch GIO_init GIO_term
 
-EXPORTED_GUTILS_SYMBOLS = $(EXPORTED_GIOFTP_SYMBOLS) GFileAppendFile	\
-	GFileBuildName GFileExists GFileGetAbsoluteName GFileGetHomeDir		\
-	GFileGetUserConfigDir GFileGetUserCacheDir GFileGetUserDataDir		\
-	GFileIsAbsolute GFileIsDir GFileMakeAbsoluteName GFileMkDir			\
-	GFileNameTail GFileReadable GFileUnlink GIOCreate					\
+EXPORTED_FSYS_SYMBOLS = GFileGetUserConfigDir GFileGetUserCacheDir		\
+	GFileGetUserDataDir GFileGetHomeDir GFileBuildName GFileBaseName	\
+	GFileAppendFile GFileIsAbsolute GFileIsDir GFileExists				\
+	GFileReadable GFileMkDir GFileUnlink u_GFileBaseName				\
+	u_GFileNormalize u_GFileAppendFile u_GFileIsAbsolute
+
+EXPORTED_GUTILS_SYMBOLS = $(EXPORTED_FSYS_SYMBOLS)						\
+	$(EXPORTED_GIOFTP_SYMBOLS) GFileMakeAbsoluteName GIOCreate			\
 	GIO_PasswordCache GIO_SetThreadCallback GIOcancel GIOclose GIOdir	\
 	GIOfileExists GIOgetDirData GIOguessMimeType GIOmkDir				\
 	GImageCreate GImageDestroy GImageDrawImage GImageDrawRect			\
@@ -56,8 +59,7 @@ EXPORTED_GUTILS_SYMBOLS = $(EXPORTED_GIOFTP_SYMBOLS) GFileAppendFile	\
 	GImageWrite_Png _GFile_find_program_dir _GIO_decomposeURL			\
 	_GImageGetPixelColor div_tables gColor2Hslrgb gColor2Hslrgba		\
 	gHSL2RGB gHSV2RGB gHslrgb2Color gHslrgba2Color gRGB2HSV sgettext	\
-	u_GFileAppendFile u_GFileGetAbsoluteName u_GFileGetHomeDir			\
-	u_GFileIsAbsolute u_GFileNameTail u_GFileNormalize
+	u_GFileGetAbsoluteName
 
 libsortsmillff_gutils_la_LIBADD = $(top_builddir)/auxiliary/libsortsmillff_aux.la	\
 	$(top_builddir)/lib/libgnu.la

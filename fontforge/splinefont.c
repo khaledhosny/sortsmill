@@ -883,10 +883,10 @@ char *Decompress(char *name, int compression)
   char *tmpfile;
 
   if ( dir==NULL ) dir = P_tmpdir;
-  tmpfile = xmalloc1(strlen(dir)+strlen(GFileNameTail(name))+2);
+  tmpfile = xmalloc1(strlen(dir)+strlen(GFileBaseName(name))+2);
   strcpy(tmpfile,dir);
   strcat(tmpfile,"/");
-  strcat(tmpfile,GFileNameTail(name));
+  strcat(tmpfile,GFileBaseName(name));
   *strrchr(tmpfile,'.') = '\0';
   snprintf( buf, sizeof(buf), "%s < %s > %s", compressors[compression].decomp, name, tmpfile );
   if ( system(buf)==0 )
@@ -1017,9 +1017,9 @@ return( NULL );
     strcpy(ubuf,_("Loading font from "));
     len = strlen(ubuf);
     if ( !wasurl || i==-1 )	/* If it wasn't compressed, or it wasn't an url, then the fullname is reasonable, else use the original name */
-	strncat(ubuf,temp = def2utf8_copy(GFileNameTail(fullname)),100);
+	strncat(ubuf,temp = def2utf8_copy(GFileBaseName(fullname)),100);
     else
-	strncat(ubuf,temp = def2utf8_copy(GFileNameTail(filename)),100);
+	strncat(ubuf,temp = def2utf8_copy(GFileBaseName(filename)),100);
     free(temp);
     ubuf[100+len] = '\0';
     ff_progress_start_indicator(FontViewFirst()==NULL?0:10,_("Loading..."),ubuf,_("Reading Glyphs"),0,1);
@@ -1223,11 +1223,11 @@ return( NULL );
 	    }
 	}
     } else if ( !GFileExists(filename) )
-	ff_post_error(_("Couldn't open font"),_("The requested file, %.100s, does not exist"),GFileNameTail(filename));
+	ff_post_error(_("Couldn't open font"),_("The requested file, %.100s, does not exist"),GFileBaseName(filename));
     else if ( !GFileReadable(filename) )
-	ff_post_error(_("Couldn't open font"),_("You do not have permission to read %.100s"),GFileNameTail(filename));
+	ff_post_error(_("Couldn't open font"),_("You do not have permission to read %.100s"),GFileBaseName(filename));
     else
-	ff_post_error(_("Couldn't open font"),_("%.100s is not in a known format (or uses features of that format fontforge does not support, or is so badly corrupted as to be unreadable)"),GFileNameTail(filename));
+	ff_post_error(_("Couldn't open font"),_("%.100s is not in a known format (or uses features of that format fontforge does not support, or is so badly corrupted as to be unreadable)"),GFileBaseName(filename));
 
     if ( oldstrippedname!=filename )
 	free(oldstrippedname);

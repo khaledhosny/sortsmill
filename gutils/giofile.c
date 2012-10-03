@@ -173,7 +173,7 @@ static void _gio_file_statfile(GIOControl *gc,char *path) {
 	_GIO_reporterror(gc,errno);
     } else {
 	cur = (GDirEntry *) xcalloc(1,sizeof(GDirEntry));
-	cur->name = uc_copy(GFileNameTail(path));
+	cur->name = uc_copy(GFileBaseName(path));
 	cur->hasdir = cur->hasexe = cur->hasmode = cur->hassize = cur->hastime = true;
 	cur->size    = statb.st_size;
 	cur->mode    = statb.st_mode;

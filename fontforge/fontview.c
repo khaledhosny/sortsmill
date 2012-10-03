@@ -479,7 +479,7 @@ static int AskChanged(SplineFont *sf) {
 	    sf->onlybitmaps && sf->bitmaps!=NULL && sf->bitmaps->next==NULL )
 	filename = sf->origname;
     if ( filename==NULL ) filename = "untitled.sfd";
-    filename = GFileNameTail(filename);
+    filename = GFileBaseName(filename);
     buts[0] = _("_Save");
     buts[1] = _("_Don't Save");
     buts[2] = _("_Cancel");
@@ -3427,7 +3427,7 @@ return;
 	uc_strcat(title,"*");
     if ( file!=NULL ) {
 	uc_strcat(title,"  ");
-	temp = def2u_copy(GFileNameTail(file));
+	temp = def2u_copy(GFileBaseName(file));
 	u_strcat(title,temp);
 	free(temp);
     }

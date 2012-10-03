@@ -2207,10 +2207,10 @@ static BDFFont *_SFImportBDF(SplineFont *sf, char *filename,int ispk, int toback
 	    /* Assume no write access to file */
 	    char *dir = getenv("TMPDIR");
 	    if ( dir==NULL ) dir = P_tmpdir;
-	    temp = xmalloc1(strlen(dir)+strlen(GFileNameTail(filename))+2);
+	    temp = xmalloc1(strlen(dir)+strlen(GFileBaseName(filename))+2);
 	    strcpy(temp,dir);
 	    strcat(temp,"/");
-	    strcat(temp,GFileNameTail(filename));
+	    strcat(temp,GFileBaseName(filename));
 	    *strrchr(temp,'.') = '\0';
 	    sprintf( buf, "%s -c %s > %s", compressors[i].decomp, filename, temp );
 	    if ( system(buf)==0 )

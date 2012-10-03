@@ -8753,7 +8753,7 @@ static void docall(Context *c,char *name,Val *val) {
 	}
 
 	if ( c->trace.u.ival ) {
-	    printf( "%s:%d Calling %s(", GFileNameTail(c->filename), c->lineno,
+	    printf( "%s:%d Calling %s(", GFileBaseName(c->filename), c->lineno,
 		    name );
 	    for ( i=1; i<sub.a.argc; ++i ) {
 		if ( i!=1 ) putchar(',');

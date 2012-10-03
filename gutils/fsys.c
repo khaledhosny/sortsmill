@@ -73,30 +73,14 @@ GFileGetHomeDir (void)
   return x_gc_grabstr (g_build_filename (g_get_home_dir (), NULL));
 }
 
-unichar_t *
-u_GFileGetHomeDir (void)
-{
-  return x_u32_strconv_from_locale (GFileGetHomeDir ());
-}
-
 char *
 GFileBuildName (char *dir, char *file)
 {
   return x_gc_grabstr (g_build_filename (dir, file, NULL));
 }
 
-/* Given a filename in a directory, pick the directory out of it, and */
-/* create a new filename using that directory and the given nametail */
 char *
-GFileReplaceName (char *oldname, char *file)
-{
-  return
-    x_gc_grabstr (g_build_filename
-                  (x_gc_grabstr (g_path_get_dirname (oldname)), file, NULL));
-}
-
-char *
-GFileNameTail (const char *file)
+GFileBaseName (const char *file)
 {
   return x_gc_grabstr (g_path_get_basename (file));
 }
@@ -141,18 +125,6 @@ GFileExists (const char *file)
 }
 
 bool
-GFileModifyable (const char *file)
-{
-  return (g_access (file, 02) == 0);
-}
-
-bool
-GFileModifyableDir (const char *file)
-{
-  return GFileModifyable (g_path_get_dirname (file));
-}
-
-bool
 GFileReadable (char *file)
 {
   return (g_access (file, 04) == 0);
@@ -165,19 +137,13 @@ GFileMkDir (char *name)
 }
 
 int
-GFileRmDir (char *name)
-{
-  return g_rmdir (name);
-}
-
-int
 GFileUnlink (char *name)
 {
   return g_unlink (name);
 }
 
 unichar_t *
-u_GFileNameTail (const unichar_t *file)
+u_GFileBaseName (const unichar_t *file)
 {
   char *locale_file = x_gc_grabstr (x_u32_strconv_to_locale (file));
   char *locale_base = x_gc_grabstr (g_path_get_basename (locale_file));
@@ -259,57 +225,4 @@ bool
 u_GFileIsAbsolute (const unichar_t *file)
 {
   return GFileIsAbsolute (x_gc_grabstr (x_u32_strconv_to_locale (file)));
-}
-
-bool
-u_GFileIsDir (const unichar_t *file)
-{
-  char *locale_file = x_gc_grabstr (x_u32_strconv_to_locale (file));
-  char *dot_file =
-    x_gc_malloc_atomic ((strlen (locale_file) + 10) * sizeof (char));
-  strcpy (dot_file, locale_file);
-  strcat (dot_file, "/.");
-  return GFileIsDir (dot_file);
-}
-
-bool
-u_GFileExists (const unichar_t *file)
-{
-  return GFileExists (x_gc_grabstr (x_u32_strconv_to_locale (file)));
-}
-
-bool
-u_GFileModifyable (const unichar_t *file)
-{
-  return GFileModifyable (x_gc_grabstr (x_u32_strconv_to_locale (file)));
-}
-
-bool
-u_GFileModifyableDir (const unichar_t *file)
-{
-  return GFileModifyableDir (x_gc_grabstr (x_u32_strconv_to_locale (file)));
-}
-
-bool
-u_GFileReadable (unichar_t *file)
-{
-  return GFileReadable (x_gc_grabstr (x_u32_strconv_to_locale (file)));
-}
-
-int
-u_GFileMkDir (unichar_t *name)
-{
-  return GFileMkDir (x_gc_grabstr (x_u32_strconv_to_locale (name)));
-}
-
-int
-u_GFileRmDir (unichar_t *name)
-{
-  return GFileRmDir (x_gc_grabstr (x_u32_strconv_to_locale (name)));
-}
-
-int
-u_GFileUnlink (unichar_t *name)
-{
-  return GFileUnlink (x_gc_grabstr (x_u32_strconv_to_locale (name)));
 }

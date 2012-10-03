@@ -330,7 +330,7 @@ static void GFileChooserFillList(GFileChooser *gfc,GDirEntry *first,
 	GGadgetSetList(&gfc->files->g,ti,false);
     }
 
-    GGadgetScrollListToText(&gfc->files->g,u_GFileNameTail(_GGadgetGetTitle(&gfc->name->g)),true);
+    GGadgetScrollListToText(&gfc->files->g,u_GFileBaseName(_GGadgetGetTitle(&gfc->name->g)),true);
 }
 
 static void GFileChooserIntermediateDir(GIOControl *gc) {
@@ -803,18 +803,21 @@ static void GFCRefresh(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     free(dir);
 }
 
-static int GFileChooserHome(GGadget *g, GEvent *e) {
-    if ( e->type==et_controlevent && e->u.control.subtype == et_buttonactivate ) {
-	unichar_t* homedir = u_GFileGetHomeDir();
-	if ( homedir==NULL )
-	    GGadgetSetEnabled(g,false);
-	else {
-	    GFileChooser *gfc = (GFileChooser *) GGadgetGetUserData(g);
-	    GFileChooserScanDir(gfc,homedir);
-	    free(homedir);
+static int GFileChooserHome(GGadget *g, GEvent *e)
+{
+  if ( e->type==et_controlevent && e->u.control.subtype == et_buttonactivate )
+    {
+      unichar_t* homedir = x_u32_strconv_from_locale (GFileGetHomeDir());
+      if ( homedir==NULL )
+	GGadgetSetEnabled(g,false);
+      else
+	{
+	  GFileChooser *gfc = (GFileChooser *) GGadgetGetUserData(g);
+	  GFileChooserScanDir(gfc,homedir);
+	  free(homedir);
 	}
     }
-return( true );
+  return( true );
 }
 
 static int GFileChooserUpDirButton(GGadget *g, GEvent *e) {

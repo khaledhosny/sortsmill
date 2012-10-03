@@ -32,37 +32,22 @@
 #include <basics.h>
 #include <stdbool.h>
 
-extern char *GFileGetHomeDir (void);
-extern unichar_t *u_GFileGetHomeDir (void);
-
 extern char *GFileGetUserConfigDir (void);
 extern char *GFileGetUserCacheDir (void);
 extern char *GFileGetUserDataDir (void);
-
+extern char *GFileGetHomeDir (void);
 extern char *GFileBuildName (char *dir, char *file);
-extern char *GFileReplaceName (char *oldname, char *file);
-extern char *GFileNameTail (const char *file);
+extern char *GFileBaseName (const char *file);
 extern char *GFileAppendFile (char *dir, char *name, bool isdir);
 extern bool GFileIsAbsolute (const char *file);
 extern bool GFileIsDir (const char *file);
 extern bool GFileExists (const char *file);
-extern bool GFileModifyable (const char *file);
-extern bool GFileModifyableDir (const char *file);
 extern bool GFileReadable (char *file);
 extern int GFileMkDir (char *name);
-extern int GFileRmDir (char *name);
 extern int GFileUnlink (char *name);
-extern unichar_t *u_GFileNameTail (const unichar_t *oldname);
+extern unichar_t *u_GFileBaseName (const unichar_t *oldname);
 extern unichar_t *u_GFileNormalize (unichar_t *name);
 extern unichar_t *u_GFileAppendFile (unichar_t *dir, unichar_t *name, bool isdir);
 extern bool u_GFileIsAbsolute (const unichar_t *file);
-extern bool u_GFileIsDir (const unichar_t *file);
-extern bool u_GFileExists (const unichar_t *file);
-extern bool u_GFileModifyable (const unichar_t *file);
-extern bool u_GFileModifyableDir (const unichar_t *file);
-extern bool u_GFileReadable (unichar_t *file);
-extern int u_GFileMkDir (unichar_t *name);
-extern int u_GFileRmDir (unichar_t *name);
-extern int u_GFileUnlink (unichar_t *name);
 
 #endif

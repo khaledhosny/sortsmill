@@ -62,7 +62,7 @@ static void GFD_exists(GIOControl *gio) {
 	rcb[1] = GStringGetResource( _STR_Cancel, &rcmn[1]);
 
 	u_strcpy(buffer, GStringGetResource(_STR_Fileexistspre,NULL));
-	u_strcat(buffer, u_GFileNameTail(d->ret));
+	u_strcat(buffer, u_GFileBaseName(d->ret));
 	u_strcat(buffer, GStringGetResource(_STR_Fileexistspost,NULL));
 	if ( GWidgetAsk(GStringGetResource(_STR_Fileexists,NULL),rcb,rcmn,0,1,buffer)==0 ) {
 	    d->done = true;
@@ -75,7 +75,7 @@ static void GFD_exists(GIOControl *gio) {
 	rcb[1] = _("Cancel");
 
 	if ( GWidgetAsk8(_("File Exists"),rcb,0,1,_("File, %s, exists. Replace it?"),
-		temp = u2utf8_copy(u_GFileNameTail(d->ret)))==0 ) {
+		temp = u2utf8_copy(u_GFileBaseName(d->ret)))==0 ) {
 	    d->done = true;
 	}
 	free(temp);
@@ -125,7 +125,7 @@ static void GFD_dircreatefailed(GIOControl *gio) {
 	u_strcpy(title, GStringGetResource(_STR_Couldntcreatedir,NULL));
 	u_strcpy(buffer, title);
 	uc_strcat(buffer,": ");
-	u_strcat(buffer, u_GFileNameTail(gio->path));
+	u_strcat(buffer, u_GFileBaseName(gio->path));
 	uc_strcat(buffer, ".\n");
 	if ( gio->error!=NULL ) {
 	    u_strcat(buffer,gio->error);
