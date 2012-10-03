@@ -63,15 +63,18 @@ $(TESTSUITE): $(srcdir)/testsuite.at $(srcdir)/package.m4 $(MY_AT_FILES)
 	$(AUTOTEST) -I '$(srcdir)' -o $@.tmp $@.at
 	mv $@.tmp $@
 
-MY_AT_FILES = xunistr_h.at fsys_c.at old_python_tests.at
+MY_AT_FILES = xuniconv_h.at xunistr_h.at fsys_c.at	\
+	old_python_tests.at
 
+TESTS_XUNICONV_H = test_xuniconv_h
 TESTS_XUNISTR_H = test_xunistr_h
 
 TESTS_FSYS_C = test_GFileGetUserConfigDir test_GFileGetUserCacheDir		\
 	test_GFileGetUserDataDir test_GFileGetHomeDir test_GFileBuildName	\
 	test_GFileBaseName test_GFileAppendFile
 
-check_PROGRAMS = $(TESTS_XUNISTR_H) $(TESTS_FSYS_C)
+check_PROGRAMS = $(TESTS_XUNICONV_H) $(TESTS_XUNISTR_H)	\
+	$(TESTS_FSYS_C)
 
 AM_DEFAULT_SOURCE_EXT = .c
 LDADD = $(top_builddir)/fontforge/libsortsmillff_fontforgeexe.la	\

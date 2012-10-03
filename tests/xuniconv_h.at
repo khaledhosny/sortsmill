@@ -1,0 +1,49 @@
+# -*- coding: utf-8 -*-
+
+m4_defun([check_xuniconv_h_utf8],
+[
+AT_SETUP([$1 (UTF-8)])
+AT_KEYWORDS([auxiliary xuniconv.c xuniconv.h unit])
+AT_SKIP_IF([test x"${utf8_locale}" = x])
+AT_CHECK_UNQUOTED([LC_ALL="${utf8_locale}" LANGUAGE="${utf8_locale}" "${abs_builddir}"/$1],[$2],[$3],[$4])
+AT_CLEANUP
+])
+
+m4_defun([check_xuniconv_h_posix],
+[
+AT_SETUP([$1 (POSIX)])
+AT_KEYWORDS([auxiliary xuniconv.c xuniconv.h unit])
+AT_SKIP_IF([test x"${posix_locale}" = x])
+AT_CHECK_UNQUOTED([LC_ALL="${posix_locale}" LANGUAGE="${posix_locale}" "${abs_builddir}"/$1],[$2],[$3],[$4])
+AT_CLEANUP
+])
+
+check_xuniconv_h_utf8([test_xuniconv_h 'Eĥoŝanĝo ĉiuĵaŭde'],[0],
+[Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+],[])
+
+check_xuniconv_h_posix([test_xuniconv_h 'Eĥoŝanĝo ĉiuĵaŭde'],[0],
+[Eĥoŝanĝo ĉiuĵaŭde
+E??o??an??o ??iu??a??de
+E??o??an??o ??iu??a??de
+E??o??an??o ??iu??a??de
+E??o??an??o ??iu??a??de
+E??o??an??o ??iu??a??de
+E??o??an??o ??iu??a??de
+],[])
+
+check_xuniconv_h_posix([test_xuniconv_h 'Ehhoshangho chiujhaude'],[0],
+[Ehhoshangho chiujhaude
+Ehhoshangho chiujhaude
+Ehhoshangho chiujhaude
+Ehhoshangho chiujhaude
+Ehhoshangho chiujhaude
+Ehhoshangho chiujhaude
+Ehhoshangho chiujhaude
+],[])
