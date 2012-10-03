@@ -311,48 +311,59 @@ static int GMenuMacIconsWidth(struct gmenu *m, int mask ) {
 return( x );
 }
 	
-static void GMenuDrawCheckMark(struct gmenu *m, Color fg, int ybase, int r2l) {
-    int as = m->as;
-    int pt = GDrawPointsToPixels(m->w,1);
-    int x = r2l ? m->width-m->tioff+2*pt : m->tickoff;
+static void
+GMenuDrawCheckMark (struct gmenu *m, Color fg, int ybase, int r2l)
+{
+  int as = m->as;
+  int pt = GDrawPointsToPixels (m->w, 1);
+  int x = r2l ? m->width - m->tioff + 2 * pt : m->tickoff;
 
-    while ( pt>1 && 2*pt>=as/3 ) --pt;
-    GDrawSetLineWidth(m->w,pt);
-    GDrawDrawLine(m->w,x+2*pt,ybase-as/3,x+as/3,ybase-2*pt,fg);
-    GDrawDrawLine(m->w,x+2*pt,ybase-as/3-pt,x+as/3,ybase-3*pt,fg);
-    GDrawDrawLine(m->w,x+as/3,ybase-2*pt,x+as/3+as/5,ybase-2*pt-as/4,fg);
-    GDrawDrawLine(m->w,x+as/3+as/5,ybase-2*pt-as/4,x+as/3+2*as/5,ybase-2*pt-as/3-as/7,fg);
-    GDrawDrawLine(m->w,x+as/3+2*as/5,ybase-2*pt-as/3-as/7,x+as/3+3*as/5,ybase-2*pt-as/3-as/7-as/8,fg);
+  while (pt > 1 && 2 * pt >= as / 3)
+    --pt;
+  GDrawSetLineWidth (m->w, 2 * pt);
+  GDrawDrawLine (m->w, x + pt, ybase - as / 2, x + as / 3, ybase - 2 * pt,
+                 fg);
+  GDrawDrawLine (m->w, x + as / 3, ybase - 2 * pt, x + as, ybase - 8 * pt,
+                 fg);
 }
 
-static void GMenuDrawUncheckMark(struct gmenu *m, Color fg, int ybase, int r2l) {
+static void
+GMenuDrawUncheckMark (struct gmenu *m, Color fg, int ybase, int r2l)
+{
 }
 
-static void GMenuDrawArrow(struct gmenu *m, int ybase, int r2l) {
-    int pt = GDrawPointsToPixels(m->w,1);
-    int as = 2*(m->as/2);
-    int x = r2l ? m->bp+2*pt : m->rightedge-2*pt;
-    GPoint p[3];
+static void
+GMenuDrawArrow (struct gmenu *m, Color fg, int ybase, int r2l)
+{
+  int pt = GDrawPointsToPixels (m->w, 1);
+  int as = 2 * (m->as / 3);
+  int x = r2l ? m->bp + 2 * pt : m->rightedge - 2 * pt;
+  GPoint p[3];
 
-    GDrawSetLineWidth(m->w,pt);
-    if ( r2l ) {
-	p[0].x = x;			p[0].y = ybase-as/2;
-	p[1].x = x+1*(as/2);		p[1].y = ybase;
-	p[2].x = p[1].x;		p[2].y = ybase-as;
+  GDrawSetLineWidth (m->w, 2 * pt);
+  if (r2l)
+    {
+      p[0].x = x;
+      p[0].y = ybase - as / 2;
+      p[1].x = x + 1 * (as / 2);
+      p[1].y = ybase;
+      p[2].x = p[1].x;
+      p[2].y = ybase - as;
 
-	GDrawDrawLine(m->w,p[0].x,p[0].y,p[2].x,p[2].y,m->box->border_brighter);
-	GDrawDrawLine(m->w,p[0].x+pt,p[0].y,p[2].x+pt,p[2].y+pt,m->box->border_brighter);
-	GDrawDrawLine(m->w,p[1].x,p[1].y,p[0].x,p[0].y,m->box->border_darkest);
-	GDrawDrawLine(m->w,p[1].x+pt,p[1].y-pt,p[0].x-pt,p[0].y,m->box->border_darkest);
-    } else {
-	p[0].x = x;			p[0].y = ybase-as/2;
-	p[1].x = x-1*(as/2);		p[1].y = ybase;
-	p[2].x = p[1].x;		p[2].y = ybase-as;
+      GDrawDrawLine (m->w, p[0].x, p[0].y, p[2].x, p[2].y, fg);
+      GDrawDrawLine (m->w, p[1].x, p[1].y, p[0].x, p[0].y, fg);
+    }
+  else
+    {
+      p[0].x = x;
+      p[0].y = ybase - as / 2;
+      p[1].x = x - 1 * (as / 2);
+      p[1].y = ybase;
+      p[2].x = p[1].x;
+      p[2].y = ybase - as;
 
-	GDrawDrawLine(m->w,p[0].x,p[0].y,p[2].x,p[2].y,m->box->border_brighter);
-	GDrawDrawLine(m->w,p[0].x-pt,p[0].y,p[2].x+pt,p[2].y+pt,m->box->border_brighter);
-	GDrawDrawLine(m->w,p[1].x,p[1].y,p[0].x,p[0].y,m->box->border_darkest);
-	GDrawDrawLine(m->w,p[1].x+pt,p[1].y-pt,p[0].x-pt,p[0].y,m->box->border_darkest);
+      GDrawDrawLine (m->w, p[0].x, p[0].y, p[2].x, p[2].y, fg);
+      GDrawDrawLine (m->w, p[1].x, p[1].y, p[0].x, p[0].y, fg);
     }
 }
 
@@ -433,7 +444,7 @@ static int GMenuDrawMenuLine(struct gmenu *m, GMenuItem *mi, int y,GWindow pixma
     }
 
     if ( mi->sub!=NULL )
-	GMenuDrawArrow(m,ybase,r2l);
+	GMenuDrawArrow(m,fg,ybase,r2l);
     else if ( mi->shortcut!=0 && (mi->short_mask&0xffe0)==0 && mac_menu_icons ) {
 	_shorttext(mi->shortcut,0,shortbuf);
 	width = GDrawGetTextWidth(pixmap,shortbuf,-1) + GMenuMacIconsWidth(m,mi->short_mask);
