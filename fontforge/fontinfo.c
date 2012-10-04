@@ -36,6 +36,7 @@
 #include "lookups.h"
 #include <null_passthru.h>
 #include <xuniconv.h>
+#include <uninorm.h>
 
 extern int _GScrollBar_Width;
 extern GBox _ggadget_Default_Box;
@@ -2949,14 +2950,23 @@ static void TN_StrPopupDispatch(GWindow gw, GMenuItem *mi, GEvent *e) {
     }
 }
 
-static int menusort(const void *m1, const void *m2) {
-    const GMenuItem *mi1 = m1, *mi2 = m2;
+static int
+menusort(const void *m1, const void *m2)
+{
+  const GMenuItem *mi1 = m1;
+  const GMenuItem *mi2 = m2;
 
-    /* Should do a strcoll here, but I never wrote one */
-    if ( mi1->ti.text_is_1byte && mi2->ti.text_is_1byte )
-return( strcoll( (char *) (mi1->ti.text), (char *) (mi2->ti.text)) );
-    else
-return( u_strcmp(mi1->ti.text,mi2->ti.text));
+  uint8_t *text1 = (mi1->ti.text_is_1byte) ?
+    x_gc_u8_strconv_from_locale ((char *) mi1->ti.text)
+    : x_gc_u32_to_u8 (mi1->ti.text);
+  uint8_t *text2 = (mi2->ti.text_is_1byte) ?
+    x_gc_u8_strconv_from_locale ((char *) mi2->ti.text)
+    : x_gc_u32_to_u8 (mi2->ti.text);
+
+  int result = 0;
+  (void) u8_normcoll (text1, u8_strlen (text1), text2,
+		      u8_strlen (text2), UNINORM_NFC, &result);
+  return result;
 }
 
 static void TN_StrIDEnable(GGadget *g,GMenuItem *mi, int r, int c) {
