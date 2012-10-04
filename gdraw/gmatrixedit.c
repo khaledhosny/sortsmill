@@ -1221,11 +1221,8 @@ static void GME_StrBigEdit(GMatrixEdit *gme,char *str) {
     mgcd[1].gd.pos.x = 30-3; mgcd[1].gd.pos.y = GDrawPixelsToPoints(NULL,pos.height)-35-3;
     mgcd[1].gd.pos.width = -1; mgcd[1].gd.pos.height = 0;
     mgcd[1].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    if ( _ggadget_use_gettext ) {
-	mlabel[1].text = (unichar_t *) _("_OK");
-	mlabel[1].text_is_1byte = true;
-    } else
-	mlabel[1].text = (unichar_t *) _STR_OK;
+    mlabel[1].text = (unichar_t *) _("_OK");
+    mlabel[1].text_is_1byte = true;
     mlabel[1].text_in_resource = true;
     mgcd[1].gd.label = &mlabel[1];
     mgcd[1].gd.cid = CID_OK;
@@ -1234,11 +1231,8 @@ static void GME_StrBigEdit(GMatrixEdit *gme,char *str) {
     mgcd[2].gd.pos.x = -30; mgcd[2].gd.pos.y = mgcd[1].gd.pos.y+3;
     mgcd[2].gd.pos.width = -1; mgcd[2].gd.pos.height = 0;
     mgcd[2].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    if ( _ggadget_use_gettext ) {
-	mlabel[2].text = (unichar_t *) _("_Cancel");
-	mlabel[2].text_is_1byte = true;
-    } else
-	mlabel[2].text = (unichar_t *) _STR_Cancel;
+    mlabel[2].text = (unichar_t *) _("_Cancel");
+    mlabel[2].text_is_1byte = true;
     mlabel[2].text_in_resource = true;
     mgcd[2].gd.label = &mlabel[2];
     mgcd[2].gd.cid = CID_Cancel;
@@ -1640,10 +1634,8 @@ static void GMatrixEdit_SubExpose(GMatrixEdit *gme,GWindow pixmap,GEvent *event)
 			buf[0] = '<';
 			if ( gme->newtext!=NULL )
 			    strncpy(buf+1,gme->newtext,sizeof(buf)-2);
-			else if ( _ggadget_use_gettext )
-			    strncpy(buf+1,S_("Row|New"),sizeof(buf)-2);
 			else
-			    u2utf8_strcpy(buf+1,GStringGetResource(_STR_New,NULL));
+			    strncpy(buf+1,S_("Row|New"),sizeof(buf)-2);
 			buf[18] = '\0';
 			k = strlen(buf);
 			buf[k] = '>'; buf[k+1] = '\0';

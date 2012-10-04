@@ -1059,7 +1059,7 @@ return( fallback[index]);
 }
 
 int GIntGetResource(int index) {
-    if ( _ggadget_use_gettext && index<2 ) {
+    if ( index<2 ) {
 	static int gt_intarray[2];
 	if ( gt_intarray[0]==0 ) {
 	    char *pt, *end;
@@ -1257,9 +1257,4 @@ void GStringSetFallbackArray(const unichar_t **array,const unichar_t *mn,const i
     if ( ires!=NULL ) while ( ires[i]!=0x80000000 ) ++i;
     filen = i;
 
-}
-
-int _ggadget_use_gettext = false;
-void GResourceUseGetText(void) {
-    _ggadget_use_gettext = true;
 }

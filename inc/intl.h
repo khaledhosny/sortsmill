@@ -68,7 +68,6 @@
 /* For messages in the shortcuts domain */
 #define H_(str)		(str)
 
-extern void GResourceUseGetText(void);
 char *sgettext(const char *msgid);
 
 #endif	/* _INTL_H */

@@ -329,7 +329,6 @@ extern int GStringSetResourceFile(char *filename);	/* returns 1 for success, 0 f
 extern void GStringSetFallbackArray(const unichar_t **array,const unichar_t *mn,
 	const int *ires);
 unichar_t *GStringFileGetResource(char *filename, int index,unichar_t *mnemonic);
-extern void GResourceUseGetText(void);
 extern void *GResource_font_cvt(char *val, void *def);
 extern FontInstance *GResourceFindFont(char *resourcename,FontInstance *deffont);
 

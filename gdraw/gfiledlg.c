@@ -121,11 +121,8 @@ static unichar_t *GWidgetOpenFileWPath(const unichar_t *title, const unichar_t *
     gcd[1].gd.pos.x = 12; gcd[1].gd.pos.y = 192-3;
     gcd[1].gd.pos.width = -1;
     gcd[1].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    if ( _ggadget_use_gettext ) {
-	label[1].text = (unichar_t *) _("_OK");
-	label[1].text_is_1byte = true;
-    } else
-	label[1].text = (unichar_t *) _STR_OK;
+    label[1].text = (unichar_t *) _("_OK");
+    label[1].text_is_1byte = true;
     label[1].text_in_resource = true;
     gcd[1].gd.mnemonic = 'O';
     gcd[1].gd.label = &label[1];
@@ -136,11 +133,8 @@ static unichar_t *GWidgetOpenFileWPath(const unichar_t *title, const unichar_t *
     gcd[2].gd.pos.x = (totwid-bs)*100/GIntGetResource(_NUM_ScaleFactor)/2; gcd[2].gd.pos.y = gcd[1].gd.pos.y+3;
     gcd[2].gd.pos.width = -1;
     gcd[2].gd.flags = gg_visible | gg_enabled;
-    if ( _ggadget_use_gettext ) {
-	label[2].text = (unichar_t *) _("_Filter");
-	label[2].text_is_1byte = true;
-    } else
-	label[2].text = (unichar_t *) _STR_Filter;
+    label[2].text = (unichar_t *) _("_Filter");
+    label[2].text_is_1byte = true;
     label[2].text_in_resource = true;
     gcd[2].gd.mnemonic = 'F';
     gcd[2].gd.label = &label[2];
@@ -151,11 +145,8 @@ static unichar_t *GWidgetOpenFileWPath(const unichar_t *title, const unichar_t *
     gcd[3].gd.pos.x = -gcd[1].gd.pos.x; gcd[3].gd.pos.y = gcd[2].gd.pos.y;
     gcd[3].gd.pos.width = -1;
     gcd[3].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    if ( _ggadget_use_gettext ) {
-	label[3].text = (unichar_t *) _("_Cancel");
-	label[3].text_is_1byte = true;
-    } else
-	label[3].text = (unichar_t *) _STR_Cancel;
+    label[3].text = (unichar_t *) _("_Cancel");
+    label[3].text_is_1byte = true;
     label[3].text_in_resource = true;
     gcd[3].gd.label = &label[3];
     gcd[3].gd.mnemonic = 'C';
