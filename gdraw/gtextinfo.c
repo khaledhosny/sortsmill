@@ -924,7 +924,8 @@ return;
     }
     mi->short_mask = mask;
     for ( i=0; i<0x100; ++i ) {
-	if ( GDrawKeysyms[i]!=NULL && uc_strcmp(GDrawKeysyms[i],sh)==0 ) {
+	if ( GDrawKeysyms[i]!=NULL
+	     && u8_strcmp(x_gc_u32_to_u8 (u32_force_valid (GDrawKeysyms[i])), u8_force_valid (sh))==0 ) {
 	    mi->shortcut = 0xff00 + i;
     break;
 	}

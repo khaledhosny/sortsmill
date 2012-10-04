@@ -2962,8 +2962,10 @@ MMW_CheckOptical (GGadget * g, GEvent * e)
       int di = (GGadgetGetCid (g) - CID_AxisType) / 100;
       char buf1[20], buf2[20], buf3[20];
 
+      uint8_t *utf8_ret = x_gc_u32_to_u8 (u32_force_valid (ret));
+
       if (mmw->old != NULL && di < mmw->old->axis_count &&
-          uc_strcmp (ret, mmw->old->axes[di]) == 0)
+          u8_strcmp (utf8_ret, u8_force_valid (mmw->old->axes[di])) == 0)
         {
           sprintf (buf1, "%g", (double) mmw->old->axismaps[di].designs[0]);
           sprintf (buf2, "%g",
@@ -2974,13 +2976,13 @@ MMW_CheckOptical (GGadget * g, GEvent * e)
           top = buf2;
           bottom = buf1;
         }
-      else if (uc_strcmp (ret, "OpticalSize") == 0)
+      else if (u8_strcmp (utf8_ret, "OpticalSize") == 0)
         {
           top = "72";
           def = "12";
           bottom = "6";
         }
-      else if (uc_strcmp (ret, "Slant") == 0)
+      else if (u8_strcmp (utf8_ret, "Slant") == 0)
         {
           top = "22";
           def = "0";

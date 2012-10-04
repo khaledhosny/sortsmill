@@ -150,7 +150,7 @@ return( true );
 	}
 
 	ret = _GGadgetGetTitle(GWidgetGetControl(pi->setup,CID_Printer));
-	if ( uc_strcmp(ret,"<default>")==0 || *ret=='\0' )
+	if ( u8_strcmp(x_gc_u32_to_u8 (u32_force_valid (ret)),"<default>")==0 || *ret=='\0' )
 	    ret = NULL;
 	pi->pi.printer = cu_copy(ret);
 	pi->pi.pagewidth = pgwidth; pi->pi.pageheight = pgheight;

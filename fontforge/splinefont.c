@@ -1526,23 +1526,31 @@ const unichar_t *_uGetModifiers(const unichar_t *fontname, const unichar_t *fami
 	       }
      }
 
-     if ( fpt!=NULL ) {
-	  for ( i=0; mods[i]!=NULL; ++i )
-	       for ( j=0; mods[i][j]!=NULL; ++j ) {
-		    if ( uc_strcmp(fpt,mods[i][j])==0 ) {
-			 uc_strcpy(space,fullmods[i][j]);
-			 return( space );
-		    }
-	       }
-	  if ( uc_strcmp(fpt,"BoldItal")==0 ) {
-	       uc_strcpy(space,"BoldItalic");
-	       return( space );
-	  } else if ( uc_strcmp(fpt,"BoldObli")==0 ) {
-	       uc_strcpy(space,"BoldOblique");
-	       return( space );
-	  }
-	  return( fpt );
-     }
+     if ( fpt!=NULL )
+       {
+	 uint8_t *utf8_fpt = x_gc_u32_to_u8 (u32_force_valid (fpt));
+
+	 for ( i=0; mods[i]!=NULL; ++i )
+	   for ( j=0; mods[i][j]!=NULL; ++j )
+	     {
+	       if ( u8_strcmp(utf8_fpt, u8_force_valid (mods[i][j]))==0 )
+		 {
+		   uc_strcpy(space,fullmods[i][j]);
+		   return( space );
+		 }
+	     }
+	 if ( u8_strcmp(utf8_fpt,"BoldItal")==0 )
+	   {
+	     uc_strcpy(space,"BoldItalic");
+	     return( space );
+	   }
+	 else if ( u8_strcmp(utf8_fpt,"BoldObli")==0 )
+	   {
+	     uc_strcpy(space,"BoldOblique");
+	     return( space );
+	   }
+	 return( fpt );
+       }
 
      return( weight==NULL || *weight=='\0' ? regular: weight );
 }

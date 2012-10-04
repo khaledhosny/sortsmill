@@ -2618,7 +2618,8 @@ static int SetFontName(GWindow gw, SplineFont *sf) {
     const unichar_t *ufont = _GGadgetGetTitle(GWidgetGetControl(gw,CID_Fontname));
     const unichar_t *uweight = _GGadgetGetTitle(GWidgetGetControl(gw,CID_Weight));
     const unichar_t *uhum = _GGadgetGetTitle(GWidgetGetControl(gw,CID_Human));
-    int diff = uc_strcmp(ufont,sf->fontname)!=0;
+    int diff = (u8_strcmp(x_gc_u32_to_u8 (u32_force_valid (ufont)),
+			  u8_force_valid (sf->fontname)) != 0);
 
     free(sf->familyname);
     free(sf->fontname);
@@ -4288,10 +4289,12 @@ return( true );
 	useuniqueid = GGadgetIsChecked(GWidgetGetControl(gw,CID_UseUniqueID));
 	txt = _GGadgetGetTitle(GWidgetGetControl(gw,CID_XUID));
 	xuidchanged = (sf->xuid==NULL && *txt!='\0') ||
-			(sf->xuid!=NULL && uc_strcmp(txt,sf->xuid)==0);
+	  (sf->xuid!=NULL && u8_strcmp(x_gc_u32_to_u8 (u32_force_valid (txt)),
+				       u8_force_valid (sf->xuid))==0);
 	if ( namechange &&
 		((uniqueid!=0 && uniqueid==sf->uniqueid && useuniqueid) ||
-		 (sf->xuid!=NULL && uc_strcmp(txt,sf->xuid)==0 && usexuid) ||
+		 (sf->xuid!=NULL && u8_strcmp(x_gc_u32_to_u8 (u32_force_valid (txt)),
+					      u8_force_valid (sf->xuid))==0 && usexuid) ||
 		 ttfuniqueidmatch(sf,d)) ) {
 	    char *buts[4];
 	    int ans;
@@ -4307,7 +4310,8 @@ return(true);
 	    if ( ans==0 ) {
 		if ( uniqueid!=0 && uniqueid==sf->uniqueid )
 		    uniqueid = 4000000 + (rand()&0x3ffff);
-		if ( sf->xuid!=NULL && uc_strcmp(txt,sf->xuid)==0 ) {
+		if ( sf->xuid!=NULL && u8_strcmp(x_gc_u32_to_u8 (u32_force_valid (txt)),
+						 u8_force_valid (sf->xuid))==0 ) {
 		    SFRandomChangeXUID(sf);
 		    xuidchanged = true;
 		}

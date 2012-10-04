@@ -581,8 +581,8 @@ static void HistSet(struct hist_dlg *hist) {
     ret1 = GGadgetGetTitle(GWidgetGetControl(hist->gw,CID_MainVal));
     ret2 = GGadgetGetTitle(GWidgetGetControl(hist->gw,CID_SecondaryVal));
     hist->done = true;
-    if ( (*ret1=='\0' || uc_strcmp(ret1,"[]")==0 ) &&
-	    (*ret2=='\0' || uc_strcmp(ret2,"[]")==0 ) && p==NULL )
+    if ( (*ret1=='\0' || u8_strcmp(x_gc_u32_to_u8 (u32_force_valid (ret1)),"[]")==0 ) &&
+	 (*ret2=='\0' || u8_strcmp(x_gc_u32_to_u8 (u32_force_valid (ret2)),"[]")==0 ) && p==NULL )
 return;
     if ( p==NULL ) {
 	hist->sf->private = p = xcalloc(1,sizeof(struct psdict));

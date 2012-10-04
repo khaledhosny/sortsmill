@@ -1949,8 +1949,9 @@ static void CVLRemoveEdit(CharView *cv, int save) {
 	int l = layerinfo.active;
 
 	if ( save
-		&& layerinfo.active>=0 && str!=NULL && str[0]!='\0' 
-		&& uc_strcmp( str,cv->b.sc->parent->layers[l].name) ) {
+	     && layerinfo.active>=0 && str!=NULL && str[0]!='\0' 
+	     && u8_strcmp( x_gc_u32_to_u8 (u32_force_valid (str)),
+			   u8_force_valid (cv->b.sc->parent->layers[l].name)) ) {
 	    free( cv->b.sc->parent->layers[l].name );
 	    cv->b.sc->parent->layers[l].name = cu_copy( str );
 	}
