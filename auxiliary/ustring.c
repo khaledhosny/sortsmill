@@ -326,21 +326,22 @@ return(res);
 }
 
 unichar_t *uc_copy(const char *pt) {
-    unichar_t *res, *rpt;
-    int n;
+  unichar_t *res, *rpt;
+  int n;
 
-    if(!pt)
-return((unichar_t *)0);
+  if(!pt)
+    return((unichar_t *)0);
 
-    n = strlen(pt);
+  n = strlen(pt);
 #ifdef MEMORY_MASK
-    if ( (n+1)*sizeof(unichar_t)>=MEMORY_MASK )
-	n = MEMORY_MASK/sizeof(unichar_t)-1;
+  if ( (n+1)*sizeof(unichar_t)>=MEMORY_MASK )
+    n = MEMORY_MASK/sizeof(unichar_t)-1;
 #endif
-    res = (unichar_t *) xmalloc((n+1)*sizeof(unichar_t));
-    for ( rpt=res; --n>=0 ; *rpt++ = *(unsigned char *) pt++ );
-    *rpt = '\0';
-return(res);
+  res = (unichar_t *) xmalloc((n+1)*sizeof(unichar_t));
+  for ( rpt=res; --n>=0 ; *rpt++ = *(unsigned char *) pt++ )
+    ;
+  *rpt = '\0';
+  return(res);
 }
 
 char *cu_copyn(const unichar_t *pt,int len) {

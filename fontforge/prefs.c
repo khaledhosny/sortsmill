@@ -1,4 +1,4 @@
-#include <config.h>		/* -*- coding: utf-8 -*- */
+#include <config.h>             /* -*- coding: utf-8 -*- */
 
 /* Copyright (C) 2000-2012 by George Williams */
 /*
@@ -42,6 +42,7 @@
 #include <sys/time.h>
 #include <stdlib.h>
 #include <xstriconv.h>
+#include <xunistr.h>
 #include <xdie_on_null.h>
 
 #include "ttf.h"
@@ -84,10 +85,10 @@ extern char *xuid;
 extern char *SaveTablesPref;
 static char *LastFonts[2 * RECENT_MAX];
 static int LastFontIndex = 0, LastFontsPreserving = 0;
-                                                                                                                                                                                                                                                                                                                                                                                         /*struct cvshows CVShows = { 1, 1, 1, 1, 1, 0, 1 }; *//* in charview */
-                                                                                                                                                                                                                                                                /* int default_fv_font_size = 24; *//* in fontview */
-                                                                                                                                                                                                                                                                            /* int default_fv_antialias = false *//* in fontview */
-                                                                                                                                                                                                                                                                /* int default_fv_bbsized = false *//* in fontview */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           /*struct cvshows CVShows = { 1, 1, 1, 1, 1, 0, 1 }; *//* in charview */
+                                                                                                                                                                                                                                                                                                                                                                            /* int default_fv_font_size = 24; *//* in fontview */
+                                                                                                                                                                                                                                                                                                                                                                                              /* int default_fv_antialias = false *//* in fontview */
+                                                                                                                                                                                                                                                                                                                                                                            /* int default_fv_bbsized = false *//* in fontview */
 extern int default_fv_row_count;        /* in fontview */
 extern int default_fv_col_count;        /* in fontview */
 extern int default_fv_showhmetrics;     /* in fontview */
@@ -258,8 +259,16 @@ UserSettingsDiffer (void)
 /* don't use mnemonics 'C' or 'O' (Cancel & OK) */
 enum pref_types
 {
-  pr_int, pr_real, pr_bool, pr_enum, pr_encoding, pr_string,
-  pr_file, pr_namelist, pr_unicode, pr_angle
+  pr_int,
+  pr_real,
+  pr_bool,
+  pr_enum,
+  pr_encoding,
+  pr_string,
+  pr_file,
+  pr_namelist,
+  pr_unicode,
+  pr_angle
 };
 
 struct enums
@@ -304,10 +313,6 @@ static struct prefs_list
            "This may not effect windows of a type that is already initialized,\n"
            "restarting FontForge will fix that.")},
 #endif
-  {
-  N_("HelpDir"), pr_file, &helpdir, NULL, NULL, 'H', NULL, 0,
-      N_
-      ("The directory on your local system in which FontForge will search for help\nfiles.  If a file is not found there, then FontForge will look for it on the net.")},
   {
   N_("OtherSubrsFile"), pr_file, &othersubrsfile, NULL, NULL, 'O', NULL, 0,
       N_
@@ -928,21 +933,8 @@ ProcessFileChooserPrefs (void)
     {
       b = xmalloc1 (8 * sizeof (unichar_t *));
       i = 0;
-#ifdef __Mac
-      b[i++] = uc_copy ("~/Library/Fonts/");
-#endif
-      b[i++] = uc_copy ("~/fonts");
-#ifdef __Mac
-      b[i++] = uc_copy ("/Library/Fonts/");
-      b[i++] = uc_copy ("/System/Library/Fonts/");
-#endif
-#if __CygWin
-      b[i++] = uc_copy ("/cygdrive/c/Windows/Fonts/");
-#endif
-      b[i++] = uc_copy ("/usr/X11R6/lib/X11/fonts/");
-#ifndef __CygWin                /* I'm not releasing ftp support on cygwin */
-      b[i++] = uc_copy ("ftp://ctan.org/pub/tex-archive/fonts/");
-#endif
+      b[i++] =
+        x_u8_to_u32 ((uint8_t *) "ftp://ctan.org/pub/tex-archive/fonts/");
       b[i++] = NULL;
       GFileChooserSetBookmarks (b);
     }
@@ -1601,11 +1593,12 @@ Pref_MappingList (int use_user)
   for (i = 0; msn[i].otf_tag != 0; ++i)
     {
       sprintf (buf, "%3d,%2d %c%c%c%c", msn[i].mac_feature_type,
-               msn[i].mac_feature_setting, (int) (msn[i].otf_tag >> 24),
-               (int) ((msn[i].otf_tag >> 16) & 0xff),
-               (int) ((msn[i].otf_tag >> 8) & 0xff),
-               (int) (msn[i].otf_tag & 0xff));
-      ti[i].text = uc_copy (buf);
+               msn[i].mac_feature_setting,
+               (int) ((msn[i].otf_tag >> 24) & 0x7f),
+               (int) ((msn[i].otf_tag >> 16) & 0x7f),
+               (int) ((msn[i].otf_tag >> 8) & 0x7f),
+               (int) (msn[i].otf_tag & 0x7f));
+      ti[i].text = x_u8_to_u32 (buf);
     }
   return (ti);
 }
@@ -1755,7 +1748,7 @@ set_e_h (GWindow gw, GEvent * event)
           sprintf (buf, "%3d,%2d %c%c%c%c", feat, on, ubuf[0], ubuf[1],
                    ubuf[2], ubuf[3]);
           sd->done = true;
-          sd->ret = uc_copy (buf);
+          sd->ret = x_u8_to_u32 (buf);
         }
     }
   return (true);
@@ -1997,8 +1990,8 @@ Pref_MappingSel (GGadget * g, GEvent * e)
                            CID_Features);
       ChangeSetting (g,
                      e->u.control.u.list.changed_index !=
-                     -1 ? e->u.control.u.list.
-                     changed_index : GGadgetGetFirstListSelectedItem (g),
+                     -1 ? e->u.control.u.
+                     list.changed_index : GGadgetGetFirstListSelectedItem (g),
                      flist);
     }
   return (true);
@@ -2743,12 +2736,13 @@ DoPrefs (void)
                 tempstr = *((char **) (pl->val));
               else
                 tempstr = (char *) ((pl->get) ());
-              if (tempstr != NULL)
-                plabel[gc].text = /* def2u_ */ uc_copy (tempstr);
+              if (tempstr != NULL
+                  && u8_check (tempstr, u8_strlen (tempstr)) == NULL)
+                plabel[gc].text = x_u8_to_u32 (tempstr);
               else if (((char **) pl->val) == &BDFFoundry)
-                plabel[gc].text = /* def2u_ */ uc_copy ("FontForge");
+                plabel[gc].text = x_u8_to_u32 ("FontForge");
               else
-                plabel[gc].text = /* def2u_ */ uc_copy ("");
+                plabel[gc].text = x_u8_to_u32 ("");
               plabel[gc].text_is_1byte = false;
               pgcd[gc++].creator = GTextFieldCreate;
               hvarray[si++] = &pgcd[gc - 1];
@@ -3446,12 +3440,13 @@ PrefsSubSetDlg (CharView * cv, char *windowTitle, struct prefs_list *plist)
             tempstr = *((char **) (pl->val));
           else
             tempstr = (char *) ((pl->get) ());
-          if (tempstr != NULL)
-            plabel[gc].text = /* def2u_ */ uc_copy (tempstr);
+          if (tempstr != NULL
+              && u8_check (tempstr, u8_strlen (tempstr)) == NULL)
+            plabel[gc].text = x_u8_to_u32 (tempstr);
           else if (((char **) pl->val) == &BDFFoundry)
-            plabel[gc].text = /* def2u_ */ uc_copy ("FontForge");
+            plabel[gc].text = x_u8_to_u32 ("FontForge");
           else
-            plabel[gc].text = /* def2u_ */ uc_copy ("");
+            plabel[gc].text = x_u8_to_u32 ("");
           plabel[gc].text_is_1byte = false;
           pgcd[gc++].creator = GTextFieldCreate;
           hvarray[si++] = &pgcd[gc - 1];
