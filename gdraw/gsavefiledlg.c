@@ -158,7 +158,7 @@ return( GGadgetDispatchEvent((GGadget *) (d->gfc),event));
 return( true );
 }
 
-unichar_t *GWidgetSaveAsFileWithGadget(const unichar_t *title, const unichar_t *defaultfile,
+static unichar_t *GWidgetSaveAsFileWithGadget(const unichar_t *title, const unichar_t *defaultfile,
 	const unichar_t *initial_filter, unichar_t **mimetypes,
 	GFileChooserFilterType filter, GGadgetCreateData *optional_gcd) {
     GRect pos;
@@ -291,13 +291,6 @@ unichar_t *GWidgetSaveAsFileWithGadget(const unichar_t *title, const unichar_t *
     GDrawDestroyWindow(gw);
     GProgressResumeTimer();
 return(d.ret);
-}
-
-unichar_t *GWidgetSaveAsFile(const unichar_t *title, const unichar_t *defaultfile,
-	const unichar_t *initial_filter, unichar_t **mimetypes,
-	GFileChooserFilterType filter) {
-return( GWidgetSaveAsFileWithGadget(title,defaultfile,initial_filter,mimetypes,
-		filter, NULL ));
 }
 
 char *GWidgetSaveAsFileWithGadget8(const char *title, const char *defaultfile,

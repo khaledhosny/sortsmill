@@ -198,12 +198,6 @@ static unichar_t *GWidgetOpenFileWPath(const unichar_t *title, const unichar_t *
 return(d.ret);
 }
 
-unichar_t *GWidgetOpenFile(const unichar_t *title, const unichar_t *defaultfile,
-	const unichar_t *initial_filter, unichar_t **mimetypes,
-	GFileChooserFilterType filter) {
-return( GWidgetOpenFileWPath(title,defaultfile,initial_filter,mimetypes,filter,NULL));
-}
-
 char *GWidgetOpenFileWPath8(const char *title, const char *defaultfile,
 	const char *initial_filter, char **mimetypes,
 	GFileChooserFilterType filter, char **path) {

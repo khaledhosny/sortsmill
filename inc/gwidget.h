@@ -99,13 +99,6 @@ extern void GWidgetFlowGadgets(GWindow gw);
 extern void GWidgetToDesiredSize(GWindow gw);
 
 	/* Built in dialogs */
-unichar_t *GWidgetOpenFile(const unichar_t *title, const unichar_t *defaultfile,
-	const unichar_t *initial_filter, unichar_t **mimetypes,GFileChooserFilterType filter);
-unichar_t *GWidgetSaveAsFile(const unichar_t *title, const unichar_t *defaultfile,
-	const unichar_t *initial_filter, unichar_t **mimetypes,GFileChooserFilterType filter );
-unichar_t *GWidgetSaveAsFileWithGadget(const unichar_t *title, const unichar_t *defaultfile,
-	const unichar_t *initial_filter, unichar_t **mimetypes,
-	GFileChooserFilterType filter, GGadgetCreateData *optional_gcd);
 char *GWidgetOpenFile8(const char *title, const char *defaultfile,
 	const char *initial_filter, char **mimetypes,GFileChooserFilterType filter);
 char *GWidgetOpenFileWPath8(const char *title, const char *defaultfile,
@@ -115,21 +108,6 @@ char *GWidgetSaveAsFileWithGadget8(const char *title, const char *defaultfile,
 	GFileChooserFilterType filter, GGadgetCreateData *optional_gcd);
 char *GWidgetSaveAsFile8(const char *title, const char *defaultfile,
 	const char *initial_filter, char **mimetypes,GFileChooserFilterType filter );
-int GWidgetAsk(const unichar_t *title, const unichar_t **answers, const unichar_t *mn,
-	int def, int cancel,const unichar_t *question,...);
-int GWidgetAskCentered(const unichar_t *title,
-	const unichar_t ** answers, const unichar_t *mn, int def, int cancel,const unichar_t *question,...);
-unichar_t *GWidgetAskString(const unichar_t *title,
-	const unichar_t *def,const unichar_t *question,...);
-void GWidgetPostNotice(const unichar_t *title,const unichar_t *statement,...);
-void GWidgetError(const unichar_t *title,const unichar_t *statement,...);
-void GWidgetErrorR(int title,int statement,...);
-int GWidgetAskR(int title, int *answers, int def, int cancel,int question,...);
-int GWidgetAskR_(int title, int *answers, int def, int cancel,const unichar_t *question,...);
-int GWidgetAskCenteredR(int title, int *answers, int def, int cancel,int question,...);
-int GWidgetAskCenteredR_(int title, int *answers, int def, int cancel,const unichar_t *question,...);
-unichar_t *GWidgetAskStringR(int title, const unichar_t *def,int question,...);
-void GWidgetPostNoticeR(int title,int statement,...);
 int GWidgetAsk8(const char *title, const char **answers,
 	int def, int cancel,const char *question,...);
 int GWidgetAskCentered8(const char *title,
@@ -144,11 +122,6 @@ void GWidgetPostNoticeTimeout8(int timeout, const char *title,const char *statem
 int GWidgetPostNoticeActive8(const char *title);
 void GWidgetError8(const char *title,const char *statement,...);
 
-int GWidgetChoicesR(int title, const unichar_t **choices,int cnt, int def,int question,...);
-int GWidgetChoicesBR(int title, const unichar_t **choices, int cnt, int def,
-	int buts[2],int question,...);
-int GWidgetChoicesBRM(int title, const unichar_t **choices,char *sel,
-	int cnt, int buts[2], int question,...);
 int GWidgetChoices8(const char *title, const char **choices,int cnt, int def,
 	const char *question,...);
 int GWidgetChoicesB8(char *title, const char **choices, int cnt, int def,
