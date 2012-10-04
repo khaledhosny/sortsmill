@@ -829,7 +829,7 @@ static void KCD_SetDevTab(KernClassDlg *kcd) {
 	for ( i=0; i<len; ++i ) {
 	    ti[i] = xcalloc(1,sizeof(GTextInfo));
 	    sprintf( buffer, "%d", i+kcd->active_adjust.first_pixel_size);
-	    ti[i]->text = uc_copy(buffer);
+	    ti[i]->text = x_u8_to_u32 (u8_force_valid (buffer));
 	    ti[i]->fg = ti[i]->bg = COLOR_DEFAULT;
 	}
 	ti[i] = xcalloc(1,sizeof(GTextInfo));
@@ -953,7 +953,7 @@ static void KPD_BuildKernList(KernClassDlg *kcd) {
 	for ( kp=kcd->isv?kcd->scf->vkerns:kcd->scf->kerns, len=0; kp!=NULL; kp=kp->next, ++len ) {
 	    ti[len] = xcalloc(1,sizeof(GTextInfo));
 	    ti[len]->fg = ti[len]->bg = COLOR_DEFAULT;
-	    ti[len]->text = uc_copy(kp->sc->name);
+	    ti[len]->text = x_u8_to_u32 (u8_force_valid (kp->sc->name));
 	}
     ti[len] = xcalloc(1,sizeof(GTextInfo));
     GGadgetSetList(GWidgetGetControl(kcd->gw,CID_Second),ti,false);
@@ -3210,20 +3210,22 @@ void KernPairD(SplineFont *sf,SplineChar *sc1,SplineChar *sc2,int layer,int isv)
 
     FillShowKerningWindow(&kcd, NULL, kcd.sf, NULL);
 
-    if ( sc1!=NULL ) {
-	unichar_t *utemp;
-	GGadgetSetTitle(GWidgetGetControl(kcd.gw,CID_First),(utemp=uc_copy(sc1->name)));
+    if ( sc1!=NULL )
+      {
+	unichar_t *utemp = x_u8_to_u32 (u8_force_valid (sc1->name));
+	GGadgetSetTitle(GWidgetGetControl(kcd.gw,CID_First), utemp);
 	free(utemp);
 	KPD_BuildKernList(&kcd);
 	KCD_UpdateGlyph(&kcd,0);
-    }
-    if ( sc2!=NULL ) {
-	unichar_t *utemp;
-	GGadgetSetTitle(GWidgetGetControl(kcd.gw,CID_Second),(utemp=uc_copy(sc2->name)));
+      }
+    if ( sc2!=NULL )
+      {
+	unichar_t *utemp = x_u8_to_u32 (u8_force_valid (sc2->name));
+	GGadgetSetTitle(GWidgetGetControl(kcd.gw,CID_Second), utemp);
 	free(utemp);
 	KCD_UpdateGlyph(&kcd,1);
 	KPD_PairSearch(&kcd);
-    }
+      }
 
     GDrawSetVisible(kcd.gw,true);
     while ( !kcd.done )

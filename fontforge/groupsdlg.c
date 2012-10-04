@@ -789,45 +789,46 @@ return( true );
 }
 
 static void GroupSelected(struct groupdlg *grp) {
-    Group *current = GroupCurrentlySelected(grp);
+  Group *current = GroupCurrentlySelected(grp);
 
-    if ( !GroupFinishOld(grp)) {
-	if ( current!=NULL )
-	    current->selected=false;
-	if ( grp->oldsel!=NULL )
-	    grp->oldsel->selected = true;
-return;
-    }
-    grp->oldsel = current;
-    if ( current == NULL ) {
-	GGadgetSetEnabled(grp->newsub,false);
-	GGadgetSetEnabled(grp->delete,false);
-	GGadgetSetEnabled(grp->gpnamelab,false);
-	GGadgetSetEnabled(grp->gpname,false);
-	GGadgetSetEnabled(grp->glyphslab,false);
-	GGadgetSetEnabled(grp->glyphs,false);
-	GGadgetSetEnabled(grp->set,false);
-	GGadgetSetEnabled(grp->select,false);
-	GGadgetSetEnabled(grp->unique,false);
-	GGadgetSetEnabled(grp->colour,false);
-    } else {
-	unichar_t *glyphs = uc_copy(current->glyphs);
-	GGadgetSetTitle8(grp->gpname,current->name);
-	if ( glyphs==NULL ) glyphs = uc_copy("");
-	GGadgetSetTitle(grp->glyphs,glyphs);
-	free(glyphs);
-	GGadgetSetChecked(grp->unique,current->unique);
-	GGadgetSetEnabled(grp->newsub,current->glyphs==NULL || *current->glyphs=='\0');
-	GGadgetSetEnabled(grp->delete,current->parent!=NULL);
-	GGadgetSetEnabled(grp->gpnamelab,true);
-	GGadgetSetEnabled(grp->gpname,true);
-	GGadgetSetEnabled(grp->glyphslab,current->kid_cnt==0);
-	GGadgetSetEnabled(grp->glyphs,current->kid_cnt==0);
-	GGadgetSetEnabled(grp->set,current->kid_cnt==0);
-	GGadgetSetEnabled(grp->select,current->kid_cnt==0);
-	GGadgetSetEnabled(grp->unique,current->parent==NULL || !current->parent->unique);
-	GGadgetSetEnabled(grp->colour,current->kid_cnt==0);
-    }
+  if ( !GroupFinishOld(grp)) {
+    if ( current!=NULL )
+      current->selected=false;
+    if ( grp->oldsel!=NULL )
+      grp->oldsel->selected = true;
+    return;
+  }
+  grp->oldsel = current;
+  if ( current == NULL ) {
+    GGadgetSetEnabled(grp->newsub,false);
+    GGadgetSetEnabled(grp->delete,false);
+    GGadgetSetEnabled(grp->gpnamelab,false);
+    GGadgetSetEnabled(grp->gpname,false);
+    GGadgetSetEnabled(grp->glyphslab,false);
+    GGadgetSetEnabled(grp->glyphs,false);
+    GGadgetSetEnabled(grp->set,false);
+    GGadgetSetEnabled(grp->select,false);
+    GGadgetSetEnabled(grp->unique,false);
+    GGadgetSetEnabled(grp->colour,false);
+  } else {
+    unichar_t *glyphs = x_u8_to_u32 (u8_force_valid (current->glyphs));
+    GGadgetSetTitle8(grp->gpname,current->name);
+    if ( glyphs==NULL )
+      glyphs = x_u8_to_u32 ("");
+    GGadgetSetTitle(grp->glyphs,glyphs);
+    free(glyphs);
+    GGadgetSetChecked(grp->unique,current->unique);
+    GGadgetSetEnabled(grp->newsub,current->glyphs==NULL || *current->glyphs=='\0');
+    GGadgetSetEnabled(grp->delete,current->parent!=NULL);
+    GGadgetSetEnabled(grp->gpnamelab,true);
+    GGadgetSetEnabled(grp->gpname,true);
+    GGadgetSetEnabled(grp->glyphslab,current->kid_cnt==0);
+    GGadgetSetEnabled(grp->glyphs,current->kid_cnt==0);
+    GGadgetSetEnabled(grp->set,current->kid_cnt==0);
+    GGadgetSetEnabled(grp->select,current->kid_cnt==0);
+    GGadgetSetEnabled(grp->unique,current->parent==NULL || !current->parent->unique);
+    GGadgetSetEnabled(grp->colour,current->kid_cnt==0);
+  }
 }
 
 static void GroupShowChange(struct groupdlg *grp) {

@@ -2736,8 +2736,7 @@ DoPrefs (void)
                 tempstr = *((char **) (pl->val));
               else
                 tempstr = (char *) ((pl->get) ());
-              if (tempstr != NULL
-                  && u8_check (tempstr, u8_strlen (tempstr)) == NULL)
+              if (tempstr != NULL && u8_valid (tempstr))
                 plabel[gc].text = x_u8_to_u32 (tempstr);
               else if (((char **) pl->val) == &BDFFoundry)
                 plabel[gc].text = x_u8_to_u32 ("FontForge");
@@ -3440,8 +3439,7 @@ PrefsSubSetDlg (CharView * cv, char *windowTitle, struct prefs_list *plist)
             tempstr = *((char **) (pl->val));
           else
             tempstr = (char *) ((pl->get) ());
-          if (tempstr != NULL
-              && u8_check (tempstr, u8_strlen (tempstr)) == NULL)
+          if (tempstr != NULL && u8_valid (tempstr))
             plabel[gc].text = x_u8_to_u32 (tempstr);
           else if (((char **) pl->val) == &BDFFoundry)
             plabel[gc].text = x_u8_to_u32 ("FontForge");

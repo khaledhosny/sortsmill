@@ -2022,7 +2022,7 @@ static unichar_t *BitmapList(SplineFont *sf) {
 	pt += strlen(pt);
     }
     *pt = '\0';
-    uret = uc_copy(cret);
+    uret = x_u8_to_u32 (u8_force_valid (cret));
     free(cret);
 return( uret );
 }
@@ -2046,7 +2046,7 @@ static unichar_t *uStyleName(SplineFont *sf) {
 	strcat(buffer," Extended");
     if ( buffer[0]=='\0' )
 	strcpy(buffer," Plain");
-return( uc_copy(buffer+1));
+    return( x_u8_to_u32 (buffer+1));
 }
 
 #if 0 && defined( HAVE_PTHREAD_H )

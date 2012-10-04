@@ -3444,7 +3444,7 @@ return;
     uc_strcat(title, ")" );
     free(enc);
 
-    ititle = uc_copy(fv->b.sf->fontname);
+    ititle = x_u8_to_u32 (u8_force_valid (fv->b.sf->fontname));
     GDrawSetWindowTitles(fv->gw,title,ititle);
     free(title);
     free(ititle);
@@ -5254,7 +5254,7 @@ static void cdlistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
 		i<sizeof(cdlist)/sizeof(cdlist[0])-1 && j<cidmaster->subfontcnt;
 		++i, ++j ) {
 	    sub = cidmaster->subfonts[j];
-	    cdlist[i].ti.text = uc_copy(sub->fontname);
+	    cdlist[i].ti.text = x_u8_to_u32 (u8_force_valid (sub->fontname));
 	    cdlist[i].ti.checkable = true;
 	    cdlist[i].ti.checked = sub==fv->b.sf;
 	    cdlist[i].ti.userdata = sub;
@@ -5316,7 +5316,7 @@ static void mmlistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
 		sub = mm->normal;
 	    else
 		sub = mm->instances[j-1];
-	    mml[i].ti.text = uc_copy(sub->fontname);
+	    mml[i].ti.text = x_u8_to_u32 (u8_force_valid (sub->fontname));
 	    mml[i].ti.checkable = true;
 	    mml[i].ti.checked = sub==fv->b.sf;
 	    mml[i].ti.userdata = sub;

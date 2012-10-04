@@ -1,6 +1,5 @@
-#include <config.h>
+#include <config.h>		/* -*- coding: utf-8 -*- */
 
-/* -*- coding: utf-8 -*- */
 /* Copyright (C) 2000-2012 by George Williams */
 /*
  * Redistribution and use in source and binary forms, with or without
@@ -441,9 +440,13 @@ static void MVSetFeatures(MetricsView *mv) {
 	if ( (tags[i]>>24)<' ' || (tags[i]>>24)>0x7e )
 	    sprintf( buf, "<%d,%d>", tags[i]>>16, tags[i]&0xffff );
 	else {
-	    buf[0] = tags[i]>>24; buf[1] = tags[i]>>16; buf[2] = tags[i]>>8; buf[3] = tags[i]; buf[4] = 0;
+	    buf[0] = tags[i]>>24;
+	    buf[1] = tags[i]>>16;
+	    buf[2] = tags[i]>>8;
+	    buf[3] = tags[i];
+	    buf[4] = 0;
 	}
-	ti[i]->text = uc_copy(buf);
+	ti[i]->text = x_u8_to_u32 (u8_force_valid (buf));
 	ti[i]->userdata = (void *) (intpt) tags[i];
 	for ( j=0; stds[j]!=0; ++j ) {
 	    if ( stds[j] == tags[i] ) {

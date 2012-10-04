@@ -484,7 +484,7 @@ return( NULL );
 	    out[2] = '\0'; out[3] = '\0';
 	    free(cstr);
 	} else {
-	    str = uc_copy("");
+	    str = x_u8_to_u32 ("");
 	}
 	ret = u2utf8_copy(str);
 	free(str);
@@ -649,23 +649,31 @@ return( true );
 return( choice!=-1);
 }
 
-static int PickCFFFont(char **fontnames) {
-    unichar_t **names;
-    int cnt, i, choice;
+static int PickCFFFont(char **fontnames)
+{
+  unichar_t **names;
+  int cnt, i, choice;
 
-    for ( cnt=0; fontnames[cnt]!=NULL; ++cnt);
-    names = xcalloc(cnt+1,sizeof(unichar_t *));
-    for ( i=0; i<cnt; ++i )
-	names[i] = uc_copy(fontnames[i]);
-    if ( no_windowing_ui )
-	choice = 0;
+  for ( cnt=0; fontnames[cnt]!=NULL; ++cnt)
+    ;
+  names = xcalloc(cnt+1,sizeof(unichar_t *));
+  for ( i=0; i<cnt; ++i )
+    if (u8_valid (fontnames[i]))
+      names[i] = x_u8_to_u32 (fontnames[i]);
     else
-	choice = ff_choose(_("Pick a font, any font..."),
-	    (const char **) names,cnt,0,_("There are multiple fonts in this file, pick one"));
-    for ( i=0; i<cnt; ++i )
-	free(names[i]);
-    free(names);
-return( choice );
+      // FIXME: Is there a better thing to do here?
+      names[i] = x_u8_to_u32 ("");
+  if ( no_windowing_ui )
+    choice = 0;
+  else
+    choice =
+      ff_choose(_("Pick a font, any font..."),
+		(const char **) names,cnt,0,
+		_("There are multiple fonts in this file, pick one"));
+  for ( i=0; i<cnt; ++i )
+    free(names[i]);
+  free(names);
+  return( choice );
 }
 
 static void ParseSaveTablesPref(struct ttfinfo *info) {

@@ -176,7 +176,7 @@ static unichar_t *GenText(int32 *sizes,real scale) {
 	}
     }
     *pt = '\0';
-    uret = uc_copy(cret);
+    uret = x_u8_to_u32 (u8_force_valid (cret));
     free(cret);
 return( uret );
 }

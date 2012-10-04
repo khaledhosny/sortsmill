@@ -165,26 +165,39 @@ return;
     (gc->receivedata)(gc);
 }
 
-static void _gio_file_statfile(GIOControl *gc,char *path) {
-    GDirEntry *cur;
-    struct stat statb;
+static void _gio_file_statfile(GIOControl *gc,char *path)
+{
+  GDirEntry *cur;
+  struct stat statb;
 
-    if ( stat(path,&statb)==-1 ) {
+  if ( stat(path,&statb)==-1 )
+    _GIO_reporterror(gc,errno);
+  else
+    {
+      cur = (GDirEntry *) xcalloc(1,sizeof(GDirEntry));
+      errno = 0;
+
+      // FIXME: This is likely wrong, but we do _not_ want to allow
+      // invalid UTF-8/32. In what encoding is 'path' supposed to be?
+      // If UTF-8, why is it passed directly to 'stat', above? Is it
+      // provably valid?
+      if (u8_valid (path))
+	{
+	  cur->name = x_u8_to_u32 (u8_GFileBaseName(path));
+	  cur->hasdir = cur->hasexe = cur->hasmode = cur->hassize = cur->hastime = true;
+	  cur->size    = statb.st_size;
+	  cur->mode    = statb.st_mode;
+	  cur->modtime = statb.st_mtime;
+	  cur->isdir   = S_ISDIR(cur->mode);
+	  cur->isexe   = !cur->isdir && (cur->mode & 0100);
+	  gc->iodata = cur;
+	  gc->direntrydata = true;
+	  gc->return_code = 200;
+	  gc->done = true;
+	  (gc->receivedata)(gc);
+	}
+      else
 	_GIO_reporterror(gc,errno);
-    } else {
-	cur = (GDirEntry *) xcalloc(1,sizeof(GDirEntry));
-	cur->name = uc_copy(GFileBaseName(path));
-	cur->hasdir = cur->hasexe = cur->hasmode = cur->hassize = cur->hastime = true;
-	cur->size    = statb.st_size;
-	cur->mode    = statb.st_mode;
-	cur->modtime = statb.st_mtime;
-	cur->isdir   = S_ISDIR(cur->mode);
-	cur->isexe   = !cur->isdir && (cur->mode & 0100);
-	gc->iodata = cur;
-	gc->direntrydata = true;
-	gc->return_code = 200;
-	gc->done = true;
-	(gc->receivedata)(gc);
     }
 }
 

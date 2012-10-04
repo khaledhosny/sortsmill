@@ -1,6 +1,5 @@
-#include <config.h>
+#include <config.h>		/* -*- coding: utf-8 -*- */
 
-/* -*- coding: utf-8 -*- */
 /* Copyright (C) 2003-2012 by George Williams */
 /*
  * Redistribution and use in source and binary forms, with or without
@@ -286,7 +285,7 @@ static GTextInfo *Pref_SettingsList(struct macsetting *all) {
 	temp = PickNameFromMacName(ms->setname);
 	sprintf(buf,"%3d ", ms->setting);
 	if ( temp==NULL )
-	    full = uc_copy(buf);
+	    full = x_u8_to_u32 (buf);
 	else {
 	    full = xmalloc1((strlen(buf)+strlen(temp)+1)*sizeof(unichar_t));
 	    uc_strcpy(full,buf);
@@ -314,7 +313,7 @@ static GTextInfo *Pref_FeaturesList(MacFeat *all) {
 	temp = PickNameFromMacName(mf->featname);
 	sprintf(buf,"%3d ", mf->feature);
 	if ( temp==NULL )
-	    full = uc_copy(buf);
+	    full = x_u8_to_u32 (buf);
 	else {
 	    full = xmalloc1((strlen(buf)+strlen(temp)+1)*sizeof(unichar_t));
 	    uc_strcpy(full,buf);

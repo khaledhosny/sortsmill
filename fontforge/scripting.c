@@ -413,31 +413,35 @@ static void bError(Context *c) {
     ScriptError( c, c->a.vals[1].u.sval );
 }
 
-static void bPostNotice(Context *c) {
-    char *t1;
-    char *loc;
+static void bPostNotice(Context *c)
+{
+  char *t1;
+  char *loc;
 
-    if ( c->a.argc!=2 )
-	ScriptError( c, "Wrong number of arguments" );
-    else if ( c->a.vals[1].type!=v_str )
-	ScriptError( c, "Expected string argument" );
+  if ( c->a.argc!=2 )
+    ScriptError( c, "Wrong number of arguments" );
+  else if ( c->a.vals[1].type!=v_str )
+    ScriptError( c, "Expected string argument" );
 
-    loc = c->a.vals[1].u.sval;
-    if ( !no_windowing_ui ) {
-	if ( !use_utf8_in_script ) {
-	    unichar_t *t1 = uc_copy(loc);
-	    loc = u2utf8_copy(t1);
-	    free(t1);
-	}
-	ff_post_notice(_("Attention"), "%.200s", loc );
-	if ( loc != c->a.vals[1].u.sval )
-	    free(loc);
-    } else
+  loc = c->a.vals[1].u.sval;
+  if ( !no_windowing_ui )
     {
-	t1 = script2utf8_copy(loc);
-	loc = utf82def_copy(t1);
-	fprintf(stderr,"%s\n", loc );
-	free(loc); free(t1);
+      if ( !use_utf8_in_script )
+	{
+	  unichar_t *t1 = x_u8_to_u32 (u8_force_valid (loc));
+	  loc = u2utf8_copy(t1);
+	  free(t1);
+	}
+      ff_post_notice(_("Attention"), "%.200s", loc );
+      if ( loc != c->a.vals[1].u.sval )
+	free(loc);
+    }
+  else
+    {
+      t1 = script2utf8_copy(loc);
+      loc = utf82def_copy(t1);
+      fprintf(stderr,"%s\n", loc );
+      free(loc); free(t1);
     }
 }
 
@@ -6429,7 +6433,7 @@ static void bAddAnchorClass(Context *c) {
     else
 	ScriptErrorString(c,"Unknown type of anchor class. Must be one of \"default\", \"mk-mk\", or \"cursive\". ",  c->a.vals[2].u.sval);
 
-    ustr = uc_copy(c->a.vals[3].u.sval);
+    ustr = x_u8_to_u32 (u8_force_valid (c->a.vals[3].u.sval));
     free(ustr);
     ac->next = sf->anchor;
     sf->anchor = ac;

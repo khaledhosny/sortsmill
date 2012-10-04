@@ -1,3 +1,5 @@
+#include <config.h>
+
 /* Copyright (C) 2000-2012 by George Williams */
 /*
  * Redistribution and use in source and binary forms, with or without
@@ -24,8 +26,6 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-#include <config.h>
 
 #include "gioftpP.h"
 #include "ustring.h"
@@ -251,8 +251,9 @@ static GDirEntry *parsedosdir(char *line, GDirEntry *last, int tzdiff) {
     }
 
     while ( *pt==' ' || *pt=='\t' ) ++pt;
-    if ( pt>line+39 ) pt = line+39;
-    cur->name = uc_copy(pt);
+    if ( pt>line+39 )
+      pt = line+39;
+    cur->name = x_u8_to_u32 (u8_force_valid (pt));
     if ( last!=NULL )
 	last->next = cur;
 return( cur );
@@ -359,7 +360,7 @@ return( last );
     when.tm_yday = when.tm_wday = 0; when.tm_isdst = -1;
     cur->modtime = mktime(&when);
 
-    cur->name = uc_copy(end+1);
+    cur->name = x_u8_to_u32 (u8_force_valid (end+1));
     if ( last!=NULL )
 	last->next = cur;
 return( cur );
@@ -392,7 +393,7 @@ static GDirEntry *parseunix_Fdir(char *line, GDirEntry *last, int tzdiff) {
 	/* sockets and named pipes */
 	*pt = '\0';
     }
-    cur->name = uc_copy(pt);
+    cur->name = x_u8_to_u32 (u8_force_valid (pt));
     if ( last!=NULL )
 	last->next = cur;
 return( cur );

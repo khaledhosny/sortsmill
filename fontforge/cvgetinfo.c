@@ -2581,7 +2581,7 @@ GTextInfo *SCHintList(SplineChar *sc,HintMask *hm) {
 	else
 	    sprintf( buffer, "H<%g,%g>",
 		    rint(h->start*100)/100, rint(h->width*100)/100 );
-	ti[i].text = uc_copy(buffer);
+	ti[i].text = x_u8_to_u32 (buffer);
 	if ( hm!=NULL && ((*hm)[i>>3]&(0x80>>(i&7))))
 	    ti[i].selected = true;
     }
@@ -2595,7 +2595,7 @@ GTextInfo *SCHintList(SplineChar *sc,HintMask *hm) {
 	else
 	    sprintf( buffer, "V<%g,%g>",
 		    rint(h->start*100)/100, rint(h->width*100)/100 );
-	ti[i].text = uc_copy(buffer);
+	ti[i].text = x_u8_to_u32 (buffer);
 	if ( hm!=NULL && ((*hm)[i>>3]&(0x80>>(i&7))))
 	    ti[i].selected = true;
     }

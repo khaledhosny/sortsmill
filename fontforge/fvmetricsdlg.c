@@ -134,7 +134,8 @@ static void FVCreateWidth(void *_fv,void (*doit)(CreateWidthData *),
     cwd.wd.doit = doit;
     cwd.gw = winds[wtype];
 
-    if ( cwd.gw==NULL ) {
+    if ( cwd.gw==NULL )
+      {
 	memset(&wattrs,0,sizeof(wattrs));
 	wattrs.mask = wam_events|wam_cursor|wam_utf8_wtitle|wam_undercursor|wam_isdlg|wam_restrict;
 	wattrs.event_masks = ~(1<<et_charup);
@@ -276,16 +277,18 @@ static void FVCreateWidth(void *_fv,void (*doit)(CreateWidthData *),
 	GWidgetIndicateFocusGadget(GWidgetGetControl(cwd.gw,CID_SetVal));
 	GTextFieldSelect(GWidgetGetControl(cwd.gw,CID_SetVal),0,-1);
 	GHVBoxFitWindow(topbox[0].ret);
-    } else {
-	unichar_t *temp = uc_copy(def);
+      }
+    else
+      {
+	unichar_t *temp = x_u8_to_u32 (u8_force_valid (def));
 	GGadgetSetTitle(GWidgetGetControl(cwd.gw,CID_SetVal),temp);
 	free( temp );
-    }
+      }
 
     GWidgetHidePalettes();
     GDrawSetVisible(cwd.gw,true);
     while ( !cwd.wd.done )
-	GDrawProcessOneEvent(NULL);
+      GDrawProcessOneEvent(NULL);
     GDrawSetVisible(cwd.gw,false);
 }
 

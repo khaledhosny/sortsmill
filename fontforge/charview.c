@@ -9933,7 +9933,7 @@ static void mvlistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
 		sub = mm->normal;
 	    else
 		sub = mm->instances[j-1];
-	    mml[i].ti.text = uc_copy(sub->fontname);
+	    mml[i].ti.text = x_u8_to_u32 (u8_force_valid (sub->fontname));
 	    mml[i].ti.checkable = true;
 	    mml[i].ti.checked = (cv->mmvisible & (1<<j))?1:0;
 	    mml[i].ti.userdata = (void *) (intpt) (1<<j);
@@ -10008,7 +10008,7 @@ static void mmlistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
 		sub = mm->normal;
 	    else
 		sub = mm->instances[j-1];
-	    mml[i].ti.text = uc_copy(sub->fontname);
+	    mml[i].ti.text = x_u8_to_u32 (u8_force_valid (sub->fontname));
 	    mml[i].ti.checkable = true;
 	    mml[i].ti.checked = sub==cv->b.sc->parent;
 	    mml[i].ti.userdata = sub;

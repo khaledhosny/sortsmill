@@ -220,7 +220,7 @@ static GTextInfo *PrinterList() {
     printcap = fopen("/etc/printcap","r");
     if ( printcap==NULL ) {
 	tis = xcalloc(2,sizeof(GTextInfo));
-	tis[0].text = uc_copy("<default>");
+	tis[0].text = x_u8_to_u32 ("<default>");
 return( tis );
     }
 
@@ -247,7 +247,7 @@ return( tis );
 return( tis );
 	}
 	tis = xcalloc((cnt+1),sizeof(GTextInfo));
-	tis[0].text = uc_copy("<default>");
+	tis[0].text = x_u8_to_u32 ("<default>");
 	rewind(printcap);
     }
 }
@@ -771,8 +771,9 @@ static GTextInfo *FontNames(SplineFont *cur_sf, int insert_text) {
     for ( fv=fv_list, cnt=0; fv!=NULL; fv=(FontView *) (fv->b.next) ) {
 	if ( (FontView *) (fv->b.nextsame)==NULL ) {
 	    sf = fv->b.sf;
-	    if ( sf->cidmaster!=NULL ) sf = sf->cidmaster;
-	    ti[cnt].text = uc_copy(sf->fontname);
+	    if ( sf->cidmaster!=NULL )
+	      sf = sf->cidmaster;
+	    ti[cnt].text = x_u8_to_u32 (u8_force_valid (sf->fontname));
 	    ti[cnt].userdata = sf;
 	    /* In the print dlg, use the current font */
 	    /* In the insert_text dlg, use anything other than the current */
@@ -976,7 +977,7 @@ static void DSP_ChangeFontCallback(void *context,SplineFont *sf,enum sftf_fontty
 	else {
 	    buf[0] = tags[i]>>24; buf[1] = tags[i]>>16; buf[2] = tags[i]>>8; buf[3] = tags[i]; buf[4] = 0;
 	}
-	ti[i]->text = uc_copy(buf);
+	ti[i]->text = x_u8_to_u32 (u8_force_valid (buf));
 	ti[i]->userdata = (void *) (intpt) tags[i];
 	if ( feats!=NULL ) {
 	    for ( j=0; feats[j]!=0; ++j ) {
@@ -1000,7 +1001,7 @@ static void DSP_ChangeFontCallback(void *context,SplineFont *sf,enum sftf_fontty
 		ti[cnt]->fg = COLOR_CREATE(0x70,0x70,0x70);
 		ti[cnt]->selected = true;
 		buf[0] = feats[i]>>24; buf[1] = feats[i]>>16; buf[2] = feats[i]>>8; buf[3] = feats[i]; buf[4] = 0;
-		ti[cnt]->text = uc_copy(buf);
+		ti[cnt]->text = x_u8_to_u32 (u8_force_valid (buf));
 		ti[cnt++]->userdata = (void *) (intpt) feats[i];
 	    }
 	}

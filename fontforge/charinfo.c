@@ -1,6 +1,5 @@
-#include <config.h>
+#include <config.h>		/* -*- coding: utf-8 -*- */
 
-/* -*- coding: utf-8 -*- */
 /* Copyright (C) 2000-2012 by George Williams */
 /*
  * Redistribution and use in source and binary forms, with or without
@@ -2009,7 +2008,7 @@ static int CI_SName(GGadget *g, GEvent *e) {	/* Set From Name */
 	}
 
 	sprintf(buf,"U+%04x", i);
-	temp = uc_copy(i==-1?"-1":buf);
+	temp = x_u8_to_u32 (i==-1?"-1":buf);
 	GGadgetSetTitle(GWidgetGetControl(ci->gw,CID_UValue),temp);
 	free(temp);
 
@@ -2111,7 +2110,7 @@ return( true );
 	CI_SetNameList(ci,val);
 
 	sprintf(buf,"U+%04x", val);
-	temp = uc_copy(buf);
+	temp = x_u8_to_u32 (buf);
 	GGadgetSetTitle(GWidgetGetControl(ci->gw,CID_UValue),temp);
 	free(temp);
     }

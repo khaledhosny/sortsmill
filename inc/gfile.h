@@ -33,7 +33,7 @@
 #include <basics.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <unistr.h>
+#include <xunistr.h>
 
 extern char *GFileGetUserConfigDir (void);
 extern char *GFileGetUserCacheDir (void);
@@ -90,23 +90,23 @@ u8_GFileGetHomeDir (void)
 inline uint8_t *
 u8_GFileBuildName (uint8_t *dir, uint8_t *file)
 {
-  assert (u8_check (dir, u8_strlen (dir)) == NULL);
-  assert (u8_check (file, u8_strlen (file)) == NULL);
+  assert (u8_valid (dir));
+  assert (u8_valid (file));
   return (uint8_t *) GFileBuildName ((char *) dir, (char *) file);
 }
 
 inline uint8_t *
 u8_GFileBaseName (const uint8_t *oldname)
 {
-  assert (u8_check (oldname, u8_strlen (oldname)) == NULL);
+  assert (u8_valid (oldname));
   return (uint8_t *) GFileBaseName ((const char *) oldname);
 }
 
 inline uint8_t *
 u8_GFileAppendFile (const uint8_t *dir, const uint8_t *name, bool isdir)
 {
-  assert (u8_check (dir, u8_strlen (dir)) == NULL);
-  assert (u8_check (name, u8_strlen (name)) == NULL);
+  assert (u8_valid (dir));
+  assert (u8_valid (name));
   return (uint8_t *) GFileAppendFile ((const char *) dir, (const char *) name,
                                       isdir);
 }

@@ -905,7 +905,7 @@ static void AnchorD_SetDevTabs(AnchorDlg *a) {
 	for ( i=0; i<len; ++i ) {
 	    ti[i] = xcalloc(1,sizeof(GTextInfo));
 	    sprintf( buffer, "%d", i+min );
-	    ti[i]->text = uc_copy(buffer);
+	    ti[i]->text = x_u8_to_u32 (u8_force_valid (buffer));
 	    ti[i]->fg = ti[i]->bg = COLOR_DEFAULT;
 	}
 	ti[i] = xcalloc(1,sizeof(GTextInfo));

@@ -38,22 +38,22 @@
 #include "encoding.h"
 
 static GTextInfo *EncodingList(void) {
-    GTextInfo *ti;
-    int i;
-    Encoding *item;
+  GTextInfo *ti;
+  int i;
+  Encoding *item;
 
-    i = 0;
-    for ( item=enclist; item!=NULL ; item=item->next )
-	if ( !item->builtin )
-	    ++i;
-    ti = xcalloc(i+1,sizeof(GTextInfo));
-    i = 0;
-    for ( item=enclist; item!=NULL ; item=item->next )
-	if ( !item->builtin )
-	    ti[i++].text = uc_copy(item->enc_name);
-    if ( i!=0 )
-	ti[0].selected = true;
-return( ti );
+  i = 0;
+  for ( item=enclist; item!=NULL ; item=item->next )
+    if ( !item->builtin )
+      ++i;
+  ti = xcalloc(i+1,sizeof(GTextInfo));
+  i = 0;
+  for ( item=enclist; item!=NULL ; item=item->next )
+    if ( !item->builtin )
+      ti[i++].text = x_u8_to_u32 (u8_force_valid (item->enc_name));
+  if ( i!=0 )
+    ti[0].selected = true;
+  return( ti );
 }
 
 #define CID_Encodings	1001
@@ -533,32 +533,34 @@ GMenuItem *GetEncodingMenu(void (*func)(GWindow,GMenuItem *,GEvent *),
 return( mi );
 }
 
-GTextInfo *GetEncodingTypes(void) {
-    GTextInfo *ti;
-    int i, cnt;
-    Encoding *item;
+GTextInfo *GetEncodingTypes(void)
+{
+  GTextInfo *ti;
+  int i, cnt;
+  Encoding *item;
 
-    EncodingInit();
+  EncodingInit();
 
-    cnt = 0;
-    for ( item=enclist; item!=NULL ; item=item->next )
+  cnt = 0;
+  for ( item=enclist; item!=NULL ; item=item->next )
+    if ( !item->hidden )
+      ++cnt;
+  i = cnt + sizeof(encodingtypes)/sizeof(encodingtypes[0]);
+  ti = xcalloc(i+1,sizeof(GTextInfo));
+  memcpy(ti,encodingtypes,sizeof(encodingtypes)-sizeof(encodingtypes[0]));
+  for ( i=0; i<sizeof(encodingtypes)/sizeof(encodingtypes[0])-1; ++i )
+    ti[i].text = (unichar_t *) copy((char *) ti[i].text);
+  if ( cnt!=0 )
+    {
+      ti[i++].line = true;
+      for ( item=enclist; item!=NULL ; item=item->next )
 	if ( !item->hidden )
-	    ++cnt;
-    i = cnt + sizeof(encodingtypes)/sizeof(encodingtypes[0]);
-    ti = xcalloc(i+1,sizeof(GTextInfo));
-    memcpy(ti,encodingtypes,sizeof(encodingtypes)-sizeof(encodingtypes[0]));
-    for ( i=0; i<sizeof(encodingtypes)/sizeof(encodingtypes[0])-1; ++i ) {
-	ti[i].text = (unichar_t *) copy((char *) ti[i].text);
+	  {
+	    ti[i].text = x_u8_to_u32 (u8_force_valid (item->enc_name));
+	    ti[i++].userdata = (void *) item->enc_name;
+	  }
     }
-    if ( cnt!=0 ) {
-	ti[i++].line = true;
-	for ( item=enclist; item!=NULL ; item=item->next )
-	    if ( !item->hidden ) {
-		ti[i].text = uc_copy(item->enc_name);
-		ti[i++].userdata = (void *) item->enc_name;
-	    }
-    }
-return( ti );
+  return( ti );
 }
 
 GTextInfo *EncodingTypesFindEnc(GTextInfo *encodingtypes, Encoding *enc) {

@@ -1,3 +1,5 @@
+#include <config.h>
+
 /* Copyright (C) 2000-2012 by George Williams */
 /*
  * Redistribution and use in source and binary forms, with or without
@@ -24,8 +26,6 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-#include <config.h>
 
 #include <stdlib.h>
 #include <stdbool.h>
@@ -688,7 +688,7 @@ return( NULL );
     ti = xmalloc((i+1)*sizeof(GTextInfo *));
     for ( i=0; i<len; ++i ) {
 	ti[i] = xcalloc(1,sizeof(GTextInfo));
-	ti[i]->text = uc_copy(array[i]);
+	ti[i]->text = x_u8_to_u32 (u8_force_valid (array[i]));
 	ti[i]->fg = ti[i]->bg = COLOR_DEFAULT;
     }
     ti[i] = xcalloc(1,sizeof(GTextInfo));
@@ -1198,7 +1198,7 @@ unichar_t *GStringFileGetResource(char *filename, int index,unichar_t *mnemonic)
     unichar_t *str;
 
     if ( filename==NULL )
-return( uc_copy("Default"));
+return( x_u8_to_u32 ("Default"));
 
     res = fopen(filename,"r");
     if ( res==NULL )

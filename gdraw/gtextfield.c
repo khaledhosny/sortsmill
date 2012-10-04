@@ -1060,25 +1060,27 @@ static void GTFPopupMenu(GTextField *gt, GEvent *event) {
     GMenuCreatePopupMenu(gt->g.base,event, gtf_popuplist);
 }
 
-static void GTextFieldIncrement(GTextField *gt,int amount) {
-    unichar_t *end;
-    double d = u_strtod(gt->text,&end);
-    char buf[40];
+static void GTextFieldIncrement(GTextField *gt,int amount)
+{
+  unichar_t *end;
+  double d = u_strtod(gt->text,&end);
+  char buf[40];
 
-    while ( *end==' ' ) ++end;
-    if ( *end!='\0' ) {
-	GDrawBeep(NULL);
-return;
+  while ( *end==' ' ) ++end;
+  if ( *end!='\0' )
+    {
+      GDrawBeep(NULL);
+      return;
     }
-    d = floor(d)+amount;
-    sprintf(buf,"%g", d);
-    free(gt->oldtext);
-    gt->oldtext = gt->text;
-    gt->text = uc_copy(buf);
-    free(gt->utf8_text);
-    gt->utf8_text = copy(buf);
-    _ggadget_redraw(&gt->g);
-    GTextFieldChanged(gt,-1);
+  d = floor(d)+amount;
+  sprintf(buf,"%g", d);
+  free(gt->oldtext);
+  gt->oldtext = gt->text;
+  gt->text = x_u8_to_u32 (u8_force_valid (buf));
+  free(gt->utf8_text);
+  gt->utf8_text = copy(buf);
+  _ggadget_redraw(&gt->g);
+  GTextFieldChanged(gt,-1);
 }
     
 static int GTextFieldDoChange(GTextField *gt, GEvent *event) {

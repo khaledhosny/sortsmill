@@ -33,6 +33,7 @@
 #include <gdraw.h>
 #include <gwidget.h>
 #include <ggadget.h>
+#include <xunistr.h>
 
 extern NameList *force_names_when_opening;
 int default_font_filter_index=0;
@@ -537,7 +538,7 @@ return( true );
 
     fontnames = GetFontNames(file);
     if ( fontnames==NULL || fontnames[0]==NULL )
-	msg = uc_copy( "???" );
+	msg = x_u8_to_u32 ( "???" );
     else {
 	len = 0;
 	for ( cnt=0; fontnames[cnt]!=NULL; ++cnt )

@@ -39,7 +39,6 @@
 
 extern unichar_t *u_copyn (const unichar_t *, long);
 extern unichar_t *uc_copyn (const char *, int);
-extern unichar_t *uc_copy (const char *);
 extern unichar_t *u_concat (const unichar_t *, const unichar_t *);
 extern char *cu_copyn (const unichar_t *pt, int len);
 extern char *cu_copy (const unichar_t *);

@@ -54,7 +54,8 @@ EXPORTED_XUNICONV_SYMBOLS = x_u8_strconv_from_locale			\
 EXPORTED_XUNISTR_SYMBOLS = x_u8_to_u16 x_u8_to_u32 x_u16_to_u8		\
 	x_u16_to_u32 x_u32_to_u8 x_u32_to_u16 x_gc_u8_to_u16			\
 	x_gc_u8_to_u32 x_gc_u16_to_u8 x_gc_u16_to_u32 x_gc_u32_to_u8	\
-	x_gc_u32_to_u16
+	x_gc_u32_to_u16 u8_valid u16_valid u32_valid u8_force_valid		\
+	u16_force_valid u32_force_valid
 
 EXPORTED_AUX_SYMBOLS = $(EXPORTED_XDIE_ON_NULL_SYMBOLS)					\
 	$(EXPORTED_XGC_SYMBOLS) $(EXPORTED_XUNICONV_SYMBOLS)				\

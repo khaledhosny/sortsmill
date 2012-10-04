@@ -37,6 +37,7 @@
 #include <config.h>
 
 #include <stdio.h>
+#include <stdbool.h>
 #include <unistr.h>
 #include <xalloc.h>
 #include <xdie_on_null.h>
@@ -55,6 +56,12 @@ inline uint8_t *x_gc_u16_to_u8 (const uint16_t *string);
 inline uint32_t *x_gc_u16_to_u32 (const uint16_t *string);
 inline uint8_t *x_gc_u32_to_u8 (const uint32_t *string);
 inline uint16_t *x_gc_u32_to_u16 (const uint32_t *string);
+inline bool u8_valid (const uint8_t *string);
+inline bool u16_valid (const uint16_t *string);
+inline bool u32_valid (const uint32_t *string);
+const uint8_t *u8_force_valid (const uint8_t *string);
+const uint16_t *u16_force_valid (const uint16_t *string);
+const uint32_t *u32_force_valid (const uint32_t *string);
 
 static inline uint8_t *
 x_u8_strdup (const uint8_t *string)
@@ -126,6 +133,24 @@ inline uint16_t *
 x_gc_u32_to_u16 (const uint32_t *string)
 {
   return x_gc_u16_grabstr (x_u32_to_u16 (string));
+}
+
+inline bool
+u8_valid (const uint8_t *string)
+{
+  return (u8_check (string, u8_strlen (string)) == NULL);
+}
+
+inline bool
+u16_valid (const uint16_t *string)
+{
+  return (u16_check (string, u16_strlen (string)) == NULL);
+}
+
+inline bool
+u32_valid (const uint32_t *string)
+{
+  return (u32_check (string, u32_strlen (string)) == NULL);
 }
 
 #endif // _FONTFORGE_XUNISTR_H
