@@ -33,20 +33,6 @@
 #include "utype.h"
 
 long
-uc_strncmp (const unichar_t *str1, const char *str2, int n)
-{
-  long ch1, ch2;
-  while (--n >= 0)
-    {
-      ch1 = *str1++;
-      ch2 = *(unsigned char *) str2++;
-      if (ch1 != ch2 || ch1 == '\0')
-        return (ch1 - ch2);
-    }
-  return (0);
-}
-
-long
 uc_strmatch (const unichar_t *str1, const char *str2)
 {
   long ch1, ch2;

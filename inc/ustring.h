@@ -44,7 +44,6 @@ extern char *cu_copyn (const unichar_t *pt, int len);
 extern char *cu_copy (const unichar_t *);
 
 extern long u_strcmp (const unichar_t *, const unichar_t *);
-extern long uc_strncmp (const unichar_t *, const char *, int);
 extern long u_strncmp (const unichar_t *, const unichar_t *, int);
 extern long uc_strmatch (const unichar_t *, const char *);
 extern long uc_strnmatch (const unichar_t *, const char *, int);

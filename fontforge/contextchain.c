@@ -1595,7 +1595,9 @@ return( NULL );
 		matched = GGadgetWildMatch((unichar_t *) wild,temp,false);
 		free(temp);
 	    } else
-		matched = uc_strncmp(spt,str,match_len)==0;
+	      matched = (u8_strncmp(x_gc_u32_to_u8 (u32_force_valid (spt)),
+				    u8_force_valid (str),
+				    match_len) == 0);
 	    if ( matched ) {
 		if ( doit ) {
 		    if ( spt==basept ) {

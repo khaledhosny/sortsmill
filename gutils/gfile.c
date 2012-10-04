@@ -179,9 +179,9 @@ u32_GFileNormalize (uint32_t *name)
     {
       if (*pt == '/')
         u_strcpy (pt, pt + 1);
-      else if (uc_strncmp (pt, "./", 2) == 0)
+      else if (u8_strncmp (x_gc_u32_to_u8 (u32_force_valid (pt)), "./", 2) == 0)
         u_strcpy (pt, pt + 2);
-      else if (uc_strncmp (pt, "../", 2) == 0)
+      else if (u8_strncmp (x_gc_u32_to_u8 (u32_force_valid (pt)), "../", 2) == 0)
         {
           for (ppt = pt - 2; ppt >= base && *ppt != '/'; --ppt);
           ++ppt;

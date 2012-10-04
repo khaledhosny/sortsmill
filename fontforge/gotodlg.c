@@ -157,7 +157,9 @@ return( NULL );
 		matched = GGadgetWildMatch((unichar_t *) spt,temp,false);
 		free(temp);
 	    } else
-		matched = uc_strncmp(spt,sc->name,match_len)==0;
+	      matched = (u8_strncmp(x_gc_u32_to_u8 (u32_force_valid (spt)),
+				    u8_force_valid (sc->name),
+				    match_len) == 0);
 	    if ( matched ) {
 		if ( doit )
 		    ret[cnt] = utf82u_copy(sc->name);

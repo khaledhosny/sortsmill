@@ -1,3 +1,5 @@
+#include <config.h>
+
 /* Copyright (C) 2000-2003 by George Williams */
 /*
  * Redistribution and use in source and binary forms, with or without
@@ -24,8 +26,6 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-#include <config.h>
 
 #include "giofuncP.h"
 #include <gfile.h>
@@ -74,7 +74,7 @@ static int AddProtocol(unichar_t *prefix,int len) {
 	}
     }
     memset(protocols+plen,0,sizeof(struct protocols));
-    if ( uc_strncmp(prefix,"file",len)==0 ) {
+    if ( u8_strncmp(x_gc_u32_to_u8 (u32_force_valid (prefix)),"file",len)==0 ) {
 	protocols[plen].handle = NULL;
 	protocols[plen].dispatcher = _GIO_fileDispatch;
 	protocols[plen].cancel = NULL;

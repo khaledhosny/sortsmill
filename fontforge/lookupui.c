@@ -1,6 +1,5 @@
-#include <config.h>
+#include <config.h>		/* -*- coding: utf-8 -*- */
 
-/* -*- coding: utf-8 -*- */
 /* Copyright (C) 2007-2012 by George Williams */
 /*
  * Redistribution and use in source and binary forms, with or without
@@ -4013,7 +4012,9 @@ return( NULL );
 		matched = GGadgetWildMatch((unichar_t *) wild,temp,false);
 		free(temp);
 	    } else
-		matched = uc_strncmp(spt,sc->name,match_len)==0;
+	      matched = (u8_strncmp(x_gc_u32_to_u8 (u32_force_valid (spt)),
+				    u8_force_valid (sc->name),
+				    match_len) == 0);
 	    if ( matched ) {
 		if ( doit ) {
 		    if ( spt==basept ) {
