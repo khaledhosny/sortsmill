@@ -41,7 +41,7 @@ extern char *GFileGetUserDataDir (void);
 extern char *GFileGetHomeDir (void);
 extern char *GFileBuildName (char *dir, char *file);
 extern char *GFileBaseName (const char *file);
-extern char *GFileAppendFile (char *dir, char *name, bool isdir);
+extern char *GFileAppendFile (const char *dir, const char *name, bool isdir);
 extern bool GFileIsAbsolute (const char *file);
 extern bool GFileIsDir (const char *file);
 extern bool GFileExists (const char *file);
@@ -55,11 +55,13 @@ inline uint8_t *u8_GFileGetUserDataDir (void);
 inline uint8_t *u8_GFileGetHomeDir (void);
 inline uint8_t *u8_GFileBuildName (uint8_t *dir, uint8_t *file);
 inline uint8_t *u8_GFileBaseName (const uint8_t *file);
+inline uint8_t *u8_GFileAppendFile (const uint8_t *dir, const uint8_t *name,
+                                    bool isdir);
 
 extern uint32_t *u32_GFileBaseName (const uint32_t *oldname);
 extern uint32_t *u32_GFileNormalize (uint32_t *name);
-extern uint32_t *u32_GFileAppendFile (uint32_t *dir, uint32_t *name,
-                                      bool isdir);
+extern uint32_t *u32_GFileAppendFile (const uint32_t *dir,
+                                      const uint32_t *name, bool isdir);
 
 inline uint8_t *
 u8_GFileGetUserConfigDir (void)
@@ -98,6 +100,15 @@ u8_GFileBaseName (const uint8_t *oldname)
 {
   assert (u8_check (oldname, u8_strlen (oldname)) == NULL);
   return (uint8_t *) GFileBaseName ((const char *) oldname);
+}
+
+inline uint8_t *
+u8_GFileAppendFile (const uint8_t *dir, const uint8_t *name, bool isdir)
+{
+  assert (u8_check (dir, u8_strlen (dir)) == NULL);
+  assert (u8_check (name, u8_strlen (name)) == NULL);
+  return (uint8_t *) GFileAppendFile ((const char *) dir, (const char *) name,
+                                      isdir);
 }
 
 #endif // _GFILE_H

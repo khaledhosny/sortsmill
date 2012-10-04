@@ -42,13 +42,17 @@ libsortsmillff_gutils_la_SOURCES = divisors.c gfile.c gcol.c gimage.c	\
 
 EXPORTED_GIOFTP_SYMBOLS = GIO_cancel GIO_dispatch GIO_init GIO_term
 
-EXPORTED_GFILE_SYMBOLS = GFileGetUserConfigDir GFileGetUserCacheDir		\
-	GFileGetUserDataDir GFileGetHomeDir GFileBuildName GFileBaseName	\
-	GFileAppendFile GFileIsAbsolute GFileIsDir GFileExists				\
-	GFileReadable GFileMkDir GFileUnlink u8_GFileGetUserConfigDir		\
+EXPORTED_GFILE_STR_SYMBOLS = GFileGetUserConfigDir					\
+	GFileGetUserCacheDir GFileGetUserDataDir GFileGetHomeDir		\
+	GFileBuildName GFileBaseName GFileAppendFile GFileIsAbsolute	\
+	GFileIsDir GFileExists GFileReadable GFileMkDir GFileUnlink
+EXPORTED_GFILE_U8_SYMBOLS = u8_GFileGetUserConfigDir					\
 	u8_GFileGetUserCacheDir u8_GFileGetUserDataDir u8_GFileGetHomeDir	\
-	u8_GFileBuildName u8_GFileBaseName u32_GFileBaseName				\
-	u32_GFileNormalize u32_GFileAppendFile
+	u8_GFileBuildName u8_GFileBaseName u8_GFileAppendFile
+EXPORTED_GFILE_U32_SYMBOLS = u32_GFileBaseName u32_GFileNormalize	\
+	u32_GFileAppendFile
+EXPORTED_GFILE_SYMBOLS = $(EXPORTED_GFILE_STR_SYMBOLS)		\
+	$(EXPORTED_GFILE_U8_SYMBOLS) $(EXPORTED_GFILE_U32_SYMBOLS)
 
 EXPORTED_GUTILS_SYMBOLS = $(EXPORTED_GFILE_SYMBOLS)					\
 	$(EXPORTED_GIOFTP_SYMBOLS) GIOCreate GIO_PasswordCache			\

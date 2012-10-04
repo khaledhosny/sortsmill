@@ -163,7 +163,7 @@ return( true );
 	if ( !GFileIsAbsolute(x_gc_u32_strconv_to_locale(newdir))) {
 	    unichar_t *temp = u32_GFileAppendFile(GFileChooserGetDir(d->gfc),newdir,false);
 	    free(newdir);
-	    newdir = temp;
+	    newdir = u_copy (temp);
 	}
 	GIOmkDir(GFileChooserReplaceIO(d->gfc,
 		GIOCreate(newdir,d,GFD_dircreated,GFD_dircreatefailed)));

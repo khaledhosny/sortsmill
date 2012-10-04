@@ -53,6 +53,8 @@ uint8_t *u8_GFileGetUserDataDir (void);
 uint8_t *u8_GFileGetHomeDir (void);
 uint8_t *u8_GFileBuildName (uint8_t *dir, uint8_t *file);
 uint8_t *u8_GFileBaseName (const uint8_t *file);
+uint8_t *u8_GFileAppendFile (const uint8_t *dir, const uint8_t *name,
+                             bool isdir);
 
 char *
 GFileGetUserConfigDir (void)
@@ -94,7 +96,7 @@ GFileBaseName (const char *file)
 }
 
 char *
-GFileAppendFile (char *dir, char *name, bool isdir)
+GFileAppendFile (const char *dir, const char *name, bool isdir)
 {
   char *filename = file_name_concat (dir, name, NULL);
   size_t length = strlen (filename);
@@ -202,28 +204,9 @@ u32_GFileNormalize (uint32_t *name)
   return (name);
 }
 
-// FIXME: Rewrite this, using UTF-8 and GFileAppendFile.
 uint32_t *
-u32_GFileAppendFile (uint32_t *dir, uint32_t *name, bool isdir)
+u32_GFileAppendFile (const uint32_t *dir, const uint32_t *name, bool isdir)
 {
-  uint32_t *ret, *pt;
-
-  ret =
-    (uint32_t *) xmalloc ((u_strlen (dir) + u_strlen (name) + 3) *
-			  sizeof (uint32_t));
-  u_strcpy (ret, dir);
-  pt = ret + u_strlen (ret);
-  if (pt > ret && pt[-1] != '/')
-    *pt++ = '/';
-  u_strcpy (pt, name);
-  if (isdir)
-    {
-      pt += u_strlen (pt);
-      if (pt > ret && pt[-1] != '/')
-        {
-          *pt++ = '/';
-          *pt = '\0';
-        }
-    }
-  return (ret);
+  return x_gc_u8_to_u32 (u8_GFileAppendFile (x_gc_u32_to_u8 (dir),
+                                             x_gc_u32_to_u8 (name), isdir));
 }
