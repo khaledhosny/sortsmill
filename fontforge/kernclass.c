@@ -2913,7 +2913,7 @@ static int KCL_Delete(GGadget *g, GEvent *e) {
 	    if ( !old[i]->selected ) {
 		new[j] = xmalloc1(sizeof(GTextInfo));
 		*new[j] = *old[i];
-		new[j]->text = u_copy(new[j]->text);
+		new[j]->text = x_u32_strdup_or_null(new[j]->text);
 		++j;
 		p = kc;
 	    } else {

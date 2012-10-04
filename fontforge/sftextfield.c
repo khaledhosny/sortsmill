@@ -1399,14 +1399,14 @@ static int SFTextAreaDoDrop(SFTextArea *st,GEvent *event,int endpos) {
 			    (st->sel_end-st->sel_start)*sizeof(unichar_t));
 		    u_strcpy(temp+endpos+st->sel_end-st->sel_start,st->li.text+endpos);
 		} else if ( endpos>=st->sel_end ) {
-		    temp = u_copy(st->li.text);
+		    temp = x_u32_strdup_or_null(st->li.text);
 		    memcpy(temp+st->sel_start,temp+st->sel_end,
 			    (endpos-st->sel_end)*sizeof(unichar_t));
 		    memcpy(temp+endpos-(st->sel_end-st->sel_start),
 			    st->li.text+st->sel_start,(st->sel_end-st->sel_start)*sizeof(unichar_t));
 		    pos = endpos;
 		} else /*if ( endpos<st->sel_start )*/ {
-		    temp = u_copy(st->li.text);
+		    temp = x_u32_strdup_or_null(st->li.text);
 		    memcpy(temp+endpos,st->li.text+st->sel_start,
 			    (st->sel_end-st->sel_start)*sizeof(unichar_t));
 		    memcpy(temp+endpos+st->sel_end-st->sel_start,st->li.text+endpos,
@@ -1796,7 +1796,7 @@ static void SFTextAreaSetTitle(GGadget *g,const unichar_t *tit) {
 return;
     st->li.oldtext = st->li.text;
     st->sel_oldstart = st->sel_start; st->sel_oldend = st->sel_end; st->sel_oldbase = st->sel_base;
-    st->li.text = u_copy(tit);		/* tit might be oldtext, so must copy before freeing */
+    st->li.text = x_u32_strdup_or_null(tit);		/* tit might be oldtext, so must copy before freeing */
     free(old);
     st->sel_start = st->sel_end = st->sel_base = u_strlen(tit);
     LI_fontlistmergecheck(&st->li);
@@ -2254,11 +2254,11 @@ static SFTextArea *_SFTextAreaCreate(SFTextArea *st, struct gwindow *base, GGadg
     st->g.takes_input = true; st->g.takes_keyboard = true; st->g.focusable = true;
     if ( gd->label!=NULL ) {
 	if ( gd->label->text_in_resource )	/* This one use of GStringGetResource is ligit */
-	    st->li.text = u_copy((unichar_t *) GStringGetResource((intpt) gd->label->text,&st->g.mnemonic));
+	    st->li.text = x_u32_strdup_or_null((unichar_t *) GStringGetResource((intpt) gd->label->text,&st->g.mnemonic));
 	else if ( gd->label->text_is_1byte )
 	    st->li.text = utf82u_copy((char *) gd->label->text);
 	else
-	    st->li.text = u_copy(gd->label->text);
+	    st->li.text = x_u32_strdup_or_null(gd->label->text);
 	st->sel_start = st->sel_end = st->sel_base = u_strlen(st->li.text);
     }
     if ( st->li.text==NULL )

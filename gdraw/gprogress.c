@@ -247,8 +247,8 @@ void GProgressStartIndicator(
 	if ( !progress_init )
 	    GProgressResInit();
 	new_ = xcalloc(1,sizeof(GProgress));
-	new_->line1 = u_copy(line1);
-	new_->line2 = u_copy(line2);
+	new_->line1 = x_u32_strdup_or_null(line1);
+	new_->line2 = x_u32_strdup_or_null(line2);
 	new_->tot = tot;
 	new_->stages = stages;
 	new_->prev = current;
@@ -280,7 +280,7 @@ void GProgressStartIndicator(
 	    wam_centered|wam_restrict|wam_redirect|wam_isdlg|wam_backcol;
 	wattrs.event_masks = ~(1<<et_charup);
 	wattrs.cursor = ct_watch;
-	wattrs.window_title = u_copy(win_title);
+	wattrs.window_title = x_u32_strdup_or_null(win_title);
 	wattrs.centered = true;
 	wattrs.restrict_input_to_me = true;
 	wattrs.redirect_chars_to_me = true;
@@ -356,7 +356,7 @@ void GProgressChangeLine1(const unichar_t *line1) {
     if ( current==NULL )
 return;
     free( current->line1 );
-    current->line1 = u_copy(line1);
+    current->line1 = x_u32_strdup_or_null(line1);
     if ( current->line1!=NULL ) {
 	GDrawSetFont(current->gw,current->font);
 	current->l1width = GDrawGetTextWidth(current->gw,current->line1,-1);
@@ -373,7 +373,7 @@ void GProgressChangeLine2(const unichar_t *line2) {
     if ( current==NULL )
 return;
     free( current->line2 );
-    current->line2 = u_copy(line2);
+    current->line2 = x_u32_strdup_or_null(line2);
     if ( current->line2!=NULL ) {
 	GDrawSetFont(current->gw,current->font);
 	current->l2width = GDrawGetTextWidth(current->gw,current->line2,-1);

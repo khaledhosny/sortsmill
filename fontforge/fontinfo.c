@@ -2203,7 +2203,7 @@ static int GFI_NameChange(GGadget *g, GEvent *e) {
 	/* If the user didn't set the full name yet, we guess it from the
 	 * postrscript name */
 	if ( gfi->human_untitled ) {
-	    unichar_t *cp = u_copy(uname);
+	    unichar_t *cp = x_u32_strdup_or_null(uname);
 	    int i=0;
 	    /* replace the last hyphen with space */
 	    for( i=u_strlen(cp); i>=0; i-- ) {
@@ -2485,14 +2485,14 @@ void GListMoveSelected(GGadget *list,int offset) {
 	}
 	new[j] = xmalloc1(sizeof(GTextInfo));
 	*new[j] = *old[i];
-	new[j]->text = u_copy(new[j]->text);
+	new[j]->text = x_u32_strdup_or_null(new[j]->text);
 	if ( offset<0 ) ++j; else --j;
     }
     for ( i=j=0; i<len; ++i ) if ( !old[i]->selected ) {
 	while ( new[j] ) ++j;
 	new[j] = xmalloc1(sizeof(GTextInfo));
 	*new[j] = *old[i];
-	new[j]->text = u_copy(new[j]->text);
+	new[j]->text = x_u32_strdup_or_null(new[j]->text);
 	++j;
     }
     new[len] = xcalloc(1,sizeof(GTextInfo));
@@ -2508,7 +2508,7 @@ void GListDelSelected(GGadget *list) {
     for ( i=j=0; i<len; ++i ) if ( !old[i]->selected ) {
 	new[j] = xmalloc1(sizeof(GTextInfo));
 	*new[j] = *old[i];
-	new[j]->text = u_copy(new[j]->text);
+	new[j]->text = x_u32_strdup_or_null(new[j]->text);
 	++j;
     }
     new[j] = xcalloc(1,sizeof(GTextInfo));
@@ -2525,9 +2525,9 @@ GTextInfo *GListChangeLine(GGadget *list,int pos, const unichar_t *line) {
 	new[i] = xmalloc1(sizeof(GTextInfo));
 	*new[i] = *old[i];
 	if ( i!=pos )
-	    new[i]->text = u_copy(new[i]->text);
+	    new[i]->text = x_u32_strdup_or_null(new[i]->text);
 	else
-	    new[i]->text = u_copy(line);
+	    new[i]->text = x_u32_strdup_or_null(line);
     }
     new[i] = xcalloc(1,sizeof(GTextInfo));
     GGadgetSetList(list,new,false);
@@ -2544,13 +2544,13 @@ GTextInfo *GListAppendLine(GGadget *list,const unichar_t *line,int select) {
     for ( i=0; i<len; ++i ) {
 	new[i] = xmalloc1(sizeof(GTextInfo));
 	*new[i] = *old[i];
-	new[i]->text = u_copy(new[i]->text);
+	new[i]->text = x_u32_strdup_or_null(new[i]->text);
 	if ( select ) new[i]->selected = false;
     }
     new[i] = xcalloc(1,sizeof(GTextInfo));
     new[i]->fg = new[i]->bg = COLOR_DEFAULT;
     new[i]->userdata = NULL;
-    new[i]->text = u_copy(line);
+    new[i]->text = x_u32_strdup_or_null(line);
     new[i]->selected = select;
     new[i+1] = xcalloc(1,sizeof(GTextInfo));
     GGadgetSetList(list,new,false);
@@ -2568,7 +2568,7 @@ GTextInfo *GListChangeLine8(GGadget *list,int pos, const char *line) {
 	new[i] = xmalloc1(sizeof(GTextInfo));
 	*new[i] = *old[i];
 	if ( i!=pos )
-	    new[i]->text = u_copy(new[i]->text);
+	    new[i]->text = x_u32_strdup_or_null(new[i]->text);
 	else
 	    new[i]->text = utf82u_copy(line);
     }
@@ -2587,7 +2587,7 @@ GTextInfo *GListAppendLine8(GGadget *list,const char *line,int select) {
     for ( i=0; i<len; ++i ) {
 	new[i] = xmalloc1(sizeof(GTextInfo));
 	*new[i] = *old[i];
-	new[i]->text = u_copy(new[i]->text);
+	new[i]->text = x_u32_strdup_or_null(new[i]->text);
 	if ( select ) new[i]->selected = false;
     }
     new[i] = xcalloc(1,sizeof(GTextInfo));

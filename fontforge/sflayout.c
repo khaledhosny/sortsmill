@@ -985,7 +985,7 @@ LayoutInfo *LIConvertToPrint(LayoutInfo *li, int width, int height, int dpi) {
     print->wrap = true;
     print->dpi = dpi;
 
-    print->text = u_copy(li->text);
+    print->text = x_u32_strdup_or_null(li->text);
     print->generated = FontDataCopyNoBDF(print,li->generated);
     print->fontlist = LI_fontlistcopy(li->fontlist);
     for ( fl = print->fontlist; fl!=NULL; fl=fl->next ) {
@@ -1304,7 +1304,7 @@ void LayoutInfoSetTitle(LayoutInfo *li,const unichar_t *tit,int width) {
     if ( u_strcmp(tit,li->text)==0 )	/* If it doesn't change anything, then don't trash undoes or selection */
 return;
     li->oldtext = li->text;
-    li->text = u_copy(tit);		/* tit might be oldtext, so must copy before freeing */
+    li->text = x_u32_strdup_or_null(tit);		/* tit might be oldtext, so must copy before freeing */
     free(old);
     LI_fontlistmergecheck(li);
     LayoutInfoRefigureLines(li,0,-1,width);

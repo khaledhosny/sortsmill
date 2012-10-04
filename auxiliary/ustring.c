@@ -28,6 +28,7 @@
  */
 
 #include <stddef.h>
+#include <xunistr.h>
 #include "ustring.h"
 #include "utype.h"
 
@@ -293,26 +294,19 @@ unichar_t *u_copyn(const unichar_t *pt, long n) {
 return(res);
 }
 
-unichar_t *u_copy(const unichar_t *pt) {
-    if(pt)
-return u_copyn(pt,u_strlen(pt));
-
-return((unichar_t *)0);
-}
-
 unichar_t *u_concat(const unichar_t *s1, const unichar_t *s2) {
-    long len1, len2;
-    unichar_t *pt;
+  long len1, len2;
+  unichar_t *pt;
 
-    if ( s1==NULL )
-return( u_copy( s2 ));
-    else if ( s2==NULL )
-return( u_copy( s1 ));
-    len1 = u_strlen(s1); len2 = u_strlen(s2);
-    pt = (unichar_t *) xmalloc((len1+len2+1)*sizeof(unichar_t));
-    u_strcpy(pt,s1);
-    u_strcpy(pt+len1,s2);
-return( pt );
+  if ( s1==NULL )
+    return( x_u32_strdup_or_null( s2 ));
+  else if ( s2==NULL )
+    return( x_u32_strdup_or_null( s1 ));
+  len1 = u_strlen(s1); len2 = u_strlen(s2);
+  pt = (unichar_t *) xmalloc((len1+len2+1)*sizeof(unichar_t));
+  u_strcpy(pt,s1);
+  u_strcpy(pt+len1,s2);
+  return( pt );
 }
 
 unichar_t *uc_copyn(const char *pt,int len) {

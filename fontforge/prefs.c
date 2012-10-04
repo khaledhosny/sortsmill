@@ -1622,7 +1622,7 @@ GListAddStr (GGadget * list, unichar_t *str, void *ud)
     {
       replace[i] = xmalloc1 (sizeof (GTextInfo));
       *replace[i] = *ti[i];
-      replace[i]->text = u_copy (ti[i]->text);
+      replace[i]->text = x_u32_strdup_or_null (ti[i]->text);
     }
   replace[i] = xcalloc (1, sizeof (GTextInfo));
   replace[i]->fg = replace[i]->bg = COLOR_DEFAULT;
@@ -1643,7 +1643,7 @@ GListReplaceStr (GGadget * list, int index, unichar_t *str, void *ud)
       replace[i] = xmalloc1 (sizeof (GTextInfo));
       *replace[i] = *ti[i];
       if (i != index)
-        replace[i]->text = u_copy (ti[i]->text);
+        replace[i]->text = x_u32_strdup_or_null (ti[i]->text);
     }
   replace[i] = xcalloc (1, sizeof (GTextInfo));
   replace[index]->text = str;
@@ -2218,7 +2218,7 @@ Prefs_Ok (GGadget * g, GEvent * e)
         }
       for (i = 0; i < mi; ++i)
         {
-          script_menu_names[i] = u_copy (names[i]);
+          script_menu_names[i] = x_u32_strdup_or_null (names[i]);
           script_filenames[i] = u2def_copy (scripts[i]);
         }
 

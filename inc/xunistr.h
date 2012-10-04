@@ -40,6 +40,7 @@
 #include <unistr.h>
 #include <xalloc.h>
 #include <xdie_on_null.h>
+#include <null_passthru.h>
 #include <xgc.h>
 
 uint16_t *x_u8_to_u16 (const uint8_t *string);
@@ -54,6 +55,42 @@ inline uint8_t *x_gc_u16_to_u8 (const uint16_t *string);
 inline uint32_t *x_gc_u16_to_u32 (const uint16_t *string);
 inline uint8_t *x_gc_u32_to_u8 (const uint32_t *string);
 inline uint16_t *x_gc_u32_to_u16 (const uint32_t *string);
+
+static inline uint8_t *
+x_u8_strdup (const uint8_t *string)
+{
+  return XDIE_ON_ENOMEM (u8_strdup (string));
+}
+
+static inline uint16_t *
+x_u16_strdup (const uint16_t *string)
+{
+  return XDIE_ON_ENOMEM (u16_strdup (string));
+}
+
+static inline uint32_t *
+x_u32_strdup (const uint32_t *string)
+{
+  return XDIE_ON_ENOMEM (u32_strdup (string));
+}
+
+static inline uint8_t *
+x_u8_strdup_or_null (const uint8_t *string)
+{
+  return NULL_PASSTHRU (string, x_u8_strdup (string));
+}
+
+static inline uint16_t *
+x_u16_strdup_or_null (const uint16_t *string)
+{
+  return NULL_PASSTHRU (string, x_u16_strdup (string));
+}
+
+static inline uint32_t *
+x_u32_strdup_or_null (const uint32_t *string)
+{
+  return NULL_PASSTHRU (string, x_u32_strdup (string));
+}
 
 inline uint16_t *
 x_gc_u8_to_u16 (const uint8_t *string)

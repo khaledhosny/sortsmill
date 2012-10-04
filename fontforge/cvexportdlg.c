@@ -379,7 +379,7 @@ return( true );
 
 static void GFD_dircreated(GIOControl *gio) {
     struct gfc_data *d = gio->userdata;
-    unichar_t *dir = u_copy(gio->path);
+    unichar_t *dir = x_u32_strdup_or_null(gio->path);
 
     GFileChooserReplaceIO(d->gfc,NULL);
     GFileChooserSetDir(d->gfc,dir);

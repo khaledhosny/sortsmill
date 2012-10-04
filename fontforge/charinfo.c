@@ -429,7 +429,7 @@ static int CI_DeleteCounter(GGadget *g, GEvent *e) {
 	    if ( !old[i]->selected ) {
 		new_[j] = (GTextInfo *) xmalloc1(sizeof(GTextInfo));
 		*new_[j] = *old[i];
-		new_[j]->text = u_copy(new_[j]->text);
+		new_[j]->text = x_u32_strdup_or_null(new_[j]->text);
 		++j;
 	    }
 	new_[j] = (GTextInfo *) xcalloc(1,sizeof(GTextInfo));

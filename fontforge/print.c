@@ -3825,7 +3825,7 @@ ScriptPrint (FontViewBase * fv, int type, int32 * pointsizes,
       li->wrap = true;
       li->dpi = printdpi;
       li->ps = -1;
-      li->text = u_copy (temp);
+      li->text = x_u32_strdup_or_null (temp);
       SFMapOfSF (li, fv->sf);
       LI_SetFontData (li, 0, -1, fv->sf, fv->active_layer, sftf_otf,
                       pi.pointsize, true, width);

@@ -1617,14 +1617,14 @@ static int GTextFieldDoDrop(GTextField *gt,GEvent *event,int endpos) {
 			    (gt->sel_end-gt->sel_start)*sizeof(unichar_t));
 		    u_strcpy(temp+endpos+gt->sel_end-gt->sel_start,gt->text+endpos);
 		} else if ( endpos>=gt->sel_end ) {
-		    temp = u_copy(gt->text);
+		    temp = x_u32_strdup_or_null(gt->text);
 		    memcpy(temp+gt->sel_start,temp+gt->sel_end,
 			    (endpos-gt->sel_end)*sizeof(unichar_t));
 		    memcpy(temp+endpos-(gt->sel_end-gt->sel_start),
 			    gt->text+gt->sel_start,(gt->sel_end-gt->sel_start)*sizeof(unichar_t));
 		    pos = endpos;
 		} else /*if ( endpos<gt->sel_start )*/ {
-		    temp = u_copy(gt->text);
+		    temp = x_u32_strdup_or_null(gt->text);
 		    memcpy(temp+endpos,gt->text+gt->sel_start,
 			    (gt->sel_end-gt->sel_start)*sizeof(unichar_t));
 		    memcpy(temp+endpos+gt->sel_end-gt->sel_start,gt->text+endpos,
@@ -2042,7 +2042,7 @@ static void GTextFieldSetTitle(GGadget *g,const unichar_t *tit) {
 return;
     gt->oldtext = gt->text;
     gt->sel_oldstart = gt->sel_start; gt->sel_oldend = gt->sel_end; gt->sel_oldbase = gt->sel_base;
-    gt->text = u_copy(tit);		/* tit might be oldtext, so must copy before freeing */
+    gt->text = x_u32_strdup_or_null(tit);		/* tit might be oldtext, so must copy before freeing */
     free(old);
     free(gt->utf8_text);
     gt->utf8_text = u2utf8_copy(gt->text);
@@ -2682,9 +2682,9 @@ static GTextField *_GTextFieldCreate(GTextField *gt, struct gwindow *base, GGadg
 	if ( gd->label->text_is_1byte )
 	    gt->text = /* def2u_*/ utf82u_copy((char *) gd->label->text);
 	else if ( gd->label->text_in_resource )
-	    gt->text = u_copy((unichar_t *) GStringGetResource((intpt) gd->label->text,&gt->g.mnemonic));
+	    gt->text = x_u32_strdup_or_null((unichar_t *) GStringGetResource((intpt) gd->label->text,&gt->g.mnemonic));
 	else
-	    gt->text = u_copy(gd->label->text);
+	    gt->text = x_u32_strdup_or_null(gd->label->text);
 	gt->sel_start = gt->sel_end = gt->sel_base = u_strlen(gt->text);
     }
     if ( gt->text==NULL )
@@ -2791,7 +2791,7 @@ return( NULL );
 	for ( i=0; i<len; ++i ) {
 	    if ( u_strncmp(ti[i]->text,spt,match_len)==0 ) {
 		if ( doit )
-		    ret[cnt] = u_copy(ti[i]->text);
+		    ret[cnt] = x_u32_strdup_or_null(ti[i]->text);
 		++cnt;
 	    }
 	}

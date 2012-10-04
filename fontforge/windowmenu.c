@@ -95,10 +95,10 @@ return;
 	    sub[i].ti.text = utf82u_copy((char *) sub[i].ti.text);
 	    sub[i].ti.text_is_1byte = false;
 	} else if ( sub[i].ti.text_in_resource ) {
-	    sub[i].ti.text = u_copy(GStringGetResource((intpt) sub[i].ti.text,NULL));
+	    sub[i].ti.text = x_u32_strdup_or_null(GStringGetResource((intpt) sub[i].ti.text,NULL));
 	    sub[i].ti.text_in_resource = false;
 	} else
-	    sub[i].ti.text = u_copy(sub[i].ti.text);
+	    sub[i].ti.text = x_u32_strdup_or_null(sub[i].ti.text);
     }
     cnt = precnt;
     for ( fv = (FontViewBase *) fv_list; fv!=NULL; fv = fv->next ) {
@@ -216,7 +216,7 @@ return;
 	mi->invoke = ScriptSelect;
 	mi->shortcut = i==9?'0':'1'+i;
 	mi->short_mask = ksm_control|ksm_meta;
-	mi->ti.text = u_copy(script_menu_names[i]);
+	mi->ti.text = x_u32_strdup_or_null(script_menu_names[i]);
     }
     mi->sub = sub;
 }

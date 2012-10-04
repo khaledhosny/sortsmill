@@ -879,7 +879,7 @@ GGadget *_GGadget_Create(GGadget *g, struct gwindow *base, GGadgetData *gd,void 
     g->data = data;
     g->popup_msg = (gd->flags&gg_utf8_popup)
 	    ? utf82u_copy((char *) gd->popup_msg)
-	    : u_copy(gd->popup_msg);
+	    : x_u32_strdup_or_null(gd->popup_msg);
     g->handle_controlevent = gd->handle_controlevent;
     if ( gd->box == NULL )
 	g->box = def;
@@ -1114,7 +1114,7 @@ void GGadgetSetUserData(GGadget *g,void *data) {
 
 void GGadgetSetPopupMsg(GGadget *g,const unichar_t *msg) {
     free(g->popup_msg);
-    g->popup_msg = u_copy(msg);
+    g->popup_msg = x_u32_strdup_or_null(msg);
 }
 
 GWindow GGadgetGetWindow(GGadget *g) {
@@ -1178,7 +1178,7 @@ unichar_t *GGadgetGetTitle(GGadget *g) {
     if ( g->funcs->get_title!=NULL )
 return( (g->funcs->get_title)(g) );
     else if ( g->funcs->_get_title!=NULL )
-return( u_copy( (g->funcs->_get_title)(g) ));
+return( x_u32_strdup_or_null( (g->funcs->_get_title)(g) ));
 
 return( NULL );
 }

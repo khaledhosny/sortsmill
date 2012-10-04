@@ -262,7 +262,7 @@ GIOControl *GIOCreate(unichar_t *path,void *userdata,
 	void (*receiveerror)(struct giocontrol *)) {
     GIOControl *gc = (GIOControl *) xcalloc(1,sizeof(GIOControl));
 
-    gc->path = u_copy(path);
+    gc->path = x_u32_strdup_or_null(path);
     gc->userdata = userdata;
     gc->receivedata = receivedata;
     gc->receiveerror = receiveerror;

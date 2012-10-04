@@ -484,7 +484,7 @@ unichar_t *GWidgetAskString(const unichar_t *title,const unichar_t *def,
     va_list ap;
 
     if ( screen_display==NULL )
-return( u_copy(def ));
+return( x_u32_strdup_or_null(def ));
 
     ocb[2]=NULL;
     ocb[0] = GStringGetResource( _STR_OK, &ocmn[0]);
@@ -497,7 +497,7 @@ return( u_copy(def ));
     while ( !d.done )
 	GDrawProcessOneEvent(NULL);
     if ( d.ret==0 )
-	ret = u_copy(GGadgetGetTitle(GWidgetGetControl(gw,2)));
+	ret = x_u32_strdup_or_null(GGadgetGetTitle(GWidgetGetControl(gw,2)));
     GDrawDestroyWindow(gw);
     GDrawSync(NULL);
     GDrawProcessPendingEvents(NULL);
@@ -512,7 +512,7 @@ unichar_t *GWidgetAskStringR(int title,const unichar_t *def,int question,...) {
     va_list ap;
 
     if ( screen_display==NULL )
-return( u_copy(def ));
+return( x_u32_strdup_or_null(def ));
 
     ocb[2]=NULL;
     ocb[0] = GStringGetResource( _STR_OK, &ocmn[0]);

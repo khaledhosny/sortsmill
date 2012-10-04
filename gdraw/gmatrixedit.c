@@ -1962,7 +1962,7 @@ static GMenuItem *GMenuItemFromTI(GTextInfo *ti,int is_enum) {
 	    if ( ti[cnt].text_is_1byte )
 		mi[cnt].ti.text = (unichar_t *) copy( (char *) mi[cnt].ti.text );
 	    else
-		mi[cnt].ti.text = u_copy( mi[cnt].ti.text );
+		mi[cnt].ti.text = x_u32_strdup_or_null( mi[cnt].ti.text );
 	    mi[cnt].ti.checkable = true;
 	    mi[cnt].invoke = is_enum ? GME_EnumDispatch : GME_EnumStringDispatch;
 	}

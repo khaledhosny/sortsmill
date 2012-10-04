@@ -1880,7 +1880,7 @@ void GMenuBarSetItemName(GGadget *g, int mid, const unichar_t *name) {
     item = GMenuBarFindMid(mb->mi,mid);
     if ( item!=NULL ) {
 	free( item->ti.text );
-	item->ti.text = u_copy(name);
+	item->ti.text = x_u32_strdup_or_null(name);
     }
 }
 

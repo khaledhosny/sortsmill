@@ -491,7 +491,7 @@ return;
 static void GRadioSetTitle(GGadget *g,const unichar_t *tit) {
     GRadio *b = (GRadio *) g;
     free(b->label);
-    b->label = u_copy(tit);
+    b->label = x_u32_strdup_or_null(tit);
 }
 
 static const unichar_t *_GRadioGetTitle(GGadget *g) {
@@ -504,7 +504,7 @@ static void GRadioSetImageTitle(GGadget *g,GImage *img,const unichar_t *tit, int
     if ( b->g.free_box )
 	free( b->g.box );
     free(b->label);
-    b->label = u_copy(tit);
+    b->label = x_u32_strdup_or_null(tit);
     b->image = img;
     b->image_precedes = before;
     _ggadget_redraw(g);
@@ -744,11 +744,11 @@ static GCheckBox *_GCheckBoxCreate(GCheckBox *gl, struct gwindow *base, GGadgetD
 	if ( gd->label->text_in_resource && gd->label->text_is_1byte )
 	    gl->label = utf82u_mncopy((char *) gd->label->text,&gl->g.mnemonic);
 	else if ( gd->label->text_in_resource )
-	    gl->label = u_copy((unichar_t *) GStringGetResource((intpt) gd->label->text,&gl->g.mnemonic));
+	    gl->label = x_u32_strdup_or_null((unichar_t *) GStringGetResource((intpt) gd->label->text,&gl->g.mnemonic));
 	else if ( gd->label->text_is_1byte )
 	    gl->label = /*def2u*/ utf82u_copy((char *) gd->label->text);
 	else
-	    gl->label = u_copy(gd->label->text);
+	    gl->label = x_u32_strdup_or_null(gd->label->text);
 	gl->image = gd->label->image;
     }
     if ( gd->flags & gg_cb_on )

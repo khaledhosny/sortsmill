@@ -27,6 +27,12 @@ main (int argc, char **argv)
   ulc_fprintf (stdout, "%U\n", s8_32_8);
   ulc_fprintf (stdout, "%llU\n", s8_16_32);
   ulc_fprintf (stdout, "%lU\n", s8_32_16);
+  ulc_fprintf (stdout, "%U\n", x_u8_strdup_or_null (s8));
+  ulc_fprintf (stdout, "%lU\n", x_u16_strdup_or_null (s8_16));
+  ulc_fprintf (stdout, "%llU\n", x_u32_strdup_or_null (s8_32));
+  ulc_fprintf (stdout, "%U\n", x_u8_strdup_or_null (NULL));
+  ulc_fprintf (stdout, "%lU\n", x_u16_strdup_or_null (NULL));
+  ulc_fprintf (stdout, "%llU\n", x_u32_strdup_or_null (NULL));
 
   return 0;
 }

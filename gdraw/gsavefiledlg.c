@@ -108,7 +108,7 @@ return( true );
 
 static void GFD_dircreated(GIOControl *gio) {
     struct gfc_data *d = gio->userdata;
-    unichar_t *dir = u_copy(gio->path);
+    unichar_t *dir = x_u32_strdup_or_null(gio->path);
 
     GFileChooserReplaceIO(d->gfc,NULL);
     GFileChooserSetDir(d->gfc,dir);
@@ -163,7 +163,7 @@ return( true );
 	if ( !GFileIsAbsolute(x_gc_u32_strconv_to_locale(newdir))) {
 	    unichar_t *temp = u32_GFileAppendFile(GFileChooserGetDir(d->gfc),newdir,false);
 	    free(newdir);
-	    newdir = u_copy (temp);
+	    newdir = x_u32_strdup_or_null (temp);
 	}
 	GIOmkDir(GFileChooserReplaceIO(d->gfc,
 		GIOCreate(newdir,d,GFD_dircreated,GFD_dircreatefailed)));

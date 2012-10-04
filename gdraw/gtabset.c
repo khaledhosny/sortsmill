@@ -856,11 +856,11 @@ GGadget *GTabSetCreate(struct gwindow *base, GGadgetData *gd,void *data) {
     gts->tabs = xmalloc(szmax(1, i*sizeof(struct tabs)));
     for ( i=0; gd->u.tabs[i].text!=NULL; ++i ) {
 	if ( gd->u.tabs[i].text_in_resource )
-	    gts->tabs[i].name = u_copy(GStringGetResource((intpt) (gd->u.tabs[i].text),NULL));
+	    gts->tabs[i].name = x_u32_strdup_or_null(GStringGetResource((intpt) (gd->u.tabs[i].text),NULL));
 	else if ( gd->u.tabs[i].text_is_1byte )
 	    gts->tabs[i].name = utf82u_copy((char *) (gd->u.tabs[i].text));
 	else
-	    gts->tabs[i].name = u_copy(gd->u.tabs[i].text);
+	    gts->tabs[i].name = x_u32_strdup_or_null(gd->u.tabs[i].text);
 	gts->tabs[i].disabled = gd->u.tabs[i].disabled;
 	gts->tabs[i].nesting = gd->u.tabs[i].nesting;
 	if ( gd->u.tabs[i].selected && !gts->tabs[i].disabled )
