@@ -31,7 +31,7 @@ lib_LTLIBRARIES = libsortsmillff_gutils.la
 
 #--------------------------------------------------------------------------
 
-libsortsmillff_gutils_la_SOURCES = divisors.c fsys.c gcol.c gimage.c	\
+libsortsmillff_gutils_la_SOURCES = divisors.c gfile.c gcol.c gimage.c	\
 	gimagereadbmp.c gimageread.c gimagereadgif.c gimagereadjpeg.c		\
 	gimagereadpng.c gimagereadras.c gimagereadrgb.c gimagereadtiff.c	\
 	gimagereadxbm.c gimagereadxpm.c gimagewritebmp.c					\
@@ -42,7 +42,7 @@ libsortsmillff_gutils_la_SOURCES = divisors.c fsys.c gcol.c gimage.c	\
 
 EXPORTED_GIOFTP_SYMBOLS = GIO_cancel GIO_dispatch GIO_init GIO_term
 
-EXPORTED_FSYS_SYMBOLS = GFileGetUserConfigDir GFileGetUserCacheDir		\
+EXPORTED_GFILE_SYMBOLS = GFileGetUserConfigDir GFileGetUserCacheDir		\
 	GFileGetUserDataDir GFileGetHomeDir GFileBuildName GFileBaseName	\
 	GFileAppendFile GFileIsAbsolute GFileIsDir GFileExists				\
 	GFileReadable GFileMkDir GFileUnlink u8_GFileGetUserConfigDir		\
@@ -50,7 +50,7 @@ EXPORTED_FSYS_SYMBOLS = GFileGetUserConfigDir GFileGetUserCacheDir		\
 	u8_GFileBuildName u8_GFileBaseName u32_GFileBaseName				\
 	u32_GFileNormalize u32_GFileAppendFile
 
-EXPORTED_GUTILS_SYMBOLS = $(EXPORTED_FSYS_SYMBOLS)					\
+EXPORTED_GUTILS_SYMBOLS = $(EXPORTED_GFILE_SYMBOLS)					\
 	$(EXPORTED_GIOFTP_SYMBOLS) GIOCreate GIO_PasswordCache			\
 	GIO_SetThreadCallback GIOcancel GIOclose GIOdir GIOfileExists	\
 	GIOgetDirData GIOguessMimeType GIOmkDir GImageCreate			\

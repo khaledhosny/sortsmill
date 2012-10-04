@@ -6,7 +6,7 @@ m4_include([xuniconv_h.at])
 m4_include([xunistr_h.at])
 
 AT_BANNER([gutils])
-m4_include([fsys_c.at])
+m4_include([gfile_c.at])
 
 AT_BANNER([Python scripting])
 m4_include([old_python_tests.at])
