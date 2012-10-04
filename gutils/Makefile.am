@@ -45,7 +45,9 @@ EXPORTED_GIOFTP_SYMBOLS = GIO_cancel GIO_dispatch GIO_init GIO_term
 EXPORTED_FSYS_SYMBOLS = GFileGetUserConfigDir GFileGetUserCacheDir		\
 	GFileGetUserDataDir GFileGetHomeDir GFileBuildName GFileBaseName	\
 	GFileAppendFile GFileIsAbsolute GFileIsDir GFileExists				\
-	GFileReadable GFileMkDir GFileUnlink u32_GFileBaseName				\
+	GFileReadable GFileMkDir GFileUnlink u8_GFileGetUserConfigDir		\
+	u8_GFileGetUserCacheDir u8_GFileGetUserDataDir u8_GFileGetHomeDir	\
+	u8_GFileBuildName u8_GFileBaseName u32_GFileBaseName				\
 	u32_GFileNormalize u32_GFileAppendFile
 
 EXPORTED_GUTILS_SYMBOLS = $(EXPORTED_FSYS_SYMBOLS)					\

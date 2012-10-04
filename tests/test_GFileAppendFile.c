@@ -8,8 +8,8 @@
 int
 main (int argc, char **argv)
 {
-  GC_INIT();
-  setlocale(LC_ALL, "");
+  GC_INIT ();
+  setlocale (LC_ALL, "");
   printf ("%s", GFileAppendFile (argv[1], argv[2], atoi (argv[3])));
   return 0;
 }

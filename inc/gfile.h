@@ -29,8 +29,11 @@
 
 #include <config.h>
 
+#include <assert.h>
 #include <basics.h>
 #include <stdbool.h>
+#include <stdlib.h>
+#include <unistr.h>
 
 extern char *GFileGetUserConfigDir (void);
 extern char *GFileGetUserCacheDir (void);
@@ -45,8 +48,56 @@ extern bool GFileExists (const char *file);
 extern bool GFileReadable (char *file);
 extern int GFileMkDir (char *name);
 extern int GFileUnlink (char *name);
-extern unichar_t *u32_GFileBaseName (const unichar_t *oldname);
-extern unichar_t *u32_GFileNormalize (unichar_t *name);
-extern unichar_t *u32_GFileAppendFile (unichar_t *dir, unichar_t *name, bool isdir);
 
-#endif
+inline uint8_t *u8_GFileGetUserConfigDir (void);
+inline uint8_t *u8_GFileGetUserCacheDir (void);
+inline uint8_t *u8_GFileGetUserDataDir (void);
+inline uint8_t *u8_GFileGetHomeDir (void);
+inline uint8_t *u8_GFileBuildName (uint8_t *dir, uint8_t *file);
+inline uint8_t *u8_GFileBaseName (const uint8_t *file);
+
+extern uint32_t *u32_GFileBaseName (const uint32_t *oldname);
+extern uint32_t *u32_GFileNormalize (uint32_t *name);
+extern uint32_t *u32_GFileAppendFile (uint32_t *dir, uint32_t *name,
+                                      bool isdir);
+
+inline uint8_t *
+u8_GFileGetUserConfigDir (void)
+{
+  return (uint8_t *) GFileGetUserConfigDir ();
+}
+
+inline uint8_t *
+u8_GFileGetUserCacheDir (void)
+{
+  return (uint8_t *) GFileGetUserCacheDir ();
+}
+
+inline uint8_t *
+u8_GFileGetUserDataDir (void)
+{
+  return (uint8_t *) GFileGetUserDataDir ();
+}
+
+inline uint8_t *
+u8_GFileGetHomeDir (void)
+{
+  return (uint8_t *) GFileGetHomeDir ();
+}
+
+inline uint8_t *
+u8_GFileBuildName (uint8_t *dir, uint8_t *file)
+{
+  assert (u8_check (dir, u8_strlen (dir)) == NULL);
+  assert (u8_check (file, u8_strlen (file)) == NULL);
+  return (uint8_t *) GFileBuildName ((char *) dir, (char *) file);
+}
+
+inline uint8_t *
+u8_GFileBaseName (const uint8_t *oldname)
+{
+  assert (u8_check (oldname, u8_strlen (oldname)) == NULL);
+  return (uint8_t *) GFileBaseName ((const char *) oldname);
+}
+
+#endif // _GFILE_H

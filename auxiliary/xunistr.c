@@ -27,6 +27,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <assert.h>
+#include <string.h>
 #include <xunistr.h>
 
 // Generate non-inline versions of these functions.
@@ -40,47 +42,113 @@ uint16_t *x_gc_u32_to_u16 (const uint32_t *string);
 uint16_t *
 x_u8_to_u16 (const uint8_t *string)
 {
-  size_t length;
-  return
-    XDIE_ON_ENOMEM (u8_to_u16 (string, u8_strlen (string), NULL, &length));
+  size_t n = u8_strlen (string);
+  assert (u8_check (string, n) == NULL);
+
+  size_t length = n;            // Enough for UTF-16.
+
+  // Use alloc’d space rather than a variable-length array (which may
+  // be on the stack), so longer strings can be handled.
+  uint16_t *buffer = xcalloc (length + 1, sizeof (uint16_t));
+
+  (void) u8_to_u16 (string, n, buffer, &length);
+  uint16_t *result = XDIE_ON_ENOMEM (u16_cpy_alloc (buffer, length));
+  free (buffer);
+
+  return result;
 }
 
 uint32_t *
 x_u8_to_u32 (const uint8_t *string)
 {
-  size_t length;
-  return
-    XDIE_ON_ENOMEM (u8_to_u32 (string, u8_strlen (string), NULL, &length));
+  size_t n = u8_strlen (string);
+  assert (u8_check (string, n) == NULL);
+
+  size_t length = n;            // Enough for UTF-32.
+
+  // Use alloc’d space rather than a variable-length array (which may
+  // be on the stack), so longer strings can be handled.
+  uint32_t *buffer = xcalloc (length + 1, sizeof (uint32_t));
+
+  (void) u8_to_u32 (string, n, buffer, &length);
+  uint32_t *result = XDIE_ON_ENOMEM (u32_cpy_alloc (buffer, length + 1));
+  free (buffer);
+
+  return result;
 }
 
 uint8_t *
 x_u16_to_u8 (const uint16_t *string)
 {
-  size_t length;
-  return
-    XDIE_ON_ENOMEM (u16_to_u8 (string, u16_strlen (string), NULL, &length));
+  size_t n = u16_strlen (string);
+  assert (u16_check (string, n) == NULL);
+
+  size_t length = 2 * n;        // Enough for UTF-8.
+
+  // Use alloc’d space rather than a variable-length array (which may
+  // be on the stack), so longer strings can be handled.
+  uint8_t *buffer = xcalloc (length + 1, sizeof (uint8_t));
+
+  (void) u16_to_u8 (string, n, buffer, &length);
+  uint8_t *result = XDIE_ON_ENOMEM (u8_cpy_alloc (buffer, length + 1));
+  free (buffer);
+
+  return result;
 }
 
 uint32_t *
 x_u16_to_u32 (const uint16_t *string)
 {
-  size_t length;
-  return
-    XDIE_ON_ENOMEM (u16_to_u32 (string, u16_strlen (string), NULL, &length));
+  size_t n = u16_strlen (string);
+  assert (u16_check (string, n) == NULL);
+
+  size_t length = n;            // Enough for UTF-32.
+
+  // Use alloc’d space rather than a variable-length array (which may
+  // be on the stack), so longer strings can be handled.
+  uint32_t *buffer = xcalloc (length + 1, sizeof (uint32_t));
+
+  (void) u16_to_u32 (string, n, buffer, &length);
+  uint32_t *result = XDIE_ON_ENOMEM (u32_cpy_alloc (buffer, length + 1));
+  free (buffer);
+
+  return result;
 }
 
 uint8_t *
 x_u32_to_u8 (const uint32_t *string)
 {
-  size_t length;
-  return
-    XDIE_ON_ENOMEM (u32_to_u8 (string, u32_strlen (string), NULL, &length));
+  size_t n = u32_strlen (string);
+  assert (u32_check (string, n) == NULL);
+
+  size_t length = 4 * n;        // Enough for UTF-8.
+
+  // Use alloc’d space rather than a variable-length array (which may
+  // be on the stack), so longer strings can be handled.
+  uint8_t *buffer = xcalloc (length + 1, sizeof (uint8_t));
+
+  (void) u32_to_u8 (string, n, buffer, &length);
+  uint8_t *result = XDIE_ON_ENOMEM (u8_cpy_alloc (buffer, length + 1));
+  free (buffer);
+
+  return result;
 }
 
 uint16_t *
 x_u32_to_u16 (const uint32_t *string)
 {
-  size_t length;
-  return
-    XDIE_ON_ENOMEM (u32_to_u16 (string, u32_strlen (string), NULL, &length));
+  size_t n = u32_strlen (string);
+  assert (u32_check (string, n) == NULL);
+
+  size_t length = 2 * n;        // Enough for UTF-16.
+
+  // Use alloc’d space rather than a variable-length array (which may
+  // be on the stack), so longer strings can be handled.
+  uint16_t *buffer = xcalloc (length + 1, sizeof (uint16_t));
+
+  (void) u32_to_u16 (string, n, buffer, &length);
+  uint16_t *result = XDIE_ON_ENOMEM (u16_cpy_alloc (buffer, length + 1));
+  free (buffer);
+
+  return result;
 }

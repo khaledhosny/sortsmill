@@ -27,6 +27,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "ustring.h"
@@ -41,10 +42,17 @@
 #include <xalloc.h>
 #include <xgc.h>
 #include <xuniconv.h>
-#include <unistr.h>
-#include <xgetcwd.h>
+#include <xunistr.h>
 #include <filenamecat.h>
 #include <dirname.h>
+
+// Generate non-inline versions of these.
+uint8_t *u8_GFileGetUserConfigDir (void);
+uint8_t *u8_GFileGetUserCacheDir (void);
+uint8_t *u8_GFileGetUserDataDir (void);
+uint8_t *u8_GFileGetHomeDir (void);
+uint8_t *u8_GFileBuildName (uint8_t *dir, uint8_t *file);
+uint8_t *u8_GFileBaseName (const uint8_t *file);
 
 char *
 GFileGetUserConfigDir (void)
@@ -142,19 +150,17 @@ GFileUnlink (char *name)
   return g_unlink (name);
 }
 
-unichar_t *
-u32_GFileBaseName (const unichar_t *file)
+uint32_t *
+u32_GFileBaseName (const uint32_t *file)
 {
-  // FIXME: Convert to utf-8 instead of locale.
-  char *locale_file = x_gc_u32_strconv_to_locale (file);
-  char *locale_base = x_gc_grabstr (g_path_get_basename (locale_file));
-  return x_gc_u32_strconv_from_locale (locale_base);
+  assert (u32_check (file, u32_strlen (file)) == NULL);
+  return x_gc_u8_to_u32 (u8_GFileBaseName (x_gc_u32_to_u8 (file)));
 }
 
-unichar_t *
-u32_GFileNormalize (unichar_t *name)
+uint32_t *
+u32_GFileNormalize (uint32_t *name)
 {
-  unichar_t *pt, *base, *ppt;
+  uint32_t *pt, *base, *ppt;
 
   if ((pt = uc_strstr (name, "://")) != NULL)
     {
@@ -197,14 +203,14 @@ u32_GFileNormalize (unichar_t *name)
 }
 
 // FIXME: Rewrite this, using UTF-8 and GFileAppendFile.
-unichar_t *
-u32_GFileAppendFile (unichar_t *dir, unichar_t *name, bool isdir)
+uint32_t *
+u32_GFileAppendFile (uint32_t *dir, uint32_t *name, bool isdir)
 {
-  unichar_t *ret, *pt;
+  uint32_t *ret, *pt;
 
   ret =
-    (unichar_t *) xmalloc ((u_strlen (dir) + u_strlen (name) + 3) *
-                           sizeof (unichar_t));
+    (uint32_t *) xmalloc ((u_strlen (dir) + u_strlen (name) + 3) *
+			  sizeof (uint32_t));
   u_strcpy (ret, dir);
   pt = ret + u_strlen (ret);
   if (pt > ret && pt[-1] != '/')

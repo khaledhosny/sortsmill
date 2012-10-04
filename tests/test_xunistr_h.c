@@ -8,9 +8,9 @@
 int
 main (int argc, char **argv)
 {
-  GC_INIT();
+  GC_INIT ();
 
-  setlocale(LC_ALL, "");
+  setlocale (LC_ALL, "");
 
   uint8_t *s8 = (uint8_t *) argv[1];
   uint16_t *s8_16 = x_gc_u8_to_u16 (s8);
