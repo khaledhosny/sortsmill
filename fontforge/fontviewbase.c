@@ -46,7 +46,7 @@
 static FontViewBase *fv_list=NULL;
 
 extern int onlycopydisplayed;
-float joinsnap=0;
+VISIBLE float joinsnap=0;
 
 static int SCUnselectedDependents(FontViewBase *fv, SplineChar *sc) {
     struct splinecharlist *dep;

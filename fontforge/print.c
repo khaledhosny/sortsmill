@@ -48,7 +48,7 @@ char *printcommand = NULL;
 int printtype = pt_unknown;
 int use_gv;
 
-struct printdefaults pdefs[] = {
+VISIBLE struct printdefaults pdefs[] = {
   {&custom, pt_fontdisplay, 0, NULL},
   {&custom, pt_chars, 0, NULL},
   {&custom, pt_fontdisplay, 0, NULL}

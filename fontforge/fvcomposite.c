@@ -422,7 +422,7 @@ static unichar_t unicode_greekalts[256][3] = {
 /* 1FFF */ { 0 },
 };
 
-unichar_t adobes_pua_alts[0x200][3] = {	/* Mapped from 0xf600-0xf7ff */
+VISIBLE unichar_t adobes_pua_alts[0x200][3] = {	/* Mapped from 0xf600-0xf7ff */
 /* U+F600 */ { 0 },
 /* U+F601 */ { 0 },
 /* U+F602 */ { 0 },

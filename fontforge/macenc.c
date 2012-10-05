@@ -2164,9 +2164,9 @@ static MacFeat fs_features[] = {
 	{ NULL, 0, 0, 0, 0, NULL, NULL }
 };
 
-MacFeat *default_mac_feature_map = &fs_features[26],
-	*builtin_mac_feature_map=&fs_features[26],
-	*user_mac_feature_map;
+MacFeat *default_mac_feature_map = &fs_features[26];
+VISIBLE MacFeat *builtin_mac_feature_map=&fs_features[26];
+VISIBLE MacFeat *user_mac_feature_map;
 
 static int MacNamesDiffer(struct macname *mn, struct macname *mn2) {
 

@@ -38,7 +38,7 @@
 
 extern int autohint_before_generate;
 
-int instruct_diagonal_stems = 1,
+VISIBLE int instruct_diagonal_stems = 1,
     instruct_serif_stems = 1,
     instruct_ball_terminals = 1,
     interpolate_strong = 1,

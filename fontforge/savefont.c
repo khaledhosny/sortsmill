@@ -42,12 +42,12 @@
 #include "psfont.h"
 #include "savefont.h"
 
-int old_sfnt_flags = ttf_flag_otmode;
-int old_ps_flags = ps_flag_afm|ps_flag_round;
+VISIBLE int old_sfnt_flags = ttf_flag_otmode;
+VISIBLE int old_ps_flags = ps_flag_afm|ps_flag_round;
 VISIBLE int old_psotb_flags = ps_flag_afm;
 
-int oldformatstate = ff_pfb;
-int oldbitmapstate = 0;
+VISIBLE int oldformatstate = ff_pfb;
+VISIBLE int oldbitmapstate = 0;
 #if __Mac
 char *savefont_extensions[] = { ".pfa", ".pfb", ".res", "%s.pfb", ".pfa", ".pfb", ".pt3", ".ps",
 	".cid", ".cff", ".cid.cff",

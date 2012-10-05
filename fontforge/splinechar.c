@@ -38,7 +38,7 @@
 int adjustwidth = true;
 int adjustlbearing = true;
 VISIBLE int allow_utf8_glyphnames = false;
-int clear_tt_instructions_when_needed = true;
+VISIBLE int clear_tt_instructions_when_needed = true;
 
 void SCClearRounds(SplineChar *sc,int layer) {
     SplineSet *ss;

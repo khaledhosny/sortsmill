@@ -56,7 +56,7 @@ VISIBLE int ask_user_for_cmap = false;
 /* It grows on you though... now that I understand it better it seems better designed */
 /*  but the docs remain in conflict. Sometimes badly so */
 
-int prefer_cjk_encodings=false;
+VISIBLE int prefer_cjk_encodings=false;
 
 /* ************************************************************************** */
 static struct ms_2_locales { char *loc_name; int local_id; } ms_2_locals[] = {

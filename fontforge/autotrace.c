@@ -44,7 +44,7 @@
 #include <errno.h>		/* for errors */
 #include <dirent.h>		/* for opendir,etc. */
 
-int preferpotrace = false;
+VISIBLE int preferpotrace = false;
 
 /* Interface to Martin Weber's autotrace program   */
 /*  http://homepages.go.com/~martweb/AutoTrace.htm */
@@ -508,8 +508,8 @@ return( NULL );
 }
 
 static char **args=NULL;
-int autotrace_ask=0, mf_ask=0, mf_clearbackgrounds=0, mf_showerrors=0;
-char *mf_args = NULL;
+VISIBLE int autotrace_ask=0, mf_ask=0, mf_clearbackgrounds=0, mf_showerrors=0;
+VISIBLE char *mf_args = NULL;
 
 void *GetAutoTraceArgs(void) {
 return( flatten(args));

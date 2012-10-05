@@ -32,7 +32,7 @@
 #include <utype.h>
 #include <math.h>
 
-int use_freetype_to_rasterize_fv = 1;
+VISIBLE int use_freetype_to_rasterize_fv = 1;
 char *BDFFoundry=NULL;
 
 VISIBLE struct std_bdf_props StandardProps[] = {

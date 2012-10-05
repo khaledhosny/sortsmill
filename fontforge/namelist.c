@@ -1,6 +1,5 @@
-#include <config.h>
+#include <config.h>			  /* -*- coding: utf-8 -*- */
 
-/* -*- coding: utf-8 -*- */
 /* Copyright (C) 2000-2012 by George Williams */
 /*
  * Redistribution and use in source and binary forms, with or without
@@ -38,9 +37,9 @@
 #include "namehash.h"
 #include "namelist_data.h"
 
-int recognizePUA = false;
-NameList *force_names_when_opening=NULL;
-NameList *force_names_when_saving=NULL;
+VISIBLE int recognizePUA = false;
+VISIBLE NameList *force_names_when_opening=NULL;
+VISIBLE NameList *force_names_when_saving=NULL;
 
 NameList agl_sans;
 NameList agl;
@@ -50,7 +49,7 @@ NameList greeksc;
 NameList tex;
 NameList ams;
 
-NameList *namelist_for_new_fonts = &agl_nf;
+VISIBLE NameList *namelist_for_new_fonts = &agl_nf;
 
 /* Adobe's standard names are wrong for: */
 /* 0x2206 is named Delta, 0x394 should be */

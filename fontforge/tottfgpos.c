@@ -30,8 +30,8 @@
 #include <utype.h>
 #include <ustring.h>
 
-int coverageformatsallowed=3;
-int use_second_indic_scripts = false;
+VISIBLE int coverageformatsallowed=3;
+VISIBLE int use_second_indic_scripts = false;
 
 #include "ttf.h"
 

@@ -38,7 +38,7 @@
 
 int32 unicode_from_adobestd[256];
 struct lconv localeinfo;
-char *coord_sep = ",";
+VISIBLE char *coord_sep = ",";
 
 /* Unicode character names and annotations. */
 uninm_names_db names_db;

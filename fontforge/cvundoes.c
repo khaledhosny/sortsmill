@@ -38,14 +38,14 @@
 
 extern char *coord_sep;
 
-int onlycopydisplayed = 0;
-int copymetadata = 0;
-int copyttfinstr = 0;
-int export_clipboard = 1;
+VISIBLE int onlycopydisplayed = 0;
+VISIBLE int copymetadata = 0;
+VISIBLE int copyttfinstr = 0;
+VISIBLE int export_clipboard = 1;
 
 /* ********************************* Undoes ********************************* */
 
-int maxundoes = 12;		/* -1 is infinite */
+VISIBLE int maxundoes = 12;		/* -1 is infinite */
 int preserve_hint_undoes = true;
 
 static uint8 *bmpcopy(uint8 *bitmap,int bytes_per_line, int lines) {

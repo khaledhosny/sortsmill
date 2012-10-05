@@ -917,7 +917,7 @@ Py_RETURN_NONE;
 /* ************************* Import/Export routines ************************* */
 /* ************************************************************************** */
 
-struct python_import_export *py_ie;
+VISIBLE struct python_import_export *py_ie;
 static int ie_cnt, ie_max;
 
 void PyFF_SCImport(SplineChar *sc,int ie_index,char *filename,

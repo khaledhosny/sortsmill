@@ -1,6 +1,5 @@
-#include <config.h>
+#include <config.h>		/* -*- coding: utf-8 -*- */
 
-/* -*- coding: utf-8 -*- */
 /* Copyright (C) 2007-2012 by George Williams */
 /*
  * Redistribution and use in source and binary forms, with or without
@@ -38,7 +37,7 @@
 #include "ttf.h"
 #include "lookups.h"
 
-struct opentype_feature_friendlynames friendlies[] = {
+VISIBLE struct opentype_feature_friendlynames friendlies[] = {
 #if 0		/* They get stuffed into the 'MATH' table now */
 /* I added these first three features to allow round-trip conversion of tfm files */
     { CHR('I','T','L','C'),	"ITLC", N_("Italic Correction"),	gpos_single_mask },

@@ -25,18 +25,20 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+include $(top_srcdir)/mk/flags.am
+
 pyexec_LTLIBRARIES = psMat.la fontforge.la
 
 psMat_la_SOURCES = psMatpyhook.c
+psMat_la_CPPFLAGS = "-I$(top_builddir)/fontforge"	\
+	"-I$(top_srcdir)/fontforge" $(AM_CPPFLAGS)
 psMat_la_LIBADD = $(LIBADD)
 
 fontforge_la_SOURCES = fontforgepyhook.c
+fontforge_la_CPPFLAGS = "-I$(top_builddir)/fontforge"	\
+	"-I$(top_srcdir)/fontforge" $(AM_CPPFLAGS)
 fontforge_la_LIBADD = $(LIBADD)
 
-AM_CPPFLAGS = -DLIBDIR='"$(libdir)"' $(PYTHON_CFLAGS)			\
-	"-I$(top_builddir)/inc" "-I$(top_srcdir)/inc"				\
-	"-I$(top_builddir)/fontforge" "-I$(top_srcdir)/fontforge"	\
-	$(MY_CFLAGS)
 AM_LDFLAGS = -module -shared -avoid-version
 
 LIBADD = $(top_builddir)/auxiliary/libsortsmillff_aux.la	\

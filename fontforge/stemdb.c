@@ -42,13 +42,13 @@
 
 /* A diagonal end is like the top or bottom of a slash. Should we add a vertical stem at the end? */
 /* A diagonal corner is like the bottom of circumflex. Should we add a horizontal stem? */
-int     hint_diagonal_ends = 0,
-	hint_diagonal_intersections = 0,
-	hint_bounding_boxes = 1,
-	detect_diagonal_stems = 0;
+VISIBLE int hint_diagonal_ends = 0,
+  hint_diagonal_intersections = 0,
+  hint_bounding_boxes = 1,
+  detect_diagonal_stems = 0;
 
-float   stem_slope_error = .05061454830783555773, /*  2.9 degrees */
-	stub_slope_error = .317649923862967983;   /* 18.2 degrees */
+VISIBLE float stem_slope_error = .05061454830783555773, /*  2.9 degrees */
+  stub_slope_error = .317649923862967983;   /* 18.2 degrees */
 
 static double dist_error_hv = 3.5;
 static double dist_error_diag = 5.5;
