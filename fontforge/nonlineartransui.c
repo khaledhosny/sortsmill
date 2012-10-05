@@ -472,7 +472,7 @@ int PointOfViewDlg(struct pov_data *pov, SplineFont *sf, int flags) {
     gcd[k++].creator = GTextFieldCreate;
     harray3[0] = &gcd[k-1];
 
-    label[k].text = (uint32_t *) U_("°");
+    label[k].text = (uint32_t *) _("°");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = gcd[k-1].gd.pos.x+gcd[k-1].gd.pos.width+3; gcd[k].gd.pos.y = gcd[k-2].gd.pos.y;
@@ -504,7 +504,7 @@ int PointOfViewDlg(struct pov_data *pov, SplineFont *sf, int flags) {
     gcd[k++].creator = GTextFieldCreate;
     harray4[0] = &gcd[k-1];
 
-    label[k].text = (uint32_t *) U_("°");
+    label[k].text = (uint32_t *) _("°");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = gcd[k-1].gd.pos.x+gcd[k-1].gd.pos.width+3; gcd[k].gd.pos.y = gcd[k-2].gd.pos.y;

@@ -863,11 +863,11 @@ static GTextInfo mslanguages[] = {
     { (uint32_t *) N_("French Luxembourg"), NULL, 0, 0, (void *) 0x140c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) N_("French Monaco"), NULL, 0, 0, (void *) 0x180c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) N_("French West Indies"), NULL, 0, 0, (void *) 0x1c0c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (uint32_t *) NU_("French Réunion"), NULL, 0, 0, (void *) 0x200c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("French Réunion"), NULL, 0, 0, (void *) 0x200c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) N_("French D.R. Congo"), NULL, 0, 0, (void *) 0x240c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) N_("French Senegal"), NULL, 0, 0, (void *) 0x280c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) N_("French Camaroon"), NULL, 0, 0, (void *) 0x2c0c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (uint32_t *) NU_("French Côte d'Ivoire"), NULL, 0, 0, (void *) 0x300c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("French Côte d'Ivoire"), NULL, 0, 0, (void *) 0x300c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) N_("French Mali"), NULL, 0, 0, (void *) 0x340c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) N_("French Morocco"), NULL, 0, 0, (void *) 0x380c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) N_("French Haiti"), NULL, 0, 0, (void *) 0x3c0c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
@@ -4058,7 +4058,7 @@ return( true );
 		int cid;
 		char *tit, *msg;
 	    } msgs[] = {
-		{ CID_Notice, N_("Bad Copyright"), NU_("Copyright text (in the Names pane) must be entirely ASCII. So, use (c) instead of ©.")},
+		{ CID_Notice, N_("Bad Copyright"), N_("Copyright text (in the Names pane) must be entirely ASCII. So, use (c) instead of ©.")},
 		{ CID_Human, N_("Bad Human Fontname"), N_("The human-readable fontname text (in the Names pane) must be entirely ASCII.")},
 		{ CID_Weight, N_("Bad Weight"), N_("The weight text (in the Names pane) must be entirely ASCII.")},
 		{ CID_Version, N_("Bad Version"), N_("The version text (in the Names pane) must be entirely ASCII.")},
@@ -9809,7 +9809,7 @@ return;
     memset(&txgcd,0,sizeof(txgcd));
 
     k=0;
-    txlabel[k].text = (uint32_t *) U_("ΤεΧ General");
+    txlabel[k].text = (uint32_t *) _("ΤεΧ General");
     txlabel[k].text_is_1byte = true;
     txgcd[k].gd.label = &txlabel[k];
     txgcd[k].gd.pos.x = 10; txgcd[k].gd.pos.y = 10;
@@ -9818,7 +9818,7 @@ return;
     txgcd[k].gd.handle_controlevent = GFI_TeXChanged;
     txgcd[k++].creator = GRadioCreate;
 
-    txlabel[k].text = (uint32_t *) U_("ΤεΧ Math Symbol");
+    txlabel[k].text = (uint32_t *) _("ΤεΧ Math Symbol");
     txlabel[k].text_is_1byte = true;
     txgcd[k].gd.label = &txlabel[k];
     txgcd[k].gd.pos.x = 80; txgcd[k].gd.pos.y = txgcd[k-1].gd.pos.y;
@@ -9827,7 +9827,7 @@ return;
     txgcd[k].gd.handle_controlevent = GFI_TeXChanged;
     txgcd[k++].creator = GRadioCreate;
 
-    txlabel[k].text = (uint32_t *) U_("ΤεΧ Math Extension");
+    txlabel[k].text = (uint32_t *) _("ΤεΧ Math Extension");
     txlabel[k].text_is_1byte = true;
     txgcd[k].gd.label = &txlabel[k];
     txgcd[k].gd.pos.x = 155; txgcd[k].gd.pos.y = txgcd[k-1].gd.pos.y;
@@ -10510,8 +10510,7 @@ return;
     aspects[i++].gcd = gaspboxes;
 
     d->tx_aspect = i;
-/* xgettext won't use non-ASCII messages */
-    aspects[i].text = (uint32_t *) U_("ΤεΧ");	/* Tau epsilon Chi, in greek */
+    aspects[i].text = (uint32_t *) _("ΤεΧ");	/* Tau epsilon Chi, in greek */
     aspects[i].text_is_1byte = true;
     aspects[i++].gcd = txbox;
 

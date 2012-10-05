@@ -1412,7 +1412,7 @@ void FVBuildAccent(FontViewBase *fv,int onlyaccents) {
 	    buts[0] = _("_Yes");
 	    buts[1] = _("_No");
 	    buts[2] = NULL;
-	    if ( ff_ask(U_("Replace Å"),(const char **) buts,0,1,U_("Are you sure you want to replace Å?\nThe ring will not join to the A."))==1 )
+	    if ( ff_ask(_("Replace Å"),(const char **) buts,0,1,_("Are you sure you want to replace Å?\nThe ring will not join to the A."))==1 )
     continue;
 	}
 	if ( SFIsSomethingBuildable(fv->sf,sc,fv->active_layer,onlyaccents) ) {

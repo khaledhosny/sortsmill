@@ -707,7 +707,7 @@ static void SMD_EditState(SMD *smd) {
 	gcd[k++].creator = GListFieldCreate;
     }
 
-    label[k].text = (uint32_t *) U_("_Up↑");
+    label[k].text = (uint32_t *) _("_Up↑");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -719,7 +719,7 @@ static void SMD_EditState(SMD *smd) {
     gcd[k].gd.handle_controlevent = SMDE_Arrow;
     gcd[k++].creator = GButtonCreate;
 
-    label[k].text = (uint32_t *) U_("←_Left");
+    label[k].text = (uint32_t *) _("←_Left");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -730,7 +730,7 @@ static void SMD_EditState(SMD *smd) {
     gcd[k].gd.handle_controlevent = SMDE_Arrow;
     gcd[k++].creator = GButtonCreate;
 
-    label[k].text = (uint32_t *) U_("_Right→");
+    label[k].text = (uint32_t *) _("_Right→");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -741,7 +741,7 @@ static void SMD_EditState(SMD *smd) {
     gcd[k].gd.handle_controlevent = SMDE_Arrow;
     gcd[k++].creator = GButtonCreate;
 
-    label[k].text = (uint32_t *) U_("↓_Down");
+    label[k].text = (uint32_t *) _("↓_Down");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];

@@ -2806,7 +2806,7 @@ void ItalicDlg(FontView *fv, CharView *cv) {
     gcd[k++].creator = GLineCreate;
     varray[r++] = &gcd[k-1]; varray[r++] = NULL;
 
-    label[k].text = (uint32_t *) U_(
+    label[k].text = (uint32_t *) _(
 	"This italic conversion will be incomplete!\n"
 	"You will probably want to do manual fixups on e, g, k, and v-z\n"
 	"And on в, г, д, е, ж, л, м, ц, щ, ъ, ђ\n"

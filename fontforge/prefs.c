@@ -2779,7 +2779,7 @@ DoPrefs (void)
               plabel[gc].text = (uint32_t *) xstrdup_or_null (buf);
               pgcd[gc++].creator = GTextFieldCreate;
               hvarray[si++] = &pgcd[gc - 1];
-              plabel[gc].text = (uint32_t *) U_ ("°");
+              plabel[gc].text = (uint32_t *) _ ("°");
               plabel[gc].text_is_1byte = true;
               pgcd[gc].gd.label = &plabel[gc];
               pgcd[gc].gd.pos.x =
@@ -3481,7 +3481,7 @@ PrefsSubSetDlg (CharView * cv, char *windowTitle, struct prefs_list *plist)
           plabel[gc].text = (uint32_t *) xstrdup_or_null (buf);
           pgcd[gc++].creator = GTextFieldCreate;
           hvarray[si++] = &pgcd[gc - 1];
-          plabel[gc].text = (uint32_t *) U_ ("°");
+          plabel[gc].text = (uint32_t *) _ ("°");
           plabel[gc].text_is_1byte = true;
           pgcd[gc].gd.label = &plabel[gc];
           pgcd[gc].gd.pos.x =

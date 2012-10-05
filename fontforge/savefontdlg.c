@@ -699,7 +699,7 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.flags = gg_enabled | gg_visible | gg_pos_in_pixels;
   gcd[k++].creator = GGroupCreate;
 
-  label[k].text = (uint32_t *) U_ ("PostScript®");
+  label[k].text = (uint32_t *) _ ("PostScript®");
   label[k].text_is_1byte = true;
   gcd[k].gd.label = &label[k];
   gcd[k].gd.pos.x = 8;
@@ -790,8 +790,7 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   label[k].text_is_1byte = true;
   gcd[k].gd.popup_msg =
     (uint32_t *)
-    U_
-    ("The AFM file contains metrics information that many word-processors will read when using a PostScript® font.");
+    _("The AFM file contains metrics information that many word-processors will read when using a PostScript® font.");
   gcd[k].gd.label = &label[k];
   gcd[k].gd.cid = CID_PS_AFM;
   gcd[k++].creator = GCheckBoxCreate;
@@ -806,8 +805,7 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   label[k].text_is_1byte = true;
   gcd[k].gd.popup_msg =
     (uint32_t *)
-    U_
-    ("The AFM format allows some information about composites\n(roughly the same as mark to base anchor classes) to be\nincluded. However it tends to make AFM files huge as it\nis not stored in an efficient manner.");
+    _("The AFM format allows some information about composites\n(roughly the same as mark to base anchor classes) to be\nincluded. However it tends to make AFM files huge as it\nis not stored in an efficient manner.");
   gcd[k].gd.label = &label[k];
   gcd[k].gd.cid = CID_PS_AFMmarks;
   gcd[k++].creator = GCheckBoxCreate;
@@ -822,8 +820,7 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   label[k].text_is_1byte = true;
   gcd[k].gd.popup_msg =
     (uint32_t *)
-    U_
-    ("The PFM file contains information Windows needs to install a PostScript® font.");
+    _("The PFM file contains information Windows needs to install a PostScript® font.");
   gcd[k].gd.label = &label[k];
   gcd[k].gd.cid = CID_PS_PFM;
   gcd[k++].creator = GCheckBoxCreate;
@@ -838,8 +835,7 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   label[k].text_is_1byte = true;
   gcd[k].gd.popup_msg =
     (uint32_t *)
-    U_
-    ("The tfm and enc files contain information TeX needs to install a PostScript® font.");
+    _("The tfm and enc files contain information TeX needs to install a PostScript® font.");
   gcd[k].gd.label = &label[k];
   gcd[k].gd.cid = CID_PS_TFM;
   gcd[k++].creator = GCheckBoxCreate;

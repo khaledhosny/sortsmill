@@ -2821,7 +2821,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	hvarray1[l++] = &gcd[j];
 	++j;
 
-	label[j].text = (uint32_t *) U_("°");
+	label[j].text = (uint32_t *) _("°");
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = gcd[j-1].gd.pos.x+gcd[j-1].gd.pos.width+2; gcd[j].gd.pos.y = gcd[j-3].gd.pos.y; 
@@ -2928,7 +2928,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	hvarray2[l++] = &gcd[j];
 	++j;
 
-	label[j].text = (uint32_t *) U_("°");
+	label[j].text = (uint32_t *) _("°");
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = gcd[j-1].gd.pos.x+gcd[j-1].gd.pos.width+2; gcd[j].gd.pos.y = gcd[j-3].gd.pos.y; 

@@ -2099,10 +2099,10 @@ static void BVMenuContextualHelp(GWindow base,struct gmenuitem *mi,GEvent *e) {
 
 char *BVFlipNames[] = { N_("Flip Horizontally"), N_("Flip Vertically"),
 /* GT: "CW" means Clockwise */
-    NU_("Rotate 90° CW"),
+    N_("Rotate 90° CW"),
 /* GT: "CW" means Counter-Clockwise */
-    NU_("Rotate 90° CCW"),
-    NU_("Rotate 180°"),
+    N_("Rotate 90° CCW"),
+    N_("Rotate 180°"),
     N_("Skew..."), NULL };
 
 static GMenuItem2 dummyitem[] = {
@@ -2153,9 +2153,9 @@ static GMenuItem2 edlist[] = {
 static GMenuItem2 trlist[] = {
     { { (uint32_t *) N_("Flip _Horizontally"), (GImage *) "transformfliphor.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'H' }, H_("Flip Horizontally|No Shortcut"), NULL, NULL, BVMenuRotateInvoked, bvt_fliph },
     { { (uint32_t *) N_("Flip _Vertically"), (GImage *) "transformflipvert.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'V' }, H_("Flip Vertically|No Shortcut"), NULL, NULL, BVMenuRotateInvoked, bvt_flipv },
-    { { (uint32_t *) NU_("_Rotate 90° CW"), (GImage *) "transformrotatecw.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'R' }, H_("Rotate 90 CW|No Shortcut"), NULL, NULL, BVMenuRotateInvoked, bvt_rotate90cw },
-    { { (uint32_t *) NU_("Rotate _90° CCW"), (GImage *) "transformrotateccw.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, '9' }, H_("Rotate 90 CCW|No Shortcut"), NULL, NULL, BVMenuRotateInvoked, bvt_rotate90ccw },
-    { { (uint32_t *) NU_("Rotate _180°"), (GImage *) "transformrotate180.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, '1' }, H_("Rotate 180|No Shortcut"), NULL, NULL, BVMenuRotateInvoked, bvt_rotate180 },
+    { { (uint32_t *) N_("_Rotate 90° CW"), (GImage *) "transformrotatecw.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'R' }, H_("Rotate 90 CW|No Shortcut"), NULL, NULL, BVMenuRotateInvoked, bvt_rotate90cw },
+    { { (uint32_t *) N_("Rotate _90° CCW"), (GImage *) "transformrotateccw.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, '9' }, H_("Rotate 90 CCW|No Shortcut"), NULL, NULL, BVMenuRotateInvoked, bvt_rotate90ccw },
+    { { (uint32_t *) N_("Rotate _180°"), (GImage *) "transformrotate180.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, '1' }, H_("Rotate 180|No Shortcut"), NULL, NULL, BVMenuRotateInvoked, bvt_rotate180 },
     { { (uint32_t *) N_("_Skew..."), (GImage *) "transformskew.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'S' }, H_("Skew...|No Shortcut"), NULL, NULL, BVMenuRotateInvoked, bvt_skew },
     GMENUITEM2_EMPTY
 };

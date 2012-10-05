@@ -91,7 +91,7 @@ struct unicoderange unicoderange[] = {
     { N_("Ogham"), 0x1680, 0x169f, ASFIRST, true, 0, 0 },
     { N_("Runic"), 0x16a0, 0x16ff, ASFIRST, true, 0, 0 },
     { N_("Tagalog"), 0x1700, 0x171f, ASFIRST, true, 0, 0 },
-    { NU_("Hanunóo"), 0x1720, 0x173f, ASFIRST, true, 0, 0 },
+    { N_("Hanunóo"), 0x1720, 0x173f, ASFIRST, true, 0, 0 },
     { N_("Buhid"), 0x1740, 0x175f, ASFIRST, true, 0, 0 },
     { N_("Tagbanwa"), 0x1760, 0x177f, ASFIRST, true, 0, 0 },
     { N_("Khmer"), 0x1780, 0x17ff, ASFIRST, true, 0, 0 },

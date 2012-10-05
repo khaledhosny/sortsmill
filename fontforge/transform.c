@@ -425,7 +425,7 @@ static GGadgetCreateData *MakeTransBlock(TransData *td,int bnum,
     gcd[7].gd.cid = CID_Scale+offset;
     gcd[7].creator = GTextFieldCreate;
 
-    label[8].text = (uint32_t *) U_("° Clockwise");
+    label[8].text = (uint32_t *) _("° Clockwise");
     label[8].text_is_1byte = true;
     gcd[8].gd.label = &label[8];
     gcd[8].gd.pos.x = TBlock_XStart+53; gcd[8].gd.pos.y = 2; gcd[8].gd.pos.height = 12;
@@ -436,7 +436,7 @@ static GGadgetCreateData *MakeTransBlock(TransData *td,int bnum,
 
 /* GT: Sometimes spelled Widdershins. An old word which means counter clockwise. */
 /* GT: I used it because "counter clockwise" took too much space. */
-    label[9].text = (uint32_t *) U_("° Withershins");	/* deiseal */
+    label[9].text = (uint32_t *) _("° Withershins");	/* deiseal */
     label[9].text_is_1byte = true;
     gcd[9].gd.label = &label[9];
     gcd[9].gd.pos.x = TBlock_XStart+53; gcd[9].gd.pos.y = 17; gcd[9].gd.pos.height = 12;
@@ -499,7 +499,7 @@ static GGadgetCreateData *MakeTransBlock(TransData *td,int bnum,
     gcd[15].gd.cid = CID_YPercent+offset;
     gcd[15].creator = GLabelCreate;
 
-    label[16].text = (uint32_t *) U_("°");
+    label[16].text = (uint32_t *) _("°");
     label[16].text_is_1byte = true;
     gcd[16].gd.label = &label[16];
     gcd[16].gd.pos.x = TBlock_XStart+51; gcd[16].gd.pos.y = 15; 
@@ -508,7 +508,7 @@ static GGadgetCreateData *MakeTransBlock(TransData *td,int bnum,
     gcd[16].gd.cid = CID_XDegree+offset;
     gcd[16].creator = GLabelCreate;
 
-    label[17].text = (uint32_t *) U_("°");
+    label[17].text = (uint32_t *) _("°");
     label[17].text_is_1byte = true;
     gcd[17].gd.label = &label[17];
     gcd[17].gd.pos.x = TBlock_XStart+121; gcd[17].gd.pos.y = 15; 

@@ -2398,38 +2398,38 @@ static struct col_init multsubsci[] = {
 };
 static struct col_init simpleposci[] = {
     { me_enum , NULL, NULL, enable_enum, N_("Subtable") },
-    { me_int, NULL, NULL, NULL, NU_("∆x") },	/* delta-x */
+    { me_int, NULL, NULL, NULL, N_("∆x") },	/* delta-x */
 /* GT: "Adjust" here means Device Table based pixel adjustments, an OpenType */
 /* GT: concept which allows small corrections for small pixel sizes where */
 /* GT: rounding errors (in kerning for example) may smush too glyphs together */
 /* GT: or space them too far apart. Generally not a problem for big pixelsizes*/
     { me_funcedit, DevTab_Dlg, NULL, NULL, N_("Adjust") },
-    { me_int, NULL, NULL, NULL, NU_("∆y") },		/* delta-y */
+    { me_int, NULL, NULL, NULL, N_("∆y") },		/* delta-y */
     { me_funcedit, DevTab_Dlg, NULL, NULL, N_("Adjust") },
-    { me_int, NULL, NULL, NULL, NU_("∆x_adv") },	/* delta-x-adv */
+    { me_int, NULL, NULL, NULL, N_("∆x_adv") },	/* delta-x-adv */
     { me_funcedit, DevTab_Dlg, NULL, NULL, N_("Adjust") },
-    { me_int, NULL, NULL, NULL, NU_("∆y_adv") },	/* delta-y-adv */
+    { me_int, NULL, NULL, NULL, N_("∆y_adv") },	/* delta-y-adv */
     { me_funcedit, DevTab_Dlg, NULL, NULL, N_("Adjust") },
     COL_INIT_EMPTY
 };
 static struct col_init pairposci[] = {
     { me_enum , NULL, NULL, NULL, N_("Subtable") },	/* There can be multiple kern-pairs for a glyph */
     { me_string , DevTab_Dlg, NULL, NULL, N_("Second Glyph Name") },
-    { me_int, NULL, NULL, NULL, NU_("∆x #1") },		/* delta-x */
+    { me_int, NULL, NULL, NULL, N_("∆x #1") },		/* delta-x */
     { me_funcedit, DevTab_Dlg, NULL, NULL, N_("Adjust") },
-    { me_int, NULL, NULL, NULL, NU_("∆y #1") },		/* delta-y */
+    { me_int, NULL, NULL, NULL, N_("∆y #1") },		/* delta-y */
     { me_funcedit, DevTab_Dlg, NULL, NULL, N_("Adjust") },
-    { me_int, NULL, NULL, NULL, NU_("∆x_adv #1") },	/* delta-x-adv */
+    { me_int, NULL, NULL, NULL, N_("∆x_adv #1") },	/* delta-x-adv */
     { me_funcedit, DevTab_Dlg, NULL, NULL, N_("Adjust") },
-    { me_int, NULL, NULL, NULL, NU_("∆y_adv #1") },	/* delta-y-adv */
+    { me_int, NULL, NULL, NULL, N_("∆y_adv #1") },	/* delta-y-adv */
     { me_funcedit, DevTab_Dlg, NULL, NULL, N_("Adjust") },
-    { me_int, NULL, NULL, NULL, NU_("∆x #2") },		/* delta-x */
+    { me_int, NULL, NULL, NULL, N_("∆x #2") },		/* delta-x */
     { me_funcedit, DevTab_Dlg, NULL, NULL, N_("Adjust") },
-    { me_int, NULL, NULL, NULL, NU_("∆y #2") },		/* delta-y */
+    { me_int, NULL, NULL, NULL, N_("∆y #2") },		/* delta-y */
     { me_funcedit, DevTab_Dlg, NULL, NULL, N_("Adjust") },
-    { me_int, NULL, NULL, NULL, NU_("∆x_adv #2") },	/* delta-x-adv */
+    { me_int, NULL, NULL, NULL, N_("∆x_adv #2") },	/* delta-x-adv */
     { me_funcedit, DevTab_Dlg, NULL, NULL, N_("Adjust") },
-    { me_int, NULL, NULL, NULL, NU_("∆y_adv #2") },	/* delta-y-adv */
+    { me_int, NULL, NULL, NULL, N_("∆y_adv #2") },	/* delta-y-adv */
     { me_funcedit, DevTab_Dlg, NULL, NULL, N_("Adjust") },
     COL_INIT_EMPTY
 };
@@ -4913,25 +4913,25 @@ return;
 	aspects[i].text_is_1byte = true;
 	aspects[i++].gcd = pstbox[6];
 
-	aspects[i].text = (uint32_t *) U_("ΤεΧ & Math");	/* TeX */
+	aspects[i].text = (uint32_t *) _("ΤεΧ & Math");	/* TeX */
 	aspects[i].text_is_1byte = true;
 	aspects[i++].gcd = tbox;
 
 	ci->vert_aspect = i;
 /* GT: "Vert." is an abbreviation for Vertical */
-	aspects[i].text = (uint32_t *) U_("Vert. Variants");
+	aspects[i].text = (uint32_t *) _("Vert. Variants");
 	aspects[i].text_is_1byte = true;
 	aspects[i].nesting = 1;
 	aspects[i++].gcd = varbox[0];
 
 /* GT: "Horiz." is an abbreviation for Horizontal */
-	aspects[i].text = (uint32_t *) U_("Horiz. Variants");
+	aspects[i].text = (uint32_t *) _("Horiz. Variants");
 	aspects[i].text_is_1byte = true;
 	aspects[i].nesting = 1;
 	aspects[i++].gcd = varbox[1];
 
 	if ( sc->parent->multilayer ) {
-	    aspects[i].text = (uint32_t *) U_("Tile Size");
+	    aspects[i].text = (uint32_t *) _("Tile Size");
 	    aspects[i].text_is_1byte = true;
 	    aspects[i++].gcd = tilebox;
 	}
