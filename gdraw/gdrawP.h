@@ -240,7 +240,6 @@ struct displayfuncs {
 
     void (*stroke)(GWindow w, Color col);
     void (*fill)(GWindow w, Color col);
-    void (*fillAndStroke)(GWindow w, Color fillcol,Color strokecol);
 
     void (*layoutInit)(GWindow w, char *text, int cnt, GFont *fi);
     void (*layoutDraw)(GWindow w, int32 x, int32 y, Color fg);

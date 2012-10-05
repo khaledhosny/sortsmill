@@ -548,10 +548,6 @@ void GDrawPathFill(GWindow w,Color col) {
     (w->display->funcs->fill)(w,col);
 }
 
-void GDrawPathFillAndStroke(GWindow w,Color fillcol, Color strokecol) {
-    (w->display->funcs->fillAndStroke)(w,fillcol,strokecol);
-}
-
 void GDrawLayoutInit(GWindow w, char *text, int cnt, GFont *fi) {
     (w->display->funcs->layoutInit)(w,text,cnt,fi);
 }

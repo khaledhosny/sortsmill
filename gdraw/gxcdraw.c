@@ -417,19 +417,6 @@ void _GXCDraw_PathFill(GWindow w,Color col) {
     cairo_fill( ((GXWindow) w)->cc );
 }
 
-void _GXCDraw_PathFillAndStroke(GWindow w,Color fillcol, Color strokecol) {
-    GXWindow gw = (GXWindow) w;
-
-    cairo_save(gw->cc);
-    cairo_set_source_rgba(gw->cc,COLOR_RED(fillcol)/255.0,COLOR_GREEN(fillcol)/255.0,COLOR_BLUE(fillcol)/255.0,
-	    (fillcol>>24)/255.0);
-    cairo_fill( gw->cc );
-    cairo_restore(gw->cc);
-    w->ggc->fg = strokecol;
-    GXCDrawSetline(gw,gw->ggc);
-    cairo_fill( gw->cc );
-}
-
 /* ************************************************************************** */
 /* ****************************** Cairo Images ****************************** */
 /* ************************************************************************** */

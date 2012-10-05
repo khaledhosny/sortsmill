@@ -3891,7 +3891,6 @@ static struct displayfuncs xfuncs = {
 
     _GXCDraw_PathStroke,
     _GXCDraw_PathFill,
-    _GXCDraw_PathFillAndStroke,
 
     _GXPDraw_LayoutInit,
     _GXPDraw_LayoutDraw,
