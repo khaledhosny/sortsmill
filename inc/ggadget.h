@@ -300,7 +300,7 @@ extern void GTextInfoListFree(GTextInfo *ti);
 extern void GTextInfoArrayFree(GTextInfo **ti);
 extern GTextInfo **GTextInfoFromChars(char **array, int len);
 extern const unichar_t *GStringGetResource(int index,unichar_t *mnemonic);
-extern int GGadgetScale(int xpos);
+VISIBLE extern int GGadgetScale(int xpos);
 extern int GIntGetResource(int index);
 extern int GStringSetResourceFileV(char *filename,uint32 checksum);
 extern int GStringSetResourceFile(char *filename);	/* returns 1 for success, 0 for failure */
@@ -313,37 +313,37 @@ extern void *GResource_font_cvt(char *val, void *def);
 extern FontInstance *GResourceFindFont(char *resourcename,FontInstance *deffont);
 
 void GGadgetDestroy(GGadget *g);
-void GGadgetSetVisible(GGadget *g,int visible);
-int GGadgetIsVisible(GGadget *g);
-void GGadgetSetEnabled(GGadget *g,int enabled);
-int GGadgetIsEnabled(GGadget *g);
-GWindow GGadgetGetWindow(GGadget *g);
-void *GGadgetGetUserData(GGadget *g);
-void GGadgetSetUserData(GGadget *g, void *d);
+VISIBLE void GGadgetSetVisible(GGadget *g,int visible);
+VISIBLE int GGadgetIsVisible(GGadget *g);
+VISIBLE void GGadgetSetEnabled(GGadget *g,int enabled);
+VISIBLE int GGadgetIsEnabled(GGadget *g);
+VISIBLE GWindow GGadgetGetWindow(GGadget *g);
+VISIBLE void *GGadgetGetUserData(GGadget *g);
+VISIBLE void GGadgetSetUserData(GGadget *g, void *d);
 void GGadgetSetPopupMsg(GGadget *g, const unichar_t *msg);
 GRect *GGadgetGetInnerSize(GGadget *g,GRect *rct);
-GRect *GGadgetGetSize(GGadget *g,GRect *rct);
+VISIBLE GRect *GGadgetGetSize(GGadget *g,GRect *rct);
 void GGadgetGetDesiredVisibleSize(GGadget *g,GRect *outer, GRect *inner);
-void GGadgetGetDesiredSize(GGadget *g,GRect *outer, GRect *inner);
-void GGadgetSetDesiredSize(GGadget *g,GRect *outer, GRect *inner);
-int GGadgetGetCid(GGadget *g);
-void GGadgetResize(GGadget *g,int32 width, int32 height );
-void GGadgetMove(GGadget *g,int32 x, int32 y );
-void GGadgetRedraw(GGadget *g);
-void GGadgetsCreate(GWindow base, GGadgetCreateData *gcd);
+VISIBLE void GGadgetGetDesiredSize(GGadget *g,GRect *outer, GRect *inner);
+VISIBLE void GGadgetSetDesiredSize(GGadget *g,GRect *outer, GRect *inner);
+VISIBLE int GGadgetGetCid(GGadget *g);
+VISIBLE void GGadgetResize(GGadget *g,int32 width, int32 height );
+VISIBLE void GGadgetMove(GGadget *g,int32 x, int32 y );
+VISIBLE void GGadgetRedraw(GGadget *g);
+VISIBLE void GGadgetsCreate(GWindow base, GGadgetCreateData *gcd);
 int  GGadgetFillsWindow(GGadget *g);
 int  GGadgetIsDefault(GGadget *g);
 
-void GGadgetSetTitle(GGadget *g,const unichar_t *title);
-void GGadgetSetTitle8(GGadget *g,const char *title);
-void GGadgetSetTitle8WithMn(GGadget *g,const char *title);
-const unichar_t *_GGadgetGetTitle(GGadget *g);	/* Do not free!!! */
-unichar_t *GGadgetGetTitle(GGadget *g);		/* Free the return */
-char *GGadgetGetTitle8(GGadget *g);		/* Free the return (utf8) */
-void GGadgetSetFont(GGadget *g,GFont *font);
+VISIBLE void GGadgetSetTitle(GGadget *g,const unichar_t *title);
+VISIBLE void GGadgetSetTitle8(GGadget *g,const char *title);
+VISIBLE void GGadgetSetTitle8WithMn(GGadget *g,const char *title);
+VISIBLE const unichar_t *_GGadgetGetTitle(GGadget *g);	/* Do not free!!! */
+VISIBLE unichar_t *GGadgetGetTitle(GGadget *g);		/* Free the return */
+VISIBLE char *GGadgetGetTitle8(GGadget *g);		/* Free the return (utf8) */
+VISIBLE void GGadgetSetFont(GGadget *g,GFont *font);
 GFont *GGadgetGetFont(GGadget *g);
 int GGadgetEditCmd(GGadget *g,enum editor_commands cmd);
-int GGadgetActiveGadgetEditCmd(GWindow gw,enum editor_commands cmd);
+VISIBLE int GGadgetActiveGadgetEditCmd(GWindow gw,enum editor_commands cmd);
 void GGadgetSetHandler(GGadget *g, GGadgetHandler handler);
 GGadgetHandler GGadgetGetHandler(GGadget *g);
 
@@ -352,24 +352,24 @@ void GTextFieldShow(GGadget *g,int pos);
 void GTextFieldReplace(GGadget *g,const unichar_t *txt);
 void GCompletionFieldSetCompletion(GGadget *g,GTextCompletionHandler completion);
 void GCompletionFieldSetCompletionMode(GGadget *g,int enabled);
-void GGadgetClearList(GGadget *g);
-void GGadgetSetList(GGadget *g, GTextInfo **ti, int32 copyit);
-GTextInfo **GGadgetGetList(GGadget *g,int32 *len);	/* Do not free!!! */
-GTextInfo *GGadgetGetListItem(GGadget *g,int32 pos);
-GTextInfo *GGadgetGetListItemSelected(GGadget *g);
-void GGadgetSelectListItem(GGadget *g,int32 pos,int32 sel);
-void GGadgetSelectOneListItem(GGadget *g,int32 pos);
-int32 GGadgetIsListItemSelected(GGadget *g,int32 pos);
-int32 GGadgetGetFirstListSelectedItem(GGadget *g);
-void GGadgetScrollListToPos(GGadget *g,int32 pos);
+VISIBLE void GGadgetClearList(GGadget *g);
+VISIBLE void GGadgetSetList(GGadget *g, GTextInfo **ti, int32 copyit);
+VISIBLE GTextInfo **GGadgetGetList(GGadget *g,int32 *len);	/* Do not free!!! */
+VISIBLE GTextInfo *GGadgetGetListItem(GGadget *g,int32 pos);
+VISIBLE GTextInfo *GGadgetGetListItemSelected(GGadget *g);
+VISIBLE void GGadgetSelectListItem(GGadget *g,int32 pos,int32 sel);
+VISIBLE void GGadgetSelectOneListItem(GGadget *g,int32 pos);
+VISIBLE int32 GGadgetIsListItemSelected(GGadget *g,int32 pos);
+VISIBLE int32 GGadgetGetFirstListSelectedItem(GGadget *g);
+VISIBLE void GGadgetScrollListToPos(GGadget *g,int32 pos);
 void GGadgetScrollListToText(GGadget *g,const unichar_t *lab,int32 sel);
 void GGadgetSetListOrderer(GGadget *g,int (*orderer)(const void *, const void *));
 
 void GColorButtonSetColor(GGadget *g, Color col);
 Color GColorButtonGetColor(GGadget *g);
 
-void GGadgetSetChecked(GGadget *g, int ison);
-int GGadgetIsChecked(GGadget *g);
+VISIBLE void GGadgetSetChecked(GGadget *g, int ison);
+VISIBLE int GGadgetIsChecked(GGadget *g);
 
 int GListIndexFromY(GGadget *g,int y);
 void GListSetSBAlwaysVisible(GGadget *g,int always);
@@ -397,45 +397,45 @@ void GScrollBarGetBounds(GGadget *g, int32 *sb_min, int32 *sb_max, int32 *sb_pag
 void GMenuBarSetItemChecked(GGadget *g, int mid, int check);
 void GMenuBarSetItemEnabled(GGadget *g, int mid, int enabled);
 void GMenuBarSetItemName(GGadget *g, int mid, const unichar_t *name);
-void GMenuSetShortcutDomain(const char *domain);
+VISIBLE void GMenuSetShortcutDomain(const char *domain);
 const char *GMenuGetShortcutDomain(void);
-int GMenuIsCommand(GEvent *event,char *shortcut);
-int GMenuMask(void);
+VISIBLE int GMenuIsCommand(GEvent *event,char *shortcut);
+VISIBLE int GMenuMask(void);
 int GMenuAnyUnmaskedShortcuts(GGadget *mb1, GGadget *mb2);
 
 
-void GFileChooserPopupCheck(GGadget *g,GEvent *e);
+VISIBLE void GFileChooserPopupCheck(GGadget *g,GEvent *e);
 void GFileChooserFilterIt(GGadget *g);
-void GFileChooserRefreshList(GGadget *g);
-int GFileChooserFilterEh(GGadget *g,GEvent *e);
-void GFileChooserConnectButtons(GGadget *g,GGadget *ok, GGadget *filter);
-void GFileChooserSetFilterText(GGadget *g,const unichar_t *filter);
+VISIBLE void GFileChooserRefreshList(GGadget *g);
+VISIBLE int GFileChooserFilterEh(GGadget *g,GEvent *e);
+VISIBLE void GFileChooserConnectButtons(GGadget *g,GGadget *ok, GGadget *filter);
+VISIBLE void GFileChooserSetFilterText(GGadget *g,const unichar_t *filter);
 void GFileChooserSetFilterFunc(GGadget *g,GFileChooserFilterType filter);
-void GFileChooserSetDir(GGadget *g,unichar_t *dir);
-struct giocontrol *GFileChooserReplaceIO(GGadget *g,struct giocontrol *gc);
-unichar_t *GFileChooserGetDir(GGadget *g);
+VISIBLE void GFileChooserSetDir(GGadget *g,unichar_t *dir);
+VISIBLE struct giocontrol *GFileChooserReplaceIO(GGadget *g,struct giocontrol *gc);
+VISIBLE unichar_t *GFileChooserGetDir(GGadget *g);
 unichar_t *GFileChooserGetFilterText(GGadget *g);
 GFileChooserFilterType GFileChooserGetFilterFunc(GGadget *g);
 void GFileChooserSetMimetypes(GGadget *g,unichar_t **mimetypes);
 unichar_t **GFileChooserGetMimetypes(GGadget *g);
-void GFileChooserGetChildren(GGadget *g,GGadget **pulldown, GGadget **list, GGadget **tf);
-int GFileChooserPosIsDir(GGadget *g, int pos);
-unichar_t *GFileChooserFileNameOfPos(GGadget *g, int pos);
-void GFileChooserSetShowHidden(int sh);
-int GFileChooserGetShowHidden(void);
-void GFileChooserSetDirectoryPlacement(int dp);
-int GFileChooserGetDirectoryPlacement(void);
-void GFileChooserSetBookmarks(unichar_t **b);
+VISIBLE void GFileChooserGetChildren(GGadget *g,GGadget **pulldown, GGadget **list, GGadget **tf);
+VISIBLE int GFileChooserPosIsDir(GGadget *g, int pos);
+VISIBLE unichar_t *GFileChooserFileNameOfPos(GGadget *g, int pos);
+VISIBLE void GFileChooserSetShowHidden(int sh);
+VISIBLE int GFileChooserGetShowHidden(void);
+VISIBLE void GFileChooserSetDirectoryPlacement(int dp);
+VISIBLE int GFileChooserGetDirectoryPlacement(void);
+VISIBLE void GFileChooserSetBookmarks(unichar_t **b);
 void GFileChooserSetPaths(GGadget *g, char **path);
-unichar_t **GFileChooserGetBookmarks(void);
-void GFileChooserSetPrefsChangedCallback(void *data, void (*p_c)(void *));
+VISIBLE unichar_t **GFileChooserGetBookmarks(void);
+VISIBLE void GFileChooserSetPrefsChangedCallback(void *data, void (*p_c)(void *));
 
-void GHVBoxSetExpandableCol(GGadget *g,int col);
-void GHVBoxSetExpandableRow(GGadget *g,int row);
-void GHVBoxSetPadding(GGadget *g,int hpad, int vpad);
-void GHVBoxFitWindow(GGadget *g);
-void GHVBoxFitWindowCentered(GGadget *g);
-void GHVBoxReflow(GGadget *g);
+VISIBLE void GHVBoxSetExpandableCol(GGadget *g,int col);
+VISIBLE void GHVBoxSetExpandableRow(GGadget *g,int row);
+VISIBLE void GHVBoxSetPadding(GGadget *g,int hpad, int vpad);
+VISIBLE void GHVBoxFitWindow(GGadget *g);
+VISIBLE void GHVBoxFitWindowCentered(GGadget *g);
+VISIBLE void GHVBoxReflow(GGadget *g);
 
 void GMatrixEditSet(GGadget *g,struct matrix_data *data, int rows, int copy_it);
 struct matrix_data *GMatrixEditGet(GGadget *g, int *rows);
@@ -468,28 +468,28 @@ GMenuItem *GMatrixEditGetColumnChoices(GGadget *g, int col);
 void GMatrixEditSetColumnCompletion(GGadget *g, int col, GTextCompletionHandler completion);
 void GMatrixEditSetEditable(GGadget *g, int editable);
 
-GWindow GDrawableGetWindow(GGadget *g);
+VISIBLE GWindow GDrawableGetWindow(GGadget *g);
 
 
-extern void GGadgetPreparePopupImage(GWindow base,const unichar_t *msg,
+VISIBLE extern void GGadgetPreparePopupImage(GWindow base,const unichar_t *msg,
 	const void *data,
 	GImage *(*get_image)(const void *data),
 	void (*free_image)(const void *data,GImage *img));
-extern void GGadgetPreparePopup(GWindow base,const unichar_t *msg);
+VISIBLE extern void GGadgetPreparePopup(GWindow base,const unichar_t *msg);
 extern void GGadgetPreparePopupR(GWindow base,int msg);
-extern void GGadgetPreparePopup8(GWindow base,char *msg);
-extern void GGadgetEndPopup(void);
-extern void GGadgetPopupExternalEvent(GEvent *e);
+VISIBLE extern void GGadgetPreparePopup8(GWindow base,char *msg);
+VISIBLE extern void GGadgetEndPopup(void);
+VISIBLE extern void GGadgetPopupExternalEvent(GEvent *e);
 
-extern int GGadgetDispatchEvent(GGadget *g,GEvent *e);
-extern void GGadgetTakesKeyboard(GGadget *g, int takes_keyboard);
+VISIBLE extern int GGadgetDispatchEvent(GGadget *g,GEvent *e);
+VISIBLE extern void GGadgetTakesKeyboard(GGadget *g, int takes_keyboard);
 
 /* Handles *?{}[] wildcards */
-int GGadgetWildMatch(unichar_t *pattern, unichar_t *name,int ignorecase);
-enum fchooserret GFileChooserDefFilter(GGadget *g,struct gdirentry *ent,
+VISIBLE int GGadgetWildMatch(unichar_t *pattern, unichar_t *name,int ignorecase);
+VISIBLE enum fchooserret GFileChooserDefFilter(GGadget *g,struct gdirentry *ent,
 	const unichar_t *dir);
 
-GWindow GMenuCreatePopupMenu(GWindow owner,GEvent *event, GMenuItem *mi);
+VISIBLE GWindow GMenuCreatePopupMenu(GWindow owner,GEvent *event, GMenuItem *mi);
 GWindow _GMenuCreatePopupMenu(GWindow owner,GEvent *event, GMenuItem *mi,
 	void (*donecallback)(GWindow owner));
 
@@ -514,15 +514,15 @@ GGadget *GTextAreaCreate(struct gwindow *base, GGadgetData *gd,void *data);
 GGadget *GListFieldCreate(struct gwindow *base, GGadgetData *gd,void *data);
 GGadget *GSimpleListFieldCreate(struct gwindow *base, GGadgetData *gd,void *data);
 GGadget *GMenuBarCreate(struct gwindow *base, GGadgetData *gd,void *data);
-GGadget *GMenu2BarCreate(struct gwindow *base, GGadgetData *gd,void *data);
+VISIBLE GGadget *GMenu2BarCreate(struct gwindow *base, GGadgetData *gd,void *data);
 GGadget *GTabSetCreate(struct gwindow *base, GGadgetData *gd,void *data);
-GGadget *GFileChooserCreate(struct gwindow *base, GGadgetData *gd,void *data);
-GGadget *GHBoxCreate(struct gwindow *base, GGadgetData *gd,void *data);
+VISIBLE GGadget *GFileChooserCreate(struct gwindow *base, GGadgetData *gd,void *data);
+VISIBLE GGadget *GHBoxCreate(struct gwindow *base, GGadgetData *gd,void *data);
 GGadget *GVBoxCreate(struct gwindow *base, GGadgetData *gd,void *data);
-GGadget *GHVBoxCreate(struct gwindow *base, GGadgetData *gd,void *data);
-GGadget *GHVGroupCreate(struct gwindow *base, GGadgetData *gd,void *data);
+VISIBLE GGadget *GHVBoxCreate(struct gwindow *base, GGadgetData *gd,void *data);
+VISIBLE GGadget *GHVGroupCreate(struct gwindow *base, GGadgetData *gd,void *data);
 GGadget *GMatrixEditCreate(struct gwindow *base, GGadgetData *gd,void *data);
-GGadget *GDrawableCreate(struct gwindow *base, GGadgetData *gd,void *data);
+VISIBLE GGadget *GDrawableCreate(struct gwindow *base, GGadgetData *gd,void *data);
 
 GGadget *CreateSlider(struct gwindow *base, GGadgetData *gd,void *data);
 GGadget *CreateFileChooser(struct gwindow *base, GGadgetData *gd,void *data);
@@ -535,31 +535,31 @@ typedef struct gresimage {
 } GResImage;
 GResImage *GGadgetResourceFindImage(char *name, GImage *def);
 
-void GGadgetSetImageDir(char *dir);
+VISIBLE void GGadgetSetImageDir(char *dir);
 void GGadgetSetImagePath(char *path);
-GImage *GGadgetImageCache(char *filename);
-int TryGGadgetImageCache(GImage *image, char *name);
+VISIBLE GImage *GGadgetImageCache(char *filename);
+VISIBLE int TryGGadgetImageCache(GImage *image, char *name);
 
-extern unichar_t *utf82u_mncopy(const char *utf8buf,unichar_t *mn);
+VISIBLE extern unichar_t *utf82u_mncopy(const char *utf8buf,unichar_t *mn);
 
 extern double GetCalmReal8(GWindow gw,int cid,char *namer,int *err);
 extern double GetReal8(GWindow gw,int cid,char *namer,int *err);
 extern int GetCalmInt8(GWindow gw,int cid,char *name,int *err);
 extern int GetInt8(GWindow gw,int cid,char *namer,int *err);
 extern int GetUnicodeChar8(GWindow gw,int cid,char *namer,int *err);
-extern void GGadgetProtest8(char *labelr);
+VISIBLE extern void GGadgetProtest8(char *labelr);
 
 extern void GMenuItemParseShortCut(GMenuItem *mi,char *shortcut);
-extern int GMenuItemParseMask(char *shortcut);
+VISIBLE extern int GMenuItemParseMask(char *shortcut);
 
 extern int GGadgetUndoMacEnglishOptionCombinations(GEvent *event);
 
 /* Among other things, this routine sets global icon cache up. */
-extern void GGadgetInit(void);
-extern int GGadgetWithin(GGadget *g, int x, int y);
-extern void GMenuItemArrayFree(GMenuItem *mi);
-extern void GMenuItem2ArrayFree(GMenuItem2 *mi);
+VISIBLE extern void GGadgetInit(void);
+VISIBLE extern int GGadgetWithin(GGadget *g, int x, int y);
+VISIBLE extern void GMenuItemArrayFree(GMenuItem *mi);
+VISIBLE extern void GMenuItem2ArrayFree(GMenuItem2 *mi);
 extern GMenuItem *GMenuItemArrayCopy(GMenuItem *mi, uint16 *cnt);
-extern GMenuItem *GMenuItem2ArrayCopy(GMenuItem2 *mi, uint16 *cnt);
+VISIBLE extern GMenuItem *GMenuItem2ArrayCopy(GMenuItem2 *mi, uint16 *cnt);
 
 #endif

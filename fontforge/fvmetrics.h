@@ -41,5 +41,5 @@ typedef struct createwidthdata {
     enum widthtype wtype;
 } CreateWidthData;
 
-extern void CVDoit(CreateWidthData *wd);
-extern void FVDoit(CreateWidthData *wd);
+VISIBLE extern void CVDoit(CreateWidthData *wd);
+VISIBLE extern void FVDoit(CreateWidthData *wd);

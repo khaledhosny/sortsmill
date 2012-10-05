@@ -14,6 +14,8 @@
 -T uint32_t
 -T unichar_t
 
+-T cairo_t
+
 -T real
 -T AnchorPoint
 -T BDFFont

@@ -26,6 +26,9 @@
  */
 #ifndef _GDRAW_H
 #define _GDRAW_H
+
+#include <config.h>
+
 #include "gimage.h"
 #include <cairo/cairo.h>
 
@@ -277,170 +280,171 @@ typedef int (*GDrawEH)(GWindow,GEvent *);
 extern unichar_t *GDrawKeysyms[];
 extern GDisplay *screen_display, *printer_display;
 
-extern void GDrawCreateDisplays(char *displayname,char *programname);
-extern void *GDrawNativeDisplay(GDisplay *);
-extern void GDrawTerm(GDisplay *disp);
+VISIBLE extern void GDrawCreateDisplays(char *displayname,char *programname);
+VISIBLE extern void *GDrawNativeDisplay(GDisplay *);
+VISIBLE extern void GDrawTerm(GDisplay *disp);
 
-extern int GDrawGetRes(GWindow gw);
-extern int GDrawPointsToPixels(GWindow gw,int points);
-extern int GDrawPixelsToPoints(GWindow gw,int pixels);
+VISIBLE extern int GDrawGetRes(GWindow gw);
+VISIBLE extern int GDrawPointsToPixels(GWindow gw,int points);
+VISIBLE extern int GDrawPixelsToPoints(GWindow gw,int pixels);
 
-extern void GDrawSetDefaultIcon(GWindow icon);
-extern GWindow GDrawCreateTopWindow(GDisplay *gdisp, GRect *pos, int (*eh)(GWindow,GEvent *), void *user_data, GWindowAttrs *wattrs);
-extern GWindow GDrawCreateSubWindow(GWindow w, GRect *pos, int (*eh)(GWindow,GEvent *), void *user_data, GWindowAttrs *wattrs);
-extern GWindow GDrawCreatePixmap(GDisplay *gdisp, uint16 width, uint16 height);
-extern GWindow GDrawCreateBitmap(GDisplay *gdisp, uint16 width, uint16 height, uint8 *data);
-extern GCursor GDrawCreateCursor(GWindow src,GWindow mask,Color fg,Color bg,
+VISIBLE extern void GDrawSetDefaultIcon(GWindow icon);
+VISIBLE extern GWindow GDrawCreateTopWindow(GDisplay *gdisp, GRect *pos, int (*eh)(GWindow,GEvent *), void *user_data, GWindowAttrs *wattrs);
+VISIBLE extern GWindow GDrawCreateSubWindow(GWindow w, GRect *pos, int (*eh)(GWindow,GEvent *), void *user_data, GWindowAttrs *wattrs);
+VISIBLE extern GWindow GDrawCreatePixmap(GDisplay *gdisp, uint16 width, uint16 height);
+VISIBLE extern GWindow GDrawCreateBitmap(GDisplay *gdisp, uint16 width, uint16 height, uint8 *data);
+VISIBLE extern GCursor GDrawCreateCursor(GWindow src,GWindow mask,Color fg,Color bg,
 	int16 x, int16 y );
-extern void GDrawDestroyWindow(GWindow w);
-extern void GDrawDestroyCursor(GDisplay *gdisp, GCursor ct);
-extern int  GDrawNativeWindowExists(GDisplay *gdisp, void *native);
-extern void GDrawSetZoom(GWindow w, GRect *zoomsize, enum gzoom_flags);
-extern void GDrawSetWindowBorder(GWindow w, int width, Color color);
-extern void GDrawSetWindowBackground(GWindow w, Color color);
-extern int  GDrawSetDither(GDisplay *gdisp, int dither);
-extern void GDrawReparentWindow(GWindow child,GWindow newparent, int x,int y);
-extern void GDrawSetVisible(GWindow w, int visible);
-extern int  GDrawIsVisible(GWindow w);
-extern void GDrawTrueMove(GWindow w, int32 x, int32 y);
-extern void GDrawMove(GWindow w, int32 x, int32 y);
-extern void GDrawResize(GWindow w, int32 width, int32 height);
-extern void GDrawMoveResize(GWindow w, int32 x, int32 y, int32 width, int32 height);
-extern GWindow GDrawGetRoot(GDisplay *);
-extern Color GDrawGetDefaultBackground(GDisplay *);
-extern Color GDrawGetDefaultForeground(GDisplay *);
-extern GRect *GDrawGetSize(GWindow w, GRect *ret);
-extern GDrawEH GDrawGetEH(GWindow w);
-extern void GDrawSetEH(GWindow w,GDrawEH e_h);
-extern void GDrawGetPointerPosition(GWindow w, GEvent *mouse);
-extern GWindow GDrawGetPointerWindow(GWindow w);
-extern void GDrawRaise(GWindow w);
-extern void GDrawRaiseAbove(GWindow w,GWindow below);
-extern int  GDrawIsAbove(GWindow w,GWindow other);
-extern void GDrawLower(GWindow w);
-extern void GDrawSetWindowTitles(GWindow w, const unichar_t *title, const unichar_t *icontit);
-extern void GDrawSetWindowTitles8(GWindow w, const char *title, const char *icontit);
-extern unichar_t *GDrawGetWindowTitle(GWindow w);
-extern char *GDrawGetWindowTitle8(GWindow w);
-extern void GDrawSetTransientFor(GWindow transient,GWindow owner);
-extern void GDrawSetCursor(GWindow w, GCursor ct);
-extern GCursor GDrawGetCursor(GWindow w);
-extern GWindow GDrawGetRedirectWindow(GDisplay *gd);
-extern GWindow GDrawGetParentWindow(GWindow gw);
-extern int GDrawWindowIsAncestor(GWindow ancester, GWindow descendent);
-extern void GDrawSetUserData(GWindow gw, void *ud);
-extern void *GDrawGetUserData(GWindow gw);
-extern GDisplay *GDrawGetDisplayOfWindow(GWindow);
-extern void GDrawTranslateCoordinates(GWindow from,GWindow to, GPoint *pt);
-extern int32 GDrawEventInWindow(GWindow inme,GEvent *event);
-extern void GDrawBeep(GDisplay *gdisp);
-extern void GDrawFlush(GDisplay *gdisp);
+VISIBLE extern void GDrawDestroyWindow(GWindow w);
+VISIBLE extern void GDrawDestroyCursor(GDisplay *gdisp, GCursor ct);
+VISIBLE extern int  GDrawNativeWindowExists(GDisplay *gdisp, void *native);
+VISIBLE extern void GDrawSetZoom(GWindow w, GRect *zoomsize, enum gzoom_flags);
+VISIBLE extern void GDrawSetWindowBorder(GWindow w, int width, Color color);
+VISIBLE extern void GDrawSetWindowBackground(GWindow w, Color color);
+VISIBLE extern int  GDrawSetDither(GDisplay *gdisp, int dither);
+VISIBLE extern void GDrawReparentWindow(GWindow child,GWindow newparent, int x,int y);
+VISIBLE extern void GDrawSetVisible(GWindow w, int visible);
+VISIBLE extern int  GDrawIsVisible(GWindow w);
+VISIBLE extern void GDrawTrueMove(GWindow w, int32 x, int32 y);
+VISIBLE extern void GDrawMove(GWindow w, int32 x, int32 y);
+VISIBLE extern void GDrawResize(GWindow w, int32 width, int32 height);
+VISIBLE extern void GDrawMoveResize(GWindow w, int32 x, int32 y, int32 width, int32 height);
+VISIBLE extern GWindow GDrawGetRoot(GDisplay *);
+VISIBLE extern Color GDrawGetDefaultBackground(GDisplay *);
+VISIBLE extern Color GDrawGetDefaultForeground(GDisplay *);
+VISIBLE extern GRect *GDrawGetSize(GWindow w, GRect *ret);
+VISIBLE extern GDrawEH GDrawGetEH(GWindow w);
+VISIBLE extern void GDrawSetEH(GWindow w,GDrawEH e_h);
+VISIBLE extern void GDrawGetPointerPosition(GWindow w, GEvent *mouse);
+VISIBLE extern GWindow GDrawGetPointerWindow(GWindow w);
+VISIBLE extern void GDrawRaise(GWindow w);
+VISIBLE extern void GDrawRaiseAbove(GWindow w,GWindow below);
+VISIBLE extern int  GDrawIsAbove(GWindow w,GWindow other);
+VISIBLE extern void GDrawLower(GWindow w);
+VISIBLE extern void GDrawSetWindowTitles(GWindow w, const unichar_t *title, const unichar_t *icontit);
+VISIBLE extern void GDrawSetWindowTitles8(GWindow w, const char *title, const char *icontit);
+VISIBLE extern unichar_t *GDrawGetWindowTitle(GWindow w);
+VISIBLE extern char *GDrawGetWindowTitle8(GWindow w);
+VISIBLE extern void GDrawSetTransientFor(GWindow transient,GWindow owner);
+VISIBLE extern void GDrawSetCursor(GWindow w, GCursor ct);
+VISIBLE extern GCursor GDrawGetCursor(GWindow w);
+VISIBLE extern GWindow GDrawGetRedirectWindow(GDisplay *gd);
+VISIBLE extern GWindow GDrawGetParentWindow(GWindow gw);
+VISIBLE extern int GDrawWindowIsAncestor(GWindow ancester, GWindow descendent);
+VISIBLE extern void GDrawSetUserData(GWindow gw, void *ud);
+VISIBLE extern void *GDrawGetUserData(GWindow gw);
+VISIBLE extern GDisplay *GDrawGetDisplayOfWindow(GWindow);
+VISIBLE extern void GDrawTranslateCoordinates(GWindow from,GWindow to, GPoint *pt);
+VISIBLE extern int32 GDrawEventInWindow(GWindow inme,GEvent *event);
+VISIBLE extern void GDrawBeep(GDisplay *gdisp);
+VISIBLE extern void GDrawFlush(GDisplay *gdisp);
 
-extern void GDrawGetClip(GWindow w, GRect *ret);
-extern void GDrawSetClip(GWindow w, GRect *rct);
-extern void GDrawPushClip(GWindow w, GRect *rct, GRect *old);
-extern void GDrawPopClip(GWindow w, GRect *old);
-extern GGC *GDrawGetWindowGGC(GWindow w);
-extern void GDrawSetXORBase(GWindow w,Color col);
-extern void GDrawSetXORMode(GWindow w);
-extern void GDrawSetCopyMode(GWindow w);
-extern void GDrawSetCopyThroughSubWindows(GWindow w,int16 through);
-extern void GDrawSetDashedLine(GWindow w,int16 dash_len, int16 skip_len, int16 off);
-extern void GDrawSetStippled(GWindow w,int16 ts, int32 yoff,int32 xoff);
-extern void GDrawSetLineWidth(GWindow w,int16 width);
-extern void GDrawSetForeground(GWindow w,Color col);
-extern void GDrawSetBackground(GWindow w,Color col);
+VISIBLE extern void GDrawGetClip(GWindow w, GRect *ret);
+VISIBLE extern void GDrawSetClip(GWindow w, GRect *rct);
+VISIBLE extern void GDrawPushClip(GWindow w, GRect *rct, GRect *old);
+VISIBLE extern void GDrawPopClip(GWindow w, GRect *old);
+VISIBLE extern GGC *GDrawGetWindowGGC(GWindow w);
+VISIBLE extern void GDrawSetXORBase(GWindow w,Color col);
+VISIBLE extern void GDrawSetXORMode(GWindow w);
+VISIBLE extern void GDrawSetCopyMode(GWindow w);
+VISIBLE extern void GDrawSetCopyThroughSubWindows(GWindow w,int16 through);
+VISIBLE extern void GDrawSetDashedLine(GWindow w,int16 dash_len, int16 skip_len, int16 off);
+VISIBLE extern void GDrawSetStippled(GWindow w,int16 ts, int32 yoff,int32 xoff);
+VISIBLE extern void GDrawSetLineWidth(GWindow w,int16 width);
+VISIBLE extern void GDrawSetForeground(GWindow w,Color col);
+VISIBLE extern void GDrawSetBackground(GWindow w,Color col);
 
-extern GFont *GDrawSetFont(GWindow gw, GFont *fi);
-extern GFont *GDrawInstanciateFont(GWindow gw, FontRequest *rq);
-extern GFont *GDrawNewFont(GWindow gw, char *family_name, int point_size, int weight, enum font_style style);
-extern FontRequest *GDrawDecomposeFont(GFont *fi, FontRequest *rq);
-extern void GDrawGetFontMetrics(GWindow gw,GFont *fi,int *as, int *ds, int *ld);
+VISIBLE extern GFont *GDrawSetFont(GWindow gw, GFont *fi);
+VISIBLE extern GFont *GDrawInstanciateFont(GWindow gw, FontRequest *rq);
+VISIBLE extern GFont *GDrawNewFont(GWindow gw, char *family_name, int point_size, int weight, enum font_style style);
+VISIBLE extern FontRequest *GDrawDecomposeFont(GFont *fi, FontRequest *rq);
+VISIBLE extern void GDrawGetFontMetrics(GWindow gw,GFont *fi,int *as, int *ds, int *ld);
 
-extern int32 GDrawGetTextBounds(GWindow gw,const unichar_t *text, int32 cnt, GTextBounds *size);
-extern int32 GDrawGetTextWidth(GWindow gw, const unichar_t *text, int32 cnt);
-extern int32 GDrawDrawText(GWindow gw, int32 x, int32 y, const unichar_t *txt, int32 cnt, Color col);
+VISIBLE extern int32 GDrawGetTextBounds(GWindow gw,const unichar_t *text, int32 cnt, GTextBounds *size);
+VISIBLE extern int32 GDrawGetTextWidth(GWindow gw, const unichar_t *text, int32 cnt);
+VISIBLE extern int32 GDrawDrawText(GWindow gw, int32 x, int32 y, const unichar_t *txt, int32 cnt, Color col);
+
 /* UTF8 routines */
-extern int32 GDrawGetText8Bounds(GWindow gw, const char *text, int32 cnt, GTextBounds *size);
-extern int32 GDrawGetText8Width(GWindow gw, const char *text, int32 cnt);
-extern int32 GDrawDrawText8(GWindow gw, int32 x, int32 y, const char *txt, int32 cnt, Color col);
+VISIBLE extern int32 GDrawGetText8Bounds(GWindow gw, const char *text, int32 cnt, GTextBounds *size);
+VISIBLE extern int32 GDrawGetText8Width(GWindow gw, const char *text, int32 cnt);
+VISIBLE extern int32 GDrawDrawText8(GWindow gw, int32 x, int32 y, const char *txt, int32 cnt, Color col);
 
-extern GIC *GDrawCreateInputContext(GWindow w,enum gic_style def_style);
-extern void GDrawSetGIC(GWindow w,GIC *gic,int x, int y);
+VISIBLE extern GIC *GDrawCreateInputContext(GWindow w,enum gic_style def_style);
+VISIBLE extern void GDrawSetGIC(GWindow w,GIC *gic,int x, int y);
 
-extern void GDrawClear(GWindow w, GRect *rect);
-extern void GDrawDrawLine(GWindow w, int32 x,int32 y, int32 xend,int32 yend, Color col);
-extern void GDrawDrawRect(GWindow w, GRect *rect, Color col);
-extern void GDrawFillRect(GWindow w, GRect *rect, Color col);
-extern void GDrawFillRoundRect(GWindow w, GRect *rect, int radius, Color col);
-extern void GDrawDrawElipse(GWindow w, GRect *rect, Color col);
-extern void GDrawFillElipse(GWindow w, GRect *rect, Color col);
-extern void GDrawDrawArc(GWindow w, GRect *rect, int32 sangle, int32 tangle, Color col);
-extern void GDrawDrawPoly(GWindow w, GPoint *pts, int16 cnt, Color col);
-extern void GDrawFillPoly(GWindow w, GPoint *pts, int16 cnt, Color col);
-extern void GDrawScroll(GWindow w, GRect *rect, int32 hor, int32 vert);
-extern void GDrawDrawImage(GWindow w, GImage *img, GRect *src, int32 x, int32 y);
-extern void GDrawDrawGlyph(GWindow w, GImage *img, GRect *src, int32 x, int32 y);
-extern void GDrawDrawScaledImage(GWindow w, GImage *img, int32 x, int32 y);
-extern void GDrawDrawImageMagnified(GWindow w, GImage *img, GRect *src, int32 x, int32 y,
+VISIBLE extern void GDrawClear(GWindow w, GRect *rect);
+VISIBLE extern void GDrawDrawLine(GWindow w, int32 x,int32 y, int32 xend,int32 yend, Color col);
+VISIBLE extern void GDrawDrawRect(GWindow w, GRect *rect, Color col);
+VISIBLE extern void GDrawFillRect(GWindow w, GRect *rect, Color col);
+VISIBLE extern void GDrawFillRoundRect(GWindow w, GRect *rect, int radius, Color col);
+VISIBLE extern void GDrawDrawElipse(GWindow w, GRect *rect, Color col);
+VISIBLE extern void GDrawFillElipse(GWindow w, GRect *rect, Color col);
+VISIBLE extern void GDrawDrawArc(GWindow w, GRect *rect, int32 sangle, int32 tangle, Color col);
+VISIBLE extern void GDrawDrawPoly(GWindow w, GPoint *pts, int16 cnt, Color col);
+VISIBLE extern void GDrawFillPoly(GWindow w, GPoint *pts, int16 cnt, Color col);
+VISIBLE extern void GDrawScroll(GWindow w, GRect *rect, int32 hor, int32 vert);
+VISIBLE extern void GDrawDrawImage(GWindow w, GImage *img, GRect *src, int32 x, int32 y);
+VISIBLE extern void GDrawDrawGlyph(GWindow w, GImage *img, GRect *src, int32 x, int32 y);
+VISIBLE extern void GDrawDrawScaledImage(GWindow w, GImage *img, int32 x, int32 y);
+VISIBLE extern void GDrawDrawImageMagnified(GWindow w, GImage *img, GRect *src, int32 x, int32 y,
 	int32 width, int32 height);
-extern void GDrawDrawPixmap(GWindow w, GWindow pixmap, GRect *src, int32 x, int32 y);
+VISIBLE extern void GDrawDrawPixmap(GWindow w, GWindow pixmap, GRect *src, int32 x, int32 y);
 
-extern void GDrawGrabSelection(GWindow w,enum selnames sel);
-extern void GDrawAddSelectionType(GWindow w,enum selnames sel,char *type,
+VISIBLE extern void GDrawGrabSelection(GWindow w,enum selnames sel);
+VISIBLE extern void GDrawAddSelectionType(GWindow w,enum selnames sel,char *type,
 	void *data,int32 cnt,int32 unitsize,void *(*gendata)(void *,int32 *len),
 	void (*freedata)(void *));
-extern void *GDrawRequestSelection(GWindow w,enum selnames sn, char *typename_, int32 *len);
-extern int GDrawSelectionHasType(GWindow w,enum selnames sn, char *typename_);
-extern void GDrawBindSelection(GDisplay *disp,enum selnames sel, char *atomname);
-extern int GDrawSelectionOwned(GDisplay *disp,enum selnames sel);
-extern void GDrawPropertyToSelectionOwner(GDisplay *disp,enum selnames sel,
+VISIBLE extern void *GDrawRequestSelection(GWindow w,enum selnames sn, char *typename_, int32 *len);
+VISIBLE extern int GDrawSelectionHasType(GWindow w,enum selnames sn, char *typename_);
+VISIBLE extern void GDrawBindSelection(GDisplay *disp,enum selnames sel, char *atomname);
+VISIBLE extern int GDrawSelectionOwned(GDisplay *disp,enum selnames sel);
+VISIBLE extern void GDrawPropertyToSelectionOwner(GDisplay *disp,enum selnames sel,
 	char *property, char *type, int format, int mode,
 	uint8 *data, int nelements);
 
-extern void GDrawPointerUngrab(GDisplay *disp);
-extern void GDrawPointerGrab(GWindow w);
-extern int GDrawEnableExposeRequests(GWindow w,int enabled);
-extern void GDrawRequestExpose(GWindow w, GRect *rect, int doclear);
-extern void GDrawSync(GDisplay *gdisp);
-extern void GDrawForceUpdate(GWindow w);
-extern void GDrawProcessOneEvent(GDisplay *disp);
-extern void GDrawProcessPendingEvents(GDisplay *disp);
-extern void GDrawProcessWindowEvents(GWindow w);
-extern void GDrawSkipMouseMoveEvents(GWindow w,GEvent *last);
-extern void GDrawEventLoop(GDisplay *disp);
-extern void GDrawPostEvent(GEvent *e);
-extern void GDrawPostDragEvent(GWindow gw,GEvent *e,enum event_type);
+VISIBLE extern void GDrawPointerUngrab(GDisplay *disp);
+VISIBLE extern void GDrawPointerGrab(GWindow w);
+VISIBLE extern int GDrawEnableExposeRequests(GWindow w,int enabled);
+VISIBLE extern void GDrawRequestExpose(GWindow w, GRect *rect, int doclear);
+VISIBLE extern void GDrawSync(GDisplay *gdisp);
+VISIBLE extern void GDrawForceUpdate(GWindow w);
+VISIBLE extern void GDrawProcessOneEvent(GDisplay *disp);
+VISIBLE extern void GDrawProcessPendingEvents(GDisplay *disp);
+VISIBLE extern void GDrawProcessWindowEvents(GWindow w);
+VISIBLE extern void GDrawSkipMouseMoveEvents(GWindow w,GEvent *last);
+VISIBLE extern void GDrawEventLoop(GDisplay *disp);
+VISIBLE extern void GDrawPostEvent(GEvent *e);
+VISIBLE extern void GDrawPostDragEvent(GWindow gw,GEvent *e,enum event_type);
 
-extern GTimer *GDrawRequestTimer(GWindow w,int32 time_from_now,int32 frequency,
+VISIBLE extern GTimer *GDrawRequestTimer(GWindow w,int32 time_from_now,int32 frequency,
 	void *userdata);
-extern void GDrawCancelTimer(GTimer *timer);
+VISIBLE extern void GDrawCancelTimer(GTimer *timer);
 
-extern void GDrawSyncThread(GDisplay *gd, void (*func)(void *), void *data);
+VISIBLE extern void GDrawSyncThread(GDisplay *gd, void (*func)(void *), void *data);
 
-extern void GDrawSetBuildCharHooks(void (*hook)(GDisplay *), void (*inshook)(GDisplay *,unichar_t));
+VISIBLE extern void GDrawSetBuildCharHooks(void (*hook)(GDisplay *), void (*inshook)(GDisplay *,unichar_t));
 
-extern int GDrawRequestDeviceEvents(GWindow w,int devcnt,struct gdeveventmask *de);
+VISIBLE extern int GDrawRequestDeviceEvents(GWindow w,int devcnt,struct gdeveventmask *de);
 
 extern void GDrawQueueDrawing(GWindow w,void (*)(GWindow,void *),void *);
-extern void GDrawPathStroke(GWindow w,Color col);
-extern void GDrawPathFill(GWindow w,Color col);
+VISIBLE extern void GDrawPathStroke(GWindow w,Color col);
+VISIBLE extern void GDrawPathFill(GWindow w,Color col);
 extern void GDrawPathFillAndStroke(GWindow w,Color fillcol, Color strokecol);
 
-extern void GDrawLayoutInit(GWindow w, char *text, int cnt, GFont *fi);
-extern void GDrawLayoutDraw(GWindow w, int32 x, int32 y, Color fg);
-extern void GDrawLayoutIndexToPos(GWindow w, int index, GRect *pos);
-extern int  GDrawLayoutXYToIndex(GWindow w, int x, int y);
-extern void GDrawLayoutExtents(GWindow w, GRect *size);
+VISIBLE extern void GDrawLayoutInit(GWindow w, char *text, int cnt, GFont *fi);
+VISIBLE extern void GDrawLayoutDraw(GWindow w, int32 x, int32 y, Color fg);
+VISIBLE extern void GDrawLayoutIndexToPos(GWindow w, int index, GRect *pos);
+VISIBLE extern int  GDrawLayoutXYToIndex(GWindow w, int x, int y);
+VISIBLE extern void GDrawLayoutExtents(GWindow w, GRect *size);
 extern void GDrawLayoutSetWidth(GWindow w, int width);
 extern int  GDrawLayoutLineCount(GWindow w);
 extern int  GDrawLayoutLineStart(GWindow w,int line);
-extern cairo_t * GDrawGetCairo(GWindow w);
+VISIBLE extern cairo_t *GDrawGetCairo(GWindow w);
 
 extern void GDrawFatalError(const char *fmt,...);
-extern void GDrawIError(const char *fmt,...);
+VISIBLE extern void GDrawIError(const char *fmt,...);
 extern void GDrawError(const char *fmt,...);
-extern int GDrawKeyState(int keysym);
+VISIBLE extern int GDrawKeyState(int keysym);
 
 extern int GImageGetScaledWidth(GWindow gw, GImage *img);
 extern int GImageGetScaledHeight(GWindow gw, GImage *img);

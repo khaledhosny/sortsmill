@@ -499,7 +499,7 @@ extern int _GGadget_Skip;		/* in points, def hor space between gadgets */
 extern int _GGadget_TextImageSkip;	/* in points, def hor space text and image */
 extern GBox _GListMark_Box, _GGroup_LineBox;
 extern GResImage *_GListMark_Image;
-extern FontInstance *_ggadget_default_font;
+VISIBLE extern FontInstance *_ggadget_default_font;
 
 void _GWidget_AddGGadget(GWindow gw,struct ggadget *g);
 void _GWidget_RemoveGadget(struct ggadget *g);
@@ -507,31 +507,31 @@ void _GWidget_SetMenuBar(GGadget *g);
 void _GWidget_SetDefaultButton(GGadget *g);
 void _GWidget_MakeDefaultButton(GGadget *g);
 void _GWidget_SetCancelButton(GGadget *g);
-void _GWidget_SetGrabGadget(GGadget *g);
-void _GWidget_ClearGrabGadget(GGadget *g);
+VISIBLE void _GWidget_SetGrabGadget(GGadget *g);
+VISIBLE void _GWidget_ClearGrabGadget(GGadget *g);
 void _GWidget_SetPopupOwner(GGadget *g);
 void _GWidget_ClearPopupOwner(GGadget *g);
 
-extern void _GGadgetCopyDefaultBox(GBox *box);
-extern FontInstance *_GGadgetInitDefaultBox(char *class,GBox *box,FontInstance *deffont);
+VISIBLE extern void _GGadgetCopyDefaultBox(GBox *box);
+VISIBLE extern FontInstance *_GGadgetInitDefaultBox(char *class,GBox *box,FontInstance *deffont);
 extern void _ggadget_underlineMnemonic(GWindow gw,int32 x,int32 y,unichar_t *label,
 	unichar_t mneumonic, Color fg,int ymax);
-extern void _ggadgetFigureSize(GWindow gw, GBox *design, GRect *r, int isdef);
+VISIBLE extern void _ggadgetFigureSize(GWindow gw, GBox *design, GRect *r, int isdef);
 extern void _ggadgetSetRects(GGadget *g, GRect *outer, GRect *inner, int xjust, int yjust );
-extern void _GGadgetCloseGroup(GGadget *g);
-extern void _ggadget_redraw(GGadget *g);
+VISIBLE extern void _GGadgetCloseGroup(GGadget *g);
+VISIBLE extern void _ggadget_redraw(GGadget *g);
 extern int _ggadget_noop(GGadget *g, GEvent *event);
-extern void _ggadget_move(GGadget *g, int32 x, int32 y );
-extern void _ggadget_resize(GGadget *g, int32 width, int32 height );
-extern void _ggadget_setvisible(GGadget *g,int visible);
-extern void _ggadget_setenabled(GGadget *g,int enabled);
-extern GRect *_ggadget_getsize(GGadget *g,GRect *rct);
-extern GRect *_ggadget_getinnersize(GGadget *g,GRect *rct);
+VISIBLE extern void _ggadget_move(GGadget *g, int32 x, int32 y );
+VISIBLE extern void _ggadget_resize(GGadget *g, int32 width, int32 height );
+VISIBLE extern void _ggadget_setvisible(GGadget *g,int visible);
+VISIBLE extern void _ggadget_setenabled(GGadget *g,int enabled);
+VISIBLE extern GRect *_ggadget_getsize(GGadget *g,GRect *rct);
+VISIBLE extern GRect *_ggadget_getinnersize(GGadget *g,GRect *rct);
 extern void _ggadget_getDesiredSize(GGadget *g, GRect *outer, GRect *inner);
 extern void _ggadget_setDesiredSize(GGadget *g,GRect *outer, GRect *inner);
 void _GGroup_Init(void);
 
-extern unichar_t *_GGadgetFileToUString(char *filename,int max);
+VISIBLE extern unichar_t *_GGadgetFileToUString(char *filename,int max);
 
 extern int GBoxDrawBorder(GWindow gw,GRect *pos,GBox *design,
 	enum gadget_state state,int is_default);
@@ -545,7 +545,7 @@ extern int GBoxBorderWidth(GWindow gw, GBox *box);
 extern int GBoxExtraSpace(GGadget *g);
 extern int GBoxDrawnWidth(GWindow gw, GBox *box);
 
-extern int GGadgetInnerWithin(GGadget *g, int x, int y);
+VISIBLE extern int GGadgetInnerWithin(GGadget *g, int x, int y);
 
 extern int GTextInfoGetWidth(GWindow base,GTextInfo *ti,FontInstance *font);
 extern int GTextInfoGetMaxWidth(GWindow base,GTextInfo **ti,FontInstance *font);
@@ -562,9 +562,9 @@ extern int GTextInfoCompare(GTextInfo *ti1, GTextInfo *ti2);
 extern int GMenuItemArrayMask(GMenuItem *mi);
 extern int GMenuItemArrayAnyUnmasked(GMenuItem *mi);
 
-extern GGadget *_GGadget_Create(GGadget *g, struct gwindow *base, GGadgetData *gd,void *data, GBox *def);
-extern void _GGadget_FinalPosition(GGadget *g, struct gwindow *base, GGadgetData *gd);
-extern void _ggadget_destroy(GGadget *g);
+VISIBLE extern GGadget *_GGadget_Create(GGadget *g, struct gwindow *base, GGadgetData *gd,void *data, GBox *def);
+VISIBLE extern void _GGadget_FinalPosition(GGadget *g, struct gwindow *base, GGadgetData *gd);
+VISIBLE extern void _ggadget_destroy(GGadget *g);
 
 extern GWindow GListPopupCreate(GGadget *owner,void (*inform)(GGadget *,int), GTextInfo **ti);
 

@@ -38,7 +38,7 @@
 #include <xunistring.h>
 #include <unistr.h>
 
-GBox _GGadget_gtextfield_box = GBOX_EMPTY; /* Don't initialize here */
+VISIBLE GBox _GGadget_gtextfield_box = GBOX_EMPTY; /* Don't initialize here */
 static GBox glistfield_box = GBOX_EMPTY; /* Don't initialize here */
 static GBox glistfieldmenu_box = GBOX_EMPTY; /* Don't initialize here */
 static GBox gnumericfield_box = GBOX_EMPTY; /* Don't initialize here */

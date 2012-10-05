@@ -35,24 +35,28 @@
 
 #include <config.h>
 
+// pthread.h should be included _before_ gc.h, if included at all, so
+// let’s play it a little safer and do so here.
+#include <pthread.h>
+#include <gc.h>
+
 #include <stdlib.h>
 #include <stdint.h>
-#include <gc.h>
 #include <xalloc.h>
 #include <xdie_on_null.h>
 
-inline void *x_gc_malloc (size_t sz);
-inline void *x_gc_malloc_atomic (size_t sz);
-inline void *x_gc_malloc_uncollectable (size_t sz);
-inline void *x_gc_realloc (void *old_pointer, size_t sz);
-inline void *x_gc_malloc_ignore_off_page (size_t sz);
-inline void *x_gc_malloc_atomic_ignore_off_page (size_t sz);
-inline void *x_gc_malloc_stubborn (size_t sz);
-inline char *x_gc_strdup (const char *s);
-inline char *x_gc_grabstr (char *s);
-uint8_t *x_gc_u8_grabstr (uint8_t *s);
-uint16_t *x_gc_u16_grabstr (uint16_t *s);
-uint32_t *x_gc_u32_grabstr (uint32_t *s);
+VISIBLE inline void *x_gc_malloc (size_t sz);
+VISIBLE inline void *x_gc_malloc_atomic (size_t sz);
+VISIBLE inline void *x_gc_malloc_uncollectable (size_t sz);
+VISIBLE inline void *x_gc_realloc (void *old_pointer, size_t sz);
+VISIBLE inline void *x_gc_malloc_ignore_off_page (size_t sz);
+VISIBLE inline void *x_gc_malloc_atomic_ignore_off_page (size_t sz);
+VISIBLE inline void *x_gc_malloc_stubborn (size_t sz);
+VISIBLE inline char *x_gc_strdup (const char *s);
+VISIBLE inline char *x_gc_grabstr (char *s);
+VISIBLE uint8_t *x_gc_u8_grabstr (uint8_t *s);
+VISIBLE uint16_t *x_gc_u16_grabstr (uint16_t *s);
+VISIBLE uint32_t *x_gc_u32_grabstr (uint32_t *s);
 
 inline void *
 x_gc_malloc (size_t sz)

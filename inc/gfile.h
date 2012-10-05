@@ -35,33 +35,35 @@
 #include <stdlib.h>
 #include <xunistring.h>
 
-extern char *GFileGetUserConfigDir (void);
-extern char *GFileGetUserCacheDir (void);
-extern char *GFileGetUserDataDir (void);
-extern char *GFileGetHomeDir (void);
-extern char *GFileBuildName (char *dir, char *file);
-extern char *GFileBaseName (const char *file);
-extern char *GFileAppendFile (const char *dir, const char *name, bool isdir);
-extern bool GFileIsAbsolute (const char *file);
-extern bool GFileIsDir (const char *file);
-extern bool GFileExists (const char *file);
-extern bool GFileReadable (char *file);
-extern int GFileMkDir (char *name);
-extern int GFileUnlink (char *name);
+VISIBLE extern char *GFileGetUserConfigDir (void);
+VISIBLE extern char *GFileGetUserCacheDir (void);
+VISIBLE extern char *GFileGetUserDataDir (void);
+VISIBLE extern char *GFileGetHomeDir (void);
+VISIBLE extern char *GFileBuildName (char *dir, char *file);
+VISIBLE extern char *GFileBaseName (const char *file);
+VISIBLE extern char *GFileAppendFile (const char *dir, const char *name,
+                                      bool isdir);
+VISIBLE extern bool GFileIsAbsolute (const char *file);
+VISIBLE extern bool GFileIsDir (const char *file);
+VISIBLE extern bool GFileExists (const char *file);
+VISIBLE extern bool GFileReadable (char *file);
+VISIBLE extern int GFileMkDir (char *name);
+VISIBLE extern int GFileUnlink (char *name);
 
-inline uint8_t *u8_GFileGetUserConfigDir (void);
-inline uint8_t *u8_GFileGetUserCacheDir (void);
-inline uint8_t *u8_GFileGetUserDataDir (void);
-inline uint8_t *u8_GFileGetHomeDir (void);
-inline uint8_t *u8_GFileBuildName (uint8_t *dir, uint8_t *file);
-inline uint8_t *u8_GFileBaseName (const uint8_t *file);
-inline uint8_t *u8_GFileAppendFile (const uint8_t *dir, const uint8_t *name,
-                                    bool isdir);
+VISIBLE inline uint8_t *u8_GFileGetUserConfigDir (void);
+VISIBLE inline uint8_t *u8_GFileGetUserCacheDir (void);
+VISIBLE inline uint8_t *u8_GFileGetUserDataDir (void);
+VISIBLE inline uint8_t *u8_GFileGetHomeDir (void);
+VISIBLE inline uint8_t *u8_GFileBuildName (uint8_t *dir, uint8_t *file);
+VISIBLE inline uint8_t *u8_GFileBaseName (const uint8_t *file);
+VISIBLE inline uint8_t *u8_GFileAppendFile (const uint8_t *dir,
+                                            const uint8_t *name, bool isdir);
 
-extern uint32_t *u32_GFileBaseName (const uint32_t *oldname);
-extern uint32_t *u32_GFileNormalize (uint32_t *name);
-extern uint32_t *u32_GFileAppendFile (const uint32_t *dir,
-                                      const uint32_t *name, bool isdir);
+VISIBLE extern uint32_t *u32_GFileBaseName (const uint32_t *oldname);
+VISIBLE extern uint32_t *u32_GFileNormalize (uint32_t *name);
+VISIBLE extern uint32_t *u32_GFileAppendFile (const uint32_t *dir,
+                                              const uint32_t *name,
+                                              bool isdir);
 
 inline uint8_t *
 u8_GFileGetUserConfigDir (void)

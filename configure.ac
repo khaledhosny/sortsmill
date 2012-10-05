@@ -268,6 +268,11 @@ test 4 -le ${ac_cv_sizeof_unsigned_int} || \
 
 AX_PTHREAD
 
+VISIBLE=''
+test x"${HAVE_VISIBILITY}" = x1 && VISIBLE='__attribute__((__visibility__("default")))'
+AC_DEFINE_UNQUOTED([VISIBLE],[${VISIBLE}],
+        [Define to the attribute for a visible symbol in a shared library.])
+
 WARNING_CFLAGS=""
 FONTFORGE_COMPILER_FLAGS([WARNING_CFLAGS],
         [-Wunused -Wreturn-type

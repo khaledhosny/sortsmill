@@ -110,7 +110,7 @@ extern void LayoutInfoRefigureLines(LayoutInfo *li, int start_of_change,
 extern int LayoutInfoReplace(LayoutInfo *li, const unichar_t *str,
 	int sel_start, int sel_end,int width);
 extern void LayoutInfo_Destroy(LayoutInfo *li);
-extern void SFMapFill(struct sfmaps *sfmaps,SplineFont *sf);
+VISIBLE extern void SFMapFill(struct sfmaps *sfmaps,SplineFont *sf);
 extern struct sfmaps *SFMapOfSF(LayoutInfo *li,SplineFont *sf);
 extern FontData *LI_FindFontData(LayoutInfo *li, SplineFont *sf,
 	int layer, enum sftf_fonttype fonttype, int size, int antialias);

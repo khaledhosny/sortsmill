@@ -129,9 +129,9 @@ typedef struct gpoint {
 #define GPOINT_EMPTY { 0, 0 }
 
 
-extern GImage *GImageCreate(enum image_type type, int32 width, int32 height);
+VISIBLE extern GImage *GImageCreate(enum image_type type, int32 width, int32 height);
 extern GImage *_GImage_Create(enum image_type type, int32 width, int32 height);
-extern void GImageDestroy(GImage *gi);
+VISIBLE extern void GImageDestroy(GImage *gi);
 extern GImage *GImageCreateAnimation(GImage **images, int n);
 extern GImage *GImageAddImageBefore(GImage *dest, GImage *src, int pos);
 
@@ -141,11 +141,11 @@ extern int GImageInsertToBase(struct _GImage *tobase, GImage *from, GRect *src, 
 	int to_x, int to_y, enum pastetrans_type ptt );
 extern int GImageInsert(GImage *to, GImage *from, GRect *src, RevCMap *rev,
 	int to_x, int to_y, enum pastetrans_type ptt );
-extern Color _GImageGetPixelColor(struct _GImage *base,int x, int y);	/* Obsolete */
+VISIBLE extern Color _GImageGetPixelColor(struct _GImage *base,int x, int y);	/* Obsolete */
 extern Color GImageGetPixelColor(GImage *base,int x, int y);		/* Obsolete */
-extern Color GImageGetPixelRGBA(GImage *base,int x, int y);
-extern int GImageGetWidth(GImage *);
-extern int GImageGetHeight(GImage *);
+VISIBLE extern Color GImageGetPixelRGBA(GImage *base,int x, int y);
+VISIBLE extern int GImageGetWidth(GImage *);
+VISIBLE extern int GImageGetHeight(GImage *);
 extern void *GImageGetUserData(GImage *img);
 extern void GImageSetUserData(GImage *img,void *userdata);
 extern void GImageResize(struct _GImage *tobase, struct _GImage *fbase,
@@ -164,32 +164,32 @@ extern Color GDrawColorDarken(Color col, int by);
 extern Color GDrawColorBrighten(Color col, int by);
 
 extern int GImageWriteGImage(GImage *gi, char *filename);
-extern int GImageWrite_Bmp(GImage *gi, FILE *fp);
-extern int GImageWriteBmp(GImage *gi, char *filename);
-extern GImage *GImageRead_Bmp(FILE *file);
+VISIBLE extern int GImageWrite_Bmp(GImage *gi, FILE *fp);
+VISIBLE extern int GImageWriteBmp(GImage *gi, char *filename);
+VISIBLE extern GImage *GImageRead_Bmp(FILE *file);
 extern GImage *GImageReadBmp(char *filename);
-extern int GImageWriteXbm(GImage *gi, char *filename);
+VISIBLE extern int GImageWriteXbm(GImage *gi, char *filename);
 extern GImage *GImageReadXbm(char *filename);
 extern int GImageWriteXpm(GImage *gi, char *filename);
 extern GImage *GImageReadXpm(char *filename);
 extern int GImageWriteEps(GImage *gi, char *filename);
 extern GImage *GImageReadTiff(char *filename);
 extern GImage *GImageReadJpeg(char *filename);
-extern GImage *GImageRead_Jpeg(FILE *fp);
-extern int GImageWrite_Jpeg(GImage *gi, FILE *outfile, int quality, int progressive);
+VISIBLE extern GImage *GImageRead_Jpeg(FILE *fp);
+VISIBLE extern int GImageWrite_Jpeg(GImage *gi, FILE *outfile, int quality, int progressive);
 extern int GImageWriteJpeg(GImage *gi, char *filename, int quality, int progressive);
-extern GImage *GImageRead_Png(FILE *fp);
+VISIBLE extern GImage *GImageRead_Png(FILE *fp);
 extern GImage *GImageReadPng(char *filename);
-extern int GImageWrite_Png(GImage *gi, FILE *fp, int progressive);
-extern int GImageWritePng(GImage *gi, char *filename, int progressive);
+VISIBLE extern int GImageWrite_Png(GImage *gi, FILE *fp, int progressive);
+VISIBLE extern int GImageWritePng(GImage *gi, char *filename, int progressive);
 extern GImage *GImageReadGif(char *filename);
 extern int GImageWriteGif(GImage *gi,char *filename,int progressive);
 extern GImage *GImageReadRas(char *filename);		/* Sun Raster */
 extern GImage *GImageReadRgb(char *filename);		/* SGI */
-extern GImage *GImageRead(char *filename);
+VISIBLE extern GImage *GImageRead(char *filename);
 
-extern void GImageDrawRect(GImage *img,GRect *r,Color col);
-extern void GImageDrawImage(GImage *dest,GImage *src,GRect *junk,int x, int y);
+VISIBLE extern void GImageDrawRect(GImage *img,GRect *r,Color col);
+VISIBLE extern void GImageDrawImage(GImage *dest,GImage *src,GRect *junk,int x, int y);
 extern void GImageBlendOver(GImage *dest,GImage *src,GRect *from,int x, int y);
 
 extern void gRGB2HSL(struct hslrgb *col);

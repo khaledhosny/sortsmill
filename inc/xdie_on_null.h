@@ -36,8 +36,8 @@
 #include <errno.h>
 #include <xalloc.h>
 
-inline void *xdie_on_null (void *p);
-inline void *xdie_on_enomem (void *p);
+VISIBLE inline void *xdie_on_null (void *p);
+VISIBLE inline void *xdie_on_enomem (void *p);
 
 inline void *
 xdie_on_null (void *p)

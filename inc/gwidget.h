@@ -27,6 +27,8 @@
 #ifndef _GWIDGET_H
 #define _GWIDGET_H
 
+#include <config.h>
+
 #include <stdarg.h>
 #include "gdraw.h"
 #include "gprogress.h"
@@ -38,96 +40,123 @@ struct gtimer;
 
 typedef GWindow GWidget;
 
-typedef struct gwidgetcreatedata {
-    GRect r;
-    struct ggadgetcreatedata *gcd;
-    struct gwidgetcreatedata *wcd;
-    unichar_t *title;
-    unsigned int trap_input: 1;
-    unsigned int tab_navigation: 1;
-    unsigned int arrow_navigation: 1;
-    unsigned int do_default: 1;
-    unsigned int do_cancel: 1;
-    Color fore, back;
-    void (*e_h)(GWindow, GEvent *);		/* User's event function for window, our eh will call it */
+typedef struct gwidgetcreatedata
+{
+  GRect r;
+  struct ggadgetcreatedata *gcd;
+  struct gwidgetcreatedata *wcd;
+  unichar_t *title;
+  unsigned int trap_input:1;
+  unsigned int tab_navigation:1;
+  unsigned int arrow_navigation:1;
+  unsigned int do_default:1;
+  unsigned int do_cancel:1;
+  Color fore, back;
+  void (*e_h) (GWindow, GEvent *);      /* User's event function for window, our eh will call it */
 } GWidgetData;
 
-typedef struct gwidgetcreatordata {
-    GWidget *(*creator)(GWidget *parent, GWidgetData *, void *data);
-    GWidgetData wd;
-    void *data;
+typedef struct gwidgetcreatordata
+{
+  GWidget *(*creator) (GWidget * parent, GWidgetData *, void *data);
+  GWidgetData wd;
+  void *data;
 } GWidgetCreateData;
 
-extern GWindow GWidgetCreateTopWindow(GDisplay *gdisp, GRect *pos, int (*eh)(GWindow,GEvent *), void *user_data, GWindowAttrs *wattrs);
-extern GWindow GWidgetCreateSubWindow(GWindow w, GRect *pos, int (*eh)(GWindow,GEvent *), void *user_data, GWindowAttrs *wattrs);
+VISIBLE extern GWindow GWidgetCreateTopWindow (GDisplay * gdisp, GRect * pos,
+                                               int (*eh) (GWindow, GEvent *),
+                                               void *user_data,
+                                               GWindowAttrs * wattrs);
+VISIBLE extern GWindow GWidgetCreateSubWindow (GWindow w, GRect * pos,
+                                               int (*eh) (GWindow, GEvent *),
+                                               void *user_data,
+                                               GWindowAttrs * wattrs);
 
-GWindow GWindowGetCurrentFocusTopWindow(void);
-GWindow GWidgetGetCurrentFocusWindow(void);
-GWindow GWidgetGetPreviousFocusTopWindow(void);
-struct ggadget *GWindowGetCurrentFocusGadget(void);
-struct ggadget *GWindowGetFocusGadgetOfWindow(GWindow gw);
-void GWindowClearFocusGadgetOfWindow(GWindow gw);
-void GWidgetIndicateFocusGadget(struct ggadget *g);
-void GWidgetReparentWindow(GWindow child,GWindow newparent, int x,int y);
+GWindow GWindowGetCurrentFocusTopWindow (void);
+GWindow GWidgetGetCurrentFocusWindow (void);
+GWindow GWidgetGetPreviousFocusTopWindow (void);
+struct ggadget *GWindowGetCurrentFocusGadget (void);
+struct ggadget *GWindowGetFocusGadgetOfWindow (GWindow gw);
+void GWindowClearFocusGadgetOfWindow (GWindow gw);
+VISIBLE void GWidgetIndicateFocusGadget (struct ggadget *g);
+VISIBLE void GWidgetReparentWindow (GWindow child, GWindow newparent, int x,
+                                    int y);
 
-struct ggadget *GWidgetGetControl(GWindow gw, int cid);
-struct ggadget *_GWidgetGetGadgets(GWindow gw);
-GWindow GWidgetGetParent(GWindow gw);
-GWindow GWidgetGetTopWidget(GWindow gw);
-extern GDrawEH GWidgetGetEH(GWindow w);
-extern void GWidgetSetEH(GWindow w,GDrawEH e_h);
-extern void GWidgetFlowGadgets(GWindow gw);
-extern void GWidgetToDesiredSize(GWindow gw);
+VISIBLE struct ggadget *GWidgetGetControl (GWindow gw, int cid);
+VISIBLE struct ggadget *_GWidgetGetGadgets (GWindow gw);
+GWindow GWidgetGetParent (GWindow gw);
+GWindow GWidgetGetTopWidget (GWindow gw);
+extern GDrawEH GWidgetGetEH (GWindow w);
+extern void GWidgetSetEH (GWindow w, GDrawEH e_h);
+VISIBLE extern void GWidgetFlowGadgets (GWindow gw);
+VISIBLE extern void GWidgetToDesiredSize (GWindow gw);
 
 /* Built in dialogs */
-char *GWidgetOpenFile8(const char *title, const char *defaultfile,
-	const char *initial_filter, char **mimetypes,GFileChooserFilterType filter);
-char *GWidgetOpenFileWPath8(const char *title, const char *defaultfile,
-	const char *initial_filter, char **mimetypes,GFileChooserFilterType filter,char **path);
-char *GWidgetSaveAsFileWithGadget8(const char *title, const char *defaultfile,
-	const char *initial_filter, char **mimetypes,
-	GFileChooserFilterType filter, GGadgetCreateData *optional_gcd);
-char *GWidgetSaveAsFile8(const char *title, const char *defaultfile,
-	const char *initial_filter, char **mimetypes,GFileChooserFilterType filter );
-int GWidgetAsk8(const char *title, const char **answers,
-	int def, int cancel,const char *question,...);
-int GWidgetAskCentered8(const char *title,
-	const char ** answers, int def, int cancel,const char *question,...);
-char *GWidgetAskString8(const char *title,
-	const char *def,const char *question,...);
-char *GWidgetAskPassword8(const char *title,
-	const char *def,const char *question,...);
-void GWidgetPostNotice8(const char *title,const char *statement,...);
-void _GWidgetPostNotice8(const char *title,const char *statement,va_list ap,int timeout);
-void GWidgetPostNoticeTimeout8(int timeout, const char *title,const char *statement,...);
-int GWidgetPostNoticeActive8(const char *title);
-void GWidgetError8(const char *title,const char *statement,...);
+VISIBLE char *GWidgetOpenFile8 (const char *title, const char *defaultfile,
+                                const char *initial_filter, char **mimetypes,
+                                GFileChooserFilterType filter);
+char *GWidgetOpenFileWPath8 (const char *title, const char *defaultfile,
+                             const char *initial_filter, char **mimetypes,
+                             GFileChooserFilterType filter, char **path);
+VISIBLE char *GWidgetSaveAsFileWithGadget8 (const char *title,
+                                            const char *defaultfile,
+                                            const char *initial_filter,
+                                            char **mimetypes,
+                                            GFileChooserFilterType filter,
+                                            GGadgetCreateData * optional_gcd);
+VISIBLE char *GWidgetSaveAsFile8 (const char *title, const char *defaultfile,
+                                  const char *initial_filter,
+                                  char **mimetypes,
+                                  GFileChooserFilterType filter);
+VISIBLE int GWidgetAsk8 (const char *title, const char **answers, int def,
+                         int cancel, const char *question, ...);
+VISIBLE int GWidgetAskCentered8 (const char *title, const char **answers,
+                                 int def, int cancel, const char *question,
+                                 ...);
+VISIBLE char *GWidgetAskString8 (const char *title, const char *def,
+                                 const char *question, ...);
+VISIBLE char *GWidgetAskPassword8 (const char *title, const char *def,
+                                   const char *question, ...);
+VISIBLE void GWidgetPostNotice8 (const char *title, const char *statement,
+                                 ...);
+VISIBLE void _GWidgetPostNotice8 (const char *title, const char *statement,
+                                  va_list ap, int timeout);
+VISIBLE void GWidgetPostNoticeTimeout8 (int timeout, const char *title,
+                                        const char *statement, ...);
+VISIBLE int GWidgetPostNoticeActive8 (const char *title);
+VISIBLE void GWidgetError8 (const char *title, const char *statement, ...);
 
-int GWidgetChoices8(const char *title, const char **choices,int cnt, int def,
-	const char *question,...);
-int GWidgetChoicesB8(char *title, const char **choices, int cnt, int def,
-	char *buts[2], const char *question,...);
-int GWidgetChoicesBM8(char *title, const char **choices,char *sel,
-	int cnt, char *buts[2], const char *question,...);
+VISIBLE int GWidgetChoices8 (const char *title, const char **choices, int cnt,
+                             int def, const char *question, ...);
+VISIBLE int GWidgetChoicesB8 (char *title, const char **choices, int cnt,
+                              int def, char *buts[2], const char *question,
+                              ...);
+VISIBLE int GWidgetChoicesBM8 (char *title, const char **choices, char *sel,
+                               int cnt, char *buts[2], const char *question,
+                               ...);
 
-extern struct hslrgb GWidgetColor(const char *title,struct hslrgb *defcol,struct hslrgb fontcols[6]);
-extern struct hslrgba GWidgetColorA(const char *title,struct hslrgba *defcol,struct hslrgba fontcols[6]);
+VISIBLE extern struct hslrgb GWidgetColor (const char *title,
+                                           struct hslrgb *defcol,
+                                           struct hslrgb fontcols[6]);
+extern struct hslrgba GWidgetColorA (const char *title,
+                                     struct hslrgba *defcol,
+                                     struct hslrgba fontcols[6]);
 
-#define gwwv_choose_multiple	GWidgetChoicesBM8
-#define gwwv_choose_with_buttons	GWidgetChoicesB8
-#define gwwv_choose		GWidgetChoices8
-#define gwwv_ask_string		GWidgetAskString8
-#define gwwv_ask_password	GWidgetAskPassword8
-#define gwwv_ask		GWidgetAsk8
-#define gwwv_ask_centered	GWidgetAskCentered8
-#define gwwv_post_error		GWidgetError8
-#define gwwv_post_notice	GWidgetPostNotice8
-#define gwwv_post_notice_timeout	GWidgetPostNoticeTimeout8
-#define gwwv_open_filename(tit,def,filter,filtfunc)	GWidgetOpenFile8(tit,def,filter,NULL,filtfunc)
-#define gwwv_open_filename_with_path(tit,def,filter,filtfunc,path)	GWidgetOpenFileWPath8(tit,def,filter,NULL,filtfunc,path)
-#define gwwv_save_filename(tit,def,filter)		GWidgetSaveAsFile8(tit,def,filter,NULL,NULL)
-#define gwwv_save_filename_with_gadget(tit,def,filter,gcd)		GWidgetSaveAsFileWithGadget8(tit,def,filter,NULL,NULL,gcd)
+#define gwwv_choose_multiple     GWidgetChoicesBM8
+#define gwwv_choose_with_buttons GWidgetChoicesB8
+#define gwwv_choose              GWidgetChoices8
+#define gwwv_ask_string          GWidgetAskString8
+#define gwwv_ask_password        GWidgetAskPassword8
+#define gwwv_ask                 GWidgetAsk8
+#define gwwv_ask_centered        GWidgetAskCentered8
+#define gwwv_post_error          GWidgetError8
+#define gwwv_post_notice         GWidgetPostNotice8
+#define gwwv_post_notice_timeout GWidgetPostNoticeTimeout8
+#define gwwv_open_filename(tit,def,filter,filtfunc) GWidgetOpenFile8(tit,def,filter,NULL,filtfunc)
+#define gwwv_open_filename_with_path(tit,def,filter,filtfunc,path) GWidgetOpenFileWPath8(tit,def,filter,NULL,filtfunc,path)
+#define gwwv_save_filename(tit,def,filter) GWidgetSaveAsFile8(tit,def,filter,NULL,NULL)
+#define gwwv_save_filename_with_gadget(tit,def,filter,gcd) GWidgetSaveAsFileWithGadget8(tit,def,filter,NULL,NULL,gcd)
 
-extern GIC *GWidgetCreateInputContext(GWindow w,enum gic_style def_style);
-extern GIC *GWidgetGetInputContext(GWindow w);
+extern GIC *GWidgetCreateInputContext (GWindow w, enum gic_style def_style);
+extern GIC *GWidgetGetInputContext (GWindow w);
+
 #endif

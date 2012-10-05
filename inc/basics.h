@@ -29,79 +29,6 @@
 
 #include <config.h>
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <stdint.h>
-#include <math.h>
-#include <limits.h>
-
-// FIXME: Use the standard names in the code; get rid of these
-// typedefs.
-typedef int32_t		int32;
-typedef uint32_t	uint32;
-typedef int16_t		int16;
-typedef uint16_t	uint16;
-typedef int8_t		int8;
-typedef uint8_t		uint8;
-
-// FIXME: Use the standard names in the code; get rid of this
-// typedef, too.
-//
-// An integral type which can hold a pointer.
-typedef intptr_t	intpt;
-
-typedef uint32_t unichar_t;
-
-// A macro to mark unused function parameters with. We often
-// have such parameters, because of extensive use of callbacks.
-#if ! defined(UNUSED)
-#if defined(__GNUC__)
-#define UNUSED(x) UNUSED_ ## x _GL_UNUSED
-#elif defined(__LCLINT__)
-#define UNUSED(x) /*@unused@*/ x
-#else
-#define UNUSED(x) x
-#endif
-#endif // ! UNUSED
-
-static inline int imin(int a, int b)
-{
-    return (a < b) ? a : b;
-}
-
-static inline int imax(int a, int b)
-{
-    return (a < b) ? b : a;
-}
-
-static inline unsigned int umin(unsigned int a, unsigned int b)
-{
-    return (a < b) ? a : b;
-}
-
-static inline unsigned int umax(unsigned int a, unsigned int b)
-{
-    return (a < b) ? b : a;
-}
-
-static inline size_t szmin(size_t a, size_t b)
-{
-    return (a < b) ? a : b;
-}
-
-static inline size_t szmax(size_t a, size_t b)
-{
-    return (a < b) ? b : a;
-}
-
-//-------------------------------------------------------------------------
-//
-// FIXME: Get rid of this when feasible. Move it to an internal-only
-// header.
-
-#ifdef __INTERNAL_TO_FONTFORGE__
-
 #ifndef FF_TEXTDOMAIN
 #error You must define FF_TEXTDOMAIN.
 #endif
@@ -114,44 +41,118 @@ static inline size_t szmax(size_t a, size_t b)
 #error You must define FF_MACSHORTCUTSDOMAIN.
 #endif
 
-#include "xalloc.h"
-#include "xstrndup.h"
+#include <xgc.h>
+#include <xstrndup.h>
+#include <xunistring.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <math.h>
+#include <limits.h>
+
+// FIXME: Use the standard names in the code; get rid of these
+// typedefs.
+typedef int32_t int32;
+typedef uint32_t uint32;
+typedef int16_t int16;
+typedef uint16_t uint16;
+typedef int8_t int8;
+typedef uint8_t uint8;
+
+// FIXME: Use the standard names in the code; get rid of this
+// typedef, too.
+//
+// An integral type which can hold a pointer.
+typedef intptr_t intpt;
+
+typedef uint32_t unichar_t;
+
+// A macro to mark unused function parameters with. We often
+// have such parameters, because of extensive use of callbacks.
+#if ! defined UNUSED
+#if defined __GNUC__
+#define UNUSED(x) UNUSED_ ## x _GL_UNUSED
+#elif defined __LCLINT__
+#define UNUSED(x) /*@unused@*/ x
+#else
+#define UNUSED(x) x
+#endif
+#endif // ! UNUSED
+
+static inline int
+imin (int a, int b)
+{
+  return (a < b) ? a : b;
+}
+
+static inline int
+imax (int a, int b)
+{
+  return (a < b) ? b : a;
+}
+
+static inline unsigned int
+umin (unsigned int a, unsigned int b)
+{
+  return (a < b) ? a : b;
+}
+
+static inline unsigned int
+umax (unsigned int a, unsigned int b)
+{
+  return (a < b) ? b : a;
+}
+
+static inline size_t
+szmin (size_t a, size_t b)
+{
+  return (a < b) ? a : b;
+}
+
+static inline size_t
+szmax (size_t a, size_t b)
+{
+  return (a < b) ? b : a;
+}
 
 // Like xmalloc, but, if the allocation succeeds, xmalloc1 is
 // guaranteed to return a valid, non-null pointer, even if the
 // argument is zero.
-static inline void *xmalloc1(size_t s)
+static inline void *
+xmalloc1 (size_t s)
 {
-    return xmalloc(szmax(1, s));
+  return xmalloc (szmax (1, s));
 }
 
-static inline char *copy(const char *str)
+static inline char *
+copy (const char *str)
 {
-    return (str == NULL) ? NULL : xstrdup(str);
+  return (str == NULL) ? NULL : xstrdup (str);
 }
 
-static inline char *copyn(const char *str, size_t n)
+static inline char *
+copyn (const char *str, size_t n)
 {
-    return (str == NULL) ? NULL : xstrndup(str, n);
+  return (str == NULL) ? NULL : xstrndup (str, n);
 }
 
-static inline const char *ff_textdomain(void)
+static inline const char *
+ff_textdomain (void)
 {
-    return FF_TEXTDOMAIN;
+  return FF_TEXTDOMAIN;
 }
 
-static inline const char *ff_shortcutsdomain(void)
+static inline const char *
+ff_shortcutsdomain (void)
 {
-    return FF_SHORTCUTSDOMAIN;
+  return FF_SHORTCUTSDOMAIN;
 }
 
-static inline const char *ff_macshortcutsdomain(void)
+static inline const char *
+ff_macshortcutsdomain (void)
 {
-    return FF_MACSHORTCUTSDOMAIN;
+  return FF_MACSHORTCUTSDOMAIN;
 }
-
-#endif // __INTERNAL_TO_FONTFORGE__
-
-//-------------------------------------------------------------------------
 
 #endif

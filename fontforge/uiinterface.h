@@ -160,7 +160,7 @@ extern struct ui_interface *ui_interface;
 
 #define PsStrokeFlagsDlg		(ui_interface->stroke_flags)
 
-void FF_SetUiInterface(struct ui_interface *uii);
+VISIBLE void FF_SetUiInterface(struct ui_interface *uii);
 
 /* ************************************************************************** */
 /*                                Preferences                                 */
@@ -184,7 +184,7 @@ extern struct prefs_interface *prefs_interface;
 #define getFontForgeShareDir	(prefs_interface->get_exe_share_dir)
 #define SetDefaults		(prefs_interface->init_prefs)
 
-void FF_SetPrefsInterface(struct prefs_interface *prefsi);
+VISIBLE void FF_SetPrefsInterface(struct prefs_interface *prefsi);
 
 /* ************************************************************************** */
 /*                          Updating glyph windows                            */
@@ -239,7 +239,7 @@ extern struct sc_interface *sc_interface;
 #define SCCloseAllViews			(sc_interface->close_all_windows)
 #define SCMoreLayers			(sc_interface->more_layers)
 
-void FF_SetSCInterface(struct sc_interface *sci);
+VISIBLE void FF_SetSCInterface(struct sc_interface *sci);
 
 /* ************************************************************************** */
 /*                         Updating glyph windows 2                           */
@@ -269,7 +269,7 @@ extern struct cv_interface *cv_interface;
 #define CVGlyphRenameFixup		(cv_interface->glyph_name_change)
 #define CVLayerPaletteCheck		(cv_interface->layer_palette_check)
 
-void FF_SetCVInterface(struct cv_interface *cvi);
+VISIBLE void FF_SetCVInterface(struct cv_interface *cvi);
 
 /* ************************************************************************** */
 /*                         Updating bitmap windows                            */
@@ -294,7 +294,7 @@ extern struct bc_interface *bc_interface;
 #define BCRefreshAll			(bc_interface->refresh_all)
 #define BCDestroyAll			(bc_interface->destroy_all)
 
-void FF_SetBCInterface(struct bc_interface *bci);
+VISIBLE void FF_SetBCInterface(struct bc_interface *bci);
 
 /* ************************************************************************** */
 /*                          Access to metrics views                           */
@@ -330,7 +330,7 @@ extern struct mv_interface *mv_interface;
 #define MVReFeatureAll			(mv_interface->refeature)
 #define MVDestroyAll			(mv_interface->sf_close_metrics)
 
-void FF_SetMVInterface(struct mv_interface *mvi);
+VISIBLE void FF_SetMVInterface(struct mv_interface *mvi);
 
 /* ************************************************************************** */
 /*                             Access to font info                            */
@@ -354,7 +354,7 @@ extern struct fi_interface *fi_interface;
 #define FIOTLookupCopyInto			(fi_interface->copy_into)
 #define FontInfo_Destroy			(fi_interface->destroy)
 
-void FF_SetFIInterface(struct fi_interface *fii);
+VISIBLE void FF_SetFIInterface(struct fi_interface *fii);
 
 /* ************************************************************************** */
 /*                           Updating font windows                            */
@@ -482,7 +482,7 @@ extern struct fv_interface *fv_interface;
 #define FVChangeGID		(fv_interface->select_gid)
 #define SFCloseAllInstrs	(fv_interface->close_all_instrs)
 
-void FF_SetFVInterface(struct fv_interface *fvi);
+VISIBLE void FF_SetFVInterface(struct fv_interface *fvi);
 
 /* ************************************************************************** */
 /*                       Clibboard access (copy/paste)                        */
@@ -509,7 +509,7 @@ extern struct clip_interface *clip_interface;
 #define ClipboardRequest	(clip_interface->request_clip)
 #define ClipboardHasType	(clip_interface->clip_has_type)
 
-void FF_SetClipInterface(struct clip_interface *clipi);
+VISIBLE void FF_SetClipInterface(struct clip_interface *clipi);
 
 extern const char *NOUI_TTFNameIds(int id);
 extern const char *NOUI_MSLangString(int language);

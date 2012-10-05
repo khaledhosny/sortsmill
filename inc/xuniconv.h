@@ -42,18 +42,18 @@
 #include <xdie_on_null.h>
 #include <xgc.h>
 
-inline uint8_t *x_u8_strconv_from_locale (const char *string);
-inline uint16_t *x_u16_strconv_from_locale (const char *string);
-inline uint32_t *x_u32_strconv_from_locale (const char *string);
-inline char *x_u8_strconv_to_locale (const uint8_t *string);
-inline char *x_u16_strconv_to_locale (const uint16_t *string);
-inline char *x_u32_strconv_to_locale (const uint32_t *string);
-inline uint8_t *x_gc_u8_strconv_from_locale (const char *string);
-inline uint16_t *x_gc_u16_strconv_from_locale (const char *string);
-inline uint32_t *x_gc_u32_strconv_from_locale (const char *string);
-inline char *x_gc_u8_strconv_to_locale (const uint8_t *string);
-inline char *x_gc_u16_strconv_to_locale (const uint16_t *string);
-inline char *x_gc_u32_strconv_to_locale (const uint32_t *string);
+VISIBLE inline uint8_t *x_u8_strconv_from_locale (const char *string);
+VISIBLE inline uint16_t *x_u16_strconv_from_locale (const char *string);
+VISIBLE inline uint32_t *x_u32_strconv_from_locale (const char *string);
+VISIBLE inline char *x_u8_strconv_to_locale (const uint8_t *string);
+VISIBLE inline char *x_u16_strconv_to_locale (const uint16_t *string);
+VISIBLE inline char *x_u32_strconv_to_locale (const uint32_t *string);
+VISIBLE inline uint8_t *x_gc_u8_strconv_from_locale (const char *string);
+VISIBLE inline uint16_t *x_gc_u16_strconv_from_locale (const char *string);
+VISIBLE inline uint32_t *x_gc_u32_strconv_from_locale (const char *string);
+VISIBLE inline char *x_gc_u8_strconv_to_locale (const uint8_t *string);
+VISIBLE inline char *x_gc_u16_strconv_to_locale (const uint16_t *string);
+VISIBLE inline char *x_gc_u32_strconv_to_locale (const uint32_t *string);
 
 inline uint8_t *
 x_u8_strconv_from_locale (const char *string)

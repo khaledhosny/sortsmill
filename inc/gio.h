@@ -27,7 +27,9 @@
 #ifndef _GIO_H
 #define _GIO_H
 
-#include "basics.h"
+#include <config.h>
+
+#include <basics.h>
 #include <time.h>
 
 enum giofuncs { gf_dir, gf_statfile, gf_getfile, gf_putfile,
@@ -77,7 +79,7 @@ typedef struct gdirentry {
     struct gdirentry *next;
 } GDirEntry;
 
-extern void GIOdir(GIOControl *gc);
+VISIBLE extern void GIOdir(GIOControl *gc);
 extern void GIOstatFile(GIOControl *gc);
 extern void GIOfileExists(GIOControl *gc);
 extern void GIOgetFile(GIOControl *gc);
@@ -86,24 +88,25 @@ extern void GIOmkDir(GIOControl *gc);
 extern void GIOdelFile(GIOControl *gc);
 extern void GIOdelDir(GIOControl *gc);
 extern void GIOrenameFile(GIOControl *gc);
-extern GDirEntry *GIOgetDirData(GIOControl *gc);
+VISIBLE extern GDirEntry *GIOgetDirData(GIOControl *gc);
 extern int32 GIOread(GIOControl *gc,void *buffer,int32 len);
 extern int32 GIOwrite(GIOControl *gc,void *buffer,int32 len);
 extern void GIOFreeDirEntries(GDirEntry *lst);
-extern void GIOcancel(GIOControl *gc);
-extern void GIOclose(GIOControl *gc);
+VISIBLE extern void GIOcancel(GIOControl *gc);
+VISIBLE extern void GIOclose(GIOControl *gc);
 extern GIOControl *GIOCreate(unichar_t *path,void *userdata,
 	void (*receivedata)(struct giocontrol *),
 	void (*receiveerror)(struct giocontrol *));
 extern void GIOSetDefAuthorizer(int32 (*getauth)(struct giocontrol *));
 extern void GIOSetUserAgent(unichar_t *agent);
 
-extern unichar_t *GIOguessMimeType(const unichar_t *path,int isdir);
+VISIBLE extern unichar_t *GIOguessMimeType(const unichar_t *path,int isdir);
 extern unichar_t *_GioMacMime(const char *path);
 
-extern char *GIO_PasswordCache(char *proto,char *host,char *username,char *password);
-extern char *_GIO_decomposeURL(const unichar_t *url,char **host, int *port, char **username,
-	char **password);
+VISIBLE extern char *GIO_PasswordCache(char *proto,char *host,char *username,char *password);
+VISIBLE extern char *_GIO_decomposeURL(const unichar_t *url,char **host, int *port, char **username,
+				       char **password);
 
-extern void GIO_SetThreadCallback(void (*callback)(void *,void *,void *));
+VISIBLE extern void GIO_SetThreadCallback(void (*callback)(void *,void *,void *));
+
 #endif

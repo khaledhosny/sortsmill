@@ -95,7 +95,7 @@ extern const unsigned int  ____utype[];
 #define combiningclass(ch)	(____utype2[(ch)+1]&____COMBININGCLASS)
 #define combiningposmask(ch)	(____utype2[(ch)+1]&____COMBININGPOSMASK)
 
-extern const uint32	____utype2[];			/* hold position boolean flags for each Unicode.org defined character */
+VISIBLE extern const uint32	____utype2[]; /* hold position boolean flags for each Unicode.org defined character */
 
 #define isunicodepointassigned(ch) (____codepointassigned[(ch)/32]&(1<<((ch)%32)))
 

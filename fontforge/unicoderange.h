@@ -49,5 +49,5 @@ struct rangeinfo {
 
 
 enum ur_flags { ur_includeempty = 1, ur_sortbyname = 2, ur_sortbyunicode = 4 };
-extern struct rangeinfo *SFUnicodeRanges(SplineFont *sf, enum ur_flags flags);
+VISIBLE extern struct rangeinfo *SFUnicodeRanges(SplineFont *sf, enum ur_flags flags);
 extern int unicoderange_cnt;

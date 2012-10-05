@@ -25,8 +25,13 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-extern void MMWeightsUnMap(real weights[MmMax], real axiscoords[4],
+#ifndef _FONTFORGE_MM_H
+#define _FONTFORGE_MM_H
+
+VISIBLE extern void MMWeightsUnMap(real weights[MmMax], real axiscoords[4],
 	int axis_count);
-extern bigreal MMAxisUnmap(MMSet *mm,int axis,bigreal ncv);
-extern SplineFont *_MMNewFont(MMSet *mm,int index,char *familyname,real *normalized);
-extern SplineFont *MMNewFont(MMSet *mm,int index,char *familyname);
+VISIBLE extern bigreal MMAxisUnmap(MMSet *mm,int axis,bigreal ncv);
+VISIBLE extern SplineFont *_MMNewFont(MMSet *mm,int index,char *familyname,real *normalized);
+VISIBLE extern SplineFont *MMNewFont(MMSet *mm,int index,char *familyname);
+
+#endif // _FONTFORGE_MM_H

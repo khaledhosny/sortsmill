@@ -71,9 +71,9 @@ struct context {
     void (*pov_func)(BasePoint *me,void *);
 };
 
-extern void _SFNLTrans(FontViewBase *fv,struct context *c);
+VISIBLE extern void _SFNLTrans(FontViewBase *fv,struct context *c);
 extern struct expr *nlt_parseexpr(struct context *c,char *str);
 extern void nlt_exprfree(struct expr *e);
-extern void CVNLTrans(CharViewBase *cv,struct context *c);
+VISIBLE extern void CVNLTrans(CharViewBase *cv,struct context *c);
 extern void SPLPoV(SplineSet *spl,struct pov_data *pov, int only_selected);
 #endif

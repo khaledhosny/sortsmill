@@ -44,24 +44,24 @@
 #include <null_passthru.h>
 #include <xgc.h>
 
-uint16_t *x_u8_to_u16 (const uint8_t *string);
-uint32_t *x_u8_to_u32 (const uint8_t *string);
-uint8_t *x_u16_to_u8 (const uint16_t *string);
-uint32_t *x_u16_to_u32 (const uint16_t *string);
-uint8_t *x_u32_to_u8 (const uint32_t *string);
-uint16_t *x_u32_to_u16 (const uint32_t *string);
-inline uint16_t *x_gc_u8_to_u16 (const uint8_t *string);
-inline uint32_t *x_gc_u8_to_u32 (const uint8_t *string);
-inline uint8_t *x_gc_u16_to_u8 (const uint16_t *string);
-inline uint32_t *x_gc_u16_to_u32 (const uint16_t *string);
-inline uint8_t *x_gc_u32_to_u8 (const uint32_t *string);
-inline uint16_t *x_gc_u32_to_u16 (const uint32_t *string);
-inline bool u8_valid (const uint8_t *string);
-inline bool u16_valid (const uint16_t *string);
-inline bool u32_valid (const uint32_t *string);
-const uint8_t *u8_force_valid (const uint8_t *string);
-const uint16_t *u16_force_valid (const uint16_t *string);
-const uint32_t *u32_force_valid (const uint32_t *string);
+VISIBLE uint16_t *x_u8_to_u16 (const uint8_t *string);
+VISIBLE uint32_t *x_u8_to_u32 (const uint8_t *string);
+VISIBLE uint8_t *x_u16_to_u8 (const uint16_t *string);
+VISIBLE uint32_t *x_u16_to_u32 (const uint16_t *string);
+VISIBLE uint8_t *x_u32_to_u8 (const uint32_t *string);
+VISIBLE uint16_t *x_u32_to_u16 (const uint32_t *string);
+VISIBLE inline uint16_t *x_gc_u8_to_u16 (const uint8_t *string);
+VISIBLE inline uint32_t *x_gc_u8_to_u32 (const uint8_t *string);
+VISIBLE inline uint8_t *x_gc_u16_to_u8 (const uint16_t *string);
+VISIBLE inline uint32_t *x_gc_u16_to_u32 (const uint16_t *string);
+VISIBLE inline uint8_t *x_gc_u32_to_u8 (const uint32_t *string);
+VISIBLE inline uint16_t *x_gc_u32_to_u16 (const uint32_t *string);
+VISIBLE inline bool u8_valid (const uint8_t *string);
+VISIBLE inline bool u16_valid (const uint16_t *string);
+VISIBLE inline bool u32_valid (const uint32_t *string);
+VISIBLE const uint8_t *u8_force_valid (const uint8_t *string);
+VISIBLE const uint16_t *u16_force_valid (const uint16_t *string);
+VISIBLE const uint32_t *u32_force_valid (const uint32_t *string);
 
 static inline uint8_t *
 x_u8_strdup (const uint8_t *string)

@@ -37,7 +37,7 @@
 
 static void GListButtonDoPopup(GListButton *);
 
-GBox _GGadget_button_box = GBOX_EMPTY; /* Don't initialize here */
+VISIBLE GBox _GGadget_button_box = GBOX_EMPTY; /* Don't initialize here */
 GBox _GGadget_defaultbutton_box = GBOX_EMPTY; /* Don't initialize here */
 static GBox _GGadget_cancelbutton_box = GBOX_EMPTY; /* Don't initialize here */
 static GBox _GGadget_colorbutton_box = GBOX_EMPTY; /* Don't initialize here */

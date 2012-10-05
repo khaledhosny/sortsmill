@@ -1,6 +1,5 @@
-#include <config.h>
+#include <config.h>		/* -*- coding: utf-8 -*- */
 
-/* -*- coding: utf-8 -*- */
 /* Copyright (C) 2000-2012 by George Williams */
 /*
  * Redistribution and use in source and binary forms, with or without
@@ -38,7 +37,7 @@
 
 int adjustwidth = true;
 int adjustlbearing = true;
-int allow_utf8_glyphnames = false;
+VISIBLE int allow_utf8_glyphnames = false;
 int clear_tt_instructions_when_needed = true;
 
 void SCClearRounds(SplineChar *sc,int layer) {

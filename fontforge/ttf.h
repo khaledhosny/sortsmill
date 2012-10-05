@@ -825,7 +825,7 @@ extern void FigureBaseOffsets(SplineFont *sf,int def_bsln,int offsets[32]);
 
     /* Apple variation tables */
 extern int ContourPtNumMatch(MMSet *mm, int gid);
-extern int16 **SCFindDeltas(MMSet *mm, int gid, int *_ptcnt);
+VISIBLE extern int16 **SCFindDeltas(MMSet *mm, int gid, int *_ptcnt);
 extern int16 **CvtFindDeltas(MMSet *mm, int *_ptcnt);
 extern void ttf_dumpvariations(struct alltabs *at, SplineFont *sf);
 
@@ -836,7 +836,7 @@ extern struct macsettingname {
 } macfeat_otftag[], *user_macfeat_otftag;
 
     /* TrueType instructions */
-extern struct ttf_table *SFFindTable(SplineFont *sf,uint32 tag);
+VISIBLE extern struct ttf_table *SFFindTable(SplineFont *sf,uint32 tag);
 extern int32 memlong(uint8 *data,int table_len, int offset);
 extern int memushort(uint8 *data,int table_len, int offset);
 extern void memputshort(uint8 *data,int offset,uint16 val);

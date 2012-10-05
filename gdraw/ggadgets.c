@@ -36,7 +36,7 @@
 #include "gkeysym.h"
 #include "ustring.h"
 
-GBox _ggadget_Default_Box = { bt_raised, bs_rect, 2, 2, 0, 0, 
+VISIBLE GBox _ggadget_Default_Box = { bt_raised, bs_rect, 2, 2, 0, 0, 
     COLOR_CREATE(0xd8,0xd8,0xd8),		/* border left */ /* brightest */
     COLOR_CREATE(0xd0,0xd0,0xd0),		/* border top */
     COLOR_CREATE(0x80,0x80,0x80),		/* border right */
