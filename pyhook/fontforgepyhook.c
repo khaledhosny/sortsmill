@@ -1,7 +1,9 @@
+#include <config.h>
+
 #include <Python.h>
 #include <splinefont.h>
 
-PyMODINIT_FUNC initfontforge(void);
+VISIBLE PyMODINIT_FUNC initfontforge(void);
 
 PyMODINIT_FUNC initfontforge(void) {
     ff_init();

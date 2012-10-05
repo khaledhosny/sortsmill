@@ -26,7 +26,6 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 include $(top_srcdir)/mk/layout.am
-include $(top_srcdir)/mk/prep_symbols.mk
 
 AM_CPPFLAGS = -I$(top_builddir)/lib -I$(top_srcdir)/lib	\
 	-I$(top_builddir)/inc -I$(top_srcdir)/inc			\
@@ -52,5 +51,4 @@ GNULIB_LD_FLAGS = $(COS_LIBM) $(FLOOR_LIBM) $(GETHOSTNAME_LIB)	\
 COMMON_LD_FLAGS = -release $(VERSION) $(MY_CFLAGS) $(MY_LIBS)	\
 	$(GNULIB_LD_FLAGS)
 
-ldflags = $(COMMON_LD_FLAGS) \
-	$(if $($1), -export-symbols-regex '$(call prep_symbols_regex,$1)')
+ldflags = $(COMMON_LD_FLAGS)

@@ -4540,7 +4540,7 @@ uni_to_euc_gb12345 (int u)
   return val;
 }
 
-int
+VISIBLE int
 FontForgeInit (void)
 {
   int success = 1;

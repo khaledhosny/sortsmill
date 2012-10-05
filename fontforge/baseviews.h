@@ -287,7 +287,7 @@ extern void PasteRemoveSFAnchors(SplineFont *);
 extern void PasteAnchorClassMerge(SplineFont *sf,AnchorClass *into,AnchorClass *from);
 extern void PasteRemoveAnchorClass(SplineFont *sf,AnchorClass *dying);
 VISIBLE extern void ClipboardClear(void);
-extern SplineSet *ClipBoardToSplineSet(void);
+VISIBLE extern SplineSet *ClipBoardToSplineSet(void);
 VISIBLE extern void BCCopySelected(BDFChar *bc,int pixelsize,int depth);
 VISIBLE extern void BCCopyReference(BDFChar *bc,int pixelsize,int depth);
 VISIBLE extern void PasteToBC(BDFChar *bc,int pixelsize,int depth);

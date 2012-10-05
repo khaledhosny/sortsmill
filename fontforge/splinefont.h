@@ -2085,7 +2085,7 @@ extern int Within16RoundingErrors(bigreal v1, bigreal v2);
 extern int Within64RoundingErrors(bigreal v1, bigreal v2);
 VISIBLE extern int RealNear(real a,real b);
 VISIBLE extern int RealNearish(real a,real b);
-extern int RealApprox(real a,real b);
+VISIBLE extern int RealApprox(real a,real b);
 VISIBLE extern int RealWithin(real a,real b,real fudge);
 extern int RealRatio(real a,real b,real fudge);
 
@@ -2184,7 +2184,7 @@ VISIBLE extern void LayerDefault(Layer *);
 extern SplineChar *SplineCharCreate(int layer_cnt);
 VISIBLE extern SplineChar *SFSplineCharCreate(SplineFont *sf);
 VISIBLE extern RefChar *RefCharCreate(void);
-extern RefChar *RefCharsCopy(RefChar *ref);	/* Still needs to be instanciated and have the dependency list adjusted */
+VISIBLE extern RefChar *RefCharsCopy(RefChar *ref);	/* Still needs to be instanciated and have the dependency list adjusted */
 VISIBLE extern struct altuni *AltUniCopy(struct altuni *altuni,SplineFont *noconflicts);
 extern void SCAddRef(SplineChar *sc,SplineChar *rsc,int layer, real xoff, real yoff);
 extern void _SCAddRef(SplineChar *sc,SplineChar *rsc,int layer, real transform[6]);
@@ -2260,7 +2260,7 @@ extern void SplineCharQuickConservativeBounds(SplineChar *sc, DBounds *b);
 extern void SplineFontQuickConservativeBounds(SplineFont *sf,DBounds *b);
 VISIBLE extern void SplinePointCatagorize(SplinePoint *sp);
 extern int SplinePointIsACorner(SplinePoint *sp);
-extern void SPLCatagorizePoints(SplinePointList *spl);
+VISIBLE extern void SPLCatagorizePoints(SplinePointList *spl);
 extern void SCCatagorizePoints(SplineChar *sc);
 VISIBLE extern SplinePointList *SplinePointListCopy1(const SplinePointList *spl);
 VISIBLE extern SplinePointList *SplinePointListCopy(const SplinePointList *base);
@@ -2425,7 +2425,7 @@ extern real SplineNearPoint(Spline *spline, BasePoint *bp, real fudge);
 VISIBLE extern int SplineT2SpiroIndex(Spline *spline,bigreal t,SplineSet *spl);
 VISIBLE extern void SCMakeDependent(SplineChar *dependent,SplineChar *base);
 VISIBLE extern SplinePoint *SplineBisect(Spline *spline, extended t);
-extern Spline *SplineSplit(Spline *spline, extended ts[3]);
+VISIBLE extern Spline *SplineSplit(Spline *spline, extended ts[3]);
 VISIBLE extern Spline *ApproximateSplineFromPoints(SplinePoint *from, SplinePoint *to,
 	TPoint *mid, int cnt,int order2);
 VISIBLE extern Spline *ApproximateSplineFromPointsSlopes(SplinePoint *from, SplinePoint *to,
@@ -2713,7 +2713,7 @@ extern void SCLigCaretheck(SplineChar *sc,int clean);
 VISIBLE extern BDFChar *BDFMakeGID(BDFFont *bdf,int gid);
 VISIBLE extern BDFChar *BDFMakeChar(BDFFont *bdf,EncMap *map,int enc);
 
-extern RefChar *RefCharsCopyState(SplineChar *sc,int layer);
+VISIBLE extern RefChar *RefCharsCopyState(SplineChar *sc,int layer);
 extern int SCWasEmpty(SplineChar *sc, int skip_this_layer);
 VISIBLE extern void SCUndoSetLBearingChange(SplineChar *sc,int lb);
 VISIBLE extern Undoes *SCPreserveHints(SplineChar *sc,int layer);
@@ -3079,7 +3079,7 @@ VISIBLE extern RefChar *HasUseMyMetrics(SplineChar *sc,int layer);
 VISIBLE extern void SCSynchronizeLBearing(SplineChar *sc,real off,int layer);
 VISIBLE extern void RevertedGlyphReferenceFixup(SplineChar *sc, SplineFont *sf);
 
-extern void SFUntickAll(SplineFont *sf);
+VISIBLE extern void SFUntickAll(SplineFont *sf);
 
 VISIBLE extern void BDFOrigFixup(BDFFont *bdf,int orig_cnt,SplineFont *sf);
 
@@ -3135,7 +3135,7 @@ VISIBLE extern void BCClearAll(BDFChar *bc);
 extern void FontForge_PythonInit(void);
 extern void PyFF_ErrorString(const char *msg,const char *str);
 extern void PyFF_ErrorF3(const char *frmt, const char *str, int size, int depth);
-extern void PyFF_Stdin(void);
+VISIBLE extern void PyFF_Stdin(void);
 extern void PyFF_Main(int argc,char **argv,int start);
 extern void PyFF_ScriptFile(struct fontviewbase *fv,SplineChar *sc,char *filename);
 VISIBLE extern void PyFF_ScriptString(struct fontviewbase *fv,SplineChar *sc,int layer,char *str);
@@ -3147,7 +3147,7 @@ extern char *PyFF_PickleMeToString(void *pydata);
 extern void *PyFF_UnPickleMeToObjects(char *str);
 struct _object;		/* Python Object */
 extern void PyFF_CallDictFunc(struct _object *dict,char *key,char *argtypes, ... );
-extern void ff_init(void);
+VISIBLE extern void ff_init(void);
 extern struct _object *ff_init_py3(int);
 #endif
 extern void doinitFontForgeMain(void);

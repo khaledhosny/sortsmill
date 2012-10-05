@@ -44,10 +44,8 @@ libguile_sortsmillff_fontforgeexe_la_LIBADD =					\
 	$(top_builddir)/fontforge/libsortsmillff_fontforge.la		\
 	$(top_builddir)/fontforge/libsortsmillff_fontforgeexe.la
 
-libguile_sortsmillff_fontforgeexe_la_LDFLAGS =					\
-	-module														\
-	$(COMMON_LD_FLAGS)											\
-	-export-symbols-regex '^sortsmillff_init_fontforge_main$$'
+libguile_sortsmillff_fontforgeexe_la_LDFLAGS = -module	\
+	$(COMMON_LD_FLAGS)
 
 #--------------------------------------------------------------------------
 #
