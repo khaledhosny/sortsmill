@@ -2399,10 +2399,10 @@ static struct col_init multsubsci[] = {
 static struct col_init simpleposci[] = {
     { me_enum , NULL, NULL, enable_enum, N_("Subtable") },
     { me_int, NULL, NULL, NULL, N_("∆x") },	/* delta-x */
-/* GT: "Adjust" here means Device Table based pixel adjustments, an OpenType */
-/* GT: concept which allows small corrections for small pixel sizes where */
-/* GT: rounding errors (in kerning for example) may smush too glyphs together */
-/* GT: or space them too far apart. Generally not a problem for big pixelsizes*/
+/* TRANSLATORS: "Adjust" here means Device Table based pixel adjustments, an OpenType */
+/* concept which allows small corrections for small pixel sizes where */
+/* rounding errors (in kerning for example) may smush too glyphs together */
+/* or space them too far apart. Generally not a problem for big pixelsizes*/
     { me_funcedit, DevTab_Dlg, NULL, NULL, N_("Adjust") },
     { me_int, NULL, NULL, NULL, N_("∆y") },		/* delta-y */
     { me_funcedit, DevTab_Dlg, NULL, NULL, N_("Adjust") },
@@ -3465,7 +3465,7 @@ static GTextInfo truefalse[] = {
 static struct col_init extensionpart[] = {
     { me_string , NULL, NULL, NULL, N_("Glyph") },
     { me_enum, NULL, truefalse, NULL, N_("Extender") },
-/* GT: "Len" is an abreviation for "Length" */
+/* TRANSLATORS: "Len" is an abreviation for "Length" */
     { me_int, NULL, NULL, NULL, N_("StartLen") },
     { me_int, NULL, NULL, NULL, N_("EndLen") },
     { me_int, NULL, NULL, NULL, N_("FullLen") },
@@ -4712,7 +4712,7 @@ return;
 	    varhvarray[i][1][0] = &vargcd[i][2];
 	    varhvarray[i][1][1] = varhvarray[i][1][2] = GCD_ColSpan; varhvarray[i][1][3] = NULL;
 
-/* GT: "Cor" is an abbreviation for correction */
+/* TRANSLATORS: "Cor" is an abbreviation for correction */
 	    varlabel[i][3].text = (uint32_t *) _("Italic Cor:");
 	    varlabel[i][3].text_is_1byte = true;
 	    vargcd[i][3].gd.label = &varlabel[i][3];
@@ -4918,13 +4918,13 @@ return;
 	aspects[i++].gcd = tbox;
 
 	ci->vert_aspect = i;
-/* GT: "Vert." is an abbreviation for Vertical */
+/* TRANSLATORS: "Vert." is an abbreviation for Vertical */
 	aspects[i].text = (uint32_t *) _("Vert. Variants");
 	aspects[i].text_is_1byte = true;
 	aspects[i].nesting = 1;
 	aspects[i++].gcd = varbox[0];
 
-/* GT: "Horiz." is an abbreviation for Horizontal */
+/* TRANSLATORS: "Horiz." is an abbreviation for Horizontal */
 	aspects[i].text = (uint32_t *) _("Horiz. Variants");
 	aspects[i].text_is_1byte = true;
 	aspects[i].nesting = 1;

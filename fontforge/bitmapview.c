@@ -170,13 +170,13 @@ static char *BVMakeTitles(BitmapView *bv, BDFChar *bc,char *buf) {
     BDFFont *bdf = bv->bdf;
 
     sc = bc->sc;
-/* GT: This is the title for a window showing a bitmap character */
-/* GT: It will look something like: */
-/* GT:  exclam at 33 size 12 from Arial */
-/* GT: $1 is the name of the glyph */
-/* GT: $2 is the glyph's encoding */
-/* GT: $3 is the pixel size of the bitmap font */
-/* GT: $4 is the font name */
+/* TRANSLATORS: This is the title for a window showing a bitmap character */
+/* It will look something like: */
+/*  exclam at 33 size 12 from Arial */
+/* $1 is the name of the glyph */
+/* $2 is the glyph's encoding */
+/* $3 is the pixel size of the bitmap font */
+/* $4 is the font name */
     sprintf(buf,_("%1$.80s at %2$d size %3$d from %4$.80s"),
 	    sc!=NULL ? sc->name : "<Nameless>", bv->enc, bdf->pixelsize, sc==NULL ? "" : sc->parent->fontname);
     title = xstrdup_or_null(buf);
@@ -2098,9 +2098,9 @@ static void BVMenuContextualHelp(GWindow base,struct gmenuitem *mi,GEvent *e) {
 }
 
 char *BVFlipNames[] = { N_("Flip Horizontally"), N_("Flip Vertically"),
-/* GT: "CW" means Clockwise */
+/* TRANSLATORS: "CW" means Clockwise */
     N_("Rotate 90° CW"),
-/* GT: "CW" means Counter-Clockwise */
+/* TRANSLATORS: "CW" means Counter-Clockwise */
     N_("Rotate 90° CCW"),
     N_("Rotate 180°"),
     N_("Skew..."), NULL };

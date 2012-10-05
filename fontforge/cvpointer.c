@@ -1344,9 +1344,9 @@ static int SPA_OK(GGadget *g, GEvent *e) {
 	double fuzz;
 	int err = false, ret;
 
-/* GT: X is a coordinate */
+/* TRANSLATORS: X is a coordinate */
 	base.x = GetReal8(gw,CID_X,_("X"),&err);
-/* GT: Y is a coordinate */
+/* TRANSLATORS: Y is a coordinate */
 	base.y = GetReal8(gw,CID_Y,_("Y"),&err);
 	if ( err )
 return( true );

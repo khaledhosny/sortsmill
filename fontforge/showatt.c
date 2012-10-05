@@ -594,12 +594,12 @@ static void BuildFPST(struct node *node,struct att_dlg *att) {
 	len = 0;
 
 	if ( i ) {
-/* GT: There are various broad classes of lookups here and the first string */
-/* GT: describes those: "Contextual Positioning", Contextual Substitution", etc. */
-/* GT: Each of those may be formated in 3 different ways: by (or perhaps using */
-/* GT: would be a better word) glyphs, classes or coverage tables. */
-/* GT: So this might look like: */
-/* GT:  Contextual Positioning by classes */
+/* TRANSLATORS: There are various broad classes of lookups here and the first string */
+/* describes those: "Contextual Positioning", Contextual Substitution", etc. */
+/* Each of those may be formated in 3 different ways: by (or perhaps using */
+/* would be a better word) glyphs, classes or coverage tables. */
+/* So this might look like: */
+/* Contextual Positioning by classes */
 	    sprintf(buf, _("%s by %s"), _(type[fpst->type-pst_contextpos]),
 		    _(format[fpst->format]));
 	    lines[len].label = xstrdup_or_null(buf);
@@ -707,9 +707,9 @@ static void BuildASM(struct node *node,struct att_dlg *att) {
 	}
 	for ( j=0; j<sm->state_cnt; ++j ) {
 	    if ( i ) {
-/* GT: You're in a state machine, and this is describing the %4d'th state of */
-/* GT: that machine. From the state the next state will be a list of */
-/* GT: state-numbers which are appended to this string. */
+/* TRANSLATORS: You're in a state machine, and this is describing the %4d'th state of */
+/* that machine. From the state the next state will be a list of */
+/* state-numbers which are appended to this string. */
 		sprintf(space, _("State %4d Next: "), j );
 		for ( k=0; k<sm->class_cnt; ++k )
 		    sprintf( space+strlen(space), "%5d", sm->state[j*sm->class_cnt+k].next_state );
@@ -1486,9 +1486,9 @@ static void BuildGDEF(struct node *node,struct att_dlg *att) {
 	    node->children[0].parent = node;
 	}
 	if ( lcar ) {
-/* GT: Here caret means where to place the cursor inside a ligature. So OpenType */
-/* GT: allows there to be a typing cursor inside a ligature (for instance you */
-/* GT: can have a cursor between f and i in the "fi" ligature) */
+/* TRANSLATORS: Here caret means where to place the cursor inside a ligature. So OpenType */
+/* allows there to be a typing cursor inside a ligature (for instance you */
+/* can have a cursor between f and i in the "fi" ligature) */
 	    node->children[gdef].label = xstrdup_or_null(_("Ligature Caret Sub-Table"));
 	    node->children[gdef].build = BuildLcar;
 	    node->children[gdef].parent = node;
@@ -1870,10 +1870,10 @@ return;
 	    strcat(buf," ");
 	} else
 	    buf[7]='\0';
-/* GT: See the long comment at "Property|New" */
-/* GT: The msgstr should contain a translation of "Script", ignore "writing system|" */
-/* GT: English uses "script" to mean a general writing style (latin, greek, kanji) */
-/* GT: and the cursive handwriting style. Here we mean the general writing system. */
+/* TRANSLATORS: See the long comment at "Property|New" */
+/* The msgstr should contain a translation of "Script", ignore "writing system|" */
+/* English uses "script" to mean a general writing style (latin, greek, kanji) */
+/* and the cursive handwriting style. Here we mean the general writing system. */
 	strcat(buf,S_("writing system|Script"));
 	scriptnodes[i].label = xstrdup_or_null(buf);
 	scriptnodes[i].build = BuildGSUBscript;
@@ -1908,10 +1908,10 @@ static void BuildJSTFTable(struct node *node,struct att_dlg *att) {
 	    strcat(buf," ");
 	} else
 	    buf[7]='\0';
-/* GT: See the long comment at "Property|New" */
-/* GT: The msgstr should contain a translation of "Script", ignore "writing system|" */
-/* GT: English uses "script" to me a general writing style (latin, greek, kanji) */
-/* GT: and the cursive handwriting style. Here we mean the general writing system. */
+/* TRANSLATORS: See the long comment at "Property|New" */
+/* The msgstr should contain a translation of "Script", ignore "writing system|" */
+/* English uses "script" to me a general writing style (latin, greek, kanji) */
+/* and the cursive handwriting style. Here we mean the general writing system. */
 	strcat(buf,S_("writing system|Script"));
 	scriptnodes[i].label = xstrdup_or_null(buf);
 	scriptnodes[i].build = BuildJSTFscript;

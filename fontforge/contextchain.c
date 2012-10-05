@@ -765,9 +765,9 @@ return;
 }
 
 static int isEverythingElse(char *text) {
-    /* GT: The string "{Everything Else}" is used in the context of a list */
-    /* GT: of classes (a set of kerning classes) where class 0 designates the */
-    /* GT: default class containing all glyphs not specified in the other classes */
+    /* TRANSLATORS: The string "{Everything Else}" is used in the context of a list */
+    /* of classes (a set of kerning classes) where class 0 designates the */
+    /* default class containing all glyphs not specified in the other classes */
     int ret = strcmp(text,_("{Everything Else}"));
 return( ret==0 );
 }
@@ -2998,9 +2998,9 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
 		cc = (&tempfpst->nccnt)[i];
 	    class_mi[i].initial_row_cnt = cc;
 	    md = xcalloc(3*cc+3,sizeof(struct matrix_data));
-/* GT: This is the default class name for the class containing any glyphs_simple */
-/* GT: which aren't specified in other classes_simple. The class name may NOT */
-/* GT: contain spaces. Use an underscore or something similar instead */
+/* TRANSLATORS: This is the default class name for the class containing any glyphs_simple */
+/* which aren't specified in other classes_simple. The class name may NOT */
+/* contain spaces. Use an underscore or something similar instead */
 	    md[0+0].u.md_str = xstrdup_or_null(classnames==NULL || cc==0 || classnames[0]==NULL?S_("Glyphs|All_Others"):classnames[0]);
 	    md[0+1].u.md_str = xstrdup_or_null(_("{Everything Else}"));
 	    md[0+1].frozen = true;

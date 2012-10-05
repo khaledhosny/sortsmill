@@ -166,10 +166,10 @@ static GTextInfo formattypes[] = {
    0, 0, '\0'},
   {(uint32_t *) N_("PS CID"), NULL, 0, 0, NULL, NULL, 1, 0, 0, 0, 0, 0, 1, 0,
    0, '\0'},
-/* GT: "CFF (Bare)" means a CFF font without the normal OpenType wrapper */
-/* GT: CFF is a font format that normally lives inside an OpenType font */
-/* GT: but it is perfectly meaningful to remove all the OpenType complexity */
-/* GT: and just leave a bare CFF font */
+/* TRANSLATORS: "CFF (Bare)" means a CFF font without the normal OpenType wrapper */
+/* CFF is a font format that normally lives inside an OpenType font */
+/* but it is perfectly meaningful to remove all the OpenType complexity */
+/* and just leave a bare CFF font */
   {(uint32_t *) N_("CFF (Bare)"), NULL, 0, 0, NULL, NULL, 1, 0, 0, 0, 0, 0,
    1, 0, 0, '\0'},
   {(uint32_t *) N_("CFF CID (Bare)"), NULL, 0, 0, NULL, NULL, 1, 0, 0, 0, 0,

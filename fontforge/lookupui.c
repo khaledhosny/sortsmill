@@ -168,8 +168,8 @@ static GTextInfo *lookuptypes[2] = { gsub_lookuptypes, gpos_lookuptypes };
     /* see also list in tottfgpos.c mapping code points to scripts */
     /* see also list in lookups.c for non-ui access to these data */
 GTextInfo scripts[] = {
-/* GT: See the long comment at "Property|New" */
-/* GT: The msgstr should contain a translation of "Arabic", ignore "Script|" */
+/* TRANSLATORS: See the long comment at "Property|New" */
+/* The msgstr should contain a translation of "Arabic", ignore "Script|" */
     { (uint32_t *) N_("Script|Arabic"), NULL, 0, 0, (void *) CHR('a','r','a','b'), NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) N_("Script|Aramaic"), NULL, 0, 0, (void *) CHR('a','r','a','m'), NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) N_("Script|Armenian"), NULL, 0, 0, (void *) CHR('a','r','m','n'), NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
@@ -200,10 +200,10 @@ GTextInfo scripts[] = {
     { (uint32_t *) N_("Devanagari2"), NULL, 0, 0, (void *) CHR('d','e','v','2'), NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
 /*  { (uint32_t *) N_("Egyptian demotic"), NULL, 0, 0, (void *) CHR('e','g','y','d'), NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'}, */
 /*  { (uint32_t *) N_("Egyptian hieratic"), NULL, 0, 0, (void *) CHR('e','g','y','h'), NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'}, */
-/* GT: Someone asked if FontForge actually was prepared generate hieroglyph output */
-/* GT: because of this string. No. But OpenType and Unicode have placeholders for */
-/* GT: dealing with these scripts against the day someone wants to use them. So */
-/* GT: FontForge must be prepared to deal with those placeholders if nothing else. */
+/* TRANSLATORS: Someone asked if FontForge actually was prepared generate hieroglyph output */
+/* because of this string. No. But OpenType and Unicode have placeholders for */
+/* dealing with these scripts against the day someone wants to use them. So */
+/* FontForge must be prepared to deal with those placeholders if nothing else. */
 /*  { (uint32_t *) N_("Egyptian hieroglyphs"), NULL, 0, 0, (void *) CHR('e','g','y','p'), NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'}, */
     { (uint32_t *) N_("Script|Ethiopic"), NULL, 0, 0, (void *) CHR('e','t','h','i'), NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) N_("Script|Georgian"), NULL, 0, 0, (void *) CHR('g','e','o','r'), NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
@@ -297,8 +297,8 @@ GTextInfo languages[] = {
     { (uint32_t *) N_("Alsatian"), NULL, 0, 0, (void *) CHR('A','L','S',' '), NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) N_("Altai"), NULL, 0, 0, (void *) CHR('A','L','T',' '), NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) N_("Americanist IPA"), NULL, 0, 0, (void *) CHR('A','M','P','H'), NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-/* GT: See the long comment at "Property|New" */
-/* GT: The msgstr should contain a translation of "Amharic", ignore "Lang|" */
+/* TRANSLATORS: See the long comment at "Property|New" */
+/* The msgstr should contain a translation of "Amharic", ignore "Lang|" */
     { (uint32_t *) N_("Lang|Amharic"), NULL, 0, 0, (void *) CHR('A','M','H',' '), NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) N_("Lang|Arabic"), NULL, 0, 0, (void *) CHR('A','R','A',' '), NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) N_("Aari"), NULL, 0, 0, (void *) CHR('A','R','I',' '), NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
@@ -689,8 +689,8 @@ GTextInfo languages[] = {
 static char *LK_LangsDlg(GGadget *, int r, int c);
 static char *LK_ScriptsDlg(GGadget *, int r, int c);
 static struct col_init scriptci[] = {
-/* GT: English uses "script" to mean a general writing system (latin, greek, kanji) */
-/* GT: and the cursive handwriting style. Here we mean the general writing system. */
+/* TRANSLATORS: English uses "script" to mean a general writing system (latin, greek, kanji) */
+/* and the cursive handwriting style. Here we mean the general writing system. */
     { me_stringchoicetag , NULL, scripts, NULL, N_("writing system|Script") },
     { me_funcedit, LK_LangsDlg, NULL, NULL, N_("Language(s)") },
     COL_INIT_EMPTY
@@ -1815,8 +1815,8 @@ int EditLookup(OTLookup *otl,int isgpos,SplineFont *sf) {
 	gcd[6].creator = GCheckBoxCreate;
 	flagarray[6] = &gcd[6]; flagarray[7] = NULL;
 
-/* GT: Process is a verb here and Mark is a noun. */
-/* GT: Marks of the given mark class are to be processed */
+/* TRANSLATORS: Process is a verb here and Mark is a noun. */
+/* Marks of the given mark class are to be processed */
 	label[7].text = (uint32_t *) _("Mark Class:");
 	label[7].text_is_1byte = true;
 	gcd[7].gd.label = &label[7];
@@ -1836,7 +1836,7 @@ int EditLookup(OTLookup *otl,int isgpos,SplineFont *sf) {
 	gcd[8].creator = GListButtonCreate;
 	flaghvarray[1] = &gcd[8]; flaghvarray[2] = GCD_Glue; flaghvarray[3] = NULL;
 
-/* GT: Mark is a noun here and Set is also a noun. */
+/* TRANSLATORS: Mark is a noun here and Set is also a noun. */
 	label[9].text = (uint32_t *) _("Mark Set:");
 	label[9].text_is_1byte = true;
 	gcd[9].gd.label = &label[9];
@@ -2579,10 +2579,10 @@ static void PSTMatrixInit(struct matrixinit *mi,SplineFont *_sf, struct lookup_s
     static struct col_init simpleposci[] = {
 	{ me_string , NULL, NULL, NULL, N_("Base Glyph Name") },
 	{ me_int, NULL, NULL, NULL, N_("∆x") },	/* delta-x */
-/* GT: "Adjust" here means Device Table based pixel adjustments, an OpenType */
-/* GT: concept which allows small corrections for small pixel sizes where */
-/* GT: rounding errors (in kerning for example) may smush too glyphs together */
-/* GT: or space them too far apart. Generally not a problem for big pixelsizes*/
+/* TRANSLATORS: "Adjust" here means Device Table based pixel adjustments, an OpenType */
+/* concept which allows small corrections for small pixel sizes where */
+/* rounding errors (in kerning for example) may smush too glyphs together */
+/* or space them too far apart. Generally not a problem for big pixelsizes*/
 	{ me_funcedit, DevTab_Dlg, NULL, NULL, N_("Adjust") },
 	{ me_int, NULL, NULL, NULL, N_("∆y") },	/* delta-y */
 	{ me_funcedit, DevTab_Dlg, NULL, NULL, N_("Adjust") },
@@ -4462,7 +4462,7 @@ static void PSTKernD(SplineFont *sf, struct lookup_subtable *sub, int def_layer)
 	gcd[i++].creator = GTextFieldCreate;
 	h2array[1] = &gcd[i-1]; h2array[2] = GCD_HPad10;
 
-/* GT: Short for "Magnification" */
+/* TRANSLATORS: Short for "Magnification" */
 	label[i].text = (uint32_t *) _("Mag:");
 	label[i].text_is_1byte = true;
 	gcd[i].gd.label = &label[i];

@@ -107,8 +107,8 @@ static GTextInfo maclanguages[] = {
     { (uint32_t *) N_("Latvian"), NULL, 0, 0, (void *) 28, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     { (uint32_t *) N_("Sami (Lappish)"), NULL, 0, 0, (void *) 29, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     { (uint32_t *) N_("Faroese (Icelandic)"), NULL, 0, 0, (void *) 30, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-/* GT: See the long comment at "Property|New" */
-/* GT: The msgstr should contain a translation of "Farsi/Persian", ignore "Lang|" */
+/* TRANSLATORS: See the long comment at "Property|New" */
+/* The msgstr should contain a translation of "Farsi/Persian", ignore "Lang|" */
     { (uint32_t *) N_("Lang|Farsi/Persian"), NULL, 0, 0, (void *) 31, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     { (uint32_t *) N_("Russian"), NULL, 0, 0, (void *) 32, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     { (uint32_t *) N_("Simplified Chinese"), NULL, 0, 0, (void *) 33, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },

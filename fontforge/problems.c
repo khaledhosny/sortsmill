@@ -2970,7 +2970,7 @@ static int Prob_OK(GGadget *g, GEvent *e) {
 	if ( toomanyhints )
 	    p->hintsmax = hintsmax = GetInt8(gw,CID_HintsMax,_("_More hints than:"),&errs);
 	if ( toodeeprefs )
-/* GT: Refs is an abbreviation for References. Space is somewhat constrained here */
+/* TRANSLATORS: Refs is an abbreviation for References. Space is somewhat constrained here */
 	    p->refdepthmax = refdepthmax = GetInt8(gw,CID_RefDepthMax,_("Refs neste_d deeper than:"),&errs);
 	if ( irrelevantcp )
 	    p->irrelevantfactor = irrelevantfactor = GetReal8(gw,CID_IrrelevantFactor,_("Irrelevant _Factor:"),&errs)/100.0;
@@ -3435,7 +3435,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     rfgcd[0].creator = GCheckBoxCreate;
     rfarray[0] = &rfgcd[0];
 
-/* GT: Refs is an abbreviation for References. Space is somewhat constrained here */
+/* TRANSLATORS: Refs is an abbreviation for References. Space is somewhat constrained here */
     rflabel[1].text = (uint32_t *) _("Refs with bad tt transformation matrices");
     rflabel[1].text_is_1byte = true;
     rflabel[1].text_in_resource = true;
@@ -3462,7 +3462,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     rfgcd[2].creator = GCheckBoxCreate;
     rfarray[2] = &rfgcd[2];
 
-/* GT: Refs is an abbreviation for References. Space is somewhat constrained here */
+/* TRANSLATORS: Refs is an abbreviation for References. Space is somewhat constrained here */
     rflabel[3].text = (uint32_t *) _("Refs with bad ps transformation matrices");
     rflabel[3].text_is_1byte = true;
     rflabel[3].text_in_resource = true;
@@ -3476,7 +3476,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     rfgcd[3].creator = GCheckBoxCreate;
     rfarray[3] = &rfgcd[3];
 
-/* GT: Refs is an abbreviation for References. Space is somewhat constrained here */
+/* TRANSLATORS: Refs is an abbreviation for References. Space is somewhat constrained here */
     rflabel[4].text = (uint32_t *) _("Refs neste_d deeper than:");
     rflabel[4].text_is_1byte = true;
     rflabel[4].text_in_resource = true;
@@ -3598,7 +3598,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     hboxes[2].creator = GHBoxCreate;
     harray[2] = &hboxes[2];
 
-/* GT: The _3 is used to mark an accelerator */
+/* TRANSLATORS: The _3 is used to mark an accelerator */
     hlabel[4].text = (uint32_t *) _("Almost stem_3 hint");
     hlabel[4].text_is_1byte = true;
     hlabel[4].text_in_resource = true;
@@ -4024,7 +4024,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     aspects[i].text_is_1byte = true;
     aspects[i++].gcd = paboxes;
 
-/* GT: Refs is an abbreviation for References. Space is tight here */
+/* TRANSLATORS: Refs is an abbreviation for References. Space is tight here */
     aspects[i].text = (uint32_t *) _("Refs");
     aspects[i].text_is_1byte = true;
     aspects[i++].gcd = rfboxes;
@@ -5173,8 +5173,8 @@ return;
 	if ( !vw->needs_blue )
 	    vs &= ~pds_missingblue;
 	if ( vs!=0 ) {
-	    /* GT: "Private" is a keyword (sort of) in PostScript. Perhaps it */
-	    /* GT: should remain untranslated? */
+	    /* TRANSLATORS: "Private" is a keyword (sort of) in PostScript. Perhaps it */
+	    /* should remain untranslated? */
 	    GDrawDrawText8(pixmap,r.x+r.width+2,y,_("Private Dictionary"),-1,0x000000 );
 	    y += vw->fh;
 	    for ( m=0, bit=1 ; bit!=0; ++m, bit<<=1 ) {

@@ -627,9 +627,9 @@ return( true );
 	    char *fn = xstrdup_or_null(filename);
 	    fn[lparen-filename] = '\0';
 	    ff_post_error(_("Not in Collection"),
-/* GT: The user is trying to open a font file which contains multiple fonts and */
-/* GT: has asked for a font which is not in that file. */
-/* GT: The string will look like: <fontname> is not in <filename> */
+/* TRANSLATORS: The user is trying to open a font file which contains multiple fonts and */
+/* has asked for a font which is not in that file. */
+/* The string will look like: <fontname> is not in <filename> */
 		    _("%1$s is not in %2$.100s"),find,fn);
 	    free(fn);
 	}
@@ -2734,9 +2734,9 @@ return( NULL );
     names = xmalloc((count+1)*sizeof(char *));
     for ( i=0; i<count; ++i ) {
 	if ( offsets[i+1]<offsets[i] ) {
-/* GT: The CFF font type contains a thing called a name INDEX, and that INDEX */
-/* GT: is bad. It is an index of many of the names used in the CFF font. */
-/* GT: We hope the user will never see this. */
+/* TRANSLATORS: The CFF font type contains a thing called a name INDEX, and that INDEX */
+/* is bad. It is an index of many of the names used in the CFF font. */
+/* We hope the user will never see this. */
 	    LogError( _("Bad CFF name INDEX\n") );
 	    if ( info!=NULL ) info->bad_cff = true;
 	    while ( i<count ) {
@@ -2833,7 +2833,7 @@ static void skipcfft2thing(FILE *ttf) {
     /*  cff stack, as there are no examples of this, it's hard to guess */
     int ch;
 
-/* GT: DICT is a magic term inside CFF fonts, as is INDEX, and I guess CFF and type2 */
+/* TRANSLATORS: DICT is a magic term inside CFF fonts, as is INDEX, and I guess CFF and type2 */
     LogError( _("FontForge does not support type2 programs embedded in CFF DICT INDICES.\n") );
     while (true) {
 	ch = getc(ttf);
@@ -4444,8 +4444,8 @@ static int PickCMap(struct cmap_encs *cmap_encs,int enccnt,int def) {
     int i, ret;
     static char *macscripts[]= { N_("Script|Roman"), N_("Script|Japanese"), N_("Script|Traditional Chinese"), N_("Script|Korean"),
 	N_("Script|Arabic"), N_("Script|Hebrew"),  N_("Script|Greek"),
-/* GT: Don't ask me what RSymbol means, I don't know either. It's in apple's */
-/* GT:  docs though */
+/* TRANSLATORS: Don't ask me what RSymbol means, I don't know either. It's in apple's */
+/* docs though */
 	N_("Script|Cyrillic"), N_("Script|RSymbol"), N_("Script|Devanagari"),
 /* 10*/ N_("Script|Gurmukhi"), N_("Script|Gujarati"), NULL, NULL, NULL,
 	NULL, NULL, NULL, NULL, NULL,

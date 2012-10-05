@@ -1698,19 +1698,19 @@ static int SCMakeBaseReference(SplineChar *sc,SplineFont *sf,int layer,int ch, B
 	    if ( ch==0x131 ) ch='i'; else ch = 'j';
 	    rsc = SFGetChar(sf,ch,NULL);
 	    if ( rsc!=NULL && !sf->dotlesswarn ) {
-/* GT: the string "dotlessi" is the official postscript name for the glyph */
-/* GT: containing an "i" without a dot on top of it. The name "dotlessi" */
-/* GT: should be left untranslated, though you may wish to explain what it */
-/* GT: means */
+/* TRANSLATORS: the string "dotlessi" is the official postscript name for the glyph */
+/* containing an "i" without a dot on top of it. The name "dotlessi" */
+/* should be left untranslated, though you may wish to explain what it */
+/* means */
 		ff_post_error( _("Missing Glyph..."),ch=='i'?_("Your font is missing the dotlessi glyph,\nplease add it and remake your accented glyphs"):
-/* GT: Adobe decided that a dotless j glyph was needed, assigned a code */
-/* GT: point to it in the private use area, and named it "dotlessj". Then */
-/* GT: years later the Unicode people decided one was needed and assigned */
-/* GT: it U+0237, so that's now the official code point and it is named */
-/* GT: "uni0237". The name "dotlessj" is deprecated but still present in */
-/* GT: many fonts. Neither "dotlessj" nor "uni0237" should be translated */
-/* GT: because they are standard PostScript glyph names. */
-/* GT: Again you may wish to explain that these refer to a "j" without a dot */
+/* TRANSLATORS: Adobe decided that a dotless j glyph was needed, assigned a code */
+/* point to it in the private use area, and named it "dotlessj". Then */
+/* years later the Unicode people decided one was needed and assigned */
+/* it U+0237, so that's now the official code point and it is named */
+/* "uni0237". The name "dotlessj" is deprecated but still present in */
+/* many fonts. Neither "dotlessj" nor "uni0237" should be translated */
+/* because they are standard PostScript glyph names. */
+/* Again you may wish to explain that these refer to a "j" without a dot */
 			_("Your font is missing the uni0237 glyph,\nand the deprecated dotlessj glyph,\nplease add the former and remake your accented glyphs"));
 		sf->dotlesswarn = true;
 	    }

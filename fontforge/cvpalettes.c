@@ -288,11 +288,11 @@ GMenuItem2 cvspirotoollist[] = {
 };
 
 static char *editablelayers[] = {
-/* GT: Foreground, make it short */
+/* TRANSLATORS: Foreground, make it short */
     N_("F_ore"),
-/* GT: Background, make it short */
+/* TRANSLATORS: Background, make it short */
     N_("_Back"),
-/* GT: Guide layer, make it short */
+/* TRANSLATORS: Guide layer, make it short */
     N_("_Guide")
 };
 static real raddiam_x = 20, raddiam_y = 20, rotate_by=0;
@@ -1644,7 +1644,7 @@ return;
     gcd[0].creator = GScrollBarCreate;
     layer2.sb_start = gcd[0].gd.pos.x;
 
-/* GT: Abbreviation for "Visible" */
+/* TRANSLATORS: Abbreviation for "Visible" */
     label[1].text = (uint32_t *) _("V");
     label[1].text_is_1byte = true;
     gcd[1].gd.label = &label[1];
@@ -2000,11 +2000,11 @@ void CVSetLayer(CharView *cv,int layer) {
 /* Check if a key press corresponds to a mnemonic the palette knows about. */
 int CVPaletteMnemonicCheck(GEvent *event) {
     static struct strmatch { char *str; int cid; } strmatch[] = {
-/* GT: Foreground, make it short */
+/* TRANSLATORS: Foreground, make it short */
 	{ N_("F_ore"), CID_EFore },
-/* GT: Background, make it short */
+/* TRANSLATORS: Background, make it short */
 	{ N_("_Back"), CID_EBack },
-/* GT: Guide layer, make it short */
+/* TRANSLATORS: Guide layer, make it short */
 	{ N_("_Guide"), CID_EGrid },
 	{ NULL, 0 }
     };
@@ -2641,7 +2641,7 @@ return(bvlayers);
     for ( i=0; i<sizeof(label)/sizeof(label[0]); ++i )
 	label[i].font = layersfont;
 
-/* GT: Abbreviation for "Visible" */
+/* TRANSLATORS: Abbreviation for "Visible" */
     label[0].text = (uint32_t *) _("V");
     label[0].text_is_1byte = true;
     gcd[0].gd.label = &label[0];

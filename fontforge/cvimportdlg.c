@@ -294,10 +294,10 @@ return( oldflags );
     memset(&boxes,0,sizeof(boxes));
 
     k = 0;
-/* GT: The following strings should be concatenated together, the result */
-/* GT: translated, and then broken into lines by hand. I'm sure it would */
-/* GT: be better to specify this all as one string, but my widgets won't support */
-/* GT: that */
+/* TRANSLATORS: The following strings should be concatenated together, the result */
+/* translated, and then broken into lines by hand. I'm sure it would */
+/* be better to specify this all as one string, but my widgets won't support */
+/* that */
     label[k].text = (uint32_t *) _("FontForge has some bugs in its remove overlap\n"
 				    "function which may cause you problems, so\n"
 				    "I give you the option of turning it off.\n"

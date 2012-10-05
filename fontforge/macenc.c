@@ -2264,8 +2264,8 @@ static struct { char *name; int code; } localmaclang[] = {
     {N_("Latvian"), 28},
     {N_("Sami (Lappish)"), 29},
     {N_("Faroese (Icelandic)"), 30},
-/* GT: See the long comment at "Property|New" */
-/* GT: The msgstr should contain a translation of "Farsi/Persian"), ignore "Lang|" */
+/* TRANSLATORS: See the long comment at "Property|New" */
+/* The msgstr should contain a translation of "Farsi/Persian"), ignore "Lang|" */
     {N_("Lang|Farsi/Persian"), 31},
     {N_("Russian"), 32},
     {N_("Simplified Chinese"), 33},

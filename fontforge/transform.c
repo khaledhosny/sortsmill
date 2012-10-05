@@ -89,7 +89,7 @@ typedef struct transdata {
 static GTextInfo origin[] = {
     { (uint32_t *) N_("Glyph Origin"), NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     { (uint32_t *) N_("Center of Selection"), NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-/* GT: The (x,y) position on the window where the user last pressed a mouse button */
+/* TRANSLATORS: The (x,y) position on the window where the user last pressed a mouse button */
     { (uint32_t *) N_("Last Press"), NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     GTEXTINFO_EMPTY
 };
@@ -434,8 +434,8 @@ static GGadgetCreateData *MakeTransBlock(TransData *td,int bnum,
     gcd[8].gd.cid = CID_Clockwise+offset;
     gcd[8].creator = GRadioCreate;
 
-/* GT: Sometimes spelled Widdershins. An old word which means counter clockwise. */
-/* GT: I used it because "counter clockwise" took too much space. */
+/* TRANSLATORS: Sometimes spelled Widdershins. An old word which means counter clockwise. */
+/* I used it because "counter clockwise" took too much space. */
     label[9].text = (uint32_t *) _("° Withershins");	/* deiseal */
     label[9].text_is_1byte = true;
     gcd[9].gd.label = &label[9];

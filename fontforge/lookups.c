@@ -1302,8 +1302,8 @@ static struct {
     char *text;
     uint32_t tag;
 } localscripts[] = {
-/* GT: See the long comment at "Property|New" */
-/* GT: The msgstr should contain a translation of "Arabic", ignore "Script|" */
+/* TRANSLATORS: See the long comment at "Property|New" */
+/* The msgstr should contain a translation of "Arabic", ignore "Script|" */
     { N_("Script|Arabic"), CHR('a','r','a','b') },
     { N_("Script|Aramaic"), CHR('a','r','a','m') },
     { N_("Script|Armenian"), CHR('a','r','m','n') },
@@ -1336,10 +1336,10 @@ static struct {
     { N_("Devanagari2"), CHR('d','e','v','2') },
 /*  { N_("Egyptian demotic"), CHR('e','g','y','d') }, */
 /*  { N_("Egyptian hieratic"), CHR('e','g','y','h') }, */
-/* GT: Someone asked if FontForge actually was prepared generate hieroglyph output */
-/* GT: because of this string. No. But OpenType and Unicode have placeholders for */
-/* GT: dealing with these scripts against the day someone wants to use them. So */
-/* GT: FontForge must be prepared to deal with those placeholders if nothing else. */
+/* TRANSLATORS: Someone asked if FontForge actually was prepared generate hieroglyph output */
+/* because of this string. No. But OpenType and Unicode have placeholders for */
+/* dealing with these scripts against the day someone wants to use them. So */
+/* FontForge must be prepared to deal with those placeholders if nothing else. */
 /*  { N_("Egyptian hieroglyphs"), CHR('e','g','y','p') }, */
     { N_("Script|Ethiopic"), CHR('e','t','h','i') },
     { N_("Script|Georgian"), CHR('g','e','o','r') },
@@ -1578,11 +1578,11 @@ void NameOTLookup(OTLookup *otl,SplineFont *sf) {
 	    }
 	}
 	if ( script!=NULL ) {
-/* GT: This string is used to generate a name for each OpenType lookup. */
-/* GT: The %s will be filled with the user friendly name of the feature used to invoke the lookup */
-/* GT: The second %s (if present) is the script */
-/* GT: While the %d is the index into the lookup list and is used to disambiguate it */
-/* GT: In case that is needed */
+/* TRANSLATORS: This string is used to generate a name for each OpenType lookup. */
+/* The %s will be filled with the user friendly name of the feature used to invoke the lookup */
+/* The second %s (if present) is the script */
+/* While the %d is the index into the lookup list and is used to disambiguate it */
+/* In case that is needed */
 	    format = _("%s in %s lookup %d");
 	    otl->lookup_name = xmalloc( strlen(userfriendly)+strlen(format)+strlen(script)+10 );
 	    sprintf( otl->lookup_name, format, userfriendly, script, otl->lookup_index );
@@ -1602,12 +1602,12 @@ void NameOTLookup(OTLookup *otl,SplineFont *sf) {
 	for ( subtable = otl->subtables; subtable!=NULL; subtable=subtable->next, ++cnt )
 		if ( subtable->subtable_name==NULL ) {
 	    if ( subtable==otl->subtables && subtable->next==NULL )
-/* GT: This string is used to generate a name for an OpenType lookup subtable. */
-/* GT:  %s is the lookup name */
+/* TRANSLATORS: This string is used to generate a name for an OpenType lookup subtable. */
+/* %s is the lookup name */
 		format = _("%s subtable");
 	    else if ( subtable->per_glyph_pst_or_kern )
-/* GT: This string is used to generate a name for an OpenType lookup subtable. */
-/* GT:  %s is the lookup name, %d is the index of the subtable in the lookup */
+/* TRANSLATORS: This string is used to generate a name for an OpenType lookup subtable. */
+/* %s is the lookup name, %d is the index of the subtable in the lookup */
 		format = _("%s per glyph data %d");
 	    else if ( subtable->kc!=NULL )
 		format = _("%s kerning class %d");

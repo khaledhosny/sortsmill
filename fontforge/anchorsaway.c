@@ -1259,7 +1259,7 @@ void AnchorControl(SplineChar *sc,AnchorPoint *ap,int layer) {
     gcd[k++].creator = GListFieldCreate;
     hvarray[hv++] = &gcd[k-1]; hvarray[hv++] = GCD_ColSpan; hvarray[hv++] = GCD_Glue; hvarray[hv++] = NULL;
 
-/* GT: Short for: Magnification */
+/* TRANSLATORS: Short for: Magnification */
     label[k].text = (uint32_t *) _("Mag:");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
@@ -1301,7 +1301,7 @@ void AnchorControl(SplineChar *sc,AnchorPoint *ap,int layer) {
     gcd[k++].creator = GNumericFieldCreate;
     hvarray[hv++] = &gcd[k-1]; hvarray[hv++] = GCD_ColSpan; hvarray[hv++] = GCD_Glue; hvarray[hv++] = NULL;
 
-/* GT: Short for Correction */
+/* TRANSLATORS: Short for Correction */
     label[k].text = (uint32_t *) _("Cor:");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
@@ -1347,7 +1347,7 @@ void AnchorControl(SplineChar *sc,AnchorPoint *ap,int layer) {
     gcd[k++].creator = GNumericFieldCreate;
     hvarray[hv++] = &gcd[k-1]; hvarray[hv++] = GCD_ColSpan; hvarray[hv++] = GCD_Glue; hvarray[hv++] = NULL;
 
-/* GT: Short for Correction */
+/* TRANSLATORS: Short for Correction */
     label[k].text = (uint32_t *) _("Cor:");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];

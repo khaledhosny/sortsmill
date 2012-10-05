@@ -258,7 +258,7 @@ int SimplifyDlg(SplineFont *sf, struct simplifyinfo *smpl) {
     gcd[k++].creator = GCheckBoxCreate;
     varray[l][0] = &gcd[k-1]; varray[l++][1] = NULL;
 
-/* GT: here "tan" means trigonometric tangent */
+/* TRANSLATORS: here "tan" means trigonometric tangent */
     label[k].text = (uint32_t *) _("if tan less than");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];

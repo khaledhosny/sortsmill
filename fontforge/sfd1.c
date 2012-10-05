@@ -453,9 +453,9 @@ static void ACDisassociateLigatures(SplineFont1 *sf,AnchorClass1 *ac) {
     lac->ac.type = act_mklg;
     ac->ac.next = (AnchorClass *) lac;
 
-  /* GT: Need to split some AnchorClasses into two classes, one for normal */
-  /* GT:  base letters, and one for ligatures. So create a new AnchorClass */
-  /* GT:  name for the ligature version */
+  /* TRANSLATORS: Need to split some AnchorClasses into two classes, one for normal */
+  /* base letters, and one for ligatures. So create a new AnchorClass */
+  /* name for the ligature version */
     format = _("Ligature %s");
     lac->ac.name = xmalloc(strlen(ac->ac.name)+strlen(format)+1);
     sprintf( lac->ac.name, format, ac->ac.name );

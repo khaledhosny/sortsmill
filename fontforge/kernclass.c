@@ -179,9 +179,9 @@ return( ti );
 }
 
 static int isEverythingElse(char *text) {
-    /* GT: The string "{Everything Else}" is used in the context of a list */
-    /* GT: of classes (a set of kerning classes) where class 0 designates the */
-    /* GT: default class containing all glyphs not specified in the other classes */
+    /* TRANSLATORS: The string "{Everything Else}" is used in the context of a list */
+    /* of classes (a set of kerning classes) where class 0 designates the */
+    /* default class containing all glyphs not specified in the other classes */
     int ret = strcmp(text,_("{Everything Else}") );
 return( ret==0 );
 }
@@ -1388,7 +1388,7 @@ static int KCD_NameClass(SplineFont *sf,char *buf,int blen,char *class_str) {
 return( true );
     }
     if ( isEverythingElse(class_str)) {
- /* GT: Short form of {Everything Else}, might use universal? U+2200 */
+ /* TRANSLATORS: Short form of {Everything Else}, might use universal? U+2200 */
 	strcpy(buf,_("{All}") );
 return( true );
     }
@@ -2221,7 +2221,7 @@ static int AddClassList(GGadgetCreateData *gcd, GTextInfo *label, int k, int off
     gcd[k++].creator = GMatrixEditCreate;
     varray[1] = &gcd[k-1];
 
-/* GT: Select the class containing the glyph named in the following text field */
+/* TRANSLATORS: Select the class containing the glyph named in the following text field */
     label[k].text = (uint32_t *) _("Select Class Containing:");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
@@ -2570,7 +2570,7 @@ return;
     wattrs.restrict_input_to_me = true;
     wattrs.undercursor = 1;
     wattrs.cursor = ct_pointer;
-/* GT: The %s is the name of the lookup subtable containing this kerning class */
+/* TRANSLATORS: The %s is the name of the lookup subtable containing this kerning class */
     snprintf( titlebuf, sizeof(titlebuf), _("Kerning by Classes: %s"), kc->subtable->subtable_name );
     wattrs.utf8_window_title =  titlebuf ;
     wattrs.is_dlg = false;

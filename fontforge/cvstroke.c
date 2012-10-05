@@ -743,7 +743,7 @@ static void MakeStrokeDlg(void *cv,void (*strokeit)(void *,StrokeInfo *,int),Str
 	wattrs.undercursor = 1;
 	wattrs.cursor = ct_pointer;
 	wattrs.utf8_window_title = strokeit!=NULL ? _("Expand Stroke") :
-/* GT: This does not mean the program, but freehand drawing */
+/* TRANSLATORS: This does not mean the program, but freehand drawing */
 		    _("Freehand");
 	wattrs.is_dlg = true;
 	pos.x = pos.y = 0;
@@ -901,18 +901,18 @@ static void MakeStrokeDlg(void *cv,void (*strokeit)(void *,StrokeInfo *,int),Str
 	boxes[3].creator = GHVBoxCreate;
 	mainarray[mi][0] = &boxes[3]; mainarray[mi++][1] = NULL;
 
-/* GT: Butt is a PostScript concept which refers to a way of ending strokes */
-/* GT: In the following image the line drawn with "=" is the original, and */
-/* GT: the others are the results. The "Round" style is hard to draw with */
-/* GT: ASCII glyphs. If this is unclear I suggest you look at the Expand Stroke */
-/* GT: dialog which has little pictures */
-/* GT: */
-/* GT: -----------------+    -----------------+    ----------------+--+ */
-/* GT:                  |                      \                      | */
-/* GT: =================+    ================== )  =================  | */
-/* GT:                  |                      /                      | */
-/* GT: -----------------+    -----------------+    ----------------+--+ */
-/* GT:       Butt                 Round                Square */
+/* TRANSLATORS: Butt is a PostScript concept which refers to a way of ending strokes */
+/* In the following image the line drawn with "=" is the original, and */
+/* the others are the results. The "Round" style is hard to draw with */
+/* ASCII glyphs. If this is unclear I suggest you look at the Expand Stroke */
+/* dialog which has little pictures */
+/* */
+/* -----------------+    -----------------+    ----------------+--+ */
+/*                  |                      \                      | */
+/* =================+    ================== )  =================  | */
+/*                  |                      /                      | */
+/* -----------------+    -----------------+    ----------------+--+ */
+/*       Butt                 Round                Square */
 	label[gcdoff].text = (uint32_t *) _("_Butt");
 	label[gcdoff].text_is_1byte = true;
 	label[gcdoff].text_in_resource = true;

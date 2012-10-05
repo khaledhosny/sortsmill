@@ -353,17 +353,17 @@ splash_e_h (GWindow gw, GEvent * event)
   GRect old;
   int i, y, x;
   static char *foolishness[] = {
-/* GT: These strings are for fun. If they are offensive or incomprehensible */
-/* GT: simply translate them as something dull like: "FontForge" */
-/* GT: This is a spoof of political slogans, designed to point out how foolish they are */
+/* TRANSLATORS: These strings are for fun. If they are offensive or incomprehensible */
+/* simply translate them as something dull like: "FontForge" */
+/* This is a spoof of political slogans, designed to point out how foolish they are */
     N_("A free press discriminates\nagainst the illiterate."),
     N_("A free press discriminates\nagainst the illiterate."),
-/* GT: This is a pun on the old latin drinking song "Gaudeamus igature!" */
+/* TRANSLATORS: This is a pun on the old latin drinking song "Gaudeamus igature!" */
     N_("Gaudeamus Ligature!"),
     N_("Gaudeamus Ligature!"),
-/* GT: Spoof on the bible */
+/* TRANSLATORS: Spoof on the bible */
     N_("In the beginning was the letter..."),
-/* GT: Some wit at MIT came up with this ("ontology recapitulates phylogony" is the original) */
+/* TRANSLATORS: Some wit at MIT came up with this ("ontology recapitulates phylogony" is the original) */
     N_("fontology recapitulates file-ogeny")
   };
 
