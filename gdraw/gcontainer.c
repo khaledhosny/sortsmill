@@ -168,7 +168,7 @@ return( g );
 return( NULL );
 }
 
-void GWidgetNextFocus(GWindow top) {
+static void GWidgetNextFocus(GWindow top) {
     GTopLevelD *topd;
     GGadget *focus, *last=NULL;
 
@@ -210,7 +210,7 @@ return( g );
 return( NULL );
 }
     
-void GWidgetPrevFocus(GWindow top) {
+static void GWidgetPrevFocus(GWindow top) {
     GTopLevelD *topd;
     GGadget *focus;
 
