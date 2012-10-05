@@ -125,7 +125,6 @@ AC_PATH_PROG([MY_SORT],[sort],[cat]) dnl FIXME: Should we get rid of this?
 AC_PATH_PROG([TR],[tr],[tr])
 AC_PATH_PROG([MSGFMT],[msgfmt],[msgfmt])
 AC_PATH_PROG([XGETTEXT],[xgettext],[xgettext])
-AC_PATH_PROG([CPROTO],[cproto],[cproto])
 AC_PATH_PROG([INDENT],[indent],[indent])
 AC_PATH_PROG([UNZIP],[unzip],[unzip])
 AC_PATH_PROG([WGET],[wget],[wget])

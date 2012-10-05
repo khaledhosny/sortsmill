@@ -1938,7 +1938,7 @@ enum ps_flags { ps_flag_nohintsubs = 0x10000, ps_flag_noflex=0x20000,
 
 struct compressors { char *ext, *decomp, *recomp; };
 #define COMPRESSORS_EMPTY { NULL, NULL, NULL }
-extern struct compressors compressors[];
+VISIBLE extern struct compressors compressors[];
 
 enum archive_list_style { ars_tar, ars_zip };
 
@@ -1954,8 +1954,8 @@ struct findsel;
 struct charprocs;
 struct enc;
 
-extern char *strconcat(const char *str, const char *str2);
-extern char *strconcat3(const char *str, const char *str2, const char *str3);
+VISIBLE extern char *strconcat(const char *str, const char *str2);
+VISIBLE extern char *strconcat3(const char *str, const char *str2, const char *str3);
 
 extern char *XUIDFromFD(int xuid[20]);
 extern SplineFont *SplineFontFromPSFont(struct fontdict *fd);
@@ -1966,9 +1966,9 @@ extern int LoadKerningDataFromTfm(SplineFont *sf, char *filename, EncMap *map);
 extern int LoadKerningDataFromOfm(SplineFont *sf, char *filename, EncMap *map);
 extern int LoadKerningDataFromPfm(SplineFont *sf, char *filename, EncMap *map);
 extern int LoadKerningDataFromMacFOND(SplineFont *sf, char *filename, EncMap *map);
-extern int LoadKerningDataFromMetricsFile(SplineFont *sf, char *filename, EncMap *map);
-extern void FeatDumpFontLookups(FILE *out,SplineFont *sf);
-extern void FeatDumpOneLookup(FILE *out,SplineFont *sf, OTLookup *otl);
+VISIBLE extern int LoadKerningDataFromMetricsFile(SplineFont *sf, char *filename, EncMap *map);
+VISIBLE extern void FeatDumpFontLookups(FILE *out,SplineFont *sf);
+VISIBLE extern void FeatDumpOneLookup(FILE *out,SplineFont *sf, OTLookup *otl);
 extern void SFApplyFeatureFile(SplineFont *sf,FILE *file,char *filename);
 extern void SFApplyFeatureFilename(SplineFont *sf,char *filename);
 extern void SubsNew(SplineChar *to,enum possub_type type,int tag,char *components,
@@ -1978,13 +1978,13 @@ extern int SFOneWidth(SplineFont *sf);
 extern int CIDOneWidth(SplineFont *sf);
 extern int SFOneHeight(SplineFont *sf);
 extern int SFIsCJK(SplineFont *sf,EncMap *map);
-extern void CIDMasterAsDes(SplineFont *sf);
+VISIBLE extern void CIDMasterAsDes(SplineFont *sf);
 enum fontformat { ff_pfa, ff_pfb, ff_pfbmacbin, ff_multiple, ff_mma, ff_mmb,
 	ff_ptype3, ff_ptype0, ff_cid, ff_cff, ff_cffcid,
 	ff_type42, ff_type42cid,
 	ff_ttf, ff_ttfsym, ff_ttfmacbin, ff_ttc, ff_ttfdfont, ff_otf, ff_otfdfont,
 	ff_otfcid, ff_otfciddfont, ff_svg, ff_ufo, ff_woff, ff_none };
-extern int CanWoff(void);
+VISIBLE extern int CanWoff(void);
 extern struct pschars *SplineFont2ChrsSubrs(SplineFont *sf, int iscjk,
 	struct pschars *subrs,int flags,enum fontformat format,int layer);
 extern int CanonicalCombiner(int uni);
@@ -2000,7 +2000,7 @@ typedef struct growbuf {
 } GrowBuf;
 extern void GrowBuffer(GrowBuf *gb);
 extern void GrowBufferAdd(GrowBuf *gb,int ch);
-extern void GrowBufferAddStr(GrowBuf *gb,char *str);
+VISIBLE extern void GrowBufferAddStr(GrowBuf *gb,char *str);
 
 struct glyphdata;
 extern int UnitsParallel(BasePoint *u1,BasePoint *u2,int strict);
@@ -2017,7 +2017,7 @@ enum bitmapformat { bf_bdf, bf_ttf, bf_sfnt_dfont, bf_sfnt_ms, bf_otb,
 	bf_ptype3,
 	bf_none };
 extern int32 filechecksum(FILE *file);
-extern const char *GetAuthor(void);
+VISIBLE extern const char *GetAuthor(void);
 extern SplineChar *SFFindExistingCharMac(SplineFont *,EncMap *map, int unienc);
 extern void SC_PSDump(void (*dumpchar)(int ch,void *data), void *data,
 	SplineChar *sc, int refs_to_splines, int pdfopers,int layer );
@@ -2040,28 +2040,28 @@ extern int WriteMacTTFFont(char *fontname,SplineFont *sf, enum fontformat format
 extern int WriteMacBitmaps(char *filename,SplineFont *sf, int32 *sizes,
 	int is_dfont,EncMap *enc);
 extern int WritePalmBitmaps(char *filename,SplineFont *sf, int32 *sizes,EncMap *enc);
-extern int WriteMacFamily(char *filename,struct sflist *sfs,enum fontformat format,
+VISIBLE extern int WriteMacFamily(char *filename,struct sflist *sfs,enum fontformat format,
 	enum bitmapformat bf,int flags,int layer);
-extern int WriteTTC(char *filename,struct sflist *sfs,enum fontformat format,
+VISIBLE extern int WriteTTC(char *filename,struct sflist *sfs,enum fontformat format,
 	enum bitmapformat bf,int flags,int layer,enum ttc_flags ttcflags);
 extern long mactime(void);
 extern int WriteSVGFont(char *fontname,SplineFont *sf,enum fontformat format,int flags,EncMap *enc,int layer);
 extern int _WriteSVGFont(FILE *file,SplineFont *sf,enum fontformat format,int flags,EncMap *enc,int layer);
 extern int WriteUFOFont(char *fontname,SplineFont *sf,enum fontformat format,int flags,EncMap *enc,int layer);
-extern void SfListFree(struct sflist *sfs);
-extern void TTF_PSDupsDefault(SplineFont *sf);
+VISIBLE extern void SfListFree(struct sflist *sfs);
+VISIBLE extern void TTF_PSDupsDefault(SplineFont *sf);
 extern void DefaultTTFEnglishNames(struct ttflangname *dummy, SplineFont *sf);
-extern void TeXDefaultParams(SplineFont *sf);
-extern int AlreadyMSSymbolArea(SplineFont *sf,EncMap *map);
-extern void OS2FigureCodePages(SplineFont *sf, uint32 CodePage[2]);
-extern void OS2FigureUnicodeRanges(SplineFont *sf, uint32 Ranges[4]);
+VISIBLE extern void TeXDefaultParams(SplineFont *sf);
+VISIBLE extern int AlreadyMSSymbolArea(SplineFont *sf,EncMap *map);
+VISIBLE extern void OS2FigureCodePages(SplineFont *sf, uint32 CodePage[2]);
+VISIBLE extern void OS2FigureUnicodeRanges(SplineFont *sf, uint32 Ranges[4]);
 VISIBLE extern void SFDefaultOS2Info(struct pfminfo *pfminfo,SplineFont *sf,char *fontname);
 extern void SFDefaultOS2Simple(struct pfminfo *pfminfo,SplineFont *sf);
 VISIBLE extern void SFDefaultOS2SubSuper(struct pfminfo *pfminfo,int emsize,double italicangle);
 extern void VerifyLanguages(SplineFont *sf);
-extern int ScriptIsRightToLeft(uint32 script);
+VISIBLE extern int ScriptIsRightToLeft(uint32 script);
 extern void ScriptMainRange(uint32 script, int *start, int *end);
-extern uint32 ScriptFromUnicode(int u,SplineFont *sf);
+VISIBLE extern uint32 ScriptFromUnicode(int u,SplineFont *sf);
 VISIBLE extern uint32 SCScriptFromUnicode(SplineChar *sc);
 VISIBLE extern int SCRightToLeft(SplineChar *sc);
 extern int SLIContainsR2L(SplineFont *sf,int sli);
@@ -2073,75 +2073,75 @@ extern void SFMatchGlyphs(SplineFont *sf,SplineFont *target,int addempties);
 VISIBLE extern void MMMatchGlyphs(MMSet *mm);
 extern char *_GetModifiers(char *fontname, char *familyname,char *weight);
 extern char *SFGetModifiers(SplineFont *sf);
-extern const unichar_t *_uGetModifiers(const unichar_t *fontname, const unichar_t *familyname,
+VISIBLE extern const unichar_t *_uGetModifiers(const unichar_t *fontname, const unichar_t *familyname,
 	const unichar_t *weight);
 extern void SFSetFontName(SplineFont *sf, char *family, char *mods, char *full);
 extern void ttfdumpbitmap(SplineFont *sf,struct alltabs *at,int32 *sizes);
 extern void ttfdumpbitmapscaling(SplineFont *sf,struct alltabs *at,int32 *sizes);
-extern void SplineFontSetUnChanged(SplineFont *sf);
+VISIBLE extern void SplineFontSetUnChanged(SplineFont *sf);
 
 extern int Within4RoundingErrors(bigreal v1, bigreal v2);
 extern int Within16RoundingErrors(bigreal v1, bigreal v2);
 extern int Within64RoundingErrors(bigreal v1, bigreal v2);
-extern int RealNear(real a,real b);
-extern int RealNearish(real a,real b);
+VISIBLE VISIBLE extern int RealNear(real a,real b);
+VISIBLE VISIBLE extern int RealNearish(real a,real b);
 extern int RealApprox(real a,real b);
-extern int RealWithin(real a,real b,real fudge);
+VISIBLE extern int RealWithin(real a,real b,real fudge);
 extern int RealRatio(real a,real b,real fudge);
 
-extern int PointsDiagonalable(SplineFont *sf,BasePoint **bp,BasePoint *unit);
-extern int MergeDStemInfo(SplineFont *sf,DStemInfo **ds, DStemInfo *test);
+VISIBLE extern int PointsDiagonalable(SplineFont *sf,BasePoint **bp,BasePoint *unit);
+VISIBLE extern int MergeDStemInfo(SplineFont *sf,DStemInfo **ds, DStemInfo *test);
 
 extern void LineListFree(LineList *ll);
 extern void LinearApproxFree(LinearApprox *la);
-extern void SplineFree(Spline *spline);
-extern SplinePoint *SplinePointCreate(real x, real y);
-extern void SplinePointFree(SplinePoint *sp);
+VISIBLE extern void SplineFree(Spline *spline);
+VISIBLE extern SplinePoint *SplinePointCreate(real x, real y);
+VISIBLE extern void SplinePointFree(SplinePoint *sp);
 extern void SplinePointsFree(SplinePointList *spl);
-extern void SplinePointListFree(SplinePointList *spl);
-extern void SplinePointListsFree(SplinePointList *head);
-extern void SplineSetSpirosClear(SplineSet *spl);
+VISIBLE extern void SplinePointListFree(SplinePointList *spl);
+VISIBLE extern void SplinePointListsFree(SplinePointList *head);
+VISIBLE extern void SplineSetSpirosClear(SplineSet *spl);
 extern void SplineSetBeziersClear(SplineSet *spl);
-extern void RefCharFree(RefChar *ref);
-extern void RefCharsFree(RefChar *ref);
-extern void RefCharsFreeRef(RefChar *ref);
+VISIBLE extern void RefCharFree(RefChar *ref);
+VISIBLE extern void RefCharsFree(RefChar *ref);
+VISIBLE extern void RefCharsFreeRef(RefChar *ref);
 extern void CopyBufferFree(void);
 extern void CopyBufferClearCopiedFrom(SplineFont *dying);
-extern void UndoesFree(Undoes *undo);
-extern void StemInfosFree(StemInfo *h);
-extern void StemInfoFree(StemInfo *h);
-extern void DStemInfosFree(DStemInfo *h);
-extern void DStemInfoFree(DStemInfo *h);
-extern void KernPairsFree(KernPair *kp);
+VISIBLE extern void UndoesFree(Undoes *undo);
+VISIBLE extern void StemInfosFree(StemInfo *h);
+VISIBLE extern void StemInfoFree(StemInfo *h);
+VISIBLE extern void DStemInfosFree(DStemInfo *h);
+VISIBLE extern void DStemInfoFree(DStemInfo *h);
+VISIBLE extern void KernPairsFree(KernPair *kp);
 VISIBLE extern void SCOrderAP(SplineChar *sc);
-extern void AnchorPointsFree(AnchorPoint *ap);
-extern AnchorPoint *AnchorPointsCopy(AnchorPoint *alist);
+VISIBLE VISIBLE extern void AnchorPointsFree(AnchorPoint *ap);
+VISIBLE extern AnchorPoint *AnchorPointsCopy(AnchorPoint *alist);
 VISIBLE extern void SFRemoveAnchorClass(SplineFont *sf,AnchorClass *an);
 extern int AnchorClassesNextMerge(AnchorClass *ac);
-extern int IsAnchorClassUsed(SplineChar *sc,AnchorClass *an);
+VISIBLE extern int IsAnchorClassUsed(SplineChar *sc,AnchorClass *an);
 extern AnchorPoint *APAnchorClassMerge(AnchorPoint *anchors,AnchorClass *into,AnchorClass *from);
 extern void AnchorClassMerge(SplineFont *sf,AnchorClass *into,AnchorClass *from);
 extern void AnchorClassesFree(AnchorClass *kp);
-extern void TtfTablesFree(struct ttf_table *tab);
+VISIBLE extern void TtfTablesFree(struct ttf_table *tab);
 extern void SFRemoveSavedTable(SplineFont *sf, uint32 tag);
-extern AnchorClass *AnchorClassMatch(SplineChar *sc1,SplineChar *sc2,
+VISIBLE extern AnchorClass *AnchorClassMatch(SplineChar *sc1,SplineChar *sc2,
 	AnchorClass *restrict_, AnchorPoint **_ap1,AnchorPoint **_ap2 );
 extern AnchorClass *AnchorClassMkMkMatch(SplineChar *sc1,SplineChar *sc2,
 	AnchorPoint **_ap1,AnchorPoint **_ap2 );
 extern AnchorClass *AnchorClassCursMatch(SplineChar *sc1,SplineChar *sc2,
 	AnchorPoint **_ap1,AnchorPoint **_ap2 );
 extern void SCInsertPST(SplineChar *sc,PST *new_);
-extern void ValDevFree(ValDevTab *adjust);
-extern ValDevTab *ValDevTabCopy(ValDevTab *orig);
-extern void DeviceTableFree(DeviceTable *adjust);
-extern DeviceTable *DeviceTableCopy(DeviceTable *orig);
-extern void DeviceTableSet(DeviceTable *adjust, int size, int correction);
-extern void PSTFree(PST *lig);
+VISIBLE extern void ValDevFree(ValDevTab *adjust);
+VISIBLE extern ValDevTab *ValDevTabCopy(ValDevTab *orig);
+VISIBLE extern void DeviceTableFree(DeviceTable *adjust);
+VISIBLE extern DeviceTable *DeviceTableCopy(DeviceTable *orig);
+VISIBLE extern void DeviceTableSet(DeviceTable *adjust, int size, int correction);
+VISIBLE extern void PSTFree(PST *lig);
 extern uint16 PSTDefaultFlags(enum possub_type type,SplineChar *sc );
-extern int PSTContains(const char *components,const char *name);
-extern StemInfo *StemInfoCopy(StemInfo *h);
-extern DStemInfo *DStemInfoCopy(DStemInfo *h);
-extern void SPChangePointType(SplinePoint *sp, int pointtype);
+VISIBLE extern int PSTContains(const char *components,const char *name);
+VISIBLE extern StemInfo *StemInfoCopy(StemInfo *h);
+VISIBLE extern DStemInfo *DStemInfoCopy(DStemInfo *h);
+VISIBLE VISIBLE extern void SPChangePointType(SplinePoint *sp, int pointtype);
 
 static inline SplineFont *optional_cidmaster(SplineFont *sf)
 {
@@ -2168,113 +2168,113 @@ extern PST *PSTCopy(PST *base,SplineChar *sc,struct sfmergecontext *mc);
 extern struct lookup_subtable *MCConvertSubtable(struct sfmergecontext *mc,struct lookup_subtable *sub);
 extern AnchorClass *MCConvertAnchorClass(struct sfmergecontext *mc,AnchorClass *ac);
 extern void SFFinishMergeContext(struct sfmergecontext *mc);
-extern SplineChar *SplineCharCopy(SplineChar *sc,SplineFont *into,struct sfmergecontext *);
+VISIBLE extern SplineChar *SplineCharCopy(SplineChar *sc,SplineFont *into,struct sfmergecontext *);
 extern BDFChar *BDFCharCopy(BDFChar *bc);
 VISIBLE extern void BCFlattenFloat(BDFChar *bc);
 extern void BitmapsCopy(SplineFont *to, SplineFont *from, int to_index, int from_index );
 extern struct gimage *ImageAlterClut(struct gimage *image);
-extern void ImageListsFree(ImageList *imgs);
-extern void TTFLangNamesFree(struct ttflangname *l);
-extern void AltUniFree(struct altuni *altuni);
+VISIBLE extern void ImageListsFree(ImageList *imgs);
+VISIBLE extern void TTFLangNamesFree(struct ttflangname *l);
+VISIBLE extern void AltUniFree(struct altuni *altuni);
 extern void AltUniFigure(SplineFont *sf,EncMap *map,int check_dups);
 extern void AltUniRemove(SplineChar *sc,int uni);
 extern void AltUniAdd(SplineChar *sc,int uni);
 extern void AltUniAdd_DontCheckDups(SplineChar *sc,int uni);
-extern void LayerDefault(Layer *);
+VISIBLE extern void LayerDefault(Layer *);
 extern SplineChar *SplineCharCreate(int layer_cnt);
 VISIBLE extern SplineChar *SFSplineCharCreate(SplineFont *sf);
-extern RefChar *RefCharCreate(void);
+VISIBLE extern RefChar *RefCharCreate(void);
 extern RefChar *RefCharsCopy(RefChar *ref);	/* Still needs to be instanciated and have the dependency list adjusted */
-extern struct altuni *AltUniCopy(struct altuni *altuni,SplineFont *noconflicts);
+VISIBLE extern struct altuni *AltUniCopy(struct altuni *altuni,SplineFont *noconflicts);
 extern void SCAddRef(SplineChar *sc,SplineChar *rsc,int layer, real xoff, real yoff);
 extern void _SCAddRef(SplineChar *sc,SplineChar *rsc,int layer, real transform[6]);
 extern KernClass *KernClassCopy(KernClass *kc);
 extern void KernClassFreeContents(KernClass *kc);
-extern void KernClassListFree(KernClass *kc);
+VISIBLE extern void KernClassListFree(KernClass *kc);
 extern int KernClassContains(KernClass *kc, char *name1, char *name2, int ordered );
 extern void OTLookupFree(OTLookup *lookup);
 extern void OTLookupListFree(OTLookup *lookup );
 extern FPST *FPSTCopy(FPST *fpst);
-extern void FPSTRuleContentsFree(struct fpst_rule *r, enum fpossub_format format);
-extern void FPSTClassesFree(FPST *fpst);
-extern void FPSTRulesFree(struct fpst_rule *r, enum fpossub_format format, int rcnt);
-extern void FPSTFree(FPST *fpst);
+VISIBLE extern void FPSTRuleContentsFree(struct fpst_rule *r, enum fpossub_format format);
+VISIBLE extern void FPSTClassesFree(FPST *fpst);
+VISIBLE extern void FPSTRulesFree(struct fpst_rule *r, enum fpossub_format format, int rcnt);
+VISIBLE VISIBLE extern void FPSTFree(FPST *fpst);
 extern void ASMFree(ASM *sm);
-extern struct macname *MacNameCopy(struct macname *mn);
-extern void MacNameListFree(struct macname *mn);
-extern void MacSettingListFree(struct macsetting *ms);
-extern void MacFeatListFree(MacFeat *mf);
-extern void GlyphVariantsFree(struct glyphvariants *gv);
-extern struct glyphvariants *GlyphVariantsCopy(struct glyphvariants *gv);
+VISIBLE extern struct macname *MacNameCopy(struct macname *mn);
+VISIBLE extern void MacNameListFree(struct macname *mn);
+VISIBLE extern void MacSettingListFree(struct macsetting *ms);
+VISIBLE extern void MacFeatListFree(MacFeat *mf);
+VISIBLE extern void GlyphVariantsFree(struct glyphvariants *gv);
+VISIBLE extern struct glyphvariants *GlyphVariantsCopy(struct glyphvariants *gv);
 extern void MathKernVContentsFree(struct mathkernvertex *mk);
-extern void MathKernFree(struct mathkern *mk);
-extern struct mathkern *MathKernCopy(struct mathkern *mk);
+VISIBLE extern void MathKernFree(struct mathkern *mk);
+VISIBLE extern struct mathkern *MathKernCopy(struct mathkern *mk);
 extern void SplineCharListsFree(struct splinecharlist *dlist);
 extern void LayerFreeContents(SplineChar *sc, int layer);
-extern void SplineCharFreeContents(SplineChar *sc);
-extern void SplineCharFree(SplineChar *sc);
-extern void EncMapFree(EncMap *map);
-extern EncMap *EncMapFromEncoding(SplineFont *sf,Encoding *enc);
-extern EncMap *CompactEncMap(EncMap *map, SplineFont *sf);
-extern EncMap *EncMapNew(int encmax, int backmax, Encoding *enc);
-extern EncMap *EncMap1to1(int enccount);
-extern EncMap *EncMapCopy(EncMap *map);
+VISIBLE VISIBLE extern void SplineCharFreeContents(SplineChar *sc);
+VISIBLE extern void SplineCharFree(SplineChar *sc);
+VISIBLE extern void EncMapFree(EncMap *map);
+VISIBLE extern EncMap *EncMapFromEncoding(SplineFont *sf,Encoding *enc);
+VISIBLE extern EncMap *CompactEncMap(EncMap *map, SplineFont *sf);
+VISIBLE extern EncMap *EncMapNew(int encmax, int backmax, Encoding *enc);
+VISIBLE extern EncMap *EncMap1to1(int enccount);
+VISIBLE extern EncMap *EncMapCopy(EncMap *map);
 extern void SFExpandGlyphCount(SplineFont *sf, int newcnt);
 extern void ScriptLangListFree(struct scriptlanglist *sl);
-extern void FeatureScriptLangListFree(FeatureScriptLangList *fl);
+VISIBLE extern void FeatureScriptLangListFree(FeatureScriptLangList *fl);
 VISIBLE extern void SFBaseSort(SplineFont *sf);
-extern struct baselangextent *BaseLangCopy(struct baselangextent *extent);
-extern void BaseLangFree(struct baselangextent *extent);
+VISIBLE extern struct baselangextent *BaseLangCopy(struct baselangextent *extent);
+VISIBLE extern void BaseLangFree(struct baselangextent *extent);
 extern void BaseScriptFree(struct basescript *bs);
-extern void BaseFree(struct Base *base);
-extern void SplineFontFree(SplineFont *sf);
-extern struct jstf_lang *JstfLangsCopy(struct jstf_lang *jl);
-extern void JstfLangFree(struct jstf_lang *jl);
-extern void JustifyFree(Justify *just);
-extern void MATHFree(struct MATH *math);
-extern struct MATH *MathTableNew(SplineFont *sf);
-extern void OtfNameListFree(struct otfname *on);
-extern void OtfFeatNameListFree(struct otffeatname *fn);
+VISIBLE extern void BaseFree(struct Base *base);
+VISIBLE extern void SplineFontFree(SplineFont *sf);
+VISIBLE extern struct jstf_lang *JstfLangsCopy(struct jstf_lang *jl);
+VISIBLE extern void JstfLangFree(struct jstf_lang *jl);
+VISIBLE extern void JustifyFree(Justify *just);
+VISIBLE extern void MATHFree(struct MATH *math);
+VISIBLE extern struct MATH *MathTableNew(SplineFont *sf);
+VISIBLE extern void OtfNameListFree(struct otfname *on);
+VISIBLE extern void OtfFeatNameListFree(struct otffeatname *fn);
 extern struct otffeatname *findotffeatname(uint32 tag,SplineFont *sf);
-extern void MarkSetFree(int cnt,char **classes,char **names);
-extern void MarkClassFree(int cnt,char **classes,char **names);
+VISIBLE extern void MarkSetFree(int cnt,char **classes,char **names);
+VISIBLE extern void MarkClassFree(int cnt,char **classes,char **names);
 VISIBLE extern void MMSetFreeContents(MMSet *mm);
 extern void MMSetFree(MMSet *mm);
 VISIBLE extern void SFRemoveUndoes(SplineFont *sf,uint8 *selected,EncMap *map);
-extern void SplineRefigure3(Spline *spline);
-extern void SplineRefigure(Spline *spline);
-extern Spline *SplineMake3(SplinePoint *from, SplinePoint *to);
+VISIBLE extern void SplineRefigure3(Spline *spline);
+VISIBLE extern void SplineRefigure(Spline *spline);
+VISIBLE VISIBLE VISIBLE extern Spline *SplineMake3(SplinePoint *from, SplinePoint *to);
 extern LinearApprox *SplineApproximate(Spline *spline, real scale);
-extern int SplinePointListIsClockwise(const SplineSet *spl);
-extern void SplineSetFindBounds(const SplinePointList *spl, DBounds *bounds);
-extern void SplineCharLayerFindBounds(SplineChar *sc,int layer,DBounds *bounds);
-extern void SplineCharFindBounds(SplineChar *sc,DBounds *bounds);
+VISIBLE extern int SplinePointListIsClockwise(const SplineSet *spl);
+VISIBLE extern void SplineSetFindBounds(const SplinePointList *spl, DBounds *bounds);
+VISIBLE extern void SplineCharLayerFindBounds(SplineChar *sc,int layer,DBounds *bounds);
+VISIBLE extern void SplineCharFindBounds(SplineChar *sc,DBounds *bounds);
 extern void SplineFontLayerFindBounds(SplineFont *sf,int layer,DBounds *bounds);
 extern void SplineFontFindBounds(SplineFont *sf,DBounds *bounds);
-extern void CIDLayerFindBounds(SplineFont *sf,int layer,DBounds *bounds);
-extern void SplineSetQuickBounds(SplineSet *ss,DBounds *b);
-extern void SplineCharLayerQuickBounds(SplineChar *sc,int layer,DBounds *bounds);
-extern void SplineCharQuickBounds(SplineChar *sc, DBounds *b);
+VISIBLE extern void CIDLayerFindBounds(SplineFont *sf,int layer,DBounds *bounds);
+VISIBLE extern void SplineSetQuickBounds(SplineSet *ss,DBounds *b);
+VISIBLE extern void SplineCharLayerQuickBounds(SplineChar *sc,int layer,DBounds *bounds);
+VISIBLE extern void SplineCharQuickBounds(SplineChar *sc, DBounds *b);
 extern void SplineSetQuickConservativeBounds(SplineSet *ss,DBounds *b);
 extern void SplineCharQuickConservativeBounds(SplineChar *sc, DBounds *b);
 extern void SplineFontQuickConservativeBounds(SplineFont *sf,DBounds *b);
-extern void SplinePointCatagorize(SplinePoint *sp);
+VISIBLE extern void SplinePointCatagorize(SplinePoint *sp);
 extern int SplinePointIsACorner(SplinePoint *sp);
 extern void SPLCatagorizePoints(SplinePointList *spl);
 extern void SCCatagorizePoints(SplineChar *sc);
-extern SplinePointList *SplinePointListCopy1(const SplinePointList *spl);
-extern SplinePointList *SplinePointListCopy(const SplinePointList *base);
-extern SplinePointList *SplinePointListCopySelected(SplinePointList *base);
-extern SplinePointList *SplinePointListCopySpiroSelected(SplinePointList *base);
+VISIBLE extern SplinePointList *SplinePointListCopy1(const SplinePointList *spl);
+VISIBLE extern SplinePointList *SplinePointListCopy(const SplinePointList *base);
+VISIBLE VISIBLE extern SplinePointList *SplinePointListCopySelected(SplinePointList *base);
+VISIBLE extern SplinePointList *SplinePointListCopySpiroSelected(SplinePointList *base);
 extern ImageList *ImageListCopy(ImageList *cimg);
-extern ImageList *ImageListTransform(ImageList *cimg,real transform[6],int everything);
+VISIBLE extern ImageList *ImageListTransform(ImageList *cimg,real transform[6],int everything);
 extern void BpTransform(BasePoint *to, BasePoint *from, real transform[6]);
-extern void ApTransform(AnchorPoint *ap, real transform[6]);
+VISIBLE extern void ApTransform(AnchorPoint *ap, real transform[6]);
 /* The order of the enum elements below doesn't make much sense, but it's done*/
 /*  this way to preserve binary compatibility */
 enum transformPointType { tpt_OnlySelected, tpt_AllPoints, tpt_OnlySelectedInterpCPs };
-extern SplinePointList *SplinePointListTransform(SplinePointList *base, real transform[6], enum transformPointType allpoints );
-extern SplinePointList *SplinePointListSpiroTransform(SplinePointList *base, real transform[6], int allpoints );
+VISIBLE extern SplinePointList *SplinePointListTransform(SplinePointList *base, real transform[6], enum transformPointType allpoints );
+VISIBLE extern SplinePointList *SplinePointListSpiroTransform(SplinePointList *base, real transform[6], int allpoints );
 extern SplinePointList *SplinePointListShift(SplinePointList *base, real xoff, enum transformPointType allpoints );
 extern HintMask *HintMaskFromTransformedRef(RefChar *ref,BasePoint *trans,
 	SplineChar *basesc,HintMask *hm);
@@ -2282,11 +2282,11 @@ extern SplinePointList *SPLCopyTranslatedHintMasks(SplinePointList *base,
 	SplineChar *basesc, SplineChar *subsc, BasePoint *trans);
 extern SplinePointList *SPLCopyTransformedHintMasks(RefChar *r,
 	SplineChar *basesc, BasePoint *trans,int layer);
-extern SplinePointList *SplinePointListRemoveSelected(SplineChar *sc,SplinePointList *base);
+VISIBLE extern SplinePointList *SplinePointListRemoveSelected(SplineChar *sc,SplinePointList *base);
 extern void SplinePointListSet(SplinePointList *tobase, SplinePointList *frombase);
 extern void SplinePointListSelect(SplinePointList *spl,int sel);
 VISIBLE extern void SCRefToSplines(SplineChar *sc,RefChar *rf,int layer);
-extern void RefCharFindBounds(RefChar *rf);
+VISIBLE extern void RefCharFindBounds(RefChar *rf);
 VISIBLE extern void SCReinstanciateRefChar(SplineChar *sc,RefChar *rf,int layer);
 VISIBLE extern void SCReinstanciateRef(SplineChar *sc,SplineChar *rsc,int layer);
 VISIBLE extern void SFReinstanciateRefs(SplineFont *sf);
@@ -2304,30 +2304,30 @@ extern void BCRotateCharForVert(BDFChar *bc,BDFChar *from, BDFFont *frombdf);
 extern int GradientHere(bigreal scale,DBounds *bbox,int iy,int ix,
 	struct gradient *grad,struct pattern *pat, int defgrey);
 extern void PatternPrep(SplineChar *sc,struct brush *brush,bigreal scale);
-extern BDFChar *SplineCharRasterize(SplineChar *sc, int layer, bigreal pixelsize);
+VISIBLE extern BDFChar *SplineCharRasterize(SplineChar *sc, int layer, bigreal pixelsize);
 extern BDFFont *SplineFontToBDFHeader(SplineFont *_sf, int pixelsize, int indicate);
 extern BDFFont *SplineFontRasterize(SplineFont *sf, int layer, int pixelsize, int indicate);
 extern void BDFCAntiAlias(BDFChar *bc, int linear_scale);
-extern BDFChar *SplineCharAntiAlias(SplineChar *sc, int layer, int pixelsize,int linear_scale);
+VISIBLE extern BDFChar *SplineCharAntiAlias(SplineChar *sc, int layer, int pixelsize,int linear_scale);
 extern BDFFont *SplineFontAntiAlias(SplineFont *sf, int layer, int pixelsize,int linear_scale);
-extern struct clut *_BDFClut(int linear_scale);
+VISIBLE extern struct clut *_BDFClut(int linear_scale);
 extern void BDFClut(BDFFont *bdf, int linear_scale);
-extern int BDFDepth(BDFFont *bdf);
-extern BDFChar *BDFPieceMeal(BDFFont *bdf, int index);
-extern BDFChar *BDFPieceMealCheck(BDFFont *bdf, int index);
+VISIBLE extern int BDFDepth(BDFFont *bdf);
+VISIBLE extern BDFChar *BDFPieceMeal(BDFFont *bdf, int index);
+VISIBLE VISIBLE extern BDFChar *BDFPieceMealCheck(BDFFont *bdf, int index);
 enum piecemeal_flags { pf_antialias=1, pf_bbsized=2, pf_ft_nohints=4, pf_ft_recontext=8 };
-extern BDFFont *SplineFontPieceMeal(SplineFont *sf,int layer,int ptsize, int dpi,int flags,void *freetype_context);
-extern void BDFCharFindBounds(BDFChar *bc,IBounds *bb);
-extern int BDFCharQuickBounds(BDFChar *bc,IBounds *bb,int8 xoff,int8 yoff,int use_backup,int first);
+VISIBLE extern BDFFont *SplineFontPieceMeal(SplineFont *sf,int layer,int ptsize, int dpi,int flags,void *freetype_context);
+VISIBLE extern void BDFCharFindBounds(BDFChar *bc,IBounds *bb);
+VISIBLE extern int BDFCharQuickBounds(BDFChar *bc,IBounds *bb,int8 xoff,int8 yoff,int use_backup,int first);
 extern void BCPrepareForOutput(BDFChar *bc,int mergeall);
 extern void BCRestoreAfterOutput(BDFChar *bc);
 extern void BCMakeDependent(BDFChar *dependent,BDFChar *base);
 VISIBLE extern void BCRemoveDependent(BDFChar *dependent,BDFRefChar *rf);
 extern void BCExpandBitmapToEmBox(BDFChar *bc, int xmin, int ymin, int xmax, int ymax);
 extern BDFFont *BitmapFontScaleTo(BDFFont *old, int to);
-extern void BDFCharFree(BDFChar *bdfc);
-extern void BDFPropsFree(BDFFont *bdf);
-extern void BDFFontFree(BDFFont *bdf);
+VISIBLE extern void BDFCharFree(BDFChar *bdfc);
+VISIBLE extern void BDFPropsFree(BDFFont *bdf);
+VISIBLE extern void BDFFontFree(BDFFont *bdf);
 extern void SFDefaultAscent(SplineFont *sf);
 extern int  PSBitmapDump(char *filename,BDFFont *font, EncMap *map);
 extern int  BDFFontDump(char *filename,BDFFont *font, EncMap *map, int res);
@@ -2337,13 +2337,13 @@ extern int  FONFontDump(char *filename,SplineFont *sf, int32 *sizes,int res,
 VISIBLE extern void SFReplaceEncodingBDFProps(SplineFont *sf,EncMap *map);
 VISIBLE extern void SFReplaceFontnameBDFProps(SplineFont *sf);
 extern int  IsUnsignedBDFKey(char *key);
-extern int  BdfPropHasInt(BDFFont *font,const char *key, int def );
-extern char *BdfPropHasString(BDFFont *font,const char *key, char *def );
+VISIBLE extern int  BdfPropHasInt(BDFFont *font,const char *key, int def );
+VISIBLE extern char *BdfPropHasString(BDFFont *font,const char *key, char *def );
 extern void def_Charset_Enc(EncMap *map,char *reg,char *enc);
-extern void Default_XLFD(BDFFont *bdf,EncMap *map, int res);
-extern void Default_Properties(BDFFont *bdf,EncMap *map,char *onlyme);
-extern void BDFDefaultProps(BDFFont *bdf, EncMap *map, int res);
-extern BDFProperties *BdfPropsCopy(BDFProperties *props, int cnt );
+VISIBLE extern void Default_XLFD(BDFFont *bdf,EncMap *map, int res);
+VISIBLE extern void Default_Properties(BDFFont *bdf,EncMap *map,char *onlyme);
+VISIBLE extern void BDFDefaultProps(BDFFont *bdf, EncMap *map, int res);
+VISIBLE extern BDFProperties *BdfPropsCopy(BDFProperties *props, int cnt );
 struct xlfd_components {
     char foundry[80];
     char family[100];
@@ -2368,20 +2368,20 @@ struct std_bdf_props {
 };
 #define STD_BDF_PROPS_EMPTY { NULL, 0, 0 }
 
-extern void XLFD_GetComponents(char *xlfd,struct xlfd_components *comp);
-extern void XLFD_CreateComponents(BDFFont *bdf,EncMap *map,int res,struct xlfd_components *comp);
+VISIBLE extern void XLFD_GetComponents(char *xlfd,struct xlfd_components *comp);
+VISIBLE extern void XLFD_CreateComponents(BDFFont *bdf,EncMap *map,int res,struct xlfd_components *comp);
 /* Two lines intersect in at most 1 point */
 /* Two quadratics intersect in at most 4 points */
 /* Two cubics intersect in at most 9 points */ /* Plus an extra space for a trailing -1 */
-extern int SplinesIntersect(const Spline *s1, const Spline *s2, BasePoint pts[9],
+VISIBLE extern int SplinesIntersect(const Spline *s1, const Spline *s2, BasePoint pts[9],
 	extended t1s[10], extended t2s[10]);
-extern SplineSet *LayerAllSplines(Layer *layer);
-extern SplineSet *LayerUnAllSplines(Layer *layer);
-extern int SplineSetIntersect(SplineSet *spl, Spline **_spline, Spline **_spline2 );
+VISIBLE extern SplineSet *LayerAllSplines(Layer *layer);
+VISIBLE extern SplineSet *LayerUnAllSplines(Layer *layer);
+VISIBLE extern int SplineSetIntersect(SplineSet *spl, Spline **_spline, Spline **_spline2 );
 extern int LineTangentToSplineThroughPt(Spline *s, BasePoint *pt, extended ts[4],
 	extended tmin, extended tmax);
-extern int _CubicSolve(const Spline1D *sp,bigreal sought,extended ts[3]);
-extern int CubicSolve(const Spline1D *sp,bigreal sought,extended ts[3]);
+VISIBLE extern int _CubicSolve(const Spline1D *sp,bigreal sought,extended ts[3]);
+VISIBLE extern int CubicSolve(const Spline1D *sp,bigreal sought,extended ts[3]);
 /* Uses an algebraic solution */
 extern extended SplineSolve(const Spline1D *sp, real tmin, real tmax, extended sought_y);
 /* Tries to fixup rounding errors that crept in to the solution */
@@ -2396,13 +2396,13 @@ extern bigreal SplineMinDistanceToPoint(Spline *s, BasePoint *p);
 
 SplineSet *SplineSetsInterpolate(SplineSet *base, SplineSet *other, real amount, SplineChar *sc);
 SplineChar *SplineCharInterpolate(SplineChar *base, SplineChar *other, real amount, SplineFont *newfont);
-extern SplineFont *InterpolateFont(SplineFont *base, SplineFont *other, real amount, Encoding *enc);
+VISIBLE extern SplineFont *InterpolateFont(SplineFont *base, SplineFont *other, real amount, Encoding *enc);
 
 VISIBLE double SFSerifHeight(SplineFont *sf);
 
-extern void DumpPfaEditEncodings(void);
-extern char *ParseEncodingFile(char *filename, char *encodingname);
-extern void LoadPfaEditEncodings(void);
+VISIBLE extern void DumpPfaEditEncodings(void);
+VISIBLE extern char *ParseEncodingFile(char *filename, char *encodingname);
+VISIBLE extern void LoadPfaEditEncodings(void);
 
 extern int GenerateScript(SplineFont *sf,char *filename,char *bitmaptype,
 	int fmflags,int res, char *subfontdirectory,struct sflist *sfs,
@@ -2412,29 +2412,29 @@ extern void _SCAutoTrace(SplineChar *sc, int layer, char **args);
 extern char **AutoTraceArgs(int ask);
 
 #define CURVATURE_ERROR	-1e9
-extern bigreal SplineCurvature(Spline *s, bigreal t);
+VISIBLE extern bigreal SplineCurvature(Spline *s, bigreal t);
 
 extern double CheckExtremaForSingleBitErrors(const Spline1D *sp, double t, double othert);
-extern int Spline2DFindExtrema(const Spline *sp, extended extrema[4] );
-extern int Spline2DFindPointsOfInflection(const Spline *sp, extended poi[2] );
+VISIBLE extern int Spline2DFindExtrema(const Spline *sp, extended extrema[4] );
+VISIBLE extern int Spline2DFindPointsOfInflection(const Spline *sp, extended poi[2] );
 extern int SplineAtInflection(Spline1D *sp, bigreal t );
 extern int SplineAtMinMax(Spline1D *sp, bigreal t );
 extern void SplineRemoveExtremaTooClose(Spline1D *sp, extended *_t1, extended *_t2 );
-extern int NearSpline(struct findsel *fs, Spline *spline);
+VISIBLE VISIBLE extern int NearSpline(struct findsel *fs, Spline *spline);
 extern real SplineNearPoint(Spline *spline, BasePoint *bp, real fudge);
-extern int SplineT2SpiroIndex(Spline *spline,bigreal t,SplineSet *spl);
+VISIBLE extern int SplineT2SpiroIndex(Spline *spline,bigreal t,SplineSet *spl);
 VISIBLE extern void SCMakeDependent(SplineChar *dependent,SplineChar *base);
-extern SplinePoint *SplineBisect(Spline *spline, extended t);
+VISIBLE extern SplinePoint *SplineBisect(Spline *spline, extended t);
 extern Spline *SplineSplit(Spline *spline, extended ts[3]);
-extern Spline *ApproximateSplineFromPoints(SplinePoint *from, SplinePoint *to,
+VISIBLE extern Spline *ApproximateSplineFromPoints(SplinePoint *from, SplinePoint *to,
 	TPoint *mid, int cnt,int order2);
-extern Spline *ApproximateSplineFromPointsSlopes(SplinePoint *from, SplinePoint *to,
+VISIBLE extern Spline *ApproximateSplineFromPointsSlopes(SplinePoint *from, SplinePoint *to,
 	TPoint *mid, int cnt,int order2);
-extern bigreal SplineLength(Spline *spline);
-extern bigreal SplineLengthRange(Spline *spline, real from_t, real to_t);
-extern bigreal PathLength(SplineSet *ss);
+VISIBLE extern bigreal SplineLength(Spline *spline);
+VISIBLE extern bigreal SplineLengthRange(Spline *spline, real from_t, real to_t);
+VISIBLE extern bigreal PathLength(SplineSet *ss);
 extern Spline *PathFindDistance(SplineSet *path,bigreal d,bigreal *_t);
-extern SplineSet *SplineSetBindToPath(SplineSet *ss,int doscale, int glyph_as_unit,
+VISIBLE extern SplineSet *SplineSetBindToPath(SplineSet *ss,int doscale, int glyph_as_unit,
 	int align,real offset, SplineSet *path);
 extern int SplineIsLinear(Spline *spline);
 extern int SplineIsLinearMake(Spline *spline);
@@ -2444,54 +2444,54 @@ extern SplineSet *SSRemoveZeroLengthSplines(SplineSet *base);
 extern void SSRemoveStupidControlPoints(SplineSet *base);
 extern void SSOverlapClusterCpAngles(SplineSet *base,bigreal within);
 extern void SplinesRemoveBetween(SplineChar *sc, SplinePoint *from, SplinePoint *to,int type);
-extern void SplineCharMerge(SplineChar *sc,SplineSet **head,int type);
+VISIBLE extern void SplineCharMerge(SplineChar *sc,SplineSet **head,int type);
 extern void SPLNearlyHvCps(SplineChar *sc,SplineSet *ss,bigreal err);
 extern void SPLNearlyHvLines(SplineChar *sc,SplineSet *ss,bigreal err);
 extern int  SPLNearlyLines(SplineChar *sc,SplineSet *ss,bigreal err);
-extern int SPInterpolate(SplinePoint *sp);
+VISIBLE extern int SPInterpolate(SplinePoint *sp);
 extern void SplinePointListSimplify(SplineChar *sc,SplinePointList *spl,
 	struct simplifyinfo *smpl);
-extern SplineSet *SplineCharSimplify(SplineChar *sc,SplineSet *head,
+VISIBLE extern SplineSet *SplineCharSimplify(SplineChar *sc,SplineSet *head,
 	struct simplifyinfo *smpl);
-extern void SPLStartToLeftmost(SplineChar *sc,SplinePointList *spl, int *changed);
+VISIBLE extern void SPLStartToLeftmost(SplineChar *sc,SplinePointList *spl, int *changed);
 extern void SPLsStartToLeftmost(SplineChar *sc,int layer);
-extern void CanonicalContours(SplineChar *sc,int layer);
-extern void SplineSetJoinCpFixup(SplinePoint *sp);
-extern SplineSet *SplineSetJoin(SplineSet *start,int doall,real fudge,int *changed);
+VISIBLE extern void CanonicalContours(SplineChar *sc,int layer);
+VISIBLE VISIBLE extern void SplineSetJoinCpFixup(SplinePoint *sp);
+VISIBLE extern SplineSet *SplineSetJoin(SplineSet *start,int doall,real fudge,int *changed);
 enum ae_type { ae_all, ae_between_selected, ae_only_good, ae_only_good_rm_later };
-extern int SpIsExtremum(SplinePoint *sp);
+VISIBLE extern int SpIsExtremum(SplinePoint *sp);
 extern int Spline1DCantExtremeX(const Spline *s);
 extern int Spline1DCantExtremeY(const Spline *s);
 extern Spline *SplineAddExtrema(Spline *s,int always,real lenbound,
 	real offsetbound,DBounds *b);
-extern void SplineSetAddExtrema(SplineChar *sc,SplineSet *ss,enum ae_type between_selected, int emsize);
+VISIBLE extern void SplineSetAddExtrema(SplineChar *sc,SplineSet *ss,enum ae_type between_selected, int emsize);
 extern void SplineSetAddSpiroExtrema(SplineChar *sc,SplineSet *ss,enum ae_type between_selected, int emsize);
-extern void SplineCharAddExtrema(SplineChar *sc,SplineSet *head,enum ae_type between_selected,int emsize);
+VISIBLE extern void SplineCharAddExtrema(SplineChar *sc,SplineSet *head,enum ae_type between_selected,int emsize);
 extern SplineSet *SplineCharRemoveTiny(SplineChar *sc,SplineSet *head);
-extern SplineFont *SplineFontNew(void);
-extern char *GetNextUntitledName(void);
+VISIBLE extern SplineFont *SplineFontNew(void);
+VISIBLE extern char *GetNextUntitledName(void);
 extern SplineFont *SplineFontEmpty(void);
-extern SplineFont *SplineFontBlank(int charcnt);
+VISIBLE extern SplineFont *SplineFontBlank(int charcnt);
 extern void SFIncrementXUID(SplineFont *sf);
 VISIBLE extern void SFRandomChangeXUID(SplineFont *sf);
-extern SplineSet *SplineSetReverse(SplineSet *spl);
+VISIBLE extern SplineSet *SplineSetReverse(SplineSet *spl);
 extern SplineSet *SplineSetsExtractOpen(SplineSet **tbase);
 extern void SplineSetsInsertOpen(SplineSet **tbase,SplineSet *open);
-extern SplineSet *SplineSetsCorrect(SplineSet *base,int *changed);
+VISIBLE extern SplineSet *SplineSetsCorrect(SplineSet *base,int *changed);
 extern SplineSet *SplineSetsAntiCorrect(SplineSet *base);
-extern SplineSet *SplineSetsDetectDir(SplineSet **_base, int *lastscan);
+VISIBLE extern SplineSet *SplineSetsDetectDir(SplineSet **_base, int *lastscan);
 extern void SPAverageCps(SplinePoint *sp);
 extern void SPLAverageCps(SplinePointList *spl);
 extern void SPWeightedAverageCps(SplinePoint *sp);
-extern void BP_HVForce(BasePoint *vector);
-extern void SplineCharDefaultPrevCP(SplinePoint *base);
-extern void SplineCharDefaultNextCP(SplinePoint *base);
-extern void SplineCharTangentNextCP(SplinePoint *sp);
-extern void SplineCharTangentPrevCP(SplinePoint *sp);
-extern void SPAdjustControl(SplinePoint *sp,BasePoint *cp, BasePoint *to,int order2);
-extern void SPHVCurveForce(SplinePoint *sp);
+VISIBLE VISIBLE extern void BP_HVForce(BasePoint *vector);
+VISIBLE extern void SplineCharDefaultPrevCP(SplinePoint *base);
+VISIBLE extern void SplineCharDefaultNextCP(SplinePoint *base);
+VISIBLE extern void SplineCharTangentNextCP(SplinePoint *sp);
+VISIBLE extern void SplineCharTangentPrevCP(SplinePoint *sp);
+VISIBLE extern void SPAdjustControl(SplinePoint *sp,BasePoint *cp, BasePoint *to,int order2);
+VISIBLE extern void SPHVCurveForce(SplinePoint *sp);
 extern void SPSmoothJoint(SplinePoint *sp);
-extern int PointListIsSelected(SplinePointList *spl);
+VISIBLE extern int PointListIsSelected(SplinePointList *spl);
 VISIBLE extern void SCSplinePointsUntick(SplineChar *sc,int layer);
 extern void SplineSetsUntick(SplineSet *spl);
 extern void SFOrderBitmapList(SplineFont *sf);
@@ -2499,16 +2499,16 @@ extern int KernThreshold(SplineFont *sf, int cnt);
 VISIBLE extern real SFGuessItalicAngle(SplineFont *sf);
 
 extern SplinePoint *SplineTtfApprox(Spline *ps);
-extern SplineSet *SSttfApprox(SplineSet *ss);
-extern SplineSet *SplineSetsTTFApprox(SplineSet *ss);
+VISIBLE extern SplineSet *SSttfApprox(SplineSet *ss);
+VISIBLE extern SplineSet *SplineSetsTTFApprox(SplineSet *ss);
 extern SplineSet *SSPSApprox(SplineSet *ss);
 extern SplineSet *SplineSetsPSApprox(SplineSet *ss);
 extern SplineSet *SplineSetsConvertOrder(SplineSet *ss, int to_order2);
-extern void SplineRefigure2(Spline *spline);
-extern void SplineRefigureFixup(Spline *spline);
-extern Spline *SplineMake2(SplinePoint *from, SplinePoint *to);
-extern Spline *SplineMake(SplinePoint *from, SplinePoint *to, int order2);
-extern Spline *SFSplineMake(SplineFont *sf,SplinePoint *from, SplinePoint *to);
+VISIBLE extern void SplineRefigure2(Spline *spline);
+VISIBLE VISIBLE extern void SplineRefigureFixup(Spline *spline);
+VISIBLE VISIBLE VISIBLE extern Spline *SplineMake2(SplinePoint *from, SplinePoint *to);
+VISIBLE VISIBLE extern Spline *SplineMake(SplinePoint *from, SplinePoint *to, int order2);
+VISIBLE VISIBLE extern Spline *SFSplineMake(SplineFont *sf,SplinePoint *from, SplinePoint *to);
 extern void SCConvertToOrder2(SplineChar *sc);
 extern void SFConvertToOrder2(SplineFont *sf);
 extern void SCConvertToOrder3(SplineChar *sc);
@@ -2520,8 +2520,8 @@ VISIBLE extern void SFConvertGridToOrder3(SplineFont *_sf);
 extern void SCConvertLayerToOrder3(SplineChar *sc,int layer);
 VISIBLE extern void SFConvertLayerToOrder3(SplineFont *sf,int layer);
 extern void SCConvertOrder(SplineChar *sc, int to_order2);
-extern void SplinePointPrevCPChanged2(SplinePoint *sp);
-extern void SplinePointNextCPChanged2(SplinePoint *sp);
+VISIBLE extern void SplinePointPrevCPChanged2(SplinePoint *sp);
+VISIBLE extern void SplinePointNextCPChanged2(SplinePoint *sp);
 extern int IntersectLinesSlopes(BasePoint *inter,
 	BasePoint *line1, BasePoint *slope1,
 	BasePoint *line2, BasePoint *slope2);
@@ -2536,21 +2536,21 @@ extern int IntersectLinesClip(BasePoint *inter,
 extern void SSBisectTurners(SplineSet *spl);
 #endif
 extern void SSRemoveBacktracks(SplineSet *ss);
-extern enum PolyType PolygonIsConvex(BasePoint *poly,int n, int *badpointindex);
-extern SplineSet *UnitShape(int isrect);
-extern SplineSet *SplineSetStroke(SplineSet *spl,StrokeInfo *si,int order2);
-extern SplineSet *SplineSetRemoveOverlap(SplineChar *sc,SplineSet *base,enum overlap_type);
-extern SplineSet *SSShadow(SplineSet *spl,real angle, real outline_width,
+VISIBLE extern enum PolyType PolygonIsConvex(BasePoint *poly,int n, int *badpointindex);
+VISIBLE extern SplineSet *UnitShape(int isrect);
+VISIBLE extern SplineSet *SplineSetStroke(SplineSet *spl,StrokeInfo *si,int order2);
+VISIBLE extern SplineSet *SplineSetRemoveOverlap(SplineChar *sc,SplineSet *base,enum overlap_type);
+VISIBLE extern SplineSet *SSShadow(SplineSet *spl,real angle, real outline_width,
 	real shadow_length,SplineChar *sc, int wireframe);
 
 extern double BlueScaleFigureForced(struct psdict *private_,real bluevalues[], real otherblues[]);
 extern double BlueScaleFigure(struct psdict *private_,real bluevalues[], real otherblues[]);
 extern void FindBlues( SplineFont *sf, int layer, real blues[14], real otherblues[10]);
-extern void QuickBlues(SplineFont *sf, int layer, BlueData *bd);
+VISIBLE extern void QuickBlues(SplineFont *sf, int layer, BlueData *bd);
 extern void FindHStems( SplineFont *sf, real snaps[12], real cnt[12]);
 extern void FindVStems( SplineFont *sf, real snaps[12], real cnt[12]);
 extern double SFStdVW(SplineFont *sf);
-extern int SplineCharIsFlexible(SplineChar *sc,int layer);
+VISIBLE extern int SplineCharIsFlexible(SplineChar *sc,int layer);
 extern void SCGuessHintInstancesList(SplineChar *sc,int layer,StemInfo *hstem,StemInfo *vstem,DStemInfo *dstem,int hvforce,int dforce);
 VISIBLE extern void SCGuessDHintInstances(SplineChar *sc, int layer,DStemInfo *ds );
 VISIBLE extern void SCGuessHHintInstancesAndAdd(SplineChar *sc, int layer,StemInfo *stem, real guess1, real guess2);
@@ -2560,7 +2560,7 @@ extern void SCGuessVHintInstancesList(SplineChar *sc, int layer);
 extern real HIlen( StemInfo *stems);
 extern real HIoverlap( HintInstance *mhi, HintInstance *thi);
 extern int StemInfoAnyOverlaps(StemInfo *stems);
-extern int StemListAnyConflicts(StemInfo *stems);
+VISIBLE extern int StemListAnyConflicts(StemInfo *stems);
 extern HintInstance *HICopyTrans(HintInstance *hi, real mul, real offset);
 extern void MDAdd(SplineChar *sc, int x, SplinePoint *sp1, SplinePoint *sp2);
 extern int SFNeedsAutoHint( SplineFont *_sf,int layer);
@@ -2605,9 +2605,9 @@ typedef struct globalinstrct {
     int      stemsnapvcnt;
 } GlobalInstrCt;
 
-extern void InitGlobalInstrCt( GlobalInstrCt *gic,SplineFont *sf,int layer,
+VISIBLE extern void InitGlobalInstrCt( GlobalInstrCt *gic,SplineFont *sf,int layer,
 	BlueData *bd );
-extern void FreeGlobalInstrCt( GlobalInstrCt *gic );
+VISIBLE extern void FreeGlobalInstrCt( GlobalInstrCt *gic );
 VISIBLE extern void NowakowskiSCAutoInstr( GlobalInstrCt *gic,SplineChar *sc );
 extern void CVT_ImportPrivate(SplineFont *sf);
 
@@ -2617,8 +2617,8 @@ VISIBLE extern void SCClearHintMasks(SplineChar *sc,int layer,int counterstoo);
 extern void SCFigureVerticalCounterMasks(SplineChar *sc);
 VISIBLE extern void SCFigureCounterMasks(SplineChar *sc);
 VISIBLE extern void SCFigureHintMasks(SplineChar *sc,int layer);
-extern void _SplineCharAutoHint( SplineChar *sc, int layer, BlueData *bd, struct glyphdata *gd2, int gen_undoes );
-extern void SplineCharAutoHint( SplineChar *sc,int layer, BlueData *bd);
+VISIBLE extern void _SplineCharAutoHint( SplineChar *sc, int layer, BlueData *bd, struct glyphdata *gd2, int gen_undoes );
+VISIBLE extern void SplineCharAutoHint( SplineChar *sc,int layer, BlueData *bd);
 extern void SFSCAutoHint( SplineChar *sc,int layer,BlueData *bd);
 extern void SplineFontAutoHint( SplineFont *sf, int layer);
 extern void SplineFontAutoHintRefs( SplineFont *sf, int layer);
@@ -2647,8 +2647,8 @@ extern int SCSetMetaData(SplineChar *sc,char *name,int unienc,
 extern enum uni_interp interp_from_encoding(Encoding *enc,enum uni_interp interp);
 extern const char *EncName(Encoding *encname);
 extern const char*FindUnicharName(void);
-extern Encoding *_FindOrMakeEncoding(const char *name,int make_it);
-extern Encoding *FindOrMakeEncoding(const char *name);
+VISIBLE extern Encoding *_FindOrMakeEncoding(const char *name,int make_it);
+VISIBLE extern Encoding *FindOrMakeEncoding(const char *name);
 VISIBLE extern void SFDDumpMacFeat(FILE *sfd,MacFeat *mf);
 VISIBLE extern MacFeat *SFDParseMacFeatures(FILE *sfd, char *tok);
 VISIBLE extern int SFDWrite(char *filename,SplineFont *sf,EncMap *map,EncMap *normal, int todir);
@@ -2673,24 +2673,24 @@ extern SplineFont *CFFParse(char *filename);
 extern SplineFont *SFReadMacBinary(char *filename,int flags,enum openflags openflags);
 extern SplineFont *SFReadWinFON(char *filename,int toback);
 extern SplineFont *SFReadPalmPdb(char *filename,int toback);
-extern SplineFont *LoadSplineFont(char *filename,enum openflags);
-extern SplineFont *_ReadSplineFont(FILE *file,char *filename, enum openflags openflags);
+VISIBLE extern SplineFont *LoadSplineFont(char *filename,enum openflags);
+VISIBLE extern SplineFont *_ReadSplineFont(FILE *file,char *filename, enum openflags openflags);
 extern SplineFont *ReadSplineFont(char *filename,enum openflags);	/* Don't use this, use LoadSF instead */
-extern FILE *URLToTempFile(char *url,void *lock);
+VISIBLE extern FILE *URLToTempFile(char *url,void *lock);
 extern int URLFromFile(char *url,FILE *from);
-extern int HttpGetBuf(char *url, char *databuf, int *datalen, void *mutex);
+VISIBLE extern int HttpGetBuf(char *url, char *databuf, int *datalen, void *mutex);
 extern void ArchiveCleanup(char *archivedir);
 extern char *Unarchive(char *name, char **_archivedir);
 extern char *Decompress(char *name, int compression);
 extern SplineFont *SFFromBDF(char *filename,int ispk,int toback);
 extern SplineFont *SFFromMF(char *filename);
 extern void SFCheckPSBitmap(SplineFont *sf);
-extern uint16 _MacStyleCode( char *styles, SplineFont *sf, uint16 *psstyle );
-extern uint16 MacStyleCode( SplineFont *sf, uint16 *psstyle );
+VISIBLE extern uint16 _MacStyleCode( char *styles, SplineFont *sf, uint16 *psstyle );
+VISIBLE extern uint16 MacStyleCode( SplineFont *sf, uint16 *psstyle );
 extern SplineFont *SFReadIkarus(char *fontname);
 extern SplineFont *_SFReadPdfFont(FILE *ttf,char *filename,enum openflags openflags);
 extern SplineFont *SFReadPdfFont(char *filename, enum openflags openflags);
-extern char **GetFontNames(char *filename);
+VISIBLE extern char **GetFontNames(char *filename);
 extern char **NamesReadPDF(char *filename);
 extern char **NamesReadSFD(char *filename);
 extern char **NamesReadTTF(char *filename);
@@ -2704,13 +2704,13 @@ extern char **NamesReadMacBinary(char *filename);
 extern void SFSetOrder(SplineFont *sf,int order2);
 extern int SFFindOrder(SplineFont *sf);
 
-extern const char *UnicodeRange(int unienc);
+VISIBLE extern const char *UnicodeRange(int unienc);
 VISIBLE extern SplineChar *SCBuildDummy(SplineChar *dummy,SplineFont *sf,EncMap *map,int i);
 VISIBLE extern SplineChar *SFMakeChar(SplineFont *sf,EncMap *map,int i);
 extern char *AdobeLigatureFormat(char *name);
 extern uint32 LigTagFromUnicode(int uni);
 extern void SCLigCaretheck(SplineChar *sc,int clean);
-extern BDFChar *BDFMakeGID(BDFFont *bdf,int gid);
+VISIBLE extern BDFChar *BDFMakeGID(BDFFont *bdf,int gid);
 VISIBLE extern BDFChar *BDFMakeChar(BDFFont *bdf,EncMap *map,int enc);
 
 extern RefChar *RefCharsCopyState(SplineChar *sc,int layer);
@@ -2748,7 +2748,7 @@ extern SplineSet *SplinePointListInterpretGlif(char *filename,char *memory, int 
 extern SplinePointList *SplinePointListInterpretPS(FILE *ps,int flags,int stroked,int *width);
 extern void PSFontInterpretPS(FILE *ps,struct charprocs *cp,char **encoding);
 extern struct enc *PSSlurpEncodings(FILE *file);
-extern int EvaluatePS(char *str,real *stack,int size);
+VISIBLE extern int EvaluatePS(char *str,real *stack,int size);
 struct pscontext {
     int is_type2;
     int painttype;
@@ -2762,8 +2762,8 @@ extern SplineChar *PSCharStringToSplines(uint8 *type1, int len, struct pscontext
 extern void MatMultiply(real m1[6], real m2[6], real to[6]);
 extern int MatIsIdentity(real transform[6]);
 
-extern int NameToEncoding(SplineFont *sf,EncMap *map,const char *uname);
-extern void GlyphHashFree(SplineFont *sf);
+VISIBLE extern int NameToEncoding(SplineFont *sf,EncMap *map,const char *uname);
+VISIBLE extern void GlyphHashFree(SplineFont *sf);
 extern void SFHashGlyph(SplineFont *sf,SplineChar *sc);
 VISIBLE extern SplineChar *SFHashName(SplineFont *sf,const char *name);
 VISIBLE extern int SFFindGID(SplineFont *sf, int unienc, const char *name );
@@ -2776,25 +2776,25 @@ VISIBLE extern int SFFindExistingSlot(SplineFont *sf, int unienc, const char *na
 extern int SFCIDFindExistingChar(SplineFont *sf, int unienc, const char *name );
 extern int SFHasCID(SplineFont *sf, int cid);
 
-extern char *getUserCacheDir(void);
-extern char *getUserConfigDir(void);
-extern char *getUserDataDir(void);
+VISIBLE extern char *getUserCacheDir(void);
+VISIBLE extern char *getUserConfigDir(void);
+VISIBLE extern char *getUserDataDir(void);
 
-extern void _DoAutoSaves(struct fontviewbase *);
-extern void CleanAutoRecovery(void);
-extern int DoAutoRecovery(int);
+VISIBLE extern void _DoAutoSaves(struct fontviewbase *);
+VISIBLE extern void CleanAutoRecovery(void);
+VISIBLE extern int DoAutoRecovery(int);
 extern SplineFont *SFRecoverFile(char *autosavename,int inquire, int *state);
 extern void SFAutoSave(SplineFont *sf,EncMap *map);
 VISIBLE extern void SFClearAutoSave(SplineFont *sf);
 
 extern void PSCharsFree(struct pschars *chrs);
-extern void PSDictFree(struct psdict *chrs);
+VISIBLE extern void PSDictFree(struct psdict *chrs);
 extern struct psdict *PSDictCopy(struct psdict *dict);
-extern int PSDictFindEntry(struct psdict *dict, char *key);
-extern char *PSDictHasEntry(struct psdict *dict, char *key);
+VISIBLE extern int PSDictFindEntry(struct psdict *dict, char *key);
+VISIBLE extern char *PSDictHasEntry(struct psdict *dict, char *key);
 extern int PSDictSame(struct psdict *dict1, struct psdict *dict2);
 extern int PSDictRemoveEntry(struct psdict *dict, char *key);
-extern int PSDictChangeEntry(struct psdict *dict, char *key, char *newval);
+VISIBLE extern int PSDictChangeEntry(struct psdict *dict, char *key, char *newval);
 VISIBLE extern int SFPrivateGuess(SplineFont *sf,int layer, struct psdict *private_,
 	char *name, int onlyone);
 
@@ -2802,31 +2802,31 @@ VISIBLE extern void SFRemoveLayer(SplineFont *sf,int l);
 VISIBLE extern void SFAddLayer(SplineFont *sf,char *name,int order2, int background);
 VISIBLE extern void SFLayerSetBackground(SplineFont *sf,int layer,int is_back);
 
-extern void SplineSetsRound2Int(SplineSet *spl,real factor,int inspiro,int onlysel);
+VISIBLE VISIBLE extern void SplineSetsRound2Int(SplineSet *spl,real factor,int inspiro,int onlysel);
 VISIBLE extern void SCRound2Int(SplineChar *sc,int layer, real factor);
 VISIBLE extern int SCRoundToCluster(SplineChar *sc,int layer,int sel,bigreal within,bigreal max);
 extern int SplineSetsRemoveAnnoyingExtrema(SplineSet *ss,bigreal err);
-extern int hascomposing(SplineFont *sf,int u,SplineChar *sc);
+VISIBLE extern int hascomposing(SplineFont *sf,int u,SplineChar *sc);
 #if 0
 extern void SFFigureGrid(SplineFont *sf);
 #endif
 
 struct cidmap;			/* private structure to encoding.c */
-extern int CIDFromName(char *name,SplineFont *cidmaster);
-extern int CID2Uni(struct cidmap *map,int cid);
+VISIBLE extern int CIDFromName(char *name,SplineFont *cidmaster);
+VISIBLE extern int CID2Uni(struct cidmap *map,int cid);
 extern int CID2NameUni(struct cidmap *map,int cid, char *buffer, int len);
 extern int NameUni2CID(struct cidmap *map,int uni, const char *name);
 extern struct altuni *CIDSetAltUnis(struct cidmap *map,int cid);
-extern int MaxCID(struct cidmap *map);
-extern struct cidmap *LoadMapFromFile(char *file,char *registry,char *ordering,
+VISIBLE extern int MaxCID(struct cidmap *map);
+VISIBLE extern struct cidmap *LoadMapFromFile(char *file,char *registry,char *ordering,
 	int supplement);
-extern struct cidmap *FindCidMap(char *registry,char *ordering,int supplement,
+VISIBLE extern struct cidmap *FindCidMap(char *registry,char *ordering,int supplement,
 	SplineFont *sf);
 VISIBLE extern void SFEncodeToMap(SplineFont *sf,struct cidmap *map);
 extern SplineFont *CIDFlatten(SplineFont *cidmaster,SplineChar **chars,int charcnt);
 VISIBLE extern void SFFlatten(SplineFont *cidmaster);
 VISIBLE extern int  SFFlattenByCMap(SplineFont *sf,char *cmapname);
-extern SplineFont *MakeCIDMaster(SplineFont *sf,EncMap *oldmap,int bycmap,char *cmapfilename,struct cidmap *cidmap);
+VISIBLE extern SplineFont *MakeCIDMaster(SplineFont *sf,EncMap *oldmap,int bycmap,char *cmapfilename,struct cidmap *cidmap);
 
 int getushort(FILE *ttf);
 int32 getlong(FILE *ttf);
@@ -2840,40 +2840,40 @@ int ttfcopyfile(FILE *ttf, FILE *other, int pos, char *table_name);
 
 VISIBLE extern void SCCopyLayerToLayer(SplineChar *sc, int from, int to,int doclear);
 
-extern int hasFreeType(void);
-extern int hasFreeTypeDebugger(void);
-extern int hasFreeTypeByteCode(void);
-extern int FreeTypeAtLeast(int major, int minor, int patch);
-extern char *FreeTypeStringVersion(void);
+VISIBLE extern int hasFreeType(void);
+VISIBLE VISIBLE extern int hasFreeTypeDebugger(void);
+VISIBLE VISIBLE extern int hasFreeTypeByteCode(void);
+VISIBLE extern int FreeTypeAtLeast(int major, int minor, int patch);
+VISIBLE extern char *FreeTypeStringVersion(void);
 extern void doneFreeType(void);
-extern void *_FreeTypeFontContext(SplineFont *sf,SplineChar *sc,struct fontviewbase *fv,
+VISIBLE VISIBLE extern void *_FreeTypeFontContext(SplineFont *sf,SplineChar *sc,struct fontviewbase *fv,
 	int layer, enum fontformat ff,int flags,void *shared_ftc);
-extern void *FreeTypeFontContext(SplineFont *sf,SplineChar *sc,struct fontviewbase *fv,int layer);
-extern BDFFont *SplineFontFreeTypeRasterize(void *freetypecontext,int pixelsize,int depth);
-extern BDFChar *SplineCharFreeTypeRasterize(void *freetypecontext,int gid,
+VISIBLE extern void *FreeTypeFontContext(SplineFont *sf,SplineChar *sc,struct fontviewbase *fv,int layer);
+VISIBLE extern BDFFont *SplineFontFreeTypeRasterize(void *freetypecontext,int pixelsize,int depth);
+VISIBLE VISIBLE extern BDFChar *SplineCharFreeTypeRasterize(void *freetypecontext,int gid,
 	int ptsize, int dpi,int depth);
-extern void FreeTypeFreeContext(void *freetypecontext);
-extern SplineSet *FreeType_GridFitChar(void *single_glyph_context,
+VISIBLE extern void FreeTypeFreeContext(void *freetypecontext);
+VISIBLE extern SplineSet *FreeType_GridFitChar(void *single_glyph_context,
 	int enc, real ptsizey, real ptsizex, int dpi, uint16 *width,
 	SplineChar *sc, int depth, int scaled);
-extern struct freetype_raster *FreeType_GetRaster(void *single_glyph_context,
+VISIBLE extern struct freetype_raster *FreeType_GetRaster(void *single_glyph_context,
 	int enc, real ptsizey, real ptsizex, int dpi,int depth);
-extern BDFChar *SplineCharFreeTypeRasterizeNoHints(SplineChar *sc,int layer,
+VISIBLE VISIBLE VISIBLE extern BDFChar *SplineCharFreeTypeRasterizeNoHints(SplineChar *sc,int layer,
 	int ptsize, int dpi,int depth);
-extern BDFFont *SplineFontFreeTypeRasterizeNoHints(SplineFont *sf,int layer,
+VISIBLE extern BDFFont *SplineFontFreeTypeRasterizeNoHints(SplineFont *sf,int layer,
 	int pixelsize,int depth);
-extern void FreeType_FreeRaster(struct freetype_raster *raster);
+VISIBLE extern void FreeType_FreeRaster(struct freetype_raster *raster);
 struct TT_ExecContextRec_;
 extern struct freetype_raster *DebuggerCurrentRaster(struct  TT_ExecContextRec_ *exc,int depth);
 
-extern int UniFromName(const char *name,enum uni_interp interp, Encoding *encname);
-extern const char *StdGlyphName(char *buffer, int uni, enum uni_interp interp, NameList *for_this_font);
-extern char **AllGlyphNames(int uni, NameList *for_this_font,SplineChar *sc/* May be NULL*/);
-extern char **AllNamelistNames(void);
-extern NameList *DefaultNameListForNewFonts(void);
-extern NameList *NameListByName(char *name);
-extern NameList *LoadNamelist(char *filename);
-extern void LoadNamelistDir(char *dir);
+VISIBLE extern int UniFromName(const char *name,enum uni_interp interp, Encoding *encname);
+VISIBLE extern const char *StdGlyphName(char *buffer, int uni, enum uni_interp interp, NameList *for_this_font);
+VISIBLE extern char **AllGlyphNames(int uni, NameList *for_this_font,SplineChar *sc/* May be NULL*/);
+VISIBLE extern char **AllNamelistNames(void);
+VISIBLE extern NameList *DefaultNameListForNewFonts(void);
+VISIBLE extern NameList *NameListByName(char *name);
+VISIBLE extern NameList *LoadNamelist(char *filename);
+VISIBLE VISIBLE extern void LoadNamelistDir(char *dir);
 extern const char *RenameGlyphToNamelist(char *buffer, SplineChar *sc,NameList *old,
 	NameList *new_, char **sofar);
 VISIBLE extern void SFRenameGlyphsToNamelist(SplineFont *sf,NameList *new_);
@@ -2896,16 +2896,16 @@ extern int SFRenameTheseFeatureTags(SplineFont *sf, uint32 tag, int sli, int fla
 	uint32 totag, int tosli, int toflags, int ismac);
 extern int SFRemoveUnusedNestedFeatures(SplineFont *sf);
 extern int ClassesMatch(int cnt1,char **classes1,int cnt2,char **classes2);
-extern FPST *FPSTGlyphToClass(FPST *fpst);
+VISIBLE extern FPST *FPSTGlyphToClass(FPST *fpst);
 
 extern ASM *ASMFromOpenTypeForms(SplineFont *sf,uint32 script);
 extern ASM *ASMFromFPST(SplineFont *sf,FPST *fpst,int ordered);
 
 extern char *utf8_verify_copy(const char *str);
 
-extern char *MacStrToUtf8(const char *str,int macenc,int maclang);
-extern char *Utf8ToMacStr(const char *ustr,int macenc,int maclang);
-extern uint8 MacEncFromMacLang(int maclang);
+VISIBLE extern char *MacStrToUtf8(const char *str,int macenc,int maclang);
+VISIBLE extern char *Utf8ToMacStr(const char *ustr,int macenc,int maclang);
+VISIBLE extern uint8 MacEncFromMacLang(int maclang);
 extern uint16 WinLangFromMac(int maclang);
 extern uint16 WinLangToMac(int winlang);
 extern int CanEncodingWinLangAsMac(int winlang);
@@ -2913,18 +2913,18 @@ extern const int32 *MacEncToUnicode(int script,int lang);
 extern int MacLangFromLocale(void);
 extern char *MacLanguageFromCode(int code);
 extern char *FindEnglishNameInMacName(struct macname *mn);
-extern char *PickNameFromMacName(struct macname *mn);
+VISIBLE extern char *PickNameFromMacName(struct macname *mn);
 extern MacFeat *FindMacFeature(SplineFont *sf, int feat,MacFeat **secondary);
 extern struct macsetting *FindMacSetting(SplineFont *sf, int feat, int set,struct macsetting **secondary);
 extern struct macname *FindMacSettingName(SplineFont *sf, int feat, int set);
 
-extern int32 UniFromEnc(int enc, Encoding *encname);
-extern int32 EncFromUni(int32 uni, Encoding *encname);
+VISIBLE extern int32 UniFromEnc(int enc, Encoding *encname);
+VISIBLE extern int32 EncFromUni(int32 uni, Encoding *encname);
 extern int32 EncFromName(const char *name,enum uni_interp interp,Encoding *encname);
 
 extern void MatInverse(real into[6], real orig[6]);
 
-extern int BpColinear(BasePoint *first, BasePoint *mid, BasePoint *last);
+VISIBLE extern int BpColinear(BasePoint *first, BasePoint *mid, BasePoint *last);
 extern int BpWithin(BasePoint *first, BasePoint *mid, BasePoint *last);
     /* Colinear & between */
 
@@ -2977,9 +2977,9 @@ enum font_compare_flags { fcf_outlines=1, fcf_exact=2, fcf_warn_not_exact=4,
 	fcf_warn_not_ref_exact=0x40,
 	fcf_bitmaps=0x80, fcf_names = 0x100, fcf_gpos=0x200, fcf_gsub=0x400,
 	fcf_adddiff2sf1=0x800, fcf_addmissing=0x1000 };
-extern int CompareFonts(SplineFont *sf1, EncMap *map1, SplineFont *sf2,
+VISIBLE extern int CompareFonts(SplineFont *sf1, EncMap *map1, SplineFont *sf2,
 	FILE *diffs, int flags);
-extern int LayersSimilar(Layer *ly1, Layer *ly2, double spline_err);
+VISIBLE extern int LayersSimilar(Layer *ly1, Layer *ly2, double spline_err);
 
 
 # if HANYANG
@@ -2990,7 +2990,7 @@ extern void SFBuildSyllables(SplineFont *sf);
 # endif
 
 extern void DefaultOtherSubrs(void);
-extern int ReadOtherSubrsFile(char *filename);
+VISIBLE extern int ReadOtherSubrsFile(char *filename);
 
 extern char *utf8toutf7_copy(const char *_str);
 extern char *utf7toutf8_copy(const char *_str);
@@ -3003,7 +3003,7 @@ extern int RefDepth(RefChar *ref,int layer);
 
 extern SplineChar *SCHasSubs(SplineChar *sc,uint32 tag);
 
-extern char *TagFullName(SplineFont *sf,uint32 tag, int ismac, int onlyifknown);
+VISIBLE extern char *TagFullName(SplineFont *sf,uint32 tag, int ismac, int onlyifknown);
 
 VISIBLE extern uint32 *SFScriptsInLookups(SplineFont *sf,int gpos);
 VISIBLE extern uint32 *SFLangsInScript(SplineFont *sf,int gpos,uint32 script);
@@ -3013,7 +3013,7 @@ extern SplineChar **SFGlyphsWithPSTinSubtable(SplineFont *sf,struct lookup_subta
 extern SplineChar **SFGlyphsWithLigatureinLookup(SplineFont *sf,struct lookup_subtable *subtable);
 VISIBLE extern void SFFindUnusedLookups(SplineFont *sf);
 VISIBLE extern void SFFindClearUnusedLookupBits(SplineFont *sf);
-extern int LookupUsedNested(SplineFont *sf,OTLookup *checkme);
+VISIBLE extern int LookupUsedNested(SplineFont *sf,OTLookup *checkme);
 extern void SFRemoveUnusedLookupSubTables(SplineFont *sf,
 	int remove_incomplete_anchorclasses,
 	int remove_unused_lookups);
@@ -3022,28 +3022,28 @@ VISIBLE extern void SFRemoveLookup(SplineFont *sf,OTLookup *otl);
 VISIBLE extern struct lookup_subtable *SFFindLookupSubtable(SplineFont *sf,char *name);
 extern struct lookup_subtable *SFFindLookupSubtableAndFreeName(SplineFont *sf,char *name);
 VISIBLE extern OTLookup *SFFindLookup(SplineFont *sf,char *name);
-extern void NameOTLookup(OTLookup *otl,SplineFont *sf);
-extern int GlyphNameCnt(const char *pt);
+VISIBLE extern void NameOTLookup(OTLookup *otl,SplineFont *sf);
+VISIBLE extern int GlyphNameCnt(const char *pt);
 extern char *reverseGlyphNames(char *str);
-extern char *FPSTRule_From_Str(SplineFont *sf,FPST *fpst,struct fpst_rule *rule,
+VISIBLE extern char *FPSTRule_From_Str(SplineFont *sf,FPST *fpst,struct fpst_rule *rule,
 	char *line, int *return_is_warning );
-extern char *FPSTRule_To_Str(SplineFont *sf,FPST *fpst,struct fpst_rule *rule);
+VISIBLE extern char *FPSTRule_To_Str(SplineFont *sf,FPST *fpst,struct fpst_rule *rule);
 extern void FListAppendScriptLang(FeatureScriptLangList *fl,uint32 script_tag,uint32 lang_tag);
 extern void FListsAppendScriptLang(FeatureScriptLangList *fl,uint32 script_tag,uint32 lang_tag);
 struct scriptlanglist *SLCopy(struct scriptlanglist *sl);
 struct scriptlanglist *SListCopy(struct scriptlanglist *sl);
 extern FeatureScriptLangList *FeatureListCopy(FeatureScriptLangList *fl);
 extern void SLMerge(FeatureScriptLangList *into, struct scriptlanglist *fsl);
-extern void FLMerge(OTLookup *into, OTLookup *from);
-extern FeatureScriptLangList *FLOrder(FeatureScriptLangList *fl);
-extern int FeatureScriptTagInFeatureScriptList(uint32 tag, uint32 script, FeatureScriptLangList *fl);
-extern FeatureScriptLangList *FindFeatureTagInFeatureScriptList(uint32 tag, FeatureScriptLangList *fl);
-extern int FeatureTagInFeatureScriptList(uint32 tag, FeatureScriptLangList *fl);
+VISIBLE extern void FLMerge(OTLookup *into, OTLookup *from);
+VISIBLE extern FeatureScriptLangList *FLOrder(FeatureScriptLangList *fl);
+VISIBLE extern int FeatureScriptTagInFeatureScriptList(uint32 tag, uint32 script, FeatureScriptLangList *fl);
+VISIBLE extern FeatureScriptLangList *FindFeatureTagInFeatureScriptList(uint32 tag, FeatureScriptLangList *fl);
+VISIBLE extern int FeatureTagInFeatureScriptList(uint32 tag, FeatureScriptLangList *fl);
 extern int DefaultLangTagInOneScriptList(struct scriptlanglist *sl);
 extern struct scriptlanglist *DefaultLangTagInScriptList(struct scriptlanglist *sl, int DFLT_ok);
-extern int ScriptInFeatureScriptList(uint32 script, FeatureScriptLangList *fl);
-extern int _FeatureOrderId( int isgpos,uint32 tag );
-extern int FeatureOrderId( int isgpos,FeatureScriptLangList *fl );
+VISIBLE extern int ScriptInFeatureScriptList(uint32 script, FeatureScriptLangList *fl);
+VISIBLE extern int _FeatureOrderId( int isgpos,uint32 tag );
+VISIBLE extern int FeatureOrderId( int isgpos,FeatureScriptLangList *fl );
 VISIBLE extern void SFSubTablesMerge(SplineFont *_sf,struct lookup_subtable *subfirst,
 	struct lookup_subtable *subsecond);
 extern struct lookup_subtable *SFSubTableFindOrMake(SplineFont *sf,uint32 tag,uint32 script,
@@ -3051,23 +3051,23 @@ extern struct lookup_subtable *SFSubTableFindOrMake(SplineFont *sf,uint32 tag,ui
 extern struct lookup_subtable *SFSubTableMake(SplineFont *sf,uint32 tag,uint32 script,
 	int lookup_type );
 extern OTLookup *OTLookupCopyInto(SplineFont *into_sf,SplineFont *from_sf, OTLookup *from_otl);
-extern void OTLookupsCopyInto(SplineFont *into_sf,SplineFont *from_sf,
+VISIBLE extern void OTLookupsCopyInto(SplineFont *into_sf,SplineFont *from_sf,
 	OTLookup **from_list, OTLookup *before);
-extern struct opentype_str *ApplyTickedFeatures(SplineFont *sf,uint32 *flist, uint32 script, uint32 lang,
+VISIBLE extern struct opentype_str *ApplyTickedFeatures(SplineFont *sf,uint32 *flist, uint32 script, uint32 lang,
 	int pixelsize, SplineChar **glyphs);
-extern int VerticalKernFeature(SplineFont *sf, OTLookup *otl, int ask);
+VISIBLE extern int VerticalKernFeature(SplineFont *sf, OTLookup *otl, int ask);
 VISIBLE extern void SFGlyphRenameFixup(SplineFont *sf, char *old, char *new_);
 
 struct sllk { uint32 script; int cnt, max; OTLookup **lookups; int lcnt, lmax; uint32 *langs; };
-extern void SllkFree(struct sllk *sllk,int sllk_cnt);
-extern struct sllk *AddOTLToSllks( OTLookup *otl, struct sllk *sllk,
+VISIBLE extern void SllkFree(struct sllk *sllk,int sllk_cnt);
+VISIBLE extern struct sllk *AddOTLToSllks( OTLookup *otl, struct sllk *sllk,
 	int *_sllk_cnt, int *_sllk_max );
-extern OTLookup *NewAALTLookup(SplineFont *sf,struct sllk *sllk, int sllk_cnt, int i);
+VISIBLE extern OTLookup *NewAALTLookup(SplineFont *sf,struct sllk *sllk, int sllk_cnt, int i);
 extern void AddNewAALTFeatures(SplineFont *sf);
 
-extern void SplinePointRound(SplinePoint *,real);
+VISIBLE extern void SplinePointRound(SplinePoint *,real);
 
-extern int KCFindName(char *name, char **classnames, int cnt, int allow_class0 );
+VISIBLE extern int KCFindName(char *name, char **classnames, int cnt, int allow_class0 );
 extern KernClass *SFFindKernClass(SplineFont *sf,SplineChar *first,SplineChar *last,
 	int *index,int allow_zero);
 extern KernClass *SFFindVKernClass(SplineFont *sf,SplineChar *first,SplineChar *last,
@@ -3075,13 +3075,13 @@ extern KernClass *SFFindVKernClass(SplineFont *sf,SplineChar *first,SplineChar *
 
 extern void SCClearRounds(SplineChar *sc,int layer);
 VISIBLE extern void SCSynchronizeWidth(SplineChar *sc,real newwidth, real oldwidth,struct fontviewbase *fv);
-extern RefChar *HasUseMyMetrics(SplineChar *sc,int layer);
+VISIBLE extern RefChar *HasUseMyMetrics(SplineChar *sc,int layer);
 VISIBLE extern void SCSynchronizeLBearing(SplineChar *sc,real off,int layer);
-extern void RevertedGlyphReferenceFixup(SplineChar *sc, SplineFont *sf);
+VISIBLE extern void RevertedGlyphReferenceFixup(SplineChar *sc, SplineFont *sf);
 
 extern void SFUntickAll(SplineFont *sf);
 
-extern void BDFOrigFixup(BDFFont *bdf,int orig_cnt,SplineFont *sf);
+VISIBLE extern void BDFOrigFixup(BDFFont *bdf,int orig_cnt,SplineFont *sf);
 
 extern int HasSVG(void);
 VISIBLE extern void SCImportSVG(SplineChar *sc,int layer,char *path,char  *memory, int memlen,int doclear);
@@ -3096,35 +3096,35 @@ VISIBLE extern void SCAddScaleImage(SplineChar *sc,struct gimage *image,int docl
 extern void SCInsertImage(SplineChar *sc,struct gimage *image,real scale,real yoff, real xoff, int layer);
 VISIBLE extern void SCImportFig(SplineChar *sc,int layer,char *path,int doclear);
 
-extern int _ExportPlate(FILE *pdf,SplineChar *sc,int layer);
-extern int _ExportPDF(FILE *pdf,SplineChar *sc,int layer);
-extern int _ExportEPS(FILE *eps,SplineChar *sc,int layer, int gen_preview);
-extern int _ExportSVG(FILE *svg,SplineChar *sc,int layer);
-extern int _ExportGlif(FILE *glif,SplineChar *sc,int layer);
-extern int ExportEPS(char *filename,SplineChar *sc,int layer);
-extern int ExportPDF(char *filename,SplineChar *sc,int layer);
-extern int ExportPlate(char *filename,SplineChar *sc,int layer);
-extern int ExportSVG(char *filename,SplineChar *sc,int layer);
-extern int ExportGlif(char *filename,SplineChar *sc,int layer);
-extern int ExportFig(char *filename,SplineChar *sc,int layer);
+VISIBLE extern int _ExportPlate(FILE *pdf,SplineChar *sc,int layer);
+VISIBLE extern int _ExportPDF(FILE *pdf,SplineChar *sc,int layer);
+VISIBLE extern int _ExportEPS(FILE *eps,SplineChar *sc,int layer, int gen_preview);
+VISIBLE extern int _ExportSVG(FILE *svg,SplineChar *sc,int layer);
+VISIBLE extern int _ExportGlif(FILE *glif,SplineChar *sc,int layer);
+VISIBLE extern int ExportEPS(char *filename,SplineChar *sc,int layer);
+VISIBLE extern int ExportPDF(char *filename,SplineChar *sc,int layer);
+VISIBLE extern int ExportPlate(char *filename,SplineChar *sc,int layer);
+VISIBLE extern int ExportSVG(char *filename,SplineChar *sc,int layer);
+VISIBLE extern int ExportGlif(char *filename,SplineChar *sc,int layer);
+VISIBLE extern int ExportFig(char *filename,SplineChar *sc,int layer);
 VISIBLE extern int BCExportXBM(char *filename,BDFChar *bdfc, int format);
-extern int ExportImage(char *filename,SplineChar *sc, int layer, int format, int pixelsize, int bitsperpixel);
+VISIBLE extern int ExportImage(char *filename,SplineChar *sc, int layer, int format, int pixelsize, int bitsperpixel);
 extern void ScriptExport(SplineFont *sf, BDFFont *bdf, int format, int gid,
 	char *format_spec, EncMap *map);
 
-extern EncMap *EncMapFromEncoding(SplineFont *sf,Encoding *enc);
+VISIBLE extern EncMap *EncMapFromEncoding(SplineFont *sf,Encoding *enc);
 extern void SFRemoveGlyph(SplineFont *sf,SplineChar *sc, int *flags);
 extern void SFAddEncodingSlot(SplineFont *sf,int gid);
 VISIBLE extern void SFAddGlyphAndEncode(SplineFont *sf,SplineChar *sc,EncMap *basemap, int baseenc);
 VISIBLE extern void SCDoRedo(SplineChar *sc,int layer);
 VISIBLE extern void SCDoUndo(SplineChar *sc,int layer);
-VISIBLE extern void SCCopyWidth(SplineChar *sc,enum undotype);
+VISIBLE VISIBLE extern void SCCopyWidth(SplineChar *sc,enum undotype);
 extern void SCAppendPosSub(SplineChar *sc,enum possub_type type, char **d,SplineFont *copied_from);
 VISIBLE extern void SCClearBackground(SplineChar *sc);
-extern void BackgroundImageTransform(SplineChar *sc, ImageList *img,real transform[6]);
+VISIBLE extern void BackgroundImageTransform(SplineChar *sc, ImageList *img,real transform[6]);
 VISIBLE extern int SFIsDuplicatable(SplineFont *sf, SplineChar *sc);
 
-extern void DoAutoSaves(void);
+VISIBLE extern void DoAutoSaves(void);
 
 extern void SCClearLayer(SplineChar *sc,int layer);
 VISIBLE extern void SCClearContents(SplineChar *sc,int layer);
@@ -3152,15 +3152,15 @@ extern struct _object *ff_init_py3(int);
 #endif
 extern void doinitFontForgeMain(void);
 
-extern void InitSimpleStuff(void);
+VISIBLE extern void InitSimpleStuff(void);
 
-extern int SSExistsInLayer(SplineSet *ss,SplineSet *lots );
-extern int SplineExistsInSS(Spline *s,SplineSet *ss);
+VISIBLE extern int SSExistsInLayer(SplineSet *ss,SplineSet *lots );
+VISIBLE extern int SplineExistsInSS(Spline *s,SplineSet *ss);
 extern int SpExistsInSS(SplinePoint *sp,SplineSet *ss);
 
-extern int MSLanguageFromLocale(void);
+VISIBLE extern int MSLanguageFromLocale(void);
 
-extern struct math_constants_descriptor {
+VISIBLE extern struct math_constants_descriptor {
     char *ui_name;
     char *script_name;
     int offset;
@@ -3171,28 +3171,28 @@ extern struct math_constants_descriptor {
 
 #define MATH_CONSTANTS_DESCRIPTOR_EMPTY { NULL, NULL, 0, 0, NULL, 0 }
 
-extern const char *knownweights[], *realweights[], **noticeweights[];
+VISIBLE extern const char *knownweights[], *realweights[], **noticeweights[];
 
-extern int BPTooFar(BasePoint *bp1, BasePoint *bp2);
+VISIBLE extern int BPTooFar(BasePoint *bp1, BasePoint *bp2);
 VISIBLE extern StemInfo *SCHintOverlapInMask(SplineChar *sc,HintMask *hm);
 extern char *VSErrorsFromMask(int mask,int private_mask);
 VISIBLE extern int SCValidate(SplineChar *sc, int layer, int force);
 VISIBLE extern AnchorClass *SCValidateAnchors(SplineChar *sc);
 VISIBLE extern void SCTickValidationState(SplineChar *sc,int layer);
-extern int ValidatePrivate(SplineFont *sf);
+VISIBLE extern int ValidatePrivate(SplineFont *sf);
 VISIBLE extern int SFValidate(SplineFont *sf, int layer, int force);
-extern int VSMaskFromFormat(SplineFont *sf, int layer, enum fontformat format);
+VISIBLE extern int VSMaskFromFormat(SplineFont *sf, int layer, enum fontformat format);
 
-extern int hasspiro(void);
+VISIBLE extern int hasspiro(void);
 extern SplineSet *SpiroCP2SplineSet(spiro_cp *spiros);
-extern spiro_cp *SplineSet2SpiroCP(SplineSet *ss,uint16 *_cnt);
+VISIBLE extern spiro_cp *SplineSet2SpiroCP(SplineSet *ss,uint16 *_cnt);
 extern spiro_cp *SpiroCPCopy(spiro_cp *spiros,uint16 *_cnt);
-extern void SSRegenerateFromSpiros(SplineSet *spl);
+VISIBLE extern void SSRegenerateFromSpiros(SplineSet *spl);
 
 struct lang_frequencies;
-extern unichar_t *PrtBuildDef( SplineFont *sf, void *tf,
+VISIBLE extern unichar_t *PrtBuildDef( SplineFont *sf, void *tf,
 	void (*langsyscallback)(void *tf, int end, uint32 script, uint32 lang) );
-extern char *RandomParaFromScriptLang(uint32 script, uint32 lang, SplineFont *sf,
+VISIBLE extern char *RandomParaFromScriptLang(uint32 script, uint32 lang, SplineFont *sf,
 	struct lang_frequencies *freq);
 extern char *RandomParaFromScript(uint32 script, uint32 *lang, SplineFont *sf);
 extern int   SF2Scripts(SplineFont *sf,uint32 scripts[100]);
@@ -3200,18 +3200,18 @@ VISIBLE extern char **SFScriptLangs(SplineFont *sf,struct lang_frequencies ***fr
 
 extern int SSHasClip(SplineSet *ss);
 extern int SSHasDrawn(SplineSet *ss);
-extern struct gradient *GradientCopy(struct gradient *old,real transform[6]);
-extern void GradientFree(struct gradient *grad);
-extern struct pattern *PatternCopy(struct pattern *old,real transform[6]);
-extern void PatternFree(struct pattern *pat);
+VISIBLE extern struct gradient *GradientCopy(struct gradient *old,real transform[6]);
+VISIBLE extern void GradientFree(struct gradient *grad);
+VISIBLE extern struct pattern *PatternCopy(struct pattern *old,real transform[6]);
+VISIBLE extern void PatternFree(struct pattern *pat);
 extern void BrushCopy(struct brush *into, struct brush *from,real transform[6]);
 extern void PenCopy(struct pen *into, struct pen *from,real transform[6]);
 VISIBLE extern void PatternSCBounds(SplineChar *sc,DBounds *b);
 
 VISIBLE extern char *SFDefaultImage(SplineFont *sf,char *filename);
 extern void SCClearInstrsOrMark(SplineChar *sc, int layer, int complain);
-extern void instrcheck(SplineChar *sc,int layer);
-extern void TTFPointMatches(SplineChar *sc,int layer,int top);
+VISIBLE extern void instrcheck(SplineChar *sc,int layer);
+VISIBLE extern void TTFPointMatches(SplineChar *sc,int layer,int top);
 
 extern bigreal SFCapHeight(SplineFont *sf, int layer, int return_error);
 extern bigreal SFXHeight(SplineFont *sf, int layer, int return_error);

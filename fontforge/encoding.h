@@ -18,8 +18,8 @@ struct cidmap {
     struct cidmap *next;
 };
 
-extern struct cidmap *cidmaps;
+VISIBLE extern struct cidmap *cidmaps;
 
-extern void DeleteEncoding(Encoding *me);
-extern void RemoveMultiples(Encoding *item);
+VISIBLE extern void DeleteEncoding(Encoding *me);
+VISIBLE extern void RemoveMultiples(Encoding *item);
 #endif

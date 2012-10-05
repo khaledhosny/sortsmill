@@ -30,7 +30,7 @@
 
 #include <annotations_base.h>
 
-extern uninm_names_db names_db; /* Unicode character names and
+VISIBLE extern uninm_names_db names_db; /* Unicode character names and
                                  * annotations. */
 
 #endif /* _ANNOTATIONS_H_ */

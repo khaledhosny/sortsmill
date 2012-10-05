@@ -39,8 +39,8 @@
 #include <gwidget.h>
 #include "ttf.h"
 
-char *SaveTablesPref;
-int ask_user_for_cmap = false;
+VISIBLE char *SaveTablesPref;
+VISIBLE int ask_user_for_cmap = false;
 
 /* True Type is a really icky format. Nothing is together. It's badly described */
 /*  much of the description is misleading */

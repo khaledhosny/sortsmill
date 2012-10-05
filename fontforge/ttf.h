@@ -792,7 +792,7 @@ struct contexttree {
 #define _SCALED_OFFSETS		0x800	/* Use Apple definition of offset interpretation */
 #define _UNSCALED_OFFSETS	0x1000	/* Use MS definition */
 
-extern int ttfFixupRef(SplineChar **chars,int i);
+VISIBLE extern int ttfFixupRef(SplineChar **chars,int i);
 extern const char *cffnames[];
 extern const int nStdStrings;
 
@@ -803,7 +803,7 @@ extern void otf_dumpgdef(struct alltabs *at, SplineFont *sf);
 extern void otf_dumpbase(struct alltabs *at, SplineFont *sf);
 extern void otf_dumpjstf(struct alltabs *at, SplineFont *sf);
 extern void otf_dump_dummydsig(struct alltabs *at, SplineFont *sf);
-extern int gdefclass(SplineChar *sc);
+VISIBLE extern int gdefclass(SplineChar *sc);
 
     /* Apple Advanced Typography Tables */
 extern void aat_dumpacnt(struct alltabs *at, SplineFont *sf);
@@ -814,32 +814,34 @@ extern void aat_dumpopbd(struct alltabs *at, SplineFont *sf);
 extern void aat_dumpprop(struct alltabs *at, SplineFont *sf);
 extern void aat_dumpbsln(struct alltabs *at, SplineFont *sf);
 extern int LookupHasDefault(OTLookup *otl);
-extern int scriptsHaveDefault(struct scriptlanglist *sl);
+VISIBLE extern int scriptsHaveDefault(struct scriptlanglist *sl);
 extern int FPSTisMacable(SplineFont *sf, FPST *fpst);
 extern uint32 MacFeatureToOTTag(int featureType,int featureSetting);
-extern int OTTagToMacFeature(uint32 tag, int *featureType,int *featureSetting);
-extern uint16 *props_array(SplineFont *sf,struct glyphinfo *gi);
-extern int haslrbounds(SplineChar *sc, PST **left, PST **right);
-extern int16 *PerGlyphDefBaseline(SplineFont *sf,int *def_baseline);
-extern void FigureBaseOffsets(SplineFont *sf,int def_bsln,int offsets[32]);
+VISIBLE extern int OTTagToMacFeature(uint32 tag, int *featureType,int *featureSetting);
+VISIBLE extern uint16 *props_array(SplineFont *sf,struct glyphinfo *gi);
+VISIBLE extern int haslrbounds(SplineChar *sc, PST **left, PST **right);
+VISIBLE extern int16 *PerGlyphDefBaseline(SplineFont *sf,int *def_baseline);
+VISIBLE extern void FigureBaseOffsets(SplineFont *sf,int def_bsln,int offsets[32]);
 
     /* Apple variation tables */
 extern int ContourPtNumMatch(MMSet *mm, int gid);
 VISIBLE extern int16 **SCFindDeltas(MMSet *mm, int gid, int *_ptcnt);
-extern int16 **CvtFindDeltas(MMSet *mm, int *_ptcnt);
+VISIBLE extern int16 **CvtFindDeltas(MMSet *mm, int *_ptcnt);
 extern void ttf_dumpvariations(struct alltabs *at, SplineFont *sf);
 
-extern struct macsettingname {
+struct macsettingname {
     int mac_feature_type;
     int mac_feature_setting;
     uint32 otf_tag;
-} macfeat_otftag[], *user_macfeat_otftag;
+};
+
+VISIBLE extern struct macsettingname macfeat_otftag[], *user_macfeat_otftag;
 
     /* TrueType instructions */
 VISIBLE extern struct ttf_table *SFFindTable(SplineFont *sf,uint32 tag);
 extern int32 memlong(uint8 *data,int table_len, int offset);
-extern int memushort(uint8 *data,int table_len, int offset);
-extern void memputshort(uint8 *data,int offset,uint16 val);
+VISIBLE extern int memushort(uint8 *data,int table_len, int offset);
+VISIBLE extern void memputshort(uint8 *data,int offset,uint16 val);
 extern int TTF__getcvtval(SplineFont *sf,int val);
 extern int TTF_getcvtval(SplineFont *sf,int val);
 extern void SCinitforinstrs(SplineChar *sc);
@@ -854,9 +856,9 @@ extern SplineChar **SFGlyphsFromNames(SplineFont *sf,char *names);
 
 
 extern void AnchorClassOrder(SplineFont *sf);
-extern SplineChar **EntryExitDecompose(SplineFont *sf,AnchorClass *ac,
+VISIBLE extern SplineChar **EntryExitDecompose(SplineFont *sf,AnchorClass *ac,
 	struct glyphinfo *gi);
-extern void AnchorClassDecompose(SplineFont *sf,AnchorClass *_ac, int classcnt, int *subcnts,
+VISIBLE extern void AnchorClassDecompose(SplineFont *sf,AnchorClass *_ac, int classcnt, int *subcnts,
 	SplineChar ***marks,SplineChar ***base,
 	SplineChar ***lig,SplineChar ***mkmk,
 	struct glyphinfo *gi);

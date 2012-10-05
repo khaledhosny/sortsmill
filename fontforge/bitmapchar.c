@@ -35,7 +35,7 @@
 int use_freetype_to_rasterize_fv = 1;
 char *BDFFoundry=NULL;
 
-struct std_bdf_props StandardProps[] = {
+VISIBLE struct std_bdf_props StandardProps[] = {
 	{ "FONT", prt_atom, true },
 	{ "COMMENT", prt_string, false },
 	{ "FOUNDRY", prt_string|prt_property, true },

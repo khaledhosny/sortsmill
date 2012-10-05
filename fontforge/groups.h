@@ -40,12 +40,12 @@ typedef struct group {
     int lpos;
 } Group;
 
-extern Group *group_root;
+VISIBLE extern Group *group_root;
 
 struct fontview;
 
-void SaveGroupList(void);
-void LoadGroupList(void);
-Group *GroupCopy(Group *g);
-void GroupFree(Group *g);
+VISIBLE void SaveGroupList(void);
+VISIBLE void LoadGroupList(void);
+VISIBLE Group *GroupCopy(Group *g);
+VISIBLE void GroupFree(Group *g);
 #endif

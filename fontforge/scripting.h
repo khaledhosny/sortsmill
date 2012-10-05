@@ -120,21 +120,21 @@ extern char *utf82script_copy(const char *ustr);
 extern char *script2utf8_copy(const char *str);
 
  /* Various error routines. */
-void ScriptError( Context *c, const char *msg );
+VISIBLE void ScriptError( Context *c, const char *msg );
 	/* Prints an error message and exits. msg is in the script's encoding */
-void ScriptErrorString( Context *c, const char *msg, const char *name);
+VISIBLE void ScriptErrorString( Context *c, const char *msg, const char *name);
 	/* Prints an error message followed by a string and exits. */
 	/*  both strings are in the script's encoding */
-void ScriptErrorF( Context *c, const char *fmt, ... );
+VISIBLE void ScriptErrorF( Context *c, const char *fmt, ... );
 	/* Standard printf-style spec. All string arguments assumed to be in */
 	/* utf8 */
 
-extern int running_script;
+VISIBLE extern int running_script;
 
 /* Hooks so a scripting dlg can execute fontforge's legacy scripting language */
-extern void ff_VerboseCheck(void);
-extern enum token_type ff_NextToken(Context *c);
-extern void ff_backuptok(Context *c);
-extern void ff_statement(Context*);
+VISIBLE extern void ff_VerboseCheck(void);
+VISIBLE extern enum token_type ff_NextToken(Context *c);
+VISIBLE extern void ff_backuptok(Context *c);
+VISIBLE extern void ff_statement(Context*);
 
 #endif	/* _SCRIPTING_H */

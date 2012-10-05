@@ -36,7 +36,7 @@
 /* Basic, low-level UI routines for events we discover deep inside script code*/
 /* ************************************************************************** */
 
-struct ui_interface {
+VISIBLE struct ui_interface {
    /* The following is used to post a fontforge internal error */
    /* currently it puts up a dlg displaying the error text */
     void (*ierror)(const char *fmt,...);
@@ -123,7 +123,7 @@ struct ui_interface {
    /*  when loading an eps file with strokes, etc. */
     int (*stroke_flags)(void);
 };
-extern struct ui_interface *ui_interface;
+VISIBLE extern struct ui_interface *ui_interface;
 
 #define IError			(ui_interface->ierror)
 #define LogError		(ui_interface->logwarning)
@@ -160,22 +160,22 @@ extern struct ui_interface *ui_interface;
 
 #define PsStrokeFlagsDlg		(ui_interface->stroke_flags)
 
-VISIBLE void FF_SetUiInterface(struct ui_interface *uii);
+VISIBLE VISIBLE void FF_SetUiInterface(struct ui_interface *uii);
 
 /* ************************************************************************** */
 /*                                Preferences                                 */
 /* ************************************************************************** */
 struct val;
 
-struct prefs_interface {
-    void  (*save_prefs)(int not_if_running_script);
-    void  (*load_prefs)(void);
-    int   (*get_prefs)(char *name,struct val *value);
-    int   (*set_prefs)(char *name,struct val *val1, struct val *val2);
-    char *(*get_exe_share_dir)(void);
-    void  (*init_prefs)(void);
+VISIBLE struct prefs_interface {
+  void  (*save_prefs)(int not_if_running_script);
+  void  (*load_prefs)(void);
+  int   (*get_prefs)(char *name,struct val *value);
+  int   (*set_prefs)(char *name,struct val *val1, struct val *val2);
+  char *(*get_exe_share_dir)(void);
+  void  (*init_prefs)(void);
 };
-extern struct prefs_interface *prefs_interface;
+VISIBLE extern struct prefs_interface *prefs_interface;
 
 #define SavePrefs		(prefs_interface->save_prefs)
 #define LoadPrefs		(prefs_interface->load_prefs)
@@ -184,7 +184,7 @@ extern struct prefs_interface *prefs_interface;
 #define getFontForgeShareDir	(prefs_interface->get_exe_share_dir)
 #define SetDefaults		(prefs_interface->init_prefs)
 
-VISIBLE void FF_SetPrefsInterface(struct prefs_interface *prefsi);
+VISIBLE VISIBLE void FF_SetPrefsInterface(struct prefs_interface *prefsi);
 
 /* ************************************************************************** */
 /*                          Updating glyph windows                            */
@@ -193,7 +193,7 @@ VISIBLE void FF_SetPrefsInterface(struct prefs_interface *prefsi);
 struct splinechar;
 struct layer;
 
-struct sc_interface {
+VISIBLE struct sc_interface {
    /* Update all windows looking at this glyph */
     void  (*update_all)(struct splinechar *);
 
@@ -227,7 +227,7 @@ struct sc_interface {
    /*  the charview needs to add more layers to its layer window, etc. */
     void (*more_layers)(struct splinechar *, struct layer *);
 };
-extern struct sc_interface *sc_interface;
+VISIBLE extern struct sc_interface *sc_interface;
 
 #define SCUpdateAll			(sc_interface->update_all)
 #define SCOutOfDateBackground		(sc_interface->out_of_date_background)
@@ -239,7 +239,7 @@ extern struct sc_interface *sc_interface;
 #define SCCloseAllViews			(sc_interface->close_all_windows)
 #define SCMoreLayers			(sc_interface->more_layers)
 
-VISIBLE void FF_SetSCInterface(struct sc_interface *sci);
+VISIBLE VISIBLE void FF_SetSCInterface(struct sc_interface *sci);
 
 /* ************************************************************************** */
 /*                         Updating glyph windows 2                           */
@@ -248,7 +248,7 @@ VISIBLE void FF_SetSCInterface(struct sc_interface *sci);
 struct charviewbase;
 struct splinefont;
 
-struct cv_interface {
+VISIBLE struct cv_interface {
    /* Update all windows looking at what this char window looks at */
    /*  which might be a glyph, or perhaps the grid layer */
    /* And mark as changed */
@@ -262,14 +262,14 @@ struct cv_interface {
    /* We've added a layer to a font */
     void (*layer_palette_check)(struct splinefont *sf);
 };
-extern struct cv_interface *cv_interface;
+VISIBLE extern struct cv_interface *cv_interface;
 
 #define CVCharChangedUpdate		(cv_interface->glyph_changed_update)
 #define _CVCharChangedUpdate		(cv_interface->_glyph_changed_update)
 #define CVGlyphRenameFixup		(cv_interface->glyph_name_change)
 #define CVLayerPaletteCheck		(cv_interface->layer_palette_check)
 
-VISIBLE void FF_SetCVInterface(struct cv_interface *cvi);
+VISIBLE VISIBLE void FF_SetCVInterface(struct cv_interface *cvi);
 
 /* ************************************************************************** */
 /*                         Updating bitmap windows                            */
@@ -277,7 +277,7 @@ VISIBLE void FF_SetCVInterface(struct cv_interface *cvi);
 
 struct bdfchar;
 
-struct bc_interface {
+VISIBLE struct bc_interface {
    /* Update all windows looking at this bitmap glyph */
    /* And mark as changed */
     void (*glyph_changed_update)(struct bdfchar *);
@@ -288,13 +288,13 @@ struct bc_interface {
    /* Destroy all open bitmap windows of this glyph */
     void (*destroy_all)(struct bdfchar *);
 };
-extern struct bc_interface *bc_interface;
+VISIBLE extern struct bc_interface *bc_interface;
 
 #define BCCharChangedUpdate		(bc_interface->glyph_changed_update)
 #define BCRefreshAll			(bc_interface->refresh_all)
 #define BCDestroyAll			(bc_interface->destroy_all)
 
-VISIBLE void FF_SetBCInterface(struct bc_interface *bci);
+VISIBLE VISIBLE void FF_SetBCInterface(struct bc_interface *bci);
 
 /* ************************************************************************** */
 /*                          Access to metrics views                           */
@@ -303,7 +303,7 @@ VISIBLE void FF_SetBCInterface(struct bc_interface *bci);
 struct metricsview;
 struct splinefont;
 
-struct mv_interface {
+VISIBLE struct mv_interface {
    /* Number of glyphs displayed in the view */
     int (*glyph_cnt)(struct metricsview *);
 
@@ -322,7 +322,7 @@ struct mv_interface {
    /* Close any metrics views associated with this font */
     void (*sf_close_metrics)(struct splinefont *sf);
 };
-extern struct mv_interface *mv_interface;
+VISIBLE extern struct mv_interface *mv_interface;
 
 #define MVGlyphCount			(mv_interface->glyph_cnt)
 #define MVGlyphIndex			(mv_interface->get_glyph)
@@ -330,7 +330,7 @@ extern struct mv_interface *mv_interface;
 #define MVReFeatureAll			(mv_interface->refeature)
 #define MVDestroyAll			(mv_interface->sf_close_metrics)
 
-VISIBLE void FF_SetMVInterface(struct mv_interface *mvi);
+VISIBLE VISIBLE void FF_SetMVInterface(struct mv_interface *mvi);
 
 /* ************************************************************************** */
 /*                             Access to font info                            */
@@ -363,7 +363,7 @@ VISIBLE void FF_SetFIInterface(struct fi_interface *fii);
 struct fontviewbase;
 struct bdffont;
 
-struct fv_interface {
+VISIBLE struct fv_interface {
    /* Create a new font view. Whatever that may entail */
     struct fontviewbase *(*create)(struct splinefont *,int hide);
 
@@ -454,7 +454,7 @@ struct fv_interface {
    /* Close any open glyph instruction windows in the font */
     int (*close_all_instrs)(struct splinefont *);
 };
-extern struct fv_interface *fv_interface;
+VISIBLE extern struct fv_interface *fv_interface;
 
 #define FontViewCreate		(fv_interface->create)
 #define _FontViewCreate		(fv_interface->_create)
@@ -482,7 +482,7 @@ extern struct fv_interface *fv_interface;
 #define FVChangeGID		(fv_interface->select_gid)
 #define SFCloseAllInstrs	(fv_interface->close_all_instrs)
 
-VISIBLE void FF_SetFVInterface(struct fv_interface *fvi);
+VISIBLE VISIBLE void FF_SetFVInterface(struct fv_interface *fvi);
 
 /* ************************************************************************** */
 /*                       Clibboard access (copy/paste)                        */

@@ -668,12 +668,12 @@ extern int SFGenerateFont(SplineFont *sf,int layer, int family,EncMap *map);
 
 extern void NonLinearDlg(FontView *fv,struct charview *cv);
 extern void FVChangeChar(FontView *fv,int encoding);
-extern void FVMergeFonts(FontView *fv);
-extern void FVInterpolateFonts(FontView *fv);
+VISIBLE extern void FVMergeFonts(FontView *fv);
+VISIBLE extern void FVInterpolateFonts(FontView *fv);
 
 extern void FVDeselectAll(FontView *fv);
 
-extern void FVAutoWidth2(FontView *fv);
+VISIBLE extern void FVAutoWidth2(FontView *fv);
 /*extern void FVAutoKern(FontView *fv);*/
 /*extern void FVAutoWidth(FontView *fv);*/
 
@@ -723,7 +723,7 @@ void AddSubSupDlg(FontView *fv);
 void ObliqueDlg(FontView *fv, CharView *cv);
 void GlyphChangeDlg(FontView *fv, CharView *cv, enum glyphchange_type gc);
 void ItalicDlg(FontView *fv, CharView *cv);
-void ChangeXHeightDlg(FontView *fv,CharView *cv);
+VISIBLE void ChangeXHeightDlg(FontView *fv,CharView *cv);
 
 extern int FVParseSelectByPST(FontView *fv,struct lookup_subtable *sub,
 	int search_type);

@@ -25,9 +25,9 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-extern void SDDestroy(SearchData *sd);
-extern SearchData *SDFillup(SearchData *sd, FontViewBase *fv);
-extern int SearchChar(SearchData *sv, int gid,int startafter);
-extern int _DoFindAll(SearchData *sv);
-extern int DoRpl(SearchData *sv);
-extern void SVResetPaths(SearchData *sv);
+VISIBLE extern void SDDestroy(SearchData *sd);
+VISIBLE extern SearchData *SDFillup(SearchData *sd, FontViewBase *fv);
+VISIBLE extern int SearchChar(SearchData *sv, int gid,int startafter);
+VISIBLE extern int _DoFindAll(SearchData *sv);
+VISIBLE extern int DoRpl(SearchData *sv);
+VISIBLE extern void SVResetPaths(SearchData *sv);

@@ -47,7 +47,7 @@
 # include <sys/mman.h>
 #endif
 
-extern FT_Library ff_ft_context;
+VISIBLE extern FT_Library ff_ft_context;
 
 #if FREETYPE_HAS_DEBUGGER
 # if defined(__MINGW32__)
@@ -77,7 +77,7 @@ typedef struct freetypecontext {
     int em;			/* Em size in the spline font, not ppem */
 } FTC;
 
-extern void *__FreeTypeFontContext(FT_Library context,
+VISIBLE VISIBLE VISIBLE extern void *__FreeTypeFontContext(FT_Library context,
 	SplineFont *sf,SplineChar *sc,FontViewBase *fv,
 	int layer,
 	enum fontformat ff,int flags,void *shared_ftc);

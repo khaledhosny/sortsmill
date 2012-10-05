@@ -40,40 +40,40 @@ static const int unicode4_size = 17*65536;
     /* Unicode goes up to 0x10ffff */
 
 extern void ProcessNativeScript(int argc, char *argv[], FILE *script);
-extern void CheckIsScript(int argc, char *argv[]);
+VISIBLE extern void CheckIsScript(int argc, char *argv[]);
 
 extern char *AdobeStandardEncoding[256];
 extern int32 unicode_from_adobestd[256];
 
-extern int default_fv_font_size;
-extern int default_fv_antialias;
-extern int default_fv_bbsized;
-extern Encoding *default_encoding, custom;
-extern int adjustwidth;
-extern int adjustlbearing;
-extern int autohint_before_generate;
+VISIBLE extern int default_fv_font_size;
+VISIBLE extern int default_fv_antialias;
+VISIBLE extern int default_fv_bbsized;
+VISIBLE VISIBLE extern Encoding *default_encoding, custom;
+VISIBLE extern int adjustwidth;
+VISIBLE extern int adjustlbearing;
+VISIBLE extern int autohint_before_generate;
 extern int seperate_hint_controls;
-extern int no_windowing_ui;
-extern uint32 default_background;
+VISIBLE extern int no_windowing_ui;
+VISIBLE extern uint32 default_background;
 extern int use_utf8_in_script;
 
-extern int new_em_size;
-extern int new_fonts_are_order2;
-extern int loaded_fonts_same_as_new;
+VISIBLE extern int new_em_size;
+VISIBLE extern int new_fonts_are_order2;
+VISIBLE extern int loaded_fonts_same_as_new;
 
-extern char *BDFFoundry, *TTFFoundry;
-extern char *xuid;
+VISIBLE extern char *BDFFoundry, *TTFFoundry;
+VISIBLE extern char *xuid;
 
-extern int pagewidth, pageheight, printtype;	/* Printer defaults */
-extern char *printcommand, *printlazyprinter;
+VISIBLE VISIBLE VISIBLE extern int pagewidth, pageheight, printtype;	/* Printer defaults */
+VISIBLE VISIBLE extern char *printcommand, *printlazyprinter;
 
-extern Encoding *enclist;
+VISIBLE extern Encoding *enclist;
 
 
 #define SCRIPT_MENU_MAX	10
 
 
-extern MacFeat *default_mac_feature_map;
+VISIBLE extern MacFeat *default_mac_feature_map;
 
 typedef struct library_version_configuration {
     uint16 major, minor;

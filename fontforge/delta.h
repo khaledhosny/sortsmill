@@ -90,6 +90,6 @@ typedef struct qg_data {
     uint8 inprocess;
 } QGData;
 
-extern void TopFindQuestionablePoints(struct qg_data *data);
+VISIBLE extern void TopFindQuestionablePoints(struct qg_data *data);
 
 #endif /* _DELTA_H */

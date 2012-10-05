@@ -27,7 +27,7 @@
 extern GImage _GIcon_unknown;
 extern GImage _GIcon_object;
 extern GImage _GIcon_updir;
-extern GImage _GIcon_dir;
+VISIBLE extern GImage _GIcon_dir;
 extern GImage _GIcon_core;
 extern GImage _GIcon_image;
 extern GImage _GIcon_video;

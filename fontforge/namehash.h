@@ -57,5 +57,5 @@ static __inline__ int hashname(const char *pt) {
 return( val );
 }
 
-extern void __GlyphHashFree(struct glyphnamehash *hash);
+VISIBLE extern void __GlyphHashFree(struct glyphnamehash *hash);
 #endif

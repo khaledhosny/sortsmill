@@ -193,12 +193,12 @@ VISIBLE extern void GImageDrawImage(GImage *dest,GImage *src,GRect *junk,int x, 
 extern void GImageBlendOver(GImage *dest,GImage *src,GRect *from,int x, int y);
 
 extern void gRGB2HSL(struct hslrgb *col);
-extern void gHSL2RGB(struct hslrgb *col);
-extern void gRGB2HSV(struct hslrgb *col);
-extern void gHSV2RGB(struct hslrgb *col);
-extern void gColor2Hslrgb(struct hslrgb *col,Color from);
-extern void gColor2Hslrgba(struct hslrgba *col,Color from);
-extern Color gHslrgb2Color(struct hslrgb *col);
-extern Color gHslrgba2Color(struct hslrgba *col);
+VISIBLE extern void gHSL2RGB(struct hslrgb *col);
+VISIBLE extern void gRGB2HSV(struct hslrgb *col);
+VISIBLE extern void gHSV2RGB(struct hslrgb *col);
+VISIBLE extern void gColor2Hslrgb(struct hslrgb *col,Color from);
+VISIBLE VISIBLE extern void gColor2Hslrgba(struct hslrgba *col,Color from);
+VISIBLE extern Color gHslrgb2Color(struct hslrgb *col);
+VISIBLE extern Color gHslrgba2Color(struct hslrgba *col);
 
 #endif

@@ -45,12 +45,12 @@ typedef struct gresstruct {
 #define GRESSTRUCT_EMPTY { NULL, 0, NULL, NULL, 0 }
 
 
-void GResourceAddResourceFile(char *filename, int warn);
-void GResourceAddResourceString(char *string);
-void GResourceFind( GResStruct *info, char *prefix);
-char *GResourceFindString(char *name);
-int GResourceFindBool(char *name, int def);
-long GResourceFindInt(char *name, long def);
-Color GResourceFindColor(char *name, Color def);
-GImage *GResourceFindImage(char *name, GImage *def);
+VISIBLE void GResourceAddResourceFile(char *filename, int warn);
+VISIBLE void GResourceAddResourceString(char *string);
+VISIBLE void GResourceFind( GResStruct *info, char *prefix);
+VISIBLE char *GResourceFindString(char *name);
+VISIBLE int GResourceFindBool(char *name, int def);
+VISIBLE long GResourceFindInt(char *name, long def);
+VISIBLE Color GResourceFindColor(char *name, Color def);
+VISIBLE GImage *GResourceFindImage(char *name, GImage *def);
 #endif

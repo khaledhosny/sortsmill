@@ -34,11 +34,11 @@
 
 #else
 
-typedef void *uninm_names_db;
+VISIBLE typedef void *uninm_names_db;
 
-#define uninm_find_names_db(locale_base)    ((char *) 0)
-#define uninm_names_db_open(filename)       ((uninm_names_db) 0)
-#define uninm_names_db_close(handle)        do {} while (0)
+VISIBLE #define uninm_find_names_db(locale_base)    ((char *) 0)
+VISIBLE #define uninm_names_db_open(filename)       ((uninm_names_db) 0)
+VISIBLE #define uninm_names_db_close(handle)        do {} while (0)
 #define uninm_name(handle, codepoint)       ((const char *) 0)
 #define uninm_annotation(handle, codepoint) ((const char *) 0)
 

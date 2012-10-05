@@ -67,12 +67,12 @@
 #define ____ISOLATED	0x4000000
 #define ____DECOMPNORM	0x10000000
 
-extern const unsigned short ____tolower[];
-extern const unsigned short ____toupper[];
+VISIBLE extern const unsigned short ____tolower[];
+VISIBLE extern const unsigned short ____toupper[];
 extern const unsigned short ____totitle[];
-extern const unsigned short ____tomirror[];
+VISIBLE extern const unsigned short ____tomirror[];
 extern const unsigned char  ____digitval[];
-extern const unsigned int  ____utype[];
+VISIBLE extern const unsigned int  ____utype[];
 
 /* utype2[] binary flags used for position/layout of each unicode.org character */
 #define ____COMBININGCLASS	0xff
@@ -99,7 +99,7 @@ VISIBLE extern const uint32	____utype2[]; /* hold position boolean flags for eac
 
 #define isunicodepointassigned(ch) (____codepointassigned[(ch)/32]&(1<<((ch)%32)))
 
-extern const uint32	____codepointassigned[];	/* 1bit_boolean_flag x 32 = exists in Unicode.org character chart list. */
+VISIBLE extern const uint32	____codepointassigned[];	/* 1bit_boolean_flag x 32 = exists in Unicode.org character chart list. */
 
 #define tolower(ch) (____tolower[(ch)+1])
 #define toupper(ch) (____toupper[(ch)+1])
@@ -137,12 +137,15 @@ extern const uint32	____codepointassigned[];	/* 1bit_boolean_flag x 32 = exists 
 
 
 
-extern struct arabicforms {
+struct arabicforms {
     unsigned short initial, medial, final, isolated;
     unsigned int isletter: 1;
     unsigned int joindual: 1;
     unsigned int required_lig_with_alef: 1;
-} ArabicForms[256];	/* for chars 0x600-0x6ff, subtract 0x600 to use array */
+};
+
+/* for chars 0x600-0x6ff, subtract 0x600 to use array */
+VISIBLE extern struct arabicforms ArabicForms[256];
 
 #define _SOFT_HYPHEN	0xad
 

@@ -81,10 +81,10 @@ typedef struct gdirentry {
 
 VISIBLE extern void GIOdir(GIOControl *gc);
 extern void GIOstatFile(GIOControl *gc);
-extern void GIOfileExists(GIOControl *gc);
+VISIBLE extern void GIOfileExists(GIOControl *gc);
 extern void GIOgetFile(GIOControl *gc);
 extern void GIOputFile(GIOControl *gc);
-extern void GIOmkDir(GIOControl *gc);
+VISIBLE extern void GIOmkDir(GIOControl *gc);
 extern void GIOdelFile(GIOControl *gc);
 extern void GIOdelDir(GIOControl *gc);
 extern void GIOrenameFile(GIOControl *gc);
@@ -94,7 +94,7 @@ extern int32 GIOwrite(GIOControl *gc,void *buffer,int32 len);
 extern void GIOFreeDirEntries(GDirEntry *lst);
 VISIBLE extern void GIOcancel(GIOControl *gc);
 VISIBLE extern void GIOclose(GIOControl *gc);
-extern GIOControl *GIOCreate(unichar_t *path,void *userdata,
+VISIBLE extern GIOControl *GIOCreate(unichar_t *path,void *userdata,
 	void (*receivedata)(struct giocontrol *),
 	void (*receiveerror)(struct giocontrol *));
 extern void GIOSetDefAuthorizer(int32 (*getauth)(struct giocontrol *));

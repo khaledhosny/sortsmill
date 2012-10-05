@@ -44,7 +44,7 @@
 
 int old_sfnt_flags = ttf_flag_otmode;
 int old_ps_flags = ps_flag_afm|ps_flag_round;
-int old_psotb_flags = ps_flag_afm;
+VISIBLE int old_psotb_flags = ps_flag_afm;
 
 int oldformatstate = ff_pfb;
 int oldbitmapstate = 0;

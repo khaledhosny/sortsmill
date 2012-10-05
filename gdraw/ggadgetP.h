@@ -493,7 +493,7 @@ typedef struct rowcol {
 /* ColorPicker */
 
 extern int _GScrollBar_StartTime,_GScrollBar_RepeatTime;	/* in millisecs */
-extern int _GScrollBar_Width;		/* in points */
+VISIBLE extern int _GScrollBar_Width;		/* in points */
 extern int _GListMarkSize;		/* in points, def width of popup mark in buttons */
 extern int _GGadget_Skip;		/* in points, def hor space between gadgets */
 extern int _GGadget_TextImageSkip;	/* in points, def hor space text and image */
@@ -533,15 +533,15 @@ void _GGroup_Init(void);
 
 VISIBLE extern unichar_t *_GGadgetFileToUString(char *filename,int max);
 
-extern int GBoxDrawBorder(GWindow gw,GRect *pos,GBox *design,
+VISIBLE extern int GBoxDrawBorder(GWindow gw,GRect *pos,GBox *design,
 	enum gadget_state state,int is_default);
-extern void GBoxDrawBackground(GWindow gw,GRect *pos,GBox *design,
+VISIBLE extern void GBoxDrawBackground(GWindow gw,GRect *pos,GBox *design,
 	enum gadget_state state,int is_default);
 extern void GBoxDrawTabOutline(GWindow pixmap, GGadget *g, int x, int y,
 	int width, int rowh, int active );
 extern int GBoxDrawHLine(GWindow gw,GRect *pos,GBox *design);
 extern int GBoxDrawVLine(GWindow gw,GRect *pos,GBox *design);
-extern int GBoxBorderWidth(GWindow gw, GBox *box);
+VISIBLE extern int GBoxBorderWidth(GWindow gw, GBox *box);
 extern int GBoxExtraSpace(GGadget *g);
 extern int GBoxDrawnWidth(GWindow gw, GBox *box);
 
@@ -555,7 +555,7 @@ extern int GTextInfoGetAs(GWindow base,GTextInfo *ti, FontInstance *font);
 extern int GTextInfoDraw(GWindow base,int x,int y,GTextInfo *ti,
 	FontInstance *font,Color fg,Color sel,int ymax);
 extern GTextInfo *GTextInfoCopy(GTextInfo *ti);
-extern GTextInfo **GTextInfoArrayFromList(GTextInfo *ti, uint16 *cnt);
+VISIBLE extern GTextInfo **GTextInfoArrayFromList(GTextInfo *ti, uint16 *cnt);
 extern GTextInfo **GTextInfoArrayCopy(GTextInfo **ti);
 extern int GTextInfoArrayCount(GTextInfo **ti);
 extern int GTextInfoCompare(GTextInfo *ti1, GTextInfo *ti2);
@@ -571,7 +571,7 @@ extern GWindow GListPopupCreate(GGadget *owner,void (*inform)(GGadget *,int), GT
 extern int GMenuPopupCheckKey(GEvent *event);
 extern int GMenuBarCheckKey(GGadget *g, GEvent *event);
 extern void _GButton_SetDefault(GGadget *g,int32 is_default);
-extern void _GButtonInit(void);
+VISIBLE extern void _GButtonInit(void);
 extern void GListMarkDraw(GWindow pixmap,int x, int y, int height, enum gadget_state state );
 extern char **_GGadget_GetImagePath(void);
 extern int _GGadget_ImageInCache(GImage *image);

@@ -68,6 +68,6 @@
 /* For messages in the shortcuts domain */
 #define H_(str)		(str)
 
-char *sgettext(const char *msgid);
+VISIBLE char *sgettext(const char *msgid);
 
 #endif	/* _INTL_H */

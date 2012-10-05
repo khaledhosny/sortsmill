@@ -54,7 +54,7 @@ enum ttf_instructions {
  ttf_wcvtf=0x70, ttf_wcvtp=0x44, ttf_ws=0x42
 };
 
-extern const char *ff_ttf_instrnames[];
+VISIBLE extern const char *ff_ttf_instrnames[];
 
 typedef struct instrbase {
     unsigned int inedit: 1;
@@ -64,5 +64,5 @@ typedef struct instrbase {
     char *scroll, *offset;
 } InstrBase;
 
-extern char *__IVUnParseInstrs(InstrBase *iv);
-extern int instr_typify(struct instrdata *);
+VISIBLE extern char *__IVUnParseInstrs(InstrBase *iv);
+VISIBLE extern int instr_typify(struct instrdata *);

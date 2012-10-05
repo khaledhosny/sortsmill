@@ -1,4 +1,5 @@
 #include <config.h>
+#include <is_LIGATURE.h>
 
 /* This is a generated file. */
 

@@ -296,12 +296,12 @@ typedef enum fchooserret (*GFileChooserFilterType)(GGadget *g,struct gdirentry *
 #define __NUM_LastStd		1
 
 extern void GTextInfoFree(GTextInfo *ti);
-extern void GTextInfoListFree(GTextInfo *ti);
-extern void GTextInfoArrayFree(GTextInfo **ti);
-extern GTextInfo **GTextInfoFromChars(char **array, int len);
-extern const unichar_t *GStringGetResource(int index,unichar_t *mnemonic);
+VISIBLE extern void GTextInfoListFree(GTextInfo *ti);
+VISIBLE extern void GTextInfoArrayFree(GTextInfo **ti);
+VISIBLE extern GTextInfo **GTextInfoFromChars(char **array, int len);
+VISIBLE extern const unichar_t *GStringGetResource(int index,unichar_t *mnemonic);
 VISIBLE extern int GGadgetScale(int xpos);
-extern int GIntGetResource(int index);
+VISIBLE extern int GIntGetResource(int index);
 extern int GStringSetResourceFileV(char *filename,uint32 checksum);
 extern int GStringSetResourceFile(char *filename);	/* returns 1 for success, 0 for failure */
 /* fallback string arrays are null terminated. mnemonics is same length as string */
@@ -310,7 +310,7 @@ extern void GStringSetFallbackArray(const unichar_t **array,const unichar_t *mn,
 	const int *ires);
 unichar_t *GStringFileGetResource(char *filename, int index,unichar_t *mnemonic);
 extern void *GResource_font_cvt(char *val, void *def);
-extern FontInstance *GResourceFindFont(char *resourcename,FontInstance *deffont);
+VISIBLE extern FontInstance *GResourceFindFont(char *resourcename,FontInstance *deffont);
 
 void GGadgetDestroy(GGadget *g);
 VISIBLE void GGadgetSetVisible(GGadget *g,int visible);
@@ -347,11 +347,11 @@ VISIBLE int GGadgetActiveGadgetEditCmd(GWindow gw,enum editor_commands cmd);
 void GGadgetSetHandler(GGadget *g, GGadgetHandler handler);
 GGadgetHandler GGadgetGetHandler(GGadget *g);
 
-void GTextFieldSelect(GGadget *g,int sel_start, int sel_end);
-void GTextFieldShow(GGadget *g,int pos);
-void GTextFieldReplace(GGadget *g,const unichar_t *txt);
-void GCompletionFieldSetCompletion(GGadget *g,GTextCompletionHandler completion);
-void GCompletionFieldSetCompletionMode(GGadget *g,int enabled);
+VISIBLE void GTextFieldSelect(GGadget *g,int sel_start, int sel_end);
+VISIBLE void GTextFieldShow(GGadget *g,int pos);
+VISIBLE void GTextFieldReplace(GGadget *g,const unichar_t *txt);
+VISIBLE void GCompletionFieldSetCompletion(GGadget *g,GTextCompletionHandler completion);
+VISIBLE VISIBLE void GCompletionFieldSetCompletionMode(GGadget *g,int enabled);
 VISIBLE void GGadgetClearList(GGadget *g);
 VISIBLE void GGadgetSetList(GGadget *g, GTextInfo **ti, int32 copyit);
 VISIBLE GTextInfo **GGadgetGetList(GGadget *g,int32 *len);	/* Do not free!!! */
@@ -371,28 +371,28 @@ Color GColorButtonGetColor(GGadget *g);
 VISIBLE void GGadgetSetChecked(GGadget *g, int ison);
 VISIBLE int GGadgetIsChecked(GGadget *g);
 
-int GListIndexFromY(GGadget *g,int y);
-void GListSetSBAlwaysVisible(GGadget *g,int always);
-void GListSetPopupCallback(GGadget *g,void (*callback)(GGadget *,int));
+VISIBLE int GListIndexFromY(GGadget *g,int y);
+VISIBLE void GListSetSBAlwaysVisible(GGadget *g,int always);
+VISIBLE void GListSetPopupCallback(GGadget *g,void (*callback)(GGadget *,int));
 
-int GTabSetGetSel(GGadget *g);
-void GTabSetSetSel(GGadget *g,int sel);
-void GTabSetSetEnabled(GGadget *g,int pos, int enabled);
-GWindow GTabSetGetSubwindow(GGadget *g,int pos);
+VISIBLE int GTabSetGetSel(GGadget *g);
+VISIBLE void GTabSetSetSel(GGadget *g,int sel);
+VISIBLE void GTabSetSetEnabled(GGadget *g,int pos, int enabled);
+VISIBLE GWindow GTabSetGetSubwindow(GGadget *g,int pos);
 int GTabSetGetTabLines(GGadget *g);
 void GTabSetSetNestedExpose(GGadget *g, void (*)(GWindow,GGadget *,GEvent *));
 void GTabSetSetNestedMouse(GGadget *g, int (*)(GGadget *,GEvent *));
-void GTabSetChangeTabName(GGadget *g, char *name, int pos);
-void GTabSetRemetric(GGadget *g);
-void GTabSetRemoveTabByPos(GGadget *g, int pos);
+VISIBLE void GTabSetChangeTabName(GGadget *g, char *name, int pos);
+VISIBLE void GTabSetRemetric(GGadget *g);
+VISIBLE VISIBLE void GTabSetRemoveTabByPos(GGadget *g, int pos);
 void GTabSetRemoveTabByName(GGadget *g, char *name);
 
 int32 GScrollBarGetPos(GGadget *g);
-int32 GScrollBarSetPos(GGadget *g,int32 pos);
+VISIBLE int32 GScrollBarSetPos(GGadget *g,int32 pos);
 void GScrollBarSetMustShow(GGadget *g, int32 sb_min, int32 sb_max, int32 sb_pagesize,
 	int32 sb_mustshow);
-void GScrollBarSetBounds(GGadget *g, int32 sb_min, int32 sb_max, int32 sb_pagesize );
-void GScrollBarGetBounds(GGadget *g, int32 *sb_min, int32 *sb_max, int32 *sb_pagesize );
+VISIBLE void GScrollBarSetBounds(GGadget *g, int32 sb_min, int32 sb_max, int32 sb_pagesize );
+VISIBLE void GScrollBarGetBounds(GGadget *g, int32 *sb_min, int32 *sb_max, int32 *sb_pagesize );
 
 void GMenuBarSetItemChecked(GGadget *g, int mid, int check);
 void GMenuBarSetItemEnabled(GGadget *g, int mid, int enabled);
@@ -437,36 +437,36 @@ VISIBLE void GHVBoxFitWindow(GGadget *g);
 VISIBLE void GHVBoxFitWindowCentered(GGadget *g);
 VISIBLE void GHVBoxReflow(GGadget *g);
 
-void GMatrixEditSet(GGadget *g,struct matrix_data *data, int rows, int copy_it);
-struct matrix_data *GMatrixEditGet(GGadget *g, int *rows);
-struct matrix_data *_GMatrixEditGet(GGadget *g, int *rows);
-GGadget *_GMatrixEditGetActiveTextField(GGadget *g);
-int GMatrixEditGetColCnt(GGadget *g);
-int GMatrixEditGetActiveRow(GGadget *g);
-int GMatrixEditGetActiveCol(GGadget *g);
-void GMatrixEditActivateRowCol(GGadget *g, int r, int c);
-void GMatrixEditDeleteRow(GGadget *g,int row);
-void GMatrixEditScrollToRowCol(GGadget *g,int r, int c);
-int GMatrixEditStringDlg(GGadget *g,int row,int col);
-void GMatrixEditSetNewText(GGadget *g, char *text);
-void GMatrixEditSetOtherButtonEnable(GGadget *g, void (*sob)(GGadget *g, int r, int c));
-void GMatrixEditSetMouseMoveReporter(GGadget *g, void (*rmm)(GGadget *g, int r, int c));
-void GMatrixEditSetTextChangeReporter(GGadget *g, void (*tcr)(GGadget *g, int r, int c, GGadget *text));
-void GMatrixEditSetValidateStr(GGadget *g, char *(*validate)(GGadget *g, int r, int c, int wasnew, char *str));
-void GMatrixEditSetBeforeDelete(GGadget *g, void (*predelete)(GGadget *g, int r));
-void GMatrixEditSetRowMotionCallback(GGadget *g, void (*rowmotion)(GGadget *g, int oldr, int newr));
+VISIBLE void GMatrixEditSet(GGadget *g,struct matrix_data *data, int rows, int copy_it);
+VISIBLE struct matrix_data *GMatrixEditGet(GGadget *g, int *rows);
+VISIBLE struct matrix_data *_GMatrixEditGet(GGadget *g, int *rows);
+VISIBLE GGadget *_GMatrixEditGetActiveTextField(GGadget *g);
+VISIBLE VISIBLE int GMatrixEditGetColCnt(GGadget *g);
+VISIBLE VISIBLE int GMatrixEditGetActiveRow(GGadget *g);
+VISIBLE VISIBLE int GMatrixEditGetActiveCol(GGadget *g);
+VISIBLE void GMatrixEditActivateRowCol(GGadget *g, int r, int c);
+VISIBLE void GMatrixEditDeleteRow(GGadget *g,int row);
+VISIBLE void GMatrixEditScrollToRowCol(GGadget *g,int r, int c);
+VISIBLE int GMatrixEditStringDlg(GGadget *g,int row,int col);
+VISIBLE void GMatrixEditSetNewText(GGadget *g, char *text);
+VISIBLE VISIBLE void GMatrixEditSetOtherButtonEnable(GGadget *g, void (*sob)(GGadget *g, int r, int c));
+VISIBLE void GMatrixEditSetMouseMoveReporter(GGadget *g, void (*rmm)(GGadget *g, int r, int c));
+VISIBLE VISIBLE void GMatrixEditSetTextChangeReporter(GGadget *g, void (*tcr)(GGadget *g, int r, int c, GGadget *text));
+VISIBLE void GMatrixEditSetValidateStr(GGadget *g, char *(*validate)(GGadget *g, int r, int c, int wasnew, char *str));
+VISIBLE void GMatrixEditSetBeforeDelete(GGadget *g, void (*predelete)(GGadget *g, int r));
+VISIBLE VISIBLE void GMatrixEditSetRowMotionCallback(GGadget *g, void (*rowmotion)(GGadget *g, int oldr, int newr));
 void GMatrixEditUp(GGadget *g);
 void GMatrixEditDown(GGadget *g);
 enum gme_updown { ud_up_enabled=1, ud_down_enabled=2 };
-void GMatrixEditSetCanUpDown(GGadget *g, enum gme_updown (*canupdown)(GGadget *g, int r));
-void GMatrixEditSetUpDownVisible(GGadget *g, int visible);
-void GMatrixEditAddButtons(GGadget *g, GGadgetCreateData *gcd);
-void GMatrixEditEnableColumn(GGadget *g, int col, int enabled);
-void GMatrixEditShowColumn(GGadget *g, int col, int visible);
-void GMatrixEditSetColumnChoices(GGadget *g, int col, GTextInfo *ti);
-GMenuItem *GMatrixEditGetColumnChoices(GGadget *g, int col);
-void GMatrixEditSetColumnCompletion(GGadget *g, int col, GTextCompletionHandler completion);
-void GMatrixEditSetEditable(GGadget *g, int editable);
+VISIBLE void GMatrixEditSetCanUpDown(GGadget *g, enum gme_updown (*canupdown)(GGadget *g, int r));
+VISIBLE void GMatrixEditSetUpDownVisible(GGadget *g, int visible);
+VISIBLE void GMatrixEditAddButtons(GGadget *g, GGadgetCreateData *gcd);
+VISIBLE void GMatrixEditEnableColumn(GGadget *g, int col, int enabled);
+VISIBLE void GMatrixEditShowColumn(GGadget *g, int col, int visible);
+VISIBLE void GMatrixEditSetColumnChoices(GGadget *g, int col, GTextInfo *ti);
+VISIBLE GMenuItem *GMatrixEditGetColumnChoices(GGadget *g, int col);
+VISIBLE void GMatrixEditSetColumnCompletion(GGadget *g, int col, GTextCompletionHandler completion);
+VISIBLE void GMatrixEditSetEditable(GGadget *g, int editable);
 
 VISIBLE GWindow GDrawableGetWindow(GGadget *g);
 
@@ -493,42 +493,42 @@ VISIBLE GWindow GMenuCreatePopupMenu(GWindow owner,GEvent *event, GMenuItem *mi)
 GWindow _GMenuCreatePopupMenu(GWindow owner,GEvent *event, GMenuItem *mi,
 	void (*donecallback)(GWindow owner));
 
-GGadget *GLineCreate(struct gwindow *base, GGadgetData *gd,void *data);
-GGadget *GGroupCreate(struct gwindow *base, GGadgetData *gd,void *data);
-GGadget *GSpacerCreate(struct gwindow *base, GGadgetData *gd,void *data);
-GGadget *GLabelCreate(struct gwindow *base, GGadgetData *gd,void *data);
-GGadget *GButtonCreate(struct gwindow *base, GGadgetData *gd,void *data);
+VISIBLE GGadget *GLineCreate(struct gwindow *base, GGadgetData *gd,void *data);
+VISIBLE GGadget *GGroupCreate(struct gwindow *base, GGadgetData *gd,void *data);
+VISIBLE GGadget *GSpacerCreate(struct gwindow *base, GGadgetData *gd,void *data);
+VISIBLE GGadget *GLabelCreate(struct gwindow *base, GGadgetData *gd,void *data);
+VISIBLE GGadget *GButtonCreate(struct gwindow *base, GGadgetData *gd,void *data);
 GGadget *GImageButtonCreate(struct gwindow *base, GGadgetData *gd,void *data);
-GGadget *GListButtonCreate(struct gwindow *base, GGadgetData *gd,void *data);
+VISIBLE GGadget *GListButtonCreate(struct gwindow *base, GGadgetData *gd,void *data);
 GGadget *GColorButtonCreate(struct gwindow *base, GGadgetData *gd,void *data);
-GGadget *GRadioCreate(struct gwindow *base, GGadgetData *gd,void *data);
-GGadget *GCheckBoxCreate(struct gwindow *base, GGadgetData *gd,void *data);
-GGadget *GVisibilityBoxCreate(struct gwindow *base, GGadgetData *gd,void *data);
-GGadget *GScrollBarCreate(struct gwindow *base, GGadgetData *gd,void *data);
-GGadget *GListCreate(struct gwindow *base, GGadgetData *gd,void *data);
-GGadget *GTextFieldCreate(struct gwindow *base, GGadgetData *gd,void *data);
-GGadget *GPasswordCreate(struct gwindow *base, GGadgetData *gd,void *data);
-GGadget *GNumericFieldCreate(struct gwindow *base, GGadgetData *gd,void *data);
-GGadget *GTextCompletionCreate(struct gwindow *base, GGadgetData *gd,void *data);
-GGadget *GTextAreaCreate(struct gwindow *base, GGadgetData *gd,void *data);
-GGadget *GListFieldCreate(struct gwindow *base, GGadgetData *gd,void *data);
+VISIBLE GGadget *GRadioCreate(struct gwindow *base, GGadgetData *gd,void *data);
+VISIBLE GGadget *GCheckBoxCreate(struct gwindow *base, GGadgetData *gd,void *data);
+VISIBLE GGadget *GVisibilityBoxCreate(struct gwindow *base, GGadgetData *gd,void *data);
+VISIBLE GGadget *GScrollBarCreate(struct gwindow *base, GGadgetData *gd,void *data);
+VISIBLE GGadget *GListCreate(struct gwindow *base, GGadgetData *gd,void *data);
+VISIBLE GGadget *GTextFieldCreate(struct gwindow *base, GGadgetData *gd,void *data);
+VISIBLE GGadget *GPasswordCreate(struct gwindow *base, GGadgetData *gd,void *data);
+VISIBLE GGadget *GNumericFieldCreate(struct gwindow *base, GGadgetData *gd,void *data);
+VISIBLE GGadget *GTextCompletionCreate(struct gwindow *base, GGadgetData *gd,void *data);
+VISIBLE GGadget *GTextAreaCreate(struct gwindow *base, GGadgetData *gd,void *data);
+VISIBLE GGadget *GListFieldCreate(struct gwindow *base, GGadgetData *gd,void *data);
 GGadget *GSimpleListFieldCreate(struct gwindow *base, GGadgetData *gd,void *data);
 GGadget *GMenuBarCreate(struct gwindow *base, GGadgetData *gd,void *data);
 VISIBLE GGadget *GMenu2BarCreate(struct gwindow *base, GGadgetData *gd,void *data);
-GGadget *GTabSetCreate(struct gwindow *base, GGadgetData *gd,void *data);
+VISIBLE GGadget *GTabSetCreate(struct gwindow *base, GGadgetData *gd,void *data);
 VISIBLE GGadget *GFileChooserCreate(struct gwindow *base, GGadgetData *gd,void *data);
 VISIBLE GGadget *GHBoxCreate(struct gwindow *base, GGadgetData *gd,void *data);
-GGadget *GVBoxCreate(struct gwindow *base, GGadgetData *gd,void *data);
+VISIBLE GGadget *GVBoxCreate(struct gwindow *base, GGadgetData *gd,void *data);
 VISIBLE GGadget *GHVBoxCreate(struct gwindow *base, GGadgetData *gd,void *data);
 VISIBLE GGadget *GHVGroupCreate(struct gwindow *base, GGadgetData *gd,void *data);
-GGadget *GMatrixEditCreate(struct gwindow *base, GGadgetData *gd,void *data);
+VISIBLE GGadget *GMatrixEditCreate(struct gwindow *base, GGadgetData *gd,void *data);
 VISIBLE GGadget *GDrawableCreate(struct gwindow *base, GGadgetData *gd,void *data);
 
 GGadget *CreateSlider(struct gwindow *base, GGadgetData *gd,void *data);
 GGadget *CreateFileChooser(struct gwindow *base, GGadgetData *gd,void *data);
 GGadget *CreateGadgets(struct gwindow *base, GGadgetCreateData *gcd);
 
-GTextInfo **GTextInfoArrayFromList(GTextInfo *ti, uint16 *cnt);
+VISIBLE GTextInfo **GTextInfoArrayFromList(GTextInfo *ti, uint16 *cnt);
 typedef struct gresimage {
     GImage *image;
     char *filename;
@@ -542,11 +542,11 @@ VISIBLE int TryGGadgetImageCache(GImage *image, char *name);
 
 VISIBLE extern unichar_t *utf82u_mncopy(const char *utf8buf,unichar_t *mn);
 
-extern double GetCalmReal8(GWindow gw,int cid,char *namer,int *err);
-extern double GetReal8(GWindow gw,int cid,char *namer,int *err);
+VISIBLE extern double GetCalmReal8(GWindow gw,int cid,char *namer,int *err);
+VISIBLE extern double GetReal8(GWindow gw,int cid,char *namer,int *err);
 extern int GetCalmInt8(GWindow gw,int cid,char *name,int *err);
-extern int GetInt8(GWindow gw,int cid,char *namer,int *err);
-extern int GetUnicodeChar8(GWindow gw,int cid,char *namer,int *err);
+VISIBLE extern int GetInt8(GWindow gw,int cid,char *namer,int *err);
+VISIBLE extern int GetUnicodeChar8(GWindow gw,int cid,char *namer,int *err);
 VISIBLE extern void GGadgetProtest8(char *labelr);
 
 extern void GMenuItemParseShortCut(GMenuItem *mi,char *shortcut);

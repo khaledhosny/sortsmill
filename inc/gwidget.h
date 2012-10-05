@@ -75,8 +75,8 @@ GWindow GWindowGetCurrentFocusTopWindow (void);
 GWindow GWidgetGetCurrentFocusWindow (void);
 GWindow GWidgetGetPreviousFocusTopWindow (void);
 struct ggadget *GWindowGetCurrentFocusGadget (void);
-struct ggadget *GWindowGetFocusGadgetOfWindow (GWindow gw);
-void GWindowClearFocusGadgetOfWindow (GWindow gw);
+VISIBLE struct ggadget *GWindowGetFocusGadgetOfWindow (GWindow gw);
+VISIBLE void GWindowClearFocusGadgetOfWindow (GWindow gw);
 VISIBLE void GWidgetIndicateFocusGadget (struct ggadget *g);
 VISIBLE void GWidgetReparentWindow (GWindow child, GWindow newparent, int x,
                                     int y);

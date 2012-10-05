@@ -278,7 +278,7 @@ enum gzoom_flags { gzf_pos=1, gzf_size=2 };
 typedef int (*GDrawEH)(GWindow,GEvent *);
 
 extern unichar_t *GDrawKeysyms[];
-extern GDisplay *screen_display, *printer_display;
+VISIBLE extern GDisplay *screen_display, *printer_display;
 
 VISIBLE extern void GDrawCreateDisplays(char *displayname,char *programname);
 VISIBLE extern void *GDrawNativeDisplay(GDisplay *);

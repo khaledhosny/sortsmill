@@ -98,6 +98,6 @@ enum override_mask_flags {
     omf_font			= 0x80000000
 };
 
-extern void GResEdit(GResInfo *additional,const char *def_res_file,void (*change_res_filename)(const char *));
-extern void GResEditFind( struct resed *resed, char *prefix);
+VISIBLE extern void GResEdit(GResInfo *additional,const char *def_res_file,void (*change_res_filename)(const char *));
+VISIBLE extern void GResEditFind( struct resed *resed, char *prefix);
 #endif /* _GRESEDIT_H */

@@ -38,7 +38,7 @@
 #include <ustring.h>
 #include "gfile.h"
 
-int AutoSaveFrequency=30;
+VISIBLE int AutoSaveFrequency=30;
 
 #if !defined(__MINGW32__)
 # include <pwd.h>

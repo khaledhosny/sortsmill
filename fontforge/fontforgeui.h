@@ -86,7 +86,7 @@ extern GImage GIcon_u45fItalic, GIcon_u452Italic,
     GIcon_aItalic, GIcon_FlatSerif, GIcon_SlantSerif, GIcon_PenSerif,
     GIcon_TopSerifs, GIcon_BottomSerifs, GIcon_DiagSerifs;
 extern GImage def_image, red_image, blue_image, green_image, magenta_image,
-	yellow_image, cyan_image, white_image, customcolor_image;
+VISIBLE 	yellow_image, cyan_image, white_image, customcolor_image;
 extern GImage GIcon_continue, GIcon_stepout, GIcon_stepover, GIcon_stepinto,
 	GIcon_watchpnt, GIcon_menudelta, GIcon_exit;
 extern GImage GIcon_Stopped, GIcon_Stop;
@@ -110,13 +110,13 @@ extern void InitToolIcons(void); /* needs image cache already working */
 
 extern int ErrorWindowExists(void);
 extern void ShowErrorWindow(void);
-extern struct ui_interface gdraw_ui_interface;
-extern struct prefs_interface gdraw_prefs_interface;
-extern struct sc_interface gdraw_sc_interface;
-extern struct cv_interface gdraw_cv_interface;
-extern struct bc_interface gdraw_bc_interface;
-extern struct mv_interface gdraw_mv_interface;
-extern struct fv_interface gdraw_fv_interface;
+VISIBLE extern struct ui_interface gdraw_ui_interface;
+VISIBLE extern struct prefs_interface gdraw_prefs_interface;
+VISIBLE extern struct sc_interface gdraw_sc_interface;
+VISIBLE extern struct cv_interface gdraw_cv_interface;
+VISIBLE extern struct bc_interface gdraw_bc_interface;
+VISIBLE extern struct mv_interface gdraw_mv_interface;
+VISIBLE extern struct fv_interface gdraw_fv_interface;
 extern struct fi_interface gdraw_fi_interface;
 extern struct clip_interface gdraw_clip_interface;
 

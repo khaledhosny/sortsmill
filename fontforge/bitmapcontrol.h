@@ -38,6 +38,6 @@ typedef struct createbitmapdata {
 
 enum { bd_all, bd_selected, bd_current };
 
-extern int bdfcontrol_lastwhich;
+VISIBLE extern int bdfcontrol_lastwhich;
 
-void BitmapsDoIt(CreateBitmapData *bd,int32 *sizes,int usefreetype);
+VISIBLE void BitmapsDoIt(CreateBitmapData *bd,int32 *sizes,int usefreetype);

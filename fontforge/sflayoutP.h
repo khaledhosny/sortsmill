@@ -98,28 +98,28 @@ typedef struct layoutinfo {
 
 extern void GImageDrawRect(GImage *img,GRect *r,Color col);
 extern void GImageDrawImage(GImage *dest,GImage *src,GRect *junk,int x, int y);
-extern int LI_FDDrawChar(void *data,
+VISIBLE extern int LI_FDDrawChar(void *data,
 	void (*drawImage)(void *,GImage *,GRect *,int x, int y),
 	void (*drawRect)(void *,GRect *,Color col),
 	struct opentype_str *osc,int x,int y,Color col);
-extern uint32 *LI_TagsCopy(uint32 *tags);
+VISIBLE extern uint32 *LI_TagsCopy(uint32 *tags);
 extern struct fontlist *LI_fontlistcopy(struct fontlist *fl );
-extern void LI_fontlistmergecheck(LayoutInfo *li);
-extern void LayoutInfoRefigureLines(LayoutInfo *li, int start_of_change,
+VISIBLE extern void LI_fontlistmergecheck(LayoutInfo *li);
+VISIBLE VISIBLE extern void LayoutInfoRefigureLines(LayoutInfo *li, int start_of_change,
 	int end_of_change, int width);
-extern int LayoutInfoReplace(LayoutInfo *li, const unichar_t *str,
+VISIBLE VISIBLE extern int LayoutInfoReplace(LayoutInfo *li, const unichar_t *str,
 	int sel_start, int sel_end,int width);
-extern void LayoutInfo_Destroy(LayoutInfo *li);
+VISIBLE extern void LayoutInfo_Destroy(LayoutInfo *li);
 VISIBLE extern void SFMapFill(struct sfmaps *sfmaps,SplineFont *sf);
 extern struct sfmaps *SFMapOfSF(LayoutInfo *li,SplineFont *sf);
-extern FontData *LI_FindFontData(LayoutInfo *li, SplineFont *sf,
+VISIBLE extern FontData *LI_FindFontData(LayoutInfo *li, SplineFont *sf,
 	int layer, enum sftf_fonttype fonttype, int size, int antialias);
-extern FontData *LI_RegenFontData(LayoutInfo *li, FontData *ret);
-extern void LayoutInfoInitLangSys(LayoutInfo *li, int end, uint32 script, uint32 lang);
-extern LayoutInfo *LIConvertToPrint(LayoutInfo *li, int width, int height, int dpi);
-extern SplineSet *LIConvertToSplines(LayoutInfo *li,double dpi,int order2);
+VISIBLE extern FontData *LI_RegenFontData(LayoutInfo *li, FontData *ret);
+VISIBLE extern void LayoutInfoInitLangSys(LayoutInfo *li, int end, uint32 script, uint32 lang);
+VISIBLE extern LayoutInfo *LIConvertToPrint(LayoutInfo *li, int width, int height, int dpi);
+VISIBLE extern SplineSet *LIConvertToSplines(LayoutInfo *li,double dpi,int order2);
 extern void LayoutInfoSetTitle(LayoutInfo *li,const unichar_t *tit,int width);
-extern struct fontlist *LI_BreakFontList(LayoutInfo *li,int start,int end);
-extern int LI_SetFontData(LayoutInfo *li, int start, int end, SplineFont *sf,
+VISIBLE extern struct fontlist *LI_BreakFontList(LayoutInfo *li,int start,int end);
+VISIBLE extern int LI_SetFontData(LayoutInfo *li, int start, int end, SplineFont *sf,
 	int layer, enum sftf_fonttype fonttype, int size, int antialias,int width);
 #endif

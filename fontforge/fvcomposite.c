@@ -1,6 +1,5 @@
-#include <config.h>
+#include <config.h>		/* -*- coding: utf-8 -*- */
 
-/* -*- coding: utf-8 -*- */
 /* Copyright (C) 2000-2012 by George Williams */
 /*
  * Redistribution and use in source and binary forms, with or without
@@ -33,10 +32,10 @@
 #include <utype.h>
 #include <ustring.h>
 
-int accent_offset = 6;
-int GraveAcuteCenterBottom = 1;
-int PreferSpacingAccents = true;
-int CharCenterHighest = 1;
+VISIBLE int accent_offset = 6;
+VISIBLE int GraveAcuteCenterBottom = 1;
+VISIBLE int PreferSpacingAccents = true;
+VISIBLE int CharCenterHighest = 1;
 
 #define BottomAccent	0x300
 #define TopAccent	0x345
