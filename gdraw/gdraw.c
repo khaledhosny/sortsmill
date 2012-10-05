@@ -38,10 +38,6 @@
 
 GDisplay *screen_display = NULL;
 
-void GDrawTerm(GDisplay *disp) {
-    (disp->funcs->term)(disp);
-}
-
 int GDrawGetRes(GWindow gw) {
     if ( gw==NULL ) {
 	if ( screen_display==NULL )
@@ -69,97 +65,12 @@ return( PixelToPoint(pixels,100));
 return( PixelToPoint(pixels,gw->display->res));
 }
 
-void GDrawSetDefaultIcon(GWindow icon) {
-    (icon->display->funcs->setDefaultIcon)(icon);
-}
-
-GWindow GDrawCreateTopWindow(GDisplay *gdisp, GRect *pos,
-	int (*eh)(GWindow,GEvent *), void *user_data, GWindowAttrs *wattrs) {
-    if ( gdisp==NULL ) gdisp = screen_display;
-return( (gdisp->funcs->createTopWindow)(gdisp,pos,eh,user_data,wattrs) );
-}
-
-GWindow GDrawCreateSubWindow(GWindow w, GRect *pos,
-	int (*eh)(GWindow,GEvent *), void *user_data, GWindowAttrs *wattrs) {
-return( (w->display->funcs->createSubWindow)(w,pos,eh,user_data,wattrs) );
-}
-
-GWindow GDrawCreatePixmap(GDisplay *gdisp, uint16 width, uint16 height) {
-    if ( gdisp==NULL ) gdisp = screen_display;
-return( (gdisp->funcs->createPixmap)(gdisp,width,height));
-}
-
-GWindow GDrawCreateBitmap(GDisplay *gdisp, uint16 width, uint16 height, uint8 *data) {
-    if ( gdisp==NULL ) gdisp = screen_display;
-return( (gdisp->funcs->createBitmap)(gdisp,width,height,data));
-}
-
-GCursor GDrawCreateCursor(GWindow src,GWindow mask,Color fg,Color bg,
-	int16 x, int16 y ) {
-return( (src->display->funcs->createCursor)(src,mask,fg,bg,x,y));
-}
-
-void GDrawDestroyWindow(GWindow w) {
-    (w->display->funcs->destroyWindow)(w);
-}
-
-void GDrawSetZoom(GWindow w,GRect *zoom, enum gzoom_flags flags) {
-    (w->display->funcs->setZoom)(w,zoom,flags);
-}
-
-void GDrawDestroyCursor(GDisplay *gdisp, GCursor ct) {
-    if ( gdisp==NULL ) gdisp = screen_display;
-    (gdisp->funcs->destroyCursor)(gdisp,ct);
-}
-
-int GDrawNativeWindowExists(GDisplay *gdisp, void *native) {
-    if ( gdisp==NULL ) gdisp = screen_display;
-return( (gdisp->funcs->nativeWindowExists)(gdisp,native) );
-}
-
-void GDrawSetWindowBackground(GWindow w,Color col) {
-    (w->display->funcs->setWindowBackground)(w,col);
-}
-
-void GDrawSetWindowBorder(GWindow w,int width,Color col) {
-    (w->display->funcs->setWindowBorder)(w,width,col);
-}
-
-int GDrawSetDither(GDisplay *gdisp, int dither) {
-    if ( gdisp==NULL ) gdisp = screen_display;
-return( (gdisp->funcs->setDither)(gdisp,dither) );
-}
-
-void GDrawReparentWindow(GWindow child, GWindow parent, int x, int y) {
-    (child->display->funcs->reparentWindow)(child,parent,x,y);
-}
-
-void GDrawSetVisible(GWindow w, int visible) {
-    (w->display->funcs->setVisible)(w,visible);
-}
-
 int GDrawIsVisible(GWindow w) {
     if ( w==NULL )
 return( false );
     while ( w!=NULL && ( w->is_visible || w->is_pixmap ))
 	w = w->parent;
 return( w==NULL );
-}
-
-void GDrawMove(GWindow w, int32 x, int32 y) {
-    (w->display->funcs->move)(w,x,y);
-}
-
-void GDrawTrueMove(GWindow w, int32 x, int32 y) {
-    (w->display->funcs->trueMove)(w,x,y);
-}
-
-void GDrawResize(GWindow w, int32 width, int32 height) {
-    (w->display->funcs->resize)(w,width,height);
-}
-
-void GDrawMoveResize(GWindow w, int32 x, int32 y, int32 width, int32 height) {
-    (w->display->funcs->moveResize)(w,x,y,width,height);
 }
 
 GWindow GDrawGetRoot(GDisplay *gdisp) {
@@ -190,80 +101,12 @@ void GDrawSetEH(GWindow w,GDrawEH eh) {
     w->eh = eh;
 }
 
-void GDrawGetPointerPosition(GWindow w, GEvent *ret) {
-    (w->display->funcs->getPointerPos)(w,ret);
-}
-
-GWindow GDrawGetPointerWindow(GWindow w) {
-return( (w->display->funcs->getPointerWindow)(w));
-}
-
-void GDrawRaise(GWindow w) {
-    (w->display->funcs->raise)(w);
-}
-
-void GDrawRaiseAbove(GWindow w,GWindow below) {
-    (w->display->funcs->raiseAbove)(w,below);
-}
-
-int GDrawIsAbove(GWindow w,GWindow other) {
-return( (w->display->funcs->isAbove)(w,other) );
-}
-
-void GDrawLower(GWindow w) {
-    (w->display->funcs->lower)(w);
-}
-
-void GDrawSetWindowTitles(GWindow w, const unichar_t *title, const unichar_t *icontit) {
-    (w->display->funcs->setWindowTitles)(w,title,icontit);
-}
-
-unichar_t *GDrawGetWindowTitle(GWindow w) {
-return( (w->display->funcs->getWindowTitle)(w) );
-}
-
-void GDrawSetWindowTitles8(GWindow w, const char *title, const char *icontit) {
-    (w->display->funcs->setWindowTitles8)(w,title,icontit);
-}
-
-char *GDrawGetWindowTitle8(GWindow w) {
-return( (w->display->funcs->getWindowTitle8)(w) );
-}
-
-void GDrawSetTransientFor(GWindow transient, GWindow owner) {
-    (transient->display->funcs->setTransientFor)(transient,owner);
-}
-
-void GDrawSetCursor(GWindow w, GCursor ct) {
-    (w->display->funcs->setCursor)(w,ct);
-}
-
-GCursor GDrawGetCursor(GWindow w) {
-return( (w->display->funcs->getCursor)(w) );
-}
-
-GWindow GDrawGetRedirectWindow(GDisplay *gd) {
-    if ( gd==NULL ) gd = screen_display;
-return( (gd->funcs->getRedirectWindow)(gd) );
-}
-
-void GDrawTranslateCoordinates(GWindow from,GWindow to, GPoint *pt) {
-    GDisplay *gd;
-    if ( from!=NULL )
-	gd = from->display;
-    else if ( to!=NULL )
-	gd = to->display;
-    else
-return;
-    (gd->funcs->translateCoordinates)(from,to,pt);
-}
-
 int32 GDrawEventInWindow(GWindow inme,GEvent *event) {
     GPoint pt;
     if ( event->type<et_char || event->type>et_crossing )
 return( false );
     pt.x = event->u.mouse.x; pt.y = event->u.mouse.y;
-    (inme->display->funcs->translateCoordinates)(event->w,inme,&pt);
+    GDrawTranslateCoordinates(event->w,inme,&pt);
     if ( pt.x<0 || pt.y<0 || pt.x >= inme->pos.width || pt.y >= inme->pos.height )
 return( false );
 
@@ -295,16 +138,6 @@ return( screen_display );
 return( gw->display );
 }
 
-void GDrawBeep(GDisplay *gdisp) {
-    if ( gdisp==NULL ) gdisp = screen_display;
-    (gdisp->funcs->beep)(gdisp);
-}
-
-void GDrawFlush(GDisplay *gdisp) {
-    if ( gdisp==NULL ) gdisp = screen_display;
-    (gdisp->funcs->flush)(gdisp);
-}
-
 void GDrawGetClip(GWindow w, GRect *ret) {
     *ret = w->ggc->clip;
 }
@@ -316,15 +149,6 @@ void GDrawSetClip(GWindow w, GRect *rct) {
     } else
 	w->ggc->clip = *rct;
 }
-
-void GDrawPushClip(GWindow w, GRect *rct, GRect *old) {
-    (w->display->funcs->pushClip)(w,rct,old);
-}
-
-void GDrawPopClip(GWindow w, GRect *old) {
-    (w->display->funcs->popClip)(w,old);
-}
-
 
 GGC *GDrawGetWindowGGC(GWindow w) {
 return( w->ggc );
@@ -369,345 +193,10 @@ void GDrawSetBackground(GWindow w,Color col) {
     w->ggc->bg = col;
 }
 
-void GDrawClear(GWindow w, GRect *rect) {
-    (w->display->funcs->clear)(w,rect);
-}
-
-void GDrawDrawLine(GWindow w, int32 x,int32 y, int32 xend,int32 yend, Color col) {
-    if ( col!=COLOR_UNKNOWN )
-	(w->display->funcs->drawLine)(w,x,y,xend,yend,col);
-}
-
-void GDrawDrawRect(GWindow w, GRect *rect, Color col) {
-    if ( col!=COLOR_UNKNOWN )
-	(w->display->funcs->drawRect)(w,rect,col);
-}
-
-void GDrawFillRect(GWindow w, GRect *rect, Color col) {
-    GRect temp;
-    if ( rect==NULL ) {
-	temp.x = temp.y = 0; temp.width = w->pos.width; temp.height = w->pos.height;
-	rect = &temp;
-    }
-    if ( col!=COLOR_UNKNOWN )
-	(w->display->funcs->fillRect)(w,rect,col);
-}
-
-void GDrawFillRoundRect(GWindow w, GRect *rect, int radius, Color col) {
-    GRect temp;
-    if ( rect==NULL ) {
-	temp.x = temp.y = 0; temp.width = w->pos.width; temp.height = w->pos.height;
-	rect = &temp;
-    }
-    if ( col!=COLOR_UNKNOWN )
-	(w->display->funcs->fillRoundRect)(w,rect,radius,col);
-}
-
-void GDrawDrawElipse(GWindow w, GRect *rect, Color col) {
-    if ( col!=COLOR_UNKNOWN )
-	(w->display->funcs->drawElipse)(w,rect,col);
-}
-
-void GDrawFillElipse(GWindow w, GRect *rect, Color col) {
-    if ( col!=COLOR_UNKNOWN )
-	(w->display->funcs->fillElipse)(w,rect,col);
-}
-
-void GDrawDrawArc(GWindow w, GRect *rect, int32 sangle, int32 tangle, Color col) {
-    if ( col!=COLOR_UNKNOWN )
-	(w->display->funcs->drawArc)(w,rect,sangle,tangle,col);
-}
-
-void GDrawDrawPoly(GWindow w, GPoint *pts, int16 cnt, Color col) {
-    if ( col!=COLOR_UNKNOWN )
-	(w->display->funcs->drawPoly)(w,pts,cnt,col);
-}
-
-void GDrawFillPoly(GWindow w, GPoint *pts, int16 cnt, Color col) {
-    if ( col!=COLOR_UNKNOWN )
-	(w->display->funcs->fillPoly)(w,pts,cnt,col);
-}
-
-void GDrawScroll(GWindow w, GRect *rect, int32 hor, int32 vert) {
-    (w->display->funcs->scroll)(w,rect,hor,vert);
-}
-
-/* draws the subset of the image specified by src starting at loc (x,y) */
-void GDrawDrawImage(GWindow w, GImage *img, GRect *src, int32 x, int32 y) {
-    GRect r;
-    if ( src==NULL ) {
-	struct _GImage *base = img->list_len==0?img->u.image:img->u.images[0];
-	r.x = r.y = 0;
-	r.width = base->width; r.height = base->height;
-	src = &r;
-    }
-    (w->display->funcs->drawImage)(w,img,src,x,y);
-}
-
-/* Draw the entire image so that it is approximately the same size on other */
-/*  displays as on the screen */
-void GDrawDrawScaledImage(GWindow w, GImage *img, int32 x, int32 y) {
-    GRect r;
-
-    r.x = r.y = 0;
-    r.width = GImageGetScaledWidth(w,img);
-    r.height = GImageGetScaledHeight(w,img);
-    (w->display->funcs->drawImage)(w,img,&r,x,y);
-}
-
-/* Similar to DrawImage, but can in some cases make improvements -- if the */
-/*  is an indexed image, then treat as the alpha channel rather than a color */
-/*  in its own right */
-void GDrawDrawGlyph(GWindow w, GImage *img, GRect *src, int32 x, int32 y) {
-    GRect r;
-    if ( src==NULL ) {
-	struct _GImage *base = img->list_len==0?img->u.image:img->u.images[0];
-	r.x = r.y = 0;
-	r.width = base->width; r.height = base->height;
-	src = &r;
-    }
-    (w->display->funcs->drawGlyph)(w,img,src,x,y);
-}
-
-/* same as drawImage except with pixmaps */
-void GDrawDrawPixmap(GWindow w, GWindow pixmap, GRect *src, int32 x, int32 y) {
-    (w->display->funcs->drawPixmap)(w,pixmap,src,x,y);
-}
-
-/* We assume the full image is drawn starting at (x,y) and scaled to (width,height) */
-/*  this routine updates the rectangle on the screen			 */
-/*		(x+src->x,y+src->y,x+src->width,y+src->height)		 */
-/* Ie. if you get an expose event in the middle of the image subtract off the */
-/*  image base (x,y) and pass in the exposed rectangle */
-void GDrawDrawImageMagnified(GWindow w, GImage *img, GRect *dest, int32 x, int32 y,
-	int32 width, int32 height) {
-    GRect temp;
-    struct _GImage *base = img->list_len==0?img->u.image:img->u.images[0];
-
-    if ( base->width==width && base->height==height ) {
-	/* Not magnified after all */
-	if ( dest==NULL )
-	    GDrawDrawImage(w,img,NULL,x,y);
-	else {
-	    int old;
-	    temp = *dest; temp.x += x; temp.y += y;
-	    if ( temp.x<x ) {
-		temp.x = 0;
-		temp.width-=x;
-	    } else {
-		old = x;
-		x = temp.x;
-		temp.x -= old;
-		temp.width -= old;
-	    }
-	    if ( temp.y<y ) {
-		temp.y = 0;
-		temp.height-=y;
-	    } else {
-		old = y;
-		y = temp.y;
-		temp.y -= old;
-		temp.height -= old;
-	    }
-	    if ( temp.x>=base->width || temp.y>=base->height || temp.width<=0 || temp.height<=0 )
-return;
-	    if ( temp.x+temp.width>=base->width )
-		temp.width = base->width-temp.x;
-	    if ( temp.y+temp.height>=base->height )
-		temp.height = base->height-temp.y;
-	    GDrawDrawImage(w,img,&temp,x,y);
-	}
-return;
-    }
-    if ( dest==NULL ) {
-	temp.x = temp.y = 0;
-	temp.width = width; temp.height = height;
-	dest = &temp;
-    } else if ( dest->x<0 || dest->y<0 ||
-	    dest->x+dest->width > width || dest->y+dest->height > height ) {
-	temp = *dest;
-	if ( temp.x<0 ) { temp.width += temp.x; temp.x = 0; }
-	if ( temp.y<0 ) { temp.height += temp.y; temp.y = 0; }
-	if ( temp.x+temp.width>width ) temp.width = width-temp.x;
-	if ( temp.y+temp.height>height ) temp.height = height-temp.y;
-	dest = &temp;
-    }
-    (w->display->funcs->drawImageMag)(w,img,dest,x,y, width, height);
-}
-
-void GDrawGetFontMetrics(GWindow w,FontInstance *fi,int *as, int *ds, int *ld) {
-    (w->display->funcs->getFontMetrics)(w,fi,as,ds,ld);
-}
-
-
-void GDrawPathStroke(GWindow w,Color col) {
-    (w->display->funcs->stroke)(w,col);
-}
-
-void GDrawPathFill(GWindow w,Color col) {
-    (w->display->funcs->fill)(w,col);
-}
-
-void GDrawLayoutInit(GWindow w, char *text, int cnt, GFont *fi) {
-    (w->display->funcs->layoutInit)(w,text,cnt,fi);
-}
-
-void GDrawLayoutDraw(GWindow w, int32 x, int32 y, Color fg) {
-    (w->display->funcs->layoutDraw)(w,x,y,fg);
-}
-
-void GDrawLayoutIndexToPos(GWindow w, int index, GRect *pos) {
-    (w->display->funcs->layoutIndexToPos)(w,index,pos);
-}
-
-int GDrawLayoutXYToIndex(GWindow w, int x, int y) {
-return( (w->display->funcs->layoutXYToIndex)(w,x,y) );
-}
-
-void GDrawLayoutExtents(GWindow w, GRect *size) {
-    (w->display->funcs->layoutExtents)(w,size);
-}
-
-void GDrawLayoutSetWidth(GWindow w, int width) {
-    (w->display->funcs->layoutSetWidth)(w,width);
-}
-
-int  GDrawLayoutLineCount(GWindow w) {
-return( (w->display->funcs->layoutLineCount)(w) );
-}
-
-int  GDrawLayoutLineStart(GWindow w,int line) {
-return( (w->display->funcs->layoutLineStart)(w,line) );
-}
-
-cairo_t * GDrawGetCairo(GWindow w) {
-    return ((w->display->funcs->getCairo)(w));
-}
-
-
-GIC *GDrawCreateInputContext(GWindow w,enum gic_style def_style) {
-return(w->display->funcs->createInputContext)(w,def_style);
-}
-
-void GDrawSetGIC(GWindow w, GIC *gic, int x, int y) {
-    (w->display->funcs->setGIC)(w,gic,x,y);
-}
-
-void GDrawGrabSelection(GWindow w,enum selnames sel) {
-    (w->display->funcs->grabSelection)(w,sel);
-}
-
-void GDrawAddSelectionType(GWindow w,enum selnames sel,char *type,
-	void *data,int32 cnt,int32 unitsize,void *(*gendata)(void *,int32 *len),
-	void (*freedata)(void *)) {
-    (w->display->funcs->addSelectionType)(w,sel,type,data,cnt,unitsize,gendata,freedata);
-}
-
-void *GDrawRequestSelection(GWindow w,enum selnames sn, char *typename_, int32 *len) {
-return( (w->display->funcs->requestSelection)(w,sn,typename_,len));
-}
-
-int GDrawSelectionHasType(GWindow w,enum selnames sn, char *typename_) {
-return( (w->display->funcs->selectionHasType)(w,sn,typename_));
-}
-
-void GDrawBindSelection(GDisplay *disp,enum selnames sel, char *atomname) {
-    if ( disp==NULL )
-	disp = screen_display;
-    (disp->funcs->bindSelection)(disp,sel,atomname);
-}
-
-int GDrawSelectionOwned(GDisplay *disp,enum selnames sel) {
-    if ( disp==NULL )
-	disp = screen_display;
-return( (disp->funcs->selectionHasOwner)(disp,sel));
-}
-
 int GDrawEnableExposeRequests(GWindow w,int enabled) {
     int old = w->disable_expose_requests;
     w->disable_expose_requests = enabled;
 return( old );
-}
-
-void GDrawRequestExpose(GWindow w, GRect *rect, int doclear) {
-    if ( !GDrawIsVisible(w) || w->disable_expose_requests )
-return;
-    (w->display->funcs->requestExpose)(w,rect,doclear);
-}
-
-void GDrawForceUpdate(GWindow w) {
-    (w->display->funcs->forceUpdate)(w);
-}
-
-void GDrawSync(GDisplay *gdisp) {
-    if ( gdisp==NULL ) gdisp=screen_display;
-    (gdisp->funcs->sync)(gdisp);
-}
-
-void GDrawPointerUngrab(GDisplay *gdisp) {
-    if ( gdisp==NULL ) gdisp=screen_display;
-    (gdisp->funcs->pointerUngrab)(gdisp);
-}
-
-void GDrawPointerGrab(GWindow w) {
-    (w->display->funcs->pointerGrab)(w);
-}
-
-void GDrawProcessOneEvent(GDisplay *gdisp) {
-    if ( gdisp==NULL ) gdisp=screen_display;
-    (gdisp->funcs->processOneEvent)(gdisp);
-}
-
-void GDrawSkipMouseMoveEvents(GWindow w,GEvent *last) {
-    (w->display->funcs->skipMouseMoveEvents)(w,last);
-}
-
-void GDrawProcessPendingEvents(GDisplay *gdisp) {
-    if ( gdisp==NULL ) gdisp=screen_display;
-    (gdisp->funcs->processPendingEvents)(gdisp);
-}
-
-void GDrawProcessWindowEvents(GWindow w) {
-    (w->display->funcs->processWindowEvents)(w);
-}
-
-void GDrawEventLoop(GDisplay *gdisp) {
-    if ( gdisp==NULL ) gdisp=screen_display;
-    (gdisp->funcs->eventLoop)(gdisp);
-}
-
-void GDrawPostEvent(GEvent *e) {
-    GDisplay *gdisp = e->w->display;
-    if ( gdisp==NULL ) gdisp=screen_display;
-    (gdisp->funcs->postEvent)(e);
-}
-
-void GDrawPostDragEvent(GWindow w,GEvent *mouse,enum event_type et) {
-    GDisplay *gdisp = w->display;
-    (gdisp->funcs->postDragEvent)(w,mouse,et);
-}
-
-GTimer *GDrawRequestTimer(GWindow w,int32 time_from_now,int32 frequency,
-	void *userdata) {
-return( (w->display->funcs->requestTimer)(w,time_from_now,frequency,userdata));
-}
-
-void GDrawCancelTimer(GTimer *timer) {
-    GDisplay *gdisp;
-    if ( timer==NULL )
-return;
-    gdisp=timer->owner->display;
-    (gdisp->funcs->cancelTimer)(timer);
-}
-
-void GDrawSyncThread(GDisplay *gdisp, void (*func)(void *), void *data) {
-    if ( gdisp==NULL )
-	gdisp = screen_display;
-    (gdisp->funcs->syncThread)(gdisp,func,data);
-}
-
-int GDrawRequestDeviceEvents(GWindow w,int devcnt,struct gdeveventmask *de) {
-return( (w->display->funcs->requestDeviceEvents)(w,devcnt,de) );
 }
 
 /* We are in compose characters mode. The gdisp->mykey_state argument tells us*/
@@ -803,13 +292,4 @@ void GDrawCreateDisplays(char *displayname,char *programname) {
 #endif
 exit(1);
     }
-}
-
-void *GDrawNativeDisplay(GDisplay *gdisp) {
-    if ( gdisp==NULL )
-	gdisp=screen_display;
-    if ( gdisp==NULL )
-return( NULL );
-
-return( (gdisp->funcs->nativeDisplay)(gdisp) );
 }

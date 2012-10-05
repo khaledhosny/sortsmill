@@ -227,7 +227,6 @@ struct xkb {
 };
 
 typedef struct gxdisplay /* : GDisplay */ {
-    struct displayfuncs *funcs;
     void *semaphore;				/* To lock the display against multiple threads */
     int16 res;
     int16 scale_screen_by;			/* When converting screen pixels to printer pixels: multiply by this then divide by 16 */
