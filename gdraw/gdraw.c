@@ -38,12 +38,6 @@
 
 GDisplay *screen_display = NULL;
 
-#if 0
-void GDrawInit(GDisplay *disp) {
-    (disp->funcs->init)(disp);
-}
-#endif
-
 void GDrawTerm(GDisplay *disp) {
     (disp->funcs->term)(disp);
 }
@@ -326,25 +320,6 @@ void GDrawSetClip(GWindow w, GRect *rct) {
 void GDrawPushClip(GWindow w, GRect *rct, GRect *old) {
     (w->display->funcs->pushClip)(w,rct,old);
 }
-
-#if 0
-void GDrawClipClip(GWindow w, GRect *rct, GRect *old) {
-    GRect temp = w->ggc->clip;
-    if ( temp.x+temp.width > rct->x+rct->width )
-	temp.width = rct->x+rct->width-w->ggc->clip.x;
-    if ( temp.y+temp.height > rct->y+rct->height )
-	temp.height = rct->y+rct->height-w->ggc->clip.y;
-    if ( temp.x< rct->x ) {
-	w->ggc->clip.width -= rct->x-temp.x;
-	w->ggc->clip.x = rct->x;
-    }
-    if ( w->ggc->clip.y< rct->y ) {
-	w->ggc->clip.height -= rct->y-temp.y;
-	w->ggc->clip.y = rct->y;
-    }
-    GDrawPushClip(w,&temp,old);
-}
-#endif
 
 void GDrawPopClip(GWindow w, GRect *old) {
     (w->display->funcs->popClip)(w,old);

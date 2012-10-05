@@ -831,41 +831,12 @@ return;
     if ( full.x+full.width>base->width ) full.width = base->width-full.x;	/* Rounding errors */
     if ( full.y+full.height>base->height ) full.height = base->height-full.y;	/* Rounding errors */
 		/* Rounding errors */
-#if 1
   {
     GImage *temp = _GImageExtract(base,&full,&viewable,xscale,yscale);
     GRect src;
     src.x = src.y = 0; src.width = viewable.width; src.height = viewable.height;
     _GXCDraw_Image(w, temp, &src, x+viewable.x, y+viewable.y);
   }
-#else
-  {
-    cairo_surface_t *is;
-    uint8 *data;
-    /* I don't see why this doesn't work, but every now and then it will crash*/
-    /*  deep inside of cairo. Perhaps cairo can't handle scaling images? */
-    /*  Perhaps there's a bug in my code? */
-    is = GImage2Surface(image,&full,&data);
-
-    cairo_save(gw->cc);
-    cairo_scale(gw->cc,viewable.width/((double) full.width),viewable.height/((double) full.height));
-
-    if ( cairo_image_surface_get_format(is)==CAIRO_FORMAT_A1 ) {
-	/* No color info, just alpha channel */
-	Color fg = base->clut->trans_index==0 ? base->clut->clut[1] : base->clut->clut[0];
-	cairo_set_source_rgba(gw->cc,COLOR_RED(fg)/255.0,COLOR_GREEN(fg)/255.0,COLOR_BLUE(fg)/255.0,1.0);
-	cairo_mask_surface(gw->cc,is,viewable.x*xscale,viewable.y*yscale);
-    } else {
-	cairo_set_source_surface(gw->cc,is,viewable.x/xscale,viewable.y/yscale);
-	cairo_paint(gw->cc);
-    }
-    cairo_restore(gw->cc);
-
-    cairo_surface_destroy(is);
-    free(data);
-    gw->cairo_state.fore_col = COLOR_UNKNOWN;
-  }
-#endif
 }
 
 /* ************************************************************************** */
@@ -1046,13 +1017,6 @@ static int32 _GXPDraw_DoText8(GWindow w, int32 x, int32 y,
     pango_layout_get_pixel_extents(gw->pango_layout,NULL,&rect);
     if ( drawit==tf_drawit ) {
         render_layout(gw, x, y, col);
-#if 0
-        cairo_move_to(gw->cc,x,y - fi->ascent);
-        gw->ggc->fg = col;
-        GXCDrawSetcolfunc(gw,gw->ggc);
-        pango_cairo_layout_path(gw->cc,gw->pango_layout);
-        cairo_fill(gw->cc);
-#endif
     } else if ( drawit==tf_rect ) {
 	PangoLayoutIter *iter;
 	PangoLayoutRun *run;

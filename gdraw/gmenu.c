@@ -521,9 +521,6 @@ static void GMenuHideAll(struct gmenu *m) {
 }
 
 static void GMenuDismissAll(struct gmenu *m) {
-#if 0
- printf("DismissAll\n");
-#endif
     if ( m!=NULL ) {
 	while ( m->parent ) m = m->parent;
 	GMenuDestroy(m);
@@ -681,9 +678,6 @@ return( true );
 		m->initial_press = true;
 	}
     } else if ( event->type == et_mouseup && m->child==NULL ) {
-#if 0
- printf("\nActivate menu\n");
-#endif
 	if ( event->u.mouse.y>=m->bp && event->u.mouse.x>=0 &&
 		event->u.mouse.y<m->height-m->bp &&
 		event->u.mouse.x < m->width &&
@@ -748,141 +742,6 @@ static int GMenuBarKeyInvoke(struct gmenubar *mb, int i) {
 	(mb->mi[i].invoke)(mb->g.base,&mb->mi[i],NULL);
 return( true );
 }
-
-#if 0
-static int getkey(int keysym, int option) {
-    if ( option && keysym>128 ) {
-	/* Under Mac 10.5 (but not under 10.4,3,2,1,0) if the option key is */
-	/*  depressed the keysym changes. Opt-A becomes ARing, etc. */
-	/* Er... I can't repeat this now. the Option modifier mask (meta) */
-	/*  should be stripped off before we call Xutf8LookupString so the */
-	/*  conversion shouldn't happen. And doesn't in my tests */
-	/* And 0x2000 is not set for option now anyway */
-	if ( keysym==0xc5 )
-	    keysym = 'a';
-	else if ( keysym==0xe5 )
-	    keysym = 'A';
-	else if ( keysym==0x8bf )
-	    keysym = 'b';
-	else if ( keysym==0x2b9 )
-	    keysym = 'B';
-	else if ( keysym==0xe7 )
-	    keysym = 'c';
-	else if ( keysym==0xc7 )
-	    keysym = 'C';
-	else if ( keysym==0x8ef )
-	    keysym = 'd';
-	else if ( keysym==0xce )
-	    keysym = 'D';
-	else if ( keysym==0xfe51 )
-	    keysym = 'e';
-	else if ( keysym==0xb4 )
-	    keysym = 'E';
-	else if ( keysym==0x8f6 )
-	    keysym = 'f';
-	else if ( keysym==0xcf )
-	    keysym = 'F';
-	else if ( keysym==0xa9 )
-	    keysym = 'g';
-	else if ( keysym==0x1bd )
-	    keysym = 'G';
-	else if ( keysym==0x1ff )
-	    keysym = 'h';
-	else if ( keysym==0xd3 )
-	    keysym = 'H';
-	else if ( keysym==0xfe52 )
-	    keysym = 'i';
-	else if ( keysym==0x2c6 )
-	    keysym = 'I';
-	else if ( keysym==0x2206 )
-	    keysym = 'j';
-	else if ( keysym==0xd4 )
-	    keysym = 'J';
-	else if ( keysym==0x2da )
-	    keysym = 'k';
-	else if ( keysym==0xf8ff )
-	    keysym = 'K';
-	else if ( keysym==0xac )
-	    keysym = 'l';
-	else if ( keysym==0xd2 )
-	    keysym = 'L';
-	else if ( keysym==0xb5 )
-	    keysym = 'm';
-	else if ( keysym==0xc2 )
-	    keysym = 'M';
-	else if ( keysym==0xfe53 )
-	    keysym = 'n';
-	else if ( keysym==0x2dc )
-	    keysym = 'N';
-	else if ( keysym==0xf8 )
-	    keysym = 'o';
-	else if ( keysym==0xd8 )
-	    keysym = 'O';
-	else if ( keysym==0x7f0 )
-	    keysym = 'p';
-	else if ( keysym==0x220f )
-	    keysym = 'P';
-	else if ( keysym==0x13bd )
-	    keysym = 'q';
-	else if ( keysym==0x13bc )
-	    keysym = 'Q';
-	else if ( keysym==0xae )
-	    keysym = 'r';
-	else if ( keysym==0x2030 )
-	    keysym = 'R';
-	else if ( keysym==0xdf )
-	    keysym = 's';
-	else if ( keysym==0xcd )
-	    keysym = 'S';
-	else if ( keysym==0xaf1 )
-	    keysym = 't';
-	else if ( keysym==0x1b7 )
-	    keysym = 'T';
-	else if ( keysym==0xfe57 )
-	    keysym = 'u';
-	else if ( keysym==0xa8 )
-	    keysym = 'U';
-	else if ( keysym==0x8d6 )
-	    keysym = 'v';
-	else if ( keysym==0x25ca )
-	    keysym = 'V';
-	else if ( keysym==0x2211 )
-	    keysym = 'w';
-	else if ( keysym==0xafe )
-	    keysym = 'W';
-	else if ( keysym==0x2248 )
-	    keysym = 'x';
-	else if ( keysym==0x1b2 )
-	    keysym = 'X';
-	else if ( keysym==0xa5 )
-	    keysym = 'y';
-	else if ( keysym==0xc1 )
-	    keysym = 'Y';
-	else if ( keysym==0x7d9 )
-	    keysym = 'z';
-	else if ( keysym==0xb8 )
-	    keysym = 'Z';
-	else if ( keysym==0xaaa )
-	    keysym = '-';
-	else if ( keysym==0xaa9 )
-	    keysym = '_';
-	else if ( keysym==0x8bd )
-	    keysym = '=';
-	else if ( keysym==0xb1 )
-	    keysym = '+';
-	else if ( keysym==0xad2 )
-	    keysym = '[';
-	else if ( keysym==0xad0 )
-	    keysym = ']';
-	else if ( keysym==0xad3 )
-	    keysym = '{';
-	else if ( keysym==0xad1 )
-	    keysym = '}';
-    }
-    if ( islower(keysym)) keysym = toupper(keysym);
-return( keysym );
-}
-#endif
 
 static GMenuItem *GMenuSearchShortcut(GWindow gw, GMenuItem *mi, GEvent *event,
 	int call_moveto) {
@@ -1074,9 +933,6 @@ return( false );
 }
 
 static int gmenu_destroy(struct gmenu *m) {
-#if 0
- printf("gmenu_destroy\n");
-#endif
     if ( most_recent_popup_menu==m )
 	most_recent_popup_menu = NULL;
     if ( m->donecallback )
@@ -1756,21 +1612,10 @@ static void GMenuBarFindXs(GMenuBar *mb) {
     int i, wid;
 
     GDrawSetFont(mb->g.base,mb->font);
-#if 1
     wid = GDrawPointsToPixels(mb->g.base,8);
     mb->xs[0] = GDrawPointsToPixels(mb->g.base,2);
     for ( i=0; i<mb->mtot; ++i )
 	mb->xs[i+1] = mb->xs[i]+wid+GTextInfoGetWidth(mb->g.base,&mb->mi[i].ti,NULL);
-#else
-    for ( i=wid=0; i<mb->mtot; ++i ) {
-	temp = GDrawGetTextWidth(mb->g.base,mb->mi[i].ti.text,-1);
-	if ( temp>wid ) wid = temp;
-    }
-    wid += GDrawPointsToPixels(mb->g.base,5);
-    mb->xs[0] = 0;
-    for ( i=0; i<mb->mtot; ++i )
-	mb->xs[i+1] = mb->xs[i]+wid;
-#endif
     GMenuBarTestSize(mb);
 }
 

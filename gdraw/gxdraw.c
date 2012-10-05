@@ -585,10 +585,6 @@ static int myerrorhandler(Display *disp, XErrorEvent *err) {
 
     if (err->request_code>0 && err->request_code<128)
 	majorcode = XProtocalCodes[err->request_code];
-#if 0		/* This varies. it is 146 on my machine, but not on everyone's */
-    else if ( err->request_code==146 )
-	majorcode = "XInputExtension";
-#endif
     else
 	majorcode = "";
     if ( err->request_code==45 && lastfontrequest!=NULL )
@@ -1374,27 +1370,8 @@ static void _GXDraw_CleanUpWindow( GWindow w ) {
 static void GXDrawReparentWindow(GWindow child,GWindow newparent, int x,int y) {
     GXWindow gchild = (GXWindow) child, gpar = (GXWindow) newparent;
     GXDisplay *gdisp = gchild->display;
-    /* Gnome won't let me reparent a top level window */
-    /* It only pays attention to override-redirect if the window hasn't been mapped */
-#if 0
-    int reset = false;
-    XSetWindowAttributes sattr;
-    XWindowAttributes attr;
 
-    if ( gchild->is_toplevel && (GXWindow) newparent!=gdisp->groot ) {
-	XGetWindowAttributes(gdisp->display,gchild->w,&attr);
-	reset = !attr.override_redirect;
-	sattr.override_redirect = true;
-	XChangeWindowAttributes(gdisp->display,gchild->w,CWOverrideRedirect,&sattr);
-    }
-#endif
     XReparentWindow(gdisp->display,gchild->w,gpar->w,x,y);
-#if 0
-    if ( reset ) {
-	sattr.override_redirect = true;
-	XChangeWindowAttributes(gdisp->display,gchild->w,CWOverrideRedirect,&sattr);
-    }
-#endif
 }
 
 static void GXDrawSetVisible(GWindow w, int visible) {
@@ -2146,9 +2123,6 @@ return;
 return;
 	rect = &temp;
     }
-#if 0		/* don't do it this way, flicker is noticeable */
-    XClearArea(display->display,gxw->w,rect->x,rect->y,rect->width,rect->height, true );
-#else
     if ( doclear )
 	XClearArea(display->display,gxw->w,rect->x,rect->y,rect->width,rect->height, false );
     if ( gw->eh!=NULL ) {
@@ -2160,7 +2134,6 @@ return;
 	event.native_window = gw->native_window;
 	(gw->eh)(gw,&event);
     }
-#endif
 }
 
 static void GTimerSetNext(GTimer *timer,int32 time_from_now) {
