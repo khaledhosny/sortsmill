@@ -39,7 +39,7 @@
 #include <stdlib.h>
 #include <xgetcwd.h>
 #include <xgc.h>
-#include <xuniconv.h>
+#include <xunistring.h>
 
 /* This isn't really a gadget, it's just a collection of gadgets with some glue*/
 /*  to make them work together. Therefore there are no expose routines here, */

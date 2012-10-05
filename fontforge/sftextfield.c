@@ -35,7 +35,7 @@
 #include <ustring.h>
 #include <utype.h>
 #include <chardata.h>
-#include <xuniconv.h>
+#include <xunistring.h>
 
 static GBox sftextarea_box = GBOX_EMPTY; /* Don't initialize here */
 static int sftextarea_inited = false;

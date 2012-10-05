@@ -42,7 +42,7 @@
 #include <sys/time.h>
 #include <stdlib.h>
 #include <xstriconv.h>
-#include <xunistr.h>
+#include <xunistring.h>
 #include <xdie_on_null.h>
 
 #include "ttf.h"

@@ -33,7 +33,7 @@
 #include <basics.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <xunistr.h>
+#include <xunistring.h>
 
 extern char *GFileGetUserConfigDir (void);
 extern char *GFileGetUserCacheDir (void);

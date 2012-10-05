@@ -4,7 +4,7 @@
 #include <locale.h>
 #include <gfile.h>
 #include <unistdio.h>
-#include <xunistr.h>
+#include <xunistring.h>
 
 int
 main (int argc, char **argv)

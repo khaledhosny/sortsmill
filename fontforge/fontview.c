@@ -42,12 +42,12 @@
 #include <gresource.h>
 #include <math.h>
 #include <unistd.h>
-#include <xuniconv.h>
+#include <xunistring.h>
 #include <stdlib.h>
 #include <xalloc.h>
 #include <xdie_on_null.h>
 #include <canonicalize.h>
-#include <xuniconv.h>
+#include <xunistring.h>
 
 int OpenCharsInNewWindow = 1;
 char *RecentFiles[RECENT_MAX] = { NULL };

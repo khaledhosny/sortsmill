@@ -35,7 +35,7 @@
 #include <string.h>
 #include <memory.h>
 #include <basics.h>
-#include <xunistr.h>
+#include <xunistring.h>
 
 extern unichar_t *u_copyn (const unichar_t *, long);
 extern unichar_t *uc_copyn (const char *, int);

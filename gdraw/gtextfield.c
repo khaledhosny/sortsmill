@@ -35,7 +35,7 @@
 #include "ustring.h"
 #include "utype.h"
 #include <math.h>
-#include <xuniconv.h>
+#include <xunistring.h>
 #include <unistr.h>
 
 GBox _GGadget_gtextfield_box = GBOX_EMPTY; /* Don't initialize here */

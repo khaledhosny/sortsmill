@@ -41,7 +41,7 @@
 #include <ustring.h>
 #include "ttf.h"
 #include "psfont.h"
-#include <xuniconv.h>
+#include <xunistring.h>
 #if __Mac
 # include <ctype.h>
 # include <Developer/Headers/FlatCarbon/Files.h>

@@ -32,7 +32,7 @@
 #include <gkeysym.h>
 #include <locale.h>
 #include <utype.h>
-#include <xunistr.h>
+#include <xunistring.h>
 #include "ttf.h"
 #include "mm.h"
 

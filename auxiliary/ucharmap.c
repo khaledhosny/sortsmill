@@ -34,7 +34,7 @@
 #include <ustring.h>
 #include <iconv.h>
 #include <uniconv.h>
-#include <xuniconv.h>
+#include <xunistring.h>
 #include <null_passthru.h>
 
 static iconv_t from_unicode = (iconv_t) (-1);

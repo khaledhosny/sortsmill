@@ -28,7 +28,7 @@
  */
 #include <stdlib.h>
 #include <string.h>
-#include <xuniconv.h>
+#include <xunistring.h>
 #include "ustring.h"
 #include "gfile.h"
 #include "gdraw.h"

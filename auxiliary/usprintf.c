@@ -32,7 +32,7 @@
 #include "ustring.h"
 #include "utype.h"
 #include <null_passthru.h>
-#include <xuniconv.h>
+#include <xunistring.h>
 
 /* unicode printf. Expect arguments to be given using <num>$ notation */
 /* But there's no way I'm going to implement all of printf now. I'll do what I */

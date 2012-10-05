@@ -38,7 +38,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <null_passthru.h>
-#include <xuniconv.h>
+#include <xunistring.h>
 #include <unistr.h>
 
 #include <sys/types.h>		/* for timers & select */

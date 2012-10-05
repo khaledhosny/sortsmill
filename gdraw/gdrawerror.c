@@ -29,7 +29,7 @@
 
 #include <stdio.h>
 #include <stdarg.h>
-#include <xuniconv.h>
+#include <xunistring.h>
 #include <unistr.h>
 
 #include "gdrawP.h"

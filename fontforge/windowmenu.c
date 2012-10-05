@@ -31,7 +31,7 @@
 #include "splinefont.h"
 #include "ustring.h"
 #include <null_passthru.h>
-#include <xuniconv.h>
+#include <xunistring.h>
 
 static void WindowSelect(GWindow base,struct gmenuitem *mi,GEvent *e) {
     GDrawRaise(mi->ti.userdata);

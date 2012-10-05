@@ -29,7 +29,7 @@
 
 #include <assert.h>
 #include <string.h>
-#include <xunistr.h>
+#include <xunistring.h>
 
 // Generate non-inline versions of these functions.
 uint16_t *x_gc_u8_to_u16 (const uint8_t *string);

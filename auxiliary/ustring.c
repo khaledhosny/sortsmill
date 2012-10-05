@@ -28,7 +28,7 @@
  */
 
 #include <stddef.h>
-#include <xunistr.h>
+#include <xunistring.h>
 #include "ustring.h"
 #include "utype.h"
 

@@ -33,7 +33,7 @@
 #include <gdraw.h>
 #include <gwidget.h>
 #include <ggadget.h>
-#include <xunistr.h>
+#include <xunistring.h>
 
 extern NameList *force_names_when_opening;
 int default_font_filter_index=0;

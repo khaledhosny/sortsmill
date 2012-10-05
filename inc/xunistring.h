@@ -1,7 +1,6 @@
-#include <config.h>
-
-/* Copyright (C) 2012 by Barry Schwartz */
 /*
+ * Copyright (C) 2000-2012 by Barry Schwartz
+  
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
 
@@ -27,18 +26,23 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <xunistring.h>
+#ifndef _FONTFORGE_XUNISTRING_H
+#define _FONTFORGE_XUNISTRING_H
 
-// Generate non-inline versions of these functions.
-uint8_t *x_u8_strconv_from_locale (const char *string);
-uint16_t *x_u16_strconv_from_locale (const char *string);
-uint32_t *x_u32_strconv_from_locale (const char *string);
-char *x_u8_strconv_to_locale (const uint8_t *string);
-char *x_u16_strconv_to_locale (const uint16_t *string);
-char *x_u32_strconv_to_locale (const uint32_t *string);
-uint8_t *x_gc_u8_strconv_from_locale (const char *string);
-uint16_t *x_gc_u16_strconv_from_locale (const char *string);
-uint32_t *x_gc_u32_strconv_from_locale (const char *string);
-char *x_gc_u8_strconv_to_locale (const uint8_t *string);
-char *x_gc_u16_strconv_to_locale (const uint16_t *string);
-char *x_gc_u32_strconv_to_locale (const uint32_t *string);
+#include <config.h>
+
+#include <unitypes.h>
+#include <xunistr.h>
+#include <xuniconv.h>
+#include <unistdio.h>
+#include <uniname.h>
+#include <unictype.h>
+#include <uniwidth.h>
+#include <uniwbrk.h>
+#include <unilbrk.h>
+#include <xuninorm.h>
+#include <unicase.h>
+//#include <uniregex.h>   This is not yet implemented.
+#include <unistring/version.h>
+
+#endif // _FONTFORGE_XUNISTRING_H

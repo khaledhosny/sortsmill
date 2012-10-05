@@ -37,7 +37,7 @@
 #include <unistd.h>
 #include <dirent.h>
 #include <errno.h>
-#include <xuniconv.h>
+#include <xunistring.h>
 
 /* the initial space is so that these guys will come first in ordered error */
 /*  lists in the file chooser */

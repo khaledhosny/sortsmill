@@ -39,7 +39,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include "print.h"
-#include <xuniconv.h>
+#include <xunistring.h>
 #include <unistr.h>
 
 int pagewidth = 0, pageheight = 0;      /* In points */

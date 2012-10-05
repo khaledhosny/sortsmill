@@ -35,7 +35,7 @@
 #include <locale.h>
 #include "lookups.h"
 #include <null_passthru.h>
-#include <xuniconv.h>
+#include <xunistring.h>
 #include <uninorm.h>
 
 extern int _GScrollBar_Width;

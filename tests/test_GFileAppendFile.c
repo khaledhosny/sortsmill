@@ -4,7 +4,7 @@
 #include <gc.h>
 #include <locale.h>
 #include <gfile.h>
-#include <xunistr.h>
+#include <xunistring.h>
 #include <unistdio.h>
 
 int

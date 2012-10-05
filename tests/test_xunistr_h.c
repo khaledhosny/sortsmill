@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <gc.h>
 #include <locale.h>
-#include <xunistr.h>
+#include <xunistring.h>
 #include <unistdio.h>
 
 int

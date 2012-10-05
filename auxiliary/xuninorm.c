@@ -27,18 +27,40 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <assert.h>
+#include <errno.h>
+#include <xalloc.h>
 #include <xunistring.h>
 
-// Generate non-inline versions of these functions.
-uint8_t *x_u8_strconv_from_locale (const char *string);
-uint16_t *x_u16_strconv_from_locale (const char *string);
-uint32_t *x_u32_strconv_from_locale (const char *string);
-char *x_u8_strconv_to_locale (const uint8_t *string);
-char *x_u16_strconv_to_locale (const uint16_t *string);
-char *x_u32_strconv_to_locale (const uint32_t *string);
-uint8_t *x_gc_u8_strconv_from_locale (const char *string);
-uint16_t *x_gc_u16_strconv_from_locale (const char *string);
-uint32_t *x_gc_u32_strconv_from_locale (const char *string);
-char *x_gc_u8_strconv_to_locale (const uint8_t *string);
-char *x_gc_u16_strconv_to_locale (const uint16_t *string);
-char *x_gc_u32_strconv_to_locale (const uint32_t *string);
+int
+u8_compare (const uint8_t *s1, const uint8_t *s2)
+{
+  int result;
+  int error = u8_normcmp (s1, u8_strlen (s1), s2, u8_strlen (s2), UNINORM_NFD, &result);
+  if (error != 0 && errno == ENOMEM)
+    xalloc_die ();
+  assert (error == 0);
+  return result;
+}
+
+int
+u16_compare (const uint16_t *s1, const uint16_t *s2)
+{
+  int result;
+  int error = u16_normcmp (s1, u16_strlen (s1), s2, u16_strlen (s2), UNINORM_NFD, &result);
+  if (error != 0 && errno == ENOMEM)
+    xalloc_die ();
+  assert (error == 0);
+  return result;
+}
+
+int
+u32_compare (const uint32_t *s1, const uint32_t *s2)
+{
+  int result;
+  int error = u32_normcmp (s1, u32_strlen (s1), s2, u32_strlen (s2), UNINORM_NFD, &result);
+  if (error != 0 && errno == ENOMEM)
+    xalloc_die ();
+  assert (error == 0);
+  return result;
+}

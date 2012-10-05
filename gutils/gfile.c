@@ -41,8 +41,8 @@
 #include <stdarg.h>
 #include <xalloc.h>
 #include <xgc.h>
-#include <xuniconv.h>
-#include <xunistr.h>
+#include <xunistring.h>
+#include <xunistring.h>
 #include <filenamecat.h>
 #include <dirname.h>
 
