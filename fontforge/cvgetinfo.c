@@ -629,7 +629,6 @@ static void RefGetInfo(CharView *cv, RefChar *ref) {
     GHVBoxSetExpandableCol(boxes[6].ret,gb_expandgluesame);
     GHVBoxFitWindow(boxes[0].ret);
 
-    GWidgetHidePalettes();
     GDrawSetVisible(gi.gw,true);
     while ( !gi.done )
 	GDrawProcessOneEvent(NULL);
@@ -725,7 +724,6 @@ static void ImgGetInfo(CharView *cv, ImageList *img) {
 	GHVBoxSetExpandableCol(boxes[2].ret,gb_expandglue);
 	GHVBoxFitWindow(boxes[0].ret);
 
-    GWidgetHidePalettes();
     GDrawSetVisible(gi.gw,true);
     while ( !gi.done )
 	GDrawProcessOneEvent(NULL);
@@ -1670,7 +1668,6 @@ return;
 	AI_Display(&gi,ap);
 	GWidgetIndicateFocusGadget(GWidgetGetControl(gi.gw,CID_X));
 
-    GWidgetHidePalettes();
     GDrawSetVisible(gi.gw,true);
     while ( !gi.done )
 	GDrawProcessOneEvent(NULL);
@@ -3272,7 +3269,6 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 
 	GHVBoxFitWindow(mb[0].ret);
 
-    GWidgetHidePalettes();
     GDrawSetVisible(gi.gw,true);
     while ( !gi.done )
 	GDrawProcessOneEvent(NULL);
@@ -3679,7 +3675,6 @@ static void SpiroPointGetInfo(CharView *cv, spiro_cp *scp, SplinePointList *spl)
 
 	GHVBoxFitWindow(pb[0].ret);
 
-    GWidgetHidePalettes();
     GDrawSetVisible(gi.gw,true);
     while ( !gi.done )
 	GDrawProcessOneEvent(NULL);

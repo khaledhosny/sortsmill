@@ -1161,7 +1161,6 @@ static void MakeStrokeDlg(void *cv,void (*strokeit)(void *,StrokeInfo *,int),Str
     sd->strokeit = strokeit;
     sd->done = false;
     sd->up[0] = sd->up[1] = true;
-    GWidgetHidePalettes();
     GWidgetIndicateFocusGadget(GWidgetGetControl(sd->gw,CID_Width));
     if ( si==NULL ) {
 	StrokeSetup(sd,GGadgetIsChecked( GWidgetGetControl(sd->gw,CID_Caligraphic))?si_caligraphic:
@@ -3349,7 +3348,6 @@ int LayerDialog(Layer *layer,SplineFont *sf) {
     GHVBoxSetExpandableCol(boxes[10].ret,gb_expandgluesame);
     GHVBoxFitWindow(boxes[0].ret);
 
-    GWidgetHidePalettes();
     /*GWidgetIndicateFocusGadget(GWidgetGetControl(ld.gw,CID_Width));*/
     GDrawSetVisible(ld.gw,true);
     while ( !ld.done )

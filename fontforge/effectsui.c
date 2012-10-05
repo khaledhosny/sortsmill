@@ -326,7 +326,6 @@ void OutlineDlg(FontView *fv, CharView *cv,MetricsView *mv,int isinline) {
     GWidgetIndicateFocusGadget(GWidgetGetControl(gw,CID_Width));
     GTextFieldSelect(GWidgetGetControl(gw,CID_Width),0,-1);
 
-    GWidgetHidePalettes();
     GDrawSetVisible(gw,true);
     while ( !od.done )
 	GDrawProcessOneEvent(NULL);
@@ -525,7 +524,6 @@ void ShadowDlg(FontView *fv, CharView *cv,MetricsView *mv,int wireframe) {
     GWidgetIndicateFocusGadget(GWidgetGetControl(gw,CID_ShadowLen));
     GTextFieldSelect(GWidgetGetControl(gw,CID_ShadowLen),0,-1);
 
-    GWidgetHidePalettes();
     GDrawSetVisible(gw,true);
     while ( !od.done )
 	GDrawProcessOneEvent(NULL);

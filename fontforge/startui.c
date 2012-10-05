@@ -595,7 +595,6 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   bind_textdomain_codeset (ff_textdomain (), "UTF-8");
   bindtextdomain (ff_textdomain (), getLocaleDir ());
   textdomain (ff_textdomain ());
-  GResourceUseGetText ();
 
   GGadgetSetImageDir (SHAREDIR "/pixmaps");
   GResourceAddResourceFile (SHAREDIR "/resources/fontforge.resource", false);

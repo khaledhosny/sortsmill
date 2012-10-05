@@ -291,26 +291,6 @@ struct gdirentry;
 typedef enum fchooserret (*GFileChooserFilterType)(GGadget *g,struct gdirentry *ent,
 	const unichar_t *dir);
 
-    /* Obsolete */
-#define _STR_NULL	(-1)		/* Null string resource */
-#define _STR_Language	0
-#define _STR_OK		1
-#define _STR_Cancel	2
-#define _STR_Open	3
-#define _STR_Save	4
-#define _STR_Filter	5
-#define _STR_New	6
-#define _STR_Replace	7
-#define _STR_Fileexists	8
-#define _STR_Fileexistspre	9
-#define _STR_Fileexistspost	10
-#define _STR_Createdir	11
-#define _STR_Dirname	12
-#define _STR_Couldntcreatedir	13
-#define _STR_SelectAll	14
-#define _STR_None	15
-#define __STR_LastStd	15
-
 #define _NUM_Buttonsize		0
 #define _NUM_ScaleFactor	1
 #define __NUM_LastStd		1
@@ -329,7 +309,6 @@ extern int GStringSetResourceFile(char *filename);	/* returns 1 for success, 0 f
 extern void GStringSetFallbackArray(const unichar_t **array,const unichar_t *mn,
 	const int *ires);
 unichar_t *GStringFileGetResource(char *filename, int index,unichar_t *mnemonic);
-extern void GResourceUseGetText(void);
 extern void *GResource_font_cvt(char *val, void *def);
 extern FontInstance *GResourceFindFont(char *resourcename,FontInstance *deffont);
 

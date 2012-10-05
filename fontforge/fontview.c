@@ -7001,7 +7001,6 @@ static FontView *FontView_Create(SplineFont *sf, int hide) {
     pos.x = 0; pos.y = fv->mbh+fv->infoh;
     FVCreateInnards(fv,&pos);
 
-    /*GWidgetHidePalettes();*/
     if ( !hide ) {
 	GDrawSetVisible(gw,true);
 	FontViewOpenKids(fv);

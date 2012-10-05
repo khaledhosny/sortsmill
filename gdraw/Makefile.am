@@ -132,7 +132,7 @@ EXPORTED_LIBGDRAW_SYMBOLS = GBoxBorderWidth GBoxDrawBackground			\
 	 GResourceAddResourceString GResourceFind GResourceFindColor		\
 	 GResourceFindFont GResourceFindInt GResourceFindString				\
 	 GResourceProgramDir GResourceProgramName GResourceSetProg			\
-	 GResourceUseGetText GScrollBarCreate GScrollBarGetBounds			\
+	 GScrollBarCreate GScrollBarGetBounds			\
 	 GScrollBarSetBounds GScrollBarSetPos GSpacerCreate					\
 	 GStringGetResource GTabSetChangeTabName GTabSetCreate				\
 	 GTabSetGetSel GTabSetGetSubwindow GTabSetRemetric					\
@@ -145,7 +145,7 @@ EXPORTED_LIBGDRAW_SYMBOLS = GBoxBorderWidth GBoxDrawBackground			\
 	 GWidgetChoices8 GWidgetChoicesB8 GWidgetChoicesBM8 GWidgetColor	\
 	 GWidgetCreateInsChar GWidgetCreateSubWindow						\
 	 GWidgetCreateTopWindow GWidgetError8 GWidgetFlowGadgets			\
-	 GWidgetGetControl GWidgetHidePalettes GWidgetIndicateFocusGadget	\
+	 GWidgetGetControl GWidgetIndicateFocusGadget	\
 	 GWidgetOpenFile8 GWidgetPostNotice8 GWidgetPostNoticeActive8		\
 	 GWidgetPostNoticeTimeout8 GWidgetReparentWindow					\
 	 GWidgetSaveAsFile8 GWidgetSaveAsFileWithGadget8					\

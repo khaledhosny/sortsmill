@@ -567,7 +567,6 @@ void BitmapDlg(FontView *fv,SplineChar *sc, int isavail) {
     which[bdfcontrol_lastwhich].selected = false;
     _CB_SystemChange(&bd.bd);
 
-    GWidgetHidePalettes();
     GDrawSetVisible(bd.gw,true);
     while ( !bd.bd.done )
 	GDrawProcessOneEvent(NULL);

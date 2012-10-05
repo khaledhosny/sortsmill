@@ -875,70 +875,41 @@ return( NULL );
 return( space );
 }
 
-static unichar_t txt[] = { '*','.','t','x','t',  '\0' };
-static unichar_t errort[] = { 'C','o','u','l','d',' ','n','o','t',' ','o','p','e','n',  '\0' };
-static unichar_t error[] = { 'C','o','u','l','d',' ','n','o','t',' ','o','p','e','n',' ','%','.','1','0','0','h','s',  '\0' };
-
 static void GTextFieldImport(GTextField *gt) {
-    unichar_t *ret;
-    char *cret;
+    char *ret;
     unichar_t *str;
 
-    if ( _ggadget_use_gettext ) {
-	char *temp = GWidgetOpenFile8(_("Open"),NULL,"*.txt",NULL,NULL);
-	ret = utf82u_copy(temp);
-	free(temp);
-    } else {
-	ret = GWidgetOpenFile(GStringGetResource(_STR_Open,NULL),NULL,
-		txt,NULL,NULL);
-    }
+    ret = GWidgetOpenFile8(_("Open"),NULL,"*.txt",NULL,NULL);
 
     if ( ret==NULL )
 return;
-    cret = u2def_copy(ret);
-    free(ret);
-    str = _GGadgetFileToUString(cret,65536);
+    str = _GGadgetFileToUString(ret,65536);
     if ( str==NULL ) {
-	if ( _ggadget_use_gettext )
-	    GWidgetError8(_("Could not open file"), _("Could not open %.100s"),cret);
-	else
-	    GWidgetError(errort,error,cret);
-	free(cret);
+	GWidgetError8(_("Could not open file"), _("Could not open %.100s"),ret);
+	free(ret);
 return;
     }
-    free(cret);
+    free(ret);
     GTextField_Replace(gt,str);
     free(str);
 }
 
 static void GTextFieldSave(GTextField *gt,int utf8) {
-    unichar_t *ret;
-    char *cret;
+    char *ret;
     FILE *file;
     unichar_t *pt;
 
-    if ( _ggadget_use_gettext ) {
-	char *temp = GWidgetOpenFile8(_("Save"),NULL,"*.txt",NULL,NULL);
-	ret = utf82u_copy(temp);
-	free(temp);
-    } else
-	ret = GWidgetSaveAsFile(GStringGetResource(_STR_Save,NULL),NULL,
-		txt,NULL,NULL);
+    ret = GWidgetOpenFile8(_("Save"),NULL,"*.txt",NULL,NULL);
 
     if ( ret==NULL )
 return;
-    cret = u2def_copy(ret);
-    free(ret);
-    file = fopen(cret,"w");
+    file = fopen(ret,"w");
     if ( file==NULL ) {
-	if ( _ggadget_use_gettext )
-	    GWidgetError8(_("Could not open file"), _("Could not open %.100s"),cret);
-	else
-	    GWidgetError(errort,error,cret);
-	free(cret);
+	GWidgetError8(_("Could not open file"), _("Could not open %.100s"),ret);
+	free(ret);
 return;
     }
-    free(cret);
+    free(ret);
 
     if ( utf8 ) {
 	putc(0xef,file);		/* Zero width something or other. Marks this as unicode, utf8 */
