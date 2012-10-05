@@ -284,7 +284,6 @@ static unichar_t *GWidgetSaveAsFileWithGadget(const unichar_t *title, const unic
     memset(&d,'\0',sizeof(d));
     d.gfc = gcd[0].ret;
 
-    GWidgetHidePalettes();
     GDrawSetVisible(gw,true);
     while ( !d.done )
 	GDrawProcessOneEvent(NULL);

@@ -10219,7 +10219,6 @@ static void _CharViewCreate(CharView *cv, SplineChar *sc, FontView *fv,int enc) 
     cv->ft_dpi = 72; cv->ft_pointsizex = cv->ft_pointsizey = 12.0;
     cv->ft_ppemx = cv->ft_ppemy = 12;
 
-    /*GWidgetHidePalettes();*/
     /*cv->tools = CVMakeTools(cv);*/
     /*cv->layers = CVMakeLayers(cv);*/
 

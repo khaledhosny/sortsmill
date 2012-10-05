@@ -71,7 +71,6 @@ typedef struct gwidgetcreatordata {
 
 extern GWindow GWidgetCreateTopWindow(GDisplay *gdisp, GRect *pos, int (*eh)(GWindow,GEvent *), void *user_data, GWindowAttrs *wattrs);
 extern GWindow GWidgetCreateSubWindow(GWindow w, GRect *pos, int (*eh)(GWindow,GEvent *), void *user_data, GWindowAttrs *wattrs);
-extern GWindow GWidgetCreatePalette(GWindow w, GRect *pos, int (*eh)(GWindow,GEvent *), void *user_data, GWindowAttrs *wattrs);
 
 GWindow GWindowGetCurrentFocusTopWindow(void);
 GWindow GWidgetGetCurrentFocusWindow(void);
@@ -82,11 +81,6 @@ void GWindowClearFocusGadgetOfWindow(GWindow gw);
 void GWidgetIndicateFocusGadget(struct ggadget *g);
 void GWidgetNextFocus(GWindow);
 void GWidgetPrevFocus(GWindow);
-void GWidgetRequestVisiblePalette(GWindow palette,int visible);
-void GWidgetHidePalettes(void);
-void GPaletteDock(GWindow palette,int x, int y);
-void GPaletteUndock(GWindow palette,int x, int y);
-int GPaletteIsDocked(GWindow palette);
 void GWidgetReparentWindow(GWindow child,GWindow newparent, int x,int y);
 
 struct ggadget *GWidgetGetControl(GWindow gw, int cid);

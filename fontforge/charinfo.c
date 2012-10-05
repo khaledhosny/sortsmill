@@ -5075,7 +5075,6 @@ return;
 
     CIFillup(ci);
 
-    GWidgetHidePalettes();
     GDrawSetVisible(ci->gw,true);
 }
 

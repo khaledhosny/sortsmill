@@ -1426,7 +1426,6 @@ AskResolution (int bf, BDFFont *bdf)
   else
     GDrawSetUserData (gw, &done);
 
-  GWidgetHidePalettes ();
   GDrawSetVisible (gw, true);
   while (true)
     {
@@ -4037,7 +4036,6 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
 
   GFD_FigureWhich (&d);
 
-  GWidgetHidePalettes ();
   GDrawSetVisible (gw, true);
   while (!d.done)
     GDrawProcessOneEvent (NULL);

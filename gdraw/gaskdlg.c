@@ -389,7 +389,6 @@ return( NULL );
 	GHVBoxSetExpandableCol(boxes[2].ret,gb_expandglue);
     GHVBoxFitWindow(boxes[0].ret);
 
-    GWidgetHidePalettes();
     if ( d!=NULL ) {
 	d->ret  = cancel;
 	d->bcnt = bcnt;
@@ -795,7 +794,6 @@ static GWindow ChoiceDlgCreate8(struct dlg_info *d,const char *title,
 #else
     GHVBoxFitWindow(boxes[0].ret);
 #endif
-    GWidgetHidePalettes();
     GDrawSetVisible(gw,true);
     d->ret = -1;
     d->size_diff = pos.height - gcd[listi].gd.pos.height;

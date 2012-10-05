@@ -43,10 +43,6 @@ typedef struct gwidgetdata {
     unsigned int enabled: 1;
     unsigned int iscontainer: 1;
     unsigned int istoplevel: 1;
-    unsigned int contains_focus: 1;		/* only for top level widgets */
-    unsigned int ispalette: 1;			/* only for top level widgets */
-    unsigned int positioned_yet: 1;		/* only for top level palettes*/
-    unsigned int isdocked: 1;			/* only for top level palettes*/
 } GWidgetD;
 
 typedef struct gwidgetcontainerdata /* : GWidgetD */{
@@ -60,10 +56,6 @@ typedef struct gwidgetcontainerdata /* : GWidgetD */{
     unsigned int enabled: 1;
     unsigned int iscontainer: 1;
     unsigned int istoplevel: 1;
-    unsigned int contains_focus: 1;		/* only for top level widgets */
-    unsigned int ispalette: 1;			/* only for top level widgets */
-    unsigned int positioned_yet: 1;		/* only for top level palettes*/
-    unsigned int isdocked: 1;			/* only for top level palettes*/
     /* ******************* */
     struct ggadget *gadgets;
     struct gwidgetdata *widgets;		/* children */
@@ -84,10 +76,6 @@ typedef struct gtopleveldata /* : GContainerD */{
     unsigned int enabled: 1;
     unsigned int iscontainer: 1;
     unsigned int istoplevel: 1;
-    unsigned int contains_focus: 1;
-    unsigned int ispalette: 1;
-    unsigned int positioned_yet: 1;		/* only for top level palettes*/
-    unsigned int isdocked: 1;			/* only for top level palettes*/
     unsigned int programmove: 10;
     struct ggadget *gadgets;
     struct gwidgetdata *widgets;		/* children */
@@ -101,8 +89,6 @@ typedef struct gtopleveldata /* : GContainerD */{
     struct ggadget *gfocus;
     GWindow wfocus;
     int (*handle_key)(GWindow top, GWindow ew, GEvent *);	/* All key events are handled by top level window */
-    struct gtopleveldata *palettes, *nextp, *owner;
-    int16 owner_off_x, owner_off_y;		/* Offset of palette from owner*/
 } GTopLevelD;
 
 GWidgetD *_GWidget_ChangeInternalFocus(GWidget gw,GWidgetD *to,struct ggadget *gto);

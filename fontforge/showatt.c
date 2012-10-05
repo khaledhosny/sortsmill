@@ -3353,7 +3353,6 @@ void FontCompareDlg(FontView *fv) {
 	d.other = gcd[1].ret;
 	d.fv = fv;
 
-	GWidgetHidePalettes();
 	GDrawSetVisible(gw,true);
 	while ( !d.done )
 	    GDrawProcessOneEvent(NULL);

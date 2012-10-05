@@ -4806,7 +4806,6 @@ MetricsView *MetricsViewCreate(FontView *fv,SplineChar *sc,BDFFont *bdf) {
 
     GDrawSetVisible(mv->v,true);
     GDrawSetVisible(gw,true);
-    /*GWidgetHidePalettes();*/
 return( mv );
 }
 

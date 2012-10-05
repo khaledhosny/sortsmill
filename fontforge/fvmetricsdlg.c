@@ -285,7 +285,6 @@ static void FVCreateWidth(void *_fv,void (*doit)(CreateWidthData *),
 	free( temp );
       }
 
-    GWidgetHidePalettes();
     GDrawSetVisible(cwd.gw,true);
     while ( !cwd.wd.done )
       GDrawProcessOneEvent(NULL);
