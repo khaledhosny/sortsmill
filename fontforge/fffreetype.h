@@ -77,7 +77,7 @@ typedef struct freetypecontext {
     int em;			/* Em size in the spline font, not ppem */
 } FTC;
 
-VISIBLE VISIBLE VISIBLE extern void *__FreeTypeFontContext(FT_Library context,
+VISIBLE extern void *__FreeTypeFontContext(FT_Library context,
 	SplineFont *sf,SplineChar *sc,FontViewBase *fv,
 	int layer,
 	enum fontformat ff,int flags,void *shared_ftc);

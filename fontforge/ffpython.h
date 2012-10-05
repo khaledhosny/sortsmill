@@ -105,8 +105,8 @@ typedef int Py_ssize_t;
 #endif
 
 extern SplineChar *sc_active_in_ui;
-VISIBLE VISIBLE extern FontViewBase *fv_active_in_ui;
-VISIBLE VISIBLE extern int layer_active_in_ui;
+VISIBLE extern FontViewBase *fv_active_in_ui;
+VISIBLE extern int layer_active_in_ui;
 
 VISIBLE extern void FfPy_Replace_MenuItemStub(PyObject *(*func)(PyObject *,PyObject *));
 VISIBLE extern PyObject *PySC_From_SC(SplineChar *sc);

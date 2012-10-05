@@ -273,7 +273,7 @@ enum fvformats { fv_bdf, fv_ttf, fv_pk, fv_pcf, fv_mac, fv_win, fv_palm,
 	fv_fig,
 	fv_pythonbase = 0x100 };
 
-VISIBLE VISIBLE extern enum undotype CopyUndoType(void);
+VISIBLE extern enum undotype CopyUndoType(void);
 VISIBLE extern int CopyContainsSomething(void);
 VISIBLE extern int CopyContainsBitmap(void);
 extern int CopyContainsVectors(void);
@@ -288,10 +288,10 @@ extern void PasteAnchorClassMerge(SplineFont *sf,AnchorClass *into,AnchorClass *
 extern void PasteRemoveAnchorClass(SplineFont *sf,AnchorClass *dying);
 VISIBLE extern void ClipboardClear(void);
 extern SplineSet *ClipBoardToSplineSet(void);
-VISIBLE VISIBLE extern void BCCopySelected(BDFChar *bc,int pixelsize,int depth);
-VISIBLE VISIBLE extern void BCCopyReference(BDFChar *bc,int pixelsize,int depth);
+VISIBLE extern void BCCopySelected(BDFChar *bc,int pixelsize,int depth);
+VISIBLE extern void BCCopyReference(BDFChar *bc,int pixelsize,int depth);
 VISIBLE extern void PasteToBC(BDFChar *bc,int pixelsize,int depth);
-VISIBLE VISIBLE extern void FVCopyWidth(FontViewBase *fv,enum undotype ut);
+VISIBLE extern void FVCopyWidth(FontViewBase *fv,enum undotype ut);
 extern void FVCopyAnchors(FontViewBase *fv);
 enum fvcopy_type { ct_fullcopy, ct_reference, ct_lookups, ct_unlinkrefs };
 VISIBLE extern void FVCopy(FontViewBase *fv, enum fvcopy_type copytype);
@@ -315,7 +315,7 @@ VISIBLE extern void FVAddExtrema(FontViewBase *fv, int force_adding);
 VISIBLE extern void FVCorrectDir(FontViewBase *fv);
 VISIBLE extern void FVRound2Int(FontViewBase *fv,real factor);
 VISIBLE extern void FVCanonicalStart(FontViewBase *fv);
-VISIBLE VISIBLE extern void FVCanonicalContours(FontViewBase *fv);
+VISIBLE extern void FVCanonicalContours(FontViewBase *fv);
 VISIBLE extern void FVCluster(FontViewBase *fv);
 VISIBLE extern void CIDSetEncMap(FontViewBase *fv, SplineFont *new );
 VISIBLE extern void FVInsertInCID(FontViewBase *fv,SplineFont *sf);
@@ -617,12 +617,12 @@ VISIBLE extern void AutoKern2(SplineFont *sf, int layer,SplineChar **left,Spline
 	int chunk_height,
 	void (*addkp)(void *data,SplineChar *left,SplineChar *r,int off),
 	void *data);
-VISIBLE VISIBLE extern void AutoKern2NewClass(SplineFont *sf,int layer,char **leftnames, char **rightnames,
+VISIBLE extern void AutoKern2NewClass(SplineFont *sf,int layer,char **leftnames, char **rightnames,
 	int lcnt, int rcnt,
 	void (*kcAddOffset)(void *data,int left_index, int right_index,int offset), void *data,
 	int separation, int min_kern, int from_closest_approach, int only_closer,
 	int chunk_height);
-VISIBLE VISIBLE extern void AutoKern2BuildClasses(SplineFont *sf,int layer,
+VISIBLE extern void AutoKern2BuildClasses(SplineFont *sf,int layer,
 	SplineChar **leftglyphs,SplineChar **rightglyphs,
 	struct lookup_subtable *sub,
 	int separation, int min_kern, int touching, int only_closer,

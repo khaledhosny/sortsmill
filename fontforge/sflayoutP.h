@@ -105,9 +105,9 @@ VISIBLE extern int LI_FDDrawChar(void *data,
 VISIBLE extern uint32 *LI_TagsCopy(uint32 *tags);
 extern struct fontlist *LI_fontlistcopy(struct fontlist *fl );
 VISIBLE extern void LI_fontlistmergecheck(LayoutInfo *li);
-VISIBLE VISIBLE extern void LayoutInfoRefigureLines(LayoutInfo *li, int start_of_change,
+VISIBLE extern void LayoutInfoRefigureLines(LayoutInfo *li, int start_of_change,
 	int end_of_change, int width);
-VISIBLE VISIBLE extern int LayoutInfoReplace(LayoutInfo *li, const unichar_t *str,
+VISIBLE extern int LayoutInfoReplace(LayoutInfo *li, const unichar_t *str,
 	int sel_start, int sel_end,int width);
 VISIBLE extern void LayoutInfo_Destroy(LayoutInfo *li);
 VISIBLE extern void SFMapFill(struct sfmaps *sfmaps,SplineFont *sf);

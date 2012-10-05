@@ -160,7 +160,7 @@ VISIBLE extern struct ui_interface *ui_interface;
 
 #define PsStrokeFlagsDlg		(ui_interface->stroke_flags)
 
-VISIBLE VISIBLE void FF_SetUiInterface(struct ui_interface *uii);
+VISIBLE void FF_SetUiInterface(struct ui_interface *uii);
 
 /* ************************************************************************** */
 /*                                Preferences                                 */
@@ -184,7 +184,7 @@ VISIBLE extern struct prefs_interface *prefs_interface;
 #define getFontForgeShareDir	(prefs_interface->get_exe_share_dir)
 #define SetDefaults		(prefs_interface->init_prefs)
 
-VISIBLE VISIBLE void FF_SetPrefsInterface(struct prefs_interface *prefsi);
+VISIBLE void FF_SetPrefsInterface(struct prefs_interface *prefsi);
 
 /* ************************************************************************** */
 /*                          Updating glyph windows                            */
@@ -239,7 +239,7 @@ VISIBLE extern struct sc_interface *sc_interface;
 #define SCCloseAllViews			(sc_interface->close_all_windows)
 #define SCMoreLayers			(sc_interface->more_layers)
 
-VISIBLE VISIBLE void FF_SetSCInterface(struct sc_interface *sci);
+VISIBLE void FF_SetSCInterface(struct sc_interface *sci);
 
 /* ************************************************************************** */
 /*                         Updating glyph windows 2                           */
@@ -269,7 +269,7 @@ VISIBLE extern struct cv_interface *cv_interface;
 #define CVGlyphRenameFixup		(cv_interface->glyph_name_change)
 #define CVLayerPaletteCheck		(cv_interface->layer_palette_check)
 
-VISIBLE VISIBLE void FF_SetCVInterface(struct cv_interface *cvi);
+VISIBLE void FF_SetCVInterface(struct cv_interface *cvi);
 
 /* ************************************************************************** */
 /*                         Updating bitmap windows                            */
@@ -294,7 +294,7 @@ VISIBLE extern struct bc_interface *bc_interface;
 #define BCRefreshAll			(bc_interface->refresh_all)
 #define BCDestroyAll			(bc_interface->destroy_all)
 
-VISIBLE VISIBLE void FF_SetBCInterface(struct bc_interface *bci);
+VISIBLE void FF_SetBCInterface(struct bc_interface *bci);
 
 /* ************************************************************************** */
 /*                          Access to metrics views                           */
@@ -330,7 +330,7 @@ VISIBLE extern struct mv_interface *mv_interface;
 #define MVReFeatureAll			(mv_interface->refeature)
 #define MVDestroyAll			(mv_interface->sf_close_metrics)
 
-VISIBLE VISIBLE void FF_SetMVInterface(struct mv_interface *mvi);
+VISIBLE void FF_SetMVInterface(struct mv_interface *mvi);
 
 /* ************************************************************************** */
 /*                             Access to font info                            */
@@ -482,7 +482,7 @@ VISIBLE extern struct fv_interface *fv_interface;
 #define FVChangeGID		(fv_interface->select_gid)
 #define SFCloseAllInstrs	(fv_interface->close_all_instrs)
 
-VISIBLE VISIBLE void FF_SetFVInterface(struct fv_interface *fvi);
+VISIBLE void FF_SetFVInterface(struct fv_interface *fvi);
 
 /* ************************************************************************** */
 /*                       Clibboard access (copy/paste)                        */

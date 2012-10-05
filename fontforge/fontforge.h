@@ -48,7 +48,7 @@ extern int32 unicode_from_adobestd[256];
 VISIBLE extern int default_fv_font_size;
 VISIBLE extern int default_fv_antialias;
 VISIBLE extern int default_fv_bbsized;
-VISIBLE VISIBLE extern Encoding *default_encoding, custom;
+VISIBLE extern Encoding *default_encoding, custom;
 VISIBLE extern int adjustwidth;
 VISIBLE extern int adjustlbearing;
 VISIBLE extern int autohint_before_generate;
@@ -64,8 +64,8 @@ VISIBLE extern int loaded_fonts_same_as_new;
 VISIBLE extern char *BDFFoundry, *TTFFoundry;
 VISIBLE extern char *xuid;
 
-VISIBLE VISIBLE VISIBLE extern int pagewidth, pageheight, printtype;	/* Printer defaults */
-VISIBLE VISIBLE extern char *printcommand, *printlazyprinter;
+VISIBLE extern int pagewidth, pageheight, printtype;	/* Printer defaults */
+VISIBLE extern char *printcommand, *printlazyprinter;
 
 VISIBLE extern Encoding *enclist;
 

@@ -25,7 +25,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 enum { pt_lp, pt_lpr, pt_ghostview, pt_file, pt_other, pt_pdf, pt_unknown=-1 };
-VISIBLE VISIBLE extern int pagewidth, pageheight;
+VISIBLE extern int pagewidth, pageheight;
 VISIBLE extern char *printlazyprinter;
 VISIBLE extern char *printcommand;
 #include "baseviews.h"

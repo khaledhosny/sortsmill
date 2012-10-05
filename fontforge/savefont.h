@@ -25,7 +25,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-VISIBLE VISIBLE extern char *savefont_extensions[], *bitmapextensions[];
+VISIBLE extern char *savefont_extensions[], *bitmapextensions[];
 
 VISIBLE void PrepareUnlinkRmOvrlp(SplineFont *sf,char *filename,int layer);
 VISIBLE void RestoreUnlinkRmOvrlp(SplineFont *sf,char *filename,int layer);

@@ -197,7 +197,7 @@ VISIBLE extern void gHSL2RGB(struct hslrgb *col);
 VISIBLE extern void gRGB2HSV(struct hslrgb *col);
 VISIBLE extern void gHSV2RGB(struct hslrgb *col);
 VISIBLE extern void gColor2Hslrgb(struct hslrgb *col,Color from);
-VISIBLE VISIBLE extern void gColor2Hslrgba(struct hslrgba *col,Color from);
+VISIBLE extern void gColor2Hslrgba(struct hslrgba *col,Color from);
 VISIBLE extern Color gHslrgb2Color(struct hslrgb *col);
 VISIBLE extern Color gHslrgba2Color(struct hslrgba *col);
 
