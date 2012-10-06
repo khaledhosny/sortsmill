@@ -29,7 +29,7 @@ Optional features:
   python extension   ${i_do_have_python_extension}
   freetype debugger  ${i_do_have_freetype_debugger}
   capslock for alt   ${i_do_have_capslock_for_alt}
-  raw points mode    ${i_do_have_capslock_for_alt}
+  raw points mode    ${i_do_have_debug_raw_points}
   tile path          ${i_do_have_tile_path}
 
 Optional dependencies:
