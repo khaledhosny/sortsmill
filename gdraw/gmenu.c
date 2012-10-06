@@ -304,11 +304,11 @@ return( x );
 }
 	
 static void
-GMenuDrawCheckMark (struct gmenu *m, Color fg, int ybase, int r2l)
+GMenuDrawCheckMark (struct gmenu *m, Color fg, int ybase)
 {
   int as = m->as;
   int pt = GDrawPointsToPixels (m->w, 1);
-  int x = r2l ? m->width - m->tioff + 2 * pt : m->tickoff;
+  int x = m->tickoff;
 
   while (pt > 1 && 2 * pt >= as / 3)
     --pt;
@@ -320,43 +320,28 @@ GMenuDrawCheckMark (struct gmenu *m, Color fg, int ybase, int r2l)
 }
 
 static void
-GMenuDrawUncheckMark (struct gmenu *m, Color fg, int ybase, int r2l)
+GMenuDrawUncheckMark (struct gmenu *m, Color fg, int ybase)
 {
 }
 
 static void
-GMenuDrawArrow (struct gmenu *m, Color fg, int ybase, int r2l)
+GMenuDrawArrow (struct gmenu *m, Color fg, int ybase)
 {
   int pt = GDrawPointsToPixels (m->w, 1);
   int as = 2 * (m->as / 3);
-  int x = r2l ? m->bp + 2 * pt : m->rightedge - 2 * pt;
+  int x = m->rightedge - 2 * pt;
   GPoint p[3];
 
   GDrawSetLineWidth (m->w, 2 * pt);
-  if (r2l)
-    {
-      p[0].x = x;
-      p[0].y = ybase - as / 2;
-      p[1].x = x + 1 * (as / 2);
-      p[1].y = ybase;
-      p[2].x = p[1].x;
-      p[2].y = ybase - as;
+  p[0].x = x;
+  p[0].y = ybase - as / 2;
+  p[1].x = x - 1 * (as / 2);
+  p[1].y = ybase;
+  p[2].x = p[1].x;
+  p[2].y = ybase - as;
 
-      GDrawDrawLine (m->w, p[0].x, p[0].y, p[2].x, p[2].y, fg);
-      GDrawDrawLine (m->w, p[1].x, p[1].y, p[0].x, p[0].y, fg);
-    }
-  else
-    {
-      p[0].x = x;
-      p[0].y = ybase - as / 2;
-      p[1].x = x - 1 * (as / 2);
-      p[1].y = ybase;
-      p[2].x = p[1].x;
-      p[2].y = ybase - as;
-
-      GDrawDrawLine (m->w, p[0].x, p[0].y, p[2].x, p[2].y, fg);
-      GDrawDrawLine (m->w, p[1].x, p[1].y, p[0].x, p[0].y, fg);
-    }
+  GDrawDrawLine (m->w, p[0].x, p[0].y, p[2].x, p[2].y, fg);
+  GDrawDrawLine (m->w, p[1].x, p[1].y, p[0].x, p[0].y, fg);
 }
 
 static int GMenuDrawMenuLine(struct gmenu *m, GMenuItem *mi, int y,GWindow pixmap) {
@@ -366,7 +351,6 @@ static int GMenuDrawMenuLine(struct gmenu *m, GMenuItem *mi, int y,GWindow pixma
     Color fg = m->box->main_foreground;
     GRect old, new;
     int ybase = y+as;
-    int r2l = false;
     int x;
 
     new.x = m->tickoff; new.width = m->rightedge-m->tickoff;
@@ -379,44 +363,32 @@ static int GMenuDrawMenuLine(struct gmenu *m, GMenuItem *mi, int y,GWindow pixma
 	fg = m->box->disabled_foreground;
     if ( fg==COLOR_DEFAULT )
 	fg = GDrawGetDefaultForeground(GDrawGetDisplayOfWindow(pixmap));
-    if ( mi->ti.text!=NULL && isrighttoleft(mi->ti.text[0]) )
-	r2l = true;
 
-    if ( r2l )
-	x = m->width-m->tioff-GTextInfoGetWidth(pixmap,&mi->ti,m->font);
-    else
-	x = m->tioff;
+    x = m->tioff;
+
     h = GTextInfoDraw(pixmap,x,y,&mi->ti,m->font,
 	    (mi->ti.disabled || m->disabled )?m->box->disabled_foreground:fg,
 	    m->box->active_border,new.y+new.height);
 
     if ( mi->ti.checkable ) {
 	if ( mi->ti.checked )
-	    GMenuDrawCheckMark(m,fg,ybase,r2l);
+	    GMenuDrawCheckMark(m,fg,ybase);
 	else
-	    GMenuDrawUncheckMark(m,fg,ybase,r2l);
+	    GMenuDrawUncheckMark(m,fg,ybase);
     }
 
     if ( mi->sub!=NULL )
-	GMenuDrawArrow(m,fg,ybase,r2l);
+	GMenuDrawArrow(m,fg,ybase);
     else if ( mi->shortcut!=0 && (mi->short_mask&0xffe0)==0 && mac_menu_icons ) {
 	_shorttext(mi->shortcut,0,shortbuf);
 	width = GDrawGetTextWidth(pixmap,shortbuf,-1) + GMenuMacIconsWidth(m,mi->short_mask);
-	if ( r2l ) {
-	    int x = GDrawDrawText(pixmap,m->bp,ybase,shortbuf,-1,fg);
-	    GMenuDrawMacIcons(m,fg,ybase, x, mi->short_mask);
-	} else {
-	    int x = GMenuDrawMacIcons(m,fg,ybase,m->rightedge-width, mi->short_mask);
-	    GDrawDrawText(pixmap,x,ybase,shortbuf,-1,fg);
-	}
+	int x = GMenuDrawMacIcons(m,fg,ybase,m->rightedge-width, mi->short_mask);
+	GDrawDrawText(pixmap,x,ybase,shortbuf,-1,fg);
     } else if ( mi->shortcut!=0 ) {
 	shorttext(mi,shortbuf);
 
 	width = GDrawGetTextWidth(pixmap,shortbuf,-1);
-	if ( r2l )
-	    GDrawDrawText(pixmap,m->bp,ybase,shortbuf,-1,fg);
-	else
-	    GDrawDrawText(pixmap,m->rightedge-width,ybase,shortbuf,-1,fg);
+	GDrawDrawText(pixmap,m->rightedge-width,ybase,shortbuf,-1,fg);
     }
     GDrawPopClip(pixmap,&old);
 return( y + h );
