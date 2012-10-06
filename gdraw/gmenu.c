@@ -352,30 +352,39 @@ static int GMenuDrawMenuLine(struct gmenu *m, GMenuItem *mi, int y,GWindow pixma
     GRect old, new;
     int ybase = y+as;
     int x;
+    GTextInfo *ti = GTextInfoCopy(&mi->ti);
 
     new.x = m->tickoff; new.width = m->rightedge-m->tickoff;
     new.y = y; new.height = GTextInfoGetHeight(pixmap,&mi->ti,m->font);
     GDrawPushClip(pixmap,&new,&old);
 
-    if ( mi->ti.fg!=COLOR_DEFAULT && mi->ti.fg!=COLOR_UNKNOWN )
-	fg = mi->ti.fg;
-    if ( mi->ti.disabled || m->disabled )
+    if ( ti->fg!=COLOR_DEFAULT && ti->fg!=COLOR_UNKNOWN )
+	fg = ti->fg;
+    if ( ti->disabled || m->disabled )
 	fg = m->box->disabled_foreground;
     if ( fg==COLOR_DEFAULT )
 	fg = GDrawGetDefaultForeground(GDrawGetDisplayOfWindow(pixmap));
 
-    x = m->tioff;
-
-    h = GTextInfoDraw(pixmap,x,y,&mi->ti,m->font,
-	    (mi->ti.disabled || m->disabled )?m->box->disabled_foreground:fg,
-	    m->box->active_border,new.y+new.height);
-
-    if ( mi->ti.checkable ) {
-	if ( mi->ti.checked )
+    if ( ti->checkable ) {
+	if ( ti->checked ) {
 	    GMenuDrawCheckMark(m,fg,ybase);
-	else
+	    /* we don't want to draw the image if check mark is drawn */
+	    ti->image = NULL;
+	} else {
 	    GMenuDrawUncheckMark(m,fg,ybase);
+	}
     }
+
+    /* draw the menu items with image at the base point, so the actual text
+     * offset is always the same */
+    if (ti->image != NULL)
+	x = m->bp;
+    else
+	x = m->tioff;
+
+    h = GTextInfoDraw(pixmap,x,y,ti,m->font,
+	    (ti->disabled || m->disabled )?m->box->disabled_foreground:fg,
+	    m->box->active_border,new.y+new.height);
 
     if ( mi->sub!=NULL )
 	GMenuDrawArrow(m,fg,ybase);
@@ -991,6 +1000,7 @@ static GMenu *_GMenu_Create(GWindow owner,GMenuItem *mi, GPoint *where,
     extern int _GScrollBar_Width;
     int ds, ld, temp, lh;
     int sbwidth = 0;
+    int ticklen;
     GRect screen;
 
     m->owner = owner;
@@ -1044,11 +1054,12 @@ static GMenu *_GMenu_Create(GWindow owner,GMenuItem *mi, GPoint *where,
     m->fh = lh;
     m->mcnt = m->lcnt = i;
     if ( keywidth!=0 ) width += keywidth + GDrawPointsToPixels(m->w,8);
-    if ( m->hasticks ) {
-	int ticklen = m->as + GDrawPointsToPixels(m->w,5);
-	width += ticklen;
-	m->tioff += ticklen;
-    }
+
+    /* reseve space used by icons, even if we don't have any */
+    ticklen = MENU_ICON_SIZE + GDrawPointsToPixels(m->w, MENU_ICON_SEP);
+    width += ticklen;
+    m->tioff += ticklen;
+
     m->width = pos.width = width + 2*m->bp;
     m->rightedge = m->width - m->bp;
     m->height = pos.height = i*m->fh + 2*m->bp;
