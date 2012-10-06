@@ -688,6 +688,7 @@ return( cs );
 void GDrawDrawImage(GWindow w, GImage *image, GRect *src, int32 x, int32 y) {
     GXWindow gw = (GXWindow) w;
     GRect r;
+    cairo_surface_t *is;
 
     if ( src==NULL ) {
 	struct _GImage *base = image->list_len==0?image->u.image:image->u.images[0];
@@ -696,26 +697,37 @@ void GDrawDrawImage(GWindow w, GImage *image, GRect *src, int32 x, int32 y) {
 	src = &r;
     }
 
-    uint8 *data;
-    cairo_surface_t *is = GImage2Surface(image,src,&data);
-    struct _GImage *base = image->list_len==0?image->u.image:image->u.images[0];
-
-    if ( cairo_image_surface_get_format(is)==CAIRO_FORMAT_A1 ) {
-	/* No color info, just alpha channel */
-	Color fg = base->clut->trans_index==0 ? base->clut->clut[1] : base->clut->clut[0];
-	cairo_set_source_rgba(gw->cc,COLOR_RED(fg)/255.0,COLOR_GREEN(fg)/255.0,COLOR_BLUE(fg)/255.0,1.0);
-	cairo_mask_surface(gw->cc,is,x,y);
-    } else {
+    if (image->filename != NULL) {
+	/* This is a PNG file, let cairo do the work then */
+	is = cairo_image_surface_create_from_png (image->filename);
 	cairo_set_source_surface(gw->cc,is,x,y);
 	cairo_rectangle(gw->cc,x,y,src->width,src->height);
 	cairo_fill(gw->cc);
+	cairo_surface_destroy(is);
+    } else {
+	uint8 *data;
+	is = GImage2Surface(image,src,&data);
+	struct _GImage *base = image->list_len==0?image->u.image:image->u.images[0];
+
+	if ( cairo_image_surface_get_format(is)==CAIRO_FORMAT_A1 ) {
+	    /* No color info, just alpha channel */
+	    Color fg = base->clut->trans_index==0 ? base->clut->clut[1] : base->clut->clut[0];
+	    cairo_set_source_rgba(gw->cc,COLOR_RED(fg)/255.0,COLOR_GREEN(fg)/255.0,COLOR_BLUE(fg)/255.0,1.0);
+	    cairo_mask_surface(gw->cc,is,x,y);
+	} else {
+	    cairo_set_source_surface(gw->cc,is,x,y);
+	    cairo_rectangle(gw->cc,x,y,src->width,src->height);
+	    cairo_fill(gw->cc);
+	}
+
+	cairo_surface_destroy(is);
+	free(data);
     }
+
     /* Clear source and mask, in case we need to */
     cairo_new_path(gw->cc);
     cairo_set_source_rgba(gw->cc,0,0,0,0);
 
-    cairo_surface_destroy(is);
-    free(data);
     gw->cairo_state.fore_col = COLOR_UNKNOWN;
 }
 

@@ -215,6 +215,7 @@ GImage *GImageReadPng(char *filename) {
 return( NULL );
 
     ret = GImageRead_Png(fp);
+    ret->filename = copy(filename);
     fclose(fp);
 return( ret );
 }

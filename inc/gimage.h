@@ -111,6 +111,7 @@ typedef struct gimage {
     	struct _GImage **images;
     } u;
     void *userdata;
+    const char *filename;	/* PNG file name to be used by cairo */
 } GImage;
 
 enum pastetrans_type { ptt_paste_trans_to_trans, ptt_old_shines_through};
