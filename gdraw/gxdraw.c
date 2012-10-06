@@ -46,6 +46,7 @@
 #include <unistd.h>		/* for timers & select */
 #include <signal.h>		/* error handler */
 #include <locale.h>		/* for setting the X locale properly */
+#include <gio.h>
 
 #ifdef HAVE_PTHREAD_H
 # if defined(__MINGW32__)
@@ -3844,7 +3845,7 @@ static void GDrawInitXKB(GXDisplay *gdisp) {
 #endif
 }
 
-GDisplay *_GXDraw_CreateDisplay(char *displayname) {
+static GDisplay *_GXDraw_CreateDisplay(char *displayname) {
     GXDisplay *gdisp;
     Display *display;
     GXWindow groot;
@@ -3959,6 +3960,22 @@ return( NULL );
 return( (GDisplay *) gdisp);
 }
 
+void GDrawCreateDisplays(char *displayname,char *programname) {
+    GIO_SetThreadCallback((void (*)(void *,void *,void *)) GDrawSyncThread);
+    screen_display = _GXDraw_CreateDisplay(displayname);
+    if ( screen_display==NULL ) {
+	fprintf( stderr, "Could not open screen.\n" );
+#if __Mac
+	fprintf( stderr, "You must start X11 before you can start %s\n", programname);
+	fprintf( stderr, " X11 is optional software found on your install DVD.\n" );
+#elif __CygWin
+	fprintf( stderr, "You must start X11 before you can start %s\n", programname);
+	fprintf( stderr, " X11 may be obtained from the cygwin site in a separate package.\n" );
+#endif
+exit(1);
+    }
+}
+
 void _XSyncScreen() {
     XSync(((GXDisplay *) screen_display)->display,false);
 }
@@ -3999,7 +4016,7 @@ return ((key_map_stat[code >> 3] >> (code & 7)) & 1);
 
 #else	/* NO X */
 
-GDisplay *_GXDraw_CreateDisplay(char *displayname) {
+void GDrawCreateDisplays(char *displayname,char *programname) {
     fprintf( stderr, "This program was not compiled with X11, and cannot open the display\n" );
     exit(1);
 }

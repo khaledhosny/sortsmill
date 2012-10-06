@@ -139,7 +139,6 @@ struct gdisplay {
 #define PixelToPoint(pixels,res)		(((pixels)*72+(res)/2)/(res))
 #define PixelToPointTenths(pixels,res)		(((pixels)*720+(res)/2)/(res))
 
-extern GDisplay *_GXDraw_CreateDisplay(char *displayname);
 extern void _GDraw_InitError(GDisplay *);
 extern void _GDraw_ComposeChars(GDisplay *gdisp,GEvent *gevent);
 
