@@ -67,7 +67,7 @@ distclean-local:
 	if test '$(top_srcdir)' -ef '$(top_builddir)'; then \
 		:; \
 	else \
-		for dir in . inc Unicode gutils gdraw fontforge pyhook tests fonttools; do \
+		for dir in . inc auxiliary gutils gdraw fontforge pyhook tests fonttools; do \
              rm -f "$(top_builddir)/$${dir}/.indent.pro"; \
 		done; \
 	fi
