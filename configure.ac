@@ -251,11 +251,6 @@ AC_TYPE_UINT16_T
 AC_TYPE_UINT32_T
 AC_TYPE_UINT8_T
 
-AC_TYPE_LONG_LONG_INT
-if test x"${ac_cv_type_long_long_int}" = xyes; then
-   AC_DEFINE([_HAS_LONGLONG],1,[Define if using 'long long int'.])
-fi
-
 # This only checks that an int requires 4 bytes of storage, not that
 # it actually uses all 32 bits. We actually require all 32 bits.
 AC_CHECK_SIZEOF([int])

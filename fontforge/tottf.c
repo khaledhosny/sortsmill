@@ -2764,7 +2764,7 @@ return( true );
 return( false );
 }
 
-#ifdef _HAS_LONGLONG
+#ifdef HAVE_LONG_LONG_INT
 void cvt_unix_to_1904( long long time, int32 result[2]) {
     uint32 date1970[4], tm[4];
     uint32 year[2];

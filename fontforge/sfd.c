@@ -2386,7 +2386,7 @@ SFD_Dump (FILE *sfd, SplineFont *sf, EncMap * map, EncMap * normal, int todir,
   fprintf (sfd, "OS2_WeightWidthSlopeOnly: %d\n",
            sf->weight_width_slope_only);
   fprintf (sfd, "OS2_UseTypoMetrics: %d\n", sf->use_typo_metrics);
-#ifdef _HAS_LONGLONG
+#ifdef HAVE_LONG_LONG_INT
   fprintf (sfd, "CreationTime: %lld\n", sf->creationtime);
   fprintf (sfd, "ModificationTime: %lld\n", sf->modificationtime);
 #else
@@ -3542,7 +3542,7 @@ copy_to_tok (char *tok, const char *s)
 }
 
 // FIXME: Do something about this.
-#ifdef _HAS_LONGLONG
+#ifdef HAVE_LONG_LONG_INT
 typedef long long __longlong;
 #else
 typedef long __longlong;
@@ -3569,7 +3569,7 @@ getlonglong (FILE *sfd, __longlong *val)
     }
   *pt = '\0';
   ungetc (ch, sfd);
-#ifdef _HAS_LONGLONG
+#ifdef HAVE_LONG_LONG_INT
   *val = strtoll (tokbuf, NULL, 10);
 #else
   *val = strtol (tokbuf, NULL, 10);

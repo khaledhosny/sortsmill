@@ -543,7 +543,7 @@ typedef struct searchdata {
     real matched_x, matched_y;
     double matched_co, matched_si;		/* Precomputed sin, cos */
     enum flipset matched_flip;
-#ifdef _HAS_LONGLONG
+#ifdef HAVE_LONG_LONG_INT
     unsigned long long matched_refs;	/* Bit map of which refs in the char were matched */
     unsigned long long matched_ss;	/* Bit map of which splines in the char were matched */
 				    /* In multi-path mode */

@@ -151,7 +151,7 @@ typedef struct fontdict {
     char *ndv;
     struct psdict *blendprivate;
     struct psdict *blendfontinfo;
-#ifdef _HAS_LONGLONG
+#ifdef HAVE_LONG_LONG_INT
     long long creationtime;		/* seconds since 1970 */
     long long modificationtime;
 #else

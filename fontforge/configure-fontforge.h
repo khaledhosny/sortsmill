@@ -73,6 +73,6 @@
 /* If the XInput extension is not available define _NO_XINPUT		      */
 /* If the Xkb extension is not available define _NO_XKB			      */
 
-/* If the compiler supports long long define _HAS_LONGLONG		      */
+/* If the compiler supports long long define HAVE_LONG_LONG_INT		      */
 
 #endif

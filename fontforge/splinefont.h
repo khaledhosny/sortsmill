@@ -1800,7 +1800,7 @@ typedef struct splinefont {
     int mark_set_cnt;
     char **mark_sets;			/* glyph name list */
     char **mark_set_names;		/* used within ff, utf8 (the name we've given to this class of marks) */
-#ifdef _HAS_LONGLONG
+#ifdef HAVE_LONG_LONG_INT
     long long creationtime;		/* seconds since 1970 */
     long long modificationtime;
 #else

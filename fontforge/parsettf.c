@@ -1264,7 +1264,7 @@ static void readdate(FILE *ttf,struct ttfinfo *info,int ismod) {
     date[3] -= date1970[3];
 
     *(ismod ? &info->modificationtime : &info->creationtime) =
-#ifdef _HAS_LONGLONG
+#ifdef HAVE_LONG_LONG_INT
 	    (((long long) date[3])<<48) |
 	    (((long long) date[2])<<32) |
 #endif
