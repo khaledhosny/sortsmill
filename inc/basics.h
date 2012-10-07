@@ -60,8 +60,6 @@ typedef uint16_t uint16;
 typedef int8_t int8;
 typedef uint8_t uint8;
 
-typedef uint32_t unichar_t;
-
 static inline int
 imin (int a, int b)
 {

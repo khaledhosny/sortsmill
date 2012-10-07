@@ -44,7 +44,7 @@ VISIBLE int CharCenterHighest = 1;
 /* type1 wants accented chars built with accents in the 0x2c? range */
 /*  except for grave and acute which live in iso8859-1 range */
 /*  this table is ordered on a best try basis */
-static const unichar_t accents[][4] = {
+static const uint32_t accents[][4] = {
     { 0x2cb, 0x300, 0x60 },	/* grave */
     { 0x2ca, 0x301, 0xb4 },	/* acute */
     { 0x2c6, 0x302, 0x5e },	/* circumflex */
@@ -163,7 +163,7 @@ static const char *uc_accent_names[] = {
 /* because of accent unification I can't use the same glyphs for greek and */
 /*  latin accents. Annoying. So when unicode decomposes a greek letter to */
 /*  use 0x0301 we actually want 0x1ffd and so on */
-static unichar_t unicode_greekalts[256][3] = {
+static uint32_t unicode_greekalts[256][3] = {
 /* 1F00 */ { 0x03B1, 0x1FBF, 0 },
 /* 1F01 */ { 0x03B1, 0x1FFE, 0 },
 /* 1F02 */ { 0x03B1, 0x1FCD, 0 },
@@ -422,7 +422,7 @@ static unichar_t unicode_greekalts[256][3] = {
 /* 1FFF */ { 0 },
 };
 
-VISIBLE unichar_t adobes_pua_alts[0x200][3] = {	/* Mapped from 0xf600-0xf7ff */
+VISIBLE uint32_t adobes_pua_alts[0x200][3] = {	/* Mapped from 0xf600-0xf7ff */
 /* U+F600 */ { 0 },
 /* U+F601 */ { 0 },
 /* U+F602 */ { 0 },
@@ -983,7 +983,7 @@ return( true );
 return( false );
 }
 
-static int haschar(SplineFont *sf,unichar_t ch,char *dot) {
+static int haschar(SplineFont *sf,uint32_t ch,char *dot) {
     char buffer[200], namebuf[200];
 
     if ( dot==NULL || ch==-1 )
@@ -999,7 +999,7 @@ return( SCWorthOutputting(SFGetChar(sf,ch,NULL)) );
 return( false );
 }
 
-static SplineChar *GetChar(SplineFont *sf,unichar_t ch,char *dot) {
+static SplineChar *GetChar(SplineFont *sf,uint32_t ch,char *dot) {
     char buffer[200], namebuf[200];
     SplineChar *sc;
     /* Basically the same as above */
@@ -1017,9 +1017,9 @@ return( SFGetChar(sf,ch,NULL) );
 return( NULL );
 }
 
-static const unichar_t *arabicfixup(SplineFont *sf, const unichar_t *upt, int ini, int final) {
-    static unichar_t arabicalts[20];
-    unichar_t *apt; const unichar_t *pt;
+static const uint32_t *arabicfixup(SplineFont *sf, const uint32_t *upt, int ini, int final) {
+    static uint32_t arabicalts[20];
+    uint32_t *apt; const uint32_t *pt;
 
     for ( apt=arabicalts, pt = upt; *pt!='\0'; ++pt, ++apt ) {
 	if ( *pt==' ' ) {
@@ -1044,9 +1044,9 @@ return(arabicalts);
 return( upt );
 }
 
-static const unichar_t *SFAlternateFromLigature(SplineFont *sf, int base,SplineChar *sc) {
-    static unichar_t space[30];
-    unichar_t *spt, *send = space+sizeof(space)/sizeof(space[0])-1;
+static const uint32_t *SFAlternateFromLigature(SplineFont *sf, int base,SplineChar *sc) {
+    static uint32_t space[30];
+    uint32_t *spt, *send = space+sizeof(space)/sizeof(space[0])-1;
     char *ligstart, *semi, *pt, sch, ch, *dpt;
     int j;
     PST *pst;
@@ -1104,9 +1104,9 @@ return( arabicfixup(sf,space,ini,final));
 return( space );
 }
 
-const unichar_t *SFGetAlternate(SplineFont *sf, int base,SplineChar *sc,int nocheck) {
-    static unichar_t greekalts[5];
-    const unichar_t *upt, *pt; unichar_t *gpt;
+const uint32_t *SFGetAlternate(SplineFont *sf, int base,SplineChar *sc,int nocheck) {
+    static uint32_t greekalts[5];
+    const uint32_t *upt, *pt; uint32_t *gpt;
     char *dot = NULL;
 
     if ( sc!=NULL && (dot = strchr(sc->name,'.'))!=NULL ) {
@@ -1222,7 +1222,7 @@ static SplineChar *GetGoodAccentGlyph(SplineFont *sf, int uni, int basech,
 	int *invert,double ia, char *dot, SplineChar *destination);
 
 int SFIsCompositBuildable(SplineFont *sf,int unicodeenc,SplineChar *sc,int layer) {
-    const unichar_t *pt, *all; unichar_t ch, basech;
+    const uint32_t *pt, *all; uint32_t ch, basech;
     SplineChar *one, *two;
     char *dot = NULL;
     int invert = false;
@@ -1299,7 +1299,7 @@ return( false );
 }
 
 int hascomposing(SplineFont *sf,int u,SplineChar *sc) {
-    const unichar_t *upt = SFGetAlternate(sf,u,sc,false);
+    const uint32_t *upt = SFGetAlternate(sf,u,sc,false);
 
     if ( upt!=NULL ) {
 	while ( *upt ) {
@@ -1750,7 +1750,7 @@ return( 1 );
 static SplineChar *GetGoodAccentGlyph(SplineFont *sf, int uni, int basech,
 	int *invert,double ia, char *dot, SplineChar *destination) {
     int ach= -1;
-    const unichar_t *apt, *end;
+    const uint32_t *apt, *end;
     SplineChar *rsc;
     char buffer[200], namebuf[200];
 
@@ -2021,7 +2021,7 @@ static void _SCCenterAccent(SplineChar *sc,SplineChar *basersc, SplineFont *sf,
     real xoff, yoff;
     real spacing = (sf->ascent+sf->descent)*accent_offset/100;
     real ybase, italicoff;
-    const unichar_t *temp;
+    const uint32_t *temp;
     int baserch = basech;
     int eta;
     AnchorPoint *ap1, *ap2;
@@ -2656,10 +2656,10 @@ return;
 }
 
 static int SCMakeRightToLeftLig(SplineChar *sc,SplineFont *sf,
-	int layer, const unichar_t *start,BDFFont *bdf,int disp_only) {
+	int layer, const uint32_t *start,BDFFont *bdf,int disp_only) {
     int cnt = u_strlen(start);
     int ret, ch, alt_ch;
-    const unichar_t *pt;
+    const uint32_t *pt;
 
     pt = start+cnt-1;
     ch = *pt;
@@ -2686,7 +2686,7 @@ static int SCMakeRightToLeftLig(SplineChar *sc,SplineFont *sf,
 return( ret );
 }
 
-static void SCBuildHangul(SplineFont *sf,SplineChar *sc, int layer, const unichar_t *pt,
+static void SCBuildHangul(SplineFont *sf,SplineChar *sc, int layer, const uint32_t *pt,
 	BDFFont *bdf, int disp_only) {
     SplineChar *rsc;
     int first = true;
@@ -2824,7 +2824,7 @@ return;
 }
 
 void SCBuildComposit(SplineFont *sf, SplineChar *sc, int layer, BDFFont *bdf, int disp_only ) {
-    const unichar_t *pt, *apt; unichar_t ch;
+    const uint32_t *pt, *apt; uint32_t ch;
     real ia;
     char *dot;
     /* This does not handle arabic ligatures at all. It would need to reverse */
@@ -2932,7 +2932,7 @@ int SCAppendAccent(SplineChar *sc,int layer,
     int invert = false;		/* invert accent, false==0, true!=0 */
     SplineChar *asc;
     int i;
-    const unichar_t *apt, *end;
+    const uint32_t *apt, *end;
     char *pt;
 
     for ( ref=sc->layers[layer].refs; ref!=NULL; ref=ref->next )

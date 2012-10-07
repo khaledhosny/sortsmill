@@ -208,13 +208,13 @@ return( old );
 /*  the state). Finally we use the base character followed by all the accents */
 /*  left unaccounted for in the mask */
 void _GDraw_ComposeChars(GDisplay *gdisp,GEvent *gevent) {
-    unichar_t ch = gevent->u.chr.keysym;
+    uint32_t ch = gevent->u.chr.keysym;
     struct gchr_transform *strt = NULL, *trans, *end=NULL;
     extern struct gchr_lookup _gdraw_chrlookup[];
     extern struct gchr_accents _gdraw_accents[];
     extern uint32 _gdraw_chrs_ctlmask, _gdraw_chrs_metamask, _gdraw_chrs_any;
     int i,mask;
-    unichar_t hold[_GD_EVT_CHRLEN], *pt, *ept, *hpt;
+    uint32_t hold[_GD_EVT_CHRLEN], *pt, *ept, *hpt;
     uint32 mykey_state = gdisp->mykey_state;
 
     if ( gevent->u.chr.chars[0]=='\0' )		/* ignore things like the shift key */

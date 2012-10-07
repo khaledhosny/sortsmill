@@ -3383,13 +3383,13 @@ ScriptInList (uint32 script, uint32 * scripts, int scnt)
   return (false);
 }
 
-unichar_t *
+uint32_t *
 PrtBuildDef (SplineFont *sf, void *tf,
              void (*langsyscallback) (void *tf, int end, uint32 script,
                                       uint32 lang))
 {
   int i, j, gotem, len, any = 0, foundsomething = 0;
-  unichar_t *ret = NULL;
+  uint32_t *ret = NULL;
   char **cur;
   uint32 scriptsdone[100], scriptsthere[100], langs[100];
   char *randoms[100];
@@ -3522,9 +3522,9 @@ PrtBuildDef (SplineFont *sf, void *tf,
       if (len == 0)
         {
           /* Er... We didn't find anything?! */
-          return (xcalloc (1, sizeof (unichar_t)));
+          return (xcalloc (1, sizeof (uint32_t)));
         }
-      ret = xmalloc ((len + 1) * sizeof (unichar_t));
+      ret = xmalloc ((len + 1) * sizeof (uint32_t));
     }
 }
 
@@ -3749,13 +3749,13 @@ PI_Init (PI * pi, FontViewBase * fv, SplineChar *sc)
 /* ******************************** Scripting ******************************* */
 /* ************************************************************************** */
 
-static unichar_t *
+static uint32_t *
 FileToUString (char *filename, int max)
 {
   FILE *file;
   int ch, ch2;
   int format = 0;
-  unichar_t *space, *upt, *end;
+  uint32_t *space, *upt, *end;
 
   file = fopen (filename, "rb");
   if (file == NULL)
@@ -3768,7 +3768,7 @@ FileToUString (char *filename, int max)
     format = 2;                 /* byte-swapped ucs2 */
   else
     rewind (file);
-  space = xzalloc ((max + 1) * sizeof (unichar_t));
+  space = xzalloc ((max + 1) * sizeof (uint32_t));
   upt = space;
   end = space + max;
   if (format != 0)
@@ -3803,12 +3803,12 @@ FileToUString (char *filename, int max)
 
 void
 ScriptPrint (FontViewBase * fv, int type, int32 * pointsizes,
-             char *samplefile, unichar_t *sample, char *outputfile)
+             char *samplefile, uint32_t *sample, char *outputfile)
 {
   PI pi;
   char buf[100];
   LayoutInfo *li;
-  unichar_t temp[2];
+  uint32_t temp[2];
 
   PI_Init (&pi, fv, NULL);
   if (pointsizes != NULL)

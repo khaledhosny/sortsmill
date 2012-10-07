@@ -588,7 +588,7 @@ return;
 
 void LI_fontlistmergecheck(LayoutInfo *li) {
     struct fontlist *fl, *next;
-    unichar_t *pt;
+    uint32_t *pt;
 
     if ( li->fontlist==NULL )
 return;
@@ -735,11 +735,11 @@ return;
     }
 }
 
-int LayoutInfoReplace(LayoutInfo *li, const unichar_t *str,
+int LayoutInfoReplace(LayoutInfo *li, const uint32_t *str,
 	int sel_start, int sel_end, int width) {
-    unichar_t *old = li->oldtext;
+    uint32_t *old = li->oldtext;
     int rpllen = u_strlen(str);
-    unichar_t *new = xmalloc((u_strlen(li->text)-(sel_end-sel_start) + rpllen+1)*sizeof(unichar_t));
+    uint32_t *new = xmalloc((u_strlen(li->text)-(sel_end-sel_start) + rpllen+1)*sizeof(uint32_t));
 
     li->oldtext = li->text;
     LayoutInfoChangeFontList(li,rpllen,sel_start,sel_end);
@@ -1172,7 +1172,7 @@ void FontImage(SplineFont *sf,char *filename,Array *arr,int width,int height) {
     enum sftf_fonttype type = sf->layers[ly_fore].order2 ? sftf_ttf : sftf_otf;
     GImage *image;
     struct _GImage *base;
-    unichar_t *upt;
+    uint32_t *upt;
     uint32 script;
     struct opentype_str **line;
     int ybase=0;
@@ -1196,7 +1196,7 @@ void FontImage(SplineFont *sf,char *filename,Array *arr,int width,int height) {
     for ( i=0; i<cnt; ++i )
 	len += utf8_strlen( arr->vals[2*i+1].u.sval )+1;
     
-    li->text = xmalloc(len*sizeof(unichar_t));
+    li->text = xmalloc(len*sizeof(uint32_t));
     len = 0;
     last = NULL;
     for ( i=0; i<cnt; ++i ) {
@@ -1299,8 +1299,8 @@ char *SFDefaultImage(SplineFont *sf,char *filename) {
 return( filename );
 }
 
-void LayoutInfoSetTitle(LayoutInfo *li,const unichar_t *tit,int width) {
-    unichar_t *old = li->oldtext;
+void LayoutInfoSetTitle(LayoutInfo *li,const uint32_t *tit,int width) {
+    uint32_t *old = li->oldtext;
     if ( u_strcmp(tit,li->text)==0 )	/* If it doesn't change anything, then don't trash undoes or selection */
 return;
     li->oldtext = li->text;

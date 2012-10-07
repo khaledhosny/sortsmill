@@ -354,7 +354,7 @@ static void RegionControl(CharView *cv,DBounds *b,int cnt) {
 	memset(&gcd,0,sizeof(gcd));
 	memset(&boxes,0,sizeof(boxes));
 
-	label[0].text = (unichar_t *) _("Coordinate along which to space");
+	label[0].text = (uint32_t *) _("Coordinate along which to space");
 	label[0].text_is_1byte = true;
 	gcd[0].gd.label = &label[0];
 	gcd[0].gd.pos.x = 5; gcd[0].gd.pos.y = 6; 
@@ -362,7 +362,7 @@ static void RegionControl(CharView *cv,DBounds *b,int cnt) {
 	gcd[0].creator = GLabelCreate;
 	hvarray[0][0] = &gcd[0]; hvarray[0][1] = NULL;
 
-	label[1].text = (unichar_t *) _("_X");
+	label[1].text = (uint32_t *) _("_X");
 	label[1].text_is_1byte = true;
 	label[1].text_in_resource = true;
 	gcd[1].gd.label = &label[1];
@@ -372,7 +372,7 @@ static void RegionControl(CharView *cv,DBounds *b,int cnt) {
 	gcd[1].gd.cid = CID_X;
 	rarray[0] = GCD_HPad10; rarray[1] = &gcd[1];
 
-	label[2].text = (unichar_t *) _("_Y");
+	label[2].text = (uint32_t *) _("_Y");
 	label[2].text_is_1byte = true;
 	label[2].text_in_resource = true;
 	gcd[2].gd.label = &label[2];
@@ -393,7 +393,7 @@ static void RegionControl(CharView *cv,DBounds *b,int cnt) {
 	else
 	    gcd[2].gd.flags |= gg_cb_on;
 
-	label[3].text = (unichar_t *) _("_Maximum distance between points in a region");
+	label[3].text = (uint32_t *) _("_Maximum distance between points in a region");
 	label[3].text_is_1byte = true;
 	label[3].text_in_resource = true;
 	gcd[3].gd.label = &label[3];
@@ -403,7 +403,7 @@ static void RegionControl(CharView *cv,DBounds *b,int cnt) {
 	hvarray[2][0] = &gcd[3]; hvarray[2][1] = NULL;
 
 	sprintf( buffer, "%g", lastsize );
-	label[4].text = (unichar_t *) buffer;
+	label[4].text = (uint32_t *) buffer;
 	label[4].text_is_1byte = true;
 	gcd[4].gd.label = &label[4];
 	gcd[4].gd.pos.x = gcd[1].gd.pos.x; gcd[4].gd.pos.y = gcd[3].gd.pos.y+14;  gcd[4].gd.pos.width = 40;
@@ -419,7 +419,7 @@ static void RegionControl(CharView *cv,DBounds *b,int cnt) {
 
 	gcd[5].gd.pos.x = 20-3; gcd[5].gd.pos.y = gcd[4].gd.pos.y+35-3;
 	gcd[5].gd.flags = gg_visible | gg_enabled | gg_but_default;
-	label[5].text = (unichar_t *) _("_OK");
+	label[5].text = (uint32_t *) _("_OK");
 	label[5].text_is_1byte = true;
 	label[5].text_in_resource = true;
 	gcd[5].gd.mnemonic = 'O';
@@ -430,7 +430,7 @@ static void RegionControl(CharView *cv,DBounds *b,int cnt) {
 
 	gcd[6].gd.pos.x = -20; gcd[6].gd.pos.y = gcd[5].gd.pos.y+3;
 	gcd[6].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-	label[6].text = (unichar_t *) _("_Cancel");
+	label[6].text = (uint32_t *) _("_Cancel");
 	label[6].text_is_1byte = true;
 	label[6].text_in_resource = true;
 	gcd[6].gd.label = &label[6];

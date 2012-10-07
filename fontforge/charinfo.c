@@ -134,20 +134,20 @@ typedef struct charinfo {
 #define PAIR_DY_ADV2	16
 
 static GTextInfo glyphclasses[] = {
-    { (unichar_t *) N_("Automatic"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("No Class"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("Base Glyph"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("Base Lig"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("Mark"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("Component"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Automatic"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("No Class"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Base Glyph"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Base Lig"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Mark"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Component"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     GTEXTINFO_EMPTY
 };
 
 #define CUSTOM_COLOR	9
 #define COLOR_CHOOSE	(-10)
 static GTextInfo std_colors[] = {
-    { (unichar_t *) N_("Color|Choose..."), NULL, 0, 0, (void *) COLOR_CHOOSE, NULL, 0, 1, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("Color|Default"), &def_image, 0, 0, (void *) COLOR_DEFAULT, NULL, 0, 1, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Color|Choose..."), NULL, 0, 0, (void *) COLOR_CHOOSE, NULL, 0, 1, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Color|Default"), &def_image, 0, 0, (void *) COLOR_DEFAULT, NULL, 0, 1, 0, 0, 0, 0, 1, 0, 0, '\0' },
     { NULL, &white_image, 0, 0, (void *) 0xffffff, NULL, 0, 1, 0, 0, 0, 0, 0, 0, 0, '\0' },
     { NULL, &red_image, 0, 0, (void *) 0xff0000, NULL, 0, 1, 0, 0, 0, 0, 0, 0, 0, '\0' },
     { NULL, &green_image, 0, 0, (void *) 0x00ff00, NULL, 0, 1, 0, 0, 0, 0, 0, 0, 0, '\0' },
@@ -163,8 +163,8 @@ static char *newstrings[] = { N_("New Positioning"), N_("New Pair Position"),
 	N_("New Substitution Variant"),
 	N_("New Alternate List"), N_("New Multiple List"), N_("New Ligature"), NULL };
 
-static unichar_t *CounterMaskLine(SplineChar *sc, HintMask *hm) {
-    unichar_t *textmask = NULL;
+static uint32_t *CounterMaskLine(SplineChar *sc, HintMask *hm) {
+    uint32_t *textmask = NULL;
     int j,k,len;
     StemInfo *h;
     char buffer[100];
@@ -190,7 +190,7 @@ static unichar_t *CounterMaskLine(SplineChar *sc, HintMask *hm) {
 	    }
 	}
 	if ( textmask==NULL ) {
-	    textmask = xmalloc((len+1)*sizeof(unichar_t));
+	    textmask = xmalloc((len+1)*sizeof(uint32_t));
 	    *textmask = '\0';
 	}
     }
@@ -307,7 +307,7 @@ static void CI_AskCounters(CharInfo *ci,HintMask *old) {
 	hgcd[j].gd.pos.x = 20-3; hgcd[j].gd.pos.y = HI_Height-31-3;
 	hgcd[j].gd.pos.width = -1; hgcd[j].gd.pos.height = 0;
 	hgcd[j].gd.flags = gg_visible | gg_enabled;
-	hlabel[j].text = (unichar_t *) _("Select hints between which counters are formed");
+	hlabel[j].text = (uint32_t *) _("Select hints between which counters are formed");
 	hlabel[j].text_is_1byte = true;
 	hlabel[j].text_in_resource = true;
 	hgcd[j].gd.label = &hlabel[j];
@@ -327,7 +327,7 @@ static void CI_AskCounters(CharInfo *ci,HintMask *old) {
 	hgcd[j].gd.pos.x = 20-3; hgcd[j].gd.pos.y = HI_Height-31-3;
 	hgcd[j].gd.pos.width = -1; hgcd[j].gd.pos.height = 0;
 	hgcd[j].gd.flags = gg_visible | gg_enabled | gg_but_default;
-	hlabel[j].text = (unichar_t *) _("_OK");
+	hlabel[j].text = (uint32_t *) _("_OK");
 	hlabel[j].text_is_1byte = true;
 	hlabel[j].text_in_resource = true;
 	hgcd[j].gd.label = &hlabel[j];
@@ -338,7 +338,7 @@ static void CI_AskCounters(CharInfo *ci,HintMask *old) {
 	hgcd[j].gd.pos.x = -20; hgcd[j].gd.pos.y = HI_Height-31;
 	hgcd[j].gd.pos.width = -1; hgcd[j].gd.pos.height = 0;
 	hgcd[j].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-	hlabel[j].text = (unichar_t *) _("_Cancel");
+	hlabel[j].text = (uint32_t *) _("_Cancel");
 	hlabel[j].text_is_1byte = true;
 	hlabel[j].text_in_resource = true;
 	hgcd[j].gd.label = &hlabel[j];
@@ -461,8 +461,8 @@ return( true );
 }
 
 static int ParseUValue(GWindow gw, int cid, int minusoneok) {
-    const unichar_t *ret = _GGadgetGetTitle(GWidgetGetControl(gw,cid));
-    unichar_t *end;
+    const uint32_t *ret = _GGadgetGetTitle(GWidgetGetControl(gw,cid));
+    uint32_t *end;
     int val;
 
     if (( *ret=='U' || *ret=='u' ) && ret[1]=='+' )
@@ -481,7 +481,7 @@ return( val );
 }
 
 static void SetNameFromUnicode(GWindow gw,int cid,int val) {
-    unichar_t *temp;
+    uint32_t *temp;
     char buf[100];
     CharInfo *ci = GDrawGetUserData(gw);
 
@@ -496,7 +496,7 @@ void SCInsertPST(SplineChar *sc,PST *new_) {
 }
 
 static int
-CI_NameCheck(const unichar_t *name)
+CI_NameCheck(const uint32_t *name)
 {
   int bad, questionable;
   extern int allow_utf8_glyphnames;
@@ -1027,7 +1027,7 @@ return( true );
 }
 
 static int gettex(GWindow gw,int cid,char *msg,int *err) {
-    const unichar_t *ret = _GGadgetGetTitle(GWidgetGetControl(gw,cid));
+    const uint32_t *ret = _GGadgetGetTitle(GWidgetGetControl(gw,cid));
 
     if ( *ret=='\0' )
 return( TEX_UNDEF );
@@ -1367,7 +1367,7 @@ static int _CI_OK(CharInfo *ci) {
     int val;
     int ret;
     char *name, *comment;
-    const unichar_t *nm;
+    const uint32_t *nm;
     int err = false;
     int tex_height, tex_depth, italic, topaccent;
     int hic, vic;
@@ -1686,10 +1686,10 @@ return( true );
 /* Generate default settings for the entries in ligature lookup
  * subtables. */
 static char *LigDefaultStr(int uni, char *name, int alt_lig ) {
-    const unichar_t *alt=NULL, *pt;
+    const uint32_t *alt=NULL, *pt;
     char *components = NULL;
     int len;
-    unichar_t hack[30], *upt;
+    uint32_t hack[30], *upt;
     char buffer[80];
 
     /* If it's not (bmp) unicode we have no info on it */
@@ -1857,7 +1857,7 @@ uint32 LigTagFromUnicode(int uni) {
     }
 #if 0
     if ( tag==CHR('l','i','g','a') && uni!=-1 && uni<0x10000 ) {
-	const unichar_t *alt=NULL;
+	const uint32_t *alt=NULL;
 	if ( isdecompositionnormative(uni) &&
 		    unicode_alternates[uni>>8]!=NULL &&
 		(alt = unicode_alternates[uni>>8][uni&0xff])!=NULL ) {
@@ -2000,9 +2000,9 @@ return;
 static int CI_SName(GGadget *g, GEvent *e) {	/* Set From Name */
     if ( e->type==et_controlevent && e->u.control.subtype == et_buttonactivate ) {
 	CharInfo *ci = GDrawGetUserData(GGadgetGetWindow(g));
-	const unichar_t *ret = _GGadgetGetTitle(GWidgetGetControl(ci->gw,CID_UName));
+	const uint32_t *ret = _GGadgetGetTitle(GWidgetGetControl(ci->gw,CID_UName));
 	int i;
-	char buf[40], *ctemp; unichar_t ubuf[2], *temp;
+	char buf[40], *ctemp; uint32_t ubuf[2], *temp;
 	ctemp = u2utf8_copy(ret);
 	i = UniFromName(ctemp,ui_none,&custom);
 	free(ctemp);
@@ -2011,7 +2011,7 @@ static int CI_SName(GGadget *g, GEvent *e) {	/* Set From Name */
 	    /*  (that is "uni" followed by two (or more) 4-digit codes). */
 	    /* But that names outside of BMP should be uXXXX or uXXXXX or uXXXXXX */
 	    if ( ret[0]=='u' && ret[1]!='n' && u_strlen(ret)<=1+6 ) {
-		unichar_t *end;
+		uint32_t *end;
 		i = u_strtol(ret+1,&end,16);
 		if ( *end )
 		    i = -1;
@@ -2037,7 +2037,7 @@ return( true );
 static int CI_SValue(GGadget *g, GEvent *e) {	/* Set From Value */
     if ( e->type==et_controlevent && e->u.control.subtype == et_buttonactivate ) {
 	CharInfo *ci = GDrawGetUserData(GGadgetGetWindow(g));
-	unichar_t ubuf[2];
+	uint32_t ubuf[2];
 	int val;
 
 	val = ParseUValue(ci->gw,CID_UValue,false);
@@ -2089,8 +2089,8 @@ return;		/* Didn't change */
 static int CI_UValChanged(GGadget *g, GEvent *e) {
     if ( e->type==et_controlevent && e->u.control.subtype == et_textchanged ) {
 	CharInfo *ci = GDrawGetUserData(GGadgetGetWindow(g));
-	const unichar_t *ret = _GGadgetGetTitle(GWidgetGetControl(ci->gw,CID_UValue));
-	unichar_t *end;
+	const uint32_t *ret = _GGadgetGetTitle(GWidgetGetControl(ci->gw,CID_UValue));
+	uint32_t *end;
 	int val;
 
 	if (( *ret=='U' || *ret=='u' ) && ret[1]=='+' )
@@ -2105,9 +2105,9 @@ return( true );
 static int CI_CharChanged(GGadget *g, GEvent *e) {
     if ( e->type==et_controlevent && e->u.control.subtype == et_textchanged ) {
 	CharInfo *ci = GDrawGetUserData(GGadgetGetWindow(g));
-	const unichar_t *ret = _GGadgetGetTitle(GWidgetGetControl(ci->gw,CID_UChar));
+	const uint32_t *ret = _GGadgetGetTitle(GWidgetGetControl(ci->gw,CID_UChar));
 	int val = *ret;
-	unichar_t *temp, ubuf[2]; char buf[10];
+	uint32_t *temp, ubuf[2]; char buf[10];
 
 	if ( ret[0]=='\0' )
 return( true );
@@ -2305,7 +2305,7 @@ char *DevTab_Dlg(GGadget *g, int r, int c) {
     gcd[k].gd.pos.x = 10; gcd[k].gd.pos.y = gcd[1].gd.pos.y+14;
     gcd[k].gd.flags = gg_enabled | gg_visible | gg_utf8_popup;
     gcd[k].gd.u.matrix = &mi;
-    gcd[k].gd.popup_msg = (unichar_t *) _(
+    gcd[k].gd.popup_msg = (uint32_t *) _(
 	"At small pixel sizes (screen font sizes)\n"
 	"the rounding errors that occur may be\n"
 	"extremely ugly. A device table allows\n"
@@ -2316,7 +2316,7 @@ char *DevTab_Dlg(GGadget *g, int r, int c) {
 
     gcd[k].gd.pos.x = 30-3; 
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    label[k].text = (unichar_t *) _("_OK");
+    label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -2325,7 +2325,7 @@ char *DevTab_Dlg(GGadget *g, int r, int c) {
 
     gcd[k].gd.pos.x = -30;
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    label[k].text = (unichar_t *) _("_Cancel");
+    label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -3407,14 +3407,14 @@ return;
     GGadgetPreparePopupImage(GGadgetGetWindow(g),NULL,ci,CI_GetConstructedImage,CI_FreeKernedImage);
 }
 
-static unichar_t **CI_GlyphNameCompletion(GGadget *t,int from_tab) {
+static uint32_t **CI_GlyphNameCompletion(GGadget *t,int from_tab) {
     CharInfo *ci = GDrawGetUserData(GDrawGetParentWindow(GGadgetGetWindow(t)));
     SplineFont *sf = ci->sc->parent;
 
 return( SFGlyphNameCompletion(sf,t,from_tab,false));
 }
 
-static unichar_t **CI_GlyphListCompletion(GGadget *t,int from_tab) {
+static uint32_t **CI_GlyphListCompletion(GGadget *t,int from_tab) {
     CharInfo *ci = GDrawGetUserData(GDrawGetParentWindow(GGadgetGetWindow(t)));
     SplineFont *sf = ci->sc->parent;
 
@@ -3457,8 +3457,8 @@ return;
 }
 
 static GTextInfo truefalse[] = {
-    { (unichar_t *) N_("false"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("true"),  NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("false"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("true"),  NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 
@@ -3805,16 +3805,16 @@ return( true );
 static void CIFillup(CharInfo *ci) {
     SplineChar *sc = ci->cachedsc!=NULL ? ci->cachedsc : ci->sc;
     SplineFont *sf = sc->parent;
-    unichar_t *temp;
+    uint32_t *temp;
     char buffer[400];
     char buf[200];
-    const unichar_t *bits;
+    const uint32_t *bits;
     int i,j,gid, isv;
     struct matrix_data *mds[pst_max];
     int cnts[pst_max];
     PST *pst;
     KernPair *kp;
-    unichar_t ubuf[4];
+    uint32_t ubuf[4];
     GTextInfo **ti;
     char *devtabstr;
 
@@ -3920,8 +3920,8 @@ static void CIFillup(CharInfo *ci) {
 	ubuf[0] = '\0';
 	GGadgetSetTitle(GWidgetGetControl(ci->gw,CID_Components),ubuf);
     } else {
-	unichar_t *temp = xmalloc(11*u_strlen(bits)*sizeof(unichar_t));
-	unichar_t *upt=temp;
+	uint32_t *temp = xmalloc(11*u_strlen(bits)*sizeof(uint32_t));
+	uint32_t *upt=temp;
 	while ( *bits!='\0' ) {
 	    sprintf(buffer, "U+%04x ", *bits );
 	    uc_strcpy(upt,buffer);
@@ -4188,7 +4188,7 @@ return;
 	memset(&ubox,0,sizeof(ubox));
 	memset(&ulabel,0,sizeof(ulabel));
 
-	ulabel[0].text = (unichar_t *) _("Gl_yph Name:");
+	ulabel[0].text = (uint32_t *) _("Gl_yph Name:");
 	ulabel[0].text_is_1byte = true;
 	ulabel[0].text_in_resource = true;
 	ugcd[0].gd.label = &ulabel[0];
@@ -4206,7 +4206,7 @@ return;
 	ugcd[1].data = (void *) (-2);
 	uhvarray[1] = &ugcd[1]; uhvarray[2] = NULL;
 
-	ulabel[2].text = (unichar_t *) _("Unicode _Value:");
+	ulabel[2].text = (uint32_t *) _("Unicode _Value:");
 	ulabel[2].text_in_resource = true;
 	ulabel[2].text_is_1byte = true;
 	ugcd[2].gd.label = &ulabel[2];
@@ -4224,7 +4224,7 @@ return;
 	ugcd[3].creator = GTextFieldCreate;
 	uhvarray[4] = &ugcd[3]; uhvarray[5] = NULL;
 
-	ulabel[4].text = (unichar_t *) _("Unicode C_har:");
+	ulabel[4].text = (uint32_t *) _("Unicode C_har:");
 	ulabel[4].text_in_resource = true;
 	ulabel[4].text_is_1byte = true;
 	ugcd[4].gd.label = &ulabel[4];
@@ -4244,7 +4244,7 @@ return;
 
 	ugcd[6].gd.pos.x = 12; ugcd[6].gd.pos.y = 117;
 	ugcd[6].gd.flags = gg_visible | gg_enabled;
-	ulabel[6].text = (unichar_t *) _("Set From N_ame");
+	ulabel[6].text = (uint32_t *) _("Set From N_ame");
 	ulabel[6].text_is_1byte = true;
 	ulabel[6].text_in_resource = true;
 	ugcd[6].gd.mnemonic = 'a';
@@ -4255,7 +4255,7 @@ return;
 
 	ugcd[7].gd.pos.x = 107; ugcd[7].gd.pos.y = 117;
 	ugcd[7].gd.flags = gg_visible | gg_enabled;
-	ulabel[7].text = (unichar_t *) _("Set From Val_ue");
+	ulabel[7].text = (uint32_t *) _("Set From Val_ue");
 	ulabel[7].text_is_1byte = true;
 	ulabel[7].text_in_resource = true;
 	ugcd[7].gd.mnemonic = 'l';
@@ -4270,10 +4270,10 @@ return;
 	uhvarray[9] = &ubox[2]; uhvarray[10] = GCD_ColSpan; uhvarray[11] = NULL;
 
 	ugcd[8].gd.flags = gg_visible | gg_enabled|gg_utf8_popup;
-	ulabel[8].text = (unichar_t *) _("Alternate Unicode Encodings / Variation Selectors");
+	ulabel[8].text = (uint32_t *) _("Alternate Unicode Encodings / Variation Selectors");
 	ulabel[8].text_is_1byte = true;
 	ugcd[8].gd.label = &ulabel[8];
-	ugcd[8].gd.popup_msg = (unichar_t *) _(
+	ugcd[8].gd.popup_msg = (uint32_t *) _(
 	    "Some glyphs may be used for more than one\n"
 	    "unicode code point -- I don't recommend\n"
 	    "doing this, better to use a reference --\n"
@@ -4298,7 +4298,7 @@ return;
 
 	ugcd[10].gd.pos.x = 5; ugcd[10].gd.pos.y = 83+4;
 	ugcd[10].gd.flags = gg_visible | gg_enabled;
-	ulabel[10].text = (unichar_t *) _("OT _Glyph Class:");
+	ulabel[10].text = (uint32_t *) _("OT _Glyph Class:");
 	ulabel[10].text_is_1byte = true;
 	ulabel[10].text_in_resource = true;
 	ugcd[10].gd.label = &ulabel[10];
@@ -4313,12 +4313,12 @@ return;
 	uhvarray[19] = &ugcd[11]; uhvarray[20] = NULL;
 
 	ugcd[12].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-	ulabel[12].text = (unichar_t *) _("Mark for Unlink, Remove Overlap Before Save");
+	ulabel[12].text = (uint32_t *) _("Mark for Unlink, Remove Overlap Before Save");
 	ulabel[12].text_is_1byte = true;
 	ulabel[12].text_in_resource = true;
 	ugcd[12].gd.label = &ulabel[12];
 	ugcd[12].gd.cid = CID_UnlinkRmOverlap;
-	ugcd[12].gd.popup_msg = (unichar_t *) _("A few glyphs, like Aring, Ccedilla, Eogonek\nare composed of two overlapping references.\nOften it is desirable to retain the references\n(so that changes made to the base glyph are\nreflected in the composed glyph), but that\nmeans you are stuck with overlapping contours.\nThis flag means that just before saving the\nfont, fontforge will unlink the references,\nand run remove overlap on them, then just\nafter saving it will undo the operation\nthereby retaining the references.");
+	ugcd[12].gd.popup_msg = (uint32_t *) _("A few glyphs, like Aring, Ccedilla, Eogonek\nare composed of two overlapping references.\nOften it is desirable to retain the references\n(so that changes made to the base glyph are\nreflected in the composed glyph), but that\nmeans you are stuck with overlapping contours.\nThis flag means that just before saving the\nfont, fontforge will unlink the references,\nand run remove overlap on them, then just\nafter saving it will undo the operation\nthereby retaining the references.");
 	ugcd[12].creator = GCheckBoxCreate;
 	uhvarray[21] = &ugcd[12]; uhvarray[22] = GCD_ColSpan; uhvarray[23] = NULL;
 	uhvarray[24] = GCD_Glue; uhvarray[25] = GCD_Glue; uhvarray[26] = NULL;
@@ -4333,7 +4333,7 @@ return;
 	memset(&cbox,0,sizeof(cbox));
 	memset(&clabel,0,sizeof(clabel));
 
-	clabel[0].text = (unichar_t *) _("Comment");
+	clabel[0].text = (uint32_t *) _("Comment");
 	clabel[0].text_is_1byte = true;
 	cgcd[0].gd.label = &clabel[0];
 	cgcd[0].gd.pos.x = 5; cgcd[0].gd.pos.y = 5; 
@@ -4349,7 +4349,7 @@ return;
 	cgcd[1].creator = GTextAreaCreate;
 	cvarray[1] = &cgcd[1]; cvarray[2] = GCD_Glue;
 
-	clabel[2].text = (unichar_t *) _("Color:");
+	clabel[2].text = (uint32_t *) _("Color:");
 	clabel[2].text_is_1byte = true;
 	cgcd[2].gd.label = &clabel[2];
 	cgcd[2].gd.pos.x = 5; cgcd[2].gd.pos.y = cgcd[1].gd.pos.y+cgcd[1].gd.pos.height+5+6; 
@@ -4388,13 +4388,13 @@ return;
 	    psgcd[i][0].creator = GMatrixEditCreate;
 	}
 	for ( i=pst_position; i<=pst_pair; ++i ) {
-	    pslabel[i-1][1].text = (unichar_t *) _("_Hide Unused Columns");
+	    pslabel[i-1][1].text = (uint32_t *) _("_Hide Unused Columns");
 	    pslabel[i-1][1].text_is_1byte = true;
 	    pslabel[i-1][1].text_in_resource = true;
 	    psgcd[i-1][1].gd.label = &pslabel[i-1][1];
 	    psgcd[i-1][1].gd.pos.x = 5; psgcd[i-1][1].gd.pos.y = 5+4; 
 	    psgcd[i-1][1].gd.flags = lookup_hideunused ? (gg_enabled|gg_visible|gg_cb_on|gg_utf8_popup) : (gg_enabled|gg_visible|gg_utf8_popup);
-	    psgcd[i-1][1].gd.popup_msg = (unichar_t *) _("Don't display columns of 0s.\nThe OpenType lookup allows for up to 8 kinds\nof data, but almost all kerning lookups will use just one.\nOmitting the others makes the behavior clearer.");
+	    psgcd[i-1][1].gd.popup_msg = (uint32_t *) _("Don't display columns of 0s.\nThe OpenType lookup allows for up to 8 kinds\nof data, but almost all kerning lookups will use just one.\nOmitting the others makes the behavior clearer.");
 	    psgcd[i-1][1].gd.handle_controlevent = i==pst_position ? CI_HideUnusedSingle : CI_HideUnusedPair;
 	    psgcd[i-1][1].creator = GCheckBoxCreate;
 	    pstvarray[i-1][0] = &psgcd[i-1][0];
@@ -4416,7 +4416,7 @@ return;
 
 	    psgcd[6][1].gd.pos.x = 10; psgcd[6][1].gd.pos.y = psgcd[6][0].gd.pos.y+psgcd[6][0].gd.pos.height+4;
 	    psgcd[6][1].gd.flags = gg_visible | gg_enabled;
-	    pslabel[6][1].text = (unichar_t *) S_("CounterHint|_New...");
+	    pslabel[6][1].text = (uint32_t *) S_("CounterHint|_New...");
 	    pslabel[6][1].text_is_1byte = true;
 	    pslabel[6][1].text_in_resource = true;
 	    psgcd[6][1].gd.label = &pslabel[6][1];
@@ -4428,7 +4428,7 @@ return;
 
 	    psgcd[6][2].gd.pos.x = 20+GIntGetResource(_NUM_Buttonsize)*100/GIntGetResource(_NUM_ScaleFactor); psgcd[6][2].gd.pos.y = psgcd[6][1].gd.pos.y;
 	    psgcd[6][2].gd.flags = gg_visible;
-	    pslabel[6][2].text = (unichar_t *) _("_Delete");
+	    pslabel[6][2].text = (uint32_t *) _("_Delete");
 	    pslabel[6][2].text_is_1byte = true;
 	    pslabel[6][2].text_in_resource = true;
 	    psgcd[6][2].gd.label = &pslabel[6][2];
@@ -4440,7 +4440,7 @@ return;
 
 	    psgcd[6][3].gd.pos.x = -10; psgcd[6][3].gd.pos.y = psgcd[6][1].gd.pos.y;
 	    psgcd[6][3].gd.flags = gg_visible;
-	    pslabel[6][3].text = (unichar_t *) _("_Edit...");
+	    pslabel[6][3].text = (uint32_t *) _("_Edit...");
 	    pslabel[6][3].text_is_1byte = true;
 	    pslabel[6][3].text_in_resource = true;
 	    psgcd[6][3].gd.label = &pslabel[6][3];
@@ -4464,7 +4464,7 @@ return;
 	memset(&cobox,0,sizeof(cobox));
 	memset(&colabel,0,sizeof(colabel));
 
-	colabel[0].text = (unichar_t *) _("Accented glyph composed of:");
+	colabel[0].text = (uint32_t *) _("Accented glyph composed of:");
 	colabel[0].text_is_1byte = true;
 	cogcd[0].gd.label = &colabel[0];
 	cogcd[0].gd.pos.x = 5; cogcd[0].gd.pos.y = 5; 
@@ -4488,12 +4488,12 @@ return;
 	memset(&tbox,0,sizeof(tbox));
 	memset(&tlabel,0,sizeof(tlabel));
 
-	tlabel[0].text = (unichar_t *) _("Height:");
+	tlabel[0].text = (uint32_t *) _("Height:");
 	tlabel[0].text_is_1byte = true;
 	tgcd[0].gd.label = &tlabel[0];
 	tgcd[0].gd.pos.x = 5; tgcd[0].gd.pos.y = 5+4; 
 	tgcd[0].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
-	tgcd[0].gd.popup_msg = (unichar_t *) _("The height and depth fields are the metrics fields used\nby TeX, they are corrected for optical distortion.\nSo 'x' and 'o' probably have the same height.");
+	tgcd[0].gd.popup_msg = (uint32_t *) _("The height and depth fields are the metrics fields used\nby TeX, they are corrected for optical distortion.\nSo 'x' and 'o' probably have the same height.");
 	tgcd[0].creator = GLabelCreate;
 	thvarray[0] = &tgcd[0];
 
@@ -4505,7 +4505,7 @@ return;
 	tgcd[1].gd.popup_msg = tgcd[0].gd.popup_msg;
 	thvarray[1] = &tgcd[1];
 
-	tlabel[2].text = (unichar_t *) _("Guess");
+	tlabel[2].text = (uint32_t *) _("Guess");
 	tlabel[2].text_is_1byte = true;
 	tgcd[2].gd.label = &tlabel[2];
 	tgcd[2].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
@@ -4515,7 +4515,7 @@ return;
 	tgcd[2].gd.popup_msg = tgcd[0].gd.popup_msg;
 	thvarray[2] = &tgcd[2]; thvarray[3] = GCD_Glue; thvarray[4] = NULL;
 
-	tlabel[3].text = (unichar_t *) _("Depth:");
+	tlabel[3].text = (uint32_t *) _("Depth:");
 	tlabel[3].text_is_1byte = true;
 	tgcd[3].gd.label = &tlabel[3];
 	tgcd[3].gd.pos.x = 5; tgcd[3].gd.pos.y = 31+4; 
@@ -4532,7 +4532,7 @@ return;
 	tgcd[4].gd.popup_msg = tgcd[0].gd.popup_msg;
 	thvarray[6] = &tgcd[4];
 
-	tlabel[5].text = (unichar_t *) _("Guess");
+	tlabel[5].text = (uint32_t *) _("Guess");
 	tlabel[5].text_is_1byte = true;
 	tgcd[5].gd.label = &tlabel[5];
 	tgcd[5].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
@@ -4542,13 +4542,13 @@ return;
 	tgcd[5].gd.popup_msg = tgcd[0].gd.popup_msg;
 	thvarray[7] = &tgcd[5];  thvarray[8] = GCD_Glue; thvarray[9] = NULL;
 
-	tlabel[6].text = (unichar_t *) _("Italic Correction:");
+	tlabel[6].text = (uint32_t *) _("Italic Correction:");
 	tlabel[6].text_is_1byte = true;
 	tgcd[6].gd.label = &tlabel[6];
 	tgcd[6].gd.pos.x = 5; tgcd[6].gd.pos.y = 57+4; 
 	tgcd[6].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
 	tgcd[6].creator = GLabelCreate;
-	tgcd[6].gd.popup_msg = (unichar_t *) _("The Italic correction field is used by both TeX and the MS 'MATH'\ntable. It is used when joining slanted text (italic) to upright.\nIt is the amount of extra white space needed so the slanted text\nwill not run into the upright text.");
+	tgcd[6].gd.popup_msg = (uint32_t *) _("The Italic correction field is used by both TeX and the MS 'MATH'\ntable. It is used when joining slanted text (italic) to upright.\nIt is the amount of extra white space needed so the slanted text\nwill not run into the upright text.");
 	thvarray[10] = &tgcd[6];
 
 	tgcd[7].gd.pos.x = 85; tgcd[7].gd.pos.y = 57;
@@ -4559,7 +4559,7 @@ return;
 	tgcd[7].gd.popup_msg = tgcd[6].gd.popup_msg;
 	thvarray[11] = &tgcd[7];
 
-	tlabel[8].text = (unichar_t *) _("Guess");
+	tlabel[8].text = (uint32_t *) _("Guess");
 	tlabel[8].text_is_1byte = true;
 	tgcd[8].gd.label = &tlabel[8];
 	tgcd[8].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
@@ -4572,17 +4572,17 @@ return;
 	tgcd[9].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
 	tgcd[9].gd.cid = CID_ItalicDevTab;
 	tgcd[9].creator = GTextFieldCreate;
-	tgcd[9].gd.popup_msg = (unichar_t *) _("A device table for italic correction.\nExpects a comma separated list of <pixelsize>\":\"<adjustment>\nAs \"9:-1,12:1,13:1\"");
+	tgcd[9].gd.popup_msg = (uint32_t *) _("A device table for italic correction.\nExpects a comma separated list of <pixelsize>\":\"<adjustment>\nAs \"9:-1,12:1,13:1\"");
 	thvarray[13] = &tgcd[9]; thvarray[14] = NULL;
 
-	tlabel[10].text = (unichar_t *) _("Top Accent Pos:");
+	tlabel[10].text = (uint32_t *) _("Top Accent Pos:");
 	tlabel[10].text_is_1byte = true;
 	tgcd[10].gd.label = &tlabel[10];
 	tgcd[10].gd.pos.x = 5; tgcd[10].gd.pos.y = 57+4; 
 	tgcd[10].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
 	tgcd[10].gd.popup_msg = tgcd[9].gd.popup_msg;
 	tgcd[10].creator = GLabelCreate;
-	tgcd[10].gd.popup_msg = (unichar_t *) _("In the MS 'MATH' table this value specifies where (horizontally)\nan accent should be placed above the glyph. Vertical placement\nis handled by other means");
+	tgcd[10].gd.popup_msg = (uint32_t *) _("In the MS 'MATH' table this value specifies where (horizontally)\nan accent should be placed above the glyph. Vertical placement\nis handled by other means");
 	thvarray[15] = &tgcd[10];
 
 	tgcd[11].gd.pos.x = 85; tgcd[11].gd.pos.y = 57;
@@ -4593,7 +4593,7 @@ return;
 	tgcd[11].gd.popup_msg = tgcd[9].gd.popup_msg;
 	thvarray[16] = &tgcd[11];
 
-	tlabel[12].text = (unichar_t *) _("Guess");
+	tlabel[12].text = (uint32_t *) _("Guess");
 	tlabel[12].text_is_1byte = true;
 	tgcd[12].gd.label = &tlabel[12];
 	tgcd[12].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
@@ -4606,27 +4606,27 @@ return;
 	tgcd[13].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
 	tgcd[13].gd.cid = CID_AccentDevTab;
 	tgcd[13].creator = GTextFieldCreate;
-	tgcd[13].gd.popup_msg = (unichar_t *) _("A device table for horizontal accent positioning.\nExpects a comma separated list of <pixelsize>\":\"<adjustment>\nAs \"9:-1,12:1,13:1\"");
+	tgcd[13].gd.popup_msg = (uint32_t *) _("A device table for horizontal accent positioning.\nExpects a comma separated list of <pixelsize>\":\"<adjustment>\nAs \"9:-1,12:1,13:1\"");
 	thvarray[18] = &tgcd[13]; thvarray[19] = NULL;
 
-	tlabel[14].text = (unichar_t *) _("Is Extended Shape");
+	tlabel[14].text = (uint32_t *) _("Is Extended Shape");
 	tlabel[14].text_is_1byte = true;
 	tgcd[14].gd.label = &tlabel[14];
 	tgcd[14].gd.pos.x = 5; tgcd[14].gd.pos.y = 57+4; 
 	tgcd[14].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
 	tgcd[14].gd.cid = CID_IsExtended;
 	tgcd[14].creator = GCheckBoxCreate;
-	tgcd[14].gd.popup_msg = (unichar_t *) _("Is this an extended shape (like a tall parenthesis)?\nExtended shapes need special attention for vertical\nsuperscript placement.");
+	tgcd[14].gd.popup_msg = (uint32_t *) _("Is this an extended shape (like a tall parenthesis)?\nExtended shapes need special attention for vertical\nsuperscript placement.");
 	thvarray[20] = &tgcd[14];
 	thvarray[21] = thvarray[22] = GCD_ColSpan; thvarray[23] = GCD_Glue; thvarray[24] = NULL;
 
-	tlabel[15].text = (unichar_t *) _("Math Kerning");	/* Graphical */
+	tlabel[15].text = (uint32_t *) _("Math Kerning");	/* Graphical */
 	tlabel[15].text_is_1byte = true;
 	tgcd[15].gd.label = &tlabel[15];
 	tgcd[15].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
 	tgcd[15].gd.handle_controlevent = CI_SubSuperPositionings;
 	tgcd[15].creator = GButtonCreate;
-	tgcd[15].gd.popup_msg = (unichar_t *) _("Brings up a dialog which gives fine control over\nhorizontal positioning of subscripts and superscripts\ndepending on their vertical positioning.");
+	tgcd[15].gd.popup_msg = (uint32_t *) _("Brings up a dialog which gives fine control over\nhorizontal positioning of subscripts and superscripts\ndepending on their vertical positioning.");
 	tbarray[0] = GCD_Glue; tbarray[1] = &tgcd[15]; tbarray[2] = GCD_Glue; tbarray[3] = NULL;
 
 	tbox[2].gd.flags = gg_enabled|gg_visible;
@@ -4647,32 +4647,32 @@ return;
 	memset(&lcbox,0,sizeof(lcbox));
 	memset(&lclabel,0,sizeof(lclabel));
 
-	lclabel[0].text = (unichar_t *) _("Default Ligature Caret Count");
+	lclabel[0].text = (uint32_t *) _("Default Ligature Caret Count");
 	lclabel[0].text_is_1byte = true;
 	lclabel[0].text_in_resource = true;
 	lcgcd[0].gd.cid = CID_DefLCCount;
 	lcgcd[0].gd.label = &lclabel[0];
 	lcgcd[0].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
-	lcgcd[0].gd.popup_msg = (unichar_t *) _("Ligature caret locations are used by a text editor\nwhen it needs to draw a text edit caret inside a\nligature. This means there should be a caret between\neach ligature component so if there are n components\nthere should be n-1 caret locations.\n  You may adjust the caret locations themselves in the\noutline glyph view (drag them from to origin to the\nappropriate place)." );
+	lcgcd[0].gd.popup_msg = (uint32_t *) _("Ligature caret locations are used by a text editor\nwhen it needs to draw a text edit caret inside a\nligature. This means there should be a caret between\neach ligature component so if there are n components\nthere should be n-1 caret locations.\n  You may adjust the caret locations themselves in the\noutline glyph view (drag them from to origin to the\nappropriate place)." );
 	lcgcd[0].gd.handle_controlevent = CI_DefLCChange;
 	lcgcd[0].creator = GCheckBoxCreate;
 	lchvarray[0][0] = &lcgcd[0];
 	lchvarray[0][1] = lchvarray[0][2] = GCD_Glue; lchvarray[0][3] = NULL;
 
-	lclabel[1].text = (unichar_t *) _("Ligature Caret Count:");
+	lclabel[1].text = (uint32_t *) _("Ligature Caret Count:");
 	lclabel[1].text_is_1byte = true;
 	lclabel[1].text_in_resource = true;
 	lcgcd[1].gd.label = &lclabel[1];
 	lcgcd[1].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
 	lcgcd[1].gd.cid = CID_LCCountLab;
-	lcgcd[1].gd.popup_msg = (unichar_t *) _("Ligature caret locations are used by a text editor\nwhen it needs to draw a text edit caret inside a\nligature. This means there should be a caret between\neach ligature component so if there are n components\nthere should be n-1 caret locations.\n  You may adjust the caret locations themselves in the\noutline glyph view (drag them from to origin to the\nappropriate place)." );
+	lcgcd[1].gd.popup_msg = (uint32_t *) _("Ligature caret locations are used by a text editor\nwhen it needs to draw a text edit caret inside a\nligature. This means there should be a caret between\neach ligature component so if there are n components\nthere should be n-1 caret locations.\n  You may adjust the caret locations themselves in the\noutline glyph view (drag them from to origin to the\nappropriate place)." );
 	lcgcd[1].creator = GLabelCreate;
 	lchvarray[1][0] = &lcgcd[1];
 
 	lcgcd[2].gd.pos.width = 50;
 	lcgcd[2].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
 	lcgcd[2].gd.cid = CID_LCCount;
-	lcgcd[2].gd.popup_msg = (unichar_t *) _("Ligature caret locations are used by a text editor\nwhen it needs to draw a text edit caret inside a\nligature. This means there should be a caret between\neach ligature component so if there are n components\nthere should be n-1 caret locations.\n  You may adjust the caret locations themselves in the\noutline glyph view (drag them from to origin to the\nappropriate place)." );
+	lcgcd[2].gd.popup_msg = (uint32_t *) _("Ligature caret locations are used by a text editor\nwhen it needs to draw a text edit caret inside a\nligature. This means there should be a caret between\neach ligature component so if there are n components\nthere should be n-1 caret locations.\n  You may adjust the caret locations themselves in the\noutline glyph view (drag them from to origin to the\nappropriate place)." );
 	lcgcd[2].creator = GNumericFieldCreate;
 	lchvarray[1][1] = &lcgcd[2]; lchvarray[1][2] = GCD_Glue; lchvarray[1][3] = NULL;
 
@@ -4688,13 +4688,13 @@ return;
 	memset(&varlabel,0,sizeof(varlabel));
 
 	for ( i=0; i<2; ++i ) {
-	    varlabel[i][0].text = (unichar_t *) _("Variant Glyphs:");
+	    varlabel[i][0].text = (uint32_t *) _("Variant Glyphs:");
 	    varlabel[i][0].text_is_1byte = true;
 	    vargcd[i][0].gd.label = &varlabel[i][0];
 	    vargcd[i][0].gd.pos.x = 5; vargcd[i][0].gd.pos.y = 57+4; 
 	    vargcd[i][0].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
 	    vargcd[i][0].creator = GLabelCreate;
-	    vargcd[i][0].gd.popup_msg = (unichar_t *) _("A list of the names of pre defined glyphs which represent\nbigger versions of the current glyph.");
+	    vargcd[i][0].gd.popup_msg = (uint32_t *) _("A list of the names of pre defined glyphs which represent\nbigger versions of the current glyph.");
 	    varhvarray[i][0][0] = &vargcd[i][0];
 
 	    vargcd[i][1].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
@@ -4703,22 +4703,22 @@ return;
 	    vargcd[i][1].gd.popup_msg = vargcd[i][0].gd.popup_msg;
 	    varhvarray[i][0][1] = &vargcd[i][1]; varhvarray[i][0][2] = GCD_ColSpan; varhvarray[i][0][3] = NULL;
 
-	    varlabel[i][2].text = (unichar_t *) _("Glyph Extension Components");
+	    varlabel[i][2].text = (uint32_t *) _("Glyph Extension Components");
 	    varlabel[i][2].text_is_1byte = true;
 	    vargcd[i][2].gd.label = &varlabel[i][2];
 	    vargcd[i][2].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
 	    vargcd[i][2].creator = GLabelCreate;
-	    vargcd[i][2].gd.popup_msg = (unichar_t *) _("A really big version of this glyph may be made up of the\nfollowing component glyphs. They will be stacked either\nhorizontally or vertically. Glyphs marked as Extenders may\nbe removed or repeated (to make shorter or longer versions).\nThe StartLength is the length of the flat section at the\nstart of the glyph which may be overlapped with the previous\nglyph, while the EndLength is the similar region at the end\nof the glyph. The FullLength is the full length of the glyph." );
+	    vargcd[i][2].gd.popup_msg = (uint32_t *) _("A really big version of this glyph may be made up of the\nfollowing component glyphs. They will be stacked either\nhorizontally or vertically. Glyphs marked as Extenders may\nbe removed or repeated (to make shorter or longer versions).\nThe StartLength is the length of the flat section at the\nstart of the glyph which may be overlapped with the previous\nglyph, while the EndLength is the similar region at the end\nof the glyph. The FullLength is the full length of the glyph." );
 	    varhvarray[i][1][0] = &vargcd[i][2];
 	    varhvarray[i][1][1] = varhvarray[i][1][2] = GCD_ColSpan; varhvarray[i][1][3] = NULL;
 
 /* GT: "Cor" is an abbreviation for correction */
-	    varlabel[i][3].text = (unichar_t *) _("Italic Cor:");
+	    varlabel[i][3].text = (uint32_t *) _("Italic Cor:");
 	    varlabel[i][3].text_is_1byte = true;
 	    vargcd[i][3].gd.label = &varlabel[i][3];
 	    vargcd[i][3].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
 	    vargcd[i][3].creator = GLabelCreate;
-	    vargcd[i][3].gd.popup_msg = (unichar_t *) _("The italic correction of the composed glyph. Should be independent of glyph size");
+	    vargcd[i][3].gd.popup_msg = (uint32_t *) _("The italic correction of the composed glyph. Should be independent of glyph size");
 	    varhvarray[i][2][0] = &vargcd[i][3];
 
 	    vargcd[i][4].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
@@ -4755,7 +4755,7 @@ return;
 	memset(&tilelabel,0,sizeof(tilelabel));
 
 	i=0;
-	tilelabel[i].text = (unichar_t *) _(
+	tilelabel[i].text = (uint32_t *) _(
 	    "If this glyph is used as a pattern to tile\n"
 	    "some other glyph then it is useful to specify\n"
 	    "the amount of whitespace surrounding the tile.\n"
@@ -4769,7 +4769,7 @@ return;
 	tilegcd[i++].creator = GLabelCreate;
 	tlvarray[0] = &tilegcd[i-1];
 
-	tilelabel[i].text = (unichar_t *) _("Tile Margin:");
+	tilelabel[i].text = (uint32_t *) _("Tile Margin:");
 	tilelabel[i].text_is_1byte = true;
 	tilelabel[i].text_in_resource = true;
 	tilegcd[i].gd.label = &tilelabel[i];
@@ -4790,7 +4790,7 @@ return;
 	tilebox[2].creator = GHBoxCreate;
 	tlvarray[1] = &tilebox[2];
 
-	tilelabel[i].text = (unichar_t *) _("Tile Bounding Box:");
+	tilelabel[i].text = (uint32_t *) _("Tile Bounding Box:");
 	tilelabel[i].text_is_1byte = true;
 	tilelabel[i].text_in_resource = true;
 	tilegcd[i].gd.label = &tilelabel[i];
@@ -4801,21 +4801,21 @@ return;
 
 	tlhvarray[0][0] = GCD_Glue;
 
-	tilelabel[i].text = (unichar_t *) _("  X");
+	tilelabel[i].text = (uint32_t *) _("  X");
 	tilelabel[i].text_is_1byte = true;
 	tilegcd[i].gd.label = &tilelabel[i];
 	tilegcd[i].gd.flags = gg_enabled|gg_visible;
 	tilegcd[i++].creator = GLabelCreate;
 	tlhvarray[0][1] = &tilegcd[i-1];
 
-	tilelabel[i].text = (unichar_t *) _("  Y");
+	tilelabel[i].text = (uint32_t *) _("  Y");
 	tilelabel[i].text_is_1byte = true;
 	tilegcd[i].gd.label = &tilelabel[i];
 	tilegcd[i].gd.flags = gg_enabled|gg_visible;
 	tilegcd[i++].creator = GLabelCreate;
 	tlhvarray[0][2] = &tilegcd[i-1]; tlhvarray[0][3] = GCD_Glue; tlhvarray[0][4] = NULL;
 
-	tilelabel[i].text = (unichar_t *) _("Min");
+	tilelabel[i].text = (uint32_t *) _("Min");
 	tilelabel[i].text_is_1byte = true;
 	tilegcd[i].gd.label = &tilelabel[i];
 	tilegcd[i].gd.flags = gg_enabled|gg_visible;
@@ -4832,7 +4832,7 @@ return;
 	tilegcd[i++].creator = GTextFieldCreate;
 	tlhvarray[1][2] = &tilegcd[i-1]; tlhvarray[1][3] = GCD_Glue; tlhvarray[1][4] = NULL;
 
-	tilelabel[i].text = (unichar_t *) _("Max");
+	tilelabel[i].text = (uint32_t *) _("Max");
 	tilelabel[i].text_is_1byte = true;
 	tilegcd[i].gd.label = &tilelabel[i];
 	tilegcd[i].gd.flags = gg_enabled|gg_visible;
@@ -4865,73 +4865,73 @@ return;
 	memset(&aspects,'\0',sizeof(aspects));
 
 	i = 0;
-	aspects[i].text = (unichar_t *) _("Unicode");
+	aspects[i].text = (uint32_t *) _("Unicode");
 	aspects[i].text_is_1byte = true;
 	aspects[i].selected = true;
 	aspects[i++].gcd = ubox;
 
-	aspects[i].text = (unichar_t *) _("Comment");
+	aspects[i].text = (uint32_t *) _("Comment");
 	aspects[i].text_is_1byte = true;
 	aspects[i++].gcd = cbox;
 
-	aspects[i].text = (unichar_t *) _("Positionings");
+	aspects[i].text = (uint32_t *) _("Positionings");
 	aspects[i].text_is_1byte = true;
 	aspects[i++].gcd = pstbox[pst_position-1];
 
-	aspects[i].text = (unichar_t *) _("Pairwise Pos");
+	aspects[i].text = (uint32_t *) _("Pairwise Pos");
 	aspects[i].text_is_1byte = true;
 	aspects[i++].gcd = pstbox[pst_pair-1];
 
-	aspects[i].text = (unichar_t *) _("Substitutions");
+	aspects[i].text = (uint32_t *) _("Substitutions");
 	aspects[i].text_is_1byte = true;
 	aspects[i++].gcd = psgcd[2];
 
-	aspects[i].text = (unichar_t *) _("Alt Subs");
+	aspects[i].text = (uint32_t *) _("Alt Subs");
 	aspects[i].text_is_1byte = true;
 	aspects[i++].gcd = psgcd[3];
 
-	aspects[i].text = (unichar_t *) _("Mult Subs");
+	aspects[i].text = (uint32_t *) _("Mult Subs");
 	aspects[i].text_is_1byte = true;
 	aspects[i++].gcd = psgcd[4];
 
-	aspects[i].text = (unichar_t *) _("Ligatures");
+	aspects[i].text = (uint32_t *) _("Ligatures");
 	aspects[i].text_is_1byte = true;
 	aspects[i++].gcd = psgcd[5];
 
-	aspects[i].text = (unichar_t *) _("Components");
+	aspects[i].text = (uint32_t *) _("Components");
 	aspects[i].text_is_1byte = true;
 	aspects[i].nesting = 1;
 	aspects[i++].gcd = cobox;
 
 	ci->lc_aspect = i;
-	aspects[i].text = (unichar_t *) _("Lig. Carets");
+	aspects[i].text = (uint32_t *) _("Lig. Carets");
 	aspects[i].text_is_1byte = true;
 	aspects[i].nesting = 1;
 	aspects[i++].gcd = lcbox;
 
-	aspects[i].text = (unichar_t *) _("Counters");
+	aspects[i].text = (uint32_t *) _("Counters");
 	aspects[i].text_is_1byte = true;
 	aspects[i++].gcd = pstbox[6];
 
-	aspects[i].text = (unichar_t *) U_("ΤεΧ & Math");	/* TeX */
+	aspects[i].text = (uint32_t *) U_("ΤεΧ & Math");	/* TeX */
 	aspects[i].text_is_1byte = true;
 	aspects[i++].gcd = tbox;
 
 	ci->vert_aspect = i;
 /* GT: "Vert." is an abbreviation for Vertical */
-	aspects[i].text = (unichar_t *) U_("Vert. Variants");
+	aspects[i].text = (uint32_t *) U_("Vert. Variants");
 	aspects[i].text_is_1byte = true;
 	aspects[i].nesting = 1;
 	aspects[i++].gcd = varbox[0];
 
 /* GT: "Horiz." is an abbreviation for Horizontal */
-	aspects[i].text = (unichar_t *) U_("Horiz. Variants");
+	aspects[i].text = (uint32_t *) U_("Horiz. Variants");
 	aspects[i].text_is_1byte = true;
 	aspects[i].nesting = 1;
 	aspects[i++].gcd = varbox[1];
 
 	if ( sc->parent->multilayer ) {
-	    aspects[i].text = (unichar_t *) U_("Tile Size");
+	    aspects[i].text = (uint32_t *) U_("Tile Size");
 	    aspects[i].text_is_1byte = true;
 	    aspects[i++].gcd = tilebox;
 	}
@@ -4949,7 +4949,7 @@ return;
 
 	mgcd[1].gd.pos.x = 40; mgcd[1].gd.pos.y = mgcd[0].gd.pos.y+mgcd[0].gd.pos.height+3;
 	mgcd[1].gd.flags = gg_visible | gg_enabled ;
-	mlabel[1].text = (unichar_t *) _("< _Prev");
+	mlabel[1].text = (uint32_t *) _("< _Prev");
 	mlabel[1].text_is_1byte = true;
 	mlabel[1].text_in_resource = true;
 	mgcd[1].gd.mnemonic = 'P';
@@ -4961,7 +4961,7 @@ return;
 
 	mgcd[2].gd.pos.x = -40; mgcd[2].gd.pos.y = mgcd[1].gd.pos.y;
 	mgcd[2].gd.flags = gg_visible | gg_enabled ;
-	mlabel[2].text = (unichar_t *) _("_Next >");
+	mlabel[2].text = (uint32_t *) _("_Next >");
 	mlabel[2].text_is_1byte = true;
 	mlabel[2].text_in_resource = true;
 	mgcd[2].gd.label = &mlabel[2];
@@ -4978,7 +4978,7 @@ return;
 
 	mgcd[3].gd.pos.x = 25-3; mgcd[3].gd.pos.y = CI_Height-31-3;
 	mgcd[3].gd.flags = gg_visible | gg_enabled | gg_but_default;
-	mlabel[3].text = (unichar_t *) _("_OK");
+	mlabel[3].text = (uint32_t *) _("_OK");
 	mlabel[3].text_is_1byte = true;
 	mlabel[3].text_in_resource = true;
 	mgcd[3].gd.mnemonic = 'O';
@@ -4989,7 +4989,7 @@ return;
 
 	mgcd[4].gd.pos.x = -25; mgcd[4].gd.pos.y = mgcd[3].gd.pos.y+3;
 	mgcd[4].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-	mlabel[4].text = (unichar_t *) _("_Cancel");
+	mlabel[4].text = (uint32_t *) _("_Cancel");
 	mlabel[4].text_is_1byte = true;
 	mlabel[4].text_in_resource = true;
 	mgcd[4].gd.label = &mlabel[4];
@@ -5164,7 +5164,7 @@ void FVSelectByPST(FontView *fv) {
 		    for ( sub=otl->subtables; sub!=NULL; sub=sub->next )
 			if ( sub->kc==NULL ) {
 			    if ( ti!=NULL ) {
-				ti[cnt].text = (unichar_t *) copy(sub->subtable_name);
+				ti[cnt].text = (uint32_t *) copy(sub->subtable_name);
 			        ti[cnt].text_is_1byte = true;
 			        ti[cnt].userdata = sub;
 			        ti[cnt].selected = cnt==0;
@@ -5203,7 +5203,7 @@ return;
 
 	i=j=0;
 
-	label[i].text = (unichar_t *) _("Select Glyphs in lookup subtable");
+	label[i].text = (uint32_t *) _("Select Glyphs in lookup subtable");
 	label[i].text_is_1byte = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.flags = gg_enabled|gg_visible;
@@ -5219,32 +5219,32 @@ return;
 	varray[j++] = &gcd[i-1]; varray[j++] = NULL;
 	varray[j++] = GCD_Glue; varray[j++] = NULL;
 
-	label[i].text = (unichar_t *) _("Select Results");
+	label[i].text = (uint32_t *) _("Select Results");
 	label[i].text_is_1byte = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.pos.x = 5; gcd[i].gd.pos.y = gcd[i-1].gd.pos.y+26; 
 	gcd[i].gd.flags = gg_enabled|gg_visible|gg_cb_on|gg_utf8_popup;
-	gcd[i].gd.popup_msg = (unichar_t *) _("Set the selection of the font view to the glyphs\nfound by this search");
+	gcd[i].gd.popup_msg = (uint32_t *) _("Set the selection of the font view to the glyphs\nfound by this search");
 	gcd[i].gd.cid = CID_SelectResults;
 	gcd[i++].creator = GRadioCreate;
 	varray[j++] = &gcd[i-1]; varray[j++] = NULL;
 
-	label[i].text = (unichar_t *) _("Merge Results");
+	label[i].text = (uint32_t *) _("Merge Results");
 	label[i].text_is_1byte = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.pos.x = 5; gcd[i].gd.pos.y = gcd[i-1].gd.pos.y+15; 
 	gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
-	gcd[i].gd.popup_msg = (unichar_t *) _("Expand the selection of the font view to include\nall the glyphs found by this search");
+	gcd[i].gd.popup_msg = (uint32_t *) _("Expand the selection of the font view to include\nall the glyphs found by this search");
 	gcd[i].gd.cid = CID_MergeResults;
 	gcd[i++].creator = GRadioCreate;
 	varray[j++] = &gcd[i-1]; varray[j++] = NULL;
 
-	label[i].text = (unichar_t *) _("Restrict Selection");
+	label[i].text = (uint32_t *) _("Restrict Selection");
 	label[i].text_is_1byte = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.pos.x = 5; gcd[i].gd.pos.y = gcd[i-1].gd.pos.y+15; 
 	gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
-	gcd[i].gd.popup_msg = (unichar_t *) _("Only search the selected glyphs, and unselect\nany characters which do not match this search");
+	gcd[i].gd.popup_msg = (uint32_t *) _("Only search the selected glyphs, and unselect\nany characters which do not match this search");
 	gcd[i].gd.cid = CID_RestrictSelection;
 	gcd[i++].creator = GRadioCreate;
 	varray[j++] = &gcd[i-1]; varray[j++] = NULL;
@@ -5252,7 +5252,7 @@ return;
 
 	gcd[i].gd.pos.x = 15-3; gcd[i].gd.pos.y = gcd[i-1].gd.pos.y+22;
 	gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_default;
-	label[i].text = (unichar_t *) _("_OK");
+	label[i].text = (uint32_t *) _("_OK");
 	label[i].text_is_1byte = true;
 	label[i].text_in_resource = true;
 	gcd[i].gd.mnemonic = 'O';
@@ -5263,7 +5263,7 @@ return;
 
 	gcd[i].gd.pos.x = -15; gcd[i].gd.pos.y = gcd[i-1].gd.pos.y+3;
 	gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-	label[i].text = (unichar_t *) _("_Cancel");
+	label[i].text = (uint32_t *) _("_Cancel");
 	label[i].text_is_1byte = true;
 	label[i].text_in_resource = true;
 	gcd[i].gd.label = &label[i];
@@ -5312,7 +5312,7 @@ return;
     done = true;
     for ( i=0; lists[i]!=NULL; ++i )
 	for ( j=0; lists[i][j].text!=NULL; ++j )
-	    lists[i][j].text = (unichar_t *) S_((char *) lists[i][j].text);
+	    lists[i][j].text = (uint32_t *) S_((char *) lists[i][j].text);
     for ( i=0; cnames[i]!=NULL; ++i )
 	for ( j=0; cnames[i][j]!=NULL; ++j )
 	    cnames[i][j] = _(cnames[i][j]);

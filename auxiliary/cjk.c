@@ -3,7 +3,7 @@
 
 const unsigned short u_allzeros[256] = { 0 };
 
-const unichar_t unicode_from_jis208[] = {
+const uint32_t unicode_from_jis208[] = {
   0x2003, 0x3001, 0x3002, 0xff0c, 0xff0e, 0x30fb, 0xff1a, 0xff1b,
   0xff1f, 0xff01, 0x309b, 0x309c, 0x00b4, 0xff40, 0x00a8, 0xff3e,
   0xffe3, 0xff3f, 0x30fd, 0x30fe, 0x309d, 0x309e, 0x3003, 0x4edd,
@@ -1112,7 +1112,7 @@ const unichar_t unicode_from_jis208[] = {
   0x804ef70, 0x0000, 0x2288, 0x804f240, 0x42130a14, 0x40015360, 0xbfffdba8, 0x804bcc9
 };
 
-const unichar_t unicode_from_jis212[] = {
+const uint32_t unicode_from_jis212[] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -5805,9 +5805,9 @@ static const unsigned short * const jis_from_unicode_[] = {
     jis_from_unicode_ff
 };
 
-struct charmap2 jis_from_unicode = { 0, 255, (unsigned short **) jis_from_unicode_, (unichar_t *) unicode_from_jis212 };
+struct charmap2 jis_from_unicode = { 0, 255, (unsigned short **) jis_from_unicode_, (uint32_t *) unicode_from_jis212 };
 
-const unichar_t unicode_from_big5[] = {
+const uint32_t unicode_from_big5[] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -12712,9 +12712,9 @@ static const unsigned short * const big5_from_unicode_[] = {
     big5_from_unicode_ff
 };
 
-struct charmap2 big5_from_unicode = { 0, 255, (unsigned short **) big5_from_unicode_, (unichar_t *) unicode_from_big5 };
+struct charmap2 big5_from_unicode = { 0, 255, (unsigned short **) big5_from_unicode_, (uint32_t *) unicode_from_big5 };
 
-const unichar_t unicode_from_big5hkscs[] = {
+const uint32_t unicode_from_big5hkscs[] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -22533,9 +22533,9 @@ static const unsigned short * const big5hkscs_from_unicode_[] = {
     big5hkscs_from_unicode_ff
 };
 
-struct charmap2 big5hkscs_from_unicode = { 0, 255, (unsigned short **) big5hkscs_from_unicode_, (unichar_t *) unicode_from_big5hkscs };
+struct charmap2 big5hkscs_from_unicode = { 0, 255, (unsigned short **) big5hkscs_from_unicode_, (uint32_t *) unicode_from_big5hkscs };
 
-const unichar_t unicode_from_ksc5601[] = {
+const uint32_t unicode_from_ksc5601[] = {
   0x3164, 0x3001, 0x3002, 0x30fb, 0x2025, 0x22ef, 0x00a8, 0x3003,
   0x2013, 0x2014, 0x2016, 0xff3c, 0xff5e, 0x2018, 0x2019, 0x201c,
   0x201d, 0x3014, 0x3015, 0x3008, 0x3009, 0x300a, 0x300b, 0x300c,
@@ -28908,9 +28908,9 @@ static const unsigned short * const ksc5601_from_unicode_[] = {
     ksc5601_from_unicode_ff
 };
 
-struct charmap2 ksc5601_from_unicode = { 0, 255, (unsigned short **) ksc5601_from_unicode_, (unichar_t *) unicode_from_ksc5601 };
+struct charmap2 ksc5601_from_unicode = { 0, 255, (unsigned short **) ksc5601_from_unicode_, (uint32_t *) unicode_from_ksc5601 };
 
-const unichar_t unicode_from_johab[] = {
+const uint32_t unicode_from_johab[] = {
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -38146,9 +38146,9 @@ static const unsigned short * const johab_from_unicode_[] = {
     johab_from_unicode_ff
 };
 
-struct charmap2 johab_from_unicode = { 0, 255, (unsigned short **) johab_from_unicode_, (unichar_t *) unicode_from_johab };
+struct charmap2 johab_from_unicode = { 0, 255, (unsigned short **) johab_from_unicode_, (uint32_t *) unicode_from_johab };
 
-const unichar_t unicode_from_gb2312[] = {
+const uint32_t unicode_from_gb2312[] = {
   0x3000, 0x3001, 0x3002, 0x00b7, 0x02c9, 0x02c7, 0x00a8, 0x3003,
   0x3005, 0x2014, 0xff5e, 0x2016, 0x2026, 0x2018, 0x2019, 0x201c,
   0x201d, 0x3014, 0x3015, 0x3008, 0x3009, 0x300a, 0x300b, 0x300c,
@@ -43016,5 +43016,5 @@ static const unsigned short * const gb2312_from_unicode_[] = {
     gb2312_from_unicode_ff
 };
 
-struct charmap2 gb2312_from_unicode = { 0, 255, (unsigned short **) gb2312_from_unicode_, (unichar_t *) unicode_from_gb2312 };
+struct charmap2 gb2312_from_unicode = { 0, 255, (unsigned short **) gb2312_from_unicode_, (uint32_t *) unicode_from_gb2312 };
 

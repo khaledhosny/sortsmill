@@ -2061,7 +2061,7 @@ return( word_buf );
 
 struct script_chars {
     int cnt;
-    unichar_t *chars;
+    uint32_t *chars;
 };
 
 static void ScriptCharInit(SplineFont *sf,uint32 script, struct script_chars *chrs) {
@@ -2102,7 +2102,7 @@ static void ScriptCharInit(SplineFont *sf,uint32 script, struct script_chars *ch
     } while ( k<sf->subfontcnt );
 
     chrs->cnt = cnt;
-    chrs->chars = xmalloc(cnt*sizeof(unichar_t));
+    chrs->chars = xmalloc(cnt*sizeof(uint32_t));
     cnt = 0;
     k=0;
     do {

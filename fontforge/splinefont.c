@@ -1483,11 +1483,11 @@ char *SFGetModifiers(SplineFont *sf) {
      return _GetModifiers(sf->fontname,sf->familyname,sf->weight);
 }
 
-const unichar_t *_uGetModifiers(const unichar_t *fontname, const unichar_t *familyname,
-				const unichar_t *weight) {
-     const unichar_t *pt, *fpt;
-     static unichar_t regular[] = { 'R','e','g','u','l','a','r', 0 };
-     static unichar_t space[20];
+const uint32_t *_uGetModifiers(const uint32_t *fontname, const uint32_t *familyname,
+				const uint32_t *weight) {
+     const uint32_t *pt, *fpt;
+     static uint32_t regular[] = { 'R','e','g','u','l','a','r', 0 };
+     static uint32_t space[20];
      int i,j;
 
      /* URW fontnames don't match the familyname */
@@ -1559,7 +1559,7 @@ int SFIsDuplicatable(SplineFont *sf, SplineChar *sc) {
     extern const int cns14pua[], amspua[];
     const int *pua = sf->uni_interp==ui_trad_chinese ? cns14pua : sf->uni_interp==ui_ams ? amspua : NULL;
     int baseuni = 0;
-    const unichar_t *pt;
+    const uint32_t *pt;
 
     if ( pua!=NULL && sc->unicodeenc>=0xe000 && sc->unicodeenc<=0xf8ff )
 	baseuni = pua[sc->unicodeenc-0xe000];
@@ -1740,12 +1740,12 @@ return( cnt );
 return( i+1 );
 }
 
-static bigreal SFStandardHeight(SplineFont *sf, int layer, int do_max, unichar_t *list) {
+static bigreal SFStandardHeight(SplineFont *sf, int layer, int do_max, uint32_t *list) {
     struct dimcnt flats[200], curves[200];
     bigreal test;
     enum flatness curf;
     int fcnt=0, ccnt=0, cnt, tot, i, useit;
-    unichar_t ch, top;
+    uint32_t ch, top;
     bigreal result, bestheight, bestdiff, diff, val;
     char *blues, *end;
 
@@ -1831,19 +1831,19 @@ return( do_max ? -1e23 : 1e23 );		/* We didn't find any glyphs */
 return( result );
 }
 
-static unichar_t capheight_str[] = { 'A', RANGE, 'Z',
+static uint32_t capheight_str[] = { 'A', RANGE, 'Z',
     0x391, RANGE, 0x3a9,
     0x402, 0x404, 0x405, 0x406, 0x408, RANGE, 0x40b, 0x40f, RANGE, 0x418, 0x41a, 0x42f,
     0 };
-static unichar_t xheight_str[] = { 'a', 'c', 'e', 'g', 'm', 'n', 'o', 'p', 'q', 'r', 's', 'u', 'v', 'w', 'x', 'y', 'z', 0x131,
+static uint32_t xheight_str[] = { 'a', 'c', 'e', 'g', 'm', 'n', 'o', 'p', 'q', 'r', 's', 'u', 'v', 'w', 'x', 'y', 'z', 0x131,
     0x3b3, 0x3b9, 0x3ba, 0x3bc, 0x3bd, 0x3c0, 0x3c3, 0x3c4, 0x3c5, 0x3c7, 0x3c8, 0x3c9,
     0x432, 0x433, 0x438, 0x43a, RANGE, 0x43f, 0x442, 0x443, 0x445, 0x44c,0x44f, 0x459, 0x45a,
     0 };
-static unichar_t ascender_str[] = { 'b','d','f','h','k','l',
+static uint32_t ascender_str[] = { 'b','d','f','h','k','l',
     0x3b3, 0x3b4, 0x3b6, 0x3b8,
     0x444, 0x452,
     0 };
-static unichar_t descender_str[] = { 'g','j','p','q','y',
+static uint32_t descender_str[] = { 'g','j','p','q','y',
     0x3b2, 0x3b3, 0x3c7, 0x3c8,
     0x434, 0x440, 0x443, 0x444, 0x452, 0x458,
     0 };

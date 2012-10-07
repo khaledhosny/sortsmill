@@ -316,12 +316,12 @@ static struct baselangextent *SFBaselang(SplineFont *sf,struct baselangextent *o
 
     i = j = k = 0;
     if ( islang )
-	label[i].text = (unichar_t *) _(
+	label[i].text = (uint32_t *) _(
 		"Set the minimum and maximum values by which\n"
 		"the glyphs in this script extend below and\n"
 		"above the baseline. This may vary by language" );
     else
-	label[i].text = (unichar_t *) _(
+	label[i].text = (uint32_t *) _(
 		"Set the minimum and maximum values by which\n"
 		"the glyphs in this script extend below and\n"
 		"above the baseline when modified by a feature." );
@@ -341,7 +341,7 @@ static struct baselangextent *SFBaselang(SplineFont *sf,struct baselangextent *o
     varray[j++] = &gcd[i-1]; varray[j++] = NULL;
 
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    label[i].text = (unichar_t *) _("_OK");
+    label[i].text = (uint32_t *) _("_OK");
     label[i].text_is_1byte = true;
     label[i].text_in_resource = true;
     gcd[i].gd.label = &label[i];
@@ -349,7 +349,7 @@ static struct baselangextent *SFBaselang(SplineFont *sf,struct baselangextent *o
     gcd[i++].creator = GButtonCreate;
 
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    label[i].text = (unichar_t *) _("_Cancel");
+    label[i].text = (uint32_t *) _("_Cancel");
     label[i].text_is_1byte = true;
     label[i].text_in_resource = true;
     gcd[i].gd.label = &label[i];
@@ -374,7 +374,7 @@ static struct baselangextent *SFBaselang(SplineFont *sf,struct baselangextent *o
     GHVBoxSetExpandableCol(box[3].ret,gb_expandgluesame);
 
     buttongcd[0].gd.flags = gg_visible;
-    buttonlabel[0].text = (unichar_t *) S_("Set Feature Extents");
+    buttonlabel[0].text = (uint32_t *) S_("Set Feature Extents");
     buttonlabel[0].text_is_1byte = true;
     buttonlabel[0].text_in_resource = true;
     buttongcd[0].gd.label = &buttonlabel[0];
@@ -400,13 +400,13 @@ return( b.old );
 }
 
 GTextInfo baselinetags[] = {
-    { (unichar_t *) ("hang"), NULL, 0, 0, (void *) CHR('h','a','n','g'), NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) ("icfb"), NULL, 0, 0, (void *) CHR('i','c','f','b'), NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) ("icft"), NULL, 0, 0, (void *) CHR('i','c','f','t'), NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) ("ideo"), NULL, 0, 0, (void *) CHR('i','d','e','o'), NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) ("idtp"), NULL, 0, 0, (void *) CHR('i','d','t','p'), NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) ("math"), NULL, 0, 0, (void *) CHR('m','a','t','h'), NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) ("romn"), NULL, 0, 0, (void *) CHR('r','o','m','n'), NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) ("hang"), NULL, 0, 0, (void *) CHR('h','a','n','g'), NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) ("icfb"), NULL, 0, 0, (void *) CHR('i','c','f','b'), NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) ("icft"), NULL, 0, 0, (void *) CHR('i','c','f','t'), NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) ("ideo"), NULL, 0, 0, (void *) CHR('i','d','e','o'), NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) ("idtp"), NULL, 0, 0, (void *) CHR('i','d','t','p'), NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) ("math"), NULL, 0, 0, (void *) CHR('m','a','t','h'), NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) ("romn"), NULL, 0, 0, (void *) CHR('r','o','m','n'), NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     GTEXTINFO_EMPTY
 };
 
@@ -739,7 +739,7 @@ struct Base *SFBaselines(SplineFont *sf,struct Base *old,int is_vertical) {
     memset(&buttonlabel,0,sizeof(buttonlabel));
 
     i = j = k = 0;
-    label[i].text = (unichar_t *) _("From the list below, select the baselines for which you\nwill provide data.");
+    label[i].text = (uint32_t *) _("From the list below, select the baselines for which you\nwill provide data.");
     label[i].text_is_1byte = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.pos.x = 5; gcd[i].gd.pos.y = 5+4; 
@@ -747,78 +747,78 @@ struct Base *SFBaselines(SplineFont *sf,struct Base *old,int is_vertical) {
     gcd[i].creator = GLabelCreate;
     varray[j++] = &gcd[i++]; varray[j++] = NULL;
 
-    label[i].text = (unichar_t *) _("hang");
+    label[i].text = (uint32_t *) _("hang");
     label[i].text_is_1byte = true;
     label[i].text_in_resource = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
-    gcd[i].gd.popup_msg = (unichar_t *) _("Indic (& Tibetan) hanging baseline");
+    gcd[i].gd.popup_msg = (uint32_t *) _("Indic (& Tibetan) hanging baseline");
     gcd[i].gd.cid = CID_BaseHang;
     gcd[i].gd.handle_controlevent = Base_ChangeBase;
     gcd[i].creator = GCheckBoxCreate;
     hvarray[k++] = &gcd[i++];
 
-    label[i].text = (unichar_t *) _("icfb");
+    label[i].text = (uint32_t *) _("icfb");
     label[i].text_is_1byte = true;
     label[i].text_in_resource = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
-    gcd[i].gd.popup_msg = (unichar_t *) _("Ideographic character face bottom edge baseline");
+    gcd[i].gd.popup_msg = (uint32_t *) _("Ideographic character face bottom edge baseline");
     gcd[i].gd.cid = CID_BaseIcfb;
     gcd[i].gd.handle_controlevent = Base_ChangeBase;
     gcd[i].creator = GCheckBoxCreate;
     hvarray[k++] = &gcd[i++];
 
-    label[i].text = (unichar_t *) _("icft");
+    label[i].text = (uint32_t *) _("icft");
     label[i].text_is_1byte = true;
     label[i].text_in_resource = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
-    gcd[i].gd.popup_msg = (unichar_t *) _("Ideographic character face top edge baseline");
+    gcd[i].gd.popup_msg = (uint32_t *) _("Ideographic character face top edge baseline");
     gcd[i].gd.cid = CID_BaseIcft;
     gcd[i].gd.handle_controlevent = Base_ChangeBase;
     gcd[i].creator = GCheckBoxCreate;
     hvarray[k++] = &gcd[i++];
 
-    label[i].text = (unichar_t *) _("ideo");
+    label[i].text = (uint32_t *) _("ideo");
     label[i].text_is_1byte = true;
     label[i].text_in_resource = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
-    gcd[i].gd.popup_msg = (unichar_t *) _("Ideographic em-box bottom edge baseline");
+    gcd[i].gd.popup_msg = (uint32_t *) _("Ideographic em-box bottom edge baseline");
     gcd[i].gd.cid = CID_BaseIdeo;
     gcd[i].gd.handle_controlevent = Base_ChangeBase;
     gcd[i].creator = GCheckBoxCreate;
     hvarray[k++] = &gcd[i++]; hvarray[k++] = NULL;
 
-    label[i].text = (unichar_t *) _("idtp");
+    label[i].text = (uint32_t *) _("idtp");
     label[i].text_is_1byte = true;
     label[i].text_in_resource = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
-    gcd[i].gd.popup_msg = (unichar_t *) _("Ideographic em-box top edge baseline");
+    gcd[i].gd.popup_msg = (uint32_t *) _("Ideographic em-box top edge baseline");
     gcd[i].gd.cid = CID_BaseIdtp;
     gcd[i].gd.handle_controlevent = Base_ChangeBase;
     gcd[i].creator = GCheckBoxCreate;
     hvarray[k++] = &gcd[i++];
 
-    label[i].text = (unichar_t *) _("math");
+    label[i].text = (uint32_t *) _("math");
     label[i].text_is_1byte = true;
     label[i].text_in_resource = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
-    gcd[i].gd.popup_msg = (unichar_t *) _("Mathematical centerline");
+    gcd[i].gd.popup_msg = (uint32_t *) _("Mathematical centerline");
     gcd[i].gd.cid = CID_BaseMath;
     gcd[i].gd.handle_controlevent = Base_ChangeBase;
     gcd[i].creator = GCheckBoxCreate;
     hvarray[k++] = &gcd[i++];
 
-    label[i].text = (unichar_t *) _("romn");
+    label[i].text = (uint32_t *) _("romn");
     label[i].text_is_1byte = true;
     label[i].text_in_resource = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
-    gcd[i].gd.popup_msg = (unichar_t *) _("Baseline used for Latin, Greek, Cyrillic text.");
+    gcd[i].gd.popup_msg = (uint32_t *) _("Baseline used for Latin, Greek, Cyrillic text.");
     gcd[i].gd.cid = CID_BaseRomn;
     gcd[i].gd.handle_controlevent = Base_ChangeBase;
     gcd[i].creator = GCheckBoxCreate;
@@ -830,7 +830,7 @@ struct Base *SFBaselines(SplineFont *sf,struct Base *old,int is_vertical) {
     box[2].creator = GHVBoxCreate;
     varray[j++] = &box[2]; varray[j++] = NULL;
 
-    label[i].text = (unichar_t *) _(
+    label[i].text = (uint32_t *) _(
 	    "If any of the above baselines are active then you should\n"
 	    "specify which one is the default baseline for each script\n"
 	    "in the font, and specify how to position glyphs in this\n"
@@ -851,7 +851,7 @@ struct Base *SFBaselines(SplineFont *sf,struct Base *old,int is_vertical) {
     varray[j++] = &gcd[i-1]; varray[j++] = NULL;
 
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    label[i].text = (unichar_t *) _("_OK");
+    label[i].text = (uint32_t *) _("_OK");
     label[i].text_is_1byte = true;
     label[i].text_in_resource = true;
     gcd[i].gd.label = &label[i];
@@ -859,7 +859,7 @@ struct Base *SFBaselines(SplineFont *sf,struct Base *old,int is_vertical) {
     gcd[i++].creator = GButtonCreate;
 
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    label[i].text = (unichar_t *) _("_Cancel");
+    label[i].text = (uint32_t *) _("_Cancel");
     label[i].text_is_1byte = true;
     label[i].text_in_resource = true;
     gcd[i].gd.label = &label[i];
@@ -884,7 +884,7 @@ struct Base *SFBaselines(SplineFont *sf,struct Base *old,int is_vertical) {
     GHVBoxSetExpandableCol(box[3].ret,gb_expandgluesame);
 
     buttongcd[0].gd.flags = gg_visible;
-    buttonlabel[0].text = (unichar_t *) S_("Set Extents");
+    buttonlabel[0].text = (uint32_t *) S_("Set Extents");
     buttonlabel[0].text_is_1byte = true;
     buttonlabel[0].text_in_resource = true;
     buttongcd[0].gd.label = &buttonlabel[0];

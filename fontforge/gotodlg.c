@@ -47,7 +47,7 @@ static GTextInfo *AvailableRanges(SplineFont *sf,EncMap *map) {
 	    ch = unicoderange[i].defined==-1 ? unicoderange[i].first : unicoderange[i].defined;
 	    pos = SFFindSlot(sf,map,ch,NULL);
 	    if ( pos!=-1 ) {
-	        ret[cnt].text = (unichar_t *) _(unicoderange[i].name);
+	        ret[cnt].text = (uint32_t *) _(unicoderange[i].name);
 	        ret[cnt].text_is_1byte = true;
 	        ret[cnt++].userdata = (void *) (intptr_t) pos;
 	    }
@@ -123,15 +123,15 @@ return( false );
 return( true );
 }
 
-static unichar_t **GotoCompletion(GGadget *t,int from_tab) {
-    unichar_t *pt, *spt; unichar_t **ret;
+static uint32_t **GotoCompletion(GGadget *t,int from_tab) {
+    uint32_t *pt, *spt; uint32_t **ret;
     int gid, cnt, doit, match_len;
     SplineChar *sc;
     GotoData *d = GDrawGetUserData(GGadgetGetWindow(t));
     SplineFont *sf = d->sf;
     int do_wildcards;
 
-    pt = spt = (unichar_t *) _GGadgetGetTitle(t);
+    pt = spt = (uint32_t *) _GGadgetGetTitle(t);
     if ( pt==NULL )
 return( NULL );
     while ( *pt && *pt!='*' && *pt!='?' && *pt!='[' && *pt!='{' )
@@ -141,7 +141,7 @@ return( NULL );
 return( NULL );
     if ( do_wildcards ) {
 	pt = spt;
-	spt = xmalloc((u_strlen(spt)+2)*sizeof(unichar_t));
+	spt = xmalloc((u_strlen(spt)+2)*sizeof(uint32_t));
 	u_strcpy(spt,pt);
 	uc_strcat(spt,"*");
     }
@@ -153,8 +153,8 @@ return( NULL );
 	for ( gid=0; gid<sf->glyphcnt; ++gid ) if ( (sc=sf->glyphs[gid])!=NULL ) {
 	    int matched;
 	    if ( do_wildcards ) {
-		unichar_t *temp = utf82u_copy(sc->name);
-		matched = GGadgetWildMatch((unichar_t *) spt,temp,false);
+		uint32_t *temp = utf82u_copy(sc->name);
+		matched = GGadgetWildMatch((uint32_t *) spt,temp,false);
 		free(temp);
 	    } else
 	      matched = (u8_strncmp(x_gc_u32_to_u8 (u32_force_valid (spt)),
@@ -171,7 +171,7 @@ return( NULL );
 	else if ( cnt==0 )
     break;
 	else
-	    ret = xmalloc((cnt+1)*sizeof(unichar_t *));
+	    ret = xmalloc((cnt+1)*sizeof(uint32_t *));
     }
     if ( do_wildcards )
 	free(spt);
@@ -214,7 +214,7 @@ int GotoChar(SplineFont *sf,EncMap *map,int *merge_with_selection) {
     memset(&boxes,0,sizeof(boxes));
 
     k=j=0;
-    label[k].text = (unichar_t *) _("Enter the name of a glyph in the font");
+    label[k].text = (uint32_t *) _("Enter the name of a glyph in the font");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled|gg_visible;
@@ -232,7 +232,7 @@ int GotoChar(SplineFont *sf,EncMap *map,int *merge_with_selection) {
     hvarray[j][0] = &gcd[k++]; hvarray[j++][1] = NULL;
 
     if ( merge_with_selection!=NULL ) {
-	label[k].text = (unichar_t *) _("Merge into selection");
+	label[k].text = (uint32_t *) _("Merge into selection");
 	label[k].text_is_1byte = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.cid = CID_MergeWithSelection;
@@ -245,7 +245,7 @@ int GotoChar(SplineFont *sf,EncMap *map,int *merge_with_selection) {
     hvarray[j][0] = GCD_Glue; hvarray[j++][1] = NULL;
 
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    label[k].text = (unichar_t *) _("_OK");
+    label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -254,7 +254,7 @@ int GotoChar(SplineFont *sf,EncMap *map,int *merge_with_selection) {
     barray[0] = GCD_Glue; barray[1] = &gcd[k++]; barray[2] = GCD_Glue; barray[3] = GCD_Glue;
 
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    label[k].text = (unichar_t *) _("_Cancel");
+    label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];

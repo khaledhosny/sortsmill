@@ -380,7 +380,7 @@ static void FilterDlg(void) {
     gcd[1].gd.pos.x = 20-3; gcd[1].gd.pos.y = 90-35-3;
     gcd[1].gd.pos.width = -1; gcd[1].gd.pos.height = 0;
     gcd[1].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    label[1].text = (unichar_t *) _("_OK");
+    label[1].text = (uint32_t *) _("_OK");
     label[1].text_is_1byte = true;
     label[1].text_in_resource = true;
     gcd[1].gd.label = &label[1];
@@ -391,7 +391,7 @@ static void FilterDlg(void) {
     gcd[2].gd.pos.x = -20; gcd[2].gd.pos.y = 90-35;
     gcd[2].gd.pos.width = -1; gcd[2].gd.pos.height = 0;
     gcd[2].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    label[2].text = (unichar_t *) _("_Cancel");
+    label[2].text = (uint32_t *) _("_Cancel");
     label[2].text_is_1byte = true;
     label[2].text_in_resource = true;
     gcd[2].gd.label = &label[2];
@@ -433,11 +433,11 @@ static void FilterDlg(void) {
 
 struct gfc_data {
     int done;
-    unichar_t *ret;
+    uint32_t *ret;
     GGadget *gfc;
     GGadget *rename;
     int filename_popup_pos;
-    unichar_t *lastpopupfontname;
+    uint32_t *lastpopupfontname;
 };
 
 static int GFD_Ok(GGadget *g, GEvent *e) {
@@ -491,7 +491,7 @@ static int GFD_FilterSelected(GGadget *g, GEvent *e) {
 	    FilterDlg();
 	    GGadgetSetList(g,StandardFilters(),true);
 	} else {
-	    unichar_t *temp = utf82u_copy(ti->userdata);
+	    uint32_t *temp = utf82u_copy(ti->userdata);
 	    GFileChooserSetFilterText(d->gfc,temp);
 	    free(temp);
 	    temp = GFileChooserGetDir(d->gfc);
@@ -508,10 +508,10 @@ static int WithinList(struct gfc_data *d,GEvent *event) {
     GRect size;
     GGadget *list;
     int32 pos;
-    unichar_t *ufile;
+    uint32_t *ufile;
     char *file, **fontnames;
     int cnt, len;
-    unichar_t *msg;
+    uint32_t *msg;
 
     if ( event->type!=et_mousemove )
 return( false );
@@ -543,7 +543,7 @@ return( true );
 	len = 0;
 	for ( cnt=0; fontnames[cnt]!=NULL; ++cnt )
 	    len += strlen(fontnames[cnt])+1;
-	msg = xmalloc((len+2)*sizeof(unichar_t));
+	msg = xmalloc((len+2)*sizeof(uint32_t));
 	len = 0;
 	for ( cnt=0; fontnames[cnt]!=NULL; ++cnt ) {
 	    uc_strcpy(msg+len,fontnames[cnt]);
@@ -589,7 +589,7 @@ return( GGadgetDispatchEvent((GGadget *) (d->gfc),event));
 return( event->type!=et_char );
 }
 
-unichar_t *FVOpenFont(char *title, const char *defaultfile, int mult) {
+uint32_t *FVOpenFont(char *title, const char *defaultfile, int mult) {
     GRect pos;
     int i, filter, renamei;
     GWindow gw;
@@ -599,7 +599,7 @@ unichar_t *FVOpenFont(char *title, const char *defaultfile, int mult) {
     struct gfc_data d;
     int bs = GIntGetResource(_NUM_Buttonsize), bsbigger, totwid, spacing;
     GGadget *tf;
-    unichar_t *temp;
+    uint32_t *temp;
     char **nlnames;
     GTextInfo *namelistnames, **filts;
     int cnt;
@@ -637,18 +637,18 @@ unichar_t *FVOpenFont(char *title, const char *defaultfile, int mult) {
     varray[0] = &gcd[i]; varray[1] = NULL;
     gcd[i++].creator = GFileChooserCreate;
 
-    label[i].text = (unichar_t *) _("Filter:");
+    label[i].text = (uint32_t *) _("Filter:");
     label[i].text_is_1byte = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.pos.x = 8; gcd[i].gd.pos.y = 188+6;
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    gcd[i].gd.popup_msg = (unichar_t *) _("Display files of this type" );
+    gcd[i].gd.popup_msg = (uint32_t *) _("Display files of this type" );
     harray1[0] = GCD_Glue; harray1[1] = &gcd[i];
     gcd[i++].creator = GLabelCreate;
 
     gcd[i].gd.pos.x = 0; gcd[i].gd.pos.y = gcd[i-1].gd.pos.y-6;
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    gcd[i].gd.popup_msg = (unichar_t *) _("Display files of this type");
+    gcd[i].gd.popup_msg = (uint32_t *) _("Display files of this type");
     gcd[i].gd.handle_controlevent = GFD_FilterSelected;
     harray1[2] = &gcd[i]; harray1[3] = GCD_Glue; harray1[4] = GCD_Glue; harray1[5] = GCD_Glue; harray1[6] = NULL;
     gcd[i++].creator = GListButtonCreate;
@@ -658,24 +658,24 @@ unichar_t *FVOpenFont(char *title, const char *defaultfile, int mult) {
     boxes[2].creator = GHBoxCreate;
     varray[2] = &boxes[2]; varray[3] = NULL;
 
-    label[i].text = (unichar_t *) _("Force glyph names to:");
+    label[i].text = (uint32_t *) _("Force glyph names to:");
     label[i].text_is_1byte = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.pos.x = 8; gcd[i].gd.pos.y = 188+6;
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    gcd[i].gd.popup_msg = (unichar_t *) _("In the saved font, force all glyph names to match those in the specified namelist");
+    gcd[i].gd.popup_msg = (uint32_t *) _("In the saved font, force all glyph names to match those in the specified namelist");
     harray2[0] = &gcd[i];
     gcd[i++].creator = GLabelCreate;
 
     renamei = i;
     gcd[i].gd.pos.x = 0; gcd[i].gd.pos.y = gcd[i-1].gd.pos.y-6;
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    gcd[i].gd.popup_msg = (unichar_t *) _("In the saved font, force all glyph names to match those in the specified namelist");
+    gcd[i].gd.popup_msg = (uint32_t *) _("In the saved font, force all glyph names to match those in the specified namelist");
     gcd[i].creator = GListButtonCreate;
     nlnames = AllNamelistNames();
     for ( cnt=0; nlnames[cnt]!=NULL; ++cnt);
     namelistnames = xcalloc(cnt+3,sizeof(GTextInfo));
-    namelistnames[0].text = (unichar_t *) _("No Rename");
+    namelistnames[0].text = (uint32_t *) _("No Rename");
     namelistnames[0].text_is_1byte = true;
     if ( force_names_when_opening==NULL ) {
 	namelistnames[0].selected = true;
@@ -683,7 +683,7 @@ unichar_t *FVOpenFont(char *title, const char *defaultfile, int mult) {
     }
     namelistnames[1].line = true;
     for ( cnt=0; nlnames[cnt]!=NULL; ++cnt) {
-	namelistnames[cnt+2].text = (unichar_t *) nlnames[cnt];
+	namelistnames[cnt+2].text = (uint32_t *) nlnames[cnt];
 	namelistnames[cnt+2].text_is_1byte = true;
 	if ( force_names_when_opening!=NULL &&
 		strcmp(_(force_names_when_opening->title),nlnames[cnt])==0 ) {
@@ -703,7 +703,7 @@ unichar_t *FVOpenFont(char *title, const char *defaultfile, int mult) {
     gcd[i].gd.pos.x = 12; gcd[i].gd.pos.y = 216-3;
     gcd[i].gd.pos.width = -1;
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    label[i].text = (unichar_t *) _("_OK");
+    label[i].text = (uint32_t *) _("_OK");
     label[i].text_is_1byte = true;
     label[i].text_in_resource = true;
     gcd[i].gd.mnemonic = 'O';
@@ -715,7 +715,7 @@ unichar_t *FVOpenFont(char *title, const char *defaultfile, int mult) {
     gcd[i].gd.pos.x = -(spacing+bs)*100/GIntGetResource(_NUM_ScaleFactor)-12; gcd[i].gd.pos.y = gcd[i-1].gd.pos.y+3;
     gcd[i].gd.pos.width = -1;
     gcd[i].gd.flags = gg_visible | gg_enabled;
-    label[i].text = (unichar_t *) S_("Font|_New");
+    label[i].text = (uint32_t *) S_("Font|_New");
     label[i].text_is_1byte = true;
     label[i].text_in_resource = true;
     gcd[i].gd.mnemonic = 'N';
@@ -728,7 +728,7 @@ unichar_t *FVOpenFont(char *title, const char *defaultfile, int mult) {
     gcd[i].gd.pos.x = (spacing+bs)*100/GIntGetResource(_NUM_ScaleFactor)+12; gcd[i].gd.pos.y = gcd[i-1].gd.pos.y;
     gcd[i].gd.pos.width = -1;
     gcd[i].gd.flags = /* gg_visible |*/ gg_enabled;
-    label[i].text = (unichar_t *) _("_Filter");
+    label[i].text = (uint32_t *) _("_Filter");
     label[i].text_is_1byte = true;
     label[i].text_in_resource = true;
     gcd[i].gd.mnemonic = 'F';
@@ -740,7 +740,7 @@ unichar_t *FVOpenFont(char *title, const char *defaultfile, int mult) {
     gcd[i].gd.pos.x = -12; gcd[i].gd.pos.y = gcd[i-1].gd.pos.y;
     gcd[i].gd.pos.width = -1;
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    label[i].text = (unichar_t *) _("_Cancel");
+    label[i].text = (uint32_t *) _("_Cancel");
     label[i].text_is_1byte = true;
     label[i].text_in_resource = true;
     gcd[i].gd.label = &label[i];

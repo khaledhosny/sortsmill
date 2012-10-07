@@ -291,7 +291,7 @@ return;
 	GScrollBarSetPos(&gl->vsb->g,gl->loff);
 }
 
-static int GListFindPosition(GList *gl,unichar_t *text) {
+static int GListFindPosition(GList *gl,uint32_t *text) {
     GTextInfo temp, *ptemp=&temp;
     int i, order;
 
@@ -338,11 +338,11 @@ static void GListShowPos(GGadget *g,int32 pos) {
 	GListScrollBy(gl,newoff-gl->loff,0);
 }
 
-static void GListScrollToText(GGadget *g,const unichar_t *text,int32 sel) {
+static void GListScrollToText(GGadget *g,const uint32_t *text,int32 sel) {
     GList *gl = (GList *) g;
     int pos;
 
-    pos = GListFindPosition(gl,(unichar_t *) text);
+    pos = GListFindPosition(gl,(uint32_t *) text);
     if ( sel && pos<gl->ltot ) {
 	GListClearSel(gl);
 	if ( gl->exactly_one || u_strmatch(text,gl->ti[pos]->text)==0 )
@@ -690,9 +690,9 @@ return( true );
 	int len = u_strlen(event->u.chr.chars);
 	if ( sofar_pos+len >= gl->sofar_max ) {
 	    if ( gl->sofar_max == 0 )
-		gl->sofar = xmalloc((gl->sofar_max = len+10) * sizeof(unichar_t));
+		gl->sofar = xmalloc((gl->sofar_max = len+10) * sizeof(uint32_t));
 	    else
-		gl->sofar = xrealloc(gl->sofar,(gl->sofar_max = sofar_pos+len+10)*sizeof(unichar_t));
+		gl->sofar = xrealloc(gl->sofar,(gl->sofar_max = sofar_pos+len+10)*sizeof(uint32_t));
 	}
 	u_strcpy(gl->sofar+sofar_pos,event->u.chr.chars);
 	gl->sofar_pos = sofar_pos + len;
@@ -954,9 +954,9 @@ static FontInstance *list_font = NULL;
 static int glist_inited = false;
 
 static GTextInfo list_choices[] = {
-    { (unichar_t *) "1", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) "2", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) "3", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) "1", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) "2", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) "3", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     GTEXTINFO_EMPTY
 };
 static GGadgetCreateData list_gcd[] = {

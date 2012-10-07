@@ -147,7 +147,7 @@ void FVAutoWidth2(FontView *fv) {
 
     i = v = 0;
 
-    label[i].text = (unichar_t *) _(
+    label[i].text = (uint32_t *) _(
 	"FontForge will attempt to adjust the left and right\n"
 	"sidebearings of the selected glyphs so that the average\n"
 	"separation between glyphs in a script will be the\n"
@@ -160,7 +160,7 @@ void FVAutoWidth2(FontView *fv) {
     gcd[i++].creator = GLabelCreate;
     varray[v++] = &gcd[i-1]; varray[v++] = NULL;
 
-    label[i].text = (unichar_t *) _( "_Separation:" );
+    label[i].text = (uint32_t *) _( "_Separation:" );
     label[i].text_is_1byte = true;
     label[i].text_in_resource = true;
     gcd[i].gd.label = &label[i];
@@ -173,7 +173,7 @@ void FVAutoWidth2(FontView *fv) {
 	sprintf( sepbuf, "%d", sf->width_separation );
     else
 	sprintf( sepbuf, "%d", (int) rint( width_separation * emsize / width_last_em_size ));
-    label[i].text = (unichar_t *) sepbuf;
+    label[i].text = (uint32_t *) sepbuf;
     label[i].text_is_1byte = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.pos.x = 5; gcd[i].gd.pos.y = 6;
@@ -187,7 +187,7 @@ void FVAutoWidth2(FontView *fv) {
     boxes[2].creator = GHBoxCreate;
     varray[v++] = &boxes[2]; varray[v++] = NULL;
 
-    label[i].text = (unichar_t *) _( "_Min:" );
+    label[i].text = (uint32_t *) _( "_Min:" );
     label[i].text_is_1byte = true;
     label[i].text_in_resource = true;
     gcd[i].gd.label = &label[i];
@@ -203,7 +203,7 @@ void FVAutoWidth2(FontView *fv) {
 	sprintf( minbuf, "%d", (int) -rint( sf->ascent*tan(sf->italicangle*PI/180 )) );
     else
 	sprintf( minbuf, "%d", (int) rint( width_min_side_bearing * emsize / width_last_em_size ));
-    label[i].text = (unichar_t *) minbuf;
+    label[i].text = (uint32_t *) minbuf;
     label[i].text_is_1byte = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.pos.x = 5; gcd[i].gd.pos.y = 6;
@@ -212,7 +212,7 @@ void FVAutoWidth2(FontView *fv) {
     gcd[i++].creator = GTextFieldCreate;
     harray2[1] = &gcd[i-1];
 
-    label[i].text = (unichar_t *) _( "Ma_x:" );
+    label[i].text = (uint32_t *) _( "Ma_x:" );
     label[i].text_is_1byte = true;
     label[i].text_in_resource = true;
     gcd[i].gd.label = &label[i];
@@ -222,7 +222,7 @@ void FVAutoWidth2(FontView *fv) {
     harray2[2] = &gcd[i-1];
 
     sprintf( maxbuf, "%d", (int) rint( width_max_side_bearing * emsize / width_last_em_size ));
-    label[i].text = (unichar_t *) maxbuf;
+    label[i].text = (uint32_t *) maxbuf;
     label[i].text_is_1byte = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.pos.x = 5; gcd[i].gd.pos.y = 6;
@@ -236,7 +236,7 @@ void FVAutoWidth2(FontView *fv) {
     boxes[3].creator = GHBoxCreate;
     varray[v++] = &boxes[3]; varray[v++] = NULL;
 
-    label[i].text = (unichar_t *) _( "_Height:" );
+    label[i].text = (uint32_t *) _( "_Height:" );
     label[i].text_is_1byte = true;
     label[i].text_in_resource = true;
     gcd[i].gd.label = &label[i];
@@ -246,7 +246,7 @@ void FVAutoWidth2(FontView *fv) {
     harray3[0] = &gcd[i-1];
 
     sprintf( hbuf, "%d", (int) rint( width_chunk_height * emsize / width_last_em_size ));
-    label[i].text = (unichar_t *) hbuf;
+    label[i].text = (uint32_t *) hbuf;
     label[i].text_is_1byte = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.pos.x = 5; gcd[i].gd.pos.y = 6;
@@ -255,7 +255,7 @@ void FVAutoWidth2(FontView *fv) {
     gcd[i++].creator = GTextFieldCreate;
     harray3[1] = &gcd[i-1];
 
-    label[i].text = (unichar_t *) _( "_Loops:" );
+    label[i].text = (uint32_t *) _( "_Loops:" );
     label[i].text_is_1byte = true;
     label[i].text_in_resource = true;
     gcd[i].gd.label = &label[i];
@@ -265,7 +265,7 @@ void FVAutoWidth2(FontView *fv) {
     harray3[2] = &gcd[i-1];
 
     sprintf( lbuf, "%d", (int) rint( width_loop_cnt * emsize / width_last_em_size ));
-    label[i].text = (unichar_t *) lbuf;
+    label[i].text = (uint32_t *) lbuf;
     label[i].text_is_1byte = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.pos.x = 5; gcd[i].gd.pos.y = 6;
@@ -280,7 +280,7 @@ void FVAutoWidth2(FontView *fv) {
     varray[v++] = &boxes[4]; varray[v++] = NULL;
 
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    label[i].text = (unichar_t *) _("_OK");
+    label[i].text = (uint32_t *) _("_OK");
     label[i].text_is_1byte = true;
     label[i].text_in_resource = true;
     gcd[i].gd.label = &label[i];
@@ -289,7 +289,7 @@ void FVAutoWidth2(FontView *fv) {
     barray[0] = GCD_Glue; barray[1] = &gcd[i-1]; barray[2] = GCD_Glue;
 
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    label[i].text = (unichar_t *) _("_Cancel");
+    label[i].text = (uint32_t *) _("_Cancel");
     label[i].text_is_1byte = true;
     label[i].text_in_resource = true;
     gcd[i].gd.label = &label[i];

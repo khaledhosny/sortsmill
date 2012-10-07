@@ -42,7 +42,7 @@
 static GWindow error;
 enum err_type { et_info, et_warn, et_error, et_fatal };
 static struct errinfo {
-    unichar_t *lines[ERR_LINE_MAX];
+    uint32_t *lines[ERR_LINE_MAX];
     unsigned int dismissed: 1;
     int width;
     enum err_type err_type;
@@ -52,7 +52,7 @@ static int e_h(GWindow gw, GEvent *event) {
     int line;
     int x,len, max_len;
     GRect r;
-    static unichar_t ok[] = { 'O', 'K', '\0' };
+    static uint32_t ok[] = { 'O', 'K', '\0' };
 
     if ( event->type == et_expose ) {
 	max_len = 0;
@@ -90,11 +90,11 @@ static void RunError() {
     GDrawProcessPendingEvents(NULL);
 }
 
-static void ProcessText(unichar_t *ubuf,char *buf, enum err_type et)
+static void ProcessText(uint32_t *ubuf,char *buf, enum err_type et)
 {
   int max_len = 60, len;
   char *pt, *ept, *last_space;
-  unichar_t *ue = ubuf;
+  uint32_t *ue = ubuf;
   int line=0;
 
   pt = buf;
@@ -131,7 +131,7 @@ static void ProcessText(unichar_t *ubuf,char *buf, enum err_type et)
 
 void _GDraw_InitError(GDisplay *gd) {
     GRect screen, pos;
-    static unichar_t title[]= { 'E', 'r', 'r', 'o', 'r', '\0' };
+    static uint32_t title[]= { 'E', 'r', 'r', 'o', 'r', '\0' };
     static GDisplay *static_gd;
     GWindowAttrs wattrs;
     GFont *font;
@@ -171,7 +171,7 @@ return;
 }
 
 void GDrawIError(const char *fmt,...) {
-    char buf[1025]; unichar_t ubuf[1025];
+    char buf[1025]; uint32_t ubuf[1025];
     va_list ap;
 
     strcpy(buf,"Internal Error:\n");
@@ -187,7 +187,7 @@ void GDrawIError(const char *fmt,...) {
 }
 
 void GDrawFatalError(const char *fmt,...) {
-    char buf[1025]; unichar_t ubuf[1025];
+    char buf[1025]; uint32_t ubuf[1025];
     va_list ap;
 
     strcpy(buf,"Fatal Error:\n");

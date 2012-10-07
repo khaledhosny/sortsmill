@@ -112,7 +112,7 @@ return;
 /* dlg which presents a list of glyph names                                   */
 /* ************************************************************************** */
 
-static unichar_t **JSTF_Glyph_Completion(GGadget *t,int from_tab) {
+static uint32_t **JSTF_Glyph_Completion(GGadget *t,int from_tab) {
     struct glyph_list_dlg *gld = GDrawGetUserData(GDrawGetParentWindow(GGadgetGetWindow(t)));
     SplineFont *sf = gld->sf;
 
@@ -243,14 +243,14 @@ char *GlyphListDlg(SplineFont *sf, char *glyphstr) {
     gcd[k].gd.flags = gg_enabled | gg_visible | gg_utf8_popup;
     gcd[k].gd.cid = CID_Glyphs;
     gcd[k].gd.u.matrix = &mi;
-    gcd[k].gd.popup_msg = (unichar_t *) _( "A list of glyph names");
+    gcd[k].gd.popup_msg = (uint32_t *) _( "A list of glyph names");
     gcd[k].creator = GMatrixEditCreate;
     varray[j++] = &gcd[k++]; varray[j++] = NULL;
 
     gcd[k].gd.pos.x = 30-3; 
     gcd[k].gd.pos.width = -1; gcd[k].gd.pos.height = 0;
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    label[k].text = (unichar_t *) _("_OK");
+    label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -261,7 +261,7 @@ char *GlyphListDlg(SplineFont *sf, char *glyphstr) {
     gcd[k].gd.pos.x = -30;
     gcd[k].gd.pos.width = -1; gcd[k].gd.pos.height = 0;
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    label[k].text = (unichar_t *) _("_Cancel");
+    label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -450,14 +450,14 @@ static char *JSTF_LookupListDlg(GGadget *g, int r, int c) {
     gcd[k].gd.flags = gg_enabled | gg_visible | gg_utf8_popup;
     gcd[k].gd.cid = CID_Lookups;
     gcd[k].gd.u.matrix = &mi;
-    gcd[k].gd.popup_msg = (unichar_t *) _( "A list of lookup names");
+    gcd[k].gd.popup_msg = (uint32_t *) _( "A list of lookup names");
     gcd[k].creator = GMatrixEditCreate;
     varray[j++] = &gcd[k++]; varray[j++] = NULL;
 
     gcd[k].gd.pos.x = 30-3; 
     gcd[k].gd.pos.width = -1; gcd[k].gd.pos.height = 0;
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    label[k].text = (unichar_t *) _("_OK");
+    label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -468,7 +468,7 @@ static char *JSTF_LookupListDlg(GGadget *g, int r, int c) {
     gcd[k].gd.pos.x = -30;
     gcd[k].gd.pos.width = -1; gcd[k].gd.pos.height = 0;
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    label[k].text = (unichar_t *) _("_Cancel");
+    label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -762,7 +762,7 @@ static char *JSTF_Langs(GGadget *g, int r, int c) {
     gcd[k].gd.flags = gg_enabled | gg_visible | gg_utf8_popup;
     gcd[k].gd.cid = CID_Languages;
     gcd[k].gd.u.matrix = &mi;
-    gcd[k].gd.popup_msg = (unichar_t *) _(
+    gcd[k].gd.popup_msg = (uint32_t *) _(
 	"A list of languages and the lookups turned on and off\n"
 	"for each to accomplish justification.  A language may\n"
 	"appear more than once, in which case second (or third,\n"
@@ -773,7 +773,7 @@ static char *JSTF_Langs(GGadget *g, int r, int c) {
     gcd[k].gd.pos.x = 30-3; 
     gcd[k].gd.pos.width = -1; gcd[k].gd.pos.height = 0;
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    label[k].text = (unichar_t *) _("_OK");
+    label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -784,7 +784,7 @@ static char *JSTF_Langs(GGadget *g, int r, int c) {
     gcd[k].gd.pos.x = -30;
     gcd[k].gd.pos.width = -1; gcd[k].gd.pos.height = 0;
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    label[k].text = (unichar_t *) _("_Cancel");
+    label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -962,14 +962,14 @@ void JustifyDlg(SplineFont *sf) {
     gcd[k].gd.flags = gg_enabled | gg_visible | gg_utf8_popup;
     gcd[k].gd.cid = CID_Scripts;
     gcd[k].gd.u.matrix = &mi;
-    gcd[k].gd.popup_msg = (unichar_t *) _( "A list of scripts with special justification needs");
+    gcd[k].gd.popup_msg = (uint32_t *) _( "A list of scripts with special justification needs");
     gcd[k].creator = GMatrixEditCreate;
     varray[j++] = &gcd[k++]; varray[j++] = NULL;
 
     gcd[k].gd.pos.x = 30-3; 
     gcd[k].gd.pos.width = -1; gcd[k].gd.pos.height = 0;
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    label[k].text = (unichar_t *) _("_OK");
+    label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -980,7 +980,7 @@ void JustifyDlg(SplineFont *sf) {
     gcd[k].gd.pos.x = -30;
     gcd[k].gd.pos.width = -1; gcd[k].gd.pos.height = 0;
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    label[k].text = (unichar_t *) _("_Cancel");
+    label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];

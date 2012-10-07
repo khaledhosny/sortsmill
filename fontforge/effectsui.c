@@ -228,7 +228,7 @@ void OutlineDlg(FontView *fv, CharView *cv,MetricsView *mv,int isinline) {
 	memset(&boxes,0,sizeof(boxes));
 
 	i = k = 0;
-	label[i].text = (unichar_t *) _("Outline Width:");
+	label[i].text = (uint32_t *) _("Outline Width:");
 	label[i].text_is_1byte = true;
 	label[i].text_in_resource = true;
 	gcd[i].gd.label = &label[i];
@@ -238,7 +238,7 @@ void OutlineDlg(FontView *fv, CharView *cv,MetricsView *mv,int isinline) {
 	harray[k++] = &gcd[i-1];
 
 	sprintf( buffer, "%g", def_outline_width );
-	label[i].text = (unichar_t *) buffer;
+	label[i].text = (uint32_t *) buffer;
 	label[i].text_is_1byte = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.pos.x = 40; gcd[i].gd.pos.y = 7; gcd[i].gd.pos.width = 40;
@@ -249,7 +249,7 @@ void OutlineDlg(FontView *fv, CharView *cv,MetricsView *mv,int isinline) {
 	harray[k++] = GCD_Glue;
 
 	if ( isinline ) {
-	    label[i].text = (unichar_t *) _("_Gap:");
+	    label[i].text = (uint32_t *) _("_Gap:");
 	    label[i].text_is_1byte = true;
 	    label[i].text_in_resource = true;
 	    gcd[i].gd.label = &label[i];
@@ -259,7 +259,7 @@ void OutlineDlg(FontView *fv, CharView *cv,MetricsView *mv,int isinline) {
 	    harray[k++] = &gcd[i-1];
 
 	    sprintf( buffer2, "%g", def_gap_width );
-	    label[i].text = (unichar_t *) buffer2;
+	    label[i].text = (uint32_t *) buffer2;
 	    label[i].text_is_1byte = true;
 	    gcd[i].gd.label = &label[i];
 	    gcd[i].gd.pos.x = 120; gcd[i].gd.pos.y = 7;  gcd[i].gd.pos.width = 40;
@@ -274,7 +274,7 @@ void OutlineDlg(FontView *fv, CharView *cv,MetricsView *mv,int isinline) {
 	gcd[i].gd.pos.x = 20-3; gcd[i].gd.pos.y = 7+32;
 	gcd[i].gd.pos.width = -1; gcd[i].gd.pos.height = 0;
 	gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_default;
-	label[i].text = (unichar_t *) _("_OK");
+	label[i].text = (uint32_t *) _("_OK");
 	label[i].text_is_1byte = true;
 	label[i].text_in_resource = true;
 	gcd[i].gd.label = &label[i];
@@ -285,7 +285,7 @@ void OutlineDlg(FontView *fv, CharView *cv,MetricsView *mv,int isinline) {
 	gcd[i].gd.pos.x = -20; gcd[i].gd.pos.y = 7+32+3;
 	gcd[i].gd.pos.width = -1; gcd[i].gd.pos.height = 0;
 	gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-	label[i].text = (unichar_t *) _("_Cancel");
+	label[i].text = (uint32_t *) _("_Cancel");
 	label[i].text_is_1byte = true;
 	label[i].text_in_resource = true;
 	gcd[i].gd.label = &label[i];
@@ -420,7 +420,7 @@ void ShadowDlg(FontView *fv, CharView *cv,MetricsView *mv,int wireframe) {
 	memset(&boxes,0,sizeof(boxes));
 
 	i = k = 0;
-	label[i].text = (unichar_t *) _("Outline Width:");
+	label[i].text = (uint32_t *) _("Outline Width:");
 	label[i].text_is_1byte = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.pos.x = 7; gcd[i].gd.pos.y = 7+3; 
@@ -429,7 +429,7 @@ void ShadowDlg(FontView *fv, CharView *cv,MetricsView *mv,int wireframe) {
 	hvarray[k++] = &gcd[i-1];
 
 	sprintf( buffer, "%g", def_outline_width );
-	label[i].text = (unichar_t *) buffer;
+	label[i].text = (uint32_t *) buffer;
 	label[i].text_is_1byte = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.pos.x = 90; gcd[i].gd.pos.y = 7; gcd[i].gd.pos.width = 50;
@@ -438,7 +438,7 @@ void ShadowDlg(FontView *fv, CharView *cv,MetricsView *mv,int wireframe) {
 	gcd[i++].creator = GTextFieldCreate;
 	hvarray[k++] = &gcd[i-1]; hvarray[k++] = NULL;
 
-	label[i].text = (unichar_t *) _("Shadow Length:");
+	label[i].text = (uint32_t *) _("Shadow Length:");
 	label[i].text_is_1byte = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.pos.x = gcd[i-2].gd.pos.x; gcd[i].gd.pos.y = gcd[i-2].gd.pos.y+26;
@@ -447,7 +447,7 @@ void ShadowDlg(FontView *fv, CharView *cv,MetricsView *mv,int wireframe) {
 	hvarray[k++] = &gcd[i-1];
 
 	sprintf( buffer2, "%g", def_shadow_len );
-	label[i].text = (unichar_t *) buffer2;
+	label[i].text = (uint32_t *) buffer2;
 	label[i].text_is_1byte = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.pos.x = gcd[i-2].gd.pos.x; gcd[i].gd.pos.y = gcd[i-1].gd.pos.y-3;  gcd[i].gd.pos.width = gcd[i-2].gd.pos.width;
@@ -456,7 +456,7 @@ void ShadowDlg(FontView *fv, CharView *cv,MetricsView *mv,int wireframe) {
 	gcd[i++].creator = GTextFieldCreate;
 	hvarray[k++] = &gcd[i-1]; hvarray[k++] = NULL;
 
-	label[i].text = (unichar_t *) _("Light Angle:");
+	label[i].text = (uint32_t *) _("Light Angle:");
 	label[i].text_is_1byte = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.pos.x = gcd[i-2].gd.pos.x; gcd[i].gd.pos.y = gcd[i-2].gd.pos.y+26;
@@ -465,7 +465,7 @@ void ShadowDlg(FontView *fv, CharView *cv,MetricsView *mv,int wireframe) {
 	hvarray[k++] = &gcd[i-1];
 
 	sprintf( buffer3, "%g", def_sun_angle );
-	label[i].text = (unichar_t *) buffer3;
+	label[i].text = (uint32_t *) buffer3;
 	label[i].text_is_1byte = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.pos.x = gcd[i-2].gd.pos.x; gcd[i].gd.pos.y = gcd[i-1].gd.pos.y-3;  gcd[i].gd.pos.width = gcd[i-2].gd.pos.width;
@@ -481,7 +481,7 @@ void ShadowDlg(FontView *fv, CharView *cv,MetricsView *mv,int wireframe) {
 	gcd[i].gd.pos.x = 20-3; gcd[i].gd.pos.y = gcd[i-2].gd.pos.y+30;
 	gcd[i].gd.pos.width = -1; gcd[i].gd.pos.height = 0;
 	gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_default;
-	label[i].text = (unichar_t *) _("_OK");
+	label[i].text = (uint32_t *) _("_OK");
 	label[i].text_is_1byte = true;
 	label[i].text_in_resource = true;
 	gcd[i].gd.label = &label[i];
@@ -492,7 +492,7 @@ void ShadowDlg(FontView *fv, CharView *cv,MetricsView *mv,int wireframe) {
 	gcd[i].gd.pos.x = -20; gcd[i].gd.pos.y = gcd[i-1].gd.pos.y+3;
 	gcd[i].gd.pos.width = -1; gcd[i].gd.pos.height = 0;
 	gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-	label[i].text = (unichar_t *) _("_Cancel");
+	label[i].text = (uint32_t *) _("_Cancel");
 	label[i].text_is_1byte = true;
 	label[i].text_in_resource = true;
 	gcd[i].gd.label = &label[i];

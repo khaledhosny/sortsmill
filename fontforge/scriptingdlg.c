@@ -59,12 +59,12 @@ struct sd_data {
 static int SD_Call(GGadget *g, GEvent *e) {
     if ( e->type==et_controlevent && e->u.control.subtype == et_buttonactivate ) {
 	char *fn;
-	unichar_t *insert;
+	uint32_t *insert;
     
 	fn = gwwv_open_filename(_("Call Script"), NULL, "*",NULL);
 	if ( fn==NULL )
 return(true);
-	insert = xmalloc((strlen(fn)+10)*sizeof(unichar_t));
+	insert = xmalloc((strlen(fn)+10)*sizeof(uint32_t));
 	*insert = '"';
 	utf82u_strcpy(insert+1,fn);
 	uc_strcat(insert,"\"()");
@@ -104,7 +104,7 @@ return;			/* Error return */
     if ( c.script==NULL )
 	ScriptError(&c, "Can't create temporary file");
     else {
-	const unichar_t *ret = _GGadgetGetTitle(GWidgetGetControl(sd->gw,CID_Script));
+	const uint32_t *ret = _GGadgetGetTitle(GWidgetGetControl(sd->gw,CID_Script));
 	while ( *ret ) {
 	    /* There's a bug here. Filenames need to be converted to the local charset !!!! */
 	    putc(*ret,c.script);
@@ -281,7 +281,7 @@ void ScriptDlg(FontView *fv,CharView *cv) {
 	gcd[i].gd.pos.x = 10; gcd[i].gd.pos.y = gcd[i-1].gd.pos.y+gcd[i-1].gd.pos.height+1;
 	gcd[i].gd.flags = gg_visible | gg_enabled | gg_cb_on;
 	gcd[i].gd.cid = CID_Python;
-	label[i].text = (unichar_t *) _("_Python");
+	label[i].text = (uint32_t *) _("_Python");
 	label[i].text_is_1byte = true;
 	label[i].text_in_resource = true;
 	gcd[i].gd.label = &label[i];
@@ -292,7 +292,7 @@ void ScriptDlg(FontView *fv,CharView *cv) {
 	gcd[i].gd.pos.x = 70; gcd[i].gd.pos.y = gcd[i-1].gd.pos.y;
 	gcd[i].gd.flags = gg_visible | gg_enabled;	/* disabled if cv!=NULL later */
 	gcd[i].gd.cid = CID_FF;
-	label[i].text = (unichar_t *) _("_FF");
+	label[i].text = (uint32_t *) _("_FF");
 	label[i].text_is_1byte = true;
 	label[i].text_in_resource = true;
 	gcd[i].gd.label = &label[i];
@@ -312,7 +312,7 @@ void ScriptDlg(FontView *fv,CharView *cv) {
 	barray[0][7] = barray[1][7] = barray[2][0] = NULL;
 	gcd[i].gd.pos.x = 25-3; gcd[i].gd.pos.y = SD_Height-32-3;
 	gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_default;
-	label[i].text = (unichar_t *) _("_OK");
+	label[i].text = (uint32_t *) _("_OK");
 	label[i].text_is_1byte = true;
 	label[i].text_in_resource = true;
 	gcd[i].gd.mnemonic = 'O';
@@ -324,7 +324,7 @@ void ScriptDlg(FontView *fv,CharView *cv) {
 
 	gcd[i].gd.pos.x = -25; gcd[i].gd.pos.y = SD_Height-32;
 	gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-	label[i].text = (unichar_t *) _("_Cancel");
+	label[i].text = (uint32_t *) _("_Cancel");
 	label[i].text_is_1byte = true;
 	label[i].text_in_resource = true;
 	gcd[i].gd.label = &label[i];
@@ -336,7 +336,7 @@ void ScriptDlg(FontView *fv,CharView *cv) {
 
 	gcd[i].gd.pos.x = (SD_Width-GIntGetResource(_NUM_Buttonsize)*100/GIntGetResource(_NUM_ScaleFactor))/2; gcd[i].gd.pos.y = SD_Height-40;
 	gcd[i].gd.flags = gg_visible | gg_enabled;
-	label[i].text = (unichar_t *) _("C_all...");
+	label[i].text = (uint32_t *) _("C_all...");
 	label[i].text_is_1byte = true;
 	label[i].text_in_resource = true;
 	gcd[i].gd.label = &label[i];

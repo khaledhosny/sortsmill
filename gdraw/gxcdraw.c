@@ -1176,7 +1176,7 @@ return( rect.width );
 }
 
 static int32 _GXPDraw_DoText(GWindow w, int32 x, int32 y,
-	const unichar_t *text, int32 cnt, Color col,
+	const uint32_t *text, int32 cnt, Color col,
 	enum text_funcs drawit, struct tf_arg *arg) {
     char *temp = cnt>=0 ? u2utf8_copyn(text,cnt) : u2utf8_copy(text);
     int width = _GXPDraw_DoText8(w,x,y,temp,-1,col,drawit,arg);
@@ -1281,19 +1281,19 @@ return( -1 );
 return( line->start_index );
 }
 
-int32 GDrawDrawText(GWindow gw, int32 x, int32 y, const unichar_t *text, int32 cnt, Color col) {
+int32 GDrawDrawText(GWindow gw, int32 x, int32 y, const uint32_t *text, int32 cnt, Color col) {
     struct tf_arg arg;
 
 return( _GXPDraw_DoText(gw,x,y,text,cnt,col,tf_drawit,&arg));
 }
 
-int32 GDrawGetTextWidth(GWindow gw,const unichar_t *text, int32 cnt) {
+int32 GDrawGetTextWidth(GWindow gw,const uint32_t *text, int32 cnt) {
     struct tf_arg arg;
 
 return( _GXPDraw_DoText(gw,0,0,text,cnt,0x0,tf_width,&arg));
 }
 
-int32 GDrawGetTextBounds(GWindow gw,const unichar_t *text, int32 cnt, GTextBounds *bounds) {
+int32 GDrawGetTextBounds(GWindow gw,const uint32_t *text, int32 cnt, GTextBounds *bounds) {
     int ret;
     struct tf_arg arg;
 

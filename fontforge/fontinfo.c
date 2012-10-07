@@ -51,10 +51,10 @@ extern GBox _ggadget_Default_Box;
 static int last_aspect=0;
 
 GTextInfo emsizes[] = {
-    { (unichar_t *) "1000", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "1024", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "2048", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "4096", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "1000", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "1024", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "2048", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "4096", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 
@@ -63,712 +63,712 @@ GTextInfo interpretations[] = {
 /* GT: The msgstr should contain a translation of "None", ignore "Interpretation|" */
 /* GT: In french this could be "Aucun" or "Aucune" depending on the gender */
 /* GT:  of "Interpretation" */
-    { (unichar_t *) N_("Interpretation|None"), NULL, 0, 0, (void *) ui_none, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-/*  { (unichar_t *) N_("Adobe Public Use Defs."), NULL, 0, 0, (void *) ui_adobe, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'}, */
-/*  { (unichar_t *) N_("Greek"), NULL, 0, 0, (void *) ui_greek, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'}, */
-    { (unichar_t *) N_("Japanese"), NULL, 0, 0, (void *) ui_japanese, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Traditional Chinese"), NULL, 0, 0, (void *) ui_trad_chinese, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Simplified Chinese"), NULL, 0, 0, (void *) ui_simp_chinese, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Korean"), NULL, 0, 0, (void *) ui_korean, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-/*  { (unichar_t *) N_("AMS Public Use"), NULL, 0, 0, (void *) ui_ams, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'}, */
+    { (uint32_t *) N_("Interpretation|None"), NULL, 0, 0, (void *) ui_none, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+/*  { (uint32_t *) N_("Adobe Public Use Defs."), NULL, 0, 0, (void *) ui_adobe, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'}, */
+/*  { (uint32_t *) N_("Greek"), NULL, 0, 0, (void *) ui_greek, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'}, */
+    { (uint32_t *) N_("Japanese"), NULL, 0, 0, (void *) ui_japanese, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Traditional Chinese"), NULL, 0, 0, (void *) ui_trad_chinese, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Simplified Chinese"), NULL, 0, 0, (void *) ui_simp_chinese, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Korean"), NULL, 0, 0, (void *) ui_korean, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+/*  { (uint32_t *) N_("AMS Public Use"), NULL, 0, 0, (void *) ui_ams, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'}, */
     GTEXTINFO_EMPTY
 };
 GTextInfo macstyles[] = {
-    { (unichar_t *) N_("MacStyles|Bold"), NULL, 0, 0, (void *) sf_bold, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("MacStyles|Italic"), NULL, 0, 0, (void *) sf_italic, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("MacStyles|Condense"), NULL, 0, 0, (void *) sf_condense, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("MacStyles|Expand"), NULL, 0, 0, (void *) sf_extend, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("MacStyles|Underline"), NULL, 0, 0, (void *) sf_underline, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("MacStyles|Outline"), NULL, 0, 0, (void *) sf_outline, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("MacStyles|Shadow"), NULL, 0, 0, (void *) sf_shadow, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("MacStyles|Bold"), NULL, 0, 0, (void *) sf_bold, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("MacStyles|Italic"), NULL, 0, 0, (void *) sf_italic, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("MacStyles|Condense"), NULL, 0, 0, (void *) sf_condense, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("MacStyles|Expand"), NULL, 0, 0, (void *) sf_extend, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("MacStyles|Underline"), NULL, 0, 0, (void *) sf_underline, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("MacStyles|Outline"), NULL, 0, 0, (void *) sf_outline, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("MacStyles|Shadow"), NULL, 0, 0, (void *) sf_shadow, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo widthclass[] = {
-    { (unichar_t *) N_("Ultra-Condensed (50%)"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Extra-Condensed (62.5%)"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Condensed (75%)"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Semi-Condensed (87.5%)"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Medium (100%)"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Semi-Expanded (112.5%)"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Expanded (125%)"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Extra-Expanded (150%)"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Ultra-Expanded (200%)"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Ultra-Condensed (50%)"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Extra-Condensed (62.5%)"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Condensed (75%)"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Semi-Condensed (87.5%)"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Medium (100%)"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Semi-Expanded (112.5%)"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Expanded (125%)"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Extra-Expanded (150%)"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Ultra-Expanded (200%)"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo weightclass[] = {
-    { (unichar_t *) N_("100 Thin"), NULL, 0, 0, (void *) 100, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("200 Extra-Light"), NULL, 0, 0, (void *) 200, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("300 Light"), NULL, 0, 0, (void *) 300, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("400 Book"), NULL, 0, 0, (void *) 400, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("500 Medium"), NULL, 0, 0, (void *) 500, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("600 Demi-Bold"), NULL, 0, 0, (void *) 600, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("700 Bold"), NULL, 0, 0, (void *) 700, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("800 Heavy"), NULL, 0, 0, (void *) 800, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("900 Black"), NULL, 0, 0, (void *) 900, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("100 Thin"), NULL, 0, 0, (void *) 100, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("200 Extra-Light"), NULL, 0, 0, (void *) 200, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("300 Light"), NULL, 0, 0, (void *) 300, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("400 Book"), NULL, 0, 0, (void *) 400, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("500 Medium"), NULL, 0, 0, (void *) 500, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("600 Demi-Bold"), NULL, 0, 0, (void *) 600, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("700 Bold"), NULL, 0, 0, (void *) 700, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("800 Heavy"), NULL, 0, 0, (void *) 800, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("900 Black"), NULL, 0, 0, (void *) 900, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo fstype[] = {
-    { (unichar_t *) N_("Never Embed/No Editing"), NULL, 0, 0, (void *) 0x02, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Printable Document"), NULL, 0, 0, (void *) 0x04, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Editable Document"), NULL, 0, 0, (void *) 0x08, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Installable Font"), NULL, 0, 0, (void *) 0x00, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Never Embed/No Editing"), NULL, 0, 0, (void *) 0x02, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Printable Document"), NULL, 0, 0, (void *) 0x04, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Editable Document"), NULL, 0, 0, (void *) 0x08, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Installable Font"), NULL, 0, 0, (void *) 0x00, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo pfmfamily[] = {
-    { (unichar_t *) N_("Serif"), NULL, 0, 0, (void *) 0x11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Sans-Serif"), NULL, 0, 0, (void *) 0x21, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Monospace"), NULL, 0, 0, (void *) 0x31, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Serif"), NULL, 0, 0, (void *) 0x11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Sans-Serif"), NULL, 0, 0, (void *) 0x21, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Monospace"), NULL, 0, 0, (void *) 0x31, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
 /* GT: See the long comment at "Property|New" */
 /* GT: The msgstr should contain a translation of "Script", ignore "cursive|" */
 /* GT: English uses "script" to me a general writing style (latin, greek, kanji) */
 /* GT: and the cursive handwriting style. Here we mean cursive handwriting. */
-    { (unichar_t *) N_("cursive|Script"), NULL, 0, 0, (void *) 0x41, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Decorative"), NULL, 0, 0, (void *) 0x51, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("cursive|Script"), NULL, 0, 0, (void *) 0x41, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Decorative"), NULL, 0, 0, (void *) 0x51, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo ibmfamily[] = {
-    { (unichar_t *) N_("No Classification"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Old Style Serifs"), NULL, 0, 0, (void *) 0x100, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("OSS Rounded Legibility"), NULL, 0, 0, (void *) 0x101, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("OSS Geralde"), NULL, 0, 0, (void *) 0x102, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("OSS Venetian"), NULL, 0, 0, (void *) 0x103, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("OSS Modified Venetian"), NULL, 0, 0, (void *) 0x104, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("OSS Dutch Modern"), NULL, 0, 0, (void *) 0x105, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("OSS Dutch Trad"), NULL, 0, 0, (void *) 0x106, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("OSS Contemporary"), NULL, 0, 0, (void *) 0x107, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("OSS Calligraphic"), NULL, 0, 0, (void *) 0x108, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("OSS Miscellaneous"), NULL, 0, 0, (void *) 0x10f, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Transitional Serifs"), NULL, 0, 0, (void *) 0x200, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("TS Direct Line"), NULL, 0, 0, (void *) 0x201, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("TS Script"), NULL, 0, 0, (void *) 0x202, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("TS Miscellaneous"), NULL, 0, 0, (void *) 0x20f, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Modern Serifs"), NULL, 0, 0, (void *) 0x300, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("MS Italian"), NULL, 0, 0, (void *) 0x301, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("MS Script"), NULL, 0, 0, (void *) 0x302, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("MS Miscellaneous"), NULL, 0, 0, (void *) 0x30f, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Clarendon Serifs"), NULL, 0, 0, (void *) 0x400, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("CS Clarendon"), NULL, 0, 0, (void *) 0x401, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("CS Modern"), NULL, 0, 0, (void *) 0x402, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("CS Traditional"), NULL, 0, 0, (void *) 0x403, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("CS Newspaper"), NULL, 0, 0, (void *) 0x404, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("CS Stub Serif"), NULL, 0, 0, (void *) 0x405, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("CS Monotone"), NULL, 0, 0, (void *) 0x406, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("CS Typewriter"), NULL, 0, 0, (void *) 0x407, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("CS Miscellaneous"), NULL, 0, 0, (void *) 0x40f, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Slab Serifs"), NULL, 0, 0, (void *) 0x500, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Slab Serifs|SS Monotone"), NULL, 0, 0, (void *) 0x501, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Slab Serifs|SS Humanist"), NULL, 0, 0, (void *) 0x502, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Slab Serifs|SS Geometric"), NULL, 0, 0, (void *) 0x503, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Slab Serifs|SS Swiss"), NULL, 0, 0, (void *) 0x504, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Slab Serifs|SS Typewriter"), NULL, 0, 0, (void *) 0x505, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Slab Serifs|SS Miscellaneous"), NULL, 0, 0, (void *) 0x50f, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Freeform Serifs"), NULL, 0, 0, (void *) 0x700, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("FS Modern"), NULL, 0, 0, (void *) 0x701, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("FS Miscellaneous"), NULL, 0, 0, (void *) 0x70f, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Sans-Serif"), NULL, 0, 0, (void *) 0x800, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Sans-Serif|SS IBM NeoGrotesque Gothic"), NULL, 0, 0, (void *) 0x801, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Sans-Serif|SS Humanist"), NULL, 0, 0, (void *) 0x802, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Sans-Serif|SS Low-x Round Geometric"), NULL, 0, 0, (void *) 0x803, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Sans-Serif|SS High-x Round Geometric"), NULL, 0, 0, (void *) 0x804, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Sans-Serif|SS NeoGrotesque Gothic"), NULL, 0, 0, (void *) 0x805, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Sans-Serif|SS Modified Grotesque Gothic"), NULL, 0, 0, (void *) 0x806, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Sans-Serif|SS Typewriter Gothic"), NULL, 0, 0, (void *) 0x809, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Sans-Serif|SS Matrix"), NULL, 0, 0, (void *) 0x80a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Sans-Serif|SS Miscellaneous"), NULL, 0, 0, (void *) 0x80f, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Ornamentals"), NULL, 0, 0, (void *) 0x900, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("O Engraver"), NULL, 0, 0, (void *) 0x901, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("O Black Letter"), NULL, 0, 0, (void *) 0x902, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("O Decorative"), NULL, 0, 0, (void *) 0x903, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("O Three Dimensional"), NULL, 0, 0, (void *) 0x904, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("O Miscellaneous"), NULL, 0, 0, (void *) 0x90f, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Scripts"), NULL, 0, 0, (void *) 0xa00, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("S Uncial"), NULL, 0, 0, (void *) 0xa01, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("S Brush Joined"), NULL, 0, 0, (void *) 0xa02, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("S Formal Joined"), NULL, 0, 0, (void *) 0xa03, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("S Monotone Joined"), NULL, 0, 0, (void *) 0xa04, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("S Calligraphic"), NULL, 0, 0, (void *) 0xa05, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("S Brush Unjoined"), NULL, 0, 0, (void *) 0xa06, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("S Formal Unjoined"), NULL, 0, 0, (void *) 0xa07, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("S Monotone Unjoined"), NULL, 0, 0, (void *) 0xa08, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("S Miscellaneous"), NULL, 0, 0, (void *) 0xa0f, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Symbolic"), NULL, 0, 0, (void *) 0xc00, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Sy Mixed Serif"), NULL, 0, 0, (void *) 0xc03, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Sy Old Style Serif"), NULL, 0, 0, (void *) 0xc06, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Sy Neo-grotesque Sans Serif"), NULL, 0, 0, (void *) 0xc07, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Sy Miscellaneous"), NULL, 0, 0, (void *) 0xc0f, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("No Classification"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Old Style Serifs"), NULL, 0, 0, (void *) 0x100, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("OSS Rounded Legibility"), NULL, 0, 0, (void *) 0x101, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("OSS Geralde"), NULL, 0, 0, (void *) 0x102, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("OSS Venetian"), NULL, 0, 0, (void *) 0x103, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("OSS Modified Venetian"), NULL, 0, 0, (void *) 0x104, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("OSS Dutch Modern"), NULL, 0, 0, (void *) 0x105, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("OSS Dutch Trad"), NULL, 0, 0, (void *) 0x106, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("OSS Contemporary"), NULL, 0, 0, (void *) 0x107, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("OSS Calligraphic"), NULL, 0, 0, (void *) 0x108, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("OSS Miscellaneous"), NULL, 0, 0, (void *) 0x10f, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Transitional Serifs"), NULL, 0, 0, (void *) 0x200, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("TS Direct Line"), NULL, 0, 0, (void *) 0x201, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("TS Script"), NULL, 0, 0, (void *) 0x202, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("TS Miscellaneous"), NULL, 0, 0, (void *) 0x20f, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Modern Serifs"), NULL, 0, 0, (void *) 0x300, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("MS Italian"), NULL, 0, 0, (void *) 0x301, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("MS Script"), NULL, 0, 0, (void *) 0x302, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("MS Miscellaneous"), NULL, 0, 0, (void *) 0x30f, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Clarendon Serifs"), NULL, 0, 0, (void *) 0x400, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("CS Clarendon"), NULL, 0, 0, (void *) 0x401, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("CS Modern"), NULL, 0, 0, (void *) 0x402, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("CS Traditional"), NULL, 0, 0, (void *) 0x403, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("CS Newspaper"), NULL, 0, 0, (void *) 0x404, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("CS Stub Serif"), NULL, 0, 0, (void *) 0x405, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("CS Monotone"), NULL, 0, 0, (void *) 0x406, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("CS Typewriter"), NULL, 0, 0, (void *) 0x407, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("CS Miscellaneous"), NULL, 0, 0, (void *) 0x40f, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Slab Serifs"), NULL, 0, 0, (void *) 0x500, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Slab Serifs|SS Monotone"), NULL, 0, 0, (void *) 0x501, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Slab Serifs|SS Humanist"), NULL, 0, 0, (void *) 0x502, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Slab Serifs|SS Geometric"), NULL, 0, 0, (void *) 0x503, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Slab Serifs|SS Swiss"), NULL, 0, 0, (void *) 0x504, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Slab Serifs|SS Typewriter"), NULL, 0, 0, (void *) 0x505, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Slab Serifs|SS Miscellaneous"), NULL, 0, 0, (void *) 0x50f, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Freeform Serifs"), NULL, 0, 0, (void *) 0x700, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("FS Modern"), NULL, 0, 0, (void *) 0x701, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("FS Miscellaneous"), NULL, 0, 0, (void *) 0x70f, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Sans-Serif"), NULL, 0, 0, (void *) 0x800, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Sans-Serif|SS IBM NeoGrotesque Gothic"), NULL, 0, 0, (void *) 0x801, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Sans-Serif|SS Humanist"), NULL, 0, 0, (void *) 0x802, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Sans-Serif|SS Low-x Round Geometric"), NULL, 0, 0, (void *) 0x803, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Sans-Serif|SS High-x Round Geometric"), NULL, 0, 0, (void *) 0x804, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Sans-Serif|SS NeoGrotesque Gothic"), NULL, 0, 0, (void *) 0x805, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Sans-Serif|SS Modified Grotesque Gothic"), NULL, 0, 0, (void *) 0x806, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Sans-Serif|SS Typewriter Gothic"), NULL, 0, 0, (void *) 0x809, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Sans-Serif|SS Matrix"), NULL, 0, 0, (void *) 0x80a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Sans-Serif|SS Miscellaneous"), NULL, 0, 0, (void *) 0x80f, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Ornamentals"), NULL, 0, 0, (void *) 0x900, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("O Engraver"), NULL, 0, 0, (void *) 0x901, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("O Black Letter"), NULL, 0, 0, (void *) 0x902, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("O Decorative"), NULL, 0, 0, (void *) 0x903, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("O Three Dimensional"), NULL, 0, 0, (void *) 0x904, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("O Miscellaneous"), NULL, 0, 0, (void *) 0x90f, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Scripts"), NULL, 0, 0, (void *) 0xa00, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("S Uncial"), NULL, 0, 0, (void *) 0xa01, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("S Brush Joined"), NULL, 0, 0, (void *) 0xa02, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("S Formal Joined"), NULL, 0, 0, (void *) 0xa03, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("S Monotone Joined"), NULL, 0, 0, (void *) 0xa04, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("S Calligraphic"), NULL, 0, 0, (void *) 0xa05, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("S Brush Unjoined"), NULL, 0, 0, (void *) 0xa06, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("S Formal Unjoined"), NULL, 0, 0, (void *) 0xa07, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("S Monotone Unjoined"), NULL, 0, 0, (void *) 0xa08, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("S Miscellaneous"), NULL, 0, 0, (void *) 0xa0f, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Symbolic"), NULL, 0, 0, (void *) 0xc00, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Sy Mixed Serif"), NULL, 0, 0, (void *) 0xc03, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Sy Old Style Serif"), NULL, 0, 0, (void *) 0xc06, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Sy Neo-grotesque Sans Serif"), NULL, 0, 0, (void *) 0xc07, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Sy Miscellaneous"), NULL, 0, 0, (void *) 0xc0f, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo os2versions[] = {
-    { (unichar_t *) N_("OS2Version|Automatic"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("1"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("2"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("3"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("4"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("OS2Version|Automatic"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("1"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("2"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("3"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("4"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo gaspversions[] = {
-    { (unichar_t *) N_("0"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("1"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("0"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("1"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo panfamily[] = {
-    { (unichar_t *) N_("PanoseFamily|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseFamily|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Latin: Text & Display"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseFamily|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseFamily|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Latin: Text & Display"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
 /* GT: See the long comment at "Property|New" */
 /* GT: The msgstr should contain a translation of "Script", ignore "cursive|" */
 /* GT: English uses "script" to me a general writing style (latin, greek, kanji) */
 /* GT: and the cursive handwriting style. Here we mean cursive handwriting. */
-    { (unichar_t *) N_("cursive|Latin: Handwritten"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Latin: Decorative"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Latin: Pictorial/Symbol"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "6", NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "7", NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "8", NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "9", NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "10", NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "11", NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("cursive|Latin: Handwritten"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Latin: Decorative"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Latin: Pictorial/Symbol"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "6", NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "7", NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "8", NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "9", NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "10", NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "11", NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo panunknown[] = {
-    { (unichar_t *) "Any", NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "No Fit", NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "2", NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "3", NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "4", NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "5", NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "6", NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "7", NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "8", NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "9", NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "10", NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "11", NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "Any", NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "No Fit", NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "2", NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "3", NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "4", NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "5", NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "6", NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "7", NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "8", NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "9", NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "10", NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "11", NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo panserifs[] = {
-    { (unichar_t *) N_("PanoseSerifs|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseSerifs|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Cove"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Obtuse Cove"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Square Cove"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Obtuse Square Cove"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseSerivfs|Square"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseSerifs|Thin"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Bone"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Exaggerated"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Triangle"), NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Normal Sans"), NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Obtuse Sans"), NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Perpendicular Sans"), NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Flared"), NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseSerivfs|Rounded"), NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseSerifs|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseSerifs|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Cove"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Obtuse Cove"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Square Cove"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Obtuse Square Cove"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseSerivfs|Square"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseSerifs|Thin"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Bone"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Exaggerated"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Triangle"), NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Normal Sans"), NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Obtuse Sans"), NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Perpendicular Sans"), NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Flared"), NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseSerivfs|Rounded"), NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo panweight[] = {
-    { (unichar_t *) N_("PanoseWeight|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseWeight|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Very Light"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Light"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseWeight|Thin"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Book"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Medium"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Demi"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Bold"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Heavy"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Black"), NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Nord"), NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseWeight|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseWeight|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Very Light"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Light"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseWeight|Thin"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Book"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Medium"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Demi"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Bold"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Heavy"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Black"), NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Nord"), NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo panprop[] = {
-    { (unichar_t *) N_("PanoseProportion|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseProportion|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Old Style"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Modern"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Even Width"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Expanded"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Condensed"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Very Expanded"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Very Condensed"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Monospaced"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "10", NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "11", NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseProportion|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseProportion|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Old Style"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Modern"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Even Width"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Expanded"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Condensed"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Very Expanded"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Very Condensed"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Monospaced"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "10", NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "11", NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo pancontrast[] = {
-    { (unichar_t *) N_("PanoseContrast|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseContrast|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseContrast|None"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseContrast|Very Low"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseContrast|Low"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseContrast|Medium Low"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseContrast|Medium"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseContrast|Medium High"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseContrast|High"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseContrast|Very High"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "10", NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "11", NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseContrast|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseContrast|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseContrast|None"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseContrast|Very Low"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseContrast|Low"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseContrast|Medium Low"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseContrast|Medium"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseContrast|Medium High"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseContrast|High"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseContrast|Very High"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "10", NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "11", NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo panstrokevar[] = {
-    { (unichar_t *) N_("PanoseStrokeVariation|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseStrokeVariation|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Gradual/Diagonal"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Gradual/Transitional"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Gradual/Vertical"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Gradual/Horizontal"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Rapid/Vertical"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Rapid/Horizontal"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Instant/Vertical"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "9", NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "10", NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "11", NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseStrokeVariation|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseStrokeVariation|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Gradual/Diagonal"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Gradual/Transitional"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Gradual/Vertical"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Gradual/Horizontal"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Rapid/Vertical"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Rapid/Horizontal"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Instant/Vertical"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "9", NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "10", NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "11", NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo panarmstyle[] = {
-    { (unichar_t *) N_("PanoseArmStyle|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseArmStyle|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Straight Arms/Horizontal"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Straight Arms/Wedge"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Straight Arms/Vertical"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Straight Arms/Single Serif"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Straight Arms/Double Serif"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Non-Straight Arms/Horizontal"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Non-Straight Arms/Wedge"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Non-Straight Arms/Vertical"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Non-Straight Arms/Single Serif"), NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Non-Straight Arms/Double Serif"), NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseArmStyle|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseArmStyle|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Straight Arms/Horizontal"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Straight Arms/Wedge"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Straight Arms/Vertical"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Straight Arms/Single Serif"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Straight Arms/Double Serif"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Non-Straight Arms/Horizontal"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Non-Straight Arms/Wedge"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Non-Straight Arms/Vertical"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Non-Straight Arms/Single Serif"), NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Non-Straight Arms/Double Serif"), NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo panletterform[] = {
-    { (unichar_t *) N_("PanoseLetterform|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseLetterform|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Normal/Contact"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Normal/Weighted"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Normal/Boxed"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Normal/Flattened"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Normal/Rounded"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Normal/Off-Center"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Normal/Square"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Oblique/Contact"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Oblique/Weighted"), NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Oblique/Boxed"), NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Oblique/Flattened"), NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Oblique/Rounded"), NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Oblique/Off-Center"), NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Oblique/Square"), NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseLetterform|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseLetterform|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Normal/Contact"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Normal/Weighted"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Normal/Boxed"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Normal/Flattened"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Normal/Rounded"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Normal/Off-Center"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Normal/Square"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Oblique/Contact"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Oblique/Weighted"), NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Oblique/Boxed"), NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Oblique/Flattened"), NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Oblique/Rounded"), NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Oblique/Off-Center"), NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Oblique/Square"), NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo panmidline[] = {
-    { (unichar_t *) N_("PanoseMidline|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseMidline|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseMidline|Standard/Trimmed"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseMidline|Standard/Pointed"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseMidline|Standard/Serifed"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseMidline|High/Trimmed"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseMidline|High/Pointed"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseMidline|High/Serifed"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseMidline|Constant/Trimmed"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseMidline|Constant/Pointed"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseMidline|Constant/Serifed"), NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseMidline|Low/Trimmed"), NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseMidline|Low/Pointed"), NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseMidline|Low/Serifed"), NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseMidline|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseMidline|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseMidline|Standard/Trimmed"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseMidline|Standard/Pointed"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseMidline|Standard/Serifed"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseMidline|High/Trimmed"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseMidline|High/Pointed"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseMidline|High/Serifed"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseMidline|Constant/Trimmed"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseMidline|Constant/Pointed"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseMidline|Constant/Serifed"), NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseMidline|Low/Trimmed"), NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseMidline|Low/Pointed"), NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseMidline|Low/Serifed"), NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo panxheight[] = {
-    { (unichar_t *) N_("PanoseXHeight|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseXHeight|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseXHeight|Constant/Small"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseXHeight|Constant/Standard"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseXHeight|Constant/Large"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseXHeight|Ducking/Small"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseXHeight|Ducking/Standard"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseXHeight|Ducking/Large"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "8", NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "9", NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "10", NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "11", NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseXHeight|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseXHeight|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseXHeight|Constant/Small"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseXHeight|Constant/Standard"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseXHeight|Constant/Large"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseXHeight|Ducking/Small"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseXHeight|Ducking/Standard"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseXHeight|Ducking/Large"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "8", NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "9", NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "10", NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "11", NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 /* Latin: Hand written */
 static GTextInfo pantool[] = {
-    { (unichar_t *) N_("PanoseTool|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseTool|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Flat Nib"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Pressure Point"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Engraved"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Ball (Round Cap)"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Brush"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Rough"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Felt Pen/Brush Tip"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Wild Brush - Drips a lot"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "10", NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "11", NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseTool|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseTool|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Flat Nib"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Pressure Point"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Engraved"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Ball (Round Cap)"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Brush"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Rough"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Felt Pen/Brush Tip"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Wild Brush - Drips a lot"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "10", NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "11", NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo panspacing[] = {
-    { (unichar_t *) N_("PanoseSpacing|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseSpacing|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Proportional Spaced"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Monospaced"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "4", NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "5", NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "6", NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "7", NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "8", NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "9", NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "10", NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "11", NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseSpacing|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseSpacing|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Proportional Spaced"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Monospaced"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "4", NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "5", NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "6", NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "7", NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "8", NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "9", NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "10", NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "11", NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo panasprat[] = {
-    { (unichar_t *) N_("PanoseAspectRatio|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseAspectRatio|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Very Condensed"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Condensed"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Normal"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Expanded"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Very Expanded"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "7", NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "8", NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "9", NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "10", NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "11", NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseAspectRatio|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseAspectRatio|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Very Condensed"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Condensed"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Normal"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Expanded"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Very Expanded"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "7", NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "8", NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "9", NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "10", NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "11", NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo pancontrast2[] = {
-    { (unichar_t *) N_("PanoseContrast|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseContrast|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseContrast|None"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Very Low"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Low"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Medium Low"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Medium"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Medium High"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("High"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Very High"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "10", NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "11", NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseContrast|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseContrast|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseContrast|None"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Very Low"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Low"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Medium Low"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Medium"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Medium High"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("High"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Very High"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "10", NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "11", NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo pantopology[] = {
-    { (unichar_t *) N_("PanoseTopology|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseTopology|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Roman Disconnected"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Roman Trailing"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Roman Connected"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Cursive Disconnected"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Cursive Trailing"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Cursive Connected"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Blackletter Disconnected"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Blackletter Trailing"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Blackletter Connected"), NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "11", NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseTopology|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseTopology|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Roman Disconnected"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Roman Trailing"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Roman Connected"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Cursive Disconnected"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Cursive Trailing"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Cursive Connected"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Blackletter Disconnected"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Blackletter Trailing"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Blackletter Connected"), NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "11", NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo panform[] = {
-    { (unichar_t *) N_("PanoseForm|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseForm|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Upright/No Wrapping"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Upright/Some Wrapping"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Upright/More Wrapping"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Upright/Extreme Wrapping"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Oblique/No Wrapping"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Oblique/Some Wrapping"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Oblique/More Wrapping"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Oblique/Extreme Wrapping"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Exaggerated/No Wrapping"), NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Exaggerated/Some Wrapping"), NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Exaggerated/More Wrapping"), NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Exaggerated/Extreme Wrapping"), NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseForm|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseForm|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Upright/No Wrapping"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Upright/Some Wrapping"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Upright/More Wrapping"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Upright/Extreme Wrapping"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Oblique/No Wrapping"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Oblique/Some Wrapping"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Oblique/More Wrapping"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Oblique/Extreme Wrapping"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Exaggerated/No Wrapping"), NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Exaggerated/Some Wrapping"), NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Exaggerated/More Wrapping"), NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Exaggerated/Extreme Wrapping"), NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo panfinials[] = {
-    { (unichar_t *) N_("PanoseFinials|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseFinials|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("None/No loops"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("None/Closed loops"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("None/Open loops"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Sharp/No loops"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Sharp/Closed loops"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Sharp/Open loops"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Tapered/No loops"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Tapered/Closed loops"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Tapered/Open loops"), NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Round/No loops"), NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Round/Closed loops"), NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Round/Open loops"), NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseFinials|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseFinials|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("None/No loops"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("None/Closed loops"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("None/Open loops"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Sharp/No loops"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Sharp/Closed loops"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Sharp/Open loops"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Tapered/No loops"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Tapered/Closed loops"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Tapered/Open loops"), NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Round/No loops"), NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Round/Closed loops"), NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Round/Open loops"), NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo panxascent[] = {
-    { (unichar_t *) N_("PanoseXAscent|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseXAscent|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseXAscent|Very Low"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseXAscent|Low"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseXAscent|Medium"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseXAscent|High"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseXAscent|Very High"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "7", NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "8", NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "9", NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "10", NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "11", NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseXAscent|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseXAscent|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseXAscent|Very Low"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseXAscent|Low"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseXAscent|Medium"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseXAscent|High"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseXAscent|Very High"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "7", NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "8", NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "9", NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "10", NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "11", NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 /* Latin: Decorative */
 static GTextInfo panclass[] = {
-    { (unichar_t *) N_("PanoseClass|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseClass|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Derivative"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Non-standard Topology"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Non-standard Elements"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Non-standard Aspect"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Initials"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Cartoon"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Picture Stems"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Ornamented"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Text and Background"), NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Collage"), NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Montage"), NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseClass|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseClass|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Derivative"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Non-standard Topology"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Non-standard Elements"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Non-standard Aspect"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Initials"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Cartoon"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Picture Stems"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Ornamented"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Text and Background"), NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Collage"), NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Montage"), NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo panaspect[] = {
-    { (unichar_t *) N_("PanoseAspect|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseAspect|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Super Condensed"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Very Condensed"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Condensed"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Normal"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Extended"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Very Extended"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Super Extended"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "9", NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "10", NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "11", NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseAspect|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseAspect|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Super Condensed"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Very Condensed"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Condensed"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Normal"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Extended"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Very Extended"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Super Extended"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "9", NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "10", NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "11", NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo pancontrast3[] = {
-    { (unichar_t *) N_("PanoseContrast|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseContrast|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseContrast|None"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Very Low"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Low"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Medium Low"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Medium"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Medium High"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("High"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Very High"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Horizontal Low"), NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Horizontal Medium"), NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Horizontal High"), NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Broken"), NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseContrast|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseContrast|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseContrast|None"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Very Low"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Low"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Medium Low"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Medium"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Medium High"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("High"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Very High"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Horizontal Low"), NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Horizontal Medium"), NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Horizontal High"), NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Broken"), NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo panserifvar[] = {
-    { (unichar_t *) N_("PanoseSerifVariant|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseSerifVariant|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Cove"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Obtuse Cove"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Square Cove"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Obtuse Square Cove"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseSerivfs|Square"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseSerifs|Thin"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-/*!*/{ (unichar_t *) N_("Oval"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Exaggerated"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Triangle"), NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Normal Sans"), NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Obtuse Sans"), NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Perpendicular Sans"), NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Flared"), NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseSerivfs|Rounded"), NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseSerifVariant|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseSerifVariant|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Cove"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Obtuse Cove"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Square Cove"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Obtuse Square Cove"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseSerivfs|Square"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseSerifs|Thin"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+/*!*/{ (uint32_t *) N_("Oval"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Exaggerated"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Triangle"), NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Normal Sans"), NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Obtuse Sans"), NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Perpendicular Sans"), NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Flared"), NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseSerivfs|Rounded"), NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
 /* Um, these guys are only supposed to go up to 15, so why does this have a 16? */
-/*!*/{ (unichar_t *) N_("PanoseSerivfs|Script"), NULL, 0, 0, (void *) 16, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+/*!*/{ (uint32_t *) N_("PanoseSerivfs|Script"), NULL, 0, 0, (void *) 16, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo pantreatment[] = {
-    { (unichar_t *) N_("PanoseTreatment|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseTreatment|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Solid Fill"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("No Fill"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Patterned Fill"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Complex Fill"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Shaped Fill"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Drawn/Distressed"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "8", NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "9", NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "10", NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "11", NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseTreatment|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseTreatment|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Solid Fill"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("No Fill"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Patterned Fill"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Complex Fill"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Shaped Fill"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Drawn/Distressed"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "8", NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "9", NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "10", NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "11", NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo panlining[] = {
-    { (unichar_t *) N_("PanoseLining|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseLining|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseLining|None"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseLining|Inline"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseLining|Outline"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseLining|Engraved (Multiple Lines)"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseLining|Shadow"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseLining|Relief"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseLining|Backdrop"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "9", NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "10", NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "11", NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseLining|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseLining|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseLining|None"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseLining|Inline"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseLining|Outline"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseLining|Engraved (Multiple Lines)"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseLining|Shadow"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseLining|Relief"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseLining|Backdrop"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "9", NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "10", NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "11", NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo pantopology2[] = {
-    { (unichar_t *) N_("PanoseTopology|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseTopology|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Standard"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Square"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Multiple Segment"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Deco (E,M,S) Waco midline"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Uneven Weighting"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Diverse Arms"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Diverse Forms"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Lombardic Forms"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Upper Case in Lower Case"), NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Implied Topology"), NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Horseshoe E and A"), NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Cursive"), NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Blackletter"), NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Swash Variance"), NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseTopology|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseTopology|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Standard"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Square"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Multiple Segment"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Deco (E,M,S) Waco midline"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Uneven Weighting"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Diverse Arms"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Diverse Forms"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Lombardic Forms"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Upper Case in Lower Case"), NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Implied Topology"), NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Horseshoe E and A"), NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Cursive"), NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Blackletter"), NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Swash Variance"), NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo pancharrange[] = {
-    { (unichar_t *) N_("PanoseCharRange|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseCharRange|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Extended Collection"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Literals"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("No Lower Case"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Small Caps"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "6", NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "7", NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "8", NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "9", NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "10", NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "11", NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseCharRange|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseCharRange|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Extended Collection"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Literals"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("No Lower Case"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Small Caps"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "6", NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "7", NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "8", NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "9", NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "10", NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "11", NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 /* Latin: Symbol */
 static GTextInfo pankind[] = {
-    { (unichar_t *) N_("PanoseKind|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseKind|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Montages"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Pictures"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Shapes"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Scientific"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Music"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Expert"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Patterns"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Borders"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Icons"), NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Logos"), NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Industry specific"), NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseKind|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseKind|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Montages"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Pictures"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Shapes"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Scientific"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Music"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Expert"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Patterns"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Borders"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Icons"), NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Logos"), NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Industry specific"), NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo panasprat2[] = {
-    { (unichar_t *) N_("PanoseAspect|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("PanoseAspect|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("No Width"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Exceptionally Wide"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Super Wide"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Very Wide"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Wide"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Normal"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Narrow"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Very Narrow"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "10", NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "11", NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseAspect|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("PanoseAspect|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("No Width"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Exceptionally Wide"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Super Wide"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Very Wide"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Wide"), NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Normal"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Narrow"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Very Narrow"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "10", NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "11", NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 
@@ -787,484 +787,484 @@ static struct titlelist { char *name; GTextInfo *variants; } panoses[][9] = {
 /* There is a similar list at the end of python.c, untranslated strings for */
 /*  scripting use */
 static GTextInfo mslanguages[] = {
-    { (unichar_t *) N_("Afrikaans"), NULL, 0, 0, (void *) 0x436, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Albanian"), NULL, 0, 0, (void *) 0x41c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Afrikaans"), NULL, 0, 0, (void *) 0x436, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Albanian"), NULL, 0, 0, (void *) 0x41c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
 /* GT: See the long comment at "Property|New" */
 /* GT: The msgstr should contain a translation of "Malayalam", ignore "Lang|" */
-    { (unichar_t *) N_("Lang|Amharic"), NULL, 0, 0, (void *) 0x45e, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Arabic (Saudi Arabia)"), NULL, 0, 0, (void *) 0x401, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Arabic (Iraq)"), NULL, 0, 0, (void *) 0x801, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Arabic (Egypt)"), NULL, 0, 0, (void *) 0xc01, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Arabic (Libya)"), NULL, 0, 0, (void *) 0x1001, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Arabic (Algeria)"), NULL, 0, 0, (void *) 0x1401, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Arabic (Morocco)"), NULL, 0, 0, (void *) 0x1801, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Arabic (Tunisia)"), NULL, 0, 0, (void *) 0x1C01, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Arabic (Oman)"), NULL, 0, 0, (void *) 0x2001, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Arabic (Yemen)"), NULL, 0, 0, (void *) 0x2401, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Arabic (Syria)"), NULL, 0, 0, (void *) 0x2801, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Arabic (Jordan)"), NULL, 0, 0, (void *) 0x2c01, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Arabic (Lebanon)"), NULL, 0, 0, (void *) 0x3001, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Arabic (Kuwait)"), NULL, 0, 0, (void *) 0x3401, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Arabic (U.A.E.)"), NULL, 0, 0, (void *) 0x3801, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Arabic (Bahrain)"), NULL, 0, 0, (void *) 0x3c01, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Arabic (Qatar)"), NULL, 0, 0, (void *) 0x4001, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Lang|Armenian"), NULL, 0, 0, (void *) 0x42b, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Assamese"), NULL, 0, 0, (void *) 0x44d, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Azeri (Latin)"), NULL, 0, 0, (void *) 0x42c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Azeri (Cyrillic)"), NULL, 0, 0, (void *) 0x82c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Basque"), NULL, 0, 0, (void *) 0x42d, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Byelorussian"), NULL, 0, 0, (void *) 0x423, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Lang|Bengali"), NULL, 0, 0, (void *) 0x445, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Bengali Bangladesh"), NULL, 0, 0, (void *) 0x845, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Bulgarian"), NULL, 0, 0, (void *) 0x402, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Burmese"), NULL, 0, 0, (void *) 0x455, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Catalan"), NULL, 0, 0, (void *) 0x403, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Cambodian"), NULL, 0, 0, (void *) 0x453, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Lang|Cherokee"), NULL, 0, 0, (void *) 0x45c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Chinese (Taiwan)"), NULL, 0, 0, (void *) 0x404, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Chinese (PRC)"), NULL, 0, 0, (void *) 0x804, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Chinese (Hong Kong)"), NULL, 0, 0, (void *) 0xc04, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Chinese (Singapore)"), NULL, 0, 0, (void *) 0x1004, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Chinese (Macau)"), NULL, 0, 0, (void *) 0x1404, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Croatian"), NULL, 0, 0, (void *) 0x41a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Croatian Bosnia/Herzegovina"), NULL, 0, 0, (void *) 0x101a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Czech"), NULL, 0, 0, (void *) 0x405, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Danish"), NULL, 0, 0, (void *) 0x406, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Divehi"), NULL, 0, 0, (void *) 0x465, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Dutch"), NULL, 0, 0, (void *) 0x413, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Flemish (Belgian Dutch)"), NULL, 0, 0, (void *) 0x813, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Edo"), NULL, 0, 0, (void *) 0x466, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("English (British)"), NULL, 0, 0, (void *) 0x809, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("English (US)"), NULL, 0, 0, (void *) 0x409, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("English (Canada)"), NULL, 0, 0, (void *) 0x1009, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("English (Australian)"), NULL, 0, 0, (void *) 0xc09, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("English (New Zealand)"), NULL, 0, 0, (void *) 0x1409, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("English (Irish)"), NULL, 0, 0, (void *) 0x1809, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("English (South Africa)"), NULL, 0, 0, (void *) 0x1c09, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("English (Jamaica)"), NULL, 0, 0, (void *) 0x2009, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("English (Caribbean)"), NULL, 0, 0, (void *) 0x2409, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("English (Belize)"), NULL, 0, 0, (void *) 0x2809, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("English (Trinidad)"), NULL, 0, 0, (void *) 0x2c09, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("English (Zimbabwe)"), NULL, 0, 0, (void *) 0x3009, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("English (Philippines)"), NULL, 0, 0, (void *) 0x3409, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("English (Indonesia)"), NULL, 0, 0, (void *) 0x3809, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("English (Hong Kong)"), NULL, 0, 0, (void *) 0x3c09, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("English (India)"), NULL, 0, 0, (void *) 0x4009, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("English (Malaysia)"), NULL, 0, 0, (void *) 0x4409, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Estonian"), NULL, 0, 0, (void *) 0x425, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Faeroese"), NULL, 0, 0, (void *) 0x438, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Lang|Farsi"), NULL, 0, 0, (void *) 0x429, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Filipino"), NULL, 0, 0, (void *) 0x464, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Finnish"), NULL, 0, 0, (void *) 0x40b, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("French French"), NULL, 0, 0, (void *) 0x40c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("French Belgium"), NULL, 0, 0, (void *) 0x80c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("French Canadian"), NULL, 0, 0, (void *) 0xc0c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("French Swiss"), NULL, 0, 0, (void *) 0x100c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("French Luxembourg"), NULL, 0, 0, (void *) 0x140c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("French Monaco"), NULL, 0, 0, (void *) 0x180c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("French West Indies"), NULL, 0, 0, (void *) 0x1c0c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) NU_("French Réunion"), NULL, 0, 0, (void *) 0x200c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("French D.R. Congo"), NULL, 0, 0, (void *) 0x240c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("French Senegal"), NULL, 0, 0, (void *) 0x280c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("French Camaroon"), NULL, 0, 0, (void *) 0x2c0c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) NU_("French Côte d'Ivoire"), NULL, 0, 0, (void *) 0x300c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("French Mali"), NULL, 0, 0, (void *) 0x340c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("French Morocco"), NULL, 0, 0, (void *) 0x380c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("French Haiti"), NULL, 0, 0, (void *) 0x3c0c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("French North Africa"), NULL, 0, 0, (void *) 0xe40c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Frisian"), NULL, 0, 0, (void *) 0x462, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Fulfulde"), NULL, 0, 0, (void *) 0x467, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Gaelic (Scottish)"), NULL, 0, 0, (void *) 0x43c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Gaelic (Irish)"), NULL, 0, 0, (void *) 0x83c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Galician"), NULL, 0, 0, (void *) 0x467, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Lang|Georgian"), NULL, 0, 0, (void *) 0x437, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("German German"), NULL, 0, 0, (void *) 0x407, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("German Swiss"), NULL, 0, 0, (void *) 0x807, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("German Austrian"), NULL, 0, 0, (void *) 0xc07, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("German Luxembourg"), NULL, 0, 0, (void *) 0x1007, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("German Liechtenstein"), NULL, 0, 0, (void *) 0x1407, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Lang|Greek"), NULL, 0, 0, (void *) 0x408, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Guarani"), NULL, 0, 0, (void *) 0x474, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Lang|Gujarati"), NULL, 0, 0, (void *) 0x447, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Hausa"), NULL, 0, 0, (void *) 0x468, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Hawaiian"), NULL, 0, 0, (void *) 0x475, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Lang|Hebrew"), NULL, 0, 0, (void *) 0x40d, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Hindi"), NULL, 0, 0, (void *) 0x439, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Hungarian"), NULL, 0, 0, (void *) 0x40e, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Ibibio"), NULL, 0, 0, (void *) 0x469, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Icelandic"), NULL, 0, 0, (void *) 0x40f, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Igbo"), NULL, 0, 0, (void *) 0x470, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Indonesian"), NULL, 0, 0, (void *) 0x421, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Inuktitut"), NULL, 0, 0, (void *) 0x45d, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Italian"), NULL, 0, 0, (void *) 0x410, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Italian Swiss"), NULL, 0, 0, (void *) 0x810, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Japanese"), NULL, 0, 0, (void *) 0x411, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Lang|Kannada"), NULL, 0, 0, (void *) 0x44b, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Kanuri"), NULL, 0, 0, (void *) 0x471, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Kashmiri (India)"), NULL, 0, 0, (void *) 0x860, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Kazakh"), NULL, 0, 0, (void *) 0x43f, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Lang|Khmer"), NULL, 0, 0, (void *) 0x453, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Kirghiz"), NULL, 0, 0, (void *) 0x440, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Konkani"), NULL, 0, 0, (void *) 0x457, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Korean"), NULL, 0, 0, (void *) 0x412, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Korean (Johab)"), NULL, 0, 0, (void *) 0x812, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Lao"), NULL, 0, 0, (void *) 0x454, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Latvian"), NULL, 0, 0, (void *) 0x426, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Lang|Latin"), NULL, 0, 0, (void *) 0x476, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Lithuanian"), NULL, 0, 0, (void *) 0x427, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Lithuanian (Classic)"), NULL, 0, 0, (void *) 0x827, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Macedonian"), NULL, 0, 0, (void *) 0x42f, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Malay"), NULL, 0, 0, (void *) 0x43e, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Malay (Brunei)"), NULL, 0, 0, (void *) 0x83e, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Lang|Malayalam"), NULL, 0, 0, (void *) 0x44c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Maltese"), NULL, 0, 0, (void *) 0x43a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Manipuri"), NULL, 0, 0, (void *) 0x458, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Maori"), NULL, 0, 0, (void *) 0x481, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Marathi"), NULL, 0, 0, (void *) 0x44e, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Mongolian (Cyrillic)"), NULL, 0, 0, (void *) 0x450, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Mongolian (Mongolian)"), NULL, 0, 0, (void *) 0x850, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Nepali"), NULL, 0, 0, (void *) 0x461, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Nepali (India)"), NULL, 0, 0, (void *) 0x861, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Norwegian (Bokmal)"), NULL, 0, 0, (void *) 0x414, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Norwegian (Nynorsk)"), NULL, 0, 0, (void *) 0x814, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Lang|Oriya"), NULL, 0, 0, (void *) 0x448, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Oromo"), NULL, 0, 0, (void *) 0x472, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Papiamentu"), NULL, 0, 0, (void *) 0x479, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Pashto"), NULL, 0, 0, (void *) 0x463, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Polish"), NULL, 0, 0, (void *) 0x415, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Portuguese (Portugal)"), NULL, 0, 0, (void *) 0x416, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Portuguese (Brasil)"), NULL, 0, 0, (void *) 0x816, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Punjabi (India)"), NULL, 0, 0, (void *) 0x446, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Punjabi (Pakistan)"), NULL, 0, 0, (void *) 0x846, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Quecha (Bolivia)"), NULL, 0, 0, (void *) 0x46b, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Quecha (Ecuador)"), NULL, 0, 0, (void *) 0x86b, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Quecha (Peru)"), NULL, 0, 0, (void *) 0xc6b, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Rhaeto-Romanic"), NULL, 0, 0, (void *) 0x417, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Romanian"), NULL, 0, 0, (void *) 0x418, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Romanian (Moldova)"), NULL, 0, 0, (void *) 0x818, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Russian"), NULL, 0, 0, (void *) 0x419, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Russian (Moldova)"), NULL, 0, 0, (void *) 0x819, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Sami (Lappish)"), NULL, 0, 0, (void *) 0x43b, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Sanskrit"), NULL, 0, 0, (void *) 0x43b, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Sepedi"), NULL, 0, 0, (void *) 0x46c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Serbian (Cyrillic)"), NULL, 0, 0, (void *) 0xc1a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Serbian (Latin)"), NULL, 0, 0, (void *) 0x81a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Sindhi India"), NULL, 0, 0, (void *) 0x459, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Sindhi Pakistan"), NULL, 0, 0, (void *) 0x859, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Lang|Sinhalese"), NULL, 0, 0, (void *) 0x45b, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Slovak"), NULL, 0, 0, (void *) 0x41b, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Slovenian"), NULL, 0, 0, (void *) 0x424, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Sorbian"), NULL, 0, 0, (void *) 0x42e, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Spanish (Traditional)"), NULL, 0, 0, (void *) 0x40a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Spanish Mexico"), NULL, 0, 0, (void *) 0x80a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Spanish (Modern)"), NULL, 0, 0, (void *) 0xc0a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Spanish (Guatemala)"), NULL, 0, 0, (void *) 0x100a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Spanish (Costa Rica)"), NULL, 0, 0, (void *) 0x140a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Spanish (Panama)"), NULL, 0, 0, (void *) 0x180a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Spanish (Dominican Republic)"), NULL, 0, 0, (void *) 0x1c0a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Spanish (Venezuela)"), NULL, 0, 0, (void *) 0x200a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Spanish (Colombia)"), NULL, 0, 0, (void *) 0x240a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Spanish (Peru)"), NULL, 0, 0, (void *) 0x280a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Spanish (Argentina)"), NULL, 0, 0, (void *) 0x2c0a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Spanish (Ecuador)"), NULL, 0, 0, (void *) 0x300a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Spanish (Chile)"), NULL, 0, 0, (void *) 0x340a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Spanish (Uruguay)"), NULL, 0, 0, (void *) 0x380a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Spanish (Paraguay)"), NULL, 0, 0, (void *) 0x3c0a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Spanish (Bolivia)"), NULL, 0, 0, (void *) 0x400a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Spanish (El Salvador)"), NULL, 0, 0, (void *) 0x440a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Spanish (Honduras)"), NULL, 0, 0, (void *) 0x480a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Spanish (Nicaragua)"), NULL, 0, 0, (void *) 0x4c0a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Spanish (Puerto Rico)"), NULL, 0, 0, (void *) 0x500a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Spanish (United States)"), NULL, 0, 0, (void *) 0x540a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Spanish (Latin America)"), NULL, 0, 0, (void *) 0xe40a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Sutu"), NULL, 0, 0, (void *) 0x430, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Swahili (Kenyan)"), NULL, 0, 0, (void *) 0x441, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Swedish (Sweden)"), NULL, 0, 0, (void *) 0x41d, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Swedish (Finland)"), NULL, 0, 0, (void *) 0x81d, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Lang|Syriac"), NULL, 0, 0, (void *) 0x45a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Lang|Tagalog"), NULL, 0, 0, (void *) 0x464, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Tajik"), NULL, 0, 0, (void *) 0x428, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Tamazight (Arabic)"), NULL, 0, 0, (void *) 0x45f, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Tamazight (Latin)"), NULL, 0, 0, (void *) 0x85f, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Lang|Tamil"), NULL, 0, 0, (void *) 0x449, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Tatar (Tatarstan)"), NULL, 0, 0, (void *) 0x444, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Lang|Telugu"), NULL, 0, 0, (void *) 0x44a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Lang|Thai"), NULL, 0, 0, (void *) 0x41e, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Tibetan (PRC)"), NULL, 0, 0, (void *) 0x451, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Tibetan Bhutan"), NULL, 0, 0, (void *) 0x851, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Tigrinya Ethiopia"), NULL, 0, 0, (void *) 0x473, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Tigrinyan Eritrea"), NULL, 0, 0, (void *) 0x873, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Tsonga"), NULL, 0, 0, (void *) 0x431, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Tswana"), NULL, 0, 0, (void *) 0x432, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Turkish"), NULL, 0, 0, (void *) 0x41f, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Turkmen"), NULL, 0, 0, (void *) 0x442, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Lang|Uighur"), NULL, 0, 0, (void *) 0x480, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Ukrainian"), NULL, 0, 0, (void *) 0x422, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Urdu (Pakistan)"), NULL, 0, 0, (void *) 0x420, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Urdu (India)"), NULL, 0, 0, (void *) 0x820, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Uzbek (Latin)"), NULL, 0, 0, (void *) 0x443, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Uzbek (Cyrillic)"), NULL, 0, 0, (void *) 0x843, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Venda"), NULL, 0, 0, (void *) 0x433, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Vietnamese"), NULL, 0, 0, (void *) 0x42a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Welsh"), NULL, 0, 0, (void *) 0x452, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Xhosa"), NULL, 0, 0, (void *) 0x434, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Lang|Yi"), NULL, 0, 0, (void *) 0x478, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Yiddish"), NULL, 0, 0, (void *) 0x43d, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Yoruba"), NULL, 0, 0, (void *) 0x46a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Zulu"), NULL, 0, 0, (void *) 0x435, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Lang|Amharic"), NULL, 0, 0, (void *) 0x45e, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Arabic (Saudi Arabia)"), NULL, 0, 0, (void *) 0x401, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Arabic (Iraq)"), NULL, 0, 0, (void *) 0x801, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Arabic (Egypt)"), NULL, 0, 0, (void *) 0xc01, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Arabic (Libya)"), NULL, 0, 0, (void *) 0x1001, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Arabic (Algeria)"), NULL, 0, 0, (void *) 0x1401, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Arabic (Morocco)"), NULL, 0, 0, (void *) 0x1801, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Arabic (Tunisia)"), NULL, 0, 0, (void *) 0x1C01, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Arabic (Oman)"), NULL, 0, 0, (void *) 0x2001, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Arabic (Yemen)"), NULL, 0, 0, (void *) 0x2401, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Arabic (Syria)"), NULL, 0, 0, (void *) 0x2801, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Arabic (Jordan)"), NULL, 0, 0, (void *) 0x2c01, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Arabic (Lebanon)"), NULL, 0, 0, (void *) 0x3001, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Arabic (Kuwait)"), NULL, 0, 0, (void *) 0x3401, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Arabic (U.A.E.)"), NULL, 0, 0, (void *) 0x3801, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Arabic (Bahrain)"), NULL, 0, 0, (void *) 0x3c01, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Arabic (Qatar)"), NULL, 0, 0, (void *) 0x4001, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Lang|Armenian"), NULL, 0, 0, (void *) 0x42b, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Assamese"), NULL, 0, 0, (void *) 0x44d, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Azeri (Latin)"), NULL, 0, 0, (void *) 0x42c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Azeri (Cyrillic)"), NULL, 0, 0, (void *) 0x82c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Basque"), NULL, 0, 0, (void *) 0x42d, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Byelorussian"), NULL, 0, 0, (void *) 0x423, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Lang|Bengali"), NULL, 0, 0, (void *) 0x445, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Bengali Bangladesh"), NULL, 0, 0, (void *) 0x845, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Bulgarian"), NULL, 0, 0, (void *) 0x402, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Burmese"), NULL, 0, 0, (void *) 0x455, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Catalan"), NULL, 0, 0, (void *) 0x403, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Cambodian"), NULL, 0, 0, (void *) 0x453, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Lang|Cherokee"), NULL, 0, 0, (void *) 0x45c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Chinese (Taiwan)"), NULL, 0, 0, (void *) 0x404, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Chinese (PRC)"), NULL, 0, 0, (void *) 0x804, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Chinese (Hong Kong)"), NULL, 0, 0, (void *) 0xc04, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Chinese (Singapore)"), NULL, 0, 0, (void *) 0x1004, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Chinese (Macau)"), NULL, 0, 0, (void *) 0x1404, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Croatian"), NULL, 0, 0, (void *) 0x41a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Croatian Bosnia/Herzegovina"), NULL, 0, 0, (void *) 0x101a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Czech"), NULL, 0, 0, (void *) 0x405, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Danish"), NULL, 0, 0, (void *) 0x406, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Divehi"), NULL, 0, 0, (void *) 0x465, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Dutch"), NULL, 0, 0, (void *) 0x413, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Flemish (Belgian Dutch)"), NULL, 0, 0, (void *) 0x813, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Edo"), NULL, 0, 0, (void *) 0x466, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("English (British)"), NULL, 0, 0, (void *) 0x809, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("English (US)"), NULL, 0, 0, (void *) 0x409, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("English (Canada)"), NULL, 0, 0, (void *) 0x1009, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("English (Australian)"), NULL, 0, 0, (void *) 0xc09, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("English (New Zealand)"), NULL, 0, 0, (void *) 0x1409, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("English (Irish)"), NULL, 0, 0, (void *) 0x1809, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("English (South Africa)"), NULL, 0, 0, (void *) 0x1c09, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("English (Jamaica)"), NULL, 0, 0, (void *) 0x2009, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("English (Caribbean)"), NULL, 0, 0, (void *) 0x2409, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("English (Belize)"), NULL, 0, 0, (void *) 0x2809, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("English (Trinidad)"), NULL, 0, 0, (void *) 0x2c09, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("English (Zimbabwe)"), NULL, 0, 0, (void *) 0x3009, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("English (Philippines)"), NULL, 0, 0, (void *) 0x3409, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("English (Indonesia)"), NULL, 0, 0, (void *) 0x3809, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("English (Hong Kong)"), NULL, 0, 0, (void *) 0x3c09, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("English (India)"), NULL, 0, 0, (void *) 0x4009, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("English (Malaysia)"), NULL, 0, 0, (void *) 0x4409, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Estonian"), NULL, 0, 0, (void *) 0x425, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Faeroese"), NULL, 0, 0, (void *) 0x438, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Lang|Farsi"), NULL, 0, 0, (void *) 0x429, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Filipino"), NULL, 0, 0, (void *) 0x464, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Finnish"), NULL, 0, 0, (void *) 0x40b, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("French French"), NULL, 0, 0, (void *) 0x40c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("French Belgium"), NULL, 0, 0, (void *) 0x80c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("French Canadian"), NULL, 0, 0, (void *) 0xc0c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("French Swiss"), NULL, 0, 0, (void *) 0x100c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("French Luxembourg"), NULL, 0, 0, (void *) 0x140c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("French Monaco"), NULL, 0, 0, (void *) 0x180c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("French West Indies"), NULL, 0, 0, (void *) 0x1c0c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) NU_("French Réunion"), NULL, 0, 0, (void *) 0x200c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("French D.R. Congo"), NULL, 0, 0, (void *) 0x240c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("French Senegal"), NULL, 0, 0, (void *) 0x280c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("French Camaroon"), NULL, 0, 0, (void *) 0x2c0c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) NU_("French Côte d'Ivoire"), NULL, 0, 0, (void *) 0x300c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("French Mali"), NULL, 0, 0, (void *) 0x340c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("French Morocco"), NULL, 0, 0, (void *) 0x380c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("French Haiti"), NULL, 0, 0, (void *) 0x3c0c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("French North Africa"), NULL, 0, 0, (void *) 0xe40c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Frisian"), NULL, 0, 0, (void *) 0x462, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Fulfulde"), NULL, 0, 0, (void *) 0x467, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Gaelic (Scottish)"), NULL, 0, 0, (void *) 0x43c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Gaelic (Irish)"), NULL, 0, 0, (void *) 0x83c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Galician"), NULL, 0, 0, (void *) 0x467, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Lang|Georgian"), NULL, 0, 0, (void *) 0x437, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("German German"), NULL, 0, 0, (void *) 0x407, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("German Swiss"), NULL, 0, 0, (void *) 0x807, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("German Austrian"), NULL, 0, 0, (void *) 0xc07, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("German Luxembourg"), NULL, 0, 0, (void *) 0x1007, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("German Liechtenstein"), NULL, 0, 0, (void *) 0x1407, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Lang|Greek"), NULL, 0, 0, (void *) 0x408, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Guarani"), NULL, 0, 0, (void *) 0x474, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Lang|Gujarati"), NULL, 0, 0, (void *) 0x447, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Hausa"), NULL, 0, 0, (void *) 0x468, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Hawaiian"), NULL, 0, 0, (void *) 0x475, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Lang|Hebrew"), NULL, 0, 0, (void *) 0x40d, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Hindi"), NULL, 0, 0, (void *) 0x439, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Hungarian"), NULL, 0, 0, (void *) 0x40e, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Ibibio"), NULL, 0, 0, (void *) 0x469, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Icelandic"), NULL, 0, 0, (void *) 0x40f, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Igbo"), NULL, 0, 0, (void *) 0x470, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Indonesian"), NULL, 0, 0, (void *) 0x421, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Inuktitut"), NULL, 0, 0, (void *) 0x45d, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Italian"), NULL, 0, 0, (void *) 0x410, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Italian Swiss"), NULL, 0, 0, (void *) 0x810, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Japanese"), NULL, 0, 0, (void *) 0x411, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Lang|Kannada"), NULL, 0, 0, (void *) 0x44b, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Kanuri"), NULL, 0, 0, (void *) 0x471, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Kashmiri (India)"), NULL, 0, 0, (void *) 0x860, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Kazakh"), NULL, 0, 0, (void *) 0x43f, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Lang|Khmer"), NULL, 0, 0, (void *) 0x453, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Kirghiz"), NULL, 0, 0, (void *) 0x440, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Konkani"), NULL, 0, 0, (void *) 0x457, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Korean"), NULL, 0, 0, (void *) 0x412, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Korean (Johab)"), NULL, 0, 0, (void *) 0x812, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Lao"), NULL, 0, 0, (void *) 0x454, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Latvian"), NULL, 0, 0, (void *) 0x426, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Lang|Latin"), NULL, 0, 0, (void *) 0x476, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Lithuanian"), NULL, 0, 0, (void *) 0x427, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Lithuanian (Classic)"), NULL, 0, 0, (void *) 0x827, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Macedonian"), NULL, 0, 0, (void *) 0x42f, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Malay"), NULL, 0, 0, (void *) 0x43e, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Malay (Brunei)"), NULL, 0, 0, (void *) 0x83e, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Lang|Malayalam"), NULL, 0, 0, (void *) 0x44c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Maltese"), NULL, 0, 0, (void *) 0x43a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Manipuri"), NULL, 0, 0, (void *) 0x458, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Maori"), NULL, 0, 0, (void *) 0x481, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Marathi"), NULL, 0, 0, (void *) 0x44e, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Mongolian (Cyrillic)"), NULL, 0, 0, (void *) 0x450, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Mongolian (Mongolian)"), NULL, 0, 0, (void *) 0x850, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Nepali"), NULL, 0, 0, (void *) 0x461, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Nepali (India)"), NULL, 0, 0, (void *) 0x861, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Norwegian (Bokmal)"), NULL, 0, 0, (void *) 0x414, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Norwegian (Nynorsk)"), NULL, 0, 0, (void *) 0x814, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Lang|Oriya"), NULL, 0, 0, (void *) 0x448, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Oromo"), NULL, 0, 0, (void *) 0x472, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Papiamentu"), NULL, 0, 0, (void *) 0x479, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Pashto"), NULL, 0, 0, (void *) 0x463, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Polish"), NULL, 0, 0, (void *) 0x415, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Portuguese (Portugal)"), NULL, 0, 0, (void *) 0x416, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Portuguese (Brasil)"), NULL, 0, 0, (void *) 0x816, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Punjabi (India)"), NULL, 0, 0, (void *) 0x446, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Punjabi (Pakistan)"), NULL, 0, 0, (void *) 0x846, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Quecha (Bolivia)"), NULL, 0, 0, (void *) 0x46b, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Quecha (Ecuador)"), NULL, 0, 0, (void *) 0x86b, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Quecha (Peru)"), NULL, 0, 0, (void *) 0xc6b, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Rhaeto-Romanic"), NULL, 0, 0, (void *) 0x417, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Romanian"), NULL, 0, 0, (void *) 0x418, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Romanian (Moldova)"), NULL, 0, 0, (void *) 0x818, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Russian"), NULL, 0, 0, (void *) 0x419, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Russian (Moldova)"), NULL, 0, 0, (void *) 0x819, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Sami (Lappish)"), NULL, 0, 0, (void *) 0x43b, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Sanskrit"), NULL, 0, 0, (void *) 0x43b, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Sepedi"), NULL, 0, 0, (void *) 0x46c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Serbian (Cyrillic)"), NULL, 0, 0, (void *) 0xc1a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Serbian (Latin)"), NULL, 0, 0, (void *) 0x81a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Sindhi India"), NULL, 0, 0, (void *) 0x459, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Sindhi Pakistan"), NULL, 0, 0, (void *) 0x859, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Lang|Sinhalese"), NULL, 0, 0, (void *) 0x45b, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Slovak"), NULL, 0, 0, (void *) 0x41b, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Slovenian"), NULL, 0, 0, (void *) 0x424, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Sorbian"), NULL, 0, 0, (void *) 0x42e, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Spanish (Traditional)"), NULL, 0, 0, (void *) 0x40a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Spanish Mexico"), NULL, 0, 0, (void *) 0x80a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Spanish (Modern)"), NULL, 0, 0, (void *) 0xc0a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Spanish (Guatemala)"), NULL, 0, 0, (void *) 0x100a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Spanish (Costa Rica)"), NULL, 0, 0, (void *) 0x140a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Spanish (Panama)"), NULL, 0, 0, (void *) 0x180a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Spanish (Dominican Republic)"), NULL, 0, 0, (void *) 0x1c0a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Spanish (Venezuela)"), NULL, 0, 0, (void *) 0x200a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Spanish (Colombia)"), NULL, 0, 0, (void *) 0x240a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Spanish (Peru)"), NULL, 0, 0, (void *) 0x280a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Spanish (Argentina)"), NULL, 0, 0, (void *) 0x2c0a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Spanish (Ecuador)"), NULL, 0, 0, (void *) 0x300a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Spanish (Chile)"), NULL, 0, 0, (void *) 0x340a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Spanish (Uruguay)"), NULL, 0, 0, (void *) 0x380a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Spanish (Paraguay)"), NULL, 0, 0, (void *) 0x3c0a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Spanish (Bolivia)"), NULL, 0, 0, (void *) 0x400a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Spanish (El Salvador)"), NULL, 0, 0, (void *) 0x440a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Spanish (Honduras)"), NULL, 0, 0, (void *) 0x480a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Spanish (Nicaragua)"), NULL, 0, 0, (void *) 0x4c0a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Spanish (Puerto Rico)"), NULL, 0, 0, (void *) 0x500a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Spanish (United States)"), NULL, 0, 0, (void *) 0x540a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Spanish (Latin America)"), NULL, 0, 0, (void *) 0xe40a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Sutu"), NULL, 0, 0, (void *) 0x430, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Swahili (Kenyan)"), NULL, 0, 0, (void *) 0x441, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Swedish (Sweden)"), NULL, 0, 0, (void *) 0x41d, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Swedish (Finland)"), NULL, 0, 0, (void *) 0x81d, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Lang|Syriac"), NULL, 0, 0, (void *) 0x45a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Lang|Tagalog"), NULL, 0, 0, (void *) 0x464, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Tajik"), NULL, 0, 0, (void *) 0x428, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Tamazight (Arabic)"), NULL, 0, 0, (void *) 0x45f, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Tamazight (Latin)"), NULL, 0, 0, (void *) 0x85f, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Lang|Tamil"), NULL, 0, 0, (void *) 0x449, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Tatar (Tatarstan)"), NULL, 0, 0, (void *) 0x444, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Lang|Telugu"), NULL, 0, 0, (void *) 0x44a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Lang|Thai"), NULL, 0, 0, (void *) 0x41e, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Tibetan (PRC)"), NULL, 0, 0, (void *) 0x451, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Tibetan Bhutan"), NULL, 0, 0, (void *) 0x851, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Tigrinya Ethiopia"), NULL, 0, 0, (void *) 0x473, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Tigrinyan Eritrea"), NULL, 0, 0, (void *) 0x873, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Tsonga"), NULL, 0, 0, (void *) 0x431, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Tswana"), NULL, 0, 0, (void *) 0x432, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Turkish"), NULL, 0, 0, (void *) 0x41f, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Turkmen"), NULL, 0, 0, (void *) 0x442, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Lang|Uighur"), NULL, 0, 0, (void *) 0x480, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Ukrainian"), NULL, 0, 0, (void *) 0x422, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Urdu (Pakistan)"), NULL, 0, 0, (void *) 0x420, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Urdu (India)"), NULL, 0, 0, (void *) 0x820, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Uzbek (Latin)"), NULL, 0, 0, (void *) 0x443, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Uzbek (Cyrillic)"), NULL, 0, 0, (void *) 0x843, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Venda"), NULL, 0, 0, (void *) 0x433, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Vietnamese"), NULL, 0, 0, (void *) 0x42a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Welsh"), NULL, 0, 0, (void *) 0x452, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Xhosa"), NULL, 0, 0, (void *) 0x434, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Lang|Yi"), NULL, 0, 0, (void *) 0x478, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Yiddish"), NULL, 0, 0, (void *) 0x43d, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Yoruba"), NULL, 0, 0, (void *) 0x46a, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Zulu"), NULL, 0, 0, (void *) 0x435, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 /* There is a similar list at the end of python.c, untranslated strings for */
 /*  scripting use */
 static GTextInfo ttfnameids[] = {
 /* Put styles (docs call it subfamily) first because it is most likely to change */
-    { (unichar_t *) N_("Styles (SubFamily)"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Copyright"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Family"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Fullname"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("UniqueID"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Version"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Styles (SubFamily)"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Copyright"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Family"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Fullname"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("UniqueID"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Version"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
 /* Don't give user access to PostScriptName, we set that elsewhere */
-    { (unichar_t *) N_("Trademark"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Manufacturer"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Designer"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Descriptor"), NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Vendor URL"), NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Designer URL"), NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("License"), NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("License URL"), NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Trademark"), NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Manufacturer"), NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Designer"), NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Descriptor"), NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Vendor URL"), NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Designer URL"), NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("License"), NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("License URL"), NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
 /* slot 15 is reserved */
-    { (unichar_t *) N_("Preferred Family"), NULL, 0, 0, (void *) 16, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Preferred Styles"), NULL, 0, 0, (void *) 17, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Compatible Full"), NULL, 0, 0, (void *) 18, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Sample Text"), NULL, 0, 0, (void *) 19, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("CID findfont Name"), NULL, 0, 0, (void *) 20, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("WWS Family"), NULL, 0, 0, (void *) 21, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("WWS Subfamily"), NULL, 0, 0, (void *) 22, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Preferred Family"), NULL, 0, 0, (void *) 16, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Preferred Styles"), NULL, 0, 0, (void *) 17, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Compatible Full"), NULL, 0, 0, (void *) 18, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Sample Text"), NULL, 0, 0, (void *) 19, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("CID findfont Name"), NULL, 0, 0, (void *) 20, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("WWS Family"), NULL, 0, 0, (void *) 21, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("WWS Subfamily"), NULL, 0, 0, (void *) 22, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo otfssfeattags[] = {
 /* These should not be translated. They are tags */
-    { (unichar_t *) "ss01", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','0','1'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "ss02", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','0','2'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "ss03", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','0','3'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "ss04", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','0','4'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "ss05", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','0','5'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "ss06", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','0','6'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "ss07", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','0','7'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "ss08", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','0','8'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "ss09", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','0','9'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "ss10", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','1','0'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "ss11", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','1','1'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "ss12", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','1','2'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "ss13", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','1','3'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "ss14", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','1','4'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "ss15", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','1','5'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "ss16", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','1','6'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "ss17", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','1','7'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "ss18", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','1','8'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "ss19", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','1','9'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "ss20", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','2','0'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "ss01", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','0','1'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "ss02", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','0','2'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "ss03", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','0','3'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "ss04", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','0','4'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "ss05", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','0','5'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "ss06", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','0','6'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "ss07", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','0','7'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "ss08", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','0','8'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "ss09", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','0','9'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "ss10", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','1','0'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "ss11", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','1','1'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "ss12", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','1','2'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "ss13", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','1','3'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "ss14", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','1','4'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "ss15", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','1','5'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "ss16", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','1','6'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "ss17", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','1','7'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "ss18", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','1','8'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "ss19", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','1','9'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "ss20", NULL, 0, 0, (void *) (intptr_t) CHR('s','s','2','0'), NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 /* Put styles (docs call it subfamily) first because it is most likely to change */
 static GTextInfo unicoderangenames[] = {
-    { (unichar_t *) N_("Basic Latin"),				NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Latin-1 Supplement"),			NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Latin Extended-A"),			NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Latin Extended-B"),			NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("IPA Extensions"),			NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Spacing Modifier Letters"),		NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Combining Diacritical Marks"),		NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Greek and Coptic"),			NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Coptic"),				NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Cyrillic & Supplement"),		NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Armenian"),				NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Hebrew"),				NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Vai"),					NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Arabic"),				NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("N'Ko"),					NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Devanagari"),				NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Bengali"),				NULL, 0, 0, (void *) 16, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Gurmukhi"),				NULL, 0, 0, (void *) 17, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Gujarati"),				NULL, 0, 0, (void *) 18, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Oriya"),				NULL, 0, 0, (void *) 19, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Tamil"),				NULL, 0, 0, (void *) 20, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Telugu"),				NULL, 0, 0, (void *) 21, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Kannada"),				NULL, 0, 0, (void *) 22, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Malayalam"),				NULL, 0, 0, (void *) 23, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Thai"),					NULL, 0, 0, (void *) 24, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Lao"),					NULL, 0, 0, (void *) 25, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Georgian"),				NULL, 0, 0, (void *) 26, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Balinese"),				NULL, 0, 0, (void *) 27, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Hangul Jamo"),				NULL, 0, 0, (void *) 28, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Latin Extended Additional"),		NULL, 0, 0, (void *) 29, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Greek Extended"),			NULL, 0, 0, (void *) 30, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("General Punctuation"),			NULL, 0, 0, (void *) 31, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Subscripts and Superscripts"),		NULL, 0, 0, (void *) 32, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Currency Symbols"),			NULL, 0, 0, (void *) 33, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Combining Diacritical Marks for Symbols"), NULL, 0, 0, (void *) 34, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Letterlike Symbols"),			NULL, 0, 0, (void *) 35, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Numeric Forms"),			NULL, 0, 0, (void *) 36, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Arrows (& Supplements A&B)"),		NULL, 0, 0, (void *) 37, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Mathematical Operators (Suppl. & Misc.)"), NULL, 0, 0, (void *) 38, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Miscellaneous Technical"),		NULL, 0, 0, (void *) 39, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Control Pictures"),			NULL, 0, 0, (void *) 40, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Optical Character Recognition"),	NULL, 0, 0, (void *) 41, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Enclosed Alphanumerics"),		NULL, 0, 0, (void *) 42, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Box Drawing"),				NULL, 0, 0, (void *) 43, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Block Elements"),			NULL, 0, 0, (void *) 44, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Geometric Shapes"),			NULL, 0, 0, (void *) 45, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Miscellaneous Symbols"),		NULL, 0, 0, (void *) 46, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Dingbats"),				NULL, 0, 0, (void *) 47, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("CJK Symbols and Punctuation"),		NULL, 0, 0, (void *) 48, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Hiragana"),				NULL, 0, 0, (void *) 49, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Katakana & Phonetic Extensions"),	NULL, 0, 0, (void *) 50, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Bopomofo & Extended"),			NULL, 0, 0, (void *) 51, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Hangul Compatibility Jamo"),		NULL, 0, 0, (void *) 52, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Phags-pa"),				NULL, 0, 0, (void *) 53, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Enclosed CJK Letters and Months"),	NULL, 0, 0, (void *) 54, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("CJK Compatibility"),			NULL, 0, 0, (void *) 55, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Hangul Syllables"),			NULL, 0, 0, (void *) 56, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Non-Basic Multilingual Plane"),		NULL, 0, 0, (void *) 57, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Phoenician"),				NULL, 0, 0, (void *) 58, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("CJK Unified Ideographs"),		NULL, 0, 0, (void *) 59, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Basic Latin"),				NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Latin-1 Supplement"),			NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Latin Extended-A"),			NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Latin Extended-B"),			NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("IPA Extensions"),			NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Spacing Modifier Letters"),		NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Combining Diacritical Marks"),		NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Greek and Coptic"),			NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Coptic"),				NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Cyrillic & Supplement"),		NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Armenian"),				NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Hebrew"),				NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Vai"),					NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Arabic"),				NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("N'Ko"),					NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Devanagari"),				NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Bengali"),				NULL, 0, 0, (void *) 16, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Gurmukhi"),				NULL, 0, 0, (void *) 17, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Gujarati"),				NULL, 0, 0, (void *) 18, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Oriya"),				NULL, 0, 0, (void *) 19, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Tamil"),				NULL, 0, 0, (void *) 20, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Telugu"),				NULL, 0, 0, (void *) 21, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Kannada"),				NULL, 0, 0, (void *) 22, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Malayalam"),				NULL, 0, 0, (void *) 23, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Thai"),					NULL, 0, 0, (void *) 24, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Lao"),					NULL, 0, 0, (void *) 25, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Georgian"),				NULL, 0, 0, (void *) 26, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Balinese"),				NULL, 0, 0, (void *) 27, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Hangul Jamo"),				NULL, 0, 0, (void *) 28, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Latin Extended Additional"),		NULL, 0, 0, (void *) 29, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Greek Extended"),			NULL, 0, 0, (void *) 30, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("General Punctuation"),			NULL, 0, 0, (void *) 31, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Subscripts and Superscripts"),		NULL, 0, 0, (void *) 32, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Currency Symbols"),			NULL, 0, 0, (void *) 33, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Combining Diacritical Marks for Symbols"), NULL, 0, 0, (void *) 34, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Letterlike Symbols"),			NULL, 0, 0, (void *) 35, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Numeric Forms"),			NULL, 0, 0, (void *) 36, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Arrows (& Supplements A&B)"),		NULL, 0, 0, (void *) 37, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Mathematical Operators (Suppl. & Misc.)"), NULL, 0, 0, (void *) 38, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Miscellaneous Technical"),		NULL, 0, 0, (void *) 39, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Control Pictures"),			NULL, 0, 0, (void *) 40, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Optical Character Recognition"),	NULL, 0, 0, (void *) 41, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Enclosed Alphanumerics"),		NULL, 0, 0, (void *) 42, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Box Drawing"),				NULL, 0, 0, (void *) 43, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Block Elements"),			NULL, 0, 0, (void *) 44, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Geometric Shapes"),			NULL, 0, 0, (void *) 45, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Miscellaneous Symbols"),		NULL, 0, 0, (void *) 46, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Dingbats"),				NULL, 0, 0, (void *) 47, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("CJK Symbols and Punctuation"),		NULL, 0, 0, (void *) 48, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Hiragana"),				NULL, 0, 0, (void *) 49, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Katakana & Phonetic Extensions"),	NULL, 0, 0, (void *) 50, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Bopomofo & Extended"),			NULL, 0, 0, (void *) 51, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Hangul Compatibility Jamo"),		NULL, 0, 0, (void *) 52, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Phags-pa"),				NULL, 0, 0, (void *) 53, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Enclosed CJK Letters and Months"),	NULL, 0, 0, (void *) 54, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("CJK Compatibility"),			NULL, 0, 0, (void *) 55, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Hangul Syllables"),			NULL, 0, 0, (void *) 56, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Non-Basic Multilingual Plane"),		NULL, 0, 0, (void *) 57, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Phoenician"),				NULL, 0, 0, (void *) 58, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("CJK Unified Ideographs"),		NULL, 0, 0, (void *) 59, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
 		/* And too much other stuff to put in this string */
-    { (unichar_t *) N_("Private Use Area"),			NULL, 0, 0, (void *) 60, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("CJK Compatibility Ideographs"),		NULL, 0, 0, (void *) 61, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Alphabetic Presentation Forms"),	NULL, 0, 0, (void *) 62, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Arabic Presentation Forms-A"),		NULL, 0, 0, (void *) 63, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Combining Half Marks"),			NULL, 0, 0, (void *) 64, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("CJK Compatibility Forms"),		NULL, 0, 0, (void *) 65, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Small Form Variants"),			NULL, 0, 0, (void *) 66, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Arabic Presentation Forms-B"),		NULL, 0, 0, (void *) 67, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Halfwidth and Fullwidth Forms"),	NULL, 0, 0, (void *) 68, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Specials"),				NULL, 0, 0, (void *) 69, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Tibetan"),				NULL, 0, 0, (void *) 70, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Syriac"),				NULL, 0, 0, (void *) 71, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Thaana"),				NULL, 0, 0, (void *) 72, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Sinhala"),				NULL, 0, 0, (void *) 73, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Myanmar"),				NULL, 0, 0, (void *) 74, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Ethiopic"),				NULL, 0, 0, (void *) 75, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Cherokee"),				NULL, 0, 0, (void *) 76, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Unified Canadian Aboriginal Syllabics"),NULL, 0, 0, (void *) 77, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Ogham"),				NULL, 0, 0, (void *) 78, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Runic"),				NULL, 0, 0, (void *) 79, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Khmer"),				NULL, 0, 0, (void *) 80, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Mongolian"),				NULL, 0, 0, (void *) 81, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Braille Patterns"),			NULL, 0, 0, (void *) 82, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Yi Syllables/Radicals"),		NULL, 0, 0, (void *) 83, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Tagalog/Hanunno/Buhid/Tagbanwa"),	NULL, 0, 0, (void *) 84, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Old Italic"),				NULL, 0, 0, (void *) 85, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Gothic"),				NULL, 0, 0, (void *) 86, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Deseret"),				NULL, 0, 0, (void *) 87, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Musical Symbols, Byzantine & Western"), NULL, 0, 0, (void *) 88, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Mathematical Alphanumeric Symbols"),	NULL, 0, 0, (void *) 89, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Private Use (planes 15&16)"),		NULL, 0, 0, (void *) 90, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Variation Selectors"),			NULL, 0, 0, (void *) 91, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Tags"),					NULL, 0, 0, (void *) 92, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Limbu"),				NULL, 0, 0, (void *) 93, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Tai Le"),				NULL, 0, 0, (void *) 94, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("New Tai Lue"),				NULL, 0, 0, (void *) 95, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Buginese"),				NULL, 0, 0, (void *) 96, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Glagolitic"),				NULL, 0, 0, (void *) 97, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Tifinagh"),				NULL, 0, 0, (void *) 98, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Yijing Hexagram Symbols"),		NULL, 0, 0, (void *) 99, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Syloti Nagri"),				NULL, 0, 0, (void *) 100, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Linear B Syllabary/Ideograms, Agean Num."),	NULL, 0, 0, (void *) 101, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Ancient Greek Numbers"),		NULL, 0, 0, (void *) 102, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Ugaritic"),				NULL, 0, 0, (void *) 103, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Old Persian"),				NULL, 0, 0, (void *) 104, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Shavian"),				NULL, 0, 0, (void *) 105, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Osmanya"),				NULL, 0, 0, (void *) 106, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Cypriot Syllabary"),			NULL, 0, 0, (void *) 107, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Kharoshthi"),				NULL, 0, 0, (void *) 108, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Tai Xuan Jing Symbols"),		NULL, 0, 0, (void *) 109, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Cuneiform Numbers & Punctuation"),	NULL, 0, 0, (void *) 110, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Counting Rod Numerals"),		NULL, 0, 0, (void *) 111, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Sudanese"),				NULL, 0, 0, (void *) 112, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Lepcha"),				NULL, 0, 0, (void *) 113, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Ol Chiki"),				NULL, 0, 0, (void *) 114, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Saurashtra"),				NULL, 0, 0, (void *) 115, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Kayah Li"),				NULL, 0, 0, (void *) 116, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Rejang"),				NULL, 0, 0, (void *) 117, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Cham"),					NULL, 0, 0, (void *) 118, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Ancient Symbols"),			NULL, 0, 0, (void *) 119, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Phaistos Disc"),			NULL, 0, 0, (void *) 120, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Carian/Lycian/Lydian"),			NULL, 0, 0, (void *) 121, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Mahjong & Domino Tiles"),		NULL, 0, 0, (void *) 122, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Unassigned Bit 123"),			NULL, 0, 0, (void *) 123, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Unassigned Bit 124"),			NULL, 0, 0, (void *) 124, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Unassigned Bit 125"),			NULL, 0, 0, (void *) 125, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Unassigned Bit 126"),			NULL, 0, 0, (void *) 126, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Unassigned Bit 127"),			NULL, 0, 0, (void *) 127, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Private Use Area"),			NULL, 0, 0, (void *) 60, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("CJK Compatibility Ideographs"),		NULL, 0, 0, (void *) 61, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Alphabetic Presentation Forms"),	NULL, 0, 0, (void *) 62, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Arabic Presentation Forms-A"),		NULL, 0, 0, (void *) 63, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Combining Half Marks"),			NULL, 0, 0, (void *) 64, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("CJK Compatibility Forms"),		NULL, 0, 0, (void *) 65, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Small Form Variants"),			NULL, 0, 0, (void *) 66, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Arabic Presentation Forms-B"),		NULL, 0, 0, (void *) 67, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Halfwidth and Fullwidth Forms"),	NULL, 0, 0, (void *) 68, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Specials"),				NULL, 0, 0, (void *) 69, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Tibetan"),				NULL, 0, 0, (void *) 70, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Syriac"),				NULL, 0, 0, (void *) 71, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Thaana"),				NULL, 0, 0, (void *) 72, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Sinhala"),				NULL, 0, 0, (void *) 73, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Myanmar"),				NULL, 0, 0, (void *) 74, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Ethiopic"),				NULL, 0, 0, (void *) 75, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Cherokee"),				NULL, 0, 0, (void *) 76, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Unified Canadian Aboriginal Syllabics"),NULL, 0, 0, (void *) 77, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Ogham"),				NULL, 0, 0, (void *) 78, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Runic"),				NULL, 0, 0, (void *) 79, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Khmer"),				NULL, 0, 0, (void *) 80, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Mongolian"),				NULL, 0, 0, (void *) 81, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Braille Patterns"),			NULL, 0, 0, (void *) 82, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Yi Syllables/Radicals"),		NULL, 0, 0, (void *) 83, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Tagalog/Hanunno/Buhid/Tagbanwa"),	NULL, 0, 0, (void *) 84, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Old Italic"),				NULL, 0, 0, (void *) 85, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Gothic"),				NULL, 0, 0, (void *) 86, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Deseret"),				NULL, 0, 0, (void *) 87, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Musical Symbols, Byzantine & Western"), NULL, 0, 0, (void *) 88, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Mathematical Alphanumeric Symbols"),	NULL, 0, 0, (void *) 89, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Private Use (planes 15&16)"),		NULL, 0, 0, (void *) 90, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Variation Selectors"),			NULL, 0, 0, (void *) 91, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Tags"),					NULL, 0, 0, (void *) 92, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Limbu"),				NULL, 0, 0, (void *) 93, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Tai Le"),				NULL, 0, 0, (void *) 94, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("New Tai Lue"),				NULL, 0, 0, (void *) 95, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Buginese"),				NULL, 0, 0, (void *) 96, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Glagolitic"),				NULL, 0, 0, (void *) 97, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Tifinagh"),				NULL, 0, 0, (void *) 98, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Yijing Hexagram Symbols"),		NULL, 0, 0, (void *) 99, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Syloti Nagri"),				NULL, 0, 0, (void *) 100, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Linear B Syllabary/Ideograms, Agean Num."),	NULL, 0, 0, (void *) 101, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Ancient Greek Numbers"),		NULL, 0, 0, (void *) 102, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Ugaritic"),				NULL, 0, 0, (void *) 103, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Old Persian"),				NULL, 0, 0, (void *) 104, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Shavian"),				NULL, 0, 0, (void *) 105, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Osmanya"),				NULL, 0, 0, (void *) 106, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Cypriot Syllabary"),			NULL, 0, 0, (void *) 107, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Kharoshthi"),				NULL, 0, 0, (void *) 108, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Tai Xuan Jing Symbols"),		NULL, 0, 0, (void *) 109, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Cuneiform Numbers & Punctuation"),	NULL, 0, 0, (void *) 110, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Counting Rod Numerals"),		NULL, 0, 0, (void *) 111, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Sudanese"),				NULL, 0, 0, (void *) 112, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Lepcha"),				NULL, 0, 0, (void *) 113, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Ol Chiki"),				NULL, 0, 0, (void *) 114, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Saurashtra"),				NULL, 0, 0, (void *) 115, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Kayah Li"),				NULL, 0, 0, (void *) 116, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Rejang"),				NULL, 0, 0, (void *) 117, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Cham"),					NULL, 0, 0, (void *) 118, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Ancient Symbols"),			NULL, 0, 0, (void *) 119, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Phaistos Disc"),			NULL, 0, 0, (void *) 120, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Carian/Lycian/Lydian"),			NULL, 0, 0, (void *) 121, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Mahjong & Domino Tiles"),		NULL, 0, 0, (void *) 122, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Unassigned Bit 123"),			NULL, 0, 0, (void *) 123, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Unassigned Bit 124"),			NULL, 0, 0, (void *) 124, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Unassigned Bit 125"),			NULL, 0, 0, (void *) 125, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Unassigned Bit 126"),			NULL, 0, 0, (void *) 126, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Unassigned Bit 127"),			NULL, 0, 0, (void *) 127, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo codepagenames[] = {
-    { (unichar_t *) N_("1252, Latin-1"),			NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("1250, Latin-2 (Eastern Europe)"),	NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("1251, Cyrillic"),			NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("1253, Greek"),				NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("1254, Turkish"),			NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("1255, Hebrew"),				NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("1256, Arabic"),				NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("1257, Windows Baltic"),			NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("1258, Vietnamese"),			NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Reserved Bit 9"),			NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Reserved Bit 10"),			NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Reserved Bit 11"),			NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Reserved Bit 12"),			NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Reserved Bit 13"),			NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Reserved Bit 14"),			NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Reserved Bit 15"),			NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("874, Thai"),				NULL, 0, 0, (void *) 16, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("932, JIS/Japan"),			NULL, 0, 0, (void *) 17, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("936, Simplified Chinese"),		NULL, 0, 0, (void *) 18, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("949, Korean Wansung"),			NULL, 0, 0, (void *) 19, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("950, Traditional Chinese"),		NULL, 0, 0, (void *) 20, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("1361, Korean Johab"),			NULL, 0, 0, (void *) 21, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Reserved Bit 22"),			NULL, 0, 0, (void *) 22, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Reserved Bit 23"),			NULL, 0, 0, (void *) 23, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Reserved Bit 24"),			NULL, 0, 0, (void *) 24, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Reserved Bit 25"),			NULL, 0, 0, (void *) 25, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Reserved Bit 26"),			NULL, 0, 0, (void *) 26, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Reserved Bit 27"),			NULL, 0, 0, (void *) 27, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Reserved Bit 28"),			NULL, 0, 0, (void *) 28, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Mac Roman"),				NULL, 0, 0, (void *) 29, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("OEM Charset"),				NULL, 0, 0, (void *) 30, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Symbol Charset"),			NULL, 0, 0, (void *) 31, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Reserved Bit 32"),			NULL, 0, 0, (void *) 32, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Reserved Bit 33"),			NULL, 0, 0, (void *) 33, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Reserved Bit 34"), 			NULL, 0, 0, (void *) 34, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Reserved Bit 35"),			NULL, 0, 0, (void *) 35, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Reserved Bit 36"),			NULL, 0, 0, (void *) 36, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Reserved Bit 37"),			NULL, 0, 0, (void *) 37, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Reserved Bit 38"), 			NULL, 0, 0, (void *) 38, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Reserved Bit 39"),			NULL, 0, 0, (void *) 39, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Reserved Bit 40"),			NULL, 0, 0, (void *) 40, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Reserved Bit 41"),			NULL, 0, 0, (void *) 41, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Reserved Bit 42"),			NULL, 0, 0, (void *) 42, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Reserved Bit 43"),			NULL, 0, 0, (void *) 43, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Reserved Bit 44"),			NULL, 0, 0, (void *) 44, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Reserved Bit 45"),			NULL, 0, 0, (void *) 45, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Reserved Bit 46"),			NULL, 0, 0, (void *) 46, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Reserved Bit 47"),			NULL, 0, 0, (void *) 47, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("869, IBM Greek"),			NULL, 0, 0, (void *) 48, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("866, MS-DOS Russian"),			NULL, 0, 0, (void *) 49, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("865, MS_DOS Nordic"),			NULL, 0, 0, (void *) 50, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("864, Arabic"),				NULL, 0, 0, (void *) 51, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("863, MS-DOS Canadian French"),		NULL, 0, 0, (void *) 52, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("862, Hebrew"),				NULL, 0, 0, (void *) 53, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("861, MS-DOS Icelandic"),		NULL, 0, 0, (void *) 54, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("860, MS-DOS Portuguese"),		NULL, 0, 0, (void *) 55, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("857, IBM Turkish"),			NULL, 0, 0, (void *) 56, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("855, IBM Cyrillic; primarily Russian"),	NULL, 0, 0, (void *) 57, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("852, Latin 2"),				NULL, 0, 0, (void *) 58, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("775, MS-DOS Baltic"),			NULL, 0, 0, (void *) 59, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("737, Greek; former 437 G"),		NULL, 0, 0, (void *) 60, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("708, Arabic ASMO 708"),			NULL, 0, 0, (void *) 61, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("850, WE/Latin 1"),			NULL, 0, 0, (void *) 62, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("437, US"),				NULL, 0, 0, (void *) 63, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("1252, Latin-1"),			NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("1250, Latin-2 (Eastern Europe)"),	NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("1251, Cyrillic"),			NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("1253, Greek"),				NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("1254, Turkish"),			NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("1255, Hebrew"),				NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("1256, Arabic"),				NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("1257, Windows Baltic"),			NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("1258, Vietnamese"),			NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Reserved Bit 9"),			NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Reserved Bit 10"),			NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Reserved Bit 11"),			NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Reserved Bit 12"),			NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Reserved Bit 13"),			NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Reserved Bit 14"),			NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Reserved Bit 15"),			NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("874, Thai"),				NULL, 0, 0, (void *) 16, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("932, JIS/Japan"),			NULL, 0, 0, (void *) 17, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("936, Simplified Chinese"),		NULL, 0, 0, (void *) 18, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("949, Korean Wansung"),			NULL, 0, 0, (void *) 19, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("950, Traditional Chinese"),		NULL, 0, 0, (void *) 20, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("1361, Korean Johab"),			NULL, 0, 0, (void *) 21, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Reserved Bit 22"),			NULL, 0, 0, (void *) 22, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Reserved Bit 23"),			NULL, 0, 0, (void *) 23, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Reserved Bit 24"),			NULL, 0, 0, (void *) 24, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Reserved Bit 25"),			NULL, 0, 0, (void *) 25, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Reserved Bit 26"),			NULL, 0, 0, (void *) 26, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Reserved Bit 27"),			NULL, 0, 0, (void *) 27, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Reserved Bit 28"),			NULL, 0, 0, (void *) 28, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Mac Roman"),				NULL, 0, 0, (void *) 29, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("OEM Charset"),				NULL, 0, 0, (void *) 30, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Symbol Charset"),			NULL, 0, 0, (void *) 31, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Reserved Bit 32"),			NULL, 0, 0, (void *) 32, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Reserved Bit 33"),			NULL, 0, 0, (void *) 33, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Reserved Bit 34"), 			NULL, 0, 0, (void *) 34, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Reserved Bit 35"),			NULL, 0, 0, (void *) 35, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Reserved Bit 36"),			NULL, 0, 0, (void *) 36, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Reserved Bit 37"),			NULL, 0, 0, (void *) 37, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Reserved Bit 38"), 			NULL, 0, 0, (void *) 38, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Reserved Bit 39"),			NULL, 0, 0, (void *) 39, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Reserved Bit 40"),			NULL, 0, 0, (void *) 40, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Reserved Bit 41"),			NULL, 0, 0, (void *) 41, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Reserved Bit 42"),			NULL, 0, 0, (void *) 42, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Reserved Bit 43"),			NULL, 0, 0, (void *) 43, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Reserved Bit 44"),			NULL, 0, 0, (void *) 44, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Reserved Bit 45"),			NULL, 0, 0, (void *) 45, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Reserved Bit 46"),			NULL, 0, 0, (void *) 46, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Reserved Bit 47"),			NULL, 0, 0, (void *) 47, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("869, IBM Greek"),			NULL, 0, 0, (void *) 48, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("866, MS-DOS Russian"),			NULL, 0, 0, (void *) 49, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("865, MS_DOS Nordic"),			NULL, 0, 0, (void *) 50, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("864, Arabic"),				NULL, 0, 0, (void *) 51, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("863, MS-DOS Canadian French"),		NULL, 0, 0, (void *) 52, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("862, Hebrew"),				NULL, 0, 0, (void *) 53, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("861, MS-DOS Icelandic"),		NULL, 0, 0, (void *) 54, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("860, MS-DOS Portuguese"),		NULL, 0, 0, (void *) 55, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("857, IBM Turkish"),			NULL, 0, 0, (void *) 56, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("855, IBM Cyrillic; primarily Russian"),	NULL, 0, 0, (void *) 57, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("852, Latin 2"),				NULL, 0, 0, (void *) 58, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("775, MS-DOS Baltic"),			NULL, 0, 0, (void *) 59, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("737, Greek; former 437 G"),		NULL, 0, 0, (void *) 60, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("708, Arabic ASMO 708"),			NULL, 0, 0, (void *) 61, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("850, WE/Latin 1"),			NULL, 0, 0, (void *) 62, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("437, US"),				NULL, 0, 0, (void *) 63, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static char *TN_DefaultName(GGadget *g, int r, int c);
@@ -1285,23 +1285,23 @@ static struct col_init sizeci[] = {
     { me_string, NULL, NULL, NULL, N_("Name") }
 };
 static GTextInfo gridfit[] = {
-    { (unichar_t *) N_("No Grid Fit"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Grid Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("No Grid Fit"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Grid Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo antialias[] = {
-    { (unichar_t *) N_("No Anti-Alias"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Anti-Alias"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("No Anti-Alias"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Anti-Alias"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo symsmooth[] = {
-    { (unichar_t *) N_("No Symmetric-Smooth"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Symmetric-Smoothing"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("No Symmetric-Smooth"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Symmetric-Smoothing"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo gfsymsmooth[] = {
-    { (unichar_t *) N_("No Grid Fit w/ Sym-Smooth"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Grid Fit w/ Sym-Smooth"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("No Grid Fit w/ Sym-Smooth"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Grid Fit w/ Sym-Smooth"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static struct col_init gaspci[] = {
@@ -1312,13 +1312,13 @@ static struct col_init gaspci[] = {
     { me_enum, NULL, gfsymsmooth, NULL, N_("Gasp|Grid Fit w/ Sym Smooth") }	/* 4 */
 };
 static GTextInfo splineorder[] = {
-    { (unichar_t *) N_("Cubic"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Quadratic"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Cubic"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Quadratic"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo layertype[] = {
-    { (unichar_t *) N_("Layer|Foreground"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Layer|Background"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Layer|Foreground"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Layer|Background"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static void Layers_BackgroundEnable(GGadget *g,GMenuItem *mi, int r, int c);
@@ -1821,23 +1821,23 @@ static struct { const char *name; short type, arr_size, present; } KnownPrivates
 
 static GTextInfo psprivate_nameids[] = {
 /* Don't translate these here either */
-    { (unichar_t *) "BlueValues", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "OtherBlues", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "BlueFuzz", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "FamilyBlues", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "FamilyOtherBlues", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "BlueScale", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "BlueShift", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "StdHW", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "StdVW", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "StemSnapH", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "StemSnapV", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "ForceBold", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "LanguageGroup", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "RndStemUp", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "lenIV", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "ExpansionFactor", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "Erode", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "BlueValues", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "OtherBlues", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "BlueFuzz", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "FamilyBlues", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "FamilyOtherBlues", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "BlueScale", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "BlueShift", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "StdHW", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "StdVW", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "StemSnapH", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "StemSnapV", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "ForceBold", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "LanguageGroup", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "RndStemUp", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "lenIV", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "ExpansionFactor", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "Erode", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 
@@ -2185,8 +2185,8 @@ static int GFI_NameChange(GGadget *g, GEvent *e) {
     if ( e->type==et_controlevent && e->u.control.subtype == et_textchanged ) {
 	GWindow gw = GGadgetGetWindow(g);
 	struct gfi_data *gfi = GDrawGetUserData(gw);
-	const unichar_t *uname = _GGadgetGetTitle(GWidgetGetControl(gw,CID_Fontname));
-	unichar_t ubuf[50];
+	const uint32_t *uname = _GGadgetGetTitle(GWidgetGetControl(gw,CID_Fontname));
+	uint32_t ubuf[50];
 	int i,j;
 	for ( j=0; noticeweights[j]!=NULL; ++j ) {
 	    for ( i=0; noticeweights[j][i]!=NULL; ++i ) {
@@ -2204,7 +2204,7 @@ static int GFI_NameChange(GGadget *g, GEvent *e) {
 	/* If the user didn't set the full name yet, we guess it from the
 	 * postrscript name */
 	if ( gfi->human_untitled ) {
-	    unichar_t *cp = x_u32_strdup_or_null(uname);
+	    uint32_t *cp = x_u32_strdup_or_null(uname);
 	    int i=0;
 	    /* replace the last hyphen with space */
 	    for( i=u_strlen(cp); i>=0; i-- ) {
@@ -2222,7 +2222,7 @@ static int GFI_NameChange(GGadget *g, GEvent *e) {
 	    free(cp);
 	}
 	if ( gfi->family_untitled ) {
-	    const unichar_t *ept = uname+u_strlen(uname); unichar_t *temp;
+	    const uint32_t *ept = uname+u_strlen(uname); uint32_t *temp;
 	    for ( i=0; knownweights[i]!=NULL; ++i ) {
 		if (( temp = uc_strstrmatch(uname,knownweights[i]))!=NULL && temp<ept && temp!=uname )
 		    ept = temp;
@@ -2281,9 +2281,9 @@ return( true );
 
 static int GFI_EmChanged(GGadget *g, GEvent *e) {
     if ( e->type==et_controlevent && e->u.control.subtype == et_textchanged ) {
-	char buf[20]; unichar_t ubuf[20];
+	char buf[20]; uint32_t ubuf[20];
 	struct gfi_data *d = GDrawGetUserData(GGadgetGetWindow(g));
-	const unichar_t *ret = _GGadgetGetTitle(g); unichar_t *end;
+	const uint32_t *ret = _GGadgetGetTitle(g); uint32_t *end;
 	int val = u_strtol(ret,&end,10), ascent, descent;
 	if ( *end )
 return( true );
@@ -2321,7 +2321,7 @@ static int GFI_GuessItalic(GGadget *g, GEvent *e) {
     if ( e->type==et_controlevent && e->u.control.subtype == et_buttonactivate ) {
 	struct gfi_data *d = GDrawGetUserData(GGadgetGetWindow(g));
 	double val = SFGuessItalicAngle(d->sf);
-	char buf[30]; unichar_t ubuf[30];
+	char buf[30]; uint32_t ubuf[30];
 	sprintf( buf, "%.1f", val);
 	uc_strcpy(ubuf,buf);
 	GGadgetSetTitle(GWidgetGetControl(d->gw,CID_ItalicAngle),ubuf);
@@ -2420,7 +2420,7 @@ static void GFI_Mark_DeleteClass(GGadget *g,int whichclass) {
     }
 }
 
-static unichar_t **GFI_GlyphListCompletion(GGadget *t,int from_tab) {
+static uint32_t **GFI_GlyphListCompletion(GGadget *t,int from_tab) {
     struct gfi_data *d = GDrawGetUserData(GDrawGetParentWindow(GGadgetGetWindow(t)));
     SplineFont *sf = d->sf;
 
@@ -2516,7 +2516,7 @@ void GListDelSelected(GGadget *list) {
     GGadgetSetList(list,new,false);
 }
 
-GTextInfo *GListChangeLine(GGadget *list,int pos, const unichar_t *line) {
+GTextInfo *GListChangeLine(GGadget *list,int pos, const uint32_t *line) {
     GTextInfo **old, **new;
     int32 i,len;
     
@@ -2536,7 +2536,7 @@ GTextInfo *GListChangeLine(GGadget *list,int pos, const unichar_t *line) {
 return( new[pos]);
 }
 
-GTextInfo *GListAppendLine(GGadget *list,const unichar_t *line,int select) {
+GTextInfo *GListAppendLine(GGadget *list,const uint32_t *line,int select) {
     GTextInfo **old, **new;
     int32 i,len;
     
@@ -2615,10 +2615,10 @@ static void BadFamily() {
 }
 
 static int SetFontName(GWindow gw, SplineFont *sf) {
-    const unichar_t *ufamily = _GGadgetGetTitle(GWidgetGetControl(gw,CID_Family));
-    const unichar_t *ufont = _GGadgetGetTitle(GWidgetGetControl(gw,CID_Fontname));
-    const unichar_t *uweight = _GGadgetGetTitle(GWidgetGetControl(gw,CID_Weight));
-    const unichar_t *uhum = _GGadgetGetTitle(GWidgetGetControl(gw,CID_Human));
+    const uint32_t *ufamily = _GGadgetGetTitle(GWidgetGetControl(gw,CID_Family));
+    const uint32_t *ufont = _GGadgetGetTitle(GWidgetGetControl(gw,CID_Fontname));
+    const uint32_t *uweight = _GGadgetGetTitle(GWidgetGetControl(gw,CID_Weight));
+    const uint32_t *uhum = _GGadgetGetTitle(GWidgetGetControl(gw,CID_Human));
     int diff = (u8_strcmp(x_gc_u32_to_u8 (u32_force_valid (ufont)),
 			  u8_force_valid (sf->fontname)) != 0);
 
@@ -2634,9 +2634,9 @@ return( diff );
 }
 
 static int CheckNames(struct gfi_data *d) {
-    const unichar_t *ufamily = _GGadgetGetTitle(GWidgetGetControl(d->gw,CID_Family));
-    const unichar_t *ufont = _GGadgetGetTitle(GWidgetGetControl(d->gw,CID_Fontname));
-    unichar_t *end; const unichar_t *pt;
+    const uint32_t *ufamily = _GGadgetGetTitle(GWidgetGetControl(d->gw,CID_Family));
+    const uint32_t *ufont = _GGadgetGetTitle(GWidgetGetControl(d->gw,CID_Fontname));
+    uint32_t *end; const uint32_t *pt;
     char *buts[3];
     buts[0] = _("_OK"); buts[1] = _("_Cancel"); buts[2]=NULL;
 
@@ -3113,18 +3113,18 @@ return;
     mi[MID_ToggleBase-1].ti.disabled = !strings[3*r+2].user_bits;
     if ( strings[3*r+2].frozen ) {
 	mi[MID_MultiEdit-1].ti.disabled = true;
-	mi[MID_ToggleBase-1].ti.text = (unichar_t *) _("Detach from PostScript Names");
+	mi[MID_ToggleBase-1].ti.text = (uint32_t *) _("Detach from PostScript Names");
     } else {
 	char *temp;
-	mi[MID_ToggleBase-1].ti.text = (unichar_t *) _("Same as PostScript Names");
+	mi[MID_ToggleBase-1].ti.text = (uint32_t *) _("Same as PostScript Names");
 	temp = tn_recalculatedef(d,strings[3*r+1].u.md_ival);
 	mi[MID_ToggleBase-1].ti.disabled = (temp==NULL);
 	free(temp);
     }
     if ( c!=2 )
 	mi[MID_MultiEdit-1].ti.disabled = true;
-    mi[MID_MultiEdit-1].ti.text = (unichar_t *) _("Multi-line edit");
-    mi[MID_Delete-1].ti.text = (unichar_t *) _("Delete");
+    mi[MID_MultiEdit-1].ti.text = (uint32_t *) _("Multi-line edit");
+    mi[MID_Delete-1].ti.text = (uint32_t *) _("Delete");
     GMenuCreatePopupMenu(event->w,event, mi);
 }
 
@@ -3893,11 +3893,11 @@ static void GFI_ApplyLookupChanges(struct gfi_data *gfi) {
 
 static void hexparse(GWindow gw, int cid, char *name, uint32 *data, int len, int *err) {
     int i;
-    const unichar_t *ret;
-    unichar_t *end;
+    const uint32_t *ret;
+    uint32_t *end;
 
     ret = _GGadgetGetTitle(GWidgetGetControl(gw,cid));
-    end = (unichar_t *) ret;
+    end = (uint32_t *) ret;
     for ( i=0; i<len; ++i ) {
 	if ( i!=0 ) {
 	    if ( *end=='.' )
@@ -4006,7 +4006,7 @@ static int GFI_OK(GGadget *g, GEvent *e) {
 	int winaoff=true, windoff=true;
 	int taoff=true, tdoff=true, haoff = true, hdoff = true;
 	real ia, cidversion;
-	const unichar_t *txt, *fond; unichar_t *end;
+	const uint32_t *txt, *fond; uint32_t *end;
 	int i,j, mcs;
 	int vmetrics, namechange, guideorder2;
 	int xuidchanged = false, usexuid, useuniqueid;
@@ -4567,7 +4567,7 @@ static void GFI_AsDsLab(struct gfi_data *d, int cid, int onlylabel) {
     char buf[40];
     char *offt, *baret;
     int ismax=0;
-    unichar_t *end;
+    uint32_t *end;
 
     switch ( cid ) {
       case CID_WinAscentIsOff:
@@ -4607,11 +4607,11 @@ return;
 return;
 
     if ( cid == CID_TypoAscentIsOff ) {
-	const unichar_t *as = _GGadgetGetTitle(GWidgetGetControl(d->gw,CID_Ascent));
+	const uint32_t *as = _GGadgetGetTitle(GWidgetGetControl(d->gw,CID_Ascent));
 	double av=u_strtod(as,&end);
 	b.maxy = *end=='\0' ? av : d->sf->ascent;
     } else if ( cid == CID_TypoDescentIsOff ) {
-	const unichar_t *ds = _GGadgetGetTitle(GWidgetGetControl(d->gw,CID_Descent));
+	const uint32_t *ds = _GGadgetGetTitle(GWidgetGetControl(d->gw,CID_Descent));
 	double dv=u_strtod(ds,&end);
 	b.miny = *end=='\0' ? -dv : -d->sf->descent;
     } else {
@@ -4703,7 +4703,7 @@ return( true );
 
 static void GFI_SubSuperSet(struct gfi_data *d, struct pfminfo *info) {
     char buffer[40];
-    unichar_t ubuf[40];
+    uint32_t ubuf[40];
 
     sprintf( buffer, "%d", info->os2_subxsize );
     uc_strcpy(ubuf,buffer);
@@ -4755,10 +4755,10 @@ static void _GFI_SubSuperDefault(struct gfi_data *d) {
     for ( i=0; i<10; ++i )
 	GGadgetSetEnabled(GWidgetGetControl(d->gw,CID_SubXSize+i),!isdefault);
     if ( isdefault ) {
-	const unichar_t *as = _GGadgetGetTitle(GWidgetGetControl(d->gw,CID_Ascent));
-	const unichar_t *ds = _GGadgetGetTitle(GWidgetGetControl(d->gw,CID_Descent));
-	const unichar_t *ia = _GGadgetGetTitle(GWidgetGetControl(d->gw,CID_Descent));
-	unichar_t *aend, *dend, *iend;
+	const uint32_t *as = _GGadgetGetTitle(GWidgetGetControl(d->gw,CID_Ascent));
+	const uint32_t *ds = _GGadgetGetTitle(GWidgetGetControl(d->gw,CID_Descent));
+	const uint32_t *ia = _GGadgetGetTitle(GWidgetGetControl(d->gw,CID_Descent));
+	uint32_t *aend, *dend, *iend;
 	double av=u_strtod(as,&aend),dv=u_strtod(ds,&dend),iav=u_strtod(ia,&iend);
 	struct pfminfo info;
 	if ( *aend!='\0' ) av = d->sf->ascent;
@@ -4780,11 +4780,11 @@ return( true );
 
 static void TTFSetup(struct gfi_data *d) {
     struct pfminfo info;
-    char buffer[10]; unichar_t ubuf[10];
+    char buffer[10]; uint32_t ubuf[10];
     int i, lg, vlg, tlg;
-    const unichar_t *as = _GGadgetGetTitle(GWidgetGetControl(d->gw,CID_Ascent));
-    const unichar_t *ds = _GGadgetGetTitle(GWidgetGetControl(d->gw,CID_Descent));
-    unichar_t *aend, *dend;
+    const uint32_t *as = _GGadgetGetTitle(GWidgetGetControl(d->gw,CID_Ascent));
+    const uint32_t *ds = _GGadgetGetTitle(GWidgetGetControl(d->gw,CID_Descent));
+    uint32_t *aend, *dend;
     double av=u_strtod(as,&aend),dv=u_strtod(ds,&dend);
 
     info = d->sf->pfminfo;
@@ -5038,17 +5038,17 @@ return( true );
 
 	k=j=0; y = 10;
 	for ( i=0; params[i]!=0; ++i ) {
-	    txlabel[k].text = (unichar_t *) params[i];
+	    txlabel[k].text = (uint32_t *) params[i];
 	    txlabel[k].text_is_1byte = true;
 	    txgcd[k].gd.label = &txlabel[k];
 	    txgcd[k].gd.pos.x = 10; txgcd[k].gd.pos.y = y+4;
 	    txgcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-	    txgcd[k].gd.popup_msg = (unichar_t *) popups[i];
+	    txgcd[k].gd.popup_msg = (uint32_t *) popups[i];
 	    txgcd[k++].creator = GLabelCreate;
 	    txarray[j][0] = &txgcd[k-1];
 
 	    sprintf( values[i], "%g", d->texdata.params[i+7]*(double) (d->sf->ascent+d->sf->descent)/(double) (1<<20));
-	    txlabel[k].text = (unichar_t *) values[i];
+	    txlabel[k].text = (uint32_t *) values[i];
 	    txlabel[k].text_is_1byte = true;
 	    txgcd[k].gd.label = &txlabel[k];
 	    txgcd[k].gd.pos.x = 85; txgcd[k].gd.pos.y = y;
@@ -5064,7 +5064,7 @@ return( true );
 	txgcd[k].gd.pos.x = 30-3; txgcd[k].gd.pos.y = GDrawPixelsToPoints(NULL,pos.height)-35-3;
 	txgcd[k].gd.pos.width = -1; txgcd[k].gd.pos.height = 0;
 	txgcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
-	txlabel[k].text = (unichar_t *) _("_OK");
+	txlabel[k].text = (uint32_t *) _("_OK");
 	txlabel[k].text_is_1byte = true;
 	txlabel[k].text_in_resource = true;
 	txgcd[k].gd.label = &txlabel[k];
@@ -5074,7 +5074,7 @@ return( true );
 	txgcd[k].gd.pos.x = -30; txgcd[k].gd.pos.y = txgcd[k-1].gd.pos.y+3;
 	txgcd[k].gd.pos.width = -1; txgcd[k].gd.pos.height = 0;
 	txgcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-	txlabel[k].text = (unichar_t *) _("_Cancel");
+	txlabel[k].text = (uint32_t *) _("_Cancel");
 	txlabel[k].text_is_1byte = true;
 	txlabel[k].text_in_resource = true;
 	txgcd[k].gd.label = &txlabel[k];
@@ -5319,8 +5319,8 @@ static int OS2_UnicodeChange(GGadget *g, GEvent *e) {
     int len,i,bit,set;
 
     if ( e==NULL || (e->type==et_controlevent && e->u.control.subtype == et_textchanged )) {
-	const unichar_t *ret;
-	unichar_t *end;
+	const uint32_t *ret;
+	uint32_t *end;
 	struct gfi_data *d = GDrawGetUserData(GGadgetGetWindow(g));
 	GWindow gw = d->gw;
 	GGadget *list;
@@ -5387,8 +5387,8 @@ static int OS2_CodePageChange(GGadget *g, GEvent *e) {
     int len,i,bit,set;
 
     if ( e==NULL || (e->type==et_controlevent && e->u.control.subtype == et_textchanged )) {
-	const unichar_t *ret;
-	unichar_t *end;
+	const uint32_t *ret;
+	uint32_t *end;
 	struct gfi_data *d = GDrawGetUserData(GGadgetGetWindow(g));
 	GWindow gw = d->gw;
 	GGadget *list;
@@ -6360,7 +6360,7 @@ static int GFI_LookupImportLookup(GGadget *g, GEvent *e) {
 		    ++cnt;
 		}
 		if ( ti ) {
-		    ti[cnt].text = (unichar_t *) copy( osf->fontname );
+		    ti[cnt].text = (uint32_t *) copy( osf->fontname );
 		    ti[cnt].text_is_1byte = true;
 		    ti[cnt].disabled = true;
 		    ti[cnt].userdata = osf;
@@ -6368,7 +6368,7 @@ static int GFI_LookupImportLookup(GGadget *g, GEvent *e) {
 		++cnt;
 		for ( otl = isgpos ? osf->gpos_lookups : osf->gsub_lookups; otl!=NULL; otl=otl->next ) {
 		    if ( ti ) {
-			ti[cnt].text = (unichar_t *) strconcat( " ", otl->lookup_name );
+			ti[cnt].text = (uint32_t *) strconcat( " ", otl->lookup_name );
 			ti[cnt].text_is_1byte = true;
 			ti[cnt].userdata = otl;
 		    }
@@ -6383,7 +6383,7 @@ static int GFI_LookupImportLookup(GGadget *g, GEvent *e) {
 	memset(label,0,sizeof(label));
 
 	i = 0;
-	label[i].text = (unichar_t *) _("Select lookups from other fonts");
+	label[i].text = (uint32_t *) _("Select lookups from other fonts");
 	label[i].text_is_1byte = true;
 	label[i].text_in_resource = true;
 	gcd[i].gd.label = &label[i];
@@ -6399,7 +6399,7 @@ static int GFI_LookupImportLookup(GGadget *g, GEvent *e) {
 	varray[2] = &gcd[i++]; varray[3] = NULL;
 
 	gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_default;
-	label[i].text = (unichar_t *) _("_Import");
+	label[i].text = (uint32_t *) _("_Import");
 	label[i].text_is_1byte = true;
 	label[i].text_in_resource = true;
 	gcd[i].gd.label = &label[i];
@@ -6408,7 +6408,7 @@ static int GFI_LookupImportLookup(GGadget *g, GEvent *e) {
 	gcd[i++].creator = GButtonCreate;
 
 	gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-	label[i].text = (unichar_t *) _("_Cancel");
+	label[i].text = (uint32_t *) _("_Cancel");
 	label[i].text_is_1byte = true;
 	label[i].text_in_resource = true;
 	gcd[i].gd.label = &label[i];
@@ -6902,29 +6902,29 @@ return;
 }
 
 static GMenuItem lookuppopupmenu[] = {
-    { { (unichar_t *) N_("_Top"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 't' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_LookupTop },
-    { { (unichar_t *) N_("_Up"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'C' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_LookupUp },
-    { { (unichar_t *) N_("_Down"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_LookupDown },
-    { { (unichar_t *) N_("_Bottom"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_LookupBottom },
-    { { (unichar_t *) N_("_Sort"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_LookupSort },
+    { { (uint32_t *) N_("_Top"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 't' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_LookupTop },
+    { { (uint32_t *) N_("_Up"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'C' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_LookupUp },
+    { { (uint32_t *) N_("_Down"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_LookupDown },
+    { { (uint32_t *) N_("_Bottom"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_LookupBottom },
+    { { (uint32_t *) N_("_Sort"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_LookupSort },
     { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, 0, '\0' }, '\0', 0, NULL, NULL, NULL, 0 }, /* line */
-    { { (unichar_t *) N_("Add _Lookup"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_AddLookup },
-    { { (unichar_t *) N_("Add Sub_table"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_AddSubtable },
-    { { (unichar_t *) N_("Edit _Metadata"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_EditMetadata },
-    { { (unichar_t *) N_("_Edit Data"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_EditSubtable },
-    { { (unichar_t *) N_("De_lete"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_DeleteLookup },
-    { { (unichar_t *) N_("_Merge"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_MergeLookup },
-    { { (unichar_t *) N_("Sa_ve Lookup..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_SaveLookup },
+    { { (uint32_t *) N_("Add _Lookup"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_AddLookup },
+    { { (uint32_t *) N_("Add Sub_table"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_AddSubtable },
+    { { (uint32_t *) N_("Edit _Metadata"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_EditMetadata },
+    { { (uint32_t *) N_("_Edit Data"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_EditSubtable },
+    { { (uint32_t *) N_("De_lete"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_DeleteLookup },
+    { { (uint32_t *) N_("_Merge"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_MergeLookup },
+    { { (uint32_t *) N_("Sa_ve Lookup..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_SaveLookup },
     { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, 0, '\0' }, '\0', 0, NULL, NULL, NULL, 0 }, /* line */
-    { { (unichar_t *) N_("Add Language to Script..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_AddLanguage },
-    { { (unichar_t *) N_("Remove Language from Script..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_RmLanguage },
+    { { (uint32_t *) N_("Add Language to Script..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_AddLanguage },
+    { { (uint32_t *) N_("Remove Language from Script..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_RmLanguage },
     { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, 0, '\0' }, '\0', 0, NULL, NULL, NULL, 0 }, /* line */
-    { { (unichar_t *) N_("_Add 'aalt' features"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_AddAllAlternates },
-    { { (unichar_t *) N_("Add 'D_FLT' script"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_AddDFLT },
+    { { (uint32_t *) N_("_Add 'aalt' features"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_AddAllAlternates },
+    { { (uint32_t *) N_("Add 'D_FLT' script"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_AddDFLT },
     { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, 0, '\0' }, '\0', 0, NULL, NULL, NULL, 0 }, /* line */
-    { { (unichar_t *) N_("_Revert All"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_RevertLookups },
-    { { (unichar_t *) N_("_Import..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_ImportLookups },
-    { { (unichar_t *) N_("S_ave Feature File..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_SaveFeat },
+    { { (uint32_t *) N_("_Revert All"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_RevertLookups },
+    { { (uint32_t *) N_("_Import..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_ImportLookups },
+    { { (uint32_t *) N_("S_ave Feature File..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, lookupmenu_dispatch, CID_SaveFeat },
     GMENUITEM_EMPTY
 };
 
@@ -6939,7 +6939,7 @@ static void LookupMenu(struct gfi_data *gfi,struct lkdata *lk,int isgpos, GEvent
 
         for ( i=0; lookuppopupmenu[i].ti.text!=NULL || lookuppopupmenu[i].ti.line; ++i )
             if ( lookuppopupmenu[i].ti.text!=NULL )
-                lookuppopupmenu[i].ti.text = (unichar_t *) _( (char *)lookuppopupmenu[i].ti.text);
+                lookuppopupmenu[i].ti.text = (uint32_t *) _( (char *)lookuppopupmenu[i].ti.text);
     }
 
     GGadgetEndPopup();
@@ -7484,7 +7484,7 @@ void FontInfo(SplineFont *sf,int deflayer,int defaspect,int sync) {
     int as, ds, ld;
     char **nlnames;
     char createtime[200], modtime[200];
-    unichar_t *tmpcreatetime, *tmpmodtime;
+    uint32_t *tmpcreatetime, *tmpmodtime;
     time_t t;
     const struct tm *tm;
     struct matrixinit mi, gaspmi, layersmi, ssmi, sizemi, marks_mi, markc_mi, private_mi;
@@ -7535,7 +7535,7 @@ return;
     memset(&nlabel,0,sizeof(nlabel));
     memset(&ngcd,0,sizeof(ngcd));
 
-    nlabel[0].text = (unichar_t *) _("Fo_ntname:");
+    nlabel[0].text = (uint32_t *) _("Fo_ntname:");
     nlabel[0].text_is_1byte = true;
     nlabel[0].text_in_resource = true;
     ngcd[0].gd.label = &nlabel[0];
@@ -7545,14 +7545,14 @@ return;
 
     ngcd[1].gd.pos.x = 115; ngcd[1].gd.pos.y = ngcd[0].gd.pos.y-6; ngcd[1].gd.pos.width = 137;
     ngcd[1].gd.flags = gg_visible | gg_enabled;
-    nlabel[1].text = (unichar_t *) sf->fontname;
+    nlabel[1].text = (uint32_t *) sf->fontname;
     nlabel[1].text_is_1byte = true;
     ngcd[1].gd.label = &nlabel[1];
     ngcd[1].gd.cid = CID_Fontname;
     ngcd[1].gd.handle_controlevent = GFI_NameChange;
     ngcd[1].creator = GTextFieldCreate;
 
-    nlabel[2].text = (unichar_t *) _("_Family Name:");
+    nlabel[2].text = (uint32_t *) _("_Family Name:");
     nlabel[2].text_is_1byte = true;
     nlabel[2].text_in_resource = true;
     ngcd[2].gd.label = &nlabel[2];
@@ -7562,7 +7562,7 @@ return;
 
     ngcd[3].gd.pos.x = ngcd[1].gd.pos.x; ngcd[3].gd.pos.y = ngcd[2].gd.pos.y-6; ngcd[3].gd.pos.width = 137;
     ngcd[3].gd.flags = gg_visible | gg_enabled;
-    nlabel[3].text = (unichar_t *) (sf->familyname?sf->familyname:sf->fontname);
+    nlabel[3].text = (uint32_t *) (sf->familyname?sf->familyname:sf->fontname);
     nlabel[3].text_is_1byte = true;
     ngcd[3].gd.label = &nlabel[3];
     ngcd[3].gd.cid = CID_Family;
@@ -7572,7 +7572,7 @@ return;
 	d->family_untitled = true;
 
     ngcd[4].gd.pos.x = 12; ngcd[4].gd.pos.y = ngcd[3].gd.pos.y+26+6;
-    nlabel[4].text = (unichar_t *) _("Name For Human_s:");
+    nlabel[4].text = (uint32_t *) _("Name For Human_s:");
     nlabel[4].text_is_1byte = true;
     nlabel[4].text_in_resource = true;
     ngcd[4].gd.label = &nlabel[4];
@@ -7581,7 +7581,7 @@ return;
 
     ngcd[5].gd.pos.x = 115; ngcd[5].gd.pos.y = ngcd[4].gd.pos.y-6; ngcd[5].gd.pos.width = 137;
     ngcd[5].gd.flags = gg_visible | gg_enabled;
-    nlabel[5].text = (unichar_t *) (sf->fullname?sf->fullname:sf->fontname);
+    nlabel[5].text = (uint32_t *) (sf->fullname?sf->fullname:sf->fontname);
     nlabel[5].text_is_1byte = true;
     ngcd[5].gd.label = &nlabel[5];
     ngcd[5].gd.cid = CID_Human;
@@ -7590,7 +7590,7 @@ return;
     if ( sf->fullname==NULL || strstr(sf->fullname,"Untitled")==sf->fullname )
 	d->human_untitled = true;
 
-    nlabel[6].text = (unichar_t *) _("_Weight");
+    nlabel[6].text = (uint32_t *) _("_Weight");
     nlabel[6].text_is_1byte = true;
     nlabel[6].text_in_resource = true;
     ngcd[6].gd.label = &nlabel[6];
@@ -7600,14 +7600,14 @@ return;
 
     ngcd[7].gd.pos.x = ngcd[1].gd.pos.x; ngcd[7].gd.pos.y = ngcd[6].gd.pos.y-6; ngcd[7].gd.pos.width = 137;
     ngcd[7].gd.flags = gg_visible | gg_enabled;
-    nlabel[7].text = (unichar_t *) (sf->weight?sf->weight:"Regular");
+    nlabel[7].text = (uint32_t *) (sf->weight?sf->weight:"Regular");
     nlabel[7].text_is_1byte = true;
     ngcd[7].gd.label = &nlabel[7];
     ngcd[7].gd.cid = CID_Weight;
     ngcd[7].creator = GTextFieldCreate;
 
     ngcd[8].gd.pos.x = 12; ngcd[8].gd.pos.y = ngcd[6].gd.pos.y+26;
-    nlabel[8].text = (unichar_t *) _("_Version:");
+    nlabel[8].text = (uint32_t *) _("_Version:");
     nlabel[8].text_is_1byte = true;
     nlabel[8].text_in_resource = true;
     ngcd[8].gd.label = &nlabel[8];
@@ -7616,52 +7616,52 @@ return;
 
     ngcd[9].gd.pos.x = 115; ngcd[9].gd.pos.y = ngcd[8].gd.pos.y-6; ngcd[9].gd.pos.width = 137;
     ngcd[9].gd.flags = gg_visible | gg_enabled;
-    nlabel[9].text = (unichar_t *) (sf->version?sf->version:"");
+    nlabel[9].text = (uint32_t *) (sf->version?sf->version:"");
     nlabel[9].text_is_1byte = true;
     if ( sf->subfontcnt!=0 ) {
 	sprintf( vbuf,"%g", sf->cidversion );
-	nlabel[9].text = (unichar_t *) vbuf;
+	nlabel[9].text = (uint32_t *) vbuf;
     }
     ngcd[9].gd.label = &nlabel[9];
     ngcd[9].gd.cid = CID_Version;
     ngcd[9].creator = GTextFieldCreate;
 
-    nlabel[10].text = (unichar_t *) _("sfnt _Revision:");
+    nlabel[10].text = (uint32_t *) _("sfnt _Revision:");
     nlabel[10].text_is_1byte = true;
     nlabel[10].text_in_resource = true;
     ngcd[10].gd.label = &nlabel[10];
     ngcd[10].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    ngcd[10].gd.popup_msg = (unichar_t *) _("If you leave this field blank FontForge will use a default based on\neither the version string above, or one in the 'name' table." );
+    ngcd[10].gd.popup_msg = (uint32_t *) _("If you leave this field blank FontForge will use a default based on\neither the version string above, or one in the 'name' table." );
     ngcd[10].creator = GLabelCreate;
 
     sfntrbuf[0]='\0';
     if ( sf->sfntRevision!=sfntRevisionUnset )
 	sprintf( sfntrbuf, "%g", sf->sfntRevision/65536.0 );
     ngcd[11].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    nlabel[11].text = (unichar_t *) sfntrbuf;
+    nlabel[11].text = (uint32_t *) sfntrbuf;
     nlabel[11].text_is_1byte = true;
     ngcd[11].gd.label = &nlabel[11];
     ngcd[11].gd.cid = CID_Revision;
-    ngcd[11].gd.popup_msg = (unichar_t *) _("If you leave this field blank FontForge will use a default based on\neither the version string above, or one in the 'name' table." );
+    ngcd[11].gd.popup_msg = (uint32_t *) _("If you leave this field blank FontForge will use a default based on\neither the version string above, or one in the 'name' table." );
     ngcd[11].creator = GTextFieldCreate;
 
-    nlabel[12].text = (unichar_t *) _("_Base Filename:");
+    nlabel[12].text = (uint32_t *) _("_Base Filename:");
     nlabel[12].text_is_1byte = true;
     nlabel[12].text_in_resource = true;
     ngcd[12].gd.label = &nlabel[12];
-    ngcd[12].gd.popup_msg = (unichar_t *) _("Use this as the default base for the filename\nwhen generating a font." );
+    ngcd[12].gd.popup_msg = (uint32_t *) _("Use this as the default base for the filename\nwhen generating a font." );
     ngcd[12].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     ngcd[12].creator = GLabelCreate;
 
 /* GT: The space in front of "Same" makes things line up better */
-    nlabel[13].text = (unichar_t *) _(" Same as Fontname");
+    nlabel[13].text = (uint32_t *) _(" Same as Fontname");
     nlabel[13].text_is_1byte = true;
     ngcd[13].gd.label = &nlabel[13];
     ngcd[13].gd.flags = sf->defbasefilename==NULL ? (gg_visible | gg_enabled | gg_cb_on ) : (gg_visible | gg_enabled);
     ngcd[13].gd.cid = CID_SameAsFontname;
     ngcd[13].creator = GRadioCreate;
 
-    nlabel[14].text = (unichar_t *) "";
+    nlabel[14].text = (uint32_t *) "";
     nlabel[14].text_is_1byte = true;
     ngcd[14].gd.label = &nlabel[14];
     ngcd[14].gd.flags = sf->defbasefilename!=NULL ?
@@ -7671,7 +7671,7 @@ return;
     ngcd[14].creator = GRadioCreate;
 
     ngcd[15].gd.flags = gg_visible | gg_enabled|gg_text_xim;
-    nlabel[15].text = (unichar_t *) (sf->defbasefilename?sf->defbasefilename:"");
+    nlabel[15].text = (uint32_t *) (sf->defbasefilename?sf->defbasefilename:"");
     nlabel[15].text_is_1byte = true;
     ngcd[15].gd.label = &nlabel[15];
     ngcd[15].gd.cid = CID_DefBaseName;
@@ -7679,7 +7679,7 @@ return;
     ngcd[15].creator = GTextFieldCreate;
 
     ngcd[16].gd.flags = gg_visible | gg_enabled;
-    nlabel[16].text = (unichar_t *) _("Copy_right:");
+    nlabel[16].text = (uint32_t *) _("Copy_right:");
     nlabel[16].text_is_1byte = true;
     nlabel[16].text_in_resource = true;
     ngcd[16].gd.label = &nlabel[16];
@@ -7690,14 +7690,14 @@ return;
     copied_copyright = NULL;
     if ( sf->copyright!=NULL ) {
 	if ( !AllAscii(sf->copyright))
-	    nlabel[17].text = (unichar_t *) (copied_copyright = StripToASCII(sf->copyright));
+	    nlabel[17].text = (uint32_t *) (copied_copyright = StripToASCII(sf->copyright));
 	else
-	    nlabel[17].text = (unichar_t *) sf->copyright;
+	    nlabel[17].text = (uint32_t *) sf->copyright;
 	nlabel[17].text_is_1byte = true;
 	ngcd[17].gd.label = &nlabel[17];
     }
     ngcd[17].gd.cid = CID_Notice;
-    ngcd[17].gd.popup_msg = (unichar_t *) _("This must be ASCII, so you may not use the copyright symbol (use (c) instead).");
+    ngcd[17].gd.popup_msg = (uint32_t *) _("This must be ASCII, so you may not use the copyright symbol (use (c) instead).");
     ngcd[17].creator = GTextAreaCreate;
 
     memset(&nb,0,sizeof(nb)); memset(&nb2,0,sizeof(nb2)); memset(&nb3,0,sizeof(nb3));
@@ -7735,14 +7735,14 @@ return;
     memset(&xulabel,0,sizeof(xulabel));
     memset(&xugcd,0,sizeof(xugcd));
 
-    xulabel[0].text = (unichar_t *) _("(Adobe now considers XUID/UniqueID unnecessary)");
+    xulabel[0].text = (uint32_t *) _("(Adobe now considers XUID/UniqueID unnecessary)");
     xulabel[0].text_is_1byte = true;
     xulabel[0].text_in_resource = true;
     xugcd[0].gd.label = &xulabel[0];
     xugcd[0].gd.flags = gg_visible | gg_enabled;
     xugcd[0].creator = GLabelCreate;
 
-    xulabel[1].text = (unichar_t *) _("Use XUID");
+    xulabel[1].text = (uint32_t *) _("Use XUID");
     xulabel[1].text_is_1byte = true;
     xulabel[1].text_in_resource = true;
     xugcd[1].gd.label = &xulabel[1];
@@ -7754,7 +7754,7 @@ return;
 
     xugcd[2].gd.pos.x = 12; xugcd[2].gd.pos.y = 10+6;
     xugcd[2].gd.flags = gg_visible | gg_enabled;
-    xulabel[2].text = (unichar_t *) _("_XUID:");
+    xulabel[2].text = (uint32_t *) _("_XUID:");
     xulabel[2].text_is_1byte = true;
     xulabel[2].text_in_resource = true;
     xugcd[2].gd.label = &xulabel[2];
@@ -7763,14 +7763,14 @@ return;
     xugcd[3].gd.flags = gg_visible;
     if ( sf->use_xuid ) xugcd[3].gd.flags = gg_visible | gg_enabled;
     if ( sf->xuid!=NULL ) {
-	xulabel[3].text = (unichar_t *) sf->xuid;
+	xulabel[3].text = (uint32_t *) sf->xuid;
 	xulabel[3].text_is_1byte = true;
 	xugcd[3].gd.label = &xulabel[3];
     }
     xugcd[3].gd.cid = CID_XUID;
     xugcd[3].creator = GTextFieldCreate;
 
-    xulabel[4].text = (unichar_t *) _("Use UniqueID");
+    xulabel[4].text = (uint32_t *) _("Use UniqueID");
     xulabel[4].text_is_1byte = true;
     xulabel[4].text_in_resource = true;
     xugcd[4].gd.label = &xulabel[4];
@@ -7780,7 +7780,7 @@ return;
     xugcd[4].gd.handle_controlevent = GFI_UseUniqueIDChanged;
     xugcd[4].creator = GCheckBoxCreate;
 
-    xulabel[5].text = (unichar_t *) _("_UniqueID:");
+    xulabel[5].text = (uint32_t *) _("_UniqueID:");
     xulabel[5].text_is_1byte = true;
     xulabel[5].text_in_resource = true;
     xugcd[5].gd.label = &xulabel[5];
@@ -7789,11 +7789,11 @@ return;
 
     xugcd[6].gd.flags = gg_visible;
     if ( sf->use_uniqueid ) xugcd[6].gd.flags = gg_visible | gg_enabled;
-    xulabel[6].text = (unichar_t *) "";
+    xulabel[6].text = (uint32_t *) "";
     xulabel[6].text_is_1byte = true;
     if ( sf->uniqueid!=0 ) {
 	sprintf( uibuf, "%d", sf->uniqueid );
-	xulabel[6].text = (unichar_t *) uibuf;
+	xulabel[6].text = (uint32_t *) uibuf;
     }
     xugcd[6].gd.label = &xulabel[6];
     xugcd[6].gd.cid = CID_UniqueID;
@@ -7818,7 +7818,7 @@ return;
 
     psgcd[0].gd.pos.x = 12; psgcd[0].gd.pos.y = 12;
     psgcd[0].gd.flags = gg_visible | gg_enabled;
-    pslabel[0].text = (unichar_t *) _("_Ascent:");
+    pslabel[0].text = (uint32_t *) _("_Ascent:");
     pslabel[0].text_is_1byte = true;
     pslabel[0].text_in_resource = true;
     psgcd[0].gd.label = &pslabel[0];
@@ -7827,7 +7827,7 @@ return;
     psgcd[1].gd.pos.x = 103; psgcd[1].gd.pos.y = psgcd[0].gd.pos.y-6; psgcd[1].gd.pos.width = 47;
     psgcd[1].gd.flags = gg_visible | gg_enabled;
     sprintf( asbuf, "%d", sf->ascent );
-    pslabel[1].text = (unichar_t *) asbuf;
+    pslabel[1].text = (uint32_t *) asbuf;
     pslabel[1].text_is_1byte = true;
     psgcd[1].gd.label = &pslabel[1];
     psgcd[1].gd.cid = CID_Ascent;
@@ -7836,7 +7836,7 @@ return;
 
     psgcd[2].gd.pos.x = 155; psgcd[2].gd.pos.y = psgcd[0].gd.pos.y;
     psgcd[2].gd.flags = gg_visible | gg_enabled;
-    pslabel[2].text = (unichar_t *) _("_Descent:");
+    pslabel[2].text = (uint32_t *) _("_Descent:");
     pslabel[2].text_is_1byte = true;
     pslabel[2].text_in_resource = true;
     psgcd[2].gd.label = &pslabel[2];
@@ -7845,7 +7845,7 @@ return;
     psgcd[3].gd.pos.x = 200; psgcd[3].gd.pos.y = psgcd[1].gd.pos.y; psgcd[3].gd.pos.width = 47;
     psgcd[3].gd.flags = gg_visible | gg_enabled;
     sprintf( dsbuf, "%d", sf->descent );
-    pslabel[3].text = (unichar_t *) dsbuf;
+    pslabel[3].text = (uint32_t *) dsbuf;
     pslabel[3].text_is_1byte = true;
     psgcd[3].gd.label = &pslabel[3];
     psgcd[3].gd.cid = CID_Descent;
@@ -7854,7 +7854,7 @@ return;
 
     psgcd[4].gd.pos.x = psgcd[0].gd.pos.x+5; psgcd[4].gd.pos.y = psgcd[0].gd.pos.y+24;
     psgcd[4].gd.flags = gg_visible | gg_enabled;
-    pslabel[4].text = (unichar_t *) _(" _Em Size:");
+    pslabel[4].text = (uint32_t *) _(" _Em Size:");
     pslabel[4].text_is_1byte = true;
     pslabel[4].text_in_resource = true;
     psgcd[4].gd.label = &pslabel[4];
@@ -7863,7 +7863,7 @@ return;
     psgcd[5].gd.pos.x = psgcd[1].gd.pos.x-20; psgcd[5].gd.pos.y = psgcd[1].gd.pos.y+24; psgcd[5].gd.pos.width = 67;
     psgcd[5].gd.flags = gg_visible | gg_enabled;
     sprintf( embuf, "%d", sf->descent+sf->ascent );
-    pslabel[5].text = (unichar_t *) embuf;
+    pslabel[5].text = (uint32_t *) embuf;
     pslabel[5].text_is_1byte = true;
     psgcd[5].gd.label = &pslabel[5];
     psgcd[5].gd.cid = CID_Em;
@@ -7873,7 +7873,7 @@ return;
 
     psgcd[6].gd.pos.x = psgcd[2].gd.pos.x; psgcd[6].gd.pos.y = psgcd[4].gd.pos.y-4;
     psgcd[6].gd.flags = gg_visible | gg_enabled | gg_cb_on;
-    pslabel[6].text = (unichar_t *) _("_Scale Outlines");
+    pslabel[6].text = (uint32_t *) _("_Scale Outlines");
     pslabel[6].text_is_1byte = true;
     pslabel[6].text_in_resource = true;
     psgcd[6].gd.label = &pslabel[6];
@@ -7886,7 +7886,7 @@ return;
 /*  "Italic Angle" is too long. Oops, no it's the next one, might as well leave in here though */
     psgcd[8].gd.pos.x = 12; psgcd[8].gd.pos.y = psgcd[5].gd.pos.y+26+6;
     psgcd[8].gd.flags = gg_visible | gg_enabled;
-    pslabel[8].text = (unichar_t *) _("_Italic Angle:");
+    pslabel[8].text = (uint32_t *) _("_Italic Angle:");
     pslabel[8].text_is_1byte = true;
     pslabel[8].text_in_resource = true;
     psgcd[8].gd.label = &pslabel[8];
@@ -7896,7 +7896,7 @@ return;
     psgcd[7].gd.pos.width = 47;
     psgcd[7].gd.flags = gg_visible | gg_enabled;
     sprintf( iabuf, "%g", (double) sf->italicangle );
-    pslabel[7].text = (unichar_t *) iabuf;
+    pslabel[7].text = (uint32_t *) iabuf;
     pslabel[7].text_is_1byte = true;
     psgcd[7].gd.label = &pslabel[7];
     psgcd[7].gd.cid = CID_ItalicAngle;
@@ -7908,7 +7908,7 @@ return;
 	    GIntGetResource(_NUM_Buttonsize)*100/GIntGetResource(_NUM_ScaleFactor);
     /*if ( strstrmatch(sf->fontname,"Italic")!=NULL ||strstrmatch(sf->fontname,"Oblique")!=NULL )*/
 	psgcd[9].gd.flags = gg_visible | gg_enabled;
-    pslabel[9].text = (unichar_t *) _("_Guess");
+    pslabel[9].text = (uint32_t *) _("_Guess");
     pslabel[9].text_is_1byte = true;
     pslabel[9].text_in_resource = true;
     psgcd[9].gd.label = &pslabel[9];
@@ -7921,7 +7921,7 @@ return;
 /*  "Underline position" is too long. */
     psgcd[11].gd.pos.x = 12; psgcd[11].gd.pos.y = psgcd[7].gd.pos.y+26+6;
     psgcd[11].gd.flags = gg_visible | gg_enabled;
-    pslabel[11].text = (unichar_t *) _("Underline _Position:");
+    pslabel[11].text = (uint32_t *) _("Underline _Position:");
     pslabel[11].text_is_1byte = true;
     pslabel[11].text_in_resource = true;
     psgcd[11].gd.label = &pslabel[11];
@@ -7930,7 +7930,7 @@ return;
     psgcd[10].gd.pos.x = 103; psgcd[10].gd.pos.y = psgcd[11].gd.pos.y-6; psgcd[10].gd.pos.width = 47;
     psgcd[10].gd.flags = gg_visible | gg_enabled;
     sprintf( upbuf, "%g", (double) sf->upos );
-    pslabel[10].text = (unichar_t *) upbuf;
+    pslabel[10].text = (uint32_t *) upbuf;
     pslabel[10].text_is_1byte = true;
     psgcd[10].gd.label = &pslabel[10];
     psgcd[10].gd.cid = CID_UPos;
@@ -7938,7 +7938,7 @@ return;
 
     psgcd[12].gd.pos.x = 155; psgcd[12].gd.pos.y = psgcd[11].gd.pos.y;
     psgcd[12].gd.flags = gg_visible | gg_enabled;
-    pslabel[12].text = (unichar_t *) S_("Underline|_Height:");
+    pslabel[12].text = (uint32_t *) S_("Underline|_Height:");
     pslabel[12].text_is_1byte = true;
     pslabel[12].text_in_resource = true;
     psgcd[12].gd.label = &pslabel[12];
@@ -7947,14 +7947,14 @@ return;
     psgcd[13].gd.pos.x = 200; psgcd[13].gd.pos.y = psgcd[10].gd.pos.y; psgcd[13].gd.pos.width = 47;
     psgcd[13].gd.flags = gg_visible | gg_enabled;
     sprintf( uwbuf, "%g", (double) sf->uwidth );
-    pslabel[13].text = (unichar_t *) uwbuf;
+    pslabel[13].text = (uint32_t *) uwbuf;
     pslabel[13].text_is_1byte = true;
     psgcd[13].gd.label = &pslabel[13];
     psgcd[13].gd.cid = CID_UWidth;
     psgcd[13].creator = GTextFieldCreate;
 
     psgcd[14].gd.pos.x = 12; psgcd[14].gd.pos.y = psgcd[13].gd.pos.y+26;
-    pslabel[14].text = (unichar_t *) _("Has _Vertical Metrics");
+    pslabel[14].text = (uint32_t *) _("Has _Vertical Metrics");
     pslabel[14].text_is_1byte = true;
     pslabel[14].text_in_resource = true;
     psgcd[14].gd.label = &pslabel[14];
@@ -7968,7 +7968,7 @@ return;
 
     psgcd[k].gd.pos.x = psgcd[k-2].gd.pos.x; psgcd[k].gd.pos.y = psgcd[k-1].gd.pos.y+32;
     psgcd[k].gd.flags = gg_visible | gg_enabled;
-    pslabel[k].text = (unichar_t *) _("Interpretation:");
+    pslabel[k].text = (uint32_t *) _("Interpretation:");
     pslabel[k].text_is_1byte = true;
     pslabel[k].text_in_resource = true;
     psgcd[k].gd.label = &pslabel[k];
@@ -7991,7 +7991,7 @@ return;
 
     psgcd[k].gd.pos.x = psgcd[k-2].gd.pos.x; psgcd[k].gd.pos.y = psgcd[k-1].gd.pos.y+32;
     psgcd[k].gd.flags = gg_visible | gg_enabled;
-    pslabel[k].text = (unichar_t *) _("Name List:");
+    pslabel[k].text = (uint32_t *) _("Name List:");
     pslabel[k].text_is_1byte = true;
     pslabel[k].text_in_resource = true;
     psgcd[k].gd.label = &pslabel[k];
@@ -8005,7 +8005,7 @@ return;
     for ( i=0; nlnames[i]!=NULL; ++i);
     namelistnames = xcalloc(i+1,sizeof(GTextInfo));
     for ( i=0; nlnames[i]!=NULL; ++i) {
-	namelistnames[i].text = (unichar_t *) nlnames[i];
+	namelistnames[i].text = (uint32_t *) nlnames[i];
 	namelistnames[i].text_is_1byte = true;
 	if ( strcmp(_(sf->for_new_glyphs->title),nlnames[i])==0 ) {
 	    namelistnames[i].selected = true;
@@ -8072,7 +8072,7 @@ return;
     k = j = 0;
 
     lgcd[k].gd.pos.x = 12; lgcd[k].gd.pos.y = 0;
-    llabel[k].text = (unichar_t *) _("Font Type:");
+    llabel[k].text = (uint32_t *) _("Font Type:");
     llabel[k].text_is_1byte = true;
     llabel[k].text_in_resource = true;
     lgcd[k].gd.label = &llabel[k];
@@ -8081,7 +8081,7 @@ return;
     larray2[j++] = &lgcd[k-1]; larray2[j++] = GCD_ColSpan; larray2[j++] = GCD_Glue; larray2[j++] = GCD_Glue; larray2[j++] = NULL;
 
     lgcd[k].gd.pos.x = 12; lgcd[k].gd.pos.y = lgcd[k-1].gd.pos.y+k;
-    llabel[k].text = (unichar_t *) _("_Outline Font");
+    llabel[k].text = (uint32_t *) _("_Outline Font");
     llabel[k].text_is_1byte = true;
     llabel[k].text_in_resource = true;
     lgcd[k].gd.label = &llabel[k];
@@ -8092,7 +8092,7 @@ return;
     larray2[j++] = GCD_HPad10; larray2[j++] = &lgcd[k-1]; larray2[j++] = GCD_Glue; larray2[j++] = GCD_Glue; larray2[j++] = NULL;
 
     lgcd[k].gd.pos.x = 12; lgcd[k].gd.pos.y = lgcd[k-1].gd.pos.y+14;
-    llabel[k].text = (unichar_t *) _("_Type3 Multi Layered Font");
+    llabel[k].text = (uint32_t *) _("_Type3 Multi Layered Font");
     llabel[k].text_is_1byte = true;
     llabel[k].text_in_resource = true;
     lgcd[k].gd.label = &llabel[k];
@@ -8102,11 +8102,11 @@ return;
     lgcd[k].gd.cid = CID_IsMultiLayer;
     lgcd[k].gd.handle_controlevent = GFI_Type3Change;
     lgcd[k].creator = GRadioCreate;
-    lgcd[k++].gd.popup_msg = (unichar_t *) _("Allow editing of multiple colors and shades, fills and strokes.\nMulti layered fonts can only be output as type3 or svg fonts.");
+    lgcd[k++].gd.popup_msg = (uint32_t *) _("Allow editing of multiple colors and shades, fills and strokes.\nMulti layered fonts can only be output as type3 or svg fonts.");
     larray2[j++] = GCD_HPad10; larray2[j++] = &lgcd[k-1]; larray2[j++] = GCD_ColSpan; larray2[j++] = GCD_Glue; larray2[j++] = NULL;
 
     lgcd[k].gd.pos.x = 12; lgcd[k].gd.pos.y = lgcd[k-1].gd.pos.y+14;
-    llabel[k].text = (unichar_t *) _("_Stroked Font");
+    llabel[k].text = (uint32_t *) _("_Stroked Font");
     llabel[k].text_is_1byte = true;
     llabel[k].text_in_resource = true;
     lgcd[k].gd.label = &llabel[k];
@@ -8114,11 +8114,11 @@ return;
     lgcd[k].gd.cid = CID_IsStrokedFont;
     lgcd[k].gd.handle_controlevent = GFI_Type3Change;
     lgcd[k].creator = GRadioCreate;
-    lgcd[k++].gd.popup_msg = (unichar_t *) _("Glyphs will be composed of stroked lines rather than filled outlines.\nAll glyphs are stroked at the following width");
+    lgcd[k++].gd.popup_msg = (uint32_t *) _("Glyphs will be composed of stroked lines rather than filled outlines.\nAll glyphs are stroked at the following width");
     larray2[j++] = GCD_HPad10; larray2[j++] = &lgcd[k-1];
 
     lgcd[k].gd.pos.x = 12; lgcd[k].gd.pos.y = lgcd[k-1].gd.pos.y+20;
-    llabel[k].text = (unichar_t *) _("  Stroke _Width:");
+    llabel[k].text = (uint32_t *) _("  Stroke _Width:");
     llabel[k].text_is_1byte = true;
     llabel[k].text_in_resource = true;
     lgcd[k].gd.label = &llabel[k];
@@ -8129,7 +8129,7 @@ return;
     sprintf( swbuf,"%g", (double) sf->strokewidth );
     lgcd[k].gd.pos.x = 115; lgcd[k].gd.pos.y = lgcd[k-1].gd.pos.y-6; lgcd[k].gd.pos.width = 137;
     lgcd[k].gd.flags = gg_visible | gg_enabled;
-    llabel[k].text = (unichar_t *) swbuf;
+    llabel[k].text = (uint32_t *) swbuf;
     llabel[k].text_is_1byte = true;
     lgcd[k].gd.label = &llabel[k];
     lgcd[k].gd.cid = CID_StrokeWidth;
@@ -8141,7 +8141,7 @@ return;
     lbox[2].creator = GHVBoxCreate;
     larray[0] = &lbox[2]; larray[1] = NULL;
 
-    llabel[k].text = (unichar_t *) _("All layers _cubic");
+    llabel[k].text = (uint32_t *) _("All layers _cubic");
     llabel[k].text_is_1byte = true;
     llabel[k].text_in_resource = true;
     lgcd[k].gd.label = &llabel[k];
@@ -8151,12 +8151,12 @@ return;
     lgcd[k].gd.cid = CID_IsOrder3;
     lgcd[k].gd.handle_controlevent = GFI_OrderChange;
     lgcd[k].creator = GRadioCreate;
-    lgcd[k++].gd.popup_msg = (unichar_t *) _(
+    lgcd[k++].gd.popup_msg = (uint32_t *) _(
 	"Use cubic (that is postscript) splines to hold the outlines of all\n"
 	"layers of this font. Cubic splines are generally easier to edit\n"
 	"than quadratic (and you may still generate a truetype font from them).");
 
-    llabel[k].text = (unichar_t *) _("All layers _quadratic");
+    llabel[k].text = (uint32_t *) _("All layers _quadratic");
     llabel[k].text_is_1byte = true;
     llabel[k].text_in_resource = true;
     lgcd[k].gd.label = &llabel[k];
@@ -8166,11 +8166,11 @@ return;
     lgcd[k].gd.cid = CID_IsOrder2;
     lgcd[k].gd.handle_controlevent = GFI_OrderChange;
     lgcd[k].creator = GRadioCreate;
-    lgcd[k++].gd.popup_msg = (unichar_t *) _(
+    lgcd[k++].gd.popup_msg = (uint32_t *) _(
 	"Use quadratic (that is truetype) splines to hold the outlines of all\n"
 	"layers of this font rather than cubic (postscript) splines.");
 
-    llabel[k].text = (unichar_t *) _("_Mixed");
+    llabel[k].text = (uint32_t *) _("_Mixed");
     llabel[k].text_is_1byte = true;
     llabel[k].text_in_resource = true;
     lgcd[k].gd.label = &llabel[k];
@@ -8180,7 +8180,7 @@ return;
     lgcd[k].gd.handle_controlevent = GFI_OrderChange;
     lgcd[k].gd.cid = CID_IsMixed;
     lgcd[k].creator = GRadioCreate;
-    lgcd[k++].gd.popup_msg = (unichar_t *) _(
+    lgcd[k++].gd.popup_msg = (uint32_t *) _(
 	"The order of each layer of the font can be controlled\n"
 	"individually. This might be useful if you wished to\n"
 	"retain both quadratic and cubic versions of a font.");
@@ -8193,7 +8193,7 @@ return;
     larray[4] = &lbox[3]; larray[5] = NULL;
 
     lgcd[k].gd.pos.x = 12; lgcd[k].gd.pos.y = 0;
-    llabel[k].text = (unichar_t *) _("Guidelines:");
+    llabel[k].text = (uint32_t *) _("Guidelines:");
     llabel[k].text_is_1byte = true;
     llabel[k].text_in_resource = true;
     lgcd[k].gd.label = &llabel[k];
@@ -8201,7 +8201,7 @@ return;
     lgcd[k++].creator = GLabelCreate;
     larray4[0] = &lgcd[k-1];
 
-    llabel[k].text = (unichar_t *) _("Quadratic");
+    llabel[k].text = (uint32_t *) _("Quadratic");
     llabel[k].text_is_1byte = true;
     llabel[k].text_in_resource = true;
     lgcd[k].gd.label = &llabel[k];
@@ -8211,7 +8211,7 @@ return;
 	lgcd[k].gd.flags |= gg_cb_on;
     lgcd[k].gd.cid = CID_GuideOrder2;
     lgcd[k].creator = GCheckBoxCreate;
-    lgcd[k++].gd.popup_msg = (unichar_t *) _(
+    lgcd[k++].gd.popup_msg = (uint32_t *) _(
 	"Use quadratic splines for the guidelines layer of the font");
     larray4[1] = &lgcd[k-1]; larray4[2] = GCD_Glue; larray4[3] = NULL;
 
@@ -8221,7 +8221,7 @@ return;
     larray[6] = &lbox[4]; larray[7] = NULL;
 
     lgcd[k].gd.pos.x = 12; lgcd[k].gd.pos.y = 0;
-    llabel[k].text = (unichar_t *) _("\nLayers:");
+    llabel[k].text = (uint32_t *) _("\nLayers:");
     llabel[k].text_is_1byte = true;
     llabel[k].text_in_resource = true;
     lgcd[k].gd.label = &llabel[k];
@@ -8255,7 +8255,7 @@ return;
     pgcd[i].gd.flags = gg_enabled | gg_visible | gg_utf8_popup;
     pgcd[i].gd.cid = CID_Private;
     pgcd[i].gd.u.matrix = &private_mi;
-    pgcd[i].gd.popup_msg = (unichar_t *) _(
+    pgcd[i].gd.popup_msg = (uint32_t *) _(
 	"The PostScript 'Private' dictionary gives you control over\n"
 	"several font-wide versions of hinting.\n"
 	"The 'Private' dictionary only applies to PostScript fonts.");
@@ -8272,7 +8272,7 @@ return;
     memset(&privatelabel_def,0,sizeof(privatelabel_def));
     memset(&privategcd_def,0,sizeof(privategcd_def));
     privategcd_def[0].gd.flags = gg_visible ;
-    privatelabel_def[0].text = (unichar_t *) _("_Guess");
+    privatelabel_def[0].text = (uint32_t *) _("_Guess");
     privatelabel_def[0].text_is_1byte = true;
     privatelabel_def[0].text_in_resource = true;
     privategcd_def[0].gd.label = &privatelabel_def[0];
@@ -8281,13 +8281,13 @@ return;
     privategcd_def[0].creator = GButtonCreate;
 
     privategcd_def[1].gd.flags = gg_visible | gg_utf8_popup ;
-    privatelabel_def[1].text = (unichar_t *) _("_Histogram");
+    privatelabel_def[1].text = (uint32_t *) _("_Histogram");
     privatelabel_def[1].text_is_1byte = true;
     privatelabel_def[1].text_in_resource = true;
     privategcd_def[1].gd.label = &privatelabel_def[1];
     privategcd_def[1].gd.handle_controlevent = PI_Hist;
     privategcd_def[1].gd.cid = CID_Hist;
-    privategcd_def[1].gd.popup_msg = (unichar_t *) _("Histogram Dialog");
+    privategcd_def[1].gd.popup_msg = (uint32_t *) _("Histogram Dialog");
     privategcd_def[1].creator = GButtonCreate;
 
 /******************************************************************************/
@@ -8295,7 +8295,7 @@ return;
     memset(&vgcd,0,sizeof(vgcd));
 
     vgcd[0].gd.pos.x = 10; vgcd[0].gd.pos.y = 12;
-    vlabel[0].text = (unichar_t *) _("_Weight Class");
+    vlabel[0].text = (uint32_t *) _("_Weight Class");
     vlabel[0].text_is_1byte = true;
     vlabel[0].text_in_resource = true;
     vgcd[0].gd.label = &vlabel[0];
@@ -8309,7 +8309,7 @@ return;
     vgcd[1].creator = GListFieldCreate;
 
     vgcd[2].gd.pos.x = 10; vgcd[2].gd.pos.y = vgcd[1].gd.pos.y+26+6;
-    vlabel[2].text = (unichar_t *) _("Width _Class");
+    vlabel[2].text = (uint32_t *) _("Width _Class");
     vlabel[2].text_is_1byte = true;
     vlabel[2].text_in_resource = true;
     vgcd[2].gd.label = &vlabel[2];
@@ -8323,7 +8323,7 @@ return;
     vgcd[3].creator = GListButtonCreate;
 
     vgcd[4].gd.pos.x = 10; vgcd[4].gd.pos.y = vgcd[3].gd.pos.y+26+6;
-    vlabel[4].text = (unichar_t *) _("P_FM Family");
+    vlabel[4].text = (uint32_t *) _("P_FM Family");
     vlabel[4].text_is_1byte = true;
     vlabel[4].text_in_resource = true;
     vgcd[4].gd.label = &vlabel[4];
@@ -8337,12 +8337,12 @@ return;
     vgcd[5].creator = GListButtonCreate;
 
     vgcd[6].gd.pos.x = 10; vgcd[6].gd.pos.y = vgcd[5].gd.pos.y+26+6;
-    vlabel[6].text = (unichar_t *) _("_Embeddable");
+    vlabel[6].text = (uint32_t *) _("_Embeddable");
     vlabel[6].text_is_1byte = true;
     vlabel[6].text_in_resource = true;
     vgcd[6].gd.label = &vlabel[6];
     vgcd[6].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    vgcd[6].gd.popup_msg = (unichar_t *) _("Can this font be embedded in a downloadable (pdf)\ndocument, and if so, what behaviors are permitted on\nboth the document and the font.");
+    vgcd[6].gd.popup_msg = (uint32_t *) _("Can this font be embedded in a downloadable (pdf)\ndocument, and if so, what behaviors are permitted on\nboth the document and the font.");
     vgcd[6].creator = GLabelCreate;
 
     vgcd[7].gd.pos.x = 90; vgcd[7].gd.pos.y = vgcd[6].gd.pos.y-6;
@@ -8366,29 +8366,29 @@ return;
     vgcd[7].gd.label = &fstype[i];
 
     vgcd[8].gd.pos.x = 20; vgcd[8].gd.pos.y = vgcd[7].gd.pos.y+26;
-    vlabel[8].text = (unichar_t *) _("No Subsetting");
+    vlabel[8].text = (uint32_t *) _("No Subsetting");
     vlabel[8].text_is_1byte = true;
     vgcd[8].gd.label = &vlabel[8];
     vgcd[8].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( sf->pfminfo.fstype!=-1 && (sf->pfminfo.fstype&0x100) )
 	vgcd[8].gd.flags |= gg_cb_on;
-    vgcd[8].gd.popup_msg = (unichar_t *) _("If set then the entire font must be\nembedded in a document when any character is.\nOtherwise the document creator need\nonly include the characters it uses.");
+    vgcd[8].gd.popup_msg = (uint32_t *) _("If set then the entire font must be\nembedded in a document when any character is.\nOtherwise the document creator need\nonly include the characters it uses.");
     vgcd[8].gd.cid = CID_NoSubsetting;
     vgcd[8].creator = GCheckBoxCreate;
 
     vgcd[9].gd.pos.x = 110; vgcd[9].gd.pos.y = vgcd[8].gd.pos.y;
-    vlabel[9].text = (unichar_t *) _("Only Embed Bitmaps");
+    vlabel[9].text = (uint32_t *) _("Only Embed Bitmaps");
     vlabel[9].text_is_1byte = true;
     vgcd[9].gd.label = &vlabel[9];
     vgcd[9].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( sf->pfminfo.fstype!=-1 && ( sf->pfminfo.fstype&0x200 ))
 	vgcd[9].gd.flags |= gg_cb_on;
-    vgcd[9].gd.popup_msg = (unichar_t *) _("Only Bitmaps may be embedded.\nOutline descriptions may not be\n(if font file contains no bitmaps\nthen nothing may be embedded).");
+    vgcd[9].gd.popup_msg = (uint32_t *) _("Only Bitmaps may be embedded.\nOutline descriptions may not be\n(if font file contains no bitmaps\nthen nothing may be embedded).");
     vgcd[9].gd.cid = CID_OnlyBitmaps;
     vgcd[9].creator = GCheckBoxCreate;
 
     vgcd[10].gd.pos.x = 10; vgcd[10].gd.pos.y = vgcd[9].gd.pos.y+24;
-    vlabel[10].text = (unichar_t *) _("Vendor ID:");
+    vlabel[10].text = (uint32_t *) _("Vendor ID:");
     vlabel[10].text_is_1byte = true;
     vgcd[10].gd.label = &vlabel[10];
     vgcd[10].gd.flags = gg_visible | gg_enabled;
@@ -8402,7 +8402,7 @@ return;
     vgcd[11].creator = GTextFieldCreate;
 
     vgcd[12].gd.pos.x = 10; vgcd[12].gd.pos.y = vgcd[11].gd.pos.y+24+6;
-    vlabel[12].text = (unichar_t *) _("_IBM Family:");
+    vlabel[12].text = (uint32_t *) _("_IBM Family:");
     vlabel[12].text_is_1byte = true;
     vlabel[12].text_in_resource = true;
     vgcd[12].gd.label = &vlabel[12];
@@ -8416,21 +8416,21 @@ return;
     vgcd[13].creator = GListButtonCreate;
 
     vgcd[14].gd.pos.x = 10; vgcd[14].gd.pos.y = vgcd[13].gd.pos.y+24+6;
-    vlabel[14].text = (unichar_t *) _("Weight, Width, Slope Only");
+    vlabel[14].text = (uint32_t *) _("Weight, Width, Slope Only");
     vlabel[14].text_is_1byte = true;
     vlabel[14].text_in_resource = true;
     vgcd[14].gd.label = &vlabel[14];
     vgcd[14].gd.cid = CID_WeightWidthSlopeOnly;
-    vgcd[14].gd.popup_msg = (unichar_t *) _("MS needs to know whether a font family's members differ\nonly in weight, width and slope (and not in other variables\nlike optical size)." );
+    vgcd[14].gd.popup_msg = (uint32_t *) _("MS needs to know whether a font family's members differ\nonly in weight, width and slope (and not in other variables\nlike optical size)." );
     vgcd[14].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     vgcd[14].creator = GCheckBoxCreate;
 
     vgcd[15].gd.pos.x = 10; vgcd[15].gd.pos.y = vgcd[11].gd.pos.y+24+6;
-    vlabel[15].text = (unichar_t *) _("_OS/2 Version");
+    vlabel[15].text = (uint32_t *) _("_OS/2 Version");
     vlabel[15].text_is_1byte = true;
     vlabel[15].text_in_resource = true;
     vgcd[15].gd.label = &vlabel[15];
-    vgcd[15].gd.popup_msg = (unichar_t *) _("The 'OS/2' table has changed slightly over the years.\nGenerally fields have been added, but occasionally their\nmeanings have been redefined." );
+    vgcd[15].gd.popup_msg = (uint32_t *) _("The 'OS/2' table has changed slightly over the years.\nGenerally fields have been added, but occasionally their\nmeanings have been redefined." );
     vgcd[15].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     vgcd[15].creator = GLabelCreate;
 
@@ -8472,12 +8472,12 @@ return;
     i = j = 0;
 
     metgcd[i].gd.pos.x = 10; metgcd[i].gd.pos.y = 9;
-    metlabel[i].text = (unichar_t *) _("Win _Ascent Offset:");
+    metlabel[i].text = (uint32_t *) _("Win _Ascent Offset:");
     metlabel[i].text_is_1byte = true;
     metlabel[i].text_in_resource = true;
     metgcd[i].gd.label = &metlabel[i];
     metgcd[i].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    metgcd[i].gd.popup_msg = (unichar_t *) _("Anything outside the OS/2 WinAscent &\nWinDescent fields will be clipped by windows.\nThis includes marks, etc. that have been repositioned by GPOS.\n(The descent field is usually positive.)\nIf the \"[] Is Offset\" checkbox is clear then\nany number you enter will be the value used in OS/2.\nIf set then any number you enter will be added to the\nfont's bounds. You should leave this\nfield 0 and check \"[*] Is Offset\" in most cases.\n\nNote: WinDescent is a POSITIVE number for\nthings below the baseline");
+    metgcd[i].gd.popup_msg = (uint32_t *) _("Anything outside the OS/2 WinAscent &\nWinDescent fields will be clipped by windows.\nThis includes marks, etc. that have been repositioned by GPOS.\n(The descent field is usually positive.)\nIf the \"[] Is Offset\" checkbox is clear then\nany number you enter will be the value used in OS/2.\nIf set then any number you enter will be added to the\nfont's bounds. You should leave this\nfield 0 and check \"[*] Is Offset\" in most cases.\n\nNote: WinDescent is a POSITIVE number for\nthings below the baseline");
     metgcd[i].gd.cid = CID_WinAscentLab;
     metarray[j++] = &metgcd[i];
     metgcd[i++].creator = GLabelCreate;
@@ -8492,7 +8492,7 @@ return;
     metgcd[i++].creator = GTextFieldCreate;
 
     metgcd[i].gd.pos.x = 178; metgcd[i].gd.pos.y = metgcd[i-1].gd.pos.y;
-    metlabel[i].text = (unichar_t *) _("Is Offset");
+    metlabel[i].text = (uint32_t *) _("Is Offset");
     metlabel[i].text_is_1byte = true;
     metgcd[i].gd.label = &metlabel[i];
     metgcd[i].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
@@ -8505,7 +8505,7 @@ return;
     metarray[j++] = NULL;
 
     metgcd[i].gd.pos.x = 10; metgcd[i].gd.pos.y = metgcd[i-2].gd.pos.y+26+4;
-    metlabel[i].text = (unichar_t *) _("Win _Descent Offset:");
+    metlabel[i].text = (uint32_t *) _("Win _Descent Offset:");
     metlabel[i].text_is_1byte = true;
     metlabel[i].text_in_resource = true;
     metgcd[i].gd.label = &metlabel[i];
@@ -8525,7 +8525,7 @@ return;
     metgcd[i++].creator = GTextFieldCreate;
 
     metgcd[i].gd.pos.x = 178; metgcd[i].gd.pos.y = metgcd[i-1].gd.pos.y;
-    metlabel[i].text = (unichar_t *) _("Is Offset");
+    metlabel[i].text = (uint32_t *) _("Is Offset");
     metlabel[i].text_is_1byte = true;
     metgcd[i].gd.label = &metlabel[i];
     metgcd[i].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
@@ -8538,24 +8538,24 @@ return;
     metarray[j++] = NULL;
 
     metgcd[i].gd.pos.x = 5; metgcd[i].gd.pos.y = metgcd[i-1].gd.pos.y;
-    metlabel[i].text = (unichar_t *) _("Really use Typo metrics");
+    metlabel[i].text = (uint32_t *) _("Really use Typo metrics");
     metlabel[i].text_is_1byte = true;
     metgcd[i].gd.label = &metlabel[i];
     metgcd[i].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
 	/* value set later */
     metgcd[i].gd.cid = CID_UseTypoMetrics;
-    metgcd[i].gd.popup_msg = (unichar_t *) _("The specification already says that the typo metrics should be\nused to determine line spacing. But so many\nprograms fail to follow the spec. that MS decided an additional\nbit was needed to remind them to do so.");
+    metgcd[i].gd.popup_msg = (uint32_t *) _("The specification already says that the typo metrics should be\nused to determine line spacing. But so many\nprograms fail to follow the spec. that MS decided an additional\nbit was needed to remind them to do so.");
     metarray[j++] = &metgcd[i]; metarray[j++] = GCD_ColSpan; metarray[j++] = GCD_Glue;
     metgcd[i++].creator = GCheckBoxCreate;
     metarray[j++] = NULL;
 
     metgcd[i].gd.pos.x = 10; metgcd[i].gd.pos.y = metgcd[i-2].gd.pos.y+26+4;
-    metlabel[i].text = (unichar_t *) _("_Typo Ascent Offset:");
+    metlabel[i].text = (uint32_t *) _("_Typo Ascent Offset:");
     metlabel[i].text_is_1byte = true;
     metlabel[i].text_in_resource = true;
     metgcd[i].gd.label = &metlabel[i];
     metgcd[i].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    metgcd[i].gd.popup_msg = (unichar_t *) _("The typo ascent&descent fields are>supposed<\nto specify the line spacing on windows.\nIn fact usually the win ascent/descent fields do.\n(The descent field is usually negative.)\nIf the \"[] Is Offset\" checkbox is clear then\nany number you enter will be the value used in OS/2.\nIf set then any number you enter will be added to the\nEm-size. You should leave this\nfield 0 and check \"[*] Is Offset\" in most cases.\n\nNOTE: Typo Descent is a NEGATIVE number for\nthings below the baseline");
+    metgcd[i].gd.popup_msg = (uint32_t *) _("The typo ascent&descent fields are>supposed<\nto specify the line spacing on windows.\nIn fact usually the win ascent/descent fields do.\n(The descent field is usually negative.)\nIf the \"[] Is Offset\" checkbox is clear then\nany number you enter will be the value used in OS/2.\nIf set then any number you enter will be added to the\nEm-size. You should leave this\nfield 0 and check \"[*] Is Offset\" in most cases.\n\nNOTE: Typo Descent is a NEGATIVE number for\nthings below the baseline");
     metgcd[i].gd.cid = CID_TypoAscentLab;
     metarray[j++] = &metgcd[i];
     metgcd[i++].creator = GLabelCreate;
@@ -8570,7 +8570,7 @@ return;
     metgcd[i++].creator = GTextFieldCreate;
 
     metgcd[i].gd.pos.x = 178; metgcd[i].gd.pos.y = metgcd[i-1].gd.pos.y;
-    metlabel[i].text = (unichar_t *) _("Is Offset");
+    metlabel[i].text = (uint32_t *) _("Is Offset");
     metlabel[i].text_is_1byte = true;
     metgcd[i].gd.label = &metlabel[i];
     metgcd[i].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
@@ -8583,7 +8583,7 @@ return;
     metarray[j++] = NULL;
 
     metgcd[i].gd.pos.x = 10; metgcd[i].gd.pos.y = metgcd[i-2].gd.pos.y+26+4;
-    metlabel[i].text = (unichar_t *) _("T_ypo Descent Offset:");
+    metlabel[i].text = (uint32_t *) _("T_ypo Descent Offset:");
     metlabel[i].text_is_1byte = true;
     metlabel[i].text_in_resource = true;
     metgcd[i].gd.label = &metlabel[i];
@@ -8603,7 +8603,7 @@ return;
     metgcd[i++].creator = GTextFieldCreate;
 
     metgcd[i].gd.pos.x = 178; metgcd[i].gd.pos.y = metgcd[i-1].gd.pos.y;
-    metlabel[i].text = (unichar_t *) _("Is Offset");
+    metlabel[i].text = (uint32_t *) _("Is Offset");
     metlabel[i].text_is_1byte = true;
     metgcd[i].gd.label = &metlabel[i];
     metgcd[i].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
@@ -8616,12 +8616,12 @@ return;
     metarray[j++] = NULL;
 
     metgcd[i].gd.pos.x = 10; metgcd[i].gd.pos.y = metgcd[i-2].gd.pos.y+26+4;
-    metlabel[i].text = (unichar_t *) _("Typo Line _Gap:");
+    metlabel[i].text = (uint32_t *) _("Typo Line _Gap:");
     metlabel[i].text_is_1byte = true;
     metlabel[i].text_in_resource = true;
     metgcd[i].gd.label = &metlabel[i];
     metgcd[i].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    metgcd[i].gd.popup_msg = (unichar_t *) _("Sets the TypoLinegap field in the OS/2 table, used on MS Windows");
+    metgcd[i].gd.popup_msg = (uint32_t *) _("Sets the TypoLinegap field in the OS/2 table, used on MS Windows");
     metarray[j++] = &metgcd[i];
     metgcd[i++].creator = GLabelCreate;
 
@@ -8637,12 +8637,12 @@ return;
     metarray[j++] = NULL;
 
     metgcd[i].gd.pos.x = 10; metgcd[i].gd.pos.y = metgcd[i-1].gd.pos.y+26+4;
-    metlabel[i].text = (unichar_t *) _("_HHead Ascent Offset:");
+    metlabel[i].text = (uint32_t *) _("_HHead Ascent Offset:");
     metlabel[i].text_is_1byte = true;
     metlabel[i].text_in_resource = true;
     metgcd[i].gd.label = &metlabel[i];
     metgcd[i].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    metgcd[i].gd.popup_msg = (unichar_t *) _("This specifies the line spacing on the mac.\n(The descent field is usually negative.)\nIf the \"[] Is Offset\" checkbox is clear then\nany number you enter will be the value used in hhea.\nIf set then any number you enter will be added to the\nfont's bounds. You should leave this\nfield 0 and check \"[*] Is Offset\" in most cases.\n\nNOTE: hhea Descent is a NEGATIVE value for things\nbelow the baseline");
+    metgcd[i].gd.popup_msg = (uint32_t *) _("This specifies the line spacing on the mac.\n(The descent field is usually negative.)\nIf the \"[] Is Offset\" checkbox is clear then\nany number you enter will be the value used in hhea.\nIf set then any number you enter will be added to the\nfont's bounds. You should leave this\nfield 0 and check \"[*] Is Offset\" in most cases.\n\nNOTE: hhea Descent is a NEGATIVE value for things\nbelow the baseline");
     metgcd[i].gd.cid = CID_HHeadAscentLab;
     metarray[j++] = &metgcd[i];
     metgcd[i++].creator = GLabelCreate;
@@ -8657,7 +8657,7 @@ return;
     metgcd[i++].creator = GTextFieldCreate;
 
     metgcd[i].gd.pos.x = 178; metgcd[i].gd.pos.y = metgcd[i-1].gd.pos.y;
-    metlabel[i].text = (unichar_t *) _("Is Offset");
+    metlabel[i].text = (uint32_t *) _("Is Offset");
     metlabel[i].text_is_1byte = true;
     metgcd[i].gd.label = &metlabel[i];
     metgcd[i].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
@@ -8670,7 +8670,7 @@ return;
     metarray[j++] = NULL;
 
     metgcd[i].gd.pos.x = 10; metgcd[i].gd.pos.y = metgcd[i-2].gd.pos.y+26+4;
-    metlabel[i].text = (unichar_t *) _("HHead De_scent Offset:");
+    metlabel[i].text = (uint32_t *) _("HHead De_scent Offset:");
     metlabel[i].text_in_resource = true;
     metlabel[i].text_is_1byte = true;
     metgcd[i].gd.label = &metlabel[i];
@@ -8690,7 +8690,7 @@ return;
     metgcd[i++].creator = GTextFieldCreate;
 
     metgcd[i].gd.pos.x = 178; metgcd[i].gd.pos.y = metgcd[i-1].gd.pos.y;
-    metlabel[i].text = (unichar_t *) _("Is Offset");
+    metlabel[i].text = (uint32_t *) _("Is Offset");
     metlabel[i].text_is_1byte = true;
     metgcd[i].gd.label = &metlabel[i];
     metgcd[i].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
@@ -8703,12 +8703,12 @@ return;
     metarray[j++] = NULL;
 
     metgcd[i].gd.pos.x = 10; metgcd[i].gd.pos.y = metgcd[i-2].gd.pos.y+26+4;
-    metlabel[i].text = (unichar_t *) _("HHead _Line Gap:");
+    metlabel[i].text = (uint32_t *) _("HHead _Line Gap:");
     metlabel[i].text_is_1byte = true;
     metlabel[i].text_in_resource = true;
     metgcd[i].gd.label = &metlabel[i];
     metgcd[i].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    metgcd[i].gd.popup_msg = (unichar_t *) _("Sets the linegap field in the hhea table, used on the mac");
+    metgcd[i].gd.popup_msg = (uint32_t *) _("Sets the linegap field in the hhea table, used on the mac");
     metarray[j++] = &metgcd[i];
     metgcd[i++].creator = GLabelCreate;
 
@@ -8724,12 +8724,12 @@ return;
     metarray[j++] = NULL;
 
     metgcd[i].gd.pos.x = 10; metgcd[i].gd.pos.y = metgcd[i-1].gd.pos.y+26+6;
-    metlabel[i].text = (unichar_t *) _("VHead _Column Spacing:");
+    metlabel[i].text = (uint32_t *) _("VHead _Column Spacing:");
     metlabel[i].text_is_1byte = true;
     metlabel[i].text_in_resource = true;
     metgcd[i].gd.label = &metlabel[i];
     metgcd[i].gd.flags = sf->hasvmetrics ? (gg_visible | gg_enabled | gg_utf8_popup) : (gg_visible | gg_utf8_popup);
-    metgcd[i].gd.popup_msg = (unichar_t *) _("Sets the linegap field in the vhea table.\nThis is the horizontal spacing between rows\nof vertically set text.");
+    metgcd[i].gd.popup_msg = (uint32_t *) _("Sets the linegap field in the vhea table.\nThis is the horizontal spacing between rows\nof vertically set text.");
     metgcd[i].gd.cid = CID_VLineGapLab;
     metarray[j++] = &metgcd[i];
     metgcd[i++].creator = GLabelCreate;
@@ -8760,7 +8760,7 @@ return;
     i = j = 0;
 
     ssgcd[i].gd.pos.x = 5; ssgcd[i].gd.pos.y = 5;
-    sslabel[i].text = (unichar_t *) S_("SubscriptSuperUse|Default");
+    sslabel[i].text = (uint32_t *) S_("SubscriptSuperUse|Default");
     sslabel[i].text_is_1byte = true;
     ssgcd[i].gd.label = &sslabel[i];
     ssgcd[i].gd.flags = gg_visible | gg_enabled;
@@ -8773,7 +8773,7 @@ return;
     ssarray[j++] = NULL;
 
     ssgcd[i].gd.pos.x = 5; ssgcd[i].gd.pos.y = ssgcd[i-1].gd.pos.y+16;
-    sslabel[i].text = (unichar_t *) _("Subscript");
+    sslabel[i].text = (uint32_t *) _("Subscript");
     sslabel[i].text_is_1byte = true;
     ssgcd[i].gd.label = &sslabel[i];
     ssgcd[i].gd.flags = gg_visible | gg_enabled;
@@ -8782,7 +8782,7 @@ return;
 
     ssgcd[i].gd.pos.x = 120; ssgcd[i].gd.pos.y = ssgcd[i-1].gd.pos.y-4;
 /* GT: X is a coordinate, the leading spaces help to align it */
-    sslabel[i].text = (unichar_t *) _("  X");
+    sslabel[i].text = (uint32_t *) _("  X");
     sslabel[i].text_is_1byte = true;
     ssgcd[i].gd.label = &sslabel[i];
     ssgcd[i].gd.flags = gg_visible | gg_enabled;
@@ -8791,7 +8791,7 @@ return;
 
     ssgcd[i].gd.pos.x = 180; ssgcd[i].gd.pos.y = ssgcd[i-1].gd.pos.y;
 /* GT: Y is a coordinate, the leading spaces help to align it */
-    sslabel[i].text = (unichar_t *) _("Y");
+    sslabel[i].text = (uint32_t *) _("Y");
     sslabel[i].text_is_1byte = true;
     ssgcd[i].gd.label = &sslabel[i];
     ssgcd[i].gd.flags = gg_visible | gg_enabled;
@@ -8800,7 +8800,7 @@ return;
     ssarray[j++] = GCD_Glue; ssarray[j++] = NULL;
 
     ssgcd[i].gd.pos.x = 10; ssgcd[i].gd.pos.y = ssgcd[i-3].gd.pos.y+14+4;
-    sslabel[i].text = (unichar_t *) _("Size");
+    sslabel[i].text = (uint32_t *) _("Size");
     sslabel[i].text_is_1byte = true;
     ssgcd[i].gd.label = &sslabel[i];
     ssgcd[i].gd.flags = gg_visible | gg_enabled;
@@ -8825,7 +8825,7 @@ return;
     ssarray[j++] = GCD_Glue; ssarray[j++] = NULL;
 
     ssgcd[i].gd.pos.x = 10; ssgcd[i].gd.pos.y = ssgcd[i-3].gd.pos.y+26;
-    sslabel[i].text = (unichar_t *) _("Offset");
+    sslabel[i].text = (uint32_t *) _("Offset");
     sslabel[i].text_is_1byte = true;
     ssgcd[i].gd.label = &sslabel[i];
     ssgcd[i].gd.flags = gg_visible | gg_enabled;
@@ -8851,7 +8851,7 @@ return;
 
 
     ssgcd[i].gd.pos.x = 5; ssgcd[i].gd.pos.y = ssgcd[i-1].gd.pos.y+30;
-    sslabel[i].text = (unichar_t *) _("Superscript");
+    sslabel[i].text = (uint32_t *) _("Superscript");
     sslabel[i].text_is_1byte = true;
     ssgcd[i].gd.label = &sslabel[i];
     ssgcd[i].gd.flags = gg_visible | gg_enabled;
@@ -8861,7 +8861,7 @@ return;
     ssarray[j++] = NULL;
 
     ssgcd[i].gd.pos.x = 10; ssgcd[i].gd.pos.y = ssgcd[i-1].gd.pos.y+14+4;
-    sslabel[i].text = (unichar_t *) _("Size");
+    sslabel[i].text = (uint32_t *) _("Size");
     sslabel[i].text_is_1byte = true;
     ssgcd[i].gd.label = &sslabel[i];
     ssgcd[i].gd.flags = gg_visible | gg_enabled;
@@ -8886,7 +8886,7 @@ return;
     ssarray[j++] = GCD_Glue; ssarray[j++] = NULL;
 
     ssgcd[i].gd.pos.x = 10; ssgcd[i].gd.pos.y = ssgcd[i-3].gd.pos.y+26;
-    sslabel[i].text = (unichar_t *) _("Offset");
+    sslabel[i].text = (uint32_t *) _("Offset");
     sslabel[i].text_is_1byte = true;
     ssgcd[i].gd.label = &sslabel[i];
     ssgcd[i].gd.flags = gg_visible | gg_enabled;
@@ -8912,7 +8912,7 @@ return;
 
 
     ssgcd[i].gd.pos.x = 5; ssgcd[i].gd.pos.y = ssgcd[i-1].gd.pos.y+30;
-    sslabel[i].text = (unichar_t *) _("Strikeout");
+    sslabel[i].text = (uint32_t *) _("Strikeout");
     sslabel[i].text_is_1byte = true;
     ssgcd[i].gd.label = &sslabel[i];
     ssgcd[i].gd.flags = gg_visible | gg_enabled;
@@ -8922,7 +8922,7 @@ return;
     ssarray[j++] = NULL;
 
     ssgcd[i].gd.pos.x = 10; ssgcd[i].gd.pos.y = ssgcd[i-1].gd.pos.y+14+4;
-    sslabel[i].text = (unichar_t *) _("Size");
+    sslabel[i].text = (uint32_t *) _("Size");
     sslabel[i].text_is_1byte = true;
     ssgcd[i].gd.label = &sslabel[i];
     ssgcd[i].gd.flags = gg_visible | gg_enabled;
@@ -8940,7 +8940,7 @@ return;
     ssarray[j++] = GCD_Glue; ssarray[j++] = NULL;
 
     ssgcd[i].gd.pos.x = 10; ssgcd[i].gd.pos.y = ssgcd[i-2].gd.pos.y+26;
-    sslabel[i].text = (unichar_t *) _("Pos");
+    sslabel[i].text = (uint32_t *) _("Pos");
     sslabel[i].text_is_1byte = true;
     ssgcd[i].gd.label = &sslabel[i];
     ssgcd[i].gd.flags = gg_visible | gg_enabled;
@@ -8988,7 +8988,7 @@ return;
     i = j = 0;
 
     pangcd[i].gd.pos.x = 5; pangcd[i].gd.pos.y = 5;
-    panlabel[i].text = (unichar_t *) S_("PanoseUse|Default");
+    panlabel[i].text = (uint32_t *) S_("PanoseUse|Default");
     panlabel[i].text_is_1byte = true;
     pangcd[i].gd.label = &panlabel[i];
     pangcd[i].gd.flags = gg_visible | gg_enabled;
@@ -8999,7 +8999,7 @@ return;
     panarray[j++] = &pangcd[i];
     pangcd[i++].creator = GCheckBoxCreate;
 
-    panlabel[i].text = (unichar_t *) _( "http://panose.com/");
+    panlabel[i].text = (uint32_t *) _( "http://panose.com/");
     panlabel[i].text_is_1byte = true;
     pangcd[i].gd.label = &panlabel[i];
     pangcd[i].gd.pos.x = 12; ugcd[1].gd.pos.y = 10; 
@@ -9010,7 +9010,7 @@ return;
     panarray[j++] = &pangcd[i-1]; panarray[j++] = NULL;
 
     pangcd[i].gd.pos.x = 20; pangcd[i].gd.pos.y = pangcd[i-1].gd.pos.y+14+4;
-    panlabel[i].text = (unichar_t *) S_("Panose|_Family");
+    panlabel[i].text = (uint32_t *) S_("Panose|_Family");
     panlabel[i].text_is_1byte = true;
     panlabel[i].text_in_resource = true;
     pangcd[i].gd.label = &panlabel[i];
@@ -9029,7 +9029,7 @@ return;
     panarray[j++] = NULL;
 
     pangcd[i].gd.pos.x = 20; pangcd[i].gd.pos.y = pangcd[i-1].gd.pos.y+26+5;
-    panlabel[i].text = (unichar_t *) _("_Serifs");
+    panlabel[i].text = (uint32_t *) _("_Serifs");
     panlabel[i].text_is_1byte = true;
     panlabel[i].text_in_resource = true;
     pangcd[i].gd.label = &panlabel[i];
@@ -9047,7 +9047,7 @@ return;
     panarray[j++] = NULL;
 
     pangcd[i].gd.pos.x = 20; pangcd[i].gd.pos.y = pangcd[i-1].gd.pos.y+26+5;
-    panlabel[i].text = (unichar_t *) S_("Panose|_Weight");
+    panlabel[i].text = (uint32_t *) S_("Panose|_Weight");
     panlabel[i].text_is_1byte = true;
     panlabel[i].text_in_resource = true;
     pangcd[i].gd.label = &panlabel[i];
@@ -9065,7 +9065,7 @@ return;
     panarray[j++] = NULL;
 
     pangcd[i].gd.pos.x = 20; pangcd[i].gd.pos.y = pangcd[i-1].gd.pos.y+26+5;
-    panlabel[i].text = (unichar_t *) _("_Proportion");
+    panlabel[i].text = (uint32_t *) _("_Proportion");
     panlabel[i].text_is_1byte = true;
     panlabel[i].text_in_resource = true;
     pangcd[i].gd.label = &panlabel[i];
@@ -9083,7 +9083,7 @@ return;
     panarray[j++] = NULL;
 
     pangcd[i].gd.pos.x = 20; pangcd[i].gd.pos.y = pangcd[i-1].gd.pos.y+26+5;
-    panlabel[i].text = (unichar_t *) _("_Contrast");
+    panlabel[i].text = (uint32_t *) _("_Contrast");
     panlabel[i].text_is_1byte = true;
     panlabel[i].text_in_resource = true;
     pangcd[i].gd.label = &panlabel[i];
@@ -9101,7 +9101,7 @@ return;
     panarray[j++] = NULL;
 
     pangcd[i].gd.pos.x = 20; pangcd[i].gd.pos.y = pangcd[i-1].gd.pos.y+26+5;
-    panlabel[i].text = (unichar_t *) _("Stroke _Variation");
+    panlabel[i].text = (uint32_t *) _("Stroke _Variation");
     panlabel[i].text_is_1byte = true;
     panlabel[i].text_in_resource = true;
     pangcd[i].gd.label = &panlabel[i];
@@ -9119,7 +9119,7 @@ return;
     panarray[j++] = NULL;
 
     pangcd[i].gd.pos.x = 20; pangcd[i].gd.pos.y = pangcd[i-1].gd.pos.y+26+5;
-    panlabel[i].text = (unichar_t *) _("_Arm Style");
+    panlabel[i].text = (uint32_t *) _("_Arm Style");
     panlabel[i].text_is_1byte = true;
     panlabel[i].text_in_resource = true;
     pangcd[i].gd.label = &panlabel[i];
@@ -9137,7 +9137,7 @@ return;
     panarray[j++] = NULL;
 
     pangcd[i].gd.pos.x = 20; pangcd[i].gd.pos.y = pangcd[i-1].gd.pos.y+26+5;
-    panlabel[i].text = (unichar_t *) _("_Letterform");
+    panlabel[i].text = (uint32_t *) _("_Letterform");
     panlabel[i].text_is_1byte = true;
     panlabel[i].text_in_resource = true;
     pangcd[i].gd.label = &panlabel[i];
@@ -9155,7 +9155,7 @@ return;
     panarray[j++] = NULL;
 
     pangcd[i].gd.pos.x = 20; pangcd[i].gd.pos.y = pangcd[i-1].gd.pos.y+26+5;
-    panlabel[i].text = (unichar_t *) _("_Midline");
+    panlabel[i].text = (uint32_t *) _("_Midline");
     panlabel[i].text_is_1byte = true;
     panlabel[i].text_in_resource = true;
     pangcd[i].gd.label = &panlabel[i];
@@ -9173,7 +9173,7 @@ return;
     panarray[j++] = NULL;
 
     pangcd[i].gd.pos.x = 20; pangcd[i].gd.pos.y = pangcd[i-1].gd.pos.y+26+5;
-    panlabel[i].text = (unichar_t *) _("_X-Height");
+    panlabel[i].text = (uint32_t *) _("_X-Height");
     panlabel[i].text_is_1byte = true;
     panlabel[i].text_in_resource = true;
     pangcd[i].gd.label = &panlabel[i];
@@ -9204,14 +9204,14 @@ return;
     memset(cbox,0,sizeof(cbox));
 
     i = j = 0;
-    clabel[i].text = (unichar_t *) _("Unicode Ranges:");
+    clabel[i].text = (uint32_t *) _("Unicode Ranges:");
     clabel[i].text_is_1byte = true;
     cgcd[i].gd.label = &clabel[i];
     cgcd[i].gd.flags = gg_visible | gg_enabled;
     cgcd[i++].creator = GLabelCreate;
     charray1[0] = &cgcd[i-1];
 
-    clabel[i].text = (unichar_t *) _("Default");
+    clabel[i].text = (uint32_t *) _("Default");
     clabel[i].text_is_1byte = true;
     cgcd[i].gd.label = &clabel[i];
     cgcd[i].gd.flags = gg_visible | gg_enabled;
@@ -9232,7 +9232,7 @@ return;
     sprintf( ranges, "%08x.%08x.%08x.%08x",
 	    sf->pfminfo.unicoderanges[3], sf->pfminfo.unicoderanges[2],
 	    sf->pfminfo.unicoderanges[1], sf->pfminfo.unicoderanges[0]);
-    clabel[i].text = (unichar_t *) ranges;
+    clabel[i].text = (uint32_t *) ranges;
     clabel[i].text_is_1byte = true;
     cgcd[i].gd.label = &clabel[i];
     cgcd[i].gd.pos.width = 270;
@@ -9258,14 +9258,14 @@ return;
     cgcd[i++].creator = GLineCreate;
     cvarray[j++] = &cgcd[i-1];
 
-    clabel[i].text = (unichar_t *) _("MS Code Pages:");
+    clabel[i].text = (uint32_t *) _("MS Code Pages:");
     clabel[i].text_is_1byte = true;
     cgcd[i].gd.label = &clabel[i];
     cgcd[i].gd.flags = gg_visible | gg_enabled;
     cgcd[i++].creator = GLabelCreate;
     charray2[0] = &cgcd[i-1];
 
-    clabel[i].text = (unichar_t *) _("Default");
+    clabel[i].text = (uint32_t *) _("Default");
     clabel[i].text_is_1byte = true;
     cgcd[i].gd.label = &clabel[i];
     cgcd[i].gd.flags = gg_visible | gg_enabled;
@@ -9285,7 +9285,7 @@ return;
 
     sprintf( codepages, "%08x.%08x",
 	    sf->pfminfo.codepages[1], sf->pfminfo.codepages[0]);
-    clabel[i].text = (unichar_t *) codepages;
+    clabel[i].text = (uint32_t *) codepages;
     clabel[i].text_is_1byte = true;
     cgcd[i].gd.label = &clabel[i];
     cgcd[i].gd.pos.width = 140;
@@ -9327,23 +9327,23 @@ return;
     memset(&vaspects,'\0',sizeof(vaspects));
 
     i = 0;
-    vaspects[i].text = (unichar_t *) _("Misc.");
+    vaspects[i].text = (uint32_t *) _("Misc.");
     vaspects[i].text_is_1byte = true;
     vaspects[i++].gcd = vbox;
 
-    vaspects[i].text = (unichar_t *) _("Metrics");
+    vaspects[i].text = (uint32_t *) _("Metrics");
     vaspects[i].text_is_1byte = true;
     vaspects[i++].gcd = metbox;
 
-    vaspects[i].text = (unichar_t *) _("Sub/Super");
+    vaspects[i].text = (uint32_t *) _("Sub/Super");
     vaspects[i].text_is_1byte = true;
     vaspects[i++].gcd = ssbox;
 
-    vaspects[i].text = (unichar_t *) _("Panose");
+    vaspects[i].text = (uint32_t *) _("Panose");
     vaspects[i].text_is_1byte = true;
     vaspects[i++].gcd = panbox;
 
-    vaspects[i].text = (unichar_t *) _("Charsets");
+    vaspects[i].text = (uint32_t *) _("Charsets");
     vaspects[i].text_is_1byte = true;
     vaspects[i++].gcd = cbox;
 
@@ -9366,7 +9366,7 @@ return;
 
     i = j = 0;
 
-    gasplabel[i].text = (unichar_t *) S_("Gasp|_Version");
+    gasplabel[i].text = (uint32_t *) S_("Gasp|_Version");
     gasplabel[i].text_is_1byte = true;
     gasplabel[i].text_in_resource = true;
     gaspgcd[i].gd.label = &gasplabel[i];
@@ -9388,7 +9388,7 @@ return;
     gaspgcd[i++].creator = GListButtonCreate;
     gaspharray[j++] = GCD_HPad10;
 
-    gasplabel[i].text = (unichar_t *) _("Optimized For ClearType");
+    gasplabel[i].text = (uint32_t *) _("Optimized For ClearType");
     gasplabel[i].text_is_1byte = true;
     gasplabel[i].text_in_resource = true;
     gaspgcd[i].gd.label = &gasplabel[i];
@@ -9396,7 +9396,7 @@ return;
     gaspgcd[i].gd.cid = CID_HeadClearType;
     if ( sf->head_optimized_for_cleartype )
 	gaspgcd[i].gd.flags |= gg_cb_on;
-    gaspgcd[i].gd.popup_msg = (unichar_t *) _("Actually a bit in the 'head' table.\nIf unset then certain East Asian fonts will not be hinted");
+    gaspgcd[i].gd.popup_msg = (uint32_t *) _("Actually a bit in the 'head' table.\nIf unset then certain East Asian fonts will not be hinted");
     gaspharray[j++] = &gaspgcd[i];
     gaspgcd[i++].creator = GCheckBoxCreate;
     gaspharray[j++] = NULL;
@@ -9411,7 +9411,7 @@ return;
     gaspgcd[i].gd.flags = gg_enabled | gg_visible | gg_utf8_popup;
     gaspgcd[i].gd.cid = CID_Gasp;
     gaspgcd[i].gd.u.matrix = &gaspmi;
-    gaspgcd[i].gd.popup_msg = (unichar_t *) _(
+    gaspgcd[i].gd.popup_msg = (uint32_t *) _(
 	"The 'gasp' table gives you control over when grid-fitting and\n"
 	"anti-aliased rasterizing are done.\n"
 	"The table consists of an (ordered) list of pixel sizes each with\n"
@@ -9431,7 +9431,7 @@ return;
     gaspboxes[0].creator = GVBoxCreate;
 
     gaspgcd_def[0].gd.flags = gg_visible | gg_enabled;
-    gasplabel[4].text = (unichar_t *) S_("Gasp|_Default");
+    gasplabel[4].text = (uint32_t *) S_("Gasp|_Default");
     gasplabel[4].text_is_1byte = true;
     gasplabel[4].text_in_resource = true;
     gaspgcd_def[0].gd.label = &gasplabel[4];
@@ -9446,7 +9446,7 @@ return;
 
     tngcd[0].gd.pos.x = 5; tngcd[0].gd.pos.y = 6;
     tngcd[0].gd.flags = gg_visible | gg_enabled;
-    tnlabel[0].text = (unichar_t *) _("Sort By:");
+    tnlabel[0].text = (uint32_t *) _("Sort By:");
     tnlabel[0].text_is_1byte = true;
     tngcd[0].gd.label = &tnlabel[0];
     tngcd[0].creator = GLabelCreate;
@@ -9455,7 +9455,7 @@ return;
     tngcd[1].gd.pos.x = 50; tngcd[1].gd.pos.y = tngcd[0].gd.pos.y-4;
     tngcd[1].gd.flags = gg_enabled | gg_visible;
     tngcd[1].gd.cid = CID_TNLangSort;
-    tnlabel[1].text = (unichar_t *) _("_Language");
+    tnlabel[1].text = (uint32_t *) _("_Language");
     tnlabel[1].text_is_1byte = true;
     tnlabel[1].text_in_resource = true;
     tngcd[1].gd.label = &tnlabel[1];
@@ -9466,7 +9466,7 @@ return;
     tngcd[2].gd.pos.x = 120; tngcd[2].gd.pos.y = tngcd[1].gd.pos.y;
     tngcd[2].gd.flags = gg_visible | gg_enabled | gg_rad_continueold;
     tngcd[2].gd.cid = CID_TNStringSort;
-    tnlabel[2].text = (unichar_t *) _("_String Type");
+    tnlabel[2].text = (uint32_t *) _("_String Type");
     tnlabel[2].text_is_1byte = true;
     tnlabel[2].text_in_resource = true;
     tngcd[2].gd.label = &tnlabel[2];
@@ -9476,7 +9476,7 @@ return;
 
     tngcd[3].gd.pos.x = 195; tngcd[3].gd.pos.y = tngcd[1].gd.pos.y;
     tngcd[3].gd.flags = gg_visible | gg_enabled | gg_cb_on | gg_rad_continueold;
-    tnlabel[3].text = (unichar_t *) S_("SortingScheme|Default");
+    tnlabel[3].text = (uint32_t *) S_("SortingScheme|Default");
     tnlabel[3].text_is_1byte = true;
     tngcd[3].gd.label = &tnlabel[3];
     tngcd[3].creator = GRadioCreate;
@@ -9488,7 +9488,7 @@ return;
     tngcd[4].gd.flags = gg_enabled | gg_visible | gg_utf8_popup;
     tngcd[4].gd.cid = CID_TNames;
     tngcd[4].gd.u.matrix = &mi;
-    tngcd[4].gd.popup_msg = (unichar_t *) _(
+    tngcd[4].gd.popup_msg = (uint32_t *) _(
 	"To create a new name, left click on the <New> button, and select a locale.\n"
 	"To change the locale, left click on it.\n"
 	"To change the string type, left click on it.\n"
@@ -9504,14 +9504,14 @@ return;
 /* GT: English (possibly translating it in parentheses). I believe there */
 /* GT: are legal reasons for this. */
 /* GT: So "Añadir SIL Open Font License (licencia de fuentes libres)" */
-    tnlabel[5].text = (unichar_t *) S_("Add SIL ");
+    tnlabel[5].text = (uint32_t *) S_("Add SIL ");
     tnlabel[5].image_precedes = false;
     tnlabel[5].image = &OFL_logo;
     tnlabel[5].text_is_1byte = true;
     tnlabel[5].text_in_resource = true;
     tngcd[5].gd.label = &tnlabel[5];
     tngcd[5].gd.handle_controlevent = GFI_AddOFL;
-    tngcd[5].gd.popup_msg = (unichar_t *) _(
+    tngcd[5].gd.popup_msg = (uint32_t *) _(
 	"The SIL Open Font License (OFL) is designed for free/libre/open font projects.\n"
 	"Most other FLOSS licenses are designed for conventional software and are problematic for fonts.\n"
 	"The OFL is a community-approved license and is well-suited for releasing fonts to be freely \n"
@@ -9525,12 +9525,12 @@ return;
     tngcd[5].creator = GButtonCreate;
 
     tngcd[6].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    tnlabel[6].text = (unichar_t *) S_("OFL website");
+    tnlabel[6].text = (uint32_t *) S_("OFL website");
     tnlabel[6].text_is_1byte = true;
     tnlabel[6].text_in_resource = true;
     tngcd[6].gd.label = &tnlabel[6];
     tngcd[6].gd.handle_controlevent = GFI_HelpOFL;
-    tngcd[6].gd.popup_msg = (unichar_t *) _(
+    tngcd[6].gd.popup_msg = (uint32_t *) _(
 	"\n"
 	"Click here to go to http://scripts.sil.org/OFL \n"
 	"to get all the details about the Open Font License \n"
@@ -9559,7 +9559,7 @@ return;
     SSMatrixInit(&ssmi,d);
 
     ssngcd[0].gd.flags = gg_visible | gg_enabled;
-    ssnlabel[0].text = (unichar_t *) _("The OpenType Style Set features ('ss01'-'ss20') may\n"
+    ssnlabel[0].text = (uint32_t *) _("The OpenType Style Set features ('ss01'-'ss20') may\n"
 				      "be assigned human readable names here.");
     ssnlabel[0].text_is_1byte = true;
     ssngcd[0].gd.label = &ssnlabel[0];
@@ -9570,7 +9570,7 @@ return;
     ssngcd[1].gd.flags = gg_enabled | gg_visible | gg_utf8_popup;
     ssngcd[1].gd.cid = CID_SSNames;
     ssngcd[1].gd.u.matrix = &ssmi;
-    ssngcd[1].gd.popup_msg = (unichar_t *) _(
+    ssngcd[1].gd.popup_msg = (uint32_t *) _(
 	"To create a new name, left click on the <New> button, and select a locale (language).\n"
 	"To change the locale, left click on it.\n"
 	"To change the feature, left click on it.\n"
@@ -9588,7 +9588,7 @@ return;
     memset(&comgcd,0,sizeof(comgcd));
 
     comgcd[0].gd.flags = gg_visible | gg_enabled;
-    comlabel[0].text = (unichar_t *) _("The font comment can contain whatever you feel it should");
+    comlabel[0].text = (uint32_t *) _("The font comment can contain whatever you feel it should");
     comlabel[0].text_is_1byte = true;
     comgcd[0].gd.label = &comlabel[0];
     comgcd[0].creator = GLabelCreate;
@@ -9597,9 +9597,9 @@ return;
     comgcd[1].gd.pos.width = ngcd[11].gd.pos.width; comgcd[1].gd.pos.height = 230;
     comgcd[1].gd.flags = gg_visible | gg_enabled | gg_textarea_wrap | gg_text_xim;
     comgcd[1].gd.cid = CID_Comment;
-    comlabel[1].text = (unichar_t *) sf->comments;
+    comlabel[1].text = (uint32_t *) sf->comments;
     comlabel[1].text_is_1byte = true;
-    if ( comlabel[1].text==NULL ) comlabel[1].text = (unichar_t *) "";
+    if ( comlabel[1].text==NULL ) comlabel[1].text = (uint32_t *) "";
     comgcd[1].gd.label = &comlabel[1];
     comgcd[1].creator = GTextAreaCreate;
 
@@ -9614,16 +9614,16 @@ return;
     memset(&floggcd,0,sizeof(floggcd));
 
     floggcd[0].gd.flags = gg_visible | gg_enabled;
-    floglabel[0].text = (unichar_t *) _("The FONTLOG contains some description of the \n font project, a detailed changelog, and a list of contributors");
+    floglabel[0].text = (uint32_t *) _("The FONTLOG contains some description of the \n font project, a detailed changelog, and a list of contributors");
     floglabel[0].text_is_1byte = true;
     floggcd[0].gd.label = &floglabel[0];
     floggcd[0].creator = GLabelCreate;
 
     floggcd[1].gd.flags = gg_visible | gg_enabled | gg_textarea_wrap | gg_text_xim;
     floggcd[1].gd.cid = CID_FontLog;
-    floglabel[1].text = (unichar_t *) sf->fontlog;
+    floglabel[1].text = (uint32_t *) sf->fontlog;
     floglabel[1].text_is_1byte = true;
-    if ( floglabel[1].text==NULL ) floglabel[1].text = (unichar_t *) "";
+    if ( floglabel[1].text==NULL ) floglabel[1].text = (uint32_t *) "";
     floggcd[1].gd.label = &floglabel[1];
     floggcd[1].creator = GTextAreaCreate;
 
@@ -9637,7 +9637,7 @@ return;
     memset(&mklabel,0,sizeof(mklabel));
     memset(&mkgcd,0,sizeof(mkgcd));
 
-    mklabel[0].text = (unichar_t *) _(
+    mklabel[0].text = (uint32_t *) _(
 	"These are not Anchor Classes. For them see the \"Lookups\" pane.\n"
 	"(Mark Classes can control when lookups are active, they do NOT\n"
 	" position glyphs.)");
@@ -9681,7 +9681,7 @@ return;
     memset(&mslabel,0,sizeof(mslabel));
     memset(&msgcd,0,sizeof(msgcd));
 
-    mslabel[0].text = (unichar_t *) _(
+    mslabel[0].text = (uint32_t *) _(
 	"These are not Anchor Classes. For them see the \"Lookups\" pane.\n"
 	"(Mark Sets, like Mark Classes can control when lookups are active,\n"
 	" they do NOT position glyphs.)");
@@ -9721,7 +9721,7 @@ return;
     memset(&wofflabel,0,sizeof(wofflabel));
     memset(&woffgcd,0,sizeof(woffgcd));
 
-    wofflabel[0].text = (unichar_t *) _("Version, Major:");
+    wofflabel[0].text = (uint32_t *) _("Version, Major:");
     wofflabel[0].text_is_1byte = true;
     woffgcd[0].gd.label = &wofflabel[0];
     woffgcd[0].gd.flags = gg_visible | gg_enabled;
@@ -9734,25 +9734,25 @@ return;
 	sprintf( woffminorbuf, "%d", sf->woffMinor );
     }
     woffgcd[1].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    wofflabel[1].text = (unichar_t *) woffmajorbuf;
+    wofflabel[1].text = (uint32_t *) woffmajorbuf;
     wofflabel[1].text_is_1byte = true;
     woffgcd[1].gd.label = &wofflabel[1];
     woffgcd[1].gd.cid = CID_WoffMajor;
-    woffgcd[1].gd.popup_msg = (unichar_t *) _("If you leave this field blank FontForge will use a default based on\neither the version string, or one in the 'name' table." );
+    woffgcd[1].gd.popup_msg = (uint32_t *) _("If you leave this field blank FontForge will use a default based on\neither the version string, or one in the 'name' table." );
     woffgcd[1].creator = GTextFieldCreate;
 
-    wofflabel[2].text = (unichar_t *) _("Minor:");
+    wofflabel[2].text = (uint32_t *) _("Minor:");
     wofflabel[2].text_is_1byte = true;
     woffgcd[2].gd.label = &wofflabel[2];
     woffgcd[2].gd.flags = gg_visible | gg_enabled;
     woffgcd[2].creator = GLabelCreate;
 
     woffgcd[3].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    wofflabel[3].text = (unichar_t *) woffminorbuf;
+    wofflabel[3].text = (uint32_t *) woffminorbuf;
     wofflabel[3].text_is_1byte = true;
     woffgcd[3].gd.label = &wofflabel[3];
     woffgcd[3].gd.cid = CID_WoffMinor;
-    woffgcd[3].gd.popup_msg = (unichar_t *) _("If you leave this field blank FontForge will use a default based on\neither the version string, or one in the 'name' table." );
+    woffgcd[3].gd.popup_msg = (uint32_t *) _("If you leave this field blank FontForge will use a default based on\neither the version string, or one in the 'name' table." );
     woffgcd[3].creator = GTextFieldCreate;
 
     woffarray[0] = &woffgcd[0];
@@ -9761,7 +9761,7 @@ return;
     woffarray[3] = &woffgcd[3];
     woffarray[4] = NULL;
 
-    wofflabel[4].text = (unichar_t *) _("Metadata (xml):");
+    wofflabel[4].text = (uint32_t *) _("Metadata (xml):");
     wofflabel[4].text_is_1byte = true;
     woffgcd[4].gd.label = &wofflabel[4];
     woffgcd[4].gd.flags = gg_visible | gg_enabled;
@@ -9775,7 +9775,7 @@ return;
 
     woffgcd[5].gd.flags = gg_visible | gg_enabled | gg_textarea_wrap;
     if ( sf->woffMetadata!=NULL ) {
-	wofflabel[5].text = (unichar_t *) sf->woffMetadata;
+	wofflabel[5].text = (uint32_t *) sf->woffMetadata;
 	wofflabel[5].text_is_1byte = true;
 	woffgcd[5].gd.label = &wofflabel[5];
     }
@@ -9798,7 +9798,7 @@ return;
     memset(&txgcd,0,sizeof(txgcd));
 
     k=0;
-    txlabel[k].text = (unichar_t *) U_("ΤεΧ General");
+    txlabel[k].text = (uint32_t *) U_("ΤεΧ General");
     txlabel[k].text_is_1byte = true;
     txgcd[k].gd.label = &txlabel[k];
     txgcd[k].gd.pos.x = 10; txgcd[k].gd.pos.y = 10;
@@ -9807,7 +9807,7 @@ return;
     txgcd[k].gd.handle_controlevent = GFI_TeXChanged;
     txgcd[k++].creator = GRadioCreate;
 
-    txlabel[k].text = (unichar_t *) U_("ΤεΧ Math Symbol");
+    txlabel[k].text = (uint32_t *) U_("ΤεΧ Math Symbol");
     txlabel[k].text_is_1byte = true;
     txgcd[k].gd.label = &txlabel[k];
     txgcd[k].gd.pos.x = 80; txgcd[k].gd.pos.y = txgcd[k-1].gd.pos.y;
@@ -9816,7 +9816,7 @@ return;
     txgcd[k].gd.handle_controlevent = GFI_TeXChanged;
     txgcd[k++].creator = GRadioCreate;
 
-    txlabel[k].text = (unichar_t *) U_("ΤεΧ Math Extension");
+    txlabel[k].text = (uint32_t *) U_("ΤεΧ Math Extension");
     txlabel[k].text_is_1byte = true;
     txgcd[k].gd.label = &txlabel[k];
     txgcd[k].gd.pos.x = 155; txgcd[k].gd.pos.y = txgcd[k-1].gd.pos.y;
@@ -9826,12 +9826,12 @@ return;
     txgcd[k++].creator = GRadioCreate;
 
     for ( i=j=0; texparams[i]!=0; ++i ) {
-	txlabel[k].text = (unichar_t *) texparams[i];
+	txlabel[k].text = (uint32_t *) texparams[i];
 	txlabel[k].text_is_1byte = true;
 	txgcd[k].gd.label = &txlabel[k];
 	txgcd[k].gd.pos.x = 10; txgcd[k].gd.pos.y = txgcd[k-2].gd.pos.y+26;
 	txgcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-	txgcd[k].gd.popup_msg = (unichar_t *) texpopups[i];
+	txgcd[k].gd.popup_msg = (uint32_t *) texpopups[i];
 	txarray2[j++] = &txgcd[k];
 	txgcd[k++].creator = GLabelCreate;
 
@@ -9847,7 +9847,7 @@ return;
     txarray2[j++] = NULL;
 
 /* GT: More Parameters */
-    txlabel[k].text = (unichar_t *) _("More Params");
+    txlabel[k].text = (uint32_t *) _("More Params");
     txlabel[k].text_is_1byte = true;
     txgcd[k].gd.label = &txlabel[k];
     txgcd[k].gd.pos.x = 20; txgcd[k].gd.pos.y = txgcd[k-1].gd.pos.y+26;
@@ -9885,17 +9885,17 @@ return;
 
     k=0;
 
-    szlabel[k].text = (unichar_t *) _("De_sign Size:");
+    szlabel[k].text = (uint32_t *) _("De_sign Size:");
     szlabel[k].text_is_1byte = true;
     szlabel[k].text_in_resource = true;
     szgcd[k].gd.label = &szlabel[k];
     szgcd[k].gd.pos.x = 10; szgcd[k].gd.pos.y = 9;
     szgcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    szgcd[k].gd.popup_msg = (unichar_t *) _("The size (in points) for which this face was designed");
+    szgcd[k].gd.popup_msg = (uint32_t *) _("The size (in points) for which this face was designed");
     szgcd[k++].creator = GLabelCreate;
 
     sprintf(dszbuf, "%.1f", sf->design_size/10.0);
-    szlabel[k].text = (unichar_t *) dszbuf;
+    szlabel[k].text = (uint32_t *) dszbuf;
     szlabel[k].text_is_1byte = true;
     szgcd[k].gd.label = &szlabel[k];
     szgcd[k].gd.pos.x = 70; szgcd[k].gd.pos.y = szgcd[k-1].gd.pos.y-4;
@@ -9904,20 +9904,20 @@ return;
     szgcd[k].gd.cid = CID_DesignSize;
     szgcd[k++].creator = GTextFieldCreate;
 
-    szlabel[k].text = (unichar_t *) S_("Size|Points");
+    szlabel[k].text = (uint32_t *) S_("Size|Points");
     szlabel[k].text_is_1byte = true;
     szgcd[k].gd.label = &szlabel[k];
     szgcd[k].gd.pos.x = 134; szgcd[k].gd.pos.y = szgcd[k-2].gd.pos.y;
     szgcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    szgcd[k].gd.popup_msg = (unichar_t *) _("The size (in points) for which this face was designed");
+    szgcd[k].gd.popup_msg = (uint32_t *) _("The size (in points) for which this face was designed");
     szgcd[k++].creator = GLabelCreate;
 
-    szlabel[k].text = (unichar_t *) _("Design Range");
+    szlabel[k].text = (uint32_t *) _("Design Range");
     szlabel[k].text_is_1byte = true;
     szgcd[k].gd.label = &szlabel[k];
     szgcd[k].gd.pos.x = 14; szgcd[k].gd.pos.y = szgcd[k-2].gd.pos.y+24;
     szgcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    szgcd[k].gd.popup_msg = (unichar_t *) _("The range of sizes (in points) to which this face applies.\nLower bound is exclusive, upper bound is inclusive.");
+    szgcd[k].gd.popup_msg = (uint32_t *) _("The range of sizes (in points) to which this face applies.\nLower bound is exclusive, upper bound is inclusive.");
     szgcd[k++].creator = GLabelCreate;
 
     szgcd[k].gd.pos.x = 8; szgcd[k].gd.pos.y = GDrawPointsToPixels(NULL,szgcd[k-1].gd.pos.y+6);
@@ -9925,17 +9925,17 @@ return;
     szgcd[k].gd.flags = gg_enabled | gg_visible | gg_pos_in_pixels;
     szgcd[k++].creator = GGroupCreate;
 
-    szlabel[k].text = (unichar_t *) _("_Bottom:");
+    szlabel[k].text = (uint32_t *) _("_Bottom:");
     szlabel[k].text_is_1byte = true;
     szlabel[k].text_in_resource = true;
     szgcd[k].gd.label = &szlabel[k];
     szgcd[k].gd.pos.x = 14; szgcd[k].gd.pos.y = szgcd[k-2].gd.pos.y+18;
     szgcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    szgcd[k].gd.popup_msg = (unichar_t *) _("The range of sizes (in points) to which this face applies.\nLower bound is exclusive, upper bound is inclusive.");
+    szgcd[k].gd.popup_msg = (uint32_t *) _("The range of sizes (in points) to which this face applies.\nLower bound is exclusive, upper bound is inclusive.");
     szgcd[k++].creator = GLabelCreate;
 
     sprintf(dsbbuf, "%.1f", sf->design_range_bottom/10.0);
-    szlabel[k].text = (unichar_t *) dsbbuf;
+    szlabel[k].text = (uint32_t *) dsbbuf;
     szlabel[k].text_is_1byte = true;
     szgcd[k].gd.label = &szlabel[k];
     szgcd[k].gd.pos.x = 70; szgcd[k].gd.pos.y = szgcd[k-1].gd.pos.y-4;
@@ -9944,17 +9944,17 @@ return;
     szgcd[k].gd.cid = CID_DesignBottom;
     szgcd[k++].creator = GTextFieldCreate;
 
-    szlabel[k].text = (unichar_t *) _("_Top:");
+    szlabel[k].text = (uint32_t *) _("_Top:");
     szlabel[k].text_is_1byte = true;
     szlabel[k].text_in_resource = true;
     szgcd[k].gd.label = &szlabel[k];
     szgcd[k].gd.pos.x = 140; szgcd[k].gd.pos.y = szgcd[k-2].gd.pos.y;
     szgcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    szgcd[k].gd.popup_msg = (unichar_t *) _("The range of sizes (in points) to which this face applies.\nLower bound is exclusive, upper bound is inclusive.");
+    szgcd[k].gd.popup_msg = (uint32_t *) _("The range of sizes (in points) to which this face applies.\nLower bound is exclusive, upper bound is inclusive.");
     szgcd[k++].creator = GLabelCreate;
 
     sprintf(dstbuf, "%.1f", sf->design_range_top/10.0);
-    szlabel[k].text = (unichar_t *) dstbuf;
+    szlabel[k].text = (uint32_t *) dstbuf;
     szlabel[k].text_is_1byte = true;
     szgcd[k].gd.label = &szlabel[k];
     szgcd[k].gd.pos.x = 180; szgcd[k].gd.pos.y = szgcd[k-1].gd.pos.y-4;
@@ -9963,17 +9963,17 @@ return;
     szgcd[k].gd.cid = CID_DesignTop;
     szgcd[k++].creator = GTextFieldCreate;
 
-    szlabel[k].text = (unichar_t *) _("Style _ID:");
+    szlabel[k].text = (uint32_t *) _("Style _ID:");
     szlabel[k].text_is_1byte = true;
     szlabel[k].text_in_resource = true;
     szgcd[k].gd.label = &szlabel[k];
     szgcd[k].gd.pos.x = 14; szgcd[k].gd.pos.y = GDrawPixelsToPoints(NULL,szgcd[k-5].gd.pos.y+szgcd[k-5].gd.pos.height)+10;
     szgcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    szgcd[k].gd.popup_msg = (unichar_t *) _("This is an identifying number shared by all members of\nthis font family with the same style (I.e. 10pt Bold and\n24pt Bold would have the same id, but 10pt Italic would not");
+    szgcd[k].gd.popup_msg = (uint32_t *) _("This is an identifying number shared by all members of\nthis font family with the same style (I.e. 10pt Bold and\n24pt Bold would have the same id, but 10pt Italic would not");
     szgcd[k++].creator = GLabelCreate;
 
     sprintf(sibuf, "%d", sf->fontstyle_id);
-    szlabel[k].text = (unichar_t *) sibuf;
+    szlabel[k].text = (uint32_t *) sibuf;
     szlabel[k].text_is_1byte = true;
     szgcd[k].gd.label = &szlabel[k];
     szgcd[k].gd.pos.x = 70; szgcd[k].gd.pos.y = szgcd[k-1].gd.pos.y-4;
@@ -9982,19 +9982,19 @@ return;
     szgcd[k].gd.cid = CID_StyleID;
     szgcd[k++].creator = GTextFieldCreate;
 
-    szlabel[k].text = (unichar_t *) _("Style Name:");
+    szlabel[k].text = (uint32_t *) _("Style Name:");
     szlabel[k].text_is_1byte = true;
     szgcd[k].gd.label = &szlabel[k];
     szgcd[k].gd.pos.x = 14; szgcd[k].gd.pos.y = szgcd[k-2].gd.pos.y+22;
     szgcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    szgcd[k].gd.popup_msg = (unichar_t *) _("This provides a set of names used to identify the\nstyle of this font. Names may be translated into multiple\nlanguages (English is required, others are optional)\nAll fonts with the same Style ID should share this name.");
+    szgcd[k].gd.popup_msg = (uint32_t *) _("This provides a set of names used to identify the\nstyle of this font. Names may be translated into multiple\nlanguages (English is required, others are optional)\nAll fonts with the same Style ID should share this name.");
     szgcd[k++].creator = GLabelCreate;
 
     szgcd[k].gd.pos.width = 300; szgcd[k].gd.pos.height = 200;
     szgcd[k].gd.flags = gg_enabled | gg_visible | gg_utf8_popup;
     szgcd[k].gd.cid = CID_StyleName;
     szgcd[k].gd.u.matrix = &sizemi;
-    szgcd[k].gd.popup_msg = (unichar_t *) _(
+    szgcd[k].gd.popup_msg = (uint32_t *) _(
 	"To create a new name, left click on the <New> button, and select a locale (language).\n"
 	"To change the locale, left click on it.\n"
 	"To change the text, left click in it and then type.\n"
@@ -10037,14 +10037,14 @@ return;
     memset(&mclabel,'\0',sizeof(mclabel));
 
     k=0;
-    mclabel[k].text = (unichar_t *) _("Mac Style Set:");
+    mclabel[k].text = (uint32_t *) _("Mac Style Set:");
     mclabel[k].text_is_1byte = true;
     mcgcd[k].gd.label = &mclabel[k];
     mcgcd[k].gd.pos.x = 10; mcgcd[k].gd.pos.y = 7;
     mcgcd[k].gd.flags = gg_visible | gg_enabled;
     mcgcd[k++].creator = GLabelCreate;
 
-    mclabel[k].text = (unichar_t *) _("Automatic");
+    mclabel[k].text = (uint32_t *) _("Automatic");
     mclabel[k].text_is_1byte = true;
     mcgcd[k].gd.label = &mclabel[k];
     mcgcd[k].gd.pos.x = 10; mcgcd[k].gd.pos.y = 20;
@@ -10065,14 +10065,14 @@ return;
     mcgcd[k].gd.u.list = macstyles;
     mcgcd[k++].creator = GListCreate;
 
-    mclabel[k].text = (unichar_t *) _("FOND Name:");
+    mclabel[k].text = (uint32_t *) _("FOND Name:");
     mclabel[k].text_is_1byte = true;
     mcgcd[k].gd.label = &mclabel[k];
     mcgcd[k].gd.pos.x = 10; mcgcd[k].gd.pos.y = mcgcd[k-1].gd.pos.y + mcgcd[k-1].gd.pos.height+8;
     mcgcd[k].gd.flags = gg_visible | gg_enabled;
     mcgcd[k++].creator = GLabelCreate;
 
-    mclabel[k].text = (unichar_t *) sf->fondname;
+    mclabel[k].text = (uint32_t *) sf->fondname;
     mclabel[k].text_is_1byte = true;
     mcgcd[k].gd.label = sf->fondname==NULL ? NULL : &mclabel[k];
     mcgcd[k].gd.pos.x = 90; mcgcd[k].gd.pos.y = mcgcd[k-1].gd.pos.y - 4;
@@ -10117,8 +10117,8 @@ return;
     i=0;
     lkbuttonsarray[i] = &lkbuttonsgcd[i];
     lkbuttonsgcd[i].gd.flags = gg_visible | gg_utf8_popup ;
-    lkbuttonsgcd[i].gd.popup_msg = (unichar_t *) _("Moves the currently selected lookup to be first in the lookup ordering\nor moves the currently selected subtable to be first in its lookup.");
-    lkbuttonslabel[i].text = (unichar_t *) _("_Top");
+    lkbuttonsgcd[i].gd.popup_msg = (uint32_t *) _("Moves the currently selected lookup to be first in the lookup ordering\nor moves the currently selected subtable to be first in its lookup.");
+    lkbuttonslabel[i].text = (uint32_t *) _("_Top");
     lkbuttonslabel[i].text_is_1byte = true;
     lkbuttonslabel[i].text_in_resource = true;
     lkbuttonsgcd[i].gd.label = &lkbuttonslabel[i];
@@ -10128,8 +10128,8 @@ return;
 
     lkbuttonsarray[i] = &lkbuttonsgcd[i];
     lkbuttonsgcd[i].gd.flags = gg_visible | gg_utf8_popup ;
-    lkbuttonsgcd[i].gd.popup_msg = (unichar_t *) _("Moves the currently selected lookup before the previous lookup\nor moves the currently selected subtable before the previous subtable.");
-    lkbuttonslabel[i].text = (unichar_t *) _("_Up");
+    lkbuttonsgcd[i].gd.popup_msg = (uint32_t *) _("Moves the currently selected lookup before the previous lookup\nor moves the currently selected subtable before the previous subtable.");
+    lkbuttonslabel[i].text = (uint32_t *) _("_Up");
     lkbuttonslabel[i].text_is_1byte = true;
     lkbuttonslabel[i].text_in_resource = true;
     lkbuttonsgcd[i].gd.label = &lkbuttonslabel[i];
@@ -10139,8 +10139,8 @@ return;
 
     lkbuttonsarray[i] = &lkbuttonsgcd[i];
     lkbuttonsgcd[i].gd.flags = gg_visible | gg_utf8_popup ;
-    lkbuttonsgcd[i].gd.popup_msg = (unichar_t *) _("Moves the currently selected lookup after the next lookup\nor moves the currently selected subtable after the next subtable.");
-    lkbuttonslabel[i].text = (unichar_t *) _("_Down");
+    lkbuttonsgcd[i].gd.popup_msg = (uint32_t *) _("Moves the currently selected lookup after the next lookup\nor moves the currently selected subtable after the next subtable.");
+    lkbuttonslabel[i].text = (uint32_t *) _("_Down");
     lkbuttonslabel[i].text_is_1byte = true;
     lkbuttonslabel[i].text_in_resource = true;
     lkbuttonsgcd[i].gd.label = &lkbuttonslabel[i];
@@ -10150,8 +10150,8 @@ return;
 
     lkbuttonsarray[i] = &lkbuttonsgcd[i];
     lkbuttonsgcd[i].gd.flags = gg_visible | gg_utf8_popup ;
-    lkbuttonsgcd[i].gd.popup_msg = (unichar_t *) _("Moves the currently selected lookup to the end of the lookup chain\nor moves the currently selected subtable to be the last subtable in the lookup");
-    lkbuttonslabel[i].text = (unichar_t *) _("_Bottom");
+    lkbuttonsgcd[i].gd.popup_msg = (uint32_t *) _("Moves the currently selected lookup to the end of the lookup chain\nor moves the currently selected subtable to be the last subtable in the lookup");
+    lkbuttonslabel[i].text = (uint32_t *) _("_Bottom");
     lkbuttonslabel[i].text_is_1byte = true;
     lkbuttonslabel[i].text_in_resource = true;
     lkbuttonsgcd[i].gd.label = &lkbuttonslabel[i];
@@ -10161,8 +10161,8 @@ return;
 
     lkbuttonsarray[i] = &lkbuttonsgcd[i];
     lkbuttonsgcd[i].gd.flags = gg_visible | gg_utf8_popup ;
-    lkbuttonsgcd[i].gd.popup_msg = (unichar_t *) _("Sorts the lookups in a default ordering based on feature tags");
-    lkbuttonslabel[i].text = (unichar_t *) _("_Sort");
+    lkbuttonsgcd[i].gd.popup_msg = (uint32_t *) _("Sorts the lookups in a default ordering based on feature tags");
+    lkbuttonslabel[i].text = (uint32_t *) _("_Sort");
     lkbuttonslabel[i].text_is_1byte = true;
     lkbuttonslabel[i].text_in_resource = true;
     lkbuttonsgcd[i].gd.label = &lkbuttonslabel[i];
@@ -10176,8 +10176,8 @@ return;
 
     lkbuttonsarray[i] = &lkbuttonsgcd[i];
     lkbuttonsgcd[i].gd.flags = gg_visible | gg_enabled | gg_utf8_popup ;
-    lkbuttonsgcd[i].gd.popup_msg = (unichar_t *) _("Adds a new lookup after the selected lookup\nor at the start of the lookup list if nothing is selected.");
-    lkbuttonslabel[i].text = (unichar_t *) _("Add _Lookup");
+    lkbuttonsgcd[i].gd.popup_msg = (uint32_t *) _("Adds a new lookup after the selected lookup\nor at the start of the lookup list if nothing is selected.");
+    lkbuttonslabel[i].text = (uint32_t *) _("Add _Lookup");
     lkbuttonslabel[i].text_is_1byte = true;
     lkbuttonslabel[i].text_in_resource = true;
     lkbuttonsgcd[i].gd.label = &lkbuttonslabel[i];
@@ -10187,8 +10187,8 @@ return;
 
     lkbuttonsarray[i] = &lkbuttonsgcd[i];
     lkbuttonsgcd[i].gd.flags = gg_visible | gg_utf8_popup ;
-    lkbuttonsgcd[i].gd.popup_msg = (unichar_t *) _("Adds a new lookup subtable after the selected subtable\nor at the start of the lookup if nothing is selected.");
-    lkbuttonslabel[i].text = (unichar_t *) _("Add Sub_table");
+    lkbuttonsgcd[i].gd.popup_msg = (uint32_t *) _("Adds a new lookup subtable after the selected subtable\nor at the start of the lookup if nothing is selected.");
+    lkbuttonslabel[i].text = (uint32_t *) _("Add Sub_table");
     lkbuttonslabel[i].text_is_1byte = true;
     lkbuttonslabel[i].text_in_resource = true;
     lkbuttonsgcd[i].gd.label = &lkbuttonslabel[i];
@@ -10198,8 +10198,8 @@ return;
 
     lkbuttonsarray[i] = &lkbuttonsgcd[i];
     lkbuttonsgcd[i].gd.flags = gg_visible | gg_utf8_popup ;
-    lkbuttonsgcd[i].gd.popup_msg = (unichar_t *) _("Edits a lookup or lookup subtable.");
-    lkbuttonslabel[i].text = (unichar_t *) _("Edit _Metadata");
+    lkbuttonsgcd[i].gd.popup_msg = (uint32_t *) _("Edits a lookup or lookup subtable.");
+    lkbuttonslabel[i].text = (uint32_t *) _("Edit _Metadata");
     lkbuttonslabel[i].text_is_1byte = true;
     lkbuttonslabel[i].text_in_resource = true;
     lkbuttonsgcd[i].gd.label = &lkbuttonslabel[i];
@@ -10209,8 +10209,8 @@ return;
 
     lkbuttonsarray[i] = &lkbuttonsgcd[i];
     lkbuttonsgcd[i].gd.flags = gg_visible | gg_utf8_popup ;
-    lkbuttonsgcd[i].gd.popup_msg = (unichar_t *) _("Edits the transformations in a lookup subtable.");
-    lkbuttonslabel[i].text = (unichar_t *) _("_Edit Data");
+    lkbuttonsgcd[i].gd.popup_msg = (uint32_t *) _("Edits the transformations in a lookup subtable.");
+    lkbuttonslabel[i].text = (uint32_t *) _("_Edit Data");
     lkbuttonslabel[i].text_is_1byte = true;
     lkbuttonslabel[i].text_in_resource = true;
     lkbuttonsgcd[i].gd.label = &lkbuttonslabel[i];
@@ -10220,8 +10220,8 @@ return;
 
     lkbuttonsarray[i] = &lkbuttonsgcd[i];
     lkbuttonsgcd[i].gd.flags = gg_visible | gg_utf8_popup ;
-    lkbuttonsgcd[i].gd.popup_msg = (unichar_t *) _("Deletes any selected lookups and their subtables, or deletes any selected subtables.\nThis will also delete any transformations associated with those subtables.");
-    lkbuttonslabel[i].text = (unichar_t *) _("De_lete");
+    lkbuttonsgcd[i].gd.popup_msg = (uint32_t *) _("Deletes any selected lookups and their subtables, or deletes any selected subtables.\nThis will also delete any transformations associated with those subtables.");
+    lkbuttonslabel[i].text = (uint32_t *) _("De_lete");
     lkbuttonslabel[i].text_is_1byte = true;
     lkbuttonslabel[i].text_in_resource = true;
     lkbuttonsgcd[i].gd.label = &lkbuttonslabel[i];
@@ -10231,8 +10231,8 @@ return;
 
     lkbuttonsarray[i] = &lkbuttonsgcd[i];
     lkbuttonsgcd[i].gd.flags = gg_visible | gg_utf8_popup ;
-    lkbuttonsgcd[i].gd.popup_msg = (unichar_t *) _("Merges two selected (and compatible) lookups into one,\nor merges two selected subtables of a lookup into one");
-    lkbuttonslabel[i].text = (unichar_t *) _("_Merge");
+    lkbuttonsgcd[i].gd.popup_msg = (uint32_t *) _("Merges two selected (and compatible) lookups into one,\nor merges two selected subtables of a lookup into one");
+    lkbuttonslabel[i].text = (uint32_t *) _("_Merge");
     lkbuttonslabel[i].text_is_1byte = true;
     lkbuttonslabel[i].text_in_resource = true;
     lkbuttonsgcd[i].gd.label = &lkbuttonslabel[i];
@@ -10242,8 +10242,8 @@ return;
 
     lkbuttonsarray[i] = &lkbuttonsgcd[i];
     lkbuttonsgcd[i].gd.flags = gg_visible | gg_utf8_popup ;
-    lkbuttonsgcd[i].gd.popup_msg = (unichar_t *) _("Reverts the lookup list to its original condition.\nBut any changes to subtable data will remain.");
-    lkbuttonslabel[i].text = (unichar_t *) _("_Revert");
+    lkbuttonsgcd[i].gd.popup_msg = (uint32_t *) _("Reverts the lookup list to its original condition.\nBut any changes to subtable data will remain.");
+    lkbuttonslabel[i].text = (uint32_t *) _("_Revert");
     lkbuttonslabel[i].text_is_1byte = true;
     lkbuttonslabel[i].text_in_resource = true;
     lkbuttonsgcd[i].gd.label = &lkbuttonslabel[i];
@@ -10253,8 +10253,8 @@ return;
 
     lkbuttonsarray[i] = &lkbuttonsgcd[i];
     lkbuttonsgcd[i].gd.flags = gg_visible | gg_utf8_popup ;
-    lkbuttonsgcd[i].gd.popup_msg = (unichar_t *) _("Imports a lookup (and all its subtables) from another font.");
-    lkbuttonslabel[i].text = (unichar_t *) _("_Import");
+    lkbuttonsgcd[i].gd.popup_msg = (uint32_t *) _("Imports a lookup (and all its subtables) from another font.");
+    lkbuttonslabel[i].text = (uint32_t *) _("_Import");
     lkbuttonslabel[i].text_is_1byte = true;
     lkbuttonslabel[i].text_in_resource = true;
     lkbuttonsgcd[i].gd.label = &lkbuttonslabel[i];
@@ -10265,7 +10265,7 @@ return;
     lkbuttonsarray[i+1] = NULL;
 
     for ( i=0; i<2; ++i ) {
-	lkaspects[i].text = (unichar_t *) (i?"GPOS":"GSUB");
+	lkaspects[i].text = (uint32_t *) (i?"GPOS":"GSUB");
 	lkaspects[i].text_is_1byte = true;
 	lkaspects[i].gcd = &lkbox[2*i];
 
@@ -10338,7 +10338,7 @@ return;
     memset(&dlabel,0,sizeof(dlabel));
     memset(&dgcd,0,sizeof(dgcd));
 
-    dlabel[0].text = (unichar_t *) _("Creation Date:");
+    dlabel[0].text = (uint32_t *) _("Creation Date:");
     dlabel[0].text_is_1byte = true;
     dlabel[0].text_in_resource = true;
     dgcd[0].gd.label = &dlabel[0];
@@ -10360,7 +10360,7 @@ return;
     dgcd[1].gd.label = &dlabel[1];
     dgcd[1].creator = GLabelCreate;
 
-    dlabel[2].text = (unichar_t *) _("Modification Date:");
+    dlabel[2].text = (uint32_t *) _("Modification Date:");
     dlabel[2].text_is_1byte = true;
     dlabel[2].text_in_resource = true;
     dgcd[2].gd.label = &dlabel[2];
@@ -10397,7 +10397,7 @@ return;
     memset(&ugcd,0,sizeof(ugcd));
     memset(ubox,0,sizeof(ubox));
 
-    ulabel[0].text = (unichar_t *) _(
+    ulabel[0].text = (uint32_t *) _(
 	    "This pane is informative only and shows the characters\n"
 	    "actually in the font. If you wish to set the OS/2 Unicode\n"
 	    "Range field, change the pane to");
@@ -10407,7 +10407,7 @@ return;
     ugcd[0].gd.flags = gg_visible | gg_enabled;
     ugcd[0].creator = GLabelCreate;
 
-    ulabel[1].text = (unichar_t *) _( "OS/2 -> Charsets");
+    ulabel[1].text = (uint32_t *) _( "OS/2 -> Charsets");
     ulabel[1].text_is_1byte = true;
     ugcd[1].gd.label = &ulabel[1];
     ugcd[1].gd.pos.x = 12; ugcd[1].gd.pos.y = 10; 
@@ -10421,7 +10421,7 @@ return;
     ubox[2].gd.u.boxelements = uharray;
     ubox[2].creator = GHBoxCreate;
 
-    ulabel[2].text = (unichar_t *) _("Include Empty Blocks");
+    ulabel[2].text = (uint32_t *) _("Include Empty Blocks");
     ulabel[2].text_is_1byte = true;
     ulabel[2].text_in_resource = true;
     ugcd[2].gd.label = &ulabel[2];
@@ -10437,7 +10437,7 @@ return;
     ugcd[3].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     ugcd[3].gd.cid = CID_Unicode;
     ugcd[3].gd.handle_controlevent = GFI_UnicodeRangeChange;
-    ugcd[3].gd.popup_msg = (unichar_t *) _("Click on a range to select characters in that range.\nDouble click on a range to see characters that should be\nin the range but aren't.");
+    ugcd[3].gd.popup_msg = (uint32_t *) _("Click on a range to select characters in that range.\nDouble click on a range to see characters that should be\nin the range but aren't.");
     ugcd[3].creator = GListCreate;
 
     uarray[0] = &ugcd[0]; uarray[1] = &ubox[2]; uarray[2] = &ugcd[2]; uarray[3] = &ugcd[3]; uarray[4] = NULL;
@@ -10454,106 +10454,106 @@ return;
 
     i = 0;
 
-    aspects[i].text = (unichar_t *) _("PS Names");
+    aspects[i].text = (uint32_t *) _("PS Names");
     d->old_aspect = 0;
     aspects[i].text_is_1byte = true;
     aspects[i++].gcd = nb;
 
-    aspects[i].text = (unichar_t *) _("General");
+    aspects[i].text = (uint32_t *) _("General");
     aspects[i].text_is_1byte = true;
     aspects[i++].gcd = psb;
 
-    aspects[i].text = (unichar_t *) _("Layers");
+    aspects[i].text = (uint32_t *) _("Layers");
     aspects[i].text_is_1byte = true;
     aspects[i++].gcd = lbox;
 
-    aspects[i].text = (unichar_t *) _("PS UID");
+    aspects[i].text = (uint32_t *) _("PS UID");
     aspects[i].text_is_1byte = true;
     aspects[i++].gcd = xub;
 
     d->private_aspect = i;
-    aspects[i].text = (unichar_t *) _("PS Private");
+    aspects[i].text = (uint32_t *) _("PS Private");
     aspects[i].text_is_1byte = true;
     aspects[i++].gcd = ppbox;
 
     d->ttfv_aspect = i;
-    aspects[i].text = (unichar_t *) _("OS/2");
+    aspects[i].text = (uint32_t *) _("OS/2");
     if ( sf->cidmaster!=NULL ) aspects[i].disabled = true;
     aspects[i].text_is_1byte = true;
     aspects[i++].gcd = vagcd;
 
     d->tn_aspect = i;
     if ( sf->cidmaster!=NULL ) aspects[i].disabled = true;
-    aspects[i].text = (unichar_t *) _("TTF Names");
+    aspects[i].text = (uint32_t *) _("TTF Names");
     aspects[i].text_is_1byte = true;
     aspects[i++].gcd = tnboxes;
 
     if ( sf->cidmaster!=NULL ) aspects[i].disabled = true;
-    aspects[i].text = (unichar_t *) _("StyleSet Names");
+    aspects[i].text = (uint32_t *) _("StyleSet Names");
     aspects[i].text_is_1byte = true;
     aspects[i++].gcd = ssboxes;
 
     if ( sf->cidmaster!=NULL ) aspects[i].disabled = true;
-    aspects[i].text = (unichar_t *) _("Grid Fitting");
+    aspects[i].text = (uint32_t *) _("Grid Fitting");
     aspects[i].text_is_1byte = true;
     aspects[i++].gcd = gaspboxes;
 
     d->tx_aspect = i;
 /* xgettext won't use non-ASCII messages */
-    aspects[i].text = (unichar_t *) U_("ΤεΧ");	/* Tau epsilon Chi, in greek */
+    aspects[i].text = (uint32_t *) U_("ΤεΧ");	/* Tau epsilon Chi, in greek */
     aspects[i].text_is_1byte = true;
     aspects[i++].gcd = txbox;
 
     if ( sf->cidmaster!=NULL ) aspects[i].disabled = true;
-    aspects[i].text = (unichar_t *) _("Size");
+    aspects[i].text = (uint32_t *) _("Size");
     aspects[i].text_is_1byte = true;
     aspects[i++].gcd = szbox;
 
-    aspects[i].text = (unichar_t *) _("Comment");
+    aspects[i].text = (uint32_t *) _("Comment");
     aspects[i].text_is_1byte = true;
     aspects[i++].gcd = combox;
 
-    aspects[i].text = (unichar_t *) _("FONTLOG");
+    aspects[i].text = (uint32_t *) _("FONTLOG");
     aspects[i].text_is_1byte = true;
     aspects[i++].gcd = flogbox;
 
     if ( sf->cidmaster!=NULL ) aspects[i].disabled = true;
-    aspects[i].text = (unichar_t *) _("Mark Classes");
+    aspects[i].text = (uint32_t *) _("Mark Classes");
     aspects[i].text_is_1byte = true;
     aspects[i++].gcd = mkbox;
 
     if ( sf->cidmaster!=NULL ) aspects[i].disabled = true;
-    aspects[i].text = (unichar_t *) _("Mark Sets");
+    aspects[i].text = (uint32_t *) _("Mark Sets");
     aspects[i].text_is_1byte = true;
     aspects[i++].gcd = msbox;
 
 /* GT: OpenType GPOS/GSUB lookups */
     if ( sf->cidmaster!=NULL ) aspects[i].disabled = true;
-    aspects[i].text = (unichar_t *) S_("OpenType|Lookups");
+    aspects[i].text = (uint32_t *) S_("OpenType|Lookups");
     aspects[i].text_is_1byte = true;
     aspects[i++].gcd = &lkbox[5];
 /* On my system the "lookups line appears indented. That seems to be because */
 /*  the letter "L" has more of a left-side bearing than it should. It is not */
 /*  a bug in the nesting level. Remember this next time it bugs me */
 
-    aspects[i].text = (unichar_t *) _("WOFF");
+    aspects[i].text = (uint32_t *) _("WOFF");
     aspects[i].text_is_1byte = true;
     aspects[i++].gcd = woffbox;
 
-    aspects[i].text = (unichar_t *) _("Mac");
+    aspects[i].text = (uint32_t *) _("Mac");
     aspects[i].text_is_1byte = true;
     aspects[i++].gcd = mcbox;
 
-    aspects[i].text = (unichar_t *) _("Mac Features");
+    aspects[i].text = (uint32_t *) _("Mac Features");
     aspects[i].text_is_1byte = true;
     aspects[i++].gcd = mfbox;
 
-    aspects[i].text = (unichar_t *) _("Dates");
+    aspects[i].text = (uint32_t *) _("Dates");
     aspects[i].text_is_1byte = true;
     aspects[i++].gcd = dbox;
 
     d->unicode_aspect = i;
-    aspects[i].text = (unichar_t *) _("Unicode Ranges");
+    aspects[i].text = (uint32_t *) _("Unicode Ranges");
     aspects[i].text_is_1byte = true;
     aspects[i++].gcd = ubox;
 
@@ -10571,7 +10571,7 @@ return;
     mgcd[1].gd.pos.x = 30-3; mgcd[1].gd.pos.y = GDrawPixelsToPoints(NULL,pos.height)-35-3;
     mgcd[1].gd.pos.width = -1; mgcd[1].gd.pos.height = 0;
     mgcd[1].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    mlabel[1].text = (unichar_t *) _("_OK");
+    mlabel[1].text = (uint32_t *) _("_OK");
     mlabel[1].text_is_1byte = true;
     mlabel[1].text_in_resource = true;
     mgcd[1].gd.label = &mlabel[1];
@@ -10582,7 +10582,7 @@ return;
     mgcd[2].gd.pos.x = -30; mgcd[2].gd.pos.y = mgcd[1].gd.pos.y+3;
     mgcd[2].gd.pos.width = -1; mgcd[2].gd.pos.height = 0;
     mgcd[2].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    mlabel[2].text = (unichar_t *) _("_Cancel");
+    mlabel[2].text = (uint32_t *) _("_Cancel");
     mlabel[2].text_is_1byte = true;
     mlabel[2].text_in_resource = true;
     mgcd[2].gd.label = &mlabel[2];
@@ -10815,7 +10815,7 @@ return;
     done = true;
     for ( j=0; needswork[j]!=NULL; ++j ) {
 	for ( i=0; needswork[j][i].text!=NULL; ++i )
-	    needswork[j][i].text = (unichar_t *) S_((char *) needswork[j][i].text);
+	    needswork[j][i].text = (uint32_t *) S_((char *) needswork[j][i].text);
     }
     for ( j=0; needswork2[j]!=NULL; ++j ) {
 	for ( i=0; needswork2[j][i]!=NULL; ++i )
@@ -10827,7 +10827,7 @@ return;
 	    needswork3[j].ci[i].title = S_(needswork3[j].ci[i].title);
 	    if ( needswork3[j].ci[i].enum_vals!=NULL ) {
 		for ( k=0; needswork3[j].ci[i].enum_vals[k].text!=NULL; ++k )
-		    needswork3[j].ci[i].enum_vals[k].text = (unichar_t *) S_((char *) needswork3[j].ci[i].enum_vals[k].text);
+		    needswork3[j].ci[i].enum_vals[k].text = (uint32_t *) S_((char *) needswork3[j].ci[i].enum_vals[k].text);
 	    }
 	}
     }

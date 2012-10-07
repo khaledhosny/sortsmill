@@ -49,10 +49,10 @@ struct gfuncs {
 
     void (*destroy)(GGadget *g);
 
-    void (*set_title)(GGadget *g,const unichar_t *str);
-    const unichar_t *(*_get_title)(GGadget *g);
-    unichar_t *(*get_title)(GGadget *g);
-    void (*set_imagetitle)(GGadget *g,GImage *,const unichar_t *str,int before);
+    void (*set_title)(GGadget *g,const uint32_t *str);
+    const uint32_t *(*_get_title)(GGadget *g);
+    uint32_t *(*get_title)(GGadget *g);
+    void (*set_imagetitle)(GGadget *g,GImage *,const uint32_t *str,int before);
     GImage *(*get_image)(GGadget *g);
 
     void (*set_font)(GGadget *g,GFont *);
@@ -67,7 +67,7 @@ struct gfuncs {
     int32 (*is_list_item_selected)(GGadget *g,int32 pos);
     int32 (*get_first_selection)(GGadget *g);
     void (*scroll_list_to_pos)(GGadget *g,int32 pos);
-    void (*scroll_list_to_text)(GGadget *g,const unichar_t *lab,int32 sel);
+    void (*scroll_list_to_text)(GGadget *g,const uint32_t *lab,int32 sel);
     void (*set_list_orderer)(GGadget *g,int (*orderer)(const void *, const void *));
 
     void (*get_desired_size)(GGadget *g, GRect *outer, GRect *inner);
@@ -84,8 +84,8 @@ struct ggadget {
     struct gwindow *base;
     GRect r;
     GRect inner;
-    unichar_t mnemonic;
-    unichar_t shortcut;
+    uint32_t mnemonic;
+    uint32_t shortcut;
     short short_mask;
     struct ggadget *prev;
     unsigned int takes_input: 1;
@@ -102,7 +102,7 @@ struct ggadget {
     void *data;
     GBox *box;
     enum gadget_state state;
-    unichar_t *popup_msg;
+    uint32_t *popup_msg;
     GGadgetHandler handle_controlevent;
     int16 desired_width, desired_height;
 };
@@ -124,7 +124,7 @@ typedef struct glabel {		/* or simple text, or groupbox */
     unsigned int labeltype: 2;	/* 0=>label/button(this), 1=>imagebutton, 2=>listbutton, 3=>colorbutton */
     unsigned int shiftonpress: 1;
     FontInstance *font;
-    unichar_t *label;
+    uint32_t *label;
     GImage *image;
     GTextInfo **ti;
     uint16 ltot;
@@ -142,7 +142,7 @@ typedef struct gimagebutton {
     unsigned int labeltype: 2;	/* 0=>label, 1=>imagebutton(this), 2=>listbutton */
     unsigned int shiftonpress: 1;
     FontInstance *font;
-    unichar_t *label;
+    uint32_t *label;
     GImage *image, *img_within, *active, *disabled;
 } GImageButton;
 
@@ -158,7 +158,7 @@ typedef struct glistbutton {
     unsigned int labeltype: 2;	/* 0=>label, 1=>imagebutton, 2=>listbutton(this) */
     unsigned int shiftonpress: 1;
     FontInstance *font;
-    unichar_t *label;
+    uint32_t *label;
     GImage *image;
     GTextInfo **ti;
     uint16 ltot;
@@ -177,7 +177,7 @@ typedef struct gcolorbutton {
     unsigned int labeltype: 2;	/* 0=>label/button, 1=>imagebutton, 2=>listbutton, 3=>colorbutton(this) */
     unsigned int shiftonpress: 1;
     FontInstance *font;
-    unichar_t *label;
+    uint32_t *label;
     GImage *image;
     Color col;
 } GColorButton;
@@ -192,7 +192,7 @@ typedef struct gcheck {
     unsigned int isradio: 1;
     unsigned int ison: 1;
     FontInstance *font;
-    unichar_t *label;
+    uint32_t *label;
     GImage *image;
     GRect onoffrect, onoffinner;
     GBox *onbox, *offbox;
@@ -209,7 +209,7 @@ typedef struct gradio {
     unsigned int isradio: 1;
     unsigned int ison: 1;
     FontInstance *font;
-    unichar_t *label;
+    uint32_t *label;
     GImage *image;
     GRect onoffrect, onoffinner;
     GBox *onbox, *offbox;
@@ -259,7 +259,7 @@ typedef struct glist {
     unsigned int ispopup: 1;		/* respond to Return and Escape */
     unsigned int sameheight: 1;		/* all lines are the same height */
     unsigned int always_show_sb: 1;	/* display scrollbar even if we don't need it */
-    unichar_t *sofar;			/* user input */
+    uint32_t *sofar;			/* user input */
     GTimer *enduser;
     GTimer *pressed;
     void (*popup_callback)(GGadget *g,int pos);
@@ -291,7 +291,7 @@ typedef struct gtextfield {
     int16 sel_start, sel_end, sel_base;
     int16 sel_oldstart, sel_oldend, sel_oldbase;
     int16 dd_cursor_pos;
-    unichar_t *text, *oldtext;
+    uint32_t *text, *oldtext;
     FontInstance *font;
     GTimer *pressed;
     GTimer *cursor;
@@ -316,7 +316,7 @@ typedef struct glistfield {
 
 typedef struct gcompletionfield {
     GListField gl;
-    unichar_t **choices;
+    uint32_t **choices;
     uint16 ctot; int16 selected;
     GWindow choice_popup;
     GTextCompletionHandler completion;
@@ -342,7 +342,7 @@ typedef struct gmenubar {
     GMenuItem fake[2];		/* Used if not enough room for menu... */
 } GMenuBar;
 
-struct tabs { unichar_t *name; int16 x, width, tw, nesting; unsigned int disabled: 1; GWindow w; };
+struct tabs { uint32_t *name; int16 x, width, tw, nesting; unsigned int disabled: 1; GWindow w; };
 
 typedef struct gtabset {
     struct ggadget g;
@@ -382,18 +382,18 @@ typedef struct gfilechooser {
     GList *files, *subdirs;
     GListButton *directories;
     GButton *ok, *filterb;	/* Not created by us, can be set by user to give chooser a better appearance */
-    unichar_t **mimetypes;
-    unichar_t *wildcard;
-    unichar_t *lastname;
+    uint32_t **mimetypes;
+    uint32_t *wildcard;
+    uint32_t *lastname;
     GFileChooserFilterType filter;
-    /*enum fchooserret (*filter)(GGadget *chooser,struct gdirentry *file,const unichar_t *dir);*/
+    /*enum fchooserret (*filter)(GGadget *chooser,struct gdirentry *file,const uint32_t *dir);*/
     struct giocontrol *outstanding;
     GCursor old_cursor;
     GButton *up, *home;
     GButton *bookmarks, *config;
     struct ghvbox *topbox;
-    unichar_t **history;
-    unichar_t **paths;
+    uint32_t **history;
+    uint32_t **paths;
     int hpos, hcnt, hmax;
 } GFileChooser;
 
@@ -514,8 +514,8 @@ void _GWidget_ClearPopupOwner(GGadget *g);
 
 VISIBLE extern void _GGadgetCopyDefaultBox(GBox *box);
 VISIBLE extern FontInstance *_GGadgetInitDefaultBox(char *class,GBox *box,FontInstance *deffont);
-extern void _ggadget_underlineMnemonic(GWindow gw,int32 x,int32 y,unichar_t *label,
-	unichar_t mneumonic, Color fg,int ymax);
+extern void _ggadget_underlineMnemonic(GWindow gw,int32 x,int32 y,uint32_t *label,
+	uint32_t mneumonic, Color fg,int ymax);
 VISIBLE extern void _ggadgetFigureSize(GWindow gw, GBox *design, GRect *r, int isdef);
 extern void _ggadgetSetRects(GGadget *g, GRect *outer, GRect *inner, int xjust, int yjust );
 VISIBLE extern void _GGadgetCloseGroup(GGadget *g);
@@ -531,7 +531,7 @@ extern void _ggadget_getDesiredSize(GGadget *g, GRect *outer, GRect *inner);
 extern void _ggadget_setDesiredSize(GGadget *g,GRect *outer, GRect *inner);
 void _GGroup_Init(void);
 
-VISIBLE extern unichar_t *_GGadgetFileToUString(char *filename,int max);
+VISIBLE extern uint32_t *_GGadgetFileToUString(char *filename,int max);
 
 VISIBLE extern int GBoxDrawBorder(GWindow gw,GRect *pos,GBox *design,
 	enum gadget_state state,int is_default);

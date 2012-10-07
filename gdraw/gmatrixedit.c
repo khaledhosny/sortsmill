@@ -895,7 +895,7 @@ static int GME_SetValue(GMatrixEdit *gme,GGadget *g ) {
     switch ( gme->col_data[c].me_type ) {
       case me_enum:
 	{
-	    const unichar_t *ustr = _GGadgetGetTitle(g), *test;
+	    const uint32_t *ustr = _GGadgetGetTitle(g), *test;
 	    int i;
 	    for ( i=0; (test=gme->col_data[c].enum_vals[i].ti.text)!=NULL || gme->col_data[c].enum_vals[i].ti.line ; ++i ) {
 		if ( u_strcmp(ustr,test)==0 ) {
@@ -1210,7 +1210,7 @@ static void GME_StrBigEdit(GMatrixEdit *gme,char *str) {
     mgcd[1].gd.pos.x = 30-3; mgcd[1].gd.pos.y = GDrawPixelsToPoints(NULL,pos.height)-35-3;
     mgcd[1].gd.pos.width = -1; mgcd[1].gd.pos.height = 0;
     mgcd[1].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    mlabel[1].text = (unichar_t *) _("_OK");
+    mlabel[1].text = (uint32_t *) _("_OK");
     mlabel[1].text_is_1byte = true;
     mlabel[1].text_in_resource = true;
     mgcd[1].gd.label = &mlabel[1];
@@ -1220,7 +1220,7 @@ static void GME_StrBigEdit(GMatrixEdit *gme,char *str) {
     mgcd[2].gd.pos.x = -30; mgcd[2].gd.pos.y = mgcd[1].gd.pos.y+3;
     mgcd[2].gd.pos.width = -1; mgcd[2].gd.pos.height = 0;
     mgcd[2].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    mlabel[2].text = (unichar_t *) _("_Cancel");
+    mlabel[2].text = (uint32_t *) _("_Cancel");
     mlabel[2].text_is_1byte = true;
     mlabel[2].text_in_resource = true;
     mgcd[2].gd.label = &mlabel[2];
@@ -1936,7 +1936,7 @@ static GMenuItem *GMenuItemFromTI(GTextInfo *ti,int is_enum) {
 	    mi[cnt].ti.bg = mi[cnt].ti.fg = COLOR_DEFAULT;
 	if ( mi[cnt].ti.text!=NULL ) {
 	    if ( ti[cnt].text_is_1byte )
-		mi[cnt].ti.text = (unichar_t *) copy( (char *) mi[cnt].ti.text );
+		mi[cnt].ti.text = (uint32_t *) copy( (char *) mi[cnt].ti.text );
 	    else
 		mi[cnt].ti.text = x_u32_strdup_or_null( mi[cnt].ti.text );
 	    mi[cnt].ti.checkable = true;
@@ -2045,7 +2045,7 @@ GGadget *GMatrixEditCreate(struct gwindow *base, GGadgetData *gd,void *data) {
     memset(&sub_gd,0,sizeof(sub_gd));
     memset(&label,0,sizeof(label));
     sub_gd.pos.x = sub_gd.pos.y = 1; sub_gd.pos.width = sub_gd.pos.height = 0;
-    label.text = (unichar_t *) _("Delete");
+    label.text = (uint32_t *) _("Delete");
     label.text_is_1byte = true;
     sub_gd.flags = gg_visible | gg_pos_in_pixels;
     sub_gd.label = &label;
@@ -2098,7 +2098,7 @@ GGadget *GMatrixEditCreate(struct gwindow *base, GGadgetData *gd,void *data) {
     GME_RecalcFH(gme);
     {
 	static GBox small = GBOX_EMPTY;
-	static unichar_t nullstr[1] = { 0 };
+	static uint32_t nullstr[1] = { 0 };
 
 	small.main_background = gmatrixedit_activebg;
 	small.main_foreground = gmatrixedit_activecol;
@@ -2272,8 +2272,8 @@ return;
 	i = 0;
 
 /* I want the 2 pronged arrow, but gdraw can't find a nice one */
-/*	label[i].text = (unichar_t *) "⇑";	*//* Up Arrow */
-	label[i].text = (unichar_t *) "↑";	/* Up Arrow */
+/*	label[i].text = (uint32_t *) "⇑";	*//* Up Arrow */
+	label[i].text = (uint32_t *) "↑";	/* Up Arrow */
 	label[i].text_is_1byte = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.flags = gg_visible /*| gg_enabled*/ ;
@@ -2282,8 +2282,8 @@ return;
 	gcd[i++].creator = GButtonCreate;
 
 /* I want the 2 pronged arrow, but gdraw can't find a nice one */
-/*	label[i].text = (unichar_t *) "⇓";	*//* Down Arrow */
-	label[i].text = (unichar_t *) "↓";	/* Down Arrow */
+/*	label[i].text = (uint32_t *) "⇓";	*//* Down Arrow */
+	label[i].text = (uint32_t *) "↓";	/* Down Arrow */
 	label[i].text_is_1byte = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.flags = gg_visible /*| gg_enabled*/ ;

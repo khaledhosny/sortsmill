@@ -74,7 +74,7 @@ typedef struct {		/* normal 16 bit characters are two bytes */
 struct gchr_transform {
     uint32 oldstate;
     uint32 newstate;
-    unichar_t resch;
+    uint32_t resch;
 };
 
 struct gchr_lookup {
@@ -83,7 +83,7 @@ struct gchr_lookup {
 };
 
 struct gchr_accents {
-    unichar_t accent;
+    uint32_t accent;
     uint32 mask;
 };
 

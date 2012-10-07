@@ -217,7 +217,7 @@ return;
 	GScrollBarSetPos(&grc->vsb->g,grc->loff);
 }
 
-static int GRowColFindPosition(GRowCol *grc,unichar_t *text) {
+static int GRowColFindPosition(GRowCol *grc,uint32_t *text) {
     GTextInfo temp, *ptemp=&temp;
     int i, order;
 
@@ -264,7 +264,7 @@ static void GRowColShowPos(GGadget *g,int pos) {
 	GRowColScrollBy(grc,newoff-grc->loff,0);
 }
 
-static void GRowColScrollToText(GGadget *g,unichar_t *text,int sel) {
+static void GRowColScrollToText(GGadget *g,uint32_t *text,int sel) {
     GRowCol *grc = (GRowCol *) g;
     int pos;
 
@@ -617,9 +617,9 @@ return( true );
 	int len = u_strlen(event->u.chr.chars);
 	if ( sofar_pos+len >= grc->sofar_max ) {
 	    if ( grc->sofar_max == 0 )
-		grc->sofar = xmalloc((grc->sofar_max = len+10) * sizeof(unichar_t));
+		grc->sofar = xmalloc((grc->sofar_max = len+10) * sizeof(uint32_t));
 	    else
-		grc->sofar = xrealloc(grc->sofar,(grc->sofar_max = sofar_pos+len+10)*sizeof(unichar_t));
+		grc->sofar = xrealloc(grc->sofar,(grc->sofar_max = sofar_pos+len+10)*sizeof(uint32_t));
 	}
 	u_strcpy(grc->sofar+sofar_pos,event->u.chr.chars);
 	grc->sofar_pos = sofar_pos + len;

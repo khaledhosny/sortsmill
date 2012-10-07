@@ -189,7 +189,7 @@ OrderedPositions (MMSet *mm, int instance_count, int isapple)
   return (true);
 }
 
-static unichar_t *
+static uint32_t *
 MMDesignCoords (MMSet *mm)
 {
   char buffer[32 * mm->axis_count];
@@ -421,7 +421,7 @@ MMCB_KnownValues (MMSet *mm)
   for (i = 0; i < mm->named_instance_count; ++i)
     {
       ti[i + 1].text =
-        (unichar_t *) PickNameFromMacName (mm->named_instances[i].names);
+        (uint32_t *) PickNameFromMacName (mm->named_instances[i].names);
       ti[i + 1].text_is_1byte = true;
       ti[i + 1].bg = ti[i + 1].fg = COLOR_DEFAULT;
     }
@@ -437,7 +437,7 @@ MMCB_PickedKnown (GGadget * g, GEvent * e)
       int which = GGadgetGetFirstListSelectedItem (g);
       char buffer[32];
       int i;
-      unichar_t *temp;
+      uint32_t *temp;
 
       --which;
       if (which < 0)
@@ -476,12 +476,12 @@ GetWeights (GWindow gw, real blends[MmMax], MMSet *mm,
 {
   int explicitblends =
     GGadgetIsChecked (GWidgetGetControl (gw, CID_Explicit));
-  const unichar_t *ret =
+  const uint32_t *ret =
     _GGadgetGetTitle (GWidgetGetControl (gw, (explicitblends ?
                                               CID_NewBlends :
                                               CID_NewDesign)));
-  const unichar_t *upt;
-  unichar_t *uend;
+  const uint32_t *upt;
+  uint32_t *uend;
   int i;
   real sum;
 
@@ -677,7 +677,7 @@ GCDFillupMacWeights (GGadgetCreateData * gcd, GTextInfo * label, int k,
 
   for (i = 0; i < 4; ++i)
     {
-      label[k].text = (unichar_t *) axisnames[i];
+      label[k].text = (uint32_t *) axisnames[i];
       label[k].text_is_1byte = true;
       gcd[k].gd.label = &label[k];
       gcd[k].gd.pos.x = 5;
@@ -686,7 +686,7 @@ GCDFillupMacWeights (GGadgetCreateData * gcd, GTextInfo * label, int k,
         i < axis_count ? (gg_visible | gg_enabled) : gg_visible;
       gcd[k++].creator = GLabelCreate;
 
-      label[k].text = (unichar_t *) axisval[i];
+      label[k].text = (uint32_t *) axisval[i];
       label[k].text_is_1byte = true;
       gcd[k].gd.label = &label[k];
       gcd[k].gd.pos.x = 15;
@@ -702,7 +702,7 @@ void
 MMChangeBlend (MMSet *mm, FontView * fv, int tonew)
 {
   char buffer[MmMax * 20], *pt;
-  unichar_t ubuf[MmMax * 20];
+  uint32_t ubuf[MmMax * 20];
   int i, k, j, def_name;
   struct mmcb mmcb;
   GRect pos;
@@ -710,7 +710,7 @@ MMChangeBlend (MMSet *mm, FontView * fv, int tonew)
   GWindowAttrs wattrs;
   GGadgetCreateData gcd[14];
   GTextInfo label[14];
-  unichar_t *utemp;
+  uint32_t *utemp;
   char axisval[4][24];
   char *axisnames[4];
   real defcoords[4];
@@ -762,7 +762,7 @@ MMChangeBlend (MMSet *mm, FontView * fv, int tonew)
 /* GT: be better to specify this all as one string, but my widgets won't support */
 /* GT: that */
       label[k].text =
-        (unichar_t *) (tonew ?
+        (uint32_t *) (tonew ?
                        _("You may specify the new instance of this font") :
                        _("You may change the default instance of this font"));
       label[k].text_is_1byte = true;
@@ -773,7 +773,7 @@ MMChangeBlend (MMSet *mm, FontView * fv, int tonew)
       gcd[k++].creator = GLabelCreate;
 
       label[k].text =
-        (unichar_t *) _("either by explicitly entering the contribution");
+        (uint32_t *) _("either by explicitly entering the contribution");
       label[k].text_is_1byte = true;
       gcd[k].gd.label = &label[k];
       gcd[k].gd.pos.x = 10;
@@ -782,7 +782,7 @@ MMChangeBlend (MMSet *mm, FontView * fv, int tonew)
       gcd[k++].creator = GLabelCreate;
 
       label[k].text =
-        (unichar_t *) _("of each master design, or by entering the design");
+        (uint32_t *) _("of each master design, or by entering the design");
       label[k].text_is_1byte = true;
       gcd[k].gd.label = &label[k];
       gcd[k].gd.pos.x = 10;
@@ -790,7 +790,7 @@ MMChangeBlend (MMSet *mm, FontView * fv, int tonew)
       gcd[k].gd.flags = gg_visible | gg_enabled;
       gcd[k++].creator = GLabelCreate;
 
-      label[k].text = (unichar_t *) _("values for each axis");
+      label[k].text = (uint32_t *) _("values for each axis");
       label[k].text_is_1byte = true;
       gcd[k].gd.label = &label[k];
       gcd[k].gd.pos.x = 10;
@@ -798,7 +798,7 @@ MMChangeBlend (MMSet *mm, FontView * fv, int tonew)
       gcd[k].gd.flags = gg_visible | gg_enabled;
       gcd[k++].creator = GLabelCreate;
 
-      label[k].text = (unichar_t *) _("Contribution of each master design");
+      label[k].text = (uint32_t *) _("Contribution of each master design");
       label[k].text_is_1byte = true;
       gcd[k].gd.label = &label[k];
       gcd[k].gd.pos.x = 10;
@@ -808,7 +808,7 @@ MMChangeBlend (MMSet *mm, FontView * fv, int tonew)
       gcd[k].gd.handle_controlevent = MMCB_Changed;
       gcd[k++].creator = GRadioCreate;
 
-      label[k].text = (unichar_t *) _("Design Axis Values");
+      label[k].text = (uint32_t *) _("Design Axis Values");
       label[k].text_is_1byte = true;
       gcd[k].gd.label = &label[k];
       gcd[k].gd.pos.x = 10;
@@ -840,7 +840,7 @@ MMChangeBlend (MMSet *mm, FontView * fv, int tonew)
       gcd[k].gd.pos.y = GDrawPixelsToPoints (NULL, pos.height) - 35 - 3;
       gcd[k].gd.pos.width = -1;
       gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
-      label[k].text = (unichar_t *) _("_OK");
+      label[k].text = (uint32_t *) _("_OK");
       label[k].text_is_1byte = true;
       label[k].text_in_resource = true;
       gcd[k].gd.label = &label[k];
@@ -851,7 +851,7 @@ MMChangeBlend (MMSet *mm, FontView * fv, int tonew)
       gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 3;
       gcd[k].gd.pos.width = -1;
       gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-      label[k].text = (unichar_t *) _("_Cancel");
+      label[k].text = (uint32_t *) _("_Cancel");
       label[k].text_is_1byte = true;
       label[k].text_in_resource = true;
       gcd[k].gd.label = &label[k];
@@ -914,7 +914,7 @@ MMChangeBlend (MMSet *mm, FontView * fv, int tonew)
       gcd[k].gd.pos.y = GDrawPixelsToPoints (NULL, pos.height) - 35 - 3;
       gcd[k].gd.pos.width = -1;
       gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
-      label[k].text = (unichar_t *) _("_OK");
+      label[k].text = (uint32_t *) _("_OK");
       label[k].text_is_1byte = true;
       label[k].text_in_resource = true;
       gcd[k].gd.label = &label[k];
@@ -925,7 +925,7 @@ MMChangeBlend (MMSet *mm, FontView * fv, int tonew)
       gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 3;
       gcd[k].gd.pos.width = -1;
       gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-      label[k].text = (unichar_t *) _("_Cancel");
+      label[k].text = (uint32_t *) _("_Cancel");
       label[k].text_is_1byte = true;
       label[k].text_in_resource = true;
       gcd[k].gd.label = &label[k];
@@ -954,84 +954,84 @@ MMChangeBlend (MMSet *mm, FontView * fv, int tonew)
 }
 
 GTextInfo axiscounts[] = {
-  {(unichar_t *) "1", NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0,
+  {(uint32_t *) "1", NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0,
    '\0'},
-  {(unichar_t *) "2", NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0,
+  {(uint32_t *) "2", NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0,
    '\0'},
-  {(unichar_t *) "3", NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0,
+  {(uint32_t *) "3", NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0,
    '\0'},
-  {(unichar_t *) "4", NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0,
+  {(uint32_t *) "4", NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0,
    '\0'},
   GTEXTINFO_EMPTY
 };
 
 /* These names are fixed by Adobe & Apple and are not subject to translation */
 GTextInfo axistypes[] = {
-  {(unichar_t *) "Weight", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0,
+  {(uint32_t *) "Weight", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0,
    '\0'},
-  {(unichar_t *) "Width", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0,
+  {(uint32_t *) "Width", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0,
    '\0'},
-  {(unichar_t *) "OpticalSize", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1,
+  {(uint32_t *) "OpticalSize", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1,
    0, 0, '\0'},
-  {(unichar_t *) "Slant", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0,
+  {(uint32_t *) "Slant", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0,
    '\0'},
   GTEXTINFO_EMPTY
 };
 
 GTextInfo mastercounts[] = {
-  {(unichar_t *) "1", NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0,
+  {(uint32_t *) "1", NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0,
    '\0'},
-  {(unichar_t *) "2", NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0,
+  {(uint32_t *) "2", NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0,
    '\0'},
-  {(unichar_t *) "3", NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0,
+  {(uint32_t *) "3", NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0,
    '\0'},
-  {(unichar_t *) "4", NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0,
+  {(uint32_t *) "4", NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0,
    '\0'},
-  {(unichar_t *) "5", NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0,
+  {(uint32_t *) "5", NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0,
    '\0'},
-  {(unichar_t *) "6", NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0,
+  {(uint32_t *) "6", NULL, 0, 0, (void *) 6, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0,
    '\0'},
-  {(unichar_t *) "7", NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0,
+  {(uint32_t *) "7", NULL, 0, 0, (void *) 7, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0,
    '\0'},
-  {(unichar_t *) "8", NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0,
+  {(uint32_t *) "8", NULL, 0, 0, (void *) 8, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0,
    '\0'},
-  {(unichar_t *) "9", NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0,
+  {(uint32_t *) "9", NULL, 0, 0, (void *) 9, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0,
    '\0'},
-  {(unichar_t *) "10", NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
+  {(uint32_t *) "10", NULL, 0, 0, (void *) 10, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
    0, '\0'},
-  {(unichar_t *) "11", NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
+  {(uint32_t *) "11", NULL, 0, 0, (void *) 11, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
    0, '\0'},
-  {(unichar_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
+  {(uint32_t *) "12", NULL, 0, 0, (void *) 12, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
    0, '\0'},
-  {(unichar_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
+  {(uint32_t *) "13", NULL, 0, 0, (void *) 13, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
    0, '\0'},
-  {(unichar_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
+  {(uint32_t *) "14", NULL, 0, 0, (void *) 14, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
    0, '\0'},
-  {(unichar_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
+  {(uint32_t *) "15", NULL, 0, 0, (void *) 15, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
    0, '\0'},
-  {(unichar_t *) "16", NULL, 0, 0, (void *) 16, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
+  {(uint32_t *) "16", NULL, 0, 0, (void *) 16, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
    0, '\0'},
-  {(unichar_t *) "17", NULL, 0, 0, (void *) 17, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
+  {(uint32_t *) "17", NULL, 0, 0, (void *) 17, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
    0, '\0'},
-  {(unichar_t *) "18", NULL, 0, 0, (void *) 18, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
+  {(uint32_t *) "18", NULL, 0, 0, (void *) 18, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
    0, '\0'},
-  {(unichar_t *) "19", NULL, 0, 0, (void *) 19, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
+  {(uint32_t *) "19", NULL, 0, 0, (void *) 19, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
    0, '\0'},
-  {(unichar_t *) "20", NULL, 0, 0, (void *) 20, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
+  {(uint32_t *) "20", NULL, 0, 0, (void *) 20, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
    0, '\0'},
-  {(unichar_t *) "21", NULL, 0, 0, (void *) 21, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
+  {(uint32_t *) "21", NULL, 0, 0, (void *) 21, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
    0, '\0'},
-  {(unichar_t *) "22", NULL, 0, 0, (void *) 22, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
+  {(uint32_t *) "22", NULL, 0, 0, (void *) 22, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
    0, '\0'},
-  {(unichar_t *) "23", NULL, 0, 0, (void *) 23, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
+  {(uint32_t *) "23", NULL, 0, 0, (void *) 23, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
    0, '\0'},
-  {(unichar_t *) "24", NULL, 0, 0, (void *) 24, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
+  {(uint32_t *) "24", NULL, 0, 0, (void *) 24, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
    0, '\0'},
-  {(unichar_t *) "25", NULL, 0, 0, (void *) 25, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
+  {(uint32_t *) "25", NULL, 0, 0, (void *) 25, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
    0, '\0'},
-  {(unichar_t *) "26", NULL, 0, 0, (void *) 26, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
+  {(uint32_t *) "26", NULL, 0, 0, (void *) 26, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
    0, '\0'},
-  {(unichar_t *) "27", NULL, 0, 0, (void *) 27, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
+  {(uint32_t *) "27", NULL, 0, 0, (void *) 27, NULL, 0, 0, 0, 0, 0, 0, 1, 0,
    0, '\0'},
 #if AppleMmMax!=26
 #error "The mastercounts array needs to be expanded to match AppleMmMax"
@@ -1143,7 +1143,7 @@ ESD_OK (GGadget * g, GEvent * e)
       real coords[4];
       struct macname *mn;
       char buffer[120], *pt;
-      unichar_t *name;
+      uint32_t *name;
       char *style;
 
       for (i = 0; i < esd->mmw->axis_count && i < 4; ++i)
@@ -1172,7 +1172,7 @@ ESD_OK (GGadget * g, GEvent * e)
       *pt = '\0';
       style = PickNameFromMacName (mn);
       name =
-        xmalloc (((pt - buffer) + strlen (style) + 1) * sizeof (unichar_t));
+        xmalloc (((pt - buffer) + strlen (style) + 1) * sizeof (uint32_t));
       utf82u_strcpy (name, style);
       uc_strcat (name, buffer);
       free (style);
@@ -1226,7 +1226,7 @@ EditStyleName (MMW * mmw, int index)
     GWidgetGetControl (mmw->subwins[mmw_named], CID_NamedDesigns);
   GTextInfo *ti = NULL;
   int i, k;
-  unichar_t *pt = NULL, *end;
+  uint32_t *pt = NULL, *end;
   real axes[4];
   struct macname *mn = NULL;
   char axisval[4][24];
@@ -1291,7 +1291,7 @@ EditStyleName (MMW * mmw, int index)
   gcd[k].gd.pos.width = -1;
   gcd[k].gd.pos.height = 0;
   gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
-  label[k].text = (unichar_t *) _("_OK");
+  label[k].text = (uint32_t *) _("_OK");
   label[k].text_is_1byte = true;
   label[k].text_in_resource = true;
   gcd[k].gd.label = &label[k];
@@ -1303,7 +1303,7 @@ EditStyleName (MMW * mmw, int index)
   gcd[k].gd.pos.width = -1;
   gcd[k].gd.pos.height = 0;
   gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-  label[k].text = (unichar_t *) _("_Cancel");
+  label[k].text = (uint32_t *) _("_Cancel");
   label[k].text_is_1byte = true;
   label[k].text_in_resource = true;
   gcd[k].gd.label = &label[k];
@@ -1524,8 +1524,8 @@ ParseWeights (GWindow gw, int cid, char *str,
               real *list, int expected, int tabset_cid, int aspect)
 {
   int cnt = 0;
-  const unichar_t *ret, *pt;
-  unichar_t *endpt;
+  const uint32_t *ret, *pt;
+  uint32_t *endpt;
 
   ret = _GGadgetGetTitle (GWidgetGetControl (gw, cid));
 
@@ -1559,8 +1559,8 @@ ParseList (GWindow gw, int cid, char *str8, int *err, real start,
            int isapple)
 {
   int i, cnt;
-  const unichar_t *ret, *pt;
-  unichar_t *endpt;
+  const uint32_t *ret, *pt;
+  uint32_t *endpt;
   real *list, val;
   int defdone = false;
 
@@ -1672,14 +1672,14 @@ _ChooseFonts (char *buffer, SplineFont **sfs, real *positions, int i, int cnt)
   return (ret);
 }
 
-static unichar_t *
+static uint32_t *
 Figure1AxisCDV (MMW * mmw)
 {
   real positions[MmMax];
   SplineFont *sfs[MmMax];
   int i;
   char *temp;
-  unichar_t *ret;
+  uint32_t *ret;
   char buffer[400];
 
   if (mmw->axis_count != 1)
@@ -1831,7 +1831,7 @@ PositionsMatch (MMSet *old, MMSet *mm)
 static void
 MMW_FuncsValid (MMW * mmw)
 {
-  unichar_t *ut;
+  uint32_t *ut;
   int pos, i;
 
   if (!SameAxes
@@ -1853,7 +1853,7 @@ MMW_FuncsValid (MMW * mmw)
           pos = 0;
           for (i = 0; i < mmw->axis_count; ++i)
             pos += strlen (lines[i]);
-          ut = xmalloc ((pos + 20) * sizeof (unichar_t));
+          ut = xmalloc ((pos + 20) * sizeof (uint32_t));
           uc_strcpy (ut, "{\n");
           pos = 2;
           for (i = 0; i < mmw->axis_count; ++i)
@@ -1906,7 +1906,7 @@ static void
 MMW_WeightsValid (MMW * mmw)
 {
   char *temp;
-  unichar_t *ut, *utc;
+  uint32_t *ut, *utc;
   int pos, i;
   real axiscoords[4], weights[2 * MmMax];
 
@@ -2014,7 +2014,7 @@ NamedDesigns (MMW * mmw)
       ti[i].bg = ti[i].fg = COLOR_DEFAULT;
       ti[i].text =
         xmalloc ((strlen (buffer) + 3 +
-                   strlen (ustyle)) * sizeof (unichar_t));
+                   strlen (ustyle)) * sizeof (uint32_t));
       utf82u_strcpy (ti[i].text, ustyle);
       uc_strcat (ti[i].text, " ");
       uc_strcat (ti[i].text, buffer);
@@ -2116,7 +2116,7 @@ MMW_DesignsSetup (MMW * mmw)
 {
   int i, j, sel;
   char buffer[80], *pt;
-  unichar_t ubuf[80];
+  uint32_t ubuf[80];
   GTextInfo **ti;
 
   for (i = 0; i < mmw->instance_count; ++i)
@@ -2149,7 +2149,7 @@ MMW_ParseNamedStyles (MMSet *setto, MMW * mmw)
     GWidgetGetControl (mmw->subwins[mmw_named], CID_NamedDesigns);
   int32 i, j, len;
   GTextInfo **ti = GGadgetGetList (list, &len);
-  unichar_t *upt, *end;
+  uint32_t *upt, *end;
 
   setto->named_instance_count = len;
   if (len != 0)
@@ -2957,8 +2957,8 @@ MMW_CheckOptical (GGadget * g, GEvent * e)
     {
       MMW *mmw = GDrawGetUserData (GGadgetGetWindow (g));
       char *top, *bottom, *def;
-      unichar_t *ut;
-      const unichar_t *ret = _GGadgetGetTitle (g);
+      uint32_t *ut;
+      const uint32_t *ret = _GGadgetGetTitle (g);
       int di = (GGadgetGetCid (g) - CID_AxisType) / 100;
       char buf1[20], buf2[20], buf3[20];
 
@@ -3033,7 +3033,7 @@ MMW_CheckBrowse (GGadget * g, GEvent * e)
       SplineFont *sf;
       GTextInfo **tis;
       int i, sel, oldsel;
-      unichar_t *ut;
+      uint32_t *ut;
 
       if (ti != NULL && ti->userdata == (void *) -1)
         {
@@ -3276,7 +3276,7 @@ MMWizard (MMSet *mm)
   bgcd[0].gd.pos.width = -1;
   bgcd[0].gd.pos.height = 0;
   bgcd[0].gd.flags = gg_visible | gg_enabled;
-  blabel[0].text = (unichar_t *) _("_OK");
+  blabel[0].text = (uint32_t *) _("_OK");
   blabel[0].text_is_1byte = true;
   blabel[0].text_in_resource = true;
   bgcd[0].gd.label = &blabel[0];
@@ -3290,7 +3290,7 @@ MMWizard (MMSet *mm)
   bgcd[1].gd.pos.width = -1;
   bgcd[1].gd.pos.height = 0;
   bgcd[1].gd.flags = gg_visible;
-  blabel[1].text = (unichar_t *) _("< _Prev");
+  blabel[1].text = (uint32_t *) _("< _Prev");
   blabel[1].text_is_1byte = true;
   blabel[1].text_in_resource = true;
   bgcd[1].gd.label = &blabel[1];
@@ -3303,7 +3303,7 @@ MMWizard (MMSet *mm)
   bgcd[2].gd.pos.width = -1;
   bgcd[2].gd.pos.height = 0;
   bgcd[2].gd.flags = gg_visible;
-  blabel[2].text = (unichar_t *) _("_Next >");
+  blabel[2].text = (uint32_t *) _("_Next >");
   blabel[2].text_in_resource = true;
   blabel[2].text_is_1byte = true;
   bgcd[2].gd.label = &blabel[2];
@@ -3316,7 +3316,7 @@ MMWizard (MMSet *mm)
   bgcd[3].gd.pos.width = -1;
   bgcd[3].gd.pos.height = 0;
   bgcd[3].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-  blabel[3].text = (unichar_t *) _("_Cancel");
+  blabel[3].text = (uint32_t *) _("_Cancel");
   blabel[3].text_in_resource = true;
   blabel[3].text_is_1byte = true;
   bgcd[3].gd.label = &blabel[3];
@@ -3348,7 +3348,7 @@ MMWizard (MMSet *mm)
   memset (&cntgcd, 0, sizeof (cntgcd));
 
   k = 0;
-  cntlabel[k].text = (unichar_t *) _("Type of distortable font:");
+  cntlabel[k].text = (uint32_t *) _("Type of distortable font:");
   cntlabel[k].text_is_1byte = true;
   cntgcd[k].gd.label = &cntlabel[k];
   cntgcd[k].gd.pos.x = 5;
@@ -3356,7 +3356,7 @@ MMWizard (MMSet *mm)
   cntgcd[k].gd.flags = gg_visible | gg_enabled;
   cntgcd[k++].creator = GLabelCreate;
 
-  cntlabel[k].text = (unichar_t *) _("Adobe");
+  cntlabel[k].text = (uint32_t *) _("Adobe");
   cntlabel[k].text_is_1byte = true;
   cntgcd[k].gd.label = &cntlabel[k];
   cntgcd[k].gd.pos.x = 10;
@@ -3367,7 +3367,7 @@ MMWizard (MMSet *mm)
   cntgcd[k].gd.handle_controlevent = MMW_TypeChanged;
   cntgcd[k++].creator = GRadioCreate;
 
-  cntlabel[k].text = (unichar_t *) _("Apple");
+  cntlabel[k].text = (uint32_t *) _("Apple");
   cntlabel[k].text_is_1byte = true;
   cntgcd[k].gd.label = &cntlabel[k];
   cntgcd[k].gd.pos.x = 70;
@@ -3378,7 +3378,7 @@ MMWizard (MMSet *mm)
   cntgcd[k].gd.handle_controlevent = MMW_TypeChanged;
   cntgcd[k++].creator = GRadioCreate;
 
-  cntlabel[k].text = (unichar_t *) _("Number of Axes:");
+  cntlabel[k].text = (uint32_t *) _("Number of Axes:");
   cntlabel[k].text_is_1byte = true;
   cntgcd[k].gd.label = &cntlabel[k];
   cntgcd[k].gd.pos.x = 5;
@@ -3398,7 +3398,7 @@ MMWizard (MMSet *mm)
     axiscounts[i].selected = false;
   axiscounts[mmw.axis_count - 1].selected = true;
 
-  cntlabel[k].text = (unichar_t *) _("Number of Master Designs:");
+  cntlabel[k].text = (uint32_t *) _("Number of Master Designs:");
   cntlabel[k].text_is_1byte = true;
   cntgcd[k].gd.label = &cntlabel[k];
   cntgcd[k].gd.pos.x = 5;
@@ -3417,7 +3417,7 @@ MMWizard (MMSet *mm)
     mastercounts[i].selected = false;
   mastercounts[mmw.instance_count - 1].selected = true;
 
-  cntlabel[k].text = (unichar_t *) _("_Family Name:");
+  cntlabel[k].text = (uint32_t *) _("_Family Name:");
   cntlabel[k].text_is_1byte = true;
   cntlabel[k].text_in_resource = true;
   cntgcd[k].gd.label = &cntlabel[k];
@@ -3428,9 +3428,9 @@ MMWizard (MMSet *mm)
 
   freeme = NULL;
   if (mmw.old != NULL && mmw.old->normal->familyname != NULL)
-    cntlabel[k].text = (unichar_t *) (mmw.old->normal->familyname);
+    cntlabel[k].text = (uint32_t *) (mmw.old->normal->familyname);
   else
-    cntlabel[k].text = (unichar_t *) (freeme = GetNextUntitledName ());
+    cntlabel[k].text = (uint32_t *) (freeme = GetNextUntitledName ());
   cntlabel[k].text_is_1byte = true;
   cntgcd[k].gd.label = &cntlabel[k];
   cntgcd[k].gd.pos.x = 15;
@@ -3452,7 +3452,7 @@ MMWizard (MMSet *mm)
   for (i = 0; i < 4; ++i)
     {
       k = 0;
-      axislabel[i][k].text = (unichar_t *) _("Axis Type:");
+      axislabel[i][k].text = (uint32_t *) _("Axis Type:");
       axislabel[i][k].text_is_1byte = true;
       axisgcd[i][k].gd.label = &axislabel[i][k];
       axisgcd[i][k].gd.pos.x = 5;
@@ -3474,7 +3474,7 @@ MMWizard (MMSet *mm)
         }
       axisgcd[i][k++].creator = GListFieldCreate;
 
-      axislabel[i][k].text = (unichar_t *) _("Axis Range:");
+      axislabel[i][k].text = (uint32_t *) _("Axis Range:");
       axislabel[i][k].text_is_1byte = true;
       axisgcd[i][k].gd.label = &axislabel[i][k];
       axisgcd[i][k].gd.pos.x = 5;
@@ -3506,7 +3506,7 @@ MMWizard (MMSet *mm)
                                                            1]) / 2);
         }
 
-      axislabel[i][k].text = (unichar_t *) _("Begin:");
+      axislabel[i][k].text = (uint32_t *) _("Begin:");
       axislabel[i][k].text_is_1byte = true;
       axisgcd[i][k].gd.label = &axislabel[i][k];
       axisgcd[i][k].gd.pos.x = 10;
@@ -3514,7 +3514,7 @@ MMWizard (MMSet *mm)
       axisgcd[i][k].gd.flags = gg_visible | gg_enabled;
       axisgcd[i][k++].creator = GLabelCreate;
 
-      axislabel[i][k].text = (unichar_t *) axisbegins[i];
+      axislabel[i][k].text = (uint32_t *) axisbegins[i];
       axislabel[i][k].text_is_1byte = true;
       axisgcd[i][k].gd.label = &axislabel[i][k];
       axisgcd[i][k].gd.pos.x = 50;
@@ -3524,7 +3524,7 @@ MMWizard (MMSet *mm)
       axisgcd[i][k].gd.cid = CID_AxisBegin + i * 100;
       axisgcd[i][k++].creator = GTextFieldCreate;
 
-      axislabel[i][k].text = (unichar_t *) _("Default:");
+      axislabel[i][k].text = (uint32_t *) _("Default:");
       axislabel[i][k].text_is_1byte = true;
       axisgcd[i][k].gd.label = &axislabel[i][k];
       axisgcd[i][k].gd.pos.x = 110;
@@ -3534,7 +3534,7 @@ MMWizard (MMSet *mm)
       axisgcd[i][k].gd.cid = CID_AxisDefaultLabel + i * 100;
       axisgcd[i][k++].creator = GLabelCreate;
 
-      axislabel[i][k].text = (unichar_t *) axisdefs[i];
+      axislabel[i][k].text = (uint32_t *) axisdefs[i];
       axislabel[i][k].text_is_1byte = true;
       axisgcd[i][k].gd.label = &axislabel[i][k];
       axisgcd[i][k].gd.pos.x = 148;
@@ -3545,7 +3545,7 @@ MMWizard (MMSet *mm)
       axisgcd[i][k].gd.cid = CID_AxisDefault + i * 100;
       axisgcd[i][k++].creator = GTextFieldCreate;
 
-      axislabel[i][k].text = (unichar_t *) _("End:");
+      axislabel[i][k].text = (uint32_t *) _("End:");
       axislabel[i][k].text_is_1byte = true;
       axisgcd[i][k].gd.label = &axislabel[i][k];
       axisgcd[i][k].gd.pos.x = 210;
@@ -3553,7 +3553,7 @@ MMWizard (MMSet *mm)
       axisgcd[i][k].gd.flags = gg_visible | gg_enabled;
       axisgcd[i][k++].creator = GLabelCreate;
 
-      axislabel[i][k].text = (unichar_t *) axisends[i];
+      axislabel[i][k].text = (uint32_t *) axisends[i];
       axislabel[i][k].text_is_1byte = true;
       axisgcd[i][k].gd.label = &axislabel[i][k];
       axisgcd[i][k].gd.pos.x = 240;
@@ -3563,7 +3563,7 @@ MMWizard (MMSet *mm)
       axisgcd[i][k].gd.cid = CID_AxisEnd + i * 100;
       axisgcd[i][k++].creator = GTextFieldCreate;
 
-      axislabel[i][k].text = (unichar_t *) _("Intermediate Points:");
+      axislabel[i][k].text = (uint32_t *) _("Intermediate Points:");
       axislabel[i][k].text_is_1byte = true;
       axisgcd[i][k].gd.label = &axislabel[i][k];
       axisgcd[i][k].gd.pos.x = 5;
@@ -3612,7 +3612,7 @@ MMWizard (MMSet *mm)
             }
         }
 
-      axislabel[i][k].text = (unichar_t *) _("Design Settings:");
+      axislabel[i][k].text = (uint32_t *) _("Design Settings:");
       axislabel[i][k].text_is_1byte = true;
       axisgcd[i][k].gd.label = &axislabel[i][k];
       axisgcd[i][k].gd.pos.x = 10;
@@ -3622,7 +3622,7 @@ MMWizard (MMSet *mm)
 
       if (designs[i] != NULL)
         {
-          axislabel[i][k].text = (unichar_t *) designs[i];
+          axislabel[i][k].text = (uint32_t *) designs[i];
           axislabel[i][k].text_is_1byte = true;
           axisgcd[i][k].gd.label = &axislabel[i][k];
         }
@@ -3632,7 +3632,7 @@ MMWizard (MMSet *mm)
       axisgcd[i][k].gd.cid = CID_IntermediateDesign + i * 100;
       axisgcd[i][k++].creator = GTextFieldCreate;
 
-      axislabel[i][k].text = (unichar_t *) _("Normalized Settings:");
+      axislabel[i][k].text = (uint32_t *) _("Normalized Settings:");
       axislabel[i][k].text_is_1byte = true;
       axisgcd[i][k].gd.label = &axislabel[i][k];
       axisgcd[i][k].gd.pos.x = 10;
@@ -3642,7 +3642,7 @@ MMWizard (MMSet *mm)
 
       if (normalized[i] != NULL)
         {
-          axislabel[i][k].text = (unichar_t *) normalized[i];
+          axislabel[i][k].text = (uint32_t *) normalized[i];
           axislabel[i][k].text_is_1byte = true;
           axisgcd[i][k].gd.label = &axislabel[i][k];
         }
@@ -3656,7 +3656,7 @@ MMWizard (MMSet *mm)
                          || i >=
                          mm->axis_count ? NULL : mm->axismaps[i].axisnames);
 
-      axisaspects[i].text = (unichar_t *) _(axistablab[i]);
+      axisaspects[i].text = (uint32_t *) _(axistablab[i]);
       axisaspects[i].text_is_1byte = true;
       axisaspects[i].gcd = axisgcd[i];
     }
@@ -3688,7 +3688,7 @@ MMWizard (MMSet *mm)
   for (i = 0; i < AppleMmMax + 1; ++i)
     {
       designlabel[i][0].text =
-        (unichar_t *) _("Source from which this design is to be taken");
+        (uint32_t *) _("Source from which this design is to be taken");
       designlabel[i][0].text_is_1byte = true;
       designgcd[i][0].gd.label = &designlabel[i][0];
       designgcd[i][0].gd.pos.x = 3;
@@ -3705,7 +3705,7 @@ MMWizard (MMSet *mm)
       designgcd[i][1].creator = GListButtonCreate;
 
       designlabel[i][2].text =
-        (unichar_t *) _("Normalized position of this design along each axis");
+        (uint32_t *) _("Normalized position of this design along each axis");
       designlabel[i][2].text_is_1byte = true;
       designgcd[i][2].gd.label = &designlabel[i][2];
       designgcd[i][2].gd.pos.x = 3;
@@ -3720,13 +3720,13 @@ MMWizard (MMSet *mm)
       designgcd[i][3].gd.cid = CID_AxisWeights + i * DesignScaleFactor;
       designgcd[i][3].creator = GTextFieldCreate;
 
-      designaspects[i].text = (unichar_t *) designtablab[i];
+      designaspects[i].text = (uint32_t *) designtablab[i];
       designaspects[i].text_is_1byte = true;
       designaspects[i].gcd = designgcd[i];
     }
   designaspects[0].selected = true;
 
-  dlabel.text = (unichar_t *) _("Master Designs");
+  dlabel.text = (uint32_t *) _("Master Designs");
   dlabel.text_is_1byte = true;
   dgcd[0].gd.label = &dlabel;
   dgcd[0].gd.pos.x = 3;
@@ -3748,7 +3748,7 @@ MMWizard (MMSet *mm)
   memset (&ngcd, 0, sizeof (ngcd));
   memset (&nlabel, 0, sizeof (nlabel));
 
-  nlabel[0].text = (unichar_t *) _("Named Styles");
+  nlabel[0].text = (uint32_t *) _("Named Styles");
   nlabel[0].text_is_1byte = true;
   ngcd[0].gd.label = &nlabel[0];
   ngcd[0].gd.pos.x = 3;
@@ -3770,7 +3770,7 @@ MMWizard (MMSet *mm)
   ngcd[2].gd.pos.y = ngcd[1].gd.pos.y + ngcd[1].gd.pos.height + 5;
   ngcd[2].gd.pos.width = -1;
   ngcd[2].gd.flags = gg_visible | gg_enabled;
-  nlabel[2].text = (unichar_t *) S_ ("Design|_New...");
+  nlabel[2].text = (uint32_t *) S_ ("Design|_New...");
   nlabel[2].text_is_1byte = true;
   nlabel[2].text_in_resource = true;
   ngcd[2].gd.label = &nlabel[2];
@@ -3782,7 +3782,7 @@ MMWizard (MMSet *mm)
   ngcd[3].gd.pos.y = ngcd[2].gd.pos.y;
   ngcd[3].gd.pos.width = -1;
   ngcd[3].gd.flags = gg_visible;
-  nlabel[3].text = (unichar_t *) _("_Delete");
+  nlabel[3].text = (uint32_t *) _("_Delete");
   nlabel[3].text_is_1byte = true;
   nlabel[3].text_in_resource = true;
   ngcd[3].gd.label = &nlabel[3];
@@ -3794,7 +3794,7 @@ MMWizard (MMSet *mm)
   ngcd[4].gd.pos.y = ngcd[2].gd.pos.y;
   ngcd[4].gd.pos.width = -1;
   ngcd[4].gd.flags = gg_visible;
-  nlabel[4].text = (unichar_t *) _("_Edit...");
+  nlabel[4].text = (uint32_t *) _("_Edit...");
   nlabel[4].text_is_1byte = true;
   nlabel[4].text_in_resource = true;
   ngcd[4].gd.label = &nlabel[4];
@@ -3810,7 +3810,7 @@ MMWizard (MMSet *mm)
   memset (&olabels, 0, sizeof (olabels));
 
   k = 0;
-  olabels[k].text = (unichar_t *) _("Normalize Design Vector Function:");
+  olabels[k].text = (uint32_t *) _("Normalize Design Vector Function:");
   olabels[k].text_is_1byte = true;
   ogcd[k].gd.label = &olabels[k];
   ogcd[k].gd.pos.x = 3;
@@ -3826,7 +3826,7 @@ MMWizard (MMSet *mm)
   ogcd[k].gd.cid = CID_NDV;
   ogcd[k++].creator = GTextAreaCreate;
 
-  olabels[k].text = (unichar_t *) _("Convert Design Vector Function:");
+  olabels[k].text = (uint32_t *) _("Convert Design Vector Function:");
   olabels[k].text_is_1byte = true;
   ogcd[k].gd.label = &olabels[k];
   ogcd[k].gd.pos.x = 3;
@@ -3848,7 +3848,7 @@ MMWizard (MMSet *mm)
   memset (&olabels, 0, sizeof (olabels));
 
   k = 0;
-  olabels[k].text = (unichar_t *) _("Contribution of each master design");
+  olabels[k].text = (uint32_t *) _("Contribution of each master design");
   olabels[k].text_is_1byte = true;
   ogcd[k].gd.label = &olabels[k];
   ogcd[k].gd.pos.x = 10;
@@ -3858,7 +3858,7 @@ MMWizard (MMSet *mm)
   ogcd[k].gd.handle_controlevent = MMCB_Changed;
   ogcd[k++].creator = GRadioCreate;
 
-  olabels[k].text = (unichar_t *) _("Design Axis Values");
+  olabels[k].text = (uint32_t *) _("Design Axis Values");
   olabels[k].text_is_1byte = true;
   ogcd[k].gd.label = &olabels[k];
   ogcd[k].gd.pos.x = 10;
@@ -3882,7 +3882,7 @@ MMWizard (MMSet *mm)
   ogcd[k].gd.cid = CID_NewDesign;
   ogcd[k++].creator = GTextFieldCreate;
 
-  olabels[k].text = (unichar_t *) _("Force Bold Threshold:");
+  olabels[k].text = (uint32_t *) _("Force Bold Threshold:");
   olabels[k].text_is_1byte = true;
   ogcd[k].gd.label = &olabels[k];
   ogcd[k].gd.pos.x = 10;
@@ -3894,9 +3894,9 @@ MMWizard (MMSet *mm)
       (pt =
        PSDictHasEntry (mmw.old->normal->private,
                        "ForceBoldThreshold")) != NULL)
-    olabels[k].text = (unichar_t *) pt;
+    olabels[k].text = (uint32_t *) pt;
   else
-    olabels[k].text = (unichar_t *) ".3";
+    olabels[k].text = (uint32_t *) ".3";
   olabels[k].text_is_1byte = true;
   ogcd[k].gd.label = &olabels[k];
   ogcd[k].gd.pos.x = 15;

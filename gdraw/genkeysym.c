@@ -125,14 +125,14 @@ int main() {
     printf( "#include <stdio.h>\n" );
     printf( "#include <gdraw.h>\n\n" );
     for ( i=0; keysyms[i].name!=NULL; ++i ) {
-	printf( "static unichar_t %s[] = { ", keysyms[i].name );
+	printf( "static uint32_t %s[] = { ", keysyms[i].name );
 	for ( j=0; keysyms[i].name[j]!='\0'; ++j )
 	    printf( "'%c', ", keysyms[i].name[j] );
 	printf( "'\\0' };\n" );
     }
     printf("\n");
 
-    printf( "unichar_t *GDrawKeysyms[] = { \n" );
+    printf( "uint32_t *GDrawKeysyms[] = { \n" );
     for ( i=0xff00; i<=0xffff; ++i ) {
 	for ( j=0; keysyms[j].name!=NULL; ++j )
 	    if ( keysyms[j].ks==i )

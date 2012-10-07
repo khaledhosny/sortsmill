@@ -436,7 +436,7 @@ return( e );
 static char *_readencstring(FILE *ttf,int offset,int len,
 	int platform,int specific,int language) {
     long pos = ftell(ttf);
-    unichar_t *str, *pt;
+    uint32_t *str, *pt;
     char *ret;
     int i, ch;
     Encoding *enc;
@@ -459,25 +459,25 @@ static char *_readencstring(FILE *ttf,int offset,int len,
 	if ( enc==NULL )
 return( NULL );
 	if ( enc->is_unicodebmp ) {
-	    str = pt = xmalloc((sizeof(unichar_t)/2)*len+sizeof(unichar_t));
+	    str = pt = xmalloc((sizeof(uint32_t)/2)*len+sizeof(uint32_t));
 	    for ( i=0; i<len/2; ++i ) {
 		ch = getc(ttf)<<8;
 		*pt++ = ch | getc(ttf);
 	    }
 	    *pt = 0;
 	} else if ( enc->unicode!=NULL ) {
-	    str = pt = xmalloc(sizeof(unichar_t)*len+sizeof(unichar_t));
+	    str = pt = xmalloc(sizeof(uint32_t)*len+sizeof(uint32_t));
 	    for ( i=0; i<len; ++i )
 		*pt++ = enc->unicode[getc(ttf)];
 	    *pt = 0;
 	} else if ( enc->tounicode!=NULL ) {
-	    size_t inlen = len+1, outlen = sizeof(unichar_t)*(len+1);
+	    size_t inlen = len+1, outlen = sizeof(uint32_t)*(len+1);
 	    char *cstr = xmalloc(inlen), *cpt;
 	    ICONV_CONST char *in = cstr;
 	    char *out;
 	    for ( cpt=cstr, i=0; i<len; ++i )
 		*cpt++ = getc(ttf);
-	    str = xmalloc(outlen+sizeof(unichar_t));
+	    str = xmalloc(outlen+sizeof(uint32_t));
 	    out = (char *) str;
 	    iconv(enc->tounicode,&in,&inlen,&out,&outlen);
 	    out[0] = '\0'; out[1] = '\0';
@@ -651,12 +651,12 @@ return( choice!=-1);
 
 static int PickCFFFont(char **fontnames)
 {
-  unichar_t **names;
+  uint32_t **names;
   int cnt, i, choice;
 
   for ( cnt=0; fontnames[cnt]!=NULL; ++cnt)
     ;
-  names = xcalloc(cnt+1,sizeof(unichar_t *));
+  names = xcalloc(cnt+1,sizeof(uint32_t *));
   for ( i=0; i<cnt; ++i )
     if (u8_valid (fontnames[i]))
       names[i] = x_u8_to_u32 (fontnames[i]);

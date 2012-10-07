@@ -2072,8 +2072,8 @@ extern void SFMatchGlyphs(SplineFont *sf,SplineFont *target,int addempties);
 VISIBLE extern void MMMatchGlyphs(MMSet *mm);
 extern char *_GetModifiers(char *fontname, char *familyname,char *weight);
 extern char *SFGetModifiers(SplineFont *sf);
-VISIBLE extern const unichar_t *_uGetModifiers(const unichar_t *fontname, const unichar_t *familyname,
-	const unichar_t *weight);
+VISIBLE extern const uint32_t *_uGetModifiers(const uint32_t *fontname, const uint32_t *familyname,
+	const uint32_t *weight);
 extern void SFSetFontName(SplineFont *sf, char *family, char *mods, char *full);
 extern void ttfdumpbitmap(SplineFont *sf,struct alltabs *at,int32 *sizes);
 extern void ttfdumpbitmapscaling(SplineFont *sf,struct alltabs *at,int32 *sizes);
@@ -2735,7 +2735,7 @@ VISIBLE extern int SFIsRotatable(SplineFont *sf,SplineChar *sc, int layer);
 /*extern int SCMakeDotless(SplineFont *sf, SplineChar *dotless, int layer, int copybmp, int doit);*/
 VISIBLE extern void SCBuildComposit(SplineFont *sf, SplineChar *sc, int layer, BDFFont *bmp, int disp_only);
 extern int SCAppendAccent(SplineChar *sc,int layer, char *glyph_name,int uni,uint32 pos);
-VISIBLE extern const unichar_t *SFGetAlternate(SplineFont *sf, int base,SplineChar *sc,int nocheck);
+VISIBLE extern const uint32_t *SFGetAlternate(SplineFont *sf, int base,SplineChar *sc,int nocheck);
 
 extern int getAdobeEnc(char *name);
 
@@ -2879,7 +2879,7 @@ VISIBLE extern void SFRenameGlyphsToNamelist(SplineFont *sf,NameList *new_);
 VISIBLE extern char **SFTemporaryRenameGlyphsToNamelist(SplineFont *sf,NameList *new_);
 VISIBLE extern void SFTemporaryRestoreGlyphNames(SplineFont *sf,char **former);
 
-extern AnchorPos *AnchorPositioning(SplineChar *sc,unichar_t *ustr,SplineChar **sstr );
+extern AnchorPos *AnchorPositioning(SplineChar *sc,uint32_t *ustr,SplineChar **sstr );
 extern void AnchorPosFree(AnchorPos *apos);
 
 extern int  SF_CloseAllInstrs(SplineFont *sf);
@@ -3189,7 +3189,7 @@ extern spiro_cp *SpiroCPCopy(spiro_cp *spiros,uint16 *_cnt);
 VISIBLE extern void SSRegenerateFromSpiros(SplineSet *spl);
 
 struct lang_frequencies;
-VISIBLE extern unichar_t *PrtBuildDef( SplineFont *sf, void *tf,
+VISIBLE extern uint32_t *PrtBuildDef( SplineFont *sf, void *tf,
 	void (*langsyscallback)(void *tf, int end, uint32 script, uint32 lang) );
 VISIBLE extern char *RandomParaFromScriptLang(uint32 script, uint32 lang, SplineFont *sf,
 	struct lang_frequencies *freq);

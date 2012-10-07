@@ -134,7 +134,7 @@ static float gridfit_pointsizex=12;		/* in cvgridfit.c */
 static float gridfit_pointsizey=12;		/* in cvgridfit.c */
 static int  gridfit_x_sameas_y=true;		/* in cvgridfit.c */
 static int default_font_filter_index=0;
-static unichar_t *script_menu_names[SCRIPT_MENU_MAX];
+static uint32_t *script_menu_names[SCRIPT_MENU_MAX];
 static char *script_filenames[SCRIPT_MENU_MAX];
 static char *RecentFiles[RECENT_MAX];
 static int ItalicConstrained = true;

@@ -133,10 +133,10 @@ extern int _GScrollBar_Width;
 int show_kerning_pane_in_class = true;
 
 static GTextInfo magnifications[] = {
-    { (unichar_t *) "100%", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "200%", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "300%", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "400%", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "100%", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "200%", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "300%", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "400%", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 
@@ -353,8 +353,8 @@ return( true );
 }
 
 static void KCD_Finalize(KernClassDlg *kcd) {
-    const unichar_t *ret = _GGadgetGetTitle(GWidgetGetControl(kcd->gw,CID_KernOffset));
-    unichar_t *end;
+    const uint32_t *ret = _GGadgetGetTitle(GWidgetGetControl(kcd->gw,CID_KernOffset));
+    uint32_t *end;
     int val = u_strtol(ret,&end,10);
 
     if ( kcd->old_pos==-1 )
@@ -438,7 +438,7 @@ return( false );
 static void KCD_KernMouse(KernClassDlg *kcd,GEvent *event) {
     int x, y, width;
     char buf[20];
-    unichar_t ubuf[20];
+    uint32_t ubuf[20];
     int kern, pkern;
     double scale;
 
@@ -571,7 +571,7 @@ static void KCD_KernExpose(KernClassDlg *kcd,GWindow pixmap,GEvent *event) {
     SplineFont *sf = kcd->sf;
     int em = sf->ascent+sf->descent;
     int as = kcd->magfactor*rint(sf->ascent*kcd->pixelsize/(double) em);
-    const unichar_t *ret = _GGadgetGetTitle(GWidgetGetControl(kcd->gw,CID_KernOffset));
+    const uint32_t *ret = _GGadgetGetTitle(GWidgetGetControl(kcd->gw,CID_KernOffset));
     int kern = u_strtol(ret,NULL,10);
     int baseline, xbaseline;
 
@@ -579,7 +579,7 @@ static void KCD_KernExpose(KernClassDlg *kcd,GWindow pixmap,GEvent *event) {
     kern = kcd->magfactor*rint(kern*kcd->pixelsize/(double) em);
 
     { int correction;
-	unichar_t *end;
+	uint32_t *end;
 
 	ret = _GGadgetGetTitle(GWidgetGetControl(kcd->gw,CID_Correction));
 	correction = u_strtol(ret,&end,10);
@@ -662,13 +662,13 @@ return;
 }
 
 static void _KCD_DisplaySizeChanged(KernClassDlg *kcd) {
-    const unichar_t *ret = _GGadgetGetTitle(GWidgetGetControl(kcd->gw,CID_DisplaySize));
-    unichar_t *end;
+    const uint32_t *ret = _GGadgetGetTitle(GWidgetGetControl(kcd->gw,CID_DisplaySize));
+    uint32_t *end;
     int pixelsize = u_strtol(ret,&end,10);
 
     while ( *end==' ' ) ++end;
     if ( pixelsize>4 && pixelsize<400 && *end=='\0' ) {
-	unichar_t ubuf[20]; char buffer[20];
+	uint32_t ubuf[20]; char buffer[20];
 	ubuf[0] = '0'; ubuf[1] = '\0';
 	if ( kcd->active_adjust.corrections!=NULL &&
 		pixelsize>=kcd->active_adjust.first_pixel_size &&
@@ -719,8 +719,8 @@ return( true );
 static int KCD_CorrectionChanged(GGadget *g, GEvent *e) {
     KernClassDlg *kcd = GDrawGetUserData(GGadgetGetWindow(g));
     if ( e->type==et_controlevent && e->u.control.subtype == et_textchanged ) {
-	const unichar_t *ret = _GGadgetGetTitle(GWidgetGetControl(kcd->gw,CID_Correction));
-	unichar_t *end;
+	const uint32_t *ret = _GGadgetGetTitle(GWidgetGetControl(kcd->gw,CID_Correction));
+	uint32_t *end;
 	int correction = u_strtol(ret,&end,10);
 
 	while ( *end==' ' ) ++end;
@@ -779,7 +779,7 @@ static void KPD_RestoreGlyphs(KernClassDlg *kcd) {
 
 static int KPD_FinishKP(KernClassDlg *kcd) {
     KernPair *kp;
-    const unichar_t *ret = _GGadgetGetTitle(GWidgetGetControl(kcd->gw,CID_KernOffset));
+    const uint32_t *ret = _GGadgetGetTitle(GWidgetGetControl(kcd->gw,CID_KernOffset));
     int offset = u_strtol(ret,NULL,10);
 
     if ( kcd->scf!=NULL && kcd->scs!=NULL ) {
@@ -817,7 +817,7 @@ return( true );
 }
 
 static void KCD_SetDevTab(KernClassDlg *kcd) {
-    unichar_t ubuf[20];
+    uint32_t ubuf[20];
 
     ubuf[0] = '0'; ubuf[1] = '\0';
     GGadgetClearList(GWidgetGetControl(kcd->gw,CID_DisplaySize));
@@ -896,7 +896,7 @@ static void KPD_PairSearch(KernClassDlg *kcd) {
     int offset = 0;
     KernPair *kp=NULL;
     char buf[20];
-    unichar_t ubuf[20];
+    uint32_t ubuf[20];
 
     free(kcd->active_adjust.corrections); kcd->active_adjust.corrections = NULL;
     if ( kcd->scf!=NULL && kcd->scs!=NULL ) {
@@ -1018,9 +1018,9 @@ return( ti );
 
 static void KCD_EditOffset(KernClassDlg *kcd, int first, int second) {
     char buf[12];
-    unichar_t ubuf[12];
+    uint32_t ubuf[12];
     GTextInfo **ti;
-    static unichar_t nullstr[] = { 0 };
+    static uint32_t nullstr[] = { 0 };
 
     KCD_Finalize(kcd);
     if ( GMatrixEditGetActiveRow(GWidgetGetControl(kcd->gw,CID_ClassList))!=first )
@@ -1205,7 +1205,7 @@ static int KCD_TextSelect(GGadget *g, GEvent *e) {
     if ( e->type==et_controlevent && e->u.control.subtype == et_textchanged ) {
 	KernClassDlg *kcd = GDrawGetUserData(GGadgetGetWindow(g));
 	int off = GGadgetGetCid(g)-CID_ClassSelect;
-	const unichar_t *uname = _GGadgetGetTitle(g), *upt;
+	const uint32_t *uname = _GGadgetGetTitle(g), *upt;
 	GGadget *list = GWidgetGetControl(kcd->gw,CID_ClassList+off);
 	int rows;
 	struct matrix_data *classes = GMatrixEditGet(list,&rows);
@@ -1294,15 +1294,15 @@ static void kernmenu_dispatch(GWindow gw, GMenuItem *mi, GEvent *e) {
 }
 
 static GMenuItem kernpopupmenu[] = {
-    { { (unichar_t *) N_("AutoKern Row"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 't' }, '\0', ksm_control, NULL, NULL, kernmenu_dispatch, MID_AutoKernRow },
-    { { (unichar_t *) N_("AutoKern Column"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 't' }, '\0', ksm_control, NULL, NULL, kernmenu_dispatch, MID_AutoKernCol },
-    { { (unichar_t *) N_("AutoKern All"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 't' }, '\0', ksm_control, NULL, NULL, kernmenu_dispatch, MID_AutoKernAll },
+    { { (uint32_t *) N_("AutoKern Row"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 't' }, '\0', ksm_control, NULL, NULL, kernmenu_dispatch, MID_AutoKernRow },
+    { { (uint32_t *) N_("AutoKern Column"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 't' }, '\0', ksm_control, NULL, NULL, kernmenu_dispatch, MID_AutoKernCol },
+    { { (uint32_t *) N_("AutoKern All"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 't' }, '\0', ksm_control, NULL, NULL, kernmenu_dispatch, MID_AutoKernAll },
     { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0' }, '\0', 0, NULL, NULL, NULL, 0 }, /* line */
 #define Menu_VKern_Offset 4		/* No autokerning for vertical kerning */
-    { { (unichar_t *) N_("Clear"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 't' }, '\0', ksm_control, NULL, NULL, kernmenu_dispatch, MID_Clear },
-    { { (unichar_t *) N_("Clear All"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'C' }, '\0', ksm_control, NULL, NULL, kernmenu_dispatch, MID_ClearAll },
-    { { (unichar_t *) N_("Clear Device Table"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, kernmenu_dispatch, MID_ClearDevTab },
-    { { (unichar_t *) N_("Clear All Device Tables"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, kernmenu_dispatch, MID_ClearAllDevTab },
+    { { (uint32_t *) N_("Clear"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 't' }, '\0', ksm_control, NULL, NULL, kernmenu_dispatch, MID_Clear },
+    { { (uint32_t *) N_("Clear All"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'C' }, '\0', ksm_control, NULL, NULL, kernmenu_dispatch, MID_ClearAll },
+    { { (uint32_t *) N_("Clear Device Table"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, kernmenu_dispatch, MID_ClearDevTab },
+    { { (uint32_t *) N_("Clear All Device Tables"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, kernmenu_dispatch, MID_ClearAllDevTab },
     GMENUITEM_EMPTY
 };
 
@@ -2156,14 +2156,14 @@ static void KCD_ClassSelectionChanged(GGadget *g,int whichclass, int c) {
 	KCD_EditOffset(kcd, first, second);
 }
 
-static unichar_t **KCD_GlyphListCompletion(GGadget *t,int from_tab) {
+static uint32_t **KCD_GlyphListCompletion(GGadget *t,int from_tab) {
     KernClassDlg *kcd = GDrawGetUserData(GDrawGetParentWindow(GGadgetGetWindow(t)));
     SplineFont *sf = kcd->sf;
 
 return( SFGlyphNameCompletion(sf,t,from_tab,true));
 }
 
-static unichar_t **KCD_GlyphCompletion(GGadget *t,int from_tab) {
+static uint32_t **KCD_GlyphCompletion(GGadget *t,int from_tab) {
     KernClassDlg *kcd = GDrawGetUserData(GGadgetGetWindow(t));
     SplineFont *sf = kcd->sf;
 
@@ -2186,7 +2186,7 @@ static int AddClassList(GGadgetCreateData *gcd, GTextInfo *label, int k, int off
 	initted = true;
     }
 
-    label[k].text = (unichar_t *) (off==0?_("First Char"):_("Second Char"));
+    label[k].text = (uint32_t *) (off==0?_("First Char"):_("Second Char"));
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_visible | gg_enabled;
@@ -2222,20 +2222,20 @@ static int AddClassList(GGadgetCreateData *gcd, GTextInfo *label, int k, int off
     varray[1] = &gcd[k-1];
 
 /* GT: Select the class containing the glyph named in the following text field */
-    label[k].text = (unichar_t *) _("Select Class Containing:");
+    label[k].text = (uint32_t *) _("Select Class Containing:");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = gcd[k-3].gd.pos.x+5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+26+4;
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    gcd[k].gd.popup_msg = (unichar_t *) _("Select the class containing the named glyph");
+    gcd[k].gd.popup_msg = (uint32_t *) _("Select the class containing the named glyph");
     gcd[k++].creator = GLabelCreate;
     harray[0] = &gcd[k-1];
 
     gcd[k].gd.pos.x = gcd[k-1].gd.pos.x+100; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y-4;
     gcd[k].gd.pos.width = 80;
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    gcd[k].gd.popup_msg = (unichar_t *) _("Select the class containing the named glyph");
+    gcd[k].gd.popup_msg = (uint32_t *) _("Select the class containing the named glyph");
     gcd[k].gd.handle_controlevent = KCD_TextSelect;
     gcd[k].gd.cid = CID_ClassSelect+off;
     gcd[k].gd.u.completion = KCD_GlyphCompletion;
@@ -2295,7 +2295,7 @@ static void FillShowKerningWindow(KernClassDlg *kcd, GGadgetCreateData *left,
     gcd[k++].creator = left!=NULL ? GListButtonCreate : GListFieldCreate;
     harray[1] = &gcd[k-1];
 
-    label[k].text = (unichar_t *) _("Use FreeType");
+    label[k].text = (uint32_t *) _("Use FreeType");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 260; gcd[k].gd.pos.y = 7;
@@ -2315,7 +2315,7 @@ static void FillShowKerningWindow(KernClassDlg *kcd, GGadgetCreateData *left,
     hbox.creator = GHBoxCreate;
     varray[j++] = &hbox; varray[j++] = NULL;
 
-    label[k].text = (unichar_t *) _("Display Size:");
+    label[k].text = (uint32_t *) _("Display Size:");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_visible|gg_enabled ;
@@ -2324,7 +2324,7 @@ static void FillShowKerningWindow(KernClassDlg *kcd, GGadgetCreateData *left,
     hvarray[0] = &gcd[k-1];
 
     sprintf( buffer, "%d", kcd->pixelsize );
-    label[k].text = (unichar_t *) buffer;
+    label[k].text = (uint32_t *) buffer;
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.width = 80;
@@ -2334,7 +2334,7 @@ static void FillShowKerningWindow(KernClassDlg *kcd, GGadgetCreateData *left,
     gcd[k++].creator = GListFieldCreate;
     hvarray[1] = &gcd[k-1];
 
-    label[k].text = (unichar_t *) _("Magnification:");
+    label[k].text = (uint32_t *) _("Magnification:");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_visible|gg_enabled ;
@@ -2350,7 +2350,7 @@ static void FillShowKerningWindow(KernClassDlg *kcd, GGadgetCreateData *left,
     gcd[k++].creator = GListButtonCreate;
     hvarray[3] = &gcd[k-1]; hvarray[4] = GCD_Glue; hvarray[5] = NULL;
 
-    label[k].text = (unichar_t *) _("Kern Offset:");
+    label[k].text = (uint32_t *) _("Kern Offset:");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_visible|gg_enabled ;
@@ -2366,7 +2366,7 @@ static void FillShowKerningWindow(KernClassDlg *kcd, GGadgetCreateData *left,
     gcd[k++].creator = GTextFieldCreate;
     hvarray[7] = &gcd[k-1];
 
-    label[k].text = (unichar_t *) _("Device Table Correction:\n  (at display size)");
+    label[k].text = (uint32_t *) _("Device Table Correction:\n  (at display size)");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_visible|gg_enabled ;
@@ -2374,7 +2374,7 @@ static void FillShowKerningWindow(KernClassDlg *kcd, GGadgetCreateData *left,
     gcd[k++].creator = GLabelCreate;
     hvarray[8] = &gcd[k-1];
 
-    label[k].text = (unichar_t *) "0";
+    label[k].text = (uint32_t *) "0";
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.width = 60;
@@ -2384,21 +2384,21 @@ static void FillShowKerningWindow(KernClassDlg *kcd, GGadgetCreateData *left,
     gcd[k++].creator = GTextFieldCreate;
     hvarray[9] = &gcd[k-1]; hvarray[10]=NULL;
 
-    label[k].text = (unichar_t *) _("Revert Kerning");
+    label[k].text = (uint32_t *) _("Revert Kerning");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup ;
-    gcd[k].gd.popup_msg = (unichar_t *) _("Resets the kerning offset and device table corrections to what they were originally");
+    gcd[k].gd.popup_msg = (uint32_t *) _("Resets the kerning offset and device table corrections to what they were originally");
     gcd[k].gd.handle_controlevent = KCD_RevertKerning;
     gcd[k].gd.cid = CID_Revert;
     gcd[k++].creator = GButtonCreate;
     hvarray[11] = &gcd[k-1]; hvarray[12] = GCD_ColSpan;
 
-    label[k].text = (unichar_t *) _("Clear Device Table");
+    label[k].text = (uint32_t *) _("Clear Device Table");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup ;
-    gcd[k].gd.popup_msg = (unichar_t *) _("Clear all device table corrections associated with this combination");
+    gcd[k].gd.popup_msg = (uint32_t *) _("Clear all device table corrections associated with this combination");
     gcd[k].gd.cid = CID_ClearDevice;
     gcd[k].gd.handle_controlevent = KCD_ClearDevice;
     gcd[k++].creator = GButtonCreate;
@@ -2422,7 +2422,7 @@ static void FillShowKerningWindow(KernClassDlg *kcd, GGadgetCreateData *left,
     if ( left==NULL ) {
 	gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = -40;
 	gcd[k].gd.flags = gg_enabled ;
-	label[k].text = (unichar_t *) _("Lookup subtable:");
+	label[k].text = (uint32_t *) _("Lookup subtable:");
 	label[k].text_is_1byte = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k++].creator = GLabelCreate;
@@ -2439,7 +2439,7 @@ static void FillShowKerningWindow(KernClassDlg *kcd, GGadgetCreateData *left,
 	flagbox.creator = GHBoxCreate;
 	varray[j++] = &flagbox; varray[j++] = NULL;
 
-	label[k].text = (unichar_t *) _("_OK");
+	label[k].text = (uint32_t *) _("_OK");
 	label[k].text_is_1byte = true;
 	label[k].text_in_resource = true;
 	gcd[k].gd.label = &label[k];
@@ -2451,7 +2451,7 @@ static void FillShowKerningWindow(KernClassDlg *kcd, GGadgetCreateData *left,
 	gcd[k].gd.cid = CID_Prev2;
 	gcd[k++].creator = GButtonCreate;
 
-	label[k].text = (unichar_t *) _("_Cancel");
+	label[k].text = (uint32_t *) _("_Cancel");
 	label[k].text_is_1byte = true;
 	label[k].text_in_resource = true;
 	gcd[k].gd.label = &label[k];
@@ -2518,7 +2518,7 @@ void KernClassD(KernClass *kc, SplineFont *sf, int layer, int isv) {
     KernClassDlg *kcd;
     int i, j, kc_width, vi;
     int as, ds, ld, sbsize;
-    static unichar_t kernw[] = { '-', '1', '2', '3', '4', '5', 0 };
+    static uint32_t kernw[] = { '-', '1', '2', '3', '4', '5', 0 };
     GWindow gw;
     char titlebuf[300];
     static GFont *font;
@@ -2604,7 +2604,7 @@ return;
     snprintf( titlebuf, sizeof(titlebuf), _("Lookup Subtable: %s"), kc->subtable->subtable_name );
     gcd[i].gd.pos.x = 5; gcd[i].gd.pos.y = 5;
     gcd[i].gd.flags = gg_visible | gg_enabled;
-    label[i].text = (unichar_t *) titlebuf;
+    label[i].text = (uint32_t *) titlebuf;
     label[i].text_is_1byte = true;
     gcd[i].gd.label = &label[i];
     gcd[i++].creator = GLabelCreate;
@@ -2612,7 +2612,7 @@ return;
 
 
     gcd[i].gd.flags = show_kerning_pane_in_class ? (gg_visible | gg_enabled | gg_cb_on) : (gg_visible | gg_enabled);
-    label[i].text = (unichar_t *) _("Show Kerning");
+    label[i].text = (uint32_t *) _("Show Kerning");
     label[i].text_is_1byte = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.handle_controlevent = KC_ShowHideKernPane;
@@ -2627,13 +2627,13 @@ return;
 
     varray[j++] = &titbox; varray[j++] = NULL;
 
-	label[i].text = (unichar_t *) _("_Default Separation:");
+	label[i].text = (uint32_t *) _("_Default Separation:");
 	label[i].text_is_1byte = true;
 	label[i].text_in_resource = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.pos.x = 5; gcd[i].gd.pos.y = 5+4; 
 	gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
-	gcd[i].gd.popup_msg = (unichar_t *) _(
+	gcd[i].gd.popup_msg = (uint32_t *) _(
 	    "Add entries to the lookup trying to make the optical\n"
 	    "separation between all pairs of glyphs equal to this\n"
 	    "value." );
@@ -2641,7 +2641,7 @@ return;
 	h4array[0] = &gcd[i++];
 
 	sprintf( sepbuf, "%d", kc->subtable->separation );
-	label[i].text = (unichar_t *) sepbuf;
+	label[i].text = (uint32_t *) sepbuf;
 	label[i].text_is_1byte = true;
 	label[i].text_in_resource = true;
 	gcd[i].gd.label = &label[i];
@@ -2652,20 +2652,20 @@ return;
 	gcd[i].creator = GTextFieldCreate;
 	h4array[1] = &gcd[i++]; h4array[2] = GCD_Glue;
 
-	label[i].text = (unichar_t *) _("_Min Kern:");
+	label[i].text = (uint32_t *) _("_Min Kern:");
 	label[i].text_is_1byte = true;
 	label[i].text_in_resource = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.pos.x = 5; gcd[i].gd.pos.y = 5+4; 
 	gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
-	gcd[i].gd.popup_msg = (unichar_t *) _(
+	gcd[i].gd.popup_msg = (uint32_t *) _(
 	    "Any computed kerning change whose absolute value is less\n"
 	    "that this will be ignored.\n" );
 	gcd[i].creator = GLabelCreate;
 	h4array[3] = &gcd[i++];
 
 	sprintf( mkbuf, "%d", kc->subtable->minkern );
-	label[i].text = (unichar_t *) mkbuf;
+	label[i].text = (uint32_t *) mkbuf;
 	label[i].text_is_1byte = true;
 	label[i].text_in_resource = true;
 	gcd[i].gd.label = &label[i];
@@ -2676,7 +2676,7 @@ return;
 	gcd[i].creator = GTextFieldCreate;
 	h4array[4] = &gcd[i++];
 
-	label[i].text = (unichar_t *) _("_Touching");
+	label[i].text = (uint32_t *) _("_Touching");
 	label[i].text_is_1byte = true;
 	label[i].text_in_resource = true;
 	gcd[i].gd.label = &label[i];
@@ -2684,7 +2684,7 @@ return;
 	gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
 	if ( kc->subtable->kerning_by_touch )
 	    gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup|gg_cb_on;
-	gcd[i].gd.popup_msg = (unichar_t *) _(
+	gcd[i].gd.popup_msg = (uint32_t *) _(
 	    "Normally kerning is based on achieving a constant (optical)\n"
 	    "separation between glyphs, but occasionally it is desirable\n"
 	    "to have a kerning table where the kerning is based on the\n"
@@ -2702,28 +2702,28 @@ return;
 	sepbox.creator = GHBoxCreate;
 	varray[j++] = &sepbox; varray[j++] = NULL;
 
-	label[i].text = (unichar_t *) _("Only kern glyphs closer");
+	label[i].text = (uint32_t *) _("Only kern glyphs closer");
 	label[i].text_is_1byte = true;
 	label[i].text_in_resource = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
 	if ( kc->subtable->onlyCloser )
 	    gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup|gg_cb_on;
-	gcd[i].gd.popup_msg = (unichar_t *) _(
+	gcd[i].gd.popup_msg = (uint32_t *) _(
 	    "When doing autokerning, only move glyphs closer together,\n"
 	    "so the kerning offset will be negative.");
 	gcd[i].gd.cid = CID_OnlyCloser;
 	gcd[i].creator = GCheckBoxCreate;
 	h5array[0] = &gcd[i++];
 
-	label[i].text = (unichar_t *) _("Autokern new entries");
+	label[i].text = (uint32_t *) _("Autokern new entries");
 	label[i].text_is_1byte = true;
 	label[i].text_in_resource = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
 	if ( !kc->subtable->dontautokern )
 	    gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup|gg_cb_on;
-	gcd[i].gd.popup_msg = (unichar_t *) _(
+	gcd[i].gd.popup_msg = (uint32_t *) _(
 	    "When adding a new class provide default kerning values\n"
 	    "Between it and every class with which it interacts.");
 	gcd[i].gd.cid = CID_Autokern;
@@ -2807,7 +2807,7 @@ return;
     gcd[i].gd.pos.x = 10; gcd[i].gd.pos.y = gcd[i-1].gd.pos.y+24+3;
     gcd[i].gd.pos.width = -1;
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    label[i].text = (unichar_t *) _("_OK");
+    label[i].text = (uint32_t *) _("_OK");
     label[i].text_is_1byte = true;
     label[i].text_in_resource = true;
     gcd[i].gd.label = &label[i];
@@ -2818,7 +2818,7 @@ return;
     gcd[i].gd.pos.x = -10; gcd[i].gd.pos.y = gcd[i-1].gd.pos.y+3;
     gcd[i].gd.pos.width = -1;
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    label[i].text = (unichar_t *) _("_Cancel");
+    label[i].text = (uint32_t *) _("_Cancel");
     label[i].text_is_1byte = true;
     label[i].text_in_resource = true;
     gcd[i].gd.label = &label[i];
@@ -3057,7 +3057,7 @@ return;
 
     gcd[1].gd.pos.x = 10; gcd[1].gd.pos.y = gcd[0].gd.pos.y+gcd[0].gd.pos.height+4;
     gcd[1].gd.flags = gg_visible | gg_enabled;
-    label[1].text = (unichar_t *) S_("KernClass|_New Lookup...");
+    label[1].text = (uint32_t *) S_("KernClass|_New Lookup...");
     label[1].text_is_1byte = true;
     label[1].text_in_resource = true;
     gcd[1].gd.label = &label[1];
@@ -3068,7 +3068,7 @@ return;
 
     gcd[2].gd.pos.x = 20+GIntGetResource(_NUM_Buttonsize)*100/GIntGetResource(_NUM_ScaleFactor); gcd[2].gd.pos.y = gcd[1].gd.pos.y;
     gcd[2].gd.flags = gg_visible;
-    label[2].text = (unichar_t *) _("_Delete");
+    label[2].text = (uint32_t *) _("_Delete");
     label[2].text_is_1byte = true;
     label[2].text_in_resource = true;
     gcd[2].gd.label = &label[2];
@@ -3080,7 +3080,7 @@ return;
     gcd[3].gd.pos.x = -10; gcd[3].gd.pos.y = gcd[1].gd.pos.y;
     gcd[3].gd.pos.width = -1;
     gcd[3].gd.flags = gg_visible;
-    label[3].text = (unichar_t *) _("_Edit...");
+    label[3].text = (uint32_t *) _("_Edit...");
     label[3].text_is_1byte = true;
     label[3].text_in_resource = true;
     gcd[3].gd.label = &label[3];
@@ -3102,7 +3102,7 @@ return;
 
     gcd[5].gd.pos.x = (kcl_width-GIntGetResource(_NUM_Buttonsize))/2; gcd[5].gd.pos.y = gcd[4].gd.pos.y+7;
     gcd[5].gd.flags = gg_visible|gg_enabled|gg_but_default|gg_but_cancel;
-    label[5].text = (unichar_t *) _("_Done");
+    label[5].text = (uint32_t *) _("_Done");
     label[5].text_is_1byte = true;
     label[5].text_in_resource = true;
     gcd[5].gd.label = &label[5];
@@ -3212,7 +3212,7 @@ void KernPairD(SplineFont *sf,SplineChar *sc1,SplineChar *sc2,int layer,int isv)
 
     if ( sc1!=NULL )
       {
-	unichar_t *utemp = x_u8_to_u32 (u8_force_valid (sc1->name));
+	uint32_t *utemp = x_u8_to_u32 (u8_force_valid (sc1->name));
 	GGadgetSetTitle(GWidgetGetControl(kcd.gw,CID_First), utemp);
 	free(utemp);
 	KPD_BuildKernList(&kcd);
@@ -3220,7 +3220,7 @@ void KernPairD(SplineFont *sf,SplineChar *sc1,SplineChar *sc2,int layer,int isv)
       }
     if ( sc2!=NULL )
       {
-	unichar_t *utemp = x_u8_to_u32 (u8_force_valid (sc2->name));
+	uint32_t *utemp = x_u8_to_u32 (u8_force_valid (sc2->name));
 	GGadgetSetTitle(GWidgetGetControl(kcd.gw,CID_Second), utemp);
 	free(utemp);
 	KCD_UpdateGlyph(&kcd,1);

@@ -3,7 +3,7 @@
 
 const unsigned char c_allzeros[256] = { 0 };
 
-const unichar_t unicode_from_i8859_1[] = {
+const uint32_t unicode_from_i8859_1[] = {
   0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
   0x0008, 0x0009, 0x000a, 0x000b, 0x000c, 0x000d, 0x000e, 0x000f,
   0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
@@ -61,9 +61,9 @@ static const unsigned char * const i8859_1_from_unicode_[] = {
     i8859_1_from_unicode_0
 };
 
-struct charmap i8859_1_from_unicode = { 0, 0, (unsigned char **) i8859_1_from_unicode_, (unichar_t *) unicode_from_i8859_1 };
+struct charmap i8859_1_from_unicode = { 0, 0, (unsigned char **) i8859_1_from_unicode_, (uint32_t *) unicode_from_i8859_1 };
 
-const unichar_t unicode_from_i8859_2[] = {
+const uint32_t unicode_from_i8859_2[] = {
   0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
   0x0008, 0x0009, 0x000a, 0x000b, 0x000c, 0x000d, 0x000e, 0x000f,
   0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
@@ -161,9 +161,9 @@ static const unsigned char * const i8859_2_from_unicode_[] = {
     i8859_2_from_unicode_2
 };
 
-struct charmap i8859_2_from_unicode = { 0, 2, (unsigned char **) i8859_2_from_unicode_, (unichar_t *) unicode_from_i8859_2 };
+struct charmap i8859_2_from_unicode = { 0, 2, (unsigned char **) i8859_2_from_unicode_, (uint32_t *) unicode_from_i8859_2 };
 
-const unichar_t unicode_from_i8859_3[] = {
+const uint32_t unicode_from_i8859_3[] = {
   0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
   0x0008, 0x0009, 0x000a, 0x000b, 0x000c, 0x000d, 0x000e, 0x000f,
   0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
@@ -261,9 +261,9 @@ static const unsigned char * const i8859_3_from_unicode_[] = {
     i8859_3_from_unicode_2
 };
 
-struct charmap i8859_3_from_unicode = { 0, 2, (unsigned char **) i8859_3_from_unicode_, (unichar_t *) unicode_from_i8859_3 };
+struct charmap i8859_3_from_unicode = { 0, 2, (unsigned char **) i8859_3_from_unicode_, (uint32_t *) unicode_from_i8859_3 };
 
-const unichar_t unicode_from_i8859_4[] = {
+const uint32_t unicode_from_i8859_4[] = {
   0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
   0x0008, 0x0009, 0x000a, 0x000b, 0x000c, 0x000d, 0x000e, 0x000f,
   0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
@@ -361,9 +361,9 @@ static const unsigned char * const i8859_4_from_unicode_[] = {
     i8859_4_from_unicode_2
 };
 
-struct charmap i8859_4_from_unicode = { 0, 2, (unsigned char **) i8859_4_from_unicode_, (unichar_t *) unicode_from_i8859_4 };
+struct charmap i8859_4_from_unicode = { 0, 2, (unsigned char **) i8859_4_from_unicode_, (uint32_t *) unicode_from_i8859_4 };
 
-const unichar_t unicode_from_i8859_5[] = {
+const uint32_t unicode_from_i8859_5[] = {
   0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
   0x0008, 0x0009, 0x000a, 0x000b, 0x000c, 0x000d, 0x000e, 0x000f,
   0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
@@ -492,9 +492,9 @@ static const unsigned char * const i8859_5_from_unicode_[] = {
     i8859_5_from_unicode_21
 };
 
-struct charmap i8859_5_from_unicode = { 0, 33, (unsigned char **) i8859_5_from_unicode_, (unichar_t *) unicode_from_i8859_5 };
+struct charmap i8859_5_from_unicode = { 0, 33, (unsigned char **) i8859_5_from_unicode_, (uint32_t *) unicode_from_i8859_5 };
 
-const unichar_t unicode_from_i8859_6[] = {
+const uint32_t unicode_from_i8859_6[] = {
   0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
   0x0008, 0x0009, 0x000a, 0x000b, 0x000c, 0x000d, 0x000e, 0x000f,
   0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
@@ -577,9 +577,9 @@ static const unsigned char * const i8859_6_from_unicode_[] = {
     i8859_6_from_unicode_6
 };
 
-struct charmap i8859_6_from_unicode = { 0, 6, (unsigned char **) i8859_6_from_unicode_, (unichar_t *) unicode_from_i8859_6 };
+struct charmap i8859_6_from_unicode = { 0, 6, (unsigned char **) i8859_6_from_unicode_, (uint32_t *) unicode_from_i8859_6 };
 
-const unichar_t unicode_from_i8859_7[] = {
+const uint32_t unicode_from_i8859_7[] = {
   0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
   0x0008, 0x0009, 0x000a, 0x000b, 0x000c, 0x000d, 0x000e, 0x000f,
   0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
@@ -726,9 +726,9 @@ static const unsigned char * const i8859_7_from_unicode_[] = {
     i8859_7_from_unicode_20
 };
 
-struct charmap i8859_7_from_unicode = { 0, 32, (unsigned char **) i8859_7_from_unicode_, (unichar_t *) unicode_from_i8859_7 };
+struct charmap i8859_7_from_unicode = { 0, 32, (unsigned char **) i8859_7_from_unicode_, (uint32_t *) unicode_from_i8859_7 };
 
-const unichar_t unicode_from_i8859_8[] = {
+const uint32_t unicode_from_i8859_8[] = {
   0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
   0x0008, 0x0009, 0x000a, 0x000b, 0x000c, 0x000d, 0x000e, 0x000f,
   0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
@@ -856,9 +856,9 @@ static const unsigned char * const i8859_8_from_unicode_[] = {
     i8859_8_from_unicode_20
 };
 
-struct charmap i8859_8_from_unicode = { 0, 32, (unsigned char **) i8859_8_from_unicode_, (unichar_t *) unicode_from_i8859_8 };
+struct charmap i8859_8_from_unicode = { 0, 32, (unsigned char **) i8859_8_from_unicode_, (uint32_t *) unicode_from_i8859_8 };
 
-const unichar_t unicode_from_i8859_9[] = {
+const uint32_t unicode_from_i8859_9[] = {
   0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
   0x0008, 0x0009, 0x000a, 0x000b, 0x000c, 0x000d, 0x000e, 0x000f,
   0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
@@ -936,9 +936,9 @@ static const unsigned char * const i8859_9_from_unicode_[] = {
     i8859_9_from_unicode_1
 };
 
-struct charmap i8859_9_from_unicode = { 0, 1, (unsigned char **) i8859_9_from_unicode_, (unichar_t *) unicode_from_i8859_9 };
+struct charmap i8859_9_from_unicode = { 0, 1, (unsigned char **) i8859_9_from_unicode_, (uint32_t *) unicode_from_i8859_9 };
 
-const unichar_t unicode_from_i8859_10[] = {
+const uint32_t unicode_from_i8859_10[] = {
   0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
   0x0008, 0x0009, 0x000a, 0x000b, 0x000c, 0x000d, 0x000e, 0x000f,
   0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
@@ -1016,9 +1016,9 @@ static const unsigned char * const i8859_10_from_unicode_[] = {
     i8859_10_from_unicode_1
 };
 
-struct charmap i8859_10_from_unicode = { 0, 1, (unsigned char **) i8859_10_from_unicode_, (unichar_t *) unicode_from_i8859_10 };
+struct charmap i8859_10_from_unicode = { 0, 1, (unsigned char **) i8859_10_from_unicode_, (uint32_t *) unicode_from_i8859_10 };
 
-const unichar_t unicode_from_i8859_11[] = {
+const uint32_t unicode_from_i8859_11[] = {
   0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
   0x0008, 0x0009, 0x000a, 0x000b, 0x000c, 0x000d, 0x000e, 0x000f,
   0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
@@ -1109,9 +1109,9 @@ static const unsigned char * const i8859_11_from_unicode_[] = {
     i8859_11_from_unicode_e
 };
 
-struct charmap i8859_11_from_unicode = { 0, 14, (unsigned char **) i8859_11_from_unicode_, (unichar_t *) unicode_from_i8859_11 };
+struct charmap i8859_11_from_unicode = { 0, 14, (unsigned char **) i8859_11_from_unicode_, (uint32_t *) unicode_from_i8859_11 };
 
-const unichar_t unicode_from_i8859_13[] = {
+const uint32_t unicode_from_i8859_13[] = {
   0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
   0x0008, 0x0009, 0x000a, 0x000b, 0x000c, 0x000d, 0x000e, 0x000f,
   0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
@@ -1239,9 +1239,9 @@ static const unsigned char * const i8859_13_from_unicode_[] = {
     i8859_13_from_unicode_20
 };
 
-struct charmap i8859_13_from_unicode = { 0, 32, (unsigned char **) i8859_13_from_unicode_, (unichar_t *) unicode_from_i8859_13 };
+struct charmap i8859_13_from_unicode = { 0, 32, (unsigned char **) i8859_13_from_unicode_, (uint32_t *) unicode_from_i8859_13 };
 
-const unichar_t unicode_from_i8859_14[] = {
+const uint32_t unicode_from_i8859_14[] = {
   0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
   0x0008, 0x0009, 0x000a, 0x000b, 0x000c, 0x000d, 0x000e, 0x000f,
   0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
@@ -1367,9 +1367,9 @@ static const unsigned char * const i8859_14_from_unicode_[] = {
     i8859_14_from_unicode_1e
 };
 
-struct charmap i8859_14_from_unicode = { 0, 30, (unsigned char **) i8859_14_from_unicode_, (unichar_t *) unicode_from_i8859_14 };
+struct charmap i8859_14_from_unicode = { 0, 30, (unsigned char **) i8859_14_from_unicode_, (uint32_t *) unicode_from_i8859_14 };
 
-const unichar_t unicode_from_i8859_15[] = {
+const uint32_t unicode_from_i8859_15[] = {
   0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
   0x0008, 0x0009, 0x000a, 0x000b, 0x000c, 0x000d, 0x000e, 0x000f,
   0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
@@ -1497,9 +1497,9 @@ static const unsigned char * const i8859_15_from_unicode_[] = {
     i8859_15_from_unicode_20
 };
 
-struct charmap i8859_15_from_unicode = { 0, 32, (unsigned char **) i8859_15_from_unicode_, (unichar_t *) unicode_from_i8859_15 };
+struct charmap i8859_15_from_unicode = { 0, 32, (unsigned char **) i8859_15_from_unicode_, (uint32_t *) unicode_from_i8859_15 };
 
-const unichar_t unicode_from_koi8_r[] = {
+const uint32_t unicode_from_koi8_r[] = {
   0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
   0x0008, 0x0009, 0x000a, 0x000b, 0x000c, 0x000d, 0x000e, 0x000f,
   0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
@@ -1670,9 +1670,9 @@ static const unsigned char * const koi8_r_from_unicode_[] = {
     koi8_r_from_unicode_25
 };
 
-struct charmap koi8_r_from_unicode = { 0, 37, (unsigned char **) koi8_r_from_unicode_, (unichar_t *) unicode_from_koi8_r };
+struct charmap koi8_r_from_unicode = { 0, 37, (unsigned char **) koi8_r_from_unicode_, (uint32_t *) unicode_from_koi8_r };
 
-const unichar_t unicode_from_jis201[] = {
+const uint32_t unicode_from_jis201[] = {
   0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
   0x0008, 0x0009, 0x000a, 0x000b, 0x000c, 0x000d, 0x000e, 0x000f,
   0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
@@ -2023,9 +2023,9 @@ static const unsigned char * const jis201_from_unicode_[] = {
     jis201_from_unicode_ff
 };
 
-struct charmap jis201_from_unicode = { 0, 255, (unsigned char **) jis201_from_unicode_, (unichar_t *) unicode_from_jis201 };
+struct charmap jis201_from_unicode = { 0, 255, (unsigned char **) jis201_from_unicode_, (uint32_t *) unicode_from_jis201 };
 
-const unichar_t unicode_from_win[] = {
+const uint32_t unicode_from_win[] = {
   0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
   0x0008, 0x0009, 0x000a, 0x000b, 0x000c, 0x000d, 0x000e, 0x000f,
   0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
@@ -2192,9 +2192,9 @@ static const unsigned char * const win_from_unicode_[] = {
     win_from_unicode_21
 };
 
-struct charmap win_from_unicode = { 0, 33, (unsigned char **) win_from_unicode_, (unichar_t *) unicode_from_win };
+struct charmap win_from_unicode = { 0, 33, (unsigned char **) win_from_unicode_, (uint32_t *) unicode_from_win };
 
-const unichar_t unicode_from_mac[] = {
+const uint32_t unicode_from_mac[] = {
   0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
   0x0008, 0x0009, 0x000a, 0x000b, 0x000c, 0x000d, 0x000e, 0x000f,
   0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
@@ -2674,9 +2674,9 @@ static const unsigned char * const mac_from_unicode_[] = {
     mac_from_unicode_fb
 };
 
-struct charmap mac_from_unicode = { 0, 251, (unsigned char **) mac_from_unicode_, (unichar_t *) unicode_from_mac };
+struct charmap mac_from_unicode = { 0, 251, (unsigned char **) mac_from_unicode_, (uint32_t *) unicode_from_mac };
 
-const unichar_t unicode_from_MacSymbol[] = {
+const uint32_t unicode_from_MacSymbol[] = {
   0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
   0x0008, 0x0009, 0x000a, 0x000b, 0x000c, 0x000d, 0x000e, 0x000f,
   0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
@@ -3153,9 +3153,9 @@ static const unsigned char * const MacSymbol_from_unicode_[] = {
     MacSymbol_from_unicode_f8
 };
 
-struct charmap MacSymbol_from_unicode = { 0, 248, (unsigned char **) MacSymbol_from_unicode_, (unichar_t *) unicode_from_MacSymbol };
+struct charmap MacSymbol_from_unicode = { 0, 248, (unsigned char **) MacSymbol_from_unicode_, (uint32_t *) unicode_from_MacSymbol };
 
-const unichar_t unicode_from_ZapfDingbats[] = {
+const uint32_t unicode_from_ZapfDingbats[] = {
   0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
   0x0008, 0x0009, 0x000a, 0x000b, 0x000c, 0x000d, 0x000e, 0x000f,
   0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
@@ -3295,31 +3295,31 @@ static const unsigned char * const ZapfDingbats_from_unicode_[] = {
     ZapfDingbats_from_unicode_27
 };
 
-struct charmap ZapfDingbats_from_unicode = { 33, 39, (unsigned char **) ZapfDingbats_from_unicode_, (unichar_t *) unicode_from_ZapfDingbats };
+struct charmap ZapfDingbats_from_unicode = { 33, 39, (unsigned char **) ZapfDingbats_from_unicode_, (uint32_t *) unicode_from_ZapfDingbats };
 
-unichar_t *unicode_from_alphabets[]={
-    (unichar_t *) unicode_from_win, 0,0,
-    (unichar_t *) unicode_from_i8859_1, 
-    (unichar_t *) unicode_from_i8859_2,
-    (unichar_t *) unicode_from_i8859_3,
-    (unichar_t *) unicode_from_i8859_4,
-    (unichar_t *) unicode_from_i8859_5,
-    (unichar_t *) unicode_from_i8859_6,
-    (unichar_t *) unicode_from_i8859_7,
-    (unichar_t *) unicode_from_i8859_8,
-    (unichar_t *) unicode_from_i8859_9,
-    (unichar_t *) unicode_from_i8859_10,
-    (unichar_t *) unicode_from_i8859_11,
-    (unichar_t *) unicode_from_i8859_13,
-    (unichar_t *) unicode_from_i8859_14,
-    (unichar_t *) unicode_from_i8859_15,
-    (unichar_t *) unicode_from_koi8_r,
-    (unichar_t *) unicode_from_jis201,
-    (unichar_t *) unicode_from_win,
-    (unichar_t *) unicode_from_mac,
-    (unichar_t *) unicode_from_MacSymbol,
-    (unichar_t *) unicode_from_ZapfDingbats,
-    (unichar_t *) unicode_from_i8859_1,	/* Place holder for user-defined map */
+uint32_t *unicode_from_alphabets[]={
+    (uint32_t *) unicode_from_win, 0,0,
+    (uint32_t *) unicode_from_i8859_1, 
+    (uint32_t *) unicode_from_i8859_2,
+    (uint32_t *) unicode_from_i8859_3,
+    (uint32_t *) unicode_from_i8859_4,
+    (uint32_t *) unicode_from_i8859_5,
+    (uint32_t *) unicode_from_i8859_6,
+    (uint32_t *) unicode_from_i8859_7,
+    (uint32_t *) unicode_from_i8859_8,
+    (uint32_t *) unicode_from_i8859_9,
+    (uint32_t *) unicode_from_i8859_10,
+    (uint32_t *) unicode_from_i8859_11,
+    (uint32_t *) unicode_from_i8859_13,
+    (uint32_t *) unicode_from_i8859_14,
+    (uint32_t *) unicode_from_i8859_15,
+    (uint32_t *) unicode_from_koi8_r,
+    (uint32_t *) unicode_from_jis201,
+    (uint32_t *) unicode_from_win,
+    (uint32_t *) unicode_from_mac,
+    (uint32_t *) unicode_from_MacSymbol,
+    (uint32_t *) unicode_from_ZapfDingbats,
+    (uint32_t *) unicode_from_i8859_1,	/* Place holder for user-defined map */
     0
 };
 

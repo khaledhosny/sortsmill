@@ -257,7 +257,7 @@ TryEscape (Encoding * enc, char *escape_sequence)
             if (iconv (enc->tounicode, &fpt, &fromlen, &upt, &tolen) !=
                 (size_t) (-1)
                 && upt - ucs ==
-                sizeof (unichar_t) /* Exactly one character */ )
+                sizeof (uint32_t) /* Exactly one character */ )
               {
                 if (low == -1)
                   {
@@ -437,7 +437,7 @@ _FindOrMakeEncoding (const char *name, int make_it)
                     if (iconv (temp.tounicode, &fpt, &fromlen, &upt, &tolen)
                         != (size_t) (-1)
                         && upt - ucs ==
-                        sizeof (unichar_t) /* Exactly one character */ )
+                        sizeof (uint32_t) /* Exactly one character */ )
                       {
                         if (temp.low_page == -1)
                           temp.low_page = i;
@@ -2968,7 +2968,7 @@ int32
 UniFromEnc (int enc, Encoding * encname)
 {
   char from[20];
-  unichar_t to[20];
+  uint32_t to[20];
   ICONV_CONST char *fpt;
   char *tpt;
   size_t fromlen, tolen;
@@ -3021,7 +3021,7 @@ UniFromEnc (int enc, Encoding * encname)
               (size_t) - 1)
             return (-1);
         }
-      if (tpt - (char *) to == sizeof (unichar_t))
+      if (tpt - (char *) to == sizeof (uint32_t))
         return (to[0]);
     }
   else if (encname->tounicode_func != NULL)
@@ -3032,7 +3032,7 @@ UniFromEnc (int enc, Encoding * encname)
 int32
 EncFromUni (int32 uni, Encoding * enc)
 {
-  unichar_t from[20];
+  uint32_t from[20];
   unsigned char to[20];
   ICONV_CONST char *fpt;
   char *tpt;
@@ -3058,7 +3058,7 @@ EncFromUni (int32 uni, Encoding * enc)
       /* I don't see how there can be any state to reset in this direction */
       /*  So I don't reset it */
       from[0] = uni;
-      fromlen = sizeof (unichar_t);
+      fromlen = sizeof (uint32_t);
       fpt = (char *) from;
       tpt = (char *) to;
       tolen = sizeof (to);
@@ -3078,7 +3078,7 @@ EncFromUni (int32 uni, Encoding * enc)
         }
       else
         {
-          if (tpt - (char *) to == sizeof (unichar_t))
+          if (tpt - (char *) to == sizeof (uint32_t))
             return ((to[0] << 8) | to[1]);
         }
     }

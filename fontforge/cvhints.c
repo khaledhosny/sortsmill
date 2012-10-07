@@ -79,8 +79,8 @@ static void RH_SetNextPrev(ReviewHintData *hd) {
 }
 
 static void RH_SetupHint(ReviewHintData *hd) {
-    char buffer[20]; unichar_t ubuf[20];
-    static unichar_t nullstr[] = {'\0'};
+    char buffer[20]; uint32_t ubuf[20];
+    static uint32_t nullstr[] = {'\0'};
     StemInfo *h;
     int pos,cnt;
 
@@ -428,7 +428,7 @@ void CVReviewHints(CharView *cv) {
 
 	k=0;
 
-	label[k].text = (unichar_t *) _("_HStem");
+	label[k].text = (uint32_t *) _("_HStem");
 	label[k].text_is_1byte = true;
 	label[k].text_in_resource = true;
 	gcd[k].gd.label = &label[k];
@@ -438,7 +438,7 @@ void CVReviewHints(CharView *cv) {
 	gcd[k].creator = GRadioCreate;
 	harray2[0] = &gcd[k++];
 
-	label[k].text = (unichar_t *) _("_VStem");
+	label[k].text = (uint32_t *) _("_VStem");
 	label[k].text_is_1byte = true;
 	label[k].text_in_resource = true;
 	gcd[k].gd.label = &label[k];
@@ -448,7 +448,7 @@ void CVReviewHints(CharView *cv) {
 	gcd[k].creator = GRadioCreate;
 	harray2[1] = &gcd[k++];
 
-	label[k].text = (unichar_t *) "999/999 hstem3";
+	label[k].text = (uint32_t *) "999/999 hstem3";
 	label[k].text_is_1byte = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.flags = gg_enabled|gg_visible;
@@ -456,17 +456,17 @@ void CVReviewHints(CharView *cv) {
 	gcd[k].creator = GLabelCreate;
 	harray2[2] = GCD_HPad10; harray2[3] = &gcd[k++]; harray2[4] = GCD_Glue; harray2[5] = NULL;
 
-	label[k].text = (unichar_t *) _("_Move Points");
+	label[k].text = (uint32_t *) _("_Move Points");
 	label[k].text_is_1byte = true;
 	label[k].text_in_resource = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
 	gcd[k].gd.cid = CID_MovePoints;
-	gcd[k].gd.popup_msg = (unichar_t *) _("When the hint's position is changed\nadjust the postion of any points\nwhich lie on that hint");
+	gcd[k].gd.popup_msg = (uint32_t *) _("When the hint's position is changed\nadjust the postion of any points\nwhich lie on that hint");
 	gcd[k].creator = GCheckBoxCreate;
 	harray3[0] = &gcd[k++]; harray3[1] = GCD_Glue; harray3[2] = NULL;
 
-	label[k].text = (unichar_t *) _("_Base:");
+	label[k].text = (uint32_t *) _("_Base:");
 	label[k].text_is_1byte = true;
 	label[k].text_in_resource = true;
 	gcd[k].gd.label = &label[k];
@@ -482,7 +482,7 @@ void CVReviewHints(CharView *cv) {
 	gcd[k].creator = GTextFieldCreate;
 	harray1[1] = &gcd[k++];
 
-	label[k].text = (unichar_t *) _("_Size:");
+	label[k].text = (uint32_t *) _("_Size:");
 	label[k].text_is_1byte = true;
 	label[k].text_in_resource = true;
 	gcd[k].gd.label = &label[k];
@@ -498,7 +498,7 @@ void CVReviewHints(CharView *cv) {
 	harray1[3] = &gcd[k++]; harray1[4] = GCD_Glue; harray1[5] = NULL;
 
 	gcd[k].gd.flags = gg_visible | gg_enabled;
-	label[k].text = (unichar_t *) "Overlaps another hint";
+	label[k].text = (uint32_t *) "Overlaps another hint";
 	label[k].text_is_1byte = true;
 	label[k].fg = 0xff0000; label[k].bg = COLOR_DEFAULT;	/* Doesn't work, needs to be in box */
 	gcd[k].gd.label = &label[k];
@@ -508,7 +508,7 @@ void CVReviewHints(CharView *cv) {
 
 
 	gcd[k].gd.flags = gg_visible | gg_enabled;
-	label[k].text = (unichar_t *) _("Cr_eate");
+	label[k].text = (uint32_t *) _("Cr_eate");
 	label[k].text_is_1byte = true;
 	label[k].text_in_resource = true;
 	gcd[k].gd.label = &label[k];
@@ -518,7 +518,7 @@ void CVReviewHints(CharView *cv) {
 	barray[0][0] = GCD_Glue; barray[0][1] = &gcd[k++]; barray[0][2] = GCD_Glue;
 
 	gcd[k].gd.flags = gg_visible | gg_enabled;
-	label[k].text = (unichar_t *) _("Re_move");
+	label[k].text = (uint32_t *) _("Re_move");
 	label[k].text_is_1byte = true;
 	label[k].text_in_resource = true;
 	gcd[k].gd.label = &label[k];
@@ -533,39 +533,39 @@ void CVReviewHints(CharView *cv) {
 	barray[1][0] = GCD_Glue; barray[1][1] = &gcd[k++]; barray[1][2] = barray[1][3] = GCD_ColSpan; barray[1][4] = GCD_Glue; barray[1][5] = NULL;
 
 	gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-	label[k].text = (unichar_t *) _("< _Prev");
+	label[k].text = (uint32_t *) _("< _Prev");
 	label[k].text_is_1byte = true;
 	label[k].text_in_resource = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.cid = CID_Prev;
-	gcd[k].gd.popup_msg = (unichar_t *) _("Previous Hint.");
+	gcd[k].gd.popup_msg = (uint32_t *) _("Previous Hint.");
 	gcd[k].gd.handle_controlevent = RH_NextPrev;
 	gcd[k].creator = GButtonCreate;
 	barray[2][0] = GCD_Glue; barray[2][1] = &gcd[k++]; barray[2][2] = GCD_Glue;
 
 	gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-	label[k].text = (unichar_t *) _("_Next >");
+	label[k].text = (uint32_t *) _("_Next >");
 	label[k].text_is_1byte = true;
 	label[k].text_in_resource = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.cid = CID_Next;
-	gcd[k].gd.popup_msg = (unichar_t *) _("Next Hint.");
+	gcd[k].gd.popup_msg = (uint32_t *) _("Next Hint.");
 	gcd[k].gd.handle_controlevent = RH_NextPrev;
 	gcd[k].creator = GButtonCreate;
 	barray[2][3] = &gcd[k++]; barray[2][4] = GCD_Glue; barray[2][5] = NULL;
 
-	label[k].text = (unichar_t *) _("Regenerate Hint Substitution Points");
+	label[k].text = (uint32_t *) _("Regenerate Hint Substitution Points");
 	label[k].text_is_1byte = true;
 	label[k].text_in_resource = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.flags = gg_enabled|gg_visible|gg_cb_on|gg_utf8_popup;
 	gcd[k].gd.cid = CID_RegenHM;
-	gcd[k].gd.popup_msg = (unichar_t *) _("If you have made any changes to the hints,\nthen in addition to changing the glyph's hints\nrefigure it's hint masks and substitution points.");
+	gcd[k].gd.popup_msg = (uint32_t *) _("If you have made any changes to the hints,\nthen in addition to changing the glyph's hints\nrefigure it's hint masks and substitution points.");
 	gcd[k].creator = GCheckBoxCreate;
 	barray[3][0] = &gcd[k++]; barray[3][1] = barray[3][2] = barray[3][3] = barray[3][4] = GCD_ColSpan; barray[3][5] = NULL;
 
 	gcd[k].gd.flags = gg_visible | gg_enabled;
-	label[k].text = (unichar_t *) _("_OK");
+	label[k].text = (uint32_t *) _("_OK");
 	label[k].text_is_1byte = true;
 	label[k].text_in_resource = true;
 	gcd[k].gd.label = &label[k];
@@ -574,7 +574,7 @@ void CVReviewHints(CharView *cv) {
 	barray[4][0] = GCD_Glue; barray[4][1] = &gcd[k++]; barray[4][2] = GCD_Glue;
 
 	gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-	label[k].text = (unichar_t *) _("_Cancel");
+	label[k].text = (uint32_t *) _("_Cancel");
 	label[k].text_is_1byte = true;
 	label[k].text_in_resource = true;
 	gcd[k].gd.label = &label[k];
@@ -740,7 +740,7 @@ void CVCreateHint(CharView *cv,int ishstem,int preservehints) {
     GGadgetCreateData gcd[9], *harray1[4], *harray2[9], *barray[7], *varray[5][2], boxes[5];
     GTextInfo label[9];
     static CreateHintData chd;
-    char buffer[20]; unichar_t ubuf[20];
+    char buffer[20]; uint32_t ubuf[20];
 
     chd.done = false;
     chd.ishstem = ishstem;
@@ -765,7 +765,7 @@ void CVCreateHint(CharView *cv,int ishstem,int preservehints) {
 	memset(&gcd,0,sizeof(gcd));
 	memset(&boxes,0,sizeof(boxes));
 
-	label[0].text = (unichar_t *) _("_Base:");
+	label[0].text = (uint32_t *) _("_Base:");
 	label[0].text_is_1byte = true;
 	label[0].text_in_resource = true;
 	gcd[0].gd.label = &label[0];
@@ -775,7 +775,7 @@ void CVCreateHint(CharView *cv,int ishstem,int preservehints) {
 	harray2[0] = GCD_Glue; harray2[1] = &gcd[0];
 
 	sprintf( buffer, "%g", (double) (ishstem ? cv->p.cy : cv->p.cx) );
-	label[1].text = (unichar_t *) buffer;
+	label[1].text = (uint32_t *) buffer;
 	label[1].text_is_1byte = true;
 	gcd[1].gd.label = &label[1];
 	gcd[1].gd.pos.x = 37; gcd[1].gd.pos.y = 17+5;  gcd[1].gd.pos.width = 40;
@@ -784,7 +784,7 @@ void CVCreateHint(CharView *cv,int ishstem,int preservehints) {
 	gcd[1].creator = GTextFieldCreate;
 	harray2[2] = &gcd[1];
 
-	label[2].text = (unichar_t *) _("_Size:");
+	label[2].text = (uint32_t *) _("_Size:");
 	label[2].text_is_1byte = true;
 	label[2].text_in_resource = true;
 	gcd[2].gd.label = &label[2];
@@ -793,7 +793,7 @@ void CVCreateHint(CharView *cv,int ishstem,int preservehints) {
 	gcd[2].creator = GLabelCreate;
 	harray2[3] = GCD_Glue; harray2[4] = &gcd[2];
 
-	label[3].text = (unichar_t *) "60";
+	label[3].text = (uint32_t *) "60";
 	label[3].text_is_1byte = true;
 	gcd[3].gd.label = &label[3];
 	gcd[3].gd.pos.x = 120; gcd[3].gd.pos.y = 17+5;  gcd[3].gd.pos.width = 40;
@@ -805,7 +805,7 @@ void CVCreateHint(CharView *cv,int ishstem,int preservehints) {
 	gcd[4].gd.pos.x = 20-3; gcd[4].gd.pos.y = 17+37;
 	gcd[4].gd.pos.width = -1; gcd[4].gd.pos.height = 0;
 	gcd[4].gd.flags = gg_visible | gg_enabled | gg_but_default;
-	label[4].text = (unichar_t *) _("_OK");
+	label[4].text = (uint32_t *) _("_OK");
 	label[4].text_is_1byte = true;
 	label[4].text_in_resource = true;
 	gcd[4].gd.mnemonic = 'O';
@@ -817,7 +817,7 @@ void CVCreateHint(CharView *cv,int ishstem,int preservehints) {
 	gcd[5].gd.pos.x = -20; gcd[5].gd.pos.y = 17+37+3;
 	gcd[5].gd.pos.width = -1; gcd[5].gd.pos.height = 0;
 	gcd[5].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-	label[5].text = (unichar_t *) _("_Cancel");
+	label[5].text = (uint32_t *) _("_Cancel");
 	label[5].text_is_1byte = true;
 	label[5].text_in_resource = true;
 	gcd[5].gd.label = &label[5];
@@ -826,7 +826,7 @@ void CVCreateHint(CharView *cv,int ishstem,int preservehints) {
 	gcd[5].creator = GButtonCreate;
 	barray[3] = GCD_Glue; barray[4] = &gcd[5]; barray[5] = GCD_Glue; barray[6] = NULL;
 
-	label[6].text = (unichar_t *) _("Create Horizontal Stem Hint");	/* Initialize to bigger size */
+	label[6].text = (uint32_t *) _("Create Horizontal Stem Hint");	/* Initialize to bigger size */
 	label[6].text_is_1byte = true;
 	gcd[6].gd.label = &label[6];
 	gcd[6].gd.pos.x = 17; gcd[6].gd.pos.y = 5; 

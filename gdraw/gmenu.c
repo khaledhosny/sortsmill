@@ -166,8 +166,8 @@ typedef struct gmenu {
     GGadget *vsb;
 } GMenu;
 
-static void _shorttext(int shortcut, int short_mask, unichar_t *buf) {
-    unichar_t *pt = buf;
+static void _shorttext(int shortcut, int short_mask, uint32_t *buf) {
+    uint32_t *pt = buf;
     static int initted = false;
     struct { int mask; char *modifier; } mods[8] = {
 	{ ksm_shift, H_("Shft+") },
@@ -222,7 +222,7 @@ return;
     }
 }
 
-static void shorttext(GMenuItem *gi,unichar_t *buf) {
+static void shorttext(GMenuItem *gi,uint32_t *buf) {
     _shorttext(gi->shortcut,gi->short_mask,buf);
 }
 
@@ -345,7 +345,7 @@ GMenuDrawArrow (struct gmenu *m, Color fg, int ybase)
 }
 
 static int GMenuDrawMenuLine(struct gmenu *m, GMenuItem *mi, int y,GWindow pixmap) {
-    unichar_t shortbuf[300];
+    uint32_t shortbuf[300];
     int as = GTextInfoGetAs(m->w,&mi->ti,m->font);
     int h, width;
     Color fg = m->box->main_foreground;
@@ -727,7 +727,7 @@ return( true );
 static GMenuItem *GMenuSearchShortcut(GWindow gw, GMenuItem *mi, GEvent *event,
 	int call_moveto) {
     int i;
-    unichar_t keysym = event->u.chr.keysym;
+    uint32_t keysym = event->u.chr.keysym;
 
     if ( keysym<GK_Special && islower(keysym))
 	keysym = toupper(keysym); /*getkey(keysym,event->u.chr.state&0x2000 );*/
@@ -746,7 +746,7 @@ return( ret );
 return( NULL );
 }
 
-static int GMenuSpecialKeys(struct gmenu *m, unichar_t keysym, GEvent *event) {
+static int GMenuSpecialKeys(struct gmenu *m, uint32_t keysym, GEvent *event) {
     switch ( keysym ) {
       case GK_Escape:
 	GMenuDestroy(m);
@@ -872,7 +872,7 @@ static int gmenu_key(struct gmenu *m, GEvent *event) {
     int i;
     GMenuItem *mi;
     GMenu *top;
-    unichar_t keysym = event->u.chr.keysym;
+    uint32_t keysym = event->u.chr.keysym;
 
     if ( islower(keysym)) keysym = toupper(keysym);
     if ( event->u.chr.state&ksm_meta && !(event->u.chr.state&(menumask&~(ksm_meta|ksm_shift)))) {
@@ -996,7 +996,7 @@ static GMenu *_GMenu_Create(GWindow owner,GMenuItem *mi, GPoint *where,
     GDisplay *disp = GDrawGetDisplayOfWindow(owner);
     GWindowAttrs pattrs;
     int i, width, keywidth;
-    unichar_t buffer[300];
+    uint32_t buffer[300];
     extern int _GScrollBar_Width;
     int ds, ld, temp, lh;
     int sbwidth = 0;
@@ -1306,7 +1306,7 @@ int GMenuBarCheckKey(GGadget *g, GEvent *event) {
     int i;
     GMenuBar *mb = (GMenuBar *) g;
     GMenuItem *mi;
-    unichar_t keysym = event->u.chr.keysym;
+    uint32_t keysym = event->u.chr.keysym;
 
     if ( g==NULL )
 return( false );
@@ -1701,7 +1701,7 @@ void GMenuBarSetItemEnabled(GGadget *g, int mid, int enabled) {
 	item->ti.disabled = !enabled;
 }
 
-void GMenuBarSetItemName(GGadget *g, int mid, const unichar_t *name) {
+void GMenuBarSetItemName(GGadget *g, int mid, const uint32_t *name) {
     GMenuBar *mb = (GMenuBar *) g;
     GMenuItem *item;
 
@@ -1716,7 +1716,7 @@ void GMenuBarSetItemName(GGadget *g, int mid, const unichar_t *name) {
 /*  syntax and subject to gettext translation */
 int GMenuIsCommand(GEvent *event,char *shortcut) {
     GMenuItem foo;
-    unichar_t keysym = event->u.chr.keysym;
+    uint32_t keysym = event->u.chr.keysym;
 
     if ( event->type!=et_char )
 return( false );

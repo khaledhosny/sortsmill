@@ -41,9 +41,9 @@ void _GIO_PostError(GIOControl *gc);
 void _GIO_RequestAuthorization(GIOControl *gc);
 struct hostdata *_GIO_LookupHost(char *host);
 
-extern char *_GIO_decomposeURL(const unichar_t *url,char **host, int *port,
+extern char *_GIO_decomposeURL(const uint32_t *url,char **host, int *port,
 	char **username, char **password);
 
-extern unichar_t *_GIO_translateURL(unichar_t *, enum giofuncs gf);
+extern uint32_t *_GIO_translateURL(uint32_t *, enum giofuncs gf);
 extern struct stdfuncs _GIO_stdfuncs;
 #endif

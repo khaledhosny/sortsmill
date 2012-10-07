@@ -639,7 +639,7 @@ struct hslrgba GWidgetColorA(const char *title,struct hslrgba *defcol,struct hsl
     boxes[2].creator = GHVBoxCreate;
 
     for ( i=0; i<7; ++i ) {
-	label[k].text = (unichar_t *) _(labnames[i]);
+	label[k].text = (uint32_t *) _(labnames[i]);
 	label[k].text_is_1byte = true;
 	label[k].text_in_resource = true;
 	gcd[k].gd.label = &label[k];
@@ -651,7 +651,7 @@ struct hslrgba GWidgetColorA(const char *title,struct hslrgba *defcol,struct hsl
 	    sprintf( values[0], "%3.0f", *offs[0]);
 	else
 	    sprintf( values[i], "%.2f", *offs[i]);
-	label[k].text = (unichar_t *) values[i];
+	label[k].text = (uint32_t *) values[i];
 	label[k].text_is_1byte = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.width = 60;
@@ -673,7 +673,7 @@ struct hslrgba GWidgetColorA(const char *title,struct hslrgba *defcol,struct hsl
     boxes[3].creator = GHVBoxCreate;
 
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    label[k].text = (unichar_t *) _("_OK");
+    label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -682,7 +682,7 @@ struct hslrgba GWidgetColorA(const char *title,struct hslrgba *defcol,struct hsl
     barray[0] = GCD_Glue; barray[1] = &gcd[k-1]; barray[2] = GCD_Glue;
 
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    label[k].text = (unichar_t *) _("_Cancel");
+    label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];

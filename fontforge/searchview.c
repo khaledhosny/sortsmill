@@ -706,47 +706,47 @@ return( NULL );
 
     k=0;
 
-    label[k].text = (unichar_t *) _("Allow:");
+    label[k].text = (uint32_t *) _("Allow:");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = GDrawPixelsToPoints(NULL,sv->cv_y+sv->cv_height+8);
     gcd[k].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
     gcd[k].gd.cid = CID_Allow;
-    gcd[k].gd.popup_msg = (unichar_t *) _("Allow a match even if the search pattern has\nto be transformed by a combination of the\nfollowing transformations.");
+    gcd[k].gd.popup_msg = (uint32_t *) _("Allow a match even if the search pattern has\nto be transformed by a combination of the\nfollowing transformations.");
     gcd[k].creator = GLabelCreate;
     allowarray[k] = &gcd[k]; ++k;
 
-    label[k].text = (unichar_t *) _("Flipping");
+    label[k].text = (uint32_t *) _("Flipping");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 35; gcd[k].gd.pos.y = gcd[0].gd.pos.y-3;
     gcd[k].gd.flags = gg_enabled|gg_visible|gg_cb_on|gg_utf8_popup;
     gcd[k].gd.cid = CID_Flipping;
-    gcd[k].gd.popup_msg = (unichar_t *) _("Allow a match even if the search pattern has\nto be transformed by a combination of the\nfollowing transformations.");
+    gcd[k].gd.popup_msg = (uint32_t *) _("Allow a match even if the search pattern has\nto be transformed by a combination of the\nfollowing transformations.");
     gcd[k].creator = GCheckBoxCreate;
     allowarray[k] = &gcd[k]; ++k;
 
-    label[k].text = (unichar_t *) _("Scaling");
+    label[k].text = (uint32_t *) _("Scaling");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 100; gcd[k].gd.pos.y = gcd[1].gd.pos.y; 
     gcd[k].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
     gcd[k].gd.cid = CID_Scaling;
-    gcd[k].gd.popup_msg = (unichar_t *) _("Allow a match even if the search pattern has\nto be transformed by a combination of the\nfollowing transformations.");
+    gcd[k].gd.popup_msg = (uint32_t *) _("Allow a match even if the search pattern has\nto be transformed by a combination of the\nfollowing transformations.");
     gcd[k].creator = GCheckBoxCreate;
     allowarray[k] = &gcd[k]; ++k;
 
-    label[k].text = (unichar_t *) _("Rotating");
+    label[k].text = (uint32_t *) _("Rotating");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 170; gcd[k].gd.pos.y = gcd[1].gd.pos.y;
     gcd[k].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
     gcd[k].gd.cid = CID_Rotating;
-    gcd[k].gd.popup_msg = (unichar_t *) _("Allow a match even if the search pattern has\nto be transformed by a combination of the\nfollowing transformations.");
+    gcd[k].gd.popup_msg = (uint32_t *) _("Allow a match even if the search pattern has\nto be transformed by a combination of the\nfollowing transformations.");
     gcd[k].creator = GCheckBoxCreate;
     allowarray[k] = &gcd[k]; allowarray[++k] = GCD_Glue; allowarray[5] = NULL;
 
-    label[k].text = (unichar_t *) _("_Match Fuzziness:");
+    label[k].text = (uint32_t *) _("_Match Fuzziness:");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -755,7 +755,7 @@ return( NULL );
     fudgearray[0] = &gcd[k++];
 
     sprintf(fudgebuf,"%g",old_fudge);
-    label[k].text = (unichar_t *) fudgebuf;
+    label[k].text = (uint32_t *) fudgebuf;
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -765,13 +765,13 @@ return( NULL );
     fudgearray[1] = &gcd[k++]; fudgearray[2] = GCD_Glue; fudgearray[3] = NULL;
 
     efdo_pos = k;
-    label[k].text = (unichar_t *) _("Endpoints specify minimum length and direction only");
+    label[k].text = (uint32_t *) _("Endpoints specify minimum length and direction only");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[1].gd.pos.y+18;
     gcd[k].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
     gcd[k].gd.cid = CID_Endpoints;
-    gcd[k].gd.popup_msg = (unichar_t *) _(
+    gcd[k].gd.popup_msg = (uint32_t *) _(
 	"If the search pattern is a single open contour\n"
 	"then do not match the end points. They merely\n"
 	"specify the direction from which the curve should\n"
@@ -786,16 +786,16 @@ return( NULL );
     gcd[k++].creator = GCheckBoxCreate;
 
     sel_pos = k;
-    label[k].text = (unichar_t *) _("Search Selected Chars Only");
+    label[k].text = (uint32_t *) _("Search Selected Chars Only");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[1].gd.pos.y+18;
     gcd[k].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
     gcd[k].gd.cid = CID_Selected;
-    gcd[k].gd.popup_msg = (unichar_t *) _("Only search characters selected in the fontview.\nNormally we search all characters in the font.");
+    gcd[k].gd.popup_msg = (uint32_t *) _("Only search characters selected in the fontview.\nNormally we search all characters in the font.");
     gcd[k++].creator = GCheckBoxCreate;
 
-    label[k].text = (unichar_t *) _("Find Next");	/* Start with this to allow sufficient space */
+    label[k].text = (uint32_t *) _("Find Next");	/* Start with this to allow sufficient space */
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[sel_pos].gd.pos.y+24;
@@ -805,7 +805,7 @@ return( NULL );
     gcd[k].creator = GButtonCreate;
     butarray[0] = GCD_Glue; butarray[1] = GCD_Glue; butarray[2] = &gcd[k++];
 
-    label[k].text = (unichar_t *) _("Find All");
+    label[k].text = (uint32_t *) _("Find All");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 0; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+3;
@@ -815,7 +815,7 @@ return( NULL );
     gcd[k].creator = GButtonCreate;
     butarray[3] = GCD_Glue; butarray[4] = &gcd[k++];
 
-    label[k].text = (unichar_t *) _("Replace");
+    label[k].text = (uint32_t *) _("Replace");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 0; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y;
@@ -825,7 +825,7 @@ return( NULL );
     gcd[k].creator = GButtonCreate;
     butarray[5] = GCD_Glue; butarray[6] = &gcd[k++];
 
-    label[k].text = (unichar_t *) _("Replace All");
+    label[k].text = (uint32_t *) _("Replace All");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 0; gcd[k].gd.pos.y = gcd[k-2].gd.pos.y;
@@ -835,7 +835,7 @@ return( NULL );
     gcd[k].creator = GButtonCreate;
     butarray[7] = GCD_Glue; butarray[8] = &gcd[k++];
 
-    label[k].text = (unichar_t *) _("_Cancel");
+    label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];

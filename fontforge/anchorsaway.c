@@ -469,8 +469,8 @@ return;
 
     if ( expose_end>a->ctl_len+a->char_size && area->y<a->sb_base ) {
 	int xcor=0, ycor=0;
-	unichar_t *end;
-	const unichar_t *ret;
+	uint32_t *end;
+	const uint32_t *ret;
 
 	ret = _GGadgetGetTitle(GWidgetGetControl(a->gw,CID_XCor));
 	xcor = u_strtol(ret,&end,10);
@@ -538,7 +538,7 @@ static void AnchorD_FigurePos(AnchorDlg *a,GEvent *event) {
 }
 
 static void AnchorD_ClearCorrections(AnchorDlg *a) {
-    unichar_t ubuf[2];
+    uint32_t ubuf[2];
 
     ubuf[0] = '0'; ubuf[1] = '\0';
     free(a->xadjust.corrections); memset(&a->xadjust,0,sizeof(DeviceTable));
@@ -550,7 +550,7 @@ static void AnchorD_ClearCorrections(AnchorDlg *a) {
 static void AnchorD_DrawPos(AnchorDlg *a) {
     GRect r;
     char buffer[20];
-    unichar_t ubuf[20];
+    uint32_t ubuf[20];
 
     sprintf( buffer, "%g", (double) a->apos.x );
     uc_strcpy(ubuf,buffer);
@@ -780,13 +780,13 @@ return( true );
 static int AnchorD_DisplaySizeChanged(GGadget *g, GEvent *e) {
     AnchorDlg *a = GDrawGetUserData(GGadgetGetWindow(g));
     if ( e->type==et_controlevent && e->u.control.subtype == et_textchanged ) {
-	const unichar_t *ret = _GGadgetGetTitle(GWidgetGetControl(a->gw,CID_DisplaySize));
-	unichar_t *end;
+	const uint32_t *ret = _GGadgetGetTitle(GWidgetGetControl(a->gw,CID_DisplaySize));
+	uint32_t *end;
 	int pixelsize = u_strtol(ret,&end,10);
 
 	while ( *end==' ' ) ++end;
 	if ( pixelsize>4 && pixelsize<400 && *end=='\0' ) {
-	    unichar_t ubuf[20]; char buffer[20];
+	    uint32_t ubuf[20]; char buffer[20];
 	    ubuf[0] = '0'; ubuf[1] = '\0';
 	    if ( a->xadjust.corrections!=NULL &&
 		    pixelsize>=a->xadjust.first_pixel_size &&
@@ -817,9 +817,9 @@ return( true );
 static int AnchorD_CorrectionChanged(GGadget *g, GEvent *e) {
     AnchorDlg *a = GDrawGetUserData(GGadgetGetWindow(g));
     if ( e->type==et_controlevent && e->u.control.subtype == et_textchanged ) {
-	const unichar_t *ret = _GGadgetGetTitle(g);
+	const uint32_t *ret = _GGadgetGetTitle(g);
 	int is_y = GGadgetGetCid(g)==CID_YCor;
-	unichar_t *end;
+	uint32_t *end;
 	int correction = u_strtol(ret,&end,10);
 
 	while ( *end==' ' ) ++end;
@@ -839,9 +839,9 @@ return( true );
 static int AnchorD_PositionChanged(GGadget *g, GEvent *e) {
     AnchorDlg *a = GDrawGetUserData(GGadgetGetWindow(g));
     if ( e->type==et_controlevent && e->u.control.subtype == et_textchanged ) {
-	const unichar_t *ret = _GGadgetGetTitle(g);
+	const uint32_t *ret = _GGadgetGetTitle(g);
 	int is_y = GGadgetGetCid(g)==CID_Y;
-	unichar_t *end;
+	uint32_t *end;
 	int val = u_strtol(ret,&end,10);
 
 	while ( *end==' ' ) ++end;
@@ -884,7 +884,7 @@ return( true );
 
 static void AnchorD_SetDevTabs(AnchorDlg *a) {
     char buffer[20];
-    unichar_t ubuf[20];
+    uint32_t ubuf[20];
     int min, max;
 
     GGadgetClearList(GWidgetGetControl(a->gw,CID_DisplaySize));
@@ -1154,10 +1154,10 @@ return( true );
 }
 
 static GTextInfo magnifications[] = {
-    { (unichar_t *) "100%", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "200%", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "300%", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "400%", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "100%", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "200%", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "300%", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "400%", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
     
@@ -1236,7 +1236,7 @@ void AnchorControl(SplineChar *sc,AnchorPoint *ap,int layer) {
     hvarray[hv++] = &glyphbox; hvarray[hv++] = GCD_ColSpan; hvarray[hv++] = GCD_ColSpan;
     hvarray[hv++] = GCD_ColSpan; hvarray[hv++] = GCD_Glue; hvarray[hv++] = NULL;
 
-    label[k].text = (unichar_t *) _("_Size:");
+    label[k].text = (uint32_t *) _("_Size:");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -1246,7 +1246,7 @@ void AnchorControl(SplineChar *sc,AnchorPoint *ap,int layer) {
     hvarray[hv++] = &gcd[k-1]; hvarray[hv++] = GCD_ColSpan;
 
     sprintf( buffer, "%d", a.pixelsize );
-    label[k].text = (unichar_t *) buffer;
+    label[k].text = (uint32_t *) buffer;
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 40; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y-4;
@@ -1254,13 +1254,13 @@ void AnchorControl(SplineChar *sc,AnchorPoint *ap,int layer) {
     gcd[k].gd.flags = gg_visible|gg_enabled | gg_utf8_popup ;
     gcd[k].gd.cid = CID_DisplaySize;
     gcd[k].gd.handle_controlevent = AnchorD_DisplaySizeChanged;
-    gcd[k].gd.popup_msg = gcd[k-1].gd.popup_msg = (unichar_t *)
+    gcd[k].gd.popup_msg = gcd[k-1].gd.popup_msg = (uint32_t *)
 	    _("The size at which the current glyph is rasterized.\nFor small pixelsize you may want to use the magnification\nfactor below to get a clearer view.\n\nThe pulldown list contains the pixelsizes at which there\nare device table corrections.");
     gcd[k++].creator = GListFieldCreate;
     hvarray[hv++] = &gcd[k-1]; hvarray[hv++] = GCD_ColSpan; hvarray[hv++] = GCD_Glue; hvarray[hv++] = NULL;
 
 /* GT: Short for: Magnification */
-    label[k].text = (unichar_t *) _("Mag:");
+    label[k].text = (uint32_t *) _("Mag:");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 10; gcd[k].gd.pos.y = gcd[k-2].gd.pos.y+26;
@@ -1273,12 +1273,12 @@ void AnchorControl(SplineChar *sc,AnchorPoint *ap,int layer) {
     gcd[k].gd.cid = CID_Mag;
     gcd[k].gd.u.list = magnifications;
     gcd[k].gd.handle_controlevent = AnchorD_MagnificationChanged;
-    gcd[k].gd.popup_msg = gcd[k-1].gd.popup_msg = (unichar_t *)
+    gcd[k].gd.popup_msg = gcd[k-1].gd.popup_msg = (uint32_t *)
 	    _("The glyph is rasterized at the size above, but it\nmay be difficult to see the alignment errors\nthat can happen at small pixelsizes. This allows\nyou to expand each pixel to show potential problems\nbetter.");
     gcd[k++].creator = GListButtonCreate;
     hvarray[hv++] = &gcd[k-1]; hvarray[hv++] = GCD_Glue; hvarray[hv++] = NULL;
 
-    label[k].text = (unichar_t *) _("_X");
+    label[k].text = (uint32_t *) _("_X");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -1288,7 +1288,7 @@ void AnchorControl(SplineChar *sc,AnchorPoint *ap,int layer) {
     hvarray[hv++] = &gcd[k-1]; hvarray[hv++] = GCD_ColSpan;
 
     sprintf( xbuf, "%d", (int) rint(ap->me.x) );
-    label[k].text = (unichar_t *) xbuf;
+    label[k].text = (uint32_t *) xbuf;
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 40; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y-4;
@@ -1296,22 +1296,22 @@ void AnchorControl(SplineChar *sc,AnchorPoint *ap,int layer) {
     gcd[k].gd.flags = gg_visible|gg_enabled  | gg_utf8_popup ;
     gcd[k].gd.cid = CID_X;
     gcd[k].gd.handle_controlevent = AnchorD_PositionChanged;
-    gcd[k].gd.popup_msg = gcd[k-1].gd.popup_msg = (unichar_t *)
+    gcd[k].gd.popup_msg = gcd[k-1].gd.popup_msg = (uint32_t *)
 	    _("The X coordinate of the anchor point in this glyph");
     gcd[k++].creator = GNumericFieldCreate;
     hvarray[hv++] = &gcd[k-1]; hvarray[hv++] = GCD_ColSpan; hvarray[hv++] = GCD_Glue; hvarray[hv++] = NULL;
 
 /* GT: Short for Correction */
-    label[k].text = (unichar_t *) _("Cor:");
+    label[k].text = (uint32_t *) _("Cor:");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 10; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+30;
     gcd[k].gd.flags = gg_visible|gg_enabled | gg_utf8_popup ;
-    gcd[k].gd.popup_msg = (unichar_t *) _("Correction in pixels to the horizontal positioning of this anchor point\nwhen rasterizing at the given pixelsize.\n(Lives in a Device Table)");
+    gcd[k].gd.popup_msg = (uint32_t *) _("Correction in pixels to the horizontal positioning of this anchor point\nwhen rasterizing at the given pixelsize.\n(Lives in a Device Table)");
     gcd[k++].creator = GLabelCreate;
     hvarray[hv++] = GCD_HPad10; hvarray[hv++] = &gcd[k-1]; hvarray[hv++] = GCD_ColSpan;
 
-    label[k].text = (unichar_t *) "0";
+    label[k].text = (uint32_t *) "0";
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 45; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y-4;
@@ -1319,12 +1319,12 @@ void AnchorControl(SplineChar *sc,AnchorPoint *ap,int layer) {
     gcd[k].gd.flags = gg_visible|gg_enabled  | gg_utf8_popup ;
     gcd[k].gd.cid = CID_XCor;
     gcd[k].gd.handle_controlevent = AnchorD_CorrectionChanged;
-    gcd[k].gd.popup_msg = gcd[k-1].gd.popup_msg = (unichar_t *)
+    gcd[k].gd.popup_msg = gcd[k-1].gd.popup_msg = (uint32_t *)
 	    _("This is the number of pixels by which the anchor\nshould be moved horizontally when the glyph is\nrasterized at the above size.  This information\nis part of the device table for this anchor.\nDevice tables are particularly important at small\npixelsizes where rounding errors will have a\nproportionally greater effect.");
     gcd[k++].creator = GNumericFieldCreate;
     hvarray[hv++] = &gcd[k-1]; hvarray[hv++] = GCD_Glue; hvarray[hv++] = NULL;
 
-    label[k].text = (unichar_t *) _("_Y");
+    label[k].text = (uint32_t *) _("_Y");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -1334,7 +1334,7 @@ void AnchorControl(SplineChar *sc,AnchorPoint *ap,int layer) {
     hvarray[hv++] = &gcd[k-1]; hvarray[hv++] = GCD_ColSpan;
 
     sprintf( ybuf, "%d", (int) rint(ap->me.y) );
-    label[k].text = (unichar_t *) ybuf;
+    label[k].text = (uint32_t *) ybuf;
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 40; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y-4;
@@ -1342,22 +1342,22 @@ void AnchorControl(SplineChar *sc,AnchorPoint *ap,int layer) {
     gcd[k].gd.flags = gg_visible|gg_enabled  | gg_utf8_popup ;
     gcd[k].gd.cid = CID_Y;
     gcd[k].gd.handle_controlevent = AnchorD_PositionChanged;
-    gcd[k].gd.popup_msg = gcd[k-1].gd.popup_msg = (unichar_t *)
+    gcd[k].gd.popup_msg = gcd[k-1].gd.popup_msg = (uint32_t *)
 	    _("The Y coordinate of the anchor point in this glyph");
     gcd[k++].creator = GNumericFieldCreate;
     hvarray[hv++] = &gcd[k-1]; hvarray[hv++] = GCD_ColSpan; hvarray[hv++] = GCD_Glue; hvarray[hv++] = NULL;
 
 /* GT: Short for Correction */
-    label[k].text = (unichar_t *) _("Cor:");
+    label[k].text = (uint32_t *) _("Cor:");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 10; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+30;
     gcd[k].gd.flags = gg_visible|gg_enabled | gg_utf8_popup ;
-    gcd[k].gd.popup_msg = (unichar_t *) _("Correction in pixels to the horizontal positioning of this anchor point\nwhen rasterizing at the given pixelsize.\n(Lives in a Device Table)");
+    gcd[k].gd.popup_msg = (uint32_t *) _("Correction in pixels to the horizontal positioning of this anchor point\nwhen rasterizing at the given pixelsize.\n(Lives in a Device Table)");
     gcd[k++].creator = GLabelCreate;
     hvarray[hv++] = GCD_HPad10; hvarray[hv++] = &gcd[k-1]; hvarray[hv++] = GCD_ColSpan;
 
-    label[k].text = (unichar_t *) "0";
+    label[k].text = (uint32_t *) "0";
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 45; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y-4;
@@ -1365,7 +1365,7 @@ void AnchorControl(SplineChar *sc,AnchorPoint *ap,int layer) {
     gcd[k].gd.flags = gg_visible|gg_enabled  | gg_utf8_popup ;
     gcd[k].gd.cid = CID_YCor;
     gcd[k].gd.handle_controlevent = AnchorD_CorrectionChanged;
-    gcd[k].gd.popup_msg = gcd[k-1].gd.popup_msg = (unichar_t *)
+    gcd[k].gd.popup_msg = gcd[k-1].gd.popup_msg = (uint32_t *)
 	    _("This is the number of pixels by which the anchor\nshould be moved vertically when the glyph is\nrasterized at the above size.  This information\nis part of the device table for this anchor.\nDevice tables are particularly important at small\npixelsizes where rounding errors will have a\nproportionally greater effect.");
     gcd[k++].creator = GNumericFieldCreate;
     hvarray[hv++] = &gcd[k-1]; hvarray[hv++] = GCD_Glue; hvarray[hv++] = NULL;
@@ -1373,7 +1373,7 @@ void AnchorControl(SplineChar *sc,AnchorPoint *ap,int layer) {
     hvarray[hv++] = GCD_Glue; hvarray[hv++] = GCD_Glue; hvarray[hv++] = GCD_Glue;
     hvarray[hv++] = GCD_Glue; hvarray[hv++] = GCD_Glue; hvarray[hv++] = NULL;
 
-    label[k].text = (unichar_t *) _("_OK");
+    label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -1384,7 +1384,7 @@ void AnchorControl(SplineChar *sc,AnchorPoint *ap,int layer) {
     gcd[k++].creator = GButtonCreate;
     buttonarray[0] = GCD_Glue; buttonarray[1] = &gcd[k-1]; buttonarray[2] = GCD_Glue;
 
-    label[k].text = (unichar_t *) _("_Cancel");
+    label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];

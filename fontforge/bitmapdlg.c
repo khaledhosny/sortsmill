@@ -42,9 +42,9 @@ static int oldusefreetype=1;
 int oldsystem=0 /* X11 */;
 
 static GTextInfo which[] = {
-    { (unichar_t *) N_("All Glyphs"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, '\0' },
-    { (unichar_t *) N_("Selected Glyphs"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, '\0' },
-    { (unichar_t *) N_("Current Glyph"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, '\0' },
+    { (uint32_t *) N_("All Glyphs"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, '\0' },
+    { (uint32_t *) N_("Selected Glyphs"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, '\0' },
+    { (uint32_t *) N_("Current Glyph"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, '\0' },
     GTEXTINFO_EMPTY
 };
 
@@ -70,8 +70,8 @@ return( CID_Mac );
 }
     
 static int32 *ParseList(GWindow gw, int cid,int *err, int final) {
-    const unichar_t *val = _GGadgetGetTitle(GWidgetGetControl(gw,cid)), *pt;
-    unichar_t *end, *end2;
+    const uint32_t *val = _GGadgetGetTitle(GWidgetGetControl(gw,cid)), *pt;
+    uint32_t *end, *end2;
     int i;
     real *sizes;
     int32 *ret;
@@ -155,10 +155,10 @@ static int CB_Cancel(GGadget *g, GEvent *e) {
 return( true );
 }
 
-static unichar_t *GenText(int32 *sizes,real scale) {
+static uint32_t *GenText(int32 *sizes,real scale) {
     int i;
     char *cret, *pt;
-    unichar_t *uret;
+    uint32_t *uret;
 
     for ( i=0; sizes[i]!=0; ++i );
     pt = cret = xmalloc(i*10+1);
@@ -183,7 +183,7 @@ return( uret );
 
 static void _CB_TextChange(CreateBitmapData *bd, GGadget *g) {
     int cid = (int) GGadgetGetCid(g);
-    unichar_t *val;
+    uint32_t *val;
     int err=false;
     int32 *sizes = ParseList(((CreateBitmapDlg *) bd)->gw,cid,&err,false);
     int ncid;
@@ -268,7 +268,7 @@ void BitmapDlg(FontView *fv,SplineChar *sc, int isavail) {
 
     if ( !done ) {
 	for ( i=0; which[i].text!=NULL; ++i )
-	    which[i].text = (unichar_t *) _((char *) which[i].text);
+	    which[i].text = (uint32_t *) _((char *) which[i].text);
 	done = true;
     }
 
@@ -316,7 +316,7 @@ void BitmapDlg(FontView *fv,SplineChar *sc, int isavail) {
 
     k=0;
     if ( isavail==1 ) {
-	label[0].text = (unichar_t *) _("The list of current pixel bitmap sizes");
+	label[0].text = (uint32_t *) _("The list of current pixel bitmap sizes");
 	label[0].text_is_1byte = true;
 	gcd[0].gd.label = &label[0];
 	gcd[0].gd.pos.x = 5; gcd[0].gd.pos.y = 5; 
@@ -324,7 +324,7 @@ void BitmapDlg(FontView *fv,SplineChar *sc, int isavail) {
 	gcd[0].creator = GLabelCreate;
 	varray[k++] = &gcd[0]; varray[k++] = NULL;
 
-	label[1].text = (unichar_t *) _(" Removing a size will delete it.");
+	label[1].text = (uint32_t *) _(" Removing a size will delete it.");
 	label[1].text_is_1byte = true;
 	gcd[1].gd.label = &label[1];
 	gcd[1].gd.pos.x = 5; gcd[1].gd.pos.y = 5+13;
@@ -333,9 +333,9 @@ void BitmapDlg(FontView *fv,SplineChar *sc, int isavail) {
 	varray[k++] = &gcd[1]; varray[k++] = NULL;
 
 	if ( bd.bd.sf->onlybitmaps && bd.bd.sf->bitmaps!=NULL )
-	    label[2].text = (unichar_t *) _(" Adding a size will create it by scaling.");
+	    label[2].text = (uint32_t *) _(" Adding a size will create it by scaling.");
 	else
-	    label[2].text = (unichar_t *) _(" Adding a size will create it.");
+	    label[2].text = (uint32_t *) _(" Adding a size will create it.");
 	label[2].text_is_1byte = true;
 	gcd[2].gd.label = &label[2];
 	gcd[2].gd.pos.x = 5; gcd[2].gd.pos.y = 5+26;
@@ -345,9 +345,9 @@ void BitmapDlg(FontView *fv,SplineChar *sc, int isavail) {
 	j = 3; y = 5+39+3;
     } else {
 	if ( isavail==0 )
-	    label[0].text = (unichar_t *) _("Specify bitmap sizes to be regenerated");
+	    label[0].text = (uint32_t *) _("Specify bitmap sizes to be regenerated");
 	else
-	    label[0].text = (unichar_t *) _("Specify bitmap sizes to be removed");
+	    label[0].text = (uint32_t *) _("Specify bitmap sizes to be removed");
 	label[0].text_is_1byte = true;
 	gcd[0].gd.label = &label[0];
 	gcd[0].gd.pos.x = 5; gcd[0].gd.pos.y = 5; 
@@ -375,7 +375,7 @@ void BitmapDlg(FontView *fv,SplineChar *sc, int isavail) {
 	j=2; y = 5+13+28;
     }
 
-    label[j].text = (unichar_t *) _("X");
+    label[j].text = (uint32_t *) _("X");
     label[j].text_is_1byte = true;
     gcd[j].gd.label = &label[j];
     gcd[j].gd.pos.x = 10; gcd[j].gd.pos.y = y;
@@ -385,7 +385,7 @@ void BitmapDlg(FontView *fv,SplineChar *sc, int isavail) {
     gcd[j++].creator = GRadioCreate;
     harray[1][0] = &gcd[j-1];
 
-    label[j].text = (unichar_t *) _("Win");
+    label[j].text = (uint32_t *) _("Win");
     label[j].text_is_1byte = true;
     gcd[j].gd.label = &label[j];
     gcd[j].gd.pos.x = 50; gcd[j].gd.pos.y = y;
@@ -395,7 +395,7 @@ void BitmapDlg(FontView *fv,SplineChar *sc, int isavail) {
     gcd[j++].creator = GRadioCreate;
     harray[1][1] = &gcd[j-1];
 
-    label[j].text = (unichar_t *) _("Mac");
+    label[j].text = (uint32_t *) _("Mac");
     label[j].text_is_1byte = true;
     gcd[j].gd.label = &label[j];
     gcd[j].gd.pos.x = 90; gcd[j].gd.pos.y = y;
@@ -413,7 +413,7 @@ void BitmapDlg(FontView *fv,SplineChar *sc, int isavail) {
     varray[k++] = &boxes[3]; varray[k++] = NULL;
     varray[k++] = GCD_Glue; varray[k++] = NULL;
 
-    label[j].text = (unichar_t *) _("Point sizes on a 75 dpi screen");
+    label[j].text = (uint32_t *) _("Point sizes on a 75 dpi screen");
     label[j].text_is_1byte = true;
     gcd[j].gd.label = &label[j];
     gcd[j].gd.pos.x = 5; gcd[j].gd.pos.y = y;
@@ -439,7 +439,7 @@ void BitmapDlg(FontView *fv,SplineChar *sc, int isavail) {
     boxes[4].creator = GHBoxCreate;
     varray[k++] = &boxes[4]; varray[k++] = NULL;
 
-    label[j].text = (unichar_t *) _("Point sizes on a 100 dpi screen");
+    label[j].text = (uint32_t *) _("Point sizes on a 100 dpi screen");
     label[j].text_is_1byte = true;
     gcd[j].gd.label = &label[j];
     gcd[j].gd.pos.x = 5; gcd[j].gd.pos.y = y;
@@ -467,7 +467,7 @@ void BitmapDlg(FontView *fv,SplineChar *sc, int isavail) {
     boxes[5].creator = GHBoxCreate;
     varray[k++] = &boxes[5]; varray[k++] = NULL;
 
-    label[j].text = (unichar_t *) _("Pixel Sizes:");
+    label[j].text = (uint32_t *) _("Pixel Sizes:");
     label[j].text_is_1byte = true;
     gcd[j].gd.label = &label[j];
     gcd[j].gd.pos.x = 5; gcd[j].gd.pos.y = y;
@@ -492,7 +492,7 @@ void BitmapDlg(FontView *fv,SplineChar *sc, int isavail) {
     boxes[6].creator = GHBoxCreate;
     varray[k++] = &boxes[6]; varray[k++] = NULL;
 
-    label[j].text = (unichar_t *) _("Use FreeType");
+    label[j].text = (uint32_t *) _("Use FreeType");
     label[j].text_is_1byte = true;
     gcd[j].gd.label = &label[j];
     gcd[j].gd.pos.x = 10; gcd[j].gd.pos.y = y;
@@ -509,7 +509,7 @@ void BitmapDlg(FontView *fv,SplineChar *sc, int isavail) {
     varray[k++] = &gcd[j-1]; varray[k++] = NULL;
 
     if ( isavail==1 ) {
-	label[j].text = (unichar_t *) _("Create Rasterized Strikes (Not empty ones)");
+	label[j].text = (uint32_t *) _("Create Rasterized Strikes (Not empty ones)");
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = 10; gcd[j].gd.pos.y = y;
@@ -524,7 +524,7 @@ void BitmapDlg(FontView *fv,SplineChar *sc, int isavail) {
     gcd[j].gd.pos.x = 20-3; gcd[j].gd.pos.y = 252-32-3;
     gcd[j].gd.pos.width = -1; gcd[j].gd.pos.height = 0;
     gcd[j].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    label[j].text = (unichar_t *) _("_OK");
+    label[j].text = (uint32_t *) _("_OK");
     label[j].text_is_1byte = true;
     label[j].text_in_resource = true;
     gcd[j].gd.mnemonic = 'O';
@@ -536,7 +536,7 @@ void BitmapDlg(FontView *fv,SplineChar *sc, int isavail) {
     gcd[j].gd.pos.x = -20; gcd[j].gd.pos.y = 252-32;
     gcd[j].gd.pos.width = -1; gcd[j].gd.pos.height = 0;
     gcd[j].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    label[j].text = (unichar_t *) _("_Cancel");
+    label[j].text = (uint32_t *) _("_Cancel");
     label[j].text_is_1byte = true;
     label[j].text_in_resource = true;
     gcd[j].gd.label = &label[j];

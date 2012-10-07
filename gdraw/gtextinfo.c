@@ -207,10 +207,10 @@ int GTextInfoDraw(GWindow base,int x,int y,GTextInfo *ti,
 return( height );
 }
 
-unichar_t *utf82u_mncopy(const char *utf8buf,unichar_t *mn) {
+uint32_t *utf82u_mncopy(const char *utf8buf,uint32_t *mn) {
     int len = strlen(utf8buf);
-    unichar_t *ubuf = xmalloc((len+1)*sizeof(unichar_t));
-    unichar_t *upt=ubuf, *uend=ubuf+len;
+    uint32_t *ubuf = xmalloc((len+1)*sizeof(uint32_t));
+    uint32_t *upt=ubuf, *uend=ubuf+len;
     const uint8 *pt = (const uint8 *) utf8buf, *end = pt+strlen(utf8buf);
     int w;
     int was_mn = false;
@@ -267,7 +267,7 @@ GTextInfo *GTextInfoCopy(GTextInfo *ti) {
 	    copy->text_in_resource = false;
 	    copy->text_is_1byte = false;
 	} else if ( ti->text_in_resource ) {
-	    copy->text = x_u32_strdup_or_null((unichar_t *) GStringGetResource((intptr_t) copy->text,&copy->mnemonic));
+	    copy->text = x_u32_strdup_or_null((uint32_t *) GStringGetResource((intptr_t) copy->text,&copy->mnemonic));
 	    copy->text_in_resource = false;
 	} else if ( ti->text_is_1byte ) {
 	    copy->text = utf82u_copy((char *) copy->text);
@@ -724,7 +724,7 @@ return( NULL );
 	    if ( mi[i].ti.text_in_resource && mi[i].ti.text_is_1byte )
 		arr[i].ti.text = utf82u_mncopy((char *) mi[i].ti.text,&arr[i].ti.mnemonic);
 	    else if ( mi[i].ti.text_in_resource )
-		arr[i].ti.text = x_u32_strdup_or_null((unichar_t *) GStringGetResource((intptr_t) mi[i].ti.text,&arr[i].ti.mnemonic));
+		arr[i].ti.text = x_u32_strdup_or_null((uint32_t *) GStringGetResource((intptr_t) mi[i].ti.text,&arr[i].ti.mnemonic));
 	    else if ( mi[i].ti.text_is_1byte )
 		arr[i].ti.text = utf82u_copy((char *) mi[i].ti.text);
 	    else
@@ -968,7 +968,7 @@ return( NULL );
 	    if ( mi[i].ti.text_in_resource && mi[i].ti.text_is_1byte )
 		arr[i].ti.text = utf82u_mncopy((char *) mi[i].ti.text,&arr[i].ti.mnemonic);
 	    else if ( mi[i].ti.text_in_resource )
-		arr[i].ti.text = x_u32_strdup_or_null((unichar_t *) GStringGetResource((intptr_t) mi[i].ti.text,&arr[i].ti.mnemonic));
+		arr[i].ti.text = x_u32_strdup_or_null((uint32_t *) GStringGetResource((intptr_t) mi[i].ti.text,&arr[i].ti.mnemonic));
 	    else if ( mi[i].ti.text_is_1byte )
 		arr[i].ti.text = utf82u_copy((char *) mi[i].ti.text);
 	    else
@@ -995,7 +995,7 @@ return( arr );
 the number of string resources, and the second the number of integer resources.
 (not the number of resources in the file, but the maximum resource index+1)
 String resources look like
-    <resource number-short> <flag,length-short> <mnemonics?> <unichar_t string>
+    <resource number-short> <flag,length-short> <mnemonics?> <uint32_t string>
 Integer resources look like:
     <resource number-short> <resource value-int>
 (numbers are stored with the high byte first)
@@ -1018,35 +1018,35 @@ Resource 2 should be the translation of "Cancel"
 Resource 7 should be the translation of "Replace"
    ...
 */
-static unichar_t lang[] = { 'E', 'n', 'g', 'l', 'i', 's', 'h', '\0' };
-static unichar_t ok[] = { 'O', 'k', '\0' };
-static unichar_t cancel[] = { 'C', 'a', 'n', 'c', 'e', 'l', '\0' };
-static unichar_t _open[] = { 'O', 'p', 'e', 'n', '\0' };
-static unichar_t save[] = { 'S', 'a', 'v', 'e', '\0' };
-static unichar_t filter[] = { 'F', 'i', 'l', 't', 'e', 'r', '\0' };
-static unichar_t new[] = { 'N', 'e', 'w', '.', '.', '.', '\0' };
-static unichar_t replace[] = { 'R', 'e', 'p', 'l', 'a', 'c', 'e', '\0' };
-static unichar_t fileexists[] = { 'F','i','l','e',' ','E','x','i','s','t','s',  '\0' };
+static uint32_t lang[] = { 'E', 'n', 'g', 'l', 'i', 's', 'h', '\0' };
+static uint32_t ok[] = { 'O', 'k', '\0' };
+static uint32_t cancel[] = { 'C', 'a', 'n', 'c', 'e', 'l', '\0' };
+static uint32_t _open[] = { 'O', 'p', 'e', 'n', '\0' };
+static uint32_t save[] = { 'S', 'a', 'v', 'e', '\0' };
+static uint32_t filter[] = { 'F', 'i', 'l', 't', 'e', 'r', '\0' };
+static uint32_t new[] = { 'N', 'e', 'w', '.', '.', '.', '\0' };
+static uint32_t replace[] = { 'R', 'e', 'p', 'l', 'a', 'c', 'e', '\0' };
+static uint32_t fileexists[] = { 'F','i','l','e',' ','E','x','i','s','t','s',  '\0' };
 /* "File, %s, exists. Replace it?" */
-static unichar_t fileexistspre[] = { 'F','i','l','e',',',' ',  '\0' };
-static unichar_t fileexistspost[] = { ',',' ','e','x','i','s','t','s','.',' ','R','e','p','l','a','c','e',' ','i','t','?',  '\0' };
-static unichar_t createdir[] = { 'C','r','e','a','t','e',' ','d','i','r','e','c','t','o','r','y','.','.','.',  '\0' };
-static unichar_t dirname_[] = { 'D','i','r','e','c','t','o','r','y',' ','n','a','m','e','?',  '\0' };
-static unichar_t couldntcreatedir[] = { 'C','o','u','l','d','n','\'','t',' ','c','r','e','a','t','e',' ','d','i','r','e','c','t','o','r','y',  '\0' };
-static unichar_t selectall[] = { 'S','e','l','e','c','t',' ','A','l','l',  '\0' };
-static unichar_t none[] = { 'N','o','n','e',  '\0' };
-static const unichar_t *deffall[] = { lang, ok, cancel, _open, save, filter, new,
+static uint32_t fileexistspre[] = { 'F','i','l','e',',',' ',  '\0' };
+static uint32_t fileexistspost[] = { ',',' ','e','x','i','s','t','s','.',' ','R','e','p','l','a','c','e',' ','i','t','?',  '\0' };
+static uint32_t createdir[] = { 'C','r','e','a','t','e',' ','d','i','r','e','c','t','o','r','y','.','.','.',  '\0' };
+static uint32_t dirname_[] = { 'D','i','r','e','c','t','o','r','y',' ','n','a','m','e','?',  '\0' };
+static uint32_t couldntcreatedir[] = { 'C','o','u','l','d','n','\'','t',' ','c','r','e','a','t','e',' ','d','i','r','e','c','t','o','r','y',  '\0' };
+static uint32_t selectall[] = { 'S','e','l','e','c','t',' ','A','l','l',  '\0' };
+static uint32_t none[] = { 'N','o','n','e',  '\0' };
+static const uint32_t *deffall[] = { lang, ok, cancel, _open, save, filter, new,
 	replace, fileexists, fileexistspre, fileexistspost, createdir,
 	dirname_, couldntcreatedir, selectall, none, NULL };
-static const unichar_t deffallmn[] = { 0, 'O', 'C', 'O', 'S', 'F', 'N', 'R', 0, 0, 0, 'A', 'N' };
+static const uint32_t deffallmn[] = { 0, 'O', 'C', 'O', 'S', 'F', 'N', 'R', 0, 0, 0, 'A', 'N' };
 static const int deffallint[] = { 55, 100 };
 
-static unichar_t **strarray=NULL; static const unichar_t **fallback=deffall;
-static unichar_t *smnemonics=NULL; static const unichar_t *fmnemonics=deffallmn;
+static uint32_t **strarray=NULL; static const uint32_t **fallback=deffall;
+static uint32_t *smnemonics=NULL; static const uint32_t *fmnemonics=deffallmn;
 static int *intarray; static const int *fallbackint = deffallint;
 static int slen=0, flen=sizeof(deffall)/sizeof(deffall[0])-1, ilen=0, filen=sizeof(deffallint)/sizeof(deffallint[0]);
 
-const unichar_t *GStringGetResource(int index,unichar_t *mnemonic) {
+const uint32_t *GStringGetResource(int index,uint32_t *mnemonic) {
     if ( index<0 || (index>=slen && index>=flen ))
 return( NULL );
     if ( index<slen && strarray[index]!=NULL ) {
@@ -1147,8 +1147,8 @@ return( 0 );
     if ( strarray!=NULL )
 	for ( i=0; i<slen; ++i ) free( strarray[i]);
     free(strarray); free(smnemonics); free(intarray);
-    strarray = xcalloc(szmax(1, scnt),sizeof(unichar_t *));
-    smnemonics = xcalloc(szmax(1, scnt),sizeof(unichar_t));
+    strarray = xcalloc(szmax(1, scnt),sizeof(uint32_t *));
+    smnemonics = xcalloc(szmax(1, scnt),sizeof(uint32_t));
     intarray = xmalloc(szmax(1, icnt*sizeof(int)));
     for ( i=0; i<icnt; ++i ) intarray[i] = 0x80000000;
     slen = ilen = 0;
@@ -1165,7 +1165,7 @@ return( 0 );
 	    smnemonics[i] = getushort(res);
 	    strlen &= ~0x8000;
 	}
-	strarray[i] = xmalloc((strlen+1)*sizeof(unichar_t));
+	strarray[i] = xmalloc((strlen+1)*sizeof(uint32_t));
 	for ( j=0; j<strlen; ++j )
 	    strarray[i][j] = getushort(res);
 	strarray[i][j] = '\0';
@@ -1192,11 +1192,11 @@ return( GStringSetResourceFileV(filename,0xffffffff));
 
 /* Read a resource from a file without loading the file */
 /*  I suspect this will just be used to get the language from the file */
-unichar_t *GStringFileGetResource(char *filename, int index,unichar_t *mnemonic) {
+uint32_t *GStringFileGetResource(char *filename, int index,uint32_t *mnemonic) {
     int scnt;
     FILE *res;
     int i,j, strlen;
-    unichar_t *str;
+    uint32_t *str;
 
     if ( filename==NULL )
 return( x_u8_to_u32 ("Default"));
@@ -1226,7 +1226,7 @@ return( NULL );
 		if ( mnemonic!=NULL ) *mnemonic = temp;
 		strlen &= ~0x8000;
 	    }
-	    str = xmalloc((strlen+1)*sizeof(unichar_t));
+	    str = xmalloc((strlen+1)*sizeof(uint32_t));
 	    for ( j=0; j<strlen; ++j )
 		str[j] = getushort(res);
 	    str[j] = '\0';
@@ -1245,7 +1245,7 @@ return( str );
 return( NULL );
 }
     
-void GStringSetFallbackArray(const unichar_t **array,const unichar_t *mn,const int *ires) {
+void GStringSetFallbackArray(const uint32_t **array,const uint32_t *mn,const int *ires) {
     int i=0;
 
     if ( array!=NULL ) while ( array[i]!=NULL ) ++i;

@@ -39,8 +39,8 @@
 typedef struct gprogress {
     struct timeval start_time;	/* Don't pop up unless we're after this */
     struct timeval pause_time;
-    unichar_t *line1;
-    unichar_t *line2;
+    uint32_t *line1;
+    uint32_t *line2;
     int sofar;
     int tot;
     int16 stage, stages;
@@ -227,9 +227,9 @@ static void GProgressResInit(void) {
 
 void GProgressStartIndicator(
     int delay,	// in tenths of seconds
-    const unichar_t *win_title, // for the window decoration
-    const unichar_t *line1, // First line of description
-    const unichar_t *line2, // Second line
+    const uint32_t *win_title, // for the window decoration
+    const uint32_t *line1, // First line of description
+    const uint32_t *line2, // Second line
     int tot, // Number of sub-entities in the operation
     int stages // Number of stages, each processing tot sub-entities
     )
@@ -297,7 +297,7 @@ void GProgressStartIndicator(
 	gd.pos.y = pos.height-GDrawPointsToPixels(new_->gw,29);
 	gd.flags = gg_visible | gg_enabled | gg_pos_in_pixels | gg_pos_use0;
 	gd.mnemonic = 'S';
-	label.text = (unichar_t *) _("_Stop");
+	label.text = (uint32_t *) _("_Stop");
 	label.text_is_1byte = true;
 	label.text_in_resource = true;
 	gd.label = &label;
@@ -352,7 +352,7 @@ return;
     GDrawProcessPendingEvents(NULL);
 }
 
-void GProgressChangeLine1(const unichar_t *line1) {
+void GProgressChangeLine1(const uint32_t *line1) {
     if ( current==NULL )
 return;
     free( current->line1 );
@@ -369,7 +369,7 @@ void GProgressChangeLine1R(int line1r) {
     GProgressChangeLine1(GStringGetResource(line1r,NULL));
 }
 
-void GProgressChangeLine2(const unichar_t *line2) {
+void GProgressChangeLine2(const uint32_t *line2) {
     if ( current==NULL )
 return;
     free( current->line2 );
@@ -487,9 +487,9 @@ return;
 
 void GProgressStartIndicator8(int delay, const char *title, const char *line1,
 	const char *line2, int tot, int stages) {
-    unichar_t *tit = utf82u_copy(title);
-    unichar_t *l1 = utf82u_copy(line1);
-    unichar_t *l2 = utf82u_copy(line2);
+    uint32_t *tit = utf82u_copy(title);
+    uint32_t *l1 = utf82u_copy(line1);
+    uint32_t *l2 = utf82u_copy(line2);
     GProgressStartIndicator(delay, tit, l1, l2, tot, stages);
     free(l1);
     free(l2);
@@ -497,13 +497,13 @@ void GProgressStartIndicator8(int delay, const char *title, const char *line1,
 }
 
 void GProgressChangeLine1_8(const char *line1) {
-    unichar_t *l1 = utf82u_copy(line1);
+    uint32_t *l1 = utf82u_copy(line1);
     GProgressChangeLine1(l1);
     free(l1);
 }
 
 void GProgressChangeLine2_8(const char *line2) {
-    unichar_t *l2 = utf82u_copy(line2);
+    uint32_t *l2 = utf82u_copy(line2);
     GProgressChangeLine2(l2);
     free(l2);
 }

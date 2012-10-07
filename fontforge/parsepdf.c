@@ -2042,7 +2042,7 @@ return( NULL );
     } else {
 	char **names;
 	int choice;
-	names = xmalloc((pc.fcnt+1)*sizeof(unichar_t *));
+	names = xmalloc((pc.fcnt+1)*sizeof(uint32_t *));
 	for ( i=0; i<pc.fcnt; ++i )
 	    names[i] = copy(pc.fontnames[i]);
 	names[i] = NULL;

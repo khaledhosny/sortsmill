@@ -52,7 +52,7 @@ return( true );
 }
 
 void NonLinearDlg(FontView *fv,CharView *cv) {
-    static unichar_t *lastx, *lasty;
+    static uint32_t *lastx, *lasty;
     struct nldlg d;
     GRect pos;
     GWindowAttrs wattrs;
@@ -82,49 +82,49 @@ void NonLinearDlg(FontView *fv,CharView *cv) {
     memset(label,0,sizeof(label));
 
 /* GT: an expression describing the transformation applied to the X coordinate */
-    label[0].text = (unichar_t *) _("X Expr:");
+    label[0].text = (uint32_t *) _("X Expr:");
     label[0].text_is_1byte = true;
     gcd[0].gd.label = &label[0];
     gcd[0].gd.pos.x = 10; gcd[0].gd.pos.y = 8;
     gcd[0].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    gcd[0].gd.popup_msg = (unichar_t *) _("These expressions may contain the operators +,-,*,/,%,^ (which means raise to the power of here), and ?: It may also contain a few standard functions. Basic terms are real numbers, x and y.\nExamples:\n x^3+2.5*x^2+5\n (x-300)*(y-200)/100\n y+sin(100*x)");
+    gcd[0].gd.popup_msg = (uint32_t *) _("These expressions may contain the operators +,-,*,/,%,^ (which means raise to the power of here), and ?: It may also contain a few standard functions. Basic terms are real numbers, x and y.\nExamples:\n x^3+2.5*x^2+5\n (x-300)*(y-200)/100\n y+sin(100*x)");
     gcd[0].creator = GLabelCreate;
     hvarray[0][0] = &gcd[0];
 
     if ( lastx!=NULL )
 	label[1].text = lastx;
     else {
-	label[1].text = (unichar_t *) "x";
+	label[1].text = (uint32_t *) "x";
 	label[1].text_is_1byte = true;
     }
     gcd[1].gd.label = &label[1];
     gcd[1].gd.pos.x = 55; gcd[1].gd.pos.y = 5; gcd[1].gd.pos.width = 135;
     gcd[1].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    gcd[1].gd.popup_msg = (unichar_t *) _("These expressions may contain the operators +,-,*,/,%,^ (which means raise to the power of here), and ?: It may also contain a few standard functions. Basic terms are real numbers, x and y.\nExamples:\n x^3+2.5*x^2+5\n (x-300)*(y-200)/100\n y+sin(100*x)");
+    gcd[1].gd.popup_msg = (uint32_t *) _("These expressions may contain the operators +,-,*,/,%,^ (which means raise to the power of here), and ?: It may also contain a few standard functions. Basic terms are real numbers, x and y.\nExamples:\n x^3+2.5*x^2+5\n (x-300)*(y-200)/100\n y+sin(100*x)");
     gcd[1].creator = GTextFieldCreate;
     hvarray[0][1] = &gcd[1]; hvarray[0][2] = NULL;
 
 /* GT: an expression describing the transformation applied to the Y coordinate */
-    label[2].text = (unichar_t *) _("Y Expr:");
+    label[2].text = (uint32_t *) _("Y Expr:");
     label[2].text_is_1byte = true;
     gcd[2].gd.label = &label[2];
     gcd[2].gd.pos.x = 10; gcd[2].gd.pos.y = gcd[0].gd.pos.y+26;
     gcd[2].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    gcd[2].gd.popup_msg = (unichar_t *) _("These expressions may contain the operators +,-,*,/,%,^ (which means raise to the power of here), and ?: It may also contain a few standard functions. Basic terms are real numbers, x and y.\nExamples:\n x^3+2.5*x^2+5\n (x-300)*(y-200)/100\n y+sin(100*x)");
+    gcd[2].gd.popup_msg = (uint32_t *) _("These expressions may contain the operators +,-,*,/,%,^ (which means raise to the power of here), and ?: It may also contain a few standard functions. Basic terms are real numbers, x and y.\nExamples:\n x^3+2.5*x^2+5\n (x-300)*(y-200)/100\n y+sin(100*x)");
     gcd[2].creator = GLabelCreate;
     hvarray[1][0] = &gcd[2];
 
     if ( lastx!=NULL )
 	label[3].text = lasty;
     else {
-	label[3].text = (unichar_t *) "y";
+	label[3].text = (uint32_t *) "y";
 	label[3].text_is_1byte = true;
     }
     gcd[3].gd.label = &label[3];
     gcd[3].gd.pos.x = gcd[1].gd.pos.x; gcd[3].gd.pos.y = gcd[1].gd.pos.y+26;
     gcd[3].gd.pos.width = gcd[1].gd.pos.width;
     gcd[3].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    gcd[3].gd.popup_msg = (unichar_t *) _("These expressions may contain the operators +,-,*,/,%,^ (which means raise to the power of here), and ?: It may also contain a few standard functions. Basic terms are real numbers, x and y.\nExamples:\n x^3+2.5*x^2+5\n (x-300)*(y-200)/100\n y+sin(100*x)");
+    gcd[3].gd.popup_msg = (uint32_t *) _("These expressions may contain the operators +,-,*,/,%,^ (which means raise to the power of here), and ?: It may also contain a few standard functions. Basic terms are real numbers, x and y.\nExamples:\n x^3+2.5*x^2+5\n (x-300)*(y-200)/100\n y+sin(100*x)");
     gcd[3].creator = GTextFieldCreate;
     hvarray[1][1] = &gcd[3]; hvarray[1][2] = NULL; hvarray[2][0] = NULL;
 
@@ -136,7 +136,7 @@ void NonLinearDlg(FontView *fv,CharView *cv) {
     gcd[4].gd.pos.x = 30-3; gcd[4].gd.pos.y = gcd[3].gd.pos.y+30;
     gcd[4].gd.pos.width = -1; gcd[4].gd.pos.height = 0;
     gcd[4].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    label[4].text = (unichar_t *) _("_OK");
+    label[4].text = (uint32_t *) _("_OK");
     label[4].text_is_1byte = true;
     label[4].text_in_resource = true;
     gcd[4].gd.label = &label[4];
@@ -147,7 +147,7 @@ void NonLinearDlg(FontView *fv,CharView *cv) {
     gcd[5].gd.pos.x = -30; gcd[5].gd.pos.y = gcd[4].gd.pos.y+3;
     gcd[5].gd.pos.width = -1; gcd[5].gd.pos.height = 0;
     gcd[5].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    label[5].text = (unichar_t *) _("_Cancel");
+    label[5].text = (uint32_t *) _("_Cancel");
     label[5].text_is_1byte = true;
     label[5].text_in_resource = true;
     gcd[5].gd.label = &label[5];
@@ -206,19 +206,19 @@ void NonLinearDlg(FontView *fv,CharView *cv) {
 }
 
 static GTextInfo originx[] = {
-    { (unichar_t *) N_("Glyph Origin"), NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("Center of Selection"), NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Glyph Origin"), NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Center of Selection"), NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
 /* GT: The (x,y) position on the window where the user last pressed a mouse button */
-    { (unichar_t *) N_("Last Press"), NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("Value"), NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Last Press"), NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Value"), NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     GTEXTINFO_EMPTY
 };
 static GTextInfo originy[] = {
-    { (unichar_t *) N_("Glyph Origin"), NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("Center of Selection"), NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Glyph Origin"), NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Center of Selection"), NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
 /* GT: The (x,y) position on the window where the user last pressed a mouse button */
-    { (unichar_t *) N_("Last Press"), NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("Value"), NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Last Press"), NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Value"), NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     GTEXTINFO_EMPTY
 };
 #define CID_XType	1001
@@ -232,7 +232,7 @@ static GTextInfo originy[] = {
 #define CID_Vanish	1009
 
 static real GetQuietReal(GWindow gw,int cid,int *err) {
-    const unichar_t *txt; unichar_t *end;
+    const uint32_t *txt; uint32_t *end;
     real val;
 
     txt = _GGadgetGetTitle(GWidgetGetControl(gw,cid));
@@ -248,7 +248,7 @@ static void PoV_DoVanish(struct nldlg *d) {
     int err = false;
     double vp;
     char buf[80];
-    unichar_t ubuf[80];
+    uint32_t ubuf[80];
 extern char *coord_sep;
 
     x = GetQuietReal(d->gw,CID_XValue,&err);
@@ -303,9 +303,9 @@ int PointOfViewDlg(struct pov_data *pov, SplineFont *sf, int flags) {
     if ( !done ) {
 	done = true;
 	for ( i=0; originx[i].text!=NULL; ++i )
-	    originx[i].text = (unichar_t *) _((char *) originx[i].text);
+	    originx[i].text = (uint32_t *) _((char *) originx[i].text);
 	for ( i=0; originy[i].text!=NULL; ++i )
-	    originy[i].text = (unichar_t *) _((char *) originy[i].text);
+	    originy[i].text = (uint32_t *) _((char *) originy[i].text);
     }
 
     *pov = def;
@@ -335,7 +335,7 @@ int PointOfViewDlg(struct pov_data *pov, SplineFont *sf, int flags) {
     memset(label,0,sizeof(label));
 
     k=l=0;
-    label[k].text = (unichar_t *) _("View Point");
+    label[k].text = (uint32_t *) _("View Point");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 10; gcd[k].gd.pos.y = 8;
@@ -343,7 +343,7 @@ int PointOfViewDlg(struct pov_data *pov, SplineFont *sf, int flags) {
     gcd[k++].creator = GLabelCreate;
     varray[l][0] = &gcd[k-1]; varray[l][1] = GCD_ColSpan; varray[l++][2] = NULL;
 
-    label[k].text = (unichar_t *) _("_X");
+    label[k].text = (uint32_t *) _("_X");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -369,7 +369,7 @@ int PointOfViewDlg(struct pov_data *pov, SplineFont *sf, int flags) {
     varray[l][0] = &boxes[2];
 
     sprintf( xval, "%g", rint(pov->x));
-    label[k].text = (unichar_t *) xval;
+    label[k].text = (uint32_t *) xval;
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 160; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y;  gcd[k].gd.pos.width = 60;
@@ -379,7 +379,7 @@ int PointOfViewDlg(struct pov_data *pov, SplineFont *sf, int flags) {
     gcd[k++].creator = GTextFieldCreate;
     varray[l][1] = &gcd[k-1]; varray[l++][2] = NULL;
 
-    label[k].text = (unichar_t *) _("_Y");
+    label[k].text = (uint32_t *) _("_Y");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -405,7 +405,7 @@ int PointOfViewDlg(struct pov_data *pov, SplineFont *sf, int flags) {
     varray[l][0] = &boxes[3];
 
     sprintf( yval, "%g", rint(pov->y));
-    label[k].text = (unichar_t *) yval;
+    label[k].text = (uint32_t *) yval;
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = gcd[k-3].gd.pos.x; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y;  gcd[k].gd.pos.width = gcd[k-3].gd.pos.width;
@@ -415,7 +415,7 @@ int PointOfViewDlg(struct pov_data *pov, SplineFont *sf, int flags) {
     gcd[k++].creator = GTextFieldCreate;
     varray[l][1] = &gcd[k-1]; varray[l++][2] = NULL;
 
-    label[k].text = (unichar_t *) _("Distance to drawing plane:");
+    label[k].text = (uint32_t *) _("Distance to drawing plane:");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 10; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y + 28;
@@ -424,7 +424,7 @@ int PointOfViewDlg(struct pov_data *pov, SplineFont *sf, int flags) {
     varray[l][0] = &gcd[k-1];
 
     sprintf( zval, "%g", rint(pov->z));
-    label[k].text = (unichar_t *) zval;
+    label[k].text = (uint32_t *) zval;
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 160; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y-4;  gcd[k].gd.pos.width = 60;
@@ -434,7 +434,7 @@ int PointOfViewDlg(struct pov_data *pov, SplineFont *sf, int flags) {
     gcd[k++].creator = GTextFieldCreate;
     varray[l][1] = &gcd[k-1]; varray[l++][2] = NULL;
 
-    label[k].text = (unichar_t *) _("Distance to projection plane:");
+    label[k].text = (uint32_t *) _("Distance to projection plane:");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = gcd[k-2].gd.pos.x; gcd[k].gd.pos.y = gcd[k-2].gd.pos.y + 24;
@@ -443,7 +443,7 @@ int PointOfViewDlg(struct pov_data *pov, SplineFont *sf, int flags) {
     varray[l][0] = &gcd[k-1];
 
     sprintf( dval, "%g", rint(pov->d));
-    label[k].text = (unichar_t *) dval;
+    label[k].text = (uint32_t *) dval;
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 160; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y-4;  gcd[k].gd.pos.width = 60;
@@ -453,7 +453,7 @@ int PointOfViewDlg(struct pov_data *pov, SplineFont *sf, int flags) {
     gcd[k++].creator = GTextFieldCreate;
     varray[l][1] = &gcd[k-1]; varray[l++][2] = NULL;
 
-    label[k].text = (unichar_t *) _("Drawing plane tilt:");
+    label[k].text = (uint32_t *) _("Drawing plane tilt:");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = gcd[k-2].gd.pos.x; gcd[k].gd.pos.y = gcd[k-2].gd.pos.y + 24;
@@ -462,7 +462,7 @@ int PointOfViewDlg(struct pov_data *pov, SplineFont *sf, int flags) {
     varray[l][0] = &gcd[k-1];
 
     sprintf( tval, "%g", rint(pov->tilt*180/3.1415926535897932));
-    label[k].text = (unichar_t *) tval;
+    label[k].text = (uint32_t *) tval;
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 160; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y-4;  gcd[k].gd.pos.width = 40;
@@ -472,7 +472,7 @@ int PointOfViewDlg(struct pov_data *pov, SplineFont *sf, int flags) {
     gcd[k++].creator = GTextFieldCreate;
     harray3[0] = &gcd[k-1];
 
-    label[k].text = (unichar_t *) U_("°");
+    label[k].text = (uint32_t *) U_("°");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = gcd[k-1].gd.pos.x+gcd[k-1].gd.pos.width+3; gcd[k].gd.pos.y = gcd[k-2].gd.pos.y;
@@ -485,7 +485,7 @@ int PointOfViewDlg(struct pov_data *pov, SplineFont *sf, int flags) {
     boxes[4].creator = GHBoxCreate;
     varray[l][1] = &boxes[4]; varray[l++][2] = NULL;
 
-    label[k].text = (unichar_t *) _("Direction of gaze:");
+    label[k].text = (uint32_t *) _("Direction of gaze:");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = gcd[k-3].gd.pos.x; gcd[k].gd.pos.y = gcd[k-3].gd.pos.y + 24;
@@ -494,7 +494,7 @@ int PointOfViewDlg(struct pov_data *pov, SplineFont *sf, int flags) {
     varray[l][0] = &gcd[k-1];
 
     sprintf( dirval, "%g", rint(pov->direction*180/3.1415926535897932));
-    label[k].text = (unichar_t *) dirval;
+    label[k].text = (uint32_t *) dirval;
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 160; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y-4;  gcd[k].gd.pos.width = 40;
@@ -504,7 +504,7 @@ int PointOfViewDlg(struct pov_data *pov, SplineFont *sf, int flags) {
     gcd[k++].creator = GTextFieldCreate;
     harray4[0] = &gcd[k-1];
 
-    label[k].text = (unichar_t *) U_("°");
+    label[k].text = (uint32_t *) U_("°");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = gcd[k-1].gd.pos.x+gcd[k-1].gd.pos.width+3; gcd[k].gd.pos.y = gcd[k-2].gd.pos.y;
@@ -517,21 +517,21 @@ int PointOfViewDlg(struct pov_data *pov, SplineFont *sf, int flags) {
     boxes[5].creator = GHBoxCreate;
     varray[l][1] = &boxes[5]; varray[l++][2] = NULL;
 
-    label[k].text = (unichar_t *) _("Vanishing Point:");
+    label[k].text = (uint32_t *) _("Vanishing Point:");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 10; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+18;
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    gcd[k].gd.popup_msg = (unichar_t *) _("This is the approximate location of the vanishing point.\nIt does not include the offset induced by \"Center of selection\"\nnor \"Last Press\".");
+    gcd[k].gd.popup_msg = (uint32_t *) _("This is the approximate location of the vanishing point.\nIt does not include the offset induced by \"Center of selection\"\nnor \"Last Press\".");
     gcd[k++].creator = GLabelCreate;
     varray[l][0] = &gcd[k-1];
 
-    label[k].text = (unichar_t *) "123456.,123456.";
+    label[k].text = (uint32_t *) "123456.,123456.";
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 160; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y;
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    gcd[k].gd.popup_msg = (unichar_t *) _("This is the approximate location of the vanishing point.\nIt does not include the offset induced by \"Center of selection\"\nnor \"Last Press\".");
+    gcd[k].gd.popup_msg = (uint32_t *) _("This is the approximate location of the vanishing point.\nIt does not include the offset induced by \"Center of selection\"\nnor \"Last Press\".");
     gcd[k].gd.cid = CID_Vanish;
     gcd[k++].creator = GLabelCreate;
     varray[l][1] = &gcd[k-1]; varray[l++][2] = NULL;
@@ -539,7 +539,7 @@ int PointOfViewDlg(struct pov_data *pov, SplineFont *sf, int flags) {
     gcd[k].gd.pos.x = 30-3; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+18;
     gcd[k].gd.pos.width = -1; gcd[k].gd.pos.height = 0;
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    label[k].text = (unichar_t *) _("_OK");
+    label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -550,7 +550,7 @@ int PointOfViewDlg(struct pov_data *pov, SplineFont *sf, int flags) {
     gcd[k].gd.pos.x = -30; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+3;
     gcd[k].gd.pos.width = -1; gcd[k].gd.pos.height = 0;
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    label[k].text = (unichar_t *) _("_Cancel");
+    label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];

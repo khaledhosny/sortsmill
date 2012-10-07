@@ -1253,7 +1253,7 @@ return( u+1 );
 #include <chardata.h>
 
 static int FigureUnicodes(int *unicode,SplineChar *sc,int u) {
-    const unichar_t *upt;
+    const uint32_t *upt;
 
     if ( u==-1 )
 return( -1 );
@@ -1271,7 +1271,7 @@ return( u );
 
 static int FindDecomposition(int *unicode, int u) {
     int uni;
-    const unichar_t *upt;
+    const uint32_t *upt;
     int i;
 
     for ( uni=0; uni<65536; ++uni ) {

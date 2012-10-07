@@ -143,104 +143,104 @@ struct gfc_data
 };
 
 static GTextInfo formattypes[] = {
-  {(unichar_t *) N_("PS Type 1 (Ascii)"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0,
+  {(uint32_t *) N_("PS Type 1 (Ascii)"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0,
    0, 0, 1, 0, 0, '\0'},
-  {(unichar_t *) N_("PS Type 1 (Binary)"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0,
+  {(uint32_t *) N_("PS Type 1 (Binary)"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0,
    0, 0, 1, 0, 0, '\0'},
 #if __Mac
-  {(unichar_t *) N_("PS Type 1 (Resource)"), NULL, 0, 0, NULL, NULL, 0, 0, 0,
+  {(uint32_t *) N_("PS Type 1 (Resource)"), NULL, 0, 0, NULL, NULL, 0, 0, 0,
    0, 0, 0, 1, 0, 0, '\0'},
 #else
-  {(unichar_t *) N_("PS Type 1 (MacBin)"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0,
+  {(uint32_t *) N_("PS Type 1 (MacBin)"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0,
    0, 0, 1, 0, 0, '\0'},
 #endif
-  {(unichar_t *) N_("PS Type 1 (Multiple)"), NULL, 0, 0, NULL, NULL, 0, 0, 0,
+  {(uint32_t *) N_("PS Type 1 (Multiple)"), NULL, 0, 0, NULL, NULL, 0, 0, 0,
    0, 0, 0, 1, 0, 0, '\0'},
-  {(unichar_t *) N_("PS Multiple Master(A)"), NULL, 0, 0, NULL, NULL, 0, 0, 0,
+  {(uint32_t *) N_("PS Multiple Master(A)"), NULL, 0, 0, NULL, NULL, 0, 0, 0,
    0, 0, 0, 1, 0, 0, '\0'},
-  {(unichar_t *) N_("PS Multiple Master(B)"), NULL, 0, 0, NULL, NULL, 0, 0, 0,
+  {(uint32_t *) N_("PS Multiple Master(B)"), NULL, 0, 0, NULL, NULL, 0, 0, 0,
    0, 0, 0, 1, 0, 0, '\0'},
-  {(unichar_t *) N_("PS Type 3"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1,
+  {(uint32_t *) N_("PS Type 3"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1,
    0, 0, '\0'},
-  {(unichar_t *) N_("PS Type 0"), NULL, 0, 0, NULL, NULL, 1, 0, 0, 0, 0, 0, 1,
+  {(uint32_t *) N_("PS Type 0"), NULL, 0, 0, NULL, NULL, 1, 0, 0, 0, 0, 0, 1,
    0, 0, '\0'},
-  {(unichar_t *) N_("PS CID"), NULL, 0, 0, NULL, NULL, 1, 0, 0, 0, 0, 0, 1, 0,
+  {(uint32_t *) N_("PS CID"), NULL, 0, 0, NULL, NULL, 1, 0, 0, 0, 0, 0, 1, 0,
    0, '\0'},
 /* GT: "CFF (Bare)" means a CFF font without the normal OpenType wrapper */
 /* GT: CFF is a font format that normally lives inside an OpenType font */
 /* GT: but it is perfectly meaningful to remove all the OpenType complexity */
 /* GT: and just leave a bare CFF font */
-  {(unichar_t *) N_("CFF (Bare)"), NULL, 0, 0, NULL, NULL, 1, 0, 0, 0, 0, 0,
+  {(uint32_t *) N_("CFF (Bare)"), NULL, 0, 0, NULL, NULL, 1, 0, 0, 0, 0, 0,
    1, 0, 0, '\0'},
-  {(unichar_t *) N_("CFF CID (Bare)"), NULL, 0, 0, NULL, NULL, 1, 0, 0, 0, 0,
+  {(uint32_t *) N_("CFF CID (Bare)"), NULL, 0, 0, NULL, NULL, 1, 0, 0, 0, 0,
    0, 1, 0, 0, '\0'},
-  {(unichar_t *) N_("Type42"), NULL, 0, 0, NULL, NULL, 1, 0, 0, 0, 0, 0, 1, 0,
+  {(uint32_t *) N_("Type42"), NULL, 0, 0, NULL, NULL, 1, 0, 0, 0, 0, 0, 1, 0,
    0, '\0'},
-  {(unichar_t *) N_("Type11 (CID 2)"), NULL, 0, 0, NULL, NULL, 1, 0, 0, 0, 0,
+  {(uint32_t *) N_("Type11 (CID 2)"), NULL, 0, 0, NULL, NULL, 1, 0, 0, 0, 0,
    0, 1, 0, 0, '\0'},
-  {(unichar_t *) N_("TrueType"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1,
+  {(uint32_t *) N_("TrueType"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1,
    0, 0, '\0'},
-  {(unichar_t *) N_("TrueType (Symbol)"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0,
+  {(uint32_t *) N_("TrueType (Symbol)"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0,
    0, 0, 1, 0, 0, '\0'},
 #if __Mac
-  {(unichar_t *) N_("TrueType (Resource)"), NULL, 0, 0, NULL, NULL, 0, 0, 0,
+  {(uint32_t *) N_("TrueType (Resource)"), NULL, 0, 0, NULL, NULL, 0, 0, 0,
    0, 0, 0, 1, 0, 0, '\0'},
 #else
-  {(unichar_t *) N_("TrueType (MacBin)"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0,
+  {(uint32_t *) N_("TrueType (MacBin)"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0,
    0, 0, 1, 0, 0, '\0'},
 #endif
-  {(unichar_t *) N_("TrueType (TTC)"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0,
+  {(uint32_t *) N_("TrueType (TTC)"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0,
    0, 1, 0, 0, '\0'},
-  {(unichar_t *) N_("TrueType (Mac dfont)"), NULL, 0, 0, NULL, NULL, 0, 0, 0,
+  {(uint32_t *) N_("TrueType (Mac dfont)"), NULL, 0, 0, NULL, NULL, 0, 0, 0,
    0, 0, 0, 1, 0, 0, '\0'},
-  {(unichar_t *) N_("OpenType (CFF)"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0,
+  {(uint32_t *) N_("OpenType (CFF)"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0,
    0, 1, 0, 0, '\0'},
-  {(unichar_t *) N_("OpenType (Mac dfont)"), NULL, 0, 0, NULL, NULL, 0, 0, 0,
+  {(uint32_t *) N_("OpenType (Mac dfont)"), NULL, 0, 0, NULL, NULL, 0, 0, 0,
    0, 0, 0, 1, 0, 0, '\0'},
-  {(unichar_t *) N_("OpenType CID"), NULL, 0, 0, NULL, NULL, 1, 0, 0, 0, 0, 0,
+  {(uint32_t *) N_("OpenType CID"), NULL, 0, 0, NULL, NULL, 1, 0, 0, 0, 0, 0,
    1, 0, 0, '\0'},
-  {(unichar_t *) N_("OpenType CID (dfont)"), NULL, 0, 0, NULL, NULL, 0, 0, 0,
+  {(uint32_t *) N_("OpenType CID (dfont)"), NULL, 0, 0, NULL, NULL, 0, 0, 0,
    0, 0, 0, 1, 0, 0, '\0'},
-  {(unichar_t *) N_("SVG font"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1,
+  {(uint32_t *) N_("SVG font"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1,
    0, 0, '\0'},
-  {(unichar_t *) N_("Unified Font Object"), NULL, 0, 0, NULL, NULL, 0, 0, 0,
+  {(uint32_t *) N_("Unified Font Object"), NULL, 0, 0, NULL, NULL, 0, 0, 0,
    0, 0, 0, 1, 0, 0, '\0'},
-  {(unichar_t *) N_("Web Open Font"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0,
+  {(uint32_t *) N_("Web Open Font"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0,
    0, 1, 0, 0, '\0'},
-  {(unichar_t *) N_("No Outline Font"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0,
+  {(uint32_t *) N_("No Outline Font"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0,
    0, 1, 0, 0, '\0'},
   GTEXTINFO_EMPTY
 };
 
 static GTextInfo bitmaptypes[] = {
-  {(unichar_t *) N_("BDF"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0,
+  {(uint32_t *) N_("BDF"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0,
    '\0'},
-  {(unichar_t *) N_("In TTF/OTF"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0,
+  {(uint32_t *) N_("In TTF/OTF"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0,
    1, 0, 0, '\0'},
-  {(unichar_t *) N_("Apple bitmap only sfnt (dfont)"), NULL, 0, 0, NULL, NULL,
+  {(uint32_t *) N_("Apple bitmap only sfnt (dfont)"), NULL, 0, 0, NULL, NULL,
    1, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-  {(unichar_t *) N_("(faked) MS bitmap only sfnt (ttf)"), NULL, 0, 0, NULL,
+  {(uint32_t *) N_("(faked) MS bitmap only sfnt (ttf)"), NULL, 0, 0, NULL,
    NULL, 1, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-  {(unichar_t *) N_("X11 bitmap only sfnt (otb)"), NULL, 0, 0, NULL, NULL, 0,
+  {(uint32_t *) N_("X11 bitmap only sfnt (otb)"), NULL, 0, 0, NULL, NULL, 0,
    0, 0, 0, 0, 0, 1, 0, 0, '\0'},
 #if __Mac
-  {(unichar_t *) N_("NFNT (Resource)"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0,
+  {(uint32_t *) N_("NFNT (Resource)"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0,
    0, 1, 0, 0, '\0'},
 #else
-  {(unichar_t *) N_("NFNT (MacBin)"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0,
+  {(uint32_t *) N_("NFNT (MacBin)"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0,
    0, 1, 0, 0, '\0'},
 #endif
 /* OS/X doesn't seem to support NFNTs, so there's no point in putting them in a dfont */
-/*  { (unichar_t *) "NFNT (dfont)", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },*/
-  {(unichar_t *) N_("Win FON"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1,
+/*  { (uint32_t *) "NFNT (dfont)", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },*/
+  {(uint32_t *) N_("Win FON"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1,
    0, 0, '\0'},
-  {(unichar_t *) N_("Win FNT"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1,
+  {(uint32_t *) N_("Win FNT"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1,
    0, 0, '\0'},
-  {(unichar_t *) N_("Palm OS Bitmap"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0,
+  {(uint32_t *) N_("Palm OS Bitmap"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0,
    0, 1, 0, 0, '\0'},
-  {(unichar_t *) N_("PS Type3 Bitmap"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0,
+  {(uint32_t *) N_("PS Type3 Bitmap"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0,
    0, 1, 0, 0, '\0'},
-  {(unichar_t *) N_("No Bitmap Fonts"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0,
+  {(uint32_t *) N_("No Bitmap Fonts"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0,
    0, 1, 0, 0, '\0'},
   GTEXTINFO_EMPTY
 };
@@ -259,8 +259,8 @@ static const char *pfaeditflag = "SplineFontDB:";
 int32 *
 ParseBitmapSizes (GGadget * g, char *msg, int *err)
 {
-  const unichar_t *val = _GGadgetGetTitle (g), *pt;
-  unichar_t *end, *end2;
+  const uint32_t *val = _GGadgetGetTitle (g), *pt;
+  uint32_t *end, *end2;
   int i;
   int32 *sizes;
   char oldloc[24];
@@ -699,7 +699,7 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.flags = gg_enabled | gg_visible | gg_pos_in_pixels;
   gcd[k++].creator = GGroupCreate;
 
-  label[k].text = (unichar_t *) U_ ("PostScript®");
+  label[k].text = (uint32_t *) U_ ("PostScript®");
   label[k].text_is_1byte = true;
   gcd[k].gd.label = &label[k];
   gcd[k].gd.pos.x = 8;
@@ -718,10 +718,10 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.pos.x = 10;
   gcd[k].gd.pos.y = 16;
   gcd[k].gd.flags = gg_visible | gg_utf8_popup;
-  label[k].text = (unichar_t *) _("Round");
+  label[k].text = (uint32_t *) _("Round");
   label[k].text_is_1byte = true;
   gcd[k].gd.popup_msg =
-    (unichar_t *)
+    (uint32_t *)
     _("Do you want to round coordinates to integers (this saves space)?");
   gcd[k].gd.label = &label[k];
   gcd[k].gd.cid = CID_PS_Round;
@@ -732,10 +732,10 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.pos.x = gcd[k - 1].gd.pos.x;
   gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 14;
   gcd[k].gd.flags = gg_visible | gg_utf8_popup;
-  label[k].text = (unichar_t *) _("Hints");
+  label[k].text = (uint32_t *) _("Hints");
   label[k].text_is_1byte = true;
   gcd[k].gd.popup_msg =
-    (unichar_t *) _("Do you want the font file to contain PostScript hints?");
+    (uint32_t *) _("Do you want the font file to contain PostScript hints?");
   gcd[k].gd.label = &label[k];
   gcd[k].gd.handle_controlevent = OPT_PSHints;
   gcd[k].gd.cid = CID_PS_Hints;
@@ -746,10 +746,10 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.pos.x = gcd[k - 1].gd.pos.x + 4;
   gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 14;
   gcd[k].gd.flags = gg_visible | gg_utf8_popup;
-  label[k].text = (unichar_t *) _("Flex Hints");
+  label[k].text = (uint32_t *) _("Flex Hints");
   label[k].text_is_1byte = true;
   gcd[k].gd.popup_msg =
-    (unichar_t *)
+    (uint32_t *)
     _("Do you want the font file to contain PostScript flex hints?");
   gcd[k].gd.label = &label[k];
   gcd[k].gd.cid = CID_PS_Flex;
@@ -762,10 +762,10 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.pos.x = gcd[k - 1].gd.pos.x;
   gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 14;
   gcd[k].gd.flags = gg_utf8_popup;
-  label[k].text = (unichar_t *) _("Hint Substitution");
+  label[k].text = (uint32_t *) _("Hint Substitution");
   label[k].text_is_1byte = true;
   gcd[k].gd.popup_msg =
-    (unichar_t *) _("Do you want the font file to do hint substitution?");
+    (uint32_t *) _("Do you want the font file to do hint substitution?");
   gcd[k].gd.label = &label[k];
   gcd[k].gd.cid = CID_PS_HintSubs;
   gcd[k++].creator = GCheckBoxCreate;
@@ -773,10 +773,10 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.pos.x = 10;
   gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 14;
   gcd[k].gd.flags = gg_utf8_popup;
-  label[k].text = (unichar_t *) _("First 256");
+  label[k].text = (uint32_t *) _("First 256");
   label[k].text_is_1byte = true;
   gcd[k].gd.popup_msg =
-    (unichar_t *)
+    (uint32_t *)
     _
     ("Limit the font so that only the glyphs referenced in the first 256 encodings\nwill be included in the file");
   gcd[k].gd.label = &label[k];
@@ -786,10 +786,10 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.pos.x = 110;
   gcd[k].gd.pos.y = gcd[k - 5].gd.pos.y;
   gcd[k].gd.flags = gg_visible | gg_utf8_popup;
-  label[k].text = (unichar_t *) _("Output AFM");
+  label[k].text = (uint32_t *) _("Output AFM");
   label[k].text_is_1byte = true;
   gcd[k].gd.popup_msg =
-    (unichar_t *)
+    (uint32_t *)
     U_
     ("The AFM file contains metrics information that many word-processors will read when using a PostScript® font.");
   gcd[k].gd.label = &label[k];
@@ -802,10 +802,10 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.pos.x = 112;
   gcd[k].gd.pos.y = gcd[k - 5].gd.pos.y;
   gcd[k].gd.flags = gg_visible | gg_utf8_popup;
-  label[k].text = (unichar_t *) _("Composites in AFM");
+  label[k].text = (uint32_t *) _("Composites in AFM");
   label[k].text_is_1byte = true;
   gcd[k].gd.popup_msg =
-    (unichar_t *)
+    (uint32_t *)
     U_
     ("The AFM format allows some information about composites\n(roughly the same as mark to base anchor classes) to be\nincluded. However it tends to make AFM files huge as it\nis not stored in an efficient manner.");
   gcd[k].gd.label = &label[k];
@@ -818,10 +818,10 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.pos.x = gcd[k - 2].gd.pos.x;
   gcd[k].gd.pos.y = gcd[k - 5].gd.pos.y;
   gcd[k].gd.flags = gg_visible | gg_utf8_popup;
-  label[k].text = (unichar_t *) _("Output PFM");
+  label[k].text = (uint32_t *) _("Output PFM");
   label[k].text_is_1byte = true;
   gcd[k].gd.popup_msg =
-    (unichar_t *)
+    (uint32_t *)
     U_
     ("The PFM file contains information Windows needs to install a PostScript® font.");
   gcd[k].gd.label = &label[k];
@@ -834,10 +834,10 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.pos.x = gcd[k - 1].gd.pos.x;
   gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 14;
   gcd[k].gd.flags = gg_visible | gg_utf8_popup;
-  label[k].text = (unichar_t *) _("Output TFM & ENC");
+  label[k].text = (uint32_t *) _("Output TFM & ENC");
   label[k].text_is_1byte = true;
   gcd[k].gd.popup_msg =
-    (unichar_t *)
+    (uint32_t *)
     U_
     ("The tfm and enc files contain information TeX needs to install a PostScript® font.");
   gcd[k].gd.label = &label[k];
@@ -854,7 +854,7 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   boxes[2].creator = GHVGroupCreate;
 
 
-  label[k].text = (unichar_t *) _("SFNT");
+  label[k].text = (uint32_t *) _("SFNT");
   label[k].text_is_1byte = true;
   gcd[k].gd.label = &label[k];
   gcd[k].gd.pos.x = 8;
@@ -873,10 +873,10 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.pos.x = gcd[group + 1].gd.pos.x;
   gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 8;
   gcd[k].gd.flags = gg_visible | gg_utf8_popup;
-  label[k].text = (unichar_t *) _("TrueType Hints");
+  label[k].text = (uint32_t *) _("TrueType Hints");
   label[k].text_is_1byte = true;
   gcd[k].gd.popup_msg =
-    (unichar_t *)
+    (uint32_t *)
     _
     ("Do you want the font file to contain truetype hints? This will not\ngenerate new instructions, it will just make use of whatever is associated\nwith each character.");
   gcd[k].gd.label = &label[k];
@@ -888,10 +888,10 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.pos.x = gcd[k - 1].gd.pos.x;
   gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 14;
   gcd[k].gd.flags = gg_visible | gg_utf8_popup;
-  label[k].text = (unichar_t *) _("PS Glyph Names");
+  label[k].text = (uint32_t *) _("PS Glyph Names");
   label[k].text_is_1byte = true;
   gcd[k].gd.popup_msg =
-    (unichar_t *)
+    (uint32_t *)
     _
     ("Do you want the font file to contain the names of each glyph in the font?");
   gcd[k].gd.label = &label[k];
@@ -903,10 +903,10 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.pos.x = gcd[k - 1].gd.pos.x;
   gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 14;
   gcd[k].gd.flags = gg_visible | gg_utf8_popup;
-  label[k].text = (unichar_t *) _("Apple");
+  label[k].text = (uint32_t *) _("Apple");
   label[k].text_is_1byte = true;
   gcd[k].gd.popup_msg =
-    (unichar_t *)
+    (uint32_t *)
     _
     ("Apple and MS/Adobe differ about the format of truetype and opentype files\nThis allows you to select which standard to follow for your font.\nThe main differences are:\n The requirements for the 'postscript' name in the name table conflict\n Bitmap data are stored in different tables\n Scaled composite characters are treated differently\n Use of GSUB rather than morx(t)/feat\n Use of GPOS rather than kern/opbd\n Use of GDEF rather than lcar/prop");
   gcd[k].gd.label = &label[k];
@@ -919,10 +919,10 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.pos.x = gcd[k - 1].gd.pos.x;
   gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 14;
   gcd[k].gd.flags = gg_visible | gg_utf8_popup;
-  label[k].text = (unichar_t *) _("OpenType");
+  label[k].text = (uint32_t *) _("OpenType");
   label[k].text_is_1byte = true;
   gcd[k].gd.popup_msg =
-    (unichar_t *)
+    (uint32_t *)
     _
     ("Apple and MS/Adobe differ about the format of truetype and opentype files\nThis allows you to select which standard to follow for your font.\nThe main differences are:\n The requirements for the 'postscript' name in the name table conflict\n Bitmap data are stored in different tables\n Scaled composite glyphs are treated differently\n Use of GSUB rather than morx(t)/feat\n Use of GPOS rather than kern/opbd\n Use of GDEF rather than lcar/prop");
   gcd[k].gd.label = &label[k];
@@ -934,10 +934,10 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.pos.x = gcd[k - 1].gd.pos.x + 4;
   gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 14;
   gcd[k].gd.flags = gg_visible | gg_utf8_popup;
-  label[k].text = (unichar_t *) _("Old style 'kern'");
+  label[k].text = (uint32_t *) _("Old style 'kern'");
   label[k].text_is_1byte = true;
   gcd[k].gd.popup_msg =
-    (unichar_t *)
+    (uint32_t *)
     _
     ("Many applications still don't support 'GPOS' kerning.\nIf you want to include both 'GPOS' and old-style 'kern'\ntables set this check box.\nIt may not be set in conjunction with the Apple checkbox.\nThis may confuse other applications though.");
   gcd[k].gd.label = &label[k];
@@ -950,10 +950,10 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.pos.x = gcd[k - 1].gd.pos.x + 4;
   gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 14;
   gcd[k].gd.flags = gg_visible | gg_utf8_popup;
-  label[k].text = (unichar_t *) _("Dummy 'DSIG'");
+  label[k].text = (uint32_t *) _("Dummy 'DSIG'");
   label[k].text_is_1byte = true;
   gcd[k].gd.popup_msg =
-    (unichar_t *)
+    (uint32_t *)
     _
     ("MS uses the presence of a 'DSIG' table to determine whether to use an OpenType\n"
      "icon for the tt font. FontForge can't generate a useful 'DSIG' table, but it can\n"
@@ -967,10 +967,10 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.pos.x = gcd[k - 1].gd.pos.x;
   gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 14;
   gcd[k].gd.flags = gg_visible | gg_utf8_popup;
-  label[k].text = (unichar_t *) _("Output Glyph Map");
+  label[k].text = (uint32_t *) _("Output Glyph Map");
   label[k].text_is_1byte = true;
   gcd[k].gd.popup_msg =
-    (unichar_t *)
+    (uint32_t *)
     _
     ("When generating a truetype or opentype font it is occasionally\nuseful to know the mapping between truetype glyph ids and\nglyph names. Setting this option will cause FontForge to\nproduce a file (with extension .g2n) containing those data.");
   gcd[k].gd.label = &label[k];
@@ -982,10 +982,10 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.pos.x = gcd[k - 1].gd.pos.x;
   gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 14;
   gcd[k].gd.flags = gg_visible | gg_utf8_popup;
-  label[k].text = (unichar_t *) _("Output OFM & CFG");
+  label[k].text = (uint32_t *) _("Output OFM & CFG");
   label[k].text_is_1byte = true;
   gcd[k].gd.popup_msg =
-    (unichar_t *)
+    (uint32_t *)
     _
     ("The ofm and cfg files contain information Omega needs to process a font.");
   gcd[k].gd.label = &label[k];
@@ -997,10 +997,10 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.pos.x = gcd[group + 6].gd.pos.x;
   gcd[k].gd.pos.y = gcd[k - 5].gd.pos.y;
   gcd[k].gd.flags = gg_visible | gg_utf8_popup;
-  label[k].text = (unichar_t *) _("PfaEdit Table");
+  label[k].text = (uint32_t *) _("PfaEdit Table");
   label[k].text_is_1byte = true;
   gcd[k].gd.popup_msg =
-    (unichar_t *)
+    (uint32_t *)
     _
     ("The PfaEdit table is an extension to the TrueType format\nand contains various data used by FontForge\n(It should be called the FontForge table,\nbut isn't for historical reasons)");
   gcd[k].gd.label = &label[k];
@@ -1013,10 +1013,10 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.pos.x = gcd[k - 1].gd.pos.x + 2;
   gcd[k].gd.pos.y = gcd[k - 5].gd.pos.y - 4;
   gcd[k].gd.flags = gg_visible | gg_utf8_popup;
-  label[k].text = (unichar_t *) _("Save Comments");
+  label[k].text = (uint32_t *) _("Save Comments");
   label[k].text_is_1byte = true;
   gcd[k].gd.popup_msg =
-    (unichar_t *) _("Save glyph comments in the PfEd table");
+    (uint32_t *) _("Save glyph comments in the PfEd table");
   gcd[k].gd.label = &label[k];
   gcd[k].gd.cid = CID_TTF_PfEdComments;
   gcd[k++].creator = GCheckBoxCreate;
@@ -1027,10 +1027,10 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.pos.x = gcd[k - 1].gd.pos.x;
   gcd[k].gd.pos.y = gcd[k - 5].gd.pos.y - 4;
   gcd[k].gd.flags = gg_visible | gg_utf8_popup;
-  label[k].text = (unichar_t *) _("Save Colors");
+  label[k].text = (uint32_t *) _("Save Colors");
   label[k].text_is_1byte = true;
   gcd[k].gd.popup_msg =
-    (unichar_t *) _("Save glyph colors in the PfEd table");
+    (uint32_t *) _("Save glyph colors in the PfEd table");
   gcd[k].gd.label = &label[k];
   gcd[k].gd.cid = CID_TTF_PfEdColors;
   gcd[k++].creator = GCheckBoxCreate;
@@ -1041,10 +1041,10 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.pos.x = gcd[k - 3].gd.pos.x;
   gcd[k].gd.pos.y = gcd[k - 5].gd.pos.y;
   gcd[k].gd.flags = gg_visible | gg_utf8_popup;
-  label[k].text = (unichar_t *) _("Lookup Names");
+  label[k].text = (uint32_t *) _("Lookup Names");
   label[k].text_is_1byte = true;
   gcd[k].gd.popup_msg =
-    (unichar_t *)
+    (uint32_t *)
     _("Preserve the names of the GPOS/GSUB lookups and subtables");
   gcd[k].gd.label = &label[k];
   gcd[k].gd.cid = CID_TTF_PfEdLookups;
@@ -1056,10 +1056,10 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.pos.x = gcd[k - 1].gd.pos.x;
   gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 14;
   gcd[k].gd.flags = gg_visible | gg_utf8_popup;
-  label[k].text = (unichar_t *) _("Save Guides");
+  label[k].text = (uint32_t *) _("Save Guides");
   label[k].text_is_1byte = true;
   gcd[k].gd.popup_msg =
-    (unichar_t *) _("Save the guidelines in the Guide layer.");
+    (uint32_t *) _("Save the guidelines in the Guide layer.");
   gcd[k].gd.label = &label[k];
   gcd[k].gd.cid = CID_TTF_PfEdGuides;
   gcd[k++].creator = GCheckBoxCreate;
@@ -1070,10 +1070,10 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.pos.x = gcd[k - 1].gd.pos.x;
   gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 14;
   gcd[k].gd.flags = gg_visible | gg_utf8_popup;
-  label[k].text = (unichar_t *) _("Save Layers");
+  label[k].text = (uint32_t *) _("Save Layers");
   label[k].text_is_1byte = true;
   gcd[k].gd.popup_msg =
-    (unichar_t *) _("Preserve any background and spiro layers.\n"
+    (uint32_t *) _("Preserve any background and spiro layers.\n"
                     "Also if we output a truetype font from a\n"
                     "cubic database, save the cubic splines.");
   gcd[k].gd.label = &label[k];
@@ -1086,10 +1086,10 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.pos.x = gcd[k - 3].gd.pos.x;
   gcd[k].gd.pos.y = gcd[k - 5].gd.pos.y;
   gcd[k].gd.flags = gg_visible | gg_utf8_popup;
-  label[k].text = (unichar_t *) _("TeX Table");
+  label[k].text = (uint32_t *) _("TeX Table");
   label[k].text_is_1byte = true;
   gcd[k].gd.popup_msg =
-    (unichar_t *)
+    (uint32_t *)
     _
     ("The TeX table is an extension to the TrueType format\nand the various data you would expect to find in\na tfm file (that isn't already stored elsewhere\nin the ttf file)\n");
   gcd[k].gd.label = &label[k];
@@ -1110,10 +1110,10 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
 
   fontlog_k = k;
   gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-  label[k].text = (unichar_t *) _("Output Font Log");
+  label[k].text = (uint32_t *) _("Output Font Log");
   label[k].text_is_1byte = true;
   gcd[k].gd.popup_msg =
-    (unichar_t *)
+    (uint32_t *)
     _("The FONTLOG is a text file containing pertinent information\n"
       "about the font including such things as its change history.\n"
       "The SIL Open Font License highly recommends its use.\n\n"
@@ -1129,7 +1129,7 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.pos.y = gcd[group2].gd.pos.y + gcd[group2].gd.pos.height + 10 - 3;
   gcd[k].gd.pos.width = -1;
   gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
-  label[k].text = (unichar_t *) _("_OK");
+  label[k].text = (uint32_t *) _("_OK");
   label[k].text_is_1byte = true;
   label[k].text_in_resource = true;
   gcd[k].gd.label = &label[k];
@@ -1143,7 +1143,7 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 3;
   gcd[k].gd.pos.width = -1;
   gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-  label[k].text = (unichar_t *) _("_Cancel");
+  label[k].text = (uint32_t *) _("_Cancel");
   label[k].text_is_1byte = true;
   label[k].text_in_resource = true;
   gcd[k].gd.label = &label[k];
@@ -1267,7 +1267,7 @@ AskResolution (int bf, BDFFont *bdf)
       memset (&gcd, 0, sizeof (gcd));
       memset (&boxes, 0, sizeof (boxes));
 
-      label[0].text = (unichar_t *) _("BDF Resolution");
+      label[0].text = (uint32_t *) _("BDF Resolution");
       label[0].text_is_1byte = true;
       gcd[0].gd.label = &label[0];
       gcd[0].gd.pos.x = 5;
@@ -1286,7 +1286,7 @@ AskResolution (int bf, BDFFont *bdf)
       varray[1] = GCD_ColSpan;
       varray[2] = NULL;
 
-      label[1].text = (unichar_t *) (bf == bf_bdf ? "75" : "96");
+      label[1].text = (uint32_t *) (bf == bf_bdf ? "75" : "96");
       label[1].text_is_1byte = true;
       gcd[1].gd.label = &label[1];
       gcd[1].gd.mnemonic = (bf == bf_bdf ? '7' : '9');
@@ -1301,7 +1301,7 @@ AskResolution (int bf, BDFFont *bdf)
       varray[4] = GCD_Glue;
       varray[5] = NULL;
 
-      label[2].text = (unichar_t *) (bf == bf_bdf ? "100" : "120");
+      label[2].text = (uint32_t *) (bf == bf_bdf ? "100" : "120");
       label[2].text_is_1byte = true;
       gcd[2].gd.label = &label[2];
       gcd[2].gd.mnemonic = '1';
@@ -1316,7 +1316,7 @@ AskResolution (int bf, BDFFont *bdf)
       varray[7] = GCD_Glue;
       varray[8] = NULL;
 
-      label[3].text = (unichar_t *) _("_Guess");
+      label[3].text = (uint32_t *) _("_Guess");
       label[3].text_is_1byte = true;
       label[3].text_in_resource = true;
       gcd[3].gd.label = &label[3];
@@ -1327,14 +1327,14 @@ AskResolution (int bf, BDFFont *bdf)
         gcd[3].gd.flags |= gg_cb_on;
       gcd[3].gd.cid = -1;
       gcd[3].gd.popup_msg =
-        (unichar_t *)
+        (uint32_t *)
         _("Guess each font's resolution based on its pixel size");
       gcd[3].creator = GRadioCreate;
       varray[9] = &gcd[3];
       varray[10] = GCD_Glue;
       varray[11] = NULL;
 
-      label[4].text = (unichar_t *) _("_Other");
+      label[4].text = (uint32_t *) _("_Other");
       label[4].text_is_1byte = true;
       label[4].text_in_resource = true;
       gcd[4].gd.label = &label[4];
@@ -1344,11 +1344,11 @@ AskResolution (int bf, BDFFont *bdf)
       gcd[4].gd.cid = 1004;
       gcd[4].creator = GRadioCreate;
 
-      label[5].text = (unichar_t *) (bf == bf_bdf ? "96" : "72");
+      label[5].text = (uint32_t *) (bf == bf_bdf ? "96" : "72");
       if (def_res > 0)
         {
           sprintf (buf, "%d", def_res);
-          label[5].text = (unichar_t *) buf;
+          label[5].text = (uint32_t *) buf;
         }
       label[5].text_is_1byte = true;
       gcd[5].gd.label = &label[5];
@@ -1370,7 +1370,7 @@ AskResolution (int bf, BDFFont *bdf)
       gcd[6].gd.pos.width = -1;
       gcd[6].gd.pos.height = 0;
       gcd[6].gd.flags = gg_visible | gg_enabled | gg_but_default;
-      label[6].text = (unichar_t *) _("_OK");
+      label[6].text = (uint32_t *) _("_OK");
       label[6].text_is_1byte = true;
       label[6].text_in_resource = true;
       gcd[6].gd.mnemonic = 'O';
@@ -1386,7 +1386,7 @@ AskResolution (int bf, BDFFont *bdf)
       gcd[7].gd.pos.width = -1;
       gcd[7].gd.pos.height = 0;
       gcd[7].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-      label[7].text = (unichar_t *) _("_Cancel");
+      label[7].text = (uint32_t *) _("_Cancel");
       label[7].text_is_1byte = true;
       label[7].text_in_resource = true;
       gcd[7].gd.label = &label[7];
@@ -1485,7 +1485,7 @@ SearchDirForWernerFile (char *dir, char *filename)
 
 static enum fchooserret
 GFileChooserFilterWernerSFDs (GGadget * g, GDirEntry * ent,
-                              const unichar_t *dir)
+                              const uint32_t *dir)
 {
   enum fchooserret ret = GFileChooserDefFilter (g, ent, dir);
   char buf2[200];
@@ -1585,7 +1585,7 @@ AnyRefs (RefChar * refs)
 }
 
 static int
-OFLibUploadGather (struct gfc_data *d, unichar_t *path)
+OFLibUploadGather (struct gfc_data *d, uint32_t *path)
 {
   OFLibData oflib;
   int ret;
@@ -1666,7 +1666,7 @@ OFLibUploadGather (struct gfc_data *d, unichar_t *path)
 }
 
 static void
-DoSave (struct gfc_data *d, unichar_t *path)
+DoSave (struct gfc_data *d, uint32_t *path)
 {
   int err = false;
   char *temp;
@@ -2124,7 +2124,7 @@ static void
 _GFD_SaveOk (struct gfc_data *d)
 {
   GGadget *tf;
-  unichar_t *ret;
+  uint32_t *ret;
   int formatstate = GGadgetGetFirstListSelectedItem (d->pstype);
 
   if (!d->family
@@ -2249,7 +2249,7 @@ static void
 GFD_dircreated (GIOControl * gio)
 {
   struct gfc_data *d = gio->userdata;
-  unichar_t *dir = x_u32_strdup_or_null (gio->path);
+  uint32_t *dir = x_u32_strdup_or_null (gio->path);
 
   GFileChooserReplaceIO (d->gfc, NULL);
   GFileChooserSetDir (d->gfc, dir);
@@ -2277,7 +2277,7 @@ GFD_NewDir (GGadget * g, GEvent * e)
     {
       struct gfc_data *d = GDrawGetUserData (GGadgetGetWindow (g));
       char *newdir;
-      unichar_t *temp;
+      uint32_t *temp;
       newdir =
         gwwv_ask_string (_("Create directory..."), NULL,
                          _("Directory name?"));
@@ -2305,14 +2305,14 @@ static void
 BitmapName (struct gfc_data *d)
 {
   int bf = GGadgetGetFirstListSelectedItem (d->bmptype);
-  unichar_t *ret = x_gc_u32_grabstr (GGadgetGetTitle (d->gfc));
-  unichar_t *dup, *pt, *tpt;
+  uint32_t *ret = x_gc_u32_grabstr (GGadgetGetTitle (d->gfc));
+  uint32_t *dup, *pt, *tpt;
   int format = GGadgetGetFirstListSelectedItem (d->pstype);
 
   if (format != ff_none)
     return;
 
-  dup = x_gc_malloc_atomic ((u_strlen (ret) + 30) * sizeof (unichar_t));
+  dup = x_gc_malloc_atomic ((u_strlen (ret) + 30) * sizeof (uint32_t));
   u_strcpy (dup, ret);
 
   pt = u_strrchr (dup, '.');
@@ -2341,11 +2341,11 @@ GFD_Format (GGadget * g, GEvent * e)
   if (e->type == et_controlevent && e->u.control.subtype == et_listselected)
     {
       struct gfc_data *d = GDrawGetUserData (GGadgetGetWindow (g));
-      unichar_t *pt, *dup, *tpt, *ret;
+      uint32_t *pt, *dup, *tpt, *ret;
       int format = GGadgetGetFirstListSelectedItem (d->pstype);
       int32 len;
       int bf;
-      static unichar_t nullstr[] = { 0 };
+      static uint32_t nullstr[] = { 0 };
       GTextInfo **list;
       SplineFont *temp;
 
@@ -2365,7 +2365,7 @@ GFD_Format (GGadget * g, GEvent * e)
         }
 
       ret = GGadgetGetTitle (d->gfc);
-      dup = xmalloc ((u_strlen (ret) + 30) * sizeof (unichar_t));
+      dup = xmalloc ((u_strlen (ret) + 30) * sizeof (uint32_t));
       u_strcpy (dup, ret);
       free (ret);
       pt = u_strrchr (dup, '.');
@@ -2621,13 +2621,13 @@ e_h (GWindow gw, GEvent * event)
   return (true);
 }
 
-static unichar_t *
+static uint32_t *
 BitmapList (SplineFont *sf)
 {
   BDFFont *bdf;
   int i;
   char *cret, *pt;
-  unichar_t *uret;
+  uint32_t *uret;
 
   for (bdf = sf->bitmaps, i = 0; bdf != NULL; bdf = bdf->next, ++i);
   pt = cret = xmalloc ((i + 1) * 20);
@@ -2647,7 +2647,7 @@ BitmapList (SplineFont *sf)
   return (uret);
 }
 
-static unichar_t *
+static uint32_t *
 uStyleName (SplineFont *sf)
 {
   int stylecode = MacStyleCode (sf, NULL);
@@ -2749,7 +2749,7 @@ SFUsableLayerNames (SplineFont *sf, int def_layer)
   for (layer = 0; layer < sf->layer_cnt; ++layer)
     if (sf->layers[layer].ticked)
       {
-        ti[cnt].text = (unichar_t *) sf->layers[layer].name;
+        ti[cnt].text = (uint32_t *) sf->layers[layer].name;
         ti[cnt].text_is_1byte = true;
         ti[cnt].selected = layer == def_layer;
         ti[cnt++].userdata = (void *) (intptr_t) layer;
@@ -2804,9 +2804,9 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
     {
       done = true;
       for (i = 0; formattypes[i].text; ++i)
-        formattypes[i].text = (unichar_t *) _((char *) formattypes[i].text);
+        formattypes[i].text = (uint32_t *) _((char *) formattypes[i].text);
       for (i = 0; bitmaptypes[i].text; ++i)
-        bitmaptypes[i].text = (unichar_t *) _((char *) bitmaptypes[i].text);
+        bitmaptypes[i].text = (uint32_t *) _((char *) bitmaptypes[i].text);
     }
 
   if (family == gf_macfamily)
@@ -2977,7 +2977,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
   gcd[1].gd.pos.y = y - 3;
   gcd[1].gd.pos.width = -1;
   gcd[1].gd.flags = gg_visible | gg_enabled | gg_but_default;
-  label[1].text = (unichar_t *) _("_Generate");
+  label[1].text = (uint32_t *) _("_Generate");
   label[1].text_is_1byte = true;
   label[1].text_in_resource = true;
   gcd[1].gd.mnemonic = 'S';
@@ -2992,7 +2992,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
   gcd[2].gd.pos.y = y;
   gcd[2].gd.pos.width = -1;
   gcd[2].gd.flags = gg_visible | gg_enabled;
-  label[2].text = (unichar_t *) _("_Filter");
+  label[2].text = (uint32_t *) _("_Filter");
   label[2].text_is_1byte = true;
   label[2].text_in_resource = true;
   gcd[2].gd.mnemonic = 'F';
@@ -3007,7 +3007,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
   gcd[3].gd.pos.width = -1;
   gcd[3].gd.pos.height = 0;
   gcd[3].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-  label[3].text = (unichar_t *) _("_Cancel");
+  label[3].text = (uint32_t *) _("_Cancel");
   label[3].text_is_1byte = true;
   label[3].text_in_resource = true;
   gcd[3].gd.label = &label[3];
@@ -3025,7 +3025,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
   gcd[4].gd.pos.width = -1;
   gcd[4].gd.pos.height = 0;
   gcd[4].gd.flags = gg_visible | gg_enabled;
-  label[4].text = (unichar_t *) S_ ("Directory|_New");
+  label[4].text = (uint32_t *) S_ ("Directory|_New");
   label[4].text_is_1byte = true;
   label[4].text_in_resource = true;
   label[4].image = &_GIcon_dir;
@@ -3046,10 +3046,10 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
   gcd[5].gd.pos.width = 0;
   gcd[5].gd.pos.height = 0;
   gcd[5].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-  label[5].text = (unichar_t *) _("Options");
+  label[5].text = (uint32_t *) _("Options");
   label[5].text_is_1byte = true;
   gcd[5].gd.popup_msg =
-    (unichar_t *)
+    (uint32_t *)
     _("Allows you to select optional behavior when generating the font");
   gcd[5].gd.label = &label[5];
   gcd[5].gd.handle_controlevent = GFD_Options;
@@ -3282,14 +3282,14 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
   hvarray[7] = NULL;
 
   k = 10;
-  label[k].text = (unichar_t *) _("Force glyph names to:");
+  label[k].text = (uint32_t *) _("Force glyph names to:");
   label[k].text_is_1byte = true;
   gcd[k].gd.label = &label[k];
   gcd[k].gd.pos.x = 8;
   gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 24 + 6;
   gcd[k].gd.flags = gg_enabled | gg_visible | gg_utf8_popup;
   gcd[k].gd.popup_msg =
-    (unichar_t *)
+    (uint32_t *)
     _
     ("In the saved font, force all glyph names to match those in the specified namelist");
   gcd[k++].creator = GLabelCreate;
@@ -3302,14 +3302,14 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
   gcd[k].gd.pos.width = gcd[k - 2].gd.pos.width;
   gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
   gcd[k].gd.popup_msg =
-    (unichar_t *)
+    (uint32_t *)
     _
     ("In the saved font, force all glyph names to match those in the specified namelist");
   gcd[k].creator = GListButtonCreate;
   nlnames = AllNamelistNames ();
   for (cnt = 0; nlnames[cnt] != NULL; ++cnt);
   namelistnames = xcalloc (cnt + 3, sizeof (GTextInfo));
-  namelistnames[0].text = (unichar_t *) _("No Rename");
+  namelistnames[0].text = (uint32_t *) _("No Rename");
   namelistnames[0].text_is_1byte = true;
   if (force_names_when_saving == NULL)
     {
@@ -3319,7 +3319,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
   namelistnames[1].line = true;
   for (cnt = 0; nlnames[cnt] != NULL; ++cnt)
     {
-      namelistnames[cnt + 2].text = (unichar_t *) nlnames[cnt];
+      namelistnames[cnt + 2].text = (uint32_t *) nlnames[cnt];
       namelistnames[cnt + 2].text_is_1byte = true;
       if (force_names_when_saving != NULL &&
           strcmp (_(force_names_when_saving->title), nlnames[cnt]) == 0)
@@ -3337,14 +3337,14 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
     {
       /* Too annoying to check if all fonts in a family have the same set of */
       /*  useful layers. So only do this if not family */
-      label[k].text = (unichar_t *) _("Layer:");
+      label[k].text = (uint32_t *) _("Layer:");
       label[k].text_is_1byte = true;
       gcd[k].gd.label = &label[k];
       gcd[k].gd.pos.x = 8;
       gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 24 + 6;
       gcd[k].gd.flags = gg_enabled | gg_visible | gg_utf8_popup;
       gcd[k].gd.popup_msg =
-        (unichar_t *)
+        (uint32_t *)
         _
         ("In the saved font, force all glyph names to match those in the specified namelist");
       gcd[k++].creator = GLabelCreate;
@@ -3354,7 +3354,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
       gcd[k].gd.pos.width = gcd[k - 2].gd.pos.width;
       gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
       gcd[k].gd.popup_msg =
-        (unichar_t *) _("Save a font based on the specified layer");
+        (uint32_t *) _("Save a font based on the specified layer");
       gcd[k].creator = GListButtonCreate;
       gcd[k].gd.cid = CID_Layers;
       gcd[k++].gd.u.list = lynames = SFUsableLayerNames (sf, layer);
@@ -3372,7 +3372,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
       /* Too time consuming to validate lots of fonts, and what UI would I use? */
       /*  so only do this if not family */
       vk = k;
-      label[k].text = (unichar_t *) _("Validate Before Saving");
+      label[k].text = (uint32_t *) _("Validate Before Saving");
       label[k].text_is_1byte = true;
       gcd[k].gd.label = &label[k];
       gcd[k].gd.pos.x = 8;
@@ -3385,7 +3385,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
       else
         gcd[k].gd.flags = (gg_enabled | gg_visible | gg_utf8_popup);
       gcd[k].gd.popup_msg =
-        (unichar_t *)
+        (uint32_t *)
         _
         ("Check the glyph outlines for standard errors before saving\nThis can be slow.");
       gcd[k++].creator = GCheckBoxCreate;
@@ -3394,7 +3394,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
       hvarray[hvi++] = GCD_ColSpan;
       hvarray[hvi++] = NULL;
 
-      label[k].text = (unichar_t *) _("Append a FONTLOG entry");
+      label[k].text = (uint32_t *) _("Append a FONTLOG entry");
       label[k].text_is_1byte = true;
       gcd[k].gd.label = &label[k];
       gcd[k].gd.pos.x = 8;
@@ -3403,7 +3403,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
       if (old_fontlog)
         gcd[k].gd.flags |= gg_cb_on;
       gcd[k].gd.popup_msg =
-        (unichar_t *)
+        (uint32_t *)
         _
         ("The FONTLOG allows you to keep a log of changes made to your font.");
       gcd[k].gd.cid = CID_AppendFontLog;
@@ -3426,14 +3426,14 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
 
 
       /* And OFLib uploads of families won't work because they don't accept dfonts */
-      label[k].text = (unichar_t *) _("Upload to the");
+      label[k].text = (uint32_t *) _("Upload to the");
       label[k].text_is_1byte = true;
       gcd[k].gd.label = &label[k];
       gcd[k].gd.pos.x = 8;
       gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 24 + 6;
       gcd[k].gd.flags = (gg_enabled | gg_visible | gg_utf8_popup);
       gcd[k].gd.popup_msg =
-        (unichar_t *)
+        (uint32_t *)
         _
         ("Once you have a final version of your font\nand if your font is licensed under the Open\nFont License, then you might consider uploading\nit to the Open Font Library. This is a website\nof Free/Libre fonts.\n\nYou must have previously registered with OFLib\nand have a valid username/password there.\n\nObviously you must be connected to the internet\nfor this to work.");
       gcd[k].gd.cid = CID_OFLibUpload;
@@ -3458,19 +3458,19 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
             small_blue_box.main_background = GDrawGetDefaultBackground (NULL);
         }
 
-      label[k].text = (unichar_t *) _("Open Font Library");
+      label[k].text = (uint32_t *) _("Open Font Library");
       label[k].text_is_1byte = true;
       gcd[k].gd.label = &label[k];
       gcd[k].gd.box = &small_blue_box;
       gcd[k].gd.flags =
         gg_enabled | gg_visible | gg_dontcopybox | gg_utf8_popup;
       gcd[k].gd.handle_controlevent = GFD_OFLibHelp;
-      gcd[k].gd.popup_msg = (unichar_t *) "http://openfontlibrary.org/";
+      gcd[k].gd.popup_msg = (uint32_t *) "http://openfontlibrary.org/";
       gcd[k++].creator = GButtonCreate;
       oflibinfo[1] = &gcd[k - 1];
       oflibinfo[2] = GCD_HPad10;
 
-      label[k].text = (unichar_t *) _("Register");
+      label[k].text = (uint32_t *) _("Register");
       label[k].text_is_1byte = true;
       gcd[k].gd.label = &label[k];
       gcd[k].gd.flags =
@@ -3478,7 +3478,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
       gcd[k].gd.box = &small_blue_box;
       gcd[k].gd.handle_controlevent = GFD_OFLibRegister;
       gcd[k].gd.popup_msg =
-        (unichar_t *) "http://openfontlibrary.org/media/register";
+        (uint32_t *) "http://openfontlibrary.org/media/register";
       gcd[k++].creator = GButtonCreate;
       oflibinfo[3] = &gcd[k - 1];
       oflibinfo[4] = GCD_Glue;
@@ -3501,35 +3501,35 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
       hvarray[hvi++] = GCD_ColSpan;
       hvarray[hvi++] = NULL;
 
-      label[k].text = (unichar_t *) _("Username:");
+      label[k].text = (uint32_t *) _("Username:");
       label[k].text_is_1byte = true;
       gcd[k].gd.label = &label[k];
       gcd[k].gd.flags = (gg_enabled | gg_utf8_popup);
-      gcd[k].gd.popup_msg = (unichar_t *) _("Username on OFLib");
+      gcd[k].gd.popup_msg = (uint32_t *) _("Username on OFLib");
       gcd[k].gd.cid = CID_OFLibUsername + CID_OFLibLabOffset;
       gcd[k++].creator = GLabelCreate;
       oflarray[0][0] = &gcd[k - 1];
 
-      label[k].text = (unichar_t *) oflib_username;
+      label[k].text = (uint32_t *) oflib_username;
       label[k].text_is_1byte = true;
       if (oflib_username != NULL)
         gcd[k].gd.label = &label[k];
       gcd[k].gd.flags = (gg_enabled | gg_utf8_popup);
-      gcd[k].gd.popup_msg = (unichar_t *) _("Username on OFLib");
+      gcd[k].gd.popup_msg = (uint32_t *) _("Username on OFLib");
       gcd[k].gd.cid = CID_OFLibUsername;
       gcd[k++].creator = GTextFieldCreate;
       oflarray[0][1] = &gcd[k - 1];
 
-      label[k].text = (unichar_t *) _("Password:");
+      label[k].text = (uint32_t *) _("Password:");
       label[k].text_is_1byte = true;
       gcd[k].gd.label = &label[k];
       gcd[k].gd.flags = (gg_enabled | gg_utf8_popup);
-      gcd[k].gd.popup_msg = (unichar_t *) _("Password on OFLib");
+      gcd[k].gd.popup_msg = (uint32_t *) _("Password on OFLib");
       gcd[k].gd.cid = CID_OFLibPassword + CID_OFLibLabOffset;
       gcd[k++].creator = GLabelCreate;
       oflarray[0][2] = &gcd[k - 1];
 
-      label[k].text = (unichar_t *) copy (oflib_password);
+      label[k].text = (uint32_t *) copy (oflib_password);
       if (label[k].text != NULL)
         for (oflpwd = (char *) label[k].text; *oflpwd != '\0'; ++oflpwd)
           *oflpwd ^= 0xf;       /* Simple encryption */
@@ -3538,20 +3538,20 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
       if (oflib_password != NULL)
         gcd[k].gd.label = &label[k];
       gcd[k].gd.flags = (gg_enabled | gg_utf8_popup);
-      gcd[k].gd.popup_msg = (unichar_t *) _("Password on OFLib");
+      gcd[k].gd.popup_msg = (uint32_t *) _("Password on OFLib");
       gcd[k].gd.cid = CID_OFLibPassword;
       gcd[k++].creator = GPasswordCreate;
       oflarray[0][3] = &gcd[k - 1];
       oflarray[0][4] = NULL;
 
-      label[k].text = (unichar_t *) _("Remember Me");
+      label[k].text = (uint32_t *) _("Remember Me");
       label[k].text_is_1byte = true;
       gcd[k].gd.label = &label[k];
       gcd[k].gd.flags = (oflib_username != NULL && oflib_password != NULL) ?
         (gg_enabled | gg_cb_on | gg_utf8_popup) :
         (gg_enabled | gg_utf8_popup);
       gcd[k].gd.popup_msg =
-        (unichar_t *)
+        (uint32_t *)
         _
         ("FontForge will remember your username/password\nby storing them as plain text (insecurely) in your preference file");
       gcd[k].gd.cid = CID_OFLibRememberMe;
@@ -3562,31 +3562,31 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
       oflarray[1][4] = NULL;
 
 
-      label[k].text = (unichar_t *) _("OFLib Name:");
+      label[k].text = (uint32_t *) _("OFLib Name:");
       label[k].text_is_1byte = true;
       gcd[k].gd.label = &label[k];
       gcd[k].gd.flags = (gg_enabled | gg_utf8_popup);
-      gcd[k].gd.popup_msg = (unichar_t *) _("Font name to display on OFLib");
+      gcd[k].gd.popup_msg = (uint32_t *) _("Font name to display on OFLib");
       gcd[k].gd.cid = CID_OFLibName + CID_OFLibLabOffset;
       gcd[k++].creator = GLabelCreate;
       oflarray[2][0] = &gcd[k - 1];
 
       label[k].text =
-        (unichar_t *) (sf->fullname != NULL ? sf->fullname : sf->fontname);
+        (uint32_t *) (sf->fullname != NULL ? sf->fullname : sf->fontname);
       label[k].text_is_1byte = true;
       gcd[k].gd.label = &label[k];
       gcd[k].gd.flags = (gg_enabled | gg_utf8_popup);
-      gcd[k].gd.popup_msg = (unichar_t *) _("Font name to display on OFLib");
+      gcd[k].gd.popup_msg = (uint32_t *) _("Font name to display on OFLib");
       gcd[k].gd.cid = CID_OFLibName;
       gcd[k++].creator = GTextFieldCreate;
       oflarray[2][1] = &gcd[k - 1];
 
-      label[k].text = (unichar_t *) _("Artists:");
+      label[k].text = (uint32_t *) _("Artists:");
       label[k].text_is_1byte = true;
       gcd[k].gd.label = &label[k];
       gcd[k].gd.flags = (gg_enabled | gg_utf8_popup);
       gcd[k].gd.popup_msg =
-        (unichar_t *)
+        (uint32_t *)
         _
         ("Other artists involved in the design of this font.\nCollaborators, etc.");
       gcd[k].gd.cid = CID_OFLibArtists + CID_OFLibLabOffset;
@@ -3595,7 +3595,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
 
       gcd[k].gd.flags = (gg_enabled | gg_utf8_popup);
       gcd[k].gd.popup_msg =
-        (unichar_t *)
+        (uint32_t *)
         _
         ("Other artists involved in the design of this font.\nCollaborators, etc.");
       gcd[k].gd.cid = CID_OFLibArtists;
@@ -3603,12 +3603,12 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
       oflarray[2][3] = &gcd[k - 1];
       oflarray[2][4] = NULL;
 
-      label[k].text = (unichar_t *) _("Keyword Tags:");
+      label[k].text = (uint32_t *) _("Keyword Tags:");
       label[k].text_is_1byte = true;
       gcd[k].gd.label = &label[k];
       gcd[k].gd.flags = (gg_enabled | gg_utf8_popup);
       gcd[k].gd.popup_msg =
-        (unichar_t *)
+        (uint32_t *)
         _
         ("A comma separated list of keywords that describe\nthe font to help others search for it.\nYou may use whatever keyword tags you desire.\nSuggestions: serif, sans_serif, bold, italic, oblique,\nextended, compressed, thin, demibold, black, outline, regular,\ndisplay, etc.");
       gcd[k].gd.cid = CID_OFLibTags + CID_OFLibLabOffset;
@@ -3617,7 +3617,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
 
       gcd[k].gd.flags = (gg_enabled | gg_utf8_popup);
       gcd[k].gd.popup_msg =
-        (unichar_t *)
+        (uint32_t *)
         _
         ("A comma separated list of keywords that describe\nthe font to help others search for it.\nYou may use whatever keyword tags you desire.\nSuggestions: serif, sans_serif, bold, italic, oblique,\nextended, compressed, thin, demibold, black, outline,\nregular, display, etc.");
       gcd[k].gd.cid = CID_OFLibTags;
@@ -3626,65 +3626,65 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
       oflarray[3][2] = oflarray[3][3] = GCD_ColSpan;
       oflarray[3][4] = NULL;
 
-      label[k].text = (unichar_t *) _("Description:");
+      label[k].text = (uint32_t *) _("Description:");
       label[k].text_is_1byte = true;
       gcd[k].gd.label = &label[k];
       gcd[k].gd.flags = (gg_enabled | gg_utf8_popup);
-      gcd[k].gd.popup_msg = (unichar_t *) _("A description of the font");
+      gcd[k].gd.popup_msg = (uint32_t *) _("A description of the font");
       gcd[k].gd.cid = CID_OFLibDescription + CID_OFLibLabOffset;
       gcd[k++].creator = GLabelCreate;
       oflarray[4][0] = &gcd[k - 1];
 
       gcd[k].gd.pos.height = 4 * 12;
       gcd[k].gd.flags = (gg_enabled | gg_utf8_popup | gg_textarea_wrap);
-      gcd[k].gd.popup_msg = (unichar_t *) _("A description of the font");
+      gcd[k].gd.popup_msg = (uint32_t *) _("A description of the font");
       gcd[k].gd.cid = CID_OFLibDescription;
       gcd[k++].creator = GTextAreaCreate;
       oflarray[4][1] = &gcd[k - 1];
       oflarray[4][2] = oflarray[4][3] = GCD_ColSpan;
       oflarray[4][4] = NULL;
 
-      label[k].text = (unichar_t *) _("License:");
+      label[k].text = (uint32_t *) _("License:");
       label[k].text_is_1byte = true;
       gcd[k].gd.label = &label[k];
       gcd[k].gd.flags = (gg_enabled | gg_utf8_popup);
-      gcd[k].gd.popup_msg = (unichar_t *) _("A description of the font");
+      gcd[k].gd.popup_msg = (uint32_t *) _("A description of the font");
       gcd[k].gd.cid = CID_OFLibOFL + CID_OFLibLabOffset;
       gcd[k++].creator = GLabelCreate;
       oflarray[5][0] = &gcd[k - 1];
 
-      label[k].text = (unichar_t *) _("SIL");
+      label[k].text = (uint32_t *) _("SIL");
       label[k].image_precedes = false;
       label[k].image = &OFL_logo;
       label[k].text_is_1byte = true;
       gcd[k].gd.label = &label[k];
       gcd[k].gd.flags = (gg_enabled | gg_utf8_popup | gg_cb_on);
       gcd[k].gd.popup_msg =
-        (unichar_t *)
+        (uint32_t *)
         _("The SIL Open Font License\nPlease see http://scripts.sil.org/OFL");
       gcd[k].gd.cid = CID_OFLibOFL;
       gcd[k++].creator = GRadioCreate;
       oflarray[5][1] = &gcd[k - 1];
       oflarray[5][2] = GCD_ColSpan;
 
-      label[k].text = (unichar_t *) _("Public Domain");
+      label[k].text = (uint32_t *) _("Public Domain");
       label[k].text_is_1byte = true;
       gcd[k].gd.label = &label[k];
       gcd[k].gd.flags = (gg_enabled | gg_utf8_popup);
-      gcd[k].gd.popup_msg = (unichar_t *) _("Public Domain");
+      gcd[k].gd.popup_msg = (uint32_t *) _("Public Domain");
       gcd[k].gd.cid = CID_OFLibPD;
       gcd[k++].creator = GRadioCreate;
       oflarray[5][3] = &gcd[k - 1];
       oflarray[5][4] = NULL;
 
-      label[k].text = (unichar_t *) _("Upload License");
+      label[k].text = (uint32_t *) _("Upload License");
       label[k].text_is_1byte = true;
       gcd[k].gd.label = &label[k];
       gcd[k].gd.flags = gg_enabled | gg_utf8_popup;
       if (HasLicense (sf, NULL))
         gcd[k].gd.flags |= gg_cb_on;
       gcd[k].gd.popup_msg =
-        (unichar_t *)
+        (uint32_t *)
         _("Upload the license (as found in the list of truetype names)");
       gcd[k].gd.cid = CID_UploadLicense;
       gcd[k++].creator = GCheckBoxCreate;
@@ -3694,7 +3694,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
       oflarray[6][3] = GCD_Glue;
       oflarray[6][4] = NULL;
 
-      label[k].text = (unichar_t *) _("Upload FONTLOG");
+      label[k].text = (uint32_t *) _("Upload FONTLOG");
       label[k].text_is_1byte = true;
       gcd[k].gd.label = &label[k];
       gcd[k].gd.flags = gg_enabled;
@@ -3708,22 +3708,22 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
       oflarray[7][3] = GCD_Glue;
       oflarray[7][4] = NULL;
 
-      label[k].text = (unichar_t *) _("Preview:");
+      label[k].text = (uint32_t *) _("Preview:");
       label[k].text_is_1byte = true;
       gcd[k].gd.label = &label[k];
       gcd[k].gd.flags = (gg_enabled | gg_utf8_popup);
-      gcd[k].gd.popup_msg = (unichar_t *) _("An image of the font in use");
+      gcd[k].gd.popup_msg = (uint32_t *) _("An image of the font in use");
       gcd[k].gd.cid = CID_OFLibGenPreview + CID_OFLibLabOffset;
       gcd[k++].creator = GLabelCreate;
       oflarray[8][0] = &gcd[k - 1];
 
-      label[k].text = (unichar_t *) _("Generated Image");
+      label[k].text = (uint32_t *) _("Generated Image");
       label[k].image_precedes = false;
       label[k].text_is_1byte = true;
       gcd[k].gd.label = &label[k];
       gcd[k].gd.flags = (gg_enabled | gg_utf8_popup | gg_cb_on);
       gcd[k].gd.popup_msg =
-        (unichar_t *)
+        (uint32_t *)
         _
         ("FontForge will generate a sample image for you\nbefore uploading.");
       gcd[k].gd.cid = CID_OFLibGenPreview;
@@ -3731,12 +3731,12 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
       parray[0][0] = &gcd[k - 1];
       parray[0][1] = GCD_ColSpan;
 
-      label[k].text = (unichar_t *) _("No Preview");
+      label[k].text = (uint32_t *) _("No Preview");
       label[k].image_precedes = false;
       label[k].text_is_1byte = true;
       gcd[k].gd.label = &label[k];
       gcd[k].gd.flags = (gg_enabled | gg_utf8_popup);
-      gcd[k].gd.popup_msg = (unichar_t *) _("No image will be uploaded.");
+      gcd[k].gd.popup_msg = (uint32_t *) _("No image will be uploaded.");
       gcd[k].gd.cid = CID_OFLibNoPreview;
       gcd[k++].creator = GRadioCreate;
       parray[0][2] = &gcd[k - 1];
@@ -3744,7 +3744,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
 
       gcd[k].gd.flags = (gg_enabled | gg_utf8_popup | gg_rad_continueold);
       gcd[k].gd.popup_msg =
-        (unichar_t *)
+        (uint32_t *)
         _
         ("If you have already created a preview image of the font\nthen provide the pathspec here.");
       gcd[k].gd.cid = CID_OFLibDiskPreview;
@@ -3753,20 +3753,20 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
 
       gcd[k].gd.flags = (gg_enabled | gg_utf8_popup);
       gcd[k].gd.popup_msg =
-        (unichar_t *)
+        (uint32_t *)
         _
         ("If you have already created a preview image of the font\nthen provide the pathspec here.");
       gcd[k].gd.cid = CID_OFLibPreviewText;
       gcd[k++].creator = GTextFieldCreate;
       p2array[1] = &gcd[k - 1];
 
-      label[k].text = (unichar_t *) _("...");
+      label[k].text = (uint32_t *) _("...");
       label[k].image_precedes = false;
       label[k].text_is_1byte = true;
       gcd[k].gd.label = &label[k];
       gcd[k].gd.flags = (gg_enabled | gg_utf8_popup);
       gcd[k].gd.popup_msg =
-        (unichar_t *)
+        (uint32_t *)
         _
         ("If you have already created a preview image of the font\nthen provide the pathspec here.");
       gcd[k].gd.cid = CID_OFLibPreviewBrowse;
@@ -3790,12 +3790,12 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
       oflarray[8][2] = oflarray[8][3] = GCD_ColSpan;
       oflarray[8][4] = NULL;
 
-      label[k].text = (unichar_t *) _("Not Safe for Work");
+      label[k].text = (uint32_t *) _("Not Safe for Work");
       label[k].text_is_1byte = true;
       gcd[k].gd.label = &label[k];
       gcd[k].gd.flags = gg_enabled | gg_utf8_popup;
       gcd[k].gd.popup_msg =
-        (unichar_t *)
+        (uint32_t *)
         _
         ("If for some reason the font is deemed inappropriate\nfor a work environment.");
       gcd[k].gd.cid = CID_OFLibNotSafe;
@@ -3877,7 +3877,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
           gcd[k].gd.pos.y = y;
           gcd[k].gd.pos.width = gcd[8].gd.pos.x - gcd[k].gd.pos.x - 5;
           gcd[k].gd.flags = gg_visible | gg_enabled | gg_cb_on;
-          label[k].text = (unichar_t *) (familysfs[fc][j]->fontname);
+          label[k].text = (uint32_t *) (familysfs[fc][j]->fontname);
           label[k].text_is_1byte = true;
           gcd[k].gd.label = &label[k];
           gcd[k].gd.cid = CID_Family + i * 10;
@@ -3918,12 +3918,12 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
         {
           gcd[k].gd.flags =
             gg_visible | gg_enabled | gg_cb_on | gg_utf8_popup;
-          label[k].text = (unichar_t *) _("Merge tables across fonts");
+          label[k].text = (uint32_t *) _("Merge tables across fonts");
           label[k].text_is_1byte = true;
           gcd[k].gd.label = &label[k];
           gcd[k].gd.cid = CID_MergeTables;
           gcd[k].gd.popup_msg =
-            (unichar_t *)
+            (uint32_t *)
             copy (_
                   ("FontForge can generate two styles of ttc file.\n"
                    "In the first each font is a separate entity\n"
@@ -3945,12 +3945,12 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
           famarray[f++] = NULL;
 
           gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-          label[k].text = (unichar_t *) _("As CFF fonts");
+          label[k].text = (uint32_t *) _("As CFF fonts");
           label[k].text_is_1byte = true;
           gcd[k].gd.label = &label[k];
           gcd[k].gd.cid = CID_TTC_CFF;
           gcd[k].gd.popup_msg =
-            (unichar_t *)
+            (uint32_t *)
             copy (_
                   ("Put CFF fonts into the ttc rather than TTF.\n These seem to work on the mac and linux\n but are documented not to work on Windows."));
           gcd[k++].creator = GCheckBoxCreate;
@@ -3986,7 +3986,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
     {
       for (i = 13; i < k; ++i)
         if (gcd[i].gd.popup_msg != NULL)
-          free ((unichar_t *) gcd[i].gd.popup_msg);
+          free ((uint32_t *) gcd[i].gd.popup_msg);
     }
   else
     {
@@ -4000,7 +4000,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
     SplineFont *master = sf->cidmaster ? sf->cidmaster : sf;
     char *fn = master->defbasefilename != NULL ? master->defbasefilename :
       master->fontname;
-    unichar_t *temp = xmalloc (sizeof (unichar_t) * (strlen (fn) + 30));
+    uint32_t *temp = xmalloc (sizeof (uint32_t) * (strlen (fn) + 30));
     uc_strcpy (temp, fn);
     uc_strcat (temp,
                savefont_extensions[ofs] !=

@@ -3808,7 +3808,7 @@ static void dumpgasp(struct alltabs *at, SplineFont *sf) {
 }
 
 #if 0
-static void dumpmacstr(FILE *file,unichar_t *str) {
+static void dumpmacstr(FILE *file,uint32_t *str) {
     int ch;
     unsigned char *table;
 
@@ -3842,7 +3842,7 @@ static void dumpc2ustr(FILE *file,char *str) {
 #endif
 
 static void dumpustr(FILE *file,char *utf8_str) {
-    unichar_t *ustr = utf82u_copy(utf8_str), *pt=ustr;
+    uint32_t *ustr = utf82u_copy(utf8_str), *pt=ustr;
     do {
 	putc(*pt>>8,file);
 	putc(*pt&0xff,file);
@@ -4037,7 +4037,7 @@ return;		/* Should not happen, but it did */
 	    if ( enc==NULL )
 		--ne;
 	    else {
-		unichar_t *uin = utf82u_copy(utf8name);
+		uint32_t *uin = utf82u_copy(utf8name);
 		outlen = 3*strlen(utf8name)+10;
 		out = space = xmalloc(outlen+2);
 		in = (char *) uin; inlen = 2*u_strlen(uin);
@@ -4912,7 +4912,7 @@ static void dumpcmap(struct alltabs *at, SplineFont *sf,enum fontformat format) 
 	table[9] = table[13] = 2;
     }
     for ( i=0; i<256 ; ++i ) {
-	extern unichar_t MacRomanEnc[];
+	extern uint32_t MacRomanEnc[];
 	/* sc = SFFindExistingCharMac(sf,map,MacRomanEnc[i]); */
 	sc = SFGetChar(sf,MacRomanEnc[i],NULL);
 	if ( sc!=NULL && sc->ttf_glyph!=-1 )

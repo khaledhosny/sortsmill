@@ -36,9 +36,9 @@
 #include <netdb.h>
 #endif
 
-char *_GIO_decomposeURL(const unichar_t *url,char **host, int *port, char **username,
+char *_GIO_decomposeURL(const uint32_t *url,char **host, int *port, char **username,
 	char **password) {
-    unichar_t *pt, *pt2, *upt, *ppt;
+    uint32_t *pt, *pt2, *upt, *ppt;
     char *path;
     char proto[40];
     /* ftp://[user[:password]@]ftpserver[:port]/url-path */

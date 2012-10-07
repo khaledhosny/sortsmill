@@ -59,21 +59,21 @@ typedef struct greseditdlg {
 } GRE;
 
 static GTextInfo bordertype[] = {
-    { (unichar_t *) "None", NULL, 0, 0, (void *) (intptr_t) bt_none, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) "Box", NULL, 0, 0, (void *) (intptr_t) bt_box, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) "Raised", NULL, 0, 0, (void *) (intptr_t) bt_raised, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) "Lowered", NULL, 0, 0, (void *) (intptr_t) bt_lowered, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) "Engraved", NULL, 0, 0, (void *) (intptr_t) bt_engraved, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) "Embossed", NULL, 0, 0, (void *) (intptr_t) bt_embossed, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) "Double", NULL, 0, 0, (void *) (intptr_t) bt_double, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) "None", NULL, 0, 0, (void *) (intptr_t) bt_none, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) "Box", NULL, 0, 0, (void *) (intptr_t) bt_box, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) "Raised", NULL, 0, 0, (void *) (intptr_t) bt_raised, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) "Lowered", NULL, 0, 0, (void *) (intptr_t) bt_lowered, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) "Engraved", NULL, 0, 0, (void *) (intptr_t) bt_engraved, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) "Embossed", NULL, 0, 0, (void *) (intptr_t) bt_embossed, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) "Double", NULL, 0, 0, (void *) (intptr_t) bt_double, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     GTEXTINFO_EMPTY
 };
 
 static GTextInfo bordershape[] = {
-    { (unichar_t *) "Rect", NULL, 0, 0, (void *) (intptr_t) bs_rect, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) "Round Rect", NULL, 0, 0, (void *) (intptr_t) bs_roundrect, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) "Elipse", NULL, 0, 0, (void *) (intptr_t) bs_elipse, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) "Diamond", NULL, 0, 0, (void *) (intptr_t) bs_diamond, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) "Rect", NULL, 0, 0, (void *) (intptr_t) bs_rect, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) "Round Rect", NULL, 0, 0, (void *) (intptr_t) bs_roundrect, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) "Elipse", NULL, 0, 0, (void *) (intptr_t) bs_elipse, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) "Diamond", NULL, 0, 0, (void *) (intptr_t) bs_diamond, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     GTEXTINFO_EMPTY
 };
 
@@ -691,7 +691,7 @@ static int GRE_Save(GGadget *g, GEvent *e) {
 	if ( gre->change_res_filename != NULL ) {
 	    memset(gcd,0,sizeof(gcd));
 	    memset(lab,0,sizeof(lab));
-	    lab[0].text = (unichar_t *) _("Store this filename in preferences");
+	    lab[0].text = (uint32_t *) _("Store this filename in preferences");
 	    lab[0].text_is_1byte = true;
 	    gcd[0].gd.label = &lab[0];
 	    gcd[0].gd.flags = gg_visible|gg_enabled|gg_cb_on;
@@ -1041,7 +1041,7 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 
 	j=k=l=0;
 	if ( res->initialcomment!=NULL ) {
-	    lab[k].text = (unichar_t *) S_(res->initialcomment);
+	    lab[k].text = (uint32_t *) S_(res->initialcomment);
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled;
@@ -1051,14 +1051,14 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 	if ( res->examples!=NULL )
 	    tofree[i].marray[j++] = res->examples;
 	if ( res->inherits_from != NULL ) {
-	    lab[k].text = (unichar_t *) _("Inherits from");
+	    lab[k].text = (uint32_t *) _("Inherits from");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled;
 	    gcd[k++].creator = GLabelCreate;
 	    tofree[i].iarray[0] = &gcd[k-1];
 
-	    lab[k].text = (unichar_t *) S_(res->inherits_from->name);
+	    lab[k].text = (uint32_t *) S_(res->inherits_from->name);
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled|gg_dontcopybox;
@@ -1074,7 +1074,7 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 	    tofree[i].ibox.creator = GHBoxCreate;
 	    tofree[i].marray[j++] = &tofree[i].ibox;
 	} else if ( res->boxdata!=NULL ) {
-	    lab[k].text = (unichar_t *) _("Does not inherit from anything");
+	    lab[k].text = (uint32_t *) _("Does not inherit from anything");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled;
@@ -1085,17 +1085,17 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 	if ( res->boxdata!=NULL ) {
 	    res->orig_state = *res->boxdata;
 
-	    lab[k].text = (unichar_t *) _("Inherit");
+	    lab[k].text = (uint32_t *) _("Inherit");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
-	    gcd[k].gd.popup_msg = (unichar_t *) _("Inherits for same field in parent");
+	    gcd[k].gd.popup_msg = (uint32_t *) _("Inherits for same field in parent");
 	    gcd[k].gd.cid = ++cid;
 	    gcd[k].gd.handle_controlevent = GRE_InheritFlagChange;
 	    gcd[k++].creator = GCheckBoxCreate;
 	    tofree[i].farray[l][0] = &gcd[k-1];
 
-	    lab[k].text = (unichar_t *) _("Outline Inner Border");
+	    lab[k].text = (uint32_t *) _("Outline Inner Border");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled;
@@ -1113,17 +1113,17 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 		gcd[k-1].gd.flags &= ~gg_enabled;
 	    }
 
-	    lab[k].text = (unichar_t *) _("Inherit");
+	    lab[k].text = (uint32_t *) _("Inherit");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
-	    gcd[k].gd.popup_msg = (unichar_t *) _("Inherits for same field in parent");
+	    gcd[k].gd.popup_msg = (uint32_t *) _("Inherits for same field in parent");
 	    gcd[k].gd.cid = ++cid;
 	    gcd[k].gd.handle_controlevent = GRE_InheritFlagChange;
 	    gcd[k++].creator = GCheckBoxCreate;
 	    tofree[i].farray[l][2] = &gcd[k-1];
 
-	    lab[k].text = (unichar_t *) _("Outline Outer Border");
+	    lab[k].text = (uint32_t *) _("Outline Outer Border");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled;
@@ -1144,17 +1144,17 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 	    tofree[i].farray[l++][5] = NULL;
 
 
-	    lab[k].text = (unichar_t *) _("Inherit");
+	    lab[k].text = (uint32_t *) _("Inherit");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
-	    gcd[k].gd.popup_msg = (unichar_t *) _("Inherits for same field in parent");
+	    gcd[k].gd.popup_msg = (uint32_t *) _("Inherits for same field in parent");
 	    gcd[k].gd.cid = ++cid;
 	    gcd[k].gd.handle_controlevent = GRE_InheritFlagChange;
 	    gcd[k++].creator = GCheckBoxCreate;
 	    tofree[i].farray[l][0] = &gcd[k-1];
 
-	    lab[k].text = (unichar_t *) _("Show Active Border");
+	    lab[k].text = (uint32_t *) _("Show Active Border");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled;
@@ -1172,17 +1172,17 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 		gcd[k-1].gd.flags &= ~gg_enabled;
 	    }
 
-	    lab[k].text = (unichar_t *) _("Inherit");
+	    lab[k].text = (uint32_t *) _("Inherit");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
-	    gcd[k].gd.popup_msg = (unichar_t *) _("Inherits for same field in parent");
+	    gcd[k].gd.popup_msg = (uint32_t *) _("Inherits for same field in parent");
 	    gcd[k].gd.cid = ++cid;
 	    gcd[k].gd.handle_controlevent = GRE_InheritFlagChange;
 	    gcd[k++].creator = GCheckBoxCreate;
 	    tofree[i].farray[l][2] = &gcd[k-1];
 
-	    lab[k].text = (unichar_t *) _("Outer Shadow");
+	    lab[k].text = (uint32_t *) _("Outer Shadow");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled;
@@ -1203,17 +1203,17 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 	    tofree[i].farray[l++][5] = NULL;
 
 
-	    lab[k].text = (unichar_t *) _("Inherit");
+	    lab[k].text = (uint32_t *) _("Inherit");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
-	    gcd[k].gd.popup_msg = (unichar_t *) _("Inherits for same field in parent");
+	    gcd[k].gd.popup_msg = (uint32_t *) _("Inherits for same field in parent");
 	    gcd[k].gd.cid = ++cid;
 	    gcd[k].gd.handle_controlevent = GRE_InheritFlagChange;
 	    gcd[k++].creator = GCheckBoxCreate;
 	    tofree[i].farray[l][0] = &gcd[k-1];
 
-	    lab[k].text = (unichar_t *) _("Depressed Background");
+	    lab[k].text = (uint32_t *) _("Depressed Background");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled;
@@ -1231,17 +1231,17 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 		gcd[k-1].gd.flags &= ~gg_enabled;
 	    }
 
-	    lab[k].text = (unichar_t *) _("Inherit");
+	    lab[k].text = (uint32_t *) _("Inherit");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
-	    gcd[k].gd.popup_msg = (unichar_t *) _("Inherits for same field in parent");
+	    gcd[k].gd.popup_msg = (uint32_t *) _("Inherits for same field in parent");
 	    gcd[k].gd.cid = ++cid;
 	    gcd[k].gd.handle_controlevent = GRE_InheritFlagChange;
 	    gcd[k++].creator = GCheckBoxCreate;
 	    tofree[i].farray[l][2] = &gcd[k-1];
 
-	    lab[k].text = (unichar_t *) _("Outline Default Button");
+	    lab[k].text = (uint32_t *) _("Outline Default Button");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled;
@@ -1262,17 +1262,17 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 	    tofree[i].farray[l++][5] = NULL;
 
 
-	    lab[k].text = (unichar_t *) _("Inherit");
+	    lab[k].text = (uint32_t *) _("Inherit");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
-	    gcd[k].gd.popup_msg = (unichar_t *) _("Inherits for same field in parent");
+	    gcd[k].gd.popup_msg = (uint32_t *) _("Inherits for same field in parent");
 	    gcd[k].gd.cid = ++cid;
 	    gcd[k].gd.handle_controlevent = GRE_InheritFlagChange;
 	    gcd[k++].creator = GCheckBoxCreate;
 	    tofree[i].farray[l][0] = &gcd[k-1];
 
-	    lab[k].text = (unichar_t *) _("Background Gradient");
+	    lab[k].text = (uint32_t *) _("Background Gradient");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled;
@@ -1303,17 +1303,17 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 	    l = 0;
 
 /* GT: "I." is an abreviation for "Inherits" */
-	    lab[k].text = (unichar_t *) _("I.");
+	    lab[k].text = (uint32_t *) _("I.");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
-	    gcd[k].gd.popup_msg = (unichar_t *) _("Inherits for same field in parent");
+	    gcd[k].gd.popup_msg = (uint32_t *) _("Inherits for same field in parent");
 	    gcd[k].gd.cid = ++cid;
 	    gcd[k].gd.handle_controlevent = GRE_InheritColChange;
 	    gcd[k++].creator = GCheckBoxCreate;
 	    tofree[i].carray[l][0] = &gcd[k-1];
 
-	    lab[k].text = (unichar_t *) _("Normal Text Color:");
+	    lab[k].text = (uint32_t *) _("Normal Text Color:");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled;
@@ -1338,17 +1338,17 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 	    }
 
 /* GT: "I." is an abreviation for "Inherits" */
-	    lab[k].text = (unichar_t *) _("I.");
+	    lab[k].text = (uint32_t *) _("I.");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
-	    gcd[k].gd.popup_msg = (unichar_t *) _("Inherits for same field in parent");
+	    gcd[k].gd.popup_msg = (uint32_t *) _("Inherits for same field in parent");
 	    gcd[k].gd.cid = ++cid;
 	    gcd[k].gd.handle_controlevent = GRE_InheritColChange;
 	    gcd[k++].creator = GCheckBoxCreate;
 	    tofree[i].carray[l][4] = &gcd[k-1];
 
-	    lab[k].text = (unichar_t *) _("Disabled Text Color:");
+	    lab[k].text = (uint32_t *) _("Disabled Text Color:");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled;
@@ -1375,17 +1375,17 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 	    tofree[i].carray[l++][8] = NULL;
 
 /* GT: "I." is an abreviation for "Inherits" */
-	    lab[k].text = (unichar_t *) _("I.");
+	    lab[k].text = (uint32_t *) _("I.");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
-	    gcd[k].gd.popup_msg = (unichar_t *) _("Inherits for same field in parent");
+	    gcd[k].gd.popup_msg = (uint32_t *) _("Inherits for same field in parent");
 	    gcd[k].gd.cid = ++cid;
 	    gcd[k].gd.handle_controlevent = GRE_InheritColChange;
 	    gcd[k++].creator = GCheckBoxCreate;
 	    tofree[i].carray[l][0] = &gcd[k-1];
 
-	    lab[k].text = (unichar_t *) _("Normal Background:");
+	    lab[k].text = (uint32_t *) _("Normal Background:");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled;
@@ -1410,17 +1410,17 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 	    }
 
 /* GT: "I." is an abreviation for "Inherits" */
-	    lab[k].text = (unichar_t *) _("I.");
+	    lab[k].text = (uint32_t *) _("I.");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
-	    gcd[k].gd.popup_msg = (unichar_t *) _("Inherits for same field in parent");
+	    gcd[k].gd.popup_msg = (uint32_t *) _("Inherits for same field in parent");
 	    gcd[k].gd.cid = ++cid;
 	    gcd[k].gd.handle_controlevent = GRE_InheritColChange;
 	    gcd[k++].creator = GCheckBoxCreate;
 	    tofree[i].carray[l][4] = &gcd[k-1];
 
-	    lab[k].text = (unichar_t *) _("Disabled Background:");
+	    lab[k].text = (uint32_t *) _("Disabled Background:");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled;
@@ -1447,17 +1447,17 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 	    tofree[i].carray[l++][8] = NULL;
 
 /* GT: "I." is an abreviation for "Inherits" */
-	    lab[k].text = (unichar_t *) _("I.");
+	    lab[k].text = (uint32_t *) _("I.");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
-	    gcd[k].gd.popup_msg = (unichar_t *) _("Inherits for same field in parent");
+	    gcd[k].gd.popup_msg = (uint32_t *) _("Inherits for same field in parent");
 	    gcd[k].gd.cid = ++cid;
 	    gcd[k].gd.handle_controlevent = GRE_InheritColChange;
 	    gcd[k++].creator = GCheckBoxCreate;
 	    tofree[i].carray[l][0] = &gcd[k-1];
 
-	    lab[k].text = (unichar_t *) _("Depressed Background:");
+	    lab[k].text = (uint32_t *) _("Depressed Background:");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled;
@@ -1482,17 +1482,17 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 	    }
 
 /* GT: "I." is an abreviation for "Inherits" */
-	    lab[k].text = (unichar_t *) _("I.");
+	    lab[k].text = (uint32_t *) _("I.");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
-	    gcd[k].gd.popup_msg = (unichar_t *) _("Inherits for same field in parent");
+	    gcd[k].gd.popup_msg = (uint32_t *) _("Inherits for same field in parent");
 	    gcd[k].gd.cid = ++cid;
 	    gcd[k].gd.handle_controlevent = GRE_InheritColChange;
 	    gcd[k++].creator = GCheckBoxCreate;
 	    tofree[i].carray[l][4] = &gcd[k-1];
 
-	    lab[k].text = (unichar_t *) _("Background Gradient:");
+	    lab[k].text = (uint32_t *) _("Background Gradient:");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled;
@@ -1519,17 +1519,17 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 	    tofree[i].carray[l++][8] = NULL;
 
 /* GT: "I." is an abreviation for "Inherits" */
-	    lab[k].text = (unichar_t *) _("I.");
+	    lab[k].text = (uint32_t *) _("I.");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
-	    gcd[k].gd.popup_msg = (unichar_t *) _("Inherits for same field in parent");
+	    gcd[k].gd.popup_msg = (uint32_t *) _("Inherits for same field in parent");
 	    gcd[k].gd.cid = ++cid;
 	    gcd[k].gd.handle_controlevent = GRE_InheritColChange;
 	    gcd[k++].creator = GCheckBoxCreate;
 	    tofree[i].carray[l][0] = &gcd[k-1];
 
-	    lab[k].text = (unichar_t *) _("Brightest Border:");
+	    lab[k].text = (uint32_t *) _("Brightest Border:");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled;
@@ -1554,17 +1554,17 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 	    }
 
 /* GT: "I." is an abreviation for "Inherits" */
-	    lab[k].text = (unichar_t *) _("I.");
+	    lab[k].text = (uint32_t *) _("I.");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
-	    gcd[k].gd.popup_msg = (unichar_t *) _("Inherits for same field in parent");
+	    gcd[k].gd.popup_msg = (uint32_t *) _("Inherits for same field in parent");
 	    gcd[k].gd.cid = ++cid;
 	    gcd[k].gd.handle_controlevent = GRE_InheritColChange;
 	    gcd[k++].creator = GCheckBoxCreate;
 	    tofree[i].carray[l][4] = &gcd[k-1];
 
-	    lab[k].text = (unichar_t *) _("Brighter Border:");
+	    lab[k].text = (uint32_t *) _("Brighter Border:");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled;
@@ -1592,17 +1592,17 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 
 
 /* GT: "I." is an abreviation for "Inherits" */
-	    lab[k].text = (unichar_t *) _("I.");
+	    lab[k].text = (uint32_t *) _("I.");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
-	    gcd[k].gd.popup_msg = (unichar_t *) _("Inherits for same field in parent");
+	    gcd[k].gd.popup_msg = (uint32_t *) _("Inherits for same field in parent");
 	    gcd[k].gd.cid = ++cid;
 	    gcd[k].gd.handle_controlevent = GRE_InheritColChange;
 	    gcd[k++].creator = GCheckBoxCreate;
 	    tofree[i].carray[l][0] = &gcd[k-1];
 
-	    lab[k].text = (unichar_t *) _("Darker Border:");
+	    lab[k].text = (uint32_t *) _("Darker Border:");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled;
@@ -1627,17 +1627,17 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 	    }
 
 /* GT: "I." is an abreviation for "Inherits" */
-	    lab[k].text = (unichar_t *) _("I.");
+	    lab[k].text = (uint32_t *) _("I.");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
-	    gcd[k].gd.popup_msg = (unichar_t *) _("Inherits for same field in parent");
+	    gcd[k].gd.popup_msg = (uint32_t *) _("Inherits for same field in parent");
 	    gcd[k].gd.cid = ++cid;
 	    gcd[k].gd.handle_controlevent = GRE_InheritColChange;
 	    gcd[k++].creator = GCheckBoxCreate;
 	    tofree[i].carray[l][4] = &gcd[k-1];
 
-	    lab[k].text = (unichar_t *) _("Darkest Border:");
+	    lab[k].text = (uint32_t *) _("Darkest Border:");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled;
@@ -1665,17 +1665,17 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 
 
 /* GT: "I." is an abreviation for "Inherits" */
-	    lab[k].text = (unichar_t *) _("I.");
+	    lab[k].text = (uint32_t *) _("I.");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
-	    gcd[k].gd.popup_msg = (unichar_t *) _("Inherits for same field in parent");
+	    gcd[k].gd.popup_msg = (uint32_t *) _("Inherits for same field in parent");
 	    gcd[k].gd.cid = ++cid;
 	    gcd[k].gd.handle_controlevent = GRE_InheritColChange;
 	    gcd[k++].creator = GCheckBoxCreate;
 	    tofree[i].carray[l][0] = &gcd[k-1];
 
-	    lab[k].text = (unichar_t *) _("Inner Border:");
+	    lab[k].text = (uint32_t *) _("Inner Border:");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled;
@@ -1700,17 +1700,17 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 	    }
 
 /* GT: "I." is an abreviation for "Inherits" */
-	    lab[k].text = (unichar_t *) _("I.");
+	    lab[k].text = (uint32_t *) _("I.");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
-	    gcd[k].gd.popup_msg = (unichar_t *) _("Inherits for same field in parent");
+	    gcd[k].gd.popup_msg = (uint32_t *) _("Inherits for same field in parent");
 	    gcd[k].gd.cid = ++cid;
 	    gcd[k].gd.handle_controlevent = GRE_InheritColChange;
 	    gcd[k++].creator = GCheckBoxCreate;
 	    tofree[i].carray[l][4] = &gcd[k-1];
 
-	    lab[k].text = (unichar_t *) _("Outer Border:");
+	    lab[k].text = (uint32_t *) _("Outer Border:");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled;
@@ -1738,17 +1738,17 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 
 
 /* GT: "I." is an abreviation for "Inherits" */
-	    lab[k].text = (unichar_t *) _("I.");
+	    lab[k].text = (uint32_t *) _("I.");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
-	    gcd[k].gd.popup_msg = (unichar_t *) _("Inherits for same field in parent");
+	    gcd[k].gd.popup_msg = (uint32_t *) _("Inherits for same field in parent");
 	    gcd[k].gd.cid = ++cid;
 	    gcd[k].gd.handle_controlevent = GRE_InheritColChange;
 	    gcd[k++].creator = GCheckBoxCreate;
 	    tofree[i].carray[l][0] = &gcd[k-1];
 
-	    lab[k].text = (unichar_t *) _("Active Border:");
+	    lab[k].text = (uint32_t *) _("Active Border:");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled;
@@ -1779,17 +1779,17 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 	    tofree[i].carray[l++][8] = NULL;
 
 /* GT: "I." is an abreviation for "Inherits" */
-	    lab[k].text = (unichar_t *) _("I.");
+	    lab[k].text = (uint32_t *) _("I.");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
-	    gcd[k].gd.popup_msg = (unichar_t *) _("Inherits for same field in parent");
+	    gcd[k].gd.popup_msg = (uint32_t *) _("Inherits for same field in parent");
 	    gcd[k].gd.cid = ++cid;
 	    gcd[k].gd.handle_controlevent = GRE_InheritListChange;
 	    gcd[k++].creator = GCheckBoxCreate;
 	    tofree[i].carray[l][0] = &gcd[k-1];
 
-	    lab[k].text = (unichar_t *) _("Border Type:");
+	    lab[k].text = (uint32_t *) _("Border Type:");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled;
@@ -1815,17 +1815,17 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 	    }
 
 /* GT: "I." is an abreviation for "Inherits" */
-	    lab[k].text = (unichar_t *) _("I.");
+	    lab[k].text = (uint32_t *) _("I.");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
-	    gcd[k].gd.popup_msg = (unichar_t *) _("Inherits for same field in parent");
+	    gcd[k].gd.popup_msg = (uint32_t *) _("Inherits for same field in parent");
 	    gcd[k].gd.cid = ++cid;
 	    gcd[k].gd.handle_controlevent = GRE_InheritListChange;
 	    gcd[k++].creator = GCheckBoxCreate;
 	    tofree[i].carray[l][4] = &gcd[k-1];
 
-	    lab[k].text = (unichar_t *) _("Border Shape:");
+	    lab[k].text = (uint32_t *) _("Border Shape:");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled;
@@ -1853,17 +1853,17 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 	    tofree[i].carray[l++][8] = NULL;
 
 /* GT: "I." is an abreviation for "Inherits" */
-	    lab[k].text = (unichar_t *) _("I.");
+	    lab[k].text = (uint32_t *) _("I.");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
-	    gcd[k].gd.popup_msg = (unichar_t *) _("Inherits for same field in parent");
+	    gcd[k].gd.popup_msg = (uint32_t *) _("Inherits for same field in parent");
 	    gcd[k].gd.cid = ++cid;
 	    gcd[k].gd.handle_controlevent = GRE_InheritByteChange;
 	    gcd[k++].creator = GCheckBoxCreate;
 	    tofree[i].carray[l][0] = &gcd[k-1];
 
-	    lab[k].text = (unichar_t *) _("Border Width:");
+	    lab[k].text = (uint32_t *) _("Border Width:");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled;
@@ -1872,7 +1872,7 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 	    tofree[i].carray[l][1] = &gcd[k-1];
 
 	    sprintf( tofree[i].bw, "%d", res->boxdata->border_width );
-	    lab[k].text = (unichar_t *) tofree[i].bw;
+	    lab[k].text = (uint32_t *) tofree[i].bw;
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.pos.width = 50;
 	    gcd[k].gd.label = &lab[k];
@@ -1892,17 +1892,17 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 	    }
 
 /* GT: "I." is an abreviation for "Inherits" */
-	    lab[k].text = (unichar_t *) _("I.");
+	    lab[k].text = (uint32_t *) _("I.");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
-	    gcd[k].gd.popup_msg = (unichar_t *) _("Inherits for same field in parent");
+	    gcd[k].gd.popup_msg = (uint32_t *) _("Inherits for same field in parent");
 	    gcd[k].gd.cid = ++cid;
 	    gcd[k].gd.handle_controlevent = GRE_InheritByteChange;
 	    gcd[k++].creator = GCheckBoxCreate;
 	    tofree[i].carray[l][4] = &gcd[k-1];
 
-	    lab[k].text = (unichar_t *) _("Padding:");
+	    lab[k].text = (uint32_t *) _("Padding:");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled;
@@ -1911,7 +1911,7 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 	    tofree[i].carray[l][5] = &gcd[k-1];
 
 	    sprintf( tofree[i].padding, "%d", res->boxdata->padding );
-	    lab[k].text = (unichar_t *) tofree[i].padding;
+	    lab[k].text = (uint32_t *) tofree[i].padding;
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.pos.width = 50;
 	    gcd[k].gd.label = &lab[k];
@@ -1933,17 +1933,17 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 	    tofree[i].carray[l++][8] = NULL;
 
 /* GT: "I." is an abreviation for "Inherits" */
-	    lab[k].text = (unichar_t *) _("I.");
+	    lab[k].text = (uint32_t *) _("I.");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
-	    gcd[k].gd.popup_msg = (unichar_t *) _("Inherits for same field in parent");
+	    gcd[k].gd.popup_msg = (uint32_t *) _("Inherits for same field in parent");
 	    gcd[k].gd.cid = ++cid;
 	    gcd[k].gd.handle_controlevent = GRE_InheritByteChange;
 	    gcd[k++].creator = GCheckBoxCreate;
 	    tofree[i].carray[l][0] = &gcd[k-1];
 
-	    lab[k].text = (unichar_t *) _("Radius:");
+	    lab[k].text = (uint32_t *) _("Radius:");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled;
@@ -1952,7 +1952,7 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 	    tofree[i].carray[l][1] = &gcd[k-1];
 
 	    sprintf( tofree[i].rr, "%d", res->boxdata->rr_radius );
-	    lab[k].text = (unichar_t *) tofree[i].rr;
+	    lab[k].text = (uint32_t *) tofree[i].rr;
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.pos.width = 50;
 	    gcd[k].gd.label = &lab[k];
@@ -1987,17 +1987,17 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 	if ( res->font!=NULL ) {
 	    tofree[i].fontname = GFontSpec2String( *res->font );
 
-	    lab[k].text = (unichar_t *) _("I.");
+	    lab[k].text = (uint32_t *) _("I.");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
-	    gcd[k].gd.popup_msg = (unichar_t *) _("Inherits for same field in parent");
+	    gcd[k].gd.popup_msg = (uint32_t *) _("Inherits for same field in parent");
 	    gcd[k].gd.cid = ++cid;
 	    gcd[k].gd.handle_controlevent = GRE_InheritFontChange;
 	    gcd[k++].creator = GCheckBoxCreate;
 	    tofree[i].fontarray[0] = &gcd[k-1];
 
-	    lab[k].text = (unichar_t *) _("Font:");
+	    lab[k].text = (uint32_t *) _("Font:");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled;
@@ -2005,7 +2005,7 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 	    gcd[k++].creator = GLabelCreate;
 	    tofree[i].fontarray[1] = &gcd[k-1];
 
-	    lab[k].text = (unichar_t *) tofree[i].fontname;
+	    lab[k].text = (uint32_t *) tofree[i].fontname;
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled;
@@ -2030,14 +2030,14 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 	    tofree[i].marray[j++] = &tofree[i].fontbox;
 	}
 	if ( res->seealso1 != NULL ) {
-	    lab[k].text = (unichar_t *) _("See also:");
+	    lab[k].text = (uint32_t *) _("See also:");
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled;
 	    gcd[k++].creator = GLabelCreate;
 	    tofree[i].saarray[0] = &gcd[k-1];
 
-	    lab[k].text = (unichar_t *) S_(res->seealso1->name);
+	    lab[k].text = (uint32_t *) S_(res->seealso1->name);
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
 	    gcd[k].gd.flags = gg_visible|gg_enabled|gg_dontcopybox;
@@ -2048,7 +2048,7 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 	    tofree[i].saarray[1] = &gcd[k-1];
 
 	    if ( res->seealso2!=NULL ) {
-		lab[k].text = (unichar_t *) S_(res->seealso2->name);
+		lab[k].text = (uint32_t *) S_(res->seealso2->name);
 		lab[k].text_is_1byte = true;
 		gcd[k].gd.label = &lab[k];
 		gcd[k].gd.flags = gg_visible|gg_enabled|gg_dontcopybox;
@@ -2082,14 +2082,14 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 		switch ( extras->type ) {
 		  case rt_bool:
 		    extras->orig.ival = *(int *) (extras->val);
-		    lab[k].text = (unichar_t *) S_(extras->name);
+		    lab[k].text = (uint32_t *) S_(extras->name);
 		    lab[k].text_is_1byte = true;
 		    gcd[k].gd.label = &lab[k];
 		    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
 		    if ( extras->orig.ival )
 			gcd[k].gd.flags |= gg_cb_on;
 		    if ( extras->popup!=NULL )
-			gcd[k].gd.popup_msg = (unichar_t *) _(extras->popup);
+			gcd[k].gd.popup_msg = (uint32_t *) _(extras->popup);
 		    gcd[k].gd.cid = extras->cid = ++cid;
 		    gcd[k].data = extras->val;
 		    gcd[k].gd.handle_controlevent = GRE_BoolChanged;
@@ -2100,24 +2100,24 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 		  break;
 		  case rt_int:
 		    extras->orig.ival = *(int *) (extras->val);
-		    lab[k].text = (unichar_t *) S_(extras->name);
+		    lab[k].text = (uint32_t *) S_(extras->name);
 		    lab[k].text_is_1byte = true;
 		    gcd[k].gd.label = &lab[k];
 		    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
 		    if ( extras->popup!=NULL )
-			gcd[k].gd.popup_msg = (unichar_t *) _(extras->popup);
+			gcd[k].gd.popup_msg = (uint32_t *) _(extras->popup);
 		    gcd[k++].creator = GLabelCreate;
 		    tofree[i].earray[hl][base] = &gcd[k-1];
 
 		    tofree[i].extradefs[l] = xmalloc(20);
 		    sprintf( tofree[i].extradefs[l], "%d", extras->orig.ival );
-		    lab[k].text = (unichar_t *) tofree[i].extradefs[l];
+		    lab[k].text = (uint32_t *) tofree[i].extradefs[l];
 		    lab[k].text_is_1byte = true;
 		    gcd[k].gd.pos.width = 60;
 		    gcd[k].gd.label = &lab[k];
 		    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
 		    if ( extras->popup!=NULL )
-			gcd[k].gd.popup_msg = (unichar_t *) S_(extras->popup);
+			gcd[k].gd.popup_msg = (uint32_t *) S_(extras->popup);
 		    gcd[k].gd.cid = extras->cid = ++cid;
 		    gcd[k].data = extras->val;
 		    gcd[k].gd.handle_controlevent = GRE_IntChanged;
@@ -2127,23 +2127,23 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 		  break;
 		  case rt_double:
 		    extras->orig.dval = *(double *) (extras->val);
-		    lab[k].text = (unichar_t *) S_(extras->name);
+		    lab[k].text = (uint32_t *) S_(extras->name);
 		    lab[k].text_is_1byte = true;
 		    gcd[k].gd.label = &lab[k];
 		    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
 		    if ( extras->popup!=NULL )
-			gcd[k].gd.popup_msg = (unichar_t *) _(extras->popup);
+			gcd[k].gd.popup_msg = (uint32_t *) _(extras->popup);
 		    gcd[k++].creator = GLabelCreate;
 		    tofree[i].earray[hl][base] = &gcd[k-1];
 
 		    tofree[i].extradefs[l] = xmalloc(40);
 		    sprintf( tofree[i].extradefs[l], "%g", extras->orig.dval );
-		    lab[k].text = (unichar_t *) tofree[i].extradefs[l];
+		    lab[k].text = (uint32_t *) tofree[i].extradefs[l];
 		    lab[k].text_is_1byte = true;
 		    gcd[k].gd.label = &lab[k];
 		    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
 		    if ( extras->popup!=NULL )
-			gcd[k].gd.popup_msg = (unichar_t *) _(extras->popup);
+			gcd[k].gd.popup_msg = (uint32_t *) _(extras->popup);
 		    gcd[k].data = extras->val;
 		    gcd[k].gd.cid = extras->cid = ++cid;
 		    gcd[k].gd.handle_controlevent = GRE_DoubleChanged;
@@ -2154,12 +2154,12 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 		  case rt_coloralpha:
 		  case rt_color:
 		    extras->orig.ival = *(int *) (extras->val);
-		    lab[k].text = (unichar_t *) S_(extras->name);
+		    lab[k].text = (uint32_t *) S_(extras->name);
 		    lab[k].text_is_1byte = true;
 		    gcd[k].gd.label = &lab[k];
 		    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
 		    if ( extras->popup!=NULL )
-			gcd[k].gd.popup_msg = (unichar_t *) _(extras->popup);
+			gcd[k].gd.popup_msg = (uint32_t *) _(extras->popup);
 		    gcd[k++].creator = GLabelCreate;
 		    tofree[i].earray[hl][base] = &gcd[k-1];
 
@@ -2168,7 +2168,7 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 			gcd[k].gd.u.col |= 0xfe000000;
 		    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
 		    if ( extras->popup!=NULL )
-			gcd[k].gd.popup_msg = (unichar_t *) _(extras->popup);
+			gcd[k].gd.popup_msg = (uint32_t *) _(extras->popup);
 		    gcd[k].gd.cid = extras->cid = ++cid;
 		    gcd[k].data = extras->val;
 		    gcd[k].gd.handle_controlevent = GRE_ExtraColorChanged;
@@ -2188,23 +2188,23 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 		  /* Fall through */
 		  case rt_string:
 		    extras->orig.sval = *(char **) (extras->val);
-		    lab[k].text = (unichar_t *) S_(extras->name);
+		    lab[k].text = (uint32_t *) S_(extras->name);
 		    lab[k].text_is_1byte = true;
 		    gcd[k].gd.label = &lab[k];
 		    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
 		    if ( extras->popup!=NULL )
-			gcd[k].gd.popup_msg = (unichar_t *) _(extras->popup);
+			gcd[k].gd.popup_msg = (uint32_t *) _(extras->popup);
 		    gcd[k++].creator = GLabelCreate;
 		    tofree[i].earray[hl][base] = &gcd[k-1];
 
 		    if ( extras->orig.sval != NULL ) {
-			lab[k].text = (unichar_t *) extras->orig.sval;
+			lab[k].text = (uint32_t *) extras->orig.sval;
 			lab[k].text_is_1byte = true;
 			gcd[k].gd.label = &lab[k];
 		    }
 		    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
 		    if ( extras->popup!=NULL )
-			gcd[k].gd.popup_msg = (unichar_t *) _(extras->popup);
+			gcd[k].gd.popup_msg = (uint32_t *) _(extras->popup);
 		    gcd[k].data = extras->val;
 		    gcd[k].gd.cid = extras->cid = ++cid;
 		    gcd[k].gd.handle_controlevent = GRE_StringChanged;
@@ -2229,24 +2229,24 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 			base=0; ++hl;
 		    }
 		    extras->orig.fontval = *(GFont **) (extras->val);
-		    lab[k].text = (unichar_t *) S_(extras->name);
+		    lab[k].text = (uint32_t *) S_(extras->name);
 		    lab[k].text_is_1byte = true;
 		    gcd[k].gd.label = &lab[k];
 		    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
 		    if ( extras->popup!=NULL )
-			gcd[k].gd.popup_msg = (unichar_t *) _(extras->popup);
+			gcd[k].gd.popup_msg = (uint32_t *) _(extras->popup);
 		    gcd[k++].creator = GLabelCreate;
 		    tofree[i].earray[hl][base] = &gcd[k-1];
 
 		    if ( extras->orig.fontval != NULL ) {
 			tofree[i].extradefs[l] = GFontSpec2String( extras->orig.fontval );
-			lab[k].text = (unichar_t *) tofree[i].extradefs[l];
+			lab[k].text = (uint32_t *) tofree[i].extradefs[l];
 			lab[k].text_is_1byte = true;
 			gcd[k].gd.label = &lab[k];
 		    }
 		    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
 		    if ( extras->popup!=NULL )
-			gcd[k].gd.popup_msg = (unichar_t *) _(extras->popup);
+			gcd[k].gd.popup_msg = (uint32_t *) _(extras->popup);
 		    gcd[k].data = extras->val;
 		    gcd[k].gd.cid = extras->cid = ++cid;
 		    gcd[k].gd.handle_controlevent = GRE_ExtraFontChanged;
@@ -2264,25 +2264,25 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 		  case rt_image: {
 		    GResImage *ri = *(GResImage **) (extras->val);
 		    extras->orig.sval = copy( ri==NULL ? NULL : ri->filename );
-		    lab[k].text = (unichar_t *) S_(extras->name);
+		    lab[k].text = (uint32_t *) S_(extras->name);
 		    lab[k].text_is_1byte = true;
 		    gcd[k].gd.label = &lab[k];
 		    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
 		    if ( extras->popup!=NULL )
-			gcd[k].gd.popup_msg = (unichar_t *) _(extras->popup);
+			gcd[k].gd.popup_msg = (uint32_t *) _(extras->popup);
 		    gcd[k++].creator = GLabelCreate;
 		    tofree[i].earray[hl][base] = &gcd[k-1];
 
 		    if ( ri != NULL && ri->image!=NULL ) {
-			lab[k].text = (unichar_t *) "...";
+			lab[k].text = (uint32_t *) "...";
 			lab[k].image = ri->image;
 		    } else
-			lab[k].text = (unichar_t *) "? ...";
+			lab[k].text = (uint32_t *) "? ...";
 		    lab[k].text_is_1byte = true;
 		    gcd[k].gd.label = &lab[k];
 		    gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
 		    if ( extras->popup!=NULL )
-			gcd[k].gd.popup_msg = (unichar_t *) _(extras->popup);
+			gcd[k].gd.popup_msg = (uint32_t *) _(extras->popup);
 		    gcd[k].data = extras->val;
 		    gcd[k].gd.cid = extras->cid = ++cid;
 		    gcd[k].gd.handle_controlevent = GRE_ImageChanged;
@@ -2310,7 +2310,7 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 	tofree[i].mainbox[0].gd.flags = gg_visible|gg_enabled;
 	tofree[i].mainbox[0].gd.u.boxelements = tofree[i].marray;
 	tofree[i].mainbox[0].creator = GVBoxCreate;
-	panes[i].text = (unichar_t *) S_(res->name);
+	panes[i].text = (uint32_t *) S_(res->name);
 	panes[i].text_is_1byte = true;
 	panes[i].gcd = &tofree[i].mainbox[0];
 	for ( parent=res; parent!=NULL; parent=parent->inherits_from, ++panes[i].nesting );
@@ -2326,7 +2326,7 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
     topgcd[0].gd.u.tabs = panes;
     topgcd[0].creator = GTabSetCreate;
 
-    toplab[1].text = (unichar_t *) _("_OK");
+    toplab[1].text = (uint32_t *) _("_OK");
     toplab[1].text_is_1byte = true;
     toplab[1].text_in_resource = true;
     topgcd[1].gd.label = &toplab[1];
@@ -2334,7 +2334,7 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
     topgcd[1].gd.handle_controlevent = GRE_OK;
     topgcd[1].creator = GButtonCreate;
 
-    toplab[2].text = (unichar_t *) _("_Save As...");
+    toplab[2].text = (uint32_t *) _("_Save As...");
     toplab[2].text_is_1byte = true;
     toplab[2].text_in_resource = true;
     topgcd[2].gd.label = &toplab[2];
@@ -2342,7 +2342,7 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
     topgcd[2].gd.handle_controlevent = GRE_Save;
     topgcd[2].creator = GButtonCreate;
 
-    toplab[3].text = (unichar_t *) _("_Cancel");
+    toplab[3].text = (uint32_t *) _("_Cancel");
     toplab[3].text_is_1byte = true;
     toplab[3].text_in_resource = true;
     topgcd[3].gd.label = &toplab[3];

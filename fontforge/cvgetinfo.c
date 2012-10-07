@@ -142,8 +142,8 @@ return( true );
 static int GI_MatchPtChange(GGadget *g, GEvent *e) {
     if ( e->type==et_controlevent && e->u.control.subtype == et_textchanged ) {
 	GIData *ci = GDrawGetUserData(GGadgetGetWindow(g));
-	const unichar_t *t1 = _GGadgetGetTitle(GWidgetGetControl(ci->gw,CID_Match_Pt_Base));
-	const unichar_t *t2 = _GGadgetGetTitle(GWidgetGetControl(ci->gw,CID_Match_Pt_Ref));
+	const uint32_t *t1 = _GGadgetGetTitle(GWidgetGetControl(ci->gw,CID_Match_Pt_Base));
+	const uint32_t *t2 = _GGadgetGetTitle(GWidgetGetControl(ci->gw,CID_Match_Pt_Ref));
 	while ( *t1==' ' ) ++t1;
 	while ( *t2==' ' ) ++t2;
 	GGadgetSetEnabled(GWidgetGetControl(ci->gw,1004),*t1=='\0' && *t2=='\0' );
@@ -193,7 +193,7 @@ return( false );
     if ( !ci->cv->b.sc->layers[ly_fore].order2 )
 	/* No point matching */;
     else {
-	const unichar_t *txt;
+	const uint32_t *txt;
 	txt = _GGadgetGetTitle(GWidgetGetControl(ci->gw,CID_Match_Pt_Base));
 	while ( isspace(*txt)) ++txt;
 	if ( *txt!='\0' )
@@ -350,7 +350,7 @@ static void RefGetInfo(CharView *cv, RefChar *ref) {
 	snprintf( namebuf, sizeof(namebuf),
 		_("Reference to character %1$.20s at %2$d"),
 		ref->sc->name, (int) cv->b.fv->map->backmap[ref->sc->orig_pos]);
-	label[0].text = (unichar_t *) namebuf;
+	label[0].text = (uint32_t *) namebuf;
 	label[0].text_is_1byte = true;
 	gcd[0].gd.label = &label[0];
 	gcd[0].gd.pos.x = 5; gcd[0].gd.pos.y = 5; 
@@ -362,7 +362,7 @@ static void RefGetInfo(CharView *cv, RefChar *ref) {
 
 	if ( ref->sc->unicodeenc!=-1 ) {
 	    sprintf( ubuf, " Unicode: U+%04x", ref->sc->unicodeenc );
-	    label[1].text = (unichar_t *) ubuf;
+	    label[1].text = (uint32_t *) ubuf;
 	    label[1].text_is_1byte = true;
 	    gcd[1].gd.label = &label[1];
 	    gcd[1].gd.pos.x = 5; gcd[1].gd.pos.y = 17;
@@ -372,12 +372,12 @@ static void RefGetInfo(CharView *cv, RefChar *ref) {
 	    j=2;
 	}
 
-	label[j].text = (unichar_t *) _("Transformed by:");
+	label[j].text = (uint32_t *) _("Transformed by:");
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = 5; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y+14;
 	gcd[j].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
-	gcd[j].gd.popup_msg = (unichar_t *) _("The transformation matrix specifies how the points in\nthe source glyph should be transformed before\nthey are drawn in the current glyph.\n x(new) = tm[1,1]*x + tm[2,1]*y + tm[3,1]\n y(new) = tm[1,2]*x + tm[2,2]*y + tm[3,2]");
+	gcd[j].gd.popup_msg = (uint32_t *) _("The transformation matrix specifies how the points in\nthe source glyph should be transformed before\nthey are drawn in the current glyph.\n x(new) = tm[1,1]*x + tm[2,1]*y + tm[3,1]\n y(new) = tm[1,2]*x + tm[2,2]*y + tm[3,2]");
 	gcd[j].creator = GLabelCreate;
 	varray[l++] = &gcd[j];
 	++j;
@@ -385,7 +385,7 @@ static void RefGetInfo(CharView *cv, RefChar *ref) {
 	for ( i=0; i<6; ++i ) {
 	    if ( !(i&1) ) hvarray[5*(i/2)] = GCD_Glue;
 	    sprintf(tbuf[i],"%g", (double) ref->transform[i]);
-	    label[i+j].text = (unichar_t *) tbuf[i];
+	    label[i+j].text = (uint32_t *) tbuf[i];
 	    label[i+j].text_is_1byte = true;
 	    gcd[i+j].gd.label = &label[i+j];
 	    gcd[i+j].gd.pos.x = 20+((i&1)?85:0); gcd[i+j].gd.pos.width=75;
@@ -406,51 +406,51 @@ static void RefGetInfo(CharView *cv, RefChar *ref) {
 	boxes[2].creator = GHVBoxCreate;
 	varray[l++] = &boxes[2];
 
-	label[6+j].text = (unichar_t *) _("_Use My Metrics");
+	label[6+j].text = (uint32_t *) _("_Use My Metrics");
 	label[6+j].text_in_resource = true;
 	label[6+j].text_is_1byte = true;
 	gcd[6+j].gd.label = &label[6+j];
 	gcd[6+j].gd.pos.x = 5; gcd[6+j].gd.pos.y = gcd[6+j-1].gd.pos.y+21;
 	gcd[6+j].gd.flags = gg_enabled|gg_visible|gg_utf8_popup | (ref->use_my_metrics?gg_cb_on:0);
 	gcd[i+j].gd.cid = 6+1000;
-	gcd[6+j].gd.popup_msg = (unichar_t *) _("Only relevant in a truetype font, this flag indicates that the width\nof the composite glyph should be the same as the width of this reference.");
+	gcd[6+j].gd.popup_msg = (uint32_t *) _("Only relevant in a truetype font, this flag indicates that the width\nof the composite glyph should be the same as the width of this reference.");
 	varray[l++] = &gcd[6+j];
 	gcd[6+j++].creator = GCheckBoxCreate;
 
-	label[6+j].text = (unichar_t *) _("_Round To Grid");
+	label[6+j].text = (uint32_t *) _("_Round To Grid");
 	label[6+j].text_in_resource = true;
 	label[6+j].text_is_1byte = true;
 	gcd[6+j].gd.label = &label[6+j];
 	gcd[6+j].gd.pos.x = 5; gcd[6+j].gd.pos.y = gcd[6+j-1].gd.pos.y+14;
 	gcd[6+j].gd.flags = gg_enabled|gg_visible|gg_utf8_popup | (ref->round_translation_to_grid?gg_cb_on:0);
 	gcd[i+j].gd.cid = 7+1000;
-	gcd[6+j].gd.popup_msg = (unichar_t *) _("Only relevant in a truetype font, this flag indicates that if the reference\nis translated, then the translation should be rounded during grid fitting.");
+	gcd[6+j].gd.popup_msg = (uint32_t *) _("Only relevant in a truetype font, this flag indicates that if the reference\nis translated, then the translation should be rounded during grid fitting.");
 	varray[l++] = &gcd[6+j];
 	gcd[6+j++].creator = GCheckBoxCreate;
 
-	label[6+j].text = (unichar_t *) _("TrueType Point _Matching:");
+	label[6+j].text = (uint32_t *) _("TrueType Point _Matching:");
 	label[6+j].text_in_resource = true;
 	label[6+j].text_is_1byte = true;
 	gcd[6+j].gd.label = &label[6+j];
 	gcd[6+j].gd.pos.x = 5; gcd[6+j].gd.pos.y = gcd[6+j-1].gd.pos.y+17;
 	gcd[6+j].gd.flags = cv->b.sc->layers[ly_fore].order2 ? (gg_enabled|gg_visible|gg_utf8_popup) : (gg_visible|gg_utf8_popup);
-	gcd[6+j].gd.popup_msg = (unichar_t *) _("Only relevant in a truetype font, this flag indicates that this\nreference should not be translated normally, but rather its position\nshould be determined by moving the reference so that the indicated\npoint in the reference falls on top of the indicated point in the base\ncharacter.");
+	gcd[6+j].gd.popup_msg = (uint32_t *) _("Only relevant in a truetype font, this flag indicates that this\nreference should not be translated normally, but rather its position\nshould be determined by moving the reference so that the indicated\npoint in the reference falls on top of the indicated point in the base\ncharacter.");
 	varray[l++] = &gcd[6+j];
 	gcd[6+j++].creator = GLabelCreate;
 
-	label[6+j].text = (unichar_t *) _("_Base:");
+	label[6+j].text = (uint32_t *) _("_Base:");
 	label[6+j].text_is_1byte = true;
 	label[6+j].text_in_resource = true;
 	gcd[6+j].gd.label = &label[6+j];
 	gcd[6+j].gd.pos.x = 8; gcd[6+j].gd.pos.y = gcd[6+j-1].gd.pos.y+19;
 	gcd[6+j].gd.flags = cv->b.sc->layers[ly_fore].order2 ? (gg_enabled|gg_visible|gg_utf8_popup) : (gg_visible|gg_utf8_popup);
-	gcd[6+j].gd.popup_msg = (unichar_t *) _("Only relevant in a truetype font, this flag indicates that this\nreference should not be translated normally, but rather its position\nshould be determined by moving the reference so that the indicated\npoint in the reference falls on top of the indicated point in the base\ncharacter.");
+	gcd[6+j].gd.popup_msg = (uint32_t *) _("Only relevant in a truetype font, this flag indicates that this\nreference should not be translated normally, but rather its position\nshould be determined by moving the reference so that the indicated\npoint in the reference falls on top of the indicated point in the base\ncharacter.");
 	harray1[0] = &gcd[6+j];
 	gcd[6+j++].creator = GLabelCreate;
 
 	if ( ref->point_match ) {
 	    sprintf(basebuf,"%d", ref->match_pt_base);
-	    label[6+j].text = (unichar_t *) basebuf;
+	    label[6+j].text = (uint32_t *) basebuf;
 	    label[6+j].text_is_1byte = true;
 	    gcd[6+j].gd.label = &label[6+j];
 	}
@@ -462,18 +462,18 @@ static void RefGetInfo(CharView *cv, RefChar *ref) {
 	harray1[1] = &gcd[6+j];
 	gcd[6+j++].creator = GTextFieldCreate;
 
-	label[6+j].text = (unichar_t *) _("Ref:");
+	label[6+j].text = (uint32_t *) _("Ref:");
 	label[6+j].text_is_1byte = true;
 	gcd[6+j].gd.label = &label[6+j];
 	gcd[6+j].gd.pos.x = 95; gcd[6+j].gd.pos.y = gcd[6+j-2].gd.pos.y;
 	gcd[6+j].gd.flags = gcd[6+j-1].gd.flags;
-	gcd[6+j].gd.popup_msg = (unichar_t *) _("Only relevant in a truetype font, this flag indicates that this\nreference should not be translated normally, but rather its position\nshould be determined by moving the reference so that the indicated\npoint in the reference falls on top of the indicated point in the base\ncharacter.");
+	gcd[6+j].gd.popup_msg = (uint32_t *) _("Only relevant in a truetype font, this flag indicates that this\nreference should not be translated normally, but rather its position\nshould be determined by moving the reference so that the indicated\npoint in the reference falls on top of the indicated point in the base\ncharacter.");
 	harray1[2] = &gcd[6+j];
 	gcd[6+j++].creator = GLabelCreate;
 
 	if ( ref->point_match ) {
 	    sprintf(refbuf,"%d", ref->match_pt_ref);
-	    label[6+j].text = (unichar_t *) refbuf;
+	    label[6+j].text = (uint32_t *) refbuf;
 	    label[6+j].text_is_1byte = true;
 	    gcd[6+j].gd.label = &label[6+j];
 	}
@@ -499,7 +499,7 @@ static void RefGetInfo(CharView *cv, RefChar *ref) {
 	varray[l++] = &gcd[6+j];
 	gcd[6+j++].creator = GLineCreate;
 
-	label[6+j].text = (unichar_t *) _("Bounding Box:");
+	label[6+j].text = (uint32_t *) _("Bounding Box:");
 	label[6+j].text_is_1byte = true;
 	gcd[6+j].gd.label = &label[6+j];
 	gcd[6+j].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
@@ -509,14 +509,14 @@ static void RefGetInfo(CharView *cv, RefChar *ref) {
 
 	hvarray2[0][0] = GCD_Glue; hvarray2[0][1] = GCD_Glue;
 
-	label[6+j].text = (unichar_t *) _("Min");
+	label[6+j].text = (uint32_t *) _("Min");
 	label[6+j].text_is_1byte = true;
 	gcd[6+j].gd.label = &label[6+j];
 	gcd[6+j].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
 	gcd[6+j].creator = GLabelCreate;
 	hvarray2[0][2] = &gcd[6+j++];
 
-	label[6+j].text = (unichar_t *) _("Max");
+	label[6+j].text = (uint32_t *) _("Max");
 	label[6+j].text_is_1byte = true;
 	gcd[6+j].gd.label = &label[6+j];
 	gcd[6+j].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
@@ -526,14 +526,14 @@ static void RefGetInfo(CharView *cv, RefChar *ref) {
 	hvarray2[1][0] = hvarray2[1][4] = GCD_Glue; hvarray2[1][5] = NULL;
 	hvarray2[2][0] = hvarray2[2][4] = GCD_Glue; hvarray2[2][5] = NULL;
 
-	label[6+j].text = (unichar_t *) _("X:");
+	label[6+j].text = (uint32_t *) _("X:");
 	label[6+j].text_is_1byte = true;
 	gcd[6+j].gd.label = &label[6+j];
 	gcd[6+j].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
 	gcd[6+j].creator = GLabelCreate;
 	hvarray2[1][1] = &gcd[6+j++];
 
-	label[6+j].text = (unichar_t *) _("Y:");
+	label[6+j].text = (uint32_t *) _("Y:");
 	label[6+j].text_is_1byte = true;
 	gcd[6+j].gd.label = &label[6+j];
 	gcd[6+j].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
@@ -542,7 +542,7 @@ static void RefGetInfo(CharView *cv, RefChar *ref) {
 
 	for ( i=0; i<4; ++i ) {
 	    sprintf(bbbuf[i],"%g", (double) ((&ref->bb.minx)[i]));
-	    label[6+j].text = (unichar_t *) bbbuf[i];
+	    label[6+j].text = (uint32_t *) bbbuf[i];
 	    label[6+j].text_is_1byte = true;
 	    gcd[6+j].gd.label = &label[6+j];
 	    gcd[6+j].gd.flags = gg_enabled|gg_visible;
@@ -566,7 +566,7 @@ static void RefGetInfo(CharView *cv, RefChar *ref) {
 	gcd[6+j].gd.pos.y = gcd[6+j-1].gd.pos.y+6;
 	gcd[6+j].gd.pos.width = -1; gcd[6+j].gd.pos.height = 0;
 	gcd[6+j].gd.flags = gg_visible | gg_enabled ;
-	label[6+j].text = (unichar_t *) _("_Show");
+	label[6+j].text = (uint32_t *) _("_Show");
 	label[6+j].text_is_1byte = true;
 	label[6+j].text_in_resource = true;
 	gcd[6+j].gd.mnemonic = 'S';
@@ -586,7 +586,7 @@ static void RefGetInfo(CharView *cv, RefChar *ref) {
 	gcd[6+j].gd.pos.x = 30-3; gcd[6+j].gd.pos.y = RI_Height+(j==13?12:0)-30-3;
 	gcd[6+j].gd.pos.width = -1; gcd[6+j].gd.pos.height = 0;
 	gcd[6+j].gd.flags = gg_visible | gg_enabled | gg_but_default;
-	label[6+j].text = (unichar_t *) _("_OK");
+	label[6+j].text = (uint32_t *) _("_OK");
 	label[6+j].text_is_1byte = true;
 	label[6+j].text_in_resource = true;
 	gcd[6+j].gd.mnemonic = 'O';
@@ -597,7 +597,7 @@ static void RefGetInfo(CharView *cv, RefChar *ref) {
 	gcd[6+j].gd.pos.x = -30; gcd[6+j].gd.pos.y = gcd[6+j-1].gd.pos.y+3;
 	gcd[6+j].gd.pos.width = -1; gcd[6+j].gd.pos.height = 0;
 	gcd[6+j].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-	label[6+j].text = (unichar_t *) _("_Cancel");
+	label[6+j].text = (uint32_t *) _("_Cancel");
 	label[6+j].text_is_1byte = true;
 	label[6+j].text_in_resource = true;
 	gcd[6+j].gd.mnemonic = 'C';
@@ -668,7 +668,7 @@ static void ImgGetInfo(CharView *cv, ImageList *img) {
 
 	sprintf( posbuf, _("Image at:      (%.0f,%.0f)"), (double) img->xoff,
 		(double) (img->yoff-GImageGetHeight(img->image)*img->yscale));
-	label[0].text = (unichar_t *) posbuf;
+	label[0].text = (uint32_t *) posbuf;
 	label[0].text_is_1byte = true;
 	gcd[0].gd.label = &label[0];
 	gcd[0].gd.pos.x = 5; gcd[0].gd.pos.y = 5; 
@@ -677,7 +677,7 @@ static void ImgGetInfo(CharView *cv, ImageList *img) {
 	varray[0] = &gcd[0]; varray[1] = NULL;
 
 	sprintf( scalebuf, _("Scaled by:    (%.2f,%.2f)"), (double) img->xscale, (double) img->yscale );
-	label[1].text = (unichar_t *) scalebuf;
+	label[1].text = (uint32_t *) scalebuf;
 	label[1].text_is_1byte = true;
 	gcd[1].gd.label = &label[1];
 	gcd[1].gd.pos.x = 5; gcd[1].gd.pos.y = 19; 
@@ -686,7 +686,7 @@ static void ImgGetInfo(CharView *cv, ImageList *img) {
 	varray[2] = &gcd[1]; varray[3] = NULL;
 
 	sprintf( sizebuf, _("Image Size:  %d x %d  pixels"), (int) base->width, (int) base->height );
-	label[2].text = (unichar_t *) sizebuf;
+	label[2].text = (uint32_t *) sizebuf;
 	label[2].text_is_1byte = true;
 	gcd[2].gd.label = &label[2];
 	gcd[2].gd.pos.x = 5; gcd[2].gd.pos.y = 19; 
@@ -698,7 +698,7 @@ static void ImgGetInfo(CharView *cv, ImageList *img) {
 	gcd[3].gd.pos.x = (II_Width-GIntGetResource(_NUM_Buttonsize)*100/GIntGetResource(_NUM_ScaleFactor)-6)/2; gcd[3].gd.pos.y = II_Height-32-3;
 	gcd[3].gd.pos.width = -1; gcd[3].gd.pos.height = 0;
 	gcd[3].gd.flags = gg_visible | gg_enabled | gg_but_default | gg_but_cancel;
-	label[3].text = (unichar_t *) _("_OK");
+	label[3].text = (uint32_t *) _("_OK");
 	label[3].text_is_1byte = true;
 	label[3].text_in_resource = true;
 	gcd[3].gd.mnemonic = 'O';
@@ -900,7 +900,7 @@ static void AI_DisplayRadio(GIData *ci,enum anchor_type type) {
 
 static void AI_Display(GIData *ci,AnchorPoint *ap) {
     char val[40];
-    unichar_t uval[40];
+    uint32_t uval[40];
     AnchorPoint *aps;
 
     if ( ap==NULL) {
@@ -1246,8 +1246,8 @@ return( true );
 static int AI_MatchChanged(GGadget *g, GEvent *e) {
     if ( e->type==et_controlevent && e->u.control.subtype == et_textchanged ) {
 	GIData *ci = GDrawGetUserData(GGadgetGetWindow(g));
-	const unichar_t *t1 = _GGadgetGetTitle(GWidgetGetControl(ci->gw,CID_MatchPt));
-	unichar_t *end;
+	const uint32_t *t1 = _GGadgetGetTitle(GWidgetGetControl(ci->gw,CID_MatchPt));
+	uint32_t *end;
 	AnchorPoint *ap = ci->ap;
 
 	while ( *t1==' ' ) ++t1;
@@ -1362,7 +1362,7 @@ return;
 	memset(&boxes,0,sizeof(boxes));
 
 	j=0;
-	label[j].text = (unichar_t *) ap->anchor->name;
+	label[j].text = (uint32_t *) ap->anchor->name;
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = 5; gcd[j].gd.pos.y = 5; 
@@ -1376,7 +1376,7 @@ return;
 	varray[0] = &gcd[j]; varray[1] = NULL;
 	++j;
 
-	label[j].text = (unichar_t *) _("_X:");
+	label[j].text = (uint32_t *) _("_X:");
 	label[j].text_is_1byte = true;
 	label[j].text_in_resource = true;
 	gcd[j].gd.label = &label[j];
@@ -1395,7 +1395,7 @@ return;
 	harray1[1] = &gcd[j];
 	++j;
 
-	label[j].text = (unichar_t *) _("_Y:");
+	label[j].text = (uint32_t *) _("_Y:");
 	label[j].text_is_1byte = true;
 	label[j].text_in_resource = true;
 	gcd[j].gd.label = &label[j];
@@ -1419,7 +1419,7 @@ return;
 	boxes[2].creator = GHBoxCreate;
 	varray[2] = &boxes[2]; varray[3] = NULL;
 
-	label[j].text = (unichar_t *) _("Matching TTF Point:");
+	label[j].text = (uint32_t *) _("Matching TTF Point:");
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = 5; gcd[j].gd.pos.y = gcd[j-2].gd.pos.y+24;
@@ -1442,7 +1442,7 @@ return;
 	boxes[3].creator = GHBoxCreate;
 	varray[4] = &boxes[3]; varray[5] = NULL;
 
-	label[j].text = (unichar_t *) _("Mark");
+	label[j].text = (uint32_t *) _("Mark");
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = 5; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y+28;
@@ -1453,7 +1453,7 @@ return;
 	hvarray[0] = &gcd[j];
 	++j;
 
-	label[j].text = (unichar_t *) _("Base Glyph");
+	label[j].text = (uint32_t *) _("Base Glyph");
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = 70; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y;
@@ -1464,7 +1464,7 @@ return;
 	hvarray[1] = &gcd[j]; hvarray[2] = NULL;
 	++j;
 
-	label[j].text = (unichar_t *) _("Base Lig");
+	label[j].text = (uint32_t *) _("Base Lig");
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = gcd[j-2].gd.pos.x; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y+14;
@@ -1475,7 +1475,7 @@ return;
 	hvarray[3] = &gcd[j];
 	++j;
 
-	label[j].text = (unichar_t *) _("Base Mark");
+	label[j].text = (uint32_t *) _("Base Mark");
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = gcd[j-2].gd.pos.x; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y;
@@ -1495,7 +1495,7 @@ return;
 /* GT: get a join such as might be expected for script. Urdu is odd because */
 /* GT: letters within a word crawl diagonally up the page, but with each word */
 /* GT: the writing point starts at the baseline. */
-	label[j].text = (unichar_t *) _("CursEntry");
+	label[j].text = (uint32_t *) _("CursEntry");
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = gcd[j-2].gd.pos.x; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y+14;
@@ -1509,7 +1509,7 @@ return;
 /* GT: Cursive Exit. This defines a point on the glyph that should be matched */
 /* GT: with the "Cursive Entry" point of the following glyph. This allows */
 /* GT: scripts such as Urdu to work */
-	label[j].text = (unichar_t *) _("CursExit");
+	label[j].text = (uint32_t *) _("CursExit");
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = gcd[j-2].gd.pos.x; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y;
@@ -1525,7 +1525,7 @@ return;
 	boxes[4].creator = GHVBoxCreate;
 	varray[6] = &boxes[4]; varray[7] = NULL;
 
-	label[j].text = (unichar_t *) _("Lig Index:");
+	label[j].text = (uint32_t *) _("Lig Index:");
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = 5; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y+26;
@@ -1548,7 +1548,7 @@ return;
 	boxes[5].creator = GHBoxCreate;
 	varray[8] = &boxes[5]; varray[9] = NULL;
 
-	label[j].text = (unichar_t *) S_("AnchorPoint|_New");
+	label[j].text = (uint32_t *) S_("AnchorPoint|_New");
 	label[j].text_is_1byte = true;
 	label[j].text_in_resource = true;
 	gcd[j].gd.label = &label[j];
@@ -1561,7 +1561,7 @@ return;
 	harray4[0] = &gcd[j]; harray4[1] = GCD_Glue;
 	++j;
 
-	label[j].text = (unichar_t *) _("_Delete");
+	label[j].text = (uint32_t *) _("_Delete");
 	label[j].text_is_1byte = true;
 	label[j].text_in_resource = true;
 	gcd[j].gd.label = &label[j];
@@ -1579,7 +1579,7 @@ return;
 	boxes[6].creator = GHBoxCreate;
 	varray[10] = &boxes[6]; varray[11] = NULL;
 
-	label[j].text = (unichar_t *) _("< _Prev");
+	label[j].text = (uint32_t *) _("< _Prev");
 	label[j].text_is_1byte = true;
 	label[j].text_in_resource = true;
 	gcd[j].gd.label = &label[j];
@@ -1592,7 +1592,7 @@ return;
 	harray5[0] = GCD_Glue; harray5[1] = &gcd[j]; harray5[2] = GCD_Glue;
 	++j;
 
-	label[j].text = (unichar_t *) _("_Next >");
+	label[j].text = (uint32_t *) _("_Next >");
 	label[j].text_is_1byte = true;
 	label[j].text_in_resource = true;
 	gcd[j].gd.label = &label[j];
@@ -1618,7 +1618,7 @@ return;
 	varray[16] = &gcd[j]; varray[17] = NULL;
 	++j;
 
-	label[j].text = (unichar_t *) _("_OK");
+	label[j].text = (uint32_t *) _("_OK");
 	label[j].text_is_1byte = true;
 	label[j].text_in_resource = true;
 	gcd[j].gd.label = &label[j];
@@ -1630,7 +1630,7 @@ return;
 	harray6[0] = &gcd[j]; harray6[1] = GCD_Glue;
 	++j;
 
-	label[j].text = (unichar_t *) _("_Cancel");
+	label[j].text = (uint32_t *) _("_Cancel");
 	label[j].text_is_1byte = true;
 	label[j].text_in_resource = true;
 	gcd[j].gd.label = &label[j];
@@ -2667,7 +2667,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	j=k=0;
 	gi.gcd = gcd;
 
-	label[j].text = (unichar_t *) _("_Normal");
+	label[j].text = (uint32_t *) _("_Normal");
 	label[j].text_is_1byte = true;
 	label[j].text_in_resource = true;
 	gcd[j].gd.label = &label[j];
@@ -2679,7 +2679,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	harray1[0] = &gcd[j];
 	++j;
 
-	label[j].text = (unichar_t *) _("_Interpolated");
+	label[j].text = (uint32_t *) _("_Interpolated");
 	label[j].text_is_1byte = true;
 	label[j].text_in_resource = true;
 	gcd[j].gd.label = &label[j];
@@ -2696,7 +2696,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	pb[2].creator = GHBoxCreate;
 	varray[k++] = &pb[2];
 
-	label[j].text = (unichar_t *) _("N_ever Interpolate");
+	label[j].text = (uint32_t *) _("N_ever Interpolate");
 	label[j].text_is_1byte = true;
 	label[j].text_in_resource = true;
 	gcd[j].gd.label = &label[j];
@@ -2709,7 +2709,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	++j;
 
 	gi.normal_start = j;
-	label[j].text = (unichar_t *) _("_Base:");
+	label[j].text = (uint32_t *) _("_Base:");
 	label[j].text_is_1byte = true;
 	label[j].text_in_resource = true;
 	gcd[j].gd.label = &label[j];
@@ -2742,7 +2742,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	varray[k++] = &pb[3];
 
 	l = 0;
-	label[j].text = (unichar_t *) _("Prev CP:");
+	label[j].text = (uint32_t *) _("Prev CP:");
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = 9; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y+24+4; 
@@ -2760,7 +2760,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	++j;
 
 	defxpos = 130;
-	label[j].text = (unichar_t *) S_("ControlPoint|Default");
+	label[j].text = (uint32_t *) S_("ControlPoint|Default");
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = defxpos; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y-3;
@@ -2771,7 +2771,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	hvarray1[l++] = &gcd[j]; hvarray1[l++] = GCD_ColSpan; hvarray1[l++] = NULL;
 	++j;
 
-	label[j].text = (unichar_t *) _("Offset");
+	label[j].text = (uint32_t *) _("Offset");
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = gcd[3].gd.pos.x+10; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y+18+4; 
@@ -2796,7 +2796,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	hvarray1[l++] = &gcd[j]; hvarray1[l++] = GCD_ColSpan; hvarray1[l++] = NULL;
 	++j;
 
-	label[j].text = (unichar_t *) _("Dist");
+	label[j].text = (uint32_t *) _("Dist");
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = gcd[3].gd.pos.x+10; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y+28; 
@@ -2821,7 +2821,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	hvarray1[l++] = &gcd[j];
 	++j;
 
-	label[j].text = (unichar_t *) U_("°");
+	label[j].text = (uint32_t *) U_("°");
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = gcd[j-1].gd.pos.x+gcd[j-1].gd.pos.width+2; gcd[j].gd.pos.y = gcd[j-3].gd.pos.y; 
@@ -2830,7 +2830,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	hvarray1[l++] = &gcd[j]; hvarray1[l++] = NULL;
 	++j;
 
-	label[j].text = (unichar_t *) _("Curvature: -0.00000000");
+	label[j].text = (uint32_t *) _("Curvature: -0.00000000");
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = 9; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y+20;
@@ -2850,7 +2850,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 
 	l = 0;
 	nextstarty = gcd[j-2].gd.pos.y+28;
-	label[j].text = (unichar_t *) _("Next CP:");
+	label[j].text = (uint32_t *) _("Next CP:");
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = 9; gcd[j].gd.pos.y = nextstarty; 
@@ -2867,7 +2867,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	hvarray2[l++] = &gcd[j];
 	++j;
 
-	label[j].text = (unichar_t *) S_("ControlPoint|Default");
+	label[j].text = (uint32_t *) S_("ControlPoint|Default");
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = defxpos; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y-3;
@@ -2878,7 +2878,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	hvarray2[l++] = &gcd[j]; hvarray2[l++] = GCD_ColSpan; hvarray2[l++] = NULL;
 	++j;
 
-	label[j].text = (unichar_t *) _("Offset");
+	label[j].text = (uint32_t *) _("Offset");
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = gcd[3].gd.pos.x+10; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y+18+4; 
@@ -2903,7 +2903,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	hvarray2[l++] = &gcd[j]; hvarray2[l++] = GCD_ColSpan; hvarray2[l++] = NULL;
 	++j;
 
-	label[j].text = (unichar_t *) _("Dist");
+	label[j].text = (uint32_t *) _("Dist");
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = gcd[3].gd.pos.x+10; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y+28; 
@@ -2928,7 +2928,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	hvarray2[l++] = &gcd[j];
 	++j;
 
-	label[j].text = (unichar_t *) U_("°");
+	label[j].text = (uint32_t *) U_("°");
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = gcd[j-1].gd.pos.x+gcd[j-1].gd.pos.width+2; gcd[j].gd.pos.y = gcd[j-3].gd.pos.y; 
@@ -2937,7 +2937,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	hvarray2[l++] = &gcd[j]; hvarray2[l++] = NULL;
 	++j;
 
-	label[j].text = (unichar_t *) _("Curvature: -0.00000000");
+	label[j].text = (uint32_t *) _("Curvature: -0.00000000");
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = 9; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y+20;
@@ -2947,12 +2947,12 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	hvarray2[l++] = &gcd[j]; hvarray2[l++] = GCD_ColSpan; hvarray2[l++] = GCD_ColSpan;
 	++j;
 
-	label[j].text = (unichar_t *) "∆: -0.00000000";
+	label[j].text = (uint32_t *) "∆: -0.00000000";
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = 130; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y;
 	gcd[j].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
-	gcd[j].gd.popup_msg = (unichar_t *) _("This is the difference of the curvature between\nthe next and previous splines. Contours often\nlook nicer as this number approaches 0." );
+	gcd[j].gd.popup_msg = (uint32_t *) _("This is the difference of the curvature between\nthe next and previous splines. Contours often\nlook nicer as this number approaches 0." );
 	gcd[j].gd.cid = CID_DeltaCurvature;
 	gcd[j].creator = GLabelCreate;
 	hvarray2[l++] = &gcd[j]; hvarray2[l++] = GCD_ColSpan; hvarray2[l++] = NULL;
@@ -2968,7 +2968,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 
 	gi.interp_start = j;
 	l = 0;
-	label[j].text = (unichar_t *) _("_Base:");
+	label[j].text = (uint32_t *) _("_Base:");
 	label[j].text_is_1byte = true;
 	label[j].text_in_resource = true;
 	gcd[j].gd.label = &label[j];
@@ -2986,7 +2986,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	hvarray3[l++] = &gcd[j]; hvarray3[l++] = GCD_Glue; hvarray3[l++] = NULL;
 	++j;
 
-	label[j].text = (unichar_t *) _("Prev CP:");
+	label[j].text = (uint32_t *) _("Prev CP:");
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = 9; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y+14+4; 
@@ -3012,7 +3012,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	hvarray3[l++] = &gcd[j]; hvarray3[l++] = NULL;
 	++j;
 
-	label[j].text = (unichar_t *) _("Next CP:");
+	label[j].text = (uint32_t *) _("Next CP:");
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = 9; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y+24+4; 
@@ -3045,7 +3045,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	varray[k++] = &pb[6];
 	varray[k++] = GCD_Glue;
 
-	label[j].text = (unichar_t *) _("Type:");
+	label[j].text = (uint32_t *) _("Type:");
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = gcd[0].gd.pos.x; gcd[j].gd.pos.y = gcd[gi.normal_end-2].gd.pos.y+26;
@@ -3122,15 +3122,15 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 
 	j = 0;
 
-	aspects[j].text = (unichar_t *) _("Location");
+	aspects[j].text = (uint32_t *) _("Location");
 	aspects[j].text_is_1byte = true;
 	aspects[j++].gcd = pb;
 
-	aspects[j].text = (unichar_t *) _("Hint Mask");
+	aspects[j].text = (uint32_t *) _("Hint Mask");
 	aspects[j].text_is_1byte = true;
 	aspects[j++].gcd = hgcd;
 
-	aspects[j].text = (unichar_t *) _("Active Hints");
+	aspects[j].text = (uint32_t *) _("Active Hints");
 	aspects[j].text_is_1byte = true;
 	aspects[j++].gcd = h2gcd;
 
@@ -3148,7 +3148,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	mgcd[j].gd.pos.x = (PI_Width-2*50-10)/2; mgcd[j].gd.pos.y = mgcd[j-1].gd.pos.y+mgcd[j-1].gd.pos.height+5;
 	mgcd[j].gd.pos.width = 53; mgcd[j].gd.pos.height = 0;
 	mgcd[j].gd.flags = gg_visible | gg_enabled;
-	mlabel[j].text = (unichar_t *) _("< _Prev");
+	mlabel[j].text = (uint32_t *) _("< _Prev");
 	mlabel[j].text_is_1byte = true;
 	mlabel[j].text_in_resource = true;
 	mgcd[j].gd.label = &mlabel[j];
@@ -3160,7 +3160,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	mgcd[j].gd.pos.x = PI_Width-50-(PI_Width-2*50-10)/2; mgcd[j].gd.pos.y = mgcd[j-1].gd.pos.y;
 	mgcd[j].gd.pos.width = 53; mgcd[j].gd.pos.height = 0;
 	mgcd[j].gd.flags = gg_visible | gg_enabled;
-	mlabel[j].text = (unichar_t *) _("_Next >");
+	mlabel[j].text = (uint32_t *) _("_Next >");
 	mlabel[j].text_is_1byte = true;
 	mlabel[j].text_in_resource = true;
 	mgcd[j].gd.label = &mlabel[j];
@@ -3172,7 +3172,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 /* Why 3? */
 	mgcd[j].gd.pos.x = mgcd[j-2].gd.pos.x-50+3; mgcd[j].gd.pos.y = mgcd[j-1].gd.pos.y+26;
 	mgcd[j].gd.flags = gg_visible | gg_enabled;
-	mlabel[j].text = (unichar_t *) _("Prev On Contour");
+	mlabel[j].text = (uint32_t *) _("Prev On Contour");
 	mlabel[j].text_is_1byte = true;
 	mgcd[j].gd.label = &mlabel[j];
 	mgcd[j].gd.cid = CID_PrevC;
@@ -3182,7 +3182,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 
 	mgcd[j].gd.pos.x = mgcd[j-2].gd.pos.x; mgcd[j].gd.pos.y = mgcd[j-1].gd.pos.y;
 	mgcd[j].gd.flags = gg_visible | gg_enabled;
-	mlabel[j].text = (unichar_t *) _("Next On Contour");
+	mlabel[j].text = (uint32_t *) _("Next On Contour");
 	mlabel[j].text_is_1byte = true;
 	mgcd[j].gd.label = &mlabel[j];
 	mgcd[j].gd.cid = CID_NextC;
@@ -3199,7 +3199,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	mgcd[j].gd.pos.x = 20-3; mgcd[j].gd.pos.y = PI_Height-33-3;
 	mgcd[j].gd.pos.width = -1; mgcd[j].gd.pos.height = 0;
 	mgcd[j].gd.flags = gg_visible | gg_enabled | gg_but_default;
-	mlabel[j].text = (unichar_t *) _("_OK");
+	mlabel[j].text = (uint32_t *) _("_OK");
 	mlabel[j].text_is_1byte = true;
 	mlabel[j].text_in_resource = true;
 	mgcd[j].gd.mnemonic = 'O';
@@ -3211,7 +3211,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	mgcd[j].gd.pos.x = -20; mgcd[j].gd.pos.y = PI_Height-33;
 	mgcd[j].gd.pos.width = -1; mgcd[j].gd.pos.height = 0;
 	mgcd[j].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-	mlabel[j].text = (unichar_t *) _("_Cancel");
+	mlabel[j].text = (uint32_t *) _("_Cancel");
 	mlabel[j].text_is_1byte = true;
 	mlabel[j].text_in_resource = true;
 	mgcd[j].gd.label = &mlabel[j];
@@ -3455,7 +3455,7 @@ static void SpiroPointGetInfo(CharView *cv, spiro_cp *scp, SplinePointList *spl)
 	j=k=0;
 	gi.gcd = gcd;
 
-	label[j].text = (unichar_t *) _("_X:");
+	label[j].text = (uint32_t *) _("_X:");
 	label[j].text_is_1byte = true;
 	label[j].text_in_resource = true;
 	gcd[j].gd.label = &label[j];
@@ -3472,7 +3472,7 @@ static void SpiroPointGetInfo(CharView *cv, spiro_cp *scp, SplinePointList *spl)
 	harray2[2] = &gcd[j]; harray2[3] = GCD_Glue; harray2[4] = GCD_Glue;
 	++j;
 
-	label[j].text = (unichar_t *) _("_Y:");
+	label[j].text = (uint32_t *) _("_Y:");
 	label[j].text_is_1byte = true;
 	label[j].text_in_resource = true;
 	gcd[j].gd.label = &label[j];
@@ -3494,7 +3494,7 @@ static void SpiroPointGetInfo(CharView *cv, spiro_cp *scp, SplinePointList *spl)
 	pb[2].creator = GHBoxCreate;
 	varray[k++] = &pb[2]; varray[k++] = NULL;
 
-	label[j].text = (unichar_t *) _("Type:");
+	label[j].text = (uint32_t *) _("Type:");
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = gcd[0].gd.pos.x;
@@ -3563,7 +3563,7 @@ static void SpiroPointGetInfo(CharView *cv, spiro_cp *scp, SplinePointList *spl)
 	varray[k++] = NULL;
 
 	gcd[j].gd.flags = gg_visible | gg_enabled;
-	label[j].text = (unichar_t *) _("< _Prev");
+	label[j].text = (uint32_t *) _("< _Prev");
 	label[j].text_is_1byte = true;
 	label[j].text_in_resource = true;
 	gcd[j].gd.label = &label[j];
@@ -3574,7 +3574,7 @@ static void SpiroPointGetInfo(CharView *cv, spiro_cp *scp, SplinePointList *spl)
 	++j;
 
 	gcd[j].gd.flags = gg_visible | gg_enabled;
-	label[j].text = (unichar_t *) _("_Next >");
+	label[j].text = (uint32_t *) _("_Next >");
 	label[j].text_is_1byte = true;
 	label[j].text_in_resource = true;
 	gcd[j].gd.label = &label[j];
@@ -3591,7 +3591,7 @@ static void SpiroPointGetInfo(CharView *cv, spiro_cp *scp, SplinePointList *spl)
 	varray[k++] = NULL;
 
 	gcd[j].gd.flags = gg_visible | gg_enabled;
-	label[j].text = (unichar_t *) _("Prev On Contour");
+	label[j].text = (uint32_t *) _("Prev On Contour");
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.cid = CID_PrevC;
@@ -3601,7 +3601,7 @@ static void SpiroPointGetInfo(CharView *cv, spiro_cp *scp, SplinePointList *spl)
 	++j;
 
 	gcd[j].gd.flags = gg_visible | gg_enabled;
-	label[j].text = (unichar_t *) _("Next On Contour");
+	label[j].text = (uint32_t *) _("Next On Contour");
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.cid = CID_NextC;
@@ -3628,7 +3628,7 @@ static void SpiroPointGetInfo(CharView *cv, spiro_cp *scp, SplinePointList *spl)
 
 	gcd[j].gd.pos.x = 20-3; gcd[j].gd.pos.y = PI_Height-33-3;
 	gcd[j].gd.flags = gg_visible | gg_enabled | gg_but_default;
-	label[j].text = (unichar_t *) _("_OK");
+	label[j].text = (uint32_t *) _("_OK");
 	label[j].text_is_1byte = true;
 	label[j].text_in_resource = true;
 	gcd[j].gd.mnemonic = 'O';
@@ -3640,7 +3640,7 @@ static void SpiroPointGetInfo(CharView *cv, spiro_cp *scp, SplinePointList *spl)
 
 	gcd[j].gd.pos.x = -20; gcd[j].gd.pos.y = PI_Height-33;
 	gcd[j].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-	label[j].text = (unichar_t *) _("_Cancel");
+	label[j].text = (uint32_t *) _("_Cancel");
 	label[j].text_is_1byte = true;
 	label[j].text_in_resource = true;
 	gcd[j].gd.label = &label[j];
@@ -3740,7 +3740,7 @@ void SCRefBy(SplineChar *sc) {
 	if ( cnt==0 )
 return;
 	if ( i==0 )
-	    deps = xcalloc(cnt+1,sizeof(unichar_t *));
+	    deps = xcalloc(cnt+1,sizeof(uint32_t *));
 	tot = cnt-1;
     }
 

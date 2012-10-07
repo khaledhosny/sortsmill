@@ -37,6 +37,6 @@ struct font_instance {
 };
 
 enum text_funcs { tf_width, tf_drawit, tf_rect, tf_stopat, tf_stopbefore, tf_stopafter };
-struct tf_arg { GTextBounds size; int width, maxwidth; unichar_t *last; char *utf8_last; int first; int dont_replace; };
+struct tf_arg { GTextBounds size; int width, maxwidth; uint32_t *last; char *utf8_last; int first; int dont_replace; };
 
 #endif // _FONTP_H

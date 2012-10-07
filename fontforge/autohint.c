@@ -100,7 +100,7 @@ void FindBlues( SplineFont *sf, int layer, real blues[14], real otherblues[10]) 
     for ( i=0; i<sf->glyphcnt; ++i ) {
 	if ( sf->glyphs[i]!=NULL && sf->glyphs[i]->layers[layer].splines!=NULL ) {
 	    int enc = sf->glyphs[i]->unicodeenc;
-	    const unichar_t *upt;
+	    const uint32_t *upt;
 	    if ( enc<0x10000 && isalnum(enc) &&
 		    ((enc>=32 && enc<128 ) || enc == 0xfe || enc==0xf0 || enc==0xdf ||
 		      enc==0x131 ||
@@ -262,7 +262,7 @@ void FindBlues( SplineFont *sf, int layer, real blues[14], real otherblues[10]) 
     base[3] = base[4] = 0;
     for ( i=0; i<sf->glyphcnt; ++i ) if ( sf->glyphs[i]!=NULL ) {
 	int enc = sf->glyphs[i]->unicodeenc;
-	const unichar_t *upt;
+	const uint32_t *upt;
 	if ( enc<0x10000 && isalnum(enc) &&
 		((enc>=32 && enc<128 ) || enc == 0xfe || enc==0xf0 || enc==0xdf ||
 		 (enc>=0x391 && enc<=0x3f3 ) ||

@@ -57,8 +57,8 @@ static void mathkern_finishedit(GGadget *g, int r, int c, int wasnew);
 static void mathkern_initrow(GGadget *g, int r);
 
 static GTextInfo truefalse[] = {
-    { (unichar_t *) N_("false"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("true"),  NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("false"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("true"),  NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     GTEXTINFO_EMPTY
 };
 
@@ -190,7 +190,7 @@ return;
     
     for ( j=0; tis[j]!=NULL; ++j )
 	for ( i=0; tis[j][i].text!=NULL; ++i )
-	    tis[j][i].text = (unichar_t *) _((char *) tis[j][i].text);
+	    tis[j][i].text = (uint32_t *) _((char *) tis[j][i].text);
     for ( j=0; ci[j]!=NULL; ++j )
 	for ( i=0; ci[j][i].title!=NULL; ++i )
 	    ci[j][i].title = _(ci[j][i].title);
@@ -336,14 +336,14 @@ typedef struct mathdlg {
     int is_horiz;
 } MathDlg;
 
-static unichar_t **MATH_GlyphNameCompletion(GGadget *t,int from_tab) {
+static uint32_t **MATH_GlyphNameCompletion(GGadget *t,int from_tab) {
     MathDlg *math = GDrawGetUserData(GDrawGetParentWindow(GGadgetGetWindow(t)));
     SplineFont *sf = math->sf;
 
 return( SFGlyphNameCompletion(sf,t,from_tab,false));
 }
 
-static unichar_t **MATH_GlyphListCompletion(GGadget *t,int from_tab) {
+static uint32_t **MATH_GlyphListCompletion(GGadget *t,int from_tab) {
     MathDlg *math = GDrawGetUserData(GDrawGetParentWindow(GGadgetGetWindow(t)));
     SplineFont *sf = math->sf;
 
@@ -782,7 +782,7 @@ static char *GlyphConstruction_Dlg(GGadget *g, int r, int c) {
     mgcd[0].creator = GMatrixEditCreate;
 
     mgcd[1].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    mlabel[1].text = (unichar_t *) _("_OK");
+    mlabel[1].text = (uint32_t *) _("_OK");
     mlabel[1].text_is_1byte = true;
     mlabel[1].text_in_resource = true;
     mgcd[1].gd.label = &mlabel[1];
@@ -790,7 +790,7 @@ static char *GlyphConstruction_Dlg(GGadget *g, int r, int c) {
     mgcd[1].creator = GButtonCreate;
 
     mgcd[2].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    mlabel[2].text = (unichar_t *) _("_Cancel");
+    mlabel[2].text = (uint32_t *) _("_Cancel");
     mlabel[2].text_is_1byte = true;
     mlabel[2].text_in_resource = true;
     mgcd[2].gd.label = &mlabel[2];
@@ -1078,26 +1078,26 @@ return;
 	    row = 0;
 	}
 
-	label[page][row].text = (unichar_t *) math_constants_descriptor[i].ui_name;
+	label[page][row].text = (uint32_t *) math_constants_descriptor[i].ui_name;
 	label[page][row].text_is_1byte = true;
 	label[page][row].text_in_resource = true;
 	gcd[page][row][0].gd.label = &label[page][row];
 	gcd[page][row][0].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-	gcd[page][row][0].gd.popup_msg = (unichar_t *) math_constants_descriptor[i].message;
+	gcd[page][row][0].gd.popup_msg = (uint32_t *) math_constants_descriptor[i].message;
 	gcd[page][row][0].creator = GLabelCreate;
 	hvarray[page][row][0] = &gcd[page][row][0];
 
 	gcd[page][row][1].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
 	gcd[page][row][1].gd.pos.width = 50;
 	gcd[page][row][1].gd.cid = 2*i+1;
-	gcd[page][row][1].gd.popup_msg = (unichar_t *) math_constants_descriptor[i].message;
+	gcd[page][row][1].gd.popup_msg = (uint32_t *) math_constants_descriptor[i].message;
 	gcd[page][row][1].creator = GTextFieldCreate;
 	hvarray[page][row][1] = &gcd[page][row][1];
 
 	if ( math_constants_descriptor[i].devtab_offset>=0 ) {
 	    gcd[page][row][2].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
 	    gcd[page][row][2].gd.cid = 2*i+2;
-	    gcd[page][row][2].gd.popup_msg = (unichar_t *) math_constants_descriptor[i].message;
+	    gcd[page][row][2].gd.popup_msg = (uint32_t *) math_constants_descriptor[i].message;
 	    gcd[page][row][2].creator = GTextFieldCreate;
 	    hvarray[page][row][2] = &gcd[page][row][2];
 	} else
@@ -1118,7 +1118,7 @@ return;
 	boxes[i][0].gd.u.boxelements = hvarray[i][0];
 	boxes[i][0].creator = GHVBoxCreate;
 
-	aspects[i].text = (unichar_t *) aspectnames[i];
+	aspects[i].text = (uint32_t *) aspectnames[i];
 	aspects[i].text_is_1byte = true;
 	aspects[i].nesting = i!=0;
 	aspects[i].gcd = boxes[i];
@@ -1134,7 +1134,7 @@ return;
 	gi[j][0].gd.cid = CID_Exten+j;
 	gi[j][0].creator = GMatrixEditCreate;
 
-	aspects[i+j].text = (unichar_t *) gi_aspectnames[j];
+	aspects[i+j].text = (uint32_t *) gi_aspectnames[j];
 	aspects[i+j].text_is_1byte = true;
 	aspects[i+j].gcd = gi[j];
     }
@@ -1149,7 +1149,7 @@ return;
     mgcd[0].creator = GTabSetCreate;
 
     mgcd[1].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    mlabel[1].text = (unichar_t *) _("_OK");
+    mlabel[1].text = (uint32_t *) _("_OK");
     mlabel[1].text_is_1byte = true;
     mlabel[1].text_in_resource = true;
     mgcd[1].gd.label = &mlabel[1];
@@ -1157,7 +1157,7 @@ return;
     mgcd[1].creator = GButtonCreate;
 
     mgcd[2].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    mlabel[2].text = (unichar_t *) _("_Cancel");
+    mlabel[2].text = (uint32_t *) _("_Cancel");
     mlabel[2].text_is_1byte = true;
     mlabel[2].text_in_resource = true;
     mgcd[2].gd.label = &mlabel[2];
@@ -1909,7 +1909,7 @@ void MathKernDialog(SplineChar *sc,int def_layer) {
 	cgcd[k][0].gd.cid = CID_TopRight+k;
 	cgcd[k][0].creator = GMatrixEditCreate;
 
-	corners[k].text = (unichar_t *) cornernames[k];
+	corners[k].text = (uint32_t *) cornernames[k];
 	corners[k].text_is_1byte = true;
 	corners[k].gcd = cgcd[k];
     }
@@ -1925,11 +1925,11 @@ void MathKernDialog(SplineChar *sc,int def_layer) {
     gcd[k].gd.pos.height = 18; gcd[k].gd.pos.width = 20;
     gcd[k++].creator = GSpacerCreate;
 
-    aspects[0].text = (unichar_t *) _("Graphical");
+    aspects[0].text = (uint32_t *) _("Graphical");
     aspects[0].text_is_1byte = true;
     aspects[0].gcd = NULL;
 
-    aspects[1].text = (unichar_t *) _("Textual");
+    aspects[1].text = (uint32_t *) _("Textual");
     aspects[1].text_is_1byte = true;
     aspects[1].gcd = tabsetgcd;
 
@@ -1944,7 +1944,7 @@ void MathKernDialog(SplineChar *sc,int def_layer) {
     gcd[k].gd.handle_controlevent = MathKernD_GlyphChanged;
     gcd[k++].creator = GListButtonCreate;
 
-    label[k].text = (unichar_t *) _("_OK");
+    label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -1952,7 +1952,7 @@ void MathKernDialog(SplineChar *sc,int def_layer) {
     gcd[k].gd.handle_controlevent = MathKernD_OK;
     gcd[k++].creator = GButtonCreate;
 
-    label[k].text = (unichar_t *) _("_Done");
+    label[k].text = (uint32_t *) _("_Done");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];

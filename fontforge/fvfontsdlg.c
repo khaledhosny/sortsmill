@@ -85,14 +85,14 @@ GTextInfo *BuildFontList(FontView *except) {
     tf = xcalloc(cnt+3,sizeof(GTextInfo));
     for ( fv=fv_list, cnt=0; fv!=NULL; fv = (FontView *) (fv->b.next) ) if ( fv!=except ) {
 	tf[cnt].fg = tf[cnt].bg = COLOR_DEFAULT;
-	tf[cnt].text = (unichar_t *) fv->b.sf->fontname;
+	tf[cnt].text = (uint32_t *) fv->b.sf->fontname;
 	tf[cnt].text_is_1byte = true;
 	++cnt;
     }
     tf[cnt++].line = true;
     tf[cnt].fg = tf[cnt].bg = COLOR_DEFAULT;
     tf[cnt].text_is_1byte = true;
-    tf[cnt++].text = (unichar_t *) _("Other ...");
+    tf[cnt++].text = (uint32_t *) _("Other ...");
 return( tf );
 }
 
@@ -190,7 +190,7 @@ void FVMergeFonts(FontView *fv) {
 	memset(&boxes,0,sizeof(boxes));
 
 	sprintf( buffer, _("Font to merge into %.20s"), fv->b.sf->fontname );
-	label[0].text = (unichar_t *) buffer;
+	label[0].text = (uint32_t *) buffer;
 	label[0].text_is_1byte = true;
 	gcd[0].gd.label = &label[0];
 	gcd[0].gd.pos.x = 12; gcd[0].gd.pos.y = 6; 
@@ -207,7 +207,7 @@ void FVMergeFonts(FontView *fv) {
 	gcd[1].creator = GListButtonCreate;
 	varray[2] = &gcd[1]; varray[3] = NULL;
 
-	label[2].text = (unichar_t *) _("Preserve cross-font kerning");
+	label[2].text = (uint32_t *) _("Preserve cross-font kerning");
 	label[2].text_is_1byte = true;
 	gcd[2].gd.label = &label[2];
 	gcd[2].gd.pos.x = 12; gcd[2].gd.pos.y = 6; 
@@ -219,7 +219,7 @@ void FVMergeFonts(FontView *fv) {
 	gcd[3].gd.pos.x = 15-3; gcd[3].gd.pos.y = 55-3;
 	gcd[3].gd.pos.width = -1; gcd[3].gd.pos.height = 0;
 	gcd[3].gd.flags = gg_visible | gg_enabled | gg_but_default;
-	label[3].text = (unichar_t *) _("_OK");
+	label[3].text = (uint32_t *) _("_OK");
 	label[3].text_is_1byte = true;
 	label[3].text_in_resource = true;
 	gcd[3].gd.mnemonic = 'O';
@@ -230,7 +230,7 @@ void FVMergeFonts(FontView *fv) {
 	gcd[4].gd.pos.x = -15; gcd[4].gd.pos.y = 55;
 	gcd[4].gd.pos.width = -1; gcd[4].gd.pos.height = 0;
 	gcd[4].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-	label[4].text = (unichar_t *) _("_Cancel");
+	label[4].text = (uint32_t *) _("_Cancel");
 	label[4].text_is_1byte = true;
 	label[4].text_in_resource = true;
 	gcd[4].gd.label = &label[4];
@@ -344,7 +344,7 @@ void FVInterpolateFonts(FontView *fv) {
     memset(&gcd,0,sizeof(gcd));
 
     sprintf( buffer, _("Interpolating between %.20s and:"), fv->b.sf->fontname );
-    label[0].text = (unichar_t *) buffer;
+    label[0].text = (uint32_t *) buffer;
     label[0].text_is_1byte = true;
     gcd[0].gd.label = &label[0];
     gcd[0].gd.pos.x = 12; gcd[0].gd.pos.y = 6; 
@@ -366,7 +366,7 @@ void FVInterpolateFonts(FontView *fv) {
     gcd[1].creator = GListButtonCreate;
 
     sprintf( buf2, "%g", last_amount );
-    label[2].text = (unichar_t *) buf2;
+    label[2].text = (uint32_t *) buf2;
     label[2].text_is_1byte = true;
     gcd[2].gd.pos.x = 20; gcd[2].gd.pos.y = 51;
     gcd[2].gd.pos.width = 40;
@@ -382,14 +382,14 @@ void FVInterpolateFonts(FontView *fv) {
 /* GT: <list of possible fonts> */
 /* GT:   by  <50>% */
 /* GT: So "by" means how much to interpolate. */
-    label[3].text = (unichar_t *) _("by");
+    label[3].text = (uint32_t *) _("by");
     label[3].text_is_1byte = true;
     gcd[3].gd.label = &label[3];
     gcd[3].creator = GLabelCreate;
 
     gcd[4].gd.pos.x = 20+40+3; gcd[4].gd.pos.y = 51+6;
     gcd[4].gd.flags = gg_visible | gg_enabled;
-    label[4].text = (unichar_t *) "%";
+    label[4].text = (uint32_t *) "%";
     label[4].text_is_1byte = true;
     gcd[4].gd.label = &label[4];
     gcd[4].creator = GLabelCreate;
@@ -397,7 +397,7 @@ void FVInterpolateFonts(FontView *fv) {
     gcd[5].gd.pos.x = 15-3; gcd[5].gd.pos.y = 85-3;
     gcd[5].gd.pos.width = -1; gcd[5].gd.pos.height = 0;
     gcd[5].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    label[5].text = (unichar_t *) _("_OK");
+    label[5].text = (uint32_t *) _("_OK");
     label[5].text_is_1byte = true;
     label[5].text_in_resource = true;
     gcd[5].gd.mnemonic = 'O';
@@ -408,7 +408,7 @@ void FVInterpolateFonts(FontView *fv) {
     gcd[6].gd.pos.x = -15; gcd[6].gd.pos.y = 85;
     gcd[6].gd.pos.width = -1; gcd[6].gd.pos.height = 0;
     gcd[6].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    label[6].text = (unichar_t *) _("_Cancel");
+    label[6].text = (uint32_t *) _("_Cancel");
     label[6].text_is_1byte = true;
     label[6].text_in_resource = true;
     gcd[6].gd.label = &label[6];

@@ -415,7 +415,7 @@ static int GWidgetCheckMn(GContainerD *gd,GEvent *event) {
     int handled = false;
     GGadget *gadget, *last;
     struct gwidgetdata *widget;
-    unichar_t keysym = event->u.chr.keysym;
+    uint32_t keysym = event->u.chr.keysym;
     int mask = GMenuMask() & (ksm_control|ksm_cmdmacosx);
 
     if ( (mask&ksm_cmdmacosx) && keysym>0x7f &&

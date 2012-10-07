@@ -587,7 +587,7 @@ static void BdfP_PopupMenuProps(struct bdf_dlg *bd, GEvent *e) {
 
     for ( i=0 ; StandardProps[i].name!=NULL; ++i );
     mi = xcalloc(i+3,sizeof(GMenuItem));
-    mi[0].ti.text = (unichar_t *) _("No Change");
+    mi[0].ti.text = (uint32_t *) _("No Change");
     mi[0].ti.text_is_1byte = true;
     mi[0].ti.fg = COLOR_DEFAULT;
     mi[0].ti.bg = COLOR_DEFAULT;
@@ -597,7 +597,7 @@ static void BdfP_PopupMenuProps(struct bdf_dlg *bd, GEvent *e) {
     mi[1].ti.bg = COLOR_DEFAULT;
     
     for ( i=0 ; StandardProps[i].name!=NULL; ++i ) {
-	mi[i+2].ti.text = (unichar_t *) StandardProps[i].name;	/* These do not translate!!! */
+	mi[i+2].ti.text = (uint32_t *) StandardProps[i].name;	/* These do not translate!!! */
 	mi[i+2].ti.text_is_1byte = true;
 	mi[i+2].ti.fg = COLOR_DEFAULT;
 	mi[i+2].ti.bg = COLOR_DEFAULT;
@@ -746,7 +746,7 @@ return;
 	    sprintf( buffer, "%d", bdf->pixelsize );
 	else
 	    sprintf( buffer, "%d@%d", bdf->pixelsize, BDFDepth(bdf));
-	ti[i].text = (unichar_t *) copy(buffer);
+	ti[i].text = (uint32_t *) copy(buffer);
 	ti[i].text_is_1byte = true;
     }
     ti[bd.cur-bd.fonts].selected = true;
@@ -803,7 +803,7 @@ return;
     gcd[i].gd.handle_controlevent = _BdfP_VScroll;
     gcd[i++].creator = GScrollBarCreate;
 
-    label[i].text = (unichar_t *) _("Delete");
+    label[i].text = (uint32_t *) _("Delete");
     label[i].text_is_1byte = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.pos.x = 4; gcd[i].gd.pos.y = GDrawPixelsToPoints(gw,subpos.y+subpos.height)+6;
@@ -812,7 +812,7 @@ return;
     gcd[i].gd.cid = CID_Delete;
     gcd[i++].creator = GButtonCreate;
 
-    label[i].text = (unichar_t *) _("Default All");
+    label[i].text = (uint32_t *) _("Default All");
     label[i].text_is_1byte = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.pos.x = 80; gcd[i].gd.pos.y = gcd[i-1].gd.pos.y;
@@ -821,7 +821,7 @@ return;
     gcd[i].gd.cid = CID_DefAll;
     gcd[i++].creator = GButtonCreate;
 
-    label[i].text = (unichar_t *) _("Default This");
+    label[i].text = (uint32_t *) _("Default This");
     label[i].text_is_1byte = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.pos.y = gcd[i-1].gd.pos.y;
@@ -831,8 +831,8 @@ return;
     gcd[i++].creator = GButtonCreate;
 
 /* I want the 2 pronged arrow, but gdraw can't find a nice one */
-/*  label[i].text = (unichar_t *) "⇑";	*//* Up Arrow */
-    label[i].text = (unichar_t *) "↑";	/* Up Arrow */
+/*  label[i].text = (uint32_t *) "⇑";	*//* Up Arrow */
+    label[i].text = (uint32_t *) "↑";	/* Up Arrow */
     label[i].text_is_1byte = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.pos.y = gcd[i-1].gd.pos.y;
@@ -842,8 +842,8 @@ return;
     gcd[i++].creator = GButtonCreate;
 
 /* I want the 2 pronged arrow, but gdraw can't find a nice one */
-/*  label[i].text = (unichar_t *) "⇓";	*//* Down Arrow */
-    label[i].text = (unichar_t *) "↓";	/* Down Arrow */
+/*  label[i].text = (uint32_t *) "⇓";	*//* Down Arrow */
+    label[i].text = (uint32_t *) "↓";	/* Down Arrow */
     label[i].text_is_1byte = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.pos.y = gcd[i-1].gd.pos.y;
@@ -856,7 +856,7 @@ return;
     gcd[i].gd.pos.x = 30-3; gcd[i].gd.pos.y = GDrawPixelsToPoints(NULL,pos.height)-32-3;
     gcd[i].gd.pos.width = -1; gcd[i].gd.pos.height = 0;
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    label[i].text = (unichar_t *) _("_OK");
+    label[i].text = (uint32_t *) _("_OK");
     label[i].text_is_1byte = true;
     label[i].text_in_resource = true;
     gcd[i].gd.label = &label[i];
@@ -867,7 +867,7 @@ return;
     gcd[i].gd.pos.x = -30; gcd[i].gd.pos.y = gcd[i-1].gd.pos.y+3;
     gcd[i].gd.pos.width = -1; gcd[i].gd.pos.height = 0;
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    label[i].text = (unichar_t *) _("_Cancel");
+    label[i].text = (uint32_t *) _("_Cancel");
     label[i].text_is_1byte = true;
     label[i].text_in_resource = true;
     gcd[i].gd.label = &label[i];
@@ -884,7 +884,7 @@ return;
     memset(&gd,'\0',sizeof(gd));
     memset(&label[0],'\0',sizeof(label[0]));
 
-    label[0].text = (unichar_t *) "\0\0\0\0";
+    label[0].text = (uint32_t *) "\0\0\0\0";
     label[0].font = bd.font;
     gd.pos.height = bd.fh;
     gd.pos.width = bd.vwidth-bd.value_x;

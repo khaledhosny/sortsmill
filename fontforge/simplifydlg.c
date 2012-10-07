@@ -162,7 +162,7 @@ int SimplifyDlg(SplineFont *sf, struct simplifyinfo *smpl) {
     memset(&boxes,0,sizeof(boxes));
 
     k=l=0;
-    label[k].text = (unichar_t *) _("_Error Limit:");
+    label[k].text = (uint32_t *) _("_Error Limit:");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -172,7 +172,7 @@ int SimplifyDlg(SplineFont *sf, struct simplifyinfo *smpl) {
     harray1[0] = &gcd[k-1];
 
     sprintf( buffer, "%.3g", olderr_rat*sim.em_size );
-    label[k].text = (unichar_t *) buffer;
+    label[k].text = (uint32_t *) buffer;
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 70; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y-6;
@@ -185,7 +185,7 @@ int SimplifyDlg(SplineFont *sf, struct simplifyinfo *smpl) {
     gcd[k].gd.pos.x = gcd[k-1].gd.pos.x+gcd[k-1].gd.pos.width+3;
     gcd[k].gd.pos.y = gcd[k-2].gd.pos.y;
     gcd[k].gd.flags = gg_visible | gg_enabled ;
-    label[k].text = (unichar_t *) _("em-units");
+    label[k].text = (uint32_t *) _("em-units");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k++].creator = GLabelCreate;
@@ -196,7 +196,7 @@ int SimplifyDlg(SplineFont *sf, struct simplifyinfo *smpl) {
     boxes[2].creator = GHBoxCreate;
     varray[l][0] = &boxes[2]; varray[l++][1] = NULL;
 
-    label[k].text = (unichar_t *) _("Allow _removal of extrema");
+    label[k].text = (uint32_t *) _("Allow _removal of extrema");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -204,12 +204,12 @@ int SimplifyDlg(SplineFont *sf, struct simplifyinfo *smpl) {
     gcd[k].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
     if ( oldextrema )
 	gcd[k].gd.flags |= gg_cb_on;
-    gcd[k].gd.popup_msg = (unichar_t *) _("Normally simplify will not remove points at the extrema of curves\n(both PostScript and TrueType suggest you retain these points)");
+    gcd[k].gd.popup_msg = (uint32_t *) _("Normally simplify will not remove points at the extrema of curves\n(both PostScript and TrueType suggest you retain these points)");
     gcd[k].gd.cid = CID_Extrema;
     gcd[k++].creator = GCheckBoxCreate;
     varray[l][0] = &gcd[k-1]; varray[l++][1] = NULL;
 
-    label[k].text = (unichar_t *) _("Allow _slopes to change");
+    label[k].text = (uint32_t *) _("Allow _slopes to change");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -218,11 +218,11 @@ int SimplifyDlg(SplineFont *sf, struct simplifyinfo *smpl) {
     if ( oldslopes )
 	gcd[k].gd.flags |= gg_cb_on;
     gcd[k].gd.cid = CID_Slopes;
-    gcd[k].gd.popup_msg = (unichar_t *) _("Normally simplify will not change the slope of the contour at the points.");
+    gcd[k].gd.popup_msg = (uint32_t *) _("Normally simplify will not change the slope of the contour at the points.");
     gcd[k++].creator = GCheckBoxCreate;
     varray[l][0] = &gcd[k-1]; varray[l++][1] = NULL;
 
-    label[k].text = (unichar_t *) _("Start contours at e_xtrema");
+    label[k].text = (uint32_t *) _("Start contours at e_xtrema");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -231,7 +231,7 @@ int SimplifyDlg(SplineFont *sf, struct simplifyinfo *smpl) {
     if ( oldstart )
 	gcd[k].gd.flags |= gg_cb_on;
     gcd[k].gd.cid = CID_Start;
-    gcd[k].gd.popup_msg = (unichar_t *) _("If the start point of a contour is not an extremum, find a new start point (on the contour) which is.");
+    gcd[k].gd.popup_msg = (uint32_t *) _("If the start point of a contour is not an extremum, find a new start point (on the contour) which is.");
     gcd[k++].creator = GCheckBoxCreate;
     varray[l][0] = &gcd[k-1]; varray[l++][1] = NULL;
 
@@ -241,7 +241,7 @@ int SimplifyDlg(SplineFont *sf, struct simplifyinfo *smpl) {
     gcd[k++].creator = GLineCreate;
     varray[l][0] = &gcd[k-1]; varray[l++][1] = NULL;
 
-    label[k].text = (unichar_t *) _("Allow _curve smoothing");
+    label[k].text = (uint32_t *) _("Allow _curve smoothing");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -253,13 +253,13 @@ int SimplifyDlg(SplineFont *sf, struct simplifyinfo *smpl) {
 	if ( oldsmooth )
 	    gcd[k].gd.flags |= gg_cb_on;
     }
-    gcd[k].gd.popup_msg = (unichar_t *) _("Simplify will examine corner points whose control points are almost\ncolinear and smooth them into curve points");
+    gcd[k].gd.popup_msg = (uint32_t *) _("Simplify will examine corner points whose control points are almost\ncolinear and smooth them into curve points");
     gcd[k].gd.cid = CID_Smooth;
     gcd[k++].creator = GCheckBoxCreate;
     varray[l][0] = &gcd[k-1]; varray[l++][1] = NULL;
 
 /* GT: here "tan" means trigonometric tangent */
-    label[k].text = (unichar_t *) _("if tan less than");
+    label[k].text = (uint32_t *) _("if tan less than");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 20; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+24;
@@ -269,7 +269,7 @@ int SimplifyDlg(SplineFont *sf, struct simplifyinfo *smpl) {
     harray2[0] = GCD_HPad10; harray2[1] = &gcd[k-1];
 
     sprintf( buffer2, "%.3g", oldsmooth_tan );
-    label[k].text = (unichar_t *) buffer2;
+    label[k].text = (uint32_t *) buffer2;
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 94; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y-6;
@@ -285,7 +285,7 @@ int SimplifyDlg(SplineFont *sf, struct simplifyinfo *smpl) {
     boxes[3].creator = GHBoxCreate;
     varray[l][0] = &boxes[3]; varray[l++][1] = NULL;
 
-    label[k].text = (unichar_t *) _("S_nap to horizontal/vertical");
+    label[k].text = (uint32_t *) _("S_nap to horizontal/vertical");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -297,7 +297,7 @@ int SimplifyDlg(SplineFont *sf, struct simplifyinfo *smpl) {
 	if ( oldsmoothhv )
 	    gcd[k].gd.flags |= gg_cb_on|gg_utf8_popup;
     }
-    gcd[k].gd.popup_msg = (unichar_t *) _("If the slope of an adjusted point is near horizontal or vertical\nsnap to that");
+    gcd[k].gd.popup_msg = (uint32_t *) _("If the slope of an adjusted point is near horizontal or vertical\nsnap to that");
     gcd[k].gd.cid = CID_SmoothHV;
     gcd[k++].creator = GCheckBoxCreate;
     harray3[0] = GCD_HPad10; harray3[1] = &gcd[k-1]; harray3[2] = GCD_Glue; harray3[3] = NULL;
@@ -307,7 +307,7 @@ int SimplifyDlg(SplineFont *sf, struct simplifyinfo *smpl) {
     boxes[4].creator = GHBoxCreate;
     varray[l][0] = &boxes[4]; varray[l++][1] = NULL;
 
-    label[k].text = (unichar_t *) _("_Flatten bumps on lines");
+    label[k].text = (uint32_t *) _("_Flatten bumps on lines");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -319,12 +319,12 @@ int SimplifyDlg(SplineFont *sf, struct simplifyinfo *smpl) {
 	if ( oldlinefix )
 	    gcd[k].gd.flags |= gg_cb_on;
     }
-    gcd[k].gd.popup_msg = (unichar_t *) _("If a line has a bump on it then flatten out that bump");
+    gcd[k].gd.popup_msg = (uint32_t *) _("If a line has a bump on it then flatten out that bump");
     gcd[k].gd.cid = CID_FlattenBumps;
     gcd[k++].creator = GCheckBoxCreate;
     varray[l][0] = &gcd[k-1]; varray[l++][1] = NULL;
 
-    label[k].text = (unichar_t *) _("if smaller than");
+    label[k].text = (uint32_t *) _("if smaller than");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 20; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+24;
@@ -334,7 +334,7 @@ int SimplifyDlg(SplineFont *sf, struct simplifyinfo *smpl) {
     harray4[0][0] = GCD_HPad10; harray4[0][1] = &gcd[k-1];
 
     sprintf( buffer3, "%.3g", oldlinefixup_rat*sim.em_size );
-    label[k].text = (unichar_t *) buffer3;
+    label[k].text = (uint32_t *) buffer3;
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 90; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y-6;
@@ -349,14 +349,14 @@ int SimplifyDlg(SplineFont *sf, struct simplifyinfo *smpl) {
     gcd[k].gd.pos.y = gcd[k-2].gd.pos.y;
     gcd[k].gd.flags = gg_visible | gg_enabled ;
     if ( sf->layers[ly_fore].order2 ) gcd[k].gd.flags = gg_visible;
-    label[k].text = (unichar_t *) _("em-units");
+    label[k].text = (uint32_t *) _("em-units");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k++].creator = GLabelCreate;
     harray4[0][3] = &gcd[k-1]; harray4[0][4] = GCD_Glue; harray4[0][5] = NULL;
 
 
-    label[k].text = (unichar_t *) _("Don't smooth lines");
+    label[k].text = (uint32_t *) _("Don't smooth lines");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 8; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+14; 
@@ -365,7 +365,7 @@ int SimplifyDlg(SplineFont *sf, struct simplifyinfo *smpl) {
     harray4[1][0] = &gcd[k-1]; harray4[1][1] = harray4[1][2] = harray4[1][3] = GCD_ColSpan;
     harray4[1][4] = GCD_Glue; harray4[1][5] = NULL;
 
-    label[k].text = (unichar_t *) _("longer than");
+    label[k].text = (uint32_t *) _("longer than");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 20; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+24;
@@ -374,7 +374,7 @@ int SimplifyDlg(SplineFont *sf, struct simplifyinfo *smpl) {
     harray4[2][0] = GCD_HPad10; harray4[2][1] = &gcd[k-1];
 
     sprintf( buffer4, "%.3g", oldlinelenmax_rat*sim.em_size );
-    label[k].text = (unichar_t *) buffer4;
+    label[k].text = (uint32_t *) buffer4;
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 90; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y-6;
@@ -387,7 +387,7 @@ int SimplifyDlg(SplineFont *sf, struct simplifyinfo *smpl) {
     gcd[k].gd.pos.x = gcd[k-1].gd.pos.x+gcd[k-1].gd.pos.width+3;
     gcd[k].gd.pos.y = gcd[k-2].gd.pos.y;
     gcd[k].gd.flags = gg_visible | gg_enabled ;
-    label[k].text = (unichar_t *) _("em-units");
+    label[k].text = (uint32_t *) _("em-units");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k++].creator = GLabelCreate;
@@ -401,7 +401,7 @@ int SimplifyDlg(SplineFont *sf, struct simplifyinfo *smpl) {
 
     gcd[k].gd.pos.x = 10; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+20;
     gcd[k].gd.flags = gg_visible | gg_enabled | (set_as_default ? gg_cb_on : 0);
-    label[k].text = (unichar_t *) _("Set as Default");
+    label[k].text = (uint32_t *) _("Set as Default");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.cid = CID_SetAsDefault;
@@ -417,7 +417,7 @@ int SimplifyDlg(SplineFont *sf, struct simplifyinfo *smpl) {
     gcd[k].gd.pos.x = 20-3; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+30;
     gcd[k].gd.pos.width = -1; gcd[k].gd.pos.height = 0;
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    label[k].text = (unichar_t *) _("_OK");
+    label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.mnemonic = 'O';
@@ -429,7 +429,7 @@ int SimplifyDlg(SplineFont *sf, struct simplifyinfo *smpl) {
     gcd[k].gd.pos.x = -20; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+3;
     gcd[k].gd.pos.width = -1; gcd[k].gd.pos.height = 0;
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    label[k].text = (unichar_t *) _("_Cancel");
+    label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];

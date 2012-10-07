@@ -38,14 +38,14 @@
 #include <ttf.h>
 #include <stemdb.h>
 
-static unichar_t lc_stem_str[] = { 'l', 'l', 'l', 'm', 'f', 't', 0x438, 0x43D,
+static uint32_t lc_stem_str[] = { 'l', 'l', 'l', 'm', 'f', 't', 0x438, 0x43D,
 	0x43f, 0x448, 0x3b9, 0 };
-static unichar_t uc_stem_str[] = { 'I', 'L', 'T', 'H', 0x3a0, 0x397, 0x399,
+static uint32_t uc_stem_str[] = { 'I', 'L', 'T', 'H', 0x3a0, 0x397, 0x399,
 	0x406, 0x418, 0x41d, 0x41f, 0x422, 0x428, 0 };
-static unichar_t lc_botserif_str[] = { 'i', 'k', 'l', 'm', 'f', 0x433, 0x43a,
+static uint32_t lc_botserif_str[] = { 'i', 'k', 'l', 'm', 'f', 0x433, 0x43a,
 	0x43f, 0x442, 0x3c0, 0x3ba, 0 };
-static unichar_t lc_topserif_str[] = { 'k', 'l', 'm', 0x444, 0x3b9, 0 };
-static unichar_t descender_str[] = { 'p', 'q', 0x3b7, 0x3c1, 0x440, 0x444, 0 };
+static uint32_t lc_topserif_str[] = { 'k', 'l', 'm', 0x444, 0x3b9, 0 };
+static uint32_t descender_str[] = { 'p', 'q', 0x3b7, 0x3c1, 0x440, 0x444, 0 };
 
 static void SSCPValidate(SplineSet *ss) {
     SplinePoint *sp, *nsp;
@@ -1784,7 +1784,7 @@ return( cnt );
 }
 
 static double CaseMajorVerticalStemWidth(SplineFont *sf, int layer,
-	unichar_t *list, double tan_ia) {
+	uint32_t *list, double tan_ia) {
     const int MW=100;
     struct widths { double width, total; } widths[MW];
     int cnt,i,j;
@@ -4111,7 +4111,7 @@ static struct {
 };
 
 static struct {
-    unichar_t from, to;
+    uint32_t from, to;
     SplineSet *(*embolden_hook)(SplineSet *,struct lcg_zones *,SplineChar *, int layer);
 } char_hooks[] = {
     { '0','9', LCG_HintedEmboldenHook },
@@ -6881,7 +6881,7 @@ void InitXHeightInfo(SplineFont *sf, int layer, struct xheightinfo *xi) {
 }
 
 static void SCChangeXHeight(SplineChar *sc,int layer,struct xheightinfo *xi) {
-    const unichar_t *alts;
+    const uint32_t *alts;
 
     if ( sc->layers[layer].refs!=NULL &&
 			((alts = SFGetAlternate(sc->parent,sc->unicodeenc,sc,true))!=NULL &&

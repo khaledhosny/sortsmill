@@ -1036,7 +1036,7 @@ return( ((long) r<<16) | (g<<8) | b );
 return( -1 );
 }
 
-Color GImageColourFName(unichar_t *name) {
+Color GImageColourFName(uint32_t *name) {
 return( _GImage_ColourFName(u_to_c(name)) );
 }
 

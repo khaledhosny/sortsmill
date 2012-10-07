@@ -41,23 +41,23 @@
 
 /* the initial space is so that these guys will come first in ordered error */
 /*  lists in the file chooser */
-static unichar_t err401[] = { ' ','U','n','a','u','t','h','o','r','i','z','e','d', '\0' };
-static unichar_t err403[] = { ' ','F','o','r','b','i','d','d','e','n', '\0' };
-static unichar_t err404[] = { ' ','N','o','t',' ','F','o','u','n','d', '\0' };
-static unichar_t err405[] = { ' ','M','e','t','h','o','d',' ','N','o','t',' ','A','l','l','o','w','e','d', '\0' };
-static unichar_t err406[] = { ' ','N','o','t',' ','A','c','c','e','p','t','a','b','l','e', '\0' };
-static unichar_t err409[] = { ' ','C','o','n','f','l','i','c','t', '\0' };
-static unichar_t err412[] = { ' ','P','r','e','c','o','n','d','i','t','i','o','n',' ','F','a','i','l','e','d', '\0' };
-static unichar_t err414[] = { ' ','R','e','q','u','e','s','t','-','U','R','I',' ','T','o','o',' ','L','o','n','g', '\0' };
-static unichar_t err500[] = { ' ','I','n','t','e','r','n','a','l',' ','S','e','r','v','e','r',' ','E','r','r','o','r', '\0' };
+static uint32_t err401[] = { ' ','U','n','a','u','t','h','o','r','i','z','e','d', '\0' };
+static uint32_t err403[] = { ' ','F','o','r','b','i','d','d','e','n', '\0' };
+static uint32_t err404[] = { ' ','N','o','t',' ','F','o','u','n','d', '\0' };
+static uint32_t err405[] = { ' ','M','e','t','h','o','d',' ','N','o','t',' ','A','l','l','o','w','e','d', '\0' };
+static uint32_t err406[] = { ' ','N','o','t',' ','A','c','c','e','p','t','a','b','l','e', '\0' };
+static uint32_t err409[] = { ' ','C','o','n','f','l','i','c','t', '\0' };
+static uint32_t err412[] = { ' ','P','r','e','c','o','n','d','i','t','i','o','n',' ','F','a','i','l','e','d', '\0' };
+static uint32_t err414[] = { ' ','R','e','q','u','e','s','t','-','U','R','I',' ','T','o','o',' ','L','o','n','g', '\0' };
+static uint32_t err500[] = { ' ','I','n','t','e','r','n','a','l',' ','S','e','r','v','e','r',' ','E','r','r','o','r', '\0' };
 
 void _GIO_reporterror(GIOControl *gc, int errn) {
 
 #if 1
-    uc_strncpy(gc->status,strerror(errn),sizeof(gc->status)/sizeof(unichar_t));
+    uc_strncpy(gc->status,strerror(errn),sizeof(gc->status)/sizeof(uint32_t));
 #else
     if ( errn<sys_nerr )
-	uc_strncpy(gc->status,sys_errlist[errn],sizeof(gc->status)/sizeof(unichar_t));
+	uc_strncpy(gc->status,sys_errlist[errn],sizeof(gc->status)/sizeof(uint32_t));
     else
 	gc->status[0] = '\0';
 #endif

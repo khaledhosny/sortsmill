@@ -48,7 +48,7 @@ struct contextchaindlg {
     struct gfi_data *gfi;
     SplineFont *sf;
     FPST *fpst;
-    unichar_t *newname;
+    uint32_t *newname;
     int isnew;
     GWindow gw;
     GWindow formats, coverage, grules, glyphs, classrules, classnumber;
@@ -146,7 +146,7 @@ Complex version:
 
 #define CID_Covers		4600
 
-char *cu_copybetween(const unichar_t *start, const unichar_t *end) {
+char *cu_copybetween(const uint32_t *start, const uint32_t *end) {
     char *ret = xmalloc(end-start+1);
     cu_strncpy(ret,start,end-start);
     ret[end-start] = '\0';
@@ -435,7 +435,7 @@ static char *classruleitem(struct fpst_rule *r,struct matrix_data **classes, int
 	}
     }
 
-    ret = pt = xmalloc((len+8+seqlookuplen(r)) * sizeof(unichar_t));
+    ret = pt = xmalloc((len+8+seqlookuplen(r)) * sizeof(uint32_t));
     for ( k=r->u.class.bcnt-1; k>=0; --k ) {
 	int c = r->u.class.bclasses[k];
 	if ( classes[1][cols*c+0].u.md_str!=NULL && *classes[1][cols*c+0].u.md_str!='\0' ) {
@@ -604,7 +604,7 @@ static void CCD_EnableNextPrev(struct contextchaindlg *ccd) {
     }
 }
 
-static int CCD_ReasonableClassNum(const unichar_t *umatch,GGadget *list,
+static int CCD_ReasonableClassNum(const uint32_t *umatch,GGadget *list,
 	struct fpst_rule *r, int which ) {
     int cols, len;
     struct matrix_data *classes;
@@ -925,7 +925,7 @@ static void CCD_ClassSelected(GGadget *g, int r, int c) {
     struct matrix_data *classes = GMatrixEditGet(g,&rows);
     GGadget *tf = GWidgetGetControl(ccd->gw,CID_ClassNumbers+off);
     char buf[20];
-    unichar_t ubuf[80];
+    uint32_t ubuf[80];
 
     if ( r<0 || r>=rows )
 return;
@@ -1411,7 +1411,7 @@ static int CCD_NewSection(GGadget *g, GEvent *e) {
 	int off = GGadgetGetCid(g)-CID_GNewSection;
 	GGadget *gme = GWidgetGetControl(GGadgetGetWindow(g),CID_GList_Simple+off);
 	GGadget *tf = _GMatrixEditGetActiveTextField(gme);
-	static const unichar_t section_mark[] = { ' ', '|', ' ', '\0' };
+	static const uint32_t section_mark[] = { ' ', '|', ' ', '\0' };
 
 	if ( tf!=NULL )
 	    GTextFieldReplace(tf,section_mark);
@@ -1429,7 +1429,7 @@ static int CCD_AddLookup(GGadget *g, GEvent *e) {
 
 	if ( tf!=NULL && lookup_ti!=NULL && lookup_ti->userdata!=NULL) {
 	    char *space;
-	    unichar_t *temp;
+	    uint32_t *temp;
 	    otl = lookup_ti->userdata;
 	    space = xmalloc(strlen(otl->lookup_name)+8);
 	    sprintf( space, " @<%s> ", otl->lookup_name );
@@ -1519,16 +1519,16 @@ return( true );
 #define CCD_WIDTH	340
 #define CCD_HEIGHT	340
 
-static unichar_t **CCD_GlyphListCompletion(GGadget *t,int from_tab) {
+static uint32_t **CCD_GlyphListCompletion(GGadget *t,int from_tab) {
     struct contextchaindlg *ccd = GDrawGetUserData(GDrawGetParentWindow(GGadgetGetWindow(t)));
     SplineFont *sf = ccd->sf;
 
 return( SFGlyphNameCompletion(sf,t,from_tab,true));
 }
 
-static unichar_t **CCD_ClassListCompletion(GGadget *t,int from_tab) {
+static uint32_t **CCD_ClassListCompletion(GGadget *t,int from_tab) {
     struct contextchaindlg *ccd = GDrawGetUserData(GDrawGetParentWindow(GGadgetGetWindow(t)));
-    unichar_t *pt, *spt, *basept, *wild; unichar_t **ret;
+    uint32_t *pt, *spt, *basept, *wild; uint32_t **ret;
     int i, cnt, doit, match_len;
     int do_wildcards;
     int section;
@@ -1538,7 +1538,7 @@ static unichar_t **CCD_ClassListCompletion(GGadget *t,int from_tab) {
 
     section = 0;
 
-    pt = spt = basept = (unichar_t *) _GGadgetGetTitle(t);
+    pt = spt = basept = (uint32_t *) _GGadgetGetTitle(t);
     if ( pt==NULL || *pt=='\0' )
 return( NULL );
 
@@ -1578,7 +1578,7 @@ return( NULL );
     wild = NULL;
     if ( do_wildcards ) {
 	pt = spt;
-	wild = xmalloc((u_strlen(spt)+2)*sizeof(unichar_t));
+	wild = xmalloc((u_strlen(spt)+2)*sizeof(uint32_t));
 	u_strcpy(wild,pt);
 	uc_strcat(wild,"*");
     }
@@ -1591,8 +1591,8 @@ return( NULL );
 	    int matched;
 	    char *str = classnames[3*i+0].u.md_str;
 	    if ( do_wildcards ) {
-		unichar_t *temp = utf82u_copy(str);
-		matched = GGadgetWildMatch((unichar_t *) wild,temp,false);
+		uint32_t *temp = utf82u_copy(str);
+		matched = GGadgetWildMatch((uint32_t *) wild,temp,false);
 		free(temp);
 	    } else
 	      matched = (u8_strncmp(x_gc_u32_to_u8 (u32_force_valid (spt)),
@@ -1603,7 +1603,7 @@ return( NULL );
 		    if ( spt==basept ) {
 			ret[cnt] = utf82u_copy(str);
 		    } else {
-			unichar_t *temp = xmalloc((spt-basept+strlen(str)+4)*sizeof(unichar_t));
+			uint32_t *temp = xmalloc((spt-basept+strlen(str)+4)*sizeof(uint32_t));
 			int len;
 			u_strncpy(temp,basept,spt-basept);
 			utf82u_strcpy(temp+(spt-basept),str);
@@ -1619,7 +1619,7 @@ return( NULL );
 	else if ( cnt==0 )
     break;
 	else
-	    ret = xmalloc((cnt+1)*sizeof(unichar_t *));
+	    ret = xmalloc((cnt+1)*sizeof(uint32_t *));
     }
     free(wild);
 return( ret );
@@ -1931,8 +1931,8 @@ return( ret );
 }
 
 static GTextInfo section[] = {
-    { (unichar_t *) N_("Section|Continue"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Section|Start"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Section|Continue"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Section|Start"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static struct col_init class_ci[] = {
@@ -2003,7 +2003,7 @@ return( true );
 }
 
 void ContextChainEdit(SplineFont *sf,FPST *fpst,
-	struct gfi_data *gfi, unichar_t *newname,int layer) {
+	struct gfi_data *gfi, uint32_t *newname,int layer) {
     struct contextchaindlg *ccd;
     int i,j,k;
     static char *titles[2][5] = {
@@ -2050,13 +2050,13 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
     memcpy(addlookup_list+1,lookup_list,(i+1)*sizeof(GTextInfo));
     addrmlookup_list = xcalloc(i+3,sizeof(GTextInfo));
     memcpy(addrmlookup_list+2,lookup_list,(i+1)*sizeof(GTextInfo));
-    addlookup_list[0].text = (unichar_t *) S_("Add Lookup");
+    addlookup_list[0].text = (uint32_t *) S_("Add Lookup");
     addlookup_list[0].text_is_1byte = true;
     addlookup_list[0].selected = true;
-    addrmlookup_list[0].text = (unichar_t *) S_("Add Lookup");
+    addrmlookup_list[0].text = (uint32_t *) S_("Add Lookup");
     addrmlookup_list[0].text_is_1byte = true;
     addrmlookup_list[0].selected = true;
-    addrmlookup_list[1].text = (unichar_t *) S_("Remove Lookup");
+    addrmlookup_list[1].text = (uint32_t *) S_("Remove Lookup");
     addrmlookup_list[1].text_is_1byte = true;
     addrmlookup_list[1].selected = false;
     addrmlookup_list[1].userdata = (void *) (intptr_t) -1;
@@ -2065,8 +2065,8 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
 
     if ( !inited ) {
 	inited = true;
-	section[0].text = (unichar_t *) S_( (char *) section[0].text);
-	section[1].text = (unichar_t *) S_( (char *) section[1].text);
+	section[0].text = (uint32_t *) S_( (char *) section[0].text);
+	section[1].text = (uint32_t *) S_( (char *) section[1].text);
 	classlist_ci[0].title = class_ci[0].title = S_(class_ci[0].title);
 	classlist_ci[1].title = class_ci[1].title = S_(class_ci[1].title);
 	coverage_ci[0].title = S_(coverage_ci[0].title);
@@ -2122,7 +2122,7 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
     hvarray[0][0] = &bgcd[0]; hvarray[0][1] = NULL;
 
     bgcd[1].gd.flags = gg_visible | gg_enabled;
-    blabel[1].text = (unichar_t *) _("_OK");
+    blabel[1].text = (uint32_t *) _("_OK");
     blabel[1].text_is_1byte = true;
     blabel[1].text_in_resource = true;
     bgcd[1].gd.label = &blabel[1];
@@ -2132,7 +2132,7 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
     barray[0] = GCD_Glue; barray[1] = &bgcd[1];
 
     bgcd[2].gd.flags = gg_visible;
-    blabel[2].text = (unichar_t *) _("< _Prev");
+    blabel[2].text = (uint32_t *) _("< _Prev");
     blabel[2].text_is_1byte = true;
     blabel[2].text_in_resource = true;
     bgcd[2].gd.label = &blabel[2];
@@ -2142,7 +2142,7 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
     barray[2] = GCD_Glue; barray[3] = &bgcd[2];
 
     bgcd[3].gd.flags = gg_visible;
-    blabel[3].text = (unichar_t *) _("_Next >");
+    blabel[3].text = (uint32_t *) _("_Next >");
     blabel[3].text_is_1byte = true;
     blabel[3].text_in_resource = true;
     bgcd[3].gd.label = &blabel[3];
@@ -2152,7 +2152,7 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
     barray[4] = GCD_Glue; barray[5] = &bgcd[3];
 
     bgcd[4].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    blabel[4].text = (unichar_t *) _("_Cancel");
+    blabel[4].text = (uint32_t *) _("_Cancel");
     blabel[4].text_is_1byte = true;
     blabel[4].text_in_resource = true;
     bgcd[4].gd.label = &blabel[4];
@@ -2208,7 +2208,7 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
     i = 0;
     rgcd[i].gd.pos.x = 5; rgcd[i].gd.pos.y = 5+i*13;
     rgcd[i].gd.flags = gg_visible | gg_enabled;
-    rlabel[i].text = (unichar_t *) _(
+    rlabel[i].text = (uint32_t *) _(
 	    "OpenType Contextual or Chaining subtables may be in one\n"
 	    " of three formats. The context may be specified either\n"
 	    " as a string of specific glyphs, a string of glyph classes\n"
@@ -2225,7 +2225,7 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
     hvarray[0][0] = &rgcd[i-1]; hvarray[0][1] = NULL;
 
     rgcd[i].gd.flags = gg_visible | gg_enabled | (fpst->format==pst_glyphs ? gg_cb_on : 0 );
-    rlabel[i].text = (unichar_t *) _("By Glyphs");
+    rlabel[i].text = (uint32_t *) _("By Glyphs");
     rlabel[i].text_is_1byte = true;
     rgcd[i].gd.label = &rlabel[i];
     rgcd[i].gd.cid = CID_ByGlyph;
@@ -2234,7 +2234,7 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
 
     rgcd[i].gd.pos.x = rgcd[i-1].gd.pos.x; rgcd[i].gd.pos.y = rgcd[i-1].gd.pos.y+16;
     rgcd[i].gd.flags = gg_visible | gg_enabled | (fpst->format==pst_class ? gg_cb_on : 0 );
-    rlabel[i].text = (unichar_t *) _("By Classes");
+    rlabel[i].text = (uint32_t *) _("By Classes");
     rlabel[i].text_is_1byte = true;
     rgcd[i].gd.label = &rlabel[i];
     rgcd[i].gd.cid = CID_ByClass;
@@ -2243,7 +2243,7 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
 
     rgcd[i].gd.pos.x = rgcd[i-1].gd.pos.x; rgcd[i].gd.pos.y = rgcd[i-1].gd.pos.y+16;
     rgcd[i].gd.flags = gg_visible | gg_enabled | (fpst->format!=pst_glyphs && fpst->format!=pst_class ? gg_cb_on : 0 );
-    rlabel[i].text = (unichar_t *) _("By Coverage");
+    rlabel[i].text = (uint32_t *) _("By Coverage");
     rlabel[i].text_is_1byte = true;
     rgcd[i].gd.label = &rlabel[i];
     rgcd[i].gd.cid = CID_ByCoverage;
@@ -2256,7 +2256,7 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
     hvarray[1][0] = &boxes[2]; hvarray[1][1] = NULL;
 
     rgcd[i].gd.flags = gg_visible | gg_enabled;
-    rlabel[i].text = (unichar_t *) _(
+    rlabel[i].text = (uint32_t *) _(
 	    "This dialog has two formats. A simpler one which\n"
 	    " hides some of the complexities of these rules,\n"
 	    " or a more complex form which gives you full control.");
@@ -2268,7 +2268,7 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
 
     rgcd[i].gd.pos.x = 5; rgcd[i].gd.pos.y = 5+i*13;
     rgcd[i].gd.flags = gg_visible | gg_enabled;
-    rlabel[i].text = (unichar_t *) _( "Dialog Type:");
+    rlabel[i].text = (uint32_t *) _( "Dialog Type:");
     rlabel[i].text_is_1byte = true;
     rgcd[i].gd.label = &rlabel[i];
     rgcd[i++].creator = GLabelCreate;
@@ -2276,7 +2276,7 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
 
     rgcd[i].gd.pos.x = rgcd[i-1].gd.pos.x; rgcd[i].gd.pos.y = rgcd[i-1].gd.pos.y+16;
     rgcd[i].gd.flags = gg_visible | gg_enabled | (use_simple ? gg_cb_on : 0 );
-    rlabel[i].text = (unichar_t *) _("Simple");
+    rlabel[i].text = (uint32_t *) _("Simple");
     rlabel[i].text_is_1byte = true;
     rgcd[i].gd.label = &rlabel[i];
     rgcd[i].gd.cid = CID_Simple;
@@ -2285,7 +2285,7 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
 
     rgcd[i].gd.pos.x = rgcd[i-1].gd.pos.x; rgcd[i].gd.pos.y = rgcd[i-1].gd.pos.y+16;
     rgcd[i].gd.flags = gg_visible | gg_enabled | (!use_simple ? gg_cb_on : 0 );
-    rlabel[i].text = (unichar_t *) _("Complex");
+    rlabel[i].text = (uint32_t *) _("Complex");
     rlabel[i].text_is_1byte = true;
     rgcd[i].gd.label = &rlabel[i];
     rgcd[i].gd.cid = CID_Complex;
@@ -2376,7 +2376,7 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
     i=0;
     if ( fpst->type==pst_chainpos || fpst->type==pst_chainsub ) {
 	extrabuttonsgcd[i].gd.flags = gg_visible | gg_enabled;
-	extrabuttonslab[i].text = (unichar_t *) _("New Section");
+	extrabuttonslab[i].text = (uint32_t *) _("New Section");
 	extrabuttonslab[i].text_is_1byte = true;
 	extrabuttonsgcd[i].gd.label = &extrabuttonslab[i];
 	extrabuttonsgcd[i].gd.cid = CID_GNewSection;
@@ -2384,7 +2384,7 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
 	extrabuttonsgcd[i++].creator = GButtonCreate;
     }
     extrabuttonsgcd[i].gd.flags = gg_visible | gg_enabled;
-    extrabuttonslab[i].text = (unichar_t *) _("Add Lookup");
+    extrabuttonslab[i].text = (uint32_t *) _("Add Lookup");
     extrabuttonslab[i].text_is_1byte = true;
     extrabuttonsgcd[i].gd.u.list = addlookup_list;
     extrabuttonsgcd[i].gd.label = &extrabuttonslab[i];
@@ -2410,10 +2410,10 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
     memset(&topbox,0,sizeof(topbox));
     for ( i=0; i<3; ++i ) {	/* Match, background foreground tabs */
 	k=0;
-	glabel[i][k].text = (unichar_t *) _("Set From Selection");
+	glabel[i][k].text = (uint32_t *) _("Set From Selection");
 	glabel[i][k].text_is_1byte = true;
 	ggcd[i][k].gd.label = &glabel[i][k];
-	ggcd[i][k].gd.popup_msg = (unichar_t *) _("Set this glyph list from a selection.");
+	ggcd[i][k].gd.popup_msg = (uint32_t *) _("Set this glyph list from a selection.");
 	ggcd[i][k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
 	ggcd[i][k].gd.handle_controlevent = CCD_FromSelection;
 	ggcd[i][k].data = (void *) (intptr_t) CID_GlyphList+(0*100+i*20);
@@ -2427,7 +2427,7 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
 	subvarray[i][1] = &ggcd[i][k-1];
 
 	if ( i==0 ) {
-	    glabel[i][k].text = (unichar_t *) _("An ordered list of lookups and positions");
+	    glabel[i][k].text = (uint32_t *) _("An ordered list of lookups and positions");
 	    glabel[i][k].text_is_1byte = true;
 	    ggcd[i][k].gd.label = &glabel[i][k];
 	    ggcd[i][k].gd.flags = gg_visible | gg_enabled;
@@ -2456,22 +2456,22 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
 
     j = 0;
 
-    faspects[j].text = (unichar_t *) _("Match");
+    faspects[j].text = (uint32_t *) _("Match");
     faspects[j].text_is_1byte = true;
     faspects[j].selected = true;
     faspects[j].gcd = subboxes[j]; ++j;
 
-    faspects[j].text = (unichar_t *) _("Backtrack");
+    faspects[j].text = (uint32_t *) _("Backtrack");
     faspects[j].text_is_1byte = true;
     faspects[j].disabled = fpst->type==pst_contextpos || fpst->type==pst_contextsub;
     faspects[j].gcd = subboxes[j]; ++j;
 
-    faspects[j].text = (unichar_t *) _("Lookahead");
+    faspects[j].text = (uint32_t *) _("Lookahead");
     faspects[j].text_is_1byte = true;
     faspects[j].disabled = fpst->type==pst_contextpos || fpst->type==pst_contextsub;
     faspects[j].gcd = subboxes[j]; ++j;
 
-    flabel[0].text = (unichar_t *) _("A list of glyphs:");
+    flabel[0].text = (uint32_t *) _("A list of glyphs:");
     flabel[0].text_is_1byte = true;
     fgcd[0].gd.label = &flabel[0];
     fgcd[0].gd.flags = gg_visible | gg_enabled;
@@ -2532,7 +2532,7 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
 
 	if ( i==0 ) {
 	    if ( ccd->fpst->type!=pst_reversesub ) {
-		clabel[i][k].text = (unichar_t *) _("An ordered list of lookups and positions");
+		clabel[i][k].text = (uint32_t *) _("An ordered list of lookups and positions");
 		clabel[i][k].text_is_1byte = true;
 		cgcd[i][k].gd.label = &clabel[i][k];
 		cgcd[i][k].gd.flags = gg_visible | gg_enabled;
@@ -2578,17 +2578,17 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
 		r = NULL;
 		if ( fpst->rule_cnt==1 ) r = &fpst->rules[0];
 
-		clabel[i][k].text = (unichar_t *) _("Replacements");
+		clabel[i][k].text = (uint32_t *) _("Replacements");
 		clabel[i][k].text_is_1byte = true;
 		cgcd[i][k].gd.label = &clabel[i][k];
 		cgcd[i][k].gd.flags = gg_visible | gg_enabled;
 		cgcd[i][k++].creator = GLabelCreate;
 		subvarray2[0] = &cgcd[i][k-1];
 
-		clabel[i][k].text = (unichar_t *) _("Set From Selection");
+		clabel[i][k].text = (uint32_t *) _("Set From Selection");
 		clabel[i][k].text_is_1byte = true;
 		cgcd[i][k].gd.label = &clabel[i][k];
-		cgcd[i][k].gd.popup_msg = (unichar_t *) _("Set this glyph list from a selection.");
+		cgcd[i][k].gd.popup_msg = (uint32_t *) _("Set this glyph list from a selection.");
 		cgcd[i][k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
 		cgcd[i][k].gd.handle_controlevent = CCD_FromSelection;
 		cgcd[i][k].data = (void *) (intptr_t) (CID_RplList+100);
@@ -2603,7 +2603,7 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
 		subvarray3[0] = &subboxes[i][1];
 
 		if ( r!=NULL && r->u.rcoverage.replacements!=NULL ) {
-		    clabel[i][k].text = (unichar_t *) SFNameList2NameUni(sf,r->u.rcoverage.replacements);
+		    clabel[i][k].text = (uint32_t *) SFNameList2NameUni(sf,r->u.rcoverage.replacements);
 		    clabel[i][k].text_is_1byte = true;
 		    cgcd[i][k].gd.label = &clabel[i][k];
 		}
@@ -2631,7 +2631,7 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
 	}
     }
 
-    flabel[0].text = (unichar_t *) _("A coverage table:");
+    flabel[0].text = (uint32_t *) _("A coverage table:");
     flabel[0].text_is_1byte = true;
     fgcd[0].gd.label = &flabel[0];
     fgcd[0].gd.flags = gg_visible | gg_enabled;
@@ -2713,7 +2713,7 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
     }
     coveragesimple_mi.finishedit = CCD_FinishCoverageSimpleEdit;
 
-    flabel[0].text = (unichar_t *) _("A list of coverage tables:");
+    flabel[0].text = (uint32_t *) _("A list of coverage tables:");
     flabel[0].text_is_1byte = true;
     fgcd[0].gd.label = &flabel[0];
     fgcd[0].gd.flags = gg_visible | gg_enabled;
@@ -2795,7 +2795,7 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
 		    }
 		}
 	    }
-	    clabel[i][l].text = (unichar_t *) _("Same as Match Classes");
+	    clabel[i][l].text = (uint32_t *) _("Same as Match Classes");
 	    clabel[i][l].text_is_1byte = true;
 	    cgcd[i][l].gd.label = &clabel[i][l];
 	    cgcd[i][l].gd.handle_controlevent = CCD_SameAsClasses;
@@ -2864,9 +2864,9 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
 	faspects[i].gcd = subboxes[i];
     }
     j=0;
-    faspects[j++].text = (unichar_t *) _("Match Classes");
-    faspects[j++].text = (unichar_t *) _("Back Classes");
-    faspects[j++].text = (unichar_t *) _("Ahead Classes");
+    faspects[j++].text = (uint32_t *) _("Match Classes");
+    faspects[j++].text = (uint32_t *) _("Back Classes");
+    faspects[j++].text = (uint32_t *) _("Ahead Classes");
 
     /* Finish initializing the list of class rules */
     if ( tempfpst->format==pst_class && tempfpst->rule_cnt>0 ) {
@@ -2969,7 +2969,7 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
 		    }
 		}
 	    }
-	    clabel[i][l].text = (unichar_t *) _("Same as Match Classes");
+	    clabel[i][l].text = (uint32_t *) _("Same as Match Classes");
 	    clabel[i][l].text_is_1byte = true;
 	    cgcd[i][l].gd.label = &clabel[i][l];
 	    cgcd[i][l].gd.handle_controlevent = CCD_SameAsClasses;
@@ -3039,9 +3039,9 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
 	faspects[i].text_is_1byte = true;
     }
     j=0;
-    faspects[j++].text = (unichar_t *) _("Match Classes");
-    faspects[j++].text = (unichar_t *) _("Back Classes");
-    faspects[j++].text = (unichar_t *) _("Ahead Classes");
+    faspects[j++].text = (uint32_t *) _("Match Classes");
+    faspects[j++].text = (uint32_t *) _("Back Classes");
+    faspects[j++].text = (uint32_t *) _("Ahead Classes");
     if ( fpst->type == pst_contextpos || fpst->type == pst_contextsub )
 	faspects[1].disabled = faspects[2].disabled = true;
 
@@ -3092,7 +3092,7 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
     for ( i=0; i<3; ++i ) {
 	k=0;
 
-	clabel[i][k].text = (unichar_t *) _("List of class names");
+	clabel[i][k].text = (uint32_t *) _("List of class names");
 	clabel[i][k].text_is_1byte = true;
 	cgcd[i][k].gd.label = &clabel[i][k];
 	cgcd[i][k].gd.flags = gg_visible | gg_enabled;
@@ -3104,7 +3104,7 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
 	cgcd[i][k++].creator = GTextAreaCreate;
 	subvarray[i][k-1] = &cgcd[i][k-1];
 
-	clabel[i][k].text = (unichar_t *) _("Classes");
+	clabel[i][k].text = (uint32_t *) _("Classes");
 	clabel[i][k].text_is_1byte = true;
 	cgcd[i][k].gd.label = &clabel[i][k];
 	cgcd[i][k].gd.flags = gg_visible | gg_enabled;
@@ -3129,7 +3129,7 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
 	faspects[i].gcd = subboxes[i];
 
 	if ( i==0 ) {
-	    clabel[i][k].text = (unichar_t *) _("An ordered list of lookups and positions");
+	    clabel[i][k].text = (uint32_t *) _("An ordered list of lookups and positions");
 	    clabel[i][k].text_is_1byte = true;
 	    ggcd[i][k].gd.label = &clabel[i][k];
 	    ggcd[i][k].gd.flags = gg_visible | gg_enabled;
@@ -3165,9 +3165,9 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
     }
 
     j=0;
-    faspects[j++].text = (unichar_t *) _("Match");
-    faspects[j++].text = (unichar_t *) _("Backtrack");
-    faspects[j++].text = (unichar_t *) _("Lookahead");
+    faspects[j++].text = (uint32_t *) _("Match");
+    faspects[j++].text = (uint32_t *) _("Backtrack");
+    faspects[j++].text = (uint32_t *) _("Lookahead");
 
     k=0;
     clgcd[k].gd.u.tabs = faspects;

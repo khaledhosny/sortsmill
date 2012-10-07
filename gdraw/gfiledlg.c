@@ -36,7 +36,7 @@
 
 struct gfc_data {
     int done;
-    unichar_t *ret;
+    uint32_t *ret;
     GGadget *gfc;
 };
 
@@ -82,8 +82,8 @@ return( GGadgetDispatchEvent((GGadget *) (d->gfc),event));
 return( true );
 }
 
-static unichar_t *GWidgetOpenFileWPath(const unichar_t *title, const unichar_t *defaultfile,
-	const unichar_t *initial_filter, unichar_t **mimetypes,
+static uint32_t *GWidgetOpenFileWPath(const uint32_t *title, const uint32_t *defaultfile,
+	const uint32_t *initial_filter, uint32_t **mimetypes,
 	GFileChooserFilterType filter, char **path) {
     GRect pos;
     GWindow gw;
@@ -101,7 +101,7 @@ static unichar_t *GWidgetOpenFileWPath(const unichar_t *title, const unichar_t *
     wattrs.undercursor = 1;
     wattrs.is_dlg = 1;
     wattrs.cursor = ct_pointer;
-    wattrs.window_title = (unichar_t *) title;
+    wattrs.window_title = (uint32_t *) title;
     pos.x = pos.y = 0;
     totwid = GGadgetScale(223);
     bsbigger = 3*bs+4*14>totwid; totwid = bsbigger?3*bs+4*12:totwid;
@@ -121,7 +121,7 @@ static unichar_t *GWidgetOpenFileWPath(const unichar_t *title, const unichar_t *
     gcd[1].gd.pos.x = 12; gcd[1].gd.pos.y = 192-3;
     gcd[1].gd.pos.width = -1;
     gcd[1].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    label[1].text = (unichar_t *) _("_OK");
+    label[1].text = (uint32_t *) _("_OK");
     label[1].text_is_1byte = true;
     label[1].text_in_resource = true;
     gcd[1].gd.mnemonic = 'O';
@@ -133,7 +133,7 @@ static unichar_t *GWidgetOpenFileWPath(const unichar_t *title, const unichar_t *
     gcd[2].gd.pos.x = (totwid-bs)*100/GIntGetResource(_NUM_ScaleFactor)/2; gcd[2].gd.pos.y = gcd[1].gd.pos.y+3;
     gcd[2].gd.pos.width = -1;
     gcd[2].gd.flags = gg_visible | gg_enabled;
-    label[2].text = (unichar_t *) _("_Filter");
+    label[2].text = (uint32_t *) _("_Filter");
     label[2].text_is_1byte = true;
     label[2].text_in_resource = true;
     gcd[2].gd.mnemonic = 'F';
@@ -145,7 +145,7 @@ static unichar_t *GWidgetOpenFileWPath(const unichar_t *title, const unichar_t *
     gcd[3].gd.pos.x = -gcd[1].gd.pos.x; gcd[3].gd.pos.y = gcd[2].gd.pos.y;
     gcd[3].gd.pos.width = -1;
     gcd[3].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    label[3].text = (unichar_t *) _("_Cancel");
+    label[3].text = (uint32_t *) _("_Cancel");
     label[3].text_is_1byte = true;
     label[3].text_in_resource = true;
     gcd[3].gd.label = &label[3];
@@ -200,7 +200,7 @@ return(d.ret);
 char *GWidgetOpenFileWPath8(const char *title, const char *defaultfile,
 	const char *initial_filter, char **mimetypes,
 	GFileChooserFilterType filter, char **path) {
-    unichar_t *tit=NULL, *def=NULL, *filt=NULL, **mimes=NULL, *ret;
+    uint32_t *tit=NULL, *def=NULL, *filt=NULL, **mimes=NULL, *ret;
     char *utf8_ret;
     int i;
 
@@ -214,7 +214,7 @@ char *GWidgetOpenFileWPath8(const char *title, const char *defaultfile,
 	filt = utf82u_copy(initial_filter);
     if ( mimetypes!=NULL ) {
 	for ( i=0; mimetypes[i]!=NULL; ++i );
-	mimes = xmalloc((i+1)*sizeof(unichar_t *));
+	mimes = xmalloc((i+1)*sizeof(uint32_t *));
 	for ( i=0; mimetypes[i]!=NULL; ++i )
 	    mimes[i] = utf82u_copy(mimetypes[i]);
 	mimes[i] = NULL;

@@ -152,7 +152,7 @@ static void FVCreateWidth(void *_fv,void (*doit)(CreateWidthData *),
 	memset(&label,0,sizeof(label));
 	memset(&gcd,0,sizeof(gcd));
 
-	label[0].text = (unichar_t *) _(rb1[wtype]);
+	label[0].text = (uint32_t *) _(rb1[wtype]);
 	label[0].text_is_1byte = true;
 	gcd[0].gd.label = &label[0];
 	gcd[0].gd.flags = gg_enabled|gg_visible|gg_cb_on;
@@ -161,7 +161,7 @@ static void FVCreateWidth(void *_fv,void (*doit)(CreateWidthData *),
 	gcd[0].data = (void *) CID_SetVal;
 	gcd[0].creator = GRadioCreate;
 
-	label[1].text = (unichar_t *) _(rb2[wtype]);
+	label[1].text = (uint32_t *) _(rb2[wtype]);
 	label[1].text_is_1byte = true;
 	gcd[1].gd.label = &label[1];
 	gcd[1].gd.flags = gg_enabled|gg_visible|gg_rad_continueold ;
@@ -170,7 +170,7 @@ static void FVCreateWidth(void *_fv,void (*doit)(CreateWidthData *),
 	gcd[1].data = (void *) CID_IncrVal;
 	gcd[1].creator = GRadioCreate;
 
-	label[2].text = (unichar_t *) _(rb3[wtype]);
+	label[2].text = (uint32_t *) _(rb3[wtype]);
 	label[2].text_is_1byte = true;
 	gcd[2].gd.label = &label[2];
 	gcd[2].gd.flags = gg_enabled|gg_visible|gg_rad_continueold ;
@@ -179,7 +179,7 @@ static void FVCreateWidth(void *_fv,void (*doit)(CreateWidthData *),
 	gcd[2].data = (void *) CID_ScaleVal;
 	gcd[2].creator = GRadioCreate;
 
-	label[3].text = (unichar_t *) def;
+	label[3].text = (uint32_t *) def;
 	label[3].text_is_1byte = true;
 	gcd[3].gd.label = &label[3];
 	gcd[3].gd.pos.width = 60;
@@ -189,7 +189,7 @@ static void FVCreateWidth(void *_fv,void (*doit)(CreateWidthData *),
 	gcd[3].data = (void *) CID_Set;
 	gcd[3].creator = GTextFieldCreate;
 
-	label[4].text = (unichar_t *) "0";
+	label[4].text = (uint32_t *) "0";
 	label[4].text_is_1byte = true;
 	gcd[4].gd.label = &label[4];
 	gcd[4].gd.pos.width = 60;
@@ -199,7 +199,7 @@ static void FVCreateWidth(void *_fv,void (*doit)(CreateWidthData *),
 	gcd[4].data = (void *) CID_Incr;
 	gcd[4].creator = GTextFieldCreate;
 
-	label[5].text = (unichar_t *) "100";
+	label[5].text = (uint32_t *) "100";
 	label[5].text_is_1byte = true;
 	gcd[5].gd.label = &label[5];
 	gcd[5].gd.pos.width = 60;
@@ -210,7 +210,7 @@ static void FVCreateWidth(void *_fv,void (*doit)(CreateWidthData *),
 	gcd[5].creator = GTextFieldCreate;
 
 	gcd[6].gd.flags = gg_visible | gg_enabled | gg_but_default;
-	label[6].text = (unichar_t *) _("_OK");
+	label[6].text = (uint32_t *) _("_OK");
 	label[6].text_is_1byte = true;
 	label[6].text_in_resource = true;
 	gcd[6].gd.mnemonic = 'O';
@@ -219,7 +219,7 @@ static void FVCreateWidth(void *_fv,void (*doit)(CreateWidthData *),
 	gcd[6].creator = GButtonCreate;
 
 	gcd[7].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-	label[7].text = (unichar_t *) _("_Cancel");
+	label[7].text = (uint32_t *) _("_Cancel");
 	label[7].text_is_1byte = true;
 	label[7].text_in_resource = true;
 	gcd[7].gd.label = &label[7];
@@ -227,14 +227,14 @@ static void FVCreateWidth(void *_fv,void (*doit)(CreateWidthData *),
 	gcd[7].gd.handle_controlevent = CW_Cancel;
 	gcd[7].creator = GButtonCreate;
 
-	label[8].text = (unichar_t *) S_(info[wtype]);
+	label[8].text = (uint32_t *) S_(info[wtype]);
 	label[8].text_is_1byte = true;
 	gcd[8].gd.label = &label[8];
 	gcd[8].gd.pos.x = 5; gcd[8].gd.pos.y = 59; 
 	gcd[8].gd.flags = gg_enabled|gg_visible ;
 	gcd[8].creator = GLabelCreate;
 
-	label[9].text = (unichar_t *) "%";
+	label[9].text = (uint32_t *) "%";
 	label[9].text_is_1byte = true;
 	gcd[9].gd.label = &label[9];
 	gcd[9].gd.flags = gg_enabled|gg_visible;
@@ -280,7 +280,7 @@ static void FVCreateWidth(void *_fv,void (*doit)(CreateWidthData *),
       }
     else
       {
-	unichar_t *temp = x_u8_to_u32 (u8_force_valid (def));
+	uint32_t *temp = x_u8_to_u32 (u8_force_valid (def));
 	GGadgetSetTitle(GWidgetGetControl(cwd.gw,CID_SetVal),temp);
 	free( temp );
       }

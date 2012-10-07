@@ -34,9 +34,9 @@
 #include <intl.h>
 
 extern void GProgressStartIndicator (int delay, /* in tenths of seconds */
-                                     const unichar_t *win_title,        /* for the window decoration */
-                                     const unichar_t *line1,    /* First line of description */
-                                     const unichar_t *line2,    /* Second line */
+                                     const uint32_t *win_title,        /* for the window decoration */
+                                     const uint32_t *line1,    /* First line of description */
+                                     const uint32_t *line2,    /* Second line */
                                      int tot,   /* Number of sub-entities in the operation */
                                      int stages /* Number of stages, each processing tot sub-entities */
   );
@@ -47,10 +47,10 @@ extern void GProgressStartIndicatorR (int delay, int win_titler, int line1r,
 VISIBLE extern void GProgressEndIndicator (void);
 
 /* Changes the text in the topmost */
-extern void GProgressChangeLine1 (const unichar_t *line1);
+extern void GProgressChangeLine1 (const uint32_t *line1);
 
 /* Changes the text in the topmost */
-extern void GProgressChangeLine2 (const unichar_t *line2);
+extern void GProgressChangeLine2 (const uint32_t *line2);
 
 /* Changes the text in the topmost */
 extern void GProgressChangeLine1R (int line1r);

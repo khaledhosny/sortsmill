@@ -33,7 +33,7 @@
 #include "utype.h"
 
 long
-uc_strmatch (const unichar_t *str1, const char *str2)
+uc_strmatch (const uint32_t *str1, const char *str2)
 {
   long ch1, ch2;
   for (;;)
@@ -48,7 +48,7 @@ uc_strmatch (const unichar_t *str1, const char *str2)
 }
 
 long
-uc_strnmatch (const unichar_t *str1, const char *str2, int len)
+uc_strnmatch (const uint32_t *str1, const char *str2, int len)
 {
   long ch1, ch2;
   for (; --len >= 0;)
@@ -64,7 +64,7 @@ uc_strnmatch (const unichar_t *str1, const char *str2, int len)
 }
 
 long
-u_strnmatch (const unichar_t *str1, const unichar_t *str2, int len)
+u_strnmatch (const uint32_t *str1, const uint32_t *str2, int len)
 {
   long ch1, ch2;
   for (; --len >= 0;)
@@ -80,7 +80,7 @@ u_strnmatch (const unichar_t *str1, const unichar_t *str2, int len)
 }
 
 long
-u_strcmp (const unichar_t *str1, const unichar_t *str2)
+u_strcmp (const uint32_t *str1, const uint32_t *str2)
 {
   long ch1, ch2;
   for (;;)
@@ -93,7 +93,7 @@ u_strcmp (const unichar_t *str1, const unichar_t *str2)
 }
 
 long
-u_strncmp (const unichar_t *str1, const unichar_t *str2, int n)
+u_strncmp (const uint32_t *str1, const uint32_t *str2, int n)
 {
   long ch1, ch2;
   while (--n >= 0)
@@ -107,7 +107,7 @@ u_strncmp (const unichar_t *str1, const unichar_t *str2, int n)
 }
 
 long
-u_strmatch (const unichar_t *str1, const unichar_t *str2)
+u_strmatch (const uint32_t *str1, const uint32_t *str2)
 {
   long ch1, ch2;
   for (;;)
@@ -122,97 +122,97 @@ u_strmatch (const unichar_t *str1, const unichar_t *str2)
 }
 
 void
-cu_strcpy (char *to, const unichar_t *from)
+cu_strcpy (char *to, const uint32_t *from)
 {
-  register unichar_t ch;
+  register uint32_t ch;
   while ((ch = *from++) != '\0')
     *(to++) = ch;
   *to = 0;
 }
 
 void
-uc_strcpy (unichar_t *to, const char *from)
+uc_strcpy (uint32_t *to, const char *from)
 {
-  register unichar_t ch;
+  register uint32_t ch;
   while ((ch = *(unsigned char *) from++) != '\0')
     *(to++) = ch;
   *to = 0;
 }
 
 void
-u_strcpy (unichar_t *to, const unichar_t *from)
+u_strcpy (uint32_t *to, const uint32_t *from)
 {
-  register unichar_t ch;
+  register uint32_t ch;
   while ((ch = *from++) != '\0')
     *(to++) = ch;
   *to = 0;
 }
 
 void
-u_strncpy (register unichar_t *to, const unichar_t *from, int len)
+u_strncpy (register uint32_t *to, const uint32_t *from, int len)
 {
-  register unichar_t ch;
+  register uint32_t ch;
   while ((ch = *from++) != '\0' && --len >= 0)
     *(to++) = ch;
   *to = 0;
 }
 
 void
-cu_strncpy (register char *to, const unichar_t *from, int len)
+cu_strncpy (register char *to, const uint32_t *from, int len)
 {
-  register unichar_t ch;
+  register uint32_t ch;
   while ((ch = *from++) != '\0' && --len >= 0)
     *(to++) = ch;
   *to = 0;
 }
 
 void
-uc_strncpy (register unichar_t *to, const char *from, int len)
+uc_strncpy (register uint32_t *to, const char *from, int len)
 {
-  register unichar_t ch;
+  register uint32_t ch;
   while ((ch = *(unsigned char *) from++) != '\0' && --len >= 0)
     *(to++) = ch;
   *to = 0;
 }
 
 void
-uc_strcat (unichar_t *to, const char *from)
+uc_strcat (uint32_t *to, const char *from)
 {
   uc_strcpy (to + u_strlen (to), from);
 }
 
 void
-uc_strncat (unichar_t *to, const char *from, int len)
+uc_strncat (uint32_t *to, const char *from, int len)
 {
   uc_strncpy (to + u_strlen (to), from, len);
 }
 
 void
-cu_strcat (char *to, const unichar_t *from)
+cu_strcat (char *to, const uint32_t *from)
 {
   cu_strcpy (to + strlen (to), from);
 }
 
 void
-cu_strncat (char *to, const unichar_t *from, int len)
+cu_strncat (char *to, const uint32_t *from, int len)
 {
   cu_strncpy (to + strlen (to), from, len);
 }
 
 void
-u_strcat (unichar_t *to, const unichar_t *from)
+u_strcat (uint32_t *to, const uint32_t *from)
 {
   u_strcpy (to + u_strlen (to), from);
 }
 
 void
-u_strncat (unichar_t *to, const unichar_t *from, int len)
+u_strncat (uint32_t *to, const uint32_t *from, int len)
 {
   u_strncpy (to + u_strlen (to), from, len);
 }
 
 int
-u_strlen (register const unichar_t *str)
+u_strlen (register const uint32_t *str)
 {
   register int len = 0;
 
@@ -221,35 +221,35 @@ u_strlen (register const unichar_t *str)
   return (len);
 }
 
-unichar_t *
-u_strchr (const unichar_t *str, unichar_t ch)
+uint32_t *
+u_strchr (const uint32_t *str, uint32_t ch)
 {
-  register unichar_t test;
+  register uint32_t test;
 
   while ((test = *(str++)) != '\0')
     if (test == ch)
-      return ((unichar_t *) str - 1);
+      return ((uint32_t *) str - 1);
 
   return (NULL);
 }
 
-unichar_t *
-u_strrchr (const unichar_t *str, unichar_t ch)
+uint32_t *
+u_strrchr (const uint32_t *str, uint32_t ch)
 {
-  register unichar_t test, *last = NULL;
+  register uint32_t test, *last = NULL;
 
   while ((test = *(str++)) != '\0')
     if (test == ch)
-      last = (unichar_t *) str - 1;
+      last = (uint32_t *) str - 1;
 
   return (last);
 }
 
-unichar_t *
-uc_strstr (const unichar_t *longer, const char *substr)
+uint32_t *
+uc_strstr (const uint32_t *longer, const char *substr)
 {
   long ch1, ch2;
-  const unichar_t *lpt, *str1;
+  const uint32_t *lpt, *str1;
   const char *str2;
 
   for (lpt = longer; *lpt != '\0'; ++lpt)
@@ -261,7 +261,7 @@ uc_strstr (const unichar_t *longer, const char *substr)
           ch1 = *str1++;
           ch2 = *(unsigned char *) str2++;
           if (ch2 == '\0')
-            return ((unichar_t *) lpt);
+            return ((uint32_t *) lpt);
           if (ch1 != ch2)
             break;
         }
@@ -269,11 +269,11 @@ uc_strstr (const unichar_t *longer, const char *substr)
   return (NULL);
 }
 
-unichar_t *
-u_strstr (const unichar_t *longer, const unichar_t *substr)
+uint32_t *
+u_strstr (const uint32_t *longer, const uint32_t *substr)
 {
   long ch1, ch2;
-  const unichar_t *lpt, *str1, *str2;
+  const uint32_t *lpt, *str1, *str2;
 
   for (lpt = longer; *lpt != '\0'; ++lpt)
     {
@@ -284,7 +284,7 @@ u_strstr (const unichar_t *longer, const unichar_t *substr)
           ch1 = *str1++;
           ch2 = *str2++;
           if (ch2 == '\0')
-            return ((unichar_t *) lpt);
+            return ((uint32_t *) lpt);
           if (ch1 != ch2)
             break;
         }
@@ -292,11 +292,11 @@ u_strstr (const unichar_t *longer, const unichar_t *substr)
   return (NULL);
 }
 
-unichar_t *
-uc_strstrmatch (const unichar_t *longer, const char *substr)
+uint32_t *
+uc_strstrmatch (const uint32_t *longer, const char *substr)
 {
   long ch1, ch2;
-  const unichar_t *lpt, *str1;
+  const uint32_t *lpt, *str1;
   const unsigned char *str2;
 
   for (lpt = longer; *lpt != '\0'; ++lpt)
@@ -310,7 +310,7 @@ uc_strstrmatch (const unichar_t *longer, const char *substr)
           ch1 = tolower (ch1);
           ch2 = tolower (ch2);
           if (ch2 == '\0')
-            return ((unichar_t *) lpt);
+            return ((uint32_t *) lpt);
           if (ch1 != ch2)
             break;
         }
@@ -318,11 +318,11 @@ uc_strstrmatch (const unichar_t *longer, const char *substr)
   return (NULL);
 }
 
-unichar_t *
-u_strstrmatch (const unichar_t *longer, const unichar_t *substr)
+uint32_t *
+u_strstrmatch (const uint32_t *longer, const uint32_t *substr)
 {
   long ch1, ch2;
-  const unichar_t *lpt, *str1, *str2;
+  const uint32_t *lpt, *str1, *str2;
 
   for (lpt = longer; *lpt != '\0'; ++lpt)
     {
@@ -335,7 +335,7 @@ u_strstrmatch (const unichar_t *longer, const unichar_t *substr)
           ch1 = tolower (ch1);
           ch2 = tolower (ch2);
           if (ch2 == '\0')
-            return ((unichar_t *) lpt);
+            return ((uint32_t *) lpt);
           if (ch1 != ch2)
             break;
         }
@@ -343,25 +343,25 @@ u_strstrmatch (const unichar_t *longer, const unichar_t *substr)
   return (NULL);
 }
 
-unichar_t *
-u_copyn (const unichar_t *pt, long n)
+uint32_t *
+u_copyn (const uint32_t *pt, long n)
 {
-  unichar_t *res;
+  uint32_t *res;
 #ifdef MEMORY_MASK
-  if (n * sizeof (unichar_t) >= MEMORY_MASK)
-    n = MEMORY_MASK / sizeof (unichar_t) - 1;
+  if (n * sizeof (uint32_t) >= MEMORY_MASK)
+    n = MEMORY_MASK / sizeof (uint32_t) - 1;
 #endif
-  res = (unichar_t *) xmalloc ((n + 1) * sizeof (unichar_t));
-  memcpy (res, pt, n * sizeof (unichar_t));
+  res = (uint32_t *) xmalloc ((n + 1) * sizeof (uint32_t));
+  memcpy (res, pt, n * sizeof (uint32_t));
   res[n] = '\0';
   return (res);
 }
 
-unichar_t *
-u_concat (const unichar_t *s1, const unichar_t *s2)
+uint32_t *
+u_concat (const uint32_t *s1, const uint32_t *s2)
 {
   long len1, len2;
-  unichar_t *pt;
+  uint32_t *pt;
 
   if (s1 == NULL)
     return (x_u32_strdup_or_null (s2));
@@ -369,32 +369,32 @@ u_concat (const unichar_t *s1, const unichar_t *s2)
     return (x_u32_strdup_or_null (s1));
   len1 = u_strlen (s1);
   len2 = u_strlen (s2);
-  pt = (unichar_t *) xmalloc ((len1 + len2 + 1) * sizeof (unichar_t));
+  pt = (uint32_t *) xmalloc ((len1 + len2 + 1) * sizeof (uint32_t));
   u_strcpy (pt, s1);
   u_strcpy (pt + len1, s2);
   return (pt);
 }
 
-unichar_t *
+uint32_t *
 uc_copyn (const char *pt, int len)
 {
-  unichar_t *res, *rpt;
+  uint32_t *res, *rpt;
 
   if (!pt)
-    return ((unichar_t *) 0);
+    return ((uint32_t *) 0);
 
 #ifdef MEMORY_MASK
-  if ((len + 1) * sizeof (unichar_t) >= MEMORY_MASK)
-    len = MEMORY_MASK / sizeof (unichar_t) - 1;
+  if ((len + 1) * sizeof (uint32_t) >= MEMORY_MASK)
+    len = MEMORY_MASK / sizeof (uint32_t) - 1;
 #endif
-  res = (unichar_t *) xmalloc ((len + 1) * sizeof (unichar_t));
+  res = (uint32_t *) xmalloc ((len + 1) * sizeof (uint32_t));
   for (rpt = res; --len >= 0; *rpt++ = *(unsigned char *) pt++);
   *rpt = '\0';
   return (res);
 }
 
 char *
-cu_copyn (const unichar_t *pt, int len)
+cu_copyn (const uint32_t *pt, int len)
 {
   char *res, *rpt;
 
@@ -412,7 +412,7 @@ cu_copyn (const unichar_t *pt, int len)
 }
 
 char *
-cu_copy (const unichar_t *pt)
+cu_copy (const uint32_t *pt)
 {
   char *res, *rpt;
   int n;
@@ -423,7 +423,7 @@ cu_copy (const unichar_t *pt)
   n = u_strlen (pt);
 #ifdef MEMORY_MASK
   if ((n + 1) >= MEMORY_MASK)
-    n = MEMORY_MASK / sizeof (unichar_t) - 1;
+    n = MEMORY_MASK / sizeof (uint32_t) - 1;
 #endif
   res = (char *) xmalloc (n + 1);
   for (rpt = res; --n >= 0; *rpt++ = *pt++)
@@ -433,10 +433,10 @@ cu_copy (const unichar_t *pt)
 }
 
 double
-u_strtod (const unichar_t *str, unichar_t **ptr)
+u_strtod (const uint32_t *str, uint32_t **ptr)
 {
   char buf[60], *pt, *ret;
-  const unichar_t *upt;
+  const uint32_t *upt;
   double val;
 
   for (upt = str, pt = buf;
@@ -447,18 +447,18 @@ u_strtod (const unichar_t *str, unichar_t **ptr)
   if (ptr != NULL)
     {
       if (pt == ret)
-        *ptr = (unichar_t *) upt;
+        *ptr = (uint32_t *) upt;
       else
-        *ptr = (unichar_t *) (str + (ret - buf));
+        *ptr = (uint32_t *) (str + (ret - buf));
     }
   return (val);
 }
 
 long
-u_strtol (const unichar_t *str, unichar_t **ptr, int base)
+u_strtol (const uint32_t *str, uint32_t **ptr, int base)
 {
   char buf[60], *pt, *ret;
-  const unichar_t *upt;
+  const uint32_t *upt;
   long val;
 
   for (upt = str, pt = buf;
@@ -469,18 +469,18 @@ u_strtol (const unichar_t *str, unichar_t **ptr, int base)
   if (ptr != NULL)
     {
       if (pt == ret)
-        *ptr = (unichar_t *) upt;
+        *ptr = (uint32_t *) upt;
       else
-        *ptr = (unichar_t *) (str + (ret - buf));
+        *ptr = (uint32_t *) (str + (ret - buf));
     }
   return (val);
 }
 
 unsigned long
-u_strtoul (const unichar_t *str, unichar_t **ptr, int base)
+u_strtoul (const uint32_t *str, uint32_t **ptr, int base)
 {
   char buf[60], *pt, *ret;
-  const unichar_t *upt;
+  const uint32_t *upt;
   unsigned long val;
 
   for (upt = str, pt = buf;
@@ -491,15 +491,15 @@ u_strtoul (const unichar_t *str, unichar_t **ptr, int base)
   if (ptr != NULL)
     {
       if (pt == ret)
-        *ptr = (unichar_t *) upt;
+        *ptr = (uint32_t *) upt;
       else
-        *ptr = (unichar_t *) (str + (ret - buf));
+        *ptr = (uint32_t *) (str + (ret - buf));
     }
   return (val);
 }
 
-unichar_t *
-cu_strstartmatch (const char *key, const unichar_t *str)
+uint32_t *
+cu_strstartmatch (const char *key, const uint32_t *str)
 {
   if (key && str)
     {
@@ -511,11 +511,11 @@ cu_strstartmatch (const char *key, const unichar_t *str)
           str++;
         }
     }
-  return (unichar_t *) str;
+  return (uint32_t *) str;
 }
 
-unichar_t *
-u_strstartmatch (const unichar_t *initial, const unichar_t *full)
+uint32_t *
+u_strstartmatch (const uint32_t *initial, const uint32_t *full)
 {
   int ch1, ch2;
   for (;;)
@@ -523,7 +523,7 @@ u_strstartmatch (const unichar_t *initial, const unichar_t *full)
       ch1 = *initial++;
       ch2 = *full++;
       if (ch1 == '\0')
-        return ((unichar_t *) full);
+        return ((uint32_t *) full);
       ch1 = tolower (ch1);
       ch2 = tolower (ch2);
       if (ch1 != ch2 || ch1 == '\0')
@@ -532,25 +532,25 @@ u_strstartmatch (const unichar_t *initial, const unichar_t *full)
 }
 
 char *
-u_to_c (const unichar_t *ubuf)
+u_to_c (const uint32_t *ubuf)
 {
   static char buf[400];
   cu_strncpy (buf, ubuf, sizeof (buf));
   return (buf);
 }
 
-unichar_t *
+uint32_t *
 c_to_u (const char *buf)
 {
-  static unichar_t ubuf[400];
+  static uint32_t ubuf[400];
   uc_strncpy (ubuf, buf, sizeof (ubuf));
   return (ubuf);
 }
 
-unichar_t *
-utf82u_strncpy (unichar_t *ubuf, const char *utf8buf, int len)
+uint32_t *
+utf82u_strncpy (uint32_t *ubuf, const char *utf8buf, int len)
 {
-  unichar_t *upt = ubuf, *uend = ubuf + len - 1;
+  uint32_t *upt = ubuf, *uend = ubuf + len - 1;
   const uint8 *pt = (const uint8 *) utf8buf, *end = pt + strlen (utf8buf);
   int w, w2;
 
@@ -582,41 +582,41 @@ utf82u_strncpy (unichar_t *ubuf, const char *utf8buf, int len)
   return (ubuf);
 }
 
-unichar_t *
-utf82u_strcpy (unichar_t *ubuf, const char *utf8buf)
+uint32_t *
+utf82u_strcpy (uint32_t *ubuf, const char *utf8buf)
 {
   return (utf82u_strncpy (ubuf, utf8buf, strlen (utf8buf) + 1));
 }
 
-unichar_t *
+uint32_t *
 utf82u_copyn (const char *utf8buf, int len)
 {
-  unichar_t *ubuf = (unichar_t *) xmalloc ((len + 1) * sizeof (unichar_t));
+  uint32_t *ubuf = (uint32_t *) xmalloc ((len + 1) * sizeof (uint32_t));
   return (utf82u_strncpy (ubuf, utf8buf, len + 1));
 }
 
-unichar_t *
+uint32_t *
 utf82u_copy (const char *utf8buf)
 {
   int len;
-  unichar_t *ubuf;
+  uint32_t *ubuf;
 
   if (utf8buf == NULL)
     return (NULL);
 
   len = strlen (utf8buf);
-  ubuf = (unichar_t *) xmalloc ((len + 1) * sizeof (unichar_t));
+  ubuf = (uint32_t *) xmalloc ((len + 1) * sizeof (uint32_t));
   return (utf82u_strncpy (ubuf, utf8buf, len + 1));
 }
 
 void
-utf82u_strcat (unichar_t *to, const char *from)
+utf82u_strcat (uint32_t *to, const char *from)
 {
   utf82u_strcpy (to + u_strlen (to), from);
 }
 
 char *
-u2utf8_strcpy (char *utf8buf, const unichar_t *ubuf)
+u2utf8_strcpy (char *utf8buf, const uint32_t *ubuf)
 {
   char *pt = utf8buf;
 
@@ -724,7 +724,7 @@ utf8_2_latin1_copy (const char *utf8buf)
 }
 
 char *
-u2utf8_copy (const unichar_t *ubuf)
+u2utf8_copy (const uint32_t *ubuf)
 {
   int len;
   char *utf8buf;
@@ -738,7 +738,7 @@ u2utf8_copy (const unichar_t *ubuf)
 }
 
 char *
-u2utf8_copyn (const unichar_t *ubuf, int len)
+u2utf8_copyn (const uint32_t *ubuf, int len)
 {
   int i;
   char *utf8buf, *pt;
@@ -961,7 +961,7 @@ StripToASCII (const char *utf8_str)
   /* Remove any non-ascii characters: Special case, convert the copyright symbol to (c) */
   char *newcr, *pt, *end;
   int len, ch;
-  const unichar_t *alt;
+  const uint32_t *alt;
 
   len = strlen (utf8_str);
   pt = newcr = (char *) xmalloc (len + 1);
@@ -1039,7 +1039,7 @@ AllAscii (const char *txt)
 }
 
 int
-uAllAscii (const unichar_t *txt)
+uAllAscii (const uint32_t *txt)
 {
   for (; *txt != '\0'; ++txt)
     {
@@ -1052,12 +1052,12 @@ uAllAscii (const unichar_t *txt)
 }
 
 int
-u_endswith (const unichar_t *haystack, const unichar_t *needle)
+u_endswith (const uint32_t *haystack, const uint32_t *needle)
 {
   int haylen = u_strlen (haystack);
   int nedlen = u_strlen (needle);
   if (haylen < nedlen)
     return 0;
-  unichar_t *p = u_strstr (haystack + haylen - nedlen, needle);
+  uint32_t *p = u_strstr (haystack + haylen - nedlen, needle);
   return p == (haystack + haylen - nedlen);
 }

@@ -49,7 +49,7 @@ typedef struct entpen {
 } Pen;
 
 typedef struct textunit {
-    unichar_t *text;
+    uint32_t *text;
     SplineFont *sf;
     float size;			/* in points */
     float kernafter;

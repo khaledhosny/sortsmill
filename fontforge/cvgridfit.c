@@ -160,7 +160,7 @@ static int FtPpem_SameAsChanged(GGadget *g, GEvent *e) {
     if ( e->type==et_controlevent && e->u.control.subtype == et_radiochanged ) {
 	FtSizeData *fsd = GDrawGetUserData(GGadgetGetWindow(g));
 	if ( GGadgetIsChecked(g)) {
-	    const unichar_t *y = _GGadgetGetTitle(GWidgetGetControl(fsd->gw,CID_PointSize));
+	    const uint32_t *y = _GGadgetGetTitle(GWidgetGetControl(fsd->gw,CID_PointSize));
 	    GGadgetSetTitle(GWidgetGetControl(fsd->gw,CID_PointSizeX),y);
 	    GGadgetSetEnabled(GWidgetGetControl(fsd->gw,CID_PointSizeX),false);
 	} else {
@@ -174,7 +174,7 @@ static int FtPpem_PtYChanged(GGadget *g, GEvent *e) {
     if ( e->type==et_controlevent && e->u.control.subtype == et_textchanged ) {
 	FtSizeData *fsd = GDrawGetUserData(GGadgetGetWindow(g));
 	if ( GGadgetIsChecked(GWidgetGetControl(fsd->gw,CID_SameAs))) {
-	    const unichar_t *y = _GGadgetGetTitle(g);
+	    const uint32_t *y = _GGadgetGetTitle(g);
 	    GGadgetSetTitle(GWidgetGetControl(fsd->gw,CID_PointSizeX),y);
 	}
     }
@@ -227,7 +227,7 @@ void CVFtPpemDlg(CharView *cv,int debug) {
     memset(&boxes,0,sizeof(boxes));
 
     k=r=0;
-    label[k].text = (unichar_t *) _("Debug _fpgm/prep");
+    label[k].text = (uint32_t *) _("Debug _fpgm/prep");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -239,7 +239,7 @@ void CVFtPpemDlg(CharView *cv,int debug) {
     gcd[k++].creator = GCheckBoxCreate;
     varray[r][0] = &gcd[k-1]; varray[r][1] = GCD_ColSpan; varray[r][2] = GCD_ColSpan; varray[r++][3] = NULL;
 
-    label[k].text = (unichar_t *) _("Scale X/Y the same");
+    label[k].text = (uint32_t *) _("Scale X/Y the same");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -252,7 +252,7 @@ void CVFtPpemDlg(CharView *cv,int debug) {
     gcd[k++].creator = GCheckBoxCreate;
     varray[r][0] = &gcd[k-1]; varray[r][1] = GCD_HPad10;
 
-    label[k].text = (unichar_t *) _("_DPI:");
+    label[k].text = (uint32_t *) _("_DPI:");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -262,7 +262,7 @@ void CVFtPpemDlg(CharView *cv,int debug) {
     harray1[0] = &gcd[k-1];
 
     sprintf( buffer2, "%d", gridfit_dpi );
-    label[k].text = (unichar_t *) buffer2;
+    label[k].text = (uint32_t *) buffer2;
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 140; gcd[k].gd.pos.y = 17+5;  gcd[k].gd.pos.width = 40;
@@ -276,7 +276,7 @@ void CVFtPpemDlg(CharView *cv,int debug) {
     boxes[2].creator = GHBoxCreate;
     varray[r][2] = &boxes[2]; varray[r++][3] = NULL;
 
-    label[k].text = (unichar_t *) _("_Pointsize Y:");
+    label[k].text = (uint32_t *) _("_Pointsize Y:");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -286,7 +286,7 @@ void CVFtPpemDlg(CharView *cv,int debug) {
     harray2[0] = &gcd[k-1];
 
     sprintf( buffer, "%g", gridfit_pointsizey );
-    label[k].text = (unichar_t *) buffer;
+    label[k].text = (uint32_t *) buffer;
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 57; gcd[k].gd.pos.y = 17+5;  gcd[k].gd.pos.width = 40;
@@ -301,7 +301,7 @@ void CVFtPpemDlg(CharView *cv,int debug) {
     boxes[3].creator = GHBoxCreate;
     varray[r][0] = &boxes[3]; varray[r][1] = GCD_HPad10;
 
-    label[k].text = (unichar_t *) _("_X:");
+    label[k].text = (uint32_t *) _("_X:");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -311,7 +311,7 @@ void CVFtPpemDlg(CharView *cv,int debug) {
     harray3[0] = &gcd[k-1];
 
     sprintf( buffer3, "%g", gridfit_x_sameas_y ? gridfit_pointsizey : gridfit_pointsizex);
-    label[k].text = (unichar_t *) buffer3;
+    label[k].text = (uint32_t *) buffer3;
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 57; gcd[k].gd.pos.y = 17+5;  gcd[k].gd.pos.width = 40;
@@ -327,7 +327,7 @@ void CVFtPpemDlg(CharView *cv,int debug) {
     boxes[4].creator = GHBoxCreate;
     varray[r][2] = &boxes[4]; varray[r++][3] = NULL;
 
-    label[k].text = (unichar_t *) _("_Mono");
+    label[k].text = (uint32_t *) _("_Mono");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -337,7 +337,7 @@ void CVFtPpemDlg(CharView *cv,int debug) {
     gcd[k++].creator = GRadioCreate;
     varray[r][0] = &gcd[k-1]; varray[r][1] = GCD_HPad10;
 
-    label[k].text = (unichar_t *) _("_Anti-Aliased");
+    label[k].text = (uint32_t *) _("_Anti-Aliased");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -355,7 +355,7 @@ void CVFtPpemDlg(CharView *cv,int debug) {
     gcd[k].gd.pos.x = 20-3; gcd[k].gd.pos.y = 17+37+16;
     gcd[k].gd.pos.width = -1; gcd[k].gd.pos.height = 0;
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    label[k].text = (unichar_t *) _("_OK");
+    label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.mnemonic = 'O';
@@ -367,7 +367,7 @@ void CVFtPpemDlg(CharView *cv,int debug) {
     gcd[k].gd.pos.x = -20; gcd[k].gd.pos.y = gcd[4].gd.pos.y+3;
     gcd[k].gd.pos.width = -1; gcd[k].gd.pos.height = 0;
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    label[k].text = (unichar_t *) _("_Cancel");
+    label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];

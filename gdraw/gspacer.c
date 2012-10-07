@@ -59,10 +59,10 @@ return;
     _ggadget_destroy(g);
 }
 
-static void GSpacerSetTitle(GGadget *g,const unichar_t *tit) {
+static void GSpacerSetTitle(GGadget *g,const uint32_t *tit) {
 }
 
-static const unichar_t *_GSpacerGetTitle(GGadget *g) {
+static const uint32_t *_GSpacerGetTitle(GGadget *g) {
 return( NULL );
 }
 

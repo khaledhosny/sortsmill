@@ -105,7 +105,7 @@ extern struct printdefaults {
     Encoding *last_cs;
     enum printtype pt;
     int pointsize;
-    unichar_t *text;
+    uint32_t *text;
 } pdefs[];
 /* defaults for print from fontview, charview, metricsview */
 

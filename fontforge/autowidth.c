@@ -638,19 +638,19 @@ void AW_FindFontParameters(WidthInfo *wi) {
     int i, j, si=-1;
     real caph, ds, xh, serifsize, angle, ca, seriflength = 0;
     int cnt;
-    static unichar_t caps[] = { 'A', 'Z', 0x391, 0x3a9, 0x40f, 0x418, 0x41a, 0x42f, 0 };
+    static uint32_t caps[] = { 'A', 'Z', 0x391, 0x3a9, 0x40f, 0x418, 0x41a, 0x42f, 0 };
 #if 0
-    static unichar_t ascent[] = { 'b','d','h','k','l',
+    static uint32_t ascent[] = { 'b','d','h','k','l',
 	    0x444, 0x452, 0x45b, 0x431, 0 };
 #endif
-    static unichar_t descent[] = { 'p','q','g','y','j',
+    static uint32_t descent[] = { 'p','q','g','y','j',
 	    0x3c8, 0x3b7, 0x3b3, 0x3b2, 0x3b6, 0x3bc, 0x3be, 0x3c1, 0x3c6,
 	    0x444, 0x443, 0x458, 0x434, 0 };
-    static unichar_t xheight[] = { 'x','u','v','w','y','z',
+    static uint32_t xheight[] = { 'x','u','v','w','y','z',
 	    0x3b3, 0x3b9, 0x3ba, 0x3bc, 0x3bd, 0x3c0, 0x3c4, 0x3c5, 0x3c7, 0x3c8,
 	    0x432, 0x433, 0x436, 0x438, 0x43a, 0x43d, 0x43f, 0x442, 0x443, 0x445,
 	    0x446, 0x447, 0x448, 0x449, 0 };
-    static unichar_t easyserif[] = { 'I','B','D','E','F','H','K','L','N','P','R',
+    static uint32_t easyserif[] = { 'I','B','D','E','F','H','K','L','N','P','R',
 	    0x399, 0x406, 0x392, 0x393, 0x395, 0x397, 0x39a,
 	    0x3a0, 0x3a1, 0x40a, 0x412, 0x413, 0x415, 0x41a, 0x41d, 0x41f,
 	    0x420, 0x428, 0 };
@@ -845,7 +845,7 @@ return( angle );
 
 #if 0
 void SFHasSerifs(SplineFont *sf,int layer) {
-    static unichar_t easyserif[] = { 'I','B','D','E','F','H','I','K','L','N','P','R',
+    static uint32_t easyserif[] = { 'I','B','D','E','F','H','I','K','L','N','P','R',
 	    0x399, 0x406, 0x392, 0x393, 0x395, 0x397, 0x39a,
 	    0x3a0, 0x3a1, 0x40a, 0x412, 0x413, 0x415, 0x41a, 0x41d, 0x41f,
 	    0x420, 0x428, 0 };
@@ -1003,14 +1003,14 @@ return( ch );
 }
 
 struct kernsets {
-    unichar_t *ch1;
+    uint32_t *ch1;
     int max, cur;
-    unichar_t **ch2s;		/* first level array is same dim as ch1 */
+    uint32_t **ch2s;		/* first level array is same dim as ch1 */
 };
 
-static unichar_t *ugetstr(FILE *file,int format,unichar_t *buffer,int len) {
+static uint32_t *ugetstr(FILE *file,int format,uint32_t *buffer,int len) {
     int ch, ch2;
-    unichar_t *upt = buffer;
+    uint32_t *upt = buffer;
 
     if ( format==0 ) {
 	while ( (ch=getc(file))!='\n' && ch!='\r' && ch!=EOF ) {
@@ -1070,7 +1070,7 @@ return( NULL );
 return( buffer );
 }
 
-static void parsekernstr(unichar_t *buffer,struct kernsets *ks) {
+static void parsekernstr(uint32_t *buffer,struct kernsets *ks) {
     int i,j,k;
 
     /* Any line not parseable as a kern pair is ignored */
@@ -1082,11 +1082,11 @@ return;
 	if ( ks->cur+1>=ks->max ) {
 	    ks->max += 100;
 	    if ( ks->cur==0 ) {
-		ks->ch1 = xmalloc(ks->max*sizeof(unichar_t));
-		ks->ch2s = xmalloc(ks->max*sizeof(unichar_t *));
+		ks->ch1 = xmalloc(ks->max*sizeof(uint32_t));
+		ks->ch2s = xmalloc(ks->max*sizeof(uint32_t *));
 	    } else {
-		ks->ch1 = xrealloc(ks->ch1,ks->max*sizeof(unichar_t));
-		ks->ch2s = xrealloc(ks->ch2s,ks->max*sizeof(unichar_t *));
+		ks->ch1 = xrealloc(ks->ch1,ks->max*sizeof(uint32_t));
+		ks->ch2s = xrealloc(ks->ch2s,ks->max*sizeof(uint32_t *));
 	    }
 	}
 	for ( j=ks->cur; j>i; --j ) {
@@ -1094,12 +1094,12 @@ return;
 	    ks->ch2s[j] = ks->ch2s[j-1];
 	}
 	ks->ch1[i] = buffer[0];
-	ks->ch2s[i] = xmalloc(50*sizeof(unichar_t));
+	ks->ch2s[i] = xmalloc(50*sizeof(uint32_t));
 	ks->ch2s[i][0] = '\0';
 	++ks->cur;
     }
     if ( (u_strlen(ks->ch2s[i])+1)%50 == 0 )
-	ks->ch2s[i] = xrealloc(ks->ch2s[i],(u_strlen(ks->ch2s[i])+50)*sizeof(unichar_t));
+	ks->ch2s[i] = xrealloc(ks->ch2s[i],(u_strlen(ks->ch2s[i])+50)*sizeof(uint32_t));
     for ( j=0 ; ks->ch2s[i][j]!=0 && buffer[1]>ks->ch2s[i][j]; ++j );
     if ( ks->ch2s[i][j]!=buffer[1] ) {
 	for ( k=u_strlen(ks->ch2s[i])+1; k>j; --k )
@@ -1125,8 +1125,8 @@ void AW_ScriptSerifChecker(WidthInfo *wi) {
 
 static int figurekernsets(WidthInfo *wi,struct kernsets *ks) {
     int i,j,k,cnt,lcnt,max;
-    unichar_t *ch2s;
-    unichar_t *cpt, *upt;
+    uint32_t *ch2s;
+    uint32_t *cpt, *upt;
     struct charpair *cp;
     SplineFont *sf = wi->sf;
 
@@ -1152,7 +1152,7 @@ return( false );
     for ( i=max=0; i<ks->cur; ++i )
 	if ( ks->ch1[i]!='\0' )
 	    max += u_strlen(ks->ch2s[i]);
-    ch2s = xmalloc((max+1)*sizeof(unichar_t));
+    ch2s = xmalloc((max+1)*sizeof(uint32_t));
     for ( i=0; i<ks->cur && ks->ch1[i]=='\0'; ++i );
     u_strcpy(ch2s,ks->ch2s[i]);
     for ( ++i; i<ks->cur; ++i ) if ( ks->ch1[i]!='\0' ) {
@@ -1216,7 +1216,7 @@ int AW_ReadKernPairFile(char *fn,WidthInfo *wi) {
     char *filename;
     FILE *file;
     int ch, format=0;
-    unichar_t buffer[300];
+    uint32_t buffer[300];
     struct kernsets ks;
 
     filename = utf82def_copy(fn);

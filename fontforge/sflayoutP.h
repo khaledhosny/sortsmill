@@ -80,7 +80,7 @@ struct paras {
 };
 
 typedef struct layoutinfo {
-    unichar_t *text, *oldtext;	/* Input glyphs (in unicode) */
+    uint32_t *text, *oldtext;	/* Input glyphs (in unicode) */
     int16 lcnt, lmax;
     struct opentype_str ***lines;	/* pointers into the paras array */
     int16 xmax;
@@ -107,7 +107,7 @@ extern struct fontlist *LI_fontlistcopy(struct fontlist *fl );
 VISIBLE extern void LI_fontlistmergecheck(LayoutInfo *li);
 VISIBLE extern void LayoutInfoRefigureLines(LayoutInfo *li, int start_of_change,
 	int end_of_change, int width);
-VISIBLE extern int LayoutInfoReplace(LayoutInfo *li, const unichar_t *str,
+VISIBLE extern int LayoutInfoReplace(LayoutInfo *li, const uint32_t *str,
 	int sel_start, int sel_end,int width);
 VISIBLE extern void LayoutInfo_Destroy(LayoutInfo *li);
 VISIBLE extern void SFMapFill(struct sfmaps *sfmaps,SplineFont *sf);
@@ -118,7 +118,7 @@ VISIBLE extern FontData *LI_RegenFontData(LayoutInfo *li, FontData *ret);
 VISIBLE extern void LayoutInfoInitLangSys(LayoutInfo *li, int end, uint32 script, uint32 lang);
 VISIBLE extern LayoutInfo *LIConvertToPrint(LayoutInfo *li, int width, int height, int dpi);
 VISIBLE extern SplineSet *LIConvertToSplines(LayoutInfo *li,double dpi,int order2);
-extern void LayoutInfoSetTitle(LayoutInfo *li,const unichar_t *tit,int width);
+extern void LayoutInfoSetTitle(LayoutInfo *li,const uint32_t *tit,int width);
 VISIBLE extern struct fontlist *LI_BreakFontList(LayoutInfo *li,int start,int end);
 VISIBLE extern int LI_SetFontData(LayoutInfo *li, int start, int end, SplineFont *sf,
 	int layer, enum sftf_fonttype fonttype, int size, int antialias,int width);

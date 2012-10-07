@@ -321,13 +321,13 @@ return;
     GGadgetPreparePopup8(hist->gw,buffer);
 }
 
-static unichar_t *ArrayOrder(const unichar_t *old,int args,int val1,int val2) {
-    unichar_t *end;
+static uint32_t *ArrayOrder(const uint32_t *old,int args,int val1,int val2) {
+    uint32_t *end;
     double array[40];
     int i,j,k;
-    static unichar_t format[] = { '%', 'g', '\0' };
-    unichar_t *new, *pt;
-    unichar_t ubuf[40];
+    static uint32_t format[] = { '%', 'g', '\0' };
+    uint32_t *new, *pt;
+    uint32_t ubuf[40];
 
     if ( *old=='[' ) ++old;
 
@@ -348,7 +348,7 @@ static unichar_t *ArrayOrder(const unichar_t *old,int args,int val1,int val2) {
     }
 
     u_sprintf(ubuf,format,val1);
-    new = xmalloc(2*(u_strlen(ubuf)+u_strlen(old)+10)*sizeof(unichar_t));
+    new = xmalloc(2*(u_strlen(ubuf)+u_strlen(old)+10)*sizeof(uint32_t));
 
     pt = new;
     *pt++ = '[';
@@ -366,8 +366,8 @@ return( new );
 
 static void HistPress(struct hist_dlg *hist,GEvent *e) {
     int x = e->u.mouse.x;
-    static unichar_t fullformat[] = { '[', '%', 'd', ']', '\0' };
-    unichar_t ubuf[20];
+    static uint32_t fullformat[] = { '[', '%', 'd', ']', '\0' };
+    uint32_t ubuf[20];
 
     x /= hist->barwidth;
     x += hist->hoff;
@@ -379,13 +379,13 @@ return;
 	    if ( x<hist->pending_blue )
 		ff_post_error(_("Bad Value"),_("The smaller number must be selected first in a pair of bluevalues"));
 	    else if ( x<0 ) {	/* OtherBlues */
-		const unichar_t *old = _GGadgetGetTitle(GWidgetGetControl(hist->gw,CID_SecondaryVal));
-		unichar_t *new = ArrayOrder(old,2,hist->pending_blue,x);
+		const uint32_t *old = _GGadgetGetTitle(GWidgetGetControl(hist->gw,CID_SecondaryVal));
+		uint32_t *new = ArrayOrder(old,2,hist->pending_blue,x);
 		GGadgetSetTitle(GWidgetGetControl(hist->gw,CID_SecondaryVal),new);
 		free(new);
 	    } else {
-		const unichar_t *old = _GGadgetGetTitle(GWidgetGetControl(hist->gw,CID_MainVal));
-		unichar_t *new = ArrayOrder(old,2,hist->pending_blue,x);
+		const uint32_t *old = _GGadgetGetTitle(GWidgetGetControl(hist->gw,CID_MainVal));
+		uint32_t *new = ArrayOrder(old,2,hist->pending_blue,x);
 		GGadgetSetTitle(GWidgetGetControl(hist->gw,CID_MainVal),new);
 		free(new);
 	    }
@@ -405,8 +405,8 @@ return;
 	    GGadgetSetTitle(GWidgetGetControl(hist->gw,CID_MainVal),ubuf);
 	    GGadgetSetTitle(GWidgetGetControl(hist->gw,CID_SecondaryVal),ubuf);
 	} else {
-	    const unichar_t *old = _GGadgetGetTitle(GWidgetGetControl(hist->gw,CID_SecondaryVal));
-	    unichar_t *new = ArrayOrder(old,1,x,0);
+	    const uint32_t *old = _GGadgetGetTitle(GWidgetGetControl(hist->gw,CID_SecondaryVal));
+	    uint32_t *new = ArrayOrder(old,1,x,0);
 	    GGadgetSetTitle(GWidgetGetControl(hist->gw,CID_SecondaryVal),new);
 	    free(new);
 	}
@@ -565,7 +565,7 @@ static void HistSet(struct hist_dlg *hist) {
     char *primary, *secondary;
     char *temp;
     struct psdict *p = hist->private ? hist->private : hist->sf->private;
-    const unichar_t *ret1, *ret2;
+    const uint32_t *ret1, *ret2;
 
     switch ( hist->which ) {
       case hist_hstem:
@@ -667,8 +667,8 @@ return( true );
 static int hist_e_h(GWindow gw, GEvent *event) {
     struct hist_dlg *hist = GDrawGetUserData(gw);
     int temp;
-    const unichar_t *ret;
-    unichar_t *end;
+    const uint32_t *ret;
+    uint32_t *end;
 
     if ( event->type==et_close ) {
 	hist->done = true;
@@ -748,7 +748,7 @@ void SFHistogram(SplineFont *sf,int layer, struct psdict *private, uint8 *select
     int i,j;
     char binsize[20], barwidth[20], *primary, *secondary;
     int as, ds, ld;
-    static unichar_t n9999[] = { '9', '9', '9', '9', 0 };
+    static uint32_t n9999[] = { '9', '9', '9', '9', 0 };
     static GFont *font = NULL;
 
     memset(&hist,0,sizeof(hist));
@@ -846,7 +846,7 @@ void SFHistogram(SplineFont *sf,int layer, struct psdict *private, uint8 *select
     boxes[2].gd.u.boxelements = &hvbody[0][0];
     boxes[2].creator = GHVBoxCreate;
 
-    label[i].text = (unichar_t *) _("Sum Around:");
+    label[i].text = (uint32_t *) _("Sum Around:");
     label[i].text_is_1byte = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.flags = gg_enabled|gg_visible;
@@ -855,7 +855,7 @@ void SFHistogram(SplineFont *sf,int layer, struct psdict *private, uint8 *select
     hvctls[0][0] = &gcd[i-1];
 
     sprintf(binsize,"%d", hist.sum_around);
-    label[i].text = (unichar_t *) binsize;
+    label[i].text = (uint32_t *) binsize;
     label[i].text_is_1byte = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.pos.width = 30;
@@ -864,7 +864,7 @@ void SFHistogram(SplineFont *sf,int layer, struct psdict *private, uint8 *select
     gcd[i++].creator = GTextFieldCreate;
     hvctls[0][1] = &gcd[i-1];
 
-    label[i].text = (unichar_t *) _("Bar Width:");
+    label[i].text = (uint32_t *) _("Bar Width:");
     label[i].text_is_1byte = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.flags = gg_enabled|gg_visible;
@@ -873,7 +873,7 @@ void SFHistogram(SplineFont *sf,int layer, struct psdict *private, uint8 *select
     hvctls[0][2] = &gcd[i-1];
 
     sprintf(barwidth,"%d", hist.barwidth);
-    label[i].text = (unichar_t *) barwidth;
+    label[i].text = (uint32_t *) barwidth;
     label[i].text_is_1byte = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.pos.width = 30;
@@ -883,7 +883,7 @@ void SFHistogram(SplineFont *sf,int layer, struct psdict *private, uint8 *select
     hvctls[0][3] = &gcd[i-1];
     hvctls[0][4] = NULL;
 
-    label[i].text = (unichar_t *) _("BlueValues come in pairs. Select another.");
+    label[i].text = (uint32_t *) _("BlueValues come in pairs. Select another.");
     label[i].text_is_1byte = true;
     label[i].fg = 0xff0000;
     label[i].bg = GDrawGetDefaultBackground(NULL);
@@ -897,18 +897,18 @@ void SFHistogram(SplineFont *sf,int layer, struct psdict *private, uint8 *select
 
     switch ( which ) {
       case hist_hstem:
-	label[i].text = (unichar_t *) "StdHW:";
-	label[i+2].text = (unichar_t *) "StemSnapH:";
+	label[i].text = (uint32_t *) "StdHW:";
+	label[i+2].text = (uint32_t *) "StemSnapH:";
 	primary = "StdHW"; secondary = "StemSnapH";
       break;
       case hist_vstem:
-	label[i].text = (unichar_t *) "StdVW:";
-	label[i+2].text = (unichar_t *) "StemSnapV:";
+	label[i].text = (uint32_t *) "StdVW:";
+	label[i+2].text = (uint32_t *) "StemSnapV:";
 	primary = "StdVW"; secondary = "StemSnapV";
       break;
       case hist_blues:
-	label[i].text = (unichar_t *) "BlueValues:";
-	label[i+2].text = (unichar_t *) "OtherBlues:";
+	label[i].text = (uint32_t *) "BlueValues:";
+	label[i+2].text = (uint32_t *) "OtherBlues:";
 	primary = "BlueValues"; secondary = "OtherBlues";
       break;
     }
@@ -921,7 +921,7 @@ void SFHistogram(SplineFont *sf,int layer, struct psdict *private, uint8 *select
     hvctls[2][0] = &gcd[i-1];
 
     if ( private!=NULL && (j=PSDictFindEntry(private,primary))!=-1 ) {
-	label[i].text = (unichar_t *) private->values[j];
+	label[i].text = (uint32_t *) private->values[j];
 	label[i].text_is_1byte = true;
 	gcd[i].gd.label = &label[i];
     }
@@ -943,7 +943,7 @@ void SFHistogram(SplineFont *sf,int layer, struct psdict *private, uint8 *select
     hvctls[3][0] = &gcd[i-1];
 
     if ( private!=NULL && (j=PSDictFindEntry(private,secondary))!=-1 ) {
-	label[i].text = (unichar_t *) private->values[j];
+	label[i].text = (uint32_t *) private->values[j];
 	label[i].text_is_1byte = true;
 	gcd[i].gd.label = &label[i];
     }
@@ -962,7 +962,7 @@ void SFHistogram(SplineFont *sf,int layer, struct psdict *private, uint8 *select
     boxes[3].creator = GHVBoxCreate;
 
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    label[i].text = (unichar_t *) _("_OK");
+    label[i].text = (uint32_t *) _("_OK");
     label[i].text_is_1byte = true;
     label[i].text_in_resource = true;
     gcd[i].gd.label = &label[i];
@@ -971,7 +971,7 @@ void SFHistogram(SplineFont *sf,int layer, struct psdict *private, uint8 *select
     butarray[0] = GCD_Glue; butarray[1] = &gcd[i-1]; butarray[2] = GCD_Glue; butarray[3] = GCD_Glue;
 
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    label[i].text = (unichar_t *) _("_Cancel");
+    label[i].text = (uint32_t *) _("_Cancel");
     label[i].text_is_1byte = true;
     label[i].text_in_resource = true;
     gcd[i].gd.label = &label[i];

@@ -16071,7 +16071,7 @@ static PyObject *PyFFFont_printSample(PyFF_Font *self, PyObject *args) {
     int type, i, inlinesample = true;
     int32 *pointsizes=NULL;
     char *samplefile=NULL, *output=NULL;
-    unichar_t *sample=NULL;
+    uint32_t *sample=NULL;
     char *locfilename=NULL;
     int arg_cnt;
     PyObject *arg;

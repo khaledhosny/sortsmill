@@ -34,7 +34,7 @@
 
 /* figure out how to do divide, multiply, 1/4, 3/4 */
 #define forever for (;;)
-//typedef unsigned short unichar_t;
+//typedef unsigned short uint32_t;
 //typedef unsigned int uint32;
 
 #define ACUTE		0x1
@@ -341,7 +341,7 @@ struct { char ch; unsigned int oldstate, newstate; unsigned short result; }
 struct transform {
     uint32 oldstate;
     uint32 newstate;
-    unichar_t resch;
+    uint32_t resch;
     struct transform *next;
 } *info[95] = { 0 };
 

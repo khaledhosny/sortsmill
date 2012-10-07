@@ -55,14 +55,14 @@ struct args {
     int fieldwidth, precision;
     enum arg_type arg_type;
     long ival;
-    const unichar_t *uval;
+    const uint32_t *uval;
     double dval;
 };
 
 struct state {
     int argmax;
     struct args *args;
-    unichar_t *opt, *end;
+    uint32_t *opt, *end;
     int cnt;
 };
 
@@ -75,7 +75,7 @@ static int isspec(int ch) {
 return( *str==ch );
 }
 
-static void padvalue(struct state *state,int arg,unichar_t *txt,int fieldwidth) {
+static void padvalue(struct state *state,int arg,uint32_t *txt,int fieldwidth) {
     int len=0, padc;
 
     padc = state->args[arg].is_zeropad?'0':' ';
@@ -98,7 +98,7 @@ static void padvalue(struct state *state,int arg,unichar_t *txt,int fieldwidth) 
     }
 }
 
-static void padstr(struct state *state,int arg,const unichar_t *txt,int fieldwidth, int precision) {
+static void padstr(struct state *state,int arg,const uint32_t *txt,int fieldwidth, int precision) {
     int len=0, padc,i;
 
     if ( fieldwidth>0 ) {
@@ -123,7 +123,7 @@ static void formatarg(struct state *state,int arg) {
     static char *hex = "0123456789abcdef", *HEX="0123456789ABCDEF";
     char *trans;
     int radix, neg; unsigned long val;
-    unichar_t buf[20], *pt;
+    uint32_t buf[20], *pt;
     char cbuf[20];
     int i, precision, fieldwidth;
 
@@ -188,7 +188,7 @@ return;
       case 's':
 	if ( state->args[arg].uval == NULL )
 	  {
-	    static unichar_t null[] = { '<','n','u','l','l','>', '\0' };
+	    static uint32_t null[] = { '<','n','u','l','l','>', '\0' };
 	    padstr(state,arg,null,fieldwidth,precision);
 	  }
 	else if ( state->args[arg].is_short )
@@ -224,10 +224,10 @@ return;
     }
 }
 
-int u_vsnprintf(unichar_t *str, int len, const unichar_t *format, va_list ap ) {
+int u_vsnprintf(uint32_t *str, int len, const uint32_t *format, va_list ap ) {
     struct state state;
     struct args args[20], temp;
-    const unichar_t *pt;
+    const uint32_t *pt;
     int argmax = 0, arg, ac, val, hadarg;
 
     memset(&state,'\0',sizeof(state));
@@ -379,13 +379,13 @@ int u_vsnprintf(unichar_t *str, int len, const unichar_t *format, va_list ap ) {
 	    state.args[arg].dval = va_arg(ap,double);
 	  break;
 	  case at_ustr:
-	    state.args[arg].uval = va_arg(ap,unichar_t *);
+	    state.args[arg].uval = va_arg(ap,uint32_t *);
 	  break;
 	  case at_astr:
-	    state.args[arg].uval = (unichar_t *) va_arg(ap,char *);
+	    state.args[arg].uval = (uint32_t *) va_arg(ap,char *);
 	  break;
 	  case at_iptr:
-	    state.args[arg].uval = (unichar_t *) va_arg(ap,int *);
+	    state.args[arg].uval = (uint32_t *) va_arg(ap,int *);
 	  break;
 	  default:
 	    /* Shouldn't get here, if we do, skip one arg */
@@ -424,7 +424,7 @@ int u_vsnprintf(unichar_t *str, int len, const unichar_t *format, va_list ap ) {
 return( state.cnt-1 );		/* don't include trailing nul */
 }
 
-int u_snprintf(unichar_t *str, int len, const unichar_t *format, ... ) {
+int u_snprintf(uint32_t *str, int len, const uint32_t *format, ... ) {
     va_list ap;
     int ret;
 
@@ -434,7 +434,7 @@ int u_snprintf(unichar_t *str, int len, const unichar_t *format, ... ) {
 return( ret );
 }
 
-int u_sprintf(unichar_t *str, const unichar_t *format, ... ) {
+int u_sprintf(uint32_t *str, const uint32_t *format, ... ) {
     va_list ap;
     int ret;
 

@@ -254,64 +254,64 @@ static char *popupsres[] = { N_("Pointer"), N_("Magnify (Minify with alt)"),
 			            N_("Rectangle or Ellipse"), N_("Polygon or Star"),
 			            N_("Rectangle or Ellipse"), N_("Polygon or Star")};
 GMenuItem2 cvtoollist[] = {
-    { { (unichar_t *) N_("_Pointer"), (GImage *) "toolspointer.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'C' }, H_("Pointer|No Shortcut"), NULL, NULL, CVMenuTool, cvt_pointer },
-    { { (unichar_t *) N_("_Magnify"), (GImage *) "toolsmagnify.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'C' }, H_("Magnify|No Shortcut"), NULL, NULL, CVMenuTool, cvt_magnify },
-    { { (unichar_t *) N_("_Freehand"), (GImage *) "toolsfreehand.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'C' }, H_("Freehand|No Shortcut"), NULL, NULL, CVMenuTool, cvt_freehand },
-    { { (unichar_t *) N_("_Scroll"), (GImage *) "toolsscroll.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'C' }, H_("Scroll|No Shortcut"), NULL, NULL, CVMenuTool, cvt_hand },
+    { { (uint32_t *) N_("_Pointer"), (GImage *) "toolspointer.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'C' }, H_("Pointer|No Shortcut"), NULL, NULL, CVMenuTool, cvt_pointer },
+    { { (uint32_t *) N_("_Magnify"), (GImage *) "toolsmagnify.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'C' }, H_("Magnify|No Shortcut"), NULL, NULL, CVMenuTool, cvt_magnify },
+    { { (uint32_t *) N_("_Freehand"), (GImage *) "toolsfreehand.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'C' }, H_("Freehand|No Shortcut"), NULL, NULL, CVMenuTool, cvt_freehand },
+    { { (uint32_t *) N_("_Scroll"), (GImage *) "toolsscroll.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'C' }, H_("Scroll|No Shortcut"), NULL, NULL, CVMenuTool, cvt_hand },
     { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0' }, NULL, NULL, NULL, NULL, 0 }, /* line */
-    { { (unichar_t *) N_("_Curve"), (GImage *) "pointscurve.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'C' }, H_("Curve Tool|No Shortcut"), NULL, NULL, CVMenuTool, cvt_curve },
-    { { (unichar_t *) N_("_HVCurve"), (GImage *) "pointshvcurve.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'o' }, H_("HVCurve Tool|No Shortcut"), NULL, NULL, CVMenuTool, cvt_hvcurve },
-    { { (unichar_t *) N_("C_orner"), (GImage *) "pointscorner.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'o' }, H_("Corner Tool|No Shortcut"), NULL, NULL, CVMenuTool, cvt_corner },
-    { { (unichar_t *) N_("_Tangent"), (GImage *) "pointstangent.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Tangent Tool|No Shortcut"), NULL, NULL, CVMenuTool, cvt_tangent },
-    { { (unichar_t *) N_("P_en"), (GImage *) "toolspen.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Pen|No Shortcut"), NULL, NULL, CVMenuTool, cvt_pen },
+    { { (uint32_t *) N_("_Curve"), (GImage *) "pointscurve.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'C' }, H_("Curve Tool|No Shortcut"), NULL, NULL, CVMenuTool, cvt_curve },
+    { { (uint32_t *) N_("_HVCurve"), (GImage *) "pointshvcurve.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'o' }, H_("HVCurve Tool|No Shortcut"), NULL, NULL, CVMenuTool, cvt_hvcurve },
+    { { (uint32_t *) N_("C_orner"), (GImage *) "pointscorner.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'o' }, H_("Corner Tool|No Shortcut"), NULL, NULL, CVMenuTool, cvt_corner },
+    { { (uint32_t *) N_("_Tangent"), (GImage *) "pointstangent.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Tangent Tool|No Shortcut"), NULL, NULL, CVMenuTool, cvt_tangent },
+    { { (uint32_t *) N_("P_en"), (GImage *) "toolspen.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Pen|No Shortcut"), NULL, NULL, CVMenuTool, cvt_pen },
     { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0' }, NULL, NULL, NULL, NULL, 0 }, /* line */
-    { { (unichar_t *) N_("_Activate Spiro"), (GImage *) "toolsspiro.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Activate Spiro|No Shortcut"), NULL, NULL, CVMenuSpiroSet, cvt_spiro },
+    { { (uint32_t *) N_("_Activate Spiro"), (GImage *) "toolsspiro.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Activate Spiro|No Shortcut"), NULL, NULL, CVMenuSpiroSet, cvt_spiro },
     { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0' }, NULL, NULL, NULL, NULL, 0 }, /* line */
-    { { (unichar_t *) N_("_Knife"), (GImage *) "toolsknife.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Knife|No Shortcut"), NULL, NULL, CVMenuTool, cvt_knife },
-    { { (unichar_t *) N_("_Ruler"), (GImage *) "toolsruler.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Ruler|No Shortcut"), NULL, NULL, CVMenuTool, cvt_ruler },
+    { { (uint32_t *) N_("_Knife"), (GImage *) "toolsknife.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Knife|No Shortcut"), NULL, NULL, CVMenuTool, cvt_knife },
+    { { (uint32_t *) N_("_Ruler"), (GImage *) "toolsruler.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Ruler|No Shortcut"), NULL, NULL, CVMenuTool, cvt_ruler },
     { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0' }, NULL, NULL, NULL, NULL, 0 }, /* line */
-    { { (unichar_t *) N_("Sca_le"), (GImage *) "toolsscale.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Scale|No Shortcut"), NULL, NULL, CVMenuTool, cvt_scale },
-    { { (unichar_t *) N_("Flip"), (GImage *) "toolsflip.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Flip|No Shortcut"), NULL, NULL, CVMenuTool, cvt_flip },
-    { { (unichar_t *) N_("Rotate"), (GImage *) "toolsrotate.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Rotate|No Shortcut"), NULL, NULL, CVMenuTool, cvt_rotate },
-    { { (unichar_t *) N_("Ske_w"), (GImage *) "toolsskew.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Skew|No Shortcut"), NULL, NULL, CVMenuTool, cvt_skew },
-    { { (unichar_t *) N_("_3D Rotate"), (GImage *) "tools3drotate.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("3D Rotate|No Shortcut"), NULL, NULL, CVMenuTool, cvt_3d_rotate },
-    { { (unichar_t *) N_("Perspecti_ve"), (GImage *) "toolsperspective.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Perspective|No Shortcut"), NULL, NULL, CVMenuTool, cvt_perspective },
+    { { (uint32_t *) N_("Sca_le"), (GImage *) "toolsscale.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Scale|No Shortcut"), NULL, NULL, CVMenuTool, cvt_scale },
+    { { (uint32_t *) N_("Flip"), (GImage *) "toolsflip.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Flip|No Shortcut"), NULL, NULL, CVMenuTool, cvt_flip },
+    { { (uint32_t *) N_("Rotate"), (GImage *) "toolsrotate.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Rotate|No Shortcut"), NULL, NULL, CVMenuTool, cvt_rotate },
+    { { (uint32_t *) N_("Ske_w"), (GImage *) "toolsskew.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Skew|No Shortcut"), NULL, NULL, CVMenuTool, cvt_skew },
+    { { (uint32_t *) N_("_3D Rotate"), (GImage *) "tools3drotate.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("3D Rotate|No Shortcut"), NULL, NULL, CVMenuTool, cvt_3d_rotate },
+    { { (uint32_t *) N_("Perspecti_ve"), (GImage *) "toolsperspective.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Perspective|No Shortcut"), NULL, NULL, CVMenuTool, cvt_perspective },
     { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0' }, NULL, NULL, NULL, NULL, 0 }, /* line */
-    { { (unichar_t *) N_("Rectan_gle"), (GImage *) "toolsrect.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Rectangle|No Shortcut"), NULL, NULL, CVMenuTool, cvt_rect },
-    { { (unichar_t *) N_("Pol_ygon"), (GImage *) "toolspolygon.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Polygon|No Shortcut"), NULL, NULL, CVMenuTool, cvt_poly },
-    { { (unichar_t *) N_("Ellipse"), (GImage *) "toolselipse.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Ellipse|No Shortcut"), NULL, NULL, CVMenuTool, cvt_elipse },
-    { { (unichar_t *) N_("Star"), (GImage *) "toolsstar.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Star|No Shortcut"), NULL, NULL, CVMenuTool, cvt_star },
+    { { (uint32_t *) N_("Rectan_gle"), (GImage *) "toolsrect.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Rectangle|No Shortcut"), NULL, NULL, CVMenuTool, cvt_rect },
+    { { (uint32_t *) N_("Pol_ygon"), (GImage *) "toolspolygon.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Polygon|No Shortcut"), NULL, NULL, CVMenuTool, cvt_poly },
+    { { (uint32_t *) N_("Ellipse"), (GImage *) "toolselipse.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Ellipse|No Shortcut"), NULL, NULL, CVMenuTool, cvt_elipse },
+    { { (uint32_t *) N_("Star"), (GImage *) "toolsstar.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Star|No Shortcut"), NULL, NULL, CVMenuTool, cvt_star },
     GMENUITEM2_EMPTY
 };
 GMenuItem2 cvspirotoollist[] = {
-    { { (unichar_t *) N_("_Pointer"), (GImage *) "toolspointer.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'C' }, H_("Pointer|No Shortcut"), NULL, NULL, CVMenuTool, cvt_pointer },
-    { { (unichar_t *) N_("_Magnify"), (GImage *) "toolsmagnify.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'C' }, H_("Magnify|No Shortcut"), NULL, NULL, CVMenuTool, cvt_magnify },
-    { { (unichar_t *) N_("_Freehand"), (GImage *) "toolsfreehand.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'C' }, H_("Freehand|No Shortcut"), NULL, NULL, CVMenuTool, cvt_freehand },
-    { { (unichar_t *) N_("_Scroll"), (GImage *) "toolsscroll.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'C' }, H_("Scroll|No Shortcut"), NULL, NULL, CVMenuTool, cvt_hand },
+    { { (uint32_t *) N_("_Pointer"), (GImage *) "toolspointer.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'C' }, H_("Pointer|No Shortcut"), NULL, NULL, CVMenuTool, cvt_pointer },
+    { { (uint32_t *) N_("_Magnify"), (GImage *) "toolsmagnify.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'C' }, H_("Magnify|No Shortcut"), NULL, NULL, CVMenuTool, cvt_magnify },
+    { { (uint32_t *) N_("_Freehand"), (GImage *) "toolsfreehand.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'C' }, H_("Freehand|No Shortcut"), NULL, NULL, CVMenuTool, cvt_freehand },
+    { { (uint32_t *) N_("_Scroll"), (GImage *) "toolsscroll.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'C' }, H_("Scroll|No Shortcut"), NULL, NULL, CVMenuTool, cvt_hand },
     { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0' }, NULL, NULL, NULL, NULL, 0 }, /* line */
-    { { (unichar_t *) N_("G_4"), (GImage *) "pointscurve.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'C' }, H_("G4 Tool|No Shortcut"), NULL, NULL, CVMenuTool, cvt_spirog4 },
-    { { (unichar_t *) N_("G_2"), (GImage *) "pointsG2curve.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'o' }, H_("G2 Tool|No Shortcut"), NULL, NULL, CVMenuTool, cvt_spirog2 },
-    { { (unichar_t *) N_("C_orner"), (GImage *) "pointscorner.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'o' }, H_("Corner Tool|No Shortcut"), NULL, NULL, CVMenuTool, cvt_spirocorner },
-    { { (unichar_t *) N_("Lef_t"), (GImage *) "pointsspiroprev.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Left Tool|No Shortcut"), NULL, NULL, CVMenuTool, cvt_spiroleft },
-    { { (unichar_t *) N_("Rig_ht"), (GImage *) "pointsspironext.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Right Tool|No Shortcut"), NULL, NULL, CVMenuTool, cvt_spiroright },
+    { { (uint32_t *) N_("G_4"), (GImage *) "pointscurve.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'C' }, H_("G4 Tool|No Shortcut"), NULL, NULL, CVMenuTool, cvt_spirog4 },
+    { { (uint32_t *) N_("G_2"), (GImage *) "pointsG2curve.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'o' }, H_("G2 Tool|No Shortcut"), NULL, NULL, CVMenuTool, cvt_spirog2 },
+    { { (uint32_t *) N_("C_orner"), (GImage *) "pointscorner.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'o' }, H_("Corner Tool|No Shortcut"), NULL, NULL, CVMenuTool, cvt_spirocorner },
+    { { (uint32_t *) N_("Lef_t"), (GImage *) "pointsspiroprev.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Left Tool|No Shortcut"), NULL, NULL, CVMenuTool, cvt_spiroleft },
+    { { (uint32_t *) N_("Rig_ht"), (GImage *) "pointsspironext.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Right Tool|No Shortcut"), NULL, NULL, CVMenuTool, cvt_spiroright },
     { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0' }, NULL, NULL, NULL, NULL, 0 }, /* line */
-    { { (unichar_t *) N_("De_activate Spiro"), (GImage *) "toolsspiro.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Activate Spiro|No Shortcut"), NULL, NULL, CVMenuSpiroSet, cvt_spiro },
+    { { (uint32_t *) N_("De_activate Spiro"), (GImage *) "toolsspiro.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Activate Spiro|No Shortcut"), NULL, NULL, CVMenuSpiroSet, cvt_spiro },
     { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0' }, NULL, NULL, NULL, NULL, 0 }, /* line */
-    { { (unichar_t *) N_("_Knife"), (GImage *) "toolsknife.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Knife|No Shortcut"), NULL, NULL, CVMenuTool, cvt_knife },
-    { { (unichar_t *) N_("_Ruler"), (GImage *) "toolsruler.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Ruler|No Shortcut"), NULL, NULL, CVMenuTool, cvt_ruler },
+    { { (uint32_t *) N_("_Knife"), (GImage *) "toolsknife.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Knife|No Shortcut"), NULL, NULL, CVMenuTool, cvt_knife },
+    { { (uint32_t *) N_("_Ruler"), (GImage *) "toolsruler.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Ruler|No Shortcut"), NULL, NULL, CVMenuTool, cvt_ruler },
     { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0' }, NULL, NULL, NULL, NULL, 0 }, /* line */
-    { { (unichar_t *) N_("Sca_le"), (GImage *) "toolsscale.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Scale|No Shortcut"), NULL, NULL, CVMenuTool, cvt_scale },
-    { { (unichar_t *) N_("Flip"), (GImage *) "toolsflip.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Flip|No Shortcut"), NULL, NULL, CVMenuTool, cvt_flip },
-    { { (unichar_t *) N_("Rotate"), (GImage *) "toolsrotate.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Rotate|No Shortcut"), NULL, NULL, CVMenuTool, cvt_rotate },
-    { { (unichar_t *) N_("Ske_w"), (GImage *) "toolsskew.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Skew|No Shortcut"), NULL, NULL, CVMenuTool, cvt_skew },
-    { { (unichar_t *) N_("Rotate"), (GImage *) "toolsrotate.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Rotate|No Shortcut"), NULL, NULL, CVMenuTool, cvt_rotate },
-    { { (unichar_t *) N_("_3D Rotate"), (GImage *) "tools3drotate.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("3D Rotate|No Shortcut"), NULL, NULL, CVMenuTool, cvt_3d_rotate },
-    { { (unichar_t *) N_("Perspecti_ve"), (GImage *) "toolsperspective.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Perspective|No Shortcut"), NULL, NULL, CVMenuTool, cvt_perspective },
+    { { (uint32_t *) N_("Sca_le"), (GImage *) "toolsscale.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Scale|No Shortcut"), NULL, NULL, CVMenuTool, cvt_scale },
+    { { (uint32_t *) N_("Flip"), (GImage *) "toolsflip.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Flip|No Shortcut"), NULL, NULL, CVMenuTool, cvt_flip },
+    { { (uint32_t *) N_("Rotate"), (GImage *) "toolsrotate.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Rotate|No Shortcut"), NULL, NULL, CVMenuTool, cvt_rotate },
+    { { (uint32_t *) N_("Ske_w"), (GImage *) "toolsskew.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Skew|No Shortcut"), NULL, NULL, CVMenuTool, cvt_skew },
+    { { (uint32_t *) N_("Rotate"), (GImage *) "toolsrotate.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Rotate|No Shortcut"), NULL, NULL, CVMenuTool, cvt_rotate },
+    { { (uint32_t *) N_("_3D Rotate"), (GImage *) "tools3drotate.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("3D Rotate|No Shortcut"), NULL, NULL, CVMenuTool, cvt_3d_rotate },
+    { { (uint32_t *) N_("Perspecti_ve"), (GImage *) "toolsperspective.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Perspective|No Shortcut"), NULL, NULL, CVMenuTool, cvt_perspective },
     { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0' }, NULL, NULL, NULL, NULL, 0 }, /* line */
-    { { (unichar_t *) N_("Rectan_gle"), (GImage *) "toolsrect.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Rectangle|No Shortcut"), NULL, NULL, CVMenuTool, cvt_rect },
-    { { (unichar_t *) N_("Pol_ygon"), (GImage *) "toolspolygon.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Polygon|No Shortcut"), NULL, NULL, CVMenuTool, cvt_poly },
-    { { (unichar_t *) N_("Ellipse"), (GImage *) "toolselipse.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Ellipse|No Shortcut"), NULL, NULL, CVMenuTool, cvt_elipse },
-    { { (unichar_t *) N_("Star"), (GImage *) "toolsstar.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Star|No Shortcut"), NULL, NULL, CVMenuTool, cvt_star },
+    { { (uint32_t *) N_("Rectan_gle"), (GImage *) "toolsrect.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Rectangle|No Shortcut"), NULL, NULL, CVMenuTool, cvt_rect },
+    { { (uint32_t *) N_("Pol_ygon"), (GImage *) "toolspolygon.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Polygon|No Shortcut"), NULL, NULL, CVMenuTool, cvt_poly },
+    { { (uint32_t *) N_("Ellipse"), (GImage *) "toolselipse.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Ellipse|No Shortcut"), NULL, NULL, CVMenuTool, cvt_elipse },
+    { { (uint32_t *) N_("Star"), (GImage *) "toolsstar.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Star|No Shortcut"), NULL, NULL, CVMenuTool, cvt_star },
     GMENUITEM2_EMPTY
 };
 
@@ -540,21 +540,21 @@ static int Ask(char *rb1, char *rb2, int rb, char *lab, float *val, int *co,
 	memset(&label,0,sizeof(label));
 	memset(&gcd,0,sizeof(gcd));
 
-	label[0].text = (unichar_t *) rb1;
+	label[0].text = (uint32_t *) rb1;
 	label[0].text_is_1byte = true;
 	gcd[0].gd.label = &label[0];
 	gcd[0].gd.pos.x = 5; gcd[0].gd.pos.y = 5; 
 	gcd[0].gd.flags = gg_enabled|gg_visible | (rb==0?gg_cb_on:0);
 	gcd[0].creator = GRadioCreate;
 
-	label[1].text = (unichar_t *) rb2;
+	label[1].text = (uint32_t *) rb2;
 	label[1].text_is_1byte = true;
 	gcd[1].gd.label = &label[1];
 	gcd[1].gd.pos.x = ispolystar?65:75; gcd[1].gd.pos.y = 5; 
 	gcd[1].gd.flags = gg_enabled|gg_visible | (rb==1?gg_cb_on:0);
 	gcd[1].creator = GRadioCreate;
 
-	label[2].text = (unichar_t *) lab;
+	label[2].text = (uint32_t *) lab;
 	label[2].text_is_1byte = true;
 	gcd[2].gd.label = &label[2];
 	gcd[2].gd.pos.x = 5; gcd[2].gd.pos.y = 25; 
@@ -562,7 +562,7 @@ static int Ask(char *rb1, char *rb2, int rb, char *lab, float *val, int *co,
 	gcd[2].creator = GLabelCreate;
 
 	sprintf( buffer, "%g", *val );
-	label[3].text = (unichar_t *) buffer;
+	label[3].text = (uint32_t *) buffer;
 	label[3].text_is_1byte = true;
 	gcd[3].gd.label = &label[3];
 	gcd[3].gd.pos.x = 5; gcd[3].gd.pos.y = 40; 
@@ -573,7 +573,7 @@ static int Ask(char *rb1, char *rb2, int rb, char *lab, float *val, int *co,
 	gcd[4].gd.pos.x = 20-3; gcd[4].gd.pos.y = 85+off;
 	gcd[4].gd.pos.width = -1; gcd[4].gd.pos.height = 0;
 	gcd[4].gd.flags = gg_visible | gg_enabled | gg_but_default;
-	label[4].text = (unichar_t *) _("_OK");
+	label[4].text = (uint32_t *) _("_OK");
 	label[4].text_is_1byte = true;
 	label[4].text_in_resource = true;
 	gcd[4].gd.mnemonic = 'O';
@@ -584,7 +584,7 @@ static int Ask(char *rb1, char *rb2, int rb, char *lab, float *val, int *co,
 	gcd[5].gd.pos.x = -20; gcd[5].gd.pos.y = 85+3+off;
 	gcd[5].gd.pos.width = -1; gcd[5].gd.pos.height = 0;
 	gcd[5].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-	label[5].text = (unichar_t *) _("_Cancel");
+	label[5].text = (uint32_t *) _("_Cancel");
 	label[5].text_is_1byte = true;
 	label[5].text_in_resource = true;
 	gcd[5].gd.label = &label[5];
@@ -593,14 +593,14 @@ static int Ask(char *rb1, char *rb2, int rb, char *lab, float *val, int *co,
 	gcd[5].creator = GButtonCreate;
 
 	if ( ispolystar ) {
-	    label[6].text = (unichar_t *) _("Regular");
+	    label[6].text = (uint32_t *) _("Regular");
 	    label[6].text_is_1byte = true;
 	    gcd[6].gd.label = &label[6];
 	    gcd[6].gd.pos.x = 5; gcd[6].gd.pos.y = 70; 
 	    gcd[6].gd.flags = gg_enabled|gg_visible | (rb==0?gg_cb_on:0);
 	    gcd[6].creator = GRadioCreate;
 
-	    label[7].text = (unichar_t *) _("Points:");
+	    label[7].text = (uint32_t *) _("Points:");
 	    label[7].text_is_1byte = true;
 	    gcd[7].gd.label = &label[7];
 	    gcd[7].gd.pos.x = 65; gcd[7].gd.pos.y = 70; 
@@ -608,7 +608,7 @@ static int Ask(char *rb1, char *rb2, int rb, char *lab, float *val, int *co,
 	    gcd[7].creator = GRadioCreate;
 
 	    sprintf( buf, "%4g", star_percent*100 );
-	    label[8].text = (unichar_t *) buf;
+	    label[8].text = (uint32_t *) buf;
 	    label[8].text_is_1byte = true;
 	    gcd[8].gd.label = &label[8];
 	    gcd[8].gd.pos.x = 125; gcd[8].gd.pos.y = 70;  gcd[8].gd.pos.width=50;
@@ -616,21 +616,21 @@ static int Ask(char *rb1, char *rb2, int rb, char *lab, float *val, int *co,
 	    gcd[8].gd.cid = CID_PointPercent;
 	    gcd[8].creator = GTextFieldCreate;
 
-	    label[9].text = (unichar_t *) "%";
+	    label[9].text = (uint32_t *) "%";
 	    label[9].text_is_1byte = true;
 	    gcd[9].gd.label = &label[9];
 	    gcd[9].gd.pos.x = 180; gcd[9].gd.pos.y = 70; 
 	    gcd[9].gd.flags = gg_enabled|gg_visible ;
 	    gcd[9].creator = GLabelCreate;
 	} else {
-	    label[6].text = (unichar_t *) _("Bounding Box");
+	    label[6].text = (uint32_t *) _("Bounding Box");
 	    label[6].text_is_1byte = true;
 	    gcd[6].gd.label = &label[6];
 	    gcd[6].gd.pos.x = 5; gcd[6].gd.pos.y = 65; 
 	    gcd[6].gd.flags = gg_enabled|gg_visible | (co[rb]==0?gg_cb_on:0);
 	    gcd[6].creator = GRadioCreate;
 
-	    label[7].text = (unichar_t *) _("Center Out");
+	    label[7].text = (uint32_t *) _("Center Out");
 	    label[7].text_is_1byte = true;
 	    gcd[7].gd.label = &label[7];
 	    gcd[7].gd.pos.x = 90; gcd[7].gd.pos.y = 65; 
@@ -646,7 +646,7 @@ static int Ask(char *rb1, char *rb2, int rb, char *lab, float *val, int *co,
 		gcd[6].gd.handle_controlevent = TA_CenRadChange;
 		gcd[7].gd.handle_controlevent = TA_CenRadChange;
 
-		label[8].text = (unichar_t *) _("_X");
+		label[8].text = (uint32_t *) _("_X");
 		label[8].text_is_1byte = true;
 		label[8].text_in_resource = true;
 		gcd[8].gd.label = &label[8];
@@ -654,7 +654,7 @@ static int Ask(char *rb1, char *rb2, int rb, char *lab, float *val, int *co,
 		gcd[8].gd.flags = gg_enabled|gg_visible;
 		gcd[8].creator = GLabelCreate;
 
-		label[9].text = (unichar_t *) _("_Y");
+		label[9].text = (uint32_t *) _("_Y");
 		label[9].text_is_1byte = true;
 		label[9].text_in_resource = true;
 		gcd[9].gd.label = &label[9];
@@ -662,7 +662,7 @@ static int Ask(char *rb1, char *rb2, int rb, char *lab, float *val, int *co,
 		gcd[9].gd.flags = gg_enabled|gg_visible;
 		gcd[9].creator = GLabelCreate;
 
-		label[10].text = (unichar_t *) (co[rb] ? _("C_enter") : _("C_orner") );
+		label[10].text = (uint32_t *) (co[rb] ? _("C_enter") : _("C_orner") );
 		label[10].text_is_1byte = true;
 		label[10].text_in_resource = true;
 		gcd[10].gd.label = &label[10];
@@ -672,7 +672,7 @@ static int Ask(char *rb1, char *rb2, int rb, char *lab, float *val, int *co,
 		gcd[10].creator = GLabelCreate;
 
 		sprintf( cenx, "%g", (double) cv->info.x );
-		label[11].text = (unichar_t *) cenx;
+		label[11].text = (uint32_t *) cenx;
 		label[11].text_is_1byte = true;
 		gcd[11].gd.label = &label[11];
 		gcd[11].gd.pos.x = 60; gcd[11].gd.pos.y = gcd[10].gd.pos.y-4;
@@ -682,7 +682,7 @@ static int Ask(char *rb1, char *rb2, int rb, char *lab, float *val, int *co,
 		gcd[11].creator = GTextFieldCreate;
 
 		sprintf( ceny, "%g", (double) cv->info.y );
-		label[12].text = (unichar_t *) ceny;
+		label[12].text = (uint32_t *) ceny;
 		label[12].text_is_1byte = true;
 		gcd[12].gd.label = &label[12];
 		gcd[12].gd.pos.x = 110; gcd[12].gd.pos.y = gcd[11].gd.pos.y;
@@ -691,7 +691,7 @@ static int Ask(char *rb1, char *rb2, int rb, char *lab, float *val, int *co,
 		gcd[12].gd.cid = CID_CentCornY;
 		gcd[12].creator = GTextFieldCreate;
 
-		label[13].text = (unichar_t *) (co[rb] ? _("Radius:   ") : _("Diameter:") );
+		label[13].text = (uint32_t *) (co[rb] ? _("Radius:   ") : _("Diameter:") );
 		label[13].text_is_1byte = true;
 		gcd[13].gd.label = &label[13];
 		gcd[13].gd.pos.x = 5; gcd[13].gd.pos.y = gcd[10].gd.pos.y+24;
@@ -700,7 +700,7 @@ static int Ask(char *rb1, char *rb2, int rb, char *lab, float *val, int *co,
 		gcd[13].creator = GLabelCreate;
 
 		sprintf( radx, "%g", (double) raddiam_x );
-		label[14].text = (unichar_t *) radx;
+		label[14].text = (uint32_t *) radx;
 		label[14].text_is_1byte = true;
 		gcd[14].gd.label = &label[14];
 		gcd[14].gd.pos.x = gcd[11].gd.pos.x; gcd[14].gd.pos.y = gcd[13].gd.pos.y-4;
@@ -710,7 +710,7 @@ static int Ask(char *rb1, char *rb2, int rb, char *lab, float *val, int *co,
 		gcd[14].creator = GTextFieldCreate;
 
 		sprintf( rady, "%g", (double) raddiam_y );
-		label[15].text = (unichar_t *) rady;
+		label[15].text = (uint32_t *) rady;
 		label[15].text_is_1byte = true;
 		gcd[15].gd.label = &label[15];
 		gcd[15].gd.pos.x = gcd[12].gd.pos.x; gcd[15].gd.pos.y = gcd[14].gd.pos.y;
@@ -719,7 +719,7 @@ static int Ask(char *rb1, char *rb2, int rb, char *lab, float *val, int *co,
 		gcd[15].gd.cid = CID_RadDiamY;
 		gcd[15].creator = GTextFieldCreate;
 
-		label[16].text = (unichar_t *) _("Angle:");
+		label[16].text = (uint32_t *) _("Angle:");
 		label[16].text_is_1byte = true;
 		gcd[16].gd.label = &label[16];
 		gcd[16].gd.pos.x = 5; gcd[16].gd.pos.y = gcd[13].gd.pos.y+24;
@@ -727,7 +727,7 @@ static int Ask(char *rb1, char *rb2, int rb, char *lab, float *val, int *co,
 		gcd[16].creator = GLabelCreate;
 
 		sprintf( angle, "%g", (double) rotate_by );
-		label[17].text = (unichar_t *) angle;
+		label[17].text = (uint32_t *) angle;
 		label[17].text_is_1byte = true;
 		gcd[17].gd.label = &label[17];
 		gcd[17].gd.pos.x = 60; gcd[17].gd.pos.y = gcd[16].gd.pos.y-4;
@@ -816,7 +816,7 @@ static void ToolsExpose(GWindow pixmap, CharView *cv, GRect *r) {
 			            &GIcon_small3drotate, &GIcon_smallperspective,
 			            &GIcon_smallrect, &GIcon_smallpoly,
 			            &GIcon_smallelipse, &GIcon_smallstar };
-    static const unichar_t _Mouse[][9] = {
+    static const uint32_t _Mouse[][9] = {
 	    { 'M', 's', 'e', '1',  '\0' },
 	    { '^', 'M', 's', 'e', '1',  '\0' },
 	    { 'M', 's', 'e', '2',  '\0' },
@@ -852,7 +852,7 @@ static void ToolsExpose(GWindow pixmap, CharView *cv, GRect *r) {
     temp.x = 52-16; temp.y = i*27; temp.width = 16; temp.height = 4*12;
     GDrawFillRect(pixmap,&temp,GDrawGetDefaultBackground(NULL));
     for ( j=0; j<4; ++j ) {
-	GDrawDrawText(pixmap,2,i*27+j*12+10,(unichar_t *) _Mouse[j],-1,GDrawGetDefaultForeground(NULL));
+	GDrawDrawText(pixmap,2,i*27+j*12+10,(uint32_t *) _Mouse[j],-1,GDrawGetDefaultForeground(NULL));
 	if ( (&cv->b1_tool)[j]!=cvt_none )
 	    GDrawDrawImage(pixmap,smalls[(&cv->b1_tool)[j]],NULL,52-16,i*27+j*12);
     }
@@ -1493,7 +1493,7 @@ static void Layer2Menu(CharView *cv,GEvent *event, int nolayer) {
     memset(mi,'\0',sizeof(mi));
     for ( i=0; names[i]!=0; ++i ) {
 	if ( names[i]!=(char *) -1 ) {
-	    mi[i].ti.text = (unichar_t *) _(names[i]);
+	    mi[i].ti.text = (uint32_t *) _(names[i]);
 	    mi[i].ti.text_is_1byte = true;
 	} else
 	    mi[i].ti.line = true;
@@ -1677,40 +1677,40 @@ return;
     layer2.sb_start = gcd[0].gd.pos.x;
 
 /* GT: Abbreviation for "Visible" */
-    label[1].text = (unichar_t *) _("V");
+    label[1].text = (uint32_t *) _("V");
     label[1].text_is_1byte = true;
     gcd[1].gd.label = &label[1];
     gcd[1].gd.pos.x = 7; gcd[1].gd.pos.y = 5; 
     gcd[1].gd.flags = gg_enabled|gg_visible|gg_pos_in_pixels|gg_utf8_popup;
-    gcd[1].gd.popup_msg = (unichar_t *) _("Is Layer Visible?");
+    gcd[1].gd.popup_msg = (uint32_t *) _("Is Layer Visible?");
     gcd[1].creator = GLabelCreate;
 
-    label[2].text = (unichar_t *) _("Layer");
+    label[2].text = (uint32_t *) _("Layer");
     label[2].text_is_1byte = true;
     gcd[2].gd.label = &label[2];
     gcd[2].gd.pos.x = 30; gcd[2].gd.pos.y = 5; 
     gcd[2].gd.flags = gg_enabled|gg_visible|gg_pos_in_pixels|gg_utf8_popup;
-    gcd[2].gd.popup_msg = (unichar_t *) _("Is Layer Editable?");
+    gcd[2].gd.popup_msg = (uint32_t *) _("Is Layer Editable?");
     gcd[2].creator = GLabelCreate;
 
     gcd[3].gd.pos.x = 5; gcd[3].gd.pos.y = CV_LAYERS2_HEADER_HEIGHT+(CV_LAYERS2_LINE_HEIGHT-12)/2; 
     gcd[3].gd.flags = gg_enabled|gg_visible|gg_dontcopybox|gg_pos_in_pixels|gg_utf8_popup;
     gcd[3].gd.cid = CID_VGrid;
-    gcd[3].gd.popup_msg = (unichar_t *) _("Is Layer Visible?");
+    gcd[3].gd.popup_msg = (uint32_t *) _("Is Layer Visible?");
     gcd[3].gd.box = &radio_box;
     gcd[3].creator = GCheckBoxCreate;
 
     gcd[4].gd.pos.x = 5; gcd[4].gd.pos.y = gcd[3].gd.pos.y+CV_LAYERS2_LINE_HEIGHT; 
     gcd[4].gd.flags = gg_enabled|gg_visible|gg_dontcopybox|gg_pos_in_pixels|gg_utf8_popup;
     gcd[4].gd.cid = CID_VBack;
-    gcd[4].gd.popup_msg = (unichar_t *) _("Is Layer Visible?");
+    gcd[4].gd.popup_msg = (uint32_t *) _("Is Layer Visible?");
     gcd[4].gd.box = &radio_box;
     gcd[4].creator = GCheckBoxCreate;
 
     gcd[5].gd.pos.x = 5; gcd[5].gd.pos.y = gcd[4].gd.pos.y+CV_LAYERS2_LINE_HEIGHT; 
     gcd[5].gd.flags = gg_enabled|gg_visible|gg_dontcopybox|gg_pos_in_pixels|gg_utf8_popup;
     gcd[5].gd.cid = CID_VFore;
-    gcd[5].gd.popup_msg = (unichar_t *) _("Is Layer Visible?");
+    gcd[5].gd.popup_msg = (uint32_t *) _("Is Layer Visible?");
     gcd[5].gd.box = &radio_box;
     gcd[5].creator = GCheckBoxCreate;
 
@@ -1944,7 +1944,7 @@ return;
 static void CVLRemoveEdit(CharView *cv, int save) {
     if ( layerinfo.rename_active ) {
 	GGadget *g = GWidgetGetControl(cvlayers,CID_Edit);
-	const unichar_t *str = GGadgetGetTitle(g);
+	const uint32_t *str = GGadgetGetTitle(g);
 	int l = layerinfo.active;
 
 	if ( save
@@ -1999,7 +1999,7 @@ static void CVLCheckLayerCount(CharView *cv, int resize) {
 	     /* Visibility toggle */
 	    gcd[0].gd.flags = gg_enabled|gg_utf8_popup;
 	    gcd[0].gd.cid = CID_VBase+i;
-	    gcd[0].gd.popup_msg = (unichar_t *) _("Is Layer Visible?");
+	    gcd[0].gd.popup_msg = (uint32_t *) _("Is Layer Visible?");
 	    gcd[0].creator = GVisibilityBoxCreate;
 
 	    GGadgetsCreate(cvlayers,gcd);
@@ -2340,7 +2340,7 @@ static void LayerMenu(CharView *cv,GEvent *event, int nolayer) {
     memset(mi,'\0',sizeof(mi));
     for ( i=0; names[i]!=0; ++i ) {
 	if ( names[i]!=(char *) -1 ) {
-	    mi[i].ti.text = (unichar_t *) _(names[i]);
+	    mi[i].ti.text = (uint32_t *) _(names[i]);
 	    mi[i].ti.text_is_1byte = true;
 	    mi[i].ti.text_in_resource = true;
 	} else
@@ -2371,7 +2371,7 @@ static void LayerMenu(CharView *cv,GEvent *event, int nolayer) {
             if ( layer>=0 ) {
                 if ( ! cv->b.sc->layers[layer].background ) {
                     mi[i].mid = LMID_Background;
-                    mi[i].ti.text = (unichar_t *) _("Make Background");
+                    mi[i].ti.text = (uint32_t *) _("Make Background");
                 }
             } else {
 	        mi[i].ti.disabled = true;
@@ -2379,7 +2379,7 @@ static void LayerMenu(CharView *cv,GEvent *event, int nolayer) {
         } else if ( mids[i]==LMID_Cubic ) {
             if ( ! cv->b.sc->layers[layer].order2 ) {
                 mi[i].mid = LMID_Quadratic;
-                mi[i].ti.text = (unichar_t *) _("Make Quadratic");
+                mi[i].ti.text = (uint32_t *) _("Make Quadratic");
             }
 
         } else if ( mids[i]==LMID_ShowCubic ) {
@@ -2717,7 +2717,7 @@ int CVPaletteMnemonicCheck(GEvent *event) {
 	{ N_("_Guide"), CID_EGrid },
 	{ NULL, 0 }
     };
-    unichar_t mn, mnc;
+    uint32_t mn, mnc;
     int j, i, ch;
     char *foo;
     GEvent fake;
@@ -2831,35 +2831,35 @@ return( cvlayers );
     memset(&gcd,0,sizeof(gcd));
 
      /* Add Layer button */
-    label[0].text = (unichar_t *) _("+");
+    label[0].text = (uint32_t *) _("+");
     label[0].text_is_1byte = true;
     gcd[i].gd.label = &label[0];
     gcd[i].gd.pos.x = 7; gcd[i].gd.pos.y = 5; 
     gcd[i].gd.flags = gg_enabled|gg_visible|gg_pos_in_pixels|gg_utf8_popup;
     gcd[i].gd.cid = CID_AddLayer;
-    gcd[i].gd.popup_msg = (unichar_t *) _("Add a new layer");
+    gcd[i].gd.popup_msg = (uint32_t *) _("Add a new layer");
     gcd[i].creator = GButtonCreate;
     ++i;
 
      /* Delete Layer button */
-    label[1].text = (unichar_t *) _("-");
+    label[1].text = (uint32_t *) _("-");
     label[1].text_is_1byte = true;
     gcd[i].gd.label = &label[1];
     gcd[i].gd.pos.x = 30; gcd[i].gd.pos.y = 5; 
     gcd[i].gd.flags = gg_enabled|gg_visible|gg_pos_in_pixels|gg_utf8_popup;
     gcd[i].gd.cid = CID_RemoveLayer;
-    gcd[i].gd.popup_msg = (unichar_t *) _("Delete the current layer");
+    gcd[i].gd.popup_msg = (uint32_t *) _("Delete the current layer");
     gcd[i].creator = GButtonCreate;
     ++i;
 
      /* "Layers" label next to the add and remove buttons */
-    label[2].text = (unichar_t *) _("Layers");
+    label[2].text = (uint32_t *) _("Layers");
     label[2].text_is_1byte = true;
     gcd[i].gd.label = &label[2];
     gcd[i].gd.pos.x = 47; gcd[i].gd.pos.y = 5; 
     gcd[i].gd.flags = gg_enabled|gg_visible|gg_pos_in_pixels|gg_utf8_popup;
     gcd[i].gd.cid = CID_LayersMenu;
-    /* gcd[i].gd.popup_msg = (unichar_t *) _("Rename the current layer"); */
+    /* gcd[i].gd.popup_msg = (uint32_t *) _("Rename the current layer"); */
     gcd[i].creator = GLabelCreate;
     ++i;
 
@@ -2868,7 +2868,7 @@ return( cvlayers );
     gcd[i].gd.flags = gg_enabled|gg_visible|gg_dontcopybox|gg_pos_in_pixels|gg_utf8_popup;
     if ( cv->showgrids ) gcd[i].gd.flags |= gg_cb_on;
     gcd[i].gd.cid = CID_VGrid;
-    gcd[i].gd.popup_msg = (unichar_t *) _("Is Layer Visible?");
+    gcd[i].gd.popup_msg = (uint32_t *) _("Is Layer Visible?");
     gcd[i].creator = GVisibilityBoxCreate;
     ++i;
 
@@ -2876,7 +2876,7 @@ return( cvlayers );
     gcd[i].gd.flags = gg_enabled|gg_visible|gg_dontcopybox|gg_pos_in_pixels|gg_utf8_popup;
     if ( cv->showback[0]&1 ) gcd[i].gd.flags |= gg_cb_on;
     gcd[i].gd.cid = CID_VBack;
-    gcd[i].gd.popup_msg = (unichar_t *) _("Is Layer Visible?");
+    gcd[i].gd.popup_msg = (uint32_t *) _("Is Layer Visible?");
     gcd[i].creator = GVisibilityBoxCreate;
     ++i;
 
@@ -2884,7 +2884,7 @@ return( cvlayers );
     gcd[i].gd.flags = gg_enabled|gg_visible|gg_dontcopybox|gg_pos_in_pixels|gg_utf8_popup;
     if ( cv->showfore ) gcd[i].gd.flags |= gg_cb_on;
     gcd[i].gd.cid = CID_VFore;
-    gcd[i].gd.popup_msg = (unichar_t *) _("Is Layer Visible?");
+    gcd[i].gd.popup_msg = (uint32_t *) _("Is Layer Visible?");
     gcd[i].creator = GVisibilityBoxCreate;
     ++i;
 
@@ -2904,7 +2904,7 @@ return( cvlayers );
     gcd[i].gd.pos.width=gcd[i].gd.pos.height=1;
     gcd[i].gd.flags = gg_enabled|gg_pos_in_pixels|gg_utf8_popup;
     gcd[i].gd.cid = CID_Edit;
-    gcd[i].gd.popup_msg = (unichar_t *) _("Type in new layer name");
+    gcd[i].gd.popup_msg = (uint32_t *) _("Type in new layer name");
     gcd[i].creator = GTextFieldCreate;
     ++i;
 
@@ -3007,7 +3007,7 @@ void CVToolsPopup(CharView *cv, GEvent *event) {
 		else if ( i==cvt_spiroright )
 		    msg = _("Add a right \"tangent\" point");
 	    }
-	    mi[i].ti.text = (unichar_t *) msg;
+	    mi[i].ti.text = (uint32_t *) msg;
 	    mi[i].ti.text_is_1byte = true;
 	    mi[i].ti.fg = COLOR_DEFAULT;
 	    mi[i].ti.bg = COLOR_DEFAULT;
@@ -3022,7 +3022,7 @@ void CVToolsPopup(CharView *cv, GEvent *event) {
 	    mi[i].ti.fg = COLOR_DEFAULT;
 	    mi[i++].ti.bg = COLOR_DEFAULT;
 	    for ( j=0;j<3; ++j, ++i ) {
-		mi[i].ti.text = (unichar_t *) _(editablelayers[j]);
+		mi[i].ti.text = (uint32_t *) _(editablelayers[j]);
 		mi[i].ti.text_in_resource = true;
 		mi[i].ti.text_is_1byte = true;
 		mi[i].ti.fg = COLOR_DEFAULT;
@@ -3040,7 +3040,7 @@ void CVToolsPopup(CharView *cv, GEvent *event) {
     }
 
     for ( j=0;selectables[j]!=0; ++j, ++i ) {
-	mi[i].ti.text = (unichar_t *) _(selectables[j]);
+	mi[i].ti.text = (uint32_t *) _(selectables[j]);
 	mi[i].ti.text_is_1byte = true;
 	if ( (!anysel && j!=2 ) ||
 		( j==0 && cv->p.spline!=NULL ) ||
@@ -3053,7 +3053,7 @@ void CVToolsPopup(CharView *cv, GEvent *event) {
     }
 
     if ( cv->b.sc->parent->multilayer ) {
-	mi[i].ti.text = (unichar_t *) _("Make Clip Path");
+	mi[i].ti.text = (uint32_t *) _("Make Clip Path");
 	mi[i].ti.text_is_1byte = true;
 	mi[i].ti.fg = COLOR_DEFAULT;
 	mi[i].ti.bg = COLOR_DEFAULT;
@@ -3344,30 +3344,30 @@ return(bvlayers);
 	label[i].font = layersfont;
 
 /* GT: Abbreviation for "Visible" */
-    label[0].text = (unichar_t *) _("V");
+    label[0].text = (uint32_t *) _("V");
     label[0].text_is_1byte = true;
     gcd[0].gd.label = &label[0];
     gcd[0].gd.pos.x = 7; gcd[0].gd.pos.y = 5; 
     gcd[0].gd.flags = gg_enabled|gg_visible|gg_pos_in_pixels|gg_utf8_popup;
-    gcd[0].gd.popup_msg = (unichar_t *) _("Is Layer Visible?");
+    gcd[0].gd.popup_msg = (uint32_t *) _("Is Layer Visible?");
     gcd[0].creator = GLabelCreate;
 
-    label[1].text = (unichar_t *) "Layer";
+    label[1].text = (uint32_t *) "Layer";
     label[1].text_is_1byte = true;
     gcd[1].gd.label = &label[1];
     gcd[1].gd.pos.x = 23; gcd[1].gd.pos.y = 5; 
     gcd[1].gd.flags = gg_enabled|gg_visible|gg_pos_in_pixels|gg_utf8_popup;
-    gcd[1].gd.popup_msg = (unichar_t *) _("Is Layer Visible?");
+    gcd[1].gd.popup_msg = (uint32_t *) _("Is Layer Visible?");
     gcd[1].creator = GLabelCreate;
     hvarray[0][0] = &gcd[0]; hvarray[0][1] = &gcd[1]; hvarray[0][2] = NULL;
 
     gcd[2].gd.pos.x = 5; gcd[2].gd.pos.y = 21; 
     gcd[2].gd.flags = gg_enabled|gg_visible|gg_dontcopybox|gg_pos_in_pixels|gg_utf8_popup;
     gcd[2].gd.cid = CID_VFore;
-    gcd[2].gd.popup_msg = (unichar_t *) _("Is Layer Visible?");
+    gcd[2].gd.popup_msg = (uint32_t *) _("Is Layer Visible?");
     gcd[2].gd.box = &radio_box;
     gcd[2].creator = GCheckBoxCreate;
-    label[2].text = (unichar_t *) _("Bitmap");
+    label[2].text = (uint32_t *) _("Bitmap");
     label[2].text_is_1byte = true;
     gcd[2].gd.label = &label[2];
     hvarray[1][0] = &gcd[2]; hvarray[1][1] = GCD_ColSpan; hvarray[1][2] = NULL;
@@ -3375,10 +3375,10 @@ return(bvlayers);
     gcd[3].gd.pos.x = 5; gcd[3].gd.pos.y = 37; 
     gcd[3].gd.flags = gg_enabled|gg_visible|gg_dontcopybox|gg_pos_in_pixels|gg_utf8_popup;
     gcd[3].gd.cid = CID_VBack;
-    gcd[3].gd.popup_msg = (unichar_t *) _("Is Layer Visible?");
+    gcd[3].gd.popup_msg = (uint32_t *) _("Is Layer Visible?");
     gcd[3].gd.box = &radio_box;
     gcd[3].creator = GCheckBoxCreate;
-    label[3].text = (unichar_t *) _("Outline");
+    label[3].text = (uint32_t *) _("Outline");
     label[3].text_is_1byte = true;
     gcd[3].gd.label = &label[3];
     hvarray[2][0] = &gcd[3]; hvarray[2][1] = GCD_ColSpan; hvarray[2][2] = NULL;
@@ -3386,10 +3386,10 @@ return(bvlayers);
     gcd[4].gd.pos.x = 5; gcd[4].gd.pos.y = 53; 
     gcd[4].gd.flags = gg_enabled|gg_visible|gg_dontcopybox|gg_pos_in_pixels|gg_utf8_popup;
     gcd[4].gd.cid = CID_VGrid;
-    gcd[4].gd.popup_msg = (unichar_t *) _("Is Layer Visible?");
+    gcd[4].gd.popup_msg = (uint32_t *) _("Is Layer Visible?");
     gcd[4].gd.box = &radio_box;
     gcd[4].creator = GCheckBoxCreate;
-    label[4].text = (unichar_t *) _("_Guide");
+    label[4].text = (uint32_t *) _("_Guide");
     label[4].text_is_1byte = true;
     label[4].text_in_resource = true;
     gcd[4].gd.label = &label[4];
@@ -3814,7 +3814,7 @@ void BVToolsPopup(BitmapView *bv, GEvent *event) {
 
     memset(mi,'\0',sizeof(mi));
     for ( i=0;i<6; ++i ) {
-	mi[i].ti.text = (unichar_t *) _(bvpopups[i]);
+	mi[i].ti.text = (uint32_t *) _(bvpopups[i]);
 	mi[i].ti.text_is_1byte = true;
 	mi[i].ti.fg = COLOR_DEFAULT;
 	mi[i].ti.bg = COLOR_DEFAULT;
@@ -3822,23 +3822,23 @@ void BVToolsPopup(BitmapView *bv, GEvent *event) {
 	mi[i].invoke = BVPopupInvoked;
     }
 
-    mi[i].ti.text = (unichar_t *) _("Rectangle");
+    mi[i].ti.text = (uint32_t *) _("Rectangle");
     mi[i].ti.text_is_1byte = true;
     mi[i].ti.fg = COLOR_DEFAULT;
     mi[i].ti.bg = COLOR_DEFAULT;
     mi[i].mid = bvt_rect;
     mi[i++].invoke = BVPopupInvoked;
-    mi[i].ti.text = (unichar_t *) _("Filled Rectangle"); mi[i].ti.text_is_1byte = true;
+    mi[i].ti.text = (uint32_t *) _("Filled Rectangle"); mi[i].ti.text_is_1byte = true;
     mi[i].ti.fg = COLOR_DEFAULT;
     mi[i].ti.bg = COLOR_DEFAULT;
     mi[i].mid = bvt_filledrect;
     mi[i++].invoke = BVPopupInvoked;
-    mi[i].ti.text = (unichar_t *) _("Ellipse"); mi[i].ti.text_is_1byte = true;
+    mi[i].ti.text = (uint32_t *) _("Ellipse"); mi[i].ti.text_is_1byte = true;
     mi[i].ti.fg = COLOR_DEFAULT;
     mi[i].ti.bg = COLOR_DEFAULT;
     mi[i].mid = bvt_elipse;
     mi[i++].invoke = BVPopupInvoked;
-    mi[i].ti.text = (unichar_t *) _("Filled Ellipse"); mi[i].ti.text_is_1byte = true;
+    mi[i].ti.text = (uint32_t *) _("Filled Ellipse"); mi[i].ti.text_is_1byte = true;
     mi[i].ti.fg = COLOR_DEFAULT;
     mi[i].ti.bg = COLOR_DEFAULT;
     mi[i].mid = bvt_filledelipse;
@@ -3848,7 +3848,7 @@ void BVToolsPopup(BitmapView *bv, GEvent *event) {
     mi[i].ti.bg = COLOR_DEFAULT;
     mi[i++].ti.line = true;
     for ( j=0; j<6; ++j, ++i ) {
-	mi[i].ti.text = (unichar_t *) BVFlipNames[j];
+	mi[i].ti.text = (uint32_t *) BVFlipNames[j];
 	mi[i].ti.text_is_1byte = true;
 	mi[i].ti.fg = COLOR_DEFAULT;
 	mi[i].ti.bg = COLOR_DEFAULT;
@@ -3859,7 +3859,7 @@ void BVToolsPopup(BitmapView *bv, GEvent *event) {
 	mi[i].ti.fg = COLOR_DEFAULT;
 	mi[i].ti.bg = COLOR_DEFAULT;
 	mi[i++].ti.line = true;
-	mi[i].ti.text = (unichar_t *) _("Set _Width...");
+	mi[i].ti.text = (uint32_t *) _("Set _Width...");
 	mi[i].ti.text_is_1byte = true;
 	mi[i].ti.text_in_resource = true;
 	mi[i].ti.fg = COLOR_DEFAULT;

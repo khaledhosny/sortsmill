@@ -87,26 +87,26 @@ typedef struct transdata {
 #define TBlock_CIDOffset	100
 
 static GTextInfo origin[] = {
-    { (unichar_t *) N_("Glyph Origin"), NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("Center of Selection"), NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Glyph Origin"), NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Center of Selection"), NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
 /* GT: The (x,y) position on the window where the user last pressed a mouse button */
-    { (unichar_t *) N_("Last Press"), NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Last Press"), NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     GTEXTINFO_EMPTY
 };
 
 static int selcid[] = { 0, CID_XMove, CID_Angle, CID_Scale, CID_XScale, 0, CID_SkewAng, CID_XAxis };
 static GTextInfo transformtypes[] = {
-    { (unichar_t *) N_("Do Nothing"), NULL, 0, 0, (void *) 0x1000, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("Move..."), NULL, 0, 0, (void *) 0x1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("Rotate..."), NULL, 0, 0, (void *) 0x2, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("Scale Uniformly..."), NULL, 0, 0, (void *) 0x4, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("Scale..."), NULL, 0, 0, (void *) 0x8, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("Flip..."), NULL, 0, 0, (void *) 0x10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("Skew..."), NULL, 0, 0, (void *) 0x20, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("Rotate 3D Around..."), NULL, 0, 0, (void *) 0x40, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("Move by Ruler..."), NULL, 0, 0, (void *) 0x401, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("Rotate by Ruler..."), NULL, 0, 0, (void *) 0x402, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("Skew by Ruler..."), NULL, 0, 0, (void *) 0x420, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Do Nothing"), NULL, 0, 0, (void *) 0x1000, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Move..."), NULL, 0, 0, (void *) 0x1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Rotate..."), NULL, 0, 0, (void *) 0x2, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Scale Uniformly..."), NULL, 0, 0, (void *) 0x4, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Scale..."), NULL, 0, 0, (void *) 0x8, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Flip..."), NULL, 0, 0, (void *) 0x10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Skew..."), NULL, 0, 0, (void *) 0x20, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Rotate 3D Around..."), NULL, 0, 0, (void *) 0x40, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Move by Ruler..."), NULL, 0, 0, (void *) 0x401, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Rotate by Ruler..."), NULL, 0, 0, (void *) 0x402, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Skew by Ruler..."), NULL, 0, 0, (void *) 0x420, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     GTEXTINFO_EMPTY
 };
 
@@ -290,7 +290,7 @@ static int Trans_TypeChange(GGadget *g, GEvent *e) {
 
 	if ( mask & 0x400 ) {
 	    real xoff = last_ruler_offset[0].x, yoff = last_ruler_offset[0].y;
-	    char buf[24]; unichar_t ubuf[24];
+	    char buf[24]; uint32_t ubuf[24];
 	    if ( mask & 0x20 )
 		index -= 4;	/* skew */
 	    else
@@ -360,7 +360,7 @@ static GGadgetCreateData *MakeTransBlock(TransData *td,int bnum,
     gcd[0].gd.handle_controlevent = Trans_TypeChange;
     transformtypes[0].selected = true;
 
-    label[1].text = (unichar_t *) _("_X");
+    label[1].text = (uint32_t *) _("_X");
     label[1].text_is_1byte = true;
     label[1].text_in_resource = true;
     gcd[1].gd.label = &label[1];
@@ -370,7 +370,7 @@ static GGadgetCreateData *MakeTransBlock(TransData *td,int bnum,
     gcd[1].gd.cid = CID_XLab+offset;
     gcd[1].creator = GLabelCreate;
 
-    label[2].text = (unichar_t *) "0";
+    label[2].text = (uint32_t *) "0";
     label[2].text_is_1byte = true;
     gcd[2].gd.label = &label[2];
     gcd[2].gd.pos.x = TBlock_XStart+10; gcd[2].gd.pos.y = 9;  gcd[2].gd.pos.width = 40;
@@ -379,7 +379,7 @@ static GGadgetCreateData *MakeTransBlock(TransData *td,int bnum,
     gcd[2].gd.cid = CID_XMove+offset;
     gcd[2].creator = GTextFieldCreate;
 
-    label[3].text = (unichar_t *) _("_Y");
+    label[3].text = (uint32_t *) _("_Y");
     label[3].text_is_1byte = true;
     label[3].text_in_resource = true;
     gcd[3].gd.label = &label[3];
@@ -389,7 +389,7 @@ static GGadgetCreateData *MakeTransBlock(TransData *td,int bnum,
     gcd[3].gd.cid = CID_YLab+offset;
     gcd[3].creator = GLabelCreate;
 
-    label[4].text = (unichar_t *) "0";
+    label[4].text = (uint32_t *) "0";
     label[4].text_is_1byte = true;
     gcd[4].gd.label = &label[4];
     gcd[4].gd.pos.x = TBlock_XStart+80; gcd[4].gd.pos.y = 9;  gcd[4].gd.pos.width = 40;
@@ -398,7 +398,7 @@ static GGadgetCreateData *MakeTransBlock(TransData *td,int bnum,
     gcd[4].gd.cid = CID_YMove+offset;
     gcd[4].creator = GTextFieldCreate;
 
-    label[5].text = (unichar_t *) "100";
+    label[5].text = (uint32_t *) "100";
     label[5].text_is_1byte = true;
     gcd[5].gd.label = &label[5];
     gcd[5].gd.pos.x = TBlock_XStart+10; gcd[5].gd.pos.y = 9;  gcd[5].gd.pos.width = 40;
@@ -407,7 +407,7 @@ static GGadgetCreateData *MakeTransBlock(TransData *td,int bnum,
     gcd[5].gd.cid = CID_XScale+offset;
     gcd[5].creator = GTextFieldCreate;
 
-    label[6].text = (unichar_t *) "100";
+    label[6].text = (uint32_t *) "100";
     label[6].text_is_1byte = true;
     gcd[6].gd.label = &label[6];
     gcd[6].gd.pos.x = TBlock_XStart+80; gcd[6].gd.pos.y = 9;  gcd[6].gd.pos.width = 40;
@@ -416,7 +416,7 @@ static GGadgetCreateData *MakeTransBlock(TransData *td,int bnum,
     gcd[6].gd.cid = CID_YScale+offset;
     gcd[6].creator = GTextFieldCreate;
 
-    label[7].text = (unichar_t *) "100";
+    label[7].text = (uint32_t *) "100";
     label[7].text_is_1byte = true;
     gcd[7].gd.label = &label[7];
     gcd[7].gd.pos.x = TBlock_XStart+10; gcd[7].gd.pos.y = 9;  gcd[7].gd.pos.width = 40;
@@ -425,7 +425,7 @@ static GGadgetCreateData *MakeTransBlock(TransData *td,int bnum,
     gcd[7].gd.cid = CID_Scale+offset;
     gcd[7].creator = GTextFieldCreate;
 
-    label[8].text = (unichar_t *) U_("° Clockwise");
+    label[8].text = (uint32_t *) U_("° Clockwise");
     label[8].text_is_1byte = true;
     gcd[8].gd.label = &label[8];
     gcd[8].gd.pos.x = TBlock_XStart+53; gcd[8].gd.pos.y = 2; gcd[8].gd.pos.height = 12;
@@ -436,7 +436,7 @@ static GGadgetCreateData *MakeTransBlock(TransData *td,int bnum,
 
 /* GT: Sometimes spelled Widdershins. An old word which means counter clockwise. */
 /* GT: I used it because "counter clockwise" took too much space. */
-    label[9].text = (unichar_t *) U_("° Withershins");	/* deiseal */
+    label[9].text = (uint32_t *) U_("° Withershins");	/* deiseal */
     label[9].text_is_1byte = true;
     gcd[9].gd.label = &label[9];
     gcd[9].gd.pos.x = TBlock_XStart+53; gcd[9].gd.pos.y = 17; gcd[9].gd.pos.height = 12;
@@ -445,7 +445,7 @@ static GGadgetCreateData *MakeTransBlock(TransData *td,int bnum,
     gcd[9].gd.cid = CID_CounterClockwise+offset;
     gcd[9].creator = GRadioCreate;
 
-    label[10].text = (unichar_t *) "180";
+    label[10].text = (uint32_t *) "180";
     label[10].text_is_1byte = true;
     gcd[10].gd.label = &label[10];
     gcd[10].gd.pos.x = TBlock_XStart+10; gcd[10].gd.pos.y = 9;  gcd[10].gd.pos.width = 40;
@@ -454,7 +454,7 @@ static GGadgetCreateData *MakeTransBlock(TransData *td,int bnum,
     gcd[10].gd.cid = CID_Angle+offset;
     gcd[10].creator = GTextFieldCreate;
 
-    label[11].text = (unichar_t *) "10";	/* -10 if we default clockwise */
+    label[11].text = (uint32_t *) "10";	/* -10 if we default clockwise */
     label[11].text_is_1byte = true;
     gcd[11].gd.label = &label[11];
     gcd[11].gd.pos.x = TBlock_XStart+10; gcd[11].gd.pos.y = 9;  gcd[11].gd.pos.width = 40;
@@ -463,7 +463,7 @@ static GGadgetCreateData *MakeTransBlock(TransData *td,int bnum,
     gcd[11].gd.cid = CID_SkewAng+offset;
     gcd[11].creator = GTextFieldCreate;
 
-    label[12].text = (unichar_t *) _("Horizontal");
+    label[12].text = (uint32_t *) _("Horizontal");
     label[12].text_is_1byte = true;
     gcd[12].gd.label = &label[12];
     gcd[12].gd.pos.x = TBlock_XStart; gcd[12].gd.pos.y = 2; gcd[12].gd.pos.height = 12;
@@ -472,7 +472,7 @@ static GGadgetCreateData *MakeTransBlock(TransData *td,int bnum,
     gcd[12].gd.cid = CID_Horizontal+offset;
     gcd[12].creator = GRadioCreate;
 
-    label[13].text = (unichar_t *) _("Vertical");
+    label[13].text = (uint32_t *) _("Vertical");
     label[13].text_is_1byte = true;
     gcd[13].gd.label = &label[13];
     gcd[13].gd.pos.x = TBlock_XStart; gcd[13].gd.pos.y = 17; gcd[13].gd.pos.height = 12;
@@ -481,7 +481,7 @@ static GGadgetCreateData *MakeTransBlock(TransData *td,int bnum,
     gcd[13].gd.cid = CID_Vertical+offset;
     gcd[13].creator = GRadioCreate;
 
-    label[14].text = (unichar_t *) _("%");
+    label[14].text = (uint32_t *) _("%");
     label[14].text_is_1byte = true;
     gcd[14].gd.label = &label[14];
     gcd[14].gd.pos.x = TBlock_XStart+51; gcd[14].gd.pos.y = 15; 
@@ -490,7 +490,7 @@ static GGadgetCreateData *MakeTransBlock(TransData *td,int bnum,
     gcd[14].gd.cid = CID_XPercent+offset;
     gcd[14].creator = GLabelCreate;
 
-    label[15].text = (unichar_t *) _("%");
+    label[15].text = (uint32_t *) _("%");
     label[15].text_is_1byte = true;
     gcd[15].gd.label = &label[15];
     gcd[15].gd.pos.x = TBlock_XStart+121; gcd[15].gd.pos.y = 15; 
@@ -499,7 +499,7 @@ static GGadgetCreateData *MakeTransBlock(TransData *td,int bnum,
     gcd[15].gd.cid = CID_YPercent+offset;
     gcd[15].creator = GLabelCreate;
 
-    label[16].text = (unichar_t *) U_("°");
+    label[16].text = (uint32_t *) U_("°");
     label[16].text_is_1byte = true;
     gcd[16].gd.label = &label[16];
     gcd[16].gd.pos.x = TBlock_XStart+51; gcd[16].gd.pos.y = 15; 
@@ -508,7 +508,7 @@ static GGadgetCreateData *MakeTransBlock(TransData *td,int bnum,
     gcd[16].gd.cid = CID_XDegree+offset;
     gcd[16].creator = GLabelCreate;
 
-    label[17].text = (unichar_t *) U_("°");
+    label[17].text = (uint32_t *) U_("°");
     label[17].text_is_1byte = true;
     gcd[17].gd.label = &label[17];
     gcd[17].gd.pos.x = TBlock_XStart+121; gcd[17].gd.pos.y = 15; 
@@ -517,7 +517,7 @@ static GGadgetCreateData *MakeTransBlock(TransData *td,int bnum,
     gcd[17].gd.cid = CID_YDegree+offset;
     gcd[17].creator = GLabelCreate;
 
-    label[18].text = (unichar_t *) "45";
+    label[18].text = (uint32_t *) "45";
     label[18].text_is_1byte = true;
     gcd[18].gd.label = &label[18];
     gcd[18].gd.pos.x = TBlock_XStart+10; gcd[18].gd.pos.y = 9;  gcd[18].gd.pos.width = 40;
@@ -526,7 +526,7 @@ static GGadgetCreateData *MakeTransBlock(TransData *td,int bnum,
     gcd[18].gd.cid = CID_XAxis+offset;
     gcd[18].creator = GTextFieldCreate;
 
-    label[19].text = (unichar_t *) "0";
+    label[19].text = (uint32_t *) "0";
     label[19].text_is_1byte = true;
     gcd[19].gd.label = &label[19];
     gcd[19].gd.pos.x = TBlock_XStart+80; gcd[19].gd.pos.y = 9;  gcd[19].gd.pos.width = 40;
@@ -597,9 +597,9 @@ void TransformDlgCreate(void *data,void (*transfunc)(void *,real *,int,BVTFunc *
     if ( !done ) {
 	int i;
 	for ( i=0; transformtypes[i].text!=NULL; ++i )
-	    transformtypes[i].text = (unichar_t *) _((char *) transformtypes[i].text);
+	    transformtypes[i].text = (uint32_t *) _((char *) transformtypes[i].text);
 	for ( i=0; origin[i].text!=NULL; ++i )
-	    origin[i].text = (unichar_t *) _((char *) origin[i].text);
+	    origin[i].text = (uint32_t *) _((char *) origin[i].text);
 	done = true;
     }
 
@@ -626,7 +626,7 @@ void TransformDlgCreate(void *data,void (*transfunc)(void *,real *,int,BVTFunc *
 	memset(&gcd,0,sizeof(gcd));
 	memset(&boxes,0,sizeof(boxes));
 
-	label[0].text = (unichar_t *) _("Origin:");
+	label[0].text = (uint32_t *) _("Origin:");
 	label[0].text_is_1byte = true;
 	label[0].text_in_resource = true;
 	gcd[0].gd.label = &label[0];
@@ -661,7 +661,7 @@ void TransformDlgCreate(void *data,void (*transfunc)(void *,real *,int,BVTFunc *
 
 	    gcd[gci].gd.pos.x = 10; gcd[gci].gd.pos.y = y;
 	    gcd[gci].gd.flags = (flags&tdf_enableback) ? (gg_visible | gg_enabled) : gg_visible;
-	    label[gci].text = (unichar_t *) _("Transform _All Layers");
+	    label[gci].text = (uint32_t *) _("Transform _All Layers");
 	    label[gci].text_is_1byte = true;
 	    label[gci].text_in_resource = true;
 	    gcd[gci].gd.label = &label[gci];
@@ -672,7 +672,7 @@ void TransformDlgCreate(void *data,void (*transfunc)(void *,real *,int,BVTFunc *
 
 	    gcd[gci].gd.pos.x = 10; gcd[gci].gd.pos.y = y;
 	    gcd[gci].gd.flags = (flags&tdf_enableback) ? (gg_visible | gg_enabled) : gg_visible;
-	    label[gci].text = (unichar_t *) _("Transform _Guide Layer Too");
+	    label[gci].text = (uint32_t *) _("Transform _Guide Layer Too");
 	    label[gci].text_is_1byte = true;
 	    label[gci].text_in_resource = true;
 	    gcd[gci].gd.label = &label[gci];
@@ -683,7 +683,7 @@ void TransformDlgCreate(void *data,void (*transfunc)(void *,real *,int,BVTFunc *
 
 	    gcd[gci].gd.pos.x = 10; gcd[gci].gd.pos.y = y;
 	    gcd[gci].gd.flags = (flags&tdf_enableback) ? (gg_visible | gg_enabled | gg_cb_on) : gg_visible;
-	    label[gci].text = (unichar_t *) _("Transform _Width Too");
+	    label[gci].text = (uint32_t *) _("Transform _Width Too");
 	    label[gci].text_is_1byte = true;
 	    label[gci].text_in_resource = true;
 	    gcd[gci].gd.label = &label[gci];
@@ -695,7 +695,7 @@ void TransformDlgCreate(void *data,void (*transfunc)(void *,real *,int,BVTFunc *
 	    gcd[gci].gd.pos.x = 10; gcd[gci].gd.pos.y = y;
 	    gcd[gci].gd.flags = gg_visible | (flags&tdf_enablekerns ? gg_enabled : 0) |
 		    (flags&tdf_defaultkerns ? gg_cb_on : 0);
-	    label[gci].text = (unichar_t *) _("Transform kerning _classes too");
+	    label[gci].text = (uint32_t *) _("Transform kerning _classes too");
 	    label[gci].text_is_1byte = true;
 	    label[gci].text_in_resource = true;
 	    gcd[gci].gd.label = &label[gci];
@@ -708,7 +708,7 @@ void TransformDlgCreate(void *data,void (*transfunc)(void *,real *,int,BVTFunc *
 	    gcd[gci].gd.flags = gg_visible |
 		    (flags&tdf_enableback ? gg_enabled : 0) |
 		    (flags&tdf_enablekerns ? gg_cb_on : 0);
-	    label[gci].text = (unichar_t *) _("Transform simple positioning features & _kern pairs");
+	    label[gci].text = (uint32_t *) _("Transform simple positioning features & _kern pairs");
 	    label[gci].text_is_1byte = true;
 	    label[gci].text_in_resource = true;
 	    gcd[gci].gd.label = &label[gci];
@@ -719,7 +719,7 @@ void TransformDlgCreate(void *data,void (*transfunc)(void *,real *,int,BVTFunc *
 
 	    gcd[gci].gd.pos.x = 10; gcd[gci].gd.pos.y = y;
 	    gcd[gci].gd.flags = gg_visible | gg_enabled;
-	    label[gci].text = (unichar_t *) _("Round To _Int");
+	    label[gci].text = (uint32_t *) _("Round To _Int");
 	    label[gci].text_is_1byte = true;
 	    label[gci].text_in_resource = true;
 	    gcd[gci].gd.label = &label[gci];
@@ -732,7 +732,7 @@ void TransformDlgCreate(void *data,void (*transfunc)(void *,real *,int,BVTFunc *
 
 	gcd[gci].gd.pos.x = 30-3; gcd[gci].gd.pos.y = y;
 	gcd[gci].gd.flags = gg_visible | gg_enabled | gg_but_default;
-	label[gci].text = (unichar_t *) _("_OK");
+	label[gci].text = (uint32_t *) _("_OK");
 	label[gci].text_is_1byte = true;
 	label[gci].text_in_resource = true;
 	gcd[gci].gd.mnemonic = 'O';
@@ -742,7 +742,7 @@ void TransformDlgCreate(void *data,void (*transfunc)(void *,real *,int,BVTFunc *
 	buttons[0] = GCD_Glue; buttons[1] = &gcd[gci-1]; buttons[2] = GCD_Glue; buttons[3] = GCD_Glue;
 
 	gcd[gci].gd.flags = gg_visible | gg_enabled;
-	label[gci].text = (unichar_t *) _("_Apply");
+	label[gci].text = (uint32_t *) _("_Apply");
 	label[gci].text_is_1byte = true;
 	label[gci].text_in_resource = true;
 	gcd[gci].gd.label = &label[gci];
@@ -753,7 +753,7 @@ void TransformDlgCreate(void *data,void (*transfunc)(void *,real *,int,BVTFunc *
 
 	gcd[gci].gd.pos.x = -30; gcd[gci].gd.pos.y = gcd[gci-1].gd.pos.y+3;
 	gcd[gci].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-	label[gci].text = (unichar_t *) _("_Cancel");
+	label[gci].text = (uint32_t *) _("_Cancel");
 	label[gci].text_is_1byte = true;
 	label[gci].text_in_resource = true;
 	gcd[gci].gd.label = &label[gci];

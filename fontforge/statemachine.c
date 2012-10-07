@@ -213,27 +213,27 @@ return( max_reachable+1 );		/* The count is one more than the max */
 /* ****************************** Edit a State ****************************** */
 /* ************************************************************************** */
 GTextInfo indicverbs_list[] = {
-    { (unichar_t *) N_("No Change"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Ax => xA"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("xD => Dx"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("AxD => DxA"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("ABx => xAB"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("ABx => xBA"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("xCD => CDx"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("xCD => DCx"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("AxCD => CDxA"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("AxCD => DCxA"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("ABxD => DxAB"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("ABxD => DxBA"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("ABxCD => CDxAB"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("ABxCD => CDxBA"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("ABxCD => DCxAB"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("ABxCD => DCxBA"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("No Change"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Ax => xA"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("xD => Dx"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("AxD => DxA"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("ABx => xAB"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("ABx => xBA"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("xCD => CDx"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("xCD => DCx"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("AxCD => CDxA"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("AxCD => DCxA"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("ABxD => DxAB"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("ABxD => DxBA"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("ABxCD => CDxAB"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("ABxCD => CDxBA"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("ABxCD => DCxAB"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("ABxCD => DCxBA"), NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 
 static char *copy_count(GWindow gw,int cid,int *cnt) {
-    const unichar_t *u = _GGadgetGetTitle(GWidgetGetControl(gw,cid)), *upt;
+    const uint32_t *u = _GGadgetGetTitle(GWidgetGetControl(gw,cid)), *upt;
     char *ret, *pt;
     int c;
 
@@ -325,8 +325,8 @@ static int SMD_DoChange(SMD *smd) {
     int err=false, ns, flags, cnt;
     char *mins, *cins;
     OTLookup *mlook, *clook;
-    const unichar_t *ret;
-    unichar_t *end;
+    const uint32_t *ret;
+    uint32_t *end;
     char *ret8;
     int16 kbuf[9];
     int kerns;
@@ -553,7 +553,7 @@ static void SMD_EditState(SMD *smd) {
 
     snprintf(stateclass,sizeof(stateclass), _("State %d,  %.40s"),
 	    999, _("Class 1: {Everything Else}" ));
-    label[k].text = (unichar_t *) stateclass;
+    label[k].text = (uint32_t *) stateclass;
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = 5;
@@ -561,7 +561,7 @@ static void SMD_EditState(SMD *smd) {
     gcd[k].gd.cid = CID_StateClass;
     gcd[k++].creator = GLabelCreate;
 
-    label[k].text = (unichar_t *) _("Next State:");
+    label[k].text = (uint32_t *) _("Next State:");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+13+4;
@@ -573,7 +573,7 @@ static void SMD_EditState(SMD *smd) {
     gcd[k].gd.cid = CID_NextState;
     gcd[k++].creator = GTextFieldCreate;
 
-    label[k].text = (unichar_t *) _("Advance To Next Glyph");
+    label[k].text = (uint32_t *) _("Advance To Next Glyph");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 10; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+24;
@@ -581,7 +581,7 @@ static void SMD_EditState(SMD *smd) {
     gcd[k].gd.cid = CID_Flag4000;
     gcd[k++].creator = GCheckBoxCreate;
 
-    label[k].text = (unichar_t *) (smd->sm->type==asm_kern?_("Push Current Glyph"):
+    label[k].text = (uint32_t *) (smd->sm->type==asm_kern?_("Push Current Glyph"):
 				   smd->sm->type!=asm_indic?_("Mark Current Glyph"):
 					    _("Mark Current Glyph As First"));
     label[k].text_is_1byte = true;
@@ -595,10 +595,10 @@ static void SMD_EditState(SMD *smd) {
 	if ( !indicv_done ) {
 	    int i;
 	    for ( i=0; indicverbs_list[i].text!=NULL; ++i )
-		indicverbs_list[i].text = (unichar_t *) _((char *) indicverbs_list[i].text );
+		indicverbs_list[i].text = (uint32_t *) _((char *) indicverbs_list[i].text );
 	    indicv_done = true;
 	}
-	label[k].text = (unichar_t *) _("Mark Current Glyph As Last");
+	label[k].text = (uint32_t *) _("Mark Current Glyph As Last");
 	label[k].text_is_1byte = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = gcd[k-1].gd.pos.x; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+16;
@@ -612,7 +612,7 @@ static void SMD_EditState(SMD *smd) {
 	gcd[k].gd.cid = CID_IndicVerb;
 	gcd[k++].creator = GListButtonCreate;
     } else if ( smd->sm->type==asm_insert ) {
-	label[k].text = (unichar_t *) _("Current Glyph Is Kashida Like");
+	label[k].text = (uint32_t *) _("Current Glyph Is Kashida Like");
 	label[k].text_is_1byte = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = gcd[k-1].gd.pos.x; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+16;
@@ -620,7 +620,7 @@ static void SMD_EditState(SMD *smd) {
 	gcd[k].gd.cid = CID_Flag2000;
 	gcd[k++].creator = GCheckBoxCreate;
 
-	label[k].text = (unichar_t *) _("Marked Glyph Is Kashida Like");
+	label[k].text = (uint32_t *) _("Marked Glyph Is Kashida Like");
 	label[k].text_is_1byte = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = gcd[k-1].gd.pos.x; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+16;
@@ -628,7 +628,7 @@ static void SMD_EditState(SMD *smd) {
 	gcd[k].gd.cid = CID_Flag1000;
 	gcd[k++].creator = GCheckBoxCreate;
 
-	label[k].text = (unichar_t *) _("Insert Before Current Glyph");
+	label[k].text = (uint32_t *) _("Insert Before Current Glyph");
 	label[k].text_is_1byte = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = gcd[k-1].gd.pos.x; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+16;
@@ -636,7 +636,7 @@ static void SMD_EditState(SMD *smd) {
 	gcd[k].gd.cid = CID_Flag0800;
 	gcd[k++].creator = GCheckBoxCreate;
 
-	label[k].text = (unichar_t *) _("Insert Before Marked Glyph");
+	label[k].text = (uint32_t *) _("Insert Before Marked Glyph");
 	label[k].text_is_1byte = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = gcd[k-1].gd.pos.x; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+16;
@@ -644,7 +644,7 @@ static void SMD_EditState(SMD *smd) {
 	gcd[k].gd.cid = CID_Flag0400;
 	gcd[k++].creator = GCheckBoxCreate;
 
-	label[k].text = (unichar_t *) _("Mark Insert:");
+	label[k].text = (uint32_t *) _("Mark Insert:");
 	label[k].text_is_1byte = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = gcd[k-1].gd.pos.x; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+26;
@@ -656,7 +656,7 @@ static void SMD_EditState(SMD *smd) {
 	gcd[k].gd.cid = CID_InsMark;
 	gcd[k++].creator = GTextFieldCreate;
 
-	label[k].text = (unichar_t *) _("Current Insert:");
+	label[k].text = (uint32_t *) _("Current Insert:");
 	label[k].text_is_1byte = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+30;
@@ -668,7 +668,7 @@ static void SMD_EditState(SMD *smd) {
 	gcd[k].gd.cid = CID_InsCur;
 	gcd[k++].creator = GTextFieldCreate;
     } else if ( smd->sm->type==asm_kern ) {
-	label[k].text = (unichar_t *) _("Kern Values:");
+	label[k].text = (uint32_t *) _("Kern Values:");
 	label[k].text_is_1byte = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+26;
@@ -680,7 +680,7 @@ static void SMD_EditState(SMD *smd) {
 	gcd[k].gd.cid = CID_Kerns;
 	gcd[k++].creator = GTextFieldCreate;
     } else {
-	label[k].text = (unichar_t *) _("Mark Subs:");
+	label[k].text = (uint32_t *) _("Mark Subs:");
 	label[k].text_is_1byte = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+26;
@@ -693,7 +693,7 @@ static void SMD_EditState(SMD *smd) {
 	gcd[k].gd.cid = CID_TagMark;
 	gcd[k++].creator = GListFieldCreate;
 
-	label[k].text = (unichar_t *) _("Current Subs:");
+	label[k].text = (uint32_t *) _("Current Subs:");
 	label[k].text_is_1byte = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+30;
@@ -707,7 +707,7 @@ static void SMD_EditState(SMD *smd) {
 	gcd[k++].creator = GListFieldCreate;
     }
 
-    label[k].text = (unichar_t *) U_("_Up↑");
+    label[k].text = (uint32_t *) U_("_Up↑");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -719,7 +719,7 @@ static void SMD_EditState(SMD *smd) {
     gcd[k].gd.handle_controlevent = SMDE_Arrow;
     gcd[k++].creator = GButtonCreate;
 
-    label[k].text = (unichar_t *) U_("←_Left");
+    label[k].text = (uint32_t *) U_("←_Left");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -730,7 +730,7 @@ static void SMD_EditState(SMD *smd) {
     gcd[k].gd.handle_controlevent = SMDE_Arrow;
     gcd[k++].creator = GButtonCreate;
 
-    label[k].text = (unichar_t *) U_("_Right→");
+    label[k].text = (uint32_t *) U_("_Right→");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -741,7 +741,7 @@ static void SMD_EditState(SMD *smd) {
     gcd[k].gd.handle_controlevent = SMDE_Arrow;
     gcd[k++].creator = GButtonCreate;
 
-    label[k].text = (unichar_t *) U_("↓_Down");
+    label[k].text = (uint32_t *) U_("↓_Down");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -752,7 +752,7 @@ static void SMD_EditState(SMD *smd) {
     gcd[k].gd.handle_controlevent = SMDE_Arrow;
     gcd[k++].creator = GButtonCreate;
 
-    label[k].text = (unichar_t *) _("_OK");
+    label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -762,7 +762,7 @@ static void SMD_EditState(SMD *smd) {
     gcd[k].gd.cid = CID_Ok;
     gcd[k++].creator = GButtonCreate;
 
-    label[k].text = (unichar_t *) _("_Cancel");
+    label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -874,7 +874,7 @@ return( true );
 }
 
 static void SMD_Mouse(SMD *smd,GEvent *event) {
-    static unichar_t space[100];
+    static uint32_t space[100];
     char *pt;
     char buf[30];
     int len;
@@ -937,7 +937,7 @@ static void SMD_Expose(SMD *smd,GWindow pixmap,GEvent *event) {
     GRect rect;
     GRect clip,old1,old2;
     int len, off, i, j, x, y, kddd=false;
-    unichar_t ubuf[8];
+    uint32_t ubuf[8];
     char buf[100];
 
     if ( area->y+area->height<smd->ystart )
@@ -1314,7 +1314,7 @@ static void SMD_ClassSelectionChanged(GGadget *g,int whichclass, int c) {
     SMD_HShow(smd,whichclass);
 }
 
-static unichar_t **SMD_GlyphListCompletion(GGadget *t,int from_tab) {
+static uint32_t **SMD_GlyphListCompletion(GGadget *t,int from_tab) {
     SMD *smd = GDrawGetUserData(GDrawGetParentWindow(GGadgetGetWindow(t)));
     SplineFont *sf = smd->sf;
 
@@ -1336,7 +1336,7 @@ void StateMachineEdit(SplineFont *sf,ASM *sm,struct gfi_data *d) {
     GTextInfo label[20];
     int i, k, vk;
     int as, ds, ld, sbsize;
-    static unichar_t statew[] = { '1', '2', '3', '4', '5', 0 };
+    static uint32_t statew[] = { '1', '2', '3', '4', '5', 0 };
     static GFont *font = NULL;
     struct matrix_data *md;
     struct matrixinit mi;
@@ -1380,7 +1380,7 @@ void StateMachineEdit(SplineFont *sf,ASM *sm,struct gfi_data *d) {
     memset(label,0,sizeof(label));
     k = 0;
 
-    label[k].text = (unichar_t *) _("Right To Left");
+    label[k].text = (uint32_t *) _("Right To Left");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 150; gcd[k].gd.pos.y = 5;
@@ -1391,7 +1391,7 @@ void StateMachineEdit(SplineFont *sf,ASM *sm,struct gfi_data *d) {
 	gcd[k-1].gd.flags = gg_enabled;		/* I'm not sure why kerning doesn't have an r2l bit */
     }
 
-    label[k].text = (unichar_t *) _("Vertical Only");
+    label[k].text = (uint32_t *) _("Vertical Only");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 150; gcd[k].gd.pos.y = 5+16;
@@ -1461,7 +1461,7 @@ void StateMachineEdit(SplineFont *sf,ASM *sm,struct gfi_data *d) {
     smd.width = gcd[k-1].gd.pos.width;
     smd.xstart = 5;
 
-    label[k].text = (unichar_t *) _("_OK");
+    label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -1472,7 +1472,7 @@ void StateMachineEdit(SplineFont *sf,ASM *sm,struct gfi_data *d) {
     gcd[k].gd.cid = CID_Ok;
     gcd[k++].creator = GButtonCreate;
 
-    label[k].text = (unichar_t *) _("_Cancel");
+    label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];

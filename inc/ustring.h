@@ -37,53 +37,53 @@
 #include <basics.h>
 #include <xunistring.h>
 
-VISIBLE extern unichar_t *u_copyn (const unichar_t *, long);
-VISIBLE extern unichar_t *uc_copyn (const char *, int);
-VISIBLE extern unichar_t *u_concat (const unichar_t *, const unichar_t *);
-VISIBLE extern char *cu_copyn (const unichar_t *pt, int len);
-VISIBLE extern char *cu_copy (const unichar_t *);
+VISIBLE extern uint32_t *u_copyn (const uint32_t *, long);
+VISIBLE extern uint32_t *uc_copyn (const char *, int);
+VISIBLE extern uint32_t *u_concat (const uint32_t *, const uint32_t *);
+VISIBLE extern char *cu_copyn (const uint32_t *pt, int len);
+VISIBLE extern char *cu_copy (const uint32_t *);
 
-VISIBLE extern long u_strcmp (const unichar_t *, const unichar_t *);
-VISIBLE extern long u_strncmp (const unichar_t *, const unichar_t *, int);
-VISIBLE extern long uc_strmatch (const unichar_t *, const char *);
-VISIBLE extern long uc_strnmatch (const unichar_t *, const char *, int);
-VISIBLE extern long u_strnmatch (const unichar_t *str1, const unichar_t *str2,
+VISIBLE extern long u_strcmp (const uint32_t *, const uint32_t *);
+VISIBLE extern long u_strncmp (const uint32_t *, const uint32_t *, int);
+VISIBLE extern long uc_strmatch (const uint32_t *, const char *);
+VISIBLE extern long uc_strnmatch (const uint32_t *, const char *, int);
+VISIBLE extern long u_strnmatch (const uint32_t *str1, const uint32_t *str2,
                          int len);
-VISIBLE extern long u_strmatch (const unichar_t *, const unichar_t *);
+VISIBLE extern long u_strmatch (const uint32_t *, const uint32_t *);
 VISIBLE extern int strmatch (const char *, const char *);
 VISIBLE extern int strnmatch (const char *str1, const char *str2, int n);
-VISIBLE extern void uc_strcpy (unichar_t *, const char *);
-VISIBLE extern void cu_strcpy (char *, const unichar_t *);
-VISIBLE extern void u_strcpy (unichar_t *, const unichar_t *);
-VISIBLE extern void u_strncpy (unichar_t *, const unichar_t *, int);
-VISIBLE extern void cu_strncpy (char *to, const unichar_t *from, int len);
-VISIBLE extern void uc_strncpy (unichar_t *to, const char *from, int len);
-VISIBLE extern void uc_strcat (unichar_t *, const char *);
-VISIBLE extern void uc_strncat (unichar_t *, const char *, int len);
-VISIBLE extern void cu_strcat (char *, const unichar_t *);
-VISIBLE extern void cu_strncat (char *, const unichar_t *, int len);
-VISIBLE extern void u_strcat (unichar_t *, const unichar_t *);
-VISIBLE extern void u_strncat (unichar_t *, const unichar_t *, int len);
-VISIBLE extern int u_strlen (const unichar_t *);
-VISIBLE extern unichar_t *u_strchr (const unichar_t *, unichar_t);
-VISIBLE extern unichar_t *u_strrchr (const unichar_t *, unichar_t);
-VISIBLE extern unichar_t *uc_strstr (const unichar_t *, const char *);
-VISIBLE extern unichar_t *u_strstr (const unichar_t *, const unichar_t *);
-VISIBLE extern unichar_t *uc_strstrmatch (const unichar_t *, const char *);
-VISIBLE extern unichar_t *u_strstrmatch (const unichar_t *, const unichar_t *);
+VISIBLE extern void uc_strcpy (uint32_t *, const char *);
+VISIBLE extern void cu_strcpy (char *, const uint32_t *);
+VISIBLE extern void u_strcpy (uint32_t *, const uint32_t *);
+VISIBLE extern void u_strncpy (uint32_t *, const uint32_t *, int);
+VISIBLE extern void cu_strncpy (char *to, const uint32_t *from, int len);
+VISIBLE extern void uc_strncpy (uint32_t *to, const char *from, int len);
+VISIBLE extern void uc_strcat (uint32_t *, const char *);
+VISIBLE extern void uc_strncat (uint32_t *, const char *, int len);
+VISIBLE extern void cu_strcat (char *, const uint32_t *);
+VISIBLE extern void cu_strncat (char *, const uint32_t *, int len);
+VISIBLE extern void u_strcat (uint32_t *, const uint32_t *);
+VISIBLE extern void u_strncat (uint32_t *, const uint32_t *, int len);
+VISIBLE extern int u_strlen (const uint32_t *);
+VISIBLE extern uint32_t *u_strchr (const uint32_t *, uint32_t);
+VISIBLE extern uint32_t *u_strrchr (const uint32_t *, uint32_t);
+VISIBLE extern uint32_t *uc_strstr (const uint32_t *, const char *);
+VISIBLE extern uint32_t *u_strstr (const uint32_t *, const uint32_t *);
+VISIBLE extern uint32_t *uc_strstrmatch (const uint32_t *, const char *);
+VISIBLE extern uint32_t *u_strstrmatch (const uint32_t *, const uint32_t *);
 VISIBLE extern char *strstrmatch (const char *, const char *);
 
-VISIBLE extern char *u_to_c (const unichar_t *);
-VISIBLE extern unichar_t *c_to_u (const char *);
+VISIBLE extern char *u_to_c (const uint32_t *);
+VISIBLE extern uint32_t *c_to_u (const char *);
 
-VISIBLE extern unsigned long u_strtoul (const unichar_t *, unichar_t **, int);
-VISIBLE extern long u_strtol (const unichar_t *, unichar_t **, int);
-VISIBLE extern double u_strtod (const unichar_t *, unichar_t **);
+VISIBLE extern unsigned long u_strtoul (const uint32_t *, uint32_t **, int);
+VISIBLE extern long u_strtol (const uint32_t *, uint32_t **, int);
+VISIBLE extern double u_strtod (const uint32_t *, uint32_t **);
 
-VISIBLE extern unichar_t *u_strstartmatch (const unichar_t *initial,
-                                   const unichar_t *full);
-VISIBLE extern unichar_t *cu_strstartmatch (const char *initial,
-                                    const unichar_t *full);
+VISIBLE extern uint32_t *u_strstartmatch (const uint32_t *initial,
+                                   const uint32_t *full);
+VISIBLE extern uint32_t *cu_strstartmatch (const char *initial,
+                                    const uint32_t *full);
 
 #define utf82u_strncpy utf82U_strncpy
 VISIBLE extern int32 utf8_ildb (const char **utf8_text);
@@ -102,24 +102,24 @@ VISIBLE extern char *def2utf8_copy (const char *from);
 VISIBLE extern char *utf82def_copy (const char *ufrom);
 VISIBLE extern char *utf8_strchr (const char *utf8_str, int search_char);
 
-VISIBLE extern unichar_t *utf82u_strncpy (unichar_t *ubuf, const char *utf8buf,
+VISIBLE extern uint32_t *utf82u_strncpy (uint32_t *ubuf, const char *utf8buf,
                                   int len);
-VISIBLE extern unichar_t *utf82u_strcpy (unichar_t *ubuf, const char *utf8buf);
-VISIBLE extern void utf82u_strcat (unichar_t *ubuf, const char *utf8buf);
-VISIBLE extern unichar_t *utf82u_copyn (const char *utf8buf, int len);
-VISIBLE extern unichar_t *utf82u_copy (const char *utf8buf);
-VISIBLE extern char *u2utf8_strcpy (char *utf8buf, const unichar_t *ubuf);
-VISIBLE extern char *u2utf8_copy (const unichar_t *ubuf);
-VISIBLE extern char *u2utf8_copyn (const unichar_t *ubuf, int len);
-VISIBLE extern char *u2def_strncpy (char *to, const unichar_t *ufrom, int n);
-VISIBLE extern char *u2def_copy (const unichar_t *ufrom);
+VISIBLE extern uint32_t *utf82u_strcpy (uint32_t *ubuf, const char *utf8buf);
+VISIBLE extern void utf82u_strcat (uint32_t *ubuf, const char *utf8buf);
+VISIBLE extern uint32_t *utf82u_copyn (const char *utf8buf, int len);
+VISIBLE extern uint32_t *utf82u_copy (const char *utf8buf);
+VISIBLE extern char *u2utf8_strcpy (char *utf8buf, const uint32_t *ubuf);
+VISIBLE extern char *u2utf8_copy (const uint32_t *ubuf);
+VISIBLE extern char *u2utf8_copyn (const uint32_t *ubuf, int len);
+VISIBLE extern char *u2def_strncpy (char *to, const uint32_t *ufrom, int n);
+VISIBLE extern char *u2def_copy (const uint32_t *ufrom);
 
-VISIBLE extern int u_sprintf (unichar_t *str, const unichar_t *format, ...);
-VISIBLE extern int u_snprintf (unichar_t *str, int len, const unichar_t *format, ...);
-VISIBLE extern int u_vsnprintf (unichar_t *str, int len, const unichar_t *format,
+VISIBLE extern int u_sprintf (uint32_t *str, const uint32_t *format, ...);
+VISIBLE extern int u_snprintf (uint32_t *str, int len, const uint32_t *format, ...);
+VISIBLE extern int u_vsnprintf (uint32_t *str, int len, const uint32_t *format,
                         va_list ap);
 
-VISIBLE extern int uAllAscii (const unichar_t *str);
+VISIBLE extern int uAllAscii (const uint32_t *str);
 VISIBLE extern int AllAscii (const char *);
 VISIBLE extern char *StripToASCII (const char *utf8_str);
 
@@ -131,6 +131,6 @@ VISIBLE extern char *StripToASCII (const char *utf8_str);
  *
  * No new strings are allocated, freed, or returned.
  */
-VISIBLE extern int u_endswith (const unichar_t *haystack, const unichar_t *needle);
+VISIBLE extern int u_endswith (const uint32_t *haystack, const uint32_t *needle);
 
 #endif

@@ -736,10 +736,10 @@ extern void SVDestroy(struct searchview *sv);
 
 
 extern int  SLICount(SplineFont *sf);
-extern unichar_t *ClassName(const char *name,uint32 feature_tag,
+extern uint32_t *ClassName(const char *name,uint32 feature_tag,
 	uint16 flags, int script_lang_index, int merge_with, int act_type,
 	int macfeature,SplineFont *sf);
-extern unichar_t *DecomposeClassName(const unichar_t *clsnm, unichar_t **name,
+extern uint32_t *DecomposeClassName(const uint32_t *clsnm, uint32_t **name,
 	uint32 *feature_tag, int *macfeature,
 	uint16 *flags, uint16 *script_lang_index,int *merge_with,int *act_type,
 	SplineFont *sf);
@@ -773,17 +773,17 @@ extern void _aplistbuild(struct gmenuitem *mi,SplineFont *sf,
 	void (*func)(GWindow,struct gmenuitem *,GEvent *));
 extern int32 *ParseBitmapSizes(GGadget *g,char *msg,int *err);
 extern GTextInfo *AddMacFeatures(GTextInfo *opentype,enum possub_type type,SplineFont *sf);
-extern unichar_t *AskNameTag(char *title,unichar_t *def,uint32 def_tag,uint16 flags,
+extern uint32_t *AskNameTag(char *title,uint32_t *def,uint32 def_tag,uint16 flags,
 	int script_lang_index, enum possub_type type, SplineFont *sf, SplineChar *default_script,
 	int merge_with,int act_type);
-extern unichar_t *ShowScripts(unichar_t *usedef);
+extern uint32_t *ShowScripts(uint32_t *usedef);
 extern GTextInfo *SFLangList(SplineFont *sf,int addfinal,SplineChar *default_script);
 extern GTextInfo **SFLangArray(SplineFont *sf,int addfinal);
 extern int  ScriptLangList(SplineFont *sf,GGadget *list,int sli);
 extern void GListDelSelected(GGadget *list);
 extern void GListMoveSelected(GGadget *list,int offset);
-extern GTextInfo *GListChangeLine(GGadget *list,int pos, const unichar_t *line);
-extern GTextInfo *GListAppendLine(GGadget *list,const unichar_t *line,int select);
+extern GTextInfo *GListChangeLine(GGadget *list,int pos, const uint32_t *line);
+extern GTextInfo *GListAppendLine(GGadget *list,const uint32_t *line,int select);
 extern GTextInfo *GListChangeLine8(GGadget *list,int pos, const char *line);
 extern GTextInfo *GListAppendLine8(GGadget *list,const char *line,int select);
 extern void CharInfoInit(void);
@@ -1005,8 +1005,8 @@ extern void DoXRes(void);
 extern void PointerDlg(CharView *cv);
 extern void LastFonts_Activate(void);
 extern void LastFonts_End(int success);
-extern void GListAddStr(GGadget *list,unichar_t *str, void *ud);
-extern void GListReplaceStr(GGadget *list,int index, unichar_t *str, void *ud);
+extern void GListAddStr(GGadget *list,uint32_t *str, void *ud);
+extern void GListReplaceStr(GGadget *list,int index, uint32_t *str, void *ud);
 extern struct macname *NameGadgetsGetNames( GWindow gw );
 extern void NameGadgetsSetEnabled( GWindow gw, int enable );
 extern int GCDBuildNames(GGadgetCreateData *gcd,GTextInfo *label,int pos,struct macname *names);
@@ -1015,7 +1015,7 @@ extern void GCDFillMacFeat(GGadgetCreateData *mfgcd,GTextInfo *mflabels, int wid
 	GGadgetCreateData **array);
 extern void Prefs_ReplaceMacFeatures(GGadget *list);
 
-extern unichar_t *FVOpenFont(char *title, const char *defaultfile, int mult);
+extern uint32_t *FVOpenFont(char *title, const char *defaultfile, int mult);
 
 
 
@@ -1090,8 +1090,8 @@ extern void SFHistogram(SplineFont *sf,int layer, struct psdict *private,uint8 *
 	EncMap *map, enum hist_type which);
 
 extern void ContextChainEdit(SplineFont *sf,FPST *fpst,
-	struct gfi_data *gfi,unichar_t *newname,int layer);
-extern char *cu_copybetween(const unichar_t *start, const unichar_t *end);
+	struct gfi_data *gfi,uint32_t *newname,int layer);
+extern char *cu_copybetween(const uint32_t *start, const uint32_t *end);
 
 extern void StateMachineEdit(SplineFont *sf,ASM *sm,struct gfi_data *d);
 extern void GFI_FinishSMNew(struct gfi_data *d,ASM *sm, int success,int isnew);
@@ -1143,9 +1143,9 @@ extern int EditSubtable(struct lookup_subtable *sub,int isgpos,SplineFont *sf,
 extern void _LookupSubtableContents(SplineFont *sf, struct lookup_subtable *sub,
 	struct subtable_data *sd,int def_layer);
 extern char *SCNameUniStr(SplineChar *sc);
-extern unichar_t *uSCNameUniStr(SplineChar *sc);
+extern uint32_t *uSCNameUniStr(SplineChar *sc);
 extern char *SFNameList2NameUni(SplineFont *sf, char *str);
-extern unichar_t **SFGlyphNameCompletion(SplineFont *sf,GGadget *t,int from_tab,
+extern uint32_t **SFGlyphNameCompletion(SplineFont *sf,GGadget *t,int from_tab,
 	int new_name_after_space);
 extern char *GlyphNameListDeUnicode( char *str );
 extern void AddRmLang(SplineFont *sf, struct lkdata *lk,int add_lang);

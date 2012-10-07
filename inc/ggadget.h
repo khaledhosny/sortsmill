@@ -35,7 +35,7 @@
 struct giocontrol;
 
 typedef struct gtextinfo {
-    unichar_t *text;
+    uint32_t *text;
     GImage *image;
     Color fg;
     Color bg;
@@ -50,7 +50,7 @@ typedef struct gtextinfo {
     unsigned int text_is_1byte: 1;		/* If passed in as 1byte (ie. iso-8859-1) text, will be converted */
     unsigned int text_in_resource: 1;		/* the text field is actually an index into the string resource table */
     unsigned int changed: 1;			/* If a row/column widget changed this */
-    unichar_t mnemonic;				/* Only for menus and menubars */
+    uint32_t mnemonic;				/* Only for menus and menubars */
 						/* should really be in menuitem, but that wastes space and complicates GTextInfoDraw */
 } GTextInfo;
 
@@ -58,7 +58,7 @@ typedef struct gtextinfo {
 
 
 typedef struct gtextinfo2 {
-    unichar_t *text;
+    uint32_t *text;
     GImage *image;
     Color fg;
     Color bg;
@@ -74,7 +74,7 @@ typedef struct gtextinfo2 {
     unsigned int text_in_resource: 1;		/* the text field is actually an index into the string resource table */
     unsigned int changed: 1;			/* If a row/column widget changed this */
     unsigned int sort_me_first_in_list: 1;	/* used for directories in file chooser widgets */
-    unichar_t mnemonic;				/* Only for menus and menubars */
+    uint32_t mnemonic;				/* Only for menus and menubars */
 						/* should really be in menuitem, but that wastes space and complicates GTextInfoDraw */
 } GTextInfo2;
 
@@ -83,7 +83,7 @@ typedef struct gtextinfo2 {
 
 typedef struct gmenuitem {
     GTextInfo ti;
-    unichar_t shortcut;
+    uint32_t shortcut;
     short short_mask;
     struct gmenuitem *sub;
     void (*moveto)(struct gwindow *base,struct gmenuitem *mi,GEvent *);	/* called before creating submenu */
@@ -107,7 +107,7 @@ typedef struct gmenuitem2 {
 
 
 typedef struct tabinfo {
-    unichar_t *text;
+    uint32_t *text;
     struct ggadgetcreatedata *gcd;
     unsigned int disabled: 1;
     unsigned int selected: 1;
@@ -164,7 +164,7 @@ enum sb_type { sb_upline, sb_downline, sb_uppage, sb_downpage, sb_track, sb_trac
 struct scrollbarinit { int32 sb_min, sb_max, sb_pagesize, sb_pos; };
 
 typedef int (*GGadgetHandler)(GGadget *,GEvent *);
-typedef unichar_t **(*GTextCompletionHandler)(GGadget *,int from_tab);
+typedef uint32_t **(*GTextCompletionHandler)(GGadget *,int from_tab);
 
 enum gg_flags { gg_visible=1, gg_enabled=2, gg_pos_in_pixels=4,
 		gg_sb_vert=8, gg_line_vert=gg_sb_vert,
@@ -193,8 +193,8 @@ enum gg_flags { gg_visible=1, gg_enabled=2, gg_pos_in_pixels=4,
 typedef struct ggadgetdata {
     GRect pos;
     GBox *box;
-    unichar_t mnemonic;
-    unichar_t shortcut;
+    uint32_t mnemonic;
+    uint32_t shortcut;
     uint8 short_mask;
     uint8 cols;			/* for rowcol */
     short cid;
@@ -214,7 +214,7 @@ typedef struct ggadgetdata {
     } u;
 //    enum gg_flags flags;
     unsigned int flags;
-    const unichar_t *popup_msg;		/* Brief help message */
+    const uint32_t *popup_msg;		/* Brief help message */
     GGadgetHandler handle_controlevent;
 } GGadgetData;
 
@@ -292,7 +292,7 @@ struct matrixinit {
 
 struct gdirentry;
 typedef enum fchooserret (*GFileChooserFilterType)(GGadget *g,struct gdirentry *ent,
-	const unichar_t *dir);
+	const uint32_t *dir);
 
 #define _NUM_Buttonsize		0
 #define _NUM_ScaleFactor	1
@@ -302,16 +302,16 @@ extern void GTextInfoFree(GTextInfo *ti);
 VISIBLE extern void GTextInfoListFree(GTextInfo *ti);
 VISIBLE extern void GTextInfoArrayFree(GTextInfo **ti);
 VISIBLE extern GTextInfo **GTextInfoFromChars(char **array, int len);
-VISIBLE extern const unichar_t *GStringGetResource(int index,unichar_t *mnemonic);
+VISIBLE extern const uint32_t *GStringGetResource(int index,uint32_t *mnemonic);
 VISIBLE extern int GGadgetScale(int xpos);
 VISIBLE extern int GIntGetResource(int index);
 extern int GStringSetResourceFileV(char *filename,uint32 checksum);
 extern int GStringSetResourceFile(char *filename);	/* returns 1 for success, 0 for failure */
 /* fallback string arrays are null terminated. mnemonics is same length as string */
 /* fallback integer arrays are terminated by 0x80000000 (negative infinity) */
-extern void GStringSetFallbackArray(const unichar_t **array,const unichar_t *mn,
+extern void GStringSetFallbackArray(const uint32_t **array,const uint32_t *mn,
 	const int *ires);
-unichar_t *GStringFileGetResource(char *filename, int index,unichar_t *mnemonic);
+uint32_t *GStringFileGetResource(char *filename, int index,uint32_t *mnemonic);
 extern void *GResource_font_cvt(char *val, void *def);
 VISIBLE extern FontInstance *GResourceFindFont(char *resourcename,FontInstance *deffont);
 
@@ -323,7 +323,7 @@ VISIBLE int GGadgetIsEnabled(GGadget *g);
 VISIBLE GWindow GGadgetGetWindow(GGadget *g);
 VISIBLE void *GGadgetGetUserData(GGadget *g);
 VISIBLE void GGadgetSetUserData(GGadget *g, void *d);
-void GGadgetSetPopupMsg(GGadget *g, const unichar_t *msg);
+void GGadgetSetPopupMsg(GGadget *g, const uint32_t *msg);
 GRect *GGadgetGetInnerSize(GGadget *g,GRect *rct);
 VISIBLE GRect *GGadgetGetSize(GGadget *g,GRect *rct);
 void GGadgetGetDesiredVisibleSize(GGadget *g,GRect *outer, GRect *inner);
@@ -337,11 +337,11 @@ VISIBLE void GGadgetsCreate(GWindow base, GGadgetCreateData *gcd);
 int  GGadgetFillsWindow(GGadget *g);
 int  GGadgetIsDefault(GGadget *g);
 
-VISIBLE void GGadgetSetTitle(GGadget *g,const unichar_t *title);
+VISIBLE void GGadgetSetTitle(GGadget *g,const uint32_t *title);
 VISIBLE void GGadgetSetTitle8(GGadget *g,const char *title);
 VISIBLE void GGadgetSetTitle8WithMn(GGadget *g,const char *title);
-VISIBLE const unichar_t *_GGadgetGetTitle(GGadget *g);	/* Do not free!!! */
-VISIBLE unichar_t *GGadgetGetTitle(GGadget *g);		/* Free the return */
+VISIBLE const uint32_t *_GGadgetGetTitle(GGadget *g);	/* Do not free!!! */
+VISIBLE uint32_t *GGadgetGetTitle(GGadget *g);		/* Free the return */
 VISIBLE char *GGadgetGetTitle8(GGadget *g);		/* Free the return (utf8) */
 VISIBLE void GGadgetSetFont(GGadget *g,GFont *font);
 GFont *GGadgetGetFont(GGadget *g);
@@ -352,7 +352,7 @@ GGadgetHandler GGadgetGetHandler(GGadget *g);
 
 VISIBLE void GTextFieldSelect(GGadget *g,int sel_start, int sel_end);
 VISIBLE void GTextFieldShow(GGadget *g,int pos);
-VISIBLE void GTextFieldReplace(GGadget *g,const unichar_t *txt);
+VISIBLE void GTextFieldReplace(GGadget *g,const uint32_t *txt);
 VISIBLE void GCompletionFieldSetCompletion(GGadget *g,GTextCompletionHandler completion);
 VISIBLE void GCompletionFieldSetCompletionMode(GGadget *g,int enabled);
 VISIBLE void GGadgetClearList(GGadget *g);
@@ -365,7 +365,7 @@ VISIBLE void GGadgetSelectOneListItem(GGadget *g,int32 pos);
 VISIBLE int32 GGadgetIsListItemSelected(GGadget *g,int32 pos);
 VISIBLE int32 GGadgetGetFirstListSelectedItem(GGadget *g);
 VISIBLE void GGadgetScrollListToPos(GGadget *g,int32 pos);
-void GGadgetScrollListToText(GGadget *g,const unichar_t *lab,int32 sel);
+void GGadgetScrollListToText(GGadget *g,const uint32_t *lab,int32 sel);
 void GGadgetSetListOrderer(GGadget *g,int (*orderer)(const void *, const void *));
 
 void GColorButtonSetColor(GGadget *g, Color col);
@@ -399,7 +399,7 @@ VISIBLE void GScrollBarGetBounds(GGadget *g, int32 *sb_min, int32 *sb_max, int32
 
 void GMenuBarSetItemChecked(GGadget *g, int mid, int check);
 void GMenuBarSetItemEnabled(GGadget *g, int mid, int enabled);
-void GMenuBarSetItemName(GGadget *g, int mid, const unichar_t *name);
+void GMenuBarSetItemName(GGadget *g, int mid, const uint32_t *name);
 VISIBLE void GMenuSetShortcutDomain(const char *domain);
 const char *GMenuGetShortcutDomain(void);
 VISIBLE int GMenuIsCommand(GEvent *event,char *shortcut);
@@ -412,25 +412,25 @@ void GFileChooserFilterIt(GGadget *g);
 VISIBLE void GFileChooserRefreshList(GGadget *g);
 VISIBLE int GFileChooserFilterEh(GGadget *g,GEvent *e);
 VISIBLE void GFileChooserConnectButtons(GGadget *g,GGadget *ok, GGadget *filter);
-VISIBLE void GFileChooserSetFilterText(GGadget *g,const unichar_t *filter);
+VISIBLE void GFileChooserSetFilterText(GGadget *g,const uint32_t *filter);
 void GFileChooserSetFilterFunc(GGadget *g,GFileChooserFilterType filter);
-VISIBLE void GFileChooserSetDir(GGadget *g,unichar_t *dir);
+VISIBLE void GFileChooserSetDir(GGadget *g,uint32_t *dir);
 VISIBLE struct giocontrol *GFileChooserReplaceIO(GGadget *g,struct giocontrol *gc);
-VISIBLE unichar_t *GFileChooserGetDir(GGadget *g);
-unichar_t *GFileChooserGetFilterText(GGadget *g);
+VISIBLE uint32_t *GFileChooserGetDir(GGadget *g);
+uint32_t *GFileChooserGetFilterText(GGadget *g);
 GFileChooserFilterType GFileChooserGetFilterFunc(GGadget *g);
-void GFileChooserSetMimetypes(GGadget *g,unichar_t **mimetypes);
-unichar_t **GFileChooserGetMimetypes(GGadget *g);
+void GFileChooserSetMimetypes(GGadget *g,uint32_t **mimetypes);
+uint32_t **GFileChooserGetMimetypes(GGadget *g);
 VISIBLE void GFileChooserGetChildren(GGadget *g,GGadget **pulldown, GGadget **list, GGadget **tf);
 VISIBLE int GFileChooserPosIsDir(GGadget *g, int pos);
-VISIBLE unichar_t *GFileChooserFileNameOfPos(GGadget *g, int pos);
+VISIBLE uint32_t *GFileChooserFileNameOfPos(GGadget *g, int pos);
 VISIBLE void GFileChooserSetShowHidden(int sh);
 VISIBLE int GFileChooserGetShowHidden(void);
 VISIBLE void GFileChooserSetDirectoryPlacement(int dp);
 VISIBLE int GFileChooserGetDirectoryPlacement(void);
-VISIBLE void GFileChooserSetBookmarks(unichar_t **b);
+VISIBLE void GFileChooserSetBookmarks(uint32_t **b);
 void GFileChooserSetPaths(GGadget *g, char **path);
-VISIBLE unichar_t **GFileChooserGetBookmarks(void);
+VISIBLE uint32_t **GFileChooserGetBookmarks(void);
 VISIBLE void GFileChooserSetPrefsChangedCallback(void *data, void (*p_c)(void *));
 
 VISIBLE void GHVBoxSetExpandableCol(GGadget *g,int col);
@@ -474,11 +474,11 @@ VISIBLE void GMatrixEditSetEditable(GGadget *g, int editable);
 VISIBLE GWindow GDrawableGetWindow(GGadget *g);
 
 
-VISIBLE extern void GGadgetPreparePopupImage(GWindow base,const unichar_t *msg,
+VISIBLE extern void GGadgetPreparePopupImage(GWindow base,const uint32_t *msg,
 	const void *data,
 	GImage *(*get_image)(const void *data),
 	void (*free_image)(const void *data,GImage *img));
-VISIBLE extern void GGadgetPreparePopup(GWindow base,const unichar_t *msg);
+VISIBLE extern void GGadgetPreparePopup(GWindow base,const uint32_t *msg);
 extern void GGadgetPreparePopupR(GWindow base,int msg);
 VISIBLE extern void GGadgetPreparePopup8(GWindow base,char *msg);
 VISIBLE extern void GGadgetEndPopup(void);
@@ -488,9 +488,9 @@ VISIBLE extern int GGadgetDispatchEvent(GGadget *g,GEvent *e);
 VISIBLE extern void GGadgetTakesKeyboard(GGadget *g, int takes_keyboard);
 
 /* Handles *?{}[] wildcards */
-VISIBLE int GGadgetWildMatch(unichar_t *pattern, unichar_t *name,int ignorecase);
+VISIBLE int GGadgetWildMatch(uint32_t *pattern, uint32_t *name,int ignorecase);
 VISIBLE enum fchooserret GFileChooserDefFilter(GGadget *g,struct gdirentry *ent,
-	const unichar_t *dir);
+	const uint32_t *dir);
 
 VISIBLE GWindow GMenuCreatePopupMenu(GWindow owner,GEvent *event, GMenuItem *mi);
 GWindow _GMenuCreatePopupMenu(GWindow owner,GEvent *event, GMenuItem *mi,
@@ -543,7 +543,7 @@ void GGadgetSetImagePath(char *path);
 VISIBLE GImage *GGadgetImageCache(char *filename);
 VISIBLE int TryGGadgetImageCache(GImage *image, char *name);
 
-VISIBLE extern unichar_t *utf82u_mncopy(const char *utf8buf,unichar_t *mn);
+VISIBLE extern uint32_t *utf82u_mncopy(const char *utf8buf,uint32_t *mn);
 
 VISIBLE extern double GetCalmReal8(GWindow gw,int cid,char *namer,int *err);
 VISIBLE extern double GetReal8(GWindow gw,int cid,char *namer,int *err);

@@ -49,10 +49,10 @@ static int gradio_inited = false;
 static GResInfo gradio_ri, gradioon_ri, gradiooff_ri;
 static GResInfo gcheckbox_ri, gcheckboxon_ri, gcheckboxoff_ri;
 static GTextInfo radio_lab[] = {
-    { (unichar_t *) "Disabled On", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) "Disabled Off", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) "Enabled" , NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) "Enabled 2" , NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' }
+    { (uint32_t *) "Disabled On", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) "Disabled Off", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) "Enabled" , NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) "Enabled 2" , NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' }
 };
 static GGadgetCreateData radio_gcd[] = {
     { GRadioCreate, { GRECT_EMPTY, NULL, 0, 0, 0, 0, 0, &radio_lab[0], { NULL }, gg_visible, NULL, NULL }, NULL, NULL },
@@ -128,9 +128,9 @@ static GResInfo gradiooff_ri = {
     NULL
 };
 static GTextInfo checkbox_lab[] = {
-    { (unichar_t *) "Disabled On", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) "Disabled Off", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) "Enabled" , NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' }
+    { (uint32_t *) "Disabled On", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) "Disabled Off", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) "Enabled" , NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' }
 };
 static GGadgetCreateData checkbox_gcd[] = {
     { GCheckBoxCreate, { GRECT_EMPTY, NULL, 0, 0, 0, 0, 0, &checkbox_lab[0], { NULL }, gg_visible, NULL, NULL }, NULL, NULL },
@@ -237,7 +237,7 @@ return;		/* Do Nothing, it's already on */
 /* Return the number of lines in the label of a radio button. */
 static int gradio_linecount(GRadio *gr) {
     int lcnt;
-    unichar_t *pt;
+    uint32_t *pt;
 
     lcnt = 0;
     if ( gr->label!=NULL ) {
@@ -488,18 +488,18 @@ return;
     _ggadget_destroy(g);
 }
 
-static void GRadioSetTitle(GGadget *g,const unichar_t *tit) {
+static void GRadioSetTitle(GGadget *g,const uint32_t *tit) {
     GRadio *b = (GRadio *) g;
     free(b->label);
     b->label = x_u32_strdup_or_null(tit);
 }
 
-static const unichar_t *_GRadioGetTitle(GGadget *g) {
+static const uint32_t *_GRadioGetTitle(GGadget *g) {
     GRadio *b = (GRadio *) g;
 return( b->label );
 }
 
-static void GRadioSetImageTitle(GGadget *g,GImage *img,const unichar_t *tit, int before) {
+static void GRadioSetImageTitle(GGadget *g,GImage *img,const uint32_t *tit, int before) {
     GRadio *b = (GRadio *) g;
     if ( b->g.free_box )
 	free( b->g.box );
@@ -744,7 +744,7 @@ static GCheckBox *_GCheckBoxCreate(GCheckBox *gl, struct gwindow *base, GGadgetD
 	if ( gd->label->text_in_resource && gd->label->text_is_1byte )
 	    gl->label = utf82u_mncopy((char *) gd->label->text,&gl->g.mnemonic);
 	else if ( gd->label->text_in_resource )
-	    gl->label = x_u32_strdup_or_null((unichar_t *) GStringGetResource((intptr_t) gd->label->text,&gl->g.mnemonic));
+	    gl->label = x_u32_strdup_or_null((uint32_t *) GStringGetResource((intptr_t) gd->label->text,&gl->g.mnemonic));
 	else if ( gd->label->text_is_1byte )
 	    gl->label = /*def2u*/ utf82u_copy((char *) gd->label->text);
 	else

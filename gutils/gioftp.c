@@ -55,9 +55,9 @@ int ftp_protocol_index;
 struct stdfuncs *stdfuncs;
 void *ftplib_handle;
 
-static unichar_t err401[] = { ' ','U','n','a','u','t','h','o','r','i','z','e','d', '\0' };
-static unichar_t err404[] = { ' ','N','o','t',' ','F','o','u','n','d', '\0' };
-/*static unichar_t err501[] = { ' ','N','o','t',' ','I','m','p','l','e','m','e','n','t','e','d', '\0' };*/
+static uint32_t err401[] = { ' ','U','n','a','u','t','h','o','r','i','z','e','d', '\0' };
+static uint32_t err404[] = { ' ','N','o','t',' ','F','o','u','n','d', '\0' };
+/*static uint32_t err501[] = { ' ','N','o','t',' ','I','m','p','l','e','m','e','n','t','e','d', '\0' };*/
 
 static void set_status(GIOControl *gc, char *prefix, char *rest) {
     int len = strlen(prefix);

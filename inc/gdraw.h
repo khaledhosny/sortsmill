@@ -38,7 +38,7 @@ enum text_mods { tm_none, tm_upper=1, tm_lower=2, tm_initialcaps=4, tm_showsofth
 enum text_lines { tl_none, tl_under=1, tl_strike=2, tl_over=4, tl_dash=8 };
 
 typedef struct {
-    const unichar_t *family_name;	/* may be more than one */
+    const uint32_t *family_name;	/* may be more than one */
     int16 point_size;			/* negative values are in pixels */
     int16 weight;
     enum font_style style;
@@ -148,7 +148,7 @@ typedef struct gevent {
 	    int16 x,y;
 	    uint16 keysym;
 	    int16 autorepeat;
-	    unichar_t chars[_GD_EVT_CHRLEN];
+	    uint32_t chars[_GD_EVT_CHRLEN];
 	} chr;
 	struct {
 	    char *device;		/* for wacom devices */
@@ -247,8 +247,8 @@ typedef struct gwindow_attrs {
     Color background_color;
     GCursor cursor;
     /* Remainder is only for top level windows */
-    const unichar_t *window_title;
-    const unichar_t *icon_title;
+    const uint32_t *window_title;
+    const uint32_t *icon_title;
     struct gwindow *icon;		/* A bitmap pixmap, or NULL */
     unsigned int nodecoration: 1;	/* no wm decoration */
     unsigned int positioned: 1;		/* position information is important */
@@ -277,7 +277,7 @@ enum gzoom_flags { gzf_pos=1, gzf_size=2 };
 
 typedef int (*GDrawEH)(GWindow,GEvent *);
 
-extern unichar_t *GDrawKeysyms[];
+extern uint32_t *GDrawKeysyms[];
 VISIBLE extern GDisplay *screen_display, *printer_display;
 
 VISIBLE extern void GDrawCreateDisplays(char *displayname,char *programname);
@@ -321,9 +321,9 @@ VISIBLE extern void GDrawRaise(GWindow w);
 VISIBLE extern void GDrawRaiseAbove(GWindow w,GWindow below);
 VISIBLE extern int  GDrawIsAbove(GWindow w,GWindow other);
 VISIBLE extern void GDrawLower(GWindow w);
-VISIBLE extern void GDrawSetWindowTitles(GWindow w, const unichar_t *title, const unichar_t *icontit);
+VISIBLE extern void GDrawSetWindowTitles(GWindow w, const uint32_t *title, const uint32_t *icontit);
 VISIBLE extern void GDrawSetWindowTitles8(GWindow w, const char *title, const char *icontit);
-VISIBLE extern unichar_t *GDrawGetWindowTitle(GWindow w);
+VISIBLE extern uint32_t *GDrawGetWindowTitle(GWindow w);
 VISIBLE extern char *GDrawGetWindowTitle8(GWindow w);
 VISIBLE extern void GDrawSetTransientFor(GWindow transient,GWindow owner);
 VISIBLE extern void GDrawSetCursor(GWindow w, GCursor ct);
@@ -360,9 +360,9 @@ VISIBLE extern GFont *GDrawNewFont(GWindow gw, char *family_name, int point_size
 VISIBLE extern FontRequest *GDrawDecomposeFont(GFont *fi, FontRequest *rq);
 VISIBLE extern void GDrawGetFontMetrics(GWindow gw,GFont *fi,int *as, int *ds, int *ld);
 
-VISIBLE extern int32 GDrawGetTextBounds(GWindow gw,const unichar_t *text, int32 cnt, GTextBounds *size);
-VISIBLE extern int32 GDrawGetTextWidth(GWindow gw, const unichar_t *text, int32 cnt);
-VISIBLE extern int32 GDrawDrawText(GWindow gw, int32 x, int32 y, const unichar_t *txt, int32 cnt, Color col);
+VISIBLE extern int32 GDrawGetTextBounds(GWindow gw,const uint32_t *text, int32 cnt, GTextBounds *size);
+VISIBLE extern int32 GDrawGetTextWidth(GWindow gw, const uint32_t *text, int32 cnt);
+VISIBLE extern int32 GDrawDrawText(GWindow gw, int32 x, int32 y, const uint32_t *txt, int32 cnt, Color col);
 
 /* UTF8 routines */
 VISIBLE extern int32 GDrawGetText8Bounds(GWindow gw, const char *text, int32 cnt, GTextBounds *size);
@@ -422,7 +422,7 @@ VISIBLE extern void GDrawCancelTimer(GTimer *timer);
 
 VISIBLE extern void GDrawSyncThread(GDisplay *gd, void (*func)(void *), void *data);
 
-VISIBLE extern void GDrawSetBuildCharHooks(void (*hook)(GDisplay *), void (*inshook)(GDisplay *,unichar_t));
+VISIBLE extern void GDrawSetBuildCharHooks(void (*hook)(GDisplay *), void (*inshook)(GDisplay *,uint32_t));
 
 VISIBLE extern int GDrawRequestDeviceEvents(GWindow w,int devcnt,struct gdeveventmask *de);
 

@@ -138,7 +138,7 @@ extern int instruct_serif_stems;        /* in nowakowskittfinstr.c */
 extern int instruct_ball_terminals;     /* in nowakowskittfinstr.c */
 extern int interpolate_strong;  /* in nowakowskittfinstr.c */
 extern int control_counters;    /* in nowakowskittfinstr.c */
-extern unichar_t *script_menu_names[SCRIPT_MENU_MAX];
+extern uint32_t *script_menu_names[SCRIPT_MENU_MAX];
 extern char *script_filenames[SCRIPT_MENU_MAX];
 static char *xdefs_filename;
 extern int new_em_size;         /* in splineutil2.c */
@@ -924,14 +924,14 @@ FileChooserPrefsChanged (void *pointless)
 static void
 ProcessFileChooserPrefs (void)
 {
-  unichar_t **b;
+  uint32_t **b;
   int i;
 
   GFileChooserSetShowHidden (gfc_showhidden);
   GFileChooserSetDirectoryPlacement (gfc_dirplace);
   if (gfc_bookmarks == NULL)
     {
-      b = xmalloc (8 * sizeof (unichar_t *));
+      b = xmalloc (8 * sizeof (uint32_t *));
       i = 0;
       b[i++] =
         x_u8_to_u32 ((uint8_t *) "ftp://ctan.org/pub/tex-archive/fonts/");
@@ -950,7 +950,7 @@ ProcessFileChooserPrefs (void)
           start = pt + 1;
         }
       start = gfc_bookmarks;
-      b = xmalloc ((i + 2) * sizeof (unichar_t *));
+      b = xmalloc ((i + 2) * sizeof (uint32_t *));
       for (i = 0;; ++i)
         {
           pt = strchr (start, ';');
@@ -971,7 +971,7 @@ ProcessFileChooserPrefs (void)
 static void
 GetFileChooserPrefs (void)
 {
-  unichar_t **foo;
+  uint32_t **foo;
 
   gfc_showhidden = GFileChooserGetShowHidden ();
   gfc_dirplace = GFileChooserGetDirectoryPlacement ();
@@ -1604,7 +1604,7 @@ Pref_MappingList (int use_user)
 }
 
 void
-GListAddStr (GGadget * list, unichar_t *str, void *ud)
+GListAddStr (GGadget * list, uint32_t *str, void *ud)
 {
   int32 i, len;
   GTextInfo **ti = GGadgetGetList (list, &len);
@@ -1625,7 +1625,7 @@ GListAddStr (GGadget * list, unichar_t *str, void *ud)
 }
 
 void
-GListReplaceStr (GGadget * list, int index, unichar_t *str, void *ud)
+GListReplaceStr (GGadget * list, int index, uint32_t *str, void *ud)
 {
   int32 i, len;
   GTextInfo **ti = GGadgetGetList (list, &len);
@@ -1656,7 +1656,7 @@ struct setdata
   GGadget *cancel;
   int index;
   int done;
-  unichar_t *ret;
+  uint32_t *ret;
 };
 
 static int
@@ -1666,10 +1666,10 @@ set_e_h (GWindow gw, GEvent * event)
   int i;
   int32 len;
   GTextInfo **ti;
-  const unichar_t *ret1;
-  unichar_t *end;
+  const uint32_t *ret1;
+  uint32_t *end;
   int on, feat, val1, val2;
-  unichar_t ubuf[4];
+  uint32_t ubuf[4];
   char buf[40];
 
   if (event->type == et_close)
@@ -1754,7 +1754,7 @@ set_e_h (GWindow gw, GEvent * event)
   return (true);
 }
 
-static unichar_t *
+static uint32_t *
 AskSetting (struct macsettingname *temp, GGadget * list, int index,
             GGadget * flist)
 {
@@ -1765,7 +1765,7 @@ AskSetting (struct macsettingname *temp, GGadget * list, int index,
   GTextInfo label[17];
   struct setdata sd;
   char buf[20];
-  unichar_t ubuf3[6];
+  uint32_t ubuf3[6];
   int32 len, i;
   GTextInfo **ti;
 
@@ -1793,7 +1793,7 @@ AskSetting (struct macsettingname *temp, GGadget * list, int index,
   memset (gcd, 0, sizeof (gcd));
   memset (label, 0, sizeof (label));
 
-  label[0].text = (unichar_t *) _("_Feature:");
+  label[0].text = (uint32_t *) _("_Feature:");
   label[0].text_is_1byte = true;
   label[0].text_in_resource = true;
   gcd[0].gd.label = &label[0];
@@ -1808,7 +1808,7 @@ AskSetting (struct macsettingname *temp, GGadget * list, int index,
   gcd[1].gd.flags = gg_enabled | gg_visible;
   gcd[1].creator = GListButtonCreate;
 
-  label[2].text = (unichar_t *) _("Setting");
+  label[2].text = (uint32_t *) _("Setting");
   label[2].text_is_1byte = true;
   gcd[2].gd.label = &label[2];
   gcd[2].gd.pos.x = 5;
@@ -1817,7 +1817,7 @@ AskSetting (struct macsettingname *temp, GGadget * list, int index,
   gcd[2].creator = GLabelCreate;
 
   sprintf (buf, "%d", temp->mac_feature_setting);
-  label[3].text = (unichar_t *) buf;
+  label[3].text = (uint32_t *) buf;
   label[3].text_is_1byte = true;
   gcd[3].gd.label = &label[3];
   gcd[3].gd.pos.x = gcd[1].gd.pos.x;
@@ -1826,7 +1826,7 @@ AskSetting (struct macsettingname *temp, GGadget * list, int index,
   gcd[3].gd.flags = gg_enabled | gg_visible;
   gcd[3].creator = GTextFieldCreate;
 
-  label[4].text = (unichar_t *) _("_Tag:");
+  label[4].text = (uint32_t *) _("_Tag:");
   label[4].text_is_1byte = true;
   label[4].text_in_resource = true;
   gcd[4].gd.label = &label[4];
@@ -1854,7 +1854,7 @@ AskSetting (struct macsettingname *temp, GGadget * list, int index,
   gcd[6].gd.pos.width = -1;
   gcd[6].gd.pos.height = 0;
   gcd[6].gd.flags = gg_visible | gg_enabled | gg_but_default;
-  label[6].text = (unichar_t *) _("_OK");
+  label[6].text = (uint32_t *) _("_OK");
   label[6].text_is_1byte = true;
   label[6].text_in_resource = true;
   gcd[6].gd.label = &label[6];
@@ -1866,7 +1866,7 @@ AskSetting (struct macsettingname *temp, GGadget * list, int index,
   gcd[7].gd.pos.width = -1;
   gcd[7].gd.pos.height = 0;
   gcd[7].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-  label[7].text = (unichar_t *) _("_Cancel");
+  label[7].text = (uint32_t *) _("_Cancel");
   label[7].text_is_1byte = true;
   label[7].text_in_resource = true;
   gcd[7].gd.label = &label[7];
@@ -1907,7 +1907,7 @@ ChangeSetting (GGadget * list, int index, GGadget * flist)
   int32 len;
   GTextInfo **ti = GGadgetGetList (list, &len);
   char *str;
-  unichar_t *ustr;
+  uint32_t *ustr;
 
   str = cu_copy (ti[index]->text);
   ParseMacMapping (str, &temp);
@@ -1927,7 +1927,7 @@ Pref_NewMapping (GGadget * g, GEvent * e)
       GGadget *flist =
         GWidgetGetControl (GDrawGetParentWindow (gw), CID_Features);
       struct macsettingname temp;
-      unichar_t *str;
+      uint32_t *str;
 
       memset (&temp, 0, sizeof (temp));
       temp.mac_feature_type = -1;
@@ -2021,8 +2021,8 @@ Prefs_Ok (GGadget * g, GEvent * e)
   int err = 0, enc;
   struct pref_data *p;
   GWindow gw;
-  const unichar_t *ret;
-  const unichar_t *names[SCRIPT_MENU_MAX], *scripts[SCRIPT_MENU_MAX];
+  const uint32_t *ret;
+  const uint32_t *names[SCRIPT_MENU_MAX], *scripts[SCRIPT_MENU_MAX];
   struct prefs_list *pl;
   GTextInfo **list;
   int32 len;
@@ -2341,7 +2341,7 @@ DoPrefs (void)
   int32 llen;
   char buf[20];
   int gcnt[20];
-  static unichar_t nullstr[] = { 0 };
+  static uint32_t nullstr[] = { 0 };
   struct prefs_list *pl;
   char *tempstr;
   GFont *font;
@@ -2422,7 +2422,7 @@ DoPrefs (void)
   msgcd[sgc].gd.pos.y =
     msgcd[sgc - 1].gd.pos.y + msgcd[sgc - 1].gd.pos.height + 10;
   msgcd[sgc].gd.flags = gg_visible | gg_enabled;
-  mslabels[sgc].text = (unichar_t *) S_ ("MacMap|_New...");
+  mslabels[sgc].text = (uint32_t *) S_ ("MacMap|_New...");
   mslabels[sgc].text_is_1byte = true;
   mslabels[sgc].text_in_resource = true;
   msgcd[sgc].gd.label = &mslabels[sgc];
@@ -2437,7 +2437,7 @@ DoPrefs (void)
     GIntGetResource (_NUM_ScaleFactor);
   msgcd[sgc].gd.pos.y = msgcd[sgc - 1].gd.pos.y;
   msgcd[sgc].gd.flags = gg_visible;
-  mslabels[sgc].text = (unichar_t *) _("_Delete");
+  mslabels[sgc].text = (uint32_t *) _("_Delete");
   mslabels[sgc].text_is_1byte = true;
   mslabels[sgc].text_in_resource = true;
   msgcd[sgc].gd.label = &mslabels[sgc];
@@ -2453,7 +2453,7 @@ DoPrefs (void)
     GIntGetResource (_NUM_ScaleFactor);
   msgcd[sgc].gd.pos.y = msgcd[sgc - 1].gd.pos.y;
   msgcd[sgc].gd.flags = gg_visible;
-  mslabels[sgc].text = (unichar_t *) _("_Edit...");
+  mslabels[sgc].text = (uint32_t *) _("_Edit...");
   mslabels[sgc].text_is_1byte = true;
   mslabels[sgc].text_in_resource = true;
   msgcd[sgc].gd.label = &mslabels[sgc];
@@ -2469,7 +2469,7 @@ DoPrefs (void)
     GIntGetResource (_NUM_ScaleFactor);
   msgcd[sgc].gd.pos.y = msgcd[sgc - 1].gd.pos.y;
   msgcd[sgc].gd.flags = gg_visible | gg_enabled;
-  mslabels[sgc].text = (unichar_t *) S_ ("MacMapping|Default");
+  mslabels[sgc].text = (uint32_t *) S_ ("MacMapping|Default");
   mslabels[sgc].text_is_1byte = true;
   mslabels[sgc].text_in_resource = true;
   msgcd[sgc].gd.label = &mslabels[sgc];
@@ -2495,11 +2495,11 @@ DoPrefs (void)
   y2 = 5;
   si = 0;
 
-  slabel[sgc].text = (unichar_t *) _("Menu Name");
+  slabel[sgc].text = (uint32_t *) _("Menu Name");
   slabel[sgc].text_is_1byte = true;
   sgcd[sgc].gd.label = &slabel[sgc];
   sgcd[sgc].gd.popup_msg =
-    (unichar_t *)
+    (uint32_t *)
     _
     ("You may create a script menu containing up to 10 frequently used scripts.\nEach entry in the menu needs both a name to display in the menu and\na script file to execute. The menu name may contain any unicode characters.\nThe button labeled \"...\" will allow you to browse for a script file.");
   sgcd[sgc].gd.pos.x = 8;
@@ -2508,11 +2508,11 @@ DoPrefs (void)
   sgcd[sgc++].creator = GLabelCreate;
   sarray[si++] = &sgcd[sgc - 1];
 
-  slabel[sgc].text = (unichar_t *) _("Script File");
+  slabel[sgc].text = (uint32_t *) _("Script File");
   slabel[sgc].text_is_1byte = true;
   sgcd[sgc].gd.label = &slabel[sgc];
   sgcd[sgc].gd.popup_msg =
-    (unichar_t *)
+    (uint32_t *)
     _
     ("You may create a script menu containing up to 10 frequently used scripts\nEach entry in the menu needs both a name to display in the menu and\na script file to execute. The menu name may contain any unicode characters.\nThe button labeled \"...\" will allow you to browse for a script file.");
   sgcd[sgc].gd.pos.x = 110;
@@ -2541,7 +2541,7 @@ DoPrefs (void)
       sgcd[sgc].gd.pos.y = y2;
       sgcd[sgc].gd.flags = gg_visible | gg_enabled;
       slabel[sgc].text =
-        (unichar_t *) (script_filenames[i] ==
+        (uint32_t *) (script_filenames[i] ==
                        NULL ? "" : script_filenames[i]);
       slabel[sgc].text_is_1byte = true;
       sgcd[sgc].gd.label = &slabel[sgc];
@@ -2552,7 +2552,7 @@ DoPrefs (void)
       sgcd[sgc].gd.pos.x = 210;
       sgcd[sgc].gd.pos.y = y2;
       sgcd[sgc].gd.flags = gg_visible | gg_enabled;
-      slabel[sgc].text = (unichar_t *) _("...");
+      slabel[sgc].text = (uint32_t *) _("...");
       slabel[sgc].text_is_1byte = true;
       sgcd[sgc].gd.label = &slabel[sgc];
       sgcd[sgc].gd.cid = i + CID_ScriptMBrowseBase;
@@ -2587,7 +2587,7 @@ DoPrefs (void)
       plabel = xcalloc (gcnt[k] + 4, sizeof (GTextInfo));
       hvarray = xcalloc ((gcnt[k] + 6) * 5 + 2, sizeof (GGadgetCreateData *));
 
-      aspects[k].text = (unichar_t *) visible_prefs_list[k].tab_name;
+      aspects[k].text = (uint32_t *) visible_prefs_list[k].tab_name;
       aspects[k].text_is_1byte = true;
       aspects[k].gcd = &boxes[2 * k];
       aspects[k].nesting = visible_prefs_list[k].nest;
@@ -2599,11 +2599,11 @@ DoPrefs (void)
           pl = &visible_prefs_list[k].pl[i];
           if (pl->dontdisplay)
             continue;
-          plabel[gc].text = (unichar_t *) _(pl->name);
+          plabel[gc].text = (uint32_t *) _(pl->name);
           plabel[gc].text_is_1byte = true;
           pgcd[gc].gd.label = &plabel[gc];
           pgcd[gc].gd.mnemonic = '\0';
-          pgcd[gc].gd.popup_msg = (unichar_t *) _(pl->popup);
+          pgcd[gc].gd.popup_msg = (uint32_t *) _(pl->popup);
           pgcd[gc].gd.pos.x = 8;
           pgcd[gc].gd.pos.y = y + 6;
           pgcd[gc].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
@@ -2613,7 +2613,7 @@ DoPrefs (void)
           plabel[gc].text_is_1byte = true;
           pgcd[gc].gd.label = &plabel[gc];
           pgcd[gc].gd.mnemonic = '\0';
-          pgcd[gc].gd.popup_msg = (unichar_t *) _(pl->popup);
+          pgcd[gc].gd.popup_msg = (uint32_t *) _(pl->popup);
           pgcd[gc].gd.pos.x = 110;
           pgcd[gc].gd.pos.y = y;
           pgcd[gc].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
@@ -2622,7 +2622,7 @@ DoPrefs (void)
           switch (pl->type)
             {
             case pr_bool:
-              plabel[gc].text = (unichar_t *) _("On");
+              plabel[gc].text = (uint32_t *) _("On");
               pgcd[gc].gd.pos.y += 3;
               pgcd[gc++].creator = GRadioCreate;
               hvarray[si++] = &pgcd[gc - 1];
@@ -2630,7 +2630,7 @@ DoPrefs (void)
               pgcd[gc].gd.pos.x += 50;
               pgcd[gc].gd.cid = 0;
               pgcd[gc].gd.label = &plabel[gc];
-              plabel[gc].text = (unichar_t *) _("Off");
+              plabel[gc].text = (uint32_t *) _("Off");
               plabel[gc].text_is_1byte = true;
               hvarray[si++] = &pgcd[gc];
               hvarray[si++] = GCD_Glue;
@@ -2643,7 +2643,7 @@ DoPrefs (void)
               break;
             case pr_int:
               sprintf (buf, "%d", *((int *) pl->val));
-              plabel[gc].text = (unichar_t *) copy (buf);
+              plabel[gc].text = (uint32_t *) copy (buf);
               pgcd[gc++].creator = GTextFieldCreate;
               hvarray[si++] = &pgcd[gc - 1];
               hvarray[si++] = GCD_Glue;
@@ -2658,7 +2658,7 @@ DoPrefs (void)
                 pt = utf8_idpb (pt, *((int *) pl->val));
                 *pt = '\0';
               }
-              plabel[gc].text = (unichar_t *) copy (buf);
+              plabel[gc].text = (uint32_t *) copy (buf);
               pgcd[gc++].creator = GTextFieldCreate;
               hvarray[si++] = &pgcd[gc - 1];
               hvarray[si++] = GCD_Glue;
@@ -2667,7 +2667,7 @@ DoPrefs (void)
               break;
             case pr_real:
               sprintf (buf, "%g", *((float *) pl->val));
-              plabel[gc].text = (unichar_t *) copy (buf);
+              plabel[gc].text = (uint32_t *) copy (buf);
               pgcd[gc++].creator = GTextFieldCreate;
               hvarray[si++] = &pgcd[gc - 1];
               hvarray[si++] = GCD_Glue;
@@ -2707,7 +2707,7 @@ DoPrefs (void)
                 namelistnames = xcalloc (cnt + 1, sizeof (GTextInfo));
                 for (cnt = 0; nlnames[cnt] != NULL; ++cnt)
                   {
-                    namelistnames[cnt].text = (unichar_t *) nlnames[cnt];
+                    namelistnames[cnt].text = (uint32_t *) nlnames[cnt];
                     namelistnames[cnt].text_is_1byte = true;
                     if (strcmp
                         (_((*(NameList **) (pl->val))->title),
@@ -2753,7 +2753,7 @@ DoPrefs (void)
                   pgcd[gc].gd.pos.x += 145;
                   pgcd[gc].gd.cid += CID_PrefsBrowseOffset;
                   pgcd[gc].gd.label = &plabel[gc];
-                  plabel[gc].text = (unichar_t *) "...";
+                  plabel[gc].text = (uint32_t *) "...";
                   plabel[gc].text_is_1byte = true;
                   pgcd[gc].gd.handle_controlevent = Prefs_BrowseFile;
                   pgcd[gc++].creator = GButtonCreate;
@@ -2776,10 +2776,10 @@ DoPrefs (void)
               break;
             case pr_angle:
               sprintf (buf, "%g", *((float *) pl->val) * RAD2DEG);
-              plabel[gc].text = (unichar_t *) copy (buf);
+              plabel[gc].text = (uint32_t *) copy (buf);
               pgcd[gc++].creator = GTextFieldCreate;
               hvarray[si++] = &pgcd[gc - 1];
-              plabel[gc].text = (unichar_t *) U_ ("°");
+              plabel[gc].text = (uint32_t *) U_ ("°");
               plabel[gc].text_is_1byte = true;
               pgcd[gc].gd.label = &plabel[gc];
               pgcd[gc].gd.pos.x =
@@ -2815,7 +2815,7 @@ DoPrefs (void)
           y += 8;
           for (i = 0; text[i] != 0; ++i)
             {
-              plabel[gc].text = (unichar_t *) S_ (text[i]);
+              plabel[gc].text = (uint32_t *) S_ (text[i]);
               plabel[gc].text_is_1byte = true;
               pgcd[gc].gd.label = &plabel[gc];
               pgcd[gc].gd.pos.x = 8;
@@ -2842,15 +2842,15 @@ DoPrefs (void)
       boxes[2 * k].creator = GHVBoxCreate;
     }
 
-  aspects[k].text = (unichar_t *) _("Script Menu");
+  aspects[k].text = (uint32_t *) _("Script Menu");
   aspects[k].text_is_1byte = true;
   aspects[k++].gcd = sboxes;
 
-  subaspects[0].text = (unichar_t *) _("Features");
+  subaspects[0].text = (uint32_t *) _("Features");
   subaspects[0].text_is_1byte = true;
   subaspects[0].gcd = mfboxes;
 
-  subaspects[1].text = (unichar_t *) _("Mapping");
+  subaspects[1].text = (uint32_t *) _("Mapping");
   subaspects[1].text_is_1byte = true;
   subaspects[1].gcd = mpboxes;
 
@@ -2862,7 +2862,7 @@ DoPrefs (void)
   mgcd[0].gd.flags = gg_visible | gg_enabled;
   mgcd[0].creator = GTabSetCreate;
 
-  aspects[k].text = (unichar_t *) _("Mac");
+  aspects[k].text = (uint32_t *) _("Mac");
   aspects[k].text_is_1byte = true;
   aspects[k++].gcd = mgcd;
 
@@ -2891,7 +2891,7 @@ DoPrefs (void)
   gcd[gc].gd.pos.width = -1;
   gcd[gc].gd.pos.height = 0;
   gcd[gc].gd.flags = gg_visible | gg_enabled | gg_but_default;
-  label[gc].text = (unichar_t *) _("_OK");
+  label[gc].text = (uint32_t *) _("_OK");
   label[gc].text_is_1byte = true;
   label[gc].text_in_resource = true;
   gcd[gc].gd.mnemonic = 'O';
@@ -2908,7 +2908,7 @@ DoPrefs (void)
   gcd[gc].gd.pos.width = -1;
   gcd[gc].gd.pos.height = 0;
   gcd[gc].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-  label[gc].text = (unichar_t *) _("_Cancel");
+  label[gc].text = (uint32_t *) _("_Cancel");
   label[gc].text_is_1byte = true;
   label[gc].text_in_resource = true;
   gcd[gc].gd.label = &label[gc];
@@ -3135,7 +3135,7 @@ PrefsSubSet_Ok (GGadget * g, GEvent * e)
   struct prefs_list *pl = plist;
   int i = 0, j = 0;
   int err = 0, enc;
-  const unichar_t *ret;
+  const uint32_t *ret;
 
   p->done = true;
 
@@ -3305,11 +3305,11 @@ PrefsSubSetDlg (CharView * cv, char *windowTitle, struct prefs_list *plist)
   for (i = 0, pl = plist; pl->name; ++i, ++pl)
     {
 
-      plabel[gc].text = (unichar_t *) _(pl->name);
+      plabel[gc].text = (uint32_t *) _(pl->name);
       plabel[gc].text_is_1byte = true;
       pgcd[gc].gd.label = &plabel[gc];
       pgcd[gc].gd.mnemonic = '\0';
-      pgcd[gc].gd.popup_msg = (unichar_t *) 0;  //_(pl->popup);
+      pgcd[gc].gd.popup_msg = (uint32_t *) 0;  //_(pl->popup);
       pgcd[gc].gd.pos.x = 8;
       pgcd[gc].gd.pos.y = y + 6;
       pgcd[gc].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
@@ -3319,7 +3319,7 @@ PrefsSubSetDlg (CharView * cv, char *windowTitle, struct prefs_list *plist)
       plabel[gc].text_is_1byte = true;
       pgcd[gc].gd.label = &plabel[gc];
       pgcd[gc].gd.mnemonic = '\0';
-      pgcd[gc].gd.popup_msg = (unichar_t *) 0;  //_(pl->popup);
+      pgcd[gc].gd.popup_msg = (uint32_t *) 0;  //_(pl->popup);
       pgcd[gc].gd.pos.x = 110;
       pgcd[gc].gd.pos.y = y;
       pgcd[gc].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
@@ -3328,7 +3328,7 @@ PrefsSubSetDlg (CharView * cv, char *windowTitle, struct prefs_list *plist)
       switch (pl->type)
         {
         case pr_bool:
-          plabel[gc].text = (unichar_t *) _("On");
+          plabel[gc].text = (uint32_t *) _("On");
           pgcd[gc].gd.pos.y += 3;
           pgcd[gc++].creator = GRadioCreate;
           hvarray[si++] = &pgcd[gc - 1];
@@ -3336,7 +3336,7 @@ PrefsSubSetDlg (CharView * cv, char *windowTitle, struct prefs_list *plist)
           pgcd[gc].gd.pos.x += 50;
           pgcd[gc].gd.cid = 0;
           pgcd[gc].gd.label = &plabel[gc];
-          plabel[gc].text = (unichar_t *) _("Off");
+          plabel[gc].text = (uint32_t *) _("Off");
           plabel[gc].text_is_1byte = true;
           hvarray[si++] = &pgcd[gc];
           hvarray[si++] = GCD_Glue;
@@ -3349,7 +3349,7 @@ PrefsSubSetDlg (CharView * cv, char *windowTitle, struct prefs_list *plist)
           break;
         case pr_int:
           sprintf (buf, "%d", *((int *) pl->val));
-          plabel[gc].text = (unichar_t *) copy (buf);
+          plabel[gc].text = (uint32_t *) copy (buf);
           pgcd[gc++].creator = GTextFieldCreate;
           hvarray[si++] = &pgcd[gc - 1];
           hvarray[si++] = GCD_Glue;
@@ -3364,7 +3364,7 @@ PrefsSubSetDlg (CharView * cv, char *windowTitle, struct prefs_list *plist)
             pt = utf8_idpb (pt, *((int *) pl->val));
             *pt = '\0';
           }
-          plabel[gc].text = (unichar_t *) copy (buf);
+          plabel[gc].text = (uint32_t *) copy (buf);
           pgcd[gc++].creator = GTextFieldCreate;
           hvarray[si++] = &pgcd[gc - 1];
           hvarray[si++] = GCD_Glue;
@@ -3373,7 +3373,7 @@ PrefsSubSetDlg (CharView * cv, char *windowTitle, struct prefs_list *plist)
           break;
         case pr_real:
           sprintf (buf, "%g", *((float *) pl->val));
-          plabel[gc].text = (unichar_t *) copy (buf);
+          plabel[gc].text = (uint32_t *) copy (buf);
           pgcd[gc++].creator = GTextFieldCreate;
           hvarray[si++] = &pgcd[gc - 1];
           hvarray[si++] = GCD_Glue;
@@ -3411,7 +3411,7 @@ PrefsSubSetDlg (CharView * cv, char *windowTitle, struct prefs_list *plist)
             namelistnames = xcalloc (cnt + 1, sizeof (GTextInfo));
             for (cnt = 0; nlnames[cnt] != NULL; ++cnt)
               {
-                namelistnames[cnt].text = (unichar_t *) nlnames[cnt];
+                namelistnames[cnt].text = (uint32_t *) nlnames[cnt];
                 namelistnames[cnt].text_is_1byte = true;
                 if (strcmp
                     (_((*(NameList **) (pl->val))->title), nlnames[cnt]) == 0)
@@ -3455,7 +3455,7 @@ PrefsSubSetDlg (CharView * cv, char *windowTitle, struct prefs_list *plist)
               pgcd[gc].gd.pos.x += 145;
               pgcd[gc].gd.cid += CID_PrefsBrowseOffset;
               pgcd[gc].gd.label = &plabel[gc];
-              plabel[gc].text = (unichar_t *) "...";
+              plabel[gc].text = (uint32_t *) "...";
               plabel[gc].text_is_1byte = true;
               pgcd[gc].gd.handle_controlevent = Prefs_BrowseFile;
               pgcd[gc++].creator = GButtonCreate;
@@ -3478,10 +3478,10 @@ PrefsSubSetDlg (CharView * cv, char *windowTitle, struct prefs_list *plist)
           break;
         case pr_angle:
           sprintf (buf, "%g", *((float *) pl->val) * RAD2DEG);
-          plabel[gc].text = (unichar_t *) copy (buf);
+          plabel[gc].text = (uint32_t *) copy (buf);
           pgcd[gc++].creator = GTextFieldCreate;
           hvarray[si++] = &pgcd[gc - 1];
-          plabel[gc].text = (unichar_t *) U_ ("°");
+          plabel[gc].text = (uint32_t *) U_ ("°");
           plabel[gc].text_is_1byte = true;
           pgcd[gc].gd.label = &plabel[gc];
           pgcd[gc].gd.pos.x =
@@ -3509,7 +3509,7 @@ PrefsSubSetDlg (CharView * cv, char *windowTitle, struct prefs_list *plist)
   gcd[gc].gd.pos.width = -1;
   gcd[gc].gd.pos.height = 0;
   gcd[gc].gd.flags = gg_visible | gg_enabled | gg_but_default;
-  label[gc].text = (unichar_t *) _("_OK");
+  label[gc].text = (uint32_t *) _("_OK");
   label[gc].text_is_1byte = true;
   label[gc].text_in_resource = true;
   gcd[gc].gd.mnemonic = 'O';

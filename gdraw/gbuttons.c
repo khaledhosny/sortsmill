@@ -69,8 +69,8 @@ static GResInfo glabel_ri = {
 };
 
 static GTextInfo button_lab[] = {
-    { (unichar_t *) "Disabled Button", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) "Enabled Button" , NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' }
+    { (uint32_t *) "Disabled Button", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) "Enabled Button" , NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' }
 };
 static GGadgetCreateData button_gcd[] = {
     { GButtonCreate, { GRECT_EMPTY, NULL, 0, 0, 0, 0, 0, &button_lab[0], { NULL }, gg_visible, NULL, NULL }, NULL, NULL },
@@ -192,9 +192,9 @@ static GResInfo gcolor_ri = {
     NULL
 };
 static GTextInfo list_choices[] = {
-    { (unichar_t *) "1", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) "2", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) "3", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) "1", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) "2", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) "3", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     GTEXTINFO_EMPTY
 };
 
@@ -277,9 +277,9 @@ static void GButtonPressed(GButton *b) {
     }
 }
 
-static int gbutton_stringsize( GButton *gb,unichar_t *label,int *lcnt ) {
+static int gbutton_stringsize( GButton *gb,uint32_t *label,int *lcnt ) {
     int maxtextwidth = 0;
-    unichar_t *pt, *start;
+    uint32_t *pt, *start;
 
     for ( pt = label; ; ) {
         for ( start=pt; *pt!='\0' && *pt!='\n'; ++pt );
@@ -295,9 +295,9 @@ static int gbutton_stringsize( GButton *gb,unichar_t *label,int *lcnt ) {
 return maxtextwidth;
 }
 
-static unichar_t *gbutton_textsize( GButton *gb, int *_maxlcnt, int *_maxw ) {
+static uint32_t *gbutton_textsize( GButton *gb, int *_maxlcnt, int *_maxw ) {
     int i, lcnt, maxlcnt, maxtextwidth;
-    unichar_t *ltxt;
+    uint32_t *ltxt;
     GFont *old;
 
     old = GDrawSetFont(gb->g.base,gb->font);
@@ -338,7 +338,7 @@ static int gbutton_expose(GWindow pixmap, GGadget *g, GEvent *event) {
     int yoff;
     GRect unpadded_inner;
     int pad, lcnt, maxtextwidth;
-    unichar_t *pt, *start;
+    uint32_t *pt, *start;
     int cbbl=0;
 
     if ( g->state == gs_invisible )
@@ -579,7 +579,7 @@ static void GButtonSetInner(GButton *b) {
 	b->g.inner.x = b->g.r.x + (b->g.r.width-b->g.inner.width-mark)/2;
 }
 
-static void GButtonSetTitle(GGadget *g,const unichar_t *tit) {
+static void GButtonSetTitle(GGadget *g,const uint32_t *tit) {
     GButton *b = (GButton *) g;
 
     if ( b->g.free_box )
@@ -590,7 +590,7 @@ static void GButtonSetTitle(GGadget *g,const unichar_t *tit) {
     _ggadget_redraw(g);
 }
 
-static void GButtonSetImageTitle(GGadget *g,GImage *img,const unichar_t *tit, int before) {
+static void GButtonSetImageTitle(GGadget *g,GImage *img,const uint32_t *tit, int before) {
     GButton *b = (GButton *) g;
 
     if ( b->g.free_box )
@@ -605,7 +605,7 @@ static void GButtonSetImageTitle(GGadget *g,GImage *img,const unichar_t *tit, in
     _ggadget_redraw(g);
 }
 
-static const unichar_t *_GButtonGetTitle(GGadget *g) {
+static const uint32_t *_GButtonGetTitle(GGadget *g) {
     GButton *b = (GButton *) g;
 return( b->label );
 }
@@ -739,7 +739,7 @@ static void GButtonGetDesiredSize(GGadget *g, GRect *outer, GRect *inner) {
     GDrawGetFontMetrics(g->base,gl->font,&as, &ds, &ld);
     if ( gl->label!=NULL ) {
 	int lcnt;
-	unichar_t *ltxt = NULL;
+	uint32_t *ltxt = NULL;
 	ltxt = gbutton_textsize(gl,&lcnt,&width);
 	if ( lcnt==1 ) {
 	    FontInstance *old = GDrawSetFont(gl->g.base,gl->font);
@@ -1037,7 +1037,7 @@ static GLabel *_GLabelCreate(GLabel *gl, struct gwindow *base, GGadgetData *gd,v
 	if ( gd->label->text_in_resource && gd->label->text_is_1byte )
 	    gl->label = utf82u_mncopy((char *) gd->label->text,&gl->g.mnemonic);
 	else if ( gd->label->text_in_resource )
-	    gl->label = x_u32_strdup_or_null((unichar_t *) GStringGetResource((intptr_t) gd->label->text,&gl->g.mnemonic));
+	    gl->label = x_u32_strdup_or_null((uint32_t *) GStringGetResource((intptr_t) gd->label->text,&gl->g.mnemonic));
 	else if ( gd->label->text_is_1byte )
 	    gl->label = /* def2u_*/ utf82u_copy((char *) gd->label->text);
 	else
@@ -1101,7 +1101,7 @@ GGadget *GColorButtonCreate(struct gwindow *base, GGadgetData *gd,void *data) {
     if ( ti.image==NULL && ti.text==NULL ) {
 	ti.image = GGadgetImageCache("colorwheel.png");
 	if ( ti.image==NULL ) {
-	    ti.text = (unichar_t *) _("Color");
+	    ti.text = (uint32_t *) _("Color");
 	    ti.text_is_1byte = true;
 	}
     }

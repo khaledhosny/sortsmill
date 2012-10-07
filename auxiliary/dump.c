@@ -112,7 +112,7 @@ static int dumpalphas(FILE *output, FILE *header) {
     FILE *file;
     int i,j,k, l, first, last;
     long _orig, _unicode, mask;
-    unichar_t unicode[256];
+    uint32_t unicode[256];
     unsigned char *table[256], *plane;
     char buffer[200+1];
 
@@ -189,8 +189,8 @@ return( 3 );
 	    }
 	    fclose(file);
 
-	    fprintf( header, "extern const unichar_t unicode_from_%s[];\n", alnames[j] );
-	    fprintf( output, "const unichar_t unicode_from_%s[] = {\n", alnames[j] );
+	    fprintf( header, "extern const uint32_t unicode_from_%s[];\n", alnames[j] );
+	    fprintf( output, "const uint32_t unicode_from_%s[] = {\n", alnames[j] );
 	    for ( i=0; i<256-8; i+=8 ) {
 		fprintf( output, "  0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x,",
 			unicode[i], unicode[i+1], unicode[i+2], unicode[i+3],
@@ -231,7 +231,7 @@ return( 3 );
 		    fprintf( output, "    c_allzeros,\n" );
 	    fprintf( output, "};\n\n" );
 	    fprintf( header, "extern struct charmap %s_from_unicode;\n", alnames[j]);
-	    fprintf( output, "struct charmap %s_from_unicode = { %d, %d, (unsigned char **) %s_from_unicode_, (unichar_t *) unicode_from_%s };\n\n",
+	    fprintf( output, "struct charmap %s_from_unicode = { %d, %d, (unsigned char **) %s_from_unicode_, (uint32_t *) unicode_from_%s };\n\n",
 		    alnames[j], first, last, alnames[j], alnames[j]);
 
 	    for ( k=first; k<=last; ++k ) {
@@ -252,20 +252,20 @@ return( 2 );
 	if ( strcmp(alphabets[j],"MacSYMBOL.TXT")==0 ) alphabets[j]=NULL;
 */
 
-    fprintf( header, "\nextern unichar_t *unicode_from_alphabets[];\n" );
+    fprintf( header, "\nextern uint32_t *unicode_from_alphabets[];\n" );
 #if 0
     fprintf( output, "\n/* the windows charset is a superset of latin1.  Many PC centric users think */\n" );
     fprintf( output, "/*  IT is the standard charset for the web and try to use &#153; for &#2122; */\n" );
     fprintf( output, "/* so even if we expect latin1, let's check for windows too, can't hurt. */\n" );
-    fprintf( output, "unichar_t *unicode_from_alphabets[]={\n" );
+    fprintf( output, "uint32_t *unicode_from_alphabets[]={\n" );
     fprintf( output, "    unicode_from_win, 0,0, unicode_from_win, \n" );
 #else
-    fprintf( output, "unichar_t *unicode_from_alphabets[]={\n" );
-    fprintf( output, "    (unichar_t *) unicode_from_win, 0,0,\n    (unichar_t *) unicode_from_i8859_1, \n" );
+    fprintf( output, "uint32_t *unicode_from_alphabets[]={\n" );
+    fprintf( output, "    (uint32_t *) unicode_from_win, 0,0,\n    (uint32_t *) unicode_from_i8859_1, \n" );
 #endif
     for ( j=1; alphabets[j]!=NULL; ++j )
-	fprintf( output, "    (unichar_t *) unicode_from_%s,\n", alnames[j] );
-    fprintf( output, "    (unichar_t *) unicode_from_%s,\t/* Place holder for user-defined map */\n", alnames[0] );
+	fprintf( output, "    (uint32_t *) unicode_from_%s,\n", alnames[j] );
+    fprintf( output, "    (uint32_t *) unicode_from_%s,\t/* Place holder for user-defined map */\n", alnames[0] );
     fprintf( output, "    0\n" );
     fprintf( output, "};\n" );
     fprintf( header, "extern struct charmap *alphabets_from_unicode[];\n" );
@@ -433,8 +433,8 @@ static int dumpjis(FILE *output,FILE *header) {
     FILE *file;
     int i,j,k, first, last;
     long _orig, _unicode;
-    unichar_t unicode208[94*94], unicode212[94*94];
-    unichar_t *table[256], *plane;
+    uint32_t unicode208[94*94], unicode212[94*94];
+    uint32_t *table[256], *plane;
     char buffer[400+1];
 
     memset(table,0,sizeof(table));
@@ -473,7 +473,7 @@ return( 4 );
 	continue;
 	    }
 	    if ( table[_unicode>>8]==NULL )
-		if ((table[_unicode>>8] = calloc(256,sizeof(unichar_t)))==NULL) {
+		if ((table[_unicode>>8] = calloc(256,sizeof(uint32_t)))==NULL) {
 		    fprintf( stderr, NoMoreMemory );
 		    fclose(file);
 		    for ( k=0; k<256; ++k ) {
@@ -543,7 +543,7 @@ return( 4 );
 	continue;
 	    }
 	    if ( table[_unicode>>8]==NULL )
-		if ((table[_unicode>>8] = calloc(256,sizeof(unichar_t)))==NULL) {
+		if ((table[_unicode>>8] = calloc(256,sizeof(uint32_t)))==NULL) {
 		    fprintf( stderr, NoMoreMemory );
 		    fclose(file);
 		    for ( k=0; k<256; ++k ) {
@@ -584,8 +584,8 @@ return( 3 );
     }
 
     j=0;
-    fprintf( header, "extern const unichar_t unicode_from_%s[];\n", cjknames[j] );
-    fprintf( output, "const unichar_t unicode_from_%s[] = {\n", cjknames[j] );
+    fprintf( header, "extern const uint32_t unicode_from_%s[];\n", cjknames[j] );
+    fprintf( output, "const uint32_t unicode_from_%s[] = {\n", cjknames[j] );
     for ( i=0; i<sizeof(unicode208)/sizeof(unicode208[0]); i+=8 ) {
 	fprintf( output, "  0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x,",
 		unicode208[i], unicode208[i+1], unicode208[i+2], unicode208[i+3],
@@ -596,8 +596,8 @@ return( 3 );
 	    unicode208[i], unicode208[i+1], unicode208[i+2], unicode208[i+3],
 	    unicode208[i+4], unicode208[i+5], unicode208[i+6], unicode208[i+7]);
     j=1;
-    fprintf( header, "extern const unichar_t unicode_from_%s[];\n", cjknames[j] );
-    fprintf( output, "const unichar_t unicode_from_%s[] = {\n", cjknames[j] );
+    fprintf( header, "extern const uint32_t unicode_from_%s[];\n", cjknames[j] );
+    fprintf( output, "const uint32_t unicode_from_%s[] = {\n", cjknames[j] );
     for ( i=0; i<sizeof(unicode212)/sizeof(unicode212[0]); i+=8 ) {
 	fprintf( output, "  0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x,",
 		unicode212[i], unicode212[i+1], unicode212[i+2], unicode212[i+3],
@@ -634,7 +634,7 @@ return( 3 );
 	    fprintf( output, "    u_allzeros,\n" );
     fprintf( output, "};\n\n" );
     fprintf( header, "extern struct charmap2 jis_from_unicode;\n" );
-    fprintf( output, "struct charmap2 jis_from_unicode = { %d, %d, (unsigned short **) jis_from_unicode_, (unichar_t *) unicode_from_%s };\n\n",
+    fprintf( output, "struct charmap2 jis_from_unicode = { %d, %d, (unsigned short **) jis_from_unicode_, (uint32_t *) unicode_from_%s };\n\n",
 	    first, last, cjknames[j]);
 
     for ( k=first; k<=last; ++k )
@@ -646,8 +646,8 @@ static int dumpbig5(FILE *output,FILE *header) {
     FILE *file;
     int i,j,k, first, last;
     long _orig, _unicode;
-    unichar_t unicode[0x6000];
-    unichar_t *table[256], *plane;
+    uint32_t unicode[0x6000];
+    uint32_t *table[256], *plane;
     char buffer[400+1];
 
     j = 2;				/* load info from ac15/cid2code.txt */
@@ -704,7 +704,7 @@ return( 4 );
 	    }
 	    unicode[_orig-0xa100] = _unicode;
 	    if ( table[_unicode>>8]==NULL )
-		if ((table[_unicode>>8] = calloc(256,sizeof(unichar_t)))==NULL) {
+		if ((table[_unicode>>8] = calloc(256,sizeof(uint32_t)))==NULL) {
 		    fprintf( stderr, NoMoreMemory );
 		    fclose(file);
 		    for ( k=0; k<256; ++k ) {
@@ -734,8 +734,8 @@ return( 3 );
 	fclose(file);
 
 	fprintf( header, "/* Subtract 0xa100 before indexing this array */\n" );
-	fprintf( header, "extern const unichar_t unicode_from_%s[];\n", cjknames[j] );
-	fprintf( output, "const unichar_t unicode_from_%s[] = {\n", cjknames[j] );
+	fprintf( header, "extern const uint32_t unicode_from_%s[];\n", cjknames[j] );
+	fprintf( output, "const uint32_t unicode_from_%s[] = {\n", cjknames[j] );
 	for ( i=0; i<sizeof(unicode)/sizeof(unicode[0]); i+=8 ) {
 	    fprintf( output, "  0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x,",
 		    unicode[i], unicode[i+1], unicode[i+2], unicode[i+3],
@@ -772,7 +772,7 @@ return( 3 );
 		fprintf( output, "    u_allzeros,\n" );
 	fprintf( output, "};\n\n" );
 	fprintf( header, "extern struct charmap2 %s_from_unicode;\n", cjknames[j]);
-	fprintf( output, "struct charmap2 %s_from_unicode = { %d, %d, (unsigned short **) %s_from_unicode_, (unichar_t *) unicode_from_%s };\n\n",
+	fprintf( output, "struct charmap2 %s_from_unicode = { %d, %d, (unsigned short **) %s_from_unicode_, (uint32_t *) unicode_from_%s };\n\n",
 		cjknames[j], first, last, cjknames[j], cjknames[j]);
 
 	for ( k=first; k<=last; ++k )
@@ -785,8 +785,8 @@ static int dumpbig5hkscs(FILE *output,FILE *header) {
     FILE *file;
     int i,j,k, first, last;
     long _orig, _unicode;
-    unichar_t unicode[0x8000];
-    unichar_t *table[256], *plane;
+    uint32_t unicode[0x8000];
+    uint32_t *table[256], *plane;
     char buffer[400+1];
 
     j=5;				/* load info from Big5HKSCS.txt */
@@ -823,7 +823,7 @@ return( 4 );
 	    }
 	    unicode[_orig-0x8100] = _unicode;
 	    if ( table[_unicode>>8]==NULL )
-		if ((table[_unicode>>8] = calloc(256,sizeof(unichar_t)))==NULL) {
+		if ((table[_unicode>>8] = calloc(256,sizeof(uint32_t)))==NULL) {
 		    fprintf( stderr, NoMoreMemory );
 		    fclose(file);
 		    for ( k=0; k<256; ++k ) {
@@ -853,8 +853,8 @@ return( 3 );
 	fclose(file);
 
 	fprintf( header, "/* Subtract 0x8100 before indexing this array */\n" );
-	fprintf( header, "extern const unichar_t unicode_from_%s[];\n", cjknames[j] );
-	fprintf( output, "const unichar_t unicode_from_%s[] = {\n", cjknames[j] );
+	fprintf( header, "extern const uint32_t unicode_from_%s[];\n", cjknames[j] );
+	fprintf( output, "const uint32_t unicode_from_%s[] = {\n", cjknames[j] );
 	for ( i=0; i<sizeof(unicode)/sizeof(unicode[0]); i+=8 ) {
 	    fprintf( output, "  0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x,",
 		    unicode[i], unicode[i+1], unicode[i+2], unicode[i+3],
@@ -891,7 +891,7 @@ return( 3 );
 		fprintf( output, "    u_allzeros,\n" );
 	fprintf( output, "};\n\n" );
 	fprintf( header, "extern struct charmap2 %s_from_unicode;\n", cjknames[j]);
-	fprintf( output, "struct charmap2 %s_from_unicode = { %d, %d, (unsigned short **) %s_from_unicode_, (unichar_t *) unicode_from_%s };\n\n",
+	fprintf( output, "struct charmap2 %s_from_unicode = { %d, %d, (unsigned short **) %s_from_unicode_, (uint32_t *) unicode_from_%s };\n\n",
 		cjknames[j], first, last, cjknames[j], cjknames[j]);
 
 	for ( k=first; k<=last; ++k )
@@ -904,8 +904,8 @@ static int dumpWansung(FILE *output,FILE *header) {
     FILE *file;
     int i,j,k, first, last;
     long _orig, _unicode, _johab;
-    unichar_t unicode[94*94], junicode[0x7c00];
-    unichar_t *table[256], *plane, *jtable[256];
+    uint32_t unicode[94*94], junicode[0x7c00];
+    uint32_t *table[256], *plane, *jtable[256];
     char buffer[400+1];
     /* Johab high=[0x84-0xf9] low=[0x31-0xfe] */
 
@@ -957,7 +957,7 @@ return( 4 );
 		}
 		if ( _orig>=0x2121 && (_orig&0xff)>=0x21 && _orig<=0x7e7e && (_orig&0xff)<=0x7e ) {
 		    if ( table[_unicode>>8]==NULL )
-			if ((table[_unicode>>8] = calloc(256,sizeof(unichar_t)))==NULL) {
+			if ((table[_unicode>>8] = calloc(256,sizeof(uint32_t)))==NULL) {
 			    fprintf( stderr, NoMoreMemory );
 			    fclose(file);
 			    for ( k=0; k<256; ++k ) {
@@ -997,7 +997,7 @@ return( 3 );
 		}
 		if ( _johab>=0x8431 && _johab<=0xf9fe ) {
 		    if ( jtable[_unicode>>8]==NULL )
-			if ((jtable[_unicode>>8] = calloc(256,sizeof(unichar_t)))==NULL) {
+			if ((jtable[_unicode>>8] = calloc(256,sizeof(uint32_t)))==NULL) {
 			    fprintf( stderr, NoMoreMemory );
 			    fclose(file);
 			    for ( k=0; k<256; ++k ) {
@@ -1035,8 +1035,8 @@ return( 3 );
 	}
 
 	/* First Wansung */
-	fprintf( header, "extern const unichar_t unicode_from_%s[];\n", cjknames[j] );
-	fprintf( output, "const unichar_t unicode_from_%s[] = {\n", cjknames[j] );
+	fprintf( header, "extern const uint32_t unicode_from_%s[];\n", cjknames[j] );
+	fprintf( output, "const uint32_t unicode_from_%s[] = {\n", cjknames[j] );
 	for ( i=0; i<sizeof(unicode)/sizeof(unicode[0]); i+=8 ) {
 	    fprintf( output, "  0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x,",
 		    unicode[i], unicode[i+1], unicode[i+2], unicode[i+3],
@@ -1073,7 +1073,7 @@ return( 3 );
 		fprintf( output, "    u_allzeros,\n" );
 	fprintf( output, "};\n\n" );
 	fprintf( header, "extern struct charmap2 %s_from_unicode;\n", cjknames[j]);
-	fprintf( output, "struct charmap2 %s_from_unicode = { %d, %d, (unsigned short **) %s_from_unicode_, (unichar_t *) unicode_from_%s };\n\n",
+	fprintf( output, "struct charmap2 %s_from_unicode = { %d, %d, (unsigned short **) %s_from_unicode_, (uint32_t *) unicode_from_%s };\n\n",
 		cjknames[j], first, last, cjknames[j], cjknames[j]);
 
 	if ( first==-1 )
@@ -1085,8 +1085,8 @@ return( 3 );
 
 	/* Then Johab */
 	fprintf( header, "/* Subtract 0x8400 before indexing this array */\n" );
-	fprintf( header, "extern const unichar_t unicode_from_johab[];\n" );
-	fprintf( output, "const unichar_t unicode_from_johab[] = {\n" );
+	fprintf( header, "extern const uint32_t unicode_from_johab[];\n" );
+	fprintf( output, "const uint32_t unicode_from_johab[] = {\n" );
 	for ( i=0; i<sizeof(junicode)/sizeof(junicode[0]); i+=8 ) {
 	    fprintf( output, "  0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x,",
 		    junicode[i], junicode[i+1], junicode[i+2], junicode[i+3],
@@ -1123,7 +1123,7 @@ return( 3 );
 		fprintf( output, "    u_allzeros,\n" );
 	fprintf( output, "};\n\n" );
 	fprintf( header, "extern struct charmap2 johab_from_unicode;\n" );
-	fprintf( output, "struct charmap2 johab_from_unicode = { %d, %d, (unsigned short **) johab_from_unicode_, (unichar_t *) unicode_from_johab };\n\n",
+	fprintf( output, "struct charmap2 johab_from_unicode = { %d, %d, (unsigned short **) johab_from_unicode_, (uint32_t *) unicode_from_johab };\n\n",
 		first, last );
 
 	if ( first==-1 )
@@ -1141,8 +1141,8 @@ static int dumpgb2312(FILE *output,FILE *header) {
     FILE *file;
     int i,j,k, first, last;
     long _orig, _unicode;
-    unichar_t unicode[94*94];
-    unichar_t *table[256], *plane;
+    uint32_t unicode[94*94];
+    uint32_t *table[256], *plane;
     char buffer[400+1];
 
     buffer[400]='\0';
@@ -1181,7 +1181,7 @@ return( 4 );
 	    continue;
 		}
 		if ( table[_unicode>>8]==NULL )
-		    if ((table[_unicode>>8] = calloc(256,sizeof(unichar_t)))==NULL) {
+		    if ((table[_unicode>>8] = calloc(256,sizeof(uint32_t)))==NULL) {
 			fprintf( stderr, NoMoreMemory );
 			fclose(file);
 			for ( k=0; k<256; ++k ) {
@@ -1214,8 +1214,8 @@ return( 3 );
 	    fclose(file);
 	}
 
-	fprintf( header, "extern const unichar_t unicode_from_%s[];\n", cjknames[j] );
-	fprintf( output, "const unichar_t unicode_from_%s[] = {\n", cjknames[j] );
+	fprintf( header, "extern const uint32_t unicode_from_%s[];\n", cjknames[j] );
+	fprintf( output, "const uint32_t unicode_from_%s[] = {\n", cjknames[j] );
 	for ( i=0; i<sizeof(unicode)/sizeof(unicode[0]); i+=8 ) {
 	    fprintf( output, "  0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x,",
 		    unicode[i], unicode[i+1], unicode[i+2], unicode[i+3],
@@ -1252,7 +1252,7 @@ return( 3 );
 		fprintf( output, "    u_allzeros,\n" );
 	fprintf( output, "};\n\n" );
 	fprintf( header, "extern struct charmap2 %s_from_unicode;\n", cjknames[j]);
-	fprintf( output, "struct charmap2 %s_from_unicode = { %d, %d, (unsigned short **) %s_from_unicode_, (unichar_t *) unicode_from_%s };\n\n",
+	fprintf( output, "struct charmap2 %s_from_unicode = { %d, %d, (unsigned short **) %s_from_unicode_, (uint32_t *) unicode_from_%s };\n\n",
 		cjknames[j], first, last, cjknames[j], cjknames[j]);
 
 	if ( first==-1 )
@@ -1337,8 +1337,8 @@ return 1;
     fprintf( header, "#include <config.h>\n" );
 
     fprintf( header, "#include \"basics.h\"\n\n" );
-    fprintf( header, "struct charmap {\n    int first, last;\n    unsigned char **table;\n    unichar_t *totable;\n};\n" );
-    fprintf( header, "struct charmap2 {\n    int first, last;\n    unsigned short **table;\n    unichar_t *totable;\n};\n\n" );
+    fprintf( header, "struct charmap {\n    int first, last;\n    unsigned char **table;\n    uint32_t *totable;\n};\n" );
+    fprintf( header, "struct charmap2 {\n    int first, last;\n    unsigned short **table;\n    uint32_t *totable;\n};\n\n" );
 
     if ( (i=dumpalphas(output,header)) ) { /* load files listed in alphabets[] */
 	fclose(header);
@@ -1372,7 +1372,7 @@ return 1;
 
     /* This really should be in make ctype, but putting it there causes all */
     /*  sorts of build problems in things when they happen out of order */
-    fprintf( header,"\nextern const unichar_t *const * const unicode_alternates[];\n" );
+    fprintf( header,"\nextern const uint32_t *const * const unicode_alternates[];\n" );
 
     fclose(output); fclose(header);
 

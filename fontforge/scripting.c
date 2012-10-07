@@ -98,7 +98,7 @@ static char *script2latin1_copy(const char *str) {
     if ( !use_utf8_in_script )
 return( copy(str));
     else {
-	unichar_t *t = utf82u_copy(str);
+	uint32_t *t = utf82u_copy(str);
 	char *ret = cu_copy(t);
 	free(t);
 return( ret );
@@ -428,7 +428,7 @@ static void bPostNotice(Context *c)
     {
       if ( !use_utf8_in_script )
 	{
-	  unichar_t *t1 = x_u8_to_u32 (u8_force_valid (loc));
+	  uint32_t *t1 = x_u8_to_u32 (u8_force_valid (loc));
 	  loc = u2utf8_copy(t1);
 	  free(t1);
 	}
@@ -2308,7 +2308,7 @@ static void bPrintFont(Context *c) {
     int type, i, inlinesample = false;
     int32 *pointsizes=NULL;
     char *samplefile=NULL, *output=NULL;
-    unichar_t *sample=NULL;
+    uint32_t *sample=NULL;
     char *t; char *locfilename=NULL;
 
     if ( c->a.argc!=2 && c->a.argc!=3 && c->a.argc!=4 && c->a.argc!=5 )
@@ -6398,7 +6398,7 @@ return;
 
 static void bAddAnchorClass(Context *c) {
     AnchorClass *ac, *t;
-    unichar_t *ustr;
+    uint32_t *ustr;
     SplineFont *sf = c->curfv->sf;
 
     if ( sf->cidmaster ) sf = sf->cidmaster;

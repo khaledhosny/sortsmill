@@ -177,7 +177,7 @@ return( true );
 }
 
 
-static unichar_t wildimg[] = { '*', '.', '{',
+static uint32_t wildimg[] = { '*', '.', '{',
 #ifndef _NO_LIBUNGIF
 'g','i','f',',',
 #endif
@@ -193,7 +193,7 @@ static unichar_t wildimg[] = { '*', '.', '{',
 'j','p','g',',',
 #endif
 'x','p','m',',', 'x','b','m',',', 'b','m','p', '}', '\0' };
-static unichar_t wildtemplate[] = { '{','u','n','i',',','u',',','c','i','d',',','e','n','c','}','[','0','-','9','a','-','f','A','-','F',']','*', '.', '{',
+static uint32_t wildtemplate[] = { '{','u','n','i',',','u',',','c','i','d',',','e','n','c','}','[','0','-','9','a','-','f','A','-','F',']','*', '.', '{',
 #ifndef _NO_LIBUNGIF
 'g','i','f',',',
 #endif
@@ -206,32 +206,32 @@ static unichar_t wildtemplate[] = { '{','u','n','i',',','u',',','c','i','d',',',
 #endif
 'x','p','m',',', 'x','b','m',',', 'b','m','p', '}', '\0' };
 /* Hmm. Mac seems to use the extension 'art' for eps files sometimes */
-static unichar_t wildepstemplate[] = { '{','u','n','i',',','u',',','c','i','d',',','e','n','c','}','[','0','-','9','a','-','f','A','-','F',']','*', '.', '{', 'p','s',',', 'e','p','s',',','a','r','t','}',  0 };
-static unichar_t wildpdftemplate[] = { '{','u','n','i',',','u',',','c','i','d',',','e','n','c','}','[','0','-','9','a','-','f','A','-','F',']','*', '.', 'p', 'd','f',  0 };
-static unichar_t wildsvgtemplate[] = { '{','u','n','i',',','u',',','c','i','d',',','e','n','c','}','[','0','-','9','a','-','f','A','-','F',']','*', '.', 's', 'v','g',  0 };
-static unichar_t wildgliftemplate[] = { '{','u','n','i',',','u',',','c','i','d',',','e','n','c','}','[','0','-','9','a','-','f','A','-','F',']','*', '.', 'g', 'l','i','f',  0 };
-static unichar_t wildplatetemplate[] = { '{','u','n','i',',','u',',','c','i','d',',','e','n','c','}','[','0','-','9','a','-','f','A','-','F',']','*', '.', 'p','l','a','t','e',  0 };
-static unichar_t wildps[] = { '*', '.', '{', 'p','s',',', 'e','p','s',',', 'a','r','t','}', '\0' };
-static unichar_t wildpdf[] = { '*', '.', 'p','d','f',  '\0' };
-static unichar_t wildsvg[] = { '*', '.', 's','v','g',  '\0' };
-static unichar_t wildplate[] = { '*', '.', 'p','l','a','t','e',  '\0' };
-static unichar_t wildglif[] = { '*', '.', 'g','l','i','f',  '\0' };
-static unichar_t wildfig[] = { '*', '.', '{', 'f','i','g',',','x','f','i','g','}',  '\0' };
-static unichar_t wildbdf[] = { '*', '.', 'b', 'd','{', 'f', ',','f','.','g','z',',','f','.','Z',',','f','.','b','z','2','}',  '\0' };
-static unichar_t wildpcf[] = { '*', '.', 'p', '{', 'c',',','m','}','{', 'f', ',','f','.','g','z',',','f','.','Z',',','f','.','b','z','2','}',  '\0' };
-static unichar_t wildttf[] = { '*', '.', '{', 't', 't','f',',','o','t','f',',','o','t','b',',','t','t','c','}',  '\0' };
-static unichar_t wildpk[] = { '*', '{', 'p', 'k', ',', 'g', 'f', '}',  '\0' };		/* pk fonts can have names like cmr10.300pk, not a normal extension */
-static unichar_t wildmac[] = { '*', '{', 'b', 'i', 'n', ',', 'h', 'q', 'x', ',', 'd','f','o','n','t', '}',  '\0' };
-static unichar_t wildwin[] = { '*', '{', 'f', 'o', 'n', ',', 'f', 'n', 't', '}',  '\0' };
-static unichar_t wildpalm[] = { '*', 'p', 'd', 'b',  '\0' };
-static unichar_t *wildchr[] = { wildimg, wildps, wildpdf,
+static uint32_t wildepstemplate[] = { '{','u','n','i',',','u',',','c','i','d',',','e','n','c','}','[','0','-','9','a','-','f','A','-','F',']','*', '.', '{', 'p','s',',', 'e','p','s',',','a','r','t','}',  0 };
+static uint32_t wildpdftemplate[] = { '{','u','n','i',',','u',',','c','i','d',',','e','n','c','}','[','0','-','9','a','-','f','A','-','F',']','*', '.', 'p', 'd','f',  0 };
+static uint32_t wildsvgtemplate[] = { '{','u','n','i',',','u',',','c','i','d',',','e','n','c','}','[','0','-','9','a','-','f','A','-','F',']','*', '.', 's', 'v','g',  0 };
+static uint32_t wildgliftemplate[] = { '{','u','n','i',',','u',',','c','i','d',',','e','n','c','}','[','0','-','9','a','-','f','A','-','F',']','*', '.', 'g', 'l','i','f',  0 };
+static uint32_t wildplatetemplate[] = { '{','u','n','i',',','u',',','c','i','d',',','e','n','c','}','[','0','-','9','a','-','f','A','-','F',']','*', '.', 'p','l','a','t','e',  0 };
+static uint32_t wildps[] = { '*', '.', '{', 'p','s',',', 'e','p','s',',', 'a','r','t','}', '\0' };
+static uint32_t wildpdf[] = { '*', '.', 'p','d','f',  '\0' };
+static uint32_t wildsvg[] = { '*', '.', 's','v','g',  '\0' };
+static uint32_t wildplate[] = { '*', '.', 'p','l','a','t','e',  '\0' };
+static uint32_t wildglif[] = { '*', '.', 'g','l','i','f',  '\0' };
+static uint32_t wildfig[] = { '*', '.', '{', 'f','i','g',',','x','f','i','g','}',  '\0' };
+static uint32_t wildbdf[] = { '*', '.', 'b', 'd','{', 'f', ',','f','.','g','z',',','f','.','Z',',','f','.','b','z','2','}',  '\0' };
+static uint32_t wildpcf[] = { '*', '.', 'p', '{', 'c',',','m','}','{', 'f', ',','f','.','g','z',',','f','.','Z',',','f','.','b','z','2','}',  '\0' };
+static uint32_t wildttf[] = { '*', '.', '{', 't', 't','f',',','o','t','f',',','o','t','b',',','t','t','c','}',  '\0' };
+static uint32_t wildpk[] = { '*', '{', 'p', 'k', ',', 'g', 'f', '}',  '\0' };		/* pk fonts can have names like cmr10.300pk, not a normal extension */
+static uint32_t wildmac[] = { '*', '{', 'b', 'i', 'n', ',', 'h', 'q', 'x', ',', 'd','f','o','n','t', '}',  '\0' };
+static uint32_t wildwin[] = { '*', '{', 'f', 'o', 'n', ',', 'f', 'n', 't', '}',  '\0' };
+static uint32_t wildpalm[] = { '*', 'p', 'd', 'b',  '\0' };
+static uint32_t *wildchr[] = { wildimg, wildps, wildpdf,
 #ifndef _NO_LIBXML
 wildsvg,
 wildglif,
 #endif
 wildplate,
 wildfig };
-static unichar_t *wildfnt[] = { wildbdf, wildttf, wildpk, wildpcf, wildmac,
+static uint32_t *wildfnt[] = { wildbdf, wildttf, wildpk, wildpcf, wildmac,
 wildwin, wildpalm,
 wildimg, wildtemplate, wildps, wildepstemplate,
 wildpdf, wildpdftemplate,
@@ -302,7 +302,7 @@ return( oldflags );
 /* GT: translated, and then broken into lines by hand. I'm sure it would */
 /* GT: be better to specify this all as one string, but my widgets won't support */
 /* GT: that */
-    label[k].text = (unichar_t *) _("FontForge has some bugs in its remove overlap\n"
+    label[k].text = (uint32_t *) _("FontForge has some bugs in its remove overlap\n"
 				    "function which may cause you problems, so\n"
 				    "I give you the option of turning it off.\n"
 				    "Leave it on if possible though, it is useful.");
@@ -314,7 +314,7 @@ return( oldflags );
     hvarray[0][0] = &gcd[k-1]; hvarray[0][1] = NULL;
 
     cd_k = k;
-    label[k].text = (unichar_t *) _("_Correct Direction");
+    label[k].text = (uint32_t *) _("_Correct Direction");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -325,32 +325,32 @@ return( oldflags );
 
 #if 0
     rm_k = k;
-    label[k].text = (unichar_t *) _("Cleanup Self Intersect");
+    label[k].text = (uint32_t *) _("Cleanup Self Intersect");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = gcd[k-1].gd.pos.x; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+15;
     gcd[k].gd.flags = gg_enabled | gg_visible | gg_utf8_popup |
 	    (oldflags&sf_removeoverlap?gg_cb_on:0);
-    gcd[k].gd.popup_msg = (unichar_t *) _("When FontForge detects that an expanded stroke will self-intersect,\nthen setting this option will cause it to try to make things nice\nby removing the intersections");
+    gcd[k].gd.popup_msg = (uint32_t *) _("When FontForge detects that an expanded stroke will self-intersect,\nthen setting this option will cause it to try to make things nice\nby removing the intersections");
     gcd[k++].creator = GCheckBoxCreate;
     hvarray[2][0] = &gcd[k-1]; hvarray[2][1] = NULL;
 #endif
 
     he_k = k;
-    label[k].text = (unichar_t *) _("Handle Erasers");
+    label[k].text = (uint32_t *) _("Handle Erasers");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = gcd[k-1].gd.pos.x; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+15;
     gcd[k].gd.flags = gg_enabled | gg_visible | gg_utf8_popup |
 	    (oldflags&sf_handle_eraser?gg_cb_on:0);
-    gcd[k].gd.popup_msg = (unichar_t *) _("Certain programs use pens with white ink as erasers\nIf you select (blacken) this checkbox, FontForge will\nattempt to simulate that.");
+    gcd[k].gd.popup_msg = (uint32_t *) _("Certain programs use pens with white ink as erasers\nIf you select (blacken) this checkbox, FontForge will\nattempt to simulate that.");
     gcd[k++].creator = GCheckBoxCreate;
     hvarray[2][0] = &gcd[k-1]; hvarray[2][1] = NULL;
     hvarray[3][0] = GCD_Glue; hvarray[3][1] = NULL;
 
     gcd[k].gd.pos.x = (PSSF_Width-GIntGetResource(_NUM_Buttonsize))/2; gcd[k].gd.pos.y = PSSF_Height-34;
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    label[k].text = (unichar_t *) _("_OK");
+    label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -408,36 +408,36 @@ struct gfc_data {
 };
 
 static GTextInfo formats[] = {
-    { (unichar_t *) N_("Image"), NULL, 0, 0, (void *) fv_image, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("EPS"), NULL, 0, 0, (void *) fv_eps, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("PDF page graphics"), NULL, 0, 0, (void *) fv_pdf, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Image"), NULL, 0, 0, (void *) fv_image, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("EPS"), NULL, 0, 0, (void *) fv_eps, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("PDF page graphics"), NULL, 0, 0, (void *) fv_pdf, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
 #ifndef _NO_LIBXML
-    { (unichar_t *) N_("SVG"), NULL, 0, 0, (void *) fv_svg, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("Glif"), NULL, 0, 0, (void *) fv_glif, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("SVG"), NULL, 0, 0, (void *) fv_svg, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Glif"), NULL, 0, 0, (void *) fv_glif, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
 #endif
-    { (unichar_t *) N_("Raph's plate files"), NULL, 0, 0, (void *) fv_plate, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("XFig"), NULL, 0, 0, (void *) fv_fig, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Raph's plate files"), NULL, 0, 0, (void *) fv_plate, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("XFig"), NULL, 0, 0, (void *) fv_fig, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     GTEXTINFO_EMPTY
 };
 
 static GTextInfo fvformats[] = {
-    { (unichar_t *) N_("BDF"), NULL, 0, 0, (void *) fv_bdf, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("TTF"), NULL, 0, 0, (void *) fv_ttf, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) NU_("ΤεΧ Bitmap Fonts"), NULL, 0, 0, (void *) fv_pk, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("PCF (pmf)"), NULL, 0, 0, (void *) fv_pcf, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("Mac Bitmap"), NULL, 0, 0, (void *) fv_mac, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("Win FON"), NULL, 0, 0, (void *) fv_win, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("palm"), NULL, 0, 0, (void *) fv_palm, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("Image"), NULL, 0, 0, (void *) fv_image, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("Image Template"), NULL, 0, 0, (void *) fv_imgtemplate, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("EPS"), NULL, 0, 0, (void *) fv_eps, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("EPS Template"), NULL, 0, 0, (void *) fv_epstemplate, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("PDF page graphics"), NULL, 0, 0, (void *) fv_pdf, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("BDF"), NULL, 0, 0, (void *) fv_bdf, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("TTF"), NULL, 0, 0, (void *) fv_ttf, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) NU_("ΤεΧ Bitmap Fonts"), NULL, 0, 0, (void *) fv_pk, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("PCF (pmf)"), NULL, 0, 0, (void *) fv_pcf, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Mac Bitmap"), NULL, 0, 0, (void *) fv_mac, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Win FON"), NULL, 0, 0, (void *) fv_win, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("palm"), NULL, 0, 0, (void *) fv_palm, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Image"), NULL, 0, 0, (void *) fv_image, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Image Template"), NULL, 0, 0, (void *) fv_imgtemplate, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("EPS"), NULL, 0, 0, (void *) fv_eps, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("EPS Template"), NULL, 0, 0, (void *) fv_epstemplate, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("PDF page graphics"), NULL, 0, 0, (void *) fv_pdf, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
 #ifndef _NO_LIBXML
-    { (unichar_t *) N_("SVG"), NULL, 0, 0, (void *) fv_svg, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("SVG Template"), NULL, 0, 0, (void *) fv_svgtemplate, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("Glif"), NULL, 0, 0, (void *) fv_glif, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("Glif Template"), NULL, 0, 0, (void *) fv_gliftemplate, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("SVG"), NULL, 0, 0, (void *) fv_svg, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("SVG Template"), NULL, 0, 0, (void *) fv_svgtemplate, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Glif"), NULL, 0, 0, (void *) fv_glif, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Glif Template"), NULL, 0, 0, (void *) fv_gliftemplate, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
 #endif
     GTEXTINFO_EMPTY
 };
@@ -445,7 +445,7 @@ static GTextInfo fvformats[] = {
 static int GFD_ImportOk(GGadget *g, GEvent *e) {
     if ( e->type==et_controlevent && e->u.control.subtype == et_buttonactivate ) {
 	struct gfc_data *d = GDrawGetUserData(GGadgetGetWindow(g));
-	unichar_t *ret = GGadgetGetTitle(d->gfc);
+	uint32_t *ret = GGadgetGetTitle(d->gfc);
 	char *temp = u2def_copy(ret);
 	int pos = GGadgetGetFirstListSelectedItem(d->format);
 	int format = (intptr_t) (GGadgetGetListItemSelected(d->format)->userdata);
@@ -553,7 +553,7 @@ static int GFD_Format(GGadget *g, GEvent *e) {
 	else {
 	    char *text;
 	    char *ae = py_ie[format-fv_pythonbase].all_extensions;
-	    unichar_t *utext;
+	    uint32_t *utext;
 	    text = xmalloc(strlen(ae)+10);
 	    if ( strchr(ae,','))
 		sprintf( text, "*.{%s}", ae );
@@ -624,9 +624,9 @@ static void _Import(CharView *cv,BitmapView *bv,FontView *fv) {
 
     if ( !done ) {
 	for ( i=0; formats[i].text!=NULL; ++i )
-	    formats[i].text = (unichar_t *) _((char *) formats[i].text);
+	    formats[i].text = (uint32_t *) _((char *) formats[i].text);
 	for ( i=0; fvformats[i].text!=NULL; ++i )
-	    fvformats[i].text = (unichar_t *) _((char *) fvformats[i].text);
+	    fvformats[i].text = (uint32_t *) _((char *) fvformats[i].text);
 	done = true;
     }
     base = cur_formats = fv==NULL?formats:fvformats;
@@ -641,11 +641,11 @@ static void _Import(CharView *cv,BitmapView *bv,FontView *fv) {
 	    cur_formats = xcalloc(extras+cnt+1,sizeof(GTextInfo));
 	    for ( cnt=0; base[cnt].text!=NULL; ++cnt ) {
 		cur_formats[cnt] = base[cnt];
-		cur_formats[cnt].text = (unichar_t *) copy( (char *) base[cnt].text );
+		cur_formats[cnt].text = (uint32_t *) copy( (char *) base[cnt].text );
 	    }
 	    for ( i=extras=0; py_ie[i].name!=NULL; ++i ) {
 		if ( py_ie[i].import!=NULL ) {
-		    cur_formats[cnt+extras].text = (unichar_t *) copy(py_ie[i].name);
+		    cur_formats[cnt+extras].text = (uint32_t *) copy(py_ie[i].name);
 		    cur_formats[cnt+extras].text_is_1byte = true;
 		    cur_formats[cnt+extras].userdata = (void *) (intptr_t) (fv_pythonbase+i);
 		    ++extras;
@@ -690,7 +690,7 @@ static void _Import(CharView *cv,BitmapView *bv,FontView *fv) {
 
     gcd[1].gd.pos.x = 12; gcd[1].gd.pos.y = 224-3; gcd[1].gd.pos.width = -1; gcd[1].gd.pos.height = 0;
     gcd[1].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    label[1].text = (unichar_t *) _("_Import");
+    label[1].text = (uint32_t *) _("_Import");
     label[1].text_is_1byte = true;
     label[1].text_in_resource = true;
     gcd[1].gd.label = &label[1];
@@ -700,7 +700,7 @@ static void _Import(CharView *cv,BitmapView *bv,FontView *fv) {
 
     gcd[2].gd.pos.x = (totwid-bs)*100/GIntGetResource(_NUM_ScaleFactor)/2; gcd[2].gd.pos.y = 224; gcd[2].gd.pos.width = -1; gcd[2].gd.pos.height = 0;
     gcd[2].gd.flags = gg_visible | gg_enabled;
-    label[2].text = (unichar_t *) _("_Filter");
+    label[2].text = (uint32_t *) _("_Filter");
     label[2].text_is_1byte = true;
     label[2].text_in_resource = true;
     gcd[2].gd.mnemonic = 'F';
@@ -711,7 +711,7 @@ static void _Import(CharView *cv,BitmapView *bv,FontView *fv) {
 
     gcd[3].gd.pos.x = -gcd[1].gd.pos.x; gcd[3].gd.pos.y = 224; gcd[3].gd.pos.width = -1; gcd[3].gd.pos.height = 0;
     gcd[3].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    label[3].text = (unichar_t *) _("_Cancel");
+    label[3].text = (uint32_t *) _("_Cancel");
     label[3].text_is_1byte = true;
     label[3].text_in_resource = true;
     gcd[3].gd.label = &label[3];
@@ -722,7 +722,7 @@ static void _Import(CharView *cv,BitmapView *bv,FontView *fv) {
 
     gcd[4].gd.pos.x = 12; gcd[4].gd.pos.y = 200; gcd[4].gd.pos.width = 0; gcd[4].gd.pos.height = 0;
     gcd[4].gd.flags = gg_visible | gg_enabled;
-    label[4].text = (unichar_t *) _("Format:");
+    label[4].text = (uint32_t *) _("Format:");
     label[4].text_is_1byte = true;
     gcd[4].gd.label = &label[4];
     gcd[4].creator = GLabelCreate;
@@ -749,7 +749,7 @@ static void _Import(CharView *cv,BitmapView *bv,FontView *fv) {
 	gcd[6].gd.flags = gg_visible | gg_enabled ;
 	if ( format==fv_pk || format==fv_image || format==fv_imgtemplate )
 	    gcd[6].gd.flags = gg_visible | gg_enabled | gg_cb_on;
-	label[6].text = (unichar_t *) _("As Background");
+	label[6].text = (uint32_t *) _("As Background");
 	label[6].text_is_1byte = true;
 	gcd[6].gd.label = &label[6];
 	gcd[6].creator = GCheckBoxCreate;

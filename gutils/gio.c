@@ -51,7 +51,7 @@ struct stdfuncs _GIO_stdfuncs = {
 };
 static struct protocols {
     int index;
-    unichar_t *proto;
+    uint32_t *proto;
     void *handle;
     void *(*dispatcher)(GIOControl *gc);
     void (*cancel)(GIOControl *gc);
@@ -61,9 +61,9 @@ static struct protocols {
 static int plen, pmax;
 typedef void *(ptread_startfunc_t)(void *);
 
-static unichar_t err501[] = { ' ','N','o','t',' ','I','m','p','l','e','m','e','n','t','e','d', '\0' };
+static uint32_t err501[] = { ' ','N','o','t',' ','I','m','p','l','e','m','e','n','t','e','d', '\0' };
 
-static int AddProtocol(unichar_t *prefix,int len) {
+static int AddProtocol(uint32_t *prefix,int len) {
 
     if ( plen>=pmax ) {
 	pmax += 20;		/* We're never going to support 20 protocols? */
@@ -90,7 +90,7 @@ return( true );
 }
 
 static void GIOdispatch(GIOControl *gc, enum giofuncs gf) {
-    unichar_t *temp, *pt, *tpt;
+    uint32_t *temp, *pt, *tpt;
     int i;
 
     gc->gf = gf;
@@ -257,7 +257,7 @@ void GIOclose(GIOControl *gc) {
     GIOcancel(gc);
 }
 
-GIOControl *GIOCreate(unichar_t *path,void *userdata,
+GIOControl *GIOCreate(uint32_t *path,void *userdata,
 	void (*receivedata)(struct giocontrol *),
 	void (*receiveerror)(struct giocontrol *)) {
     GIOControl *gc = (GIOControl *) xcalloc(1,sizeof(GIOControl));
@@ -273,7 +273,7 @@ void GIOSetDefAuthorizer(int32 (*getauth)(struct giocontrol *)) {
     _GIO_stdfuncs.getauth = getauth;
 }
 
-void GIOSetUserAgent(unichar_t *agent) {
+void GIOSetUserAgent(uint32_t *agent) {
     free( _GIO_stdfuncs.useragent );
     _GIO_stdfuncs.useragent = cu_copy(agent);
 }

@@ -126,7 +126,7 @@ unsigned char mynumericvalue[MAXC];
 unsigned short mymirror[MAXC];
 unsigned int flags[MAXC];			/* 32 binary flags for each unicode.org character */
 unsigned int flags2[MAXC];
-unichar_t alts[MAXC][MAXA+1];
+uint32_t alts[MAXC][MAXA+1];
 unsigned int assignedcodepoints[0x120000/32];	/* 32 characters represented per each int value */
 
 const char GeneratedFileMessage[] = "\n/* This file was generated using the program 'makeutype' */\n\n";
@@ -1019,7 +1019,7 @@ return;
 
     for ( i=32; i<MAXC; ++i ) {
 	if ( alts[i][0]!=0 ) {
-	    fprintf( file, "static const unichar_t str_%x[] = { 0x%04x, ", i, alts[i][0] );
+	    fprintf( file, "static const uint32_t str_%x[] = { 0x%04x, ", i, alts[i][0] );
 	    for ( j=1; j<MAXA && alts[i][j]!=0; ++j )
 		fprintf( file, "0x%04x, ", alts[i][j] );
 	    fprintf( file, "0 };\n" );
@@ -1027,11 +1027,11 @@ return;
     }
     fprintf( file, "\n" );
 
-    fprintf( file, "static const unichar_t *const up_allzeros[256] = { NULL };\n\n" );
+    fprintf( file, "static const uint32_t *const up_allzeros[256] = { NULL };\n\n" );
 
     for ( i=32; i<0xffff; ++i ) {
 	if ( alts[i][0]!=0 ) {
-	    fprintf( file, "static const unichar_t * const tab_%x[] = {\n", i>>8 );
+	    fprintf( file, "static const uint32_t * const tab_%x[] = {\n", i>>8 );
 	    for ( j=(i&0xff00); j<=(i&0xff00)+0xff; ++j ) {
 		if ( alts[j][0]==0 )
 		    fprintf( file, "0, " );
@@ -1043,7 +1043,7 @@ return;
 	}
     }
 
-    fprintf( file, "const unichar_t *const * const unicode_alternates[] = {\n" );
+    fprintf( file, "const uint32_t *const * const unicode_alternates[] = {\n" );
     for ( i=0; i<=0xff; ++i ) {
 	if ( AnyAlts(i) )
 	    fprintf(file, "tab_%x,\n", i );
@@ -1058,7 +1058,7 @@ return;
 	/*  best if done elsewhere */
     file = fopen("chardata.h","a");
     fprintf( file, GeneratedFileMessage );
-    fprintf( file,"\nextern const unichar_t *const * const unicode_alternates[];\n" );
+    fprintf( file,"\nextern const uint32_t *const * const unicode_alternates[];\n" );
     fclose(file);
 #endif
 }

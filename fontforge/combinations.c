@@ -36,19 +36,19 @@
 
 
 GTextInfo sizes[] = {
-    { (unichar_t *) "24", NULL, 0, 0, (void *) 24, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "36", NULL, 0, 0, (void *) 36, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "48", NULL, 0, 0, (void *) 48, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "72", NULL, 0, 0, (void *) 72, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "96", NULL, 0, 0, (void *) 96, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) "200", NULL, 0, 0, (void *) 200, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "24", NULL, 0, 0, (void *) 24, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "36", NULL, 0, 0, (void *) 36, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "48", NULL, 0, 0, (void *) 48, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "72", NULL, 0, 0, (void *) 72, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "96", NULL, 0, 0, (void *) 96, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) "200", NULL, 0, 0, (void *) 200, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 enum sortby { sb_first, sb_second, sb_kern };
 GTextInfo sortby[] = {
-    { (unichar_t *) N_("First Char"), NULL, 0, 0, (void *) sb_first, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Second Char"), NULL, 0, 0, (void *) sb_second, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Kern Size"), NULL, 0, 0, (void *) sb_kern, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("First Char"), NULL, 0, 0, (void *) sb_first, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Second Char"), NULL, 0, 0, (void *) sb_second, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Kern Size"), NULL, 0, 0, (void *) sb_kern, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 
@@ -106,7 +106,7 @@ void SFShowLigatures(SplineFont *sf,SplineChar *searchfor) {
 	}
 	if ( choices!=NULL )
     break;
-	choices = xmalloc((cnt+2)*sizeof(unichar_t *));
+	choices = xmalloc((cnt+2)*sizeof(uint32_t *));
 	where = xmalloc((cnt+1)*sizeof(int));
 	if ( cnt==0 ) {
 	    choices[0] = copy("<No Ligatures>");
@@ -410,7 +410,7 @@ return;
     AnchorRefigure(kpd);
 }
 
-static void KPScrollTo(KPData *kpd, unichar_t uch, enum sortby sort) {
+static void KPScrollTo(KPData *kpd, uint32_t uch, enum sortby sort) {
     int i;
 
     if ( sort==sb_first ) {
@@ -897,18 +897,18 @@ static void KPMenuACM(GWindow gw,struct gmenuitem *mi,GEvent *e) {
 }
 
 static GMenuItem kernmenu[] = {
-    { { (unichar_t *) N_("C_lear"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 'N' }, '\177', 0, NULL, NULL, KPMenuRemove, 0 },
-    { { (unichar_t *) N_("Kern Pair Closeup"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 'N' }, '\0', 0, NULL, NULL, KPMenuKPCloseup, 0 },
+    { { (uint32_t *) N_("C_lear"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 'N' }, '\177', 0, NULL, NULL, KPMenuRemove, 0 },
+    { { (uint32_t *) N_("Kern Pair Closeup"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 'N' }, '\0', 0, NULL, NULL, KPMenuKPCloseup, 0 },
     GMENUITEM_EMPTY
 };
 
 static GMenuItem acmenu[] = {
-    { { (unichar_t *) N_("Anchor Control for Base"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 'N' }, '\0', 0, NULL, NULL, KPMenuACB, 0 },
-    { { (unichar_t *) N_("Anchor Control for Mark"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 'N' }, '\0', 0, NULL, NULL, KPMenuACM, 0 },
+    { { (uint32_t *) N_("Anchor Control for Base"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 'N' }, '\0', 0, NULL, NULL, KPMenuACB, 0 },
+    { { (uint32_t *) N_("Anchor Control for Mark"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 'N' }, '\0', 0, NULL, NULL, KPMenuACM, 0 },
     GMENUITEM_EMPTY
 };
 
-static unichar_t upopupbuf[100];
+static uint32_t upopupbuf[100];
 
 static int kpdv_e_h(GWindow gw, GEvent *event) {
     KPData *kpd = GDrawGetUserData(gw);
@@ -944,10 +944,10 @@ return( true );
 		int i;
 		for ( i=0; kernmenu[i].ti.text!=NULL || kernmenu[i].ti.line; ++i )
 		    if ( kernmenu[i].ti.text!=NULL )
-			kernmenu[i].ti.text = (unichar_t *) _((char *) kernmenu[i].ti.text);
+			kernmenu[i].ti.text = (uint32_t *) _((char *) kernmenu[i].ti.text);
 		for ( i=0; acmenu[i].ti.text!=NULL || acmenu[i].ti.line; ++i )
 		    if ( acmenu[i].ti.text!=NULL )
-			acmenu[i].ti.text = (unichar_t *) _((char *) acmenu[i].ti.text);
+			acmenu[i].ti.text = (uint32_t *) _((char *) acmenu[i].ti.text);
 		done = true;
 	    }
 	    if ( kpd->ac==NULL )
@@ -1114,7 +1114,7 @@ return;
     memset(&gcd,0,sizeof(gcd));
     memset(&boxes,0,sizeof(boxes));
 
-    label[0].text = (unichar_t *) _("_Size:");
+    label[0].text = (uint32_t *) _("_Size:");
     label[0].text_is_1byte = true;
     label[0].text_in_resource = true;
     gcd[0].gd.label = &label[0];
@@ -1132,7 +1132,7 @@ return;
     gcd[1].creator = GListButtonCreate;
     hvarray[0][1] = &gcd[1]; hvarray[0][2] = NULL;
 
-    label[2].text = (unichar_t *) _("Sort By:");
+    label[2].text = (uint32_t *) _("Sort By:");
     label[2].text_is_1byte = true;
     gcd[2].gd.label = &label[2];
     gcd[2].gd.pos.x = gcd[0].gd.pos.x; gcd[2].gd.pos.y = gcd[0].gd.pos.y+25; 
@@ -1143,7 +1143,7 @@ return;
     if ( !done ) {
 	done = true;
 	for ( i=0; sortby[i].text!=NULL; ++i )
-	    sortby[i].text = (unichar_t *) _((char *) sortby[i].text);
+	    sortby[i].text = (uint32_t *) _((char *) sortby[i].text);
     }
 
     gcd[3].gd.label = &sortby[0]; gcd[3].gd.label->selected = true;
@@ -1180,7 +1180,7 @@ return;
     gcd[6].gd.pos.x = 20-3; gcd[6].gd.pos.y = 17+37;
     gcd[6].gd.pos.width = -1; gcd[6].gd.pos.height = 0;
     gcd[6].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    label[6].text = (unichar_t *) _("_OK");
+    label[6].text = (uint32_t *) _("_OK");
     label[6].text_is_1byte = true;
     label[6].text_in_resource = true;
     gcd[6].gd.label = &label[6];
@@ -1191,7 +1191,7 @@ return;
     gcd[7].gd.pos.x = -20; gcd[7].gd.pos.y = gcd[6].gd.pos.y+3;
     gcd[7].gd.pos.width = -1; gcd[7].gd.pos.height = 0;
     gcd[7].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    label[7].text = (unichar_t *) _("_Cancel");
+    label[7].text = (uint32_t *) _("_Cancel");
     label[7].text_is_1byte = true;
     label[7].text_in_resource = true;
     gcd[7].gd.label = &label[7];

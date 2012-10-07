@@ -781,7 +781,7 @@ return( XCreateWindow(gdisp->display, gdisp->root,
 /* FIXME: Xming+WindowsWM hack */
 
 /* unichar to ActiveCodePage, this is not limited to setlocale() */
-static char*  u2acp_copy(const unichar_t* ustr){
+static char*  u2acp_copy(const uint32_t* ustr){
     if(ustr){
 	int wlen = u_strlen(ustr);
 	if(wlen > 0){
@@ -789,7 +789,7 @@ static char*  u2acp_copy(const unichar_t* ustr){
 	    char*  mbs = xmalloc(sizeof(char) * (wlen*3));
 	    if(wcs && mbs){
 		WCHAR* w = wcs;
-		const unichar_t* u = ustr;
+		const uint32_t* u = ustr;
 		for(; *u; *w++ = (WCHAR)*u++); /* unichar(4) to WCHAR(2) */
 
 		int alen = WideCharToMultiByte(CP_ACP,0, wcs,wlen, mbs,wlen*3, 0,0);
@@ -807,7 +807,7 @@ static char*  u2acp_copy(const unichar_t* ustr){
 }
 
 /* SET WM Name unichar */
-static void  mingw_set_wm_name(Display* display, Window window, const unichar_t* name){
+static void  mingw_set_wm_name(Display* display, Window window, const uint32_t* name){
     char* a_str = u2acp_copy(name);
     if(a_str){
 	XTextProperty prop;
@@ -818,7 +818,7 @@ static void  mingw_set_wm_name(Display* display, Window window, const unichar_t*
     }
 }
 /* Set WM IconName unichar */
-static void  mingw_set_wm_icon_name(Display* display, Window window, const unichar_t* name){
+static void  mingw_set_wm_icon_name(Display* display, Window window, const uint32_t* name){
     char* a_str = u2acp_copy(name);
     if(a_str){
 	XTextProperty prop;
@@ -831,7 +831,7 @@ static void  mingw_set_wm_icon_name(Display* display, Window window, const unich
 /* SET WM Name utf8 */
 static void  mingw_set_wm_name_utf8(Display* display, Window window, const char* utf8){
     if(utf8){
-	unichar_t* uni = utf82u_copy(utf8);
+	uint32_t* uni = utf82u_copy(utf8);
 	if(uni){
 	    mingw_set_wm_name(display, window, uni);
 	    free(uni);
@@ -841,7 +841,7 @@ static void  mingw_set_wm_name_utf8(Display* display, Window window, const char*
 /* SET WM IconName utf8 */
 static void  mingw_set_wm_icon_name_utf8(Display* display, Window window, const char* utf8){
     if(utf8){
-	unichar_t* uni = utf82u_copy(utf8);
+	uint32_t* uni = utf82u_copy(utf8);
 	if(uni){
 	    mingw_set_wm_icon_name(display, window, uni);
 	    free(uni);
@@ -849,8 +849,8 @@ static void  mingw_set_wm_icon_name_utf8(Display* display, Window window, const 
     }
 }
 /* GET WM Name unichar */
-static unichar_t*  mingw_get_wm_name(Display* display, Window window){
-    unichar_t* result = NULL;
+static uint32_t*  mingw_get_wm_name(Display* display, Window window){
+    uint32_t* result = NULL;
     XTextProperty prop;
     if( XGetWMName(display, window, &prop) >= Success ){
 	char** list;
@@ -858,7 +858,7 @@ static unichar_t*  mingw_get_wm_name(Display* display, Window window){
 	if( XTextPropertyToStringList(&prop, &list, &count) >= Success ){
 	    char      *m, *mbs;
 	    WCHAR     *w, *wcs;
-	    unichar_t *u, *ustr;
+	    uint32_t *u, *ustr;
 
 	    int i, wlen, alen=0;
 	    for(i=0; i < count; i++){
@@ -867,7 +867,7 @@ static unichar_t*  mingw_get_wm_name(Display* display, Window window){
 
 	    mbs  = xmalloc(sizeof(char)      * (alen+4));
 	    wcs  = xmalloc(sizeof(WCHAR)     * (alen+4));
-	    ustr = xmalloc(sizeof(unichar_t) * (alen+4));
+	    ustr = xmalloc(sizeof(uint32_t) * (alen+4));
 
 	    if(mbs && wcs && ustr){
 		m = mbs;
@@ -882,7 +882,7 @@ static unichar_t*  mingw_get_wm_name(Display* display, Window window){
 		w = wcs;
 		u = ustr;
 		for(i=0; i < wlen; i++)
-		    *u++ = (unichar_t)*w++;
+		    *u++ = (uint32_t)*w++;
 		*u++ = '\0';
 
 		result = ustr;
@@ -899,7 +899,7 @@ static unichar_t*  mingw_get_wm_name(Display* display, Window window){
 }
 /* GET WM Name utf8 */
 static char*  mingw_get_wm_name_utf8(Display* display, Window window){
-    unichar_t* uni = mingw_get_wm_name(display, window);
+    uint32_t* uni = mingw_get_wm_name(display, window);
     if(uni){
 	char* utf8 = u2utf8_copy(uni);
 	free(uni);
@@ -1088,7 +1088,7 @@ return( NULL );
 	    #if defined(__MINGW32__)
 	    mingw_set_wm_name_utf8(display, nw->w, wattrs->utf8_window_title);
 	    #else
-	    unichar_t *tit = utf82u_copy(wattrs->utf8_window_title);
+	    uint32_t *tit = utf82u_copy(wattrs->utf8_window_title);
 	    XmbSetWMProperties(display,nw->w,(pt = u2def_copy(tit)),NULL,NULL,0,NULL,NULL,NULL);
 	    free(pt); free(tit);
 	    #endif
@@ -1097,7 +1097,7 @@ return( NULL );
 	    #if defined(__MINGW32__)
 	    mingw_set_wm_icon_name_utf8(display, nw->w, wattrs->utf8_icon_title);
 	    #else
-	    unichar_t *tit = utf82u_copy(wattrs->utf8_icon_title);
+	    uint32_t *tit = utf82u_copy(wattrs->utf8_icon_title);
 	    XmbSetWMProperties(display,nw->w,NULL,(pt = u2def_copy(tit)),NULL,0,NULL,NULL,NULL);
 	    free(pt); free(tit);
 	    #endif
@@ -1575,7 +1575,7 @@ void GDrawLower(GWindow w) {
     XLowerWindow(gw->display->display,gw->w);
 }
 
-void GDrawSetWindowTitles(GWindow w, const unichar_t *title, const unichar_t *icontit) {
+void GDrawSetWindowTitles(GWindow w, const uint32_t *title, const uint32_t *icontit) {
 #if defined(__MINGW32__)
     GXWindow gw = (GXWindow) w;
     mingw_set_wm_name      (gw->display->display, gw->w, title);
@@ -1600,7 +1600,7 @@ void GDrawSetWindowTitles8(GWindow w, const char *title, const char *icontit) {
 #else
     GXWindow gw = (GXWindow) w;
     Display *display = gw->display->display;
-    unichar_t *tit = utf82u_copy(title), *itit = utf82u_copy(icontit);
+    uint32_t *tit = utf82u_copy(title), *itit = utf82u_copy(icontit);
     char *ipt, *tpt;
 
     XmbSetWMProperties(display,gw->w,(tpt = u2def_copy(tit)),
@@ -1700,7 +1700,7 @@ return( (GWindow) ret );
 return( NULL );
 }
 
-unichar_t *GDrawGetWindowTitle(GWindow w)
+uint32_t *GDrawGetWindowTitle(GWindow w)
 {
 #if defined(__MINGW32__)
   GXWindow gw = (GXWindow) w;
@@ -1708,7 +1708,7 @@ unichar_t *GDrawGetWindowTitle(GWindow w)
 #else
 #if X_HAVE_UTF8_STRING
   char *ret1 = GDrawGetWindowTitle8(w);
-  unichar_t *ret = utf82u_copy(ret1);
+  uint32_t *ret = utf82u_copy(ret1);
 
   free(ret1);
   return( ret );
@@ -1716,7 +1716,7 @@ unichar_t *GDrawGetWindowTitle(GWindow w)
   GXWindow gw = (GXWindow) w;
   Display *display = gw->display->display;
   char *pt;
-  unichar_t *ret;
+  uint32_t *ret;
 
   XFetchName(display,gw->w,&pt);
   ret = NULL_PASSTHRU (pt, x_u32_strconv_from_locale (pt));
@@ -1755,7 +1755,7 @@ return( NULL );
     XFreeStringList( propret );
 return( ret );
 #else
-    unichar_t *ret1 = GXDrawGetWindowTitle(w);
+    uint32_t *ret1 = GXDrawGetWindowTitle(w);
     char *ret = u2utf8_copy(ret1);
 
     free(ret1);

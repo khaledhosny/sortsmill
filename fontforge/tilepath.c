@@ -1105,11 +1105,11 @@ static int TileAsk(struct tiledata *td,SplineFont *sf) {
 	gcd[k].gd.pos.x = gcd[0].gd.pos.x; gcd[k].gd.pos.y = gcd[6].gd.pos.y+24;
 	gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
 	if ( include_whitespace[i] ) gcd[k].gd.flags |= gg_cb_on;
-	label[k].text = (unichar_t *) _("Include Whitespace below Tile");
+	label[k].text = (uint32_t *) _("Include Whitespace below Tile");
 	label[k].text_is_1byte = true;
 	label[k].text_in_resource = true;
 	gcd[k].gd.label = &label[k];
-	gcd[k].gd.popup_msg = (unichar_t *) _("Normally the Tile will consist of everything\nwithin the minimum bounding box of the tile --\nso adjacent tiles will abut directly on one\nanother. If you wish whitespace between tiles\nset this flag");
+	gcd[k].gd.popup_msg = (uint32_t *) _("Normally the Tile will consist of everything\nwithin the minimum bounding box of the tile --\nso adjacent tiles will abut directly on one\nanother. If you wish whitespace between tiles\nset this flag");
 	gcd[k].gd.cid = CID_IncludeWhiteSpaceBelowTile+i;
 	gcd[k++].creator = GCheckBoxCreate;
 	chvarray[2][i] = &gcd[k-1];
@@ -1119,11 +1119,11 @@ static int TileAsk(struct tiledata *td,SplineFont *sf) {
     gcd[k].gd.pos.x = 6; gcd[k].gd.pos.y = 6;
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     gcd[k].gd.mnemonic = 'L';
-    label[k].text = (unichar_t *) _("_Left");
+    label[k].text = (uint32_t *) _("_Left");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
-    gcd[k].gd.popup_msg = (unichar_t *) _("The tiles should be placed to the left of the path\nas the path is traced from its start point to its end");
+    gcd[k].gd.popup_msg = (uint32_t *) _("The tiles should be placed to the left of the path\nas the path is traced from its start point to its end");
     gcd[k].gd.cid = CID_Left;
     gcd[k++].creator = GRadioCreate;
     rhvarray[0][0] = &gcd[k-1];
@@ -1131,11 +1131,11 @@ static int TileAsk(struct tiledata *td,SplineFont *sf) {
     gcd[k].gd.pos.x = 60; gcd[k].gd.pos.y = gcd[0].gd.pos.y;
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     gcd[k].gd.mnemonic = 'C';
-    label[k].text = (unichar_t *) _("C_enter");
+    label[k].text = (uint32_t *) _("C_enter");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
-    gcd[k].gd.popup_msg = (unichar_t *) _("The tiles should be centered on the path");
+    gcd[k].gd.popup_msg = (uint32_t *) _("The tiles should be centered on the path");
     gcd[k].gd.cid = CID_Center;
     gcd[k++].creator = GRadioCreate;
     rhvarray[0][1] = &gcd[k-1];
@@ -1143,11 +1143,11 @@ static int TileAsk(struct tiledata *td,SplineFont *sf) {
     gcd[k].gd.pos.x = 140; gcd[k].gd.pos.y = gcd[1].gd.pos.y;
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     gcd[k].gd.mnemonic = 'R';
-    label[k].text = (unichar_t *) _("_Right");
+    label[k].text = (uint32_t *) _("_Right");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
-    gcd[k].gd.popup_msg = (unichar_t *) _("The tiles should be placed to the right of the path\nas the path is traced from its start point to its end");
+    gcd[k].gd.popup_msg = (uint32_t *) _("The tiles should be placed to the right of the path\nas the path is traced from its start point to its end");
     gcd[k].gd.cid = CID_Right;
     gcd[k++].creator = GRadioCreate;
     rhvarray[0][2] = &gcd[k-1];
@@ -1164,11 +1164,11 @@ static int TileAsk(struct tiledata *td,SplineFont *sf) {
     gcd[k].gd.pos.x = gcd[0].gd.pos.x; gcd[k].gd.pos.y = gcd[2].gd.pos.y+24;
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     gcd[k].gd.mnemonic = 'T';
-    label[k].text = (unichar_t *) _("_Tile");
+    label[k].text = (uint32_t *) _("_Tile");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
-    gcd[k].gd.popup_msg = (unichar_t *) _("Multiple copies of the selection should be tiled onto the path");
+    gcd[k].gd.popup_msg = (uint32_t *) _("Multiple copies of the selection should be tiled onto the path");
     gcd[k].gd.cid = CID_Tile;
     gcd[k++].creator = GRadioCreate;
     rhvarray[2][0] = &gcd[k-1];
@@ -1176,11 +1176,11 @@ static int TileAsk(struct tiledata *td,SplineFont *sf) {
     gcd[k].gd.pos.x = gcd[1].gd.pos.x; gcd[k].gd.pos.y = gcd[4].gd.pos.y;
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     gcd[k].gd.mnemonic = 'a';
-    label[k].text = (unichar_t *) _("Sc_ale & Tile");
+    label[k].text = (uint32_t *) _("Sc_ale & Tile");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
-    gcd[k].gd.popup_msg = (unichar_t *) _("An integral number of the selection will be used to cover the path.\nIf the path length is not evenly divisible by the selection's\nheight, then the selection should be scaled slightly.");
+    gcd[k].gd.popup_msg = (uint32_t *) _("An integral number of the selection will be used to cover the path.\nIf the path length is not evenly divisible by the selection's\nheight, then the selection should be scaled slightly.");
     gcd[k].gd.cid = CID_TileScale;
     gcd[k++].creator = GRadioCreate;
     rhvarray[2][1] = &gcd[k-1];
@@ -1188,11 +1188,11 @@ static int TileAsk(struct tiledata *td,SplineFont *sf) {
     gcd[k].gd.pos.x = gcd[2].gd.pos.x; gcd[k].gd.pos.y = gcd[5].gd.pos.y;
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     gcd[k].gd.mnemonic = 'S';
-    label[k].text = (unichar_t *) _("_Scale");
+    label[k].text = (uint32_t *) _("_Scale");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
-    gcd[k].gd.popup_msg = (unichar_t *) _("The selection should be scaled so that it will cover the path's length");
+    gcd[k].gd.popup_msg = (uint32_t *) _("The selection should be scaled so that it will cover the path's length");
     gcd[k].gd.cid = CID_Scale;
     gcd[k++].creator = GRadioCreate;
     rhvarray[2][2] = &gcd[k-1];
@@ -1202,7 +1202,7 @@ static int TileAsk(struct tiledata *td,SplineFont *sf) {
     gcd[k-7+tilepos].gd.flags |= gg_cb_on;
     gcd[k-3+tilescale].gd.flags |= gg_cb_on;
 
-    label[k].text = (unichar_t *) _("_OK");
+    label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -1210,7 +1210,7 @@ static int TileAsk(struct tiledata *td,SplineFont *sf) {
     gcd[k].gd.handle_controlevent = TilePathD_OK;
     gcd[k++].creator = GButtonCreate;
 
-    label[k].text = (unichar_t *) _("_Cancel");
+    label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -1776,14 +1776,14 @@ static int TilePatternAsk(struct tiledata *td,SplineFont *sf) {
     varray[1] = &gcd[k-1];
 
     gcd[k].gd.flags = gg_visible | gg_enabled;
-    label[k].text = (unichar_t *) _("Pattern Size:");
+    label[k].text = (uint32_t *) _("Pattern Size:");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k++].creator = GLabelCreate;
     varray[2] = &gcd[k-1];
 
     gcd[k].gd.flags = gg_visible | gg_enabled;
-    label[k].text = (unichar_t *) _("Width:");
+    label[k].text = (uint32_t *) _("Width:");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k++].creator = GLabelCreate;
@@ -1794,7 +1794,7 @@ static int TilePatternAsk(struct tiledata *td,SplineFont *sf) {
     else
 	sprintf( width, "%g", patternSize.x );
     gcd[k].gd.flags = gg_visible | gg_enabled;
-    label[k].text = (unichar_t *) width;
+    label[k].text = (uint32_t *) width;
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.cid = CID_PatternWidth;
@@ -1803,7 +1803,7 @@ static int TilePatternAsk(struct tiledata *td,SplineFont *sf) {
     harray1[1] = &gcd[k-1];
 
     gcd[k].gd.flags = gg_visible | gg_enabled;
-    label[k].text = (unichar_t *) _("Height:");
+    label[k].text = (uint32_t *) _("Height:");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k++].creator = GLabelCreate;
@@ -1814,7 +1814,7 @@ static int TilePatternAsk(struct tiledata *td,SplineFont *sf) {
     else
 	sprintf( height, "%g", patternSize.y );
     gcd[k].gd.flags = gg_visible | gg_enabled;
-    label[k].text = (unichar_t *) height;
+    label[k].text = (uint32_t *) height;
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.cid = CID_PatternHeight;
@@ -1828,14 +1828,14 @@ static int TilePatternAsk(struct tiledata *td,SplineFont *sf) {
     varray[3] = &boxes[2];
 
     gcd[k].gd.flags = gg_visible | gg_enabled;
-    label[k].text = (unichar_t *) _("Repeat Counts:");
+    label[k].text = (uint32_t *) _("Repeat Counts:");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k++].creator = GLabelCreate;
     varray[4] = &gcd[k-1];
 
     gcd[k].gd.flags = gg_visible | gg_enabled;
-    label[k].text = (unichar_t *) _("X:");
+    label[k].text = (uint32_t *) _("X:");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k++].creator = GLabelCreate;
@@ -1843,7 +1843,7 @@ static int TilePatternAsk(struct tiledata *td,SplineFont *sf) {
 
     sprintf( xr, "%d", patternRepeat.x );
     gcd[k].gd.flags = gg_visible | gg_enabled;
-    label[k].text = (unichar_t *) xr;
+    label[k].text = (uint32_t *) xr;
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.cid = CID_XRepeat;
@@ -1851,7 +1851,7 @@ static int TilePatternAsk(struct tiledata *td,SplineFont *sf) {
     harray2[1] = &gcd[k-1];
 
     gcd[k].gd.flags = gg_visible | gg_enabled;
-    label[k].text = (unichar_t *) _("Y:");
+    label[k].text = (uint32_t *) _("Y:");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k++].creator = GLabelCreate;
@@ -1859,7 +1859,7 @@ static int TilePatternAsk(struct tiledata *td,SplineFont *sf) {
 
     sprintf( yr, "%d", patternRepeat.y );
     gcd[k].gd.flags = gg_visible | gg_enabled;
-    label[k].text = (unichar_t *) yr;
+    label[k].text = (uint32_t *) yr;
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.cid = CID_YRepeat;
@@ -1872,7 +1872,7 @@ static int TilePatternAsk(struct tiledata *td,SplineFont *sf) {
     varray[5] = &boxes[3];
 
 
-    label[k].text = (unichar_t *) _("_OK");
+    label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -1880,7 +1880,7 @@ static int TilePatternAsk(struct tiledata *td,SplineFont *sf) {
     gcd[k].gd.handle_controlevent = PTD_OK;
     gcd[k++].creator = GButtonCreate;
 
-    label[k].text = (unichar_t *) _("_Cancel");
+    label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];

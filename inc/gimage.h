@@ -158,7 +158,7 @@ void GClut_RevCMapFree(RevCMap *rev);
 extern GClut *GImageFindCLUT(GImage *image,GClut *clut,int clutmax);
 extern int GImageSameClut(GClut *clut,GClut *nclut);
 extern int GImageGreyClut(GClut *clut);
-extern Color GImageColourFName(unichar_t *name);
+extern Color GImageColourFName(uint32_t *name);
 extern Color _GImage_ColourFName(char *name);
 extern char *GImageNameFColour(Color col);
 extern Color GDrawColorDarken(Color col, int by);

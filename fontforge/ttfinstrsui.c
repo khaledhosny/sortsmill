@@ -365,9 +365,9 @@ static void IVBuildEdit(InstrDlg *iv) {
 static void instr_expose(struct instrinfo *ii,GWindow pixmap,GRect *rect) {
     int low, high;
     int i,x,y;
-    char loc[8], ins[8], val[8]; unichar_t uins[8], uname[30];
+    char loc[8], ins[8], val[8]; uint32_t uins[8], uname[30];
     int addr_end, num_end;
-    static unichar_t nums[] = { '0', '0', '0', '0', '0', '0', '\0' };
+    static uint32_t nums[] = { '0', '0', '0', '0', '0', '0', '\0' };
     int indent;
     extern GBox _ggadget_Default_Box;
 
@@ -761,7 +761,7 @@ static void InstrDlgCreate(struct instrdata *id,char *title) {
     memset(&gcd,0,sizeof(gcd));
     gcd[0].gd.pos.x = 5; gcd[0].gd.pos.y = 105;
     gcd[0].gd.pos.width = -1;
-    label[0].text = (unichar_t *) _("_OK");
+    label[0].text = (uint32_t *) _("_OK");
     label[0].text_is_1byte = true;
     label[0].text_in_resource = true;
     gcd[0].gd.label = &label[0];
@@ -771,7 +771,7 @@ static void InstrDlgCreate(struct instrdata *id,char *title) {
 
     gcd[1].gd.pos.x = -8; gcd[1].gd.pos.y = 3;
     gcd[1].gd.pos.width = -1;
-    label[1].text = (unichar_t *) _("_Cancel");
+    label[1].text = (uint32_t *) _("_Cancel");
     label[1].text_is_1byte = true;
     label[1].text_in_resource = true;
     gcd[1].gd.label = &label[1];
@@ -780,7 +780,7 @@ static void InstrDlgCreate(struct instrdata *id,char *title) {
     gcd[1].data = iv;
 
     gcd[2] = gcd[1];
-    label[2].text = (unichar_t *) _("_Edit");
+    label[2].text = (uint32_t *) _("_Edit");
     label[2].text_is_1byte = true;
     label[2].text_in_resource = true;
     gcd[2].gd.flags = gg_visible|gg_enabled;
@@ -790,7 +790,7 @@ static void InstrDlgCreate(struct instrdata *id,char *title) {
 
     gcd[3] = gcd[1];
     label[3] = label[2];
-    label[3].text = (unichar_t *) _("_Parse");
+    label[3].text = (uint32_t *) _("_Parse");
     gcd[3].gd.flags = gg_enabled;
     gcd[3].gd.label = &label[3];
     gcd[3].creator = GButtonCreate;
@@ -1004,8 +1004,8 @@ typedef struct shortview /* : tableview */ {
 } ShortView;
 
 static int sfinishup(ShortView *sv,int showerr) {
-    const unichar_t *ret = _GGadgetGetTitle(sv->tf);
-    unichar_t *end;
+    const uint32_t *ret = _GGadgetGetTitle(sv->tf);
+    uint32_t *end;
     int val, oldval;
 
     if ( sv->active==-1 )
@@ -1399,7 +1399,7 @@ static void cvtCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32 tag) {
     GGadgetCreateData gcd[9], *butarray[8], *harray[4], *harray2[3], *varray[7];
     GTextInfo label[5], lab;
     GGadgetData gd;
-    static unichar_t num[] = { '0',  '\0' };
+    static uint32_t num[] = { '0',  '\0' };
     int numlen;
     static GBox tfbox;
     int i;
@@ -1454,7 +1454,7 @@ static void cvtCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32 tag) {
 
     gcd[0].gd.pos.x = 5; gcd[0].gd.pos.y = 105;
     gcd[0].gd.pos.width = -1;
-    label[0].text = (unichar_t *) _("_OK");
+    label[0].text = (uint32_t *) _("_OK");
     label[0].text_is_1byte = true;
     label[0].text_in_resource = true;
     gcd[0].gd.label = &label[0];
@@ -1465,7 +1465,7 @@ static void cvtCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32 tag) {
 
     gcd[1].gd.pos.x = -8; gcd[1].gd.pos.y = 3;
     gcd[1].gd.pos.width = -1;
-    label[1].text = (unichar_t *) _("_Cancel");
+    label[1].text = (uint32_t *) _("_Cancel");
     label[1].text_is_1byte = true;
     label[1].text_in_resource = true;
     gcd[1].gd.label = &label[1];
@@ -1475,7 +1475,7 @@ static void cvtCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32 tag) {
     gcd[1].gd.handle_controlevent = SV_Cancel;
 
     gcd[2] = gcd[1];
-    label[2].text = (unichar_t *) _("Change Length");
+    label[2].text = (uint32_t *) _("Change Length");
     label[2].text_is_1byte = true;
     label[2].text_in_resource = true;
     gcd[2].gd.flags = gg_visible|gg_enabled;
@@ -1772,7 +1772,7 @@ static void maxpCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32 tag) {
     memset(boxes,0,sizeof(boxes));
 
 	k=hv=0;
-	label[k].text = (unichar_t *) _("_Zones:");
+	label[k].text = (uint32_t *) _("_Zones:");
 	label[k].text_is_1byte = true;
 	label[k].text_in_resource = true;
 	gcd[k].gd.label = &label[k];
@@ -1783,7 +1783,7 @@ static void maxpCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32 tag) {
 	hvarray[hv++] = &gcd[k-1];
 
 	sprintf( buffer[0], "%d", (data[14]<<8)|data[14+1] );
-	label[k].text = (unichar_t *) buffer[0];
+	label[k].text = (uint32_t *) buffer[0];
 	label[k].text_is_1byte = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = 60; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y-6;
@@ -1793,7 +1793,7 @@ static void maxpCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32 tag) {
 	gcd[k++].creator = GTextFieldCreate;
 	hvarray[hv++] = &gcd[k-1];
 
-	label[k].text = (unichar_t *) _("_Twilight Pnt Cnt:");
+	label[k].text = (uint32_t *) _("_Twilight Pnt Cnt:");
 	label[k].text_is_1byte = true;
 	label[k].text_in_resource = true;
 	gcd[k].gd.label = &label[k];
@@ -1804,7 +1804,7 @@ static void maxpCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32 tag) {
 	hvarray[hv++] = &gcd[k-1];
 
 	sprintf( buffer[1], "%d", (data[16]<<8)|data[16+1] );
-	label[k].text = (unichar_t *) buffer[1];
+	label[k].text = (uint32_t *) buffer[1];
 	label[k].text_is_1byte = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = 202; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y-6;
@@ -1814,7 +1814,7 @@ static void maxpCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32 tag) {
 	gcd[k++].creator = GTextFieldCreate;
 	hvarray[hv++] = &gcd[k-1]; hvarray[hv++] = NULL;
 
-	label[k].text = (unichar_t *) _("St_orage:");
+	label[k].text = (uint32_t *) _("St_orage:");
 	label[k].text_in_resource = true;
 	label[k].text_is_1byte = true;
 	gcd[k].gd.label = &label[k];
@@ -1825,7 +1825,7 @@ static void maxpCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32 tag) {
 	hvarray[hv++] = &gcd[k-1];
 
 	sprintf( buffer[2], "%d", (data[18]<<8)|data[18+1] );
-	label[k].text = (unichar_t *) buffer[2];
+	label[k].text = (uint32_t *) buffer[2];
 	label[k].text_is_1byte = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = gcd[k-4].gd.pos.x; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y-6;
@@ -1835,7 +1835,7 @@ static void maxpCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32 tag) {
 	gcd[k++].creator = GTextFieldCreate;
 	hvarray[hv++] = &gcd[k-1];
 
-	label[k].text = (unichar_t *) _("Max _Stack Depth:");
+	label[k].text = (uint32_t *) _("Max _Stack Depth:");
 	label[k].text_in_resource = true;
 	label[k].text_is_1byte = true;
 	gcd[k].gd.label = &label[k];
@@ -1846,7 +1846,7 @@ static void maxpCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32 tag) {
 	hvarray[hv++] = &gcd[k-1];
 
 	sprintf( buffer[3], "%d", (data[24]<<8)|data[24+1] );
-	label[k].text = (unichar_t *) buffer[3];
+	label[k].text = (uint32_t *) buffer[3];
 	label[k].text_is_1byte = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = gcd[k-4].gd.pos.x; gcd[k].gd.pos.y = gcd[k-2].gd.pos.y;
@@ -1856,7 +1856,7 @@ static void maxpCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32 tag) {
 	gcd[k++].creator = GTextFieldCreate;
 	hvarray[hv++] = &gcd[k-1]; hvarray[hv++] = NULL;
 
-	label[k].text = (unichar_t *) _("_FDEF");
+	label[k].text = (uint32_t *) _("_FDEF");
 	label[k].text_in_resource = true;
 	label[k].text_is_1byte = true;
 	gcd[k].gd.label = &label[k];
@@ -1867,7 +1867,7 @@ static void maxpCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32 tag) {
 	hvarray[hv++] = &gcd[k-1];
 
 	sprintf( buffer[4], "%d", (data[20]<<8)|data[20+1] );
-	label[k].text = (unichar_t *) buffer[4];
+	label[k].text = (uint32_t *) buffer[4];
 	label[k].text_is_1byte = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = gcd[k-4].gd.pos.x; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y-6;  gcd[k].gd.pos.width = 50;
@@ -1876,7 +1876,7 @@ static void maxpCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32 tag) {
 	gcd[k++].creator = GTextFieldCreate;
 	hvarray[hv++] = &gcd[k-1];
 
-	label[k].text = (unichar_t *) _("_IDEFs");
+	label[k].text = (uint32_t *) _("_IDEFs");
 	label[k].text_in_resource = true;
 	label[k].text_is_1byte = true;
 	gcd[k].gd.label = &label[k];
@@ -1887,7 +1887,7 @@ static void maxpCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32 tag) {
 	hvarray[hv++] = &gcd[k-1];
 
 	sprintf( buffer[5], "%d", (data[22]<<8)|data[22+1] );
-	label[k].text = (unichar_t *) buffer[5];
+	label[k].text = (uint32_t *) buffer[5];
 	label[k].text_is_1byte = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = gcd[k-4].gd.pos.x; gcd[k].gd.pos.y = gcd[k-2].gd.pos.y;  gcd[k].gd.pos.width = 50;
@@ -1905,7 +1905,7 @@ static void maxpCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32 tag) {
     gcd[k].gd.pos.x = 20-3; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+35-3;
     gcd[k].gd.pos.width = -1; gcd[k].gd.pos.height = 0;
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    label[k].text = (unichar_t *) _("_OK");
+    label[k].text = (uint32_t *) _("_OK");
     label[k].text_in_resource = true;
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
@@ -1916,7 +1916,7 @@ static void maxpCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32 tag) {
     gcd[k].gd.pos.x = -20; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+3;
     gcd[k].gd.pos.width = -1; gcd[k].gd.pos.height = 0;
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    label[k].text = (unichar_t *) _("_Cancel");
+    label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];

@@ -1461,7 +1461,7 @@ return( true );
     HFSUniStr255 resforkname;
     FSCatalogInfo info;
     long len;
-    unichar_t *filename;
+    uint32_t *filename;
     ByteCount whocares;
     /* When on the mac let's just create a real resource fork. We do this by */
     /*  creating a mac file with a resource fork, opening that fork, and */

@@ -569,7 +569,7 @@ return;
 	biggest = ff_choose_multiple(_("Load Bitmap Fonts"), choices,sel,cnt,buttons,
 		_("Do you want to load the bitmap fonts embedded in this true/open type file?\n(And if so, which)"));
     }
-    for ( i=0; i<cnt; ++i ) free( (unichar_t *) (choices[i]));
+    for ( i=0; i<cnt; ++i ) free( (uint32_t *) (choices[i]));
     free(choices);
     if ( biggest<0 ) {		/* Cancelled */
 	free(sizes); free(sel);

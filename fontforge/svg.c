@@ -747,7 +747,7 @@ return( NULL );
 
 static void svg_scdump(FILE *file, SplineChar *sc,int defwid, int encuni, int vs,int layer) {
     PST *best=NULL;
-    const unichar_t *alt;
+    const uint32_t *alt;
     int32 univals[50];
     int i, c;
 

@@ -123,9 +123,9 @@ static struct resed listmark_re[] = {
     RESED_EMPTY
 };
 static GTextInfo list_choices[] = {
-    { (unichar_t *) "1", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) "2", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) "3", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) "1", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) "2", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) "3", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     GTEXTINFO_EMPTY
 };
 static GGadgetCreateData droplist_gcd[] = {
@@ -484,7 +484,7 @@ void GListMarkDraw(GWindow pixmap,int x, int y, int height, enum gadget_state st
 }
 
 static struct popup_info {
-    const unichar_t *msg;
+    const uint32_t *msg;
     GImage *img;
     const void *data;
     GImage *(*get_image)(const void *data);
@@ -531,11 +531,11 @@ return;
 }
 
 static int GGadgetPopupTest(GEvent *e) {
-    unichar_t *msg;
+    uint32_t *msg;
     int lines, temp, width;
     GWindow root = GDrawGetRoot(GDrawGetDisplayOfWindow(popup));
     GRect pos, size;
-    unichar_t *pt, *ept;
+    uint32_t *pt, *ept;
     int as, ds, ld, img_height=0;
     GEvent where;
 
@@ -559,7 +559,7 @@ return( true );
 	img_height = GImageGetHeight(popup_info.img);
 	width = GImageGetWidth(popup_info.img);
     }
-    pt = msg = (unichar_t *) popup_info.msg;
+    pt = msg = (uint32_t *) popup_info.msg;
     if ( msg!=NULL ) {
 	GDrawSetFont(popup,popup_font);
 	do {
@@ -594,12 +594,12 @@ return( true );
 
 static int msgpopup_eh(GWindow popup,GEvent *event) {
     if ( event->type == et_expose ) {
-	unichar_t *msg, *pt, *ept;
+	uint32_t *msg, *pt, *ept;
 	int x,y, fh, temp;
 	int as, ds, ld;
 
 	popup_visible = true;
-	pt = msg = (unichar_t *) popup_info.msg;
+	pt = msg = (uint32_t *) popup_info.msg;
 	if ( pt==NULL && popup_info.img==NULL ) {
 	    GGadgetEndPopup();
 return( true );
@@ -632,7 +632,7 @@ return( true );
 return( true );
 }
 
-void GGadgetPreparePopupImage(GWindow base,const unichar_t *msg, const void *data,
+void GGadgetPreparePopupImage(GWindow base,const uint32_t *msg, const void *data,
 	GImage *(*get_image)(const void *data),
 	void (*free_image)(const void *data,GImage *img)) {
     GPoint pt;
@@ -676,7 +676,7 @@ static void popup_refresh(void) {
     }
 }
 
-void GGadgetPreparePopup(GWindow base,const unichar_t *msg) {
+void GGadgetPreparePopup(GWindow base,const uint32_t *msg) {
     GGadgetPreparePopupImage(base,msg,NULL,NULL,NULL);
 }
 
@@ -685,7 +685,7 @@ void GGadgetPreparePopupR(GWindow base,int msg) {
 }
 
 void GGadgetPreparePopup8(GWindow base,char *msg) {
-    static unichar_t popup_msg[500];
+    static uint32_t popup_msg[500];
     utf82u_strncpy(popup_msg,msg,sizeof(popup_msg)/sizeof(popup_msg[0]));
     popup_msg[sizeof(popup_msg)/sizeof(popup_msg[0])-1]=0;
     GGadgetPreparePopupImage(base,popup_msg,NULL,NULL,NULL);
@@ -971,8 +971,8 @@ return( false );
 return( true );
 }
 
-void _ggadget_underlineMnemonic(GWindow gw,int32 x,int32 y,unichar_t *label,
-	unichar_t mnemonic, Color fg, int maxy) {
+void _ggadget_underlineMnemonic(GWindow gw,int32 x,int32 y,uint32_t *label,
+	uint32_t mnemonic, Color fg, int maxy) {
     int point = GDrawPointsToPixels(gw,1);
     int width;
     /*GRect clip;*/
@@ -1112,7 +1112,7 @@ void GGadgetSetUserData(GGadget *g,void *data) {
     g->data = data;
 }
 
-void GGadgetSetPopupMsg(GGadget *g,const unichar_t *msg) {
+void GGadgetSetPopupMsg(GGadget *g,const uint32_t *msg) {
     free(g->popup_msg);
     g->popup_msg = x_u32_strdup_or_null(msg);
 }
@@ -1135,14 +1135,14 @@ return(g->funcs->handle_editcmd)(g,cmd);
 return( false );
 }
 
-void GGadgetSetTitle(GGadget *g,const unichar_t *title) {
+void GGadgetSetTitle(GGadget *g,const uint32_t *title) {
     if ( g->funcs->set_title!=NULL )
 	(g->funcs->set_title)(g,title);
 }
 
 void GGadgetSetTitle8(GGadget *g,const char *title) {
     if ( g->funcs->set_title!=NULL ) {
-	unichar_t *temp = utf82u_copy(title);
+	uint32_t *temp = utf82u_copy(title);
 	(g->funcs->set_title)(g,temp);
 	free(temp);
     }
@@ -1167,14 +1167,14 @@ void GGadgetSetTitle8WithMn(GGadget *g,const char *title) {
     free(freeme);
 }
 
-const unichar_t *_GGadgetGetTitle(GGadget *g) {
+const uint32_t *_GGadgetGetTitle(GGadget *g) {
     if ( g->funcs->_get_title!=NULL )
 return( (g->funcs->_get_title)(g) );
 
 return( NULL );
 }
 
-unichar_t *GGadgetGetTitle(GGadget *g) {
+uint32_t *GGadgetGetTitle(GGadget *g) {
     if ( g->funcs->get_title!=NULL )
 return( (g->funcs->get_title)(g) );
     else if ( g->funcs->_get_title!=NULL )
@@ -1187,7 +1187,7 @@ char *GGadgetGetTitle8(GGadget *g) {
     if ( g->funcs->_get_title!=NULL )
 return( u2utf8_copy( (g->funcs->_get_title)(g) ));
     else if ( g->funcs->get_title!=NULL ) {
-	unichar_t *temp = (g->funcs->get_title)(g);
+	uint32_t *temp = (g->funcs->get_title)(g);
 	char *ret = u2utf8_copy(temp);
 	free(temp);
 return( ret );
@@ -1280,7 +1280,7 @@ void GGadgetScrollListToPos(GGadget *g,int32 pos) {
 	(g->funcs->scroll_list_to_pos)(g,pos);
 }
 
-void GGadgetScrollListToText(GGadget *g,const unichar_t *lab,int32 sel) {
+void GGadgetScrollListToText(GGadget *g,const uint32_t *lab,int32 sel) {
     if ( g->funcs->scroll_list_to_text!=NULL )
 	(g->funcs->scroll_list_to_text)(g,lab,sel);
 }

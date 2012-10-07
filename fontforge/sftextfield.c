@@ -41,7 +41,7 @@ static GBox sftextarea_box = GBOX_EMPTY; /* Don't initialize here */
 static int sftextarea_inited = false;
 static FontInstance *sftextarea_font;
 
-static unichar_t nullstr[] = { 0 }, 
+static uint32_t nullstr[] = { 0 }, 
 	newlinestr[] = { '\n', 0 }, tabstr[] = { '\t', 0 };
 
 static int SFTextArea_Show(SFTextArea *st, int pos);
@@ -90,7 +90,7 @@ static void SFTextAreaFocusChanged(SFTextArea *st,int gained) {
 	GDrawPostEvent(&e);
 }
 
-static void _SFTextAreaReplace(SFTextArea *st, const unichar_t *str) {
+static void _SFTextAreaReplace(SFTextArea *st, const uint32_t *str) {
 
     st->sel_oldstart = st->sel_start;
     st->sel_oldend = st->sel_end;
@@ -105,7 +105,7 @@ static void _SFTextAreaReplace(SFTextArea *st, const unichar_t *str) {
 	GScrollBarSetBounds(&st->vsb->g,0,st->li.lineheights[st->li.lcnt-1].y+st->li.lineheights[st->li.lcnt-1].fh,st->g.inner.height);
 }
 
-static void SFTextArea_Replace(SFTextArea *st, const unichar_t *str) {
+static void SFTextArea_Replace(SFTextArea *st, const uint32_t *str) {
     _SFTextAreaReplace(st,str);
     SFTextArea_Show(st,st->sel_start);
 }
@@ -340,9 +340,9 @@ return( refresh );
 
 static void *genunicodedata(void *_gt,int32 *len) {
     SFTextArea *st = _gt;
-    unichar_t *temp;
+    uint32_t *temp;
     *len = st->sel_end-st->sel_start + 1;
-    temp = xmalloc((*len+2)*sizeof(unichar_t));
+    temp = xmalloc((*len+2)*sizeof(uint32_t));
     temp[0] = 0xfeff;		/* KDE expects a byte order flag */
     u_strncpy(temp+1,st->li.text+st->sel_start,st->sel_end-st->sel_start);
     temp[*len+1] = 0;
@@ -351,7 +351,7 @@ return( temp );
 
 static void *genutf8data(void *_gt,int32 *len) {
     SFTextArea *st = _gt;
-    unichar_t *temp =u_copyn(st->li.text+st->sel_start,st->sel_end-st->sel_start);
+    uint32_t *temp =u_copyn(st->li.text+st->sel_start,st->sel_end-st->sel_start);
     char *ret = u2utf8_copy(temp);
     free(temp);
     *len = strlen(ret);
@@ -369,7 +369,7 @@ return( temp );
 static void *genlocaldata(void *_gt, int32 *len)
 {
   SFTextArea *st = _gt;
-  unichar_t *temp = u_copyn(st->li.text+st->sel_start,st->sel_end-st->sel_start);
+  uint32_t *temp = u_copyn(st->li.text+st->sel_start,st->sel_end-st->sel_start);
   char *ret = u2def_copy(temp);
   free(temp);
   *len = strlen(ret);
@@ -393,10 +393,10 @@ static void SFTextAreaGrabPrimarySelection(SFTextArea *st) {
     GDrawGrabSelection(st->g.base,sn_primary);
     st->sel_start = ss; st->sel_end = se;
     GDrawAddSelectionType(st->g.base,sn_primary,"text/plain;charset=ISO-10646-UCS-4",st,st->sel_end-st->sel_start,
-	    sizeof(unichar_t),
+	    sizeof(uint32_t),
 	    genunicodedata,noop);
     GDrawAddSelectionType(st->g.base,sn_primary,"UTF8_STRING",st,3*(st->sel_end-st->sel_start),
-	    sizeof(unichar_t),
+	    sizeof(uint32_t),
 	    genutf8data,noop);
     GDrawAddSelectionType(st->g.base,sn_primary,"STRING",st,st->sel_end-st->sel_start,sizeof(char),
 	    genlocaldata,noop);
@@ -406,7 +406,7 @@ static void SFTextAreaGrabDDSelection(SFTextArea *st) {
 
     GDrawGrabSelection(st->g.base,sn_drag_and_drop);
     GDrawAddSelectionType(st->g.base,sn_drag_and_drop,"text/plain;charset=ISO-10646-UCS-4",st,st->sel_end-st->sel_start,
-	    sizeof(unichar_t),
+	    sizeof(uint32_t),
 	    ddgenunicodedata,noop);
     GDrawAddSelectionType(st->g.base,sn_drag_and_drop,"STRING",st,st->sel_end-st->sel_start,sizeof(char),
 	    ddgenlocaldata,noop);
@@ -415,18 +415,18 @@ static void SFTextAreaGrabDDSelection(SFTextArea *st) {
 static void SFTextAreaGrabSelection(SFTextArea *st, enum selnames sel ) {
 
     if ( st->sel_start!=st->sel_end ) {
-	unichar_t *temp;
+	uint32_t *temp;
 	char *ctemp;
 	int i;
 	uint16 *u2temp;
 
 	GDrawGrabSelection(st->g.base,sel);
-	temp = xmalloc((st->sel_end-st->sel_start + 2)*sizeof(unichar_t));
+	temp = xmalloc((st->sel_end-st->sel_start + 2)*sizeof(uint32_t));
 	temp[0] = 0xfeff;		/* KDE expects a byte order flag */
 	u_strncpy(temp+1,st->li.text+st->sel_start,st->sel_end-st->sel_start);
 	ctemp = u2utf8_copy(temp);
 	GDrawAddSelectionType(st->g.base,sel,"text/plain;charset=ISO-10646-UCS-4",temp,u_strlen(temp),
-		sizeof(unichar_t),
+		sizeof(uint32_t),
 		NULL,NULL);
 	u2temp = xmalloc((st->sel_end-st->sel_start + 2)*sizeof(uint16));
 	for ( i=0; temp[i]!=0; ++i )
@@ -442,8 +442,8 @@ static void SFTextAreaGrabSelection(SFTextArea *st, enum selnames sel ) {
     }
 }
 
-static int SFTextAreaSelBackword(unichar_t *text,int start) {
-    unichar_t ch;
+static int SFTextAreaSelBackword(uint32_t *text,int start) {
+    uint32_t ch;
 
     if ( start==0 )
 return( 0 ); /* Can't go back */;
@@ -461,8 +461,8 @@ return( 0 ); /* Can't go back */;
 return( start );
 }
 
-static int SFTextAreaSelForeword(unichar_t *text,int end) {
-    unichar_t ch = text[end];
+static int SFTextAreaSelForeword(uint32_t *text,int end) {
+    uint32_t ch = text[end];
 
     if ( ch=='\0' )
 	/* Nothing */;
@@ -479,8 +479,8 @@ return( end );
 }
 
 static void SFTextAreaSelectWord(SFTextArea *st,int mid, int16 *start, int16 *end) {
-    unichar_t *text = st->li.text;
-    unichar_t ch = text[mid];
+    uint32_t *text = st->li.text;
+    uint32_t ch = text[mid];
 
     if ( ch=='\0' )
 	*start = *end = mid;
@@ -518,7 +518,7 @@ static void SFTextAreaSelectWords(SFTextArea *st,int last) {
 static void SFTextAreaPaste(SFTextArea *st,enum selnames sel) {
     if ( GDrawSelectionHasType(st->g.base,sel,"UTF8_STRING") ||
 	    GDrawSelectionHasType(st->g.base,sel,"text/plain;charset=UTF-8")) {
-	unichar_t *temp; char *ctemp;
+	uint32_t *temp; char *ctemp;
 	int32 len;
 	if ( GDrawSelectionHasType(st->g.base,sel,"UTF8_STRING") )
 	    ctemp = GDrawRequestSelection(st->g.base,sel,"UTF8_STRING",&len);
@@ -530,7 +530,7 @@ static void SFTextAreaPaste(SFTextArea *st,enum selnames sel) {
 	    free(ctemp); free(temp);
 	}
     } else if ( GDrawSelectionHasType(st->g.base,sel,"text/plain;charset=ISO-10646-UCS-4")) {
-	unichar_t *temp;
+	uint32_t *temp;
 	int32 len;
 	temp = GDrawRequestSelection(st->g.base,sel,"text/plain;charset=ISO-10646-UCS-4",&len);
 	/* Bug! I don't handle byte reversed selections. But I don't think there should be any anyway... */
@@ -539,7 +539,7 @@ static void SFTextAreaPaste(SFTextArea *st,enum selnames sel) {
 	free(temp);
     } else if ( GDrawSelectionHasType(st->g.base,sel,"Unicode") ||
 	    GDrawSelectionHasType(st->g.base,sel,"text/plain;charset=ISO-10646-UCS-2")) {
-	unichar_t *temp;
+	uint32_t *temp;
 	uint16 *temp2;
 	int32 len;
 	temp2 = GDrawRequestSelection(st->g.base,sel,"text/plain;charset=ISO-10646-UCS-2",&len);
@@ -547,7 +547,7 @@ static void SFTextAreaPaste(SFTextArea *st,enum selnames sel) {
 	    temp2 = GDrawRequestSelection(st->g.base,sel,"Unicode",&len);
 	if ( temp2!=NULL ) {
 	    int i;
-	    temp = xmalloc((len/2+1)*sizeof(unichar_t));
+	    temp = xmalloc((len/2+1)*sizeof(uint32_t));
 	    for ( i=0; temp2[i]!=0; ++i )
 		temp[i] = temp2[i];
 	    temp[i] = 0;
@@ -592,7 +592,7 @@ return( true );
 return( true );
       case ec_undo:
 	if ( st->li.oldtext!=NULL ) {
-	    unichar_t *temp = st->li.text;
+	    uint32_t *temp = st->li.text;
 	    struct fontlist *ofl = st->li.fontlist;
 	    int16 s;
 	    st->li.text = st->li.oldtext; st->li.oldtext = temp;
@@ -692,7 +692,7 @@ return( newpos );
 static void SFTextAreaImport(SFTextArea *st) {
     char *cret = gwwv_open_filename(_("Open"),NULL,
 	    "*.txt",NULL);
-    unichar_t *str;
+    uint32_t *str;
 
     if ( cret==NULL )
 return;
@@ -714,7 +714,7 @@ static void SFTextAreaInsertRandom(SFTextArea *st) {
     int i,cnt;
     uint32 script, lang;
     char *utf8_str;
-    unichar_t *str;
+    uint32_t *str;
     int start, pos;
     struct lang_frequencies **freq;
 
@@ -760,7 +760,7 @@ return;
 static void SFTextAreaSave(SFTextArea *st) {
     char *cret = gwwv_save_filename(_("Save"),NULL, "*.txt");
     FILE *file;
-    unichar_t *pt;
+    uint32_t *pt;
 
     if ( cret==NULL )
 return;
@@ -932,17 +932,17 @@ return;
 }
 
 static GMenuItem sftf_popuplist[] = {
-    { { (unichar_t *) N_("_Undo"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'U' }, 'Z', ksm_control, NULL, NULL, SFTFPopupInvoked, MID_Undo },
+    { { (uint32_t *) N_("_Undo"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'U' }, 'Z', ksm_control, NULL, NULL, SFTFPopupInvoked, MID_Undo },
     { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, 0, '\0' }, '\0', 0, NULL, NULL, NULL, 0 }, /* line */
-    { { (unichar_t *) N_("Cu_t"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 't' }, 'X', ksm_control, NULL, NULL, SFTFPopupInvoked, MID_Cut },
-    { { (unichar_t *) N_("_Copy"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'C' }, 'C', ksm_control, NULL, NULL, SFTFPopupInvoked, MID_Copy },
-    { { (unichar_t *) N_("_Paste"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'P' }, 'V', ksm_control, NULL, NULL, SFTFPopupInvoked, MID_Paste },
+    { { (uint32_t *) N_("Cu_t"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 't' }, 'X', ksm_control, NULL, NULL, SFTFPopupInvoked, MID_Cut },
+    { { (uint32_t *) N_("_Copy"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'C' }, 'C', ksm_control, NULL, NULL, SFTFPopupInvoked, MID_Copy },
+    { { (uint32_t *) N_("_Paste"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'P' }, 'V', ksm_control, NULL, NULL, SFTFPopupInvoked, MID_Paste },
     { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, 0, '\0' }, '\0', 0, NULL, NULL, NULL, 0 }, /* line */
-    { { (unichar_t *) N_("_Save As..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'S' }, 'S', ksm_control, NULL, NULL, SFTFPopupInvoked, MID_Save },
-    { { (unichar_t *) N_("_Import..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'I' }, 'I', ksm_control, NULL, NULL, SFTFPopupInvoked, MID_Import },
-    { { (unichar_t *) N_("_Insert Random Text..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'I' }, 'T', ksm_control, NULL, NULL, SFTFPopupInvoked, MID_Insert },
+    { { (uint32_t *) N_("_Save As..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'S' }, 'S', ksm_control, NULL, NULL, SFTFPopupInvoked, MID_Save },
+    { { (uint32_t *) N_("_Import..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'I' }, 'I', ksm_control, NULL, NULL, SFTFPopupInvoked, MID_Import },
+    { { (uint32_t *) N_("_Insert Random Text..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'I' }, 'T', ksm_control, NULL, NULL, SFTFPopupInvoked, MID_Insert },
     { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, 0, '\0' }, '\0', 0, NULL, NULL, NULL, 0 }, /* line */
-    { { (unichar_t *) N_("Save As _Image..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'S' }, 'S', ksm_control|ksm_shift, NULL, NULL, SFTFPopupInvoked, MID_SaveImage },
+    { { (uint32_t *) N_("Save As _Image..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'S' }, 'S', ksm_control|ksm_shift, NULL, NULL, SFTFPopupInvoked, MID_SaveImage },
     GMENUITEM_EMPTY
 };
 
@@ -954,7 +954,7 @@ void SFTFPopupMenu(SFTextArea *st, GEvent *event) {
 	int i;
 	for ( i=0; sftf_popuplist[i].ti.text!=NULL || sftf_popuplist[i].ti.line; ++i )
 	    if ( sftf_popuplist[i].ti.text!=NULL )
-		sftf_popuplist[i].ti.text = (unichar_t *) _( (char *) sftf_popuplist[i].ti.text);
+		sftf_popuplist[i].ti.text = (uint32_t *) _( (char *) sftf_popuplist[i].ti.text);
 	done = true;
     }
 
@@ -972,7 +972,7 @@ void SFTFPopupMenu(SFTextArea *st, GEvent *event) {
 static int SFTextAreaDoChange(SFTextArea *st, GEvent *event) {
     int ss = st->sel_start, se = st->sel_end;
     int pos, l, xpos;
-    unichar_t *upt;
+    uint32_t *upt;
 
     if ( ( event->u.chr.state&(ksm_control|ksm_meta)) ||
 	    event->u.chr.chars[0]<' ' || event->u.chr.chars[0]==0x7f ) {
@@ -1390,27 +1390,27 @@ static int SFTextAreaDoDrop(SFTextArea *st,GEvent *event,int endpos) {
 	    if ( endpos>=st->sel_start && endpos<st->sel_end ) {
 		st->sel_start = st->sel_end = endpos;
 	    } else {
-		unichar_t *old=st->li.oldtext, *temp;
+		uint32_t *old=st->li.oldtext, *temp;
 		int pos=0;
 		if ( event->u.mouse.state&ksm_control ) {
-		    temp = xmalloc((u_strlen(st->li.text)+st->sel_end-st->sel_start+1)*sizeof(unichar_t));
-		    memcpy(temp,st->li.text,endpos*sizeof(unichar_t));
+		    temp = xmalloc((u_strlen(st->li.text)+st->sel_end-st->sel_start+1)*sizeof(uint32_t));
+		    memcpy(temp,st->li.text,endpos*sizeof(uint32_t));
 		    memcpy(temp+endpos,st->li.text+st->sel_start,
-			    (st->sel_end-st->sel_start)*sizeof(unichar_t));
+			    (st->sel_end-st->sel_start)*sizeof(uint32_t));
 		    u_strcpy(temp+endpos+st->sel_end-st->sel_start,st->li.text+endpos);
 		} else if ( endpos>=st->sel_end ) {
 		    temp = x_u32_strdup_or_null(st->li.text);
 		    memcpy(temp+st->sel_start,temp+st->sel_end,
-			    (endpos-st->sel_end)*sizeof(unichar_t));
+			    (endpos-st->sel_end)*sizeof(uint32_t));
 		    memcpy(temp+endpos-(st->sel_end-st->sel_start),
-			    st->li.text+st->sel_start,(st->sel_end-st->sel_start)*sizeof(unichar_t));
+			    st->li.text+st->sel_start,(st->sel_end-st->sel_start)*sizeof(uint32_t));
 		    pos = endpos;
 		} else /*if ( endpos<st->sel_start )*/ {
 		    temp = x_u32_strdup_or_null(st->li.text);
 		    memcpy(temp+endpos,st->li.text+st->sel_start,
-			    (st->sel_end-st->sel_start)*sizeof(unichar_t));
+			    (st->sel_end-st->sel_start)*sizeof(uint32_t));
 		    memcpy(temp+endpos+st->sel_end-st->sel_start,st->li.text+endpos,
-			    (st->sel_start-endpos)*sizeof(unichar_t));
+			    (st->sel_start-endpos)*sizeof(uint32_t));
 		    pos = endpos+st->sel_end-st->sel_start;
 		}
 		st->li.oldtext = st->li.text;
@@ -1789,9 +1789,9 @@ return;
     _ggadget_destroy(g);
 }
 
-static void SFTextAreaSetTitle(GGadget *g,const unichar_t *tit) {
+static void SFTextAreaSetTitle(GGadget *g,const uint32_t *tit) {
     SFTextArea *st = (SFTextArea *) g;
-    unichar_t *old = st->li.oldtext;
+    uint32_t *old = st->li.oldtext;
     if ( u_strcmp(tit,st->li.text)==0 )	/* If it doesn't change anything, then don't trash undoes or selection */
 return;
     st->li.oldtext = st->li.text;
@@ -1805,7 +1805,7 @@ return;
     _ggadget_redraw(g);
 }
 
-static const unichar_t *_SFTextAreaGetTitle(GGadget *g) {
+static const uint32_t *_SFTextAreaGetTitle(GGadget *g) {
     SFTextArea *st = (SFTextArea *) g;
 return( st->li.text );
 }
@@ -1845,7 +1845,7 @@ void SFTextAreaSelect(GGadget *g,int start, int end) {
     _ggadget_redraw(g);			/* Should be safe just to draw the textfield gadget, sbs won't have changed */
 }
 
-void SFTextAreaReplace(GGadget *g,const unichar_t *txt) {
+void SFTextAreaReplace(GGadget *g,const uint32_t *txt) {
     SFTextArea *st = (SFTextArea *) g;
 
     SFTextArea_Replace(st,txt);
@@ -2254,7 +2254,7 @@ static SFTextArea *_SFTextAreaCreate(SFTextArea *st, struct gwindow *base, GGadg
     st->g.takes_input = true; st->g.takes_keyboard = true; st->g.focusable = true;
     if ( gd->label!=NULL ) {
 	if ( gd->label->text_in_resource )	/* This one use of GStringGetResource is ligit */
-	    st->li.text = x_u32_strdup_or_null((unichar_t *) GStringGetResource((intptr_t) gd->label->text,&st->g.mnemonic));
+	    st->li.text = x_u32_strdup_or_null((uint32_t *) GStringGetResource((intptr_t) gd->label->text,&st->g.mnemonic));
 	else if ( gd->label->text_is_1byte )
 	    st->li.text = utf82u_copy((char *) gd->label->text);
 	else
@@ -2262,7 +2262,7 @@ static SFTextArea *_SFTextAreaCreate(SFTextArea *st, struct gwindow *base, GGadg
 	st->sel_start = st->sel_end = st->sel_base = u_strlen(st->li.text);
     }
     if ( st->li.text==NULL )
-	st->li.text = xcalloc(1,sizeof(unichar_t));
+	st->li.text = xcalloc(1,sizeof(uint32_t));
     st->font = sftextarea_font;
     if ( gd->label!=NULL && gd->label->font!=NULL )
 	st->font = gd->label->font;

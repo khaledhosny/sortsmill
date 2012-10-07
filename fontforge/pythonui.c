@@ -236,7 +236,7 @@ static void InsertSubMenus(PyObject *args,GMenuItem2 **mn, int is_cv) {
 
     for ( i=5; i<cnt; ++i ) {
         PyObject *submenu_utf8 = PYBYTES_UTF8(PyTuple_GetItem(args,i));
-	unichar_t *submenuu = utf82u_copy( PyBytes_AsString(submenu_utf8) );
+	uint32_t *submenuu = utf82u_copy( PyBytes_AsString(submenu_utf8) );
 	Py_DECREF(submenu_utf8);
 
 	j = 0;

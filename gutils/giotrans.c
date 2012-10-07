@@ -31,10 +31,10 @@
 #include "ustring.h"
 
 
-struct transtab { unichar_t *old; unichar_t *new; int olen; int gf_mask; };
+struct transtab { uint32_t *old; uint32_t *new; int olen; int gf_mask; };
 static struct transtab *transtab=NULL;
 
-unichar_t *_GIO_translateURL(unichar_t *path, enum giofuncs gf) {
+uint32_t *_GIO_translateURL(uint32_t *path, enum giofuncs gf) {
     struct transtab *test;
 
     if ( transtab==NULL )
@@ -42,7 +42,7 @@ return( NULL );
 
     for ( test = transtab; test->old!=NULL; ++test ) {
 	if ( (test->gf_mask&(1<<gf)) && u_strncmp(path,test->old,test->olen)==0 ) {
-	    unichar_t *res = xmalloc((u_strlen(path)-test->olen+u_strlen(test->new)+1)*sizeof(unichar_t));
+	    uint32_t *res = xmalloc((u_strlen(path)-test->olen+u_strlen(test->new)+1)*sizeof(uint32_t));
 	    u_strcpy(res,test->new);
 	    u_strcat(res,path+test->olen);
 return( res );

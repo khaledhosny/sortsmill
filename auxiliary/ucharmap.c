@@ -52,11 +52,11 @@ my_iconv_setup (void)
 }
 
 char *
-u2def_strncpy (char *to, const unichar_t *ufrom, int n)
+u2def_strncpy (char *to, const uint32_t *ufrom, int n)
 {
   my_iconv_setup ();
 
-  size_t in_left = sizeof (unichar_t) * n, out_left = n;
+  size_t in_left = sizeof (uint32_t) * n, out_left = n;
   char *cfrom = (char *) ufrom, *cto = to;
   iconv (from_unicode, (ICONV_CONST char **) &cfrom, &in_left, &cto,
          &out_left);
@@ -72,7 +72,7 @@ u2def_strncpy (char *to, const unichar_t *ufrom, int n)
 }
 
 char *
-u2def_copy (const unichar_t *ufrom)
+u2def_copy (const uint32_t *ufrom)
 {
   return NULL_PASSTHRU (ufrom,
                         x_u32_strconv_to_locale ((const uint32_t *) ufrom));

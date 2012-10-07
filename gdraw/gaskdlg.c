@@ -103,13 +103,13 @@ return( true );
 
 #define GLINE_MAX	20
 
-static int FindLineBreaks(const unichar_t *question, GTextInfo linebreaks[GLINE_MAX+1]) {
+static int FindLineBreaks(const uint32_t *question, GTextInfo linebreaks[GLINE_MAX+1]) {
     int lb, i;
-    const unichar_t *pt, *last;
+    const uint32_t *pt, *last;
 
     /* Find good places to break the question into bits */
     last = pt = question;
-    linebreaks[0].text = (unichar_t *) question;
+    linebreaks[0].text = (uint32_t *) question;
     lb=0;
     while ( *pt!='\0' && lb<GLINE_MAX-1 ) {
 	last = pt;
@@ -127,11 +127,11 @@ static int FindLineBreaks(const unichar_t *question, GTextInfo linebreaks[GLINE_
 	if ( last==linebreaks[lb].text )
 	    last = pt;
 	if ( *last==' ' || *last=='\n' ) ++last;
-	linebreaks[++lb].text = (unichar_t *) last;
+	linebreaks[++lb].text = (uint32_t *) last;
 	pt = last;
     }
     if ( *pt!='\0' )
-	linebreaks[++lb].text = (unichar_t *) pt+u_strlen(pt);
+	linebreaks[++lb].text = (uint32_t *) pt+u_strlen(pt);
     for ( i=0; i<lb; ++i ) {
 	int temp = linebreaks[i+1].text - linebreaks[i].text;
 	if ( linebreaks[i+1].text[-1]==' ' || linebreaks[i+1].text[-1]=='\n' )
@@ -205,7 +205,7 @@ static GWindow DlgCreate8(const char *title,const char *question,va_list ap,
     int w, maxw, bw, bspace;
     int i, y;
     char buf[1600];
-    unichar_t *ubuf;
+    uint32_t *ubuf;
     extern GBox _GGadget_defaultbutton_box;
 
     if ( d!=NULL )
@@ -226,7 +226,7 @@ return( NULL );
     blabels = (GTextInfo *) xcalloc(bcnt+1,sizeof(GTextInfo));
     barray = (GGadgetCreateData **) xcalloc(2*bcnt+3,sizeof(GGadgetCreateData *));
     for ( bcnt=0; answers[bcnt]!=NULL; ++bcnt) {
-	blabels[bcnt].text = (unichar_t *) answers[bcnt];
+	blabels[bcnt].text = (uint32_t *) answers[bcnt];
 	blabels[bcnt].text_is_1byte = true;
 	blabels[bcnt].text_in_resource = true;	/* Look for mnemonics in the utf8 string (preceded by _) */
     }
@@ -577,7 +577,7 @@ static GWindow ChoiceDlgCreate8(struct dlg_info *d,const char *title,
     int w, maxw;
     int i, y, listi;
     char buf[600];
-    unichar_t *ubuf;
+    uint32_t *ubuf;
     extern GBox _GGadget_defaultbutton_box;
 
     memset(d,0,sizeof(*d));
@@ -591,7 +591,7 @@ static GWindow ChoiceDlgCreate8(struct dlg_info *d,const char *title,
 	if ( choices[i][0]=='-' && choices[i][1]=='\0' )
 	    llabels[i].line = true;
 	else {
-	    llabels[i].text = (unichar_t *) choices[i];
+	    llabels[i].text = (uint32_t *) choices[i];
 	    llabels[i].text_is_1byte = true;
 	}
 	if ( multisel )
@@ -695,7 +695,7 @@ static GWindow ChoiceDlgCreate8(struct dlg_info *d,const char *title,
 	gcd[i].gd.pos.x = GDrawPointsToPixels(gw,15); gcd[i].gd.pos.y = y;
 	gcd[i].gd.flags = gg_visible | gg_enabled | gg_pos_in_pixels | gg_pos_use0;
 	gcd[i].gd.label = &blabel[2];
-        blabel[2].text = (unichar_t *) _("Select _All");
+        blabel[2].text = (uint32_t *) _("Select _All");
         blabel[2].text_is_1byte = true;
 	blabel[2].text_in_resource = true;
 	gcd[i].gd.cid = CID_SelectAll;
@@ -709,7 +709,7 @@ static GWindow ChoiceDlgCreate8(struct dlg_info *d,const char *title,
 	gcd[i].gd.pos.width = -1;
 	gcd[i].gd.flags = gg_visible | gg_enabled | gg_pos_in_pixels | gg_pos_use0 ;
 	gcd[i].gd.label = &blabel[3];
-        blabel[3].text = (unichar_t *) _("_None");
+        blabel[3].text = (uint32_t *) _("_None");
         blabel[3].text_is_1byte = true;
 	blabel[3].text_in_resource = true;
 	gcd[i].gd.cid = CID_SelectNone;
@@ -731,7 +731,7 @@ static GWindow ChoiceDlgCreate8(struct dlg_info *d,const char *title,
     gcd[i].gd.pos.width = -1;
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_pos_in_pixels |gg_but_default | gg_pos_use0;
     gcd[i].gd.label = &blabel[0];
-    blabel[0].text = (unichar_t *) buts[0];
+    blabel[0].text = (uint32_t *) buts[0];
     blabel[0].text_is_1byte = true;
     blabel[0].text_in_resource = true;
     gcd[i].gd.cid = CID_OK;
@@ -744,7 +744,7 @@ static GWindow ChoiceDlgCreate8(struct dlg_info *d,const char *title,
     gcd[i].gd.pos.width = -1;
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_pos_in_pixels |gg_but_cancel | gg_pos_use0;
     gcd[i].gd.label = &blabel[1];
-    blabel[1].text = (unichar_t *) buts[1];
+    blabel[1].text = (uint32_t *) buts[1];
     blabel[1].text_is_1byte = true;
     blabel[1].text_in_resource = true;
     gcd[i].gd.cid = CID_Cancel;

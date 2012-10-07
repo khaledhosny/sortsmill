@@ -115,7 +115,7 @@ static int AskSizeBits(int *pixelsize,int *bitsperpixel) {
     memset(&gcd,0,sizeof(gcd));
     memset(&boxes,0,sizeof(boxes));
 
-    label[0].text = (unichar_t *) _("Pixel size:");
+    label[0].text = (uint32_t *) _("Pixel size:");
     label[0].text_is_1byte = true;
     gcd[0].gd.label = &label[0];
     gcd[0].gd.pos.x = 8; gcd[0].gd.pos.y = 8+6; 
@@ -124,7 +124,7 @@ static int AskSizeBits(int *pixelsize,int *bitsperpixel) {
     hvarray[0][0] = &gcd[0];
 
     gcd[1].gd.pos.x = 70; gcd[1].gd.pos.y = 8;  gcd[1].gd.pos.width = 65;
-    label[1].text = (unichar_t *) (last==NULL ? "100" : last);
+    label[1].text = (uint32_t *) (last==NULL ? "100" : last);
     label[1].text_is_1byte = true;
     gcd[1].gd.label = &label[1];
     gcd[1].gd.flags = gg_enabled|gg_visible;
@@ -132,7 +132,7 @@ static int AskSizeBits(int *pixelsize,int *bitsperpixel) {
     gcd[1].creator = GNumericFieldCreate;
     hvarray[0][1] = &gcd[1]; hvarray[0][2] = GCD_Glue; hvarray[0][3] = NULL;
 
-    label[2].text = (unichar_t *) _("Bits/Pixel:");
+    label[2].text = (uint32_t *) _("Bits/Pixel:");
     label[2].text_is_1byte = true;
     gcd[2].gd.label = &label[2];
     gcd[2].gd.pos.x = 8; gcd[2].gd.pos.y = 38+6; 
@@ -141,7 +141,7 @@ static int AskSizeBits(int *pixelsize,int *bitsperpixel) {
     hvarray[1][0] = &gcd[2];
 
     gcd[3].gd.pos.x = 70; gcd[3].gd.pos.y = 38;  gcd[3].gd.pos.width = 65;
-    label[3].text = (unichar_t *) (last_bits==NULL? "1" : last_bits);
+    label[3].text = (uint32_t *) (last_bits==NULL? "1" : last_bits);
     label[3].text_is_1byte = true;
     gcd[3].gd.label = &label[3];
     gcd[3].gd.flags = gg_enabled|gg_visible;
@@ -153,7 +153,7 @@ static int AskSizeBits(int *pixelsize,int *bitsperpixel) {
     gcd[4].gd.pos.x = 10-3; gcd[4].gd.pos.y = 38+30-3;
     gcd[4].gd.pos.width = -1; gcd[4].gd.pos.height = 0;
     gcd[4].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    label[4].text = (unichar_t *) _("_OK");
+    label[4].text = (uint32_t *) _("_OK");
     label[4].text_is_1byte = true;
     label[4].text_in_resource = true;
     gcd[4].gd.mnemonic = 'O';
@@ -165,7 +165,7 @@ static int AskSizeBits(int *pixelsize,int *bitsperpixel) {
     gcd[5].gd.pos.x = -10; gcd[5].gd.pos.y = 38+30;
     gcd[5].gd.pos.width = -1; gcd[5].gd.pos.height = 0;
     gcd[5].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    label[5].text = (unichar_t *) _("_Cancel");
+    label[5].text = (uint32_t *) _("_Cancel");
     label[5].text_is_1byte = true;
     label[5].text_in_resource = true;
     gcd[5].gd.label = &label[5];
@@ -233,32 +233,32 @@ struct gfc_data {
 
 
 static GTextInfo bcformats[] = {
-    { (unichar_t *) N_("X Bitmap"), NULL, 0, 0, (void *) 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("BMP"), NULL, 0, 0, (void *) 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("X Bitmap"), NULL, 0, 0, (void *) 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("BMP"), NULL, 0, 0, (void *) 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
 #ifndef _NO_LIBPNG
-    { (unichar_t *) N_("png"), NULL, 0, 0, (void *) 2, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("png"), NULL, 0, 0, (void *) 2, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
 #endif
     GTEXTINFO_EMPTY
 };
 
 static GTextInfo formats[] = {
-    { (unichar_t *) N_("EPS"), NULL, 0, 0, (void *) 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("XFig"), NULL, 0, 0, (void *) 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("SVG"), NULL, 0, 0, (void *) 2, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("Glif"), NULL, 0, 0, (void *) 3, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("PDF"), NULL, 0, 0, (void *) 4, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("Raph's plate"), NULL, 0, 0, (void *) 5, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("EPS"), NULL, 0, 0, (void *) 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("XFig"), NULL, 0, 0, (void *) 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("SVG"), NULL, 0, 0, (void *) 2, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Glif"), NULL, 0, 0, (void *) 3, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("PDF"), NULL, 0, 0, (void *) 4, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Raph's plate"), NULL, 0, 0, (void *) 5, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
 #define BITMAP_FORMAT_START	6
-    { (unichar_t *) N_("X Bitmap"), NULL, 0, 0, (void *) BITMAP_FORMAT_START, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("BMP"), NULL, 0, 0, (void *) (BITMAP_FORMAT_START+1), 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("X Bitmap"), NULL, 0, 0, (void *) BITMAP_FORMAT_START, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("BMP"), NULL, 0, 0, (void *) (BITMAP_FORMAT_START+1), 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
 #ifndef _NO_LIBPNG
-    { (unichar_t *) N_("png"), NULL, 0, 0, (void *) (BITMAP_FORMAT_START+2), 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("png"), NULL, 0, 0, (void *) (BITMAP_FORMAT_START+2), 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
 #endif
     GTEXTINFO_EMPTY
 };
 static int last_format = 0;
 
-static void DoExport(struct gfc_data *d,unichar_t *path) {
+static void DoExport(struct gfc_data *d,uint32_t *path) {
     char *temp;
     int format, good;
 
@@ -323,7 +323,7 @@ static int GFD_SaveOk(GGadget *g, GEvent *e) {
 	GGadget *tf;
 	GFileChooserGetChildren(d->gfc,NULL,NULL,&tf);
 	if ( *_GGadgetGetTitle(tf)!='\0' ) {
-	    unichar_t *ret = GGadgetGetTitle(d->gfc);
+	    uint32_t *ret = GGadgetGetTitle(d->gfc);
 
 	    GIOfileExists(GFileChooserReplaceIO(d->gfc,
 		    GIOCreate(ret,d,GFD_exists,GFD_doesnt)));
@@ -345,10 +345,10 @@ return( true );
 static int GFD_Format(GGadget *g, GEvent *e) {
     if ( e->type==et_controlevent && e->u.control.subtype == et_listselected ) {
 	struct gfc_data *d = GDrawGetUserData(GGadgetGetWindow(g));
-	unichar_t *pt, *file, *f2;
+	uint32_t *pt, *file, *f2;
 	int format = (intptr_t) (GGadgetGetListItemSelected(d->format)->userdata);
 	file = GGadgetGetTitle(d->gfc);
-	f2 = xmalloc(sizeof(unichar_t) * (u_strlen(file)+6));
+	f2 = xmalloc(sizeof(uint32_t) * (u_strlen(file)+6));
 	u_strcpy(f2,file);
 	free(file);
 	pt = u_strrchr(f2,'.');
@@ -378,7 +378,7 @@ return( true );
 
 static void GFD_dircreated(GIOControl *gio) {
     struct gfc_data *d = gio->userdata;
-    unichar_t *dir = x_u32_strdup_or_null(gio->path);
+    uint32_t *dir = x_u32_strdup_or_null(gio->path);
 
     GFileChooserReplaceIO(d->gfc,NULL);
     GFileChooserSetDir(d->gfc,dir);
@@ -401,7 +401,7 @@ static int GFD_NewDir(GGadget *g, GEvent *e) {
     if ( e->type==et_controlevent && e->u.control.subtype == et_buttonactivate ) {
 	struct gfc_data *d = GDrawGetUserData(GGadgetGetWindow(g));
 	char *newdir;
-	unichar_t *utemp;
+	uint32_t *utemp;
 
 	newdir = gwwv_ask_string(_("Create directory"),NULL,_("Directory name?"));
 	if ( newdir==NULL )
@@ -470,7 +470,7 @@ static int _Export(SplineChar *sc,BDFChar *bc,int layer) {
     GTextInfo label[7];
     struct gfc_data d;
     GGadget *pulldown, *files, *tf;
-    char buffer[100]; unichar_t ubuf[100];
+    char buffer[100]; uint32_t ubuf[100];
     char *ext;
     int _format, i;
     int /*bs = GIntGetResource(_NUM_Buttonsize), bsbigger,*/ totwid;
@@ -479,9 +479,9 @@ static int _Export(SplineChar *sc,BDFChar *bc,int layer) {
 
     if ( !done ) {
 	for ( i=0; formats[i].text!=NULL; ++i )
-	    formats[i].text= (unichar_t *) _((char *) formats[i].text);
+	    formats[i].text= (uint32_t *) _((char *) formats[i].text);
 	for ( i=0; bcformats[i].text!=NULL; ++i )
-	    bcformats[i].text= (unichar_t *) _((char *) bcformats[i].text);
+	    bcformats[i].text= (uint32_t *) _((char *) bcformats[i].text);
 	done = true;
     }
     if ( bc==NULL )
@@ -498,11 +498,11 @@ static int _Export(SplineChar *sc,BDFChar *bc,int layer) {
 	    cur_formats = xcalloc(extras+cnt+1,sizeof(GTextInfo));
 	    for ( cnt=0; formats[cnt].text!=NULL; ++cnt ) {
 		cur_formats[cnt] = formats[cnt];
-		cur_formats[cnt].text = (unichar_t *) copy( (char *) formats[cnt].text );
+		cur_formats[cnt].text = (uint32_t *) copy( (char *) formats[cnt].text );
 	    }
 	    for ( i=extras=0; py_ie[i].name!=NULL; ++i ) {
 		if ( py_ie[i].export!=NULL ) {
-		    cur_formats[cnt+extras].text = (unichar_t *) copy(py_ie[i].name);
+		    cur_formats[cnt+extras].text = (uint32_t *) copy(py_ie[i].name);
 		    cur_formats[cnt+extras].text_is_1byte = true;
 		    cur_formats[cnt+extras].userdata = (void *) (intptr_t) (fv_pythonbase+i);
 		    ++extras;
@@ -535,7 +535,7 @@ static int _Export(SplineChar *sc,BDFChar *bc,int layer) {
     hvarray[0] = &gcd[0]; hvarray[1] = NULL;
 
     gcd[1].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    label[1].text = (unichar_t *) _("_Save");
+    label[1].text = (uint32_t *) _("_Save");
     label[1].text_is_1byte = true;
     label[1].text_in_resource = true;
     gcd[1].gd.label = &label[1];
@@ -544,7 +544,7 @@ static int _Export(SplineChar *sc,BDFChar *bc,int layer) {
     barray[0] = GCD_Glue; barray[1] = &gcd[1]; barray[2] = GCD_Glue;
 
     gcd[2].gd.flags = gg_visible | gg_enabled;
-    label[2].text = (unichar_t *) _("_Filter");
+    label[2].text = (uint32_t *) _("_Filter");
     label[2].text_is_1byte = true;
     label[2].text_in_resource = true;
     gcd[2].gd.label = &label[2];
@@ -554,7 +554,7 @@ static int _Export(SplineChar *sc,BDFChar *bc,int layer) {
 
     gcd[3].gd.pos.x = -gcd[1].gd.pos.x; gcd[3].gd.pos.y = 224; gcd[3].gd.pos.width = -1; gcd[3].gd.pos.height = 0;
     gcd[3].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    label[3].text = (unichar_t *) _("_Cancel");
+    label[3].text = (uint32_t *) _("_Cancel");
     label[3].text_is_1byte = true;
     label[3].text_in_resource = true;
     gcd[3].gd.label = &label[3];
@@ -570,7 +570,7 @@ static int _Export(SplineChar *sc,BDFChar *bc,int layer) {
 
     gcd[4].gd.pos.x = gcd[3].gd.pos.x; gcd[4].gd.pos.y = 194; gcd[4].gd.pos.width = -1; gcd[4].gd.pos.height = 0;
     gcd[4].gd.flags = gg_visible | gg_enabled;
-    label[4].text = (unichar_t *) S_("Directory|_New");
+    label[4].text = (uint32_t *) S_("Directory|_New");
     label[4].text_is_1byte = true;
     label[4].text_in_resource = true;
     label[4].image = &_GIcon_dir;
@@ -581,7 +581,7 @@ static int _Export(SplineChar *sc,BDFChar *bc,int layer) {
 
     gcd[5].gd.pos.x = 12; gcd[5].gd.pos.y = 200; gcd[5].gd.pos.width = 0; gcd[5].gd.pos.height = 0;
     gcd[5].gd.flags = gg_visible | gg_enabled;
-    label[5].text = (unichar_t *) _("Format:");
+    label[5].text = (uint32_t *) _("Format:");
     label[5].text_is_1byte = true;
     gcd[5].gd.label = &label[5];
     gcd[5].creator = GLabelCreate;

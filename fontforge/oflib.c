@@ -712,11 +712,11 @@ static pthread_key_t jump_key;
 enum searchtype { st_showall, st_author, st_name, st_tag, st_license };
 static int initted = false;
 static GTextInfo searchtypes[] = {
-    { (unichar_t *) N_("Show All"), NULL, 0, 0, (void *) st_showall, NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},	/* Selected, One byte */
-    { (unichar_t *) N_("Designer"), NULL, 0, 0, (void *) st_author, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Name"), NULL, 0, 0, (void *) st_name, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("Tag(s)"), NULL, 0, 0, (void *) st_tag, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (unichar_t *) N_("License"), NULL, 0, 0, (void *) st_license, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Show All"), NULL, 0, 0, (void *) st_showall, NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},	/* Selected, One byte */
+    { (uint32_t *) N_("Designer"), NULL, 0, 0, (void *) st_author, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Name"), NULL, 0, 0, (void *) st_name, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("Tag(s)"), NULL, 0, 0, (void *) st_tag, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("License"), NULL, 0, 0, (void *) st_license, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 
@@ -746,7 +746,7 @@ static void OFLibInit(void) {
     int i;
     initted = true;
     for ( i=0; searchtypes[i].text!=NULL; ++i )
-	searchtypes[i].text = (unichar_t *) _((char *) searchtypes[i].text);
+	searchtypes[i].text = (uint32_t *) _((char *) searchtypes[i].text);
 }
 
 static struct ofl_download_urls *OFLibHasImage(OFLibDlg *d,int sel_font) {
@@ -1919,7 +1919,7 @@ return;
     memset(&label,0,sizeof(label));
     j=k=l=0;
 
-    label[k].text = (unichar_t *) _("Sort by:");
+    label[k].text = (uint32_t *) _("Sort by:");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -1927,7 +1927,7 @@ return;
     gcd[k].creator = GLabelCreate;
     harray1[0] = &gcd[k++];
 
-    label[k].text = (unichar_t *) _("Date");
+    label[k].text = (uint32_t *) _("Date");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -1937,7 +1937,7 @@ return;
     gcd[k].creator = GRadioCreate;
     harray1[1] = &gcd[k++];
 
-    label[k].text = (unichar_t *) _("Designer");
+    label[k].text = (uint32_t *) _("Designer");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -1947,7 +1947,7 @@ return;
     gcd[k].creator = GRadioCreate;
     harray1[2] = &gcd[k++];
 
-    label[k].text = (unichar_t *) _("Name");
+    label[k].text = (uint32_t *) _("Name");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -1957,7 +1957,7 @@ return;
     gcd[k].creator = GRadioCreate;
     harray1[3] = &gcd[k++];
 
-    label[k].text = (unichar_t *) _("Reverse");
+    label[k].text = (uint32_t *) _("Reverse");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -1972,7 +1972,7 @@ return;
     boxes[2].creator = GHBoxCreate;
     varray[l++] = &boxes[2]; varray[l++] = NULL;
 
-    label[k].text = (unichar_t *) _("Search:");
+    label[k].text = (uint32_t *) _("Search:");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -1998,7 +1998,7 @@ return;
     boxes[3].creator = GHBoxCreate;
     varray[l++] = &boxes[3]; varray[l++] = NULL;
 
-    label[k].text = (unichar_t *) _("Fonts on http://openfontlibrary.org/");
+    label[k].text = (uint32_t *) _("Fonts on http://openfontlibrary.org/");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -2059,7 +2059,7 @@ return;
     fontlistl = l;
     varray[l++] = &boxes[6]; varray[l++] = NULL;
 
-    label[k].text = (unichar_t *) _("Automatically download preview after selecting a font (be patient)");
+    label[k].text = (uint32_t *) _("Automatically download preview after selecting a font (be patient)");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -2071,7 +2071,7 @@ return;
     gcd[k].creator = GCheckBoxCreate;
     varray[l++] = &gcd[k++]; varray[l++] = NULL;
 
-    label[k].text = (unichar_t *) _("Open Font");
+    label[k].text = (uint32_t *) _("Open Font");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -2081,7 +2081,7 @@ return;
     gcd[k].creator = GButtonCreate;
     barray[0] = GCD_Glue; barray[1] = &gcd[k++]; barray[2] = GCD_Glue;
 
-    label[k].text = (unichar_t *) _("Preview");
+    label[k].text = (uint32_t *) _("Preview");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -2091,7 +2091,7 @@ return;
     gcd[k].creator = GButtonCreate;
     barray[3] = GCD_Glue; barray[4] = &gcd[k++]; barray[5] = GCD_Glue;
 
-    label[k].text = (unichar_t *) _("Done");
+    label[k].text = (uint32_t *) _("Done");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];

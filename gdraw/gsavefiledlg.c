@@ -40,7 +40,7 @@
 
 struct gfc_data {
     int done;
-    unichar_t *ret;
+    uint32_t *ret;
     GGadget *gfc;
 };
 
@@ -93,7 +93,7 @@ return( true );
 
 static void GFD_dircreated(GIOControl *gio) {
     struct gfc_data *d = gio->userdata;
-    unichar_t *dir = x_u32_strdup_or_null(gio->path);
+    uint32_t *dir = x_u32_strdup_or_null(gio->path);
 
     GFileChooserReplaceIO(d->gfc,NULL);
     GFileChooserSetDir(d->gfc,dir);
@@ -117,7 +117,7 @@ static void GFD_dircreatefailed(GIOControl *gio) {
 static int GFD_NewDir(GGadget *g, GEvent *e) {
     if ( e->type==et_controlevent && e->u.control.subtype == et_buttonactivate ) {
 	struct gfc_data *d = GDrawGetUserData(GGadgetGetWindow(g));
-	unichar_t *newdir;
+	uint32_t *newdir;
 	char *temp;
 	temp = GWidgetAskString8(_("Create directory..."),NULL,_("Directory name?"));
 	newdir = utf82u_copy(temp);
@@ -126,7 +126,7 @@ static int GFD_NewDir(GGadget *g, GEvent *e) {
 	if ( newdir==NULL )
 return( true );
 	if ( !GFileIsAbsolute(x_gc_u32_strconv_to_locale(newdir))) {
-	    unichar_t *temp = u32_GFileAppendFile(GFileChooserGetDir(d->gfc),newdir,false);
+	    uint32_t *temp = u32_GFileAppendFile(GFileChooserGetDir(d->gfc),newdir,false);
 	    free(newdir);
 	    newdir = x_u32_strdup_or_null (temp);
 	}
@@ -158,8 +158,8 @@ return( GGadgetDispatchEvent((GGadget *) (d->gfc),event));
 return( true );
 }
 
-static unichar_t *GWidgetSaveAsFileWithGadget(const unichar_t *title, const unichar_t *defaultfile,
-	const unichar_t *initial_filter, unichar_t **mimetypes,
+static uint32_t *GWidgetSaveAsFileWithGadget(const uint32_t *title, const uint32_t *defaultfile,
+	const uint32_t *initial_filter, uint32_t **mimetypes,
 	GFileChooserFilterType filter, GGadgetCreateData *optional_gcd) {
     GRect pos;
     GWindow gw;
@@ -179,7 +179,7 @@ static unichar_t *GWidgetSaveAsFileWithGadget(const unichar_t *title, const unic
     wattrs.is_dlg = 1;
     wattrs.undercursor = 1;
     wattrs.cursor = ct_pointer;
-    wattrs.window_title = (unichar_t *) title;
+    wattrs.window_title = (uint32_t *) title;
     pos.x = pos.y = 0;
     totwid = GGadgetScale(223);
     bsbigger = 3*bs+4*14>totwid; totwid = bsbigger?3*bs+4*12:totwid;
@@ -204,7 +204,7 @@ static unichar_t *GWidgetSaveAsFileWithGadget(const unichar_t *title, const unic
     gcd[1].gd.pos.x = 12; gcd[1].gd.pos.y = 222-3;
     gcd[1].gd.pos.width = -1;
     gcd[1].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    label[1].text = (unichar_t *) _("_Save");
+    label[1].text = (uint32_t *) _("_Save");
     label[1].text_is_1byte = true;
     label[1].text_in_resource = true;
     gcd[1].gd.mnemonic = 'S';
@@ -216,7 +216,7 @@ static unichar_t *GWidgetSaveAsFileWithGadget(const unichar_t *title, const unic
     gcd[2].gd.pos.x = (totwid-bs)*100/GIntGetResource(_NUM_ScaleFactor)/2; gcd[2].gd.pos.y = 222;
     gcd[2].gd.pos.width = -1;
     gcd[2].gd.flags = gg_visible | gg_enabled;
-    label[2].text = (unichar_t *) _("_Filter");
+    label[2].text = (uint32_t *) _("_Filter");
     label[2].text_is_1byte = true;
     label[2].text_in_resource = true;
     gcd[2].gd.mnemonic = 'F';
@@ -228,7 +228,7 @@ static unichar_t *GWidgetSaveAsFileWithGadget(const unichar_t *title, const unic
     gcd[3].gd.pos.x = gcd[2].gd.pos.x; gcd[3].gd.pos.y = 192;
     gcd[3].gd.pos.width = -1;
     gcd[3].gd.flags = gg_visible | gg_enabled;
-    label[3].text = (unichar_t *) S_("Directory|_New");
+    label[3].text = (uint32_t *) S_("Directory|_New");
     label[3].text_is_1byte = true;
     label[3].text_in_resource = true;
     label[3].image = &_GIcon_dir;
@@ -242,7 +242,7 @@ static unichar_t *GWidgetSaveAsFileWithGadget(const unichar_t *title, const unic
     gcd[4].gd.pos.x = -gcd[1].gd.pos.x; gcd[4].gd.pos.y = 222;
     gcd[4].gd.pos.width = -1;
     gcd[4].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    label[4].text = (unichar_t *) _("_Cancel");
+    label[4].text = (uint32_t *) _("_Cancel");
     label[4].text_is_1byte = true;
     label[4].text_in_resource = true;
     gcd[4].gd.label = &label[4];
@@ -295,7 +295,7 @@ return(d.ret);
 char *GWidgetSaveAsFileWithGadget8(const char *title, const char *defaultfile,
 	const char *initial_filter, char **mimetypes,
 	GFileChooserFilterType filter, GGadgetCreateData *optional_gcd) {
-    unichar_t *tit=NULL, *def=NULL, *filt=NULL, **mimes=NULL, *ret;
+    uint32_t *tit=NULL, *def=NULL, *filt=NULL, **mimes=NULL, *ret;
     char *utf8_ret;
     int i;
 
@@ -307,7 +307,7 @@ char *GWidgetSaveAsFileWithGadget8(const char *title, const char *defaultfile,
 	filt = utf82u_copy(initial_filter);
     if ( mimetypes!=NULL ) {
 	for ( i=0; mimetypes[i]!=NULL; ++i );
-	mimes = xmalloc((i+1)*sizeof(unichar_t *));
+	mimes = xmalloc((i+1)*sizeof(uint32_t *));
 	for ( i=0; mimetypes[i]!=NULL; ++i )
 	    mimes[i] = utf82u_copy(mimetypes[i]);
 	mimes[i] = NULL;

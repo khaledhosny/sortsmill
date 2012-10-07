@@ -58,7 +58,7 @@ typedef struct sftextarea {
     int16 sel_start, sel_end, sel_base;
     int16 sel_oldstart, sel_oldend, sel_oldbase;
     int16 dd_cursor_pos;
-    unichar_t *pointless_text, *pointless_oldtext;
+    uint32_t *pointless_text, *pointless_oldtext;
     FontInstance *font;		/* pointless */
     GTimer *pressed;
     GTimer *cursor;
@@ -75,7 +75,7 @@ typedef struct sftextarea {
 extern void SFTFRefreshFonts(GGadget *g);
 extern void SFTextAreaShow(GGadget *g,int pos);
 extern void SFTextAreaSelect(GGadget *g,int start, int end);
-extern void SFTextAreaReplace(GGadget *g,const unichar_t *txt);
+extern void SFTextAreaReplace(GGadget *g,const uint32_t *txt);
 extern int SFTFSetFontData(GGadget *g, int start, int end, SplineFont *sf,
 	enum sftf_fonttype, int size, int antialias);
 extern int SFTFSetFont(GGadget *g, int start, int end, SplineFont *sf);
@@ -93,7 +93,7 @@ extern float SFTFGetDPI(GGadget *g);
 extern void SFTFInitLangSys(GGadget *g, int end, uint32 script, uint32 lang);
 extern GGadget *SFTextAreaCreate(struct gwindow *base, GGadgetData *gd,void *data);
 extern void SFTFPopupMenu(SFTextArea *st, GEvent *event);
-extern void SFTextAreaSetTitleNotFonts(GGadget *g,const unichar_t *tit);
+extern void SFTextAreaSetTitleNotFonts(GGadget *g,const uint32_t *tit);
 
 extern struct gfuncs sftextarea_funcs;
 #endif

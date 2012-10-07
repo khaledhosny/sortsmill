@@ -38,9 +38,9 @@ enum giofuncs { gf_dir, gf_statfile, gf_getfile, gf_putfile,
 	gf_max };
 
 typedef struct giocontrol {
-    unichar_t *path;
-    unichar_t *origpath;		/* what the user asked for (before any redirects), NULL if path doesn't change */
-    unichar_t *topath;			/* for renames and copies */
+    uint32_t *path;
+    uint32_t *origpath;		/* what the user asked for (before any redirects), NULL if path doesn't change */
+    uint32_t *topath;			/* for renames and copies */
     void *userdata;
     struct gio_connectiondata *connectiondata;
     struct gio_threaddata *threaddata;
@@ -55,13 +55,13 @@ typedef struct giocontrol {
     int protocol_index;
     struct giocontrol *next;
     int return_code;
-    unichar_t *error;
-    unichar_t status[80];
+    uint32_t *error;
+    uint32_t status[80];
 } GIOControl;
     
 typedef struct gdirentry {
-    unichar_t *name;
-    unichar_t *mimetype;
+    uint32_t *name;
+    uint32_t *mimetype;
     unsigned int isdir: 1;
     unsigned int isexe: 1;
     unsigned int islnk: 1;
@@ -94,17 +94,17 @@ extern int32 GIOwrite(GIOControl *gc,void *buffer,int32 len);
 extern void GIOFreeDirEntries(GDirEntry *lst);
 VISIBLE extern void GIOcancel(GIOControl *gc);
 VISIBLE extern void GIOclose(GIOControl *gc);
-VISIBLE extern GIOControl *GIOCreate(unichar_t *path,void *userdata,
+VISIBLE extern GIOControl *GIOCreate(uint32_t *path,void *userdata,
 	void (*receivedata)(struct giocontrol *),
 	void (*receiveerror)(struct giocontrol *));
 extern void GIOSetDefAuthorizer(int32 (*getauth)(struct giocontrol *));
-extern void GIOSetUserAgent(unichar_t *agent);
+extern void GIOSetUserAgent(uint32_t *agent);
 
-VISIBLE extern unichar_t *GIOguessMimeType(const unichar_t *path,int isdir);
-extern unichar_t *_GioMacMime(const char *path);
+VISIBLE extern uint32_t *GIOguessMimeType(const uint32_t *path,int isdir);
+extern uint32_t *_GioMacMime(const char *path);
 
 VISIBLE extern char *GIO_PasswordCache(char *proto,char *host,char *username,char *password);
-VISIBLE extern char *_GIO_decomposeURL(const unichar_t *url,char **host, int *port, char **username,
+VISIBLE extern char *_GIO_decomposeURL(const uint32_t *url,char **host, int *port, char **username,
 				       char **password);
 
 VISIBLE extern void GIO_SetThreadCallback(void (*callback)(void *,void *,void *));

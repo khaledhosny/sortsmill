@@ -515,7 +515,7 @@ return;
 	memset(&gcd,0,sizeof(gcd));
 	memset(&boxes,0,sizeof(boxes));
 
-	label[0].text = (unichar_t *) explain;
+	label[0].text = (uint32_t *) explain;
 	label[0].text_is_1byte = true;
 	gcd[0].gd.label = &label[0];
 	gcd[0].gd.pos.x = 6; gcd[0].gd.pos.y = 6; gcd[0].gd.pos.width = 400-12;
@@ -523,7 +523,7 @@ return;
 	gcd[0].creator = GLabelCreate;
 	varray[0] = &gcd[0]; varray[1] = NULL;
 
-	label[4].text = (unichar_t *) "";
+	label[4].text = (uint32_t *) "";
 	label[4].text_is_1byte = true;
 	gcd[4].gd.label = &label[4];
 	gcd[4].gd.pos.x = 6; gcd[4].gd.pos.y = gcd[0].gd.pos.y+12; gcd[4].gd.pos.width = 400-12;
@@ -531,7 +531,7 @@ return;
 	gcd[4].creator = GLabelCreate;
 	varray[2] = &gcd[4]; varray[3] = NULL;
 
-	label[5].text = (unichar_t *) _("Ignore this problem in the future");
+	label[5].text = (uint32_t *) _("Ignore this problem in the future");
 	label[5].text_is_1byte = true;
 	gcd[5].gd.label = &label[5];
 	gcd[5].gd.pos.x = 6; gcd[5].gd.pos.y = gcd[4].gd.pos.y+12;
@@ -542,7 +542,7 @@ return;
 	gcd[1].gd.pos.x = 15-3; gcd[1].gd.pos.y = gcd[5].gd.pos.y+20;
 	gcd[1].gd.pos.width = -1; gcd[1].gd.pos.height = 0;
 	gcd[1].gd.flags = gg_visible | gg_enabled | gg_but_default;
-	label[1].text = (unichar_t *) _("_Next");
+	label[1].text = (uint32_t *) _("_Next");
 	label[1].text_is_1byte = true;
 	label[1].text_in_resource = true;
 	gcd[1].gd.mnemonic = 'N';
@@ -554,7 +554,7 @@ return;
 	gcd[6].gd.pos.x = 200-30; gcd[6].gd.pos.y = gcd[2].gd.pos.y;
 	gcd[6].gd.pos.width = -1; gcd[6].gd.pos.height = 0;
 	gcd[6].gd.flags = /*gg_visible |*/ gg_enabled;
-	label[6].text = (unichar_t *) _("Fix");
+	label[6].text = (uint32_t *) _("Fix");
 	label[6].text_is_1byte = true;
 	gcd[6].gd.mnemonic = 'F';
 	gcd[6].gd.label = &label[6];
@@ -565,7 +565,7 @@ return;
 	gcd[2].gd.pos.x = -15; gcd[2].gd.pos.y = gcd[1].gd.pos.y+3;
 	gcd[2].gd.pos.width = -1; gcd[2].gd.pos.height = 0;
 	gcd[2].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-	label[2].text = (unichar_t *) _("_Stop");
+	label[2].text = (uint32_t *) _("_Stop");
 	label[2].text_is_1byte = true;
 	label[2].text_in_resource = true;
 	gcd[2].gd.label = &label[2];
@@ -2211,7 +2211,7 @@ static void mark_to_replace(struct problems *p,struct mgask_data *d, char *rpl) 
 static int MGA_RplChange(GGadget *g, GEvent *e) {
     if ( e->type==et_controlevent && e->u.control.subtype == et_textchanged ) {
 	struct mgask_data *d = GDrawGetUserData(GGadgetGetWindow(g));
-	const unichar_t *rpl = _GGadgetGetTitle(g);
+	const uint32_t *rpl = _GGadgetGetTitle(g);
 	GGadgetSetEnabled(GWidgetGetControl(d->gw,CID_Rpl),*rpl!=0);
     }
 return( true );
@@ -2220,7 +2220,7 @@ return( true );
 static int MGA_Rpl(GGadget *g, GEvent *e) {
     if ( e->type==et_controlevent && e->u.control.subtype == et_buttonactivate ) {
 	struct mgask_data *d = GDrawGetUserData(GGadgetGetWindow(g));
-	const unichar_t *_rpl = _GGadgetGetTitle(GWidgetGetControl(d->gw,CID_RplText));
+	const uint32_t *_rpl = _GGadgetGetTitle(GWidgetGetControl(d->gw,CID_RplText));
 	char *rpl = cu_copy(_rpl);
 	if ( GGadgetIsChecked(GWidgetGetControl(d->gw,CID_Always)))
 	    mark_to_replace(d->p,d,rpl);
@@ -2339,28 +2339,28 @@ static int mgAsk(struct problems *p,char **_str,char *str, char *end,uint32 tag,
     memset(&gcd,0,sizeof(gcd));
 
     k=0;
-    label[k].text = (unichar_t *) buffer;
+    label[k].text = (uint32_t *) buffer;
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 10; gcd[k].gd.pos.y = 6;
     gcd[k].gd.flags = gg_visible | gg_enabled;
     gcd[k++].creator = GLabelCreate;
 
-    label[k].text = (unichar_t *) _(" refers to a missing glyph");
+    label[k].text = (uint32_t *) _(" refers to a missing glyph");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 10; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+13;
     gcd[k].gd.flags = gg_visible | gg_enabled;
     gcd[k++].creator = GLabelCreate;
 
-    label[k].text = (unichar_t *) str;
+    label[k].text = (uint32_t *) str;
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 10; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+13;
     gcd[k].gd.flags = gg_visible | gg_enabled;
     gcd[k++].creator = GLabelCreate;
 
-    label[k].text = (unichar_t *) _("Replace With:");
+    label[k].text = (uint32_t *) _("Replace With:");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+16;
@@ -2376,13 +2376,13 @@ static int mgAsk(struct problems *p,char **_str,char *str, char *end,uint32 tag,
 
     gcd[k].gd.pos.x = 10; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+30;
     gcd[k].gd.flags = gg_visible | gg_enabled;
-    label[k].text = (unichar_t *) _("Always");
+    label[k].text = (uint32_t *) _("Always");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.cid = CID_Always;
     gcd[k++].creator = GCheckBoxCreate;
 
-    label[k].text = (unichar_t *) _("Ignore this problem in the future");
+    label[k].text = (uint32_t *) _("Ignore this problem in the future");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 10; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+20;
@@ -2393,7 +2393,7 @@ static int mgAsk(struct problems *p,char **_str,char *str, char *end,uint32 tag,
     gcd[k].gd.pos.x = 10-3; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+30 -3;
     gcd[k].gd.pos.width = -1;
     gcd[k].gd.flags = gg_visible | gg_but_default;
-    label[k].text = (unichar_t *) _("Replace");
+    label[k].text = (uint32_t *) _("Replace");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.handle_controlevent = MGA_Rpl;
@@ -2404,7 +2404,7 @@ static int mgAsk(struct problems *p,char **_str,char *str, char *end,uint32 tag,
     gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+3;
     gcd[k].gd.pos.width = -1;
     gcd[k].gd.flags = gg_visible | gg_enabled;
-    label[k].text = (unichar_t *) _("Remove");
+    label[k].text = (uint32_t *) _("Remove");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.handle_controlevent = MGA_Delete;
@@ -2414,7 +2414,7 @@ static int mgAsk(struct problems *p,char **_str,char *str, char *end,uint32 tag,
     gcd[k].gd.pos.x = -10; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y;
     gcd[k].gd.pos.width = -1;
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    label[k].text = (unichar_t *) _("Skip");
+    label[k].text = (uint32_t *) _("Skip");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.handle_controlevent = MGA_Skip;
@@ -3121,14 +3121,14 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     memset(&pgcd,0,sizeof(pgcd));
     memset(&pboxes,0,sizeof(pboxes));
 
-    plabel[0].text = (unichar_t *) _("Non-_Integral coordinates");
+    plabel[0].text = (uint32_t *) _("Non-_Integral coordinates");
     plabel[0].text_is_1byte = true;
     plabel[0].text_in_resource = true;
     pgcd[0].gd.label = &plabel[0];
     pgcd[0].gd.pos.x = 3; pgcd[0].gd.pos.y = 5; 
     pgcd[0].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( nonintegral ) pgcd[0].gd.flags |= gg_cb_on;
-    pgcd[0].gd.popup_msg = (unichar_t *) _(
+    pgcd[0].gd.popup_msg = (uint32_t *) _(
 	    "The coordinates of all points and control points in truetype\n"
 	    "must be integers (if they are not integers then FontForge will\n"
 	    "round them when it outputs them, potentially causing havoc).\n"
@@ -3138,7 +3138,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     pgcd[0].creator = GCheckBoxCreate;
     parray[0] = &pgcd[0];
 
-    plabel[1].text = (unichar_t *) U_("_X near¹");
+    plabel[1].text = (uint32_t *) U_("_X near¹");
     plabel[1].text_is_1byte = true;
     plabel[1].text_in_resource = true;
     pgcd[1].gd.label = &plabel[1];
@@ -3146,13 +3146,13 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     pgcd[1].gd.pos.x = 3; pgcd[1].gd.pos.y = pgcd[0].gd.pos.y+17; 
     pgcd[1].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( doxnear ) pgcd[1].gd.flags |= gg_cb_on;
-    pgcd[1].gd.popup_msg = (unichar_t *) _("Allows you to check that vertical stems in several\ncharacters start at the same location.");
+    pgcd[1].gd.popup_msg = (uint32_t *) _("Allows you to check that vertical stems in several\ncharacters start at the same location.");
     pgcd[1].gd.cid = CID_XNear;
     pgcd[1].creator = GCheckBoxCreate;
     pharray1[0] = &pgcd[1];
 
     sprintf(xnbuf,"%g",xval);
-    plabel[2].text = (unichar_t *) xnbuf;
+    plabel[2].text = (uint32_t *) xnbuf;
     plabel[2].text_is_1byte = true;
     pgcd[2].gd.label = &plabel[2];
     pgcd[2].gd.pos.x = 60; pgcd[2].gd.pos.y = pgcd[1].gd.pos.y-5; pgcd[2].gd.pos.width = 40;
@@ -3168,7 +3168,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     pboxes[2].creator = GHBoxCreate;
     parray[1] = &pboxes[2];
 
-    plabel[3].text = (unichar_t *) U_("_Y near¹");
+    plabel[3].text = (uint32_t *) U_("_Y near¹");
     plabel[3].text_is_1byte = true;
     plabel[3].text_in_resource = true;
     pgcd[3].gd.label = &plabel[3];
@@ -3176,13 +3176,13 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     pgcd[3].gd.pos.x = 3; pgcd[3].gd.pos.y = pgcd[1].gd.pos.y+24; 
     pgcd[3].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( doynear ) pgcd[3].gd.flags |= gg_cb_on;
-    pgcd[3].gd.popup_msg = (unichar_t *) _("Allows you to check that horizontal stems in several\ncharacters start at the same location.");
+    pgcd[3].gd.popup_msg = (uint32_t *) _("Allows you to check that horizontal stems in several\ncharacters start at the same location.");
     pgcd[3].gd.cid = CID_YNear;
     pgcd[3].creator = GCheckBoxCreate;
     pharray2[0] = &pgcd[3];
 
     sprintf(ynbuf,"%g",yval);
-    plabel[4].text = (unichar_t *) ynbuf;
+    plabel[4].text = (uint32_t *) ynbuf;
     plabel[4].text_is_1byte = true;
     pgcd[4].gd.label = &plabel[4];
     pgcd[4].gd.pos.x = 60; pgcd[4].gd.pos.y = pgcd[3].gd.pos.y-5; pgcd[4].gd.pos.width = 40;
@@ -3198,7 +3198,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     pboxes[3].creator = GHBoxCreate;
     parray[2] = &pboxes[3];
 
-    plabel[5].text = (unichar_t *) U_("Y near¹ _standard heights");
+    plabel[5].text = (uint32_t *) U_("Y near¹ _standard heights");
     plabel[5].text_is_1byte = true;
     plabel[5].text_in_resource = true;
     pgcd[5].gd.label = &plabel[5];
@@ -3206,12 +3206,12 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     pgcd[5].gd.pos.x = 3; pgcd[5].gd.pos.y = pgcd[3].gd.pos.y+18; 
     pgcd[5].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( doynearstd ) pgcd[5].gd.flags |= gg_cb_on;
-    pgcd[5].gd.popup_msg = (unichar_t *) _("Allows you to find points which are slightly\noff from the baseline, xheight, cap height,\nascender, descender heights.");
+    pgcd[5].gd.popup_msg = (uint32_t *) _("Allows you to find points which are slightly\noff from the baseline, xheight, cap height,\nascender, descender heights.");
     pgcd[5].gd.cid = CID_YNearStd;
     pgcd[5].creator = GCheckBoxCreate;
     parray[3] = &pgcd[5];
 
-    plabel[6].text = (unichar_t *) (fv->b.sf->italicangle==0?_("_Control Points near horizontal/vertical"):_("Control Points near horizontal/vertical/italic"));
+    plabel[6].text = (uint32_t *) (fv->b.sf->italicangle==0?_("_Control Points near horizontal/vertical"):_("Control Points near horizontal/vertical/italic"));
     plabel[6].text_is_1byte = true;
     plabel[6].text_in_resource = true;
     pgcd[6].gd.label = &plabel[6];
@@ -3219,12 +3219,12 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     pgcd[6].gd.pos.x = 3; pgcd[6].gd.pos.y = pgcd[5].gd.pos.y+14; 
     pgcd[6].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( cpstd ) pgcd[6].gd.flags |= gg_cb_on;
-    pgcd[6].gd.popup_msg = (unichar_t *) _("Allows you to find control points which are almost,\nbut not quite horizontal or vertical\nfrom their base point\n(or at the italic angle).");
+    pgcd[6].gd.popup_msg = (uint32_t *) _("Allows you to find control points which are almost,\nbut not quite horizontal or vertical\nfrom their base point\n(or at the italic angle).");
     pgcd[6].gd.cid = CID_CpStd;
     pgcd[6].creator = GCheckBoxCreate;
     parray[4] = &pgcd[6];
 
-    plabel[7].text = (unichar_t *) _("Control Points _beyond spline");
+    plabel[7].text = (uint32_t *) _("Control Points _beyond spline");
     plabel[7].text_is_1byte = true;
     plabel[7].text_in_resource = true;
     pgcd[7].gd.label = &plabel[7];
@@ -3232,51 +3232,51 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     pgcd[7].gd.pos.x = 3; pgcd[7].gd.pos.y = pgcd[6].gd.pos.y+14; 
     pgcd[7].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( cpodd ) pgcd[7].gd.flags |= gg_cb_on;
-    pgcd[7].gd.popup_msg = (unichar_t *) _("Allows you to find control points which when projected\nonto the line segment between the two end points lie\noutside of those end points");
+    pgcd[7].gd.popup_msg = (uint32_t *) _("Allows you to find control points which when projected\nonto the line segment between the two end points lie\noutside of those end points");
     pgcd[7].gd.cid = CID_CpOdd;
     pgcd[7].creator = GCheckBoxCreate;
     parray[5] = &pgcd[7];
 
-    plabel[8].text = (unichar_t *) _("Check for _irrelevant control points");
+    plabel[8].text = (uint32_t *) _("Check for _irrelevant control points");
     plabel[8].text_is_1byte = true;
     plabel[8].text_in_resource = true;
     pgcd[8].gd.label = &plabel[8];
     pgcd[8].gd.pos.x = 3; pgcd[8].gd.pos.y = pgcd[7].gd.pos.y+14; 
     pgcd[8].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( irrelevantcp ) pgcd[8].gd.flags |= gg_cb_on;
-    pgcd[8].gd.popup_msg = (unichar_t *) _("Control points are irrelevant if they are too close to the main\npoint to make a significant difference in the shape of the curve.");
+    pgcd[8].gd.popup_msg = (uint32_t *) _("Control points are irrelevant if they are too close to the main\npoint to make a significant difference in the shape of the curve.");
     pgcd[8].gd.cid = CID_IrrelevantCP;
     pgcd[8].creator = GCheckBoxCreate;
     parray[6] = &pgcd[8];
 
-    plabel[9].text = (unichar_t *) _("Irrelevant _Factor:");
+    plabel[9].text = (uint32_t *) _("Irrelevant _Factor:");
     plabel[9].text_is_1byte = true;
     plabel[9].text_in_resource = true;
     pgcd[9].gd.label = &plabel[9];
     pgcd[9].gd.pos.x = 20; pgcd[9].gd.pos.y = pgcd[8].gd.pos.y+17; 
     pgcd[9].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    pgcd[9].gd.popup_msg = (unichar_t *) _("A control point is deemed irrelevant if the distance between it and the main\n(end) point is less than this times the distance between the two end points");
+    pgcd[9].gd.popup_msg = (uint32_t *) _("A control point is deemed irrelevant if the distance between it and the main\n(end) point is less than this times the distance between the two end points");
     pgcd[9].creator = GLabelCreate;
     pharray3[0] = GCD_HPad10; pharray3[1] = &pgcd[9];
 
     sprintf( irrel, "%g", irrelevantfactor*100 );
-    plabel[10].text = (unichar_t *) irrel;
+    plabel[10].text = (uint32_t *) irrel;
     plabel[10].text_is_1byte = true;
     pgcd[10].gd.label = &plabel[10];
     pgcd[10].gd.pos.x = 105; pgcd[10].gd.pos.y = pgcd[9].gd.pos.y-3;
     pgcd[10].gd.pos.width = 50; 
     pgcd[10].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    pgcd[10].gd.popup_msg = (unichar_t *) _("A control point is deemed irrelevant if the distance between it and the main\n(end) point is less than this times the distance between the two end points");
+    pgcd[10].gd.popup_msg = (uint32_t *) _("A control point is deemed irrelevant if the distance between it and the main\n(end) point is less than this times the distance between the two end points");
     pgcd[10].gd.cid = CID_IrrelevantFactor;
     pgcd[10].creator = GTextFieldCreate;
     pharray3[2] = &pgcd[10];
 
-    plabel[11].text = (unichar_t *) "%";
+    plabel[11].text = (uint32_t *) "%";
     plabel[11].text_is_1byte = true;
     pgcd[11].gd.label = &plabel[11];
     pgcd[11].gd.pos.x = 163; pgcd[11].gd.pos.y = pgcd[9].gd.pos.y; 
     pgcd[11].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    pgcd[11].gd.popup_msg = (unichar_t *) _("A control point is deemed irrelevant if the distance between it and the main\n(end) point is less than this times the distance between the two end points");
+    pgcd[11].gd.popup_msg = (uint32_t *) _("A control point is deemed irrelevant if the distance between it and the main\n(end) point is less than this times the distance between the two end points");
     pgcd[11].creator = GLabelCreate;
     pharray3[3] = &pgcd[11]; pharray3[4] = GCD_Glue; pharray3[5] = NULL;
 
@@ -3285,26 +3285,26 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     pboxes[4].creator = GHBoxCreate;
     parray[7] = &pboxes[4];
 
-    plabel[12].text = (unichar_t *) _("Poin_ts too close");
+    plabel[12].text = (uint32_t *) _("Poin_ts too close");
     plabel[12].text_is_1byte = true;
     plabel[12].text_in_resource = true;
     pgcd[12].gd.label = &plabel[12];
     pgcd[12].gd.pos.x = 3; pgcd[12].gd.pos.y = pgcd[11].gd.pos.y+14; 
     pgcd[12].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( pointstooclose ) pgcd[12].gd.flags |= gg_cb_on;
-    pgcd[12].gd.popup_msg = (unichar_t *) _("If two adjacent points on the same path are less than a few\nemunits apart they will cause problems for some of FontForge's\ncommands. PostScript shouldn't care though.");
+    pgcd[12].gd.popup_msg = (uint32_t *) _("If two adjacent points on the same path are less than a few\nemunits apart they will cause problems for some of FontForge's\ncommands. PostScript shouldn't care though.");
     pgcd[12].gd.cid = CID_PointsTooClose;
     pgcd[12].creator = GCheckBoxCreate;
     parray[8] = &pgcd[12];
 
-    plabel[13].text = (unichar_t *) _("_Points too far");
+    plabel[13].text = (uint32_t *) _("_Points too far");
     plabel[13].text_is_1byte = true;
     plabel[13].text_in_resource = true;
     pgcd[13].gd.label = &plabel[13];
     pgcd[13].gd.pos.x = 3; pgcd[13].gd.pos.y = pgcd[12].gd.pos.y+14; 
     pgcd[13].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( pointstoofar ) pgcd[13].gd.flags |= gg_cb_on;
-    pgcd[13].gd.popup_msg = (unichar_t *) _("Most font formats cannot specify adjacent points (or control points)\nwhich are more than 32767 em-units apart in either the x or y direction");
+    pgcd[13].gd.popup_msg = (uint32_t *) _("Most font formats cannot specify adjacent points (or control points)\nwhich are more than 32767 em-units apart in either the x or y direction");
     pgcd[13].gd.cid = CID_PointsTooFar;
     pgcd[13].creator = GCheckBoxCreate;
     parray[9] = &pgcd[13]; parray[10] = GCD_Glue; parray[11] = NULL;
@@ -3319,7 +3319,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     memset(&pagcd,0,sizeof(pagcd));
     memset(&paboxes,0,sizeof(paboxes));
 
-    palabel[0].text = (unichar_t *) _("O_pen Paths");
+    palabel[0].text = (uint32_t *) _("O_pen Paths");
     palabel[0].text_is_1byte = true;
     palabel[0].text_in_resource = true;
     pagcd[0].gd.label = &palabel[0];
@@ -3327,24 +3327,24 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     pagcd[0].gd.pos.x = 3; pagcd[0].gd.pos.y = 6; 
     pagcd[0].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( openpaths ) pagcd[0].gd.flags |= gg_cb_on;
-    pagcd[0].gd.popup_msg = (unichar_t *) _("All paths should be closed loops, there should be no exposed endpoints");
+    pagcd[0].gd.popup_msg = (uint32_t *) _("All paths should be closed loops, there should be no exposed endpoints");
     pagcd[0].gd.cid = CID_OpenPaths;
     pagcd[0].creator = GCheckBoxCreate;
     paarray[0] = &pagcd[0];
 
-    palabel[1].text = (unichar_t *) _("Intersecting Paths");
+    palabel[1].text = (uint32_t *) _("Intersecting Paths");
     palabel[1].text_is_1byte = true;
     pagcd[1].gd.label = &palabel[1];
     pagcd[1].gd.mnemonic = 'E';
     pagcd[1].gd.pos.x = 3; pagcd[1].gd.pos.y = pagcd[0].gd.pos.y+17; 
     pagcd[1].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( intersectingpaths ) pagcd[1].gd.flags |= gg_cb_on;
-    pagcd[1].gd.popup_msg = (unichar_t *) _("No paths with within a glyph should intersect");
+    pagcd[1].gd.popup_msg = (uint32_t *) _("No paths with within a glyph should intersect");
     pagcd[1].gd.cid = CID_IntersectingPaths;
     pagcd[1].creator = GCheckBoxCreate;
     paarray[1] = &pagcd[1];
 
-    palabel[2].text = (unichar_t *) (fv->b.sf->italicangle==0?_("_Edges near horizontal/vertical"):_("Edges near horizontal/vertical/italic"));
+    palabel[2].text = (uint32_t *) (fv->b.sf->italicangle==0?_("_Edges near horizontal/vertical"):_("Edges near horizontal/vertical/italic"));
     palabel[2].text_is_1byte = true;
     palabel[2].text_in_resource = true;
     pagcd[2].gd.label = &palabel[2];
@@ -3352,12 +3352,12 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     pagcd[2].gd.pos.x = 3; pagcd[2].gd.pos.y = pagcd[1].gd.pos.y+17; 
     pagcd[2].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( linestd ) pagcd[2].gd.flags |= gg_cb_on;
-    pagcd[2].gd.popup_msg = (unichar_t *) _("Allows you to find lines which are almost,\nbut not quite horizontal or vertical\n(or at the italic angle).");
+    pagcd[2].gd.popup_msg = (uint32_t *) _("Allows you to find lines which are almost,\nbut not quite horizontal or vertical\n(or at the italic angle).");
     pagcd[2].gd.cid = CID_LineStd;
     pagcd[2].creator = GCheckBoxCreate;
     paarray[2] = &pagcd[2];
 
-    palabel[3].text = (unichar_t *) _("Check _outermost paths clockwise");
+    palabel[3].text = (uint32_t *) _("Check _outermost paths clockwise");
     palabel[3].text_is_1byte = true;
     palabel[3].text_in_resource = true;
     pagcd[3].gd.label = &palabel[3];
@@ -3365,24 +3365,24 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     pagcd[3].gd.pos.x = 3; pagcd[3].gd.pos.y = pagcd[2].gd.pos.y+17; 
     pagcd[3].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( direction ) pagcd[3].gd.flags |= gg_cb_on;
-    pagcd[3].gd.popup_msg = (unichar_t *) _("PostScript and TrueType require that paths be drawn\nin a clockwise direction. This lets you check that they\nare.\n Before doing this test insure that\nno paths self-intersect");
+    pagcd[3].gd.popup_msg = (uint32_t *) _("PostScript and TrueType require that paths be drawn\nin a clockwise direction. This lets you check that they\nare.\n Before doing this test insure that\nno paths self-intersect");
     pagcd[3].gd.cid = CID_Direction;
     pagcd[3].creator = GCheckBoxCreate;
     paarray[3] = &pagcd[3];
 
-    palabel[4].text = (unichar_t *) _("Check _missing extrema");
+    palabel[4].text = (uint32_t *) _("Check _missing extrema");
     palabel[4].text_is_1byte = true;
     palabel[4].text_in_resource = true;
     pagcd[4].gd.label = &palabel[4];
     pagcd[4].gd.pos.x = 3; pagcd[4].gd.pos.y = pagcd[3].gd.pos.y+17; 
     pagcd[4].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( missingextrema ) pagcd[4].gd.flags |= gg_cb_on;
-    pagcd[4].gd.popup_msg = (unichar_t *) _("PostScript and TrueType require that when a path\nreaches its maximum or minimum position\nthere must be a point at that location.");
+    pagcd[4].gd.popup_msg = (uint32_t *) _("PostScript and TrueType require that when a path\nreaches its maximum or minimum position\nthere must be a point at that location.");
     pagcd[4].gd.cid = CID_MissingExtrema;
     pagcd[4].creator = GCheckBoxCreate;
     paarray[4] = &pagcd[4];
 
-    palabel[5].text = (unichar_t *) _("_More points than:");
+    palabel[5].text = (uint32_t *) _("_More points than:");
     palabel[5].text_is_1byte = true;
     palabel[5].text_in_resource = true;
     pagcd[5].gd.label = &palabel[5];
@@ -3390,19 +3390,19 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     pagcd[5].gd.pos.x = 3; pagcd[5].gd.pos.y = pagcd[4].gd.pos.y+21; 
     pagcd[5].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( toomanypoints ) pagcd[5].gd.flags |= gg_cb_on;
-    pagcd[5].gd.popup_msg = (unichar_t *) _("The PostScript Language Reference Manual (Appendix B) says that\nan interpreter need not support paths with more than 1500 points.\nI think this count includes control points. From PostScript's point\nof view, all the contours in a character make up one path. Modern\ninterpreters tend to support paths with more points than this limit.\n(Note a truetype font after conversion to PS will contain\ntwice as many control points)");
+    pagcd[5].gd.popup_msg = (uint32_t *) _("The PostScript Language Reference Manual (Appendix B) says that\nan interpreter need not support paths with more than 1500 points.\nI think this count includes control points. From PostScript's point\nof view, all the contours in a character make up one path. Modern\ninterpreters tend to support paths with more points than this limit.\n(Note a truetype font after conversion to PS will contain\ntwice as many control points)");
     pagcd[5].gd.cid = CID_TooManyPoints;
     pagcd[5].creator = GCheckBoxCreate;
     paharray[0] = &pagcd[5];
 
     sprintf( pmax, "%d", pointsmax );
-    palabel[6].text = (unichar_t *) pmax;
+    palabel[6].text = (uint32_t *) pmax;
     palabel[6].text_is_1byte = true;
     pagcd[6].gd.label = &palabel[6];
     pagcd[6].gd.pos.x = 105; pagcd[6].gd.pos.y = pagcd[5].gd.pos.y-3;
     pagcd[6].gd.pos.width = 50; 
     pagcd[6].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    pagcd[6].gd.popup_msg = (unichar_t *) _("The PostScript Language Reference Manual (Appendix B) says that\nan interpreter need not support paths with more than 1500 points.\nI think this count includes control points. From PostScript's point\nof view, all the contours in a character make up one path. Modern\ninterpreters tend to support paths with more points than this limit.\n(Note a truetype font after conversion to PS will contain\ntwice as many control points)");
+    pagcd[6].gd.popup_msg = (uint32_t *) _("The PostScript Language Reference Manual (Appendix B) says that\nan interpreter need not support paths with more than 1500 points.\nI think this count includes control points. From PostScript's point\nof view, all the contours in a character make up one path. Modern\ninterpreters tend to support paths with more points than this limit.\n(Note a truetype font after conversion to PS will contain\ntwice as many control points)");
     pagcd[6].gd.cid = CID_PointsMax;
     pagcd[6].creator = GTextFieldCreate;
     paharray[1] = &pagcd[6]; paharray[2] = GCD_Glue; paharray[3] = NULL;
@@ -3422,7 +3422,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     memset(&rfgcd,0,sizeof(rfgcd));
     memset(&rfboxes,0,sizeof(rfboxes));
 
-    rflabel[0].text = (unichar_t *) _("Check _flipped references");
+    rflabel[0].text = (uint32_t *) _("Check _flipped references");
     rflabel[0].text_is_1byte = true;
     rflabel[0].text_in_resource = true;
     rfgcd[0].gd.label = &rflabel[0];
@@ -3430,13 +3430,13 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     rfgcd[0].gd.pos.x = 3; rfgcd[0].gd.pos.y = 6; 
     rfgcd[0].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( flippedrefs ) rfgcd[0].gd.flags |= gg_cb_on;
-    rfgcd[0].gd.popup_msg = (unichar_t *) _("PostScript and TrueType require that paths be drawn\nin a clockwise direction. If you have a reference\nthat has been flipped then the paths in that reference will\nprobably be counter-clockwise. You should unlink it and do\nElement->Correct direction on it.");
+    rfgcd[0].gd.popup_msg = (uint32_t *) _("PostScript and TrueType require that paths be drawn\nin a clockwise direction. If you have a reference\nthat has been flipped then the paths in that reference will\nprobably be counter-clockwise. You should unlink it and do\nElement->Correct direction on it.");
     rfgcd[0].gd.cid = CID_FlippedRefs;
     rfgcd[0].creator = GCheckBoxCreate;
     rfarray[0] = &rfgcd[0];
 
 /* GT: Refs is an abbreviation for References. Space is somewhat constrained here */
-    rflabel[1].text = (unichar_t *) _("Refs with bad tt transformation matrices");
+    rflabel[1].text = (uint32_t *) _("Refs with bad tt transformation matrices");
     rflabel[1].text_is_1byte = true;
     rflabel[1].text_in_resource = true;
     rfgcd[1].gd.label = &rflabel[1];
@@ -3444,12 +3444,12 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     rfgcd[1].gd.pos.x = 3; rfgcd[1].gd.pos.y = rfgcd[0].gd.pos.y+17; 
     rfgcd[1].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( refsbadtransformttf ) rfgcd[1].gd.flags |= gg_cb_on;
-    rfgcd[1].gd.popup_msg = (unichar_t *) _("TrueType requires that all scaling and rotational\nentries in a transformation matrix be between -2 and 2");
+    rfgcd[1].gd.popup_msg = (uint32_t *) _("TrueType requires that all scaling and rotational\nentries in a transformation matrix be between -2 and 2");
     rfgcd[1].gd.cid = CID_RefBadTransformTTF;
     rfgcd[1].creator = GCheckBoxCreate;
     rfarray[1] = &rfgcd[1];
 
-    rflabel[2].text = (unichar_t *) _("Mixed contours and references");
+    rflabel[2].text = (uint32_t *) _("Mixed contours and references");
     rflabel[2].text_is_1byte = true;
     rflabel[2].text_in_resource = true;
     rfgcd[2].gd.label = &rflabel[2];
@@ -3457,13 +3457,13 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     rfgcd[2].gd.pos.x = 3; rfgcd[2].gd.pos.y = rfgcd[1].gd.pos.y+17; 
     rfgcd[2].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( mixedcontoursrefs ) rfgcd[2].gd.flags |= gg_cb_on;
-    rfgcd[2].gd.popup_msg = (unichar_t *) _("TrueType glyphs can either contain references or contours.\nNot both.");
+    rfgcd[2].gd.popup_msg = (uint32_t *) _("TrueType glyphs can either contain references or contours.\nNot both.");
     rfgcd[2].gd.cid = CID_MixedContoursRefs;
     rfgcd[2].creator = GCheckBoxCreate;
     rfarray[2] = &rfgcd[2];
 
 /* GT: Refs is an abbreviation for References. Space is somewhat constrained here */
-    rflabel[3].text = (unichar_t *) _("Refs with bad ps transformation matrices");
+    rflabel[3].text = (uint32_t *) _("Refs with bad ps transformation matrices");
     rflabel[3].text_is_1byte = true;
     rflabel[3].text_in_resource = true;
     rfgcd[3].gd.label = &rflabel[3];
@@ -3471,13 +3471,13 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     rfgcd[3].gd.pos.x = 3; rfgcd[3].gd.pos.y = rfgcd[2].gd.pos.y+17; 
     rfgcd[3].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( refsbadtransformps ) rfgcd[3].gd.flags |= gg_cb_on;
-    rfgcd[3].gd.popup_msg = (unichar_t *) _("Type1 and 2 fonts only support translation of references.\nThe first four entries of the transformation matrix should be\n[1 0 0 1].");
+    rfgcd[3].gd.popup_msg = (uint32_t *) _("Type1 and 2 fonts only support translation of references.\nThe first four entries of the transformation matrix should be\n[1 0 0 1].");
     rfgcd[3].gd.cid = CID_RefBadTransformPS;
     rfgcd[3].creator = GCheckBoxCreate;
     rfarray[3] = &rfgcd[3];
 
 /* GT: Refs is an abbreviation for References. Space is somewhat constrained here */
-    rflabel[4].text = (unichar_t *) _("Refs neste_d deeper than:");
+    rflabel[4].text = (uint32_t *) _("Refs neste_d deeper than:");
     rflabel[4].text_is_1byte = true;
     rflabel[4].text_in_resource = true;
     rfgcd[4].gd.label = &rflabel[4];
@@ -3485,19 +3485,19 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     rfgcd[4].gd.pos.x = 3; rfgcd[4].gd.pos.y = rfgcd[3].gd.pos.y+21; 
     rfgcd[4].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( toodeeprefs ) rfgcd[4].gd.flags |= gg_cb_on;
-    rfgcd[4].gd.popup_msg = (unichar_t *) _("The Type 2 Charstring Reference (Appendix B) says that\nsubroutines may not be nested more than 10 deep. Each\nnesting level for references requires one subroutine\nlevel, and hints may require another level.");
+    rfgcd[4].gd.popup_msg = (uint32_t *) _("The Type 2 Charstring Reference (Appendix B) says that\nsubroutines may not be nested more than 10 deep. Each\nnesting level for references requires one subroutine\nlevel, and hints may require another level.");
     rfgcd[4].gd.cid = CID_TooDeepRefs;
     rfgcd[4].creator = GCheckBoxCreate;
     rfharray[0] = &rfgcd[4];
 
     sprintf( rmax, "%d", refdepthmax );
-    rflabel[5].text = (unichar_t *) rmax;
+    rflabel[5].text = (uint32_t *) rmax;
     rflabel[5].text_is_1byte = true;
     rfgcd[5].gd.label = &rflabel[5];
     rfgcd[5].gd.pos.x = 140; rfgcd[5].gd.pos.y = rfgcd[4].gd.pos.y-3;
     rfgcd[5].gd.pos.width = 40; 
     rfgcd[5].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    rfgcd[5].gd.popup_msg = (unichar_t *) _("The Type 2 Charstring Reference (Appendix B) says that\nsubroutines may not be nested more than 10 deep. Each\nnesting level for references requires one subroutine\nlevel, and hints may require another level.");
+    rfgcd[5].gd.popup_msg = (uint32_t *) _("The Type 2 Charstring Reference (Appendix B) says that\nsubroutines may not be nested more than 10 deep. Each\nnesting level for references requires one subroutine\nlevel, and hints may require another level.");
     rfgcd[5].gd.cid = CID_RefDepthMax;
     rfgcd[5].creator = GTextFieldCreate;
     rfharray[1] = &rfgcd[5]; rfharray[2] = GCD_Glue; rfharray[3] = NULL;
@@ -3507,7 +3507,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     rfboxes[2].creator = GHBoxCreate;
     rfarray[4] = &rfboxes[2];
 
-    rflabel[6].text = (unichar_t *) _("Refs with out of date point matching");
+    rflabel[6].text = (uint32_t *) _("Refs with out of date point matching");
     rflabel[6].text_is_1byte = true;
     rflabel[6].text_in_resource = true;
     rfgcd[6].gd.label = &rflabel[6];
@@ -3515,19 +3515,19 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     rfgcd[6].gd.pos.x = 3; rfgcd[6].gd.pos.y = rfgcd[5].gd.pos.y+24; 
     rfgcd[6].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( ptmatchrefsoutofdate ) rfgcd[6].gd.flags |= gg_cb_on;
-    rfgcd[6].gd.popup_msg = (unichar_t *) _("If a glyph has been edited so that it has a different\nnumber of points now, then any references\nwhich use point matching and depended on that glyph's\npoint count will be incorrect.");
+    rfgcd[6].gd.popup_msg = (uint32_t *) _("If a glyph has been edited so that it has a different\nnumber of points now, then any references\nwhich use point matching and depended on that glyph's\npoint count will be incorrect.");
     rfgcd[6].gd.cid = CID_PtMatchRefsOutOfDate;
     rfgcd[6].creator = GCheckBoxCreate;
     rfarray[5] = &rfgcd[6];
 
-    rflabel[7].text = (unichar_t *) _("Multiple refs with use-my-metrics");
+    rflabel[7].text = (uint32_t *) _("Multiple refs with use-my-metrics");
     rflabel[7].text_is_1byte = true;
     rflabel[7].text_in_resource = true;
     rfgcd[7].gd.label = &rflabel[7];
     rfgcd[7].gd.mnemonic = 'r';
     rfgcd[7].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( multusemymetrics ) rfgcd[7].gd.flags |= gg_cb_on;
-    rfgcd[7].gd.popup_msg = (unichar_t *) _("There may be at most one reference with the use-my-metrics bit set");
+    rfgcd[7].gd.popup_msg = (uint32_t *) _("There may be at most one reference with the use-my-metrics bit set");
     rfgcd[7].gd.cid = CID_MultUseMyMetrics;
     rfgcd[7].creator = GCheckBoxCreate;
     rfarray[6] = &rfgcd[7]; rfarray[7] = GCD_Glue; rfarray[8] = NULL;
@@ -3542,7 +3542,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     memset(&hgcd,0,sizeof(hgcd));
     memset(&hboxes,0,sizeof(hboxes));
 
-    hlabel[0].text = (unichar_t *) _("_Hints controlling no points");
+    hlabel[0].text = (uint32_t *) _("_Hints controlling no points");
     hlabel[0].text_is_1byte = true;
     hlabel[0].text_in_resource = true;
     hgcd[0].gd.label = &hlabel[0];
@@ -3550,12 +3550,12 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     hgcd[0].gd.pos.x = 3; hgcd[0].gd.pos.y = 5; 
     hgcd[0].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( hintnopt ) hgcd[0].gd.flags |= gg_cb_on;
-    hgcd[0].gd.popup_msg = (unichar_t *) _("Ghostview (perhaps other interpreters) has a problem when a\nhint exists without any points that lie on it.");
+    hgcd[0].gd.popup_msg = (uint32_t *) _("Ghostview (perhaps other interpreters) has a problem when a\nhint exists without any points that lie on it.");
     hgcd[0].gd.cid = CID_HintNoPt;
     hgcd[0].creator = GCheckBoxCreate;
     harray[0] = &hgcd[0];
 
-    hlabel[1].text = (unichar_t *) U_("_Points near¹ hint edges");
+    hlabel[1].text = (uint32_t *) U_("_Points near¹ hint edges");
     hlabel[1].text_is_1byte = true;
     hlabel[1].text_in_resource = true;
     hgcd[1].gd.label = &hlabel[1];
@@ -3563,12 +3563,12 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     hgcd[1].gd.pos.x = 3; hgcd[1].gd.pos.y = hgcd[0].gd.pos.y+17; 
     hgcd[1].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( ptnearhint ) hgcd[1].gd.flags |= gg_cb_on;
-    hgcd[1].gd.popup_msg = (unichar_t *) _("Often if a point is slightly off from a hint\nit is because a stem is made up\nof several segments, and one of them\nhas the wrong width.");
+    hgcd[1].gd.popup_msg = (uint32_t *) _("Often if a point is slightly off from a hint\nit is because a stem is made up\nof several segments, and one of them\nhas the wrong width.");
     hgcd[1].gd.cid = CID_PtNearHint;
     hgcd[1].creator = GCheckBoxCreate;
     harray[1] = &hgcd[1];
 
-    hlabel[2].text = (unichar_t *) U_("Hint _Width Near¹");
+    hlabel[2].text = (uint32_t *) U_("Hint _Width Near¹");
     hlabel[2].text_is_1byte = true;
     hlabel[2].text_in_resource = true;
     hgcd[2].gd.label = &hlabel[2];
@@ -3576,13 +3576,13 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     hgcd[2].gd.pos.x = 3; hgcd[2].gd.pos.y = hgcd[1].gd.pos.y+21;
     hgcd[2].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( hintwidth ) hgcd[2].gd.flags |= gg_cb_on;
-    hgcd[2].gd.popup_msg = (unichar_t *) _("Allows you to check that stems have consistent widths..");
+    hgcd[2].gd.popup_msg = (uint32_t *) _("Allows you to check that stems have consistent widths..");
     hgcd[2].gd.cid = CID_HintWidthNear;
     hgcd[2].creator = GCheckBoxCreate;
     hharray1[0] = &hgcd[2];
 
     sprintf(widthbuf,"%g",widthval);
-    hlabel[3].text = (unichar_t *) widthbuf;
+    hlabel[3].text = (uint32_t *) widthbuf;
     hlabel[3].text_is_1byte = true;
     hgcd[3].gd.label = &hlabel[3];
     hgcd[3].gd.pos.x = 100+5; hgcd[3].gd.pos.y = hgcd[2].gd.pos.y-1; hgcd[3].gd.pos.width = 40;
@@ -3599,7 +3599,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     harray[2] = &hboxes[2];
 
 /* GT: The _3 is used to mark an accelerator */
-    hlabel[4].text = (unichar_t *) _("Almost stem_3 hint");
+    hlabel[4].text = (uint32_t *) _("Almost stem_3 hint");
     hlabel[4].text_is_1byte = true;
     hlabel[4].text_in_resource = true;
     hgcd[4].gd.label = &hlabel[4];
@@ -3607,13 +3607,13 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     hgcd[4].gd.pos.x = 3; hgcd[4].gd.pos.y = hgcd[3].gd.pos.y+19;
     hgcd[4].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( stem3 ) hgcd[4].gd.flags |= gg_cb_on;
-    hgcd[4].gd.popup_msg = (unichar_t *) _("This checks if the character almost, but not exactly,\nconforms to the requirements for a stem3 hint.\nThat is, either vertically or horizontally, there must\nbe exactly three hints, and they must have the same\nwidth and they must be evenly spaced.");
+    hgcd[4].gd.popup_msg = (uint32_t *) _("This checks if the character almost, but not exactly,\nconforms to the requirements for a stem3 hint.\nThat is, either vertically or horizontally, there must\nbe exactly three hints, and they must have the same\nwidth and they must be evenly spaced.");
     hgcd[4].gd.cid = CID_Stem3;
     hgcd[4].gd.handle_controlevent = Prob_EnableExact;
     hgcd[4].creator = GCheckBoxCreate;
     harray[3] = &hgcd[4];
 
-    hlabel[5].text = (unichar_t *) _("_Show Exact *stem3");
+    hlabel[5].text = (uint32_t *) _("_Show Exact *stem3");
     hlabel[5].text_is_1byte = true;
     hlabel[5].text_in_resource = true;
     hgcd[5].gd.label = &hlabel[5];
@@ -3622,7 +3622,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     hgcd[5].gd.flags = gg_visible | gg_utf8_popup;
     if ( showexactstem3 ) hgcd[5].gd.flags |= gg_cb_on;
     if ( stem3 ) hgcd[5].gd.flags |= gg_enabled;
-    hgcd[5].gd.popup_msg = (unichar_t *) _("Shows when this character is exactly a stem3 hint");
+    hgcd[5].gd.popup_msg = (uint32_t *) _("Shows when this character is exactly a stem3 hint");
     hgcd[5].gd.cid = CID_ShowExactStem3;
     hgcd[5].creator = GCheckBoxCreate;
     hharray2[0] = GCD_HPad10; hharray2[1] = &hgcd[5]; hharray2[2] = GCD_Glue; hharray2[3] = NULL;
@@ -3632,26 +3632,26 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     hboxes[3].creator = GHBoxCreate;
     harray[4] = &hboxes[3];
 
-    hlabel[6].text = (unichar_t *) _("_More hints than:");
+    hlabel[6].text = (uint32_t *) _("_More hints than:");
     hlabel[6].text_is_1byte = true;
     hlabel[6].text_in_resource = true;
     hgcd[6].gd.label = &hlabel[6];
     hgcd[6].gd.pos.x = 3; hgcd[6].gd.pos.y = hgcd[5].gd.pos.y+21; 
     hgcd[6].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( toomanyhints ) hgcd[6].gd.flags |= gg_cb_on;
-    hgcd[6].gd.popup_msg = (unichar_t *) _("The Type 2 Charstring Reference (Appendix B) says that\nthere may be at most 96 horizontal and vertical stem hints\nin a character.");
+    hgcd[6].gd.popup_msg = (uint32_t *) _("The Type 2 Charstring Reference (Appendix B) says that\nthere may be at most 96 horizontal and vertical stem hints\nin a character.");
     hgcd[6].gd.cid = CID_TooManyHints;
     hgcd[6].creator = GCheckBoxCreate;
     hharray3[0] = &hgcd[6];
 
     sprintf( hmax, "%d", hintsmax );
-    hlabel[7].text = (unichar_t *) hmax;
+    hlabel[7].text = (uint32_t *) hmax;
     hlabel[7].text_is_1byte = true;
     hgcd[7].gd.label = &hlabel[7];
     hgcd[7].gd.pos.x = 105; hgcd[7].gd.pos.y = hgcd[6].gd.pos.y-3;
     hgcd[7].gd.pos.width = 50; 
     hgcd[7].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    hgcd[7].gd.popup_msg = (unichar_t *) _("The Type 2 Charstring Reference (Appendix B) says that\nthere may be at most 96 horizontal and vertical stem hints\nin a character.");
+    hgcd[7].gd.popup_msg = (uint32_t *) _("The Type 2 Charstring Reference (Appendix B) says that\nthere may be at most 96 horizontal and vertical stem hints\nin a character.");
     hgcd[7].gd.cid = CID_HintsMax;
     hgcd[7].creator = GTextFieldCreate;
     hharray3[1] = &hgcd[7]; hharray3[2] = GCD_Glue; hharray3[3] = NULL;
@@ -3661,13 +3661,13 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     hboxes[4].creator = GHBoxCreate;
     harray[5] = &hboxes[4];
 
-    hlabel[8].text = (unichar_t *) _("_Overlapped hints");
+    hlabel[8].text = (uint32_t *) _("_Overlapped hints");
     hlabel[8].text_is_1byte = true;
     hlabel[8].text_in_resource = true;
     hgcd[8].gd.label = &hlabel[8];
     hgcd[8].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( overlappedhints ) hgcd[8].gd.flags |= gg_cb_on;
-    hgcd[8].gd.popup_msg = (unichar_t *) _("Either a glyph should have no overlapping hints,\nor a glyph with hint masks should have no overlapping\nhints within a hint mask.");
+    hgcd[8].gd.popup_msg = (uint32_t *) _("Either a glyph should have no overlapping hints,\nor a glyph with hint masks should have no overlapping\nhints within a hint mask.");
     hgcd[8].gd.cid = CID_OverlappedHints;
     hgcd[8].creator = GCheckBoxCreate;
     harray[6] = &hgcd[8];
@@ -3684,7 +3684,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     memset(&rgcd,0,sizeof(rgcd));
     memset(&rboxes,0,sizeof(rboxes));
 
-    rlabel[0].text = (unichar_t *) _("Check missing _bitmaps");
+    rlabel[0].text = (uint32_t *) _("Check missing _bitmaps");
     rlabel[0].text_is_1byte = true;
     rlabel[0].text_in_resource = true;
     rgcd[0].gd.label = &rlabel[0];
@@ -3692,11 +3692,11 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     rgcd[0].gd.pos.x = 3; rgcd[0].gd.pos.y = 6; 
     rgcd[0].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( bitmaps ) rgcd[0].gd.flags |= gg_cb_on;
-    rgcd[0].gd.popup_msg = (unichar_t *) _("Are there any outline characters which don't have a bitmap version in one of the bitmap fonts?\nConversely are there any bitmap characters without a corresponding outline character?");
+    rgcd[0].gd.popup_msg = (uint32_t *) _("Are there any outline characters which don't have a bitmap version in one of the bitmap fonts?\nConversely are there any bitmap characters without a corresponding outline character?");
     rgcd[0].gd.cid = CID_Bitmaps;
     rgcd[0].creator = GCheckBoxCreate;
 
-    rlabel[1].text = (unichar_t *) _("Bitmap/outline _advance mismatch");
+    rlabel[1].text = (uint32_t *) _("Bitmap/outline _advance mismatch");
     rlabel[1].text_is_1byte = true;
     rlabel[1].text_in_resource = true;
     rgcd[1].gd.label = &rlabel[1];
@@ -3704,37 +3704,37 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     rgcd[1].gd.pos.x = 3; rgcd[1].gd.pos.y = 6; 
     rgcd[1].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( bitmapwidths ) rgcd[1].gd.flags |= gg_cb_on;
-    rgcd[1].gd.popup_msg = (unichar_t *) _("Are there any bitmap glyphs whose advance width\nis not is expected from scaling and rounding\nthe outline's advance width?");
+    rgcd[1].gd.popup_msg = (uint32_t *) _("Are there any bitmap glyphs whose advance width\nis not is expected from scaling and rounding\nthe outline's advance width?");
     rgcd[1].gd.cid = CID_BitmapWidths;
     rgcd[1].creator = GCheckBoxCreate;
 
-    rlabel[2].text = (unichar_t *) _("Check multiple Unicode");
+    rlabel[2].text = (uint32_t *) _("Check multiple Unicode");
     rlabel[2].text_is_1byte = true;
     rgcd[2].gd.label = &rlabel[2];
     rgcd[2].gd.pos.x = 3; rgcd[2].gd.pos.y = rgcd[1].gd.pos.y+15; 
     rgcd[2].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( multuni ) rgcd[2].gd.flags |= gg_cb_on;
-    rgcd[2].gd.popup_msg = (unichar_t *) _("Check multiple Unicode");
+    rgcd[2].gd.popup_msg = (uint32_t *) _("Check multiple Unicode");
     rgcd[2].gd.cid = CID_MultUni;
     rgcd[2].creator = GCheckBoxCreate;
 
-    rlabel[3].text = (unichar_t *) _("Check multiple Names");
+    rlabel[3].text = (uint32_t *) _("Check multiple Names");
     rlabel[3].text_is_1byte = true;
     rgcd[3].gd.label = &rlabel[3];
     rgcd[3].gd.pos.x = 3; rgcd[3].gd.pos.y = rgcd[2].gd.pos.y+15; 
     rgcd[3].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( multname ) rgcd[3].gd.flags |= gg_cb_on;
-    rgcd[3].gd.popup_msg = (unichar_t *) _("Check for multiple characters with the same name");
+    rgcd[3].gd.popup_msg = (uint32_t *) _("Check for multiple characters with the same name");
     rgcd[3].gd.cid = CID_MultName;
     rgcd[3].creator = GCheckBoxCreate;
 
-    rlabel[4].text = (unichar_t *) _("Check Unicode/Name mismatch");
+    rlabel[4].text = (uint32_t *) _("Check Unicode/Name mismatch");
     rlabel[4].text_is_1byte = true;
     rgcd[4].gd.label = &rlabel[4];
     rgcd[4].gd.pos.x = 3; rgcd[4].gd.pos.y = rgcd[3].gd.pos.y+15; 
     rgcd[4].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( uninamemismatch ) rgcd[4].gd.flags |= gg_cb_on;
-    rgcd[4].gd.popup_msg = (unichar_t *) _("Check for characters whose name maps to a unicode code point\nwhich does not map the character's assigned code point.");
+    rgcd[4].gd.popup_msg = (uint32_t *) _("Check for characters whose name maps to a unicode code point\nwhich does not map the character's assigned code point.");
     rgcd[4].gd.cid = CID_UniNameMisMatch;
     rgcd[4].creator = GCheckBoxCreate;
 
@@ -3752,7 +3752,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     memset(&bbgcd,0,sizeof(bbgcd));
     memset(&bbboxes,0,sizeof(bbboxes));
 
-    bblabel[0].text = (unichar_t *) _("Glyph BB Above");
+    bblabel[0].text = (uint32_t *) _("Glyph BB Above");
     bblabel[0].text_is_1byte = true;
     bblabel[0].text_in_resource = true;
     bbgcd[0].gd.label = &bblabel[0];
@@ -3760,7 +3760,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     bbgcd[0].gd.pos.x = 3; bbgcd[0].gd.pos.y = 6; 
     bbgcd[0].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( bbymax ) bbgcd[0].gd.flags |= gg_cb_on;
-    bbgcd[0].gd.popup_msg = (unichar_t *) _("Are there any glyph's whose bounding boxes extend above this number?");
+    bbgcd[0].gd.popup_msg = (uint32_t *) _("Are there any glyph's whose bounding boxes extend above this number?");
     bbgcd[0].gd.cid = CID_BBYMax;
     bbgcd[0].creator = GCheckBoxCreate;
 
@@ -3770,7 +3770,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     }
 
     sprintf(yymaxbuf,"%g", bbymax_val!=0 ? bbymax_val : sf->ascent);
-    bblabel[1].text = (unichar_t *) yymaxbuf;
+    bblabel[1].text = (uint32_t *) yymaxbuf;
     bblabel[1].text_is_1byte = true;
     bbgcd[1].gd.label = &bblabel[1];
     bbgcd[1].gd.pos.x = 100+15; bbgcd[1].gd.pos.y = bbgcd[0].gd.pos.y-1; bbgcd[1].gd.pos.width = 40;
@@ -3781,7 +3781,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     bbgcd[1].creator = GTextFieldCreate;
     bbarray[0][0] = &bbgcd[0]; bbarray[0][1] = &bbgcd[1]; bbarray[0][2] = GCD_Glue; bbarray[0][3] = NULL;
 
-    bblabel[2].text = (unichar_t *) _("Glyph BB Below");
+    bblabel[2].text = (uint32_t *) _("Glyph BB Below");
     bblabel[2].text_is_1byte = true;
     bblabel[2].text_in_resource = true;
     bbgcd[2].gd.label = &bblabel[2];
@@ -3789,12 +3789,12 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     bbgcd[2].gd.pos.x = 3; bbgcd[2].gd.pos.y = bbgcd[0].gd.pos.y+21; 
     bbgcd[2].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( bbymin ) bbgcd[2].gd.flags |= gg_cb_on;
-    bbgcd[2].gd.popup_msg = (unichar_t *) _("Are there any glyph's whose bounding boxes extend below this number?");
+    bbgcd[2].gd.popup_msg = (uint32_t *) _("Are there any glyph's whose bounding boxes extend below this number?");
     bbgcd[2].gd.cid = CID_BBYMin;
     bbgcd[2].creator = GCheckBoxCreate;
 
     sprintf(yyminbuf,"%g", bbymin_val!=0 ? bbymin_val : -sf->descent);
-    bblabel[3].text = (unichar_t *) yyminbuf;
+    bblabel[3].text = (uint32_t *) yyminbuf;
     bblabel[3].text_is_1byte = true;
     bbgcd[3].gd.label = &bblabel[3];
     bbgcd[3].gd.pos.x = 100+15; bbgcd[3].gd.pos.y = bbgcd[2].gd.pos.y-1; bbgcd[3].gd.pos.width = 40;
@@ -3805,19 +3805,19 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     bbgcd[3].creator = GTextFieldCreate;
     bbarray[1][0] = &bbgcd[2]; bbarray[1][1] = &bbgcd[3]; bbarray[1][2] = GCD_Glue; bbarray[1][3] = NULL;
 
-    bblabel[4].text = (unichar_t *) _("Glyph BB Right Of");
+    bblabel[4].text = (uint32_t *) _("Glyph BB Right Of");
     bblabel[4].text_is_1byte = true;
     bblabel[4].text_in_resource = true;
     bbgcd[4].gd.label = &bblabel[4];
     bbgcd[4].gd.pos.x = 3; bbgcd[4].gd.pos.y = bbgcd[2].gd.pos.y+21; 
     bbgcd[4].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( bbxmax ) bbgcd[4].gd.flags |= gg_cb_on;
-    bbgcd[4].gd.popup_msg = (unichar_t *) _("Are there any glyphs whose bounding boxes extend to the right of this number?");
+    bbgcd[4].gd.popup_msg = (uint32_t *) _("Are there any glyphs whose bounding boxes extend to the right of this number?");
     bbgcd[4].gd.cid = CID_BBXMax;
     bbgcd[4].creator = GCheckBoxCreate;
 
     sprintf(xxmaxbuf,"%g", bbxmax_val!=0 ? bbxmax_val : (double) (sf->ascent+sf->descent));
-    bblabel[5].text = (unichar_t *) xxmaxbuf;
+    bblabel[5].text = (uint32_t *) xxmaxbuf;
     bblabel[5].text_is_1byte = true;
     bbgcd[5].gd.label = &bblabel[5];
     bbgcd[5].gd.pos.x = 100+15; bbgcd[5].gd.pos.y = bbgcd[4].gd.pos.y-1; bbgcd[5].gd.pos.width = 40;
@@ -3828,19 +3828,19 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     bbgcd[5].creator = GTextFieldCreate;
     bbarray[2][0] = &bbgcd[4]; bbarray[2][1] = &bbgcd[5]; bbarray[2][2] = GCD_Glue; bbarray[2][3] = NULL;
 
-    bblabel[6].text = (unichar_t *) _("Glyph BB Left Of");
+    bblabel[6].text = (uint32_t *) _("Glyph BB Left Of");
     bblabel[6].text_is_1byte = true;
     bblabel[6].text_in_resource = true;
     bbgcd[6].gd.label = &bblabel[6];
     bbgcd[6].gd.pos.x = 3; bbgcd[6].gd.pos.y = bbgcd[4].gd.pos.y+21; 
     bbgcd[6].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( bbxmin ) bbgcd[6].gd.flags |= gg_cb_on;
-    bbgcd[6].gd.popup_msg = (unichar_t *) _("Are there any glyph's whose bounding boxes extend to the left of this number?");
+    bbgcd[6].gd.popup_msg = (uint32_t *) _("Are there any glyph's whose bounding boxes extend to the left of this number?");
     bbgcd[6].gd.cid = CID_BBXMin;
     bbgcd[6].creator = GCheckBoxCreate;
 
     sprintf(xxminbuf,"%g",bbxmin_val);
-    bblabel[7].text = (unichar_t *) xxminbuf;
+    bblabel[7].text = (uint32_t *) xxminbuf;
     bblabel[7].text_is_1byte = true;
     bbgcd[7].gd.label = &bblabel[7];
     bbgcd[7].gd.pos.x = 100+15; bbgcd[7].gd.pos.y = bbgcd[6].gd.pos.y-1; bbgcd[7].gd.pos.width = 40;
@@ -3851,7 +3851,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     bbgcd[7].creator = GTextFieldCreate;
     bbarray[3][0] = &bbgcd[6]; bbarray[3][1] = &bbgcd[7]; bbarray[3][2] = GCD_Glue; bbarray[3][3] = NULL;
 
-    bblabel[8].text = (unichar_t *) _("Check Advance:");
+    bblabel[8].text = (uint32_t *) _("Check Advance:");
     bblabel[8].text_is_1byte = true;
     bblabel[8].text_in_resource = true;
     bbgcd[8].gd.label = &bblabel[8];
@@ -3859,14 +3859,14 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     bbgcd[8].gd.pos.x = 3; bbgcd[8].gd.pos.y = bbgcd[6].gd.pos.y+21;
     bbgcd[8].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( advancewidth ) bbgcd[8].gd.flags |= gg_cb_on;
-    bbgcd[8].gd.popup_msg = (unichar_t *) _("Check for characters whose advance width is not the displayed value.");
+    bbgcd[8].gd.popup_msg = (uint32_t *) _("Check for characters whose advance width is not the displayed value.");
     bbgcd[8].gd.cid = CID_AdvanceWidth;
     bbgcd[8].creator = GCheckBoxCreate;
 
     if ( ( ssc = SFGetChar(sf,' ',NULL))!=NULL )
 	advancewidthval = ssc->width;
     sprintf(awidthbuf,"%g",advancewidthval);
-    bblabel[9].text = (unichar_t *) awidthbuf;
+    bblabel[9].text = (uint32_t *) awidthbuf;
     bblabel[9].text_is_1byte = true;
     bbgcd[9].gd.label = &bblabel[9];
     bbgcd[9].gd.pos.x = 100+15; bbgcd[9].gd.pos.y = bbgcd[8].gd.pos.y-1; bbgcd[9].gd.pos.width = 40;
@@ -3877,7 +3877,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     bbgcd[9].creator = GTextFieldCreate;
     bbarray[4][0] = &bbgcd[8]; bbarray[4][1] = &bbgcd[9]; bbarray[4][2] = GCD_Glue; bbarray[4][3] = NULL;
 
-    bblabel[10].text = (unichar_t *) _("Check VAdvance:\n");
+    bblabel[10].text = (uint32_t *) _("Check VAdvance:\n");
     bblabel[10].text_is_1byte = true;
     bbgcd[10].gd.label = &bblabel[10];
     bbgcd[10].gd.mnemonic = 'W';
@@ -3885,13 +3885,13 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     bbgcd[10].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( !sf->hasvmetrics ) bbgcd[10].gd.flags = gg_visible;
     else if ( vadvancewidth ) bbgcd[10].gd.flags |= gg_cb_on;
-    bbgcd[10].gd.popup_msg = (unichar_t *) _("Check for characters whose vertical advance width is not the displayed value.");
+    bbgcd[10].gd.popup_msg = (uint32_t *) _("Check for characters whose vertical advance width is not the displayed value.");
     bbgcd[10].gd.cid = CID_VAdvanceWidth;
     bbgcd[10].creator = GCheckBoxCreate;
 
     if ( vadvancewidth==0 ) vadvancewidth = sf->ascent+sf->descent;
     sprintf(vawidthbuf,"%g",vadvancewidthval);
-    bblabel[11].text = (unichar_t *) vawidthbuf;
+    bblabel[11].text = (uint32_t *) vawidthbuf;
     bblabel[11].text_is_1byte = true;
     bbgcd[11].gd.label = &bblabel[11];
     bbgcd[11].gd.pos.x = 100+15; bbgcd[11].gd.pos.y = bbgcd[10].gd.pos.y-1; bbgcd[11].gd.pos.width = 40;
@@ -3915,7 +3915,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     memset(&cgcd,0,sizeof(cgcd));
     memset(&cboxes,0,sizeof(cboxes));
 
-    clabel[0].text = (unichar_t *) _("Check for CIDs defined _twice");
+    clabel[0].text = (uint32_t *) _("Check for CIDs defined _twice");
     clabel[0].text_is_1byte = true;
     clabel[0].text_in_resource = true;
     cgcd[0].gd.label = &clabel[0];
@@ -3923,12 +3923,12 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     cgcd[0].gd.pos.x = 3; cgcd[0].gd.pos.y = 6;
     cgcd[0].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( cidmultiple ) cgcd[0].gd.flags |= gg_cb_on;
-    cgcd[0].gd.popup_msg = (unichar_t *) _("Check whether a CID is defined in more than one sub-font");
+    cgcd[0].gd.popup_msg = (uint32_t *) _("Check whether a CID is defined in more than one sub-font");
     cgcd[0].gd.cid = CID_CIDMultiple;
     cgcd[0].creator = GCheckBoxCreate;
     carray[0] = &cgcd[0];
 
-    clabel[1].text = (unichar_t *) _("Check for _undefined CIDs");
+    clabel[1].text = (uint32_t *) _("Check for _undefined CIDs");
     clabel[1].text_is_1byte = true;
     clabel[1].text_in_resource = true;
     cgcd[1].gd.label = &clabel[1];
@@ -3936,7 +3936,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     cgcd[1].gd.pos.x = 3; cgcd[1].gd.pos.y = cgcd[0].gd.pos.y+17; 
     cgcd[1].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( cidblank ) cgcd[1].gd.flags |= gg_cb_on;
-    cgcd[1].gd.popup_msg = (unichar_t *) _("Check whether a CID is undefined in all sub-fonts");
+    cgcd[1].gd.popup_msg = (uint32_t *) _("Check whether a CID is undefined in all sub-fonts");
     cgcd[1].gd.cid = CID_CIDBlank;
     cgcd[1].creator = GCheckBoxCreate;
     carray[1] = &cgcd[1]; carray[2] = GCD_Glue; carray[3] = NULL;
@@ -3951,50 +3951,50 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     memset(&agcd,0,sizeof(agcd));
     memset(&aboxes,0,sizeof(aboxes));
 
-    alabel[0].text = (unichar_t *) _("Check for missing _glyph names");
+    alabel[0].text = (uint32_t *) _("Check for missing _glyph names");
     alabel[0].text_is_1byte = true;
     alabel[0].text_in_resource = true;
     agcd[0].gd.label = &alabel[0];
     agcd[0].gd.pos.x = 3; agcd[0].gd.pos.y = 6;
     agcd[0].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( missingglyph ) agcd[0].gd.flags |= gg_cb_on;
-    agcd[0].gd.popup_msg = (unichar_t *) _("Check whether a substitution, kerning class, etc. uses a glyph name which does not match any glyph in the font");
+    agcd[0].gd.popup_msg = (uint32_t *) _("Check whether a substitution, kerning class, etc. uses a glyph name which does not match any glyph in the font");
     agcd[0].gd.cid = CID_MissingGlyph;
     agcd[0].creator = GCheckBoxCreate;
     aarray[0] = &agcd[0];
 
-    alabel[1].text = (unichar_t *) _("Check for missing _scripts in features");
+    alabel[1].text = (uint32_t *) _("Check for missing _scripts in features");
     alabel[1].text_is_1byte = true;
     alabel[1].text_in_resource = true;
     agcd[1].gd.label = &alabel[1];
     agcd[1].gd.pos.x = 3; agcd[1].gd.pos.y = agcd[0].gd.pos.y+14;
     agcd[1].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( missingscriptinfeature ) agcd[1].gd.flags |= gg_cb_on;
-    agcd[1].gd.popup_msg = (unichar_t *) _(
+    agcd[1].gd.popup_msg = (uint32_t *) _(
 	    "In every lookup that uses a glyph, check that at\n"
 	    "least one feature is active for the glyph's script.");
     agcd[1].gd.cid = CID_MissingScriptInFeature;
     agcd[1].creator = GCheckBoxCreate;
     aarray[1] = &agcd[1];
 
-    alabel[2].text = (unichar_t *) _("Check substitutions for empty chars");
+    alabel[2].text = (uint32_t *) _("Check substitutions for empty chars");
     alabel[2].text_is_1byte = true;
     agcd[2].gd.label = &alabel[2];
     agcd[2].gd.pos.x = 3; agcd[2].gd.pos.y = agcd[1].gd.pos.y+15; 
     agcd[2].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( badsubs ) agcd[2].gd.flags |= gg_cb_on;
-    agcd[2].gd.popup_msg = (unichar_t *) _("Check for characters which contain 'GSUB' entries which refer to empty characters");
+    agcd[2].gd.popup_msg = (uint32_t *) _("Check for characters which contain 'GSUB' entries which refer to empty characters");
     agcd[2].gd.cid = CID_BadSubs;
     agcd[2].creator = GCheckBoxCreate;
     aarray[2] = &agcd[2];
 
-    alabel[3].text = (unichar_t *) _("Check for incomplete mark to base subtables");
+    alabel[3].text = (uint32_t *) _("Check for incomplete mark to base subtables");
     alabel[3].text_is_1byte = true;
     agcd[3].gd.label = &alabel[3];
     agcd[3].gd.pos.x = 3; agcd[3].gd.pos.y = agcd[1].gd.pos.y+15; 
     agcd[3].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( missinganchor ) agcd[3].gd.flags |= gg_cb_on;
-    agcd[3].gd.popup_msg = (unichar_t *) _(
+    agcd[3].gd.popup_msg = (uint32_t *) _(
 	"The OpenType documentation suggests in a rather confusing way\n"
 	"that if a base glyph (or base mark) contains an anchor point\n"
 	"for one class in a lookup subtable, then it should contain\n"
@@ -4015,38 +4015,38 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     memset(aspects,0,sizeof(aspects));
     i = 0;
 
-    aspects[i].text = (unichar_t *) _("Points");
+    aspects[i].text = (uint32_t *) _("Points");
     aspects[i].selected = true;
     aspects[i].text_is_1byte = true;
     aspects[i++].gcd = pboxes;
 
-    aspects[i].text = (unichar_t *) _("Paths");
+    aspects[i].text = (uint32_t *) _("Paths");
     aspects[i].text_is_1byte = true;
     aspects[i++].gcd = paboxes;
 
 /* GT: Refs is an abbreviation for References. Space is tight here */
-    aspects[i].text = (unichar_t *) _("Refs");
+    aspects[i].text = (uint32_t *) _("Refs");
     aspects[i].text_is_1byte = true;
     aspects[i++].gcd = rfboxes;
 
-    aspects[i].text = (unichar_t *) _("Hints");
+    aspects[i].text = (uint32_t *) _("Hints");
     aspects[i].text_is_1byte = true;
     aspects[i++].gcd = hboxes;
 
-    aspects[i].text = (unichar_t *) _("ATT");
+    aspects[i].text = (uint32_t *) _("ATT");
     aspects[i].text_is_1byte = true;
     aspects[i++].gcd = aboxes;
 
-    aspects[i].text = (unichar_t *) _("CID");
+    aspects[i].text = (uint32_t *) _("CID");
     aspects[i].disabled = fv->b.cidmaster==NULL;
     aspects[i].text_is_1byte = true;
     aspects[i++].gcd = cboxes;
 
-    aspects[i].text = (unichar_t *) _("BB");
+    aspects[i].text = (uint32_t *) _("BB");
     aspects[i].text_is_1byte = true;
     aspects[i++].gcd = bbboxes;
 
-    aspects[i].text = (unichar_t *) _("Random");
+    aspects[i].text = (uint32_t *) _("Random");
     aspects[i].text_is_1byte = true;
     aspects[i++].gcd = rboxes;
 
@@ -4060,7 +4060,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
 
     mgcd[1].gd.pos.x = 15; mgcd[1].gd.pos.y = 190+10;
     mgcd[1].gd.flags = gg_visible | gg_enabled | gg_dontcopybox;
-    mlabel[1].text = (unichar_t *) _("Clear All");
+    mlabel[1].text = (uint32_t *) _("Clear All");
     mlabel[1].text_is_1byte = true;
     mlabel[1].text_in_resource = true;
     mgcd[1].gd.label = &mlabel[1];
@@ -4073,7 +4073,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     mgcd[2].gd.pos.x = mgcd[1].gd.pos.x+1.25*GIntGetResource(_NUM_Buttonsize);
     mgcd[2].gd.pos.y = mgcd[1].gd.pos.y;
     mgcd[2].gd.flags = gg_visible | gg_enabled | gg_dontcopybox;
-    mlabel[2].text = (unichar_t *) _("Set All");
+    mlabel[2].text = (uint32_t *) _("Set All");
     mlabel[2].text_is_1byte = true;
     mlabel[2].text_in_resource = true;
     mgcd[2].gd.label = &mlabel[2];
@@ -4094,7 +4094,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     mgcd[3].creator = GLineCreate;
     marray[2][0] = &mgcd[3]; marray[2][1] = NULL;
 
-    mlabel[4].text = (unichar_t *) U_("¹ \"Near\" means within");
+    mlabel[4].text = (uint32_t *) U_("¹ \"Near\" means within");
     mlabel[4].text_is_1byte = true;
     mgcd[4].gd.label = &mlabel[4];
     mgcd[4].gd.mnemonic = 'N';
@@ -4104,7 +4104,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     mharray2[0] = &mgcd[4];
 
     sprintf(nearbuf,"%g",near);
-    mlabel[5].text = (unichar_t *) nearbuf;
+    mlabel[5].text = (uint32_t *) nearbuf;
     mlabel[5].text_is_1byte = true;
     mgcd[5].gd.label = &mlabel[5];
     mgcd[5].gd.pos.x = 130; mgcd[5].gd.pos.y = mgcd[4].gd.pos.y-6; mgcd[5].gd.pos.width = 40;
@@ -4113,7 +4113,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     mgcd[5].creator = GTextFieldCreate;
     mharray2[1] = &mgcd[5];
 
-    mlabel[6].text = (unichar_t *) _("em-units");
+    mlabel[6].text = (uint32_t *) _("em-units");
     mlabel[6].text_is_1byte = true;
     mgcd[6].gd.label = &mlabel[6];
     mgcd[6].gd.pos.x = mgcd[5].gd.pos.x+mgcd[5].gd.pos.width+4; mgcd[6].gd.pos.y = mgcd[4].gd.pos.y;
@@ -4129,7 +4129,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     mgcd[7].gd.pos.x = 15-3; mgcd[7].gd.pos.y = mgcd[5].gd.pos.y+26;
     mgcd[7].gd.pos.width = -1; mgcd[7].gd.pos.height = 0;
     mgcd[7].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    mlabel[7].text = (unichar_t *) _("_OK");
+    mlabel[7].text = (uint32_t *) _("_OK");
     mlabel[7].text_is_1byte = true;
     mlabel[7].text_in_resource = true;
     mgcd[7].gd.mnemonic = 'O';
@@ -4141,7 +4141,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     mgcd[8].gd.pos.x = -15; mgcd[8].gd.pos.y = mgcd[7].gd.pos.y+3;
     mgcd[8].gd.pos.width = -1; mgcd[8].gd.pos.height = 0;
     mgcd[8].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    mlabel[8].text = (unichar_t *) _("_Cancel");
+    mlabel[8].text = (uint32_t *) _("_Cancel");
     mlabel[8].text_is_1byte = true;
     mlabel[8].text_in_resource = true;
     mgcd[8].gd.label = &mlabel[8];
@@ -4815,11 +4815,11 @@ static void VWMenuSelect(GWindow gw,struct gmenuitem *mi,GEvent *e) {
 }
 
 static GMenuItem vw_subselect[] = {
-    { { (unichar_t *) N_("problselect|Errors"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuSelect, MID_SelectErrors },
-    { { (unichar_t *) N_("problselect|Open Contours"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuSelect, MID_SelectOpen },
-    { { (unichar_t *) N_("problselect|Bad Direction"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuSelect, MID_SelectDir },
-    { { (unichar_t *) N_("problselect|Self Intersections"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuSelect, MID_SelectRO },
-    { { (unichar_t *) N_("problselect|Missing Extrema"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuSelect, MID_SelectExtr },
+    { { (uint32_t *) N_("problselect|Errors"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuSelect, MID_SelectErrors },
+    { { (uint32_t *) N_("problselect|Open Contours"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuSelect, MID_SelectOpen },
+    { { (uint32_t *) N_("problselect|Bad Direction"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuSelect, MID_SelectDir },
+    { { (uint32_t *) N_("problselect|Self Intersections"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuSelect, MID_SelectRO },
+    { { (uint32_t *) N_("problselect|Missing Extrema"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuSelect, MID_SelectExtr },
     GMENUITEM_EMPTY
 };
 
@@ -5014,35 +5014,35 @@ static void VWMenuManySimplify(GWindow gw,struct gmenuitem *mi,GEvent *e) {
 }
 
 static GMenuItem vw_subfixup[] = {
-    { { (unichar_t *) N_("problfixup|Open Contours"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuManyConnect, 0 },
-    { { (unichar_t *) N_("problfixup|Self Intersections"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuManyOverlap, 0 },
-    { { (unichar_t *) N_("problfixup|Mark for Overlap fix before Save"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuManyMark, 0 },
-    { { (unichar_t *) N_("problfixup|Bad Directions"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuManyCorrectDir, 0 },
-    { { (unichar_t *) N_("problfixup|Missing Extrema (cautiously)"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuManyGoodExtrema, 0 },
-    { { (unichar_t *) N_("problfixup|Missing Extrema"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuManyAllExtrema, 0 },
-    { { (unichar_t *) N_("problfixup|Too Many Points"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuManySimplify, 0 },
+    { { (uint32_t *) N_("problfixup|Open Contours"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuManyConnect, 0 },
+    { { (uint32_t *) N_("problfixup|Self Intersections"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuManyOverlap, 0 },
+    { { (uint32_t *) N_("problfixup|Mark for Overlap fix before Save"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuManyMark, 0 },
+    { { (uint32_t *) N_("problfixup|Bad Directions"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuManyCorrectDir, 0 },
+    { { (uint32_t *) N_("problfixup|Missing Extrema (cautiously)"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuManyGoodExtrema, 0 },
+    { { (uint32_t *) N_("problfixup|Missing Extrema"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuManyAllExtrema, 0 },
+    { { (uint32_t *) N_("problfixup|Too Many Points"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuManySimplify, 0 },
     GMENUITEM_EMPTY
 };
 
 static GMenuItem vw_popuplist[] = {
-    { { (unichar_t *) N_("Close Open Contours"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuConnect, 0 },
-    { { (unichar_t *) N_("Inline All References"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuInlineRefs, 0 },
-    { { (unichar_t *) N_("Remove Overlap"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuOverlap, 0 },
-    { { (unichar_t *) N_("Mark for Overlap fix before Save"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuMark, 0 },
-    { { (unichar_t *) N_("Inline Flipped References"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuInlineFlippedRefs, 0 },
-    { { (unichar_t *) N_("Correct Direction"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuCorrectDir, 0 },
-    { { (unichar_t *) N_("Add Good Extrema"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0',0, NULL, NULL, VWMenuGoodExtrema, 0 },
-    { { (unichar_t *) N_("Add All Extrema"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuAllExtrema, 0 },
-    { { (unichar_t *) N_("Simplify"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuSimplify, 0 },
+    { { (uint32_t *) N_("Close Open Contours"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuConnect, 0 },
+    { { (uint32_t *) N_("Inline All References"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuInlineRefs, 0 },
+    { { (uint32_t *) N_("Remove Overlap"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuOverlap, 0 },
+    { { (uint32_t *) N_("Mark for Overlap fix before Save"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuMark, 0 },
+    { { (uint32_t *) N_("Inline Flipped References"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuInlineFlippedRefs, 0 },
+    { { (uint32_t *) N_("Correct Direction"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuCorrectDir, 0 },
+    { { (uint32_t *) N_("Add Good Extrema"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0',0, NULL, NULL, VWMenuGoodExtrema, 0 },
+    { { (uint32_t *) N_("Add All Extrema"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuAllExtrema, 0 },
+    { { (uint32_t *) N_("Simplify"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuSimplify, 0 },
     { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, 0, '\0' }, '\0', 0, NULL, NULL, NULL, 0 }, /* line */
-    { { (unichar_t *) N_("Revalidate All"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuRevalidateAll, 0 },
-    { { (unichar_t *) N_("Revalidate"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuRevalidate, 0 },
-    { { (unichar_t *) N_("Open Glyph"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuOpenGlyph, 0 },
+    { { (uint32_t *) N_("Revalidate All"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuRevalidateAll, 0 },
+    { { (uint32_t *) N_("Revalidate"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuRevalidate, 0 },
+    { { (uint32_t *) N_("Open Glyph"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuOpenGlyph, 0 },
     { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, 0, '\0' }, '\0', 0, NULL, NULL, NULL, 0 }, /* line */
-    { { (unichar_t *) N_("Scroll To Glyph"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuGotoGlyph, 0 },
+    { { (uint32_t *) N_("Scroll To Glyph"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuGotoGlyph, 0 },
     { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, 0, '\0' }, '\0', 0, NULL, NULL, NULL, 0 }, /* line */
-    { { (unichar_t *) N_("Select Glyphs With"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, vw_subselect, NULL, NULL, 0 },
-    { { (unichar_t *) N_("Try To Fix Glyphs With"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, vw_subfixup, NULL, NULL, 0 },
+    { { (uint32_t *) N_("Select Glyphs With"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, vw_subselect, NULL, NULL, 0 },
+    { { (uint32_t *) N_("Try To Fix Glyphs With"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, vw_subfixup, NULL, NULL, 0 },
     GMENUITEM_EMPTY
 };
 
@@ -5085,15 +5085,15 @@ return;
 
 	    for ( i=0; vw_popuplist[i].ti.text!=NULL || vw_popuplist[i].ti.line; ++i )
 		if ( vw_popuplist[i].ti.text!=NULL )
-		    vw_popuplist[i].ti.text = (unichar_t *) _( (char *)vw_popuplist[i].ti.text);
+		    vw_popuplist[i].ti.text = (uint32_t *) _( (char *)vw_popuplist[i].ti.text);
 
 	    for (i=0; vw_subfixup[i].ti.text!=NULL || vw_subfixup[i].ti.line; ++i )
 		if ( vw_subfixup[i].ti.text!=NULL )
-		    vw_subfixup[i].ti.text = (unichar_t *) S_( (char *)vw_subfixup[i].ti.text);
+		    vw_subfixup[i].ti.text = (uint32_t *) S_( (char *)vw_subfixup[i].ti.text);
 
 	    for (i=0; vw_subselect[i].ti.text!=NULL || vw_subselect[i].ti.line; ++i )
 		if ( vw_subselect[i].ti.text!=NULL )
-		    vw_subselect[i].ti.text = (unichar_t *) S_( (char *)vw_subselect[i].ti.text);
+		    vw_subselect[i].ti.text = (uint32_t *) S_( (char *)vw_subselect[i].ti.text);
 	}
 	vw_popuplist[0].ti.disabled = (sc->layers[vw->layer].validation_state&vs_opencontour)?0:1;
 	vw_popuplist[1].ti.disabled = (SCValidate(sc,vw->layer,true)&vs_selfintersects)?0:1;
@@ -5427,7 +5427,7 @@ return;
     harray[0] = &gcd[k-2]; harray[1] = &gcd[k-1]; harray[2] = NULL; harray[3] = NULL;
 
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    label[k].text = (unichar_t *) _("_OK");
+    label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];

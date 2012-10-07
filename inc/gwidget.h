@@ -45,7 +45,7 @@ typedef struct gwidgetcreatedata
   GRect r;
   struct ggadgetcreatedata *gcd;
   struct gwidgetcreatedata *wcd;
-  unichar_t *title;
+  uint32_t *title;
   unsigned int trap_input:1;
   unsigned int tab_navigation:1;
   unsigned int arrow_navigation:1;

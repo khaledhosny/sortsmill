@@ -60,7 +60,7 @@ typedef struct printdlg {
 static PD *printwindow;
 
 static int lastdpi=0;
-static unichar_t *old_bind_text = NULL;
+static uint32_t *old_bind_text = NULL;
 
 /* ************************************************************************** */
 /* *********************** Code for Page Setup dialog *********************** */
@@ -97,7 +97,7 @@ static void PG_SetEnabled(PD *pi) {
 static int PG_OK(GGadget *g, GEvent *e) {
     if ( e->type==et_controlevent && e->u.control.subtype == et_buttonactivate ) {
 	PD *pi = GDrawGetUserData(GGadgetGetWindow(g));
-	const unichar_t *ret;
+	const uint32_t *ret;
 	int err=false;
 	int copies, pgwidth, pgheight;
 
@@ -267,11 +267,11 @@ static int PageSetup(PD *pi) {
     int pt;
     /* Don't translate these. we compare against the text */
     static GTextInfo pagesizes[] = {
-	{ (unichar_t *) "US Letter", NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-	{ (unichar_t *) "US Legal", NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-	{ (unichar_t *) "A3", NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-	{ (unichar_t *) "A4", NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-	{ (unichar_t *) "B4", NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+	{ (uint32_t *) "US Letter", NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+	{ (uint32_t *) "US Legal", NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+	{ (uint32_t *) "A3", NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+	{ (uint32_t *) "A4", NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+	{ (uint32_t *) "B4", NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
 	GTEXTINFO_EMPTY
     };
 
@@ -292,7 +292,7 @@ static int PageSetup(PD *pi) {
     memset(&gcd,0,sizeof(gcd));
 
 /* program names also don't get translated */
-    label[0].text = (unichar_t *) "lp";
+    label[0].text = (uint32_t *) "lp";
     label[0].text_is_1byte = true;
     gcd[0].gd.label = &label[0];
     gcd[0].gd.mnemonic = 'l';
@@ -303,7 +303,7 @@ static int PageSetup(PD *pi) {
     gcd[0].creator = GRadioCreate;
     radarray[0][0] = GCD_HPad10; radarray[0][1] = &gcd[0];
 
-    label[1].text = (unichar_t *) "lpr";
+    label[1].text = (uint32_t *) "lpr";
     label[1].text_is_1byte = true;
     gcd[1].gd.label = &label[1];
     gcd[1].gd.mnemonic = 'r';
@@ -315,7 +315,7 @@ static int PageSetup(PD *pi) {
     radarray[1][0] = GCD_HPad10; radarray[1][1] = &gcd[1];
 
     use_gv = false;
-    label[2].text = (unichar_t *) "ghostview";
+    label[2].text = (uint32_t *) "ghostview";
     label[2].text_is_1byte = true;
     gcd[2].gd.label = &label[2];
     gcd[2].gd.mnemonic = 'g';
@@ -325,7 +325,7 @@ static int PageSetup(PD *pi) {
       {
 	if ( progexists("gv") )
 	  {
-	    label[2].text = (unichar_t *) "gv";
+	    label[2].text = (uint32_t *) "gv";
 	    use_gv = true;
 	  }
 	else
@@ -336,7 +336,7 @@ static int PageSetup(PD *pi) {
     gcd[2].creator = GRadioCreate;
     radarray[0][2] = &gcd[2]; radarray[0][3] = GCD_ColSpan; radarray[0][4] =NULL;
 
-    label[3].text = (unichar_t *) _("To _File");
+    label[3].text = (uint32_t *) _("To _File");
     label[3].text_is_1byte = true;
     label[3].text_in_resource = true;
     gcd[3].gd.label = &label[3];
@@ -348,7 +348,7 @@ static int PageSetup(PD *pi) {
     gcd[3].creator = GRadioCreate;
     radarray[1][2] = &gcd[3];
 
-    label[4].text = (unichar_t *) _("To P_DF File");
+    label[4].text = (uint32_t *) _("To P_DF File");
     label[4].text_is_1byte = true;
     label[4].text_in_resource = true;
     gcd[4].gd.label = &label[4];
@@ -360,7 +360,7 @@ static int PageSetup(PD *pi) {
     gcd[4].creator = GRadioCreate;
     radarray[1][3] = &gcd[4]; radarray[1][4] =NULL;
 
-    label[5].text = (unichar_t *) _("_Other");
+    label[5].text = (uint32_t *) _("_Other");
     label[5].text_is_1byte = true;
     label[5].text_in_resource = true;
     gcd[5].gd.label = &label[5];
@@ -369,7 +369,7 @@ static int PageSetup(PD *pi) {
     gcd[5].gd.flags = gg_visible | gg_enabled | gg_utf8_popup | gg_rad_continueold;
     gcd[5].gd.cid = CID_Other;
     gcd[5].gd.handle_controlevent = PG_RadioSet;
-    gcd[5].gd.popup_msg = (unichar_t *) _("Any other command with all its arguments.\nThe command must expect to deal with a postscript\nfile which it will find by reading its standard input.");
+    gcd[5].gd.popup_msg = (uint32_t *) _("Any other command with all its arguments.\nThe command must expect to deal with a postscript\nfile which it will find by reading its standard input.");
     gcd[5].creator = GRadioCreate;
     radarray[2][0] = GCD_HPad10; radarray[2][1] = &gcd[5];
 
@@ -379,7 +379,7 @@ static int PageSetup(PD *pi) {
     if ( !(gcd[pt].gd.flags&gg_enabled) ) pt = pt_file;		/* always enabled */
     gcd[pt].gd.flags |= gg_cb_on;
 
-    label[6].text = (unichar_t *) (printcommand?printcommand:"");
+    label[6].text = (uint32_t *) (printcommand?printcommand:"");
     label[6].text_is_1byte = true;
     gcd[6].gd.label = &label[6];
     gcd[6].gd.mnemonic = 'O';
@@ -391,7 +391,7 @@ static int PageSetup(PD *pi) {
     radarray[2][2] = &gcd[6]; radarray[2][3] = GCD_ColSpan; radarray[2][4] =NULL;
     radarray[3][0] = NULL;
 
-    label[7].text = (unichar_t *) _("Page_Size:");
+    label[7].text = (uint32_t *) _("Page_Size:");
     label[7].text_is_1byte = true;
     label[7].text_in_resource = true;
     gcd[7].gd.label = &label[7];
@@ -415,7 +415,7 @@ static int PageSetup(PD *pi) {
 	strcpy(pb,"B4");
     else
 	sprintf(pb,"%dx%d mm", (int) (pi->pi.pagewidth*25.4/72),(int) (pi->pi.pageheight*25.4/72));
-    label[8].text = (unichar_t *) pb;
+    label[8].text = (uint32_t *) pb;
     label[8].text_is_1byte = true;
     gcd[8].gd.label = &label[8];
     gcd[8].gd.mnemonic = 'S';
@@ -428,7 +428,7 @@ static int PageSetup(PD *pi) {
     txtarray[0][1] = &gcd[8];
 
 
-    label[9].text = (unichar_t *) _("_Copies:");
+    label[9].text = (uint32_t *) _("_Copies:");
     label[9].text_is_1byte = true;
     label[9].text_in_resource = true;
     gcd[9].gd.label = &label[9];
@@ -440,7 +440,7 @@ static int PageSetup(PD *pi) {
     txtarray[0][2] = &gcd[9];
 
     sprintf(buf,"%d",pi->pi.copies);
-    label[10].text = (unichar_t *) buf;
+    label[10].text = (uint32_t *) buf;
     label[10].text_is_1byte = true;
     gcd[10].gd.label = &label[10];
     gcd[10].gd.mnemonic = 'C';
@@ -452,7 +452,7 @@ static int PageSetup(PD *pi) {
     txtarray[0][3] = &gcd[10]; txtarray[0][4] = NULL;
 
 
-    label[11].text = (unichar_t *) _("_Printer:");
+    label[11].text = (uint32_t *) _("_Printer:");
     label[11].text_is_1byte = true;
     label[11].text_in_resource = true;
     gcd[11].gd.label = &label[11];
@@ -463,7 +463,7 @@ static int PageSetup(PD *pi) {
     gcd[11].creator = GLabelCreate;
     txtarray[1][0] = &gcd[11];
 
-    label[12].text = (unichar_t *) pi->pi.printer;
+    label[12].text = (uint32_t *) pi->pi.printer;
     label[12].text_is_1byte = true;
     if ( pi->pi.printer!=NULL )
 	gcd[12].gd.label = &label[12];
@@ -482,7 +482,7 @@ static int PageSetup(PD *pi) {
     gcd[13].gd.pos.x = 30-3; gcd[13].gd.pos.y = gcd[12].gd.pos.y+36;
     gcd[13].gd.pos.width = -1; gcd[13].gd.pos.height = 0;
     gcd[13].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    label[13].text = (unichar_t *) _("_OK");
+    label[13].text = (uint32_t *) _("_OK");
     label[13].text_is_1byte = true;
     label[13].text_in_resource = true;
     gcd[13].gd.mnemonic = 'O';
@@ -493,7 +493,7 @@ static int PageSetup(PD *pi) {
     gcd[14].gd.pos.x = -30; gcd[14].gd.pos.y = gcd[13].gd.pos.y+3;
     gcd[14].gd.pos.width = -1; gcd[14].gd.pos.height = 0;
     gcd[14].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    label[14].text = (unichar_t *) _("_Cancel");
+    label[14].text = (uint32_t *) _("_Cancel");
     label[14].text_is_1byte = true;
     label[14].text_in_resource = true;
     gcd[14].gd.label = &label[14];
@@ -849,7 +849,7 @@ static BDFFont *DSP_BestMatchDlg(PD *di) {
     GTextInfo *sel = GGadgetGetListItemSelected(GWidgetGetControl(di->gw,CID_Font));
     SplineFont *sf;
     int val;
-    unichar_t *end;
+    uint32_t *end;
 
     if ( sel==NULL )
 return( NULL );
@@ -873,7 +873,7 @@ return( type );
 }
 
 static void DSP_SetFont(PD *di,int doall) {
-    unichar_t *end;
+    uint32_t *end;
     int size = u_strtol(_GGadgetGetTitle(GWidgetGetControl(di->gw,CID_Size)),&end,10);
     GTextInfo *sel = GGadgetGetListItemSelected(GWidgetGetControl(di->gw,CID_Font));
     SplineFont *sf;
@@ -1038,7 +1038,7 @@ static int DSP_FontChanged(GGadget *g, GEvent *e) {
 	SplineFont *sf;
 	BDFFont *best;
 	int flags, pick = 0, i;
-	char size[12]; unichar_t usize[12];
+	char size[12]; uint32_t usize[12];
 	uint16 cnt;
 
 	if ( sel==NULL )
@@ -1115,7 +1115,7 @@ return( true );
 		}
 	    }
 	    if ( best!=NULL ) {
-		char size[12]; unichar_t usize[12];
+		char size[12]; uint32_t usize[12];
 		sprintf( size, "%d", best->pixelsize );
 		uc_strcpy(usize,size);
 		GGadgetSetTitle(GWidgetGetControl(di->gw,CID_Size),usize);
@@ -1157,7 +1157,7 @@ return( true );
 	    }
 	    if ( best==NULL ) {
 		char buf[100], *pt=buf, *end=buf+sizeof(buf)-10;
-		unichar_t ubuf[12];
+		uint32_t ubuf[12];
 		int lastsize = 0;
 		for ( bdf=sf->bitmaps; bdf!=NULL && pt<end; bdf=bdf->next ) {
 		    if ( bdf->pixelsize!=lastsize ) {
@@ -1335,7 +1335,7 @@ static int DSP_RadioSet(GGadget *g, GEvent *e) {
 	    GTextInfo *sel = GGadgetGetListItemSelected(GWidgetGetControl(di->gw,CID_Font));
 	    SplineFont *sf;
 	    int flags;
-	    char size[12]; unichar_t usize[12];
+	    char size[12]; uint32_t usize[12];
 
 	    if ( sel!=NULL ) {
 		sf = sel->userdata;
@@ -1362,7 +1362,7 @@ return( true );
 static int DSP_ScriptLangChanged(GGadget *g, GEvent *e) {
 
     if ( e->type==et_controlevent && e->u.control.subtype == et_textchanged ) {
-	const unichar_t *sstr = _GGadgetGetTitle(g);
+	const uint32_t *sstr = _GGadgetGetTitle(g);
 	PD *di = GDrawGetUserData(GGadgetGetWindow(g));
 	uint32 script, lang;
 
@@ -1446,8 +1446,8 @@ static int DSP_TextChanged(GGadget *g, GEvent *e) {
     if ( e==NULL ||
 	    (e->type==et_controlevent && e->u.control.subtype == et_textchanged )) {
 	PD *di = GDrawGetUserData(GGadgetGetWindow(g));
-	const unichar_t *txt = _GGadgetGetTitle(g);
-	const unichar_t *pt;
+	const uint32_t *txt = _GGadgetGetTitle(g);
+	const uint32_t *pt;
 	SFTextArea *ta = (SFTextArea *) g;
 	LayoutInfo *li = &ta->li;
 	char buffer[200];
@@ -1465,7 +1465,7 @@ static int DSP_TextChanged(GGadget *g, GEvent *e) {
 	} else if ( di->script_unknown ) {
 	    uint32 script = ScriptFromUnicode(*pt,NULL);
 	    struct fontlist *fl;
-	    unichar_t buf[20];
+	    uint32_t buf[20];
 	    for ( fl=li->fontlist; fl!=NULL && ta->sel_start>fl->end; fl=fl->next );
 	    if ( fl!=NULL && (fl->script==DEFAULT_SCRIPT || fl->script==0 )) {
 		for ( fl=li->fontlist; fl!=NULL; fl=fl->next ) {
@@ -1563,7 +1563,7 @@ static void _PrintDlg(FontView *fv,SplineChar *sc,MetricsView *mv,
     SplineFont *sf = fv!=NULL ? fv->b.sf : sc!=NULL ? sc->parent : mv->fv->b.sf;
     int hasfreetype = hasFreeType();
     BDFFont *bestbdf=DSP_BestMatch(sf,true,12);
-    unichar_t *temp;
+    uint32_t *temp;
     int cnt;
     int fromwindow = fv!=NULL?0:sc!=NULL?1:2;
     PD *active;
@@ -1619,10 +1619,10 @@ return;
     memset(&tgcd,0,sizeof(tgcd));
     memset(&boxes,0,sizeof(boxes));
 
-    label[0].text = (unichar_t *) sf->fontname;
+    label[0].text = (uint32_t *) sf->fontname;
     label[0].text_is_1byte = true;
     gcd[0].gd.label = &label[0];
-    gcd[0].gd.popup_msg = (unichar_t *) _("Select some text, then use this list to change the\nfont in which those characters are displayed.");
+    gcd[0].gd.popup_msg = (uint32_t *) _("Select some text, then use this list to change the\nfont in which those characters are displayed.");
     gcd[0].gd.pos.x = 12; gcd[0].gd.pos.y = 6; 
     gcd[0].gd.pos.width = 150;
     gcd[0].gd.cid = CID_Font;
@@ -1634,16 +1634,16 @@ return;
     gcd[0].creator = GListButtonCreate;
     varray[0] = &gcd[0]; varray[1] = NULL;
 
-    label[2].text = (unichar_t *) _("_Size:");
+    label[2].text = (uint32_t *) _("_Size:");
     label[2].text_is_1byte = true;
     label[2].text_in_resource = true;
     gcd[2].gd.label = &label[2];
     gcd[2].gd.pos.x = 210; gcd[2].gd.pos.y = gcd[0].gd.pos.y+6; 
     gcd[2].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( isprint )
-	gcd[2].gd.popup_msg = (unichar_t *) _("Select some text, this specifies the point\nsize of those characters");
+	gcd[2].gd.popup_msg = (uint32_t *) _("Select some text, this specifies the point\nsize of those characters");
     else
-	gcd[2].gd.popup_msg = (unichar_t *) _("Select some text, this specifies the vertical\nsize of those characters in em-units");
+	gcd[2].gd.popup_msg = (uint32_t *) _("Select some text, this specifies the vertical\nsize of those characters in em-units");
     gcd[2].gd.cid = CID_SizeLab;
     gcd[2].creator = GLabelCreate;
     harray[0] = &gcd[2];
@@ -1652,7 +1652,7 @@ return;
 	sprintf( buf, "%d", bestbdf->pixelsize );
     else
 	strcpy(buf,"12");
-    label[3].text = (unichar_t *) buf;
+    label[3].text = (uint32_t *) buf;
     label[3].text_is_1byte = true;
     gcd[3].gd.label = &label[3];
     gcd[3].gd.pos.x = 240; gcd[3].gd.pos.y = gcd[0].gd.pos.y+3; 
@@ -1660,11 +1660,11 @@ return;
     gcd[3].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     gcd[3].gd.cid = CID_Size;
     gcd[3].gd.handle_controlevent = DSP_SizeChanged;
-    gcd[3].gd.popup_msg = (unichar_t *) _("Select some text, this specifies the pixel\nsize of those characters");
+    gcd[3].gd.popup_msg = (uint32_t *) _("Select some text, this specifies the pixel\nsize of those characters");
     gcd[3].creator = GNumericFieldCreate;
     harray[1] = &gcd[3]; harray[2] = GCD_HPad10;
 
-    label[1].text = (unichar_t *) _("_AA");
+    label[1].text = (uint32_t *) _("_AA");
     label[1].text_is_1byte = true;
     label[1].text_in_resource = true;
     gcd[1].gd.label = &label[1];
@@ -1674,7 +1674,7 @@ return;
 	gcd[1].gd.flags = DSP_AAState(sf,bestbdf);
     if ( !isprint )
 	gcd[1].gd.flags = gg_enabled | gg_cb_on | gg_utf8_popup;
-    gcd[1].gd.popup_msg = (unichar_t *) _("Select some text, this controls whether those characters will be\nAntiAlias (greymap) characters, or bitmap characters");
+    gcd[1].gd.popup_msg = (uint32_t *) _("Select some text, this controls whether those characters will be\nAntiAlias (greymap) characters, or bitmap characters");
     gcd[1].gd.handle_controlevent = DSP_AAChange;
     gcd[1].gd.cid = CID_AA;
     gcd[1].creator = GCheckBoxCreate;
@@ -1685,79 +1685,79 @@ return;
     boxes[2].creator = GHBoxCreate;
     varray[2] = &boxes[2]; varray[3] = NULL;
 
-    label[4].text = (unichar_t *) "pfb";
+    label[4].text = (uint32_t *) "pfb";
     label[4].text_is_1byte = true;
     gcd[4].gd.label = &label[4];
     gcd[4].gd.pos.x = gcd[0].gd.pos.x; gcd[4].gd.pos.y = 24+gcd[3].gd.pos.y; 
     gcd[4].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     gcd[4].gd.cid = CID_pfb;
     gcd[4].gd.handle_controlevent = DSP_RadioSet;
-    gcd[4].gd.popup_msg = (unichar_t *) _("Specifies file format used to pass the font to freetype\n  pfb -- is the standard postscript type1\n  ttf -- is truetype\n  otf -- is opentype\n  nohints -- freetype rasterizes without hints\n  bitmap -- not passed to freetype for rendering\n    bitmap fonts must already be generated\n  FontForge -- uses FontForge's own rasterizer, not\n    freetype's. Only as last resort");
+    gcd[4].gd.popup_msg = (uint32_t *) _("Specifies file format used to pass the font to freetype\n  pfb -- is the standard postscript type1\n  ttf -- is truetype\n  otf -- is opentype\n  nohints -- freetype rasterizes without hints\n  bitmap -- not passed to freetype for rendering\n    bitmap fonts must already be generated\n  FontForge -- uses FontForge's own rasterizer, not\n    freetype's. Only as last resort");
     gcd[4].creator = GRadioCreate;
     if ( sf->subfontcnt!=0 || !hasfreetype || sf->onlybitmaps || sf->strokedfont || sf->multilayer ) gcd[4].gd.flags = gg_visible| gg_utf8_popup;
     farray[0] = &gcd[4];
 
-    label[5].text = (unichar_t *) "ttf";
+    label[5].text = (uint32_t *) "ttf";
     label[5].text_is_1byte = true;
     gcd[5].gd.label = &label[5];
     gcd[5].gd.pos.x = 46; gcd[5].gd.pos.y = gcd[4].gd.pos.y; 
     gcd[5].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     gcd[5].gd.cid = CID_ttf;
     gcd[5].gd.handle_controlevent = DSP_RadioSet;
-    gcd[5].gd.popup_msg = (unichar_t *) _("Specifies file format used to pass the font to freetype\n  pfb -- is the standard postscript type1\n  ttf -- is truetype\n  otf -- is opentype\n  nohints -- freetype rasterizes without hints\n  bitmap -- not passed to freetype for rendering\n    bitmap fonts must already be generated\n  FontForge -- uses FontForge's own rasterizer, not\n    freetype's. Only as last resort");
+    gcd[5].gd.popup_msg = (uint32_t *) _("Specifies file format used to pass the font to freetype\n  pfb -- is the standard postscript type1\n  ttf -- is truetype\n  otf -- is opentype\n  nohints -- freetype rasterizes without hints\n  bitmap -- not passed to freetype for rendering\n    bitmap fonts must already be generated\n  FontForge -- uses FontForge's own rasterizer, not\n    freetype's. Only as last resort");
     gcd[5].creator = GRadioCreate;
     if ( sf->subfontcnt!=0 || !hasfreetype || sf->onlybitmaps || sf->strokedfont || sf->multilayer ) gcd[5].gd.flags = gg_visible| gg_utf8_popup;
     else if ( sf->layers[ly_fore].order2 ) gcd[5].gd.flags |= gg_cb_on;
     farray[1] = &gcd[5];
 
-    label[6].text = (unichar_t *) "otf";
+    label[6].text = (uint32_t *) "otf";
     label[6].text_is_1byte = true;
     gcd[6].gd.label = &label[6];
     gcd[6].gd.pos.x = 114; gcd[6].gd.pos.y = gcd[4].gd.pos.y; 
     gcd[6].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     gcd[6].gd.cid = CID_otf;
     gcd[6].gd.handle_controlevent = DSP_RadioSet;
-    gcd[6].gd.popup_msg = (unichar_t *) _("Specifies file format used to pass the font to freetype\n  pfb -- is the standard postscript type1\n  ttf -- is truetype\n  otf -- is opentype\n  nohints -- freetype rasterizes without hints\n  bitmap -- not passed to freetype for rendering\n    bitmap fonts must already be generated\n  FontForge -- uses FontForge's own rasterizer, not\n    freetype's. Only as last resort");
+    gcd[6].gd.popup_msg = (uint32_t *) _("Specifies file format used to pass the font to freetype\n  pfb -- is the standard postscript type1\n  ttf -- is truetype\n  otf -- is opentype\n  nohints -- freetype rasterizes without hints\n  bitmap -- not passed to freetype for rendering\n    bitmap fonts must already be generated\n  FontForge -- uses FontForge's own rasterizer, not\n    freetype's. Only as last resort");
     gcd[6].creator = GRadioCreate;
     if ( !hasfreetype || sf->onlybitmaps || sf->strokedfont || sf->multilayer ) gcd[6].gd.flags = gg_visible| gg_utf8_popup;
     else if ( sf->subfontcnt!=0 || !sf->layers[ly_fore].order2 ) gcd[6].gd.flags |= gg_cb_on;
     farray[2] = &gcd[6];
 
-    label[7].text = (unichar_t *) _("nohints");
+    label[7].text = (uint32_t *) _("nohints");
     label[7].text_is_1byte = true;
     gcd[7].gd.label = &label[7];
     gcd[7].gd.pos.x = 114; gcd[7].gd.pos.y = gcd[4].gd.pos.y; 
     gcd[7].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     gcd[7].gd.cid = CID_nohints;
     gcd[7].gd.handle_controlevent = DSP_RadioSet;
-    gcd[7].gd.popup_msg = (unichar_t *) _("Specifies file format used to pass the font to freetype\n  pfb -- is the standard postscript type1\n  ttf -- is truetype\n  otf -- is opentype\n  nohints -- freetype rasterizes without hints\n  bitmap -- not passed to freetype for rendering\n    bitmap fonts must already be generated\n  FontForge -- uses FontForge's own rasterizer, not\n    freetype's. Only as last resort");
+    gcd[7].gd.popup_msg = (uint32_t *) _("Specifies file format used to pass the font to freetype\n  pfb -- is the standard postscript type1\n  ttf -- is truetype\n  otf -- is opentype\n  nohints -- freetype rasterizes without hints\n  bitmap -- not passed to freetype for rendering\n    bitmap fonts must already be generated\n  FontForge -- uses FontForge's own rasterizer, not\n    freetype's. Only as last resort");
     gcd[7].creator = GRadioCreate;
     if ( !hasfreetype || sf->onlybitmaps ) gcd[7].gd.flags = gg_visible| gg_utf8_popup;
     else if ( sf->strokedfont || sf->multilayer ) gcd[7].gd.flags |= gg_cb_on;
     farray[3] = &gcd[7];
     
 
-    label[8].text = (unichar_t *) "bitmap";
+    label[8].text = (uint32_t *) "bitmap";
     label[8].text_is_1byte = true;
     gcd[8].gd.label = &label[8];
     gcd[8].gd.pos.x = 148; gcd[8].gd.pos.y = gcd[4].gd.pos.y; 
     gcd[8].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     gcd[8].gd.cid = CID_bitmap;
     gcd[8].gd.handle_controlevent = DSP_RadioSet;
-    gcd[8].gd.popup_msg = (unichar_t *) _("Specifies file format used to pass the font to freetype\n  pfb -- is the standard postscript type1\n  ttf -- is truetype\n  otf -- is opentype\n  nohints -- freetype rasterizes without hints\n  bitmap -- not passed to freetype for rendering\n    bitmap fonts must already be generated\n  FontForge -- uses FontForge's own rasterizer, not\n    freetype's. Only as last resort");
+    gcd[8].gd.popup_msg = (uint32_t *) _("Specifies file format used to pass the font to freetype\n  pfb -- is the standard postscript type1\n  ttf -- is truetype\n  otf -- is opentype\n  nohints -- freetype rasterizes without hints\n  bitmap -- not passed to freetype for rendering\n    bitmap fonts must already be generated\n  FontForge -- uses FontForge's own rasterizer, not\n    freetype's. Only as last resort");
     gcd[8].creator = GRadioCreate;
     if ( sf->bitmaps==NULL ) gcd[8].gd.flags = gg_visible| gg_utf8_popup;
     else if ( sf->onlybitmaps ) gcd[8].gd.flags |= gg_cb_on;
     farray[4] = &gcd[8];
 
-    label[9].text = (unichar_t *) "FontForge";
+    label[9].text = (uint32_t *) "FontForge";
     label[9].text_is_1byte = true;
     gcd[9].gd.label = &label[9];
     gcd[9].gd.pos.x = 200; gcd[9].gd.pos.y = gcd[4].gd.pos.y; 
     gcd[9].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     gcd[9].gd.cid = CID_pfaedit;
     gcd[9].gd.handle_controlevent = DSP_RadioSet;
-    gcd[9].gd.popup_msg = (unichar_t *) _("Specifies file format used to pass the font to freetype\n  pfb -- is the standard postscript type1\n  ttf -- is truetype\n  otf -- is opentype\n  nohints -- freetype rasterizes without hints\n  bitmap -- not passed to freetype for rendering\n    bitmap fonts must already be generated\n  FontForge -- uses FontForge's own rasterizer, not\n    freetype's. Only as last resort");
+    gcd[9].gd.popup_msg = (uint32_t *) _("Specifies file format used to pass the font to freetype\n  pfb -- is the standard postscript type1\n  ttf -- is truetype\n  otf -- is opentype\n  nohints -- freetype rasterizes without hints\n  bitmap -- not passed to freetype for rendering\n    bitmap fonts must already be generated\n  FontForge -- uses FontForge's own rasterizer, not\n    freetype's. Only as last resort");
     gcd[9].creator = GRadioCreate;
     if ( sf->onlybitmaps ) gcd[9].gd.flags = gg_visible | gg_utf8_popup;
     if ( !hasfreetype && sf->bitmaps==NULL ) gcd[9].gd.flags |= gg_cb_on;
@@ -1775,10 +1775,10 @@ return;
 	boxes[3].gd.flags = gg_enabled;
     }
 
-    label[10].text = (unichar_t *) "DFLT{dflt}";
+    label[10].text = (uint32_t *) "DFLT{dflt}";
     label[10].text_is_1byte = true;
     gcd[10].gd.label = &label[10];
-    gcd[10].gd.popup_msg = (unichar_t *) _("Select some text, then use this list to specify\nthe current script & language.");
+    gcd[10].gd.popup_msg = (uint32_t *) _("Select some text, then use this list to specify\nthe current script & language.");
     gcd[10].gd.pos.x = 12; gcd[10].gd.pos.y = 6; 
     gcd[10].gd.pos.width = 150;
     gcd[10].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
@@ -1794,7 +1794,7 @@ return;
     boxes[4].creator = GHVBoxCreate;
     harray2[1] = &boxes[4];
 
-    gcd[11].gd.popup_msg = (unichar_t *) _("Select some text, then use this list to specify\nactive features.");
+    gcd[11].gd.popup_msg = (uint32_t *) _("Select some text, then use this list to specify\nactive features.");
     gcd[11].gd.pos.width = 50;
     gcd[11].gd.flags = gg_visible | gg_enabled | gg_utf8_popup | gg_list_alphabetic | gg_list_multiplesel;
     gcd[11].gd.cid = CID_Features;
@@ -1804,7 +1804,7 @@ return;
 
     label[12].image = &GIcon_menudelta;
     gcd[12].gd.label = &label[12];
-    gcd[12].gd.popup_msg = (unichar_t *) _("Menu");
+    gcd[12].gd.popup_msg = (uint32_t *) _("Menu");
     gcd[12].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     gcd[12].gd.handle_controlevent = DSP_Menu;
     gcd[12].creator = GButtonCreate;
@@ -1834,23 +1834,23 @@ return;
     gcd[14].creator = GLineCreate;
     varray2[4] = &gcd[14]; varray2[5] = NULL;
 
-    label[15].text = (unichar_t *) _("DPI:");
+    label[15].text = (uint32_t *) _("DPI:");
     label[15].text_is_1byte = true;
     gcd[15].gd.label = &label[15];
     gcd[15].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    gcd[15].gd.popup_msg = (unichar_t *) _("Specifies screen dots per inch");
+    gcd[15].gd.popup_msg = (uint32_t *) _("Specifies screen dots per inch");
     gcd[15].creator = GLabelCreate;
 
     if ( lastdpi==0 )
 	lastdpi = GDrawPointsToPixels(NULL,72);
     dpi = lastdpi;
     sprintf( dpibuf, "%d", dpi );
-    label[16].text = (unichar_t *) dpibuf;
+    label[16].text = (uint32_t *) dpibuf;
     label[16].text_is_1byte = true;
     gcd[16].gd.label = &label[16];
     gcd[16].gd.pos.width = 50;
     gcd[16].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    gcd[16].gd.popup_msg = (unichar_t *) _("Specifies screen dots per inch");
+    gcd[16].gd.popup_msg = (uint32_t *) _("Specifies screen dots per inch");
     gcd[16].gd.cid = CID_DPI;
     gcd[16].gd.handle_controlevent = DSP_DpiChanged;
     gcd[16].creator = GNumericFieldCreate;
@@ -1858,8 +1858,8 @@ return;
     regenarray[0] = &gcd[15]; regenarray[1] = &gcd[16]; regenarray[2] = GCD_Glue;
     if ( isprint ) {
 	gcd[17].gd.flags = gg_visible | gg_enabled | gg_utf8_popup ;
-	gcd[17].gd.popup_msg = (unichar_t *) _("FontForge does not update this window when a change is made to the font.\nIf a font has changed press the button to force an update");
-	label[17].text = (unichar_t *) _("_Refresh");
+	gcd[17].gd.popup_msg = (uint32_t *) _("FontForge does not update this window when a change is made to the font.\nIf a font has changed press the button to force an update");
+	label[17].text = (uint32_t *) _("_Refresh");
 	label[17].text_is_1byte = true;
 	label[17].text_in_resource = true;
 	gcd[17].gd.label = &label[17];
@@ -1867,27 +1867,27 @@ return;
 	gcd[17].creator = GButtonCreate;
 	regenarray[3] = &gcd[17]; regenarray[4] = NULL;
     } else {
-	label[17].text = (unichar_t *) _("Text Width:    0");
+	label[17].text = (uint32_t *) _("Text Width:    0");
 	label[17].text_is_1byte = true;
 	gcd[17].gd.label = &label[17];
 	gcd[17].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
 	gcd[17].gd.cid = CID_ActualWidth;
 	gcd[17].creator = GLabelCreate;
 
-	label[18].text = (unichar_t *) _("Wrap Pos:");
+	label[18].text = (uint32_t *) _("Wrap Pos:");
 	label[18].text_is_1byte = true;
 	gcd[18].gd.label = &label[18];
 	gcd[18].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-	gcd[18].gd.popup_msg = (unichar_t *) _("The text will wrap to a new line after this many em-units");
+	gcd[18].gd.popup_msg = (uint32_t *) _("The text will wrap to a new line after this many em-units");
 	gcd[18].creator = GLabelCreate;
 
 	sprintf( widthbuf, "%d", width );
-	label[19].text = (unichar_t *) widthbuf;
+	label[19].text = (uint32_t *) widthbuf;
 	label[19].text_is_1byte = true;
 	gcd[19].gd.label = &label[19];
 	gcd[19].gd.pos.width = 50;
 	gcd[19].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-	gcd[19].gd.popup_msg = (unichar_t *) _("The text will wrap to a new line after this many em-units");
+	gcd[19].gd.popup_msg = (uint32_t *) _("The text will wrap to a new line after this many em-units");
 	gcd[19].gd.cid = CID_TextWidth;
 	gcd[19].gd.handle_controlevent = DSP_WidthChanged;
 	gcd[19].creator = GNumericFieldCreate;
@@ -1907,11 +1907,11 @@ return;
 
     if ( isprint ) {
 	memset(aspects,0,sizeof(aspects));
-	aspects[0].text = (unichar_t *) _("Display");
+	aspects[0].text = (uint32_t *) _("Display");
 	aspects[0].text_is_1byte = true;
 	aspects[0].gcd = &boxes[6];
 
-	plabel[0].text = (unichar_t *) _("_Full Font Display");
+	plabel[0].text = (uint32_t *) _("_Full Font Display");
 	plabel[0].text_is_1byte = true;
 	plabel[0].text_in_resource = true;
 	pgcd[0].gd.label = &plabel[0];
@@ -1919,7 +1919,7 @@ return;
 	pgcd[0].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
 	pgcd[0].gd.cid = CID_Display;
 	pgcd[0].gd.handle_controlevent = PRT_RadioSet;
-	pgcd[0].gd.popup_msg = (unichar_t *) _("Displays all the glyphs in the font on a rectangular grid at the given point size");
+	pgcd[0].gd.popup_msg = (uint32_t *) _("Displays all the glyphs in the font on a rectangular grid at the given point size");
 	pgcd[0].creator = GRadioCreate;
 	varray3[0][0] = GCD_HPad10; varray3[0][1] = &pgcd[0]; varray3[0][2] = GCD_Glue; varray3[0][3] = NULL;
 
@@ -1928,25 +1928,25 @@ return;
 	    cnt = FVSelCount(fv);
 	else if ( mv!=NULL )
 	    cnt = mv->glyphcnt;
-	plabel[1].text = (unichar_t *) (cnt==1?_("Full Pa_ge Glyph"):_("Full Pa_ge Glyphs"));
+	plabel[1].text = (uint32_t *) (cnt==1?_("Full Pa_ge Glyph"):_("Full Pa_ge Glyphs"));
 	plabel[1].text_is_1byte = true;
 	plabel[1].text_in_resource = true;
 	pgcd[1].gd.label = &plabel[1];
 	pgcd[1].gd.flags = (cnt==0 ? (gg_visible | gg_utf8_popup ): (gg_visible | gg_enabled | gg_utf8_popup));
 	pgcd[1].gd.cid = CID_Chars;
 	pgcd[1].gd.handle_controlevent = PRT_RadioSet;
-	pgcd[1].gd.popup_msg = (unichar_t *) _("Displays all the selected characters, each on its own page, at an extremely large point size");
+	pgcd[1].gd.popup_msg = (uint32_t *) _("Displays all the selected characters, each on its own page, at an extremely large point size");
 	pgcd[1].creator = GRadioCreate;
 	varray3[1][0] = GCD_HPad10; varray3[1][1] = &pgcd[1]; varray3[1][2] = GCD_Glue; varray3[1][3] = NULL;
 
-	plabel[2].text = (unichar_t *) (cnt==1?_("_Multi Size Glyph"):_("_Multi Size Glyphs"));
+	plabel[2].text = (uint32_t *) (cnt==1?_("_Multi Size Glyph"):_("_Multi Size Glyphs"));
 	plabel[2].text_is_1byte = true;
 	plabel[2].text_in_resource = true;
 	pgcd[2].gd.label = &plabel[2];
 	pgcd[2].gd.flags = pgcd[1].gd.flags;
 	pgcd[2].gd.cid = CID_MultiSize;
 	pgcd[2].gd.handle_controlevent = PRT_RadioSet;
-	pgcd[2].gd.popup_msg = (unichar_t *) _("Displays all the selected characters, at several different point sizes");
+	pgcd[2].gd.popup_msg = (uint32_t *) _("Displays all the selected characters, at several different point sizes");
 	pgcd[2].creator = GRadioCreate;
 
 	if ( pdefs[fromwindow].pt==pt_chars && cnt==0 )
@@ -1963,7 +1963,7 @@ return;
 	boxes[13].gd.u.boxelements = varray3[0];
 	boxes[13].creator = GHVBoxCreate;
 
-	plabel[3].text = (unichar_t *) _("_Pointsize:");
+	plabel[3].text = (uint32_t *) _("_Pointsize:");
 	plabel[3].text_is_1byte = true;
 	plabel[3].text_in_resource = true;
 	pgcd[3].gd.label = &plabel[3];
@@ -1973,7 +1973,7 @@ return;
 	ptarray[0] = &pgcd[3];
 
 	sprintf(sizebuf,"%d",active->pi.pointsize);
-	plabel[4].text = (unichar_t *) sizebuf;
+	plabel[4].text = (uint32_t *) sizebuf;
 	plabel[4].text_is_1byte = true;
 	pgcd[4].gd.label = &plabel[4];
 	pgcd[4].gd.pos.width = 60;
@@ -1991,7 +1991,7 @@ return;
 	boxes[9].gd.u.boxelements = varray4;
 	boxes[9].creator = GVBoxCreate;
 
-	aspects[1].text = (unichar_t *) _("Print");
+	aspects[1].text = (uint32_t *) _("Print");
 	aspects[1].text_is_1byte = true;
 	aspects[1].gcd = &boxes[9];
 
@@ -2003,7 +2003,7 @@ return;
 
 	mgcd[1].gd.pos.width = -1; mgcd[1].gd.pos.height = 0;
 	mgcd[1].gd.flags = gg_visible | gg_enabled ;
-	mlabel[1].text = (unichar_t *) _("S_etup");
+	mlabel[1].text = (uint32_t *) _("S_etup");
 	mlabel[1].text_is_1byte = true;
 	mlabel[1].text_in_resource = true;
 	mgcd[1].gd.label = &mlabel[1];
@@ -2017,7 +2017,7 @@ return;
 
 	mgcd[2].gd.pos.width = -1; mgcd[2].gd.pos.height = 0;
 	mgcd[2].gd.flags = gg_visible | gg_enabled | gg_but_default;
-	mlabel[2].text = (unichar_t *) _("_Print");
+	mlabel[2].text = (uint32_t *) _("_Print");
 	mlabel[2].text_is_1byte = true;
 	mlabel[2].text_in_resource = true;
 	mgcd[2].gd.mnemonic = 'O';
@@ -2028,7 +2028,7 @@ return;
 
 	mgcd[3].gd.pos.width = -1; mgcd[3].gd.pos.height = 0;
 	mgcd[3].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-	mlabel[3].text = (unichar_t *) _("_Done");
+	mlabel[3].text = (uint32_t *) _("_Done");
 	mlabel[3].text_is_1byte = true;
 	mlabel[3].text_in_resource = true;
 	mgcd[3].gd.label = &mlabel[3];
@@ -2056,7 +2056,7 @@ return;
 	tarray[0] = &boxes[6]; tarray[1] = NULL;
 
 	tgcd[0].gd.flags = fit_to_path==NULL ? gg_visible : (gg_visible | gg_enabled | gg_cb_on);
-	tlabel[0].text = (unichar_t *) _("Bind to Path");
+	tlabel[0].text = (uint32_t *) _("Bind to Path");
 	tlabel[0].text_is_1byte = true;
 	tlabel[0].text_in_resource = true;
 	tgcd[0].gd.label = &tlabel[0];
@@ -2072,7 +2072,7 @@ return;
 	    tgcd[1].gd.flags = gg_visible | gg_enabled;
 	    sprintf(pathlen, _("Path Length: %g"), PathLength(fit_to_path));
 	}
-	tlabel[1].text = (unichar_t *) pathlen;
+	tlabel[1].text = (uint32_t *) pathlen;
 	tlabel[1].text_is_1byte = true;
 	tlabel[1].text_in_resource = true;
 	tgcd[1].gd.label = &tlabel[1];
@@ -2085,7 +2085,7 @@ return;
 	tarray[2] = &boxes[9]; tarray[3] = NULL;
 
 	tgcd[2].gd.flags = fit_to_path==NULL ? 0 : (gg_visible | gg_enabled | gg_cb_on);
-	tlabel[2].text = (unichar_t *) _("Scale so text width matches path length");
+	tlabel[2].text = (uint32_t *) _("Scale so text width matches path length");
 	tlabel[2].text_is_1byte = true;
 	tlabel[2].text_in_resource = true;
 	tgcd[2].gd.label = &tlabel[2];
@@ -2094,7 +2094,7 @@ return;
 	tarray[4] = &tgcd[2]; tarray[5] = NULL;
 
 	tgcd[3].gd.flags = fit_to_path==NULL ? 0 : (gg_visible | gg_enabled);
-	tlabel[3].text = (unichar_t *) _("Rotate each glyph as a unit");
+	tlabel[3].text = (uint32_t *) _("Rotate each glyph as a unit");
 	tlabel[3].text_is_1byte = true;
 	tlabel[3].text_in_resource = true;
 	tgcd[3].gd.label = &tlabel[3];
@@ -2103,7 +2103,7 @@ return;
 	tarray[6] = &tgcd[3]; tarray[7] = NULL;
 
 	tgcd[4].gd.flags = fit_to_path==NULL ? 0 : (gg_visible | gg_enabled);
-	tlabel[4].text = (unichar_t *) _("Align:");
+	tlabel[4].text = (uint32_t *) _("Align:");
 	tlabel[4].text_is_1byte = true;
 	tlabel[4].text_in_resource = true;
 	tgcd[4].gd.label = &tlabel[4];
@@ -2111,7 +2111,7 @@ return;
 	alarray[0] = &tgcd[4];
 
 	tgcd[5].gd.flags = fit_to_path==NULL ? 0 : (gg_visible | gg_enabled | gg_cb_on);
-	tlabel[5].text = (unichar_t *) _("At Start");
+	tlabel[5].text = (uint32_t *) _("At Start");
 	tlabel[5].text_is_1byte = true;
 	tlabel[5].text_in_resource = true;
 	tgcd[5].gd.label = &tlabel[5];
@@ -2120,7 +2120,7 @@ return;
 	alarray[1] = &tgcd[5];
 
 	tgcd[6].gd.flags = fit_to_path==NULL ? 0 : (gg_visible | gg_enabled);
-	tlabel[6].text = (unichar_t *) _("Centered");
+	tlabel[6].text = (uint32_t *) _("Centered");
 	tlabel[6].text_is_1byte = true;
 	tlabel[6].text_in_resource = true;
 	tgcd[6].gd.label = &tlabel[6];
@@ -2129,7 +2129,7 @@ return;
 	alarray[2] = &tgcd[6];
 
 	tgcd[7].gd.flags = fit_to_path==NULL ? 0 : (gg_visible | gg_enabled);
-	tlabel[7].text = (unichar_t *) _("At End");
+	tlabel[7].text = (uint32_t *) _("At End");
 	tlabel[7].text_is_1byte = true;
 	tlabel[7].text_in_resource = true;
 	tgcd[7].gd.label = &tlabel[7];
@@ -2144,7 +2144,7 @@ return;
 	tarray[8] = &boxes[8]; tarray[9] = NULL;
 
 	tgcd[8].gd.flags = fit_to_path==NULL ? 0 : (gg_visible | gg_enabled);
-	tlabel[8].text = (unichar_t *) _("Offset text from path by:");
+	tlabel[8].text = (uint32_t *) _("Offset text from path by:");
 	tlabel[8].text_is_1byte = true;
 	tlabel[8].text_in_resource = true;
 	tgcd[8].gd.label = &tlabel[8];
@@ -2153,7 +2153,7 @@ return;
 
 	tgcd[9].gd.flags = fit_to_path==NULL ? 0 : (gg_visible | gg_enabled);
 	tgcd[9].gd.pos.width = 60;
-	tlabel[9].text = (unichar_t *) "0";
+	tlabel[9].text = (uint32_t *) "0";
 	tlabel[9].text_is_1byte = true;
 	tlabel[9].text_in_resource = true;
 	tgcd[9].gd.label = &tlabel[9];
@@ -2172,7 +2172,7 @@ return;
 
 	tgcd[11].gd.pos.width = -1; tgcd[11].gd.pos.height = 0;
 	tgcd[11].gd.flags = gg_visible | gg_enabled | gg_but_default;
-	tlabel[11].text = (unichar_t *) _("_Insert");
+	tlabel[11].text = (uint32_t *) _("_Insert");
 	tlabel[11].text_is_1byte = true;
 	tlabel[11].text_in_resource = true;
 	tgcd[11].gd.mnemonic = 'O';
@@ -2183,7 +2183,7 @@ return;
 
 	tgcd[12].gd.pos.width = -1; tgcd[12].gd.pos.height = 0;
 	tgcd[12].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-	tlabel[12].text = (unichar_t *) _("_Cancel");
+	tlabel[12].text = (uint32_t *) _("_Cancel");
 	tlabel[12].text_is_1byte = true;
 	tlabel[12].text_in_resource = true;
 	tgcd[12].gd.label = &tlabel[12];

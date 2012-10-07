@@ -57,7 +57,7 @@ static void CurveToBuf(char *buf,CharView *cv,Spline *s, double t) {
     }
 }
 
-static int RulerText(CharView *cv, unichar_t *ubuf, int line) {
+static int RulerText(CharView *cv, uint32_t *ubuf, int line) {
     char buf[80];
     double len;
     double dx, dy;
@@ -245,7 +245,7 @@ return( false );
 return( true );
 }
 
-static int RulerTextIntersection(CharView *cv, unichar_t *ubuf, int i) {
+static int RulerTextIntersection(CharView *cv, uint32_t *ubuf, int i) {
     char buf[80];
 
     if ( i==0 && cv->num_ruler_intersections>4 ) {
@@ -276,7 +276,7 @@ return( 1 );
 
 static int ruler_e_h(GWindow gw, GEvent *event) {
     CharView *cv = (CharView *) GDrawGetUserData(gw);
-    unichar_t ubuf[80];
+    uint32_t ubuf[80];
     int line;
     int i;
 
@@ -384,7 +384,7 @@ return( total_intersections );	/* note that it could be greater than max */
 }
 
 static void RulerPlace(CharView *cv, GEvent *event) {
-    unichar_t ubuf[80];
+    uint32_t ubuf[80];
     int width, x, y;
     GRect size;
     GPoint pt;

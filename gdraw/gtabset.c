@@ -1008,7 +1008,7 @@ void GTabSetRemoveTabByPos(GGadget *g, int pos) {
 void GTabSetRemoveTabByName(GGadget *g, char *name) {
     GTabSet *gts = (GTabSet *) g;
     int pos;
-    unichar_t *uname = utf82u_copy(name);
+    uint32_t *uname = utf82u_copy(name);
 
     for ( pos=0; pos<gts->tabcnt; ++pos ) {
 	if ( u_strcmp(uname,gts->tabs[pos].name)==0 ) {

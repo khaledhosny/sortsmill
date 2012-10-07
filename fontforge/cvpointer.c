@@ -1441,7 +1441,7 @@ void CVSelectPointAt(CharView *cv) {
 	memset(&gcd,0,sizeof(gcd));
 
 	k = 0;
-	label[k].text = (unichar_t *) _("_X:");
+	label[k].text = (uint32_t *) _("_X:");
 	label[k].text_is_1byte = true;
 	label[k].text_in_resource = true;
 	gcd[k].gd.label = &label[k];
@@ -1454,7 +1454,7 @@ void CVSelectPointAt(CharView *cv) {
 	gcd[k].gd.cid = CID_X;
 	gcd[k++].creator = GTextFieldCreate;
 
-	label[k].text = (unichar_t *) _("_Y:");
+	label[k].text = (uint32_t *) _("_Y:");
 	label[k].text_is_1byte = true;
 	label[k].text_in_resource = true;
 	gcd[k].gd.label = &label[k];
@@ -1467,7 +1467,7 @@ void CVSelectPointAt(CharView *cv) {
 	gcd[k].gd.cid = CID_Y;
 	gcd[k++].creator = GTextFieldCreate;
 
-	label[k].text = (unichar_t *) _("_Exact");
+	label[k].text = (uint32_t *) _("_Exact");
 	label[k].text_is_1byte = true;
 	label[k].text_in_resource = true;
 	gcd[k].gd.label = &label[k];
@@ -1476,7 +1476,7 @@ void CVSelectPointAt(CharView *cv) {
 	gcd[k].gd.cid = CID_Exact;
 	gcd[k++].creator = GRadioCreate;
 
-	label[k].text = (unichar_t *) _("_Around");
+	label[k].text = (uint32_t *) _("_Around");
 	label[k].text_is_1byte = true;
 	label[k].text_in_resource = true;
 	gcd[k].gd.label = &label[k];
@@ -1485,7 +1485,7 @@ void CVSelectPointAt(CharView *cv) {
 	gcd[k].gd.cid = CID_Fuzzy;
 	gcd[k++].creator = GRadioCreate;
 
-	label[k].text = (unichar_t *) _("W_ithin Rectangle");
+	label[k].text = (uint32_t *) _("W_ithin Rectangle");
 	label[k].text_is_1byte = true;
 	label[k].text_in_resource = true;
 	gcd[k].gd.label = &label[k];
@@ -1494,7 +1494,7 @@ void CVSelectPointAt(CharView *cv) {
 	gcd[k].gd.cid = CID_Within;
 	gcd[k++].creator = GRadioCreate;
 
-	label[k].text = (unichar_t *) _("_Radius:");
+	label[k].text = (uint32_t *) _("_Radius:");
 	label[k].text_is_1byte = true;
 	label[k].text_in_resource = true;
 	gcd[k].gd.label = &label[k];
@@ -1502,7 +1502,7 @@ void CVSelectPointAt(CharView *cv) {
 	gcd[k].gd.flags = gg_enabled|gg_visible;
 	gcd[k++].creator = GLabelCreate;
 
-	label[k].text = (unichar_t *) _("3");
+	label[k].text = (uint32_t *) _("3");
 	label[k].text_is_1byte = true;
 	label[k].text_in_resource = true;
 	gcd[k].gd.label = &label[k];
@@ -1512,7 +1512,7 @@ void CVSelectPointAt(CharView *cv) {
 	gcd[k].gd.handle_controlevent = SPA_Radius;
 	gcd[k++].creator = GTextFieldCreate;
 
-	label[k].text = (unichar_t *) _("_Width:");
+	label[k].text = (uint32_t *) _("_Width:");
 	label[k].text_is_1byte = true;
 	label[k].text_in_resource = true;
 	gcd[k].gd.label = &label[k];
@@ -1526,7 +1526,7 @@ void CVSelectPointAt(CharView *cv) {
 	gcd[k].gd.handle_controlevent = SPA_Rect;
 	gcd[k++].creator = GTextFieldCreate;
 
-	label[k].text = (unichar_t *) _("_Height:");
+	label[k].text = (uint32_t *) _("_Height:");
 	label[k].text_is_1byte = true;
 	label[k].text_in_resource = true;
 	gcd[k].gd.label = &label[k];
@@ -1548,7 +1548,7 @@ void CVSelectPointAt(CharView *cv) {
 	gcd[k].gd.pos.x = 20-3; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+8;
 	gcd[k].gd.pos.width = -1; gcd[k].gd.pos.height = 0;
 	gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
-	label[k].text = (unichar_t *) _("_OK");
+	label[k].text = (uint32_t *) _("_OK");
 	label[k].text_is_1byte = true;
 	label[k].text_in_resource = true;
 	gcd[k].gd.label = &label[k];
@@ -1558,7 +1558,7 @@ void CVSelectPointAt(CharView *cv) {
 	gcd[k].gd.pos.x = -20; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+3;
 	gcd[k].gd.pos.width = -1; gcd[k].gd.pos.height = 0;
 	gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-	label[k].text = (unichar_t *) _("_Cancel");
+	label[k].text = (uint32_t *) _("_Cancel");
 	label[k].text_is_1byte = true;
 	label[k].text_in_resource = true;
 	gcd[k].gd.label = &label[k];

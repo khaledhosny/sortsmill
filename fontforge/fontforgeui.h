@@ -121,7 +121,7 @@ extern struct fi_interface gdraw_fi_interface;
 extern struct clip_interface gdraw_clip_interface;
 
 extern int ItalicConstrained;
-extern unichar_t *script_menu_names[SCRIPT_MENU_MAX];
+extern uint32_t *script_menu_names[SCRIPT_MENU_MAX];
 extern char *script_filenames[SCRIPT_MENU_MAX];
 extern char *RecentFiles[RECENT_MAX];
 

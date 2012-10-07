@@ -240,7 +240,7 @@ return;
 
     k=r=0;
 
-    label[k].text = (unichar_t *) _(
+    label[k].text = (uint32_t *) _(
 	    "When a curve passes very close to the center of a\n"
 	    "pixel you might want to check that the curve is on\n"
 	    "the intended side of that pixel.\n"
@@ -255,14 +255,14 @@ return;
     gcd[k++].creator = GLabelCreate;
     varray[r][0] = &gcd[k-1]; varray[r][1] = GCD_ColSpan; varray[r][2] = GCD_ColSpan; varray[r][3] = GCD_ColSpan; varray[r++][4] = NULL;
 
-    label[k].text = (unichar_t *) _("Rasterize at sizes:");
+    label[k].text = (uint32_t *) _("Rasterize at sizes:");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled|gg_visible;
     gcd[k++].creator = GLabelCreate;
 
-    label[k].text = (unichar_t *) delta_sizes;
+    label[k].text = (uint32_t *) delta_sizes;
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -271,7 +271,7 @@ return;
     gcd[k++].creator = GTextFieldCreate;
     varray[r][0] = &gcd[k-2]; varray[r][1] = &gcd[k-1]; varray[r][2] = GCD_ColSpan; varray[r][3] = GCD_ColSpan; varray[r++][4] = NULL;
 
-    label[k].text = (unichar_t *) _("DPI:");
+    label[k].text = (uint32_t *) _("DPI:");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -279,7 +279,7 @@ return;
     gcd[k++].creator = GLabelCreate;
 
     sprintf( dpi_buffer, "%d", delta_dpi );
-    label[k].text = (unichar_t *) dpi_buffer;
+    label[k].text = (uint32_t *) dpi_buffer;
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -288,7 +288,7 @@ return;
     gcd[k].gd.flags = gg_enabled|gg_visible;
     gcd[k++].creator = GTextFieldCreate;
 
-    label[k].text = (unichar_t *) _("_Mono");
+    label[k].text = (uint32_t *) _("_Mono");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -297,7 +297,7 @@ return;
     gcd[k++].creator = GRadioCreate;
     varray[r][0] = &gcd[k-1]; varray[r][1] = GCD_HPad10;
 
-    label[k].text = (unichar_t *) _("_Anti-Aliased");
+    label[k].text = (uint32_t *) _("_Anti-Aliased");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -305,7 +305,7 @@ return;
     gcd[k++].creator = GRadioCreate;
     varray[r][0] = &gcd[k-4]; varray[r][1] = &gcd[k-3]; varray[r][2] = &gcd[k-2]; varray[r][3] = &gcd[k-1]; varray[r++][4] = NULL;
 
-    label[k].text = (unichar_t *) _("Proximity:");
+    label[k].text = (uint32_t *) _("Proximity:");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -313,7 +313,7 @@ return;
     gcd[k++].creator = GLabelCreate;
 
     sprintf( within_buffer, "%g", delta_within );
-    label[k].text = (unichar_t *) within_buffer;
+    label[k].text = (uint32_t *) within_buffer;
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -322,7 +322,7 @@ return;
     gcd[k].gd.cid = CID_Within;
     gcd[k++].creator = GTextFieldCreate;
 
-    label[k].text = (unichar_t *) _("pixels");
+    label[k].text = (uint32_t *) _("pixels");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -330,7 +330,7 @@ return;
     gcd[k++].creator = GLabelCreate;
     varray[r][0] = &gcd[k-3]; varray[r][1] = &gcd[k-2]; varray[r][2] = &gcd[k-1]; varray[r][3] = GCD_ColSpan; varray[r++][4] = NULL;
 
-    label[k].text = (unichar_t *) _( "This may take a while. Please be patient..." );
+    label[k].text = (uint32_t *) _( "This may take a while. Please be patient..." );
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -340,7 +340,7 @@ return;
     varray[r][0] = &gcd[k-1]; varray[r][1] = GCD_ColSpan; varray[r][2] = GCD_ColSpan; varray[r][3] = GCD_ColSpan; varray[r++][4] = NULL;
 
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    label[k].text = (unichar_t *) _("_OK");
+    label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -350,7 +350,7 @@ return;
     barray[0] = GCD_Glue; barray[1] = &gcd[k-1]; barray[2] = GCD_Glue;
 
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    label[k].text = (unichar_t *) _("_Cancel");
+    label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -401,15 +401,15 @@ void QGRmFontView(QGData *qg,FontView *fv) {
 #define CID_GlyphSort	201
 
 static GTextInfo sorts[] = {
-    { (unichar_t *) N_("Glyph, Size, Point"), NULL, 0, 0, (void *) is_glyph_size_pt, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("Glyph, Point, Size"), NULL, 0, 0, (void *) is_glyph_pt_size, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("Size, Glyph, Point"), NULL, 0, 0, (void *) is_size_glyph_pt, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Glyph, Size, Point"), NULL, 0, 0, (void *) is_glyph_size_pt, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Glyph, Point, Size"), NULL, 0, 0, (void *) is_glyph_pt_size, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Size, Glyph, Point"), NULL, 0, 0, (void *) is_size_glyph_pt, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     GTEXTINFO_EMPTY
 };
 static GTextInfo glyphsorts[] = {
-    { (unichar_t *) N_("Unicode"), NULL, 0, 0, (void *) gs_unicode, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("Sort|Alphabetic"), NULL, 0, 0, (void *) gs_alpha, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (unichar_t *) N_("Glyph Order"), NULL, 0, 0, (void *) gs_gid, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Unicode"), NULL, 0, 0, (void *) gs_unicode, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Sort|Alphabetic"), NULL, 0, 0, (void *) gs_alpha, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("Glyph Order"), NULL, 0, 0, (void *) gs_gid, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     GTEXTINFO_EMPTY
 };
 
@@ -970,9 +970,9 @@ static void StartDeltaDisplay(QGData *qg) {
     if (!sorts_translated)
     {
         for (i=0; i<sizeof(sorts)/sizeof(sorts[0]); i++)
-            sorts[i].text = (unichar_t *) _((char *) sorts[i].text);
+            sorts[i].text = (uint32_t *) _((char *) sorts[i].text);
         for (i=0; i<sizeof(glyphsorts)/sizeof(glyphsorts[0]); i++)
-            glyphsorts[i].text = (unichar_t *) _((char *) glyphsorts[i].text);
+            glyphsorts[i].text = (uint32_t *) _((char *) glyphsorts[i].text);
         sorts_translated=1;
     }
 
@@ -1003,7 +1003,7 @@ static void StartDeltaDisplay(QGData *qg) {
     memset(&boxes,0,sizeof(boxes));
 
     k = 0;
-    label[k].text = (unichar_t *) _("Sort:");
+    label[k].text = (uint32_t *) _("Sort:");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled|gg_visible;
@@ -1017,7 +1017,7 @@ static void StartDeltaDisplay(QGData *qg) {
     gcd[k].gd.handle_controlevent = QGSorter;
     gcd[k++].creator = GListButtonCreate;
 
-    label[k].text = (unichar_t *) _("Glyph:");
+    label[k].text = (uint32_t *) _("Glyph:");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled|gg_visible;
@@ -1043,7 +1043,7 @@ static void StartDeltaDisplay(QGData *qg) {
     harray[0] = &gcd[k-2]; harray[1] = &gcd[k-1]; harray[2] = NULL; harray[3] = NULL;
 
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    label[k].text = (unichar_t *) _("_OK");
+    label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];

@@ -898,13 +898,13 @@ static void DVMenuCreate(GWindow v, GMenuItem *mi,GEvent *e) {
 }
 
 static GMenuItem popupwindowlist[] = {
-    { { (unichar_t *) N_("Registers"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 1, 0, 0, '\0' }, '\0', 0, NULL, NULL, DVMenuCreate, MID_Registers },
-    { { (unichar_t *) N_("Stack"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 1, 0, 0, '\0' }, '\0', 0, NULL, NULL, DVMenuCreate, MID_Stack },
-    { { (unichar_t *) N_("Storage"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 1, 0, 0, '\0' }, '\0', 0, NULL, NULL, DVMenuCreate, MID_Storage },
-    { { (unichar_t *) N_("Points"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 1, 0, 0, '\0' }, '\0', 0, NULL, NULL, DVMenuCreate, MID_Points },
-    { { (unichar_t *) N_("Cvt"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 1, 0, 0, '\0' }, '\0', 0, NULL, NULL, DVMenuCreate, MID_Cvt },
-    { { (unichar_t *) N_("Raster"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 1, 0, 0, '\0' }, '\0', 0, NULL, NULL, DVMenuCreate, MID_Raster },
-    { { (unichar_t *) N_("Gloss"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 1, 0, 0, '\0' }, '\0', 0, NULL, NULL, DVMenuCreate, MID_Gloss },
+    { { (uint32_t *) N_("Registers"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 1, 0, 0, '\0' }, '\0', 0, NULL, NULL, DVMenuCreate, MID_Registers },
+    { { (uint32_t *) N_("Stack"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 1, 0, 0, '\0' }, '\0', 0, NULL, NULL, DVMenuCreate, MID_Stack },
+    { { (uint32_t *) N_("Storage"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 1, 0, 0, '\0' }, '\0', 0, NULL, NULL, DVMenuCreate, MID_Storage },
+    { { (uint32_t *) N_("Points"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 1, 0, 0, '\0' }, '\0', 0, NULL, NULL, DVMenuCreate, MID_Points },
+    { { (uint32_t *) N_("Cvt"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 1, 0, 0, '\0' }, '\0', 0, NULL, NULL, DVMenuCreate, MID_Cvt },
+    { { (uint32_t *) N_("Raster"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 1, 0, 0, '\0' }, '\0', 0, NULL, NULL, DVMenuCreate, MID_Raster },
+    { { (uint32_t *) N_("Gloss"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 1, 0, 0, '\0' }, '\0', 0, NULL, NULL, DVMenuCreate, MID_Gloss },
     GMENUITEM_EMPTY
 };
 
@@ -919,7 +919,7 @@ static int DV_WindowMenu(GGadget *g, GEvent *e) {
 	if ( !done ) {
 	    int i;
 	    for ( i=0; popupwindowlist[i].ti.text!=NULL; ++i )
-		popupwindowlist[i].ti.text = (unichar_t *) _((char *) popupwindowlist[i].ti.text);
+		popupwindowlist[i].ti.text = (uint32_t *) _((char *) popupwindowlist[i].ti.text);
 	    done = true;
 	}
 	popupwindowlist[0].ti.checked = dv->regs!=NULL;
@@ -1829,7 +1829,7 @@ static void DVCreatePoints(DebugView *dv) {
     memset(&label,0,sizeof(label));
     memset(&gcd,0,sizeof(gcd));
 
-    label[0].text = (unichar_t *) _("Twilight");
+    label[0].text = (uint32_t *) _("Twilight");
     label[0].text_is_1byte = true;
     gcd[0].gd.label = &label[0];
     gcd[0].gd.pos.x = 5; gcd[0].gd.pos.y = 3;
@@ -1837,7 +1837,7 @@ static void DVCreatePoints(DebugView *dv) {
     gcd[0].gd.cid = CID_Twilight;
     gcd[0].creator = GRadioCreate;
 
-    label[1].text = (unichar_t *) _("Normal");
+    label[1].text = (uint32_t *) _("Normal");
     label[1].text_is_1byte = true;
     gcd[1].gd.label = &label[1];
     gcd[1].gd.pos.x = 60; gcd[1].gd.pos.y = gcd[0].gd.pos.y;
@@ -1845,7 +1845,7 @@ static void DVCreatePoints(DebugView *dv) {
     gcd[1].gd.cid = CID_Normal;
     gcd[1].creator = GRadioCreate;
 
-    label[2].text = (unichar_t *) _("Current");
+    label[2].text = (uint32_t *) _("Current");
     label[2].text_is_1byte = true;
     gcd[2].gd.label = &label[2];
     gcd[2].gd.pos.x = 5; gcd[2].gd.pos.y = gcd[0].gd.pos.y+16;
@@ -1853,7 +1853,7 @@ static void DVCreatePoints(DebugView *dv) {
     gcd[2].gd.cid = CID_Current;
     gcd[2].creator = GRadioCreate;
 
-    label[3].text = (unichar_t *) S_("Points|Original");
+    label[3].text = (uint32_t *) S_("Points|Original");
     label[3].text_is_1byte = true;
     gcd[3].gd.label = &label[3];
     gcd[3].gd.pos.x = gcd[1].gd.pos.x; gcd[3].gd.pos.y = gcd[2].gd.pos.y;
@@ -1861,7 +1861,7 @@ static void DVCreatePoints(DebugView *dv) {
     gcd[3].gd.cid = CID_Original;
     gcd[3].creator = GRadioCreate;
 
-    label[4].text = (unichar_t *) _("Grid");
+    label[4].text = (uint32_t *) _("Grid");
     label[4].text_is_1byte = true;
     gcd[4].gd.label = &label[4];
     gcd[4].gd.pos.x = 5; gcd[4].gd.pos.y = gcd[2].gd.pos.y+16;
@@ -1872,7 +1872,7 @@ static void DVCreatePoints(DebugView *dv) {
     k=5;
 
 #if defined(FONTFORGE_CONFIG_SHOW_RAW_POINTS)
-    label[k].text = (unichar_t *) _("Raw");
+    label[k].text = (uint32_t *) _("Raw");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 43; gcd[k].gd.pos.y = gcd[4].gd.pos.y;
@@ -1882,7 +1882,7 @@ static void DVCreatePoints(DebugView *dv) {
     gcd[k++].creator = GRadioCreate;
 #endif
 
-    label[k].text = (unichar_t *) _("Em Units");
+    label[k].text = (uint32_t *) _("Em Units");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
 #if defined(FONTFORGE_CONFIG_SHOW_RAW_POINTS)
@@ -1894,7 +1894,7 @@ static void DVCreatePoints(DebugView *dv) {
     gcd[k].gd.cid = CID_EmUnit;
     gcd[k++].creator = GRadioCreate;
 
-    label[k].text = (unichar_t *) _("Transformed");
+    label[k].text = (uint32_t *) _("Transformed");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[4].gd.pos.y+16;
@@ -2130,7 +2130,7 @@ return;
 	gcd[1].gd.label = &label[1];
 	label[1].image = &GIcon_stepinto;
 	gcd[1].gd.handle_controlevent = DV_Run;
-	gcd[1].gd.popup_msg = (unichar_t *) _("Step into");
+	gcd[1].gd.popup_msg = (uint32_t *) _("Step into");
 	gcd[1].creator = GButtonCreate;
 
 	gcd[2].gd.pos.y = 2; gcd[2].gd.pos.x = 38;
@@ -2139,7 +2139,7 @@ return;
 	gcd[2].gd.label = &label[2];
 	label[2].image = &GIcon_stepover;
 	gcd[2].gd.handle_controlevent = DV_Run;
-	gcd[2].gd.popup_msg = (unichar_t *) _("Step over (Next)");
+	gcd[2].gd.popup_msg = (uint32_t *) _("Step over (Next)");
 	gcd[2].creator = GButtonCreate;
 
 	gcd[3].gd.pos.y = 2; gcd[3].gd.pos.x = 74;
@@ -2148,7 +2148,7 @@ return;
 	gcd[3].gd.label = &label[3];
 	label[3].image = &GIcon_stepout;
 	gcd[3].gd.handle_controlevent = DV_Run;
-	gcd[3].gd.popup_msg = (unichar_t *) _("Step out of current function");
+	gcd[3].gd.popup_msg = (uint32_t *) _("Step out of current function");
 	gcd[3].creator = GButtonCreate;
 
 	gcd[4].gd.pos.y = 2; gcd[4].gd.pos.x = 110;
@@ -2157,7 +2157,7 @@ return;
 	gcd[4].gd.label = &label[4];
 	label[4].image = &GIcon_continue;
 	gcd[4].gd.handle_controlevent = DV_Run;
-	gcd[4].gd.popup_msg = (unichar_t *) _("Continue");
+	gcd[4].gd.popup_msg = (uint32_t *) _("Continue");
 	gcd[4].creator = GButtonCreate;
 
 	gcd[5].gd.pos.y = 2; gcd[5].gd.pos.x = 146;
@@ -2166,7 +2166,7 @@ return;
 	gcd[5].gd.label = &label[5];
 	label[5].image = &GIcon_watchpnt;
 	gcd[5].gd.handle_controlevent = DV_WatchPnt;
-	gcd[5].gd.popup_msg = (unichar_t *) _("Watch all selected points\n(stop when a point moves)");
+	gcd[5].gd.popup_msg = (uint32_t *) _("Watch all selected points\n(stop when a point moves)");
 	gcd[5].creator = GButtonCreate;
 
 	gcd[6].gd.pos.y = 2; gcd[6].gd.pos.x = 182;
@@ -2175,7 +2175,7 @@ return;
 	gcd[6].gd.label = &label[6];
 	label[6].image = &GIcon_menudelta;
 	gcd[6].gd.handle_controlevent = DV_WindowMenu;
-	gcd[6].gd.popup_msg = (unichar_t *) _("Window");
+	gcd[6].gd.popup_msg = (uint32_t *) _("Window");
 	gcd[6].creator = GButtonCreate;
 
 	gcd[7].gd.pos.y = 2; gcd[7].gd.pos.x = 218;
@@ -2184,7 +2184,7 @@ return;
 	gcd[7].gd.label = &label[7];
 	label[7].image = &GIcon_exit;
 	gcd[7].gd.handle_controlevent = DV_Exit;
-	gcd[7].gd.popup_msg = (unichar_t *) _("Exit Debugger");
+	gcd[7].gd.popup_msg = (uint32_t *) _("Exit Debugger");
 	gcd[7].creator = GButtonCreate;
 
 	GGadgetsCreate(dv->dv,gcd);

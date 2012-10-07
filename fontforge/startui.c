@@ -148,8 +148,8 @@ static GTimer *autosave_timer;
 static GTimer *splasht;
 static GFont *splash_font, *splash_italic;
 static int as, fh, linecnt;
-static unichar_t msg[470];
-static unichar_t *lines[20], *is, *ie;
+static uint32_t msg[470];
+static uint32_t *lines[20], *is, *ie;
 
 void
 ShowAboutScreen (void)
@@ -171,7 +171,7 @@ ShowAboutScreen (void)
 static void
 SplashLayout ()
 {
-  unichar_t *start, *pt, *lastspace;
+  uint32_t *start, *pt, *lastspace;
 
   uc_strcpy (msg, "When my father finished his book on Renaissance printing"
              " (The Craft of Printing and the Publication of Shakespeare's Works)"

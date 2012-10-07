@@ -51,7 +51,7 @@ static GTextInfo *SFLayerList(SplineFont *sf,int def_layer) {
     int l;
 
     for ( l=0; l<sf->layer_cnt; ++l ) {
-	ret[l].text = (unichar_t *) copy(sf->layers[l].name);
+	ret[l].text = (uint32_t *) copy(sf->layers[l].name);
 	ret[l].text_is_1byte = true;
 	ret[l].userdata = (void *) (intptr_t) l;
     }
@@ -214,14 +214,14 @@ static void Layer2Layer(CharView *cv,FontView *fv,enum l2l_type l2l,int def_laye
     memset(&boxes,0,sizeof(boxes));
 
     k=j=0;
-    label[k].text = (unichar_t *) (l2l==l2l_copy ? _("Copy one layer to another") : _("Compare two layers"));
+    label[k].text = (uint32_t *) (l2l==l2l_copy ? _("Copy one layer to another") : _("Compare two layers"));
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled|gg_visible;
     gcd[k++].creator = GLabelCreate;
     hvarray[j++] = &gcd[k-1]; hvarray[j++] = NULL;
 
-    label[k].text = (unichar_t *) (l2l==l2l_copy ? _("From:") : _("Base:"));
+    label[k].text = (uint32_t *) (l2l==l2l_copy ? _("From:") : _("Base:"));
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled|gg_visible;
@@ -234,7 +234,7 @@ static void Layer2Layer(CharView *cv,FontView *fv,enum l2l_type l2l,int def_laye
     gcd[k++].creator = GListButtonCreate;
     hvarray2[1] = &gcd[k-1]; hvarray2[2] = NULL;
 
-    label[k].text = (unichar_t *) (l2l==l2l_copy ? _("To:") : _("Other:"));
+    label[k].text = (uint32_t *) (l2l==l2l_copy ? _("To:") : _("Other:"));
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled|gg_visible;
@@ -253,7 +253,7 @@ static void Layer2Layer(CharView *cv,FontView *fv,enum l2l_type l2l,int def_laye
     hvarray[j++] = &boxes[3]; hvarray[j++] = NULL;
 
     if ( l2l==l2l_copy ) {
-	label[k].text = (unichar_t *) _("Clear destination layer before copy");
+	label[k].text = (uint32_t *) _("Clear destination layer before copy");
 	label[k].text_is_1byte = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.cid = CID_ClearOld;
@@ -261,14 +261,14 @@ static void Layer2Layer(CharView *cv,FontView *fv,enum l2l_type l2l,int def_laye
 	gcd[k++].creator = GCheckBoxCreate;
 	hvarray[j++] = &gcd[k-1]; hvarray[j++] = NULL;
     } else {
-	label[k].text = (unichar_t *) _("Allow errors of:");
+	label[k].text = (uint32_t *) _("Allow errors of:");
 	label[k].text_is_1byte = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.flags = gg_enabled|gg_visible;
 	gcd[k++].creator = GLabelCreate;
 	harray[0] = &gcd[k-1];
     
-	label[k].text = (unichar_t *) "1";
+	label[k].text = (uint32_t *) "1";
 	label[k].text_is_1byte = true;
 	gcd[k].gd.pos.width = 50;
 	gcd[k].gd.label = &label[k];
@@ -277,7 +277,7 @@ static void Layer2Layer(CharView *cv,FontView *fv,enum l2l_type l2l,int def_laye
 	gcd[k++].creator = GTextFieldCreate;
 	harray[1] = &gcd[k-1];
 
-	label[k].text = (unichar_t *) _("em units");
+	label[k].text = (uint32_t *) _("em units");
 	label[k].text_is_1byte = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.flags = gg_enabled|gg_visible;
@@ -291,7 +291,7 @@ static void Layer2Layer(CharView *cv,FontView *fv,enum l2l_type l2l,int def_laye
     }
 
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    label[k].text = (unichar_t *) _("_OK");
+    label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];
@@ -300,7 +300,7 @@ static void Layer2Layer(CharView *cv,FontView *fv,enum l2l_type l2l,int def_laye
     harray2[0] = GCD_Glue; harray2[1] = &gcd[k-1]; harray2[2] = GCD_Glue; harray2[3] = GCD_Glue;
 
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    label[k].text = (unichar_t *) _("_Cancel");
+    label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     gcd[k].gd.label = &label[k];

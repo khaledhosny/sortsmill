@@ -362,7 +362,7 @@ void FVBuildDuplicate(FontViewBase *fv) {
     const int *pua = fv->sf->uni_interp==ui_trad_chinese ? cns14pua : fv->sf->uni_interp==ui_ams ? amspua : NULL;
     int i, cnt=0, gid;
     SplineChar dummy;
-    const unichar_t *pt;
+    const uint32_t *pt;
 
     for ( i=0; i<fv->map->enccount; ++i ) if ( fv->selected[i] )
 	++cnt;

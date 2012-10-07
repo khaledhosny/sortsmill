@@ -31,47 +31,47 @@
 #include "gfile.h"
 #include "ustring.h"
 
-unichar_t unknown[] = { '*','/','*', '\0' };
-unichar_t textplain[] = { 't','e','x','t','/','p','l','a','i','n', '\0' };
-unichar_t texthtml[] = { 't','e','x','t','/','h','t','m','l', '\0' };
-unichar_t textxml[] = { 't','e','x','t','/','x','m','l', '\0' };
-unichar_t textc[] = { 't','e','x','t','/','c', '\0' };
-unichar_t textcss[] = { 't','e','x','t','/','c','s','s', '\0' };
-unichar_t textmake[] = { 't','e','x','t','/','m','a','k','e', '\0' };
-unichar_t textjava[] = { 't','e','x','t','/','j','a','v','a', '\0' };
-unichar_t textps[] = { 't','e','x','t','/','p','s', '\0' };
+uint32_t unknown[] = { '*','/','*', '\0' };
+uint32_t textplain[] = { 't','e','x','t','/','p','l','a','i','n', '\0' };
+uint32_t texthtml[] = { 't','e','x','t','/','h','t','m','l', '\0' };
+uint32_t textxml[] = { 't','e','x','t','/','x','m','l', '\0' };
+uint32_t textc[] = { 't','e','x','t','/','c', '\0' };
+uint32_t textcss[] = { 't','e','x','t','/','c','s','s', '\0' };
+uint32_t textmake[] = { 't','e','x','t','/','m','a','k','e', '\0' };
+uint32_t textjava[] = { 't','e','x','t','/','j','a','v','a', '\0' };
+uint32_t textps[] = { 't','e','x','t','/','p','s', '\0' };
 	/* Officially registered with IANA on 14 May 2008 */
-unichar_t sfdfont[] = { 'a','p','p','l','i','c','a','t','i','o','n','/','v','n','d','.','f','o','n','t','-','f','o','n','t','f','o','r','g','e','-','s','f','d', '\0' };
-unichar_t textpsfont[] = { 't','e','x','t','/','f','o','n','t','p','s', '\0' };
-unichar_t textbdffont[] = { 't','e','x','t','/','f','o','n','t','b','d','f', '\0' };
-unichar_t imagegif[] = { 'i','m','a','g','e','/','g','i','f', '\0' };
-unichar_t imagejpeg[] = { 'i','m','a','g','e','/','j','p','e','g', '\0' };
-unichar_t imagepng[] = { 'i','m','a','g','e','/','p','n','g', '\0' };
-unichar_t imagesvg[] = { 'i','m','a','g','e','/','s','v','g','+','x','m','l', '\0' };
-unichar_t videoquick[] = { 'v','i','d','e','o','/','q','u','i','c','k','t','i','m','e', '\0' };
-unichar_t audiowav[] = { 'a','u','d','i','o','/','w','a','v', '\0' };
-unichar_t pdf[] = { 'a','p','p','l','i','c','a','t','i','o','n','/','p','d','f', '\0' };
-unichar_t object[] = { 'a','p','p','l','i','c','a','t','i','o','n','/','x','-','o','b','j','e','c','t', '\0' };
-unichar_t dir[] = { 'a','p','p','l','i','c','a','t','i','o','n','/','x','-','n','a','v','i','d','i','r', '\0' };
-unichar_t core[] = { 'a','p','p','l','i','c','a','t','i','o','n','/','x','-','c','o','r','e', '\0' };
-unichar_t fontttf[] = { 'a','p','p','l','i','c','a','t','i','o','n','/','x','-','f','o','n','t','-','t','t','f', '\0' };
-unichar_t fontotf[] = { 'a','p','p','l','i','c','a','t','i','o','n','/','x','-','f','o','n','t','-','o','t','f', '\0' };
-unichar_t fontcid[] = { 'a','p','p','l','i','c','a','t','i','o','n','/','x','-','f','o','n','t','-','c','i','d', '\0' };
-unichar_t fonttype1[] = { 'a','p','p','l','i','c','a','t','i','o','n','/','x','-','f','o','n','t','-','t','y','p','e','1', '\0' };
-unichar_t fontmacsuit[] = { 'a','p','p','l','i','c','a','t','i','o','n','/','x','-','m','a','c','-','s','u','i','t', '\0' };
-unichar_t macbin[] = { 'a','p','p','l','i','c','a','t','i','o','n','/','x','-','m','a','c','b','i','n','a','r','y', '\0' };
-unichar_t machqx[] = { 'a','p','p','l','i','c','a','t','i','o','n','/','x','-','m','a','c','-','b','i','n','h','e','x','4','0', '\0' };
-unichar_t macdfont[] = { 'a','p','p','l','i','c','a','t','i','o','n','/','x','-','m','a','c','-','d','f','o','n','t', '\0' };
-unichar_t compressed[] = { 'a','p','p','l','i','c','a','t','i','o','n','/','x','-','c','o','m','p','r','e','s','s','e','d', '\0' };
-unichar_t tar[] = { 'a','p','p','l','i','c','a','t','i','o','n','/','x','-','t','a','r', '\0' };
-unichar_t fontpcf[] = { 'a','p','p','l','i','c','a','t','i','o','n','/','x','-','f','o','n','t','-','p','c','f', '\0' };
-unichar_t fontsnf[] = { 'a','p','p','l','i','c','a','t','i','o','n','/','x','-','f','o','n','t','-','s','n','f', '\0' };
+uint32_t sfdfont[] = { 'a','p','p','l','i','c','a','t','i','o','n','/','v','n','d','.','f','o','n','t','-','f','o','n','t','f','o','r','g','e','-','s','f','d', '\0' };
+uint32_t textpsfont[] = { 't','e','x','t','/','f','o','n','t','p','s', '\0' };
+uint32_t textbdffont[] = { 't','e','x','t','/','f','o','n','t','b','d','f', '\0' };
+uint32_t imagegif[] = { 'i','m','a','g','e','/','g','i','f', '\0' };
+uint32_t imagejpeg[] = { 'i','m','a','g','e','/','j','p','e','g', '\0' };
+uint32_t imagepng[] = { 'i','m','a','g','e','/','p','n','g', '\0' };
+uint32_t imagesvg[] = { 'i','m','a','g','e','/','s','v','g','+','x','m','l', '\0' };
+uint32_t videoquick[] = { 'v','i','d','e','o','/','q','u','i','c','k','t','i','m','e', '\0' };
+uint32_t audiowav[] = { 'a','u','d','i','o','/','w','a','v', '\0' };
+uint32_t pdf[] = { 'a','p','p','l','i','c','a','t','i','o','n','/','p','d','f', '\0' };
+uint32_t object[] = { 'a','p','p','l','i','c','a','t','i','o','n','/','x','-','o','b','j','e','c','t', '\0' };
+uint32_t dir[] = { 'a','p','p','l','i','c','a','t','i','o','n','/','x','-','n','a','v','i','d','i','r', '\0' };
+uint32_t core[] = { 'a','p','p','l','i','c','a','t','i','o','n','/','x','-','c','o','r','e', '\0' };
+uint32_t fontttf[] = { 'a','p','p','l','i','c','a','t','i','o','n','/','x','-','f','o','n','t','-','t','t','f', '\0' };
+uint32_t fontotf[] = { 'a','p','p','l','i','c','a','t','i','o','n','/','x','-','f','o','n','t','-','o','t','f', '\0' };
+uint32_t fontcid[] = { 'a','p','p','l','i','c','a','t','i','o','n','/','x','-','f','o','n','t','-','c','i','d', '\0' };
+uint32_t fonttype1[] = { 'a','p','p','l','i','c','a','t','i','o','n','/','x','-','f','o','n','t','-','t','y','p','e','1', '\0' };
+uint32_t fontmacsuit[] = { 'a','p','p','l','i','c','a','t','i','o','n','/','x','-','m','a','c','-','s','u','i','t', '\0' };
+uint32_t macbin[] = { 'a','p','p','l','i','c','a','t','i','o','n','/','x','-','m','a','c','b','i','n','a','r','y', '\0' };
+uint32_t machqx[] = { 'a','p','p','l','i','c','a','t','i','o','n','/','x','-','m','a','c','-','b','i','n','h','e','x','4','0', '\0' };
+uint32_t macdfont[] = { 'a','p','p','l','i','c','a','t','i','o','n','/','x','-','m','a','c','-','d','f','o','n','t', '\0' };
+uint32_t compressed[] = { 'a','p','p','l','i','c','a','t','i','o','n','/','x','-','c','o','m','p','r','e','s','s','e','d', '\0' };
+uint32_t tar[] = { 'a','p','p','l','i','c','a','t','i','o','n','/','x','-','t','a','r', '\0' };
+uint32_t fontpcf[] = { 'a','p','p','l','i','c','a','t','i','o','n','/','x','-','f','o','n','t','-','p','c','f', '\0' };
+uint32_t fontsnf[] = { 'a','p','p','l','i','c','a','t','i','o','n','/','x','-','f','o','n','t','-','s','n','f', '\0' };
 
 #ifdef __Mac
 #include <Developer/Headers/FlatCarbon/Files.h>
 #define CHR(ch1,ch2,ch3,ch4) (((ch1)<<24)|((ch2)<<16)|((ch3)<<8)|(ch4))
 
-unichar_t *_GioMacMime(const char *path) {
+uint32_t *_GioMacMime(const char *path) {
     /* If we're on a mac, we can try to see if we've got a real resource fork */
     FSRef ref;
     FSCatalogInfo info;
@@ -103,8 +103,8 @@ return( NULL );
 }
 #endif
 
-unichar_t *GIOguessMimeType(const unichar_t *path,int isdir) {
-    unichar_t *pt;
+uint32_t *GIOguessMimeType(const uint32_t *path,int isdir) {
+    uint32_t *pt;
 
     if ( isdir )
 return( dir );
