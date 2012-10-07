@@ -5981,16 +5981,6 @@ void FVChar(FontView *fv, GEvent *event) {
     int i,pos, cnt, gid;
     extern int navigation_mask;
 
-#if MyMemory
-    if ( event->u.chr.keysym == GK_F2 ) {
-	fprintf( stderr, "Malloc debug on\n" );
-	__malloc_debug(5);
-    } else if ( event->u.chr.keysym == GK_F3 ) {
-	fprintf( stderr, "Malloc debug off\n" );
-	__malloc_debug(0);
-    }
-#endif
-
     if ( event->u.chr.keysym=='s' &&
 	    (event->u.chr.state&ksm_control) &&
 	    (event->u.chr.state&ksm_meta) )
