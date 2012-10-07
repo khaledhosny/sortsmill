@@ -5991,15 +5991,6 @@ return;
 	}
 #endif
 
-#if MyMemory
-    if ( event->u.chr.keysym == GK_F2 ) {
-	fprintf( stderr, "Malloc debug on\n" );
-	__malloc_debug(5);
-    } else if ( event->u.chr.keysym == GK_F3 ) {
-	fprintf( stderr, "Malloc debug off\n" );
-	__malloc_debug(0);
-    }
-#endif
 #if 0
     if ( event->u.chr.keysym == GK_F4 ) {
 	RepeatFromFile(cv);

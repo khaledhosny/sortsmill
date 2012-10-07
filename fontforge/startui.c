@@ -80,9 +80,6 @@ _dousage (void)
   printf ("\t-sync\t\t\t (syncs the display, debugging)\n");
   printf
     ("\t-keyboard ibm|mac|sun|ppc  (generates appropriate hotkeys in menus)\n");
-#if MyMemory
-  printf ("\t-memory\t\t\t (turns on memory checks, debugging)\n");
-#endif
   printf ("\t-help\t\t\t (displays this message, and exits)\n");
   printf
     ("\t-docs\t\t\t (displays this message, invokes a browser)\n\t\t\t\t (Using the BROWSER environment variable)\n");
