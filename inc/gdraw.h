@@ -426,10 +426,8 @@ VISIBLE extern void GDrawSetBuildCharHooks(void (*hook)(GDisplay *), void (*insh
 
 VISIBLE extern int GDrawRequestDeviceEvents(GWindow w,int devcnt,struct gdeveventmask *de);
 
-extern void GDrawQueueDrawing(GWindow w,void (*)(GWindow,void *),void *);
 VISIBLE extern void GDrawPathStroke(GWindow w,Color col);
 VISIBLE extern void GDrawPathFill(GWindow w,Color col);
-extern void GDrawPathFillAndStroke(GWindow w,Color fillcol, Color strokecol);
 
 VISIBLE extern void GDrawLayoutInit(GWindow w, char *text, int cnt, GFont *fi);
 VISIBLE extern void GDrawLayoutDraw(GWindow w, int32 x, int32 y, Color fg);
@@ -443,7 +441,6 @@ VISIBLE extern cairo_t *GDrawGetCairo(GWindow w);
 
 extern void GDrawFatalError(const char *fmt,...);
 VISIBLE extern void GDrawIError(const char *fmt,...);
-extern void GDrawError(const char *fmt,...);
 VISIBLE extern int GDrawKeyState(int keysym);
 
 extern int GImageGetScaledWidth(GWindow gw, GImage *img);

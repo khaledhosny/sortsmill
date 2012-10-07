@@ -304,11 +304,11 @@ return( x );
 }
 	
 static void
-GMenuDrawCheckMark (struct gmenu *m, Color fg, int ybase, int r2l)
+GMenuDrawCheckMark (struct gmenu *m, Color fg, int ybase)
 {
   int as = m->as;
   int pt = GDrawPointsToPixels (m->w, 1);
-  int x = r2l ? m->width - m->tioff + 2 * pt : m->tickoff;
+  int x = m->tickoff;
 
   while (pt > 1 && 2 * pt >= as / 3)
     --pt;
@@ -320,43 +320,28 @@ GMenuDrawCheckMark (struct gmenu *m, Color fg, int ybase, int r2l)
 }
 
 static void
-GMenuDrawUncheckMark (struct gmenu *m, Color fg, int ybase, int r2l)
+GMenuDrawUncheckMark (struct gmenu *m, Color fg, int ybase)
 {
 }
 
 static void
-GMenuDrawArrow (struct gmenu *m, Color fg, int ybase, int r2l)
+GMenuDrawArrow (struct gmenu *m, Color fg, int ybase)
 {
   int pt = GDrawPointsToPixels (m->w, 1);
   int as = 2 * (m->as / 3);
-  int x = r2l ? m->bp + 2 * pt : m->rightedge - 2 * pt;
+  int x = m->rightedge - 2 * pt;
   GPoint p[3];
 
   GDrawSetLineWidth (m->w, 2 * pt);
-  if (r2l)
-    {
-      p[0].x = x;
-      p[0].y = ybase - as / 2;
-      p[1].x = x + 1 * (as / 2);
-      p[1].y = ybase;
-      p[2].x = p[1].x;
-      p[2].y = ybase - as;
+  p[0].x = x;
+  p[0].y = ybase - as / 2;
+  p[1].x = x - 1 * (as / 2);
+  p[1].y = ybase;
+  p[2].x = p[1].x;
+  p[2].y = ybase - as;
 
-      GDrawDrawLine (m->w, p[0].x, p[0].y, p[2].x, p[2].y, fg);
-      GDrawDrawLine (m->w, p[1].x, p[1].y, p[0].x, p[0].y, fg);
-    }
-  else
-    {
-      p[0].x = x;
-      p[0].y = ybase - as / 2;
-      p[1].x = x - 1 * (as / 2);
-      p[1].y = ybase;
-      p[2].x = p[1].x;
-      p[2].y = ybase - as;
-
-      GDrawDrawLine (m->w, p[0].x, p[0].y, p[2].x, p[2].y, fg);
-      GDrawDrawLine (m->w, p[1].x, p[1].y, p[0].x, p[0].y, fg);
-    }
+  GDrawDrawLine (m->w, p[0].x, p[0].y, p[2].x, p[2].y, fg);
+  GDrawDrawLine (m->w, p[1].x, p[1].y, p[0].x, p[0].y, fg);
 }
 
 static int GMenuDrawMenuLine(struct gmenu *m, GMenuItem *mi, int y,GWindow pixmap) {
@@ -366,57 +351,53 @@ static int GMenuDrawMenuLine(struct gmenu *m, GMenuItem *mi, int y,GWindow pixma
     Color fg = m->box->main_foreground;
     GRect old, new;
     int ybase = y+as;
-    int r2l = false;
     int x;
+    GTextInfo *ti = GTextInfoCopy(&mi->ti);
 
     new.x = m->tickoff; new.width = m->rightedge-m->tickoff;
     new.y = y; new.height = GTextInfoGetHeight(pixmap,&mi->ti,m->font);
     GDrawPushClip(pixmap,&new,&old);
 
-    if ( mi->ti.fg!=COLOR_DEFAULT && mi->ti.fg!=COLOR_UNKNOWN )
-	fg = mi->ti.fg;
-    if ( mi->ti.disabled || m->disabled )
+    if ( ti->fg!=COLOR_DEFAULT && ti->fg!=COLOR_UNKNOWN )
+	fg = ti->fg;
+    if ( ti->disabled || m->disabled )
 	fg = m->box->disabled_foreground;
     if ( fg==COLOR_DEFAULT )
 	fg = GDrawGetDefaultForeground(GDrawGetDisplayOfWindow(pixmap));
-    if ( mi->ti.text!=NULL && isrighttoleft(mi->ti.text[0]) )
-	r2l = true;
 
-    if ( r2l )
-	x = m->width-m->tioff-GTextInfoGetWidth(pixmap,&mi->ti,m->font);
-    else
-	x = m->tioff;
-    h = GTextInfoDraw(pixmap,x,y,&mi->ti,m->font,
-	    (mi->ti.disabled || m->disabled )?m->box->disabled_foreground:fg,
-	    m->box->active_border,new.y+new.height);
-
-    if ( mi->ti.checkable ) {
-	if ( mi->ti.checked )
-	    GMenuDrawCheckMark(m,fg,ybase,r2l);
-	else
-	    GMenuDrawUncheckMark(m,fg,ybase,r2l);
+    if ( ti->checkable ) {
+	if ( ti->checked ) {
+	    GMenuDrawCheckMark(m,fg,ybase);
+	    /* we don't want to draw the image if check mark is drawn */
+	    ti->image = NULL;
+	} else {
+	    GMenuDrawUncheckMark(m,fg,ybase);
+	}
     }
 
+    /* draw the menu items with image at the base point, so the actual text
+     * offset is always the same */
+    if (ti->image != NULL)
+	x = m->bp;
+    else
+	x = m->tioff;
+
+    h = GTextInfoDraw(pixmap,x,y,ti,m->font,
+	    (ti->disabled || m->disabled )?m->box->disabled_foreground:fg,
+	    m->box->active_border,new.y+new.height);
+
     if ( mi->sub!=NULL )
-	GMenuDrawArrow(m,fg,ybase,r2l);
+	GMenuDrawArrow(m,fg,ybase);
     else if ( mi->shortcut!=0 && (mi->short_mask&0xffe0)==0 && mac_menu_icons ) {
 	_shorttext(mi->shortcut,0,shortbuf);
 	width = GDrawGetTextWidth(pixmap,shortbuf,-1) + GMenuMacIconsWidth(m,mi->short_mask);
-	if ( r2l ) {
-	    int x = GDrawDrawText(pixmap,m->bp,ybase,shortbuf,-1,fg);
-	    GMenuDrawMacIcons(m,fg,ybase, x, mi->short_mask);
-	} else {
-	    int x = GMenuDrawMacIcons(m,fg,ybase,m->rightedge-width, mi->short_mask);
-	    GDrawDrawText(pixmap,x,ybase,shortbuf,-1,fg);
-	}
+	int x = GMenuDrawMacIcons(m,fg,ybase,m->rightedge-width, mi->short_mask);
+	GDrawDrawText(pixmap,x,ybase,shortbuf,-1,fg);
     } else if ( mi->shortcut!=0 ) {
 	shorttext(mi,shortbuf);
 
 	width = GDrawGetTextWidth(pixmap,shortbuf,-1);
-	if ( r2l )
-	    GDrawDrawText(pixmap,m->bp,ybase,shortbuf,-1,fg);
-	else
-	    GDrawDrawText(pixmap,m->rightedge-width,ybase,shortbuf,-1,fg);
+	GDrawDrawText(pixmap,m->rightedge-width,ybase,shortbuf,-1,fg);
     }
     GDrawPopClip(pixmap,&old);
 return( y + h );
@@ -521,9 +502,6 @@ static void GMenuHideAll(struct gmenu *m) {
 }
 
 static void GMenuDismissAll(struct gmenu *m) {
-#if 0
- printf("DismissAll\n");
-#endif
     if ( m!=NULL ) {
 	while ( m->parent ) m = m->parent;
 	GMenuDestroy(m);
@@ -681,9 +659,6 @@ return( true );
 		m->initial_press = true;
 	}
     } else if ( event->type == et_mouseup && m->child==NULL ) {
-#if 0
- printf("\nActivate menu\n");
-#endif
 	if ( event->u.mouse.y>=m->bp && event->u.mouse.x>=0 &&
 		event->u.mouse.y<m->height-m->bp &&
 		event->u.mouse.x < m->width &&
@@ -748,141 +723,6 @@ static int GMenuBarKeyInvoke(struct gmenubar *mb, int i) {
 	(mb->mi[i].invoke)(mb->g.base,&mb->mi[i],NULL);
 return( true );
 }
-
-#if 0
-static int getkey(int keysym, int option) {
-    if ( option && keysym>128 ) {
-	/* Under Mac 10.5 (but not under 10.4,3,2,1,0) if the option key is */
-	/*  depressed the keysym changes. Opt-A becomes ARing, etc. */
-	/* Er... I can't repeat this now. the Option modifier mask (meta) */
-	/*  should be stripped off before we call Xutf8LookupString so the */
-	/*  conversion shouldn't happen. And doesn't in my tests */
-	/* And 0x2000 is not set for option now anyway */
-	if ( keysym==0xc5 )
-	    keysym = 'a';
-	else if ( keysym==0xe5 )
-	    keysym = 'A';
-	else if ( keysym==0x8bf )
-	    keysym = 'b';
-	else if ( keysym==0x2b9 )
-	    keysym = 'B';
-	else if ( keysym==0xe7 )
-	    keysym = 'c';
-	else if ( keysym==0xc7 )
-	    keysym = 'C';
-	else if ( keysym==0x8ef )
-	    keysym = 'd';
-	else if ( keysym==0xce )
-	    keysym = 'D';
-	else if ( keysym==0xfe51 )
-	    keysym = 'e';
-	else if ( keysym==0xb4 )
-	    keysym = 'E';
-	else if ( keysym==0x8f6 )
-	    keysym = 'f';
-	else if ( keysym==0xcf )
-	    keysym = 'F';
-	else if ( keysym==0xa9 )
-	    keysym = 'g';
-	else if ( keysym==0x1bd )
-	    keysym = 'G';
-	else if ( keysym==0x1ff )
-	    keysym = 'h';
-	else if ( keysym==0xd3 )
-	    keysym = 'H';
-	else if ( keysym==0xfe52 )
-	    keysym = 'i';
-	else if ( keysym==0x2c6 )
-	    keysym = 'I';
-	else if ( keysym==0x2206 )
-	    keysym = 'j';
-	else if ( keysym==0xd4 )
-	    keysym = 'J';
-	else if ( keysym==0x2da )
-	    keysym = 'k';
-	else if ( keysym==0xf8ff )
-	    keysym = 'K';
-	else if ( keysym==0xac )
-	    keysym = 'l';
-	else if ( keysym==0xd2 )
-	    keysym = 'L';
-	else if ( keysym==0xb5 )
-	    keysym = 'm';
-	else if ( keysym==0xc2 )
-	    keysym = 'M';
-	else if ( keysym==0xfe53 )
-	    keysym = 'n';
-	else if ( keysym==0x2dc )
-	    keysym = 'N';
-	else if ( keysym==0xf8 )
-	    keysym = 'o';
-	else if ( keysym==0xd8 )
-	    keysym = 'O';
-	else if ( keysym==0x7f0 )
-	    keysym = 'p';
-	else if ( keysym==0x220f )
-	    keysym = 'P';
-	else if ( keysym==0x13bd )
-	    keysym = 'q';
-	else if ( keysym==0x13bc )
-	    keysym = 'Q';
-	else if ( keysym==0xae )
-	    keysym = 'r';
-	else if ( keysym==0x2030 )
-	    keysym = 'R';
-	else if ( keysym==0xdf )
-	    keysym = 's';
-	else if ( keysym==0xcd )
-	    keysym = 'S';
-	else if ( keysym==0xaf1 )
-	    keysym = 't';
-	else if ( keysym==0x1b7 )
-	    keysym = 'T';
-	else if ( keysym==0xfe57 )
-	    keysym = 'u';
-	else if ( keysym==0xa8 )
-	    keysym = 'U';
-	else if ( keysym==0x8d6 )
-	    keysym = 'v';
-	else if ( keysym==0x25ca )
-	    keysym = 'V';
-	else if ( keysym==0x2211 )
-	    keysym = 'w';
-	else if ( keysym==0xafe )
-	    keysym = 'W';
-	else if ( keysym==0x2248 )
-	    keysym = 'x';
-	else if ( keysym==0x1b2 )
-	    keysym = 'X';
-	else if ( keysym==0xa5 )
-	    keysym = 'y';
-	else if ( keysym==0xc1 )
-	    keysym = 'Y';
-	else if ( keysym==0x7d9 )
-	    keysym = 'z';
-	else if ( keysym==0xb8 )
-	    keysym = 'Z';
-	else if ( keysym==0xaaa )
-	    keysym = '-';
-	else if ( keysym==0xaa9 )
-	    keysym = '_';
-	else if ( keysym==0x8bd )
-	    keysym = '=';
-	else if ( keysym==0xb1 )
-	    keysym = '+';
-	else if ( keysym==0xad2 )
-	    keysym = '[';
-	else if ( keysym==0xad0 )
-	    keysym = ']';
-	else if ( keysym==0xad3 )
-	    keysym = '{';
-	else if ( keysym==0xad1 )
-	    keysym = '}';
-    }
-    if ( islower(keysym)) keysym = toupper(keysym);
-return( keysym );
-}
-#endif
 
 static GMenuItem *GMenuSearchShortcut(GWindow gw, GMenuItem *mi, GEvent *event,
 	int call_moveto) {
@@ -1074,9 +914,6 @@ return( false );
 }
 
 static int gmenu_destroy(struct gmenu *m) {
-#if 0
- printf("gmenu_destroy\n");
-#endif
     if ( most_recent_popup_menu==m )
 	most_recent_popup_menu = NULL;
     if ( m->donecallback )
@@ -1163,6 +1000,7 @@ static GMenu *_GMenu_Create(GWindow owner,GMenuItem *mi, GPoint *where,
     extern int _GScrollBar_Width;
     int ds, ld, temp, lh;
     int sbwidth = 0;
+    int ticklen;
     GRect screen;
 
     m->owner = owner;
@@ -1216,11 +1054,12 @@ static GMenu *_GMenu_Create(GWindow owner,GMenuItem *mi, GPoint *where,
     m->fh = lh;
     m->mcnt = m->lcnt = i;
     if ( keywidth!=0 ) width += keywidth + GDrawPointsToPixels(m->w,8);
-    if ( m->hasticks ) {
-	int ticklen = m->as + GDrawPointsToPixels(m->w,5);
-	width += ticklen;
-	m->tioff += ticklen;
-    }
+
+    /* reseve space used by icons, even if we don't have any */
+    ticklen = MENU_ICON_SIZE + GDrawPointsToPixels(m->w, MENU_ICON_SEP);
+    width += ticklen;
+    m->tioff += ticklen;
+
     m->width = pos.width = width + 2*m->bp;
     m->rightedge = m->width - m->bp;
     m->height = pos.height = i*m->fh + 2*m->bp;
@@ -1756,21 +1595,10 @@ static void GMenuBarFindXs(GMenuBar *mb) {
     int i, wid;
 
     GDrawSetFont(mb->g.base,mb->font);
-#if 1
     wid = GDrawPointsToPixels(mb->g.base,8);
     mb->xs[0] = GDrawPointsToPixels(mb->g.base,2);
     for ( i=0; i<mb->mtot; ++i )
 	mb->xs[i+1] = mb->xs[i]+wid+GTextInfoGetWidth(mb->g.base,&mb->mi[i].ti,NULL);
-#else
-    for ( i=wid=0; i<mb->mtot; ++i ) {
-	temp = GDrawGetTextWidth(mb->g.base,mb->mi[i].ti.text,-1);
-	if ( temp>wid ) wid = temp;
-    }
-    wid += GDrawPointsToPixels(mb->g.base,5);
-    mb->xs[0] = 0;
-    for ( i=0; i<mb->mtot; ++i )
-	mb->xs[i+1] = mb->xs[i]+wid;
-#endif
     GMenuBarTestSize(mb);
 }
 

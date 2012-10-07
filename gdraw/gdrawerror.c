@@ -186,22 +186,6 @@ void GDrawIError(const char *fmt,...) {
     }
 }
 
-void GDrawError(const char *fmt,...) {
-    char buf[1025]; unichar_t ubuf[1025];
-    va_list ap;
-
-    va_start(ap, fmt);
-    vsprintf(buf, fmt, ap);
-    va_end(ap);
-    _GDraw_InitError(NULL);
-    if ( error==NULL )
-	fprintf( stderr, "%s\n", buf );
-    else {
-	ProcessText(ubuf,buf,et_error);
-	RunError();
-    }
-}
-
 void GDrawFatalError(const char *fmt,...) {
     char buf[1025]; unichar_t ubuf[1025];
     va_list ap;

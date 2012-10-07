@@ -123,7 +123,6 @@ struct gtimer {
 };
 
 struct gdisplay {
-    struct displayfuncs *funcs;
     void *semaphore;				/* To lock the display against multiple threads */
     int16 res;
     int16 scale_screen_by;			/* When converting screen pixels to printer pixels */
@@ -140,120 +139,6 @@ struct gdisplay {
 #define PixelToPoint(pixels,res)		(((pixels)*72+(res)/2)/(res))
 #define PixelToPointTenths(pixels,res)		(((pixels)*720+(res)/2)/(res))
 
-struct displayfuncs {
-    void (*init)(GDisplay *);
-    void (*term)(GDisplay *);
-    void *(*nativeDisplay)(GDisplay *);
-
-    void (*setDefaultIcon)(GWindow);
-
-    GWindow (*createTopWindow)(GDisplay *, GRect *pos, int (*eh)(GWindow,GEvent *), void *user_data, GWindowAttrs *);
-    GWindow (*createSubWindow)(GWindow, GRect *pos, int (*eh)(GWindow,GEvent *), void *user_data, GWindowAttrs *);
-    GWindow (*createPixmap)(GDisplay *, uint16 width, uint16 height);
-    GWindow (*createBitmap)(GDisplay *, uint16 width, uint16 height, uint8 *data);
-    GCursor (*createCursor)(GWindow src, GWindow mask, Color fg, Color bg, int16 x, int16 y);
-    void (*destroyWindow)(GWindow);
-    void (*destroyCursor)(GDisplay *,GCursor);
-    int (*nativeWindowExists)(GDisplay *,void *native_window);
-    void (*setZoom)(GWindow,GRect *size,enum gzoom_flags flags);
-    void (*setWindowBorder)(GWindow,int width,Color);
-    void (*setWindowBackground)(GWindow,Color);
-    int (*setDither)(GDisplay *,int);
-
-    void (*reparentWindow)(GWindow,GWindow,int,int);
-    void (*setVisible)(GWindow,int);
-    void (*move)(GWindow,int32,int32);
-    void (*trueMove)(GWindow,int32,int32);
-    void (*resize)(GWindow,int32,int32);
-    void (*moveResize)(GWindow,int32,int32,int32,int32);
-    void (*raise)(GWindow);
-    void (*raiseAbove)(GWindow,GWindow);
-    int  (*isAbove)(GWindow,GWindow);
-    void (*lower)(GWindow);
-    void (*setWindowTitles)(GWindow, const unichar_t *title, const unichar_t *icontitle);
-    void (*setWindowTitles8)(GWindow, const char *title, const char *icontitle);
-    unichar_t *(*getWindowTitle)(GWindow);
-    char *(*getWindowTitle8)(GWindow);
-    void (*setTransientFor)(GWindow, GWindow);
-    void (*getPointerPos)(GWindow,GEvent *);
-    GWindow (*getPointerWindow)(GWindow);
-    void (*setCursor)(GWindow, GCursor);
-    GCursor (*getCursor)(GWindow);
-    GWindow (*getRedirectWindow)(GDisplay *gd);
-    void (*translateCoordinates)(GWindow from, GWindow to, GPoint *pt);
-
-    void (*beep)(GDisplay *);
-    void (*flush)(GDisplay *);
-
-    void (*pushClip)(GWindow, GRect *rct, GRect *old);
-    void (*popClip)(GWindow, GRect *old);
-
-    void (*clear)(GWindow,GRect *);
-    void (*drawLine)(GWindow, int32 x,int32 y, int32 xend,int32 yend, Color col);
-    void (*drawRect)(GWindow, GRect *rect, Color col);
-    void (*fillRect)(GWindow, GRect *rect, Color col);
-    void (*fillRoundRect)(GWindow, GRect *rect, int radius, Color col);
-    void (*drawElipse)(GWindow, GRect *rect, Color col);
-    void (*fillElipse)(GWindow, GRect *rect, Color col);
-    void (*drawArc)(GWindow, GRect *rect, int32 sangle, int32 eangle, Color col);
-    void (*drawPoly)(GWindow, GPoint *pts, int16 cnt, Color col);
-    void (*fillPoly)(GWindow, GPoint *pts, int16 cnt, Color col);
-    void (*scroll)(GWindow, GRect *rect, int32 hor, int32 vert);
-
-    void (*drawImage)(GWindow, GImage *, GRect *src, int32 x, int32 y);
-    void (*drawGlyph)(GWindow, GImage *, GRect *src, int32 x, int32 y);
-    void (*drawImageMag)(GWindow, GImage *, GRect *src, int32 x, int32 y, int32 width, int32 height);
-    void (*drawPixmap)(GWindow, GWindow, GRect *src, int32 x, int32 y);
-
-    GIC *(*createInputContext)(GWindow, enum gic_style);
-    void (*setGIC)(GWindow, GIC *, int x, int y);
-
-    void (*grabSelection)(GWindow w,enum selnames sel);
-    void (*addSelectionType)(GWindow w,enum selnames sel,char *type,
-	void *data,int32 cnt,int32 unitsize,void *(*gendata)(void *,int32 *len),
-	void (*freedata)(void *));
-    void *(*requestSelection)(GWindow w,enum selnames sn, char *typename_, int32 *len);
-    int (*selectionHasType)(GWindow w,enum selnames sn, char *typename_);
-    void (*bindSelection)(GDisplay *disp,enum selnames sn, char *atomname);
-    int (*selectionHasOwner)(GDisplay *disp,enum selnames sn);
-
-    void (*pointerUngrab)(GDisplay *);
-    void (*pointerGrab)(GWindow);
-    void (*requestExpose)(GWindow,GRect *,int);
-    void (*forceUpdate)(GWindow);
-    void (*sync)(GDisplay *);
-    void (*skipMouseMoveEvents)(GWindow, GEvent *);
-    void (*processPendingEvents)(GDisplay *);
-    void (*processWindowEvents)(GWindow);
-    void (*processOneEvent)(GDisplay *);
-    void (*eventLoop)(GDisplay *);
-    void (*postEvent)(GEvent *e);
-    void (*postDragEvent)(GWindow w,GEvent *mouse,enum event_type et);
-    int  (*requestDeviceEvents)(GWindow w,int devcnt,struct gdeveventmask *de);
-
-    GTimer *(*requestTimer)(GWindow w,int32 time_from_now,int32 frequency, void *userdata);
-    void (*cancelTimer)(GTimer *timer);
-
-    void (*syncThread)(GDisplay *gd, void (*func)(void *), void *data);
-
-    void (*getFontMetrics)(GWindow,GFont *,int *,int *,int *);
-
-    void (*stroke)(GWindow w, Color col);
-    void (*fill)(GWindow w, Color col);
-    void (*fillAndStroke)(GWindow w, Color fillcol,Color strokecol);
-
-    void (*layoutInit)(GWindow w, char *text, int cnt, GFont *fi);
-    void (*layoutDraw)(GWindow w, int32 x, int32 y, Color fg);
-    void (*layoutIndexToPos)(GWindow w, int index, GRect *pos);
-    int  (*layoutXYToIndex)(GWindow w, int x, int y);
-    void (*layoutExtents)(GWindow w, GRect *size);
-    void (*layoutSetWidth)(GWindow w, int width);
-    int  (*layoutLineCount)(GWindow w);
-    int  (*layoutLineStart)(GWindow w,int line);
-    cairo_t *(*getCairo)(GWindow w);
-};
-
-extern GDisplay *_GXDraw_CreateDisplay(char *displayname);
 extern void _GDraw_InitError(GDisplay *);
 extern void _GDraw_ComposeChars(GDisplay *gdisp,GEvent *gevent);
 

@@ -67,7 +67,7 @@ PNG_LIST = chooseraudio.png chooserback.png chooserbookmark.png			\
 	helphelp.png helpindex.png hintsadddstem.png hintsaddhstem.png		\
 	hintsaddvstem.png hintsautohint.png hintscleardstems.png			\
 	hintsclearhstems.png hintsclearvstems.png hintsdontautohint.png		\
-	hintsreviewhints.png menuempty.png metricscenter.png				\
+	hintsreviewhints.png metricscenter.png				\
 	metricssetlbearing.png metricssetrbearing.png						\
 	metricssetvwidth.png metricssetwidth.png overlapexclude.png			\
 	overlapfindinter.png overlapintersection.png overlaprm.png			\

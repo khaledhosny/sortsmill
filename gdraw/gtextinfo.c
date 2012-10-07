@@ -50,9 +50,9 @@ int GTextInfoGetWidth(GWindow base,GTextInfo *ti,FontInstance *font) {
 	width = GDrawGetTextWidth(base,ti->text, -1);
     }
     if ( ti->image!=NULL ) {
-	iwidth = GImageGetScaledWidth(base,ti->image);
+	iwidth = MENU_ICON_SIZE;
 	if ( ti->text!=NULL )
-	    skip = GDrawPointsToPixels(base,6);
+	    skip = GDrawPointsToPixels(base, MENU_ICON_SEP);
     }
 return( width+iwidth+skip );
 }
@@ -85,7 +85,7 @@ int GTextInfoGetHeight(GWindow base,GTextInfo *ti,FontInstance *font) {
     }
     fh = as+ds;
     if ( ti->image!=NULL ) {
-	iheight = GImageGetScaledHeight(base,ti->image);
+	iheight = MENU_ICON_SIZE;
 	iheight += 1;
     }
     if ( (height = fh)<iheight ) height = iheight;
@@ -122,7 +122,7 @@ int GTextInfoGetAs(GWindow base,GTextInfo *ti, FontInstance *font) {
     }
     fh = as+ds;
     if ( ti->image!=NULL ) {
-	iheight = GImageGetScaledHeight(base,ti->image);
+	iheight = MENU_ICON_SIZE;
     }
     if ( (height = fh)<iheight ) height = iheight;
 
@@ -156,10 +156,10 @@ int GTextInfoDraw(GWindow base,int x,int y,GTextInfo *ti,
     if ( fg == COLOR_DEFAULT )
 	fg = GDrawGetDefaultForeground(GDrawGetDisplayOfWindow(base));
     if ( ti->image!=NULL ) {
-	iwidth = GImageGetScaledWidth(base,ti->image);
-	iheight = GImageGetScaledHeight(base,ti->image)+1;
+	iwidth = MENU_ICON_SIZE;
+	iheight = MENU_ICON_SIZE+1;
 	if ( ti->text!=NULL )
-	    skip = GDrawPointsToPixels(base,6);
+	    skip = GDrawPointsToPixels(base, MENU_ICON_SEP);
     }
     if ( (height = fh)<iheight ) height = iheight;
 
