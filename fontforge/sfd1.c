@@ -72,7 +72,7 @@ return;
     sf->sli_cnt = 1;
     for ( j=0; j<scnt; ++j ) {
 	sf->script_lang[0][j].script = scripts[j];
-	sf->script_lang[0][j].langs = xmalloc1(2*sizeof(uint32));
+	sf->script_lang[0][j].langs = xmalloc(2*sizeof(uint32));
 	sf->script_lang[0][j].langs[0] = DEFAULT_LANG;
 	sf->script_lang[0][j].langs[1] = 0;
     }
@@ -128,7 +128,7 @@ return( i );
     sr = sf->script_lang[i] = xcalloc(scnt+1,sizeof(struct script_record));
     for ( j = 0; j<scnt; ++j ) {
 	sr[j].script = scripts[j];
-	sr[j].langs = xmalloc1(2*sizeof(uint32));
+	sr[j].langs = xmalloc(2*sizeof(uint32));
 	sr[j].langs[0] = DEFAULT_LANG;
 	sr[j].langs[1] = 0;
     }
@@ -160,7 +160,7 @@ return( i );
     sf->script_lang = xrealloc(sf->script_lang,(i+2)*sizeof(struct script_record *));
     sf->script_lang[i] = xcalloc(2,sizeof(struct script_record));
     sf->script_lang[i][0].script = script;
-    sf->script_lang[i][0].langs = xmalloc1(2*sizeof(uint32));
+    sf->script_lang[i][0].langs = xmalloc(2*sizeof(uint32));
     sf->script_lang[i][0].langs[0] = lang;
     sf->script_lang[i][0].langs[1] = 0;
     sf->script_lang[i+1] = NULL;
@@ -220,7 +220,7 @@ return( fl );
 	for ( i=0; sr->langs[i]!=0; ++i );
 	cur->lang_cnt = i;
 	if ( i>MAX_LANG )
-	    cur->morelangs = xmalloc1((i-MAX_LANG) * sizeof(uint32));
+	    cur->morelangs = xmalloc((i-MAX_LANG) * sizeof(uint32));
 	for ( i=0; sr->langs[i]!=0; ++i ) {
 	    if ( i<MAX_LANG )
 		cur->langs[i] = sr->langs[i];
@@ -457,7 +457,7 @@ static void ACDisassociateLigatures(SplineFont1 *sf,AnchorClass1 *ac) {
   /* GT:  base letters, and one for ligatures. So create a new AnchorClass */
   /* GT:  name for the ligature version */
     format = _("Ligature %s");
-    lac->ac.name = xmalloc1(strlen(ac->ac.name)+strlen(format)+1);
+    lac->ac.name = xmalloc(strlen(ac->ac.name)+strlen(format)+1);
     sprintf( lac->ac.name, format, ac->ac.name );
 
     k=0;
@@ -833,7 +833,7 @@ void SFD_AssignLookups(SplineFont1 *sf) {
     /*  lookups because I didn't before */
     for ( otl=sf->sf.gsub_lookups, cnt=0; otl!=NULL; otl=otl->next, ++cnt );
     if ( cnt!=0 ) {
-	all = xmalloc1(cnt*sizeof(OTLookup *));
+	all = xmalloc(cnt*sizeof(OTLookup *));
 	for ( otl=sf->sf.gsub_lookups, cnt=0; otl!=NULL; otl=otl->next, ++cnt ) {
 	    all[cnt] = otl;
 	    otl->lookup_index = GSubOrder(sf,otl->features);

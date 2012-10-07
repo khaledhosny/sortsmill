@@ -2136,7 +2136,7 @@ static struct overlaps *SCFindHintOverlaps(StemInfo *hints,double min_coord,
     for ( h=hints, cnt=0; h!=NULL; h=h->next ) if ( !h->ghost )
 	++cnt;
 
-    overlaps = xmalloc1((cnt+3)*sizeof(struct overlaps));
+    overlaps = xmalloc((cnt+3)*sizeof(struct overlaps));
     overlaps[0].start = min_coord; overlaps[0].stop = min_coord;
     overlaps[1].start = max_coord; overlaps[1].stop = max_coord;
     tot = 2;
@@ -2676,7 +2676,7 @@ return;		/* Can't randomly add things to a CID keyed font */
 return;
 
     genchange->g.cnt = genchange->m.cnt+2;
-    genchange->g.maps = xmalloc1(genchange->g.cnt*sizeof(struct position_maps));
+    genchange->g.maps = xmalloc(genchange->g.cnt*sizeof(struct position_maps));
     genchange->sf     = fv->sf;
     genchange->layer  = fv->active_layer;
 
@@ -2905,10 +2905,10 @@ return;		/* Can't randomly add things to a CID keyed font */
 return;
 
     genchange->g.cnt = genchange->m.cnt+2;
-    genchange->g.maps = xmalloc1(genchange->g.cnt*sizeof(struct position_maps));
+    genchange->g.maps = xmalloc(genchange->g.cnt*sizeof(struct position_maps));
 
     if ( genchange->feature_tag!=0 ) {
-	uint32 *scripts = xmalloc1(cnt*sizeof(uint32));
+	uint32 *scripts = xmalloc(cnt*sizeof(uint32));
 	int scnt = 0;
 	for ( enc=0; enc<fv->map->enccount; ++enc ) {
 	    if ( (gid=fv->map->map[enc])!=-1 && fv->selected[enc] && (sc=sf->glyphs[gid])!=NULL ) {
@@ -3047,7 +3047,7 @@ return;
     }
 
     genchange->g.cnt = genchange->m.cnt+2;
-    genchange->g.maps = xmalloc1(genchange->g.cnt*sizeof(struct position_maps));
+    genchange->g.maps = xmalloc(genchange->g.cnt*sizeof(struct position_maps));
 
     if ( sc->layers[layer].splines!=NULL ) {
 	SCPreserveLayer(sc,layer,true);
@@ -3785,7 +3785,7 @@ static SplineSet *LCG_EmboldenHook(SplineSet *ss_expanded,struct lcg_zones *zone
     ccnt = MaxContourCount(ss_expanded);
     if ( ccnt==0 )
 return(ss_expanded);			/* No points? Nothing to do */
-    ptmoves = xmalloc1((ccnt+1)*sizeof(struct ptmoves));
+    ptmoves = xmalloc((ccnt+1)*sizeof(struct ptmoves));
     for ( ss = ss_expanded; ss!=NULL ; ss=ss->next ) {
 	if ( ss->first->prev==NULL )
     continue;
@@ -3861,7 +3861,7 @@ return( LCG_EmboldenHook(ss_expanded,zones,sc,layer));
     ccnt = MaxContourCount(ss_expanded);
     if ( ccnt==0 )
 return(ss_expanded);			/* No points? Nothing to do */
-    ptmoves = xmalloc1((ccnt+1)*sizeof(struct ptmoves));
+    ptmoves = xmalloc((ccnt+1)*sizeof(struct ptmoves));
     for ( ss = ss_expanded; ss!=NULL ; ss=ss->next ) {
 	if ( ss->first->prev==NULL )
     continue;

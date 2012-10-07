@@ -108,7 +108,7 @@ ExecConvertDesignVector (real *designs, int dcnt, char *ndv, char *cdv,
     }
   setlocale (LC_NUMERIC, oldloc);
 
-  temp = xmalloc1 (len + strlen (ndv) + strlen (cdv) + 20);
+  temp = xmalloc (len + strlen (ndv) + strlen (cdv) + 20);
   strcpy (temp, dv);
   /*strcpy(temp+len++," "); *//* dv always will end in a space */
 
@@ -370,7 +370,7 @@ MakeAppleBlend (FontView * fv, MMSet *mm, real *blends, real *normalized)
       cur = (struct ttf_table *) xzalloc (sizeof (struct ttf_table));
       cur->tag = tab->tag;
       cur->len = tab->len;
-      cur->data = xmalloc1 (tab->len);
+      cur->data = xmalloc (tab->len);
       memcpy (cur->data, tab->data, tab->len);
       if (cur->tag == CHR ('c', 'v', 't', ' '))
         cvt = cur;
@@ -663,7 +663,7 @@ GCDFillupMacWeights (GGadgetCreateData * gcd, GTextInfo * label, int k,
       an = PickNameFromMacName (mm->axismaps[i].axisnames);
       if (an == NULL)
         an = copy (mm->axes[i]);
-      axisnames[i] = xmalloc1 (strlen (axisrange) + 3 + strlen (an));
+      axisnames[i] = xmalloc (strlen (axisrange) + 3 + strlen (an));
       strcpy (axisnames[i], an);
       strcat (axisnames[i], axisrange);
       sprintf (axisval[i], "%.4g", (double) defcoords[i]);
@@ -1172,7 +1172,7 @@ ESD_OK (GGadget * g, GEvent * e)
       *pt = '\0';
       style = PickNameFromMacName (mn);
       name =
-        xmalloc1 (((pt - buffer) + strlen (style) + 1) * sizeof (unichar_t));
+        xmalloc (((pt - buffer) + strlen (style) + 1) * sizeof (unichar_t));
       utf82u_strcpy (name, style);
       uc_strcat (name, buffer);
       free (style);
@@ -1582,7 +1582,7 @@ ParseList (GWindow gw, int cid, char *str8, int *err, real start,
     ++cnt;
   if (!isapple || start == end)
     defdone = true;
-  list = xmalloc1 (cnt * sizeof (real));
+  list = xmalloc (cnt * sizeof (real));
   if (start == end)
     cnt = 0;
   else
@@ -1665,7 +1665,7 @@ _ChooseFonts (char *buffer, SplineFont **sfs, real *positions, int i, int cnt)
   if (elsepart == NULL)
     return (copy (buffer));
 
-  ret = xmalloc1 (strlen (buffer) + strlen (elsepart) + 40);
+  ret = xmalloc (strlen (buffer) + strlen (elsepart) + 40);
   sprintf (ret, "dup %g le {%s} {%s} ifelse", (double) positions[i + 1],
            buffer, elsepart);
   free (elsepart);
@@ -1737,7 +1737,7 @@ _NormalizeAxis (char *buffer, struct axismap *axis, int i)
   if (elsepart == NULL)
     return (copy (buffer));
 
-  ret = xmalloc1 (strlen (buffer) + strlen (elsepart) + 40);
+  ret = xmalloc (strlen (buffer) + strlen (elsepart) + 40);
   sprintf (ret, "dup %g le {%s} {%s} ifelse", (double) axis->designs[i + 1],
            buffer, elsepart);
   free (elsepart);
@@ -1754,7 +1754,7 @@ NormalizeAxis (char *header, struct axismap *axis)
   if (*header)
     {
       char *temp;
-      temp = xmalloc1 (strlen (header) + strlen (ret) + 2);
+      temp = xmalloc (strlen (header) + strlen (ret) + 2);
       strcpy (temp, header);
       strcat (temp, ret);
       strcat (temp, "\n");
@@ -1805,9 +1805,9 @@ AxisDataCopyFree (struct axismap *into, struct axismap *from, int count)
   for (i = 0; i < count; ++i)
     {
       into[i].points = from[i].points;
-      into[i].blends = xmalloc1 (into[i].points * sizeof (real));
+      into[i].blends = xmalloc (into[i].points * sizeof (real));
       memcpy (into[i].blends, from[i].blends, into[i].points * sizeof (real));
-      into[i].designs = xmalloc1 (into[i].points * sizeof (real));
+      into[i].designs = xmalloc (into[i].points * sizeof (real));
       memcpy (into[i].designs, from[i].designs,
               into[i].points * sizeof (real));
     }
@@ -1853,7 +1853,7 @@ MMW_FuncsValid (MMW * mmw)
           pos = 0;
           for (i = 0; i < mmw->axis_count; ++i)
             pos += strlen (lines[i]);
-          ut = xmalloc1 ((pos + 20) * sizeof (unichar_t));
+          ut = xmalloc ((pos + 20) * sizeof (unichar_t));
           uc_strcpy (ut, "{\n");
           pos = 2;
           for (i = 0; i < mmw->axis_count; ++i)
@@ -1875,7 +1875,7 @@ MMW_FuncsValid (MMW * mmw)
       if (standard_cdvs[4] == NULL)
         {
           standard_cdvs[4] =
-            xmalloc1 (strlen (cdv_4axis[0]) + strlen (cdv_4axis[1]) +
+            xmalloc (strlen (cdv_4axis[0]) + strlen (cdv_4axis[1]) +
                       strlen (cdv_4axis[2]) + 2);
           strcpy (standard_cdvs[4], cdv_4axis[0]);
           strcat (standard_cdvs[4], cdv_4axis[1]);
@@ -1912,7 +1912,7 @@ MMW_WeightsValid (MMW * mmw)
 
   if (mmw->lastw_instance_count != mmw->instance_count)
     {
-      temp = xmalloc1 (mmw->instance_count * 20 + 1);
+      temp = xmalloc (mmw->instance_count * 20 + 1);
       pos = 0;
       if (mmw->old != NULL && mmw->instance_count == mmw->old->instance_count)
         {
@@ -2013,7 +2013,7 @@ NamedDesigns (MMW * mmw)
       ustyle = PickNameFromMacName (mmw->old->named_instances[i].names);
       ti[i].bg = ti[i].fg = COLOR_DEFAULT;
       ti[i].text =
-        xmalloc1 ((strlen (buffer) + 3 +
+        xmalloc ((strlen (buffer) + 3 +
                    strlen (ustyle)) * sizeof (unichar_t));
       utf82u_strcpy (ti[i].text, ustyle);
       uc_strcat (ti[i].text, " ");
@@ -2059,7 +2059,7 @@ FontList (MMW * mmw, int instance, int *sel)
   ++cnt;                        /* New */
   ++cnt;                        /* Browse... */
 
-  ti = xmalloc1 ((cnt + 1) * sizeof (GTextInfo *));
+  ti = xmalloc ((cnt + 1) * sizeof (GTextInfo *));
   pos = -1;
   cnt = 0;
   if (mmw->old != NULL)
@@ -2338,7 +2338,7 @@ MMW_DoOK (MMW * mmw)
             setto->instance_count * sizeof (real));
   free (dlgmm->defweights);
   setto->positions =
-    xmalloc1 (setto->instance_count * setto->axis_count * sizeof (real));
+    xmalloc (setto->instance_count * setto->axis_count * sizeof (real));
   for (i = 0; i < setto->instance_count; ++i)
     {
       int k = i < defpos ? i : i + 1;
@@ -3063,7 +3063,7 @@ MMW_CheckBrowse (GGadget * g, GEvent * e)
                 {
                   if (mmw->lmax == 0)
                     mmw->loaded =
-                      xmalloc1 ((mmw->lmax = 10) * sizeof (SplineFont *));
+                      xmalloc ((mmw->lmax = 10) * sizeof (SplineFont *));
                   else
                     mmw->loaded =
                       xrealloc (mmw->loaded,
@@ -3184,11 +3184,11 @@ MMCopy (MMSet *orig)
     {
       mm->axismaps[i].points = orig->axismaps[i].points;
       mm->axismaps[i].blends =
-        xmalloc1 (mm->axismaps[i].points * sizeof (real));
+        xmalloc (mm->axismaps[i].points * sizeof (real));
       memcpy (mm->axismaps[i].blends, orig->axismaps[i].blends,
               mm->axismaps[i].points * sizeof (real));
       mm->axismaps[i].designs =
-        xmalloc1 (mm->axismaps[i].points * sizeof (real));
+        xmalloc (mm->axismaps[i].points * sizeof (real));
       memcpy (mm->axismaps[i].designs, orig->axismaps[i].designs,
               mm->axismaps[i].points * sizeof (real));
       mm->axismaps[i].min = orig->axismaps[i].min;
@@ -3601,8 +3601,8 @@ MMWizard (MMSet *mm)
                 }
               if (l == 0)
                 {
-                  normalized[i] = xmalloc1 (len2 + 2);
-                  designs[i] = xmalloc1 (len1 + 2);
+                  normalized[i] = xmalloc (len2 + 2);
+                  designs[i] = xmalloc (len1 + 2);
                 }
               else
                 {

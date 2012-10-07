@@ -132,7 +132,7 @@ static void aw2_figure_all_sidebearing(AW_Data *all) {
     int ldiff, rdiff;
 
     all->denom = denom;
-    all->visual_separation = xmalloc1(all->gcnt*all->gcnt*sizeof(int));
+    all->visual_separation = xmalloc(all->gcnt*all->gcnt*sizeof(int));
     for ( i=0; i<all->gcnt; ++i ) {
 	int *vpt = all->visual_separation + i*all->gcnt;
 	me = &all->glyphs[i];
@@ -314,8 +314,8 @@ static void aw2_findedges(AW_Glyph *me, AW_Data *all) {
 
     me->imin_y = floor(me->bb.miny/all->sub_height);
     me->imax_y = ceil (me->bb.maxy/all->sub_height);
-    me->left = xmalloc1((me->imax_y-me->imin_y+1)*sizeof(short));
-    me->right = xmalloc1((me->imax_y-me->imin_y+1)*sizeof(short));
+    me->left = xmalloc((me->imax_y-me->imin_y+1)*sizeof(short));
+    me->right = xmalloc((me->imax_y-me->imin_y+1)*sizeof(short));
 
     base = LayerAllSplines(&me->sc->layers[all->layer]);
     ms = SSsToMContours(base,over_remove);	/* over_remove is an arcane way of saying: Look at all contours, not just selected ones */
@@ -439,7 +439,7 @@ SplineChar ***GlyphClassesFromNames(SplineFont *sf,char **classnames,
 	    if ( pass )
 		classes[i][clen] = NULL;
 	    else
-		classes[i] = xmalloc1((clen+1)*sizeof(SplineChar *));
+		classes[i] = xmalloc((clen+1)*sizeof(SplineChar *));
 	}
     }
 return( classes );
@@ -464,7 +464,7 @@ void AutoWidth2(FontViewBase *fv,int separation,int min_side,int max_side,
 	loop_cnt = 4;
 
     scnt = 0; smax = 10;
-    scripts = xmalloc1(smax*sizeof(struct scriptlist));
+    scripts = xmalloc(smax*sizeof(struct scriptlist));
 
     for ( gid=0; gid<sf->glyphcnt; ++gid ) {
 	if ( (sc = sf->glyphs[gid])!=NULL )
@@ -723,8 +723,8 @@ void AutoKern2NewClass(SplineFont *sf,int layer,char **leftnames, char **rightna
     int i,cnt,k, kern;
     SplineChar ***left = GlyphClassesFromNames(sf,leftnames,lcnt);
     SplineChar ***right = GlyphClassesFromNames(sf,rightnames,rcnt);
-    int **ileft = xmalloc1(lcnt*sizeof(int*));
-    int **iright = xmalloc1(rcnt*sizeof(int*));
+    int **ileft = xmalloc(lcnt*sizeof(int*));
+    int **iright = xmalloc(rcnt*sizeof(int*));
     SplineChar **class, *sc;
 
     if ( chunk_height <= 0 )
@@ -770,14 +770,14 @@ void AutoKern2NewClass(SplineFont *sf,int layer,char **leftnames, char **rightna
 
     for ( i=0; i<lcnt; ++i ) {
 	for ( class = left[i], k=0; (sc = class[k])!=NULL; ++k );
-	ileft[i] = xmalloc1((k+1)*sizeof(int));
+	ileft[i] = xmalloc((k+1)*sizeof(int));
 	for ( class = left[i], k=0; (sc = class[k])!=NULL; ++k )
 	    ileft[i][k] = sc->ttf_glyph;
 	ileft[i][k] = -1;
     }
     for ( i=0; i<rcnt; ++i ) {
 	for ( class = right[i], k=0; (sc = class[k])!=NULL; ++k );
-	iright[i] = xmalloc1((k+1)*sizeof(int));
+	iright[i] = xmalloc((k+1)*sizeof(int));
 	for ( class = right[i], k=0; (sc = class[k])!=NULL; ++k )
 	    iright[i][k] = sc->ttf_glyph;
 	iright[i][k] = -1;
@@ -908,7 +908,7 @@ return;
 
     all.glyphs = glyphs;
     all.gcnt = cnt;
-    visual_separation = xmalloc1(lcnt*rcnt*sizeof(int));
+    visual_separation = xmalloc(lcnt*rcnt*sizeof(int));
     for ( i=0; i<lcnt; ++i ) {
 	int *vpt = visual_separation + i*rcnt;
 	SplineChar *lsc = leftglyphs[i];
@@ -936,7 +936,7 @@ return;
 
     good_enough *= good_enough;
 
-    lclassnames = xmalloc1((lcnt+2) * sizeof(char *));
+    lclassnames = xmalloc((lcnt+2) * sizeof(char *));
     lclasscnt = 1;
     lclassnames[0] = NULL;
     lused = xcalloc(lcnt,sizeof(int));
@@ -956,7 +956,7 @@ return;
 		len += strlen(leftglyphs[j]->name)+1;
 	    }
 	}
-	lclassnames[lclasscnt] = str = xmalloc1(len+1);
+	lclassnames[lclasscnt] = str = xmalloc(len+1);
 	for ( j=i; j<lcnt; ++j ) if ( lused[j]==lclasscnt ) {
 	    strcpy(str,leftglyphs[j]->name);
 	    str += strlen(str);
@@ -971,7 +971,7 @@ return;
     kc->first_cnt = lclasscnt;
     free(lused); lused = NULL;
 
-    rclassnames = xmalloc1((rcnt+2) * sizeof(char *));
+    rclassnames = xmalloc((rcnt+2) * sizeof(char *));
     rclasscnt = 1;
     rclassnames[0] = NULL;
     rused = xcalloc(rcnt,sizeof(int));
@@ -991,7 +991,7 @@ return;
 		len += strlen(rightglyphs[j]->name)+1;
 	    }
 	}
-	rclassnames[rclasscnt] = str = xmalloc1(len+1);
+	rclassnames[rclasscnt] = str = xmalloc(len+1);
 	for ( j=i; j<rcnt; ++j ) if ( rused[j]==rclasscnt ) {
 	    strcpy(str,rightglyphs[j]->name);
 	    str += strlen(str);

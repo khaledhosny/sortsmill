@@ -113,7 +113,7 @@ static int CountKerns(struct alltabs *at, SplineFont *sf, struct kerncounts *kcn
 	/*  length is a long. BUT... there's a damn binsearch header with */
 	/*  shorts in it still */
 	int b=0;
-	kcnt->hbreaks = xmalloc1((at->gi.gcnt+1)*sizeof(int));
+	kcnt->hbreaks = xmalloc((at->gi.gcnt+1)*sizeof(int));
 	cnt = 0;
 	for ( i=0; i<at->gi.gcnt; ++i ) if ( at->gi.bygid[i]!=-1 ) {
 	    j = 0;
@@ -134,7 +134,7 @@ static int CountKerns(struct alltabs *at, SplineFont *sf, struct kerncounts *kcn
 	kcnt->hsubs = 0;
     if ( vcnt>=10000 ) {
 	int b=0;
-	kcnt->vbreaks = xmalloc1((at->gi.gcnt+1)*sizeof(int));
+	kcnt->vbreaks = xmalloc((at->gi.gcnt+1)*sizeof(int));
 	vcnt = 0;
 	for ( i=0; i<at->gi.gcnt; ++i ) if ( at->gi.bygid[i]!=-1 ) {
 	    j = 0;
@@ -193,8 +193,8 @@ return;
 	breaks = isv ? kcnt.vbreaks : kcnt.hbreaks;
 	if ( c!=0 ) {
 	    km = isv ? kcnt.mv : kcnt.mh;
-	    glnum = xmalloc1(km*sizeof(uint16));
-	    offsets = xmalloc1(km*sizeof(uint16));
+	    glnum = xmalloc(km*sizeof(uint16));
+	    offsets = xmalloc(km*sizeof(uint16));
 	    gid = 0;
 	    for ( b=0; b<bmax; ++b ) {
 		c = bmax==1 ? c : breaks[b];
@@ -656,8 +656,8 @@ static struct feature *aat_dumpmorx_substitutions(struct alltabs *at, SplineFont
 	if ( k==0 ) {
 	    if ( gcnt==0 )
 return( features );
-	    glyphs = xmalloc1((gcnt+1)*sizeof(SplineChar *));
-	    maps = xmalloc1((gcnt+1)*sizeof(uint16));
+	    glyphs = xmalloc((gcnt+1)*sizeof(SplineChar *));
+	    maps = xmalloc((gcnt+1)*sizeof(uint16));
 	} else {
 	    glyphs[gcnt] = NULL; maps[gcnt] = 0;
 	}
@@ -748,8 +748,8 @@ static void morx_dumpLigaFeature(FILE *temp,SplineChar **glyphs,int gcnt,
 	if ( anymarks )
 	    ++class;
     }
-    cglyphs = xmalloc1((charcnt+1)*sizeof(SplineChar *));
-    map = xmalloc1((charcnt+1)*sizeof(uint16));
+    cglyphs = xmalloc((charcnt+1)*sizeof(SplineChar *));
+    map = xmalloc((charcnt+1)*sizeof(uint16));
     j=0;
     for ( i=k=0; i<at->maxp.numGlyphs; ++i ) if ( used[i] ) {
 	j = at->gi.bygid[i];
@@ -779,7 +779,7 @@ static void morx_dumpLigaFeature(FILE *temp,SplineChar **glyphs,int gcnt,
     /* Note: the ligofme list is so ordered that the longest ligatures come first */
     /*  we will depend on that in the case of "ffl", "ffi", "ff" */
     state_max = 40; state_cnt = 2;
-    states = xmalloc1(state_max*sizeof(struct transition *));
+    states = xmalloc(state_max*sizeof(struct transition *));
     states[0] = xcalloc(class,sizeof(struct transition));	/* Initial state */
     states[1] = xcalloc(class,sizeof(struct transition));	/* other Initial state */
     for ( i=0; i<gcnt; ++i ) {
@@ -828,7 +828,7 @@ static void morx_dumpLigaFeature(FILE *temp,SplineChar **glyphs,int gcnt,
     }
     /* Ok, we've got the state machine now. Convert it into apple's wierd */
     /*  (space saving) format */
-    trans = xmalloc1(class*state_cnt*sizeof(struct trans_entries));
+    trans = xmalloc(class*state_cnt*sizeof(struct trans_entries));
     trans_cnt = 0;
     for ( i=0; i<state_cnt; ++i ) for ( j=0; j<class; ++j ) {
 	if ( states[i][j].ismark )
@@ -874,9 +874,9 @@ static void morx_dumpLigaFeature(FILE *temp,SplineChar **glyphs,int gcnt,
 	putshort( temp, states[i][j].trans_ent );
 
     /* Now figure out the ligature actions (and all the other tables) */
-    actions = xmalloc1(trans_cnt*maxccnt*sizeof(uint32));
-    components = xmalloc1(trans_cnt*maxccnt*sizeof(uint16));
-    lig_glyphs = xmalloc1(trans_cnt*sizeof(uint16));
+    actions = xmalloc(trans_cnt*maxccnt*sizeof(uint32));
+    components = xmalloc(trans_cnt*maxccnt*sizeof(uint16));
+    lig_glyphs = xmalloc(trans_cnt*sizeof(uint16));
     acnt = lcnt = 0;
     for ( i=0; i<trans_cnt; ++i ) if ( trans[i].l!=NULL ) {
 	lig_glyphs[lcnt] = trans[i].l->lig->u.lig.lig->ttf_glyph;
@@ -938,7 +938,7 @@ static struct feature *aat_dumpmorx_ligatures(struct alltabs *at, SplineFont *sf
     struct feature *cur;
     LigList *l;
 
-    glyphs = xmalloc1((at->maxp.numGlyphs+1)*sizeof(SplineChar *));
+    glyphs = xmalloc((at->maxp.numGlyphs+1)*sizeof(SplineChar *));
     for ( i=0; i<sf->glyphcnt; ++i ) if ( sf->glyphs[i]!=NULL )
 	sf->glyphs[i]->ticked = false;
 
@@ -995,8 +995,8 @@ static void morx_dumpnestedsubs(FILE *temp,SplineFont *sf,OTLookup *otl,struct g
 	    }
 	}
 	if ( !j ) {
-	    glyphs = xmalloc1((gcnt+1)*sizeof(SplineChar *));
-	    map = xmalloc1(gcnt*sizeof(uint16));
+	    glyphs = xmalloc((gcnt+1)*sizeof(SplineChar *));
+	    map = xmalloc(gcnt*sizeof(uint16));
 	    glyphs[gcnt] = NULL;
 	}
     }
@@ -1013,7 +1013,7 @@ static uint16 *NamesToGlyphs(SplineFont *sf,char *names,uint16 *cnt) {
 
     for ( c=0, pt=names; *pt; ++pt )
 	if ( *pt==' ' ) ++c;
-    ret = xmalloc1((c+1)*sizeof(uint16));
+    ret = xmalloc((c+1)*sizeof(uint16));
 
     for ( c=0, pt=names; *pt; ) {
 	while ( *pt==' ' ) ++pt;
@@ -1064,8 +1064,8 @@ static int morx_dumpASM(FILE *temp,ASM *sm, struct alltabs *at, SplineFont *sf )
 	    }
 	}
     }
-    glyphs = xmalloc1((gcnt+1)*sizeof(SplineChar *));
-    map = xmalloc1((gcnt+1)*sizeof(uint16));
+    glyphs = xmalloc((gcnt+1)*sizeof(SplineChar *));
+    map = xmalloc((gcnt+1)*sizeof(uint16));
     gcnt = 0;
     for ( i=0; i<at->gi.gcnt; ++i ) if ( at->gi.bygid[i]!=-1 && sf->glyphs[at->gi.bygid[i]]->lsidebearing!=1 ) {
 	glyphs[gcnt] = sf->glyphs[at->gi.bygid[i]];
@@ -1078,7 +1078,7 @@ static int morx_dumpASM(FILE *temp,ASM *sm, struct alltabs *at, SplineFont *sf )
     stcnt = 0;
     subslookups = NULL; subsins = NULL;
     if ( sm->type==asm_context ) {
-	subslookups = xmalloc1(2*sm->state_cnt*sm->class_cnt*sizeof(OTLookup));
+	subslookups = xmalloc(2*sm->state_cnt*sm->class_cnt*sizeof(OTLookup));
 	for ( j=0; j<sm->state_cnt*sm->class_cnt; ++j ) {
 	    struct asm_state *this = &sm->state[j];
 	    transdata[j].mark_index = transdata[j].cur_index = 0xffff;
@@ -1100,7 +1100,7 @@ static int morx_dumpASM(FILE *temp,ASM *sm, struct alltabs *at, SplineFont *sf )
 	    }
 	}
     } else if ( sm->type==asm_insert ) {
-	subsins = xmalloc1(2*sm->state_cnt*sm->class_cnt*sizeof(struct ins));
+	subsins = xmalloc(2*sm->state_cnt*sm->class_cnt*sizeof(struct ins));
 	for ( j=0; j<sm->state_cnt*sm->class_cnt; ++j ) {
 	    struct asm_state *this = &sm->state[j];
 	    transdata[j].mark_index = transdata[j].cur_index = 0xffff;
@@ -1158,7 +1158,7 @@ static int morx_dumpASM(FILE *temp,ASM *sm, struct alltabs *at, SplineFont *sf )
 	}
     }
 
-    trans = xmalloc1(sm->state_cnt*sm->class_cnt*sizeof(struct trans));
+    trans = xmalloc(sm->state_cnt*sm->class_cnt*sizeof(struct trans));
     tcnt = 0;
     for ( j=0; j<sm->state_cnt*sm->class_cnt; ++j ) {
 	struct asm_state *this = &sm->state[j];
@@ -1483,7 +1483,7 @@ static struct feature *featuresOrderByType(struct feature *features) {
     if ( cnt==1 ) {
 return( features );
     }
-    all = xmalloc1(cnt*sizeof(struct feature *));
+    all = xmalloc(cnt*sizeof(struct feature *));
     for ( i=0, f=features; f!=NULL; f=f->next, ++i )
 	all[i] = f;
     for ( i=0; i<cnt-1; ++i ) for ( j=i+1; j<cnt; ++j ) {
@@ -1664,7 +1664,7 @@ return;
 	    ++fcnt;		/* Add one for "All Typographic Features" */
 	    ++scnt;		/* Add one for All Features */
 	    at->feat = tmpfile();
-	    at->feat_name = xmalloc1((fcnt+scnt+1)*sizeof(struct feat_name));
+	    at->feat_name = xmalloc((fcnt+scnt+1)*sizeof(struct feat_name));
 	    putlong(at->feat,0x00010000);
 	    putshort(at->feat,fcnt);
 	    putshort(at->feat,0);
@@ -1842,7 +1842,7 @@ static void morxDumpChain(struct alltabs *at,struct feature *features,
     putlong(at->morx,0);		/* disable */
     fs_cnt += 2;
 
-    buf = xmalloc1(16*1024);
+    buf = xmalloc(16*1024);
     /* Subtables */
     for ( f=features; f!=NULL; f=f->next ) if ( f->chain==chain ) {
 	putlong(at->morx,f->feature_len+12);		/* Size of header needs to be added */
@@ -2239,7 +2239,7 @@ return( 0xffff );
 }
 
 int16 *PerGlyphDefBaseline(SplineFont *sf,int *def_baseline) {
-    int16 *baselines = xmalloc1(sf->glyphcnt*sizeof(int16));
+    int16 *baselines = xmalloc(sf->glyphcnt*sizeof(int16));
     int gid, bsln, i, any;
     SplineChar *sc;
     int counts[32];		/* Apple supports a max of 32 baselines, but only 5 are defined */

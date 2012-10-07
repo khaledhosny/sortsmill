@@ -68,7 +68,7 @@ void SFShowLigatures(SplineFont *sf,SplineChar *searchfor) {
 			if ( pst->type==pst_ligature &&
 				(searchfor==NULL || PSTContains(pst->u.lig.components,searchfor->name))) {
 		    if ( choices!=NULL ) {
-			line = pt = xmalloc1((strlen(sc->name)+13+3*strlen(pst->u.lig.components)));
+			line = pt = xmalloc((strlen(sc->name)+13+3*strlen(pst->u.lig.components)));
 			strcpy(pt,sc->name);
 			pt += strlen(pt);
 			if ( sc->unicodeenc!=-1 && sc->unicodeenc<0x10000 ) {
@@ -106,8 +106,8 @@ void SFShowLigatures(SplineFont *sf,SplineChar *searchfor) {
 	}
 	if ( choices!=NULL )
     break;
-	choices = xmalloc1((cnt+2)*sizeof(unichar_t *));
-	where = xmalloc1((cnt+1)*sizeof(int));
+	choices = xmalloc((cnt+2)*sizeof(unichar_t *));
+	where = xmalloc((cnt+1)*sizeof(int));
 	if ( cnt==0 ) {
 	    choices[0] = copy("<No Ligatures>");
 	    where[0] = -1;
@@ -273,7 +273,7 @@ static void KPBuildKernList(KPData *kpd) {
 	break;
 	    if ( cnt==0 )
 return;
-	    kpd->kerns = xmalloc1((cnt+1)*sizeof(struct kerns));
+	    kpd->kerns = xmalloc((cnt+1)*sizeof(struct kerns));
 	    kpd->kcnt = cnt;
 	}
     } else {
@@ -296,7 +296,7 @@ return;
 	break;
 	    if ( cnt==0 )
 return;
-	    kpd->kerns = xmalloc1((cnt+1)*sizeof(struct kerns));
+	    kpd->kerns = xmalloc((cnt+1)*sizeof(struct kerns));
 	    kpd->kcnt = cnt;
 	}
     }
@@ -366,7 +366,7 @@ static void KPBuildAnchorList(KPData *kpd) {
 	break;
 	    if ( cnt==0 )
 return;
-	    kpd->kerns = xmalloc1((cnt+1)*sizeof(struct kerns));
+	    kpd->kerns = xmalloc((cnt+1)*sizeof(struct kerns));
 	    kpd->kcnt = cnt;
 	}
     } else {
@@ -402,7 +402,7 @@ return;
 	break;
 	    if ( cnt==0 )
 return;
-	    kpd->kerns = xmalloc1((cnt+1)*sizeof(struct kerns));
+	    kpd->kerns = xmalloc((cnt+1)*sizeof(struct kerns));
 	    kpd->kcnt = cnt;
 	}
     }

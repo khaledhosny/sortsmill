@@ -49,7 +49,7 @@ VISIBLE int maxundoes = 12;		/* -1 is infinite */
 int preserve_hint_undoes = true;
 
 static uint8 *bmpcopy(uint8 *bitmap,int bytes_per_line, int lines) {
-    uint8 *ret = xmalloc1(bytes_per_line*lines);
+    uint8 *ret = xmalloc(bytes_per_line*lines);
     memcpy(ret,bitmap,bytes_per_line*lines);
 return( ret );
 }
@@ -1346,7 +1346,7 @@ return( copy(""));
 
     fseek(svg,0,SEEK_END);
     *len = ftell(svg);
-    ret = xmalloc1(*len);
+    ret = xmalloc(*len);
     rewind(svg);
     fread(ret,1,*len,svg);
     fclose(svg);
@@ -1413,7 +1413,7 @@ return( copy(""));
 
     fseek(svg,0,SEEK_END);
     *len = ftell(svg);
-    ret = xmalloc1(*len);
+    ret = xmalloc(*len);
     rewind(svg);
     fread(ret,1,*len,svg);
     fclose(svg);
@@ -1507,7 +1507,7 @@ return( copy(""));
 
     fseek(eps,0,SEEK_END);
     *len = ftell(eps);
-    ret = xmalloc1(*len);
+    ret = xmalloc(*len);
     rewind(eps);
     fread(ret,1,*len,eps);
     fclose(eps);
@@ -2363,7 +2363,7 @@ static void _PasteToSC(SplineChar *sc,Undoes *paster,FontViewBase *fv,int pastei
 	if ( paster->u.state.images!=NULL && sc->parent->multilayer ) {
 	    ImageList *new_, *cimg;
 	    for ( cimg = paster->u.state.images; cimg!=NULL; cimg=cimg->next ) {
-		new_ = xmalloc1(sizeof(ImageList));
+		new_ = xmalloc(sizeof(ImageList));
 		*new_ = *cimg;
 		new_->selected = true;
 		new_->next = sc->layers[layer].images;
@@ -2525,19 +2525,19 @@ return;		/* Nothing to do */
     adjust = (ValDevTab *) xzalloc(sizeof (ValDevTab));
     *adjust = *vr->adjust;
     if ( adjust->xadjust.corrections!=NULL ) {
-	adjust->xadjust.corrections = xmalloc1(adjust->xadjust.last_pixel_size-adjust->xadjust.first_pixel_size+1);
+	adjust->xadjust.corrections = xmalloc(adjust->xadjust.last_pixel_size-adjust->xadjust.first_pixel_size+1);
 	memcpy(adjust->xadjust.corrections,vr->adjust->xadjust.corrections,adjust->xadjust.last_pixel_size-adjust->xadjust.first_pixel_size+1);
     }
     if ( adjust->yadjust.corrections!=NULL ) {
-	adjust->yadjust.corrections = xmalloc1(adjust->yadjust.last_pixel_size-adjust->yadjust.first_pixel_size+1);
+	adjust->yadjust.corrections = xmalloc(adjust->yadjust.last_pixel_size-adjust->yadjust.first_pixel_size+1);
 	memcpy(adjust->yadjust.corrections,vr->adjust->yadjust.corrections,adjust->yadjust.last_pixel_size-adjust->yadjust.first_pixel_size+1);
     }
     if ( adjust->xadv.corrections!=NULL ) {
-	adjust->xadv.corrections = xmalloc1(adjust->xadv.last_pixel_size-adjust->xadv.first_pixel_size+1);
+	adjust->xadv.corrections = xmalloc(adjust->xadv.last_pixel_size-adjust->xadv.first_pixel_size+1);
 	memcpy(adjust->xadv.corrections,vr->adjust->xadv.corrections,adjust->xadv.last_pixel_size-adjust->xadv.first_pixel_size+1);
     }
     if ( adjust->yadv.corrections!=NULL ) {
-	adjust->yadv.corrections = xmalloc1(adjust->yadv.last_pixel_size-adjust->yadv.first_pixel_size+1);
+	adjust->yadv.corrections = xmalloc(adjust->yadv.last_pixel_size-adjust->yadv.first_pixel_size+1);
 	memcpy(adjust->yadv.corrections,vr->adjust->yadv.corrections,adjust->yadv.last_pixel_size-adjust->yadv.first_pixel_size+1);
     }
 }
@@ -2590,11 +2590,11 @@ static void APInto(SplineChar *sc,AnchorPoint *ap,AnchorPoint *fromap,
 	ap->me = fromap->me;
     }
     if ( fromap->xadjust.corrections!=NULL ) {
-	ap->xadjust.corrections = xmalloc1(ap->xadjust.last_pixel_size-ap->xadjust.first_pixel_size+1);
+	ap->xadjust.corrections = xmalloc(ap->xadjust.last_pixel_size-ap->xadjust.first_pixel_size+1);
 	memcpy(ap->xadjust.corrections,fromap->xadjust.corrections,ap->xadjust.last_pixel_size-ap->xadjust.first_pixel_size+1);
     }
     if ( fromap->yadjust.corrections!=NULL ) {
-	ap->yadjust.corrections = xmalloc1(ap->yadjust.last_pixel_size-ap->yadjust.first_pixel_size+1);
+	ap->yadjust.corrections = xmalloc(ap->yadjust.last_pixel_size-ap->yadjust.first_pixel_size+1);
 	memcpy(ap->yadjust.corrections,fromap->yadjust.corrections,ap->yadjust.last_pixel_size-ap->xadjust.first_pixel_size+1);
     }
 }
@@ -2797,7 +2797,7 @@ static OTLookup **GetLookupsToCopy(SplineFont *sf,OTLookup ***backpairlist, int 
 /* GT:  is the second glyph in the kerning pair, and that's what this line */
 /* GT:  refers to. The "%s" will be filled in with the lookup name */
 			    char *format = _("Second glyph of %s");
-			    char *space = xmalloc1(strlen(format)+strlen(otl->lookup_name)+1);
+			    char *space = xmalloc(strlen(format)+strlen(otl->lookup_name)+1);
 			    sprintf(space, format, otl->lookup_name );
 			    list2[bcnt] = otl;
 			    choices[ftot+1+bcnt++] = space;
@@ -2816,16 +2816,16 @@ return( NULL );
 	}
 	if ( !doit ) {
 	    ftot = cnt;
-	    choices = xmalloc1((cnt+bcnt+2)*sizeof(char *));
+	    choices = xmalloc((cnt+bcnt+2)*sizeof(char *));
 	    sel = xcalloc(cnt+bcnt+1,1);
-	    list1 = xmalloc1(cnt*sizeof(OTLookup *));
+	    list1 = xmalloc(cnt*sizeof(OTLookup *));
 	    if ( bcnt==0 ) {
 		choices[cnt] = NULL;
 		list2 = NULL;
 	    } else {
 		choices[cnt] = copy("-");
 		choices[bcnt+cnt+1] = NULL;
-		list2 = xmalloc1(bcnt*sizeof(OTLookup *));
+		list2 = xmalloc(bcnt*sizeof(OTLookup *));
 	    }
 	}
     }
@@ -2837,7 +2837,7 @@ return( NULL );
 	    if ( sel[i] )
 		++cnt;
 	}
-	list = xmalloc1((cnt+1)*sizeof(OTLookup *));
+	list = xmalloc((cnt+1)*sizeof(OTLookup *));
 	for ( i=cnt=0; i<ftot; ++i ) {
 	    if ( sel[i] )
 		list[cnt++] = list1[i];
@@ -2850,7 +2850,7 @@ return( NULL );
 		    ++cnt;
 	    }
 	    if ( cnt!=0 ) {
-		blist = xmalloc1((cnt+1)*sizeof(OTLookup *));
+		blist = xmalloc((cnt+1)*sizeof(OTLookup *));
 		for ( i=cnt=0; i<bcnt; ++i ) {
 		    if ( sel[i+ftot+1] )
 			blist[cnt++] = list2[i];
@@ -2964,7 +2964,7 @@ return;
 		    CVLayer(cv) : ly_back;
 	    if ( ly==ly_grid ) ly = ly_back;
 	    for ( cimg = paster->u.state.images; cimg!=NULL; cimg=cimg->next ) {
-		new_ = xmalloc1(sizeof(ImageList));
+		new_ = xmalloc(sizeof(ImageList));
 		*new_ = *cimg;
 		new_->selected = true;
 		new_->next = cvsc->layers[ly].images;
@@ -3589,7 +3589,7 @@ return;
     if ( cnt==1 && cur->undotype==ut_multiple && cur->u.multiple.mult->next!=NULL ) {
 	Undoes *tot; int j;
 	for ( cnt=0, tot=cur->u.multiple.mult; tot!=NULL; ++cnt, tot=tot->next );
-	fv->selected = xmalloc1(fv->map->enccount);
+	fv->selected = xmalloc(fv->map->enccount);
 	memcpy(fv->selected,oldsel,fv->map->enccount);
 	for ( i=0; i<fv->map->enccount && !fv->selected[i]; ++i );
 	for ( j=0; j<cnt && i+j<fv->map->enccount; ++j )

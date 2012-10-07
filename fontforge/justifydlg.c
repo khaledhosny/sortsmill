@@ -163,7 +163,7 @@ static int JSTF_Glyph_OK(GGadget *g, GEvent *e) {
 	    len = 0;
 	    for ( i=0; i<rows; ++i )
 		len += strlen(strings[1*i+0].u.md_str) +1;
-	    ret = xmalloc1(len+1);
+	    ret = xmalloc(len+1);
 	    for ( i=0; i<rows; ++i ) {
 		strcpy(ret,strings[1*i+0].u.md_str);
 		strcat(ret," ");
@@ -369,7 +369,7 @@ static int JSTF_Lookup_OK(GGadget *g, GEvent *e) {
 		OTLookup *otl = (OTLookup *) strings[1*i+0].u.md_ival;
 		len += strlen(otl->lookup_name) +2;
 	    }
-	    gld->ret = ret = xmalloc1(len+1);
+	    gld->ret = ret = xmalloc(len+1);
 	    for ( i=0; i<rows; ++i ) {
 		OTLookup *otl = (OTLookup *) strings[1*i+0].u.md_ival;
 		strcpy(ret,otl->lookup_name);
@@ -551,7 +551,7 @@ return( NULL );
     if ( len==0 )
 return( copy( "" ));
 
-    ret = pt = xmalloc1(len+1);
+    ret = pt = xmalloc(len+1);
     for ( i=0; otll[i]!=NULL; ++i ) {
 	strcpy(pt,otll[i]->lookup_name);
 	strcat(pt,", ");
@@ -578,7 +578,7 @@ return( NULL );
     while ( (pt = strchr(pt+1,','))!=NULL )
 	++cnt;
 
-    ret = xmalloc1( (cnt+2)*sizeof(OTLookup *));
+    ret = xmalloc( (cnt+2)*sizeof(OTLookup *));
     pt = str;
     cnt = 0;
     while ( (ept = strchr(pt,','))!=NULL ) {

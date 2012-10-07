@@ -421,7 +421,7 @@ static void MVSetFeatures(MetricsView *mv) {
     else {		/* features list may have changed, but retain those set */
 	int32 len, sc;
 	ti = GGadgetGetList(mv->features,&len);
-	stds = xmalloc1((len+1)*sizeof(uint32));
+	stds = xmalloc((len+1)*sizeof(uint32));
 	for ( i=sc=0; i<len; ++i ) if ( ti[i]->selected )
 	    stds[sc++] = (uint32) (intpt) ti[i]->userdata;
 	stds[sc] = 0;
@@ -433,7 +433,7 @@ static void MVSetFeatures(MetricsView *mv) {
 
     /*qsort(tags,cnt,sizeof(uint32),tag_comp);*/ /* The glist will do this for us */
 
-    ti = xmalloc1((cnt+2)*sizeof(GTextInfo *));
+    ti = xmalloc((cnt+2)*sizeof(GTextInfo *));
     for ( i=0; i<cnt; ++i ) {
 	ti[i] = xcalloc( 1,sizeof(GTextInfo));
 	ti[i]->fg = ti[i]->bg = COLOR_DEFAULT;
@@ -1508,7 +1508,7 @@ void MVSetSCs(MetricsView *mv, SplineChar **scs) {
     memcpy(mv->chars,scs,(len+1)*sizeof(SplineChar *));
     mv->clen = len;
 
-    ustr = xmalloc1((len+1)*sizeof(unichar_t));
+    ustr = xmalloc((len+1)*sizeof(unichar_t));
     for ( len=0; scs[len]!=NULL; ++len )
 	if ( scs[len]->unicodeenc>0 )
 	    ustr[len] = scs[len]->unicodeenc;
@@ -1571,7 +1571,7 @@ return;					/* Nothing changed */
     if ( ept-pt-missing > ei-i ) {
 	if ( i<mv->clen ) {
 	    int diff = (ept-pt-missing) - (ei-i);
-	    hold = xmalloc1((mv->clen+diff+6)*sizeof(SplineChar *));
+	    hold = xmalloc((mv->clen+diff+6)*sizeof(SplineChar *));
 	    for ( j=mv->clen-1; j>=ei; --j )
 		hold[j+diff] = mv->chars[j];
 	    start = ei+diff; end = mv->clen+diff;
@@ -1637,7 +1637,7 @@ static void MVFigureGlyphNames(MetricsView *mv,const unichar_t *names) {
 	mv->cmax = mv->clen+cnt+10;
 	mv->chars = xrealloc(mv->chars,mv->cmax*sizeof(SplineChar *));
     }
-    newtext = xmalloc1((cnt+1)*sizeof(unichar_t));
+    newtext = xmalloc((cnt+1)*sizeof(unichar_t));
     for ( i=0; i<cnt; ++i ) {
 	newtext[i] = founds[i]->unicodeenc==-1 ?
 						MVFakeUnicodeOfSc(mv,founds[i]) :
@@ -1678,7 +1678,7 @@ return;
     }
     free(filename);
 
-    words = xmalloc1(1002*sizeof(GTextInfo *));
+    words = xmalloc(1002*sizeof(GTextInfo *));
 
     cnt = 0;
     if ( type==-1 ) {
@@ -2524,7 +2524,7 @@ static void MVResetText(MetricsView *mv) {
     unichar_t *new, *pt;
     int i;
 
-    new = xmalloc1((mv->clen+1)*sizeof(unichar_t));
+    new = xmalloc((mv->clen+1)*sizeof(unichar_t));
     for ( pt=new, i=0; i<mv->clen; ++i ) {
 	if ( mv->chars[i]->unicodeenc==-1 )
 	    *pt++ = MVFakeUnicodeOfSc(mv,mv->chars[i]);
@@ -4381,7 +4381,7 @@ return;
 	}
     }
 
-    founds = xmalloc1(len*sizeof(SplineChar *));	/* Will be a vast over-estimate */
+    founds = xmalloc(len*sizeof(SplineChar *));	/* Will be a vast over-estimate */
     start = cnames;
     for ( i=0; *start; ) {
 	while ( *start==' ' ) ++start;
@@ -4408,7 +4408,7 @@ return;
 	mv->chars = xrealloc(mv->chars,mv->cmax*sizeof(SplineChar *));
     }
     oldtext = _GGadgetGetTitle(mv->text);
-    newtext = xmalloc1((mv->clen+cnt+1)*sizeof(unichar_t));
+    newtext = xmalloc((mv->clen+cnt+1)*sizeof(unichar_t));
     u_strcpy(newtext,oldtext);
     newtext[mv->clen+cnt]='\0';
     for ( i=mv->clen+cnt; i>=within+cnt; --i ) {
@@ -4612,11 +4612,11 @@ return( NULL );
 		    lbuf[4] = 0;
 		    if ( lname==NULL )
 			lname = lbuf;
-		    temp = xmalloc1(strlen(sname)+strlen(lname)+3);
+		    temp = xmalloc(strlen(sname)+strlen(lname)+3);
 		    strcpy(temp,sname); strcat(temp,"{"); strcat(temp,lname); strcat(temp,"}");
 		    ret[cnt].text = (unichar_t *) temp;
 		    ret[cnt].text_is_1byte = true;
-		    temp = xmalloc1(11);
+		    temp = xmalloc(11);
 		    strcpy(temp,sbuf); temp[4] = '{'; strcpy(temp+5,lbuf); temp[9]='}'; temp[10] = 0;
 		    ret[cnt].userdata = temp;
 		}

@@ -89,7 +89,7 @@ static char *_MMMakeFontname(MMSet *mm,real *normalized,char **fullname) {
 	    if ( styles==NULL )
 		styles = FindEnglishNameInMacName(mm->named_instances[i].names);
 	    if ( styles!=NULL ) {
-		ret = xmalloc1(strlen(mm->normal->familyname)+ strlen(styles)+3 );
+		ret = xmalloc(strlen(mm->normal->familyname)+ strlen(styles)+3 );
 		strcpy(ret,mm->normal->familyname);
 		hyphen = ret+strlen(ret);
 		strcpy(hyphen," ");
@@ -100,7 +100,7 @@ static char *_MMMakeFontname(MMSet *mm,real *normalized,char **fullname) {
     }
 
     if ( ret==NULL ) {
-	pt = ret = xmalloc1(strlen(mm->normal->familyname)+ mm->axis_count*15 + 1);
+	pt = ret = xmalloc(strlen(mm->normal->familyname)+ mm->axis_count*15 + 1);
 	strcpy(pt,mm->normal->familyname);
 	pt += strlen(pt);
 	*pt++ = '_';
@@ -221,7 +221,7 @@ return( NULL );
 	len += strlen( hold[j] )+1;
     }
 
-    pt = ret = xmalloc1(len+4);
+    pt = ret = xmalloc(len+4);
     *pt++ = '[';
     for ( j=0; j<i; ++j ) {
 	strcpy(pt,hold[j]);
@@ -598,7 +598,7 @@ return( private );
 		    ++cnt;
 		}
 	    }
-	    space = pt = xmalloc1((cnt+2)*24+4);
+	    space = pt = xmalloc((cnt+2)*24+4);
 	    *pt++ = '[';
 	    for ( j=0; j<mm->instance_count; ++j )
 		if ( *values[j]=='[' ) ++values[j];

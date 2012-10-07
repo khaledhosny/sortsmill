@@ -67,7 +67,7 @@
 /*  different/more tags in fontinfo.plist */
 
 static char *buildname(char *basedir,char *sub) {
-    char *fname = xmalloc1(strlen(basedir)+strlen(sub)+2);
+    char *fname = xmalloc(strlen(basedir)+strlen(sub)+2);
 
     strcpy(fname, basedir);
     if ( fname[strlen(fname)-1]!='/' )
@@ -257,7 +257,7 @@ return( false );
 	    int i, cnt;
 	    for ( cnt=0, ref = sc->layers[layer].refs; ref!=NULL; ref=ref->next ) if ( SCWorthOutputting(ref->sc))
 		++cnt;
-	    refs = xmalloc1(cnt*sizeof(RefChar *));
+	    refs = xmalloc(cnt*sizeof(RefChar *));
 	    for ( cnt=0, ref = sc->layers[layer].refs; ref!=NULL; ref=ref->next ) if ( SCWorthOutputting(ref->sc))
 		refs[cnt++] = ref;
 	    if ( cnt>1 )
@@ -757,7 +757,7 @@ return( !err );
 
 int WriteUFOFont(char *basedir,SplineFont *sf,enum fontformat ff,int flags,
 	EncMap *map,int layer) {
-    char *foo = xmalloc1( strlen(basedir) +20 ), *glyphdir, *gfname;
+    char *foo = xmalloc( strlen(basedir) +20 ), *glyphdir, *gfname;
     int err;
     FILE *plist;
     int i;
@@ -795,7 +795,7 @@ return( false );
 
     for ( i=0; i<sf->glyphcnt; ++i ) if ( SCWorthOutputting(sc=sf->glyphs[i]) ) {
 	char *start, *gstart;
-	gstart = gfname = xmalloc1(2*strlen(sc->name)+20);
+	gstart = gfname = xmalloc(2*strlen(sc->name)+20);
 	start = sc->name;
 	if ( *start=='.' ) {
 	    *gstart++ = '_';

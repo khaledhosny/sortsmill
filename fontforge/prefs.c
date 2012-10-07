@@ -931,7 +931,7 @@ ProcessFileChooserPrefs (void)
   GFileChooserSetDirectoryPlacement (gfc_dirplace);
   if (gfc_bookmarks == NULL)
     {
-      b = xmalloc1 (8 * sizeof (unichar_t *));
+      b = xmalloc (8 * sizeof (unichar_t *));
       i = 0;
       b[i++] =
         x_u8_to_u32 ((uint8_t *) "ftp://ctan.org/pub/tex-archive/fonts/");
@@ -950,7 +950,7 @@ ProcessFileChooserPrefs (void)
           start = pt + 1;
         }
       start = gfc_bookmarks;
-      b = xmalloc1 ((i + 2) * sizeof (unichar_t *));
+      b = xmalloc ((i + 2) * sizeof (unichar_t *));
       for (i = 0;; ++i)
         {
           pt = strchr (start, ';');
@@ -984,7 +984,7 @@ GetFileChooserPrefs (void)
       int i, len = 0;
       for (i = 0; foo[i] != NULL; ++i)
         len += 4 * u_strlen (foo[i]) + 1;
-      gfc_bookmarks = xmalloc1 (len + 10);
+      gfc_bookmarks = xmalloc (len + 10);
       len = 0;
       for (i = 0; foo[i] != NULL; ++i)
         {
@@ -1608,12 +1608,12 @@ GListAddStr (GGadget * list, unichar_t *str, void *ud)
 {
   int32 i, len;
   GTextInfo **ti = GGadgetGetList (list, &len);
-  GTextInfo **replace = xmalloc1 ((len + 2) * sizeof (GTextInfo *));
+  GTextInfo **replace = xmalloc ((len + 2) * sizeof (GTextInfo *));
 
   replace[len + 1] = xcalloc (1, sizeof (GTextInfo));
   for (i = 0; i < len; ++i)
     {
-      replace[i] = xmalloc1 (sizeof (GTextInfo));
+      replace[i] = xmalloc (sizeof (GTextInfo));
       *replace[i] = *ti[i];
       replace[i]->text = x_u32_strdup_or_null (ti[i]->text);
     }
@@ -1629,11 +1629,11 @@ GListReplaceStr (GGadget * list, int index, unichar_t *str, void *ud)
 {
   int32 i, len;
   GTextInfo **ti = GGadgetGetList (list, &len);
-  GTextInfo **replace = xmalloc1 ((len + 2) * sizeof (GTextInfo *));
+  GTextInfo **replace = xmalloc ((len + 2) * sizeof (GTextInfo *));
 
   for (i = 0; i < len; ++i)
     {
-      replace[i] = xmalloc1 (sizeof (GTextInfo));
+      replace[i] = xmalloc (sizeof (GTextInfo));
       *replace[i] = *ti[i];
       if (i != index)
         replace[i]->text = x_u32_strdup_or_null (ti[i]->text);
@@ -2218,7 +2218,7 @@ Prefs_Ok (GGadget * g, GEvent * e)
       list = GGadgetGetList (GWidgetGetControl (gw, CID_Mapping), &len);
       UserSettingsFree ();
       user_macfeat_otftag =
-        xmalloc1 ((len + 1) * sizeof (struct macsettingname));
+        xmalloc ((len + 1) * sizeof (struct macsettingname));
       user_macfeat_otftag[len].otf_tag = 0;
       maxl = 0;
       for (i = 0; i < len; ++i)

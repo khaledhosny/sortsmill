@@ -43,7 +43,7 @@ typedef struct quartic {
 
 char *strconcat(const char *str1,const char *str2) {
     int len1 = strlen(str1);
-    char *ret = xmalloc1(len1+strlen(str2)+1);
+    char *ret = xmalloc(len1+strlen(str2)+1);
     strcpy(ret,str1);
     strcpy(ret+len1,str2);
 return( ret );
@@ -51,7 +51,7 @@ return( ret );
 
 char *strconcat3(const char *str1,const char *str2, const char *str3) {
     int len1 = strlen(str1), len2 = strlen(str2);
-    char *ret = xmalloc1(len1+len2+strlen(str3)+1);
+    char *ret = xmalloc(len1+len2+strlen(str3)+1);
     strcpy(ret,str1);
     strcpy(ret+len1,str2);
     strcpy(ret+len1+len2,str3);
@@ -1128,7 +1128,7 @@ SplinePointList *SplinePointListCopy1(const SplinePointList *spl) {
     }
     if ( spl->spiro_cnt!=0 ) {
 	cur->spiro_cnt = cur->spiro_max = spl->spiro_cnt;
-	cur->spiros = xmalloc1(cur->spiro_cnt*sizeof(spiro_cp));
+	cur->spiros = xmalloc(cur->spiro_cnt*sizeof(spiro_cp));
 	memcpy(cur->spiros,spl->spiros,cur->spiro_cnt*sizeof(spiro_cp));
     }
 return( cur );
@@ -1217,7 +1217,7 @@ static SplinePointList *SplinePointListCopySpiroSelected1(SplinePointList *spl) 
 	    if ( !(SPIRO_SELECTED(&list[i])) )
 	break;
 	if ( i!=0 ) {
-	    freeme = xmalloc1(spl->spiro_cnt*sizeof(spiro_cp));
+	    freeme = xmalloc(spl->spiro_cnt*sizeof(spiro_cp));
 	    memcpy(freeme,list+i,(spl->spiro_cnt-1-i)*sizeof(spiro_cp));
 	    memcpy(freeme+(spl->spiro_cnt-1-i),list,i*sizeof(spiro_cp));
 	    /* And copy the list terminator */
@@ -1231,7 +1231,7 @@ static SplinePointList *SplinePointListCopySpiroSelected1(SplinePointList *spl) 
 	if ( i==spl->spiro_cnt-1 )
     break;
 	for ( j=i; j<spl->spiro_cnt-1 && SPIRO_SELECTED(&list[j]); ++j );
-	temp = xmalloc1((j-i+2)*sizeof(spiro_cp));
+	temp = xmalloc((j-i+2)*sizeof(spiro_cp));
 	memcpy(temp,list+i,(j-i)*sizeof(spiro_cp));
 	temp[0].ty = SPIRO_OPEN_CONTOUR;
 	memset(temp+(j-i),0,sizeof(spiro_cp));
@@ -1333,7 +1333,7 @@ static SplinePointList *SplinePointListSplitSpiros(SplineChar *sc,SplinePointLis
 	    if ( !(SPIRO_SELECTED(&list[i])) )
 	break;
 	if ( i!=0 ) {
-	    freeme = xmalloc1(spl->spiro_cnt*sizeof(spiro_cp));
+	    freeme = xmalloc(spl->spiro_cnt*sizeof(spiro_cp));
 	    memcpy(freeme,list+i,(spl->spiro_cnt-1-i)*sizeof(spiro_cp));
 	    memcpy(freeme+(spl->spiro_cnt-1-i),list,i*sizeof(spiro_cp));
 	    /* And copy the list terminator */
@@ -1346,7 +1346,7 @@ static SplinePointList *SplinePointListSplitSpiros(SplineChar *sc,SplinePointLis
 	/* Retain unselected things */
 	for ( ; i<spl->spiro_cnt-1 && !SPIRO_SELECTED(&list[i]); ++i );
 	if ( i!=start ) {
-	    temp = xmalloc1((i-start+2)*sizeof(spiro_cp));
+	    temp = xmalloc((i-start+2)*sizeof(spiro_cp));
 	    memcpy(temp,list+start,(i-start)*sizeof(spiro_cp));
 	    temp[0].ty = SPIRO_OPEN_CONTOUR;
 	    memset(temp+(i-start),0,sizeof(spiro_cp));
@@ -2043,7 +2043,7 @@ static char *copyparse(char *str) {
     if ( str==NULL )
 return( str );
 
-    rpt=ret=xmalloc1(strlen(str)+1);
+    rpt=ret=xmalloc(strlen(str)+1);
     while ( *str ) {
 	if ( *str=='\\' ) {
 	    ++str;
@@ -2088,7 +2088,7 @@ char *XUIDFromFD(int xuid[20]) {
     for ( i=19; i>=0 && xuid[i]==0; --i );
     if ( i>=0 ) {
 	int j; char *pt;
-	ret = xmalloc1(2+20*(i+1));
+	ret = xmalloc(2+20*(i+1));
 	pt = ret;
 	*pt++ = '[';
 	for ( j=0; j<=i; ++j ) {
@@ -2409,8 +2409,8 @@ return( NULL );
     }
 
     mm->instance_count = pscontext->instance_count;
-    mm->instances = xmalloc1(pscontext->instance_count*sizeof(SplineFont *));
-    mm->defweights = xmalloc1(mm->instance_count*sizeof(real));
+    mm->instances = xmalloc(pscontext->instance_count*sizeof(SplineFont *));
+    mm->defweights = xmalloc(mm->instance_count*sizeof(real));
     memcpy(mm->defweights,pscontext->blend_values,mm->instance_count*sizeof(real));
     mm->normal = sf;
     _SplineFontFromType1(mm->normal,fd,pscontext);
@@ -2510,8 +2510,8 @@ return( NULL );
 	    if ( ppos<2 )
 		LogError( _("Bad few values in /BlendDesignMap for axis %s.\n"), mm->axes[apos] );
 	    mm->axismaps[apos].points = ppos;
-	    mm->axismaps[apos].blends = xmalloc1(ppos*sizeof(real));
-	    mm->axismaps[apos].designs = xmalloc1(ppos*sizeof(real));
+	    mm->axismaps[apos].blends = xmalloc(ppos*sizeof(real));
+	    mm->axismaps[apos].designs = xmalloc(ppos*sizeof(real));
 	    memcpy(mm->axismaps[apos].blends,blends,ppos*sizeof(real));
 	    memcpy(mm->axismaps[apos].designs,designs,ppos*sizeof(real));
 	    ++apos;
@@ -2637,7 +2637,7 @@ return( NULL );
     encmap = EncMap1to1(fd->cidcnt);
 
     sf->subfontcnt = fd->fdcnt;
-    sf->subfonts = xmalloc1((sf->subfontcnt+1)*sizeof(SplineFont *));
+    sf->subfonts = xmalloc((sf->subfontcnt+1)*sizeof(SplineFont *));
     for ( i=0; i<fd->fdcnt; ++i ) {
 	if ( fd->fontmatrix[0]!=0 ) {
 	    MatMultiply(fd->fontmatrix,fd->fds[i]->fontmatrix,fd->fds[i]->fontmatrix);
@@ -5275,12 +5275,12 @@ AnchorPoint *AnchorPointsCopy(AnchorPoint *alist) {
 	*ap = *alist;
 	if ( ap->xadjust.corrections!=NULL ) {
 	    int len = ap->xadjust.last_pixel_size-ap->xadjust.first_pixel_size+1;
-	    ap->xadjust.corrections = xmalloc1(len);
+	    ap->xadjust.corrections = xmalloc(len);
 	    memcpy(ap->xadjust.corrections,alist->xadjust.corrections,len);
 	}
 	if ( ap->yadjust.corrections!=NULL ) {
 	    int len = ap->yadjust.last_pixel_size-ap->yadjust.first_pixel_size+1;
-	    ap->yadjust.corrections = xmalloc1(len);
+	    ap->yadjust.corrections = xmalloc(len);
 	    memcpy(ap->yadjust.corrections,alist->yadjust.corrections,len);
 	}
 	if ( head==NULL )
@@ -5324,7 +5324,7 @@ return( NULL );
 	if ( (&orig->xadjust)[i].corrections!=NULL ) {
 	    int len = (&orig->xadjust)[i].last_pixel_size - (&orig->xadjust)[i].first_pixel_size + 1;
 	    (&new->xadjust)[i] = (&orig->xadjust)[i];
-	    (&new->xadjust)[i].corrections = xmalloc1(len);
+	    (&new->xadjust)[i].corrections = xmalloc(len);
 	    memcpy((&new->xadjust)[i].corrections,(&orig->xadjust)[i].corrections,len);
 	}
     }
@@ -5349,7 +5349,7 @@ return( NULL );
     new = (DeviceTable *) xzalloc(sizeof (DeviceTable));
     *new = *orig;
     len = orig->last_pixel_size - orig->first_pixel_size + 1;
-    new->corrections = xmalloc1(len);
+    new->corrections = xmalloc(len);
     memcpy(new->corrections,orig->corrections,len);
 return( new );
 }
@@ -5385,7 +5385,7 @@ return;
     } else {
 	if ( adjust->corrections==NULL ) {
 	    adjust->first_pixel_size = adjust->last_pixel_size = size;
-	    adjust->corrections = xmalloc1(1);
+	    adjust->corrections = xmalloc(1);
 	} else if ( size>=adjust->first_pixel_size &&
 		size<=adjust->last_pixel_size ) {
 	} else if ( size>adjust->last_pixel_size ) {
@@ -5395,7 +5395,7 @@ return;
 		adjust->corrections[i] = 0;
 	    adjust->last_pixel_size = size;
 	} else {
-	    int8 *new = xmalloc1(adjust->last_pixel_size-size+1);
+	    int8 *new = xmalloc(adjust->last_pixel_size-size+1);
 	    memset(new,0,adjust->first_pixel_size-size);
 	    memcpy(new+adjust->first_pixel_size-size,
 		    adjust->corrections, len);
@@ -5486,16 +5486,16 @@ return( NULL );
 	    t->u.class.ncnt = f->u.class.ncnt;
 	    t->u.class.bcnt = f->u.class.bcnt;
 	    t->u.class.fcnt = f->u.class.fcnt;
-	    t->u.class.nclasses = xmalloc1( f->u.class.ncnt*sizeof(uint16));
+	    t->u.class.nclasses = xmalloc( f->u.class.ncnt*sizeof(uint16));
 	    memcpy(t->u.class.nclasses,f->u.class.nclasses,
 		    f->u.class.ncnt*sizeof(uint16));
 	    if ( t->u.class.bcnt!=0 ) {
-		t->u.class.bclasses = xmalloc1( f->u.class.bcnt*sizeof(uint16));
+		t->u.class.bclasses = xmalloc( f->u.class.bcnt*sizeof(uint16));
 		memcpy(t->u.class.bclasses,f->u.class.bclasses,
 			f->u.class.bcnt*sizeof(uint16));
 	    }
 	    if ( t->u.class.fcnt!=0 ) {
-		t->u.class.fclasses = xmalloc1( f->u.class.fcnt*sizeof(uint16));
+		t->u.class.fclasses = xmalloc( f->u.class.fcnt*sizeof(uint16));
 		memcpy(t->u.class.fclasses,f->u.class.fclasses,
 			f->u.class.fcnt*sizeof(uint16));
 	    }
@@ -5506,16 +5506,16 @@ return( NULL );
 	    t->u.coverage.ncnt = f->u.coverage.ncnt;
 	    t->u.coverage.bcnt = f->u.coverage.bcnt;
 	    t->u.coverage.fcnt = f->u.coverage.fcnt;
-	    t->u.coverage.ncovers = xmalloc1( f->u.coverage.ncnt*sizeof(char *));
+	    t->u.coverage.ncovers = xmalloc( f->u.coverage.ncnt*sizeof(char *));
 	    for ( j=0; j<t->u.coverage.ncnt; ++j )
 		t->u.coverage.ncovers[j] = copy(f->u.coverage.ncovers[j]);
 	    if ( t->u.coverage.bcnt!=0 ) {
-		t->u.coverage.bcovers = xmalloc1( f->u.coverage.bcnt*sizeof(char *));
+		t->u.coverage.bcovers = xmalloc( f->u.coverage.bcnt*sizeof(char *));
 		for ( j=0; j<t->u.coverage.bcnt; ++j )
 		    t->u.coverage.bcovers[j] = copy(f->u.coverage.bcovers[j]);
 	    }
 	    if ( t->u.coverage.fcnt!=0 ) {
-		t->u.coverage.fcovers = xmalloc1( f->u.coverage.fcnt*sizeof(char *));
+		t->u.coverage.fcovers = xmalloc( f->u.coverage.fcnt*sizeof(char *));
 		for ( j=0; j<t->u.coverage.fcnt; ++j )
 		    t->u.coverage.fcovers[j] = copy(f->u.coverage.fcovers[j]);
 	    }
@@ -5523,7 +5523,7 @@ return( NULL );
 	}
 	if ( f->lookup_cnt!=0 ) {
 	    t->lookup_cnt = f->lookup_cnt;
-	    t->lookups = xmalloc1(t->lookup_cnt*sizeof(struct seqlookup));
+	    t->lookups = xmalloc(t->lookup_cnt*sizeof(struct seqlookup));
 	    memcpy(t->lookups,f->lookups,t->lookup_cnt*sizeof(struct seqlookup));
 	}
     }
@@ -5538,24 +5538,24 @@ FPST *FPSTCopy(FPST *fpst) {
     *nfpst = *fpst;
     nfpst->next = NULL;
     if ( nfpst->nccnt!=0 ) {
-	nfpst->nclass = xmalloc1(nfpst->nccnt*sizeof(char *));
-	nfpst->nclassnames = xmalloc1(nfpst->nccnt*sizeof(char *));
+	nfpst->nclass = xmalloc(nfpst->nccnt*sizeof(char *));
+	nfpst->nclassnames = xmalloc(nfpst->nccnt*sizeof(char *));
 	for ( i=0; i<nfpst->nccnt; ++i ) {
 	    nfpst->nclass[i] = copy(fpst->nclass[i]);
 	    nfpst->nclassnames[i] = copy(fpst->nclassnames[i]);
 	}
     }
     if ( nfpst->bccnt!=0 ) {
-	nfpst->bclass = xmalloc1(nfpst->bccnt*sizeof(char *));
-	nfpst->bclassnames = xmalloc1(nfpst->bccnt*sizeof(char *));
+	nfpst->bclass = xmalloc(nfpst->bccnt*sizeof(char *));
+	nfpst->bclassnames = xmalloc(nfpst->bccnt*sizeof(char *));
 	for ( i=0; i<nfpst->bccnt; ++i ) {
 	    nfpst->bclass[i] = copy(fpst->bclass[i]);
 	    nfpst->bclassnames[i] = copy(fpst->bclassnames[i]);
 	}
     }
     if ( nfpst->fccnt!=0 ) {
-	nfpst->fclass = xmalloc1(nfpst->fccnt*sizeof(char *));
-	nfpst->fclassnames = xmalloc1(nfpst->fccnt*sizeof(char *));
+	nfpst->fclass = xmalloc(nfpst->fccnt*sizeof(char *));
+	nfpst->fclassnames = xmalloc(nfpst->fccnt*sizeof(char *));
 	for ( i=0; i<nfpst->fccnt; ++i ) {
 	    nfpst->fclass[i] = copy(fpst->fclass[i]);
 	    nfpst->fclassnames[i] = copy(fpst->fclassnames[i]);
@@ -5788,7 +5788,7 @@ return( NULL );
     grad = (struct gradient *) xzalloc(sizeof (struct gradient));
 
     *grad = *old;
-    grad->grad_stops = xmalloc1(old->stop_cnt*sizeof(struct grad_stops));
+    grad->grad_stops = xmalloc(old->stop_cnt*sizeof(struct grad_stops));
     memcpy(grad->grad_stops,old->grad_stops,old->stop_cnt*sizeof(struct grad_stops));
     if ( transform!=NULL ) {
 	BpTransform(&grad->start,&grad->start,transform);
@@ -5968,9 +5968,9 @@ KernClass *KernClassCopy(KernClass *kc) {
 return( NULL );
     new = (KernClass *) xzalloc(sizeof (KernClass));
     *new = *kc;
-    new->firsts = xmalloc1(new->first_cnt*sizeof(char *));
-    new->seconds = xmalloc1(new->second_cnt*sizeof(char *));
-    new->offsets = xmalloc1(new->first_cnt*new->second_cnt*sizeof(int16));
+    new->firsts = xmalloc(new->first_cnt*sizeof(char *));
+    new->seconds = xmalloc(new->second_cnt*sizeof(char *));
+    new->offsets = xmalloc(new->first_cnt*new->second_cnt*sizeof(int16));
     memcpy(new->offsets,kc->offsets, new->first_cnt*new->second_cnt*sizeof(int16));
     for ( i=0; i<new->first_cnt; ++i )
 	new->firsts[i] = copy(kc->firsts[i]);
@@ -5982,7 +5982,7 @@ return( NULL );
 	if ( new->adjusts[i].corrections!=NULL ) {
 	    int8 *old = new->adjusts[i].corrections;
 	    int len = new->adjusts[i].last_pixel_size - new->adjusts[i].first_pixel_size + 1;
-	    new->adjusts[i].corrections = xmalloc1(len);
+	    new->adjusts[i].corrections = xmalloc(len);
 	    memcpy(new->adjusts[i].corrections,old,len);
 	}
     }
@@ -6100,9 +6100,9 @@ EncMap *EncMapNew(int enccount,int backmax,Encoding *enc) {
     
     map->enccount = map->encmax = enccount;
     map->backmax = backmax;
-    map->map = xmalloc1(enccount*sizeof(int));
+    map->map = xmalloc(enccount*sizeof(int));
     memset(map->map,-1,enccount*sizeof(int));
-    map->backmap = xmalloc1(backmax*sizeof(int));
+    map->backmap = xmalloc(backmax*sizeof(int));
     memset(map->backmap,-1,backmax*sizeof(int));
     map->enc = enc;
 return(map);
@@ -6114,8 +6114,8 @@ EncMap *EncMap1to1(int enccount) {
     int i;
     
     map->enccount = map->encmax = map->backmax = enccount;
-    map->map = xmalloc1(enccount*sizeof(int));
-    map->backmap = xmalloc1(enccount*sizeof(int));
+    map->map = xmalloc(enccount*sizeof(int));
+    map->backmap = xmalloc(enccount*sizeof(int));
     for ( i=0; i<enccount; ++i )
 	map->map[i] = map->backmap[i] = i;
     map->enc = &custom;
@@ -6154,14 +6154,14 @@ EncMap *EncMapCopy(EncMap *map) {
 
     new = (EncMap *) xzalloc(sizeof (EncMap));
     *new = *map;
-    new->map = xmalloc1(new->encmax*sizeof(int));
-    new->backmap = xmalloc1(new->backmax*sizeof(int));
+    new->map = xmalloc(new->encmax*sizeof(int));
+    new->backmap = xmalloc(new->backmax*sizeof(int));
     memcpy(new->map,map->map,new->enccount*sizeof(int));
     memcpy(new->backmap,map->backmap,new->backmax*sizeof(int));
     if ( map->remap ) {
 	int n;
 	for ( n=0; map->remap[n].infont!=-1; ++n );
-	new->remap = xmalloc1(n*sizeof(struct remap));
+	new->remap = xmalloc(n*sizeof(struct remap));
 	memcpy(new->remap,map->remap,n*sizeof(struct remap));
     }
 return( new );
@@ -6246,7 +6246,7 @@ static OTLookup **OTLListCopy(OTLookup **str) {
     if ( str == NULL )
 return( NULL );
     for ( i=0 ; str[i]!=NULL; ++i );
-    ret = xmalloc1((i+1)*sizeof( OTLookup *));
+    ret = xmalloc((i+1)*sizeof( OTLookup *));
     for ( i=0 ; str[i]!=NULL; ++i )
 	ret[i] = str[i];
     ret[i] = NULL;
@@ -6634,12 +6634,12 @@ int SCRoundToCluster(SplineChar *sc,int layer,int sel,bigreal within,bigreal max
 	if ( ptcnt<=1 )
 return(false);				/* Can't be any clusters */
 	if ( k==0 )
-	    ptspace = xmalloc1((ptcnt+1)*sizeof(SplinePoint *));
+	    ptspace = xmalloc((ptcnt+1)*sizeof(SplinePoint *));
 	else
 	    ptspace[ptcnt] = NULL;
     }
 
-    cspace = xmalloc1(ptcnt*sizeof(struct cluster));
+    cspace = xmalloc(ptcnt*sizeof(struct cluster));
 
     qsort(ptspace,ptcnt,sizeof(SplinePoint *),xcmp);
     changed = _SplineCharRoundToCluster(sc,ptspace,cspace,ptcnt,false,
@@ -7282,7 +7282,7 @@ return( -1 );
 
 void GrowBuffer(GrowBuf *gb) {
     if ( gb->base==NULL ) {
-	gb->base = gb->pt = xmalloc1(200);
+	gb->base = gb->pt = xmalloc(200);
 	gb->end = gb->base + 200;
     } else {
 	int len = (gb->end-gb->base) + 400;
@@ -7295,7 +7295,7 @@ void GrowBuffer(GrowBuf *gb) {
 
 void GrowBufferAdd(GrowBuf *gb,int ch) {
     if ( gb->base==NULL ) {
-	gb->base = gb->pt = xmalloc1(200);
+	gb->base = gb->pt = xmalloc(200);
 	gb->end = gb->base + 200;
     } else if ( gb->pt>=gb->end ) {
 	int len = (gb->end-gb->base) + 400;
@@ -7315,7 +7315,7 @@ return;
     n = strlen(str);
 
     if ( gb->base==NULL ) {
-	gb->base = gb->pt = xmalloc1(200+n);
+	gb->base = gb->pt = xmalloc(200+n);
 	gb->end = gb->base + 200+n;
     } else if ( gb->pt+n+1>=gb->end ) {
 	int len = (gb->end-gb->base) + n+200;

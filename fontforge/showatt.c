@@ -304,8 +304,8 @@ static void BuildAnchorLists(struct node *node,struct att_dlg *att) {
 	if ( classcnt==0 )
 return;
 
-	marks = xmalloc1(classcnt*sizeof(SplineChar **));
-	subcnts = xmalloc1(classcnt*sizeof(int));
+	marks = xmalloc(classcnt*sizeof(SplineChar **));
+	subcnts = xmalloc(classcnt*sizeof(int));
 	AnchorClassDecompose(sf,ac,classcnt,subcnts,marks,&base,&lig,&mkmk,NULL);
 	node->cnt = classcnt+(base!=NULL)+(lig!=NULL)+(mkmk!=NULL);
 	node->children = xcalloc(node->cnt+1,sizeof(struct node));
@@ -349,7 +349,7 @@ static void BuildKC2(struct node *node,struct att_dlg *att) {
     for ( i=1; i<kc->second_cnt; ++i ) if ( kc->offsets[index*kc->second_cnt+i]!=0 && strlen(kc->seconds[i])!=0 ) {
 	sprintf( buf, "%d ", kc->offsets[index*kc->second_cnt+i]);
 	len = strlen(buf)+strlen(kc->seconds[i])+1;
-	name = xmalloc1(len);
+	name = xmalloc(len);
 	strcpy(name,buf);
 	strcat(name,kc->seconds[i]);
 	seconds[cnt].label = name;
@@ -429,7 +429,7 @@ static void BuildFPSTRule(struct node *node,struct att_dlg *att) {
 	    if ( r->u.glyph.back!=NULL && *r->u.glyph.back!='\0' ) {
 		if ( i ) {
 		    strcpy(buf, _("Backtrack Match: ") );
-		    lines[len].label = xmalloc1((strlen(buf)+strlen(r->u.glyph.back)+1));
+		    lines[len].label = xmalloc((strlen(buf)+strlen(r->u.glyph.back)+1));
 		    strcpy(lines[len].label,buf);
 		    upt = lines[len].label+strlen(lines[len].label);
 		    for ( pt=r->u.glyph.back+strlen(r->u.glyph.back); pt>r->u.glyph.back; pt=start ) {
@@ -445,7 +445,7 @@ static void BuildFPSTRule(struct node *node,struct att_dlg *att) {
 	    }
 	    if ( i ) {
 		strcpy(buf, _("Match: ") );
-		lines[len].label = xmalloc1((strlen(buf)+strlen(r->u.glyph.names)+1));
+		lines[len].label = xmalloc((strlen(buf)+strlen(r->u.glyph.names)+1));
 		strcpy(lines[len].label,buf);
 		strcat(lines[len].label,r->u.glyph.names);
 		lines[len].parent = node;
@@ -454,7 +454,7 @@ static void BuildFPSTRule(struct node *node,struct att_dlg *att) {
 	    if ( r->u.glyph.fore!=NULL && *r->u.glyph.fore!='\0' ) {
 		if ( i ) {
 		    strcpy(buf, _("Lookahead Match: ") );
-		    lines[len].label = xmalloc1((strlen(buf)+strlen(r->u.glyph.fore)+1));
+		    lines[len].label = xmalloc((strlen(buf)+strlen(r->u.glyph.fore)+1));
 		    strcpy(lines[len].label,buf);
 		    strcat(lines[len].label,r->u.glyph.fore);
 		    lines[len].parent = node;
@@ -515,7 +515,7 @@ static void BuildFPSTRule(struct node *node,struct att_dlg *att) {
 	    for ( j=r->u.coverage.bcnt-1; j>=0; --j ) {
 		if ( i ) {
 		    sprintf(buf, _("Back coverage %d: "), -j-1);
-		    lines[len].label = xmalloc1((strlen(buf)+strlen(r->u.coverage.bcovers[j])+1));
+		    lines[len].label = xmalloc((strlen(buf)+strlen(r->u.coverage.bcovers[j])+1));
 		    strcpy(lines[len].label,buf);
 		    strcat(lines[len].label,r->u.coverage.bcovers[j]);
 		    lines[len].parent = node;
@@ -525,7 +525,7 @@ static void BuildFPSTRule(struct node *node,struct att_dlg *att) {
 	    for ( j=0; j<r->u.coverage.ncnt; ++j ) {
 		if ( i ) {
 		    sprintf(buf, _("Coverage %d: "), j);
-		    lines[len].label = xmalloc1((strlen(buf)+strlen(r->u.coverage.ncovers[j])+1));
+		    lines[len].label = xmalloc((strlen(buf)+strlen(r->u.coverage.ncovers[j])+1));
 		    strcpy(lines[len].label,buf);
 		    strcat(lines[len].label,r->u.coverage.ncovers[j]);
 		    lines[len].parent = node;
@@ -535,7 +535,7 @@ static void BuildFPSTRule(struct node *node,struct att_dlg *att) {
 	    for ( j=0; j<r->u.coverage.fcnt; ++j ) {
 		if ( i ) {
 		    sprintf(buf, _("Lookahead coverage %d: "), j+r->u.coverage.ncnt);
-		    lines[len].label = xmalloc1((strlen(buf)+strlen(r->u.coverage.fcovers[j])+1));
+		    lines[len].label = xmalloc((strlen(buf)+strlen(r->u.coverage.fcovers[j])+1));
 		    strcpy(lines[len].label,buf);
 		    strcat(lines[len].label,r->u.coverage.fcovers[j]);
 		    lines[len].parent = node;
@@ -563,7 +563,7 @@ static void BuildFPSTRule(struct node *node,struct att_dlg *att) {
 	  case pst_reversecoverage:
 	    if ( i ) {
 		strcpy(buf, _("Replacement: ") );
-		lines[len].label = xmalloc1((strlen(buf)+strlen(r->u.rcoverage.replacements)+1));
+		lines[len].label = xmalloc((strlen(buf)+strlen(r->u.rcoverage.replacements)+1));
 		strcpy(lines[len].label,buf);
 		strcat(lines[len].label,r->u.rcoverage.replacements);
 		lines[len].parent = node;
@@ -610,7 +610,7 @@ static void BuildFPST(struct node *node,struct att_dlg *att) {
 	    for ( j=1; j<fpst->bccnt ; ++j ) {
 		if ( i ) {
 		    sprintf(buf, _("Backtrack class %d: "), j);
-		    lines[len].label = xmalloc1((strlen(buf)+strlen(fpst->bclass[j])+1));
+		    lines[len].label = xmalloc((strlen(buf)+strlen(fpst->bclass[j])+1));
 		    strcpy(lines[len].label,buf);
 		    strcat(lines[len].label,fpst->bclass[j]);
 		    lines[len].parent = node;
@@ -620,7 +620,7 @@ static void BuildFPST(struct node *node,struct att_dlg *att) {
 	    for ( j=1; j<fpst->nccnt ; ++j ) {
 		if ( i ) {
 		    sprintf(buf, _("Class %d: "), j);
-		    lines[len].label = xmalloc1((strlen(buf)+strlen(fpst->nclass[j])+1));
+		    lines[len].label = xmalloc((strlen(buf)+strlen(fpst->nclass[j])+1));
 		    strcpy(lines[len].label,buf);
 		    strcat(lines[len].label,fpst->nclass[j]);
 		    lines[len].parent = node;
@@ -630,7 +630,7 @@ static void BuildFPST(struct node *node,struct att_dlg *att) {
 	    for ( j=1; j<fpst->fccnt ; ++j ) {
 		if ( i ) {
 		    sprintf(buf, _("Lookahead class %d: "), j);
-		    lines[len].label = xmalloc1((strlen(buf)+strlen(fpst->fclass[j])+1));
+		    lines[len].label = xmalloc((strlen(buf)+strlen(fpst->fclass[j])+1));
 		    strcpy(lines[len].label,buf);
 		    strcat(lines[len].label,fpst->fclass[j]);
 		    lines[len].parent = node;
@@ -669,7 +669,7 @@ static void BuildASM(struct node *node,struct att_dlg *att) {
     OTLookup **used;
 
     if ( sm->type == asm_context ) {
-	used = xmalloc1(sm->class_cnt*sm->state_cnt*2*sizeof(OTLookup *));
+	used = xmalloc(sm->class_cnt*sm->state_cnt*2*sizeof(OTLookup *));
 	for ( i=scnt=0; i<sm->class_cnt*sm->state_cnt; ++i ) {
 	    OTLookup *otl;
 	    otl = sm->state[i].u.context.mark_lookup;
@@ -686,7 +686,7 @@ static void BuildASM(struct node *node,struct att_dlg *att) {
     }
 
     lines = NULL;
-    space = xmalloc1( 81*sm->class_cnt+40 );
+    space = xmalloc( 81*sm->class_cnt+40 );
     for ( i=0; i<2; ++i ) {
 	len = 0;
 
@@ -698,7 +698,7 @@ static void BuildASM(struct node *node,struct att_dlg *att) {
 	for ( j=4; j<sm->class_cnt ; ++j ) {
 	    if ( i ) {
 		sprintf(buf, _("Class %d: "), j);
-		lines[len].label = xmalloc1((strlen(buf)+strlen(sm->classes[j])+1));
+		lines[len].label = xmalloc((strlen(buf)+strlen(sm->classes[j])+1));
 		strcpy(lines[len].label,buf);
 		strcat(lines[len].label,sm->classes[j]);
 		lines[len].parent = node;
@@ -972,7 +972,7 @@ static void BuildPST(struct node *node,struct att_dlg *att) {
 	    }
 	}
 	if ( !doit ) {
-	    lbuf = xmalloc1(maxl*sizeof(unichar_t));
+	    lbuf = xmalloc(maxl*sizeof(unichar_t));
 	    node->children = lines = xcalloc(cnt+1,sizeof(struct node));
 	    node->cnt = cnt;
 	} else
@@ -1305,7 +1305,7 @@ static void BuildMClass(struct node *node,struct att_dlg *att) {
     node->cnt = _sf->mark_class_cnt-1;
     for ( i=1; i<_sf->mark_class_cnt; ++i ) {
 	glyphs[i-1].parent = node;
-	temp = xmalloc1((strlen(_sf->mark_classes[i]) + strlen(_sf->mark_class_names[i]) + 4));
+	temp = xmalloc((strlen(_sf->mark_classes[i]) + strlen(_sf->mark_class_names[i]) + 4));
 	strcpy(temp,_sf->mark_class_names[i]);
 	strcat(temp,": ");
 	strcat(temp,_sf->mark_classes[i]);
@@ -2949,7 +2949,7 @@ static void BuildFCmpNodes(struct att_dlg *att, SplineFont *sf1, SplineFont *sf2
 	rewind(tmp);
 	memset(&nf,0,sizeof(nf));
 	nf.file = tmp;
-	nf.linebuf = xmalloc1( nf.linemax = 300 );
+	nf.linebuf = xmalloc( nf.linemax = 300 );
 	ReadKids(&nf,0,&tables[0]);
 	free(nf.linebuf);
     }
@@ -2970,7 +2970,7 @@ static void FontCmpDlg(FontView *fv1, FontView *fv2,int flags) {
     else
 	strcpy( buffer, _("Font Compare")); 
 
-    att = xmalloc1(sizeof(struct att_dlg));
+    att = xmalloc(sizeof(struct att_dlg));
     ShowAttCreateDlg(att, sf1, dt_font_comp, buffer);
     att->fv1 = fv1; att->fv2 = fv2;
 

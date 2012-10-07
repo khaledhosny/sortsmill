@@ -521,11 +521,11 @@ static int pdf_findfonts(struct pdfcontext *pc) {
     int i, j, k=0, dnum, cnum;
     char *pt, *tpt, *cmap, *desc;
 
-    pc->fontobjs = xmalloc1(pc->ocnt*sizeof(long));
-    pc->cmapobjs = xmalloc1(pc->ocnt*sizeof(long));
+    pc->fontobjs = xmalloc(pc->ocnt*sizeof(long));
+    pc->cmapobjs = xmalloc(pc->ocnt*sizeof(long));
     pc->cmap_from_cid = xcalloc(pc->ocnt,sizeof(int));
     memset(pc->cmapobjs,-1,sizeof(long));
-    pc->fontnames = xmalloc1(pc->ocnt*sizeof(char *));
+    pc->fontnames = xmalloc(pc->ocnt*sizeof(char *));
     /* First look for CID-keyed fonts with a pointer to a ToUnicode CMap */
     for ( i=1; i<pc->ocnt; ++i ) if ( pc->objs[i]!=-1 ) {	/* Object 0 is always unused */
 	if ( pdf_findobject(pc,i) && pdf_readdict(pc) ) {
@@ -671,7 +671,7 @@ return( 0 );
 return( 0 );
     if ( fscanf( pdf, "%d", &top_ref )!=1 )
 return( 0 );
-    pc->pages = xmalloc1(pc->ocnt*sizeof(long));
+    pc->pages = xmalloc(pc->ocnt*sizeof(long));
     pdf_addpages(pc,top_ref);
 return( pc->pcnt );
 }
@@ -775,7 +775,7 @@ static int pdf_zfilter(FILE *to,FILE *from) {
 	LogError( _("Flate decompression failed.\n") );
 return ret;
     }
-    in = xmalloc1(Z_CHUNK); out = xmalloc1(Z_CHUNK);
+    in = xmalloc(Z_CHUNK); out = xmalloc(Z_CHUNK);
 
     do {
 	strm.avail_in = fread(in,1,Z_CHUNK,from);
@@ -1981,7 +1981,7 @@ return( NULL );
 	setlocale(LC_NUMERIC,oldloc);
 return( NULL );
     }
-    list = xmalloc1((pc.fcnt+1)*sizeof(char *));
+    list = xmalloc((pc.fcnt+1)*sizeof(char *));
     for ( i=0; i<pc.fcnt; ++i )
 	list[i] = copy( pc.fontnames[i]);
     list[i] = NULL;
@@ -2042,7 +2042,7 @@ return( NULL );
     } else {
 	char **names;
 	int choice;
-	names = xmalloc1((pc.fcnt+1)*sizeof(unichar_t *));
+	names = xmalloc((pc.fcnt+1)*sizeof(unichar_t *));
 	for ( i=0; i<pc.fcnt; ++i )
 	    names[i] = copy(pc.fontnames[i]);
 	names[i] = NULL;

@@ -923,7 +923,7 @@ void SCOrderAP(SplineChar *sc) {
     if ( !out )
 return;
 
-    array = xmalloc1(cnt*sizeof(AnchorPoint *));
+    array = xmalloc(cnt*sizeof(AnchorPoint *));
     for ( i=0, ap=sc->anchor; ap!=NULL; ++i, ap=ap->next )
 	array[i] = ap;
     for ( i=0; i<cnt-1; ++i ) {

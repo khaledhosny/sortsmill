@@ -1737,8 +1737,8 @@ static TPoint *SplinesFigureTPsBetween(SplinePoint *from, SplinePoint *to,
     break;
     }
     if ( cnt>10 ) {
-	lens = xmalloc1(cnt*sizeof(bigreal));
-	cnts = xmalloc1(cnt*sizeof(int));
+	lens = xmalloc(cnt*sizeof(bigreal));
+	cnts = xmalloc(cnt*sizeof(int));
     }
     cnt = 0; len = 0;
     for ( np = from->next->to; ; np = np->next->to ) {
@@ -1759,7 +1759,7 @@ static TPoint *SplinesFigureTPsBetween(SplinePoint *from, SplinePoint *to,
     } else
 	pcnt = 2*cnt;
 
-    tp = xmalloc1((pcnt+1)*sizeof(TPoint)); i = 0;
+    tp = xmalloc((pcnt+1)*sizeof(TPoint)); i = 0;
     if ( len==0 ) {
 	for ( i=0; i<=pcnt; ++i ) {
 	    tp[i].t = i/(pcnt);
@@ -2334,7 +2334,7 @@ static int SplinesRemoveBetweenMaybe(SplineChar *sc,
 return( false );
 
     tp = SplinesFigureTPsBetween(from,to,&tot);
-    tp2 = xmalloc1((tot+1)*sizeof(TPoint));
+    tp2 = xmalloc((tot+1)*sizeof(TPoint));
     memcpy(tp2,tp,tot*sizeof(TPoint));
 
     if ( !(flags&sf_ignoreslopes) )
@@ -4089,7 +4089,7 @@ SplineFont *SplineFontBlank(int charcnt) {
 	strcpy( buffer, "Created with FontForge 2.0 (http://fontforge.sf.net)" );
     sf->copyright = copy(buffer);
     if ( xuid!=NULL ) {
-	sf->xuid = xmalloc1(strlen(xuid)+20);
+	sf->xuid = xmalloc(strlen(xuid)+20);
 	sprintf(sf->xuid,"[%s %d]", xuid, (rand()&0xffffff));
     }
     time(&now);
@@ -4142,7 +4142,7 @@ return;
 	val = (val+1)&0xffffff;
     }
 
-    new = xmalloc1(pt-sf->xuid+12);
+    new = xmalloc(pt-sf->xuid+12);
     strncpy(new,sf->xuid,pt-sf->xuid);
     npt = new + (pt-sf->xuid);
     if ( npt==new ) *npt++ = '[';
@@ -5307,12 +5307,12 @@ void SFFigureGrid(SplineFont *sf) {
     }
 
     if ( hcnt!=0 && sf->hsnaps==NULL ) {
-	sf->hsnaps = xmalloc1((hcnt+1)*sizeof(int));
+	sf->hsnaps = xmalloc((hcnt+1)*sizeof(int));
 	memcpy(sf->hsnaps,hsnaps,hcnt*sizeof(int));
 	sf->hsnaps[hcnt] = 0x80000000;
     }
     if ( vcnt!=0 && sf->vsnaps==NULL ) {
-	sf->vsnaps = xmalloc1((vcnt+1)*sizeof(int));
+	sf->vsnaps = xmalloc((vcnt+1)*sizeof(int));
 	memcpy(sf->vsnaps,vsnaps,vcnt*sizeof(int));
 	sf->vsnaps[vcnt] = 0x80000000;
     }

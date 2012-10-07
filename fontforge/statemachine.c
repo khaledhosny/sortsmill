@@ -154,7 +154,7 @@ static struct asm_state *StateCopy(struct asm_state *old,int old_class_cnt,int o
 	    for ( j=0; j<minclass; ++j ) {
 		struct asm_state *this = &new[i*new_class_cnt+j];
 		int16 *temp;
-		temp = xmalloc1(this->u.kern.kcnt*sizeof(int16));
+		temp = xmalloc(this->u.kern.kcnt*sizeof(int16));
 		memcpy(temp,this->u.kern.kerns,this->u.kern.kcnt*sizeof(int16));
 		this->u.kern.kerns = temp;
 	    }
@@ -243,7 +243,7 @@ static char *copy_count(GWindow gw,int cid,int *cnt) {
 return( NULL );
     }
 
-    ret = pt = xmalloc1(u_strlen(u)+1);
+    ret = pt = xmalloc(u_strlen(u)+1);
     c = 0;
     for ( upt=u; *upt; ) {
 	if ( *upt==' ' ) {
@@ -373,7 +373,7 @@ return( false );
 	if ( kerns==0 )
 	    this->u.kern.kerns = NULL;
 	else {
-	    this->u.kern.kerns = xmalloc1(kerns*sizeof(int16));
+	    this->u.kern.kerns = xmalloc(kerns*sizeof(int16));
 	    memcpy(this->u.kern.kerns,kbuf,kerns*sizeof(int16));
 	}
     } else if ( smd->sm->type==asm_context ) {
@@ -852,7 +852,7 @@ static int SMD_Ok(GGadget *g, GEvent *e) {
 	for ( i=4; i<sm->class_cnt; ++i )
 	    free(sm->classes[i]);
 	free(sm->classes);
-	sm->classes = xmalloc1(smd->class_cnt*sizeof(char *));
+	sm->classes = xmalloc(smd->class_cnt*sizeof(char *));
 	sm->classes[0] = sm->classes[1] = sm->classes[2] = sm->classes[3] = NULL;
 	sm->class_cnt = smd->class_cnt;
     for ( i=4; i<sm->class_cnt; ++i ) {

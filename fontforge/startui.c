@@ -483,7 +483,7 @@ static void
 AddR (char *name, char *val)
 {
   /* Add this command line value to this GUI resource. */
-  char *full = xmalloc1 (strlen (name) + strlen (val) + 4);
+  char *full = xmalloc (strlen (name) + strlen (val) + 4);
   strcpy (full, name);
   strcat (full, ": ");
   strcat (full, val);

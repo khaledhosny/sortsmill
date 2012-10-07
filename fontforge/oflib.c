@@ -114,7 +114,7 @@ return( str2 );
 return( str1 );
 
     len = strlen(str1);
-    ret = xmalloc1(len+strlen(str2)+1);
+    ret = xmalloc(len+strlen(str2)+1);
     strcpy(ret,str1);
     strcpy(ret+len,str2);
     free(str1); free(str2);
@@ -1144,7 +1144,7 @@ return;
 	fclose(cur->result);
 return;
     }
-    name = xmalloc1(strlen(getOFLibDir()) + strlen(pt) + 10 );
+    name = xmalloc(strlen(getOFLibDir()) + strlen(pt) + 10 );
     sprintf( name,"%s%s", getOFLibDir(), pt);
     final = fopen(name,"w");
     if ( final==NULL ) {
@@ -1250,7 +1250,7 @@ static void HttpListStuff(OFLibDlg *d) {
     if ( d->databuf==NULL ) {
 	/* We're just starting up */
 	d->datalen = 128*1024;		/* More than twice the size of the largest page on OFLib */
-	d->databuf = xmalloc1(d->datalen);
+	d->databuf = xmalloc(d->datalen);
 	pthread_mutex_init(&d->http_thread_can_do_stuff,NULL);
 	pthread_mutex_init(&d->http_thread_done,NULL);
 	pthread_mutex_lock(&d->http_thread_can_do_stuff);
@@ -1438,7 +1438,7 @@ return( true );
 	    pt = strrchr(du->url,'/');
 	    if ( pt==NULL )
 return( true );
-	    name = xmalloc1(strlen(getOFLibDir()) + strlen(pt) + 10 );
+	    name = xmalloc(strlen(getOFLibDir()) + strlen(pt) + 10 );
 	    sprintf( name,"%s%s", getOFLibDir(), pt);
 	    final = fopen(name,"w");
 	    if ( final==NULL )
@@ -1468,7 +1468,7 @@ return( true );
 	    pt = strrchr(du->url,'/');
 	    if ( pt==NULL )
 return( true );
-	    name = xmalloc1(strlen(getOFLibDir()) + strlen(pt) + strlen( ".png" ) + 10 );
+	    name = xmalloc(strlen(getOFLibDir()) + strlen(pt) + strlen( ".png" ) + 10 );
 	    sprintf( name, "%s%s", getOFLibDir(), pt );
 	    pt = strrchr(name,'.');
 	    if ( pt==NULL || pt<strrchr(name,'/') )

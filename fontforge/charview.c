@@ -5249,7 +5249,7 @@ return;
 	temp = *cv->b.sc;
 	cv->b.sc->dependents = NULL;
 	lc = cv->b.sc->layer_cnt;
-	undoes = xmalloc1(lc*sizeof(Undoes *));
+	undoes = xmalloc(lc*sizeof(Undoes *));
 	for ( layer=0; layer<lc; ++layer ) {
 	    undoes[layer] = cv->b.sc->layers[layer].undoes;
 	    cv->b.sc->layers[layer].undoes = NULL;
@@ -5881,7 +5881,7 @@ static SplineChar **GlyphsMatchingAP(SplineFont *sf, AnchorPoint *ap) {
 	 if ( !k ) {
 	     if ( gcnt==0 )
 return( NULL );
-	     glyphs = xmalloc1((gcnt+1)*sizeof(SplineChar *));
+	     glyphs = xmalloc((gcnt+1)*sizeof(SplineChar *));
 	 } else
 	     glyphs[gcnt] = NULL;
      }
@@ -7816,7 +7816,7 @@ return;
 return;
 
     CVPreserveState(&cv->b);
-    newspiros = xmalloc1((sel->spiro_max+1)*sizeof(spiro_cp));
+    newspiros = xmalloc((sel->spiro_max+1)*sizeof(spiro_cp));
     memcpy(newspiros,sel->spiros+which,(sel->spiro_cnt-1-which)*sizeof(spiro_cp));
     memcpy(newspiros+(sel->spiro_cnt-1-which),sel->spiros,which*sizeof(spiro_cp));
     memcpy(newspiros+sel->spiro_cnt-1,sel->spiros+sel->spiro_cnt-1,sizeof(spiro_cp));

@@ -1212,7 +1212,7 @@ void FVInsertInCID(FontViewBase *fv,SplineFont *sf) {
     SplineFont **subs;
     int i;
 
-    subs = xmalloc1((cidmaster->subfontcnt+1)*sizeof(SplineFont *));
+    subs = xmalloc((cidmaster->subfontcnt+1)*sizeof(SplineFont *));
     for ( i=0; i<cidmaster->subfontcnt && cidmaster->subfonts[i]!=fv->sf; ++i )
 	subs[i] = cidmaster->subfonts[i];
     subs[i] = sf;
@@ -1657,7 +1657,7 @@ return;
 	/* we can only revert to backup if it's an sfd file. So we use filename*/
 	/*  here. In the normal case we revert to whatever file we read it from*/
 	/*  (sfd or not) so we use origname */
-	char *buf = xmalloc1(strlen(old->filename)+20);
+	char *buf = xmalloc(strlen(old->filename)+20);
 	strcpy(buf,old->filename);
 	if ( old->compression!=0 ) {
 	    char *tmpfile;
@@ -1679,7 +1679,7 @@ return;
     } else {
 	if ( old->compression!=0 ) {
 	    char *tmpfile;
-	    char *buf = xmalloc1(strlen(old->filename)+20);
+	    char *buf = xmalloc(strlen(old->filename)+20);
 	    strcpy(buf,old->filename);
 	    strcat(buf,compressors[old->compression-1].ext);
 	    tmpfile = Decompress(buf,old->compression-1);
@@ -1784,7 +1784,7 @@ void FVRevertGlyph(FontViewBase *fv) {
 		temp = *tsc;
 		tsc->dependents = NULL;
 		lc = tsc->layer_cnt;
-		undoes = xmalloc1(lc*sizeof(Undoes *));
+		undoes = xmalloc(lc*sizeof(Undoes *));
 		for ( layer=0; layer<lc; ++layer ) {
 		    undoes[layer] = tsc->layers[layer].undoes;
 		    tsc->layers[layer].undoes = NULL;

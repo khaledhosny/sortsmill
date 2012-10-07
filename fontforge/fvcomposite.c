@@ -1648,7 +1648,7 @@ static void BCClearAndCopyBelow(BDFFont *bdf,int togid,int fromgid, int ymax) {
 	bc->ymax = ymax;
 	bc->bytes_per_line = rbc->bytes_per_line;
 	bc->width = rbc->width;
-	bc->bitmap = xmalloc1(bc->bytes_per_line*(bc->ymax-bc->ymin+1));
+	bc->bitmap = xmalloc(bc->bytes_per_line*(bc->ymax-bc->ymin+1));
 	memcpy(bc->bitmap,rbc->bitmap+(rbc->ymax-ymax)*rbc->bytes_per_line,
 		bc->bytes_per_line*(bc->ymax-bc->ymin+1));
     }
@@ -1814,7 +1814,7 @@ static SplineChar *GetGoodAccentGlyph(SplineFont *sf, int uni, int basech,
 	int scnt=0, i;
 
 	if ( rsc!=NULL ) {
-	    uc_accent = xmalloc1(strlen(rsc->name)+11);
+	    uc_accent = xmalloc(strlen(rsc->name)+11);
 	    strcpy(uc_accent,rsc->name);
 	} else
 	    uc_accent = NULL;

@@ -342,7 +342,7 @@ static void *genunicodedata(void *_gt,int32 *len) {
     SFTextArea *st = _gt;
     unichar_t *temp;
     *len = st->sel_end-st->sel_start + 1;
-    temp = xmalloc1((*len+2)*sizeof(unichar_t));
+    temp = xmalloc((*len+2)*sizeof(unichar_t));
     temp[0] = 0xfeff;		/* KDE expects a byte order flag */
     u_strncpy(temp+1,st->li.text+st->sel_start,st->sel_end-st->sel_start);
     temp[*len+1] = 0;
@@ -421,14 +421,14 @@ static void SFTextAreaGrabSelection(SFTextArea *st, enum selnames sel ) {
 	uint16 *u2temp;
 
 	GDrawGrabSelection(st->g.base,sel);
-	temp = xmalloc1((st->sel_end-st->sel_start + 2)*sizeof(unichar_t));
+	temp = xmalloc((st->sel_end-st->sel_start + 2)*sizeof(unichar_t));
 	temp[0] = 0xfeff;		/* KDE expects a byte order flag */
 	u_strncpy(temp+1,st->li.text+st->sel_start,st->sel_end-st->sel_start);
 	ctemp = u2utf8_copy(temp);
 	GDrawAddSelectionType(st->g.base,sel,"text/plain;charset=ISO-10646-UCS-4",temp,u_strlen(temp),
 		sizeof(unichar_t),
 		NULL,NULL);
-	u2temp = xmalloc1((st->sel_end-st->sel_start + 2)*sizeof(uint16));
+	u2temp = xmalloc((st->sel_end-st->sel_start + 2)*sizeof(uint16));
 	for ( i=0; temp[i]!=0; ++i )
 	    u2temp[i] = temp[i];
 	u2temp[i] = 0;
@@ -547,7 +547,7 @@ static void SFTextAreaPaste(SFTextArea *st,enum selnames sel) {
 	    temp2 = GDrawRequestSelection(st->g.base,sel,"Unicode",&len);
 	if ( temp2!=NULL ) {
 	    int i;
-	    temp = xmalloc1((len/2+1)*sizeof(unichar_t));
+	    temp = xmalloc((len/2+1)*sizeof(unichar_t));
 	    for ( i=0; temp2[i]!=0; ++i )
 		temp[i] = temp2[i];
 	    temp[i] = 0;
@@ -810,7 +810,7 @@ return;
 
     basename = NULL;
     if ( st->li.fontlist!=NULL ) {
-	basename = xmalloc1(strlen(st->li.fontlist->fd->sf->fontname)+8);
+	basename = xmalloc(strlen(st->li.fontlist->fd->sf->fontname)+8);
 	strcpy(basename, st->li.fontlist->fd->sf->fontname);
 #ifdef _NO_LIBPNG
 	strcat(basename,".bmp");
@@ -1393,7 +1393,7 @@ static int SFTextAreaDoDrop(SFTextArea *st,GEvent *event,int endpos) {
 		unichar_t *old=st->li.oldtext, *temp;
 		int pos=0;
 		if ( event->u.mouse.state&ksm_control ) {
-		    temp = xmalloc1((u_strlen(st->li.text)+st->sel_end-st->sel_start+1)*sizeof(unichar_t));
+		    temp = xmalloc((u_strlen(st->li.text)+st->sel_end-st->sel_start+1)*sizeof(unichar_t));
 		    memcpy(temp,st->li.text,endpos*sizeof(unichar_t));
 		    memcpy(temp+endpos,st->li.text+st->sel_start,
 			    (st->sel_end-st->sel_start)*sizeof(unichar_t));

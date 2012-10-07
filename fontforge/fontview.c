@@ -520,7 +520,7 @@ static int SaveAs_FormatChange(GGadget *g, GEvent *e) {
 	char *oldname = GGadgetGetTitle8(fc);
 	int *_s2d = GGadgetGetUserData(g);
 	int s2d = GGadgetIsChecked(g);
-	char *pt, *newname = xmalloc1(strlen(oldname)+8);
+	char *pt, *newname = xmalloc(strlen(oldname)+8);
 #ifdef VMS
 	char *pt2;
 
@@ -571,7 +571,7 @@ int _FVMenuSaveAs(FontView *fv)
       SplineFont *sf = fv->b.cidmaster?fv->b.cidmaster:
 	fv->b.sf->mm!=NULL?fv->b.sf->mm->normal:fv->b.sf;
       char *fn = sf->defbasefilename ? sf->defbasefilename : sf->fontname;
-      temp = xmalloc1((strlen(fn)+10));
+      temp = xmalloc((strlen(fn)+10));
       strcpy(temp,fn);
       if ( sf->defbasefilename!=NULL )
 	/* Don't add a default suffix, they've already told us what name to use */;
@@ -966,7 +966,7 @@ return;
 	do {
 	    fpt = strstr(file,"; ");
 	    if ( fpt!=NULL ) *fpt = '\0';
-	    full = xmalloc1(strlen(temp)+1+strlen(file)+1);
+	    full = xmalloc(strlen(temp)+1+strlen(file)+1);
 	    strcpy(full,temp); strcat(full,"/"); strcat(full,file);
 	    ViewPostScriptFont(full,0);
 	    file = fpt+2;
@@ -2863,7 +2863,7 @@ static void FVMenuDisplaySubs(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *
 	    if ( cnt==0 )
 	break;
 	    if ( names==NULL )
-		names = xmalloc1((cnt+3) * sizeof(char *));
+		names = xmalloc((cnt+3) * sizeof(char *));
 	    else {
 		names[cnt++] = "-";
 		names[cnt++] = _("New Lookup Subtable...");
@@ -3430,7 +3430,7 @@ return;
     }
     if ( file!=NULL )
 	len += 2+strlen(file);
-    title = xmalloc1((len+1)*sizeof(unichar_t));
+    title = xmalloc((len+1)*sizeof(unichar_t));
     uc_strcpy(title,fv->b.sf->fontname);
     if ( fv->b.sf->changed )
 	uc_strcat (title, "*");
@@ -3893,7 +3893,7 @@ static void fllistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
 	    mi->ti.disabled = true;
 	    if ( fv->b.sf->filename!=NULL ) {
 		if ( fv->b.sf->backedup == bs_dontknow ) {
-		    char *buf = xmalloc1(strlen(fv->b.sf->filename)+20);
+		    char *buf = xmalloc(strlen(fv->b.sf->filename)+20);
 		    strcpy(buf,fv->b.sf->filename);
 		    if ( fv->b.sf->compression!=0 )
 			strcat(buf,compressors[fv->b.sf->compression-1].ext);
@@ -5548,23 +5548,23 @@ return( feat_sc );
 	feat_sc = SFSplineCharCreate(sf);
 	feat_sc->unicodeenc = uni;
 	if ( uni!=-1 ) {
-	    feat_sc->name = xmalloc1(8);
+	    feat_sc->name = xmalloc(8);
 	    feat_sc->unicodeenc = uni;
 	    sprintf( feat_sc->name,"uni%04X", uni );
 	} else if ( fv->cur_subtable->suffix!=NULL ) {
-	    feat_sc->name = xmalloc1(strlen(base_sc->name)+strlen(fv->cur_subtable->suffix)+2);
+	    feat_sc->name = xmalloc(strlen(base_sc->name)+strlen(fv->cur_subtable->suffix)+2);
 	    sprintf( feat_sc->name, "%s.%s", base_sc->name, fv->cur_subtable->suffix );
 	} else if ( fl==NULL ) {
 	    feat_sc->name = strconcat(base_sc->name,".unknown");
 	} else if ( fl->ismac ) {
 	    /* mac feature/setting */
-	    feat_sc->name = xmalloc1(strlen(base_sc->name)+14);
+	    feat_sc->name = xmalloc(strlen(base_sc->name)+14);
 	    sprintf( feat_sc->name,"%s.m%d_%d", base_sc->name,
 		    (int) (fl->featuretag>>16),
 		    (int) ((fl->featuretag)&0xffff) );
 	} else {
 	    /* OpenType feature tag */
-	    feat_sc->name = xmalloc1(strlen(base_sc->name)+6);
+	    feat_sc->name = xmalloc(strlen(base_sc->name)+6);
 	    sprintf( feat_sc->name,"%s.%c%c%c%c", base_sc->name,
 		    (int) (fl->featuretag>>24),
 		    (int) ((fl->featuretag>>16)&0xff),
@@ -6266,7 +6266,7 @@ static void *ddgencharlist(void *_fv,int32 *len) {
 
     for ( i=cnt=0; i<map->enccount; ++i ) if ( fv->b.selected[i] && (gid=map->map[i])!=-1 && sf->glyphs[gid]!=NULL )
 	cnt += strlen(sf->glyphs[gid]->name)+1;
-    data = xmalloc1(cnt+1); data[0] = '\0';
+    data = xmalloc(cnt+1); data[0] = '\0';
     for ( cnt=0, j=1 ; j<=fv->sel_index; ++j ) {
 	for ( i=cnt=0; i<map->enccount; ++i )
 	    if ( fv->b.selected[i] && (gid=map->map[i])!=-1 && sf->glyphs[gid]!=NULL ) {
@@ -7596,7 +7596,7 @@ char *GlyphSetFromSelection(SplineFont *sf,int def_layer,char *current) {
 		}
 	    }
 	    if ( k==0 )
-		ret = rpt = xmalloc1(len+1);
+		ret = rpt = xmalloc(len+1);
 	    else if ( rpt!=ret && rpt[-1]==' ' )
 		rpt[-1]='\0';
 	    else

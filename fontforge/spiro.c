@@ -77,7 +77,7 @@ return( NULL );
 	if ( !any )
 	    TaggedSpiroCPsToBezier(spiros,bc);
 	else {
-	    nspiros = xmalloc1((n+1)*sizeof(spiro_cp));
+	    nspiros = xmalloc((n+1)*sizeof(spiro_cp));
 	    memcpy(nspiros,spiros,(n+1)*sizeof(spiro_cp));
 	    for ( n=0; nspiros[n].ty!=SPIRO_END; ++n )
 		nspiros[n].ty &= ~0x80;
@@ -112,7 +112,7 @@ spiro_cp *SplineSet2SpiroCP(SplineSet *ss,uint16 *_cnt) {
     break;
     }
 
-    ret = xmalloc1((3*cnt+1)*sizeof(spiro_cp));
+    ret = xmalloc((3*cnt+1)*sizeof(spiro_cp));
 
     for ( cnt=0, sp=ss->first; ; ) {
 	ret[cnt].x = sp->me.x;
@@ -175,7 +175,7 @@ spiro_cp *SpiroCPCopy(spiro_cp *spiros,uint16 *_cnt) {
     if ( spiros==NULL )
 return( NULL );
     for ( n=0; spiros[n].ty!='z'; ++n );
-    nspiros = xmalloc1((n+1)*sizeof(spiro_cp));
+    nspiros = xmalloc((n+1)*sizeof(spiro_cp));
     memcpy(nspiros,spiros,(n+1)*sizeof(spiro_cp));
     if ( _cnt != NULL ) *_cnt = n+1;
 return( nspiros );

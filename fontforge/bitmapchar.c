@@ -83,7 +83,7 @@ VISIBLE struct std_bdf_props StandardProps[] = {
 	{ "FIGURE_WIDTH", prt_int|prt_property, true },
 	{ "AVG_LOWERCASE_WIDTH", prt_int|prt_property, true },
 	{ "AVG_UPPERCASE_WIDTH", prt_int|prt_property, true },
-#ifdef FONTFORGE_CONFIG_BDF_GLYPH_RANGES
+#if FONTFORGE_CONFIG_BDF_GLYPH_RANGES
 	{ "_XFREE86_GLYPH_RANGES", prt_string|prt_property, true },
 #endif
 	{ "WEIGHT", prt_uint|prt_property, false },
@@ -247,7 +247,7 @@ static void BDFPropAppendString(BDFFont *bdf,char *keyword,char *value) {
     bdf->props[i].u.str = copy(value);
 }
 
-#ifdef FONTFORGE_CONFIG_BDF_GLYPH_RANGES
+#if FONTFORGE_CONFIG_BDF_GLYPH_RANGES
 static void BDFPropClearKey(BDFFont *bdf,char *keyword) {
     int i, j;
 
@@ -385,7 +385,7 @@ BDFProperties *BdfPropsCopy(BDFProperties *props, int cnt ) {
 
     if ( cnt==0 )
 return( NULL );
-    ret = xmalloc1(cnt*sizeof(BDFProperties));
+    ret = xmalloc(cnt*sizeof(BDFProperties));
     memcpy(ret,props,cnt*sizeof(BDFProperties));
     for ( i=0; i<cnt; ++i ) {
 	ret[i].name = copy(ret[i].name);
@@ -647,7 +647,7 @@ void Default_XLFD(BDFFont *bdf,EncMap *map, int res) {
 }
 
 static int GenerateGlyphRanges(BDFFont *font) {
-#ifdef FONTFORGE_CONFIG_BDF_GLYPH_RANGES
+#if FONTFORGE_CONFIG_BDF_GLYPH_RANGES
     char buffer[300], *pt, *end, add[30];
     int i, j, max, cnt=0;
 

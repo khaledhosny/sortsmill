@@ -267,11 +267,6 @@ test 4 -le ${ac_cv_sizeof_unsigned_int} || \
 
 AX_PTHREAD
 
-VISIBLE=''
-test x"${HAVE_VISIBILITY}" = x1 && VISIBLE='__attribute__((__visibility__("default")))'
-AC_DEFINE_UNQUOTED([VISIBLE],[${VISIBLE}],
-        [Define to the attribute for a visible symbol in a shared library.])
-
 WARNING_CFLAGS=""
 FONTFORGE_COMPILER_FLAGS([WARNING_CFLAGS],
         [-Wunused -Wreturn-type
@@ -308,17 +303,7 @@ FONTFORGE_ICONV_CHOOSE_ENCODING([MY_ICONV_UTF8],[UTF-8 utf-8 UTF8 utf8])
 FONTFORGE_ICONV_CHOOSE_ENCODING([MY_ICONV_UTF7],[UTF-7 utf-7 UTF7 utf7])
 FONTFORGE_ICONV_CHOOSE_ENCODING([MY_ICONV_MAC],[MACINTOSH macintosh MAC mac])
 
-AH_BOTTOM(
-[/* The iconv encoding to use for the unichar_t type.
-   Note that we hope to get rid of that type. */
-#ifdef WORDS_BIGENDIAN
-# define MY_ICONV_ENCODING_UNICHAR_T MY_ICONV_UCS4BE
-# define MY_ICONV_STRING_UNICHAR_T MY_ICONV_UCS4BE_STRING
-#else
-# define MY_ICONV_ENCODING_UNICHAR_T MY_ICONV_UCS4LE
-# define MY_ICONV_STRING_UNICHAR_T MY_ICONV_UCS4LE_STRING
-#endif
-])
+AH_BOTTOM([#include <config-extra.h>])
 
 #--------------------------------------------------------------------------
 
@@ -330,10 +315,12 @@ AM_CONDITIONAL([MACINTOSH],[test x"${gww_ismac}" = xyes])
 # "make dist".
 AM_CONDITIONAL([FONTTOOLS],[test x != x])
 
+FONTFORGE_OBSCURE_CONFIGURATION
 FONTFORGE_SET_MY_CFLAGS
 FONTFORGE_SET_MY_LIBS
 FONTFORGE_CREATE_MAKEFILES
 FONTFORGE_CREATE_INDENT_PRO
+AC_CONFIG_FILES([inc/config-extra.h])
 AC_CONFIG_FILES([scheme/fontforge.scm])
 AC_CONFIG_FILES([pycontrib/site_init.py])
 AC_CONFIG_FILES([fontforge/darwinsetup],[chmod +x fontforge/darwinsetup])

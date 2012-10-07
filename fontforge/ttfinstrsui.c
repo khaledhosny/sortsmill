@@ -311,7 +311,7 @@ static void IVOk(InstrDlg *iv) {
 	    if ( id->instr_cnt==0 )
 		sc->ttf_instrs = NULL;
 	    else {
-		sc->ttf_instrs = xmalloc1( id->instr_cnt );
+		sc->ttf_instrs = xmalloc( id->instr_cnt );
 		memcpy(sc->ttf_instrs,id->instrs,id->instr_cnt );
 	    }
 	    for ( cv=(CharView *) (sc->views); cv!=NULL; cv=(CharView *) (cv->b.next) )
@@ -343,7 +343,7 @@ static void IVOk(InstrDlg *iv) {
 		    tab->tag = id->tag;
 		}
 		free( tab->data );
-		tab->data = xmalloc1( id->instr_cnt );
+		tab->data = xmalloc( id->instr_cnt );
 		memcpy(tab->data,id->instrs,id->instr_cnt );
 		tab->len = id->instr_cnt;
 	    }
@@ -925,7 +925,7 @@ return;
     id->instr_cnt = id->max = sc->ttf_instrs_len;
     id->sf = sc->parent;
     id->sc = sc;
-    id->instrs = xmalloc1(id->max+1);
+    id->instrs = xmalloc(id->max+1);
     if ( sc->ttf_instrs!=NULL )
 	memcpy(id->instrs,sc->ttf_instrs,id->instr_cnt);
     sprintf(title,_("TrueType Instructions for %.50s"),sc->name);
@@ -1152,8 +1152,8 @@ return( true );
 		tab->tag = sv->tag;
 		sv->table = tab;
 	    }
-	    sv->table->data = xmalloc1(sv->len);
-	    sf->cvt_names = xmalloc1(((sv->len>>1)+1)*sizeof(char *));
+	    sv->table->data = xmalloc(sv->len);
+	    sf->cvt_names = xmalloc(((sv->len>>1)+1)*sizeof(char *));
 	    for ( i=0; i<sv->len/2; ++i ) {
 		sv->table->data[i<<1] = (sv->edits[i]>>8)&0xff;
 		sv->table->data[(i<<1)+1] = sv->edits[i]&0xff;
@@ -1414,7 +1414,7 @@ static void cvtCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32 tag) {
 	tab = SFFindTable(sf->mm->normal,tag);
     if ( tab!=NULL ) {
 	sv->len = tab->len;
-	sv->edits = xmalloc1(tab->len+1);
+	sv->edits = xmalloc(tab->len+1);
 	sv->comments = xcalloc((tab->len/2+1),sizeof(char *));
 	for ( i=0; i<tab->len/2; ++i )
 	    sv->edits[i] = (tab->data[i<<1]<<8) | tab->data[(i<<1)+1];
@@ -1422,7 +1422,7 @@ static void cvtCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32 tag) {
 	    for ( i=0; i<tab->len/2 && sf->cvt_names[i]!=END_CVT_NAMES; ++i )
 		sv->comments[i] = copy(sf->cvt_names[i]);
     } else {
-	sv->edits = xmalloc1(2);
+	sv->edits = xmalloc(2);
 	sv->len = 0;
 	sv->comments = xcalloc(1,sizeof(char *));
     }
@@ -1974,7 +1974,7 @@ return;
 	id->sf = sf;
 	id->tag = tag;
 	id->instr_cnt = id->max = tab==NULL ? 0 : tab->len;
-	id->instrs = xmalloc1(id->max+1);
+	id->instrs = xmalloc(id->max+1);
 	if ( tab!=NULL && tab->data!=NULL )
 	    memcpy(id->instrs,tab->data,id->instr_cnt);
 	else

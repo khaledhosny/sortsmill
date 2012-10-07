@@ -56,7 +56,7 @@ return( class );
 }
 
 static char **ClassToNames(struct ttfinfo *info,int class_cnt,uint16 *class,int glyph_cnt) {
-    char **ret = xmalloc1(class_cnt*sizeof(char *));
+    char **ret = xmalloc(class_cnt*sizeof(char *));
     int *lens = xcalloc(class_cnt,sizeof(int));
     int i;
 
@@ -64,7 +64,7 @@ static char **ClassToNames(struct ttfinfo *info,int class_cnt,uint16 *class,int 
     for ( i=0 ; i<glyph_cnt; ++i ) if ( class[i]!=0 && info->chars[i]!=NULL && class[i]<class_cnt )
 	lens[class[i]] += strlen(info->chars[i]->name)+1;
     for ( i=1; i<class_cnt ; ++i )
-	ret[i] = xmalloc1(lens[i]+1);
+	ret[i] = xmalloc(lens[i]+1);
     memset(lens,0,class_cnt*sizeof(int));
     for ( i=0 ; i<glyph_cnt; ++i ) if ( class[i]!=0 && info->chars[i]!=NULL ) {
 	if ( class[i]<class_cnt ) {
@@ -119,7 +119,7 @@ return( NULL );
 	    }
 	}
 	if ( j==0 )
-	    ret = xmalloc1(len+1);
+	    ret = xmalloc(len+1);
 	else
 	    ret[len-1] = '\0';
     }
@@ -175,7 +175,7 @@ return( copy(""));
 	if ( info->chars[glyphs[i]]!=NULL )
 	    len += strlen(info->chars[glyphs[i]]->name)+1;
     }
-    ret = pt = xmalloc1(len+1); *pt = '\0';
+    ret = pt = xmalloc(len+1); *pt = '\0';
     for ( i=0 ; glyphs[i]!=0xffff; ++i ) if ( info->chars[glyphs[i]]!=NULL ) {
 	strcpy(pt,info->chars[glyphs[i]]->name);
 	pt += strlen(pt);
@@ -225,7 +225,7 @@ static uint16 *getCoverageTable(FILE *ttf, int coverage_offset, struct ttfinfo *
     format = getushort(ttf);
     if ( format==1 ) {
 	cnt = getushort(ttf);
-	glyphs = xmalloc1((cnt+1)*sizeof(uint16));
+	glyphs = xmalloc((cnt+1)*sizeof(uint16));
 	if ( ftell(ttf)+2*cnt > info->g_bounds ) {
 	    LogError( _("coverage table extends beyond end of table\n") );
 	    info->bad_ot = true;
@@ -410,7 +410,7 @@ return;
 	adjust->first_pixel_size = adjust->last_pixel_size = 0;
     } else {
 	c = adjust->last_pixel_size-adjust->first_pixel_size+1;
-	adjust->corrections = xmalloc1(c);
+	adjust->corrections = xmalloc(c);
 	if ( pack==1 ) {
 	    for ( i=0; i<c; i+=8 ) {
 		w = getushort(ttf);
@@ -550,7 +550,7 @@ return;
     if ( format==1 ) {
 	subtable->per_glyph_pst_or_kern = true;
 	cnt = getushort(ttf);
-	ps_offsets = xmalloc1(cnt*sizeof(uint16));
+	ps_offsets = xmalloc(cnt*sizeof(uint16));
 	for ( i=0; i<cnt; ++i )
 	    ps_offsets[i]=getushort(ttf);
 	glyphs = getCoverageTable(ttf,stoffset+coverage,info);
@@ -623,7 +623,7 @@ return;
 	    subtable->kc = kc;
 	    kc->first_cnt = c1_cnt; kc->second_cnt = c2_cnt;
 	    kc->subtable = subtable;
-	    kc->offsets = xmalloc1(c1_cnt*c2_cnt*sizeof(int16));
+	    kc->offsets = xmalloc(c1_cnt*c2_cnt*sizeof(int16));
 	    kc->adjusts = xcalloc(c1_cnt*c2_cnt,sizeof(DeviceTable));
 	    kc->firsts = ClassToNames(info,c1_cnt,class1,info->glyph_cnt);
 	    kc->seconds = ClassToNames(info,c2_cnt,class2,info->glyph_cnt);
@@ -723,7 +723,7 @@ return;
     cnt = getushort(ttf);
     if ( cnt==0 )
 return;
-    offsets = xmalloc1(cnt*sizeof(struct ee_offsets));
+    offsets = xmalloc(cnt*sizeof(struct ee_offsets));
     for ( i=0; i<cnt; ++i ) {
 	offsets[i].entry = getushort(ttf);
 	offsets[i].exit  = getushort(ttf);
@@ -797,7 +797,7 @@ static AnchorClass **MarkGlyphsProcessMarks(FILE *ttf,int markoffset,
 	info->bad_ot = true;
 return( NULL );
     }
-    at_offsets = xmalloc1(cnt*sizeof(struct mr));
+    at_offsets = xmalloc(cnt*sizeof(struct mr));
     for ( i=0; i<cnt; ++i ) {
 	at_offsets[i].class = getushort(ttf);
 	at_offsets[i].offset = getushort(ttf);
@@ -837,7 +837,7 @@ static void MarkGlyphsProcessBases(FILE *ttf,int baseoffset,
 	info->bad_ot = true;
 return;
     }
-    offsets = xmalloc1(basecnt*classcnt*sizeof(uint16));
+    offsets = xmalloc(basecnt*classcnt*sizeof(uint16));
     for ( i=0; i<basecnt*classcnt; ++i )
 	offsets[i] = getushort(ttf);
     for ( i=ibase=0; i<basecnt; ++i, ibase+= classcnt ) {
@@ -868,7 +868,7 @@ static void MarkGlyphsProcessLigs(FILE *ttf,int baseoffset,
 	info->bad_ot = true;
 return;
     }
-    loffsets = xmalloc1(basecnt*sizeof(uint16));
+    loffsets = xmalloc(basecnt*sizeof(uint16));
     for ( i=0; i<basecnt; ++i )
 	loffsets[i] = getushort(ttf);
     for ( i=0; i<basecnt; ++i ) {
@@ -882,7 +882,7 @@ return;
 	    info->bad_ot = true;
     continue;
 	}
-	aoffsets = xmalloc1(compcnt*classcnt*sizeof(uint16));
+	aoffsets = xmalloc(compcnt*classcnt*sizeof(uint16));
 	for ( k=0; k<compcnt*classcnt; ++k )
 	    aoffsets[k] = getushort(ttf);
 	for ( k=kbase=0; k<compcnt; ++k, kbase+=classcnt ) {
@@ -1026,7 +1026,7 @@ static void g___ContextSubTable1(FILE *ttf, int stoffset,
 
     coverage = getushort(ttf);
     rcnt = getushort(ttf);		/* glyph count in coverage table */
-    rules = xmalloc1(rcnt*sizeof(struct rule));
+    rules = xmalloc(rcnt*sizeof(struct rule));
     for ( i=0; i<rcnt; ++i )
 	rules[i].offsets = getushort(ttf)+stoffset;
     glyphs = getCoverageTable(ttf,stoffset+coverage,info);
@@ -1040,14 +1040,14 @@ return;
 	fseek(ttf,rules[i].offsets,SEEK_SET);
 	rules[i].scnt = getushort(ttf);
 	cnt += rules[i].scnt;
-	rules[i].subrules = xmalloc1(rules[i].scnt*sizeof(struct subrule));
+	rules[i].subrules = xmalloc(rules[i].scnt*sizeof(struct subrule));
 	for ( j=0; j<rules[i].scnt; ++j )
 	    rules[i].subrules[j].offset = getushort(ttf)+rules[i].offsets;
 	for ( j=0; j<rules[i].scnt; ++j ) {
 	    fseek(ttf,rules[i].subrules[j].offset,SEEK_SET);
 	    rules[i].subrules[j].gcnt = getushort(ttf);
 	    rules[i].subrules[j].scnt = getushort(ttf);
-	    rules[i].subrules[j].glyphs = xmalloc1((rules[i].subrules[j].gcnt+1)*sizeof(uint16));
+	    rules[i].subrules[j].glyphs = xmalloc((rules[i].subrules[j].gcnt+1)*sizeof(uint16));
 	    rules[i].subrules[j].glyphs[0] = glyphs[i];
 	    for ( k=1; k<rules[i].subrules[j].gcnt; ++k ) {
 		rules[i].subrules[j].glyphs[k] = getushort(ttf);
@@ -1061,7 +1061,7 @@ return;
 		 }
 	    }
 	    rules[i].subrules[j].glyphs[k] = 0xffff;
-	    rules[i].subrules[j].sl = xmalloc1(rules[i].subrules[j].scnt*sizeof(struct seqlookup));
+	    rules[i].subrules[j].sl = xmalloc(rules[i].subrules[j].scnt*sizeof(struct seqlookup));
 	    for ( k=0; k<rules[i].subrules[j].scnt; ++k ) {
 		rules[i].subrules[j].sl[k].seq = getushort(ttf);
 		if ( rules[i].subrules[j].sl[k].seq >= rules[i].subrules[j].gcnt+1 )
@@ -1138,7 +1138,7 @@ static void g___ChainingSubTable1(FILE *ttf, int stoffset,
 
     coverage = getushort(ttf);
     rcnt = getushort(ttf);		/* glyph count in coverage table */
-    rules = xmalloc1(rcnt*sizeof(struct rule));
+    rules = xmalloc(rcnt*sizeof(struct rule));
     for ( i=0; i<rcnt; ++i )
 	rules[i].offsets = getushort(ttf)+stoffset;
     glyphs = getCoverageTable(ttf,stoffset+coverage,info);
@@ -1152,7 +1152,7 @@ return;
 	fseek(ttf,rules[i].offsets,SEEK_SET);
 	rules[i].scnt = getushort(ttf);
 	cnt += rules[i].scnt;
-	rules[i].subrules = xmalloc1(rules[i].scnt*sizeof(struct subrule));
+	rules[i].subrules = xmalloc(rules[i].scnt*sizeof(struct subrule));
 	for ( j=0; j<rules[i].scnt; ++j )
 	    rules[i].subrules[j].offset = getushort(ttf)+rules[i].offsets;
 	for ( j=0; j<rules[i].scnt; ++j ) {
@@ -1163,7 +1163,7 @@ return;
 		info->bad_ot = true;
 return;
 	    }
-	    rules[i].subrules[j].bglyphs = xmalloc1((rules[i].subrules[j].bcnt+1)*sizeof(uint16));
+	    rules[i].subrules[j].bglyphs = xmalloc((rules[i].subrules[j].bcnt+1)*sizeof(uint16));
 	    for ( k=0; k<rules[i].subrules[j].bcnt; ++k )
 		rules[i].subrules[j].bglyphs[k] = getushort(ttf);
 	    rules[i].subrules[j].bglyphs[k] = 0xffff;
@@ -1174,7 +1174,7 @@ return;
 		info->bad_ot = true;
 return;
 	    }
-	    rules[i].subrules[j].glyphs = xmalloc1((rules[i].subrules[j].gcnt+1)*sizeof(uint16));
+	    rules[i].subrules[j].glyphs = xmalloc((rules[i].subrules[j].gcnt+1)*sizeof(uint16));
 	    rules[i].subrules[j].glyphs[0] = glyphs[i];
 	    for ( k=1; k<rules[i].subrules[j].gcnt; ++k )
 		rules[i].subrules[j].glyphs[k] = getushort(ttf);
@@ -1186,7 +1186,7 @@ return;
 		info->bad_ot = true;
 return;
 	    }
-	    rules[i].subrules[j].fglyphs = xmalloc1((rules[i].subrules[j].fcnt+1)*sizeof(uint16));
+	    rules[i].subrules[j].fglyphs = xmalloc((rules[i].subrules[j].fcnt+1)*sizeof(uint16));
 	    for ( k=0; k<rules[i].subrules[j].fcnt; ++k )
 		rules[i].subrules[j].fglyphs[k] = getushort(ttf);
 	    rules[i].subrules[j].fglyphs[k] = 0xffff;
@@ -1210,7 +1210,7 @@ return;
 		info->bad_ot = true;
 return;
 	    }
-	    rules[i].subrules[j].sl = xmalloc1(rules[i].subrules[j].scnt*sizeof(struct seqlookup));
+	    rules[i].subrules[j].sl = xmalloc(rules[i].subrules[j].scnt*sizeof(struct seqlookup));
 	    for ( k=0; k<rules[i].subrules[j].scnt; ++k ) {
 		rules[i].subrules[j].sl[k].seq = getushort(ttf);
 		if ( rules[i].subrules[j].sl[k].seq >= rules[i].subrules[j].gcnt+1 )
@@ -1306,7 +1306,7 @@ static void g___ContextSubTable2(FILE *ttf, int stoffset,
 return;
 	}
 	cnt += rules[i].scnt;
-	rules[i].subrules = xmalloc1(rules[i].scnt*sizeof(struct subrule));
+	rules[i].subrules = xmalloc(rules[i].scnt*sizeof(struct subrule));
 	for ( j=0; j<rules[i].scnt; ++j )
 	    rules[i].subrules[j].offset = getushort(ttf)+rules[i].offsets;
 	for ( j=0; j<rules[i].scnt; ++j ) {
@@ -1319,7 +1319,7 @@ return;
 		free(rules);
 return;
 	    }
-	    rules[i].subrules[j].classindeces = xmalloc1(rules[i].subrules[j].ccnt*sizeof(uint16));
+	    rules[i].subrules[j].classindeces = xmalloc(rules[i].subrules[j].ccnt*sizeof(uint16));
 	    rules[i].subrules[j].classindeces[0] = i;
 	    for ( k=1; k<rules[i].subrules[j].ccnt; ++k )
 		rules[i].subrules[j].classindeces[k] = getushort(ttf);
@@ -1329,7 +1329,7 @@ return;
 		free(rules);
 return;
 	    }
-	    rules[i].subrules[j].sl = xmalloc1(rules[i].subrules[j].scnt*sizeof(struct seqlookup));
+	    rules[i].subrules[j].sl = xmalloc(rules[i].subrules[j].scnt*sizeof(struct seqlookup));
 	    for ( k=0; k<rules[i].subrules[j].scnt; ++k ) {
 		rules[i].subrules[j].sl[k].seq = getushort(ttf);
 		if ( rules[i].subrules[j].sl[k].seq >= rules[i].subrules[j].ccnt )
@@ -1440,7 +1440,7 @@ static void g___ChainingSubTable2(FILE *ttf, int stoffset,
 return;
 	}
 	cnt += rules[i].scnt;
-	rules[i].subrules = xmalloc1(rules[i].scnt*sizeof(struct subrule));
+	rules[i].subrules = xmalloc(rules[i].scnt*sizeof(struct subrule));
 	for ( j=0; j<rules[i].scnt; ++j )
 	    rules[i].subrules[j].offset = getushort(ttf)+rules[i].offsets;
 	for ( j=0; j<rules[i].scnt; ++j ) {
@@ -1452,7 +1452,7 @@ return;
 		free(rules);
 return;
 	    }
-	    rules[i].subrules[j].bci = xmalloc1(rules[i].subrules[j].bccnt*sizeof(uint16));
+	    rules[i].subrules[j].bci = xmalloc(rules[i].subrules[j].bccnt*sizeof(uint16));
 	    for ( k=0; k<rules[i].subrules[j].bccnt; ++k )
 		rules[i].subrules[j].bci[k] = getushort(ttf);
 	    rules[i].subrules[j].ccnt = getushort(ttf);
@@ -1462,7 +1462,7 @@ return;
 		free(rules);
 return;
 	    }
-	    rules[i].subrules[j].classindeces = xmalloc1(rules[i].subrules[j].ccnt*sizeof(uint16));
+	    rules[i].subrules[j].classindeces = xmalloc(rules[i].subrules[j].ccnt*sizeof(uint16));
 	    rules[i].subrules[j].classindeces[0] = i;
 	    for ( k=1; k<rules[i].subrules[j].ccnt; ++k )
 		rules[i].subrules[j].classindeces[k] = getushort(ttf);
@@ -1473,7 +1473,7 @@ return;
 		free(rules);
 return;
 	    }
-	    rules[i].subrules[j].fci = xmalloc1(rules[i].subrules[j].fccnt*sizeof(uint16));
+	    rules[i].subrules[j].fci = xmalloc(rules[i].subrules[j].fccnt*sizeof(uint16));
 	    for ( k=0; k<rules[i].subrules[j].fccnt; ++k )
 		rules[i].subrules[j].fci[k] = getushort(ttf);
 	    rules[i].subrules[j].scnt = getushort(ttf);
@@ -1483,7 +1483,7 @@ return;
 		free(rules);
 return;
 	    }
-	    rules[i].subrules[j].sl = xmalloc1(rules[i].subrules[j].scnt*sizeof(struct seqlookup));
+	    rules[i].subrules[j].sl = xmalloc(rules[i].subrules[j].scnt*sizeof(struct seqlookup));
 	    for ( k=0; k<rules[i].subrules[j].scnt; ++k ) {
 		rules[i].subrules[j].sl[k].seq = getushort(ttf);
 		if ( rules[i].subrules[j].sl[k].seq >= rules[i].subrules[j].ccnt )
@@ -1594,10 +1594,10 @@ static void g___ContextSubTable3(FILE *ttf, int stoffset,
 	info->bad_ot = true;
 return;
     }
-    coverage = xmalloc1(gcnt*sizeof(uint16));
+    coverage = xmalloc(gcnt*sizeof(uint16));
     for ( i=0; i<gcnt; ++i )
 	coverage[i] = getushort(ttf);
-    sl = xmalloc1(scnt*sizeof(struct seqlookup));
+    sl = xmalloc(scnt*sizeof(struct seqlookup));
     for ( k=0; k<scnt; ++k ) {
 	sl[k].seq = getushort(ttf);
 	if ( sl[k].seq >= gcnt && !warned2 ) {
@@ -1624,7 +1624,7 @@ return;
 	fpst->rules = rule = xcalloc(1,sizeof(struct fpst_rule));
 	fpst->rule_cnt = 1;
 	rule->u.coverage.ncnt = gcnt;
-	rule->u.coverage.ncovers = xmalloc1(gcnt*sizeof(char **));
+	rule->u.coverage.ncovers = xmalloc(gcnt*sizeof(char **));
 	for ( i=0; i<gcnt; ++i ) {
 	    glyphs =  getCoverageTable(ttf,stoffset+coverage[i],info);
 	    rule->u.coverage.ncovers[i] = GlyphsToNames(info,glyphs,true);
@@ -1656,7 +1656,7 @@ static void g___ChainingSubTable3(FILE *ttf, int stoffset,
 	info->bad_ot = true;
 return;
     }
-    bcoverage = xmalloc1(bcnt*sizeof(uint16));
+    bcoverage = xmalloc(bcnt*sizeof(uint16));
     for ( i=0; i<bcnt; ++i )
 	bcoverage[i] = getushort(ttf);
     gcnt = getushort(ttf);
@@ -1665,7 +1665,7 @@ return;
 	info->bad_ot = true;
 return;
     }
-    coverage = xmalloc1(gcnt*sizeof(uint16));
+    coverage = xmalloc(gcnt*sizeof(uint16));
     for ( i=0; i<gcnt; ++i )
 	coverage[i] = getushort(ttf);
     fcnt = getushort(ttf);
@@ -1674,7 +1674,7 @@ return;
 	info->bad_ot = true;
 return;
     }
-    fcoverage = xmalloc1(fcnt*sizeof(uint16));
+    fcoverage = xmalloc(fcnt*sizeof(uint16));
     for ( i=0; i<fcnt; ++i )
 	fcoverage[i] = getushort(ttf);
     scnt = getushort(ttf);
@@ -1683,7 +1683,7 @@ return;
 	info->bad_ot = true;
 return;
     }
-    sl = xmalloc1(scnt*sizeof(struct seqlookup));
+    sl = xmalloc(scnt*sizeof(struct seqlookup));
     for ( k=0; k<scnt; ++k ) {
 	sl[k].seq = getushort(ttf);
 	if ( sl[k].seq >= gcnt && !warned2 ) {
@@ -1711,7 +1711,7 @@ return;
 	fpst->rule_cnt = 1;
 
 	rule->u.coverage.bcnt = bcnt;
-	rule->u.coverage.bcovers = xmalloc1(bcnt*sizeof(char **));
+	rule->u.coverage.bcovers = xmalloc(bcnt*sizeof(char **));
 	for ( i=0; i<bcnt; ++i ) {
 	    glyphs =  getCoverageTable(ttf,stoffset+bcoverage[i],info);
 	    rule->u.coverage.bcovers[i] = GlyphsToNames(info,glyphs,true);
@@ -1719,7 +1719,7 @@ return;
 	}
 
 	rule->u.coverage.ncnt = gcnt;
-	rule->u.coverage.ncovers = xmalloc1(gcnt*sizeof(char **));
+	rule->u.coverage.ncovers = xmalloc(gcnt*sizeof(char **));
 	for ( i=0; i<gcnt; ++i ) {
 	    glyphs =  getCoverageTable(ttf,stoffset+coverage[i],info);
 	    rule->u.coverage.ncovers[i] = GlyphsToNames(info,glyphs,true);
@@ -1727,7 +1727,7 @@ return;
 	}
 
 	rule->u.coverage.fcnt = fcnt;
-	rule->u.coverage.fcovers = xmalloc1(fcnt*sizeof(char **));
+	rule->u.coverage.fcovers = xmalloc(fcnt*sizeof(char **));
 	for ( i=0; i<fcnt; ++i ) {
 	    glyphs =  getCoverageTable(ttf,stoffset+fcoverage[i],info);
 	    rule->u.coverage.fcovers[i] = GlyphsToNames(info,glyphs,true);
@@ -1803,7 +1803,7 @@ return;
 	delta = getushort(ttf);
     } else {
 	cnt = getushort(ttf);
-	glyph2s = xmalloc1(cnt*sizeof(uint16));
+	glyph2s = xmalloc(cnt*sizeof(uint16));
 	for ( i=0; i<cnt; ++i )
 	    glyph2s[i] = getushort(ttf);
 	    /* in range check comes later */
@@ -1839,7 +1839,7 @@ return;
 			tag[4] = '\0';
 			pt = tag;
 		    }
-		    str = xmalloc1(strlen(basename)+strlen(pt)+2);
+		    str = xmalloc(strlen(basename)+strlen(pt)+2);
 		    sprintf(str,"%s.%s", basename, pt );
 		    info->chars[which]->name = str;
 		}
@@ -1900,7 +1900,7 @@ return;
 	info->bad_ot = true;
 return;
     }
-    offsets = xmalloc1(cnt*sizeof(uint16));
+    offsets = xmalloc(cnt*sizeof(uint16));
     for ( i=0; i<cnt; ++i )
 	offsets[i] = getushort(ttf);
     glyphs = getCoverageTable(ttf,stoffset+coverage,info);
@@ -1919,7 +1919,7 @@ return;
 	    cnt = i;
     }
     max = 20;
-    glyph2s = xmalloc1(max*sizeof(uint16));
+    glyph2s = xmalloc(max*sizeof(uint16));
     for ( i=0; glyphs[i]!=0xffff; ++i ) {
 	PST *alt;
 	fseek(ttf,stoffset+offsets[i],SEEK_SET);
@@ -1967,7 +1967,7 @@ return;
 	    alt->subtable = subtable;
 	    alt->next = info->chars[glyphs[i]]->possub;
 	    info->chars[glyphs[i]]->possub = alt;
-	    pt = alt->u.subs.variant = xmalloc1(len+1);
+	    pt = alt->u.subs.variant = xmalloc(len+1);
 	    *pt = '\0';
 	    for ( j=0; j<cnt; ++j ) {
 		strcat(pt,info->chars[glyph2s[j]]->name);
@@ -1999,7 +1999,7 @@ static void gsubLigatureSubTable(FILE *ttf, int stoffset,
 	info->bad_ot = true;
 return;
     }
-    ls_offsets = xmalloc1(cnt*sizeof(uint16));
+    ls_offsets = xmalloc(cnt*sizeof(uint16));
     for ( i=0; i<cnt; ++i )
 	ls_offsets[i]=getushort(ttf);
     glyphs = getCoverageTable(ttf,stoffset+coverage,info);
@@ -2015,7 +2015,7 @@ return;
 	    info->bad_ot = true;
 return;
 	}
-	lig_offsets = xmalloc1(lig_cnt*sizeof(uint16));
+	lig_offsets = xmalloc(lig_cnt*sizeof(uint16));
 	for ( j=0; j<lig_cnt; ++j )
 	    lig_offsets[j] = getushort(ttf);
 	if ( feof(ttf)) {
@@ -2039,7 +2039,7 @@ return;
 		free(glyphs); free(lig_offsets);
 return;
 	    }
-	    lig_glyphs = xmalloc1(cc*sizeof(uint16));
+	    lig_glyphs = xmalloc(cc*sizeof(uint16));
 	    lig_glyphs[0] = glyphs[i];
 	    for ( k=1; k<cc; ++k ) {
 		lig_glyphs[k] = getushort(ttf);
@@ -2068,7 +2068,7 @@ return;
 			len += strlen(info->chars[lig_glyphs[k]]->name)+1;
 		    }
 		    if ( k==cc ) {
-			char *str = xmalloc1(len+6), *pt;
+			char *str = xmalloc(len+6), *pt;
 			char tag[5];
 			tag[0] = fl->featuretag>>24;
 			if ( (tag[1] = (fl->featuretag>>16)&0xff)==' ' ) tag[1] = '\0';
@@ -2101,7 +2101,7 @@ return;
 		    liga->next = info->chars[lig]->possub;
 		    info->chars[lig]->possub = liga;
 		    liga->u.lig.lig = info->chars[lig];
-		    liga->u.lig.components = pt = xmalloc1(len);
+		    liga->u.lig.components = pt = xmalloc(len);
 		    for ( k=0; k<cc; ++k ) {
 			if ( lig_glyphs[k]<info->glyph_cnt &&
 				info->chars[lig_glyphs[k]]!=NULL ) {
@@ -2175,15 +2175,15 @@ return;		/* Don't understand this format type */
 
     coverage = getushort(ttf);
     bcnt = getushort(ttf);
-    bcoverage = xmalloc1(bcnt*sizeof(uint16));
+    bcoverage = xmalloc(bcnt*sizeof(uint16));
     for ( i = 0 ; i<bcnt; ++i )
 	bcoverage[i] = getushort(ttf);
     fcnt = getushort(ttf);
-    fcoverage = xmalloc1(fcnt*sizeof(uint16));
+    fcoverage = xmalloc(fcnt*sizeof(uint16));
     for ( i = 0 ; i<fcnt; ++i )
 	fcoverage[i] = getushort(ttf);
     scnt = getushort(ttf);
-    sglyphs = xmalloc1((scnt+1)*sizeof(uint16));
+    sglyphs = xmalloc((scnt+1)*sizeof(uint16));
     for ( i = 0 ; i<scnt; ++i )
 	if (( sglyphs[i] = getushort(ttf))>=info->glyph_cnt ) {
 	    LogError( _("Bad reverse contextual chaining substitution glyph: %d is not less than %d\n"),
@@ -2211,9 +2211,9 @@ return;		/* Don't understand this format type */
 	rule->u.rcoverage.always1 = 1;
 	rule->u.rcoverage.bcnt = bcnt;
 	rule->u.rcoverage.fcnt = fcnt;
-	rule->u.rcoverage.ncovers = xmalloc1(sizeof(char *));
-	rule->u.rcoverage.bcovers = xmalloc1(bcnt*sizeof(char *));
-	rule->u.rcoverage.fcovers = xmalloc1(fcnt*sizeof(char *));
+	rule->u.rcoverage.ncovers = xmalloc(sizeof(char *));
+	rule->u.rcoverage.bcovers = xmalloc(bcnt*sizeof(char *));
+	rule->u.rcoverage.fcovers = xmalloc(fcnt*sizeof(char *));
 	rule->u.rcoverage.replacements = GlyphsToNames(info,sglyphs,false);
 	glyphs = getCoverageTable(ttf,stoffset+coverage,info);
 	rule->u.rcoverage.ncovers[0] = GlyphsToNames(info,glyphs,false);
@@ -2410,7 +2410,7 @@ return( NULL );
 		info->bad_ot = true;
 return( NULL );
 	    }
-	    scripts[i].languages[j].features = xmalloc1(scripts[i].languages[j].fcnt*sizeof(uint16));
+	    scripts[i].languages[j].features = xmalloc(scripts[i].languages[j].fcnt*sizeof(uint16));
 	    for ( k=0; k<scripts[i].languages[j].fcnt; ++k )
 		scripts[i].languages[j].features[k] = getushort(ttf);
 	}
@@ -2476,7 +2476,7 @@ return( NULL );
 	    info->bad_ot = true;
 return( NULL );
 	}
-	features[i].lookups = xmalloc1(features[i].lcnt*sizeof(uint16));
+	features[i].lookups = xmalloc(features[i].lcnt*sizeof(uint16));
 	for ( j=0; j<features[i].lcnt; ++j )
 	    features[i].lookups[j] = getushort(ttf);
     }
@@ -2522,7 +2522,7 @@ return( NULL );
 	lookups[i].type = getushort(ttf);
 	lookups[i].flags = getushort(ttf);
 	lookups[i].subtabcnt = getushort(ttf);
-	lookups[i].subtab_offsets = xmalloc1(lookups[i].subtabcnt*sizeof(int32));
+	lookups[i].subtab_offsets = xmalloc(lookups[i].subtabcnt*sizeof(int32));
 	for ( j=0; j<lookups[i].subtabcnt; ++j )
 	    lookups[i].subtab_offsets[j] = pos+lookups[i].offset+getushort(ttf);
 	if ( lookups[i].flags&pst_usemarkfilteringset )
@@ -2963,10 +2963,10 @@ return;
 	const char *format_spec = _("MarkClass-%d");
 	info->mark_class_cnt = ClassFindCnt(mclasses,info->glyph_cnt);
 	info->mark_classes = ClassToNames(info,info->mark_class_cnt,mclasses,info->glyph_cnt);
-	info->mark_class_names = xmalloc1(info->mark_class_cnt*sizeof(char *));
+	info->mark_class_names = xmalloc(info->mark_class_cnt*sizeof(char *));
 	info->mark_class_names[0] = NULL;
 	for ( i=1; i<info->mark_class_cnt; ++i ) {
-	    info->mark_class_names[i] = xmalloc1((strlen(format_spec)+10));
+	    info->mark_class_names[i] = xmalloc((strlen(format_spec)+10));
 	    sprintf( info->mark_class_names[i], format_spec, i );
 	}
 	free(mclasses);
@@ -2978,14 +2978,14 @@ return;
 	    uint32 *offsets;
 	    uint16 *glyphs;
 	    info->mark_set_cnt = getushort(ttf);
-	    offsets = xmalloc1(info->mark_set_cnt*sizeof(uint32));
+	    offsets = xmalloc(info->mark_set_cnt*sizeof(uint32));
 	    for ( i=0; i<info->mark_set_cnt; ++i )
 		offsets[i]=getlong(ttf);
-	    info->mark_sets = xmalloc1(info->mark_set_cnt*sizeof(char *));
-	    info->mark_set_names = xmalloc1(info->mark_set_cnt*sizeof(char *));
+	    info->mark_sets = xmalloc(info->mark_set_cnt*sizeof(char *));
+	    info->mark_set_names = xmalloc(info->mark_set_cnt*sizeof(char *));
 	    info->mark_set_names[0] = NULL;
 	    for ( i=0; i<info->mark_set_cnt; ++i ) {
-		info->mark_set_names[i] = xmalloc1((strlen(format_spec)+10));
+		info->mark_set_names[i] = xmalloc((strlen(format_spec)+10));
 		sprintf( info->mark_set_names[i], format_spec, i );
 		if ( offsets[i]!=0 ) {
 		    glyphs = getCoverageTable(ttf,info->gdef_start+mas+offsets[i],info);
@@ -3005,7 +3005,7 @@ return;
 	cnt = getushort(ttf);
 	if ( cnt==0 )
 return;
-	lc_offsets = xmalloc1(cnt*sizeof(uint16));
+	lc_offsets = xmalloc(cnt*sizeof(uint16));
 	for ( i=0; i<cnt; ++i )
 	    lc_offsets[i]=getushort(ttf);
 	glyphs = getCoverageTable(ttf,lclo+coverage,info);
@@ -3025,10 +3025,10 @@ return;
 	    caret_base = ftell(ttf);
 	    pst->u.lcaret.cnt = getushort(ttf);
 	    if ( pst->u.lcaret.carets!=NULL ) free(pst->u.lcaret.carets);
-	    offsets = xmalloc1(pst->u.lcaret.cnt*sizeof(uint16));
+	    offsets = xmalloc(pst->u.lcaret.cnt*sizeof(uint16));
 	    for ( j=0; j<pst->u.lcaret.cnt; ++j )
 		offsets[j] = getushort(ttf);
-	    pst->u.lcaret.carets = xmalloc1(pst->u.lcaret.cnt*sizeof(int16));
+	    pst->u.lcaret.carets = xmalloc(pst->u.lcaret.cnt*sizeof(int16));
 	    for ( j=0; j<pst->u.lcaret.cnt; ++j ) {
 		fseek(ttf,caret_base+offsets[j],SEEK_SET);
 		format=getushort(ttf);
@@ -3231,7 +3231,7 @@ return( subs[nest_index] );
 /* GT: and the %d is n, where this lookup is the n'th defined for this state */
 /* GT: machine */
     format = _("%s nested-substitutions %d");
-    name = xmalloc1(strlen(parent->lookup_name)+strlen(format)+10);
+    name = xmalloc(strlen(parent->lookup_name)+strlen(format)+10);
     sprintf( name, format, parent->lookup_name, nest_index );
     otl->lookup_name = name;
     otl->subtables->subtable_name = strconcat3(name," ",_("subtable"));
@@ -3342,7 +3342,7 @@ return;
     sc->possub = pst;
     sc->lig_caret_cnt_fixed = true;
     pst->u.lcaret.cnt = cnt;
-    pst->u.lcaret.carets = xmalloc1(cnt*sizeof(uint16));
+    pst->u.lcaret.carets = xmalloc(cnt*sizeof(uint16));
     for ( i=0; i<cnt; ++i )
 	pst->u.lcaret.carets[i] = getushort(ttf);
     fseek(ttf,here,SEEK_SET);
@@ -3672,7 +3672,7 @@ return;
 		    else
 			err = true;
 		if ( sm->info->chars[lig_glyph]!=NULL && !err ) {
-		    comp = xmalloc1(len+1);
+		    comp = xmalloc(len+1);
 		    *comp = '\0';
 		    for ( j=lcp; j<sm->lcp; ++j ) {
 			if ( sm->lig_comp_glyphs[j]<sm->info->glyph_cnt &&
@@ -3800,7 +3800,7 @@ return;
 			len += strlen(sm->info->chars[sm->lig_comp_glyphs[j]]->name)+1;
 		}
 		if ( !err ) {
-		    comp = xmalloc1(len);
+		    comp = xmalloc(len);
 		    *comp = '\0';
 		    for ( j=lcp; j<sm->lcp; ++j ) {
 			if ( *comp!='\0' )
@@ -3885,7 +3885,7 @@ static void readttf_mortx_lig(FILE *ttf,struct ttfinfo *info,int ismorx,uint32 b
     sm.info = info;
     here = ftell(ttf);
     length -= here-base;
-    sm.data = xmalloc1(length);
+    sm.data = xmalloc(length);
     sm.length = length;
     if ( fread(sm.data,1,length,ttf)!=length ) {
 	free(sm.data);
@@ -3906,7 +3906,7 @@ return;
 	/* I used only to allocate space for info->glyph_cnt entries */
 	/*  but some fonts use out of bounds gids as flags to contextual */
 	/*  morx subtables, so allocate a full 65536 */
-	sm.classes = info->morx_classes = xmalloc1(65536*sizeof(uint16));
+	sm.classes = info->morx_classes = xmalloc(65536*sizeof(uint16));
 	for ( i=0; i<65536; ++i )
 	    sm.classes[i] = 1;			/* Out of bounds */
 	readttf_applelookup(ttf,info,
@@ -3922,7 +3922,7 @@ return;
 	sm.ligActOff = memushort(sm.data,sm.length, 4*sizeof(uint16));
 	sm.compOff = memushort(sm.data,sm.length, 5*sizeof(uint16));
 	sm.ligOff = memushort(sm.data,sm.length, 6*sizeof(uint16));
-	sm.classes = xmalloc1(info->glyph_cnt*sizeof(uint16));
+	sm.classes = xmalloc(info->glyph_cnt*sizeof(uint16));
 	for ( i=0; i<info->glyph_cnt; ++i )
 	    sm.classes[i] = 1;			/* Out of bounds */
 	first = memushort(sm.data,sm.length, sm.classOffset);
@@ -3994,7 +3994,7 @@ static struct statetable *read_statetable(FILE *ttf, int ent_extras, int ismorx,
 	/* I used only to allocate space for info->glyph_cnt entries */
 	/*  but some fonts use out of bounds gids as flags to contextual */
 	/*  morx subtables, so allocate a full 65536 */
-	st->classes2 = info->morx_classes = xmalloc1(65536*sizeof(uint16));
+	st->classes2 = info->morx_classes = xmalloc(65536*sizeof(uint16));
 	for ( i=0; i<65536; ++i )
 	    st->classes2[i] = 1;			/* Out of bounds */
 	readttf_applelookup(ttf,info,
@@ -4016,7 +4016,7 @@ static struct statetable *read_statetable(FILE *ttf, int ent_extras, int ismorx,
 	    info->bad_gx = true;
 	    st->nglyphs = 0;
 	}
-	st->classes = xmalloc1(st->nglyphs);
+	st->classes = xmalloc(st->nglyphs);
 	fread(st->classes,1,st->nglyphs,ttf);
 	for ( i=0; i<st->nglyphs; ++i ) {
 	    if ( /*st->classes[i]<0 ||*/ st->classes[i]>=st->nclasses ) {
@@ -4094,17 +4094,17 @@ return( NULL );
     /*  number of classes (classes vary faster than states) */
     /* The first two states are predefined, 0 is start of text, 1 start of line*/
     if ( ismorx ) {
-	st->state_table2 = xmalloc1(st->nstates*st->nclasses*sizeof(uint16));
+	st->state_table2 = xmalloc(st->nstates*st->nclasses*sizeof(uint16));
 	for ( i=0; i<st->nstates*st->nclasses; ++i )
 	    st->state_table2[i] = getushort(ttf);
     } else {
-	st->state_table = xmalloc1(st->nstates*st->nclasses);
+	st->state_table = xmalloc(st->nstates*st->nclasses);
 	fread(st->state_table,1,st->nstates*st->nclasses,ttf);
     }
 
 	/* parse the entry subtable */
     fseek(ttf,here+entry_off,SEEK_SET);
-    st->transitions = xmalloc1(st->nentries*st->entry_size);
+    st->transitions = xmalloc(st->nentries*st->entry_size);
     fread(st->transitions,1,st->nentries*st->entry_size,ttf);
 return( st );
 }
@@ -4138,7 +4138,7 @@ static void tagSMWithScriptLang(FeatureScriptLangList *fl,
 static char **ClassesFromStateTable(struct statetable *st,int ismorx,struct ttfinfo *info) {
     /* On the mac the first four classes should be left blank. only class 1 */
     /*  (out of bounds) is supposed to be used in the class array anyway */
-    char **classes = xmalloc1(st->nclasses*sizeof(char *));
+    char **classes = xmalloc(st->nclasses*sizeof(char *));
     int *lens = xcalloc(st->nclasses,sizeof(int));
     int i;
 
@@ -4156,7 +4156,7 @@ static char **ClassesFromStateTable(struct statetable *st,int ismorx,struct ttfi
     }
     classes[0] = classes[1] = classes[2] = classes[3] = NULL;
     for ( i=4; i<st->nclasses; ++i ) {
-	classes[i] = xmalloc1(lens[i]+1);
+	classes[i] = xmalloc(lens[i]+1);
 	*classes[i] = '\0';
     }
     if ( ismorx ) {
@@ -4199,7 +4199,7 @@ return(NULL);
     }
     if ( len==0 )
 return( NULL );
-    str = xmalloc1(len+1);
+    str = xmalloc(len+1);
     fseek(ttf,pos,SEEK_SET);
     for ( i=len=0; i<cnt; ++i ) {
 	glyph = getushort(ttf);
@@ -4270,7 +4270,7 @@ static void KernReadKernList(FILE *ttf,uint32 pos, struct asm_state *trans) {
     if ( i==0 ) {
 	trans->u.kern.kerns = NULL;
     } else {
-	trans->u.kern.kerns = xmalloc1(i*sizeof(int16));
+	trans->u.kern.kerns = xmalloc(i*sizeof(int16));
 	for ( j=i-1, k=0; k<i; ++k, --j )
 	    trans->u.kern.kerns[k] = buffer[j];
     }
@@ -4360,7 +4360,7 @@ return(NULL);
     as->class_cnt = st->nclasses;
     as->state_cnt = st->nstates;
     as->classes = ClassesFromStateTable(st,ismorx,info);
-    as->state = xmalloc1(st->nclasses*st->nstates*sizeof(struct asm_state));
+    as->state = xmalloc(st->nclasses*st->nstates*sizeof(struct asm_state));
     if ( otl==NULL )
 	otl = NewMacLookup(info,false);
     otl->lookup_type = type==asm_indic ? morx_indic : type==asm_context ? morx_context : morx_insert;
@@ -4438,7 +4438,7 @@ return(NULL);
 	/*  is there */
 	uint8 *classes_subbed = xcalloc(st->nclasses,1);
 	int lookup_max = -1, index, index_max;
-	int32 *lookups = xmalloc1(st->nclasses*st->nstates*sizeof(int32));
+	int32 *lookups = xmalloc(st->nclasses*st->nstates*sizeof(int32));
 	uint8 *evermarked = xcalloc(st->nclasses*st->nstates,sizeof(uint8));
 	uint8 *used;
 	OTLookup **subs;
@@ -4517,7 +4517,7 @@ return(NULL);
 	    } else
 		as->state[i].u.context.cur_lookup = NULL;
 	}
-	lookups = xmalloc1(lookup_max*sizeof(uint32));
+	lookups = xmalloc(lookup_max*sizeof(uint32));
 	fseek(ttf,here+st->extra_offsets[0],SEEK_SET);
 	for ( i=0; i<lookup_max; ++i )
 	    lookups[i] = getlong(ttf) + here+st->extra_offsets[0];
@@ -4940,7 +4940,7 @@ return;
 		    if ( class1[i]>kc->first_cnt )
 			kc->first_cnt = class1[i];
 		++ kc->first_cnt;
-		kc->offsets = xmalloc1(kc->first_cnt*kc->second_cnt*sizeof(int16));
+		kc->offsets = xmalloc(kc->first_cnt*kc->second_cnt*sizeof(int16));
 		kc->adjusts = xcalloc(kc->first_cnt*kc->second_cnt,sizeof(DeviceTable));
 		fseek(ttf,begin_table+array,SEEK_SET);
 		for ( i=0; i<kc->first_cnt*kc->second_cnt; ++i )
@@ -4962,8 +4962,8 @@ return;
 		}
 		class1 = xcalloc(gc>info->glyph_cnt?gc:info->glyph_cnt,sizeof(uint16));
 		class2 = xcalloc(gc>info->glyph_cnt?gc:info->glyph_cnt,sizeof(uint16));
-		kvs = xmalloc1(kv*sizeof(int16));
-		kc->offsets = xmalloc1(kc->first_cnt*kc->second_cnt*sizeof(int16));
+		kvs = xmalloc(kv*sizeof(int16));
+		kc->offsets = xmalloc(kc->first_cnt*kc->second_cnt*sizeof(int16));
 		kc->adjusts = xcalloc(kc->first_cnt*kc->second_cnt,sizeof(DeviceTable));
 		for ( i=0; i<kv; ++i )
 		    kvs[i] = (int16) getushort(ttf);
@@ -5016,7 +5016,7 @@ void readmacfeaturemap(FILE *ttf,struct ttfinfo *info) {
 return;
     }
 
-    fs = xmalloc1(featcnt*sizeof(struct fs));
+    fs = xmalloc(featcnt*sizeof(struct fs));
     for ( i=0; i<featcnt; ++i ) {
 	cur = (MacFeat *) xzalloc(sizeof (MacFeat));
 	if ( last==NULL )
@@ -5218,7 +5218,7 @@ static void ttf_math_read_mathkern(FILE *ttf,struct ttfinfo *info, uint32 start)
     fseek(ttf,start,SEEK_SET);
     coverage = getushort(ttf);
     cnt = getushort(ttf);
-    koff = xmalloc1(cnt*sizeof(struct koff));
+    koff = xmalloc(cnt*sizeof(struct koff));
     for ( i=0; i<cnt; ++i ) {
 	koff[i].tr = getushort(ttf);
 	koff[i].tl = getushort(ttf);
@@ -5301,7 +5301,7 @@ static struct glyphvariants *ttf_math_read_gvtable(FILE *ttf,struct ttfinfo *inf
 		}
 	    }
 	} else {
-	    glyphs    = xmalloc1(vcnt*sizeof(uint16));
+	    glyphs    = xmalloc(vcnt*sizeof(uint16));
 	    len = 0;
 	    for ( i=0; i<vcnt; ++i ) {
 		glyphs[i]      = getushort(ttf);
@@ -5310,7 +5310,7 @@ static struct glyphvariants *ttf_math_read_gvtable(FILE *ttf,struct ttfinfo *inf
 		    len += strlen(sc->name)+1;
 	    }
 	    if ( len!=0 ) {
-		gv->variants = pt = xmalloc1(len);
+		gv->variants = pt = xmalloc(len);
 		for ( i=len=0; i<vcnt; ++i ) {
 		    if ( glyphs[i]<info->glyph_cnt && (sc = info->chars[ glyphs[i]])!=NULL ) {
 			strcpy(pt+len,sc->name);
@@ -5405,8 +5405,8 @@ static void ttf_math_read_variants(FILE *ttf,struct ttfinfo *info, uint32 start,
     hcoverage = getushort(ttf);
     vcnt = getushort(ttf);
     hcnt = getushort(ttf);
-    hoffs = xmalloc1(hcnt*sizeof(int));
-    voffs = xmalloc1(vcnt*sizeof(int));
+    hoffs = xmalloc(hcnt*sizeof(int));
+    voffs = xmalloc(vcnt*sizeof(int));
 
     for ( i=0; i<vcnt; ++i )
 	voffs[i] = getushort(ttf);
@@ -5706,7 +5706,7 @@ return;
 
     info->horiz_base = base = (struct Base *) xzalloc(sizeof (struct Base));
     base->baseline_cnt = 4;
-    base->baseline_tags = xmalloc1(4*sizeof(uint32));
+    base->baseline_tags = xmalloc(4*sizeof(uint32));
     base->baseline_tags[0] = CHR('h','a','n','g');	/* Apple 3 */
     if ( offsets[1]!= offsets[2] ) {
 	base->baseline_tags[1] = CHR('i','d','e','o');	/* Apple 2 */
@@ -5749,7 +5749,7 @@ return;
 	if ( values!=NULL )
 	    ap_def = values[i];
 	bs->def_baseline = mapping[ap_def];
-	bs->baseline_pos = xmalloc1((base->baseline_cnt<5?5:base->baseline_cnt)*sizeof(int16));
+	bs->baseline_pos = xmalloc((base->baseline_cnt<5?5:base->baseline_cnt)*sizeof(int16));
 	for ( i=0; i<5; ++i ) if ( i!=1 )
 	    bs->baseline_pos[mapping[i]] = offsets[i] - offsets[ap_def];
 	bs->next = base->scripts;
@@ -5780,7 +5780,7 @@ return( NULL );
     }
     if ( cnt==0 )
 return( NULL );
-    glyphs = xmalloc1((cnt+1)*sizeof(uint16));
+    glyphs = xmalloc((cnt+1)*sizeof(uint16));
     for ( i=0; i<cnt; ++i ) {
 	glyphs[i] = getushort(ttf);
 	if ( glyphs[i]>=info->glyph_cnt ) {
@@ -5833,7 +5833,7 @@ return( NULL );
     if ( scnt==0 && pcnt==0 )
 return( NULL );
 
-    ret = xmalloc1((scnt+pcnt+1)*sizeof(OTLookup *));
+    ret = xmalloc((scnt+pcnt+1)*sizeof(OTLookup *));
     if ( Sub>0 ) {
 	fseek(ttf,base+Sub+2,SEEK_SET);
 	for ( i=0; i<scnt; ++i ) {
@@ -5939,7 +5939,7 @@ return( NULL );
 	    gposLookupSwitch(ttf,st,info,l,subtable,lookups);
 	}
     }
-    ret = xmalloc1((cnt+1)*sizeof(OTLookup*));
+    ret = xmalloc((cnt+1)*sizeof(OTLookup*));
 
     for ( l=lookups, cnt=0; l->offset!=0; ++l, ++cnt ) {
 	NameOTJSTFLookup(l->otlookup,info);
@@ -6030,7 +6030,7 @@ return;
 	info->bad_ot = true;
 return;
     }
-    soff = xmalloc1(scnt*sizeof(struct tagoff));
+    soff = xmalloc(scnt*sizeof(struct tagoff));
 
     for ( i=0; i<scnt; ++i ) {
 	soff[i].tag    = getlong(ttf);

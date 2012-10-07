@@ -554,7 +554,7 @@ static int GFD_Format(GGadget *g, GEvent *e) {
 	    char *text;
 	    char *ae = py_ie[format-fv_pythonbase].all_extensions;
 	    unichar_t *utext;
-	    text = xmalloc1(strlen(ae)+10);
+	    text = xmalloc(strlen(ae)+10);
 	    if ( strchr(ae,','))
 		sprintf( text, "*.{%s}", ae );
 	    else

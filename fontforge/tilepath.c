@@ -119,8 +119,8 @@ return( false );
     td->pcnt = pcnt;
 
     td->nsamples = ceil(len)+10;
-    td->samples = xmalloc1((td->nsamples+1)*sizeof(struct tdsample));
-    td->joins = xmalloc1(td->pcnt*sizeof(struct jsample));
+    td->samples = xmalloc((td->nsamples+1)*sizeof(struct tdsample));
+    td->joins = xmalloc(td->pcnt*sizeof(struct jsample));
 
     i = 0; pcnt = 0;
     first = NULL; sofar = 0;

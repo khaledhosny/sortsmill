@@ -190,7 +190,7 @@ static unichar_t *CounterMaskLine(SplineChar *sc, HintMask *hm) {
 	    }
 	}
 	if ( textmask==NULL ) {
-	    textmask = xmalloc1((len+1)*sizeof(unichar_t));
+	    textmask = xmalloc((len+1)*sizeof(unichar_t));
 	    *textmask = '\0';
 	}
     }
@@ -426,7 +426,7 @@ static int CI_DeleteCounter(GGadget *g, GEvent *e) {
 	new_ = xcalloc(len+1,sizeof(GTextInfo *));
 	for ( i=j=0; i<len; ++i )
 	    if ( !old[i]->selected ) {
-		new_[j] = (GTextInfo *) xmalloc1(sizeof(GTextInfo));
+		new_[j] = (GTextInfo *) xmalloc(sizeof(GTextInfo));
 		*new_[j] = *old[i];
 		new_[j]->text = x_u32_strdup_or_null(new_[j]->text);
 		++j;
@@ -558,7 +558,7 @@ static void CI_ParseCounters(CharInfo *ci) {
     if ( len==0 )
 	sc->countermasks = NULL;
     else {
-	sc->countermasks = xmalloc1(len*sizeof(HintMask));
+	sc->countermasks = xmalloc(len*sizeof(HintMask));
 	for ( i=0; i<len; ++i ) {
 	    memcpy(sc->countermasks[i],ti[i]->userdata,sizeof(HintMask));
 	    free(ti[i]->userdata);
@@ -665,7 +665,7 @@ void DevTabToString(char **str,DeviceTable *adjust) {
 	*str = NULL;
 return;
     }
-    *str = pt = xmalloc1(11*(adjust->last_pixel_size-adjust->first_pixel_size+1)+1);
+    *str = pt = xmalloc(11*(adjust->last_pixel_size-adjust->first_pixel_size+1)+1);
     for ( i=adjust->first_pixel_size; i<=adjust->last_pixel_size; ++i ) {
 	if ( adjust->corrections[i-adjust->first_pixel_size]!=0 )
 	    sprintf( pt, "%d:%d, ", i, adjust->corrections[i-adjust->first_pixel_size]);
@@ -1207,7 +1207,7 @@ static PST *CI_PSTCopy(PST *pst) {
 	    newpst->u.pair.vr[0].adjust = ValDevTabCopy(pst->u.pair.vr[0].adjust);
 	    newpst->u.pair.vr[1].adjust = ValDevTabCopy(pst->u.pair.vr[1].adjust);
 	} else if ( newpst->type==pst_lcaret ) {
-	    newpst->u.lcaret.carets = xmalloc1(pst->u.lcaret.cnt*sizeof(uint16));
+	    newpst->u.lcaret.carets = xmalloc(pst->u.lcaret.cnt*sizeof(uint16));
 	    memcpy(newpst->u.lcaret.carets,pst->u.lcaret.carets,pst->u.lcaret.cnt*sizeof(uint16));
 	} else if ( newpst->type==pst_substitution || newpst->type==pst_multiple || newpst->type==pst_alternate )
 	    newpst->u.subs.variant = copy(pst->u.subs.variant);
@@ -1235,7 +1235,7 @@ static SplineChar *CI_SCDuplicate(SplineChar *sc) {
     newsc->color = sc->color;
     if ( sc->countermask_cnt!=0 ) {
 	newsc->countermask_cnt = sc->countermask_cnt;
-	newsc->countermasks = xmalloc1(sc->countermask_cnt*sizeof(HintMask));
+	newsc->countermasks = xmalloc(sc->countermask_cnt*sizeof(HintMask));
 	memcpy(newsc->countermasks,sc->countermasks,sc->countermask_cnt*sizeof(HintMask));
     }
     newsc->tex_height = sc->tex_height;
@@ -1782,7 +1782,7 @@ return( NULL );
 	    }
 	    if ( components!=NULL )
 	break;
-	    components = xmalloc1(len+1);
+	    components = xmalloc(len+1);
 	}
 	components[len-1] = '\0';
     }
@@ -1799,7 +1799,7 @@ char *AdobeLigatureFormat(char *name) {
 
     if ( strncmp(name,"uni",3)==0 && (len-3)%4==0 && len>7 ) {
 	pt = name+3;
-	components = xmalloc1(1); *components = '\0';
+	components = xmalloc(1); *components = '\0';
 	while ( *pt ) {
 	    if ( sscanf(pt,"%4x", (unsigned *) &uni )==0 ) {
 		free(components); components = NULL;
@@ -2074,7 +2074,7 @@ return;		/* Didn't change */
 	char **names = AllGlyphNames(val,ci->sc->parent->for_new_glyphs,ci->sc);
 
 	for ( cnt=0; names[cnt]!=NULL; ++cnt );
-	list = xmalloc1((cnt+1)*sizeof(GTextInfo*)); 
+	list = xmalloc((cnt+1)*sizeof(GTextInfo*)); 
 	for ( cnt=0; names[cnt]!=NULL; ++cnt ) {
 	    list[cnt] = TIFromName(names[cnt]);
 	    free(names[cnt]);
@@ -3016,7 +3016,7 @@ GImage *GV_GetConstructedImage(SplineChar *sc,int def_layer,struct glyphvariants
     if ( gv==NULL || gv->part_cnt==0 )
 return( NULL );
     me = Rasterize(sc,def_layer);
-    others = xmalloc1(gv->part_cnt*sizeof(BDFChar *));
+    others = xmalloc(gv->part_cnt*sizeof(BDFChar *));
     for ( i=0; i<gv->part_cnt; ++i ) {
 	SplineChar *othersc = SFGetChar(sf,-1,gv->parts[i].component);
 	if ( othersc==NULL ) {
@@ -3247,7 +3247,7 @@ return( NULL );
 	if ( *pt==' ' )
 	    while ( *pt==' ' ) ++pt;
     }
-    extras = xmalloc1(extracnt*sizeof(BDFChar *));
+    extras = xmalloc(extracnt*sizeof(BDFChar *));
     extracnt = 0;
     for ( pt=subs; *pt ; ) {
 	start = pt;
@@ -3920,7 +3920,7 @@ static void CIFillup(CharInfo *ci) {
 	ubuf[0] = '\0';
 	GGadgetSetTitle(GWidgetGetControl(ci->gw,CID_Components),ubuf);
     } else {
-	unichar_t *temp = xmalloc1(11*u_strlen(bits)*sizeof(unichar_t));
+	unichar_t *temp = xmalloc(11*u_strlen(bits)*sizeof(unichar_t));
 	unichar_t *upt=temp;
 	while ( *bits!='\0' ) {
 	    sprintf(buffer, "U+%04x ", *bits );
@@ -3943,7 +3943,7 @@ static void CIFillup(CharInfo *ci) {
     CI_SetColorList(ci,sc->color);
     ci->first = sc->comment==NULL;
 
-    ti = xmalloc1((sc->countermask_cnt+1)*sizeof(GTextInfo *));
+    ti = xmalloc((sc->countermask_cnt+1)*sizeof(GTextInfo *));
     ti[sc->countermask_cnt] = xcalloc(1,sizeof(GTextInfo));
     for ( i=0; i<sc->countermask_cnt; ++i ) {
 	ti[i] = xcalloc(1,sizeof(GTextInfo));

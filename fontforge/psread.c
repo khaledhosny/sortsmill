@@ -611,7 +611,7 @@ static int AddEntry(struct pskeydict *dict,struct psstack *stack, int sp) {
     if ( dict->cnt>=dict->max ) {
 	if ( dict->cnt==0 ) {
 	    dict->max = 30;
-	    dict->entries = xmalloc1(dict->max*sizeof(struct pskeyval));
+	    dict->entries = xmalloc(dict->max*sizeof(struct pskeyval));
 	} else {
 	    dict->max += 30;
 	    dict->entries = xrealloc(dict->entries,dict->max*sizeof(struct pskeyval));
@@ -671,7 +671,7 @@ static int rollstack(struct psstack *stack, int sp) {
 	if ( sp>=n && n>0 ) {
 	    j %= n;
 	    if ( j<0 ) j += n;
-	    temp = xmalloc1(n*sizeof(struct psstack));
+	    temp = xmalloc(n*sizeof(struct psstack));
 	    for ( i=0; i<n; ++i )
 		temp[i] = stack[sp-n+i];
 	    for ( i=0; i<n; ++i )
@@ -1000,7 +1000,7 @@ static uint8 *StringToBytes(struct psstack *stackel,int *len) {
     } else if ( stackel->type!=pt_string )
 return( NULL );
 
-    upt = base = xmalloc1(65536+1);	/* Maximum size of ps string */
+    upt = base = xmalloc(65536+1);	/* Maximum size of ps string */
 
     if ( *pt=='(' ) {
 	/* A conventional string */
@@ -1123,7 +1123,7 @@ return( NULL );
 	}
     }
     *len = upt-base;
-    ret = xmalloc1(upt-base);
+    ret = xmalloc(upt-base);
     memcpy(ret,base,upt-base);
     free(base);
 return(ret);
@@ -1283,7 +1283,7 @@ static void _InterpretPS(IO *wrapper, EntityChar *ec, RetStack *rs) {
     char *tokbuf;
     const int tokbufsize = 2*65536+10;
 
-    tokbuf = xmalloc1(tokbufsize);
+    tokbuf = xmalloc(tokbufsize);
 
     strcpy( oldloc,setlocale(LC_NUMERIC,NULL) );
     setlocale(LC_NUMERIC,"C");
@@ -3424,7 +3424,7 @@ return( head );
 	    item = xcalloc(1,sizeof(Encoding));
 	    item->enc_name = encname;
 	    item->char_cnt = max;
-	    item->unicode = xmalloc1(max*sizeof(int32));
+	    item->unicode = xmalloc(max*sizeof(int32));
 	    memcpy(item->unicode,encs,max*sizeof(int32));
 	    if ( any && !codepointsonly ) {
 		item->psnames = xcalloc(max,sizeof(char *));
@@ -4113,7 +4113,7 @@ SplineChar *PSCharStringToSplines(uint8 *type1, int len, struct pscontext *conte
 		    else if ( j==0 || N==0 )
 			/* No op */;
 		    else {
-			real *temp = xmalloc1(N*sizeof(real));
+			real *temp = xmalloc(N*sizeof(real));
 			int i;
 			for ( i=0; i<N; ++i )
 			    temp[i] = stack[sp-N+i];
@@ -4647,7 +4647,7 @@ SplineChar *PSCharStringToSplines(uint8 *type1, int len, struct pscontext *conte
     ret->vstem = HintsAppend(ret->vstem,activev); activev=NULL;
 
     if ( cp!=0 ) { int i;
-	ret->countermasks = xmalloc1(cp*sizeof(HintMask));
+	ret->countermasks = xmalloc(cp*sizeof(HintMask));
 	ret->countermask_cnt = cp;
 	for ( i=0; i<cp; ++i ) {
 	    memcpy(&ret->countermasks[i],counters[i],sizeof(HintMask));

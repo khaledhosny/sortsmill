@@ -3838,7 +3838,7 @@ return;
 return;
 	if ( j==0 ) {
 	    deps = xcalloc(tot+1,sizeof(char *));
-	    depsc = xmalloc1(tot*sizeof(SplineChar *));
+	    depsc = xmalloc(tot*sizeof(SplineChar *));
 	}
     }
 

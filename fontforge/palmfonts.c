@@ -71,7 +71,7 @@ static SplineFont *MakeContainer(struct font *fn, char *family, char *style) {
     sf = SplineFontBlank(256);
     free(sf->familyname); free(sf->fontname); free(sf->fullname);
     sf->familyname = copy(family);
-    sf->fontname = xmalloc1(strlen(family)+strlen(style)+2);
+    sf->fontname = xmalloc(strlen(family)+strlen(style)+2);
     strcpy(sf->fontname,family);
     if ( *style!='\0' ) {
 	strcat(sf->fontname,"-");
@@ -115,7 +115,7 @@ static void PalmReadBitmaps(SplineFont *sf,FILE *file,int imagepos,
 return;
 
     imagesize = (density*fn->rowwords/72)*(density*fn->frectheight/72);
-    fontImage = xmalloc1(2*imagesize);
+    fontImage = xmalloc(2*imagesize);
     fseek(file,imagepos,SEEK_SET);
     for ( i=0; i<imagesize; ++i )
 	fontImage[i] = getushort(file);
@@ -272,7 +272,7 @@ static char *palmreadstring(FILE *file) {
     char *str, *pt;
 
     for ( i=0; (ch=getc(file))!=0 && ch!=EOF; ++i);
-    str = pt = xmalloc1(i+1);
+    str = pt = xmalloc(i+1);
     fseek(file,pos,SEEK_SET);
     while ( (ch=getc(file))!=0 && ch!=EOF )
 	*pt++ = ch;
@@ -380,7 +380,7 @@ return( NULL );			/* failed */
 
 static FILE *MakeFewRecordPdb(char *filename,int cnt) {
     FILE *file;
-    char *fn = xmalloc1(strlen(filename)+8), *pt1, *pt2;
+    char *fn = xmalloc(strlen(filename)+8), *pt1, *pt2;
     long now;
     int i;
 
@@ -542,8 +542,8 @@ return( NULL );
 
     if ( rowWords!=NULL ) {
 	*rowWords = rw;
-	*offsets = xmalloc1((fn->lastChar-fn->firstChar+3)*sizeof(int));
-	*widths = xmalloc1((fn->lastChar-fn->firstChar+3)*sizeof(int));
+	*offsets = xmalloc((fn->lastChar-fn->firstChar+3)*sizeof(int));
+	*widths = xmalloc((fn->lastChar-fn->firstChar+3)*sizeof(int));
     }
     image = xcalloc(bdf->pixelsize*rw,sizeof(uint16));
     rbits = 0;

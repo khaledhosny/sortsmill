@@ -566,7 +566,7 @@ return( true );
 	    if ( err )
 return( true );
 	    genchange.m.cnt = rows;
-	    genchange.m.maps = xmalloc1(rows*sizeof(struct position_maps));
+	    genchange.m.maps = xmalloc(rows*sizeof(struct position_maps));
 	    for ( i=0; i<rows; ++i ) {
 		genchange.m.maps[i].current   = mappings[cols*i+0].u.md_real;
 		genchange.m.maps[i].desired   = mappings[cols*i+2].u.md_real;

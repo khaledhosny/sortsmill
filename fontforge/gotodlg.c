@@ -141,7 +141,7 @@ return( NULL );
 return( NULL );
     if ( do_wildcards ) {
 	pt = spt;
-	spt = xmalloc1((u_strlen(spt)+2)*sizeof(unichar_t));
+	spt = xmalloc((u_strlen(spt)+2)*sizeof(unichar_t));
 	u_strcpy(spt,pt);
 	uc_strcat(spt,"*");
     }
@@ -171,7 +171,7 @@ return( NULL );
 	else if ( cnt==0 )
     break;
 	else
-	    ret = xmalloc1((cnt+1)*sizeof(unichar_t *));
+	    ret = xmalloc((cnt+1)*sizeof(unichar_t *));
     }
     if ( do_wildcards )
 	free(spt);

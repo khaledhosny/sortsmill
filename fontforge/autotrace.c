@@ -279,7 +279,7 @@ void _SCAutoTrace(SplineChar *sc, int layer, char **args) {
 	else
 	    bgcol = 0xffffff;
 
-	command = xmalloc1(32768);
+	command = xmalloc(32768);
 	cmd = add_arg(command, prog);
 	cmd = add_arg(cmd, " ");
 	if(args){
@@ -475,7 +475,7 @@ return( NULL );
 	    vector[cnt] = NULL;
 return( vector );
 	}
-	vector = xmalloc1((cnt+1)*sizeof(char *));
+	vector = xmalloc((cnt+1)*sizeof(char *));
     }
 return( NULL );
 }
@@ -502,7 +502,7 @@ return( NULL );
 return( ret );
 	} else if ( len<=1 )
 return( NULL );
-	ret = rpt = xmalloc1(len);
+	ret = rpt = xmalloc(len);
     }
 return( NULL );
 }
@@ -777,7 +777,7 @@ return( NULL );
 
     ac = 0;
     arglist[ac++] = FindMFName();
-    arglist[ac++] = xmalloc1(strlen(mf_args)+strlen(filename)+20);
+    arglist[ac++] = xmalloc(strlen(mf_args)+strlen(filename)+20);
     arglist[ac] = NULL;
     strcpy(arglist[1],mf_args);
     strcat(arglist[1]," ");

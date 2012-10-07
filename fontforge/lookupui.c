@@ -908,7 +908,7 @@ static char *LK_LangsDlg(GGadget *g, int r, int c) {
 	    done = 0;
  goto retry;
 	}
-	ret = xmalloc1(5*lcnt+1);
+	ret = xmalloc(5*lcnt+1);
 	*ret = '\0';
 	pt = ret;
 	for ( i=0; i<len; ++i ) {
@@ -1034,7 +1034,7 @@ return(true);
 	}
 
 	/* Ok, we validated the script lang list. Now parse it */
-	rpt = ret = xmalloc1(6*script_cnt+5*lang_cnt+10);
+	rpt = ret = xmalloc(6*script_cnt+5*lang_cnt+10);
 	for ( i=0; i<rows; ++i ) {
 	    memset(foo,' ',sizeof(foo));
 	    for ( j=0, pt = strings[2*i+0].u.md_str; j<4 && *pt; foo[j++] = *pt++ );
@@ -1253,7 +1253,7 @@ static FeatureScriptLangList *LK_ParseFL(struct matrix_data *strings, int rows )
 		for ( j=0; j<lcnt && j<MAX_LANG; ++j )
 		    sl->langs[j] = langs[j];
 		if ( lcnt>MAX_LANG ) {
-		    sl->morelangs = xmalloc1((lcnt-MAX_LANG)*sizeof(uint32));
+		    sl->morelangs = xmalloc((lcnt-MAX_LANG)*sizeof(uint32));
 		    for ( ; j<lcnt; ++j )
 			sl->morelangs[j-MAX_LANG] = langs[j];
 		}
@@ -1332,7 +1332,7 @@ static void LK_NewFeature(GGadget *g,int row) {
     if ( scnt==0 )
 	scripts[scnt++] = DEFAULT_SCRIPT;
 
-    buf = xmalloc1(bmax = 100);
+    buf = xmalloc(bmax = 100);
     bpos = 0;
     for ( i=0; i<scnt; ++i ) {
 	langs = SFLangsInScript(sf,-1,scripts[i]);
@@ -3236,7 +3236,7 @@ return( true );
 }
 
 static struct matrix_data *MDCopy(struct matrix_data *old,int rows,int cols) {
-    struct matrix_data *md = xmalloc1(rows*cols*sizeof(struct matrix_data));
+    struct matrix_data *md = xmalloc(rows*cols*sizeof(struct matrix_data));
     int r;
 
     memcpy(md,old,rows*cols*sizeof(struct matrix_data));
@@ -3474,7 +3474,7 @@ static int PSTKD_AutoKern(GGadget *g, GEvent *e) {
 	    ff_post_error(_("No scripts"),_("There are no scripts bound to features bound to this lookup. So nothing happens." ));
 return(true);
 	}
-	scripttags = xmalloc1((cnt+1)*sizeof(uint32));
+	scripttags = xmalloc((cnt+1)*sizeof(uint32));
 	for ( testf=features,cnt=0; testf!=NULL; testf=testf->next ) {
 	    for ( scripts=testf->scripts; scripts!=NULL; scripts=scripts->next ) {
 		for ( i=0; i<cnt; ++i )
@@ -3486,7 +3486,7 @@ return(true);
 	}
 	scripttags[cnt] = 0;
 
-	list = xmalloc1((sf->glyphcnt+1)*sizeof(SplineChar *));
+	list = xmalloc((sf->glyphcnt+1)*sizeof(SplineChar *));
 	for ( i=0; scripttags[i]!=0; ++i ) {
 	    uint32 script = scripttags[i];
 
@@ -3530,7 +3530,7 @@ static int PSTKD_AutoKernSelected(GGadget *g, GEvent *e) {
 		    SCWorthOutputting(sc = sf->glyphs[gid]))
 		++cnt;
 	}
-	list = xmalloc1((cnt+1)*sizeof(SplineChar *));
+	list = xmalloc((cnt+1)*sizeof(SplineChar *));
 	for ( enc=0,cnt=0; enc<fv->map->enccount; ++enc ) {
 	    if ( fv->selected[enc] && (gid=fv->map->map[enc])!=-1 &&
 		    SCWorthOutputting(sc = sf->glyphs[gid]))
@@ -3844,7 +3844,7 @@ char *GlyphNameListDeUnicode( char *str ) {
     char *pt;
     char *ret, *rpt;
 
-    rpt = ret = xmalloc1(strlen(str)+1);
+    rpt = ret = xmalloc(strlen(str)+1);
     while ( *str==' ' ) ++str;
     for ( pt=str; *pt!='\0'; ) {
 	if ( *pt==' ' ) {
@@ -3875,7 +3875,7 @@ return( copy(str));
     for ( pt=str; *pt!='\0'; ++pt )
 	if ( *pt==' ' )
 	    ++cnt;
-    rpt = ret = xmalloc1(strlen(str) + (cnt+1)*7 + 1);
+    rpt = ret = xmalloc(strlen(str) + (cnt+1)*7 + 1);
     for ( start=str; *start!='\0'; ) {
 	while ( *start==' ' ) ++start;
 	if ( *start=='\0' )
@@ -3919,7 +3919,7 @@ return( NULL );
 return( copy(sc->name));
 
     len = strlen(sc->name);
-    temp = xmalloc1(len + 8);
+    temp = xmalloc(len + 8);
     strcpy(temp,sc->name);
     if ( sc->unicodeenc>32 && sc->unicodeenc!=')' && add_char_to_name_list &&
 	    !( sc->unicodeenc<0x7f && isalpha(sc->unicodeenc)) &&
@@ -3939,7 +3939,7 @@ unichar_t *uSCNameUniStr(SplineChar *sc) {
 
     if ( sc==NULL )
 return( NULL );
-    temp = xmalloc1((strlen(sc->name) + 5) * sizeof(unichar_t));
+    temp = xmalloc((strlen(sc->name) + 5) * sizeof(unichar_t));
     utf82u_strcpy(temp,sc->name);
     if ( sc->unicodeenc>32 && sc->unicodeenc!=')' && add_char_to_name_list &&
 	    !( sc->unicodeenc<0x7f && isalpha(sc->unicodeenc)) &&
@@ -3984,7 +3984,7 @@ return( NULL );
 	/*  (so "," becomes "comma(,)" */
 	/* Or, a single wildcard followed by a space gets expanded to glyph name */
 	if ( sc!=NULL ) {
-	    ret = xmalloc1((2)*sizeof(unichar_t *));
+	    ret = xmalloc((2)*sizeof(unichar_t *));
 	    ret[0] = uSCNameUniStr(sc);
 	    ret[1] = NULL;
 return( ret );
@@ -3996,7 +3996,7 @@ return( NULL );
     wild = NULL;
     if ( do_wildcards ) {
 	pt = spt;
-	wild = xmalloc1((u_strlen(spt)+2)*sizeof(unichar_t));
+	wild = xmalloc((u_strlen(spt)+2)*sizeof(unichar_t));
 	u_strcpy(wild,pt);
 	uc_strcat(wild,"*");
     }
@@ -4020,7 +4020,7 @@ return( NULL );
 		    if ( spt==basept ) {
 			ret[cnt] = uSCNameUniStr(sc);
 		    } else {
-			unichar_t *temp = xmalloc1((spt-basept+strlen(sc->name)+4)*sizeof(unichar_t));
+			unichar_t *temp = xmalloc((spt-basept+strlen(sc->name)+4)*sizeof(unichar_t));
 			int len;
 			u_strncpy(temp,basept,spt-basept);
 			utf82u_strcpy(temp+(spt-basept),sc->name);
@@ -4044,7 +4044,7 @@ return( NULL );
 	else if ( cnt==0 )
     break;
 	else
-	    ret = xmalloc1((cnt+1)*sizeof(unichar_t *));
+	    ret = xmalloc((cnt+1)*sizeof(unichar_t *));
     }
     free(wild);
 return( ret );
@@ -4612,7 +4612,7 @@ int EditSubtable(struct lookup_subtable *sub,int isgpos,SplineFont *sf,
     int name_search;
 
     if ( new ) {
-	def = freeme = xmalloc1(strlen(sub->lookup->lookup_name)+10);
+	def = freeme = xmalloc(strlen(sub->lookup->lookup_name)+10);
 	name_search = 1;
 	do {
 	    sprintf( def, "%s-%d", sub->lookup->lookup_name, name_search++ );
@@ -4700,7 +4700,7 @@ GTextInfo **SFSubtablesOfType(SplineFont *sf, int lookup_type, int kernclass,
 	    if ( otl->lookup_type==lookup_type && otl->subtables!=NULL ) {
 		if ( k ) {
 		    ti[pos] = xcalloc(1,sizeof(GTextInfo));
-		    ti[pos]->text = xmalloc1((utf82u_strlen(otl->lookup_name)+2)*sizeof(unichar_t));
+		    ti[pos]->text = xmalloc((utf82u_strlen(otl->lookup_name)+2)*sizeof(unichar_t));
 		    ti[pos]->text[0] = ' ';
 		    utf82u_strcpy(ti[pos]->text+1,otl->lookup_name);
 		    ti[pos]->fg = ti[pos]->bg = COLOR_DEFAULT;
@@ -4786,7 +4786,7 @@ return( sub );
     /*  create a subtable in that lookup... but no. Still give them the */
     /*  option of creating a new lookup */
 
-    choices = xmalloc1((cnt+2)*sizeof(char *));
+    choices = xmalloc((cnt+2)*sizeof(char *));
     for ( cnt=0, otl=isgpos ? sf->gpos_lookups : sf->gsub_lookups; otl!=NULL; otl=otl->next )
 	if ( otl->lookup_type==lookup_type )
 	    choices[cnt++] = otl->lookup_name;
@@ -5032,7 +5032,7 @@ static SplineChar **SelectedGlyphs(FontView *_fv) {
 return(NULL);
     }
 
-    glyphlist = xmalloc1((selcnt+1)*sizeof(SplineChar *));
+    glyphlist = xmalloc((selcnt+1)*sizeof(SplineChar *));
     selcnt=0;
     for ( enc=0; enc<map->enccount; ++enc ) {
 	if ( fv->selected[enc] && (gid=map->map[enc])!=-1 &&
@@ -5710,7 +5710,7 @@ static GTextInfo *ScriptListOfFont(SplineFont *sf) {
     char tag[8];
 
     if ( ourscripts==NULL || ourscripts[0]==0 ) {
-	ourscripts = xmalloc1(2*sizeof(uint32));
+	ourscripts = xmalloc(2*sizeof(uint32));
 	ourscripts[0] = DEFAULT_SCRIPT;
 	ourscripts[1] = 0;
     }
@@ -5941,7 +5941,7 @@ return( true );
 		sourcesc = SFMakeChar(mrd->fv->b.sf,mrd->fv->b.map,enc_start+sel_cnt);
 	    oldname = sc->name;
 	    if ( rplsuffix && (pt=strchr(sourcesc->name,'.'))!=NULL ) {
-		char *name = xmalloc1(pt-sourcesc->name+strlen(suffix)+2);
+		char *name = xmalloc(pt-sourcesc->name+strlen(suffix)+2);
 		strcpy(name,sourcesc->name);
 		strcpy(name+(pt-sourcesc->name),suffix);
 		sc->name = name;

@@ -656,7 +656,7 @@ SplineChar **SFGlyphsWithPSTinSubtable(SplineFont *sf,struct lookup_subtable *su
 	free(used);
 return( NULL );
     }
-    glyphs = xmalloc1((cnt+1)*sizeof(SplineChar *));
+    glyphs = xmalloc((cnt+1)*sizeof(SplineChar *));
     for ( i=cnt=0 ; i<sf->glyphcnt; ++i ) {
 	if ( used[i] )
 	    glyphs[cnt++] = sf->glyphs[i];
@@ -691,7 +691,7 @@ SplineChar **SFGlyphsWithLigatureinLookup(SplineFont *sf,struct lookup_subtable 
 return( NULL );
     }
 
-    glyphs = xmalloc1((cnt+1)*sizeof(SplineChar *));
+    glyphs = xmalloc((cnt+1)*sizeof(SplineChar *));
     for ( i=cnt=0 ; i<sf->glyphcnt; ++i ) {
 	if ( used[i] )
 	    glyphs[cnt++] = sf->glyphs[i];
@@ -1527,7 +1527,7 @@ void NameOTLookup(OTLookup *otl,SplineFont *sf) {
 	    if ( fl==NULL )
 		userfriendly = copy(lookuptype);
 	    else {
-		userfriendly = xmalloc1( strlen(lookuptype) + 10);
+		userfriendly = xmalloc( strlen(lookuptype) + 10);
 		sprintf( userfriendly, "%s '%c%c%c%c'", lookuptype,
 		    fl->featuretag>>24,
 		    fl->featuretag>>16,
@@ -1584,11 +1584,11 @@ void NameOTLookup(OTLookup *otl,SplineFont *sf) {
 /* GT: While the %d is the index into the lookup list and is used to disambiguate it */
 /* GT: In case that is needed */
 	    format = _("%s in %s lookup %d");
-	    otl->lookup_name = xmalloc1( strlen(userfriendly)+strlen(format)+strlen(script)+10 );
+	    otl->lookup_name = xmalloc( strlen(userfriendly)+strlen(format)+strlen(script)+10 );
 	    sprintf( otl->lookup_name, format, userfriendly, script, otl->lookup_index );
 	} else {
 	    format = _("%s lookup %d");
-	    otl->lookup_name = xmalloc1( strlen(userfriendly)+strlen(format)+10 );
+	    otl->lookup_name = xmalloc( strlen(userfriendly)+strlen(format)+10 );
 	    sprintf( otl->lookup_name, format, userfriendly, otl->lookup_index );
 	}
 	free(script);
@@ -1619,7 +1619,7 @@ void NameOTLookup(OTLookup *otl,SplineFont *sf) {
 		IError("Subtable status not filled in for %dth subtable of %s", cnt, otl->lookup_name );
 		format = "%s !!!!!!!! %d";
 	    }
-	    subtable->subtable_name = xmalloc1( strlen(otl->lookup_name)+strlen(format)+10 );
+	    subtable->subtable_name = xmalloc( strlen(otl->lookup_name)+strlen(format)+10 );
 	    sprintf( subtable->subtable_name, format, otl->lookup_name, cnt );
 	}
     }
@@ -1666,7 +1666,7 @@ static struct scriptlanglist *SLOrder(struct scriptlanglist *sl) {
     if ( cnt<=1 )
 return( sl );
     if ( cnt>30 )
-	test = allocked = xmalloc1(cnt*sizeof(struct scriptlanglist *));
+	test = allocked = xmalloc(cnt*sizeof(struct scriptlanglist *));
     for ( sl2=sl, cnt=0; sl2!=NULL; sl2=sl2->next, ++cnt )
 	test[cnt] = sl2;
     for ( i=0; i<cnt; ++i ) for ( j=i+1; j<cnt; ++j ) {
@@ -1694,7 +1694,7 @@ FeatureScriptLangList *FLOrder(FeatureScriptLangList *fl) {
     if ( cnt<=1 )
 return( fl );
     if ( cnt>30 )
-	test = allocked = xmalloc1(cnt*sizeof(FeatureScriptLangList *));
+	test = allocked = xmalloc(cnt*sizeof(FeatureScriptLangList *));
     for ( fl2=fl, cnt=0; fl2!=NULL; fl2=fl2->next, ++cnt )
 	test[cnt] = fl2;
     for ( i=0; i<cnt; ++i ) for ( j=i+1; j<cnt; ++j ) {
@@ -1721,7 +1721,7 @@ struct scriptlanglist *SLCopy(struct scriptlanglist *sl) {
     newsl->next = NULL;
 
     if ( sl->lang_cnt>MAX_LANG ) {
-	newsl->morelangs = xmalloc1((newsl->lang_cnt-MAX_LANG)*sizeof(uint32));
+	newsl->morelangs = xmalloc((newsl->lang_cnt-MAX_LANG)*sizeof(uint32));
 	memcpy(newsl->morelangs,sl->morelangs,(newsl->lang_cnt-MAX_LANG)*sizeof(uint32));
     }
 return( newsl );
@@ -1964,7 +1964,7 @@ static char **ClassCopy(int class_cnt,char **classes) {
 
     if ( classes==NULL || class_cnt==0 )
 return( NULL );
-    newclasses = xmalloc1(class_cnt*sizeof(char *));
+    newclasses = xmalloc(class_cnt*sizeof(char *));
     for ( i=0; i<class_cnt; ++i )
 	newclasses[i] = copy(classes[i]);
 return( newclasses );
@@ -2011,7 +2011,7 @@ static KernClass *SF_AddKernClass(struct sfmergecontext *mc,KernClass *kc,
 
     newkc->firsts = ClassCopy(newkc->first_cnt,newkc->firsts);
     newkc->seconds = ClassCopy(newkc->second_cnt,newkc->seconds);
-    newkc->offsets = xmalloc1(newkc->first_cnt*newkc->second_cnt*sizeof(int16));
+    newkc->offsets = xmalloc(newkc->first_cnt*newkc->second_cnt*sizeof(int16));
     memcpy(newkc->offsets,kc->offsets,newkc->first_cnt*newkc->second_cnt*sizeof(int16));
 return( newkc );
 }
@@ -2035,14 +2035,14 @@ static FPST *SF_AddFPST(struct sfmergecontext *mc,FPST *fpst,
     newfpst->bclassnames = ClassCopy(newfpst->bccnt,newfpst->bclassnames);
     newfpst->fclassnames = ClassCopy(newfpst->fccnt,newfpst->fclassnames);
 
-    newfpst->rules = xmalloc1(newfpst->rule_cnt*sizeof(struct fpst_rule));
+    newfpst->rules = xmalloc(newfpst->rule_cnt*sizeof(struct fpst_rule));
     memcpy(newfpst->rules,fpst->rules,newfpst->rule_cnt*sizeof(struct fpst_rule));
 
     cur = 0;
     for ( i=0; i<newfpst->rule_cnt; ++i ) {
 	struct fpst_rule *r = &newfpst->rules[i], *oldr = &fpst->rules[i];
 
-	r->lookups = xmalloc1(r->lookup_cnt*sizeof(struct seqlookup));
+	r->lookups = xmalloc(r->lookup_cnt*sizeof(struct seqlookup));
 	memcpy(r->lookups,oldr->lookups,r->lookup_cnt*sizeof(struct seqlookup));
 	for ( k=0; k<r->lookup_cnt; ++k ) {
 	    r->lookups[k].lookup = OTLookupCopyNested(mc,
@@ -2056,11 +2056,11 @@ static FPST *SF_AddFPST(struct sfmergecontext *mc,FPST *fpst,
 	    r->u.glyph.fore = copy( r->u.glyph.fore );
 	  break;
 	  case pst_class:
-	    r->u.class.nclasses = xmalloc1( r->u.class.ncnt*sizeof(uint16));
+	    r->u.class.nclasses = xmalloc( r->u.class.ncnt*sizeof(uint16));
 	    memcpy(r->u.class.nclasses,oldr->u.class.nclasses, r->u.class.ncnt*sizeof(uint16));
-	    r->u.class.bclasses = xmalloc1( r->u.class.bcnt*sizeof(uint16));
+	    r->u.class.bclasses = xmalloc( r->u.class.bcnt*sizeof(uint16));
 	    memcpy(r->u.class.bclasses,oldr->u.class.bclasses, r->u.class.bcnt*sizeof(uint16));
-	    r->u.class.fclasses = xmalloc1( r->u.class.fcnt*sizeof(uint16));
+	    r->u.class.fclasses = xmalloc( r->u.class.fcnt*sizeof(uint16));
 	    memcpy(r->u.class.fclasses,oldr->u.class.fclasses, r->u.class.fcnt*sizeof(uint16));
 	  break;
 	  case pst_coverage:
@@ -2090,12 +2090,12 @@ static ASM *SF_AddASM(struct sfmergecontext *mc,ASM *sm, struct lookup_subtable 
     mc->sf_to->sm = newsm;
     mc->sf_to->changed = true;
     newsm->classes = ClassCopy(newsm->class_cnt, newsm->classes);
-    newsm->state = xmalloc1(newsm->class_cnt*newsm->state_cnt*sizeof(struct asm_state));
+    newsm->state = xmalloc(newsm->class_cnt*newsm->state_cnt*sizeof(struct asm_state));
     memcpy(newsm->state,sm->state,
 	    newsm->class_cnt*newsm->state_cnt*sizeof(struct asm_state));
     if ( newsm->type == asm_kern ) {
 	for ( i=newsm->class_cnt*newsm->state_cnt-1; i>=0; --i ) {
-	    newsm->state[i].u.kern.kerns = xmalloc1(newsm->state[i].u.kern.kcnt*sizeof(int16));
+	    newsm->state[i].u.kern.kerns = xmalloc(newsm->state[i].u.kern.kcnt*sizeof(int16));
 	    memcpy(newsm->state[i].u.kern.kerns,sm->state[i].u.kern.kerns,newsm->state[i].u.kern.kcnt*sizeof(int16));
 	}
     } else if ( newsm->type == asm_insert ) {
@@ -2563,7 +2563,7 @@ void OTLookupsCopyInto(SplineFont *into_sf,SplineFont *from_sf,
     mc.prefix = NeedsPrefix(into_sf,from_sf,list)
 	    ? strconcat(from_sf->fontname,"-") : copy("");
     for ( i=0; list[i]!=NULL; ++i );
-    mc.lks = xmalloc1((mc.lmax=i+5)*sizeof(struct lookup_cvt));
+    mc.lks = xmalloc((mc.lmax=i+5)*sizeof(struct lookup_cvt));
     /* First create all the lookups and position them in the right order */
     /*  then create subtables (which may in turn create some new lookups */
     /*  for contextual lookups which invoke other lookups, don't care how */
@@ -2915,7 +2915,7 @@ static void LigatureSearch(struct lookup_subtable *sub, struct lookup_data *data
 		    ++ccnt;
 	    if ( cnt>=data->lmax )
 		data->ligs = xrealloc(data->ligs,(data->lmax+=100)*sizeof(SplineChar **));
-	    data->ligs[cnt] = xmalloc1((ccnt+3)*sizeof(SplineChar *));
+	    data->ligs[cnt] = xmalloc((ccnt+3)*sizeof(SplineChar *));
 	    data->ligs[cnt][0] = sc;
 	    ccnt = 1;
 	    err = 0;
@@ -3722,7 +3722,7 @@ static void doreplace(char **haystack,char *start,char *search,char *rpl,int sle
 	}
     } else {
 	char *base = *haystack;
-	char *new = xmalloc1(pt-base+strlen(pt)+rlen-slen+1);
+	char *new = xmalloc(pt-base+strlen(pt)+rlen-slen+1);
 	memcpy(new,base,start-base);
 	memcpy(new+(start-base),rpl,rlen);
 	strcpy(new+(start-base)+rlen,pt);
@@ -4173,7 +4173,7 @@ static char *ComponentsFromPSTs(PST **psts,int pcnt) {
     for ( i=0; i<ncnt; ++i )
 	len += strlen(names[i])+1;
     if ( len==0 ) len=1;
-    ret = xmalloc1(len);
+    ret = xmalloc(len);
     len = 0;
     for ( i=0; i<ncnt; ++i ) {
 	strcpy(ret+len,names[i]);
@@ -4254,7 +4254,7 @@ OTLookup *NewAALTLookup(SplineFont *sf,struct sllk *sllk, int sllk_cnt, int i) {
 	    sl->script = sllk[j].script;
 	    sl->lang_cnt = sllk[j].lcnt;
 	    if ( sl->lang_cnt>MAX_LANG )
-		sl->morelangs = xmalloc1((sl->lang_cnt-MAX_LANG)*sizeof(uint32));
+		sl->morelangs = xmalloc((sl->lang_cnt-MAX_LANG)*sizeof(uint32));
 	    for ( l=0; l<sl->lang_cnt; ++l )
 		if ( l<MAX_LANG )
 		    sl->langs[l] = sllk[j].langs[l];
@@ -4275,7 +4275,7 @@ OTLookup *NewAALTLookup(SplineFont *sf,struct sllk *sllk, int sllk_cnt, int i) {
     /*  lookups we are interested in, and if it does, build a new pst */
     /*  containing all posibilities listed on any of them */
     if ( sf->cidmaster ) sf = sf->cidmaster;
-    psts = xmalloc1(sllk[i].cnt*sizeof(PST *));
+    psts = xmalloc(sllk[i].cnt*sizeof(PST *));
     k=0;
     do {
 	_sf = k<sf->subfontcnt ? sf->subfonts[k] : sf;
@@ -4524,7 +4524,7 @@ char *reverseGlyphNames(char *str) {
     if ( str==NULL )
 return( NULL );
 
-    rpt = ret = xmalloc1(strlen(str)+1);
+    rpt = ret = xmalloc(strlen(str)+1);
     *ret = '\0';
     for ( pt=str+strlen(str); pt>str; pt=start ) {
 	for ( start = pt-1; start>=str && *start!=' '; --start );
@@ -4562,7 +4562,7 @@ char *FPSTRule_To_Str(SplineFont *sf,FPST *fpst,struct fpst_rule *rule) {
 		( rule->u.glyph.back ? strlen(rule->u.glyph.back) : 0 ) +
 		( rule->u.glyph.fore ? strlen(rule->u.glyph.fore) : 0 ) +
 		200;
-	gb.base = gb.pt = xmalloc1(max+1);
+	gb.base = gb.pt = xmalloc(max+1);
 	gb.end = gb.base+max;
         if ( rule->u.glyph.back!=NULL ) {
 	    char *temp;
@@ -4733,7 +4733,7 @@ return( my_asprintf( _("Replacements must follow the coverage table to which the
 		    /* Good */;
 		else if ( rcnt==1 && ecnt>1 ) {
 		    char *newr;
-		    newr = xmalloc1(ecnt*(strlen(parsed[cnt].replacements)+1)+1);
+		    newr = xmalloc(ecnt*(strlen(parsed[cnt].replacements)+1)+1);
 		    *newr = '\0';
 		    for ( i=0; i<ecnt; ++i ) {
 			strcat(newr,parsed[cnt].replacements);
@@ -4893,13 +4893,13 @@ return( copy( _("A reverse contextual chaining lookup can only match one coverag
       } break;
       case pst_class:
         rule->u.class.ncnt = last+1-first;
-	rule->u.class.nclasses = xmalloc1(rule->u.class.ncnt*sizeof(uint16));
+	rule->u.class.nclasses = xmalloc(rule->u.class.ncnt*sizeof(uint16));
 	rule->u.class.bcnt = first;
 	if ( first!=0 )
-	    rule->u.class.bclasses = xmalloc1(first*sizeof(uint16));
+	    rule->u.class.bclasses = xmalloc(first*sizeof(uint16));
 	rule->u.class.fcnt = cnt==last?0:cnt-last-1;
 	if ( rule->u.class.fcnt!=0 )
-	    rule->u.class.fclasses = xmalloc1(rule->u.class.fcnt*sizeof(uint16));
+	    rule->u.class.fclasses = xmalloc(rule->u.class.fcnt*sizeof(uint16));
 	for ( i=0; i<cnt; ++i ) {
 	    char **classnames, *pend;
 	    int class_cnt, val;
@@ -4966,13 +4966,13 @@ return( my_asprintf( _("%s is not a class name for the forward classes." ), pars
 	    }
 	}
         rule->u.coverage.ncnt = last+1-first;
-	rule->u.coverage.ncovers = xmalloc1(rule->u.coverage.ncnt*sizeof(char *));
+	rule->u.coverage.ncovers = xmalloc(rule->u.coverage.ncnt*sizeof(char *));
 	rule->u.coverage.bcnt = first;
 	if ( first!=0 )
-	    rule->u.coverage.bcovers = xmalloc1(first*sizeof(char *));
+	    rule->u.coverage.bcovers = xmalloc(first*sizeof(char *));
 	rule->u.coverage.fcnt = cnt-last-1;
 	if ( rule->u.coverage.fcnt!=0 )
-	    rule->u.coverage.fcovers = xmalloc1(rule->u.coverage.fcnt*sizeof(char *));
+	    rule->u.coverage.fcovers = xmalloc(rule->u.coverage.fcnt*sizeof(char *));
 	for ( i=0; i<cnt; ++i ) {
 	    if ( i<first )
 		rule->u.coverage.bcovers[first-1-i] = parsed[i].entity;	/* Reverse the order of backtrack coverage tables */

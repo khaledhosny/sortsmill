@@ -68,18 +68,6 @@ typedef intptr_t intpt;
 
 typedef uint32_t unichar_t;
 
-// A macro to mark unused function parameters with. We often
-// have such parameters, because of extensive use of callbacks.
-#if ! defined UNUSED
-#if defined __GNUC__
-#define UNUSED(x) UNUSED_ ## x _GL_UNUSED
-#elif defined __LCLINT__
-#define UNUSED(x) /*@unused@*/ x
-#else
-#define UNUSED(x) x
-#endif
-#endif // ! UNUSED
-
 static inline int
 imin (int a, int b)
 {
@@ -114,15 +102,6 @@ static inline size_t
 szmax (size_t a, size_t b)
 {
   return (a < b) ? b : a;
-}
-
-// Like xmalloc, but, if the allocation succeeds, xmalloc1 is
-// guaranteed to return a valid, non-null pointer, even if the
-// argument is zero.
-static inline void *
-xmalloc1 (size_t s)
-{
-  return xmalloc (szmax (1, s));
 }
 
 static inline char *

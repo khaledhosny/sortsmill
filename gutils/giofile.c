@@ -107,7 +107,7 @@ static void _gio_file_dir(GIOControl *gc,char *path) {
 return;
     }
 
-    buffer = (char *) xmalloc1(strlen(path)+FILENAME_MAX+3);
+    buffer = (char *) xmalloc(strlen(path)+FILENAME_MAX+3);
     strcpy(buffer,path);
     ept = buffer+strlen(buffer);
     if ( ept[-1]!='/' )

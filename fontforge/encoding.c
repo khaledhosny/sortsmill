@@ -628,7 +628,7 @@ ParseConsortiumEncodingFile (FILE *file)
   item = xcalloc (1, sizeof (Encoding));
   item->only_1byte = item->has_1byte = true;
   item->char_cnt = max;
-  item->unicode = xmalloc1 (max * sizeof (int32));
+  item->unicode = xmalloc (max * sizeof (int32));
   memcpy (item->unicode, encs, max * sizeof (int32));
   return (item);
 }
@@ -984,7 +984,7 @@ SearchDirForCidMap (char *dir, char *registry, char *ordering,
         continue;
       if (test >= supplement)
         {
-          ret = xmalloc1 (strlen (dir) + 1 + len + 1);
+          ret = xmalloc (strlen (dir) + 1 + len + 1);
           strcpy (ret, dir);
           strcat (ret, "/");
           strcat (ret, ent->d_name);
@@ -1000,7 +1000,7 @@ SearchDirForCidMap (char *dir, char *registry, char *ordering,
   closedir (d);
   if (best > -1)
     {
-      ret = xmalloc1 (strlen (dir) + 1 + strlen (maybe) + 1);
+      ret = xmalloc (strlen (dir) + 1 + strlen (maybe) + 1);
       strcpy (ret, dir);
       strcat (ret, "/");
       strcat (ret, maybe);
@@ -1031,7 +1031,7 @@ SearchNoLibsDirForCidMap (char *dir, char *registry, char *ordering,
 static struct cidmap *
 MakeDummyMap (char *registry, char *ordering, int supplement)
 {
-  struct cidmap *ret = xmalloc1 (sizeof (struct cidmap));
+  struct cidmap *ret = xmalloc (sizeof (struct cidmap));
 
   ret->registry = copy (registry);
   ret->ordering = copy (ordering);
@@ -1048,7 +1048,7 @@ MakeDummyMap (char *registry, char *ordering, int supplement)
 struct cidmap *
 LoadMapFromFile (char *file, char *registry, char *ordering, int supplement)
 {
-  struct cidmap *ret = xmalloc1 (sizeof (struct cidmap));
+  struct cidmap *ret = xmalloc (sizeof (struct cidmap));
   char *pt = strrchr (file, '.');
   FILE *f;
   int cid1, cid2, uni, cnt, i, ch;
@@ -2228,7 +2228,7 @@ _SFForceEncoding (SplineFont *sf, EncMap * old, Encoding * new_enc)
               {
                 free (map->backmap);
                 map->backmax = enc_cnt;
-                map->backmap = xmalloc1 (enc_cnt * sizeof (int));
+                map->backmap = xmalloc (enc_cnt * sizeof (int));
               }
             memset (map->backmap, -1, enc_cnt * sizeof (int));
             for (i = 0; i < map->enccount; ++i)
@@ -2333,9 +2333,9 @@ EncMapFromEncoding (SplineFont *sf, Encoding * enc)
     base = 256;
   else if (enc->char_cnt <= 0x10000)
     base = 0x10000;
-  encoded = xmalloc1 (base * sizeof (int));
+  encoded = xmalloc (base * sizeof (int));
   memset (encoded, -1, base * sizeof (int));
-  unencoded = xmalloc1 (sf->glyphcnt * sizeof (int));
+  unencoded = xmalloc (sf->glyphcnt * sizeof (int));
   unmax = sf->glyphcnt;
 
   for (i = extras = 0; i < sf->glyphcnt; ++i)
@@ -2419,11 +2419,11 @@ EncMapFromEncoding (SplineFont *sf, Encoding * enc)
 
   map = (EncMap *) xzalloc (sizeof (EncMap));
   map->enccount = map->encmax = base + extras;
-  map->map = xmalloc1 (map->enccount * sizeof (int));
+  map->map = xmalloc (map->enccount * sizeof (int));
   memcpy (map->map, encoded, base * sizeof (int));
   memcpy (map->map + base, unencoded, extras * sizeof (int));
   map->backmax = sf->glyphcnt;
-  map->backmap = xmalloc1 (sf->glyphcnt * sizeof (int));
+  map->backmap = xmalloc (sf->glyphcnt * sizeof (int));
   memset (map->backmap, -1, sf->glyphcnt * sizeof (int));       /* Just in case there are some unencoded glyphs (duplicates perhaps) */
   for (i = map->enccount - 1; i >= 0; --i)
     if (map->map[i] != -1)
@@ -2445,7 +2445,7 @@ CompactEncMap (EncMap * map, SplineFont *sf)
   for (i = inuse = 0; i < map->enccount; ++i)
     if ((gid = map->map[i]) != -1 && SCWorthOutputting (sf->glyphs[gid]))
       ++inuse;
-  newmap = xmalloc1 (inuse * sizeof (int32));
+  newmap = xmalloc (inuse * sizeof (int32));
   for (i = inuse = 0; i < map->enccount; ++i)
     if ((gid = map->map[i]) != -1 && SCWorthOutputting (sf->glyphs[gid]))
       newmap[inuse++] = gid;

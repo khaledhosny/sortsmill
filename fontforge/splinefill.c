@@ -697,7 +697,7 @@ void BCRegularizeBitmap(BDFChar *bdfc) {
     int i;
 
     if ( bdfc->bytes_per_line!=bpl ) {
-	uint8 *bitmap = xmalloc1(bpl*(bdfc->ymax-bdfc->ymin+1));
+	uint8 *bitmap = xmalloc(bpl*(bdfc->ymax-bdfc->ymin+1));
 	for ( i=0; i<=(bdfc->ymax-bdfc->ymin); ++i )
 	    memcpy(bitmap+i*bpl,bdfc->bitmap+i*bdfc->bytes_per_line,bpl);
 	free(bdfc->bitmap);
@@ -711,7 +711,7 @@ void BCRegularizeGreymap(BDFChar *bdfc) {
     int i;
 
     if ( bdfc->bytes_per_line!=bpl ) {
-	uint8 *bitmap = xmalloc1(bpl*(bdfc->ymax-bdfc->ymin+1));
+	uint8 *bitmap = xmalloc(bpl*(bdfc->ymax-bdfc->ymin+1));
 	for ( i=0; i<=(bdfc->ymax-bdfc->ymin); ++i )
 	    memcpy(bitmap+i*bpl,bdfc->bitmap+i*bdfc->bytes_per_line,bpl);
 	free(bdfc->bitmap);
@@ -1559,7 +1559,7 @@ BDFFont *SplineFontToBDFHeader(SplineFont *_sf, int pixelsize, int indicate) {
     bdf->sf = _sf;
     bdf->glyphcnt = bdf->glyphmax = max;
     bdf->pixelsize = pixelsize;
-    bdf->glyphs = xmalloc1(max*sizeof(BDFChar *));
+    bdf->glyphs = xmalloc(max*sizeof(BDFChar *));
     bdf->ascent = rint(sf->ascent*scale);
     bdf->descent = pixelsize-bdf->ascent;
     bdf->res = -1;
@@ -1719,7 +1719,7 @@ return( SplineFontRasterize(_sf,layer,pixelsize,true));
     bdf->sf = _sf;
     bdf->glyphcnt = bdf->glyphmax = max;
     bdf->pixelsize = pixelsize;
-    bdf->glyphs = xmalloc1(max*sizeof(BDFChar *));
+    bdf->glyphs = xmalloc(max*sizeof(BDFChar *));
     bdf->ascent = rint(sf->ascent*scale);
     bdf->descent = pixelsize-bdf->ascent;
     bdf->res = -1;

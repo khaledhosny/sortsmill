@@ -486,7 +486,7 @@ static void IkarusReadChar(SplineChar *sc,FILE *file) {
     n = getushort(file)*2048;
     n += getushort(file);		/* Length of contour section in words */
     ncontours = (n-2)/6;
-    contours = xmalloc1(ncontours*sizeof(struct contour));
+    contours = xmalloc(ncontours*sizeof(struct contour));
     ptmax = 0;
     for ( i=0; i<ncontours; ++i ) {
 	contours[i].offset = getushort(file)*4096;
@@ -498,8 +498,8 @@ static void IkarusReadChar(SplineChar *sc,FILE *file) {
 	if ( contours[i].npts > ptmax )
 	    ptmax = contours[i].npts;
     }
-    bps = xmalloc1(ptmax*sizeof(BasePoint));
-    ptype = xmalloc1(ptmax*sizeof(uint8));
+    bps = xmalloc(ptmax*sizeof(BasePoint));
+    ptype = xmalloc(ptmax*sizeof(uint8));
 
     base = ftell(file);
     /* 2 words here giving length (in records/words) of image data */
@@ -674,8 +674,8 @@ return( NULL );
     /* last record */ getushort(file);
     /* last word of last record */ getushort(file);
 
-    offsets = xmalloc1(numchars*sizeof(int32));
-    numbers = xmalloc1(numchars*sizeof(int32));
+    offsets = xmalloc(numchars*sizeof(int32));
+    numbers = xmalloc(numchars*sizeof(int32));
     maxnum = 0;
     for ( i=0; i<numchars; ++i ) {
 	numbers[i] = getushort(file);

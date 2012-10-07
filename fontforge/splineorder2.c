@@ -466,7 +466,7 @@ return( end );
 return( _ttfapprox(ps,tmin,tmax,start));
 }
 
-#if !defined(FONTFORGE_CONFIG_NON_SYMMETRIC_QUADRATIC_CONVERSION)
+#if !FONTFORGE_CONFIG_NON_SYMMETRIC_QUADRATIC_CONVERSION
 typedef struct qpoint {
     BasePoint bp;
     BasePoint cp;
@@ -763,7 +763,7 @@ return( NULL );
 }
 
 static SplinePoint *ttfApprox(Spline *ps, SplinePoint *start) {
-#if !defined(FONTFORGE_CONFIG_NON_SYMMETRIC_QUADRATIC_CONVERSION)
+#if !FONTFORGE_CONFIG_NON_SYMMETRIC_QUADRATIC_CONVERSION
     extended magicpoints[6], last;
     int cnt, i, j, qcnt, test_level;
     QPoint data[8*10];
@@ -802,7 +802,7 @@ static SplinePoint *ttfApprox(Spline *ps, SplinePoint *start) {
     if (( ret = AlreadyQuadraticCheck(ps,start))!=NULL )
 return( ret );
 
-#if !defined(FONTFORGE_CONFIG_NON_SYMMETRIC_QUADRATIC_CONVERSION)
+#if !FONTFORGE_CONFIG_NON_SYMMETRIC_QUADRATIC_CONVERSION
     qcnt = 1;
     data[0].bp = ps->from->me;
     data[0].t = 0;

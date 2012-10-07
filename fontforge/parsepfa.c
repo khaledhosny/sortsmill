@@ -966,7 +966,7 @@ return( copy(""));
 	}
 	if ( end>start ) {
 	    if ( ret==NULL )
-		ret = xmalloc1(end-start+1);
+		ret = xmalloc(end-start+1);
 	    else
 		ret = xrealloc(ret,len+end-start);
 	    strncpy(ret+len-1,start,end-start);
@@ -988,7 +988,7 @@ static char *gettoken(char *start) {
     while ( *start!='\0' && *start!='/' && *start!='(' ) ++start;
     if ( *start=='/' || *start=='(' ) ++start;
     for ( end = start; *end!='\0' && !isspace(*end) && *end!='[' && *end!='/' && *end!='{' && *end!='(' && *end!=')'; ++end );
-    ret = xmalloc1(end-start+1);
+    ret = xmalloc(end-start+1);
     if ( end>start )
 	strncpy(ret,start,end-start);
     ret[end-start] = '\0';
@@ -1268,7 +1268,7 @@ static void findstring(struct fontparse *fp,struct pschars *subrs,int index,char
 	if ( bpt<bs ) bs=bpt;		/* garbage */ 
 	subrs->lens[index] = bpt-bs;
 	subrs->keys[index] = copy(nametok);
-	subrs->values[index] = xmalloc1(bpt-bs);
+	subrs->values[index] = xmalloc(bpt-bs);
 	memcpy(subrs->values[index],bs,bpt-bs);
 	if ( index>=subrs->next ) subrs->next = index+1;
     }
@@ -1611,8 +1611,8 @@ return;
 	fp->inmetrics = true;
 	fp->fd->metrics = xcalloc(1,sizeof(struct psdict));
 	fp->fd->metrics->cnt = strtol(endtok,NULL,10);
-	fp->fd->metrics->keys = xmalloc1(fp->fd->metrics->cnt*sizeof(char *));
-	fp->fd->metrics->values = xmalloc1(fp->fd->metrics->cnt*sizeof(char *));
+	fp->fd->metrics->keys = xmalloc(fp->fd->metrics->cnt*sizeof(char *));
+	fp->fd->metrics->values = xmalloc(fp->fd->metrics->cnt*sizeof(char *));
     } else if ( strstr(line,"/Private")!=NULL && strstr(line,"/Blend")!=NULL ) {
 	fp->infi = fp->inbb = fp->inmetrics = fp->inmetrics2 = false;
 	fp->inprivate = fp->inblendprivate = fp->inblendfi = false;
@@ -1973,7 +1973,7 @@ return;
 		if ( chars->values[i]!=NULL )
 		    LogError( _("Duplicate definition of subroutine %d\n"), i );
 		chars->lens[i] = binlen;
-		chars->values[i] = xmalloc1(binlen);
+		chars->values[i] = xmalloc(binlen);
 		memcpy(chars->values[i],binstart,binlen);
 		if ( i>=chars->next ) chars->next = i+1;
 	    } else if ( !fp->alreadycomplained ) {
@@ -1996,7 +1996,7 @@ return;
 	    int i = chars->next;
 	    chars->lens[i] = binlen;
 	    chars->keys[i] = copy(tok);
-	    chars->values[i] = xmalloc1(binlen);
+	    chars->values[i] = xmalloc(binlen);
 	    memcpy(chars->values[i],binstart,binlen);
 	    ++chars->next;
 	    ff_progress_next();
@@ -2062,7 +2062,7 @@ return( 0 );
     ungetc(ch,temp);
 
     if ( buffer==NULL ) {
-	buffer = xmalloc1(3000);
+	buffer = xmalloc(3000);
 	end = buffer+3000;
     }
     innum = inr = 0; wasspace = 0; inbinary = 0; rpt = NULL; rdpt = NULL;
@@ -2317,7 +2317,7 @@ static unsigned char *readt1str(FILE *temp,int offset,int len,int leniv) {
 
     fseek(temp,offset,SEEK_SET);
     if ( leniv<0 ) {
-	str = pt = xmalloc1(len+1);
+	str = pt = xmalloc(len+1);
 	for ( i=0 ; i<len; ++i )
 	    *pt++ = getc(temp);
     } else {
@@ -2326,7 +2326,7 @@ static unsigned char *readt1str(FILE *temp,int offset,int len,int leniv) {
 	    plain = ( cypher ^ (r>>8));
 	    r = (cypher + r) * c1 + c2;
 	}
-	str = pt = xmalloc1(len-leniv+1);
+	str = pt = xmalloc(len-leniv+1);
 	for (; i<len; ++i ) {
 	    cypher = getc(temp);
 	    plain = ( cypher ^ (r>>8));
@@ -2346,10 +2346,10 @@ static void figurecids(struct fontparse *fp,FILE *temp) {
     int leniv;
     /* Some cid formats don't have any of these */
 
-    fd->cidstrs = xmalloc1(cidcnt*sizeof(uint8 *));
-    fd->cidlens = xmalloc1(cidcnt*sizeof(int16));
-    fd->cidfds = xmalloc1((cidcnt+1)*sizeof(int16));
-    offsets = xmalloc1((cidcnt+1)*sizeof(int));
+    fd->cidstrs = xmalloc(cidcnt*sizeof(uint8 *));
+    fd->cidlens = xmalloc(cidcnt*sizeof(int16));
+    fd->cidfds = xmalloc((cidcnt+1)*sizeof(int16));
+    offsets = xmalloc((cidcnt+1)*sizeof(int));
     ff_progress_change_total(cidcnt);
 
     fseek(temp,fd->mapoffset,SEEK_SET);
@@ -2400,7 +2400,7 @@ static void figurecids(struct fontparse *fp,FILE *temp) {
 	    private->subrs->values = xcalloc(subrcnt,sizeof(char *));
 	    private->subrs->lens = xcalloc(subrcnt,sizeof(int));
 	    leniv = private->leniv;
-	    offsets = xmalloc1((subrcnt+1)*sizeof(int));
+	    offsets = xmalloc((subrcnt+1)*sizeof(int));
 	    fseek(temp,subroff,SEEK_SET);
 	    for ( i=0; i<=subrcnt; ++i ) {
 		for ( j=val=0; j<sdbytes; ++j )
@@ -2728,7 +2728,7 @@ char **_NamesReadPostScript(FILE *ps) {
 		while ( isspace(*pt)) ++pt;
 		if ( *pt=='/' ) ++pt;
 		for ( end = pt; *end!='\0' && !isspace(*end); ++end );
-		ret = xmalloc1(2*sizeof(char *));
+		ret = xmalloc(2*sizeof(char *));
 		ret[0] = copyn(pt,end-pt);
 		ret[1] = NULL;
 	break;

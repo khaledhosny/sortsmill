@@ -672,7 +672,7 @@ struct freetype_raster *DebuggerCurrentRaster(TT_ExecContext exc,int depth) {
 	outline.points[i].y += yoff;
     }
 
-    ret = xmalloc1(sizeof(struct freetype_raster));
+    ret = xmalloc(sizeof(struct freetype_raster));
     /* I'm not sure why I need these, but it seems I do */
     if ( depth==8 ) {
 	ret->as = floor(b.miny/64.0) + bitmap.rows;

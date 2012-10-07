@@ -147,7 +147,7 @@ Complex version:
 #define CID_Covers		4600
 
 char *cu_copybetween(const unichar_t *start, const unichar_t *end) {
-    char *ret = xmalloc1(end-start+1);
+    char *ret = xmalloc(end-start+1);
     cu_strncpy(ret,start,end-start);
     ret[end-start] = '\0';
 return( ret );
@@ -160,7 +160,7 @@ static char *reversenames(char *str) {
     if ( str==NULL )
 return( NULL );
 
-    rpt = ret = xmalloc1(strlen(str)+1);
+    rpt = ret = xmalloc(strlen(str)+1);
     *ret = '\0';
     for ( pt=str+strlen(str); pt>str; pt=start ) {
 	for ( start = pt-1; start>=str && *start!=' '; --start );
@@ -190,7 +190,7 @@ static char *rpl(const char *src, const char *find, const char *rpl) {
     if ( found_cnt==0 )
 return( copy(src));
 
-    rpt = ret = xmalloc1(strlen(src)+found_cnt*(strlen(rpl)-flen)+1);
+    rpt = ret = xmalloc(strlen(src)+found_cnt*(strlen(rpl)-flen)+1);
     for ( pt=src; *pt; ) {
 	while ( isspace(*pt))
 	    *rpt++ = *pt++;
@@ -223,7 +223,7 @@ static char *classnumbers(int cnt,uint16 *classes, struct matrix_data *classname
 	    len += strlen(classnames[cols*classes[i]+0].u.md_str)+1;
 	}
     }
-    ret = pt = xmalloc1(len+3);
+    ret = pt = xmalloc(len+3);
     *pt = '\0';		/* In case it is empty */
 
     for ( i=0; i<cnt; ++i ) {
@@ -255,7 +255,7 @@ static char *rclassnumbers(int cnt,uint16 *classes, struct matrix_data *classnam
 	    len += strlen(classnames[cols*classes[i]+0].u.md_str)+1;
 	}
     }
-    ret = pt = xmalloc1(len+3);
+    ret = pt = xmalloc(len+3);
     *pt = '\0';
     for ( i=cnt-1; i>=0; --i ) {
 	if ( classnames[cols*classes[i]+0].u.md_str==NULL ) {
@@ -361,7 +361,7 @@ static char *gruleitem(struct fpst_rule *r) {
 	    (r->u.glyph.fore==0 ? 0 : strlen(r->u.glyph.fore)) +
 	    seqlookuplen(r);
 
-    ret = pt = xmalloc1(len+8);
+    ret = pt = xmalloc(len+8);
     if ( r->u.glyph.back!=NULL && *r->u.glyph.back!='\0' ) {
 	char *temp = reversenames(r->u.glyph.back);
 	strcpy(pt,temp);
@@ -435,7 +435,7 @@ static char *classruleitem(struct fpst_rule *r,struct matrix_data **classes, int
 	}
     }
 
-    ret = pt = xmalloc1((len+8+seqlookuplen(r)) * sizeof(unichar_t));
+    ret = pt = xmalloc((len+8+seqlookuplen(r)) * sizeof(unichar_t));
     for ( k=r->u.class.bcnt-1; k>=0; --k ) {
 	int c = r->u.class.bclasses[k];
 	if ( classes[1][cols*c+0].u.md_str!=NULL && *classes[1][cols*c+0].u.md_str!='\0' ) {
@@ -498,7 +498,7 @@ static void classruleitem2rule(SplineFont *sf,const char *ruletext,struct fpst_r
 		ch = utf8_ildb((const char **) &pt);
 	}
 	(&r->u.class.ncnt)[i] = len;
-	(&r->u.class.nclasses)[i] = xmalloc1(len*sizeof(uint16));
+	(&r->u.class.nclasses)[i] = xmalloc(len*sizeof(uint16));
 	len = 0;
 	if ( ch=='\0' || ch==0x21d2 )
     break;
@@ -563,7 +563,7 @@ static void CCD_ParseLookupList(SplineFont *sf, struct fpst_rule *r,GGadget *lis
     struct matrix_data *classes = GMatrixEditGet(list,&len);
 
     r->lookup_cnt = len;
-    r->lookups = xmalloc1(len*sizeof(struct seqlookup));
+    r->lookups = xmalloc(len*sizeof(struct seqlookup));
     for ( i=0; i<len; ++i ) {
 	r->lookups[i].seq = classes[2*i+1].u.md_ival;
 	r->lookups[i].lookup = (OTLookup *) classes[2*i+0].u.md_ival;
@@ -641,7 +641,7 @@ return( false );
 	}
 	if ( !doit ) {
 	    (&r->u.class.ncnt)[which] = any;
-	    (&r->u.class.nclasses)[which] = xmalloc1(any*sizeof(uint16));
+	    (&r->u.class.nclasses)[which] = xmalloc(any*sizeof(uint16));
 	}
     }
 return( true );
@@ -957,7 +957,7 @@ static char **CCD_ParseCoverageList(struct contextchaindlg *ccd,int cid,int *cnt
     *cnt = _cnt;
     if ( _cnt==0 )
 return( NULL );
-    ret = xmalloc1(*cnt*sizeof(char *));
+    ret = xmalloc(*cnt*sizeof(char *));
     for ( i=0; i<_cnt; ++i )
 	ret[i] = GlyphNameListDeUnicode(covers[i].u.md_str);
 return( ret );
@@ -1025,7 +1025,7 @@ return;
 	    if ( i!=0 && !has[i] )
 	continue;
 	    (&fpst->nccnt)[i] = clen[i];
-	    (&fpst->nclass)[i] = xmalloc1(clen[i]*sizeof(char*));
+	    (&fpst->nclass)[i] = xmalloc(clen[i]*sizeof(char*));
 	    (&fpst->nclass)[i][0] = NULL;
 	    had_class0 = i==0 && !isEverythingElse(classes[i][0].u.md_str);
 	    for ( k=had_class0 ? 0 : 1 ; k<clen[i]; ++k )
@@ -1105,8 +1105,8 @@ return;
 		    classes_simple = GMatrixEditGet(GWidgetGetControl(ccd->gw,CID_MatchClasses),&clen);
 		(&dummyfpst->nccnt)[i] = clen;
 		if ( clen!=0 ) {
-		    (&dummyfpst->nclass)[i] = xmalloc1(clen*sizeof(char*));
-		    (&dummyfpst->nclassnames)[i] = xmalloc1(clen*sizeof(char*));
+		    (&dummyfpst->nclass)[i] = xmalloc(clen*sizeof(char*));
+		    (&dummyfpst->nclassnames)[i] = xmalloc(clen*sizeof(char*));
 		    (&dummyfpst->nclass)[i][0] = NULL;
 		    (&dummyfpst->nclassnames)[i][0] = NULL;
 		    had_class0 = i==0 && !isEverythingElse(classes_simple[3*0+1].u.md_str);
@@ -1256,11 +1256,11 @@ return;
 	dummy.u.coverage.bcnt = first;
 	dummy.u.coverage.ncnt = forward_start-first;
 	dummy.u.coverage.fcnt = len-forward_start;
-	dummy.u.coverage.ncovers = xmalloc1(dummy.u.coverage.ncnt*sizeof(char *));
+	dummy.u.coverage.ncovers = xmalloc(dummy.u.coverage.ncnt*sizeof(char *));
 	if ( dummy.u.coverage.bcnt!=0 )
-	    dummy.u.coverage.bcovers = xmalloc1(dummy.u.coverage.bcnt*sizeof(char *));
+	    dummy.u.coverage.bcovers = xmalloc(dummy.u.coverage.bcnt*sizeof(char *));
 	if ( dummy.u.coverage.fcnt!=0 )
-	    dummy.u.coverage.fcovers = xmalloc1(dummy.u.coverage.fcnt*sizeof(char *));
+	    dummy.u.coverage.fcovers = xmalloc(dummy.u.coverage.fcnt*sizeof(char *));
 	for ( i=0; i<first; ++i )
 	    dummy.u.coverage.bcovers[first-1-i] = GlyphNameListDeUnicode( old[cols*i+0].u.md_str );
 	for ( i=0; i<dummy.u.coverage.ncnt; ++i )
@@ -1431,7 +1431,7 @@ static int CCD_AddLookup(GGadget *g, GEvent *e) {
 	    char *space;
 	    unichar_t *temp;
 	    otl = lookup_ti->userdata;
-	    space = xmalloc1(strlen(otl->lookup_name)+8);
+	    space = xmalloc(strlen(otl->lookup_name)+8);
 	    sprintf( space, " @<%s> ", otl->lookup_name );
 	    temp = utf82u_copy(space);
 	    GTextFieldReplace(tf,temp);
@@ -1578,7 +1578,7 @@ return( NULL );
     wild = NULL;
     if ( do_wildcards ) {
 	pt = spt;
-	wild = xmalloc1((u_strlen(spt)+2)*sizeof(unichar_t));
+	wild = xmalloc((u_strlen(spt)+2)*sizeof(unichar_t));
 	u_strcpy(wild,pt);
 	uc_strcat(wild,"*");
     }
@@ -1603,7 +1603,7 @@ return( NULL );
 		    if ( spt==basept ) {
 			ret[cnt] = utf82u_copy(str);
 		    } else {
-			unichar_t *temp = xmalloc1((spt-basept+strlen(str)+4)*sizeof(unichar_t));
+			unichar_t *temp = xmalloc((spt-basept+strlen(str)+4)*sizeof(unichar_t));
 			int len;
 			u_strncpy(temp,basept,spt-basept);
 			utf82u_strcpy(temp+(spt-basept),str);
@@ -1619,7 +1619,7 @@ return( NULL );
 	else if ( cnt==0 )
     break;
 	else
-	    ret = xmalloc1((cnt+1)*sizeof(unichar_t *));
+	    ret = xmalloc((cnt+1)*sizeof(unichar_t *));
     }
     free(wild);
 return( ret );

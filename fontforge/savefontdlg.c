@@ -283,7 +283,7 @@ ParseBitmapSizes (GGadget * g, char *msg, int *err)
       pt = end + 1;
       end2 = NULL;
     }
-  sizes = xmalloc1 ((i + 1) * sizeof (int32));
+  sizes = xmalloc ((i + 1) * sizeof (int32));
 
   for (i = 0, pt = val; *pt != '\0';)
     {
@@ -1493,7 +1493,7 @@ GFileChooserFilterWernerSFDs (GGadget * g, GDirEntry * ent,
 
   if (ret == fc_show && !ent->isdir)
     {
-      char *filename = xmalloc1 (u_strlen (dir) + u_strlen (ent->name) + 5);
+      char *filename = xmalloc (u_strlen (dir) + u_strlen (ent->name) + 5);
       cu_strcpy (filename, dir);
       strcat (filename, "/");
       cu_strcat (filename, ent->name);
@@ -1634,7 +1634,7 @@ OFLibUploadGather (struct gfc_data *d, unichar_t *path)
     {
       char *baseurl = "http://openfontlibrary.org/media/files/";
       char *uploadcontrol =
-        xmalloc1 (strlen (baseurl) + strlen (oflib.upload_id) + 1);
+        xmalloc (strlen (baseurl) + strlen (oflib.upload_id) + 1);
       strcpy (uploadcontrol, baseurl);
       strcat (uploadcontrol, oflib.upload_id);
       help (uploadcontrol);
@@ -2365,7 +2365,7 @@ GFD_Format (GGadget * g, GEvent * e)
         }
 
       ret = GGadgetGetTitle (d->gfc);
-      dup = xmalloc1 ((u_strlen (ret) + 30) * sizeof (unichar_t));
+      dup = xmalloc ((u_strlen (ret) + 30) * sizeof (unichar_t));
       u_strcpy (dup, ret);
       free (ret);
       pt = u_strrchr (dup, '.');
@@ -2630,7 +2630,7 @@ BitmapList (SplineFont *sf)
   unichar_t *uret;
 
   for (bdf = sf->bitmaps, i = 0; bdf != NULL; bdf = bdf->next, ++i);
-  pt = cret = xmalloc1 ((i + 1) * 20);
+  pt = cret = xmalloc ((i + 1) * 20);
   for (bdf = sf->bitmaps; bdf != NULL; bdf = bdf->next)
     {
       if (pt != cret)
@@ -2825,7 +2825,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
       /*  and I want people to know why they can't generate a family */
       FontView *fv;
       SplineFont *dup = NULL /*, *badenc=NULL */ ;
-      familysfs = xmalloc1 ((fondmax = 10) * sizeof (SFArray));
+      familysfs = xmalloc ((fondmax = 10) * sizeof (SFArray));
       memset (familysfs[0], 0, sizeof (familysfs[0]));
       familysfs[0][0] = sf;
       fondcnt = 1;
@@ -4000,7 +4000,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
     SplineFont *master = sf->cidmaster ? sf->cidmaster : sf;
     char *fn = master->defbasefilename != NULL ? master->defbasefilename :
       master->fontname;
-    unichar_t *temp = xmalloc1 (sizeof (unichar_t) * (strlen (fn) + 30));
+    unichar_t *temp = xmalloc (sizeof (unichar_t) * (strlen (fn) + 30));
     uc_strcpy (temp, fn);
     uc_strcat (temp,
                savefont_extensions[ofs] !=

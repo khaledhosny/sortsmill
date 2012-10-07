@@ -357,9 +357,9 @@ enum Compare_Ret SSsCompare(const SplineSet *ss1, const SplineSet *ss2,
     if ( cnt1!=cnt2 )
 return( SS_DiffContourCount|SS_NoMatch );
 
-    b1 = xmalloc1(cnt1*sizeof(DBounds));
-    b2 = xmalloc1(cnt1*sizeof(DBounds));
-    match = xmalloc1(cnt1*sizeof(SplineSet *));
+    b1 = xmalloc(cnt1*sizeof(DBounds));
+    b2 = xmalloc(cnt1*sizeof(DBounds));
+    match = xmalloc(cnt1*sizeof(SplineSet *));
     for ( ss=ss1, cnt1=0; ss!=NULL; ss=ss->next, ++cnt1 ) {
 	SplineSet *next = ss->next; ((SplineSet *) ss)->next = NULL;
 	SplineSetFindBounds(ss,&b1[cnt1]);

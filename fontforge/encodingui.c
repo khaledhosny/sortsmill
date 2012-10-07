@@ -300,8 +300,8 @@ return;		/* Duplicate */
     }
     if ( block->tot==0 ) {
 	block->tot = 10;
-	block->maps = xmalloc1(10*sizeof(char *));
-	block->dirs = xmalloc1(10*sizeof(char *));
+	block->maps = xmalloc(10*sizeof(char *));
+	block->dirs = xmalloc(10*sizeof(char *));
     } else if ( block->cur>=block->tot ) {
 	block->tot += 10;
 	block->maps = xrealloc(block->maps,block->tot*sizeof(char *));
@@ -380,7 +380,7 @@ struct cidmap *AskUserForCIDMap(void) {
 	if ( filename!=NULL )
 	    /* Do nothing for now */;
 	else if ( block.dirs[ret-1]!=NULL ) {
-	    filename = xmalloc1(strlen(block.dirs[ret-1])+strlen(block.maps[ret-1])+3+8);
+	    filename = xmalloc(strlen(block.dirs[ret-1])+strlen(block.maps[ret-1])+3+8);
 	    strcpy(filename,block.dirs[ret-1]);
 	    strcat(filename,"/");
 	    strcat(filename,block.maps[ret-1]);

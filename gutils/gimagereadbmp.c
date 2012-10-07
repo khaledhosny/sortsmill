@@ -145,15 +145,15 @@ static int readpixels(FILE *file,struct bmpheader *head) {
 
     fseek(file,head->offset,0);
     if ( head->bitsperpixel>=16 ) {
-	head->int32_pixels = (uint32 *) xmalloc1(head->height* 4*head->width );
+	head->int32_pixels = (uint32 *) xmalloc(head->height* 4*head->width );
 	if ( head->int32_pixels==NULL )
 return( 0 );
     } else if ( head->bitsperpixel!=1 ) {
-	head->byte_pixels = (unsigned char *) xmalloc1(head->height* head->width );
+	head->byte_pixels = (unsigned char *) xmalloc(head->height* head->width );
 	if ( head->byte_pixels==NULL )
 return( 0 );
     } else {
-	head->byte_pixels = (unsigned char *) xmalloc1(head->height* ((head->width+7)/8) );
+	head->byte_pixels = (unsigned char *) xmalloc(head->height* ((head->width+7)/8) );
 	if ( head->byte_pixels==NULL )
 return( 0 );
     }

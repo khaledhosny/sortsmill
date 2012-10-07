@@ -713,7 +713,7 @@ return( false );
     }
 
     datalen = 8*8*1024;
-    databuf = xmalloc1(datalen+1);
+    databuf = xmalloc(datalen+1);
     memset(&siteinfo,0,sizeof(siteinfo));
     siteinfo.user_id = -1;
 
@@ -1081,7 +1081,7 @@ return( false );
     if ( lock!=NULL )
 	pthread_mutex_lock(lock);
     datalen = 8*8*1024;
-    databuf = xmalloc1(datalen+1);
+    databuf = xmalloc(datalen+1);
     if ( lock!=NULL )
 	pthread_mutex_unlock(lock);
     else
@@ -1381,7 +1381,7 @@ return( false );
     }
 
     datalen = 8*8*1024;
-    databuf = xmalloc1(datalen+1);
+    databuf = xmalloc(datalen+1);
     cmd = databuf;
 
     ChangeLine2_8(_("Logging in..."));

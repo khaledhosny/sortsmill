@@ -254,7 +254,7 @@ void BCRotateCharForVert(BDFChar *bc,BDFChar *from, BDFFont *frombdf) {
     free(bc->bitmap);
     bc->xmin = from->xmin; bc->xmax = from->xmax; bc->ymin = from->ymin; bc->ymax = from->ymax;
     bc->width = from->width; bc->bytes_per_line = from->bytes_per_line;
-    bc->bitmap = xmalloc1(bc->bytes_per_line*(bc->ymax-bc->ymin+1));
+    bc->bitmap = xmalloc(bc->bytes_per_line*(bc->ymax-bc->ymin+1));
     memcpy(bc->bitmap,from->bitmap,bc->bytes_per_line*(bc->ymax-bc->ymin+1));
     BCTransFunc(bc,bvt_rotate90cw,0,0);
     xmin = frombdf->descent + from->ymin;
@@ -362,9 +362,9 @@ BDFFloat *BDFFloatCopy(BDFFloat *sel) {
     BDFFloat *new;
     if ( sel==NULL )
 return(NULL);
-    new = xmalloc1(sizeof(BDFFloat));
+    new = xmalloc(sizeof(BDFFloat));
     *new = *sel;
-    new->bitmap = xmalloc1(sel->bytes_per_line*(sel->ymax-sel->ymin+1));
+    new->bitmap = xmalloc(sel->bytes_per_line*(sel->ymax-sel->ymin+1));
     memcpy(new->bitmap,sel->bitmap,sel->bytes_per_line*(sel->ymax-sel->ymin+1));
 return( new );
 }
@@ -378,7 +378,7 @@ return(NULL);
     if ( todepth==fromdepth )
 return( BDFFloatCopy(sel));
 
-    new = xmalloc1(sizeof(BDFFloat));
+    new = xmalloc(sizeof(BDFFloat));
     *new = *sel;
     new->byte_data = todepth!=1;
     new->depth = todepth;
@@ -433,7 +433,7 @@ BDFFloat *BDFFloatCreate(BDFChar *bc,int xmin,int xmax,int ymin,int ymax, int cl
     if ( ymax>bc->ymax ) ymax = bc->ymax;
     if ( xmin>xmax || ymin>ymax )
 return( NULL );
-    new = xmalloc1(sizeof(BDFFloat));
+    new = xmalloc(sizeof(BDFFloat));
     new->xmin = xmin;
     new->xmax = xmax;
     new->ymin = ymin;
@@ -653,7 +653,7 @@ void BCPrepareForOutput( BDFChar *bc,int mergeall ) {
 	/* Preserve the current glyph bitmap with all related values, unless we */
 	/* have already done this when detecting width groups for TTF output    */
 	if ( bc->backup == NULL ) {
-	    bc->backup = xmalloc1( sizeof( BDFFloat ));
+	    bc->backup = xmalloc( sizeof( BDFFloat ));
 	    bc->backup->bytes_per_line = bc->bytes_per_line;
 	    bc->backup->xmin = bc->xmin; bc->backup->xmax = bc->xmax;
 	    bc->backup->ymin = bc->ymin; bc->backup->ymax = bc->ymax;
@@ -939,7 +939,7 @@ BDFFont *BitmapFontScaleTo(BDFFont *old, int to) {
 
     new->sf = old->sf;
     new->glyphcnt = new->glyphmax = old->glyphcnt;
-    new->glyphs = xmalloc1(new->glyphcnt*sizeof(BDFChar *));
+    new->glyphs = xmalloc(new->glyphcnt*sizeof(BDFChar *));
     new->pixelsize = to;
     new->ascent = (old->ascent*to+.5)/old->pixelsize;
     new->descent = to-new->ascent;

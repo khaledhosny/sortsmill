@@ -88,8 +88,8 @@ static int32 *ParseList(GWindow gw, int cid,int *err, int final) {
 	pt = end+1;
 	end2 = NULL;
     }
-    sizes = xmalloc1((i+1)*sizeof(real));
-    ret = xmalloc1((i+1)*sizeof(int32));
+    sizes = xmalloc((i+1)*sizeof(real));
+    ret = xmalloc((i+1)*sizeof(int32));
 
     for ( i=0, pt = val; *pt!='\0' ; ) {
 	sizes[i]=u_strtod(pt,&end);
@@ -161,7 +161,7 @@ static unichar_t *GenText(int32 *sizes,real scale) {
     unichar_t *uret;
 
     for ( i=0; sizes[i]!=0; ++i );
-    pt = cret = xmalloc1(i*10+1);
+    pt = cret = xmalloc(i*10+1);
     for ( i=0; sizes[i]!=0; ++i ) {
 	if ( pt!=cret ) *pt++ = ',';
 	sprintf(pt,"%.1f",(double) ((sizes[i]&0xffff)*scale) );
@@ -284,7 +284,7 @@ void BitmapDlg(FontView *fv,SplineChar *sc, int isavail) {
     if ( i==0 && isavail )
 	i = 2;
 */
-    sizes = xmalloc1((i+1)*sizeof(int32));
+    sizes = xmalloc((i+1)*sizeof(int32));
     for ( bdf=bd.bd.sf->bitmaps, i=0; bdf!=NULL; bdf=bdf->next, ++i )
 	sizes[i] = bdf->pixelsize | (BDFDepth(bdf)<<16);
 /*
