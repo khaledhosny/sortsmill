@@ -1471,7 +1471,7 @@ return( false );
     ci->cachedsc->glyph_class = GGadgetGetFirstListSelectedItem(GWidgetGetControl(ci->gw,CID_GClass));
     val = GGadgetGetFirstListSelectedItem(GWidgetGetControl(ci->gw,CID_Color));
     if ( val!=-1 )
-	ci->cachedsc->color = (intpt) (std_colors[val].userdata);
+	ci->cachedsc->color = (intptr_t) (std_colors[val].userdata);
     CI_ParseCounters(ci);
     ci->cachedsc->tex_height = tex_height;
     ci->cachedsc->tex_depth  = tex_depth;
@@ -2067,7 +2067,7 @@ static void CI_SetNameList(CharInfo *ci,int val) {
     GGadget *g = GWidgetGetControl(ci->gw,CID_UName);
     int cnt;
 
-    if ( GGadgetGetUserData(g)==(void *) (intpt) val )
+    if ( GGadgetGetUserData(g)==(void *) (intptr_t) val )
 return;		/* Didn't change */
     {
 	GTextInfo **list = NULL;
@@ -2083,7 +2083,7 @@ return;		/* Didn't change */
 	list[cnt] = TIFromName(NULL);
 	GGadgetSetList(g,list,true);
     }
-    GGadgetSetUserData(g,(void *) (intpt) val);
+    GGadgetSetUserData(g,(void *) (intptr_t) val);
 }
 
 static int CI_UValChanged(GGadget *g, GEvent *e) {
@@ -2563,7 +2563,7 @@ return;
 		    if ( components==NULL )
 		break;
 		    for ( i=0; i<r; ++i ) {
-			if ( possub[i*col_cnt+0].u.md_ival == (intpt) sub &&
+			if ( possub[i*col_cnt+0].u.md_ival == (intptr_t) sub &&
 				strcmp(possub[i*col_cnt+1].u.md_str,components)==0 )
 		    break;
 		    }
@@ -2605,7 +2605,7 @@ return;
     sd.flags = sdf_dontedit;
     sub = SFNewLookupSubtableOfType(ci->sc->parent,pst2lookuptype[sel+1],&sd,ci->def_layer);
     if ( sub!=NULL ) {
-	possub[r*cols+0].u.md_ival = (intpt) sub;
+	possub[r*cols+0].u.md_ival = (intptr_t) sub;
 	ti = SFSubtableListOfType(ci->sc->parent, pst2lookuptype[sel+1], false, false);
 	GMatrixEditSetColumnChoices(g,0,ti);
 	GTextInfoListFree(ti);
@@ -2613,7 +2613,7 @@ return;
 	    SCSubtableDefaultSubsCheck(ci->sc,sub, possub, cols, r, CVLayer((CharViewBase *) (ci->cv)));
     } else if ( ci->old_sub!=NULL ) {
 	/* Restore old value */
-	possub[r*cols+0].u.md_ival = (intpt) ci->old_sub;
+	possub[r*cols+0].u.md_ival = (intptr_t) ci->old_sub;
     } else {
 	GMatrixEditDeleteRow(g,r);
     }
@@ -2699,7 +2699,7 @@ static void kerninit(GGadget *g, int r) {
 	break;
 	}
 	if ( mi[i].ti.line || mi[i].ti.text!=NULL )
-	    possub[r*cols+0].u.md_ival = (intpt) mi[i].ti.userdata;
+	    possub[r*cols+0].u.md_ival = (intptr_t) mi[i].ti.userdata;
     }
 }
 
@@ -3696,13 +3696,13 @@ static void CI_SetColorList(CharInfo *ci,Color color) {
 
     std_colors[CUSTOM_COLOR].image = NULL;
     for ( i=0; std_colors[i].image!=NULL; ++i ) {
-	if ( std_colors[i].userdata == (void *) (intpt) color )
+	if ( std_colors[i].userdata == (void *) (intptr_t) color )
     break;
     }
     if ( std_colors[i].image==NULL ) {
 	std_colors[i].image = &customcolor_image;
 	customcolor_image.u.image->clut->clut[1] = color;
-	std_colors[i].userdata = (void *) (intpt) color;
+	std_colors[i].userdata = (void *) (intptr_t) color;
     }
     GGadgetSetList(GWidgetGetControl(ci->gw,CID_Color), GTextInfoArrayFromList(std_colors,&junk), false);
     GGadgetSelectOneListItem(GWidgetGetControl(ci->gw,CID_Color),i);
@@ -3794,9 +3794,9 @@ static int CI_PickColor(GGadget *g, GEvent *e) {
 	    } else /* Cancelled */
 		CI_SetColorList(ci,ci->real_last);
 	} else {
-	    if ( (intpt) ti->userdata!=COLOR_DEFAULT )
-		ci->last = (intpt) ti->userdata;
-	    ci->real_last = (intpt) ti->userdata;
+	    if ( (intptr_t) ti->userdata!=COLOR_DEFAULT )
+		ci->last = (intptr_t) ti->userdata;
+	    ci->real_last = (intptr_t) ti->userdata;
 	}
     }
 return( true );
@@ -3863,7 +3863,7 @@ static void CIFillup(CharInfo *ci) {
     memset(cnts,0,sizeof(cnts));
     for ( pst = sc->possub; pst!=NULL; pst=pst->next ) if ( pst->type!=pst_lcaret ) {
 	j = (cnts[pst->type]++ * mi[pst->type-1].col_cnt);
-	mds[pst->type][j+0].u.md_ival = (intpt) pst->subtable;
+	mds[pst->type][j+0].u.md_ival = (intptr_t) pst->subtable;
 	if ( pst->type==pst_position ) {
 	    mds[pst->type][j+SIM_DX].u.md_ival = pst->u.pos.xoff;
 	    mds[pst->type][j+SIM_DY].u.md_ival = pst->u.pos.yoff;
@@ -3889,7 +3889,7 @@ static void CIFillup(CharInfo *ci) {
     for ( isv=0; isv<2; ++isv ) {
 	for ( kp=isv ? sc->vkerns : sc->kerns; kp!=NULL; kp=kp->next ) {
 	    j = (cnts[pst_pair]++ * mi[pst_pair-1].col_cnt);
-	    mds[pst_pair][j+0].u.md_ival = (intpt) kp->subtable;
+	    mds[pst_pair][j+0].u.md_ival = (intptr_t) kp->subtable;
 	    mds[pst_pair][j+1].u.md_str = SCNameUniStr(kp->sc);
 	    if ( isv ) {
 		mds[pst_pair][j+PAIR_DY_ADV1].u.md_ival = kp->off;

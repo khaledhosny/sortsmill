@@ -6709,7 +6709,7 @@ return( NULL );
 	if ( test!=NULL && test->len==tab->len &&
 		memcmp(test->data,tab->data,tab->len)==0 ) {
 	    *len = i;
-return( (FILE *) (intpt) -1 );
+return( (FILE *) (intptr_t) -1 );
 	}
     }
 return( dumpstoredtable(sf,tag,len));
@@ -6768,18 +6768,18 @@ static void ttc_perfonttables(struct alltabs *all, int me, int mainpos,
     /* These tables are always to be shared and are found in the extra structure */
     /*  called main */
     if ( format==ff_ttf ) {
-	at->loca = (void *) (intpt) -1; at->localen = mainpos;
-	at->gi.glyphs = (void *) (intpt) -1; at->gi.glyph_len = mainpos;
+	at->loca = (void *) (intptr_t) -1; at->localen = mainpos;
+	at->gi.glyphs = (void *) (intptr_t) -1; at->gi.glyph_len = mainpos;
     } else {
-	at->cfff = (void *) (intpt) -1; at->cfflen = mainpos;
+	at->cfff = (void *) (intptr_t) -1; at->cfflen = mainpos;
     }
-    at->fftmf = (void *) (intpt) -1; at->fftmlen = mainpos;
-    at->hheadf = (void *) (intpt) -1; at->hheadlen = mainpos;
-    at->gi.hmtx = (void *) (intpt) -1; at->gi.hmtxlen = mainpos;
-    at->maxpf = (void *) (intpt) -1; at->maxplen = mainpos;
+    at->fftmf = (void *) (intptr_t) -1; at->fftmlen = mainpos;
+    at->hheadf = (void *) (intptr_t) -1; at->hheadlen = mainpos;
+    at->gi.hmtx = (void *) (intptr_t) -1; at->gi.hmtxlen = mainpos;
+    at->maxpf = (void *) (intptr_t) -1; at->maxplen = mainpos;
     if ( all[mainpos].vheadf!=NULL ) {
-	at->vheadf = (void *) (intpt) -1; at->vheadlen = mainpos;
-	at->gi.vmtx = (void *) (intpt) -1; at->gi.vmtxlen = mainpos;
+	at->vheadf = (void *) (intptr_t) -1; at->vheadlen = mainpos;
+	at->gi.vmtx = (void *) (intptr_t) -1; at->gi.vmtxlen = mainpos;
     }
 
     free(at->gi.bygid);
@@ -6795,7 +6795,7 @@ static int tablefilematch(struct taboff *tab,FILE *ttc,struct alltabs *all,int p
 
     for ( i=0; i<pos; ++i ) {
 	test = findtabindir(&all[i].tabdir,tab->tag);
-	if ( test==NULL || test->data==(void *) (intpt) -1 ||
+	if ( test==NULL || test->data==(void *) (intptr_t) -1 ||
 		test->length!=tab->length )
     continue;
 	rewind(tab->data);
@@ -6886,10 +6886,10 @@ static void ttc_dump(FILE *ttc,struct alltabs *all, enum fontformat format,
 	buildtablestructures(&all[i],all[i].sf,format);
 	/* Check for any tables which match those of a previous font */
 	for ( j=0 ; j<all[i].tabdir.numtab; ++j ) {
-	    if ( all[i].tabdir.tabs[j].data!=(void *) (intpt) -1 &&
+	    if ( all[i].tabdir.tabs[j].data!=(void *) (intptr_t) -1 &&
 		    (dup = tablefilematch(&all[i].tabdir.tabs[j],ttc,all,i))!=-1 ) {
 		fclose(all[i].tabdir.tabs[j].data);
-		all[i].tabdir.tabs[j].data = (void *) (intpt) -1;
+		all[i].tabdir.tabs[j].data = (void *) (intptr_t) -1;
 		all[i].tabdir.tabs[j].length = dup;
 	    }
 	}
@@ -6897,7 +6897,7 @@ static void ttc_dump(FILE *ttc,struct alltabs *all, enum fontformat format,
 	/* And now dump those tables into the file. I don't see how I could */
 	/*  order them meaningfully */
 	for ( j=0 ; j<all[i].tabdir.numtab; ++j ) {
-	    if ( all[i].tabdir.tabs[j].data!=(void *) (intpt) -1 ) {
+	    if ( all[i].tabdir.tabs[j].data!=(void *) (intptr_t) -1 ) {
 		all[i].tabdir.tabs[j].offset = ftell(ttc);
 		all[i].tabdir.tabs[j].checksum = filechecksum(all[i].tabdir.tabs[j].data);
 		if ( !ttfcopyfile(ttc,all[i].tabdir.tabs[j].data, all[i].tabdir.tabs[j].offset,Tag2String(all[i].tabdir.tabs[j].tag)))
@@ -6957,7 +6957,7 @@ static void ttc_dump(FILE *ttc,struct alltabs *all, enum fontformat format,
 	/* Find the location of any shared tables */
 	for ( j=0; j<at->tabdir.numtab; ++j ) {
 	    struct taboff *curtab = &at->tabdir.tabs[j];
-	    if ( curtab->data == (void *) (intpt) -1 ) {
+	    if ( curtab->data == (void *) (intptr_t) -1 ) {
 		tab = findtabindir(&all[curtab->length].tabdir,curtab->tag);
 		if ( tab==NULL ) {
 		    IError("Failed to find tab");

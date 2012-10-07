@@ -250,7 +250,7 @@ static GTextInfo *Pref_MacNamesList(struct macname *all) {
 	if ( temp==NULL )
     continue;
 	for ( j=0 ; maclanguages[j].text!=0; ++j )
-	    if ( maclanguages[j].userdata == (void *) (intpt) (mn->lang ))
+	    if ( maclanguages[j].userdata == (void *) (intptr_t) (mn->lang ))
 	break;
 	if ( maclanguages[j].text!=0 ) {
 	    char *lang = (char *) maclanguages[j].text;
@@ -363,7 +363,7 @@ return( false );
 	    sel = GGadgetGetListItemSelected(GWidgetGetControl(nd->gw,CID_Language));
 	    language = nd->changing->lang;
 	    if ( sel!=NULL )
-		language = (intpt) sel->userdata;
+		language = (intptr_t) sel->userdata;
 	    else if ( nd->index==-1 ) {
 		ff_post_error(_("Bad Language"),_("Bad Language"));
 return( true );
@@ -477,7 +477,7 @@ static char *AskName(struct macname *changing,struct macname *all,GGadget *list,
     gcd[1].creator = GListButtonCreate;
 
     for ( i=0; maclanguages[i].text!=NULL; ++i ) {
-	if ( maclanguages[i].userdata == (void *) (intpt) (changing->lang) )
+	if ( maclanguages[i].userdata == (void *) (intptr_t) (changing->lang) )
 	    maclanguages[i].selected = true;
 	else
 	    maclanguages[i].selected = false;
@@ -1323,7 +1323,7 @@ return( true );
 static int Pref_DefaultFeat(GGadget *g, GEvent *e) {
     if ( e->type==et_controlevent && e->u.control.subtype == et_buttonactivate ) {
 	GGadget *list = GWidgetGetControl(GGadgetGetWindow(g),CID_Features);
-	int inprefs = (intpt) GGadgetGetUserData(g);
+	int inprefs = (intptr_t) GGadgetGetUserData(g);
 	GTextInfo *ti, **arr;
 	uint16 cnt;
 	/* In preferences the default is the built in data. */
@@ -1403,7 +1403,7 @@ void GCDFillMacFeat(GGadgetCreateData *mfgcd,GTextInfo *mflabels, int width,
     mflabels[sgc].text_is_1byte = true;
     mfgcd[sgc].gd.label = &mflabels[sgc];
     mfgcd[sgc].gd.handle_controlevent = Pref_DefaultFeat;
-    mfgcd[sgc].data = (void *) (intpt) fromprefs;
+    mfgcd[sgc].data = (void *) (intptr_t) fromprefs;
     mfgcd[sgc++].creator = GButtonCreate;
     butarray[6] = GCD_Glue; butarray[7] = &mfgcd[sgc-1];
     butarray[8] = GCD_Glue; butarray[9] = NULL;

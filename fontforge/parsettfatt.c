@@ -991,7 +991,7 @@ static void ProcessSubLookups(FILE *ttf,struct ttfinfo *info,int gpos,
 	struct lookup *alllooks,struct seqlookup *sl) {
     int i;
 
-    i = (intpt) sl->lookup;
+    i = (intptr_t) sl->lookup;
     if ( i<0 || i>=info->lookup_cnt ) {
 	LogError( _("Attempt to reference lookup %d (within a contextual lookup), but there are\n only %d lookups in %s\n"),
 		i, info->lookup_cnt, gpos ? "'GPOS'" : "'GSUB'" );
@@ -1071,7 +1071,7 @@ return;
 			info->bad_ot = true;
 			warned2 = true;
 		    }
-		rules[i].subrules[j].sl[k].lookup = (void *) (intpt) getushort(ttf);
+		rules[i].subrules[j].sl[k].lookup = (void *) (intptr_t) getushort(ttf);
 	    }
 	}
     }
@@ -1220,7 +1220,7 @@ return;
 			info->bad_ot = true;
 			warned2 = true;
 		    }
-		rules[i].subrules[j].sl[k].lookup = (void *) (intpt) getushort(ttf);
+		rules[i].subrules[j].sl[k].lookup = (void *) (intptr_t) getushort(ttf);
 	    }
 	}
     }
@@ -1339,7 +1339,7 @@ return;
 			info->bad_ot = true;
 			warned2 = true;
 		    }
-		rules[i].subrules[j].sl[k].lookup = (void *) (intpt) getushort(ttf);
+		rules[i].subrules[j].sl[k].lookup = (void *) (intptr_t) getushort(ttf);
 	    }
 	}
     }
@@ -1493,7 +1493,7 @@ return;
 			info->bad_ot = true;
 			warned2 = true;
 		    }
-		rules[i].subrules[j].sl[k].lookup = (void *) (intpt) getushort(ttf);
+		rules[i].subrules[j].sl[k].lookup = (void *) (intptr_t) getushort(ttf);
 	    }
 	}
     }
@@ -1606,7 +1606,7 @@ return;
 	    info->bad_ot = true;
 	    warned2 = true;
 	}
-	sl[k].lookup = (void *) (intpt) getushort(ttf);
+	sl[k].lookup = (void *) (intptr_t) getushort(ttf);
     }
 
     if ( justinuse==git_justinuse ) {
@@ -1692,7 +1692,7 @@ return;
 	    info->bad_ot = true;
 	    warned2 = true;
 	}
-	sl[k].lookup = (void *) (intpt) getushort(ttf);
+	sl[k].lookup = (void *) (intptr_t) getushort(ttf);
     }
 
     if ( justinuse==git_justinuse ) {
@@ -3295,7 +3295,7 @@ static void prop_apply_value(struct ttfinfo *info, int gfirst, int glast,FILE *t
 static void prop_apply_default(struct ttfinfo *info, int gfirst, int glast,void *def) {
     int def_prop, i;
 
-    def_prop = (intpt) def;
+    def_prop = (intptr_t) def;
     for ( i=gfirst; i<=glast; ++i )
 	TTF_SetProp(info,i, def_prop);
 }
@@ -3316,7 +3316,7 @@ void readttfprop(FILE *ttf,struct ttfinfo *info) {
     info->mort_subs_lookup->subtables->per_glyph_pst_or_kern = true;
     readttf_applelookup(ttf,info,
 	    prop_apply_values,prop_apply_value,
-	    prop_apply_default,(void *) (intpt) def, false);
+	    prop_apply_default,(void *) (intptr_t) def, false);
     InfoNameOTLookup(info->mort_subs_lookup,info);
 }
 
@@ -4378,9 +4378,9 @@ return(NULL);
 	}
 	as->state[i].flags = memushort(st->transitions,st->nentries*st->entry_size,trans*st->entry_size+2);
 	if ( extras>0 )
-	    as->state[i].u.context.mark_lookup = (void *) (intpt) memushort(st->transitions,st->nentries*st->entry_size, trans*st->entry_size+2+2);
+	    as->state[i].u.context.mark_lookup = (void *) (intptr_t) memushort(st->transitions,st->nentries*st->entry_size, trans*st->entry_size+2+2);
 	if ( extras>1 )
-	    as->state[i].u.context.cur_lookup = (void *) (intpt) memushort(st->transitions,st->nentries*st->entry_size, trans*st->entry_size+2+2+2);
+	    as->state[i].u.context.cur_lookup = (void *) (intptr_t) memushort(st->transitions,st->nentries*st->entry_size, trans*st->entry_size+2+2+2);
     }
     /* Indic tables have no attached subtables, just a verb in the flag field */
     /*  so for them we are done. For the others... */
@@ -4388,11 +4388,11 @@ return(NULL);
 	for ( i=0; i<st->nclasses*st->nstates; ++i ) {
 	    char *cur=NULL, *mark=NULL;
 	    if ( (as->state[i].flags&0x3e0)!=0 && as->state[i].u.context.mark_lookup!=NULL ) {
-		cur = NamesOfList(here+(intpt) as->state[i].u.context.mark_lookup,
+		cur = NamesOfList(here+(intptr_t) as->state[i].u.context.mark_lookup,
 			(as->state[i].flags&0x3e0)>>5,ttf,info);
 	    }
 	    if ( (as->state[i].flags&0x01f)!=0 && as->state[i].u.context.cur_lookup!=NULL ) {
-		mark = NamesOfList(here+(intpt) as->state[i].u.context.cur_lookup,
+		mark = NamesOfList(here+(intptr_t) as->state[i].u.context.cur_lookup,
 			as->state[i].flags&0x01f,ttf,info);
 	    }
 	    as->state[i].u.insert.cur_ins=cur;
@@ -4401,12 +4401,12 @@ return(NULL);
     } else if ( ismorx && type == asm_insert ) {
 	for ( i=0; i<st->nclasses*st->nstates; ++i ) {
 	    char *cur=NULL, *mark=NULL;
-	    if ( (as->state[i].flags&0x3e0)!=0 && (intpt) as->state[i].u.context.mark_lookup!=0xffff ) {
-		cur = NamesOfList(here+st->extra_offsets[0]+((intpt) as->state[i].u.context.mark_lookup)*2,
+	    if ( (as->state[i].flags&0x3e0)!=0 && (intptr_t) as->state[i].u.context.mark_lookup!=0xffff ) {
+		cur = NamesOfList(here+st->extra_offsets[0]+((intptr_t) as->state[i].u.context.mark_lookup)*2,
 			(as->state[i].flags&0x3e0)>>5,ttf,info);
 	    }
-	    if ( (as->state[i].flags&0x01f)!=0 && ((intpt) as->state[i].u.context.cur_lookup)!=0xffff ) {
-		mark = NamesOfList(here+st->extra_offsets[0]+((intpt) as->state[i].u.context.cur_lookup)*2,
+	    if ( (as->state[i].flags&0x01f)!=0 && ((intptr_t) as->state[i].u.context.cur_lookup)!=0xffff ) {
+		mark = NamesOfList(here+st->extra_offsets[0]+((intptr_t) as->state[i].u.context.cur_lookup)*2,
 			as->state[i].flags&0x01f,ttf,info);
 	    }
 	    as->state[i].u.insert.cur_ins=cur;
@@ -4446,11 +4446,11 @@ return(NULL);
 	index_max = 0;
 	for ( i=0; i<st->nclasses*st->nstates; ++i ) {
 	    if ( as->state[i].u.context.mark_lookup!=NULL ) {
-		index = sm_lookupfind(lookups,&lookup_max,(int16) (intpt) as->state[i].u.context.mark_lookup);
+		index = sm_lookupfind(lookups,&lookup_max,(int16) (intptr_t) as->state[i].u.context.mark_lookup);
 		if ( index>index_max ) index_max = index;
 	    }
 	    if ( as->state[i].u.context.cur_lookup!=NULL ) {
-		index = sm_lookupfind(lookups,&lookup_max,(int16) (intpt) as->state[i].u.context.cur_lookup);
+		index = sm_lookupfind(lookups,&lookup_max,(int16) (intptr_t) as->state[i].u.context.cur_lookup);
 		if ( index>index_max ) index_max = index;
 	    }
 	}
@@ -4458,12 +4458,12 @@ return(NULL);
 
 	for ( i=0; i<st->nclasses*st->nstates; ++i ) {
 	    if ( as->state[i].u.context.mark_lookup!=NULL ) {
-		index = sm_lookupfind(lookups,&lookup_max,(int16) (intpt) as->state[i].u.context.mark_lookup);
+		index = sm_lookupfind(lookups,&lookup_max,(int16) (intptr_t) as->state[i].u.context.mark_lookup);
 		evermarked[index] = true;
 		as->state[i].u.context.mark_lookup = NewMacSubsLookup(info,otl,index,subs);
 	    }
 	    if ( as->state[i].u.context.cur_lookup!=NULL ) {
-		index = sm_lookupfind(lookups,&lookup_max,(int16) (intpt) as->state[i].u.context.cur_lookup);
+		index = sm_lookupfind(lookups,&lookup_max,(int16) (intptr_t) as->state[i].u.context.cur_lookup);
 		as->state[i].u.context.cur_lookup = NewMacSubsLookup(info,otl,index,subs);
 	    }
 	}
@@ -4496,24 +4496,24 @@ return(NULL);
 	OTLookup **subs;
 
 	for ( i=0; i<st->nclasses*st->nstates; ++i ) {
-	    if ( (intpt) as->state[i].u.context.mark_lookup!=0xffff ) {
-		if ( ((int) (intpt) as->state[i].u.context.mark_lookup)>lookup_max )
-		    lookup_max = (intpt) as->state[i].u.context.mark_lookup;
+	    if ( (intptr_t) as->state[i].u.context.mark_lookup!=0xffff ) {
+		if ( ((int) (intptr_t) as->state[i].u.context.mark_lookup)>lookup_max )
+		    lookup_max = (intptr_t) as->state[i].u.context.mark_lookup;
 	    }
-	    if ( (intpt) as->state[i].u.context.cur_lookup!=0xffff ) {
-		if ( ((int) (intpt) as->state[i].u.context.cur_lookup)>lookup_max )
-		    lookup_max = (intpt) as->state[i].u.context.cur_lookup;
+	    if ( (intptr_t) as->state[i].u.context.cur_lookup!=0xffff ) {
+		if ( ((int) (intptr_t) as->state[i].u.context.cur_lookup)>lookup_max )
+		    lookup_max = (intptr_t) as->state[i].u.context.cur_lookup;
 	    }
 	}
 	++lookup_max;
 	subs = xcalloc(lookup_max,sizeof(OTLookup *));
 	for ( i=0; i<st->nclasses*st->nstates; ++i ) {
-	    if ( (intpt) as->state[i].u.context.mark_lookup!=0xffff ) {
-		as->state[i].u.context.mark_lookup = NewMacSubsLookup(info,otl,(intpt) as->state[i].u.context.mark_lookup,subs);
+	    if ( (intptr_t) as->state[i].u.context.mark_lookup!=0xffff ) {
+		as->state[i].u.context.mark_lookup = NewMacSubsLookup(info,otl,(intptr_t) as->state[i].u.context.mark_lookup,subs);
 	    } else
 		as->state[i].u.context.mark_lookup = NULL;
-	    if ( (intpt) as->state[i].u.context.cur_lookup!=0xffff ) {
-		as->state[i].u.context.cur_lookup = NewMacSubsLookup(info,otl,(intpt) as->state[i].u.context.cur_lookup,subs);
+	    if ( (intptr_t) as->state[i].u.context.cur_lookup!=0xffff ) {
+		as->state[i].u.context.cur_lookup = NewMacSubsLookup(info,otl,(intptr_t) as->state[i].u.context.cur_lookup,subs);
 	    } else
 		as->state[i].u.context.cur_lookup = NULL;
 	}
@@ -5173,24 +5173,24 @@ static void ttf_math_read_mathkernv(FILE *ttf, uint32 start,struct mathkernverte
 
     for ( i=0; i<cnt-1; ++i ) {
 	mkv->mkd[i].height = getushort(ttf);
-	mkv->mkd[i].height_adjusts = (void *) (intpt) getushort(ttf);
+	mkv->mkd[i].height_adjusts = (void *) (intptr_t) getushort(ttf);
     }
 
     for ( i=0; i<cnt; ++i ) {
 	mkv->mkd[i].kern = getushort(ttf);
-	mkv->mkd[i].kern_adjusts = (void *) (intpt) getushort(ttf);
+	mkv->mkd[i].kern_adjusts = (void *) (intptr_t) getushort(ttf);
     }
 
     for ( i=0; i<cnt; ++i ) {
 	DeviceTable *dv;
 	uint32 offset;
 	if ( mkv->mkd[i].height_adjusts!=NULL ) {
-	    offset = start + (intpt) mkv->mkd[i].height_adjusts;
+	    offset = start + (intptr_t) mkv->mkd[i].height_adjusts;
 	    mkv->mkd[i].height_adjusts = dv = (DeviceTable *) xzalloc(sizeof (DeviceTable));
 	    ReadDeviceTable(ttf,dv,offset,info);
 	}
 	if ( mkv->mkd[i].kern_adjusts!=NULL ) {
-	    offset = start + (intpt) mkv->mkd[i].kern_adjusts;
+	    offset = start + (intptr_t) mkv->mkd[i].kern_adjusts;
 	    mkv->mkd[i].kern_adjusts = dv = (DeviceTable *) xzalloc(sizeof (DeviceTable));
 	    ReadDeviceTable(ttf,dv,offset,info);
 	}
@@ -5656,7 +5656,7 @@ static void bsln_apply_value(struct ttfinfo *info, int gfirst, int glast,FILE *t
 static void bsln_apply_default(struct ttfinfo *info, int gfirst, int glast,void *def) {
     int def_bsln, i;
 
-    def_bsln = (intpt) def;
+    def_bsln = (intptr_t) def;
     for ( i=gfirst; i<=glast; ++i )
 	info->bsln_values[i]= def_bsln;
 }
@@ -5698,7 +5698,7 @@ return;
 	info->bsln_values = values = xcalloc(info->glyph_cnt,sizeof(uint16));
 	readttf_applelookup(ttf,info,
 		bsln_apply_values,bsln_apply_value,
-		bsln_apply_default,(void *) (intpt) def, false);
+		bsln_apply_default,(void *) (intptr_t) def, false);
     } else
 	values = NULL;
 
@@ -5977,11 +5977,11 @@ return( NULL );
     ret->cnt = cnt;
     ret->prios = xcalloc(cnt,sizeof(struct jstf_prio));
     for ( i=0; i<cnt; ++i )
-	ret->prios[i].maxExtend = (void *) (intpt) getushort(ttf);
+	ret->prios[i].maxExtend = (void *) (intptr_t) getushort(ttf);
     for ( i=0; i<cnt; ++i ) {
 	int enSub, disSub, enPos, disPos, maxShrink, maxExtend;
 	int enSub2, disSub2, enPos2, disPos2;
-	uint32 pbase = base+off+(intpt) ret->prios[i].maxExtend;
+	uint32 pbase = base+off+(intptr_t) ret->prios[i].maxExtend;
 	fseek(ttf,pbase,SEEK_SET);
 	info->jstf_prio = i;
 	enSub = getushort(ttf);

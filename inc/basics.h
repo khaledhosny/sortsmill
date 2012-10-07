@@ -60,12 +60,6 @@ typedef uint16_t uint16;
 typedef int8_t int8;
 typedef uint8_t uint8;
 
-// FIXME: Use the standard names in the code; get rid of this
-// typedef, too.
-//
-// An integral type which can hold a pointer.
-typedef intptr_t intpt;
-
 typedef uint32_t unichar_t;
 
 static inline int

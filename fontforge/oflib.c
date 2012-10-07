@@ -891,7 +891,7 @@ return( strcasecmp(op1->name, op2->name) );
 
 static void OFLibSortSearch(OFLibDlg *d) {
     int reverse = GGadgetIsChecked( GWidgetGetControl(d->gw,CID_SortReverse));
-    enum searchtype st = (intpt) GGadgetGetListItemSelected(GWidgetGetControl(d->gw,CID_SearchType))->userdata;
+    enum searchtype st = (intptr_t) GGadgetGetListItemSelected(GWidgetGetControl(d->gw,CID_SearchType))->userdata;
     char *search = GGadgetGetTitle8( GWidgetGetControl(d->gw,CID_SearchString));
     int i, s;
     int isofl = false, ispd = false;

@@ -95,7 +95,7 @@ return;
 	    sub[i].ti.text = utf82u_copy((char *) sub[i].ti.text);
 	    sub[i].ti.text_is_1byte = false;
 	} else if ( sub[i].ti.text_in_resource ) {
-	    sub[i].ti.text = x_u32_strdup_or_null(GStringGetResource((intpt) sub[i].ti.text,NULL));
+	    sub[i].ti.text = x_u32_strdup_or_null(GStringGetResource((intptr_t) sub[i].ti.text,NULL));
 	    sub[i].ti.text_in_resource = false;
 	} else
 	    sub[i].ti.text = x_u32_strdup_or_null(sub[i].ti.text);
@@ -182,7 +182,7 @@ return( false );
 
 #if !defined(_NO_FFSCRIPT) || !defined(_NO_PYTHON)
 static void ScriptSelect(GWindow base,struct gmenuitem *mi,GEvent *e) {
-    int index = (intpt) (mi->ti.userdata);
+    int index = (intptr_t) (mi->ti.userdata);
     FontView *fv = (FontView *) GDrawGetUserData(base);
 
     /* the menu is not always up to date. If user changed prefs and then used */
@@ -211,7 +211,7 @@ return;
     sub = xcalloc(i+1,sizeof(GMenuItem));
     for ( i=0; i<SCRIPT_MENU_MAX && script_menu_names[i]!=NULL; ++i ) {
 	GMenuItem *mi = &sub[i];
-	mi->ti.userdata = (void *) (intpt) i;
+	mi->ti.userdata = (void *) (intptr_t) i;
 	mi->ti.bg = mi->ti.fg = COLOR_DEFAULT;
 	mi->invoke = ScriptSelect;
 	mi->shortcut = i==9?'0':'1'+i;

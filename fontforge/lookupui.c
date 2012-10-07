@@ -804,7 +804,7 @@ static char *LK_LangsDlg(GGadget *g, int r, int c) {
 	if ( *pt==',' ) ++pt;
 	tag = (tagstr[0]<<24) | (tagstr[1]<<16) | (tagstr[2]<<8) | tagstr[3];
 	for ( i=0; languages[i].text!=NULL; ++i )
-	    if ( languages[i].userdata == (void *) (intpt) tag ) {
+	    if ( languages[i].userdata == (void *) (intptr_t) tag ) {
 		languages[i].selected = true;
 	break;
 	    }
@@ -913,7 +913,7 @@ static char *LK_LangsDlg(GGadget *g, int r, int c) {
 	pt = ret;
 	for ( i=0; i<len; ++i ) {
 	    if ( done==2 && ti[i]->selected ) {
-		uint32 tag = (uint32) (intpt) (ti[i]->userdata);
+		uint32 tag = (uint32) (intptr_t) (ti[i]->userdata);
 		*pt++ = tag>>24;
 		*pt++ = tag>>16;
 		*pt++ = tag>>8;
@@ -1285,7 +1285,7 @@ static void LK_FinishEdit(GGadget *g,int row, int col, int wasnew) {
 	int old_type = otl->lookup_type;
 	FeatureScriptLangList *oldfl = otl->features;
 
-	otl->lookup_type = (intpt) GGadgetGetListItemSelected(GWidgetGetControl(ld->gw,CID_LookupType))->userdata;
+	otl->lookup_type = (intptr_t) GGadgetGetListItemSelected(GWidgetGetControl(ld->gw,CID_LookupType))->userdata;
 	otl->features = LK_ParseFL(strings,rows);
 	NameOTLookup(otl,ld->sf);
 	GGadgetSetTitle8(GWidgetGetControl(ld->gw,CID_LookupName),otl->lookup_name);
@@ -1439,7 +1439,7 @@ static GTextInfo *SFMarkClassList(SplineFont *sf,int class) {
     ti[0].selected = class==0;
     for ( i=1; i<sf->mark_class_cnt; ++i ) {
 	ti[i].text = (unichar_t *) copy(sf->mark_class_names[i]);
-	ti[i].userdata = (void *) (intpt) i;
+	ti[i].userdata = (void *) (intptr_t) i;
 	ti[i].text_is_1byte = true;
 	if ( i==class ) ti[i].selected = true;
     }
@@ -1456,11 +1456,11 @@ static GTextInfo *SFMarkSetList(SplineFont *sf,int set) {
     i = sf->mark_set_cnt;
     ti = xcalloc(i+4,sizeof( GTextInfo ));
     ti[0].text = utf82u_copy( _("All"));
-    ti[0].userdata = (void *) (intpt) -1;
+    ti[0].userdata = (void *) (intptr_t) -1;
     ti[0].selected = set==-1;
     for ( i=0; i<sf->mark_set_cnt; ++i ) {
 	ti[i+1].text = (unichar_t *) copy(sf->mark_set_names[i]);
-	ti[i+1].userdata = (void *) (intpt) i;
+	ti[i+1].userdata = (void *) (intptr_t) i;
 	ti[i+1].text_is_1byte = true;
 	if ( i==set ) ti[i+1].selected = true;
     }
@@ -1529,7 +1529,7 @@ return( true );
 static int LK_TypeChanged(GGadget *g, GEvent *e) {
 
     if ( e->type==et_controlevent && e->u.control.subtype == et_listselected ) {
-	int lookup_type = (intpt) GGadgetGetListItemSelected(g)->userdata;
+	int lookup_type = (intptr_t) GGadgetGetListItemSelected(g)->userdata;
 	struct lookup_dlg *ld = GDrawGetUserData(GGadgetGetWindow(g));
 	GTextInfo *ti = FeatureListFromLookupType( lookup_type );
 	GMatrixEditSetColumnChoices( GWidgetGetControl(ld->gw,CID_LookupFeatures), 0, ti );
@@ -1547,7 +1547,7 @@ static int Lookup_OK(GGadget *g, GEvent *e) {
 
     if ( e->type==et_controlevent && e->u.control.subtype == et_buttonactivate ) {
 	struct lookup_dlg *ld = GDrawGetUserData(GGadgetGetWindow(g));
-	int lookup_type = (intpt) GGadgetGetListItemSelected(GWidgetGetControl(ld->gw,CID_LookupType))->userdata;
+	int lookup_type = (intptr_t) GGadgetGetListItemSelected(GWidgetGetControl(ld->gw,CID_LookupType))->userdata;
 	int rows, i, isgpos;
 	struct matrix_data *strings = GMatrixEditGet(GWidgetGetControl(ld->gw,CID_LookupFeatures), &rows);
 	char *pt, *start, *name;
@@ -1631,8 +1631,8 @@ return(true);
 	if ( GGadgetIsChecked(GWidgetGetControl(ld->gw,CID_Lookup_IgnBase)) ) flags |= pst_ignorebaseglyphs;
 	if ( GGadgetIsChecked(GWidgetGetControl(ld->gw,CID_Lookup_IgnLig)) ) flags |= pst_ignoreligatures;
 	if ( GGadgetIsChecked(GWidgetGetControl(ld->gw,CID_Lookup_IgnMark)) ) flags |= pst_ignorecombiningmarks;
-	flags |= ((intpt) GGadgetGetListItemSelected(GWidgetGetControl(ld->gw,CID_Lookup_ProcessMark))->userdata)<<8;
-	set = ((intpt) GGadgetGetListItemSelected(GWidgetGetControl(ld->gw,CID_Lookup_ProcessSet))->userdata);
+	flags |= ((intptr_t) GGadgetGetListItemSelected(GWidgetGetControl(ld->gw,CID_Lookup_ProcessMark))->userdata)<<8;
+	set = ((intptr_t) GGadgetGetListItemSelected(GWidgetGetControl(ld->gw,CID_Lookup_ProcessSet))->userdata);
 	if ( set!=-1 )
 	    flags |= pst_usemarkfilteringset | (set<<16);
 
@@ -2361,7 +2361,7 @@ struct sortinfo {
 static void SortPrep(PSTKernDlg *pstkd, struct matrix_data *md, struct sortinfo *si) {
 
     si->glyphname = md->u.md_str;
-    md->u.md_ival = (intpt) si;
+    md->u.md_ival = (intptr_t) si;
 
     si->sc = SFGetChar(pstkd->sf,-1,si->glyphname);
     if ( si->sc==NULL )
@@ -5678,7 +5678,7 @@ static int ARL_TagChanged(GGadget *g, GEvent *e) {
 	int len;
 	GTextInfo **ti = GGadgetGetList(g,&len);
 	char tag[8];
-	uint32 tagval = (intpt) (ti[which]->userdata);
+	uint32 tagval = (intptr_t) (ti[which]->userdata);
 
 	tag[0] = tagval>>24;
 	tag[1] = tagval>>16;
@@ -5717,9 +5717,9 @@ static GTextInfo *ScriptListOfFont(SplineFont *sf) {
     for ( i=0; ourscripts[i]!=0; ++i );
     ti = xcalloc(i+1,sizeof(GTextInfo));
     for ( i=0; ourscripts[i]!=0; ++i ) {
-	ti[i].userdata = (void *) (intpt) ourscripts[i];
+	ti[i].userdata = (void *) (intptr_t) ourscripts[i];
 	for ( j=0; scripts[j].text!=NULL; ++j) {
-	    if ( scripts[j].userdata == (void *) (intpt) ourscripts[i])
+	    if ( scripts[j].userdata == (void *) (intptr_t) ourscripts[i])
 	break;
 	}
 	if ( scripts[j].text!=NULL )

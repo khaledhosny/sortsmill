@@ -267,7 +267,7 @@ GTextInfo *GTextInfoCopy(GTextInfo *ti) {
 	    copy->text_in_resource = false;
 	    copy->text_is_1byte = false;
 	} else if ( ti->text_in_resource ) {
-	    copy->text = x_u32_strdup_or_null((unichar_t *) GStringGetResource((intpt) copy->text,&copy->mnemonic));
+	    copy->text = x_u32_strdup_or_null((unichar_t *) GStringGetResource((intptr_t) copy->text,&copy->mnemonic));
 	    copy->text_in_resource = false;
 	} else if ( ti->text_is_1byte ) {
 	    copy->text = utf82u_copy((char *) copy->text);
@@ -724,7 +724,7 @@ return( NULL );
 	    if ( mi[i].ti.text_in_resource && mi[i].ti.text_is_1byte )
 		arr[i].ti.text = utf82u_mncopy((char *) mi[i].ti.text,&arr[i].ti.mnemonic);
 	    else if ( mi[i].ti.text_in_resource )
-		arr[i].ti.text = x_u32_strdup_or_null((unichar_t *) GStringGetResource((intpt) mi[i].ti.text,&arr[i].ti.mnemonic));
+		arr[i].ti.text = x_u32_strdup_or_null((unichar_t *) GStringGetResource((intptr_t) mi[i].ti.text,&arr[i].ti.mnemonic));
 	    else if ( mi[i].ti.text_is_1byte )
 		arr[i].ti.text = utf82u_copy((char *) mi[i].ti.text);
 	    else
@@ -968,7 +968,7 @@ return( NULL );
 	    if ( mi[i].ti.text_in_resource && mi[i].ti.text_is_1byte )
 		arr[i].ti.text = utf82u_mncopy((char *) mi[i].ti.text,&arr[i].ti.mnemonic);
 	    else if ( mi[i].ti.text_in_resource )
-		arr[i].ti.text = x_u32_strdup_or_null((unichar_t *) GStringGetResource((intpt) mi[i].ti.text,&arr[i].ti.mnemonic));
+		arr[i].ti.text = x_u32_strdup_or_null((unichar_t *) GStringGetResource((intptr_t) mi[i].ti.text,&arr[i].ti.mnemonic));
 	    else if ( mi[i].ti.text_is_1byte )
 		arr[i].ti.text = utf82u_copy((char *) mi[i].ti.text);
 	    else

@@ -5699,7 +5699,7 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
                   break;
                 }
               kp = (KernPair *) xzalloc (sizeof (KernPair1));
-              kp->sc = (SplineChar *) (intpt) index;
+              kp->sc = (SplineChar *) (intptr_t) index;
               kp->kcid = true;
               kp->off = off;
               kp->subtable = sub;
@@ -5776,7 +5776,7 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
                   complained = true;
                 }
               kp = (KernPair1 *) xzalloc (sizeof (KernPair1));
-              kp->kp.sc = (SplineChar *) (intpt) index;
+              kp->kp.sc = (SplineChar *) (intptr_t) index;
               kp->kp.kcid = has_orig;
               kp->kp.off = off;
               kp->sli = sli;
@@ -6495,7 +6495,7 @@ SFDFixupRefs (SplineFont *sf)
                 for (prev = NULL, kp = isv ? sc->vkerns : sc->kerns;
                      kp != NULL; kp = next)
                   {
-                    int index = (intpt) (kp->sc);
+                    int index = (intptr_t) (kp->sc);
                     next = kp->next;
                     if (!kp->kcid)
                       {         /* It's encoded (old sfds), else orig */
@@ -6598,12 +6598,12 @@ SFRemoveDependencies (SplineFont *sf)
         sf->glyphs[i]->dependents = NULL;
         for (kp = sf->glyphs[i]->kerns; kp != NULL; kp = kp->next)
           {
-            kp->sc = (SplineChar *) (intpt) (kp->sc->orig_pos);
+            kp->sc = (SplineChar *) (intptr_t) (kp->sc->orig_pos);
             kp->kcid = true;    /* flag */
           }
         for (kp = sf->glyphs[i]->vkerns; kp != NULL; kp = kp->next)
           {
-            kp->sc = (SplineChar *) (intpt) (kp->sc->orig_pos);
+            kp->sc = (SplineChar *) (intptr_t) (kp->sc->orig_pos);
             kp->kcid = true;
           }
       }
@@ -6835,7 +6835,7 @@ SFD_ParseNestedLookup (FILE *sfd, SplineFont *sf, int old)
 
       ungetc (ch, sfd);
       tag = gettag (sfd);
-      return ((OTLookup *) (intpt) tag);
+      return ((OTLookup *) (intptr_t) tag);
     }
   else
     {

@@ -1149,7 +1149,7 @@ return( NULL );
 	memset(&e,0,sizeof(e));
 	e.type = et_create;
 	e.w = (GWindow) nw;
-	e.native_window = (void *) (intpt) nw->w;
+	e.native_window = (void *) (intptr_t) nw->w;
 	(eh)((GWindow) nw,&e);
     }
     _GXCDraw_NewWindow(nw);
@@ -1293,7 +1293,7 @@ int GDrawNativeWindowExists(GDisplay *gdisp,void *native) {
 
     if ( gdisp==NULL ) gdisp = screen_display;
 
-    if ( XFindContext(((GXDisplay *) gdisp)->display,(Window) (intpt) native,((GXDisplay *) gdisp)->mycontext,(void *) &ret)==0 &&
+    if ( XFindContext(((GXDisplay *) gdisp)->display,(Window) (intptr_t) native,((GXDisplay *) gdisp)->mycontext,(void *) &ret)==0 &&
 	    ret!=NULL )
 return( true );
 
@@ -3416,7 +3416,7 @@ void GDrawGrabSelection(GWindow w,enum selnames sel) {
 	memset(&e,0,sizeof(e));
 	e.type = et_selclear;
 	e.u.selclear.sel = sel;
-	e.native_window = (void *) (intpt) gd->selinfo[sel].owner->w;
+	e.native_window = (void *) (intptr_t) gd->selinfo[sel].owner->w;
 	if ( gd->selinfo[sel].owner->eh!=NULL )
 	    (gd->selinfo[sel].owner->eh)((GWindow) gd->selinfo[sel].owner, &e);
     }
@@ -3748,7 +3748,7 @@ static void *vc_cvt(char *val, void *def) {
 	if ( ept==val || *ept!='\0' )
 return( def );
     }
-return( (void *) (intpt) ret );
+return( (void *) (intptr_t) ret );
 }
 
 static void *cm_cvt(char *val, void *def) {
@@ -3757,7 +3757,7 @@ static void *cm_cvt(char *val, void *def) {
     if ( ret== -1 )
 return( (void *) -1 );
 
-return( (void *) (intpt) (ret-1) );
+return( (void *) (intptr_t) (ret-1) );
 }
 
 static void GXResourceInit(GXDisplay *gdisp) {

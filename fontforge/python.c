@@ -5453,7 +5453,7 @@ static PyObject *PyFF_MathKern_get_kerns(PyFF_MathKern *self, void *closure) {
 
     if ( self->sc->mathkern==NULL )
 Py_RETURN_NONE;
-    mkv = &self->sc->mathkern->top_right + (int) (intpt) closure;
+    mkv = &self->sc->mathkern->top_right + (int) (intptr_t) closure;
     if ( mkv->cnt==0 )
 Py_RETURN_NONE;
 
@@ -5477,7 +5477,7 @@ static int PyFF_MathKern_set_kerns(PyFF_MathKern *self, PyObject *value, void *c
 return( 0 );
 	self->sc->mathkern = (struct mathkern *) xzalloc(sizeof (struct mathkern));
     }
-    mkv = &self->sc->mathkern->top_right + (int) (intpt) closure;
+    mkv = &self->sc->mathkern->top_right + (int) (intptr_t) closure;
     if ( value==Py_None ) {
 	MathKernVContentsFree(mkv);
 	mkv->cnt = 0;
@@ -5512,16 +5512,16 @@ return( 0 );
 static PyGetSetDef PyFFMathKern_members[] = {
     {"topRight",
 	 (getter)PyFF_MathKern_get_kerns, (setter)PyFF_MathKern_set_kerns,
-	 "Math Kerning information for the top right corner", (void *) (intpt) 0},
+	 "Math Kerning information for the top right corner", (void *) (intptr_t) 0},
     {"topLeft",
 	 (getter)PyFF_MathKern_get_kerns, (setter)PyFF_MathKern_set_kerns,
-	 "Math Kerning information for the top left corner", (void *) (intpt) 1},
+	 "Math Kerning information for the top left corner", (void *) (intptr_t) 1},
     {"bottomLeft",
 	 (getter)PyFF_MathKern_get_kerns, (setter)PyFF_MathKern_set_kerns,
-	 "Math Kerning information for the bottom left corner", (void *) (intpt) 3},
+	 "Math Kerning information for the bottom left corner", (void *) (intptr_t) 3},
     {"bottomRight",
 	 (getter)PyFF_MathKern_get_kerns, (setter)PyFF_MathKern_set_kerns,
-	 "Math Kerning information for the bottom right corner", (void *) (intpt) 2},
+	 "Math Kerning information for the bottom right corner", (void *) (intptr_t) 2},
     PYGETSETDEF_EMPTY /* Sentinel */
 };
 
@@ -9798,7 +9798,7 @@ return(sf->MATH);
 }
 
 static PyObject *PyFFMath_get(PyFF_Math *self, void *closure) {
-    int offset = (int) (intpt) closure;
+    int offset = (int) (intptr_t) closure;
     struct MATH *math;
 
     math = SFGetMathTable(self->sf);
@@ -9807,7 +9807,7 @@ return( Py_BuildValue("i", *(int16 *) (((char *) math) + offset) ));
 }
 
 static int PyFFMath_set(PyFF_Math *self, PyObject *value, void *closure) {
-    int offset = (int) (intpt) closure;
+    int offset = (int) (intptr_t) closure;
     struct MATH *math;
     long val;
 
@@ -9926,7 +9926,7 @@ static void setupMath(void) {
 	getset[cnt].get = (getter) PyFFMath_get;
 	getset[cnt].set = (setter) PyFFMath_set;
 	getset[cnt].doc = math_constants_descriptor[cnt].message;
-	getset[cnt].closure = (void *) (intpt) math_constants_descriptor[cnt].offset;
+	getset[cnt].closure = (void *) (intptr_t) math_constants_descriptor[cnt].offset;
     }
     PyFF_MathType.tp_getset = getset;
 }

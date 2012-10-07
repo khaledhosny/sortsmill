@@ -2578,7 +2578,7 @@ return( true );
 static int Layer_Inherit(GGadget *g, GEvent *e) {
     if ( e->type==et_controlevent && e->u.control.subtype == et_radiochanged ) {
 	GWindow gw = GGadgetGetWindow(g);
-	int cid = (intpt) GGadgetGetUserData(g);
+	int cid = (intptr_t) GGadgetGetUserData(g);
 	GGadgetSetEnabled(GWidgetGetControl(gw,cid),
 		!GGadgetIsChecked(g));
     }
@@ -2588,7 +2588,7 @@ return( true );
 static int Layer_DoColorWheel(GGadget *g, GEvent *e) {
     if ( e->type==et_controlevent && e->u.control.subtype == et_buttonactivate ) {
 	GWindow gw = GGadgetGetWindow(g);
-	int cid = (intpt) GGadgetGetUserData(g);
+	int cid = (intptr_t) GGadgetGetUserData(g);
 	GGadget *tf = GWidgetGetControl(gw,cid);
 	if ( GGadgetIsEnabled(tf)) {
 	    char *pt, *text = GGadgetGetTitle8(tf);

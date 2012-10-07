@@ -5223,7 +5223,7 @@ static void readttfpostnames(FILE *ttf,struct ttfinfo *info) {
 	    info->map = map = EncMapNew(65536,65536,FindOrMakeEncoding("UnicodeBmp"));
 	/* In type42 fonts the names are stored in a postscript /CharStrings dictionary */
 	for ( i=0; i<chars->next; ++i ) {
-	    int gid = (intpt) (chars->values[i]);
+	    int gid = (intptr_t) (chars->values[i]);
 	    if ( gid>=0 && gid<info->glyph_cnt && chars->keys[i]!=NULL ) {
 		free(info->chars[gid]->name);
 		info->chars[gid]->name = chars->keys[i];

@@ -384,7 +384,7 @@ static void FPSTReplaceTagsWithLookups(FPST *fpst,SplineFont1 *sf) {
 return;
     for ( i=0; i<fpst->rule_cnt; ++i ) {
 	for ( j=0; j<fpst->rules[i].lookup_cnt; ++j ) {
-	    OTLookup *otl = FindNestedLookupByTag(sf,(uint32) (intpt) (fpst->rules[i].lookups[j].lookup) );
+	    OTLookup *otl = FindNestedLookupByTag(sf,(uint32) (intptr_t) (fpst->rules[i].lookups[j].lookup) );
 	    if ( otl!=NULL )
 		fpst->rules[i].lookups[j].lookup = otl;
 	    else {
@@ -403,9 +403,9 @@ static void ASMReplaceTagsWithLookups(ASM *sm,SplineFont1 *sf) {
 return;
     for ( i=0; i<sm->class_cnt*sm->state_cnt; ++i ) {
 	if ( sm->state[i].u.context.mark_lookup!=NULL )
-	    sm->state[i].u.context.mark_lookup = FindNestedLookupByTag(sf,(uint32) (intpt) (sm->state[i].u.context.mark_lookup) );
+	    sm->state[i].u.context.mark_lookup = FindNestedLookupByTag(sf,(uint32) (intptr_t) (sm->state[i].u.context.mark_lookup) );
 	if ( sm->state[i].u.context.cur_lookup!=NULL )
-	    sm->state[i].u.context.cur_lookup = FindNestedLookupByTag(sf,(uint32) (intpt) (sm->state[i].u.context.cur_lookup) );
+	    sm->state[i].u.context.cur_lookup = FindNestedLookupByTag(sf,(uint32) (intptr_t) (sm->state[i].u.context.cur_lookup) );
     }
 }
 

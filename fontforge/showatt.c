@@ -1125,7 +1125,7 @@ static void BuildGSUBscript(struct node *node,struct att_dlg *att) {
     free( langlist );
 
     for ( i=0; i<lang_max; ++i ) {
-	for ( j=0; languages[j].text!=NULL && langnodes[i].tag!=(uint32) (intpt) languages[j].userdata; ++j );
+	for ( j=0; languages[j].text!=NULL && langnodes[i].tag!=(uint32) (intptr_t) languages[j].userdata; ++j );
 	buf[0] = '\'';
 	buf[1] = langnodes[i].tag>>24;
 	buf[2] = (langnodes[i].tag>>16)&0xff;
@@ -1272,7 +1272,7 @@ static void BuildJSTFscript(struct node *node,struct att_dlg *att) {
 	    
     for ( jlang=jscript->langs, i=1; jlang!=NULL; jlang=jlang->next, ++i ) {
 	langnodes[i].tag = jlang->lang;
-	for ( j=0; languages[j].text!=NULL && langnodes[i].tag!=(uint32) (intpt) languages[j].userdata; ++j );
+	for ( j=0; languages[j].text!=NULL && langnodes[i].tag!=(uint32) (intptr_t) languages[j].userdata; ++j );
 	buf[0] = '\'';
 	buf[1] = langnodes[i].tag>>24;
 	buf[2] = (langnodes[i].tag>>16)&0xff;
@@ -1857,7 +1857,7 @@ return;
     free( scriptlist );
 
     for ( i=0; i<script_max; ++i ) {
-	for ( j=0; scripts[j].text!=NULL && scriptnodes[i].tag!=(uint32) (intpt) scripts[j].userdata; ++j );
+	for ( j=0; scripts[j].text!=NULL && scriptnodes[i].tag!=(uint32) (intptr_t) scripts[j].userdata; ++j );
 	buf[0] = '\'';
 	buf[1] = scriptnodes[i].tag>>24;
 	buf[2] = (scriptnodes[i].tag>>16)&0xff;
@@ -1895,7 +1895,7 @@ static void BuildJSTFTable(struct node *node,struct att_dlg *att) {
     scriptnodes = xcalloc(sub_cnt+1,sizeof(struct node));
     for ( i=0, jscript=_sf->justify; jscript!=NULL; jscript=jscript->next, ++i ) {
 	scriptnodes[i].tag = jscript->script;
-	for ( j=0; scripts[j].text!=NULL && scriptnodes[i].tag!=(uint32) (intpt) scripts[j].userdata; ++j );
+	for ( j=0; scripts[j].text!=NULL && scriptnodes[i].tag!=(uint32) (intptr_t) scripts[j].userdata; ++j );
 	buf[0] = '\'';
 	buf[1] = scriptnodes[i].tag>>24;
 	buf[2] = (scriptnodes[i].tag>>16)&0xff;

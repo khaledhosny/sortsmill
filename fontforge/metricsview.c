@@ -423,7 +423,7 @@ static void MVSetFeatures(MetricsView *mv) {
 	ti = GGadgetGetList(mv->features,&len);
 	stds = xmalloc((len+1)*sizeof(uint32));
 	for ( i=sc=0; i<len; ++i ) if ( ti[i]->selected )
-	    stds[sc++] = (uint32) (intpt) ti[i]->userdata;
+	    stds[sc++] = (uint32) (intptr_t) ti[i]->userdata;
 	stds[sc] = 0;
     }
 
@@ -447,7 +447,7 @@ static void MVSetFeatures(MetricsView *mv) {
 	    buf[4] = 0;
 	}
 	ti[i]->text = x_u8_to_u32 (u8_force_valid (buf));
-	ti[i]->userdata = (void *) (intpt) tags[i];
+	ti[i]->userdata = (void *) (intptr_t) tags[i];
 	for ( j=0; stds[j]!=0; ++j ) {
 	    if ( stds[j] == tags[i] ) {
 		ti[i]->selected = true;
@@ -706,30 +706,30 @@ static void MVCreateFields(MetricsView *mv,int i) {
     gd.flags = gg_visible | gg_pos_in_pixels | gg_dontcopybox;
     if ( mv->bdf==NULL )
 	gd.flags |= gg_enabled;
-    mv->perchar[i].name = GLabelCreate(mv->gw,&gd,(void *) (intpt) i);
+    mv->perchar[i].name = GLabelCreate(mv->gw,&gd,(void *) (intptr_t) i);
     if ( mv->perchar[i].selected )
 	GGadgetSetEnabled(mv->perchar[i].name,false);
 
     gd.pos.y += mv->fh+4;
     gd.handle_controlevent = MV_WidthChanged;
-    mv->perchar[i].width = GTextFieldCreate(mv->gw,&gd,(void *) (intpt) i);
+    mv->perchar[i].width = GTextFieldCreate(mv->gw,&gd,(void *) (intptr_t) i);
     mv->perchar[i].updownkparray[udaidx++] = mv->perchar[i].width;
 
     gd.pos.y += mv->fh+4;
     gd.handle_controlevent = MV_LBearingChanged;
-    mv->perchar[i].lbearing = GTextFieldCreate(mv->gw,&gd,(void *) (intpt) i);
+    mv->perchar[i].lbearing = GTextFieldCreate(mv->gw,&gd,(void *) (intptr_t) i);
     mv->perchar[i].updownkparray[udaidx++] = mv->perchar[i].lbearing;
 
     gd.pos.y += mv->fh+4;
     gd.handle_controlevent = MV_RBearingChanged;
-    mv->perchar[i].rbearing = GTextFieldCreate(mv->gw,&gd,(void *) (intpt) i);
+    mv->perchar[i].rbearing = GTextFieldCreate(mv->gw,&gd,(void *) (intptr_t) i);
     mv->perchar[i].updownkparray[udaidx++] = mv->perchar[i].rbearing;
 
     if ( i!=0 ) {
 	gd.pos.y += mv->fh+4;
 	gd.pos.x -= mv->mwidth/2;
 	gd.handle_controlevent = MV_KernChanged;
-	mv->perchar[i].kern = GTextFieldCreate(mv->gw,&gd,(void *) (intpt) i);
+	mv->perchar[i].kern = GTextFieldCreate(mv->gw,&gd,(void *) (intptr_t) i);
 	if( i==1 ) {
 	    mv->perchar[i-1].updownkparray[udaidx] = mv->perchar[i].kern;
 	}
@@ -804,7 +804,7 @@ static void MVRemetric(MetricsView *mv) {
     feats = xcalloc(cnt+1,sizeof(uint32));
     for ( i=cnt=0; i<len; ++i )
 	if ( ti[i]->selected )
-	    feats[cnt++] = (intpt) ti[i]->userdata;
+	    feats[cnt++] = (intptr_t) ti[i]->userdata;
 
     free(mv->glyphs);
     sf = mv->sf;
@@ -916,7 +916,7 @@ static int isValidInt(unichar_t *end) {
 
 static int MV_WidthChanged(GGadget *g, GEvent *e) {
     MetricsView *mv = GDrawGetUserData(GGadgetGetWindow(g));
-    int which = (intpt) GGadgetGetUserData(g);
+    int which = (intptr_t) GGadgetGetUserData(g);
     int i;
 
     if ( e->type!=et_controlevent )
@@ -950,7 +950,7 @@ return( true );
 
 static int MV_LBearingChanged(GGadget *g, GEvent *e) {
     MetricsView *mv = GDrawGetUserData(GGadgetGetWindow(g));
-    int which = (intpt) GGadgetGetUserData(g);
+    int which = (intptr_t) GGadgetGetUserData(g);
     int i;
 
     if ( e->type!=et_controlevent )
@@ -991,7 +991,7 @@ return( true );
 
 static int MV_RBearingChanged(GGadget *g, GEvent *e) {
     MetricsView *mv = GDrawGetUserData(GGadgetGetWindow(g));
-    int which = (intpt) GGadgetGetUserData(g);
+    int which = (intptr_t) GGadgetGetUserData(g);
     int i;
 
     if ( e->type!=et_controlevent )
@@ -1171,7 +1171,7 @@ return( true );
 
 static int MV_KernChanged(GGadget *g, GEvent *e) {
     MetricsView *mv = GDrawGetUserData(GGadgetGetWindow(g));
-    int which = (intpt) GGadgetGetUserData(g);
+    int which = (intptr_t) GGadgetGetUserData(g);
     int i;
 
     if ( e->type!=et_controlevent )
@@ -1750,7 +1750,7 @@ static int MV_TextChanged(GGadget *g, GEvent *e) {
 	    int32 len;
 	    GTextInfo **ti = GGadgetGetList(g,&len);
 	    GTextInfo *cur = ti[pos];
-	    int type = (intpt) cur->userdata;
+	    int type = (intptr_t) cur->userdata;
 	    if ( type < 0 )
 		MVLoadWordList(mv,type);
 	    else if ( cur->text!=NULL ) {
@@ -4586,7 +4586,7 @@ return( NULL );
 	for ( s=0; scripttags[s]!=0; ++s ) {
 	    if ( k ) {
 		for ( i=0; scripts[i].text!=NULL; ++i )
-		    if ( scripttags[s] == (intpt) (scripts[i].userdata))
+		    if ( scripttags[s] == (intptr_t) (scripts[i].userdata))
 		break;
 		sname = (char *) (scripts[i].text);
 		sbuf[0] = scripttags[s]>>24;
@@ -4602,7 +4602,7 @@ return( NULL );
 	    for ( l=0; langtags[l]!=0; ++l ) {
 		if ( k ) {
 		    for ( i=0; languages[i].text!=NULL; ++i )
-			if ( langtags[l] == (intpt) (languages[i].userdata))
+			if ( langtags[l] == (intptr_t) (languages[i].userdata))
 		    break;
 		    lname = (char *) (languages[i].text);
 		    lbuf[0] = langtags[l]>>24;

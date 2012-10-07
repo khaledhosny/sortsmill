@@ -794,7 +794,7 @@ return;
 static int CCD_FromSelection(GGadget *g, GEvent *e) {
     if ( e->type==et_controlevent && e->u.control.subtype == et_buttonactivate ) {
 	struct contextchaindlg *ccd = GDrawGetUserData(GGadgetGetWindow(g));
-	int cid = (intpt) GGadgetGetUserData(g);
+	int cid = (intptr_t) GGadgetGetUserData(g);
 
 	_CCD_FromSelection(ccd,cid);
     }
@@ -831,8 +831,8 @@ static void CCD_NewGlyphRule(GGadget *glyphrules,int r,int c) {
 
     md = xcalloc(2*dummy.lookup_cnt,sizeof(struct matrix_data));
     for ( j=0; j<dummy.lookup_cnt; ++j ) {
-	md[2*j+0].u.md_ival = (intpt) (void *) dummy.lookups[j].lookup;
-	md[2*j+1].u.md_ival = (intpt) dummy.lookups[j].seq;
+	md[2*j+0].u.md_ival = (intptr_t) (void *) dummy.lookups[j].lookup;
+	md[2*j+1].u.md_ival = (intptr_t) dummy.lookups[j].seq;
     }
     GMatrixEditSet(lookuplist,md,dummy.lookup_cnt,false);
     ccd->aw = aw_glyphs;
@@ -875,8 +875,8 @@ static void CCD_NewClassRule(GGadget *classrules,int r,int c) {
 
     md = xcalloc(2*dummy.lookup_cnt,sizeof(struct matrix_data));
     for ( j=0; j<dummy.lookup_cnt; ++j ) {
-	md[2*j+0].u.md_ival = (intpt) (void *) dummy.lookups[j].lookup;
-	md[2*j+1].u.md_ival = (intpt) dummy.lookups[j].seq;
+	md[2*j+0].u.md_ival = (intptr_t) (void *) dummy.lookups[j].lookup;
+	md[2*j+1].u.md_ival = (intptr_t) dummy.lookups[j].seq;
     }
     GMatrixEditSet(lookuplist,md,dummy.lookup_cnt,false);
     FPSTRuleContentsFree(&dummy,pst_class);
@@ -1644,7 +1644,7 @@ static void CCD_FinishCoverageSimpleEdit(GGadget *g,int r, int c, int wasnew) {
     else if ( c==1 && cols==2 ) {	/* The replacement list in a reverse coverage_simple */
 	ME_ListCheck(g, r, c, ccd->sf);
     } else if ( c==1 && cols==4 ) {	/* The lookup in a coverage_simple line (not reverse coverage_simple) */
-	if ( covers[cols*r+c].u.md_addr== (void *) (intpt) -1 ) {
+	if ( covers[cols*r+c].u.md_addr== (void *) (intptr_t) -1 ) {
 	    /* They asked to remove the lookup that was there */
 	    covers[cols*r+c].u.md_addr = NULL;
 	} else if ( covers[cols*r+c].u.md_addr==NULL ) {
@@ -2059,7 +2059,7 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
     addrmlookup_list[1].text = (unichar_t *) S_("Remove Lookup");
     addrmlookup_list[1].text_is_1byte = true;
     addrmlookup_list[1].selected = false;
-    addrmlookup_list[1].userdata = (void *) (intpt) -1;
+    addrmlookup_list[1].userdata = (void *) (intptr_t) -1;
     coveragesimple_ci[1].enum_vals = addrmlookup_list;
     seqlookup_ci[0].enum_vals = lookup_list;
 
@@ -2416,7 +2416,7 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
 	ggcd[i][k].gd.popup_msg = (unichar_t *) _("Set this glyph list from a selection.");
 	ggcd[i][k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
 	ggcd[i][k].gd.handle_controlevent = CCD_FromSelection;
-	ggcd[i][k].data = (void *) (intpt) CID_GlyphList+(0*100+i*20);
+	ggcd[i][k].data = (void *) (intptr_t) CID_GlyphList+(0*100+i*20);
 	ggcd[i][k++].creator = GButtonCreate;
 	subvarray[i][0] = &ggcd[i][k-1];
 
@@ -2547,8 +2547,8 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
 		    co_seqlookup_mi.initial_row_cnt = r->lookup_cnt;
 		    md = xcalloc(2*r->lookup_cnt,sizeof(struct matrix_data));
 		    for ( j=0; j<r->lookup_cnt; ++j ) {
-			md[2*j+0].u.md_ival = (intpt) (void *) r->lookups[j].lookup;
-			md[2*j+1].u.md_ival = (intpt) r->lookups[j].seq;
+			md[2*j+0].u.md_ival = (intptr_t) (void *) r->lookups[j].lookup;
+			md[2*j+1].u.md_ival = (intptr_t) r->lookups[j].seq;
 		    }
 		    co_seqlookup_mi.matrix_data = md;
 		} else {
@@ -2591,7 +2591,7 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
 		cgcd[i][k].gd.popup_msg = (unichar_t *) _("Set this glyph list from a selection.");
 		cgcd[i][k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
 		cgcd[i][k].gd.handle_controlevent = CCD_FromSelection;
-		cgcd[i][k].data = (void *) (intpt) (CID_RplList+100);
+		cgcd[i][k].data = (void *) (intptr_t) (CID_RplList+100);
 		cgcd[i][k++].creator = GButtonCreate;
 		subvarray2[1] = &cgcd[i][k-1];
 		subvarray2[2] = GCD_Glue;

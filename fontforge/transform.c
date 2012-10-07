@@ -285,7 +285,7 @@ static int Trans_TypeChange(GGadget *g, GEvent *e) {
 	GWindow bw = GGadgetGetWindow(g);
 	int offset = GGadgetGetCid(g)-CID_Type;
 	int index = GGadgetGetFirstListSelectedItem(g);
-	int mask = (intpt) transformtypes[index].userdata;
+	int mask = (intptr_t) transformtypes[index].userdata;
 	int i;
 
 	if ( mask & 0x400 ) {
@@ -316,7 +316,7 @@ static int Trans_TypeChange(GGadget *g, GEvent *e) {
 	for ( i=CID_First; i<=CID_Last; ++i ) {
 	    GGadget *sg;
 	    sg = GWidgetGetControl(bw,i+offset);
-	    GGadgetSetVisible(sg, ( ((intpt) GGadgetGetUserData(sg))&mask )?1:0);
+	    GGadgetSetVisible(sg, ( ((intptr_t) GGadgetGetUserData(sg))&mask )?1:0);
 	}
 	if ( selcid[index]!=0 ) {
 	    GGadget *tf = GWidgetGetControl(bw,selcid[index]+offset);

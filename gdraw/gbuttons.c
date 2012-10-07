@@ -167,8 +167,8 @@ static GResInfo gcancel_ri = {
     NULL
 };
 static GGadgetCreateData color_gcd[] = {
-    { GColorButtonCreate, { GRECT_EMPTY, NULL, 0, 0, 0, 0, 0, NULL, { (GTextInfo *) (intpt) (0x000000) }, gg_visible, NULL, NULL }, NULL, NULL },
-    { GColorButtonCreate, { GRECT_EMPTY, NULL, 0, 0, 0, 0, 0, NULL, { (GTextInfo *) (intpt) (0x000000) }, gg_visible|gg_enabled, NULL, NULL }, NULL, NULL }
+    { GColorButtonCreate, { GRECT_EMPTY, NULL, 0, 0, 0, 0, 0, NULL, { (GTextInfo *) (intptr_t) (0x000000) }, gg_visible, NULL, NULL }, NULL, NULL },
+    { GColorButtonCreate, { GRECT_EMPTY, NULL, 0, 0, 0, 0, 0, NULL, { (GTextInfo *) (intptr_t) (0x000000) }, gg_visible|gg_enabled, NULL, NULL }, NULL, NULL }
 };
 static GGadgetCreateData *colarray[] = { GCD_Glue, &color_gcd[0], GCD_Glue, &color_gcd[1], GCD_Glue, NULL, NULL };
 static GGadgetCreateData colorbox =
@@ -1037,7 +1037,7 @@ static GLabel *_GLabelCreate(GLabel *gl, struct gwindow *base, GGadgetData *gd,v
 	if ( gd->label->text_in_resource && gd->label->text_is_1byte )
 	    gl->label = utf82u_mncopy((char *) gd->label->text,&gl->g.mnemonic);
 	else if ( gd->label->text_in_resource )
-	    gl->label = x_u32_strdup_or_null((unichar_t *) GStringGetResource((intpt) gd->label->text,&gl->g.mnemonic));
+	    gl->label = x_u32_strdup_or_null((unichar_t *) GStringGetResource((intptr_t) gd->label->text,&gl->g.mnemonic));
 	else if ( gd->label->text_is_1byte )
 	    gl->label = /* def2u_*/ utf82u_copy((char *) gd->label->text);
 	else

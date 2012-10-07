@@ -1675,10 +1675,10 @@ static int SS_ScriptChanged(GGadget *g, GEvent *e) {
 	free(txt);
 	if ( scripts[i].text==NULL )
 return( true );
-	buf[0] = ((intpt) scripts[i].userdata)>>24;
-	buf[1] = ((intpt) scripts[i].userdata)>>16;
-	buf[2] = ((intpt) scripts[i].userdata)>>8 ;
-	buf[3] = ((intpt) scripts[i].userdata)    ;
+	buf[0] = ((intptr_t) scripts[i].userdata)>>24;
+	buf[1] = ((intptr_t) scripts[i].userdata)>>16;
+	buf[2] = ((intptr_t) scripts[i].userdata)>>8 ;
+	buf[3] = ((intptr_t) scripts[i].userdata)    ;
 	buf[4] = 0;
 	GGadgetSetTitle8(g,buf);
     }
@@ -1943,8 +1943,8 @@ static void FVSelectColor(FontView *fv, uint32 col, int merge) {
 
 static void FVMenuSelectColor(GWindow gw, struct gmenuitem *mi, GEvent *e) {
     FontView *fv = (FontView *) GDrawGetUserData(gw);
-    Color col = (Color) (intpt) (mi->ti.userdata);
-    if ( (intpt) mi->ti.userdata == (intpt) -10 ) {
+    Color col = (Color) (intptr_t) (mi->ti.userdata);
+    if ( (intptr_t) mi->ti.userdata == (intptr_t) -10 ) {
 	struct hslrgb retcol, font_cols[6];
 	retcol = GWidgetColor(_("Pick a color"),NULL,SFFontCols(fv->b.sf,font_cols));
 	if ( !retcol.rgb )
@@ -2359,8 +2359,8 @@ static void FVSetColor(FontView *fv, uint32 col) {
 
 static void FVMenuSetColor(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     FontView *fv = (FontView *) GDrawGetUserData(gw);
-    Color col = (Color) (intpt) (mi->ti.userdata);
-    if ( (intpt) mi->ti.userdata == (intpt) -10 ) {
+    Color col = (Color) (intptr_t) (mi->ti.userdata);
+    if ( (intptr_t) mi->ti.userdata == (intptr_t) -10 ) {
 	struct hslrgb retcol, font_cols[6];
 	retcol = GWidgetColor(_("Pick a color"),NULL,SFFontCols(fv->b.sf,font_cols));
 	if ( !retcol.rgb )

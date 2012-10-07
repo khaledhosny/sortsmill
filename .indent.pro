@@ -12,6 +12,8 @@
 -T uint8_t
 -T uint16_t
 -T uint32_t
+-T intptr_t
+-T uintptr_t
 -T unichar_t
 
 -T cairo_t

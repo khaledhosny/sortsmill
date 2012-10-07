@@ -7955,7 +7955,7 @@ return( true );
 static int IOSA_FocusChange(GGadget *g, GEvent *e) {
     if ( e->type==et_controlevent && e->u.control.subtype == et_textfocuschanged ) {
 	struct insertonsplineat *iosa = GDrawGetUserData(GGadgetGetWindow(g));
-	int cid = (intpt) GGadgetGetUserData(g);
+	int cid = (intptr_t) GGadgetGetUserData(g);
 	GGadgetSetChecked(GWidgetGetControl(iosa->gw,cid),true);
     }
 return( true );
@@ -7964,7 +7964,7 @@ return( true );
 static int IOSA_RadioChange(GGadget *g, GEvent *e) {
     if ( e->type==et_controlevent && e->u.control.subtype == et_radiochanged ) {
 	struct insertonsplineat *iosa = GDrawGetUserData(GGadgetGetWindow(g));
-	int cid = (intpt) GGadgetGetUserData(g);
+	int cid = (intptr_t) GGadgetGetUserData(g);
 	GWidgetIndicateFocusGadget(GWidgetGetControl(iosa->gw,cid));
 	GTextFieldSelect(GWidgetGetControl(iosa->gw,cid),0,-1);
     }
@@ -9882,7 +9882,7 @@ static GMenuItem2 vwlist[] = {
 
 static void CVMenuShowMMMask(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     CharView *cv = (CharView *) GDrawGetUserData(gw);
-    uint32 changemask = (uint32) (intpt) mi->ti.userdata;
+    uint32 changemask = (uint32) (intptr_t) mi->ti.userdata;
     /* Change which mms get displayed in the "background" */
 
     if ( mi->mid==MID_MMAll ) {
@@ -9927,15 +9927,15 @@ static void mvlistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
 	    mml[i].ti.text = x_u8_to_u32 (u8_force_valid (sub->fontname));
 	    mml[i].ti.checkable = true;
 	    mml[i].ti.checked = (cv->mmvisible & (1<<j))?1:0;
-	    mml[i].ti.userdata = (void *) (intpt) (1<<j);
+	    mml[i].ti.userdata = (void *) (intptr_t) (1<<j);
 	    mml[i].invoke = CVMenuShowMMMask;
 	    mml[i].ti.fg = mml[i].ti.bg = COLOR_DEFAULT;
 	    if ( sub==cv->b.sc->parent )
 		submask = (1<<j);
 	}
 	/* All */
-	mml[0].ti.userdata = (void *) (intpt) ((1<<j)-1);
-	mml[0].ti.checked = (cv->mmvisible == (uint32) (intpt) mml[0].ti.userdata);
+	mml[0].ti.userdata = (void *) (intptr_t) ((1<<j)-1);
+	mml[0].ti.checked = (cv->mmvisible == (uint32) (intptr_t) mml[0].ti.userdata);
 	    /* None */
 	mml[1].ti.checked = (cv->mmvisible == 0 || cv->mmvisible == submask);
     }

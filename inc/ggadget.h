@@ -27,8 +27,11 @@
 #ifndef _GGADGET_H
 #define _GGADGET_H
 
+#include <config.h>
+
 #include "gdraw.h"
 #include "intl.h"
+
 struct giocontrol;
 
 typedef struct gtextinfo {
@@ -258,7 +261,7 @@ struct col_init {
 
 struct matrix_data {
     union {
-	intpt md_ival;
+	intptr_t md_ival;
 	double md_real;
 	char *md_str;
 	void *md_addr;

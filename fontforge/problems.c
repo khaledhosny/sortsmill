@@ -3043,7 +3043,7 @@ return( true );
 
 static int Prob_TextChanged(GGadget *g, GEvent *e) {
     if ( e->type==et_controlevent && e->u.control.subtype == et_textchanged ) {
-	GGadgetSetChecked(GWidgetGetControl(GGadgetGetWindow(g),(intpt) GGadgetGetUserData(g)),true);
+	GGadgetSetChecked(GWidgetGetControl(GGadgetGetWindow(g),(intptr_t) GGadgetGetUserData(g)),true);
     }
 return( true );
 }

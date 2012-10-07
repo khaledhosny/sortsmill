@@ -1013,7 +1013,7 @@ static int Group_AddColor(GGadget *g, GEvent *e) {
 		set = true;
 	    }
 	} else {
-	    xcol = (intpt) ti->userdata;
+	    xcol = (intptr_t) ti->userdata;
 	    set = true;
 	}
 

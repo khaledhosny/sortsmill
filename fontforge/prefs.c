@@ -2974,7 +2974,7 @@ DoPrefs (void)
               for (j = 0; j < llen; ++j)
                 {
                   if (list[j]->text != NULL
-                      && (void *) (intpt) (*((int *) pl->val)) ==
+                      && (void *) (intptr_t) (*((int *) pl->val)) ==
                       list[j]->userdata)
                     list[j]->selected = true;
                   else

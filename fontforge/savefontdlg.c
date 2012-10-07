@@ -1721,7 +1721,7 @@ DoSave (struct gfc_data *d, unichar_t *path)
 
   if (d->family == gf_none)
     layer =
-      (intpt)
+      (intptr_t)
       GGadgetGetListItemSelected (GWidgetGetControl (d->gw, CID_Layers))->
       userdata;
 
@@ -2752,7 +2752,7 @@ SFUsableLayerNames (SplineFont *sf, int def_layer)
         ti[cnt].text = (unichar_t *) sf->layers[layer].name;
         ti[cnt].text_is_1byte = true;
         ti[cnt].selected = layer == def_layer;
-        ti[cnt++].userdata = (void *) (intpt) layer;
+        ti[cnt++].userdata = (void *) (intptr_t) layer;
       }
   return (ti);
 }

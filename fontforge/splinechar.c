@@ -1105,7 +1105,7 @@ void RevertedGlyphReferenceFixup(SplineChar *sc, SplineFont *sf) {
     /* Fixup kerning pairs as well */
     for ( isv=0; isv<2; ++isv ) {
 	for ( kprev = NULL, kp=isv?sc->vkerns : sc->kerns; kp!=NULL; kp=knext ) {
-	    int index = (intpt) (kp->sc);
+	    int index = (intptr_t) (kp->sc);
 	    knext = kp->next;
 	    kp->kcid = false;
 	    ksf = sf;

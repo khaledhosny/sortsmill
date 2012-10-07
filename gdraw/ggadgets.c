@@ -177,7 +177,7 @@ static void *border_type_cvt(char *val, void *def) {
     int ret = match(types,val);
     if ( ret== -1 )
 return( def );
-return( (void *) (intpt) ret );
+return( (void *) (intptr_t) ret );
 }
 
 static void *border_shape_cvt(char *val, void *def) {
@@ -185,7 +185,7 @@ static void *border_shape_cvt(char *val, void *def) {
     int ret = match(shapes,val);
     if ( ret== -1 )
 return( def );
-return( (void *) (intpt) ret );
+return( (void *) (intptr_t) ret );
 }
 
 /* font name may be something like:
@@ -312,7 +312,7 @@ FontInstance *_GGadgetInitDefaultBox(char *class,GBox *box, FontInstance *deffon
 	{ "Box.BorderOuterCol", rt_color, NULL, NULL, 0 },
 	GRESSTRUCT_EMPTY
     };
-    intpt bt, bs;
+    intptr_t bt, bs;
     int bw, pad, rr, inner, outer, active, depressed, def, grad, shadow;
     FontInstance *fi=deffont;
 

@@ -338,7 +338,7 @@ static void LookupMatrixInit(struct matrixinit *mi,char *lookupstr,
 	    if ( k ) {
 		for ( j=0; (temp=(char *) (lookup_ci[0].enum_vals[j].text))!=NULL; ++j )
 		    if ( strlen(temp)==end-start && strncmp(temp,start,end-start)==0 ) {
-			md[1*cnt++ + 0].u.md_ival = (intpt) lookup_ci[0].enum_vals[j].userdata;
+			md[1*cnt++ + 0].u.md_ival = (intptr_t) lookup_ci[0].enum_vals[j].userdata;
 		break;
 		    }
 	    } else

@@ -232,11 +232,11 @@ static void GMatrixEdit_Move(GGadget *g, int32 x, int32 y) {
     _ggadget_move(g,x,y);
 }
 
-static GMenuItem *FindMi(GMenuItem *mi, intpt val ) {
+static GMenuItem *FindMi(GMenuItem *mi, intptr_t val ) {
     int i;
 
     for ( i=0; mi[i].ti.text!=NULL || mi[i].ti.line; ++i ) {
-	if ( mi[i].ti.userdata == (void *) (intpt) val && mi[i].ti.text!=NULL )
+	if ( mi[i].ti.userdata == (void *) (intptr_t) val && mi[i].ti.text!=NULL )
 return( &mi[i] );
     }
 return( NULL );
@@ -899,9 +899,9 @@ static int GME_SetValue(GMatrixEdit *gme,GGadget *g ) {
 	    int i;
 	    for ( i=0; (test=gme->col_data[c].enum_vals[i].ti.text)!=NULL || gme->col_data[c].enum_vals[i].ti.line ; ++i ) {
 		if ( u_strcmp(ustr,test)==0 ) {
-		    if ( (intpt) gme->col_data[c].enum_vals[i].ti.userdata != GME_NoChange )
+		    if ( (intptr_t) gme->col_data[c].enum_vals[i].ti.userdata != GME_NoChange )
 			gme->data[r*gme->cols+c].u.md_ival =
-				(intpt) gme->col_data[c].enum_vals[i].ti.userdata;
+				(intptr_t) gme->col_data[c].enum_vals[i].ti.userdata;
 		    free(str);
   goto good;
 		}
@@ -1259,10 +1259,10 @@ static void GME_StrBigEdit(GMatrixEdit *gme,char *str) {
 static void GME_EnumDispatch(GWindow gw, GMenuItem *mi, GEvent *e) {
     GMatrixEdit *gme = GDrawGetUserData(gw);
 
-    if ( (intpt) mi->ti.userdata == GME_NoChange )
+    if ( (intptr_t) mi->ti.userdata == GME_NoChange )
 return;
 
-    gme->data[gme->active_row*gme->cols+gme->active_col].u.md_ival = (intpt) mi->ti.userdata;
+    gme->data[gme->active_row*gme->cols+gme->active_col].u.md_ival = (intptr_t) mi->ti.userdata;
 
     if ( gme->finishedit != NULL )
 	(gme->finishedit)(&gme->g,gme->active_row,gme->active_col,gme->wasnew);
@@ -1286,7 +1286,7 @@ static void GME_Choices(GMatrixEdit *gme,GEvent *event,int r,int c) {
     int i;
 
     for ( i=0; mi[i].ti.text!=NULL || mi[i].ti.line || mi[i].ti.image!=NULL; ++i )
-	mi[i].ti.selected = mi[i].ti.checked = !gme->wasnew && (mi[i].ti.userdata == (void *) (intpt) val);
+	mi[i].ti.selected = mi[i].ti.checked = !gme->wasnew && (mi[i].ti.userdata == (void *) (intptr_t) val);
     if ( gme->col_data[c].enable_enum!=NULL )
 	(gme->col_data[c].enable_enum)(&gme->g,mi,r,c);
     _GMenuCreatePopupMenu(gme->nested,event, mi, GME_FinishChoice);
@@ -1296,7 +1296,7 @@ static void GME_EnumStringDispatch(GWindow gw, GMenuItem *mi, GEvent *e) {
     GMatrixEdit *gme = GDrawGetUserData(gw);
     int r = gme->active_row, c = gme->active_col;
 
-    if ( (intpt) mi->ti.userdata == GME_NoChange )
+    if ( (intptr_t) mi->ti.userdata == GME_NoChange )
 return;
 
     free(gme->data[r*gme->cols+c].u.md_str);
@@ -1304,10 +1304,10 @@ return;
 	gme->data[r*gme->cols+c].u.md_str = copy( (char *) mi->ti.userdata );
     else if ( gme->col_data[c].me_type==me_stringchoicetag ) {
 	char buf[8];
-	buf[0] = ((intpt) mi->ti.userdata)>>24;
-	buf[1] = ((intpt) mi->ti.userdata)>>16;
-	buf[2] = ((intpt) mi->ti.userdata)>>8;
-	buf[3] = ((intpt) mi->ti.userdata)&0xff;
+	buf[0] = ((intptr_t) mi->ti.userdata)>>24;
+	buf[1] = ((intptr_t) mi->ti.userdata)>>16;
+	buf[2] = ((intptr_t) mi->ti.userdata)>>8;
+	buf[3] = ((intptr_t) mi->ti.userdata)&0xff;
 	buf[4] = '\0';
 	gme->data[r*gme->cols+c].u.md_str = copy( buf );
     } else
@@ -1327,10 +1327,10 @@ static void GME_StringChoices(GMatrixEdit *gme,GEvent *event,int r,int c) {
     if ( gme->col_data[c].me_type==me_stringchoicetag ) {
 	char buf[8];
 	for ( i=0; mi[i].ti.text!=NULL || mi[i].ti.line || mi[i].ti.image!=NULL; ++i ) {
-	    buf[0] = ((intpt) mi[i].ti.userdata)>>24;
-	    buf[1] = ((intpt) mi[i].ti.userdata)>>16;
-	    buf[2] = ((intpt) mi[i].ti.userdata)>>8;
-	    buf[3] = ((intpt) mi[i].ti.userdata)&0xff;
+	    buf[0] = ((intptr_t) mi[i].ti.userdata)>>24;
+	    buf[1] = ((intptr_t) mi[i].ti.userdata)>>16;
+	    buf[2] = ((intptr_t) mi[i].ti.userdata)>>8;
+	    buf[3] = ((intptr_t) mi[i].ti.userdata)&0xff;
 	    buf[4] = '\0';
 	    mi[i].ti.selected = mi[i].ti.checked = !gme->wasnew && val!=NULL &&
 		    strcmp(buf,val)==0;
@@ -1503,10 +1503,10 @@ return;
 	    char *str = gme->data[r*gme->cols+c].u.md_str, buf[8];
 	    GMenuItem *enums = gme->col_data[c].enum_vals;
 	    for ( i=0; enums[i].ti.text!=NULL || enums[i].ti.line ; ++i ) {
-		buf[0] = ((intpt) enums[i].ti.userdata)>>24;
-		buf[1] = ((intpt) enums[i].ti.userdata)>>16;
-		buf[2] = ((intpt) enums[i].ti.userdata)>>8;
-		buf[3] = ((intpt) enums[i].ti.userdata)&0xff;
+		buf[0] = ((intptr_t) enums[i].ti.userdata)>>24;
+		buf[1] = ((intptr_t) enums[i].ti.userdata)>>16;
+		buf[2] = ((intptr_t) enums[i].ti.userdata)>>8;
+		buf[3] = ((intptr_t) enums[i].ti.userdata)&0xff;
 		buf[4] = '\0';
 		if ( enums[i].ti.userdata!=NULL && strcmp(buf,str)==0 ) {
 		    if ( enums[i].ti.text_is_1byte )

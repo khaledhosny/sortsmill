@@ -978,7 +978,7 @@ static void DSP_ChangeFontCallback(void *context,SplineFont *sf,enum sftf_fontty
 	    buf[0] = tags[i]>>24; buf[1] = tags[i]>>16; buf[2] = tags[i]>>8; buf[3] = tags[i]; buf[4] = 0;
 	}
 	ti[i]->text = x_u8_to_u32 (u8_force_valid (buf));
-	ti[i]->userdata = (void *) (intpt) tags[i];
+	ti[i]->userdata = (void *) (intptr_t) tags[i];
 	if ( feats!=NULL ) {
 	    for ( j=0; feats[j]!=0; ++j ) {
 		if ( feats[j] == tags[i] ) {
@@ -1002,7 +1002,7 @@ static void DSP_ChangeFontCallback(void *context,SplineFont *sf,enum sftf_fontty
 		ti[cnt]->selected = true;
 		buf[0] = feats[i]>>24; buf[1] = feats[i]>>16; buf[2] = feats[i]>>8; buf[3] = feats[i]; buf[4] = 0;
 		ti[cnt]->text = x_u8_to_u32 (u8_force_valid (buf));
-		ti[cnt++]->userdata = (void *) (intpt) feats[i];
+		ti[cnt++]->userdata = (void *) (intptr_t) feats[i];
 	    }
 	}
     ti[cnt] = xcalloc(1,sizeof(GTextInfo));
@@ -1422,7 +1422,7 @@ static int DSP_FeaturesChanged(GGadget *g, GEvent *e) {
 	feats = xmalloc((cnt+1)*sizeof(uint32));
 	for ( i=cnt=0; i<len; ++i )
 	    if ( ti[i]->selected )
-		feats[cnt++] = (intpt) ti[i]->userdata;
+		feats[cnt++] = (intptr_t) ti[i]->userdata;
 	feats[cnt] = 0;
 	/* These will be ordered because the list widget will do that */
 	SFTFSetFeatures(GWidgetGetControl(di->gw,CID_SampleText),-1,-1,feats);
