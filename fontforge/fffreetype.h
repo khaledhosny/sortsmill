@@ -28,7 +28,7 @@
 #ifndef _FFFREETYPE_H
 #define _FFFREETYPE_H
 
-#if !defined(_NO_FREETYPE) && !defined(_NO_MMAP)
+#if !defined(_NO_FREETYPE) && defined HAVE_MMAP
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_OUTLINE_H

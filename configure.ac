@@ -282,9 +282,6 @@ AC_FUNC_FORK
 AC_FUNC_MALLOC
 AC_FUNC_MKTIME
 AC_FUNC_MMAP
-if test x"${ac_cv_func_mmap_fixed_mapped}" != xyes; then
-   AC_DEFINE([_NO_MMAP],1,[Define if not using mmap.])
-fi
 AC_FUNC_REALLOC
 AC_FUNC_STRCOLL
 AC_FUNC_STRTOD
