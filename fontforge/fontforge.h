@@ -27,7 +27,8 @@
 #ifndef _PFAEDIT_H_
 #define _PFAEDIT_H_
 
-#include "configure-fontforge.h"
+#include <config.h>
+
 #include <basics.h>
 #include <stdio.h>
 #include <string.h>

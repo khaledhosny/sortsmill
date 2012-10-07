@@ -30,7 +30,6 @@
 #include <config.h>
 
 #include "basics.h"
-#include "configure-fontforge.h"
 #include <iconv.h>
 
 #ifdef FONTFORGE_CONFIG_USE_DOUBLE
