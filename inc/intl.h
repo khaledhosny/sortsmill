@@ -31,7 +31,6 @@
 #if !defined( HAVE_LIBINTL_H )
 
 # define _(str)			(str)
-# define P_(str1,str_non1,n)	((n)==1?str1:str_non1)
 # define U_(str)		(str)
 
 # ifdef bindtextdomain
@@ -54,7 +53,6 @@
 
 # include <libintl.h>
 # define _(str)			gettext(str)
-# define P_(str1,str_non1,n)	ngettext(str1,str_non1,n)
 /* For messages including utf8 characters. old xgettexts won't handle them */
 /*  so we must do something special. */
 # define U_(str)		gettext(str)

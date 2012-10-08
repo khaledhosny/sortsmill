@@ -466,7 +466,7 @@ static void BuildFPSTRule(struct node *node,struct att_dlg *att) {
 	    if ( r->u.class.bcnt!=0 ) {
 		if ( i ) {
 		    gb.pt = gb.base;
-		    GrowBufferAddStr(&gb,P_("Backtrack class: ","Backtrack classes: ",r->u.class.bcnt));
+		    GrowBufferAddStr(&gb,ngettext("Backtrack class: ","Backtrack classes: ",r->u.class.bcnt));
 		    for ( j=r->u.class.bcnt-1; j>=0; --j ) {
 			if ( fpst->bclassnames==NULL || fpst->bclassnames[r->u.class.bclasses[j]]==NULL ) {
 			    sprintf( buf, "%d ", r->u.class.bclasses[j] );
@@ -481,7 +481,7 @@ static void BuildFPSTRule(struct node *node,struct att_dlg *att) {
 	    }
 	    if ( i ) {
 		gb.pt = gb.base;
-		GrowBufferAddStr(&gb, P_("Class","Classes",r->u.class.ncnt));
+		GrowBufferAddStr(&gb, ngettext("Class","Classes",r->u.class.ncnt));
 		for ( j=0; j<r->u.class.ncnt; ++j ) {
 		    if ( fpst->nclassnames==NULL || fpst->nclassnames[r->u.class.nclasses[j]]==NULL ) {
 			sprintf( buf, "%d ", r->u.class.nclasses[j] );
@@ -496,7 +496,7 @@ static void BuildFPSTRule(struct node *node,struct att_dlg *att) {
 	    if ( r->u.class.fcnt!=0 ) {
 		if ( i ) {
 		    gb.pt = gb.base;
-		    GrowBufferAddStr(&gb, P_("Lookahead Class","Lookahead Classes",r->u.class.fcnt));
+		    GrowBufferAddStr(&gb, ngettext("Lookahead Class","Lookahead Classes",r->u.class.fcnt));
 		    for ( j=0; j<r->u.class.fcnt; ++j ) {
 			if ( fpst->fclassnames==NULL || fpst->fclassnames[r->u.class.fclasses[j]]==NULL ) {
 			    sprintf( buf, "%d ", r->u.class.fclasses[j] );
@@ -2024,7 +2024,7 @@ static void BuildTop(struct att_dlg *att) {
 		tables[i].children[0].cnt = sub_cnt;
 		if ( _sf->horiz_base!=NULL ) {
 		    snprintf(buffer,sizeof(buffer),
-			    P_("Horizontal: %d baseline","Horizontal: %d baselines",_sf->horiz_base->baseline_cnt),
+			    ngettext("Horizontal: %d baseline","Horizontal: %d baselines",_sf->horiz_base->baseline_cnt),
 			    _sf->horiz_base->baseline_cnt );
 		    tables[i].children[0].children[j].label = xstrdup_or_null(buffer);
 		    tables[i].children[0].children[j].horizontal = true;
@@ -2034,7 +2034,7 @@ static void BuildTop(struct att_dlg *att) {
 		}
 		if ( _sf->vert_base!=NULL ) {
 		    snprintf(buffer,sizeof(buffer),
-			    P_("Vertical: %d baseline","Vertical: %d baselines",_sf->vert_base->baseline_cnt),
+			    ngettext("Vertical: %d baseline","Vertical: %d baselines",_sf->vert_base->baseline_cnt),
 			    _sf->vert_base->baseline_cnt );
 		    tables[i].children[0].children[j].label = xstrdup_or_null(buffer);
 		    tables[i].children[0].children[j].horizontal = false;
