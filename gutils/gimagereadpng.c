@@ -1,3 +1,5 @@
+#include <config.h>
+
 /* Copyright (C) 2000-2012 by George Williams */
 /*
  * Redistribution and use in source and binary forms, with or without
@@ -25,16 +27,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <config.h>
-
-#ifdef _NO_LIBPNG
-
-static void *a_file_must_define_something=(void *) &a_file_must_define_something;
-		/* ANSI says so */
-
-#else
-
-# include <png.h>
+#include <png.h>
 
 //# define int32_t _int32
 //# define uint32_t _uint32
@@ -211,4 +204,3 @@ return( NULL );
     fclose(fp);
 return( ret );
 }
-#endif

@@ -3440,9 +3440,7 @@ static void edlistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
 #if 0	/* Paste should always be enabled so textfields will get the event */
 	    mi->ti.disabled = i==-1 ||
 		(!CopyContainsSomething() &&
-#ifndef _NO_LIBPNG
 		    !GDrawSelectionHasType(mv->gw,sn_clipboard,"image/png") &&
-#endif
 #ifndef _NO_LIBXML
 		    !GDrawSelectionHasType(mv->gw,sn_clipboard,"image/svg+xml") &&
 		    !GDrawSelectionHasType(mv->gw,sn_clipboard,"image/svg-xml") &&

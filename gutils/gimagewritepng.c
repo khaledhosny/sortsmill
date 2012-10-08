@@ -1,3 +1,5 @@
+#include <config.h>
+
 /* Copyright (C) 2000-2012 by George Williams */
 /*
  * Redistribution and use in source and binary forms, with or without
@@ -24,14 +26,6 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-#include <config.h>
-
-#ifdef _NO_LIBPNG
-
-static int a_file_must_define_something=0;	/* ANSI says so */
-
-#else
 
 #include <png.h>
 
@@ -179,5 +173,3 @@ return(false);
     fclose(fp);
 return( ret );
 }
-
-#endif

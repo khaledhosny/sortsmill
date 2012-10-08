@@ -54,10 +54,8 @@ return( GImageReadTiff(filename));
     else if ( strmatch(pt,".jpeg")==0 || strmatch(pt,".jpg")==0 )
 return( GImageReadJpeg(filename));
 #endif
-#ifndef _NO_LIBPNG
     else if ( strmatch(pt,".png")==0 )
 return( GImageReadPng(filename));
-#endif
 #ifndef _NO_LIBUNGIF
     else if ( strmatch(pt,".gif")==0 )
 return( GImageReadGif(filename));

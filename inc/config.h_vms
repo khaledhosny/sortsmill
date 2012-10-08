@@ -45,7 +45,6 @@
 #undef _NO_FREETYPE
 #undef _NO_LIBXML
 #undef _NO_LIBUNGIF
-#undef _NO_LIBPNG
 #undef _LIBPNG12
 #undef _NO_LIBJPEG
 #undef _NO_LIBTIFF

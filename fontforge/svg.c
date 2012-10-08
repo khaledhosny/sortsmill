@@ -379,12 +379,10 @@ static void DataURI_ImageDump(FILE *file,struct gimage *img) {
 	mimetype = "image/jpeg";
     }
 #endif
-#ifndef _NO_LIBPNG
     if ( !done ) {
 	done = GImageWrite_Png(img,imgf,false);
 	mimetype = "image/png";
     }
-#endif
     if ( !done ) {
 	GImageWrite_Bmp(img,imgf);
 	mimetype = "image/bmp";
@@ -2551,11 +2549,9 @@ return( NULL );
 	}
     }
     rewind(tmp);
-#ifndef _NO_LIBPNG
     if ( strcmp(mimetype,"image/png")==0 )
 	img = GImageRead_Png(tmp);
     else
-#endif
 #ifndef _NO_LIBJPEG
     if ( strcmp(mimetype,"image/jpeg")==0 )
 	img = GImageRead_Jpeg(tmp);

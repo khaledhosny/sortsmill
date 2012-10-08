@@ -759,9 +759,7 @@ static struct ofl_download_urls *OFLibHasImage(OFLibDlg *d,int sel_font) {
 	    if ( ext==NULL || !du->selected)
 	continue;
 	    if (
-#ifndef _NO_LIBPNG
 		    strcasecmp(ext,".png")==0 ||
-#endif
 #ifndef _NO_LIBJPEG
 		    strcasecmp(ext,".jpeg")==0 || strcasecmp(ext,".jpg")==0 ||
 #endif
@@ -782,9 +780,7 @@ return( du );
 	if ( ext==NULL )
     continue;
 	if (
-#ifndef _NO_LIBPNG
 		    strcasecmp(ext,".png")==0 ||
-#endif
 #ifndef _NO_LIBJPEG
 		    strcasecmp(ext,".jpeg")==0 || strcasecmp(ext,".jpg")==0 ||
 #endif

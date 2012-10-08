@@ -3929,9 +3929,7 @@ static void edlistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     int pos = FVAnyCharSelected(fv), i, gid;
     int not_pasteable = pos==-1 ||
 		    (!CopyContainsSomething() &&
-#ifndef _NO_LIBPNG
 		    !GDrawSelectionHasType(fv->gw,sn_clipboard,"image/png") &&
-#endif
 #ifndef _NO_LIBXML
 		    !GDrawSelectionHasType(fv->gw,sn_clipboard,"image/svg+xml") &&
 		    !GDrawSelectionHasType(fv->gw,sn_clipboard,"image/svg-xml") &&

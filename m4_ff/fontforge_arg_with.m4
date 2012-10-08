@@ -55,18 +55,6 @@ FONTFORGE_ARG_WITH([freetype],
 ])
 
 
-dnl FONTFORGE_ARG_WITH_LIBPNG
-dnl -------------------------
-AC_DEFUN([FONTFORGE_ARG_WITH_LIBPNG],
-[
-FONTFORGE_ARG_WITH([libpng],
-        [AS_HELP_STRING([--without-libpng],[build without PNG support])],
-        [libpng],
-        [FONTFORGE_WARN_PKG_NOT_FOUND([LIBPNG])],
-        [_NO_LIBPNG])
-])
-
-
 dnl FONTFORGE_ARG_WITH_LIBTIFF
 dnl --------------------------
 AC_DEFUN([FONTFORGE_ARG_WITH_LIBTIFF],

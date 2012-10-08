@@ -181,9 +181,7 @@ static uint32_t wildimg[] = { '*', '.', '{',
 #ifndef _NO_LIBUNGIF
 'g','i','f',',',
 #endif
-#ifndef _NO_LIBPNG
 'p','n','g',',',
-#endif
 #ifndef _NO_LIBTIFF
 't','i','f','f',',',
 't','i','f',',',
@@ -197,9 +195,7 @@ static uint32_t wildtemplate[] = { '{','u','n','i',',','u',',','c','i','d',',','
 #ifndef _NO_LIBUNGIF
 'g','i','f',',',
 #endif
-#ifndef _NO_LIBPNG
 'p','n','g',',',
-#endif
 #ifndef _NO_LIBTIFF
 't','i','f','f',',',
 't','i','f',',',
