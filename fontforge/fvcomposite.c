@@ -1111,7 +1111,7 @@ const uint32_t *SFGetAlternate(SplineFont *sf, int base,SplineChar *sc,int noche
 
     if ( sc!=NULL && (dot = strchr(sc->name,'.'))!=NULL ) {
 	/* agrave.sc should be built from a.sc and grave or grave.sc */
-	char *temp = copyn(sc->name,dot-sc->name);
+	char *temp = xstrndup(sc->name,dot-sc->name);
 	base = UniFromName(temp,sf->uni_interp,NULL);
 	free(temp);
     }
@@ -1232,7 +1232,7 @@ return( SCMakeDotless(sf,SFGetOrMakeChar(sf,unicodeenc,NULL),layer,NULL,false,fa
 
     if ( sc!=NULL && (dot = strchr(sc->name,'.'))!=NULL ) {
 	/* agrave.sc should be built from a.sc and grave or grave.sc */
-	char *temp = copyn(sc->name,dot-sc->name);
+	char *temp = xstrndup(sc->name,dot-sc->name);
 	unicodeenc = UniFromName(temp,sf->uni_interp,NULL);
 	free(temp);
     }
@@ -1290,7 +1290,7 @@ return( true );
 	int ret;
 	char *temp;
 	end = strchr(sc->name,'.');
-	temp = copyn(sc->name,end-sc->name);
+	temp = xstrndup(sc->name,end-sc->name);
 	ret = SFFindExistingSlot(sf,-1,temp)!=-1;
 	free(temp);
 return( ret );
@@ -2610,7 +2610,7 @@ return;
 	} else if ( strstr(sc->name,".vert")!=NULL || strstr(sc->name,".vrt2")!=NULL) {
 	    char *temp;
 	    end = strchr(sc->name,'.');
-	    temp = copyn(sc->name,end-sc->name);
+	    temp = xstrndup(sc->name,end-sc->name);
 	    cid = SFFindExistingSlot(sf,-1,temp);
 	    free(temp);
 	    if ( cid==-1 )

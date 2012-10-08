@@ -255,7 +255,7 @@ return( NULL );
 	if ( (start = skip_to_plain_text(start))==NULL )
     break;
 	end = skip_over_plain_text(start);
-	name = copyn(start,end-start);
+	name = xstrndup(start,end-start);
 	start = end;
 
 	if ( (start = strstr(start,"<th>by:</th>"))==NULL )
@@ -264,7 +264,7 @@ return( NULL );
 	if ( (start = skip_to_plain_text(start))==NULL )
     break;
 	end = skip_over_plain_text(start);
-	author = copyn(start,end-start);
+	author = xstrndup(start,end-start);
 	start = end;
 
 	if ( (start = strstr(start,"<th>date:</th>"))==NULL )
@@ -273,7 +273,7 @@ return( NULL );
 	if ( (start = skip_to_plain_text(start))==NULL )
     break;
 	end = skip_over_plain_text(start);
-	temp = copyn(start,end-start);
+	temp = xstrndup(start,end-start);
 	start = end;
 	date = parseOFLibDate(temp);
 	free(temp);
@@ -291,7 +291,7 @@ return( NULL );
 	    if ( test==NULL || test>end )
 	break;
 	    ptend = skip_over_plain_text(test);
-	    temp = despace(copyn(test,ptend-test));
+	    temp = despace(xstrndup(test,ptend-test));
 	    test = ptend;
 	    taglist = strconcat_free(taglist,temp);
 	    /* Plain text alternates between tag and comma, we want both */
@@ -332,7 +332,7 @@ return( NULL );
 	    temp = strchr(test,'"');
 	    if ( temp==NULL || temp>end )
 	break;
-	    url = copyn(test,temp-test);
+	    url = xstrndup(test,temp-test);
 	    test = strchr(temp,'>');
 	    if ( test==NULL )
 	break;
@@ -342,7 +342,7 @@ return( NULL );
 	    ducur = (struct ofl_download_urls  *) xzalloc(sizeof (struct ofl_download_urls ));
 	    ducur->url = url;
 	    ptend = skip_over_plain_text(test);
-	    ducur->comment = copyn(test,ptend-test);
+	    ducur->comment = xstrndup(test,ptend-test);
 	    test = ptend;
 	    if ( duhead==NULL )
 		duhead = ducur;

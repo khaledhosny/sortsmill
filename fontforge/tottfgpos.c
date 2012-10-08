@@ -232,9 +232,11 @@ return( DEFAULT_SCRIPT );
 return( ScriptFromUnicode( sc->unicodeenc,sf ));
 
     pt = sc->name;
-    if ( *pt ) for ( ++pt; *pt!='\0' && *pt!='_' && *pt!='.'; ++pt );
+    if ( *pt )
+      for ( ++pt; *pt!='\0' && *pt!='_' && *pt!='.'; ++pt )
+	;
     if ( *pt!='\0' ) {
-	char *str = copyn(sc->name,pt-sc->name);
+	char *str = xstrndup(sc->name,pt-sc->name);
 	int uni = sf==NULL || sf->fv==NULL ? UniFromName(str,ui_none,&custom) :
 			    UniFromName(str,sf->uni_interp,sf->fv->map->enc);
 	free(str);

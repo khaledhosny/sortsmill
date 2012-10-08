@@ -733,7 +733,7 @@ return( onlyname );
 		if ( strncmp(files[i],files[0],pt-files[0]+1)!=0 )
 	    break;
 	    if ( i==fcnt ) {
-		char *onlydirfont = copyn(files[0],pt-files[0]+1);
+		char *onlydirfont = xstrndup_or_null(files[0],pt-files[0]+1);
 		for ( i=0; i<fcnt; ++i )
 		    free(files[i]);
 		free(files);

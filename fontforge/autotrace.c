@@ -465,7 +465,7 @@ return( NULL );
 	while ( *start ) {
 	    for ( pt=start; !isspace(*pt) && *pt!='\0'; ++pt );
 	    if ( vector!=NULL )
-		vector[cnt] = copyn(start,pt-start);
+		vector[cnt] = xstrndup_or_null(start,pt-start);
 	    ++cnt;
 	    for ( start=pt; isspace(*start); ++start);
 	}

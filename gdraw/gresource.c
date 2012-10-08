@@ -190,38 +190,39 @@ return;
 
     pt = string;
     while ( *pt!='\0' ) {
-	next = strchr(pt,'\n');
-	if ( next==NULL ) next = pt+strlen(pt);
-	if ( strncmp(pt,"Gdraw.",6)==0 || strncmp(pt,"*",1)==0 ||
-	     strncmp(pt,"FontForge.",10)==0 ||
-	     // for backword compatability with old resources
-	     strncmp(pt,"fontforge.",10)==0) {
-	    temp.generic = false;
-	    if ( strncmp(pt,"Gdraw.",6)==0 )
-	      {
-		temp.generic = true;
-		off = 6;
-	      }
-	    else if ( strncmp(pt,"*",1)==0 )
-	      {
-		temp.generic = true;
-		off = 1;
-	      }
-	    else
-		off = 10;
-	    ept = strchr(pt+off,':');
-	    if ( ept==NULL )
-	goto bad;
-	    temp.res = copyn(pt+off,ept-(pt+off));
-	    pt = ept+1;
-	    while ( isspace( *pt ) && pt<next ) ++pt;
-	    temp.val = copyn(pt,next-pt);
-	    temp.new = true;
-	    _GResource_Res[rcur++] = temp;
-	}
-	bad:
-	if ( *next ) ++next;
-	pt = next;
+      next = strchr(pt,'\n');
+      if ( next==NULL )
+	next = pt+strlen(pt);
+      if ( strncmp(pt,"Gdraw.",6)==0 || strncmp(pt,"*",1)==0 ||
+	   strncmp(pt,"FontForge.",10)==0 ||
+	   // for backword compatability with old resources
+	   strncmp(pt,"fontforge.",10)==0) {
+	temp.generic = false;
+	if ( strncmp(pt,"Gdraw.",6)==0 )
+	  {
+	    temp.generic = true;
+	    off = 6;
+	  }
+	else if ( strncmp(pt,"*",1)==0 )
+	  {
+	    temp.generic = true;
+	    off = 1;
+	  }
+	else
+	  off = 10;
+	ept = strchr(pt+off,':');
+	if ( ept==NULL )
+	  goto bad;
+	temp.res = xstrndup_or_null(pt+off,ept-(pt+off));
+	pt = ept+1;
+	while ( isspace( *pt ) && pt<next ) ++pt;
+	temp.val = xstrndup_or_null(pt,next-pt);
+	temp.new = true;
+	_GResource_Res[rcur++] = temp;
+      }
+    bad:
+      if ( *next ) ++next;
+      pt = next;
     }
 
     if ( rcur!=0 )

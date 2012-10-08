@@ -336,7 +336,7 @@ static void parseseqlookups(SplineFont *sf, const char *solooks, struct fpst_rul
 	    const char *eoname; char *temp;
 	    ++pt;
 	    for ( eoname = pt; *eoname!='\0' && *eoname!='>'; ++eoname );
-	    temp = copyn(pt,eoname-pt);
+	    temp = xstrndup(pt,eoname-pt);
 	    r->lookups[cnt].lookup = SFFindLookup(sf,temp);
 	    if ( r->lookups[cnt].lookup==NULL )
 		IError("No lookup in parseseqlookups");
@@ -396,7 +396,7 @@ return;
     if ( *pt=='\0' )
 return;
     if ( pt>ruletext ) {
-	temp = GlyphNameListDeUnicode(freeme = copyn(ruletext,pt-1-ruletext));
+	temp = GlyphNameListDeUnicode(freeme = xstrndup_or_null(ruletext,pt-1-ruletext));
 	r->u.glyph.back = reversenames(temp);
 	free(temp); free(freeme);
     }
@@ -404,14 +404,14 @@ return;
     for ( pt=ruletext; *pt!='\0' && *pt!='|'; ++pt );
     if ( *pt=='\0' )
 return;
-    r->u.glyph.names = GlyphNameListDeUnicode(freeme = copyn(ruletext,pt-1-ruletext));
+    r->u.glyph.names = GlyphNameListDeUnicode(freeme = xstrndup_or_null(ruletext,pt-1-ruletext));
     free(freeme);
     ruletext = pt+2;
     for ( pt2=ruletext; (ch=utf8_ildb((const char **) &pt2))!='\0' && ch!=0x21d2; );
     if ( ch=='\0' )
 return;
     if ( pt2!=ruletext ) {
-	r->u.glyph.fore = GlyphNameListDeUnicode(freeme = copyn(ruletext,pt2-3-ruletext));
+	r->u.glyph.fore = GlyphNameListDeUnicode(freeme = xstrndup_or_null(ruletext,pt2-3-ruletext));
 	free(freeme);
     }
     parseseqlookups(sf,pt2+2,r);

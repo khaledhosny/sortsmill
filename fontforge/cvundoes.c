@@ -589,7 +589,7 @@ Undoes *CVPreserveStateHints(CharViewBase *cv) {
     if ( CVLayer(cv)==ly_fore ) {
 	undo->undotype = ut_statehint;
 	undo->u.state.hints = UHintCopy(cv->sc,true);
-	undo->u.state.instrs = (uint8_t*) copyn((char*) cv->sc->ttf_instrs, cv->sc->ttf_instrs_len);
+	undo->u.state.instrs = (uint8_t*) xstrndup_or_null((char*) cv->sc->ttf_instrs, cv->sc->ttf_instrs_len);
 	undo->u.state.instrs_len = cv->sc->ttf_instrs_len;
     }
 return( undo );
@@ -608,7 +608,7 @@ return( NULL );
     undo->was_modified = sc->changed;
     undo->undotype = ut_hints;
     undo->u.state.hints = UHintCopy(sc,true);
-    undo->u.state.instrs = (uint8_t*) copyn((char *) sc->ttf_instrs, sc->ttf_instrs_len);
+    undo->u.state.instrs = (uint8_t*) xstrndup_or_null((char *) sc->ttf_instrs, sc->ttf_instrs_len);
     undo->u.state.instrs_len = sc->ttf_instrs_len;
     undo->copied_from = sc->parent;
 return( AddUndo(undo,&sc->layers[layer].undoes,&sc->layers[layer].redoes));
@@ -639,7 +639,7 @@ return(NULL);
     if ( dohints ) {
 	undo->undotype = ut_statehint;
 	undo->u.state.hints = UHintCopy(sc,true);
-	undo->u.state.instrs = (uint8_t *) copyn((char *) sc->ttf_instrs, sc->ttf_instrs_len);
+	undo->u.state.instrs = (uint8_t *) xstrndup_or_null((char *) sc->ttf_instrs, sc->ttf_instrs_len);
 	undo->u.state.instrs_len = sc->ttf_instrs_len;
 	if ( dohints==2 ) {
 	    undo->undotype = ut_statename;
@@ -1820,7 +1820,7 @@ static Undoes *SCCopyAllLayer(SplineChar *sc,enum fvcopy_type full,int layer) {
 	    cur->u.state.anchor = AnchorPointsCopy(sc->anchor);
 	    cur->u.state.hints = UHintCopy(sc,true);
 	    if ( copyttfinstr ) {
-		cur->u.state.instrs = (uint8_t *) copyn((char *) sc->ttf_instrs, sc->ttf_instrs_len);
+		cur->u.state.instrs = (uint8_t *) xstrndup_or_null((char *) sc->ttf_instrs, sc->ttf_instrs_len);
 		cur->u.state.instrs_len = sc->ttf_instrs_len;
 	    }
 	    cur->u.state.unicodeenc = sc->unicodeenc;
@@ -2379,7 +2379,7 @@ static void _PasteToSC(SplineChar *sc,Undoes *paster,FontViewBase *fv,int pastei
 		    free(sc->ttf_instrs);
 		    if ( paster->u.state.instrs_len!=0 && sc->layers[layer].order2 &&
 			    InstrsSameParent(sc,paster->copied_from)) {
-			sc->ttf_instrs = (uint8_t *) copyn((char *) paster->u.state.instrs,paster->u.state.instrs_len);
+			sc->ttf_instrs = (uint8_t *) xstrndup_or_null((char *) paster->u.state.instrs,paster->u.state.instrs_len);
 			sc->ttf_instrs_len = paster->u.state.instrs_len;
 		    } else {
 			sc->ttf_instrs = NULL;
@@ -2978,7 +2978,7 @@ return;
 		free(cvsc->ttf_instrs);
 		if ( paster->u.state.instrs_len!=0 && cv->layerheads[cv->drawmode]->order2 &&
 			InstrsSameParent(cvsc,paster->copied_from)) {
-		    cvsc->ttf_instrs = (uint8_t *) copyn((char *) paster->u.state.instrs,paster->u.state.instrs_len);
+		    cvsc->ttf_instrs = (uint8_t *) xstrndup_or_null((char *) paster->u.state.instrs,paster->u.state.instrs_len);
 		    cvsc->ttf_instrs_len = paster->u.state.instrs_len;
 		} else {
 		    cvsc->ttf_instrs = NULL;

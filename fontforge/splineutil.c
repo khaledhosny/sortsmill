@@ -2430,7 +2430,7 @@ return( NULL );
 	    LogError( _("Multiple master font with more than 4 axes\n") );
     break;
 	}
-	mm->axes[ mm->axis_count++ ] = copyn( pt,end-pt );
+	mm->axes[ mm->axis_count++ ] = xstrndup_or_null( pt,end-pt );
 	for ( pt = end; *pt==' '; ++pt );
     }
 

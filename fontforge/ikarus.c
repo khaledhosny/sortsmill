@@ -576,7 +576,7 @@ static void IkarusFontname(SplineFont *sf,char *fullname,char *fnam) {
 	    (pt=strstr(fullname,"Ligh"))!=NULL ||
 	    (pt=strstr(fullname,"Thin"))!=NULL ) {
 	free(sf->weight);
-	sf->weight = copyn(pt,4);
+	sf->weight = xstrndup(pt,4);
 	*pt='\0';
     }
     while ( (pt=strstr(fullname,"Ital"))!=NULL ||

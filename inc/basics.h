@@ -94,9 +94,8 @@ xstrdup_or_null (const char *str)
   return NULL_PASSTHRU (str, xstrdup (str));
 }
 
-// FIXME: Try to get rid of this or rename it more descriptively.
 static inline char *
-copyn (const char *str, size_t n)
+xstrndup_or_null (const char *str, size_t n)
 {
   return NULL_PASSTHRU (str, xstrndup (str, n));
 }

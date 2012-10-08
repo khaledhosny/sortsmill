@@ -367,7 +367,7 @@ return( xstrdup(""));
     l = s_l;
     if ( e_l == l ) {
 	*len = e_c-s_c;
-return( copyn( errdata.errlines[l]+s_c, e_c-s_c ));
+return( xstrndup_or_null( errdata.errlines[l]+s_c, e_c-s_c ));
     }
 
     cnt = strlen(errdata.errlines[l]+s_c)+1;
@@ -596,8 +596,9 @@ static void AppendToErrorWindow(char *buffer) {
     }
     for ( i=errdata.cnt, pt=buffer; i<MAX_ERR_LINES; ++i ) {
 	end = strchr(pt,'\n');
-	if ( end==NULL ) end = pt+strlen(pt);
-	errdata.errlines[i] = copyn(pt,end-pt);
+	if ( end==NULL )
+	  end = pt+strlen(pt);
+	errdata.errlines[i] = xstrndup(pt,end-pt);
 	pt = end;
 	if ( *pt=='\0' ) {
 	    ++i;

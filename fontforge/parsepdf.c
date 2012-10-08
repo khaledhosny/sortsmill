@@ -1250,7 +1250,7 @@ static void _InterpretPdf(FILE *in, struct pdfcontext *pc, EntityChar *ec) {
 	  case pt_string:
 	    if ( sp<sizeof(stack)/sizeof(stack[0]) ) {
 		stack[sp].type = ps_string;
-		stack[sp++].u.str = copyn(tokbuf+1,strlen(tokbuf)-2);
+		stack[sp++].u.str = xstrndup_or_null(tokbuf+1,strlen(tokbuf)-2);
 	    }
 	  break;
 	  case pt_namelit:

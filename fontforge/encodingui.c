@@ -311,7 +311,7 @@ return;		/* Duplicate */
 	block->maps[j+1] = block->maps[j];
 	block->dirs[j+1] = block->dirs[j];
     }
-    block->maps[i] = copyn(mapname,len);
+    block->maps[i] = xstrndup_or_null(mapname,len);
     block->dirs[i] = dir;
     ++block->cur;
 }

@@ -956,9 +956,9 @@ static void ScriptMatrixInit(struct matrixinit *mi,char *scriptstr) {
 	    if ( *scriptend=='{' )
 		for ( langsend=scriptend+1; *langsend!='\0' && *langsend!='}'; ++langsend );
 	    if ( k ) {
-		md[2*cnt+0].u.md_str = copyn(start,scriptend-start);
+		md[2*cnt+0].u.md_str = xstrndup(start,scriptend-start);
 		if ( *scriptend=='{' )
-		    md[2*cnt+1].u.md_str = copyn(scriptend+1,langsend-(scriptend+1));
+		    md[2*cnt+1].u.md_str = xstrndup(scriptend+1,langsend-(scriptend+1));
 		else
 		    md[2*cnt+1].u.md_str = xstrdup("");
 	    }

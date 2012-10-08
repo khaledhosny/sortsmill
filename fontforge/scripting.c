@@ -578,7 +578,7 @@ static void bStrSplit(Context *c) {
 		if ( max!=-1 && cnt>=max )
 	break;
 		c->return_val.u.aval->vals[cnt].type = v_str;
-		c->return_val.u.aval->vals[cnt].u.sval = copyn(pt,pt2-pt);
+		c->return_val.u.aval->vals[cnt].u.sval = xstrndup_or_null(pt,pt2-pt);
 	    }
 	    ++cnt;
 	    pt = pt2+len2;
@@ -682,7 +682,7 @@ static void bStrsub(Context *c) {
     if ( start<0 || start>strlen(str) || end<start || end>strlen(str) )
 	ScriptError( c, "Arguments out of bounds" );
     c->return_val.type = v_str;
-    c->return_val.u.sval = copyn(str+start,end-start);
+    c->return_val.u.sval = xstrndup_or_null(str+start,end-start);
 }
 
 static void bStrcasecmp(Context *c) {
@@ -3626,7 +3626,7 @@ static void bGetOS2Value(Context *c) {
 	os2getint(sf->pfminfo.os2_family_class,c);
     } else if ( strmatch(c->a.vals[1].u.sval,"VendorID")==0 ) {
 	c->return_val.type = v_str;
-	c->return_val.u.sval = copyn(sf->pfminfo.os2_vendor,4);
+	c->return_val.u.sval = xstrndup_or_null(sf->pfminfo.os2_vendor,4);
     } else if ( strmatch(c->a.vals[1].u.sval,"WinAscent")==0 ) {
 	os2getint(sf->pfminfo.os2_winascent,c);
     } else if ( strmatch(c->a.vals[1].u.sval,"WinAscentIsOffset")==0 ) {
@@ -7725,7 +7725,7 @@ static void bGetPosSub(Context *c) {
 			    start = pt;
 			    while ( *pt!=' ' && *pt!='\0' ) ++pt;
 			    temp->vals[2+subcnt].type = v_str;
-			    temp->vals[2+subcnt].u.sval = copyn(start,pt-start);
+			    temp->vals[2+subcnt].u.sval = xstrndup(start,pt-start);
 			    ++subcnt;
 			}
 		      break;

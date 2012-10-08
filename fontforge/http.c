@@ -446,7 +446,7 @@ return( 404 );
 		char *end = strchr(pt,'"');
 		pt += strlen(search);
 		if ( end!=NULL )
-		    siteinfo->upload_id = copyn(pt,end-pt);
+		    siteinfo->upload_id = xstrndup(pt,end-pt);
 	    }
 	}
 	if ( verbose>=2 || ( verbose!=0 && verbose<2 && !ended) )
@@ -987,24 +987,24 @@ return( xstrdup_or_null(url));
     if ( upt!=NULL && upt<pt2 ) {
 	ppt = strchr(pt,':');
 	if ( ppt==NULL ) {
-	    *username = copyn(pt,upt-pt);
+	    *username = xstrndup(pt,upt-pt);
 	} else {
-	    *username = copyn(pt,ppt-pt);
-	    *password = copyn(ppt+1,upt-ppt-1);
+	    *username = xstrndup(pt,ppt-pt);
+	    *password = xstrndup(ppt+1,upt-ppt-1);
 	}
 	pt = upt+1;
     }
 
     ppt = strchr(pt,':');
     if ( ppt!=NULL && ppt<pt2 ) {
-	char *temp = copyn(ppt+1,pt2-ppt-1), *end;
+	char *temp = xstrndup(ppt+1,pt2-ppt-1), *end;
 	*port = strtol(temp,&end,10);
 	if ( *end!='\0' )
 	    *port = -2;
 	free(temp);
 	pt2 = ppt;
     }
-    *host = copyn(pt,pt2-pt);
+    *host = xstrndup(pt,pt2-pt);
     if ( *username ) {
 	*password = GIO_PasswordCache(proto,*host,*username,*password);
 	if ( *password==NULL ) {

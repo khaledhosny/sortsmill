@@ -466,7 +466,7 @@ return( NULL );
 	for ( pt = bpt; !isspace(*pt) && *pt!='\0'; ++pt );
 	if ( *pt=='\0' || *pt=='\r' || *pt=='\n' )
     continue;
-	names[subfilecnt] = copyn(bpt,pt-bpt);
+	names[subfilecnt] = xstrndup(bpt,pt-bpt);
 	if ( subfilecnt>*max ) *max = subfilecnt;
 	end = pt;
 	thusfar = 0;

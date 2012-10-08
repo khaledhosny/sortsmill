@@ -752,11 +752,11 @@ static int FindOrBuildHintSubr(struct hintdb *hdb, uint8_t mask[12], int round) 
     /* Replace an old subroutine */
     if ( mh!=NULL ) {
 	free( hdb->subrs->values[mh->subr]);
-	hdb->subrs->values[mh->subr] = (uint8_t *) copyn((char *) gb.base,gb.pt-gb.base);
+	hdb->subrs->values[mh->subr] = (uint8_t *) xstrndup_or_null((char *) gb.base,gb.pt-gb.base);
 	hdb->subrs->lens[mh->subr] = gb.pt-gb.base;
 	memcpy(mh->mask,mask,sizeof(mh->mask));
     } else {
-	hdb->subrs->values[hdb->subrs->next] = (uint8_t *) copyn((char *) gb.base,gb.pt-gb.base);
+	hdb->subrs->values[hdb->subrs->next] = (uint8_t *) xstrndup_or_null((char *) gb.base,gb.pt-gb.base);
 	hdb->subrs->lens[hdb->subrs->next] = gb.pt-gb.base;
 
 	mh = xcalloc(1,sizeof(struct mhlist));

@@ -1460,7 +1460,7 @@ readpsstr (char *str)
   /* PostScript strings can be more complicated than this (hex, nested parens, Enc85...) */
   /*  but none of those should show up here */
   for (eos = str; *eos != ')' && *eos != '\0'; ++eos);
-  return (copyn (str, eos - str));
+  return (xstrndup (str, eos - str));
 }
 
 static struct cmap *

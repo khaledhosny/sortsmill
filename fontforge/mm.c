@@ -184,7 +184,7 @@ char *MMExtractNth(char *pt,int ipos) {
 return( NULL );
 	for ( end=pt; *end!=' ' && *end!=']' && *end!='\0'; ++end );
 	if ( i==ipos )
-return( copyn(pt,end-pt));
+return( xstrndup(pt,end-pt));
 	pt = end;
     }
 return( NULL );

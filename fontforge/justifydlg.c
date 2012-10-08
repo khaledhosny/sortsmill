@@ -134,7 +134,7 @@ static void GlyphMatrixInit(struct matrixinit *mi,char *glyphstr,SplineFont *sf)
 	if ( glyphstr!=NULL ) for ( start = glyphstr; *start; ) {
 	    for ( end=start; *end!='\0' && *end!=' ' && *end!=','; ++end );
 	    if ( k ) {
-		char *str = copyn(start,end-start);
+		char *str = xstrndup(start,end-start);
 		md[1*cnt+0].u.md_str = SFNameList2NameUni(sf,str);
 		free(str);
 	    }

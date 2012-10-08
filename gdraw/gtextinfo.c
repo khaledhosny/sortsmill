@@ -413,7 +413,7 @@ return( imagedir );
 	absname[hlen+len-1] = '\0';
 return( absname );
     } else
-return( copyn(start,len));
+return( xstrndup(start,len));
 }
 
 #ifndef PATH_SEPARATOR

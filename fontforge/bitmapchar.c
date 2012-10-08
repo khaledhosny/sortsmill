@@ -282,7 +282,7 @@ static int BDFPropReplace(BDFFont *bdf,const char *key, const char *value) {
 	if ( pt==NULL )
 	    bdf->props[i].u.str = xstrdup_or_null(value);
 	else
-	    bdf->props[i].u.str = copyn(value,pt-value);
+	    bdf->props[i].u.str = xstrndup_or_null(value,pt-value);
 return( true );
     }
 return( false );
@@ -747,7 +747,7 @@ void Default_Properties(BDFFont *bdf,EncMap *map,char *onlyme) {
 	if ( pt==NULL )
 	    BDFPropAddString(bdf,"COPYRIGHT",bdf->sf->copyright,onlyme);
 	else {
-	    new = copyn(bdf->sf->copyright,pt-bdf->sf->copyright);
+	    new = xstrndup_or_null(bdf->sf->copyright,pt-bdf->sf->copyright);
 	    BDFPropAddString(bdf,"COPYRIGHT",new,onlyme);
 	    free(new);
 	}
@@ -876,7 +876,7 @@ void BDFDefaultProps(BDFFont *bdf, EncMap *map, int res) {
     if ( bdf->sf->copyright!=NULL ) {
 	start = bdf->sf->copyright;
 	while ( (end=strchr(start,'\n'))!=NULL ) {
-	    temp = copyn(start,end-start );
+	    temp = xstrndup(start,end-start );
 	    BDFPropAppendString(bdf,"COMMENT", temp);
 	    free( temp );
 	    start = end+1;

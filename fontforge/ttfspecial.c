@@ -2139,7 +2139,7 @@ return( k );
 	while ( *pt!='\n' && *pt!='\0' ) ++pt;
 	bdf->props[k+i].name = xstrdup_or_null(bdf->props[k].name);
 	bdf->props[k+i].type = bdf->props[k].type;
-	bdf->props[k+i].u.atom = copyn(start,pt-start);
+	bdf->props[k+i].u.atom = xstrndup(start,pt-start);
 	if ( *pt=='\n' ) ++pt;
     }
     pt = xstrdup_or_null( bdf->props[k].u.atom );

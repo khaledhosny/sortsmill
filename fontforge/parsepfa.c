@@ -1115,10 +1115,10 @@ static void ContinueValue(struct fontparse *fp, struct psdict *dict, char *line)
 	    /*  converts itself into an array. We could just truncate to the */
 	    /*  default array, but I don't see any reason to do so */
 	    if ( fp->pending_parse!=NULL ) {
-		*fp->pending_parse = copyn(fp->vbuf,fp->vpt-fp->vbuf);
+		*fp->pending_parse = xstrndup_or_null(fp->vbuf,fp->vpt-fp->vbuf);
 		fp->pending_parse = NULL;
 	    } else {
-		dict->values[dict->next] = copyn(fp->vbuf,fp->vpt-fp->vbuf);
+		dict->values[dict->next] = xstrndup_or_null(fp->vbuf,fp->vpt-fp->vbuf);
 		++dict->next;
 	    }
 	    fp->vpt = fp->vbuf;
@@ -1156,7 +1156,7 @@ static void AddValue(struct fontparse *fp, struct psdict *dict, char *line, char
 	    dict->keys = xrealloc(dict->keys,dict->cnt*sizeof(char *));
 	    dict->values = xrealloc(dict->values,dict->cnt*sizeof(char *));
 	}
-	dict->keys[dict->next] = copyn(line+1,endtok-(line+1));
+	dict->keys[dict->next] = xstrndup_or_null(line+1,endtok-(line+1));
     }
     pt = line+strlen(line)-1;
     while ( isspace(*endtok)) ++endtok;
@@ -1183,10 +1183,10 @@ return;
 	    break;
     }
     if ( dict!=NULL ) {
-	dict->values[dict->next] = copyn(endtok,pt-endtok);
+	dict->values[dict->next] = xstrndup_or_null(endtok,pt-endtok);
 	++dict->next;
     } else {
-	*fp->pending_parse = copyn(endtok,pt-endtok);
+	*fp->pending_parse = xstrndup_or_null(endtok,pt-endtok);
 	fp->pending_parse = NULL;
     }
 }
@@ -2729,7 +2729,7 @@ char **_NamesReadPostScript(FILE *ps) {
 		if ( *pt=='/' ) ++pt;
 		for ( end = pt; *end!='\0' && !isspace(*end); ++end );
 		ret = xmalloc(2*sizeof(char *));
-		ret[0] = copyn(pt,end-pt);
+		ret[0] = xstrndup(pt,end-pt);
 		ret[1] = NULL;
 	break;
 	    } else if ( strstr(buffer,"currentfile")!=NULL && strstr(buffer,"eexec")!=NULL )
