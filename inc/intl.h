@@ -30,28 +30,28 @@
 
 #if !defined( HAVE_LIBINTL_H )
 
-# define _(str)			(str)
+#define _(str)			(str)
 
-# ifdef bindtextdomain
-#  undef bindtextdomain
-# endif
-# ifdef bind_textdomain_codeset
-#  undef bind_textdomain_codeset
-# endif
-# ifdef textdomain
-#  undef textdomain
-# endif
+#ifdef bindtextdomain
+#undef bindtextdomain
+#endif
+#ifdef bind_textdomain_codeset
+#undef bind_textdomain_codeset
+#endif
+#ifdef textdomain
+#undef textdomain
+#endif
 
-# define bindtextdomain(domain,dir)
-# define bind_textdomain_codeset(domain,enc)
-# define textdomain(domain)
+#define bindtextdomain(domain,dir)
+#define bind_textdomain_codeset(domain,enc)
+#define textdomain(domain)
 
-# define dgettext(domain,str)	(str)
+#define dgettext(domain,str)	(str)
 
 #else /* HAVE_LIBINTL_H */
 
-# include <libintl.h>
-# define _(str)			gettext(str)
+#include <libintl.h>
+#define _(str)			gettext(str)
 
 #endif /* HAVE_LIBINTL_H */
 
@@ -59,4 +59,4 @@
 /* For messages in the shortcuts domain */
 #define H_(str)		(str)
 
-#endif	/* _INTL_H */
+#endif /* _INTL_H */
