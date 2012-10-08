@@ -43,46 +43,19 @@ extern int interpCPsOnMotion;
 #include <utype.h>
 #include <gresource.h>
 
-extern GBox _ggadget_Default_Box;
-#define ACTIVE_BORDER   (_ggadget_Default_Box.active_border)
-#define MAIN_FOREGROUND (_ggadget_Default_Box.main_foreground)
-
 extern GDevEventMask input_em[];
 extern const int input_em_cnt;
 
 int cvvisible[2] = { 1, 1}, bvvisible[3]= { 1,1,1 };
 static GWindow cvlayers, cvtools, bvlayers, bvtools, bvshades;
 static GWindow cvlayers2=NULL;
-
-#define LSHOW_CUBIC   1
-#define LSHOW_FG      2
-#define LSHOW_PREVIEW 4
-static int layerscols = LSHOW_CUBIC|LSHOW_FG|LSHOW_PREVIEW; /* which columns to show in layers1 palette */
-static int layer_height = 0;        /* height of each layer row in layers1 palette */
-static int layer_header_height = 0; /* height of initial stuff in layers1 palette  */
-static int layers_max = 2; /* Maximum number of layers for which widgets have been allocated in layers1 palette */
-struct l2 {
-    int active;           /* index of the active layer */
-    int offtop;           /* first layer to show at the top line in layers palette */
-    int visible_layers;   /* number of layers apart from the guides layer to show before using a scrollbar      */
-    int current_layers;   /* number of layers for the current character, and the number used in l2.layers       */
-    int max_layers;       /* maximum number of layers for which layer controls and previews have been allocated */
-    BDFChar **layers;     /* layer thumbnail previews              */
-    int sb_start;         /* x pixel position of the scrollbar     */
-    int column_width;     /* width of various indicator columns    */
-    int mo_col, mo_layer; /* mouse over column and layer           */
-    int rename_active;    /* If >=2, layer number for which the edit box for layer names is active */
-    GClut *clut;
-    GFont *font;          /* font to draw text in the palette with */
-} layerinfo = {           /* info about the current layers in the layers palette */
-    2, 0, 0, 0, 0, NULL, 0, 0, 0, 0, 0, NULL, NULL
-};
-
-struct l2 layer2 = { 2, 0, 0, 0, 0, NULL, 0, 0, 0, 0, 0, NULL, NULL };
 static int layers2_active = -1;
+static int layers_max=2, layers_cur=0;
+static SplineFont *layers_sf = NULL;
 static GPoint cvtoolsoff = { -9999, -9999 }, cvlayersoff = { -9999, -9999 }, bvlayersoff = { -9999, -9999 }, bvtoolsoff = { -9999, -9999 }, bvshadesoff = { -9999, -9999 };
 int palettes_fixed=1;
 static GCursor tools[cvt_max+1] = { ct_pointer }, spirotools[cvt_max+1];
+static int layer_height;
 
 enum cvtools cv_b1_tool = cvt_pointer, cv_cb1_tool = cvt_pointer,
 	     cv_b2_tool = cvt_magnify, cv_cb2_tool = cvt_ruler;
@@ -92,9 +65,8 @@ static GFont *toolsfont=NULL, *layersfont=NULL;
 #define CV_TOOLS_WIDTH		53
 #define CV_TOOLS_HEIGHT		(10*27+4*12+2)
 #define CV_LAYERS_WIDTH		104
-#define CV_LAYERS_HEIGHT	100
-#define CV_LAYERS_INITIALCNT	6
-#define CV_LAYERS_LINE_HEIGHT	25
+#define CV_LAYERS_HEIGHT	78
+#define CV_LAYERS_MAXCNT	6
 #define CV_LAYERS2_WIDTH	120
 #define CV_LAYERS2_HEIGHT	196
 #define CV_LAYERS2_LINE_HEIGHT	25
@@ -1268,21 +1240,17 @@ return( cvtools );
 #define CID_EBack	(CID_EBase+ly_back)
 #define CID_EFore	(CID_EBase+ly_fore)
 
-#define CID_QBase	5000
-#define CID_QGrid	(CID_QBase+ly_grid)
-#define CID_QBack	(CID_QBase+ly_back)
-#define CID_QFore	(CID_QBase+ly_fore)
+#define CID_SB		5000
 
-#define CID_FBase	7000
-
-#define CID_SB		8000
-#define CID_Edit	8001
-
-#define CID_AddLayer    9000
-#define CID_RemoveLayer 9001
-#define CID_RenameLayer 9002
-#define CID_LayersMenu  9003
-
+struct l2 {
+    int active;
+    int offtop;
+    int current_layers, max_layers;
+    BDFChar **layers;
+    int sb_start;
+    GClut *clut;
+    GFont *font;
+} layer2 = { 2, 0, 0, 0, NULL, 0, NULL, NULL};
 
 /* Create a layer thumbnail */
 static BDFChar *BDFCharFromLayer(SplineChar *sc,int layer) {
@@ -1302,14 +1270,14 @@ static void CVLayers2Set(CharView *cv) {
     GGadgetSetChecked(GWidgetGetControl(cvlayers2,CID_VBack),cv->showback[0]&1);
     GGadgetSetChecked(GWidgetGetControl(cvlayers2,CID_VGrid),cv->showgrids);
 
-	 /* set old to NULL */
+    /* set old to NULL */
     layer2.offtop = 0;
     for ( i=2; i<layer2.current_layers; ++i ) {
 	BDFCharFree(layer2.layers[i]);
 	layer2.layers[i]=NULL;
     }
 
-	 /* reallocate enough space if necessary */
+    /* reallocate enough space if necessary */
     if ( cv->b.sc->layer_cnt+1>=layer2.max_layers ) {
 	top = cv->b.sc->layer_cnt+10;
 	if ( layer2.layers==NULL )
@@ -1769,238 +1737,56 @@ return;
     GDrawRequestExpose(cvlayers2,NULL,false);
 }
 
-/* Update the state of the controls of the non-type3 layers palette to the given character view */
-/* New widgets are not allocated here. For that, see CVLCheckLayerCount(). */
-static void CVLayers1Set(CharView *cv) {
-    int i, top;
-
-    GGadgetSetChecked(GWidgetGetControl(cvlayers,CID_VFore),cv->showfore);
-    GGadgetSetChecked(GWidgetGetControl(cvlayers,CID_VBack),cv->showback[0]&1);
-    GGadgetSetChecked(GWidgetGetControl(cvlayers,CID_VGrid),cv->showgrids);
-
-     /* clear old layer previews */
-    layerinfo.offtop = 0;
-    for ( i=2; i<layerinfo.current_layers; ++i ) {
-	BDFCharFree(layerinfo.layers[i]);
-	layerinfo.layers[i]=NULL;
-    }
-
-     /* reallocate enough space if necessary */
-    if ( cv->b.sc->layer_cnt+1>=layerinfo.max_layers ) {
-	top = cv->b.sc->layer_cnt+10;
-	if ( layerinfo.layers==NULL )
-	    layerinfo.layers = xcalloc(top,sizeof(BDFChar *));
-	else {
-	    layerinfo.layers = xrealloc(layerinfo.layers,top*sizeof(BDFChar *));
-	    for ( i=layerinfo.current_layers; i<top; ++i )
-		layerinfo.layers[i] = NULL;
-	}
-	layerinfo.max_layers = top;
-    }
-    layerinfo.current_layers = cv->b.sc->layer_cnt+1;
-    for ( i=ly_fore; i<cv->b.sc->layer_cnt; ++i )
-	layerinfo.layers[i+1] = BDFCharFromLayer(cv->b.sc,i);
-    layerinfo.active = CVLayer(&cv->b)+1;
-
-    if ( layerinfo.visible_layers==0 ) {
-        GRect size;
-        GDrawGetSize(cvlayers,&size);
-        layerinfo.visible_layers=(size.height-layer_header_height)/layer_height;
-    }
-    GScrollBarSetBounds(GWidgetGetControl(cvlayers,CID_SB),0,cv->b.sc->layer_cnt+1-2, layerinfo.visible_layers);
-    if ( layerinfo.offtop>cv->b.sc->layer_cnt-1-layerinfo.visible_layers )
-        layerinfo.offtop = cv->b.sc->layer_cnt-1-layerinfo.visible_layers;
-    if ( layerinfo.offtop<0 ) layerinfo.offtop = 0;
-    GScrollBarSetPos(GWidgetGetControl(cvlayers,CID_SB),layerinfo.offtop);
-
-    for ( i=0; i<cv->b.sc->layer_cnt; i++ ) {
-        GGadgetSetChecked(GWidgetGetControl(cvlayers,CID_VBase+i),cv->showback[i>>5]&(1<<(i&31)));
-    }
-
-    layerinfo.active = CVLayer(&cv->b); /* the index of the active layer */
-    GDrawRequestExpose(cvlayers,NULL,false);
-}
-
-/* Update the layers palette to reflect the given character view. No new gadgets
- * are created or hid here, only the state of existing gadgets is changed.
- * New layer gadgets are created in CVLCheckLayerCount(). */
 void CVLayersSet(CharView *cv) {
+    int layers;
+
     if ( cv->b.sc->parent->multilayer ) {
 	CVLayers2Set(cv);
 return;
     }
-     /* This is for the non-type3 layers palette: */
-    CVLayers1Set(cv);
+    GGadgetSetChecked(GWidgetGetControl(cvlayers,CID_VFore),cv->showfore);
+    for ( layers=ly_back; layers<cv->b.sc->layer_cnt; ++layers ) if ( layers!=ly_fore )
+	GGadgetSetChecked(GWidgetGetControl(cvlayers,CID_VBase+layers),cv->showback[layers>>5]&(1<<(layers&31)));
+    GGadgetSetChecked(GWidgetGetControl(cvlayers,CID_VGrid),cv->showgrids);
+    layers = CVLayer((CharViewBase *) cv);
+    GGadgetSetChecked(GWidgetGetControl(cvlayers,CID_EBase+layers),true);
 }
 
- /* Draw the fg/bg, cubic/quadratic columns, plus layer preview and label name */
-static void LayersExpose(CharView *cv,GWindow pixmap,GEvent *event) {
-    int i, ll, y;
-    const char *str;
-    GRect r;
-    struct _GImage base;
-    GImage gi;
-    Color mocolor = ACTIVE_BORDER; /* mouse over color */
-    int ww;
-
-    int yt = .7*layer_height; /* vertical spacer to add when drawing text in the row */
-    int column_width;
-    int viscol=7, quadcol, fgcol, editcol;
-
-    if ( event->u.expose.rect.y+event->u.expose.rect.height<layer_header_height )
-return;
-
-    column_width = layerinfo.column_width;
-
-    GDrawSetDither(NULL, false);	/* on 8 bit displays we don't want any dithering */
-    ww=layerinfo.sb_start;
-
-    memset(&gi,0,sizeof(gi));
-    memset(&base,0,sizeof(base));
-    gi.u.image = &base;
-    base.image_type = it_index;
-    base.clut = layer2.clut;
-    base.trans = -1;
-    GDrawSetFont(pixmap,layerinfo.font);
-
-    quadcol=fgcol=viscol;
-    if ( layerscols & LSHOW_CUBIC ) { quadcol = viscol+column_width; fgcol=viscol+column_width; } /* show quad col */
-    if ( layerscols & LSHOW_FG    ) { fgcol = quadcol+column_width; } /* show fg col */
-    editcol=fgcol+column_width;
-
-     /* loop once per layer, where 0==guides, 1=back, 2=fore, etc */
-    for ( i=(event->u.expose.rect.y-layer_header_height)/layer_height;
-	    i<(event->u.expose.rect.y+event->u.expose.rect.height+layer_height-layer_header_height)/layer_height;
-	    ++i ) {
-	ll = i-1+layerinfo.offtop;
-        if ( ll>=cv->b.sc->layer_cnt || ll<-1 ) continue;
-
-        y = layer_header_height + i*layer_height;
-        if ( y<layer_header_height ) continue;
-
-         /* draw quadratic/cubic toggle */
-        if ( layerscols & LSHOW_CUBIC ) {
-            if ( layerinfo.mo_layer==ll && layerinfo.mo_col==CID_QBase ) {
-                r.x = quadcol; r.width = column_width;
-                r.y = y;
-                r.height = layer_height;
-                GDrawFillRect(pixmap,&r,mocolor);
-            }
-            str = ( ll>=0 && ll<cv->b.sc->layer_cnt ? (cv->b.sc->layers[ll].order2? "Q" : "C") : " ");
-	    GDrawDrawText8(pixmap, quadcol, y + yt,
-		    (char *) str,-1,GDrawGetDefaultForeground(NULL));
-        }
-
-         /* draw fg/bg toggle */
-        if ( layerscols & LSHOW_FG ) {
-            if ( layerinfo.mo_layer==ll && layerinfo.mo_col==CID_FBase ) {
-                r.x = fgcol; r.width = column_width;
-                r.y = y;
-                r.height = layer_height;
-                GDrawFillRect(pixmap,&r,mocolor);
-            }
-            str = ( ll>=0 && ll<cv->b.sc->layer_cnt ? (cv->b.sc->layers[ll].background? "B" : "F") : "#");
-	    GDrawDrawText8(pixmap, fgcol, y + yt,
-		    (char *) str,-1,GDrawGetDefaultForeground(NULL));
-        }
-
-         /* draw layer thumbnail and label */
-	if ( ll==layerinfo.active ) {
-            r.x = editcol; r.width = ww-r.x;
-	    r.y = y;
-	    r.height = layer_height;
-	    GDrawFillRect(pixmap,&r,GDrawGetDefaultForeground(NULL));
-	} else if ( layerinfo.mo_layer==ll && layerinfo.mo_col==CID_EBase ) {
-            r.x = editcol; r.width = ww-r.x;
-            r.y = y;
-            r.height = layer_height;
-            GDrawFillRect(pixmap,&r,mocolor);
-        }
-        r.x=editcol;
-	if ( ll==-1 || ll==0 || ll==1) {
-	    str = ll==-1 ? _("Guide") : (ll==0 ?_("Back") : _("Fore")) ;
-	    GDrawDrawText8(pixmap,r.x+2,y + yt,
-		    (char *) str,-1,ll==layerinfo.active?0xffffff:GDrawGetDefaultForeground(NULL));
-	} else if ( ll>=layerinfo.current_layers ) {
-             break; /* no more layers to draw! */
-	} else if ( ll>=0 && layerinfo.layers[ll]!=NULL ) {
-	    BDFChar *bdfc = layerinfo.layers[ll];
-	    base.data = bdfc->bitmap;
-	    base.bytes_per_line = bdfc->bytes_per_line;
-	    base.width = bdfc->xmax-bdfc->xmin+1;
-	    base.height = bdfc->ymax-bdfc->ymin+1;
-//	    GDrawDrawImage(pixmap,&gi,NULL,
-//		    r.x+2+bdfc->xmin,
-//		    y+as-bdfc->ymax);
-            str = cv->b.sc->parent->layers[ll].name;
-            if ( !str || !*str ) str="-";
-	    GDrawDrawText8(pixmap, r.x+2, y + yt,
-		        (char *) str,-1,ll==layerinfo.active?0xffffff:GDrawGetDefaultForeground(NULL));
-	}
-    }
-}
-
-/* Remove the layer rename edit box. If save!=0, then record the text as the new layer name. */
-static void CVLRemoveEdit(CharView *cv, int save) {
-    if ( layerinfo.rename_active ) {
-	GGadget *g = GWidgetGetControl(cvlayers,CID_Edit);
-	const uint32_t *str = GGadgetGetTitle(g);
-	int l = layerinfo.active;
-
-	if ( save
-	     && layerinfo.active>=0 && str!=NULL && str[0]!='\0' 
-	     && u8_strcmp( x_gc_u32_to_u8 (u32_force_valid (str)),
-			   u8_force_valid (cv->b.sc->parent->layers[l].name)) ) {
-	    free( cv->b.sc->parent->layers[l].name );
-	    cv->b.sc->parent->layers[l].name = cu_copy( str );
-	}
-	GGadgetSetVisible(g,false);
-	GDrawRequestExpose(cvlayers,NULL,false);
-
-	layerinfo.rename_active = 0;
-	CVInfoDrawText(cv,cv->gw);
-    }
-}
-
- /* Make sure we've got the right number of gadgets in the layers palette, and that
-  * they are positioned properly. Their state are updated in CVLayers1Set().
-  * If resize, then make the palette fit the layers up to a max number of layers. */
-static void CVLCheckLayerCount(CharView *cv, int resize) {
-
+static void CVLCheckLayerCount(CharView *cv) {
+    /* Make sure we've got the layers palette orginized properly for the */
+    /*  number of layers in use in this font */
     SplineChar *sc = cv->b.sc;
     int i;
-    GGadgetCreateData gcd[4];
+    GGadgetCreateData gcd[3];
     GTextInfo label[3];
-    GRect size;
-    int width;
-    int maxwidth=0;
-    int togsize=0;
-    int x, y;
-    int column_width = layerinfo.column_width;
+    GRect size, inner;
+    int maxwidth, y;
     char namebuf[40];
-    int viscol=7, quadcol, fgcol, editcol;
-    extern int _GScrollBar_Width;
 
-    if (layerinfo.rename_active) CVLRemoveEdit(cv,true);
-
-    quadcol=fgcol=viscol;
-    if ( layerscols & LSHOW_CUBIC ) { quadcol = viscol+column_width; fgcol=viscol+column_width; }
-    if ( layerscols & LSHOW_FG    ) { fgcol = quadcol+column_width; }
-    editcol = fgcol+column_width;
-
-    /* First figure out if we need to create any new widgets. If we have more */
-    /* widgets than we need, we just set them to be invisible.                */
+    /* First figure out if we need to create any new widgets */
     if ( sc->layer_cnt > layers_max ) {
 	memset(&label,0,sizeof(label));
 	memset(&gcd,0,sizeof(gcd));
 	for ( i=layers_max; i<sc->layer_cnt; ++i ) {
-	     /* for each new layer, create new widgets */
-
-	     /* Visibility toggle */
 	    gcd[0].gd.flags = gg_enabled|gg_utf8_popup;
 	    gcd[0].gd.cid = CID_VBase+i;
 	    gcd[0].gd.popup_msg = (uint32_t *) _("Is Layer Visible?");
-	    gcd[0].creator = GVisibilityBoxCreate;
+	    gcd[0].creator = GCheckBoxCreate;
+
+	    if ( i < sc->parent->layer_cnt ) {	/* Happens when viewing a Type3 sfd file from a non-type3 fontforge */
+		char *hasmn = strchr(sc->parent->layers[i].name,'_');
+		if ( hasmn==NULL && i>=2 && i<9 && strlen(sc->parent->layers[i].name)<30 ) {
+		    sprintf(namebuf, "%s (_%d)", sc->parent->layers[i].name, i+1);
+		    label[1].text = (uint32_t *) namebuf;
+		} else
+		    label[1].text = (uint32_t *) sc->parent->layers[i].name;
+		label[1].text_is_1byte = true;
+		gcd[1].gd.label = &label[1];
+	    }
+	    gcd[1].gd.flags = gg_enabled|gg_utf8_popup|gg_rad_continueold;
+	    gcd[1].gd.cid = CID_EBase+i;
+	    gcd[1].gd.popup_msg = (uint32_t *) _("Is Layer Editable?");
+	    gcd[1].creator = GRadioCreate;
 
 	    GGadgetsCreate(cvlayers,gcd);
 	}
@@ -2008,97 +1794,59 @@ static void CVLCheckLayerCount(CharView *cv, int resize) {
     }
 
     /* Then position everything, and name it properly */
-
-    GDrawSetFont(cvlayers,layerinfo.font); /* for width finding code, need this */
-
-     /* First need to position the add, remove, and layers gadgets */
-    GGadgetGetSize(GWidgetGetControl(cvlayers,CID_AddLayer),&size);
-    x = 7+size.width;
-    y = layer_header_height;
-    GGadgetMove(GWidgetGetControl(cvlayers,CID_RemoveLayer), x, 5);
-    GGadgetGetSize(GWidgetGetControl(cvlayers,CID_RemoveLayer),&size);
-    x += size.width;
-    GGadgetGetSize(GWidgetGetControl(cvlayers,CID_LayersMenu),&size);
-    GGadgetMove(GWidgetGetControl(cvlayers,CID_LayersMenu), x+5, 5+(y-8-size.height)/2);
-    maxwidth=x+5+size.width;
-
-    if ( !resize ) {
-         /* adjust the number of layers that can be visible in the palette */
-        GDrawGetSize(cvlayers,&size);
-        layerinfo.visible_layers=(size.height-layer_header_height)/layer_height;
-        if ( layerinfo.offtop+layerinfo.visible_layers>=sc->layer_cnt )
-            layerinfo.offtop = sc->layer_cnt-layerinfo.visible_layers;
-        if ( layerinfo.offtop<0 ) layerinfo.offtop=0;
-    }
-    if ( layerinfo.visible_layers<2 ) layerinfo.visible_layers=2;
-
-     /* Now position each layer row */
-    for ( i=-1; i<layers_max; ++i ) {
+    GGadgetGetSize(GWidgetGetControl(cvlayers,CID_EGrid),&size);
+    layer_height = size.height;
+    maxwidth = size.width;
+    y = 5+layer_height;
+    GGadgetMove(GWidgetGetControl(cvlayers,CID_VGrid),7,y);
+    GGadgetMove(GWidgetGetControl(cvlayers,CID_EGrid),30,y);
+    y += layer_height;
+    for ( i=0; i<layers_max; ++i ) {
+	GGadget *e = GWidgetGetControl(cvlayers,CID_EBase+i);
 	GGadget *v = GWidgetGetControl(cvlayers,CID_VBase+i);
-
-        width=0;
-        togsize=viscol;
-        GGadgetGetSize(v,&size);
-        togsize+=size.width; /* makes togsize  == the right edge of the visibility column */
-        if ( layerscols & LSHOW_CUBIC ) { togsize += column_width; } /* Quadratic column */
-        if ( layerscols & LSHOW_FG    ) { togsize += column_width; } /* fg/bg column     */
-
-	if ( i>=0 && i<sc->layer_cnt ) {
+	if ( i<sc->layer_cnt ) {
 	    char *hasmn = strchr(sc->parent->layers[i].name,'_');
 	    if ( hasmn==NULL && i>=2 && i<9 && strlen(sc->parent->layers[i].name)<30 ) {
-		 /* For the first 10 or so layers, add a mnemonic like "(_3)" to the name label */
-		 /* if it does not already have a mnemonic.                                     */
-		/* sprintf(namebuf, "%s (_%d)", sc->parent->layers[i].name, i+1); */
-		sprintf(namebuf, "%s", sc->parent->layers[i].name);
-	    } else if ( hasmn==NULL ) {
-                sprintf(namebuf,"%s", i==-1 ? _("Guide") : (i==0 ?_("Back") : _("Fore")) );
-            }
-            width = GDrawGetText8Width(cvlayers, namebuf, -1);
-	    if ( width+togsize>maxwidth ) maxwidth = width + togsize;
-	} else if ( i==-1 ) {
-	    if ( width+togsize>maxwidth ) maxwidth = width + togsize;
-        }
+		sprintf(namebuf, "%s (_%d)", sc->parent->layers[i].name, i+1);
+		GGadgetSetTitle8WithMn(e,namebuf);
+	    } else if ( hasmn )
+		GGadgetSetTitle8WithMn(e,sc->parent->layers[i].name);
+	    else
+		GGadgetSetTitle8(e,sc->parent->layers[i].name);
+	    GGadgetGetDesiredVisibleSize(e,&size,&inner);
+	    GGadgetResize(e,size.width,size.height);
+	    if ( size.width>maxwidth ) maxwidth = size.width;
+	}
 
-	if ( i+1<layerinfo.offtop || i>=layerinfo.offtop+layerinfo.visible_layers ||
-		(sc->layer_cnt<=layerinfo.visible_layers && i>=sc->layer_cnt)) {
-             /* layer is currently scrolled out of palette */
+	if ( i<cv->layers_off_top || i>=cv->layers_off_top+CV_LAYERS_MAXCNT ||
+		(sc->layer_cnt<=CV_LAYERS_MAXCNT && i>=sc->layer_cnt)) {
 	    GGadgetSetVisible(v,false);
+	    GGadgetSetVisible(e,false);
 	} else {
-	    GGadgetMove(v,viscol ,y);
+	    GGadgetMove(v,7 ,y);
+	    GGadgetMove(e,30,y);
 	    GGadgetSetVisible(v,true);
+	    GGadgetSetVisible(e,true);
 	    y += layer_height;
 	}
     }
-
-     /* Update the scroll bar */
-    if ( sc->layer_cnt+1<=layerinfo.visible_layers ) {
-         /* don't need the scroll bar, so turn it off */
+    if ( sc->layer_cnt<=CV_LAYERS_MAXCNT ) {
 	GGadgetSetVisible(GWidgetGetControl(cvlayers,CID_SB),false);
     } else {
 	GGadget *sb = GWidgetGetControl(cvlayers,CID_SB);
-	maxwidth += 2 + GDrawPointsToPixels(cv->gw,_GScrollBar_Width);
-	GScrollBarSetBounds(sb,0,sc->layer_cnt,layerinfo.visible_layers);
+	GGadgetGetDesiredVisibleSize(sb,&size,&inner);
+	GGadgetResize(sb,size.width,CV_LAYERS_MAXCNT*layer_height);
+	GGadgetMove(sb,maxwidth+GDrawPointsToPixels(NULL,30)+2,5+2*layer_height);
+	maxwidth += 2 + size.width;
+	GScrollBarSetBounds(sb,0,sc->layer_cnt,CV_LAYERS_MAXCNT);
 	GScrollBarSetPos(sb,cv->layers_off_top);
 	GGadgetSetVisible(sb,true);
     }
-
-     /* Resize the palette to fit */
-    if ( resize ) {
-        y += GDrawPointsToPixels(NULL,3);
-        GDrawGetSize(cvlayers,&size);
-        if ( size.width != maxwidth || y!=size.height ) {
-            GDrawResize(cvlayers,maxwidth,y);
-        }
-    }
-
-    GDrawGetSize(cvlayers,&size);
-    layerinfo.sb_start = size.width
-                - (sc->layer_cnt+1<=layerinfo.visible_layers ? 0 : GDrawPointsToPixels(cv->gw,_GScrollBar_Width));
-    GGadget *sb = GWidgetGetControl(cvlayers,CID_SB);
-    GGadgetResize(sb, GDrawPointsToPixels(cv->gw,_GScrollBar_Width), size.height-layer_header_height);
-    GGadgetMove(sb,layerinfo.sb_start,layer_header_height);
-
-    GDrawRequestExpose(cvlayers,NULL,false);
+    y += GDrawPointsToPixels(NULL,3);
+    maxwidth += GDrawPointsToPixels(NULL,30);
+    GDrawGetSize(cvlayers,&size);    
+    if ( size.width != maxwidth || y!=size.height )
+	GDrawResize(cvlayers,maxwidth,y);
 }
 
 /* Respond to scroll events from cvlayers scrollbar. */
@@ -2109,350 +1857,31 @@ static void LayerScroll(CharView *cv, GEvent *event) {
     if ( sbt==et_sb_top )
 	off = 0;
     else if ( sbt==et_sb_bottom )
-	off = cv->b.sc->layer_cnt-layerinfo.visible_layers;
+	off = cv->b.sc->layer_cnt-CV_LAYERS_MAXCNT;
     else if ( sbt==et_sb_up ) {
 	off = cv->layers_off_top-1;
     } else if ( sbt==et_sb_down ) {
 	off = cv->layers_off_top+1;
     } else if ( sbt==et_sb_uppage ) {
-	off = cv->layers_off_top-layerinfo.visible_layers+1;
+	off = cv->layers_off_top-CV_LAYERS_MAXCNT+1;
     } else if ( sbt==et_sb_downpage ) {
-	off = cv->layers_off_top+layerinfo.visible_layers-1;
+	off = cv->layers_off_top+CV_LAYERS_MAXCNT-1;
     } else /* if ( sbt==et_sb_thumb || sbt==et_sb_thumbrelease ) */ {
 	off = event->u.control.u.sb.pos;
     }
-    if ( off>cv->b.sc->layer_cnt-layerinfo.visible_layers )
-	off = cv->b.sc->layer_cnt-layerinfo.visible_layers;
+    if ( off>cv->b.sc->layer_cnt-CV_LAYERS_MAXCNT )
+	off = cv->b.sc->layer_cnt-CV_LAYERS_MAXCNT;
     if ( off<0 ) off=0;
     if ( off==cv->layers_off_top )
 return;
     cv->layers_off_top = off;
-    layerinfo.offtop = off;
-    CVLCheckLayerCount(cv, false);
+    CVLCheckLayerCount(cv);
     GScrollBarSetPos(GWidgetGetControl(cvlayers,CID_SB),off);
     GDrawRequestExpose(cvlayers,NULL,false);
 }
 
-/* Layers palette menu ids */
-#define LMID_LayerInfo	1
-#define LMID_NewLayer	2
-#define LMID_DelLayer	3
-#define LMID_Fill       4
-#define LMID_First	5
-#define LMID_Up     	6
-#define LMID_Down	7
-#define LMID_Last	8
-#define LMID_Foreground 9
-#define LMID_Background 10
-#define LMID_Cubic      11
-#define LMID_Quadratic  12
-#define LMID_ShowCubic  13
-#define LMID_ShowFore   14
-
-/* Return a unique layer name based on base.
- * This just appends a number to base until the name is not found. */
-static char *UniqueLayerName(SplineChar *sc, const char *base)
-{
-    static char buffer[100];
-    const char *basestr=base;
-    int i=1, c;
-    
-    if ( basestr==NULL || basestr[0]=='\0' ) basestr=_("Layer");
-
-    while (1) {
-        if (i==1) sprintf( buffer,"%s",basestr );
-        else sprintf( buffer,"%s %d",basestr, i );
-        
-        for (c=0; c<sc->layer_cnt; c++) {
-            if (!strcmp(sc->parent->layers[c].name,buffer)) break;
-        }
-
-        if ( c==sc->layer_cnt ) break;
-        i++;
-    }
-
-    return buffer;
-}
-
-/* Layers palette menu selection */
-static void CVLayerInvoked(GWindow v, GMenuItem *mi, GEvent *e) {
-    CharView *cv = (CharView *) GDrawGetUserData(v);
-    int layer = CVLayer(&cv->b);
-    SplineChar *sc = cv->b.sc;
-    Layer temp;
-    int i;
-    char *buts[3];
-    buts[0] = _("_Yes"); buts[1]=_("_No"); buts[2] = NULL;
-
-    switch ( mi->mid ) {
-      case LMID_Fill:
-        cv->showfilled = !cv->showfilled;
-        CVRegenFill(cv);
-        GDrawRequestExpose(cv->v,NULL,false);
-      break;
-
-      case LMID_ShowCubic:
-        layerscols=(layerscols&~LSHOW_CUBIC)|((layerscols&LSHOW_CUBIC)?0:1);
-        CVLCheckLayerCount(cv, true);
-      break;
-
-      case LMID_ShowFore:
-        layerscols=(layerscols&~LSHOW_FG)|((layerscols&LSHOW_FG)?0:2);
-        CVLCheckLayerCount(cv, true);
-      break;
-
-      case LMID_Foreground:
-        if ( layer>ly_fore && cv->b.sc->parent->layers[layer].background==1) {
-            SFLayerSetBackground(cv->b.sc->parent,layer,0);
-	    GDrawRequestExpose(cvlayers,NULL,false);
-        }
-      break;
-
-      case LMID_Background:
-        if ( layer>=ly_fore && cv->b.sc->parent->layers[layer].background==0) {
-            SFLayerSetBackground(cv->b.sc->parent,layer,1);
-	    GDrawRequestExpose(cvlayers,NULL,false);
-        }
-      break;
-
-      case LMID_Cubic:
-        if ( layer!=ly_grid && cv->b.sc->layers[layer].order2 ) {
-            SFConvertLayerToOrder3(cv->b.sc->parent, layer);
-	    GDrawRequestExpose(cvlayers,NULL,false);
-            cv->back_img_out_of_date = true;
-        }
-      break;
-
-      case LMID_Quadratic:
-        if ( layer!=ly_grid && !cv->b.sc->layers[layer].order2 ) {
-            SFConvertLayerToOrder2(cv->b.sc->parent, layer);
-	    GDrawRequestExpose(cvlayers,NULL,false);
-            cv->back_img_out_of_date = true;
-        }
-      break;
-
-      case LMID_NewLayer:
-        SFAddLayer(cv->b.sc->parent, /* font of the glyph in the charview */
-                        UniqueLayerName(sc,_("Back")),     /* Name */
-                        0,         /* 0=cubic, 1=quad */
-                        1);       /* 1=back,  0=fore */
-
-        layer=cv->b.sc->parent->layer_cnt-1;
-        
-        cv->showback[layer>>5] |=  (1<<(layer&31)); /* make it visible */
-        CVLCheckLayerCount(cv, true); /* update widget existence */
-        CVLayersSet(cv);       /* update widget state     */
-      break;
-      case LMID_DelLayer:
-        layer = CVLayer((CharViewBase *) cv); /* the index of the active layer */
-        if (layer==ly_fore || layer==ly_back || layer==ly_grid)
-return;
-        if ( gwwv_ask(_("Cannot Be Undone"),(const char **) buts,0,1,_("This operation cannot be undone, do it anyway?"))==1 )
-return;
-        SFRemoveLayer(cv->b.sc->parent, layer);
-        CVLCheckLayerCount(cv, true); /* update widget existence */
-        CVLayersSet(cv);       /* update widget state     */
-      break;
-
-      case LMID_First: /* move layer contents to top */
-	if ( layer==ly_fore )
-return;
-	temp = sc->layers[layer];
-	for ( i=layer-1; i>=ly_fore; --i )
-	    sc->layers[i+1] = sc->layers[i];
-	sc->layers[i+1] = temp;
-	cv->b.layerheads[dm_fore] = &sc->layers[ly_fore];
-      break;
-      case LMID_Up: /* move layer contents one up */
-	if ( layer==ly_fore )
-return;
-	temp = sc->layers[layer];
-	sc->layers[layer] = sc->layers[layer-1];
-	sc->layers[layer-1] = temp;
-	cv->b.layerheads[dm_fore] = &sc->layers[layer-1];
-      break;
-      case LMID_Down: /* move layer contents one down */
-	if ( layer==sc->layer_cnt-1 )
-return;
-	temp = sc->layers[layer];
-	sc->layers[layer] = sc->layers[layer+1];
-	sc->layers[layer+1] = temp;
-	cv->b.layerheads[dm_fore] = &sc->layers[layer+1];
-      break;
-      case LMID_Last:
-	if ( layer==sc->layer_cnt-1 )
-return;
-	temp = sc->layers[layer]; /* move layer contents to bottom */
-	for ( i=layer+1; i<sc->layer_cnt; ++i )
-	    sc->layers[i-1] = sc->layers[i];
-	sc->layers[i-1] = temp;
-	cv->b.layerheads[dm_fore] = &sc->layers[i-1];
-      break;
-    }
-    CVLayersSet(cv);
-    CVCharChangedUpdate(&cv->b);
-}
-
-/* Pop up the layers palette context menu */
-static void LayerMenu(CharView *cv,GEvent *event, int nolayer) {
-    GMenuItem mi[20];
-    int i;
-    static char *names[] = {
-                     /*N_("Rename Layer..."),*/
-                     N_("New Layer"),
-                     N_("Del Layer"),
-                     (char *) -1,
-                     N_("Shift Contents To _First"),
-                     N_("Shift Contents _Up"),
-                     N_("Shift Contents _Down"),
-                     N_("Shift Contents To _Last"),
-                     (char *) -1,
-                     N_("Make Foreground"),/* or N_("Make Background"), */
-                     N_("Make Cubic"),     /* or N_("Make Quadratic"),  */
-                     (char *) -1,
-                     N_("Fill"),
-                     (char *) -1,
-                     N_("Show Cubic Column"),
-                     N_("Show Fore/Back Column"),
-                     NULL,
-                    };
-    static int mids[] = {
-                     /*LMID_RenameLayer,*/
-                     LMID_NewLayer,
-                     LMID_DelLayer,
-                     -1,
-                     LMID_First,
-                     LMID_Up,
-                     LMID_Down,
-                     LMID_Last,
-                     -1,
-                     LMID_Foreground, /* or LMID_Background, */
-                     LMID_Cubic,      /* or LMID_Quadratic,  */
-                     -1,
-                     LMID_Fill,
-                     -1,
-                     LMID_ShowCubic,
-                     LMID_ShowFore,
-                     0
-                    };
-    int layer = CVLayer(&cv->b);
-
-    memset(mi,'\0',sizeof(mi));
-    for ( i=0; names[i]!=0; ++i ) {
-	if ( names[i]!=(char *) -1 ) {
-	    mi[i].ti.text = (uint32_t *) _(names[i]);
-	    mi[i].ti.text_is_1byte = true;
-	} else
-	    mi[i].ti.line = true;
-	mi[i].ti.fg = COLOR_DEFAULT;
-	mi[i].ti.bg = COLOR_DEFAULT;
-	mi[i].mid = mids[i];
-	mi[i].invoke = CVLayerInvoked;
-
-	/*if ( mids[i]!=LMID_NewLayer && nolayer )
-	    mi[i].ti.disabled = true;*/
-
-	if ( ( mids[i]==LMID_First || mids[i]==LMID_Up ) && ( layer==-1 || layer==0) )
-	    mi[i].ti.disabled = true;
-
-        else if ( ( mids[i]==LMID_Last || mids[i]==LMID_Down ) && (layer==ly_grid || layer==cv->b.sc->layer_cnt-1) )
-	    mi[i].ti.disabled = true;
-
-        else if ( mids[i]==LMID_DelLayer && ( layer<2 || cv->b.sc->layer_cnt==2) )
-	    mi[i].ti.disabled = true;
-
-        else if ( mids[i]==LMID_Fill ) {
-            mi[i].ti.checkable = 1;
-            mi[i].ti.checked = cv->showfilled;
-
-        } else if ( mids[i]==LMID_Foreground ) {
-            if ( layer>=0 ) {
-                if ( ! cv->b.sc->layers[layer].background ) {
-                    mi[i].mid = LMID_Background;
-                    mi[i].ti.text = (uint32_t *) _("Make Background");
-                }
-            } else {
-	        mi[i].ti.disabled = true;
-            }
-        } else if ( mids[i]==LMID_Cubic ) {
-            if ( ! cv->b.sc->layers[layer].order2 ) {
-                mi[i].mid = LMID_Quadratic;
-                mi[i].ti.text = (uint32_t *) _("Make Quadratic");
-            }
-
-        } else if ( mids[i]==LMID_ShowCubic ) {
-            mi[i].ti.checkable = 1;
-            mi[i].ti.checked = (layerscols & LSHOW_CUBIC)?1:0;
-
-        } else if ( mids[i]==LMID_ShowFore ) {
-            mi[i].ti.checkable = 1;
-            mi[i].ti.checked = (layerscols & LSHOW_FG)?1:0;
-        }
-    }
-    GMenuCreatePopupMenu(cvlayers, event, mi);
-}
-
-/* Scan for which layer and column one clicks on in the layers 1 palette                */
-/* -1 is the guides layer, 0 is default back, 1 default fore, etc.                      */
-/* col will be set to either -1 for none, CID_VBase, CID_QBase, CID_FBase, or CID_EBase */
-static int CVLScanForItem(int x, int y, int *col) {
-    int l=(y-layer_header_height)/layer_height + layerinfo.offtop - 1;
-    int viscol=7, quadcol, fgcol, editcol;
-    int cw=layerinfo.column_width;
-
-    quadcol=fgcol=viscol;
-    if ( layerscols & LSHOW_CUBIC ) { quadcol = viscol+cw; fgcol=viscol+cw; }
-    if ( layerscols & LSHOW_FG    ) { fgcol = quadcol+cw; }
-    editcol=fgcol+cw;
-
-    *col=-1;
-    if ( x>0 && x<viscol+cw ) *col=CID_VBase;
-    else if ( (layerscols & LSHOW_CUBIC) && x>=quadcol && x<quadcol+cw ) *col=CID_QBase;
-    else if ( (layerscols & LSHOW_FG) && x>=fgcol && x<fgcol+cw ) *col=CID_FBase;
-    else if ( x>=editcol ) *col=CID_EBase;
-
-    return l;
-}
-
-/* Called in response to some event where we want to change the current layer. */
-static void CVLSelectLayer(CharView *cv, int layer) {
-    enum drawmode dm = cv->b.drawmode;
-
-    if ( layer<-1 || layer>=cv->b.sc->layer_cnt )
-return;
-
-    if ( layer==-1 ) {
-        cv->b.drawmode = dm_grid;
-        cv->lastselpt = NULL;
-    } else {
-        if ( layer==1 ) {
-            cv->b.drawmode = dm_fore;
-            cv->lastselpt = NULL;
-        } else {
-            cv->b.drawmode = dm_back;
-            cv->b.layerheads[dm_back] = &cv->b.sc->layers[layer];
-            cv->lastselpt = NULL;
-        }
-
-        CVDebugFree(cv->dv);
-        SplinePointListsFree(cv->b.gridfit); cv->b.gridfit = NULL;
-        FreeType_FreeRaster(cv->oldraster); cv->oldraster = NULL;
-        FreeType_FreeRaster(cv->raster); cv->raster = NULL;
-        cv->show_ft_results = false;
-    }
-    layerinfo.active = CVLayer(&cv->b); /* the index of the active layer */
-    GDrawRequestExpose(cv->v,NULL,false);
-    if (cvlayers2) GDrawRequestExpose(cvlayers2,NULL,false);
-    if (cvlayers)  GDrawRequestExpose(cvlayers,NULL,false);
-    if ( dm!=cv->b.drawmode )
-        GDrawRequestExpose(cv->gw,NULL,false); /* the logo (where the scrollbars join) shows what layer we are in */
-    CVInfoDrawText(cv,cv->gw);
-}
-
 static int cvlayers_e_h(GWindow gw, GEvent *event) {
     CharView *cv = (CharView *) GDrawGetUserData(gw);
-    char *buts[3];
-    buts[0] = _("_Yes"); buts[1]=_("_No"); buts[2] = NULL;
 
     if ( event->type==et_destroy ) {
 	cvlayers = NULL;
@@ -2467,152 +1896,15 @@ return( true );
 	GDrawSetVisible(gw,false);
       break;
       case et_char: case et_charup:
-	if ( event->u.chr.keysym == GK_Return) {
-	    CVLRemoveEdit(cv, true);
-	} else if ( event->u.chr.keysym == GK_Escape) {
-	    CVLRemoveEdit(cv, false);
-	} else PostCharToWindow(cv->gw,event);
-      break;
-      case et_mousemove: {
-        int l, col;
-
-        l = CVLScanForItem(event->u.mouse.x,event->u.mouse.y, &col);
-        if ( l!=layerinfo.mo_layer || col!=layerinfo.mo_col ) {
-            layerinfo.mo_layer = l;
-            layerinfo.mo_col = col;
-            GDrawRequestExpose(cvlayers,NULL,false);
-        }
-
-return( true );
-
-      } break;
-      case et_mousedown: {
-        if ( layerinfo.rename_active ) CVLRemoveEdit(cv, true);
-      } break;
-      case et_mouseup: {
-        int l, x, cid, h;
-        GGadget *g;
-        l = CVLScanForItem(event->u.mouse.x,event->u.mouse.y, &cid);
-
-        if ( cid==CID_EBase && l>=-1 && l<cv->b.sc->layer_cnt ) { /* Need to check for this BEFORE checking for right click! */
-            if ( event->u.mouse.button==1 && event->u.mouse.clicks==2 ) {
-		 /* bring up edit box for layer name */
-
-                if ( l<2 )
-return ( true );
-
-                x = 7+(1+((layerscols&LSHOW_CUBIC)?1:0)+((layerscols&LSHOW_FG)?1:0))*layerinfo.column_width;
-                g = GWidgetGetControl(cvlayers,CID_Edit);
-		h = 1.5*layer_height;
-
-                GGadgetResize(g, layerinfo.sb_start-x, h);
-                GGadgetMove(g, x,layer_header_height+(l+1.5+layerinfo.offtop)*layer_height-h/2);
-                GGadgetSetVisible(g,true);
-                /* GGadgetSetTitle8((GTextField*)g, cv->b.sc->parent->layers[l].name); */
-                GGadgetSetTitle8(g, cv->b.sc->parent->layers[l].name);
-
-		layerinfo.active=l;
-                layerinfo.rename_active=1;
-                return ( true );
-            }
-
-            CVLSelectLayer(cv, l);
-        }
-
-         /* right click to pop up menu */
-	if ( event->u.mouse.button==3 ) {
-	    LayerMenu(cv,event,true);
-return(true);
-        }
-
-         /* otherwise, deal with clicking up on the various controls */
-        if ( l<-1 || l>=cv->b.sc->layer_cnt)
-return (true);
-
-        if ( cid==CID_QBase) {
-            if (l>=0) { /* don't try to adjust if calling for guides layer */
-                if (cv->b.sc->layers[l].order2)
-                    SFConvertLayerToOrder3(cv->b.sc->parent, l);
-                else
-                    SFConvertLayerToOrder2(cv->b.sc->parent, l);
-                cv->back_img_out_of_date = true;
-	        GDrawRequestExpose(cvlayers,NULL,false);
-                GDrawRequestExpose(cv->v,NULL,false);
-            }
-        } else if ( cid==CID_FBase) {
-            if (l>1) { /* don't try to adjust if calling guides, default fore or back layer */
-                if (cv->b.sc->layers[l].background)
-                    SFLayerSetBackground(cv->b.sc->parent,l,0);
-                else
-                    SFLayerSetBackground(cv->b.sc->parent,l,1);
-	        GDrawRequestExpose(cvlayers,NULL,false);
-                GDrawRequestExpose(cv->v,NULL,false);
-            }
-        }
-      } break; /* case et_mouseup */
-      case et_expose:
-	LayersExpose(cv,gw,event);
-      break;
-      case et_resize:
-        if ( event->u.resize.sized ) {
-            CVLCheckLayerCount(cv,false); /* update widget existence, but do not resize */
-        }
+	PostCharToWindow(cv->gw,event);
       break;
       case et_controlevent:
-	if ( event->u.control.subtype == et_buttonactivate ) {
-	    int cid = GGadgetGetCid(event->u.control.g);
-	    int layer;
-
-	    switch( cid ) {
-	      case CID_AddLayer: {
-                SplineChar *sc = cv->b.sc;
-
-		 /* This adds a new layer to the end of the current layers list.
-		  * Somehow it is created as an invisible layer. */
-		SFAddLayer(cv->b.sc->parent, /* font of the glyph in the charview */
-				UniqueLayerName(sc,_("Back")),     /* Name */
-				0,         /* 0=cubic, 1=quad */
-				1);       /* 1=back,  0=fore */
-
-		layer=cv->b.sc->parent->layer_cnt-1;
-		
-		cv->showback[layer>>5] |=  (1<<(layer&31)); /* make it visible */
-		CVLCheckLayerCount(cv,true); /* update widget existence */
-		CVLayersSet(cv);       /* update widget state     */
-              } break;
-	      case CID_RemoveLayer:
-		layer = CVLayer((CharViewBase *) cv); /* the index of the active layer */
-                if (layer==ly_fore || layer==ly_back || layer==ly_grid)
-return ( true );
-	        if ( gwwv_ask(_("Cannot Be Undone"),(const char **) buts,0,1,_("This operation cannot be undone, do it anyway?"))==1 )
-return ( true );
-                SFRemoveLayer(cv->b.sc->parent, layer);
-                CVLCheckLayerCount(cv,true); /* update widget existence */
-                CVLayersSet(cv);       /* update widget state     */
-	      break;
-	      case CID_RenameLayer: {
-		/* *** */
-                int x = 7+(1+((layerscols&LSHOW_CUBIC)?1:0)+((layerscols&LSHOW_FG)?1:0))*layerinfo.column_width;
-                GGadget *g = GWidgetGetControl(cvlayers,CID_Edit);
-		layer = CVLayer((CharViewBase *) cv); /* the index of the active layer */
-		/* layer = layerinfo.active */ /* the index of the active layer */
-
-                GGadgetResize(g, layerinfo.sb_start-x,1.5*layer_height);
-                GGadgetMove(g, x,layer_header_height+(layer+1+layerinfo.offtop)*layer_height);
-                GGadgetSetVisible(g,true);
-                GGadgetSetTitle8(g, cv->b.sc->parent->layers[layer].name);
-
-                layerinfo.rename_active=1;
-              } break;
-	    }
-        } else if ( event->u.control.subtype == et_radiochanged ) {
+	if ( event->u.control.subtype == et_radiochanged ) {
 	    enum drawmode dm = cv->b.drawmode;
 	    int cid = GGadgetGetCid(event->u.control.g);
-
 	    switch( cid ) {
 	      case CID_VFore:
 		CVShows.showfore = cv->showfore = GGadgetIsChecked(event->u.control.g);
-                GDrawRequestExpose(cv->v,NULL,false);
 	      break;
 	      case CID_VBack:
 		CVShows.showback = GGadgetIsChecked(event->u.control.g);
@@ -2621,11 +1913,9 @@ return ( true );
 		else
 		    cv->showback[0] &= ~1;
 		cv->back_img_out_of_date = true;
-                GDrawRequestExpose(cv->v,NULL,false);
 	      break;
 	      case CID_VGrid:
 		CVShows.showgrids = cv->showgrids = GGadgetIsChecked(event->u.control.g);
-                GDrawRequestExpose(cv->v,NULL,false);
 	      break;
 	      case CID_EFore:
 		cv->b.drawmode = dm_fore;
@@ -2653,35 +1943,40 @@ return ( true );
 		cv->lastselpt = NULL;
 	      break;
 	      default:
-                if ( cid>=CID_VBase-1 && cid<CID_VBase+999) {
-                    cid -= CID_VBase;
-                    if ( GGadgetIsChecked(event->u.control.g))
-                        cv->showback[cid>>5] |=  (1<<(cid&31));
-                    else
-                        cv->showback[cid>>5] &= ~(1<<(cid&31));
-                    cv->back_img_out_of_date = true;
+		if ( cid<CID_EBase-1 ) {
+		    cid -= CID_VBase;
+		    if ( GGadgetIsChecked(event->u.control.g))
+			cv->showback[cid>>5] |=  (1<<(cid&31));
+		    else
+			cv->showback[cid>>5] &= ~(1<<(cid&31));
+		    cv->back_img_out_of_date = true;
+		} else {
+		    cid -= CID_EBase;
+		    cv->b.drawmode = dm_back;
+		    cv->b.layerheads[dm_back] = &cv->b.sc->layers[cid];
+		    cv->lastselpt = NULL;
 
-                    GDrawRequestExpose(cv->v,NULL,false);
-                    if ( dm!=cv->b.drawmode )
-                        GDrawRequestExpose(cv->gw,NULL,false);	/* the logo (where the scrollbars join) shows what layer we are in */
-                }
-            }
-
-        } else if ( event->u.control.subtype == et_scrollbarchange ) {
+		    CVDebugFree(cv->dv);
+		    SplinePointListsFree(cv->b.gridfit); cv->b.gridfit = NULL;
+		    FreeType_FreeRaster(cv->oldraster); cv->oldraster = NULL;
+		    FreeType_FreeRaster(cv->raster); cv->raster = NULL;
+		    cv->show_ft_results = false;
+		}
+	    }
+	    GDrawRequestExpose(cv->v,NULL,false);
+	    if ( dm!=cv->b.drawmode )
+		GDrawRequestExpose(cv->gw,NULL,false);	/* the logo (where the scrollbars join) shows what layer we are in */
+	} else
 	    LayerScroll(cv,event);
-
-	}
-      break; /* case et_controlevent */
-      default: {
-      } break;
-    } /* switch ( event->type ) */
+      break;
+    }
 return( true );
 }
 
 /* Set to true the editable field for the current layer, and false for the other layers. */
 void CVSetLayer(CharView *cv,int layer) {
 
-     /* Update the drawmode of cv */
+    /* Update the drawmode of cv */
     if ( layer == ly_grid )
 	cv->b.drawmode = dm_grid;
     else if (layer == ly_fore )
@@ -2690,8 +1985,16 @@ void CVSetLayer(CharView *cv,int layer) {
 	cv->b.drawmode = dm_back;
 	cv->b.layerheads[dm_back] = &cv->b.sc->layers[layer];
     }
-    if ( cvlayers!=NULL && GDrawGetUserData(cvlayers)==cv ) 
-	GDrawRequestExpose(cvlayers,NULL,false);
+    if ( cvlayers!=NULL && GDrawGetUserData(cvlayers)==cv ) {
+	if ( layer==ly_grid )
+	    GGadgetSetChecked(GWidgetGetControl(cvlayers,CID_EGrid), true );
+	else if ( layer==ly_fore )
+	    GGadgetSetChecked(GWidgetGetControl(cvlayers,CID_EFore), true );
+	else if ( layer==ly_back )
+	    GGadgetSetChecked(GWidgetGetControl(cvlayers,CID_EBack), true );
+	else
+	    GGadgetSetChecked(GWidgetGetControl(cvlayers,CID_EBase+layer), true );
+    }
 }
 
 /* Check if a key press corresponds to a mnemonic the palette knows about. */
@@ -2712,28 +2015,28 @@ int CVPaletteMnemonicCheck(GEvent *event) {
     GGadget *g;
     CharView *cv;
     SplineFont *parent;
-    int curlayer;
 
     if ( cvtools==NULL )
 return( false );
     cv = GDrawGetUserData(cvtools);
     parent = cv->b.sc->parent;
-    curlayer = CVLayer(&cv->b); /* the index of the active layer */
 
     if ( isdigit(event->u.chr.keysym) ) {
 	int off = event->u.chr.keysym - '0';
 
 	g = GWidgetGetControl(cvlayers, CID_EBase+off-1);
-	if ( off-1<parent->layer_cnt && off!=curlayer ) {
-            CVLSelectLayer(cv, off);
-	    if ( cv->b.sc->parent->multilayer )
-	    	GDrawRequestExpose(cvlayers2,NULL,false);
-	    else
+	if ( off-1<parent->layer_cnt && g!=NULL && !GGadgetIsChecked(g)) {
+	    GGadgetSetChecked(g,true);
+	    fake.type = et_controlevent;
+	    fake.w = cvlayers;
+	    fake.u.control.subtype = et_radiochanged;
+	    fake.u.control.g = g;
+	    cvlayers_e_h(cvlayers,&fake);
 return( true );
 	}
     }
 
-     /* mnemonic is encoded in the layer name */
+    /* mnemonic is encoded in the layer name */
     for ( j=0; j<2; ++j ) {
 	for ( i=0; j==0 ? i<parent->layer_cnt : strmatch[i].str!=NULL; ++i ) {
 	    for ( foo = j==0 ? parent->layers[i].name : _(strmatch[i].str);
@@ -2761,8 +2064,15 @@ return( true );
 		    }
 		    cvlayers2_e_h(cvlayers2,&fake);
 		} else {
-            	    CVLSelectLayer(cv, i);
-	    	    GDrawRequestExpose(cvlayers,NULL,false);
+		    g = GWidgetGetControl(cvlayers, j==0 ? CID_EBase+i : strmatch[i].cid);
+		    if ( g!=NULL && !GGadgetIsChecked(g)) {
+			GGadgetSetChecked(g,true);
+			fake.type = et_controlevent;
+			fake.w = cvlayers;
+			fake.u.control.subtype = et_radiochanged;
+			fake.u.control.g = g;
+			cvlayers_e_h(cvlayers,&fake);
+		    }
 		}
     return( true );
 	    }
@@ -2775,28 +2085,17 @@ return( false );
  * Only the basics of the palette are set up here, with the widgets for the default fore, back,
  * and guides layers. The palette is updated to actual character views in CVLCheckLayerCount(). */
 GWindow CVMakeLayers(CharView *cv) {
-    GRect r,size;
+    GRect r;
     GWindowAttrs wattrs;
     GGadgetCreateData gcd[25];
     GTextInfo label[25];
-    GGadget *gadget;
+    int base;
     extern int _GScrollBar_Width;
-    int i=0;
-    int viscol=7;
 
     if ( cvlayers!=NULL )
 return( cvlayers );
 
-     /* Initialize layerinfo */
-    if ( layerinfo.clut==NULL )
-	layerinfo.clut = _BDFClut(4);
-    if ( layersfont==NULL ) {
-	layersfont = GDrawNewFont(cvlayers2, SANS_UI_FAMILIES, -12, 400, fs_none);
-	layersfont = GResourceFindFont("LayersPalette.Font",layersfont);
-    }
-    layerinfo.font = layersfont;
-
-     /* Initialize palette window */
+    /* Initialize palette window */
     memset(&wattrs,0,sizeof(wattrs));
     wattrs.mask = wam_events|wam_cursor|wam_utf8_wtitle|wam_positioned|wam_isdlg;
     wattrs.event_masks = -1;
@@ -2807,9 +2106,9 @@ return( cvlayers );
 
     r.width = GGadgetScale(104); r.height = CV_LAYERS_HEIGHT;
     if ( cvlayersoff.x==-9999 ) {
-	 /* Offset of window on screen, by default make it sit just below the tools palette */
+	/* Offset of window on screen, by default make it sit just below the tools palette */
 	cvlayersoff.x = -r.width-6;
-	cvlayersoff.y = cv->mbh+CV_TOOLS_HEIGHT+45/*25*/; /* 45 is right if there's decor, 25 when none. twm gives none, kde gives decor */
+	cvlayersoff.y = cv->mbh+CV_TOOLS_HEIGHT+45/*25*/;	/* 45 is right if there's decor, 25 when none. twm gives none, kde gives decor */
     }
     r.x = cvlayersoff.x; r.y = cvlayersoff.y;
     if ( palettes_docked ) { r.x = 0; r.y=CV_TOOLS_HEIGHT+2; }
@@ -2818,104 +2117,105 @@ return( cvlayers );
     memset(&label,0,sizeof(label));
     memset(&gcd,0,sizeof(gcd));
 
-     /* Add Layer button */
-    label[0].text = (uint32_t *) _("+");
+/* GT: Abbreviation for "Visible" */
+    label[0].text = (uint32_t *) _("V");
     label[0].text_is_1byte = true;
-    gcd[i].gd.label = &label[0];
-    gcd[i].gd.pos.x = 7; gcd[i].gd.pos.y = 5; 
-    gcd[i].gd.flags = gg_enabled|gg_visible|gg_pos_in_pixels|gg_utf8_popup;
-    gcd[i].gd.cid = CID_AddLayer;
-    gcd[i].gd.popup_msg = (uint32_t *) _("Add a new layer");
-    gcd[i].creator = GButtonCreate;
-    ++i;
+    gcd[0].gd.label = &label[0];
+    gcd[0].gd.pos.x = 7; gcd[0].gd.pos.y = 5; 
+    gcd[0].gd.flags = gg_enabled|gg_visible|gg_pos_in_pixels|gg_utf8_popup;
+    gcd[0].gd.popup_msg = (uint32_t *) _("Is Layer Visible?");
+    gcd[0].creator = GLabelCreate;
 
-     /* Delete Layer button */
-    label[1].text = (uint32_t *) _("-");
+/* GT: Abbreviation for "Editable" */
+    label[1].text = (uint32_t *) _("E");
     label[1].text_is_1byte = true;
-    gcd[i].gd.label = &label[1];
-    gcd[i].gd.pos.x = 30; gcd[i].gd.pos.y = 5; 
-    gcd[i].gd.flags = gg_enabled|gg_visible|gg_pos_in_pixels|gg_utf8_popup;
-    gcd[i].gd.cid = CID_RemoveLayer;
-    gcd[i].gd.popup_msg = (uint32_t *) _("Delete the current layer");
-    gcd[i].creator = GButtonCreate;
-    ++i;
+    gcd[1].gd.label = &label[1];
+    gcd[1].gd.pos.x = 30; gcd[1].gd.pos.y = 5; 
+    gcd[1].gd.flags = gg_enabled|gg_visible|gg_pos_in_pixels|gg_utf8_popup;
+    gcd[1].gd.popup_msg = (uint32_t *) _("Is Layer Editable?");
+    gcd[1].creator = GLabelCreate;
 
-     /* "Layers" label next to the add and remove buttons */
-    label[2].text = (uint32_t *) _("Layers");
+    label[2].text = (uint32_t *) _("Layer");
     label[2].text_is_1byte = true;
-    gcd[i].gd.label = &label[2];
-    gcd[i].gd.pos.x = 47; gcd[i].gd.pos.y = 5; 
-    gcd[i].gd.flags = gg_enabled|gg_visible|gg_pos_in_pixels|gg_utf8_popup;
-    gcd[i].gd.cid = CID_LayersMenu;
-    /* gcd[i].gd.popup_msg = (uint32_t *) _("Rename the current layer"); */
-    gcd[i].creator = GLabelCreate;
-    ++i;
+    gcd[2].gd.label = &label[2];
+    gcd[2].gd.pos.x = 47; gcd[2].gd.pos.y = 5; 
+    gcd[2].gd.flags = gg_enabled|gg_visible|gg_pos_in_pixels|gg_utf8_popup;
+    gcd[2].gd.popup_msg = (uint32_t *) _("Is Layer Editable?");
+    gcd[2].creator = GLabelCreate;
 
-     /* Default visibility toggles for Fore, Back, and Guides */
-    gcd[i].gd.pos.x = viscol; gcd[i].gd.pos.y = 38; 
-    gcd[i].gd.flags = gg_enabled|gg_visible|gg_dontcopybox|gg_pos_in_pixels|gg_utf8_popup;
-    if ( cv->showgrids ) gcd[i].gd.flags |= gg_cb_on;
-    gcd[i].gd.cid = CID_VGrid;
-    gcd[i].gd.popup_msg = (uint32_t *) _("Is Layer Visible?");
-    gcd[i].creator = GVisibilityBoxCreate;
-    ++i;
+    gcd[3].gd.pos.x = 5; gcd[3].gd.pos.y = 55; 
+    gcd[3].gd.flags = gg_enabled|gg_visible|gg_dontcopybox|gg_pos_in_pixels|gg_utf8_popup;
+    gcd[3].gd.cid = CID_VGrid;
+    gcd[3].gd.popup_msg = (uint32_t *) _("Is Layer Visible?");
+    gcd[3].creator = GCheckBoxCreate;
 
-    gcd[i].gd.pos.x = viscol; gcd[i].gd.pos.y = 38; 
-    gcd[i].gd.flags = gg_enabled|gg_visible|gg_dontcopybox|gg_pos_in_pixels|gg_utf8_popup;
-    if ( cv->showback[0]&1 ) gcd[i].gd.flags |= gg_cb_on;
-    gcd[i].gd.cid = CID_VBack;
-    gcd[i].gd.popup_msg = (uint32_t *) _("Is Layer Visible?");
-    gcd[i].creator = GVisibilityBoxCreate;
-    ++i;
+    gcd[4].gd.pos.x = 5; gcd[4].gd.pos.y = 38; 
+    gcd[4].gd.flags = gg_enabled|gg_visible|gg_dontcopybox|gg_pos_in_pixels|gg_utf8_popup;
+    gcd[4].gd.cid = CID_VBack;
+    gcd[4].gd.popup_msg = (uint32_t *) _("Is Layer Visible?");
+    gcd[4].creator = GCheckBoxCreate;
 
-    gcd[i].gd.pos.x = viscol; gcd[i].gd.pos.y = 21; 
-    gcd[i].gd.flags = gg_enabled|gg_visible|gg_dontcopybox|gg_pos_in_pixels|gg_utf8_popup;
-    if ( cv->showfore ) gcd[i].gd.flags |= gg_cb_on;
-    gcd[i].gd.cid = CID_VFore;
-    gcd[i].gd.popup_msg = (uint32_t *) _("Is Layer Visible?");
-    gcd[i].creator = GVisibilityBoxCreate;
-    ++i;
+    gcd[5].gd.pos.x = 5; gcd[5].gd.pos.y = 21; 
+    gcd[5].gd.flags = gg_enabled|gg_visible|gg_dontcopybox|gg_pos_in_pixels|gg_utf8_popup;
+    gcd[5].gd.cid = CID_VFore;
+    gcd[5].gd.popup_msg = (uint32_t *) _("Is Layer Visible?");
+    gcd[5].creator = GCheckBoxCreate;
+    base = 6;
+
+/* GT: Guide layer, make it short */
+    label[base].text = (uint32_t *) _("_Guide");
+    label[base].text_is_1byte = true;
+    label[base].text_in_resource = true;
+    gcd[base].gd.label = &label[base];
+    gcd[base].gd.pos.x = 27; gcd[base].gd.pos.y = 55; 
+    gcd[base].gd.flags = gg_enabled|gg_visible|gg_dontcopybox|gg_pos_in_pixels|gg_utf8_popup;
+    gcd[base].gd.cid = CID_EGrid;
+    gcd[base].gd.popup_msg = (uint32_t *) _("Is Layer Editable?");
+    gcd[base].creator = GRadioCreate;
 
 
-     /* Scroll bar */
-    gcd[i].gd.pos.width = GDrawPointsToPixels(cv->gw,_GScrollBar_Width);
-    gcd[i].gd.pos.x = 0; /* <- these get updated to real values later */
-    gcd[i].gd.pos.y = 0;
-    gcd[i].gd.pos.height = 50;
-    gcd[i].gd.flags = gg_enabled|gg_pos_in_pixels|gg_sb_vert;
-    gcd[i].gd.cid = CID_SB;
-    gcd[i].creator = GScrollBarCreate;
-    layerinfo.sb_start = gcd[i].gd.pos.x;
-    ++i;
+/* GT: Background, make it short */
+    label[base+1].text = (uint32_t *) _("_Back");
+    label[base+1].text_is_1byte = true;
+    label[base+1].text_in_resource = true;
+    gcd[base+1].gd.label = &label[base+1];
+    gcd[base+1].gd.pos.x = 27; gcd[base+1].gd.pos.y = 38; 
+    gcd[base+1].gd.flags = gg_enabled|gg_visible|gg_dontcopybox|gg_pos_in_pixels|gg_utf8_popup;
+    gcd[base+1].gd.cid = CID_EBack;
+    gcd[base+1].gd.popup_msg = (uint32_t *) _("Is Layer Editable?");
+    gcd[base+1].creator = GRadioCreate;
 
-     /* Edit box for in place layer rename */
-    gcd[i].gd.pos.width=gcd[i].gd.pos.height=1;
-    gcd[i].gd.flags = gg_enabled|gg_pos_in_pixels|gg_utf8_popup;
-    gcd[i].gd.cid = CID_Edit;
-    gcd[i].gd.popup_msg = (uint32_t *) _("Type in new layer name");
-    gcd[i].creator = GTextFieldCreate;
-    ++i;
+/* GT: Foreground, make it short */
+    label[base+2].text = (uint32_t *) _("F_ore");
+    label[base+2].text_is_1byte = true;
+    label[base+2].text_in_resource = true;
+    gcd[base+2].gd.label = &label[base+2];
+    gcd[base+2].gd.pos.x = 27; gcd[base+2].gd.pos.y = 21; 
+    gcd[base+2].gd.flags = gg_enabled|gg_visible|gg_dontcopybox|gg_pos_in_pixels|gg_utf8_popup;
+    gcd[base+2].gd.cid = CID_EFore;
+    gcd[base+2].gd.popup_msg = (uint32_t *) _("Is Layer Editable?");
+    gcd[base+2].creator = GRadioCreate;
+
+    gcd[base+cv->b.drawmode].gd.flags |= gg_cb_on;
+    base += 3;
+
+    gcd[base].gd.pos.width = GDrawPointsToPixels(cv->gw,_GScrollBar_Width);
+    gcd[base].gd.pos.x = CV_LAYERS2_WIDTH-gcd[base].gd.pos.width;
+    gcd[base].gd.pos.y = CV_LAYERS2_HEADER_HEIGHT+2*CV_LAYERS2_LINE_HEIGHT;
+    gcd[base].gd.pos.height = CV_LAYERS2_HEIGHT-gcd[base].gd.pos.y;
+    gcd[base].gd.flags = gg_enabled|gg_pos_in_pixels|gg_sb_vert;
+    gcd[base].gd.cid = CID_SB;
+    gcd[base].creator = GScrollBarCreate;
+
+    if ( cv->showgrids ) gcd[3].gd.flags |= gg_cb_on;
+    if ( cv->showback[0]&1 ) gcd[4].gd.flags |= gg_cb_on;
+    if ( cv->showfore ) gcd[5].gd.flags |= gg_cb_on;
 
     GGadgetsCreate(cvlayers,gcd);
     if ( cvvisible[0] )
 	GDrawSetVisible(cvlayers,true);
-    layers_max=2;
-
-    gadget=GWidgetGetControl(cvlayers,CID_AddLayer);
-    GGadgetGetSize(gadget,&size);
-    //layer_header_height = size.y + size.height + 2*GDrawPointsToPixels(((GLabel*)gadget)->box->border_width);
-    layer_header_height = size.y + size.height;
-
-    GGadgetGetSize(GWidgetGetControl(cvlayers,CID_VGrid),&size);
-    layer_height = size.height;
-    layerinfo.column_width = size.width;
-
-    layerinfo.active = CVLayer(&cv->b); /* the index of the active layer */
-    layerinfo.mo_col   = -2; /* -2 forces this variable to be updated. afterwords it will be -1 for nothing, or >=0 */
-    layerinfo.mo_layer = -2;
-    layerinfo.offtop   = 0;
-    layerinfo.rename_active = 0;
-
+    layers_max=2; layers_cur=0;
+    
 return( cvlayers );
 }
 
@@ -2948,11 +2248,20 @@ static void CVPopupInvoked(GWindow v, GMenuItem *mi, GEvent *e) {
 }
 
 static void CVPopupLayerInvoked(GWindow v, GMenuItem *mi, GEvent *e) {
-    CharView *cv = (CharView *) GDrawGetUserData(v);
-    int layer = mi->mid==0 ? 1 : mi->mid==1 ? 0 : -1;
+    int cid;
+    GGadget *g;
+    GEvent fake;
 
-    if ( layerinfo.active!=layer )
-        CVLSelectLayer(cv, layer);
+    cid = mi->mid==0 ? CID_EFore : mi->mid==1 ? CID_EBack : CID_EGrid;
+    g = GWidgetGetControl(cvlayers,cid);
+    if ( !GGadgetIsChecked(g)) {
+	GGadgetSetChecked(g,true);
+	fake.type = et_controlevent;
+	fake.w = cvlayers;
+	fake.u.control.subtype = et_radiochanged;
+	fake.u.control.g = g;
+	cvlayers_e_h(cvlayers,&fake);
+    }
 }
 
 static void CVPopupSelectInvoked(GWindow v, GMenuItem *mi, GEvent *e) {
@@ -3137,7 +2446,8 @@ void _CVPaletteActivate(CharView *cv,int force) {
 	    GDrawSetUserData(cvlayers2,cv);
 	} else {
 	    GDrawSetUserData(cvlayers,cv);
-            CVLCheckLayerCount(cv,true);
+	    if ( layers_cur!=cv->b.sc->layer_cnt || layers_sf!=cv->b.sc->parent )
+		CVLCheckLayerCount(cv);
 	}
 	if ( palettes_docked ) {
 	    ReparentFixup(cvtools,cv->v,0,0,CV_TOOLS_WIDTH,CV_TOOLS_HEIGHT);
@@ -3659,8 +2969,8 @@ return;			/* If the wm gave me a window the wrong size */
     if ( pos<0 || pos>=bvt_max )
 	pos = bvt_none;
     if ( event->type == et_mousedown ) {
-        if ( isstylus && event->u.mouse.button==2 )
-            /* Not a real button press, only touch counts. This is a modifier */;
+	if ( isstylus && event->u.mouse.button==2 )
+	    /* Not a real button press, only touch counts. This is a modifier */;
 	else {
 	    bv->pressed_tool = bv->pressed_display = pos;
 	    bv->had_control = ((event->u.mouse.state&ksm_control) || styluscntl)?1:0;

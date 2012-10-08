@@ -2304,8 +2304,7 @@ static void SC_OutOfDateBackground(SplineChar *sc) {
 }
 
 /* CVRegenFill() regenerates data used to show or not show paths as filled */
-/* This is not static so that it can be called from the layers palette */
-void CVRegenFill(CharView *cv) {
+static void CVRegenFill(CharView *cv) {
     BDFCharFree(cv->filled);
     cv->filled = NULL;
     if ( cv->showfilled ) {
@@ -2313,9 +2312,6 @@ void CVRegenFill(CharView *cv) {
 	int layer = CVLayer((CharViewBase *) cv);
 	int size = cv->scale*(cv->b.fv->sf->ascent+cv->b.fv->sf->descent);
 	int clut_len= 2;
-        
-        if ( layer==-1 ) layer=ly_fore; /* otherwise crashes when using guides layer! */
-
 	/* Generally I don't think there's much point in doing an anti-aliased*/
 	/*  fill. But on the "M" (and "W") glyph of extravigant caps, ft won't*/
 	/*  do a mono fill */
