@@ -31,7 +31,6 @@
 #if !defined( HAVE_LIBINTL_H )
 
 # define _(str)			(str)
-# define U_(str)		(str)
 
 # ifdef bindtextdomain
 #  undef bindtextdomain
@@ -53,14 +52,9 @@
 
 # include <libintl.h>
 # define _(str)			gettext(str)
-/* For messages including utf8 characters. old xgettexts won't handle them */
-/*  so we must do something special. */
-# define U_(str)		gettext(str)
 
 #endif /* HAVE_LIBINTL_H */
 
-/* For messages including utf8 sequences that need gettext_noop treatment */
-#define NU_(str)	(str)
 #define N_(str)		(str)
 /* For messages in the shortcuts domain */
 #define H_(str)		(str)
