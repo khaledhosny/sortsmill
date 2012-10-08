@@ -2011,8 +2011,8 @@ static KernClass *SF_AddKernClass(struct sfmergecontext *mc,KernClass *kc,
 
     newkc->firsts = ClassCopy(newkc->first_cnt,newkc->firsts);
     newkc->seconds = ClassCopy(newkc->second_cnt,newkc->seconds);
-    newkc->offsets = xmalloc(newkc->first_cnt*newkc->second_cnt*sizeof(int16));
-    memcpy(newkc->offsets,kc->offsets,newkc->first_cnt*newkc->second_cnt*sizeof(int16));
+    newkc->offsets = xmalloc(newkc->first_cnt*newkc->second_cnt*sizeof(int16_t));
+    memcpy(newkc->offsets,kc->offsets,newkc->first_cnt*newkc->second_cnt*sizeof(int16_t));
 return( newkc );
 }
 
@@ -2056,12 +2056,12 @@ static FPST *SF_AddFPST(struct sfmergecontext *mc,FPST *fpst,
 	    r->u.glyph.fore = copy( r->u.glyph.fore );
 	  break;
 	  case pst_class:
-	    r->u.class.nclasses = xmalloc( r->u.class.ncnt*sizeof(uint16));
-	    memcpy(r->u.class.nclasses,oldr->u.class.nclasses, r->u.class.ncnt*sizeof(uint16));
-	    r->u.class.bclasses = xmalloc( r->u.class.bcnt*sizeof(uint16));
-	    memcpy(r->u.class.bclasses,oldr->u.class.bclasses, r->u.class.bcnt*sizeof(uint16));
-	    r->u.class.fclasses = xmalloc( r->u.class.fcnt*sizeof(uint16));
-	    memcpy(r->u.class.fclasses,oldr->u.class.fclasses, r->u.class.fcnt*sizeof(uint16));
+	    r->u.class.nclasses = xmalloc( r->u.class.ncnt*sizeof(uint16_t));
+	    memcpy(r->u.class.nclasses,oldr->u.class.nclasses, r->u.class.ncnt*sizeof(uint16_t));
+	    r->u.class.bclasses = xmalloc( r->u.class.bcnt*sizeof(uint16_t));
+	    memcpy(r->u.class.bclasses,oldr->u.class.bclasses, r->u.class.bcnt*sizeof(uint16_t));
+	    r->u.class.fclasses = xmalloc( r->u.class.fcnt*sizeof(uint16_t));
+	    memcpy(r->u.class.fclasses,oldr->u.class.fclasses, r->u.class.fcnt*sizeof(uint16_t));
 	  break;
 	  case pst_coverage:
 	    r->u.coverage.ncovers = ClassCopy( r->u.coverage.ncnt, r->u.coverage.ncovers );
@@ -2095,8 +2095,8 @@ static ASM *SF_AddASM(struct sfmergecontext *mc,ASM *sm, struct lookup_subtable 
 	    newsm->class_cnt*newsm->state_cnt*sizeof(struct asm_state));
     if ( newsm->type == asm_kern ) {
 	for ( i=newsm->class_cnt*newsm->state_cnt-1; i>=0; --i ) {
-	    newsm->state[i].u.kern.kerns = xmalloc(newsm->state[i].u.kern.kcnt*sizeof(int16));
-	    memcpy(newsm->state[i].u.kern.kerns,sm->state[i].u.kern.kerns,newsm->state[i].u.kern.kcnt*sizeof(int16));
+	    newsm->state[i].u.kern.kerns = xmalloc(newsm->state[i].u.kern.kcnt*sizeof(int16_t));
+	    memcpy(newsm->state[i].u.kern.kerns,sm->state[i].u.kern.kerns,newsm->state[i].u.kern.kcnt*sizeof(int16_t));
 	}
     } else if ( newsm->type == asm_insert ) {
 	for ( i=0; i<newsm->class_cnt*newsm->state_cnt; ++i ) {
@@ -4893,13 +4893,13 @@ return( copy( _("A reverse contextual chaining lookup can only match one coverag
       } break;
       case pst_class:
         rule->u.class.ncnt = last+1-first;
-	rule->u.class.nclasses = xmalloc(rule->u.class.ncnt*sizeof(uint16));
+	rule->u.class.nclasses = xmalloc(rule->u.class.ncnt*sizeof(uint16_t));
 	rule->u.class.bcnt = first;
 	if ( first!=0 )
-	    rule->u.class.bclasses = xmalloc(first*sizeof(uint16));
+	    rule->u.class.bclasses = xmalloc(first*sizeof(uint16_t));
 	rule->u.class.fcnt = cnt==last?0:cnt-last-1;
 	if ( rule->u.class.fcnt!=0 )
-	    rule->u.class.fclasses = xmalloc(rule->u.class.fcnt*sizeof(uint16));
+	    rule->u.class.fclasses = xmalloc(rule->u.class.fcnt*sizeof(uint16_t));
 	for ( i=0; i<cnt; ++i ) {
 	    char **classnames, *pend;
 	    int class_cnt, val;

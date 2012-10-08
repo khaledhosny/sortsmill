@@ -111,7 +111,7 @@ typedef struct val {
 	struct val *lval;
 	struct array *aval;
 	uint32_t *u32ptval;
-	uint16 *u16ptval;
+	uint16_t *u16ptval;
 	uint8  *u8ptval;
     } u;
 } Val;		/* Used by scripting */
@@ -328,8 +328,8 @@ typedef struct bluedata {
 
 
 typedef struct bdffloat {
-    int16 xmin,xmax,ymin,ymax;
-    int16 bytes_per_line;
+    int16_t xmin,xmax,ymin,ymax;
+    int16_t bytes_per_line;
     unsigned int byte_data:1;
     uint8 depth;
     uint8 *bitmap;
@@ -432,7 +432,7 @@ enum pst_flags { pst_r2l=1, pst_ignorebaseglyphs=2, pst_ignoreligatures=4,
 struct lookup_subtable {
     char *subtable_name;
     char *suffix;			/* for gsub_single, used to find a default replacement */
-    int16 separation, minkern;	/* for gpos_pair, used to guess default kerning values */
+    int16_t separation, minkern;	/* for gpos_pair, used to guess default kerning values */
     struct otlookup *lookup;
     unsigned int unused: 1;
     unsigned int per_glyph_pst_or_kern: 1;
@@ -480,7 +480,7 @@ typedef struct otlookup {
     unsigned int in_gpos: 1;
     unsigned int in_jstf: 1;
     unsigned int only_jstf: 1;
-    int16 subcnt;		/* Actual number of subtables we will output */
+    int16_t subcnt;		/* Actual number of subtables we will output */
 				/* Some of our subtables may contain no data */
 			        /* Some may be too big and need to be broken up.*/
 			        /* So this field may be different than just counting the subtables */
@@ -495,7 +495,7 @@ typedef struct otlookup {
 
 
 typedef struct devicetab {
-    uint16 first_pixel_size, last_pixel_size;		/* A range of point sizes to which this table applies */
+    uint16_t first_pixel_size, last_pixel_size;		/* A range of point sizes to which this table applies */
     int8 *corrections;					/* a set of pixel corrections, one for each point size */
 } DeviceTable;
 
@@ -533,16 +533,16 @@ typedef struct anchorpoint {
     unsigned int selected: 1;
     unsigned int ticked: 1;
     unsigned int has_ttf_pt: 1;
-    uint16 ttf_pt_index;
-    int16  lig_index;
+    uint16_t ttf_pt_index;
+    int16_t  lig_index;
     struct anchorpoint *next;
 } AnchorPoint;
 
 typedef struct kernpair {
     struct lookup_subtable *subtable;
     struct splinechar *sc;
-    int16 off;
-    uint16 kcid;			/* temporary value */
+    int16_t off;
+    uint16_t kcid;			/* temporary value */
     DeviceTable *adjust;		/* Only adjustment in one dimen, if more needed use pst */
     struct kernpair *next;
 } KernPair;
@@ -553,8 +553,8 @@ typedef struct kernclass {
     char **seconds;			/*  one entry for each class. Entry 0 is null */
     					/*  and means everything not specified elsewhere */
     struct lookup_subtable *subtable;
-    uint16 kcid;			/* Temporary value, used for many things briefly */
-    int16 *offsets;			/* array of first_cnt*second_cnt entries */
+    uint16_t kcid;			/* Temporary value, used for many things briefly */
+    int16_t *offsets;			/* array of first_cnt*second_cnt entries */
     DeviceTable *adjusts;		/* array of first_cnt*second_cnt entries */
     struct kernclass *next;
 } KernClass;
@@ -576,7 +576,7 @@ enum possub_type { pst_null, pst_position, pst_pair,
 	};
 
 struct vr {
-    int16 xoff, yoff, h_adv_off, v_adv_off;
+    int16_t xoff, yoff, h_adv_off, v_adv_off;
     ValDevTab *adjust;
 };
 
@@ -592,7 +592,7 @@ typedef struct generic_pst {
 	struct { char *variant; } subs;
 	struct { char *components; } mult, alt;
 	struct { char *components; struct splinechar *lig; } lig;
-	struct { int16 *carets; int cnt; } lcaret;	/* Ligature caret positions */
+	struct { int16_t *carets; int cnt; } lcaret;	/* Ligature caret positions */
     } u;
 } PST;
 
@@ -613,7 +613,7 @@ struct seqlookup {
 };
 
 struct fpg { char *names, *back, *fore; };
-struct fpc { int ncnt, bcnt, fcnt; uint16 *nclasses, *bclasses, *fclasses, *allclasses; };
+struct fpc { int ncnt, bcnt, fcnt; uint16_t *nclasses, *bclasses, *fclasses, *allclasses; };
 struct fpv { int ncnt, bcnt, fcnt; char **ncovers, **bcovers, **fcovers; };
 struct fpr { int always1, bcnt, fcnt; char **ncovers, **bcovers, **fcovers; char *replacements; };
 
@@ -631,12 +631,12 @@ struct fpst_rule {
 };
 
 typedef struct generic_fpst {
-    uint16 /*enum possub_type*/ type;
-    uint16 /*enum fpossub_format*/ format;
+    uint16_t /*enum possub_type*/ type;
+    uint16_t /*enum fpossub_format*/ format;
     struct lookup_subtable *subtable;
     struct generic_fpst *next;
-    uint16 nccnt, bccnt, fccnt;
-    uint16 rule_cnt;
+    uint16_t nccnt, bccnt, fccnt;
+    uint16_t rule_cnt;
     char **nclass, **bclass, **fclass;
     struct fpst_rule *rules;
     uint8 ticked;
@@ -649,8 +649,8 @@ enum asm_type { asm_indic, asm_context, asm_lig, asm_simple=4, asm_insert,
 enum asm_flags { asm_vert=0x8000, asm_descending=0x4000, asm_always=0x2000 };
 
 struct asm_state {
-    uint16 next_state;
-    uint16 flags;
+    uint16_t next_state;
+    uint16_t flags;
     union {
 	struct {
 	    struct otlookup *mark_lookup;	/* for contextual glyph subs (tag of a nested lookup) */
@@ -661,7 +661,7 @@ struct asm_state {
 	    char *cur_ins;
 	} insert;
 	struct {
-	    int16 *kerns;
+	    int16_t *kerns;
 	    int kcnt;
 	} kern;
     } u;
@@ -669,12 +669,12 @@ struct asm_state {
 
 typedef struct generic_asm {		/* Apple State Machine */
     struct generic_asm *next;
-    uint16 /*enum asm_type*/ type;
+    uint16_t /*enum asm_type*/ type;
     struct lookup_subtable *subtable;	/* Lookup contains feature setting info */
-    uint16 flags;	/* 0x8000=>vert, 0x4000=>r2l, 0x2000=>hor&vert */
+    uint16_t flags;	/* 0x8000=>vert, 0x4000=>r2l, 0x2000=>hor&vert */
     uint8 ticked;
 
-    uint16 class_cnt, state_cnt;
+    uint16_t class_cnt, state_cnt;
     char **classes;
     struct asm_state *state;
 #if 0
@@ -743,24 +743,24 @@ struct opentype_str {
     struct kernclass *kc;
     unsigned int prev_kc0: 1;
     unsigned int next_kc0: 1;
-    int16 advance_width;	/* Basic advance, modifications in vr, scaled and rounded */
+    int16_t advance_width;	/* Basic advance, modifications in vr, scaled and rounded */
 	/* Er... not actually set by ApplyLookups, but somewhere the caller */
 	/*  can stash info. (Extract width from hinted bdf if possible, tt */
 	/*  instructions can change it from the expected value) */
-    int16 kc_index;
-    int16 lig_pos;		/* when skipping marks to form a ligature keep track of what ligature element a mark was attached to */
-    int16 context_pos;		/* When doing a contextual match remember which glyphs are used, and where in the match they occur. Skipped glyphs have -1 */
+    int16_t kc_index;
+    int16_t lig_pos;		/* when skipping marks to form a ligature keep track of what ligature element a mark was attached to */
+    int16_t context_pos;		/* When doing a contextual match remember which glyphs are used, and where in the match they occur. Skipped glyphs have -1 */
     int32_t orig_index;
     void *fl;
     unsigned int line_break_after: 1;
     unsigned int r2l: 1;
-    int16 bsln_off;
+    int16_t bsln_off;
 };
 
 struct macname {
     struct macname *next;
-    uint16 enc;		/* Platform specific encoding. 0=>mac roman, 1=>sjis, 7=>russian */
-    uint16 lang;	/* Mac languages 0=>english, 1=>french, 2=>german */
+    uint16_t enc;		/* Platform specific encoding. 0=>mac roman, 1=>sjis, 7=>russian */
+    uint16_t lang;	/* Mac languages 0=>english, 1=>french, 2=>german */
     char *name;		/* Not a unicode string, uninterpreted mac encoded string */
 };
 
@@ -769,7 +769,7 @@ struct macname {
 /* And now (OTF 1.6) GSUB 'ss01'-'ss20' do too */
 struct otfname {
     struct otfname *next;
-    uint16 lang;	/* windows language code */
+    uint16_t lang;	/* windows language code */
     char *name;		/* utf8 */
 };
 
@@ -777,23 +777,23 @@ struct otffeatname {
     uint32_t tag;			/* Feature tag */
     struct otfname *names;
     struct otffeatname *next;
-    uint16 nid;			/* temporary value */
+    uint16_t nid;			/* temporary value */
 };
 
 struct macsetting {
     struct macsetting *next;
-    uint16 setting;
-    uint16 strid;
+    uint16_t setting;
+    uint16_t strid;
     struct macname *setname;
     unsigned int initially_enabled: 1;
 };
 
 typedef struct macfeat {
     struct macfeat *next;
-    uint16 feature;
+    uint16_t feature;
     uint8 ismutex;
     uint8 default_setting;		/* Apple's docs say both that this is a byte and a short. It's a byte */
-    uint16 strid;			/* Temporary value, used when reading in */
+    uint16_t strid;			/* Temporary value, used when reading in */
     struct macname *featname;
     struct macsetting *settings;
 } MacFeat;
@@ -803,7 +803,7 @@ typedef struct refbdfc {
     unsigned int selected: 1;
     int8 xoff;
     int8 yoff;
-    uint16 gid;
+    uint16_t gid;
     struct refbdfc *next;
     struct bdfchar *bdfc;
 } BDFRefChar;
@@ -815,13 +815,13 @@ struct bdfcharlist {
 
 typedef struct bdfchar {
     struct splinechar *sc;
-    int16 xmin,xmax,ymin,ymax;
-    int16 width;
-    int16 bytes_per_line;
+    int16_t xmin,xmax,ymin,ymax;
+    int16_t width;
+    int16_t bytes_per_line;
     uint8 *bitmap;
     struct refbdfc *refs;
     int orig_pos;
-    int16 pixelsize;                    /* for undoes */
+    int16_t pixelsize;                    /* for undoes */
     struct bitmapview *views;
     struct undoes *undoes;
     struct undoes *redoes;
@@ -831,7 +831,7 @@ typedef struct bdfchar {
     unsigned int isreference: 1;	/* for ttf bitmap input, */
     unsigned int ticked: 1;
     uint8 depth;			/* for ttf bitmap output */
-    uint16 vwidth;
+    uint16_t vwidth;
     BDFFloat *selection;
     BDFFloat *backup;
     struct bdfcharlist *dependents;
@@ -851,8 +851,8 @@ typedef struct undoes {
     unsigned int was_order2: 1;
     union {
 	struct {
-	    int16 width, vwidth;
-	    int16 lbearingchange;
+	    int16_t width, vwidth;
+	    int16_t lbearingchange;
 	    int unicodeenc;			/* only for ut_statename */
 	    char *charname;			/* only for ut_statename */
 	    char *comment;			/* in utf8 */
@@ -973,9 +973,9 @@ typedef struct bdffont {
     struct splinefont *sf;
     int glyphcnt, glyphmax;	/* used & allocated sizes of glyphs array */
     BDFChar **glyphs;		/* an array of charcnt entries */
-    int16 pixelsize;
-    int16 ascent, descent;
-    int16 layer;		/* for piecemeal fonts */
+    int16_t pixelsize;
+    int16_t ascent, descent;
+    int16_t layer;		/* for piecemeal fonts */
     unsigned int piecemeal: 1;
     unsigned int bbsized: 1;
     unsigned int ticked: 1;
@@ -986,11 +986,11 @@ typedef struct bdffont {
     char *foundry;
     int res;
     void *freetype_context;
-    uint16 truesize;		/* for bbsized fonts */
-    int16 prop_cnt;
-    int16 prop_max;		/* only used within bdfinfo dlg */
+    uint16_t truesize;		/* for bbsized fonts */
+    int16_t prop_cnt;
+    int16_t prop_max;		/* only used within bdfinfo dlg */
     BDFProperties *props;
-    uint16 ptsize, dpi;		/* for piecemeal fonts */
+    uint16_t ptsize, dpi;		/* for piecemeal fonts */
 } BDFFont;
 
 #define HntMax	96		/* PS says at most 96 hints */
@@ -1016,12 +1016,12 @@ typedef struct splinepoint {
     unsigned int ticked: 1;
     unsigned int watched: 1;
 	/* 1 bits left... */
-    uint16 ptindex;		/* Temporary value used by metafont routine */
-    uint16 ttfindex;		/* Truetype point index */
+    uint16_t ptindex;		/* Temporary value used by metafont routine */
+    uint16_t ttfindex;		/* Truetype point index */
 	/* Special values 0xffff => point implied by averaging control points */
 	/*		  0xfffe => point created with no real number yet */
 	/* (or perhaps point in context where no number is possible as in a glyph with points & refs) */
-    uint16 nextcpindex;		/* Truetype point index */
+    uint16_t nextcpindex;		/* Truetype point index */
     struct spline *next;
     struct spline *prev;
     HintMask *hintmask;
@@ -1108,7 +1108,7 @@ typedef struct splinepointlist {
     SplinePoint *first, *last;
     struct splinepointlist *next;
     spiro_cp *spiros;
-    uint16 spiro_cnt, spiro_max;
+    uint16_t spiro_cnt, spiro_max;
 	/* These could be bit fields, but bytes are easier to access and we */
 	/*  don't need the space (yet) */
     uint8 ticked;
@@ -1152,7 +1152,7 @@ typedef struct refchar {
 	/* inside composites */
     unsigned int round_translation_to_grid: 1;	/* Retain the ttf "round_to_grid" info. */
     unsigned int point_match_out_of_date: 1;	/* Someone has edited a base glyph */
-    int16 adobe_enc;
+    int16_t adobe_enc;
     int orig_pos;
     int unicode_enc;		/* used by paste */
     real transform[6];		/* transformation matrix (first 2 rows of a 3x3 matrix, missing row is 0,0,1) */
@@ -1162,7 +1162,7 @@ typedef struct refchar {
     DBounds bb;
     struct splinechar *sc;
     BasePoint top;
-    uint16 match_pt_base, match_pt_ref;
+    uint16_t match_pt_base, match_pt_ref;
 } RefChar;
 
 /* Some stems may appear, disappear, reapear several times */
@@ -1203,7 +1203,7 @@ typedef struct steminfo {
     unsigned int linearedges: 1;/* If we have a nice rectangle then we aren't */
 				/*  interested in the orientation which is */
 			        /*  wider than long */
-    int16 hintnumber;		/* when dumping out hintmasks we need to know */
+    int16_t hintnumber;		/* when dumping out hintmasks we need to know */
 				/*  what bit to set for this hint */
     union {
 	int mask;		/* Mask of all references that use this hint */
@@ -1250,23 +1250,23 @@ enum layer_type { ly_all=-2, ly_grid= -1, ly_back=0, ly_fore=1,
 struct gv_part {
     char *component;
     unsigned int is_extender: 1;	/* This component may be skipped or repeated */
-    uint16 startConnectorLength;
-    uint16 endConnectorLength;
-    uint16 fullAdvance;
+    uint16_t startConnectorLength;
+    uint16_t endConnectorLength;
+    uint16_t fullAdvance;
 };
 
 /* For the 'MATH' table (and for TeX) */
 struct glyphvariants {
     char *variants;	/* Space separated list of glyph names */
 /* Glyph assembly */
-    int16 italic_correction;	/* Of the composed glyph */
+    int16_t italic_correction;	/* Of the composed glyph */
     DeviceTable *italic_adjusts;
     int part_cnt;
     struct gv_part *parts;
 };
 
 struct mathkerndata {
-    int16 height,kern;
+    int16_t height,kern;
     DeviceTable *height_adjusts;
     DeviceTable *kern_adjusts;
 };
@@ -1361,8 +1361,8 @@ typedef struct splinechar {
     char *name;
     int unicodeenc;
     int orig_pos;		/* Original position in the glyph list */
-    int16 width, vwidth;
-    int16 lsidebearing;		/* only used when reading in a type1 font */
+    int16_t width, vwidth;
+    int16_t lsidebearing;		/* only used when reading in a type1 font */
 				/*  Or an otf font where it is the subr number of a refered character */
 			        /*  or a ttf font without bit 1 of head.flags set */
 			        /*  or (once upon a time, but no longer) a ttf font with vert metrics where it is the ymax value when we had a font-wide vertical offset */
@@ -1404,7 +1404,7 @@ typedef struct splinechar {
     /* 6 bits left (one more if we ignore compositionunit below) */
 #if HANYANG
     unsigned int compositionunit: 1;
-    int16 jamo, varient;
+    int16_t jamo, varient;
 #endif
     struct splinecharlist *dependents;
 	    /* The dependents list is a list of all characters which refenence*/
@@ -1419,17 +1419,17 @@ typedef struct splinechar {
     uint32_t /*Color*/ color;
     AnchorPoint *anchor;
     uint8 *ttf_instrs;
-    int16 ttf_instrs_len;
-    int16 countermask_cnt;
+    int16_t ttf_instrs_len;
+    int16_t countermask_cnt;
     HintMask *countermasks;
     struct altuni *altuni;
 /* for TeX */
-    int16 tex_height, tex_depth;
+    int16_t tex_height, tex_depth;
 /* TeX also uses italic_correction and glyph variants below */
 /* For the 'MATH' table (and for TeX) */
     unsigned int is_extended_shape: 1;
-    int16 italic_correction;
-    int16 top_accent_horiz;		/* MATH table allows you to specific a*/
+    int16_t italic_correction;
+    int16_t top_accent_horiz;		/* MATH table allows you to specific a*/
 		/* horizontal anchor for accent attachments, vertical */
 		/* positioning is done elsewhere */
     DeviceTable *italic_adjusts;
@@ -1470,115 +1470,115 @@ struct ttflangname {
 
 struct MATH {
 /* From the MATH Constants subtable (constants for positioning glyphs. Not PI)*/
-    int16 ScriptPercentScaleDown;
-    int16 ScriptScriptPercentScaleDown;
-    uint16 DelimitedSubFormulaMinHeight;
-    uint16 DisplayOperatorMinHeight;
-    int16 MathLeading;
+    int16_t ScriptPercentScaleDown;
+    int16_t ScriptScriptPercentScaleDown;
+    uint16_t DelimitedSubFormulaMinHeight;
+    uint16_t DisplayOperatorMinHeight;
+    int16_t MathLeading;
     DeviceTable *MathLeading_adjust;
-    int16 AxisHeight;
+    int16_t AxisHeight;
     DeviceTable *AxisHeight_adjust;
-    int16 AccentBaseHeight;
+    int16_t AccentBaseHeight;
     DeviceTable *AccentBaseHeight_adjust;
-    int16 FlattenedAccentBaseHeight;
+    int16_t FlattenedAccentBaseHeight;
     DeviceTable *FlattenedAccentBaseHeight_adjust;
-    int16 SubscriptShiftDown;
+    int16_t SubscriptShiftDown;
     DeviceTable *SubscriptShiftDown_adjust;
-    int16 SubscriptTopMax;
+    int16_t SubscriptTopMax;
     DeviceTable *SubscriptTopMax_adjust;
-    int16 SubscriptBaselineDropMin;
+    int16_t SubscriptBaselineDropMin;
     DeviceTable *SubscriptBaselineDropMin_adjust;
-    int16 SuperscriptShiftUp;
+    int16_t SuperscriptShiftUp;
     DeviceTable *SuperscriptShiftUp_adjust;
-    int16 SuperscriptShiftUpCramped;
+    int16_t SuperscriptShiftUpCramped;
     DeviceTable *SuperscriptShiftUpCramped_adjust;
-    int16 SuperscriptBottomMin;
+    int16_t SuperscriptBottomMin;
     DeviceTable *SuperscriptBottomMin_adjust;
-    int16 SuperscriptBaselineDropMax;
+    int16_t SuperscriptBaselineDropMax;
     DeviceTable *SuperscriptBaselineDropMax_adjust;
-    int16 SubSuperscriptGapMin;
+    int16_t SubSuperscriptGapMin;
     DeviceTable *SubSuperscriptGapMin_adjust;
-    int16 SuperscriptBottomMaxWithSubscript;
+    int16_t SuperscriptBottomMaxWithSubscript;
     DeviceTable *SuperscriptBottomMaxWithSubscript_adjust;
-    int16 SpaceAfterScript;
+    int16_t SpaceAfterScript;
     DeviceTable *SpaceAfterScript_adjust;
-    int16 UpperLimitGapMin;
+    int16_t UpperLimitGapMin;
     DeviceTable *UpperLimitGapMin_adjust;
-    int16 UpperLimitBaselineRiseMin;
+    int16_t UpperLimitBaselineRiseMin;
     DeviceTable *UpperLimitBaselineRiseMin_adjust;
-    int16 LowerLimitGapMin;
+    int16_t LowerLimitGapMin;
     DeviceTable *LowerLimitGapMin_adjust;
-    int16 LowerLimitBaselineDropMin;
+    int16_t LowerLimitBaselineDropMin;
     DeviceTable *LowerLimitBaselineDropMin_adjust;
-    int16 StackTopShiftUp;
+    int16_t StackTopShiftUp;
     DeviceTable *StackTopShiftUp_adjust;
-    int16 StackTopDisplayStyleShiftUp;
+    int16_t StackTopDisplayStyleShiftUp;
     DeviceTable *StackTopDisplayStyleShiftUp_adjust;
-    int16 StackBottomShiftDown;
+    int16_t StackBottomShiftDown;
     DeviceTable *StackBottomShiftDown_adjust;
-    int16 StackBottomDisplayStyleShiftDown;
+    int16_t StackBottomDisplayStyleShiftDown;
     DeviceTable *StackBottomDisplayStyleShiftDown_adjust;
-    int16 StackGapMin;
+    int16_t StackGapMin;
     DeviceTable *StackGapMin_adjust;
-    int16 StackDisplayStyleGapMin;
+    int16_t StackDisplayStyleGapMin;
     DeviceTable *StackDisplayStyleGapMin_adjust;
-    int16 StretchStackTopShiftUp;
+    int16_t StretchStackTopShiftUp;
     DeviceTable *StretchStackTopShiftUp_adjust;
-    int16 StretchStackBottomShiftDown;
+    int16_t StretchStackBottomShiftDown;
     DeviceTable *StretchStackBottomShiftDown_adjust;
-    int16 StretchStackGapAboveMin;
+    int16_t StretchStackGapAboveMin;
     DeviceTable *StretchStackGapAboveMin_adjust;
-    int16 StretchStackGapBelowMin;
+    int16_t StretchStackGapBelowMin;
     DeviceTable *StretchStackGapBelowMin_adjust;
-    int16 FractionNumeratorShiftUp;
+    int16_t FractionNumeratorShiftUp;
     DeviceTable *FractionNumeratorShiftUp_adjust;
-    int16 FractionNumeratorDisplayStyleShiftUp;
+    int16_t FractionNumeratorDisplayStyleShiftUp;
     DeviceTable *FractionNumeratorDisplayStyleShiftUp_adjust;
-    int16 FractionDenominatorShiftDown;
+    int16_t FractionDenominatorShiftDown;
     DeviceTable *FractionDenominatorShiftDown_adjust;
-    int16 FractionDenominatorDisplayStyleShiftDown;
+    int16_t FractionDenominatorDisplayStyleShiftDown;
     DeviceTable *FractionDenominatorDisplayStyleShiftDown_adjust;
-    int16 FractionNumeratorGapMin;
+    int16_t FractionNumeratorGapMin;
     DeviceTable *FractionNumeratorGapMin_adjust;
-    int16 FractionNumeratorDisplayStyleGapMin;
+    int16_t FractionNumeratorDisplayStyleGapMin;
     DeviceTable *FractionNumeratorDisplayStyleGapMin_adjust;
-    int16 FractionRuleThickness;
+    int16_t FractionRuleThickness;
     DeviceTable *FractionRuleThickness_adjust;
-    int16 FractionDenominatorGapMin;
+    int16_t FractionDenominatorGapMin;
     DeviceTable *FractionDenominatorGapMin_adjust;
-    int16 FractionDenominatorDisplayStyleGapMin;
+    int16_t FractionDenominatorDisplayStyleGapMin;
     DeviceTable *FractionDenominatorDisplayStyleGapMin_adjust;
-    int16 SkewedFractionHorizontalGap;
+    int16_t SkewedFractionHorizontalGap;
     DeviceTable *SkewedFractionHorizontalGap_adjust;
-    int16 SkewedFractionVerticalGap;
+    int16_t SkewedFractionVerticalGap;
     DeviceTable *SkewedFractionVerticalGap_adjust;
-    int16 OverbarVerticalGap;
+    int16_t OverbarVerticalGap;
     DeviceTable *OverbarVerticalGap_adjust;
-    int16 OverbarRuleThickness;
+    int16_t OverbarRuleThickness;
     DeviceTable *OverbarRuleThickness_adjust;
-    int16 OverbarExtraAscender;
+    int16_t OverbarExtraAscender;
     DeviceTable *OverbarExtraAscender_adjust;
-    int16 UnderbarVerticalGap;
+    int16_t UnderbarVerticalGap;
     DeviceTable *UnderbarVerticalGap_adjust;
-    int16 UnderbarRuleThickness;
+    int16_t UnderbarRuleThickness;
     DeviceTable *UnderbarRuleThickness_adjust;
-    int16 UnderbarExtraDescender;
+    int16_t UnderbarExtraDescender;
     DeviceTable *UnderbarExtraDescender_adjust;
-    int16 RadicalVerticalGap;
+    int16_t RadicalVerticalGap;
     DeviceTable *RadicalVerticalGap_adjust;
-    int16 RadicalDisplayStyleVerticalGap;
+    int16_t RadicalDisplayStyleVerticalGap;
     DeviceTable *RadicalDisplayStyleVerticalGap_adjust;
-    int16 RadicalRuleThickness;
+    int16_t RadicalRuleThickness;
     DeviceTable *RadicalRuleThickness_adjust;
-    int16 RadicalExtraAscender;
+    int16_t RadicalExtraAscender;
     DeviceTable *RadicalExtraAscender_adjust;
-    int16 RadicalKernBeforeDegree;
+    int16_t RadicalKernBeforeDegree;
     DeviceTable *RadicalKernBeforeDegree_adjust;
-    int16 RadicalKernAfterDegree;
+    int16_t RadicalKernAfterDegree;
     DeviceTable *RadicalKernAfterDegree_adjust;
-    uint16 RadicalDegreeBottomRaisePercent;
+    uint16_t RadicalDegreeBottomRaisePercent;
 /* Global constants from other subtables */
-    uint16 MinConnectorOverlap;			/* in the math variants sub-table */
+    uint16_t MinConnectorOverlap;			/* in the math variants sub-table */
 };
 
 enum backedup_state { bs_dontknow=0, bs_not=1, bs_backedup=2 };
@@ -1607,7 +1607,7 @@ typedef struct layerinfo {
 struct baselangextent {
     uint32_t lang;		/* also used for feature tag */
     struct baselangextent *next;
-    int16 ascent, descent;
+    int16_t ascent, descent;
     struct baselangextent *features;
 };
 
@@ -1615,7 +1615,7 @@ struct basescript {
     uint32_t script;
     struct basescript *next;
     int    def_baseline;	/* index [0-baseline_cnt) */
-    int16 *baseline_pos;	/* baseline_cnt of these */
+    int16_t *baseline_pos;	/* baseline_cnt of these */
     struct baselangextent *langs;	/* Language specific extents (may be NULL) */
 				/* The default one has the tag DEFAULT_LANG */
 };
@@ -1643,20 +1643,20 @@ struct pfminfo {		/* A misnomer now. OS/2 info would be more accurate, but that'
     unsigned int hascodepages: 1;
     unsigned int hasunicoderanges: 1;
     unsigned char pfmfamily;
-    int16 weight;
-    int16 width;
+    int16_t weight;
+    int16_t width;
     char panose[10];
-    int16 fstype;
-    int16 linegap;		/* from hhea */
-    int16 vlinegap;		/* from vhea */
-    int16 hhead_ascent, hhead_descent;
-    int16 os2_typoascent, os2_typodescent, os2_typolinegap;
-    int16 os2_winascent, os2_windescent;
-    int16 os2_subxsize, os2_subysize, os2_subxoff, os2_subyoff;
-    int16 os2_supxsize, os2_supysize, os2_supxoff, os2_supyoff;
-    int16 os2_strikeysize, os2_strikeypos;
+    int16_t fstype;
+    int16_t linegap;		/* from hhea */
+    int16_t vlinegap;		/* from vhea */
+    int16_t hhead_ascent, hhead_descent;
+    int16_t os2_typoascent, os2_typodescent, os2_typolinegap;
+    int16_t os2_winascent, os2_windescent;
+    int16_t os2_subxsize, os2_subysize, os2_subxoff, os2_subyoff;
+    int16_t os2_supxsize, os2_supysize, os2_supxoff, os2_supyoff;
+    int16_t os2_strikeysize, os2_strikeypos;
     char os2_vendor[4];
-    int16 os2_family_class;
+    int16_t os2_family_class;
     uint32_t codepages[2];
     uint32_t unicoderanges[4];
 };
@@ -1677,8 +1677,8 @@ struct texdata {
 };
 
 struct gasp {
-    uint16 ppem;
-    uint16 flags;
+    uint16_t ppem;
+    uint16_t flags;
 };
 
 typedef struct splinefont {
@@ -1754,7 +1754,7 @@ typedef struct splinefont {
     char *fontlog;
     int tempuniqueid;
     int top_enc;
-    uint16 desired_row_cnt, desired_col_cnt;
+    uint16_t desired_row_cnt, desired_col_cnt;
     struct glyphnamehash *glyphnames;
     struct ttf_table *ttf_tables, *ttf_tab_saved;
 	/* We copy: fpgm, prep, cvt, maxp (into ttf_tables) user can ask for others, into saved*/
@@ -1775,7 +1775,7 @@ typedef struct splinefont {
     MacFeat *features;
     char *chosenname;			/* Set for files with multiple fonts in them */
     struct mmset *mm;			/* If part of a multiple master set */
-    int16 macstyle;
+    int16_t macstyle;
     char *fondname;			/* For use in generating mac families */
     /* from the GPOS 'size' feature. design_size, etc. are measured in tenths of a point */
     /*  bottom is exclusive, top is inclusive */
@@ -1783,10 +1783,10 @@ typedef struct splinefont {
     /*  defined, or design_size may be defined without any of the others */
     /*  but we can't define the range without defining the other junk */
     /*  Name must contain an English language name, may contain others */
-    uint16 design_size;
-    uint16 fontstyle_id;
+    uint16_t design_size;
+    uint16_t fontstyle_id;
     struct otfname *fontstyle_name;
-    uint16 design_range_bottom, design_range_top;
+    uint16_t design_range_bottom, design_range_top;
     struct otffeatname *feat_names;
     real strokewidth;
 /* For GDEF Mark Attachment Class -- used in lookup flags */
@@ -2136,7 +2136,7 @@ VISIBLE extern void DeviceTableFree(DeviceTable *adjust);
 VISIBLE extern DeviceTable *DeviceTableCopy(DeviceTable *orig);
 VISIBLE extern void DeviceTableSet(DeviceTable *adjust, int size, int correction);
 VISIBLE extern void PSTFree(PST *lig);
-extern uint16 PSTDefaultFlags(enum possub_type type,SplineChar *sc );
+extern uint16_t PSTDefaultFlags(enum possub_type type,SplineChar *sc );
 VISIBLE extern int PSTContains(const char *components,const char *name);
 VISIBLE extern StemInfo *StemInfoCopy(StemInfo *h);
 VISIBLE extern DStemInfo *DStemInfoCopy(DStemInfo *h);
@@ -2684,8 +2684,8 @@ extern char *Decompress(char *name, int compression);
 extern SplineFont *SFFromBDF(char *filename,int ispk,int toback);
 extern SplineFont *SFFromMF(char *filename);
 extern void SFCheckPSBitmap(SplineFont *sf);
-VISIBLE extern uint16 _MacStyleCode( char *styles, SplineFont *sf, uint16 *psstyle );
-VISIBLE extern uint16 MacStyleCode( SplineFont *sf, uint16 *psstyle );
+VISIBLE extern uint16_t _MacStyleCode( char *styles, SplineFont *sf, uint16_t *psstyle );
+VISIBLE extern uint16_t MacStyleCode( SplineFont *sf, uint16_t *psstyle );
 extern SplineFont *SFReadIkarus(char *fontname);
 extern SplineFont *_SFReadPdfFont(FILE *ttf,char *filename,enum openflags openflags);
 extern SplineFont *SFReadPdfFont(char *filename, enum openflags openflags);
@@ -2853,7 +2853,7 @@ VISIBLE extern BDFChar *SplineCharFreeTypeRasterize(void *freetypecontext,int gi
 	int ptsize, int dpi,int depth);
 VISIBLE extern void FreeTypeFreeContext(void *freetypecontext);
 VISIBLE extern SplineSet *FreeType_GridFitChar(void *single_glyph_context,
-	int enc, real ptsizey, real ptsizex, int dpi, uint16 *width,
+	int enc, real ptsizey, real ptsizex, int dpi, uint16_t *width,
 	SplineChar *sc, int depth, int scaled);
 VISIBLE extern struct freetype_raster *FreeType_GetRaster(void *single_glyph_context,
 	int enc, real ptsizey, real ptsizex, int dpi,int depth);
@@ -2905,8 +2905,8 @@ extern char *utf8_verify_copy(const char *str);
 VISIBLE extern char *MacStrToUtf8(const char *str,int macenc,int maclang);
 VISIBLE extern char *Utf8ToMacStr(const char *ustr,int macenc,int maclang);
 VISIBLE extern uint8 MacEncFromMacLang(int maclang);
-extern uint16 WinLangFromMac(int maclang);
-extern uint16 WinLangToMac(int winlang);
+extern uint16_t WinLangFromMac(int maclang);
+extern uint16_t WinLangToMac(int winlang);
 extern int CanEncodingWinLangAsMac(int winlang);
 extern const int32_t *MacEncToUnicode(int script,int lang);
 extern int MacLangFromLocale(void);
@@ -3184,8 +3184,8 @@ VISIBLE extern int VSMaskFromFormat(SplineFont *sf, int layer, enum fontformat f
 
 VISIBLE extern int hasspiro(void);
 extern SplineSet *SpiroCP2SplineSet(spiro_cp *spiros);
-VISIBLE extern spiro_cp *SplineSet2SpiroCP(SplineSet *ss,uint16 *_cnt);
-extern spiro_cp *SpiroCPCopy(spiro_cp *spiros,uint16 *_cnt);
+VISIBLE extern spiro_cp *SplineSet2SpiroCP(SplineSet *ss,uint16_t *_cnt);
+extern spiro_cp *SpiroCPCopy(spiro_cp *spiros,uint16_t *_cnt);
 VISIBLE extern void SSRegenerateFromSpiros(SplineSet *spl);
 
 struct lang_frequencies;

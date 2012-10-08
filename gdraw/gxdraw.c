@@ -1192,7 +1192,7 @@ void GDrawSetZoom(GWindow w, GRect *pos, enum gzoom_flags flags) {
     XSetWMSizeHints(display,((GXWindow) w)->w,&zoom,XA_WM_ZOOM_HINTS);
 }
 
-GWindow GDrawCreatePixmap(GDisplay *gdisp, uint16 width, uint16 height) {
+GWindow GDrawCreatePixmap(GDisplay *gdisp, uint16_t width, uint16_t height) {
     if ( gdisp==NULL ) gdisp = screen_display;
     GXWindow gw = xcalloc(1,sizeof(struct gxwindow));
 
@@ -1215,7 +1215,7 @@ return( NULL );
 return( (GWindow) gw );
 }
 
-GWindow GDrawCreateBitmap(GDisplay *disp, uint16 width, uint16 height, uint8 *data) {
+GWindow GDrawCreateBitmap(GDisplay *disp, uint16_t width, uint16_t height, uint8 *data) {
     if ( disp==NULL ) disp = screen_display;
     GXDisplay *gdisp = (GXDisplay *) disp;
     GXWindow gw = xcalloc(1,sizeof(struct gxwindow));
@@ -1246,7 +1246,7 @@ return( (GWindow) gw );
 }
 
 GCursor GDrawCreateCursor(GWindow src,GWindow mask,Color fg,Color bg,
-	int16 x, int16 y ) {
+	int16_t x, int16_t y ) {
     GXDisplay *gdisp = (GXDisplay *) (src->display);
     Display *display = gdisp->display;
     XColor fgc, bgc;

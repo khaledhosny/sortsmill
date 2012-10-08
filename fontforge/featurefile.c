@@ -813,7 +813,7 @@ static int ClassUsed(FPST *fpst, int which, int class_num) {
     for ( j=0; j<fpst->rule_cnt; ++j ) {
 	struct fpst_rule *r = &fpst->rules[j];
 	int cnt = which==0? r->u.class.ncnt : which==1 ? r->u.class.bcnt : r->u.class.fcnt;
-	uint16 *checkme = which==0? r->u.class.nclasses : which==1 ? r->u.class.bclasses : r->u.class.fclasses;
+	uint16_t *checkme = which==0? r->u.class.nclasses : which==1 ? r->u.class.bclasses : r->u.class.fclasses;
 	for ( i=0; i<cnt; ++i )
 	    if ( checkme[i] == class_num )
 return( true );
@@ -1939,8 +1939,8 @@ void FeatDumpFontLookups(FILE *out,SplineFont *sf) {
 #include <gfile.h>
 
 struct nameid {
-    uint16 strid;
-    uint16 platform, specific, language;
+    uint16_t strid;
+    uint16_t platform, specific, language;
     char *utf8_str;
     struct nameid *next;
 };
@@ -1966,7 +1966,7 @@ enum feat_type { ft_lookup_start, ft_lookup_end, ft_feat_start, ft_feat_end,
     ft_subtable, ft_script, ft_lang, ft_lookupflags, ft_langsys,
     ft_pst, ft_pstclass, ft_fpst, ft_ap, ft_lookup_ref, ft_featname };
 struct feat_item {
-    uint16 /* enum feat_type */ type;
+    uint16_t /* enum feat_type */ type;
     uint8 ticked;
     union {
 	SplineChar *sc;		/* For psts, aps */
@@ -1987,7 +1987,7 @@ struct feat_item {
 	int exclude_dflt;		/* for lang tags */
 	struct nameid *names;		/* size params */
 	struct tablevalues *tvals;
-	int16 *lcaret;
+	int16_t *lcaret;
 	struct otffeatname *featnames;
     } u2;
     struct gpos_mark *mclass;		/* v1.8 For mark to base-ligature-mark, names of all marks which attach to this anchor */
@@ -3193,7 +3193,7 @@ return;
 struct apmark {
     AnchorPoint *ap;
     struct gpos_mark *mark_class;
-    uint16 mark_count;
+    uint16_t mark_count;
 };
 
 struct ligcomponent {
@@ -3211,7 +3211,7 @@ struct markedglyphs {
     unsigned int is_mark2lig: 1;
     unsigned int is_name: 1;		/* Otherwise a class */
     unsigned int hidden_marked_glyphs: 1;/* for glyphs with marked marks in a mark2base sequence */
-    uint16 mark_count;			/* 0=>unmarked, 1=>first mark, etc. */
+    uint16_t mark_count;			/* 0=>unmarked, 1=>first mark, etc. */
     char *name_or_class;		/* Glyph name / class contents */
     struct vr *vr;			/* A value record. Only in position sequences */
     int ap_cnt;				/* Number of anchor points */
@@ -5509,7 +5509,7 @@ static void fea_ParseGDEFTable(struct parseState *tok) {
     /* LigatureCaret <glyph>|<glyph class> <caret value>+ */
     int i;
     struct feat_item *item;
-    int16 *carets=NULL; int len=0, max=0;
+    int16_t *carets=NULL; int len=0, max=0;
 
     while (true) {
 	fea_ParseTok(tok);
@@ -5558,7 +5558,7 @@ static void fea_ParseGDEFTable(struct parseState *tok) {
 		    fea_ParseCaret(tok);
 		else
 	    break;
-		carets = xrealloc(carets,(max+=10)*sizeof(int16));
+		carets = xrealloc(carets,(max+=10)*sizeof(int16_t));
 		carets[len++] = tok->value;
 	    }
 	    if ( tok->type!=tk_char || tok->tokbuf[0]!=';' ) {
@@ -5566,8 +5566,8 @@ static void fea_ParseGDEFTable(struct parseState *tok) {
 		++tok->err_count;
 		fea_skip_to_semi(tok);
 	    }
-	    item->u2.lcaret = xmalloc((len+1)*sizeof(int16));
-	    memcpy(item->u2.lcaret,carets,len*sizeof(int16));
+	    item->u2.lcaret = xmalloc((len+1)*sizeof(int16_t));
+	    memcpy(item->u2.lcaret,carets,len*sizeof(int16_t));
 	    item->u2.lcaret[len] = 0;
 	} else if ( strcmp(tok->tokbuf,"GlyphClassDef")==0 ) {
 	    item = (struct feat_item *) xzalloc(sizeof (struct feat_item));
@@ -5616,7 +5616,7 @@ static void fea_ParseBaseTable(struct parseState *tok) {
     struct Base h, v, *active;
     int cnt=0, i, off;
     uint32_t baselines[50];
-    int16 poses[50];
+    int16_t poses[50];
     struct basescript *last=NULL, *cur;
 
     memset(&h,0,sizeof(h));
@@ -5681,8 +5681,8 @@ static void fea_ParseBaseTable(struct parseState *tok) {
 			active->scripts = cur;
 		    last = cur;
 		    cur->script = script_tag;
-		    cur->baseline_pos = xcalloc(cnt,sizeof(int16));
-		    memcpy(cur->baseline_pos,poses,i*sizeof(int16));
+		    cur->baseline_pos = xcalloc(cnt,sizeof(int16_t));
+		    memcpy(cur->baseline_pos,poses,i*sizeof(int16_t));
 		    for ( i=0; i<active->baseline_cnt; ++i ) {
 			if ( base_tag == active->baseline_tags[i] ) {
 			    cur->def_baseline = i;
@@ -6485,7 +6485,7 @@ static void fea_ApplyLookupListPair(struct parseState *tok,
 	    for ( i=0; i<rights.cnt; ++i )
 		kc->seconds[i+1] = rights.classes[i];
 	    kc->subtable = sub;
-	    kc->offsets = xcalloc(kc->first_cnt*kc->second_cnt,sizeof(int16));
+	    kc->offsets = xcalloc(kc->first_cnt*kc->second_cnt,sizeof(int16_t));
 	    kc->adjusts = xcalloc(kc->first_cnt*kc->second_cnt,sizeof(DeviceTable));
 	    fea_fillKernClass(kc,first);
 	    if ( sub->vertical_kerning ) {
@@ -6653,7 +6653,7 @@ static void fea_TableByKeywords(SplineFont *sf, struct feat_item *f) {
 	    if ( cur->size==4 )
 		*((uint32_t *) (((uint8 *) sf) + cur->offset)) = tv->value;
 	    else if ( cur->size==2 )
-		*((uint16 *) (((uint8 *) sf) + cur->offset)) = tv->value;
+		*((uint16_t *) (((uint8 *) sf) + cur->offset)) = tv->value;
 	    else
 		*((uint8 *) (((uint8 *) sf) + cur->offset)) = tv->value;
 	    if ( strcmp(cur->name,"Ascender")==0 )

@@ -1325,7 +1325,7 @@ static int Pref_DefaultFeat(GGadget *g, GEvent *e) {
 	GGadget *list = GWidgetGetControl(GGadgetGetWindow(g),CID_Features);
 	int inprefs = (intptr_t) GGadgetGetUserData(g);
 	GTextInfo *ti, **arr;
-	uint16 cnt;
+	uint16_t cnt;
 	/* In preferences the default is the built in data. */
 	/* in a font the default is the preference data (which might be built in or might not) */
 	MacFeat *def = inprefs ? builtin_mac_feature_map : default_mac_feature_map;

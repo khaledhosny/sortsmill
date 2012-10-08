@@ -74,10 +74,10 @@ typedef struct gcstate {
     enum draw_func func;
     unsigned int copy_through_sub_windows: 1;
     unsigned int bitmap_col: 1;			/* fore_col is mapped for bitmap */
-    int16 dash_len, skip_len;
-    int16 line_width;
-    int16 dash_offset;
-    int16 ts;
+    int16_t dash_len, skip_len;
+    int16_t line_width;
+    int16_t dash_offset;
+    int16_t ts;
     int32_t ts_xoff, ts_yoff;
 } GCState;
 
@@ -127,9 +127,9 @@ typedef struct gxwindow /* :GWindow */ {
 } *GXWindow;
 
 struct colstate {
-    int16 red_shift, green_shift, blue_shift;
+    int16_t red_shift, green_shift, blue_shift;
     int32_t red_bits_mask, green_bits_mask, blue_bits_mask;
-    int16 red_bits_shift, green_bits_shift, blue_bits_shift;
+    int16_t red_bits_shift, green_bits_shift, blue_bits_shift;
     int32_t alpha_bits;
     RevCMap *rev;
     unsigned int is_grey: 1;
@@ -158,11 +158,11 @@ struct inputRedirect {
 struct button_state {
     Time release_time;
     Window release_w;
-    int16 release_x, release_y;
-    int16 release_button;
-    int16 cur_click;
-    int16 double_time;		/* max milliseconds between release & click */
-    int16 double_wiggle;	/* max pixel wiggle allowed between release&click */
+    int16_t release_x, release_y;
+    int16_t release_button;
+    int16_t cur_click;
+    int16_t double_time;		/* max milliseconds between release & click */
+    int16_t double_wiggle;	/* max pixel wiggle allowed between release&click */
 };
 
 struct seldata {
@@ -205,7 +205,7 @@ struct xthreaddata {
 
 struct gimageglobals {
     XImage *img, *mask;
-    int16 *red_dith, *green_dith, *blue_dith;
+    int16_t *red_dith, *green_dith, *blue_dith;
     int32_t iwidth, iheight;
 };
 
@@ -228,13 +228,13 @@ struct xkb {
 
 typedef struct gxdisplay /* : GDisplay */ {
     void *semaphore;				/* To lock the display against multiple threads */
-    int16 res;
-    int16 scale_screen_by;			/* When converting screen pixels to printer pixels: multiply by this then divide by 16 */
+    int16_t res;
+    int16_t scale_screen_by;			/* When converting screen pixels to printer pixels: multiply by this then divide by 16 */
     GXWindow groot;
     Color def_background, def_foreground;
-    uint16 mykey_state;
-    uint16 mykey_keysym;
-    uint16 mykey_mask;
+    uint16_t mykey_state;
+    uint16_t mykey_keysym;
+    uint16_t mykey_mask;
     unsigned int mykeybuild: 1;
     unsigned int default_visual: 1;
     unsigned int do_dithering: 1;
@@ -254,10 +254,10 @@ typedef struct gxdisplay /* : GDisplay */ {
     Display *display;
     Window root;
     Window virtualRoot;				/* Some window managers create a "virtual root" that is bigger than the real root and all decoration windows live in it */
-    int16 screen;
-    int16 depth;
-    int16 pixel_size;				/* 32bit displays usually have a 24bit depth */
-    int16 bitmap_pad;				/* 8bit displays sometimes pad on 32bit boundaries */
+    int16_t screen;
+    int16_t depth;
+    int16_t pixel_size;				/* 32bit displays usually have a 24bit depth */
+    int16_t bitmap_pad;				/* 8bit displays sometimes pad on 32bit boundaries */
     Visual *visual;
     Colormap cmap;
     struct colstate cs;
@@ -269,7 +269,7 @@ typedef struct gxdisplay /* : GDisplay */ {
     Pixmap grey_stipple;
     Pixmap fence_stipple;
     int32_t mycontext;
-    int16 top_window_count;
+    int16_t top_window_count;
     GTimer *timers;
     Time last_event_time;
     struct gxselinfo selinfo[sn_max];
@@ -284,7 +284,7 @@ typedef struct gxdisplay /* : GDisplay */ {
 	int rx,ry;
     } last_dd;
     struct xthreaddata xthread;
-    int16 off_x, off_y;			/* The difference between where I asked */
+    int16_t off_x, off_y;			/* The difference between where I asked */
     					/*  to put a top level window, and where */
 			                /*  it ended up */
     GWindow grab_window;		/* For reasons I don't understand the */
@@ -294,8 +294,8 @@ typedef struct gxdisplay /* : GDisplay */ {
 	/* my other windows, then that window gets it and is mightily confused*/
 	/* So this field lets us do it right. when the pointer is grabbed the */
 	/* events go to the grab window. It seems so simple... */
-    int16 desired_depth, desired_vc, desired_cm;
-    int16 xres;				/* What X Thinks the resolution is */
+    int16_t desired_depth, desired_vc, desired_cm;
+    int16_t xres;				/* What X Thinks the resolution is */
     XIM im;				/* Input method for current locale */
     XFontSet def_im_fontset;
     struct inputdevices *inputdevices;

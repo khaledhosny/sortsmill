@@ -54,10 +54,10 @@ typedef struct sftextarea {
     uint8 fh;
     uint8 as;
     uint8 nw;			/* Width of one character (an "n") */
-    int16 xoff_left, loff_top;
-    int16 sel_start, sel_end, sel_base;
-    int16 sel_oldstart, sel_oldend, sel_oldbase;
-    int16 dd_cursor_pos;
+    int16_t xoff_left, loff_top;
+    int16_t sel_start, sel_end, sel_base;
+    int16_t sel_oldstart, sel_oldend, sel_oldbase;
+    int16_t dd_cursor_pos;
     uint32_t *pointless_text, *pointless_oldtext;
     FontInstance *font;		/* pointless */
     GTimer *pressed;

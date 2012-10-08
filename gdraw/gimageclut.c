@@ -686,7 +686,7 @@ return( rc );
 
 static RevCMap *_GClutReverse(int side_cnt,int range,struct revcol *basecol,
 	struct revcol *cols,struct revcol *outercols) {
-    extern int16 div_tables[256][2];
+    extern int16_t div_tables[256][2];
     RevCMap *rev;
     int i, s2, s3, side_size;
     struct revcol *test;

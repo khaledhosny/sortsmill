@@ -1992,7 +1992,7 @@ return( scs );
 }
 
 static void AddTempKP(SplineChar *first,SplineChar *second,
-	int16 offset, struct lookup_subtable *sub,uint16 kcid,int isv) {
+	int16_t offset, struct lookup_subtable *sub,uint16_t kcid,int isv) {
     KernPair *kp;
 
     for ( kp=first->kerns; kp!=NULL; kp=kp->next )
@@ -2542,14 +2542,14 @@ struct tfm_params {
 };
 /* tfm files use uint8s, ofm files use uint16s */
 struct ligkern {
-    uint16 skip;
-    uint16 other_char;
-    uint16 op;
-    uint16 remainder;
+    uint16_t skip;
+    uint16_t other_char;
+    uint16_t op;
+    uint16_t remainder;
     struct ligkern *next;
 };
 struct extension {
-    uint16 extens[4];	/* top, mid, bottom & repeat */
+    uint16_t extens[4];	/* top, mid, bottom & repeat */
 };
 
 static struct ligkern *TfmAddKern(KernPair *kp,struct ligkern *last,double *kerns,
@@ -2634,7 +2634,7 @@ static int FindExtensions(SplineFont *sf,struct extension *extensions,int *exten
     int i;
     int j,k;
     char *foundnames[4];
-    int16 founds[4]; int fcnt, ecnt=0;
+    int16_t founds[4]; int fcnt, ecnt=0;
 
     memset(extenindex,-1,(maxc+1)*sizeof(int));
     for ( i=0; i<maxc && i<map->enccount; ++i ) if ( map->map[i]!=-1 && SCWorthOutputting(sf->glyphs[map->map[i]])) {
@@ -2904,7 +2904,7 @@ static int _OTfmSplineFont(FILE *tfm, SplineFont *sf, int formattype,EncMap *map
     double _widths[257], _heights[257], _depths[257], _italics[257];
     double *widths, *heights, *depths, *italics;
     uint8 _tags[256], *tags;
-    uint16 _lkindex[256], *lkindex;
+    uint16_t _lkindex[256], *lkindex;
     int _former[256], *former;
     struct extension _extensions[257], *extensions;
     int _charlistindex[257], _extenindex[257];
@@ -2947,7 +2947,7 @@ static int _OTfmSplineFont(FILE *tfm, SplineFont *sf, int formattype,EncMap *map
 	depths = xmalloc((maxc+1)*sizeof(double));
 	italics = xmalloc((maxc+1)*sizeof(double));
 	tags = xmalloc(maxc*sizeof(uint8));
-	lkindex = xmalloc(maxc*sizeof(uint16));
+	lkindex = xmalloc(maxc*sizeof(uint16_t));
 	former = xmalloc(maxc*sizeof(int));
 	charlistindex = xmalloc((maxc+1)*sizeof(int));
 	extensions = xmalloc((maxc+1)*sizeof(struct extension));
@@ -3129,7 +3129,7 @@ static int _OTfmSplineFont(FILE *tfm, SplineFont *sf, int formattype,EncMap *map
     if ( sccnt>=128 )	/* We need to use the special extension mechanism */
 	lkcnt += sccnt;
     memset(former,-1,maxc*sizeof(int));
-    memset(lkindex,0,maxc*sizeof(uint16));
+    memset(lkindex,0,maxc*sizeof(uint16_t));
     if ( maxc==256 ) {
 	lkarray = xmalloc(lkcnt*sizeof(uint32_t));
 	if ( sccnt<128 ) {

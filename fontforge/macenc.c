@@ -788,7 +788,7 @@ static uint8 _MacScriptFromLanguage[] = {
 	0xff
 };
 
-static uint16 _WinLangFromMac[] = {
+static uint16_t _WinLangFromMac[] = {
 	0x409,		/* English */
 	0x40c,		/* French */
 	0x407,		/* German */
@@ -1238,7 +1238,7 @@ return( 0xff );
 return( _MacScriptFromLanguage[maclang] );
 }
 
-uint16 WinLangFromMac(int maclang) {
+uint16_t WinLangFromMac(int maclang) {
 
     if ( maclang<0 || maclang>=sizeof(_WinLangFromMac)/sizeof(_WinLangFromMac[0]))
 return( 0xffff );
@@ -1246,7 +1246,7 @@ return( 0xffff );
 return( _WinLangFromMac[maclang] );
 }
 
-uint16 WinLangToMac(int winlang) {
+uint16_t WinLangToMac(int winlang) {
     int i;
 
     for ( i=0; i<sizeof(_WinLangFromMac)/sizeof(_WinLangFromMac[0]); ++i )

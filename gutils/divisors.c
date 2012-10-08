@@ -3,7 +3,7 @@
 
 /* divide data (division tricks for numbers<256) */
 /* multiply by the first number, left shift by the second */
-VISIBLE int16 div_tables[257][2] = {
+VISIBLE int16_t div_tables[257][2] = {
 /*   0 */	{   0,  0},
 /*   1 */	{   1,  0},
 /*   2 */	{   1,  1},

@@ -209,7 +209,7 @@ return( copy(src));
 return( ret );
 }
 
-static char *classnumbers(int cnt,uint16 *classes, struct matrix_data *classnames, int rows, int cols) {
+static char *classnumbers(int cnt,uint16_t *classes, struct matrix_data *classnames, int rows, int cols) {
     char buf[20];
     int i, len;
     char *pt, *ret;
@@ -241,7 +241,7 @@ static char *classnumbers(int cnt,uint16 *classes, struct matrix_data *classname
 return( ret );
 }
 
-static char *rclassnumbers(int cnt,uint16 *classes, struct matrix_data *classnames, int rows, int cols) {
+static char *rclassnumbers(int cnt,uint16_t *classes, struct matrix_data *classnames, int rows, int cols) {
     char buf[20];
     int i, len;
     char *pt, *ret;
@@ -498,7 +498,7 @@ static void classruleitem2rule(SplineFont *sf,const char *ruletext,struct fpst_r
 		ch = utf8_ildb((const char **) &pt);
 	}
 	(&r->u.class.ncnt)[i] = len;
-	(&r->u.class.nclasses)[i] = xmalloc(len*sizeof(uint16));
+	(&r->u.class.nclasses)[i] = xmalloc(len*sizeof(uint16_t));
 	len = 0;
 	if ( ch=='\0' || ch==0x21d2 )
     break;
@@ -641,7 +641,7 @@ return( false );
 	}
 	if ( !doit ) {
 	    (&r->u.class.ncnt)[which] = any;
-	    (&r->u.class.nclasses)[which] = xmalloc(any*sizeof(uint16));
+	    (&r->u.class.nclasses)[which] = xmalloc(any*sizeof(uint16_t));
 	}
     }
 return( true );

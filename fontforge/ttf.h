@@ -263,8 +263,8 @@ struct ttfinfo {
 
     OTLookup *mort_subs_lookup, *mort_pos_lookup2;
     int mort_r2l, mort_tag_mac, mort_feat, mort_setting, mort_is_nested;
-    uint16 *morx_classes;
-    uint16 *bsln_values;
+    uint16_t *morx_classes;
+    uint16_t *bsln_values;
 
     int mort_max;
 
@@ -282,10 +282,10 @@ struct ttfinfo {
     int savecnt;
     struct savetab *savetab;
     int32_t last_size_pos;
-    uint16 design_size;
-    uint16 fontstyle_id;
+    uint16_t design_size;
+    uint16_t fontstyle_id;
     struct otfname *fontstyle_name;
-    uint16 design_range_bottom, design_range_top;
+    uint16_t design_range_bottom, design_range_top;
     struct texdata texdata;
     int mark_class_cnt;
     char **mark_classes;		/* glyph name list */
@@ -327,7 +327,7 @@ struct ttfinfo {
 
     uint32_t jstf_script;
     uint32_t jstf_lang;
-    int16 jstf_isShrink, jstf_prio, jstf_lcnt;
+    int16_t jstf_isShrink, jstf_prio, jstf_lcnt;
     struct otffeatname *feat_names;
     enum gsub_inusetype justinuse;
 };
@@ -338,17 +338,17 @@ struct taboff {
     uint32_t offset;	/* to start of table in file */
     uint32_t length;
     FILE *data;
-    uint16 dup_of;
-    uint16 orderingval;
+    uint16_t dup_of;
+    uint16_t orderingval;
 };
 
 #define MAX_TAB	48
 struct tabdir {
     int32_t version;	/* 0x00010000 */
-    uint16 numtab;
-    uint16 searchRange;	/* (Max power of 2 <= numtab) *16 */
-    uint16 entrySel;	/* Log2(Max power of 2 <= numtab ) */
-    uint16 rangeShift;	/* numtab*16 - searchRange */
+    uint16_t numtab;
+    uint16_t searchRange;	/* (Max power of 2 <= numtab) *16 */
+    uint16_t entrySel;	/* Log2(Max power of 2 <= numtab ) */
+    uint16_t rangeShift;	/* numtab*16 - searchRange */
     struct taboff tabs[MAX_TAB];/* room for all the tables */
 				/* Not in any particular order. */
     struct taboff *ordered[MAX_TAB];	/* Ordered the way the tables should be output in file */
@@ -356,11 +356,11 @@ struct tabdir {
 };
 
 struct glyphhead {
-    int16 numContours;
-    int16 xmin;
-    int16 ymin;
-    int16 xmax;
-    int16 ymax;
+    int16_t numContours;
+    int16_t xmin;
+    int16_t ymin;
+    int16_t xmax;
+    int16_t ymax;
 };
 
 struct head {
@@ -368,121 +368,121 @@ struct head {
     int32_t revision;	/* 0 */
     uint32_t checksumAdj;	/* set to 0, sum entire font, store 0xb1b0afba-sum */
     uint32_t magicNum;	/* 0x5f0f3cf5 */
-    uint16 flags;	/* 1 */
-    uint16 emunits;	/* sf->ascent+sf->descent */
+    uint16_t flags;	/* 1 */
+    uint16_t emunits;	/* sf->ascent+sf->descent */
     int32_t createtime[2];/* number of seconds since 1904 */
     int32_t modtime[2];
-    int16 xmin;		/* min for entire font */
-    int16 ymin;
-    int16 xmax;
-    int16 ymax;
-    uint16 macstyle;	/* 1=>Bold, 2=>Italic */
-    uint16 lowestreadable;	/* size in pixels. Say about 10? */
-    int16 dirhint;	/* 0=>mixed directional characters, */
-    int16 locais32;	/* is the location table 32bits or 16, 0=>16, 1=>32 */
-    int16 glyphformat;	/* 0 */
-    uint16 mbz;		/* padding */
+    int16_t xmin;		/* min for entire font */
+    int16_t ymin;
+    int16_t xmax;
+    int16_t ymax;
+    uint16_t macstyle;	/* 1=>Bold, 2=>Italic */
+    uint16_t lowestreadable;	/* size in pixels. Say about 10? */
+    int16_t dirhint;	/* 0=>mixed directional characters, */
+    int16_t locais32;	/* is the location table 32bits or 16, 0=>16, 1=>32 */
+    int16_t glyphformat;	/* 0 */
+    uint16_t mbz;		/* padding */
 };
 
 struct hhead {
     int32_t version;	/* 0x00010000 */
-    int16 ascender;	/* sf->ascender */
-    int16 descender;	/* -sf->descender */
-    int16 linegap;	/* 0 */
-    int16 maxwidth;	/* of all characters */
-    int16 minlsb;	/* How is this different from xmin above? */
-    int16 minrsb;
-    int16 maxextent;	/* How is this different from xmax above? */
-    int16 caretSlopeRise;/* Uh... let's say 1? */
-    int16 caretSlopeRun;/* Uh... let's say 0 */
+    int16_t ascender;	/* sf->ascender */
+    int16_t descender;	/* -sf->descender */
+    int16_t linegap;	/* 0 */
+    int16_t maxwidth;	/* of all characters */
+    int16_t minlsb;	/* How is this different from xmin above? */
+    int16_t minrsb;
+    int16_t maxextent;	/* How is this different from xmax above? */
+    int16_t caretSlopeRise;/* Uh... let's say 1? */
+    int16_t caretSlopeRun;/* Uh... let's say 0 */
 	    /* not exactly specified, but FontValidator wants this to match italicangle */
-    int16 mbz[5];
-    int16 metricformat;	/* 0 */
-    uint16 numMetrics;	/* just set to glyph count */
+    int16_t mbz[5];
+    int16_t metricformat;	/* 0 */
+    uint16_t numMetrics;	/* just set to glyph count */
 };
 
 struct hmtx {
-    uint16 width;	/* NOTE: TTF only allows positive widths!!! */
-    int16 lsb;
+    uint16_t width;	/* NOTE: TTF only allows positive widths!!! */
+    int16_t lsb;
 };
 
 struct kp {
-    uint16 left;	/* left glyph num */
-    uint16 right;	/* right glyph num */
+    uint16_t left;	/* left glyph num */
+    uint16_t right;	/* right glyph num */
     /* table is ordered by these two above treated as uint32_t */
-    int16 offset;	/* kern amount */
+    int16_t offset;	/* kern amount */
 };
 
 struct kern {
-    uint16 version;	/* 0 */
-    uint16 ntab;	/* 1, number of subtables */
+    uint16_t version;	/* 0 */
+    uint16_t ntab;	/* 1, number of subtables */
     /* first (and only) subtable */
-    uint16 stversion;	/* 0 */
-    uint16 length;	/* length of subtable beginning at &stversion */
-    uint16 coverage;	/* 1, (set of flags&format) */
-    uint16 nPairs;	/* number of kern pairs */
-    uint16 searchRange;	/* (Max power of 2 <= nPairs) *6 */
-    uint16 entrySel;	/* Log2(Max power of 2 <= nPairs ) */
-    uint16 rangeShift;	/* numtab*6 - searchRange */
+    uint16_t stversion;	/* 0 */
+    uint16_t length;	/* length of subtable beginning at &stversion */
+    uint16_t coverage;	/* 1, (set of flags&format) */
+    uint16_t nPairs;	/* number of kern pairs */
+    uint16_t searchRange;	/* (Max power of 2 <= nPairs) *6 */
+    uint16_t entrySel;	/* Log2(Max power of 2 <= nPairs ) */
+    uint16_t rangeShift;	/* numtab*6 - searchRange */
     struct kp *kerns;	/* Array should be nPairs big */
 };
 
 struct maxp {
     int32_t version;	/* 0x00010000 */
-    uint16 numGlyphs;
-    uint16 maxPoints;	/* max number of points in a simple glyph */
-    uint16 maxContours;	/* max number of paths in a simple glyph */
-    uint16 maxCompositPts;
-    uint16 maxCompositCtrs;
-    uint16 maxZones;	/* 1 */
-    uint16 maxTwilightPts;	/* 0 */
-    uint16 maxStorage;	/* 0 */
-    uint16 maxFDEFs;	/* 0 */
-    uint16 maxIDEFs;	/* 0 */
-    uint16 maxStack;	/* 0 */
-    uint16 maxglyphInstr;/* 0 */
-    uint16 maxnumcomponents;	/* Maximum number of refs in any composit */
-    uint16 maxcomponentdepth;
+    uint16_t numGlyphs;
+    uint16_t maxPoints;	/* max number of points in a simple glyph */
+    uint16_t maxContours;	/* max number of paths in a simple glyph */
+    uint16_t maxCompositPts;
+    uint16_t maxCompositCtrs;
+    uint16_t maxZones;	/* 1 */
+    uint16_t maxTwilightPts;	/* 0 */
+    uint16_t maxStorage;	/* 0 */
+    uint16_t maxFDEFs;	/* 0 */
+    uint16_t maxIDEFs;	/* 0 */
+    uint16_t maxStack;	/* 0 */
+    uint16_t maxglyphInstr;/* 0 */
+    uint16_t maxnumcomponents;	/* Maximum number of refs in any composit */
+    uint16_t maxcomponentdepth;
 	/* Apple docs say: 0 (if no composits), maximum value 1 (one level of composit) */
 	/* OpenType docs say: 1 (if no composits), any depth allowed */
 };
 
 struct namerec {
-    uint16 platform;	/* 3 => MS */
-    uint16 specific;	/* 1 */
-    uint16 language;	/* 0x0409 */
-    uint16 nameid;	/* 0=>copyright, 1=>family, 2=>weight, 4=>fullname */
+    uint16_t platform;	/* 3 => MS */
+    uint16_t specific;	/* 1 */
+    uint16_t language;	/* 0x0409 */
+    uint16_t nameid;	/* 0=>copyright, 1=>family, 2=>weight, 4=>fullname */
 			/*  5=>version, 6=>postscript name */
-    uint16 strlen;
-    uint16 stroff;
+    uint16_t strlen;
+    uint16_t stroff;
 };
 
 struct nametab {
-    uint16 format;	/* 0 */
-    uint16 numrec;	/* 1 */
-    uint16 startOfStrings;	/* offset from start of table to start of strings */
+    uint16_t format;	/* 0 */
+    uint16_t numrec;	/* 1 */
+    uint16_t startOfStrings;	/* offset from start of table to start of strings */
     struct namerec nr[6];
 };
 
 struct os2 {
-    uint16 version;	/* 1 */
-    int16 avgCharWid;	/* average all chars (v3) see v2 definition below */
-    uint16 weightClass;	/* 100=>thin, 200=>extra-light, 300=>light, 400=>normal, */
+    uint16_t version;	/* 1 */
+    int16_t avgCharWid;	/* average all chars (v3) see v2 definition below */
+    uint16_t weightClass;	/* 100=>thin, 200=>extra-light, 300=>light, 400=>normal, */
 			/* 500=>Medium, 600=>semi-bold, 700=>bold, 800=>extra-bold, */
 			/* 900=>black */
-    uint16 widthClass;	/* 75=>condensed, 100, 125=>expanded */
-    int16 fstype;	/* 0x0008 => allow embedded editing */
-    int16 ysubXSize;	/* emsize/5 */
-    int16 ysubYSize;	/* emsize/5 */
-    int16 ysubXOff;	/* 0 */
-    int16 ysubYOff;	/* emsize/5 */
-    int16 ysupXSize;	/* emsize/5 */
-    int16 ysupYSize;	/* emsize/5 */
-    int16 ysupXOff;	/* 0 */
-    int16 ysupYOff;	/* emsize/5 */
-    int16 yStrikeoutSize;	/* 102/2048 *emsize */
-    int16 yStrikeoutPos;	/* 530/2048 *emsize */
-    int16 sFamilyClass;	/* ??? 0 */
+    uint16_t widthClass;	/* 75=>condensed, 100, 125=>expanded */
+    int16_t fstype;	/* 0x0008 => allow embedded editing */
+    int16_t ysubXSize;	/* emsize/5 */
+    int16_t ysubYSize;	/* emsize/5 */
+    int16_t ysubXOff;	/* 0 */
+    int16_t ysubYOff;	/* emsize/5 */
+    int16_t ysupXSize;	/* emsize/5 */
+    int16_t ysupYSize;	/* emsize/5 */
+    int16_t ysupXOff;	/* 0 */
+    int16_t ysupYOff;	/* emsize/5 */
+    int16_t yStrikeoutSize;	/* 102/2048 *emsize */
+    int16_t yStrikeoutPos;	/* 530/2048 *emsize */
+    int16_t sFamilyClass;	/* ??? 0 */
 	/* high order byte is the "class", low order byte the sub class */
 	/* class = 0 => no classification */
 	/* class = 1 => old style serifs */
@@ -510,19 +510,19 @@ struct os2 {
 	/* 1<<0=>ascii, 1<<1 => latin1, 2=>100-17f, 3=>180-24f, 4=>250-2af */
 	/* 5=> 2b0-2ff, 6=>300-36f, ... */
     char achVendID[4];	/* can be zero */
-    uint16 fsSel;	/* 1=> italic, 32=>bold, 64 => regular */
+    uint16_t fsSel;	/* 1=> italic, 32=>bold, 64 => regular */
 			/* 2=>underscore, 4=>negative, 8->outlined, 16=>strikeout */
 			/* version 4 of OS/2 */
 			/* 128->don't use win_ascent/descent for line spacing */
 			/* 256=>family varies on weight width slope only */
 			/* 512=>oblique (as opposed to italic) */
-    uint16 firstcharindex; /* minimum unicode encoding */
-    uint16 lastcharindex;  /* maximum unicode encoding */
-    uint16 ascender;	/* font ascender height (not ascent) */
-    uint16 descender;	/* font descender height */
-    uint16 linegap;	/* 0 */
-    uint16 winascent;	/* ymax */
-    uint16 windescent;	/* ymin */
+    uint16_t firstcharindex; /* minimum unicode encoding */
+    uint16_t lastcharindex;  /* maximum unicode encoding */
+    uint16_t ascender;	/* font ascender height (not ascent) */
+    uint16_t descender;	/* font descender height */
+    uint16_t linegap;	/* 0 */
+    uint16_t winascent;	/* ymax */
+    uint16_t windescent;	/* ymin */
     uint32_t ulCodePage[2];
 	/* 1<<0 => latin1, 1<<1=>latin2, cyrillic, greek, turkish, hebrew, arabic */
 	/* 1<<30 => mac, 1<<31 => symbol */
@@ -542,15 +542,15 @@ struct os2 {
 struct post {
     int32_t formattype;		/* 0x00020000 */
     int32_t italicAngle;		/* in fixed format */
-    int16 upos;
-    int16 uwidth;
+    int16_t upos;
+    int16_t uwidth;
     uint32_t isfixed;
     uint32_t minmem42;
     uint32_t maxmem42;
     uint32_t minmem1;
     uint32_t maxmem1;
-    uint16 numglyphs;
-    uint16 glyphnameindex[1];
+    uint16_t numglyphs;
+    uint16_t glyphnameindex[1];
 };
 
 struct glyphinfo {
@@ -584,13 +584,13 @@ struct glyphinfo {
 };
 
 struct vorg {
-    uint16 majorVersion;		/* 1 */
-    uint16 minorVersion;		/* 0 */
+    uint16_t majorVersion;		/* 1 */
+    uint16_t minorVersion;		/* 0 */
     short defaultVertOriginY;	/* Y coord of default vertical origin in the design coordinate system */
-    uint16 numVertOriginYMetrics;	/* exceptions to the above, elements in following array */
+    uint16_t numVertOriginYMetrics;	/* exceptions to the above, elements in following array */
 #if 0
     struct {
-	uint16 glyphindex;		/* ordered */
+	uint16_t glyphindex;		/* ordered */
 	short vertOrigin;
     } origins[];
 #endif
@@ -742,19 +742,19 @@ struct alltabs {
     int oldcvtlen;
 };
 
-struct subhead { uint16 first, cnt, delta, rangeoff; };	/* a sub header in 8/16 cmap table */
+struct subhead { uint16_t first, cnt, delta, rangeoff; };	/* a sub header in 8/16 cmap table */
 
 enum touchflags { tf_x=1, tf_y=2, tf_d=4, tf_endcontour=0x80, tf_startcontour=0x40 };
 
 struct ct_branch {
-    uint16 classnum;
+    uint16_t classnum;
     struct contexttree *branch;
 };
 
 struct ct_subs {
     struct fpst_rule *rule;
     struct contexttree *branch;/* if the rule ends here this will be null */
-    uint16 thisclassnum;
+    uint16_t thisclassnum;
 };
 
 struct contexttree {
@@ -767,7 +767,7 @@ struct contexttree {
     int pending_pos;
     OTLookup *applymarkedsubs;
     OTLookup *applycursubs;
-    uint16 marked_index, cur_index;
+    uint16_t marked_index, cur_index;
     uint8 markme;
     int state, next_state;
     struct contexttree *parent;
@@ -818,15 +818,15 @@ VISIBLE extern int scriptsHaveDefault(struct scriptlanglist *sl);
 extern int FPSTisMacable(SplineFont *sf, FPST *fpst);
 extern uint32_t MacFeatureToOTTag(int featureType,int featureSetting);
 VISIBLE extern int OTTagToMacFeature(uint32_t tag, int *featureType,int *featureSetting);
-VISIBLE extern uint16 *props_array(SplineFont *sf,struct glyphinfo *gi);
+VISIBLE extern uint16_t *props_array(SplineFont *sf,struct glyphinfo *gi);
 VISIBLE extern int haslrbounds(SplineChar *sc, PST **left, PST **right);
-VISIBLE extern int16 *PerGlyphDefBaseline(SplineFont *sf,int *def_baseline);
+VISIBLE extern int16_t *PerGlyphDefBaseline(SplineFont *sf,int *def_baseline);
 VISIBLE extern void FigureBaseOffsets(SplineFont *sf,int def_bsln,int offsets[32]);
 
     /* Apple variation tables */
 extern int ContourPtNumMatch(MMSet *mm, int gid);
-VISIBLE extern int16 **SCFindDeltas(MMSet *mm, int gid, int *_ptcnt);
-VISIBLE extern int16 **CvtFindDeltas(MMSet *mm, int *_ptcnt);
+VISIBLE extern int16_t **SCFindDeltas(MMSet *mm, int gid, int *_ptcnt);
+VISIBLE extern int16_t **CvtFindDeltas(MMSet *mm, int *_ptcnt);
 extern void ttf_dumpvariations(struct alltabs *at, SplineFont *sf);
 
 struct macsettingname {
@@ -841,7 +841,7 @@ VISIBLE extern struct macsettingname macfeat_otftag[], *user_macfeat_otftag;
 VISIBLE extern struct ttf_table *SFFindTable(SplineFont *sf,uint32_t tag);
 extern int32_t memlong(uint8 *data,int table_len, int offset);
 VISIBLE extern int memushort(uint8 *data,int table_len, int offset);
-VISIBLE extern void memputshort(uint8 *data,int offset,uint16 val);
+VISIBLE extern void memputshort(uint8 *data,int offset,uint16_t val);
 extern int TTF__getcvtval(SplineFont *sf,int val);
 extern int TTF_getcvtval(SplineFont *sf,int val);
 extern void SCinitforinstrs(SplineChar *sc);
@@ -850,7 +850,7 @@ extern int Macable(SplineFont *sf, OTLookup *otl);
 
     /* Used by both otf and apple */
 extern int LigCaretCnt(SplineChar *sc);
-extern uint16 *ClassesFromNames(SplineFont *sf,char **classnames,int class_cnt,
+extern uint16_t *ClassesFromNames(SplineFont *sf,char **classnames,int class_cnt,
 	int numGlyphs, SplineChar ***glyphs, int apple_kc);
 extern SplineChar **SFGlyphsFromNames(SplineFont *sf,char *names);
 

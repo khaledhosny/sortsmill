@@ -5486,18 +5486,18 @@ return( NULL );
 	    t->u.class.ncnt = f->u.class.ncnt;
 	    t->u.class.bcnt = f->u.class.bcnt;
 	    t->u.class.fcnt = f->u.class.fcnt;
-	    t->u.class.nclasses = xmalloc( f->u.class.ncnt*sizeof(uint16));
+	    t->u.class.nclasses = xmalloc( f->u.class.ncnt*sizeof(uint16_t));
 	    memcpy(t->u.class.nclasses,f->u.class.nclasses,
-		    f->u.class.ncnt*sizeof(uint16));
+		    f->u.class.ncnt*sizeof(uint16_t));
 	    if ( t->u.class.bcnt!=0 ) {
-		t->u.class.bclasses = xmalloc( f->u.class.bcnt*sizeof(uint16));
+		t->u.class.bclasses = xmalloc( f->u.class.bcnt*sizeof(uint16_t));
 		memcpy(t->u.class.bclasses,f->u.class.bclasses,
-			f->u.class.bcnt*sizeof(uint16));
+			f->u.class.bcnt*sizeof(uint16_t));
 	    }
 	    if ( t->u.class.fcnt!=0 ) {
-		t->u.class.fclasses = xmalloc( f->u.class.fcnt*sizeof(uint16));
+		t->u.class.fclasses = xmalloc( f->u.class.fcnt*sizeof(uint16_t));
 		memcpy(t->u.class.fclasses,f->u.class.fclasses,
-			f->u.class.fcnt*sizeof(uint16));
+			f->u.class.fcnt*sizeof(uint16_t));
 	    }
 	  break;
 	  case pst_reversecoverage:
@@ -5970,8 +5970,8 @@ return( NULL );
     *new = *kc;
     new->firsts = xmalloc(new->first_cnt*sizeof(char *));
     new->seconds = xmalloc(new->second_cnt*sizeof(char *));
-    new->offsets = xmalloc(new->first_cnt*new->second_cnt*sizeof(int16));
-    memcpy(new->offsets,kc->offsets, new->first_cnt*new->second_cnt*sizeof(int16));
+    new->offsets = xmalloc(new->first_cnt*new->second_cnt*sizeof(int16_t));
+    memcpy(new->offsets,kc->offsets, new->first_cnt*new->second_cnt*sizeof(int16_t));
     for ( i=0; i<new->first_cnt; ++i )
 	new->firsts[i] = copy(kc->firsts[i]);
     for ( i=0; i<new->second_cnt; ++i )

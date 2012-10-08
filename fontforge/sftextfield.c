@@ -418,7 +418,7 @@ static void SFTextAreaGrabSelection(SFTextArea *st, enum selnames sel ) {
 	uint32_t *temp;
 	char *ctemp;
 	int i;
-	uint16 *u2temp;
+	uint16_t *u2temp;
 
 	GDrawGrabSelection(st->g.base,sel);
 	temp = xmalloc((st->sel_end-st->sel_start + 2)*sizeof(uint32_t));
@@ -428,7 +428,7 @@ static void SFTextAreaGrabSelection(SFTextArea *st, enum selnames sel ) {
 	GDrawAddSelectionType(st->g.base,sel,"text/plain;charset=ISO-10646-UCS-4",temp,u_strlen(temp),
 		sizeof(uint32_t),
 		NULL,NULL);
-	u2temp = xmalloc((st->sel_end-st->sel_start + 2)*sizeof(uint16));
+	u2temp = xmalloc((st->sel_end-st->sel_start + 2)*sizeof(uint16_t));
 	for ( i=0; temp[i]!=0; ++i )
 	    u2temp[i] = temp[i];
 	u2temp[i] = 0;
@@ -478,7 +478,7 @@ static int SFTextAreaSelForeword(uint32_t *text,int end) {
 return( end );
 }
 
-static void SFTextAreaSelectWord(SFTextArea *st,int mid, int16 *start, int16 *end) {
+static void SFTextAreaSelectWord(SFTextArea *st,int mid, int16_t *start, int16_t *end) {
     uint32_t *text = st->li.text;
     uint32_t ch = text[mid];
 
@@ -506,7 +506,7 @@ static void SFTextAreaSelectWord(SFTextArea *st,int mid, int16 *start, int16 *en
 }
 
 static void SFTextAreaSelectWords(SFTextArea *st,int last) {
-    int16 ss, se;
+    int16_t ss, se;
     SFTextAreaSelectWord(st,st->sel_base,&st->sel_start,&st->sel_end);
     if ( last!=st->sel_base ) {
 	SFTextAreaSelectWord(st,last,&ss,&se);
@@ -540,7 +540,7 @@ static void SFTextAreaPaste(SFTextArea *st,enum selnames sel) {
     } else if ( GDrawSelectionHasType(st->g.base,sel,"Unicode") ||
 	    GDrawSelectionHasType(st->g.base,sel,"text/plain;charset=ISO-10646-UCS-2")) {
 	uint32_t *temp;
-	uint16 *temp2;
+	uint16_t *temp2;
 	int32_t len;
 	temp2 = GDrawRequestSelection(st->g.base,sel,"text/plain;charset=ISO-10646-UCS-2",&len);
 	if ( temp2==NULL || len==0 )
@@ -594,7 +594,7 @@ return( true );
 	if ( st->li.oldtext!=NULL ) {
 	    uint32_t *temp = st->li.text;
 	    struct fontlist *ofl = st->li.fontlist;
-	    int16 s;
+	    int16_t s;
 	    st->li.text = st->li.oldtext; st->li.oldtext = temp;
 	    st->li.fontlist = st->li.oldfontlist; st->li.oldfontlist = ofl;
 	    s = st->sel_start; st->sel_start = st->sel_oldstart; st->sel_oldstart = s;

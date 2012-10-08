@@ -166,22 +166,22 @@ void GDrawSetCopyMode(GWindow w) {
     w->ggc->func = df_copy;
 }
 
-void GDrawSetCopyThroughSubWindows(GWindow w,int16 through) {
+void GDrawSetCopyThroughSubWindows(GWindow w,int16_t through) {
     w->ggc->copy_through_sub_windows = through;
 }
 
-void GDrawSetDashedLine(GWindow w,int16 dash_len, int16 skip_len, int16 off) {
+void GDrawSetDashedLine(GWindow w,int16_t dash_len, int16_t skip_len, int16_t off) {
     w->ggc->dash_offset = off;
     w->ggc->dash_len = dash_len;
     w->ggc->skip_len = skip_len;
 }
 
-void GDrawSetStippled(GWindow w,int16 ts, int32_t yoff,int32_t xoff) {
+void GDrawSetStippled(GWindow w,int16_t ts, int32_t yoff,int32_t xoff) {
     w->ggc->ts = ts;
     w->ggc->ts_xoff = xoff; w->ggc->ts_yoff = yoff;
 }
 
-void GDrawSetLineWidth(GWindow w,int16 width) {
+void GDrawSetLineWidth(GWindow w,int16_t width) {
     w->ggc->line_width = width;
 }
 

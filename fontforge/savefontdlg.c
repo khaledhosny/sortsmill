@@ -2777,7 +2777,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
   int familycnt = 0;
   int fondcnt = 0, fondmax = 10;
   SFArray *familysfs = NULL;
-  uint16 psstyle;
+  uint16_t psstyle;
   static int done = false;
   extern NameList *force_names_when_saving;
   char **nlnames;

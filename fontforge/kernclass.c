@@ -42,7 +42,7 @@ typedef struct kernclassdlg {
     KernClass *orig;
     struct lookup_subtable *subtable;
     int first_cnt, second_cnt;
-    int16 *offsets;
+    int16_t *offsets;
     DeviceTable *adjusts;
     DeviceTable active_adjust;		/* The one that is currently active */
     DeviceTable orig_adjust;		/* Initial value for this the active adjust */
@@ -2011,9 +2011,9 @@ static void KCD_FinishEdit(GGadget *g,int r, int c, int wasnew) {
     if ( wasnew ) {
 	autokern = GGadgetIsChecked(GWidgetGetControl(kcd->gw,CID_Autokern));
 	if ( is_first ) {
-	    kcd->offsets = xrealloc(kcd->offsets,(kcd->first_cnt+1)*kcd->second_cnt*sizeof(int16));
+	    kcd->offsets = xrealloc(kcd->offsets,(kcd->first_cnt+1)*kcd->second_cnt*sizeof(int16_t));
 	    memset(kcd->offsets+kcd->first_cnt*kcd->second_cnt,
-		    0, kcd->second_cnt*sizeof(int16));
+		    0, kcd->second_cnt*sizeof(int16_t));
 	    kcd->adjusts = xrealloc(kcd->adjusts,(kcd->first_cnt+1)*kcd->second_cnt*sizeof(DeviceTable));
 	    memset(kcd->adjusts+kcd->first_cnt*kcd->second_cnt,
 		    0, kcd->second_cnt*sizeof(DeviceTable));
@@ -2021,10 +2021,10 @@ static void KCD_FinishEdit(GGadget *g,int r, int c, int wasnew) {
 	    if ( autokern )
 		KCD_AutoKernAClass(kcd,kcd->first_cnt-1,true);
 	} else {
-	    int16 *new = xmalloc(kcd->first_cnt*(kcd->second_cnt+1)*sizeof(int16));
+	    int16_t *new = xmalloc(kcd->first_cnt*(kcd->second_cnt+1)*sizeof(int16_t));
 	    for ( i=0; i<kcd->first_cnt; ++i ) {
 		memcpy(new+i*(kcd->second_cnt+1),kcd->offsets+i*kcd->second_cnt,
-			kcd->second_cnt*sizeof(int16));
+			kcd->second_cnt*sizeof(int16_t));
 		new[i*(kcd->second_cnt+1)+kcd->second_cnt] = 0;
 	    }
 	    free( kcd->offsets );
@@ -2076,7 +2076,7 @@ static void KCD_RowMotion(GGadget *g,int oldr, int newr) {
 
     if ( is_first ) {
 	for ( i=0; i<kcd->second_cnt; ++i ) {
-	    int16 off = kcd->offsets[oldr*kcd->second_cnt + i];
+	    int16_t off = kcd->offsets[oldr*kcd->second_cnt + i];
 	    kcd->offsets[oldr*kcd->second_cnt + i] = kcd->offsets[newr*kcd->second_cnt + i];
 	    kcd->offsets[newr*kcd->second_cnt + i] = off;
 	    tempdt = kcd->adjusts[oldr*kcd->second_cnt + i];
@@ -2085,7 +2085,7 @@ static void KCD_RowMotion(GGadget *g,int oldr, int newr) {
 	}
     } else {
 	for ( i=0; i<kcd->first_cnt; ++i ) {
-	    int16 off = kcd->offsets[i*kcd->second_cnt + oldr];
+	    int16_t off = kcd->offsets[i*kcd->second_cnt + oldr];
 	    kcd->offsets[i*kcd->second_cnt + oldr] = kcd->offsets[i*kcd->second_cnt + newr];
 	    kcd->offsets[i*kcd->second_cnt + newr] = off;
 	    tempdt = kcd->adjusts[i*kcd->second_cnt + oldr];
@@ -2113,14 +2113,14 @@ static void KCD_DeleteClass(GGadget *g,int whichclass) {
 	for ( i=whichclass+1; i<rows; ++i ) {
 	    memcpy(kcd->offsets+(i-1)*kcd->second_cnt,
 		    kcd->offsets+i*kcd->second_cnt,
-		    kcd->second_cnt*sizeof(int16));
+		    kcd->second_cnt*sizeof(int16_t));
 	    memcpy(kcd->adjusts+(i-1)*kcd->second_cnt,
 		    kcd->adjusts+i*kcd->second_cnt,
 		    kcd->second_cnt*sizeof(DeviceTable));
 	}
 	-- kcd->first_cnt;
     } else {
-	int16 *newoffs = xmalloc(kcd->first_cnt*(kcd->second_cnt-1)*sizeof(int16));
+	int16_t *newoffs = xmalloc(kcd->first_cnt*(kcd->second_cnt-1)*sizeof(int16_t));
 	DeviceTable *newadj = xmalloc(kcd->first_cnt*(kcd->second_cnt-1)*sizeof(DeviceTable));
 	for ( i=0; i<kcd->first_cnt; ++i )
 	    free(kcd->adjusts[i*kcd->second_cnt+whichclass].corrections);
@@ -2543,8 +2543,8 @@ return;
 
     kcd->first_cnt = kc->first_cnt;
     kcd->second_cnt = kc->second_cnt;
-    kcd->offsets = xmalloc(kc->first_cnt*kc->second_cnt*sizeof(int16));
-    memcpy(kcd->offsets,kc->offsets,kc->first_cnt*kc->second_cnt*sizeof(int16));
+    kcd->offsets = xmalloc(kc->first_cnt*kc->second_cnt*sizeof(int16_t));
+    memcpy(kcd->offsets,kc->offsets,kc->first_cnt*kc->second_cnt*sizeof(int16_t));
     kcd->adjusts = xmalloc(kc->first_cnt*kc->second_cnt*sizeof(DeviceTable));
     memcpy(kcd->adjusts,kc->adjusts,kc->first_cnt*kc->second_cnt*sizeof(DeviceTable));
     for ( i=0; i<kcd->first_cnt*kcd->second_cnt; ++i ) {

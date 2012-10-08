@@ -1239,7 +1239,7 @@ pdf_build_type0 (PI * pi, int sfid)
   struct sfbits *sfbit = &pi->sfbits[sfid];
   SplineFont *sf = sfbit->sf;
   SplineFont *cidmaster = sf->cidmaster != NULL ? sf->cidmaster : sf;
-  uint16 *widths;
+  uint16_t *widths;
   int defwidth = sf->ascent + sf->descent;
 
   fseek (sfbit->fontfile, 0, SEEK_END);
@@ -1295,7 +1295,7 @@ pdf_build_type0 (PI * pi, int sfid)
   else
     cidmax = cidmaster->glyphcnt + 2;   /* two extra useless glyphs in ttf */
 
-  widths = xmalloc (cidmax * sizeof (uint16));
+  widths = xmalloc (cidmax * sizeof (uint16_t));
 
   for (i = 0; i < cidmax; ++i)
     {

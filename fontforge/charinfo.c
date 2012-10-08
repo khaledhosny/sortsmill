@@ -1207,8 +1207,8 @@ static PST *CI_PSTCopy(PST *pst) {
 	    newpst->u.pair.vr[0].adjust = ValDevTabCopy(pst->u.pair.vr[0].adjust);
 	    newpst->u.pair.vr[1].adjust = ValDevTabCopy(pst->u.pair.vr[1].adjust);
 	} else if ( newpst->type==pst_lcaret ) {
-	    newpst->u.lcaret.carets = xmalloc(pst->u.lcaret.cnt*sizeof(uint16));
-	    memcpy(newpst->u.lcaret.carets,pst->u.lcaret.carets,pst->u.lcaret.cnt*sizeof(uint16));
+	    newpst->u.lcaret.carets = xmalloc(pst->u.lcaret.cnt*sizeof(uint16_t));
+	    memcpy(newpst->u.lcaret.carets,pst->u.lcaret.carets,pst->u.lcaret.cnt*sizeof(uint16_t));
 	} else if ( newpst->type==pst_substitution || newpst->type==pst_multiple || newpst->type==pst_alternate )
 	    newpst->u.subs.variant = copy(pst->u.subs.variant);
 	newpst->next = NULL;
@@ -1512,7 +1512,7 @@ return( false );
 		ci->cachedsc->possub = pst;
 	    }
 	    if ( lc_cnt>pst->u.lcaret.cnt )
-		pst->u.lcaret.carets = xrealloc(pst->u.lcaret.carets,lc_cnt*sizeof(int16));
+		pst->u.lcaret.carets = xrealloc(pst->u.lcaret.carets,lc_cnt*sizeof(int16_t));
 	    for ( i=pst->u.lcaret.cnt; i<lc_cnt; ++i )
 		pst->u.lcaret.carets[i] = 0;
 	    pst->u.lcaret.cnt = lc_cnt;
@@ -1988,9 +1988,9 @@ return;
 return;
     }
     if ( carets->u.lcaret.carets==NULL )
-	carets->u.lcaret.carets = (int16 *) xcalloc(lig_comp_max,sizeof(int16));
+	carets->u.lcaret.carets = (int16_t *) xcalloc(lig_comp_max,sizeof(int16_t));
     else {
-	carets->u.lcaret.carets = (int16 *) xrealloc(carets->u.lcaret.carets,lig_comp_max*sizeof(int16));
+	carets->u.lcaret.carets = (int16_t *) xrealloc(carets->u.lcaret.carets,lig_comp_max*sizeof(int16_t));
 	for ( i=carets->u.lcaret.cnt; i<lig_comp_max; ++i )
 	    carets->u.lcaret.carets[i] = 0;
     }
@@ -3692,7 +3692,7 @@ return;
 
 static void CI_SetColorList(CharInfo *ci,Color color) {
     int i;
-    uint16 junk;
+    uint16_t junk;
 
     std_colors[CUSTOM_COLOR].image = NULL;
     for ( i=0; std_colors[i].image!=NULL; ++i ) {

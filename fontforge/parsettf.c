@@ -1835,7 +1835,7 @@ static void FigureControls(SplinePoint *from, SplinePoint *to, BasePoint *cp,
     }
 }
 
-static SplineSet *ttfbuildcontours(int path_cnt,uint16 *endpt, char *flags,
+static SplineSet *ttfbuildcontours(int path_cnt,uint16_t *endpt, char *flags,
 	BasePoint *pts, int is_order2) {
     SplineSet *head=NULL, *last=NULL, *cur;
     int i, path, start, last_off;
@@ -1942,7 +1942,7 @@ return( head );
 }
 
 static void readttfsimpleglyph(FILE *ttf,struct ttfinfo *info,SplineChar *sc, int path_cnt, int gbb[4]) {
-    uint16 *endpt = xmalloc((path_cnt+1)*sizeof(uint16));
+    uint16_t *endpt = xmalloc((path_cnt+1)*sizeof(uint16_t));
     uint8 *instructions;
     char *flags;
     BasePoint *pts;
@@ -2717,7 +2717,7 @@ const char *cffnames[] = {
 const int nStdStrings = sizeof(cffnames)/sizeof(cffnames[0])-1;
 
 static char **readcfffontnames(FILE *ttf,int *cnt,struct ttfinfo *info) {
-    uint16 count = getushort(ttf);
+    uint16_t count = getushort(ttf);
     int offsize;
     uint32_t *offsets;
     char **names;
@@ -2930,7 +2930,7 @@ struct topdicts {
 
     struct pschars glyphs;
     struct pschars local_subrs;
-    uint16 *charset;
+    uint16_t *charset;
 };
 
 static void TopDictFree(struct topdicts *dict) {
@@ -2949,7 +2949,7 @@ static void TopDictFree(struct topdicts *dict) {
 }
 
 static void readcffsubrs(FILE *ttf, struct pschars *subs, struct ttfinfo *info) {
-    uint16 count = getushort(ttf);
+    uint16_t count = getushort(ttf);
     int offsize;
     uint32_t *offsets;
     int i,j, base;
@@ -3299,7 +3299,7 @@ static void readcffprivate(FILE *ttf, struct topdicts *td, struct ttfinfo *info)
 
 static struct topdicts **readcfftopdicts(FILE *ttf, char **fontnames, int32_t cff_start,
 	struct ttfinfo *info, struct topdicts *parent_dict) {
-    uint16 count = getushort(ttf);
+    uint16_t count = getushort(ttf);
     int offsize;
     uint32_t *offsets;
     struct topdicts **dicts;
@@ -3423,12 +3423,12 @@ static void readcffset(FILE *ttf,struct topdicts *dict,struct ttfinfo *info) {
     i = 0;
     if ( dict->charsetoff==0 ) {
 	/* ISO Adobe charset */
-	dict->charset = xmalloc(len*sizeof(uint16));
+	dict->charset = xmalloc(len*sizeof(uint16_t));
 	for ( i=0; i<len && i<=228; ++i )
 	    dict->charset[i] = i;
     } else if ( dict->charsetoff==1 ) {
 	/* Expert charset */
-	dict->charset = xmalloc((len<162?162:len)*sizeof(uint16));
+	dict->charset = xmalloc((len<162?162:len)*sizeof(uint16_t));
 	dict->charset[0] = 0;		/* .notdef */
 	dict->charset[1] = 1;
 	for ( i=2; i<len && i<=238-227; ++i )
@@ -3459,7 +3459,7 @@ static void readcffset(FILE *ttf,struct topdicts *dict,struct ttfinfo *info) {
 	    dict->charset[i] = i+217;
     } else if ( dict->charsetoff==2 ) {
 	/* Expert subset charset */
-	dict->charset = xmalloc((len<130?130:len)*sizeof(uint16));
+	dict->charset = xmalloc((len<130?130:len)*sizeof(uint16_t));
 	dict->charset[0] = 0;		/* .notdef */
 	dict->charset[1] = 1;
 	for ( i=2; i<len && i<=238-227; ++i )
@@ -3495,7 +3495,7 @@ static void readcffset(FILE *ttf,struct topdicts *dict,struct ttfinfo *info) {
 	for ( i=110; i<len && i<=346-217; ++i )
 	    dict->charset[i] = i+217;
     } else {
-	dict->charset = xmalloc(len*sizeof(uint16));
+	dict->charset = xmalloc(len*sizeof(uint16_t));
 	dict->charset[0] = 0;		/* .notdef */
 	fseek(ttf,dict->cff_start+dict->charsetoff,SEEK_SET);
 	format = getc(ttf);
@@ -3789,7 +3789,7 @@ static void cfffigure(struct ttfinfo *info, struct topdicts *dict,
 		subrs,gsubrs,getsid(dict->charset[i],strings,scnt,info));
 	info->chars[i]->vwidth = info->emsize;
 	if ( cstype==2 ) {
-	    if ( info->chars[i]->width == (int16) 0x8000 )
+	    if ( info->chars[i]->width == (int16_t) 0x8000 )
 		info->chars[i]->width = dict->defaultwidthx;
 	    else
 		info->chars[i]->width += dict->nominalwidthx;
@@ -3879,7 +3879,7 @@ static void cidfigure(struct ttfinfo *info, struct topdicts *dict,
 	if ( sf->glyphs[cid]->layers[ly_fore].refs!=NULL )
 	    IError( "Reference found in CID font. Can't fix it up");
 	if ( cstype==2 ) {
-	    if ( sf->glyphs[cid]->width == (int16) 0x8000 )
+	    if ( sf->glyphs[cid]->width == (int16_t) 0x8000 )
 		sf->glyphs[cid]->width = subdicts[j]->defaultwidthx;
 	    else
 		sf->glyphs[cid]->width += subdicts[j]->nominalwidthx;
@@ -4524,9 +4524,9 @@ static void readttfencodings(FILE *ttf,struct ttfinfo *info, int justinuse) {
     int offset, encoff=0;
     int format, len;
     uint32_t vs_map=0;
-    uint16 table[256];
+    uint16_t table[256];
     int segCount;
-    uint16 *endchars, *startchars, *delta, *rangeOffset, *glyphs;
+    uint16_t *endchars, *startchars, *delta, *rangeOffset, *glyphs;
     int index, last;
     int mod = 0;
     SplineChar *sc;
@@ -4721,23 +4721,23 @@ return;
 	    /* searchRange = */ getushort(ttf);
 	    /* entrySelector = */ getushort(ttf);
 	    /* rangeShift = */ getushort(ttf);
-	    endchars = xmalloc(segCount*sizeof(uint16));
+	    endchars = xmalloc(segCount*sizeof(uint16_t));
 	    used = xcalloc(65536,sizeof(uint8));
 	    for ( i=0; i<segCount; ++i )
 		endchars[i] = getushort(ttf);
 	    if ( getushort(ttf)!=0 )
 		IError("Expected 0 in 'cmap' format 4 subtable");
-	    startchars = xmalloc(segCount*sizeof(uint16));
+	    startchars = xmalloc(segCount*sizeof(uint16_t));
 	    for ( i=0; i<segCount; ++i )
 		startchars[i] = getushort(ttf);
-	    delta = xmalloc(segCount*sizeof(uint16));
+	    delta = xmalloc(segCount*sizeof(uint16_t));
 	    for ( i=0; i<segCount; ++i )
 		delta[i] = getushort(ttf);
-	    rangeOffset = xmalloc(segCount*sizeof(uint16));
+	    rangeOffset = xmalloc(segCount*sizeof(uint16_t));
 	    for ( i=0; i<segCount; ++i )
 		rangeOffset[i] = getushort(ttf);
-	    len -= 8*sizeof(uint16) +
-		    4*segCount*sizeof(uint16);
+	    len -= 8*sizeof(uint16_t) +
+		    4*segCount*sizeof(uint16_t);
 	    /* that's the amount of space left in the subtable and it must */
 	    /*  be filled with glyphIDs */
 	    if ( len<0 ) {
@@ -4753,11 +4753,11 @@ return;
 		    /* Done */;
 		else if ( rangeOffset[i]==0 ) {
 		    for ( j=startchars[i]; j<=endchars[i]; ++j ) {
-			if ( justinuse==git_justinuse && (uint16) (j+delta[i])<info->glyph_cnt )
-			    info->inuse[(uint16) (j+delta[i])] = true;
-			else if ( (uint16) (j+delta[i])>=info->glyph_cnt || info->chars[(uint16) (j+delta[i])]==NULL ) {
+			if ( justinuse==git_justinuse && (uint16_t) (j+delta[i])<info->glyph_cnt )
+			    info->inuse[(uint16_t) (j+delta[i])] = true;
+			else if ( (uint16_t) (j+delta[i])>=info->glyph_cnt || info->chars[(uint16_t) (j+delta[i])]==NULL ) {
 			    LogError( _("Attempt to encode missing glyph %d to %d (0x%x)\n"),
-				    (uint16) (j+delta[i]), modenc(j,mod), modenc(j,mod));
+				    (uint16_t) (j+delta[i]), modenc(j,mod), modenc(j,mod));
 			    info->bad_cmap = true;
 			} else {
 			    int uenc = umodenc(j,mod,info);
@@ -4770,10 +4770,10 @@ return;
 				}
 			    } else {
 				if ( uenc!=-1 && dounicode ) used[uenc] = true;
-				if ( dounicode && info->chars[(uint16) (j+delta[i])]->unicodeenc==-1 )
-				    info->chars[(uint16) (j+delta[i])]->unicodeenc = uenc;
+				if ( dounicode && info->chars[(uint16_t) (j+delta[i])]->unicodeenc==-1 )
+				    info->chars[(uint16_t) (j+delta[i])]->unicodeenc = uenc;
 			        if ( map!=NULL && lenc<map->enccount )
-				    map->map[lenc] = (uint16) (j+delta[i]);
+				    map->map[lenc] = (uint16_t) (j+delta[i]);
 			    }
 			}
 		    }
@@ -4924,7 +4924,7 @@ return;
 			if ( subheads[k].rangeoff+j>=cnt )
 			    index = 0;
 			else if ( (index = glyphs[subheads[k].rangeoff+j])!= 0 )
-			    index = (uint16) (index+subheads[k].delta);
+			    index = (uint16_t) (index+subheads[k].delta);
 			if ( index!=0 && index<info->glyph_cnt ) {
 			    enc = (i<<8)|(j+subheads[k].first);
 			    lenc = modenc(enc,mod);
@@ -5149,7 +5149,7 @@ static void readttfpostnames(FILE *ttf,struct ttfinfo *info) {
     int format, len, gc, gcbig, val;
     const char *name;
     char buffer[30];
-    uint16 *indexes;
+    uint16_t *indexes;
     extern const char *ttfstandardnames[];
     int notdefwarned = false;
     int anynames = false;
@@ -5177,7 +5177,7 @@ static void readttfpostnames(FILE *ttf,struct ttfinfo *info) {
 	/* mem4 = */ getlong(ttf);
 	if ( format==0x00020000 ) {
 	    gc = getushort(ttf);
-	    indexes = xcalloc(65536,sizeof(uint16));
+	    indexes = xcalloc(65536,sizeof(uint16_t));
 	    /* the index table is backwards from the way I want to use it */
 	    gcbig = 0;
 	    for ( i=0; i<gc; ++i ) {

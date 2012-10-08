@@ -329,7 +329,7 @@ typedef struct mathdlg {
     struct MATH *math;
     uint8 done;
     uint8 ok;
-    uint16 popup_r;
+    uint16_t popup_r;
     GGadget *popup_g;
     /* Used by glyphconstruction_dlg */
     SplineChar *sc;
@@ -362,7 +362,7 @@ static void MATH_Init(MathDlg *math) {
 
     for ( i=0; math_constants_descriptor[i].ui_name!=NULL; ++i ) {
 	GGadget *tf = GWidgetGetControl(math->gw,2*i+1);
-	int16 *pos = (int16 *) (((char *) (math->math)) + math_constants_descriptor[i].offset );
+	int16_t *pos = (int16_t *) (((char *) (math->math)) + math_constants_descriptor[i].offset );
 
 	sprintf( buffer, "%d", *pos );
 	GGadgetSetTitle8(tf,buffer);
@@ -926,7 +926,7 @@ return( true );
 	/* Ok, if we got this far it should be legal */
 	/*********************************************/
 	for ( i=0; math_constants_descriptor[i].ui_name!=NULL; ++i ) {
-	    int16 *pos = (int16 *) (((char *) (math->math)) + math_constants_descriptor[i].offset );
+	    int16_t *pos = (int16_t *) (((char *) (math->math)) + math_constants_descriptor[i].offset );
 	    *pos = GetInt8(math->gw,2*i+1,math_constants_descriptor[i].ui_name,&err);
 
 	    if ( math_constants_descriptor[i].devtab_offset >= 0 ) {

@@ -550,7 +550,7 @@ static void GTextFieldGrabSelection(GTextField *gt, enum selnames sel ) {
 	uint32_t *temp;
 	char *ctemp, *ctemp2;
 	int i;
-	uint16 *u2temp;
+	uint16_t *u2temp;
 
 	GDrawGrabSelection(gt->g.base,sel);
 	temp = xmalloc((gt->sel_end-gt->sel_start + 2)*sizeof(uint32_t));
@@ -561,7 +561,7 @@ static void GTextFieldGrabSelection(GTextField *gt, enum selnames sel ) {
 	GDrawAddSelectionType(gt->g.base,sel,"text/plain;charset=ISO-10646-UCS-4",temp,u_strlen(temp),
 		sizeof(uint32_t),
 		NULL,NULL);
-	u2temp = xmalloc((gt->sel_end-gt->sel_start + 2)*sizeof(uint16));
+	u2temp = xmalloc((gt->sel_end-gt->sel_start + 2)*sizeof(uint16_t));
 	for ( i=0; temp[i]!=0; ++i )
 	    u2temp[i] = temp[i];
 	u2temp[i] = 0;
@@ -618,7 +618,7 @@ static int GTextFieldSelForeword(uint32_t *text,int end) {
 return( end );
 }
 
-static void GTextFieldSelectWord(GTextField *gt,int mid, int16 *start, int16 *end) {
+static void GTextFieldSelectWord(GTextField *gt,int mid, int16_t *start, int16_t *end) {
     uint32_t *text;
     uint32_t ch = gt->text[mid];
 
@@ -649,7 +649,7 @@ static void GTextFieldSelectWord(GTextField *gt,int mid, int16 *start, int16 *en
 }
 
 static void GTextFieldSelectWords(GTextField *gt,int last) {
-    int16 ss, se;
+    int16_t ss, se;
     GTextFieldSelectWord(gt,gt->sel_base,&gt->sel_start,&gt->sel_end);
     if ( last!=gt->sel_base ) {
 	GTextFieldSelectWord(gt,last,&ss,&se);
@@ -684,7 +684,7 @@ static void GTextFieldPaste(GTextField *gt,enum selnames sel) {
     } else if ( GDrawSelectionHasType(gt->g.base,sel,"Unicode") ||
 	    GDrawSelectionHasType(gt->g.base,sel,"text/plain;charset=ISO-10646-UCS-2")) {
 	uint32_t *temp;
-	uint16 *temp2;
+	uint16_t *temp2;
 	int32_t len;
 	temp2 = GDrawRequestSelection(gt->g.base,sel,"text/plain;charset=ISO-10646-UCS-2",&len);
 	if ( temp2==NULL || len==0 )
@@ -741,7 +741,7 @@ return( true );
       case ec_undo:
 	if ( gt->oldtext!=NULL ) {
 	    uint32_t *temp = gt->text;
-	    int16 s;
+	    int16_t s;
 	    gt->text = gt->oldtext; gt->oldtext = temp;
 	    s = gt->sel_start; gt->sel_start = gt->sel_oldstart; gt->sel_oldstart = s;
 	    s = gt->sel_end; gt->sel_end = gt->sel_oldend; gt->sel_oldend = s;

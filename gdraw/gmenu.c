@@ -1621,7 +1621,7 @@ GGadget *GMenuBarCreate(struct gwindow *base, GGadgetData *gd,void *data) {
     _GGadget_Create(&mb->g,base,gd,data,&menubar_box);
 
     mb->mi = GMenuItemArrayCopy(gd->u.menu,&mb->mtot);
-    mb->xs = xmalloc((mb->mtot+1)*sizeof(uint16));
+    mb->xs = xmalloc((mb->mtot+1)*sizeof(uint16_t));
     mb->entry_with_mouse = -1;
     mb->font = menubar_font;
 
@@ -1648,7 +1648,7 @@ GGadget *GMenu2BarCreate(struct gwindow *base, GGadgetData *gd,void *data) {
     _GGadget_Create(&mb->g,base,gd,data,&menubar_box);
 
     mb->mi = GMenuItem2ArrayCopy(gd->u.menu2,&mb->mtot);
-    mb->xs = xmalloc((mb->mtot+1)*sizeof(uint16));
+    mb->xs = xmalloc((mb->mtot+1)*sizeof(uint16_t));
     mb->entry_with_mouse = -1;
     mb->font = menubar_font;
 

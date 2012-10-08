@@ -29,7 +29,7 @@
 
 struct gfuncs {
     unsigned int is_widget: 1;
-    uint16 size;
+    uint16_t size;
     int (*handle_expose)(GWindow pixmap,GGadget *g,GEvent *event);
     int (*handle_mouse)(GGadget *g,GEvent *event);
     int (*handle_key)(GGadget *g,GEvent *event);
@@ -104,7 +104,7 @@ struct ggadget {
     enum gadget_state state;
     uint32_t *popup_msg;
     GGadgetHandler handle_controlevent;
-    int16 desired_width, desired_height;
+    int16_t desired_width, desired_height;
 };
 
 typedef struct ggadget GLine;
@@ -127,7 +127,7 @@ typedef struct glabel {		/* or simple text, or groupbox */
     uint32_t *label;
     GImage *image;
     GTextInfo **ti;
-    uint16 ltot;
+    uint16_t ltot;
 } GLabel, GButton;
 
 typedef struct gimagebutton {
@@ -161,7 +161,7 @@ typedef struct glistbutton {
     uint32_t *label;
     GImage *image;
     GTextInfo **ti;
-    uint16 ltot;
+    uint16_t ltot;
     GWindow popup;
 } GListButton;
 
@@ -230,10 +230,10 @@ typedef struct gscrollbar {		/* and slider */
     int8 repeatcmd;		/*  sb event to be generated on timer interupts (ie. upline)*/
     int8 thumbborder;		/* Size of the border of the thumbbox */
     int8 sbborder;		/* Size of the border of the main scrollbar */
-    int16 thumboff;		/* Offset from where the thumb was pressed to top of thumb */
-    int16 arrowsize;		
-    int16 thumbsize;		/* Current thumb size, refigured after every call to setbounds */
-    int16 thumbpos;		/* Current thumb pos */
+    int16_t thumboff;		/* Offset from where the thumb was pressed to top of thumb */
+    int16_t arrowsize;		
+    int16_t thumbsize;		/* Current thumb size, refigured after every call to setbounds */
+    int16_t thumbpos;		/* Current thumb pos */
     GTimer *pressed;
     GBox *thumbbox;
 } GScrollBar;
@@ -243,10 +243,10 @@ typedef struct glist {
     uint8 fh;
     uint8 as;
     uint8 sofar_max, sofar_pos;
-    uint16 ltot, loff, lcnt;
-    uint16 xoff, xmax;
-    uint16 start, end;			/* current selection drag */
-    uint16 hmax;		/* maximum line height */
+    uint16_t ltot, loff, lcnt;
+    uint16_t xoff, xmax;
+    uint16_t start, end;			/* current selection drag */
+    uint16_t hmax;		/* maximum line height */
     FontInstance *font;
     GTextInfo **ti;
     struct gscrollbar *vsb;
@@ -287,19 +287,19 @@ typedef struct gtextfield {
     uint8 fh;
     uint8 as;
     uint8 nw;			/* Width of one character (an "n") */
-    int16 xoff_left, loff_top;
-    int16 sel_start, sel_end, sel_base;
-    int16 sel_oldstart, sel_oldend, sel_oldbase;
-    int16 dd_cursor_pos;
+    int16_t xoff_left, loff_top;
+    int16_t sel_start, sel_end, sel_base;
+    int16_t sel_oldstart, sel_oldend, sel_oldbase;
+    int16_t dd_cursor_pos;
     uint32_t *text, *oldtext;
     FontInstance *font;
     GTimer *pressed;
     GTimer *cursor;
     GCursor old_cursor;
     GScrollBar *hsb, *vsb;
-    int16 lcnt, lmax;
+    int16_t lcnt, lmax;
     int32_t *lines;		/* offsets in text to the start of the nth line */
-    int16 xmax;
+    int16_t xmax;
     GIC *gic;
     GTimer *numeric_scroll;
     char *utf8_text;		/* For Pango */
@@ -310,14 +310,14 @@ typedef struct glistfield {
     GTextField gt;
     GRect fieldrect, buttonrect;
     GTextInfo **ti;
-    uint16 ltot;
+    uint16_t ltot;
     GWindow popup;
 } GListField;
 
 typedef struct gcompletionfield {
     GListField gl;
     uint32_t **choices;
-    uint16 ctot; int16 selected;
+    uint16_t ctot; int16_t selected;
     GWindow choice_popup;
     GTextCompletionHandler completion;
 } GCompletionField;
@@ -330,10 +330,10 @@ typedef struct gnumericfield {
 typedef struct gmenubar {
     GGadget g;
     GMenuItem *mi;
-    uint16 *xs;			/* locations at which to draw each name (+1 to give us width of last one) */
-    uint16 mtot;
-    int16 entry_with_mouse;
-    int16 lastmi;		/* If the menubar doesn't fit across the top the make some of it be vertical. Start here */
+    uint16_t *xs;			/* locations at which to draw each name (+1 to give us width of last one) */
+    uint16_t mtot;
+    int16_t entry_with_mouse;
+    int16_t lastmi;		/* If the menubar doesn't fit across the top the make some of it be vertical. Start here */
     struct gmenu *child;
     unsigned int pressed: 1;
     unsigned int initial_press: 1;
@@ -342,23 +342,23 @@ typedef struct gmenubar {
     GMenuItem fake[2];		/* Used if not enough room for menu... */
 } GMenuBar;
 
-struct tabs { uint32_t *name; int16 x, width, tw, nesting; unsigned int disabled: 1; GWindow w; };
+struct tabs { uint32_t *name; int16_t x, width, tw, nesting; unsigned int disabled: 1; GWindow w; };
 
 typedef struct gtabset {
     struct ggadget g;
     struct tabs *tabs;
-    int16 *rowstarts;		/* for each row, index into tab array of its first tab, one extra entry at end with tabcnt */
-    int16 tabcnt;		/* number of tabs */
-    int16 sel;			/* active tab */
-    int16 rcnt;			/* number of rows */
-    int16 active_row;		/* row which is closest to the display area */
-    int16 offset_per_row;	/* stagger tabs by this much */
-    int16 rowh;			/* height of each row */
-    int16 toff;			/* amount things are scrolled off left (x, tabs) */
-    int16 arrow_width;		/* width of arrow tab (for scrolling) */
-    int16 arrow_size;		/* size of the actual arrow itself */
-    int16 ds;
-    int16 pressed_sel;
+    int16_t *rowstarts;		/* for each row, index into tab array of its first tab, one extra entry at end with tabcnt */
+    int16_t tabcnt;		/* number of tabs */
+    int16_t sel;			/* active tab */
+    int16_t rcnt;			/* number of rows */
+    int16_t active_row;		/* row which is closest to the display area */
+    int16_t offset_per_row;	/* stagger tabs by this much */
+    int16_t rowh;			/* height of each row */
+    int16_t toff;			/* amount things are scrolled off left (x, tabs) */
+    int16_t arrow_width;		/* width of arrow tab (for scrolling) */
+    int16_t arrow_size;		/* size of the actual arrow itself */
+    int16_t ds;
+    int16_t pressed_sel;
     unsigned int scrolled: 1;	/* big tabsets either get scrolled or appear in multiple rows */
     unsigned int haslarrow: 1;
     unsigned int hasrarrow: 1;
@@ -370,8 +370,8 @@ typedef struct gtabset {
     FontInstance *font;
     void (*nested_expose)(GWindow pixmap, GGadget *g, GEvent *event);
     int (*nested_mouse)(GGadget *g, GEvent *event);
-    int16 vert_list_width;
-    int16 as, fh, offtop;
+    int16_t vert_list_width;
+    int16_t as, fh, offtop;
     GGadget *vsb;
 } GTabSet;
 
@@ -414,7 +414,7 @@ struct col_data {
     void (*enable_enum)(GGadget *,GMenuItem *, int r, int c);
     GTextCompletionHandler completer;
     char *title;
-    int16 width, x;			/* Relative to inner.x */
+    int16_t width, x;			/* Relative to inner.x */
     uint8 fixed;
     uint8 disabled;
     uint8 hidden;
@@ -434,8 +434,8 @@ typedef struct gmatrixedit {
     unsigned int no_edit: 1;
     int pressed_col;			/* For changing column spacing */
     struct matrix_data *data;
-    int16 as, fh;
-    int16 font_as, font_fh;
+    int16_t as, fh;
+    int16_t font_as, font_fh;
     FontInstance *font;
     FontInstance *titfont;
     GGadget *tf;
@@ -446,7 +446,7 @@ typedef struct gmatrixedit {
     GGadget *up, *down;
     GGadget **buttonlist;
     GWindow nested;
-    int16 mark_length, mark_size, mark_skip;
+    int16_t mark_length, mark_size, mark_skip;
     char *newtext;
     void (*initrow)(GGadget *g,int row);
     int  (*candelete)(GGadget *g,int row);
@@ -555,7 +555,7 @@ extern int GTextInfoGetAs(GWindow base,GTextInfo *ti, FontInstance *font);
 extern int GTextInfoDraw(GWindow base,int x,int y,GTextInfo *ti,
 	FontInstance *font,Color fg,Color sel,int ymax);
 extern GTextInfo *GTextInfoCopy(GTextInfo *ti);
-VISIBLE extern GTextInfo **GTextInfoArrayFromList(GTextInfo *ti, uint16 *cnt);
+VISIBLE extern GTextInfo **GTextInfoArrayFromList(GTextInfo *ti, uint16_t *cnt);
 extern GTextInfo **GTextInfoArrayCopy(GTextInfo **ti);
 extern int GTextInfoArrayCount(GTextInfo **ti);
 extern int GTextInfoCompare(GTextInfo *ti1, GTextInfo *ti2);

@@ -140,8 +140,8 @@ typedef struct fontdict {
     int gdbytes;
     int cidcnt;
     uint8 **cidstrs;
-    int16 *cidlens;
-    int16 *cidfds;
+    int16_t *cidlens;
+    int16_t *cidfds;
 /* CFF stuff */
     struct splinefont *sf;
 /* MM stuff */

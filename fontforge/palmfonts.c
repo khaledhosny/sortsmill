@@ -56,8 +56,8 @@ struct font {
     int rowwords;
     int first, last;
     struct chars {
-	uint16 start;
-	int16 width;
+	uint16_t start;
+	int16_t width;
     } chars[258];
 };
 
@@ -105,7 +105,7 @@ static void PalmReadBitmaps(SplineFont *sf,FILE *file,int imagepos,
 	struct font *fn,int density) {
     int pixelsize = density*fn->frectheight/72;
     BDFFont *bdf;
-    uint16 *fontImage;
+    uint16_t *fontImage;
     int imagesize, index, i;
     int gid;
     EncMap *map = sf->map;
@@ -158,7 +158,7 @@ return;
 
 	    bits = density*fn->chars[index].start/72; bite = density*fn->chars[index+1].start/72;
 	    for ( i=0; i<density*fn->frectheight/72; ++i ) {
-		uint16 *test = fontImage + i*density*fn->rowwords/72;
+		uint16_t *test = fontImage + i*density*fn->rowwords/72;
 		uint8 *bpt = bdfc->bitmap + i*bdfc->bytes_per_line;
 		for ( bit=bits, j=0; bit<bite; ++bit, ++j ) {
 		    if ( test[bit>>4]&(0x8000>>(bit&0xf)) )
@@ -440,19 +440,19 @@ return( bdf );
 }
 
 struct FontTag {
-  uint16 fontType;
-  int16 firstChar;
-  int16 lastChar;
-  int16 maxWidth;
-  int16 kernMax;
-  int16 nDescent;
-  int16 fRectWidth; 
-  int16 fRectHeight;
-  int16 owTLoc;
-  int16 ascent;
-  int16 descent;
-  int16 leading;
-  int16 rowWords;
+  uint16_t fontType;
+  int16_t firstChar;
+  int16_t lastChar;
+  int16_t maxWidth;
+  int16_t kernMax;
+  int16_t nDescent;
+  int16_t fRectWidth; 
+  int16_t fRectHeight;
+  int16_t owTLoc;
+  int16_t ascent;
+  int16_t descent;
+  int16_t leading;
+  int16_t rowWords;
 };
 
 static int ValidMetrics(BDFFont *test,BDFFont *base,EncMap *map,int den) {
@@ -498,7 +498,7 @@ return( false );
 return( true );
 }
 
-static void PalmAddChar(uint16 *image,int rw,int rbits,
+static void PalmAddChar(uint16_t *image,int rw,int rbits,
 	BDFFont *bdf,BDFChar *bc, int width) {
     int i,j;
 
@@ -515,11 +515,11 @@ static void PalmAddChar(uint16 *image,int rw,int rbits,
     }
 }
 
-static uint16 *BDF2Image(struct FontTag *fn, BDFFont *bdf, int **offsets,
-	int **widths, int16 *rowWords, BDFFont *base,EncMap *map,int notdefpos) {
+static uint16_t *BDF2Image(struct FontTag *fn, BDFFont *bdf, int **offsets,
+	int **widths, int16_t *rowWords, BDFFont *base,EncMap *map,int notdefpos) {
     int rbits, rw;
     int i,j, gid;
-    uint16 *image;
+    uint16_t *image;
     int den;
     BDFChar *bdfc;
 
@@ -545,7 +545,7 @@ return( NULL );
 	*offsets = xmalloc((fn->lastChar-fn->firstChar+3)*sizeof(int));
 	*widths = xmalloc((fn->lastChar-fn->firstChar+3)*sizeof(int));
     }
-    image = xcalloc(bdf->pixelsize*rw,sizeof(uint16));
+    image = xcalloc(bdf->pixelsize*rw,sizeof(uint16_t));
     rbits = 0;
     for ( i=fn->firstChar; i<=fn->lastChar; ++i ) {
 	if ( offsets!=NULL )
@@ -596,7 +596,7 @@ int WritePalmBitmaps(char *filename,SplineFont *sf, int32_t *sizes,EncMap *map) 
     				/* Ignore 1.5 density. No docs on how odd metrics get rounded */
     int i, j, k, f, den, dencnt, gid;
     struct FontTag fn;
-    uint16 *images[4];
+    uint16_t *images[4];
     int *offsets, *widths;
     int owbase, owpos, font_start, density_starts;
     FILE *file;

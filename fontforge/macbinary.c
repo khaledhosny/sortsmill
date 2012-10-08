@@ -114,7 +114,7 @@ extern unsigned long binhex_crc(unsigned char *buffer,int size);
 
 /* ******************************** Creation ******************************** */
 
-static uint16 HashToId(char *fontname,SplineFont *sf,EncMap *map) {
+static uint16_t HashToId(char *fontname,SplineFont *sf,EncMap *map) {
     int low = 128, high = 0x3fff;
     /* A FOND ID should be between these two numbers for roman script (I think) */
     uint32_t hash = 0;
@@ -252,7 +252,7 @@ return( cnt );
 struct resource {
     uint32_t pos;
     uint8 flags;
-    uint16 id;
+    uint16_t id;
     char *name;
     uint32_t nameloc;
     uint32_t nameptloc;
@@ -648,7 +648,7 @@ return(resstarts);
 enum psstyle_flags { psf_bold = 1, psf_italic = 2, psf_outline = 4,
 	psf_shadow = 0x8, psf_condense = 0x10, psf_extend = 0x20 };
 
-uint16 _MacStyleCode( char *styles, SplineFont *sf, uint16 *psstylecode ) {
+uint16_t _MacStyleCode( char *styles, SplineFont *sf, uint16_t *psstylecode ) {
     unsigned short stylecode= 0, psstyle=0;
 
     if ( strstrmatch( styles, "Bold" ) || strstrmatch(styles,"Demi") ||
@@ -709,7 +709,7 @@ uint16 _MacStyleCode( char *styles, SplineFont *sf, uint16 *psstylecode ) {
 return( stylecode );
 }
 
-uint16 MacStyleCode( SplineFont *sf, uint16 *psstylecode ) {
+uint16_t MacStyleCode( SplineFont *sf, uint16_t *psstylecode ) {
     unsigned int style_code;
 
     sf = optional_cidmaster(sf);
@@ -937,7 +937,7 @@ struct sflistlist {
 static struct sflistlist *FondSplitter(struct sflist *sfs,int *fondcnt) {
     struct sflist *psfaces[48], *sfi, *last, *start;
     struct sflistlist *sfsl=NULL, *lastl=NULL, *cur, *test;
-    uint16 psstyle;
+    uint16_t psstyle;
     int fc = 0;
 
     sfi = sfs;
@@ -1025,7 +1025,7 @@ static uint32_t SFsToFOND(FILE *res,struct sflist *sfs,uint32_t id,int format,in
     int i,j,k,cnt, scnt, kcnt, pscnt, strcnt, fontclass, glyphenc, geoffset;
     int gid;
     int size;
-    uint16 psstyle, stylecode;
+    uint16_t psstyle, stylecode;
     int exact, famlen, has_hyphen;
     char *familyname;
     KernPair *kp;
@@ -2447,7 +2447,7 @@ static BDFChar *NFNTCvtBitmap(struct MacFontRec *font,int index,SplineFont *sf,i
 
     bits = font->locs[index]; bite = font->locs[index+1];
     for ( i=0; i<font->fRectHeight; ++i ) {
-	uint16 *test = font->fontImage + i*font->rowWords;
+	uint16_t *test = font->fontImage + i*font->rowWords;
 	uint8 *bpt = bdfc->bitmap + i*bdfc->bytes_per_line;
 	for ( bit=bits, j=0; bit<bite; ++bit, ++j ) {
 	    if ( test[bit>>4]&(0x8000>>(bit&0xf)) )

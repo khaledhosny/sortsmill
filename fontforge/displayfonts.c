@@ -1039,7 +1039,7 @@ static int DSP_FontChanged(GGadget *g, GEvent *e) {
 	BDFFont *best;
 	int flags, pick = 0, i;
 	char size[12]; uint32_t usize[12];
-	uint16 cnt;
+	uint16_t cnt;
 
 	if ( sel==NULL )
 return( true );

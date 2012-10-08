@@ -43,11 +43,11 @@ typedef struct gprogress {
     uint32_t *line2;
     int sofar;
     int tot;
-    int16 stage, stages;
-    int16 width;
-    int16 l1width, l2width;
-    int16 l1y, l2y, boxy;
-    int16 last_amount;
+    int16_t stage, stages;
+    int16_t width;
+    int16_t l1width, l2width;
+    int16_t l1y, l2y, boxy;
+    int16_t last_amount;
     unsigned int aborted: 1;
     unsigned int visible: 1;
     unsigned int dying: 1;

@@ -40,42 +40,42 @@
 typedef struct anchorclass1 {
     AnchorClass ac;
     uint32_t feature_tag;
-    uint16 script_lang_index;
-    uint16 flags;
-    uint16 merge_with;
+    uint16_t script_lang_index;
+    uint16_t flags;
+    uint16_t merge_with;
     uint8 has_bases;
     uint8 has_ligatures;
 } AnchorClass1;
 
 typedef struct kernpair1 {
     KernPair kp;
-    uint16 sli, flags;
+    uint16_t sli, flags;
 } KernPair1;
 
 typedef struct kernclass1 {
     KernClass kc;
-    uint16 sli;
-    uint16 flags;
+    uint16_t sli;
+    uint16_t flags;
 } KernClass1;
 
 typedef struct generic_pst1 {
     PST pst;
     uint8 macfeature;		/* tag should be interpretted as <feature,setting> rather than 'abcd' */
-    uint16 flags;
-    uint16 script_lang_index;		/* 0xffff means none */
+    uint16_t flags;
+    uint16_t script_lang_index;		/* 0xffff means none */
     uint32_t tag;
 } PST1;
 
 typedef struct generic_fpst1 {
     FPST fpst;
-    uint16 script_lang_index;
-    uint16 flags;
+    uint16_t script_lang_index;
+    uint16_t flags;
     uint32_t tag;
 } FPST1;
 
 typedef struct generic_asm1 {		/* Apple State Machine */
     ASM sm;
-    uint16 feature, setting;
+    uint16_t feature, setting;
     uint32_t opentype_tag;		/* If converted from opentype */
 } ASM1;
 
@@ -96,7 +96,7 @@ struct tagtype {
 };
 
 struct gentagtype {
-    uint16 tt_cur, tt_max;
+    uint16_t tt_cur, tt_max;
     struct tagtype *tagtype;
 };
 
@@ -113,7 +113,7 @@ typedef struct splinefont1 {
     /*  store all choices used here, and just store an index into this list */
     /*  in the PST. All lists are terminated by a 0 entry */
     struct script_record **script_lang;
-    int16 sli_cnt;
+    int16_t sli_cnt;
 
     struct gentagtype gentags;
 } SplineFont1;

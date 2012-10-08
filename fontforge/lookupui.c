@@ -5517,7 +5517,7 @@ return;
 	    sub->kc->first_cnt = sub->kc->second_cnt = 1;
 	    sub->kc->firsts = xcalloc(1,sizeof(char *));
 	    sub->kc->seconds = xcalloc(1,sizeof(char *));
-	    sub->kc->offsets = xcalloc(1,sizeof(int16));
+	    sub->kc->offsets = xcalloc(1,sizeof(int16_t));
 	    sub->kc->adjusts = xcalloc(1,sizeof(DeviceTable));
 		/* Need to fix for Hebrew !!!! */
 	    if ( results.autobuild )

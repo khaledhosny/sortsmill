@@ -292,18 +292,18 @@ int TTF__getcvtval(SplineFont *sf,int val) {
         cvt_tab->next = sf->ttf_tables;
         sf->ttf_tables = cvt_tab;
     }
-    for ( i=0; (int)sizeof(uint16)*i<cvt_tab->len; ++i ) {
-        int tval = (int16) memushort(cvt_tab->data,cvt_tab->len, sizeof(uint16)*i);
+    for ( i=0; (int)sizeof(uint16_t)*i<cvt_tab->len; ++i ) {
+        int tval = (int16_t) memushort(cvt_tab->data,cvt_tab->len, sizeof(uint16_t)*i);
         if ( val>=tval-1 && val<=tval+1 )
 return( i );
     }
-    if ( (int)sizeof(uint16)*i>=cvt_tab->maxlen ) {
+    if ( (int)sizeof(uint16_t)*i>=cvt_tab->maxlen ) {
         if ( cvt_tab->maxlen==0 ) cvt_tab->maxlen = cvt_tab->len;
         cvt_tab->maxlen += 200;
         cvt_tab->data = xrealloc(cvt_tab->data,cvt_tab->maxlen);
     }
-    memputshort(cvt_tab->data,sizeof(uint16)*i,val);
-    cvt_tab->len += sizeof(uint16);
+    memputshort(cvt_tab->data,sizeof(uint16_t)*i,val);
+    cvt_tab->len += sizeof(uint16_t);
 return( i );
 }
 
@@ -685,7 +685,7 @@ static void init_cvt(GlobalInstrCt *gic) {
     cvtsize += gic->stemsnapvcnt;
     cvtsize += gic->bluecnt * 2; /* possible family blues */
 
-    cvt = xcalloc(cvtsize, cvtsize * sizeof(int16));
+    cvt = xcalloc(cvtsize, cvtsize * sizeof(int16_t));
     cvtindex = 0;
 
     /* Assign cvt indices */
@@ -720,7 +720,7 @@ static void init_cvt(GlobalInstrCt *gic) {
     }
 
     cvtsize = cvtindex;
-    cvt = xrealloc(cvt, cvtsize * sizeof(int16));
+    cvt = xrealloc(cvt, cvtsize * sizeof(int16_t));
 
     /* Try to implant the new cvt table */
     gic->cvt_done = 0;
@@ -733,15 +733,15 @@ static void init_cvt(GlobalInstrCt *gic) {
 	gic->sf->ttf_tables = tab;
 	tab->tag = CHR('c','v','t',' ');
 
-	tab->len = tab->maxlen = cvtsize * sizeof(int16);
+	tab->len = tab->maxlen = cvtsize * sizeof(int16_t);
 	if (tab->maxlen >256) tab->maxlen = 256;
         tab->data = cvt;
 
         gic->cvt_done = 1;
     }
     else {
-        if (tab->len >= cvtsize * (int)sizeof(int16) &&
-	    memcmp(cvt, tab->data, cvtsize * sizeof(int16)) == 0)
+        if (tab->len >= cvtsize * (int)sizeof(int16_t) &&
+	    memcmp(cvt, tab->data, cvtsize * sizeof(int16_t)) == 0)
 	        gic->cvt_done = 1;
 
         free(cvt);
@@ -795,7 +795,7 @@ return;
  */
 static void init_maxp(GlobalInstrCt *gic) {
     struct ttf_table *tab = SFFindTable(gic->sf, CHR('m','a','x','p'));
-    uint16 zones, twpts, store, fdefs, stack;
+    uint16_t zones, twpts, store, fdefs, stack;
 
     if ( tab==NULL ) {
         tab = (struct ttf_table *) xzalloc(sizeof (struct ttf_table));
@@ -810,11 +810,11 @@ static void init_maxp(GlobalInstrCt *gic) {
         tab->len = tab->maxlen = 32;
     }
 
-    zones = memushort(tab->data, 32,  7*sizeof(uint16));
-    twpts = memushort(tab->data, 32,  8*sizeof(uint16));
-    store = memushort(tab->data, 32,  9*sizeof(uint16));
-    fdefs = memushort(tab->data, 32, 10*sizeof(uint16));
-    stack = memushort(tab->data, 32, 12*sizeof(uint16));
+    zones = memushort(tab->data, 32,  7*sizeof(uint16_t));
+    twpts = memushort(tab->data, 32,  8*sizeof(uint16_t));
+    store = memushort(tab->data, 32,  9*sizeof(uint16_t));
+    fdefs = memushort(tab->data, 32, 10*sizeof(uint16_t));
+    stack = memushort(tab->data, 32, 12*sizeof(uint16_t));
 
     if (gic->fpgm_done && zones<2) zones=2;
     if (gic->fpgm_done && twpts<1) twpts=1;
@@ -822,11 +822,11 @@ static void init_maxp(GlobalInstrCt *gic) {
     if (gic->fpgm_done && fdefs<22) fdefs=22;
     if (stack<STACK_DEPTH) stack=STACK_DEPTH;
 
-    memputshort(tab->data, 7*sizeof(uint16), zones);
-    memputshort(tab->data, 8*sizeof(uint16), twpts);
-    memputshort(tab->data, 9*sizeof(uint16), store);
-    memputshort(tab->data,10*sizeof(uint16), fdefs);
-    memputshort(tab->data,12*sizeof(uint16), stack);
+    memputshort(tab->data, 7*sizeof(uint16_t), zones);
+    memputshort(tab->data, 8*sizeof(uint16_t), twpts);
+    memputshort(tab->data, 9*sizeof(uint16_t), store);
+    memputshort(tab->data,10*sizeof(uint16_t), fdefs);
+    memputshort(tab->data,12*sizeof(uint16_t), stack);
 }
 
 /* Other hinting software puts certain actions in FPGM to ease developer's life

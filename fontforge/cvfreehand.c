@@ -58,7 +58,7 @@ typedef struct tracedata {
     unsigned int online: 1;
     unsigned int wasconstrained: 1;
     unsigned int constrained_corner: 1;
-    uint16 num;
+    uint16_t num;
 } TraceData;
 
 static void TraceDataFree(TraceData *td) {

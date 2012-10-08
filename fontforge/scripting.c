@@ -1844,7 +1844,7 @@ static void bGenerateFamily(Context *c) {
     Array *fonts;
     FontViewBase *fv;
     int i, j, fc, added;
-    uint16 psstyle;
+    uint16_t psstyle;
     int fondcnt = 0, fondmax = 10;
     SFArray *familysfs=NULL;
     char *t;
@@ -3477,13 +3477,13 @@ static void bSetPanose(Context *c) {
     c->curfv->sf->changed = true;
 }
 
-static void setint16(int16 *val,Context *c) {
+static void setint16(int16_t *val,Context *c) {
     if ( c->a.vals[2].type!=v_int )
 	ScriptError(c,"Bad argument type");
     *val = c->a.vals[2].u.ival;
 }
 
-static void setss16(int16 *val,SplineFont *sf,Context *c) {
+static void setss16(int16_t *val,SplineFont *sf,Context *c) {
     if ( c->a.vals[2].type!=v_int )
 	ScriptError(c,"Bad argument type");
     *val = c->a.vals[2].u.ival;
@@ -3714,17 +3714,17 @@ static void bSetMaxpValue(Context *c) {
 	tab->len = tab->maxlen = 32;
     }
     if ( strmatch(c->a.vals[1].u.sval,"Zones")==0 )
-	memputshort(tab->data,7*sizeof(uint16),c->a.vals[2].u.ival);
+	memputshort(tab->data,7*sizeof(uint16_t),c->a.vals[2].u.ival);
     else if ( strmatch(c->a.vals[1].u.sval,"TwilightPntCnt")==0 )
-	memputshort(tab->data,8*sizeof(uint16),c->a.vals[2].u.ival);
+	memputshort(tab->data,8*sizeof(uint16_t),c->a.vals[2].u.ival);
     else if ( strmatch(c->a.vals[1].u.sval,"StorageCnt")==0 )
-	memputshort(tab->data,9*sizeof(uint16),c->a.vals[2].u.ival);
+	memputshort(tab->data,9*sizeof(uint16_t),c->a.vals[2].u.ival);
     else if ( strmatch(c->a.vals[1].u.sval,"MaxStackDepth")==0 )
-	memputshort(tab->data,12*sizeof(uint16),c->a.vals[2].u.ival);
+	memputshort(tab->data,12*sizeof(uint16_t),c->a.vals[2].u.ival);
     else if ( strmatch(c->a.vals[1].u.sval,"FDEFs")==0 )
-	memputshort(tab->data,10*sizeof(uint16),c->a.vals[2].u.ival);
+	memputshort(tab->data,10*sizeof(uint16_t),c->a.vals[2].u.ival);
     else if ( strmatch(c->a.vals[1].u.sval,"IDEFs")==0 )
-	memputshort(tab->data,11*sizeof(uint16),c->a.vals[2].u.ival);
+	memputshort(tab->data,11*sizeof(uint16_t),c->a.vals[2].u.ival);
     else
 	ScriptErrorString(c,"Unknown 'maxp' field: ", c->a.vals[1].u.sval );
 }
@@ -3752,17 +3752,17 @@ static void bGetMaxpValue(Context *c) {
 
     c->return_val.type = v_int;
     if ( strmatch(c->a.vals[1].u.sval,"Zones")==0 )
-	c->return_val.u.ival = memushort(data,32,7*sizeof(uint16));
+	c->return_val.u.ival = memushort(data,32,7*sizeof(uint16_t));
     else if ( strmatch(c->a.vals[1].u.sval,"TwilightPntCnt")==0 )
-	c->return_val.u.ival = memushort(data,32,8*sizeof(uint16));
+	c->return_val.u.ival = memushort(data,32,8*sizeof(uint16_t));
     else if ( strmatch(c->a.vals[1].u.sval,"StorageCnt")==0 )
-	c->return_val.u.ival = memushort(data,32,9*sizeof(uint16));
+	c->return_val.u.ival = memushort(data,32,9*sizeof(uint16_t));
     else if ( strmatch(c->a.vals[1].u.sval,"MaxStackDepth")==0 )
-	c->return_val.u.ival = memushort(data,32,12*sizeof(uint16));
+	c->return_val.u.ival = memushort(data,32,12*sizeof(uint16_t));
     else if ( strmatch(c->a.vals[1].u.sval,"FDEFs")==0 )
-	c->return_val.u.ival = memushort(data,32,10*sizeof(uint16));
+	c->return_val.u.ival = memushort(data,32,10*sizeof(uint16_t));
     else if ( strmatch(c->a.vals[1].u.sval,"IDEFs")==0 )
-	c->return_val.u.ival = memushort(data,32,11*sizeof(uint16));
+	c->return_val.u.ival = memushort(data,32,11*sizeof(uint16_t));
     else
 	ScriptErrorString(c,"Unknown 'maxp' field: ", c->a.vals[1].u.sval );
 }
@@ -5442,7 +5442,7 @@ static void bGetCvtAt(Context *c) {
 	ScriptError(c,"Cvt table is either not present or too short");
     c->return_val.type = v_int;
     c->return_val.u.ival = memushort(tab->data,tab->len,
-	    sizeof(uint16)*c->a.vals[1].u.ival);
+	    sizeof(uint16_t)*c->a.vals[1].u.ival);
 }
 
 static void bReplaceCvtAt(Context *c) {
@@ -5456,7 +5456,7 @@ static void bReplaceCvtAt(Context *c) {
     for ( tab=sf->ttf_tables; tab!=NULL && tab->tag!=CHR('c','v','t',' '); tab=tab->next );
     if ( tab==NULL || c->a.vals[1].u.ival>=tab->len/2 )
 	ScriptError(c,"Cvt table is either not present or too short");
-    memputshort(tab->data,sizeof(uint16)*c->a.vals[1].u.ival,
+    memputshort(tab->data,sizeof(uint16_t)*c->a.vals[1].u.ival,
 	    c->a.vals[2].u.ival);
 }
 

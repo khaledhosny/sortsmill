@@ -1006,7 +1006,7 @@ return;
     free(rused);
     free(visual_separation);
 	
-    kc->offsets = xcalloc(lclasscnt*rclasscnt,sizeof(int16));;
+    kc->offsets = xcalloc(lclasscnt*rclasscnt,sizeof(int16_t));;
     kc->adjusts = xcalloc(lclasscnt*rclasscnt,sizeof(DeviceTable));
 
     if ( autokern )

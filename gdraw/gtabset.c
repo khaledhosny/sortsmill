@@ -417,7 +417,7 @@ static void GTabSet_Remetric(GTabSet *gts) {
 	    while ( (r2 = GTabSetRCnt(gts,width-(r-1)*gts->offset_per_row))!=r )
 		r = r2;
 	free(gts->rowstarts);
-	gts->rowstarts = xmalloc((r+1)*sizeof(int16));
+	gts->rowstarts = xmalloc((r+1)*sizeof(int16_t));
 	gts->rcnt = r;
 	gts->rowstarts[r] = gts->tabcnt;
 	for ( i=r=0; i<gts->tabcnt; ++i ) {

@@ -964,14 +964,14 @@ return( str );
 
 static void pfed_readcvtcomments(FILE *ttf,struct ttfinfo *info,uint32_t base ) {
     int count, i;
-    uint16 *offsets;
+    uint16_t *offsets;
 
     fseek(ttf,base,SEEK_SET);
     if ( getushort(ttf)!=0 )
 return;			/* Bad version number */
     count = getushort(ttf);
     
-    offsets = xmalloc(count*sizeof(uint16));
+    offsets = xmalloc(count*sizeof(uint16_t));
     info->cvt_names = xmalloc((count+1)*sizeof(char *));
     for ( i=0; i<count; ++i )
 	offsets[i] = getushort(ttf);
@@ -1598,18 +1598,18 @@ return;
 /* 'TeX ' 'htdp' per-glyph height/depth subtable format		 */
 /*  short  version number 0					 */
 /*  short  glyph-count						 */
-/*  array[glyph-count] of { int16 height,depth }		 */
+/*  array[glyph-count] of { int16_t height,depth }		 */
 
 /* 'TeX ' 'itlc' per-glyph italic correction subtable		 */
 /*  short  version number 0					 */
 /*  short  glyph-count						 */
-/*  array[glyph-count] of int16 italic_correction		 */
+/*  array[glyph-count] of int16_t italic_correction		 */
 
 /* !!!!!!!!!!! OBSOLETE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
 /* 'TeX ' 'sbsp' per-glyph sub/super script positioning subtable */
 /*  short  version number 0					 */
 /*  short  glyph-count						 */
-/*  array[glyph-count] of { int16 sub,super }			 */
+/*  array[glyph-count] of { int16_t sub,super }			 */
 
 #undef MAX_SUBTABLE_TYPES
 #define MAX_SUBTABLE_TYPES	4

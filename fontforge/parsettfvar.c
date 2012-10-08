@@ -230,7 +230,7 @@ static int *readpackeddeltas(FILE *ttf,int n) {
 	} else if ( runcnt&0x40 ) {
 	    /* runcnt shorts from the stack */
 	    for ( j=0 ; j<=(runcnt&0x3f) && i<n ; ++j )
-		deltas[i++] = (int16) getushort(ttf);
+		deltas[i++] = (int16_t) getushort(ttf);
 	} else {
 	    /* runcnt signed bytes from the stack */
 	    for ( j=0; j<=(runcnt&0x3f) && i<n; ++j )
@@ -660,7 +660,7 @@ static void VaryCvts(struct ttfinfo *info,int tupleIndex, int *points, FILE *ttf
     struct variations *v = info->variations;
 
     if ( points[0]==ALL_POINTS )
-	pcnt = origcvt->len/sizeof(uint16);
+	pcnt = origcvt->len/sizeof(uint16_t);
     else {
 	for ( pcnt=0; points[pcnt]!=END_OF_POINTS; ++pcnt );
     }
@@ -731,7 +731,7 @@ return;
 	    if ( tupleIndex&0x8000 ) {
 		real *coords = xmalloc(info->variations->axis_count*sizeof(real));
 		for ( j=0; j<info->variations->axis_count; ++j )
-		    coords[j] = ((int16) getushort(ttf))/16384.0;
+		    coords[j] = ((int16_t) getushort(ttf))/16384.0;
 		for ( k=0 ; k<info->variations->tuple_count; ++k ) {
 		    for ( j=0; j<info->variations->axis_count; ++j )
 			if ( coords[j]!=info->variations->tuples[k].coords[j] )

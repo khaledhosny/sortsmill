@@ -51,7 +51,7 @@ struct node {
     unsigned int macfeat: 1;
     unsigned int monospace: 1;
     unsigned int horizontal: 1;
-    uint16 cnt;
+    uint16_t cnt;
     struct node *children, *parent;
     void (*build)(struct node *,struct att_dlg *);
     char *label;		/* utf8 */
@@ -1566,7 +1566,7 @@ static void BuildBsLnTable(struct node *node,struct att_dlg *att) {
     SplineFont *_sf = att->sf;
     int def_baseline;
     int offsets[32];
-    int16 *baselines;
+    int16_t *baselines;
     char buffer[300];
     struct node *glyphs;
     int gid,i;
@@ -1673,7 +1673,7 @@ static void BuildProperties(struct node *node,struct att_dlg *att) {
     int i, cmax, l,j,k, ccnt;
     SplineChar *sc;
     struct node *chars;
-    uint16 *props;
+    uint16_t *props;
     char buffer[200];
 
     cmax = 0;

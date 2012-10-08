@@ -38,8 +38,8 @@ static void *a_file_must_define_something=(void *) &a_file_must_define_something
 
 //# define int32_t _int32
 //# define uint32_t _uint32
-//# define int16 _int16
-//# define uint16 _uint16
+//# define int16_t _int16
+//# define uint16_t _uint16
 //# define int8 _int8
 //# define uint8 _uint8
 

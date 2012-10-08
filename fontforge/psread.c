@@ -54,7 +54,7 @@ struct garbage {
     int cnt;
     struct garbage *next;
     struct pskeyval *entries[GARBAGE_MAX];
-    int16 cnts[GARBAGE_MAX];
+    int16_t cnts[GARBAGE_MAX];
 };
 
 static void AddTok(GrowBuf *gb,char *buf,int islit) {
@@ -3660,7 +3660,7 @@ SplineChar *PSCharStringToSplines(uint8 *type1, int len, struct pscontext *conte
 
     ret->name = copy( name );
     ret->unicodeenc = -1;
-    ret->width = (int16) 0x8000;
+    ret->width = (int16_t) 0x8000;
     if ( name==NULL ) name = "unnamed";
     ret->manualhints = true;
 
@@ -4220,7 +4220,7 @@ SplineChar *PSCharStringToSplines(uint8 *type1, int len, struct pscontext *conte
 	  case 1: /* hstem */
 	  case 18: /* hstemhm */
 	    base = 0;
-	    if ( (sp&1) && ret->width == (int16) 0x8000 )
+	    if ( (sp&1) && ret->width == (int16_t) 0x8000 )
 		ret->width = stack[0];
 	    if ( sp&1 )
 		base=1;
@@ -4266,7 +4266,7 @@ SplineChar *PSCharStringToSplines(uint8 *type1, int len, struct pscontext *conte
 	  case 23: /* vstemhm */
 	    base = 0;
 	    if ( cur==NULL || v==3 || v==23 ) {
-		if ( (sp&1) && is_type2 && ret->width == (int16) 0x8000 ) {
+		if ( (sp&1) && is_type2 && ret->width == (int16_t) 0x8000 ) {
 		    ret->width = stack[0];
 		}
 		if ( sp&1 )
@@ -4336,7 +4336,7 @@ SplineChar *PSCharStringToSplines(uint8 *type1, int len, struct pscontext *conte
 	  break;
 	  case 14: /* endchar */
 	    /* endchar is allowed to terminate processing even within a subroutine */
-	    if ( (sp&1) && is_type2 && ret->width == (int16) 0x8000 )
+	    if ( (sp&1) && is_type2 && ret->width == (int16_t) 0x8000 )
 		ret->width = stack[0];
 	    if ( context->painttype!=2 )
 		closepath(cur,is_type2);
@@ -4379,7 +4379,7 @@ SplineChar *PSCharStringToSplines(uint8 *type1, int len, struct pscontext *conte
 	  case 22: /* hmoveto */
 	  case 4: /* vmoveto */
 	    if ( is_type2 ) {
-		if (( (v==21 && sp==3) || (v!=21 && sp==2))  && ret->width == (int16) 0x8000 )
+		if (( (v==21 && sp==3) || (v!=21 && sp==2))  && ret->width == (int16_t) 0x8000 )
 		    /* Character's width may be specified on the first moveto */
 		    ret->width = stack[0];
 		if ( v==21 && sp>2 ) {

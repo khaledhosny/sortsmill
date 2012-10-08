@@ -106,10 +106,10 @@ typedef struct bvtfunc {
 } BVTFunc;
 
 struct freetype_raster {
-    int16 rows, cols;
-    int16 as, lb;
-    int16 bytes_per_row;
-    int16 num_greys;
+    int16_t rows, cols;
+    int16_t as, lb;
+    int16_t bytes_per_row;
+    int16_t num_greys;
     uint8 *bitmap;
 };
 
@@ -139,7 +139,7 @@ typedef struct charviewbase {
     SplineChar *sc;
     Layer *layerheads[dm_max];
     uint8 drawmode;
-    uint16 ft_gridfitwidth;
+    uint16_t ft_gridfitwidth;
     SplineSet *gridfit;
     struct cvcontainer *container;		/* The sv (or whatever) within which this view is embedded (if it is embedded) */
 } CharViewBase;

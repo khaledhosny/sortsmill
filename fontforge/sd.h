@@ -116,7 +116,7 @@ typedef struct splinedesign {
     EntLayer *layers;
 
     real width, height;		/* in millimeters */
-    int16 hpages, vpages;
+    int16_t hpages, vpages;
     real pwidth, pheight;		/* in millimeters */
     real units;			/* if user wants to see things in */
 	/* centimeters then units will be 10, if inches then 25.4, if points */
@@ -145,7 +145,7 @@ typedef struct entitychar {
 extern SplinePointList *SplinesFromEntityChar(EntityChar *ec,int *flags,int is_stroked);
 
 struct pskeydict {
-    int16 cnt, max;
+    int16_t cnt, max;
     uint8 is_executable;
     struct pskeyval *entries;
 };

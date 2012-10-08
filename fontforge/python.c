@@ -1737,7 +1737,7 @@ return( NULL );
     }
     if ( self->spiro_cnt==0 ) {
 	SplineSet *ss;
-	uint16 cnt;
+	uint16_t cnt;
 	ss = SSFromContour(self,NULL);
 	self->spiros = SplineSet2SpiroCP(ss,&cnt);
 	self->spiro_cnt = cnt;
@@ -6144,7 +6144,7 @@ static int PyFF_Glyph_set_lcarets(PyFF_Glyph *self,PyObject *value, void *UNUSED
     SplineChar *sc = self->sc;
     int i, cnt, lig_comp_max = 0, lc;
     char *pt;
-    int16 *carets;
+    int16_t *carets;
     PST *pst, *lcar = NULL;
 
     cnt = PySequence_Size(value);
@@ -6152,7 +6152,7 @@ static int PyFF_Glyph_set_lcarets(PyFF_Glyph *self,PyObject *value, void *UNUSED
 return( -1 );
 
     if ( cnt > 0 )
-       carets = xmalloc( cnt*sizeof(int16) );
+       carets = xmalloc( cnt*sizeof(int16_t) );
     for ( i=0; i<cnt; ++i ) {
        carets[i] = PyInt_AsLong( PySequence_GetItem(value,i) );
        if ( PyErr_Occurred())
@@ -8731,10 +8731,10 @@ return( NULL );
     }
     ret = PyTuple_New(len1+len2);
     for ( i=0; i<len1; ++i )
-	PyTuple_SetItem(ret,i,Py_BuildValue("i",memushort(c1->cvt->data,c1->cvt->len,i*sizeof(uint16))) );
+	PyTuple_SetItem(ret,i,Py_BuildValue("i",memushort(c1->cvt->data,c1->cvt->len,i*sizeof(uint16_t))) );
     if ( is_cvt2 ) {
 	for ( i=0; i<len2; ++i )
-	    PyTuple_SetItem(ret,len1+i,Py_BuildValue("i",memushort(c2->cvt->data,c2->cvt->len,i*sizeof(uint16))) );
+	    PyTuple_SetItem(ret,len1+i,Py_BuildValue("i",memushort(c2->cvt->data,c2->cvt->len,i*sizeof(uint16_t))) );
     } else {
 	for ( i=0; i<len2; ++i )
 	    PyTuple_SetItem(ret,len1+i,Py_BuildValue("i",PySequence_GetItem(_c2,i)));
@@ -8768,13 +8768,13 @@ return( NULL );
 	cvt->data = xrealloc(cvt->data,cvt->maxlen = 2*(len1+len2)+10 );
     if ( is_cvt2 ) {
 	if ( len2!=0 )
-	    memcpy(cvt->data+len1*sizeof(uint16),c2->cvt->data, 2*len2);
+	    memcpy(cvt->data+len1*sizeof(uint16_t),c2->cvt->data, 2*len2);
     } else {
 	for ( i=0; i<len2; ++i ) {
 	    int val = PyInt_AsLong(PySequence_GetItem(_c2,i));
 	    if ( PyErr_Occurred())
 return( NULL );
-	    memputshort(cvt->data,sizeof(uint16)*(len1+i),val);
+	    memputshort(cvt->data,sizeof(uint16_t)*(len1+i),val);
 	}
     }
     cvt->len += 2*len2;
@@ -8788,7 +8788,7 @@ static PyObject *PyFFCvt_Index( PyObject *self, Py_ssize_t pos ) {
 	PyErr_Format(PyExc_TypeError, "Index out of bounds");
 return( NULL );
     }
-return( Py_BuildValue("i",(short)memushort(c->cvt->data,c->cvt->len,pos*sizeof(uint16))) );
+return( Py_BuildValue("i",(short)memushort(c->cvt->data,c->cvt->len,pos*sizeof(uint16_t))) );
 }
 
 static int PyFFCvt_IndexAssign( PyObject *self, Py_ssize_t pos, PyObject *value ) {
@@ -8807,10 +8807,10 @@ return( -1 );
 return( -1 );
     }
     if ( 2*pos>=cvt->maxlen )
-	cvt->data = xrealloc(cvt->data,cvt->maxlen = sizeof(uint16)*pos+10 );
+	cvt->data = xrealloc(cvt->data,cvt->maxlen = sizeof(uint16_t)*pos+10 );
     if ( 2*pos>=cvt->len )
-	cvt->len = sizeof(uint16)*pos;
-    memputshort(cvt->data,sizeof(uint16)*pos,val);
+	cvt->len = sizeof(uint16_t)*pos;
+    memputshort(cvt->data,sizeof(uint16_t)*pos,val);
 return( 0 );
 }
 
@@ -8854,7 +8854,7 @@ return( -1 );
 return( -1 );
     }
     for ( i=start; i<=end; ++i ) {
-	memputshort(cvt->data,sizeof(uint16)*i,
+	memputshort(cvt->data,sizeof(uint16_t)*i,
 		PyInt_AsLong(PySequence_GetItem(rpl,i-start)));
 	if ( PyErr_Occurred())
 return( -1 );
@@ -9803,7 +9803,7 @@ static PyObject *PyFFMath_get(PyFF_Math *self, void *closure) {
 
     math = SFGetMathTable(self->sf);
 	/* some entries are unsigned, but I don't know which here */
-return( Py_BuildValue("i", *(int16 *) (((char *) math) + offset) ));
+return( Py_BuildValue("i", *(int16_t *) (((char *) math) + offset) ));
 }
 
 static int PyFFMath_set(PyFF_Math *self, PyObject *value, void *closure) {
@@ -9819,7 +9819,7 @@ return( -1 );
 	PyErr_Format(PyExc_ValueError, "The math table constants must have 16 bit values, but this (%ld) is out of range", val);
 return( -1 );
     }
-    *(int16 *) (((char *) math) + offset) = val;
+    *(int16_t *) (((char *) math) + offset) = val;
 return( 0 );
 }
 
@@ -11078,7 +11078,7 @@ return( -1 );
     if ( cvt==NULL )
 	cvt = BuildCvt(sf,len2*2);
     if ( len2*2>=cvt->maxlen )
-	cvt->data = xrealloc(cvt->data,cvt->maxlen = sizeof(uint16)*len2+10 );
+	cvt->data = xrealloc(cvt->data,cvt->maxlen = sizeof(uint16_t)*len2+10 );
     if ( is_cvt2 ) {
 	if ( len2!=0 )
 	    memcpy(cvt->data,c2->cvt->data,2*len2 );
@@ -11309,7 +11309,7 @@ return( -1 );
     temp = PyInt_AsLong(value);
     if ( PyErr_Occurred()!=NULL )
 return( -1 );
-    * (int16 *) (((char *) (self->fv->sf)) + offset ) = temp;
+    * (int16_t *) (((char *) (self->fv->sf)) + offset ) = temp;
 return( 0 );
 }
 
@@ -11965,7 +11965,7 @@ return( -1 );
 return( -1 );
 	    }
 	    bs->def_baseline = i;
-	    bs->baseline_pos = xmalloc(basecnt*sizeof(int16));
+	    bs->baseline_pos = xmalloc(basecnt*sizeof(int16_t));
 	    for ( i=0; i<basecnt; ++i ) {
 		if ( !PyInt_Check(PyTuple_GetItem(offsets,i))) {
 		    PyErr_Format(PyExc_TypeError, "Baseline positions must be integers");
@@ -12762,17 +12762,17 @@ return( -1 );
 	tab->len = tab->maxlen = 32;
     }
     if ( strmatch(str,"Zones")==0 )
-	memputshort(tab->data,7*sizeof(uint16),val);
+	memputshort(tab->data,7*sizeof(uint16_t),val);
     else if ( strmatch(str,"TwilightPntCnt")==0 )
-	memputshort(tab->data,8*sizeof(uint16),val);
+	memputshort(tab->data,8*sizeof(uint16_t),val);
     else if ( strmatch(str,"StorageCnt")==0 )
-	memputshort(tab->data,9*sizeof(uint16),val);
+	memputshort(tab->data,9*sizeof(uint16_t),val);
     else if ( strmatch(str,"MaxStackDepth")==0 )
-	memputshort(tab->data,12*sizeof(uint16),val);
+	memputshort(tab->data,12*sizeof(uint16_t),val);
     else if ( strmatch(str,"FDEFs")==0 )
-	memputshort(tab->data,10*sizeof(uint16),val);
+	memputshort(tab->data,10*sizeof(uint16_t),val);
     else if ( strmatch(str,"IDEFs")==0 )
-	memputshort(tab->data,11*sizeof(uint16),val);
+	memputshort(tab->data,11*sizeof(uint16_t),val);
 return( 0 );
 }
 
@@ -12797,17 +12797,17 @@ return (NULL);
 	data = tab->data;
 
     if ( strmatch(str,"Zones")==0 )
-	val = memushort(data,32,7*sizeof(uint16));
+	val = memushort(data,32,7*sizeof(uint16_t));
     else if ( strmatch(str,"TwilightPntCnt")==0 )
-	val = memushort(data,32,8*sizeof(uint16));
+	val = memushort(data,32,8*sizeof(uint16_t));
     else if ( strmatch(str,"StorageCnt")==0 )
-	val = memushort(data,32,9*sizeof(uint16));
+	val = memushort(data,32,9*sizeof(uint16_t));
     else if ( strmatch(str,"MaxStackDepth")==0 )
-	val = memushort(data,32,12*sizeof(uint16));
+	val = memushort(data,32,12*sizeof(uint16_t));
     else if ( strmatch(str,"FDEFs")==0 )
-	val = memushort(data,32,10*sizeof(uint16));
+	val = memushort(data,32,10*sizeof(uint16_t));
     else if ( strmatch(str,"IDEFs")==0 )
-	val = memushort(data,32,11*sizeof(uint16));
+	val = memushort(data,32,11*sizeof(uint16_t));
     else
 	val = -1;
 return( Py_BuildValue("i",val));
@@ -13969,7 +13969,7 @@ static PyObject *PyFFFont_addKerningClass(PyFF_Font *self, PyObject *args) {
     PyObject *arg3, *arg4, *arg5;
     char **class1_strs, **class2_strs;
     int cnt1, cnt2, acnt;
-    int16 *offs=NULL;
+    int16_t *offs=NULL;
     int separation= -1, touch=0, do_autokern=false, only_closer=0, autokern=true;
     double class_error_distance;
     /* arguments:
@@ -14053,14 +14053,14 @@ return( NULL );
 		PyErr_Format(PyExc_ValueError, "There aren't enough kerning offsets for the number of kerning classes. Should be %d", cnt1*cnt2 );
 return( NULL );
 	    }
-	    offs = xmalloc(cnt1*cnt2*sizeof(int16));
+	    offs = xmalloc(cnt1*cnt2*sizeof(int16_t));
 	    for ( i=0 ; i<cnt1*cnt2; ++i ) {
 		offs[i] = PyInt_AsLong(PySequence_GetItem(offsets,i));
 		if ( PyErr_Occurred())
 return( NULL );
 	    }
 	} else
-	    offs = xcalloc(cnt1*cnt2,sizeof(int16));
+	    offs = xcalloc(cnt1*cnt2,sizeof(int16_t));
     }
 
     sub = addLookupSubtable(sf, lookup, subtable, after_str);
@@ -14214,7 +14214,7 @@ static PyObject *PyFFFont_alterKerningClass(PyFF_Font *self, PyObject *args) {
     PyObject *class1s, *class2s, *offsets;
     char **class1_strs, **class2_strs;
     int cnt1, cnt2;
-    int16 *offs;
+    int16_t *offs;
 
     if ( CheckIfFontClosed(self) )
 return (NULL);
@@ -14239,7 +14239,7 @@ return( NULL );
 	PyErr_Format(PyExc_ValueError, "There aren't enough kerning offsets for the number of kerning classes. Should be %d", cnt1*cnt2 );
 return( NULL );
     }
-    offs = xmalloc(cnt1*cnt2*sizeof(int16));
+    offs = xmalloc(cnt1*cnt2*sizeof(int16_t));
     for ( i=0 ; i<cnt1*cnt2; ++i ) {
 	offs[i] = PyInt_AsLong(PySequence_GetItem(offsets,i));
 	if ( PyErr_Occurred())

@@ -573,7 +573,7 @@ return;
     ti->image = GGadgetImageCache((char *) (ti->image));
 }
 
-GTextInfo **GTextInfoArrayFromList(GTextInfo *ti, uint16 *cnt) {
+GTextInfo **GTextInfoArrayFromList(GTextInfo *ti, uint16_t *cnt) {
     int i;
     GTextInfo **arr;
 
@@ -707,7 +707,7 @@ return;
     free(mi);
 }
 
-GMenuItem *GMenuItemArrayCopy(GMenuItem *mi, uint16 *cnt) {
+GMenuItem *GMenuItemArrayCopy(GMenuItem *mi, uint16_t *cnt) {
     int i;
     GMenuItem *arr;
 
@@ -946,7 +946,7 @@ return;
     }
 }
 
-GMenuItem *GMenuItem2ArrayCopy(GMenuItem2 *mi, uint16 *cnt) {
+GMenuItem *GMenuItem2ArrayCopy(GMenuItem2 *mi, uint16_t *cnt) {
     int i;
     GMenuItem *arr;
 

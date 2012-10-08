@@ -68,14 +68,14 @@ enum debug_wins { dw_registers=0x1, dw_stack=0x2, dw_storage=0x4, dw_points=0x8,
 
 struct instrinfo {
     int isel_pos;
-    int16 lheight,lpos;
+    int16_t lheight,lpos;
     char *scroll, *offset;
     GWindow v;
     GGadget *vsb;
-    int16 sbw;
-    int16 vheight, vwidth;
-    int16 lstopped;
-    int16 as, fh;
+    int16_t sbw;
+    int16_t vheight, vwidth;
+    int16_t lstopped;
+    int16_t as, fh;
     struct instrdata *instrdata;
     GFont *gfont;
     unsigned int showaddr: 1;
@@ -199,7 +199,7 @@ typedef struct charview {
     int width, height;
     float xoff, yoff; /* must be floating point, for precise zoom by scroll */
     int mbh, infoh, rulerh;
-    int16 sas, sfh, sdh, nas, nfh;
+    int16_t sas, sfh, sdh, nas, nfh;
     BasePoint info;
     SplinePoint *info_sp;
     Spline *info_spline;
@@ -225,7 +225,7 @@ typedef struct charview {
     SplinePoint *active_sp;
     spiro_cp *active_cp;
     IPoint handscroll_base;
-    uint16 rfh, ras;
+    uint16_t rfh, ras;
     BasePoint lastknife;
     struct freehand freehand;
     enum expandedge expandedge;
@@ -239,7 +239,7 @@ typedef struct charview {
     struct jamodisplay *jamodisplay;
 #endif
     real oldwidth, oldvwidth;
-    int16 oldic, oldtah;
+    int16_t oldic, oldtah;
 #if _ModKeysAutoRepeat
     GTimer *autorpt;
     int keysym, oldstate;
@@ -247,9 +247,9 @@ typedef struct charview {
     GWindow oldkeyw;
 #endif
     PST *lcarets;
-    int16 nearcaret;
+    int16_t nearcaret;
 	/* freetype results display */
-    int16 ft_dpi, ft_ppemy, ft_ppemx, ft_depth;
+    int16_t ft_dpi, ft_ppemy, ft_ppemx, ft_depth;
     real ft_pointsizey, ft_pointsizex;
     struct freetype_raster *raster, *oldraster;
     DebugView *dv;
@@ -260,7 +260,7 @@ typedef struct charview {
     SplineChar *apsc;
     int guide_pos;
     struct qg_data *qg;
-    int16 note_x, note_y;
+    int16_t note_x, note_y;
 } CharView;
 
 typedef struct bitmapview {
@@ -294,7 +294,7 @@ typedef struct bitmapview {
     int pressed_x, pressed_y;
     int info_x, info_y;
     int event_x, event_y;
-    int16 sas, sfh;
+    int16_t sas, sfh;
 #if _ModKeysAutoRepeat
     GTimer *autorpt;
     int keysym, oldstate;
@@ -309,11 +309,11 @@ enum mv_grids { mv_hidegrid, mv_showgrid, mv_partialgrid, mv_hidemovinggrid };
 enum mv_type { mv_kernonly, mv_widthonly, mv_kernwidth };
 
 struct metricchar {
-    int16 dx, dwidth;	/* position and width of the displayed char */
-    int16 dy, dheight;	/*  displayed info for vertical metrics */
+    int16_t dx, dwidth;	/* position and width of the displayed char */
+    int16_t dy, dheight;	/*  displayed info for vertical metrics */
     int xoff, yoff;
-    int16 mx, mwidth;	/* position and width of the text underneath */
-    int16 kernafter;
+    int16_t mx, mwidth;	/* position and width of the text underneath */
+    int16_t kernafter;
     unsigned int selected: 1;
     GGadget *width, *lbearing, *rbearing, *kern, *name;
     GGadget* updownkparray[10]; /* Cherry picked elements from width...kern allowing up/down key navigation */
@@ -332,22 +332,22 @@ typedef struct metricsview {
     GFont *font;
     GGadget *hsb, *vsb, *mb, *text, *script, *features, *subtable_list;
     GGadget *namelab, *widthlab, *lbearinglab, *rbearinglab, *kernlab;
-    int16 xstart;
-    int16 width, height, dwidth;
-    int16 vwidth, vheight;
-    int16 mbh,sbh;
-    int16 topend;		/* y value of the end of the region containing the text field */
-    int16 displayend;		/* y value of the end of the region showing filled characters */
-    int16 fh, as;
-    int16 cmax, clen; 
+    int16_t xstart;
+    int16_t width, height, dwidth;
+    int16_t vwidth, vheight;
+    int16_t mbh,sbh;
+    int16_t topend;		/* y value of the end of the region containing the text field */
+    int16_t displayend;		/* y value of the end of the region showing filled characters */
+    int16_t fh, as;
+    int16_t cmax, clen; 
     SplineChar **chars;		/* Character input stream */
     struct opentype_str *glyphs;/* after going through the various gsub/gpos transformations */
     struct metricchar *perchar;	/* One for each glyph above */
     SplineChar **sstr;		/* Character input stream */
-    int16 mwidth, mbase;
-    int16 glyphcnt, max;
-    int16 pressed_x, pressed_y;
-    int16 activeoff;
+    int16_t mwidth, mbase;
+    int16_t glyphcnt, max;
+    int16_t pressed_x, pressed_y;
+    int16_t activeoff;
     int xoff, coff, yoff;
     struct metricsview *next;
     unsigned int right_to_left: 1;
@@ -387,11 +387,11 @@ typedef struct fontview {
     GIC *gic;
     GIC *gwgic;
     int width, height;		/* of v */
-    int16 infoh,mbh;
-    int16 lab_height, lab_as;
-    int16 colcnt, rowcnt;		/* of display window */
+    int16_t infoh,mbh;
+    int16_t lab_height, lab_as;
+    int16_t colcnt, rowcnt;		/* of display window */
     int32_t rowoff, rowltot;		/* Can be really big in full unicode */
-    int16 cbw,cbh;			/* width/height of a character box */
+    int16_t cbw,cbh;			/* width/height of a character box */
     int pressed_pos, end_pos;
     unsigned int antialias:1;
     unsigned int bbsized:1;		/* displayed bitmap should be scaled by bounding box rather than emsize */
@@ -410,8 +410,8 @@ typedef struct fontview {
 	/*  stays the same size, so kludge things */
     unsigned int glyphlabel: 2;
     unsigned int notactive:1;			/* When embedded in a dlg */
-    int16 magnify;
-    int16 user_requested_magnify;
+    int16_t magnify;
+    int16_t user_requested_magnify;
     struct searchview *sv;
     SplineChar *sc_near_top;
     int sel_index;
@@ -591,7 +591,7 @@ struct lkinfo {
     unsigned int new: 1;
     unsigned int selected: 1;
     unsigned int moved: 1;
-    int16 subtable_cnt, subtable_max;
+    int16_t subtable_cnt, subtable_max;
     struct lksubinfo *subtables;
 };
 
@@ -737,14 +737,14 @@ extern void SVDestroy(struct searchview *sv);
 
 extern int  SLICount(SplineFont *sf);
 extern uint32_t *ClassName(const char *name,uint32_t feature_tag,
-	uint16 flags, int script_lang_index, int merge_with, int act_type,
+	uint16_t flags, int script_lang_index, int merge_with, int act_type,
 	int macfeature,SplineFont *sf);
 extern uint32_t *DecomposeClassName(const uint32_t *clsnm, uint32_t **name,
 	uint32_t *feature_tag, int *macfeature,
-	uint16 *flags, uint16 *script_lang_index,int *merge_with,int *act_type,
+	uint16_t *flags, uint16_t *script_lang_index,int *merge_with,int *act_type,
 	SplineFont *sf);
-extern PST *AddSubs(PST *last,uint32_t tag,char *name,uint16 flags,
-	uint16 sli,SplineChar *sc);
+extern PST *AddSubs(PST *last,uint32_t tag,char *name,uint16_t flags,
+	uint16_t sli,SplineChar *sc);
 
 
 extern void FVSetUIToMatch(FontView *destfv,FontView *srcfv);
@@ -773,7 +773,7 @@ extern void _aplistbuild(struct gmenuitem *mi,SplineFont *sf,
 	void (*func)(GWindow,struct gmenuitem *,GEvent *));
 extern int32_t *ParseBitmapSizes(GGadget *g,char *msg,int *err);
 extern GTextInfo *AddMacFeatures(GTextInfo *opentype,enum possub_type type,SplineFont *sf);
-extern uint32_t *AskNameTag(char *title,uint32_t *def,uint32_t def_tag,uint16 flags,
+extern uint32_t *AskNameTag(char *title,uint32_t *def,uint32_t def_tag,uint16_t flags,
 	int script_lang_index, enum possub_type type, SplineFont *sf, SplineChar *default_script,
 	int merge_with,int act_type);
 extern uint32_t *ShowScripts(uint32_t *usedef);

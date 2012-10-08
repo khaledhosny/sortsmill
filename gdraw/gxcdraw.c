@@ -391,7 +391,7 @@ void GDrawFillElipse(GWindow w, GRect *rect, Color col) {
     cairo_fill(gw->cc);
 }
 
-void GDrawDrawPoly(GWindow w, GPoint *pts, int16 cnt, Color col) {
+void GDrawDrawPoly(GWindow w, GPoint *pts, int16_t cnt, Color col) {
     if ( col==COLOR_UNKNOWN )
 	return;
 
@@ -409,7 +409,7 @@ void GDrawDrawPoly(GWindow w, GPoint *pts, int16 cnt, Color col) {
     cairo_stroke(gw->cc);
 }
 
-void GDrawFillPoly(GWindow w, GPoint *pts, int16 cnt, Color col) {
+void GDrawFillPoly(GWindow w, GPoint *pts, int16_t cnt, Color col) {
     if ( col==COLOR_UNKNOWN )
 	return;
 

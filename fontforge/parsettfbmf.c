@@ -888,8 +888,8 @@ struct bitmapSizeTable {
     int32_t numsubtables;
     int32_t colorRef;
     struct sbitLineMetrics hori, vert;
-    uint16 startGlyph;
-    uint16 endGlyph;
+    uint16_t startGlyph;
+    uint16_t endGlyph;
     uint8 ppemX;
     uint8 ppemY;
     uint8 bitdepth;
@@ -898,8 +898,8 @@ struct bitmapSizeTable {
     unsigned int error: 1;
 };
 struct indexarray {
-    uint16 first;
-    uint16 last;
+    uint16_t first;
+    uint16_t last;
     uint32_t additionalOffset;
     struct indexarray *next;
 };

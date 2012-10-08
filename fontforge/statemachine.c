@@ -153,9 +153,9 @@ static struct asm_state *StateCopy(struct asm_state *old,int old_class_cnt,int o
 	} else if ( type==asm_kern ) {
 	    for ( j=0; j<minclass; ++j ) {
 		struct asm_state *this = &new[i*new_class_cnt+j];
-		int16 *temp;
-		temp = xmalloc(this->u.kern.kcnt*sizeof(int16));
-		memcpy(temp,this->u.kern.kerns,this->u.kern.kcnt*sizeof(int16));
+		int16_t *temp;
+		temp = xmalloc(this->u.kern.kcnt*sizeof(int16_t));
+		memcpy(temp,this->u.kern.kerns,this->u.kern.kcnt*sizeof(int16_t));
 		this->u.kern.kerns = temp;
 	    }
 	}
@@ -328,7 +328,7 @@ static int SMD_DoChange(SMD *smd) {
     const uint32_t *ret;
     uint32_t *end;
     char *ret8;
-    int16 kbuf[9];
+    int16_t kbuf[9];
     int kerns;
     int oddcomplain=false;
 
@@ -373,8 +373,8 @@ return( false );
 	if ( kerns==0 )
 	    this->u.kern.kerns = NULL;
 	else {
-	    this->u.kern.kerns = xmalloc(kerns*sizeof(int16));
-	    memcpy(this->u.kern.kerns,kbuf,kerns*sizeof(int16));
+	    this->u.kern.kerns = xmalloc(kerns*sizeof(int16_t));
+	    memcpy(this->u.kern.kerns,kbuf,kerns*sizeof(int16_t));
 	}
     } else if ( smd->sm->type==asm_context ) {
 	ret8 = GGadgetGetTitle8(GWidgetGetControl(smd->editgw,CID_TagMark));

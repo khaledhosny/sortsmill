@@ -30,12 +30,12 @@
 #include "gdraw.h"
 
 typedef struct gcol {
-    int16 red, green, blue;
+    int16_t red, green, blue;
     uint32_t pixel;
 } GCol;
 
 struct revcol /* : GCol */ {
-    int16 red, green, blue;
+    int16_t red, green, blue;
     uint32_t index;
     uint8 dist;
     struct revcol *next;
@@ -43,19 +43,19 @@ struct revcol /* : GCol */ {
 
 struct revitem {
     struct revcol *cols[2];	/* cols[0] => colours in this subcube, cols[1] => those near */
-    int16 cnt;
+    int16_t cnt;
     struct revcmap *sub;
 };
 
 struct revcmap {
-    int16 range;		/* red_max-red_min+1, total number of colors */
+    int16_t range;		/* red_max-red_min+1, total number of colors */
 				/*  in the cube along any linear dimension */
-    int16 side_cnt;		/* Number of sub-cubes along each linear side side of the cube */
+    int16_t side_cnt;		/* Number of sub-cubes along each linear side side of the cube */
 				/* ie. we decimate by a factor of side_cnt, there */
 			        /*  will be side_cnt levels of red, and side_cnt^3*/
 			        /*  subcubes */
-    int16 side_shift;		/* if side_cnt==2^n then this is n */
-    int16 div_mul, div_shift, div_add;
+    int16_t side_shift;		/* if side_cnt==2^n then this is n */
+    int16_t div_mul, div_shift, div_add;
 				/* tricks for dividing by range/side_cnt */
 			        /* We can do (small) integer division by */
 			        /*  multiplying by an integer reciprical and */
@@ -124,13 +124,13 @@ struct gtimer {
 
 struct gdisplay {
     void *semaphore;				/* To lock the display against multiple threads */
-    int16 res;
-    int16 scale_screen_by;			/* When converting screen pixels to printer pixels */
+    int16_t res;
+    int16_t scale_screen_by;			/* When converting screen pixels to printer pixels */
     GWindow groot;
     Color def_background, def_foreground;
-    uint16 mykey_state;
-    uint16 mykey_keysym;
-    uint16 mykey_mask;
+    uint16_t mykey_state;
+    uint16_t mykey_keysym;
+    uint16_t mykey_mask;
     unsigned int mykeybuild: 1;
     /* display specific data */
 };

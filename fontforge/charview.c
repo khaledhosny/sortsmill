@@ -2894,9 +2894,9 @@ static void CVDoFindInFontView(CharView *cv) {
     GDrawRaise(((FontView *) (cv->b.fv))->gw);
 }
 
-static uint16 HaveModifiers = 0;
-static uint16 PressingTilde = 0;
-static uint16 PrevCharEventWasCharUpOnControl = 0;
+static uint16_t HaveModifiers = 0;
+static uint16_t PressingTilde = 0;
+static uint16_t PrevCharEventWasCharUpOnControl = 0;
 
 static void CVCharUp(CharView *cv, GEvent *event ) {
 
@@ -6982,7 +6982,7 @@ static void cv_ptlistcheck(CharView *cv, struct gmenuitem *mi) {
     SplinePoint *selpt=NULL;
     int notimplicit = -1;
     int acceptable = -1;
-    uint16 junk;
+    uint16_t junk;
     int i;
 
     if ( cv->showing_spiro_pt_menu != (cv->b.sc->inspiro && hasspiro())) {

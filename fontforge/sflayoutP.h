@@ -48,8 +48,8 @@ typedef struct fontdata {
 
 struct lineheights {
     int32_t y;
-    int16 as, fh;
-    uint16 p, linelen;
+    int16_t as, fh;
+    uint16_t p, linelen;
     uint32_t start_pos;
 };
 
@@ -68,8 +68,8 @@ struct fontlist {
 struct sfmaps {
     SplineFont *sf;
     EncMap *map;
-    int16 sfbit_id;
-    int16 notdef_gid;
+    int16_t sfbit_id;
+    int16_t notdef_gid;
     SplineChar *fake_notdef;
     struct sfmaps *next;
 };
@@ -81,9 +81,9 @@ struct paras {
 
 typedef struct layoutinfo {
     uint32_t *text, *oldtext;	/* Input glyphs (in unicode) */
-    int16 lcnt, lmax;
+    int16_t lcnt, lmax;
     struct opentype_str ***lines;	/* pointers into the paras array */
-    int16 xmax;
+    int16_t xmax;
     struct lineheights *lineheights;
     struct fontlist *fontlist, *oldfontlist;
     struct sfmaps *sfmaps;

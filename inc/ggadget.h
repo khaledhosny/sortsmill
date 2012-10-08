@@ -531,7 +531,7 @@ GGadget *CreateSlider(struct gwindow *base, GGadgetData *gd,void *data);
 GGadget *CreateFileChooser(struct gwindow *base, GGadgetData *gd,void *data);
 GGadget *CreateGadgets(struct gwindow *base, GGadgetCreateData *gcd);
 
-VISIBLE GTextInfo **GTextInfoArrayFromList(GTextInfo *ti, uint16 *cnt);
+VISIBLE GTextInfo **GTextInfoArrayFromList(GTextInfo *ti, uint16_t *cnt);
 typedef struct gresimage {
     GImage *image;
     char *filename;
@@ -562,7 +562,7 @@ VISIBLE extern void GGadgetInit(void);
 VISIBLE extern int GGadgetWithin(GGadget *g, int x, int y);
 VISIBLE extern void GMenuItemArrayFree(GMenuItem *mi);
 VISIBLE extern void GMenuItem2ArrayFree(GMenuItem2 *mi);
-extern GMenuItem *GMenuItemArrayCopy(GMenuItem *mi, uint16 *cnt);
-VISIBLE extern GMenuItem *GMenuItem2ArrayCopy(GMenuItem2 *mi, uint16 *cnt);
+extern GMenuItem *GMenuItemArrayCopy(GMenuItem *mi, uint16_t *cnt);
+VISIBLE extern GMenuItem *GMenuItem2ArrayCopy(GMenuItem2 *mi, uint16_t *cnt);
 
 #endif

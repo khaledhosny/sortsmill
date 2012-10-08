@@ -2004,7 +2004,7 @@ Pref_DefaultMapping (GGadget * g, GEvent * e)
     {
       GGadget *list = GWidgetGetControl (GGadgetGetWindow (g), CID_Mapping);
       GTextInfo *ti, **arr;
-      uint16 cnt;
+      uint16_t cnt;
 
       ti = Pref_MappingList (false);
       arr = GTextInfoArrayFromList (ti, &cnt);

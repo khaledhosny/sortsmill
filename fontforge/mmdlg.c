@@ -212,7 +212,7 @@ MMDesignCoords (MMSet *mm)
 }
 
 static real
-DoDelta (int16 ** deltas, int pt, int is_y, real *blends, int instance_count)
+DoDelta (int16_t ** deltas, int pt, int is_y, real *blends, int instance_count)
 {
   real diff = 0;
   int j;
@@ -229,7 +229,7 @@ static void
 DistortChar (SplineFont *sf, MMSet *mm, int gid, real *blends)
 {
   int i, j, ptcnt;
-  int16 **deltas;
+  int16_t **deltas;
   SplineSet *ss;
   SplinePoint *sp;
   RefChar *ref;
@@ -321,7 +321,7 @@ DistortCvt (struct ttf_table *cvt, MMSet *mm, real *blends)
 {
   int i, j, ptcnt;
   real diff;
-  int16 **deltas;
+  int16_t **deltas;
 
   deltas = CvtFindDeltas (mm, &ptcnt);
   if (deltas == NULL)

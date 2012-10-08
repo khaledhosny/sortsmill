@@ -60,7 +60,7 @@ typedef struct instrbase {
     unsigned int inedit: 1;
     struct instrdata *instrdata;
     int isel_pos;
-    int16 lheight,lpos;
+    int16_t lheight,lpos;
     char *scroll, *offset;
 } InstrBase;
 

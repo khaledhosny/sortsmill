@@ -2347,8 +2347,8 @@ static void figurecids(struct fontparse *fp,FILE *temp) {
     /* Some cid formats don't have any of these */
 
     fd->cidstrs = xmalloc(cidcnt*sizeof(uint8 *));
-    fd->cidlens = xmalloc(cidcnt*sizeof(int16));
-    fd->cidfds = xmalloc((cidcnt+1)*sizeof(int16));
+    fd->cidlens = xmalloc(cidcnt*sizeof(int16_t));
+    fd->cidfds = xmalloc((cidcnt+1)*sizeof(int16_t));
     offsets = xmalloc((cidcnt+1)*sizeof(int));
     ff_progress_change_total(cidcnt);
 
