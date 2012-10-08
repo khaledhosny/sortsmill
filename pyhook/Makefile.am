@@ -27,12 +27,7 @@
 
 include $(top_srcdir)/mk/flags.am
 
-pyexec_LTLIBRARIES = psMat.la fontforge.la
-
-psMat_la_SOURCES = psMatpyhook.c
-psMat_la_CPPFLAGS = "-I$(top_builddir)/fontforge"	\
-	"-I$(top_srcdir)/fontforge" $(AM_CPPFLAGS)
-psMat_la_LIBADD = $(LIBADD)
+pyexec_LTLIBRARIES = fontforge.la
 
 fontforge_la_SOURCES = fontforgepyhook.c
 fontforge_la_CPPFLAGS = "-I$(top_builddir)/fontforge"	\

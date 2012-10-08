@@ -27,5 +27,8 @@
 
 include $(top_srcdir)/mk/layout.am
 
+# FIXME: Maybe this should go in a separate package.
+dist_python_SCRIPTS = psMat.py
+
 nodist_pkgpythondata_SCRIPTS = site_init.py
 dist_pycontrib_SCRIPTS = __init__.py excepthook.py
