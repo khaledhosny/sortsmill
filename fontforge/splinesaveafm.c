@@ -73,7 +73,7 @@ return( buffer );
 /* ************************************************************************** */
 static void KPInsert( SplineChar *sc1, SplineChar *sc2, int off, int isv ) {
     KernPair *kp;
-    int32 script;
+    int32_t script;
 
     if ( sc1!=NULL && sc2!=NULL ) {
 	for ( kp=sc1->kerns; kp!=NULL && kp->sc!=sc2; kp = kp->next );
@@ -520,27 +520,27 @@ return( 0 );
 	fclose(file);
 return( 0 );
     }
-    tfmd.kerntab = xcalloc(tfmd.kern_size,sizeof(int32));
-    tfmd.ligkerntab = xcalloc(tfmd.ligkern_size,sizeof(int32));
-    tfmd.ext = xcalloc(tfmd.esize,sizeof(int32));
-    tfmd.ictab = xcalloc(tfmd.italic_size,sizeof(int32));
-    tfmd.dptab = xcalloc(tfmd.depth_size,sizeof(int32));
-    tfmd.httab = xcalloc(tfmd.height_size,sizeof(int32));
-    tfmd.widtab = xcalloc(tfmd.width_size,sizeof(int32));
+    tfmd.kerntab = xcalloc(tfmd.kern_size,sizeof(int32_t));
+    tfmd.ligkerntab = xcalloc(tfmd.ligkern_size,sizeof(int32_t));
+    tfmd.ext = xcalloc(tfmd.esize,sizeof(int32_t));
+    tfmd.ictab = xcalloc(tfmd.italic_size,sizeof(int32_t));
+    tfmd.dptab = xcalloc(tfmd.depth_size,sizeof(int32_t));
+    tfmd.httab = xcalloc(tfmd.height_size,sizeof(int32_t));
+    tfmd.widtab = xcalloc(tfmd.width_size,sizeof(int32_t));
     tfmd.charlist = charlist;
 
-    fseek( file,(6+1)*sizeof(int32),SEEK_SET);
+    fseek( file,(6+1)*sizeof(int32_t),SEEK_SET);
     sf->design_size = (5*getlong(file)+(1<<18))>>19;	/* TeX stores as <<20, adobe in decipoints */
     fseek( file,
-	    (6+tfmd.head_len+(tfmd.last-tfmd.first+1))*sizeof(int32),
+	    (6+tfmd.head_len+(tfmd.last-tfmd.first+1))*sizeof(int32_t),
 	    SEEK_SET);
-    fread( tfmd.widtab,1,tfmd.width_size*sizeof(int32),file);
-    fread( tfmd.httab,1,tfmd.height_size*sizeof(int32),file);
-    fread( tfmd.dptab,1,tfmd.depth_size*sizeof(int32),file);
-    fread( tfmd.ictab,1,tfmd.italic_size*sizeof(int32),file);
-    fread( tfmd.ligkerntab,1,tfmd.ligkern_size*sizeof(int32),file);
-    fread( tfmd.kerntab,1,tfmd.kern_size*sizeof(int32),file);
-    fread( tfmd.ext,1,tfmd.esize*sizeof(int32),file);
+    fread( tfmd.widtab,1,tfmd.width_size*sizeof(int32_t),file);
+    fread( tfmd.httab,1,tfmd.height_size*sizeof(int32_t),file);
+    fread( tfmd.dptab,1,tfmd.depth_size*sizeof(int32_t),file);
+    fread( tfmd.ictab,1,tfmd.italic_size*sizeof(int32_t),file);
+    fread( tfmd.ligkerntab,1,tfmd.ligkern_size*sizeof(int32_t),file);
+    fread( tfmd.kerntab,1,tfmd.kern_size*sizeof(int32_t),file);
+    fread( tfmd.ext,1,tfmd.esize*sizeof(int32_t),file);
     for ( i=0; i<22 && i<tfmd.param_size; ++i )
 	sf->texdata.params[i] = getlong(file);
     if ( tfmd.param_size==22 ) sf->texdata.type = tex_math;
@@ -552,7 +552,7 @@ return( 0 );
 
     memset(charlist,-1,sizeof(charlist));
 
-    fseek( file, (6+tfmd.head_len)*sizeof(int32), SEEK_SET);
+    fseek( file, (6+tfmd.head_len)*sizeof(int32_t), SEEK_SET);
     for ( i=tfmd.first; i<=tfmd.last; ++i ) {
 	width = getc(file);
 	height = getc(file);
@@ -777,25 +777,25 @@ return( 0 );
 return( 0 );
     }
 
-    tfmd.kerntab = xcalloc(tfmd.kern_size,sizeof(int32));
-    tfmd.ligkerntab = xcalloc(tfmd.ligkern_size,2*sizeof(int32));
-    tfmd.ext = xcalloc(tfmd.esize,2*sizeof(int32));
-    tfmd.ictab = xcalloc(tfmd.italic_size,sizeof(int32));
-    tfmd.dptab = xcalloc(tfmd.depth_size,sizeof(int32));
-    tfmd.httab = xcalloc(tfmd.height_size,sizeof(int32));
-    tfmd.widtab = xcalloc(tfmd.width_size,sizeof(int32));
-    fseek( file,(14+1)*sizeof(int32),SEEK_SET);
+    tfmd.kerntab = xcalloc(tfmd.kern_size,sizeof(int32_t));
+    tfmd.ligkerntab = xcalloc(tfmd.ligkern_size,2*sizeof(int32_t));
+    tfmd.ext = xcalloc(tfmd.esize,2*sizeof(int32_t));
+    tfmd.ictab = xcalloc(tfmd.italic_size,sizeof(int32_t));
+    tfmd.dptab = xcalloc(tfmd.depth_size,sizeof(int32_t));
+    tfmd.httab = xcalloc(tfmd.height_size,sizeof(int32_t));
+    tfmd.widtab = xcalloc(tfmd.width_size,sizeof(int32_t));
+    fseek( file,(14+1)*sizeof(int32_t),SEEK_SET);
     sf->design_size = (5*getlong(file)+(1<<18))>>19;	/* TeX stores as <<20, adobe in decipoints */
     fseek( file,
-	    (14+tfmd.head_len+2*(tfmd.last-tfmd.first+1))*sizeof(int32),
+	    (14+tfmd.head_len+2*(tfmd.last-tfmd.first+1))*sizeof(int32_t),
 	    SEEK_SET);
-    fread( tfmd.widtab,1,tfmd.width_size*sizeof(int32),file);
-    fread( tfmd.httab,1,tfmd.height_size*sizeof(int32),file);
-    fread( tfmd.dptab,1,tfmd.depth_size*sizeof(int32),file);
-    fread( tfmd.ictab,1,tfmd.italic_size*sizeof(int32),file);
-    fread( tfmd.ligkerntab,1,tfmd.ligkern_size*2*sizeof(int32),file);
-    fread( tfmd.kerntab,1,tfmd.kern_size*sizeof(int32),file);
-    fread( tfmd.ext,1,tfmd.esize*2*sizeof(int32),file);
+    fread( tfmd.widtab,1,tfmd.width_size*sizeof(int32_t),file);
+    fread( tfmd.httab,1,tfmd.height_size*sizeof(int32_t),file);
+    fread( tfmd.dptab,1,tfmd.depth_size*sizeof(int32_t),file);
+    fread( tfmd.ictab,1,tfmd.italic_size*sizeof(int32_t),file);
+    fread( tfmd.ligkerntab,1,tfmd.ligkern_size*2*sizeof(int32_t),file);
+    fread( tfmd.kerntab,1,tfmd.kern_size*sizeof(int32_t),file);
+    fread( tfmd.ext,1,tfmd.esize*2*sizeof(int32_t),file);
     for ( i=0; i<22 && i<tfmd.param_size; ++i )
 	sf->texdata.params[i] = getlong(file);
     if ( tfmd.param_size==22 ) sf->texdata.type = tex_math;
@@ -805,10 +805,10 @@ return( 0 );
     /* Fields in tfm files have different meanings for math fonts */
     is_math = sf->texdata.type == tex_mathext || sf->texdata.type == tex_math;
 
-    tfmd.charlist = xmalloc(65536*sizeof(int32));
-    memset(tfmd.charlist,-1,65536*sizeof(int32));
+    tfmd.charlist = xmalloc(65536*sizeof(int32_t));
+    memset(tfmd.charlist,-1,65536*sizeof(int32_t));
 
-    fseek( file, (14+tfmd.head_len)*sizeof(int32), SEEK_SET);
+    fseek( file, (14+tfmd.head_len)*sizeof(int32_t), SEEK_SET);
     for ( i=tfmd.first; i<=tfmd.last; ++i ) {
 	width = getushort(file);
 	height = getc(file);
@@ -2511,10 +2511,10 @@ return( true );
 /* ************************************************************************** */
 /* **************************** Writing TFM files *************************** */
 /* ************************************************************************** */
-typedef uint32 fix_word;
+typedef uint32_t fix_word;
 
 struct tfm_header {
-    uint32 checksum;	/* don't know how to calculate this, use 0 to ignore it */
+    uint32_t checksum;	/* don't know how to calculate this, use 0 to ignore it */
     fix_word design_size;	/* in points (10<<20 seems to be default) */
     char encoding[40];	/* first byte is length, rest are a string that names the encoding */
 	/* ASCII, TeX text, TeX math extension, XEROX, GRAPHIC, UNSPECIFIED */
@@ -2917,7 +2917,7 @@ static int _OTfmSplineFont(FILE *tfm, SplineFont *sf, int formattype,EncMap *map
     KernPair *kp;
     LigList *l;
     int style, any;
-    uint32 *lkarray;
+    uint32_t *lkarray;
     struct ligkern *o_lkarray=NULL;
     char *familyname;
     int anyITLC;
@@ -3131,7 +3131,7 @@ static int _OTfmSplineFont(FILE *tfm, SplineFont *sf, int formattype,EncMap *map
     memset(former,-1,maxc*sizeof(int));
     memset(lkindex,0,maxc*sizeof(uint16));
     if ( maxc==256 ) {
-	lkarray = xmalloc(lkcnt*sizeof(uint32));
+	lkarray = xmalloc(lkcnt*sizeof(uint32_t));
 	if ( sccnt<128 ) {
 	    lkcnt = 0;
 	    do {

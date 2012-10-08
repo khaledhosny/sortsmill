@@ -587,7 +587,7 @@ static int uniranges[][3] = {
     { 0x100000, 0x10fffd, 90 },	/* Supplementary Private Use Area-B */
 };
 
-static int32 getuint32(FILE *ttf) {
+static int32_t getuint32(FILE *ttf) {
     int ch1 = getc(ttf);
     int ch2 = getc(ttf);
     int ch3 = getc(ttf);
@@ -1408,7 +1408,7 @@ static int AssignTTFGlyph(struct glyphinfo *gi,SplineFont *sf,EncMap *map,int is
 return j;
 }
 
-static int AssignTTFBitGlyph(struct glyphinfo *gi,SplineFont *sf,EncMap *map,int32 *bsizes) {
+static int AssignTTFBitGlyph(struct glyphinfo *gi,SplineFont *sf,EncMap *map,int32_t *bsizes) {
     int i, j;
     BDFFont *bdf;
     int *bygid = xmalloc((sf->glyphcnt+3)*sizeof(int));
@@ -1487,9 +1487,9 @@ static int dumpglyphs(SplineFont *sf,struct glyphinfo *gi) {
     }
 
     gi->maxp->numGlyphs = gi->gcnt;
-    gi->loca = xmalloc((gi->maxp->numGlyphs+1)*sizeof(uint32));
-    gi->pointcounts = xmalloc((gi->maxp->numGlyphs+1)*sizeof(int32));
-    memset(gi->pointcounts,-1,(gi->maxp->numGlyphs+1)*sizeof(int32));
+    gi->loca = xmalloc((gi->maxp->numGlyphs+1)*sizeof(uint32_t));
+    gi->pointcounts = xmalloc((gi->maxp->numGlyphs+1)*sizeof(int32_t));
+    memset(gi->pointcounts,-1,(gi->maxp->numGlyphs+1)*sizeof(int32_t));
     gi->next_glyph = 0;
     gi->glyphs = tmpfile();
     gi->hmtx = tmpfile();
@@ -1802,7 +1802,7 @@ static void dumpcffnames(SplineFont *sf,FILE *cfff) {
 static void dumpcffcharset(SplineFont *sf,struct alltabs *at) {
     int i;
 
-    at->gn_sid = xcalloc(at->gi.gcnt,sizeof(uint32));
+    at->gn_sid = xcalloc(at->gi.gcnt,sizeof(uint32_t));
     putc(0,at->charset);
     /* I always use a format 0 charset. ie. an array of SIDs in random order */
 
@@ -1877,7 +1877,7 @@ static void dumpcfffdselect(SplineFont *sf,struct alltabs *at) {
 
 static void dumpcffencoding(SplineFont *sf,struct alltabs *at) {
     int i, cnt, anydups;
-    uint32 start_pos = ftell(at->encoding);
+    uint32_t start_pos = ftell(at->encoding);
     SplineChar *sc;
     EncMap *map = at->map;
 
@@ -1968,7 +1968,7 @@ return( file );
 }
 
 int SFFigureDefWidth(SplineFont *sf, int *_nomwid) {
-    uint16 *widths; uint32 *cumwid;
+    uint16 *widths; uint32_t *cumwid;
     int nomwid, defwid, i, sameval=(int) 0x80000000, maxw=0, allsame=true;
     int cnt,j;
 
@@ -1986,7 +1986,7 @@ int SFFigureDefWidth(SplineFont *sf, int *_nomwid) {
 	++maxw;
 	if ( maxw>65535 ) maxw = 3*(sf->ascent+sf->descent);
 	widths = xcalloc(maxw,sizeof(uint16));
-	cumwid = xcalloc(maxw,sizeof(uint32));
+	cumwid = xcalloc(maxw,sizeof(uint32_t));
 	defwid = 0; cnt=0;
 	for ( i=0; i<sf->glyphcnt; ++i )
 	    if ( SCWorthOutputting(sf->glyphs[i]) &&
@@ -2739,7 +2739,7 @@ return( true );
 return( false );
 }
 
-static int AnyMisleadingBitmapAdvances(SplineFont *sf, int32 *bsizes) {
+static int AnyMisleadingBitmapAdvances(SplineFont *sf, int32_t *bsizes) {
     int strike, gid;
     double em = sf->ascent+sf->descent;
     BDFFont *bdf;
@@ -2765,9 +2765,9 @@ return( false );
 }
 
 #ifdef HAVE_LONG_LONG_INT
-void cvt_unix_to_1904( long long time, int32 result[2]) {
-    uint32 date1970[4], tm[4];
-    uint32 year[2];
+void cvt_unix_to_1904( long long time, int32_t result[2]) {
+    uint32_t date1970[4], tm[4];
+    uint32_t year[2];
     int i;
 
     tm[0] =  time     &0xffff;
@@ -2775,9 +2775,9 @@ void cvt_unix_to_1904( long long time, int32 result[2]) {
     tm[2] = (time>>32)&0xffff;
     tm[3] = (time>>48)&0xffff;
 #else
-void cvt_unix_to_1904( long time, int32 result[2]) {
-    int32 date1970[4], tm[4];
-    uint32 year[2];
+void cvt_unix_to_1904( long time, int32_t result[2]) {
+    int32_t date1970[4], tm[4];
+    uint32_t year[2];
     int i;
 
     tm[0] =  time     &0xffff;
@@ -2813,7 +2813,7 @@ void cvt_unix_to_1904( long time, int32 result[2]) {
 }
 
 static void sethead(struct head *head,SplineFont *sf,struct alltabs *at,
-	enum fontformat format, int32 *bsizes) {
+	enum fontformat format, int32_t *bsizes) {
     time_t now;
     int i, lr, rl, indic_rearrange, arabic;
     ASM *sm;
@@ -3180,9 +3180,9 @@ int AlreadyMSSymbolArea(SplineFont *sf,EncMap *map) {
 return( pcnt>acnt );
 }
 
-void OS2FigureCodePages(SplineFont *sf, uint32 CodePage[2]) {
+void OS2FigureCodePages(SplineFont *sf, uint32_t CodePage[2]) {
     int i;
-    uint32 latin1[8];
+    uint32_t latin1[8];
     int has_ascii, has_latin1, has_lineart=0, has_radical=0, has_summation=0;
     int cp852=0, cp775=0, cp861=0, cp860=0, cp857=0, cp855=0, cp862=0, cp863=0;
     int cp864=0, cp865=0, cp866=0, cp869=0, cp737=0, cp708=0, mac=0;
@@ -3328,12 +3328,12 @@ void OS2FigureCodePages(SplineFont *sf, uint32 CodePage[2]) {
 	CodePage[0] |= 1U<<29;		/* mac roman */
 }
 
-void OS2FigureUnicodeRanges(SplineFont *sf, uint32 Ranges[4]) {
+void OS2FigureUnicodeRanges(SplineFont *sf, uint32_t Ranges[4]) {
     int i, j, k;
     SplineChar *sc;
     SplineFont *sub;
 
-    memset(Ranges,0,4*sizeof(uint32));
+    memset(Ranges,0,4*sizeof(uint32_t));
     k=0;
     do {
 	sub = k<sf->subfontcnt? sf->subfonts[k] : sf;
@@ -3605,7 +3605,7 @@ static void redoloca(struct alltabs *at) {
     if ( at->head.locais32 ) {
 	for ( i=0; i<=at->maxp.numGlyphs; ++i )
 	    putlong(at->loca,at->gi.loca[i]);
-	at->localen = sizeof(int32)*(at->maxp.numGlyphs+1);
+	at->localen = sizeof(int32_t)*(at->maxp.numGlyphs+1);
     } else {
 	for ( i=0; i<=at->maxp.numGlyphs; ++i )
 	    putshort(at->loca,at->gi.loca[i]/2);
@@ -3624,7 +3624,7 @@ static void dummyloca(struct alltabs *at) {
     at->loca = tmpfile();
     if ( at->head.locais32 ) {
 	putlong(at->loca,0);
-	at->localen = sizeof(int32);
+	at->localen = sizeof(int32_t);
     } else {
 	putshort(at->loca,0);
 	at->localen = sizeof(int16);
@@ -4200,7 +4200,7 @@ static void dumppost(struct alltabs *at, SplineFont *sf, enum fontformat format)
     int pos, i,j, shouldbe;
     int shorttable = (format==ff_otf || format==ff_otfcid ||
 	    (at->gi.flags&ttf_flag_shortps));
-    uint32 here;
+    uint32_t here;
 
     at->post = tmpfile();
 
@@ -4627,7 +4627,7 @@ return( format12 );
 static FILE *NeedsUCS2Table(SplineFont *sf,int *ucs2len,EncMap *map,int issymbol) {
     /* We always want a format 4 2byte unicode encoding map */
     /* But if it's symbol, only include encodings 0xff20 - 0xffff */
-    uint32 *avail = xmalloc(65536*sizeof(uint32));
+    uint32_t *avail = xmalloc(65536*sizeof(uint32_t));
     int i,j,l;
     int segcnt, cnt=0, delta, rpos;
     struct cmapseg { uint16 start, end; uint16 delta; uint16 rangeoff; } *cmapseg;
@@ -4635,7 +4635,7 @@ static FILE *NeedsUCS2Table(SplineFont *sf,int *ucs2len,EncMap *map,int issymbol
     SplineChar *sc;
     FILE *format4 = tmpfile();
 
-    memset(avail,0xff,65536*sizeof(uint32));
+    memset(avail,0xff,65536*sizeof(uint32_t));
     if ( map->enc->is_unicodebmp || map->enc->is_unicodefull ) { int gid;
 	for ( i=0; i<65536 && i<map->enccount; ++i ) if ( (gid=map->map[i])!=-1 && sf->glyphs[gid]!=NULL && sf->glyphs[gid]->ttf_glyph!=-1 ) {
 	    avail[i] = gid;
@@ -4661,8 +4661,8 @@ static FILE *NeedsUCS2Table(SplineFont *sf,int *ucs2len,EncMap *map,int issymbol
     }
     if ( issymbol ) {
 	/* Clear out all entries we don't want */
-	memset(avail       ,0xff,0xf020*sizeof(uint32));
-	memset(avail+0xf100,0xff,0x0eff*sizeof(uint32));
+	memset(avail       ,0xff,0xf020*sizeof(uint32_t));
+	memset(avail+0xf100,0xff,0x0eff*sizeof(uint32_t));
     }
 
     j = -1;
@@ -4745,12 +4745,12 @@ static FILE *NeedsVariationSequenceTable(SplineFont *sf,int *vslen,EncMap *map) 
     /* Do we need a format 14 (unicode variation sequence) subtable? */
     int gid, vs_cnt=0, vs_max=512, i, j, k, cnt, mingid, maxgid;
     struct altuni *altuni, *au;
-    uint32 vsbuf[512], *vses = vsbuf;
+    uint32_t vsbuf[512], *vses = vsbuf;
     FILE *format14;
-    uint32 *avail = NULL;
+    uint32_t *avail = NULL;
     enum vs_type {vs_default=(1<<24), vs_nondefault=(2<<24) };
     SplineChar *sc;
-    uint32 here;
+    uint32_t here;
     int any;
 
     mingid = maxgid = -1;
@@ -4764,10 +4764,10 @@ static FILE *NeedsVariationSequenceTable(SplineFont *sf,int *vslen,EncMap *map) 
 		if ( i>=vs_cnt ) {
 		    if ( i>=vs_max ) {
 			if ( vses==vsbuf ) {
-			    vses = xmalloc((vs_max*=2)*sizeof(uint32));
+			    vses = xmalloc((vs_max*=2)*sizeof(uint32_t));
 			    memcpy(vses,vsbuf,sizeof(vsbuf));
 			} else
-			    vses = xrealloc(vses,(vs_max+=512)*sizeof(uint32));
+			    vses = xrealloc(vses,(vs_max+=512)*sizeof(uint32_t));
 		    }
 		    vses[vs_cnt++] = altuni->vs;
 		}
@@ -4792,7 +4792,7 @@ return( NULL );			/* No variation selectors */
 	}
     }
 
-    avail = xmalloc(unicode4_size*sizeof(uint32));
+    avail = xmalloc(unicode4_size*sizeof(uint32_t));
 
     format14 = tmpfile();
     putshort(format14,14);
@@ -5008,7 +5008,7 @@ static void dumpcmap(struct alltabs *at, SplineFont *sf,enum fontformat format) 
     putshort(at->cmap,0);		/* version */
     putshort(at->cmap,enccnt);		/* num tables */
 
-    mspos = 2*sizeof(uint16)+enccnt*(2*sizeof(uint16)+sizeof(uint32));
+    mspos = 2*sizeof(uint16)+enccnt*(2*sizeof(uint16)+sizeof(uint32_t));
     ucs4pos = mspos+ucs2len;
     cjkpos = ucs4pos+ucs4len;
     if ( apple2==NULL ) {
@@ -5130,8 +5130,8 @@ static void dumpcmap(struct alltabs *at, SplineFont *sf,enum fontformat format) 
     }
 }
 
-int32 filechecksum(FILE *file) {
-    uint32 sum = 0, chunk;
+int32_t filechecksum(FILE *file) {
+    uint32_t sum = 0, chunk;
 
     rewind(file);
     while ( 1 ) {
@@ -5292,7 +5292,7 @@ return;
     at->maxp.maxStack = memushort(maxp->data,maxp->len, 12*sizeof(uint16));
 }
 
-static FILE *dumpstoredtable(SplineFont *sf,uint32 tag,int *len) {
+static FILE *dumpstoredtable(SplineFont *sf,uint32_t tag,int *len) {
     struct ttf_table *tab = SFFindTable(sf,tag);
     FILE *out;
 
@@ -5400,7 +5400,7 @@ static void initATTables(struct alltabs *at, SplineFont *sf,
     redoos2(at);
 }
 
-static struct taboff *findtabindir(struct tabdir *td, uint32 tag ) {
+static struct taboff *findtabindir(struct tabdir *td, uint32_t tag ) {
     int i;
 
     for ( i=0; i<td->numtab; ++i )
@@ -5750,7 +5750,7 @@ static void buildtablestructures(struct alltabs *at, SplineFont *sf,
 }
 
 static int initTables(struct alltabs *at, SplineFont *sf,enum fontformat format,
-	int32 *bsizes, enum bitmapformat bf,int flags) {
+	int32_t *bsizes, enum bitmapformat bf,int flags) {
     int i, j, aborted, offset;
     BDFFont *bdf;
     struct ttf_table *tab;
@@ -5960,7 +5960,7 @@ return( false );
     qsort(at->tabdir.ordered,at->tabdir.numtab,sizeof(struct taboff *),tcomp);
     qsort(at->tabdir.alpha,i,sizeof(struct taboff *),tagcomp);
 
-    offset = sizeof(int32)+4*sizeof(int16) + at->tabdir.numtab*4*sizeof(int32);
+    offset = sizeof(int32_t)+4*sizeof(int16) + at->tabdir.numtab*4*sizeof(int32_t);
     for ( i=0; i<at->tabdir.numtab; ++i ) if ( at->tabdir.ordered[i]->data!=NULL ) {
 	at->tabdir.ordered[i]->offset = offset;
 	offset += ((at->tabdir.ordered[i]->length+3)>>2)<<2;
@@ -5998,7 +5998,7 @@ return( false );
 return( true );
 }
 
-static char *Tag2String(uint32 tag) {
+static char *Tag2String(uint32_t tag) {
     static char buffer[8];
 
     buffer[0] = tag>>24;
@@ -6010,7 +6010,7 @@ return( buffer );
 }
 
 static void dumpttf(FILE *ttf,struct alltabs *at, enum fontformat format) {
-    int32 checksum;
+    int32_t checksum;
     int i, head_index=-1;
     /* I can't use fwrite because I (may) have to byte swap everything */
 
@@ -6037,7 +6037,7 @@ static void dumpttf(FILE *ttf,struct alltabs *at, enum fontformat format) {
     if ( head_index!=-1 ) {
 	checksum = filechecksum(ttf);
 	checksum = 0xb1b0afba-checksum;
-	fseek(ttf,at->tabdir.alpha[head_index]->offset+2*sizeof(int32),SEEK_SET);
+	fseek(ttf,at->tabdir.alpha[head_index]->offset+2*sizeof(int32_t),SEEK_SET);
 	putlong(ttf,checksum);
     }
 
@@ -6174,7 +6174,7 @@ static void ATinit(struct alltabs *at,SplineFont *sf,EncMap *map,int flags, int 
 }
 
 int _WriteTTFFont(FILE *ttf,SplineFont *sf,enum fontformat format,
-	int32 *bsizes, enum bitmapformat bf,int flags,EncMap *map, int layer) {
+	int32_t *bsizes, enum bitmapformat bf,int flags,EncMap *map, int layer) {
     struct alltabs at;
     char oldloc[24];
     int i, anyglyphs;
@@ -6245,7 +6245,7 @@ return( 1 );
 }
 
 int WriteTTFFont(char *fontname,SplineFont *sf,enum fontformat format,
-	int32 *bsizes, enum bitmapformat bf,int flags,EncMap *map, int layer) {
+	int32_t *bsizes, enum bitmapformat bf,int flags,EncMap *map, int layer) {
     FILE *ttf;
     int ret;
 
@@ -6331,7 +6331,7 @@ static void dumptype42(FILE *type42,struct alltabs *at, enum fontformat format) 
 
     for ( i=0; i<at->tabdir.numtab; ++i ) {
 	if ( at->tabdir.ordered[i]->length>65534 && at->tabdir.ordered[i]->tag==CHR('g','l','y','f')) {
-	    uint32 last = 0;
+	    uint32_t last = 0;
 	    int j;
 	    fseek(temp,at->tabdir.ordered[i]->offset,SEEK_SET);
 	    for ( j=0; j<at->maxp.numGlyphs; ++j ) {
@@ -6695,7 +6695,7 @@ return( NULL );
 return( ret );
 }
 
-static FILE *checkdupstoredtable(SplineFont *sf,uint32 tag,int *len,
+static FILE *checkdupstoredtable(SplineFont *sf,uint32_t tag,int *len,
 	struct alltabs *all, int me) {
     int i;
     struct ttf_table *tab = SFFindTable(sf,tag), *test;
@@ -6997,7 +6997,7 @@ static void ttc_dump(FILE *ttc,struct alltabs *all, enum fontformat format,
 	int checksum;
 	checksum = filechecksum(ttc);
 	checksum = 0xb1b0afba-checksum;
-	fseek(ttc,tab->offset+2*sizeof(int32),SEEK_SET);
+	fseek(ttc,tab->offset+2*sizeof(int32_t),SEEK_SET);
 	putlong(ttc,checksum);
     }
 }

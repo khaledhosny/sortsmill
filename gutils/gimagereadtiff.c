@@ -35,12 +35,12 @@ static int a_file_must_define_something=0;	/* ANSI says so */
 
 #include <tiffio.h>
 
-#define int32 _int32
-#define uint32 _uint32
-#define int16 _int16
-#define uint16 _uint16
-#define int8 _int8
-#define uint8 _uint8
+//#define int32_t _int32
+//#define uint32_t _uint32
+//#define int16 _int16
+//#define uint16 _uint16
+//#define int8 _int8
+//#define uint8 _uint8
 
 #include "gimage.h"
 
@@ -48,8 +48,8 @@ static int a_file_must_define_something=0;	/* ANSI says so */
 
 GImage *GImageReadTiff(char *filename) {
     TIFF* tif;
-    uint32 w, h, i,j;
-    uint32 *ipt, *fpt;
+    uint32_t w, h, i,j;
+    uint32_t *ipt, *fpt;
     size_t npixels;
     uint32* raster;
     GImage *ret=NULL;
@@ -63,14 +63,14 @@ return( ret );
     TIFFGetField(tif, TIFFTAG_IMAGEWIDTH, &w);
     TIFFGetField(tif, TIFFTAG_IMAGELENGTH, &h);
     npixels = w * h;
-    raster = (uint32*) xmalloc(szmax(1, npixels * sizeof (uint32)));
+    raster = (uint32_t*) xmalloc(szmax(1, npixels * sizeof (uint32_t)));
     if (raster != NULL) {
 	if (TIFFReadRGBAImage(tif, w, h, raster, 0)) {
 	    ret = GImageCreate(it_true,w,h);
 	    if ( ret!=NULL ) {
 		base = ret->u.image;
 		for ( i=0; i<h; ++i ) {
-		    ipt = (uint32 *) (base->data+i*base->bytes_per_line);
+		    ipt = (uint32_t *) (base->data+i*base->bytes_per_line);
 		    fpt = raster+(h-1-i)*w;
 		    for ( j=0; j<w; ++j )
 			*ipt++ = COLOR_CREATE(

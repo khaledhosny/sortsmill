@@ -593,8 +593,8 @@ static void dumpGradient(void (*dumpchar)(int ch,void *data), void *data,
 		    col = grad->grad_stops[j].col;
 		else {
 		    double percent = (t-grad->grad_stops[j-1].offset)/ (grad->grad_stops[j].offset-grad->grad_stops[j-1].offset);
-		    uint32 col1 = grad->grad_stops[j-1].col;
-		    uint32 col2 = grad->grad_stops[j  ].col;
+		    uint32_t col1 = grad->grad_stops[j-1].col;
+		    uint32_t col2 = grad->grad_stops[j  ].col;
 		    int red, green, blue;
 		    if ( col1==COLOR_INHERITED ) col1 = 0x000000;
 		    if ( col2==COLOR_INHERITED ) col2 = 0x000000;
@@ -738,7 +738,7 @@ static void Filter(struct psfilter *ps,uint8 ch) {
     ps->ascii85encode = (ps->ascii85encode<<8) | ch;
     if ( ++ps->ascii85n == 4 ) {
 	int ch5, ch4, ch3, ch2, ch1;
-	uint32 val = ps->ascii85encode;
+	uint32_t val = ps->ascii85encode;
 	if ( val==0 ) {
 	    (ps->dumpchar)('z',ps->data);
 	    ps->ascii85n = 0;
@@ -765,7 +765,7 @@ static void Filter(struct psfilter *ps,uint8 ch) {
 }
 
 static void FlushFilter(struct psfilter *ps) {
-    uint32 val = ps->ascii85encode;
+    uint32_t val = ps->ascii85encode;
     int n = ps->ascii85n;
     if ( n!=0 ) {
 	int ch5, ch4, ch3, ch2, ch1;
@@ -848,8 +848,8 @@ static void PSDump24BinaryData(void (*dumpchar)(int ch,void *data), void *data,
 	struct _GImage *base ) {
     struct psfilter ps;
     int i,j,cnt,group_cnt;
-    register uint32 val;
-    register uint32 *pt, *end;
+    register uint32_t val;
+    register uint32_t *pt, *end;
     const int max_string = 65536;
 
     if ( 3*base->width*base->height<max_string ) {
@@ -857,7 +857,7 @@ static void PSDump24BinaryData(void (*dumpchar)(int ch,void *data), void *data,
 	dumpf(dumpchar,data, "{<~" );
 	InitFilter(&ps,dumpchar,data);
 	for ( i=0; i<base->height; ++i ) {
-	    pt = (uint32 *) (base->data + i*base->bytes_per_line);
+	    pt = (uint32_t *) (base->data + i*base->bytes_per_line);
 	    end = pt + base->width;
 	    while ( pt<end ) {
 		val = *pt++;
@@ -881,7 +881,7 @@ static void PSDump24BinaryData(void (*dumpchar)(int ch,void *data), void *data,
 	    }
 	    InitFilter(&ps,dumpchar,data);
 	    for ( j=0; j<cnt && i<base->height; ++i, ++j ) {
-		pt = (uint32 *) (base->data + i*base->bytes_per_line);
+		pt = (uint32_t *) (base->data + i*base->bytes_per_line);
 		end = pt + base->width;
 		while ( pt<end ) {
 		    val = *pt++;

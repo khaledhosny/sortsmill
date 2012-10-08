@@ -40,7 +40,7 @@ static GImage *ColorWheel(int width,int height) {
     struct _GImage *base;
     int i,j;
     double x,y, hh, hw;
-    uint32 *row;
+    uint32_t *row;
 
     memset(&col,0,sizeof(col));
     col.v = 1.0;
@@ -52,7 +52,7 @@ static GImage *ColorWheel(int width,int height) {
     wheel = GImageCreate(it_true,width,height);
     base = wheel->u.image;
     for ( i=0; i<height; ++i ) {
-	row = (uint32 *) (base->data + i*base->bytes_per_line);
+	row = (uint32_t *) (base->data + i*base->bytes_per_line);
 	y = (i-hh)/(hh-1);
 	for ( j=0; j<width; ++j ) {
 	    x = (j-hw)/(hw-1);
@@ -75,14 +75,14 @@ static GImage *Gradient(int height) {
     GImage *grad;
     struct _GImage *base;
     int i,j,c;
-    uint32 *row;
+    uint32_t *row;
 
     if ( height<10 ) height = 10;
 
     grad = GImageCreate(it_true,GRAD_WIDTH,height);
     base = grad->u.image;
     for ( i=0; i<height; ++i ) {
-	row = (uint32 *) (base->data + i*base->bytes_per_line);
+	row = (uint32_t *) (base->data + i*base->bytes_per_line);
 	c = 255*(height-1-i)/(height-1);
 	for ( j=0; j<GRAD_WIDTH; ++j ) {
 	    *row++ = COLOR_CREATE(c,c,c);

@@ -32,13 +32,13 @@
 
 static void WriteBase(FILE *file, struct _GImage *base, char *stem, int instance) {
     int i,j,k;
-    uint32 *ipt;
+    uint32_t *ipt;
     uint8 *pt;
 
     if ( base->image_type==it_true ) {
-	fprintf(file,"static uint32 %s%d_data[] = {\n", stem, instance );
+	fprintf(file,"static uint32_t %s%d_data[] = {\n", stem, instance );
 	for ( i=0; i<base->height; ++i ) {
-	    ipt = (uint32 *) (base->data+i*base->bytes_per_line);
+	    ipt = (uint32_t *) (base->data+i*base->bytes_per_line);
 	    for ( j=0; j<base->width; ) {
 		fprintf( file, j==0?"    ":"\t");
 		for ( k=0; k<8 && j<base->width; ++k, ++j, ++ipt )

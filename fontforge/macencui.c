@@ -337,7 +337,7 @@ struct namedata {
 static int name_e_h(GWindow gw, GEvent *event) {
     struct namedata *nd = GDrawGetUserData(gw);
     int i;
-    int32 len;
+    int32_t len;
     GTextInfo **ti, *sel;
     char *ret1, *temp; uint32_t *full;
     int val1, val2;
@@ -560,7 +560,7 @@ static int Pref_DelName(GGadget *g, GEvent *e) {
 	struct macname *mn, *p, *all, *next;
 	GWindow gw = GGadgetGetWindow(g);
 	GGadget *list = GWidgetGetControl(gw,CID_NameList);
-	int32 len;
+	int32_t len;
 	GTextInfo **ti = GGadgetGetList(list,&len);
 	int i;
 
@@ -599,7 +599,7 @@ return( true );
 
 static int Pref_NameSel(GGadget *g, GEvent *e) {
     if ( e->type==et_controlevent && e->u.control.subtype == et_listselected ) {
-	int32 len;
+	int32_t len;
 	GTextInfo **ti = GGadgetGetList(g,&len);
 	GWindow gw = GGadgetGetWindow(g);
 	int i, sel_cnt=0;
@@ -626,7 +626,7 @@ void NameGadgetsSetEnabled( GWindow gw, int enable ) {
 	GGadgetSetEnabled(GWidgetGetControl(gw,CID_NameDel),false);
 	GGadgetSetEnabled(GWidgetGetControl(gw,CID_NameEdit),false);
     } else {
-	int32 len;
+	int32_t len;
 	GGadget *list = GWidgetGetControl(gw,CID_NameList);
 	GTextInfo **ti = GGadgetGetList(list,&len);
 	int i, sel_cnt=0;
@@ -696,7 +696,7 @@ struct setdata {
 static int set_e_h(GWindow gw, GEvent *event) {
     struct setdata *sd = GDrawGetUserData(gw);
     int i;
-    int32 len;
+    int32_t len;
     GTextInfo **ti;
     const uint32_t *ret1; uint32_t *end, *res; char *temp;
     int val1, val2;
@@ -929,7 +929,7 @@ static int Pref_DelSetting(GGadget *g, GEvent *e) {
 	struct macsetting *ms, *p, *all, *next;
 	GWindow gw = GGadgetGetWindow(g);
 	GGadget *list = GWidgetGetControl(gw,CID_Settings);
-	int32 len;
+	int32_t len;
 	GTextInfo **ti = GGadgetGetList(list,&len);
 	int i;
 
@@ -968,7 +968,7 @@ return( true );
 
 static int Pref_SettingSel(GGadget *g, GEvent *e) {
     if ( e->type==et_controlevent && e->u.control.subtype == et_listselected ) {
-	int32 len;
+	int32_t len;
 	GTextInfo **ti = GGadgetGetList(g,&len);
 	GWindow gw = GGadgetGetWindow(g);
 	int i, sel_cnt=0;
@@ -994,7 +994,7 @@ struct featdata {
 static int feat_e_h(GWindow gw, GEvent *event) {
     struct featdata *fd = GDrawGetUserData(gw);
     int i;
-    int32 len;
+    int32_t len;
     GTextInfo **ti;
     const uint32_t *ret1; uint32_t *end, *res; char *temp;
     int val1, val2;
@@ -1266,7 +1266,7 @@ static int Pref_DelFeat(GGadget *g, GEvent *e) {
 	MacFeat *mf, *p, *all, *next;
 	GWindow gw = GGadgetGetWindow(g);
 	GGadget *list = GWidgetGetControl(gw,CID_Features);
-	int32 len;
+	int32_t len;
 	GTextInfo **ti = GGadgetGetList(list,&len);
 	int i;
 
@@ -1305,7 +1305,7 @@ return( true );
 
 static int Pref_FeatureSel(GGadget *g, GEvent *e) {
     if ( e->type==et_controlevent && e->u.control.subtype == et_listselected ) {
-	int32 len;
+	int32_t len;
 	GTextInfo **ti = GGadgetGetList(g,&len);
 	GWindow gw = GGadgetGetWindow(g);
 	int i, sel_cnt=0;

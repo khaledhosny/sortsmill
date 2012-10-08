@@ -38,7 +38,7 @@ struct dup {
 };
 
 struct taxis {
-    uint32 tag;
+    uint32_t tag;
     real min, def, max;	/* in user design space */
     int nameid;
     int paircount;
@@ -76,8 +76,8 @@ struct macidname {
 };
 
 struct savetab {
-    uint32 tag;
-    uint32 offset;
+    uint32_t tag;
+    uint32_t offset;
     int len;
 };
 
@@ -145,99 +145,99 @@ struct ttfinfo {
 
     int numtables;
     		/* BASE  */
-    uint32 base_start;		/* Offset from sof to start of 'BASE' table */
+    uint32_t base_start;		/* Offset from sof to start of 'BASE' table */
     		/* CFF  */
-    uint32 cff_start;		/* Offset from sof to start of postscript compact font format */
-    uint32 cff_length;
+    uint32_t cff_start;		/* Offset from sof to start of postscript compact font format */
+    uint32_t cff_length;
     		/* cmap */
-    uint32 encoding_start;	/* Offset from sof to start of encoding table */
-    uint32 vs_start;		/* Offset within 'cmap' to variant selector table */
+    uint32_t encoding_start;	/* Offset from sof to start of encoding table */
+    uint32_t vs_start;		/* Offset within 'cmap' to variant selector table */
 		/* gasp */
-    uint32 gasp_start;
+    uint32_t gasp_start;
 		/* glyf */
-    uint32 glyph_start;		/* Offset from sof to start of glyph table */
-    uint32 glyph_length;
+    uint32_t glyph_start;		/* Offset from sof to start of glyph table */
+    uint32_t glyph_length;
 		/* GDEF */
-    uint32 gdef_start;		/* Offset from sof to start of GDEF table (glyph class defn, ligature carets) */
-    uint32 gdef_length;
+    uint32_t gdef_start;		/* Offset from sof to start of GDEF table (glyph class defn, ligature carets) */
+    uint32_t gdef_length;
 		/* GPOS */
-    uint32 gpos_start;		/* Offset from sof to start of GPOS table */
-    uint32 gpos_length;
+    uint32_t gpos_start;		/* Offset from sof to start of GPOS table */
+    uint32_t gpos_length;
 		/* GSUB */
-    uint32 gsub_start;		/* Offset from sof to start of GSUB table */
-    uint32 gsub_length;
-    uint32 g_bounds;		/* Filled in with g???_start+g???_length */
+    uint32_t gsub_start;		/* Offset from sof to start of GSUB table */
+    uint32_t gsub_length;
+    uint32_t g_bounds;		/* Filled in with g???_start+g???_length */
 		/* EBDT, bdat */
-    uint32 bitmapdata_start;	/* Offset to start of bitmap data */
-    uint32 bitmapdata_length;
+    uint32_t bitmapdata_start;	/* Offset to start of bitmap data */
+    uint32_t bitmapdata_length;
 		/* EBLT, bloc */
-    uint32 bitmaploc_start;	/* Offset to start of bitmap locator data */
-    uint32 bitmaploc_length;
+    uint32_t bitmaploc_start;	/* Offset to start of bitmap locator data */
+    uint32_t bitmaploc_length;
 		/* gvar, etc. */
-    uint32 gvar_start, gvar_len;
-    uint32 fvar_start, fvar_len;
-    uint32 avar_start, avar_len;
-    uint32 cvar_start, cvar_len;
+    uint32_t gvar_start, gvar_len;
+    uint32_t fvar_start, fvar_len;
+    uint32_t avar_start, avar_len;
+    uint32_t cvar_start, cvar_len;
 		/* head */
-    uint32 head_start;
+    uint32_t head_start;
 		/* hhea */
-    uint32 hhea_start;
+    uint32_t hhea_start;
 		/* hmtx */
-    uint32 hmetrics_start;
+    uint32_t hmetrics_start;
 		/* JSTF */
-    uint32 jstf_start;
-    uint32 jstf_length;
+    uint32_t jstf_start;
+    uint32_t jstf_length;
 		/* kern */
-    uint32 kern_start;
+    uint32_t kern_start;
 		/* loca */
-    uint32 glyphlocations_start;/* there are glyph_cnt of these, from maxp tab */
-    uint32 loca_length;		/* actually glypn_cnt is wrong. Use the table length (divided by size) instead */
+    uint32_t glyphlocations_start;/* there are glyph_cnt of these, from maxp tab */
+    uint32_t loca_length;		/* actually glypn_cnt is wrong. Use the table length (divided by size) instead */
 		/* maxp */
-    uint32 maxp_start;		/* maximum number of glyphs */
-    uint32 maxp_len;
+    uint32_t maxp_start;		/* maximum number of glyphs */
+    uint32_t maxp_len;
 		/* name */
-    uint32 copyright_start;	/* copyright and fontname */
+    uint32_t copyright_start;	/* copyright and fontname */
 		/* post */
-    uint32 postscript_start;	/* names for the glyphs, italic angle, etc. */
+    uint32_t postscript_start;	/* names for the glyphs, italic angle, etc. */
 		/* OS/2 */
-    uint32 os2_start;
+    uint32_t os2_start;
 		/* TYP1 */
-    uint32 typ1_start;		/* For Adobe's? Apple's? attempt to stuff a type1 font into an sfnt wrapper */
-    uint32 typ1_length;
+    uint32_t typ1_start;		/* For Adobe's? Apple's? attempt to stuff a type1 font into an sfnt wrapper */
+    uint32_t typ1_length;
 		/* vhea */
-    uint32 vhea_start;
+    uint32_t vhea_start;
 		/* vmtx */
-    uint32 vmetrics_start;
+    uint32_t vmetrics_start;
 		/* VORG */
-    uint32 vorg_start;
+    uint32_t vorg_start;
 
 		/* PfEd -- FontForge/PfaEdit specific info */
-    uint32 pfed_start;
+    uint32_t pfed_start;
 		/* TeX  -- TeX table, also non-standard */
-    uint32 tex_start;
+    uint32_t tex_start;
 		/* BDF  -- BDF properties, also non-standard */
-    uint32 bdf_start;
+    uint32_t bdf_start;
 		/* FFTM -- FontForge timestamps */
-    uint32 fftm_start;
+    uint32_t fftm_start;
 
 		/* Apple Advanced Typography Tables */
-    uint32 prop_start;
-    uint32 lcar_start;
-    uint32 opbd_start;
-    uint32 acnt_start;
-    uint32 feat_start;
-    uint32 mort_start;
-    uint32 morx_start;
-    uint32 bsln_start;
+    uint32_t prop_start;
+    uint32_t lcar_start;
+    uint32_t opbd_start;
+    uint32_t acnt_start;
+    uint32_t feat_start;
+    uint32_t mort_start;
+    uint32_t morx_start;
+    uint32_t bsln_start;
 
 		/* MATH Table */
-    uint32 math_start;
-    uint32 math_length;
+    uint32_t math_start;
+    uint32_t math_length;
 
 		/* Info for instructions */
-    uint32 cvt_start, cvt_len;
-    uint32 prep_start, prep_len;
-    uint32 fpgm_start, fpgm_len;
+    uint32_t cvt_start, cvt_len;
+    uint32_t prep_start, prep_len;
+    uint32_t fpgm_start, fpgm_len;
 
     unsigned int one_of_many: 1;	/* A TTCF file, or a opentype font with multiple fonts */
     unsigned int obscomplain: 1;	/* We've complained about obsolete format 3 in EBDT table */
@@ -281,7 +281,7 @@ struct ttfinfo {
     struct fontdict *fd;	/* For reading in Type42 fonts. Glyph names in postscript section must be associated with glyphs in TTF section */
     int savecnt;
     struct savetab *savetab;
-    int32 last_size_pos;
+    int32_t last_size_pos;
     uint16 design_size;
     uint16 fontstyle_id;
     struct otfname *fontstyle_name;
@@ -325,18 +325,18 @@ struct ttfinfo {
     int fbb[4];		/* x,yMin x,yMax*/
     int isFixedPitch;
 
-    uint32 jstf_script;
-    uint32 jstf_lang;
+    uint32_t jstf_script;
+    uint32_t jstf_lang;
     int16 jstf_isShrink, jstf_prio, jstf_lcnt;
     struct otffeatname *feat_names;
     enum gsub_inusetype justinuse;
 };
 
 struct taboff {
-    uint32 tag;	/* Table name */
-    uint32 checksum;/* for table */
-    uint32 offset;	/* to start of table in file */
-    uint32 length;
+    uint32_t tag;	/* Table name */
+    uint32_t checksum;/* for table */
+    uint32_t offset;	/* to start of table in file */
+    uint32_t length;
     FILE *data;
     uint16 dup_of;
     uint16 orderingval;
@@ -344,7 +344,7 @@ struct taboff {
 
 #define MAX_TAB	48
 struct tabdir {
-    int32 version;	/* 0x00010000 */
+    int32_t version;	/* 0x00010000 */
     uint16 numtab;
     uint16 searchRange;	/* (Max power of 2 <= numtab) *16 */
     uint16 entrySel;	/* Log2(Max power of 2 <= numtab ) */
@@ -364,14 +364,14 @@ struct glyphhead {
 };
 
 struct head {
-    int32 version;	/* 0x00010000 */
-    int32 revision;	/* 0 */
-    uint32 checksumAdj;	/* set to 0, sum entire font, store 0xb1b0afba-sum */
-    uint32 magicNum;	/* 0x5f0f3cf5 */
+    int32_t version;	/* 0x00010000 */
+    int32_t revision;	/* 0 */
+    uint32_t checksumAdj;	/* set to 0, sum entire font, store 0xb1b0afba-sum */
+    uint32_t magicNum;	/* 0x5f0f3cf5 */
     uint16 flags;	/* 1 */
     uint16 emunits;	/* sf->ascent+sf->descent */
-    int32 createtime[2];/* number of seconds since 1904 */
-    int32 modtime[2];
+    int32_t createtime[2];/* number of seconds since 1904 */
+    int32_t modtime[2];
     int16 xmin;		/* min for entire font */
     int16 ymin;
     int16 xmax;
@@ -385,7 +385,7 @@ struct head {
 };
 
 struct hhead {
-    int32 version;	/* 0x00010000 */
+    int32_t version;	/* 0x00010000 */
     int16 ascender;	/* sf->ascender */
     int16 descender;	/* -sf->descender */
     int16 linegap;	/* 0 */
@@ -409,7 +409,7 @@ struct hmtx {
 struct kp {
     uint16 left;	/* left glyph num */
     uint16 right;	/* right glyph num */
-    /* table is ordered by these two above treated as uint32 */
+    /* table is ordered by these two above treated as uint32_t */
     int16 offset;	/* kern amount */
 };
 
@@ -428,7 +428,7 @@ struct kern {
 };
 
 struct maxp {
-    int32 version;	/* 0x00010000 */
+    int32_t version;	/* 0x00010000 */
     uint16 numGlyphs;
     uint16 maxPoints;	/* max number of points in a simple glyph */
     uint16 maxContours;	/* max number of paths in a simple glyph */
@@ -506,7 +506,7 @@ struct os2 {
 	/* class = 12 => symbolic */
 	/*	subclass: 3 mixed serif; 6 old style serif; 7 neo-grotesque sans; */
     char panose[10];	/* can be set to zero */
-    uint32 unicoderange[4];	
+    uint32_t unicoderange[4];	
 	/* 1<<0=>ascii, 1<<1 => latin1, 2=>100-17f, 3=>180-24f, 4=>250-2af */
 	/* 5=> 2b0-2ff, 6=>300-36f, ... */
     char achVendID[4];	/* can be zero */
@@ -523,7 +523,7 @@ struct os2 {
     uint16 linegap;	/* 0 */
     uint16 winascent;	/* ymax */
     uint16 windescent;	/* ymin */
-    uint32 ulCodePage[2];
+    uint32_t ulCodePage[2];
 	/* 1<<0 => latin1, 1<<1=>latin2, cyrillic, greek, turkish, hebrew, arabic */
 	/* 1<<30 => mac, 1<<31 => symbol */
     /* OTF stuff (version 2 of OS/2) */
@@ -540,22 +540,22 @@ struct os2 {
 };
 
 struct post {
-    int32 formattype;		/* 0x00020000 */
-    int32 italicAngle;		/* in fixed format */
+    int32_t formattype;		/* 0x00020000 */
+    int32_t italicAngle;		/* in fixed format */
     int16 upos;
     int16 uwidth;
-    uint32 isfixed;
-    uint32 minmem42;
-    uint32 maxmem42;
-    uint32 minmem1;
-    uint32 maxmem1;
+    uint32_t isfixed;
+    uint32_t minmem42;
+    uint32_t maxmem42;
+    uint32_t minmem1;
+    uint32_t maxmem1;
     uint16 numglyphs;
     uint16 glyphnameindex[1];
 };
 
 struct glyphinfo {
     struct maxp *maxp;		/* this one is given to dumpglyphs, rest blank */
-    uint32 *loca;
+    uint32_t *loca;
     FILE *glyphs;
     FILE *hmtx;
     int hmtxlen;
@@ -570,14 +570,14 @@ struct glyphinfo {
     int hfullcnt, vfullcnt;
     int flags;
     int fixed_width;
-    int32 *bsizes;
+    int32_t *bsizes;
     unsigned int dovariations: 1;
     unsigned int onlybitmaps: 1;
     unsigned int has_instrs: 1;
     unsigned int is_ttf: 1;
     unsigned int ttc_composite_font: 1;
     SplineFont *sf;
-    int32 *pointcounts;
+    int32_t *pointcounts;
     int *bygid;			/* glyph list */
     int gcnt;
     int layer;
@@ -816,8 +816,8 @@ extern void aat_dumpbsln(struct alltabs *at, SplineFont *sf);
 extern int LookupHasDefault(OTLookup *otl);
 VISIBLE extern int scriptsHaveDefault(struct scriptlanglist *sl);
 extern int FPSTisMacable(SplineFont *sf, FPST *fpst);
-extern uint32 MacFeatureToOTTag(int featureType,int featureSetting);
-VISIBLE extern int OTTagToMacFeature(uint32 tag, int *featureType,int *featureSetting);
+extern uint32_t MacFeatureToOTTag(int featureType,int featureSetting);
+VISIBLE extern int OTTagToMacFeature(uint32_t tag, int *featureType,int *featureSetting);
 VISIBLE extern uint16 *props_array(SplineFont *sf,struct glyphinfo *gi);
 VISIBLE extern int haslrbounds(SplineChar *sc, PST **left, PST **right);
 VISIBLE extern int16 *PerGlyphDefBaseline(SplineFont *sf,int *def_baseline);
@@ -832,14 +832,14 @@ extern void ttf_dumpvariations(struct alltabs *at, SplineFont *sf);
 struct macsettingname {
     int mac_feature_type;
     int mac_feature_setting;
-    uint32 otf_tag;
+    uint32_t otf_tag;
 };
 
 VISIBLE extern struct macsettingname macfeat_otftag[], *user_macfeat_otftag;
 
     /* TrueType instructions */
-VISIBLE extern struct ttf_table *SFFindTable(SplineFont *sf,uint32 tag);
-extern int32 memlong(uint8 *data,int table_len, int offset);
+VISIBLE extern struct ttf_table *SFFindTable(SplineFont *sf,uint32_t tag);
+extern int32_t memlong(uint8 *data,int table_len, int offset);
 VISIBLE extern int memushort(uint8 *data,int table_len, int offset);
 VISIBLE extern void memputshort(uint8 *data,int offset,uint16 val);
 extern int TTF__getcvtval(SplineFont *sf,int val);
@@ -864,9 +864,9 @@ VISIBLE extern void AnchorClassDecompose(SplineFont *sf,AnchorClass *_ac, int cl
 	struct glyphinfo *gi);
 
 #ifdef HAVE_LONG_LONG_INT
-extern void cvt_unix_to_1904( long long time, int32 result[2]);
+extern void cvt_unix_to_1904( long long time, int32_t result[2]);
 #else
-extern void cvt_unix_to_1904( long time, int32 result[2]);
+extern void cvt_unix_to_1904( long time, int32_t result[2]);
 #endif
 
 
@@ -878,7 +878,7 @@ extern void pfed_read(FILE *ttf,struct ttfinfo *info);
 extern void tex_dump(struct alltabs *at, SplineFont *sf);
 extern void tex_read(FILE *ttf,struct ttfinfo *info);
 	/* The BDF table, to contain bdf properties the X people want */
-extern int ttf_bdf_dump(SplineFont *sf,struct alltabs *at,int32 *sizes);
+extern int ttf_bdf_dump(SplineFont *sf,struct alltabs *at,int32_t *sizes);
 extern void ttf_bdf_read(FILE *ttf,struct ttfinfo *info);
 	/* The FFTM table, to some timestamps I'd like */
 extern int ttf_fftm_dump(SplineFont *sf,struct alltabs *at);

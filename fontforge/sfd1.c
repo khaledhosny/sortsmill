@@ -35,7 +35,7 @@
 /*  convert it into the new format */
 
 static void SFGuessScriptList(SplineFont1 *sf) {
-    uint32 scripts[32], script;
+    uint32_t scripts[32], script;
     int i, scnt=0, j;
 
     for ( i=0; i<sf->sf.glyphcnt; ++i ) if ( sf->sf.glyphs[i]!=NULL ) {
@@ -72,14 +72,14 @@ return;
     sf->sli_cnt = 1;
     for ( j=0; j<scnt; ++j ) {
 	sf->script_lang[0][j].script = scripts[j];
-	sf->script_lang[0][j].langs = xmalloc(2*sizeof(uint32));
+	sf->script_lang[0][j].langs = xmalloc(2*sizeof(uint32_t));
 	sf->script_lang[0][j].langs[0] = DEFAULT_LANG;
 	sf->script_lang[0][j].langs[1] = 0;
     }
     sf->script_lang[1] = NULL;
 }
 
-static int SLContains(struct script_record *sr, uint32 script, uint32 lang) {
+static int SLContains(struct script_record *sr, uint32_t script, uint32_t lang) {
     int i, j;
 
     if ( script==DEFAULT_SCRIPT || script == 0 )
@@ -98,7 +98,7 @@ return( false );	/* this script entry didn't contain the language. won't be any 
 return( false );	/* Never found script */
 }
 
-int SFAddScriptIndex(SplineFont1 *sf,uint32 *scripts,int scnt) {
+int SFAddScriptIndex(SplineFont1 *sf,uint32_t *scripts,int scnt) {
     int i,j;
     struct script_record *sr;
 
@@ -106,7 +106,7 @@ int SFAddScriptIndex(SplineFont1 *sf,uint32 *scripts,int scnt) {
 	scripts[scnt++] = CHR('l','a','t','n');		/* Need a default script preference */
     for ( i=0; i<scnt-1; ++i ) for ( j=i+1; j<scnt; ++j ) {
 	if ( scripts[i]>scripts[j] ) {
-	    uint32 temp = scripts[i];
+	    uint32_t temp = scripts[i];
 	    scripts[i] = scripts[j];
 	    scripts[j] = temp;
 	}
@@ -128,14 +128,14 @@ return( i );
     sr = sf->script_lang[i] = xcalloc(scnt+1,sizeof(struct script_record));
     for ( j = 0; j<scnt; ++j ) {
 	sr[j].script = scripts[j];
-	sr[j].langs = xmalloc(2*sizeof(uint32));
+	sr[j].langs = xmalloc(2*sizeof(uint32_t));
 	sr[j].langs[0] = DEFAULT_LANG;
 	sr[j].langs[1] = 0;
     }
 return( i );
 }
 
-static int SFAddScriptLangIndex(SplineFont *_sf,uint32 script,uint32 lang) {
+static int SFAddScriptLangIndex(SplineFont *_sf,uint32_t script,uint32_t lang) {
     int i;
     SplineFont1 *sf;
 
@@ -160,7 +160,7 @@ return( i );
     sf->script_lang = xrealloc(sf->script_lang,(i+2)*sizeof(struct script_record *));
     sf->script_lang[i] = xcalloc(2,sizeof(struct script_record));
     sf->script_lang[i][0].script = script;
-    sf->script_lang[i][0].langs = xmalloc(2*sizeof(uint32));
+    sf->script_lang[i][0].langs = xmalloc(2*sizeof(uint32_t));
     sf->script_lang[i][0].langs[0] = lang;
     sf->script_lang[i][0].langs[1] = 0;
     sf->script_lang[i+1] = NULL;
@@ -179,7 +179,7 @@ static int SLCount(struct script_record *sr) {
 return( sl_cnt );
 }
 
-int SFFindBiggestScriptLangIndex(SplineFont *_sf,uint32 script,uint32 lang) {
+int SFFindBiggestScriptLangIndex(SplineFont *_sf,uint32_t script,uint32_t lang) {
     int i, best_sli= -1, best_cnt= -1, cnt;
     SplineFont1 *sf = (SplineFont1 *) _sf;
 
@@ -203,7 +203,7 @@ return( SFAddScriptLangIndex(_sf,script,lang) );
 return( best_sli );
 }
 
-static FeatureScriptLangList *FeaturesFromTagSli(uint32 tag,int sli,SplineFont1 *sf) {
+static FeatureScriptLangList *FeaturesFromTagSli(uint32_t tag,int sli,SplineFont1 *sf) {
     FeatureScriptLangList *fl;
     struct script_record *sr;
     struct scriptlanglist *cur, *last;
@@ -220,7 +220,7 @@ return( fl );
 	for ( i=0; sr->langs[i]!=0; ++i );
 	cur->lang_cnt = i;
 	if ( i>MAX_LANG )
-	    cur->morelangs = xmalloc((i-MAX_LANG) * sizeof(uint32));
+	    cur->morelangs = xmalloc((i-MAX_LANG) * sizeof(uint32_t));
 	for ( i=0; sr->langs[i]!=0; ++i ) {
 	    if ( i<MAX_LANG )
 		cur->langs[i] = sr->langs[i];
@@ -236,7 +236,7 @@ return( fl );
 return( fl );
 }
 
-static OTLookup *CreateLookup(SplineFont1 *sf,uint32 tag, int sli,
+static OTLookup *CreateLookup(SplineFont1 *sf,uint32_t tag, int sli,
 	int flags,enum possub_type type) {
     OTLookup *otl = (OTLookup *) xzalloc(sizeof (OTLookup));
 
@@ -363,7 +363,7 @@ static struct lookup_subtable *CreateSubtable(OTLookup *otl,SplineFont1 *sf) {
 return( cur );
 }
 
-static OTLookup *FindNestedLookupByTag(SplineFont1 *sf,uint32 tag) {
+static OTLookup *FindNestedLookupByTag(SplineFont1 *sf,uint32_t tag) {
     int isgpos;
     OTLookup *otl;
 
@@ -384,7 +384,7 @@ static void FPSTReplaceTagsWithLookups(FPST *fpst,SplineFont1 *sf) {
 return;
     for ( i=0; i<fpst->rule_cnt; ++i ) {
 	for ( j=0; j<fpst->rules[i].lookup_cnt; ++j ) {
-	    OTLookup *otl = FindNestedLookupByTag(sf,(uint32) (intptr_t) (fpst->rules[i].lookups[j].lookup) );
+	    OTLookup *otl = FindNestedLookupByTag(sf,(uint32_t) (intptr_t) (fpst->rules[i].lookups[j].lookup) );
 	    if ( otl!=NULL )
 		fpst->rules[i].lookups[j].lookup = otl;
 	    else {
@@ -403,9 +403,9 @@ static void ASMReplaceTagsWithLookups(ASM *sm,SplineFont1 *sf) {
 return;
     for ( i=0; i<sm->class_cnt*sm->state_cnt; ++i ) {
 	if ( sm->state[i].u.context.mark_lookup!=NULL )
-	    sm->state[i].u.context.mark_lookup = FindNestedLookupByTag(sf,(uint32) (intptr_t) (sm->state[i].u.context.mark_lookup) );
+	    sm->state[i].u.context.mark_lookup = FindNestedLookupByTag(sf,(uint32_t) (intptr_t) (sm->state[i].u.context.mark_lookup) );
 	if ( sm->state[i].u.context.cur_lookup!=NULL )
-	    sm->state[i].u.context.cur_lookup = FindNestedLookupByTag(sf,(uint32) (intptr_t) (sm->state[i].u.context.cur_lookup) );
+	    sm->state[i].u.context.cur_lookup = FindNestedLookupByTag(sf,(uint32_t) (intptr_t) (sm->state[i].u.context.cur_lookup) );
     }
 }
 
@@ -481,7 +481,7 @@ static void ACDisassociateLigatures(SplineFont1 *sf,AnchorClass1 *ac) {
     } while ( k<sf->sf.subfontcnt );
 }
 
-static int TTFFeatureIndex( uint32 tag, struct table_ordering *ord ) {
+static int TTFFeatureIndex( uint32_t tag, struct table_ordering *ord ) {
     /* This is the order in which features should be executed */
     int cnt = 0;
 
@@ -610,7 +610,7 @@ static void SFDCleanupAnchorClasses(SplineFont *sf) {
     AnchorPoint *ap;
     int i, j, scnt;
 #define S_MAX	100
-    uint32 scripts[S_MAX];
+    uint32_t scripts[S_MAX];
     int merge=0;
 
     for ( ac = sf->anchor; ac!=NULL; ac=ac->next ) {
@@ -619,7 +619,7 @@ static void SFDCleanupAnchorClasses(SplineFont *sf) {
 	    for ( i=0; i<sf->glyphcnt; ++i ) if ( sf->glyphs[i]!=NULL ) {
 		for ( ap = sf->glyphs[i]->anchor; ap!=NULL && ap->anchor!=ac; ap=ap->next );
 		if ( ap!=NULL && scnt<S_MAX ) {
-		    uint32 script = SCScriptFromUnicode(sf->glyphs[i]);
+		    uint32_t script = SCScriptFromUnicode(sf->glyphs[i]);
 		    if ( script==0 )
 	    continue;
 		    for ( j=0; j<scnt; ++j )

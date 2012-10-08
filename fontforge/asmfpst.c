@@ -530,7 +530,7 @@ static char *BuildClassNames(SplineChar **glyphs,uint16 *map, int classnum) {
 return( ret );
 }
 
-static int FindFormLookupsForScript(SplineFont *sf,uint32 script,OTLookup *lookups[4]) {
+static int FindFormLookupsForScript(SplineFont *sf,uint32_t script,OTLookup *lookups[4]) {
     OTLookup *otl;
     FeatureScriptLangList *fl;
     struct scriptlanglist *sl;
@@ -560,7 +560,7 @@ return( true );
 return( false );
 }
 
-ASM *ASMFromOpenTypeForms(SplineFont *sf,uint32 script) {
+ASM *ASMFromOpenTypeForms(SplineFont *sf,uint32_t script) {
     int i, which, cg, mg;
     SplineChar *sc, *rsc, **classglyphs, **markglyphs;
     PST *pst;

@@ -942,7 +942,7 @@ return( cnt>0 && stop_at_join );
 }
 
 /* Move the selection and return whether we did a merge */
-int CVMoveSelection(CharView *cv, real dx, real dy, uint32 input_state) {
+int CVMoveSelection(CharView *cv, real dx, real dy, uint32_t input_state) {
     real transform[6];
     RefChar *refs;
     ImageList *img;

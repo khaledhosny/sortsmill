@@ -1921,7 +1921,7 @@ void SmallCapsFindConstants(struct smallcaps *small, SplineFont *sf,
 }
 
 static void MakeLookups(SplineFont *sf,OTLookup **lookups,int ltn,int crl,int grk,
-	int symbols, uint32 ftag) {
+	int symbols, uint32_t ftag) {
     OTLookup *any = NULL;
     int i;
     struct lookup_subtable *sub;
@@ -1999,7 +1999,7 @@ static void MakeSCLookups(SplineFont *sf,struct lookup_subtable **c2sc,
     struct scriptlanglist *sl;
     OTLookup *lc2sc[4], *lsmcp[4];
     int i;
-    uint32 ucfeat, lcfeat;
+    uint32_t ucfeat, lcfeat;
 
     memset(lc2sc,0,sizeof(lc2sc)); memset(lsmcp,0,sizeof(lsmcp));
 
@@ -2078,7 +2078,7 @@ return( lc_sc );
 }
 
 static SplineChar *MakeSmallCapGlyphSlot(SplineFont *sf,SplineChar *cap_sc,
-	uint32 script,struct lookup_subtable **c2sc,struct lookup_subtable **smcp,
+	uint32_t script,struct lookup_subtable **c2sc,struct lookup_subtable **smcp,
 	FontViewBase *fv, struct genericchange *genchange) {
     SplineChar *sc_sc, *lc_sc;
     char buffer[300];
@@ -2660,7 +2660,7 @@ return;		/* Can't randomly add things to a CID keyed font */
 	    if ( genchange->do_smallcap_symbols || ( sc->unicodeenc<0x10000 &&
 		    (isupper(sc->unicodeenc) || islower(sc->unicodeenc) ||
 		     (sc->unicodeenc>=0xfb00 && sc->unicodeenc<=0xfb06)) )) {
-		uint32 script = SCScriptFromUnicode(sc);
+		uint32_t script = SCScriptFromUnicode(sc);
 		if ( script==CHR('l','a','t','n'))
 		    ++ltn, ++cnt;
 		else if ( script==CHR('g','r','e','k'))
@@ -2688,7 +2688,7 @@ return;
 	    if ( genchange->do_smallcap_symbols || ( sc->unicodeenc<0x10000 &&
 		    (isupper(sc->unicodeenc) || islower(sc->unicodeenc) ||
 		     (sc->unicodeenc>=0xfb00 && sc->unicodeenc<=0xfb06)) )) {
-		uint32 script = SCScriptFromUnicode(sc);
+		uint32_t script = SCScriptFromUnicode(sc);
 		if ( script!=CHR('l','a','t','n') &&
 			script!=CHR('g','r','e','k') &&
 			script!=CHR('c','y','r','l') &&
@@ -2728,7 +2728,7 @@ return;
 	    if ( genchange->do_smallcap_symbols || ( sc->unicodeenc<0x10000 &&
 		    (isupper(sc->unicodeenc) || islower(sc->unicodeenc) ||
 		     (sc->unicodeenc>=0xfb00 && sc->unicodeenc<=0xfb06)) )) {
-		uint32 script = SCScriptFromUnicode(sc);
+		uint32_t script = SCScriptFromUnicode(sc);
 		if ( script!=CHR('l','a','t','n') &&
 			script!=CHR('g','r','e','k') &&
 			script!=CHR('c','y','r','l') &&
@@ -2804,8 +2804,8 @@ return;
 /* ************************** Subscript/Superscript ************************* */
 /* ************************************************************************** */
 
-static struct lookup_subtable *MakeSupSupLookup(SplineFont *sf,uint32 feature_tag,
-	uint32 *scripts,int scnt) {
+static struct lookup_subtable *MakeSupSupLookup(SplineFont *sf,uint32_t feature_tag,
+	uint32_t *scripts,int scnt) {
     OTLookup *test, *found;
     FeatureScriptLangList *fl;
     struct scriptlanglist *sl;
@@ -2908,11 +2908,11 @@ return;
     genchange->g.maps = xmalloc(genchange->g.cnt*sizeof(struct position_maps));
 
     if ( genchange->feature_tag!=0 ) {
-	uint32 *scripts = xmalloc(cnt*sizeof(uint32));
+	uint32_t *scripts = xmalloc(cnt*sizeof(uint32_t));
 	int scnt = 0;
 	for ( enc=0; enc<fv->map->enccount; ++enc ) {
 	    if ( (gid=fv->map->map[enc])!=-1 && fv->selected[enc] && (sc=sf->glyphs[gid])!=NULL ) {
-		uint32 script = SCScriptFromUnicode(sc);
+		uint32_t script = SCScriptFromUnicode(sc);
 		int i;
 		for ( i=0; i<scnt; ++i )
 		    if ( scripts[i]==script )
@@ -4099,7 +4099,7 @@ static void SCEmbolden(SplineChar *sc, struct lcg_zones *zones, int layer) {
 }
 
 static struct {
-    uint32 script;
+    uint32_t script;
     SplineSet *(*embolden_hook)(SplineSet *,struct lcg_zones *,SplineChar *, int layer);
 } script_hooks[] = {
     { CHR('l','a','t','n'), LCG_HintedEmboldenHook },
@@ -4251,7 +4251,7 @@ static void PerGlyphInit(SplineChar *sc, struct lcg_zones *zones,
 	    }
 	}
 	if ( zones->embolden_hook == NULL ) {
-	    uint32 script = SCScriptFromUnicode(sc);
+	    uint32_t script = SCScriptFromUnicode(sc);
 	    for ( j=0; script_hooks[j].script!=0; ++j ) {
 		if ( script==script_hooks[j].script ) {
 		    zones->embolden_hook = script_hooks[j].embolden_hook;

@@ -432,7 +432,7 @@ return( NULL );
 return(file);
 }
     
-static BDFFont *getbdfsize(SplineFont *sf, int32 size) {
+static BDFFont *getbdfsize(SplineFont *sf, int32_t size) {
     BDFFont *bdf;
 
     for ( bdf=sf->bitmaps; bdf!=NULL && (bdf->pixelsize!=(size&0xffff) || BDFDepth(bdf)!=(size>>16)); bdf=bdf->next );
@@ -590,7 +590,7 @@ return( NULL );
 return( image );    
 }
 
-int WritePalmBitmaps(char *filename,SplineFont *sf, int32 *sizes,EncMap *map) {
+int WritePalmBitmaps(char *filename,SplineFont *sf, int32_t *sizes,EncMap *map) {
     BDFFont *base=NULL, *temp;
     BDFFont *densities[4];	/* Be prepared for up to quad density */
     				/* Ignore 1.5 density. No docs on how odd metrics get rounded */

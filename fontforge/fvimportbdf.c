@@ -209,7 +209,7 @@ static int figureProperEncoding(SplineFont *sf,EncMap *map, BDFFont *b, int enc,
 	if ( i>=map->enccount || map->map[i]==-1 )
 	    MakeEncChar(sf,map,i,name);
     } else {
-	int32 uni = UniFromEnc(enc,encname);
+	int32_t uni = UniFromEnc(enc,encname);
 	if ( uni==-1 )
 	    uni = UniFromName(name,sf->uni_interp,map->enc);
 	i = EncFromUni(uni,map->enc);
@@ -754,7 +754,7 @@ return(bc);
 
 static void gf_skip_noops(FILE *gf,char *char_name) {
     uint8 cmd;
-    int32 val;
+    int32_t val;
     int i;
     char buffer[257];
 
@@ -818,7 +818,7 @@ static int gf_postamble(FILE *gf, int *_as, int *_ds, Encoding **_enc, char *fam
     int design_size, pixels_per_point;
     double size;
     char *pt, *fpt;
-    int32 pos, off;
+    int32_t pos, off;
 
     fseek(gf,-4,SEEK_END);
     pos = ftell(gf);
@@ -865,7 +865,7 @@ return( pixelsize );
 }
 
 static int gf_char(FILE *gf, SplineFont *sf, BDFFont *b,EncMap *map) {
-    int32 pos, to;
+    int32_t pos, to;
     int ch, enc, dx, dy, aw;
     int min_c, max_c, min_r, max_r, w;
     int r,c, col,cnt,i;
@@ -992,7 +992,7 @@ enum pk_cmd { pk_rrr1=240, pk_rrr2, pk_rrr3, pk_rrr4, pk_yyy, pk_post, pk_no_op,
 	pk_pre, pk_version_number=89 };
 static void pk_skip_noops(FILE *pk) {
     uint8 cmd;
-    int32 val;
+    int32_t val;
     int i;
 
     while ( 1 ) {
@@ -1111,7 +1111,7 @@ static int pk_char(FILE *pk, SplineFont *sf, BDFFont *b, EncMap *map) {
     int gid;
     BDFChar *bc;
     struct pkstate st;
-    int32 char_end;
+    int32_t char_end;
 
     memset(&st,'\0', sizeof(st));
 

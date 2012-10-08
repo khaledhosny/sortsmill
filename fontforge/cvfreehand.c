@@ -47,8 +47,8 @@ typedef struct tracedata {
   /* First the data */
     int x,y;
     BasePoint here;
-    uint32 time;
-    int32 pressure, xtilt, ytilt, separation;
+    uint32_t time;
+    int32_t pressure, xtilt, ytilt, separation;
 
   /* Then overhead */
     struct tracedata *next, *prev;

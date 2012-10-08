@@ -47,17 +47,17 @@ typedef struct fontdata {
 } FontData;
 
 struct lineheights {
-    int32 y;
+    int32_t y;
     int16 as, fh;
     uint16 p, linelen;
-    uint32 start_pos;
+    uint32_t start_pos;
 };
 
 struct fontlist {
     int start, end;		/* starting and ending characters [start,end) */
 				/*  always break at newline & will omit it between fontlists */
-    uint32 *feats;		/* Ends with a 0 entry */
-    uint32 script, lang;
+    uint32_t *feats;		/* Ends with a 0 entry */
+    uint32_t script, lang;
     FontData *fd;
     SplineChar **sctext;
     int scmax;
@@ -102,7 +102,7 @@ VISIBLE extern int LI_FDDrawChar(void *data,
 	void (*drawImage)(void *,GImage *,GRect *,int x, int y),
 	void (*drawRect)(void *,GRect *,Color col),
 	struct opentype_str *osc,int x,int y,Color col);
-VISIBLE extern uint32 *LI_TagsCopy(uint32 *tags);
+VISIBLE extern uint32_t *LI_TagsCopy(uint32_t *tags);
 extern struct fontlist *LI_fontlistcopy(struct fontlist *fl );
 VISIBLE extern void LI_fontlistmergecheck(LayoutInfo *li);
 VISIBLE extern void LayoutInfoRefigureLines(LayoutInfo *li, int start_of_change,
@@ -115,7 +115,7 @@ extern struct sfmaps *SFMapOfSF(LayoutInfo *li,SplineFont *sf);
 VISIBLE extern FontData *LI_FindFontData(LayoutInfo *li, SplineFont *sf,
 	int layer, enum sftf_fonttype fonttype, int size, int antialias);
 VISIBLE extern FontData *LI_RegenFontData(LayoutInfo *li, FontData *ret);
-VISIBLE extern void LayoutInfoInitLangSys(LayoutInfo *li, int end, uint32 script, uint32 lang);
+VISIBLE extern void LayoutInfoInitLangSys(LayoutInfo *li, int end, uint32_t script, uint32_t lang);
 VISIBLE extern LayoutInfo *LIConvertToPrint(LayoutInfo *li, int width, int height, int dpi);
 VISIBLE extern SplineSet *LIConvertToSplines(LayoutInfo *li,double dpi,int order2);
 extern void LayoutInfoSetTitle(LayoutInfo *li,const uint32_t *tit,int width);

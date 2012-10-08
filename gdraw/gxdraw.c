@@ -1426,7 +1426,7 @@ void GDrawSetVisible(GWindow w, int visible) {
     }
 }
 
-void GDrawMove(GWindow w, int32 x, int32 y) {
+void GDrawMove(GWindow w, int32_t x, int32_t y) {
     GXWindow gw = (GXWindow) w;
 
     if ( gw->is_toplevel ) {
@@ -1442,7 +1442,7 @@ void GDrawMove(GWindow w, int32 x, int32 y) {
     XMoveWindow(gw->display->display,gw->w,x,y);
 }
 
-void GDrawTrueMove(GWindow w, int32 x, int32 y) {
+void GDrawTrueMove(GWindow w, int32_t x, int32_t y) {
     GXWindow gw = (GXWindow) w;
 
     if ( gw->is_toplevel && !gw->is_popup && !gw->istransient ) {
@@ -1452,7 +1452,7 @@ void GDrawTrueMove(GWindow w, int32 x, int32 y) {
     GDrawMove(w,x,y);
 }
 
-void GDrawResize(GWindow w, int32 width, int32 height) {
+void GDrawResize(GWindow w, int32_t width, int32_t height) {
     GXWindow gw = (GXWindow) w;
 
     XResizeWindow(gw->display->display,gw->w,width,height);
@@ -1468,7 +1468,7 @@ void GDrawResize(GWindow w, int32 width, int32 height) {
     }
 }
 
-void GDrawMoveResize(GWindow w, int32 x, int32 y, int32 width, int32 height) {
+void GDrawMoveResize(GWindow w, int32_t x, int32_t y, int32_t width, int32_t height) {
     GXWindow gw = (GXWindow) w;
 
     if ( gw->is_toplevel ) {
@@ -1925,7 +1925,7 @@ void GDrawPopClip(GWindow w, GRect *old) {
     _GXCDraw_PopClip(gw);
 }
 
-void GDrawDrawLine(GWindow w, int32 x,int32 y, int32 xend,int32 yend, Color col) {
+void GDrawDrawLine(GWindow w, int32_t x,int32_t y, int32_t xend,int32_t yend, Color col) {
     if ( col==COLOR_UNKNOWN )
 	return;
 
@@ -1985,7 +1985,7 @@ return;
     }
 }
 
-void GDrawScroll(GWindow _w, GRect *rect, int32 hor, int32 vert) {
+void GDrawScroll(GWindow _w, GRect *rect, int32_t hor, int32_t vert) {
     GXWindow gw = (GXWindow) _w;
     GRect temp, old;
 
@@ -2003,7 +2003,7 @@ void GDrawScroll(GWindow _w, GRect *rect, int32 hor, int32 vert) {
     GDrawPopClip(_w,&old);
 }
 
-void GDrawDrawPixmap( GWindow _w, GWindow _pixmap, GRect *src, int32 x, int32 y) {
+void GDrawDrawPixmap( GWindow _w, GWindow _pixmap, GRect *src, int32_t x, int32_t y) {
     GXWindow gw = (GXWindow) _w, pixmap = (GXWindow) _pixmap;
     GXDisplay *gdisp = gw->display;
 
@@ -2159,7 +2159,7 @@ return;
     }
 }
 
-static void GTimerSetNext(GTimer *timer,int32 time_from_now) {
+static void GTimerSetNext(GTimer *timer,int32_t time_from_now) {
     struct timeval tv;
 
     gettimeofday(&tv,NULL);
@@ -2249,7 +2249,7 @@ static void GTimerReinstall(GXDisplay *gdisp,GTimer *timer) {
 	free(timer);
 }
 
-GTimer *GDrawRequestTimer(GWindow w,int32 time_from_now,int32 frequency,
+GTimer *GDrawRequestTimer(GWindow w,int32_t time_from_now,int32_t frequency,
 	void *userdata) {
     GTimer *timer = xcalloc(1,sizeof(GTimer));
 
@@ -3427,7 +3427,7 @@ void GDrawGrabSelection(GWindow w,enum selnames sel) {
 }
 
 void GDrawAddSelectionType(GWindow w,enum selnames sel,char *type,
-	void *data,int32 cnt,int32 unitsize, void *(*gendata)(void *,int32 *len),
+	void *data,int32_t cnt,int32_t unitsize, void *(*gendata)(void *,int32_t *len),
 	void (*freedata)(void *)) {
     GXDisplay *gd = (GXDisplay *) (w->display);
     int typeatom = GXDrawGetAtom(gd,type);
@@ -3464,7 +3464,7 @@ static void GXDrawTransmitSelection(GXDisplay *gd,XEvent *event) {
     int is_multiple = cur_targ == GXDrawGetAtom(gd,"MULTIPLE");
     int found = 0;
     void *temp;
-    int32 proplen;
+    int32_t proplen;
 
     for ( which = 0; which<sn_max; ++which )
 	if ( event->xselectionrequest.selection == gd->selinfo[which].sel_atom )
@@ -3589,7 +3589,7 @@ return;
     XSendEvent(gd->display,e_to_send.xselection.requestor,True,0,&e_to_send);
 }
 
-void *GDrawRequestSelection(GWindow w,enum selnames sn, char *typename, int32 *len) {
+void *GDrawRequestSelection(GWindow w,enum selnames sn, char *typename, int32_t *len) {
     GXDisplay *gd = (GXDisplay *) (w->display);
     GXWindow gw = (GXWindow) w;
     Display *display = gd->display;

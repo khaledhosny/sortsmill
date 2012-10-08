@@ -273,7 +273,7 @@ return( instrs );
  *
  ******************************************************************************/
 
-struct ttf_table *SFFindTable(SplineFont *sf,uint32 tag) {
+struct ttf_table *SFFindTable(SplineFont *sf,uint32_t tag) {
     struct ttf_table *tab;
 
     for ( tab=sf->ttf_tables; tab!=NULL && tab->tag!=tag; tab=tab->next );

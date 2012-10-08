@@ -36,7 +36,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-int32 unicode_from_adobestd[256];
+int32_t unicode_from_adobestd[256];
 struct lconv localeinfo;
 VISIBLE char *coord_sep = ",";
 

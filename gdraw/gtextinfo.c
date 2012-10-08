@@ -1117,7 +1117,7 @@ return( EOF );
 return( (ch<<8)|getc(file));
 }
 
-int GStringSetResourceFileV(char *filename,uint32 checksum) {
+int GStringSetResourceFileV(char *filename,uint32_t checksum) {
     FILE *res;
     int scnt, icnt;
     int strlen;

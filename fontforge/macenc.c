@@ -1273,8 +1273,8 @@ return( false );
 return( true );
 }
 
-const int32 *MacEncToUnicode(int script,int lang) {
-    static int32 temp[256];
+const int32_t *MacEncToUnicode(int script,int lang) {
+    static int32_t temp[256];
     int i;
     const uint32_t *table;
 

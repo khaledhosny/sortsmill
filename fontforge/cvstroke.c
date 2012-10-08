@@ -2448,10 +2448,10 @@ static int Layer_StrokePatAddEdit(GGadget *g, GEvent *e) {
 return( true );
 }
 
-static uint32 getcol(GGadget *g,int *err) {
+static uint32_t getcol(GGadget *g,int *err) {
     const uint32_t *ret=_GGadgetGetTitle(g);
     uint32_t *end;
-    uint32 col = COLOR_INHERITED;
+    uint32_t col = COLOR_INHERITED;
 
     if ( *ret=='#' ) ++ret;
     col = u_strtol(ret,&end,16);

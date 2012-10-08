@@ -81,7 +81,7 @@ static GImage *GImage1to32(struct _GImage *base,GRect *src) {
     register Color *clut;
     Color fake[2];
     uint8 *pt;
-    uint32 *ipt;
+    uint32_t *ipt;
     int bit, i,j;
 
     if ( base->clut==NULL ) {
@@ -97,7 +97,7 @@ static GImage *GImage1to32(struct _GImage *base,GRect *src) {
 
     for ( i=src->y; i<src->y+src->height; ++i ) {
 	pt = (uint8 *) (base->data) + i*base->bytes_per_line + (src->x>>3);
-	ipt = (uint32 *) (rbase->data + (i-src->y)*rbase->bytes_per_line);
+	ipt = (uint32_t *) (rbase->data + (i-src->y)*rbase->bytes_per_line);
 	bit = 0x80>>(src->x&7);
 	for ( j=src->width-1; j>=0; --j ) {
 	    if ( *pt&bit )
@@ -115,7 +115,7 @@ static GImage *GImage8to32(struct _GImage *base,GRect *src) {
     struct _GImage *rbase;
     register Color *clut = base->clut->clut;
     uint8 *pt;
-    uint32 *ipt;
+    uint32_t *ipt;
     int i,j;
 
     ret = GImageCreate(it_true,src->width,src->height);
@@ -125,7 +125,7 @@ static GImage *GImage8to32(struct _GImage *base,GRect *src) {
 
     for ( i=src->y; i<src->y+src->height; ++i ) {
 	pt = (uint8 *) (base->data) + i*base->bytes_per_line + src->x;
-	ipt = (uint32 *) (rbase->data + (i-src->y)*rbase->bytes_per_line);
+	ipt = (uint32_t *) (rbase->data + (i-src->y)*rbase->bytes_per_line);
 	for ( j=src->width-1; j>=0; --j )
 	    *ipt++ = clut[ *pt++ ];
     }
@@ -135,8 +135,8 @@ return( ret );
 static GImage *GImage32to32(struct _GImage *base,GRect *src) {
     GImage *ret;
     struct _GImage *rbase;
-    uint32 *pt;
-    uint32 *ipt;
+    uint32_t *pt;
+    uint32_t *ipt;
     int i;
 
     ret = GImageCreate(it_true,src->width,src->height);
@@ -144,9 +144,9 @@ static GImage *GImage32to32(struct _GImage *base,GRect *src) {
     rbase->trans = base->trans;
 
     for ( i=src->y; i<src->y+src->height; ++i ) {
-	pt = ((uint32 *) (base->data + i*base->bytes_per_line)) + src->x;
-	ipt = (uint32 *) (rbase->data + (i-src->y)*rbase->bytes_per_line);
-	memcpy(ipt,pt,(src->width)*sizeof(uint32));
+	pt = ((uint32_t *) (base->data + i*base->bytes_per_line)) + src->x;
+	ipt = (uint32_t *) (rbase->data + (i-src->y)*rbase->bytes_per_line);
+	memcpy(ipt,pt,(src->width)*sizeof(uint32_t));
     }
 return( ret );
 }
@@ -203,7 +203,7 @@ static GImage *GImage8to8(struct _GImage *base,GRect *src, GClut *nclut, RevCMap
     struct _GImage *rbase;
     uint8 *pt;
     uint8 *ipt;
-    uint32 from_trans=COLOR_UNKNOWN, to_trans;
+    uint32_t from_trans=COLOR_UNKNOWN, to_trans;
     int i,j;
 
     to_trans = nclut->trans_index;
@@ -262,9 +262,9 @@ return( ret );
 static GImage *GImage32to8(struct _GImage *base,GRect *src, GClut *nclut, RevCMap *rev) {
     GImage *ret;
     struct _GImage *rbase;
-    uint32 *pt;
+    uint32_t *pt;
     uint8 *ipt;
-    uint32 from_trans=COLOR_UNKNOWN, to_trans;
+    uint32_t from_trans=COLOR_UNKNOWN, to_trans;
     int i,j;
     short *red_dith, *green_dith, *blue_dith;
     short *r_d, *g_d, *b_d;
@@ -284,7 +284,7 @@ static GImage *GImage32to8(struct _GImage *base,GRect *src, GClut *nclut, RevCMa
     green_dith = xcalloc(src->width,sizeof(short));
     blue_dith = xcalloc(src->width,sizeof(short));
     for ( i=src->y; i<src->y+src->height; ++i ) {
-	pt = (uint32 *) (base->data + i*base->bytes_per_line) + src->x;
+	pt = (uint32_t *) (base->data + i*base->bytes_per_line) + src->x;
 	ipt = (uint8 *) (ret->u.image->data) + (i-src->y)*ret->u.image->bytes_per_line;
 	rd = gd = bd = 0;
 	r_d = red_dith; g_d = green_dith; b_d = blue_dith;
@@ -388,7 +388,7 @@ static GImage *GImage8to1(struct _GImage *base,GRect *src, GClut *nclut) {
     struct _GImage *rbase;
     uint8 *pt;
     uint8 *ipt;
-    uint32 from_trans=COLOR_UNKNOWN, to_trans;
+    uint32_t from_trans=COLOR_UNKNOWN, to_trans;
     struct gcol gclut[256];
     int bit;
     short *grey_dith;
@@ -452,9 +452,9 @@ return( ret );
 static GImage *GImage32to1(struct _GImage *base,GRect *src, GClut *nclut) {
     GImage *ret;
     struct _GImage *rbase;
-    uint32 *pt;
+    uint32_t *pt;
     uint8 *ipt;
-    uint32 from_trans=COLOR_UNKNOWN, to_trans;
+    uint32_t from_trans=COLOR_UNKNOWN, to_trans;
     int bit;
     short *grey_dith;
     short *g_d;
@@ -479,7 +479,7 @@ static GImage *GImage32to1(struct _GImage *base,GRect *src, GClut *nclut) {
 
     grey_dith = xcalloc(src->width,sizeof(short));
     for ( i=src->y; i<src->y+src->height; ++i ) {
-	pt = (uint32 *) (base->data + i*base->bytes_per_line) + src->x;
+	pt = (uint32_t *) (base->data + i*base->bytes_per_line) + src->x;
 	ipt = (uint8 *) (rbase->data) + (i-src->y)*rbase->bytes_per_line;
 	bit = 0x80;
 	gd = 0;
@@ -590,7 +590,7 @@ static void GImageInsert1to1(GImage *from,struct _GImage *tobase, GRect *src,
     struct _GImage *fbase = from->u.image;
     uint8 *pt;
     uint8 *ipt;
-    uint32 from_trans=COLOR_UNKNOWN, to_trans;
+    uint32_t from_trans=COLOR_UNKNOWN, to_trans;
     uint8 ones, zeros;
     int i,j, bit, ibit, index;
 
@@ -647,7 +647,7 @@ static void GImageInsert8to8(GImage *from,struct _GImage *tobase, GRect *src, Re
     register Color *clut = from->u.image->clut->clut;
     uint8 *pt;
     uint8 *ipt;
-    uint32 from_trans=COLOR_UNKNOWN, to_trans;
+    uint32_t from_trans=COLOR_UNKNOWN, to_trans;
     struct gcol gclut[256];
     short *red_dith, *green_dith, *blue_dith;
     short *r_d, *g_d, *b_d;
@@ -696,9 +696,9 @@ static void GImageInsert8to8(GImage *from,struct _GImage *tobase, GRect *src, Re
 static void GImageInsert32to32(GImage *from,struct _GImage *tobase, GRect *src,
 	int to_x, int to_y, enum pastetrans_type ptt) {
     struct _GImage *fbase = from->u.image;
-    uint32 *pt;
-    uint32 *ipt;
-    uint32 from_trans=COLOR_UNKNOWN, to_trans;
+    uint32_t *pt;
+    uint32_t *ipt;
+    uint32_t from_trans=COLOR_UNKNOWN, to_trans;
     int i,j,index;
 
     to_trans = tobase->trans;
@@ -706,8 +706,8 @@ static void GImageInsert32to32(GImage *from,struct _GImage *tobase, GRect *src,
 	from_trans = fbase->trans;
 
     for ( i=src->y; i<src->y+src->height; ++i ) {
-	pt = (uint32 *) (fbase->data + i*fbase->bytes_per_line) + src->x;
-	ipt = (uint32 *) (tobase->data + (i-src->y+to_y)*tobase->bytes_per_line)+to_x;
+	pt = (uint32_t *) (fbase->data + i*fbase->bytes_per_line) + src->x;
+	ipt = (uint32_t *) (tobase->data + (i-src->y+to_y)*tobase->bytes_per_line)+to_x;
 	for ( j=src->width-1; j>=0; --j ) {
 	    index = *pt++;
 	    if ( index==from_trans ) {
@@ -880,7 +880,7 @@ void GImageResize(struct _GImage *tobase, struct _GImage *fbase,
 	GRect *src, RevCMap *rev) {
     struct bounds *vert, *hor;
     int i,j;
-    uint32 *pt32=NULL;
+    uint32_t *pt32=NULL;
     uint8 *pt8=NULL;
     int bit=0;
     struct gcol gclut[256];
@@ -919,7 +919,7 @@ void GImageResize(struct _GImage *tobase, struct _GImage *fbase,
     for ( i=0; i<tobase->height; ++i ) {
 	switch ( tobase->image_type ) {
 	  case it_true:
-	    pt32 = (uint32 *) (tobase->data + i*tobase->bytes_per_line);
+	    pt32 = (uint32_t *) (tobase->data + i*tobase->bytes_per_line);
 	  break;
 	  case it_index:
 	    pt8 = (uint8 *) (tobase->data + i*tobase->bytes_per_line);

@@ -1515,7 +1515,7 @@ static void GMenuBarTestSize(GMenuBar *mb) {
     }
 }
 
-static void GMenuBarResize(GGadget *g, int32 width, int32 height) {
+static void GMenuBarResize(GGadget *g, int32_t width, int32_t height) {
     _ggadget_resize(g,width,height);
     GMenuBarTestSize((GMenuBar *) g);
 }

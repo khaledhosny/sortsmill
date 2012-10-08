@@ -34,7 +34,7 @@ static void NClipboard_Grab(void) {
 }
 
 static void NClipboard_AddDataType(const char *type, void *data, int cnt, int size,
-	void *(*gendata)(void *,int32 *len), void (*freedata)(void *)) {
+	void *(*gendata)(void *,int32_t *len), void (*freedata)(void *)) {
     if ( freedata!=NULL && data !=NULL )
 	(freedata)(data);
 }

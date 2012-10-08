@@ -1606,7 +1606,7 @@ Pref_MappingList (int use_user)
 void
 GListAddStr (GGadget * list, uint32_t *str, void *ud)
 {
-  int32 i, len;
+  int32_t i, len;
   GTextInfo **ti = GGadgetGetList (list, &len);
   GTextInfo **replace = xmalloc ((len + 2) * sizeof (GTextInfo *));
 
@@ -1627,7 +1627,7 @@ GListAddStr (GGadget * list, uint32_t *str, void *ud)
 void
 GListReplaceStr (GGadget * list, int index, uint32_t *str, void *ud)
 {
-  int32 i, len;
+  int32_t i, len;
   GTextInfo **ti = GGadgetGetList (list, &len);
   GTextInfo **replace = xmalloc ((len + 2) * sizeof (GTextInfo *));
 
@@ -1664,7 +1664,7 @@ set_e_h (GWindow gw, GEvent * event)
 {
   struct setdata *sd = GDrawGetUserData (gw);
   int i;
-  int32 len;
+  int32_t len;
   GTextInfo **ti;
   const uint32_t *ret1;
   uint32_t *end;
@@ -1766,7 +1766,7 @@ AskSetting (struct macsettingname *temp, GGadget * list, int index,
   struct setdata sd;
   char buf[20];
   uint32_t ubuf3[6];
-  int32 len, i;
+  int32_t len, i;
   GTextInfo **ti;
 
   memset (&sd, 0, sizeof (sd));
@@ -1904,7 +1904,7 @@ static void
 ChangeSetting (GGadget * list, int index, GGadget * flist)
 {
   struct macsettingname temp;
-  int32 len;
+  int32_t len;
   GTextInfo **ti = GGadgetGetList (list, &len);
   char *str;
   uint32_t *ustr;
@@ -1970,7 +1970,7 @@ Pref_MappingSel (GGadget * g, GEvent * e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_listselected)
     {
-      int32 len;
+      int32_t len;
       GTextInfo **ti = GGadgetGetList (g, &len);
       GWindow gw = GGadgetGetWindow (g);
       int i, sel_cnt = 0;
@@ -2025,7 +2025,7 @@ Prefs_Ok (GGadget * g, GEvent * e)
   const uint32_t *names[SCRIPT_MENU_MAX], *scripts[SCRIPT_MENU_MAX];
   struct prefs_list *pl;
   GTextInfo **list;
-  int32 len;
+  int32_t len;
   int maxl, t;
   real dangle;
 
@@ -2338,7 +2338,7 @@ DoPrefs (void)
   GGadgetCreateData **hvarray, boxes[2 * TOPICS];
   struct pref_data p;
   int i, gc, sgc, j, k, line, line_max, y, y2, ii, si;
-  int32 llen;
+  int32_t llen;
   char buf[20];
   int gcnt[20];
   static uint32_t nullstr[] = { 0 };

@@ -78,7 +78,7 @@ typedef struct gcstate {
     int16 line_width;
     int16 dash_offset;
     int16 ts;
-    int32 ts_xoff, ts_yoff;
+    int32_t ts_xoff, ts_yoff;
 } GCState;
 
 #ifndef X_DISPLAY_MISSING
@@ -128,9 +128,9 @@ typedef struct gxwindow /* :GWindow */ {
 
 struct colstate {
     int16 red_shift, green_shift, blue_shift;
-    int32 red_bits_mask, green_bits_mask, blue_bits_mask;
+    int32_t red_bits_mask, green_bits_mask, blue_bits_mask;
     int16 red_bits_shift, green_bits_shift, blue_bits_shift;
-    int32 alpha_bits;
+    int32_t alpha_bits;
     RevCMap *rev;
     unsigned int is_grey: 1;
 };
@@ -166,18 +166,18 @@ struct button_state {
 };
 
 struct seldata {
-    int32 typeatom;
-    int32 cnt;
-    int32 unitsize;
+    int32_t typeatom;
+    int32_t cnt;
+    int32_t unitsize;
     void *data;
-    void *(*gendata)(void *,int32 *len);
+    void *(*gendata)(void *,int32_t *len);
     /* Either the data are stored here, or we use this function to generate them on the fly */
     void (*freedata)(void *);
     struct seldata *next;
 };
 
 struct gxselinfo {
-    int32 sel_atom;		/* Either XA_PRIMARY or CLIPBOARD */
+    int32_t sel_atom;		/* Either XA_PRIMARY or CLIPBOARD */
     GXWindow owner;
     Time timestamp;
     struct seldata *datalist;
@@ -206,10 +206,10 @@ struct xthreaddata {
 struct gimageglobals {
     XImage *img, *mask;
     int16 *red_dith, *green_dith, *blue_dith;
-    int32 iwidth, iheight;
+    int32_t iwidth, iheight;
 };
 
-struct atomdata { char *atomname; int32 xatom; };
+struct atomdata { char *atomname; int32_t xatom; };
 
 struct inputdevices {
     char *name;
@@ -268,7 +268,7 @@ typedef struct gxdisplay /* : GDisplay */ {
     struct gimageglobals gg;
     Pixmap grey_stipple;
     Pixmap fence_stipple;
-    int32 mycontext;
+    int32_t mycontext;
     int16 top_window_count;
     GTimer *timers;
     Time last_event_time;
@@ -276,7 +276,7 @@ typedef struct gxdisplay /* : GDisplay */ {
     int amax, alen;
     struct atomdata *atomdata;
     struct gxseltypes seltypes;
-    int32 SelNotifyTimeout;		/* In seconds (time to give up on requests for selections) */
+    int32_t SelNotifyTimeout;		/* In seconds (time to give up on requests for selections) */
     struct {
 	Window w;
 	GWindow gw;

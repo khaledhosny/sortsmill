@@ -44,7 +44,7 @@ extern void ProcessNativeScript(int argc, char *argv[], FILE *script);
 VISIBLE extern void CheckIsScript(int argc, char *argv[]);
 
 extern char *AdobeStandardEncoding[256];
-extern int32 unicode_from_adobestd[256];
+extern int32_t unicode_from_adobestd[256];
 
 VISIBLE extern int default_fv_font_size;
 VISIBLE extern int default_fv_antialias;
@@ -55,7 +55,7 @@ VISIBLE extern int adjustlbearing;
 VISIBLE extern int autohint_before_generate;
 extern int seperate_hint_controls;
 VISIBLE extern int no_windowing_ui;
-VISIBLE extern uint32 default_background;
+VISIBLE extern uint32_t default_background;
 extern int use_utf8_in_script;
 
 VISIBLE extern int new_em_size;

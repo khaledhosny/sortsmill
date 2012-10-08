@@ -31,12 +31,12 @@
 
 typedef struct gcol {
     int16 red, green, blue;
-    uint32 pixel;
+    uint32_t pixel;
 } GCol;
 
 struct revcol /* : GCol */ {
     int16 red, green, blue;
-    uint32 index;
+    uint32_t index;
     uint8 dist;
     struct revcol *next;
 };
@@ -72,8 +72,8 @@ typedef struct {		/* normal 16 bit characters are two bytes */
 } GChar2b;
 
 struct gchr_transform {
-    uint32 oldstate;
-    uint32 newstate;
+    uint32_t oldstate;
+    uint32_t newstate;
     uint32_t resch;
 };
 
@@ -84,7 +84,7 @@ struct gchr_lookup {
 
 struct gchr_accents {
     uint32_t accent;
-    uint32 mask;
+    uint32_t mask;
 };
 
 struct gwindow {
@@ -115,7 +115,7 @@ struct ginput_context {
 struct gtimer {
     long time_sec;				/* longs not int32s to match timeval */
     long time_usec;
-    int32 repeat_time;				/* 0 => one shot */
+    int32_t repeat_time;				/* 0 => one shot */
     GWindow owner;
     void *userdata;
     struct gtimer *next;

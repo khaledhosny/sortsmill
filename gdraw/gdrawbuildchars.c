@@ -1120,4 +1120,4 @@ struct gchr_accents _gdraw_accents[] = {
     { 0, 0 },
 };
 
-uint32 _gdraw_chrs_any=ANY, _gdraw_chrs_ctlmask=GREEK, _gdraw_chrs_metamask=0;
+uint32_t _gdraw_chrs_any=ANY, _gdraw_chrs_ctlmask=GREEK, _gdraw_chrs_metamask=0;

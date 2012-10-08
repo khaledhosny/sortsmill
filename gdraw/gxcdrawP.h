@@ -37,10 +37,10 @@ extern void _GXCDraw_DestroyWindow(GXWindow gw);
 extern void _GXCDraw_PushClip(GXWindow gw);
 extern void _GXCDraw_PopClip(GXWindow gw);
 
-extern void _GXCDraw_DrawLine(GWindow w, int32 x,int32 y, int32 xend,int32 yend, Color col);
+extern void _GXCDraw_DrawLine(GWindow w, int32_t x,int32_t y, int32_t xend,int32_t yend, Color col);
 extern void _GXCDraw_DrawRect(GWindow w, GRect *rect, Color col);
 
-extern void _GXCDraw_CopyArea( GXWindow from, GXWindow into, GRect *src, int32 x, int32 y);
+extern void _GXCDraw_CopyArea( GXWindow from, GXWindow into, GRect *src, int32_t x, int32_t y);
 
 extern void _GXCDraw_Flush(GXWindow gw);
 extern void _GXCDraw_DirtyRect(GXWindow gw,double x, double y, double width, double height);

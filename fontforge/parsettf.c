@@ -331,7 +331,7 @@ return( EOF );
 return( (ch1<<16)|(ch2<<8)|ch3 );
 }
 
-int32 getlong(FILE *ttf) {
+int32_t getlong(FILE *ttf) {
     int ch1 = getc(ttf);
     int ch2 = getc(ttf);
     int ch3 = getc(ttf);
@@ -341,7 +341,7 @@ return( EOF );
 return( (ch1<<24)|(ch2<<16)|(ch3<<8)|ch4 );
 }
 
-static int32 getoffset(FILE *ttf, int offsize) {
+static int32_t getoffset(FILE *ttf, int offsize) {
     if ( offsize==1 )
 return( getc(ttf));
     else if ( offsize==2 )
@@ -353,7 +353,7 @@ return( getlong(ttf));
 }
 
 real getfixed(FILE *ttf) {
-    int32 val = getlong(ttf);
+    int32_t val = getlong(ttf);
     int mant = val&0xffff;
     /* This oddity may be needed to deal with the first 16 bits being signed */
     /*  and the low-order bits unsigned */
@@ -361,7 +361,7 @@ return( (real) (val>>16) + (mant/65536.0) );
 }
 
 real get2dot14(FILE *ttf) {
-    int32 val = getushort(ttf);
+    int32_t val = getushort(ttf);
     int mant = val&0x3fff;
     /* This oddity may be needed to deal with the first 2 bits being signed */
     /*  and the low-order bits unsigned */
@@ -493,9 +493,9 @@ return( NULL );
 return( ret );
 }
 
-char *TTFGetFontName(FILE *ttf,int32 offset,int32 off2) {
+char *TTFGetFontName(FILE *ttf,int32_t offset,int32_t off2) {
     int i,num;
-    int32 tag, nameoffset, length, stringoffset;
+    int32_t tag, nameoffset, length, stringoffset;
     int plat, spec, lang, name, len, off, val;
     int fullval, fullstr, fulllen, famval, famstr, famlen;
     Encoding *enc;
@@ -583,7 +583,7 @@ return( _readencstring(ttf,stringoffset+fullstr,fulllen,fullplat,fullspec,fullla
 }
 
 static int PickTTFFont(FILE *ttf,char *filename,char **chosenname) {
-    int32 *offsets, cnt, i, choice, j;
+    int32_t *offsets, cnt, i, choice, j;
     char **names;
     char *pt, *lparen, *rparen;
 
@@ -591,11 +591,11 @@ static int PickTTFFont(FILE *ttf,char *filename,char **chosenname) {
     cnt = getlong(ttf);
     if ( cnt==1 ) {
 	/* This is easy, don't bother to ask the user, there's no choice */
-	int32 offset = getlong(ttf);
+	int32_t offset = getlong(ttf);
 	fseek(ttf,offset,SEEK_SET);
 return( true );
     }
-    offsets = xmalloc(cnt*sizeof(int32));
+    offsets = xmalloc(cnt*sizeof(int32_t));
     for ( i=0; i<cnt; ++i )
 	offsets[i] = getlong(ttf);
     names = xmalloc(cnt*sizeof(char *));
@@ -692,7 +692,7 @@ return;
     info->savetab = xcalloc(cnt+1,sizeof(struct savetab));
     for ( pt=spt=SaveTablesPref, cnt=0; ; ++pt ) {
 	if ( *pt==',' || *pt=='\0' ) {
-	    uint32 tag;
+	    uint32_t tag;
 	    tag  = ( ( spt  <pt )? spt[0] : ' ' )<<24;
 	    tag |= ( ( spt+1<pt )? spt[1] : ' ' )<<16;
 	    tag |= ( ( spt+2<pt )? spt[2] : ' ' )<<8 ;
@@ -706,8 +706,8 @@ return;
     }
 }
 
-static int32 regionchecksom(FILE *file, int start, int len) {
-    uint32 sum = 0, chunk;
+static int32_t regionchecksom(FILE *file, int start, int len) {
+    uint32_t sum = 0, chunk;
 
     fseek(file,start,SEEK_SET);
     if ( len!=-1 ) len=(len+3)>>2;
@@ -725,15 +725,15 @@ static void ValidateTTFHead(FILE *ttf,struct ttfinfo *info) {
     /*  sure all the offsets and lengths are valid, and the checksums */
     /*  match. Most of the time this is just extra work and we don't */
     /*  bather */
-    uint32 restore_this_pos = ftell(ttf);
+    uint32_t restore_this_pos = ftell(ttf);
     struct tt_tables {
-	uint32 tag;
-	uint32 checksum;
-	uint32 offset;
-	uint32 length;
+	uint32_t tag;
+	uint32_t checksum;
+	uint32_t offset;
+	uint32_t length;
     } *tabs, temp;
     int i,j;
-    uint32 file_len;
+    uint32_t file_len;
     int sr, es, rs, e_sr, e_es, e_rs;
     int hashead, hashhea, hasmaxp, masos2, haspost, hasname, hasos2;
     int hasloca, hascff, hasglyf;
@@ -899,7 +899,7 @@ return;
     fseek(ttf,restore_this_pos,SEEK_SET);
 }
 	    
-static struct tablenames { uint32 tag; char *name; } stdtables[] = {
+static struct tablenames { uint32_t tag; char *name; } stdtables[] = {
     { CHR('a','c','n','t'), N_("accent attachment table") },
     { CHR('a','v','a','r'), N_("axis variation table") },
     { CHR('B','A','S','E'), N_("Baseline table (OT version)") },
@@ -1503,7 +1503,7 @@ static int IsSubSetOf(const char *substr,const char *fullstr ) {
     /*  characters can't be expressed in the mac encoding and are omitted */
     /*  or turned to question marks or some such */
     const char *pt1, *pt2;
-    uint32 ch1, ch2;
+    uint32_t ch1, ch2;
 
     for ( pt1=substr, pt2=fullstr, ch1=utf8_ildb(&pt1); ch1!=0 ; ) {
 	if ( *pt2=='\0' )
@@ -1656,7 +1656,7 @@ return( ret );
 
 struct otfname *FindAllLangEntries(FILE *ttf, struct ttfinfo *info, int id ) {
     /* Look for all entries with string id under windows platform */
-    int32 here = ftell(ttf);
+    int32_t here = ftell(ttf);
     int i, cnt, tableoff;
     int platform, specific, language, name, str_len, stroff;
     struct otfname *head=NULL, *cur;
@@ -2052,7 +2052,7 @@ return;
     }
 }
 
-static void readttfcompositglyph(FILE *ttf,struct ttfinfo *info,SplineChar *sc, int32 end) {
+static void readttfcompositglyph(FILE *ttf,struct ttfinfo *info,SplineChar *sc, int32_t end) {
     RefChar *head=NULL, *last=NULL, *cur;
     int flags=0, arg1, arg2;
     int use_my_metrics=0;
@@ -2266,7 +2266,7 @@ static void readttfencodings(FILE *ttf,struct ttfinfo *info, int justinuse);
 
 static void readttfglyphs(FILE *ttf,struct ttfinfo *info) {
     int i, anyread;
-    uint32 *goffsets = xmalloc((info->glyph_cnt+1)*sizeof(uint32));
+    uint32_t *goffsets = xmalloc((info->glyph_cnt+1)*sizeof(uint32_t));
 
     /* First we read all the locations. This might not be needed, they may */
     /*  just follow one another, but nothing I've noticed says that so let's */
@@ -2719,7 +2719,7 @@ const int nStdStrings = sizeof(cffnames)/sizeof(cffnames[0])-1;
 static char **readcfffontnames(FILE *ttf,int *cnt,struct ttfinfo *info) {
     uint16 count = getushort(ttf);
     int offsize;
-    uint32 *offsets;
+    uint32_t *offsets;
     char **names;
     int i,j;
 
@@ -2727,7 +2727,7 @@ static char **readcfffontnames(FILE *ttf,int *cnt,struct ttfinfo *info) {
 
     if ( count==0 )
 return( NULL );
-    offsets = xmalloc((count+1)*sizeof(uint32));
+    offsets = xmalloc((count+1)*sizeof(uint32_t));
     offsize = getc(ttf);
     for ( i=0; i<=count; ++i )
 	offsets[i] = getoffset(ttf,offsize);
@@ -2854,7 +2854,7 @@ return;
 }
 
 struct topdicts {
-    int32 cff_start;
+    int32_t cff_start;
 
     char *fontname;	/* From Name Index */
 
@@ -2951,7 +2951,7 @@ static void TopDictFree(struct topdicts *dict) {
 static void readcffsubrs(FILE *ttf, struct pschars *subs, struct ttfinfo *info) {
     uint16 count = getushort(ttf);
     int offsize;
-    uint32 *offsets;
+    uint32_t *offsets;
     int i,j, base;
     int err = false;
 
@@ -2961,7 +2961,7 @@ return;
     subs->cnt = count;
     subs->lens = xmalloc(count*sizeof(int));
     subs->values = xmalloc(count*sizeof(uint8 *));
-    offsets = xmalloc((count+1)*sizeof(uint32));
+    offsets = xmalloc((count+1)*sizeof(uint32_t));
     offsize = getc(ttf);
     for ( i=0; i<=count; ++i )
 	offsets[i] = getoffset(ttf,offsize);
@@ -3165,7 +3165,7 @@ return( td );
 static void readcffprivate(FILE *ttf, struct topdicts *td, struct ttfinfo *info) {
     int ival, oval, sp, ret, i;
     real stack[50];
-    int32 end = td->cff_start+td->private_offset+td->private_size;
+    int32_t end = td->cff_start+td->private_offset+td->private_size;
 
     fseek(ttf,td->cff_start+td->private_offset,SEEK_SET);
 
@@ -3297,17 +3297,17 @@ static void readcffprivate(FILE *ttf, struct topdicts *td, struct ttfinfo *info)
     }
 }
 
-static struct topdicts **readcfftopdicts(FILE *ttf, char **fontnames, int32 cff_start,
+static struct topdicts **readcfftopdicts(FILE *ttf, char **fontnames, int32_t cff_start,
 	struct ttfinfo *info, struct topdicts *parent_dict) {
     uint16 count = getushort(ttf);
     int offsize;
-    uint32 *offsets;
+    uint32_t *offsets;
     struct topdicts **dicts;
     int i;
 
     if ( count==0 )
 return( NULL );
-    offsets = xmalloc((count+1)*sizeof(uint32));
+    offsets = xmalloc((count+1)*sizeof(uint32_t));
     offsize = getc(ttf);
     for ( i=0; i<=count; ++i )
 	offsets[i] = getoffset(ttf,offsize);
@@ -4146,7 +4146,7 @@ return;
 static void readttfvwidths(FILE *ttf,struct ttfinfo *info) {
     int i,j;
     int lastvwidth = info->emsize, vwidth_cnt, tsb/*, cnt=0*/;
-    /* int32 voff=0; */
+    /* int32_t voff=0; */
 
     fseek(ttf,info->vhea_start+4+4,SEEK_SET);		/* skip over the version number & typo right/left */
     info->pfminfo.vlinegap = getushort(ttf);
@@ -4273,8 +4273,8 @@ struct cmap_encs {
     Encoding *enc;
 };
 
-static int SubtableIsntSupported(FILE *ttf,uint32 offset,struct cmap_encs *cmap_enc, struct ttfinfo *info) {
-    uint32 here = ftell(ttf);
+static int SubtableIsntSupported(FILE *ttf,uint32_t offset,struct cmap_encs *cmap_enc, struct ttfinfo *info) {
+    uint32_t here = ftell(ttf);
     int format, len, ret=false;
 
     fseek(ttf,offset,SEEK_SET);
@@ -4305,8 +4305,8 @@ static int SubtableIsntSupported(FILE *ttf,uint32 offset,struct cmap_encs *cmap_
 return( ret );
 }
 
-static int SubtableMustBe14(FILE *ttf,uint32 offset,struct ttfinfo *info) {
-    uint32 here = ftell(ttf);
+static int SubtableMustBe14(FILE *ttf,uint32_t offset,struct ttfinfo *info) {
+    uint32_t here = ftell(ttf);
     int format, ret=true;
 
     fseek(ttf,offset,SEEK_SET);
@@ -4322,10 +4322,10 @@ static int SubtableMustBe14(FILE *ttf,uint32 offset,struct ttfinfo *info) {
 return( ret );
 }
 
-static void ApplyVariationSequenceSubtable(FILE *ttf,uint32 vs_map,
+static void ApplyVariationSequenceSubtable(FILE *ttf,uint32_t vs_map,
 	struct ttfinfo *info,int justinuse) {
     int sub_table_len, vs_cnt, i, j, rcnt, gid, cur_gid;
-    struct vs_data { int vs; uint32 def, non_def; } *vs_data;
+    struct vs_data { int vs; uint32_t def, non_def; } *vs_data;
     SplineChar *sc;
 
     fseek(ttf,vs_map,SEEK_SET);
@@ -4518,12 +4518,12 @@ static void readttfencodings(FILE *ttf,struct ttfinfo *info, int justinuse) {
     int i,j, def, unicode_cmap, unicode4_cmap, dcnt, dcmap_cnt, dc;
     int nencs, version, usable_encs;
     Encoding *enc = &custom;
-    const int32 *trans=NULL;
+    const int32_t *trans=NULL;
     enum uni_interp interp = ui_none;
     int platform, specific;
     int offset, encoff=0;
     int format, len;
-    uint32 vs_map=0;
+    uint32_t vs_map=0;
     uint16 table[256];
     int segCount;
     uint16 *endchars, *startchars, *delta, *rangeOffset, *glyphs;
@@ -4902,7 +4902,7 @@ return;
 			    subheads[0].rangeoff+(i-subheads[0].first)>=cnt )
 			index = 0;
 		    else if ( (index = glyphs[subheads[0].rangeoff+(i-subheads[0].first)])!= 0 )
-			index = (uint32) (index+subheads[0].delta);
+			index = (uint32_t) (index+subheads[0].delta);
 		    /* I assume the single byte codes are just ascii or latin1*/
 		    if ( index!=0 && index<info->glyph_cnt ) {
 			if ( justinuse==git_justinuse )
@@ -4946,7 +4946,7 @@ return;
 	    free(subheads);
 	    free(glyphs);
 	} else if ( format==8 ) {
-	    uint32 ngroups, start, end, startglyph;
+	    uint32_t ngroups, start, end, startglyph;
 	    if ( !enc->is_unicodefull ) {
 		IError("I don't support 32 bit characters except for the UCS-4 (MS platform, specific=10)" );
 		enc = FindOrMakeEncoding("UnicodeFull");
@@ -4994,7 +4994,7 @@ return;
 			map->map[first+i] = gid;
 		}
 	} else if ( format==12 ) {
-	    uint32 ngroups, start, end, startglyph;
+	    uint32_t ngroups, start, end, startglyph;
 	    if ( !enc->is_unicodefull ) {
 		IError("I don't support 32 bit characters except for the UCS-4 (MS platform, specific=10)" );
 		enc = FindOrMakeEncoding("UnicodeFull");
@@ -5457,7 +5457,7 @@ static void ttfFixupReferences(struct ttfinfo *info) {
 }
 
 static void TtfCopyTableBlindly(struct ttfinfo *info,FILE *ttf,
-	uint32 start,uint32 len,uint32 tag) {
+	uint32_t start,uint32_t len,uint32_t tag) {
     struct ttf_table *tab;
 
     if ( start==0 || len==0 )
@@ -5477,7 +5477,7 @@ return;
     info->tabs = tab;
 }
 
-static int LookupListHasFeature(OTLookup *otl,uint32 tag) {
+static int LookupListHasFeature(OTLookup *otl,uint32_t tag) {
     FeatureScriptLangList *feat;
 
     while ( otl!=NULL ) {
@@ -5786,7 +5786,7 @@ static void UseGivenEncoding(SplineFont *sf,struct ttfinfo *info) {
     NameConsistancyCheck(sf, sf->map);
 }
 
-static char *AxisNameConvert(uint32 tag) {
+static char *AxisNameConvert(uint32_t tag) {
     char buffer[8];
 
     if ( tag==CHR('w','g','h','t'))
@@ -6385,7 +6385,7 @@ return( sf );
 
 char **NamesReadCFF(char *filename) {
     FILE *cff = fopen(filename,"rb");
-    int32 hdrsize, offsize;
+    int32_t hdrsize, offsize;
     char **fontnames;
 
     if ( cff==NULL )
@@ -6407,7 +6407,7 @@ return( fontnames );
 
 char **NamesReadTTF(char *filename) {
     FILE *ttf = fopen(filename,"rb");
-    int32 version, cnt, *offsets;
+    int32_t version, cnt, *offsets;
     int i,j;
     char **ret = NULL;
     char *temp;
@@ -6418,7 +6418,7 @@ return( NULL );
     if ( version==CHR('t','t','c','f')) {
 	/* TTCF version = */ getlong(ttf);
 	cnt = getlong(ttf);
-	offsets = xmalloc(cnt*sizeof(int32));
+	offsets = xmalloc(cnt*sizeof(int32_t));
 	for ( i=0; i<cnt; ++i )
 	    offsets[i] = getlong(ttf);
 	ret = xmalloc((cnt+1)*sizeof(char *));

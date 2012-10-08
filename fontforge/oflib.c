@@ -1551,7 +1551,7 @@ return( true );
 static int OFLib_FontsVScroll(GGadget *g,GEvent *event) {
     OFLibDlg *d = GDrawGetUserData(GGadgetGetWindow(g));
     int newpos = d->l_off_top;
-    int32 sb_min, sb_max, sb_pagesize;
+    int32_t sb_min, sb_max, sb_pagesize;
 
     if ( event->type!=et_controlevent || event->u.control.subtype != et_scrollbarchange )
 return( true );
@@ -1595,7 +1595,7 @@ return( true );
 static int OFLib_PreviewVScroll(GGadget *g,GEvent *event) {
     OFLibDlg *d = GDrawGetUserData(GGadgetGetWindow(g));
     int newpos = d->p_off_top;
-    int32 sb_min, sb_max, sb_pagesize;
+    int32_t sb_min, sb_max, sb_pagesize;
 
     if ( event->type!=et_controlevent || event->u.control.subtype != et_scrollbarchange )
 return( true );
@@ -1641,7 +1641,7 @@ return( true );
 static int OFLib_PreviewHScroll(GGadget *g,GEvent *event) {
     OFLibDlg *d = GDrawGetUserData(GGadgetGetWindow(g));
     int newpos = d->p_off_left;
-    int32 sb_min, sb_max, sb_pagesize;
+    int32_t sb_min, sb_max, sb_pagesize;
 
     if ( event->type!=et_controlevent || event->u.control.subtype != et_scrollbarchange )
 return( true );

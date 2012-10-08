@@ -69,7 +69,7 @@ typedef struct sftextarea {
     struct layoutinfo li;
     void *cbcontext;
     void (*changefontcallback)(void *,SplineFont *,enum sftf_fonttype,int size,int aa,
-	    uint32 script, uint32 lang, uint32 *features);
+	    uint32_t script, uint32_t lang, uint32_t *features);
 } SFTextArea;
 
 extern void SFTFRefreshFonts(GGadget *g);
@@ -82,15 +82,15 @@ extern int SFTFSetFont(GGadget *g, int start, int end, SplineFont *sf);
 extern int SFTFSetFontType(GGadget *g, int start, int end, enum sftf_fonttype);
 extern int SFTFSetSize(GGadget *g, int start, int end, int size);
 extern int SFTFSetAntiAlias(GGadget *g, int start, int end, int antialias);
-extern int SFTFSetScriptLang(GGadget *g, int start, int end, uint32 script, uint32 lang);
-extern int SFTFSetFeatures(GGadget *g, int start, int end, uint32 *features);
+extern int SFTFSetScriptLang(GGadget *g, int start, int end, uint32_t script, uint32_t lang);
+extern int SFTFSetFeatures(GGadget *g, int start, int end, uint32_t *features);
 extern void SFTFRegisterCallback(GGadget *g, void *cbcontext,
 	void (*changefontcallback)(void *,SplineFont *,enum sftf_fonttype,int size,int aa,
-		uint32 script, uint32 lang, uint32 *features));
+		uint32_t script, uint32_t lang, uint32_t *features));
 extern void SFTFProvokeCallback(GGadget *g);
 extern void  SFTFSetDPI(GGadget *g, float dpi);
 extern float SFTFGetDPI(GGadget *g);
-extern void SFTFInitLangSys(GGadget *g, int end, uint32 script, uint32 lang);
+extern void SFTFInitLangSys(GGadget *g, int end, uint32_t script, uint32_t lang);
 extern GGadget *SFTextAreaCreate(struct gwindow *base, GGadgetData *gd,void *data);
 extern void SFTFPopupMenu(SFTextArea *st, GEvent *event);
 extern void SFTextAreaSetTitleNotFonts(GGadget *g,const uint32_t *tit);

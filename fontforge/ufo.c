@@ -1475,7 +1475,7 @@ static void UFOHandleKern(SplineFont *sf,char *basedir,int isv) {
     SplineChar *sc, *ssc;
     KernPair *kp;
     char *end;
-    uint32 script;
+    uint32_t script;
 
     if ( GFileExists(fname))
 	doc = xmlParseFile(fname);
@@ -1632,7 +1632,7 @@ return( 0 );
 return( mask );
 }
 
-static void UFOGetBitArray(xmlDocPtr doc,xmlNodePtr value,uint32 *res,int len) {
+static void UFOGetBitArray(xmlDocPtr doc,xmlNodePtr value,uint32_t *res,int len) {
     xmlNodePtr kid;
     int index;
 

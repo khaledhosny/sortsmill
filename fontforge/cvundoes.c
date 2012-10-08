@@ -1160,7 +1160,7 @@ static void CopyBufferFreeGrab(void) {
 static void noop(void *_copybuffer) {
 }
 
-static void *copybufferPt2str(void *_copybuffer,int32 *len) {
+static void *copybufferPt2str(void *_copybuffer,int32_t *len) {
     Undoes *cur = &copybuffer;
     SplinePoint *sp;
     char buffer[100];
@@ -1195,7 +1195,7 @@ return( copy(""));
 return( copy(buffer));
 }
 
-static void *copybufferName2str(void *_copybuffer,int32 *len) {
+static void *copybufferName2str(void *_copybuffer,int32_t *len) {
     Undoes *cur = &copybuffer;
 
     while ( cur ) {
@@ -1287,7 +1287,7 @@ return( false );
 return( true );
 }
 
-static void *copybuffer2svg(void *_copybuffer,int32 *len) {
+static void *copybuffer2svg(void *_copybuffer,int32_t *len) {
     Undoes *cur = &copybuffer;
     SplineChar dummy;
     static Layer layers[2];
@@ -1354,7 +1354,7 @@ return( ret );
 }
 
 /* When a selection contains multiple glyphs, save them into an svg font */
-static void *copybuffer2svgmult(void *_copybuffer,int32 *len) {
+static void *copybuffer2svgmult(void *_copybuffer,int32_t *len) {
     Undoes *cur = &copybuffer, *c, *c2;
     SplineFont *sf;
     int cnt,i;
@@ -1421,7 +1421,7 @@ return( ret );
 }
 #endif
 
-static void *copybuffer2eps(void *_copybuffer,int32 *len) {
+static void *copybuffer2eps(void *_copybuffer,int32_t *len) {
     Undoes *cur = &copybuffer;
     SplineChar dummy;
     static Layer layers[2];
@@ -2020,7 +2020,7 @@ static void PasteNonExistantRefCheck(SplineChar *sc,Undoes *paster,RefChar *ref,
 }
 
 static void SCCheckXClipboard(SplineChar *sc,int layer,int doclear) {
-    int type; int32 len;
+    int type; int32_t len;
     char *paste;
     FILE *temp;
     GImage *image;
@@ -2087,7 +2087,7 @@ return;
 
 #ifndef _NO_LIBXML
 static void XClipFontToFFClip(void) {
-    int32 len;
+    int32_t len;
     int i;
     char *paste;
     SplineFont *sf;

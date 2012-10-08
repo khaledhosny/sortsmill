@@ -999,8 +999,8 @@ typedef struct shortview /* : tableview */ {
     int16 *edits;
     char **comments;
     uint8 *data;
-    int32 len;
-    uint32 tag;
+    int32_t len;
+    uint32_t tag;
 } ShortView;
 
 static int sfinishup(ShortView *sv,int showerr) {
@@ -1389,7 +1389,7 @@ return( true );
 }
 
 /* cvt table */
-static void cvtCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32 tag) {
+static void cvtCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32_t tag) {
     ShortView *sv = xcalloc(1,sizeof(ShortView));
     char title[60];
     GRect pos, subpos, gsize;
@@ -1720,7 +1720,7 @@ return( false );
 return( true );
 }
 
-static void maxpCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32 tag) {
+static void maxpCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32_t tag) {
     char title[60];
     GRect pos;
     GWindow gw;
@@ -1946,7 +1946,7 @@ static void maxpCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32 tag) {
     GDrawDestroyWindow(gw);
 }
 
-void SFEditTable(SplineFont *sf, uint32 tag) {
+void SFEditTable(SplineFont *sf, uint32_t tag) {
     struct instrdata *id;
     struct ttf_table *tab;
     char name[12];

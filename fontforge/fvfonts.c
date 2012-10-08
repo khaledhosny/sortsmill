@@ -1396,7 +1396,7 @@ return( NULL );
 return( head );
 }
 
-static uint32 InterpColor( uint32 col1,uint32 col2, real amount ) {
+static uint32_t InterpColor( uint32_t col1,uint32_t col2, real amount ) {
     int r1, g1, b1, r2, b2, g2;
 
     r1 = (col1>>16)&0xff;

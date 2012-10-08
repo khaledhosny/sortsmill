@@ -61,7 +61,7 @@ Thom Hogan, pages 6-18 through 6-19.  You need this book.  ISBN 1-55615-321-X.
 /* Windows FNT header. A FON file may contain several FNTs */
 struct fntheader {
     uint16	version;		/* Either 0x200 or 0x300 */
-    uint32	filesize;
+    uint32_t	filesize;
     char	copyright[60+1];
     uint16	type;
 #define FNT_TYPE_VECTOR	0x0001		/* If set a vector FNT, else raster (we only parse rasters) */
@@ -99,14 +99,14 @@ struct fntheader {
     uint8	defchar;		/* ?-firstchar */
     uint8	breakchar;		/* 32-firstchar */
     uint16	widthbytes;		/* Number of bytes in a row */
-    uint32	deviceoffset;		/* set to 0 */
-    uint32	faceoffset;		/* Offset from start of file to face name (C string) */
-    uint32	bitspointer;		/* set to 0 */
-    uint32	bitsoffset;		/* Offset from start of file to start of bitmap info */
+    uint32_t	deviceoffset;		/* set to 0 */
+    uint32_t	faceoffset;		/* Offset from start of file to face name (C string) */
+    uint32_t	bitspointer;		/* set to 0 */
+    uint32_t	bitsoffset;		/* Offset from start of file to start of bitmap info */
     uint8	mbz1;
 /* These fields are not present in 2.0 and are not meaningful in 3.0 */
 /*  they are there for future expansion */
-    uint32	flags;
+    uint32_t	flags;
 #define FNT_FLAGS_FIXED		0x0001
 #define FNT_FLAGS_PROPORTIONAL	0x0002
 #define FNT_FLAGS_ABCFIXED	0x0004
@@ -118,14 +118,14 @@ struct fntheader {
     uint16	aspace;
     uint16	bspace;
     uint16	cspace;
-    uint32	coloroffset;		/* Offset to color table */
+    uint32_t	coloroffset;		/* Offset to color table */
     uint8	mbz2[16];		/* Freetype says 4. Online docs say 16 & earlier versions were wrong... */
 #if 0		/* Font data */
     union {
 	/* Width below is width of bitmap, and advance width */
 	/* so no chars can extend before 0 or after advance */
 	struct v2chars { uint16 width; uint16 offset; } v2;
-	struct v3chars { uint16 width; uint32 offset; } v3;
+	struct v3chars { uint16 width; uint32_t offset; } v3;
     } chartable[/*lastchar-firstchar+2*/258];
     /* facename */
     /* devicename */
@@ -139,7 +139,7 @@ struct fntheader {
 struct v2chars { uint16 width; uint16 offset; };
     /* In v2 I get the impression that characters are stored as they are on the */
     /*  ie. one huge bitmap. The offset gives the location in each row */
-struct v3chars { uint16 width; uint32 offset; };
+struct v3chars { uint16 width; uint32_t offset; };
     /* The offset gives the offset to the entire character (stored in a weird */
     /*  format but basically contiguously) from the bitsoffset */
 
@@ -147,7 +147,7 @@ struct winmz_header {
     uint16 magic;
 #define FON_MZ_MAGIC	0x5A4D
     uint16 skip[29];
-    uint32 lfanew;
+    uint32_t lfanew;
 };
 
 struct winne_header {
@@ -191,7 +191,7 @@ static int FNT_Load(FILE *fnt,SplineFont *sf) {
     struct fntheader fntheader;
     struct v3chars charinfo[258];	/* Max size */
     int i, j, k, ch;
-    uint32 base = ftell(fnt);
+    uint32_t base = ftell(fnt);
     char *pt, *spt, *temp;
     BDFFont *bdf;
     BDFChar *bdfc;
@@ -375,7 +375,7 @@ SplineFont *SFReadWinFON(char *filename,int toback) {
     FILE *fon;
     int magic, i, shift_size;
     SplineFont *sf;
-    uint32 neoffset, recoffset, recend;
+    uint32_t neoffset, recoffset, recend;
     int font_count;
     BDFFont *bdf, *next;
 
@@ -429,8 +429,8 @@ return( NULL );
 	    fseek(fon,4+count*12,SEEK_CUR);
 	}
 	for ( i=0; i<font_count; ++i ) {
-	    uint32 here = ftell(fon);
-	    uint32 offset = lgetushort(fon)<<shift_size;
+	    uint32_t here = ftell(fon);
+	    uint32_t offset = lgetushort(fon)<<shift_size;
 	    fseek(fon,offset,SEEK_SET);		/* FontDirEntries need a +4 here */
 	    FNT_Load(fon,sf);
 	    fseek(fon,here+12,SEEK_SET);
@@ -466,7 +466,7 @@ return( sf );
 /* ************************************************************************** */
 
 static int _FntFontDump(FILE *file,BDFFont *font, EncMap *map, int res) {
-    uint32 startpos, endpos, namelocpos, datapos, namepos;
+    uint32_t startpos, endpos, namelocpos, datapos, namepos;
     int i, j, k, l;
     int ch;
     int cnt, badch, defch;
@@ -677,19 +677,19 @@ typedef unsigned char	BYTE;
 typedef unsigned char	CHAR;
 typedef signed short	INT16;
 typedef int		INT;
-typedef uint32		DWORD;		/* originally unsigned long */
-typedef int32		LONG;
+typedef uint32_t		DWORD;		/* originally unsigned long */
+typedef int32_t		LONG;
 #if 0
 #define CALLBACK	__stdcall
 typedef INT		(CALLBACK *FARPROC)();
 typedef LRESULT		(CALLBACK *FARPROC16)();
 #else
 #define CALLBACK
-typedef int32		FARPROC;	/* Pointers screw up the alignment on 64 bit machines */
-typedef int32		FARPROC16;	/* ditto */
+typedef int32_t		FARPROC;	/* Pointers screw up the alignment on 64 bit machines */
+typedef int32_t		FARPROC16;	/* ditto */
 #endif
 typedef unsigned short	HANDLE16;
-typedef int32		LONG_PTR;	/* originally "long", but that won't work on 64 bit machines */
+typedef int32_t		LONG_PTR;	/* originally "long", but that won't work on 64 bit machines */
 typedef LONG_PTR        LRESULT;
 
 typedef struct
@@ -816,7 +816,7 @@ static const BYTE MZ_hdr[] = {'M',  'Z',  0x0d, 0x01, 0x01, 0x00, 0x00, 0x00, 0x
 };
 
 
-int FONFontDump(char *filename,SplineFont *sf, int32 *sizes,int resol,
+int FONFontDump(char *filename,SplineFont *sf, int32_t *sizes,int resol,
 	EncMap *map) {
     BDFFont *bdf;
     /* res = -1 => Guess depending on pixel size of font */

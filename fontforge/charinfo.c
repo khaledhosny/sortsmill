@@ -213,7 +213,7 @@ struct hi_data {
 static int HI_Ok(GGadget *g, GEvent *e) {
     if ( e->type==et_controlevent && e->u.control.subtype == et_buttonactivate ) {
 	struct hi_data *hi = GDrawGetUserData(GGadgetGetWindow(g));
-	int32 i, len;
+	int32_t i, len;
 	GTextInfo **ti = GGadgetGetList(GWidgetGetControl(hi->gw,CID_HintMask),&len);
 
 	for ( i=0; i<len; ++i )
@@ -416,7 +416,7 @@ return( true );
 }
 
 static int CI_DeleteCounter(GGadget *g, GEvent *e) {
-    int32 len; int i,j, offset;
+    int32_t len; int i,j, offset;
     GTextInfo **old, **new_;
     GGadget *list;
     if ( e->type==et_controlevent && e->u.control.subtype == et_buttonactivate ) {
@@ -548,7 +548,7 @@ CI_NameCheck(const uint32_t *name)
 }
 
 static void CI_ParseCounters(CharInfo *ci) {
-    int32 i,len;
+    int32_t i,len;
     GTextInfo **ti = GGadgetGetList(GWidgetGetControl(ci->gw,CID_List+600),&len);
     SplineChar *sc = ci->cachedsc;
 
@@ -1824,7 +1824,7 @@ return( NULL );
 return( components );
 }
 
-uint32 LigTagFromUnicode(int uni) {
+uint32_t LigTagFromUnicode(int uni) {
     int tag = CHR('l','i','g','a');	/* standard */
 
     if (( uni>=0xbc && uni<=0xbe ) || (uni>=0x2153 && uni<=0x215f) )
@@ -2489,7 +2489,7 @@ void SCSubtableDefaultSubsCheck(SplineChar *sc, struct lookup_subtable *sub,
     SplineChar *alt;
     char buffer[8];
     int i;
-    static uint32 form_tags[] = { CHR('i','n','i','t'), CHR('m','e','d','i'), CHR('f','i','n','a'), CHR('i','s','o','l'), 0 };
+    static uint32_t form_tags[] = { CHR('i','n','i','t'), CHR('m','e','d','i'), CHR('f','i','n','a'), CHR('i','s','o','l'), 0 };
     real loff, roff;
 
     if ( lookup_type == gsub_single && sub->suffix != NULL ) {
@@ -2665,7 +2665,7 @@ static void kernfinishedit(GGadget *g, int r, int c, int wasnew) {
 	finishedit(g,r,c,wasnew);
 }
 
-static int SubHasScript(uint32 script,struct lookup_subtable *sub) {
+static int SubHasScript(uint32_t script,struct lookup_subtable *sub) {
     FeatureScriptLangList *f;
     struct scriptlanglist *s;
 
@@ -2685,7 +2685,7 @@ static void kerninit(GGadget *g, int r) {
     GMenuItem *mi = GMatrixEditGetColumnChoices(g,0);
     int i,cols,rows;
     struct matrix_data *possub;
-    uint32 script;
+    uint32_t script;
 
     possub = GMatrixEditGet(g, &rows);
     cols = GMatrixEditGetColCnt(g);
@@ -4078,7 +4078,7 @@ return( true );
 }
 
 static void CI_DoCancel(CharInfo *ci) {
-    int32 i,len;
+    int32_t i,len;
     GTextInfo **ti = GGadgetGetList(GWidgetGetControl(ci->gw,CID_List+600),&len);
 
     for ( i=0; i<len; ++i )

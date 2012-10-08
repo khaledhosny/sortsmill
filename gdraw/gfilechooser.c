@@ -527,7 +527,7 @@ static uint32_t **GFileChooserCompletion(GGadget *t,int from_tab) {
     GFileChooser *gfc;
     const uint32_t *pt, *spt; uint32_t **ret;
     GTextInfo **ti;
-    int32 len;
+    int32_t len;
     int i, cnt, doit, match_len;
 
     pt = spt = _GGadgetGetTitle(t);
@@ -571,7 +571,7 @@ return( ret );
 
 static uint32_t *GFileChooserGetCurDir(GFileChooser *gfc,int dirindex) {
     GTextInfo **ti;
-    int32 len; int j, cnt;
+    int32_t len; int j, cnt;
     uint32_t *dir, *pt;
 
     ti = GGadgetGetList(&gfc->directories->g,&len);
@@ -595,7 +595,7 @@ return( dir );
 /* Handle events from the directory dropdown list */
 static int GFileChooserDListChanged(GGadget *pl,GEvent *e) {
     GFileChooser *gfc;
-    int i; /*int32 len;*/
+    int i; /*int32_t len;*/
     uint32_t *dir;
     /*GTextInfo **ti;*/
 
@@ -619,7 +619,7 @@ return( true );
 static int GFileChooserFListSelected(GGadget *gl,GEvent *e) {
     GFileChooser *gfc;
     int i;
-    int32 listlen; int len, cnt, dirpos, apos;
+    int32_t listlen; int len, cnt, dirpos, apos;
     uint32_t *dir, *newdir;
     GTextInfo *ti, **all;
 
@@ -1323,14 +1323,14 @@ static int gfilechooser_timer(GGadget *g, GEvent *event) {
 return( false );
 }
 
-static void gfilechooser_move(GGadget *g, int32 x, int32 y ) {
+static void gfilechooser_move(GGadget *g, int32_t x, int32_t y ) {
     GFileChooser *gfc = (GFileChooser *) g;
 
     GGadgetMove(&gfc->topbox->g,x,y);
     _ggadget_move(g,x,y);
 }
 
-static void gfilechooser_resize(GGadget *g, int32 width, int32 height ) {
+static void gfilechooser_resize(GGadget *g, int32_t width, int32_t height ) {
     GFileChooser *gfc = (GFileChooser *) g;
 
     GGadgetResize(&gfc->topbox->g,width,height);

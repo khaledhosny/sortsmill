@@ -339,8 +339,8 @@ struct { char ch; unsigned int oldstate, newstate; unsigned short result; }
 };
 
 struct transform {
-    uint32 oldstate;
-    uint32 newstate;
+    uint32_t oldstate;
+    uint32_t newstate;
     uint32_t resch;
     struct transform *next;
 } *info[95] = { 0 };
@@ -436,7 +436,7 @@ static void dumpinfo() {
     fprintf(out, "    { 0x030b, 0x%07x },\n", HORN );
     fprintf(out, "    { 0 },\n" );
     fprintf(out, "};\n\n" );
-    fprintf(out, "uint32 _gdraw_chrs_any=ANY, _gdraw_chrs_ctlmask=GREEK, _gdraw_chrs_metamask=0;\n" );
+    fprintf(out, "uint32_t _gdraw_chrs_any=ANY, _gdraw_chrs_ctlmask=GREEK, _gdraw_chrs_metamask=0;\n" );
     fclose(out);
 }
 
@@ -452,7 +452,7 @@ return( NULL );
 return(buffer );
 }
 
-static void AddTransform(int ch, uint32 oldstate, uint32 newstate, unsigned short resch ) {
+static void AddTransform(int ch, uint32_t oldstate, uint32_t newstate, unsigned short resch ) {
     struct transform *trans;
 
     ch -= ' ';

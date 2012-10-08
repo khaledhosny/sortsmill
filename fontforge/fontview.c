@@ -1730,7 +1730,7 @@ static void FVSelectByScript(FontView *fv,int merge) {
     int i,k;
     int done = 0, doit;
     char tagbuf[4];
-    uint32 tag;
+    uint32_t tag;
     const uint32_t *ret;
     int lc_k, uc_k, select_k;
     int only_uc=0, only_lc=0;
@@ -1927,9 +1927,9 @@ static void FVMenuSelectByScript(GWindow gw, struct gmenuitem *UNUSED(mi), GEven
     FVSelectByScript(fv,SelMergeType(e));
 }
 
-static void FVSelectColor(FontView *fv, uint32 col, int merge) {
+static void FVSelectColor(FontView *fv, uint32_t col, int merge) {
     int i, doit;
-    uint32 sccol;
+    uint32_t sccol;
     SplineChar **glyphs = fv->b.sf->glyphs;
 
     for ( i=0; i<fv->b.map->enccount; ++i ) {
@@ -2347,7 +2347,7 @@ static void FVMenuMassRename(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *U
     FVMassGlyphRename(fv);
 }
 
-static void FVSetColor(FontView *fv, uint32 col) {
+static void FVSetColor(FontView *fv, uint32_t col) {
     int i;
 
     for ( i=0; i<fv->b.map->enccount; ++i ) if ( fv->b.selected[i] ) {
@@ -6247,7 +6247,7 @@ void SCPreparePopup(GWindow gw,SplineChar *sc,struct remap *remap, int localenc,
 static void noop(void *UNUSED(_fv)) {
 }
 
-static void *ddgencharlist(void *_fv,int32 *len) {
+static void *ddgencharlist(void *_fv,int32_t *len) {
     int i,j,cnt, gid;
     FontView *fv = (FontView *) _fv;
     SplineFont *sf = fv->b.sf;

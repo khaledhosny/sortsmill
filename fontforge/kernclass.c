@@ -423,12 +423,12 @@ static int KCD_RightToLeft(KernClassDlg *kcd) {
 return( kcd->subtable->lookup->lookup_flags&pst_r2l );
 
     if ( kcd->scf!=NULL ) {
-	uint32 script = SCScriptFromUnicode(kcd->scf);
+	uint32_t script = SCScriptFromUnicode(kcd->scf);
 	if ( script!=DEFAULT_SCRIPT )
 return( ScriptIsRightToLeft( script ));
     }
     if ( kcd->scs!=NULL ) {
-	uint32 script = SCScriptFromUnicode(kcd->scs);
+	uint32_t script = SCScriptFromUnicode(kcd->scs);
 	if ( script!=DEFAULT_SCRIPT )
 return( ScriptIsRightToLeft( script ));
     }
@@ -847,7 +847,7 @@ static void KCD_SetDevTab(KernClassDlg *kcd) {
 }
 
 static void KP_SelectSubtable(KernClassDlg *kcd,struct lookup_subtable *sub) {
-    int32 len;
+    int32_t len;
     GTextInfo **ti = GGadgetGetList(GWidgetGetControl(kcd->gw,CID_Subtable),&len);
     int i, new_pos = -1;
 
@@ -917,9 +917,9 @@ static void KPD_PairSearch(KernClassDlg *kcd) {
 	}
     }
     if ( kp==NULL && kcd->scf!=NULL ) {
-	int32 len;
+	int32_t len;
 	GTextInfo **ti = GGadgetGetList(GWidgetGetControl(kcd->gw,CID_Subtable),&len);
-	uint32 script = SCScriptFromUnicode(kcd->scf);
+	uint32_t script = SCScriptFromUnicode(kcd->scf);
 	int i;
 	struct lookup_subtable *sub = NULL;
 
@@ -2895,7 +2895,7 @@ return( true );
 }
 
 static int KCL_Delete(GGadget *g, GEvent *e) {
-    int32 len; int i,j;
+    int32_t len; int i,j;
     GTextInfo **old, **new;
     GGadget *list;
     KernClassListDlg *kcld;

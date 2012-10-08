@@ -456,8 +456,8 @@ void PyFF_Glyph_Set_Layer(SplineChar *sc,int layer) {
     ((PyFF_Glyph *) pysc)->layer = layer;
 }
 
-#define BAD_TAG ((uint32)0xffffffff)
-static uint32 StrToTag(char *tag_name, int *was_mac) {
+#define BAD_TAG ((uint32_t)0xffffffff)
+static uint32_t StrToTag(char *tag_name, int *was_mac) {
     uint8 foo[4];
     int feat, set;
 
@@ -472,7 +472,7 @@ return( BAD_TAG );
 return( BAD_TAG );
 	}
 	*was_mac = true;
-return( ( ((uint32)feat)<<16) | set );
+return( ( ((uint32_t)feat)<<16) | set );
     }
 
     if ( was_mac ) *was_mac = false;
@@ -496,7 +496,7 @@ return( BAD_TAG );
 return( (foo[0]<<24) | (foo[1]<<16) | (foo[2]<<8) | foo[3] );
 }
 
-static PyObject *TagToPythonString(uint32 tag,int ismac) {
+static PyObject *TagToPythonString(uint32_t tag,int ismac) {
     char foo[30];
 
     if ( ismac ) {
@@ -6679,7 +6679,7 @@ return( 0 );
 }
 
 static PyObject *PyFF_Glyph_get_script(PyFF_Glyph *self, void *UNUSED(closure)) {
-    uint32 script = SCScriptFromUnicode(self->sc);
+    uint32_t script = SCScriptFromUnicode(self->sc);
 
 return( TagToPythonString(script, false ));
 }
@@ -7134,7 +7134,7 @@ static char *appendaccent_keywords[] = { "name", "unicode", "pos", NULL };
 static PyObject *PyFFGlyph_appendAccent(PyObject *self, PyObject *args, PyObject *keywds) {
     SplineChar *sc = ((PyFF_Glyph *) self)->sc;
     int layer = ((PyFF_Glyph *) self)->layer;
-    int pos = ____NOPOSDATAGIVEN;	/* unicode char pos info, see #define for (uint32)(utype2[]) */
+    int pos = ____NOPOSDATAGIVEN;	/* unicode char pos info, see #define for (uint32_t)(utype2[]) */
     int uni=-1;				/* unicode char value */
     char *name = NULL;			/* unicode char name */
     int ret;
@@ -7146,7 +7146,7 @@ return( NULL );
 	PyErr_Format(PyExc_ValueError, "You must specify either a name of a unicode code point");
 return( NULL );
     }
-    ret = SCAppendAccent(sc,layer,name,uni,(uint32)(pos));
+    ret = SCAppendAccent(sc,layer,name,uni,(uint32_t)(pos));
     if ( ret==1 ) {
 	PyErr_Format(PyExc_ValueError, "No base character reference found");
 return( NULL );
@@ -7247,10 +7247,10 @@ static enum embolden_type CW_ParseArgs(SplineFont *sf, struct lcg_zones *zones, 
 	    &zoneO ))
 return( embolden_error );
     type = FlagsFromString(type_name,cw_types,"embolden type");
-    if ( type==(uint32)FLAG_UNKNOWN )
+    if ( type==(uint32_t)FLAG_UNKNOWN )
 return( embolden_error );
     zones->counter_type = FlagsFromString(counter_name,co_types,"counter type");
-    if ( zones->counter_type==(uint32)FLAG_UNKNOWN )
+    if ( zones->counter_type==(uint32_t)FLAG_UNKNOWN )
 return( embolden_error );
 
     just_top = true;
@@ -11902,7 +11902,7 @@ return( -1 );
     }
     base = (struct Base *) xzalloc(sizeof (struct Base));
     base->baseline_cnt = basecnt;
-    base->baseline_tags = xmalloc(basecnt*sizeof(uint32));
+    base->baseline_tags = xmalloc(basecnt*sizeof(uint32_t));
     base->scripts = NULL;
     for ( i=0; i<basecnt; ++i ) {
 	PyObject *str = PyTuple_GetItem(basetags,i);
@@ -11948,7 +11948,7 @@ return( -1 );
 	    /* That's reasonable */;
 	else if ( basecnt!=0 && (def_baseln!=NULL && offsets!=NULL)) {
 	    /* Also reasonable */;
-	    uint32 tag = StrToTag(def_baseln,NULL);
+	    uint32_t tag = StrToTag(def_baseln,NULL);
 	    if ( tag==BAD_TAG ) {
 		BaseFree(base);
 return( -1 );
@@ -13275,7 +13275,7 @@ static PyGetSetDef PyFF_Font_getset[] = {
 		    
 static PyObject *PyFFFont_GetTableData(PyFF_Font *self, PyObject *args) {
     char *table_name;
-    uint32 tag;
+    uint32_t tag;
     struct ttf_table *tab;
     PyObject *binstr;
 
@@ -13298,7 +13298,7 @@ Py_RETURN_NONE;
 return( binstr );
 }
 
-static void TableAddInstrs(SplineFont *sf, uint32 tag,int replace,
+static void TableAddInstrs(SplineFont *sf, uint32_t tag,int replace,
 			   uint8 *instrs,int icnt) {
     struct ttf_table *tab;
 
@@ -13342,7 +13342,7 @@ return;
 
 static PyObject *PyFFFont_SetTableData(PyFF_Font *self, PyObject *args) {
     char *table_name;
-    uint32 tag;
+    uint32_t tag;
     PyObject *tuple;
     uint8 *instrs;
     int icnt, i;
@@ -14669,7 +14669,7 @@ return( BAD_FEATURE_LIST );
 	    sltail = sl;
 	    langs = PySequence_GetItem(scriptsubs,1);
 	    if ( STRING_CHECK(langs) ) {
-		uint32 lang = StrToTag(PyBytes_AsString(langs),NULL);
+		uint32_t lang = StrToTag(PyBytes_AsString(langs),NULL);
 		if ( lang==BAD_TAG ) {
 		    FeatureScriptLangListFree(flhead);
 return( BAD_FEATURE_LIST );
@@ -14686,9 +14686,9 @@ return( BAD_FEATURE_LIST );
 	    } else {
 		sl->lang_cnt = PySequence_Size(langs);
 		if ( sl->lang_cnt>MAX_LANG )
-		    sl->morelangs = xmalloc((sl->lang_cnt-MAX_LANG)*sizeof(uint32));
+		    sl->morelangs = xmalloc((sl->lang_cnt-MAX_LANG)*sizeof(uint32_t));
 		for ( l=0; l<sl->lang_cnt; ++l ) {
-		    uint32 lang = StrToTag(PyBytes_AsString(PySequence_GetItem(langs,l)),NULL);
+		    uint32_t lang = StrToTag(PyBytes_AsString(PySequence_GetItem(langs,l)),NULL);
 		    if ( lang==BAD_TAG ) {
 			FeatureScriptLangListFree(flhead);
 return( BAD_FEATURE_LIST );
@@ -14939,7 +14939,7 @@ return( NULL );
     }
 
     for ( i=0; lookup_types[i].name!=NULL ; ++i )
-	if ( (uint32)lookup_types[i].flag == otl->lookup_type )
+	if ( (uint32_t)lookup_types[i].flag == otl->lookup_type )
     break;
     type = lookup_types[i].name;
 
@@ -15638,7 +15638,7 @@ return(NULL);
 	BDFFont *bdf;
 	for ( cnt=0, bdf=ret->sf->bitmaps; bdf!=NULL; bdf=bdf->next, ++cnt );
 	if ( cnt!=0 ) {
-	    ret->sizes = xmalloc((cnt+1)*sizeof(int32));
+	    ret->sizes = xmalloc((cnt+1)*sizeof(int32_t));
 	    ret->sizes[cnt] = 0;
 	    for ( cnt=0, bdf=ret->sf->bitmaps; bdf!=NULL; bdf=bdf->next, ++cnt ) {
 		if ( bdf->clut==NULL )
@@ -16069,7 +16069,7 @@ static struct flaglist printflags[] = {
 
 static PyObject *PyFFFont_printSample(PyFF_Font *self, PyObject *args) {
     int type, i, inlinesample = true;
-    int32 *pointsizes=NULL;
+    int32_t *pointsizes=NULL;
     char *samplefile=NULL, *output=NULL;
     uint32_t *sample=NULL;
     char *locfilename=NULL;
@@ -16101,12 +16101,12 @@ return( NULL );
 	if ( PyInt_Check(arg)) {
 	    int val = PyInt_AsLong(arg);
 	    if ( val>0 ) { 
-		pointsizes = xcalloc(2,sizeof(int32));
+		pointsizes = xcalloc(2,sizeof(int32_t));
 		pointsizes[0] = val;
 	    }
 	} else if ( PySequence_Check(arg) ) {
 	    int subcnt = PySequence_Size(arg);
-	    pointsizes = xmalloc((subcnt+1)*sizeof(int32));
+	    pointsizes = xmalloc((subcnt+1)*sizeof(int32_t));
 	    for ( i=0; i<subcnt; ++i ) {
 		pointsizes[i] = PyInt_AsLong(PySequence_GetItem(arg,i));
 		if ( PyErr_Occurred()) {
@@ -16157,7 +16157,7 @@ Py_RETURN(self);
 static PyObject *PyFFFont_randomText(PyFF_Font *self, PyObject *args) {
     FontViewBase *fv;
     char *script=NULL, *lang=NULL, *txt;
-    uint32 stag, ltag=0;
+    uint32_t stag, ltag=0;
     PyObject *ret;
 
     if ( CheckIfFontClosed(self) )

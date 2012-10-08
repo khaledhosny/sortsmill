@@ -74,7 +74,7 @@ typedef struct gdirentry {
     unsigned int timezoneknown: 1;	/* We got a time, but we don't know the timezone. might be off by 24 hours either way */
     unsigned int fcdata: 2;
     short mode;
-    uint32 size;
+    uint32_t size;
     time_t modtime;
     struct gdirentry *next;
 } GDirEntry;
@@ -89,15 +89,15 @@ extern void GIOdelFile(GIOControl *gc);
 extern void GIOdelDir(GIOControl *gc);
 extern void GIOrenameFile(GIOControl *gc);
 VISIBLE extern GDirEntry *GIOgetDirData(GIOControl *gc);
-extern int32 GIOread(GIOControl *gc,void *buffer,int32 len);
-extern int32 GIOwrite(GIOControl *gc,void *buffer,int32 len);
+extern int32_t GIOread(GIOControl *gc,void *buffer,int32_t len);
+extern int32_t GIOwrite(GIOControl *gc,void *buffer,int32_t len);
 extern void GIOFreeDirEntries(GDirEntry *lst);
 VISIBLE extern void GIOcancel(GIOControl *gc);
 VISIBLE extern void GIOclose(GIOControl *gc);
 VISIBLE extern GIOControl *GIOCreate(uint32_t *path,void *userdata,
 	void (*receivedata)(struct giocontrol *),
 	void (*receiveerror)(struct giocontrol *));
-extern void GIOSetDefAuthorizer(int32 (*getauth)(struct giocontrol *));
+extern void GIOSetDefAuthorizer(int32_t (*getauth)(struct giocontrol *));
 extern void GIOSetUserAgent(uint32_t *agent);
 
 VISIBLE extern uint32_t *GIOguessMimeType(const uint32_t *path,int isdir);

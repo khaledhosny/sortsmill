@@ -511,7 +511,7 @@ return( gld.ret );
 /* ************************************************************************** */
 /* dlg which presents a list of languages and associated lookups              */
 /* ************************************************************************** */
-static char *Tag2Str(uint32 tag) {
+static char *Tag2Str(uint32_t tag) {
     static char foo[8];
     foo[0] = tag>>24;
     foo[1] = tag>>16;
@@ -521,7 +521,7 @@ static char *Tag2Str(uint32 tag) {
 return( foo );
 }
 
-static uint32 Str2Tag(char *str) {
+static uint32_t Str2Tag(char *str) {
     unsigned char foo[4];
 
     memset(foo,' ',4);

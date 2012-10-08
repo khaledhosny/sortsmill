@@ -53,7 +53,7 @@ struct stdfuncs {
     void (*PostError)(GIOControl *gc);
     void (*RequestAuthorization)(GIOControl *gc);
     struct hostdata *(*LookupHost)(char *name);
-    int32 (*getauth)(struct giocontrol *);
+    int32_t (*getauth)(struct giocontrol *);
     void (*FreeDirEntries)(GDirEntry *lst);
     void (*reportheaders)(char *, ...);
 #ifdef HAVE_PTHREAD_H

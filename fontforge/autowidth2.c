@@ -448,7 +448,7 @@ return( classes );
 void AutoWidth2(FontViewBase *fv,int separation,int min_side,int max_side,
 	int chunk_height, int loop_cnt) {
     struct scriptlist {
-	uint32 script;
+	uint32_t script;
 	AW_Glyph *glyphs;
 	int gcnt;
     } *scripts;
@@ -475,7 +475,7 @@ void AutoWidth2(FontViewBase *fv,int separation,int min_side,int max_side,
 		(sc = sf->glyphs[gid])!=NULL && ! sc->ticked &&
 		HasUseMyMetrics(sc,fv->active_layer)==NULL ) {
 		/* If Use My Metrics is set, then we can't change the width (which we grab from a refchar) */
-	    uint32 script;
+	    uint32_t script;
 	    script = SCScriptFromUnicode(sc);
 	    for ( s=0; s<scnt; ++s ) {
 		if ( scripts[s].script == script )

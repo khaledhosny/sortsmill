@@ -588,7 +588,7 @@ void TransformDlgCreate(void *data,void (*transfunc)(void *,real *,int,BVTFunc *
     GTextInfo label[9+TCnt*24];
     static TransData td;
     int i, y, gci, subai, ai;
-    int32 len;
+    int32_t len;
     GGadget *orig;
     BasePoint junk;
     GTextInfo **ti;

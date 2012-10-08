@@ -133,7 +133,7 @@ enum expandedge { ee_none, ee_nw, ee_up, ee_ne, ee_right, ee_se, ee_down,
 
 typedef struct charview {
     CharViewBase b;
-    uint32 showback[BACK_LAYER_MAX/32];
+    uint32_t showback[BACK_LAYER_MAX/32];
     unsigned int showfore:1;
     unsigned int showgrids:1;
     unsigned int showhhints:1;
@@ -253,7 +253,7 @@ typedef struct charview {
     real ft_pointsizey, ft_pointsizex;
     struct freetype_raster *raster, *oldraster;
     DebugView *dv;
-    uint32 mmvisible;
+    uint32_t mmvisible;
     char *former_names[FORMER_MAX];
     int former_cnt;
     AnchorPoint *apmine, *apmatch;
@@ -390,7 +390,7 @@ typedef struct fontview {
     int16 infoh,mbh;
     int16 lab_height, lab_as;
     int16 colcnt, rowcnt;		/* of display window */
-    int32 rowoff, rowltot;		/* Can be really big in full unicode */
+    int32_t rowoff, rowltot;		/* Can be really big in full unicode */
     int16 cbw,cbh;			/* width/height of a character box */
     int pressed_pos, end_pos;
     unsigned int antialias:1;
@@ -438,7 +438,7 @@ typedef struct searchview {
     LayerInfo layerinfo[2];
     SplineChar *chars[2];
     EncMap dummy_map;
-    int32 map[2], backmap[2];
+    int32_t map[2], backmap[2];
     uint8 sel[2];
     CharView cv_srch, cv_rpl;
     CharView *lastcv;
@@ -468,7 +468,7 @@ typedef struct mathkernview {
     SplineChar sc_topright, sc_topleft, sc_bottomright, sc_bottomleft;
     SplineChar *chars[4];
     EncMap dummy_map;
-    int32 map[4], backmap[4];
+    int32_t map[4], backmap[4];
     uint8 sel[4];
     CharView cv_topright, cv_topleft, cv_bottomright, cv_bottomleft;
     CharView *lastcv;
@@ -501,7 +501,7 @@ typedef struct tilepathdlg {
     SplineChar sc_first, sc_medial, sc_final, sc_isolated;
     SplineChar *chars[4];
     EncMap dummy_map;
-    int32 map[4], backmap[4];
+    int32_t map[4], backmap[4];
     uint8 sel[4];
     CharView cv_first, cv_medial, cv_final, cv_isolated;
     CharView *lastcv;
@@ -530,7 +530,7 @@ typedef struct gradientdlg {
     SplineChar sc_grad;
     SplineChar *chars[1];
     EncMap dummy_map;
-    int32 map[1], backmap[1];
+    int32_t map[1], backmap[1];
     uint8 sel[1];
     CharView cv_grad;
 /* ****** */
@@ -555,7 +555,7 @@ typedef struct strokedlg {
     SplineChar sc_stroke;
     SplineChar *chars[1];
     EncMap dummy_map;
-    int32 map[1], backmap[1];
+    int32_t map[1], backmap[1];
     uint8 sel[1];
     CharView cv_stroke;
     int cv_width, cv_height;
@@ -736,14 +736,14 @@ extern void SVDestroy(struct searchview *sv);
 
 
 extern int  SLICount(SplineFont *sf);
-extern uint32_t *ClassName(const char *name,uint32 feature_tag,
+extern uint32_t *ClassName(const char *name,uint32_t feature_tag,
 	uint16 flags, int script_lang_index, int merge_with, int act_type,
 	int macfeature,SplineFont *sf);
 extern uint32_t *DecomposeClassName(const uint32_t *clsnm, uint32_t **name,
-	uint32 *feature_tag, int *macfeature,
+	uint32_t *feature_tag, int *macfeature,
 	uint16 *flags, uint16 *script_lang_index,int *merge_with,int *act_type,
 	SplineFont *sf);
-extern PST *AddSubs(PST *last,uint32 tag,char *name,uint16 flags,
+extern PST *AddSubs(PST *last,uint32_t tag,char *name,uint16 flags,
 	uint16 sli,SplineChar *sc);
 
 
@@ -771,9 +771,9 @@ extern void OFLibBrowse(void);
 extern int RecentFilesAny(void);
 extern void _aplistbuild(struct gmenuitem *mi,SplineFont *sf,
 	void (*func)(GWindow,struct gmenuitem *,GEvent *));
-extern int32 *ParseBitmapSizes(GGadget *g,char *msg,int *err);
+extern int32_t *ParseBitmapSizes(GGadget *g,char *msg,int *err);
 extern GTextInfo *AddMacFeatures(GTextInfo *opentype,enum possub_type type,SplineFont *sf);
-extern uint32_t *AskNameTag(char *title,uint32_t *def,uint32 def_tag,uint16 flags,
+extern uint32_t *AskNameTag(char *title,uint32_t *def,uint32_t def_tag,uint16 flags,
 	int script_lang_index, enum possub_type type, SplineFont *sf, SplineChar *default_script,
 	int merge_with,int act_type);
 extern uint32_t *ShowScripts(uint32_t *usedef);
@@ -939,7 +939,7 @@ extern void CVAdjustPoint(CharView *cv, SplinePoint *sp);
 extern void CVMergeSplineSets(CharView *cv, SplinePoint *active, SplineSet *activess,
 	SplinePoint *merge, SplineSet *mergess);
 extern void CVAdjustControl(CharView *cv,BasePoint *cp, BasePoint *to);
-extern int  CVMoveSelection(CharView *cv, real dx, real dy, uint32 input_state);
+extern int  CVMoveSelection(CharView *cv, real dx, real dy, uint32_t input_state);
 extern int  CVTestSelectFromEvent(CharView *cv,GEvent *event);
 extern void CVMouseMovePen(CharView *cv, PressedOn *p, GEvent *event);
 extern void CVMouseUpPoint(CharView *cv,GEvent *event);
@@ -1055,7 +1055,7 @@ extern void SFShowKernPairs(SplineFont *sf,SplineChar *sc,AnchorClass *ac,int la
 extern void SFShowLigatures(SplineFont *sf,SplineChar *sc);
 
 extern void SCEditInstructions(SplineChar *sc);
-extern void SFEditTable(SplineFont *sf, uint32 tag);
+extern void SFEditTable(SplineFont *sf, uint32_t tag);
 extern void IIScrollTo(struct instrinfo *ii,int ip,int mark_stop);
 extern void IIReinit(struct instrinfo *ii,int ip);
 extern int ii_v_e_h(GWindow gw, GEvent *event);

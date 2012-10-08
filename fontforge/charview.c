@@ -4237,7 +4237,7 @@ static void CVTimer(CharView *cv,GEvent *event) {
 
 static void CVDrop(CharView *cv,GEvent *event) {
     /* We should get a list of character names. Add each as a RefChar */
-    int32 len;
+    int32_t len;
     int ch, first = true;
     char *start, *pt, *cnames;
     SplineChar *rsc;
@@ -9882,7 +9882,7 @@ static GMenuItem2 vwlist[] = {
 
 static void CVMenuShowMMMask(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     CharView *cv = (CharView *) GDrawGetUserData(gw);
-    uint32 changemask = (uint32) (intptr_t) mi->ti.userdata;
+    uint32_t changemask = (uint32_t) (intptr_t) mi->ti.userdata;
     /* Change which mms get displayed in the "background" */
 
     if ( mi->mid==MID_MMAll ) {
@@ -9906,7 +9906,7 @@ static void mvlistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     CharView *cv = (CharView *) GDrawGetUserData(gw);
     int i, base, j;
     MMSet *mm = cv->b.sc->parent->mm;
-    uint32 submask;
+    uint32_t submask;
     SplineFont *sub;
     GMenuItem2 *mml;
 
@@ -9935,7 +9935,7 @@ static void mvlistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
 	}
 	/* All */
 	mml[0].ti.userdata = (void *) (intptr_t) ((1<<j)-1);
-	mml[0].ti.checked = (cv->mmvisible == (uint32) (intptr_t) mml[0].ti.userdata);
+	mml[0].ti.checked = (cv->mmvisible == (uint32_t) (intptr_t) mml[0].ti.userdata);
 	    /* None */
 	mml[1].ti.checked = (cv->mmvisible == 0 || cv->mmvisible == submask);
     }

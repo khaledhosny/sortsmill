@@ -285,9 +285,9 @@ return;
 		for ( l=0; l<scale; ++l )
 		    clut.clut[l] =
 			COLOR_CREATE(
-			 COLOR_RED(bg) + ((int32) (l*(COLOR_RED(fg)-COLOR_RED(bg))))/(scale-1),
-			 COLOR_GREEN(bg) + ((int32) (l*(COLOR_GREEN(fg)-COLOR_GREEN(bg))))/(scale-1),
-			 COLOR_BLUE(bg) + ((int32) (l*(COLOR_BLUE(fg)-COLOR_BLUE(bg))))/(scale-1) );
+			 COLOR_RED(bg) + ((int32_t) (l*(COLOR_RED(fg)-COLOR_RED(bg))))/(scale-1),
+			 COLOR_GREEN(bg) + ((int32_t) (l*(COLOR_GREEN(fg)-COLOR_GREEN(bg))))/(scale-1),
+			 COLOR_BLUE(bg) + ((int32_t) (l*(COLOR_BLUE(fg)-COLOR_BLUE(bg))))/(scale-1) );
 	    }
 	    base.data = bdfc->bitmap;
 	    base.bytes_per_line = bdfc->bytes_per_line;
@@ -403,9 +403,9 @@ static void MVSetFeatures(MetricsView *mv) {
     SplineFont *sf = mv->sf;
     int i, j, cnt;
     GTextInfo **ti=NULL;
-    uint32 *tags = NULL, script, lang;
+    uint32_t *tags = NULL, script, lang;
     char buf[16];
-    uint32 *stds;
+    uint32_t *stds;
     const uint32_t *pt = _GGadgetGetTitle(mv->script);
 
     if ( sf->cidmaster ) sf=sf->cidmaster;
@@ -416,14 +416,14 @@ static void MVSetFeatures(MetricsView *mv) {
 	script = (pt[0]<<24) | (pt[1]<<16) | (pt[2]<<8) | pt[3];
     if ( pt[4]=='{' && u_strlen(pt)>=9 )
 	lang = (pt[5]<<24) | (pt[6]<<16) | (pt[7]<<8) | pt[8];
-    if ( (uint32)mv->oldscript!=script || (uint32)mv->oldlang!=lang )
+    if ( (uint32_t)mv->oldscript!=script || (uint32_t)mv->oldlang!=lang )
 	stds = StdFeaturesOfScript(script);
     else {		/* features list may have changed, but retain those set */
-	int32 len, sc;
+	int32_t len, sc;
 	ti = GGadgetGetList(mv->features,&len);
-	stds = xmalloc((len+1)*sizeof(uint32));
+	stds = xmalloc((len+1)*sizeof(uint32_t));
 	for ( i=sc=0; i<len; ++i ) if ( ti[i]->selected )
-	    stds[sc++] = (uint32) (intptr_t) ti[i]->userdata;
+	    stds[sc++] = (uint32_t) (intptr_t) ti[i]->userdata;
 	stds[sc] = 0;
     }
 
@@ -431,7 +431,7 @@ static void MVSetFeatures(MetricsView *mv) {
     /* Never returns NULL */
     for ( cnt=0; tags[cnt]!=0; ++cnt );
 
-    /*qsort(tags,cnt,sizeof(uint32),tag_comp);*/ /* The glist will do this for us */
+    /*qsort(tags,cnt,sizeof(uint32_t),tag_comp);*/ /* The glist will do this for us */
 
     ti = xmalloc((cnt+2)*sizeof(GTextInfo *));
     for ( i=0; i<cnt; ++i ) {
@@ -461,7 +461,7 @@ static void MVSetFeatures(MetricsView *mv) {
 }
 
 static void MVSelectSubtable(MetricsView *mv, struct lookup_subtable *sub) {
-    int32 len; int i;
+    int32_t len; int i;
     GTextInfo **old = GGadgetGetList(mv->subtable_list,&len);
 
     for ( i=0; i<len && (old[i]->userdata!=sub || old[i]->line); ++i );
@@ -524,8 +524,8 @@ static void MVDeselectChar(MetricsView *mv, int i) {
     MVRedrawI(mv,i,0,0);
 }
 
-static void MVSelectSubtableForScript(MetricsView *mv,uint32 script) {
-    int32 len;
+static void MVSelectSubtableForScript(MetricsView *mv,uint32_t script) {
+    int32_t len;
     GTextInfo **ti = GGadgetGetList(mv->subtable_list,&len);
     struct lookup_subtable *sub;
     int i;
@@ -752,9 +752,9 @@ static void MVRemetric(MetricsView *mv) {
     SplineChar *anysc, *goodsc;
     int i, cnt, x, y, goodpos;
     const uint32_t *_script = _GGadgetGetTitle(mv->script);
-    uint32 script, lang, *feats;
+    uint32_t script, lang, *feats;
     char buf[20];
-    int32 len;
+    int32_t len;
     GTextInfo **ti;
     SplineChar *sc;
     BDFChar *bdfc;
@@ -801,7 +801,7 @@ static void MVRemetric(MetricsView *mv) {
     ti = GGadgetGetList(mv->features,&len);
     for ( i=cnt=0; i<len; ++i )
 	if ( ti[i]->selected ) ++cnt;
-    feats = xcalloc(cnt+1,sizeof(uint32));
+    feats = xcalloc(cnt+1,sizeof(uint32_t));
     for ( i=cnt=0; i<len; ++i )
 	if ( ti[i]->selected )
 	    feats[cnt++] = (intptr_t) ti[i]->userdata;
@@ -1384,7 +1384,7 @@ static void MVHScroll(MetricsView *mv,struct sbevent *sb) {
 
 static void MVVScroll(MetricsView *mv,struct sbevent *sb) {
     int newpos = mv->yoff;
-    int32 min, max, page;
+    int32_t min, max, page;
 
     GScrollBarGetBounds(mv->vsb,&min,&max,&page);
     switch( sb->type ) {
@@ -1747,7 +1747,7 @@ static int MV_TextChanged(GGadget *g, GEvent *e) {
 	MetricsView *mv = GGadgetGetUserData(g);
 	int pos = e->u.control.u.tf_changed.from_pulldown;
 	if ( pos!=-1 ) {
-	    int32 len;
+	    int32_t len;
 	    GTextInfo **ti = GGadgetGetList(g,&len);
 	    GTextInfo *cur = ti[pos];
 	    int type = (intptr_t) cur->userdata;
@@ -1800,14 +1800,14 @@ return( true );
 }
 
 void MV_FriendlyFeatures(GGadget *g, int pos) {
-    int32 len;
+    int32_t len;
     GTextInfo **ti = GGadgetGetList(g,&len);
 
     if ( pos<0 || pos>=len )
 	GGadgetEndPopup();
     else {
 	const uint32_t *pt = ti[pos]->text;
-	uint32 tag;
+	uint32_t tag;
 	int i;
 	tag = (pt[0]<<24) | (pt[1]<<16) | (pt[2]<<8) | pt[3];
 	LookupUIInit();
@@ -1823,7 +1823,7 @@ static int MV_SubtableChanged(GGadget *g, GEvent *e) {
 
     if ( e->type==et_controlevent && e->u.control.subtype == et_listselected ) {
 	MetricsView *mv = GGadgetGetUserData(g);
-	int32 len;
+	int32_t len;
 	GTextInfo **ti = GGadgetGetList(g,&len);
 	int i;
 	KernPair *kp;
@@ -3767,7 +3767,7 @@ static void MVChar(MetricsView *mv,GEvent *event) {
 	 event->u.chr.keysym == GK_Down || event->u.chr.keysym==GK_KP_Down ) {
 	int dir = ( event->u.chr.keysym == GK_Up || event->u.chr.keysym==GK_KP_Up ) ? -1 : 1;
 	if ( mv->word_index!=-1 ) {
-	    int32 len;
+	    int32_t len;
 	    GTextInfo **ti = GGadgetGetList(mv->text,&len);
 	    /* We subtract 3 because: There are two lines saying "load * list" */
 	    /*  and then a line with a rule on it which we don't want access to */
@@ -4345,7 +4345,7 @@ static void MVDrop(MetricsView *mv,GEvent *event) {
     int x,ex = event->u.drag_drop.x + mv->xoff;
     int y,ey = event->u.drag_drop.y + mv->yoff;
     int within, i, cnt, ch;
-    int32 len;
+    int32_t len;
     char *cnames, *start, *pt;
     uint32_t *newtext;
     const uint32_t *oldtext;
@@ -4569,7 +4569,7 @@ return( true );
 }
 
 GTextInfo *SLOfFont(SplineFont *sf) {
-    uint32 *scripttags, *langtags;
+    uint32_t *scripttags, *langtags;
     int s, l, i, k, cnt;
     extern GTextInfo scripts[], languages[];
     GTextInfo *ret = NULL;

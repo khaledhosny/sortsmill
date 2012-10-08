@@ -500,7 +500,7 @@ static void ttf_dumpcvar(struct alltabs *at, MMSet *mm) {
     int ptcnt, cnt, pcnt;
     int i,j,rj,big;
     int tuple_size;
-    uint32 start, end;
+    uint32_t start, end;
     uint16 *pts;
 
     deltas = CvtFindDeltas(mm,&ptcnt);
@@ -638,7 +638,7 @@ static void dumpdeltas(struct alltabs *at,int16 *deltas,int ptcnt) {
 
 static void ttf_dumpgvar(struct alltabs *at, MMSet *mm) {
     int i,j, last;
-    uint32 gcoordoff, glyphoffs, start, here, tupledataend, tupledatastart;
+    uint32_t gcoordoff, glyphoffs, start, here, tupledataend, tupledatastart;
     int16 **deltas;
     int ptcnt;
 
@@ -736,7 +736,7 @@ return;					/* No need for a variation table */
 	putshort(at->avar,0);
 }
 
-static uint32 AxisNameToTag(char *name) {
+static uint32_t AxisNameToTag(char *name) {
     char buf[4];
     int i;
 

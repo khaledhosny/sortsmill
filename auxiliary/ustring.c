@@ -637,7 +637,7 @@ u2utf8_strcpy (char *utf8buf, const uint32_t *ubuf)
         }
       else
         {
-          uint32 val = *ubuf - 0x10000;
+          uint32_t val = *ubuf - 0x10000;
           int u = ((val & 0xf0000) >> 16) + 1, z = (val & 0x0f000) >> 12, y =
             (val & 0x00fc0) >> 6, x = val & 0x0003f;
           *pt++ = 0xf0 | (u >> 2);
@@ -753,10 +753,10 @@ u2utf8_copyn (const uint32_t *ubuf, int len)
   return (utf8buf);
 }
 
-int32
+int32_t
 utf8_ildb (const char **_text)
 {
-  int32 val = -1;
+  int32_t val = -1;
   int ch;
   const uint8 *text = (const uint8 *) *_text;
   /* Increment and load character */
@@ -800,7 +800,7 @@ utf8_ildb (const char **_text)
 }
 
 char *
-utf8_idpb (char *utf8_text, uint32 ch)
+utf8_idpb (char *utf8_text, uint32_t ch)
 {
   /* Increment and deposit character */
   if (ch < 0 || ch >= 17 * 65536)
@@ -821,7 +821,7 @@ utf8_idpb (char *utf8_text, uint32 ch)
     }
   else
     {
-      uint32 val = ch - 0x10000;
+      uint32_t val = ch - 0x10000;
       int u = ((val & 0xf0000) >> 16) + 1, z = (val & 0x0f000) >> 12, y =
         (val & 0x00fc0) >> 6, x = val & 0x0003f;
       *utf8_text++ = 0xf0 | (u >> 2);

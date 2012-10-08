@@ -2468,7 +2468,7 @@ return( head );
 }
 
 void GListMoveSelected(GGadget *list,int offset) {
-    int32 len; int i,j;
+    int32_t len; int i,j;
     GTextInfo **old, **new;
 
     old = GGadgetGetList(list,&len);
@@ -2501,7 +2501,7 @@ void GListMoveSelected(GGadget *list,int offset) {
 }
 
 void GListDelSelected(GGadget *list) {
-    int32 len; int i,j;
+    int32_t len; int i,j;
     GTextInfo **old, **new;
 
     old = GGadgetGetList(list,&len);
@@ -2518,7 +2518,7 @@ void GListDelSelected(GGadget *list) {
 
 GTextInfo *GListChangeLine(GGadget *list,int pos, const uint32_t *line) {
     GTextInfo **old, **new;
-    int32 i,len;
+    int32_t i,len;
     
     old = GGadgetGetList(list,&len);
     new = xcalloc(len+1,sizeof(GTextInfo *));
@@ -2538,7 +2538,7 @@ return( new[pos]);
 
 GTextInfo *GListAppendLine(GGadget *list,const uint32_t *line,int select) {
     GTextInfo **old, **new;
-    int32 i,len;
+    int32_t i,len;
     
     old = GGadgetGetList(list,&len);
     new = xcalloc(len+2,sizeof(GTextInfo *));
@@ -2561,7 +2561,7 @@ return( new[i]);
 
 GTextInfo *GListChangeLine8(GGadget *list,int pos, const char *line) {
     GTextInfo **old, **new;
-    int32 i,len;
+    int32_t i,len;
     
     old = GGadgetGetList(list,&len);
     new = xcalloc(len+1,sizeof(GTextInfo *));
@@ -2581,7 +2581,7 @@ return( new[pos]);
 
 GTextInfo *GListAppendLine8(GGadget *list,const char *line,int select) {
     GTextInfo **old, **new;
-    int32 i,len;
+    int32_t i,len;
     
     old = GGadgetGetList(list,&len);
     new = xcalloc(len+2,sizeof(GTextInfo *));
@@ -3786,7 +3786,7 @@ static int SSNameValidate(struct gfi_data *d) {
 	continue;
 	    if ( strings[3*i  ].u.md_ival == strings[3*j  ].u.md_ival &&
 		    strings[3*i+1].u.md_ival == strings[3*j+1].u.md_ival ) {
-		uint32 tag = strings[3*i+1].u.md_ival;
+		uint32_t tag = strings[3*i+1].u.md_ival;
 		for ( k=0; mslanguages[k].text!=NULL &&
 			((intptr_t) mslanguages[k].userdata)!=strings[3*i].u.md_ival; ++k );
 		if ( mslanguages[k].text==NULL ) k=0;
@@ -3808,7 +3808,7 @@ static void StoreSSNames(struct gfi_data *d) {
     int rows;
     struct matrix_data *strings = GMatrixEditGet(edit, &rows);
     int i;
-    uint32 tag, lang;
+    uint32_t tag, lang;
     struct otffeatname *fn;
     struct otfname *on;
     SplineFont *sf = d->sf;
@@ -3891,7 +3891,7 @@ static void GFI_ApplyLookupChanges(struct gfi_data *gfi) {
     }
 }
 
-static void hexparse(GWindow gw, int cid, char *name, uint32 *data, int len, int *err) {
+static void hexparse(GWindow gw, int cid, char *name, uint32_t *data, int len, int *err) {
     int i;
     const uint32_t *ret;
     uint32_t *end;
@@ -4011,7 +4011,7 @@ static int GFI_OK(GGadget *g, GEvent *e) {
 	int vmetrics, namechange, guideorder2;
 	int xuidchanged = false, usexuid, useuniqueid;
 	GTextInfo *pfmfam, *ibmfam, *fstype, *nlitem;
-	int32 len;
+	int32_t len;
 	GTextInfo **ti;
 	int subs[4], super[4], strike[2];
 	struct otfname *fontstyle_name;
@@ -4029,7 +4029,7 @@ static int GFI_OK(GGadget *g, GEvent *e) {
 	struct matrix_data *markclasses = GMatrixEditGet(GWidgetGetControl(d->gw,CID_MarkClasses), &mc_rows);
 	struct matrix_data *marksets    = GMatrixEditGet(GWidgetGetControl(d->gw,CID_MarkSets), &ms_rows);
 	int was_ml = sf->multilayer, was_stroke = sf->strokedfont;
-	uint32 codepages[2], uranges[4];
+	uint32_t codepages[2], uranges[4];
 	int layer_cnt;
 	struct matrix_data *layers = GMatrixEditGet(GWidgetGetControl(d->gw,CID_Backgrounds), &layer_cnt);
 	int layer_flags;
@@ -5315,7 +5315,7 @@ return( true );
 }
 
 static int OS2_UnicodeChange(GGadget *g, GEvent *e) {
-    int32 flags[4];
+    int32_t flags[4];
     int len,i,bit,set;
 
     if ( e==NULL || (e->type==et_controlevent && e->u.control.subtype == et_textchanged )) {
@@ -5383,7 +5383,7 @@ return( true );
 }
 
 static int OS2_CodePageChange(GGadget *g, GEvent *e) {
-    int32 flags[2];
+    int32_t flags[2];
     int len,i,bit,set;
 
     if ( e==NULL || (e->type==et_controlevent && e->u.control.subtype == et_textchanged )) {
@@ -5663,7 +5663,7 @@ static int LookupsHScroll(GGadget *g,GEvent *event) {
     int isgpos = GGadgetGetCid(g)-CID_LookupHSB;
     struct lkdata *lk = &gfi->tables[isgpos];
     int newpos = lk->off_left;
-    int32 sb_min, sb_max, sb_pagesize;
+    int32_t sb_min, sb_max, sb_pagesize;
 
     if ( event->type!=et_controlevent || event->u.control.subtype != et_scrollbarchange )
 return( true );
@@ -5715,7 +5715,7 @@ static int LookupsVScroll(GGadget *g,GEvent *event) {
     int isgpos = GGadgetGetCid(g)-CID_LookupVSB;
     struct lkdata *lk = &gfi->tables[isgpos];
     int newpos = lk->off_top;
-    int32 sb_min, sb_max, sb_pagesize;
+    int32_t sb_min, sb_max, sb_pagesize;
 
     if ( event->type!=et_controlevent || event->u.control.subtype != et_scrollbarchange )
 return( true );
@@ -6449,7 +6449,7 @@ static int GFI_LookupImportLookup(GGadget *g, GEvent *e) {
 	while ( !done )
 	    GDrawProcessOneEvent(NULL);
 	if ( done==2 ) {
-	    int32 len;
+	    int32_t len;
 	    GTextInfo **ti = GGadgetGetList(gcd[1].ret,&len);
 	    OTLookup **list = xmalloc((len+1)*sizeof(OTLookup));
 	    struct lkdata *lk = &gfi->tables[isgpos];
@@ -6603,7 +6603,7 @@ static void LookupPopup(GWindow gw,OTLookup *otl,struct lookup_subtable *sub,
 			sl->script>>8, sl->script&0xff );
 		pos += strlen( popup_msg+pos );
 		for ( l=0; l<sl->lang_cnt; ++l ) {
-		    uint32 lang = l<MAX_LANG ? sl->langs[l] : sl->morelangs[l-MAX_LANG];
+		    uint32_t lang = l<MAX_LANG ? sl->langs[l] : sl->morelangs[l-MAX_LANG];
 		    snprintf(popup_msg+pos,sizeof(popup_msg)-pos,"%c%c%c%c,",
 			    lang>>24, lang>>16,
 			    lang>>8, lang&0xff );
@@ -6668,7 +6668,7 @@ static void AddDFLT(OTLookup *otl) {
 	    if ( sl->script == DEFAULT_SCRIPT )
 		hasDFLT = true;
 	    for ( l=0; l<sl->lang_cnt; ++l ) {
-		uint32 lang = l<MAX_LANG ? sl->langs[l] : sl->morelangs[l-MAX_LANG];
+		uint32_t lang = l<MAX_LANG ? sl->langs[l] : sl->morelangs[l-MAX_LANG];
 		if ( lang==DEFAULT_LANG ) {
 		    hasdflt = true;
 	    break;

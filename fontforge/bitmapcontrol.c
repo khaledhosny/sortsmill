@@ -65,7 +65,7 @@ static BDFFont *BDFNew(SplineFont *sf,int pixel_size, int depth) {
 return( new );
 }
 
-static void SFRemoveUnwantedBitmaps(SplineFont *sf,int32 *sizes) {
+static void SFRemoveUnwantedBitmaps(SplineFont *sf,int32_t *sizes) {
     BDFFont *bdf, *prev, *next;
     FontViewBase *fv;
     int i;
@@ -97,7 +97,7 @@ static void SFRemoveUnwantedBitmaps(SplineFont *sf,int32 *sizes) {
     }
 }
 
-static void SFFigureBitmaps(SplineFont *sf,int32 *sizes,int usefreetype,int rasterize,int layer) {
+static void SFFigureBitmaps(SplineFont *sf,int32_t *sizes,int usefreetype,int rasterize,int layer) {
     BDFFont *bdf;
     int i, first;
     void *freetypecontext = NULL;
@@ -140,7 +140,7 @@ return( true );
 return( false );
 }
 
-static void FVScaleBitmaps(FontViewBase *fv,int32 *sizes, int rasterize) {
+static void FVScaleBitmaps(FontViewBase *fv,int32_t *sizes, int rasterize) {
     BDFFont *bdf, *scale;
     int i, cnt=0;
 
@@ -170,7 +170,7 @@ static void FVScaleBitmaps(FontViewBase *fv,int32 *sizes, int rasterize) {
     SFRemoveUnwantedBitmaps(fv->sf,sizes);
 }
 
-static void ReplaceBDFC(SplineFont *sf,int32 *sizes,int gid,
+static void ReplaceBDFC(SplineFont *sf,int32_t *sizes,int gid,
 	void *freetypecontext, int usefreetype,int layer) {
     BDFFont *bdf;
     BDFChar *bdfc, temp;
@@ -209,7 +209,7 @@ return;
     }
 }
 
-static int FVRegenBitmaps(CreateBitmapData *bd,int32 *sizes,int usefreetype) {
+static int FVRegenBitmaps(CreateBitmapData *bd,int32_t *sizes,int usefreetype) {
     FontViewBase *fv = bd->fv, *selfv = bd->which==bd_all ? NULL : fv;
     SplineFont *sf = bd->sf, *subsf, *bdfsf = sf->cidmaster!=NULL ? sf->cidmaster : sf;
     int i,j;
@@ -279,7 +279,7 @@ return;
 }
 
 
-static int FVRemoveBitmaps(CreateBitmapData *bd,int32 *sizes) {
+static int FVRemoveBitmaps(CreateBitmapData *bd,int32_t *sizes) {
     FontViewBase *fv = bd->fv;
     SplineFont *sf = bd->sf, *bdfsf = sf->cidmaster!=NULL ? sf->cidmaster : sf;
     int i,j,pass;
@@ -314,7 +314,7 @@ static int FVRemoveBitmaps(CreateBitmapData *bd,int32 *sizes) {
 return( true );
 }
 
-void BitmapsDoIt(CreateBitmapData *bd,int32 *sizes,int usefreetype) {
+void BitmapsDoIt(CreateBitmapData *bd,int32_t *sizes,int usefreetype) {
 
     if ( bd->isavail==-1 )
 	FVRemoveBitmaps(bd,sizes);
@@ -344,7 +344,7 @@ return;
 }
 
 
-int BitmapControl(FontViewBase *fv,int32 *sizes,int isavail,int rasterize) {
+int BitmapControl(FontViewBase *fv,int32_t *sizes,int isavail,int rasterize) {
     CreateBitmapData bd;
 
     memset(&bd,0,sizeof(bd));

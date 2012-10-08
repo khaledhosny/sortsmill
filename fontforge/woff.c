@@ -43,13 +43,13 @@ return( NULL );
 }
 
 int _WriteWOFFFont(FILE *woff,SplineFont *sf, enum fontformat format,
-	int32 *bsizes, enum bitmapformat bf,int flags,EncMap *enc,int layer) {
+	int32_t *bsizes, enum bitmapformat bf,int flags,EncMap *enc,int layer) {
     ff_post_error(_("WOFF not supported"), _("This version of fontforge cannot handle WOFF files. You need to recompile it with libpng and zlib") );
 return( 1 );
 }
 
 int WriteWOFFFont(char *fontname,SplineFont *sf, enum fontformat format,
-	int32 *bsizes, enum bitmapformat bf,int flags,EncMap *enc,int layer) {
+	int32_t *bsizes, enum bitmapformat bf,int flags,EncMap *enc,int layer) {
     ff_post_error(_("WOFF not supported"), _("This version of fontforge cannot handle WOFF files. You need to recompile it with libpng and zlib") );
 return( 1 );
 }
@@ -358,7 +358,7 @@ return( sf );
 }	
 
 int _WriteWOFFFont(FILE *woff,SplineFont *sf, enum fontformat format,
-	int32 *bsizes, enum bitmapformat bf,int flags,EncMap *enc,int layer) {
+	int32_t *bsizes, enum bitmapformat bf,int flags,EncMap *enc,int layer) {
     int ret;
     FILE *sfnt;
     int major=sf->woffMajor, minor=sf->woffMinor;
@@ -491,7 +491,7 @@ return( true );		/* No errors */
 }
 
 int WriteWOFFFont(char *fontname,SplineFont *sf, enum fontformat format,
-	int32 *bsizes, enum bitmapformat bf,int flags,EncMap *enc,int layer) {
+	int32_t *bsizes, enum bitmapformat bf,int flags,EncMap *enc,int layer) {
     FILE *woff;
     int ret;
 

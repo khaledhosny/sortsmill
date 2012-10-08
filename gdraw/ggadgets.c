@@ -971,7 +971,7 @@ return( false );
 return( true );
 }
 
-void _ggadget_underlineMnemonic(GWindow gw,int32 x,int32 y,uint32_t *label,
+void _ggadget_underlineMnemonic(GWindow gw,int32_t x,int32_t y,uint32_t *label,
 	uint32_t mnemonic, Color fg, int maxy) {
     int point = GDrawPointsToPixels(gw,1);
     int width;
@@ -999,14 +999,14 @@ return;
     GDrawSetLineWidth(gw,0);
 }
 
-void _ggadget_move(GGadget *g, int32 x, int32 y ) {
+void _ggadget_move(GGadget *g, int32_t x, int32_t y ) {
     g->inner.x = x+(g->inner.x-g->r.x);
     g->inner.y = y+(g->inner.y-g->r.y);
     g->r.x = x;
     g->r.y = y;
 }
 
-void _ggadget_resize(GGadget *g, int32 width, int32 height ) {
+void _ggadget_resize(GGadget *g, int32_t width, int32_t height ) {
     g->inner.width = width-(g->r.width-g->inner.width);
     g->inner.height = height-(g->r.height-g->inner.height);
     g->r.width = width;
@@ -1074,11 +1074,11 @@ void GGadgetRedraw(GGadget *g) {
     (g->funcs->redraw)(g);
 }
 
-void GGadgetMove(GGadget *g,int32 x, int32 y ) {
+void GGadgetMove(GGadget *g,int32_t x, int32_t y ) {
     (g->funcs->move)(g,x,y);
 }
 
-void GGadgetResize(GGadget *g,int32 width, int32 height ) {
+void GGadgetResize(GGadget *g,int32_t width, int32_t height ) {
     (g->funcs->resize)(g,width,height);
 }
 
@@ -1223,12 +1223,12 @@ void GGadgetClearList(GGadget *g) {
 	(g->funcs->clear_list)(g);
 }
 
-void GGadgetSetList(GGadget *g, GTextInfo **ti, int32 copyit) {
+void GGadgetSetList(GGadget *g, GTextInfo **ti, int32_t copyit) {
     if ( g->funcs->set_list!=NULL )
 	(g->funcs->set_list)(g,ti,copyit);
 }
 
-GTextInfo **GGadgetGetList(GGadget *g,int32 *len) {
+GTextInfo **GGadgetGetList(GGadget *g,int32_t *len) {
     if ( g->funcs->get_list!=NULL )
 return((g->funcs->get_list)(g,len));
 
@@ -1236,7 +1236,7 @@ return((g->funcs->get_list)(g,len));
 return( NULL );
 }
 
-GTextInfo *GGadgetGetListItem(GGadget *g,int32 pos) {
+GTextInfo *GGadgetGetListItem(GGadget *g,int32_t pos) {
     if ( g->funcs->get_list_item!=NULL )
 return((g->funcs->get_list_item)(g,pos));
 
@@ -1252,35 +1252,35 @@ return((g->funcs->get_list_item)(g,pos));
 return( NULL );
 }
 
-void GGadgetSelectListItem(GGadget *g,int32 pos,int32 sel) {
+void GGadgetSelectListItem(GGadget *g,int32_t pos,int32_t sel) {
     if ( g->funcs->select_list_item!=NULL )
 	(g->funcs->select_list_item)(g,pos,sel);
 }
 
-void GGadgetSelectOneListItem(GGadget *g,int32 pos) {
+void GGadgetSelectOneListItem(GGadget *g,int32_t pos) {
     if ( g->funcs->select_one_list_item!=NULL )
 	(g->funcs->select_one_list_item)(g,pos);
 }
 
-int32 GGadgetIsListItemSelected(GGadget *g,int32 pos) {
+int32_t GGadgetIsListItemSelected(GGadget *g,int32_t pos) {
     if ( g->funcs->is_list_item_selected!=NULL )
 return((g->funcs->is_list_item_selected)(g,pos));
 
 return( 0 );
 }
 
-int32 GGadgetGetFirstListSelectedItem(GGadget *g) {
+int32_t GGadgetGetFirstListSelectedItem(GGadget *g) {
     if ( g->funcs->get_first_selection!=NULL )
 return((g->funcs->get_first_selection)(g));
 return( -1 );
 }
 
-void GGadgetScrollListToPos(GGadget *g,int32 pos) {
+void GGadgetScrollListToPos(GGadget *g,int32_t pos) {
     if ( g->funcs->scroll_list_to_pos!=NULL )
 	(g->funcs->scroll_list_to_pos)(g,pos);
 }
 
-void GGadgetScrollListToText(GGadget *g,const uint32_t *lab,int32 sel) {
+void GGadgetScrollListToText(GGadget *g,const uint32_t *lab,int32_t sel) {
     if ( g->funcs->scroll_list_to_text!=NULL )
 	(g->funcs->scroll_list_to_text)(g,lab,sel);
 }

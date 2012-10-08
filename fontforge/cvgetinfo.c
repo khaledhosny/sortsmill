@@ -1677,7 +1677,7 @@ return;
 
 void PI_ShowHints(SplineChar *sc, GGadget *list, int set) {
     StemInfo *h;
-    int32 i, len;
+    int32_t i, len;
 
     if ( !set ) {
 	for ( h = sc->hstem; h!=NULL; h=h->next )
@@ -1775,7 +1775,7 @@ static void PI_FigurePrev(GIData *ci) {
 }
 
 static void PI_FigureHintMask(GIData *ci) {
-    int32 i, len;
+    int32_t i, len;
     GTextInfo **ti = GGadgetGetList(GWidgetGetControl(ci->gw,CID_HintMask),&len);
 
     for ( i=0; i<len; ++i )
@@ -2006,7 +2006,7 @@ static void PIShowHide(GIData *ci) {
 static void PIChangePoint(GIData *ci) {
     int aspect = GTabSetGetSel(GWidgetGetControl(ci->gw,CID_TabSet));
     GGadget *list = GWidgetGetControl(ci->gw,CID_HintMask);
-    int32 i, len;
+    int32_t i, len;
     HintMask *hm;
     SplinePoint *sp;
     SplineSet *spl;

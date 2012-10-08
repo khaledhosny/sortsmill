@@ -1,3 +1,5 @@
+#include <config.h>
+
 /* Copyright (C) 2000-2012 by George Williams */
 /*
  * Redistribution and use in source and binary forms, with or without
@@ -25,11 +27,9 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <config.h>
-
 #include "gimage.h"
 
-GImage *GImageCreate(enum image_type type, int32 width, int32 height) {
+GImage *GImageCreate(enum image_type type, int32_t width, int32_t height) {
     GImage *gi;
     struct _GImage *base;
 
@@ -64,7 +64,7 @@ return( gi );
 }
 
 
-GImage *_GImage_Create(enum image_type type, int32 width, int32 height) {
+GImage *_GImage_Create(enum image_type type, int32_t width, int32_t height) {
     GImage *gi;
     struct _GImage *base;
 
@@ -259,7 +259,7 @@ return;
 void GImageBlendOver(GImage *dest,GImage *src,GRect *from,int x, int y) {
     struct _GImage *sbase, *dbase;
     int i, j, a, r, g, b;
-    uint32 *dpt, *spt;
+    uint32_t *dpt, *spt;
 
     dbase = dest->u.image;
     sbase =  src->u.image;
@@ -275,8 +275,8 @@ return;
     }
 
     for ( i=0; i<from->height; ++i ) {
-	dpt = (uint32 *) (dbase->data + (i+y)*dbase->bytes_per_line + x*sizeof(uint32));
-	spt = (uint32 *) (sbase->data + (i+from->y)*sbase->bytes_per_line + from->x*sizeof(uint32));
+	dpt = (uint32_t *) (dbase->data + (i+y)*dbase->bytes_per_line + x*sizeof(uint32_t));
+	spt = (uint32_t *) (sbase->data + (i+from->y)*sbase->bytes_per_line + from->x*sizeof(uint32_t));
 	
 	for (j=0; j<from->width; j++) {
             a = COLOR_ALPHA(*spt);
@@ -317,17 +317,17 @@ static Color _GImageGetPixelRGBA(struct _GImage *base,int x, int y) {
     Color val;
 
     if ( base->image_type==it_rgba ) {
-	val = ((uint32*) (base->data + y*base->bytes_per_line))[x] ;
+	val = ((uint32_t*) (base->data + y*base->bytes_per_line))[x] ;
 return( val==base->trans?(val&0xffffff):val );
     } else if ( base->image_type==it_true ) {
-	val = ((uint32*) (base->data + y*base->bytes_per_line))[x] ;
+	val = ((uint32_t*) (base->data + y*base->bytes_per_line))[x] ;
 return( val==base->trans?(val&0xffffff):(val|0xff000000) );
     } else if ( base->image_type==it_index ) {
-	int pixel = ((uint8*) (base->data + y*base->bytes_per_line))[x];
+	int pixel = ((uint8_t*) (base->data + y*base->bytes_per_line))[x];
 	val = base->clut->clut[pixel];
 return( pixel==base->trans?(val&0xffffff):(val|0xff000000) );
     } else {
-	int pixel = (((uint8*) (base->data + y*base->bytes_per_line))[x>>3]&(1<<(7-(x&7))) )?1:0;
+	int pixel = (((uint8_t*) (base->data + y*base->bytes_per_line))[x>>3]&(1<<(7-(x&7))) )?1:0;
 	if ( base->clut==NULL ) {
 	    if ( pixel )
 		val = COLOR_CREATE(0xff,0xff,0xff);
@@ -349,10 +349,10 @@ Color _GImageGetPixelColor(struct _GImage *base,int x, int y) {
     Color val;
 
     if ( base->image_type==it_rgba ) {
-	val = ((uint32*) (base->data + y*base->bytes_per_line))[x] ;
+	val = ((uint32_t*) (base->data + y*base->bytes_per_line))[x] ;
 return( val==base->trans?~val:val );
     } else if ( base->image_type==it_true ) {
-	val = ((uint32*) (base->data + y*base->bytes_per_line))[x] ;
+	val = ((uint32_t*) (base->data + y*base->bytes_per_line))[x] ;
 return( val==base->trans?~val:val );
     } else if ( base->image_type==it_index ) {
 	int pixel = ((uint8*) (base->data + y*base->bytes_per_line))[x];

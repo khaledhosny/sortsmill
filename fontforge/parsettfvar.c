@@ -525,7 +525,7 @@ return;
 static void parsegvar(struct ttfinfo *info, FILE *ttf) {
     /* I'm only going to support a subset of the gvar. Only the global tuples */
     int axiscount, globaltc, gvarflags, gc, i,j,g;
-    uint32 tupoff, dataoff, *gvars;
+    uint32_t tupoff, dataoff, *gvars;
     struct variations *v = info->variations;
     int warned=false;
 
@@ -559,7 +559,7 @@ return;
 return;
     }
 
-    gvars = xmalloc((gc+1)*sizeof(uint32));
+    gvars = xmalloc((gc+1)*sizeof(uint32_t));
     if ( gvarflags&1 ) {	/* 32 bit data */
 	for ( i=0; i<=gc; ++i )
 	    gvars[i] = getlong(ttf)+dataoff;
@@ -580,13 +580,13 @@ return;
 
     for ( g=0; g<gc; ++g ) if ( gvars[g]!=gvars[g+1] ) {
 	int tc;
-	uint32 datoff;
+	uint32_t datoff;
 	int *sharedpoints=NULL;
 	fseek(ttf,gvars[g],SEEK_SET);
 	tc = getushort(ttf);
 	datoff = gvars[g]+getushort(ttf);
 	if ( tc&0x8000 ) {
-	    uint32 here = ftell(ttf);
+	    uint32_t here = ftell(ttf);
 	    fseek(ttf,datoff,SEEK_SET);
 	    sharedpoints = readpackedpoints(ttf);
 	    datoff = ftell(ttf);
@@ -607,7 +607,7 @@ return;
 		    fseek(ttf,4*axiscount,SEEK_CUR);
 	    } else {
 		int *localpoints=NULL;
-		uint32 here = ftell(ttf);
+		uint32_t here = ftell(ttf);
 		fseek(ttf,datoff,SEEK_SET);
 		if ( tupleIndex&0x2000 )
 		    localpoints = readpackedpoints(ttf);
@@ -681,7 +681,7 @@ static void VaryCvts(struct ttfinfo *info,int tupleIndex, int *points, FILE *ttf
 static void parsecvar(struct ttfinfo *info, FILE *ttf) {
     struct ttf_table *cvt;
     int tuplecount;
-    uint32 offset;
+    uint32_t offset;
     int *sharedpoints=NULL;
     int i;
     int warned = false;
@@ -703,7 +703,7 @@ return;
     /*  but John Jenkins tells me that shared points don't apply to cvar */
     /*  Might as well parse it just in case */
     if ( tuplecount&0x8000 ) {
-	uint32 here = ftell(ttf);
+	uint32_t here = ftell(ttf);
 	fseek(ttf,offset,SEEK_SET);
 	sharedpoints = readpackedpoints(ttf);
 	offset = ftell(ttf);
@@ -725,7 +725,7 @@ return;
 		fseek(ttf,4*info->variations->axis_count,SEEK_CUR);
 	} else {
 	    int *localpoints=NULL;
-	    uint32 here;
+	    uint32_t here;
 	    int j,k,ti;
 	    ti = tupleIndex&0xfff;
 	    if ( tupleIndex&0x8000 ) {

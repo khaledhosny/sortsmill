@@ -200,9 +200,9 @@ VISIBLE struct opentype_feature_friendlynames friendlies[] = {
 };
 
 static int uint32_cmp(const void *_ui1, const void *_ui2) {
-    if ( *(uint32 *) _ui1 > *(uint32 *)_ui2 )
+    if ( *(uint32_t *) _ui1 > *(uint32_t *)_ui2 )
 return( 1 );
-    if ( *(uint32 *) _ui1 < *(uint32 *)_ui2 )
+    if ( *(uint32_t *) _ui1 < *(uint32_t *)_ui2 )
 return( -1 );
 
 return( 0 );
@@ -211,20 +211,20 @@ return( 0 );
 static int lang_cmp(const void *_ui1, const void *_ui2) {
     /* The default language is magic, and should come first in the list even */
     /*  if that is not true alphabetical order */
-    if ( *(uint32 *) _ui1 == DEFAULT_LANG )
+    if ( *(uint32_t *) _ui1 == DEFAULT_LANG )
 return( -1 );
-    if ( *(uint32 *) _ui2 == DEFAULT_LANG )
+    if ( *(uint32_t *) _ui2 == DEFAULT_LANG )
 return( 1 );
 
-    if ( *(uint32 *) _ui1 > *(uint32 *)_ui2 )
+    if ( *(uint32_t *) _ui1 > *(uint32_t *)_ui2 )
 return( 1 );
-    if ( *(uint32 *) _ui1 < *(uint32 *)_ui2 )
+    if ( *(uint32_t *) _ui1 < *(uint32_t *)_ui2 )
 return( -1 );
 
 return( 0 );
 }
 
-FeatureScriptLangList *FindFeatureTagInFeatureScriptList(uint32 tag, FeatureScriptLangList *fl) {
+FeatureScriptLangList *FindFeatureTagInFeatureScriptList(uint32_t tag, FeatureScriptLangList *fl) {
 
     while ( fl!=NULL ) {
 	if ( fl->featuretag==tag )
@@ -234,7 +234,7 @@ return( fl );
 return( NULL );
 }
 
-int FeatureTagInFeatureScriptList(uint32 tag, FeatureScriptLangList *fl) {
+int FeatureTagInFeatureScriptList(uint32_t tag, FeatureScriptLangList *fl) {
 
     while ( fl!=NULL ) {
 	if ( fl->featuretag==tag )
@@ -244,7 +244,7 @@ return( true );
 return( false );
 }
 
-int ScriptInFeatureScriptList(uint32 script, FeatureScriptLangList *fl) {
+int ScriptInFeatureScriptList(uint32_t script, FeatureScriptLangList *fl) {
     struct scriptlanglist *sl;
 
     if ( fl==NULL )		/* No features bound to lookup? (nested?) don't restrict by script */
@@ -260,7 +260,7 @@ return( true );
 return( false );
 }
 
-int FeatureScriptTagInFeatureScriptList(uint32 feature, uint32 script, FeatureScriptLangList *fl) {
+int FeatureScriptTagInFeatureScriptList(uint32_t feature, uint32_t script, FeatureScriptLangList *fl) {
     struct scriptlanglist *sl;
 
     while ( fl!=NULL ) {
@@ -279,7 +279,7 @@ int DefaultLangTagInOneScriptList(struct scriptlanglist *sl) {
     int l;
 
     for ( l=0; l<sl->lang_cnt; ++l ) {
-	uint32 lang = l<MAX_LANG ? sl->langs[l] : sl->morelangs[l-MAX_LANG];
+	uint32_t lang = l<MAX_LANG ? sl->langs[l] : sl->morelangs[l-MAX_LANG];
 	if ( lang==DEFAULT_LANG )
 return( true );
     }
@@ -298,7 +298,7 @@ return( sl );
 return( NULL );
 }
 
-uint32 *SFScriptsInLookups(SplineFont *sf,int gpos) {
+uint32_t *SFScriptsInLookups(SplineFont *sf,int gpos) {
     /* Presumes that either SFFindUnusedLookups or SFFindClearUnusedLookupBits */
     /*  has been called first */
     /* Since MS will sometimes ignore a script if it isn't found in both */
@@ -334,7 +334,7 @@ better make sure that both tables have the same script set.
 a GPOS, but he says the GPOS won't work without a GSUB.)
 */
     int cnt=0, tot=0, i;
-    uint32 *scripts = NULL;
+    uint32_t *scripts = NULL;
     OTLookup *test;
     FeatureScriptLangList *fl;
     struct scriptlanglist *sl;
@@ -355,7 +355,7 @@ a GPOS, but he says the GPOS won't work without a GSUB.)
 		    }
 		    if ( i==cnt ) {
 			if ( cnt>=tot )
-			    scripts = xrealloc(scripts,(tot+=10)*sizeof(uint32));
+			    scripts = xrealloc(scripts,(tot+=10)*sizeof(uint32_t));
 			scripts[cnt++] = sl->script;
 		    }
 		}
@@ -367,20 +367,20 @@ a GPOS, but he says the GPOS won't work without a GSUB.)
 return( NULL );
 
     /* We want our scripts in alphabetic order */
-    qsort(scripts,cnt,sizeof(uint32),uint32_cmp);
+    qsort(scripts,cnt,sizeof(uint32_t),uint32_cmp);
     /* add a 0 entry to mark the end of the list */
     if ( cnt>=tot )
-	scripts = xrealloc(scripts,(tot+1)*sizeof(uint32));
+	scripts = xrealloc(scripts,(tot+1)*sizeof(uint32_t));
     scripts[cnt] = 0;
 return( scripts );
 }
 
-uint32 *SFLangsInScript(SplineFont *sf,int gpos,uint32 script) {
+uint32_t *SFLangsInScript(SplineFont *sf,int gpos,uint32_t script) {
     /* However, the language lists (I think) are distinct */
     /* But giving a value of -1 for gpos will give us the set of languages in */
     /*  both tables (for this script) */
     int cnt=0, tot=0, i, g, l;
-    uint32 *langs = NULL;
+    uint32_t *langs = NULL;
     OTLookup *test;
     FeatureScriptLangList *fl;
     struct scriptlanglist *sl;
@@ -406,7 +406,7 @@ uint32 *SFLangsInScript(SplineFont *sf,int gpos,uint32 script) {
 			    }
 			    if ( i==cnt ) {
 				if ( cnt>=tot )
-				    langs = xrealloc(langs,(tot+=10)*sizeof(uint32));
+				    langs = xrealloc(langs,(tot+=10)*sizeof(uint32_t));
 				langs[cnt++] = lang;
 			    }
 			}
@@ -424,23 +424,23 @@ uint32 *SFLangsInScript(SplineFont *sf,int gpos,uint32 script) {
 	/*  and hence no languages. It seems that Uniscribe doesn't like */
 	/*  that either. So give each such script a dummy default language */
 	/*  entry. This is what VOLT does */
-	langs = xcalloc(2,sizeof(uint32));
+	langs = xcalloc(2,sizeof(uint32_t));
 	langs[0] = DEFAULT_LANG;
 return( langs );
     }
 
     /* We want our languages in alphabetic order */
-    qsort(langs,cnt,sizeof(uint32),lang_cmp);
+    qsort(langs,cnt,sizeof(uint32_t),lang_cmp);
     /* add a 0 entry to mark the end of the list */
     if ( cnt>=tot )
-	langs = xrealloc(langs,(tot+1)*sizeof(uint32));
+	langs = xrealloc(langs,(tot+1)*sizeof(uint32_t));
     langs[cnt] = 0;
 return( langs );
 }
 
-uint32 *SFFeaturesInScriptLang(SplineFont *sf,int gpos,uint32 script,uint32 lang) {
+uint32_t *SFFeaturesInScriptLang(SplineFont *sf,int gpos,uint32_t script,uint32_t lang) {
     int cnt=0, tot=0, i, l, isg;
-    uint32 *features = NULL;
+    uint32_t *features = NULL;
     OTLookup *test;
     FeatureScriptLangList *fl;
     struct scriptlanglist *sl;
@@ -463,7 +463,7 @@ uint32 *SFFeaturesInScriptLang(SplineFont *sf,int gpos,uint32 script,uint32 lang
 		    }
 		    if ( i==cnt ) {
 			if ( cnt>=tot )
-			    features = xrealloc(features,(tot+=10)*sizeof(uint32));
+			    features = xrealloc(features,(tot+=10)*sizeof(uint32_t));
 			features[cnt++] = fl->featuretag;
 		    }
 		} else for ( sl=fl->scripts ; sl!=NULL; sl=sl->next ) {
@@ -489,7 +489,7 @@ uint32 *SFFeaturesInScriptLang(SplineFont *sf,int gpos,uint32 script,uint32 lang
 			    }
 			    if ( i==cnt ) {
 				if ( cnt>=tot )
-				    features = xrealloc(features,(tot+=10)*sizeof(uint32));
+				    features = xrealloc(features,(tot+=10)*sizeof(uint32_t));
 				features[cnt++] = fl->featuretag;
 			    }
 			}
@@ -506,26 +506,26 @@ uint32 *SFFeaturesInScriptLang(SplineFont *sf,int gpos,uint32 script,uint32 lang
 	/*  gets a 'size' feature which contains no lookups but feature */
 	/*  params */
 	if ( cnt>=tot )
-	    features = xrealloc(features,(tot+=2)*sizeof(uint32));
+	    features = xrealloc(features,(tot+=2)*sizeof(uint32_t));
 	features[cnt++] = CHR('s','i','z','e');
     }
 
     if ( cnt==0 )
-return( xcalloc(1,sizeof(uint32)) );
+return( xcalloc(1,sizeof(uint32_t)) );
 
     /* We don't care if our features are in alphabetical order here */
     /*  all that matters is whether the complete list of features is */
     /*  ordering here would be irrelevant */
-    /* qsort(features,cnt,sizeof(uint32),uint32_cmp); */
+    /* qsort(features,cnt,sizeof(uint32_t),uint32_cmp); */
 
     /* add a 0 entry to mark the end of the list */
     if ( cnt>=tot )
-	features = xrealloc(features,(tot+1)*sizeof(uint32));
+	features = xrealloc(features,(tot+1)*sizeof(uint32_t));
     features[cnt] = 0;
 return( features );
 }
 
-OTLookup **SFLookupsInScriptLangFeature(SplineFont *sf,int gpos,uint32 script,uint32 lang, uint32 feature) {
+OTLookup **SFLookupsInScriptLangFeature(SplineFont *sf,int gpos,uint32_t script,uint32_t lang, uint32_t feature) {
     int cnt=0, tot=0, l;
     OTLookup **lookups = NULL;
     OTLookup *test;
@@ -1224,7 +1224,7 @@ return( otl );
 return( NULL );
 }
 
-void FListAppendScriptLang(FeatureScriptLangList *fl,uint32 script_tag,uint32 lang_tag) {
+void FListAppendScriptLang(FeatureScriptLangList *fl,uint32_t script_tag,uint32_t lang_tag) {
     struct scriptlanglist *sl;
     int l;
 
@@ -1245,7 +1245,7 @@ void FListAppendScriptLang(FeatureScriptLangList *fl,uint32 script_tag,uint32 la
 	    sl->langs[l] = lang_tag;
 	else {
 	    if ( l%MAX_LANG == 0 )
-		sl->morelangs = xrealloc(sl->morelangs,l*sizeof(uint32));
+		sl->morelangs = xrealloc(sl->morelangs,l*sizeof(uint32_t));
 		/* We've just allocated MAX_LANG-1 more than we need */
 		/*  so we don't do quite some many allocations */
 	    sl->morelangs[l-MAX_LANG] = lang_tag;
@@ -1254,7 +1254,7 @@ void FListAppendScriptLang(FeatureScriptLangList *fl,uint32 script_tag,uint32 la
     }
 }
 
-void FListsAppendScriptLang(FeatureScriptLangList *fl,uint32 script_tag,uint32 lang_tag) {
+void FListsAppendScriptLang(FeatureScriptLangList *fl,uint32_t script_tag,uint32_t lang_tag) {
     while ( fl!=NULL ) {
 	FListAppendScriptLang(fl,script_tag,lang_tag);
 	fl=fl->next;
@@ -1262,7 +1262,7 @@ void FListsAppendScriptLang(FeatureScriptLangList *fl,uint32 script_tag,uint32 l
 }
 
 char *SuffixFromTags(FeatureScriptLangList *fl) {
-    static struct { uint32 tag; char *suffix; } tags2suffix[] = {
+    static struct { uint32_t tag; char *suffix; } tags2suffix[] = {
         { CHR('v','r','t','2'), "vert" },	/* Will check for vrt2 later */
         { CHR('o','n','u','m'), "oldstyle" },
         { CHR('s','u','p','s'), "superior" },
@@ -1300,7 +1300,7 @@ char *lookup_type_names[2][10] = {
 /* This is a non-ui based copy of a similar list in lookupui.c */
 static struct {
     char *text;
-    uint32 tag;
+    uint32_t tag;
 } localscripts[] = {
 /* GT: See the long comment at "Property|New" */
 /* GT: The msgstr should contain a translation of "Arabic", ignore "Script|" */
@@ -1448,7 +1448,7 @@ return;
 	friendlies[i].friendlyname = S_(friendlies[i].friendlyname);
 }
 
-char *TagFullName(SplineFont *sf,uint32 tag, int ismac, int onlyifknown) {
+char *TagFullName(SplineFont *sf,uint32_t tag, int ismac, int onlyifknown) {
     char ubuf[200], *end = ubuf+sizeof(ubuf), *setname;
     int k;
 
@@ -1541,7 +1541,7 @@ void NameOTLookup(OTLookup *otl,SplineFont *sf) {
 	    char buf[8];
 	    int j;
 	    struct scriptlanglist *sl, *found, *found2;
-	    uint32 script_tag = fl->scripts->script;
+	    uint32_t script_tag = fl->scripts->script;
 	    found = found2 = NULL;
 	    for ( sl = fl->scripts; sl!=NULL; sl=sl->next ) {
 		if ( sl->script == DEFAULT_SCRIPT )
@@ -1636,7 +1636,7 @@ void NameOTLookup(OTLookup *otl,SplineFont *sf) {
 
 static void LangOrder(struct scriptlanglist *sl) {
     int i,j;
-    uint32 lang, lang2;
+    uint32_t lang, lang2;
 
     for ( i=0; i<sl->lang_cnt; ++i ) {
 	lang = i<MAX_LANG ? sl->langs[i] : sl->morelangs[i-MAX_LANG];
@@ -1721,8 +1721,8 @@ struct scriptlanglist *SLCopy(struct scriptlanglist *sl) {
     newsl->next = NULL;
 
     if ( sl->lang_cnt>MAX_LANG ) {
-	newsl->morelangs = xmalloc((newsl->lang_cnt-MAX_LANG)*sizeof(uint32));
-	memcpy(newsl->morelangs,sl->morelangs,(newsl->lang_cnt-MAX_LANG)*sizeof(uint32));
+	newsl->morelangs = xmalloc((newsl->lang_cnt-MAX_LANG)*sizeof(uint32_t));
+	memcpy(newsl->morelangs,sl->morelangs,(newsl->lang_cnt-MAX_LANG)*sizeof(uint32_t));
     }
 return( newsl );
 }
@@ -1757,7 +1757,7 @@ return( newfl );
     
 static void LangMerge(struct scriptlanglist *into, struct scriptlanglist *from) {
     int i,j;
-    uint32 flang, tlang;
+    uint32_t flang, tlang;
 
     for ( i=0 ; i<from->lang_cnt; ++i ) {
 	flang = i<MAX_LANG ? from->langs[i] : from->morelangs[i-MAX_LANG];
@@ -1770,7 +1770,7 @@ static void LangMerge(struct scriptlanglist *into, struct scriptlanglist *from) 
 	    if ( into->lang_cnt<MAX_LANG )
 		into->langs[into->lang_cnt++] = flang;
 	    else {
-		into->morelangs = xrealloc(into->morelangs,(into->lang_cnt+1-MAX_LANG)*sizeof(uint32));
+		into->morelangs = xrealloc(into->morelangs,(into->lang_cnt+1-MAX_LANG)*sizeof(uint32_t));
 		into->morelangs[into->lang_cnt++-MAX_LANG] = flang;
 	    }
 	}
@@ -2265,7 +2265,7 @@ static void SF_AddPSTKern(struct sfmergecontext *mc,struct lookup_subtable *from
     } while ( k<mc->sf_from->subfontcnt );
 }
 
-int _FeatureOrderId( int isgpos,uint32 tag ) {
+int _FeatureOrderId( int isgpos,uint32_t tag ) {
     /* This is the order in which features should be executed */
     
     if ( !isgpos ) switch ( tag ) {
@@ -2583,7 +2583,7 @@ struct lookup_data {
     struct opentype_str *str;
     int cnt, max;
 
-    uint32 script;
+    uint32_t script;
     SplineFont *sf;
 
     struct lookup_subtable *lig_owner;
@@ -2594,7 +2594,7 @@ struct lookup_data {
     double scale;
 };
 
-static int ApplyLookupAtPos(uint32 tag, OTLookup *otl,struct lookup_data *data,int pos);
+static int ApplyLookupAtPos(uint32_t tag, OTLookup *otl,struct lookup_data *data,int pos);
 
 static int GlyphNameInClass(char *name,char *class ) {
     char *pt;
@@ -2792,7 +2792,7 @@ return( 0 );
 return( cnt );
 }
 
-static void ApplyAppleStateMachine(uint32 tag, OTLookup *otl,struct lookup_data *data) {
+static void ApplyAppleStateMachine(uint32_t tag, OTLookup *otl,struct lookup_data *data) {
     struct lookup_subtable *sub;
     int state, class, pos, mark_pos, markend_pos, i;
     ASM *sm;
@@ -3510,9 +3510,9 @@ return( 0 );		/* No match */
 return( pos+1 );
 }
 
-static int ConditionalTagOk(uint32 tag, OTLookup *otl,struct lookup_data *data,int pos) {
+static int ConditionalTagOk(uint32_t tag, OTLookup *otl,struct lookup_data *data,int pos) {
     int npos, bpos;
-    uint32 script;
+    uint32_t script;
     int before_in_script, after_in_script;
 
     if ( tag==CHR('i','n','i','t') || tag==CHR('i','s','o','l') ||
@@ -3535,7 +3535,7 @@ return( before_in_script && after_in_script );
 return( true );
 }
 
-static int ApplyLookupAtPos(uint32 tag, OTLookup *otl,struct lookup_data *data,int pos) {
+static int ApplyLookupAtPos(uint32_t tag, OTLookup *otl,struct lookup_data *data,int pos) {
     struct lookup_subtable *sub;
     int newpos;
     /* Need two passes for pair kerning lookups. At the second pass we accept */
@@ -3608,7 +3608,7 @@ return( 0 );
 return( 0 );
 }
 
-static void ApplyLookup(uint32 tag, OTLookup *otl,struct lookup_data *data) {
+static void ApplyLookup(uint32_t tag, OTLookup *otl,struct lookup_data *data) {
     int pos, npos;
     int lt = otl->lookup_type;
 
@@ -3626,7 +3626,7 @@ static void ApplyLookup(uint32 tag, OTLookup *otl,struct lookup_data *data) {
     }
 }
 
-static uint32 FSLLMatches(FeatureScriptLangList *fl,uint32 *flist,uint32 script,uint32 lang) {
+static uint32_t FSLLMatches(FeatureScriptLangList *fl,uint32_t *flist,uint32_t script,uint32_t lang) {
     int i,l;
     struct scriptlanglist *sl;
 
@@ -3659,12 +3659,12 @@ return( 0 );
 /*  indicated by the features (and script and language) we are passed, it returns */
 /*  a transformed string with substitutions applied and containing positioning */
 /*  info */
-struct opentype_str *ApplyTickedFeatures(SplineFont *sf,uint32 *flist, uint32 script, uint32 lang,
+struct opentype_str *ApplyTickedFeatures(SplineFont *sf,uint32_t *flist, uint32_t script, uint32_t lang,
 	int pixelsize, SplineChar **glyphs) {
     int isgpos, cnt;
     OTLookup *otl;
     struct lookup_data data;
-    uint32 *langs, templang;
+    uint32_t *langs, templang;
     int i;
 
     memset(&data,0,sizeof(data));
@@ -3694,7 +3694,7 @@ struct opentype_str *ApplyTickedFeatures(SplineFont *sf,uint32 *flist, uint32 sc
 	free(langs);
 
 	for ( otl = isgpos ? sf->gpos_lookups : sf->gsub_lookups; otl!=NULL ; otl = otl->next ) {
-	    uint32 tag;
+	    uint32_t tag;
 	    if ( (tag=FSLLMatches(otl->features,flist,script,templang))!=0 )
 		ApplyLookup(tag,otl,&data);
 	}
@@ -3948,7 +3948,7 @@ void SFGlyphRenameFixup(SplineFont *sf, char *old, char *new) {
     }
 }
 
-struct lookup_subtable *SFSubTableFindOrMake(SplineFont *sf,uint32 tag,uint32 script,
+struct lookup_subtable *SFSubTableFindOrMake(SplineFont *sf,uint32_t tag,uint32_t script,
 	int lookup_type ) {
     OTLookup **base;
     OTLookup *otl, *found=NULL;
@@ -3992,7 +3992,7 @@ return( sub );
 return( sub );
 }
 
-struct lookup_subtable *SFSubTableMake(SplineFont *sf,uint32 tag,uint32 script,
+struct lookup_subtable *SFSubTableMake(SplineFont *sf,uint32_t tag,uint32_t script,
 	int lookup_type ) {
     OTLookup **base;
     OTLookup *otl, *found=NULL;
@@ -4113,13 +4113,13 @@ static void AddOTLToSllk(struct sllk *sllk, OTLookup *otl, struct scriptlanglist
 		sllk->lookups = xrealloc(sllk->lookups,(sllk->max+=5)*sizeof(OTLookup *));
 	    sllk->lookups[sllk->cnt++] = otl;
 	    for ( l=0; l<sl->lang_cnt; ++l ) {
-		uint32 lang = l<MAX_LANG ? sl->langs[l] : sl->morelangs[l-MAX_LANG];
+		uint32_t lang = l<MAX_LANG ? sl->langs[l] : sl->morelangs[l-MAX_LANG];
 		for ( j=0; j<sllk->lcnt; ++j )
 		    if ( sllk->langs[j]==lang )
 		break;
 		if ( j==sllk->lcnt ) {
 		    if ( sllk->lcnt>=sllk->lmax )
-			sllk->langs = xrealloc(sllk->langs,(sllk->lmax+=sl->lang_cnt+MAX_LANG)*sizeof(uint32));
+			sllk->langs = xrealloc(sllk->langs,(sllk->lmax+=sl->lang_cnt+MAX_LANG)*sizeof(uint32_t));
 		    sllk->langs[sllk->lcnt++] = lang;
 		}
 	    }
@@ -4254,7 +4254,7 @@ OTLookup *NewAALTLookup(SplineFont *sf,struct sllk *sllk, int sllk_cnt, int i) {
 	    sl->script = sllk[j].script;
 	    sl->lang_cnt = sllk[j].lcnt;
 	    if ( sl->lang_cnt>MAX_LANG )
-		sl->morelangs = xmalloc((sl->lang_cnt-MAX_LANG)*sizeof(uint32));
+		sl->morelangs = xmalloc((sl->lang_cnt-MAX_LANG)*sizeof(uint32_t));
 	    for ( l=0; l<sl->lang_cnt; ++l )
 		if ( l<MAX_LANG )
 		    sl->langs[l] = sllk[j].langs[l];

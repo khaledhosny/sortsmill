@@ -36,12 +36,12 @@ static void *a_file_must_define_something=(void *) &a_file_must_define_something
 
 # include <png.h>
 
-# define int32 _int32
-# define uint32 _uint32
-# define int16 _int16
-# define uint16 _uint16
-# define int8 _int8
-# define uint8 _uint8
+//# define int32_t _int32
+//# define uint32_t _uint32
+//# define int16 _int16
+//# define uint16 _uint16
+//# define int8 _int8
+//# define uint8 _uint8
 
 # include "gimage.h"
 
@@ -175,8 +175,8 @@ return( NULL );
 
     if ( png_get_color_type(png_ptr, info_ptr)==PNG_COLOR_TYPE_RGB || png_get_color_type(png_ptr, info_ptr)==PNG_COLOR_TYPE_RGB_ALPHA ) {
 	/* PNG orders its bytes as AABBGGRR instead of 00RRGGBB */
-	uint32 *ipt, *iend;
-	for ( ipt = (uint32 *) (base->data), iend=ipt+base->width*base->height; ipt<iend; ++ipt ) {
+	uint32_t *ipt, *iend;
+	for ( ipt = (uint32_t *) (base->data), iend=ipt+base->width*base->height; ipt<iend; ++ipt ) {
 #if 0
 	    /* Minimal support for alpha channel. Assume default background of white */
 	    if ( __gimage_can_support_alpha )
@@ -191,7 +191,7 @@ return( NULL );
 		*ipt = COLOR_CREATE( r,g,b );
 	    }
 #else
-	    uint32 r, g, b, a = *ipt&0xff000000;
+	    uint32_t r, g, b, a = *ipt&0xff000000;
 	    r = (*ipt    )&0xff;
 	    g = (*ipt>>8 )&0xff;
 	    b = (*ipt>>16)&0xff;

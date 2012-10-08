@@ -161,7 +161,7 @@ typedef struct ggadget GGadget;
 typedef struct ggadget *GGadgetSet;
 
 enum sb_type { sb_upline, sb_downline, sb_uppage, sb_downpage, sb_track, sb_trackrelease };
-struct scrollbarinit { int32 sb_min, sb_max, sb_pagesize, sb_pos; };
+struct scrollbarinit { int32_t sb_min, sb_max, sb_pagesize, sb_pos; };
 
 typedef int (*GGadgetHandler)(GGadget *,GEvent *);
 typedef uint32_t **(*GTextCompletionHandler)(GGadget *,int from_tab);
@@ -305,7 +305,7 @@ VISIBLE extern GTextInfo **GTextInfoFromChars(char **array, int len);
 VISIBLE extern const uint32_t *GStringGetResource(int index,uint32_t *mnemonic);
 VISIBLE extern int GGadgetScale(int xpos);
 VISIBLE extern int GIntGetResource(int index);
-extern int GStringSetResourceFileV(char *filename,uint32 checksum);
+extern int GStringSetResourceFileV(char *filename,uint32_t checksum);
 extern int GStringSetResourceFile(char *filename);	/* returns 1 for success, 0 for failure */
 /* fallback string arrays are null terminated. mnemonics is same length as string */
 /* fallback integer arrays are terminated by 0x80000000 (negative infinity) */
@@ -330,8 +330,8 @@ void GGadgetGetDesiredVisibleSize(GGadget *g,GRect *outer, GRect *inner);
 VISIBLE void GGadgetGetDesiredSize(GGadget *g,GRect *outer, GRect *inner);
 VISIBLE void GGadgetSetDesiredSize(GGadget *g,GRect *outer, GRect *inner);
 VISIBLE int GGadgetGetCid(GGadget *g);
-VISIBLE void GGadgetResize(GGadget *g,int32 width, int32 height );
-VISIBLE void GGadgetMove(GGadget *g,int32 x, int32 y );
+VISIBLE void GGadgetResize(GGadget *g,int32_t width, int32_t height );
+VISIBLE void GGadgetMove(GGadget *g,int32_t x, int32_t y );
 VISIBLE void GGadgetRedraw(GGadget *g);
 VISIBLE void GGadgetsCreate(GWindow base, GGadgetCreateData *gcd);
 int  GGadgetFillsWindow(GGadget *g);
@@ -356,16 +356,16 @@ VISIBLE void GTextFieldReplace(GGadget *g,const uint32_t *txt);
 VISIBLE void GCompletionFieldSetCompletion(GGadget *g,GTextCompletionHandler completion);
 VISIBLE void GCompletionFieldSetCompletionMode(GGadget *g,int enabled);
 VISIBLE void GGadgetClearList(GGadget *g);
-VISIBLE void GGadgetSetList(GGadget *g, GTextInfo **ti, int32 copyit);
-VISIBLE GTextInfo **GGadgetGetList(GGadget *g,int32 *len);	/* Do not free!!! */
-VISIBLE GTextInfo *GGadgetGetListItem(GGadget *g,int32 pos);
+VISIBLE void GGadgetSetList(GGadget *g, GTextInfo **ti, int32_t copyit);
+VISIBLE GTextInfo **GGadgetGetList(GGadget *g,int32_t *len);	/* Do not free!!! */
+VISIBLE GTextInfo *GGadgetGetListItem(GGadget *g,int32_t pos);
 VISIBLE GTextInfo *GGadgetGetListItemSelected(GGadget *g);
-VISIBLE void GGadgetSelectListItem(GGadget *g,int32 pos,int32 sel);
-VISIBLE void GGadgetSelectOneListItem(GGadget *g,int32 pos);
-VISIBLE int32 GGadgetIsListItemSelected(GGadget *g,int32 pos);
-VISIBLE int32 GGadgetGetFirstListSelectedItem(GGadget *g);
-VISIBLE void GGadgetScrollListToPos(GGadget *g,int32 pos);
-void GGadgetScrollListToText(GGadget *g,const uint32_t *lab,int32 sel);
+VISIBLE void GGadgetSelectListItem(GGadget *g,int32_t pos,int32_t sel);
+VISIBLE void GGadgetSelectOneListItem(GGadget *g,int32_t pos);
+VISIBLE int32_t GGadgetIsListItemSelected(GGadget *g,int32_t pos);
+VISIBLE int32_t GGadgetGetFirstListSelectedItem(GGadget *g);
+VISIBLE void GGadgetScrollListToPos(GGadget *g,int32_t pos);
+void GGadgetScrollListToText(GGadget *g,const uint32_t *lab,int32_t sel);
 void GGadgetSetListOrderer(GGadget *g,int (*orderer)(const void *, const void *));
 
 void GColorButtonSetColor(GGadget *g, Color col);
@@ -390,12 +390,12 @@ VISIBLE void GTabSetRemetric(GGadget *g);
 VISIBLE void GTabSetRemoveTabByPos(GGadget *g, int pos);
 void GTabSetRemoveTabByName(GGadget *g, char *name);
 
-int32 GScrollBarGetPos(GGadget *g);
-VISIBLE int32 GScrollBarSetPos(GGadget *g,int32 pos);
-void GScrollBarSetMustShow(GGadget *g, int32 sb_min, int32 sb_max, int32 sb_pagesize,
-	int32 sb_mustshow);
-VISIBLE void GScrollBarSetBounds(GGadget *g, int32 sb_min, int32 sb_max, int32 sb_pagesize );
-VISIBLE void GScrollBarGetBounds(GGadget *g, int32 *sb_min, int32 *sb_max, int32 *sb_pagesize );
+int32_t GScrollBarGetPos(GGadget *g);
+VISIBLE int32_t GScrollBarSetPos(GGadget *g,int32_t pos);
+void GScrollBarSetMustShow(GGadget *g, int32_t sb_min, int32_t sb_max, int32_t sb_pagesize,
+	int32_t sb_mustshow);
+VISIBLE void GScrollBarSetBounds(GGadget *g, int32_t sb_min, int32_t sb_max, int32_t sb_pagesize );
+VISIBLE void GScrollBarGetBounds(GGadget *g, int32_t *sb_min, int32_t *sb_max, int32_t *sb_pagesize );
 
 void GMenuBarSetItemChecked(GGadget *g, int mid, int check);
 void GMenuBarSetItemEnabled(GGadget *g, int mid, int enabled);

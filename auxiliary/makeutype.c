@@ -762,7 +762,7 @@ static void dump() {
 	    _Outside|_CenteredOutside|_CenterRight|_CenterLeft|_Joins2|
 	    _Right|_Left|_Overstrike|_Below|_Above|_RightEdge|_LeftEdge|
 	    _Touching );
-    fprintf( header, "#define ____NOPOSDATAGIVEN\t(uint32)(-1)\t/* -1 == no position data given */\n\n" );
+    fprintf( header, "#define ____NOPOSDATAGIVEN\t(uint32_t)(-1)\t/* -1 == no position data given */\n\n" );
 
     fprintf( header, "#define combiningclass(ch)\t(____utype2[(ch)+1]&____COMBININGCLASS)\n" );
     fprintf( header, "#define combiningposmask(ch)\t(____utype2[(ch)+1]&____COMBININGPOSMASK)\n\n" );
@@ -897,7 +897,7 @@ static void dump() {
 	    else
 		fprintf( data, "\n");
     }
-    fprintf( data, "const uint32 ____utype2[] = { 0,\n" );
+    fprintf( data, "const uint32_t ____utype2[] = { 0,\n" );
     fprintf( data, "  /* binary flags used for physical layout of each unicode.org character */\n" );
     for ( i=0; i<MAXC; i+=j ) {
 	fprintf( data, " " );
@@ -913,7 +913,7 @@ static void dump() {
 		fprintf( data, "\n");
     }
 
-    fprintf( data, "const uint32 ____codepointassigned[] = {\n" );
+    fprintf( data, "const uint32_t ____codepointassigned[] = {\n" );
     fprintf( data, "  /* 32 unicode.org characters represented for each data value in array */\n" );
     for ( i=0; i<0x120000/32; i+=j ) {
 	fprintf( data, " " );

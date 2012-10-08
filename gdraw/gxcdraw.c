@@ -88,8 +88,8 @@ static void GXCDraw_StippleMePink(GXWindow gw,int ts, Color fg) {
     static unsigned char fence_init[8] = { 0x55, 0x22, 0x55, 0x88, 0x55, 0x22, 0x55, 0x88};
     uint8 *spt;
     int bit,i,j;
-    uint32 *data;
-    static uint32 space[8*8];
+    uint32_t *data;
+    static uint32_t space[8*8];
     static cairo_surface_t *is = NULL;
     static cairo_pattern_t *pat = NULL;
 
@@ -215,7 +215,7 @@ void GDrawClear(GWindow w, GRect *rect) {
     cairo_fill(gw->cc);
 }
 
-void _GXCDraw_DrawLine(GWindow w, int32 x, int32 y, int32 xend, int32 yend, Color col) {
+void _GXCDraw_DrawLine(GWindow w, int32_t x, int32_t y, int32_t xend, int32_t yend, Color col) {
     GXWindow gw = (GXWindow) w;
     gw->ggc->fg = col;
 
@@ -292,7 +292,7 @@ void GDrawFillRoundRect(GWindow w, GRect *rect, int radius, Color col) {
     cairo_fill(gw->cc);
 }
 
-void GDrawDrawArc(GWindow w, GRect *rect, int32 sangle, int32 tangle, Color col) {
+void GDrawDrawArc(GWindow w, GRect *rect, int32_t sangle, int32_t tangle, Color col) {
     if ( col==COLOR_UNKNOWN )
 	return;
 
@@ -457,7 +457,7 @@ static cairo_surface_t *GImage2Surface(GImage *image, GRect *src, uint8 **_data)
     struct _GImage *base = image->list_len==0?image->u.image:image->u.images[0];
     cairo_format_t type;
     uint8 *data, *pt;
-    uint32 *idata, *ipt, *ito;
+    uint32_t *idata, *ipt, *ito;
     int i,j,jj,tjj,stride;
     int bit, tobit;
     cairo_surface_t *cs;
@@ -482,7 +482,7 @@ static cairo_surface_t *GImage2Surface(GImage *image, GRect *src, uint8 **_data)
     /*  premultiply each channel by alpha. We can reuse it for non-transparent*/
     /*  rgb images */
     if ( base->image_type == it_true && type == CAIRO_FORMAT_RGB24 ) {
-	idata = ((uint32 *) (base->data)) + src->y*base->bytes_per_line + src->x;
+	idata = ((uint32_t *) (base->data)) + src->y*base->bytes_per_line + src->x;
 	*_data = NULL;		/* We can reuse the image's own data, don't need a copy */
 return( cairo_image_surface_create_for_data((uint8 *) idata,type,
 		src->width, src->height,
@@ -493,14 +493,14 @@ return( cairo_image_surface_create_for_data((uint8 *) idata,type,
     *_data = data = xmalloc(szmax(1, stride * src->height));
     cs = cairo_image_surface_create_for_data(data,type,
 		src->width, src->height,   stride);
-    idata = (uint32 *) data;
+    idata = (uint32_t *) data;
 
     if ( base->image_type == it_rgba ) {
-	ipt = ((uint32 *) (base->data + src->y*base->bytes_per_line)) + src->x;
+	ipt = ((uint32_t *) (base->data + src->y*base->bytes_per_line)) + src->x;
 	ito = idata;
 	for ( i=0; i<src->height; ++i ) {
 	   for ( j=0; j<src->width; ++j ) {
-	       uint32 orig = ipt[j];
+	       uint32_t orig = ipt[j];
 	       int alpha = orig>>24;
 	       if ( alpha==0xff )
 		   ito[j] = orig;
@@ -512,12 +512,12 @@ return( cairo_image_surface_create_for_data((uint8 *) idata,type,
 			   ((COLOR_GREEN(orig)*alpha/255)<<8 )|
 			   ((COLOR_BLUE (orig)*alpha/255));
 	   }
-	   ipt = (uint32 *) (((uint8 *) ipt) + base->bytes_per_line);
-	   ito = (uint32 *) (((uint8 *) ito) +stride);
+	   ipt = (uint32_t *) (((uint8 *) ipt) + base->bytes_per_line);
+	   ito = (uint32_t *) (((uint8 *) ito) +stride);
        }
     } else if ( base->image_type == it_true && base->trans!=COLOR_UNKNOWN ) {
 	Color trans = base->trans;
-	ipt = ((uint32 *) (base->data + src->y*base->bytes_per_line)) + src->x;
+	ipt = ((uint32_t *) (base->data + src->y*base->bytes_per_line)) + src->x;
 	ito = idata;
 	for ( i=0; i<src->height; ++i ) {
 	   for ( j=0; j<src->width; ++j ) {
@@ -526,18 +526,18 @@ return( cairo_image_surface_create_for_data((uint8 *) idata,type,
 	       else
 		   ito[j] = ipt[j]|0xff000000;
 	   }
-	   ipt = (uint32 *) (((uint8 *) ipt) + base->bytes_per_line);
-	   ito = (uint32 *) (((uint8 *) ito) +stride);
+	   ipt = (uint32_t *) (((uint8 *) ipt) + base->bytes_per_line);
+	   ito = (uint32_t *) (((uint8 *) ito) +stride);
        }
     } else if ( base->image_type == it_true ) {
-	ipt = ((uint32 *) (base->data + src->y*base->bytes_per_line)) + src->x;
+	ipt = ((uint32_t *) (base->data + src->y*base->bytes_per_line)) + src->x;
 	ito = idata;
 	for ( i=0; i<src->height; ++i ) {
 	   for ( j=0; j<src->width; ++j ) {
 	       ito[j] = ipt[j]|0xff000000;
 	   }
-	   ipt = (uint32 *) (((uint8 *) ipt) + base->bytes_per_line);
-	   ito = (uint32 *) (((uint8 *) ito) +stride);
+	   ipt = (uint32_t *) (((uint8 *) ipt) + base->bytes_per_line);
+	   ito = (uint32_t *) (((uint8 *) ito) +stride);
        }
     } else if ( base->image_type == it_index && base->clut->trans_index!=COLOR_UNKNOWN ) {
 	int trans = base->clut->trans_index;
@@ -555,7 +555,7 @@ return( cairo_image_surface_create_for_data((uint8 *) idata,type,
 		   ito[j] = clut[index]|0xff000000;
 	   }
 	   pt += base->bytes_per_line;
-	   ito = (uint32 *) (((uint8 *) ito) +stride);
+	   ito = (uint32_t *) (((uint8 *) ito) +stride);
        }
     } else if ( base->image_type == it_index ) {
 	Color *clut = base->clut->clut;
@@ -567,7 +567,7 @@ return( cairo_image_surface_create_for_data((uint8 *) idata,type,
 	       ito[j] = clut[index] | 0xff000000;
 	   }
 	   pt += base->bytes_per_line;
-	   ito = (uint32 *) (((uint8 *) ito) +stride);
+	   ito = (uint32_t *) (((uint8 *) ito) +stride);
        }
 #ifdef WORDS_BIGENDIAN
     } else if ( base->image_type == it_mono && base->clut!=NULL &&
@@ -592,7 +592,7 @@ return( cairo_image_surface_create_for_data((uint8 *) idata,type,
 		    }
 		}
 		pt += base->bytes_per_line;
-		ito = (uint32 *) (((uint8 *) ito) +stride);
+		ito = (uint32_t *) (((uint8 *) ito) +stride);
 	    }
 	} else {
 	    for ( i=0; i<src->height; ++i ) {
@@ -611,7 +611,7 @@ return( cairo_image_surface_create_for_data((uint8 *) idata,type,
 		    }
 		}
 		pt += base->bytes_per_line;
-		ito = (uint32 *) (((uint8 *) ito) +stride);
+		ito = (uint32_t *) (((uint8 *) ito) +stride);
 	    }
 	}
 #else
@@ -637,7 +637,7 @@ return( cairo_image_surface_create_for_data((uint8 *) idata,type,
 		    }
 		}
 		pt += base->bytes_per_line;
-		ito = (uint32 *) (((uint8 *) ito) +stride);
+		ito = (uint32_t *) (((uint8 *) ito) +stride);
 	    }
 	} else {
 	    for ( i=0; i<src->height; ++i ) {
@@ -656,7 +656,7 @@ return( cairo_image_surface_create_for_data((uint8 *) idata,type,
 		    }
 		}
 		pt += base->bytes_per_line;
-		ito = (uint32 *) (((uint8 *) ito) +stride);
+		ito = (uint32_t *) (((uint8 *) ito) +stride);
 	    }
 	}
 #endif
@@ -678,14 +678,14 @@ return( cairo_image_surface_create_for_data((uint8 *) idata,type,
 		}
 	    }
 	    pt += base->bytes_per_line;
-	    ito = (uint32 *) (((uint8 *) ito) +stride);
+	    ito = (uint32_t *) (((uint8 *) ito) +stride);
 	}
     }
 return( cs );
 }
 
 /* draws the subset of the image specified by src starting at loc (x,y) */
-void GDrawDrawImage(GWindow w, GImage *image, GRect *src, int32 x, int32 y) {
+void GDrawDrawImage(GWindow w, GImage *image, GRect *src, int32_t x, int32_t y) {
     GXWindow gw = (GXWindow) w;
     GRect r;
     cairo_surface_t *is;
@@ -733,7 +733,7 @@ void GDrawDrawImage(GWindow w, GImage *image, GRect *src, int32 x, int32 y) {
 
 /* Draw the entire image so that it is approximately the same size on other */
 /*  displays as on the screen */
-void GDrawDrawScaledImage(GWindow w, GImage *img, int32 x, int32 y) {
+void GDrawDrawScaledImage(GWindow w, GImage *img, int32_t x, int32_t y) {
     GRect r;
 
     r.x = r.y = 0;
@@ -746,7 +746,7 @@ void GDrawDrawScaledImage(GWindow w, GImage *img, int32 x, int32 y) {
 /*  is an indexed image, then treat as the alpha channel rather than a color */
 /*  in its own right */
 /* What we really want to do is use the grey levels as an alpha channel */
-void GDrawDrawGlyph(GWindow w, GImage *image, GRect *src, int32 x, int32 y) {
+void GDrawDrawGlyph(GWindow w, GImage *image, GRect *src, int32_t x, int32_t y) {
     GRect r;
     if ( src==NULL ) {
 	struct _GImage *base = image->list_len==0?image->u.image:image->u.images[0];
@@ -844,8 +844,8 @@ static GImage *_GImageExtract(struct _GImage *base,GRect *src,GRect *size,
     } else {
 	for ( r=0; r<size->height; ++r ) {
 	    int or = ((int) floor( (r+size->y)/yscale ));
-	    uint32 *pt = (uint32 *) (data+r*tbase.bytes_per_line);
-	    uint32 *opt = (uint32 *) (base->data+or*base->bytes_per_line);
+	    uint32_t *pt = (uint32_t *) (data+r*tbase.bytes_per_line);
+	    uint32_t *opt = (uint32_t *) (base->data+or*base->bytes_per_line);
 	    for ( c=0; c<size->width; ++c ) {
 		int oc = ((int) floor( (c+size->x)/xscale));
 		*pt++ = opt[oc];
@@ -861,7 +861,7 @@ return( &temp );
 /* Ie. if you get an expose event in the middle of the image subtract off the */
 /*  image base (x,y) and pass in the exposed rectangle */
 void GDrawDrawImageMagnified(GWindow w, GImage *image, GRect *magsrc,
-	int32 x, int32 y, int32 width, int32 height) {
+	int32_t x, int32_t y, int32_t width, int32_t height) {
     GRect temp;
     struct _GImage *base = image->list_len==0?image->u.image:image->u.images[0];
 
@@ -962,7 +962,7 @@ return;
 /* ******************************** Copy Area ******************************* */
 /* ************************************************************************** */
 
-void _GXCDraw_CopyArea( GXWindow from, GXWindow into, GRect *src, int32 x, int32 y) {
+void _GXCDraw_CopyArea( GXWindow from, GXWindow into, GRect *src, int32_t x, int32_t y) {
     int width, height;
 
     width = cairo_xlib_surface_get_width(into->cs);
@@ -1116,8 +1116,8 @@ return( *fdbase );
 return( fd );
 }
 
-static int32 _GXPDraw_DoText8(GWindow w, int32 x, int32 y,
-	const char *text, int32 cnt, Color col,
+static int32_t _GXPDraw_DoText8(GWindow w, int32_t x, int32_t y,
+	const char *text, int32_t cnt, Color col,
 	enum text_funcs drawit, struct tf_arg *arg) {
     GXWindow gw = (GXWindow) w;
     struct font_instance *fi = gw->ggc->fi;
@@ -1175,8 +1175,8 @@ static int32 _GXPDraw_DoText8(GWindow w, int32 x, int32 y,
 return( rect.width );
 }
 
-static int32 _GXPDraw_DoText(GWindow w, int32 x, int32 y,
-	const uint32_t *text, int32 cnt, Color col,
+static int32_t _GXPDraw_DoText(GWindow w, int32_t x, int32_t y,
+	const uint32_t *text, int32_t cnt, Color col,
 	enum text_funcs drawit, struct tf_arg *arg) {
     char *temp = cnt>=0 ? u2utf8_copyn(text,cnt) : u2utf8_copy(text);
     int width = _GXPDraw_DoText8(w,x,y,temp,-1,col,drawit,arg);
@@ -1214,7 +1214,7 @@ void GDrawLayoutInit(GWindow w, char *text, int cnt, GFont *fi) {
     pango_layout_set_text(gw->pango_layout,(char *) text,cnt);
 }
 
-void GDrawLayoutDraw(GWindow w, int32 x, int32 y, Color col) {
+void GDrawLayoutDraw(GWindow w, int32_t x, int32_t y, Color col) {
     GXWindow gw = (GXWindow) w;
 
     render_layout(gw, x, y, col);
@@ -1281,19 +1281,19 @@ return( -1 );
 return( line->start_index );
 }
 
-int32 GDrawDrawText(GWindow gw, int32 x, int32 y, const uint32_t *text, int32 cnt, Color col) {
+int32_t GDrawDrawText(GWindow gw, int32_t x, int32_t y, const uint32_t *text, int32_t cnt, Color col) {
     struct tf_arg arg;
 
 return( _GXPDraw_DoText(gw,x,y,text,cnt,col,tf_drawit,&arg));
 }
 
-int32 GDrawGetTextWidth(GWindow gw,const uint32_t *text, int32 cnt) {
+int32_t GDrawGetTextWidth(GWindow gw,const uint32_t *text, int32_t cnt) {
     struct tf_arg arg;
 
 return( _GXPDraw_DoText(gw,0,0,text,cnt,0x0,tf_width,&arg));
 }
 
-int32 GDrawGetTextBounds(GWindow gw,const uint32_t *text, int32 cnt, GTextBounds *bounds) {
+int32_t GDrawGetTextBounds(GWindow gw,const uint32_t *text, int32_t cnt, GTextBounds *bounds) {
     int ret;
     struct tf_arg arg;
 
@@ -1304,19 +1304,19 @@ int32 GDrawGetTextBounds(GWindow gw,const uint32_t *text, int32 cnt, GTextBounds
 return( ret );
 }
 
-int32 GDrawDrawText8(GWindow gw, int32 x, int32 y, const char *text, int32 cnt, Color col) {
+int32_t GDrawDrawText8(GWindow gw, int32_t x, int32_t y, const char *text, int32_t cnt, Color col) {
     struct tf_arg arg;
 
 return( _GXPDraw_DoText8(gw,x,y,text,cnt,col,tf_drawit,&arg));
 }
 
-int32 GDrawGetText8Width(GWindow gw, const char *text, int32 cnt) {
+int32_t GDrawGetText8Width(GWindow gw, const char *text, int32_t cnt) {
     struct tf_arg arg;
 
 return( _GXPDraw_DoText8(gw,0,0,text,cnt,0x0,tf_width,&arg));
 }
 
-int32 GDrawGetText8Bounds(GWindow gw,const char *text, int32 cnt, GTextBounds *bounds) {
+int32_t GDrawGetText8Bounds(GWindow gw,const char *text, int32_t cnt, GTextBounds *bounds) {
     int ret;
     struct tf_arg arg;
 

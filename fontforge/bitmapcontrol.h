@@ -40,4 +40,4 @@ enum { bd_all, bd_selected, bd_current };
 
 VISIBLE extern int bdfcontrol_lastwhich;
 
-VISIBLE void BitmapsDoIt(CreateBitmapData *bd,int32 *sizes,int usefreetype);
+VISIBLE void BitmapsDoIt(CreateBitmapData *bd,int32_t *sizes,int usefreetype);

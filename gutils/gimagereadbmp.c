@@ -30,7 +30,7 @@
 #include "gimage.h"
 #include "gimagebmpP.h"
 #include <string.h>
-GImage *_GImage_Create(enum image_type type, int32 width, int32 height);
+GImage *_GImage_Create(enum image_type type, int32_t width, int32_t height);
 
 static int getshort(FILE *file) {
     int temp = getc(file);
@@ -145,7 +145,7 @@ static int readpixels(FILE *file,struct bmpheader *head) {
 
     fseek(file,head->offset,0);
     if ( head->bitsperpixel>=16 ) {
-	head->int32_pixels = (uint32 *) xmalloc(head->height* 4*head->width );
+	head->int32_pixels = (uint32_t *) xmalloc(head->height* 4*head->width );
 	if ( head->int32_pixels==NULL )
 return( 0 );
     } else if ( head->bitsperpixel!=1 ) {
@@ -351,7 +351,7 @@ return( NULL );
 	    base = ret->u.image;
 	    for ( i=0; i<bmp.height; ++i ) {
 		l = bmp.height-1-i;
-		memcpy(base->data+l*base->bytes_per_line,bmp.int32_pixels+i*bmp.width,bmp.width*sizeof(uint32));
+		memcpy(base->data+l*base->bytes_per_line,bmp.int32_pixels+i*bmp.width,bmp.width*sizeof(uint32_t));
 	    }
 	    free( bmp.int32_pixels );
 	} else if ( bmp.bitsperpixel!=1 ) {

@@ -90,16 +90,16 @@ VISIBLE extern const unsigned int  ____utype[];
 #define ____RIGHTEDGE		0x40000
 #define ____TOUCHING		0x100000
 #define ____COMBININGPOSMASK	0x1fff00
-#define ____NOPOSDATAGIVEN	(uint32)(-1)	/* -1 == no position data given */
+#define ____NOPOSDATAGIVEN	(uint32_t)(-1)	/* -1 == no position data given */
 
 #define combiningclass(ch)	(____utype2[(ch)+1]&____COMBININGCLASS)
 #define combiningposmask(ch)	(____utype2[(ch)+1]&____COMBININGPOSMASK)
 
-VISIBLE extern const uint32	____utype2[]; /* hold position boolean flags for each Unicode.org defined character */
+VISIBLE extern const uint32_t	____utype2[]; /* hold position boolean flags for each Unicode.org defined character */
 
 #define isunicodepointassigned(ch) (____codepointassigned[(ch)/32]&(1<<((ch)%32)))
 
-VISIBLE extern const uint32	____codepointassigned[];	/* 1bit_boolean_flag x 32 = exists in Unicode.org character chart list. */
+VISIBLE extern const uint32_t	____codepointassigned[];	/* 1bit_boolean_flag x 32 = exists in Unicode.org character chart list. */
 
 #define tolower(ch) (____tolower[(ch)+1])
 #define toupper(ch) (____toupper[(ch)+1])

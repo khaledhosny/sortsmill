@@ -39,8 +39,8 @@ struct gfuncs {
     int (*handle_sel)(GGadget *g,GEvent *event);
 
     void (*redraw)(GGadget *g);
-    void (*move)(GGadget *g,int32 x, int32 y);
-    void (*resize)(GGadget *g,int32 width, int32 height);
+    void (*move)(GGadget *g,int32_t x, int32_t y);
+    void (*resize)(GGadget *g,int32_t width, int32_t height);
     void (*setvisible)(GGadget *g,int);
     void (*setenabled)(GGadget *g,int);
 
@@ -59,15 +59,15 @@ struct gfuncs {
     GFont *(*get_font)(GGadget *g);
 
     void (*clear_list)(GGadget *g);
-    void (*set_list)(GGadget *g, GTextInfo **ti, int32 copyit);
-    GTextInfo **(*get_list)(GGadget *g,int32 *len);
-    GTextInfo *(*get_list_item)(GGadget *g,int32 pos);
-    void (*select_list_item)(GGadget *g,int32 pos, int32 sel);
-    void (*select_one_list_item)(GGadget *g,int32 pos);
-    int32 (*is_list_item_selected)(GGadget *g,int32 pos);
-    int32 (*get_first_selection)(GGadget *g);
-    void (*scroll_list_to_pos)(GGadget *g,int32 pos);
-    void (*scroll_list_to_text)(GGadget *g,const uint32_t *lab,int32 sel);
+    void (*set_list)(GGadget *g, GTextInfo **ti, int32_t copyit);
+    GTextInfo **(*get_list)(GGadget *g,int32_t *len);
+    GTextInfo *(*get_list_item)(GGadget *g,int32_t pos);
+    void (*select_list_item)(GGadget *g,int32_t pos, int32_t sel);
+    void (*select_one_list_item)(GGadget *g,int32_t pos);
+    int32_t (*is_list_item_selected)(GGadget *g,int32_t pos);
+    int32_t (*get_first_selection)(GGadget *g);
+    void (*scroll_list_to_pos)(GGadget *g,int32_t pos);
+    void (*scroll_list_to_text)(GGadget *g,const uint32_t *lab,int32_t sel);
     void (*set_list_orderer)(GGadget *g,int (*orderer)(const void *, const void *));
 
     void (*get_desired_size)(GGadget *g, GRect *outer, GRect *inner);
@@ -220,8 +220,8 @@ typedef struct gradio {
 
 typedef struct gscrollbar {		/* and slider */
     struct ggadget g;
-    int32 sb_min, sb_max, sb_pagesize, sb_pos;
-    int32 sb_mustshow;			/* normally this is sb_pagesize, but might be the height of a single line */
+    int32_t sb_min, sb_max, sb_pagesize, sb_pos;
+    int32_t sb_mustshow;			/* normally this is sb_pagesize, but might be the height of a single line */
 		    /* if we want people to be able to scroll to see white space */
 		    /* after the document */
     /*unsigned int vert: 1; */	/* Moved to GGadget, shared with line */
@@ -298,12 +298,12 @@ typedef struct gtextfield {
     GCursor old_cursor;
     GScrollBar *hsb, *vsb;
     int16 lcnt, lmax;
-    int32 *lines;		/* offsets in text to the start of the nth line */
+    int32_t *lines;		/* offsets in text to the start of the nth line */
     int16 xmax;
     GIC *gic;
     GTimer *numeric_scroll;
     char *utf8_text;		/* For Pango */
-    int32 *lines8;		/* offsets in utf8_text */
+    int32_t *lines8;		/* offsets in utf8_text */
 } GTextField;
 
 typedef struct glistfield {
@@ -514,15 +514,15 @@ void _GWidget_ClearPopupOwner(GGadget *g);
 
 VISIBLE extern void _GGadgetCopyDefaultBox(GBox *box);
 VISIBLE extern FontInstance *_GGadgetInitDefaultBox(char *class,GBox *box,FontInstance *deffont);
-extern void _ggadget_underlineMnemonic(GWindow gw,int32 x,int32 y,uint32_t *label,
+extern void _ggadget_underlineMnemonic(GWindow gw,int32_t x,int32_t y,uint32_t *label,
 	uint32_t mneumonic, Color fg,int ymax);
 VISIBLE extern void _ggadgetFigureSize(GWindow gw, GBox *design, GRect *r, int isdef);
 extern void _ggadgetSetRects(GGadget *g, GRect *outer, GRect *inner, int xjust, int yjust );
 VISIBLE extern void _GGadgetCloseGroup(GGadget *g);
 VISIBLE extern void _ggadget_redraw(GGadget *g);
 extern int _ggadget_noop(GGadget *g, GEvent *event);
-VISIBLE extern void _ggadget_move(GGadget *g, int32 x, int32 y );
-VISIBLE extern void _ggadget_resize(GGadget *g, int32 width, int32 height );
+VISIBLE extern void _ggadget_move(GGadget *g, int32_t x, int32_t y );
+VISIBLE extern void _ggadget_resize(GGadget *g, int32_t width, int32_t height );
 VISIBLE extern void _ggadget_setvisible(GGadget *g,int visible);
 VISIBLE extern void _ggadget_setenabled(GGadget *g,int enabled);
 VISIBLE extern GRect *_ggadget_getsize(GGadget *g,GRect *rct);
@@ -570,7 +570,7 @@ extern GWindow GListPopupCreate(GGadget *owner,void (*inform)(GGadget *,int), GT
 
 extern int GMenuPopupCheckKey(GEvent *event);
 extern int GMenuBarCheckKey(GGadget *g, GEvent *event);
-extern void _GButton_SetDefault(GGadget *g,int32 is_default);
+extern void _GButton_SetDefault(GGadget *g,int32_t is_default);
 VISIBLE extern void _GButtonInit(void);
 extern void GListMarkDraw(GWindow pixmap,int x, int y, int height, enum gadget_state state );
 extern char **_GGadget_GetImagePath(void);

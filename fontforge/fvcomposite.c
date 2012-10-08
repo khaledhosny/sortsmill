@@ -1961,7 +1961,7 @@ return( NULL );
 }
 
 static void _BCCenterAccent( BDFFont *bdf, int gid, int rgid, int ch, int basech, int italicoff,
-	uint32 pos,	/* unicode char position info, see #define for utype2[] in utype.h */
+	uint32_t pos,	/* unicode char position info, see #define for utype2[] in utype.h */
 	real em ) {
     BDFChar *bc, *rbc;
     int ixoff, iyoff, ispacing;
@@ -2015,7 +2015,7 @@ static void _SCCenterAccent(SplineChar *sc,SplineChar *basersc, SplineFont *sf,
 	int layer, int ch, BDFFont *bdf, int disp_only,
 	SplineChar *rsc, real ia, int basech,
 	int invert,	/* invert accent, false==0, true!=0 */
-	uint32 pos	/* unicode char position info, see #define for utype2[] in utype.h */ ) {
+	uint32_t pos	/* unicode char position info, see #define for utype2[] in utype.h */ ) {
     real transform[6];
     DBounds bb, rbb, bbb;
     real xoff, yoff;
@@ -2924,7 +2924,7 @@ return;
 int SCAppendAccent(SplineChar *sc,int layer,
 	char *glyph_name,	/* unicode char name */
 	int uni,		/* unicode char value */
-	uint32 pos		/* unicode char position info, see #define for (uint32)(utype2[]) */ ) {
+	uint32_t pos		/* unicode char position info, see #define for (uint32_t)(utype2[]) */ ) {
     SplineFont *sf = sc->parent;
     double ia;
     int basech;

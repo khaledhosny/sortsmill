@@ -2253,7 +2253,7 @@ void CVDebugPointPopup(CharView *cv) {
     TT_GlyphZoneRec *r;
     FT_Vector *pts;
     int i,l,n;
-    int32 x,y,fudge;
+    int32_t x,y,fudge;
     char cspace[210];
     extern float snapdistance;
 

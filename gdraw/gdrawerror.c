@@ -106,7 +106,7 @@ static void ProcessText(uint32_t *ubuf,char *buf, enum err_type et)
 	  last_space = ept;
       if ( *ept!='\n' && *ept!='\0' && last_space!=NULL )
 	ept = last_space;
-      uint32 *utext = x_u32_strconv_from_locale (pt);
+      uint32_t *utext = x_u32_strconv_from_locale (pt);
       errinfo.lines[line] = u32_strncpy (ue, utext, ept - pt);
       free (utext);
       ue[ept-pt] = 0;

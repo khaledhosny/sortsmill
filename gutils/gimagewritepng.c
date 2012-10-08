@@ -35,12 +35,12 @@ static int a_file_must_define_something=0;	/* ANSI says so */
 
 #include <png.h>
 
-#define int32 _int32
-#define uint32 _uint32
-#define int16 _int16
-#define uint16 _uint16
-#define int8 _int8
-#define uint8 _uint8
+//#define int32_t _int32
+//#define uint32_t _uint32
+//#define int16 _int16
+//#define uint16 _uint16
+//#define int8 _int8
+//#define uint8 _uint8
 
 #include "gimage.h"
 

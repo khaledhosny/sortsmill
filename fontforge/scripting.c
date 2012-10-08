@@ -1103,9 +1103,9 @@ static void bChr(Context *c) {
 }
 
 static void bUtf8(Context *c) {
-    uint32 buf[2];
+    uint32_t buf[2];
     int i;
-    uint32 *temp;
+    uint32_t *temp;
 
     if ( c->a.argc!=2 )
 	ScriptError( c, "Wrong number of arguments" );
@@ -1117,7 +1117,7 @@ static void bUtf8(Context *c) {
 	c->return_val.u.sval = u2utf8_copy(buf);
     } else if ( c->a.vals[1].type==v_arr || c->a.vals[1].type==v_arrfree ) {
 	Array *arr = c->a.vals[1].u.aval;
-	temp = xmalloc((arr->argc+1)*sizeof(int32));
+	temp = xmalloc((arr->argc+1)*sizeof(int32_t));
 	for ( i=0; i<arr->argc; ++i ) {
 	    if ( arr->vals[i].type!=v_int )
 		ScriptError( c, "Bad type for argument" );
@@ -1999,7 +1999,7 @@ static void bControlAfmLigatureOutput(Context *c) {
 }
 
 static void Bitmapper(Context *c,int isavail) {
-    int32 *sizes;
+    int32_t *sizes;
     int i;
     int rasterize = true;
 
@@ -2016,7 +2016,7 @@ static void Bitmapper(Context *c,int isavail) {
 	    ScriptError( c, "Bad type of argument");
 	rasterize = c->a.vals[2].u.ival;
     }
-    sizes = xmalloc((c->a.vals[1].u.aval->argc+1)*sizeof(int32));
+    sizes = xmalloc((c->a.vals[1].u.aval->argc+1)*sizeof(int32_t));
     for ( i=0; i<c->a.vals[1].u.aval->argc; ++i ) {
 	sizes[i] = c->a.vals[1].u.aval->vals[i].u.ival;
 	if ( (sizes[i]>>16)==0 )
@@ -2306,7 +2306,7 @@ static void bPrintSetup(Context *c) {
 
 static void bPrintFont(Context *c) {
     int type, i, inlinesample = false;
-    int32 *pointsizes=NULL;
+    int32_t *pointsizes=NULL;
     char *samplefile=NULL, *output=NULL;
     uint32_t *sample=NULL;
     char *t; char *locfilename=NULL;
@@ -2323,12 +2323,12 @@ static void bPrintFont(Context *c) {
     if ( c->a.argc>=3 ) {
 	if ( c->a.vals[2].type==v_int ) {
 	    if ( c->a.vals[2].u.ival>0 ) { 
-		pointsizes = xcalloc(2,sizeof(int32));
+		pointsizes = xcalloc(2,sizeof(int32_t));
 		pointsizes[0] = c->a.vals[2].u.ival;
 	    }
 	} else if ( c->a.vals[2].type==v_arr ) {
 	    Array *a = c->a.vals[2].u.aval;
-	    pointsizes = xmalloc((a->argc+1)*sizeof(int32));
+	    pointsizes = xmalloc((a->argc+1)*sizeof(int32_t));
 	    for ( i=0; i<a->argc; ++i ) {
 		if ( a->vals[i].type!=v_int )
 		    ScriptError( c, "Bad type for array contents");
@@ -3063,7 +3063,7 @@ static void bRemoveDetachedGlyphs(Context *c) {
 
 static void bLoadTableFromFile(Context *c) {
     SplineFont *sf = c->curfv->sf;
-    uint32 tag;
+    uint32_t tag;
     char *tstr, *end;
     struct ttf_table *tab;
     FILE *file;
@@ -3111,7 +3111,7 @@ static void bLoadTableFromFile(Context *c) {
 
 static void bSaveTableToFile(Context *c) {
     SplineFont *sf = c->curfv->sf;
-    uint32 tag;
+    uint32_t tag;
     char *tstr, *end;
     struct ttf_table *tab;
     FILE *file;
@@ -3147,7 +3147,7 @@ static void bSaveTableToFile(Context *c) {
 
 static void bRemovePreservedTable(Context *c) {
     SplineFont *sf = c->curfv->sf;
-    uint32 tag;
+    uint32_t tag;
     char *tstr, *end;
     struct ttf_table *tab, *prev;
 
@@ -3178,7 +3178,7 @@ static void bRemovePreservedTable(Context *c) {
 
 static void bHasPreservedTable(Context *c) {
     SplineFont *sf = c->curfv->sf;
-    uint32 tag;
+    uint32_t tag;
     char *tstr, *end;
     struct ttf_table *tab;
 
@@ -4062,7 +4062,7 @@ return;
     SCCharChangedUpdate(dest,ly_fore);
 }
 
-static int FSLMatch(FeatureScriptLangList *fl,uint32 feat_tag,uint32 script,uint32 lang) {
+static int FSLMatch(FeatureScriptLangList *fl,uint32_t feat_tag,uint32_t script,uint32_t lang) {
     struct scriptlanglist *sl;
     int l;
 
@@ -4071,7 +4071,7 @@ static int FSLMatch(FeatureScriptLangList *fl,uint32 feat_tag,uint32 script,uint
 	    for ( sl=fl->scripts; sl!=NULL ; sl=sl->next ) {
 		if ( sl->script==script || script==CHR('*',' ',' ',' ')) {
 		    for ( l=0; l<sl->lang_cnt; ++l ) {
-			uint32 lng = l<MAX_LANG ? sl->langs[l] : sl->morelangs[l-MAX_LANG];
+			uint32_t lng = l<MAX_LANG ? sl->langs[l] : sl->morelangs[l-MAX_LANG];
 			if ( lng==lang || lang==CHR('*',' ',' ',' '))
 return( true );
 		    }
@@ -4083,7 +4083,7 @@ return( true );
 return( false );
 }
 		
-static void FVApplySubstitution(FontViewBase *fv,uint32 script, uint32 lang, uint32 feat_tag) {
+static void FVApplySubstitution(FontViewBase *fv,uint32_t script, uint32_t lang, uint32_t feat_tag) {
     SplineFont *sf = fv->sf, *sf_sl=sf;
     SplineChar *sc, *replacement, *sc2;
     PST *pst;
@@ -4141,7 +4141,7 @@ static void FVApplySubstitution(FontViewBase *fv,uint32 script, uint32 lang, uin
 }
 
 static void bApplySubstitution(Context *c) {
-    uint32 tags[3];
+    uint32_t tags[3];
     int i;
 
     if ( c->a.argc!=4 )
@@ -5117,7 +5117,7 @@ static void bBuildAccented(Context *c) {
 }
 
 static void bAppendAccent(Context *c) {
-    int pos = ____NOPOSDATAGIVEN;	/* unicode char pos info, see #define for (uint32)(utype2[]) */
+    int pos = ____NOPOSDATAGIVEN;	/* unicode char pos info, see #define for (uint32_t)(utype2[]) */
     char *glyph_name = NULL;		/* unicode char name */
     int uni = -1;			/* unicode char value */
 
@@ -5136,10 +5136,10 @@ static void bAppendAccent(Context *c) {
     else
 	uni = c->a.vals[1].u.ival;
     if ( c->a.argc==3 )
-	pos = (uint32)(c->a.vals[2].u.ival);
+	pos = (uint32_t)(c->a.vals[2].u.ival);
 
     sc = GetOneSelChar(c);
-    ret = SCAppendAccent(sc,ly_fore,glyph_name,uni,(uint32)(pos));
+    ret = SCAppendAccent(sc,ly_fore,glyph_name,uni,(uint32_t)(pos));
     if ( ret==1 )
 	ScriptError(c,"No base character reference found");
     else if ( ret==2 )
@@ -5307,7 +5307,7 @@ static void bAutoInstr(Context *c) {
     FVAutoInstr(c->curfv);
 }
 
-static void TableAddInstrs(SplineFont *sf, uint32 tag,int replace,
+static void TableAddInstrs(SplineFont *sf, uint32_t tag,int replace,
 	uint8 *instrs,int icnt) {
     struct ttf_table *tab;
 
@@ -5376,7 +5376,7 @@ static void bAddInstrs(Context *c) {
     SplineChar *sc = NULL;
     int icnt;
     uint8 *instrs;
-    uint32 tag=0;
+    uint32_t tag=0;
     SplineFont *sf = c->curfv->sf;
     int i;
     EncMap *map = c->curfv->map;
@@ -5517,7 +5517,7 @@ static void bClearInstrs(Context *c) {
 }
 
 static void bClearTable(Context *c) {
-    uint32 tag;
+    uint32_t tag;
     uint8 _tag[4];
     SplineFont *sf = c->curfv->sf;
     struct ttf_table *table, *prev;
@@ -6721,7 +6721,7 @@ static void bMergeLookupSubtables(Context *c) {
     SFRemoveLookupSubTable(c->curfv->sf,sub2);
 }
 
-static int32 ParseTag(Context *c,Val *tagstr,int macok,int *wasmac) {
+static int32_t ParseTag(Context *c,Val *tagstr,int macok,int *wasmac) {
     char tag[4];
     int feat,set;
     char *str;
@@ -6800,9 +6800,9 @@ static FeatureScriptLangList *ParseFeatureList(Context *c,Array *a) {
 	    } else {
 		sl->lang_cnt = langs->argc;
 		if ( langs->argc>MAX_LANG )
-		    sl->morelangs = xmalloc((langs->argc-MAX_LANG)*sizeof(uint32));
+		    sl->morelangs = xmalloc((langs->argc-MAX_LANG)*sizeof(uint32_t));
 		for ( l=0; l<langs->argc; ++l ) {
-		    uint32 lang = ParseTag(c,&langs->vals[l],false,&wasmac);
+		    uint32_t lang = ParseTag(c,&langs->vals[l],false,&wasmac);
 		    if ( l<MAX_LANG )
 			sl->langs[l] = lang;
 		    else
@@ -6931,7 +6931,7 @@ static void bLookupStoreLigatureInAfm(Context *c) {
     otl->store_in_afm = c->a.vals[2].u.ival;
 }
 
-static char *Tag2Str(uint32 tag, int ismac) {
+static char *Tag2Str(uint32_t tag, int ismac) {
     char buffer[20];
 
     if ( ismac )

@@ -1117,7 +1117,7 @@ static void StrokeGlyph(uint8 *bytemap,EdgeList *es,real wid, SplineChar *sc) {
 
 static void StrokePaths(uint8 *bytemap,EdgeList *es,Layer *layer,Layer *alt,
 	uint8 *clipmask) {
-    uint32 col;
+    uint32_t col;
     int width;
     int grey;
 
@@ -1223,8 +1223,8 @@ return ( defgrey );
 	col = grad->grad_stops[i].col;
     else {
 	bigreal percent = (relpos-grad->grad_stops[i-1].offset)/ (grad->grad_stops[i].offset-grad->grad_stops[i-1].offset);
-	uint32 col1 = grad->grad_stops[i-1].col;
-	uint32 col2 = grad->grad_stops[i  ].col;
+	uint32_t col1 = grad->grad_stops[i-1].col;
+	uint32_t col2 = grad->grad_stops[i  ].col;
 	if ( col1==COLOR_INHERITED ) col1 = 0x000000;
 	if ( col2==COLOR_INHERITED ) col2 = 0x000000;
 	int red   = ((col1>>16)&0xff)*(1-percent) + ((col2>>16)&0xff)*percent;
@@ -1270,7 +1270,7 @@ return;
 
 static void SetByteMapToGrey(uint8 *bytemap,EdgeList *es,Layer *layer,Layer *alt,
 	uint8 *clipmask,SplineChar *sc) {
-    uint32 col;
+    uint32_t col;
     int grey,i,j;
     uint8 *pt, *bpt, *cpt;
     struct gradient *grad = layer->fill_brush.gradient;
@@ -1306,7 +1306,7 @@ static void SetByteMapToGrey(uint8 *bytemap,EdgeList *es,Layer *layer,Layer *alt
 
 static void FillImages(uint8 *bytemap,EdgeList *es,ImageList *img,Layer *layer,
 	Layer *alt, uint8 *clipmask) {
-    uint32 fillcol, col;
+    uint32_t fillcol, col;
     int grey,i,j,x1,x2,y1,y2,jj,ii;
 
     if ( layer->fill_brush.col!=COLOR_INHERITED )
@@ -1335,7 +1335,7 @@ static void FillImages(uint8 *bytemap,EdgeList *es,ImageList *img,Layer *layer,
 	    continue;
 		jj = j*(base->width-1)/(x2-x1);
 		if ( base->image_type==it_true )
-		    col = ((uint32 *) (base->data + ii*base->bytes_per_line))[jj];
+		    col = ((uint32_t *) (base->data + ii*base->bytes_per_line))[jj];
 		else if ( base->image_type==it_index ) {
 		    col = (base->data + ii*base->bytes_per_line)[jj];
 		    col = base->clut->clut[col];
@@ -1608,7 +1608,7 @@ return;
     new.depth = max==3 ? 2 : max==15 ? 4 : 8;
     new.bitmap = xcalloc( (new.ymax-new.ymin+1) * new.bytes_per_line, sizeof(uint8));
     if ( bc->depth>1 ) {
-	uint32 *sum = xcalloc(new.bytes_per_line,sizeof(uint32));
+	uint32_t *sum = xcalloc(new.bytes_per_line,sizeof(uint32_t));
 	for ( i=0; i<=bc->ymax-bc->ymin; ++i ) {
 	    bpt = bc->bitmap + i*bc->bytes_per_line;
 	    for ( j=0; j<=bc->xmax-bc->xmin; ++j ) {
@@ -1621,7 +1621,7 @@ return;
 		    if ( val>max ) val = max;
 		    pt[j] = val;
 		}
-		memset(sum,0,new.bytes_per_line*sizeof(uint32));
+		memset(sum,0,new.bytes_per_line*sizeof(uint32_t));
 	    }
 	}
     } else {

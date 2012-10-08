@@ -101,7 +101,7 @@ void GDrawSetEH(GWindow w,GDrawEH eh) {
     w->eh = eh;
 }
 
-int32 GDrawEventInWindow(GWindow inme,GEvent *event) {
+int32_t GDrawEventInWindow(GWindow inme,GEvent *event) {
     GPoint pt;
     if ( event->type<et_char || event->type>et_crossing )
 return( false );
@@ -176,7 +176,7 @@ void GDrawSetDashedLine(GWindow w,int16 dash_len, int16 skip_len, int16 off) {
     w->ggc->skip_len = skip_len;
 }
 
-void GDrawSetStippled(GWindow w,int16 ts, int32 yoff,int32 xoff) {
+void GDrawSetStippled(GWindow w,int16 ts, int32_t yoff,int32_t xoff) {
     w->ggc->ts = ts;
     w->ggc->ts_xoff = xoff; w->ggc->ts_yoff = yoff;
 }
@@ -212,10 +212,10 @@ void _GDraw_ComposeChars(GDisplay *gdisp,GEvent *gevent) {
     struct gchr_transform *strt = NULL, *trans, *end=NULL;
     extern struct gchr_lookup _gdraw_chrlookup[];
     extern struct gchr_accents _gdraw_accents[];
-    extern uint32 _gdraw_chrs_ctlmask, _gdraw_chrs_metamask, _gdraw_chrs_any;
+    extern uint32_t _gdraw_chrs_ctlmask, _gdraw_chrs_metamask, _gdraw_chrs_any;
     int i,mask;
     uint32_t hold[_GD_EVT_CHRLEN], *pt, *ept, *hpt;
-    uint32 mykey_state = gdisp->mykey_state;
+    uint32_t mykey_state = gdisp->mykey_state;
 
     if ( gevent->u.chr.chars[0]=='\0' )		/* ignore things like the shift key */
 return;

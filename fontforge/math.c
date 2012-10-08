@@ -1740,7 +1740,7 @@ static void MKD_Do_Navigate(struct cvcontainer *cvc, enum nav_type type) {
     SplineChar *sc = NULL;
     int pos;
     GGadget *list = GWidgetGetControl(mkd->gw,CID_Glyph);
-    int32 rows;
+    int32_t rows;
     GTextInfo **tis;
 
     if ( !MKD_Parse(mkd))

@@ -66,7 +66,7 @@ static const uint32_t *_GSpacerGetTitle(GGadget *g) {
 return( NULL );
 }
 
-static void _gspacer_resize(GGadget *g, int32 width, int32 height ) {
+static void _gspacer_resize(GGadget *g, int32_t width, int32_t height ) {
 
     g->inner.height = g->r.height = height;
     g->inner.width = g->r.width = width;

@@ -338,7 +338,7 @@ static int SFTextArea_Show(SFTextArea *st, int pos) {
 return( refresh );
 }
 
-static void *genunicodedata(void *_gt,int32 *len) {
+static void *genunicodedata(void *_gt,int32_t *len) {
     SFTextArea *st = _gt;
     uint32_t *temp;
     *len = st->sel_end-st->sel_start + 1;
@@ -349,7 +349,7 @@ static void *genunicodedata(void *_gt,int32 *len) {
 return( temp );
 }
 
-static void *genutf8data(void *_gt,int32 *len) {
+static void *genutf8data(void *_gt,int32_t *len) {
     SFTextArea *st = _gt;
     uint32_t *temp =u_copyn(st->li.text+st->sel_start,st->sel_end-st->sel_start);
     char *ret = u2utf8_copy(temp);
@@ -358,7 +358,7 @@ static void *genutf8data(void *_gt,int32 *len) {
 return( ret );
 }
 
-static void *ddgenunicodedata(void *_gt,int32 *len) {
+static void *ddgenunicodedata(void *_gt,int32_t *len) {
     void *temp = genunicodedata(_gt,len);
     SFTextArea *st = _gt;
     _SFTextAreaReplace(st,nullstr);
@@ -366,7 +366,7 @@ static void *ddgenunicodedata(void *_gt,int32 *len) {
 return( temp );
 }
 
-static void *genlocaldata(void *_gt, int32 *len)
+static void *genlocaldata(void *_gt, int32_t *len)
 {
   SFTextArea *st = _gt;
   uint32_t *temp = u_copyn(st->li.text+st->sel_start,st->sel_end-st->sel_start);
@@ -376,7 +376,7 @@ static void *genlocaldata(void *_gt, int32 *len)
   return( ret );
 }
 
-static void *ddgenlocaldata(void *_gt,int32 *len) {
+static void *ddgenlocaldata(void *_gt,int32_t *len) {
     void *temp = genlocaldata(_gt,len);
     SFTextArea *st = _gt;
     _SFTextAreaReplace(st,nullstr);
@@ -519,7 +519,7 @@ static void SFTextAreaPaste(SFTextArea *st,enum selnames sel) {
     if ( GDrawSelectionHasType(st->g.base,sel,"UTF8_STRING") ||
 	    GDrawSelectionHasType(st->g.base,sel,"text/plain;charset=UTF-8")) {
 	uint32_t *temp; char *ctemp;
-	int32 len;
+	int32_t len;
 	if ( GDrawSelectionHasType(st->g.base,sel,"UTF8_STRING") )
 	    ctemp = GDrawRequestSelection(st->g.base,sel,"UTF8_STRING",&len);
 	else
@@ -531,7 +531,7 @@ static void SFTextAreaPaste(SFTextArea *st,enum selnames sel) {
 	}
     } else if ( GDrawSelectionHasType(st->g.base,sel,"text/plain;charset=ISO-10646-UCS-4")) {
 	uint32_t *temp;
-	int32 len;
+	int32_t len;
 	temp = GDrawRequestSelection(st->g.base,sel,"text/plain;charset=ISO-10646-UCS-4",&len);
 	/* Bug! I don't handle byte reversed selections. But I don't think there should be any anyway... */
 	if ( temp!=NULL )
@@ -541,7 +541,7 @@ static void SFTextAreaPaste(SFTextArea *st,enum selnames sel) {
 	    GDrawSelectionHasType(st->g.base,sel,"text/plain;charset=ISO-10646-UCS-2")) {
 	uint32_t *temp;
 	uint16 *temp2;
-	int32 len;
+	int32_t len;
 	temp2 = GDrawRequestSelection(st->g.base,sel,"text/plain;charset=ISO-10646-UCS-2",&len);
 	if ( temp2==NULL || len==0 )
 	    temp2 = GDrawRequestSelection(st->g.base,sel,"Unicode",&len);
@@ -557,7 +557,7 @@ static void SFTextAreaPaste(SFTextArea *st,enum selnames sel) {
 	free(temp2);
     } else if ( GDrawSelectionHasType(st->g.base,sel,"STRING")) {
 	char *ctemp;
-	int32 len;
+	int32_t len;
 	ctemp = GDrawRequestSelection(st->g.base,sel,"STRING",&len);
 	if ( ctemp!=NULL )
 	  {
@@ -712,7 +712,7 @@ static void SFTextAreaInsertRandom(SFTextArea *st) {
     struct fontlist *fl, *prev;
     char **scriptlangs;
     int i,cnt;
-    uint32 script, lang;
+    uint32_t script, lang;
     char *utf8_str;
     uint32_t *str;
     int start, pos;
@@ -1861,7 +1861,7 @@ static void sftextarea_redraw(GGadget *g) {
     _ggadget_redraw(g);
 }
 
-static void sftextarea_move(GGadget *g, int32 x, int32 y ) {
+static void sftextarea_move(GGadget *g, int32_t x, int32_t y ) {
     SFTextArea *st = (SFTextArea *) g;
     if ( st->vsb!=NULL )
 	_ggadget_move((GGadget *) (st->vsb),x+(st->vsb->g.r.x-g->r.x),y);
@@ -1870,7 +1870,7 @@ static void sftextarea_move(GGadget *g, int32 x, int32 y ) {
     _ggadget_move(g,x,y);
 }
 
-static void sftextarea_resize(GGadget *g, int32 width, int32 height ) {
+static void sftextarea_resize(GGadget *g, int32_t width, int32_t height ) {
     SFTextArea *st = (SFTextArea *) g;
     int gtwidth=width, gtheight=height, oldheight=0;
     int l;
@@ -2398,7 +2398,7 @@ int SFTFSetAntiAlias(GGadget *g, int start, int end, int antialias) {
 return( true );
 }
 
-int SFTFSetScriptLang(GGadget *g, int start, int end, uint32 script, uint32 lang) {
+int SFTFSetScriptLang(GGadget *g, int start, int end, uint32_t script, uint32_t lang) {
     SFTextArea *st = (SFTextArea *) g;
     struct fontlist *fl;
 
@@ -2418,7 +2418,7 @@ int SFTFSetScriptLang(GGadget *g, int start, int end, uint32 script, uint32 lang
 return( true );
 }
 
-int SFTFSetFeatures(GGadget *g, int start, int end, uint32 *features) {
+int SFTFSetFeatures(GGadget *g, int start, int end, uint32_t *features) {
     SFTextArea *st = (SFTextArea *) g;
     struct fontlist *fl;
 
@@ -2435,7 +2435,7 @@ return( true );
 }
 
 void SFTFRegisterCallback(GGadget *g, void *cbcontext,
-	void (*changefontcallback)(void *,SplineFont *,enum sftf_fonttype,int size,int aa, uint32 script, uint32 lang, uint32 *feats)) {
+	void (*changefontcallback)(void *,SplineFont *,enum sftf_fonttype,int size,int aa, uint32_t script, uint32_t lang, uint32_t *feats)) {
     SFTextArea *st = (SFTextArea *) g;
 
     st->cbcontext = cbcontext;

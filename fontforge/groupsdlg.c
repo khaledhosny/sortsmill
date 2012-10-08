@@ -1485,7 +1485,7 @@ static void EncodeToGroups(FontView *fv,Group *group, int compacted) {
 	enc->enc_name = EncNameFromGroups(group);
 	enc->is_temporary = true;
 	enc->char_max = 256;
-	enc->unicode = xmalloc(256*sizeof(int32));
+	enc->unicode = xmalloc(256*sizeof(int32_t));
 	enc->psnames = xmalloc(256*sizeof(char *));
 	map = EncMapNew(0,sf->glyphcnt,enc);
     }

@@ -32,12 +32,12 @@
 
 struct clutinf {
     Color col;
-    int32 cnt;
+    int32_t cnt;
     struct clutinf *next;
 };
 
 struct clutcube {
-    int32 cnt;
+    int32_t cnt;
     struct clutinf *ours;
 };
 
@@ -46,7 +46,7 @@ struct clutcnt {
     struct clutinf clut[256];
     struct clutinf transinf;
     struct clutcube cube[16][16][16];
-    int32 dither[6*6*6];
+    int32_t dither[6*6*6];
     int size, div;
 };
 
@@ -59,7 +59,7 @@ struct clut_range {
 
 struct colcnt {
     Color col;
-    int32 cnt;
+    int32_t cnt;
 };
 
 static void RevColListFree(struct revcol *rc) {
@@ -110,7 +110,7 @@ static GClut *gimage_reduceclut(GClut *clut,int clutmax,struct clutinf *clutinf,
     int i,j;
     int size, div, s2, s3;
     int r,g,b,dindex;
-    int32 dither[6*6*6];
+    int32_t dither[6*6*6];
 
     if ( transinf->cnt )
 	--clutmax;
@@ -168,7 +168,7 @@ return( clut );
 
 static void gimage_count32(GImage *image, struct clutcnt *clutcnt,int clutmax) {
     int i, j, len, size, div;
-    uint32 *ipt, *istart, *iend;
+    uint32_t *ipt, *istart, *iend;
     struct _GImage *base, **bases;
     int orig_trans = clutcnt->transinf.cnt;
 
@@ -188,11 +188,11 @@ static void gimage_count32(GImage *image, struct clutcnt *clutcnt,int clutmax) {
 
     for ( j=0; j<len; ++j ) {
 	base = bases[j];
-	ipt = (uint32 *) (base->data);
+	ipt = (uint32_t *) (base->data);
 	for ( i=0; i<base->height; ++i ) {
 	    istart = ipt;
 	    for ( iend = ipt + base->width; ipt<iend; ++ipt ) {
-		register int32 val = *ipt;
+		register int32_t val = *ipt;
 		register int r=COLOR_RED(val), g=COLOR_GREEN(val), b=COLOR_BLUE(val);
 		int dindex = (r/div)*size*size+(g/div)*size+(b/div);
 		register struct clutcube *cc = &clutcnt->cube[r>>4][g>>4][b>>4];
@@ -219,7 +219,7 @@ static void gimage_count32(GImage *image, struct clutcnt *clutcnt,int clutmax) {
 		    }
 		}
 	    }
-	    ipt = (uint32 *) (((uint8 *) istart) + base->bytes_per_line);
+	    ipt = (uint32_t *) (((uint8 *) istart) + base->bytes_per_line);
 	}
 	if ( clutcnt->transinf.cnt!=orig_trans )
 	    clutcnt->transinf.col = base->trans;

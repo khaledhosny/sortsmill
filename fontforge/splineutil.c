@@ -5889,7 +5889,7 @@ void TtfTablesFree(struct ttf_table *tab) {
     }
 }
 
-void SFRemoveSavedTable(SplineFont *sf, uint32 tag) {
+void SFRemoveSavedTable(SplineFont *sf, uint32_t tag) {
     struct ttf_table *tab, *prev;
 
     for ( prev=NULL, tab=sf->ttf_tables; tab!=NULL && tab->tag!=tag; prev=tab, tab=tab->next );

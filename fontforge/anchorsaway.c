@@ -568,7 +568,7 @@ static void AnchorD_DrawPos(AnchorDlg *a) {
 
 static void AnchorD_SelectGlyph(AnchorDlg *a, AnchorPoint *ap) {
     int i;
-    int32 len;
+    int32_t len;
     GTextInfo **ti = GGadgetGetList(GWidgetGetControl(a->gw,CID_Glyph),&len);
 
     for ( i=0; i<len; ++i )

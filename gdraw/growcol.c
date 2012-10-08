@@ -113,7 +113,7 @@ return( true );
 return( false );
 }
 
-static int32 GRowColGetFirstSelPos(GGadget *g) {
+static int32_t GRowColGetFirstSelPos(GGadget *g) {
     int i;
     GRowCol *grc = (GRowCol *) g;
 
@@ -124,7 +124,7 @@ return( i );
 return( -1 );
 }
 
-static void GRowColSelect(GGadget *g, int32 pos, int32 sel) {
+static void GRowColSelect(GGadget *g, int32_t pos, int32_t sel) {
     GRowCol *grc = (GRowCol *) g;
 
     GRowColClearSel(grc);
@@ -136,7 +136,7 @@ return;
     }
 }
 
-static void GRowColSelectOne(GGadget *g, int32 pos) {
+static void GRowColSelectOne(GGadget *g, int32_t pos) {
     GRowCol *grc = (GRowCol *) g;
 
     GRowColClearSel(grc);
@@ -148,7 +148,7 @@ static void GRowColSelectOne(GGadget *g, int32 pos) {
     }
 }
 
-static int32 GRowColIsItemSelected(GGadget *g, int32 pos) {
+static int32_t GRowColIsItemSelected(GGadget *g, int32_t pos) {
     GRowCol *grc = (GRowCol *) g;
 
     if ( pos>=grc->ltot )
@@ -353,13 +353,13 @@ static void GRowColClear(GGadget *g) {
     GRowColSetList(g,NULL,true);
 }
 
-static GTextInfo **GRowColGetList(GGadget *g,int32 *len) {
+static GTextInfo **GRowColGetList(GGadget *g,int32_t *len) {
     GRowCol *grc = (GRowCol *) g;
     if ( len!=NULL ) *len = grc->ltot;
 return( grc->ti );
 }
 
-static GTextInfo *GRowColGetListItem(GGadget *g,int32 pos) {
+static GTextInfo *GRowColGetListItem(GGadget *g,int32_t pos) {
     GRowCol *grc = (GRowCol *) g;
     if ( pos<0 || pos>=grc->ltot )
 return( NULL );
@@ -736,14 +736,14 @@ static void growcol_redraw(GGadget *g) {
     _ggadget_redraw(g);
 }
 
-static void growcol_move(GGadget *g, int32 x, int32 y ) {
+static void growcol_move(GGadget *g, int32_t x, int32_t y ) {
     GRowCol *grc = (GRowCol *) g;
     if ( grc->vsb!=NULL )
 	_ggadget_move((GGadget *) (grc->vsb),x+(grc->vsb->g.r.x-g->r.x),y);
     _ggadget_move(g,x,y);
 }
 
-static void growcol_resize(GGadget *g, int32 width, int32 height ) {
+static void growcol_resize(GGadget *g, int32_t width, int32_t height ) {
     GRowCol *grc = (GRowCol *) g;
     if ( grc->vsb!=NULL ) {
 	int oldwidth = grc->vsb->g.r.x+grc->vsb->g.r.width-g->r.x;

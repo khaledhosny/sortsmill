@@ -201,7 +201,7 @@ static void GME_FixScrollBars(GMatrixEdit *gme) {
     GScrollBarSetBounds(gme->hsb,0,width,gme->hsb->r.width);
 }
 
-static void GMatrixEdit_Move(GGadget *g, int32 x, int32 y) {
+static void GMatrixEdit_Move(GGadget *g, int32_t x, int32_t y) {
     GMatrixEdit *gme = (GMatrixEdit *) g;
     int i;
 
@@ -455,7 +455,7 @@ static void GMatrixEdit_GetDesiredSize(GGadget *g,GRect *outer,GRect *inner) {
 }
 
 static void GME_PositionEdit(GMatrixEdit *gme);
-static void GMatrixEdit_Resize(GGadget *g, int32 width, int32 height ) {
+static void GMatrixEdit_Resize(GGadget *g, int32_t width, int32_t height ) {
     GMatrixEdit *gme = (GMatrixEdit *) g;
     int bp = GBoxBorderWidth(g->base,g->box);
     int subheight, subwidth;
@@ -719,7 +719,7 @@ return( copy(str));
 
 static int GME_RecalcFH(GMatrixEdit *gme) {
     int r,c, as, ds;
-    int32 end = -1;
+    int32_t end = -1;
     char *str, *ept;
     GTextBounds bounds;
     GMenuItem *mi;
@@ -775,13 +775,13 @@ static FontInstance *GMatrixEdit_GetFont(GGadget *g) {
 return( gme->font );
 }
 
-static int32 GMatrixEdit_IsSelected(GGadget *g, int32 pos) {
+static int32_t GMatrixEdit_IsSelected(GGadget *g, int32_t pos) {
     GMatrixEdit *gme = (GMatrixEdit *) g;
 
 return( pos==gme->active_row );
 }
 
-static int32 GMatrixEdit_GetFirst(GGadget *g) {
+static int32_t GMatrixEdit_GetFirst(GGadget *g) {
     GMatrixEdit *gme = (GMatrixEdit *) g;
 
 return( gme->active_row );

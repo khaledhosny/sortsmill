@@ -27,7 +27,7 @@
 
 VISIBLE extern struct unicoderange {
     char *name;		/* The range's name */
-    int32 first, last, defined;
+    int32_t first, last, defined;
     			/* The first codepoint, last codepoint in the range */
 			/*  and a codepoint which actually has a character */
 			/*  associated with it */

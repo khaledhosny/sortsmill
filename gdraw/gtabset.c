@@ -621,10 +621,10 @@ static void _gtabset_redraw(GGadget *g) {
 	GDrawRequestExpose(gts->tabs[i].w, NULL, false);
 }
 
-static void _gtabset_move(GGadget *g, int32 x, int32 y ) {
+static void _gtabset_move(GGadget *g, int32_t x, int32_t y ) {
     GTabSet *gts = (GTabSet *) g;
     int i;
-    int32 nx = x+g->inner.x-g->r.x, ny = y+g->inner.y-g->r.y;
+    int32_t nx = x+g->inner.x-g->r.x, ny = y+g->inner.y-g->r.y;
 
     for ( i=0; i<gts->tabcnt; ++i ) if ( gts->tabs[i].w!=NULL )
 	GDrawMove(gts->tabs[i].w,nx,ny);
@@ -636,7 +636,7 @@ static void _gtabset_move(GGadget *g, int32 x, int32 y ) {
     }
 }
 
-static void _gtabset_resize(GGadget *g, int32 width, int32 height ) {
+static void _gtabset_resize(GGadget *g, int32_t width, int32_t height ) {
     GTabSet *gts = (GTabSet *) g;
     int i;
 

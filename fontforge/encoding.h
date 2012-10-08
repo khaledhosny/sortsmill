@@ -12,7 +12,7 @@ struct cidmap {
     int supplement, maxsupple;
     int cidmax;			/* Max cid found in the charset */
     int namemax;		/* Max cid with useful info */
-    uint32 *unicode;
+    uint32_t *unicode;
     char **name;
     struct cidaltuni *alts;
     struct cidmap *next;

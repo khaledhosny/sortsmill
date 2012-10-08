@@ -2168,7 +2168,7 @@ return;
 
 void SCFigureCounterMasks(SplineChar *sc) {
     HintMask masks[30];
-    uint32 script;
+    uint32_t script;
     StemInfo *h;
     int mc=0, i;
 

@@ -3360,7 +3360,7 @@ void PSFontInterpretPS(FILE *ps,struct charprocs *cp,char **encoding) {
 We're not smart here no: 0 1 255 {1 index exch /.notdef put} for */
 Encoding *PSSlurpEncodings(FILE *file) {
     char *names[1024];
-    int32 encs[1024];
+    int32_t encs[1024];
     Encoding *item, *head = NULL, *last;
     char *encname;
     char tokbuf[200];
@@ -3424,8 +3424,8 @@ return( head );
 	    item = xcalloc(1,sizeof(Encoding));
 	    item->enc_name = encname;
 	    item->char_cnt = max;
-	    item->unicode = xmalloc(max*sizeof(int32));
-	    memcpy(item->unicode,encs,max*sizeof(int32));
+	    item->unicode = xmalloc(max*sizeof(int32_t));
+	    memcpy(item->unicode,encs,max*sizeof(int32_t));
 	    if ( any && !codepointsonly ) {
 		item->psnames = xcalloc(max,sizeof(char *));
 		memcpy(item->psnames,names,max*sizeof(char *));

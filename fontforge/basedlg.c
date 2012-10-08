@@ -33,7 +33,7 @@
 #include <gkeysym.h>
 #include <math.h>
 
-static uint32 TagFromString(char *pt) {
+static uint32_t TagFromString(char *pt) {
     char script[4];
 
     memset(script,' ',4);
@@ -64,7 +64,7 @@ typedef struct baselangdlg {
     int vertical;
     int islang;
     int done;
-    uint32 script;
+    uint32_t script;
 } BaseLangDlg;
 
 extern GTextInfo scripts[], languages[];
@@ -103,7 +103,7 @@ static void BaseLang_FinishEdit(GGadget *g, int r, int c, int wasnew) {
 	BaseLangDlg *b = GDrawGetUserData(GGadgetGetWindow(g));
 	int rows, cols = GMatrixEditGetColCnt(g);
 	struct matrix_data *md = GMatrixEditGet(g,&rows);
-	uint32 lang = TagFromString(md[r*cols+0].u.md_str);
+	uint32_t lang = TagFromString(md[r*cols+0].u.md_str);
 	int gid;
 	SplineChar *sc;
 	DBounds bnd, scb;
@@ -180,7 +180,7 @@ static void BaseLangMatrixInit(struct matrixinit *mi,struct baselangextent *old,
 }
 
 static struct baselangextent *SFBaselang(SplineFont *sf,struct baselangextent *old,
-	int is_vertical, int islang, uint32 script );
+	int is_vertical, int islang, uint32_t script );
 
 static int BaseLang_Extents(GGadget *g, GEvent *e) {
     if ( e->type==et_controlevent && e->u.control.subtype == et_buttonactivate ) {
@@ -272,7 +272,7 @@ return( true );
 }
 
 static struct baselangextent *SFBaselang(SplineFont *sf,struct baselangextent *old,
-	int is_vertical, int islang, uint32 script ) {
+	int is_vertical, int islang, uint32_t script ) {
     int i,j,k;
     GRect pos;
     GWindowAttrs wattrs;
@@ -422,7 +422,7 @@ static struct col_init baselinesci[10] = {
     { me_int, NULL, NULL, NULL, "romn" },
     { me_int, NULL, NULL, NULL, "hidden" }	/* Used to hold per-script data */
     };
-static uint32 stdtags[] = {
+static uint32_t stdtags[] = {
     CHR('h','a','n','g'), CHR('i','c','f','b'), CHR('i','c','f','t'), CHR('i','d','e','o'),
     CHR('i','d','t','p'), CHR('m','a','t','h'), CHR('r','o','m','n'), 0
 };
@@ -432,8 +432,8 @@ static void Base_FinishEdit(GGadget *g, int r, int c, int wasnew) {
     if ( wasnew && c==0 ) {
 	int rows, cols = GMatrixEditGetColCnt(g);
 	struct matrix_data *md = GMatrixEditGet(g,&rows);
-	uint32 script = TagFromString(md[r*cols+0].u.md_str);
-	uint32 bsln;
+	uint32_t script = TagFromString(md[r*cols+0].u.md_str);
+	uint32_t bsln;
 	int i,j,k;
 
 /* This if is duplicated (almost) in tottfaat.c: PerGlyphDefBaseline */
@@ -629,7 +629,7 @@ return( true );
 
 	b->old->baseline_cnt = cnt;
 	if ( i!=0 ) {
-	    b->old->baseline_tags = xmalloc(cnt*sizeof(uint32));
+	    b->old->baseline_tags = xmalloc(cnt*sizeof(uint32_t));
 	    for ( i=0; stdtags[i]!=0 ; ++i ) if ( mapping[i]!=-1 )
 		b->old->baseline_tags[mapping[i]] = stdtags[i];
 	}

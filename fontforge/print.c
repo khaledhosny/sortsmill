@@ -590,8 +590,8 @@ pdf_BrushCheck (PI * pi, struct glyph_res *gr, struct brush *brush,
                                       1].offset) /
                     (grad->grad_stops[j].offset -
                      grad->grad_stops[j - 1].offset);
-                  uint32 col1 = grad->grad_stops[j - 1].col;
-                  uint32 col2 = grad->grad_stops[j].col;
+                  uint32_t col1 = grad->grad_stops[j - 1].col;
+                  uint32_t col2 = grad->grad_stops[j].col;
                   if (col1 == COLOR_INHERITED)
                     col1 = 0x000000;
                   if (col2 == COLOR_INHERITED)
@@ -820,7 +820,7 @@ pdf_ImageCheck (PI * pi, struct glyph_res *gr, ImageList * images, int layer,
       else
         {
           /* My image representation of colors includes a pad byte, pdf's does not */
-          uint32 *pt = (uint32 *) base->data;
+          uint32_t *pt = (uint32_t *) base->data;
           for (i = 0; i < base->width * base->height; ++i, ++pt)
             {
               int red = (*pt >> 16) & 0xff;
@@ -2689,7 +2689,7 @@ static char *_simplelatnchoices[] = {
   NULL
 };
 
-static uint32 _simplelatnlangs[] = {
+static uint32_t _simplelatnlangs[] = {
   CHR ('E', 'N', 'G', ' '),
   CHR ('E', 'N', 'G', ' '),
   CHR ('E', 'N', 'G', ' '),
@@ -2741,7 +2741,7 @@ fertilization of genetic hybrids. */
   NULL
 };
 
-static uint32 _simplecyrilliclangs[] = {
+static uint32_t _simplecyrilliclangs[] = {
   CHR ('R', 'U', 'S', ' '),     /* Russian */
   CHR ('R', 'U', 'S', ' '),
   CHR ('S', 'R', 'B', ' '),     /* Serbian */
@@ -3113,7 +3113,7 @@ static struct langsamples
   char **sample;
   char *iso_lang;               /* ISO 639 two character abbreviation */
   enum scripts script;
-  uint32 otf_script, lang;
+  uint32_t otf_script, lang;
 } sample[] =
 {
   {
@@ -3372,7 +3372,7 @@ AllChars (SplineFont *sf, const char *str)
 }
 
 static int
-ScriptInList (uint32 script, uint32 * scripts, int scnt)
+ScriptInList (uint32_t script, uint32_t * scripts, int scnt)
 {
   int s;
 
@@ -3385,13 +3385,13 @@ ScriptInList (uint32 script, uint32 * scripts, int scnt)
 
 uint32_t *
 PrtBuildDef (SplineFont *sf, void *tf,
-             void (*langsyscallback) (void *tf, int end, uint32 script,
-                                      uint32 lang))
+             void (*langsyscallback) (void *tf, int end, uint32_t script,
+                                      uint32_t lang))
 {
   int i, j, gotem, len, any = 0, foundsomething = 0;
   uint32_t *ret = NULL;
   char **cur;
-  uint32 scriptsdone[100], scriptsthere[100], langs[100];
+  uint32_t scriptsdone[100], scriptsthere[100], langs[100];
   char *randoms[100];
   char buffer[220], *pt;
   int scnt, s, therecnt, rcnt;
@@ -3802,7 +3802,7 @@ FileToUString (char *filename, int max)
 }
 
 void
-ScriptPrint (FontViewBase * fv, int type, int32 * pointsizes,
+ScriptPrint (FontViewBase * fv, int type, int32_t * pointsizes,
              char *samplefile, uint32_t *sample, char *outputfile)
 {
   PI pi;
@@ -3835,7 +3835,7 @@ ScriptPrint (FontViewBase * fv, int type, int32 * pointsizes,
       if (sample == NULL)
         sample =
           PrtBuildDef (pi.mainsf, li,
-                       (void (*)(void *, int, uint32, uint32))
+                       (void (*)(void *, int, uint32_t, uint32_t))
                        LayoutInfoInitLangSys);
       else
         LayoutInfoInitLangSys (li, u_strlen (sample), DEFAULT_SCRIPT,

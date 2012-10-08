@@ -39,7 +39,7 @@
 
 typedef struct anchorclass1 {
     AnchorClass ac;
-    uint32 feature_tag;
+    uint32_t feature_tag;
     uint16 script_lang_index;
     uint16 flags;
     uint16 merge_with;
@@ -63,36 +63,36 @@ typedef struct generic_pst1 {
     uint8 macfeature;		/* tag should be interpretted as <feature,setting> rather than 'abcd' */
     uint16 flags;
     uint16 script_lang_index;		/* 0xffff means none */
-    uint32 tag;
+    uint32_t tag;
 } PST1;
 
 typedef struct generic_fpst1 {
     FPST fpst;
     uint16 script_lang_index;
     uint16 flags;
-    uint32 tag;
+    uint32_t tag;
 } FPST1;
 
 typedef struct generic_asm1 {		/* Apple State Machine */
     ASM sm;
     uint16 feature, setting;
-    uint32 opentype_tag;		/* If converted from opentype */
+    uint32_t opentype_tag;		/* If converted from opentype */
 } ASM1;
 
 struct table_ordering {
-    uint32 table_tag;
-    uint32 *ordered_features;
+    uint32_t table_tag;
+    uint32_t *ordered_features;
     struct table_ordering *next;
 };
 
 struct script_record {
-    uint32 script;
-    uint32 *langs;
+    uint32_t script;
+    uint32_t *langs;
 };
 
 struct tagtype {
     enum possub_type type;
-    uint32 tag;
+    uint32_t tag;
 };
 
 struct gentagtype {
@@ -118,7 +118,7 @@ typedef struct splinefont1 {
     struct gentagtype gentags;
 } SplineFont1;
 
-extern int SFFindBiggestScriptLangIndex(SplineFont *_sf,uint32 script,uint32 lang);
-extern int SFAddScriptIndex(SplineFont1 *sf,uint32 *scripts,int scnt);
+extern int SFFindBiggestScriptLangIndex(SplineFont *_sf,uint32_t script,uint32_t lang);
+extern int SFAddScriptIndex(SplineFont1 *sf,uint32_t *scripts,int scnt);
 extern void SFD_AssignLookups(SplineFont1 *sf);
 #endif		/* _SFD1_H */

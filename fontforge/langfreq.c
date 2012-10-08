@@ -1818,7 +1818,7 @@ static float WEL_vowel_run[] = {
     0.000000, 0.716191, 0.249052, 0.031673, 0.002959, 0.000125, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000
 };
 
-static struct lang_frequencies { uint32 script, lang; char *note; struct letter_frequencies *cnts; float *wordlens; char *vowels; float *consonant_run, *all_consonants, *vowel_run; } lang_frequencies[] = {
+static struct lang_frequencies { uint32_t script, lang; char *note; struct letter_frequencies *cnts; float *wordlens; char *vowels; float *consonant_run, *all_consonants, *vowel_run; } lang_frequencies[] = {
     { CHR('l','a','t','n'), CHR('C','S','Y',' '), N_("Czech"),     CSY_counts, CSY_word_lens, "aeiouyráéíóúýěů", CSY_consonant_run, CSY_all_consonants, CSY_vowel_run },
     { CHR('l','a','t','n'), CHR('N','L','D',' '), N_("Dutch"),     NLD_counts, NLD_word_lens, "aeiouyàéêëïòó", NLD_consonant_run, NLD_all_consonants, NLD_vowel_run },
     { CHR('l','a','t','n'), CHR('E','N','G',' '), N_("English"),   ENG_counts, ENG_word_lens, "aeiouy", ENG_consonant_run, ENG_all_consonants, ENG_vowel_run },
@@ -2064,7 +2064,7 @@ struct script_chars {
     uint32_t *chars;
 };
 
-static void ScriptCharInit(SplineFont *sf,uint32 script, struct script_chars *chrs) {
+static void ScriptCharInit(SplineFont *sf,uint32_t script, struct script_chars *chrs) {
     int gid, cnt, k;
     SplineFont *subsf;
     SplineChar *sc;
@@ -2200,7 +2200,7 @@ return( copy(""));
 return( copy( parabuf ));
 }
 
-char *RandomParaFromScriptLang(uint32 script, uint32 lang, SplineFont *sf,
+char *RandomParaFromScriptLang(uint32_t script, uint32_t lang, SplineFont *sf,
 	struct lang_frequencies *lf) {
     int i;
     struct script_chars chrs;
@@ -2225,7 +2225,7 @@ char *RandomParaFromScriptLang(uint32 script, uint32 lang, SplineFont *sf,
 return( ret );
 }
 
-char *RandomParaFromScript(uint32 script, uint32 *lang, SplineFont *sf) {
+char *RandomParaFromScript(uint32_t script, uint32_t *lang, SplineFont *sf) {
     int i;
     struct lang_frequencies *lf;
     struct script_chars chrs;
@@ -2268,19 +2268,19 @@ return( ret );
 }
 
 static int tag_compare(const void *tag1, const void *tag2) {
-    if ( *(uint32 *) tag1 > *(uint32 *) tag2 )
+    if ( *(uint32_t *) tag1 > *(uint32_t *) tag2 )
 return( 1 );
-    else if ( *(uint32 *) tag1 < *(uint32 *) tag2 )
+    else if ( *(uint32_t *) tag1 < *(uint32_t *) tag2 )
 return( -1 );
     else
 return( 0 );
 }
 
-int SF2Scripts(SplineFont *sf,uint32 scripts[100]) {
+int SF2Scripts(SplineFont *sf,uint32_t scripts[100]) {
     int scnt, s, gid, k;
     SplineFont *subsf;
     SplineChar *sc;
-    uint32 script;
+    uint32_t script;
     PST *pst;
 
     scnt=0;
@@ -2308,13 +2308,13 @@ int SF2Scripts(SplineFont *sf,uint32 scripts[100]) {
 	}
 	++k;
     } while ( k<sf->subfontcnt );
-    qsort(scripts,scnt,sizeof(uint32),tag_compare);
+    qsort(scripts,scnt,sizeof(uint32_t),tag_compare);
     scripts[scnt] = 0;
 return( scnt );
 }
 
 char **SFScriptLangs(SplineFont *sf,struct lang_frequencies ***_freq) {
-    uint32 scripts[100];
+    uint32_t scripts[100];
     int scnt, s, extras, i, pos;
     char **sl;
     char buffer[100];

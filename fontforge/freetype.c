@@ -983,7 +983,7 @@ return( SplineSetStroke(layer->splines,&si,layer->order2));
 static void MergeBitmaps(FT_Bitmap *bitmap,FT_Bitmap *newstuff,struct brush *brush,
 	uint8 *clipmask,double scale,DBounds *bbox,SplineChar *sc) {
     int i, j;
-    uint32 col = brush->col;
+    uint32_t col = brush->col;
 
     if ( col == COLOR_INHERITED ) col = 0x000000;
     col = 3*((col>>16)&0xff) + 6*((col>>8)&0xff) + 1*(col&0xff);

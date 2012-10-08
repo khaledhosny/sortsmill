@@ -95,7 +95,7 @@ static void gdrawable_redraw(GGadget *g ) {
     _ggadget_redraw(g);
 }
 
-static void gdrawable_move(GGadget *g, int32 x, int32 y) {
+static void gdrawable_move(GGadget *g, int32_t x, int32_t y) {
     GDrawable *gd = (GDrawable *) g;
 
     if ( gd->gw!=NULL )
@@ -103,7 +103,7 @@ static void gdrawable_move(GGadget *g, int32 x, int32 y) {
     _ggadget_move(g,x,y);
 }
 
-static void gdrawable_resize(GGadget *g, int32 width, int32 height ) {
+static void gdrawable_resize(GGadget *g, int32_t width, int32_t height ) {
     GDrawable *gd = (GDrawable *) g;
     int bp = GBoxBorderWidth(g->base,g->box);
 

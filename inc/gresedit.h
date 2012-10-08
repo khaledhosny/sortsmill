@@ -59,8 +59,8 @@ typedef struct gresinfo {
     char *initialcomment;
     char *resname;
     char *progname;
-    uint8 is_button;		/* Activate default button border flag */
-    uint32 override_mask;
+    uint8_t is_button;		/* Activate default button border flag */
+    uint32_t override_mask;
     GBox *overrides;
     GBox orig_state;
     void (*refresh)(void);	/* Called when user OKs the resource editor dlg */

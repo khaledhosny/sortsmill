@@ -1346,7 +1346,7 @@ SetMasterToAxis (MMW * mmw, int initial)
     {
       GGadget *list =
         GWidgetGetControl (mmw->subwins[mmw_counts], CID_MasterCount);
-      int32 len;
+      int32_t len;
       GTextInfo **ti = GGadgetGetList (list, &len);
       if (isadobe)
         {
@@ -1469,7 +1469,7 @@ MMW_Close (MMW * mmw)
   int i;
   GGadget *list =
     GWidgetGetControl (mmw->subwins[mmw_named], CID_NamedDesigns);
-  int32 len;
+  int32_t len;
   GTextInfo **ti = GGadgetGetList (list, &len);
 
   for (i = 0; i < len; ++i)
@@ -2147,7 +2147,7 @@ MMW_ParseNamedStyles (MMSet *setto, MMW * mmw)
 {
   GGadget *list =
     GWidgetGetControl (mmw->subwins[mmw_named], CID_NamedDesigns);
-  int32 i, j, len;
+  int32_t i, j, len;
   GTextInfo **ti = GGadgetGetList (list, &len);
   uint32_t *upt, *end;
 
@@ -2908,7 +2908,7 @@ MMW_NamedDelete (GGadget * g, GEvent * e)
     {
       GWindow gw = GGadgetGetWindow (g);
       GGadget *list = GWidgetGetControl (gw, CID_NamedDesigns);
-      int32 i, len;
+      int32_t i, len;
       GTextInfo **ti = GGadgetGetList (list, &len);
       for (i = 0; i < len; ++i)
         {
@@ -2930,7 +2930,7 @@ MMW_NamedSel (GGadget * g, GEvent * e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_listselected)
     {
-      int32 len;
+      int32_t len;
       GTextInfo **ti = GGadgetGetList (g, &len);
       GWindow gw = GGadgetGetWindow (g);
       int i, sel_cnt = 0;

@@ -256,13 +256,13 @@ extern int oldbitmapstate;
 
 static const char *pfaeditflag = "SplineFontDB:";
 
-int32 *
+int32_t *
 ParseBitmapSizes (GGadget * g, char *msg, int *err)
 {
   const uint32_t *val = _GGadgetGetTitle (g), *pt;
   uint32_t *end, *end2;
   int i;
-  int32 *sizes;
+  int32_t *sizes;
   char oldloc[24];
 
   strcpy (oldloc, setlocale (LC_NUMERIC, NULL));
@@ -283,7 +283,7 @@ ParseBitmapSizes (GGadget * g, char *msg, int *err)
       pt = end + 1;
       end2 = NULL;
     }
-  sizes = xmalloc ((i + 1) * sizeof (int32));
+  sizes = xmalloc ((i + 1) * sizeof (int32_t));
 
   for (i = 0, pt = val; *pt != '\0';)
     {
@@ -1670,7 +1670,7 @@ DoSave (struct gfc_data *d, uint32_t *path)
 {
   int err = false;
   char *temp;
-  int32 *sizes = NULL;
+  int32_t *sizes = NULL;
   int iscid, i;
   struct sflist *sfs = NULL, *cur, *last = NULL;
   static int psscalewarned = 0, ttfscalewarned = 0, psfnlenwarned = 0;
@@ -2343,7 +2343,7 @@ GFD_Format (GGadget * g, GEvent * e)
       struct gfc_data *d = GDrawGetUserData (GGadgetGetWindow (g));
       uint32_t *pt, *dup, *tpt, *ret;
       int format = GGadgetGetFirstListSelectedItem (d->pstype);
-      int32 len;
+      int32_t len;
       int bf;
       static uint32_t nullstr[] = { 0 };
       GTextInfo **list;

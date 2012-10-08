@@ -341,7 +341,7 @@ VISIBLE extern int FVImportBDF(FontViewBase *fv, char *filename,int ispk, int to
 VISIBLE extern void MergeFont(FontViewBase *fv,SplineFont *other,int preserveCrossFontKerning);
 VISIBLE extern int FVImportImages(FontViewBase *fv,char *path,int isimage,int toback,int flags);
 VISIBLE extern int FVImportImageTemplate(FontViewBase *fv,char *path,int isimage,int toback,int flags);
-extern void ScriptPrint(FontViewBase *fv,int type,int32 *pointsizes,char *samplefile,
+extern void ScriptPrint(FontViewBase *fv,int type,int32_t *pointsizes,char *samplefile,
 	uint32_t *sample, char *outputfile);
 VISIBLE extern int FVBParseSelectByPST(FontViewBase *fv,struct lookup_subtable *sub,
 	int search_type);
@@ -393,7 +393,7 @@ struct fixed_maps {
 
 struct genericchange {
     enum glyphchange_type gc;
-    uint32 feature_tag;
+    uint32_t feature_tag;
     char *glyph_extension;
     char *extension_for_letters, *extension_for_symbols;
     double stem_height_scale, stem_width_scale;
@@ -577,7 +577,7 @@ VISIBLE extern void PyFF_InitFontHook(FontViewBase *fv);
 
 VISIBLE extern void LookupInit(void);
 VISIBLE extern int UserFeaturesDiffer(void);
-VISIBLE extern uint32 *StdFeaturesOfScript(uint32 script);
+VISIBLE extern uint32_t *StdFeaturesOfScript(uint32_t script);
 
 enum byte_types { bt_instr, bt_cnt, bt_byte, bt_wordhi, bt_wordlo, bt_impliedreturn };
 struct instrdata {
@@ -588,7 +588,7 @@ struct instrdata {
     unsigned int in_composit: 1;
     SplineFont *sf;
     SplineChar *sc;
-    uint32 tag;
+    uint32_t tag;
     struct instrdlg *id;
     struct instrdata *next;
 };
@@ -597,7 +597,7 @@ VISIBLE extern uint8 *_IVParse(SplineFont *sf, char *text, int *len,
 	void (*IVError)(void *,char *, int), void *iv);
 VISIBLE extern char *_IVUnParseInstrs(uint8 *instrs,int instr_cnt);
 
-extern int BitmapControl(FontViewBase *fv,int32 *sizes,int isavail,int rasterize);
+extern int BitmapControl(FontViewBase *fv,int32_t *sizes,int isavail,int rasterize);
 extern void FVSetWidthScript(FontViewBase *fv,enum widthtype wtype,int val,int incr);
 VISIBLE extern void FVMetricsCenter(FontViewBase *fv,int docenter);
 VISIBLE extern void FVRevert(FontViewBase *fv);

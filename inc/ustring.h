@@ -86,8 +86,8 @@ VISIBLE extern uint32_t *cu_strstartmatch (const char *initial,
                                     const uint32_t *full);
 
 #define utf82u_strncpy utf82U_strncpy
-VISIBLE extern int32 utf8_ildb (const char **utf8_text);
-VISIBLE extern char *utf8_idpb (char *utf8_text, uint32 ch);
+VISIBLE extern int32_t utf8_ildb (const char **utf8_text);
+VISIBLE extern char *utf8_idpb (char *utf8_text, uint32_t ch);
 VISIBLE extern char *utf8_db (char *utf8_text);
 VISIBLE extern char *utf8_ib (char *utf8_text);
 VISIBLE extern int utf8_valid (const char *str);

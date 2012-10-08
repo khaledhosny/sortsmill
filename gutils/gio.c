@@ -269,7 +269,7 @@ GIOControl *GIOCreate(uint32_t *path,void *userdata,
 return(gc);
 }
 
-void GIOSetDefAuthorizer(int32 (*getauth)(struct giocontrol *)) {
+void GIOSetDefAuthorizer(int32_t (*getauth)(struct giocontrol *)) {
     _GIO_stdfuncs.getauth = getauth;
 }
 

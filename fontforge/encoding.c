@@ -39,7 +39,7 @@
 
 Encoding *default_encoding = NULL;
 
-static int32 tex_base_encoding[] = {
+static int32_t tex_base_encoding[] = {
   0x0000, 0x02d9, 0xfb01, 0xfb02, 0x2044, 0x02dd, 0x0141, 0x0142,
   0x02db, 0x02da, 0x000a, 0x02d8, 0x2212, 0x000d, 0x017d, 0x017e,
   0x02c7, 0x0131, 0xf6be, 0xfb00, 0xfb03, 0xfb04, 0x2260, 0x221e,
@@ -74,7 +74,7 @@ static int32 tex_base_encoding[] = {
   0x00f8, 0x00f9, 0x00fa, 0x00fb, 0x00fc, 0x00fd, 0x00fe, 0x00ff
 };
 
-static int32 unicode_from_MacSymbol[] = {
+static int32_t unicode_from_MacSymbol[] = {
   0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
   0x0008, 0x0009, 0x000a, 0x000b, 0x000c, 0x000d, 0x000e, 0x000f,
   0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
@@ -597,7 +597,7 @@ static Encoding *
 ParseConsortiumEncodingFile (FILE *file)
 {
   char buffer[200];
-  int32 encs[0x10000];
+  int32_t encs[0x10000];
   int enc, unienc, max;
   Encoding *item;
 
@@ -628,8 +628,8 @@ ParseConsortiumEncodingFile (FILE *file)
   item = xcalloc (1, sizeof (Encoding));
   item->only_1byte = item->has_1byte = true;
   item->char_cnt = max;
-  item->unicode = xmalloc (max * sizeof (int32));
-  memcpy (item->unicode, encs, max * sizeof (int32));
+  item->unicode = xmalloc (max * sizeof (int32_t));
+  memcpy (item->unicode, encs, max * sizeof (int32_t));
   return (item);
 }
 
@@ -1087,7 +1087,7 @@ LoadMapFromFile (char *file, char *registry, char *ordering, int supplement)
     }
   else
     {
-      ret->unicode = xcalloc (ret->namemax + 1, sizeof (uint32));
+      ret->unicode = xcalloc (ret->namemax + 1, sizeof (uint32_t));
       ret->name = xcalloc (ret->namemax + 1, sizeof (char *));
       while (1)
         {
@@ -1405,7 +1405,7 @@ enum cmaptype
 
 struct coderange
 {
-  uint32 first, last, cid;
+  uint32_t first, last, cid;
 };
 
 struct cmap
@@ -1552,8 +1552,8 @@ ParseCMap (char *filename)
 static void
 CompressCMap (struct cmap *cmap)
 {
-  int32 i, j, k, pos, base;
-  uint32 min, oldmax;
+  int32_t i, j, k, pos, base;
+  uint32_t min, oldmax;
   /* we can't really deal with three and four byte encodings */
   /*  so if we get one arrange for the sf itself to do a remap */
 
@@ -2440,12 +2440,12 @@ EncMap *
 CompactEncMap (EncMap * map, SplineFont *sf)
 {
   int i, inuse, gid;
-  int32 *newmap;
+  int32_t *newmap;
 
   for (i = inuse = 0; i < map->enccount; ++i)
     if ((gid = map->map[i]) != -1 && SCWorthOutputting (sf->glyphs[gid]))
       ++inuse;
-  newmap = xmalloc (inuse * sizeof (int32));
+  newmap = xmalloc (inuse * sizeof (int32_t));
   for (i = inuse = 0; i < map->enccount; ++i)
     if ((gid = map->map[i]) != -1 && SCWorthOutputting (sf->glyphs[gid]))
       newmap[inuse++] = gid;
@@ -2964,7 +2964,7 @@ MMMatchGlyphs (MMSet *mm)
     SFMatchGlyphs (mm->normal, base, true);
 }
 
-int32
+int32_t
 UniFromEnc (int enc, Encoding * encname)
 {
   char from[20];
@@ -3029,8 +3029,8 @@ UniFromEnc (int enc, Encoding * encname)
   return (-1);
 }
 
-int32
-EncFromUni (int32 uni, Encoding * enc)
+int32_t
+EncFromUni (int32_t uni, Encoding * enc)
 {
   uint32_t from[20];
   unsigned char to[20];
@@ -3087,7 +3087,7 @@ EncFromUni (int32 uni, Encoding * enc)
   return (-1);
 }
 
-int32
+int32_t
 EncFromName (const char *name, enum uni_interp interp, Encoding * encname)
 {
   int i;
@@ -3138,9 +3138,9 @@ SFExpandGlyphCount (SplineFont *sf, int newcnt)
           if (newcnt > fv->map->backmax)
             fv->map->backmap =
               xrealloc (fv->map->backmap,
-                        (fv->map->backmax = newcnt + 5) * sizeof (int32));
+                        (fv->map->backmax = newcnt + 5) * sizeof (int32_t));
           memset (fv->map->backmap + old, -1,
-                  (newcnt - old) * sizeof (int32));
+                  (newcnt - old) * sizeof (int32_t));
         }
     }
 }

@@ -68,7 +68,7 @@ typedef struct printinfo {
     EncMap *mainmap;
     enum printtype pt;
     int pointsize;
-    int32 *pointsizes;
+    int32_t *pointsizes;
     int extrahspace, extravspace;
     FILE *out;
     unsigned int showvm: 1;
