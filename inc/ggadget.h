@@ -326,7 +326,7 @@ VISIBLE void GGadgetSetUserData(GGadget *g, void *d);
 void GGadgetSetPopupMsg(GGadget *g, const uint32_t *msg);
 GRect *GGadgetGetInnerSize(GGadget *g,GRect *rct);
 VISIBLE GRect *GGadgetGetSize(GGadget *g,GRect *rct);
-void GGadgetGetDesiredVisibleSize(GGadget *g,GRect *outer, GRect *inner);
+VISIBLE void GGadgetGetDesiredVisibleSize(GGadget *g,GRect *outer, GRect *inner);
 VISIBLE void GGadgetGetDesiredSize(GGadget *g,GRect *outer, GRect *inner);
 VISIBLE void GGadgetSetDesiredSize(GGadget *g,GRect *outer, GRect *inner);
 VISIBLE int GGadgetGetCid(GGadget *g);
