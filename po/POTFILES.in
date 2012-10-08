@@ -79,6 +79,7 @@ fontforge/openfontdlg.c
 fontforge/othersubrs.c
 fontforge/palmfonts.c
 fontforge/parsepdf.c
+fontforge/parsepfa.c
 fontforge/parsettfatt.c
 fontforge/parsettfbmf.c
 fontforge/parsettf.c
@@ -98,6 +99,7 @@ fontforge/scstylesui.c
 fontforge/search.c
 fontforge/searchview.c
 fontforge/sfd1.c
+fontforge/sfd.c
 fontforge/sflayout.c
 fontforge/sftextfield.c
 fontforge/showatt.c
