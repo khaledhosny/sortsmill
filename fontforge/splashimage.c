@@ -28,7 +28,7 @@
  */
 #include "gimage.h"
 
-static uint8 splashimage0_data[] = {
+static uint8_t splashimage0_data[] = {
     0x4, 0xb, 0x23, 0x23, 0x15, 0x2e, 0x3a, 0x15, 
 	0x5, 0x4, 0x4, 0x4, 0x1, 0x1, 0xe, 0xb, 
 	0x8, 0x8, 0x15, 0x23, 0x24, 0x40, 0x46, 0x46, 
@@ -18068,7 +18068,7 @@ static GClut splashimage0_clut = { 255, 1, -1,
 static struct _GImage splashimage0_base = {
     it_index,
     15420,379,375,379,
-    (uint8 *) splashimage0_data,
+    (uint8_t *) splashimage0_data,
     &splashimage0_clut,
     0xffffffff
 };

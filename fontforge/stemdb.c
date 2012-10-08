@@ -1187,7 +1187,7 @@ static BasePoint MiddleUnit( BasePoint *unit1, BasePoint *unit2 ) {
 return( ret );
 }
 
-static uint8 IsStubOrIntersection( struct glyphdata *gd, BasePoint *dir1, 
+static uint8_t IsStubOrIntersection( struct glyphdata *gd, BasePoint *dir1, 
     struct pointdata *pd1, struct pointdata *pd2, int is_next1, int is_next2 ) {
     int i;
     int exc=0;
@@ -1351,7 +1351,7 @@ static void SwapEdges( struct glyphdata *gd,struct stemdata *stem ) {
     }
 }
 
-static int StemFitsHV( struct stemdata *stem,int is_x,uint8 mask ) {
+static int StemFitsHV( struct stemdata *stem,int is_x,uint8_t mask ) {
     int i,cnt;
     double loff,roff;
     double lmin=0,lmax=0,rmin=0,rmax=0;
@@ -1813,7 +1813,7 @@ return( stem );
 }
 
 static int ParallelToDir( struct pointdata *pd,int checknext,BasePoint *dir,
-    BasePoint *opposite,SplinePoint *basesp,uint8 is_stub ) {
+    BasePoint *opposite,SplinePoint *basesp,uint8_t is_stub ) {
     
     BasePoint n, o, *base = &basesp->me;
     SplinePoint *sp;
@@ -1947,7 +1947,7 @@ return( hv );
 }
 
 static struct stemdata *TestStem( struct glyphdata *gd,struct pointdata *pd,
-    BasePoint *dir,SplinePoint *match,int is_next,int is_next2,int require_existing,uint8 is_stub,int eidx ) {
+    BasePoint *dir,SplinePoint *match,int is_next,int is_next2,int require_existing,uint8_t is_stub,int eidx ) {
     struct pointdata *pd2;
     struct stemdata *stem, *destem;
     struct stem_chunk *chunk;
@@ -2314,7 +2314,7 @@ static int BuildStem( struct glyphdata *gd,struct pointdata *pd,int is_next,
     struct linedata *line;
     struct pointdata *testpd, *topd, *frompd;
     int tp, fp, t_needs_recalc=false, ret=0;
-    uint8 tstub=0, fstub=0;
+    uint8_t tstub=0, fstub=0;
     BasePoint opposite;
     struct stemdata *stem=NULL;
 
@@ -3136,7 +3136,7 @@ static int AddLineSegment( struct stemdata *stem,struct segment *space,int cnt,
     int scurved = false, ecurved = false, c, hv;
     SplinePoint *sp, *psp, *nsp;
     double b;
-    uint8 extr;
+    uint8_t extr;
     
     if ( pd==NULL || (sp = pd->sp)==NULL || sp->ticked ||
 	    sp->next==NULL || sp->prev==NULL )
@@ -4036,7 +4036,7 @@ static void FindRefPointsNew( struct glyphdata *gd,struct stemdata *stem ) {
     struct pointdata *lmost1, *lmost2, *rmost1, *rmost2;
     double llen, prevllen, rlen, prevrlen;
     SplinePoint *sp, *tsp;
-    uint8 *lextr, *rextr;
+    uint8_t *lextr, *rextr;
 
     is_x = (int) rint( stem->unit.y );
     lpos = ((real *) &stem->left.x)[!is_x];

@@ -633,7 +633,7 @@ static uint32_t *macencodings[] = {
 
 /* I've no idea what encoding code farsi uses, it isn't documented to be arabic 4, nor is it documented to have its own code */
 
-static uint8 _MacScriptFromLanguage[] = {
+static uint8_t _MacScriptFromLanguage[] = {
 	sm_roman,		/* English */
 	sm_roman,		/* French */
 	sm_roman,		/* German */
@@ -1119,7 +1119,7 @@ return( table );
 char *MacStrToUtf8(const char *str,int macenc,int maclang) {
     const uint32_t *table;
     char *ret, *rpt;
-    const uint8 *ustr = (uint8 *) str;
+    const uint8_t *ustr = (uint8_t *) str;
 
     if ( str==NULL )
 return( NULL );
@@ -1231,7 +1231,7 @@ return( NULL );
 return( ret );
 }
 
-uint8 MacEncFromMacLang(int maclang) {
+uint8_t MacEncFromMacLang(int maclang) {
     if ( maclang<0 || maclang>=sizeof(_MacScriptFromLanguage)/sizeof(_MacScriptFromLanguage[0]))
 return( 0xff );
 

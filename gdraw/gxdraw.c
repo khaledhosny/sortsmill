@@ -1215,7 +1215,7 @@ return( NULL );
 return( (GWindow) gw );
 }
 
-GWindow GDrawCreateBitmap(GDisplay *disp, uint16_t width, uint16_t height, uint8 *data) {
+GWindow GDrawCreateBitmap(GDisplay *disp, uint16_t width, uint16_t height, uint8_t *data) {
     if ( disp==NULL ) disp = screen_display;
     GXDisplay *gdisp = (GXDisplay *) disp;
     GXWindow gw = xcalloc(1,sizeof(struct gxwindow));

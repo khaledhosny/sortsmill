@@ -90,7 +90,7 @@ int autohint_before_generate = 1;
 /*  to my surprise, it just made things worse.                                */
 
 struct potentialsubrs {
-    uint8 *data;		/* the charstring of the subr */
+    uint8_t *data;		/* the charstring of the subr */
     int len;			/* the length of the charstring */
     int idx;			/* initially index into psubrs array */
     				/*  then index into subrs array or -1 if none */
@@ -104,7 +104,7 @@ struct potentialsubrs {
 };
 
 struct bits {
-    uint8 *data;
+    uint8_t *data;
     int dlen;
     int psub_index;
 };
@@ -114,7 +114,7 @@ struct glyphbits {
     int fd;			/* Which subfont is it in */
     int bcnt;
     struct bits *bits;
-    uint8 wasseac;
+    uint8_t wasseac;
 };
 
 #define HSH_SIZE	511
@@ -138,13 +138,13 @@ typedef struct glyphinfo {
 } GlyphInfo;
 
 struct mhlist {
-    uint8 mask[HntMax/8];
+    uint8_t mask[HntMax/8];
     int subr;
     struct mhlist *next;
 };
 
 struct hintdb {
-    uint8 mask[HntMax/8];
+    uint8_t mask[HntMax/8];
     int cnt;				/* number of hints */
     struct mhlist *sublist;
     struct pschars *subrs;
@@ -227,8 +227,8 @@ return;
     gi->justbroken = false;
 }
 
-static int hashfunc(uint8 *data, int len) {
-    uint8 *end = data+len;
+static int hashfunc(uint8_t *data, int len) {
+    uint8_t *end = data+len;
     unsigned int hash = 0, r;
 
     while ( data<end ) {
@@ -597,7 +597,7 @@ return;
 }
 
 static void CvtPsMasked(GrowBuf *gb,SplineChar *scs[MmMax], int instance_count,
-	int ishstem, int round, uint8 mask[12] ) {
+	int ishstem, int round, uint8_t mask[12] ) {
     StemInfo *hs[MmMax];
     bigreal data[MmMax][6], off;
     int i;
@@ -698,7 +698,7 @@ static void SubrsCheck(struct pschars *subrs) {
 
     if ( subrs->next>=subrs->cnt ) {
 	subrs->cnt += 100;
-	subrs->values = xrealloc(subrs->values,subrs->cnt*sizeof(uint8 *));
+	subrs->values = xrealloc(subrs->values,subrs->cnt*sizeof(uint8_t *));
 	subrs->lens = xrealloc(subrs->lens,subrs->cnt*sizeof(int));
 	if ( subrs->keys!=NULL ) {
 	    int i;
@@ -713,12 +713,12 @@ static void SubrsCheck(struct pschars *subrs) {
 /*  subr. Else build a new subr with the hints we need. Note we can only use */
 /*  *stem3 commands if there are no conflicts in that coordinate, it isn't cjk*/
 /*  and all the other conditions are met */
-static int FindOrBuildHintSubr(struct hintdb *hdb, uint8 mask[12], int round) {
+static int FindOrBuildHintSubr(struct hintdb *hdb, uint8_t mask[12], int round) {
     struct mhlist *mh;
     GrowBuf gb;
 
     for ( mh=hdb->sublist; mh!=NULL; mh=mh->next ) {
-	if ( memcmp(mask, mh->mask, 12*sizeof(uint8)) == 0 )
+	if ( memcmp(mask, mh->mask, 12*sizeof(uint8_t)) == 0 )
 	    return( mh->subr );
 #if 0
 	/* If we find a subr for which we have all the bits set (with extras */
@@ -752,11 +752,11 @@ static int FindOrBuildHintSubr(struct hintdb *hdb, uint8 mask[12], int round) {
     /* Replace an old subroutine */
     if ( mh!=NULL ) {
 	free( hdb->subrs->values[mh->subr]);
-	hdb->subrs->values[mh->subr] = (uint8 *) copyn((char *) gb.base,gb.pt-gb.base);
+	hdb->subrs->values[mh->subr] = (uint8_t *) copyn((char *) gb.base,gb.pt-gb.base);
 	hdb->subrs->lens[mh->subr] = gb.pt-gb.base;
 	memcpy(mh->mask,mask,sizeof(mh->mask));
     } else {
-	hdb->subrs->values[hdb->subrs->next] = (uint8 *) copyn((char *) gb.base,gb.pt-gb.base);
+	hdb->subrs->values[hdb->subrs->next] = (uint8_t *) copyn((char *) gb.base,gb.pt-gb.base);
 	hdb->subrs->lens[hdb->subrs->next] = gb.pt-gb.base;
 
 	mh = xcalloc(1,sizeof(struct mhlist));
@@ -1957,7 +1957,7 @@ static void SetupType1Chrs(struct pschars *chrs,struct pschars *subrs,GlyphInfo 
 	if ( !iscid )
 	    chrs->keys[i] = copy(gb->sc->name);
 	for ( k=0; k<2; ++k ) if ( k!=0 || gb->sc->ttf_glyph!=0x7fff ) {
-	    uint8 *vals;
+	    uint8_t *vals;
 	    for ( j=0; j<gb->bcnt; ++j ) {
 		if ( k!=0 || j!=0 )
 		    len += gb->bits[j].dlen;
@@ -2305,7 +2305,7 @@ static void AddNumber2(GrowBuf *gb, real pos, int round) {
     gb->pt = str;
 }
 
-static void AddMask2(GrowBuf *gb,uint8 mask[12],int cnt, int oper) {
+static void AddMask2(GrowBuf *gb,uint8_t mask[12],int cnt, int oper) {
     int i;
 
     if ( gb->pt+1+((cnt+7)>>3)>=gb->end )
@@ -2753,7 +2753,7 @@ return;
 
 static void DumpRefsHints(GrowBuf *gb, struct hintdb *hdb,RefChar *cur,StemInfo *h,StemInfo *v,
 	BasePoint *trans, int round,int layer) {
-    uint8 masks[12];
+    uint8_t masks[12];
     int cnt, sets=0;
     StemInfo *rs;
 
@@ -3262,7 +3262,7 @@ struct pschars *SplineFont2ChrsSubrs2(SplineFont *sf, int nomwid, int defwid,
     chrs->keys = xmalloc(cnt*sizeof(char *));
     for ( i=0; i<cnt; ++i ) {
 	int len=0;
-	uint8 *vals;
+	uint8_t *vals;
 	struct glyphbits *gb = &gi.gb[i];
 	if ( gb->sc==NULL )
     continue;

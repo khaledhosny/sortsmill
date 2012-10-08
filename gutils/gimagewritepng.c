@@ -39,8 +39,8 @@ static int a_file_must_define_something=0;	/* ANSI says so */
 //#define uint32_t _uint32
 //#define int16_t _int16
 //#define uint16_t _uint16
-//#define int8 _int8
-//#define uint8 _uint8
+//#define int8_t _int8
+//#define uint8_t _uint8
 
 #include "gimage.h"
 

@@ -51,9 +51,9 @@ typedef struct sftextarea {
     unsigned int incr_down: 1;	/* Direction of increments when numeric_scroll events happen */
     unsigned int completionfield: 1;
     unsigned int was_completing: 1;
-    uint8 fh;
-    uint8 as;
-    uint8 nw;			/* Width of one character (an "n") */
+    uint8_t fh;
+    uint8_t as;
+    uint8_t nw;			/* Width of one character (an "n") */
     int16_t xoff_left, loff_top;
     int16_t sel_start, sel_end, sel_base;
     int16_t sel_oldstart, sel_oldend, sel_oldbase;

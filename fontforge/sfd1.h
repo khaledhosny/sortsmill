@@ -43,8 +43,8 @@ typedef struct anchorclass1 {
     uint16_t script_lang_index;
     uint16_t flags;
     uint16_t merge_with;
-    uint8 has_bases;
-    uint8 has_ligatures;
+    uint8_t has_bases;
+    uint8_t has_ligatures;
 } AnchorClass1;
 
 typedef struct kernpair1 {
@@ -60,7 +60,7 @@ typedef struct kernclass1 {
 
 typedef struct generic_pst1 {
     PST pst;
-    uint8 macfeature;		/* tag should be interpretted as <feature,setting> rather than 'abcd' */
+    uint8_t macfeature;		/* tag should be interpretted as <feature,setting> rather than 'abcd' */
     uint16_t flags;
     uint16_t script_lang_index;		/* 0xffff means none */
     uint32_t tag;

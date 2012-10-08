@@ -127,7 +127,7 @@ static void aw2_figure_all_sidebearing(AW_Data *all) {
     AW_Glyph *me, *other;
     real transform[6], half;
     int width, changed;
-    uint8 *rsel = xcalloc(all->fv->map->enccount,sizeof(char));
+    uint8_t *rsel = xcalloc(all->fv->map->enccount,sizeof(char));
     real denom = (all->sf->ascent + all->sf->descent)/DENOM_FACTOR_OF_EMSIZE;
     int ldiff, rdiff;
 

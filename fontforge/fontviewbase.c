@@ -593,7 +593,7 @@ static void KCTrans(KernClass *kc,double scale) {
 	kc->offsets[i] = rint(scale*kc->offsets[i]);
 }
 
-static void SCTransLayer(FontViewBase *fv, SplineChar *sc, int flags, int i, real transform[6], uint8 *sel) {
+static void SCTransLayer(FontViewBase *fv, SplineChar *sc, int flags, int i, real transform[6], uint8_t *sel) {
     int j;
     RefChar *refs;
     real t[6];
@@ -654,7 +654,7 @@ static void SCTransLayer(FontViewBase *fv, SplineChar *sc, int flags, int i, rea
 /*  of the reference */
 /* If sel is NULL then we transform the reference */
 /* if flags&fvt_partialreftrans then we always just transform the offsets */
-void FVTrans(FontViewBase *fv,SplineChar *sc,real transform[6], uint8 *sel,
+void FVTrans(FontViewBase *fv,SplineChar *sc,real transform[6], uint8_t *sel,
 	enum fvtrans_flags flags) {
     AnchorPoint *ap;
     int i,first,last;

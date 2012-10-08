@@ -2178,7 +2178,7 @@ static void ClearMissingState(struct problems *p) {
 enum missingglyph_type { mg_pst, mg_fpst, mg_kern, mg_vkern, mg_asm };
 struct mgask_data {
     GWindow gw;
-    uint8 done, skipped;
+    uint8_t done, skipped;
     uint32_t tag;
     char **_str, *start, *end;
     SplineChar *sc;

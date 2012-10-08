@@ -341,9 +341,9 @@ return( NULL );
 	ret = _GImage_Create(bmp.bitsperpixel>=16?it_true:bmp.bitsperpixel!=1?it_index:it_mono,
 		bmp.width, bmp.height);
 	if ( bmp.bitsperpixel>=16 ) {
-	    ret->u.image->data = (uint8 *) bmp.int32_pixels;
+	    ret->u.image->data = (uint8_t *) bmp.int32_pixels;
 	} else if ( bmp.bitsperpixel!=1 ) {
-	    ret->u.image->data = (uint8 *) bmp.byte_pixels;
+	    ret->u.image->data = (uint8_t *) bmp.byte_pixels;
 	}
     } else {
 	if ( bmp.bitsperpixel>=16 ) {

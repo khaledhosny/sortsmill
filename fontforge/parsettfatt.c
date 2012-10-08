@@ -88,7 +88,7 @@ return( ret );
 static char *CoverageMinusClasses(uint16_t *coverageglyphs,uint16_t *classed,
 	struct ttfinfo *info ) {
     int i, j, len;
-    uint8 *glyphs = xcalloc(info->glyph_cnt,1);
+    uint8_t *glyphs = xcalloc(info->glyph_cnt,1);
     char *ret;
 
     for ( i=0; coverageglyphs[i]!=0xffff; ++i )
@@ -425,7 +425,7 @@ return;
 	    }
 	} else {
 	    for ( i=0; i<c; ++i )
-		adjust->corrections[i] = (int8) getc(ttf);
+		adjust->corrections[i] = (int8_t) getc(ttf);
 	}
     }
     fseek(ttf,here,SEEK_SET);
@@ -3585,7 +3585,7 @@ static void mortclass_apply_value(struct ttfinfo *info, int gfirst, int glast,FI
 	info->morx_classes[i] = class;
 }
 
-int32_t memlong(uint8 *data,int len, int offset) {
+int32_t memlong(uint8_t *data,int len, int offset) {
     if ( offset>=0 && offset+3<len ) {
 	int ch1 = data[offset], ch2 = data[offset+1], ch3 = data[offset+2], ch4 = data[offset+3];
 return( (ch1<<24)|(ch2<<16)|(ch3<<8)|ch4 );
@@ -3595,7 +3595,7 @@ return( 0 );
     }
 }
 
-int memushort(uint8 *data,int len, int offset) {
+int memushort(uint8_t *data,int len, int offset) {
     if ( offset>=0 && offset+1<len ) {
 	int ch1 = data[offset], ch2 = data[offset+1];
 return( (ch1<<8)|ch2 );
@@ -3605,14 +3605,14 @@ return( 0 );
     }
 }
 
-void memputshort(uint8 *data,int offset,uint16_t val) {
+void memputshort(uint8_t *data,int offset,uint16_t val) {
     data[offset] = (val>>8);
     data[offset+1] = val&0xff;
 }
 
 #define MAX_LIG_COMP	16
 struct statemachine {
-    uint8 *data;
+    uint8_t *data;
     int length;
     uint32_t nClasses;
     uint32_t classOffset, stateOffset, entryOffset, ligActOff, compOff, ligOff;
@@ -3620,7 +3620,7 @@ struct statemachine {
     uint16_t lig_comp_classes[MAX_LIG_COMP];
     uint16_t lig_comp_glyphs[MAX_LIG_COMP];
     int lcp;
-    uint8 *states_in_use;
+    uint8_t *states_in_use;
     int smax;
     struct ttfinfo *info;
     int cnt;
@@ -3912,7 +3912,7 @@ return;
 	readttf_applelookup(ttf,info,
 		mortclass_apply_values,mortclass_apply_value,NULL,NULL,true);
 	sm.smax = length/(2*sm.nClasses);
-	sm.states_in_use = xcalloc(sm.smax,sizeof(uint8));
+	sm.states_in_use = xcalloc(sm.smax,sizeof(uint8_t));
 	follow_morx_state(&sm,0,-1,info);
     } else {
 	sm.nClasses = memushort(sm.data,sm.length, 0);
@@ -3930,7 +3930,7 @@ return;
 	for ( i=0; i<cnt; ++i )
 	    sm.classes[first+i] = sm.data[sm.classOffset+2*sizeof(uint16_t)+i];
 	sm.smax = length/sm.nClasses;
-	sm.states_in_use = xcalloc(sm.smax,sizeof(uint8));
+	sm.states_in_use = xcalloc(sm.smax,sizeof(uint8_t));
 	follow_mort_state(&sm,sm.stateOffset,-1,info);
     }
     free(sm.data);
@@ -3948,12 +3948,12 @@ struct statetable {
     int entry_extras;	/* Number of extra glyph offsets */
     int first_glyph;	/* that's classifyable */
     int nglyphs;
-    uint8 *classes;
-    uint8 *state_table;	/* state_table[nstates][nclasses], each entry is an */
+    uint8_t *classes;
+    uint8_t *state_table;	/* state_table[nstates][nclasses], each entry is an */
 	/* index into the following array */
     uint16_t *state_table2;	/* morx version. States are have 2 byte entries */
     uint16_t *classes2;
-    uint8 *transitions;
+    uint8_t *transitions;
     uint32_t extra_offsets[3];
 };
 
@@ -4214,7 +4214,7 @@ return( str );
 }
 
 #if 0
-static void RunStateFindKernDepth_(ASM *as,int state,int kdepth,uint8 *used) {
+static void RunStateFindKernDepth_(ASM *as,int state,int kdepth,uint8_t *used) {
     int j, kd;
 
     if ( used[state] )
@@ -4235,7 +4235,7 @@ return;
 }
 
 static void RunStateFindKernDepth(ASM *as) {
-    uint8 *used = xcalloc(as->class_cnt);
+    uint8_t *used = xcalloc(as->class_cnt);
     int i;
 
     for ( i=0; i<as->class_cnt*as->state_cnt; ++i ) {
@@ -4279,7 +4279,7 @@ static void KernReadKernList(FILE *ttf,uint32_t pos, struct asm_state *trans) {
 
 static void read_perglyph_subs(FILE *ttf,struct ttfinfo *info,
 	int subs_base,int subs_end,struct statetable *st,
-	uint8 *classes_subbed, int evermarked, uint8 *used) {
+	uint8_t *classes_subbed, int evermarked, uint8_t *used) {
     /* The file is positioned at the start of a per-glyph substitution table */
     /* Sadly great chunks of this table have been omitted. We are where glyph */
     /*  0 would be if it were present. We've no idea what has been omitted */
@@ -4436,11 +4436,11 @@ return(NULL);
 	/*  from the substitution table (given that Apple's docs are often */
 	/*  wrong */ /* Apple's docs are right. not clear why that offset  */
 	/*  is there */
-	uint8 *classes_subbed = xcalloc(st->nclasses,1);
+	uint8_t *classes_subbed = xcalloc(st->nclasses,1);
 	int lookup_max = -1, index, index_max;
 	int32_t *lookups = xmalloc(st->nclasses*st->nstates*sizeof(int32_t));
-	uint8 *evermarked = xcalloc(st->nclasses*st->nstates,sizeof(uint8));
-	uint8 *used;
+	uint8_t *evermarked = xcalloc(st->nclasses*st->nstates,sizeof(uint8_t));
+	uint8_t *used;
 	OTLookup **subs;
 
 	index_max = 0;
@@ -4467,7 +4467,7 @@ return(NULL);
 		as->state[i].u.context.cur_lookup = NewMacSubsLookup(info,otl,index,subs);
 	    }
 	}
-	used = xcalloc((subtab_len-st->extra_offsets[0]+1)/2,sizeof(uint8));
+	used = xcalloc((subtab_len-st->extra_offsets[0]+1)/2,sizeof(uint8_t));
 	/* first figure things that only appear in current subs */
 	/*  then go back and work on things that apply to things which are also in marked subs */
 	for ( j=0; j<2; ++j ) for ( i=0; i<=lookup_max; ++i ) if ( evermarked[i]==j ) {

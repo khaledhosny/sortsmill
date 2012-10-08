@@ -37,7 +37,7 @@ typedef struct gcol {
 struct revcol /* : GCol */ {
     int16_t red, green, blue;
     uint32_t index;
-    uint8 dist;
+    uint8_t dist;
     struct revcol *next;
 };
 

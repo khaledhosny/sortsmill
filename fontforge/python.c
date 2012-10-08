@@ -88,8 +88,8 @@ typedef struct ff_point {
     PyObject_HEAD
     /* Type-specific fields go here. */
     float x,y;
-    uint8 on_curve;
-    uint8 selected;
+    uint8_t on_curve;
+    uint8_t selected;
 } PyFF_Point;
 static PyTypeObject PyFF_PointType;
 
@@ -118,9 +118,9 @@ typedef struct {
     PyObject_HEAD
     /* Type-specific fields go here. */
     SplineChar *sc;
-    uint8 replace;
-    uint8 ended;
-    uint8 changed;
+    uint8_t replace;
+    uint8_t ended;
+    uint8_t changed;
     int layer;
 } PyFF_GlyphPen;
 static PyTypeObject PyFF_GlyphPenType;
@@ -458,7 +458,7 @@ void PyFF_Glyph_Set_Layer(SplineChar *sc,int layer) {
 
 #define BAD_TAG ((uint32_t)0xffffffff)
 static uint32_t StrToTag(char *tag_name, int *was_mac) {
-    uint8 foo[4];
+    uint8_t foo[4];
     int feat, set;
 
     if ( tag_name==NULL ) {
@@ -821,7 +821,7 @@ static PyObject *PyFF_ParseTTFInstrs(PyObject *UNUSED(self), PyObject *args) {
     PyObject *binstr;
     char *instr_str;
     int icnt;
-    uint8 *instrs;
+    uint8_t *instrs;
 
     if ( !PyArg_ParseTuple(args,"s",&instr_str) )
 return( NULL );
@@ -839,7 +839,7 @@ return( binstr );
 static PyObject *PyFF_UnParseTTFInstrs(PyObject *UNUSED(self), PyObject *args) {
     PyObject *tuple, *ret;
     int icnt, i;
-    uint8 *instrs;
+    uint8_t *instrs;
     char *as_str;
 
     if ( !PyArg_ParseTuple(args,"O",&tuple) )
@@ -851,7 +851,7 @@ return( NULL );
     if ( PyBytes_Check(tuple)) {
 	char *space; Py_ssize_t len;
 	PyBytes_AsStringAndSize(tuple,&space,&len);
-	instrs = xcalloc(len,sizeof(uint8));
+	instrs = xcalloc(len,sizeof(uint8_t));
 	icnt = len;
 	memcpy(instrs,space,len);
     } else {
@@ -6249,11 +6249,11 @@ return( 0 );
     if ( PyBytes_Check(value)) {
 	char *space; Py_ssize_t len;
 	PyBytes_AsStringAndSize(value,&space,&len);
-	sc->ttf_instrs = xcalloc(len,sizeof(uint8));
+	sc->ttf_instrs = xcalloc(len,sizeof(uint8_t));
 	sc->ttf_instrs_len = len;
 	memcpy(sc->ttf_instrs,space,len);
     } else {
-	sc->ttf_instrs = xcalloc(cnt,sizeof(uint8));
+	sc->ttf_instrs = xcalloc(cnt,sizeof(uint8_t));
 	for ( i=0; i<cnt; ++i ) {
 	    int val = PyInt_AsLong(PySequence_GetItem(value,i));
 	    if ( PyErr_Occurred()!=NULL )
@@ -12779,7 +12779,7 @@ return( 0 );
 static PyObject *PyFF_Font_GetMaxpValue(PyFF_Font *self,char *str) {
     SplineFont *sf;
     struct ttf_table *tab;
-    uint8 *data, dummy[32];
+    uint8_t *data, dummy[32];
     int val;
 
     if ( CheckIfFontClosed(self) )
@@ -13299,7 +13299,7 @@ return( binstr );
 }
 
 static void TableAddInstrs(SplineFont *sf, uint32_t tag,int replace,
-			   uint8 *instrs,int icnt) {
+			   uint8_t *instrs,int icnt) {
     struct ttf_table *tab;
 
     for ( tab=sf->ttf_tables; tab!=NULL && tab->tag!=tag; tab=tab->next );
@@ -13330,7 +13330,7 @@ return;
 	memcpy(tab->data,instrs,icnt);
 	tab->len = icnt;
     } else {
-	uint8 *newi = xmalloc(icnt+tab->len);
+	uint8_t *newi = xmalloc(icnt+tab->len);
 	memcpy(newi,tab->data,tab->len);
 	memcpy(newi+tab->len,instrs,icnt);
 	free(tab->data);
@@ -13344,7 +13344,7 @@ static PyObject *PyFFFont_SetTableData(PyFF_Font *self, PyObject *args) {
     char *table_name;
     uint32_t tag;
     PyObject *tuple;
-    uint8 *instrs;
+    uint8_t *instrs;
     int icnt, i;
 
     if ( CheckIfFontClosed(self) )
@@ -13367,7 +13367,7 @@ return( NULL );
     if ( PyBytes_Check(tuple)) {
 	char *space; Py_ssize_t len;
 	PyBytes_AsStringAndSize(tuple,&space,&len);
-	instrs = xcalloc(len,sizeof(uint8));
+	instrs = xcalloc(len,sizeof(uint8_t));
 	icnt = len;
 	memcpy(instrs,space,len);
     } else {

@@ -293,7 +293,7 @@ struct ttfinfo {
     int mark_set_cnt;
     char **mark_sets;			/* glyph name list */
     char **mark_set_names;		/* used within ff (utf8) */
-    uint8 warned_morx_out_of_bounds_glyph;
+    uint8_t warned_morx_out_of_bounds_glyph;
     int badgid_cnt, badgid_max;		/* Used when parsing apple morx tables*/
     SplineChar **badgids;		/* which use out of range glyph IDs as temporary flags */
 #ifdef HAVE_LONG_LONG_INT
@@ -768,7 +768,7 @@ struct contexttree {
     OTLookup *applymarkedsubs;
     OTLookup *applycursubs;
     uint16_t marked_index, cur_index;
-    uint8 markme;
+    uint8_t markme;
     int state, next_state;
     struct contexttree *parent;
 };
@@ -839,9 +839,9 @@ VISIBLE extern struct macsettingname macfeat_otftag[], *user_macfeat_otftag;
 
     /* TrueType instructions */
 VISIBLE extern struct ttf_table *SFFindTable(SplineFont *sf,uint32_t tag);
-extern int32_t memlong(uint8 *data,int table_len, int offset);
-VISIBLE extern int memushort(uint8 *data,int table_len, int offset);
-VISIBLE extern void memputshort(uint8 *data,int offset,uint16_t val);
+extern int32_t memlong(uint8_t *data,int table_len, int offset);
+VISIBLE extern int memushort(uint8_t *data,int table_len, int offset);
+VISIBLE extern void memputshort(uint8_t *data,int offset,uint16_t val);
 extern int TTF__getcvtval(SplineFont *sf,int val);
 extern int TTF_getcvtval(SplineFont *sf,int val);
 extern void SCinitforinstrs(SplineChar *sc);

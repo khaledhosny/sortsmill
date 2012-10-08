@@ -2707,7 +2707,7 @@ static void CI_DoHideUnusedSingle(CharInfo *ci) {
     GGadget *pstk = GWidgetGetControl(ci->gw,CID_List+(pst_position-1)*100);
     int rows, cols = GMatrixEditGetColCnt(pstk);
     struct matrix_data *old = GMatrixEditGet(pstk,&rows);
-    uint8 cols_used[20];
+    uint8_t cols_used[20];
     int r, col, tot;
 
     if ( lookup_hideunused ) {
@@ -2745,7 +2745,7 @@ static void CI_DoHideUnusedPair(CharInfo *ci) {
     GGadget *pstk = GWidgetGetControl(ci->gw,CID_List+(pst_pair-1)*100);
     int rows, cols = GMatrixEditGetColCnt(pstk);
     struct matrix_data *old = GMatrixEditGet(pstk,&rows);
-    uint8 cols_used[20];
+    uint8_t cols_used[20];
     int r, col, tot;
 
     if ( lookup_hideunused ) {

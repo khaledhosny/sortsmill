@@ -228,7 +228,7 @@ static void AnchorD_FindComplements(AnchorDlg *a) {
     AnchorPoint *ap;
     int i, k, j, cnt;
     SplineFont *_sf = a->sc->parent, *sf;
-    uint8 *sel, *oldsel;
+    uint8_t *sel, *oldsel;
     FontView *fv = (FontView *) _sf->fv;
     EncMap *map = fv->b.map;
 

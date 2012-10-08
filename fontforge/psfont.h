@@ -139,7 +139,7 @@ typedef struct fontdict {
     int fdbytes;
     int gdbytes;
     int cidcnt;
-    uint8 **cidstrs;
+    uint8_t **cidstrs;
     int16_t *cidlens;
     int16_t *cidfds;
 /* CFF stuff */

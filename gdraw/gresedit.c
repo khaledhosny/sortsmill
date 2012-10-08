@@ -163,7 +163,7 @@ static void inherit_list_change(GRE *gre, int childindex, int cid_off,
     int sel = (intptr_t) whatever;
 
     GGadgetSelectOneListItem(g,sel);
-    *((uint8 *) GGadgetGetUserData(g)) = sel;
+    *((uint8_t *) GGadgetGetUserData(g)) = sel;
 }
 
 static void inherit_byte_change(GRE *gre, int childindex, int cid_off,
@@ -174,7 +174,7 @@ static void inherit_byte_change(GRE *gre, int childindex, int cid_off,
 
     sprintf( buf, "%d", val );
     GGadgetSetTitle8(g,buf);
-    *((uint8 *) GGadgetGetUserData(g)) = val;
+    *((uint8_t *) GGadgetGetUserData(g)) = val;
 }
 
 static void inherit_flag_change(GRE *gre, int childindex, int cid_off,
@@ -241,11 +241,11 @@ static int GRE_InheritListChange(GGadget *g, GEvent *e) {
 	    int index = GTabSetGetSel(gre->tabset);
 	    GResInfo *res = gre->tofree[index].res;
 	    int offset = ((char *) GGadgetGetUserData(g)) - ((char *) (res->boxdata));
-	    int sel = *((uint8 *) (((char *) (res->inherits_from->boxdata))+offset));
-	    if ( sel != *(uint8 *) GGadgetGetUserData(g) ) {
+	    int sel = *((uint8_t *) (((char *) (res->inherits_from->boxdata))+offset));
+	    if ( sel != *(uint8_t *) GGadgetGetUserData(g) ) {
 		int cid_off = cid - gre->tofree[index].startcid;
 		GGadgetSelectOneListItem(g,sel);
-		*((uint8 *) GGadgetGetUserData(g)) = sel;
+		*((uint8_t *) GGadgetGetUserData(g)) = sel;
 		GRE_FigureInheritance(gre,res,cid_off,cid_off+2,false,
 			(void *) (intptr_t) sel, inherit_list_change);
 		GRE_Reflow(gre,res);
@@ -267,13 +267,13 @@ static int GRE_InheritByteChange(GGadget *g, GEvent *e) {
 	    int index = GTabSetGetSel(gre->tabset);
 	    GResInfo *res = gre->tofree[index].res;
 	    int offset = ((char *) GGadgetGetUserData(g)) - ((char *) (res->boxdata));
-	    int val = *((uint8 *) (((char *) (res->inherits_from->boxdata))+offset));
-	    if ( val != *(uint8 *) GGadgetGetUserData(g) ) {
+	    int val = *((uint8_t *) (((char *) (res->inherits_from->boxdata))+offset));
+	    if ( val != *(uint8_t *) GGadgetGetUserData(g) ) {
 		int cid_off = cid - gre->tofree[index].startcid;
 		char buf[20];
 		sprintf( buf, "%d", val );
 		GGadgetSetTitle8(g,buf);
-		*((uint8 *) GGadgetGetUserData(g)) = val;
+		*((uint8_t *) GGadgetGetUserData(g)) = val;
 		GRE_FigureInheritance(gre,res,cid_off,cid_off+2,false,
 			(void *) (intptr_t) val, inherit_byte_change);
 		GRE_Reflow(gre,res);
@@ -370,7 +370,7 @@ static int GRE_ListChanged(GGadget *g, GEvent *e) {
 	int cid_off = GGadgetGetCid(g) - gre->tofree[index].startcid;
 	int sel = GGadgetGetFirstListSelectedItem(g);
 
-	*((uint8 *) GGadgetGetUserData(g)) = sel;
+	*((uint8_t *) GGadgetGetUserData(g)) = sel;
 	GRE_FigureInheritance(gre,res,cid_off-2,cid_off,false,
 		(void *) (intptr_t) sel, inherit_list_change);
 	GRE_Reflow(gre,res);
@@ -396,7 +396,7 @@ static int GRE_ByteChanged(GGadget *g, GEvent *e) {
 	GResInfo *res = gre->tofree[index].res;
 	if ( *end=='\0' && val>=0 && val<=255 ) {
 	    int cid_off = GGadgetGetCid(g) - gre->tofree[index].startcid;
-	    *((uint8 *) GGadgetGetUserData(g)) = val;
+	    *((uint8_t *) GGadgetGetUserData(g)) = val;
 	    GRE_FigureInheritance(gre,res,cid_off-2,cid_off,false,
 		    (void *) (intptr_t) val, inherit_byte_change);
 	    GRE_Reflow(gre,res);

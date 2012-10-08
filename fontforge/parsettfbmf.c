@@ -171,18 +171,18 @@ return;
 	bdfc->depth = bdf->clut->clut_len==4 ? 2 : bdf->clut->clut_len==16 ? 4 : 8;
     }
     if ( imageformat!=8 && imageformat!=9 )
-	bdfc->bitmap = xcalloc(metrics->height*bdfc->bytes_per_line,sizeof(uint8));
+	bdfc->bitmap = xcalloc(metrics->height*bdfc->bytes_per_line,sizeof(uint8_t));
 
     if ( imageformat==8 || imageformat==9 ) {
 	/* composite */
 	num = getushort(ttf);
-	bdfc->bitmap = xcalloc( 1,sizeof( uint8 ));
+	bdfc->bitmap = xcalloc( 1,sizeof( uint8_t ));
 	bdfc->bytes_per_line = 1;
 	for ( i=0; i<num; ++i ) {
 	    ref = xcalloc( 1,sizeof( BDFRefChar ));
 	    ref->gid = getushort(ttf);
-	    ref->xoff = (int8) getc(ttf);
-	    ref->yoff = (int8) getc(ttf);
+	    ref->xoff = (int8_t) getc(ttf);
+	    ref->yoff = (int8_t) getc(ttf);
 	    if ( prev == NULL )
 		bdfc->refs = ref;
 	    else
@@ -719,7 +719,7 @@ static struct bdfcharlist *BDFAddDefaultGlyphs(BDFFont *bdf, int format) {
 	glyph1.width = glyph2.width = width;
 	glyph1.vwidth = glyph2.vwidth = bdf->pixelsize;
 	glyph1.bytes_per_line = glyph2.bytes_per_line = 1;	/* Needs to be 1 or BCRegularizeBitmap gets upset */
-	glyph1.bitmap = glyph2.bitmap = (uint8 *) "";
+	glyph1.bitmap = glyph2.bitmap = (uint8_t *) "";
 	glyph1.orig_pos = 1; glyph2.orig_pos = 2;
 	if ( nullpos==-1 ) {
 	    if ( blpos!=0 )
@@ -869,17 +869,17 @@ return( pos );
 }
 
 struct sbitLineMetrics {
-    int8 ascender;
-    int8 descender;
-    uint8 widthMax;
-    int8 caretRise;
-    int8 caretRun;
-    int8 caretOff;
-    int8 minoriginsb;
-    int8 minAdvancesb;
-    int8 maxbeforebl;
-    int8 minafterbl;
-    int8 pad1, pad2;
+    int8_t ascender;
+    int8_t descender;
+    uint8_t widthMax;
+    int8_t caretRise;
+    int8_t caretRun;
+    int8_t caretOff;
+    int8_t minoriginsb;
+    int8_t minAdvancesb;
+    int8_t maxbeforebl;
+    int8_t minafterbl;
+    int8_t pad1, pad2;
 };
 
 struct bitmapSizeTable {
@@ -890,10 +890,10 @@ struct bitmapSizeTable {
     struct sbitLineMetrics hori, vert;
     uint16_t startGlyph;
     uint16_t endGlyph;
-    uint8 ppemX;
-    uint8 ppemY;
-    uint8 bitdepth;
-    int8 flags;
+    uint8_t ppemX;
+    uint8_t ppemY;
+    uint8_t bitdepth;
+    int8_t flags;
     struct bitmapSizeTable *next;
     unsigned int error: 1;
 };
@@ -974,7 +974,7 @@ static void BCPreserveAndExpand( BDFChar *bc,IBounds *ib ) {
     bc->backup->bytes_per_line = bc->bytes_per_line;
     bc->backup->xmin = bc->xmin; bc->backup->xmax = bc->xmax;
     bc->backup->ymin = bc->ymin; bc->backup->ymax = bc->ymax;
-    bc->backup->bitmap = xcalloc( bc->bytes_per_line * bmp_width,sizeof( uint8 ));
+    bc->backup->bitmap = xcalloc( bc->bytes_per_line * bmp_width,sizeof( uint8_t ));
     memcpy( bc->backup->bitmap,bc->bitmap,bc->bytes_per_line * bmp_width );
     
     BCExpandBitmapToEmBox( bc,ib->minx,ib->miny,ib->maxx,ib->maxy );

@@ -172,8 +172,8 @@ return( 0 );
 
 #define czone_top 2
 #define czone_bot 1
-static uint8 GetStemCounterZone( StemData *stem, DBounds *orig_b ) {
-    uint8 ret = 0, by_x;
+static uint8_t GetStemCounterZone( StemData *stem, DBounds *orig_b ) {
+    uint8_t ret = 0, by_x;
     int i;
     double min, max, middle, fudge, s, e;
     
@@ -199,7 +199,7 @@ return( ret );
 }
 
 static double GetCounterBlackSpace( GlyphData *gd, StemData **dstems, int dcnt, 
-    DBounds *orig_b, double cstart, double cend, double pos, uint8 czone, struct genericchange *gc, int x_dir ) {
+    DBounds *orig_b, double cstart, double cend, double pos, uint8_t czone, struct genericchange *gc, int x_dir ) {
     
     double ldist, rdist, lrdist, is, ie, temp, black=0;
     double scale, w;
@@ -307,7 +307,7 @@ static double ScaleCounter( GlyphData *gd, StemData **dstems, int dcnt,
     
     double min, max, onequarter, threequarters, cstart, cend, cntr_scale; 
     double black25, black75, white25, white75, gen25, gen75, ret;
-    uint8 pczone, nczone;
+    uint8_t pczone, nczone;
 
     min = x_dir ? orig_b->minx : orig_b->miny;
     max = x_dir ? orig_b->maxx : orig_b->maxy;
@@ -717,7 +717,7 @@ static void InitZoneMappings( struct fixed_maps *fix, BlueData *bd, double stem_
 static void PosStemPoints( GlyphData *gd, struct genericchange *genchange, int has_dstems, int x_dir ) {
     
     int i, j, best_is_l;
-    uint8 flag = x_dir ? tf_x : tf_y;
+    uint8_t flag = x_dir ? tf_x : tf_y;
     PointData *pd;
     StemData *tstem, *best;
     struct stem_chunk *chunk;
@@ -829,7 +829,7 @@ return( ret );
 
 static void InterpolateStrong( GlyphData *gd, DBounds *orig_b, DBounds *new_b, int x_dir ) {
     int i;
-    uint8 mask, flag = x_dir ? tf_x : tf_y;
+    uint8_t mask, flag = x_dir ? tf_x : tf_y;
     double coord, new;
     double min, max, min_new, max_new;
     PointData *pd;
@@ -855,7 +855,7 @@ static void InterpolateStrong( GlyphData *gd, DBounds *orig_b, DBounds *new_b, i
 static void InterpolateWeak( GlyphData *gd, DBounds *orig_b, DBounds *new_b, double scale, int x_dir ) {
     PointData *pd, *tpd, *fpd;
     int i;
-    uint8 mask, flag = x_dir ? tf_x : tf_y;
+    uint8_t mask, flag = x_dir ? tf_x : tf_y;
     double coord, new, min, max, min_new, max_new;
 
     mask = flag | tf_d;
@@ -1135,7 +1135,7 @@ static int CorrectDPointPos( GlyphData *gd, PointData *pd, StemData *stem,
     double scale, int next, int is_l, int x_dir ) {
 
     int i, found = 0;
-    uint8 flag = x_dir ? tf_x : tf_y;
+    uint8_t flag = x_dir ? tf_x : tf_y;
     double ndot, pdot, coord_orig, coord_new, base_orig, base_new;
     Spline *ns;
     StemData *tstem;
@@ -1199,7 +1199,7 @@ return( false );
 static void ShiftDependent( GlyphData *gd, PointData *pd, StemData *stem, 
     DBounds *orig_b, DBounds *new_b, double cscale, int next, int is_l, int x_dir ) {
     
-    uint8 flag = x_dir ? tf_x : tf_y;
+    uint8_t flag = x_dir ? tf_x : tf_y;
     int i, scnt, from_min;
     double ndot, pdot, off, dist, s, s_new, e, e_new;
     Spline *ns;
@@ -3509,7 +3509,7 @@ struct ptmoves {
     BasePoint pdir, ndir;
     double factor;
     BasePoint newpos;
-    uint8 touched;
+    uint8_t touched;
 };
 
 static int MaxContourCount(SplineSet *ss) {

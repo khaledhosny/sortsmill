@@ -325,13 +325,13 @@ struct tfmdata {
     int esize;
     int param_size;
 
-    uint8 *kerntab;
-    uint8 *ligkerntab;
-    uint8 *ext;
-    uint8 *ictab;
-    uint8 *dptab;
-    uint8 *httab;
-    uint8 *widtab;
+    uint8_t *kerntab;
+    uint8_t *ligkerntab;
+    uint8_t *ext;
+    uint8_t *ictab;
+    uint8_t *dptab;
+    uint8_t *httab;
+    uint8_t *widtab;
 
     int *charlist;
 };
@@ -431,7 +431,7 @@ return;
 static void tfmDoExten(SplineFont *sf,int i,struct tfmdata *tfmd,int left,EncMap *map) {
     int j, k, gid, gid2, cnt;
     SplineChar *bits[4], *bats[5];
-    uint8 *ext;
+    uint8_t *ext;
     SplineChar *sc;
     struct glyphvariants **gvbase;
     int is_horiz;
@@ -491,7 +491,7 @@ return;
     }
 }
 
-#define BigEndianWord(pt) ((((uint8 *) pt)[0]<<24) | (((uint8 *) pt)[1]<<16) | (((uint8 *) pt)[2]<<8) | (((uint8 *) pt)[3]))
+#define BigEndianWord(pt) ((((uint8_t *) pt)[0]<<24) | (((uint8_t *) pt)[1]<<16) | (((uint8_t *) pt)[2]<<8) | (((uint8_t *) pt)[3]))
 
 int LoadKerningDataFromTfm(SplineFont *sf, char *filename,EncMap *map) {
     FILE *file = fopen(filename,"rb");
@@ -654,7 +654,7 @@ return;
 /*  than bytes */
 static void ofmDoExten(SplineFont *sf,int i,struct tfmdata *tfmd,int left,EncMap *map) {
     int j, k, gid, gid2, cnt;
-    uint8 *ext;
+    uint8_t *ext;
     SplineChar *sc, *bits[4], *bats[4];
     struct glyphvariants **gvbase;
     int is_horiz;
@@ -2519,9 +2519,9 @@ struct tfm_header {
     char encoding[40];	/* first byte is length, rest are a string that names the encoding */
 	/* ASCII, TeX text, TeX math extension, XEROX, GRAPHIC, UNSPECIFIED */
     char family[20];	/* Font Family, preceded by a length byte */
-    uint8 seven_bit_safe_flag;
-    uint8 ignored[2];
-    uint8 face; 	/* 0=>roman, 1=>italic */
+    uint8_t seven_bit_safe_flag;
+    uint8_t ignored[2];
+    uint8_t face; 	/* 0=>roman, 1=>italic */
     			/* 4=>light, 0=>medium, 2=>bold */
 			/* 6=>condensed, 0=>regular, 12=>extended */
 };
@@ -2903,7 +2903,7 @@ static int _OTfmSplineFont(FILE *tfm, SplineFont *sf, int formattype,EncMap *map
     struct ligkern *_ligkerns[256], **ligkerns, *lk, *lknext;
     double _widths[257], _heights[257], _depths[257], _italics[257];
     double *widths, *heights, *depths, *italics;
-    uint8 _tags[256], *tags;
+    uint8_t _tags[256], *tags;
     uint16_t _lkindex[256], *lkindex;
     int _former[256], *former;
     struct extension _extensions[257], *extensions;
@@ -2946,7 +2946,7 @@ static int _OTfmSplineFont(FILE *tfm, SplineFont *sf, int formattype,EncMap *map
 	heights = xmalloc((maxc+1)*sizeof(double));
 	depths = xmalloc((maxc+1)*sizeof(double));
 	italics = xmalloc((maxc+1)*sizeof(double));
-	tags = xmalloc(maxc*sizeof(uint8));
+	tags = xmalloc(maxc*sizeof(uint8_t));
 	lkindex = xmalloc(maxc*sizeof(uint16_t));
 	former = xmalloc(maxc*sizeof(int));
 	charlistindex = xmalloc((maxc+1)*sizeof(int));
@@ -3021,7 +3021,7 @@ static int _OTfmSplineFont(FILE *tfm, SplineFont *sf, int formattype,EncMap *map
     memset(heights,0,maxc*sizeof(double));
     memset(depths,0,maxc*sizeof(double));
     memset(italics,0,maxc*sizeof(double));
-    memset(tags,0,maxc*sizeof(uint8));
+    memset(tags,0,maxc*sizeof(uint8_t));
     first = last = -1;
     /* Note: Text fonts for TeX and math fonts use the italic correction & width */
     /*  fields to mean different things */

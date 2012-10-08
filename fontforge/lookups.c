@@ -609,7 +609,7 @@ return( true );
 }
 
 SplineChar **SFGlyphsWithPSTinSubtable(SplineFont *sf,struct lookup_subtable *subtable) {
-    uint8 *used = xcalloc(sf->glyphcnt,sizeof(uint8));
+    uint8_t *used = xcalloc(sf->glyphcnt,sizeof(uint8_t));
     SplineChar **glyphs, *sc;
     int i, k, gid, cnt;
     KernPair *kp;
@@ -667,7 +667,7 @@ return( glyphs );
 }
 
 SplineChar **SFGlyphsWithLigatureinLookup(SplineFont *sf,struct lookup_subtable *subtable) {
-    uint8 *used = xcalloc(sf->glyphcnt,sizeof(uint8));
+    uint8_t *used = xcalloc(sf->glyphcnt,sizeof(uint8_t));
     SplineChar **glyphs, *sc;
     int i, cnt;
     PST *pst;

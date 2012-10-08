@@ -472,13 +472,13 @@ return( names );
 }
 
 #if 0
-uint8 *AllNamelistUnicodes(void) {
+uint8_t *AllNamelistUnicodes(void) {
     NameList *nl;
     int cnt;
-    uint8 *uses;
+    uint8_t *uses;
 
     for ( nl = &agl, cnt=0; nl!=NULL; nl=nl->next, ++cnt );
-    uses = xmalloc((cnt+1) *sizeof(uint8));
+    uses = xmalloc((cnt+1) *sizeof(uint8_t));
     for ( nl = &agl, cnt=0; nl!=NULL; nl=nl->next, ++cnt )
 	uses[cnt] = nl->uses_unicode;
     uses[cnt] = 0xff;

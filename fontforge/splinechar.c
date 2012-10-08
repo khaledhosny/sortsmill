@@ -2440,7 +2440,7 @@ void _CVMenuMakeLine(CharViewBase *cv,int do_arc,int ellipse_to_back) {
 }
 
 void SCClearInstrsOrMark(SplineChar *sc, int layer, int complain) {
-    uint8 *instrs = sc->ttf_instrs==NULL && sc->parent->mm!=NULL && sc->parent->mm->apple ?
+    uint8_t *instrs = sc->ttf_instrs==NULL && sc->parent->mm!=NULL && sc->parent->mm->apple ?
 		sc->parent->mm->normal->glyphs[sc->orig_pos]->ttf_instrs : sc->ttf_instrs;
     struct splinecharlist *dep;
     SplineSet *ss;
@@ -2558,7 +2558,7 @@ static void SCHintsChng(SplineChar *sc) {
 }
 
 void instrcheck(SplineChar *sc,int layer) {
-    uint8 *instrs = sc->ttf_instrs==NULL && sc->parent->mm!=NULL && sc->parent->mm->apple ?
+    uint8_t *instrs = sc->ttf_instrs==NULL && sc->parent->mm!=NULL && sc->parent->mm->apple ?
 		sc->parent->mm->normal->glyphs[sc->orig_pos]->ttf_instrs : sc->ttf_instrs;
 
     if ( !sc->layers[layer].order2 || sc->layers[layer].background )

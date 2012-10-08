@@ -5395,7 +5395,7 @@ return;
 		adjust->corrections[i] = 0;
 	    adjust->last_pixel_size = size;
 	} else {
-	    int8 *new = xmalloc(adjust->last_pixel_size-size+1);
+	    int8_t *new = xmalloc(adjust->last_pixel_size-size+1);
 	    memset(new,0,adjust->first_pixel_size-size);
 	    memcpy(new+adjust->first_pixel_size-size,
 		    adjust->corrections, len);
@@ -5980,7 +5980,7 @@ return( NULL );
     memcpy(new->adjusts,kc->adjusts, new->first_cnt*new->second_cnt*sizeof(DeviceTable));
     for ( i=new->first_cnt*new->second_cnt-1; i>=0 ; --i ) {
 	if ( new->adjusts[i].corrections!=NULL ) {
-	    int8 *old = new->adjusts[i].corrections;
+	    int8_t *old = new->adjusts[i].corrections;
 	    int len = new->adjusts[i].last_pixel_size - new->adjusts[i].first_pixel_size + 1;
 	    new->adjusts[i].corrections = xmalloc(len);
 	    memcpy(new->adjusts[i].corrections,old,len);

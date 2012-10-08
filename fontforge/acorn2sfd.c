@@ -480,7 +480,7 @@ static void ReadIntmetrics(char *dir, struct Outlines *outline) {
     int i, flags, m, n, left, right;
     int kern_offset, table_base, misc_offset;
     char buffer[100];
-    uint8 *mapping=NULL;
+    uint8_t *mapping=NULL;
     int *widths;
     struct r_kern *kern;
 

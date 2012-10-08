@@ -131,13 +131,13 @@ struct gfc_data
   int sfnt_flags;               /*  important. We index into them */
   /* WAS otf_flags */
   int psotb_flags;              /*  don't reorder or put junk in between */
-  uint8 optset[3];
+  uint8_t optset[3];
   SplineFont *sf;
   EncMap *map;
   int layer;
 #ifdef HAVE_PTHREAD_H
-  uint8 please_die_thread;
-  uint8 thread_active;
+  uint8_t please_die_thread;
+  uint8_t thread_active;
   pthread_t validate_thread;
 #endif
 };

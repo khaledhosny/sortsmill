@@ -195,8 +195,8 @@ typedef struct ggadgetdata {
     GBox *box;
     uint32_t mnemonic;
     uint32_t shortcut;
-    uint8 short_mask;
-    uint8 cols;			/* for rowcol */
+    uint8_t short_mask;
+    uint8_t cols;			/* for rowcol */
     short cid;
     GTextInfo *label;		/* Overloaded with a GGadgetCreateData * for hvboxes (their label is a gadget) */
     union {
@@ -266,9 +266,9 @@ struct matrix_data {
 	char *md_str;
 	void *md_addr;
     } u;
-    uint8 frozen;
-    uint8 user_bits;
-    uint8 current;
+    uint8_t frozen;
+    uint8_t user_bits;
+    uint8_t current;
 };
 
 struct matrixinit {

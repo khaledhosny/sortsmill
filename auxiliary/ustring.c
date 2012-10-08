@@ -551,7 +551,7 @@ uint32_t *
 utf82u_strncpy (uint32_t *ubuf, const char *utf8buf, int len)
 {
   uint32_t *upt = ubuf, *uend = ubuf + len - 1;
-  const uint8 *pt = (const uint8 *) utf8buf, *end = pt + strlen (utf8buf);
+  const uint8_t *pt = (const uint8_t *) utf8buf, *end = pt + strlen (utf8buf);
   int w, w2;
 
   while (pt < end && *pt != '\0' && upt < uend)
@@ -758,7 +758,7 @@ utf8_ildb (const char **_text)
 {
   int32_t val = -1;
   int ch;
-  const uint8 *text = (const uint8 *) *_text;
+  const uint8_t *text = (const uint8_t *) *_text;
   /* Increment and load character */
 
   if ((ch = *text++) < 0x80)

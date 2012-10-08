@@ -50,7 +50,7 @@ return( NULL );
     base->data = NULL;
     base->clut = NULL;
     base->trans = COLOR_UNKNOWN;
-    base->data = (uint8 *) xmalloc(height*base->bytes_per_line);
+    base->data = (uint8_t *) xmalloc(height*base->bytes_per_line);
     if ( base->data==NULL ) {
 	free(base);
 	free(gi);
@@ -355,11 +355,11 @@ return( val==base->trans?~val:val );
 	val = ((uint32_t*) (base->data + y*base->bytes_per_line))[x] ;
 return( val==base->trans?~val:val );
     } else if ( base->image_type==it_index ) {
-	int pixel = ((uint8*) (base->data + y*base->bytes_per_line))[x];
+	int pixel = ((uint8_t*) (base->data + y*base->bytes_per_line))[x];
 	val = base->clut->clut[pixel];
 return( pixel==base->trans?~val:val );
     } else {
-	int pixel = (((uint8*) (base->data + y*base->bytes_per_line))[x>>3]&(1<<(7-(x&7))) )?1:0;
+	int pixel = (((uint8_t*) (base->data + y*base->bytes_per_line))[x>>3]&(1<<(7-(x&7))) )?1:0;
 	if ( base->clut==NULL ) {
 	    if ( pixel )
 		val = COLOR_CREATE(0xff,0xff,0xff);

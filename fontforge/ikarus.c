@@ -405,7 +405,7 @@ return;
 }
 
 static void IkarusAddContour(SplineChar *sc,int npts,BasePoint *bps,
-	uint8 *ptype, int nesting) {
+	uint8_t *ptype, int nesting) {
     SplinePointList *spl;
     SplinePoint *last, *next;
     int i, cw;
@@ -445,7 +445,7 @@ static void IkarusReadChar(SplineChar *sc,FILE *file) {
 	int dir, nest, col, npts;
     } *contours;
     BasePoint *bps;
-    uint8 *ptype;
+    uint8_t *ptype;
     int x,y;
 
     /* record len of char = */ getushort(file);
@@ -499,7 +499,7 @@ static void IkarusReadChar(SplineChar *sc,FILE *file) {
 	    ptmax = contours[i].npts;
     }
     bps = xmalloc(ptmax*sizeof(BasePoint));
-    ptype = xmalloc(ptmax*sizeof(uint8));
+    ptype = xmalloc(ptmax*sizeof(uint8_t));
 
     base = ftell(file);
     /* 2 words here giving length (in records/words) of image data */

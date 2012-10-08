@@ -51,9 +51,9 @@ typedef struct printdlg {
     FontView *fv;
     CharView *cv;
     SplineSet *fit_to_path;
-    uint8 script_unknown;
-    uint8 insert_text;
-    uint8 ready;
+    uint8_t script_unknown;
+    uint8_t insert_text;
+    uint8_t ready;
     int *done;
 } PD;
 

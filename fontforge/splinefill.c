@@ -557,7 +557,7 @@ return( false );
 static void FillChar(EdgeList *es) {
     Edge *active=NULL, *apt, *pr, *e, *prev;
     int i, k, end, width, oldk;
-    uint8 *bpt;
+    uint8_t *bpt;
 
     for ( i=0; i<es->cnt; ++i ) {
 	active = ActiveEdgesRefigure(es,active,i);
@@ -697,7 +697,7 @@ void BCRegularizeBitmap(BDFChar *bdfc) {
     int i;
 
     if ( bdfc->bytes_per_line!=bpl ) {
-	uint8 *bitmap = xmalloc(bpl*(bdfc->ymax-bdfc->ymin+1));
+	uint8_t *bitmap = xmalloc(bpl*(bdfc->ymax-bdfc->ymin+1));
 	for ( i=0; i<=(bdfc->ymax-bdfc->ymin); ++i )
 	    memcpy(bitmap+i*bpl,bdfc->bitmap+i*bdfc->bytes_per_line,bpl);
 	free(bdfc->bitmap);
@@ -711,7 +711,7 @@ void BCRegularizeGreymap(BDFChar *bdfc) {
     int i;
 
     if ( bdfc->bytes_per_line!=bpl ) {
-	uint8 *bitmap = xmalloc(bpl*(bdfc->ymax-bdfc->ymin+1));
+	uint8_t *bitmap = xmalloc(bpl*(bdfc->ymax-bdfc->ymin+1));
 	for ( i=0; i<=(bdfc->ymax-bdfc->ymin); ++i )
 	    memcpy(bitmap+i*bpl,bdfc->bitmap+i*bdfc->bytes_per_line,bpl);
 	free(bdfc->bitmap);
@@ -837,8 +837,8 @@ void BCCompressBitmap(BDFChar *bdfc) {
     }
 }
 
-static void Bresenham(uint8 *bytemap,EdgeList *es,int x1,int x2,int y1,int y2,
-	int grey,uint8 *clipmask) {
+static void Bresenham(uint8_t *bytemap,EdgeList *es,int x1,int x2,int y1,int y2,
+	int grey,uint8_t *clipmask) {
     int dx, dy, incr1, incr2, d, x, y;
     int incr3;
     int bytes_per_line = es->bytes_per_line<<3;
@@ -898,8 +898,8 @@ static void Bresenham(uint8 *bytemap,EdgeList *es,int x1,int x2,int y1,int y2,
     }
 }
 
-static void BresenhamT(uint8 *bytemap,EdgeList *es,int x1,int x2,int y1,int y2,
-	int grey,uint8 *clipmask) {
+static void BresenhamT(uint8_t *bytemap,EdgeList *es,int x1,int x2,int y1,int y2,
+	int grey,uint8_t *clipmask) {
     if ( x1>x2 ) {
 	int dx, dy;
 	dx = x1; x1 = x2; x2 = dx;
@@ -914,7 +914,7 @@ struct last_vector {
     int x2,y2;
 };
 
-static void FillFromLast(uint8 *bytemap,struct last_vector *last,
+static void FillFromLast(uint8_t *bytemap,struct last_vector *last,
 	int x1,int ox1,int y1,int oy1,EdgeList *es,int grey) {
     int x2 = last->x1, y2 = last->y1;
     int ox2 = last->x2, oy2 = last->y2;
@@ -991,7 +991,7 @@ return;
 }
 #endif
 
-static void StrokeLine(uint8 *bytemap,IPoint *from, IPoint *to,EdgeList *es,int grey,int width, uint8 *clipmask) {
+static void StrokeLine(uint8_t *bytemap,IPoint *from, IPoint *to,EdgeList *es,int grey,int width, uint8_t *clipmask) {
     int x1, x2, y1, y2;
     int dx, dy;
     BasePoint vector;
@@ -1087,8 +1087,8 @@ return;
 	BresenhamT(bytemap,es,x1,x2,y1,y2,grey,clipmask);
 }
 
-static void StrokeSS(uint8 *bytemap,EdgeList *es,int width,int grey,SplineSet *ss,
-	uint8 *clipmask) {
+static void StrokeSS(uint8_t *bytemap,EdgeList *es,int width,int grey,SplineSet *ss,
+	uint8_t *clipmask) {
     LinearApprox *lap;
     LineList *line, *prev;
     Spline *spline, *first;
@@ -1106,7 +1106,7 @@ static void StrokeSS(uint8 *bytemap,EdgeList *es,int width,int grey,SplineSet *s
     }
 }
 
-static void StrokeGlyph(uint8 *bytemap,EdgeList *es,real wid, SplineChar *sc) {
+static void StrokeGlyph(uint8_t *bytemap,EdgeList *es,real wid, SplineChar *sc) {
     RefChar *ref;
     int width = rint(wid*es->scale);
 
@@ -1115,8 +1115,8 @@ static void StrokeGlyph(uint8 *bytemap,EdgeList *es,real wid, SplineChar *sc) {
 	StrokeSS(bytemap,es,width,0xff,ref->layers[0].splines,NULL);
 }
 
-static void StrokePaths(uint8 *bytemap,EdgeList *es,Layer *layer,Layer *alt,
-	uint8 *clipmask) {
+static void StrokePaths(uint8_t *bytemap,EdgeList *es,Layer *layer,Layer *alt,
+	uint8_t *clipmask) {
     uint32_t col;
     int width;
     int grey;
@@ -1268,11 +1268,11 @@ return;
     MatInverse(pattern->invtrans,pattern->transform);
 }
 
-static void SetByteMapToGrey(uint8 *bytemap,EdgeList *es,Layer *layer,Layer *alt,
-	uint8 *clipmask,SplineChar *sc) {
+static void SetByteMapToGrey(uint8_t *bytemap,EdgeList *es,Layer *layer,Layer *alt,
+	uint8_t *clipmask,SplineChar *sc) {
     uint32_t col;
     int grey,i,j;
-    uint8 *pt, *bpt, *cpt;
+    uint8_t *pt, *bpt, *cpt;
     struct gradient *grad = layer->fill_brush.gradient;
     struct pattern *pat  = layer->fill_brush.pattern;
 
@@ -1304,8 +1304,8 @@ static void SetByteMapToGrey(uint8 *bytemap,EdgeList *es,Layer *layer,Layer *alt
     }
 }
 
-static void FillImages(uint8 *bytemap,EdgeList *es,ImageList *img,Layer *layer,
-	Layer *alt, uint8 *clipmask) {
+static void FillImages(uint8_t *bytemap,EdgeList *es,ImageList *img,Layer *layer,
+	Layer *alt, uint8_t *clipmask) {
     uint32_t fillcol, col;
     int grey,i,j,x1,x2,y1,y2,jj,ii;
 
@@ -1367,8 +1367,8 @@ static void FillImages(uint8 *bytemap,EdgeList *es,ImageList *img,Layer *layer,
     }
 }
 
-static void ProcessLayer(uint8 *bytemap,EdgeList *es,Layer *layer,
-	Layer *alt, uint8 *clipmask,SplineChar *sc) {
+static void ProcessLayer(uint8_t *bytemap,EdgeList *es,Layer *layer,
+	Layer *alt, uint8_t *clipmask,SplineChar *sc) {
     ImageList *img;
 
     if ( !layer->fillfirst && layer->dostroke )
@@ -1386,8 +1386,8 @@ static void ProcessLayer(uint8 *bytemap,EdgeList *es,Layer *layer,
 	StrokePaths(bytemap,es,layer,alt,clipmask);
 }
 
-static uint8 *ProcessClipMask(EdgeList *es,Layer *layer) {
-    uint8 *clipmask;
+static uint8_t *ProcessClipMask(EdgeList *es,Layer *layer) {
+    uint8_t *clipmask;
 
     if ( !SSHasClip(layer->splines) )
 return( NULL );
@@ -1400,9 +1400,9 @@ return( NULL );
 return( clipmask );
 }
 
-static void FlattenBytemap(EdgeList *es,uint8 *bytemap) {
+static void FlattenBytemap(EdgeList *es,uint8_t *bytemap) {
     int i,j;
-    uint8 *bpt, *pt;
+    uint8_t *bpt, *pt;
 
     memset(es->bitmap,0,es->cnt*es->bytes_per_line);
     for ( i=0; i<es->cnt; ++i ) {
@@ -1414,7 +1414,7 @@ static void FlattenBytemap(EdgeList *es,uint8 *bytemap) {
     }
 }
 
-static int FigureBitmap(EdgeList *es,uint8 *bytemap, int is_aa) {
+static int FigureBitmap(EdgeList *es,uint8_t *bytemap, int is_aa) {
     if ( is_aa ) {
 	free(es->bitmap);
 	es->bitmap = bytemap;
@@ -1465,11 +1465,11 @@ return( NULL );
 
 	    InitializeHints(sc,&es);
 	    if ( sc->parent->multilayer ) {
-		uint8 *bytemap = xcalloc(es.cnt*es.bytes_per_line*8,1);
+		uint8_t *bytemap = xcalloc(es.cnt*es.bytes_per_line*8,1);
 		int layer, i;
 		RefChar *rf;
 		for ( layer=ly_fore; layer<sc->layer_cnt; ++layer ) {
-		    uint8 *clipmask = ProcessClipMask(&es,&sc->layers[layer]);
+		    uint8_t *clipmask = ProcessClipMask(&es,&sc->layers[layer]);
 		    ProcessLayer(bytemap,&es,&sc->layers[layer],NULL,clipmask,sc);
 
 		    for ( rf=sc->layers[layer].refs; rf!=NULL; rf = rf->next ) {
@@ -1482,7 +1482,7 @@ return( NULL );
 		}
 		depth = FigureBitmap(&es,bytemap,is_aa);
 	    } else if ( sc->parent->strokedfont ) {
-		uint8 *bytemap = xcalloc(es.cnt*es.bytes_per_line*8,1);
+		uint8_t *bytemap = xcalloc(es.cnt*es.bytes_per_line*8,1);
 		StrokeGlyph(bytemap,&es,sc->parent->strokewidth,sc);
 		depth = FigureBitmap(&es,bytemap,is_aa);
 	    } else {
@@ -1589,7 +1589,7 @@ return( bdf );
 void BDFCAntiAlias(BDFChar *bc, int linear_scale) {
     BDFChar new;
     int i,j, l2 = linear_scale*linear_scale, max = l2-1;
-    uint8 *bpt, *pt;
+    uint8_t *bpt, *pt;
 
     if ( bc==NULL )
 return;
@@ -1606,7 +1606,7 @@ return;
     new.sc = bc->sc;
     new.byte_data = true;
     new.depth = max==3 ? 2 : max==15 ? 4 : 8;
-    new.bitmap = xcalloc( (new.ymax-new.ymin+1) * new.bytes_per_line, sizeof(uint8));
+    new.bitmap = xcalloc( (new.ymax-new.ymin+1) * new.bytes_per_line, sizeof(uint8_t));
     if ( bc->depth>1 ) {
 	uint32_t *sum = xcalloc(new.bytes_per_line,sizeof(uint32_t));
 	for ( i=0; i<=bc->ymax-bc->ymin; ++i ) {
@@ -1743,7 +1743,7 @@ return( bdf );
 
 static void ByteMult(BDFChar *bc,int factor) {
     /* Internal rasterizer uses bit depth 4, but font expects 8. Correct by multiplying each byte by 17 */
-    uint8 *pt, *end;
+    uint8_t *pt, *end;
 
     pt = bc->bitmap;
     end = pt + bc->bytes_per_line*(bc->ymax-bc->ymin+1);

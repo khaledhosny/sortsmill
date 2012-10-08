@@ -247,7 +247,7 @@ void *__FreeTypeFontContext(FT_Library context,
      */
     FTC *ftc;
     SplineChar **old=sf->glyphs, **new;
-    uint8 *selected = fv!=NULL ? fv->selected : NULL;
+    uint8_t *selected = fv!=NULL ? fv->selected : NULL;
     EncMap *map = fv!=NULL ? fv->map : sf->fv!=NULL ? sf->fv->map : sf->map;
     int i,cnt, notdefpos;
 
@@ -470,7 +470,7 @@ return( bdfc );
 
 static BDFChar *BDFCReClut(BDFChar *bdfc) {
     /* Made for something with a bit depth of 4, but we use 8 here */
-    uint8 *pt, *end;
+    uint8_t *pt, *end;
 
     if ( bdfc==NULL )
 return( NULL );
@@ -981,7 +981,7 @@ return( SplineSetStroke(layer->splines,&si,layer->order2));
 }
 
 static void MergeBitmaps(FT_Bitmap *bitmap,FT_Bitmap *newstuff,struct brush *brush,
-	uint8 *clipmask,double scale,DBounds *bbox,SplineChar *sc) {
+	uint8_t *clipmask,double scale,DBounds *bbox,SplineChar *sc) {
     int i, j;
     uint32_t col = brush->col;
 
@@ -1081,7 +1081,7 @@ return( NULL );
 	bitmap.num_grays = 256;
 	bitmap.pixel_mode = ft_pixel_mode_grays;
     }
-    bitmap.buffer = xcalloc(bitmap.pitch*bitmap.rows,sizeof(uint8));
+    bitmap.buffer = xcalloc(bitmap.pitch*bitmap.rows,sizeof(uint8_t));
     memset(&temp,0,sizeof(temp));
     if ( sc->parent->multilayer && !(sc->layer_cnt==2 &&
 	    !sc->layers[ly_fore].dostroke &&
@@ -1115,7 +1115,7 @@ return( NULL );
 	/* Can only get here if multilayer */
 	err = 0;
 	for ( i=ly_fore; i<sc->layer_cnt; ++i ) {
-	    uint8 *clipmask = NULL;
+	    uint8_t *clipmask = NULL;
 	    if ( SSHasClip(sc->layers[i].splines)) {
 		memset(temp.buffer,0,temp.pitch*temp.rows);
 		FillOutline(sc->layers[i].splines,&outline,&pmax,&cmax,

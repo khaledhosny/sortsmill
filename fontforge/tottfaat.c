@@ -523,7 +523,7 @@ struct feature {
     unsigned int needsOff: 1;
     unsigned int singleMutex: 1;
     unsigned int dummyOff: 1;
-    uint8 subtable_type;
+    uint8_t subtable_type;
     int chain;
     int32_t flag, offFlags;
     uint32_t feature_start;

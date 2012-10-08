@@ -35,7 +35,7 @@ GImage *GImageReadXbm(char * filename) {
     GImage *gi = NULL;
     struct _GImage *base;
     int i,j,k,pixels,val,val2, ch;
-    uint8 *scanline;
+    uint8_t *scanline;
 
     file = fopen(filename,"r");
     if ( file==NULL )

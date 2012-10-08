@@ -219,7 +219,7 @@ static void gimage_count32(GImage *image, struct clutcnt *clutcnt,int clutmax) {
 		    }
 		}
 	    }
-	    ipt = (uint32_t *) (((uint8 *) istart) + base->bytes_per_line);
+	    ipt = (uint32_t *) (((uint8_t *) istart) + base->bytes_per_line);
 	}
 	if ( clutcnt->transinf.cnt!=orig_trans )
 	    clutcnt->transinf.col = base->trans;
@@ -303,7 +303,7 @@ return( gimage_pickclut32(clut,clutmax,&clutcnt));
 
 static int gimage_count8(GImage *image, struct clutinf *clutinf, int pos, struct clutinf *transinf) {
     int i, j, k, len;
-    uint8 *ipt, *istart, *iend;
+    uint8_t *ipt, *istart, *iend;
     struct _GImage *base, **bases;
     GClut *clut;
     int clutmax;
@@ -318,7 +318,7 @@ static int gimage_count8(GImage *image, struct clutinf *clutinf, int pos, struct
 
     for ( k=0; k<len; ++k ) {
 	base = bases[k];
-	ipt = (uint8 *) (base->data);
+	ipt = (uint8_t *) (base->data);
 	clutmax = base->clut->clut_len;
 	for ( i=0; i<base->height; ++i ) {
 	    istart = ipt;

@@ -286,7 +286,7 @@ _FindOrMakeEncoding (const char *name, int make_it)
   char buffer[20];
   const char *iconv_name;
   Encoding temp;
-  uint8 good[256];
+  uint8_t good[256];
   int i, j, any, all;
   char from[8], ucs[20];
   size_t fromlen, tolen;

@@ -912,8 +912,8 @@ struct sckppst {
     uint16_t samewas;
     uint16_t devtablen;
     uint16_t tot;
-    uint8 isv;
-    uint8 subtable_too_big;
+    uint8_t isv;
+    uint8_t subtable_too_big;
 /* The first few fields are only meaningful in the first structure in the array*/
 /*   and provide information about the entire rest of the array */
     uint16_t other_gid;

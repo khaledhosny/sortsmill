@@ -86,7 +86,7 @@ cairo_t * GDrawGetCairo(GWindow w) {
 static void GXCDraw_StippleMePink(GXWindow gw,int ts, Color fg) {
     static unsigned char grey_init[8] = { 0x55, 0xaa, 0x55, 0xaa, 0x55, 0xaa, 0x55, 0xaa };
     static unsigned char fence_init[8] = { 0x55, 0x22, 0x55, 0x88, 0x55, 0x22, 0x55, 0x88};
-    uint8 *spt;
+    uint8_t *spt;
     int bit,i,j;
     uint32_t *data;
     static uint32_t space[8*8];
@@ -110,7 +110,7 @@ static void GXCDraw_StippleMePink(GXWindow gw,int ts, Color fg) {
 	}
     }
     if ( is==NULL ) {
-	is = cairo_image_surface_create_for_data((uint8 *) space,CAIRO_FORMAT_ARGB32,
+	is = cairo_image_surface_create_for_data((uint8_t *) space,CAIRO_FORMAT_ARGB32,
 		8,8,8*4);
 	pat = cairo_pattern_create_for_surface(is);
 	cairo_pattern_set_extend(pat,CAIRO_EXTEND_REPEAT);
@@ -453,10 +453,10 @@ void GDrawPathFill(GWindow w,Color col) {
 /* ************************************************************************** */
 /* ****************************** Cairo Images ****************************** */
 /* ************************************************************************** */
-static cairo_surface_t *GImage2Surface(GImage *image, GRect *src, uint8 **_data) {
+static cairo_surface_t *GImage2Surface(GImage *image, GRect *src, uint8_t **_data) {
     struct _GImage *base = image->list_len==0?image->u.image:image->u.images[0];
     cairo_format_t type;
-    uint8 *data, *pt;
+    uint8_t *data, *pt;
     uint32_t *idata, *ipt, *ito;
     int i,j,jj,tjj,stride;
     int bit, tobit;
@@ -484,7 +484,7 @@ static cairo_surface_t *GImage2Surface(GImage *image, GRect *src, uint8 **_data)
     if ( base->image_type == it_true && type == CAIRO_FORMAT_RGB24 ) {
 	idata = ((uint32_t *) (base->data)) + src->y*base->bytes_per_line + src->x;
 	*_data = NULL;		/* We can reuse the image's own data, don't need a copy */
-return( cairo_image_surface_create_for_data((uint8 *) idata,type,
+return( cairo_image_surface_create_for_data((uint8_t *) idata,type,
 		src->width, src->height,
 		base->bytes_per_line));
     }
@@ -512,8 +512,8 @@ return( cairo_image_surface_create_for_data((uint8 *) idata,type,
 			   ((COLOR_GREEN(orig)*alpha/255)<<8 )|
 			   ((COLOR_BLUE (orig)*alpha/255));
 	   }
-	   ipt = (uint32_t *) (((uint8 *) ipt) + base->bytes_per_line);
-	   ito = (uint32_t *) (((uint8 *) ito) +stride);
+	   ipt = (uint32_t *) (((uint8_t *) ipt) + base->bytes_per_line);
+	   ito = (uint32_t *) (((uint8_t *) ito) +stride);
        }
     } else if ( base->image_type == it_true && base->trans!=COLOR_UNKNOWN ) {
 	Color trans = base->trans;
@@ -526,8 +526,8 @@ return( cairo_image_surface_create_for_data((uint8 *) idata,type,
 	       else
 		   ito[j] = ipt[j]|0xff000000;
 	   }
-	   ipt = (uint32_t *) (((uint8 *) ipt) + base->bytes_per_line);
-	   ito = (uint32_t *) (((uint8 *) ito) +stride);
+	   ipt = (uint32_t *) (((uint8_t *) ipt) + base->bytes_per_line);
+	   ito = (uint32_t *) (((uint8_t *) ito) +stride);
        }
     } else if ( base->image_type == it_true ) {
 	ipt = ((uint32_t *) (base->data + src->y*base->bytes_per_line)) + src->x;
@@ -536,8 +536,8 @@ return( cairo_image_surface_create_for_data((uint8 *) idata,type,
 	   for ( j=0; j<src->width; ++j ) {
 	       ito[j] = ipt[j]|0xff000000;
 	   }
-	   ipt = (uint32_t *) (((uint8 *) ipt) + base->bytes_per_line);
-	   ito = (uint32_t *) (((uint8 *) ito) +stride);
+	   ipt = (uint32_t *) (((uint8_t *) ipt) + base->bytes_per_line);
+	   ito = (uint32_t *) (((uint8_t *) ito) +stride);
        }
     } else if ( base->image_type == it_index && base->clut->trans_index!=COLOR_UNKNOWN ) {
 	int trans = base->clut->trans_index;
@@ -555,7 +555,7 @@ return( cairo_image_surface_create_for_data((uint8 *) idata,type,
 		   ito[j] = clut[index]|0xff000000;
 	   }
 	   pt += base->bytes_per_line;
-	   ito = (uint32_t *) (((uint8 *) ito) +stride);
+	   ito = (uint32_t *) (((uint8_t *) ito) +stride);
        }
     } else if ( base->image_type == it_index ) {
 	Color *clut = base->clut->clut;
@@ -567,7 +567,7 @@ return( cairo_image_surface_create_for_data((uint8 *) idata,type,
 	       ito[j] = clut[index] | 0xff000000;
 	   }
 	   pt += base->bytes_per_line;
-	   ito = (uint32_t *) (((uint8 *) ito) +stride);
+	   ito = (uint32_t *) (((uint8_t *) ito) +stride);
        }
 #ifdef WORDS_BIGENDIAN
     } else if ( base->image_type == it_mono && base->clut!=NULL &&
@@ -592,7 +592,7 @@ return( cairo_image_surface_create_for_data((uint8 *) idata,type,
 		    }
 		}
 		pt += base->bytes_per_line;
-		ito = (uint32_t *) (((uint8 *) ito) +stride);
+		ito = (uint32_t *) (((uint8_t *) ito) +stride);
 	    }
 	} else {
 	    for ( i=0; i<src->height; ++i ) {
@@ -611,7 +611,7 @@ return( cairo_image_surface_create_for_data((uint8 *) idata,type,
 		    }
 		}
 		pt += base->bytes_per_line;
-		ito = (uint32_t *) (((uint8 *) ito) +stride);
+		ito = (uint32_t *) (((uint8_t *) ito) +stride);
 	    }
 	}
 #else
@@ -637,7 +637,7 @@ return( cairo_image_surface_create_for_data((uint8 *) idata,type,
 		    }
 		}
 		pt += base->bytes_per_line;
-		ito = (uint32_t *) (((uint8 *) ito) +stride);
+		ito = (uint32_t *) (((uint8_t *) ito) +stride);
 	    }
 	} else {
 	    for ( i=0; i<src->height; ++i ) {
@@ -656,7 +656,7 @@ return( cairo_image_surface_create_for_data((uint8 *) idata,type,
 		    }
 		}
 		pt += base->bytes_per_line;
-		ito = (uint32_t *) (((uint8 *) ito) +stride);
+		ito = (uint32_t *) (((uint8_t *) ito) +stride);
 	    }
 	}
 #endif
@@ -678,7 +678,7 @@ return( cairo_image_surface_create_for_data((uint8 *) idata,type,
 		}
 	    }
 	    pt += base->bytes_per_line;
-	    ito = (uint32_t *) (((uint8 *) ito) +stride);
+	    ito = (uint32_t *) (((uint8_t *) ito) +stride);
 	}
     }
 return( cs );
@@ -705,7 +705,7 @@ void GDrawDrawImage(GWindow w, GImage *image, GRect *src, int32_t x, int32_t y) 
 	cairo_fill(gw->cc);
 	cairo_surface_destroy(is);
     } else {
-	uint8 *data;
+	uint8_t *data;
 	is = GImage2Surface(image,src,&data);
 	struct _GImage *base = image->list_len==0?image->u.image:image->u.images[0];
 
@@ -762,7 +762,7 @@ void GDrawDrawGlyph(GWindow w, GImage *image, GRect *src, int32_t x, int32_t y) 
 	GDrawDrawImage(w,image,src,x,y);
     else {
 	int stride = cairo_format_stride_for_width(CAIRO_FORMAT_A8,src->width);
-	uint8 *basedata = xmalloc(szmax(1,stride*src->height)),
+	uint8_t *basedata = xmalloc(szmax(1,stride*src->height)),
 	       *data = basedata,
 		*srcd = base->data + src->y*base->bytes_per_line + src->x;
 	int factor = base->clut->clut_len==256 ? 1 :
@@ -798,7 +798,7 @@ static GImage *_GImageExtract(struct _GImage *base,GRect *src,GRect *size,
 	double xscale, double yscale) {
     static GImage temp;
     static struct _GImage tbase;
-    static uint8 *data;
+    static uint8_t *data;
     static int dlen;
     int r,c;
 
@@ -823,8 +823,8 @@ static GImage *_GImageExtract(struct _GImage *base,GRect *src,GRect *size,
 	memset(data,0,tbase.height*tbase.bytes_per_line);
 	for ( r=0; r<size->height; ++r ) {
 	    int or = ((int) floor( (r+size->y)/yscale ));
-	    uint8 *pt = data+r*tbase.bytes_per_line;
-	    uint8 *opt = base->data+or*base->bytes_per_line;
+	    uint8_t *pt = data+r*tbase.bytes_per_line;
+	    uint8_t *opt = base->data+or*base->bytes_per_line;
 	    for ( c=0; c<size->width; ++c ) {
 		int oc = ((int) floor( (c+size->x)/xscale));
 		if ( opt[oc>>3] & (0x80>>(oc&7)) )
@@ -834,8 +834,8 @@ static GImage *_GImageExtract(struct _GImage *base,GRect *src,GRect *size,
     } else if ( base->image_type==it_index ) {
 	for ( r=0; r<size->height; ++r ) {
 	    int or = ((int) floor( (r+size->y)/yscale ));
-	    uint8 *pt = data+r*tbase.bytes_per_line;
-	    uint8 *opt = base->data+or*base->bytes_per_line;
+	    uint8_t *pt = data+r*tbase.bytes_per_line;
+	    uint8_t *opt = base->data+or*base->bytes_per_line;
 	    for ( c=0; c<size->width; ++c ) {
 		int oc = ((int) floor( (c+size->x)/xscale));
 		*pt++ = opt[oc];

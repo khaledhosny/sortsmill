@@ -1161,7 +1161,7 @@ static void bOrd(Context *c) {
 	if ( c->a.vals[2].u.ival<0 || c->a.vals[2].u.ival>strlen( c->a.vals[1].u.sval ))
 	    ScriptError( c, "Bad value for argument" );
 	c->return_val.type = v_int;
-	c->return_val.u.ival = (uint8) c->a.vals[1].u.sval[c->a.vals[2].u.ival];
+	c->return_val.u.ival = (uint8_t) c->a.vals[1].u.sval[c->a.vals[2].u.ival];
     } else {
 	int i, len = strlen(c->a.vals[1].u.sval);
 	c->return_val.type = v_arrfree;
@@ -1170,7 +1170,7 @@ static void bOrd(Context *c) {
 	c->return_val.u.aval->vals = xmalloc(len*sizeof(Val));
 	for ( i=0; i<len; ++i ) {
 	    c->return_val.u.aval->vals[i].type = v_int;
-	    c->return_val.u.aval->vals[i].u.ival = (uint8) c->a.vals[1].u.sval[i];
+	    c->return_val.u.aval->vals[i].u.ival = (uint8_t) c->a.vals[1].u.sval[i];
 	}
     }
 }
@@ -3732,7 +3732,7 @@ static void bSetMaxpValue(Context *c) {
 static void bGetMaxpValue(Context *c) {
     SplineFont *sf = c->curfv->sf;
     struct ttf_table *tab;
-    uint8 *data, dummy[32];
+    uint8_t *data, dummy[32];
 
     if ( c->a.argc!=2 )
 	ScriptError( c, "Wrong number of arguments");
@@ -4090,7 +4090,7 @@ static void FVApplySubstitution(FontViewBase *fv,uint32_t script, uint32_t lang,
     EncMap *map = fv->map;
     int i, gid, gid2;
     SplineChar **replacements;
-    uint8 *removes;
+    uint8_t *removes;
     int flags = -1;
 
     if ( sf_sl->cidmaster!=NULL ) sf_sl = sf_sl->cidmaster;
@@ -4099,7 +4099,7 @@ static void FVApplySubstitution(FontViewBase *fv,uint32_t script, uint32_t lang,
     /* I used to do replaces and removes as I went along, and then Werner */
     /*  gave me a font were "a" was replaced by "b" replaced by "a" */
     replacements = xcalloc(sf->glyphcnt,sizeof(SplineChar *));
-    removes = xcalloc(sf->glyphcnt,sizeof(uint8));
+    removes = xcalloc(sf->glyphcnt,sizeof(uint8_t));
 
     for ( i=0; i<map->enccount; ++i ) if ( fv->selected[i] &&
 	    (gid=map->map[i])!=-1 && (sc=sf->glyphs[gid])!=NULL ) {
@@ -5308,7 +5308,7 @@ static void bAutoInstr(Context *c) {
 }
 
 static void TableAddInstrs(SplineFont *sf, uint32_t tag,int replace,
-	uint8 *instrs,int icnt) {
+	uint8_t *instrs,int icnt) {
     struct ttf_table *tab;
 
     for ( tab=sf->ttf_tables; tab!=NULL && tab->tag!=tag; tab=tab->next );
@@ -5331,7 +5331,7 @@ return;
 	memcpy(tab->data,instrs,icnt);
 	tab->len = icnt;
     } else {
-	uint8 *newi = xmalloc(icnt+tab->len);
+	uint8_t *newi = xmalloc(icnt+tab->len);
 	memcpy(newi,tab->data,tab->len);
 	memcpy(newi+tab->len,instrs,icnt);
 	free(tab->data);
@@ -5342,7 +5342,7 @@ return;
 }
 
 static void GlyphAddInstrs(SplineChar *sc,int replace,
-	uint8 *instrs,int icnt) {
+	uint8_t *instrs,int icnt) {
 
     if ( replace ) {
 	free(sc->ttf_instrs);
@@ -5358,7 +5358,7 @@ return;
 	memcpy(sc->ttf_instrs,instrs,icnt);
 	sc->ttf_instrs_len = icnt;
     } else {
-	uint8 *newi = xmalloc(icnt+sc->ttf_instrs_len);
+	uint8_t *newi = xmalloc(icnt+sc->ttf_instrs_len);
 	memcpy(newi,sc->ttf_instrs,sc->ttf_instrs_len);
 	memcpy(newi+sc->ttf_instrs_len,instrs,icnt);
 	free(sc->ttf_instrs);
@@ -5375,7 +5375,7 @@ static void bAddInstrs(Context *c) {
     int replace;
     SplineChar *sc = NULL;
     int icnt;
-    uint8 *instrs;
+    uint8_t *instrs;
     uint32_t tag=0;
     SplineFont *sf = c->curfv->sf;
     int i;
@@ -5518,7 +5518,7 @@ static void bClearInstrs(Context *c) {
 
 static void bClearTable(Context *c) {
     uint32_t tag;
-    uint8 _tag[4];
+    uint8_t _tag[4];
     SplineFont *sf = c->curfv->sf;
     struct ttf_table *table, *prev;
 

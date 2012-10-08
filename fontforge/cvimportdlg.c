@@ -99,7 +99,7 @@ static int BVImportImage(BitmapView *bv,char *path) {
     GImage *image;
     struct _GImage *base;
     int tot;
-    uint8 *pt, *end;
+    uint8_t *pt, *end;
     BDFChar *bc = bv->bc;
     int i, j;
 

@@ -227,9 +227,9 @@ typedef struct gscrollbar {		/* and slider */
     /*unsigned int vert: 1; */	/* Moved to GGadget, shared with line */
     unsigned int thumbpressed: 1;
     unsigned int ignorenext45: 1;
-    int8 repeatcmd;		/*  sb event to be generated on timer interupts (ie. upline)*/
-    int8 thumbborder;		/* Size of the border of the thumbbox */
-    int8 sbborder;		/* Size of the border of the main scrollbar */
+    int8_t repeatcmd;		/*  sb event to be generated on timer interupts (ie. upline)*/
+    int8_t thumbborder;		/* Size of the border of the thumbbox */
+    int8_t sbborder;		/* Size of the border of the main scrollbar */
     int16_t thumboff;		/* Offset from where the thumb was pressed to top of thumb */
     int16_t arrowsize;		
     int16_t thumbsize;		/* Current thumb size, refigured after every call to setbounds */
@@ -240,9 +240,9 @@ typedef struct gscrollbar {		/* and slider */
 
 typedef struct glist {
     GGadget g;
-    uint8 fh;
-    uint8 as;
-    uint8 sofar_max, sofar_pos;
+    uint8_t fh;
+    uint8_t as;
+    uint8_t sofar_max, sofar_pos;
     uint16_t ltot, loff, lcnt;
     uint16_t xoff, xmax;
     uint16_t start, end;			/* current selection drag */
@@ -284,9 +284,9 @@ typedef struct gtextfield {
     unsigned int incr_down: 1;	/* Direction of increments when numeric_scroll events happen */
     unsigned int completionfield: 1;
     unsigned int was_completing: 1;
-    uint8 fh;
-    uint8 as;
-    uint8 nw;			/* Width of one character (an "n") */
+    uint8_t fh;
+    uint8_t as;
+    uint8_t nw;			/* Width of one character (an "n") */
     int16_t xoff_left, loff_top;
     int16_t sel_start, sel_end, sel_base;
     int16_t sel_oldstart, sel_oldend, sel_oldbase;
@@ -415,9 +415,9 @@ struct col_data {
     GTextCompletionHandler completer;
     char *title;
     int16_t width, x;			/* Relative to inner.x */
-    uint8 fixed;
-    uint8 disabled;
-    uint8 hidden;
+    uint8_t fixed;
+    uint8_t disabled;
+    uint8_t hidden;
 };
 
 typedef struct gmatrixedit {
@@ -478,7 +478,7 @@ typedef struct rowcol {
     unsigned int vrules: 1;		/* Draw vertical lines between each column */
     unsigned int display_only: 1;
     unsigned int order_entries: 1;	/* normally order rows based on first column entry */
-    uint8 hpad;
+    uint8_t hpad;
     int *colx;				/* col+1 entries, last is xmax */
     GTextInfo **labels;
     GTextInfo **ti;

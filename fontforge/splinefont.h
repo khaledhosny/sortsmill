@@ -112,7 +112,7 @@ typedef struct val {
 	struct array *aval;
 	uint32_t *u32ptval;
 	uint16_t *u16ptval;
-	uint8  *u8ptval;
+	uint8_t  *u8ptval;
     } u;
 } Val;		/* Used by scripting */
 
@@ -125,7 +125,7 @@ struct psdict {
 struct pschars {
     int cnt, next;
     char **keys;
-    uint8 **values;
+    uint8_t **values;
     int *lens;
     int bias;		/* for type2 strings */
 };
@@ -185,8 +185,8 @@ struct brush {
 typedef unsigned char DashType;
 struct pen {
     struct brush brush;
-    uint8 linejoin;
-    uint8 linecap;
+    uint8_t linejoin;
+    uint8_t linecap;
     float width;
     real trans[4];
     DashType dashes[DASH_MAX];
@@ -331,8 +331,8 @@ typedef struct bdffloat {
     int16_t xmin,xmax,ymin,ymax;
     int16_t bytes_per_line;
     unsigned int byte_data:1;
-    uint8 depth;
-    uint8 *bitmap;
+    uint8_t depth;
+    uint8_t *bitmap;
 } BDFFloat;
 
 /* OpenType does not document 'dflt' as a language, but we'll use it anyway. */
@@ -496,7 +496,7 @@ typedef struct otlookup {
 
 typedef struct devicetab {
     uint16_t first_pixel_size, last_pixel_size;		/* A range of point sizes to which this table applies */
-    int8 *corrections;					/* a set of pixel corrections, one for each point size */
+    int8_t *corrections;					/* a set of pixel corrections, one for each point size */
 } DeviceTable;
 
 typedef struct valdev {		/* Value records can have four associated device tables */
@@ -510,10 +510,10 @@ enum anchorclass_type { act_mark, act_mkmk, act_curs, act_mklg };
 typedef struct anchorclass {
     char *name;			/* in utf8 */
     struct lookup_subtable *subtable;
-    uint8 type;		/* anchorclass_type */
-    uint8 has_base;
-    uint8 processed, has_mark, matches, ac_num;
-    uint8 ticked;
+    uint8_t type;		/* anchorclass_type */
+    uint8_t has_base;
+    uint8_t processed, has_mark, matches, ac_num;
+    uint8_t ticked;
     struct anchorclass *next;
 } AnchorClass;
 
@@ -583,7 +583,7 @@ struct vr {
 typedef struct generic_pst {
     unsigned int ticked: 1;
     unsigned int temporary: 1;		/* Used in afm ligature closure */
-    /* enum possub_type*/ uint8 type;
+    /* enum possub_type*/ uint8_t type;
     struct lookup_subtable *subtable;
     struct generic_pst *next;
     union {
@@ -639,8 +639,8 @@ typedef struct generic_fpst {
     uint16_t rule_cnt;
     char **nclass, **bclass, **fclass;
     struct fpst_rule *rules;
-    uint8 ticked;
-    uint8 effectively_by_glyphs;
+    uint8_t ticked;
+    uint8_t effectively_by_glyphs;
     char **nclassnames, **bclassnames, **fclassnames;
 } FPST;
 
@@ -672,7 +672,7 @@ typedef struct generic_asm {		/* Apple State Machine */
     uint16_t /*enum asm_type*/ type;
     struct lookup_subtable *subtable;	/* Lookup contains feature setting info */
     uint16_t flags;	/* 0x8000=>vert, 0x4000=>r2l, 0x2000=>hor&vert */
-    uint8 ticked;
+    uint8_t ticked;
 
     uint16_t class_cnt, state_cnt;
     char **classes;
@@ -791,8 +791,8 @@ struct macsetting {
 typedef struct macfeat {
     struct macfeat *next;
     uint16_t feature;
-    uint8 ismutex;
-    uint8 default_setting;		/* Apple's docs say both that this is a byte and a short. It's a byte */
+    uint8_t ismutex;
+    uint8_t default_setting;		/* Apple's docs say both that this is a byte and a short. It's a byte */
     uint16_t strid;			/* Temporary value, used when reading in */
     struct macname *featname;
     struct macsetting *settings;
@@ -801,8 +801,8 @@ typedef struct macfeat {
 typedef struct refbdfc {
     unsigned int checked: 1;
     unsigned int selected: 1;
-    int8 xoff;
-    int8 yoff;
+    int8_t xoff;
+    int8_t yoff;
     uint16_t gid;
     struct refbdfc *next;
     struct bdfchar *bdfc;
@@ -818,7 +818,7 @@ typedef struct bdfchar {
     int16_t xmin,xmax,ymin,ymax;
     int16_t width;
     int16_t bytes_per_line;
-    uint8 *bitmap;
+    uint8_t *bitmap;
     struct refbdfc *refs;
     int orig_pos;
     int16_t pixelsize;                    /* for undoes */
@@ -830,7 +830,7 @@ typedef struct bdfchar {
     unsigned int widthgroup: 1;	/* for ttf bitmap output */
     unsigned int isreference: 1;	/* for ttf bitmap input, */
     unsigned int ticked: 1;
-    uint8 depth;			/* for ttf bitmap output */
+    uint8_t depth;			/* for ttf bitmap output */
     uint16_t vwidth;
     BDFFloat *selection;
     BDFFloat *backup;
@@ -862,7 +862,7 @@ typedef struct undoes {
 	    
 	    struct imagelist *images;
 	    void *hints;			/* ut_statehint, ut_statename */
-	    uint8 *instrs;
+	    uint8_t *instrs;
 	    int instrs_len;
 	    AnchorPoint *anchor;
 	    struct brush fill_brush;
@@ -889,7 +889,7 @@ typedef struct undoes {
 	    struct undoes *more_pst;
 	    short cnt,max;		/* Not always set */
 	} possub;
-	uint8 *bitmap;
+	uint8_t *bitmap;
     } u;
     struct splinefont *copied_from;
 } Undoes;
@@ -994,7 +994,7 @@ typedef struct bdffont {
 } BDFFont;
 
 #define HntMax	96		/* PS says at most 96 hints */
-typedef uint8 HintMask[HntMax/8];
+typedef uint8_t HintMask[HntMax/8];
 
 enum pointtype { pt_curve, pt_corner, pt_tangent, pt_hvcurve };
 typedef struct splinepoint {
@@ -1111,9 +1111,9 @@ typedef struct splinepointlist {
     uint16_t spiro_cnt, spiro_max;
 	/* These could be bit fields, but bytes are easier to access and we */
 	/*  don't need the space (yet) */
-    uint8 ticked;
-    uint8 beziers_need_optimizer;	/* If the spiros have changed in spiro mode, then reverting to bezier mode might, someday, run a simplifier */
-    uint8 is_clip_path;			/* In type3/svg fonts */
+    uint8_t ticked;
+    uint8_t beziers_need_optimizer;	/* If the spiros have changed in spiro mode, then reverting to bezier mode might, someday, run a simplifier */
+    uint8_t is_clip_path;			/* In type3/svg fonts */
     char *contour_name;
 } SplinePointList, SplineSet;
 
@@ -1418,7 +1418,7 @@ typedef struct splinechar {
     char *comment;			/* in utf8 */
     uint32_t /*Color*/ color;
     AnchorPoint *anchor;
-    uint8 *ttf_instrs;
+    uint8_t *ttf_instrs;
     int16_t ttf_instrs_len;
     int16_t countermask_cnt;
     HintMask *countermasks;
@@ -1664,7 +1664,7 @@ struct pfminfo {		/* A misnomer now. OS/2 info would be more accurate, but that'
 struct ttf_table {
     uint32_t tag;
     int32_t len, maxlen;
-    uint8 *data;
+    uint8_t *data;
     struct ttf_table *next;
     FILE *temp;	/* Temporary storage used during generation */
 };
@@ -2239,7 +2239,7 @@ VISIBLE extern void MarkSetFree(int cnt,char **classes,char **names);
 VISIBLE extern void MarkClassFree(int cnt,char **classes,char **names);
 VISIBLE extern void MMSetFreeContents(MMSet *mm);
 extern void MMSetFree(MMSet *mm);
-VISIBLE extern void SFRemoveUndoes(SplineFont *sf,uint8 *selected,EncMap *map);
+VISIBLE extern void SFRemoveUndoes(SplineFont *sf,uint8_t *selected,EncMap *map);
 VISIBLE extern void SplineRefigure3(Spline *spline);
 VISIBLE extern void SplineRefigure(Spline *spline);
 VISIBLE extern Spline *SplineMake3(SplinePoint *from, SplinePoint *to);
@@ -2317,7 +2317,7 @@ VISIBLE extern BDFChar *BDFPieceMealCheck(BDFFont *bdf, int index);
 enum piecemeal_flags { pf_antialias=1, pf_bbsized=2, pf_ft_nohints=4, pf_ft_recontext=8 };
 VISIBLE extern BDFFont *SplineFontPieceMeal(SplineFont *sf,int layer,int ptsize, int dpi,int flags,void *freetype_context);
 VISIBLE extern void BDFCharFindBounds(BDFChar *bc,IBounds *bb);
-VISIBLE extern int BDFCharQuickBounds(BDFChar *bc,IBounds *bb,int8 xoff,int8 yoff,int use_backup,int first);
+VISIBLE extern int BDFCharQuickBounds(BDFChar *bc,IBounds *bb,int8_t xoff,int8_t yoff,int use_backup,int first);
 extern void BCPrepareForOutput(BDFChar *bc,int mergeall);
 extern void BCRestoreAfterOutput(BDFChar *bc);
 extern void BCMakeDependent(BDFChar *dependent,BDFChar *base);
@@ -2756,7 +2756,7 @@ struct pscontext {
     int blend_warn;
 };
 extern int UnblendedCompare(real u1[MmMax], real u2[MmMax], int cnt);
-extern SplineChar *PSCharStringToSplines(uint8 *type1, int len, struct pscontext *context,
+extern SplineChar *PSCharStringToSplines(uint8_t *type1, int len, struct pscontext *context,
 	struct pschars *subrs, struct pschars *gsubrs, const char *name);
 extern void MatMultiply(real m1[6], real m2[6], real to[6]);
 extern int MatIsIdentity(real transform[6]);
@@ -2904,7 +2904,7 @@ extern char *utf8_verify_copy(const char *str);
 
 VISIBLE extern char *MacStrToUtf8(const char *str,int macenc,int maclang);
 VISIBLE extern char *Utf8ToMacStr(const char *ustr,int macenc,int maclang);
-VISIBLE extern uint8 MacEncFromMacLang(int maclang);
+VISIBLE extern uint8_t MacEncFromMacLang(int maclang);
 extern uint16_t WinLangFromMac(int maclang);
 extern uint16_t WinLangToMac(int winlang);
 extern int CanEncodingWinLangAsMac(int winlang);

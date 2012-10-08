@@ -113,7 +113,7 @@ typedef struct debugview {
     int points_offtop;
 
     int codeSize;
-    uint8 initialbytes[4];
+    uint8_t initialbytes[4];
     struct reflist *active_refs;
     int last_npoints;
     int layer;
@@ -216,11 +216,11 @@ typedef struct charview {
     SplinePoint *lastselpt;
     spiro_cp *lastselcp;
     /*GWindow tools, layers;*/
-    int8 b1_tool, cb1_tool, b2_tool, cb2_tool;	/* Button 3 does a popup */
-    int8 b1_tool_old;				/* Used by mingw port */
-    int8 s1_tool, s2_tool, er_tool;		/* Bindings for wacom stylus and eraser */
-    int8 showing_tool, pressed_tool, pressed_display, had_control, active_tool;
-    int8 spacebar_hold;				/* spacebar is held down */
+    int8_t b1_tool, cb1_tool, b2_tool, cb2_tool;	/* Button 3 does a popup */
+    int8_t b1_tool_old;				/* Used by mingw port */
+    int8_t s1_tool, s2_tool, er_tool;		/* Bindings for wacom stylus and eraser */
+    int8_t showing_tool, pressed_tool, pressed_display, had_control, active_tool;
+    int8_t spacebar_hold;				/* spacebar is held down */
     SplinePointList *active_spl;
     SplinePoint *active_sp;
     spiro_cp *active_cp;
@@ -288,9 +288,9 @@ typedef struct bitmapview {
     unsigned int shades_hidden:1;
     unsigned int shades_down:1;
     /*GWindow tools, layers;*/
-    int8 b1_tool, cb1_tool, b2_tool, cb2_tool;		/* Button 3 does a popup */
-    int8 s1_tool, s2_tool, er_tool;			/* Bindings for wacom stylus and eraser */
-    int8 showing_tool, pressed_tool, pressed_display, had_control, active_tool;
+    int8_t b1_tool, cb1_tool, b2_tool, cb2_tool;		/* Button 3 does a popup */
+    int8_t s1_tool, s2_tool, er_tool;			/* Bindings for wacom stylus and eraser */
+    int8_t showing_tool, pressed_tool, pressed_display, had_control, active_tool;
     int pressed_x, pressed_y;
     int info_x, info_y;
     int event_x, event_y;
@@ -439,7 +439,7 @@ typedef struct searchview {
     SplineChar *chars[2];
     EncMap dummy_map;
     int32_t map[2], backmap[2];
-    uint8 sel[2];
+    uint8_t sel[2];
     CharView cv_srch, cv_rpl;
     CharView *lastcv;
 /* ****** */
@@ -469,7 +469,7 @@ typedef struct mathkernview {
     SplineChar *chars[4];
     EncMap dummy_map;
     int32_t map[4], backmap[4];
-    uint8 sel[4];
+    uint8_t sel[4];
     CharView cv_topright, cv_topleft, cv_bottomright, cv_bottomleft;
     CharView *lastcv;
 /* ****** */
@@ -486,9 +486,9 @@ typedef struct mathkernview {
     SplineChar *cursc;
     int def_layer;
     struct mathkern *orig_mathkern;
-    uint8 saved_mathkern;		/* Can't just check if orig is non-NULL, because NULL is a perfectly valid initial state */
-    uint8 last_aspect;
-    uint8 done;
+    uint8_t saved_mathkern;		/* Can't just check if orig is non-NULL, because NULL is a perfectly valid initial state */
+    uint8_t last_aspect;
+    uint8_t done;
 } MathKernDlg;
 
 # ifdef FONTFORGE_CONFIG_TILEPATH
@@ -502,7 +502,7 @@ typedef struct tilepathdlg {
     SplineChar *chars[4];
     EncMap dummy_map;
     int32_t map[4], backmap[4];
-    uint8 sel[4];
+    uint8_t sel[4];
     CharView cv_first, cv_medial, cv_final, cv_isolated;
     CharView *lastcv;
 /* ****** */
@@ -516,7 +516,7 @@ typedef struct tilepathdlg {
 /* ****** */
     struct tiledata *td;
     SplineFont *base_sf;
-    uint8 done, oked;
+    uint8_t done, oked;
 } TilePathDlg;
 extern void TPDCharViewInits(TilePathDlg *tpd, int cid);
 extern void PTDCharViewInits(TilePathDlg *tpd, int cid);
@@ -531,7 +531,7 @@ typedef struct gradientdlg {
     SplineChar *chars[1];
     EncMap dummy_map;
     int32_t map[1], backmap[1];
-    uint8 sel[1];
+    uint8_t sel[1];
     CharView cv_grad;
 /* ****** */
     GWindow gw;
@@ -542,7 +542,7 @@ typedef struct gradientdlg {
     int mid_space, cv_y;
     int cv_width, cv_height;
 /* ****** */
-    uint8 done, oked;
+    uint8_t done, oked;
     struct gradient *active;
 } GradientDlg;
 extern void GDDCharViewInits(GradientDlg *gdd,int cid);
@@ -556,7 +556,7 @@ typedef struct strokedlg {
     SplineChar *chars[1];
     EncMap dummy_map;
     int32_t map[1], backmap[1];
-    uint8 sel[1];
+    uint8_t sel[1];
     CharView cv_stroke;
     int cv_width, cv_height;
     GGadget *mb;
@@ -697,13 +697,13 @@ extern void DebuggerGo(struct debugger_context *dc,enum debug_gotype,DebugView *
 extern struct  TT_ExecContextRec_ *DebuggerGetEContext(struct debugger_context *dc);
 extern void DebuggerToggleBp(struct debugger_context *dc,int range,int ip);
 extern int DebuggerBpCheck(struct debugger_context *dc,int range,int ip);
-extern void DebuggerSetWatches(struct debugger_context *dc,int n, uint8 *w);
-extern uint8 *DebuggerGetWatches(struct debugger_context *dc, int *n);
-extern void DebuggerSetWatchStores(struct debugger_context *dc,int n, uint8 *w);
-extern uint8 *DebuggerGetWatchStores(struct debugger_context *dc, int *n);
+extern void DebuggerSetWatches(struct debugger_context *dc,int n, uint8_t *w);
+extern uint8_t *DebuggerGetWatches(struct debugger_context *dc, int *n);
+extern void DebuggerSetWatchStores(struct debugger_context *dc,int n, uint8_t *w);
+extern uint8_t *DebuggerGetWatchStores(struct debugger_context *dc, int *n);
 extern int DebuggerIsStorageSet(struct debugger_context *dc, int index);
-extern void DebuggerSetWatchCvts(struct debugger_context *dc,int n, uint8 *w);
-extern uint8 *DebuggerGetWatchCvts(struct debugger_context *dc, int *n);
+extern void DebuggerSetWatchCvts(struct debugger_context *dc,int n, uint8_t *w);
+extern uint8_t *DebuggerGetWatchCvts(struct debugger_context *dc, int *n);
 extern int DebuggingFpgm(struct debugger_context *dc);
 
 
@@ -1086,7 +1086,7 @@ extern void FVSelectByPST(FontView *fv);
 
 enum hist_type { hist_hstem, hist_vstem, hist_blues };
 struct psdict;
-extern void SFHistogram(SplineFont *sf,int layer, struct psdict *private,uint8 *selected,
+extern void SFHistogram(SplineFont *sf,int layer, struct psdict *private,uint8_t *selected,
 	EncMap *map, enum hist_type which);
 
 extern void ContextChainEdit(SplineFont *sf,FPST *fpst,

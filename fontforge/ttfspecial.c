@@ -736,13 +736,13 @@ static void PfEd_Layers(SplineFont *sf, struct PfEd_subtabs *pfed,
     /*  if the foreground is cubic and output is quad then the foreground */
     /*  Any other layers      		               */
     /* Check if any of these data exist                */
-    uint8 has_spiro=0;
-    uint8 *otherlayers;
+    uint8_t has_spiro=0;
+    uint8_t *otherlayers;
     int i, name_off, l, cnt, sofar;
     SplineChar *sc;
     FILE *layr;
 
-    otherlayers = xcalloc(sf->layer_cnt,sizeof(uint8));
+    otherlayers = xcalloc(sf->layer_cnt,sizeof(uint8_t));
 
     /* We don't need to check in bygid order. We just want to know existance */
     /* We don't check for refs because a reference to an empty glyph is empty too */

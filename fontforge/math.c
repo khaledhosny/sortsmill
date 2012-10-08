@@ -327,8 +327,8 @@ typedef struct mathdlg {
     SplineFont *sf;
     int def_layer;
     struct MATH *math;
-    uint8 done;
-    uint8 ok;
+    uint8_t done;
+    uint8_t ok;
     uint16_t popup_r;
     GGadget *popup_g;
     /* Used by glyphconstruction_dlg */

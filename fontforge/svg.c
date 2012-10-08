@@ -51,7 +51,7 @@ static void latin1ToUtf8Out(FILE *file,char *str) {
     /* beware of characters above 0x80, also &, <, > (things that are magic for xml) */
     while ( *str ) {
 	if ( *str=='&' || *str=='<' || *str=='>' || (*str&0x80) )
-	    fprintf( file, "&#%d;", (uint8) *str);
+	    fprintf( file, "&#%d;", (uint8_t) *str);
 	else
 	    putc(*str,file);
 	++str;
@@ -2022,7 +2022,7 @@ struct svg_state {
     real transform[6];
     DashType dashes[DASH_MAX];
     SplineSet *clippath;
-    uint8 free_clip;
+    uint8_t free_clip;
     uint32_t currentColor;
     uint32_t stopColor;
     float stopOpacity;

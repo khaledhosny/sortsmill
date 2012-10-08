@@ -45,13 +45,13 @@ typedef uint32_t Color;
 struct hslrgb {
     double h,s,l,v;
     double r,g,b;
-    uint8 rgb, hsl, hsv;
+    uint8_t rgb, hsl, hsv;
 };
 
 struct hslrgba {
     double h,s,l,v;
     double r,g,b;
-    uint8 rgb, hsl, hsv, has_alpha;
+    uint8_t rgb, hsl, hsv, has_alpha;
     double alpha;
 };
 

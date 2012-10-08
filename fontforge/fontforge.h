@@ -87,10 +87,10 @@ typedef struct library_version_configuration {
     uint16_t sizeof_fvbase;
     uint16_t sizeof_cvbase;
     uint16_t sizeof_cvcontainer;
-    uint8  config_had_devicetables;
-    uint8  config_had_multilayer;
-    uint8  config_had_python;
-    uint8  mba1;		/* Must be all ones (0xff), config values are 0,1 need to distinquish from both */
+    uint8_t  config_had_devicetables;
+    uint8_t  config_had_multilayer;
+    uint8_t  config_had_python;
+    uint8_t  mba1;		/* Must be all ones (0xff), config values are 0,1 need to distinquish from both */
 } Library_Version_Configuration;
 extern Library_Version_Configuration library_version_configuration;
 

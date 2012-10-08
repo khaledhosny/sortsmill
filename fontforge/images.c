@@ -31,7 +31,7 @@
 static GClut magnify0_clut = { 2, 0, 1,
     { 0x0, 0xb0b0b0 } };
 
-static uint8 magnify0_data[] = {
+static uint8_t magnify0_data[] = {
     0xff, 0xff, 0xff, 
     0xff, 0xff, 0xff, 
     0xff, 0xff, 0xff, 
@@ -61,12 +61,12 @@ static uint8 magnify0_data[] = {
 static struct _GImage magnify0_base = {
     it_mono,
     2080,24,24,3,
-    (uint8 *) magnify0_data,
+    (uint8_t *) magnify0_data,
     &magnify0_clut,
     1
 };
 
-static uint8 pointer0_data[] = {
+static uint8_t pointer0_data[] = {
     0xff, 0xff, 0xff, 
     0xff, 0xff, 0xff, 
     0xff, 0xff, 0xff, 
@@ -96,12 +96,12 @@ static uint8 pointer0_data[] = {
 static struct _GImage pointer0_base = {
     it_mono,
     2080,24,24,3,
-    (uint8 *) pointer0_data,
+    (uint8_t *) pointer0_data,
     &magnify0_clut,
     1
 };
 
-static uint8 ruler0_data[] = {
+static uint8_t ruler0_data[] = {
     0xff, 0xff, 0xff, 
     0xff, 0xff, 0xff, 
     0xff, 0xff, 0xff, 
@@ -131,12 +131,12 @@ static uint8 ruler0_data[] = {
 static struct _GImage ruler0_base = {
     it_mono,
     2080,24,24,3,
-    (uint8 *) ruler0_data,
+    (uint8_t *) ruler0_data,
     &magnify0_clut,
     1
 };
 
-static uint8 knife0_data[] = {
+static uint8_t knife0_data[] = {
     0xff, 0xff, 0xff, 
     0xff, 0xff, 0xff, 
     0xff, 0xff, 0xff, 
@@ -166,12 +166,12 @@ static uint8 knife0_data[] = {
 static struct _GImage knife0_base = {
     it_mono,
     2080,24,24,3,
-    (uint8 *) knife0_data,
+    (uint8_t *) knife0_data,
     &magnify0_clut,
     1
 };
 
-static uint8 corner0_data[] = {
+static uint8_t corner0_data[] = {
     0x0, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 
 	0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 
 	0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 
@@ -252,12 +252,12 @@ static GClut corner0_clut = { 3, 0, 2,
 static struct _GImage corner0_base = {
     it_index,
     2080,24,24,24,
-    (uint8 *) corner0_data,
+    (uint8_t *) corner0_data,
     &corner0_clut,
     2
 };
 
-static uint8 curve0_data[] = {
+static uint8_t curve0_data[] = {
     0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 
 	0x2, 0x0, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 
 	0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 
@@ -335,12 +335,12 @@ static uint8 curve0_data[] = {
 static struct _GImage curve0_base = {
     it_index,
     2080,24,24,24,
-    (uint8 *) curve0_data,
+    (uint8_t *) curve0_data,
     &corner0_clut,
     2
 };
 
-static uint8 hvcurve0_data[] = {
+static uint8_t hvcurve0_data[] = {
     0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 
 	0x3, 0x2, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 
 	0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 
@@ -421,12 +421,12 @@ static GClut hvcurve0_clut = { 5, 0, 3,
 static struct _GImage hvcurve0_base = {
     it_index,
     15420,24,24,24,
-    (uint8 *) hvcurve0_data,
+    (uint8_t *) hvcurve0_data,
     &hvcurve0_clut,
     3
 };
 
-static uint8 tangent0_data[] = {
+static uint8_t tangent0_data[] = {
     0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 
 	0x2, 0x0, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 
 	0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 
@@ -501,7 +501,7 @@ static uint8 tangent0_data[] = {
 	0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2
 };
 
-static uint8 corner1_data[] = {
+static uint8_t corner1_data[] = {
     0x0, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 
     0x2, 0x0, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 
     0x2, 0x2, 0x0, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 
@@ -523,12 +523,12 @@ static uint8 corner1_data[] = {
 static struct _GImage corner1_base = {
     it_index,
     2080,16,16,16,
-    (uint8 *) corner1_data,
+    (uint8_t *) corner1_data,
     &corner0_clut,
     2
 };
 
-static uint8 curve1_data[] = {
+static uint8_t curve1_data[] = {
     0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x0, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 
     0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x0, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 
     0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x0, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 
@@ -550,12 +550,12 @@ static uint8 curve1_data[] = {
 static struct _GImage curve1_base = {
     it_index,
     2080,16,16,16,
-    (uint8 *) curve1_data,
+    (uint8_t *) curve1_data,
     &corner0_clut,
     2
 };
 
-static uint8 hvcurve1_data[] = {
+static uint8_t hvcurve1_data[] = {
     0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x2, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 
     0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x2, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 
     0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x2, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 
@@ -577,12 +577,12 @@ static uint8 hvcurve1_data[] = {
 static struct _GImage hvcurve1_base = {
     it_index,
     15420,16,16,16,
-    (uint8 *) hvcurve1_data,
+    (uint8_t *) hvcurve1_data,
     &hvcurve0_clut,
     3
 };
 
-static uint8 tangent1_data[] = {
+static uint8_t tangent1_data[] = {
     0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x0, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 
     0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x0, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 
     0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x0, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 
@@ -604,7 +604,7 @@ static uint8 tangent1_data[] = {
 static struct _GImage tangent1_base = {
     it_index,
     2080,16,16,16,
-    (uint8 *) tangent1_data,
+    (uint8_t *) tangent1_data,
     &corner0_clut,
     2
 };
@@ -612,12 +612,12 @@ static struct _GImage tangent1_base = {
 static struct _GImage tangent0_base = {
     it_index,
     2080,24,24,24,
-    (uint8 *) tangent0_data,
+    (uint8_t *) tangent0_data,
     &corner0_clut,
     2
 };
 
-static uint8 spirocorner0_data[] = {
+static uint8_t spirocorner0_data[] = {
     0x1, 0x2, 0x2, 0x2, 0x2, 0x3, 0x2, 0x2, 
 	0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 
 	0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 
@@ -698,12 +698,12 @@ static GClut spirocorner0_clut = { 5, 1, 2,
 static struct _GImage spirocorner0_base = {
     it_index,
     15420,24,24,24,
-    (uint8 *) spirocorner0_data,
+    (uint8_t *) spirocorner0_data,
     &spirocorner0_clut,
     2
 };
 
-static uint8 spirocurve0_data[] = {
+static uint8_t spirocurve0_data[] = {
     0x1, 0x1, 0x1, 0x1, 0x1, 0x2, 0x1, 0x1, 
 	0x1, 0x3, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 
 	0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 
@@ -784,12 +784,12 @@ static GClut spirocurve0_clut = { 5, 1, 1,
 static struct _GImage spirocurve0_base = {
     it_index,
     15420,24,24,24,
-    (uint8 *) spirocurve0_data,
+    (uint8_t *) spirocurve0_data,
     &spirocurve0_clut,
     1
 };
 
-static uint8 spirog2curve0_data[] = {
+static uint8_t spirog2curve0_data[] = {
     0x1, 0x1, 0x1, 0x1, 0x1, 0x2, 0x1, 0x1, 0x1, 0x3, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 
     0x1, 0x1, 0x1, 0x1, 0x2, 0x1, 0x1, 0x2, 0x2, 0x2, 0x3, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x1, 0x1, 0x1, 0x1, 0x1, 
     0x1, 0x1, 0x1, 0x2, 0x1, 0x1, 0x2, 0x1, 0x1, 0x1, 0x3, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x2, 0x1, 0x1, 0x1, 0x1, 
@@ -822,12 +822,12 @@ static GClut spirog2curve0_clut = { 5, 1, 1,
 static struct _GImage spirog2curve0_base = {
     it_index,
     15420,24,24,24,
-    (uint8 *) spirog2curve0_data,
+    (uint8_t *) spirog2curve0_data,
     &spirog2curve0_clut,
     1
 };
 
-static uint8 spiroright0_data[] = {
+static uint8_t spiroright0_data[] = {
     0x1, 0x1, 0x1, 0x1, 0x1, 0x2, 0x1, 0x1, 
 	0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 
 	0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 
@@ -908,12 +908,12 @@ static GClut spiroright0_clut = { 4, 1, 1,
 static struct _GImage spiroright0_base = {
     it_index,
     15420,24,24,24,
-    (uint8 *) spiroright0_data,
+    (uint8_t *) spiroright0_data,
     &spiroright0_clut,
     1
 };
 
-static uint8 spiroleft0_data[] = {
+static uint8_t spiroleft0_data[] = {
     0x1, 0x1, 0x1, 0x1, 0x1, 0x2, 0x1, 0x1, 
 	0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 
 	0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 
@@ -994,12 +994,12 @@ static GClut spiroleft0_clut = { 4, 1, 1,
 static struct _GImage spiroleft0_base = {
     it_index,
     15420,24,24,24,
-    (uint8 *) spiroleft0_data,
+    (uint8_t *) spiroleft0_data,
     &spiroleft0_clut,
     1
 };
 
-static uint8 spirodisabled0_data[] = {
+static uint8_t spirodisabled0_data[] = {
     0x2, 0x1, 0x2, 0x1, 0x2, 0x1, 0x2, 0x1, 
 	0x2, 0x1, 0x2, 0x1, 0x2, 0x1, 0x2, 0x1, 
 	0x2, 0x1, 0x2, 0x1, 0x2, 0x1, 0x2, 0x1, 
@@ -1080,11 +1080,11 @@ static GClut spirodisabled0_clut = { 4, 0, -1,
 static struct _GImage spirodisabled0_base = {
     it_index,
     15420,24,24,24,
-    (uint8 *) spirodisabled0_data,
+    (uint8_t *) spirodisabled0_data,
     &spirodisabled0_clut,
     -1
 };
-static uint8 spirodown0_data[] = {
+static uint8_t spirodown0_data[] = {
     0x3, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 
 	0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 
 	0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x3, 
@@ -1165,12 +1165,12 @@ static GClut spirodown0_clut = { 5, 0, 1,
 static struct _GImage spirodown0_base = {
     it_index,
     15420,24,24,24,
-    (uint8 *) spirodown0_data,
+    (uint8_t *) spirodown0_data,
     &spirodown0_clut,
     1
 };
 
-static uint8 spiroup0_data[] = {
+static uint8_t spiroup0_data[] = {
     0x3, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 
 	0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 
 	0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x3, 
@@ -1251,12 +1251,12 @@ static GClut spiroup0_clut = { 5, 0, 1,
 static struct _GImage spiroup0_base = {
     it_index,
     15420,24,24,24,
-    (uint8 *) spiroup0_data,
+    (uint8_t *) spiroup0_data,
     &spiroup0_clut,
     1
 };
 
-static uint8 rotate0_data[] = {
+static uint8_t rotate0_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -1337,13 +1337,13 @@ static GClut rotate0_clut = { 6, 0, 0,
 static struct _GImage rotate0_base = {
     it_index,
     2080,24,24,24,
-    (uint8 *) rotate0_data,
+    (uint8_t *) rotate0_data,
     &rotate0_clut,
     0
 };
 
 
-static uint8 skew0_data[] = {
+static uint8_t skew0_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -1421,13 +1421,13 @@ static uint8 skew0_data[] = {
 static struct _GImage skew0_base = {
     it_index,
     2080,24,24,24,
-    (uint8 *) skew0_data,
+    (uint8_t *) skew0_data,
     &rotate0_clut,
     0
 };
 
 
-static uint8 flip0_data[] = {
+static uint8_t flip0_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x2, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -1505,13 +1505,13 @@ static uint8 flip0_data[] = {
 static struct _GImage flip0_base = {
     it_index,
     2080,24,24,24,
-    (uint8 *) flip0_data,
+    (uint8_t *) flip0_data,
     &rotate0_clut,
     0
 };
 
 
-static uint8 scale0_data[] = {
+static uint8_t scale0_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x2, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -1589,12 +1589,12 @@ static uint8 scale0_data[] = {
 static struct _GImage scale0_base = {
     it_index,
     2080,24,24,24,
-    (uint8 *) scale0_data,
+    (uint8_t *) scale0_data,
     &rotate0_clut,
     0
 };
 
-static uint8 rotate3d0_data[] = {
+static uint8_t rotate3d0_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -1672,13 +1672,13 @@ static uint8 rotate3d0_data[] = {
 static struct _GImage rotate3d0_base = {
     it_index,
     15420,24,24,24,
-    (uint8 *) rotate3d0_data,
+    (uint8_t *) rotate3d0_data,
     &rotate0_clut,
     0
 };
 
 
-static uint8 perspective0_data[] = {
+static uint8_t perspective0_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -1756,13 +1756,13 @@ static uint8 perspective0_data[] = {
 static struct _GImage perspective0_base = {
     it_index,
     15420,24,24,24,
-    (uint8 *) perspective0_data,
+    (uint8_t *) perspective0_data,
     &rotate0_clut,
     0
 };
 
 
-static uint8 pen0_data[] = {
+static uint8_t pen0_data[] = {
     0x2, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x1, 
 	0x1, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x5, 
 	0x0, 0x0, 0x0, 0x5, 0x0, 0x0, 0x0, 0x0, 
@@ -1840,12 +1840,12 @@ static uint8 pen0_data[] = {
 static struct _GImage pen0_base = {
     it_index,
     2080,24,24,24,
-    (uint8 *) pen0_data,
+    (uint8_t *) pen0_data,
     &rotate0_clut,
     0
 };
 
-static uint8 beveljoin0_data[] = {
+static uint8_t beveljoin0_data[] = {
     0xff, 0xff, 
     0xfe, 0x0, 
     0xfd, 0xff, 
@@ -1867,13 +1867,13 @@ static uint8 beveljoin0_data[] = {
 static struct _GImage beveljoin0_base = {
     it_mono,
     2069,16,16,2,
-    (uint8 *) beveljoin0_data,
+    (uint8_t *) beveljoin0_data,
     &magnify0_clut,
     1
 };
 
 
-static uint8 buttcap0_data[] = {
+static uint8_t buttcap0_data[] = {
     0xff, 0xff, 
     0xff, 0xff, 
     0xff, 0xff, 
@@ -1895,13 +1895,13 @@ static uint8 buttcap0_data[] = {
 static struct _GImage buttcap0_base = {
     it_mono,
     2069,16,16,2,
-    (uint8 *) buttcap0_data,
+    (uint8_t *) buttcap0_data,
     &magnify0_clut,
     1
 };
 
 
-static uint8 miterjoin0_data[] = {
+static uint8_t miterjoin0_data[] = {
     0xff, 0xff, 
     0x80, 0x0, 
     0xbf, 0xff, 
@@ -1923,13 +1923,13 @@ static uint8 miterjoin0_data[] = {
 static struct _GImage miterjoin0_base = {
     it_mono,
     2069,16,16,2,
-    (uint8 *) miterjoin0_data,
+    (uint8_t *) miterjoin0_data,
     &magnify0_clut,
     1
 };
 
 
-static uint8 roundcap0_data[] = {
+static uint8_t roundcap0_data[] = {
     0xff, 0xff, 
     0xf8, 0x3f, 
     0xe7, 0xcf, 
@@ -1951,13 +1951,13 @@ static uint8 roundcap0_data[] = {
 static struct _GImage roundcap0_base = {
     it_mono,
     2069,16,16,2,
-    (uint8 *) roundcap0_data,
+    (uint8_t *) roundcap0_data,
     &magnify0_clut,
     1
 };
 
 
-static uint8 roundjoin0_data[] = {
+static uint8_t roundjoin0_data[] = {
     0xff, 0xff, 
     0xf8, 0x0, 
     0xe7, 0xff, 
@@ -1979,13 +1979,13 @@ static uint8 roundjoin0_data[] = {
 static struct _GImage roundjoin0_base = {
     it_mono,
     2069,16,16,2,
-    (uint8 *) roundjoin0_data,
+    (uint8_t *) roundjoin0_data,
     &magnify0_clut,
     1
 };
 
 
-static uint8 squarecap0_data[] = {
+static uint8_t squarecap0_data[] = {
     0xff, 0xff, 
     0x80, 0x3, 
     0xbf, 0xfb, 
@@ -2007,12 +2007,12 @@ static uint8 squarecap0_data[] = {
 static struct _GImage squarecap0_base = {
     it_mono,
     2069,16,16,2,
-    (uint8 *) squarecap0_data,
+    (uint8_t *) squarecap0_data,
     &magnify0_clut,
     1
 };
 
-static uint8 rect0_data[] = {
+static uint8_t rect0_data[] = {
     0xff, 0xff, 0xff, 
     0xff, 0xff, 0xff, 
     0xff, 0xff, 0xff, 
@@ -2042,12 +2042,12 @@ static uint8 rect0_data[] = {
 static struct _GImage rect0_base = {
     it_mono,
     2069,24,24,3,
-    (uint8 *) rect0_data,
+    (uint8_t *) rect0_data,
     &magnify0_clut,
     1
 };
 
-static uint8 rrect0_data[] = {
+static uint8_t rrect0_data[] = {
     0xff, 0xff, 0xff, 
     0xff, 0xff, 0xff, 
     0xff, 0xff, 0xff, 
@@ -2077,13 +2077,13 @@ static uint8 rrect0_data[] = {
 static struct _GImage rrect0_base = {
     it_mono,
     2069,24,24,3,
-    (uint8 *) rrect0_data,
+    (uint8_t *) rrect0_data,
     &magnify0_clut,
     1
 };
 
 
-static uint8 elipse0_data[] = {
+static uint8_t elipse0_data[] = {
     0xff, 0xff, 0xff, 
     0xff, 0xff, 0xff, 
     0xff, 0xff, 0xff, 
@@ -2113,13 +2113,13 @@ static uint8 elipse0_data[] = {
 static struct _GImage elipse0_base = {
     it_mono,
     2069,24,24,3,
-    (uint8 *) elipse0_data,
+    (uint8_t *) elipse0_data,
     &magnify0_clut,
     1
 };
 
 
-static uint8 poly0_data[] = {
+static uint8_t poly0_data[] = {
     0xff, 0xff, 0xff, 
     0xff, 0xff, 0xff, 
     0xff, 0xe7, 0xff, 
@@ -2149,13 +2149,13 @@ static uint8 poly0_data[] = {
 static struct _GImage poly0_base = {
     it_mono,
     2069,24,24,3,
-    (uint8 *) poly0_data,
+    (uint8_t *) poly0_data,
     &magnify0_clut,
     1
 };
 
 
-static uint8 star0_data[] = {
+static uint8_t star0_data[] = {
     0xfd, 0xff, 0xbf, 
     0xfc, 0x7e, 0x3f, 
     0xfd, 0x99, 0xbf, 
@@ -2185,12 +2185,12 @@ static uint8 star0_data[] = {
 static struct _GImage star0_base = {
     it_mono,
     2069,24,24,3,
-    (uint8 *) star0_data,
+    (uint8_t *) star0_data,
     &magnify0_clut,
     1
 };
 
-static uint8 shift0_data[] = {
+static uint8_t shift0_data[] = {
     0xff, 0xef, 0xff, 
     0xff, 0xd7, 0xff, 
     0xff, 0x93, 0xff, 
@@ -2220,13 +2220,13 @@ static uint8 shift0_data[] = {
 static struct _GImage shift0_base = {
     it_mono,
     2069,24,24,3,
-    (uint8 *) shift0_data,
+    (uint8_t *) shift0_data,
     &magnify0_clut,
     1
 };
 
 
-static uint8 pencil0_data[] = {
+static uint8_t pencil0_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -2307,13 +2307,13 @@ static GClut pencil0_clut = { 4, 0, 0,
 static struct _GImage pencil0_base = {
     it_index,
     2069,24,24,24,
-    (uint8 *) pencil0_data,
+    (uint8_t *) pencil0_data,
     &pencil0_clut,
     0
 };
 
 
-static uint8 freehand0_data[] = {
+static uint8_t freehand0_data[] = {
     0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 
 	0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 
 	0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 
@@ -2391,7 +2391,7 @@ static uint8 freehand0_data[] = {
 static struct _GImage freehand0_base = {
     it_index,
     15420,24,24,24,
-    (uint8 *) freehand0_data,
+    (uint8_t *) freehand0_data,
     &corner0_clut,
     2
 };
@@ -2402,13 +2402,13 @@ static GClut greyfree0_clut = { 3, 0, 2,
 static struct _GImage greyfree0_base = {
     it_index,
     15420,24,24,24,
-    (uint8 *) freehand0_data,
+    (uint8_t *) freehand0_data,
     &greyfree0_clut,
     2
 };
 
 
-static uint8 line0_data[] = {
+static uint8_t line0_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -2486,13 +2486,13 @@ static uint8 line0_data[] = {
 static struct _GImage line0_base = {
     it_index,
     2069,24,24,24,
-    (uint8 *) line0_data,
+    (uint8_t *) line0_data,
     &pencil0_clut,
     0
 };
 
 
-static uint8 hand0_data[] = {
+static uint8_t hand0_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -2570,12 +2570,12 @@ static uint8 hand0_data[] = {
 static struct _GImage hand0_base = {
     it_index,
     2069,24,24,24,
-    (uint8 *) hand0_data,
+    (uint8_t *) hand0_data,
     &pencil0_clut,
     0
 };
 
-static uint8 press2ptr0_data[] = {
+static uint8_t press2ptr0_data[] = {
     0xff, 0xf2, 
     0xef, 0x9c, 
     0xec, 0xf8, 
@@ -2591,7 +2591,7 @@ static uint8 press2ptr0_data[] = {
 static struct _GImage press2ptr0_base = {
     it_mono,
     2069,16,10,2,
-    (uint8 *) press2ptr0_data,
+    (uint8_t *) press2ptr0_data,
     &magnify0_clut,
     1
 };
@@ -2645,7 +2645,7 @@ GImage GIcon_midcorner = { 0, { &corner1_base }, NULL };
 
 /* Small (16x12) images */
 
-static uint8 smallstar0_data[] = {
+static uint8_t smallstar0_data[] = {
     0xf7, 0xef, 
     0xf1, 0x8f, 
     0xf6, 0x6f, 
@@ -2663,12 +2663,12 @@ static uint8 smallstar0_data[] = {
 static struct _GImage smallstar0_base = {
     it_mono,
     15420,16,12,2,
-    (uint8 *) smallstar0_data,
+    (uint8_t *) smallstar0_data,
     &magnify0_clut,
     1
 };
 
-static uint8 smallruler0_data[] = {
+static uint8_t smallruler0_data[] = {
     0xff, 0xff, 
     0xef, 0xff, 
     0xdf, 0xff, 
@@ -2686,12 +2686,12 @@ static uint8 smallruler0_data[] = {
 static struct _GImage smallruler0_base = {
     it_mono,
     15420,16,12,2,
-    (uint8 *) smallruler0_data,
+    (uint8_t *) smallruler0_data,
     &magnify0_clut,
     1
 };
 
-static uint8 smallrect0_data[] = {
+static uint8_t smallrect0_data[] = {
     0xff, 0xff, 
     0xff, 0xff, 
     0xc0, 0x3, 
@@ -2709,12 +2709,12 @@ static uint8 smallrect0_data[] = {
 static struct _GImage smallrect0_base = {
     it_mono,
     15420,16,12,2,
-    (uint8 *) smallrect0_data,
+    (uint8_t *) smallrect0_data,
     &magnify0_clut,
     1
 };
 
-static uint8 smallelipse0_data[] = {
+static uint8_t smallelipse0_data[] = {
     0xff, 0xff, 
     0xff, 0xff, 
     0xfc, 0x3f, 
@@ -2732,12 +2732,12 @@ static uint8 smallelipse0_data[] = {
 static struct _GImage smallelipse0_base = {
     it_mono,
     15420,16,12,2,
-    (uint8 *) smallelipse0_data,
+    (uint8_t *) smallelipse0_data,
     &magnify0_clut,
     1
 };
 
-static uint8 smallpoly0_data[] = {
+static uint8_t smallpoly0_data[] = {
     0xff, 0xff, 
     0xfd, 0xff, 
     0xf2, 0x7f, 
@@ -2755,12 +2755,12 @@ static uint8 smallpoly0_data[] = {
 static struct _GImage smallpoly0_base = {
     it_mono,
     15420,16,12,2,
-    (uint8 *) smallpoly0_data,
+    (uint8_t *) smallpoly0_data,
     &magnify0_clut,
     1
 };
 
-static uint8 smallpointer0_data[] = {
+static uint8_t smallpointer0_data[] = {
     0xdf, 0xff, 
     0xcf, 0xff, 
     0xc7, 0xff, 
@@ -2778,12 +2778,12 @@ static uint8 smallpointer0_data[] = {
 static struct _GImage smallpointer0_base = {
     it_mono,
     15420,16,12,2,
-    (uint8 *) smallpointer0_data,
+    (uint8_t *) smallpointer0_data,
     &magnify0_clut,
     1
 };
 
-static uint8 smallpen0_data[] = {
+static uint8_t smallpen0_data[] = {
     0xff, 0xff, 
     0xff, 0x1f, 
     0xfc, 0xef, 
@@ -2801,12 +2801,12 @@ static uint8 smallpen0_data[] = {
 static struct _GImage smallpen0_base = {
     it_mono,
     15420,16,12,2,
-    (uint8 *) smallpen0_data,
+    (uint8_t *) smallpen0_data,
     &magnify0_clut,
     1
 };
 
-static uint8 smallpencil0_data[] = {
+static uint8_t smallpencil0_data[] = {
     0xc7, 0xff, 
     0xcb, 0xff, 
     0xdd, 0xff, 
@@ -2824,12 +2824,12 @@ static uint8 smallpencil0_data[] = {
 static struct _GImage smallpencil0_base = {
     it_mono,
     15420,16,12,2,
-    (uint8 *) smallpencil0_data,
+    (uint8_t *) smallpencil0_data,
     &magnify0_clut,
     1
 };
 
-static uint8 smallknife0_data[] = {
+static uint8_t smallknife0_data[] = {
     0xff, 0xff, 
     0xff, 0xff, 
     0xff, 0xff, 
@@ -2847,12 +2847,12 @@ static uint8 smallknife0_data[] = {
 static struct _GImage smallknife0_base = {
     it_mono,
     15420,16,12,2,
-    (uint8 *) smallknife0_data,
+    (uint8_t *) smallknife0_data,
     &magnify0_clut,
     1
 };
 
-static uint8 smallmag0_data[] = {
+static uint8_t smallmag0_data[] = {
     0xff, 0xff, 
     0xf1, 0xff, 
     0xee, 0xff, 
@@ -2870,12 +2870,12 @@ static uint8 smallmag0_data[] = {
 static struct _GImage smallmag0_base = {
     it_mono,
     15420,16,12,2,
-    (uint8 *) smallmag0_data,
+    (uint8_t *) smallmag0_data,
     &magnify0_clut,
     1
 };
 
-static uint8 smallhand0_data[] = {
+static uint8_t smallhand0_data[] = {
     0xfe, 0x7f, 
     0xfd, 0xbf, 
     0xed, 0x8f, 
@@ -2893,12 +2893,12 @@ static uint8 smallhand0_data[] = {
 static struct _GImage smallhand0_base = {
     it_mono,
     15420,16,12,2,
-    (uint8 *) smallhand0_data,
+    (uint8_t *) smallhand0_data,
     &magnify0_clut,
     1
 };
 
-static uint8 smallcurve0_data[] = {
+static uint8_t smallcurve0_data[] = {
     0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 
 	0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 
     0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 
@@ -2931,12 +2931,12 @@ static GClut smallcurve0_clut = { 3, 0, 1,
 static struct _GImage smallcurve0_base = {
     it_index,
     15420,16,12,16,
-    (uint8 *) smallcurve0_data,
+    (uint8_t *) smallcurve0_data,
     &smallcurve0_clut,
     1
 };
 
-static uint8 smallhvcurve0_data[] = {
+static uint8_t smallhvcurve0_data[] = {
     0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 
 	0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 
     0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x0, 
@@ -2966,12 +2966,12 @@ static uint8 smallhvcurve0_data[] = {
 static struct _GImage smallhvcurve0_base = {
     it_index,
     15420,16,12,16,
-    (uint8 *) smallhvcurve0_data,
+    (uint8_t *) smallhvcurve0_data,
     &smallcurve0_clut,
     1
 };
 
-static uint8 smallcorner0_data[] = {
+static uint8_t smallcorner0_data[] = {
     0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 
 	0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 
     0x1, 0x1, 0x0, 0x1, 0x1, 0x1, 0x1, 0x1, 
@@ -3001,12 +3001,12 @@ static uint8 smallcorner0_data[] = {
 static struct _GImage smallcorner0_base = {
     it_index,
     15420,16,12,16,
-    (uint8 *) smallcorner0_data,
+    (uint8_t *) smallcorner0_data,
     &smallcurve0_clut,
     1
 };
 
-static uint8 smalltangent0_data[] = {
+static uint8_t smalltangent0_data[] = {
     0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 
 	0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 
     0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 
@@ -3036,12 +3036,12 @@ static uint8 smalltangent0_data[] = {
 static struct _GImage smalltangent0_base = {
     it_index,
     15420,16,12,16,
-    (uint8 *) smalltangent0_data,
+    (uint8_t *) smalltangent0_data,
     &smallcurve0_clut,
     1
 };
 
-static uint8 smallspirocorner0_data[] = {
+static uint8_t smallspirocorner0_data[] = {
     0x2, 0x1, 0x3, 0x2, 0x2, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x2, 0x2, 0x3, 0x2, 0x2, 0x3, 0x2, 
     0x2, 0x3, 0x1, 0x2, 0x3, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x3, 0x2, 0x2, 0x3, 0x2, 0x2, 0x3, 
     0x3, 0x2, 0x2, 0x1, 0x2, 0x2, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x2, 0x2, 0x3, 0x2, 0x2, 0x3, 0x2, 0x3, 
@@ -3064,12 +3064,12 @@ static GClut smallspirocorner0_clut = { 5, 1, 0,
 static struct _GImage smallspirocorner0_base = {
     it_index,
     15420,20,14,20,
-    (uint8 *) smallspirocorner0_data,
+    (uint8_t *) smallspirocorner0_data,
     &smallspirocorner0_clut,
     0x2
 };
 
-static uint8 smallspirog2curve0_data[] = {
+static uint8_t smallspirog2curve0_data[] = {
     0x1, 0x1, 0x2, 0x1, 0x1, 0x2, 0x2, 0x3, 0x2, 0x2, 0x2, 0x2, 0x2, 0x1, 0x1, 0x2, 0x1, 0x1, 0x2, 0x1, 
     0x1, 0x2, 0x1, 0x1, 0x2, 0x1, 0x1, 0x3, 0x1, 0x1, 0x1, 0x1, 0x1, 0x2, 0x1, 0x1, 0x2, 0x1, 0x1, 0x2, 
     0x2, 0x1, 0x1, 0x2, 0x1, 0x1, 0x2, 0x2, 0x3, 0x2, 0x2, 0x2, 0x1, 0x1, 0x2, 0x1, 0x1, 0x2, 0x1, 0x2, 
@@ -3092,12 +3092,12 @@ static GClut smallspirog2curve0_clut = { 5, 1, 0,
 static struct _GImage smallspirog2curve0_base = {
     it_index,
     15420,20,14,20,
-    (uint8 *) smallspirog2curve0_data,
+    (uint8_t *) smallspirog2curve0_data,
     &smallspirog2curve0_clut,
     1
 };
 
-static uint8 smallspiroright0_data[] = {
+static uint8_t smallspiroright0_data[] = {
     0x1, 0x1, 0x2, 0x1, 0x1, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x1, 0x1, 0x2, 0x1, 0x1, 0x2, 0x1, 
     0x1, 0x2, 0x1, 0x1, 0x2, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x2, 0x1, 0x1, 0x2, 0x1, 0x1, 0x2, 
     0x2, 0x1, 0x1, 0x2, 0x1, 0x1, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x1, 0x1, 0x2, 0x1, 0x1, 0x2, 0x1, 0x2, 
@@ -3120,12 +3120,12 @@ static GClut smallspiroright0_clut = { 4, 1, 0,
 static struct _GImage smallspiroright0_base = {
     it_index,
     15420,20,14,20,
-    (uint8 *) smallspiroright0_data,
+    (uint8_t *) smallspiroright0_data,
     &smallspiroright0_clut,
     1
 };
 
-static uint8 smallspiroleft0_data[] = {
+static uint8_t smallspiroleft0_data[] = {
     0x1, 0x1, 0x2, 0x1, 0x1, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x1, 0x1, 0x2, 0x1, 0x1, 0x2, 0x1, 
     0x1, 0x2, 0x1, 0x1, 0x2, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x2, 0x1, 0x1, 0x2, 0x1, 0x1, 0x2, 
     0x2, 0x1, 0x1, 0x2, 0x1, 0x1, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x1, 0x1, 0x2, 0x1, 0x1, 0x2, 0x1, 0x2, 
@@ -3148,12 +3148,12 @@ static GClut smallspiroleft0_clut = { 4, 1, 0,
 static struct _GImage smallspiroleft0_base = {
     it_index,
     15420,20,14,20,
-    (uint8 *) smallspiroleft0_data,
+    (uint8_t *) smallspiroleft0_data,
     &smallspiroleft0_clut,
     0x1
 };
 
-static uint8 smallspirocurve0_data[] = {
+static uint8_t smallspirocurve0_data[] = {
     0x2, 0x1, 0x1, 0x2, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x2, 0x1, 0x1, 0x2, 0x1, 0x1, 0x2, 0x1, 
     0x1, 0x1, 0x2, 0x1, 0x1, 0x2, 0x2, 0x2, 0x2, 0x2, 0x2, 0x1, 0x1, 0x2, 0x1, 0x1, 0x2, 0x1, 0x1, 0x2, 
     0x1, 0x2, 0x1, 0x1, 0x2, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x2, 0x1, 0x1, 0x2, 0x1, 0x1, 0x2, 0x1, 0x2, 
@@ -3176,12 +3176,12 @@ static GClut smallspirocurve0_clut = { 5, 1, 0,
 static struct _GImage smallspirocurve0_base = {
     it_index,
     15420,20,14,20,
-    (uint8 *) smallspirocurve0_data,
+    (uint8_t *) smallspirocurve0_data,
     &smallspirocurve0_clut,
     1
 };
 
-static uint8 smallflip0_data[] = {
+static uint8_t smallflip0_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x2, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x2, 0x0, 
@@ -3211,12 +3211,12 @@ static uint8 smallflip0_data[] = {
 static struct _GImage smallflip0_base = {
     it_index,
     15420,16,12,16,
-    (uint8 *) smallflip0_data,
+    (uint8_t *) smallflip0_data,
     &rotate0_clut,
     0
 };
 
-static uint8 smallrotate0_data[] = {
+static uint8_t smallrotate0_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
     0x0, 0x0, 0x0, 0x0, 0x0, 0x3, 0x0, 0x0, 
@@ -3246,12 +3246,12 @@ static uint8 smallrotate0_data[] = {
 static struct _GImage smallrotate0_base = {
     it_index,
     15420,16,12,16,
-    (uint8 *) smallrotate0_data,
+    (uint8_t *) smallrotate0_data,
     &rotate0_clut,
     0
 };
 
-static uint8 smallscale0_data[] = {
+static uint8_t smallscale0_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -3281,12 +3281,12 @@ static uint8 smallscale0_data[] = {
 static struct _GImage smallscale0_base = {
     it_index,
     15420,16,12,16,
-    (uint8 *) smallscale0_data,
+    (uint8_t *) smallscale0_data,
     &rotate0_clut,
     0
 };
 
-static uint8 smallskew0_data[] = {
+static uint8_t smallskew0_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -3316,12 +3316,12 @@ static uint8 smallskew0_data[] = {
 static struct _GImage smallskew0_base = {
     it_index,
     15420,16,12,16,
-    (uint8 *) smallskew0_data,
+    (uint8_t *) smallskew0_data,
     &rotate0_clut,
     0
 };
 
-static uint8 small3drotate0_data[] = {
+static uint8_t small3drotate0_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -3351,12 +3351,12 @@ static uint8 small3drotate0_data[] = {
 static struct _GImage small3drotate0_base = {
     it_index,
     15420,16,12,16,
-    (uint8 *) small3drotate0_data,
+    (uint8_t *) small3drotate0_data,
     &rotate0_clut,
     0
 };
 
-static uint8 smallperspective0_data[] = {
+static uint8_t smallperspective0_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -3386,12 +3386,12 @@ static uint8 smallperspective0_data[] = {
 static struct _GImage smallperspective0_base = {
     it_index,
     15420,16,12,16,
-    (uint8 *) smallperspective0_data,
+    (uint8_t *) smallperspective0_data,
     &rotate0_clut,
     0
 };
 
-static uint8 logo_data[] = {
+static uint8_t logo_data[] = {
     0x25, 0x1a, 0x1f, 0x00, 0x00, 0x1a, 0x1d, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x26, 0x3b, 0x38, 0x28, 0x20, 0x3b, 0x38, 0x2f, 0x25, 0x00, 0x00, 0x00, 0x00,
     0x25, 0x16, 0x32, 0x3a, 0x16, 0x16, 0x32, 0x3a, 0x16, 0x26, 0x21, 0x00, 0x00,
@@ -3420,7 +3420,7 @@ static GClut logo_clut = { 64, 1, 1,
 static struct _GImage logo_base = {
     it_index,
     15420,13,13,13,
-    (uint8 *) logo_data,
+    (uint8_t *) logo_data,
     &logo_clut,
     0
 };
@@ -3428,7 +3428,7 @@ static struct _GImage logo_base = {
 static GClut logoback_clut = { 2, 0, 1,
     { 0x808080, 0xb0b0b0 } };
 
-static uint8 logoback_data[] = {
+static uint8_t logoback_data[] = {
     0xff, 0xff, 
     0xfe, 0x7f, 
     0xe5, 0xbf, 
@@ -3447,12 +3447,12 @@ static uint8 logoback_data[] = {
 static struct _GImage logoback_base = {
     it_mono,
     15420,11,13,2,
-    (uint8 *) logoback_data,
+    (uint8_t *) logoback_data,
     &logoback_clut,
     1
 };
 
-static uint8 logogrid_data[] = {
+static uint8_t logogrid_data[] = {
     0xbf, 0xff, 
     0x3f, 0xff, 
     0xbf, 0xff, 
@@ -3474,12 +3474,12 @@ static GClut def_clut = { 2, 0, 1,
 static struct _GImage logogrid_base = {
     it_mono,
     15420,11,13,2,
-    (uint8 *) logogrid_data,
+    (uint8_t *) logogrid_data,
     &def_clut,
     1
 };
 
-static uint8 image_data[] = {
+static uint8_t image_data[] = {
     0x00, 0x00,
     0x7f, 0xfe,
     0x7f, 0xfe,
@@ -3497,7 +3497,7 @@ static uint8 image_data[] = {
 static struct _GImage def_base = {
     it_mono,
     0,16,12,2,
-    (uint8 *) image_data,
+    (uint8_t *) image_data,
     &def_clut,
     1
 };
@@ -3506,7 +3506,7 @@ static GClut red_clut = { 2, 0, COLOR_UNKNOWN,
 static struct _GImage red_base = {
     it_mono,
     0,16,12,2,
-    (uint8 *) image_data,
+    (uint8_t *) image_data,
     &red_clut,
     COLOR_UNKNOWN
 };
@@ -3515,7 +3515,7 @@ static GClut blue_clut = { 2, 0, COLOR_UNKNOWN,
 static struct _GImage blue_base = {
     it_mono,
     0,16,12,2,
-    (uint8 *) image_data,
+    (uint8_t *) image_data,
     &blue_clut,
     COLOR_UNKNOWN
 };
@@ -3524,7 +3524,7 @@ static GClut green_clut = { 2, 0, COLOR_UNKNOWN,
 static struct _GImage green_base = {
     it_mono,
     0,16,12,2,
-    (uint8 *) image_data,
+    (uint8_t *) image_data,
     &green_clut,
     COLOR_UNKNOWN
 };
@@ -3533,7 +3533,7 @@ static GClut magenta_clut = { 2, 0, COLOR_UNKNOWN,
 static struct _GImage magenta_base = {
     it_mono,
     0,16,12,2,
-    (uint8 *) image_data,
+    (uint8_t *) image_data,
     &magenta_clut,
     COLOR_UNKNOWN
 };
@@ -3542,7 +3542,7 @@ static GClut cyan_clut = { 2, 0, COLOR_UNKNOWN,
 static struct _GImage cyan_base = {
     it_mono,
     0,16,12,2,
-    (uint8 *) image_data,
+    (uint8_t *) image_data,
     &cyan_clut,
     COLOR_UNKNOWN
 };
@@ -3551,7 +3551,7 @@ static GClut yellow_clut = { 2, 0, COLOR_UNKNOWN,
 static struct _GImage yellow_base = {
     it_mono,
     0,16,12,2,
-    (uint8 *) image_data,
+    (uint8_t *) image_data,
     &yellow_clut,
     COLOR_UNKNOWN
 };
@@ -3560,7 +3560,7 @@ static GClut white_clut = { 2, 0, COLOR_UNKNOWN,
 static struct _GImage white_base = {
     it_mono,
     0,16,12,2,
-    (uint8 *) image_data,
+    (uint8_t *) image_data,
     &white_clut,
     COLOR_UNKNOWN
 };
@@ -3569,7 +3569,7 @@ static GClut custom_clut = { 2, 0, COLOR_UNKNOWN,
 static struct _GImage custom_base = {
     it_mono,
     0,16,12,2,
-    (uint8 *) image_data,
+    (uint8_t *) image_data,
     &custom_clut,
     COLOR_UNKNOWN
 };
@@ -3584,7 +3584,7 @@ GImage cyan_image = { 0, { &cyan_base }, NULL };
 GImage white_image = { 0, { &white_base }, NULL };
 GImage customcolor_image = { 0, { &custom_base }, NULL };
 
-static uint8 continue_data[] = {
+static uint8_t continue_data[] = {
     0xfe, 0xff, 
     0xff, 0x7f, 
     0xf0, 0x3f, 
@@ -3606,12 +3606,12 @@ static uint8 continue_data[] = {
 static struct _GImage continue_base = {
     it_mono,
     15420,16,16,2,
-    (uint8 *) continue_data,
+    (uint8_t *) continue_data,
     &magnify0_clut,
     1
 };
 
-static uint8 stepout_data[] = {
+static uint8_t stepout_data[] = {
     0xfe, 0x1f, 
     0xfd, 0xef, 
     0xfd, 0xc7, 
@@ -3633,12 +3633,12 @@ static uint8 stepout_data[] = {
 static struct _GImage stepout_base = {
     it_mono,
     15420,16,16,2,
-    (uint8 *) stepout_data,
+    (uint8_t *) stepout_data,
     &magnify0_clut,
     1
 };
 
-static uint8 stepover_data[] = {
+static uint8_t stepover_data[] = {
     0xf0, 0x1f, 
     0xef, 0xef, 
     0xef, 0xc7, 
@@ -3660,12 +3660,12 @@ static uint8 stepover_data[] = {
 static struct _GImage stepover_base = {
     it_mono,
     15420,16,16,2,
-    (uint8 *) stepover_data,
+    (uint8_t *) stepover_data,
     &magnify0_clut,
     1
 };
 
-static uint8 stepinto_data[] = {
+static uint8_t stepinto_data[] = {
     0xff, 0xff, 
     0xf3, 0xff, 
     0xed, 0xff, 
@@ -3687,12 +3687,12 @@ static uint8 stepinto_data[] = {
 static struct _GImage stepinto_base = {
     it_mono,
     15420,16,16,2,
-    (uint8 *) stepinto_data,
+    (uint8_t *) stepinto_data,
     &magnify0_clut,
     1
 };
 
-static uint8 watchpnt_data[] = {
+static uint8_t watchpnt_data[] = {
     1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 0, 1, 
     1, 1, 1, 1, 1, 1, 1, 1, 
@@ -3733,12 +3733,12 @@ static GClut watchpnt_clut = { 4, 0, 1,
 static struct _GImage watchpnt_base = {
     it_index,
     15420,16,16,16,
-    (uint8 *) watchpnt_data,
+    (uint8_t *) watchpnt_data,
     &watchpnt_clut,
     1
 };
 
-static uint8 menudelta_data[] = {
+static uint8_t menudelta_data[] = {
     0xff, 0xff, 
     0xff, 0xff, 
     0xe0, 0x3, 
@@ -3760,12 +3760,12 @@ static uint8 menudelta_data[] = {
 static struct _GImage menudelta_base = {
     it_mono,
     15420,16,16,2,
-    (uint8 *) menudelta_data,
+    (uint8_t *) menudelta_data,
     &magnify0_clut,
     1
 };
 
-static uint8 exit_data[] = {
+static uint8_t exit_data[] = {
     0xff, 0xff, 
     0xff, 0xff, 
     0xff, 0xff, 
@@ -3787,12 +3787,12 @@ static uint8 exit_data[] = {
 static struct _GImage exit_base = {
     it_mono,
     15420,16,16,2,
-    (uint8 *) exit_data,
+    (uint8_t *) exit_data,
     &magnify0_clut,
     1
 };
 
-static uint8 stopped_data[] = {
+static uint8_t stopped_data[] = {
     1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
 	1, 1, 1, 1, 1, 1, 1, 1, 
@@ -3861,12 +3861,12 @@ static GClut stopped_clut = { 3, 0, 1,
 static struct _GImage stopped_base = {
     it_index,
     15420,36,12,36,
-    (uint8 *) stopped_data,
+    (uint8_t *) stopped_data,
     &stopped_clut,
     1
 };
 
-static uint8 stop_data[] = {
+static uint8_t stop_data[] = {
     1, 1, 1, 1, 1, 1, 0, 0, 
 	0, 0, 0, 0, 0, 1, 1, 1, 
 	1, 1, 1, 
@@ -3923,12 +3923,12 @@ static uint8 stop_data[] = {
 static struct _GImage stop_base = {
     it_index,
     15420,19,17,19,
-    (uint8 *) stop_data,
+    (uint8_t *) stop_data,
     &stopped_clut,
     1
 };
 
-static uint8 exclude_data[] = {
+static uint8_t exclude_data[] = {
     0xff, 0xff, 0xff, 0xff, 0xff, 
     0x80, 0x1f, 0xff, 0xff, 0xff, 
     0xbf, 0xdf, 0xff, 0xff, 0xff, 
@@ -3950,12 +3950,12 @@ static uint8 exclude_data[] = {
 static struct _GImage exclude_base = {
     it_mono,
     15420,40,16,5,
-    (uint8 *) exclude_data,
+    (uint8_t *) exclude_data,
     &magnify0_clut,
     1
 };
 
-static uint8 intersection_data[] = {
+static uint8_t intersection_data[] = {
     0xff, 0xff, 0xff, 0xff, 0xff, 
     0x80, 0x1f, 0xff, 0xff, 0xff, 
     0xbf, 0xdf, 0xff, 0xff, 0xff, 
@@ -3977,12 +3977,12 @@ static uint8 intersection_data[] = {
 static struct _GImage intersection_base = {
     it_mono,
     15420,40,16,5,
-    (uint8 *) intersection_data,
+    (uint8_t *) intersection_data,
     &magnify0_clut,
     1
 };
 
-static uint8 rmoverlap_data[] = {
+static uint8_t rmoverlap_data[] = {
     0xff, 0xff, 0xff, 0xff, 0xff, 
     0x80, 0x1f, 0xff, 0x0, 0x3f, 
     0xbf, 0xdf, 0xff, 0x7f, 0xbf, 
@@ -4004,12 +4004,12 @@ static uint8 rmoverlap_data[] = {
 static struct _GImage rmoverlap_base = {
     it_mono,
     15420,40,16,5,
-    (uint8 *) rmoverlap_data,
+    (uint8_t *) rmoverlap_data,
     &magnify0_clut,
     1
 };
 
-static uint8 findinter_data[] = {
+static uint8_t findinter_data[] = {
     0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 
 	0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 
 	0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 
@@ -4095,12 +4095,12 @@ static uint8 findinter_data[] = {
 static struct _GImage findinter_base = {
     it_index,
     15420,40,16,40,
-    (uint8 *) findinter_data,
+    (uint8_t *) findinter_data,
     &smallcurve0_clut,
     1
 };
 
-static uint8 styles_data[] = {
+static uint8_t styles_data[] = {
     0xfc, 0xc0, 0x7f, 
     0xfa, 0x40, 0x3f, 
     0xfb, 0xc0, 0x1f, 
@@ -4122,12 +4122,12 @@ static uint8 styles_data[] = {
 static struct _GImage styles_base = {
     it_mono,
     15420,20,16,3,
-    (uint8 *) styles_data,
+    (uint8_t *) styles_data,
     NULL,
     1
 };
 
-static uint8 bold_data[] = {
+static uint8_t bold_data[] = {
     0xff, 0xff, 
     0x80, 0x7f, 
     0x80, 0x3f, 
@@ -4149,12 +4149,12 @@ static uint8 bold_data[] = {
 static struct _GImage bold_base = {
     it_mono,
     15420,16,16,2,
-    (uint8 *) bold_data,
+    (uint8_t *) bold_data,
     &magnify0_clut,
     1
 };
 
-static uint8 changexheight_data[] = {
+static uint8_t changexheight_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
     0x0, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -4195,12 +4195,12 @@ static GClut changexheight_clut = { 7, 1, 0,
 static struct _GImage changexheight_base = {
     it_index,
     15420,16,16,16,
-    (uint8 *) changexheight_data,
+    (uint8_t *) changexheight_data,
     &changexheight_clut,
     0
 };
 
-static uint8 smallcaps_data[] = {
+static uint8_t smallcaps_data[] = {
     0xff, 0xff, 
     0xff, 0xff, 
     0xff, 0xff, 
@@ -4222,12 +4222,12 @@ static uint8 smallcaps_data[] = {
 static struct _GImage smallcaps_base = {
     it_mono,
     15420,16,16,2,
-    (uint8 *) smallcaps_data,
+    (uint8_t *) smallcaps_data,
     NULL,
     1
 };
 
-static uint8 subsuper0_data[] = {
+static uint8_t subsuper0_data[] = {
     0xff, 0xff, 
     0xff, 0xff, 
     0xff, 0xef, 
@@ -4249,12 +4249,12 @@ static uint8 subsuper0_data[] = {
 static struct _GImage subsuper0_base = {
     it_mono,
     15420,16,16,2,
-    (uint8 *) subsuper0_data,
+    (uint8_t *) subsuper0_data,
     NULL,
     1
 };
 
-static uint8 italic0_data[] = {
+static uint8_t italic0_data[] = {
     0xfe, 0x7f, 
     0xfd, 0x3f, 
     0xfd, 0xff, 
@@ -4276,13 +4276,13 @@ static uint8 italic0_data[] = {
 static struct _GImage italic_base = {
     it_mono,
     15420,16,16,2,
-    (uint8 *) italic0_data,
+    (uint8_t *) italic0_data,
     NULL,
     0x1
 };
 
 
-static uint8 oblique_data[] = {
+static uint8_t oblique_data[] = {
     0xfc, 0x7f, 
     0xfd, 0x7f, 
     0xfb, 0xff, 
@@ -4304,12 +4304,12 @@ static uint8 oblique_data[] = {
 static struct _GImage oblique_base = {
     it_mono,
     15420,16,16,2,
-    (uint8 *) oblique_data,
+    (uint8_t *) oblique_data,
     &magnify0_clut,
     1
 };
 
-static uint8 condense_data[] = {
+static uint8_t condense_data[] = {
     0xff, 0xff, 
     0x8f, 0xff, 
     0xb7, 0xff, 
@@ -4331,12 +4331,12 @@ static uint8 condense_data[] = {
 static struct _GImage condense_base = {
     it_mono,
     15420,16,16,2,
-    (uint8 *) condense_data,
+    (uint8_t *) condense_data,
     &magnify0_clut,
     1
 };
 
-static uint8 outline_data[] = {
+static uint8_t outline_data[] = {
     0xff, 0xff, 
     0x80, 0xf, 
     0xbf, 0xef, 
@@ -4358,12 +4358,12 @@ static uint8 outline_data[] = {
 static struct _GImage outline_base = {
     it_mono,
     15420,16,16,2,
-    (uint8 *) outline_data,
+    (uint8_t *) outline_data,
     &magnify0_clut,
     1
 };
 
-static uint8 inline_data[] = {
+static uint8_t inline_data[] = {
     0xff, 0xff, 
     0x80, 0xf, 
     0xbf, 0xef, 
@@ -4385,12 +4385,12 @@ static uint8 inline_data[] = {
 static struct _GImage inline_base = {
     it_mono,
     15420,16,16,2,
-    (uint8 *) inline_data,
+    (uint8_t *) inline_data,
     &magnify0_clut,
     1
 };
 
-static uint8 shadow_data[] = {
+static uint8_t shadow_data[] = {
     0xff, 0xff, 
     0xc0, 0x1f, 
     0xdf, 0xcf, 
@@ -4412,7 +4412,7 @@ static uint8 shadow_data[] = {
 static struct _GImage shadow_base = {
     it_mono,
     15420,16,16,2,
-    (uint8 *) shadow_data,
+    (uint8_t *) shadow_data,
     &magnify0_clut,
     1
 };
@@ -4439,12 +4439,12 @@ static unsigned char wireframe_data[] = {
 static struct _GImage wireframe_base = {
     it_mono,
     15420,16,16,2,
-    (uint8 *) wireframe_data,
+    (uint8_t *) wireframe_data,
     &magnify0_clut,
     1
 };
 
-static uint8 menumark_data[] = {
+static uint8_t menumark_data[] = {
     0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x1a, 
 	0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 
     0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 
@@ -4473,12 +4473,12 @@ static GClut menumark_clut = { 6, 0, 1,
 static struct _GImage menumark_base = {
     it_index,
     15420,16,10,16,
-    (uint8 *) menumark_data,
+    (uint8_t *) menumark_data,
     &menumark_clut,
     0xffffffff
 };
 
-static uint8 upicon0_data[] = {
+static uint8_t upicon0_data[] = {
     0xff, 
     0xef, 
     0xef, 
@@ -4495,12 +4495,12 @@ static uint8 upicon0_data[] = {
 static struct _GImage upicon0_base = {
     it_mono,
     15420,7,11,1,
-    (uint8 *) upicon0_data,
+    (uint8_t *) upicon0_data,
     &magnify0_clut,
     1
 };
 
-static uint8 downicon0_data[] = {
+static uint8_t downicon0_data[] = {
     0xff, 
     0xbb, 
     0xbb, 
@@ -4517,13 +4517,13 @@ static uint8 downicon0_data[] = {
 static struct _GImage downicon0_base = {
     it_mono,
     15420,7,11,1,
-    (uint8 *) downicon0_data,
+    (uint8_t *) downicon0_data,
     &magnify0_clut,
     1
 };
 
 #if 0
-static uint8 lock0_data[] = {
+static uint8_t lock0_data[] = {
     0xe0, 0xff, 
     0xdf, 0x7f, 
     0xbf, 0xbf, 
@@ -4547,14 +4547,14 @@ static uint8 lock0_data[] = {
 static struct _GImage lock0_base = {
     it_mono,
     15420,12,18,2,
-    (uint8 *) lock0_data,
+    (uint8_t *) lock0_data,
     &magnify0_clut,
     1
 };
 #else
 
 
-static uint8 lock0_data[] = {
+static uint8_t lock0_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
     0x0, 0x1, 0x2, 0x2, 0x2, 0x1, 0x0, 
     0x0, 0x2, 0x1, 0x0, 0x1, 0x2, 0x0, 
@@ -4575,7 +4575,7 @@ static GClut lock0_clut = { 6, 1, 0,
 static struct _GImage lock0_base = {
     it_index,
     15420,7,12,7,
-    (uint8 *) lock0_data,
+    (uint8_t *) lock0_data,
     &lock0_clut,
     0
 };
@@ -4648,7 +4648,7 @@ GImage GIcon_down = { 0, { &downicon0_base }, NULL };
 
 GImage GIcon_lock = { 0, { &lock0_base }, NULL };
 
-static uint8 OFL_logo0_data[] = {
+static uint8_t OFL_logo0_data[] = {
     0x9, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -5001,7 +5001,7 @@ static GClut OFL_logo0_clut = { 32, 1, -1,
 static struct _GImage OFL_logo0_base = {
     it_index,
     15420,88,31,88,
-    (uint8 *) OFL_logo0_data,
+    (uint8_t *) OFL_logo0_data,
     &OFL_logo0_clut,
     0xffffffff
 };
@@ -5011,7 +5011,7 @@ GImage OFL_logo = { 0, { &OFL_logo0_base }, NULL };
 static GClut clut = { 2, 0, 1,
     { 0x0, 0xb0b0b0 } };
 
-static uint8 rightpointer0_data[] = {
+static uint8_t rightpointer0_data[] = {
     0xfb, 
     0xf3, 
     0xe3, 
@@ -5027,12 +5027,12 @@ static uint8 rightpointer0_data[] = {
 static struct _GImage rightpointer0_base = {
     it_mono,
     2081,8,10,1,
-    (uint8 *) rightpointer0_data,
+    (uint8_t *) rightpointer0_data,
     &clut,
     1
 };
 
-static uint8 sel2ptr0_data[] = {
+static uint8_t sel2ptr0_data[] = {
     0xff, 0xe5, 
     0xff, 0x39, 
     0xf9, 0xf1, 
@@ -5048,12 +5048,12 @@ static uint8 sel2ptr0_data[] = {
 static struct _GImage sel2ptr0_base = {
     it_mono,
     2081,16,10,2,
-    (uint8 *) sel2ptr0_data,
+    (uint8_t *) sel2ptr0_data,
     &clut,
     1
 };
 
-static uint8 selectedpoint0_data[] = {
+static uint8_t selectedpoint0_data[] = {
     0xdf, 
     0xef, 
     0xef, 
@@ -5069,12 +5069,12 @@ static uint8 selectedpoint0_data[] = {
 static struct _GImage selectedpoint0_base = {
     it_mono,
     2081,8,10,1,
-    (uint8 *) selectedpoint0_data,
+    (uint8_t *) selectedpoint0_data,
     &clut,
     1
 };
 
-static uint8 distance0_data[] = {
+static uint8_t distance0_data[] = {
     0xff, 0xff, 
     0xbf, 0xfe, 
     0xbb, 0xee, 
@@ -5090,12 +5090,12 @@ static uint8 distance0_data[] = {
 static struct _GImage distance0_base = {
     it_mono,
     2081,16,10,2,
-    (uint8 *) distance0_data,
+    (uint8_t *) distance0_data,
     &clut,
     1
 };
 
-static uint8 angle0_data[] = {
+static uint8_t angle0_data[] = {
     0xff, 0xff, 
     0xff, 0xcf, 
     0xff, 0x9f, 
@@ -5111,12 +5111,12 @@ static uint8 angle0_data[] = {
 static struct _GImage angle0_base = {
     it_mono,
     2081,16,10,2,
-    (uint8 *) angle0_data,
+    (uint8_t *) angle0_data,
     &clut,
     1
 };
 
-static uint8 magicon0_data[] = {
+static uint8_t magicon0_data[] = {
     0xc7, 
     0xbb, 
     0x6d, 
@@ -5132,7 +5132,7 @@ static uint8 magicon0_data[] = {
 static struct _GImage magicon0_base = {
     it_mono,
     2069,8,10,1,
-    (uint8 *) magicon0_data,
+    (uint8_t *) magicon0_data,
     &clut,
     1
 };
@@ -5144,7 +5144,7 @@ GImage GIcon_selectedpoint = { 0, { &selectedpoint0_base }, NULL };
 GImage GIcon_sel2ptr = { 0, { &sel2ptr0_base }, NULL };
 GImage GIcon_rightpointer = { 0, { &rightpointer0_base }, NULL };
 
-static uint8 BottomSerifs0_data[] = {
+static uint8_t BottomSerifs0_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -5375,12 +5375,12 @@ static GClut BottomSerifs0_clut = { 55, 1, 0,
 static struct _GImage BottomSerifs0_base = {
     it_index,
     15420,68,24,68,
-    (uint8 *) BottomSerifs0_data,
+    (uint8_t *) BottomSerifs0_data,
     &BottomSerifs0_clut,
     0
 };
 
-static uint8 TopSerifs_data[] = {
+static uint8_t TopSerifs_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -5588,12 +5588,12 @@ static GClut TopSerifs_clut = { 60, 1, 0,
 static struct _GImage TopSerifs_base = {
     it_index,
     15420,61,24,61,
-    (uint8 *) TopSerifs_data,
+    (uint8_t *) TopSerifs_data,
     &TopSerifs_clut,
     0
 };
 
-static uint8 DiagSerifs_data[] = {
+static uint8_t DiagSerifs_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -5825,12 +5825,12 @@ static GClut DiagSerifs_clut = { 63, 1, 0,
 static struct _GImage DiagSerifs_base = {
     it_index,
     15420,68,24,68,
-    (uint8 *) DiagSerifs_data,
+    (uint8_t *) DiagSerifs_data,
     &DiagSerifs_clut,
     0
 };
 
-static uint8 FlatSerif_data[] = {
+static uint8_t FlatSerif_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -6008,12 +6008,12 @@ static GClut FlatSerif_clut = { 16, 1, 0,
 static struct _GImage FlatSerif_base = {
     it_index,
     15420,49,24,49,
-    (uint8 *) FlatSerif_data,
+    (uint8_t *) FlatSerif_data,
     &FlatSerif_clut,
     0
 };
 
-static uint8 SlantSerif_data[] = {
+static uint8_t SlantSerif_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -6192,12 +6192,12 @@ static GClut SlantSerif_clut = { 17, 1, 0,
 static struct _GImage SlantSerif_base = {
     it_index,
     15420,49,24,49,
-    (uint8 *) SlantSerif_data,
+    (uint8_t *) SlantSerif_data,
     &SlantSerif_clut,
     0
 };
 
-static uint8 PenSerif_data[] = {
+static uint8_t PenSerif_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -6371,12 +6371,12 @@ static uint8 PenSerif_data[] = {
 static struct _GImage PenSerif_base = {
     it_index,
     15420,49,24,49,
-    (uint8 *) PenSerif_data,
+    (uint8_t *) PenSerif_data,
     &SlantSerif_clut,
     0
 };
 
-static uint8 aItalic_data[] = {
+static uint8_t aItalic_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -6611,12 +6611,12 @@ static GClut aItalic_clut = { 84, 1, 0,
 static struct _GImage aItalic_base = {
     it_index,
     15420,68,24,68,
-    (uint8 *) aItalic_data,
+    (uint8_t *) aItalic_data,
     &aItalic_clut,
     0
 };
 
-static uint8 fImage_data[] = {
+static uint8_t fImage_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -6869,12 +6869,12 @@ static GClut fImage_clut = { 84, 1, 0,
 static struct _GImage fImage_base = {
     it_index,
     15420,68,26,68,
-    (uint8 *) fImage_data,
+    (uint8_t *) fImage_data,
     &fImage_clut,
     0
 };
 
-static uint8 f2Italic_data[] = {
+static uint8_t f2Italic_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -7125,12 +7125,12 @@ static GClut f2Italic_clut = { 72, 1, 0,
 static struct _GImage f2Italic_base = {
     it_index,
     15420,68,26,68,
-    (uint8 *) f2Italic_data,
+    (uint8_t *) f2Italic_data,
     &f2Italic_clut,
     0
 };
 
-static uint8 gItalic_data[] = {
+static uint8_t gItalic_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -7369,12 +7369,12 @@ static GClut gItalic_clut = { 113, 1, 0,
 static struct _GImage gItalic_base = {
     it_index,
     15420,68,24,68,
-    (uint8 *) gItalic_data,
+    (uint8_t *) gItalic_data,
     &gItalic_clut,
     0
 };
 
-static uint8 kItalic_data[] = {
+static uint8_t kItalic_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -7610,12 +7610,12 @@ static GClut kItalic_clut = { 93, 1, 0,
 static struct _GImage kItalic_base = {
     it_index,
     15420,68,24,68,
-    (uint8 *) kItalic_data,
+    (uint8_t *) kItalic_data,
     &kItalic_clut,
     0
 };
 
-static uint8 pItalic_data[] = {
+static uint8_t pItalic_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -7850,12 +7850,12 @@ static GClut pItalic_clut = { 87, 1, 0,
 static struct _GImage pItalic_base = {
     it_index,
     15420,68,24,68,
-    (uint8 *) pItalic_data,
+    (uint8_t *) pItalic_data,
     &pItalic_clut,
     0
 };
 
-static uint8 vItalic_data[] = {
+static uint8_t vItalic_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -8090,12 +8090,12 @@ static GClut vItalic_clut = { 88, 1, 0,
 static struct _GImage vItalic_base = {
     it_index,
     15420,68,24,68,
-    (uint8 *) vItalic_data,
+    (uint8_t *) vItalic_data,
     &vItalic_clut,
     0
 };
 
-static uint8 wItalic_data[] = {
+static uint8_t wItalic_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -8333,12 +8333,12 @@ static GClut wItalic_clut = { 108, 1, 0,
 static struct _GImage wItalic_base = {
     it_index,
     15420,68,24,68,
-    (uint8 *) wItalic_data,
+    (uint8_t *) wItalic_data,
     &wItalic_clut,
     0
 };
 
-static uint8 xItalic_data[] = {
+static uint8_t xItalic_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -8573,12 +8573,12 @@ static GClut xItalic_clut = { 88, 1, 0,
 static struct _GImage xItalic_base = {
     it_index,
     15420,68,24,68,
-    (uint8 *) xItalic_data,
+    (uint8_t *) xItalic_data,
     &xItalic_clut,
     0
 };
 
-static uint8 yItalic_data[] = {
+static uint8_t yItalic_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -8816,12 +8816,12 @@ static GClut yItalic_clut = { 110, 1, 0,
 static struct _GImage yItalic_base = {
     it_index,
     15420,68,24,68,
-    (uint8 *) yItalic_data,
+    (uint8_t *) yItalic_data,
     &yItalic_clut,
     0
 };
 
-static uint8 zItalic_data[] = {
+static uint8_t zItalic_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -9056,12 +9056,12 @@ static GClut zItalic_clut = { 81, 1, 0,
 static struct _GImage zItalic_base = {
     it_index,
     15420,68,24,68,
-    (uint8 *) zItalic_data,
+    (uint8_t *) zItalic_data,
     &zItalic_clut,
     0
 };
 
-static uint8 u432Italic_data[] = {
+static uint8_t u432Italic_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -9296,12 +9296,12 @@ static GClut u432Italic_clut = { 81, 1, 0,
 static struct _GImage u432Italic_base = {
     it_index,
     15420,68,24,68,
-    (uint8 *) u432Italic_data,
+    (uint8_t *) u432Italic_data,
     &u432Italic_clut,
     0
 };
 
-static uint8 u433Italic_data[] = {
+static uint8_t u433Italic_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -9534,12 +9534,12 @@ static GClut u433Italic_clut = { 70, 1, 0,
 static struct _GImage u433Italic_base = {
     it_index,
     15420,68,24,68,
-    (uint8 *) u433Italic_data,
+    (uint8_t *) u433Italic_data,
     &u433Italic_clut,
     0
 };
 
-static uint8 u434Italic_data[] = {
+static uint8_t u434Italic_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -9776,12 +9776,12 @@ static GClut u434Italic_clut = { 101, 1, 0,
 static struct _GImage u434Italic_base = {
     it_index,
     15420,68,24,68,
-    (uint8 *) u434Italic_data,
+    (uint8_t *) u434Italic_data,
     &u434Italic_clut,
     0
 };
 
-static uint8 u436Italic_data[] = {
+static uint8_t u436Italic_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -10020,12 +10020,12 @@ static GClut u436Italic_clut = { 118, 1, 0,
 static struct _GImage u436Italic_base = {
     it_index,
     15420,68,24,68,
-    (uint8 *) u436Italic_data,
+    (uint8_t *) u436Italic_data,
     &u436Italic_clut,
     0
 };
 
-static uint8 u438Italic_data[] = {
+static uint8_t u438Italic_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -10258,12 +10258,12 @@ static GClut u438Italic_clut = { 67, 1, 0,
 static struct _GImage u438Italic_base = {
     it_index,
     15420,68,24,68,
-    (uint8 *) u438Italic_data,
+    (uint8_t *) u438Italic_data,
     &u438Italic_clut,
     0
 };
 
-static uint8 u43cItalic_data[] = {
+static uint8_t u43cItalic_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -10499,12 +10499,12 @@ static GClut u43cItalic_clut = { 96, 1, 0,
 static struct _GImage u43cItalic_base = {
     it_index,
     15420,68,24,68,
-    (uint8 *) u43cItalic_data,
+    (uint8_t *) u43cItalic_data,
     &u43cItalic_clut,
     0
 };
 
-static uint8 u43fItalic_data[] = {
+static uint8_t u43fItalic_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -10735,12 +10735,12 @@ static GClut u43fItalic_clut = { 52, 1, 0,
 static struct _GImage u43fItalic_base = {
     it_index,
     15420,68,24,68,
-    (uint8 *) u43fItalic_data,
+    (uint8_t *) u43fItalic_data,
     &u43fItalic_clut,
     0
 };
 
-static uint8 u442Italic_data[] = {
+static uint8_t u442Italic_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -10973,12 +10973,12 @@ static GClut u442Italic_clut = { 67, 1, 0,
 static struct _GImage u442Italic_base = {
     it_index,
     15420,68,24,68,
-    (uint8 *) u442Italic_data,
+    (uint8_t *) u442Italic_data,
     &u442Italic_clut,
     0
 };
 
-static uint8 u444Italic_data[] = {
+static uint8_t u444Italic_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -11219,12 +11219,12 @@ static GClut u444Italic_clut = { 133, 1, 0,
 static struct _GImage u444Italic_base = {
     it_index,
     15420,68,24,68,
-    (uint8 *) u444Italic_data,
+    (uint8_t *) u444Italic_data,
     &u444Italic_clut,
     0
 };
 
-static uint8 u446Italic_data[] = {
+static uint8_t u446Italic_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -11458,12 +11458,12 @@ static GClut u446Italic_clut = { 73, 1, 0,
 static struct _GImage u446Italic_base = {
     it_index,
     15420,68,24,68,
-    (uint8 *) u446Italic_data,
+    (uint8_t *) u446Italic_data,
     &u446Italic_clut,
     0
 };
 
-static uint8 u449Italic_data[] = {
+static uint8_t u449Italic_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -11696,12 +11696,12 @@ static GClut u449Italic_clut = { 72, 1, 0,
 static struct _GImage u449Italic_base = {
     it_index,
     15420,68,24,68,
-    (uint8 *) u449Italic_data,
+    (uint8_t *) u449Italic_data,
     &u449Italic_clut,
     0
 };
 
-static uint8 u452Italic_data[] = {
+static uint8_t u452Italic_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -11951,12 +11951,12 @@ static GClut u452Italic_clut = { 61, 1, 0,
 static struct _GImage u452Italic_base = {
     it_index,
     15420,68,26,68,
-    (uint8 *) u452Italic_data,
+    (uint8_t *) u452Italic_data,
     &u452Italic_clut,
     0
 };
 
-static uint8 u45fItalic_data[] = {
+static uint8_t u45fItalic_data[] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
 	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
@@ -12187,7 +12187,7 @@ static GClut u45fItalic_clut = { 52, 1, 0,
 static struct _GImage u45fItalic_base = {
     it_index,
     15420,68,24,68,
-    (uint8 *) u45fItalic_data,
+    (uint8_t *) u45fItalic_data,
     &u45fItalic_clut,
     0
 };

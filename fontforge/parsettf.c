@@ -1432,7 +1432,7 @@ static void ValidatePostScriptFontName(struct ttfinfo *info, char *str) {
     /* someone gave me a font where the fontname started with the utf8 byte */
     /*  order mark.  PLRM says only ASCII encoding is supported. CFF says */
     /*  only printable ASCII should be used */
-    if ( ((uint8 *) str)[0] == 0xef && ((uint8 *) str)[1]==0xbb && ((uint8 *) str)[2] == 0xbf ) {
+    if ( ((uint8_t *) str)[0] == 0xef && ((uint8_t *) str)[1]==0xbb && ((uint8_t *) str)[2] == 0xbf ) {
 	LogError(_("The fontname begins with the utf8 byte order sequence. This is illegal. %s"), str+3 );
 	info->bad_ps_fontname = true;
 	for ( pt=str+3; *pt; ++pt )
@@ -1943,7 +1943,7 @@ return( head );
 
 static void readttfsimpleglyph(FILE *ttf,struct ttfinfo *info,SplineChar *sc, int path_cnt, int gbb[4]) {
     uint16_t *endpt = xmalloc((path_cnt+1)*sizeof(uint16_t));
-    uint8 *instructions;
+    uint8_t *instructions;
     char *flags;
     BasePoint *pts;
     int i, j, tot, len;
@@ -2191,7 +2191,7 @@ return;
     if ( (flags & _INSTR ) && info->to_order2 && ftell(ttf)<end ) {
 	sc->ttf_instrs_len = getushort(ttf);
 	if ( sc->ttf_instrs_len > 0 && ftell(ttf)+sc->ttf_instrs_len<=end ) {
-	    uint8 *instructions = xmalloc(sc->ttf_instrs_len);
+	    uint8_t *instructions = xmalloc(sc->ttf_instrs_len);
 	    int i;
 	    for ( i=0; i<sc->ttf_instrs_len; ++i )
 		instructions[i] = getc(ttf);
@@ -2960,7 +2960,7 @@ static void readcffsubrs(FILE *ttf, struct pschars *subs, struct ttfinfo *info) 
 return;
     subs->cnt = count;
     subs->lens = xmalloc(count*sizeof(int));
-    subs->values = xmalloc(count*sizeof(uint8 *));
+    subs->values = xmalloc(count*sizeof(uint8_t *));
     offsets = xmalloc((count+1)*sizeof(uint32_t));
     offsize = getc(ttf);
     for ( i=0; i<=count; ++i )
@@ -3524,8 +3524,8 @@ static void readcffset(FILE *ttf,struct topdicts *dict,struct ttfinfo *info) {
     while ( i<len ) dict->charset[i++] = 0;
 }
 
-static uint8 *readfdselect(FILE *ttf,int numglyphs,struct ttfinfo *info) {
-    uint8 *fdselect = xcalloc(numglyphs,sizeof(uint8));
+static uint8_t *readfdselect(FILE *ttf,int numglyphs,struct ttfinfo *info) {
+    uint8_t *fdselect = xcalloc(numglyphs,sizeof(uint8_t));
     int i, j, format, nr, first, end, fd;
 
     format = getc(ttf);
@@ -3802,7 +3802,7 @@ static void cfffigure(struct ttfinfo *info, struct topdicts *dict,
 
 static void cidfigure(struct ttfinfo *info, struct topdicts *dict,
 	char **strings, int scnt, struct pschars *gsubrs, struct topdicts **subdicts,
-	uint8 *fdselect) {
+	uint8_t *fdselect) {
     int i, j, cstype, uni, cid;
     struct pschars *subrs;
     SplineFont *sf;
@@ -3897,7 +3897,7 @@ static int readcffglyphs(FILE *ttf,struct ttfinfo *info) {
     struct topdicts **dicts, **subdicts;
     int i, j, which;
     struct pschars gsubs;
-    uint8 *fdselect;
+    uint8_t *fdselect;
     int scnt;
 
     fseek(ttf,info->cff_start,SEEK_SET);
@@ -4530,7 +4530,7 @@ static void readttfencodings(FILE *ttf,struct ttfinfo *info, int justinuse) {
     int index, last;
     int mod = 0;
     SplineChar *sc;
-    uint8 *used;
+    uint8_t *used;
     int badencwarned=false;
     int glyph_tot;
     Encoding *temp;
@@ -4722,7 +4722,7 @@ return;
 	    /* entrySelector = */ getushort(ttf);
 	    /* rangeShift = */ getushort(ttf);
 	    endchars = xmalloc(segCount*sizeof(uint16_t));
-	    used = xcalloc(65536,sizeof(uint8));
+	    used = xcalloc(65536,sizeof(uint8_t));
 	    for ( i=0; i<segCount; ++i )
 		endchars[i] = getushort(ttf);
 	    if ( getushort(ttf)!=0 )

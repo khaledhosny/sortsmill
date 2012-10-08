@@ -984,9 +984,9 @@ static Entity *EntityCreate(SplinePointList *head,int linecap,int linejoin,
 return( ent );
 }
 
-static uint8 *StringToBytes(struct psstack *stackel,int *len) {
+static uint8_t *StringToBytes(struct psstack *stackel,int *len) {
     char *pt;
-    uint8 *upt, *base, *ret;
+    uint8_t *upt, *base, *ret;
     int half, sofar, val, nesting;
     int i,j;
 
@@ -1131,7 +1131,7 @@ return(ret);
 
 static int PSAddImagemask(EntityChar *ec,struct psstack *stack,int sp,
 	real transform[6],Color fillcol) {
-    uint8 *data;
+    uint8_t *data;
     int datalen, width, height, polarity;
     real trans[6];
     struct _GImage *base;
@@ -3627,7 +3627,7 @@ return( sum );
 /*  we'll get it right */
 /* Char width is done differently. Moveto starts a newpath. 0xff starts a 16.16*/
 /*  number rather than a 32 bit number */
-SplineChar *PSCharStringToSplines(uint8 *type1, int len, struct pscontext *context,
+SplineChar *PSCharStringToSplines(uint8_t *type1, int len, struct pscontext *context,
 	struct pschars *subrs, struct pschars *gsubrs, const char *name) {
     int is_type2 = context->is_type2;
     real stack[50]; int sp=0, v;		/* Type1 stack is about 25 long, Type2 stack is 48 */

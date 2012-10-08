@@ -2903,7 +2903,7 @@ static void PSTKD_DoHideUnused(PSTKernDlg *pstkd) {
     GGadget *pstk = GWidgetGetControl(pstkd->gw,CID_PSTList);
     int rows, cols = GMatrixEditGetColCnt(pstk);
     struct matrix_data *old = GMatrixEditGet(pstk,&rows);
-    uint8 cols_used[20];
+    uint8_t cols_used[20];
     int r, col, startc, tot;
 
     startc = ( pstkd->sub->lookup->lookup_type == gpos_single ) ? 1 : 2;

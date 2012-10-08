@@ -251,7 +251,7 @@ return( cnt );
 
 struct resource {
     uint32_t pos;
-    uint8 flags;
+    uint8_t flags;
     uint16_t id;
     char *name;
     uint32_t nameloc;
@@ -337,7 +337,7 @@ static uint32_t TTFToResource(FILE *res,FILE *ttffile) {
 return( resstart );
 }
 
-static int BDFCCopyBitmaps(uint8 **rows,int offset,BDFChar *bdfc, BDFFont *bdf) {
+static int BDFCCopyBitmaps(uint8_t **rows,int offset,BDFChar *bdfc, BDFFont *bdf) {
     int i, r, y, ipos, j, c;
 
     y = bdf->ascent-1; r = i = 0;
@@ -362,7 +362,7 @@ return( offset + bdfc->xmax-bdfc->xmin+1 );
 
 static uint32_t BDFToNFNT(FILE *res, BDFFont *bdf, EncMap *map) {
     short widths[258], lbearings[258], locs[258]/*, idealwidths[256]*/;
-    uint8 **rows = xmalloc(bdf->pixelsize*sizeof(uint8 *));
+    uint8_t **rows = xmalloc(bdf->pixelsize*sizeof(uint8_t *));
     int i, k, width, kernMax=1, descentMax=bdf->descent-1, rectMax=1, widMax=3;
     uint32_t rlenpos = ftell(res), end, owloc, owpos;
     int gid;
@@ -387,7 +387,7 @@ static uint32_t BDFToNFNT(FILE *res, BDFFont *bdf, EncMap *map) {
     if ( descentMax>bdf->descent ) descentMax = bdf->descent;
     ++width;			/* For the "undefined character */
     for ( k=0; k<bdf->pixelsize; ++k )
-	rows[k] = xcalloc((width+7)/8 + 4 , sizeof(uint8));
+	rows[k] = xcalloc((width+7)/8 + 4 , sizeof(uint8_t));
     for ( i=width=0; i<256 ; ++i ) {
 	locs[i] = width;
 	if ( i>=map->enccount || (gid=map->map[i])==-1 || gid>=bdf->glyphcnt || bdf->glyphs[gid]==NULL ||
@@ -1373,7 +1373,7 @@ return( now );
 
 static int DumpMacBinaryHeader(FILE *res,struct macbinaryheader *mb) {
 #if !__Mac
-    uint8 header[128], *hpt; char buffer[256], *pt, *dpt;
+    uint8_t header[128], *hpt; char buffer[256], *pt, *dpt;
     uint32_t len;
     time_t now;
     int crc;
@@ -1479,7 +1479,7 @@ return( true );
 	free(dirname);
 	dirname = copy(".");
     }
-    ret=FSPathMakeRef( (uint8 *) dirname,&parentref,NULL);
+    ret=FSPathMakeRef( (uint8_t *) dirname,&parentref,NULL);
     free(dirname);
     if ( ret!=noErr )
 return( false );
@@ -1501,7 +1501,7 @@ return( false );
     free(filename);
     if ( ret==dupFNErr ) {
     	/* File already exists, create failed, didn't get an FSRef */
-	ret=FSPathMakeRef( (uint8 *) fname,&ref,NULL);
+	ret=FSPathMakeRef( (uint8_t *) fname,&ref,NULL);
     }
     if ( ret!=noErr )
 return( false );
@@ -2376,7 +2376,7 @@ static FOND *BuildFondList(FILE *f,long rlistpos,int subcnt,long rdata_pos,
 	    }
 	}
 	if ( styleoff!=0 ) {
-	    uint8 stringoffsets[48];
+	    uint8_t stringoffsets[48];
 	    int strcnt, stringlen, format;
 	    char **strings, *pt;
 	    fseek(f,styleoff,SEEK_SET);
@@ -2441,14 +2441,14 @@ static BDFChar *NFNTCvtBitmap(struct MacFontRec *font,int index,SplineFont *sf,i
     bdfc->width = font->offsetWidths[index]&0xff;
     bdfc->vwidth = font->ascent + font->descent;
     bdfc->bytes_per_line = ((bdfc->xmax-bdfc->xmin)>>3) + 1;
-    bdfc->bitmap = xcalloc(bdfc->bytes_per_line*font->fRectHeight,sizeof(uint8));
+    bdfc->bitmap = xcalloc(bdfc->bytes_per_line*font->fRectHeight,sizeof(uint8_t));
     bdfc->orig_pos = gid;
     bdfc->sc = sf->glyphs[gid];
 
     bits = font->locs[index]; bite = font->locs[index+1];
     for ( i=0; i<font->fRectHeight; ++i ) {
 	uint16_t *test = font->fontImage + i*font->rowWords;
-	uint8 *bpt = bdfc->bitmap + i*bdfc->bytes_per_line;
+	uint8_t *bpt = bdfc->bitmap + i*bdfc->bytes_per_line;
 	for ( bit=bits, j=0; bit<bite; ++bit, ++j ) {
 	    if ( test[bit>>4]&(0x8000>>(bit&0xf)) )
 		bpt[j>>3] |= (0x80>>(j&7));
@@ -2587,7 +2587,7 @@ static int GuessStyle(char *fontname,int *styles,int style_cnt) {
 static FOND *PickFOND(FOND *fondlist,char *filename,char **name, int *style) {
     int i,j;
     FOND *test;
-    uint8 stylesused[96];
+    uint8_t stylesused[96];
     char **names;
     FOND **fonds, *fond;
     int *styles;

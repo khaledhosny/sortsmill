@@ -52,8 +52,8 @@ typedef struct strokepoint {
     unsigned int line: 1;		/* On a cap, join or place where slope paralel to poly edge, point lies on a line can find slope by vector (pos,pos-1) or (pos+1,pos) */
     unsigned int needs_point_left: 1;	/* Contour changes direction abruptly on the left side */
     unsigned int needs_point_right: 1;
-    uint8 lt;
-    uint8 rt;
+    uint8_t lt;
+    uint8_t rt;
 } StrokePoint;
 
 /* Square line caps and miter line joins cover more area than the circular pen*/

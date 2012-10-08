@@ -3002,7 +3002,7 @@ static void TN_NewName(GGadget *g,int row) {
 static void TN_FinishEdit(GGadget *g,int row,int col,int wasnew) {
     int i,rows;
     struct matrix_data *strings = GMatrixEditGet(g, &rows);
-    uint8 found[ttf_namemax];
+    uint8_t found[ttf_namemax];
     struct gfi_data *d = (struct gfi_data *) GGadgetGetUserData(g);
     int ret = false;
 
@@ -3150,7 +3150,7 @@ return( copy( buf ));
 static void TNMatrixInit(struct matrixinit *mi,struct gfi_data *d) {
     SplineFont *sf = d->sf;
     int i,j,k,cnt;
-    uint8 sawEnglishUS[ttf_namemax];
+    uint8_t sawEnglishUS[ttf_namemax];
     struct ttflangname *tln;
     struct matrix_data *md;
 

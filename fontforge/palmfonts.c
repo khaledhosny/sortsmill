@@ -151,7 +151,7 @@ return;
 	    bdfc->width = density*fn->chars[index].width/72;
 	    bdfc->vwidth = pixelsize;
 	    bdfc->bytes_per_line = ((bdfc->xmax-bdfc->xmin)>>3) + 1;
-	    bdfc->bitmap = xcalloc(bdfc->bytes_per_line*(density*fn->frectheight)/72,sizeof(uint8));
+	    bdfc->bitmap = xcalloc(bdfc->bytes_per_line*(density*fn->frectheight)/72,sizeof(uint8_t));
 	    bdfc->orig_pos = gid;
 	    bdfc->sc = sf->glyphs[gid];
 	    bdf->glyphs[gid] = bdfc;
@@ -159,7 +159,7 @@ return;
 	    bits = density*fn->chars[index].start/72; bite = density*fn->chars[index+1].start/72;
 	    for ( i=0; i<density*fn->frectheight/72; ++i ) {
 		uint16_t *test = fontImage + i*density*fn->rowwords/72;
-		uint8 *bpt = bdfc->bitmap + i*bdfc->bytes_per_line;
+		uint8_t *bpt = bdfc->bitmap + i*bdfc->bytes_per_line;
 		for ( bit=bits, j=0; bit<bite; ++bit, ++j ) {
 		    if ( test[bit>>4]&(0x8000>>(bit&0xf)) )
 			bpt[j>>3] |= (0x80>>(j&7));
@@ -245,8 +245,8 @@ return( NULL );
     fseek(file,owtloc,SEEK_SET);
     for ( i=fn.first; i<=fn.last+1; ++i ) {
 	int offset, width;
-	offset = (int8) getc(file);
-	width = (int8) getc(file);
+	offset = (int8_t) getc(file);
+	width = (int8_t) getc(file);
 	if ( offset==-1 && width==-1 )
 	    /* Skipped glyph */;
 	else if ( offset!=0 )

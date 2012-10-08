@@ -139,14 +139,14 @@ typedef struct entitychar {
     RefChar *refs;
     int width, vwidth;
     SplineChar *sc;
-    uint8 fromtype3;
+    uint8_t fromtype3;
 } EntityChar;
 
 extern SplinePointList *SplinesFromEntityChar(EntityChar *ec,int *flags,int is_stroked);
 
 struct pskeydict {
     int16_t cnt, max;
-    uint8 is_executable;
+    uint8_t is_executable;
     struct pskeyval *entries;
 };
 

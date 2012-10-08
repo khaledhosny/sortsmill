@@ -906,7 +906,7 @@ static void dumppointarrays(struct glyphinfo *gi,BasePoint *bp, char *fs, int pc
 	putc('\0',gi->glyphs);		/* on a word boundary */
 }
 
-static void dumpinstrs(struct glyphinfo *gi,uint8 *instrs,int cnt) {
+static void dumpinstrs(struct glyphinfo *gi,uint8_t *instrs,int cnt) {
     int i;
 
     if ( (gi->flags&ttf_flag_nohints) ) {
@@ -925,7 +925,7 @@ static void dumpmissingglyph(SplineFont *sf,struct glyphinfo *gi,int fixedwidth)
     /* Or .notdef */
     struct glyphhead gh;
     BasePoint bp[10];
-    uint8 instrs[50];
+    uint8_t instrs[50];
     int stemcvt, stem;
     char *stempt;
 
@@ -1953,7 +1953,7 @@ static void _dumpcffstrings(FILE *file, struct pschars *strs) {
 
 	/* last of all the strings */
 	for ( i=0; i<strs->next; ++i ) {
-	    uint8 *pt = strs->values[i], *end = pt+strs->lens[i];
+	    uint8_t *pt = strs->values[i], *end = pt+strs->lens[i];
 	    while ( pt<end )
 		putc( *pt++, file );
 	}

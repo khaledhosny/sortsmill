@@ -266,7 +266,7 @@ static void IVError(void *_iv,char *msg,int offset) {
 static int IVParse(InstrDlg *iv) {
     char *text = GGadgetGetTitle8(iv->text);
     int icnt=0, i;
-    uint8 *instrs;
+    uint8_t *instrs;
 
     instrs = _IVParse(iv->instrdata->sf, text, &icnt, IVError, iv);
     free(text);
@@ -998,7 +998,7 @@ typedef struct shortview /* : tableview */ {
     int16_t which;
     int16_t *edits;
     char **comments;
-    uint8 *data;
+    uint8_t *data;
     int32_t len;
     uint32_t tag;
 } ShortView;
@@ -1728,7 +1728,7 @@ static void maxpCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32_t tag) 
     struct maxp_data mp;
     GGadgetCreateData gcd[17], boxes[4], *hvarray[16], *butarray[8], *varray[7];
     GTextInfo label[17];
-    uint8 dummy[32], *data;
+    uint8_t dummy[32], *data;
     char buffer[6][20];
     int k, hv;
 

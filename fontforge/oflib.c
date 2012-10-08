@@ -71,7 +71,7 @@ enum ofl_license { ofll_ofl, ofll_pd };
 struct ofl_download_urls {
     char *url;
     char *comment;
-    uint8 selected;
+    uint8_t selected;
     struct ofl_download_urls *next;
 };
 
@@ -87,10 +87,10 @@ struct ofl_font_info {
     GImage *preview;
     /* If they interrupted the download after this font info (so there might  */
     /*  be a gap after it) set the following */
-    uint8 potential_gap_after_me;
-    uint8 open;		/* Display download URLS in UI */
-    uint8 selected;
-    uint8 downloading_in_background;
+    uint8_t potential_gap_after_me;
+    uint8_t open;		/* Display download URLS in UI */
+    uint8_t selected;
+    uint8_t downloading_in_background;
 };
 
 struct ofl_state {

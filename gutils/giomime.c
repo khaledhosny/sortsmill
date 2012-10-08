@@ -76,7 +76,7 @@ uint32_t *_GioMacMime(const char *path) {
     FSRef ref;
     FSCatalogInfo info;
 
-    if ( FSPathMakeRef( (uint8 *) path,&ref,NULL)!=noErr )
+    if ( FSPathMakeRef( (uint8_t *) path,&ref,NULL)!=noErr )
 return( NULL );
     if ( FSGetCatalogInfo(&ref,kFSCatInfoFinderInfo,&info,NULL,NULL,NULL)!=noErr )
 return( NULL );

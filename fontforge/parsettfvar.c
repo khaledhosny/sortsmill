@@ -234,7 +234,7 @@ static int *readpackeddeltas(FILE *ttf,int n) {
 	} else {
 	    /* runcnt signed bytes from the stack */
 	    for ( j=0; j<=(runcnt&0x3f) && i<n; ++j )
-		deltas[i++] = (int8) getc(ttf);
+		deltas[i++] = (int8_t) getc(ttf);
 	}
 	if ( j<=(runcnt&0x3f) ) {
 	    if ( n>0 )

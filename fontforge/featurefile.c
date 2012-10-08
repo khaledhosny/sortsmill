@@ -151,7 +151,7 @@ static void dump_glyphnamelist(FILE *out, SplineFont *sf, char *names) {
     }
 }
 
-static int MarkNeeded(uint8 *needed,uint8 *setsneeded,OTLookup *otl) {
+static int MarkNeeded(uint8_t *needed,uint8_t *setsneeded,OTLookup *otl) {
     int index = (otl->lookup_flags>>8)&0xff;
     int sindex = (otl->lookup_flags>>16)&0xffff;
     int any = false;
@@ -179,8 +179,8 @@ return( any );
 }
 
 static void gdef_markclasscheck(FILE *out,SplineFont *sf,OTLookup *otl) {
-    uint8 *needed;
-    uint8 *setsneeded;
+    uint8_t *needed;
+    uint8_t *setsneeded;
     int any = false;
     int gpos;
 
@@ -1956,7 +1956,7 @@ struct tablekeywords {
 struct tablevalues {
     int index;			/* in the table key structure above */
     int value;
-    uint8 panose_vals[10];
+    uint8_t panose_vals[10];
     struct tablevalues *next;
 };
 
@@ -1967,7 +1967,7 @@ enum feat_type { ft_lookup_start, ft_lookup_end, ft_feat_start, ft_feat_end,
     ft_pst, ft_pstclass, ft_fpst, ft_ap, ft_lookup_ref, ft_featname };
 struct feat_item {
     uint16_t /* enum feat_type */ type;
-    uint8 ticked;
+    uint8_t ticked;
     union {
 	SplineChar *sc;		/* For psts, aps */
 	char *class;		/* List of glyph names for kerning by class, lcarets */
@@ -2297,7 +2297,7 @@ static struct tablekeywords vhead_keys[] = {
 
 static struct tablekeywords os2_keys[] = {
     { "FSType", sizeof(short), 1, offsetof(struct pfminfo,fstype)+offsetof(SplineFont,pfminfo) },
-    { "Panose", sizeof(uint8), 10, offsetof(struct pfminfo,panose)+offsetof(SplineFont,pfminfo) },
+    { "Panose", sizeof(uint8_t), 10, offsetof(struct pfminfo,panose)+offsetof(SplineFont,pfminfo) },
     { "UnicodeRange", sizeof(short), -1, -1 },
     { "CodePageRange", sizeof(short), -1, -1 },
     { "TypoAscender", sizeof(short), 1, offsetof(struct pfminfo,os2_typoascent)+offsetof(SplineFont,pfminfo) },
@@ -3228,7 +3228,7 @@ static void fea_ParseDeviceTable(struct parseState *tok,DeviceTable *adjust)
 	{
     int first = true;
     int min=0, max= -1;
-    int8 values[512];
+    int8_t values[512];
 
     memset(values,0,sizeof(values));
 
@@ -5417,7 +5417,7 @@ static void fea_ParseTableKeywords(struct parseState *tok, struct tablekeywords 
 		/* Accept a normal tag, since that's what it really is */
 		tv->value = tok->tag;
 	    else if ( tok->type==tk_char && tok->tokbuf[0]=='"' ) {
-		uint8 foo[4]; int ch;
+		uint8_t foo[4]; int ch;
 		FILE *in = tok->inlist[tok->inc_depth];
 		memset(foo,' ',sizeof(foo));
 		for ( i=0; i<4; ++i ) {
@@ -6651,11 +6651,11 @@ static void fea_TableByKeywords(SplineFont *sf, struct feat_item *f) {
 	    /* We don't support this guy, whatever he may be, but we did parse it */;
 	else if ( cur->cnt==1 ) {
 	    if ( cur->size==4 )
-		*((uint32_t *) (((uint8 *) sf) + cur->offset)) = tv->value;
+		*((uint32_t *) (((uint8_t *) sf) + cur->offset)) = tv->value;
 	    else if ( cur->size==2 )
-		*((uint16_t *) (((uint8 *) sf) + cur->offset)) = tv->value;
+		*((uint16_t *) (((uint8_t *) sf) + cur->offset)) = tv->value;
 	    else
-		*((uint8 *) (((uint8 *) sf) + cur->offset)) = tv->value;
+		*((uint8_t *) (((uint8_t *) sf) + cur->offset)) = tv->value;
 	    if ( strcmp(cur->name,"Ascender")==0 )
 		sf->pfminfo.hheadascent_add = false;
 	    else if ( strcmp(cur->name,"Descender")==0 )
@@ -6670,7 +6670,7 @@ static void fea_TableByKeywords(SplineFont *sf, struct feat_item *f) {
 		sf->pfminfo.typodescent_add = false;
 	} else if ( cur->cnt==10 && cur->size==1 ) {
 	    for ( i=0; i<10; ++i )
-		(((uint8 *) sf) + cur->offset)[i] = tv->panose_vals[i];
+		(((uint8_t *) sf) + cur->offset)[i] = tv->panose_vals[i];
 	}
     }
 }

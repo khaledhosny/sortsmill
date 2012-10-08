@@ -292,7 +292,7 @@ VISIBLE extern void GDrawSetDefaultIcon(GWindow icon);
 VISIBLE extern GWindow GDrawCreateTopWindow(GDisplay *gdisp, GRect *pos, int (*eh)(GWindow,GEvent *), void *user_data, GWindowAttrs *wattrs);
 VISIBLE extern GWindow GDrawCreateSubWindow(GWindow w, GRect *pos, int (*eh)(GWindow,GEvent *), void *user_data, GWindowAttrs *wattrs);
 VISIBLE extern GWindow GDrawCreatePixmap(GDisplay *gdisp, uint16_t width, uint16_t height);
-VISIBLE extern GWindow GDrawCreateBitmap(GDisplay *gdisp, uint16_t width, uint16_t height, uint8 *data);
+VISIBLE extern GWindow GDrawCreateBitmap(GDisplay *gdisp, uint16_t width, uint16_t height, uint8_t *data);
 VISIBLE extern GCursor GDrawCreateCursor(GWindow src,GWindow mask,Color fg,Color bg,
 	int16_t x, int16_t y );
 VISIBLE extern void GDrawDestroyWindow(GWindow w);
@@ -400,7 +400,7 @@ VISIBLE extern void GDrawBindSelection(GDisplay *disp,enum selnames sel, char *a
 VISIBLE extern int GDrawSelectionOwned(GDisplay *disp,enum selnames sel);
 VISIBLE extern void GDrawPropertyToSelectionOwner(GDisplay *disp,enum selnames sel,
 	char *property, char *type, int format, int mode,
-	uint8 *data, int nelements);
+	uint8_t *data, int nelements);
 
 VISIBLE extern void GDrawPointerUngrab(GDisplay *disp);
 VISIBLE extern void GDrawPointerGrab(GWindow w);

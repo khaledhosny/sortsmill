@@ -3250,7 +3250,7 @@ KernClass *SFFindKernClass(SplineFont *sf,SplineChar *first,SplineChar *last,
     if (allow_zero) pcnt *= 2;
     for ( i=0; i<=pcnt; ++i ) {
 	for ( kc=sf->kerns; kc!=NULL; kc=kc->next ) {
-	    uint8 kspecd = kc->firsts[0] != NULL;
+	    uint8_t kspecd = kc->firsts[0] != NULL;
 	    f = KCFindName(first->name,kc->firsts ,kc->first_cnt ,i % 2);
 	    l = KCFindName(last->name ,kc->seconds,kc->second_cnt,i % 2);
 	    if ( f!=-1 && l!=-1 && ( kspecd || f!=0 || l!=0 )  ) {
@@ -3272,7 +3272,7 @@ KernClass *SFFindVKernClass(SplineFont *sf,SplineChar *first,SplineChar *last,
     if (allow_zero) pcnt *= 2;
     for ( i=0; i<=pcnt; ++i ) {
 	for ( kc=sf->vkerns; kc!=NULL; kc=kc->next ) {
-	    uint8 kspecd = kc->firsts[0] != NULL;
+	    uint8_t kspecd = kc->firsts[0] != NULL;
 	    f = KCFindName(first->name,kc->firsts ,kc->first_cnt ,i % 2);
 	    l = KCFindName(last->name ,kc->seconds,kc->second_cnt,i % 2);
 	    if ( f!=-1 && l!=-1 && ( kspecd || f!=0 || l!=0 ) ) {

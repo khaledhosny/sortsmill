@@ -211,7 +211,7 @@ uint32_t *utf82u_mncopy(const char *utf8buf,uint32_t *mn) {
     int len = strlen(utf8buf);
     uint32_t *ubuf = xmalloc((len+1)*sizeof(uint32_t));
     uint32_t *upt=ubuf, *uend=ubuf+len;
-    const uint8 *pt = (const uint8 *) utf8buf, *end = pt+strlen(utf8buf);
+    const uint8_t *pt = (const uint8_t *) utf8buf, *end = pt+strlen(utf8buf);
     int w;
     int was_mn = false;
 

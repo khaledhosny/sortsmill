@@ -1523,7 +1523,7 @@ static void FVMenuDeselectAll(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *
 
 enum merge_type { mt_set=0, mt_merge=4, mt_or=mt_merge, mt_restrict=8, mt_and=12 };
     /* Index array by merge_type(*4) + selection*2 + doit */
-const uint8 mergefunc[] = {
+const uint8_t mergefunc[] = {
 /* mt_set */
 	0, 1,
 	0, 1,

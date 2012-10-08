@@ -50,7 +50,7 @@ void skewselect(BVTFunc *bvtf,real t) {
 
 void BCTransFunc(BDFChar *bc,enum bvtools type,int xoff,int yoff) {
     int i, j;
-    uint8 *pt, *end, *pt2, *bitmap;
+    uint8_t *pt, *end, *pt2, *bitmap;
     int bpl, temp;
     int xmin, xmax;
 
@@ -73,7 +73,7 @@ void BCTransFunc(BDFChar *bc,enum bvtools type,int xoff,int yoff) {
 	bitmap = NULL;
     } else if ( !bc->byte_data ) {
 	if ( type==bvt_fliph ) {
-	    bitmap = xcalloc((bc->ymax-bc->ymin+1)*bc->bytes_per_line,sizeof(uint8));
+	    bitmap = xcalloc((bc->ymax-bc->ymin+1)*bc->bytes_per_line,sizeof(uint8_t));
 	    for ( i=0; i<=bc->ymax-bc->ymin; ++i ) {
 		pt = bc->bitmap + i*bc->bytes_per_line;
 		pt2 =    bitmap + i*bc->bytes_per_line;
@@ -85,7 +85,7 @@ void BCTransFunc(BDFChar *bc,enum bvtools type,int xoff,int yoff) {
 		}
 	    }
 	} else if ( type==bvt_rotate180 ) {
-	    bitmap = xcalloc((bc->ymax-bc->ymin+1)*bc->bytes_per_line,sizeof(uint8));
+	    bitmap = xcalloc((bc->ymax-bc->ymin+1)*bc->bytes_per_line,sizeof(uint8_t));
 	    for ( i=0; i<=bc->ymax-bc->ymin; ++i ) {
 		pt = bc->bitmap + i*bc->bytes_per_line;
 		pt2 = bitmap + (bc->ymax-bc->ymin-i)*bc->bytes_per_line;
@@ -98,7 +98,7 @@ void BCTransFunc(BDFChar *bc,enum bvtools type,int xoff,int yoff) {
 	    }
 	} else if ( type==bvt_rotate90cw ) {
 	    bpl = ((bc->ymax-bc->ymin)>>3) + 1;
-	    bitmap = xcalloc((bc->xmax-bc->xmin+1)*bpl,sizeof(uint8));
+	    bitmap = xcalloc((bc->xmax-bc->xmin+1)*bpl,sizeof(uint8_t));
 	    for ( i=0; i<=bc->ymax-bc->ymin; ++i ) {
 		pt = bc->bitmap + i*bc->bytes_per_line;
 		for ( j=0; j<=bc->xmax-bc->xmin; ++j ) {
@@ -113,7 +113,7 @@ void BCTransFunc(BDFChar *bc,enum bvtools type,int xoff,int yoff) {
 	    temp = bc->xmin; bc->xmin = bc->ymin; bc->ymin = temp;
 	} else if ( type==bvt_rotate90ccw ) {
 	    bpl = ((bc->ymax-bc->ymin)>>3) + 1;
-	    bitmap = xcalloc((bc->xmax-bc->xmin+1)*bpl,sizeof(uint8));
+	    bitmap = xcalloc((bc->xmax-bc->xmin+1)*bpl,sizeof(uint8_t));
 	    for ( i=0; i<=bc->ymax-bc->ymin; ++i ) {
 		pt = bc->bitmap + i*bc->bytes_per_line;
 		for ( j=0; j<=bc->xmax-bc->xmin; ++j ) {
@@ -135,7 +135,7 @@ void BCTransFunc(BDFChar *bc,enum bvtools type,int xoff,int yoff) {
 		xmax = bc->xmax+(xoff*bc->ymin)/yoff;
 	    }
 	    bpl = ((xmax-xmin)>>3) + 1;
-	    bitmap = xcalloc((bc->ymax-bc->ymin+1)*bpl,sizeof(uint8));
+	    bitmap = xcalloc((bc->ymax-bc->ymin+1)*bpl,sizeof(uint8_t));
 	    for ( i=0; i<=bc->ymax-bc->ymin; ++i ) {
 		pt = bc->bitmap + i*bc->bytes_per_line;
 		pt2 = bitmap + i*bpl;
@@ -161,7 +161,7 @@ void BCTransFunc(BDFChar *bc,enum bvtools type,int xoff,int yoff) {
 	    }
 	    bitmap = NULL;
 	} else if ( type==bvt_rotate180 ) {
-	    bitmap = xcalloc((bc->ymax-bc->ymin+1)*bc->bytes_per_line,sizeof(uint8));
+	    bitmap = xcalloc((bc->ymax-bc->ymin+1)*bc->bytes_per_line,sizeof(uint8_t));
 	    for ( i=0; i<=bc->ymax-bc->ymin; ++i ) {
 		pt = bc->bitmap + i*bc->bytes_per_line;
 		pt2 = bitmap + (bc->ymax-bc->ymin-i)*bc->bytes_per_line;
@@ -172,7 +172,7 @@ void BCTransFunc(BDFChar *bc,enum bvtools type,int xoff,int yoff) {
 	    }
 	} else if ( type==bvt_rotate90cw ) {
 	    bpl = bc->ymax-bc->ymin + 1;
-	    bitmap = xcalloc((bc->xmax-bc->xmin+1)*bpl,sizeof(uint8));
+	    bitmap = xcalloc((bc->xmax-bc->xmin+1)*bpl,sizeof(uint8_t));
 	    for ( i=0; i<=bc->ymax-bc->ymin; ++i ) {
 		pt = bc->bitmap + i*bc->bytes_per_line;
 		for ( j=0; j<=bc->xmax-bc->xmin; ++j ) {
@@ -185,7 +185,7 @@ void BCTransFunc(BDFChar *bc,enum bvtools type,int xoff,int yoff) {
 	    temp = bc->xmin; bc->xmin = bc->ymin; bc->ymin = temp;
 	} else if ( type==bvt_rotate90ccw ) {
 	    bpl = bc->ymax-bc->ymin + 1;
-	    bitmap = xcalloc((bc->xmax-bc->xmin+1)*bpl,sizeof(uint8));
+	    bitmap = xcalloc((bc->xmax-bc->xmin+1)*bpl,sizeof(uint8_t));
 	    for ( i=0; i<=bc->ymax-bc->ymin; ++i ) {
 		pt = bc->bitmap + i*bc->bytes_per_line;
 		for ( j=0; j<=bc->xmax-bc->xmin; ++j ) {
@@ -205,7 +205,7 @@ void BCTransFunc(BDFChar *bc,enum bvtools type,int xoff,int yoff) {
 		xmax = bc->xmax+(xoff*bc->ymin)/yoff;
 	    }
 	    bpl = xmax-xmin + 1;
-	    bitmap = xcalloc((bc->ymax-bc->ymin+1)*bpl,sizeof(uint8));
+	    bitmap = xcalloc((bc->ymax-bc->ymin+1)*bpl,sizeof(uint8_t));
 	    for ( i=0; i<=bc->ymax-bc->ymin; ++i ) {
 		pt = bc->bitmap + i*bc->bytes_per_line;
 		pt2 = bitmap + i*bpl;
@@ -266,9 +266,9 @@ void BCRotateCharForVert(BDFChar *bc,BDFChar *from, BDFFont *frombdf) {
 
 static void BCExpandBitmap(BDFChar *bc, int x, int y) {
     int xmin, xmax, bpl, ymin, ymax;
-    uint8 *bitmap;
+    uint8_t *bitmap;
     int i,j,nj;
-    uint8 *pt, *npt;
+    uint8_t *pt, *npt;
     SplineChar *sc;
 
     if ( x<bc->xmin || x>bc->xmax || y<bc->ymin || y>bc->ymax ) {
@@ -278,7 +278,7 @@ static void BCExpandBitmap(BDFChar *bc, int x, int y) {
 	ymax = y>bc->ymax?y:bc->ymax;
 	if ( !bc->byte_data ) {
 	    bpl = ((xmax-xmin)>>3) + 1;
-	    bitmap = xcalloc((ymax-ymin+1)*bpl,sizeof(uint8));
+	    bitmap = xcalloc((ymax-ymin+1)*bpl,sizeof(uint8_t));
 	    for ( i=0; i<=bc->ymax-bc->ymin; ++i ) {
 		pt = bc->bitmap + i*bc->bytes_per_line;
 		npt = bitmap + (i+ymax-bc->ymax)*bpl;
@@ -291,7 +291,7 @@ static void BCExpandBitmap(BDFChar *bc, int x, int y) {
 	    }
 	} else {
 	    bpl = xmax-xmin + 1;
-	    bitmap = xcalloc((ymax-ymin+1)*bpl,sizeof(uint8));
+	    bitmap = xcalloc((ymax-ymin+1)*bpl,sizeof(uint8_t));
 	    for ( i=0; i<=bc->ymax-bc->ymin; ++i ) {
 		pt = bc->bitmap + i*bc->bytes_per_line;
 		npt = bitmap + (i+ymax-bc->ymax)*bpl;
@@ -327,7 +327,7 @@ void BCExpandBitmapToEmBox(BDFChar *bc, int xmin, int ymin, int xmax, int ymax) 
 	bc->bytes_per_line = xmax - xmin + 1;
 	bc->xmin = xmin; bc->xmax = xmax;
 	bc->ymin = ymin; bc->ymax = ymax;
-	bc->bitmap = xcalloc(( ymax - ymin + 1) * bc->bytes_per_line, sizeof( uint8 ));
+	bc->bitmap = xcalloc(( ymax - ymin + 1) * bc->bytes_per_line, sizeof( uint8_t ));
     } else {
 	BCExpandBitmap(bc,xmin,ymin);
 	BCExpandBitmap(bc,xmax,ymax);
@@ -413,7 +413,7 @@ return( new );
 BDFFloat *BDFFloatCreate(BDFChar *bc,int xmin,int xmax,int ymin,int ymax, int clear) {
     BDFFloat *new;
     int x,y;
-    uint8 *bpt, *npt;
+    uint8_t *bpt, *npt;
 
     if ( bc->selection!=NULL ) {
 	BCFlattenFloat(bc);
@@ -442,7 +442,7 @@ return( NULL );
     new->depth = bc->depth;
     if ( bc->byte_data ) {
 	new->bytes_per_line = xmax-xmin+1;
-	new->bitmap = xcalloc(new->bytes_per_line*(ymax-ymin+1),sizeof(uint8));
+	new->bitmap = xcalloc(new->bytes_per_line*(ymax-ymin+1),sizeof(uint8_t));
 	for ( y=ymin; y<=ymax; ++y ) {
 	    bpt = bc->bitmap + (bc->ymax-y)*bc->bytes_per_line;
 	    npt = new->bitmap + (ymax-y)*new->bytes_per_line;
@@ -452,7 +452,7 @@ return( NULL );
 	}
     } else {
 	new->bytes_per_line = ((xmax-xmin)>>3)+1;
-	new->bitmap = xcalloc(new->bytes_per_line*(ymax-ymin+1),sizeof(uint8));
+	new->bitmap = xcalloc(new->bytes_per_line*(ymax-ymin+1),sizeof(uint8_t));
 	for ( y=ymin; y<=ymax; ++y ) {
 	    bpt = bc->bitmap + (bc->ymax-y)*bc->bytes_per_line;
 	    npt = new->bitmap + (ymax-y)*new->bytes_per_line;
@@ -475,7 +475,7 @@ void BCFlattenFloat(BDFChar *bc ) {
     /* flatten any floating selection */
     BDFFloat *sel = bc->selection;
     int x,y;
-    uint8 *bpt, *spt;
+    uint8_t *bpt, *spt;
 
     if ( sel!=NULL ) {
 	BCExpandBitmapToEmBox( bc,sel->xmin,sel->ymin,sel->xmax,sel->ymax );
@@ -505,7 +505,7 @@ void BCFlattenFloat(BDFChar *bc ) {
 
 void BCPasteInto(BDFChar *bc,BDFChar *rbc,int ixoff,int iyoff, int invert, int cleartoo) {
     int x, y, bx, rx;
-    uint8 *bpt, *rpt;
+    uint8_t *bpt, *rpt;
 
     x = 0;
     BCExpandBitmapToEmBox( bc,rbc->xmin+ixoff,rbc->ymin+iyoff,rbc->xmax+ixoff,rbc->ymax+iyoff );
@@ -536,7 +536,7 @@ void BCPasteInto(BDFChar *bc,BDFChar *rbc,int ixoff,int iyoff, int invert, int c
     BCCompressBitmap(bc);
 }
 
-void BCMergeReferences(BDFChar *base,BDFChar *cur,int8 xoff,int8 yoff) {
+void BCMergeReferences(BDFChar *base,BDFChar *cur,int8_t xoff,int8_t yoff) {
     BDFRefChar *head;
 
     for ( head=cur->refs; head!=NULL; head=head->next ) {
@@ -552,7 +552,7 @@ BDFChar *BDFGetMergedChar( BDFChar *bc ) {
 return( NULL );
     ret = (BDFChar  *) xzalloc(sizeof (BDFChar ));
     memcpy( ret,bc,sizeof( BDFChar ));
-    ret->bitmap = xcalloc(ret->bytes_per_line*(ret->ymax-ret->ymin+1),sizeof(uint8));
+    ret->bitmap = xcalloc(ret->bytes_per_line*(ret->ymax-ret->ymin+1),sizeof(uint8_t));
     memcpy( ret->bitmap,bc->bitmap,ret->bytes_per_line*(ret->ymax-ret->ymin+1));
     
     BCMergeReferences( ret,bc,0,0 );
@@ -565,7 +565,7 @@ return( NULL );
 return( ret );
 }
 
-int BDFCharQuickBounds( BDFChar *bc,IBounds *bb,int8 xoff,int8 yoff,int use_backup,int first ) {
+int BDFCharQuickBounds( BDFChar *bc,IBounds *bb,int8_t xoff,int8_t yoff,int use_backup,int first ) {
     int has_bitmap = false;
     int xmin, xmax, ymin, ymax;
     BDFRefChar *head;
@@ -657,7 +657,7 @@ void BCPrepareForOutput( BDFChar *bc,int mergeall ) {
 	    bc->backup->bytes_per_line = bc->bytes_per_line;
 	    bc->backup->xmin = bc->xmin; bc->backup->xmax = bc->xmax;
 	    bc->backup->ymin = bc->ymin; bc->backup->ymax = bc->ymax;
-	    bc->backup->bitmap = xcalloc( bc->bytes_per_line * bmp_width,sizeof( uint8 ));
+	    bc->backup->bitmap = xcalloc( bc->bytes_per_line * bmp_width,sizeof( uint8_t ));
 	    memcpy( bc->backup->bitmap,bc->bitmap,bc->bytes_per_line * bmp_width );
 	}
 

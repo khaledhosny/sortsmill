@@ -110,7 +110,7 @@ struct freetype_raster {
     int16_t as, lb;
     int16_t bytes_per_row;
     int16_t num_greys;
-    uint8 *bitmap;
+    uint8_t *bitmap;
 };
 
 struct cvcontainer {
@@ -138,7 +138,7 @@ typedef struct charviewbase {
     struct fontviewbase *fv;
     SplineChar *sc;
     Layer *layerheads[dm_max];
-    uint8 drawmode;
+    uint8_t drawmode;
     uint16_t ft_gridfitwidth;
     SplineSet *gridfit;
     struct cvcontainer *container;		/* The sv (or whatever) within which this view is embedded (if it is embedded) */
@@ -169,7 +169,7 @@ typedef struct fontviewbase {
     SplineFont *cidmaster;		/* If CID keyed, contains master font */
     int active_layer;
     BDFFont *active_bitmap;		/* Set if the fontview displays a bitmap strike */
-    uint8 *selected;			/* Current selection */
+    uint8_t *selected;			/* Current selection */
 #ifndef _NO_FFSCRIPT
     struct dictionary *fontvars;	/* Scripting */
 #endif
@@ -200,8 +200,8 @@ typedef struct {
     int notsafeforwork;
     int oflicense;
     char *previewimage;			/* NULL => No image */
-    uint8 upload_license;
-    uint8 upload_fontlog;
+    uint8_t upload_license;
+    uint8_t upload_fontlog;
     char *upload_id;			/* Way to manipulate upload on OFLib */
 } OFLibData;
 
@@ -305,7 +305,7 @@ VISIBLE extern void FVUndo(FontViewBase *fv);
 VISIBLE extern void FVRedo(FontViewBase *fv);
 VISIBLE extern void FVJoin(FontViewBase *fv);
 VISIBLE extern void FVBuildDuplicate(FontViewBase *fv);
-VISIBLE extern void FVTrans(FontViewBase *fv,SplineChar *sc,real transform[6],uint8 *sel,
+VISIBLE extern void FVTrans(FontViewBase *fv,SplineChar *sc,real transform[6],uint8_t *sel,
 	enum fvtrans_flags);
 VISIBLE extern void FVTransFunc(void *_fv,real transform[6],int otype, BVTFunc *bvts,
 	enum fvtrans_flags );
@@ -404,10 +404,10 @@ struct genericchange {
     double hcounter_scale, hcounter_add;
     double lsb_scale, lsb_add;
     double rsb_scale, rsb_add;
-    uint8 center_in_hor_advance;
-    uint8 use_vert_mapping;
-    uint8 do_smallcap_symbols;
-    uint8 petite;				/* generate petite caps rather than smallcaps */
+    uint8_t center_in_hor_advance;
+    uint8_t use_vert_mapping;
+    uint8_t do_smallcap_symbols;
+    uint8_t petite;				/* generate petite caps rather than smallcaps */
     double vcounter_scale, vcounter_add;	/* If not using mapping */
     double v_scale;				/* If using mapping */
     struct fixed_maps m;
@@ -469,7 +469,7 @@ extern BDFFloat *BDFFloatCopy(BDFFloat *sel);
 extern BDFFloat *BDFFloatConvert(BDFFloat *sel,int newdepth, int olddepth);
 VISIBLE extern void BDFFloatFree(BDFFloat *sel);
 
-VISIBLE extern void BCMergeReferences(BDFChar *base,BDFChar *cur,int8 xoff,int8 yoff);
+VISIBLE extern void BCMergeReferences(BDFChar *base,BDFChar *cur,int8_t xoff,int8_t yoff);
 VISIBLE extern BDFChar *BDFGetMergedChar(BDFChar *bc) ;
 VISIBLE extern void BCUnlinkThisReference(struct fontviewbase *fv,BDFChar *bc);
 
@@ -581,9 +581,9 @@ VISIBLE extern uint32_t *StdFeaturesOfScript(uint32_t script);
 
 enum byte_types { bt_instr, bt_cnt, bt_byte, bt_wordhi, bt_wordlo, bt_impliedreturn };
 struct instrdata {
-    uint8 *instrs;
+    uint8_t *instrs;
     int instr_cnt, max;
-    uint8 *bts;
+    uint8_t *bts;
     unsigned int changed: 1;
     unsigned int in_composit: 1;
     SplineFont *sf;
@@ -593,9 +593,9 @@ struct instrdata {
     struct instrdata *next;
 };
 
-VISIBLE extern uint8 *_IVParse(SplineFont *sf, char *text, int *len,
+VISIBLE extern uint8_t *_IVParse(SplineFont *sf, char *text, int *len,
 	void (*IVError)(void *,char *, int), void *iv);
-VISIBLE extern char *_IVUnParseInstrs(uint8 *instrs,int instr_cnt);
+VISIBLE extern char *_IVUnParseInstrs(uint8_t *instrs,int instr_cnt);
 
 extern int BitmapControl(FontViewBase *fv,int32_t *sizes,int isavail,int rasterize);
 extern void FVSetWidthScript(FontViewBase *fv,enum widthtype wtype,int val,int incr);
