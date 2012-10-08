@@ -535,7 +535,7 @@ static void BdfP_Expose(struct bdf_dlg *bd, GWindow pixmap) {
 /* by several different words in different languages (in Japanese a different */
 /* word is used for the latin script and the latin language) and that you, as */
 /* a translator may need to ask me to disambiguate more strings. Please do so. */
-	GDrawDrawText8(pixmap,4,i*(bd->fh+1)+bd->as,S_("Property|New..."),-1,0xff0000);
+	GDrawDrawText8(pixmap,4,i*(bd->fh+1)+bd->as,_("Property|New..."),-1,0xff0000);
 	GDrawDrawLine(pixmap,0,i*(bd->fh+1)+bd->fh,bd->vwidth,i*(bd->fh+1)+bd->fh, _ggadget_Default_Box.border_darker);
     }
     GDrawDrawLine(pixmap,bd->value_x,0,bd->value_x,bd->vheight, _ggadget_Default_Box.border_darker);

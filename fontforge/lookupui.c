@@ -715,14 +715,14 @@ return;
     for ( j=0; needswork[j]!=NULL; ++j ) {
 	for ( i=0; needswork[j][i].text!=NULL || needswork[j][i].line; ++i )
 	    if ( needswork[j][i].text!=NULL )
-		needswork[j][i].text = (uint32_t *) S_((char *) needswork[j][i].text);
+		needswork[j][i].text = (uint32_t *) _((char *) needswork[j][i].text);
     }
     LookupInit();
 
-    featureci[0].title = S_(featureci[0].title);
-    featureci[1].title = S_(featureci[1].title);
-    scriptci[0].title = S_(scriptci[0].title);
-    scriptci[1].title = S_(scriptci[1].title);
+    featureci[0].title = _(featureci[0].title);
+    featureci[1].title = _(featureci[1].title);
+    scriptci[0].title = _(scriptci[0].title);
+    scriptci[1].title = _(scriptci[1].title);
 }
 
 #define CID_LookupType		1000
@@ -1183,7 +1183,7 @@ static char *LK_ScriptsDlg(GGadget *g, int r, int c) {
     }
     free( mi.matrix_data );
 
-    GMatrixEditSetNewText(gcd[0].ret,S_("OpenTypeFeature|New"));
+    GMatrixEditSetNewText(gcd[0].ret,_("OpenTypeFeature|New"));
     GHVBoxSetExpandableRow(boxes[1].ret,0);
     GHVBoxSetExpandableCol(boxes[0].ret,gb_expandgluesame);
 
@@ -1955,7 +1955,7 @@ int EditLookup(OTLookup *otl,int isgpos,SplineFont *sf) {
     }
     free( mi.matrix_data );
 
-    GMatrixEditSetNewText(gcd[2].ret,S_("OpenTypeFeature|New"));
+    GMatrixEditSetNewText(gcd[2].ret,_("OpenTypeFeature|New"));
     GHVBoxSetExpandableRow(boxes[5].ret,1);
     GHVBoxSetExpandableCol(boxes[4].ret,gb_expandgluesame);
     GHVBoxSetExpandableCol(boxes[3].ret,1);
@@ -2208,7 +2208,7 @@ static void ACDMatrixInit(struct matrixinit *mi,SplineFont *sf, struct lookup_su
 
     if ( !initted ) {
 	initted = true;
-	ci[0].title = S_(ci[0].title);
+	ci[0].title = _(ci[0].title);
     }
 
     memset(mi,0,sizeof(*mi));
@@ -2324,7 +2324,7 @@ static void AnchorClassD(SplineFont *sf, struct lookup_subtable *sub, int def_la
     GMatrixEditShowColumn(gcd[0].ret,1,false);
 
     gcd[i].gd.flags = gg_visible | gg_enabled;
-    label[i].text = (uint32_t *) S_("Anchor Control...");
+    label[i].text = (uint32_t *) _("Anchor Control...");
     label[i].text_is_1byte = true;
     label[i].text_in_resource = true;
     gcd[i].gd.label = &label[i];
@@ -2334,7 +2334,7 @@ static void AnchorClassD(SplineFont *sf, struct lookup_subtable *sub, int def_la
 
     GMatrixEditAddButtons(gcd[0].ret,gcd+i);
     GMatrixEditSetOtherButtonEnable(gcd[0].ret,AC_EnableOtherButtons);
-    GMatrixEditSetNewText(gcd[0].ret,S_("New Anchor Class"));
+    GMatrixEditSetNewText(gcd[0].ret,_("New Anchor Class"));
 
     GDrawSetVisible(acd.gw,true);
     while ( !acd.done )
@@ -2635,7 +2635,7 @@ static void PSTMatrixInit(struct matrixinit *mi,SplineFont *_sf, struct lookup_s
 	initted = true;
 	for ( i=0; fuf[i].ltype!=0; ++i ) if ( fuf[i].ltype!=gsub_alternate ) {
 	    for ( j=0; j<fuf[i].cnt; ++j )
-		fuf[i].ci[j].title = S_(fuf[i].ci[j].title);
+		fuf[i].ci[j].title = _(fuf[i].ci[j].title);
 	}
     }
 

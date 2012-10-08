@@ -374,7 +374,7 @@ static struct baselangextent *SFBaselang(SplineFont *sf,struct baselangextent *o
     GHVBoxSetExpandableCol(box[3].ret,gb_expandgluesame);
 
     buttongcd[0].gd.flags = gg_visible;
-    buttonlabel[0].text = (uint32_t *) S_("Set Feature Extents");
+    buttonlabel[0].text = (uint32_t *) _("Set Feature Extents");
     buttonlabel[0].text_is_1byte = true;
     buttonlabel[0].text_in_resource = true;
     buttongcd[0].gd.label = &buttonlabel[0];
@@ -684,14 +684,14 @@ static void BaseUIInit(void) {
     if ( inited )
 return;
 
-    baselinesci[0].title = S_(baselinesci[0].title);
-    baselinesci[1].title = S_(baselinesci[1].title);
-    baselangci[0].title = S_(baselangci[0].title);
-    baselangci[1].title = S_(baselangci[1].title);
-    baselangci[2].title = S_(baselangci[2].title);
-    basefeatci[0].title = S_(basefeatci[0].title);
-    basefeatci[1].title = S_(basefeatci[1].title);
-    basefeatci[2].title = S_(basefeatci[2].title);
+    baselinesci[0].title = _(baselinesci[0].title);
+    baselinesci[1].title = _(baselinesci[1].title);
+    baselangci[0].title = _(baselangci[0].title);
+    baselangci[1].title = _(baselangci[1].title);
+    baselangci[2].title = _(baselangci[2].title);
+    basefeatci[0].title = _(basefeatci[0].title);
+    basefeatci[1].title = _(basefeatci[1].title);
+    basefeatci[2].title = _(basefeatci[2].title);
     inited = true;
 }
 
@@ -884,7 +884,7 @@ struct Base *SFBaselines(SplineFont *sf,struct Base *old,int is_vertical) {
     GHVBoxSetExpandableCol(box[3].ret,gb_expandgluesame);
 
     buttongcd[0].gd.flags = gg_visible;
-    buttonlabel[0].text = (uint32_t *) S_("Set Extents");
+    buttonlabel[0].text = (uint32_t *) _("Set Extents");
     buttonlabel[0].text_is_1byte = true;
     buttonlabel[0].text_in_resource = true;
     buttongcd[0].gd.label = &buttonlabel[0];

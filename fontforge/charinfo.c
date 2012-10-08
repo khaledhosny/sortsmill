@@ -2352,7 +2352,7 @@ char *DevTab_Dlg(GGadget *g, int r, int c) {
     free( mi.matrix_data );
 
     dvd.gme = gcd[0].ret;
-    GMatrixEditSetNewText(gcd[0].ret,S_("PixelSize|New"));
+    GMatrixEditSetNewText(gcd[0].ret,_("PixelSize|New"));
     GHVBoxSetExpandableRow(boxes[1].ret,1);
     GHVBoxSetExpandableCol(boxes[0].ret,gb_expandgluesame);
 
@@ -4416,7 +4416,7 @@ return;
 
 	    psgcd[6][1].gd.pos.x = 10; psgcd[6][1].gd.pos.y = psgcd[6][0].gd.pos.y+psgcd[6][0].gd.pos.height+4;
 	    psgcd[6][1].gd.flags = gg_visible | gg_enabled;
-	    pslabel[6][1].text = (uint32_t *) S_("CounterHint|_New...");
+	    pslabel[6][1].text = (uint32_t *) _("CounterHint|_New...");
 	    pslabel[6][1].text_is_1byte = true;
 	    pslabel[6][1].text_in_resource = true;
 	    psgcd[6][1].gd.label = &pslabel[6][1];
@@ -5312,7 +5312,7 @@ return;
     done = true;
     for ( i=0; lists[i]!=NULL; ++i )
 	for ( j=0; lists[i][j].text!=NULL; ++j )
-	    lists[i][j].text = (uint32_t *) S_((char *) lists[i][j].text);
+	    lists[i][j].text = (uint32_t *) _((char *) lists[i][j].text);
     for ( i=0; cnames[i]!=NULL; ++i )
 	for ( j=0; cnames[i][j]!=NULL; ++j )
 	    cnames[i][j] = _(cnames[i][j]);

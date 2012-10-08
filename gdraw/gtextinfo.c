@@ -1069,7 +1069,7 @@ int GIntGetResource(int index) {
 /* be the number of points used for a standard sized button. It should be */
 /* big enough to contain "OK", "Cancel", "New...", "Edit...", "Delete" */
 /* (in their translated forms of course). */
-	    pt = S_("GGadget|ButtonSize|55");
+	    pt = _("GGadget|ButtonSize|55");
 	    gt_intarray[0] = strtol(pt,&end,10);
 	    if ( pt==end || gt_intarray[0]<20 || gt_intarray[0]>4000 )
 		gt_intarray[0]=55;
@@ -1081,7 +1081,7 @@ int GIntGetResource(int index) {
 /* Suppose it takes 116 pixels to say "Ne pas enregistrer" in French but */
 /* only 67 pixels to say "Don't Save" in English. Then a value for ScaleFactor */
 /* might be 116*100/67 = 173 */
-	    pt = S_("GGadget|ScaleFactor|100");
+	    pt = _("GGadget|ScaleFactor|100");
 	    gt_intarray[1] = strtol(pt,&end,10);
 	    if ( pt==end || gt_intarray[1]<20 || gt_intarray[1]>4000 )
 		gt_intarray[1]=100;

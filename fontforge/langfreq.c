@@ -2336,7 +2336,7 @@ char **SFScriptLangs(SplineFont *sf,struct lang_frequencies ***_freq) {
 	for ( i=0; lang_frequencies[i].script!=0; ++i ) {
 	    if ( lang_frequencies[i].script==scripts[s] ) {
 		sprintf( buffer, "%.70s %c%c%c%c{%c%c%c%c}",
-			S_(lang_frequencies[i].note),
+			_(lang_frequencies[i].note),
 			scripts[s]>>24, scripts[s]>>16, scripts[s]>>8, scripts[s],
 			lang_frequencies[i].lang>>24, lang_frequencies[i].lang>>16, lang_frequencies[i].lang>>8, lang_frequencies[i].lang );
 		freq[pos] = &lang_frequencies[i];

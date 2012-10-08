@@ -4122,7 +4122,7 @@ return(true);
 	multilayer = GGadgetIsChecked(GWidgetGetControl(gw,CID_IsMultiLayer));
 	vmetrics = GGadgetIsChecked(GWidgetGetControl(gw,CID_HasVerticalMetrics));
 	upos = GetReal8(gw,CID_UPos, _("Underline _Position:"),&err);
-	uwid = GetReal8(gw,CID_UWidth,S_("Underline|_Height:"),&err);
+	uwid = GetReal8(gw,CID_UWidth,_("Underline|_Height:"),&err);
 	GetInt8(gw,CID_Em,_("_Em Size:"),&err);	/* just check for errors. redundant info */
 	as = GetInt8(gw,CID_Ascent,_("_Ascent:"),&err);
 	des = GetInt8(gw,CID_Descent,_("_Descent:"),&err);
@@ -6591,7 +6591,7 @@ static void LookupPopup(GWindow gw,OTLookup *otl,struct lookup_subtable *sub,
     } else if ( (otl->lookup_type>>8)<2 && (otl->lookup_type&0xff)<10 )
 	lookuptype = _(lookup_type_names[otl->lookup_type>>8][otl->lookup_type&0xff]);
     else
-	lookuptype = S_("LookupType|Unknown");
+	lookuptype = _("LookupType|Unknown");
     snprintf(popup_msg,sizeof(popup_msg), "%s\n", lookuptype);
     pos = strlen(popup_msg);
 
@@ -7949,7 +7949,7 @@ return;
 
     psgcd[12].gd.pos.x = 155; psgcd[12].gd.pos.y = psgcd[11].gd.pos.y;
     psgcd[12].gd.flags = gg_visible | gg_enabled;
-    pslabel[12].text = (uint32_t *) S_("Underline|_Height:");
+    pslabel[12].text = (uint32_t *) _("Underline|_Height:");
     pslabel[12].text_is_1byte = true;
     pslabel[12].text_in_resource = true;
     psgcd[12].gd.label = &pslabel[12];
@@ -8771,7 +8771,7 @@ return;
     i = j = 0;
 
     ssgcd[i].gd.pos.x = 5; ssgcd[i].gd.pos.y = 5;
-    sslabel[i].text = (uint32_t *) S_("SubscriptSuperUse|Default");
+    sslabel[i].text = (uint32_t *) _("SubscriptSuperUse|Default");
     sslabel[i].text_is_1byte = true;
     ssgcd[i].gd.label = &sslabel[i];
     ssgcd[i].gd.flags = gg_visible | gg_enabled;
@@ -8999,7 +8999,7 @@ return;
     i = j = 0;
 
     pangcd[i].gd.pos.x = 5; pangcd[i].gd.pos.y = 5;
-    panlabel[i].text = (uint32_t *) S_("PanoseUse|Default");
+    panlabel[i].text = (uint32_t *) _("PanoseUse|Default");
     panlabel[i].text_is_1byte = true;
     pangcd[i].gd.label = &panlabel[i];
     pangcd[i].gd.flags = gg_visible | gg_enabled;
@@ -9021,7 +9021,7 @@ return;
     panarray[j++] = &pangcd[i-1]; panarray[j++] = NULL;
 
     pangcd[i].gd.pos.x = 20; pangcd[i].gd.pos.y = pangcd[i-1].gd.pos.y+14+4;
-    panlabel[i].text = (uint32_t *) S_("Panose|_Family");
+    panlabel[i].text = (uint32_t *) _("Panose|_Family");
     panlabel[i].text_is_1byte = true;
     panlabel[i].text_in_resource = true;
     pangcd[i].gd.label = &panlabel[i];
@@ -9058,7 +9058,7 @@ return;
     panarray[j++] = NULL;
 
     pangcd[i].gd.pos.x = 20; pangcd[i].gd.pos.y = pangcd[i-1].gd.pos.y+26+5;
-    panlabel[i].text = (uint32_t *) S_("Panose|_Weight");
+    panlabel[i].text = (uint32_t *) _("Panose|_Weight");
     panlabel[i].text_is_1byte = true;
     panlabel[i].text_in_resource = true;
     pangcd[i].gd.label = &panlabel[i];
@@ -9377,7 +9377,7 @@ return;
 
     i = j = 0;
 
-    gasplabel[i].text = (uint32_t *) S_("Gasp|_Version");
+    gasplabel[i].text = (uint32_t *) _("Gasp|_Version");
     gasplabel[i].text_is_1byte = true;
     gasplabel[i].text_in_resource = true;
     gaspgcd[i].gd.label = &gasplabel[i];
@@ -9442,7 +9442,7 @@ return;
     gaspboxes[0].creator = GVBoxCreate;
 
     gaspgcd_def[0].gd.flags = gg_visible | gg_enabled;
-    gasplabel[4].text = (uint32_t *) S_("Gasp|_Default");
+    gasplabel[4].text = (uint32_t *) _("Gasp|_Default");
     gasplabel[4].text_is_1byte = true;
     gasplabel[4].text_in_resource = true;
     gaspgcd_def[0].gd.label = &gasplabel[4];
@@ -9487,7 +9487,7 @@ return;
 
     tngcd[3].gd.pos.x = 195; tngcd[3].gd.pos.y = tngcd[1].gd.pos.y;
     tngcd[3].gd.flags = gg_visible | gg_enabled | gg_cb_on | gg_rad_continueold;
-    tnlabel[3].text = (uint32_t *) S_("SortingScheme|Default");
+    tnlabel[3].text = (uint32_t *) _("SortingScheme|Default");
     tnlabel[3].text_is_1byte = true;
     tngcd[3].gd.label = &tnlabel[3];
     tngcd[3].creator = GRadioCreate;
@@ -9515,7 +9515,7 @@ return;
 /* English (possibly translating it in parentheses). I believe there */
 /* are legal reasons for this. */
 /* So "Añadir SIL Open Font License (licencia de fuentes libres)" */
-    tnlabel[5].text = (uint32_t *) S_("Add SIL ");
+    tnlabel[5].text = (uint32_t *) _("Add SIL ");
     tnlabel[5].image_precedes = false;
     tnlabel[5].image = &OFL_logo;
     tnlabel[5].text_is_1byte = true;
@@ -9536,7 +9536,7 @@ return;
     tngcd[5].creator = GButtonCreate;
 
     tngcd[6].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    tnlabel[6].text = (uint32_t *) S_("OFL website");
+    tnlabel[6].text = (uint32_t *) _("OFL website");
     tnlabel[6].text_is_1byte = true;
     tnlabel[6].text_in_resource = true;
     tngcd[6].gd.label = &tnlabel[6];
@@ -9915,7 +9915,7 @@ return;
     szgcd[k].gd.cid = CID_DesignSize;
     szgcd[k++].creator = GTextFieldCreate;
 
-    szlabel[k].text = (uint32_t *) S_("Size|Points");
+    szlabel[k].text = (uint32_t *) _("Size|Points");
     szlabel[k].text_is_1byte = true;
     szgcd[k].gd.label = &szlabel[k];
     szgcd[k].gd.pos.x = 134; szgcd[k].gd.pos.y = szgcd[k-2].gd.pos.y;
@@ -10539,7 +10539,7 @@ return;
 
 /* TRANSLATORS: OpenType GPOS/GSUB lookups */
     if ( sf->cidmaster!=NULL ) aspects[i].disabled = true;
-    aspects[i].text = (uint32_t *) S_("OpenType|Lookups");
+    aspects[i].text = (uint32_t *) _("OpenType|Lookups");
     aspects[i].text_is_1byte = true;
     aspects[i++].gcd = &lkbox[5];
 /* On my system the "lookups line appears indented. That seems to be because */
@@ -10627,9 +10627,9 @@ return;
     mb2.creator = GHBoxCreate;
 
     GGadgetsCreate(gw,mb);
-    GMatrixEditSetNewText(tngcd[4].ret,S_("TrueTypeName|New"));
+    GMatrixEditSetNewText(tngcd[4].ret,_("TrueTypeName|New"));
     GGadgetSelectOneListItem(gaspgcd[0].ret,sf->gasp_version);
-    GMatrixEditSetNewText(gaspgcd[3].ret,S_("gaspTableEntry|New"));
+    GMatrixEditSetNewText(gaspgcd[3].ret,_("gaspTableEntry|New"));
     GMatrixEditAddButtons(gaspgcd[3].ret,gaspgcd_def);
     if ( sf->gasp_version==0 ) {
 	GMatrixEditShowColumn(gaspgcd[3].ret,3,false);
@@ -10641,7 +10641,7 @@ return;
     GMatrixEditAddButtons(pgcd[0].ret,privategcd_def);
     GMatrixEditSetUpDownVisible(pgcd[0].ret, true);
     GMatrixEditSetOtherButtonEnable(pgcd[0].ret, PSPrivate_EnableButtons);
-    GMatrixEditSetNewText(pgcd[0].ret,S_("PSPrivateDictKey|New"));
+    GMatrixEditSetNewText(pgcd[0].ret,_("PSPrivateDictKey|New"));
 
     GHVBoxSetExpandableCol(lbox[2].ret,3);
     GHVBoxSetExpandableCol(lbox[3].ret,gb_expandglue);
@@ -10825,25 +10825,25 @@ return;
     done = true;
     for ( j=0; needswork[j]!=NULL; ++j ) {
 	for ( i=0; needswork[j][i].text!=NULL; ++i )
-	    needswork[j][i].text = (uint32_t *) S_((char *) needswork[j][i].text);
+	    needswork[j][i].text = (uint32_t *) _((char *) needswork[j][i].text);
     }
     for ( j=0; needswork2[j]!=NULL; ++j ) {
 	for ( i=0; needswork2[j][i]!=NULL; ++i )
-	    needswork2[j][i] = S_(needswork2[j][i]);
+	    needswork2[j][i] = _(needswork2[j][i]);
     }
 
     for ( j=0; needswork3[j].ci!=NULL; ++j ) {
 	for ( i=0; i<needswork3[j].size; ++i ) {
-	    needswork3[j].ci[i].title = S_(needswork3[j].ci[i].title);
+	    needswork3[j].ci[i].title = _(needswork3[j].ci[i].title);
 	    if ( needswork3[j].ci[i].enum_vals!=NULL ) {
 		for ( k=0; needswork3[j].ci[i].enum_vals[k].text!=NULL; ++k )
-		    needswork3[j].ci[i].enum_vals[k].text = (uint32_t *) S_((char *) needswork3[j].ci[i].enum_vals[k].text);
+		    needswork3[j].ci[i].enum_vals[k].text = (uint32_t *) _((char *) needswork3[j].ci[i].enum_vals[k].text);
 	    }
 	}
     }
 
     for ( tl=&panoses[0][0]; tl->name!=NULL; ++tl )
-	tl->name = S_(tl->name);
+	tl->name = _(tl->name);
  
     LookupUIInit();
     LookupInit();

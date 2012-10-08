@@ -2182,7 +2182,7 @@ static int AddClassList(GGadgetCreateData *gcd, GTextInfo *label, int k, int off
     int i;
 
     if ( !initted ) {
-	class_ci[0].title = S_(class_ci[0].title);
+	class_ci[0].title = _(class_ci[0].title);
 	initted = true;
     }
 
@@ -3057,7 +3057,7 @@ return;
 
     gcd[1].gd.pos.x = 10; gcd[1].gd.pos.y = gcd[0].gd.pos.y+gcd[0].gd.pos.height+4;
     gcd[1].gd.flags = gg_visible | gg_enabled;
-    label[1].text = (uint32_t *) S_("KernClass|_New Lookup...");
+    label[1].text = (uint32_t *) _("KernClass|_New Lookup...");
     label[1].text_is_1byte = true;
     label[1].text_in_resource = true;
     gcd[1].gd.label = &label[1];

@@ -1134,7 +1134,7 @@ static void BuildGSUBscript(struct node *node,struct att_dlg *att) {
 	buf[5] = '\'';
 	buf[6] = ' ';
 	if ( languages[j].text!=NULL ) {
-	    strcpy(buf+7,S_((char *) languages[j].text));
+	    strcpy(buf+7,_((char *) languages[j].text));
 	    strcat(buf," ");
 	} else
 	    buf[7]='\0';
@@ -1281,7 +1281,7 @@ static void BuildJSTFscript(struct node *node,struct att_dlg *att) {
 	buf[5] = '\'';
 	buf[6] = ' ';
 	if ( languages[j].text!=NULL ) {
-	    strcpy(buf+7,S_((char *) languages[j].text));
+	    strcpy(buf+7,_((char *) languages[j].text));
 	    strcat(buf," ");
 	} else
 	    buf[7]='\0';
@@ -1866,7 +1866,7 @@ return;
 	buf[5] = '\'';
 	buf[6] = ' ';
 	if ( scripts[j].text!=NULL ) {
-	    strcpy(buf+7,S_((char*) scripts[j].text));
+	    strcpy(buf+7,_((char*) scripts[j].text));
 	    strcat(buf," ");
 	} else
 	    buf[7]='\0';
@@ -1874,7 +1874,7 @@ return;
 /* The msgstr should contain a translation of "Script", ignore "writing system|" */
 /* English uses "script" to mean a general writing style (latin, greek, kanji) */
 /* and the cursive handwriting style. Here we mean the general writing system. */
-	strcat(buf,S_("writing system|Script"));
+	strcat(buf,_("writing system|Script"));
 	scriptnodes[i].label = xstrdup_or_null(buf);
 	scriptnodes[i].build = BuildGSUBscript;
 	scriptnodes[i].parent = node;
@@ -1904,7 +1904,7 @@ static void BuildJSTFTable(struct node *node,struct att_dlg *att) {
 	buf[5] = '\'';
 	buf[6] = ' ';
 	if ( scripts[j].text!=NULL ) {
-	    strcpy(buf+7,S_((char*) scripts[j].text));
+	    strcpy(buf+7,_((char*) scripts[j].text));
 	    strcat(buf," ");
 	} else
 	    buf[7]='\0';
@@ -1912,7 +1912,7 @@ static void BuildJSTFTable(struct node *node,struct att_dlg *att) {
 /* The msgstr should contain a translation of "Script", ignore "writing system|" */
 /* English uses "script" to me a general writing style (latin, greek, kanji) */
 /* and the cursive handwriting style. Here we mean the general writing system. */
-	strcat(buf,S_("writing system|Script"));
+	strcat(buf,_("writing system|Script"));
 	scriptnodes[i].label = xstrdup_or_null(buf);
 	scriptnodes[i].build = BuildJSTFscript;
 	scriptnodes[i].parent = node;

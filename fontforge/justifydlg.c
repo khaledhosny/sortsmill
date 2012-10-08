@@ -104,7 +104,7 @@ return;
     for ( j=0; needswork[j]!=NULL; ++j ) {
 	for ( i=0; needswork[j][i].title!=NULL; ++i )
 	    if ( needswork[j][i].title!=NULL )
-		needswork[j][i].title = S_(needswork[j][i].title);
+		needswork[j][i].title = _(needswork[j][i].title);
     }
 }
 
@@ -290,7 +290,7 @@ char *GlyphListDlg(SplineFont *sf, char *glyphstr) {
     }
     free( mi.matrix_data );
 
-    GMatrixEditSetNewText(gcd[0].ret,S_("GlyphName|New"));
+    GMatrixEditSetNewText(gcd[0].ret,_("GlyphName|New"));
     GMatrixEditSetColumnCompletion(gcd[0].ret, 0, JSTF_Glyph_Completion );
     GHVBoxSetExpandableCol(boxes[0].ret,gb_expandgluesame);
 
@@ -494,7 +494,7 @@ static char *JSTF_LookupListDlg(GGadget *g, int r, int c) {
 
     free( mi.matrix_data );
 
-    GMatrixEditSetNewText(gcd[0].ret,S_("LookupName|New"));
+    GMatrixEditSetNewText(gcd[0].ret,_("LookupName|New"));
     GHVBoxSetExpandableCol(boxes[0].ret,gb_expandgluesame);
 
     GHVBoxFitWindow(boxes[1].ret);
@@ -813,7 +813,7 @@ static char *JSTF_Langs(GGadget *g, int r, int c) {
     }
     free( mi.matrix_data );
 
-    GMatrixEditSetNewText(gcd[0].ret,S_("Language|New"));
+    GMatrixEditSetNewText(gcd[0].ret,_("Language|New"));
     GMatrixEditSetUpDownVisible(gcd[0].ret,true);
     GHVBoxSetExpandableCol(boxes[0].ret,gb_expandgluesame);
 
@@ -1009,7 +1009,7 @@ void JustifyDlg(SplineFont *sf) {
     }
     free( mi.matrix_data );
 
-    GMatrixEditSetNewText(gcd[0].ret,S_("Script|New"));
+    GMatrixEditSetNewText(gcd[0].ret,_("Script|New"));
     GMatrixEditSetUpDownVisible(gcd[0].ret,true);
     GMatrixEditShowColumn(gcd[0].ret,3,false);
     GHVBoxSetExpandableCol(boxes[0].ret,gb_expandgluesame);

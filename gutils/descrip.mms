@@ -6,7 +6,7 @@ libgutil_OBJECTS =divisors.obj,dynamic.obj,fsys.obj,gimage.obj,gimageread.obj\
  gimagereadras.obj,gimagereadrgb.obj,gimagereadtiff.obj,gimagereadxbm.obj,\
  gimagereadxpm.obj,gimagewritebmp.obj,gimagewritegimage.obj,\
  gimagewritejpeg.obj,gimagewritepng.obj,\
- gimagewritexbm.obj,gwwintl.obj,gio.obj,giofile.obj,gioftp.obj,giohosts.obj,\
+ gimagewritexbm.obj,gio.obj,giofile.obj,gioftp.obj,giohosts.obj,\
  giomime.obj,giothread.obj,giotrans.obj,gcol.obj
 
 CFLAGS=/nowarn/incl=([-.inc])/name=(as_is,short)/define=("HAVE_CONFIG_H=1")
@@ -39,7 +39,6 @@ gimagewritejpeg.obj : gimagewritejpeg.c
 gimagewritepng.obj : gimagewritepng.c
 gimagewritexbm.obj : gimagewritexbm.c
 gimagewritexpm.obj : gimagewritexpm.c
-gwwintl.obj : gwwintl.c
 gio.obj : gio.c
 giofile.obj : giofile.c
 gioftp.obj : gioftp.c

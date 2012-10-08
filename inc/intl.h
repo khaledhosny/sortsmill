@@ -64,10 +64,7 @@
 /* For messages including utf8 sequences that need gettext_noop treatment */
 #define NU_(str)	(str)
 #define N_(str)		(str)
-#define S_(str) sgettext(str)
 /* For messages in the shortcuts domain */
 #define H_(str)		(str)
-
-VISIBLE char *sgettext(const char *msgid);
 
 #endif	/* _INTL_H */

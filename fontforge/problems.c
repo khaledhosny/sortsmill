@@ -5089,11 +5089,11 @@ return;
 
 	    for (i=0; vw_subfixup[i].ti.text!=NULL || vw_subfixup[i].ti.line; ++i )
 		if ( vw_subfixup[i].ti.text!=NULL )
-		    vw_subfixup[i].ti.text = (uint32_t *) S_( (char *)vw_subfixup[i].ti.text);
+		    vw_subfixup[i].ti.text = (uint32_t *) _( (char *)vw_subfixup[i].ti.text);
 
 	    for (i=0; vw_subselect[i].ti.text!=NULL || vw_subselect[i].ti.line; ++i )
 		if ( vw_subselect[i].ti.text!=NULL )
-		    vw_subselect[i].ti.text = (uint32_t *) S_( (char *)vw_subselect[i].ti.text);
+		    vw_subselect[i].ti.text = (uint32_t *) _( (char *)vw_subselect[i].ti.text);
 	}
 	vw_popuplist[0].ti.disabled = (sc->layers[vw->layer].validation_state&vs_opencontour)?0:1;
 	vw_popuplist[1].ti.disabled = (SCValidate(sc,vw->layer,true)&vs_selfintersects)?0:1;

@@ -2364,7 +2364,7 @@ return( _("Unspecified Language") );
 
     for ( i=0; localmaclang[i].name!=NULL; ++i )
 	if ( code == localmaclang[i].code )
-return( S_(localmaclang[i].name) );
+return( _(localmaclang[i].name) );
 
 return( _("Unknown Language"));
 }

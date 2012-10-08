@@ -1548,7 +1548,7 @@ return;
 	boxes[5].creator = GHBoxCreate;
 	varray[8] = &boxes[5]; varray[9] = NULL;
 
-	label[j].text = (uint32_t *) S_("AnchorPoint|_New");
+	label[j].text = (uint32_t *) _("AnchorPoint|_New");
 	label[j].text_is_1byte = true;
 	label[j].text_in_resource = true;
 	gcd[j].gd.label = &label[j];
@@ -2760,7 +2760,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	++j;
 
 	defxpos = 130;
-	label[j].text = (uint32_t *) S_("ControlPoint|Default");
+	label[j].text = (uint32_t *) _("ControlPoint|Default");
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = defxpos; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y-3;
@@ -2867,7 +2867,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	hvarray2[l++] = &gcd[j];
 	++j;
 
-	label[j].text = (uint32_t *) S_("ControlPoint|Default");
+	label[j].text = (uint32_t *) _("ControlPoint|Default");
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = defxpos; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y-3;

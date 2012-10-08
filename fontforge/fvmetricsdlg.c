@@ -227,7 +227,7 @@ static void FVCreateWidth(void *_fv,void (*doit)(CreateWidthData *),
 	gcd[7].gd.handle_controlevent = CW_Cancel;
 	gcd[7].creator = GButtonCreate;
 
-	label[8].text = (uint32_t *) S_(info[wtype]);
+	label[8].text = (uint32_t *) _(info[wtype]);
 	label[8].text_is_1byte = true;
 	gcd[8].gd.label = &label[8];
 	gcd[8].gd.pos.x = 5; gcd[8].gd.pos.y = 59; 
