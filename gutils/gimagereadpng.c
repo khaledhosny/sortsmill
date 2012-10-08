@@ -45,10 +45,6 @@ static void *a_file_must_define_something=(void *) &a_file_must_define_something
 
 # include "gimage.h"
 
-static void *libpng=(void *) 1;
-
-static int loadpng() { return true; }
- 
 static void user_error_fn(png_structp png_ptr, png_const_charp error_msg) {
     fprintf(stderr,"%s\n", error_msg);
 #if (PNG_LIBPNG_VER < 10500)
@@ -72,10 +68,6 @@ GImage *GImageRead_Png(FILE *fp) {
     int num_trans;
     png_color_16p trans_color;
     int i;
-
-    if ( libpng==NULL )
-	if ( !loadpng())
-return( NULL );
 
    png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING,
       (void *)NULL, user_error_fn, user_warning_fn);

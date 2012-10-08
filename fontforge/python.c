@@ -712,10 +712,10 @@ return( ret );
 static PyObject *PyFF_Version(PyObject *UNUSED(self), PyObject *UNUSED(args)) {
     char buffer[20];
 
-    // FIXME: What do we really want to go here?
-    //
-    //sprintf( buffer, "%d", library_version_configuration.library_source_versiondate);
-    sprintf( buffer, "%s", PACKAGE_VERSION);
+    PyErr_WarnEx(PyExc_DeprecationWarning, "version() is deprecated, use __version__ instead.", 1);
+
+    // A big value for old scripts checking for minimal version.
+    sprintf( buffer, "99999999");
 return( Py_BuildValue("s", buffer ));
 }
 
@@ -18339,7 +18339,7 @@ static void SetPythonModuleMetadata( PyObject *module ) {
     //int dt = library_version_configuration.library_source_versiondate;
 
     /* Make __version__ string */
-    pyver = STRING_TO_PY(PACKAGE_VERSION);
+    pyver = STRING_TO_PY(VERSION_MAJOR"."VERSION_MINOR"."VERSION_PATCH""VERSION_EXTRA_SHORT);
     Py_INCREF(pyver);
     PyModule_AddObject(module, "__version__", pyver);
 
