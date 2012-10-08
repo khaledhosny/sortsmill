@@ -179,7 +179,7 @@ static char *BVMakeTitles(BitmapView *bv, BDFChar *bc,char *buf) {
 /* GT: $4 is the font name */
     sprintf(buf,_("%1$.80s at %2$d size %3$d from %4$.80s"),
 	    sc!=NULL ? sc->name : "<Nameless>", bv->enc, bdf->pixelsize, sc==NULL ? "" : sc->parent->fontname);
-    title = copy(buf);
+    title = xstrdup_or_null(buf);
     if ( sc->unicodeenc != -1) {
 	uniname = uninm_name(names_db, (unsigned int) sc->unicodeenc);
 	if (uniname != NULL) {
@@ -2354,7 +2354,7 @@ BitmapView *BitmapViewCreate(BDFChar *bc, BDFFont *bdf, FontView *fv, int enc) {
     /*bv->layers = BVMakeLayers(bv);*/
 
     if ( infofamily==NULL ) {	/* Yes, let's use the same resource name */
-	infofamily = copy(GResourceFindString("CharView.InfoFamily"));
+	infofamily = xstrdup_or_null(GResourceFindString("CharView.InfoFamily"));
 	/* FontConfig doesn't have access to all the X11 bitmap fonts */
 	/*  so the font I used to use isn't found, and a huge monster is */
 	/*  inserted instead */

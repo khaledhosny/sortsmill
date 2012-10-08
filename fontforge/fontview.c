@@ -620,7 +620,7 @@ int _FVMenuSaveAs(FontView *fv)
       sf->filename = filename;
       sf->save_to_dir = s2d;
       free(sf->origname);
-      sf->origname = copy(filename);
+      sf->origname = xstrdup_or_null(filename);
       sf->new = false;
       if ( sf->mm!=NULL )
 	{
@@ -630,7 +630,7 @@ int _FVMenuSaveAs(FontView *fv)
 	      free(sf->mm->instances[i]->filename);
 	      sf->mm->instances[i]->filename = filename;
 	      free(sf->mm->instances[i]->origname);
-	      sf->mm->instances[i]->origname = copy(filename);
+	      sf->mm->instances[i]->origname = xstrdup_or_null(filename);
 	      sf->mm->instances[i]->new = false;
 	    }
 	}
@@ -4857,8 +4857,8 @@ return;
 		    if ( sc==NULL ) {
 			sc = SFMakeChar(fv->b.sf,map,map->enccount-1);
 			free(sc->name);
-			sc->name = copy(buffer);
-			sc->comment = copy(".");	/* Mark as something for sfd file */
+			sc->name = xstrdup_or_null(buffer);
+			sc->comment = xstrdup(".");	/* Mark as something for sfd file */
 			/*SCLigDefault(sc);*/
 		    }
 		    map->map[map->enccount-1] = sc->orig_pos;
@@ -5451,7 +5451,7 @@ return;
 #if 0
     /* What on earth was this code for? it breaks updates of things like "a.sc"*/
     if ( fv->cur_subtable==NULL && strchr(fv->b.sf->glyphs[gid]->name,'.')!=NULL ) {
-	char *temp = copy(fv->b.sf->glyphs[gid]->name);
+	char *temp = xstrdup_or_null(fv->b.sf->glyphs[gid]->name);
 	SplineChar *sc2;
 	*strchr(temp,'.') = '\0';
 	sc2 = SFGetChar(fv->b.sf,-1,temp);
@@ -5513,7 +5513,7 @@ static void AddSubPST(SplineChar *sc,struct lookup_subtable *sub,char *variant) 
     pst = (PST *) xzalloc(sizeof (PST));
     pst->type = pst_substitution;
     pst->subtable = sub;
-    pst->u.alt.components = copy(variant);
+    pst->u.alt.components = xstrdup_or_null(variant);
     pst->next = sc->possub;
     sc->possub = pst;
 }

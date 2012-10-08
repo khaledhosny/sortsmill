@@ -484,9 +484,9 @@ _FindOrMakeEncoding (const char *name, int make_it)
 
   enc = (Encoding *) xzalloc (sizeof (Encoding));
   *enc = temp;
-  enc->enc_name = copy (name);
+  enc->enc_name = xstrdup_or_null (name);
   if (iconv_name != name)
-    enc->iconv_name = copy (iconv_name);
+    enc->iconv_name = xstrdup_or_null (iconv_name);
   enc->next = enclist;
   enc->builtin = true;
   enclist = enc;
@@ -539,7 +539,7 @@ getPfaEditEncodings (void)
   if (getUserDataDir () == NULL)
     return (NULL);
   sprintf (buffer, "%s/Encodings.ps", getUserDataDir ());
-  encfile = copy (buffer);
+  encfile = xstrdup_or_null (buffer);
   return (encfile);
 }
 
@@ -678,7 +678,7 @@ ParseEncodingFile (char *filename, char *encodingname)
     {
       head = ParseConsortiumEncodingFile (file);
       if (encodingname)
-        head->enc_name = copy (encodingname);
+        head->enc_name = xstrdup_or_null (encodingname);
     }
   else
     head = PSSlurpEncodings (file);
@@ -719,7 +719,7 @@ ParseEncodingFile (char *filename, char *encodingname)
           name = ff_ask_string (buf, NULL, buf);
           if (name != NULL)
             {
-              item->enc_name = copy (name);
+              item->enc_name = xstrdup_or_null (name);
               free (name);
             }
           else
@@ -742,7 +742,7 @@ ParseEncodingFile (char *filename, char *encodingname)
       for (item = enclist; item->next != NULL; item = item->next);
       item->next = head;
     }
-  return (copy (head->enc_name));
+  return (xstrdup_or_null (head->enc_name));
 }
 
 void
@@ -1019,7 +1019,7 @@ SearchNoLibsDirForCidMap (char *dir, char *registry, char *ordering,
   if (dir == NULL || strstr (dir, "/.libs") == NULL)
     return (NULL);
 
-  dir = copy (dir);
+  dir = xstrdup_or_null (dir);
   *strstr (dir, "/.libs") = '\0';
 
   ret = SearchDirForCidMap (dir, registry, ordering, supplement, maybefile);
@@ -1033,8 +1033,8 @@ MakeDummyMap (char *registry, char *ordering, int supplement)
 {
   struct cidmap *ret = xmalloc (sizeof (struct cidmap));
 
-  ret->registry = copy (registry);
-  ret->ordering = copy (ordering);
+  ret->registry = xstrdup_or_null (registry);
+  ret->ordering = xstrdup_or_null (ordering);
   ret->supplement = ret->maxsupple = supplement;
   ret->cidmax = ret->namemax = 0;
   ret->unicode = NULL;
@@ -1059,8 +1059,8 @@ LoadMapFromFile (char *file, char *registry, char *ordering, int supplement)
   ret->supplement = ret->maxsupple = strtol (pt, NULL, 10);
   if (supplement > ret->maxsupple)
     ret->maxsupple = supplement;
-  ret->registry = copy (registry);
-  ret->ordering = copy (ordering);
+  ret->registry = xstrdup_or_null (registry);
+  ret->ordering = xstrdup_or_null (ordering);
   ret->alts = NULL;
   ret->cidmax = ret->namemax = 0;
   ret->unicode = NULL;
@@ -1126,7 +1126,7 @@ LoadMapFromFile (char *file, char *registry, char *ordering, int supplement)
                   ungetc (ch, f);
                 }
               else if (fscanf (f, " /%s", name) == 1)
-                ret->name[cid1] = copy (name);
+                ret->name[cid1] = xstrdup_or_null (name);
             }
         }
       fclose (f);
@@ -1632,13 +1632,13 @@ CIDFlatten (SplineFont *cidmaster, SplineChar **glyphs, int charcnt)
   if (cidmaster == NULL)
     return (NULL);
   new = SplineFontEmpty ();
-  new->fontname = copy (cidmaster->fontname);
-  new->fullname = copy (cidmaster->fullname);
-  new->familyname = copy (cidmaster->familyname);
-  new->weight = copy (cidmaster->weight);
-  new->copyright = copy (cidmaster->copyright);
+  new->fontname = xstrdup_or_null (cidmaster->fontname);
+  new->fullname = xstrdup_or_null (cidmaster->fullname);
+  new->familyname = xstrdup_or_null (cidmaster->familyname);
+  new->weight = xstrdup_or_null (cidmaster->weight);
+  new->copyright = xstrdup_or_null (cidmaster->copyright);
   sprintf (buffer, "%g", cidmaster->cidversion);
-  new->version = copy (buffer);
+  new->version = xstrdup_or_null (buffer);
   new->italicangle = cidmaster->italicangle;
   new->upos = cidmaster->upos;
   new->uwidth = cidmaster->uwidth;
@@ -1676,10 +1676,10 @@ CIDFlatten (SplineFont *cidmaster, SplineChar **glyphs, int charcnt)
   new->features = cidmaster->features;
   cidmaster->features = NULL;
   new->macstyle = cidmaster->macstyle;
-  new->origname = copy (cidmaster->origname);
+  new->origname = xstrdup_or_null (cidmaster->origname);
   new->display_size = cidmaster->display_size;
   /* Don't copy private */
-  new->xuid = copy (cidmaster->xuid);
+  new->xuid = xstrdup_or_null (cidmaster->xuid);
   new->glyphs = glyphs;
   new->glyphcnt = new->glyphmax = charcnt;
   for (j = 0; j < charcnt; ++j)
@@ -2046,8 +2046,8 @@ MakeCIDMaster (SplineFont *sf, EncMap * oldmap, int bycmap,
           SplineFontFree (cidmaster);
           return (NULL);
         }
-      cidmaster->cidregistry = copy (map->registry);
-      cidmaster->ordering = copy (map->ordering);
+      cidmaster->cidregistry = xstrdup_or_null (map->registry);
+      cidmaster->ordering = xstrdup_or_null (map->ordering);
       cidmaster->supplement = map->supplement;
       SFEncodeToMap (sf, map);
     }
@@ -2062,11 +2062,11 @@ MakeCIDMaster (SplineFont *sf, EncMap * oldmap, int bycmap,
   else if (strstrmatch (cidmaster->ordering, "Korea") != NULL)
     cidmaster->uni_interp = ui_korean;
   sf->uni_interp = cidmaster->uni_interp;
-  cidmaster->fontname = copy (sf->fontname);
-  cidmaster->fullname = copy (sf->fullname);
-  cidmaster->familyname = copy (sf->familyname);
-  cidmaster->weight = copy (sf->weight);
-  cidmaster->copyright = copy (sf->copyright);
+  cidmaster->fontname = xstrdup_or_null (sf->fontname);
+  cidmaster->fullname = xstrdup_or_null (sf->fullname);
+  cidmaster->familyname = xstrdup_or_null (sf->familyname);
+  cidmaster->weight = xstrdup_or_null (sf->weight);
+  cidmaster->copyright = xstrdup_or_null (sf->copyright);
   cidmaster->cidversion = 1.0;
   cidmaster->display_antialias = sf->display_antialias;
   cidmaster->display_size = sf->display_size;
@@ -2128,9 +2128,9 @@ SFEncodingName (SplineFont *sf, EncMap * map)
     {
       sprintf (buffer, "%.50s-%.50s-%d", sf->cidregistry, sf->ordering,
                sf->supplement);
-      return (copy (buffer));
+      return (xstrdup_or_null (buffer));
     }
-  return (copy (map->enc->enc_name));
+  return (xstrdup_or_null (map->enc->enc_name));
 }
 
 /* ************************** Reencoding  routines ************************** */
@@ -2275,7 +2275,7 @@ _SFForceEncoding (SplineFont *sf, EncMap * old, Encoding * new_enc)
         SCBuildDummy (&dummy, sf, old, i);
         sf->glyphs[j]->unicodeenc = dummy.unicodeenc;
         free (sf->glyphs[j]->name);
-        sf->glyphs[j]->name = copy (dummy.name);
+        sf->glyphs[j]->name = xstrdup_or_null (dummy.name);
       }
   /* We just changed the unicode values for most glyphs */
   /* but any references to them will have the old values, and that's bad, so fix 'em up */
@@ -2412,7 +2412,7 @@ EncMapFromEncoding (SplineFont *sf, Encoding * enc)
               strcmp (sf->glyphs[encoded[j]]->name, enc->psnames[j]) != 0)
             {
               free (sf->glyphs[encoded[j]]->name);
-              sf->glyphs[encoded[j]]->name = copy (enc->psnames[j]);
+              sf->glyphs[encoded[j]]->name = xstrdup_or_null (enc->psnames[j]);
             }
         }
     }
@@ -2827,7 +2827,7 @@ SplineCharMatch (SplineFont *parent, SplineChar *sc)
 
   scnew->parent = parent;
   scnew->orig_pos = sc->orig_pos;
-  scnew->name = copy (sc->name);
+  scnew->name = xstrdup_or_null (sc->name);
   scnew->unicodeenc = sc->unicodeenc;
   scnew->width = sc->width;
   scnew->vwidth = sc->vwidth;

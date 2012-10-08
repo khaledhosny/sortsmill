@@ -1884,7 +1884,7 @@ static char *rpldecimal(const char *orig,const char *decimal_point,const char *o
 	while ( isspace(*end)) ++end;
 	if ( *end!='\0' )
 return( NULL );
-return( copy(orig));
+return( xstrdup_or_null(orig));
     }
 
     npt = new = xmalloc(2*strlen(orig)+10);
@@ -1908,7 +1908,7 @@ return( copy(orig));
     setlocale(LC_NUMERIC,oldloc);
     while ( isspace(*end)) ++end;
     if ( *end=='\0' ) {
-	char *ret = copy(new);
+	char *ret = xstrdup_or_null(new);
 	free(new);
 return( ret );
     }
@@ -1924,7 +1924,7 @@ return( NULL );
     setlocale(LC_NUMERIC,"C");
     sprintf( buffer, "%g", dval );
     setlocale(LC_NUMERIC,oldloc);
-return( copy(buffer));
+return( xstrdup_or_null(buffer));
 }
 
 static char *rplarraydecimal(const char *orig,const char *decimal_point,const char *oldloc) {
@@ -1963,7 +1963,7 @@ return( NULL );
     }
     *npt++ =']';
     *npt = '\0';
-    rpl = copy(new);
+    rpl = xstrdup_or_null(new);
     free(new);
 return( rpl );
 }
@@ -1984,7 +1984,7 @@ return;
     if ( c==0 && (wasnew || val==NULL || *val=='\0')) {
 	tempdict = xcalloc(1,sizeof(*tempdict));
 	SFPrivateGuess(d->sf,ly_fore,tempdict,key,true);
-	strings[r*cols+1].u.md_str = copy(PSDictHasEntry(tempdict,key));
+	strings[r*cols+1].u.md_str = xstrdup_or_null(PSDictHasEntry(tempdict,key));
 	PSDictFree(tempdict);
     } else if ( c==1 && val!=NULL ) {
 	struct lconv *loc = localeconv();
@@ -1994,18 +1994,18 @@ return;
 	break;
 	if ( KnownPrivates[i].name==NULL )	/* If we don't recognize it, leave it be */
 return;
-	oldloc = copy(setlocale(LC_NUMERIC,NULL));
+	oldloc = xstrdup_or_null(setlocale(LC_NUMERIC,NULL));
 
 	for ( pt=val; isspace(*pt); ++pt );
 	for ( ept = val+strlen(val-1); ept>pt && isspace(*ept); --ept );
 	if ( KnownPrivates[i].type==pt_boolean ) {
 	    if ( strcasecmp(val,"true")==0 || strcasecmp(val,"t")==0 || strtol(val,NULL,10)!=0 ) {
 		/* If they make a mistake about case, correct it */
-		strings[r*cols+1].u.md_str = copy("true");
+		strings[r*cols+1].u.md_str = xstrdup("true");
 		free(val);
 		GGadgetRedraw(g);
 	    } else if ( strcasecmp(val,"false")==0 || strcasecmp(val,"f")==0 || (*val=='0' && strtol(val,NULL,10)==0) ) {
-		strings[r*cols+1].u.md_str = copy("false");
+		strings[r*cols+1].u.md_str = xstrdup("false");
 		free(val);
 		GGadgetRedraw(g);
 	    } else
@@ -2056,8 +2056,8 @@ static void PSPrivate_MatrixInit(struct matrixinit *mi,struct gfi_data *d) {
     md = xcalloc(2*(mi->initial_row_cnt+1),sizeof(struct matrix_data));
     if ( sf->private!=NULL ) {
 	for ( i=j=0; i<sf->private->next; ++i ) {
-	    md[2*j  ].u.md_str = copy(sf->private->keys[i]);
-	    md[2*j+1].u.md_str = copy(sf->private->values[i]);
+	    md[2*j  ].u.md_str = xstrdup_or_null(sf->private->keys[i]);
+	    md[2*j+1].u.md_str = xstrdup_or_null(sf->private->values[i]);
 	    ++j;
 	}
     }
@@ -2078,8 +2078,8 @@ static struct psdict *GFI_ParsePrivate(struct gfi_data *d) {
     ret->values = xmalloc(rows*sizeof(char *));
     for ( i=j=0; i<rows; ++i ) {
 	if ( strings[i*cols+0].u.md_str!=NULL && strings[i*cols+1].u.md_str!=NULL ) {
-	    ret->keys[j] = copy(strings[i*cols+0].u.md_str);
-	    ret->values[j++] = copy(strings[i*cols+1].u.md_str);
+	    ret->keys[j] = xstrdup_or_null(strings[i*cols+0].u.md_str);
+	    ret->values[j++] = xstrdup_or_null(strings[i*cols+1].u.md_str);
 	}
     }
     ret->next = j;
@@ -2128,7 +2128,7 @@ static int PI_Guess(GGadget *g, GEvent *e) {
 	key = strings[r*cols+0].u.md_str;
 	tempdict = xcalloc(1,sizeof(*tempdict));
 	SFPrivateGuess(d->sf,ly_fore,tempdict,key,true);
-	ret = copy(PSDictHasEntry(tempdict,key));
+	ret = xstrdup_or_null(PSDictHasEntry(tempdict,key));
 	if ( ret!=NULL ) {
 	    free(strings[r*cols+1].u.md_str);
 	    strings[r*cols+1].u.md_str = ret;
@@ -2170,7 +2170,7 @@ static int PI_Hist(GGadget *g, GEvent *e) {
 return( true );		/* can't happen */
 	tempdict = GFI_ParsePrivate(d);
 	SFHistogram(d->sf,ly_fore,tempdict,NULL,NULL,h);
-	ret = copy(PSDictHasEntry(tempdict,key));
+	ret = xstrdup_or_null(PSDictHasEntry(tempdict,key));
 	if ( ret!=NULL ) {
 	    free(strings[r*cols+1].u.md_str);
 	    strings[r*cols+1].u.md_str = ret;
@@ -2457,7 +2457,7 @@ static struct otfname *OtfNameFromStyleNames(GGadget *me) {
     for ( i=0; i<rows; ++i ) {
 	cur = (struct otfname *) xzalloc(sizeof (struct otfname));
 	cur->lang = strings[2*i  ].u.md_ival;
-	cur->name = copy(strings[2*i+1].u.md_str);
+	cur->name = xstrdup_or_null(strings[2*i+1].u.md_str);
 	if ( head==NULL )
 	    head = cur;
 	else
@@ -2718,7 +2718,7 @@ return( u2utf8_copy(_uGetModifiers(
 	sprintf(versionbuf,_("Version %.20s"),
 		v=GGadgetGetTitle8(GWidgetGetControl(d->gw,CID_Version)));
 	free(v);
-return( copy(versionbuf));
+return( xstrdup_or_null(versionbuf));
       default:
 return( NULL );
     }
@@ -2856,7 +2856,7 @@ static int CheckActiveStyleTranslation(struct gfi_data *d,
 	for ( i=rows-1; i>=0; --i )
 	    if ( strings[3*i+1].u.md_ival==ttf_subfamily &&
 		    strings[3*i].u.md_ival == other_lang ) {
-		new = copy(strings[3*i+2].u.md_str);
+		new = xstrdup_or_null(strings[3*i+2].u.md_str);
 		changed = true;
 	break;
 	    }
@@ -2864,7 +2864,7 @@ static int CheckActiveStyleTranslation(struct gfi_data *d,
 	if ( i<0 || (english = strings[3*i+2].u.md_str)==NULL )
 	    new = tn_recalculatedef(d,ttf_subfamily);
 	else
-	    new = copy(english);
+	    new = xstrdup_or_null(english);
 	for ( i=0; stylelist[i]!=NULL; ++i ) {
 	    eng_pos = other_pos = -1;
 	    for ( j=0; stylelist[i][j].str!=NULL; ++j ) {
@@ -2887,7 +2887,7 @@ static int CheckActiveStyleTranslation(struct gfi_data *d,
 			    strcpy(strings[3*r+2].u.md_str,"odmiana ");
 			    strcat(strings[3*r+2].u.md_str,stylelist[i][other_pos].str);
 			} else
-			    strings[3*r+2].u.md_str = copy(stylelist[i][other_pos].str);
+			    strings[3*r+2].u.md_str = xstrdup_or_null(stylelist[i][other_pos].str);
     return( true );
 		    }
 		    temp = xmalloc((strlen(new)
@@ -3044,7 +3044,7 @@ static void TN_FinishEdit(GGadget *g,int row,int col,int wasnew) {
 		    if ( strings[3*i+2].u.md_str==NULL )
 			strings[3*row+2].u.md_str = tn_recalculatedef(d,strings[3*row+1].u.md_ival );
 		    else
-			strings[3*row+2].u.md_str = copy(strings[3*i+2].u.md_str);
+			strings[3*row+2].u.md_str = xstrdup_or_null(strings[3*i+2].u.md_str);
 		    ret = true;
 	    break;
 		}
@@ -3063,7 +3063,7 @@ static void TN_FinishEdit(GGadget *g,int row,int col,int wasnew) {
 		    for ( i=rows-1; i>=0; --i )
 			if ( strings[3*i+1].u.md_ival==ttf_family &&
 				strings[3*i].u.md_ival == strings[3*row].u.md_ival ) {
-			    strings[3*row+2].u.md_str = copy(strings[3*i+2].u.md_str);
+			    strings[3*row+2].u.md_str = xstrdup_or_null(strings[3*i+2].u.md_str);
 			    ret = true;
 		    break;
 			}
@@ -3144,7 +3144,7 @@ static char *TN_BigEditTitle(GGadget *g,int r, int c) {
 	    ++k );
     snprintf(buf,sizeof(buf),_("%1$.30s string for %2$.30s"),
 	    lang, (char *) ttfnameids[k].text );
-return( copy( buf ));
+return( xstrdup_or_null( buf ));
 }
 
 static void TNMatrixInit(struct matrixinit *mi,struct gfi_data *d) {
@@ -3169,7 +3169,7 @@ static void TNMatrixInit(struct matrixinit *mi,struct gfi_data *d) {
 		if ( md!=NULL ) {
 		    md[3*cnt  ].u.md_ival = tln->lang;
 		    md[3*cnt+1].u.md_ival = i;
-		    md[3*cnt+2].u.md_str = copy(tln->names[i]);
+		    md[3*cnt+2].u.md_str = xstrdup_or_null(tln->names[i]);
 		}
 		++cnt;
 		if ( tln->lang==0x409 )
@@ -3302,7 +3302,7 @@ static int GFI_AddOFL(GGadget *g, GEvent *e) {
 		newtns = xcalloc((rows+extras)*3,sizeof(struct matrix_data));
 		memcpy(newtns,tns,rows*3*sizeof(struct matrix_data));
 		for ( i=0; i<rows; ++i )
-		    newtns[3*i+2].u.md_str = copy(newtns[3*i+2].u.md_str);
+		    newtns[3*i+2].u.md_str = xstrdup_or_null(newtns[3*i+2].u.md_str);
 	    }
 	}
 	GMatrixEditSet(tng, newtns, rows+extras, false);
@@ -3357,7 +3357,7 @@ static void SSMatrixInit(struct matrixinit *mi,struct gfi_data *d) {
 	for ( on=fn->names; on!=NULL; on=on->next, ++cnt ) {
 	    md[3*cnt  ].u.md_ival = on->lang;
 	    md[3*cnt+1].u.md_ival = fn->tag;
-	    md[3*cnt+2].u.md_str = copy(on->name);
+	    md[3*cnt+2].u.md_str = xstrdup_or_null(on->name);
 	}
     }
     qsort( md, cnt, 3*sizeof(struct matrix_data), ss_cmp );
@@ -3391,7 +3391,7 @@ static void SizeMatrixInit(struct matrixinit *mi,struct gfi_data *d) {
     md = xcalloc(2*(cnt+10),sizeof(struct matrix_data));
     for ( cnt=0, on=sf->fontstyle_name; on!=NULL; on=on->next, ++cnt ) {
 	md[2*cnt  ].u.md_ival = on->lang;
-	md[2*cnt+1].u.md_str = copy(on->name);
+	md[2*cnt+1].u.md_str = xstrdup_or_null(on->name);
     }
     qsort( md, cnt, 2*sizeof(struct matrix_data), size_cmp );
     mi->matrix_data = md;
@@ -3529,7 +3529,7 @@ static void LayersMatrixInit(struct matrixinit *mi,struct gfi_data *d) {
 
     md = xcalloc(4*(sf->layer_cnt+1),sizeof(struct matrix_data));
     for ( i=j=0; i<sf->layer_cnt; ++i ) {
-	md[4*j  ].u.md_str  = copy(sf->layers[i].name);
+	md[4*j  ].u.md_str  = xstrdup_or_null(sf->layers[i].name);
 	md[4*j+1].u.md_ival = sf->layers[i].order2;
 	md[4*j+2].u.md_ival = sf->layers[i].background;
 	md[4*j+3].u.md_ival = i+1;
@@ -3713,7 +3713,7 @@ return;
 	    if ( i==rows )
 	continue;
 	    if ( strcmp(tln->names[ttf_uniqueid],strings[3*i+2].u.md_str )!=0 )
-		changed = copy(strings[3*i+2].u.md_str );
+		changed = xstrdup_or_null(strings[3*i+2].u.md_str );
 	break;
 	}
 	/* All unique ids should be the same, if any changed set the unchanged */
@@ -3728,9 +3728,7 @@ return;
 	continue;
 	    if ( strcmp(tln->names[ttf_uniqueid],strings[3*i+2].u.md_str)==0 ) {
 		free(strings[3*i+2].u.md_str);
-		strings[3*i+2].u.md_str = changed!=NULL
-			? copy( changed )
-			: NULL;
+		strings[3*i+2].u.md_str = NULL_PASSTHRU (changed, xstrdup ( changed ));
 	    }
 	}
     }
@@ -3755,7 +3753,7 @@ static void StoreTTFNames(struct gfi_data *d) {
 	    tln->next = sf->names;
 	    sf->names = tln;
 	}
-	tln->names[strings[3*i+1].u.md_ival] = copy(strings[3*i+2].u.md_str );
+	tln->names[strings[3*i+1].u.md_ival] = xstrdup_or_null(strings[3*i+2].u.md_str );
 	if ( strings[3*i+2].u.md_str!=NULL )
 	    len += 2*utf8_strlen(strings[3*i+2].u.md_str);
     }
@@ -3833,7 +3831,7 @@ static void StoreSSNames(struct gfi_data *d) {
 	on->next = fn->names;
 	fn->names = on;
 	on->lang = lang;
-	on->name = copy(strings[3*i+2].u.md_str );
+	on->name = xstrdup_or_null(strings[3*i+2].u.md_str );
     }
 }
 
@@ -3973,7 +3971,7 @@ static int GFI_SetLayers(struct gfi_data *d) {
 	if ( layers[r*cols+0].u.md_str!=NULL && *layers[r*cols+0].u.md_str!='\0' &&
 		strcmp( sf->layers[origr].name, layers[r*cols+0].u.md_str)!=0 ) {
 	    free( sf->layers[origr].name );
-	    sf->layers[origr].name = copy( layers[r*cols+0].u.md_str );
+	    sf->layers[origr].name = xstrdup_or_null( layers[r*cols+0].u.md_str );
 	    changed = true;
 	}
     }
@@ -4536,7 +4534,7 @@ return(true);
 	sf->mark_class_names = xmalloc((mc_rows+1)*sizeof(char *));
 	sf->mark_classes[0] = sf->mark_class_names[0] = NULL;
 	for ( i=0; i<mc_rows; ++i ) {
-	    sf->mark_class_names[i+1] = copy(markclasses[2*i+0].u.md_str);
+	    sf->mark_class_names[i+1] = xstrdup_or_null(markclasses[2*i+0].u.md_str);
 	    sf->mark_classes[i+1]     = GlyphNameListDeUnicode(markclasses[2*i+1].u.md_str);
 	}
 
@@ -4546,7 +4544,7 @@ return(true);
 	sf->mark_sets      = xmalloc((ms_rows)*sizeof(char *));
 	sf->mark_set_names = xmalloc((ms_rows)*sizeof(char *));
 	for ( i=0; i<ms_rows; ++i ) {
-	    sf->mark_set_names[i] = copy(marksets[2*i+0].u.md_str);
+	    sf->mark_set_names[i] = xstrdup_or_null(marksets[2*i+0].u.md_str);
 	    sf->mark_sets[i]      = GlyphNameListDeUnicode(marksets[2*i+1].u.md_str);
 	}
 
@@ -6360,7 +6358,7 @@ static int GFI_LookupImportLookup(GGadget *g, GEvent *e) {
 		    ++cnt;
 		}
 		if ( ti ) {
-		    ti[cnt].text = (uint32_t *) copy( osf->fontname );
+		    ti[cnt].text = (uint32_t *) xstrdup_or_null( osf->fontname );
 		    ti[cnt].text_is_1byte = true;
 		    ti[cnt].disabled = true;
 		    ti[cnt].userdata = osf;
@@ -9653,7 +9651,7 @@ return;
     /* Class 0 is unused */
     markc_md = xcalloc(sf->mark_class_cnt+1,2*sizeof(struct matrix_data));
     for ( i=1; i<sf->mark_class_cnt; ++i ) {
-	markc_md[2*(i-1)+0].u.md_str = copy(sf->mark_class_names[i]);
+	markc_md[2*(i-1)+0].u.md_str = xstrdup_or_null(sf->mark_class_names[i]);
 	markc_md[2*(i-1)+1].u.md_str = SFNameList2NameUni(sf,sf->mark_classes[i]);
     }
     markc_mi.matrix_data = markc_md;
@@ -9697,7 +9695,7 @@ return;
     /* Set 0 is used */
     marks_md = xcalloc(sf->mark_set_cnt+1,2*sizeof(struct matrix_data));
     for ( i=0; i<sf->mark_set_cnt; ++i ) {
-	marks_md[2*i+0].u.md_str = copy(sf->mark_set_names[i]);
+	marks_md[2*i+0].u.md_str = xstrdup_or_null(sf->mark_set_names[i]);
 	marks_md[2*i+1].u.md_str = SFNameList2NameUni(sf,sf->mark_sets[i]);
     }
     marks_mi.matrix_data = marks_md;

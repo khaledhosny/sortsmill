@@ -4027,7 +4027,7 @@ char *GetNextUntitledName(void) {
     char buffer[80];
 
     sprintf( buffer, "Untitled%d", untitled_cnt++ );
-return( copy(buffer));
+return( xstrdup_or_null(buffer));
 }
 
 SplineFont *SplineFontEmpty(void) {
@@ -4060,9 +4060,9 @@ SplineFont *SplineFontEmpty(void) {
 
     sf->layer_cnt = 2;
     sf->layers = xcalloc(2,sizeof(LayerInfo));
-    sf->layers[0].name = copy(_("Back"));
+    sf->layers[0].name = xstrdup_or_null(_("Back"));
     sf->layers[0].background = true;
-    sf->layers[1].name = copy(_("Fore"));
+    sf->layers[1].name = xstrdup_or_null(_("Fore"));
     sf->layers[1].background = false;
     sf->grid.background = true;
 
@@ -4078,16 +4078,16 @@ SplineFont *SplineFontBlank(int charcnt) {
 
     sf = SplineFontEmpty();
     sf->fontname = GetNextUntitledName();
-    sf->fullname = copy(sf->fontname);
-    sf->familyname = copy(sf->fontname);
+    sf->fullname = xstrdup_or_null(sf->fontname);
+    sf->familyname = xstrdup_or_null(sf->fontname);
     sprintf( buffer, "%s.sfd", sf->fontname);
     sf->origname = XDIE_ON_NULL (canonicalize_filename_mode (buffer, CAN_MISSING));
-    sf->weight = copy("Medium");
+    sf->weight = xstrdup("Medium");
     if ( author!=NULL )
 	sprintf( buffer, "Created by %.50s with FontForge 2.0 (http://fontforge.sf.net)", author );
     else
 	strcpy( buffer, "Created with FontForge 2.0 (http://fontforge.sf.net)" );
-    sf->copyright = copy(buffer);
+    sf->copyright = xstrdup_or_null(buffer);
     if ( xuid!=NULL ) {
 	sf->xuid = xmalloc(strlen(xuid)+20);
 	sprintf(sf->xuid,"[%s %d]", xuid, (rand()&0xffffff));
@@ -4095,8 +4095,8 @@ SplineFont *SplineFontBlank(int charcnt) {
     time(&now);
     tm = localtime(&now);
     sprintf( buffer, "%d-%d-%d: Created.", tm->tm_year+1900, tm->tm_mon+1, tm->tm_mday );
-    sf->comments = copy(buffer);
-    sf->version = copy("001.000");
+    sf->comments = xstrdup_or_null(buffer);
+    sf->version = xstrdup("001.000");
     sf->ascent = rint(new_em_size*.8); sf->descent = new_em_size-sf->ascent;
     sf->upos = -rint(new_em_size*.1); sf->uwidth = rint(new_em_size*.05);		/* defaults for cff */
     sf->glyphcnt = 0;

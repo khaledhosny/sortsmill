@@ -1698,11 +1698,11 @@ return;
     }
     if ( temp->filename!=NULL ) {
 	free(temp->filename);
-	temp->filename = copy(old->filename);
+	temp->filename = xstrdup_or_null(old->filename);
     }
     if ( temp->origname!=NULL ) {
 	free(temp->origname);
-	temp->origname = copy(old->origname);
+	temp->origname = xstrdup_or_null(old->origname);
     }
     temp->compression = old->compression;
     temp->fv = old->fv;

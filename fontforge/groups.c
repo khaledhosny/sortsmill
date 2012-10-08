@@ -56,8 +56,8 @@ Group *GroupCopy(Group *g) {
 return( NULL );
 
     gp = (Group *) xzalloc(sizeof (Group));
-    gp->name = copy(g->name);
-    gp->glyphs = copy(g->glyphs);
+    gp->name = xstrdup_or_null(g->name);
+    gp->glyphs = xstrdup_or_null(g->glyphs);
     if ( g->kid_cnt!=0 ) {
 	gp->kids = xmalloc((gp->kid_cnt=g->kid_cnt)*sizeof(Group *));
 	for ( i=0; i<g->kid_cnt; ++i ) {
@@ -81,7 +81,7 @@ return( groupname );
     if ( getUserDataDir()==NULL )
 return( NULL );
     sprintf(buffer,"%s/groups", getUserDataDir());
-    groupname = copy(buffer);
+    groupname = xstrdup_or_null(buffer);
 return( groupname );
 }
 
@@ -169,9 +169,9 @@ return( NULL );
 return( NULL );
 
     if ( i==0 )
-return( copy(""));
+return( xstrdup(""));
     gc->buffer[i] = '\0';
-return( copy( gc->buffer ));
+return( xstrdup_or_null( gc->buffer ));
 }
 
 static Group *_LoadGroupList(FILE *file, Group *parent, int expected_indent,

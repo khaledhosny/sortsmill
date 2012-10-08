@@ -877,7 +877,7 @@ return( NULL );
 	if ( strcmp(buffer,"fontName")!=0 ) {
 	    if ( get_thingy(info,buffer,"string")!=NULL ) {
 		ret = xcalloc(2,sizeof(char *));
-		ret[0] = copy(buffer);
+		ret[0] = xstrdup_or_null(buffer);
 		fclose(info);
 return( ret );
 	    }
@@ -1123,7 +1123,7 @@ return( NULL );
     name = (char *) xmlGetProp(glyph,(xmlChar *) "name");
     if ( name==NULL && glifname!=NULL ) {
 	char *pt = strrchr(glifname,'/');
-	name = copy(pt+1);
+	name = xstrdup_or_null(pt+1);
 	for ( pt=cpt=name; *cpt!='\0'; ++cpt ) {
 	    if ( *cpt=='@' )		/* VMS doesn't let me have two "." in a filename so I use @ instead when a "." is called for */
 		*cpt = '.';
@@ -1134,7 +1134,7 @@ return( NULL );
 	}
 	*pt = '\0';
     } else if ( name==NULL )
-	name = copy("nameless");
+	name = xstrdup("nameless");
     sc = SplineCharCreate(2);
     sc->name = name;
     last = NULL;
@@ -1921,17 +1921,17 @@ return( NULL );
 	if ( stylename!=NULL && sf->familyname!=NULL )
 	    sf->fullname = strconcat3(sf->familyname," ",stylename);
 	else
-	    sf->fullname = copy(sf->fontname);
+	    sf->fullname = xstrdup_or_null(sf->fontname);
     }
     if ( sf->familyname==NULL )
-	sf->familyname = copy(sf->fontname);
+	sf->familyname = xstrdup_or_null(sf->fontname);
     free(stylename);
     if ( sf->weight==NULL )
-	sf->weight = copy("Medium");
+	sf->weight = xstrdup("Medium");
     if ( sf->version==NULL && sf->names!=NULL &&
 	    sf->names->names[ttf_version]!=NULL &&
 	    strncmp(sf->names->names[ttf_version],"Version ",8)==0 )
-	sf->version = copy(sf->names->names[ttf_version]+8);
+	sf->version = xstrdup_or_null(sf->names->names[ttf_version]+8);
     xmlFreeDoc(doc);
 
     UFOLoadGlyphs(sf,glyphdir);

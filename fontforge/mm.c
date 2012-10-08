@@ -120,7 +120,7 @@ static char *_MMMakeFontname(MMSet *mm,real *normalized,char **fullname) {
 
     *fullname = ret;
 
-    ret = copy(ret);
+    ret = xstrdup_or_null(ret);
     for ( pt=*fullname, pt2=ret; *pt!='\0'; ++pt )
 	if ( pt==hyphen )
 	    *pt2++ = '-';
@@ -164,7 +164,7 @@ return( def );
     else
 	ret = "Black";
     free( def );
-return( copy(ret) );
+return( xstrdup_or_null(ret) );
 }
 
 char *MMGuessWeight(MMSet *mm,int ipos,char *def) {
@@ -285,7 +285,7 @@ static SplineChar *SFMakeGlyphLike(SplineFont *sf, int gid, SplineFont *base) {
     sf->glyphs[gid] = sc;
 
     sc->width = bsc->width; sc->widthset = true; sc->vwidth = bsc->vwidth;
-    free(sc->name); sc->name = copy(bsc->name);
+    free(sc->name); sc->name = xstrdup_or_null(bsc->name);
     sc->unicodeenc = bsc->unicodeenc;
 return( sc );
 }
@@ -710,17 +710,17 @@ SplineFont *_MMNewFont(MMSet *mm,int index,char *familyname,real *normalized) {
     sf->layers[ly_fore].order2 = sf->layers[ly_back].order2 = sf->grid.order2 =
 	    mm->apple;
     free(sf->fontname); free(sf->familyname); free(sf->fullname); free(sf->weight);
-    sf->familyname = copy(familyname);
+    sf->familyname = xstrdup_or_null(familyname);
     if ( index==-1 ) {
-	sf->fontname = copy(familyname);
+	sf->fontname = xstrdup_or_null(familyname);
 	for ( pt1=pt2=sf->fontname; *pt1; ++pt1 )
 	    if ( *pt1!=' ' )
 		*pt2++ = *pt1;
 	*pt2='\0';
-	sf->fullname = copy(familyname);
+	sf->fullname = xstrdup_or_null(familyname);
     } else
 	sf->fontname = _MMMakeFontname(mm,normalized,&sf->fullname);
-    sf->weight = copy( "All" );
+    sf->weight = xstrdup_or_null( "All" );
 
     base = NULL;
     if ( mm->normal!=NULL )
@@ -735,7 +735,7 @@ SplineFont *_MMNewFont(MMSet *mm,int index,char *familyname,real *normalized) {
 
     if ( base!=NULL ) {
 	free(sf->xuid);
-	sf->xuid = copy(base->xuid);
+	sf->xuid = xstrdup_or_null(base->xuid);
 	free(sf->glyphs);
 	sf->glyphs = xcalloc(base->glyphcnt,sizeof(SplineChar *));
 	sf->glyphcnt = sf->glyphmax = base->glyphcnt;
@@ -743,10 +743,10 @@ SplineFont *_MMNewFont(MMSet *mm,int index,char *familyname,real *normalized) {
 	sf->ascent = base->ascent;
 	sf->descent = base->descent;
 	free(sf->origname);
-	sf->origname = copy(base->origname);
+	sf->origname = xstrdup_or_null(base->origname);
 	if ( index<0 ) {
 	    free(sf->copyright);
-	    sf->copyright = copy(base->copyright);
+	    sf->copyright = xstrdup_or_null(base->copyright);
 	}
 	/* Make sure we get the encoding exactly right */
 	for ( i=0; i<base->glyphcnt; ++i ) if ( base->glyphs[i]!=NULL )

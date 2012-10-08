@@ -787,7 +787,7 @@ void SFMapFill(struct sfmaps *sfmaps,SplineFont *sf) {
     if ( sfmaps->notdef_gid==-1 ) {
 	SplineChar *notdef = SFSplineCharCreate(sf);
 	sfmaps->fake_notdef = notdef;
-	notdef->name = copy(".notdef");
+	notdef->name = xstrdup(".notdef");
 	notdef->parent = sf;
 	notdef->width = (sf->ascent+sf->descent);
 	if ( sf->cidmaster==NULL )
@@ -1055,7 +1055,7 @@ static Array *SFDefaultScriptsLines(Array *arr,SplineFont *sf) {
 	pixelsize = arr->vals[0].u.ival;
 
     scnt = 0;
-    lines[0] = copy(sf->fullname!=NULL ? sf->fullname : sf->fontname);
+    lines[0] = xstrdup_or_null(sf->fullname!=NULL ? sf->fullname : sf->fontname);
     lcnt = 1;
     for ( gid=0; gid<sf->glyphcnt; ++gid ) if ( (sc=sf->glyphs[gid])!=NULL ) {
 	int uni = sc->unicodeenc;
@@ -1093,13 +1093,13 @@ static Array *SFDefaultScriptsLines(Array *arr,SplineFont *sf) {
 	  break;
 	  case CHR('h','a','n','i'):
 	    /* Chinese Tranditional */
-	    lines[lcnt++] = copy("道可道非常道，名可名非常名。");
+	    lines[lcnt++] = xstrdup("道可道非常道，名可名非常名。");
 	    /* Japanese */
 	    str = "吾輩は猫で∂る（夏ｭﾚ漱⽯）：吾輩は猫で∂る";
 	  break;
 	  case CHR('k','a','n','a'):
 	      /* Hiragana */
-	    lines[lcnt++] = copy("あいうえおかがきぎくぐけこさざしじすせそただちぢつてとなにぬねのはばぱひふへほまみむ");
+	    lines[lcnt++] = xstrdup("あいうえおかがきぎくぐけこさざしじすせそただちぢつてとなにぬねのはばぱひふへほまみむ");
 	      /* Katakana */
 	    str = "アイウエオカガキギクケコサザシジスセソタダチヂツテトナニヌネノハバパヒフヘホマミムメモ";
 	  break;
@@ -1127,7 +1127,7 @@ static Array *SFDefaultScriptsLines(Array *arr,SplineFont *sf) {
 	      }
 	  }
 	  if ( anyhere ) {
-	      lines[lcnt++] = copy(str);
+	      lines[lcnt++] = xstrdup_or_null(str);
 	      scripts[scnt++] = script;
 	      anyscript = true;
 	  }
@@ -1147,7 +1147,7 @@ static Array *SFDefaultScriptsLines(Array *arr,SplineFont *sf) {
 	  }
 	  *pt = '\0';
 	  if ( i>0 ) {
-	      lines[lcnt++] = copy(buffer);
+	      lines[lcnt++] = xstrdup_or_null(buffer);
 	      scripts[scnt++] = DEFAULT_SCRIPT;
 	  }
       }

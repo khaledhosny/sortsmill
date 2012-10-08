@@ -1420,7 +1420,7 @@ static void cvtCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32_t tag) {
 	    sv->edits[i] = (tab->data[i<<1]<<8) | tab->data[(i<<1)+1];
 	if ( sf->cvt_names!=NULL )
 	    for ( i=0; i<tab->len/2 && sf->cvt_names[i]!=END_CVT_NAMES; ++i )
-		sv->comments[i] = copy(sf->cvt_names[i]);
+		sv->comments[i] = xstrdup_or_null(sf->cvt_names[i]);
     } else {
 	sv->edits = xmalloc(2);
 	sv->len = 0;

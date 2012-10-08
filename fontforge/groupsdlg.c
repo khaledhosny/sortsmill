@@ -1047,7 +1047,7 @@ return( true );
 	grp->oldsel->kids[grp->oldsel->kid_cnt-1] = new_grp = (Group *) xzalloc(sizeof (Group));
 	new_grp->parent = grp->oldsel;
 	new_grp->unique = grp->oldsel->unique;
-	new_grp->name = copy(_("UntitledGroup"));
+	new_grp->name = xstrdup_or_null(_("UntitledGroup"));
 	grp->oldsel->selected = false;
 	grp->oldsel->open = true;
 	new_grp->selected = true;
@@ -1162,7 +1162,7 @@ void DefineGroups(FontView *fv) {
 
     if ( group_root==NULL ) {
 	grp->root = (Group *) xzalloc(sizeof (Group));
-	grp->root->name = copy(_("Groups"));
+	grp->root->name = xstrdup_or_null(_("Groups"));
     } else
 	grp->root = GroupCopy(group_root);
 
@@ -1378,7 +1378,7 @@ return;
 		uni = UniFromName(name,ui_none,&custom);
 	}
 	enc->unicode[enc->char_cnt] = uni;
-	enc->psnames[enc->char_cnt++] = copy( name );
+	enc->psnames[enc->char_cnt++] = xstrdup_or_null( name );
     }
 }
 
@@ -1458,7 +1458,7 @@ static char *EncNameFromGroups(Group *group) {
 
     switch ( cnt ) {
       case 0:
-return( copy( _("No Groups")) );
+return( xstrdup_or_null( _("No Groups")) );
       case 1:
 	ret = xmalloc(strlen(prefix) + strlen(first->name) + 3 );
 	sprintf( ret, "%s: %s", prefix, first->name);
@@ -1521,7 +1521,7 @@ void DisplayGroups(FontView *fv) {
 
     if ( grp.root==NULL ) {
 	grp.root = (Group *) xzalloc(sizeof (Group));
-	grp.root->name = copy(_("Groups"));
+	grp.root->name = xstrdup_or_null(_("Groups"));
     }
 
     memset(&wattrs,0,sizeof(wattrs));

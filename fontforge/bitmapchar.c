@@ -166,7 +166,7 @@ return;
 	if ( i>=bdf->prop_max )
 	    bdf->props = xrealloc(bdf->props,(bdf->prop_max+=10)*sizeof(BDFProperties));
 	++bdf->prop_cnt;
-	bdf->props[i].name = copy(keyword);
+	bdf->props[i].name = xstrdup_or_null(keyword);
     }
     if ( strcmp(keyword,"FONT")==0 )
 	bdf->props[i].type = prt_atom;
@@ -174,7 +174,7 @@ return;
 	bdf->props[i].type = prt_string;
     else
 	bdf->props[i].type = prt_string | prt_property;
-    bdf->props[i].u.str = copy(value);
+    bdf->props[i].u.str = xstrdup_or_null(value);
 }
 
 static void BDFPropAddInt(BDFFont *bdf,char *keyword,int value,char *match_key) {
@@ -194,7 +194,7 @@ return;
 	if ( i>=bdf->prop_max )
 	    bdf->props = xrealloc(bdf->props,(bdf->prop_max+=10)*sizeof(BDFProperties));
 	++bdf->prop_cnt;
-	bdf->props[i].name = copy(keyword);
+	bdf->props[i].name = xstrdup_or_null(keyword);
     }
     if ( IsUnsignedBDFKey(keyword) )
 	bdf->props[i].type = prt_uint | prt_property;
@@ -237,14 +237,14 @@ static void BDFPropAppendString(BDFFont *bdf,char *keyword,char *value) {
     if ( i>=bdf->prop_max )
 	bdf->props = xrealloc(bdf->props,(bdf->prop_max+=10)*sizeof(BDFProperties));
     ++bdf->prop_cnt;
-    bdf->props[i].name = copy(keyword);
+    bdf->props[i].name = xstrdup_or_null(keyword);
     if ( strcmp(keyword,"COMMENT")==0 )
 	bdf->props[i].type = prt_string;
     else if ( strcmp(keyword,"FONT")==0 )
 	bdf->props[i].type = prt_atom;
     else
 	bdf->props[i].type = prt_string | prt_property;
-    bdf->props[i].u.str = copy(value);
+    bdf->props[i].u.str = xstrdup_or_null(value);
 }
 
 #if FONTFORGE_CONFIG_BDF_GLYPH_RANGES
@@ -280,7 +280,7 @@ static int BDFPropReplace(BDFFont *bdf,const char *key, const char *value) {
 	    bdf->props[i].type = (bdf->props[i].type&prt_property)|prt_string;
 	pt = strchr(value,'\n');
 	if ( pt==NULL )
-	    bdf->props[i].u.str = copy(value);
+	    bdf->props[i].u.str = xstrdup_or_null(value);
 	else
 	    bdf->props[i].u.str = copyn(value,pt-value);
 return( true );
@@ -388,9 +388,9 @@ return( NULL );
     ret = xmalloc(cnt*sizeof(BDFProperties));
     memcpy(ret,props,cnt*sizeof(BDFProperties));
     for ( i=0; i<cnt; ++i ) {
-	ret[i].name = copy(ret[i].name);
+	ret[i].name = xstrdup_or_null(ret[i].name);
 	if ( (ret[i].type&~prt_property)==prt_string || (ret[i].type&~prt_property)==prt_atom )
-	    ret[i].u.str = copy(ret[i].u.str);
+	    ret[i].u.str = xstrdup_or_null(ret[i].u.str);
     }
 return( ret );
 }

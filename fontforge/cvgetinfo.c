@@ -3734,7 +3734,7 @@ void SCRefBy(SplineChar *sc) {
 	cnt = 0;
 	for ( d = sc->dependents; d!=NULL; d=d->next ) {
 	    if ( deps!=NULL )
-		deps[tot-cnt] = copy(d->sc->name);
+		deps[tot-cnt] = xstrdup_or_null(d->sc->name);
 	    ++cnt;
 	}
 	if ( cnt==0 )
@@ -3825,7 +3825,7 @@ return;
 					_("Subtable %.60s in glyph %.60s"),
 			                pst->subtable->subtable_name,
 			                sf->glyphs[i]->name);
-				deps[tot] = copy(ubuf);
+				deps[tot] = xstrdup_or_null(ubuf);
 			        depsc[tot] = sf->glyphs[i];
 			    }
 			    ++tot;

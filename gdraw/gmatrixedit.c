@@ -714,7 +714,7 @@ return( (gme->col_data[c].func)(&gme->g,r,c) );
       break;
     }
     if (!str) str="";
-return( copy(str));
+return( xstrdup_or_null(str));
 }
 
 static int GME_RecalcFH(GMatrixEdit *gme) {
@@ -733,7 +733,7 @@ static int GME_RecalcFH(GMatrixEdit *gme) {
 	    mi = FindMi(gme->col_data[c].enum_vals,gme->data[r*gme->cols+c].u.md_ival);
 	    if ( mi==NULL )
     continue;
-	    str = copy( (char *)mi->ti.text );
+	    str = xstrdup_or_null( (char *)mi->ti.text );
 	break;
 	  default:
 	    str = MD_Text(gme,r,c);
@@ -1301,7 +1301,7 @@ return;
 
     free(gme->data[r*gme->cols+c].u.md_str);
     if ( gme->col_data[c].me_type==me_stringchoicetrans )
-	gme->data[r*gme->cols+c].u.md_str = copy( (char *) mi->ti.userdata );
+	gme->data[r*gme->cols+c].u.md_str = xstrdup_or_null( (char *) mi->ti.userdata );
     else if ( gme->col_data[c].me_type==me_stringchoicetag ) {
 	char buf[8];
 	buf[0] = ((intptr_t) mi->ti.userdata)>>24;
@@ -1309,7 +1309,7 @@ return;
 	buf[2] = ((intptr_t) mi->ti.userdata)>>8;
 	buf[3] = ((intptr_t) mi->ti.userdata)&0xff;
 	buf[4] = '\0';
-	gme->data[r*gme->cols+c].u.md_str = copy( buf );
+	gme->data[r*gme->cols+c].u.md_str = xstrdup_or_null( buf );
     } else
 	gme->data[r*gme->cols+c].u.md_str = u2utf8_copy( mi->ti.text );
 
@@ -1369,7 +1369,7 @@ static void GMatrixEdit_StartSubGadgets(GMatrixEdit *gme,int r, int c,GEvent *ev
 	      case me_stringchoice: case me_stringchoicetrans: case me_stringchoicetag:
 	      case me_funcedit:
 	      case me_onlyfuncedit:
-		d->u.md_str = copy("");
+		d->u.md_str = xstrdup("");
 	      break;
 	      case me_enum:
 		d->u.md_ival = (int) (intptr_t) gme->col_data[i].enum_vals[0].ti.userdata;
@@ -1449,7 +1449,7 @@ return;
     } else {
 	char *str = MD_Text(gme,gme->active_row,gme->active_col);
 	if ( str==NULL )
-	    str = copy("");
+	    str = xstrdup("");
 	if ( str!=NULL &&
 		(utf8_strlen(str)>40 || strchr(str,'\n')!=NULL || gme->col_data[c].me_type == me_bigstr))
 	    GME_StrBigEdit(gme,str);
@@ -1647,7 +1647,7 @@ static void GMatrixEdit_SubExpose(GMatrixEdit *gme,GWindow pixmap,GEvent *event)
 			kludge = gme->edit_active; gme->edit_active = false;
 			str = MD_Text(gme,r+gme->off_top,c);
 			if ( str==NULL && gme->col_data[c].me_type==me_button )
-			    str = copy("...");
+			    str = xstrdup("...");
 			gme->edit_active = kludge;
 		      break;
 		    }
@@ -1936,7 +1936,7 @@ static GMenuItem *GMenuItemFromTI(GTextInfo *ti,int is_enum) {
 	    mi[cnt].ti.bg = mi[cnt].ti.fg = COLOR_DEFAULT;
 	if ( mi[cnt].ti.text!=NULL ) {
 	    if ( ti[cnt].text_is_1byte )
-		mi[cnt].ti.text = (uint32_t *) copy( (char *) mi[cnt].ti.text );
+		mi[cnt].ti.text = (uint32_t *) xstrdup_or_null( (char *) mi[cnt].ti.text );
 	    else
 		mi[cnt].ti.text = x_u32_strdup_or_null( mi[cnt].ti.text );
 	    mi[cnt].ti.checkable = true;
@@ -1987,7 +1987,7 @@ GGadget *GMatrixEditCreate(struct gwindow *base, GGadgetData *gd,void *data) {
 	else
 	    gme->col_data[c].enum_vals = NULL;
 	gme->col_data[c].enable_enum = matrix->col_init[c].enable_enum;
-	gme->col_data[c].title = copy( matrix->col_init[c].title );
+	gme->col_data[c].title = xstrdup_or_null( matrix->col_init[c].title );
 	if ( gme->col_data[c].title!=NULL ) gme->has_titles = true;
 	gme->col_data[c].fixed = false;
     }
@@ -2001,7 +2001,7 @@ GGadget *GMatrixEditCreate(struct gwindow *base, GGadgetData *gd,void *data) {
 		me_type==me_funcedit || me_type==me_stringchoice ||
 		me_type==me_stringchoicetrans || me_type==me_stringchoicetag ) {
 	    for ( r=0; r<gme->rows; ++r )
-		gme->data[r*gme->cols+c].u.md_str = copy(gme->data[r*gme->cols+c].u.md_str);
+		gme->data[r*gme->cols+c].u.md_str = xstrdup_or_null(gme->data[r*gme->cols+c].u.md_str);
 	}
     }
 
@@ -2145,7 +2145,7 @@ void GMatrixEditSet(GGadget *g,struct matrix_data *data, int rows, int copy_it) 
 			me_type==me_funcedit || me_type==me_stringchoice ||
 			me_type==me_stringchoicetrans || me_type==me_stringchoicetag ) {
 		    for ( r=0; r<rows; ++r )
-			gme->data[r*gme->cols+c].u.md_str = copy(gme->data[r*gme->cols+c].u.md_str);
+			gme->data[r*gme->cols+c].u.md_str = xstrdup_or_null(gme->data[r*gme->cols+c].u.md_str);
 		}
 	    }
 	}
@@ -2230,7 +2230,7 @@ void GMatrixEditSetNewText(GGadget *g, char *text) {
     GMatrixEdit *gme = (GMatrixEdit *) g;
 
     free(gme->newtext);
-    gme->newtext = copy(text);
+    gme->newtext = xstrdup_or_null(text);
 }
 
 void GMatrixEditSetOtherButtonEnable(GGadget *g, void (*sob)(GGadget *g, int r, int c)) {

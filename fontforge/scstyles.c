@@ -1819,7 +1819,7 @@ static double CaseMajorVerticalStemWidth(SplineFont *sf, int layer,
 	    dummy.layer_cnt = 2;
 	    dummy.layers = layers;
 	    dummy.parent = sc->parent;
-	    dummy.name = copy("Fake");
+	    dummy.name = xstrdup("Fake");
 
 	    dummy.layers[ly_fore].order2 = sc->layers[layer].order2;
 	    dummy.layers[ly_fore].splines = SplinePointListTransform(
@@ -2098,7 +2098,7 @@ return( sc_sc );
 	enc = fv->map->enccount;
     sc_sc = SFMakeChar(sf,fv->map,enc);
     free(sc_sc->name);
-    sc_sc->name = copy(buffer);
+    sc_sc->name = xstrdup_or_null(buffer);
     SFHashGlyph(sf,sc_sc);
 
     pst = (PST *) xzalloc(sizeof (PST));
@@ -2109,7 +2109,7 @@ return( sc_sc );
 			 script==CHR('g','r','e','k')?2:3;
     pst->subtable = c2sc[script_index];
     pst->type = pst_substitution;
-    pst->u.subs.variant = copy(buffer);
+    pst->u.subs.variant = xstrdup_or_null(buffer);
 
     /* Adobe's convention seems to be that symbols get both the lc and the uc */
     /*  feature attached to them. */
@@ -2119,7 +2119,7 @@ return( sc_sc );
 	lc_sc->possub = pst;
 	pst->subtable = smcp[script_index];
 	pst->type = pst_substitution;
-	pst->u.subs.variant = copy(buffer);
+	pst->u.subs.variant = xstrdup_or_null(buffer);
     }
 return( sc_sc );
 }
@@ -2863,7 +2863,7 @@ return( sc_sc );
 	enc = fv->map->enccount;
     sc_sc = SFMakeChar(sf,fv->map,enc);
     free(sc_sc->name);
-    sc_sc->name = copy(buffer);
+    sc_sc->name = xstrdup_or_null(buffer);
     SFHashGlyph(sf,sc_sc);
 
     pst = (PST *) xzalloc(sizeof (PST));
@@ -2871,7 +2871,7 @@ return( sc_sc );
     sc->possub = pst;
     pst->subtable = feature;
     pst->type = pst_substitution;
-    pst->u.subs.variant = copy(buffer);
+    pst->u.subs.variant = xstrdup_or_null(buffer);
 
 return( sc_sc );
 }

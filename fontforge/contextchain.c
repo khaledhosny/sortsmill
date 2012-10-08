@@ -188,7 +188,7 @@ static char *rpl(const char *src, const char *find, const char *rpl) {
 	    ++found_cnt;
     }
     if ( found_cnt==0 )
-return( copy(src));
+return( xstrdup_or_null(src));
 
     rpt = ret = xmalloc(strlen(src)+found_cnt*(strlen(rpl)-flen)+1);
     for ( pt=src; *pt; ) {
@@ -806,8 +806,8 @@ static struct matrix_data *MD2MD(struct matrix_data *md,int len) {
     int i;
 
     for ( i=0; i<len; ++i ) {
-	newmd[2*i+0].u.md_str = copy(md[3*i+0].u.md_str);
-	newmd[2*i+1].u.md_str = copy(md[3*i+1].u.md_str);
+	newmd[2*i+0].u.md_str = xstrdup_or_null(md[3*i+0].u.md_str);
+	newmd[2*i+1].u.md_str = xstrdup_or_null(md[3*i+1].u.md_str);
     }
 return( newmd );
 }
@@ -846,7 +846,7 @@ static char *_CCD_NewGlyphRule(GGadget *glyphrules,int r,int c) {
     int rows;
     struct matrix_data *rulelist = GMatrixEditGet(glyphrules,&rows);
     CCD_NewGlyphRule(glyphrules,r,c);
-return( copy( rulelist[r].u.md_str ) );		/* We change the display to get the new value, but we must return something... */
+return( xstrdup_or_null( rulelist[r].u.md_str ) );		/* We change the display to get the new value, but we must return something... */
 }
 
 static void CCD_NewClassRule(GGadget *classrules,int r,int c) {
@@ -899,7 +899,7 @@ static char *_CCD_NewClassRule(GGadget *classrules,int r,int c) {
     int rows;
     struct matrix_data *rulelist = GMatrixEditGet(classrules,&rows);
     CCD_NewClassRule(classrules,r,c);
-return( copy( rulelist[r].u.md_str ) );		/* We change the display to get the new value, but we must return something... */
+return( xstrdup_or_null( rulelist[r].u.md_str ) );		/* We change the display to get the new value, but we must return something... */
 }
 
 static int CCD_SameAsClasses(GGadget *g, GEvent *e) {
@@ -1031,7 +1031,7 @@ return;
 	    for ( k=had_class0 ? 0 : 1 ; k<clen[i]; ++k )
 		(&fpst->nclass)[i][k] = GlyphNameListDeUnicode(classes[i][ccols*k+1].u.md_str);
 	    for ( k=0; k<clen[i]; ++k )
-		(&fpst->nclassnames)[i][k] = copy(classes[i][ccols*k+0].u.md_str);
+		(&fpst->nclassnames)[i][k] = xstrdup_or_null(classes[i][ccols*k+0].u.md_str);
 	}
       } break;
       case aw_coverage:
@@ -1111,9 +1111,9 @@ return;
 		    (&dummyfpst->nclassnames)[i][0] = NULL;
 		    had_class0 = i==0 && !isEverythingElse(classes_simple[3*0+1].u.md_str);
 		    if ( !had_class0 )
-			(&dummyfpst->nclassnames)[i][0] = copy(classes_simple[3*0+0].u.md_str);
+			(&dummyfpst->nclassnames)[i][0] = xstrdup_or_null(classes_simple[3*0+0].u.md_str);
 		    for ( k=had_class0 ? 0 : 1 ; k<clen; ++k ) {
-			(&dummyfpst->nclassnames)[i][k] = copy(classes_simple[3*k+0].u.md_str);
+			(&dummyfpst->nclassnames)[i][k] = xstrdup_or_null(classes_simple[3*k+0].u.md_str);
 			(&dummyfpst->nclass)[i][k] = GlyphNameListDeUnicode(classes_simple[3*k+1].u.md_str);
 		    }
 		}
@@ -1862,7 +1862,7 @@ static void CCD_FinishClassEdit(GGadget *g,int r, int c, int wasnew) {
 	if ( *end=='\0' && i!=r ) {
 	    sprintf( buffer,"%d",r );
 	    free( classes_simple[3*r+0].u.md_str );
-	    classes_simple[3*r+0].u.md_str = copy(buffer);
+	    classes_simple[3*r+0].u.md_str = xstrdup_or_null(buffer);
 	    GGadgetRedraw(g);
 	    ff_post_error(_("Bad class name"),_("If a class name is a number, it must be the index of the class in the array of classes_simple."));
 	}
@@ -1870,7 +1870,7 @@ static void CCD_FinishClassEdit(GGadget *g,int r, int c, int wasnew) {
 	    if ( strcmp(classes_simple[3*i+0].u.md_str,classes_simple[3*r+0].u.md_str) == 0 ) {
 		sprintf( buffer,"%d",r );
 		free( classes_simple[3*r+0].u.md_str );
-		classes_simple[3*r+0].u.md_str = copy(buffer);
+		classes_simple[3*r+0].u.md_str = xstrdup_or_null(buffer);
 		GGadgetRedraw(g);
 		ff_post_error(_("Bad class name"),_("The class name, %s, is already in use."), classes_simple[3*i+0].u.md_str);
 	    }
@@ -1878,7 +1878,7 @@ static void CCD_FinishClassEdit(GGadget *g,int r, int c, int wasnew) {
 	if ( strcmp(classes_simple[3*r+0].u.md_str,classes_simple[3*r+2].u.md_str)!=0 ) {
 	    RenameClass(ccd,classes_simple[3*r+2].u.md_str,classes_simple[3*r+0].u.md_str,WhichSections(ccd,g));
 	    free(classes_simple[3*r+2].u.md_str);
-	    classes_simple[3*r+2].u.md_str = copy(classes_simple[3*r+0].u.md_str);
+	    classes_simple[3*r+2].u.md_str = xstrdup_or_null(classes_simple[3*r+0].u.md_str);
 	}
     }
 }
@@ -1897,10 +1897,10 @@ static void CCD_ClassGoing(GGadget *g,int r) {
 	if ( *end=='\0' ) {
 	    sprintf(buffer,"%d",i-1);
 	    free(classes_simple[3*i+0].u.md_str);
-	    classes_simple[3*i+0].u.md_str = copy(buffer);
+	    classes_simple[3*i+0].u.md_str = xstrdup_or_null(buffer);
 	    RenameClass(ccd,classes_simple[3*i+2].u.md_str,buffer,sections);
 	    free(classes_simple[3*i+2].u.md_str);
-	    classes_simple[3*i+2].u.md_str = copy(buffer);
+	    classes_simple[3*i+2].u.md_str = xstrdup_or_null(buffer);
 	}
     }
 }
@@ -1911,7 +1911,7 @@ static void CCD_InitClassRow(GGadget *g,int r) {
     struct matrix_data *classes_simple = _GMatrixEditGet(g,&rows);
 
     sprintf( buffer, "%d", r );
-    classes_simple[3*r+0].u.md_str = copy(buffer);
+    classes_simple[3*r+0].u.md_str = xstrdup_or_null(buffer);
 }
 
 static int CCD_EnableDeleteClass(GGadget *g,int whichclass) {
@@ -2824,19 +2824,19 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
 		cc = (&tempfpst->nccnt)[i];
 	    class_mi[i].initial_row_cnt = cc;
 	    md = xcalloc(3*cc+3,sizeof(struct matrix_data));
-	    md[0+0].u.md_str = copy(classnames==NULL || cc==0 || classnames[0]==NULL?S_("Glyphs|All_Others"):classnames[0]);
-	    md[3*0+1].u.md_str = copy(_("{Everything Else}"));
+	    md[0+0].u.md_str = xstrdup_or_null(classnames==NULL || cc==0 || classnames[0]==NULL?S_("Glyphs|All_Others"):classnames[0]);
+	    md[3*0+1].u.md_str = xstrdup_or_null(_("{Everything Else}"));
 	    md[3*0+1].frozen = true;
-	    md[0+2].u.md_str = copy(md[0+0].u.md_str);
+	    md[0+2].u.md_str = xstrdup_or_null(md[0+0].u.md_str);
 	    for ( j=1; j<cc; ++j ) {
 		if ( classnames==NULL || classnames[j]==NULL ) {
 		    char buffer[12];
 		    sprintf( buffer,"%d",j );
-		    md[3*j+0].u.md_str = copy(buffer);
+		    md[3*j+0].u.md_str = xstrdup_or_null(buffer);
 		} else
-		    md[3*j+0].u.md_str = copy(classnames[j]);
+		    md[3*j+0].u.md_str = xstrdup_or_null(classnames[j]);
 		md[3*j+1].u.md_str = SFNameList2NameUni(sf,classes[j]);
-		md[3*j+2].u.md_str = copy(md[3*j+0].u.md_str);
+		md[3*j+2].u.md_str = xstrdup_or_null(md[3*j+0].u.md_str);
 	    }
 	    class_mi[i].matrix_data = md;
 
@@ -3001,19 +3001,19 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
 /* GT: This is the default class name for the class containing any glyphs_simple */
 /* GT: which aren't specified in other classes_simple. The class name may NOT */
 /* GT: contain spaces. Use an underscore or something similar instead */
-	    md[0+0].u.md_str = copy(classnames==NULL || cc==0 || classnames[0]==NULL?S_("Glyphs|All_Others"):classnames[0]);
-	    md[0+1].u.md_str = copy(_("{Everything Else}"));
+	    md[0+0].u.md_str = xstrdup_or_null(classnames==NULL || cc==0 || classnames[0]==NULL?S_("Glyphs|All_Others"):classnames[0]);
+	    md[0+1].u.md_str = xstrdup_or_null(_("{Everything Else}"));
 	    md[0+1].frozen = true;
-	    md[0+2].u.md_str = copy(md[0+0].u.md_str);
+	    md[0+2].u.md_str = xstrdup_or_null(md[0+0].u.md_str);
 	    for ( j=1; j<cc; ++j ) {
 		if ( classnames==NULL || classnames[j]==NULL ) {
 		    char buffer[12];
 		    sprintf( buffer,"%d",j );
-		    md[3*j+0].u.md_str = copy(buffer);
+		    md[3*j+0].u.md_str = xstrdup_or_null(buffer);
 		} else
-		    md[3*j+0].u.md_str = copy(classnames[j]);
+		    md[3*j+0].u.md_str = xstrdup_or_null(classnames[j]);
 		md[3*j+1].u.md_str = SFNameList2NameUni(sf,classes[j]);
-		md[3*j+2].u.md_str = copy(md[3*j+0].u.md_str);
+		md[3*j+2].u.md_str = xstrdup_or_null(md[3*j+0].u.md_str);
 	    }
 	    class_mi[i].matrix_data = md;
 	}

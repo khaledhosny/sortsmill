@@ -80,7 +80,7 @@ struct fontparse {
 static void copyenc(char *encoding[256],char *std[256]) {
     int i;
     for ( i=0; i<256; ++i )
-	encoding[i] = copy(std[i]);
+	encoding[i] = xstrdup_or_null(std[i]);
 }
 
 char *AdobeStandardEncoding[] = {
@@ -950,7 +950,7 @@ static char *getstring(char *start,FILE *in) {
 	while ( *start!='\0' && *start!='(' ) ++start;
 	if ( *start=='\0' ) {
 	    if ( myfgetsNoNulls(buffer,sizeof(buffer),in)==NULL )
-return( copy(""));
+return( xstrdup(""));
 	    start = buffer;
 	} else
     break;
@@ -1267,7 +1267,7 @@ static void findstring(struct fontparse *fp,struct pschars *subrs,int index,char
 	bs = buffer + fp->fd->private->leniv;
 	if ( bpt<bs ) bs=bpt;		/* garbage */ 
 	subrs->lens[index] = bpt-bs;
-	subrs->keys[index] = copy(nametok);
+	subrs->keys[index] = xstrdup_or_null(nametok);
 	subrs->values[index] = xmalloc(bpt-bs);
 	memcpy(subrs->values[index],bs,bpt-bs);
 	if ( index>=subrs->next ) subrs->next = index+1;
@@ -1294,7 +1294,7 @@ static void findnumbers(struct fontparse *fp,struct pschars *chars,char *str) {
 	++str;
 	val = strtol(str,&end,10);
 	chars->lens[index] = 0;
-	chars->keys[index] = copy(namestrt);
+	chars->keys[index] = xstrdup_or_null(namestrt);
 	chars->values[index] = (void *) (intptr_t) val;
 	chars->next = index+1;
 	str = end;
@@ -1447,7 +1447,7 @@ static void ParseSimpleEncoding(struct fontparse *fp,char *line) {
 	}
 	*pt = '\0';
 	if ( fp->simple_enc_pos<256 )
-	    fp->fd->encoding[fp->simple_enc_pos++] = copy(tok);
+	    fp->fd->encoding[fp->simple_enc_pos++] = xstrdup_or_null(tok);
     }
     if ( *line==']' ) {
 	fp->simpleencoding = false;
@@ -1481,7 +1481,7 @@ return;
 	    *pt = '\0';
 	    if ( pos>=0 && pos<256 ) {
 		free(fp->fd->encoding[pos]);
-		fp->fd->encoding[pos] = copy(buffer);
+		fp->fd->encoding[pos] = xstrdup_or_null(buffer);
 	    }
 	    while ( isspace(*line)) ++line;
 	    if ( strncmp(line,"put",3)==0 ) line+=3;
@@ -1495,7 +1495,7 @@ return;
 	int i;
 	for ( i=0; i<256; ++i )
 	    if ( fp->fd->encoding[i]==NULL )
-		fp->fd->encoding[i] = copy(".notdef");
+		fp->fd->encoding[i] = xstrdup(".notdef");
 return;
     } else if ( fp->inencoding && strstr(line,"Encoding")!=NULL && strstr(line,"put")!=NULL ) {
 	/* Saw a type 3 font with lines like "Encoding 1 /_a0 put" */
@@ -1512,7 +1512,7 @@ return;
 		for ( pt = buffer; !isspace(*line); *pt++ = *line++ );
 		*pt = '\0';
 		if ( pos>=0 && pos<256 )
-		    fp->fd->encoding[pos] = copy(buffer);
+		    fp->fd->encoding[pos] = xstrdup_or_null(buffer);
 	    }
 	}
 return;
@@ -1912,7 +1912,7 @@ return;
 	    if ( fp->fd->fontinfo->version==NULL ) {
 		char temp[40];
 		sprintf(temp,"%f", fp->fd->cidversion);
-		fp->fd->fontinfo->version = copy(temp);
+		fp->fd->fontinfo->version = xstrdup_or_null(temp);
 	    }
 #endif
 	} else if ( mycmp("CIDFontType",line+1,endtok)==0 )
@@ -1995,7 +1995,7 @@ return;
 	else {
 	    int i = chars->next;
 	    chars->lens[i] = binlen;
-	    chars->keys[i] = copy(tok);
+	    chars->keys[i] = xstrdup_or_null(tok);
 	    chars->values[i] = xmalloc(binlen);
 	    memcpy(chars->values[i],binstart,binlen);
 	    ++chars->next;

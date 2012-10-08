@@ -100,7 +100,7 @@ return( copyn(fontname,fpt-fontname));
     }
 
     if ( fpt==NULL )
-return( copy( fontname ));
+return( xstrdup_or_null( fontname ));
 
 return( copyn(fontname,fpt-fontname));
 }
@@ -110,15 +110,15 @@ static char *GuessWeight(char *fontname) {
 
     for ( i=0; knownweights[i]!=NULL; ++i )
 	if ( strstr(fontname,knownweights[i])!=NULL )
-return( copy( realweights[i]));
+return( xstrdup_or_null( realweights[i]));
 
-return( copy( "Regular" ));
+return( xstrdup( "Regular" ));
 }
 
 static char *despace(char *fontname) {
     char *pt, *npt;
 
-    fontname = copy(fontname);
+    fontname = xstrdup_or_null(fontname);
     for ( pt=npt=fontname; *pt; ++pt )
 	if ( *pt!=' ' )
 	    *npt++ = *pt;
@@ -242,7 +242,7 @@ return( NULL );
     sc->changedsincelasthinted = true; /* I don't understand the scaffold lines */
 	/* which I think are the same as hints. So no hints processed. PfaEdit */
 	/* should autohint the char */
-    sc->name = copy( StdGlyphName(buffer,enc,ui_none,NULL));
+    sc->name = xstrdup_or_null( StdGlyphName(buffer,enc,ui_none,NULL));
     sc->width = (outline->defxadvance*(sf->ascent + sf->descent))/1000;
     sc->vwidth = (outline->defyadvance*(sf->ascent + sf->descent))/1000;
     sc->widthset = true;
@@ -456,7 +456,7 @@ static int dirfind(char *dir, char *pattern,char *buffer) {
 
     if ( ret==-1 ) {
 	/* Just in case the give us the pathspec for the Outlines file rather than the dir containing it */
-	space = copy(dir);
+	space = xstrdup_or_null(dir);
 	pt = strrchr(space,'/');
 	if ( pt!=NULL ) {
 	    *pt = '\0';
@@ -498,7 +498,7 @@ return;
 	if ( buffer[i]=='\r' ) buffer[i] = '\0';
     }
     buffer[i] = '\0';
-    outline->metrics_fontname = copy(buffer);
+    outline->metrics_fontname = xstrdup_or_null(buffer);
     r_getint(file);	/* Must be 16 */
     r_getint(file);	/* Must be 16 */
     n = getc(file);	/* low order byte */
@@ -821,14 +821,14 @@ return( NULL );
     memset(outline.sf->map->backmap,-1,outline.sf->glyphmax*sizeof(int32_t));
     outline.sf->for_new_glyphs = namelist_for_new_fonts;
     outline.sf->fontname = despace(outline.fontname);
-    outline.sf->fullname = copy(outline.fontname);
+    outline.sf->fullname = xstrdup_or_null(outline.fontname);
     outline.sf->familyname = GuessFamily(outline.fontname);
     outline.sf->weight = GuessWeight(outline.fontname);
     if ( strcmp(buffer,"Outlines")!=0 )
-	outline.sf->copyright = copy(buffer);
+	outline.sf->copyright = xstrdup_or_null(buffer);
     strcpy(buffer,outline.fontname);
     strcat(buffer,".sfd");
-    outline.sf->filename = copy(buffer);
+    outline.sf->filename = xstrdup_or_null(buffer);
 
     outline.sf->top_enc = -1;
 

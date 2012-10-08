@@ -388,19 +388,19 @@ static void IkarusNameFromURWNumber(SplineChar *sc,int number) {
     if ( number<sizeof(urwtable)/sizeof(urwtable[0]) ) {
 	sc->unicodeenc = urwtable[number];
 	if ( sc->unicodeenc!=-1 ) {
-	    sc->name = copy(StdGlyphName(buf,sc->unicodeenc,ui_none,NULL));
+	    sc->name = xstrdup_or_null(StdGlyphName(buf,sc->unicodeenc,ui_none,NULL));
 return;
 	}
     }
     if ( number==1059 )
-	sc->name = copy("apple");
+	sc->name = xstrdup("apple");
     else if ( number==795 )
-	sc->name = copy("copyright.big");
+	sc->name = xstrdup("copyright.big");
     else if ( number==796 )
-	sc->name = copy("registered.big");
+	sc->name = xstrdup("registered.big");
     else {
 	sprintf(buf, "urw%d", number );
-	sc->name = copy(buf);
+	sc->name = xstrdup_or_null(buf);
     }
 }
 
@@ -553,10 +553,10 @@ static void IkarusFontname(SplineFont *sf,char *fullname,char *fnam) {
     }
 
     free(sf->fullname);
-    sf->fullname=copy(fullname);
+    sf->fullname=xstrdup_or_null(fullname);
 
     free(sf->fontname);
-    sf->fontname=copy(fullname);
+    sf->fontname=xstrdup_or_null(fullname);
     for ( pt=tpt=sf->fontname; *pt; ++pt ) {
 	if ( isalnum(*pt) || *pt=='-' || *pt=='_' || *pt=='$' )
 	    *tpt++ = *pt;
@@ -588,7 +588,7 @@ static void IkarusFontname(SplineFont *sf,char *fullname,char *fnam) {
 	*pt='\0';
     }
     free(sf->familyname);
-    sf->familyname = copy(fullname);
+    sf->familyname = xstrdup_or_null(fullname);
 }
 
 SplineFont *SFReadIkarus(char *fontname) {

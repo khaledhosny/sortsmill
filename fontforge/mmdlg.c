@@ -662,7 +662,7 @@ GCDFillupMacWeights (GGadgetCreateData * gcd, GTextInfo * label, int k,
                (double) mm->axismaps[i].def, (double) mm->axismaps[i].max);
       an = PickNameFromMacName (mm->axismaps[i].axisnames);
       if (an == NULL)
-        an = copy (mm->axes[i]);
+        an = xstrdup_or_null (mm->axes[i]);
       axisnames[i] = xmalloc (strlen (axisrange) + 3 + strlen (an));
       strcpy (axisnames[i], an);
       strcat (axisnames[i], axisrange);
@@ -1663,7 +1663,7 @@ _ChooseFonts (char *buffer, SplineFont **sfs, real *positions, int i, int cnt)
     }
 
   if (elsepart == NULL)
-    return (copy (buffer));
+    return (xstrdup_or_null (buffer));
 
   ret = xmalloc (strlen (buffer) + strlen (elsepart) + 40);
   sprintf (ret, "dup %g le {%s} {%s} ifelse", (double) positions[i + 1],
@@ -1735,7 +1735,7 @@ _NormalizeAxis (char *buffer, struct axismap *axis, int i)
     }
 
   if (elsepart == NULL)
-    return (copy (buffer));
+    return (xstrdup_or_null (buffer));
 
   ret = xmalloc (strlen (buffer) + strlen (elsepart) + 40);
   sprintf (ret, "dup %g le {%s} {%s} ifelse", (double) axis->designs[i + 1],
@@ -2223,7 +2223,7 @@ MMW_DoOK (MMW * mmw)
                          _("A Font Family name is required"));
           return;
         }
-      familyname = copy (fn);
+      familyname = xstrdup_or_null (fn);
     }
 
   /* Did we have a fontview open on this mm? */
@@ -2233,7 +2233,7 @@ MMW_DoOK (MMW * mmw)
         if (mmw->old->instances[j]->fv != NULL)
           {
             fv = (FontView *) mmw->old->instances[j]->fv;
-            origname = copy (mmw->old->instances[j]->origname);
+            origname = xstrdup_or_null (mmw->old->instances[j]->origname);
             enc = fv->b.map->enc;
             break;
           }
@@ -2395,7 +2395,7 @@ MMW_DoOK (MMW * mmw)
       for (i = 0; i < setto->instance_count; ++i)
         {
           free (setto->instances[i]->origname);
-          setto->instances[i]->origname = copy (origname);
+          setto->instances[i]->origname = xstrdup_or_null (origname);
         }
       free (setto->normal->origname);
       setto->normal->origname = origname;
@@ -2405,7 +2405,7 @@ MMW_DoOK (MMW * mmw)
       for (i = 0; i < setto->instance_count; ++i)
         {
           free (setto->instances[i]->origname);
-          setto->instances[i]->origname = copy (setto->normal->origname);
+          setto->instances[i]->origname = xstrdup_or_null (setto->normal->origname);
         }
     }
   if (!isapple)
@@ -3166,7 +3166,7 @@ MMCopy (MMSet *orig)
   mm->instance_count = AppleMmMax + 1;
   mm->axis_count = 4;
   for (i = 0; i < orig->axis_count; ++i)
-    mm->axes[i] = copy (orig->axes[i]);
+    mm->axes[i] = xstrdup_or_null (orig->axes[i]);
   mm->instances = xcalloc (AppleMmMax + 1, sizeof (SplineFont *));
   memcpy (mm->instances, orig->instances,
           orig->instance_count * sizeof (SplineFont *));
@@ -3195,8 +3195,8 @@ MMCopy (MMSet *orig)
       mm->axismaps[i].max = orig->axismaps[i].max;
       mm->axismaps[i].def = orig->axismaps[i].def;
     }
-  mm->cdv = copy (orig->cdv);
-  mm->ndv = copy (orig->ndv);
+  mm->cdv = xstrdup_or_null (orig->cdv);
+  mm->ndv = xstrdup_or_null (orig->ndv);
   return (mm);
 }
 

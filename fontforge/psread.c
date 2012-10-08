@@ -310,7 +310,7 @@ static void pushio(IO *wrapper, FILE *ps, char *macro, int cnt) {
 
     io->prev = wrapper->top;
     io->ps = ps;
-    io->macro = io->start = copy(macro);
+    io->macro = io->start = xstrdup_or_null(macro);
     io->backedup = EOF;
     if ( cnt==-1 ) {
 	io->cnt = 1;
@@ -794,7 +794,7 @@ static void copyarray(struct pskeydict *to,struct pskeydict *from, struct garbag
 	to->entries[i] = oldent[i];
 	if ( to->entries[i].type==ps_string || to->entries[i].type==ps_instr ||
 		to->entries[i].type==ps_lit )
-	    to->entries[i].u.str = copy(to->entries[i].u.str);
+	    to->entries[i].u.str = xstrdup_or_null(to->entries[i].u.str);
 	else if ( to->entries[i].type==ps_array || to->entries[i].type==ps_dict )
 	    copyarray(&to->entries[i].u.dict,&oldent[i].u.dict,tofrees);
     }
@@ -814,7 +814,7 @@ static int aload(int sp, struct psstack *stack,int stacktop, struct garbage *tof
 		stack[sp].u = dict.entries[i].u;
 		if ( stack[sp].type==ps_string || stack[sp].type==ps_instr ||
 			stack[sp].type==ps_lit )
-		    stack[sp].u.str = copy(stack[sp].u.str);
+		    stack[sp].u.str = xstrdup_or_null(stack[sp].u.str);
 /* The following is incorrect behavior, but as I don't do garbage collection */
 /*  and I'm not going to implement reference counts, this will work in most cases */
 		else if ( stack[sp].type==ps_array )
@@ -1231,7 +1231,7 @@ return;		/* Hunh. I don't understand it. I give up */
    tok = nextpstoken(wrapper,&dval,tokbuf,toksize);
    if ( tok!=pt_namelit )
 return;		/* Hunh. I don't understand it. I give up */
-    glyphname = copy(tokbuf);
+    glyphname = xstrdup_or_null(tokbuf);
    tok = nextpstoken(wrapper,&dval,tokbuf,toksize);
    if ( strcmp(tokbuf,"get")!=0 )
 return;		/* Hunh. I don't understand it. I give up */
@@ -1334,21 +1334,21 @@ static void _InterpretPS(IO *wrapper, EntityChar *ec, RetStack *rs) {
 		if ( sp<sizeof(stack)/sizeof(stack[0]) ) {
 		    stack[sp].type = ps_instr;
 		    if ( gb.pt==NULL )
-			stack[sp++].u.str = copy("");
+			stack[sp++].u.str = xstrdup("");
 		    else {
 			*gb.pt = '\0'; gb.pt = gb.base;
-			stack[sp++].u.str = copy((const char *) gb.base);
+			stack[sp++].u.str = xstrdup_or_null((const char *) gb.base);
 		    }
 		}
 	    }
 	} else if ( tok==pt_unknown && (kv=lookup(&dict,tokbuf))!=NULL ) {
 	    if ( kv->type == ps_instr )
-		pushio(wrapper,NULL,copy(kv->u.str),0);
+		pushio(wrapper,NULL,xstrdup_or_null(kv->u.str),0);
 	    else if ( sp<sizeof(stack)/sizeof(stack[0]) ) {
 		stack[sp].type = kv->type;
 		stack[sp++].u = kv->u;
 		if ( kv->type==ps_instr || kv->type==ps_lit || kv->type==ps_string )
-		    stack[sp-1].u.str = copy(stack[sp-1].u.str);
+		    stack[sp-1].u.str = xstrdup_or_null(stack[sp-1].u.str);
 		else if ( kv->type==ps_array || kv->type==ps_dict ) {
 		    copyarray(&stack[sp-1].u.dict,&stack[sp-1].u.dict,&tofrees);
 		    if ( stack[sp-1].u.dict.is_executable )
@@ -1499,7 +1499,7 @@ printf( "-%s-\n", toknames[tok]);
 		stack[sp] = stack[sp-1];
 		if ( stack[sp].type==ps_string || stack[sp].type==ps_instr ||
 			stack[sp].type==ps_lit )
-		    stack[sp].u.str = copy(stack[sp].u.str);
+		    stack[sp].u.str = xstrdup_or_null(stack[sp].u.str);
     /* The following is incorrect behavior, but as I don't do garbage collection */
     /*  and I'm not going to implement reference counts, this will work in most cases */
 		else if ( stack[sp].type==ps_array )
@@ -1516,7 +1516,7 @@ printf( "-%s-\n", toknames[tok]);
 			stack[sp] = stack[sp-n];
 			if ( stack[sp].type==ps_string || stack[sp].type==ps_instr ||
 				stack[sp].type==ps_lit )
-			    stack[sp].u.str = copy(stack[sp].u.str);
+			    stack[sp].u.str = xstrdup_or_null(stack[sp].u.str);
     /* The following is incorrect behavior, but as I don't do garbage collection */
     /*  and I'm not going to implement reference counts, this will work in most cases */
 			else if ( stack[sp].type==ps_array )
@@ -1544,7 +1544,7 @@ printf( "-%s-\n", toknames[tok]);
 		    stack[sp] = stack[sp-i-1];
 		    if ( stack[sp].type==ps_string || stack[sp].type==ps_instr ||
 			    stack[sp].type==ps_lit )
-			stack[sp].u.str = copy(stack[sp].u.str);
+			stack[sp].u.str = xstrdup_or_null(stack[sp].u.str);
     /* The following is incorrect behavior, but as I don't do garbage collection */
     /*  and I'm not going to implement reference counts, this will work in most cases */
 		    else if ( stack[sp].type==ps_array )
@@ -1882,7 +1882,7 @@ printf( "-%s-\n", toknames[tok]);
 		    stack[sp-1].type = kv->type;
 		    stack[sp-1].u = kv->u;
 		    if ( kv->type==ps_instr || kv->type==ps_lit )
-			stack[sp-1].u.str = copy(stack[sp-1].u.str);
+			stack[sp-1].u.str = xstrdup_or_null(stack[sp-1].u.str);
 		} else
 		    stack[sp-1].type = ps_instr;
 	    }
@@ -2010,7 +2010,7 @@ printf( "-%s-\n", toknames[tok]);
 		HandleType3Reference(wrapper,ec,transform,tokbuf,tokbufsize);
 	    } else if ( sp<sizeof(stack)/sizeof(stack[0]) ) {
 		stack[sp].type = ps_lit;
-		stack[sp++].u.str = copy(tokbuf);
+		stack[sp++].u.str = xstrdup_or_null(tokbuf);
 	    }
 	  break;
 	  case pt_exec:
@@ -3305,9 +3305,9 @@ void PSFontInterpretPS(FILE *ps,struct charprocs *cp,char **encoding) {
 	    }
 	    if ( cp->next<cp->cnt ) {
 		sc = SplineCharCreate(2);
-		cp->keys[cp->next] = copy(tokbuf);
+		cp->keys[cp->next] = xstrdup_or_null(tokbuf);
 		cp->values[cp->next++] = sc;
-		sc->name = copy(tokbuf);
+		sc->name = xstrdup_or_null(tokbuf);
 		SCInterpretPS(ps,sc,&flags);
        		ff_progress_next();
 	    } else {
@@ -3376,7 +3376,7 @@ Encoding *PSSlurpEncodings(FILE *file) {
     while ( (tok = nextpstoken(&wrapper,&dval,tokbuf,sizeof(tokbuf)))!=pt_eof ) {
 	encname = NULL;
 	if ( tok==pt_namelit ) {
-	    encname = copy(tokbuf);
+	    encname = xstrdup_or_null(tokbuf);
 	    tok = nextpstoken(&wrapper,&dval,tokbuf,sizeof(tokbuf));
 	}
 	if ( tok!=pt_openarray && tok!=pt_opencurly )
@@ -3399,10 +3399,10 @@ return( head );
 		    /* Used not to do this, but there are several legal names */
 		    /*  for some slots and people get unhappy (rightly) if we */
 		    /*  use the wrong one */
-		    names[i] = copy(tokbuf);
+		    names[i] = xstrdup_or_null(tokbuf);
 		    any = 1;
 		} else {
-		    names[i] = copy(tokbuf);
+		    names[i] = xstrdup_or_null(tokbuf);
 		    any = 1;
 		}
 	    }
@@ -3658,7 +3658,7 @@ SplineChar *PSCharStringToSplines(uint8_t *type1, int len, struct pscontext *con
     if ( !is_type2 && context->instance_count>1 )
 	memset(unblended,0,sizeof(unblended));
 
-    ret->name = copy( name );
+    ret->name = xstrdup_or_null( name );
     ret->unicodeenc = -1;
     ret->width = (int16_t) 0x8000;
     if ( name==NULL ) name = "unnamed";

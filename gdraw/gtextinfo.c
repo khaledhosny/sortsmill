@@ -311,11 +311,11 @@ static void ImagePathDefault(void) {
 
     if ( imagepath==NULL ) {
 	imagepath = xmalloc(2*sizeof(void *));
-	imagepath[0] = copy(imagedir);
+	imagepath[0] = xstrdup_or_null(imagedir);
 	imagepath[1] = NULL;
 	imagepathlenmax = strlen(imagedir);
 	free(_GGadget_ImagePath);
-	_GGadget_ImagePath = copy("=");
+	_GGadget_ImagePath = xstrdup("=");
     }
 }
 
@@ -373,7 +373,7 @@ static void ImageCacheReload(void) {
 		    GImageDestroy(temp);
 		}
 		free( bucket->absname );
-		bucket->absname = copy( path );
+		bucket->absname = xstrdup_or_null( path );
 	    }
 	}
     }
@@ -386,7 +386,7 @@ void GGadgetSetImageDir(char *dir) {
 
     if ( dir!=NULL && strcmp(imagedir,dir)!=0 ) {
 	char *old = imagedir;
-	imagedir = copy( dir );
+	imagedir = xstrdup_or_null( dir );
 	if ( imagepath!=NULL ) {
 	    for ( k=0; imagepath[k]!=NULL; ++k )
 		if ( strcmp(imagepath[k],old)==0 )
@@ -397,7 +397,7 @@ void GGadgetSetImageDir(char *dir) {
 		ImageCacheReload();
 	    }
 	    free(_GGadget_ImagePath);
-	    _GGadget_ImagePath = copy("=");
+	    _GGadget_ImagePath = xstrdup("=");
 	}
     }
 }
@@ -445,7 +445,7 @@ return;
 	if ( strlen(imagepath[cnt]) > imagepathlenmax )
 	    imagepathlenmax = strlen(imagepath[cnt]);
     ImageCacheReload();
-    _GGadget_ImagePath = copy(path);
+    _GGadget_ImagePath = xstrdup_or_null(path);
 }
 
 static GImage *_GGadgetImageCache(char *filename, char **foundname) {
@@ -456,14 +456,14 @@ static GImage *_GGadgetImageCache(char *filename, char **foundname) {
 
     for ( bucket = imagecache[index]; bucket!=NULL; bucket = bucket->next ) {
 	if ( strcmp(bucket->filename,filename)==0 ) {
-	    if ( foundname!=NULL ) *foundname = copy( bucket->absname );
+	    if ( foundname!=NULL ) *foundname = xstrdup_or_null( bucket->absname );
 return( bucket->image );
 	}
     }
     bucket = xcalloc(1,sizeof(struct image_bucket));
     bucket->next = imagecache[index];
     imagecache[index] = bucket;
-    bucket->filename = copy(filename);
+    bucket->filename = xstrdup_or_null(filename);
 
     ImagePathDefault();
 
@@ -472,7 +472,7 @@ return( bucket->image );
 	sprintf( path,"%s/%s", imagepath[k], filename );
 	bucket->image = GImageRead(path);
 	if ( bucket->image!=NULL ) {
-	    bucket->absname = copy(path);
+	    bucket->absname = xstrdup_or_null(path);
     break;
 	}
     }
@@ -493,7 +493,7 @@ return( bucket->image );
 	}
     }
     if ( foundname!=NULL && bucket->image!=NULL )
-	*foundname = copy( bucket->absname );
+	*foundname = xstrdup_or_null( bucket->absname );
 return( bucket->image );
 }
 

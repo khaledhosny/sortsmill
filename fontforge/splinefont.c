@@ -201,7 +201,7 @@ return( sc );
 	}
 	sc = SFSplineCharCreate(sf);
 	sc->unicodeenc = dummy.unicodeenc;
-	sc->name = copy(dummy.name);
+	sc->name = xstrdup_or_null(dummy.name);
 	sc->width = dummy.width;
 	sc->orig_pos = 0xffff;
 	if ( sf->cidmaster!=NULL )
@@ -682,7 +682,7 @@ return( NULL );
 		*pt = '\0';
 		/* Blessed if I know what encoded was used for filenames */
 		/*  inside the tar file. I shall assume utf8, faut de mieux */
-		files[fcnt++] = copy(linebuffer);
+		files[fcnt++] = xstrdup_or_null(linebuffer);
 		pt = linebuffer;
 	    } else
 		*pt++ = ch;
@@ -701,7 +701,7 @@ return( NULL );
 		/* Blessed if I know what encoded was used for filenames */
 		/*  inside the zip file. I shall assume utf8, faut de mieux */
 		if ( pt-linebuffer>=28 && pt[-1]!='/' )
-		    files[fcnt++] = copy(linebuffer+28);
+		    files[fcnt++] = xstrdup_or_null(linebuffer+28);
 		pt = linebuffer;
 	    } else
 		*pt++ = ch;
@@ -769,7 +769,7 @@ return( onlydirfont );
     if ( choice==-1 )
 	name = NULL;
     else
-	name = copy(files[choice]);
+	name = xstrdup_or_null(files[choice]);
 
     for ( i=0; i<fcnt; ++i )
 	free(files[i]);
@@ -912,7 +912,7 @@ static char *ForceFileToHaveName(FILE *file, char *exten) {
 		fwrite(buffer,1,len,newfile);
 	    fclose(newfile);
 	}
-return(copy(tmpfilename));			/* The filename does not exist */
+return(xstrdup_or_null(tmpfilename));			/* The filename does not exist */
     }
 }
 
@@ -942,7 +942,7 @@ return( NULL );
     if ( (paren = strrchr(pt,'('))!=NULL &&
 	    (rparen = strrchr(paren,')'))!=NULL &&
 	    rparen[1]=='\0' ) {
-	strippedname = copy(filename);
+	strippedname = xstrdup_or_null(filename);
 	strippedname[paren-filename] = '\0';
     }
 
@@ -1197,7 +1197,7 @@ return( NULL );
 	if ( compression!=0 ) {
 	    free(sf->filename);
 	    *strrchr(oldstrippedname,'.') = '\0';
-	    sf->filename = copy( oldstrippedname );
+	    sf->filename = xstrdup_or_null( oldstrippedname );
 	}
 	if ( fromsfd )
 	    sf->compression = compression;
@@ -1213,13 +1213,13 @@ return( NULL );
 	    strcat(norm->origname,sf->chosenname);
 	    strcat(norm->origname,")");
 	} else
-	    norm->origname = copy(filename);
+	    norm->origname = xstrdup_or_null(filename);
 	free( norm->chosenname ); norm->chosenname = NULL;
 	if ( sf->mm!=NULL ) {
 	    int j;
 	    for ( j=0; j<sf->mm->instance_count; ++j ) {
 		free(sf->mm->instances[j]->origname);
-		sf->mm->instances[j]->origname = copy(norm->origname);
+		sf->mm->instances[j]->origname = xstrdup_or_null(norm->origname);
 	    }
 	}
     } else if ( !GFileExists(filename) )
@@ -1465,18 +1465,18 @@ char *_GetModifiers(char *fontname, char *familyname, char *weight) {
 	     for ( j=0; mods[i][j]!=NULL; ++j ) {
 		  if ( strcmp(fpt,mods[i][j])==0 ) {
 		       strcpy(space,fullmods[i][j]);
-		       return copy(space);
+		       return xstrdup_or_null(space);
 		  }
 	     }
 	if ( strcmp(fpt,"BoldItal")==0 )
-	     return copy( "BoldItalic" );
+	     return xstrdup( "BoldItalic" );
 	else if ( strcmp(fpt,"BoldObli")==0 )
-	    return copy( "BoldOblique" );
+	    return xstrdup( "BoldOblique" );
 
-	return copy( fpt );
+	return xstrdup_or_null( fpt );
     }
 
-    return copy( weight==NULL || *weight=='\0' ? "Regular": weight );
+    return xstrdup( weight==NULL || *weight=='\0' ? "Regular": weight );
 }
 
 char *SFGetModifiers(SplineFont *sf) {
@@ -1922,7 +1922,7 @@ int SFPrivateGuess(SplineFont *sf,int layer, struct psdict *private,char *name, 
     char *oldloc;
     int ret;
 
-    oldloc = copy(setlocale(LC_NUMERIC,NULL));
+    oldloc = xstrdup_or_null(setlocale(LC_NUMERIC,NULL));
     setlocale(LC_NUMERIC,"C");
     ret = true;
 
@@ -2047,7 +2047,7 @@ return;
     ++sf->layer_cnt;
     sf->layers = xrealloc(sf->layers,(l+1)*sizeof(LayerInfo));
     memset(&sf->layers[l],0,sizeof(LayerInfo));
-    sf->layers[l].name = copy(name);
+    sf->layers[l].name = xstrdup_or_null(name);
     sf->layers[l].order2 = order2;
     sf->layers[l].background = background;
 

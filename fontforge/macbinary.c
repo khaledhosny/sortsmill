@@ -959,7 +959,7 @@ static struct sflistlist *FondSplitter(struct sflist *sfs,int *fondcnt) {
 	for ( last=sfi; last!=NULL; last=last->next )
 	    if ( last->sf->fondname!=NULL && strcmp(last->sf->fondname,sfs->sf->familyname)==0 )
 	break;
-	cur->fondname = copy( last==NULL ? sfs->sf->familyname : sfs->sf->fontname );
+	cur->fondname = xstrdup_or_null( last==NULL ? sfs->sf->familyname : sfs->sf->fontname );
 	lastl = sfsl = cur;
 	++fc;
     }
@@ -989,10 +989,10 @@ static struct sflistlist *FondSplitter(struct sflist *sfs,int *fondcnt) {
 		if ( strcmp(test->fondname,start->sf->fondname)==0 )
 	    break;
 	    if ( test==NULL )
-		cur->fondname = copy(start->sf->fondname);
+		cur->fondname = xstrdup_or_null(start->sf->fondname);
 	}
 	if ( cur->fondname==NULL )
-	    cur->fondname = copy(start->sf->fontname);
+	    cur->fondname = xstrdup_or_null(start->sf->fontname);
 	if ( lastl!=NULL ) lastl->next = cur;
 	lastl = cur;
 	cur->sfs = start;
@@ -1471,13 +1471,13 @@ return( true );
     /*  an FSRef unless the file exists.  That is incredibly stupid and annoying of them */
     /* But the directory should exist... */
     fname = mb->macfilename?mb->macfilename:mb->binfilename;
-    dirname = copy(fname);
+    dirname = xstrdup_or_null(fname);
     pt = strrchr(dirname,'/');
     if ( pt!=NULL )
 	pt[1] = '\0';
     else {
 	free(dirname);
-	dirname = copy(".");
+	dirname = xstrdup(".");
     }
     ret=FSPathMakeRef( (uint8_t *) dirname,&parentref,NULL);
     free(dirname);
@@ -2104,7 +2104,7 @@ static SplineFont *SearchTtfResources(FILE *f,long rlistpos,int subcnt,long rdat
 	    if ( names[i]==NULL ) {
 		char buffer[32];
 		sprintf( buffer, "Nameless%d", i );
-		names[i] = copy(buffer);
+		names[i] = xstrdup_or_null(buffer);
 	    }
 	    fseek(f,here,SEEK_SET);
 	}
@@ -2118,7 +2118,7 @@ return( (SplineFont *) names );
 	if ( (lparen = strrchr(pt,'('))!=NULL &&
 		(rparen = strrchr(lparen,')'))!=NULL &&
 		rparen[1]=='\0' ) {
-	    char *find = copy(lparen+1);
+	    char *find = xstrdup_or_null(lparen+1);
 	    pt = strchr(find,')');
 	    if ( pt!=NULL ) *pt='\0';
 	    for ( which=subcnt-1; which>=0; --which )
@@ -2131,7 +2131,7 @@ return( (SplineFont *) names );
 		    which = -1;
 	    }
 	    if ( which==-1 ) {
-		char *fn = copy(filename);
+		char *fn = xstrdup_or_null(filename);
 		fn[lparen-filename] = '\0';
 		ff_post_error(_("Not in Collection"),_("%s is not in %.100s"),find,fn);
 		free(fn);
@@ -2142,7 +2142,7 @@ return( (SplineFont *) names );
 	else
 	    which = ff_choose(_("Pick a font, any font..."),(const char **) names,subcnt,0,_("There are multiple fonts in this file, pick one"));
 	if ( lparen==NULL && which!=-1 )
-	    chosenname = copy(names[which]);
+	    chosenname = xstrdup_or_null(names[which]);
 	for ( i=0; i<subcnt; ++i )
 	    free(names[i]);
 	free(names);
@@ -2319,7 +2319,7 @@ static FOND *BuildFondList(FILE *f,long rlistpos,int subcnt,long rdata_pos,
 	    ch1 = getc(f);
 	    fread(name,1,ch1,f);
 	    name[ch1] = '\0';
-	    cur->fondname = copy(name);
+	    cur->fondname = xstrdup_or_null(name);
 	}
 
 	offset += 4;
@@ -2556,7 +2556,7 @@ static char *BuildName(char *family,int style) {
 	strcat(buffer,"Condensed");
     if ( style&sf_extend )
 	strcat(buffer,"Extended");
-return( copy(buffer));
+return( xstrdup_or_null(buffer));
 }
 
 static int GuessStyle(char *fontname,int *styles,int style_cnt) {
@@ -2597,14 +2597,14 @@ static FOND *PickFOND(FOND *fondlist,char *filename,char **name, int *style) {
 
     if ((pt = strrchr(filename,'/'))!=NULL ) pt = filename;
     if ( (lparen = strchr(filename,'('))!=NULL && strchr(lparen,')')!=NULL ) {
-	find = copy(lparen+1);
+	find = xstrdup_or_null(lparen+1);
 	pt = strchr(find,')');
 	if ( pt!=NULL ) *pt='\0';
 	for ( test=fondlist; test!=NULL; test=test->next ) {
 	    for ( i=0; i<48; ++i )
 		if ( test->psnames[i]!=NULL && strcmp(find,test->psnames[i])==0 ) {
 		    *style = (i&3) | ((i&~3)<<1);	/* PS styles skip underline bit */
-		    *name = copy(test->psnames[i]);
+		    *name = xstrdup_or_null(test->psnames[i]);
 return( test );
 		}
 	}
@@ -2644,7 +2644,7 @@ return( test );
 	if ( which==-1 && strstrmatch(find,test->fondname)!=NULL )
 	    which = GuessStyle(find,styles,cnt);
 	if ( which==-1 ) {
-	    char *fn = copy(filename);
+	    char *fn = xstrdup_or_null(filename);
 	    fn[lparen-filename] = '\0';
 	    ff_post_error(_("Not in Collection"),_("%s is not in %.100s"),find,fn);
 	    free(fn);
@@ -2660,7 +2660,7 @@ return( test );
 
     if ( which!=-1 ) {
 	fond = fonds[which];
-	*name = copy(names[which]);
+	*name = xstrdup_or_null(names[which]);
 	*style = styles[which];
     }
     for ( i=0; i<cnt; ++i )
@@ -2704,12 +2704,12 @@ return( NULL );
 
     sf = SplineFontBlank(257);
     free(sf->fontname); sf->fontname = name;
-    free(sf->familyname); sf->familyname = copy(fond->fondname);
-    sf->fondname = copy(fond->fondname);
-    free(sf->fullname); sf->fullname = copy(name);
+    free(sf->familyname); sf->familyname = xstrdup_or_null(fond->fondname);
+    sf->fondname = xstrdup_or_null(fond->fondname);
+    free(sf->fullname); sf->fullname = xstrdup_or_null(name);
     free(sf->origname); sf->origname = NULL;
     if ( style & sf_bold ) {
-	free(sf->weight); sf->weight = copy("Bold");
+	free(sf->weight); sf->weight = xstrdup("Bold");
     }
     free(sf->copyright); sf->copyright = NULL;
     free(sf->comments); sf->comments = NULL;
@@ -2727,7 +2727,7 @@ return( NULL );
 	    sc = SFSplineCharCreate(sf);
 	    sc->orig_pos = sf->glyphcnt;
 	    sf->glyphs[sf->glyphcnt++] = sc;
-	    sc->name = copy(".notdef");
+	    sc->name = xstrdup(".notdef");
 	    sc->width = (widths[fond->last+1-fond->first]*1000L+(1<<11))>>12;
 	    sc->widthset = true;
 	}
@@ -2945,7 +2945,7 @@ static SplineFont *HasResourceFork(char *filename,int flags,enum openflags openf
 
     if (( pt=strrchr(filename,'/'))==NULL ) pt = filename;
     if ( (lparen = strchr(pt,'('))!=NULL && strchr(lparen,')')!=NULL ) {
-	tempfn = copy(filename);
+	tempfn = xstrdup_or_null(filename);
 	tempfn[lparen-filename] = '\0';
     }
     respath = xmalloc(strlen(tempfn)+strlen("/..namedfork/rsrc")+1);
@@ -3111,7 +3111,7 @@ static SplineFont *IsResourceInFile(char *filename,int flags,enum openflags open
 
     if (( pt=strrchr(filename,'/'))==NULL ) pt = filename;
     if ( (lparen = strchr(pt,'('))!=NULL && strchr(lparen,')')!=NULL ) {
-	temp = copy(filename);
+	temp = xstrdup_or_null(filename);
 	temp[lparen-filename] = '\0';
     }
     f = fopen(temp,"rb");

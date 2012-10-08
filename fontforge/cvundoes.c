@@ -644,8 +644,8 @@ return(NULL);
 	if ( dohints==2 ) {
 	    undo->undotype = ut_statename;
 	    undo->u.state.unicodeenc = sc->unicodeenc;
-	    undo->u.state.charname = copy(sc->name);
-	    undo->u.state.comment = copy(sc->comment);
+	    undo->u.state.charname = xstrdup_or_null(sc->name);
+	    undo->u.state.comment = xstrdup_or_null(sc->comment);
 	    undo->u.state.possub = PSTCopy(sc->possub,sc,NULL);
 	}
     }
@@ -1186,13 +1186,13 @@ static void *copybufferPt2str(void *_copybuffer,int32_t *len) {
 	    cur->u.state.splines->next!=NULL ||
 	    cur->u.state.splines->first->next!=NULL ) {
 	*len=0;
-return( copy(""));
+return( xstrdup(""));
     }
 
     sp = cur->u.state.splines->first;
     sprintf(buffer,"(%g%s%g)", (double) sp->me.x, coord_sep, (double) sp->me.y );
     *len = strlen(buffer);
-return( copy(buffer));
+return( xstrdup_or_null(buffer));
 }
 
 static void *copybufferName2str(void *_copybuffer,int32_t *len) {
@@ -1216,10 +1216,10 @@ static void *copybufferName2str(void *_copybuffer,int32_t *len) {
     out:
     if ( cur==NULL || FontViewFirst()==NULL || cur->u.state.charname==NULL ) {
 	*len=0;
-return( copy(""));
+return( xstrdup(""));
     }
     *len = strlen(cur->u.state.charname);
-return( copy( cur->u.state.charname ));
+return( xstrdup_or_null( cur->u.state.charname ));
 }
 
 static RefChar *XCopyInstanciateRefs(RefChar *refs,SplineChar *container,int layer) {
@@ -1314,13 +1314,13 @@ static void *copybuffer2svg(void *_copybuffer,int32_t *len) {
     out:
     if ( FontViewFirst()==NULL || cur==NULL ) {
 	*len=0;
-return( copy(""));
+return( xstrdup(""));
     }
 
     svg = tmpfile();
     if ( svg==NULL ) {
 	*len=0;
-return( copy(""));
+return( xstrdup(""));
     }
 
     memset(&dummy,0,sizeof(dummy));
@@ -1330,7 +1330,7 @@ return( copy(""));
     if ( !FFClipToSC(&dummy,cur) ) {
 	fclose(svg);
 	*len=0;
-return( copy(""));
+return( xstrdup(""));
     }
 
     old_order2 = dummy.parent->layers[ly_fore].order2;
@@ -1366,13 +1366,13 @@ static void *copybuffer2svgmult(void *_copybuffer,int32_t *len) {
 
     if ( cur->undotype!=ut_multiple || !CopyContainsVectors() || FontViewFirst()==NULL ) {
 	*len=0;
-return( copy(""));
+return( xstrdup(""));
     }
 
     svg = tmpfile();
     if ( svg==NULL ) {
 	*len=0;
-return( copy(""));
+return( xstrdup(""));
     }
 
     cur = cur->u.multiple.mult;
@@ -1448,7 +1448,7 @@ static void *copybuffer2eps(void *_copybuffer,int32_t *len) {
     out:
     if ( cur==NULL || FontViewFirst()==NULL ) {
 	*len=0;
-return( copy(""));
+return( xstrdup(""));
     }
 
     memset(&dummy,0,sizeof(dummy));
@@ -1489,7 +1489,7 @@ return( copy(""));
     eps = tmpfile();
     if ( eps==NULL ) {
 	*len=0;
-return( copy(""));
+return( xstrdup(""));
     }
 
     old_order2 = dummy.parent->layers[ly_fore].order2;
@@ -1825,8 +1825,8 @@ static Undoes *SCCopyAllLayer(SplineChar *sc,enum fvcopy_type full,int layer) {
 	    }
 	    cur->u.state.unicodeenc = sc->unicodeenc;
 	    if ( copymetadata && layer==ly_fore ) {
-		cur->u.state.charname = copy(sc->name);
-		cur->u.state.comment = copy(sc->comment);
+		cur->u.state.charname = xstrdup_or_null(sc->name);
+		cur->u.state.comment = xstrdup_or_null(sc->comment);
 		cur->u.state.possub = PSTCopy(sc->possub,sc,NULL);
 	    } else {
 		cur->u.state.charname = NULL;
@@ -2559,12 +2559,12 @@ static void PSTInto(SplineChar *sc,PST *pst,PST *frompst, struct lookup_subtable
     }
     if ( pst->type == pst_substitution || pst->type == pst_alternate ||
 		pst->type == pst_multiple )
-	pst->u.subs.variant = copy( frompst->u.subs.variant );
+	pst->u.subs.variant = xstrdup_or_null( frompst->u.subs.variant );
     else if ( pst->type == pst_ligature ) {
-	pst->u.lig.components = copy( frompst->u.lig.components );
+	pst->u.lig.components = xstrdup_or_null( frompst->u.lig.components );
 	pst->u.lig.lig = sc;
     } else if ( pst->type==pst_pair ) {
-	pst->u.pair.paired = copy( frompst->u.pair.paired );
+	pst->u.pair.paired = xstrdup_or_null( frompst->u.pair.paired );
 	pst->u.pair.vr = (struct vr *) xzalloc(sizeof (struct vr[2]));
 	memcpy(pst->u.pair.vr,frompst->u.pair.vr,sizeof(struct vr[2]));
 	DevTabInto(&pst->u.pair.vr[0]);
@@ -2786,7 +2786,7 @@ static OTLookup **GetLookupsToCopy(SplineFont *sf,OTLookup ***backpairlist, int 
 			(otl->lookup_type == gpos_pair && HasNonClass(otl))) {
 		    if ( doit ) {
 			list1[cnt] = otl;
-			choices[cnt++] = copy(otl->lookup_name);
+			choices[cnt++] = xstrdup_or_null(otl->lookup_name);
 			if ( otl->lookup_type==gpos_pair ) {
 /* GT: I'm not happy with this phrase. Suggestions for improvements are welcome */
 /* GT:  Here I am generating a list of lookup names representing data that can */
@@ -2823,7 +2823,7 @@ return( NULL );
 		choices[cnt] = NULL;
 		list2 = NULL;
 	    } else {
-		choices[cnt] = copy("-");
+		choices[cnt] = xstrdup("-");
 		choices[bcnt+cnt+1] = NULL;
 		list2 = xmalloc(bcnt*sizeof(OTLookup *));
 	    }

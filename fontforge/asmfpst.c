@@ -62,7 +62,7 @@ return( NULL );
     ret = xmalloc(nextclass*sizeof(char *));
     ret[0] = NULL;
     for ( i=1; i<nextclass; ++i )
-	ret[i] = copy(names[i]);
+	ret[i] = xstrdup_or_null(names[i]);
 return( ret );
 }
 
@@ -113,7 +113,7 @@ return( NULL );
 		    if ( k==nextclass ) {
 			if ( nextclass>=max )
 			    names = xrealloc(names,(max+=100)*sizeof(char *));
-			names[nextclass++] = copy(pt);
+			names[nextclass++] = xstrdup_or_null(pt);
 		    }
 		    *end = ch;
 		    (&new->rules[i].u.class.nclasses)[j][cnt++] = k;
@@ -954,7 +954,7 @@ static ASM *ASMFromClassFPST(SplineFont *sf,FPST *fpst, struct contexttree *tree
     sm->classes = xmalloc(sm->class_cnt*sizeof(char *));
     sm->classes[0] = sm->classes[1] = sm->classes[2] = sm->classes[3] = NULL;
     for ( i=1; i<fpst->nccnt; ++i )
-	sm->classes[i+3] = copy(fpst->nclass[i]);
+	sm->classes[i+3] = xstrdup_or_null(fpst->nclass[i]);
     if ( fpst->subtable->lookup->lookup_flags&pst_ignorecombiningmarks )
 	sm->classes[sm->class_cnt-1] = BuildMarkClass(sf);
 

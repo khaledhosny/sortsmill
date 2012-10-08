@@ -1196,7 +1196,7 @@ static void FDAddMissingGlyph(struct font_diff *fd,SplineChar *sc2) {
     sc->vwidth = sc2->vwidth;
     sc->widthset = sc2->widthset;
     free(sc->name);
-    sc->name = copy(sc2->name);
+    sc->name = xstrdup_or_null(sc2->name);
     sc->unicodeenc = sc2->unicodeenc;
     SCAddBackgrounds(sc,sc2,fd);
 }

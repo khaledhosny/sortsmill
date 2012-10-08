@@ -205,7 +205,7 @@ return(NULL);
 	else if ( strcmp(sc->name,".notdef")!=0 ) {
 	    if ( item->psnames==NULL )
 		item->psnames = xcalloc(map->enccount,sizeof(uint32_t *));
-	    item->psnames[i] = copy(sc->name);
+	    item->psnames[i] = xstrdup_or_null(sc->name);
 	}
     }
     RemoveMultiples(item);
@@ -363,9 +363,9 @@ struct cidmap *AskUserForCIDMap(void) {
     FindMapsInDir(&block, SHAREDIR);
 
     choices = xcalloc(block.cur+2,sizeof(uint32_t *));
-    choices[0] = copy(_("Browse..."));
+    choices[0] = xstrdup_or_null(_("Browse..."));
     for ( i=0; i<block.cur; ++i )
-	choices[i+1] = copy(block.maps[i]);
+	choices[i+1] = xstrdup_or_null(block.maps[i]);
     ret = gwwv_choose(_("Find a cidmap file..."),(const char **) choices,i+1,0,_("Please select a CID ordering"));
     for ( i=0; i<=block.cur; ++i )
 	free( choices[i] );
@@ -392,7 +392,7 @@ struct cidmap *AskUserForCIDMap(void) {
 	    reg = strrchr(filename,'/');
 	    if ( reg==NULL ) reg = filename;
 	    else ++reg;
-	    reg = copy(reg);
+	    reg = xstrdup_or_null(reg);
 	}
 	pt = strchr(reg,'-');
 	if ( pt==NULL )
@@ -548,7 +548,7 @@ GTextInfo *GetEncodingTypes(void)
   ti = xcalloc(i+1,sizeof(GTextInfo));
   memcpy(ti,encodingtypes,sizeof(encodingtypes)-sizeof(encodingtypes[0]));
   for ( i=0; i<sizeof(encodingtypes)/sizeof(encodingtypes[0])-1; ++i )
-    ti[i].text = (uint32_t *) copy((char *) ti[i].text);
+    ti[i].text = (uint32_t *) xstrdup_or_null((char *) ti[i].text);
   if ( cnt!=0 )
     {
       ti[i++].line = true;

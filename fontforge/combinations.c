@@ -109,7 +109,7 @@ void SFShowLigatures(SplineFont *sf,SplineChar *searchfor) {
 	choices = xmalloc((cnt+2)*sizeof(uint32_t *));
 	where = xmalloc((cnt+1)*sizeof(int));
 	if ( cnt==0 ) {
-	    choices[0] = copy("<No Ligatures>");
+	    choices[0] = xstrdup("<No Ligatures>");
 	    where[0] = -1;
 	    choices[1] = NULL;
     break;

@@ -279,7 +279,7 @@ return;
 	    if ( info->cvt!=NULL )
 		*(void **) (info->val) = (info->cvt)( _GResource_Res[pos].val, *(void **) (info->val) );
 	    else
-		*(char **) (info->val) = copy( _GResource_Res[pos].val );
+		*(char **) (info->val) = xstrdup_or_null( _GResource_Res[pos].val );
 	} else if ( info->type == rt_color ) {
 	    Color temp = _GImage_ColourFName(_GResource_Res[pos].val );
 	    if ( temp==-1 ) {
@@ -340,7 +340,7 @@ char *GResourceFindString(char *name) {
     if ( pos==-1 )
 return( NULL );
     else
-return( copy(_GResource_Res[pos].val));
+return( xstrdup_or_null(_GResource_Res[pos].val));
 }
 
 int GResourceFindBool(char *name, int def) {

@@ -324,8 +324,8 @@ return( NULL );
     ret->keys = xcalloc(ret->cnt,sizeof(char *));
     ret->values = xcalloc(ret->cnt,sizeof(char *));
     for ( i=0; i<dict->next; ++i ) {
-	ret->keys[i] = copy(dict->keys[i]);
-	ret->values[i] = copy(dict->values[i]);
+	ret->keys[i] = xstrdup_or_null(dict->keys[i]);
+	ret->values[i] = xstrdup_or_null(dict->values[i]);
     }
 
 return( ret );
@@ -411,12 +411,12 @@ return( -1 );
 	    dict->keys = xrealloc(dict->keys,dict->cnt*sizeof(char *));
 	    dict->values = xrealloc(dict->values,dict->cnt*sizeof(char *));
 	}
-	dict->keys[dict->next] = copy(key);
+	dict->keys[dict->next] = xstrdup_or_null(key);
 	dict->values[dict->next] = NULL;
 	++dict->next;
     }
     free(dict->values[i]);
-    dict->values[i] = copy(newval);
+    dict->values[i] = xstrdup_or_null(newval);
 return( i );
 }
 

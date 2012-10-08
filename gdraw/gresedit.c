@@ -88,7 +88,7 @@ static char *GFontSpec2String(GFont *font) {
     FontRequest rq;
 
     if ( font==NULL )
-return( copy(""));
+return( xstrdup(""));
 
     GDrawDecomposeFont(font,&rq);
     if ( rq.family_name!=NULL )
@@ -618,7 +618,7 @@ static void GRE_DoCancel(GRE *gre) {
 				    GImageDestroy(ri->image);
 				ri->image = temp;
 			        free(ri->filename);
-			        ri->filename = copy(extras->orig.sval);
+			        ri->filename = xstrdup_or_null(extras->orig.sval);
 			    }
 			}
 		    }
@@ -2263,7 +2263,7 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 		  break;
 		  case rt_image: {
 		    GResImage *ri = *(GResImage **) (extras->val);
-		    extras->orig.sval = copy( ri==NULL ? NULL : ri->filename );
+		    extras->orig.sval = xstrdup_or_null( ri==NULL ? NULL : ri->filename );
 		    lab[k].text = (uint32_t *) S_(extras->name);
 		    lab[k].text_is_1byte = true;
 		    gcd[k].gd.label = &lab[k];
@@ -2516,7 +2516,7 @@ void GResEdit(GResInfo *additional,const char *def_res_file,void (*change_res_fi
 	additional = &gdraw_ri;
 	re_end = NULL;
     }
-    oldimagepath = copy( _GGadget_ImagePath );
+    oldimagepath = xstrdup_or_null( _GGadget_ImagePath );
     GResEditDlg(additional,def_res_file,change_res_filename);
     if (( oldimagepath!=NULL && _GGadget_ImagePath==NULL ) ||
 	    ( oldimagepath==NULL && _GGadget_ImagePath!=NULL ) ||

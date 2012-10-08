@@ -2183,7 +2183,7 @@ static char *RandomPara(struct lang_frequencies *lf,
     char *pt = parabuf;
 
     if ( lf==NULL && chrs->cnt==0 )
-return( copy(""));
+return( xstrdup(""));
 
     for ( i=0 ; i<len; ++i ) {
 	if ( lf!=NULL )
@@ -2197,7 +2197,7 @@ return( copy(""));
 	--pt;
     *pt++ = '\n';
     *pt = '\0';
-return( copy( parabuf ));
+return( xstrdup_or_null( parabuf ));
 }
 
 char *RandomParaFromScriptLang(uint32_t script, uint32_t lang, SplineFont *sf,
@@ -2340,13 +2340,13 @@ char **SFScriptLangs(SplineFont *sf,struct lang_frequencies ***_freq) {
 			scripts[s]>>24, scripts[s]>>16, scripts[s]>>8, scripts[s],
 			lang_frequencies[i].lang>>24, lang_frequencies[i].lang>>16, lang_frequencies[i].lang>>8, lang_frequencies[i].lang );
 		freq[pos] = &lang_frequencies[i];
-		sl[pos++] = copy( buffer );
+		sl[pos++] = xstrdup_or_null( buffer );
 	    }
 	}
 	sprintf( buffer, "%c%c%c%c{dflt}",
 		scripts[s]>>24, scripts[s]>>16, scripts[s]>>8, scripts[s] );
 	freq[pos] = NULL;
-	sl[pos++] = copy( buffer );
+	sl[pos++] = xstrdup_or_null( buffer );
     }
     sl[pos] = NULL;
     if ( _freq!=NULL ) *_freq = freq;

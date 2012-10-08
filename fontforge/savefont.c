@@ -440,7 +440,7 @@ return( NULL );
 	bpt = buffer;
 	if (( *pt!='\n' && *pt!='\r') || (pt>buffer && pt[-1]=='\\') ||
 		(pt>buffer+1 && pt[-2]=='\\' && isspace(pt[-1])) ) {
-	    bpt = copy("");
+	    bpt = xstrdup("");
 	    while (true) {
 		loop = false;
 		if (( *pt!='\n' && *pt!='\r') || (pt>buffer && pt[-1]=='\\') ||
@@ -643,7 +643,7 @@ return( 0 );
 	    strcpy(pt+len,pt+2);
 	memcpy(pt,names[subfont],len);
     }
-    temp.fontname = copy(spt);
+    temp.fontname = xstrdup_or_null(spt);
     temp.fullname = xmalloc(strlen(temp.fullname)+strlen(names[subfont])+3);
     strcpy(temp.fullname,sf->fullname);
     strcat(temp.fullname," ");

@@ -1016,7 +1016,7 @@ static int GFileChooserBookmarks(GGadget *g, GEvent *e) {
 	mi = xcalloc((mcnt+bcnt+1),sizeof(GMenuItem));
 	for ( mcnt=0; gfcbookmarkmenu[mcnt].ti.text!=NULL || gfcbookmarkmenu[mcnt].ti.line; ++mcnt ) {
 	    mi[mcnt] = gfcbookmarkmenu[mcnt];
-	    mi[mcnt].ti.text = (uint32_t *) copy( (char *) mi[mcnt].ti.text);
+	    mi[mcnt].ti.text = (uint32_t *) xstrdup_or_null( (char *) mi[mcnt].ti.text);
 	    mi[mcnt].ti.userdata = gfc;
 	}
 	if ( gfc->hpos==0 )

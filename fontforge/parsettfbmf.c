@@ -539,7 +539,7 @@ return;
 	    sprintf(buf,"%d", sizes[i].ppem );
 	else
 	    sprintf(buf,"%d@%d", sizes[i].ppem, sizes[i].depth );
-	choices[i] = copy(buf);
+	choices[i] = xstrdup_or_null(buf);
     }
     /* When loading a ttf font with only bitmaps, and there's only one strike */
     /*  then just load that strike. Don't ask */

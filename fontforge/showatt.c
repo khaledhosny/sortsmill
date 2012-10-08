@@ -139,7 +139,7 @@ static void BuildMarkedLigatures(struct node *node,struct att_dlg *att) {
 	    if ( ap!=NULL ) {
 		sprintf(buf,_("Component %d %.30s (%d,%d)"),
 			k, ac->name, (int) ap->me.x, (int) ap->me.y );
-		node->children[j].label = copy(buf);
+		node->children[j].label = xstrdup_or_null(buf);
 		node->children[j++].parent = node;
 	    }
 	}
@@ -168,7 +168,7 @@ static void BuildMarkedChars(struct node *node,struct att_dlg *att) {
 	if ( ap!=NULL ) {
 	    sprintf(buf,"%.30s (%d,%d)", ac->name,
 		    (int) ap->me.x, (int) ap->me.y );
-	    node->children[j].label = copy(buf);
+	    node->children[j].label = xstrdup_or_null(buf);
 	    node->children[j++].parent = node;
 	}
     }
@@ -180,20 +180,20 @@ static void BuildBase(struct node *node,SplineChar **bases,enum anchor_type at, 
     int i;
 
     node->parent = parent;
-    node->label = copy(at==at_basechar?_("Base Glyphs"):
+    node->label = xstrdup_or_null(at==at_basechar?_("Base Glyphs"):
 			at==at_baselig?_("Base Ligatures"):
 			_("Base Marks"));
     for ( i=0; bases[i]!=NULL; ++i );
     if ( i==0 ) {
 	node->cnt = 1;
 	node->children = xcalloc(2,sizeof(struct node));
-	node->children[0].label = copy(_("Empty"));
+	node->children[0].label = xstrdup_or_null(_("Empty"));
 	node->children[0].parent = node;
     } else {
 	node->cnt = i;
 	node->children = xcalloc(i+1,sizeof(struct node));
 	for ( i=0; bases[i]!=NULL; ++i ) {
-	    node->children[i].label = copy(bases[i]->name);
+	    node->children[i].label = xstrdup_or_null(bases[i]->name);
 	    node->children[i].parent = node;
 	    node->children[i].u.sc = bases[i];
 	    node->children[i].build = at==at_baselig?BuildMarkedLigatures:BuildMarkedChars;
@@ -209,12 +209,12 @@ static void BuildMark(struct node *node,SplineChar **marks,AnchorClass *ac, stru
 
     node->parent = parent;
     sprintf(buf,_("Mark Class %.20s"),ac->name);
-    node->label = copy(buf);
+    node->label = xstrdup_or_null(buf);
     for ( i=0; marks[i]!=NULL; ++i );
     if ( i==0 ) {
 	node->cnt = 1;
 	node->children = xcalloc(2,sizeof(struct node));
-	node->children[0].label = copy(_("Empty"));
+	node->children[0].label = xstrdup_or_null(_("Empty"));
 	node->children[0].parent = node;
     } else {
 	node->cnt = i;
@@ -223,7 +223,7 @@ static void BuildMark(struct node *node,SplineChar **marks,AnchorClass *ac, stru
 	    for ( ap=marks[i]->anchor; ap!=NULL && (ap->type!=at_mark || ap->anchor!=ac); ap=ap->next );
 	    sprintf(buf,_("%.30s (%d,%d)"), marks[i]->name,
 		    (int) ap->me.x, (int) ap->me.y );
-	    node->children[i].label = copy(buf);
+	    node->children[i].label = xstrdup_or_null(buf);
 	    node->children[i].parent = node;
 	}
 	qsort(node->children,node->cnt,sizeof(struct node), node_alphabetize);
@@ -249,7 +249,7 @@ static void BuildAnchorLists(struct node *node,struct att_dlg *att) {
 	if ( entryexit==NULL ) {
 	    node->children = xcalloc(2,sizeof(struct node));
 	    node->cnt = 1;
-	    node->children[0].label = copy(_("Empty"));
+	    node->children[0].label = xstrdup_or_null(_("Empty"));
 	    node->children[0].parent = node;
 	} else {
 	    for ( cnt=0; entryexit[cnt]!=NULL; ++cnt );
@@ -257,7 +257,7 @@ static void BuildAnchorLists(struct node *node,struct att_dlg *att) {
 	    node->cnt = cnt;
 	    for ( cnt=0; entryexit[cnt]!=NULL; ++cnt ) {
 		node->children[cnt].u.sc = entryexit[cnt];
-		node->children[cnt].label = copy(entryexit[cnt]->name);
+		node->children[cnt].label = xstrdup_or_null(entryexit[cnt]->name);
 		node->children[cnt].parent = node;
 	    }
 	    qsort(node->children,node->cnt,sizeof(struct node), node_alphabetize);
@@ -276,14 +276,14 @@ static void BuildAnchorLists(struct node *node,struct att_dlg *att) {
 		if ( ent!=NULL ) {
 		    snprintf(buf,sizeof(buf), _("Entry (%d,%d)"),
 			    (int) ent->me.x, (int) ent->me.y);
-		    node->children[cnt].children[i].label = copy(buf);
+		    node->children[cnt].children[i].label = xstrdup_or_null(buf);
 		    node->children[cnt].children[i].parent = &node->children[cnt];
 		    ++i;
 		}
 		if ( ext!=NULL ) {
 		    snprintf(buf,sizeof(buf), _("Exit (%d,%d)"),
 			    (int) ext->me.x, (int) ext->me.y);
-		    node->children[cnt].children[i].label = copy(buf);
+		    node->children[cnt].children[i].label = xstrdup_or_null(buf);
 		    node->children[cnt].children[i].parent = &node->children[cnt];
 		    ++i;
 		}
@@ -382,7 +382,7 @@ static void BuildKC(struct node *node,struct att_dlg *att) {
 	}
 	if ( cnt2==0 || strlen(kc->firsts[i])==0 )
     continue;
-	firsts[cnt].label = copy(kc->firsts[i]);
+	firsts[cnt].label = xstrdup_or_null(kc->firsts[i]);
 	firsts[cnt].parent = node;
 	firsts[cnt].build = BuildKC2;
 	firsts[cnt++].u.index = i;
@@ -474,7 +474,7 @@ static void BuildFPSTRule(struct node *node,struct att_dlg *att) {
 			} else
 			    GrowBufferAddStr(&gb,fpst->bclassnames[r->u.class.bclasses[j]]);
 		    }
-		    lines[len].label = copy((const char *) gb.base);
+		    lines[len].label = xstrdup_or_null((const char *) gb.base);
 		    lines[len].parent = node;
 		}
 		++len;
@@ -489,7 +489,7 @@ static void BuildFPSTRule(struct node *node,struct att_dlg *att) {
 		    } else
 			GrowBufferAddStr(&gb,fpst->nclassnames[r->u.class.nclasses[j]]);
 		}
-		lines[len].label = copy((const char *) gb.base);
+		lines[len].label = xstrdup_or_null((const char *) gb.base);
 		lines[len].parent = node;
 	    }
 	    ++len;
@@ -504,7 +504,7 @@ static void BuildFPSTRule(struct node *node,struct att_dlg *att) {
 			} else
 			    GrowBufferAddStr(&gb,fpst->fclassnames[r->u.class.fclasses[j]]);
 		    }
-		    lines[len].label = copy((const char *) gb.base);
+		    lines[len].label = xstrdup_or_null((const char *) gb.base);
 		    lines[len].parent = node;
 		}
 		++len;
@@ -552,7 +552,7 @@ static void BuildFPSTRule(struct node *node,struct att_dlg *att) {
 		if ( i ) {
 		    sprintf(buf, _("Apply at %d %.80s"), r->lookups[j].seq,
 			    r->lookups[j].lookup->lookup_name );
-		    lines[len].label = copy(buf);
+		    lines[len].label = xstrdup_or_null(buf);
 		    lines[len].parent = node;
 		    lines[len].u.otl = r->lookups[j].lookup;
 		    lines[len].build = BuildGSUBlookups;
@@ -602,7 +602,7 @@ static void BuildFPST(struct node *node,struct att_dlg *att) {
 /* GT:  Contextual Positioning by classes */
 	    sprintf(buf, _("%s by %s"), _(type[fpst->type-pst_contextpos]),
 		    _(format[fpst->format]));
-	    lines[len].label = copy(buf);
+	    lines[len].label = xstrdup_or_null(buf);
 	    lines[len].parent = node;
 	}
 	++len;
@@ -641,7 +641,7 @@ static void BuildFPST(struct node *node,struct att_dlg *att) {
 	for ( j=0; j<fpst->rule_cnt; ++j ) {
 	    if ( i ) {
 		sprintf(buf, _("Rule %d"), j);
-		lines[len].label = copy(buf);
+		lines[len].label = xstrdup_or_null(buf);
 		lines[len].parent = node;
 		lines[len].u.index = j;
 		lines[len].build = BuildFPSTRule;
@@ -691,7 +691,7 @@ static void BuildASM(struct node *node,struct att_dlg *att) {
 	len = 0;
 
 	if ( i ) {
-	    lines[len].label = copy(_(type[sm->type]));
+	    lines[len].label = xstrdup_or_null(_(type[sm->type]));
 	    lines[len].parent = node;
 	}
 	++len;
@@ -713,7 +713,7 @@ static void BuildASM(struct node *node,struct att_dlg *att) {
 		sprintf(space, _("State %4d Next: "), j );
 		for ( k=0; k<sm->class_cnt; ++k )
 		    sprintf( space+strlen(space), "%5d", sm->state[j*sm->class_cnt+k].next_state );
-		lines[len].label = copy(space);
+		lines[len].label = xstrdup_or_null(space);
 		lines[len].parent = node;
 		lines[len].monospace = true;
 	    }
@@ -722,7 +722,7 @@ static void BuildASM(struct node *node,struct att_dlg *att) {
 		sprintf(space, _("State %4d Flags:"), j );
 		for ( k=0; k<sm->class_cnt; ++k )
 		    sprintf( space+strlen(space), " %04x", sm->state[j*sm->class_cnt+k].flags );
-		lines[len].label = copy(space);
+		lines[len].label = xstrdup_or_null(space);
 		lines[len].parent = node;
 		lines[len].monospace = true;
 	    }
@@ -735,7 +735,7 @@ static void BuildASM(struct node *node,struct att_dlg *att) {
 			    strcat(space,"     ");
 			else
 			    sprintf( space+strlen(space), " %.80s", sm->state[j*sm->class_cnt+k].u.context.mark_lookup->lookup_name );
-		    lines[len].label = copy(space);
+		    lines[len].label = xstrdup_or_null(space);
 		    lines[len].parent = node;
 		    lines[len].monospace = true;
 		}
@@ -747,7 +747,7 @@ static void BuildASM(struct node *node,struct att_dlg *att) {
 			    strcat(space,"     ");
 			else
 			    sprintf( space+strlen(space), " %.80s", sm->state[j*sm->class_cnt+k].u.context.cur_lookup->lookup_name );
-		    lines[len].label = copy(space);
+		    lines[len].label = xstrdup_or_null(space);
 		    lines[len].parent = node;
 		    lines[len].monospace = true;
 		}
@@ -757,7 +757,7 @@ static void BuildASM(struct node *node,struct att_dlg *att) {
 	for ( j=0; j<scnt; ++j ) {
 	    if ( i ) {
 		sprintf(buf, _("Nested Substitution %.80s"), used[j]->lookup_name );
-		lines[len].label = copy(buf);
+		lines[len].label = xstrdup_or_null(buf);
 		lines[len].parent = node;
 		lines[len].u.otl = used[j];
 		lines[len].build = BuildGSUBlookups;
@@ -816,7 +816,7 @@ static void BuildKern2(struct node *node,struct att_dlg *att) {
 			sprintf( buffer+strlen(buffer), " ∆x_adv²=%d", pst->u.pair.vr[1].h_adv_off );
 		    if ( pst->u.pair.vr[1].v_adv_off!=0 )
 			sprintf( buffer+strlen(buffer), " ∆y_adv²=%d", pst->u.pair.vr[1].v_adv_off );
-		    lines[cnt].label = copy(buffer);
+		    lines[cnt].label = xstrdup_or_null(buffer);
 		    lines[cnt].parent = node;
 		}
 		++cnt;
@@ -832,7 +832,7 @@ static void BuildKern2(struct node *node,struct att_dlg *att) {
 			    sprintf( buffer, "%.80s  ∆x_adv²=%d", kp->sc->name, kp->off );
 			else
 			    sprintf( buffer, "%.80s  ∆x_adv¹=%d", kp->sc->name, kp->off );
-			lines[cnt].label = copy(buffer);
+			lines[cnt].label = xstrdup_or_null(buffer);
 			lines[cnt].parent = node;
 		    }
 		    ++cnt;
@@ -896,7 +896,7 @@ static void BuildKern(struct node *node,struct att_dlg *att) {
 		}
 		if ( found ) {
 		    if ( doit ) {
-			lines[cnt].label = copy(sc->name);
+			lines[cnt].label = xstrdup_or_null(sc->name);
 			lines[cnt].parent = node;
 			lines[cnt].build = BuildKern2;
 			lines[cnt].u.sc = sc;
@@ -957,7 +957,7 @@ static void BuildPST(struct node *node,struct att_dlg *att) {
 				sprintf(lbuf, "%s %s %s", sc->name,
 					pst->type==pst_ligature ? "<=" : "=>",
 					pst->u.subs.variant );
-			    lines[cnt].label = copy(lbuf);
+			    lines[cnt].label = xstrdup_or_null(lbuf);
 			    lines[cnt].parent = node;
 			} else {
 			    if ( pst->type==pst_position )
@@ -1023,7 +1023,7 @@ static void BuildGSUBlookups(struct node *node,struct att_dlg *att) {
 	subslist[cnt].parent = node;
 	subslist[cnt].u.sub = sub;
 	subslist[cnt].build = BuildSubtableDispatch;
-	subslist[cnt].label = copy(sub->subtable_name);
+	subslist[cnt].label = xstrdup_or_null(sub->subtable_name);
     }
 
     node->children = subslist;
@@ -1064,7 +1064,7 @@ static void BuildGSUBfeatures(struct node *node,struct att_dlg *att) {
 		if ( lookups ) {
 		    lookups[cnt].parent = node;
 		    lookups[cnt].build = BuildGSUBlookups;
-		    lookups[cnt].label = copy(otl->lookup_name);
+		    lookups[cnt].label = xstrdup_or_null(otl->lookup_name);
 		    lookups[cnt].u.otl = otl;
 		}
 		++cnt;
@@ -1139,7 +1139,7 @@ static void BuildGSUBscript(struct node *node,struct att_dlg *att) {
 	} else
 	    buf[7]='\0';
 	strcat(buf,_("Language"));
-	langnodes[i].label = copy(buf);
+	langnodes[i].label = xstrdup_or_null(buf);
 	langnodes[i].build = BuildGSUBlang;
 	langnodes[i].parent = node;
     }
@@ -1155,7 +1155,7 @@ static void BuildLookupList(struct node *node,struct att_dlg *att) {
     for ( i=0; otll[i]!=NULL; ++i );
     lookupnodes = xcalloc(i+1,sizeof(struct node));
     for ( i=0; otll[i]!=NULL; ++i ) {
-	lookupnodes[i].label = copy(otll[i]->lookup_name);
+	lookupnodes[i].label = xstrdup_or_null(otll[i]->lookup_name);
 	lookupnodes[i].parent = node;
 	lookupnodes[i].build = BuildGSUBlookups;
 	lookupnodes[i].u.otl = otll[i];
@@ -1170,11 +1170,11 @@ static void BuildJSTFPrio(struct node *node, struct node *parent, OTLookup **otl
 
     node->parent = parent;
     if ( otll==NULL || otll[0]==NULL ) {
-	node->label = copy(label_if_none);
+	node->label = xstrdup_or_null(label_if_none);
 	node->children_checked = true;
 	node->cnt = 0;
     } else {
-	node->label = copy(label_if_some);
+	node->label = xstrdup_or_null(label_if_some);
 	node->build = BuildLookupList;
 	node->u.otll = otll;
     }
@@ -1196,7 +1196,7 @@ static void BuildJSTFlang(struct node *node,struct att_dlg *att) {
 	BuildJSTFPrio(&kids[4],&prionodes[i],jlang->prios[i].disableShrink,_("Lookups Disabled for Shrinkage"), _("No Lookups Disabled for Shrinkage"));
 	BuildJSTFPrio(&kids[5],&prionodes[i],jlang->prios[i].maxShrink,_("Lookups Limiting Shrinkage"), _("No Lookups Limiting Shrinkage"));
 	sprintf( buf, _("Priority: %d"), i );
-	prionodes[i].label = copy(buf);
+	prionodes[i].label = xstrdup_or_null(buf);
 	prionodes[i].parent = node;
 	prionodes[i].children_checked = true;
 	prionodes[i].children = kids;
@@ -1245,7 +1245,7 @@ static void BuildJSTFscript(struct node *node,struct att_dlg *att) {
 	    sc = SFGetChar(sf,-1,start);
 	    *end = ch;
 	    if ( sc!=NULL ) {
-		extenders[gc].label = copy(sc->name);
+		extenders[gc].label = xstrdup_or_null(sc->name);
 		extenders[gc].parent = &langnodes[0];
 		extenders[gc].children_checked = true;
 		extenders[gc].u.sc = sc;
@@ -1259,11 +1259,11 @@ static void BuildJSTFscript(struct node *node,struct att_dlg *att) {
     if ( gc==0 ) {
 	free(extenders);
 	extenders=NULL;
-	langnodes[0].label = copy(_("No Extender Glyphs"));
+	langnodes[0].label = xstrdup_or_null(_("No Extender Glyphs"));
 	langnodes[0].parent = node;
 	langnodes[0].children_checked = true;
     } else {
-	langnodes[0].label = copy(_("Extender Glyphs"));
+	langnodes[0].label = xstrdup_or_null(_("Extender Glyphs"));
 	langnodes[0].parent = node;
 	langnodes[0].children_checked = true;
 	langnodes[0].children = extenders;
@@ -1286,7 +1286,7 @@ static void BuildJSTFscript(struct node *node,struct att_dlg *att) {
 	} else
 	    buf[7]='\0';
 	strcat(buf,_("Language"));
-	langnodes[i].label = copy(buf);
+	langnodes[i].label = xstrdup_or_null(buf);
 	langnodes[i].build = BuildJSTFlang;
 	langnodes[i].parent = node;
 	langnodes[i].u.jlang = jlang;
@@ -1336,7 +1336,7 @@ return;
 	if ( pst->u.lcaret.carets[j]!=0 ) {
 	    sprintf( buffer,"%d", pst->u.lcaret.carets[j] );
 	    lcars[i].parent = node;
-	    lcars[i++].label = copy(buffer);
+	    lcars[i++].label = xstrdup_or_null(buffer);
 	}
     }
 }
@@ -1368,7 +1368,7 @@ static void BuildLcar(struct node *node,struct att_dlg *att) {
 			glyphs[lcnt].parent = node;
 			glyphs[lcnt].build = BuildLCarets;
 			glyphs[lcnt].u.sc = sf->glyphs[i];
-			glyphs[lcnt].label = copy(sf->glyphs[i]->name);
+			glyphs[lcnt].label = xstrdup_or_null(sf->glyphs[i]->name);
 		    }
 		    ++lcnt;
 		}
@@ -1425,7 +1425,7 @@ static void BuildGdefs(struct node *node,struct att_dlg *att) {
 			gdefc==3 ? _("Mark") :
 			    _("Component") );
 		    chars[ccnt].parent = node;
-		    chars[ccnt].label = copy(buffer);;
+		    chars[ccnt].label = xstrdup_or_null(buffer);;
 		}
 		++ccnt;
 	    }
@@ -1481,7 +1481,7 @@ static void BuildGDEF(struct node *node,struct att_dlg *att) {
 	node->children = xcalloc(gdef+lcar+mclass+1,sizeof(struct node));
 	node->cnt = gdef+lcar+mclass;
 	if ( gdef ) {
-	    node->children[0].label = copy(_("Glyph Definition Sub-Table"));
+	    node->children[0].label = xstrdup_or_null(_("Glyph Definition Sub-Table"));
 	    node->children[0].build = BuildGdefs;
 	    node->children[0].parent = node;
 	}
@@ -1489,12 +1489,12 @@ static void BuildGDEF(struct node *node,struct att_dlg *att) {
 /* GT: Here caret means where to place the cursor inside a ligature. So OpenType */
 /* GT: allows there to be a typing cursor inside a ligature (for instance you */
 /* GT: can have a cursor between f and i in the "fi" ligature) */
-	    node->children[gdef].label = copy(_("Ligature Caret Sub-Table"));
+	    node->children[gdef].label = xstrdup_or_null(_("Ligature Caret Sub-Table"));
 	    node->children[gdef].build = BuildLcar;
 	    node->children[gdef].parent = node;
 	}
 	if ( mclass ) {
-	    node->children[gdef+lcar].label = copy(_("Mark Attachment Classes"));
+	    node->children[gdef+lcar].label = xstrdup_or_null(_("Mark Attachment Classes"));
 	    node->children[gdef+lcar].build = BuildMClass;
 	    node->children[gdef+lcar].parent = node;
 	}
@@ -1516,7 +1516,7 @@ static void BuildBaseLangs(struct node *node,struct att_dlg *att) {
 	sprintf( buffer, _("%c%c%c%c  Min Extent=%d, Max Extent=%d"),
 		lf->lang>>24, lf->lang>>16, lf->lang>>8, lf->lang,
 		lf->descent, lf->ascent );
-	langs[cnt].label = copy(buffer);
+	langs[cnt].label = xstrdup_or_null(buffer);
 	langs[cnt].parent = node;
 	if ( lf->features!=NULL ) {
 	    langs[cnt].build = BuildBaseLangs;
@@ -1553,7 +1553,7 @@ static void BuildBASE(struct node *node,struct att_dlg *att) {
 	} else
 	    sprintf( buffer, _("Script '%c%c%c%c' "),
 		    bs->script>>24, bs->script>>16, bs->script>>8, bs->script );
-	scripts[cnt].label = copy(buffer);
+	scripts[cnt].label = xstrdup_or_null(buffer);
 	scripts[cnt].parent = node;
 	if ( bs->langs!=NULL ) {
 	    scripts[cnt].build = BuildBaseLangs;
@@ -1584,17 +1584,17 @@ static void BuildBsLnTable(struct node *node,struct att_dlg *att) {
 	    (def_baseline&0x1f)==2 ? "ideo" :
 	    (def_baseline&0x1f)==3 ? "hang" :
 	    (def_baseline&0x1f)==4 ? "math" : "????" );
-    node->children[0].label = copy(buffer);
+    node->children[0].label = xstrdup_or_null(buffer);
     node->children[0].parent = node;
     sprintf( buffer, _("Offsets from def. baseline:  romn: %d  idcn: %d  ideo: %d  hang: %d  math: %d"),
 	    offsets[0], offsets[1], offsets[2], offsets[3], offsets[4] );
-    node->children[1].label = copy(buffer);
+    node->children[1].label = xstrdup_or_null(buffer);
     node->children[1].parent = node;
     if ( def_baseline&0x100 ) {
-	node->children[2].label = copy(_("All glyphs have the same baseline"));
+	node->children[2].label = xstrdup_or_null(_("All glyphs have the same baseline"));
 	node->children[2].parent = node;
     } else {
-	node->children[2].label = copy(_("Per glyph baseline data"));
+	node->children[2].label = xstrdup_or_null(_("Per glyph baseline data"));
 	node->children[2].parent = node;
 	node->children[2].children_checked = true;
 	node->children[2].children = glyphs = xcalloc(_sf->glyphcnt+1,sizeof(struct node));
@@ -1605,7 +1605,7 @@ static void BuildBsLnTable(struct node *node,struct att_dlg *att) {
 		    (baselines[gid])==2 ? "ideo" :
 		    (baselines[gid])==3 ? "hang" :
 		    (baselines[gid])==4 ? "math" : "????" );
-	    glyphs[i].label = copy(buffer);
+	    glyphs[i].label = xstrdup_or_null(buffer);
 	    glyphs[i++].parent = &node->children[2];
 	}
 	node->children[2].cnt = i;
@@ -1654,7 +1654,7 @@ static void BuildOpticalBounds(struct node *node,struct att_dlg *att) {
 			sprintf(buffer+strlen(buffer), _("  Right Bound=%d"),
 				-right->u.pos.h_adv_off );
 		    chars[ccnt].parent = node;
-		    chars[ccnt].label = copy(buffer);
+		    chars[ccnt].label = xstrdup_or_null(buffer);
 		}
 		++ccnt;
 	    }
@@ -1747,7 +1747,7 @@ static void BuildProperties(struct node *node,struct att_dlg *att) {
 			}
 		    }
 		    chars[ccnt].parent = node;
-		    chars[ccnt++].label = copy(buffer);
+		    chars[ccnt++].label = xstrdup_or_null(buffer);
 		}
 	    }
 	}
@@ -1785,7 +1785,7 @@ static void BuildKernTable(struct node *node,struct att_dlg *att) {
 		if ( doit ) {
 		    kerns[cnt].parent = node;
 		    kerns[cnt].build = BuildGSUBlookups;
-		    kerns[cnt].label = copy(otl->lookup_name);
+		    kerns[cnt].label = xstrdup_or_null(otl->lookup_name);
 		    kerns[cnt].u.otl = otl;
 		}
 		++cnt;
@@ -1822,7 +1822,7 @@ static void BuildMorxTable(struct node *node,struct att_dlg *att) {
 		if ( doit ) {
 		    lookups[cnt].parent = node;
 		    lookups[cnt].build = BuildGSUBlookups;
-		    lookups[cnt].label = copy(otl->lookup_name);
+		    lookups[cnt].label = xstrdup_or_null(otl->lookup_name);
 		    lookups[cnt].u.otl = otl;
 		}
 		++cnt;
@@ -1875,7 +1875,7 @@ return;
 /* GT: English uses "script" to mean a general writing style (latin, greek, kanji) */
 /* GT: and the cursive handwriting style. Here we mean the general writing system. */
 	strcat(buf,S_("writing system|Script"));
-	scriptnodes[i].label = copy(buf);
+	scriptnodes[i].label = xstrdup_or_null(buf);
 	scriptnodes[i].build = BuildGSUBscript;
 	scriptnodes[i].parent = node;
     }
@@ -1913,7 +1913,7 @@ static void BuildJSTFTable(struct node *node,struct att_dlg *att) {
 /* GT: English uses "script" to me a general writing style (latin, greek, kanji) */
 /* GT: and the cursive handwriting style. Here we mean the general writing system. */
 	strcat(buf,S_("writing system|Script"));
-	scriptnodes[i].label = copy(buf);
+	scriptnodes[i].label = xstrdup_or_null(buf);
 	scriptnodes[i].build = BuildJSTFscript;
 	scriptnodes[i].parent = node;
 	scriptnodes[i].u.jscript = jscript;
@@ -2004,19 +2004,19 @@ static void BuildTop(struct att_dlg *att) {
 
     if ( hasgsub+hasgpos+hasgdef+hasmorx+haskern+haslcar+hasopbd+hasprop+hasbase+hasjstf==0 ) {
 	tables = xcalloc(2,sizeof(struct node));
-	tables[0].label = copy(_("No Advanced Typography"));
+	tables[0].label = xstrdup_or_null(_("No Advanced Typography"));
     } else {
 	tables = xcalloc((hasgsub||hasgpos||hasgdef||hasbase||hasjstf)+
 	    (hasmorx||haskern||haslcar||hasopbd||hasprop||hasbsln)+1,sizeof(struct node));
 	i=0;
 	if ( hasgsub || hasgpos || hasgdef || hasbase || hasjstf ) {
-	    tables[i].label = copy(_("OpenType Tables"));
+	    tables[i].label = xstrdup_or_null(_("OpenType Tables"));
 	    tables[i].children_checked = true;
 	    tables[i].children = xcalloc(hasgsub+hasgpos+hasgdef+hasbase+hasjstf+1,sizeof(struct node));
 	    tables[i].cnt = hasgsub + hasgpos + hasgdef + hasbase + hasjstf;
 	    if ( hasbase ) {
 		int sub_cnt= (sf->horiz_base!=NULL) + (sf->vert_base!=NULL), j=0;
-		tables[i].children[0].label = copy(_("'BASE' Baseline Table"));
+		tables[i].children[0].label = xstrdup_or_null(_("'BASE' Baseline Table"));
 		tables[i].children[0].tag = CHR('B','A','S','E');
 		tables[i].children[0].parent = &tables[i];
 		tables[i].children[0].children_checked = true;
@@ -2026,7 +2026,7 @@ static void BuildTop(struct att_dlg *att) {
 		    snprintf(buffer,sizeof(buffer),
 			    P_("Horizontal: %d baseline","Horizontal: %d baselines",_sf->horiz_base->baseline_cnt),
 			    _sf->horiz_base->baseline_cnt );
-		    tables[i].children[0].children[j].label = copy(buffer);
+		    tables[i].children[0].children[j].label = xstrdup_or_null(buffer);
 		    tables[i].children[0].children[j].horizontal = true;
 		    tables[i].children[0].children[j].parent = &tables[i].children[0];
 		    tables[i].children[0].children[j].build = BuildBASE;
@@ -2036,7 +2036,7 @@ static void BuildTop(struct att_dlg *att) {
 		    snprintf(buffer,sizeof(buffer),
 			    P_("Vertical: %d baseline","Vertical: %d baselines",_sf->vert_base->baseline_cnt),
 			    _sf->vert_base->baseline_cnt );
-		    tables[i].children[0].children[j].label = copy(buffer);
+		    tables[i].children[0].children[j].label = xstrdup_or_null(buffer);
 		    tables[i].children[0].children[j].horizontal = false;
 		    tables[i].children[0].children[j].parent = &tables[i].children[0];
 		    tables[i].children[0].children[j].build = BuildBASE;
@@ -2044,26 +2044,26 @@ static void BuildTop(struct att_dlg *att) {
 		}
 	    }
 	    if ( hasgdef ) {
-		tables[i].children[hasbase].label = copy(_("'GDEF' Glyph Definition Table"));
+		tables[i].children[hasbase].label = xstrdup_or_null(_("'GDEF' Glyph Definition Table"));
 		tables[i].children[hasbase].tag = CHR('G','D','E','F');
 		tables[i].children[hasbase].build = BuildGDEF;
 		tables[i].children[hasbase].parent = &tables[i];
 	    }
 	    if ( hasgpos ) {
-		tables[i].children[hasgdef+hasbase].label = copy(_("'GPOS' Glyph Positioning Table"));
+		tables[i].children[hasgdef+hasbase].label = xstrdup_or_null(_("'GPOS' Glyph Positioning Table"));
 		tables[i].children[hasgdef+hasbase].tag = CHR('G','P','O','S');
 		tables[i].children[hasgdef+hasbase].build = BuildTable;
 		tables[i].children[hasgdef+hasbase].parent = &tables[i];
 	    }
 	    if ( hasgsub ) {
-		tables[i].children[hasgdef+hasgpos+hasbase].label = copy(_("'GSUB' Glyph Substitution Table"));
+		tables[i].children[hasgdef+hasgpos+hasbase].label = xstrdup_or_null(_("'GSUB' Glyph Substitution Table"));
 		tables[i].children[hasgdef+hasgpos+hasbase].tag = CHR('G','S','U','B');
 		tables[i].children[hasgdef+hasgpos+hasbase].build = BuildTable;
 		tables[i].children[hasgdef+hasgpos+hasbase].parent = &tables[i];
 	    }
 	    if ( hasjstf ) {
 		int k = hasgdef+hasgpos+hasbase+hasgsub;
-		tables[i].children[k].label = copy(_("'JSTF' Justification Table"));
+		tables[i].children[k].label = xstrdup_or_null(_("'JSTF' Justification Table"));
 		tables[i].children[k].tag = CHR('J','S','T','F');
 		tables[i].children[k].parent = &tables[i];
 		tables[i].children[k].build = BuildJSTFTable;
@@ -2072,42 +2072,42 @@ static void BuildTop(struct att_dlg *att) {
 	}
 	if ( hasmorx || haskern || haslcar || hasopbd || hasprop || hasbsln ) {
 	    int j = 0;
-	    tables[i].label = copy(_("Apple Advanced Typography"));
+	    tables[i].label = xstrdup_or_null(_("Apple Advanced Typography"));
 	    tables[i].children_checked = true;
 	    tables[i].children = xcalloc(hasmorx+haskern+haslcar+hasopbd+hasprop+hasvkern+haskc+hasvkc+hasbsln+1,sizeof(struct node));
 	    tables[i].cnt = hasmorx+haskern+hasopbd+hasprop+haslcar+hasvkern+haskc+hasvkc+hasbsln;
 	    if ( hasbsln ) {
-		tables[i].children[j].label = copy(_("'bsln' Horizontal Baseline Table"));
+		tables[i].children[j].label = xstrdup_or_null(_("'bsln' Horizontal Baseline Table"));
 		tables[i].children[j].tag = CHR('b','s','l','n');
 		tables[i].children[j].build = BuildBsLnTable;
 		tables[i].children[j++].parent = &tables[i];
 	    }
 	    if ( haskern ) {
-		tables[i].children[j].label = copy(_("'kern' Horizontal Kerning Table"));
+		tables[i].children[j].label = xstrdup_or_null(_("'kern' Horizontal Kerning Table"));
 		tables[i].children[j].tag = CHR('k','e','r','n');
 		tables[i].children[j].build = BuildKernTable;
 		tables[i].children[j++].parent = &tables[i];
 	    }
 	    if ( haslcar ) {
-		tables[i].children[j].label = copy(_("'lcar' Ligature Caret Table"));
+		tables[i].children[j].label = xstrdup_or_null(_("'lcar' Ligature Caret Table"));
 		tables[i].children[j].tag = CHR('l','c','a','r');
 		tables[i].children[j].build = BuildLcar;
 		tables[i].children[j++].parent = &tables[i];
 	    }
 	    if ( hasmorx ) {
-		tables[i].children[j].label = copy(_("'morx' Glyph Extended Metamorphosis Table"));
+		tables[i].children[j].label = xstrdup_or_null(_("'morx' Glyph Extended Metamorphosis Table"));
 		tables[i].children[j].tag = CHR('m','o','r','x');
 		tables[i].children[j].build = BuildMorxTable;
 		tables[i].children[j++].parent = &tables[i];
 	    }
 	    if ( hasopbd ) {
-		tables[i].children[j].label = copy(_("'opbd' Optical Bounds Table"));
+		tables[i].children[j].label = xstrdup_or_null(_("'opbd' Optical Bounds Table"));
 		tables[i].children[j].tag = CHR('o','p','b','d');
 		tables[i].children[j].build = BuildOpticalBounds;
 		tables[i].children[j++].parent = &tables[i];
 	    }
 	    if ( hasprop ) {
-		tables[i].children[j].label = copy(_("'prop' Glyph Properties Table"));
+		tables[i].children[j].label = xstrdup_or_null(_("'prop' Glyph Properties Table"));
 		tables[i].children[j].tag = CHR('p','r','o','p');
 		tables[i].children[j].build = BuildProperties;
 		tables[i].children[j++].parent = &tables[i];
@@ -2919,7 +2919,7 @@ static void ReadKids(struct nested_file *nf,int desired_nest,struct node *parent
 	    parent->children = xrealloc(parent->children,(max+=10)*sizeof( struct node ));
 	    memset(parent->children+i,0,(max-i)*sizeof(struct node));
 	}
-	parent->children[i].label = copy(nf->linebuf);
+	parent->children[i].label = xstrdup_or_null(nf->linebuf);
 	parent->children[i].parent = parent;
 	ReadKids(nf,desired_nest+1,&parent->children[i]);
 	++i;
@@ -2943,9 +2943,9 @@ static void BuildFCmpNodes(struct att_dlg *att, SplineFont *sf1, SplineFont *sf2
     att->tables = tables = xcalloc(2,sizeof(struct node));
     att->current = tables;
     if ( !CompareFonts(sf1,att->fv1->b.map,sf2,tmp,flags) && ftell(tmp)==0 ) {
-	tables[0].label = copy(_("No differences found"));
+	tables[0].label = xstrdup_or_null(_("No differences found"));
     } else {
-	tables[0].label = copy(_("Differences..."));
+	tables[0].label = xstrdup_or_null(_("Differences..."));
 	rewind(tmp);
 	memset(&nf,0,sizeof(nf));
 	nf.file = tmp;

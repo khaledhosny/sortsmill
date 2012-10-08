@@ -1638,7 +1638,7 @@ return( false );
 	AW_ScriptSerifChecker(&wi);
 	AW_InitCharPairs(&wi);
     } else {
-	if ( !AW_ReadKernPairFile(copy(kernfile),&wi))
+	if ( !AW_ReadKernPairFile(xstrdup_or_null(kernfile),&wi))
 return( false );
     }
     wi.done = true;

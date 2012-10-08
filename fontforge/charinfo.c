@@ -802,7 +802,7 @@ void KpMDParse(SplineChar *sc,struct lookup_subtable *sub,
 		pst->next = sc->possub;
 		sc->possub = pst;
 		pst->u.pair.vr = (struct vr *) xzalloc(sizeof (struct vr [2]));
-		pst->u.pair.paired = copy(start);
+		pst->u.pair.paired = xstrdup_or_null(start);
 	    }
 	    VRDevTabParse(&pst->u.pair.vr[0],&possub[cols*i+PAIR_DX1+1]);
 	    VRDevTabParse(&pst->u.pair.vr[1],&possub[cols*i+PAIR_DX2]+1);
@@ -1044,7 +1044,7 @@ struct glyphvariants *GV_ParseConstruction(struct glyphvariants *gv,
     gv->part_cnt = rows;
     gv->parts = xcalloc(rows,sizeof(struct gv_part));
     for ( i=0; i<rows; ++i ) {
-	gv->parts[i].component = copy(stuff[i*cols+0].u.md_str);
+	gv->parts[i].component = xstrdup_or_null(stuff[i*cols+0].u.md_str);
 	gv->parts[i].is_extender = stuff[i*cols+1].u.md_ival;
 	gv->parts[i].startConnectorLength = stuff[i*cols+2].u.md_ival;
 	gv->parts[i].endConnectorLength = stuff[i*cols+3].u.md_ival;
@@ -1199,9 +1199,9 @@ static PST *CI_PSTCopy(PST *pst) {
 	newpst = (PST *) xzalloc(sizeof (PST));
 	*newpst = *pst;
 	if ( newpst->type==pst_ligature ) {
-	    newpst->u.lig.components = copy(pst->u.lig.components);
+	    newpst->u.lig.components = xstrdup_or_null(pst->u.lig.components);
 	} else if ( newpst->type==pst_pair ) {
-	    newpst->u.pair.paired = copy(pst->u.pair.paired);
+	    newpst->u.pair.paired = xstrdup_or_null(pst->u.pair.paired);
 	    newpst->u.pair.vr = (struct vr *) xzalloc(sizeof (struct vr [2]));
 	    memcpy(newpst->u.pair.vr,pst->u.pair.vr,sizeof(struct vr [2]));
 	    newpst->u.pair.vr[0].adjust = ValDevTabCopy(pst->u.pair.vr[0].adjust);
@@ -1210,7 +1210,7 @@ static PST *CI_PSTCopy(PST *pst) {
 	    newpst->u.lcaret.carets = xmalloc(pst->u.lcaret.cnt*sizeof(uint16_t));
 	    memcpy(newpst->u.lcaret.carets,pst->u.lcaret.carets,pst->u.lcaret.cnt*sizeof(uint16_t));
 	} else if ( newpst->type==pst_substitution || newpst->type==pst_multiple || newpst->type==pst_alternate )
-	    newpst->u.subs.variant = copy(pst->u.subs.variant);
+	    newpst->u.subs.variant = xstrdup_or_null(pst->u.subs.variant);
 	newpst->next = NULL;
 	if ( head==NULL )
 	    head = newpst;
@@ -1226,10 +1226,10 @@ static SplineChar *CI_SCDuplicate(SplineChar *sc) {
     SplineChar *newsc;		/* copy everything we care about in this dlg */
 
     newsc = (SplineChar *) xzalloc(sizeof (SplineChar));
-    newsc->name = copy(sc->name);
+    newsc->name = xstrdup_or_null(sc->name);
     newsc->unicodeenc = sc->unicodeenc;
     newsc->orig_pos = sc->orig_pos;
-    newsc->comment = copy(sc->comment);
+    newsc->comment = xstrdup_or_null(sc->comment);
     newsc->unlink_rm_ovrlp_save_undo = sc->unlink_rm_ovrlp_save_undo;
     newsc->glyph_class = sc->glyph_class;
     newsc->color = sc->color;
@@ -1323,7 +1323,7 @@ return( false );
 		    ci->changes = baduniscl;
 		}
 		baduni->unicodeenc = oldsc->unicodeenc;
-		free(baduni->name); baduni->name = copy(oldsc->name);
+		free(baduni->name); baduni->name = xstrdup_or_null(oldsc->name);
 	    } else {
 		if ( baduni!=NULL ) {
 		    if ( ff_ask(_("Multiple"),(const char **) buts,0,1,_("There is already a glyph with this encoding,\nwhich must be unique within a font,\ndo you want to swap the encodings of the two?"))==1 )
@@ -1347,7 +1347,7 @@ return( false );
 			badnamescl->next = ci->changes;
 			ci->changes = badnamescl;
 		    }
-		    free(badname->name); badname->name = copy(oldsc->name);
+		    free(badname->name); badname->name = xstrdup_or_null(oldsc->name);
 		}
 	    }
 	}
@@ -1357,9 +1357,9 @@ return( false );
     if ( !sameuni )
 	ci->uni_change = true;
     free( newsc->name ); free( newsc->comment );
-    newsc->name = copy( name );
+    newsc->name = xstrdup_or_null( name );
     newsc->unicodeenc = unienc;
-    newsc->comment = copy( comment );
+    newsc->comment = xstrdup_or_null( comment );
 return( true );
 }
 
@@ -1541,7 +1541,7 @@ static void CI_ApplyAll(CharInfo *ci) {
 	if ( sc->name==NULL || strcmp( sc->name,cached->name )!=0 ) {
 	    if ( sc->name!=NULL )
 		SFGlyphRenameFixup(sf,sc->name,cached->name);
-	    free(sc->name); sc->name = copy(cached->name);
+	    free(sc->name); sc->name = xstrdup_or_null(cached->name);
 	    sc->namechanged = true;
 	    GlyphHashFree(sf);
 	}
@@ -1566,7 +1566,7 @@ static void CI_ApplyAll(CharInfo *ci) {
 		alt->unienc = sc->unicodeenc;
 	    sc->unicodeenc = cached->unicodeenc;
 	}
-	free(sc->comment); sc->comment = copy(cached->comment);
+	free(sc->comment); sc->comment = xstrdup_or_null(cached->comment);
 	sc->unlink_rm_ovrlp_save_undo = cached->unlink_rm_ovrlp_save_undo;
 	sc->glyph_class = cached->glyph_class;
 	if ( sc->color != cached->color )
@@ -1734,9 +1734,9 @@ return( AdobeLigatureFormat(name));
     }
 
     if ( uni==0xfb03 && alt_lig==1 )
-	components = copy("ff i");
+	components = xstrdup("ff i");
     else if ( uni==0xfb04 && alt_lig==1 )
-	components = copy("ff l");
+	components = xstrdup("ff l");
     else if ( alt!=NULL ) {
 	if ( alt[1]==0x2044 && (alt[2]==0 || alt[3]==0) && alt_lig==1 ) {
 	    u_strcpy(hack,alt);
@@ -1818,7 +1818,7 @@ return( components );
 
     if ( strchr(name,'_')==NULL )
 return( NULL );
-    pt = components = copy(name);
+    pt = components = xstrdup_or_null(name);
     while ( (pt = strchr(pt,'_'))!=NULL )
 	*pt = ' ';
 return( components );
@@ -2368,7 +2368,7 @@ char *DevTab_Dlg(GGadget *g, int r, int c) {
 	free(dvd.devtab.corrections);
 return( ret );
     } else
-return( copy(dvstr));
+return( xstrdup_or_null(dvstr));
 }
 
 static void finishedit(GGadget *g, int r, int c, int wasnew);
@@ -2495,7 +2495,7 @@ void SCSubtableDefaultSubsCheck(SplineChar *sc, struct lookup_subtable *sub,
     if ( lookup_type == gsub_single && sub->suffix != NULL ) {
 	alt = SuffixCheck(sc,sub->suffix);
 	if ( alt!=NULL ) {
-	    possub[r*col_cnt+1].u.md_str = copy( alt->name );
+	    possub[r*col_cnt+1].u.md_str = xstrdup_or_null( alt->name );
 return;
 	}
     }
@@ -2552,7 +2552,7 @@ return;
 		}
 	    }
 	    if ( alt!=NULL ) {
-		possub[r*col_cnt+1].u.md_str = copy( alt->name );
+		possub[r*col_cnt+1].u.md_str = xstrdup_or_null( alt->name );
 return;
 	    }
 	} else if ( lookup_type == gsub_ligature ) {
@@ -3664,7 +3664,7 @@ return;
     }
     mds = xcalloc(gv->part_cnt*cols,sizeof(struct matrix_data));
     for ( j=0; j<gv->part_cnt; ++j ) {
-	mds[j*cols+0].u.md_str = copy(gv->parts[j].component);
+	mds[j*cols+0].u.md_str = xstrdup_or_null(gv->parts[j].component);
 	mds[j*cols+1].u.md_ival = gv->parts[j].is_extender;
 	mds[j*cols+2].u.md_ival = gv->parts[j].startConnectorLength;
 	mds[j*cols+3].u.md_ival = gv->parts[j].endConnectorLength;
@@ -3871,7 +3871,7 @@ static void CIFillup(CharInfo *ci) {
 	    mds[pst->type][j+SIM_DY_ADV].u.md_ival = pst->u.pos.v_adv_off;
 	    ValDevTabToStrings(mds[pst_position],j+SIM_DX+1,pst->u.pos.adjust);
 	} else if ( pst->type==pst_pair ) {
-	    mds[pst->type][j+1].u.md_str = copy(pst->u.pair.paired);
+	    mds[pst->type][j+1].u.md_str = xstrdup_or_null(pst->u.pair.paired);
 	    mds[pst->type][j+PAIR_DX1].u.md_ival = pst->u.pair.vr[0].xoff;
 	    mds[pst->type][j+PAIR_DY1].u.md_ival = pst->u.pair.vr[0].yoff;
 	    mds[pst->type][j+PAIR_DX_ADV1].u.md_ival = pst->u.pair.vr[0].h_adv_off;
@@ -5164,7 +5164,7 @@ void FVSelectByPST(FontView *fv) {
 		    for ( sub=otl->subtables; sub!=NULL; sub=sub->next )
 			if ( sub->kc==NULL ) {
 			    if ( ti!=NULL ) {
-				ti[cnt].text = (uint32_t *) copy(sub->subtable_name);
+				ti[cnt].text = (uint32_t *) xstrdup_or_null(sub->subtable_name);
 			        ti[cnt].text_is_1byte = true;
 			        ti[cnt].userdata = sub;
 			        ti[cnt].selected = cnt==0;

@@ -250,7 +250,7 @@ void *GResource_font_cvt(char *val, void *def) {
     }
 
     if ( *pt!='\0' )
-	rq.utf8_family_name = freeme = copy(pt);
+	rq.utf8_family_name = freeme = xstrdup_or_null(pt);
 		
     fi = GDrawInstanciateFont(NULL,&rq);
 
@@ -1157,7 +1157,7 @@ void GGadgetSetTitle8WithMn(GGadget *g,const char *title) {
 	char *pos = pt+1;
 	mnc = utf8_ildb((const char **) &pos);
 	g->mnemonic = mnc;
-	freeme = copy(title);
+	freeme = xstrdup_or_null(title);
 	for ( pt = freeme + (pt-title); *pt; ++pt )
 	    *pt = pt[1];
 	title = freeme;

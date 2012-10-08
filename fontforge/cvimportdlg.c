@@ -641,11 +641,11 @@ static void _Import(CharView *cv,BitmapView *bv,FontView *fv) {
 	    cur_formats = xcalloc(extras+cnt+1,sizeof(GTextInfo));
 	    for ( cnt=0; base[cnt].text!=NULL; ++cnt ) {
 		cur_formats[cnt] = base[cnt];
-		cur_formats[cnt].text = (uint32_t *) copy( (char *) base[cnt].text );
+		cur_formats[cnt].text = (uint32_t *) xstrdup_or_null( (char *) base[cnt].text );
 	    }
 	    for ( i=extras=0; py_ie[i].name!=NULL; ++i ) {
 		if ( py_ie[i].import!=NULL ) {
-		    cur_formats[cnt+extras].text = (uint32_t *) copy(py_ie[i].name);
+		    cur_formats[cnt+extras].text = (uint32_t *) xstrdup_or_null(py_ie[i].name);
 		    cur_formats[cnt+extras].text_is_1byte = true;
 		    cur_formats[cnt+extras].userdata = (void *) (intptr_t) (fv_pythonbase+i);
 		    ++extras;

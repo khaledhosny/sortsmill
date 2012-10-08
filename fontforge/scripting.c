@@ -87,16 +87,16 @@ static const char *toknames[] = {
     NULL };
 
 char *utf82script_copy(const char *ustr) {
-return( use_utf8_in_script ? copy(ustr) : utf8_2_latin1_copy(ustr));
+return( use_utf8_in_script ? xstrdup_or_null(ustr) : utf8_2_latin1_copy(ustr));
 }
 
 char *script2utf8_copy(const char *str) {
-return( use_utf8_in_script ? copy(str) : latin1_2_utf8_copy(str));
+return( use_utf8_in_script ? xstrdup_or_null(str) : latin1_2_utf8_copy(str));
 }
 
 static char *script2latin1_copy(const char *str) {
     if ( !use_utf8_in_script )
-return( copy(str));
+return( xstrdup_or_null(str));
     else {
 	uint32_t *t = utf82u_copy(str);
 	char *ret = cu_copy(t);
@@ -130,7 +130,7 @@ static Array *arraycopy(Array *a) {
     memcpy(c->vals,a->vals,c->argc*sizeof(Val));
     for ( i=0; i<a->argc; ++i ) {
 	if ( a->vals[i].type==v_str )
-	    c->vals[i].u.sval = copy(a->vals[i].u.sval);
+	    c->vals[i].u.sval = xstrdup_or_null(a->vals[i].u.sval);
 	else if ( a->vals[i].type==v_arr )
 	    c->vals[i].u.aval = arraycopy(a->vals[i].u.aval);
     }
@@ -143,7 +143,7 @@ static void array_copy_into(Array *dest,int offset,Array *src) {
     memcpy(dest->vals+offset,src->vals,src->argc*sizeof(Val));
     for ( i=0; i<src->argc; ++i ) {
 	if ( src->vals[i].type==v_str )
-	    dest->vals[i+offset].u.sval = copy(src->vals[i].u.sval);
+	    dest->vals[i+offset].u.sval = xstrdup_or_null(src->vals[i].u.sval);
 	else if ( src->vals[i].type==v_arr )
 	    dest->vals[i+offset].u.aval = arraycopy(src->vals[i].u.aval);
     }
@@ -188,7 +188,7 @@ static void DicaNewEntry(struct dictionary *dica,char *name,Val *val) {
 	dica->max += 10;
 	dica->entries = xrealloc(dica->entries,dica->max*sizeof(struct dictentry));
     }
-    dica->entries[dica->cnt].name = copy(name);
+    dica->entries[dica->cnt].name = xstrdup_or_null(name);
     dica->entries[dica->cnt].val.type = v_void;
     val->type = v_lval;
     val->u.lval = &dica->entries[dica->cnt].val;
@@ -339,7 +339,7 @@ static char *forcePSName_copy(Context *c,char *str) {
 		*pt=='%' || *pt=='/' )
 	    ScriptErrorString(c,"Invalid character in PostScript name token (probably fontname): ", str );
     }
-return( copy( str ));
+return( xstrdup_or_null( str ));
 }
 
 static char *forceASCIIcopy(Context *c,char *str) {
@@ -349,14 +349,14 @@ static char *forceASCIIcopy(Context *c,char *str) {
 	if ( *pt<' ' || *pt>=0x7f )
 	    ScriptErrorString(c,"Invalid ASCII character in: ", str );
     }
-return( copy( str ));
+return( xstrdup_or_null( str ));
 }
 
 static void dereflvalif(Val *val) {
     if ( val->type == v_lval ) {
 	*val = *val->u.lval;
 	if ( val->type==v_str )
-	    val->u.sval = copy(val->u.sval);
+	    val->u.sval = xstrdup_or_null(val->u.sval);
     }
 }
 
@@ -465,9 +465,9 @@ static void bAskUser(Context *c) {
 	c->return_val.type = v_str;
 	if ( fgets(buffer,sizeof(buffer),stdin)==NULL ) {
 	    clearerr(stdin);
-	    c->return_val.u.sval = copy("");
+	    c->return_val.u.sval = xstrdup("");
 	} else if ( buffer[0]=='\0' || buffer[0]=='\n' || buffer[0]=='\r' )
-	    c->return_val.u.sval = copy(def);
+	    c->return_val.u.sval = xstrdup_or_null(def);
 	else {
 	    t1 = def2utf8_copy(buffer);
 	    c->return_val.u.sval = utf82script_copy(t1);
@@ -485,7 +485,7 @@ static void bAskUser(Context *c) {
 	c->return_val.type = v_str;
 	c->return_val.u.sval = utf82script_copy(ret);
 	if ( ret==NULL )
-	    c->return_val.u.sval = copy("");
+	    c->return_val.u.sval = xstrdup("");
 	else
 	    free(ret);
     }
@@ -526,7 +526,7 @@ static void bTypeOf(Context *c) {
 	ScriptError( c, "Wrong number of arguments" );
 
     c->return_val.type = v_str;
-    c->return_val.u.sval = copy( typenames[c->a.vals[1].type] );
+    c->return_val.u.sval = xstrdup_or_null( typenames[c->a.vals[1].type] );
 }
 
 static void bStrlen(Context *c) {
@@ -595,7 +595,7 @@ static void bStrSplit(Context *c) {
 	} else {
 	    if ( *pt!='\0' ) {
 		c->return_val.u.aval->vals[cnt].type = v_str;
-		c->return_val.u.aval->vals[cnt].u.sval = copy(pt);
+		c->return_val.u.aval->vals[cnt].u.sval = xstrdup_or_null(pt);
 	    }
 	}
     }
@@ -772,7 +772,7 @@ static void bStrftime(Context *c) {
 	(void) setlocale(LC_TIME, oldloc);
 
     c->return_val.type = v_str;
-    c->return_val.u.sval = copy(buffer);
+    c->return_val.u.sval = xstrdup_or_null(buffer);
 }
 
 static void bisupper(Context *c) {
@@ -902,7 +902,7 @@ static void btoupper(Context *c) {
 	ScriptError( c, "Wrong number of arguments" );
     else if ( c->a.vals[1].type==v_str ) {
 	c->return_val.type = v_str;
-	c->return_val.u.sval = pt = copy(ipt = c->a.vals[1].u.sval);
+	c->return_val.u.sval = pt = xstrdup_or_null(ipt = c->a.vals[1].u.sval);
 	while ( *ipt ) {
 	    ch = utf8_ildb(&ipt);
 	    if ( ch==-1 )
@@ -926,7 +926,7 @@ static void btolower(Context *c) {
 	ScriptError( c, "Wrong number of arguments" );
     else if ( c->a.vals[1].type==v_str ) {
 	c->return_val.type = v_str;
-	c->return_val.u.sval = pt = copy(ipt = c->a.vals[1].u.sval);
+	c->return_val.u.sval = pt = xstrdup_or_null(ipt = c->a.vals[1].u.sval);
 	while ( *ipt ) {
 	    ch = utf8_ildb(&ipt);
 	    if ( ch==-1 )
@@ -950,7 +950,7 @@ static void btomirror(Context *c) {
 	ScriptError( c, "Wrong number of arguments" );
     else if ( c->a.vals[1].type==v_str ) {
 	c->return_val.type = v_str;
-	c->return_val.u.sval = pt = copy(ipt = c->a.vals[1].u.sval);
+	c->return_val.u.sval = pt = xstrdup_or_null(ipt = c->a.vals[1].u.sval);
 	while ( *ipt ) {
 	    ch = utf8_ildb(&ipt);
 	    if ( ch==-1 )
@@ -1069,7 +1069,7 @@ static void bNameFromUnicode(Context *c) {
     }
     
     c->return_val.type = v_str;
-    c->return_val.u.sval = copy(StdGlyphName(buffer,c->a.vals[1].u.ival,uniinterp,for_new_glyphs));
+    c->return_val.u.sval = xstrdup_or_null(StdGlyphName(buffer,c->a.vals[1].u.ival,uniinterp,for_new_glyphs));
 }
 
 static void bChr(Context *c) {
@@ -1084,7 +1084,7 @@ static void bChr(Context *c) {
 	    ScriptError( c, "Bad value for argument" );
 	buf[0] = c->a.vals[1].u.ival; buf[1] = 0;
 	c->return_val.type = v_str;
-	c->return_val.u.sval = copy(buf);
+	c->return_val.u.sval = xstrdup_or_null(buf);
     } else if ( c->a.vals[1].type==v_arr || c->a.vals[1].type==v_arrfree ) {
 	Array *arr = c->a.vals[1].u.aval;
 	temp = xmalloc((arr->argc+1)*sizeof(char));
@@ -1259,7 +1259,7 @@ static char *ToString(Val *val) {
     char buffer[40];
 
     if ( val->type==v_str ) {
-return( copy(val->u.sval) );
+return( xstrdup_or_null(val->u.sval) );
     } else if ( val->type==v_arr || val->type==v_arrfree ) {
 	char **results, *ret, *pt;
 	int len;
@@ -1296,7 +1296,7 @@ return( ret );
 	sprintf( buffer, "<void>");
     else
 	sprintf( buffer, "<" "???" ">");
-return( copy( buffer ));
+return( xstrdup_or_null( buffer ));
 }
 
 static void bToString(Context *c) {
@@ -1470,7 +1470,7 @@ static void bLoadFileToString(Context *c) {
     free(name);
 
     if ( f==NULL )
-	c->return_val.u.sval = copy("");
+	c->return_val.u.sval = xstrdup("");
     else {
 	fseek(f,0,SEEK_END);
 	len = ftell(f);
@@ -2299,9 +2299,9 @@ static void bPrintSetup(Context *c) {
     
     printtype = c->a.vals[1].u.ival;
     if ( c->a.argc>=3 && printtype==4 )
-	printcommand = copy(c->a.vals[2].u.sval);
+	printcommand = xstrdup_or_null(c->a.vals[2].u.sval);
     else if ( c->a.argc>=3 && (printtype==0 || printtype==1) )
-	printlazyprinter = copy(c->a.vals[2].u.sval);
+	printlazyprinter = xstrdup_or_null(c->a.vals[2].u.sval);
 }
 
 static void bPrintFont(Context *c) {
@@ -3367,7 +3367,7 @@ static void bSetTTFName(Context *c) {
     else if ( strid<0 || strid>=ttf_namemax )
 	ScriptError(c,"Bad value for string id");
 
-    u = copy(c->a.vals[3].u.sval);
+    u = xstrdup_or_null(c->a.vals[3].u.sval);
     if ( *u=='\0' ) {
 	free(u);
 	u = NULL;
@@ -3409,9 +3409,9 @@ static void bGetTTFName(Context *c) {
 
     for ( ln = sf->names; ln!=NULL && ln->lang!=lang; ln = ln->next );
     if ( ln==NULL || ln->names[strid]==NULL )
-	c->return_val.u.sval = copy("");
+	c->return_val.u.sval = xstrdup("");
     else
-	c->return_val.u.sval = copy(ln->names[strid]);
+	c->return_val.u.sval = xstrdup_or_null(ln->names[strid]);
 }
 
 static void bSetItalicAngle(Context *c) {
@@ -3860,7 +3860,7 @@ static void bSetCharName(Context *c) {
     sc = GetOneSelChar(c);
     uni = sc->unicodeenc;
     name = c->a.vals[1].u.sval;
-    comment = copy(sc->comment);
+    comment = xstrdup_or_null(sc->comment);
 
     if ( c->a.argc!=3 || c->a.vals[2].u.ival ) {
 	uni = UniFromName(name,c->curfv->sf->uni_interp,c->curfv->map->enc);
@@ -3882,13 +3882,13 @@ static void bSetUnicodeValue(Context *c) {
 	ScriptError(c,"Bad argument type");
     sc = GetOneSelChar(c);
     uni = c->a.vals[1].u.ival;
-    name = copy(sc->name);
-    comment = copy(sc->comment);
+    name = xstrdup_or_null(sc->name);
+    comment = xstrdup_or_null(sc->comment);
 
     if ( c->a.argc!=3 || c->a.vals[2].u.ival ) {
 	char buffer[400];
 	free(name);
-	name = copy(StdGlyphName(buffer,uni,c->curfv->sf->uni_interp,c->curfv->sf->for_new_glyphs));
+	name = xstrdup_or_null(StdGlyphName(buffer,uni,c->curfv->sf->uni_interp,c->curfv->sf->for_new_glyphs));
     }
     SCSetMetaData(sc,name,uni,comment);
     /*SCLigDefault(sc);*/
@@ -5835,9 +5835,9 @@ static void bGetPrivateEntry(Context *c) {
     c->return_val.type = v_str;
     if ( c->curfv->sf->private==NULL ||
 	    (i = PSDictFindEntry(c->curfv->sf->private,c->a.vals[1].u.sval))==-1 )
-	c->return_val.u.sval = copy("");
+	c->return_val.u.sval = xstrdup("");
     else
-	c->return_val.u.sval = copy(c->curfv->sf->private->values[i]);
+	c->return_val.u.sval = xstrdup_or_null(c->curfv->sf->private->values[i]);
 }
 
 static void bSetWidth(Context *c) {
@@ -6051,7 +6051,7 @@ static void bMMInstanceNames(Context *c) {
     c->return_val.u.aval->vals = xmalloc(mm->instance_count*sizeof(Val));
     for ( i=0; i<mm->instance_count; ++i ) {
 	c->return_val.u.aval->vals[i].type = v_str;
-	c->return_val.u.aval->vals[i].u.sval = copy(mm->instances[i]->fontname);
+	c->return_val.u.aval->vals[i].u.sval = xstrdup_or_null(mm->instances[i]->fontname);
     }
 }
 
@@ -6070,7 +6070,7 @@ static void bMMAxisNames(Context *c) {
     c->return_val.u.aval->vals = xmalloc(mm->axis_count*sizeof(Val));
     for ( i=0; i<mm->axis_count; ++i ) {
 	c->return_val.u.aval->vals[i].type = v_str;
-	c->return_val.u.aval->vals[i].u.sval = copy(mm->axes[i]);
+	c->return_val.u.aval->vals[i].u.sval = xstrdup_or_null(mm->axes[i]);
     }
 }
 
@@ -6108,7 +6108,7 @@ static void bMMWeightedName(Context *c) {
 	ScriptError( c, "Not a multiple master font" );
 
     c->return_val.type = v_str;
-    c->return_val.u.sval = copy(mm->normal->fontname);
+    c->return_val.u.sval = xstrdup_or_null(mm->normal->fontname);
 }
 
 static void bMMChangeInstance(Context *c) {
@@ -6413,7 +6413,7 @@ static void bAddAnchorClass(Context *c) {
 
     ac = (AnchorClass *) xzalloc(sizeof (AnchorClass));
 
-    ac->name = copy( c->a.vals[1].u.sval );
+    ac->name = xstrdup_or_null( c->a.vals[1].u.sval );
     for ( t=sf->anchor; t!=NULL; t=t->next )
 	if ( strcmp(ac->name,t->name)==0 )
     break;
@@ -6621,7 +6621,7 @@ static void bAddPosSub(Context *c) {
 	temp.u.pos.h_adv_off = c->a.vals[4].u.ival;
 	temp.u.pos.v_adv_off = c->a.vals[5].u.ival;
     } else if ( temp.type==pst_pair ) {
-	temp.u.pair.paired = copy(c->a.vals[2].u.sval);
+	temp.u.pair.paired = xstrdup_or_null(c->a.vals[2].u.sval);
 	temp.u.pair.vr = (struct vr *) xzalloc(sizeof (struct vr [2]));
 	temp.u.pair.vr[0].xoff = c->a.vals[3].u.ival;
 	temp.u.pair.vr[0].yoff = c->a.vals[4].u.ival;
@@ -6632,7 +6632,7 @@ static void bAddPosSub(Context *c) {
 	temp.u.pair.vr[1].h_adv_off = c->a.vals[9].u.ival;
 	temp.u.pair.vr[1].v_adv_off = c->a.vals[10].u.ival;
     } else {
-	temp.u.subs.variant = copy(c->a.vals[2].u.sval);
+	temp.u.subs.variant = xstrdup_or_null(c->a.vals[2].u.sval);
 	if ( temp.type==pst_ligature )
 	    temp.u.lig.lig = sc;
     }
@@ -6894,7 +6894,7 @@ static void bAddLookup(Context *c) {
     }
     otl->lookup_type = type;
     otl->lookup_flags = c->a.vals[3].u.ival;
-    otl->lookup_name = copy(c->a.vals[1].u.sval);
+    otl->lookup_name = xstrdup_or_null(c->a.vals[1].u.sval);
     otl->features = ParseFeatureList(c,c->a.vals[4].u.aval);
     if ( otl->features!=NULL && (otl->features->featuretag==CHR('l','i','g','a') || otl->features->featuretag==CHR('r','l','i','g')))
 	otl->store_in_afm = true;
@@ -6943,7 +6943,7 @@ static char *Tag2Str(uint32_t tag, int ismac) {
 	buffer[3] = tag&0xff;
 	buffer[4] = '\0';
     }
-return( copy(buffer ));
+return( xstrdup_or_null(buffer ));
 }
 
 static void bGetLookupInfo(Context *c) {
@@ -6966,7 +6966,7 @@ static void bGetLookupInfo(Context *c) {
     c->return_val.u.aval->argc = 3;
     c->return_val.u.aval->vals = xmalloc(3*sizeof(Val));
     c->return_val.u.aval->vals[0].type = v_str;
-    c->return_val.u.aval->vals[0].u.sval = copy(
+    c->return_val.u.aval->vals[0].u.sval = xstrdup_or_null(
 	    otl->lookup_type==gpos_single ? "GPOS_single" :
 	    otl->lookup_type==gpos_pair ? "GPOS_pair" :
 	    otl->lookup_type==gpos_cursive ? "GPOS_cursive" :
@@ -7045,7 +7045,7 @@ static void bGetLookupSubtables(Context *c) {
     c->return_val.u.aval->vals = xmalloc(cnt*sizeof(Val));
     for ( sub=otl->subtables, cnt=0; sub!=NULL; sub=sub->next, ++cnt ) {
 	c->return_val.u.aval->vals[cnt].type = v_str;
-	c->return_val.u.aval->vals[cnt].u.sval = copy( sub->subtable_name );
+	c->return_val.u.aval->vals[cnt].u.sval = xstrdup_or_null( sub->subtable_name );
     }
 }
 
@@ -7075,7 +7075,7 @@ static void bGetLookups(Context *c) {
     c->return_val.u.aval->vals = xmalloc(cnt*sizeof(Val));
     for ( otl=base, cnt=0; otl!=NULL; otl=otl->next, ++cnt ) {
 	c->return_val.u.aval->vals[cnt].type = v_str;
-	c->return_val.u.aval->vals[cnt].u.sval = copy( otl->lookup_name );
+	c->return_val.u.aval->vals[cnt].u.sval = xstrdup_or_null( otl->lookup_name );
     }
 }
 
@@ -7113,7 +7113,7 @@ static void bAddLookupSubtable(Context *c) {
     }
     sub = (struct lookup_subtable *) xzalloc(sizeof (struct lookup_subtable));
     sub->lookup = otl;
-    sub->subtable_name = copy(c->a.vals[2].u.sval);
+    sub->subtable_name = xstrdup_or_null(c->a.vals[2].u.sval);
     if ( after!=NULL ) {
 	sub->next = after->next;
 	after->next = sub;
@@ -7143,7 +7143,7 @@ static void bGetLookupOfSubtable(Context *c) {
     if ( sub==NULL )
 	ScriptErrorString(c,"Unknown lookup subtable",c->a.vals[1].u.sval);
     c->return_val.type = v_str;
-    c->return_val.u.sval = copy( sub->lookup->lookup_name );
+    c->return_val.u.sval = xstrdup_or_null( sub->lookup->lookup_name );
 }
 
 static void bGetSubtableOfAnchorClass(Context *c) {
@@ -7162,7 +7162,7 @@ static void bGetSubtableOfAnchorClass(Context *c) {
     if ( ac==NULL )
 	ScriptErrorString(c,"Unknown anchor class",c->a.vals[1].u.sval);
     c->return_val.type = v_str;
-    c->return_val.u.sval = copy( ac->subtable->subtable_name );
+    c->return_val.u.sval = xstrdup_or_null( ac->subtable->subtable_name );
 }
 
 static void bAddSizeFeature(Context *c) {
@@ -7213,7 +7213,7 @@ static void bAddSizeFeature(Context *c) {
 		found_english = true;
 	    cur = (struct otfname *) xzalloc(sizeof (*cur));
 	    cur->lang = subarr->vals[0].u.ival;
-	    cur->name = copy(subarr->vals[1].u.sval);
+	    cur->name = xstrdup_or_null(subarr->vals[1].u.sval);
 	    if ( last==NULL )
 		sf->fontstyle_name = cur;
 	    else
@@ -7478,7 +7478,7 @@ return;
     } else {
 	if ( strmatch( c->a.vals[1].u.sval,"Name")==0 ) {
 	    c->return_val.type = v_str;
-	    c->return_val.u.sval = copy(sc->name);
+	    c->return_val.u.sval = xstrdup_or_null(sc->name);
 	} else if ( strmatch( c->a.vals[1].u.sval,"Unicode")==0 )
 	    c->return_val.u.ival = sc->unicodeenc;
 	else if ( strmatch( c->a.vals[1].u.sval,"Encoding")==0 )
@@ -7521,7 +7521,7 @@ return;
 	    c->return_val.u.aval->vals = xmalloc(i*sizeof(Val));
 	    for ( i=0, layer=0; layer<sc->layer_cnt; ++layer ) {
 		for ( ref=sc->layers[layer].refs; ref!=NULL; ref=ref->next, ++i ) {
-		    c->return_val.u.aval->vals[i].u.sval = copy(ref->sc->name);
+		    c->return_val.u.aval->vals[i].u.sval = xstrdup_or_null(ref->sc->name);
 		    c->return_val.u.aval->vals[i].type = v_str;
 		}
 	    }
@@ -7547,7 +7547,7 @@ return;
 	    }
 	} else if ( strmatch( c->a.vals[1].u.sval,"Comment")==0 ) {
 	    c->return_val.type = v_str;
-	    c->return_val.u.sval = sc->comment?copy(sc->comment):copy("");
+	    c->return_val.u.sval = sc->comment?xstrdup_or_null(sc->comment):xstrdup_or_null("");
 	} else {
 	    SplineCharFindBounds(sc,&b);
 	    if ( strmatch( c->a.vals[1].u.sval,"LBearing")==0 )
@@ -7612,9 +7612,9 @@ static void bGetAnchorPoints(Context *c) {
 	    temp->vals = xcalloc(5,sizeof(Val));
 	}
 	temp->vals[0].type = v_str;
-	temp->vals[0].u.sval = copy(ap->anchor->name);
+	temp->vals[0].u.sval = xstrdup_or_null(ap->anchor->name);
 	temp->vals[1].type = v_str;
-	temp->vals[1].u.sval = copy(FindNameOfFlag(ap_types,ap->type));
+	temp->vals[1].u.sval = xstrdup_or_null(FindNameOfFlag(ap_types,ap->type));
 	temp->vals[2].type = v_real;
 	temp->vals[2].u.fval = ap->me.x;
 	temp->vals[3].type = v_real;
@@ -7678,7 +7678,7 @@ static void bGetPosSub(Context *c) {
 		      case pst_position:
 			temp->argc = 6;
 			temp->vals = xcalloc(7,sizeof(Val));
-			temp->vals[1].u.sval = copy("Position");
+			temp->vals[1].u.sval = xstrdup("Position");
 			for ( k=2; k<6; ++k ) {
 			    temp->vals[k].type = v_int;
 			    temp->vals[k].u.ival =
@@ -7688,9 +7688,9 @@ static void bGetPosSub(Context *c) {
 		      case pst_pair:
 			temp->argc = 11;
 			temp->vals = xcalloc(11,sizeof(Val));
-			temp->vals[1].u.sval = copy("Pair");
+			temp->vals[1].u.sval = xstrdup("Pair");
 			temp->vals[2].type = v_str;
-			temp->vals[2].u.sval = copy(pst->u.pair.paired);
+			temp->vals[2].u.sval = xstrdup_or_null(pst->u.pair.paired);
 			for ( k=3; k<11; ++k ) {
 			    temp->vals[k].type = v_int;
 			    temp->vals[k].u.ival =
@@ -7700,9 +7700,9 @@ static void bGetPosSub(Context *c) {
 		      case pst_substitution:
 			temp->argc = 3;
 			temp->vals = xcalloc(4,sizeof(Val));
-			temp->vals[1].u.sval = copy("Substitution");
+			temp->vals[1].u.sval = xstrdup("Substitution");
 			temp->vals[2].type = v_str;
-			temp->vals[2].u.sval = copy(pst->u.subs.variant);
+			temp->vals[2].u.sval = xstrdup_or_null(pst->u.subs.variant);
 		      break;
 		      case pst_alternate:
 		      case pst_multiple:
@@ -7715,7 +7715,7 @@ static void bGetPosSub(Context *c) {
 			}
 			temp->argc = 2+subcnt;
 			temp->vals = xcalloc(2+subcnt,sizeof(Val));
-			temp->vals[1].u.sval = copy(pst->type==pst_alternate?"AltSubs":
+			temp->vals[1].u.sval = xstrdup_or_null(pst->type==pst_alternate?"AltSubs":
 					    pst->type==pst_multiple?"MultSubs":
 			                    "Ligature");
 			for ( pt=pst->u.mult.components, subcnt=0; *pt; ) {
@@ -7732,7 +7732,7 @@ static void bGetPosSub(Context *c) {
 		    }
 		    if ( ret->vals[cnt].type==v_arr ) {
 			temp->vals[0].type = v_str;
-			temp->vals[0].u.sval = copy(pst->subtable->subtable_name);
+			temp->vals[0].u.sval = xstrdup_or_null(pst->subtable->subtable_name);
 			temp->vals[1].type = v_str;
 		    }
 		}
@@ -7749,11 +7749,11 @@ static void bGetPosSub(Context *c) {
 			    temp->argc = 11;
 			    temp->vals = xcalloc(temp->argc,sizeof(Val));
 			    temp->vals[0].type = v_str;
-			    temp->vals[0].u.sval = copy(kp->subtable->subtable_name);
+			    temp->vals[0].u.sval = xstrdup_or_null(kp->subtable->subtable_name);
 			    temp->vals[1].type = v_str;
-			    temp->vals[1].u.sval = copy("Pair");
+			    temp->vals[1].u.sval = xstrdup("Pair");
 			    temp->vals[2].type = v_str;
-			    temp->vals[2].u.sval = copy(kp->sc->name);
+			    temp->vals[2].u.sval = xstrdup_or_null(kp->sc->name);
 			    for ( k=3; k<11; ++k ) {
 				temp->vals[k].type = v_int;
 				temp->vals[k].u.ival = 0;
@@ -8326,7 +8326,7 @@ return( 2 );
 
     if ( ud_cnt >= ud_max )
 	userdefined = xrealloc(userdefined,(ud_max+=20)*sizeof(struct builtins));
-    userdefined[ud_cnt].name = copy(name);
+    userdefined[ud_cnt].name = xstrdup_or_null(name);
     userdefined[ud_cnt].func = func;
     userdefined[ud_cnt].nofontok = !needs_font;
 return( true );
@@ -8958,7 +8958,7 @@ static void handlename(Context *c,Val *val) {
 		    }
 		}
 		val->type = v_str;
-		val->u.sval = copy(sf==NULL?"":sf->fontname);
+		val->u.sval = xstrdup_or_null(sf==NULL?"":sf->fontname);
 	    } else if ( strcmp(name,"$fontname")==0 || strcmp(name,"$familyname")==0 ||
 		    strcmp(name,"$fullname")==0 || strcmp(name,"$weight")==0 ||
 		    strcmp(name,"$copyright")==0 || strcmp(name,"$filename")==0 ||
@@ -8966,7 +8966,7 @@ static void handlename(Context *c,Val *val) {
 		char *t;
 		if ( c->curfv==NULL ) ScriptError(c,"No current font");
 		val->type = v_str;
-		t = copy(strcmp(name,"$fontname")==0?c->curfv->sf->fontname:
+		t = xstrdup_or_null(strcmp(name,"$fontname")==0?c->curfv->sf->fontname:
 			name[2]=='a'?c->curfv->sf->familyname:
 			name[2]=='u'?c->curfv->sf->fullname:
 			name[2]=='e'?c->curfv->sf->weight:
@@ -8976,7 +8976,7 @@ static void handlename(Context *c,Val *val) {
 				    c->curfv->sf->version);
 		val->u.sval = utf82script_copy(t);
 		if ( val->u.sval==NULL )
-		    val->u.sval = copy("");
+		    val->u.sval = xstrdup("");
 		free(t);
 	    } else if ( strcmp(name,"$iscid")==0 ) {
 		if ( c->curfv==NULL ) ScriptError(c,"No current font");
@@ -8989,10 +8989,10 @@ static void handlename(Context *c,Val *val) {
 		if ( c->curfv==NULL ) ScriptError(c,"No current font");
 		val->type = v_str;
 		if ( c->curfv->sf->cidmaster==NULL )
-		    val->u.sval = copy("");
+		    val->u.sval = xstrdup("");
 		else {
 		    SplineFont *sf = c->curfv->sf->cidmaster;
-		    t = copy(strcmp(name,"$cidfontname")==0?sf->fontname:
+		    t = xstrdup_or_null(strcmp(name,"$cidfontname")==0?sf->fontname:
 			    name[5]=='a'?sf->familyname:
 			    name[5]=='u'?sf->fullname:
 			    name[5]=='e'?sf->weight:
@@ -9072,7 +9072,7 @@ static void handlename(Context *c,Val *val) {
 		//
 		//sprintf(name,"%d", library_version_configuration.library_source_versiondate);
 		sprintf(name,"%s", PACKAGE_VERSION);
-		val->u.sval = copy(name);
+		val->u.sval = xstrdup_or_null(name);
 	    } else if ( strcmp(name,"$haspython")==0 ) {
 		val->type = v_int;
 #ifdef _NO_PYTHON
@@ -9123,7 +9123,7 @@ static void term(Context *c,Val *val) {
 	*val = c->tok_val;
     } else if ( tok==tt_string ) {
 	val->type = v_str;
-	val->u.sval = copy( c->tok_text );
+	val->u.sval = xstrdup_or_null( c->tok_text );
     } else if ( tok==tt_name ) {
 	handlename(c,val);
     } else if ( tok==tt_minus || tok==tt_plus || tok==tt_not || tok==tt_bitnot ) {
@@ -9187,7 +9187,7 @@ static void term(Context *c,Val *val) {
 		    } else if ( strcmp(c->tok_text,"t")==0 ) {
 			pt = strrchr(val->u.sval,'/');
 			if ( pt!=NULL ) {
-			    char *ret = copy(pt+1);
+			    char *ret = xstrdup_or_null(pt+1);
 			    free(val->u.sval);
 			    val->u.sval = ret;
 			}
@@ -9201,7 +9201,7 @@ static void term(Context *c,Val *val) {
 			if ( pt==NULL ) pt=val->u.sval;
 			ept = strrchr(pt,'.');
 			if ( ept!=NULL ) {
-			    char *ret = copy(ept+1);
+			    char *ret = xstrdup_or_null(ept+1);
 			    free(val->u.sval);
 			    val->u.sval = ret;
 			}

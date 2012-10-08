@@ -274,10 +274,10 @@ PST *PSTCopy(PST *base,SplineChar *sc,struct sfmergecontext *mc) {
 	*cur = *base;
 	cur->subtable = MCConvertSubtable(mc,base->subtable);
 	if ( cur->type==pst_ligature ) {
-	    cur->u.lig.components = copy(cur->u.lig.components);
+	    cur->u.lig.components = xstrdup_or_null(cur->u.lig.components);
 	    cur->u.lig.lig = sc;
 	} else if ( cur->type==pst_pair ) {
-	    cur->u.pair.paired = copy(cur->u.pair.paired);
+	    cur->u.pair.paired = xstrdup_or_null(cur->u.pair.paired);
 	    cur->u.pair.vr = (struct vr *) xzalloc(sizeof (struct vr [2]));
 	    memcpy(cur->u.pair.vr,base->u.pair.vr,sizeof(struct vr [2]));
 	    cur->u.pair.vr[0].adjust = ValDevTabCopy(base->u.pair.vr[0].adjust);
@@ -286,7 +286,7 @@ PST *PSTCopy(PST *base,SplineChar *sc,struct sfmergecontext *mc) {
 	    cur->u.lcaret.carets = xmalloc(cur->u.lcaret.cnt*sizeof(uint16_t));
 	    memcpy(cur->u.lcaret.carets,base->u.lcaret.carets,cur->u.lcaret.cnt*sizeof(uint16_t));
 	} else if ( cur->type==pst_substitution || cur->type==pst_multiple || cur->type==pst_alternate )
-	    cur->u.subs.variant = copy(cur->u.subs.variant);
+	    cur->u.subs.variant = xstrdup_or_null(cur->u.subs.variant);
 	if ( head==NULL )
 	    head = cur;
 	else
@@ -341,7 +341,7 @@ static void AnchorClassesAdd(SplineFont *into, SplineFont *from, struct sfmergec
 	    cur = (AnchorClass *) xzalloc(sizeof (AnchorClass));
 	    *cur = *fac;
 	    cur->next = NULL;
-	    cur->name = copy(cur->name);
+	    cur->name = xstrdup_or_null(cur->name);
 	    cur->subtable = MCConvertSubtable(mc,cur->subtable);
 	    if ( last==NULL )
 		into->anchor = cur;
@@ -393,7 +393,7 @@ static void ASMsAdd(SplineFont *into, SplineFont *from,struct sfmergecontext *mc
 	nsm->subtable->sm = nsm;
 	nsm->classes = xmalloc(nsm->class_cnt*sizeof(char *));
 	for ( i=0; i<nsm->class_cnt; ++i )
-	    nsm->classes[i] = copy(sm->classes[i]);
+	    nsm->classes[i] = xstrdup_or_null(sm->classes[i]);
 	nsm->state = xmalloc(nsm->class_cnt*nsm->state_cnt*sizeof(struct asm_state));
 	memcpy(nsm->state,sm->state,nsm->class_cnt*nsm->state_cnt*sizeof(struct asm_state));
 	if ( nsm->type == asm_kern ) {
@@ -410,8 +410,8 @@ static void ASMsAdd(SplineFont *into, SplineFont *from,struct sfmergecontext *mc
 	    }
 	} else if ( nsm->type == asm_insert ) {
 	    for ( i=nsm->class_cnt*nsm->state_cnt-1; i>=0; --i ) {
-		nsm->state[i].u.insert.mark_ins = copy(sm->state[i].u.insert.mark_ins);
-		nsm->state[i].u.insert.cur_ins = copy(sm->state[i].u.insert.cur_ins);
+		nsm->state[i].u.insert.mark_ins = xstrdup_or_null(sm->state[i].u.insert.mark_ins);
+		nsm->state[i].u.insert.cur_ins = xstrdup_or_null(sm->state[i].u.insert.cur_ins);
 	    }
 	}
     }
@@ -509,7 +509,7 @@ SplineChar *SplineCharCopy(SplineChar *sc,SplineFont *into,struct sfmergecontext
     }
     nsc->parent = into;
     nsc->orig_pos = -2;
-    nsc->name = copy(sc->name);
+    nsc->name = xstrdup_or_null(sc->name);
     nsc->hstem = StemInfoCopy(nsc->hstem);
     nsc->vstem = StemInfoCopy(nsc->vstem);
     nsc->dstem = DStemInfoCopy(nsc->dstem);
@@ -880,11 +880,11 @@ SplineChar *SFGetOrMakeChar(SplineFont *sf, int unienc, const char *name ) {
 	}
 	sc->unicodeenc = unienc;
 	if ( name!=NULL )
-	    sc->name = copy(name);
+	    sc->name = xstrdup_or_null(name);
 	else {
 	    char buffer[40];
 	    sprintf(buffer,"glyph%d", sf->glyphcnt);
-	    sc->name = copy(buffer);
+	    sc->name = xstrdup_or_null(buffer);
 	}
 	SFAddGlyphAndEncode(sf,sc,NULL,-1);
 	/*SCLigDefault(sc);*/
@@ -1467,7 +1467,7 @@ static void LayerInterpolate(Layer *to,Layer *base,Layer *other,real amount,Spli
 #if 0
     if ( base->fill_brush.pattern!=NULL && other->fill_brush.pattern!=NULL &&
 	    strcmp(base->fill_brush.pattern,other->fill_brush.pattern)==0 )
-	to->fill_brush.pattern = copy(base->fill_brush.pattern);
+	to->fill_brush.pattern = xstrdup_or_null(base->fill_brush.pattern);
     else
 #endif
     if ( base->fill_brush.pattern!=NULL || other->fill_brush.pattern!=NULL )
@@ -1475,7 +1475,7 @@ static void LayerInterpolate(Layer *to,Layer *base,Layer *other,real amount,Spli
 #if 0
     if ( base->stroke_pen.brush.pattern!=NULL && other->stroke_pen.brush.pattern!=NULL &&
 	    strcmp(base->stroke_pen.brush.pattern,other->stroke_pen.brush.pattern)==0 )
-	to->stroke_pen.brush.pattern = copy(base->stroke_pen.brush.pattern);
+	to->stroke_pen.brush.pattern = xstrdup_or_null(base->stroke_pen.brush.pattern);
     else
 #endif
     if ( base->stroke_pen.brush.pattern!=NULL || other->stroke_pen.brush.pattern!=NULL )
@@ -1504,7 +1504,7 @@ return( NULL );
     sc->layers[ly_fore].undoes = sc->layers[ly_back].undoes = NULL;
     sc->layers[ly_fore].redoes = sc->layers[ly_back].redoes = NULL;
     sc->kerns = NULL;
-    sc->name = copy(base->name);
+    sc->name = xstrdup_or_null(base->name);
     sc->width = base->width + amount*(other->width-base->width);
     sc->vwidth = base->vwidth + amount*(other->vwidth-base->vwidth);
     sc->lsidebearing = base->lsidebearing + amount*(other->lsidebearing-base->lsidebearing);
@@ -1597,7 +1597,7 @@ return( NULL );
 	if ( lc>2 )
 	    memset(new_->layers+2,0,(lc-2)*sizeof(LayerInfo));
 	for ( i=2; i<lc; ++i ) {
-	    new_->layers[i].name = copy(base->layers[i].name);
+	    new_->layers[i].name = xstrdup_or_null(base->layers[i].name);
 	    new_->layers[i].background = base->layers[i].background;
 	    new_->layers[i].order2 = base->layers[i].order2;
 	}

@@ -118,7 +118,7 @@ GTextInfo *SFLookupArrayFromMask(SplineFont *sf, int mask ) {
 			ti[cnt].userdata = (void *) otl;
 			ti[cnt].fg = ti[cnt].bg = COLOR_DEFAULT;
 			ti[cnt].text_is_1byte = true;
-			ti[cnt].text = (uint32_t *) copy(otl->lookup_name);
+			ti[cnt].text = (uint32_t *) xstrdup_or_null(otl->lookup_name);
 		    }
 		    ++cnt;
 		}
@@ -935,7 +935,7 @@ static void LK_NewScript(GGadget *g,int row) {
     /*  well it depends on what the script is, but we don't know that yet */
     /* dflt is safe */
 	
-    strings[2*row+1].u.md_str = copy("dflt");
+    strings[2*row+1].u.md_str = xstrdup("dflt");
 }
 
 static void ScriptMatrixInit(struct matrixinit *mi,char *scriptstr) {
@@ -960,7 +960,7 @@ static void ScriptMatrixInit(struct matrixinit *mi,char *scriptstr) {
 		if ( *scriptend=='{' )
 		    md[2*cnt+1].u.md_str = copyn(scriptend+1,langsend-(scriptend+1));
 		else
-		    md[2*cnt+1].u.md_str = copy("");
+		    md[2*cnt+1].u.md_str = xstrdup("");
 	    }
 	    ++cnt;
 	    if ( *langsend=='}' ) ++langsend;
@@ -1354,7 +1354,7 @@ static void LK_NewFeature(GGadget *g,int row) {
     if ( bpos>0 )
 	buf[bpos-1] = '\0';
 	
-    strings[2*row+1].u.md_str = copy(buf);
+    strings[2*row+1].u.md_str = xstrdup_or_null(buf);
     free(buf);
 }
 
@@ -1380,7 +1380,7 @@ static void LKMatrixInit(struct matrixinit *mi,OTLookup *otl) {
 		else
 		    sprintf( featbuf, "%c%c%c%c", fl->featuretag>>24, fl->featuretag>>16,
 			    fl->featuretag>>8, fl->featuretag );
-		md[2*cnt+0].u.md_str = copy(featbuf);
+		md[2*cnt+0].u.md_str = xstrdup_or_null(featbuf);
 		bpos=0;
 		for ( sl=fl->scripts; sl!=NULL; sl=sl->next ) {
 		    if ( bpos+4/*script*/+1/*open brace*/+5*sl->lang_cnt+1+2 > blen )
@@ -1403,7 +1403,7 @@ static void LKMatrixInit(struct matrixinit *mi,OTLookup *otl) {
 		    --bpos;
         if (buf) {
             buf[bpos] = '\0';
-            md[2*cnt+1].u.md_str = copy(buf);
+            md[2*cnt+1].u.md_str = xstrdup_or_null(buf);
         }
         else {
             md[2*cnt+1].u.md_str = NULL;
@@ -1438,7 +1438,7 @@ static GTextInfo *SFMarkClassList(SplineFont *sf,int class) {
     ti[0].text = utf82u_copy( _("All"));
     ti[0].selected = class==0;
     for ( i=1; i<sf->mark_class_cnt; ++i ) {
-	ti[i].text = (uint32_t *) copy(sf->mark_class_names[i]);
+	ti[i].text = (uint32_t *) xstrdup_or_null(sf->mark_class_names[i]);
 	ti[i].userdata = (void *) (intptr_t) i;
 	ti[i].text_is_1byte = true;
 	if ( i==class ) ti[i].selected = true;
@@ -1459,7 +1459,7 @@ static GTextInfo *SFMarkSetList(SplineFont *sf,int set) {
     ti[0].userdata = (void *) (intptr_t) -1;
     ti[0].selected = set==-1;
     for ( i=0; i<sf->mark_set_cnt; ++i ) {
-	ti[i+1].text = (uint32_t *) copy(sf->mark_set_names[i]);
+	ti[i+1].text = (uint32_t *) xstrdup_or_null(sf->mark_set_names[i]);
 	ti[i+1].userdata = (void *) (intptr_t) i;
 	ti[i+1].text_is_1byte = true;
 	if ( i==set ) ti[i+1].selected = true;
@@ -1496,7 +1496,7 @@ static GTextInfo *FeatureListFromLookupType(int lookup_type) {
 	cnt = 0;
 	for ( i=0; friendlies[i].tag!=0; ++i ) if ( friendlies[i].masks&mask ) {
 	    if ( k ) {
-		ti[cnt].text = (uint32_t *) copy( friendlies[i].friendlyname );
+		ti[cnt].text = (uint32_t *) xstrdup_or_null( friendlies[i].friendlyname );
 		ti[cnt].text_is_1byte = true;
 		ti[cnt].userdata = friendlies[i].tagstr;
 	    }
@@ -1504,7 +1504,7 @@ static GTextInfo *FeatureListFromLookupType(int lookup_type) {
 	}
 	if ( cnt==0 ) {
 	    if ( k ) {
-		ti[cnt].text = (uint32_t *) copy( _("You must choose a lookup type") );
+		ti[cnt].text = (uint32_t *) xstrdup_or_null( _("You must choose a lookup type") );
 		ti[cnt].text_is_1byte = true;
 		ti[cnt].userdata = "????";
 	    }
@@ -2038,7 +2038,7 @@ static AnchorClass *SFAddAnchorClass(SplineFont *sf,struct lookup_subtable *sub,
     AnchorClass *ac;
 
     ac = (AnchorClass *) xzalloc(sizeof (AnchorClass));
-    ac->name = copy(name);
+    ac->name = xstrdup_or_null(name);
     ac->type = sub->lookup->lookup_type == gpos_mark2base ? act_mark :
 		sub->lookup->lookup_type == gpos_mark2ligature ? act_mklg :
 		sub->lookup->lookup_type == gpos_cursive ? act_curs :
@@ -2140,7 +2140,7 @@ return( true );
 		ac->processed = true;
 	    } else {
 		free(ac->name);
-		ac->name = copy(classes[2*i+0].u.md_str);
+		ac->name = xstrdup_or_null(classes[2*i+0].u.md_str);
 		ac->processed = true;
 	    }
 	}
@@ -2760,7 +2760,7 @@ return;
 return;
     alt = SuffixCheck(sc,suffix);
     if ( alt!=NULL )
-	psts[row*cols+1].u.md_str = copy(alt->name);
+	psts[row*cols+1].u.md_str = xstrdup_or_null(alt->name);
 }
 
 static void PSTKD_FinishBoundsEdit(GGadget *g, int row, int col, int wasnew) {
@@ -2812,8 +2812,8 @@ return;
     if ( i >= pstkd->rows )
 	pstkd->psts = psts = xrealloc(psts,(pstkd->rows += 100)*cols*sizeof(struct matrix_data));
     memset(psts+i*cols,0,cols*sizeof(struct matrix_data));
-    psts[i*cols+0].u.md_str = copy(first->name);
-    psts[i*cols+1].u.md_str = copy(second->name);
+    psts[i*cols+0].u.md_str = xstrdup_or_null(first->name);
+    psts[i*cols+1].u.md_str = xstrdup_or_null(second->name);
     if ( pstkd->sub->lookup->lookup_flags & pst_r2l )
 	psts[i*cols+PAIR_DX_ADV1].u.md_ival = psts[i*cols+PAIR_DX1].u.md_ival = off;
     /* else if ( pstkd->sub->vertical_kerning ) */	/* We don't do vertical stuff */
@@ -3241,9 +3241,9 @@ static struct matrix_data *MDCopy(struct matrix_data *old,int rows,int cols) {
 
     memcpy(md,old,rows*cols*sizeof(struct matrix_data));
     for ( r=0; r<rows; ++r ) {
-	md[r*cols+0].u.md_str = copy(md[r*cols+0].u.md_str);
+	md[r*cols+0].u.md_str = xstrdup_or_null(md[r*cols+0].u.md_str);
 	if ( cols==2 /* subs, lig, alt, etc. */ || cols>=10 /* kerning */ )
-	    md[r*cols+1].u.md_str = copy(md[r*cols+1].u.md_str);
+	    md[r*cols+1].u.md_str = xstrdup_or_null(md[r*cols+1].u.md_str);
     }
 return( md );
 }
@@ -3342,11 +3342,11 @@ static void PSTKD_DoPopulate(PSTKernDlg *pstkd,char *suffix, enum pop_type pt) {
 			psts = xrealloc(psts,row_max*cols*sizeof(struct matrix_data));
 		    }
 		    memset(psts+rows*cols,0,cols*sizeof(struct matrix_data));
-		    psts[rows*cols+0].u.md_str = copy(sc->name);
+		    psts[rows*cols+0].u.md_str = xstrdup_or_null(sc->name);
 		    ++rows;
 		}
 		if ( alt!=NULL ) 
-		    psts[pos*cols+1].u.md_str = copy(alt->name);
+		    psts[pos*cols+1].u.md_str = xstrdup_or_null(alt->name);
 		else if ( allsame && pos!=0 ) {
 		    psts[pos*cols+SIM_DX].u.md_ival = psts[0+SIM_DX].u.md_ival;
 		    psts[pos*cols+SIM_DY].u.md_ival = psts[0+SIM_DY].u.md_ival;
@@ -3374,7 +3374,7 @@ return;		/* Not applicable */
     suffix = GGadgetGetTitle8(GWidgetGetControl(pstkd->gw,CID_Suffix));
     if ( *suffix!='\0' && ( suffix[0]!='.' || suffix[1]!='\0' )) {
 	free(pstkd->sub->suffix);
-	pstkd->sub->suffix = ( *suffix=='.' ) ? copy(suffix+1): copy(suffix);
+	pstkd->sub->suffix = ( *suffix=='.' ) ? xstrdup(suffix+1): xstrdup(suffix);
 	free(suffix);
     }
 }
@@ -3869,7 +3869,7 @@ char *SFNameList2NameUni(SplineFont *sf, char *str) {
     if ( str==NULL )
 return( NULL );
     if ( !add_char_to_name_list )
-return( copy(str));
+return( xstrdup_or_null(str));
 
     cnt = 0;
     for ( pt=str; *pt!='\0'; ++pt )
@@ -3916,7 +3916,7 @@ char *SCNameUniStr(SplineChar *sc) {
     if ( sc==NULL )
 return( NULL );
     if ( !add_char_to_name_list )
-return( copy(sc->name));
+return( xstrdup_or_null(sc->name));
 
     len = strlen(sc->name);
     temp = xmalloc(len + 8);
@@ -5723,14 +5723,14 @@ static GTextInfo *ScriptListOfFont(SplineFont *sf) {
 	break;
 	}
 	if ( scripts[j].text!=NULL )
-	    ti[i].text = (uint32_t *) copy( (char *) scripts[j].text );
+	    ti[i].text = (uint32_t *) xstrdup_or_null( (char *) scripts[j].text );
 	else {
 	    tag[0] = ourscripts[i]>>24;
 	    tag[1] = ourscripts[i]>>16;
 	    tag[2] = ourscripts[i]>>8;
 	    tag[3] = ourscripts[i]&0xff;
 	    tag[4] = 0;
-	    ti[i].text = (uint32_t *) copy( (char *) tag );
+	    ti[i].text = (uint32_t *) xstrdup_or_null( (char *) tag );
 	}
 	ti[i].text_is_1byte = true;
     }
@@ -5961,7 +5961,7 @@ return( true );
 		    pst->type = pst_substitution;
 		}
 		free(pst->u.subs.variant);
-		pst->u.subs.variant = copy(sc->name);
+		pst->u.subs.variant = xstrdup_or_null(sc->name);
 	    }
 	    ++sel_cnt;
 	}

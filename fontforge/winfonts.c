@@ -270,10 +270,10 @@ return( false );
     sf->pfminfo.pfmset = true;
     if ( fntheader.copyright[0]!='\0' ) {
 	free(sf->copyright);
-	sf->copyright = copy(fntheader.copyright);
+	sf->copyright = xstrdup_or_null(fntheader.copyright);
     }
     free(sf->weight);
-    sf->weight = copy( fntheader.weight<=100 ? "Thin" :
+    sf->weight = xstrdup_or_null( fntheader.weight<=100 ? "Thin" :
 			fntheader.weight<=200 ? "Extralight" :
 			fntheader.weight<=300 ? "Light" :
 			fntheader.weight<=400 ? "Normal" :
@@ -303,7 +303,7 @@ return( false );
     free(sf->fullname);
     sf->fullname = temp;
     free(sf->fontname);
-    sf->fontname = copy(sf->fullname);
+    sf->fontname = xstrdup_or_null(sf->fullname);
     for ( pt=spt=sf->fontname; *spt; ++spt )
 	if ( *spt!=' ' )
 	    *pt++ = *spt;

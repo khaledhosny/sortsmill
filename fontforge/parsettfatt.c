@@ -144,7 +144,7 @@ static char *GlyphsToNames(struct ttfinfo *info,uint16_t *glyphs,int make_uniq) 
     char *ret, *pt;
 
     if ( glyphs==NULL )
-return( copy(""));
+return( xstrdup(""));
 
     /* Adobe produces coverage tables containing duplicate glyphs in */
     /*  GaramondPremrPro.otf. We want unique glyphs, so enforce that */
@@ -170,7 +170,7 @@ return( copy(""));
 		LogError( _("GID out of range.\n") );
 		info->bad_ot = true;
 	    }
-return( copy(""));
+return( xstrdup(""));
 	}
 	if ( info->chars[glyphs[i]]!=NULL )
 	    len += strlen(info->chars[glyphs[i]]->name)+1;
@@ -462,7 +462,7 @@ static void addPairPos(struct ttfinfo *info, int glyph1, int glyph2,
 	pos->next = info->chars[glyph1]->possub;
 	info->chars[glyph1]->possub = pos;
 	pos->u.pair.vr = (struct vr *) xzalloc(sizeof (struct vr [2]));
-	pos->u.pair.paired = copy(info->chars[glyph2]->name);
+	pos->u.pair.paired = xstrdup_or_null(info->chars[glyph2]->name);
 	pos->u.pair.vr[0].xoff = vr1->xplacement;
 	pos->u.pair.vr[0].yoff = vr1->yplacement;
 	pos->u.pair.vr[0].h_adv_off = vr1->xadvance;
@@ -739,7 +739,7 @@ return;
     class = (AnchorClass *) xzalloc(sizeof (AnchorClass));
     snprintf(buf,sizeof(buf),_("Cursive-%d"),
 	    info->anchor_class_cnt++ );
-    class->name = copy(buf);
+    class->name = xstrdup_or_null(buf);
     subtable->anchor_classes = true;
     class->subtable = subtable;
     class->type = act_curs;
@@ -777,7 +777,7 @@ static AnchorClass **MarkGlyphsProcessMarks(FILE *ttf,int markoffset,
 	snprintf(buf,sizeof(buf),_("Anchor-%d"),
 		info->anchor_class_cnt+i );
 	classes[i] = ac = (AnchorClass *) xzalloc(sizeof (AnchorClass));
-	ac->name = copy(buf);
+	ac->name = xstrdup_or_null(buf);
 	subtable->anchor_classes = true;
 	ac->subtable = subtable;
 	/*ac->merge_with = info->anchor_merge_cnt+1;*/
@@ -1867,7 +1867,7 @@ return;
 		pos->subtable = subtable;
 		pos->next = info->chars[glyphs[i]]->possub;
 		info->chars[glyphs[i]]->possub = pos;
-		pos->u.subs.variant = copy(info->chars[which]->name);
+		pos->u.subs.variant = xstrdup_or_null(info->chars[which]->name);
 	    }
 	}
     }
@@ -3271,7 +3271,7 @@ return;
 		    DEFAULT_LANG);
 	    pst->next = info->chars[gnum]->possub;
 	    info->chars[gnum]->possub = pst;
-	    pst->u.subs.variant = copy(info->chars[gnum+offset]->name);
+	    pst->u.subs.variant = xstrdup_or_null(info->chars[gnum+offset]->name);
 	}
     }
 }
@@ -3492,7 +3492,7 @@ return( info->badgids[i] );
     fake = SplineCharCreate(2);
     fake->orig_pos = badgid;
     sprintf( name, "Out-Of-Range-GID-%d", badgid );
-    fake->name = copy(name);
+    fake->name = xstrdup_or_null(name);
     fake->widthset = true;		/* So it doesn't just vanish on us */
     fake->width = fake->vwidth = info->emsize;
     info->badgids[info->badgid_cnt++] = fake;
@@ -3545,7 +3545,7 @@ return;
 		DEFAULT_LANG);
     pst->next = sc->possub;
     sc->possub = pst;
-    pst->u.subs.variant = gsubs!=0xffff ? copy(ssc->name) : copy(MAC_DELETED_GLYPH_NAME);
+    pst->u.subs.variant = gsubs!=0xffff ? xstrdup_or_null(ssc->name) : xstrdup_or_null(MAC_DELETED_GLYPH_NAME);
 }
 
 static void mort_apply_values(struct ttfinfo *info, int gfirst, int glast,FILE *ttf) {
@@ -5297,7 +5297,7 @@ static struct glyphvariants *ttf_math_read_gvtable(FILE *ttf,struct ttfinfo *inf
 			(sc = info->chars[gid])!=NULL && sc->name==NULL ) {
 		    snprintf(buffer,sizeof(buffer),"%.30s.%csize%d",
 			    basesc->name, isv?'v':'h', i);
-		    sc->name = copy(buffer);
+		    sc->name = xstrdup_or_null(buffer);
 		}
 	    }
 	} else {
@@ -5365,11 +5365,11 @@ return( NULL );
 		    }
 		    snprintf(buffer,sizeof(buffer),"%.30s.%s",
 			    basesc->name, ext );
-		    sc->name = copy(buffer);
+		    sc->name = xstrdup_or_null(buffer);
 		}
 	    } else {
 		if ( gid<info->glyph_cnt && (sc = info->chars[gid])!=NULL ) {
-		    gv->parts[j].component = copy( sc->name );
+		    gv->parts[j].component = xstrdup_or_null( sc->name );
 		    gv->parts[j].startConnectorLength = start;
 		    gv->parts[j].endConnectorLength = end;
 		    gv->parts[j].fullAdvance = full;
@@ -5902,7 +5902,7 @@ static void NameOTJSTFLookup(OTLookup *otl,struct ttfinfo *info) {
 		 info->jstf_script>>16,
 		 info->jstf_script>>8,
 		 info->jstf_script );
-    otl->lookup_name = copy(buffer);
+    otl->lookup_name = xstrdup_or_null(buffer);
 
     cnt = 0;
     for ( subtable = otl->subtables; subtable!=NULL; subtable=subtable->next, ++cnt ) {
@@ -5912,7 +5912,7 @@ static void NameOTJSTFLookup(OTLookup *otl,struct ttfinfo *info) {
 	    else
 		format = _("%s subtable %d");
 	    snprintf(buffer,sizeof(buffer),format,otl->lookup_name,cnt );
-	    subtable->subtable_name=copy(buffer);
+	    subtable->subtable_name=xstrdup_or_null(buffer);
 	}
     }
 }

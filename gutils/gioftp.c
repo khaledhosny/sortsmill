@@ -643,11 +643,11 @@ void *GIO_dispatch(GIOControl *gc) {
 	    if ( getresponse(gc,ctl)<=0 )
   goto leave;
 	    if ( username==NULL ) {
-		username=copy("anonymous");
+		username=xstrdup("anonymous");
 		if ( password==NULL )
-		    password=copy(stdfuncs->useragent);
+		    password=xstrdup_or_null(stdfuncs->useragent);
 	    } else if ( password==NULL )
-		password = copy("");
+		password = xstrdup("");
 	    sprintf(cmd,"USER %s\r\n", username);
 	    if ( ftpsendr(gc,ctl,cmd)== -1 )
   goto leave;

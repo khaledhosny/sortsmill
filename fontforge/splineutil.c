@@ -2126,9 +2126,9 @@ static void SplineFontMetaData(SplineFont *sf,struct fontdict *fd) {
     }
     if ( sf->uniqueid==0 ) sf->uniqueid = fd->uniqueid;
     if ( sf->fontname==NULL ) sf->fontname = GetNextUntitledName();
-    if ( sf->fullname==NULL ) sf->fullname = copy(sf->fontname);
-    if ( sf->familyname==NULL ) sf->familyname = copy(sf->fontname);
-    if ( sf->weight==NULL ) sf->weight = copy("");
+    if ( sf->fullname==NULL ) sf->fullname = xstrdup_or_null(sf->fontname);
+    if ( sf->familyname==NULL ) sf->familyname = xstrdup_or_null(sf->fontname);
+    if ( sf->weight==NULL ) sf->weight = xstrdup("");
     if ( fd->modificationtime!=0 ) {
 	sf->modificationtime = fd->modificationtime;
 	sf->creationtime = fd->creationtime;
@@ -2152,8 +2152,8 @@ static void SplineFontMetaData(SplineFont *sf,struct fontdict *fd) {
     sf->private = fd->private->private; fd->private->private = NULL;
     PSDictRemoveEntry(sf->private, "OtherSubrs");
 
-    sf->cidregistry = copy(fd->registry);
-    sf->ordering = copy(fd->ordering);
+    sf->cidregistry = xstrdup_or_null(fd->registry);
+    sf->ordering = xstrdup_or_null(fd->ordering);
     sf->supplement = fd->supplement;
     sf->pfminfo.fstype = fd->fontinfo->fstype;
     if ( sf->ordering!=NULL ) {
@@ -2519,8 +2519,8 @@ return( NULL );
 	    ++pt;
     }
 
-    mm->cdv = copy(fd->cdv);
-    mm->ndv = copy(fd->ndv);
+    mm->cdv = xstrdup_or_null(fd->cdv);
+    mm->ndv = xstrdup_or_null(fd->ndv);
 
     origweight = fd->fontinfo->weight;
 
@@ -2531,7 +2531,7 @@ return( NULL );
 	free(fd->fontname);
 	free(fd->fontinfo->fullname);
 	fd->fontname = MMMakeMasterFontname(mm,ipos,&fd->fontinfo->fullname);
-	fd->fontinfo->weight = MMGuessWeight(mm,ipos,copy(origweight));
+	fd->fontinfo->weight = MMGuessWeight(mm,ipos,xstrdup_or_null(origweight));
 	if ( fd->blendfontinfo!=NULL ) {
 	    for ( item=0; item<3; ++item ) {
 		static char *names[] = { "ItalicAngle", "UnderlinePosition", "UnderlineThickness" };
@@ -5478,9 +5478,9 @@ return( NULL );
 	f = from+i; t = to+i;
 	switch ( format ) {
 	  case pst_glyphs:
-	    t->u.glyph.names = copy(f->u.glyph.names);
-	    t->u.glyph.back = copy(f->u.glyph.back);
-	    t->u.glyph.fore = copy(f->u.glyph.fore);
+	    t->u.glyph.names = xstrdup_or_null(f->u.glyph.names);
+	    t->u.glyph.back = xstrdup_or_null(f->u.glyph.back);
+	    t->u.glyph.fore = xstrdup_or_null(f->u.glyph.fore);
 	  break;
 	  case pst_class:
 	    t->u.class.ncnt = f->u.class.ncnt;
@@ -5501,23 +5501,23 @@ return( NULL );
 	    }
 	  break;
 	  case pst_reversecoverage:
-	    t->u.rcoverage.replacements = copy(f->u.rcoverage.replacements);
+	    t->u.rcoverage.replacements = xstrdup_or_null(f->u.rcoverage.replacements);
 	  case pst_coverage:
 	    t->u.coverage.ncnt = f->u.coverage.ncnt;
 	    t->u.coverage.bcnt = f->u.coverage.bcnt;
 	    t->u.coverage.fcnt = f->u.coverage.fcnt;
 	    t->u.coverage.ncovers = xmalloc( f->u.coverage.ncnt*sizeof(char *));
 	    for ( j=0; j<t->u.coverage.ncnt; ++j )
-		t->u.coverage.ncovers[j] = copy(f->u.coverage.ncovers[j]);
+		t->u.coverage.ncovers[j] = xstrdup_or_null(f->u.coverage.ncovers[j]);
 	    if ( t->u.coverage.bcnt!=0 ) {
 		t->u.coverage.bcovers = xmalloc( f->u.coverage.bcnt*sizeof(char *));
 		for ( j=0; j<t->u.coverage.bcnt; ++j )
-		    t->u.coverage.bcovers[j] = copy(f->u.coverage.bcovers[j]);
+		    t->u.coverage.bcovers[j] = xstrdup_or_null(f->u.coverage.bcovers[j]);
 	    }
 	    if ( t->u.coverage.fcnt!=0 ) {
 		t->u.coverage.fcovers = xmalloc( f->u.coverage.fcnt*sizeof(char *));
 		for ( j=0; j<t->u.coverage.fcnt; ++j )
-		    t->u.coverage.fcovers[j] = copy(f->u.coverage.fcovers[j]);
+		    t->u.coverage.fcovers[j] = xstrdup_or_null(f->u.coverage.fcovers[j]);
 	    }
 	  break;
 	}
@@ -5541,24 +5541,24 @@ FPST *FPSTCopy(FPST *fpst) {
 	nfpst->nclass = xmalloc(nfpst->nccnt*sizeof(char *));
 	nfpst->nclassnames = xmalloc(nfpst->nccnt*sizeof(char *));
 	for ( i=0; i<nfpst->nccnt; ++i ) {
-	    nfpst->nclass[i] = copy(fpst->nclass[i]);
-	    nfpst->nclassnames[i] = copy(fpst->nclassnames[i]);
+	    nfpst->nclass[i] = xstrdup_or_null(fpst->nclass[i]);
+	    nfpst->nclassnames[i] = xstrdup_or_null(fpst->nclassnames[i]);
 	}
     }
     if ( nfpst->bccnt!=0 ) {
 	nfpst->bclass = xmalloc(nfpst->bccnt*sizeof(char *));
 	nfpst->bclassnames = xmalloc(nfpst->bccnt*sizeof(char *));
 	for ( i=0; i<nfpst->bccnt; ++i ) {
-	    nfpst->bclass[i] = copy(fpst->bclass[i]);
-	    nfpst->bclassnames[i] = copy(fpst->bclassnames[i]);
+	    nfpst->bclass[i] = xstrdup_or_null(fpst->bclass[i]);
+	    nfpst->bclassnames[i] = xstrdup_or_null(fpst->bclassnames[i]);
 	}
     }
     if ( nfpst->fccnt!=0 ) {
 	nfpst->fclass = xmalloc(nfpst->fccnt*sizeof(char *));
 	nfpst->fclassnames = xmalloc(nfpst->fccnt*sizeof(char *));
 	for ( i=0; i<nfpst->fccnt; ++i ) {
-	    nfpst->fclass[i] = copy(fpst->fclass[i]);
-	    nfpst->fclassnames[i] = copy(fpst->fclassnames[i]);
+	    nfpst->fclass[i] = xstrdup_or_null(fpst->fclass[i]);
+	    nfpst->fclassnames[i] = xstrdup_or_null(fpst->fclassnames[i]);
 	}
     }
     nfpst->rules = RulesCopy(fpst->rules,fpst->rule_cnt,fpst->format);
@@ -5694,14 +5694,14 @@ struct glyphvariants *GlyphVariantsCopy(struct glyphvariants *gv) {
     if ( gv==NULL )
 return( NULL );
     newgv = (struct glyphvariants *) xzalloc(sizeof (struct glyphvariants));
-    newgv->variants = copy(gv->variants);
+    newgv->variants = xstrdup_or_null(gv->variants);
     newgv->italic_adjusts = DeviceTableCopy(gv->italic_adjusts);
     newgv->part_cnt = gv->part_cnt;
     if ( gv->part_cnt!=0 ) {
 	newgv->parts = xcalloc(gv->part_cnt,sizeof(struct gv_part));
 	memcpy(newgv->parts,gv->parts,gv->part_cnt*sizeof(struct gv_part));
 	for ( i=0; i<gv->part_cnt; ++i )
-	    newgv->parts[i].component = copy(gv->parts[i].component);
+	    newgv->parts[i].component = xstrdup_or_null(gv->parts[i].component);
     }
 return( newgv );
 }
@@ -5766,7 +5766,7 @@ return( NULL );
     pat = (struct pattern *) xzalloc(sizeof (struct pattern));
 
     *pat = *old;
-    pat->pattern = copy( old->pattern );
+    pat->pattern = xstrdup_or_null( old->pattern );
     if ( transform!=NULL )
 	MatMultiply(pat->transform,transform,pat->transform);
 return( pat );
@@ -5973,9 +5973,9 @@ return( NULL );
     new->offsets = xmalloc(new->first_cnt*new->second_cnt*sizeof(int16_t));
     memcpy(new->offsets,kc->offsets, new->first_cnt*new->second_cnt*sizeof(int16_t));
     for ( i=0; i<new->first_cnt; ++i )
-	new->firsts[i] = copy(kc->firsts[i]);
+	new->firsts[i] = xstrdup_or_null(kc->firsts[i]);
     for ( i=0; i<new->second_cnt; ++i )
-	new->seconds[i] = copy(kc->seconds[i]);
+	new->seconds[i] = xstrdup_or_null(kc->seconds[i]);
     new->adjusts = xcalloc(new->first_cnt*new->second_cnt,sizeof(DeviceTable));
     memcpy(new->adjusts,kc->adjusts, new->first_cnt*new->second_cnt*sizeof(DeviceTable));
     for ( i=new->first_cnt*new->second_cnt-1; i>=0 ; --i ) {

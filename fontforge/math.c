@@ -251,7 +251,7 @@ return( gv );
 return( gv );
 	for ( pt=start; *pt!=':' ; ++pt );
 	ch = *pt; *pt = '\0';
-	gv->parts[pcnt].component = copy(start);
+	gv->parts[pcnt].component = xstrdup_or_null(start);
 	*pt = ch;
 	sscanf(pt,":%d:%hd:%hd:%hd", &temp,
 		&gv->parts[pcnt].startConnectorLength,
@@ -385,7 +385,7 @@ static void MATH_Init(MathDlg *math) {
     mds = xcalloc(cnt*2,sizeof(struct matrix_data));
     for ( i=cnt=0; i<sf->glyphcnt; ++i ) if ( (sc=sf->glyphs[i])!=NULL )
 	if ( sc->is_extended_shape ) {
-	    mds[2*cnt+0].u.md_str = copy(sc->name);
+	    mds[2*cnt+0].u.md_str = xstrdup_or_null(sc->name);
 	    mds[2*cnt+1].u.md_ival = true;
 	    ++cnt;
 	}
@@ -403,12 +403,12 @@ static void MATH_Init(MathDlg *math) {
 	mds = xcalloc(cnt*cols,sizeof(struct matrix_data));
 	for ( i=cnt=0; i<sf->glyphcnt; ++i ) if ( (sc=sf->glyphs[i])!=NULL ) {
 	    if ( ta==0 && sc->italic_correction!=TEX_UNDEF ) {
-		mds[cols*cnt+0].u.md_str = copy(sc->name);
+		mds[cols*cnt+0].u.md_str = xstrdup_or_null(sc->name);
 		mds[cols*cnt+1].u.md_ival = sc->italic_correction;
 		DevTabToString(&mds[cols*cnt+2].u.md_str,sc->italic_adjusts);
 		++cnt;
 	    } else if ( ta==1 &&sc->top_accent_horiz!=TEX_UNDEF ) {
-		mds[cols*cnt+0].u.md_str = copy(sc->name);
+		mds[cols*cnt+0].u.md_str = xstrdup_or_null(sc->name);
 		mds[cols*cnt+1].u.md_ival = sc->top_accent_horiz;
 		DevTabToString(&mds[cols*cnt+2].u.md_str,sc->top_accent_adjusts);
 		++cnt;
@@ -426,8 +426,8 @@ static void MATH_Init(MathDlg *math) {
     mds = xcalloc(cnt*cols,sizeof(struct matrix_data));
     for ( i=cnt=0; i<sf->glyphcnt; ++i ) if ( (sc=sf->glyphs[i])!=NULL )
 	if ( sc->mathkern!=NULL ) {
-	    mds[cols*cnt+0].u.md_str = copy(sc->name);
-	    mds[cols*cnt+1].u.md_str = copy(change);
+	    mds[cols*cnt+0].u.md_str = xstrdup_or_null(sc->name);
+	    mds[cols*cnt+1].u.md_str = xstrdup_or_null(change);
 	    ++cnt;
 	}
     GMatrixEditSet(g, mds,cnt,false);
@@ -461,7 +461,7 @@ static void MATH_Init(MathDlg *math) {
 	for ( i=cnt=0; i<sf->glyphcnt; ++i ) if ( (sc=sf->glyphs[i])!=NULL ) {
 	    struct glyphvariants *gv = h ? sc->horiz_variants : sc->vert_variants;
 	    if ( gv!=NULL && gv->part_cnt!=0 ) {
-		mds[cols*cnt+0].u.md_str = copy(sc->name);
+		mds[cols*cnt+0].u.md_str = xstrdup_or_null(sc->name);
 		mds[cols*cnt+1].u.md_ival = gv->italic_correction;
 		DevTabToString(&mds[cols*cnt+2].u.md_str,gv->italic_adjusts);
 		mds[cols*cnt+cols-1].u.md_str = GV_ToString(gv);
@@ -636,7 +636,7 @@ static void mathkern_initrow(GGadget *g, int r) {
 
     cols = GMatrixEditGetColCnt(g);
     stuff = GMatrixEditGet(g, &rows);
-    stuff[r*cols+1].u.md_str = copy(_("Change"));
+    stuff[r*cols+1].u.md_str = xstrdup_or_null(_("Change"));
 };
 
 static void mathkern_finishedit(GGadget *g, int r, int c, int wasnew) {
@@ -839,7 +839,7 @@ static char *GlyphConstruction_Dlg(GGadget *g, int r, int c) {
 	ret = GV_ToString(gv);
 	GlyphVariantsFree(gv);
     } else
-	ret = copy( old[r*cols+cols-1].u.md_str );
+	ret = xstrdup_or_null( old[r*cols+cols-1].u.md_str );
     GDrawDestroyWindow(md.gw);
 return( ret );
 }

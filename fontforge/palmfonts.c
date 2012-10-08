@@ -70,14 +70,14 @@ static SplineFont *MakeContainer(struct font *fn, char *family, char *style) {
 
     sf = SplineFontBlank(256);
     free(sf->familyname); free(sf->fontname); free(sf->fullname);
-    sf->familyname = copy(family);
+    sf->familyname = xstrdup_or_null(family);
     sf->fontname = xmalloc(strlen(family)+strlen(style)+2);
     strcpy(sf->fontname,family);
     if ( *style!='\0' ) {
 	strcat(sf->fontname,"-");
 	strcat(sf->fontname,style);
     }
-    sf->fullname = copy(sf->fontname);
+    sf->fullname = xstrdup_or_null(sf->fontname);
 
     free(sf->copyright); sf->copyright = NULL;
 
@@ -94,7 +94,7 @@ static SplineFont *MakeContainer(struct font *fn, char *family, char *style) {
 	sc->widthset = true;
     }
     sc = SFMakeChar(sf,map,256);
-    free(sc->name); sc->name = copy(".notdef");
+    free(sc->name); sc->name = xstrdup(".notdef");
     sc->width = fn->chars[i].width*em/fn->frectheight;
     sc->widthset = true;
 return( sf );

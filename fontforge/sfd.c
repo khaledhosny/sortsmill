@@ -574,7 +574,7 @@ SFDReadUTF7Str (FILE *sfd)
   if (buffer == NULL)
     return (NULL);
   *pt = '\0';
-  pt = copy (buffer);
+  pt = xstrdup_or_null (buffer);
   free (buffer);
   return (pt);
 }
@@ -685,7 +685,7 @@ utf7toutf8_copy (const char *_str)
         }
     }
   *pt = '\0';
-  pt = copy (buffer);
+  pt = xstrdup_or_null (buffer);
   free (buffer);
   return (pt);
 }
@@ -1511,7 +1511,7 @@ SFDUnPickle (FILE *sfd)
     return (NULL);
   *pt = '\0';
 #ifdef _NO_PYTHON
-  return (copy (buf));
+  return (xstrdup_or_null (buf));
 #else
   return (PyFF_UnPickleMeToObjects (buf));
 #endif
@@ -4904,7 +4904,7 @@ LigaCreateFromOldStyleMultiple (PST1 * liga)
     {
       new = (PST1 *) xzalloc (sizeof (PST1));
       *new = *liga;
-      new->pst.u.lig.components = copy (pt + 1);
+      new->pst.u.lig.components = xstrdup_or_null (pt + 1);
       last->pst.next = (PST *) new;
       last = new;
       *pt = '\0';
@@ -5043,7 +5043,7 @@ SFDParseGlyphComposition (FILE *sfd, struct glyphvariants *gv, char *tok)
     {
       int temp, ch;
       copy_to_tok (tok, getname (sfd));
-      gv->parts[i].component = copy (tok);
+      gv->parts[i].component = xstrdup_or_null (tok);
       while ((ch = nlgetc (sfd)) == ' ');
       if (ch != '%')
         ungetc (ch, sfd);
@@ -5140,7 +5140,7 @@ SFDParsePattern (FILE *sfd, char *tok)
   int ch;
 
   copy_to_tok (tok, getname (sfd));
-  pat->pattern = copy (tok);
+  pat->pattern = xstrdup_or_null (tok);
 
   getreal (sfd, &pat->width);
   while (isspace (ch = nlgetc (sfd)));
@@ -5197,7 +5197,7 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
           SplineCharFree (sc);
           return (NULL);
         }
-      sc->name = copy (tok);
+      sc->name = xstrdup_or_null (tok);
     }
   else
     {
@@ -5408,7 +5408,7 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
               (struct glyphvariants *)
               xzalloc (sizeof (struct glyphvariants));
           geteol (sfd, tok);
-          sc->vert_variants->variants = copy (tok);
+          sc->vert_variants->variants = xstrdup_or_null (tok);
         }
       else if (strmatch (tok, "GlyphVariantsHorizontal:") == 0)
         {
@@ -5417,7 +5417,7 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
               (struct glyphvariants *)
               xzalloc (sizeof (struct glyphvariants));
           geteol (sfd, tok);
-          sc->horiz_variants->variants = copy (tok);
+          sc->horiz_variants->variants = xstrdup_or_null (tok);
         }
       else if (strmatch (tok, "GlyphCompositionVertical:") == 0)
         {
@@ -5931,7 +5931,7 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
           else if (pst->type == pst_pair)
             {
               copy_to_tok (tok, getname (sfd));
-              pst->u.pair.paired = copy (tok);
+              pst->u.pair.paired = xstrdup_or_null (tok);
               pst->u.pair.vr = (struct vr *) xzalloc (sizeof (struct vr[2]));
               fscanf (sfd, " dx=%hd dy=%hd dh=%hd dv=%hd",
                       &pst->u.pair.vr[0].xoff, &pst->u.pair.vr[0].yoff,
@@ -5958,7 +5958,7 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
           else
             {
               geteol (sfd, tok);
-              pst->u.lig.components = copy (tok);       /* it's in the same place for all formats */
+              pst->u.lig.components = xstrdup_or_null (tok);       /* it's in the same place for all formats */
               if (isliga)
                 {
                   pst->u.lig.lig = sc;
@@ -6040,7 +6040,7 @@ SFDGetBitmapProps (FILE *sfd, BDFFont *bdf, char *tok)
         break;
       if (strcmp (tok, "BDFEndProperties") == 0)
         break;
-      bdf->props[i].name = copy (tok);
+      bdf->props[i].name = xstrdup_or_null (tok);
       getint (sfd, &bdf->props[i].type);
       switch (bdf->props[i].type & ~prt_property)
         {
@@ -6053,7 +6053,7 @@ SFDGetBitmapProps (FILE *sfd, BDFFont *bdf, char *tok)
           geteol (sfd, tok);
           if (tok[strlen (tok) - 1] == '"')
             tok[strlen (tok) - 1] = '\0';
-          bdf->props[i].u.str = copy (tok[0] == '"' ? tok + 1 : tok);
+          bdf->props[i].u.str = xstrdup_or_null (tok[0] == '"' ? tok + 1 : tok);
           break;
         }
     }
@@ -6267,7 +6267,7 @@ SFDGetBitmapFont (FILE *sfd, SplineFont *sf, int fromdir, char *dirname)
   if (ch != '\n' && ch != '\r')
     {
       copy_to_tok (tok, getname (sfd));
-      bdf->foundry = copy (tok);
+      bdf->foundry = xstrdup_or_null (tok);
     }
   bdf->pixelsize = pixelsize;
   bdf->ascent = ascent;
@@ -6624,7 +6624,7 @@ SFDGetPrivate (FILE *sfd, SplineFont *sf)
   for (i = 0; i < cnt; ++i)
     {
       copy_to_tok (name, getname (sfd));
-      sf->private->keys[i] = copy (name);
+      sf->private->keys[i] = xstrdup_or_null (name);
       getint (sfd, &len);
       nlgetc (sfd);             /* skip space */
       pt = sf->private->values[i] = xmalloc (len + 1);
@@ -7899,7 +7899,7 @@ SFDParseJustify (FILE *sfd, SplineFont *sf, char *tok)
               while ((ch = nlgetc (sfd)) == ' ');
               ungetc (ch, sfd);
               geteol (sfd, tok);
-              cur->extenders = copy (tok);
+              cur->extenders = xstrdup_or_null (tok);
             }
           else if (strcmp (tok, "JstfLang:") == 0)
             {
@@ -8036,27 +8036,27 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
       if (strmatch (tok, "FontName:") == 0)
         {
           copy_to_tok (tok, getname (sfd));
-          sf->fontname = copy (tok);
+          sf->fontname = xstrdup_or_null (tok);
         }
       else if (strmatch (tok, "FullName:") == 0)
         {
           geteol (sfd, tok);
-          sf->fullname = copy (tok);
+          sf->fullname = xstrdup_or_null (tok);
         }
       else if (strmatch (tok, "FamilyName:") == 0)
         {
           geteol (sfd, tok);
-          sf->familyname = copy (tok);
+          sf->familyname = xstrdup_or_null (tok);
         }
       else if (strmatch (tok, "DefaultBaseFilename:") == 0)
         {
           geteol (sfd, tok);
-          sf->defbasefilename = copy (tok);
+          sf->defbasefilename = xstrdup_or_null (tok);
         }
       else if (strmatch (tok, "Weight:") == 0)
         {
           char *token = getprotectedname (sfd);
-          sf->weight = copy (token);    // FIXME: What if token == NULL?
+          sf->weight = xstrdup_or_null (token);    // FIXME: What if token == NULL?
         }
       else if (strmatch (tok, "Copyright:") == 0)
         {
@@ -8079,12 +8079,12 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
       else if (strmatch (tok, "Version:") == 0)
         {
           geteol (sfd, tok);
-          sf->version = copy (tok);
+          sf->version = xstrdup_or_null (tok);
         }
       else if (strmatch (tok, "FONDName:") == 0)
         {
           geteol (sfd, tok);
-          sf->fondname = copy (tok);
+          sf->fondname = xstrdup_or_null (tok);
         }
       else if (strmatch (tok, "ItalicAngle:") == 0)
         {
@@ -8562,7 +8562,7 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
       else if (strmatch (tok, "XUID:") == 0)
         {
           geteol (sfd, tok);
-          sf->xuid = copy (tok);
+          sf->xuid = xstrdup_or_null (tok);
         }
       else if (strmatch (tok, "Encoding:") == 0)
         {
@@ -8591,12 +8591,12 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
       else if (strmatch (tok, "Registry:") == 0)
         {
           geteol (sfd, tok);
-          sf->cidregistry = copy (tok);
+          sf->cidregistry = xstrdup_or_null (tok);
         }
       else if (strmatch (tok, "Ordering:") == 0)
         {
           geteol (sfd, tok);
-          sf->ordering = copy (tok);
+          sf->ordering = xstrdup_or_null (tok);
         }
       else if (strmatch (tok, "Supplement:") == 0)
         {
@@ -9157,7 +9157,7 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
               for (i = 0; i < mm->axis_count; ++i)
                 {
                   copy_to_tok (tok, getname (sfd));
-                  mm->axes[i] = copy (tok);
+                  mm->axes[i] = xstrdup_or_null (tok);
                 }
             }
         }
@@ -9449,12 +9449,12 @@ SFD_Read (char *filename, FILE *sfd, int fromdir)
   setlocale (LC_NUMERIC, oldloc);
   if (sf != NULL)
     {
-      sf->filename = copy (filename);
+      sf->filename = xstrdup_or_null (filename);
       if (sf->mm != NULL)
         {
           int i;
           for (i = 0; i < sf->mm->instance_count; ++i)
-            sf->mm->instances[i]->filename = copy (filename);
+            sf->mm->instances[i]->filename = xstrdup_or_null (filename);
         }
       else if (!sf->onlybitmaps)
         {
@@ -9877,7 +9877,7 @@ SFRecoverFile (char *autosavename, int inquire, int *state)
   setlocale (LC_NUMERIC, oldloc);
   fclose (asfd);
   if (ret)
-    ret->autosavename = copy (autosavename);
+    ret->autosavename = xstrdup_or_null (autosavename);
   return (ret);
 }
 
@@ -9997,7 +9997,7 @@ NamesReadSFD (char *filename)
             {
               copy_to_tok (tok, getname (sfd));
               ret = xmalloc (2 * sizeof (char *));
-              ret[0] = copy (tok);
+              ret[0] = xstrdup_or_null (tok);
               ret[1] = NULL;
               break;
             }

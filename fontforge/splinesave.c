@@ -1955,7 +1955,7 @@ static void SetupType1Chrs(struct pschars *chrs,struct pschars *subrs,GlyphInfo 
 	if ( gb->sc==NULL )
     continue;
 	if ( !iscid )
-	    chrs->keys[i] = copy(gb->sc->name);
+	    chrs->keys[i] = xstrdup_or_null(gb->sc->name);
 	for ( k=0; k<2; ++k ) if ( k!=0 || gb->sc->ttf_glyph!=0x7fff ) {
 	    uint8_t *vals;
 	    for ( j=0; j<gb->bcnt; ++j ) {
@@ -3266,7 +3266,7 @@ struct pschars *SplineFont2ChrsSubrs2(SplineFont *sf, int nomwid, int defwid,
 	struct glyphbits *gb = &gi.gb[i];
 	if ( gb->sc==NULL )
     continue;
-	chrs->keys[i] = copy(gb->sc->name);
+	chrs->keys[i] = xstrdup_or_null(gb->sc->name);
 	for ( k=0; k<2; ++k ) if ( k!=0 || gb->sc->lsidebearing!=0x7fff ) {
 	    for ( j=0; j<gb->bcnt; ++j ) {
 		if ( k!=0 || j!=0 )
@@ -3498,7 +3498,7 @@ struct pschars *CID2ChrsSubrs2(SplineFont *cidmaster,struct fd2data *fds,
     for ( i=0; i<cnt; ++i ) {
 	int len=0;
 	struct glyphbits *gb = &gi.gb[i];
-	chrs->keys[i] = copy(gb->sc->name);
+	chrs->keys[i] = xstrdup_or_null(gb->sc->name);
 	for ( j=0; j<gb->bcnt; ++j ) {
 	    len += gb->bits[j].dlen;
 	    if ( gi.psubrs[ gb->bits[j].psub_index ].idx==-1 )

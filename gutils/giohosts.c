@@ -55,7 +55,7 @@ return( cu_copy(url));
     pt2 = u_strchr(pt,'/');
     if ( pt2==NULL ) {
 	pt2 = pt+u_strlen(pt);
-	path = copy("/");
+	path = xstrdup("/");
     } else {
 	path = cu_copy(pt2);
     }
@@ -114,12 +114,12 @@ return( password );
 		strcasecmp(host,pc[i].host)==0 &&
 		strcmp(username,pc[i].username)==0 ) {
 	    if ( password==NULL ) {
-		password = copy( pc[i].password );
+		password = xstrdup_or_null( pc[i].password );
  goto leave;
 	    }
 	    if ( strcmp(password,pc[i].password)!=0 ) {
 		free( pc[i].password );
-		pc[i].password = copy( password );
+		pc[i].password = xstrdup_or_null( password );
 	    }
  goto leave;
 	}
@@ -130,10 +130,10 @@ return( password );
 
     if ( pc_cnt>=pc_max )
 	pc = xrealloc(pc,(pc_max+=10)*sizeof(struct passwd_cache));
-    pc[pc_cnt].proto = copy( proto );
-    pc[pc_cnt].host  = copy( host  );
-    pc[pc_cnt].username = copy( username );
-    pc[pc_cnt].password = copy( password );
+    pc[pc_cnt].proto = xstrdup_or_null( proto );
+    pc[pc_cnt].host  = xstrdup_or_null( host  );
+    pc[pc_cnt].username = xstrdup_or_null( username );
+    pc[pc_cnt].password = xstrdup_or_null( password );
     ++pc_cnt;
  leave:
 #ifdef HAVE_PTHREAD_H
@@ -201,7 +201,7 @@ return( NULL );
 	for ( i=0; he->h_addr_list[i]!=NULL; ++i );
 	memcpy(&cur->addr.sin_addr,he->h_addr_list[rand()%i],he->h_length);
     }
-    cur->hostname = copy(host);
+    cur->hostname = xstrdup_or_null(host);
     cur->next = *base;
     *base = cur;
 #ifdef HAVE_PTHREAD_H

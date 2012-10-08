@@ -50,6 +50,7 @@
 #include <stdint.h>
 #include <math.h>
 #include <limits.h>
+#include <null_passthru.h>
 
 static inline int
 imin (int a, int b)
@@ -88,15 +89,16 @@ szmax (size_t a, size_t b)
 }
 
 static inline char *
-copy (const char *str)
+xstrdup_or_null (const char *str)
 {
-  return (str == NULL) ? NULL : xstrdup (str);
+  return NULL_PASSTHRU (str, xstrdup (str));
 }
 
+// FIXME: Try to get rid of this or rename it more descriptively.
 static inline char *
 copyn (const char *str, size_t n)
 {
-  return (str == NULL) ? NULL : xstrndup (str, n);
+  return NULL_PASSTHRU (str, xstrndup (str, n));
 }
 
 static inline const char *

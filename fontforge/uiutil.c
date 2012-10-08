@@ -361,7 +361,7 @@ static void *genutf8data(void *_ed,int32_t *len) {
 
     if ( s_l==-1 ) {
 	*len = 0;
-return( copy(""));
+return( xstrdup(""));
     }
 
     l = s_l;

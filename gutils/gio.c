@@ -96,7 +96,7 @@ static void GIOdispatch(GIOControl *gc, enum giofuncs gf) {
     gc->gf = gf;
 
     if ( _GIO_stdfuncs.useragent == NULL )
-	_GIO_stdfuncs.useragent = copy("someone@somewhere.com");
+	_GIO_stdfuncs.useragent = xstrdup("someone@somewhere.com");
 
     temp = _GIO_translateURL(gc->path,gf);
     if ( temp!=NULL ) {

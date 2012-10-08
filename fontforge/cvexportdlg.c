@@ -498,11 +498,11 @@ static int _Export(SplineChar *sc,BDFChar *bc,int layer) {
 	    cur_formats = xcalloc(extras+cnt+1,sizeof(GTextInfo));
 	    for ( cnt=0; formats[cnt].text!=NULL; ++cnt ) {
 		cur_formats[cnt] = formats[cnt];
-		cur_formats[cnt].text = (uint32_t *) copy( (char *) formats[cnt].text );
+		cur_formats[cnt].text = (uint32_t *) xstrdup_or_null( (char *) formats[cnt].text );
 	    }
 	    for ( i=extras=0; py_ie[i].name!=NULL; ++i ) {
 		if ( py_ie[i].export!=NULL ) {
-		    cur_formats[cnt+extras].text = (uint32_t *) copy(py_ie[i].name);
+		    cur_formats[cnt+extras].text = (uint32_t *) xstrdup_or_null(py_ie[i].name);
 		    cur_formats[cnt+extras].text_is_1byte = true;
 		    cur_formats[cnt+extras].userdata = (void *) (intptr_t) (fv_pythonbase+i);
 		    ++extras;

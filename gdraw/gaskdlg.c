@@ -438,7 +438,7 @@ char *GWidgetAskString8(const char *title,const char *def,
     va_list ap;
 
     if ( screen_display==NULL )
-return( copy(def ));
+return( xstrdup_or_null(def ));
 
     ocb[2]=NULL;
     ocb[0] = _("_OK");
@@ -467,7 +467,7 @@ char *GWidgetAskPassword8(const char *title,const char *def,
     va_list ap;
 
     if ( screen_display==NULL )
-return( copy(def ));
+return( xstrdup_or_null(def ));
 
     ocb[2]=NULL;
     ocb[0] = _("_OK");

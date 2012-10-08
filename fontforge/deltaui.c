@@ -191,7 +191,7 @@ return;
     }
     
     if ( delta_sizes==NULL )
-	delta_sizes = copy("7-40,72,80,88,96");
+	delta_sizes = xstrdup("7-40,72,80,88,96");
 
     data = xcalloc(1,sizeof(QGData));
     data->fv = (FontViewBase *) fv;
@@ -637,7 +637,7 @@ static void QGSecondLevel(QGData *qg, struct qgnode *parent) {
 	for ( l=0; l<parent->qg_cnt; ++l ) {
 	    if ( size!=parent->first[l].size && size!=-1 ) {
 		sprintf( buffer, _("Size: %d (%d)"), size, l-lstart );
-		parent->kids[cnt].name = copy(buffer);
+		parent->kids[cnt].name = xstrdup_or_null(buffer);
 		parent->kids[cnt].parent = parent;
 		parent->kids[cnt].first = &parent->first[lstart];
 		parent->kids[cnt].qg_cnt = l-lstart;
@@ -649,7 +649,7 @@ static void QGSecondLevel(QGData *qg, struct qgnode *parent) {
 	}
 	if ( size!=-1 ) {
 	    sprintf( buffer, _("Size: %d (%d)"), size, l-lstart );
-	    parent->kids[cnt].name = copy(buffer);
+	    parent->kids[cnt].name = xstrdup_or_null(buffer);
 	    parent->kids[cnt].parent = parent;
 	    parent->kids[cnt].first = &parent->first[lstart];
 	    parent->kids[cnt].qg_cnt = l-lstart;
@@ -671,7 +671,7 @@ static void QGSecondLevel(QGData *qg, struct qgnode *parent) {
 	for ( l=0; l<parent->qg_cnt; ++l ) {
 	    if ( pt!=parent->first[l].nearestpt && pt!=-1 ) {
 		sprintf( buffer, _("Point: %d (%d)"), pt, l-lstart );
-		parent->kids[cnt].name = copy(buffer);
+		parent->kids[cnt].name = xstrdup_or_null(buffer);
 		parent->kids[cnt].parent = parent;
 		parent->kids[cnt].first = &parent->first[lstart];
 		parent->kids[cnt].qg_cnt = l-lstart;
@@ -683,7 +683,7 @@ static void QGSecondLevel(QGData *qg, struct qgnode *parent) {
 	}
 	if ( pt!=-1 ) {
 	    sprintf( buffer, _("Point: %d (%d)"), pt, l-lstart );
-	    parent->kids[cnt].name = copy(buffer);
+	    parent->kids[cnt].name = xstrdup_or_null(buffer);
 	    parent->kids[cnt].parent = parent;
 	    parent->kids[cnt].first = &parent->first[lstart];
 	    parent->kids[cnt].qg_cnt = l-lstart;
@@ -706,7 +706,7 @@ static void QGSecondLevel(QGData *qg, struct qgnode *parent) {
 	for ( l=0; l<parent->qg_cnt; ++l ) {
 	    if ( sc!=parent->first[l].sc && sc!=NULL ) {
 		sprintf( buffer, "\"%.40s\" (%d)", sc->name, l-lstart );
-		parent->kids[cnt].name = copy(buffer);
+		parent->kids[cnt].name = xstrdup_or_null(buffer);
 		parent->kids[cnt].parent = parent;
 		parent->kids[cnt].first = &parent->first[lstart];
 		parent->kids[cnt].qg_cnt = l-lstart;
@@ -718,7 +718,7 @@ static void QGSecondLevel(QGData *qg, struct qgnode *parent) {
 	}
 	if ( sc!=NULL ) {
 	    sprintf( buffer, "\"%.40s\" (%d)", sc->name, l-lstart );
-	    parent->kids[cnt].name = copy(buffer);
+	    parent->kids[cnt].name = xstrdup_or_null(buffer);
 	    parent->kids[cnt].parent = parent;
 	    parent->kids[cnt].first = &parent->first[lstart];
 	    parent->kids[cnt].qg_cnt = l-lstart;
@@ -760,7 +760,7 @@ static void QGDoSort(QGData *qg) {
 	for ( l=0; l<qg->cur; ++l ) {
 	    if ( sc!=qg->qg[l].sc && sc!=NULL ) {
 		sprintf( buffer, "\"%.40s\" (%d)", sc->name, l-lstart );
-		qg->list.kids[cnt].name = copy(buffer);
+		qg->list.kids[cnt].name = xstrdup_or_null(buffer);
 		qg->list.kids[cnt].parent = &qg->list;
 		qg->list.kids[cnt].first = &qg->qg[lstart];
 		qg->list.kids[cnt].qg_cnt = l-lstart;
@@ -772,7 +772,7 @@ static void QGDoSort(QGData *qg) {
 	}
 	if ( sc!=NULL ) {
 	    sprintf( buffer, "\"%.40s\" (%d)", sc->name, l-lstart );
-	    qg->list.kids[cnt].name = copy(buffer);
+	    qg->list.kids[cnt].name = xstrdup_or_null(buffer);
 	    qg->list.kids[cnt].parent = &qg->list;
 	    qg->list.kids[cnt].first = &qg->qg[lstart];
 	    qg->list.kids[cnt].qg_cnt = l-lstart;
@@ -793,7 +793,7 @@ static void QGDoSort(QGData *qg) {
 	for ( l=0; l<qg->cur; ++l ) {
 	    if ( size!=qg->qg[l].size && size!=-1 ) {
 		sprintf( buffer, _("Size: %d (%d)"), size, l-lstart );
-		qg->list.kids[cnt].name = copy(buffer);
+		qg->list.kids[cnt].name = xstrdup_or_null(buffer);
 		qg->list.kids[cnt].parent = &qg->list;
 		qg->list.kids[cnt].first = &qg->qg[lstart];
 		qg->list.kids[cnt].qg_cnt = l-lstart;
@@ -805,7 +805,7 @@ static void QGDoSort(QGData *qg) {
 	}
 	if ( size!=-1 ) {
 	    sprintf( buffer, _("Size: %d (%d)"), size, l-lstart );
-	    qg->list.kids[cnt].name = copy(buffer);
+	    qg->list.kids[cnt].name = xstrdup_or_null(buffer);
 	    qg->list.kids[cnt].parent = &qg->list;
 	    qg->list.kids[cnt].first = &qg->qg[lstart];
 	    qg->list.kids[cnt].qg_cnt = l-lstart;

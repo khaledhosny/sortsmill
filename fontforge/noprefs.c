@@ -346,19 +346,19 @@ static int NOUI_GetPrefs(char *name,Val *val) {
 		val->type = v_str;
 
 		char *tmpstr = pf->val ? *((char **) (pf->val)) : (char *) (pf->get)();
-		val->u.sval = copy( tmpstr ? tmpstr : "" );
+		val->u.sval = xstrdup_or_null( tmpstr ? tmpstr : "" );
 
 		if( ! pf->val )
 		    free( tmpstr );
 	    } else if ( pf->type == pr_encoding ) {
 		val->type = v_str;
 		if ( *((NameList **) (pf->val))==NULL )
-		    val->u.sval = copy( "NULL" );
+		    val->u.sval = xstrdup_or_null( "NULL" );
 		else
-		    val->u.sval = copy( (*((Encoding **) (pf->val)))->enc_name );
+		    val->u.sval = xstrdup_or_null( (*((Encoding **) (pf->val)))->enc_name );
 	    } else if ( pf->type == pr_namelist ) {
 		val->type = v_str;
-		val->u.sval = copy( (*((NameList **) (pf->val)))->title );
+		val->u.sval = xstrdup_or_null( (*((NameList **) (pf->val)))->title );
 	    } else if ( pf->type == pr_real ) {
 		val->type = v_real;
 		val->u.fval = *((float *) (pf->val));
@@ -395,7 +395,7 @@ return( -1 );
 		    pf->set( val1->u.sval );
 		} else {
 		    free( *((char **) (pf->val)));
-		    *((char **) (pf->val)) = copy( val1->u.sval );
+		    *((char **) (pf->val)) = xstrdup_or_null( val1->u.sval );
 		}
 	    } else if ( pf->type == pr_encoding ) {
 		if ( val2!=NULL )
@@ -438,7 +438,7 @@ return( prefs );
     if ( getUserConfigDir()==NULL )
 return( NULL );
     sprintf(buffer,"%s/prefs", getUserConfigDir());
-    prefs = copy(buffer);
+    prefs = xstrdup_or_null(buffer);
 return( prefs );
 }
 
@@ -465,7 +465,7 @@ static void DefaultXUID(void) {
     r2 = random();
     sprintf( buffer, "1021 %d %d", r1, r2 );
     free(xuid);
-    xuid = copy(buffer);
+    xuid = xstrdup_or_null(buffer);
 }
 
 static void NOUI_SetDefaults(void) {
@@ -532,9 +532,9 @@ static void NOUI_LoadPrefs(void) {
 		line[strlen(line)-1] = '\0';
 	    if ( pl==NULL ) {
 		if ( strncmp(line,"Recent:",strlen("Recent:"))==0 && ri<RECENT_MAX )
-		    RecentFiles[ri++] = copy(pt);
+		    RecentFiles[ri++] = xstrdup_or_null(pt);
 		else if ( strncmp(line,"MenuScript:",strlen("MenuScript:"))==0 && ms<SCRIPT_MENU_MAX )
-		    script_filenames[ms++] = copy(pt);
+		    script_filenames[ms++] = xstrdup_or_null(pt);
 		else if ( strncmp(line,"MenuName:",strlen("MenuName:"))==0 && mn<SCRIPT_MENU_MAX )
 		    script_menu_names[mn++] = utf82u_copy(pt);
 #if 0
@@ -542,11 +542,11 @@ static void NOUI_LoadPrefs(void) {
 		    if ( fn>=filt_max )
 			user_font_filters = xrealloc(user_font_filters,((filt_max+=10)+1)*sizeof( struct openfilefilters));
 		    user_font_filters[fn].filter = NULL;
-		    user_font_filters[fn++].name = copy(pt);
+		    user_font_filters[fn++].name = xstrdup_or_null(pt);
 		    user_font_filters[fn].name = NULL;
 		} else if ( strncmp(line,"FontFilter:",strlen("FontFilter:"))==0 ) {
 		    if ( ff<filt_max )
-			user_font_filters[ff++].filter = copy(pt);
+			user_font_filters[ff++].filter = xstrdup_or_null(pt);
 		}
 #endif
 		else if ( strncmp(line,"MacMapCnt:",strlen("MacSetCnt:"))==0 ) {
@@ -598,9 +598,9 @@ static void NOUI_LoadPrefs(void) {
 	      case pr_string: case pr_file:
 		if ( *pt=='\0' ) pt=NULL;
 		if ( pl->val!=NULL )
-		    *((char **) (pl->val)) = copy(pt);
+		    *((char **) (pl->val)) = xstrdup_or_null(pt);
 		else
-		    (pl->set)(copy(pt));
+		    (pl->set)(xstrdup_or_null(pt));
 	      break;
 	    }
 	}

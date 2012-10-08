@@ -457,7 +457,7 @@ static const char **CopyLines(char **lines, int l,int is_copyright) {
 
     if ( l==0 && !is_copyright ) {
 	ret = xmalloc(2*sizeof(char *));
-	ret[0] = copy("{}");
+	ret[0] = xstrdup("{}");
 	ret[1] = NULL;
 return( ret );
     }
@@ -521,7 +521,7 @@ return( false );
 		lmax += 100;
 		lines = xrealloc(lines,lmax*sizeof(char *));
 	    }
-	    lines[l++] = copy(buffer);
+	    lines[l++] = xstrdup_or_null(buffer);
 	}
     }
     fclose( os );
@@ -530,7 +530,7 @@ return( false );
 return( false );
     while ( sub_num<14 ) {
 	osubs[sub_num] = xcalloc(2,sizeof(char *));
-	osubs[sub_num][0] = copy("{}");
+	osubs[sub_num][0] = xstrdup("{}");
 	++sub_num;
     }
     DefaultOtherSubrs();

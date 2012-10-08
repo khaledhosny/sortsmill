@@ -207,7 +207,7 @@ GImage *GImageReadPng(char *filename) {
 return( NULL );
 
     ret = GImageRead_Png(fp);
-    ret->filename = copy(filename);
+    ret->filename = xstrdup_or_null(filename);
     fclose(fp);
 return( ret );
 }

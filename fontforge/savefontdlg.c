@@ -1478,7 +1478,7 @@ SearchDirForWernerFile (char *dir, char *filename)
     good = true;
   fclose (file);
   if (good)
-    return (copy (buffer));
+    return (xstrdup_or_null (buffer));
 
   return (NULL);
 }
@@ -1646,8 +1646,8 @@ OFLibUploadGather (struct gfc_data *d, uint32_t *path)
     {
       free (oflib_username);
       free (oflib_password);
-      oflib_username = copy (oflib.username);
-      oflib_password = copy (oflib.password);
+      oflib_username = xstrdup_or_null (oflib.username);
+      oflib_password = xstrdup_or_null (oflib.password);
       for (pt = oflib_password; *pt != '\0'; ++pt)
         *pt ^= 0xf;             /* Simple encryption */
     }
@@ -3529,7 +3529,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
       gcd[k++].creator = GLabelCreate;
       oflarray[0][2] = &gcd[k - 1];
 
-      label[k].text = (uint32_t *) copy (oflib_password);
+      label[k].text = (uint32_t *) xstrdup_or_null (oflib_password);
       if (label[k].text != NULL)
         for (oflpwd = (char *) label[k].text; *oflpwd != '\0'; ++oflpwd)
           *oflpwd ^= 0xf;       /* Simple encryption */
@@ -3924,21 +3924,21 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
           gcd[k].gd.cid = CID_MergeTables;
           gcd[k].gd.popup_msg =
             (uint32_t *)
-            copy (_
-                  ("FontForge can generate two styles of ttc file.\n"
-                   "In the first each font is a separate entity\n"
-                   "with no connection to other fonts. In the second\n"
-                   "FontForge will attempt to use the same glyph table\n"
-                   "for all fonts, merging duplicate glyphs. It will\n"
-                   "also attempt to use the same space for tables in\n"
-                   "different fonts which are bit by bit the same.\n\n"
-                   "FontForge isn't always able to perform a merge, in\n"
-                   "which case it falls back on generating independent\n"
-                   "fonts within the ttc.\n" " FontForge cannot merge if:\n"
-                   "  * The fonts have different em-sizes\n"
-                   "  * Bitmaps are involved\n"
-                   "  * The merged glyf table has more than 65534 glyphs\n\n"
-                   "(Merging will take longer)"));
+            xstrdup (_
+		     ("FontForge can generate two styles of ttc file.\n"
+		      "In the first each font is a separate entity\n"
+		      "with no connection to other fonts. In the second\n"
+		      "FontForge will attempt to use the same glyph table\n"
+		      "for all fonts, merging duplicate glyphs. It will\n"
+		      "also attempt to use the same space for tables in\n"
+		      "different fonts which are bit by bit the same.\n\n"
+		      "FontForge isn't always able to perform a merge, in\n"
+		      "which case it falls back on generating independent\n"
+		      "fonts within the ttc.\n" " FontForge cannot merge if:\n"
+		      "  * The fonts have different em-sizes\n"
+		      "  * Bitmaps are involved\n"
+		      "  * The merged glyf table has more than 65534 glyphs\n\n"
+		      "(Merging will take longer)"));
           gcd[k++].creator = GCheckBoxCreate;
           famarray[f++] = &gcd[k - 1];
           famarray[f++] = GCD_ColSpan;
@@ -3951,8 +3951,8 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
           gcd[k].gd.cid = CID_TTC_CFF;
           gcd[k].gd.popup_msg =
             (uint32_t *)
-            copy (_
-                  ("Put CFF fonts into the ttc rather than TTF.\n These seem to work on the mac and linux\n but are documented not to work on Windows."));
+            xstrdup (_
+		     ("Put CFF fonts into the ttc rather than TTF.\n These seem to work on the mac and linux\n but are documented not to work on Windows."));
           gcd[k++].creator = GCheckBoxCreate;
           famarray[f++] = &gcd[k - 1];
           famarray[f++] = GCD_ColSpan;

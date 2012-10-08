@@ -293,7 +293,7 @@ SendNextArg (struct argsstruct *args)
 
   GDrawGrabSelection (splashw, sn_user1);
   GDrawAddSelectionType (splashw, sn_user1, "STRING",
-                         copy (msg), strlen (msg), 1, NULL, NULL);
+                         xstrdup (msg), strlen (msg), 1, NULL, NULL);
 
   /* If we just sent the other fontforge a request to die, it will never */
   /*  take the selection back. So we should just die quietly */

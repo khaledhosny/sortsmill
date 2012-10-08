@@ -89,7 +89,7 @@ return( NULL );
     if ( access(buffer,F_OK)==-1 )
 	if ( GFileMkDir(buffer)==-1 )
 return( NULL );
-    dir = copy(buffer);
+    dir = xstrdup_or_null(buffer);
 return( dir );
 }
 
@@ -106,7 +106,7 @@ return;
     while ( 1 ) {
 	sprintf( buffer, "%s/auto%06x-%d.asfd", autosavedir, getpid(), ++cnt );
 	if ( access(buffer,F_OK)==-1 ) {
-	    sf->autosavename = copy(buffer);
+	    sf->autosavename = xstrdup_or_null(buffer);
 return;
 	}
     }

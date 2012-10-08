@@ -3866,7 +3866,7 @@ char *utf8_verify_copy(const char *str) {
 return( NULL );
 
     if ( utf8_valid(str))
-return( copy(str));		/* Either in ASCII (good) or appears to be utf8*/
+return( xstrdup_or_null(str));		/* Either in ASCII (good) or appears to be utf8*/
 return( latin1_2_utf8_copy(str));
 }
 
@@ -3895,7 +3895,7 @@ void DefaultTTFEnglishNames(struct ttflangname *dummy, SplineFont *sf) {
 		BDFFoundry?BDFFoundry:TTFFoundry?TTFFoundry:"FontForge 2.0",
 		sf->fullname!=NULL?sf->fullname:sf->fontname,
 		tm->tm_mday, tm->tm_mon+1, tm->tm_year+1900 );
-	dummy->names[ttf_uniqueid] = copy(buffer);
+	dummy->names[ttf_uniqueid] = xstrdup_or_null(buffer);
     }
     if ( dummy->names[ttf_fullname]==NULL || *dummy->names[ttf_fullname]=='\0' )
 	dummy->names[ttf_fullname] = utf8_verify_copy(sf->fullname);
@@ -3906,7 +3906,7 @@ void DefaultTTFEnglishNames(struct ttflangname *dummy, SplineFont *sf) {
 	    sprintf(buffer,"Version %.20s ", sf->version);
 	else
 	    strcpy(buffer,"Version 1.0" );
-	dummy->names[ttf_version] = copy(buffer);
+	dummy->names[ttf_version] = xstrdup_or_null(buffer);
     }
     if ( dummy->names[ttf_postscriptname]==NULL || *dummy->names[ttf_postscriptname]=='\0' )
 	dummy->names[ttf_postscriptname] = utf8_verify_copy(sf->fontname);

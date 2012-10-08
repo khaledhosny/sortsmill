@@ -197,7 +197,7 @@ static int mytempnam(char *buffer) {
     strcat(buffer,"/PfaEdXXXXXX");
     fd = mkstemp(buffer);
 #if 0
-    old = copy(buffer);
+    old = xstrdup_or_null(buffer);
     strcat(buffer,".bmp");
     if ( rename(old,buffer)==-1 )
 	strcpy(buffer,old);
@@ -224,7 +224,7 @@ static char *mytempdir(void) {
     while ( 1 ) {
 	sprintf( eon, "%04X_mf%d", getpid(), ++cnt );
 	if ( mkdir(buffer,0770)==0 )
-return( copy(buffer) );
+return( xstrdup_or_null(buffer) );
 	else if ( errno!=EEXIST )
 return( NULL );
 	if ( ++tries>100 )
@@ -684,7 +684,7 @@ static char *FindGfFile(char *tempdir) {
 		strcpy(buffer,tempdir);
 		strcat(buffer,"/");
 		strcat(buffer,ent->d_name);
-		ret = copy(buffer);
+		ret = xstrdup_or_null(buffer);
 	break;
 	    }
 	}
@@ -713,7 +713,7 @@ static void cleantempdir(char *tempdir) {
 	    /*  which might mean we could not read it properly. So save up the*/
 	    /*  things we need to delete and trash them later */
 	    if ( cnt<99 )
-		todelete[cnt++] = copy(buffer);
+		todelete[cnt++] = xstrdup_or_null(buffer);
 	}
 	closedir(temp);
 	todelete[cnt] = NULL;
@@ -727,7 +727,7 @@ static void cleantempdir(char *tempdir) {
 
 void MfArgsInit(void) {
     if ( mf_args==NULL )
-	mf_args = copy("\\scrollmode; mode=proof ; mag=2; input");
+	mf_args = xstrdup("\\scrollmode; mode=proof ; mag=2; input");
 }
 
 static char *MfArgs(void) {

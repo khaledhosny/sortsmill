@@ -252,8 +252,8 @@ static int Filter_OK(GGadget *g, GEvent *e) {
 	if ( cnt!=0 ) {
 	    user_font_filters = xmalloc((cnt+1)*sizeof(struct openfilefilters));
 	    for ( i=cnt=0; i<rows; ++i ) if ( !md[2*i].frozen ) {
-		user_font_filters[cnt].name = copy(md[2*i].u.md_str);
-		user_font_filters[cnt].filter = copy(md[2*i+1].u.md_str);
+		user_font_filters[cnt].name = xstrdup_or_null(md[2*i].u.md_str);
+		user_font_filters[cnt].filter = xstrdup_or_null(md[2*i+1].u.md_str);
 		++cnt;
 	    }
 	    user_font_filters[cnt].name = user_font_filters[cnt].filter = NULL;
@@ -321,9 +321,9 @@ static void FilterDlg(void) {
 	for ( i=0; def_font_filters[i].name!=NULL; ++i ) {
 	    if ( *(char *) def_font_filters[i].name != '-' ) {
 		if ( k ) {
-		    md[2*cnt].u.md_str = copy(_(def_font_filters[i].name));
+		    md[2*cnt].u.md_str = xstrdup_or_null(_(def_font_filters[i].name));
 		    md[2*cnt].frozen = true;
-		    md[2*cnt+1].u.md_str = copy(def_font_filters[i].filter);
+		    md[2*cnt+1].u.md_str = xstrdup_or_null(def_font_filters[i].filter);
 		    md[2*cnt+1].frozen = true;
 		}
 		++cnt;
@@ -333,9 +333,9 @@ static void FilterDlg(void) {
 	    for ( i=0; user_font_filters[i].name!=NULL; ++i ) {
 		if ( *(char *) user_font_filters[i].name != '-' ) {
 		    if ( k ) {
-			md[2*cnt].u.md_str = copy(user_font_filters[i].name);
+			md[2*cnt].u.md_str = xstrdup_or_null(user_font_filters[i].name);
 			md[2*cnt].frozen = false;
-			md[2*cnt+1].u.md_str = copy(user_font_filters[i].filter);
+			md[2*cnt+1].u.md_str = xstrdup_or_null(user_font_filters[i].filter);
 			md[2*cnt+1].frozen = false;
 		    }
 		    ++cnt;

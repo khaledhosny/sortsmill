@@ -45,7 +45,7 @@ static char *cleancopy(char *name) {
     /*  a good postscript name, so do something reasonable here */
     if ( !isalpha(*(unsigned char *) fpt) && fpt[0]>=' ' && /* fpt[0]<=0x7f &&*/
 	    fpt[1]=='\0' )
-return( copy( StdGlyphName(buf,*(unsigned char *) fpt,ui_none,(NameList *) -1)) );
+return( xstrdup_or_null( StdGlyphName(buf,*(unsigned char *) fpt,ui_none,(NameList *) -1)) );
     if ( isdigit(*fpt)) {
 	tpt = temp = xmalloc(strlen(name)+2);
 	*tpt++ = '$';
@@ -70,13 +70,13 @@ return( copy( StdGlyphName(buf,*(unsigned char *) fpt,ui_none,(NameList *) -1)) 
 	char buffer[20];
 	static int unique = 0;
 	sprintf( buffer, "$u%d", ++unique );
-return( copy( buffer ));
+return( xstrdup_or_null( buffer ));
     }
 
     if ( temp!=NULL )
 return( temp );
 
-return( copy(name));
+return( xstrdup_or_null(name));
 }
 
 /* The pcf code is adapted from... */
@@ -539,7 +539,7 @@ static int slurp_header(FILE *bdf, int *_as, int *_ds, Encoding **_enc,
 
 	    if ( pcnt>=pmax )
 		dummy->props = xrealloc(dummy->props,(pmax=pcnt+10)*sizeof(BDFProperties));
-	    dummy->props[pcnt].name = copy(tok);
+	    dummy->props[pcnt].name = xstrdup_or_null(tok);
 	    while ( *buf==' ' || *buf=='\t' ) ++buf;
 	    for ( eol=buf+strlen(buf)-1; eol>=buf && isspace(*eol); --eol);
 	    eol[1] ='\0';
@@ -550,10 +550,10 @@ static int slurp_header(FILE *bdf, int *_as, int *_ds, Encoding **_enc,
 	    } else if ( *buf=='"' ) {
 		++buf;
 		if ( *eol=='"' ) *eol = '\0';
-		dummy->props[pcnt].u.str = copy(buf);
+		dummy->props[pcnt].u.str = xstrdup_or_null(buf);
 		dummy->props[pcnt].type = prt_string;
 	    } else {
-		dummy->props[pcnt].u.atom = copy(buf);
+		dummy->props[pcnt].u.atom = xstrdup_or_null(buf);
 		dummy->props[pcnt].type = prt_atom;
 	    }
 	    if ( inprops )
@@ -1482,9 +1482,9 @@ return(-2);
     dummy->props = xmalloc(cnt*sizeof(BDFProperties));
 
     for ( i=0; i<cnt; ++i ) {
-	dummy->props[i].name = copy(props[i].name);
+	dummy->props[i].name = xstrdup_or_null(props[i].name);
 	if ( props[i].isStr ) {
-	    dummy->props[i].u.str = copy(props[i].value);
+	    dummy->props[i].u.str = xstrdup_or_null(props[i].value);
 	    dummy->props[i].type  = prt_string | prt_property;
 	    if ( strcmp(props[i].name,"FAMILY_NAME")==0 )
 		strcpy(family,props[i].value);
@@ -1941,7 +1941,7 @@ void SFSetFontName(SplineFont *sf, char *family, char *mods,char *full) {
     n = xmalloc(strlen(family)+strlen(mods)+2);
     strcpy(n,family); strcat(n," "); strcat(n,mods);
     if ( full==NULL || *full == '\0' )
-	full = copy(n);
+	full = xstrdup_or_null(n);
     for ( pt=tpt=n; *pt; ) {
 	if ( !isspace(*pt))
 	    *tpt++ = *pt++;
@@ -1959,7 +1959,7 @@ void SFSetFontName(SplineFont *sf, char *family, char *mods,char *full) {
     *tpt = '\0';
 #endif
 
-    free(sf->fullname); sf->fullname = copy(full);
+    free(sf->fullname); sf->fullname = xstrdup_or_null(full);
 
     /* In the URW world fontnames aren't just a simple concatenation of */
     /*  family name and modifiers, so neither the family name nor the modifiers */
@@ -1969,51 +1969,51 @@ void SFSetFontName(SplineFont *sf, char *family, char *mods,char *full) {
 	/* or anything else */
     else {
 	free(sf->fontname); sf->fontname = n;
-	free(sf->familyname); sf->familyname = copy(family);
+	free(sf->familyname); sf->familyname = xstrdup_or_null(family);
 	free(sf->weight); sf->weight = NULL;
 	if ( strstrmatch(mods,"extralight")!=NULL || strstrmatch(mods,"extra-light")!=NULL )
-	    sf->weight = copy("ExtraLight");
+	    sf->weight = xstrdup("ExtraLight");
 	else if ( strstrmatch(mods,"demilight")!=NULL || strstrmatch(mods,"demi-light")!=NULL )
-	    sf->weight = copy("DemiLight");
+	    sf->weight = xstrdup("DemiLight");
 	else if ( strstrmatch(mods,"demibold")!=NULL || strstrmatch(mods,"demi-bold")!=NULL )
-	    sf->weight = copy("DemiBold");
+	    sf->weight = xstrdup("DemiBold");
 	else if ( strstrmatch(mods,"semibold")!=NULL || strstrmatch(mods,"semi-bold")!=NULL )
-	    sf->weight = copy("SemiBold");
+	    sf->weight = xstrdup("SemiBold");
 	else if ( strstrmatch(mods,"demiblack")!=NULL || strstrmatch(mods,"demi-black")!=NULL )
-	    sf->weight = copy("DemiBlack");
+	    sf->weight = xstrdup("DemiBlack");
 	else if ( strstrmatch(mods,"extrabold")!=NULL || strstrmatch(mods,"extra-bold")!=NULL )
-	    sf->weight = copy("ExtraBold");
+	    sf->weight = xstrdup("ExtraBold");
 	else if ( strstrmatch(mods,"extrablack")!=NULL || strstrmatch(mods,"extra-black")!=NULL )
-	    sf->weight = copy("ExtraBlack");
+	    sf->weight = xstrdup("ExtraBlack");
 	else if ( strstrmatch(mods,"book")!=NULL )
-	    sf->weight = copy("Book");
+	    sf->weight = xstrdup("Book");
 	else if ( strstrmatch(mods,"regular")!=NULL )
-	    sf->weight = copy("Regular");
+	    sf->weight = xstrdup("Regular");
 	else if ( strstrmatch(mods,"roman")!=NULL )
-	    sf->weight = copy("Roman");
+	    sf->weight = xstrdup("Roman");
 	else if ( strstrmatch(mods,"normal")!=NULL )
-	    sf->weight = copy("Normal");
+	    sf->weight = xstrdup("Normal");
 	else if ( strstrmatch(mods,"demi")!=NULL )
-	    sf->weight = copy("Demi");
+	    sf->weight = xstrdup("Demi");
 	else if ( strstrmatch(mods,"medium")!=NULL )
-	    sf->weight = copy("Medium");
+	    sf->weight = xstrdup("Medium");
 	else if ( strstrmatch(mods,"bold")!=NULL )
-	    sf->weight = copy("Bold");
+	    sf->weight = xstrdup("Bold");
 	else if ( strstrmatch(mods,"heavy")!=NULL )
-	    sf->weight = copy("Heavy");
+	    sf->weight = xstrdup("Heavy");
 	else if ( strstrmatch(mods,"black")!=NULL )
-	    sf->weight = copy("Black");
+	    sf->weight = xstrdup("Black");
 	else if ( strstrmatch(mods,"Nord")!=NULL )
-	    sf->weight = copy("Nord");
+	    sf->weight = xstrdup("Nord");
 /* Sigh. URW uses 4 letter abreviations... */
 	else if ( strstrmatch(mods,"Regu")!=NULL )
-	    sf->weight = copy("Regular");
+	    sf->weight = xstrdup("Regular");
 	else if ( strstrmatch(mods,"Medi")!=NULL )
-	    sf->weight = copy("Medium");
+	    sf->weight = xstrdup("Medium");
 	else if ( strstrmatch(mods,"blac")!=NULL )
-	    sf->weight = copy("Black");
+	    sf->weight = xstrdup("Black");
 	else
-	    sf->weight = copy("Medium");
+	    sf->weight = xstrdup("Medium");
     }
 
     FVSetTitles(sf);
@@ -2099,7 +2099,7 @@ return( NULL );
 	SFSetFontName(sf,family,mods,full);
 	if ( fontname[0]!='\0' ) {
 	    free(sf->fontname);
-	    sf->fontname = copy(fontname);
+	    sf->fontname = xstrdup_or_null(fontname);
 	}
 	map->enc = enc;
 	if ( defs.metricsset!=0 ) {
@@ -2109,7 +2109,7 @@ return( NULL );
 	sf->display_size = pixelsize;
 	if ( comments[0]!='\0' ) {
 	    free(sf->copyright);
-	    sf->copyright = copy(comments);
+	    sf->copyright = xstrdup_or_null(comments);
 	}
 	if ( upos!=0x80000000 )
 	    sf->upos = upos;
@@ -2154,7 +2154,7 @@ return( (BDFFont *) -1 );
     b->prop_cnt = dummy.prop_cnt;
     b->props = dummy.props;
     free(b->foundry);
-    b->foundry = ( foundry[0]=='\0' ) ? NULL : copy(foundry);
+    b->foundry = ( foundry[0]=='\0' ) ? NULL : xstrdup_or_null(foundry);
     if ( ispk==1 ) {
 	while ( pk_char(bdf,sf,b,map));
     } else if ( ispk==3 ) {
@@ -2359,7 +2359,7 @@ static void SFAddToBackground(SplineFont *sf,BDFFont *bdf) {
 	if ( bdf->glyphs[i]!=NULL ) {
 	    if ( (sc = sf->glyphs[i])==NULL ) {
 		sc = sf->glyphs[i] = SplineCharCreate(2);
-		sc->name = copy(bdf->glyphs[i]->sc->name);
+		sc->name = xstrdup_or_null(bdf->glyphs[i]->sc->name);
 		sc->orig_pos = i;
 		sc->unicodeenc = bdf->glyphs[i]->sc->unicodeenc;
 	    }

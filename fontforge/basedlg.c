@@ -166,7 +166,7 @@ static void BaseLangMatrixInit(struct matrixinit *mi,struct baselangextent *old,
 	lang[2] = bl->lang>>8;
 	lang[3] = bl->lang;
 	lang[4] = '\0';
-	md[mi->col_cnt*cnt+0].u.md_str = copy(lang);
+	md[mi->col_cnt*cnt+0].u.md_str = xstrdup_or_null(lang);
 	md[mi->col_cnt*cnt+1].u.md_ival = bl->descent;
 	md[mi->col_cnt*cnt+2].u.md_ival = bl->ascent;
 	md[mi->col_cnt*cnt+mi->col_cnt-1].u.md_str = (char *) BaseLangCopy(bl->features);
@@ -500,7 +500,7 @@ static void BaselineMatrixInit(struct matrixinit *mi,struct Base *old) {
 	    script[2] = bs->script>>8;
 	    script[3] = bs->script;
 	    script[4] = '\0';
-	    md[mi->col_cnt*cnt+0].u.md_str = copy(script);
+	    md[mi->col_cnt*cnt+0].u.md_str = xstrdup_or_null(script);
 	    if ( old->baseline_cnt!=0 ) {
 		md[mi->col_cnt*cnt+1].u.md_ival = old->baseline_tags[bs->def_baseline];
 		for ( k=0; k<old->baseline_cnt; ++k ) if ( mapping[k]!=-1 )

@@ -188,7 +188,7 @@ return( false );
 	if ( UnknownKey(bdf->props[cur->sel_prop].name) ) {
 	    if ( *end!='\0' ) {
 		bdf->props[cur->sel_prop].type = prt_string | prt_property;
-		bdf->props[cur->sel_prop].u.str = copy(text);
+		bdf->props[cur->sel_prop].u.str = xstrdup_or_null(text);
 	    } else {
 		if ( bdf->props[cur->sel_prop].type != (prt_uint | prt_property ))
 		    bdf->props[cur->sel_prop].type = prt_int | prt_property;
@@ -199,7 +199,7 @@ return( false );
 	    bdf->props[cur->sel_prop].u.val = val;
 	} else {
 	    bdf->props[cur->sel_prop].type = KeyType(bdf->props[cur->sel_prop].name);
-	    bdf->props[cur->sel_prop].u.str = copy(text);
+	    bdf->props[cur->sel_prop].u.str = xstrdup_or_null(text);
 	}
 	free(text);	    
 	bd->active = false;
@@ -569,10 +569,10 @@ static void BdfP_Invoked(GWindow v, GMenuItem *mi, GEvent *e) {
 		_BdfP_DefaultCurrent(bd);
 	    else if ( (bdf->props[sel].type&~prt_property)==prt_string ||
 		    (bdf->props[sel].type&~prt_property)==prt_atom)
-		bdf->props[sel].u.str = copy("");
+		bdf->props[sel].u.str = xstrdup("");
 	} else {
 	    bdf->props[sel].type = prt_property|prt_string;
-	    bdf->props[sel].u.str = copy("");
+	    bdf->props[sel].u.str = xstrdup("");
 	}
     } else {
 	free(bdf->props[sel].name);
@@ -746,7 +746,7 @@ return;
 	    sprintf( buffer, "%d", bdf->pixelsize );
 	else
 	    sprintf( buffer, "%d@%d", bdf->pixelsize, BDFDepth(bdf));
-	ti[i].text = (uint32_t *) copy(buffer);
+	ti[i].text = (uint32_t *) xstrdup_or_null(buffer);
 	ti[i].text_is_1byte = true;
     }
     ti[bd.cur-bd.fonts].selected = true;

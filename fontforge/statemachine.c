@@ -147,8 +147,8 @@ static struct asm_state *StateCopy(struct asm_state *old,int old_class_cnt,int o
 	if ( type==asm_insert ) {
 	    for ( j=0; j<minclass; ++j ) {
 		struct asm_state *this = &new[i*new_class_cnt+j];
-		this->u.insert.mark_ins = copy(this->u.insert.mark_ins);
-		this->u.insert.cur_ins = copy(this->u.insert.cur_ins);
+		this->u.insert.mark_ins = xstrdup_or_null(this->u.insert.mark_ins);
+		this->u.insert.cur_ins = xstrdup_or_null(this->u.insert.cur_ins);
 	    }
 	} else if ( type==asm_kern ) {
 	    for ( j=0; j<minclass; ++j ) {
@@ -858,7 +858,7 @@ static int SMD_Ok(GGadget *g, GEvent *e) {
     for ( i=4; i<sm->class_cnt; ++i ) {
         upt = strstr(classes[i].u.md_str,": ");
         if ( upt==NULL ) upt = classes[i].u.md_str; else upt += 2;
-        sm->classes[i] = copy(GlyphNameListDeUnicode(upt));
+        sm->classes[i] = xstrdup_or_null(GlyphNameListDeUnicode(upt));
     }
 
 	StatesFree(sm->state,sm->state_cnt,sm->class_cnt,
@@ -1413,7 +1413,7 @@ void StateMachineEdit(SplineFont *sf,ASM *sm,struct gfi_data *d) {
     md = xcalloc(sm->class_cnt+1,sizeof(struct matrix_data));
     for ( i=0; i<sm->class_cnt; ++i ) {
 	if ( i<4 ) {
-	    md[i+0].u.md_str = copy( _(specialclasses[i]) );
+	    md[i+0].u.md_str = xstrdup_or_null( _(specialclasses[i]) );
 	    md[i+0].frozen = true;
 	} else
       if (sm->classes[i])

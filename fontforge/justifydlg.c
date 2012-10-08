@@ -549,7 +549,7 @@ return( NULL );
     for ( i=0; otll[i]!=NULL; ++i )
 	len += strlen(otll[i]->lookup_name) +2;
     if ( len==0 )
-return( copy( "" ));
+return( xstrdup_or_null( "" ));
 
     ret = pt = xmalloc(len+1);
     for ( i=0; otll[i]!=NULL; ++i ) {
@@ -629,7 +629,7 @@ static void JLanguageMatrixInit(struct matrixinit *mi, struct jstf_lang *jl) {
     cnt = 0;
     for ( jlang = jl; jlang!=NULL; jlang=jlang->next ) {
 	for ( i=0; i<jlang->cnt; ++i ) {
-	    md[7*cnt+0].u.md_str = copy(Tag2Str(jl->lang));
+	    md[7*cnt+0].u.md_str = xstrdup_or_null(Tag2Str(jl->lang));
 	    md[7*cnt+1].u.md_str  = OTList2Str(jl->prios[i].enableExtend);
 	    md[7*cnt+2].u.md_str  = OTList2Str(jl->prios[i].disableExtend);
 	    md[7*cnt+3].u.md_str  = OTList2Str(jl->prios[i].maxExtend);
@@ -844,8 +844,8 @@ static void JScriptMatrixInit(struct matrixinit *mi,Justify *js) {
 	cnt = 0;
 	for ( jscript=js; jscript!=NULL; jscript = jscript->next ) {
 	    if ( k ) {
-		md[4*cnt+0].u.md_str = copy(Tag2Str(jscript->script));
-		md[4*cnt+1].u.md_str  = copy(jscript->extenders);
+		md[4*cnt+0].u.md_str = xstrdup_or_null(Tag2Str(jscript->script));
+		md[4*cnt+1].u.md_str  = xstrdup_or_null(jscript->extenders);
 		/* Nothing in 4*cnt+2 */
 		md[4*cnt+3].u.md_addr = JstfLangsCopy(jscript->langs);
 	    }
@@ -871,7 +871,7 @@ static int JSTF_Script_OK(GGadget *g, GEvent *e) {
 	for ( i=0; i<rows; ++i ) {
 	    cur = (Justify *) xzalloc(sizeof (Justify));
 	    cur->script = Str2Tag(strings[cols*i+0].u.md_str);
-	    cur->extenders = copy(strings[cols*i+1].u.md_str);
+	    cur->extenders = xstrdup_or_null(strings[cols*i+1].u.md_str);
 	    cur->langs = strings[cols*i+3].u.md_addr;
 	    if ( head==NULL )
 		head = cur;

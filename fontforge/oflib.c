@@ -535,7 +535,7 @@ return( NULL );
 	if ( GFileMkDir(buffer)==-1 )
 return( NULL );
 
-    oflibdir = copy(buffer);
+    oflibdir = xstrdup_or_null(buffer);
 return( oflibdir );
 }
 
@@ -581,22 +581,22 @@ return;
 	    cur = &all->fonts[all->fcnt];
 	    if ( ofl_gettoken(file,&tok)!= tok_str )
     break;
-	    cur->name = copy(tok.buf);
+	    cur->name = xstrdup_or_null(tok.buf);
 	    if ( ofl_gettoken(file,&tok)!= tok_str )
     break;
-	    cur->author = copy(tok.buf);
+	    cur->author = xstrdup_or_null(tok.buf);
 	    if ( ofl_gettoken(file,&tok)!= tok_int )
     break;
 	    cur->date = tok.ival;
 	    if ( ofl_gettoken(file,&tok)!= tok_str )
     break;
-	    cur->taglist = copy(tok.buf);
+	    cur->taglist = xstrdup_or_null(tok.buf);
 	    if ( ofl_gettoken(file,&tok)!= tok_str )
     break;
 	    cur->license = strcmp(tok.buf,"OFL")==0 ? ofll_ofl : ofll_pd;
 	    if ( ofl_gettoken(file,&tok)!= tok_str )
     break;
-	    cur->preview_filename = tok.buf[0]=='\0' ? NULL : copy(tok.buf);
+	    cur->preview_filename = tok.buf[0]=='\0' ? NULL : xstrdup_or_null(tok.buf);
 	    if ( ofl_gettoken(file,&tok)!= tok_int )
     break;
 	    cur->potential_gap_after_me = tok.ival;
@@ -606,10 +606,10 @@ return;
 	    du = (struct ofl_download_urls  *) xzalloc(sizeof (struct ofl_download_urls ));
 	    if ( ofl_gettoken(file,&tok)!= tok_str )
     break;
-	    du->comment = copy(tok.buf);
+	    du->comment = xstrdup_or_null(tok.buf);
 	    if ( ofl_gettoken(file,&tok)!= tok_str )
     break;
-	    du->url = copy(tok.buf);
+	    du->url = xstrdup_or_null(tok.buf);
 	    if ( cur==NULL )
     break;
 	    if ( last==NULL )
@@ -1176,7 +1176,7 @@ return;
 	SFDefaultImage(sf,name);
 	SplineFontFree(sf);
     }
-    cur->fi->preview_filename = copy(strrchr(name,'/')+1);
+    cur->fi->preview_filename = xstrdup_or_null(strrchr(name,'/')+1);
     free(name);
 
     OFLibEnableButtons(d);		/* This will load the image */
@@ -1478,7 +1478,7 @@ return( true );
 	    SFDefaultImage(sf,name);
 	    SplineFontFree(sf);
 	}
-	d->show[onefont]->preview_filename = copy(strrchr(name,'/')+1);
+	d->show[onefont]->preview_filename = xstrdup_or_null(strrchr(name,'/')+1);
 	free(name);
 	OFLibEnableButtons(d);		/* This will load the image */
 	DumpOFLibState(&d->all);

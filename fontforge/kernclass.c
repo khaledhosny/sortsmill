@@ -235,13 +235,13 @@ return;
     if ( err )
 return;
 
-    space[0] = copy(activedata[index].u.md_str);
+    space[0] = xstrdup_or_null(activedata[index].u.md_str);
     others = xmalloc((ocnt+1)*sizeof(char *));
     for ( i=0; i<ocnt; ++i ) {
 	if ( i==0 && isEverythingElse(otherdata[0].u.md_str))
-	    others[i] = copy("");
+	    others[i] = xstrdup("");
 	else
-	    others[i] = copy(otherdata[i].u.md_str);
+	    others[i] = xstrdup_or_null(otherdata[i].u.md_str);
     }
     kcd->first_class_new = is_first;
     kcd->r2l = r2l = (kcd->subtable->lookup->lookup_flags & pst_r2l)?1:0;
@@ -286,16 +286,16 @@ return;
     firsts = xmalloc((fcnt+1)*sizeof(char *));
     for ( i=0; i<fcnt; ++i ) {
 	if ( i==0 && isEverythingElse(firstdata[0].u.md_str))
-	    firsts[i] = copy("");
+	    firsts[i] = xstrdup("");
 	else
-	    firsts[i] = copy(firstdata[i].u.md_str);
+	    firsts[i] = xstrdup_or_null(firstdata[i].u.md_str);
     }
     seconds = xmalloc((scnt+1)*sizeof(char *));
     for ( i=0; i<scnt; ++i ) {
 	if ( i==0 && isEverythingElse(seconddata[0].u.md_str))
-	    seconds[i] = copy("");
+	    seconds[i] = xstrdup("");
 	else
-	    seconds[i] = copy(seconddata[i].u.md_str);
+	    seconds[i] = xstrdup_or_null(seconddata[i].u.md_str);
     }
     kcd->r2l = r2l = (kcd->subtable->lookup->lookup_flags & pst_r2l)?1:0;
 
@@ -2205,7 +2205,7 @@ static int AddClassList(GGadgetCreateData *gcd, GTextInfo *label, int k, int off
     md = xcalloc(cnt+10,sizeof(struct matrix_data));
     for ( i=0; i<cnt; ++i ) {
 	if ( i==0 && classes[i]==NULL ) {
-	    md[i+0].u.md_str = copy( _("{Everything Else}") );
+	    md[i+0].u.md_str = xstrdup_or_null( _("{Everything Else}") );
 	    if ( off!=0 ) md[i+0].frozen = true;
 	} else
 	    md[i+0].u.md_str = SFNameList2NameUni(sf,classes[i]);

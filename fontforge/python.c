@@ -907,9 +907,9 @@ return( NULL );
 
     printtype = iptype;
     if ( pcmd!=NULL && iptype==4 )
-	printcommand = copy(pcmd);
+	printcommand = xstrdup_or_null(pcmd);
     else if ( pcmd!=NULL && (iptype==0 || iptype==1) )
-	printlazyprinter = copy(pcmd);
+	printlazyprinter = xstrdup_or_null(pcmd);
 Py_RETURN_NONE;
 }
 
@@ -1008,8 +1008,8 @@ return( NULL );
     py_ie[ie_cnt].export = export;
     py_ie[ie_cnt].data = data;
     py_ie[ie_cnt].name = name;
-    py_ie[ie_cnt].extension = copy(exten);
-    py_ie[ie_cnt].all_extensions = copy(exten_list==NULL ? exten : exten_list);
+    py_ie[ie_cnt].extension = xstrdup_or_null(exten);
+    py_ie[ie_cnt].all_extensions = xstrdup_or_null(exten_list==NULL ? exten : exten_list);
     ++ie_cnt;
     py_ie[ie_cnt].name = NULL;		/* End list marker */
 
@@ -1148,7 +1148,7 @@ return( NULL );
 	    FreeStringArray( i, answers );
 return( NULL );
 	}
-	answers[i] = copy(PyBytes_AsString(utf8_name));
+	answers[i] = xstrdup_or_null(PyBytes_AsString(utf8_name));
 	Py_DECREF(utf8_name);
     }
     answers[cnt] = NULL;
@@ -1195,7 +1195,7 @@ return( NULL );
 	    FreeStringArray( i, answers );
 return( NULL );
 	}
-        answers[i] = copy(PyBytes_AsString(utf8_name));
+        answers[i] = xstrdup_or_null(PyBytes_AsString(utf8_name));
         Py_DECREF(utf8_name);
     }
     answers[cnt] = NULL;
@@ -2123,7 +2123,7 @@ static PyObject *PyFFContour_dup(PyFF_Contour *self) {
     PyFF_Contour *ret = (PyFF_Contour *)PyFF_ContourType.tp_alloc(&PyFF_ContourType, 0);
     ret->pt_max = ret->pt_cnt = self->pt_cnt;
     ret->spiro_cnt = self->spiro_cnt;
-    ret->name = copy(self->name);
+    ret->name = xstrdup_or_null(self->name);
     ret->is_quadratic = self->is_quadratic;
     ret->closed = self->closed;
     if ( ret->pt_cnt!=0 ) {
@@ -4246,7 +4246,7 @@ return( NULL );
 	ss->spiro_cnt = ss->spiro_max = c->spiro_cnt;
 	ss->spiros = SpiroCPCopy(c->spiros,NULL);
     }
-    ss->contour_name = copy(c->name);
+    ss->contour_name = xstrdup_or_null(c->name);
 
     if ( c->is_quadratic ) {
 	if ( !c->points[0]->on_curve ) {
@@ -4404,7 +4404,7 @@ static PyFF_Contour *ContourFromSS(SplineSet *ss,PyFF_Contour *ret) {
 	ret->spiro_cnt = ss->spiro_cnt;
 	ret->spiros = SpiroCPCopy(ss->spiros,NULL);
     }
-    ret->name = copy(ss->contour_name);
+    ret->name = xstrdup_or_null(ss->contour_name);
     ret->closed = ss->first->prev!=NULL;
     for ( k=0; k<2; ++k ) {
 	if ( ss->first->next == NULL ) {
@@ -5810,7 +5810,7 @@ return( -1 );
     SFGlyphRenameFixup(self->sc->parent,self->sc->name,str);
     self->sc->namechanged = self->sc->changed = true;
     free( self->sc->name );
-    self->sc->name = copy(str);
+    self->sc->name = xstrdup_or_null(str);
     GlyphHashFree(self->sc->parent);
     SCRefreshTitles(self->sc);
 #if PY_MAJOR_VERSION >= 3
@@ -6494,10 +6494,10 @@ static int PyFF_Glyph_set_comment(PyFF_Glyph *self,PyObject *value, void *UNUSED
 	/* Need to force utf8 encoding rather than accepting the "default" */
 	/*  which would happen if we treated unicode as a string */
 	temp = PyUnicode_AsUTF8String(value);
-	newv = copy( PyBytes_AsString(temp));
+	newv = xstrdup_or_null( PyBytes_AsString(temp));
 	Py_DECREF(temp);
     } else
-	newv = copy( PyBytes_AsString(value));
+	newv = xstrdup_or_null( PyBytes_AsString(value));
     if ( newv==NULL )
 return( -1 );
     free(self->sc->comment);
@@ -6763,13 +6763,13 @@ return( NULL );
 	PyObject *obj = PySequence_GetItem(tuple,i);
 	int extender=0, start=0, end=0, full=0;
 	if ( PyType_IsSubtype(&PyFF_GlyphType,obj->ob_type) ) {
-	    parts[i].component = copy( ((PyFF_Glyph *) obj)->sc->name );
+	    parts[i].component = xstrdup_or_null( ((PyFF_Glyph *) obj)->sc->name );
 	} else if ( PyUnicode_Check(obj)) {
 	    PyObject *bytes = PyUnicode_AsUTF8String(obj);
-	    parts[i].component = copy(PyBytes_AsString(bytes));
+	    parts[i].component = xstrdup_or_null(PyBytes_AsString(bytes));
 	    Py_DECREF(bytes);
 	} else if ( PyString_Check(obj)) {
-	    parts[i].component = copy(PyString_AsString(obj));
+	    parts[i].component = xstrdup_or_null(PyString_AsString(obj));
 	} else if ( PyTuple_Check(obj) && PyTuple_Size(obj)>0 &&
 		PyType_IsSubtype(&PyFF_GlyphType,PyTuple_GetItem(obj,0)->ob_type) ) {
 	    PyObject *g;
@@ -6778,7 +6778,7 @@ return( NULL );
 		free(parts);
 return( NULL );
 	    }
-	    parts[i].component = copy(((PyFF_Glyph *) g)->sc->name);
+	    parts[i].component = xstrdup_or_null(((PyFF_Glyph *) g)->sc->name);
 	} else if ( !PyArg_ParseTuple(obj,"s|iiii", &parts[i].component,
 		&extender, &start, &end, &full )) {
             free(parts);
@@ -6863,7 +6863,7 @@ static int PyFF_Glyph_set_verticalVariants(PyFF_Glyph *self,PyObject *value, voi
 return( -1 );
 	if ( self->sc->vert_variants == NULL )
 	    self->sc->vert_variants = (struct glyphvariants *) xzalloc(sizeof (struct glyphvariants));
-	self->sc->vert_variants->variants = copy(str);
+	self->sc->vert_variants->variants = xstrdup_or_null(str);
     }
 return( 0 );
 }
@@ -6889,7 +6889,7 @@ static int PyFF_Glyph_set_horizontalVariants(PyFF_Glyph *self,PyObject *value, v
 return( -1 );
 	if ( self->sc->horiz_variants == NULL )
 	    self->sc->horiz_variants = (struct glyphvariants *) xzalloc(sizeof (struct glyphvariants));
-	self->sc->horiz_variants->variants = copy(str);
+	self->sc->horiz_variants->variants = xstrdup_or_null(str);
     }
 return( 0 );
 }
@@ -7730,11 +7730,11 @@ static char *GlyphNamesFromTuple(PyObject *glyphs) {
         PyObject *bytes = PyUnicode_AsUTF8String(glyphs);
         if (bytes == NULL)
 return( NULL );
-        str = copy( PyBytes_AsString(bytes) );
+        str = xstrdup_or_null( PyBytes_AsString(bytes) );
         Py_DECREF( bytes );
 return( str );
 #else /* PY_MAJOR_VERSION >= 3 */
-return( copy( PyBytes_AsString(glyphs)) );
+return( xstrdup_or_null( PyBytes_AsString(glyphs)) );
 #endif /* PY_MAJOR_VERSION >= 3 */
     }
     if ( !PySequence_Check(glyphs) ) {
@@ -7798,7 +7798,7 @@ return(NULL );
 	    free(ret);
 return( NULL );
 	}
-	ret[i] = copy(str);
+	ret[i] = xstrdup_or_null(str);
     }
 return( ret );
 }
@@ -8151,7 +8151,7 @@ return( NULL );
 	    }
 Py_RETURN( self );
 	}
-	temp.u.pair.paired = copy(other);
+	temp.u.pair.paired = xstrdup_or_null(other);
 	if ( kpold!=NULL ) {
 	    if ( kpprev!=NULL )
 		kpprev->next = kpold->next;
@@ -8166,7 +8166,7 @@ Py_RETURN( self );
 	if ( !PyArg_ParseTuple(args,"ss", &subname, &other))
 return( NULL );
 	temp.type = pst_substitution;
-	temp.u.subs.variant = copy(other);
+	temp.u.subs.variant = xstrdup_or_null(other);
     } else {
 	if ( !PyArg_ParseTuple(args,"sO", &subname, &others))
 return( NULL );
@@ -9458,7 +9458,7 @@ return( Py_BuildValue("s",self->sf->layers[self->layer].name));
 static int PyFF_LayerInfo_set_name(PyFF_LayerInfo *self,PyObject *value, void *UNUSED(closure)) {
     if ( STRING_CHECK(value)) {
 	free( self->sf->layers[self->layer].name );
-	self->sf->layers[self->layer].name = copy(PyBytes_AsString(value));
+	self->sf->layers[self->layer].name = xstrdup_or_null(PyBytes_AsString(value));
 return(0);
     }
     PyErr_Format(PyExc_TypeError,"Expected layer name");
@@ -9677,7 +9677,7 @@ return( 0 );
     } else if ( !PyArg_ParseTuple(value,"si", &name, &order2 ) )
 return( -1 );
     free(sf->layers[layer].name);
-    sf->layers[layer].name = copy(name);
+    sf->layers[layer].name = xstrdup_or_null(name);
     order2 = order2!=0;
     if ( sf->layers[layer].order2!=order2 ) {
 	if ( sf->layers[layer].order2!=order2 ) {
@@ -10662,7 +10662,7 @@ return( 1 );	/* If they set it to the default, there's nothing to do */
 	sf->names = names;
     }
     free(names->names[strid]);
-    names->names[strid] = copy( string );
+    names->names[strid] = xstrdup_or_null( string );
 #if PY_MAJOR_VERSION >= 3
     Py_DECREF( bytes );
 #endif /* PY_MAJOR_VERSION >= 3 */
@@ -11174,10 +11174,10 @@ return( -1 );
 	/* Need to force utf8 encoding rather than accepting the "default" */
 	/*  which would happen if we treated unicode as a string */
 	temp = PyUnicode_AsUTF8String(value);
-	newv = copy( PyBytes_AsString(temp));
+	newv = xstrdup_or_null( PyBytes_AsString(temp));
 	Py_DECREF(temp);
     } else
-	newv = copy( PyBytes_AsString(value));
+	newv = xstrdup_or_null( PyBytes_AsString(value));
     if ( newv==NULL && value!=Py_None )
 return( -1 );
     oldpos = (char **) (((char *) sf) + offset );
@@ -11219,10 +11219,10 @@ return( -1 );
 	/* Need to force utf8 encoding rather than accepting the "default" */
 	/*  which would happen if we treated unicode as a string */
 	temp = PyUnicode_AsUTF8String(value);
-	newv = copy( PyBytes_AsString(temp));
+	newv = xstrdup_or_null( PyBytes_AsString(temp));
 	Py_DECREF(temp);
     } else
-	newv = copy( PyBytes_AsString(value));
+	newv = xstrdup_or_null( PyBytes_AsString(value));
     if ( newv==NULL )
 return( -1 );
     oldpos = (char **) (((char *) (self->fv->sf)) + offset );
@@ -12327,7 +12327,7 @@ return( -1 );
 return( -1 );
 	}
 	cur = (struct otfname  *) xzalloc(sizeof (struct otfname ));
-	cur->name = copy(string);
+	cur->name = xstrdup_or_null(string);
 	cur->lang = lang;
 	cur->next = NULL;
 	if ( head==NULL )
@@ -12691,7 +12691,7 @@ return( -1 );
 	    FreeStringArray( i, classes );
 return( -1 );
 	}
-	names[i] = copy(nm);
+	names[i] = xstrdup_or_null(nm);
     }
 
     MarkClassFree(sf->mark_class_cnt,sf->mark_classes,sf->mark_class_names);
@@ -13723,7 +13723,7 @@ return( NULL );
 
     sub = (struct lookup_subtable *) xzalloc(sizeof (struct lookup_subtable));
     sub->lookup = otl;
-    sub->subtable_name = copy(new_subtable);
+    sub->subtable_name = xstrdup_or_null(new_subtable);
     if ( after!=NULL ) {
 	sub->next = after->next;
 	after->next = sub;
@@ -13802,7 +13802,7 @@ return( NULL );
 return( NULL );
     }
     ac = (AnchorClass *) xzalloc(sizeof (AnchorClass));
-    ac->name = copy( anchor_name );
+    ac->name = xstrdup_or_null( anchor_name );
     ac->subtable = sub;
     ac->type = lookup_type==gpos_cursive        ? act_curs :
 		lookup_type==gpos_mark2base     ? act_mark :
@@ -14139,12 +14139,12 @@ PyFFFont_addMarkClass (PyFF_Font *self, PyObject *args)
 
   for (int i = 0; i < cnt; ++i)
     {
-      mark_classes[i] = copy (sf->mark_classes[i]);
-      mark_class_names[i] = copy (sf->mark_class_names[i]);
+      mark_classes[i] = xstrdup_or_null (sf->mark_classes[i]);
+      mark_class_names[i] = xstrdup_or_null (sf->mark_class_names[i]);
     }
 
-  mark_classes[cnt] = copy (str);
-  mark_class_names[cnt] = copy (name);
+  mark_classes[cnt] = xstrdup_or_null (str);
+  mark_class_names[cnt] = xstrdup_or_null (name);
 
   MarkClassFree (sf->mark_class_cnt, sf->mark_classes, sf->mark_class_names);
 
@@ -14190,12 +14190,12 @@ PyFFFont_addMarkSet (PyFF_Font *self, PyObject *args)
 
   for (int i = 0; i < cnt; ++i)
     {
-      mark_sets[i] = copy (sf->mark_sets[i]);
-      mark_set_names[i] = copy (sf->mark_set_names[i]);
+      mark_sets[i] = xstrdup_or_null (sf->mark_sets[i]);
+      mark_set_names[i] = xstrdup_or_null (sf->mark_set_names[i]);
     }
 
-  mark_sets[cnt] = copy (str);
-  mark_set_names[cnt] = copy (name);
+  mark_sets[cnt] = xstrdup_or_null (str);
+  mark_set_names[cnt] = xstrdup_or_null (name);
 
   MarkSetFree (sf->mark_set_cnt, sf->mark_sets, sf->mark_set_names);
 
@@ -14765,7 +14765,7 @@ return( NULL );
     }
     otl->lookup_type = itype;
     otl->lookup_flags = flags;
-    otl->lookup_name = copy(lookup_str);
+    otl->lookup_name = xstrdup_or_null(lookup_str);
     otl->features = fl;
     if ( fl!=NULL && (fl->featuretag==CHR('l','i','g','a') || fl->featuretag==CHR('r','l','i','g')))
 	otl->store_in_afm = true;
@@ -15463,18 +15463,18 @@ return( NULL );
     if ( locfilename!=NULL ) {
 	SplineFont *sf = fv->cidmaster?fv->cidmaster:fv->sf->mm!=NULL?fv->sf->mm->normal:fv->sf;
 	free(sf->filename);
-	sf->filename = copy(locfilename);
+	sf->filename = xstrdup_or_null(locfilename);
 	sf->save_to_dir = s2d;
 	free(sf->origname);
-	sf->origname = copy(locfilename);
+	sf->origname = xstrdup_or_null(locfilename);
 	sf->new = false;
 	if ( sf->mm!=NULL ) {
 	    int i;
 	    for ( i=0; i<sf->mm->instance_count; ++i ) {
 		free(sf->mm->instances[i]->filename);
-		sf->mm->instances[i]->filename = copy(locfilename);
+		sf->mm->instances[i]->filename = xstrdup_or_null(locfilename);
 		free(sf->mm->instances[i]->origname);
-		sf->mm->instances[i]->origname = copy(locfilename);
+		sf->mm->instances[i]->origname = xstrdup_or_null(locfilename);
 		sf->mm->instances[i]->new = false;
 	    }
 	}
@@ -15947,7 +15947,7 @@ return( NULL );
 	sc = SFMakeChar(fv->sf,fv->map,enc);
 	if ( name!=NULL ) {
 	    free(sc->name);
-	    sc->name = copy(name);
+	    sc->name = xstrdup_or_null(name);
 	}
     } else {
 	sc = SFGetOrMakeChar(fv->sf,uni,name);
@@ -17986,7 +17986,7 @@ char *PyFF_PickleMeToString(void *pydata) {
     result = PyEval_CallObject(pickler, arglist);
     Py_DECREF(arglist);
     if ( result!=NULL )
-	ret = copy(PyBytes_AsString(result));
+	ret = xstrdup_or_null(PyBytes_AsString(result));
     Py_XDECREF(result);
     if ( PyErr_Occurred()!=NULL ) {
 	PyErr_Print();

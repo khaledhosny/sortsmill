@@ -1031,7 +1031,7 @@ PrefsUI_GetPrefs (char *name, Val * val)
 
                 char *tmpstr =
                   pf->val ? *((char **) (pf->val)) : (char *) (pf->get) ();
-                val->u.sval = copy (tmpstr ? tmpstr : "");
+                val->u.sval = xstrdup_or_null (tmpstr ? tmpstr : "");
 
                 if (!pf->val)
                   free (tmpstr);
@@ -1040,14 +1040,14 @@ PrefsUI_GetPrefs (char *name, Val * val)
               {
                 val->type = v_str;
                 if (*((NameList **) (pf->val)) == NULL)
-                  val->u.sval = copy ("NULL");
+                  val->u.sval = xstrdup_or_null ("NULL");
                 else
-                  val->u.sval = copy ((*((Encoding **) (pf->val)))->enc_name);
+                  val->u.sval = xstrdup_or_null ((*((Encoding **) (pf->val)))->enc_name);
               }
             else if (pf->type == pr_namelist)
               {
                 val->type = v_str;
-                val->u.sval = copy ((*((NameList **) (pf->val)))->title);
+                val->u.sval = xstrdup_or_null ((*((NameList **) (pf->val)))->title);
               }
             else if (pf->type == pr_real || pf->type == pr_angle)
               {
@@ -1129,7 +1129,7 @@ PrefsUI_SetPrefs (char *name, Val * val1, Val * val2)
                 else
                   {
                     free (*((char **) (pf->val)));
-                    *((char **) (pf->val)) = copy (val1->u.sval);
+                    *((char **) (pf->val)) = xstrdup_or_null (val1->u.sval);
                   }
               }
             else if (pf->type == pr_encoding)
@@ -1185,7 +1185,7 @@ getPfaEditPrefs (void)
   if (getUserConfigDir () == NULL)
     return (NULL);
   sprintf (buffer, "%s/prefs", getUserConfigDir ());
-  prefs = copy (buffer);
+  prefs = xstrdup_or_null (buffer);
   return (prefs);
 }
 
@@ -1218,14 +1218,14 @@ DefaultXUID (void)
   r2 = random ();
   sprintf (buffer, "1021 %d %d", r1, r2);
   free (xuid);
-  xuid = copy (buffer);
+  xuid = xstrdup_or_null (buffer);
 }
 
 static void
 DefaultHelp (void)
 {
   if (helpdir == NULL)
-    helpdir = copy (DOCDIR "/");
+    helpdir = xstrdup_or_null (DOCDIR "/");
 }
 
 static void
@@ -1307,10 +1307,10 @@ PrefsUI_LoadPrefs (void)
             {
               if (strncmp (line, "Recent:", strlen ("Recent:")) == 0
                   && ri < RECENT_MAX)
-                RecentFiles[ri++] = copy (pt);
+                RecentFiles[ri++] = xstrdup_or_null (pt);
               else if (strncmp (line, "MenuScript:", strlen ("MenuScript:"))
                        == 0 && ms < SCRIPT_MENU_MAX)
-                script_filenames[ms++] = copy (pt);
+                script_filenames[ms++] = xstrdup_or_null (pt);
               else if (strncmp (line, "MenuName:", strlen ("MenuName:")) == 0
                        && mn < SCRIPT_MENU_MAX)
                 script_menu_names[mn++] = utf82u_copy (pt);
@@ -1325,14 +1325,14 @@ PrefsUI_LoadPrefs (void)
                                 ((filt_max +=
                                   10) + 1) * sizeof (struct openfilefilters));
                   user_font_filters[fn].filter = NULL;
-                  user_font_filters[fn++].name = copy (pt);
+                  user_font_filters[fn++].name = xstrdup_or_null (pt);
                   user_font_filters[fn].name = NULL;
                 }
               else if (strncmp (line, "FontFilter:", strlen ("FontFilter:"))
                        == 0)
                 {
                   if (ff < filt_max)
-                    user_font_filters[ff++].filter = copy (pt);
+                    user_font_filters[ff++].filter = xstrdup_or_null (pt);
                 }
               else if (strncmp (line, "MacMapCnt:", strlen ("MacSetCnt:")) ==
                        0)
@@ -1403,9 +1403,9 @@ PrefsUI_LoadPrefs (void)
               if (*pt == '\0')
                 pt = NULL;
               if (pl->val != NULL)
-                *((char **) (pl->val)) = copy (pt);
+                *((char **) (pl->val)) = xstrdup_or_null (pt);
               else
-                (pl->set) (copy (pt));
+                (pl->set) (xstrdup_or_null (pt));
               break;
             }
         }
@@ -2245,7 +2245,7 @@ Prefs_Ok (GGadget * g, GEvent * e)
           for (pt = xuid; *pt == ' '; ++pt);
           if (*pt == '[')
             {                   /* People who know PS well, might want to put brackets arround the xuid base array, but I don't want them */
-              pt = copy (pt + 1);
+              pt = xstrdup_or_null (pt + 1);
               free (xuid);
               xuid = pt;
             }
@@ -2643,7 +2643,7 @@ DoPrefs (void)
               break;
             case pr_int:
               sprintf (buf, "%d", *((int *) pl->val));
-              plabel[gc].text = (uint32_t *) copy (buf);
+              plabel[gc].text = (uint32_t *) xstrdup_or_null (buf);
               pgcd[gc++].creator = GTextFieldCreate;
               hvarray[si++] = &pgcd[gc - 1];
               hvarray[si++] = GCD_Glue;
@@ -2658,7 +2658,7 @@ DoPrefs (void)
                 pt = utf8_idpb (pt, *((int *) pl->val));
                 *pt = '\0';
               }
-              plabel[gc].text = (uint32_t *) copy (buf);
+              plabel[gc].text = (uint32_t *) xstrdup_or_null (buf);
               pgcd[gc++].creator = GTextFieldCreate;
               hvarray[si++] = &pgcd[gc - 1];
               hvarray[si++] = GCD_Glue;
@@ -2667,7 +2667,7 @@ DoPrefs (void)
               break;
             case pr_real:
               sprintf (buf, "%g", *((float *) pl->val));
-              plabel[gc].text = (uint32_t *) copy (buf);
+              plabel[gc].text = (uint32_t *) xstrdup_or_null (buf);
               pgcd[gc++].creator = GTextFieldCreate;
               hvarray[si++] = &pgcd[gc - 1];
               hvarray[si++] = GCD_Glue;
@@ -2776,7 +2776,7 @@ DoPrefs (void)
               break;
             case pr_angle:
               sprintf (buf, "%g", *((float *) pl->val) * RAD2DEG);
-              plabel[gc].text = (uint32_t *) copy (buf);
+              plabel[gc].text = (uint32_t *) xstrdup_or_null (buf);
               pgcd[gc++].creator = GTextFieldCreate;
               hvarray[si++] = &pgcd[gc - 1];
               plabel[gc].text = (uint32_t *) U_ ("°");
@@ -3039,7 +3039,7 @@ RecentFilesRemember (char *filename)
         free (RecentFiles[RECENT_MAX - 1]);
       for (i = RECENT_MAX - 1; i > 0; --i)
         RecentFiles[i] = RecentFiles[i - 1];
-      RecentFiles[0] = copy (filename);
+      RecentFiles[0] = xstrdup_or_null (filename);
     }
 
   if (LastFontsPreserving)
@@ -3048,7 +3048,7 @@ RecentFilesRemember (char *filename)
         if (strcmp (filename, LastFonts[i]) == 0)
           break;
       if (LastFontIndex < RECENT_MAX && i == LastFontIndex)
-        LastFonts[LastFontIndex++] = copy (filename);
+        LastFonts[LastFontIndex++] = xstrdup_or_null (filename);
     }
   PrefsUI_SavePrefs (true);
 }
@@ -3097,7 +3097,7 @@ static void
 change_res_filename (const char *newname)
 {
   free (xdefs_filename);
-  xdefs_filename = copy (newname);
+  xdefs_filename = xstrdup_or_null (newname);
   SavePrefs (true);
 }
 
@@ -3349,7 +3349,7 @@ PrefsSubSetDlg (CharView * cv, char *windowTitle, struct prefs_list *plist)
           break;
         case pr_int:
           sprintf (buf, "%d", *((int *) pl->val));
-          plabel[gc].text = (uint32_t *) copy (buf);
+          plabel[gc].text = (uint32_t *) xstrdup_or_null (buf);
           pgcd[gc++].creator = GTextFieldCreate;
           hvarray[si++] = &pgcd[gc - 1];
           hvarray[si++] = GCD_Glue;
@@ -3364,7 +3364,7 @@ PrefsSubSetDlg (CharView * cv, char *windowTitle, struct prefs_list *plist)
             pt = utf8_idpb (pt, *((int *) pl->val));
             *pt = '\0';
           }
-          plabel[gc].text = (uint32_t *) copy (buf);
+          plabel[gc].text = (uint32_t *) xstrdup_or_null (buf);
           pgcd[gc++].creator = GTextFieldCreate;
           hvarray[si++] = &pgcd[gc - 1];
           hvarray[si++] = GCD_Glue;
@@ -3373,7 +3373,7 @@ PrefsSubSetDlg (CharView * cv, char *windowTitle, struct prefs_list *plist)
           break;
         case pr_real:
           sprintf (buf, "%g", *((float *) pl->val));
-          plabel[gc].text = (uint32_t *) copy (buf);
+          plabel[gc].text = (uint32_t *) xstrdup_or_null (buf);
           pgcd[gc++].creator = GTextFieldCreate;
           hvarray[si++] = &pgcd[gc - 1];
           hvarray[si++] = GCD_Glue;
@@ -3478,7 +3478,7 @@ PrefsSubSetDlg (CharView * cv, char *windowTitle, struct prefs_list *plist)
           break;
         case pr_angle:
           sprintf (buf, "%g", *((float *) pl->val) * RAD2DEG);
-          plabel[gc].text = (uint32_t *) copy (buf);
+          plabel[gc].text = (uint32_t *) xstrdup_or_null (buf);
           pgcd[gc++].creator = GTextFieldCreate;
           hvarray[si++] = &pgcd[gc - 1];
           plabel[gc].text = (uint32_t *) U_ ("°");

@@ -1277,7 +1277,7 @@ char *SuffixFromTags(FeatureScriptLangList *fl) {
     while ( fl!=NULL ) {
 	for ( i=0; tags2suffix[i].tag!=0; ++i )
 	    if ( tags2suffix[i].tag==fl->featuretag )
-return( copy( tags2suffix[i].suffix ));
+return( xstrdup_or_null( tags2suffix[i].suffix ));
 	fl = fl->next;
     }
 return( NULL );
@@ -1489,7 +1489,7 @@ return( NULL );
 		ubuf[7]='\0';
 	}
     }
-return( copy( ubuf ));
+return( xstrdup_or_null( ubuf ));
 }
 
 
@@ -1525,7 +1525,7 @@ void NameOTLookup(OTLookup *otl,SplineFont *sf) {
 		lookuptype = S_("LookupType|Unknown");
 	    for ( fl=otl->features; fl!=NULL && !fl->ismac; fl=fl->next );
 	    if ( fl==NULL )
-		userfriendly = copy(lookuptype);
+		userfriendly = xstrdup_or_null(lookuptype);
 	    else {
 		userfriendly = xmalloc( strlen(lookuptype) + 10);
 		sprintf( userfriendly, "%s '%c%c%c%c'", lookuptype,
@@ -1564,7 +1564,7 @@ void NameOTLookup(OTLookup *otl,SplineFont *sf) {
 		script_tag = found->script;
 		for ( j=0; localscripts[j].text!=NULL && script_tag!=localscripts[j].tag; ++j );
 		if ( localscripts[j].text!=NULL )
-		    script = copy( S_((char *) localscripts[j].text) );
+		    script = xstrdup_or_null( S_((char *) localscripts[j].text) );
 		else {
 		    buf[0] = '\'';
 		    buf[1] = fl->scripts->script>>24;
@@ -1573,7 +1573,7 @@ void NameOTLookup(OTLookup *otl,SplineFont *sf) {
 		    buf[4] = fl->scripts->script&0xff;
 		    buf[5] = '\'';
 		    buf[6] = 0;
-		    script = copy(buf);
+		    script = xstrdup_or_null(buf);
 		}
 	    }
 	}
@@ -1966,7 +1966,7 @@ static char **ClassCopy(int class_cnt,char **classes) {
 return( NULL );
     newclasses = xmalloc(class_cnt*sizeof(char *));
     for ( i=0; i<class_cnt; ++i )
-	newclasses[i] = copy(classes[i]);
+	newclasses[i] = xstrdup_or_null(classes[i]);
 return( newclasses );
 }
 
@@ -2051,9 +2051,9 @@ static FPST *SF_AddFPST(struct sfmergecontext *mc,FPST *fpst,
 
 	switch ( newfpst->format ) {
 	  case pst_glyphs:
-	    r->u.glyph.names = copy( r->u.glyph.names );
-	    r->u.glyph.back = copy( r->u.glyph.back );
-	    r->u.glyph.fore = copy( r->u.glyph.fore );
+	    r->u.glyph.names = xstrdup_or_null( r->u.glyph.names );
+	    r->u.glyph.back = xstrdup_or_null( r->u.glyph.back );
+	    r->u.glyph.fore = xstrdup_or_null( r->u.glyph.fore );
 	  break;
 	  case pst_class:
 	    r->u.class.nclasses = xmalloc( r->u.class.ncnt*sizeof(uint16_t));
@@ -2072,7 +2072,7 @@ static FPST *SF_AddFPST(struct sfmergecontext *mc,FPST *fpst,
 	    r->u.rcoverage.ncovers = ClassCopy( r->u.rcoverage.always1, r->u.rcoverage.ncovers );
 	    r->u.rcoverage.bcovers = ClassCopy( r->u.rcoverage.bcnt, r->u.rcoverage.bcovers );
 	    r->u.rcoverage.fcovers = ClassCopy( r->u.rcoverage.fcnt, r->u.rcoverage.fcovers );
-	    r->u.rcoverage.replacements = copy( r->u.rcoverage.replacements );
+	    r->u.rcoverage.replacements = xstrdup_or_null( r->u.rcoverage.replacements );
 	  break;
 	}
     }
@@ -2101,8 +2101,8 @@ static ASM *SF_AddASM(struct sfmergecontext *mc,ASM *sm, struct lookup_subtable 
     } else if ( newsm->type == asm_insert ) {
 	for ( i=0; i<newsm->class_cnt*newsm->state_cnt; ++i ) {
 	    struct asm_state *this = &newsm->state[i];
-	    this->u.insert.mark_ins = copy(this->u.insert.mark_ins);
-	    this->u.insert.cur_ins = copy(this->u.insert.cur_ins);
+	    this->u.insert.mark_ins = xstrdup_or_null(this->u.insert.mark_ins);
+	    this->u.insert.cur_ins = xstrdup_or_null(this->u.insert.cur_ins);
 	}
     } else if ( newsm->type == asm_context ) {
 	for ( i=0; i<newsm->class_cnt*newsm->state_cnt; ++i ) {
@@ -2182,7 +2182,7 @@ static int SF_SCAddPST(SplineChar *tosc,PST *pst,struct lookup_subtable *sub) {
 
     switch( newpst->type ) {
       case pst_pair:
-	newpst->u.pair.paired = copy(pst->u.pair.paired);
+	newpst->u.pair.paired = xstrdup_or_null(pst->u.pair.paired);
 	newpst->u.pair.vr = (struct vr *) xzalloc(sizeof (struct vr [2]));
 	memcpy(newpst->u.pair.vr,pst->u.pair.vr,sizeof(struct vr [2]));
       break;
@@ -2192,7 +2192,7 @@ static int SF_SCAddPST(SplineChar *tosc,PST *pst,struct lookup_subtable *sub) {
       case pst_substitution:
       case pst_alternate:
       case pst_multiple:
-	newpst->u.subs.variant = copy(pst->u.subs.variant);
+	newpst->u.subs.variant = xstrdup_or_null(pst->u.subs.variant);
       break;
     }
 return( true );
@@ -2476,7 +2476,7 @@ return( otl );
 	*sub = *from_sub;
 	sub->lookup = otl;
 	sub->subtable_name = strconcat(mc->prefix,from_sub->subtable_name);
-	sub->suffix = copy(sub->suffix);
+	sub->suffix = xstrdup_or_null(sub->suffix);
 	if ( last==NULL )
 	    otl->subtables = sub;
 	else
@@ -2545,7 +2545,7 @@ OTLookup *OTLookupCopyInto(SplineFont *into_sf,SplineFont *from_sf, OTLookup *fr
 
     list[0] = from_otl; list[1] = NULL;
     mc.prefix = NeedsPrefix(into_sf,from_sf,list)
-	    ? strconcat(from_sf->fontname,"-") : copy("");
+	    ? strconcat(from_sf->fontname,"-") : xstrdup("");
     newotl = _OTLookupCopyInto(&mc,from_otl,(OTLookup *) -2,true);
     free(mc.lks);
     free(mc.prefix);
@@ -2561,7 +2561,7 @@ void OTLookupsCopyInto(SplineFont *into_sf,SplineFont *from_sf,
     mc.sf_from = from_sf; mc.sf_to = into_sf;
 
     mc.prefix = NeedsPrefix(into_sf,from_sf,list)
-	    ? strconcat(from_sf->fontname,"-") : copy("");
+	    ? strconcat(from_sf->fontname,"-") : xstrdup("");
     for ( i=0; list[i]!=NULL; ++i );
     mc.lks = xmalloc((mc.lmax=i+5)*sizeof(struct lookup_cvt));
     /* First create all the lookups and position them in the right order */
@@ -3834,7 +3834,7 @@ return( false );
     for ( i=0; i<gv->part_cnt; ++i ) {
 	if ( strcmp(gv->parts[i].component,old)==0 ) {
 	    free( gv->parts[i].component);
-	    gv->parts[i].component = copy(new);
+	    gv->parts[i].component = xstrdup_or_null(new);
 	    ret = true;
 	}
     }
@@ -3865,7 +3865,7 @@ void SFGlyphRenameFixup(SplineFont *sf, char *old, char *new) {
 	sf = k<master->subfontcnt ? master->subfonts[k] : master;
 	for ( gid=0; gid<sf->glyphcnt; ++gid ) if ( (sc=sf->glyphs[gid])!=NULL ) {
 	    if ( glyphnameIsComponent(sc->name,old)) {
-		char *newer = copy(sc->name);
+		char *newer = xstrdup_or_null(sc->name);
 		rplglyphname(&newer,old,new);
 		SFGlyphRenameFixup(master,sc->name,newer);
 		free(sc->name);
@@ -4162,7 +4162,7 @@ static char *ComponentsFromPSTs(PST **psts,int pcnt) {
 	    if ( j==ncnt ) {
 		if ( ncnt>=nmax )
 		    names = xrealloc(names,(nmax+=10)*sizeof(char *));
-		names[ncnt++] = copy(start);
+		names[ncnt++] = xstrdup_or_null(start);
 	    }
 	    *pt = ch;
 	    start = pt;
@@ -4640,7 +4640,7 @@ return( NULL );
     }
     if ( gb.pt>gb.base && gb.pt[-1]==' ' )
 	gb.pt[-1] = '\0';
-    ret = copy((const char *) gb.base);
+    ret = xstrdup_or_null((const char *) gb.base);
     free(gb.base);
 return( ret );
 }
@@ -4651,7 +4651,7 @@ static char *my_asprintf( const char *format,...) {
     va_start(ap,format);
     vsnprintf(buffer,sizeof(buffer),format,ap);
     va_end(ap);
-return( copy( buffer ));
+return( xstrdup_or_null( buffer ));
 }
 
 typedef struct lookuplist {
@@ -4725,7 +4725,7 @@ return( my_asprintf( _("Unterminated coverage table, starting at: %.20s..."), st
 		if ( cnt==0 )
 return( my_asprintf( _("Replacements must follow the coverage table to which they apply: %s"), start-4 ));
 		ch = *end; *end = '\0';
-		parsed[cnt].replacements = copy(start);
+		parsed[cnt].replacements = xstrdup_or_null(start);
 		*end = ch;
 		rcnt = GlyphNameCnt(parsed[cnt].replacements);
 		ecnt = GlyphNameCnt(parsed[cnt].entity);
@@ -4811,23 +4811,23 @@ return( ret );
 	if ( cnt>=max )
 	    parsed = xrealloc(parsed,(max+=200)*sizeof(MatchStr));
 	memset(&parsed[cnt],'\0',sizeof(MatchStr));
-	parsed[cnt++].entity = copy(start);
+	parsed[cnt++].entity = xstrdup_or_null(start);
 	*end = ch;
     }
 
     if ( cnt==0 )
-return( copy( _("Empty rule" )) );
+return( xstrdup_or_null( _("Empty rule" )) );
 
     ret = NULL;
 
     if ( !do_replacements && !anylookup ) {
 	if ( fpst->format==pst_reversecoverage )
-return( copy( _("A reverse contextual chaining lookup must have a set of replacement glyphs somewhere" )) );
+return( xstrdup_or_null( _("A reverse contextual chaining lookup must have a set of replacement glyphs somewhere" )) );
 	else {
 	    *return_is_warning = true;
 	    /* If there are no lookups then this rule matches and does nothing */
 	    /*  which can make it easier to write subsequent rules */
-	    ret = copy( _("This contextual rule applies no lookups." ));
+	    ret = xstrdup_or_null( _("This contextual rule applies no lookups." ));
 	}
     }
 
@@ -4839,7 +4839,7 @@ return( copy( _("A reverse contextual chaining lookup must have a set of replace
 	}
 	if ( parsed[i].replacements!=NULL ) {
 	    if (( first!=-1 && first!=i ) || (last!=-1 && last!=i ))
-return( copy( _("A reverse contextual chaining lookup can only match one coverage table directly" )) );
+return( xstrdup_or_null( _("A reverse contextual chaining lookup can only match one coverage table directly" )) );
 	    first = last = i;
 	}
     }
@@ -4988,7 +4988,7 @@ return( my_asprintf( _("%s is not a class name for the forward classes." ), pars
 	}
       break;
       default:
-return( copy( _("Bad FPST format")) );
+return( xstrdup_or_null( _("Bad FPST format")) );
     }
     if ( fpst->format!=pst_reversecoverage ) {
 	int tot=0;

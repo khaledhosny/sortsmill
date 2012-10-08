@@ -2620,7 +2620,7 @@ static char *CVMakeTitles(CharView *cv,char *buf) {
 	    sc->name, CVCurEnc(cv), sc->parent->fontname);
     if ( sc->changed )
 	strcat(buf," *");
-    title = copy(buf);
+    title = xstrdup_or_null(buf);
     uniname = (sc->unicodeenc != -1) ? uninm_name (names_db, sc->unicodeenc) : (const char *) NULL;
     if (uniname != NULL) {
 	strcat(buf, " ");
@@ -2766,7 +2766,7 @@ void CVChangeSC(CharView *cv, SplineChar *sc ) {
 		free(cv->former_names[FORMER_MAX-1]);
 	    for ( i=cv->former_cnt<FORMER_MAX?cv->former_cnt-1:FORMER_MAX-2; i>=0; --i )
 		cv->former_names[i+1] = cv->former_names[i];
-	    cv->former_names[0] = copy(sc->name);
+	    cv->former_names[0] = xstrdup_or_null(sc->name);
 	    if ( cv->former_cnt<FORMER_MAX )
 		++cv->former_cnt;
 	    for ( i=0; i<cv->former_cnt; ++i )
@@ -2845,7 +2845,7 @@ static int CVChangeToFormer( GGadget *g, GEvent *e) {
 		gid = SFFindGID(sf,unienc,cv->former_names[new_aspect]);
 		if ( gid>=0 ) {
 		    free(cv->former_names[new_aspect]);
-		    cv->former_names[new_aspect] = copy(sf->glyphs[gid]->name);
+		    cv->former_names[new_aspect] = xstrdup_or_null(sf->glyphs[gid]->name);
 		}
 	    }
 	}
@@ -9777,10 +9777,10 @@ return;
     for ( cnt = 0; glyphs[cnt]!=NULL; ++cnt );
     mit = xcalloc(cnt+2,sizeof(GMenuItem2));
     mit[0] = aplist[0];
-    mit[0].ti.text = (uint32_t *) copy( (char *) mit[0].ti.text );
+    mit[0].ti.text = (uint32_t *) xstrdup_or_null( (char *) mit[0].ti.text );
     mit[0].ti.disabled = (cv->apmine==NULL);
     for ( cnt = 0; glyphs[cnt]!=NULL; ++cnt ) {
-	mit[cnt+1].ti.text = (uint32_t *) copy(glyphs[cnt]->name);
+	mit[cnt+1].ti.text = (uint32_t *) xstrdup_or_null(glyphs[cnt]->name);
 	mit[cnt+1].ti.text_is_1byte = true;
 	mit[cnt+1].ti.fg = mit[cnt+1].ti.bg = COLOR_DEFAULT;
 	mit[cnt+1].ti.userdata = glyphs[cnt];
@@ -10158,7 +10158,7 @@ static void _CharViewCreate(CharView *cv, SplineChar *sc, FontView *fv,int enc) 
     }
 
     if ( infofamily==NULL ) {
-	infofamily = copy(GResourceFindString("CharView.InfoFamily"));
+	infofamily = xstrdup_or_null(GResourceFindString("CharView.InfoFamily"));
 	/* FontConfig doesn't have access to all the X11 bitmap fonts */
 	/*  so the font I used to use isn't found, and a huge monster is */
 	/*  inserted instead */
@@ -10344,7 +10344,7 @@ CharView *CharViewCreate(SplineChar *sc, FontView *fv,int enc) {
     gd.handle_controlevent = CVChangeToFormer;
     cv->tabs = GTabSetCreate( gw, &gd, NULL );
     cv->former_cnt = 1;
-    cv->former_names[0] = copy(sc->name);
+    cv->former_names[0] = xstrdup_or_null(sc->name);
     GGadgetTakesKeyboard(cv->tabs,false);
 
     _CharViewCreate(cv,sc,fv,enc);
@@ -10728,7 +10728,7 @@ return;
 	for ( cv=(CharView *) (sc->views); cv!=NULL; cv = (CharView *) (cv->b.next)) {
 	    for ( i=0; i<cv->former_cnt; ++i ) if ( strcmp(oldname,cv->former_names[i])==0 ) {
 		free( cv->former_names[i] );
-		cv->former_names[i] = copy( newname );
+		cv->former_names[i] = xstrdup_or_null( newname );
 		if ( cv->tabs!=NULL ) {
 		    GTabSetChangeTabName(cv->tabs,newname,i);
 		    GTabSetRemetric(cv->tabs);

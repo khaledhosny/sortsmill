@@ -1204,9 +1204,9 @@ static xmlNodePtr SVGPickFont(xmlNodePtr *fonts,char *filename) {
     for ( cnt=0; fonts[cnt]!=NULL; ++cnt) {
 	name = xmlGetProp(fonts[cnt],(xmlChar *) "id");
 	if ( name==NULL ) {
-	    names[cnt] = copy("nameless-font");
+	    names[cnt] = xstrdup("nameless-font");
 	} else {
-	    names[cnt] = copy((char *) name);
+	    names[cnt] = xstrdup_or_null((char *) name);
 	    xmlFree(name);
 	}
     }
@@ -1218,14 +1218,14 @@ static xmlNodePtr SVGPickFont(xmlNodePtr *fonts,char *filename) {
 	pt = strrchr(filename,'/');
     if ( pt==NULL ) pt = filename;
     if ( pt!=NULL && (lparen = strchr(pt,'('))!=NULL && strchr(lparen,')')!=NULL ) {
-	char *find = copy(lparen+1);
+	char *find = xstrdup_or_null(lparen+1);
 	pt = strchr(find,')');
 	if ( pt!=NULL ) *pt='\0';
 	for ( choice=cnt-1; choice>=0; --choice )
 	    if ( strcmp(names[choice],find)==0 )
 	break;
 	if ( choice==-1 ) {
-	    char *fn = copy(filename);
+	    char *fn = xstrdup_or_null(filename);
 	    fn[lparen-filename] = '\0';
 	    ff_post_error(_("Not in Collection"),_("%s is not in %.100s"),find,fn);
 	    free(fn);
@@ -2457,7 +2457,7 @@ static int xmlParseColor(xmlChar *name,uint32_t *color, char **url,struct svg_st
 			 ( ((int) b)     );
 	    }
 	} else if ( url!=NULL && strncmp( (char *) name, "url(#",5)==0 ) {
-	    *url = copy( (char *) name);
+	    *url = xstrdup_or_null( (char *) name);
 	    *color = COLOR_INHERITED;
 	} else {
 	    LogError( _("Failed to parse color %s\n"), (char *) name );
@@ -3054,14 +3054,14 @@ static SplineChar *SVGParseGlyphArgs(xmlNodePtr glyph,int defh, int defv,
     if ( glyphname!=NULL ) {
 	if ( sc->unicodeenc==-1 )
 	    sc->unicodeenc = UniFromName((char *) glyphname,ui_none,&custom);
-	sc->name = copy((char *) glyphname);
+	sc->name = xstrdup_or_null((char *) glyphname);
 	xmlFree(glyphname);
     } else if ( orientation!=NULL && *orientation=='v' && sc->unicodeenc!=-1 ) {
 	if ( sc->unicodeenc<0x10000 )
 	    sprintf( buffer, "uni%04X.vert", sc->unicodeenc );
 	else
 	    sprintf( buffer, "u%04X.vert", sc->unicodeenc );
-	sc->name = copy( buffer );
+	sc->name = xstrdup_or_null( buffer );
     }
     /* we finish off defaulting the glyph name in the parseglyph routine */
     if ( form!=NULL )
@@ -3074,7 +3074,7 @@ return( sc );
 static SplineChar *SVGParseMissing(SplineFont *sf,xmlNodePtr notdef,int defh, int defv, int enc, int *flags) {
     SplineChar *sc = SVGParseGlyphArgs(notdef,defh,defv,sf);
     sc->parent = sf;
-    sc->name = copy(".notdef");
+    sc->name = xstrdup(".notdef");
     sc->unicodeenc = 0;
     SVGParseGlyphBody(sc,notdef,flags);
 return( sc );
@@ -3087,9 +3087,9 @@ static SplineChar *SVGParseGlyph(SplineFont *sf,xmlNodePtr glyph,int defh, int d
     if ( sc->name==NULL ) {
 	if ( sc->unicodeenc==-1 ) {
 	    sprintf( buffer, "glyph%d", enc);
-	    sc->name = copy(buffer);
+	    sc->name = xstrdup_or_null(buffer);
 	} else
-	    sc->name = copy(StdGlyphName(buffer,sc->unicodeenc,ui_none,NULL));
+	    sc->name = xstrdup_or_null(StdGlyphName(buffer,sc->unicodeenc,ui_none,NULL));
     }
     SVGParseGlyphBody(sc,glyph,flags);
 return( sc );
@@ -3167,7 +3167,7 @@ static void SVGLigatureFixupCheck(SplineChar *sc,xmlNodePtr glyph) {
 	    if ( strncmp(sc->name,"glyph",5)==0 && isdigit(sc->name[5])) {
 		/* It's a default name, we can do better */
 		free(sc->name);
-		sc->name = copy(comp);
+		sc->name = xstrdup_or_null(comp);
 		for ( pt = sc->name; *pt; ++pt )
 		    if ( *pt==' ' ) *pt = '_';
 	    }
@@ -3340,7 +3340,7 @@ static SplineFont *SVGParseFont(xmlNodePtr font) {
     }
     name = xmlGetProp(font,(xmlChar *) "id");
     if ( name!=NULL ) {
-	sf->fontname = copy( (char *) name);
+	sf->fontname = xstrdup_or_null( (char *) name);
 	xmlFree(name);
     }
 
@@ -3367,47 +3367,47 @@ return( NULL );
 	    if ( name!=NULL ) {
 		if ( strchr((char *) name,',')!=NULL )
 		    *strchr((char *) name,',') ='\0';
-		sf->familyname = copy( (char *) name);
+		sf->familyname = xstrdup_or_null( (char *) name);
 		xmlFree(name);
 	    }
 	    name = xmlGetProp(kids,(xmlChar *) "font-weight");
 	    if ( name!=NULL ) {
 		if ( strnmatch((char *) name,"normal",6)==0 ) {
 		    sf->pfminfo.weight = 400;
-		    sf->weight = copy("Regular");
+		    sf->weight = xstrdup("Regular");
 		    sf->pfminfo.panose[2] = 5;
 		} else if ( strnmatch((char *) name,"bold",4)==0 ) {
 		    sf->pfminfo.weight = 700;
-		    sf->weight = copy("Bold");
+		    sf->weight = xstrdup("Bold");
 		    sf->pfminfo.panose[2] = 8;
 		} else {
 		    sf->pfminfo.weight = strtod((char *) name,NULL);
 		    if ( sf->pfminfo.weight <= 100 ) {
-			sf->weight = copy("Thin");
+			sf->weight = xstrdup("Thin");
 			sf->pfminfo.panose[2] = 2;
 		    } else if ( sf->pfminfo.weight <= 200 ) {
-			sf->weight = copy("Extra-Light");
+			sf->weight = xstrdup("Extra-Light");
 			sf->pfminfo.panose[2] = 3;
 		    } else if ( sf->pfminfo.weight <= 300 ) {
-			sf->weight = copy("Light");
+			sf->weight = xstrdup("Light");
 			sf->pfminfo.panose[2] = 4;
 		    } else if ( sf->pfminfo.weight <= 400 ) {
-			sf->weight = copy("Regular");
+			sf->weight = xstrdup("Regular");
 			sf->pfminfo.panose[2] = 5;
 		    } else if ( sf->pfminfo.weight <= 500 ) {
-			sf->weight = copy("Medium");
+			sf->weight = xstrdup("Medium");
 			sf->pfminfo.panose[2] = 6;
 		    } else if ( sf->pfminfo.weight <= 600 ) {
-			sf->weight = copy("DemiBold");
+			sf->weight = xstrdup("DemiBold");
 			sf->pfminfo.panose[2] = 7;
 		    } else if ( sf->pfminfo.weight <= 700 ) {
-			sf->weight = copy("Bold");
+			sf->weight = xstrdup("Bold");
 			sf->pfminfo.panose[2] = 8;
 		    } else if ( sf->pfminfo.weight <= 800 ) {
-			sf->weight = copy("Heavy");
+			sf->weight = xstrdup("Heavy");
 			sf->pfminfo.panose[2] = 9;
 		    } else {
-			sf->weight = copy("Black");
+			sf->weight = xstrdup("Black");
 			sf->pfminfo.panose[2] = 10;
 		    }
 		}
@@ -3499,14 +3499,14 @@ return( NULL );
 return( NULL );
     }
     if ( sf->weight==NULL )
-	sf->weight = copy("Regular");
+	sf->weight = xstrdup("Regular");
     if ( sf->fontname==NULL && sf->familyname==NULL )
 	sf->fontname = GetNextUntitledName();
     if ( sf->familyname==NULL )
-	sf->familyname = copy(sf->fontname);
+	sf->familyname = xstrdup_or_null(sf->fontname);
     if ( sf->fontname==NULL )
 	sf->fontname = EnforcePostScriptName(sf->familyname);
-    sf->fullname = copy(sf->fontname);
+    sf->fullname = xstrdup_or_null(sf->fontname);
 
     /* Give ourselves an xuid, just in case they want to convert to PostScript*/
     if ( xuid!=NULL ) {
@@ -3722,7 +3722,7 @@ return( NULL );
     pt = strrchr(filename,'/');
     if ( pt==NULL ) pt = filename;
     if ( (lparen=strchr(pt,'('))!=NULL && strchr(lparen,')')!=NULL ) {
-	temp = copy(filename);
+	temp = xstrdup_or_null(filename);
 	pt = temp + (lparen-filename);
 	*pt = '\0';
     }
@@ -3781,9 +3781,9 @@ return( NULL );
     for ( cnt=0; fonts[cnt]!=NULL; ++cnt) {
 	name = xmlGetProp(fonts[cnt],(xmlChar *) "id");
 	if ( name==NULL ) {
-	    ret[cnt] = copy("nameless-font");
+	    ret[cnt] = xstrdup("nameless-font");
 	} else {
-	    ret[cnt] = copy((char *) name);
+	    ret[cnt] = xstrdup_or_null((char *) name);
 	    xmlFree(name);
 	}
     }

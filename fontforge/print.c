@@ -648,7 +648,7 @@ pdf_BrushCheck (PI * pi, struct glyph_res *gr, struct brush *brush,
             xrealloc (gr->pattern_objs, (gr->pattern_max) * sizeof (int));
         }
       makePatName (buffer, ref, sc, layer, !isfill, true);
-      gr->pattern_names[gr->pattern_cnt] = copy (buffer);
+      gr->pattern_names[gr->pattern_cnt] = xstrdup_or_null (buffer);
       gr->pattern_objs[gr->pattern_cnt++] = pdf_addobject (pi);
       fprintf (pi->out, "<<\n");
       fprintf (pi->out, "  /Type /Pattern\n");
@@ -679,7 +679,7 @@ pdf_BrushCheck (PI * pi, struct glyph_res *gr, struct brush *brush,
             xrealloc (gr->pattern_objs, (gr->pattern_max) * sizeof (int));
         }
       makePatName (buffer, ref, sc, layer, !isfill, false);
-      gr->pattern_names[gr->pattern_cnt] = copy (buffer);
+      gr->pattern_names[gr->pattern_cnt] = xstrdup_or_null (buffer);
       gr->pattern_objs[gr->pattern_cnt++] = pdf_addobject (pi);
       fprintf (pi->out, "<<\n");
       fprintf (pi->out, "  /Type /Pattern\n");
@@ -778,7 +778,7 @@ pdf_ImageCheck (PI * pi, struct glyph_res *gr, ImageList * images, int layer,
             xrealloc (gr->image_objs, (gr->image_max) * sizeof (int));
         }
       sprintf (buffer, "%s_ly%d_%d_image", sc->name, layer, icnt);
-      gr->image_names[gr->image_cnt] = copy (buffer);
+      gr->image_names[gr->image_cnt] = xstrdup_or_null (buffer);
       gr->image_objs[gr->image_cnt++] = pdf_addobject (pi);
       ++icnt;
 
@@ -3595,7 +3595,7 @@ QueueIt (PI * pi)
           int quoted = 0;
           /* This is in the child. We're going to do an exec soon */
           /*  We don't need to free things here */
-          temp = copy (printcommand);
+          temp = xstrdup_or_null (printcommand);
           for (pt = start = temp; *pt; ++pt)
             {
               if (*pt == quoted)
@@ -3705,7 +3705,7 @@ PIGetPrinterDefs (PI * pi)
   pi->pagewidth = pagewidth;
   pi->pageheight = pageheight;
   pi->printtype = printtype;
-  pi->printer = copy (printlazyprinter);
+  pi->printer = xstrdup_or_null (printlazyprinter);
   pi->copies = 1;
   if (pi->pagewidth != 0 && pi->pageheight != 0)
     pi->hadsize = true;

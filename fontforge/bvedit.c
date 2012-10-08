@@ -943,7 +943,7 @@ BDFFont *BitmapFontScaleTo(BDFFont *old, int to) {
     new->pixelsize = to;
     new->ascent = (old->ascent*to+.5)/old->pixelsize;
     new->descent = to-new->ascent;
-    new->foundry = copy(old->foundry);
+    new->foundry = xstrdup_or_null(old->foundry);
     new->res = -1;
     for ( i=0; i<old->glyphcnt; ++i ) {
 	if ( old->clut==NULL ) {

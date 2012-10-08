@@ -3223,7 +3223,7 @@ return( 0 );
 return( 0 );
 	gdisp->inputdevices = xcalloc(ndevs+1,sizeof(struct inputdevices));
 	for ( i=0; i<ndevs; ++i ) {
-	    gdisp->inputdevices[i].name = copy(devs[i].name);
+	    gdisp->inputdevices[i].name = xstrdup_or_null(devs[i].name);
 	    gdisp->inputdevices[i].devid = devs[i].id;
 	}
 	gdisp->n_inputdevices = ndevs;
@@ -3386,7 +3386,7 @@ return( gd->atomdata[i].xatom );
 
     if ( i>=gd->amax )
 	gd->atomdata = realloc(gd->atomdata,(gd->amax+=10)*sizeof(struct atomdata));
-    gd->atomdata[i].atomname = copy(name);
+    gd->atomdata[i].atomname = xstrdup_or_null(name);
     gd->atomdata[i].xatom = XInternAtom(gd->display,name,false);
     ++gd->alen;
 return( gd->atomdata[i].xatom );

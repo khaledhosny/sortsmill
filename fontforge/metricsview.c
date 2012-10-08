@@ -1709,7 +1709,7 @@ return;
 		buffer[strlen(buffer)-1] = '\0';
 	    words[cnt] = xcalloc(1,sizeof(GTextInfo));
 	    words[cnt]->fg = words[cnt]->bg = COLOR_DEFAULT;
-	    words[cnt]->text = (uint32_t *) copy( buffer );
+	    words[cnt]->text = (uint32_t *) xstrdup_or_null( buffer );
 	    words[cnt++]->text_is_1byte = true;
 	}
     }
@@ -1720,12 +1720,12 @@ return;
 	words[cnt++]->line = true;
 	words[cnt] = xcalloc(1,sizeof(GTextInfo));
 	words[cnt]->fg = words[cnt]->bg = COLOR_DEFAULT;
-	words[cnt]->text = (uint32_t *) copy( _("Load Word List...") );
+	words[cnt]->text = (uint32_t *) xstrdup_or_null( _("Load Word List...") );
 	words[cnt]->text_is_1byte = true;
 	words[cnt++]->userdata = (void *) -1;
 	words[cnt] = xcalloc(1,sizeof(GTextInfo));
 	words[cnt]->fg = words[cnt]->bg = COLOR_DEFAULT;
-	words[cnt]->text = (uint32_t *) copy( _("Load Glyph Name List...") );
+	words[cnt]->text = (uint32_t *) xstrdup_or_null( _("Load Glyph Name List...") );
 	words[cnt]->text_is_1byte = true;
 	words[cnt++]->userdata = (void *) -2;
 	words[cnt] = xcalloc(1,sizeof(GTextInfo));

@@ -171,7 +171,7 @@ return( true );
 	    pi->pi.printtype = pt_file;
 
 	printtype = pi->pi.printtype;
-	free(printlazyprinter); printlazyprinter = copy(pi->pi.printer);
+	free(printlazyprinter); printlazyprinter = xstrdup_or_null(pi->pi.printer);
 	pagewidth = pgwidth; pageheight = pgheight;
 
 	pi->pi.done = true;

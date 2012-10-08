@@ -106,7 +106,7 @@ return( NULL );
 
 static char *NOUI_saveas_file(const char *title, const char *defaultfile,
 	const char *initial_filter) {
-return( copy(defaultfile) );
+return( xstrdup_or_null(defaultfile) );
 }
 
 static void NOUI_progress_start(int delay, const char *title, const char *line1,

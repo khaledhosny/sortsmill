@@ -568,7 +568,7 @@ static void GTextFieldGrabSelection(GTextField *gt, enum selnames sel ) {
 	GDrawAddSelectionType(gt->g.base,sel,"text/plain;charset=ISO-10646-UCS-2",u2temp,u_strlen(temp),
 		2,
 		NULL,NULL);
-	GDrawAddSelectionType(gt->g.base,sel,"UTF8_STRING",copy(ctemp),strlen(ctemp),
+	GDrawAddSelectionType(gt->g.base,sel,"UTF8_STRING",xstrdup_or_null(ctemp),strlen(ctemp),
 		sizeof(char),
 		NULL,NULL);
 	GDrawAddSelectionType(gt->g.base,sel,"text/plain;charset=UTF-8",ctemp,strlen(ctemp),
@@ -1049,7 +1049,7 @@ static void GTextFieldIncrement(GTextField *gt,int amount)
   gt->oldtext = gt->text;
   gt->text = x_u8_to_u32 (u8_force_valid (buf));
   free(gt->utf8_text);
-  gt->utf8_text = copy(buf);
+  gt->utf8_text = xstrdup_or_null(buf);
   _ggadget_redraw(&gt->g);
   GTextFieldChanged(gt,-1);
 }

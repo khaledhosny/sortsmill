@@ -96,7 +96,7 @@ return( 0 );
     for ( i=0; hostent->h_addr_list[i]!=NULL; ++i );
     memcpy(&addr->sin_addr,hostent->h_addr_list[rand()%i],hostent->h_length);
     if ( hostent->h_length < sizeof(last_addr)) {	/* Cache the last hostname, in case they ask for it again */
-	free(last_host); last_host = copy(hostname);
+	free(last_host); last_host = xstrdup_or_null(hostname);
 	last_len = hostent->h_length;
 	memcpy(last_addr,hostent->h_addr_list[rand()%i],hostent->h_length);
     }
@@ -421,10 +421,10 @@ return( 404 );
 			pt += strlen(str);
 			end2 = strstr(pt,"; ");
 			if ( end2==NULL )
-			    siteinfo->cookies[siteinfo->cookie_cnt++] = copy(pt);
+			    siteinfo->cookies[siteinfo->cookie_cnt++] = xstrdup_or_null(pt);
 			else {
 			    *end2 = '\0';
-			    siteinfo->cookies[siteinfo->cookie_cnt++] = copy(pt);
+			    siteinfo->cookies[siteinfo->cookie_cnt++] = xstrdup_or_null(pt);
 			    *end2 = ' ';
 			}
 		    }
@@ -969,7 +969,7 @@ static char *decomposeURL(const char *url,char **host, int *port, char **usernam
     pt = strstr(url,"://");
     if ( pt==NULL ) {
 	*host = NULL;
-return( copy(url));
+return( xstrdup_or_null(url));
     }
     strncpy(proto,url,pt-url<sizeof(proto)?pt-url:sizeof(proto));
     proto[(pt-url)] = '\0';
@@ -978,9 +978,9 @@ return( copy(url));
     pt2 = strchr(pt,'/');
     if ( pt2==NULL ) {
 	pt2 = pt+strlen(pt);
-	path = copy("/");
+	path = xstrdup("/");
     } else {
-	path = copy(pt2);
+	path = xstrdup_or_null(pt2);
     }
 
     upt = strchr(pt,'@');
@@ -1395,11 +1395,11 @@ return( false );
     free( host );
 
     if ( username==NULL ) {
-	username=copy("anonymous");
+	username=xstrdup("anonymous");
 	if ( password==NULL )
-	    password=copy("FontForge");
+	    password=xstrdup("FontForge");
     } else if ( password==NULL )
-	password = copy("");
+	password = xstrdup("");
     
     sprintf(cmd,"USER %s\r\n", username);
     if ( ftpsendr(soc,cmd,databuf,datalen)== -1 ) {

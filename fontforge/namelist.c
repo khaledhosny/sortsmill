@@ -362,7 +362,7 @@ char **AllGlyphNames(int uni, NameList *for_this_font, SplineChar *sc) {
 		}
 		if ( name!=NULL ) {
 		    if ( names )
-			names[cnt] = copy(name);
+			names[cnt] = xstrdup_or_null(name);
 		    ++cnt;
 		}
 	    }
@@ -374,7 +374,7 @@ char **AllGlyphNames(int uni, NameList *for_this_font, SplineChar *sc) {
 		}
 		if ( name!=NULL ) {
 		    if ( names )
-			names[cnt] = copy(name);
+			names[cnt] = xstrdup_or_null(name);
 		    ++cnt;
 		}
 	    }
@@ -382,27 +382,27 @@ char **AllGlyphNames(int uni, NameList *for_this_font, SplineChar *sc) {
 		if ( nl2->unicode[up]!=NULL && nl2->unicode[up][ub]!=NULL &&
 			(name = nl2->unicode[up][ub][uc])!=NULL ) {
 		    if ( names )
-			names[cnt] = copy(name);
+			names[cnt] = xstrdup_or_null(name);
 		    ++cnt;
 		}
 	    }
 	    for ( i=0; psaltnames[i].name!=NULL ; ++i ) {
 		if ( psaltnames[i].unicode==uni ) {
 		    if ( names )
-			names[cnt] = copy(psaltnames[i].name);
+			names[cnt] = xstrdup_or_null(psaltnames[i].name);
 		    ++cnt;
 		}
 	    }
 	    if ( uni<0x10000 ) {
 		if ( names ) {
 		    sprintf( buffer, "uni%04X", uni);
-		    names[cnt] = copy(buffer);
+		    names[cnt] = xstrdup_or_null(buffer);
 		}
 		++cnt;
 	    }
 	    if ( names ) {
 		sprintf( buffer, "u%04X", uni);
-		names[cnt] = copy(buffer);
+		names[cnt] = xstrdup_or_null(buffer);
 	    }
 	    ++cnt;
 	}
@@ -438,7 +438,7 @@ char **AllGlyphNames(int uni, NameList *for_this_font, SplineChar *sc) {
 	}
 	if ( uni<0 || up>=17 ) {
 	    if ( names )
-		names[cnt] = copy(".notdef");
+		names[cnt] = xstrdup(".notdef");
 	    ++cnt;
 	}
 	if ( k==0 ) {
@@ -466,7 +466,7 @@ char **AllNamelistNames(void) {
     for ( nl = &agl, cnt=0; nl!=NULL; nl=nl->next, ++cnt );
     names = xmalloc((cnt+1) *sizeof(char *));
     for ( nl = &agl, cnt=0; nl!=NULL; nl=nl->next, ++cnt )
-	names[cnt] = copy(_(nl->title));
+	names[cnt] = xstrdup_or_null(_(nl->title));
     names[cnt] = NULL;
 return( names );
 }
@@ -495,7 +495,7 @@ NameList *NameListByName(char *name) {
 
     /* ΤεΧ is hard tp type e.g. from scripting, so accept TeX as alias */
     if (strcmp(name,"TeX Names")==0)
-	name = copy("ΤεΧ Names");
+	name = xstrdup("ΤεΧ Names");
 
     for ( nl = &agl; nl!=NULL; nl=nl->next ) {
 	if ( strcmp(_(nl->title),name)==0 || strcmp(nl->title,name)==0 )
@@ -599,8 +599,8 @@ return( NULL );
 	    }
 	    if ( rn_cnt>=rn_max-1 )
 		nl->renames = xrealloc(nl->renames,(rn_max+=20)*sizeof(struct renames));
-	    nl->renames[rn_cnt].from   = copy(pt);
-	    nl->renames[rn_cnt].to     = copy(test);
+	    nl->renames[rn_cnt].from   = xstrdup_or_null(pt);
+	    nl->renames[rn_cnt].to     = xstrdup_or_null(test);
 	    nl->renames[++rn_cnt].from = NULL;		/* End mark */
 	} else {
 	    pt = buffer;
@@ -633,7 +633,7 @@ return( NULL );
 		if ( *test&0x80 ) {
 		    uses_unicode = true;
 		    if ( nl->a_utf8_name==NULL )
-			nl->a_utf8_name = copy(pt);
+			nl->a_utf8_name = xstrdup_or_null(pt);
 		}
 	    }
 	    up = uni>>16;
@@ -644,7 +644,7 @@ return( NULL );
 	    if ( nl->unicode[up][ub]==NULL )
 		nl->unicode[up][ub] = xcalloc(256,sizeof(char *));
 	    if ( nl->unicode[up][ub][uc]==NULL )
-		nl->unicode[up][ub][uc]=copy(pt);
+		nl->unicode[up][ub][uc]=xstrdup_or_null(pt);
 	    else {
 		ff_post_error(_("NameList parsing error"),_("Multiple names when parsing %s for unicode %x"), nl->title, uni );
 		NameListFree(nl);
@@ -774,7 +774,7 @@ return( sc->name );
 		*opt = '\0';
 return( buffer );
 	    } else if ( ch=='.' ) {
-		/* don't attempt to translate anything after a '.' just copy that litterally */
+		/* don't attempt to translate anything after a '.' just copy that literally */
 		*pt = ch;
 		while ( opt<oend && *pt )
 		    *opt++ = *pt++;
@@ -920,7 +920,7 @@ static void SFRenameLookupsByHash(SplineFont *sf,struct glyphnamehash *hash) {
 		rpl = HashFind(hash,pst->u.subs.variant);	/* variant is at same location as paired */
 		if ( rpl!=NULL ) {
 		    free( pst->u.subs.variant );
-		    pst->u.subs.variant = copy(rpl->name);
+		    pst->u.subs.variant = xstrdup_or_null(rpl->name);
 		}
 	      break;
 	      case pst_alternate: case pst_multiple: case pst_ligature:
@@ -1008,7 +1008,7 @@ return( NULL );
 	name = RenameGlyphToNamelist(buffer,sc,sf->for_new_glyphs,new_,ret);
 	if ( name!=sc->name ) {
 	    ret[gid] = sc->name;
-	    sc->name = copy(name);
+	    sc->name = xstrdup_or_null(name);
 	}
     }
 

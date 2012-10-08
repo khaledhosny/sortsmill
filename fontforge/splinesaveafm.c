@@ -152,7 +152,7 @@ return( 0 );
 			    liga->next = sc1->possub;
 			    sc1->possub = liga;
 			    liga->u.lig.lig = sc1;
-			    liga->u.lig.components = copy( buf2 );
+			    liga->u.lig.components = xstrdup_or_null( buf2 );
 			}
 		    }
 		}
@@ -169,7 +169,7 @@ static void CheckMMAfmFile(SplineFont *sf,char *amfm_filename,char *fontname,Enc
     char *temp, *pt;
 
     free(sf->fontname);
-    sf->fontname = copy(fontname);
+    sf->fontname = xstrdup_or_null(fontname);
 
     temp = xmalloc(strlen(amfm_filename)+strlen(fontname)+strlen(".afm")+1);
     strcpy(temp, amfm_filename);
@@ -196,7 +196,7 @@ int LoadKerningDataFromAmfm(SplineFont *sf, char *filename,EncMap *map) {
 	file = fopen(filename,"r");
     pt = strstrmatch(filename,".amfm");
     if ( pt!=NULL ) {
-	char *afmname = copy(filename);
+	char *afmname = xstrdup_or_null(filename);
 	strcpy(afmname+(pt-filename),isupper(pt[1])?".AFM":".afm");
 	LoadKerningDataFromAfm(mm->normal,afmname,map);
 	free(afmname);
@@ -483,7 +483,7 @@ return;
 	    len = b.maxx;
 	else
 	    len = b.maxy;
-	(*gvbase)->parts[j].component = copy(bats[j]->name);
+	(*gvbase)->parts[j].component = xstrdup_or_null(bats[j]->name);
 	(*gvbase)->parts[j].is_extender = bats[j]==bits[3];
 	(*gvbase)->parts[j].startConnectorLength = len/4;
 	(*gvbase)->parts[j].endConnectorLength = len/4;
@@ -706,7 +706,7 @@ return;
 	    len = b.maxx;
 	else
 	    len = b.maxy;
-	(*gvbase)->parts[j].component = copy(bats[j]->name);
+	(*gvbase)->parts[j].component = xstrdup_or_null(bats[j]->name);
 	(*gvbase)->parts[j].is_extender = bats[j]==bits[3];
 	(*gvbase)->parts[j].startConnectorLength = len/4;
 	(*gvbase)->parts[j].endConnectorLength = len/4;
@@ -1308,7 +1308,7 @@ static char *NameFrom(struct cc_data *this,int *unicode,int u,int uni) {
     int i,len;
 
     if ( uni!=-1 )
-return( copy( StdGlyphName(buffer,uni,ui_none,NULL)) );
+return( xstrdup_or_null( StdGlyphName(buffer,uni,ui_none,NULL)) );
     if ( u!=-1 && (unicode[0]<0x370 || unicode[0]>0x3ff) ) {
 	/* Don't use the unicode decomposition to get a name for greek */
 	/*  glyphs. We'd get acute for tonos, etc. */
@@ -2037,12 +2037,12 @@ void SFKernClassTempDecompose(SplineFont *sf,int isv) {
 	otl->lookup_type = gpos_pair;
 	otl->lookup_flags = kc->subtable->lookup->lookup_flags;
 	otl->features = FeatureListCopy(kc->subtable->lookup->features);
-	otl->lookup_name = copy(_("<Temporary kerning>"));
+	otl->lookup_name = xstrdup_or_null(_("<Temporary kerning>"));
 	otl->temporary_kern = otl->store_in_afm = true;
 	otl->subtables = (struct lookup_subtable *) xzalloc(sizeof (struct lookup_subtable));
 	otl->subtables->lookup = otl;
 	otl->subtables->per_glyph_pst_or_kern = true;
-	otl->subtables->subtable_name = copy(_("<Temporary kerning>"));
+	otl->subtables->subtable_name = xstrdup_or_null(_("<Temporary kerning>"));
 
 	first = KernClassToSC(sf,kc->firsts,kc->first_cnt);
 	last = KernClassToSC(sf,kc->seconds,kc->second_cnt);

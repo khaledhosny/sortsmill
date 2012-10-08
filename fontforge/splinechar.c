@@ -445,7 +445,7 @@ return;
     if ( copymetadata ) {
 	sc->unicodeenc = -1;
 	free(sc->name);
-	sc->name = copy(".notdef");
+	sc->name = xstrdup(".notdef");
 	PSTFree(sc->possub);
 	sc->possub = NULL;
     }
@@ -1022,7 +1022,7 @@ return( false );
 			sprintf( buffer,"uni%04X", sf->glyphs[i]->unicodeenc);
 		    else
 			sprintf( buffer,"u%04X", sf->glyphs[i]->unicodeenc);
-		    sf->glyphs[i]->name = copy(buffer);
+		    sf->glyphs[i]->name = xstrdup_or_null(buffer);
 		} else {
 		    sf->glyphs[i]->name = sc->name;
 		    sc->name = NULL;
@@ -1050,7 +1050,7 @@ return( false );
 	if ( sc->name!=NULL )
 	    SFGlyphRenameFixup(sf,sc->name,name);
 	free(sc->name);
-	sc->name = copy(name);
+	sc->name = xstrdup_or_null(name);
 	sc->namechanged = true;
 	GlyphHashFree(sf);
     }
@@ -1072,7 +1072,7 @@ return( false );
     }
     free(sc->comment); sc->comment = NULL;
     if ( comment!=NULL && *comment!='\0' )
-	sc->comment = copy(comment);
+	sc->comment = xstrdup_or_null(comment);
 
     SCRefreshTitles(sc);
 return( true );

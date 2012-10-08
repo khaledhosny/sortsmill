@@ -1853,7 +1853,7 @@ return;
 		break;
 		if ( i==cnt ) {
 		    /* It's a unique name, use it */
-		    otl->tempname = names[cnt++] = copy(name);
+		    otl->tempname = names[cnt++] = xstrdup_or_null(name);
 	    break;
 		}
 
@@ -2004,7 +2004,7 @@ return( strcmp(str1,str2));
 static char *fea_canonicalClassOrder(char *class) {
     int name_cnt, i;
     char *pt, **names, *cpt;
-    char *temp = copy(class);
+    char *temp = xstrdup_or_null(class);
 
     name_cnt = 0;
     for ( pt = class; ; ) {
@@ -2369,7 +2369,7 @@ return;
 
     if ( *namebuf=='/' ||
 	    ( pt = strrchr(tok->filename[tok->inc_depth],'/') )==NULL )
-	filename=copy(namebuf);
+	filename=xstrdup_or_null(namebuf);
     else {
 	*pt = '\0';
 	filename = GFileAppendFile(tok->filename[tok->inc_depth],namebuf,false);
@@ -2698,7 +2698,7 @@ static char *fea_lookup_class_complain(struct parseState *tok,char *classname) {
 
     for ( test=tok->classes; test!=NULL; test=test->next ) {
 	if ( strcmp(classname,test->classname)==0 )
-return( copy( test->glyphs) );
+return( xstrdup_or_null( test->glyphs) );
     }
 
     /* Mark classes can also be used as normal classes */
@@ -2759,7 +2759,7 @@ static int fea_AddGlyphs(char **_glyphs, int *_max, int cnt, char *contents ) {
     /* Append a glyph name, etc. to a glyph class */
 
     if ( glyphs==NULL ) {
-	glyphs = copy(contents);
+	glyphs = xstrdup_or_null(contents);
 	cnt = *_max = len;
     } else {
 	if ( *_max-cnt <= len+1 )
@@ -2813,7 +2813,7 @@ return( NULL );
     EncMapFree(map);
     if ( sc==NULL )
 return( NULL );
-return( copy( sc->name ));
+return( xstrdup_or_null( sc->name ));
 }
 
 static SplineChar *fea_glyphname_get(struct parseState *tok,char *name) {
@@ -2836,7 +2836,7 @@ return( sc );
 	if ( sc!=NULL ) {
 	    sc->widthset = true;
 	    free(sc->name);
-	    sc->name = copy(name);
+	    sc->name = xstrdup_or_null(name);
 	}
 return( sc );
     }
@@ -2853,7 +2853,7 @@ return( sc );
     if ( sc!=NULL ) {
 	sc->widthset = true;
 	free(sc->name);
-	sc->name = copy(name);
+	sc->name = xstrdup_or_null(name);
 	sc->unicodeenc = UniFromName(name,ui_none,&custom);
     }
 #else
@@ -2861,7 +2861,7 @@ return( sc );
 /*  mess with maps or selections */
     SFExpandGlyphCount(sf,sf->glyphcnt+1);
     sc = SFSplineCharCreate(sf);
-    sc->name = copy(name);
+    sc->name = xstrdup_or_null(name);
     sc->unicodeenc = UniFromName(name,ui_none,&custom);
     sc->parent = sf;
     sc->vwidth = (sf->ascent+sf->descent);
@@ -2879,7 +2879,7 @@ static char *fea_glyphname_validate(struct parseState *tok,char *name) {
     if ( sc==NULL )
 return( NULL );
 
-return( copy( sc->name ));
+return( xstrdup_or_null( sc->name ));
 }
 
 static char *fea_ParseGlyphClass(struct parseState *tok) {
@@ -2991,7 +2991,7 @@ return( NULL );
 		}
 		last_val=-1; last_glyph[0] = '\0';
 	    } else if ( tok->type == tk_NULL ) {
-		contents = copy("NULL");
+		contents = xstrdup("NULL");
 	    } else {
 		LogError(_("Expected glyph name, cid, or class in glyph class definition on line %d of %s"), tok->line[tok->inc_depth], tok->filename[tok->inc_depth] );
 		++tok->err_count;
@@ -3001,7 +3001,7 @@ return( NULL );
 		cnt = fea_AddGlyphs(&glyphs,&max,cnt,contents);
 	}
 	if ( glyphs==NULL )
-	    glyphs = copy("");	/* Is it legal to have an empty class? I can't think of any use for one */
+	    glyphs = xstrdup("");	/* Is it legal to have an empty class? I can't think of any use for one */
     }
 return( glyphs );
 }
@@ -3009,7 +3009,7 @@ return( glyphs );
 static char *fea_ParseGlyphClassGuarded(struct parseState *tok) {
     char *ret = fea_ParseGlyphClass(tok);
     if ( ret==NULL )
-	ret = copy("");
+	ret = xstrdup("");
 return( ret );
 }
 
@@ -3035,7 +3035,7 @@ return( 0 );
 		tok->gm_pos[is_set] = sf->mark_class_cnt==0 ? 1 : sf->mark_class_cnt;
 	}
     }
-    tok->gdef_mark[is_set][tok->gm_cnt[is_set]].name   = copy(tok->tokbuf);
+    tok->gdef_mark[is_set][tok->gm_cnt[is_set]].name   = xstrdup_or_null(tok->tokbuf);
     tok->gdef_mark[is_set][tok->gm_cnt[is_set]].glyphs = glyphs;
     /* see if the mark class is already in the font? */
     if ( is_set ) {
@@ -3116,7 +3116,7 @@ static void fea_ParseLookupFlags(struct parseState *tok) {
 }
 
 static void fea_ParseGlyphClassDef(struct parseState *tok) {
-    char *classname = copy(tok->tokbuf );
+    char *classname = xstrdup_or_null(tok->tokbuf );
     char *contents;
 
     fea_ParseTok(tok);
@@ -3132,7 +3132,7 @@ return;
 	fea_skip_to_semi(tok);
 return;
     }
-    fea_AddClassDef(tok,classname,copy(contents));
+    fea_AddClassDef(tok,classname,xstrdup_or_null(contents));
     fea_end_statement(tok);
 }
 
@@ -3392,7 +3392,7 @@ return;
 	nap = (struct namedanchor *) xzalloc(sizeof (struct namedanchor));
 	nap->next = tok->namedAnchors;
 	tok->namedAnchors = nap;
-	nap->name = copy(tok->tokbuf);
+	nap->name = xstrdup_or_null(tok->tokbuf);
     }
     nap->ap = ap;
 
@@ -3502,7 +3502,7 @@ return;
 	nvr = (struct namedvalue *) xzalloc(sizeof (struct namedvalue));
 	nvr->next = tok->namedValueRs;
 	tok->namedValueRs = nvr;
-	nvr->name = copy(tok->tokbuf);
+	nvr->name = xstrdup_or_null(tok->tokbuf);
     }
     nvr->vr = vr;
 
@@ -3546,7 +3546,7 @@ return;
     } else {
 	gm->next = tok->gpos_mark;
 	tok->gpos_mark = gm;
-	gm->name = copy(tok->tokbuf);
+	gm->name = xstrdup_or_null(tok->tokbuf);
     }
 
     fea_end_statement(tok);
@@ -3569,7 +3569,7 @@ static void fea_ParseBroket(struct parseState *tok,struct markedglyphs *last) {
 	    LogError(_("Lookups must be defined before being used on line %d of %s"), tok->line[tok->inc_depth], tok->filename[tok->inc_depth] );
 	    ++tok->err_count;
 	} else
-	    last->lookupname = copy(tok->tokbuf);
+	    last->lookupname = xstrdup_or_null(tok->tokbuf);
 	fea_TokenMustBe(tok,tk_char,'>');
     } else if ( tok->type==tk_anchor ) {
 	last->anchors = xrealloc(last->anchors,(++last->ap_cnt)*sizeof(AnchorPoint *));
@@ -3858,7 +3858,7 @@ static struct markedglyphs *fea_ParseMarkedGlyphs(struct parseState *tok,
 		LogError(_("Lookups must be defined before being used on line %d of %s"), tok->line[tok->inc_depth], tok->filename[tok->inc_depth] );
 		++tok->err_count;
 	    }
-	    last->lookupname = copy(tok->tokbuf);
+	    last->lookupname = xstrdup_or_null(tok->tokbuf);
 	} else if ( !is_pos && allow_lookups && tok->type == tk_char && tok->tokbuf[0]=='<' ) {
 	    /* When I came up with my own syntax I put brokets around the lookup*/
 	    /*  token, in keeping, I thought, with the rest of the syntax. */
@@ -3870,7 +3870,7 @@ static struct markedglyphs *fea_ParseMarkedGlyphs(struct parseState *tok,
 	    cur = (struct markedglyphs *) xzalloc(sizeof (struct markedglyphs));
 	    cur->is_name = false;
 	    cur->is_lookup = true;
-	    cur->lookupname = copy(tok->tokbuf);
+	    cur->lookupname = xstrdup_or_null(tok->tokbuf);
 	    fea_TokenMustBe(tok,tk_char,'>');
 	} else
     break;
@@ -3953,7 +3953,7 @@ static struct feat_item *fea_AddAllLigPosibilities(struct parseState *tok,struct
 	    item->u1.sc = sc;
 	    item->u2.pst = (PST *) xzalloc(sizeof (PST));
 	    item->u2.pst->type = pst_ligature;
-	    item->u2.pst->u.lig.components = copy(sequence_start);
+	    item->u2.pst->u.lig.components = xstrdup_or_null(sequence_start);
 	    item->u2.pst->u.lig.lig = sc;
 	}
     }
@@ -4064,7 +4064,7 @@ static struct feat_item *fea_process_pos_pair(struct parseState *tok,
 			item->u1.sc = sc;
 			item->u2.pst = (PST *) xzalloc(sizeof (PST));
 			item->u2.pst->type = pst_pair;
-			item->u2.pst->u.pair.paired = copy(sc2->name);
+			item->u2.pst->u.pair.paired = xstrdup_or_null(sc2->name);
 			item->u2.pst->u.pair.vr = (struct vr *) xzalloc(sizeof (struct vr[2]));
 			memcpy(item->u2.pst->u.pair.vr,vr,sizeof(vr));
 		    }
@@ -4076,10 +4076,10 @@ static struct feat_item *fea_process_pos_pair(struct parseState *tok,
 	item->type = ft_pstclass;
 	item->next = sofar;
 	sofar = item;
-	item->u1.class = copy(glyphs->name_or_class);
+	item->u1.class = xstrdup_or_null(glyphs->name_or_class);
 	item->u2.pst = (PST *) xzalloc(sizeof (PST));
 	item->u2.pst->type = pst_pair;
-	item->u2.pst->u.pair.paired = copy(glyphs->next->name_or_class);
+	item->u2.pst->u.pair.paired = xstrdup_or_null(glyphs->next->name_or_class);
 	item->u2.pst->u.pair.vr = (struct vr *) xzalloc(sizeof (struct vr[2]));
 	memcpy(item->u2.pst->u.pair.vr,vr,sizeof(vr));
     }
@@ -4223,7 +4223,7 @@ return( sofar );
 		    item->u1.sc = sc;
 		    item->u2.pst = (PST *) xzalloc(sizeof (PST));
 		    item->u2.pst->type = pst_substitution;
-		    item->u2.pst->u.subs.variant = copy(temp->name);
+		    item->u2.pst->u.subs.variant = xstrdup_or_null(temp->name);
 		}
 	    }
 	}
@@ -4257,7 +4257,7 @@ return( sofar );
 	    item->u1.sc = sc;
 	    item->u2.pst = (PST *) xzalloc(sizeof (PST));
 	    item->u2.pst->type = pst_substitution;
-	    item->u2.pst->u.subs.variant = copy(temp->name);
+	    item->u2.pst->u.subs.variant = xstrdup_or_null(temp->name);
 	}
     } else {
 	LogError(_("When a single substitution's replacement is specified by a glyph class, the thing being replaced must also be a class on line %d of %s"), tok->line[tok->inc_depth], tok->filename[tok->inc_depth] );
@@ -4317,7 +4317,7 @@ return( ret );
 static int fea_AddAGlyphSet(char **covers,char **ncovers,int i, struct markedglyphs *g) {
     int j;
 
-    covers[i] = copy(g->name_or_class);
+    covers[i] = xstrdup_or_null(g->name_or_class);
     if ( g->apm_cnt>0 ) {
 	j = ++i;
 	if ( g->hidden_marked_glyphs && ncovers!=NULL ) {
@@ -4422,7 +4422,7 @@ static FPST *fea_markedglyphs_to_fpst(struct parseState *tok,struct markedglyphs
 	for ( i=0, g=glyphs; i<bcnt; ++i, g=g->next )
 	    i = fea_AddAGlyphSet(bcovers,r->u.coverage.ncovers,i,g);
 	for ( j=0, k=bcnt-1; j<bcnt; j++ ) {
-		r->u.coverage.bcovers[j] = copy(bcovers[k]);
+		r->u.coverage.bcovers[j] = xstrdup_or_null(bcovers[k]);
 		k--;
 	}
 
@@ -4454,7 +4454,7 @@ static FPST *fea_markedglyphs_to_fpst(struct parseState *tok,struct markedglyphs
 	    } else if ( g->lookupname!=NULL ) {
 		head = (struct feat_item *) xzalloc(sizeof (struct feat_item));
 		head->type = ft_lookup_ref;
-		head->u1.lookup_name = copy(g->lookupname);
+		head->u1.lookup_name = xstrdup_or_null(g->lookupname);
 	    /* The difference between single positioning and pair positioning */
 	    /*  isn't important here. The contextual sequence already contains */
 	    /*  the info a kern pair would need, so no need to duplicate. Always */
@@ -4650,7 +4650,7 @@ static void fea_ParseSubstitute(struct parseState *tok) {
 		    LogError(_("Expected a single glyph name in reverse substitution on line %d of %s"), tok->line[tok->inc_depth], tok->filename[tok->inc_depth] );
 		    ++tok->err_count;
 		} else {
-		    r->u.rcoverage.replacements = copy(rpl->name_or_class );
+		    r->u.rcoverage.replacements = xstrdup_or_null(rpl->name_or_class );
 		}
 	    } else {
 		if ( rpl==NULL ) {
@@ -4661,7 +4661,7 @@ static void fea_ParseSubstitute(struct parseState *tok) {
 		        if ( rp->lookupname!=NULL ) {
 			    head = (struct feat_item *) xzalloc(sizeof (struct feat_item));
 			    head->type = ft_lookup_ref;
-			    head->u1.lookup_name = copy(rp->lookupname);
+			    head->u1.lookup_name = xstrdup_or_null(rp->lookupname);
 		        } else if ( g->next==NULL || g->next->mark_count!=g->mark_count ) {
 			    head = fea_process_sub_single(tok,g,rp,NULL);
 		        } else if ( g->next!=NULL && g->mark_count==g->next->mark_count ) {
@@ -4871,7 +4871,7 @@ static void fea_ParseLookupDef(struct parseState *tok, int could_be_stat ) {
 	fea_skip_to_semi(tok);
 return;
     }
-    lookup_name = copy(tok->tokbuf);
+    lookup_name = xstrdup_or_null(tok->tokbuf);
     fea_ParseTok(tok);
     if ( could_be_stat && tok->type==tk_char && tok->tokbuf[0]==';' ) {
 	item = (struct feat_item *) xzalloc(sizeof (struct feat_item));
@@ -5081,10 +5081,10 @@ static struct nameid *fea_ParseNameId(struct parseState *tok,int strid) {
 	}
 	if ( nm!=NULL ) {
 	    if ( pt==NULL )
-		nm->utf8_str = copy("");
+		nm->utf8_str = xstrdup("");
 	    else {
 		*pt = '\0';
-		nm->utf8_str = copy(start);
+		nm->utf8_str = xstrdup_or_null(start);
 		free(start);
 	    }
 	}
@@ -6182,7 +6182,7 @@ static void fea_ApplyLookupListMark2(struct parseState *tok,
 					    act_mklg;
 		    /* Skip the initial '@' in the named mark class name */
 		    if ( classes[i]->name_used==0 )
-			acs[i]->name = copy(classes[i]->name+1);
+			acs[i]->name = xstrdup_or_null(classes[i]->name+1);
 		    else {
 			acs[i]->name = xmalloc(strlen(classes[i]->name)+10);
 			sprintf(acs[i]->name,"%s_%d", classes[i]->name+1, classes[i]->name_used);
@@ -6455,8 +6455,8 @@ static void fea_ApplyLookupListPair(struct parseState *tok,
 		    sc->possub = pst;
 		}
 	    } else if ( l->type == ft_pstclass ) {
-		lefts.classes[kcnt] = copy(fea_canonicalClassOrder(l->u1.class));
-		rights.classes[kcnt++] = copy(fea_canonicalClassOrder(l->u2.pst->u.pair.paired));
+		lefts.classes[kcnt] = xstrdup_or_null(fea_canonicalClassOrder(l->u1.class));
+		rights.classes[kcnt++] = xstrdup_or_null(fea_canonicalClassOrder(l->u2.pst->u.pair.paired));
 	    }
 	    l = l->lookup_next;
 	}
@@ -6987,7 +6987,7 @@ static void fea_NameLookups(struct parseState *tok) {
 		snprintf(buf,sizeof(buf),_("Anchor-%d"), acnt++ );
 		for ( an=sf->anchor; an!=NULL && strcmp(an->name,buf)!=0; an=an->next );
 	    } while ( an!=NULL );
-	    ac->name = copy(buf);
+	    ac->name = xstrdup_or_null(buf);
 	}
 	ac->next = sf->anchor;
 	sf->anchor = ac;
@@ -7000,8 +7000,8 @@ static void fea_NameLookups(struct parseState *tok) {
 	sf->mark_class_names = xrealloc(sf->mark_class_names,tok->gm_pos[0]*sizeof(char *));
 	for ( i=0; i<tok->gm_cnt[0]; ++i ) if ( tok->gdef_mark[0][i].index>=sf->mark_class_cnt ) {
 	    int index = tok->gdef_mark[0][i].index;
-	    sf->mark_class_names[index] = copy(tok->gdef_mark[0][i].name+1);
-	    sf->mark_classes[index]     = copy(tok->gdef_mark[0][i].glyphs);
+	    sf->mark_class_names[index] = xstrdup_or_null(tok->gdef_mark[0][i].name+1);
+	    sf->mark_classes[index]     = xstrdup_or_null(tok->gdef_mark[0][i].glyphs);
 	}
 	sf->mark_class_cnt = tok->gm_pos[0];
     }
@@ -7011,8 +7011,8 @@ static void fea_NameLookups(struct parseState *tok) {
 	sf->mark_set_names = xrealloc(sf->mark_set_names,tok->gm_pos[1]*sizeof(char *));
 	for ( i=0; i<tok->gm_cnt[1]; ++i ) if ( tok->gdef_mark[1][i].index>=sf->mark_set_cnt ) {
 	    int index = tok->gdef_mark[1][i].index;
-	    sf->mark_set_names[index] = copy(tok->gdef_mark[1][i].name+1);
-	    sf->mark_sets[index]      = copy(tok->gdef_mark[1][i].glyphs);
+	    sf->mark_set_names[index] = xstrdup_or_null(tok->gdef_mark[1][i].name+1);
+	    sf->mark_sets[index]      = xstrdup_or_null(tok->gdef_mark[1][i].glyphs);
 	}
 	sf->mark_set_cnt = tok->gm_pos[1];
     }

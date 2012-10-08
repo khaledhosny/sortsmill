@@ -2220,7 +2220,7 @@ struct macname *MacNameCopy(struct macname *mn) {
 	cur = (struct macname *) xzalloc(sizeof (struct macname));
 	cur->enc = mn->enc;
 	cur->lang = mn->lang;
-	cur->name = copy(mn->name);
+	cur->name = xstrdup_or_null(mn->name);
 	if ( head==NULL )
 	    head = cur;
 	else

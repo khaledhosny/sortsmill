@@ -211,7 +211,7 @@ InsertSubMenus(menu_info_func func,
                 mmn[j].moveto = is_cv ? cv_tl2listcheck : fv_tl2listcheck;
                 mn = &mmn[j].sub;
             } else {
-                mmn[j].shortcut = copy(shortcut_str);
+                mmn[j].shortcut = xstrdup_or_null(shortcut_str);
                 mmn[j].invoke = is_cv ? cv_menuactivate : fv_menuactivate;
                 mmn[j].mid = MenuDataAdd(func, check, data, is_cv);
             }
@@ -219,7 +219,7 @@ InsertSubMenus(menu_info_func func,
             if (submenu_names[i + 1] != NULL)
                 mn = &mmn[j].sub;
             else {
-                mmn[j].shortcut = copy(shortcut_str);
+                mmn[j].shortcut = xstrdup_or_null(shortcut_str);
                 mmn[j].invoke = is_cv ? cv_menuactivate : fv_menuactivate;
                 mmn[j].mid = MenuDataAdd(func, check, data, is_cv);
                 fprintf(stderr, "Redefining menu item %s\n", submenu_names[i]);

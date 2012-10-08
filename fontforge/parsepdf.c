@@ -362,7 +362,7 @@ return( false );
     getc(pdf);		/* Eat the second '<' */
 
     while (true) {
-	key = copy(pdf_getname(pc));
+	key = xstrdup_or_null(pdf_getname(pc));
 	if ( key==NULL ) {
 	    if ( pc->compressed!=NULL ) {	/* We've read the whole object*/
 		fclose(pc->compressed);		/* so close the compressed */
@@ -370,7 +370,7 @@ return( false );
 	    }
 return( true );
 	}
-	value = copy(pdf_getdictvalue(pc));
+	value = xstrdup_or_null(pdf_getdictvalue(pc));
 	if ( value==NULL || strcmp(value,"null")==0 )
 	    free(key);
 	else {
@@ -541,7 +541,7 @@ static int pdf_findfonts(struct pdfcontext *pc) {
 		sscanf(desc, "%d", &dnum);
 		if ( *pt=='/' || *pt=='(' )
 		    ++pt;
-		tpt = copy(pt);
+		tpt = xstrdup_or_null(pt);
 		
 		dnum = pdf_getdescendantfont( pc,dnum );
 		if ( dnum > 0 ) {
@@ -581,7 +581,7 @@ static int pdf_findfonts(struct pdfcontext *pc) {
 		pc->fontobjs[k] = i;
 		if ( *pt=='/' || *pt=='(' )
 		    ++pt;
-		pc->fontnames[k++] = tpt = copy(pt);
+		pc->fontnames[k++] = tpt = xstrdup_or_null(pt);
 		for ( pt=tpt; *pt; ++pt ) {
 		    if ( *pt=='#' && ishexdigit(pt[1]) && ishexdigit(pt[2])) {
 			*tpt++ = hex(pt[1],pt[2]);
@@ -634,7 +634,7 @@ static void pdf_addpages(struct pdfcontext *pc, int obj) {
 		pc->pages[pc->pcnt++] = obj;
 	    } else if ( strcmp(pt,"/Pages")==0 ) {
 		if ( (pt=PSDictHasEntry(&pc->pdfdict,"Kids"))!=NULL ) {
-		    char *kids = copy(pt);
+		    char *kids = xstrdup_or_null(pt);
 		    for ( pt = kids; *pt!=']' && *pt!='\0' ;  ) {
 			if ( *pt=='[' || isspace(*pt)) {
 			    ++pt;
@@ -1256,7 +1256,7 @@ static void _InterpretPdf(FILE *in, struct pdfcontext *pc, EntityChar *ec) {
 	  case pt_namelit:
 	    if ( sp<sizeof(stack)/sizeof(stack[0]) ) {
 		stack[sp].type = ps_lit;
-		stack[sp++].u.str = copy(tokbuf);
+		stack[sp++].u.str = xstrdup_or_null(tokbuf);
 	    }
 	  break;
 	  case pt_true: case pt_false:
@@ -1562,7 +1562,7 @@ return( NULL );
     memset(&ec,'\0',sizeof(ec));
     ec.fromtype3 = true;
     ec.sc = sc = SplineCharCreate(2);
-    sc->name = copy(glyphname);
+    sc->name = xstrdup_or_null(glyphname);
 
     _InterpretPdf(glyph_stream,pc,&ec);
     sc->width = ec.width;
@@ -1626,10 +1626,10 @@ static void add_mapping(SplineFont *basesf, long *mappings, int *uvals, int nuni
     struct altuni *altuni, *prev;
     SplineChar *sc;
 
-    name = copy(StdGlyphName(buffer,uvals[0],sf->uni_interp,sf->for_new_glyphs));
+    name = xstrdup_or_null(StdGlyphName(buffer,uvals[0],sf->uni_interp,sf->for_new_glyphs));
     name = xrealloc(name,strlen(name)+8);
     for (i = 1; i<nuni; i++) {
-	nname = copy(StdGlyphName(buffer,uvals[i],sf->uni_interp,sf->for_new_glyphs));
+	nname = xstrdup_or_null(StdGlyphName(buffer,uvals[i],sf->uni_interp,sf->for_new_glyphs));
 	name = xrealloc(name,strlen(name)+strlen(nname)+10);
 	strcat(name, "_");
 	strcat(name, nname);
@@ -1817,8 +1817,8 @@ static SplineFont *pdf_loadtype3(struct pdfcontext *pc) {
     if ( sscanf(fontmatrix,"[%lg",&emsize)!=1 || emsize==0 )
   goto fail;
     emsize = 1.0/emsize;
-    enc = copy(enc);
-    name = copy(name+1);
+    enc = xstrdup_or_null(enc);
+    name = xstrdup_or_null(name+1);
 
     if ( !pdf_getcharprocs(pc,cp))
   goto fail;
@@ -1828,8 +1828,8 @@ static SplineFont *pdf_loadtype3(struct pdfcontext *pc) {
     if ( name!=NULL ) {
 	free(sf->fontname); free(sf->fullname); free(sf->familyname);
 	sf->fontname = name;
-	sf->familyname = copy(name);
-	sf->fullname = copy(name);
+	sf->familyname = xstrdup_or_null(name);
+	sf->fullname = xstrdup_or_null(name);
     }
     free(sf->copyright); sf->copyright = NULL;
     free(sf->comments); sf->comments = NULL;
@@ -1983,7 +1983,7 @@ return( NULL );
     }
     list = xmalloc((pc.fcnt+1)*sizeof(char *));
     for ( i=0; i<pc.fcnt; ++i )
-	list[i] = copy( pc.fontnames[i]);
+	list[i] = xstrdup_or_null( pc.fontnames[i]);
     list[i] = NULL;
     fclose(pc.pdf);
     pcFree(&pc);
@@ -2023,7 +2023,7 @@ return( NULL );
     }
     // parse the chosen font name
     if((pt = strchr(filename, '(')) != NULL) {
-        select_this_font = copy(pt+1);
+        select_this_font = xstrdup_or_null(pt+1);
         if((pt = strchr(select_this_font, ')')) != NULL)
             *pt = '\0';
     }
@@ -2044,7 +2044,7 @@ return( NULL );
 	int choice;
 	names = xmalloc((pc.fcnt+1)*sizeof(uint32_t *));
 	for ( i=0; i<pc.fcnt; ++i )
-	    names[i] = copy(pc.fontnames[i]);
+	    names[i] = xstrdup_or_null(pc.fontnames[i]);
 	names[i] = NULL;
 	if ( no_windowing_ui )
 	    choice = 0;

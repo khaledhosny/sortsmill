@@ -285,7 +285,7 @@ return;
 	foundsc = SFHashName(p->sc->parent,newname);
 	if ( foundsc==NULL ) {
 	    free(p->sc->name);
-	    p->sc->name = copy(newname);
+	    p->sc->name = xstrdup_or_null(newname);
 	} else {
 	    ff_post_error(_("Can't fix"), _("The name FontForge would like to assign to this glyph, %.30s, is already used by a different glyph."),
 		    newname );
@@ -2012,7 +2012,7 @@ static int SCProblems(CharView *cv,SplineChar *sc,struct problems *p) {
 		    *end = '\0';
 		    if ( !SCWorthOutputting(SFGetChar(sc->parent,-1,pt)) ) {
 			changed = true;
-			p->badsubsname = copy(pt);
+			p->badsubsname = xstrdup_or_null(pt);
 			*end = ch;
 			p->badsubs_lsubtable = pst->subtable;
 			ExplainIt(p,sc,_("This glyph contains a substitution or ligature entry which refers to an empty char"),0,0);
@@ -2196,8 +2196,8 @@ static void mark_to_replace(struct problems *p,struct mgask_data *d, char *rpl) 
 	    p->mg = xrealloc(p->mg,(p->rpl_max += 30)*sizeof(struct mgrpl));
     }
     ch = *d->end; *d->end = '\0';
-    p->mg[p->rpl_cnt].search = copy( d->start );
-    p->mg[p->rpl_cnt++].rpl = copy( rpl );
+    p->mg[p->rpl_cnt].search = xstrdup_or_null( d->start );
+    p->mg[p->rpl_cnt++].rpl = xstrdup_or_null( rpl );
     *d->end = ch;
 }
 
