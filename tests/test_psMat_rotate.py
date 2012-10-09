@@ -15,8 +15,8 @@ def test_angle (theta):
         exit (10)
     if len (a) != 6:
         exit (20)
-    for x in a:
-        if not isinstance (x, float):
+    for element in a:
+        if not isinstance (element, float):
             exit (30)
     if theta == 0:
         for i in range (0, 6):

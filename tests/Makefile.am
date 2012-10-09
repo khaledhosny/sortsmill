@@ -85,7 +85,8 @@ AM_LDFLAGS = -export-dynamic -avoid-version
 
 EXTRA_DIST += $(MY_AT_FILES)
 
-EXTRA_DIST += test_psMat_identity.py test_psMat_rotate.py
+EXTRA_DIST += test_psMat_identity.py test_psMat_rotate.py	\
+	test_psMat_scale.py
 
 EXTRA_DIST += findoverlapbugs.py test0001.py test0101.py test1001.py	\
 	test1002.py test1003.py test1004.py test1005.py test1006.py			\
