@@ -47,6 +47,9 @@ test_angle (3 * pi / 2)
 
 for i in range (0, 3600):
     test_angle (i * pi / 1800)
+    
+for i in range (-1000, 1001):
+    test_angle (i)
 
 exit (0)
 
