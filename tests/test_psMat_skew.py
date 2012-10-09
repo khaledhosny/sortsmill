@@ -47,5 +47,8 @@ for i in range (-890, 900):
     test_angle (i * pi / 1800)
     test_angle ((i + 1800) * pi / 1800)
 
+for i in range (-1000, 1001):
+    test_angle (i)
+
 exit (0)
 
