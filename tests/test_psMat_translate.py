@@ -28,5 +28,9 @@ for i in range (0, 1000):
     test_translate (random.uniform (-1000, 1000),
                     random.uniform (-1000, 1000))
 
+for i in range (0, 1000):
+    test_translate (random.randrange (-1000, 1001),
+                    random.randrange (-1000, 1001))
+
 exit (0)
 
