@@ -17853,116 +17853,6 @@ static PyModuleDef fontforge_module = {
 };
 #endif /* PY_MAJOR_VERSION >= 3 */
 
-static PyObject *PyPS_Identity(PyObject *UNUSED(noself), PyObject *UNUSED(args)) {
-return( Py_BuildValue("(dddddd)",  1.0, 0.0, 0.0,  1.0, 0.0, 0.0));
-}
-
-static PyObject *PyPS_Translate(PyObject *UNUSED(noself), PyObject *args) {
-    double x,y=0;
-
-    if ( !PyArg_ParseTuple(args,"d|d",&x,&y) ) {
-	PyErr_Clear();
-	if ( !PyArg_ParseTuple(args,"(dd)",&x,&y) )
-return( NULL );
-    }
-
-return( Py_BuildValue("(dddddd)",  1.0, 0.0, 0.0, 1.0,  x, y));
-}
-
-static PyObject *PyPS_Scale(PyObject *UNUSED(noself), PyObject *args) {
-    double x,y=-99999;
-
-    if ( !PyArg_ParseTuple(args,"d|d",&x,&y) )
-return( NULL );
-    if ( y== -99999 )
-	y = x;
-
-return( Py_BuildValue("(dddddd)",  x, 0.0, 0.0, y,  0.0, 0.0));
-}
-
-static PyObject *PyPS_Rotate(PyObject *UNUSED(noself), PyObject *args) {
-    double theta, c, s;
-
-    if ( !PyArg_ParseTuple(args,"d",&theta) )
-return( NULL );
-    c = cos(theta); s = sin(theta);
-
-return( Py_BuildValue("(dddddd)",  c, s, -s, c,  0.0, 0.0));
-}
-
-static PyObject *PyPS_Skew(PyObject *UNUSED(noself), PyObject *args) {
-    double theta, t;
-
-    if ( !PyArg_ParseTuple(args,"d",&theta) )
-return( NULL );
-    t = tan(theta);
-
-return( Py_BuildValue("(dddddd)",  1.0, 0.0, t, 1.0,  0.0, 0.0));
-}
-
-static PyObject *PyPS_Compose(PyObject *UNUSED(noself), PyObject *args) {
-    double m1[6], m2[6];
-    real r1[6], r2[6], r3[6];
-    int i;
-    PyObject *tuple;
-
-    if ( !PyArg_ParseTuple(args,"(dddddd)(dddddd)",
-	    &m1[0], &m1[1], &m1[2], &m1[3], &m1[4], &m1[5],
-	    &m2[0], &m2[1], &m2[2], &m2[3], &m2[4], &m2[5] ))
-return( NULL );
-    for ( i=0; i<6; ++i ) {
-	r1[i] = m1[i]; r2[i] = m2[i];
-    }
-    MatMultiply(r1,r2,r3);
-    tuple = PyTuple_New(6);
-    for ( i=0; i<6; ++i )
-	PyTuple_SetItem(tuple,i,Py_BuildValue("d",(double) r3[i]));
-return( tuple );
-}
-
-static PyObject *PyPS_Inverse(PyObject *UNUSED(noself), PyObject *args) {
-    double m1[6];
-    real r1[6], r3[6];
-    int i;
-    PyObject *tuple;
-
-    if ( !PyArg_ParseTuple(args,"(dddddd)",
-	    &m1[0], &m1[1], &m1[2], &m1[3], &m1[4], &m1[5] ))
-return( NULL );
-    for ( i=0; i<6; ++i )
-	r1[i] = m1[i];
-    MatInverse(r3,r1);
-    tuple = PyTuple_New(6);
-    for ( i=0; i<6; ++i )
-	PyTuple_SetItem(tuple,i,Py_BuildValue("d",(double) r3[i]));
-return( tuple );
-}
-
-static PyMethodDef psMat_methods[] = {
-    { "identity", PyPS_Identity, METH_NOARGS, "Identity transformation" },
-    { "translate", PyPS_Translate, METH_VARARGS, "Translation transformation" },
-    { "rotate", PyPS_Rotate, METH_VARARGS, "Rotation transformation" },
-    { "skew", PyPS_Skew, METH_VARARGS, "Skew transformation (for making a oblique font)" },
-    { "scale", PyPS_Scale, METH_VARARGS, "Scale transformation" },
-    { "compose", PyPS_Compose, METH_VARARGS, "Compose two transformations (matrix multiplication)" },
-    { "inverse", PyPS_Inverse, METH_VARARGS, "Provide an inverse transformations (not always possible)" },
-    PYMETHODDEF_EMPTY /* Sentinel */
-};
-
-#if PY_MAJOR_VERSION >= 3
-static PyModuleDef psMat_module = {
-    PyModuleDef_HEAD_INIT,
-    "psMat",                          /* m_name */
-    "PostScript Matrix manipulation", /* m_doc */
-    -1,                               /* m_size */
-    psMat_methods,                    /* m_methods */
-    NULL,                             /* m_reload */
-    NULL,                             /* m_traverse */
-    NULL,                             /* m_clear */
-    NULL                              /* m_free */
-};
-#endif /* PY_MAJOR_VERSION >= 3 */
-
 static void PyFF_PicklerInit(void) {
     if ( pickler==NULL )
 	PyRun_SimpleString("import " PICKLE ";\nimport __FontForge_Internals___;\n__FontForge_Internals___.initPickles(" PICKLE ".dumps," PICKLE ".loads);");
@@ -18144,10 +18034,8 @@ static void SetPythonModuleMetadata( PyObject *module );
 #if PY_MAJOR_VERSION >= 3 /*---------------------------------------------*/
 
 PyMODINIT_FUNC _PyInit_fontforge(void);
-PyMODINIT_FUNC _PyInit_psMat(void);
 PyMODINIT_FUNC _PyInit___FontForge_Internals___(void);
 PyMODINIT_FUNC PyInit_fontforge(void);
-PyMODINIT_FUNC PyInit_psMat(void);
 
     /* See also initPyFontForge above for the version 3 case */
 PyMODINIT_FUNC _PyInit_fontforge(void) {
@@ -18203,14 +18091,6 @@ PyMODINIT_FUNC _PyInit_fontforge(void) {
     return m;
 }
 
-PyMODINIT_FUNC _PyInit_psMat(void) {
-    PyObject *module;
-    module PyModule_Create(&psMat_module);
-    if ( module!=NULL )
-	SetPythonModuleMetadata( module );
-    return( module );
-}
-
 PyMODINIT_FUNC _PyInit___FontForge_Internals___(void) {
     return PyModule_Create(&ff_internals_module);
 }
@@ -18218,23 +18098,13 @@ PyMODINIT_FUNC _PyInit___FontForge_Internals___(void) {
 PyMODINIT_FUNC PyInit_fontforge(void) {
     doinitFontForgeMain();
     no_windowing_ui = running_script = true;
-    PyImport_AppendInittab("psMat", _PyInit_psMat);
     PyImport_AppendInittab("__FontForge_Internals___", _PyInit___FontForge_Internals___);
     return _PyInit_fontforge();
-}
-
-PyMODINIT_FUNC PyInit_psMat(void) {
-    doinitFontForgeMain();
-    no_windowing_ui = running_script = true;
-    PyImport_AppendInittab("fontforge", _PyInit_fontforge);
-    PyImport_AppendInittab("__FontForge_Internals___", _PyInit___FontForge_Internals___);
-    return _PyInit_psMat();
 }
 
 void FontForge_PythonInit(void) {
   Py_SetProgramName(L"fontforge");
   PyImport_AppendInittab("fontforge", _PyInit_fontforge);
-  PyImport_AppendInittab("psMat", _PyInit_psMat);
   PyImport_AppendInittab("__FontForge_Internals___", _PyInit___FontForge_Internals___);
 #ifdef MAC
   PyMac_Initialize();
@@ -18301,10 +18171,6 @@ return;
     /* Add constant names for the spiro point types */
     for ( i=0; spiro_names[i]!=NULL; ++i )
 	PyModule_AddObject(m, spiro_names[i], Py_BuildValue("i",i+1));
-
-    m = Py_InitModule3("psMat", psMat_methods,
-                       "PostScript Matrix manipulation");
-    SetPythonModuleMetadata( m );
 
     /* No types, just tuples */
 

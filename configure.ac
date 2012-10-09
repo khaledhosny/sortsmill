@@ -123,6 +123,7 @@ PKG_PROG_PKG_CONFIG
 #AX_PKG_SWIG([2.0.4],[],[AC_MSG_ERROR([SWIG is required to build ${PACKAGE}.])])
 AC_PATH_PROG([MY_SORT],[sort],[cat]) dnl FIXME: Should we get rid of this?
 AC_PATH_PROG([TR],[tr],[tr])
+AC_PATH_PROG([GAWK],[gawk],[gawk])
 AC_PATH_PROG([MSGFMT],[msgfmt],[msgfmt])
 AC_PATH_PROG([XGETTEXT],[xgettext],[xgettext])
 AC_PATH_PROG([INDENT],[indent],[indent])
@@ -315,7 +316,7 @@ FONTFORGE_CREATE_MAKEFILES
 FONTFORGE_CREATE_INDENT_PRO
 AC_CONFIG_FILES([inc/config-extra.h])
 AC_CONFIG_FILES([scheme/fontforge.scm])
-AC_CONFIG_FILES([pycontrib/site_init.py])
+AC_CONFIG_FILES([pycontrib/site_init.py pycontrib/psMat.py])
 AC_CONFIG_FILES([fontforge/darwinsetup],[chmod +x fontforge/darwinsetup])
 FONTFORGE_CONFIG_TESTSUITE
 FONTFORGE_CREATE_SUMMARY

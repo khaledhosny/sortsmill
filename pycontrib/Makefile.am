@@ -32,3 +32,12 @@ dist_python_SCRIPTS = psMat.py
 
 nodist_pkgpythondata_SCRIPTS = site_init.py
 dist_pycontrib_SCRIPTS = __init__.py excepthook.py
+
+extract_text = $(GAWK) ' \
+BEGIN { pattern = "^[[:space:]]*\#[[:space:]]*$1--[[:space:]]*(.*)[[:space:]]*" } \
+$$0 ~ pattern { match($$0, pattern, matches); print matches[1] }'
+
+$(top_srcdir)/doc/%.interface.texi: %.py
+	$(call extract_text,i) $< > $@
+
+extract-text: $(top_srcdir)/doc/psMat.interface.texi

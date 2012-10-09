@@ -37,6 +37,7 @@ Copyright @copyright{} 2012 Barry Schwartz
 @menu
 * Introduction::    What is Sorts Mill FontForge?
 * Installing::      How to install Sorts Mill FontForge.
+* psMat::           The psMat Python module.
 @end menu
 
 @end ifnottex
@@ -52,5 +53,10 @@ Sorts Mill FontForge is a font editor.
 
 For installation instructions, see the file @file{INSTALL} that
 accompanies the source code.
+
+@node psMat
+@chapter The psMat Python module
+
+@include psMat.interface.texi
 
 @bye

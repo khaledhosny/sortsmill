@@ -28,6 +28,20 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+"""Transformations on PostScript matrices.
+
+The matrices are expressed as six-element tuples of floats.
+
+"""
+
+__version__ = '@VERSION_MAJOR@.@VERSION_MINOR@.@VERSION_PATCH@@VERSION_EXTRA_SHORT@'
+
+# i--
+# i-- @strong{FIXME:} This chapter needs an introductory section,
+# i-- for instance describing the tuples that represent
+# i-- PostScript matrices.
+# i--
+
 from math import cos, sin, tan
 
 try:
@@ -37,6 +51,7 @@ try:
     # Use a high-quality, already written matrix inversion algorithm
     # if one is available.
     def psMat_invert (a):
+        # Invert a PostScript matrix.
         a = map (float, a)
         m = numpy.array ([a[0:2], a[2:4]])
         minv = numpy.linalg.inv (m)
@@ -55,6 +70,7 @@ except ImportError:
     # let singular matrices throw division-by-zero or overflow
     # exceptions, which is different from what FontForge did.)
     def psMat_invert (a):
+        # Invert a PostScript matrix.
         a = map (float, a)
         det = a[0] * a[3] - a[1] * a[2]
         b11 = a[3] / det
@@ -65,17 +81,30 @@ except ImportError:
         c2 = - a[4] * b12 - a[5] * b22;
         return (b11, b12, b21, b22, c1, c2)
 
-# f--
-# f-- Returns an identity matrix as a 6-element tuple.
-# f--
+# i--
+# i-- @defun identity ()
+# i--
+# i-- Return an identity matrix as a six-element tuple.
+# i--
+# i-- @end defun
+# i--
 def identity ():
+    """Return an identity matrix as a six-element tuple."""
     return (1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
 
-# f--
-# f-- Returns a matrix that is the composition of two input
-# f-- transformations.
-# f--
+# i--
+# i-- @defun compose (@var{mat1}, @var{mat2})
+# i--
+# i-- Return a matrix that is the composition of two input
+# i-- transformations.
+# i--
+# i-- @end defun
+# i--
 def compose (mat1, mat2):
+    """Return a matrix that is the composition of two input
+    transformations.
+    
+    """
     mat1 = map (float, mat1)
     mat2 = map (float, mat2)
     a0 = mat1[0] * mat2[0] + mat1[1] * mat2[2]
@@ -86,45 +115,77 @@ def compose (mat1, mat2):
     a5 = mat1[4] * mat2[1] + mat1[5] * mat2[3] + mat2[5];
     return (a0, a1, a2, a3, a4, a5)
 
-# f--
-# f-- Returns a matrix which is the inverse of the input
-# f-- transformation.
-# f-- (Note: There will not always be an inverse.)
-# f--
+# i--
+# i-- @defun inverse (@var{mat})
+# i--
+# i-- Return a matrix which is the inverse of the input
+# i-- transformation.
+# i-- (Note: There will not always be an inverse.)
+# i--
+# i-- @end defun
+# i--
 def inverse (mat):
+    """Return a matrix which is the inverse of the input
+    transformation.
+
+    """
     return psMat_invert (mat)
 
-# f--
-# f-- Returns a matrix which will rotate by theta.
-# f-- Theta is expressed in radians.
-# f--
+# i--
+# i-- @defun rotate (@var{theta})
+# i--
+# i-- Return a matrix which will rotate by an angle theta
+# i-- expressed in radians.
+# i--
+# i-- @end defun
+# i--
 def rotate (theta):
+    """Return a matrix which will rotate by an angle expressed
+    in radians.
+
+    """
     t = float (theta)
     cosine = cos (t)
     sine = sin (t)
     return (cosine, sine, -sine, cosine, 0.0, 0.0)
 
-# f--
-# f-- Returns a matrix that will scale by x horizontally
-# f-- and y vertically.
-# f-- If y is omitted, the matrix will scale by x in both
-# f-- directions.
-# f--
+# i--
+# i-- @defun scale (@var{x} [ , @var{y}])
+# i--
+# i-- Return a matrix that will scale by x horizontally
+# i-- and y vertically.
+# i-- If y is omitted, the matrix will scale by x in both
+# i-- directions.
+# i--
+# i-- @end defun
+# i--
 def scale (x, y = None):
+    """Return a matrix that will scale."""
     if y is None:
         y = x
     return (float (x), 0.0, 0.0, float (y), 0.0, 0.0)
 
-# f--
-# f-- Returns a matrix that will skew by theta
-# f-- (to produce a oblique font). Theta is expressed in radians.
-# f--
+# i--
+# i-- @defun skew (@var{theta})
+# i--
+# i-- Return a matrix that will skew by theta
+# i-- (to produce an oblique font).
+# i-- Theta is expressed in radians.
+# i--
+# i-- @end defun
+# i--
 def skew (theta):
+    """Return a matrix that will skew."""
     return (1.0, 0.0, tan (float (theta)), 1.0, 0.0, 0.0)
 
-# f--
-# f-- Returns a matrix that will translate by x horizontally
-# f-- and y vertically.
-# f--
+# i--
+# i-- @defun translate (@var{x}, @var{y})
+# i--
+# i-- Return a matrix that will translate by x horizontally
+# i-- and y vertically.
+# i--
+# i-- @end defun
+# i--
 def translate (x, y):
+    """Return a matrix that will translate."""
     return (1.0, 0.0, 0.0, 1.0, float (x), float (y))
