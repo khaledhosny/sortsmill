@@ -33,6 +33,8 @@ def test_scale (x, y = None):
         if eps < abs (a[i] - (xx, 0, 0, yy, 0, 0)[i]):
             exit (50)
 
+random.seed ()
+
 for i in range (0, 1000):
     test_scale (random.uniform (-1000, 1000))
 
