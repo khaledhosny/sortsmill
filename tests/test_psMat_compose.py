@@ -48,5 +48,14 @@ for i in range (0, 1000):
           random.uniform (-1000, 1000), random.uniform (-1000, 1000))
     test_compose (a1, a2)
 
+for i in range (0, 1000):
+    a1 = (random.randrange (-1000, 1001), random.randrange (-1000, 1001),
+          random.randrange (-1000, 1001), random.randrange (-1000, 1001),
+          random.randrange (-1000, 1001), random.randrange (-1000, 1001))
+    a2 = (random.randrange (-1000, 1001), random.randrange (-1000, 1001),
+          random.randrange (-1000, 1001), random.randrange (-1000, 1001),
+          random.randrange (-1000, 1001), random.randrange (-1000, 1001))
+    test_compose (a1, a2)
+
 exit (0)
 
