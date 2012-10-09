@@ -50,8 +50,7 @@ AC_DEFUN([FONTFORGE_ARG_DISABLE_PYTHON_EXTENSION],
 [
 AC_ARG_ENABLE([python-extension],
          [AS_HELP_STRING([--disable-python-extension],
-                         [do not build the Python extension modules "psMat" and "fontforge",
-                          even if they were included in this source distribution])],
+                         [do not build the Python extension module "fontforge"])],
          [i_do_have_python_extension="${enableval}"],
          [i_do_have_python_extension=yes])
 AM_CONDITIONAL([PYTHON_EXTENSION],[test x"${i_do_have_python_extension}" = xyes])

@@ -91,6 +91,7 @@ libpng_url="http://www.libpng.org/"
 libxml_url="http://www.xmlsoft.org/"
 libspiro_url="http://libspiro.sourceforge.net/"
 libunicodenames_url="https://github.com/sortsmill/libunicodenames"
+numpy_url="http://numpy.scipy.org/"
 
 # Point to the Wikipedia page, primarily because one may want
 # libjpeg-turbo rather than the reference implementation.
@@ -222,13 +223,17 @@ AC_ARG_VAR([FREETYPE_SOURCE],
          the setting of FREETYPE_SOURCE])
 FONTFORGE_ARG_WITH_GIFLIB
 FONTFORGE_ARG_WITH_LIBJPEG
-FONTFORGE_ARG_WITH_LIBPNG
 FONTFORGE_ARG_WITH_LIBTIFF
 FONTFORGE_ARG_WITH_LIBXML
 FONTFORGE_ARG_WITH_LIBSPIRO
 FONTFORGE_ARG_WITH_LIBUNICODENAMES
 
 FONTFORGE_CONFIG_FREETYPE_DEBUGGER
+
+if test x"${i_do_have_python_scripting}" = xyes -o x"${i_do_have_python_extension}" = xyes; then
+   FONTFORGE_CHECK_NUMPY
+   FONTFORGE_CHECK_NUMPY_LINALG
+fi
 
 #--------------------------------------------------------------------------
 #

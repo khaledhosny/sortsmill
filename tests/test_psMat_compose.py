@@ -34,7 +34,7 @@ def test_compose (a1, a2):
         v[0] += a2[4]
         v[1] += a2[5]
         mm = m + v
-        if eps < abs (a[i] - mm[i]):
+        if 1e6 * eps < abs (a[i] - mm[i]):
             exit (50)
 
 random.seed ()

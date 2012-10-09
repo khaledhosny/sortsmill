@@ -8,6 +8,8 @@ AT_CLEANUP
 
 check_psMat([test_psMat_identity.py],[0],[ignore],[])
 check_psMat([test_psMat_compose.py],[0],[ignore],[])
+check_psMat([test_psMat_inverse.py],[0],[ignore],[]) # Depends on
+                                                     # compose.
 check_psMat([test_psMat_rotate.py],[0],[ignore],[])
 check_psMat([test_psMat_scale.py],[0],[ignore],[])
 check_psMat([test_psMat_skew.py],[0],[ignore],[])

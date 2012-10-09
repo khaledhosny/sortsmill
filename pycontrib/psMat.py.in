@@ -59,8 +59,8 @@ try:
         b12 = minv[0][1]
         b21 = minv[1][0]
         b22 = minv[1][1]
-        c1 = - a[4] * b11 - a[5] * b21;
-        c2 = - a[4] * b12 - a[5] * b22;
+        c1 = - (a[4] * b11 + a[5] * b21);
+        c2 = - (a[4] * b12 + a[5] * b22);
         return (b11, b12, b21, b22, c1, c2)
 
 except ImportError:
@@ -77,8 +77,8 @@ except ImportError:
         b12 = - a[1] / det
         b21 = - a[2] / det
         b22 = a[0] / det
-        c1 = - a[4] * b11 - a[5] * b21;
-        c2 = - a[4] * b12 - a[5] * b22;
+        c1 = - (a[4] * b11 + a[5] * b21);
+        c2 = - (a[4] * b12 + a[5] * b22);
         return (b11, b12, b21, b22, c1, c2)
 
 # i--

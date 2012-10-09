@@ -30,7 +30,7 @@ def test_scale (x, y = None):
         yy = y
 
     for i in range (0, 6):
-        if eps < abs (a[i] - (xx, 0, 0, yy, 0, 0)[i]):
+        if 1000 * eps < abs (a[i] - (xx, 0, 0, yy, 0, 0)[i]):
             exit (50)
 
 random.seed ()

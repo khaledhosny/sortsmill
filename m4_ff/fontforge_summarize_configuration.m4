@@ -43,4 +43,25 @@ Optional dependencies:
   libunicodenames    ${i_do_have_libunicodenames}  	${libunicodenames_url}
   X Window System    ${i_do_have_x}
 EOF
+
+if test x"${i_do_have_python_scripting}" = xyes -o x"${i_do_have_python_extension}" = xyes; then
+
+   cat >> config-summary <<EOF
+  numpy              ${fontforge_cv_python_numpy}  	${numpy_url}
+  numpy.linalg       ${fontforge_cv_python_numpy_linalg}  	${numpy_url}
+EOF
+
+   if test x"${fontforge_cv_python_numpy}" != xyes -o  x"${fontforge_cv_python_numpy_linalg}" != xyes; then
+      cat >> config-summary <<EOF
+
+Suggestions:
+
+  * Consider installing the Python module 'NumPy' with
+    LAPACK support compiled in, for more stable linear
+    algebra calculations in Python scripts.
+    See ${numpy_url}
+
+EOF
+   fi
+fi
 ])

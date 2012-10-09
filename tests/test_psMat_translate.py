@@ -19,7 +19,7 @@ def test_translate (x, y):
             exit (30)
 
     for i in range (0, 6):
-        if eps < abs (a[i] - (1, 0, 0, 1, x, y)[i]):
+        if 1000 * eps < abs (a[i] - (1, 0, 0, 1, x, y)[i]):
             exit (50)
 
 random.seed ()
