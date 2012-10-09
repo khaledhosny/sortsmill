@@ -64,7 +64,7 @@ $(TESTSUITE): $(srcdir)/testsuite.at $(srcdir)/package.m4 $(MY_AT_FILES)
 	mv $@.tmp $@
 
 MY_AT_FILES = xuniconv_h.at xuninorm_h.at xunistr_h.at gfile_c.at	\
-	old_python_tests.at
+	psMat.at old_python_tests.at
 
 TESTS_XUNISTRING_H = test_xuniconv_h test_xuninorm_h test_xunistr_h
 
@@ -84,6 +84,8 @@ LDADD = $(top_builddir)/fontforge/libsortsmillff_fontforgeexe.la	\
 AM_LDFLAGS = -export-dynamic -avoid-version
 
 EXTRA_DIST += $(MY_AT_FILES)
+
+EXTRA_DIST += test_psMat_identity.py
 
 EXTRA_DIST += findoverlapbugs.py test0001.py test0101.py test1001.py	\
 	test1002.py test1003.py test1004.py test1005.py test1006.py			\

@@ -1,0 +1,64 @@
+
+@strong{FIXME:} This chapter needs an introductory section,
+for instance describing the tuples that represent
+PostScript matrices.
+
+
+@defun identity ()
+
+Return an identity matrix as a six-element tuple.
+
+@end defun
+
+
+@defun compose (@var{mat1}, @var{mat2})
+
+Return a matrix that is the composition of two input
+transformations.
+
+@end defun
+
+
+@defun inverse (@var{mat})
+
+Return a matrix which is the inverse of the input
+transformation.
+(Note: There will not always be an inverse.)
+
+@end defun
+
+
+@defun rotate (@var{theta})
+
+Return a matrix which will rotate by an angle theta
+expressed in radians.
+
+@end defun
+
+
+@defun scale (@var{x} [ , @var{y}])
+
+Return a matrix that will scale by x horizontally
+and y vertically.
+If y is omitted, the matrix will scale by x in both
+directions.
+
+@end defun
+
+
+@defun skew (@var{theta})
+
+Return a matrix that will skew by theta
+(to produce an oblique font).
+Theta is expressed in radians.
+
+@end defun
+
+
+@defun translate (@var{x}, @var{y})
+
+Return a matrix that will translate by x horizontally
+and y vertically.
+
+@end defun
+

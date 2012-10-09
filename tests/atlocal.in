@@ -30,6 +30,7 @@ abs_top_builddir="@abs_top_builddir@"
 
 MKDIR_P="@MKDIR_P@"
 GUILE="@GUILE@"
+PYTHON="@PYTHON@"
 
 LOCALE_FR_UTF8="@LOCALE_FR_UTF8@"
 

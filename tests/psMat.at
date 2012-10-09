@@ -1,0 +1,9 @@
+m4_defun([check_psMat],
+[
+AT_SETUP([$1])
+AT_KEYWORDS([psMat python unit])
+AT_CHECK_UNQUOTED([${PYTHON} "${abs_srcdir}"/$1],[$2],[$3],[$4])
+AT_CLEANUP
+])
+
+check_psMat([test_psMat_identity.py],[0],[ignore],[])
