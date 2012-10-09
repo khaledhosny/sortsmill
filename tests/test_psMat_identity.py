@@ -6,6 +6,7 @@ import sys
 eps = sys.float_info.epsilon
 
 a = psMat.identity ()
+print (a)
 
 if not isinstance (a, tuple):
     exit (10)
