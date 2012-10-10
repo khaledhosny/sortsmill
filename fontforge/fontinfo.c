@@ -2181,67 +2181,79 @@ return( true );		/* can't happen */
 return( true );
 }
 
-static int GFI_NameChange(GGadget *g, GEvent *e) {
-    if ( e->type==et_controlevent && e->u.control.subtype == et_textchanged ) {
-	GWindow gw = GGadgetGetWindow(g);
-	struct gfi_data *gfi = GDrawGetUserData(gw);
-	const uint32_t *uname = _GGadgetGetTitle(GWidgetGetControl(gw,CID_Fontname));
-	uint32_t ubuf[50];
-	int i,j;
-	for ( j=0; noticeweights[j]!=NULL; ++j ) {
-	    for ( i=0; noticeweights[j][i]!=NULL; ++i ) {
-		if ( uc_strstrmatch(uname,noticeweights[j][i])!=NULL ) {
-		    uc_strcpy(ubuf, noticeweights[j]==knownweights ?
+static int GFI_NameChange(GGadget *g, GEvent *e)
+{
+  if ( e->type==et_controlevent && e->u.control.subtype == et_textchanged )
+    {
+      GWindow gw = GGadgetGetWindow(g);
+      struct gfi_data *gfi = GDrawGetUserData(gw);
+      const uint32_t *uname = _GGadgetGetTitle(GWidgetGetControl(gw,CID_Fontname));
+      uint32_t ubuf[50];
+      int i,j;
+      for ( j=0; noticeweights[j]!=NULL; ++j )
+	{
+	  for ( i=0; noticeweights[j][i]!=NULL; ++i )
+	    {
+	      if ( uc_strstrmatch(uname,noticeweights[j][i])!=NULL )
+		{
+		  uc_strcpy(ubuf, noticeweights[j]==knownweights ?
 			    realweights[i] : noticeweights[j][i]);
-		    GGadgetSetTitle(GWidgetGetControl(gw,CID_Weight),ubuf);
-	    break;
+		  GGadgetSetTitle(GWidgetGetControl(gw,CID_Weight),ubuf);
+		  break;
 		}
 	    }
-	    if ( noticeweights[j][i]!=NULL )
-	break;
+	  if ( noticeweights[j][i]!=NULL )
+	    break;
 	}
 
-	/* If the user didn't set the full name yet, we guess it from the
-	 * postrscript name */
-	if ( gfi->human_untitled ) {
-	    uint32_t *cp = x_u32_strdup_or_null(uname);
-	    int i=0;
-	    /* replace the last hyphen with space */
-	    for( i=u_strlen(cp); i>=0; i-- ) {
-		if( cp[i] == '-' ) {
-		    cp[i] = ' ';
-		    break;
+      /* If the user didn't set the full name yet, we guess it from the
+       * postrscript name */
+      if ( gfi->human_untitled )
+	{
+	  uint32_t *cp = x_u32_strdup_or_null(uname);
+	  int i=0;
+	  /* replace the last hyphen with space */
+	  for( i=u_strlen(cp); i>=0; i-- )
+	    {
+	      if( cp[i] == '-' )
+		{
+		  cp[i] = ' ';
+		  break;
 		}
 	    }
-	    /* If the postscript name ends with "Regular" it is recommended not
-	     * to include it in the full name */
-	    if(u_endswith(cp,c_to_u(" Regular")) || u_endswith(cp,c_to_u(" regular"))) {
-		cp[u_strlen(cp) - strlen(" Regular")] ='\0';
+	  /* If the postscript name ends with "Regular" it is recommended not
+	   * to include it in the full name */
+	  if(u_endswith(cp,c_to_u(" Regular")) || u_endswith(cp,c_to_u(" regular")))
+	    {
+	      cp[u_strlen(cp) - strlen(" Regular")] ='\0';
 	    }
-	    GGadgetSetTitle(GWidgetGetControl(gw,CID_Human),cp);
-	    free(cp);
+	  GGadgetSetTitle(GWidgetGetControl(gw,CID_Human),cp);
+	  free(cp);
 	}
-	if ( gfi->family_untitled ) {
-	    const uint32_t *ept = uname+u_strlen(uname); uint32_t *temp;
-	    for ( i=0; knownweights[i]!=NULL; ++i ) {
-		if (( temp = uc_strstrmatch(uname,knownweights[i]))!=NULL && temp<ept && temp!=uname )
-		    ept = temp;
+      if ( gfi->family_untitled )
+	{
+	  const uint32_t *ept = uname+u_strlen(uname);
+	  uint32_t *temp;
+	  for ( i=0; knownweights[i]!=NULL; ++i )
+	    {
+	      if (( temp = uc_strstrmatch(uname,knownweights[i]))!=NULL && temp<ept && temp!=uname )
+		ept = temp;
 	    }
-	    if (( temp = uc_strstrmatch(uname,"ital"))!=NULL && temp<ept && temp!=uname )
-		ept = temp;
-	    if (( temp = uc_strstrmatch(uname,"obli"))!=NULL && temp<ept && temp!=uname )
-		ept = temp;
-	    if (( temp = uc_strstrmatch(uname,"kurs"))!=NULL && temp<ept && temp!=uname )
-		ept = temp;
-	    if (( temp = uc_strstrmatch(uname,"slanted"))!=NULL && temp<ept && temp!=uname )
-		ept = temp;
-	    if (( temp = u_strchr(uname,'-'))!=NULL && temp!=uname )
-		ept = temp;
-	    temp = u_copyn(uname,ept-uname);
-	    GGadgetSetTitle(GWidgetGetControl(gw,CID_Family),temp);
+	  if (( temp = uc_strstrmatch(uname,"ital"))!=NULL && temp<ept && temp!=uname )
+	    ept = temp;
+	  if (( temp = uc_strstrmatch(uname,"obli"))!=NULL && temp<ept && temp!=uname )
+	    ept = temp;
+	  if (( temp = uc_strstrmatch(uname,"kurs"))!=NULL && temp<ept && temp!=uname )
+	    ept = temp;
+	  if (( temp = uc_strstrmatch(uname,"slanted"))!=NULL && temp<ept && temp!=uname )
+	    ept = temp;
+	  if (( temp = u_strchr(uname,'-'))!=NULL && temp!=uname )
+	    ept = temp;
+	  temp = u_copyn(uname,ept-uname);
+	  GGadgetSetTitle(GWidgetGetControl(gw,CID_Family),temp);
 	}
     }
-return( true );
+  return( true );
 }
 
 static int GFI_FamilyChange(GGadget *g, GEvent *e) {

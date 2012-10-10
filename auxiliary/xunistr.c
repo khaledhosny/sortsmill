@@ -176,3 +176,41 @@ u32_force_valid (const uint32_t *string)
   static const uint32_t empty_string[1] = { 0 };
   return (u32_valid (string)) ? string : empty_string;
 }
+
+uint8_t *x_u8_strnchardup (const uint8_t *string, size_t n)
+{
+  uint32_t *s32 = x_u8_to_u32 (string);
+  uint32_t *s32_copy = x_u32_strnchardup (s32, n);
+  free (s32);
+  uint8_t *s8_copy = x_u32_to_u8 (s32_copy);
+  free (s32_copy);
+  return s8_copy;
+}
+
+uint16_t *x_u16_strnchardup (const uint16_t *string, size_t n)
+{
+  uint32_t *s32 = x_u16_to_u32 (string);
+  uint32_t *s32_copy = x_u32_strnchardup (s32, n);
+  free (s32);
+  uint16_t *s16_copy = x_u32_to_u16 (s32_copy);
+  free (s32_copy);
+  return s16_copy;
+}
+
+uint32_t *x_u32_strnchardup (const uint32_t *string, size_t n)
+{
+  uint32_t *copy;
+
+  size_t i = 0;
+  while (i < n && string[i] != 0)
+    i++;
+  if (string[i] == 0)
+    copy = x_u32_strdup (string);
+  else
+    {
+      copy = xmalloc ((n + 1) * sizeof (uint32_t));
+      memcpy (copy, string, n * sizeof (uint32_t));
+      copy[n] = 0;
+    }
+  return copy;
+}

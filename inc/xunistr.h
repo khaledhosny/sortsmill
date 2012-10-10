@@ -63,6 +63,11 @@ VISIBLE const uint8_t *u8_force_valid (const uint8_t *string);
 VISIBLE const uint16_t *u16_force_valid (const uint16_t *string);
 VISIBLE const uint32_t *u32_force_valid (const uint32_t *string);
 
+// Copy up to n characters (as opposed to storage units).
+VISIBLE uint8_t *x_u8_strnchardup (const uint8_t *string, size_t n);
+VISIBLE uint16_t *x_u16_strnchardup (const uint16_t *string, size_t n);
+VISIBLE uint32_t *x_u32_strnchardup (const uint32_t *string, size_t n);
+
 static inline uint8_t *
 x_u8_strdup (const uint8_t *string)
 {

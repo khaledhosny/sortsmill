@@ -1,9 +1,9 @@
 #include <config.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <gc.h>
 #include <locale.h>
 #include <xunistring.h>
-#include <unistdio.h>
 
 int
 main (int argc, char **argv)
@@ -20,6 +20,8 @@ main (int argc, char **argv)
   uint32_t *s8_16_32 = x_gc_u16_to_u32 (s8_16);
   uint16_t *s8_32_16 = x_gc_u32_to_u16 (s8_32);
 
+  size_t n = atoi (argv[2]);
+
   ulc_fprintf (stdout, "%U\n", s8);
   ulc_fprintf (stdout, "%lU\n", s8_16);
   ulc_fprintf (stdout, "%llU\n", s8_32);
@@ -33,6 +35,9 @@ main (int argc, char **argv)
   ulc_fprintf (stdout, "%U\n", x_u8_strdup_or_null (NULL));
   ulc_fprintf (stdout, "%lU\n", x_u16_strdup_or_null (NULL));
   ulc_fprintf (stdout, "%llU\n", x_u32_strdup_or_null (NULL));
+  ulc_fprintf (stdout, "%U\n", x_u8_strnchardup (s8, n));
+  ulc_fprintf (stdout, "%lU\n", x_u16_strnchardup (s8_16, n));
+  ulc_fprintf (stdout, "%llU\n", x_u32_strnchardup (s8_32, n));
 
   return 0;
 }

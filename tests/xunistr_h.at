@@ -9,7 +9,7 @@ AT_CHECK_UNQUOTED([LC_ALL="${utf8_locale}" LANGUAGE="${utf8_locale}" "${abs_buil
 AT_CLEANUP
 ])
 
-check_xunistr_h([test_xunistr_h 'Eĥoŝanĝo ĉiuĵaŭde'],[0],
+check_xunistr_h([test_xunistr_h 'Eĥoŝanĝo ĉiuĵaŭde' 0],[0],
 [Eĥoŝanĝo ĉiuĵaŭde
 Eĥoŝanĝo ĉiuĵaŭde
 Eĥoŝanĝo ĉiuĵaŭde
@@ -23,4 +23,68 @@ Eĥoŝanĝo ĉiuĵaŭde
 (NULL)
 (NULL)
 (NULL)
+
+
+
 ],[])
+
+check_xunistr_h([test_xunistr_h 'Eĥoŝanĝo ĉiuĵaŭde' 1],[0],
+[Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+(NULL)
+(NULL)
+(NULL)
+E
+E
+E
+],[])
+
+check_xunistr_h([test_xunistr_h 'Eĥoŝanĝo ĉiuĵaŭde' 16],[0],
+[Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+(NULL)
+(NULL)
+(NULL)
+Eĥoŝanĝo ĉiuĵaŭd
+Eĥoŝanĝo ĉiuĵaŭd
+Eĥoŝanĝo ĉiuĵaŭd
+],[])
+
+m4_foreach_w([n],[17 18 29],
+[
+check_xunistr_h([test_xunistr_h 'Eĥoŝanĝo ĉiuĵaŭde' n],[0],
+[Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+(NULL)
+(NULL)
+(NULL)
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+],[])
+])
+
