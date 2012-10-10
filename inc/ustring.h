@@ -41,7 +41,6 @@ VISIBLE extern uint32_t *u_concat (const uint32_t *, const uint32_t *);
 VISIBLE extern char *cu_copyn (const uint32_t *pt, int len);
 VISIBLE extern char *cu_copy (const uint32_t *);
 
-VISIBLE extern long u_strcmp (const uint32_t *, const uint32_t *);
 VISIBLE extern long u_strncmp (const uint32_t *, const uint32_t *, int);
 VISIBLE extern long uc_strmatch (const uint32_t *, const char *);
 VISIBLE extern long uc_strnmatch (const uint32_t *, const char *, int);

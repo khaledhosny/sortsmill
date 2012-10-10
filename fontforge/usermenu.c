@@ -193,7 +193,8 @@ InsertSubMenus(menu_info_func func,
             for (j = 0; (*mn)[j].ti.text != NULL || (*mn)[j].ti.line; ++j) {
                 if ((*mn)[j].ti.text == NULL)
                     continue;
-                if (u_strcmp((*mn)[j].ti.text, submenuu) == 0)
+		// FIXME: Should this be a normalized comparison?
+                if (u32_strcmp((*mn)[j].ti.text, submenuu) == 0)
                     break;
             }
         }

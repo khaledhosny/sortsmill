@@ -1290,14 +1290,15 @@ return( filename );
 }
 
 void LayoutInfoSetTitle(LayoutInfo *li,const uint32_t *tit,int width) {
-    uint32_t *old = li->oldtext;
-    if ( u_strcmp(tit,li->text)==0 )	/* If it doesn't change anything, then don't trash undoes or selection */
-return;
-    li->oldtext = li->text;
-    li->text = x_u32_strdup_or_null(tit);		/* tit might be oldtext, so must copy before freeing */
-    free(old);
-    LI_fontlistmergecheck(li);
-    LayoutInfoRefigureLines(li,0,-1,width);
+  uint32_t *old = li->oldtext;
+  // FIXME: Should this be a normalized comparison?
+  if ( u32_strcmp(tit,li->text)==0 )	/* If it doesn't change anything, then don't trash undoes or selection */
+    return;
+  li->oldtext = li->text;
+  li->text = x_u32_strdup_or_null(tit);		/* tit might be oldtext, so must copy before freeing */
+  free(old);
+  LI_fontlistmergecheck(li);
+  LayoutInfoRefigureLines(li,0,-1,width);
 }
 
 static int LI_NormalizeStartEnd(LayoutInfo *li, int start, int *_end) {

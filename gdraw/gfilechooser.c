@@ -472,7 +472,7 @@ static void GFileChooserScanDir(GFileChooser *gfc,uint32_t *dir) {
 	gfc->history = xrealloc(gfc->history,(gfc->hmax+20)*sizeof(uint32_t *));
     if ( gfc->hcnt==0 ) {
 	gfc->history[gfc->hcnt++] = x_u32_strdup_or_null(dir);
-    } else if ( u_strcmp(gfc->history[gfc->hpos],dir)==0 )
+    } else if ( u32_strcmp(gfc->history[gfc->hpos],dir)==0 ) // FIXME: Should this be a normalized comparison?
 	/* Just a refresh */;
     else {
 	gfc->history[++gfc->hpos] = x_u32_strdup_or_null(dir);

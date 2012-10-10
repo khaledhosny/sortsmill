@@ -1011,7 +1011,8 @@ void GTabSetRemoveTabByName(GGadget *g, char *name) {
     uint32_t *uname = utf82u_copy(name);
 
     for ( pos=0; pos<gts->tabcnt; ++pos ) {
-	if ( u_strcmp(uname,gts->tabs[pos].name)==0 ) {
+      	// FIXME: Should this be a normalized comparison?
+	if ( u32_strcmp(uname,gts->tabs[pos].name)==0 ) {
 	    GTabSetRemoveTabByPos(g,pos);
     break;
 	}

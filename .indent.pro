@@ -21,6 +21,8 @@
 -T real
 -T AnchorPoint
 -T BDFFont
+-T Encoding
+-T GGadget
 -T GImage
 -T GResStruct
 -T MMSet

@@ -1774,20 +1774,23 @@ return;
     _ggadget_destroy(g);
 }
 
-static void SFTextAreaSetTitle(GGadget *g,const uint32_t *tit) {
-    SFTextArea *st = (SFTextArea *) g;
-    uint32_t *old = st->li.oldtext;
-    if ( u_strcmp(tit,st->li.text)==0 )	/* If it doesn't change anything, then don't trash undoes or selection */
-return;
-    st->li.oldtext = st->li.text;
-    st->sel_oldstart = st->sel_start; st->sel_oldend = st->sel_end; st->sel_oldbase = st->sel_base;
-    st->li.text = x_u32_strdup_or_null(tit);		/* tit might be oldtext, so must copy before freeing */
-    free(old);
-    st->sel_start = st->sel_end = st->sel_base = u_strlen(tit);
-    LI_fontlistmergecheck(&st->li);
-    LayoutInfoRefigureLines(&st->li,0,-1,st->g.inner.width);
-    SFTextArea_Show(st,st->sel_start);
-    _ggadget_redraw(g);
+static void
+SFTextAreaSetTitle(GGadget *g,const uint32_t *tit)
+{
+  SFTextArea *st = (SFTextArea *) g;
+  uint32_t *old = st->li.oldtext;
+  // FIXME: Should this be a normalized comparison?
+  if ( u32_strcmp(tit,st->li.text)==0 )	/* If it doesn't change anything, then don't trash undoes or selection */
+    return;
+  st->li.oldtext = st->li.text;
+  st->sel_oldstart = st->sel_start; st->sel_oldend = st->sel_end; st->sel_oldbase = st->sel_base;
+  st->li.text = x_u32_strdup_or_null(tit);		/* tit might be oldtext, so must copy before freeing */
+  free(old);
+  st->sel_start = st->sel_end = st->sel_base = u_strlen(tit);
+  LI_fontlistmergecheck(&st->li);
+  LayoutInfoRefigureLines(&st->li,0,-1,st->g.inner.width);
+  SFTextArea_Show(st,st->sel_start);
+  _ggadget_redraw(g);
 }
 
 static const uint32_t *_SFTextAreaGetTitle(GGadget *g) {

@@ -2011,7 +2011,8 @@ return;
 static void GTextFieldSetTitle(GGadget *g,const uint32_t *tit) {
     GTextField *gt = (GTextField *) g;
     uint32_t *old = gt->oldtext;
-    if ( tit==NULL || u_strcmp(tit,gt->text)==0 )	/* If it doesn't change anything, then don't trash undoes or selection */
+    // FIXME: Should this u32_strcmp actually be a normalized comparison?
+    if ( tit==NULL || u32_strcmp(tit,gt->text)==0 )	/* If it doesn't change anything, then don't trash undoes or selection */
 return;
     gt->oldtext = gt->text;
     gt->sel_oldstart = gt->sel_start; gt->sel_oldend = gt->sel_end; gt->sel_oldbase = gt->sel_base;
@@ -2930,8 +2931,11 @@ static void GCompletionCreatePopup(GCompletionField *gc) {
     /* Don't grab this one. User should be free to ignore it */
 }
 
-static int ucmp(const void *_s1, const void *_s2) {
-return( u_strcmp(*(const uint32_t **)_s1,*(const uint32_t **)_s2));
+static int
+ucmp(const void *_s1, const void *_s2)
+{
+  // FIXME: Should this be a normalized comparison?
+  return u32_strcmp (*(const uint32_t **)_s1, *(const uint32_t **)_s2);
 }
 
 #define MAXLINES	30		/* Maximum # entries allowed in popup window */

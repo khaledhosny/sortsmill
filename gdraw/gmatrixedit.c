@@ -883,102 +883,126 @@ static void GME_StrSmallEdit(GMatrixEdit *gme,char *str, GEvent *event) {
 	GGadgetDispatchEvent(gme->tf,event);
 }
 
-static int GME_SetValue(GMatrixEdit *gme,GGadget *g ) {
-    int c = gme->active_col;
-    int r = gme->active_row;
-    long lval;
-    double dval;
-    char *end="";
-    char *str = GGadgetGetTitle8(g), *pt;
-    int kludge;
+static int
+GME_SetValue(GMatrixEdit *gme,GGadget *g )
+{
+  int c = gme->active_col;
+  int r = gme->active_row;
+  long lval;
+  double dval;
+  char *end="";
+  char *str = GGadgetGetTitle8(g), *pt;
+  int kludge;
 
-    switch ( gme->col_data[c].me_type ) {
-      case me_enum:
+  switch ( gme->col_data[c].me_type )
+    {
+    case me_enum:
+      {
+	const uint32_t *ustr = _GGadgetGetTitle(g), *test;
+	int i;
+	for ( i=0; (test=gme->col_data[c].enum_vals[i].ti.text)!=NULL || gme->col_data[c].enum_vals[i].ti.line ; ++i )
+	  {
+	    // FIXME: Should this be a normalized comparison?
+	    if ( u32_strcmp(ustr,test)==0 )
+	      {
+		if ( (intptr_t) gme->col_data[c].enum_vals[i].ti.userdata != GME_NoChange )
+		  gme->data[r*gme->cols+c].u.md_ival =
+		    (intptr_t) gme->col_data[c].enum_vals[i].ti.userdata;
+		free(str);
+		goto good;
+	      }
+	  }
+      }
+      /* Didn't match any of the enums try as a direct integer */
+      /* Fall through */
+    case me_int:
+    case me_hex:
+    case me_uhex:
+    case me_addr:
+      if ( gme->validatestr!=NULL )
+	end = (gme->validatestr)(&gme->g,gme->active_row,gme->active_col,gme->wasnew,str);
+      if ( *end=='\0' )
 	{
-	    const uint32_t *ustr = _GGadgetGetTitle(g), *test;
-	    int i;
-	    for ( i=0; (test=gme->col_data[c].enum_vals[i].ti.text)!=NULL || gme->col_data[c].enum_vals[i].ti.line ; ++i ) {
-		if ( u_strcmp(ustr,test)==0 ) {
-		    if ( (intptr_t) gme->col_data[c].enum_vals[i].ti.userdata != GME_NoChange )
-			gme->data[r*gme->cols+c].u.md_ival =
-				(intptr_t) gme->col_data[c].enum_vals[i].ti.userdata;
-		    free(str);
-  goto good;
-		}
+	  if ( gme->col_data[c].me_type==me_hex || gme->col_data[c].me_type==me_uhex )
+	    {
+	      pt = str;
+	      while ( *pt==' ' ) ++pt;
+	      if ( (*pt=='u' || *pt=='U') && pt[1]=='+' )
+		pt += 2;
+	      else if ( *pt=='0' && (pt[1]=='x' || pt[1]=='X'))
+		pt += 2;
+	      lval = strtoul(pt,&end,16);
 	    }
+	  else
+	    lval = strtol(str,&end,10);
 	}
-	/* Didn't match any of the enums try as a direct integer */
-	/* Fall through */
-      case me_int: case me_hex: case me_uhex: case me_addr:
-	if ( gme->validatestr!=NULL )
-	    end = (gme->validatestr)(&gme->g,gme->active_row,gme->active_col,gme->wasnew,str);
-	if ( *end=='\0' ) {
-	    if ( gme->col_data[c].me_type==me_hex || gme->col_data[c].me_type==me_uhex ) {
-		pt = str;
-		while ( *pt==' ' ) ++pt;
-		if ( (*pt=='u' || *pt=='U') && pt[1]=='+' )
-		    pt += 2;
-		else if ( *pt=='0' && (pt[1]=='x' || pt[1]=='X'))
-		    pt += 2;
-		lval = strtoul(pt,&end,16);
-	    } else
-		lval = strtol(str,&end,10);
+      if ( *end!='\0')
+	{
+	  GTextFieldSelect(g,end-str,-1);
+	  free(str);
+	  GDrawBeep(NULL);
+	  return( false );
 	}
-	if ( *end!='\0' ) {
-	    GTextFieldSelect(g,end-str,-1);
-	    free(str);
-	    GDrawBeep(NULL);
-return( false );
-	}
-	if ( gme->col_data[c].me_type == me_addr )
-	    gme->data[r*gme->cols+c].u.md_addr = (void *) lval;
-	else
-	    gme->data[r*gme->cols+c].u.md_ival = lval;
+      if ( gme->col_data[c].me_type == me_addr )
+	gme->data[r*gme->cols+c].u.md_addr = (void *) lval;
+      else
+	gme->data[r*gme->cols+c].u.md_ival = lval;
+      free(str);
+      goto good;
+
+    case me_real:
+      if ( gme->validatestr!=NULL )
+	end = (gme->validatestr)(&gme->g,gme->active_row,gme->active_col,gme->wasnew,str);
+      if ( *end=='\0' )
+	dval = strtod(str,&end);
+      if ( *end!='\0' ) {
+	GTextFieldSelect(g,end-str,-1);
 	free(str);
-  goto good;
-      case me_real:
-	if ( gme->validatestr!=NULL )
-	    end = (gme->validatestr)(&gme->g,gme->active_row,gme->active_col,gme->wasnew,str);
-	if ( *end=='\0' )
-	    dval = strtod(str,&end);
-	if ( *end!='\0' ) {
-	    GTextFieldSelect(g,end-str,-1);
-	    free(str);
-	    GDrawBeep(NULL);
-return( false );
-	}
-	gme->data[r*gme->cols+c].u.md_real = dval;
-	free(str);
-  goto good;
-      case me_stringchoice: case me_stringchoicetrans: case me_stringchoicetag:
-      case me_funcedit: case me_onlyfuncedit:
-      case me_string: case me_bigstr: case me_func: case me_button:
-	if ( gme->validatestr!=NULL )
-	    end = (gme->validatestr)(&gme->g,gme->active_row,gme->active_col,gme->wasnew,str);
-	if ( *end!='\0' ) {
-	    GTextFieldSelect(g,end-str,-1);
-	    free(str);
-	    GDrawBeep(NULL);
-return( false );
+	GDrawBeep(NULL);
+	return( false );
+      }
+      gme->data[r*gme->cols+c].u.md_real = dval;
+      free(str);
+      goto good;
+
+    case me_stringchoice:
+    case me_stringchoicetrans:
+    case me_stringchoicetag:
+    case me_funcedit:
+    case me_onlyfuncedit:
+    case me_string:
+    case me_bigstr:
+    case me_func:
+    case me_button:
+      if ( gme->validatestr!=NULL )
+	end = (gme->validatestr)(&gme->g,gme->active_row,gme->active_col,gme->wasnew,str);
+      if ( *end!='\0' )
+	{
+	  GTextFieldSelect(g,end-str,-1);
+	  free(str);
+	  GDrawBeep(NULL);
+	  return( false );
 	}
 
-	free(gme->data[r*gme->cols+c].u.md_str);
-	gme->data[r*gme->cols+c].u.md_str = str;
-	/* Used to delete the row if this were a null string. seems extreme */
-  goto good;
-      default:
-	/* Eh? Can't happen */
-	GTextFieldSelect(g,0,-1);
-	GDrawBeep(NULL);
-	free(str);
-return( false );
+      free(gme->data[r*gme->cols+c].u.md_str);
+      gme->data[r*gme->cols+c].u.md_str = str;
+      /* Used to delete the row if this were a null string. seems extreme */
+      goto good;
+
+    default:
+      /* Eh? Can't happen */
+      GTextFieldSelect(g,0,-1);
+      GDrawBeep(NULL);
+      free(str);
+      return( false );
     }
-  good:
-    kludge = gme->edit_active; gme->edit_active = false;
-    if ( gme->finishedit != NULL )
-	(gme->finishedit)(&gme->g,r,c,gme->wasnew);
-    gme->edit_active = kludge;
-return( true );
+
+ good:
+  kludge = gme->edit_active; gme->edit_active = false;
+  if ( gme->finishedit != NULL )
+    (gme->finishedit)(&gme->g,r,c,gme->wasnew);
+  gme->edit_active = kludge;
+  return( true );
 }
 
 static int GME_FinishEdit(GMatrixEdit *gme) {
