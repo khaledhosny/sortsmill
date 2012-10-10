@@ -970,14 +970,3 @@ uAllAscii (const uint32_t *txt)
     }
   return (true);
 }
-
-int
-u_endswith (const uint32_t *haystack, const uint32_t *needle)
-{
-  int haylen = u32_strlen (haystack);
-  int nedlen = u32_strlen (needle);
-  if (haylen < nedlen)
-    return 0;
-  uint32_t *p = u_strstr (haystack + haylen - nedlen, needle);
-  return p == (haystack + haylen - nedlen);
-}

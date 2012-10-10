@@ -117,14 +117,4 @@ VISIBLE extern int uAllAscii (const uint32_t *str);
 VISIBLE extern int AllAscii (const char *);
 VISIBLE extern char *StripToASCII (const char *utf8_str);
 
-/**
- * Return true if the haystack unicode string ends with the string needle.
- * Return 0 otherwise.
- *
- * Needles which are larger than the haystack are handled.
- *
- * No new strings are allocated, freed, or returned.
- */
-VISIBLE extern int u_endswith (const uint32_t *haystack, const uint32_t *needle);
-
 #endif

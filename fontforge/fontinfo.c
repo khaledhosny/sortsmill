@@ -2207,7 +2207,7 @@ static int GFI_NameChange(GGadget *g, GEvent *e)
 	}
 
       /* If the user didn't set the full name yet, we guess it from the
-       * postrscript name */
+       * postscript name */
       if ( gfi->human_untitled )
 	{
 	  uint32_t *cp = x_u32_strdup_or_null(uname);
@@ -2223,7 +2223,7 @@ static int GFI_NameChange(GGadget *g, GEvent *e)
 	    }
 	  /* If the postscript name ends with "Regular" it is recommended not
 	   * to include it in the full name */
-	  if(u_endswith(cp,c_to_u(" Regular")) || u_endswith(cp,c_to_u(" regular")))
+	  if(u32_endswith(cp,c_to_u(" Regular")) || u32_endswith(cp,c_to_u(" regular")))
 	    {
 	      cp[u32_strlen(cp) - strlen(" Regular")] ='\0';
 	    }
