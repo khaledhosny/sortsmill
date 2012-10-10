@@ -20,6 +20,9 @@ Eĥoŝanĝo ĉiuĵaŭde
 Eĥoŝanĝo ĉiuĵaŭde
 Eĥoŝanĝo ĉiuĵaŭde
 Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
 (NULL)
 (NULL)
 (NULL)
@@ -33,6 +36,9 @@ Eĥoŝanĝo ĉiuĵaŭde
 
 check_xunistr_h([test_xunistr_h 'Eĥoŝanĝo ĉiuĵaŭde' 1],[0],
 [Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
 Eĥoŝanĝo ĉiuĵaŭde
 Eĥoŝanĝo ĉiuĵaŭde
 Eĥoŝanĝo ĉiuĵaŭde
@@ -64,6 +70,9 @@ Eĥoŝanĝo ĉiuĵaŭde
 Eĥoŝanĝo ĉiuĵaŭde
 Eĥoŝanĝo ĉiuĵaŭde
 Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
 (NULL)
 (NULL)
 (NULL)
@@ -79,6 +88,9 @@ m4_foreach_w([n],[17 18 29],
 [
 check_xunistr_h([test_xunistr_h 'Eĥoŝanĝo ĉiuĵaŭde' n],[0],
 [Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
+Eĥoŝanĝo ĉiuĵaŭde
 Eĥoŝanĝo ĉiuĵaŭde
 Eĥoŝanĝo ĉiuĵaŭde
 Eĥoŝanĝo ĉiuĵaŭde
