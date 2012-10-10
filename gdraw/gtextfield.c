@@ -480,7 +480,7 @@ return( temp );
 
 static void *genutf8data(void *_gt,int32_t *len) {
     GTextField *gt = _gt;
-    uint32_t *temp = x_u32_mbstrndup (gt->text+gt->sel_start,gt->sel_end-gt->sel_start);
+    uint32_t *temp = x_u32_strmbndup (gt->text+gt->sel_start,gt->sel_end-gt->sel_start);
     char *ret = u2utf8_copy(temp);
     free(temp);
     *len = strlen(ret);
@@ -497,7 +497,7 @@ return( temp );
 
 static void *genlocaldata(void *_gt,int32_t *len) {
     GTextField *gt = _gt;
-    uint32_t *temp = x_u32_mbstrndup (gt->text+gt->sel_start,gt->sel_end-gt->sel_start);
+    uint32_t *temp = x_u32_strmbndup (gt->text+gt->sel_start,gt->sel_end-gt->sel_start);
     char *ret = u2def_copy(temp);
     free(temp);
     *len = strlen(ret);

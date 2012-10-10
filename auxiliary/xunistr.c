@@ -177,44 +177,41 @@ u32_force_valid (const uint32_t *string)
   return (u32_valid (string)) ? string : empty_string;
 }
 
-uint8_t *x_u8_mbstrndup (const uint8_t *string, size_t n)
-{
-  // FIXME? This may not be the fastest implementation using
-  // libunistring, although it is simple and likely will suffice.
-  uint32_t *s32 = x_u8_to_u32 (string);
-  uint32_t *s32_copy = x_u32_mbstrndup (s32, n);
-  free (s32);
-  uint8_t *s8_copy = x_u32_to_u8 (s32_copy);
-  free (s32_copy);
-  return s8_copy;
-}
+//-------------------------------------------------------------------------
 
-uint16_t *x_u16_mbstrndup (const uint16_t *string, size_t n)
-{
-  // FIXME? This may not be the fastest implementation using
-  // libunistring, although it is simple and likely will suffice.
-  uint32_t *s32 = x_u16_to_u32 (string);
-  uint32_t *s32_copy = x_u32_mbstrndup (s32, n);
-  free (s32);
-  uint16_t *s16_copy = x_u32_to_u16 (s32_copy);
-  free (s32_copy);
-  return s16_copy;
-}
+#define STRMBNDUP_FUNC(NAME, SIZE, ALLOCATOR)				\
+  uint##SIZE##_t *							\
+  NAME (const uint##SIZE##_t *string, size_t n)				\
+  {									\
+    size_t num_units = 0;						\
+    size_t i = 0;							\
+    int len = u##SIZE##_strmblen (&string[0]);				\
+    while (i < n && 0 < len)						\
+      {									\
+	num_units += len;						\
+	i++;								\
+	if (i < n)							\
+	  len = u##SIZE##_strmblen (&string[num_units]);		\
+      }									\
+									\
+    uint##SIZE##_t *p;							\
+    if (len < 0)							\
+      p = NULL; /* Unicode error. */					\
+    else								\
+      {									\
+	p = ALLOCATOR ((num_units + 1) * sizeof (uint##SIZE##_t));	\
+	memcpy (p, string, (num_units + 1) * sizeof (uint##SIZE##_t));	\
+	p[num_units] = 0;						\
+      }									\
+    return p;								\
+  }
 
-uint32_t *x_u32_mbstrndup (const uint32_t *string, size_t n)
-{
-  uint32_t *copy;
+STRMBNDUP_FUNC (x_u8_strmbndup, 8, xmalloc);
+STRMBNDUP_FUNC (x_u16_strmbndup, 16, xmalloc);
+STRMBNDUP_FUNC (x_u32_strmbndup, 32, xmalloc);
 
-  size_t i = 0;
-  while (i < n && string[i] != 0)
-    i++;
-  if (string[i] == 0)
-    copy = x_u32_strdup (string);
-  else
-    {
-      copy = xmalloc ((n + 1) * sizeof (uint32_t));
-      memcpy (copy, string, n * sizeof (uint32_t));
-      copy[n] = 0;
-    }
-  return copy;
-}
+STRMBNDUP_FUNC (x_gc_u8_strmbndup, 8, x_gc_malloc);
+STRMBNDUP_FUNC (x_gc_u16_strmbndup, 16, x_gc_malloc);
+STRMBNDUP_FUNC (x_gc_u32_strmbndup, 32, x_gc_malloc);
+
+//-------------------------------------------------------------------------

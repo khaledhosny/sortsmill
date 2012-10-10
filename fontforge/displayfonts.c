@@ -237,7 +237,7 @@ return( tis );
 			cpt = bpt;
 		    else if ( cpt==NULL )
 			cpt = bpt;
-		    tis[cnt].text = x_u8_to_u32 (x_gc_u8_mbstrndup (line, cpt - line));
+		    tis[cnt].text = x_u8_to_u32 (x_gc_u8_strmbndup (line, cpt - line));
 		}
 		++cnt;
 	    }
