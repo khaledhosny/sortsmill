@@ -158,4 +158,19 @@ u32_valid (const uint32_t *string)
   return (u32_check (string, u32_strlen (string)) == NULL);
 }
 
+static inline uint8_t *x_gc_u8_strnchardup (const uint8_t *string, size_t n)
+{
+  return x_gc_u8_grabstr (x_u8_strnchardup (string, n));
+}
+
+static inline uint16_t *x_gc_u16_strnchardup (const uint16_t *string, size_t n)
+{
+  return x_gc_u16_grabstr (x_u16_strnchardup (string, n));
+}
+
+static inline uint32_t *x_gc_u32_strnchardup (const uint32_t *string, size_t n)
+{
+  return x_gc_u32_grabstr (x_u32_strnchardup (string, n));
+}
+
 #endif // _FONTFORGE_XUNISTR_H

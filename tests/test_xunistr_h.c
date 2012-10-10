@@ -38,6 +38,9 @@ main (int argc, char **argv)
   ulc_fprintf (stdout, "%U\n", x_u8_strnchardup (s8, n));
   ulc_fprintf (stdout, "%lU\n", x_u16_strnchardup (s8_16, n));
   ulc_fprintf (stdout, "%llU\n", x_u32_strnchardup (s8_32, n));
+  ulc_fprintf (stdout, "%U\n", x_gc_u8_strnchardup (s8, n));
+  ulc_fprintf (stdout, "%lU\n", x_gc_u16_strnchardup (s8_16, n));
+  ulc_fprintf (stdout, "%llU\n", x_gc_u32_strnchardup (s8_32, n));
 
   return 0;
 }
