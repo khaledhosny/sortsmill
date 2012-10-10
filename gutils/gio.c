@@ -84,7 +84,7 @@ static int AddProtocol(uint32_t *prefix,int len) {
 return( false );
     }
     protocols[plen].index = plen;
-    protocols[plen].proto = u_copyn(prefix,len);
+    protocols[plen].proto = x_u32_strnchardup (prefix,len);
     ++plen;
 return( true );
 }

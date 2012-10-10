@@ -344,20 +344,6 @@ u_strstrmatch (const uint32_t *longer, const uint32_t *substr)
 }
 
 uint32_t *
-u_copyn (const uint32_t *pt, long n)
-{
-  uint32_t *res;
-#ifdef MEMORY_MASK
-  if (n * sizeof (uint32_t) >= MEMORY_MASK)
-    n = MEMORY_MASK / sizeof (uint32_t) - 1;
-#endif
-  res = (uint32_t *) xmalloc ((n + 1) * sizeof (uint32_t));
-  memcpy (res, pt, n * sizeof (uint32_t));
-  res[n] = '\0';
-  return (res);
-}
-
-uint32_t *
 u_concat (const uint32_t *s1, const uint32_t *s2)
 {
   long len1, len2;

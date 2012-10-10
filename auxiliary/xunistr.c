@@ -179,6 +179,8 @@ u32_force_valid (const uint32_t *string)
 
 uint8_t *x_u8_strnchardup (const uint8_t *string, size_t n)
 {
+  // FIXME? This may not be the fastest implementation using
+  // libunistring, although it is simple and likely will suffice.
   uint32_t *s32 = x_u8_to_u32 (string);
   uint32_t *s32_copy = x_u32_strnchardup (s32, n);
   free (s32);
@@ -189,6 +191,8 @@ uint8_t *x_u8_strnchardup (const uint8_t *string, size_t n)
 
 uint16_t *x_u16_strnchardup (const uint16_t *string, size_t n)
 {
+  // FIXME? This may not be the fastest implementation using
+  // libunistring, although it is simple and likely will suffice.
   uint32_t *s32 = x_u16_to_u32 (string);
   uint32_t *s32_copy = x_u32_strnchardup (s32, n);
   free (s32);

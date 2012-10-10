@@ -37,7 +37,6 @@
 #include <basics.h>
 #include <xunistring.h>
 
-VISIBLE extern uint32_t *u_copyn (const uint32_t *, long);
 VISIBLE extern uint32_t *uc_copyn (const char *, int);
 VISIBLE extern uint32_t *u_concat (const uint32_t *, const uint32_t *);
 VISIBLE extern char *cu_copyn (const uint32_t *pt, int len);

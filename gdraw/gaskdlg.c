@@ -136,7 +136,7 @@ static int FindLineBreaks(const uint32_t *question, GTextInfo linebreaks[GLINE_M
 	int temp = linebreaks[i+1].text - linebreaks[i].text;
 	if ( linebreaks[i+1].text[-1]==' ' || linebreaks[i+1].text[-1]=='\n' )
 	    --temp;
-	linebreaks[i].text = u_copyn(linebreaks[i].text,temp);
+	linebreaks[i].text = x_u32_strnchardup (linebreaks[i].text,temp);
     }
 
     if ( question[u_strlen(question)-1]=='\n' )
