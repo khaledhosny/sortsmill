@@ -1259,7 +1259,7 @@ void AnchorControl(SplineChar *sc,AnchorPoint *ap,int layer) {
     gcd[k++].creator = GListFieldCreate;
     hvarray[hv++] = &gcd[k-1]; hvarray[hv++] = GCD_ColSpan; hvarray[hv++] = GCD_Glue; hvarray[hv++] = NULL;
 
-/* TRANSLATORS: Short for: Magnification */
+/* TRANSLATORS: Short for "Magnification" */
     label[k].text = (uint32_t *) _("Mag:");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
