@@ -361,24 +361,6 @@ u_concat (const uint32_t *s1, const uint32_t *s2)
   return (pt);
 }
 
-uint32_t *
-uc_copyn (const char *pt, int len)
-{
-  uint32_t *res, *rpt;
-
-  if (!pt)
-    return ((uint32_t *) 0);
-
-#ifdef MEMORY_MASK
-  if ((len + 1) * sizeof (uint32_t) >= MEMORY_MASK)
-    len = MEMORY_MASK / sizeof (uint32_t) - 1;
-#endif
-  res = (uint32_t *) xmalloc ((len + 1) * sizeof (uint32_t));
-  for (rpt = res; --len >= 0; *rpt++ = *(unsigned char *) pt++);
-  *rpt = '\0';
-  return (res);
-}
-
 char *
 cu_copyn (const uint32_t *pt, int len)
 {

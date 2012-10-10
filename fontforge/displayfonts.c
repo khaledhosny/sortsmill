@@ -224,7 +224,7 @@ static GTextInfo *PrinterList() {
 return( tis );
     }
 
-    while ( 1 ) {
+    while ( true ) {
 	cnt=1;		/* leave room for default printer */
 	while ( fgets(line,sizeof(line),printcap)!=NULL ) {
 	    if ( !isspace(*line) && *line!='#' ) {
@@ -237,7 +237,7 @@ return( tis );
 			cpt = bpt;
 		    else if ( cpt==NULL )
 			cpt = bpt;
-		    tis[cnt].text = uc_copyn(line,cpt-line);
+		    tis[cnt].text = x_u8_to_u32 (x_gc_u8_strnchardup (line, cpt - line));
 		}
 		++cnt;
 	    }
