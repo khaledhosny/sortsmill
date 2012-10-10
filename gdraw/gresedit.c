@@ -92,7 +92,7 @@ return( xstrdup(""));
 
     GDrawDecomposeFont(font,&rq);
     if ( rq.family_name!=NULL )
-	len = 4*u_strlen(rq.family_name);
+	len = 4*u32_strlen(rq.family_name);
     else
 	len = strlen(rq.utf8_family_name);
     len += 6 /* point size */ + 1 +

@@ -614,7 +614,7 @@ return( false );
 	_ggadget_redraw(&grc->g);
 return( true );
     } else if ( event->u.chr.chars[0]!='\0' && grc->orderer ) {
-	int len = u_strlen(event->u.chr.chars);
+	int len = u32_strlen(event->u.chr.chars);
 	if ( sofar_pos+len >= grc->sofar_max ) {
 	    if ( grc->sofar_max == 0 )
 		grc->sofar = xmalloc((grc->sofar_max = len+10) * sizeof(uint32_t));

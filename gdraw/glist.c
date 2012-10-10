@@ -687,7 +687,7 @@ return( false );
 	_ggadget_redraw(&gl->g);
 return( true );
     } else if ( event->u.chr.chars[0]!='\0' && gl->orderer ) {
-	int len = u_strlen(event->u.chr.chars);
+	int len = u32_strlen(event->u.chr.chars);
 	if ( sofar_pos+len >= gl->sofar_max ) {
 	    if ( gl->sofar_max == 0 )
 		gl->sofar = xmalloc((gl->sofar_max = len+10) * sizeof(uint32_t));

@@ -783,7 +783,7 @@ return( XCreateWindow(gdisp->display, gdisp->root,
 /* unichar to ActiveCodePage, this is not limited to setlocale() */
 static char*  u2acp_copy(const uint32_t* ustr){
     if(ustr){
-	int wlen = u_strlen(ustr);
+	int wlen = u32_strlen(ustr);
 	if(wlen > 0){
 	    WCHAR* wcs = xmalloc(sizeof(WCHAR) * (wlen));
 	    char*  mbs = xmalloc(sizeof(char) * (wlen*3));

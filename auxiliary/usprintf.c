@@ -80,7 +80,7 @@ static void padvalue(struct state *state,int arg,uint32_t *txt,int fieldwidth) {
 
     padc = state->args[arg].is_zeropad?'0':' ';
     if ( fieldwidth>0 ) {
-	len = u_strlen(txt);
+	len = u32_strlen(txt);
 	if ( !state->args[arg].is_leftadj ) {
 	    while ( len<fieldwidth ) {
 		addchar(state,padc);
@@ -102,7 +102,7 @@ static void padstr(struct state *state,int arg,const uint32_t *txt,int fieldwidt
     int len=0, padc,i;
 
     if ( fieldwidth>0 ) {
-	len = precision>0?precision:u_strlen(txt);
+	len = precision>0?precision:u32_strlen(txt);
 	padc = state->args[arg].is_zeropad?'0':' ';
 	if ( !state->args[arg].is_leftadj ) {
 	    while ( len<fieldwidth ) {

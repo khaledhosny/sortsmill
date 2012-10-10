@@ -204,7 +204,7 @@ SplashLayout ()
         ++pt;
     }
   uc_strcpy (pt, " FontForge used to be named PfaEdit.");
-  pt += u_strlen (pt);
+  pt += u32_strlen (pt);
   lines[linecnt++] = pt;
   uc_strcat (pt, " ");
   uc_strcat (pt, PACKAGE_STRING);
@@ -217,7 +217,7 @@ SplashLayout ()
 #ifdef FONTFORGE_CONFIG_USE_DOUBLE
   uc_strcat (pt, "-D");
 #endif
-  pt += u_strlen (pt);
+  pt += u32_strlen (pt);
   lines[linecnt] = pt;
   linecnt++;
   lines[linecnt] = NULL;

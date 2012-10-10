@@ -2213,7 +2213,7 @@ static int GFI_NameChange(GGadget *g, GEvent *e)
 	  uint32_t *cp = x_u32_strdup_or_null(uname);
 	  int i=0;
 	  /* replace the last hyphen with space */
-	  for( i=u_strlen(cp); i>=0; i-- )
+	  for( i=u32_strlen(cp); i>=0; i-- )
 	    {
 	      if( cp[i] == '-' )
 		{
@@ -2225,14 +2225,14 @@ static int GFI_NameChange(GGadget *g, GEvent *e)
 	   * to include it in the full name */
 	  if(u_endswith(cp,c_to_u(" Regular")) || u_endswith(cp,c_to_u(" regular")))
 	    {
-	      cp[u_strlen(cp) - strlen(" Regular")] ='\0';
+	      cp[u32_strlen(cp) - strlen(" Regular")] ='\0';
 	    }
 	  GGadgetSetTitle(GWidgetGetControl(gw,CID_Human),cp);
 	  free(cp);
 	}
       if ( gfi->family_untitled )
 	{
-	  const uint32_t *ept = uname+u_strlen(uname);
+	  const uint32_t *ept = uname+u32_strlen(uname);
 	  uint32_t *temp;
 	  for ( i=0; knownweights[i]!=NULL; ++i )
 	    {
@@ -2652,7 +2652,7 @@ static int CheckNames(struct gfi_data *d) {
     char *buts[3];
     buts[0] = _("_OK"); buts[1] = _("_Cancel"); buts[2]=NULL;
 
-    if ( u_strlen(ufont)>63 ) {
+    if ( u32_strlen(ufont)>63 ) {
 	ff_post_error(_("Bad Font Name"),_("A PostScript name should be ASCII\nand must not contain (){}[]<>%%/ or space\nand must be shorter than 63 characters"));
 return( false );
     }
@@ -2670,14 +2670,14 @@ return( false );
 	ff_post_error(_("Bad Font Family Name"),_("A PostScript name may not be a number"));
 return( false );
     }
-    if ( u_strlen(ufamily)>31 ) {
+    if ( u32_strlen(ufamily)>31 ) {
 	if ( gwwv_ask(_("Bad Font Family Name"),(const char **) buts,0,1,_("Some versions of Windows will refuse to install postscript fonts if the familyname is longer than 31 characters. Do you want to continue anyway?"))==1 )
 return( false );
     } else {
-	if ( u_strlen(ufont)>31 ) {
+	if ( u32_strlen(ufont)>31 ) {
 	    if ( gwwv_ask(_("Bad Font Name"),(const char **) buts,0,1,_("Some versions of Windows will refuse to install postscript fonts if the fontname is longer than 31 characters. Do you want to continue anyway?"))==1 )
 return( false );
-	} else if ( u_strlen(ufont)>29 ) {
+	} else if ( u32_strlen(ufont)>29 ) {
 	    if ( gwwv_ask(_("Bad Font Name"),(const char **) buts,0,1,_("Adobe's fontname spec (5088.FontNames.pdf) says that fontnames should not be longer than 29 characters. Do you want to continue anyway?"))==1 )
 return( false );
 	}
@@ -4236,9 +4236,9 @@ return(true);
 		    strike[i] = GetInt8(gw,CID_StrikeoutSize+i,_("Strikeout"),&err);
 	    }
 	    txt = _GGadgetGetTitle(GWidgetGetControl(gw,CID_Vendor));
-	    if ( u_strlen(txt)>4 || txt[0]>0x7e || (txt[0]!='\0' && (txt[1]>0x7e ||
+	    if ( u32_strlen(txt)>4 || txt[0]>0x7e || (txt[0]!='\0' && (txt[1]>0x7e ||
 		    (txt[1]!='\0' && (txt[2]>0x7e || (txt[2]!='\0' && txt[3]>0x7e))))) ) {
-		if ( u_strlen(txt)>4 )
+		if ( u32_strlen(txt)>4 )
 		    ff_post_error(_("Bad IBM Family"),_("Tag must be 4 characters long"));
 		else
 		    ff_post_error(_("Bad IBM Family"),_("A tag must be 4 ASCII characters"));

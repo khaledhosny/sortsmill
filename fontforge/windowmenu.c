@@ -44,7 +44,7 @@ static void AddMI(GMenuItem *mi,GWindow gw,int changed, int top) {
     mi->ti.text = GDrawGetWindowTitle(gw);
     if(mi->ti.text == NULL)
 	mi->ti.text = utf82u_copy("(null)");
-    if ( u_strlen( mi->ti.text ) > 35 )
+    if ( u32_strlen( mi->ti.text ) > 35 )
 	mi->ti.text[35] = '\0';
 }
 

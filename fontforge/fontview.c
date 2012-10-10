@@ -1874,7 +1874,7 @@ static void FVSelectByScript(FontView *fv,int merge) {
 	    if ( *ret=='\0' ) {
 		ff_post_error(_("No Script"),_("Please specify a script"));
 		done = 0;
-	    } else if ( u_strlen(ret)>4 ) {
+	    } else if ( u32_strlen(ret)>4 ) {
 		ff_post_error(_("Bad Script"),_("Scripts are 4 letter tags"));
 		done = 0;
 	    }
@@ -5933,7 +5933,7 @@ return;
 
     strcat(buffer,"  ");
     utf82u_strcpy(ubuffer,buffer);
-    ulen = u_strlen(ubuffer);
+    ulen = u32_strlen(ubuffer);
 
     if ( uni==-1 && (pt=strchr(sc->name,'.'))!=NULL && pt-sc->name<30 ) {
 	strncpy(buffer,sc->name,pt-sc->name);
@@ -5948,7 +5948,7 @@ return;
     if (uni != -1) {        
         uniname = uninm_name(names_db, (unsigned int) uni);
         if (uniname != NULL) {
-            utf82u_strncpy(ubuffer+u_strlen(ubuffer), uniname, 80);
+            utf82u_strncpy(ubuffer+u32_strlen(ubuffer), uniname, 80);
         } else if ( uni>=0xAC00 && uni<=0xD7A3 ) {
             sprintf( buffer, "Hangul Syllable %s%s%s",
                      chosung[(uni-0xAC00)/(21*28)],
@@ -6153,7 +6153,7 @@ return;
 static void utf82u_annot_strncat(uint32_t *to, const char *from, int len) {
     register uint32_t ch;
 
-    to += u_strlen(to);
+    to += u32_strlen(to);
     while ( (ch = utf8_ildb(&from)) != '\0' && --len>=0 ) {
 	if ( ch=='\t' ) {
 	    *(to++) = ' ';
@@ -6226,17 +6226,17 @@ void SCPreparePopup(GWindow gw,SplineChar *sc,struct remap *remap, int localenc,
     }
     uniannot = uninm_annotation(names_db, upos);
     if (uniannot != NULL) {
-	int left = sizeof(space)/sizeof(space[0]) - u_strlen(space)-1;
+	int left = sizeof(space)/sizeof(space[0]) - u32_strlen(space)-1;
 	if ( left>4 ) {
 	    uc_strcat(space,"\n");
             utf82u_annot_strncat(space, uniannot, left-2);
 	}
     }
     if ( sc->comment!=NULL ) {
-	int left = sizeof(space)/sizeof(space[0]) - u_strlen(space)-1;
+	int left = sizeof(space)/sizeof(space[0]) - u32_strlen(space)-1;
 	if ( left>4 ) {
 	    uc_strcat(space,"\n\n");
-	    utf82u_strncpy(space+u_strlen(space),sc->comment,left-2);
+	    utf82u_strncpy(space+u32_strlen(space),sc->comment,left-2);
 	}
     }
     GGadgetPreparePopup(gw,space);

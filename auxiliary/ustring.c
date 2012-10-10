@@ -151,13 +151,13 @@ uc_strncpy (register uint32_t *to, const char *from, int len)
 void
 uc_strcat (uint32_t *to, const char *from)
 {
-  uc_strcpy (to + u_strlen (to), from);
+  uc_strcpy (to + u32_strlen (to), from);
 }
 
 void
 uc_strncat (uint32_t *to, const char *from, int len)
 {
-  uc_strncpy (to + u_strlen (to), from, len);
+  uc_strncpy (to + u32_strlen (to), from, len);
 }
 
 void
@@ -175,23 +175,13 @@ cu_strncat (char *to, const uint32_t *from, int len)
 void
 u_strcat (uint32_t *to, const uint32_t *from)
 {
-  u_strcpy (to + u_strlen (to), from);
+  u_strcpy (to + u32_strlen (to), from);
 }
 
 void
 u_strncat (uint32_t *to, const uint32_t *from, int len)
 {
-  u_strncpy (to + u_strlen (to), from, len);
-}
-
-int
-u_strlen (register const uint32_t *str)
-{
-  register int len = 0;
-
-  while (*str++ != '\0')
-    ++len;
-  return (len);
+  u_strncpy (to + u32_strlen (to), from, len);
 }
 
 uint32_t *
@@ -326,8 +316,8 @@ u_concat (const uint32_t *s1, const uint32_t *s2)
     return (x_u32_strdup_or_null (s2));
   else if (s2 == NULL)
     return (x_u32_strdup_or_null (s1));
-  len1 = u_strlen (s1);
-  len2 = u_strlen (s2);
+  len1 = u32_strlen (s1);
+  len2 = u32_strlen (s2);
   pt = (uint32_t *) xmalloc ((len1 + len2 + 1) * sizeof (uint32_t));
   u_strcpy (pt, s1);
   u_strcpy (pt + len1, s2);
@@ -361,7 +351,7 @@ cu_copy (const uint32_t *pt)
   if (!pt)
     return ((char *) 0);
 
-  n = u_strlen (pt);
+  n = u32_strlen (pt);
 #ifdef MEMORY_MASK
   if ((n + 1) >= MEMORY_MASK)
     n = MEMORY_MASK / sizeof (uint32_t) - 1;
@@ -553,7 +543,7 @@ utf82u_copy (const char *utf8buf)
 void
 utf82u_strcat (uint32_t *to, const char *from)
 {
-  utf82u_strcpy (to + u_strlen (to), from);
+  utf82u_strcpy (to + u32_strlen (to), from);
 }
 
 char *
@@ -673,7 +663,7 @@ u2utf8_copy (const uint32_t *ubuf)
   if (ubuf == NULL)
     return (NULL);
 
-  len = u_strlen (ubuf);
+  len = u32_strlen (ubuf);
   utf8buf = (char *) xmalloc ((len + 1) * 4);
   return (u2utf8_strcpy (utf8buf, ubuf));
 }
@@ -995,8 +985,8 @@ uAllAscii (const uint32_t *txt)
 int
 u_endswith (const uint32_t *haystack, const uint32_t *needle)
 {
-  int haylen = u_strlen (haystack);
-  int nedlen = u_strlen (needle);
+  int haylen = u32_strlen (haystack);
+  int nedlen = u32_strlen (needle);
   if (haylen < nedlen)
     return 0;
   uint32_t *p = u_strstr (haystack + haylen - nedlen, needle);

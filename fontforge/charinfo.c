@@ -507,7 +507,7 @@ CI_NameCheck(const uint32_t *name)
 
   if ( u8_strcmp(utf8_name,".notdef")==0 ) /* This name is a special case and doesn't follow conventions */
     return( true );
-  if ( u_strlen(name)>31 )
+  if ( u32_strlen(name)>31 )
     {
       ff_post_error(_("Bad Name"),_("Glyph names are limited to 31 characters"));
       return( false );
@@ -1747,7 +1747,7 @@ return( NULL );
 
 	if ( isarabisolated(uni) || isarabinitial(uni) || isarabmedial(uni) || isarabfinal(uni) ) {
 	    /* If it is arabic, then convert from the unformed version to the formed */
-	    if ( u_strlen(alt)<sizeof(hack)/sizeof(hack[0])-1 ) {
+	    if ( u32_strlen(alt)<sizeof(hack)/sizeof(hack[0])-1 ) {
 		u_strcpy(hack,alt);
 		for ( upt=hack ; *upt ; ++upt ) {
 		    /* Make everything medial */
@@ -2010,7 +2010,7 @@ static int CI_SName(GGadget *g, GEvent *e) {	/* Set From Name */
 	    /* Adobe says names like uni00410042 represent a ligature (A&B) */
 	    /*  (that is "uni" followed by two (or more) 4-digit codes). */
 	    /* But that names outside of BMP should be uXXXX or uXXXXX or uXXXXXX */
-	    if ( ret[0]=='u' && ret[1]!='n' && u_strlen(ret)<=1+6 ) {
+	    if ( ret[0]=='u' && ret[1]!='n' && u32_strlen(ret)<=1+6 ) {
 		uint32_t *end;
 		i = u_strtol(ret+1,&end,16);
 		if ( *end )
@@ -3920,12 +3920,12 @@ static void CIFillup(CharInfo *ci) {
 	ubuf[0] = '\0';
 	GGadgetSetTitle(GWidgetGetControl(ci->gw,CID_Components),ubuf);
     } else {
-	uint32_t *temp = xmalloc(11*u_strlen(bits)*sizeof(uint32_t));
+	uint32_t *temp = xmalloc(11*u32_strlen(bits)*sizeof(uint32_t));
 	uint32_t *upt=temp;
 	while ( *bits!='\0' ) {
 	    sprintf(buffer, "U+%04x ", *bits );
 	    uc_strcpy(upt,buffer);
-	    upt += u_strlen(upt);
+	    upt += u32_strlen(upt);
 	    ++bits;
 	}
 	upt[-1] = '\0';

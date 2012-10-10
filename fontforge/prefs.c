@@ -983,7 +983,7 @@ GetFileChooserPrefs (void)
     {
       int i, len = 0;
       for (i = 0; foo[i] != NULL; ++i)
-        len += 4 * u_strlen (foo[i]) + 1;
+        len += 4 * u32_strlen (foo[i]) + 1;
       gfc_bookmarks = xmalloc (len + 10);
       len = 0;
       for (i = 0; foo[i] != NULL; ++i)
@@ -1736,7 +1736,7 @@ set_e_h (GWindow gw, GEvent * event)
             ubuf[2] = ubuf[3] = ' ';
           else if ((ubuf[3] = ret1[3]) == 0)
             ubuf[3] = ' ';
-          len = u_strlen (ret1);
+          len = u32_strlen (ret1);
           if (len < 2 || len > 4 || ubuf[0] >= 0x7f || ubuf[1] >= 0x7f
               || ubuf[2] >= 0x7f || ubuf[3] >= 0x7f)
             {
@@ -2223,7 +2223,7 @@ Prefs_Ok (GGadget * g, GEvent * e)
       maxl = 0;
       for (i = 0; i < len; ++i)
         {
-          t = u_strlen (list[i]->text);
+          t = u32_strlen (list[i]->text);
           if (t > maxl)
             maxl = t;
         }

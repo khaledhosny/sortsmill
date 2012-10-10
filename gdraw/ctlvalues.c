@@ -115,7 +115,7 @@ int GetUnicodeChar8(GWindow gw,int cid,char *name,int *err) {
     const uint32_t *utxt;
 
     utxt = _GGadgetGetTitle(GWidgetGetControl(gw,cid));
-    if ( u_strlen(utxt)==1 )
+    if ( u32_strlen(utxt)==1 )
 return( utxt[0] );
 
     txt = GGadgetGetTitle8(GWidgetGetControl(gw,cid));

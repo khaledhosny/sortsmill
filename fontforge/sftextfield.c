@@ -158,7 +158,7 @@ static int SFTextAreaGetOffsetFromXPos(SFTextArea *st,int i,int xpos) {
     if ( i<0 )
 return( 0 );
     if ( i>=st->li.lcnt )
-return( u_strlen(st->li.text));
+return( u32_strlen(st->li.text));
 
     p = st->li.lineheights[i].p;
     if ( st->li.paras[p].para[0]!=NULL &&
@@ -291,7 +291,7 @@ static int SFTextArea_Show(SFTextArea *st, int pos) {
     int refresh=false, endpage, page;
 
     if ( pos < 0 ) pos = 0;
-    if ( pos > u_strlen(st->li.text)) pos = u_strlen(st->li.text);
+    if ( pos > u32_strlen(st->li.text)) pos = u32_strlen(st->li.text);
     i = SFTextAreaFindLine(st,pos);
 
     loff = st->loff_top;
@@ -425,19 +425,19 @@ static void SFTextAreaGrabSelection(SFTextArea *st, enum selnames sel ) {
 	temp[0] = 0xfeff;		/* KDE expects a byte order flag */
 	u_strncpy(temp+1,st->li.text+st->sel_start,st->sel_end-st->sel_start);
 	ctemp = u2utf8_copy(temp);
-	GDrawAddSelectionType(st->g.base,sel,"text/plain;charset=ISO-10646-UCS-4",temp,u_strlen(temp),
+	GDrawAddSelectionType(st->g.base,sel,"text/plain;charset=ISO-10646-UCS-4",temp,u32_strlen(temp),
 		sizeof(uint32_t),
 		NULL,NULL);
 	u2temp = xmalloc((st->sel_end-st->sel_start + 2)*sizeof(uint16_t));
 	for ( i=0; temp[i]!=0; ++i )
 	    u2temp[i] = temp[i];
 	u2temp[i] = 0;
-	GDrawAddSelectionType(st->g.base,sel,"text/plain;charset=ISO-10646-UCS-2",u2temp,u_strlen(temp),
+	GDrawAddSelectionType(st->g.base,sel,"text/plain;charset=ISO-10646-UCS-2",u2temp,u32_strlen(temp),
 		2,
 		NULL,NULL);
 	GDrawAddSelectionType(st->g.base,sel,"UTF8_STRING",ctemp,strlen(ctemp),sizeof(char),
 		NULL,NULL);
-	GDrawAddSelectionType(st->g.base,sel,"STRING",u2def_copy(temp),u_strlen(temp),sizeof(char),
+	GDrawAddSelectionType(st->g.base,sel,"STRING",u2def_copy(temp),u32_strlen(temp),sizeof(char),
 		NULL,NULL);
     }
 }
@@ -574,7 +574,7 @@ static int sftextarea_editcmd(GGadget *g,enum editor_commands cmd) {
     switch ( cmd ) {
       case ec_selectall:
 	st->sel_start = 0;
-	st->sel_end = u_strlen(st->li.text);
+	st->sel_end = u32_strlen(st->li.text);
 return( true );
       case ec_clear:
 	SFTextArea_Replace(st,nullstr);
@@ -747,7 +747,7 @@ return;
 
     start = st->sel_start;
     SFTextArea_Replace(st,str);
-    SFTFSetScriptLang(&st->g,start,start+u_strlen(str),script,lang);
+    SFTFSetScriptLang(&st->g,start,start+u32_strlen(str),script,lang);
 
     free(str);
     free(utf8_str);
@@ -1087,7 +1087,7 @@ return( false );
 	    if ( *upt=='\n' )
 		++upt;
 	    upt = u_strchr(upt,'\n');
-	    if ( upt==NULL ) upt=st->li.text+u_strlen(st->li.text);
+	    if ( upt==NULL ) upt=st->li.text+u32_strlen(st->li.text);
 	    if ( !(event->u.chr.state&ksm_shift) ) {
 		st->sel_start = st->sel_base = st->sel_end =upt-st->li.text;
 	    } else {
@@ -1098,9 +1098,9 @@ return( 2 );
 	  break;
 	  case GK_End: case GK_KP_End:
 	    if ( !(event->u.chr.state&ksm_shift) ) {
-		st->sel_start = st->sel_base = st->sel_end = u_strlen(st->li.text);
+		st->sel_start = st->sel_base = st->sel_end = u32_strlen(st->li.text);
 	    } else {
-		st->sel_start = st->sel_base; st->sel_end = u_strlen(st->li.text);
+		st->sel_start = st->sel_base; st->sel_end = u32_strlen(st->li.text);
 	    }
 	    SFTextArea_Show(st,st->sel_start);
 return( 2 );
@@ -1378,7 +1378,7 @@ static int SFTextAreaDoDrop(SFTextArea *st,GEvent *event,int endpos) {
 		uint32_t *old=st->li.oldtext, *temp;
 		int pos=0;
 		if ( event->u.mouse.state&ksm_control ) {
-		    temp = xmalloc((u_strlen(st->li.text)+st->sel_end-st->sel_start+1)*sizeof(uint32_t));
+		    temp = xmalloc((u32_strlen(st->li.text)+st->sel_end-st->sel_start+1)*sizeof(uint32_t));
 		    memcpy(temp,st->li.text,endpos*sizeof(uint32_t));
 		    memcpy(temp+endpos,st->li.text+st->sel_start,
 			    (st->sel_end-st->sel_start)*sizeof(uint32_t));
@@ -1492,7 +1492,7 @@ return( true );
 	    if ( i+1<st->li.lcnt )
 		st->sel_end = st->li.lineheights[i+1].start_pos;
 	    else
-		st->sel_end = u_strlen(st->li.text);
+		st->sel_end = u32_strlen(st->li.text);
 	    st->wordsel = false; st->linesel = true;
 	} else if ( event->u.mouse.button==1 && event->u.mouse.clicks==2 ) {
 	    st->sel_start = st->sel_end = st->sel_base = end;
@@ -1518,7 +1518,7 @@ return( true );
 	}
 	if ( st->pressed==NULL )
 	    st->pressed = GDrawRequestTimer(st->g.base,200,100,NULL);
-	if ( st->sel_start > u_strlen( st->li.text ))	/* Ok to have selection at end, but beyond is an error */
+	if ( st->sel_start > u32_strlen( st->li.text ))	/* Ok to have selection at end, but beyond is an error */
 	    fprintf( stderr, "About to crash\n" );
 	_ggadget_redraw(g);
 	if ( st->changefontcallback )
@@ -1542,7 +1542,7 @@ return( true );
 	    if ( l+1<st->li.lcnt )
 		spos = st->li.lineheights[l+1].start_pos;
 	    else
-		spos = u_strlen(st->li.text);
+		spos = u32_strlen(st->li.text);
 	    st->sel_end = spos;
 	} else if ( st->wordsel )
 	    SFTextAreaSelectWords(st,end);
@@ -1561,7 +1561,7 @@ return( true );
 	    if ( st->sel_start==st->sel_end )
 		SFTextArea_Show(st,st->sel_start);
 	}
-	if ( st->sel_end > u_strlen( st->li.text ))
+	if ( st->sel_end > u32_strlen( st->li.text ))
 	    fprintf( stderr, "About to crash\n" );
 	if ( refresh )
 	    _ggadget_redraw(g);
@@ -1739,7 +1739,7 @@ return( false );
 	    event->u.drag_drop.y-g->inner.y; ++i );
     if ( !st->multi_line ) i = 0;
     if ( i>=st->li.lcnt )
-	end = u_strlen(st->li.text);
+	end = u32_strlen(st->li.text);
     else
 	end = SFTextAreaGetOffsetFromXPos(st,i,event->u.drag_drop.x - st->g.inner.x - st->xoff_left);
     if ( event->type == et_drag ) {
@@ -1786,7 +1786,7 @@ SFTextAreaSetTitle(GGadget *g,const uint32_t *tit)
   st->sel_oldstart = st->sel_start; st->sel_oldend = st->sel_end; st->sel_oldbase = st->sel_base;
   st->li.text = x_u32_strdup_or_null(tit);		/* tit might be oldtext, so must copy before freeing */
   free(old);
-  st->sel_start = st->sel_end = st->sel_base = u_strlen(tit);
+  st->sel_start = st->sel_end = st->sel_base = u32_strlen(tit);
   LI_fontlistmergecheck(&st->li);
   LayoutInfoRefigureLines(&st->li,0,-1,st->g.inner.width);
   SFTextArea_Show(st,st->sel_start);
@@ -1821,12 +1821,12 @@ void SFTextAreaSelect(GGadget *g,int start, int end) {
 
     SFTextAreaGrabPrimarySelection(st);
     if ( end<0 ) {
-	end = u_strlen(st->li.text);
+	end = u32_strlen(st->li.text);
 	if ( start<0 ) start = end;
     }
     if ( start>end ) { int temp = start; start = end; end = temp; }
-    if ( end>u_strlen(st->li.text)) end = u_strlen(st->li.text);
-    if ( start>u_strlen(st->li.text)) start = end;
+    if ( end>u32_strlen(st->li.text)) end = u32_strlen(st->li.text);
+    if ( start>u32_strlen(st->li.text)) start = end;
     else if ( start<0 ) start=0;
     st->sel_start = st->sel_base = start;
     st->sel_end = end;
@@ -2247,7 +2247,7 @@ static SFTextArea *_SFTextAreaCreate(SFTextArea *st, struct gwindow *base, GGadg
 	    st->li.text = utf82u_copy((char *) gd->label->text);
 	else
 	    st->li.text = x_u32_strdup_or_null(gd->label->text);
-	st->sel_start = st->sel_end = st->sel_base = u_strlen(st->li.text);
+	st->sel_start = st->sel_end = st->sel_base = u32_strlen(st->li.text);
     }
     if ( st->li.text==NULL )
 	st->li.text = xcalloc(1,sizeof(uint32_t));
@@ -2279,7 +2279,7 @@ return( &st->g );
 
 static int SFTF_NormalizeStartEnd(SFTextArea *st, int start, int *_end) {
     int end = *_end;
-    int len = u_strlen(st->li.text);
+    int len = u32_strlen(st->li.text);
 
     if ( st->li.generated==NULL ) {
 	start = 0;

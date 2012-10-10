@@ -289,7 +289,7 @@ static GTextInfo *Pref_SettingsList(struct macsetting *all) {
 	else {
 	    full = xmalloc((strlen(buf)+strlen(temp)+1)*sizeof(uint32_t));
 	    uc_strcpy(full,buf);
-	    utf82u_strcpy(full+u_strlen(full),temp);
+	    utf82u_strcpy(full+u32_strlen(full),temp);
 	    free(temp);
 	}
 	ti[i].text = full;
@@ -317,7 +317,7 @@ static GTextInfo *Pref_FeaturesList(MacFeat *all) {
 	else {
 	    full = xmalloc((strlen(buf)+strlen(temp)+1)*sizeof(uint32_t));
 	    uc_strcpy(full,buf);
-	    utf82u_strcpy(full+u_strlen(full),temp);
+	    utf82u_strcpy(full+u32_strlen(full),temp);
 	    free(temp);
 	}
 	ti[i].text = full;
@@ -390,7 +390,7 @@ return( true );
 	    temp = MacStrToUtf8(nd->changing->name,nd->changing->enc,nd->changing->lang);
 	    if ( sel!=NULL ) {
 		const uint32_t *lang = sel->text;
-		full = xmalloc((u_strlen(lang)+strlen(temp)+6)*sizeof(uint32_t));
+		full = xmalloc((u32_strlen(lang)+strlen(temp)+6)*sizeof(uint32_t));
 		u_strcpy(full,lang);
 	    } else {
 		char *hunh = "???";
@@ -398,7 +398,7 @@ return( true );
 		uc_strcpy(full,hunh);
 	    }
 	    uc_strcat(full,spacer);
-	    utf82u_strcpy(full+u_strlen(full),temp);
+	    utf82u_strcpy(full+u32_strlen(full),temp);
 
 	    if ( nd->index==-1 )
 		GListAddStr(nd->namelist,full,nd->changing);
@@ -754,7 +754,7 @@ return( true );
 	    len = strlen(temp);
 	    res = xmalloc( (strlen(buf)+len+3)*sizeof(uint32_t) );
 	    uc_strcpy(res,buf);
-	    utf82u_strcpy(res+u_strlen(res),temp);
+	    utf82u_strcpy(res+u32_strlen(res),temp);
 	    free(temp);
 
 	    if ( sd->index==-1 )
@@ -1056,7 +1056,7 @@ return( true );
 	    len = strlen(temp);
 	    res = xmalloc( (strlen(buf)+len+3)*sizeof(uint32_t) );
 	    uc_strcpy(res,buf);
-	    utf82u_strcpy(res+u_strlen(res),temp);
+	    utf82u_strcpy(res+u32_strlen(res),temp);
 	    free(temp);
 
 	    if ( fd->index==-1 )

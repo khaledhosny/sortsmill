@@ -3944,7 +3944,7 @@ return( NULL );
     if ( sc->unicodeenc>32 && sc->unicodeenc!=')' && add_char_to_name_list &&
 	    !( sc->unicodeenc<0x7f && isalpha(sc->unicodeenc)) &&
 	    !isprivateuse(sc->unicodeenc)) {
-	len = u_strlen(temp);
+	len = u32_strlen(temp);
 	temp[len] = '(';
 	temp[len+1] = sc->unicodeenc;
 	temp[len+2] = ')';
@@ -3996,12 +3996,12 @@ return( NULL );
     wild = NULL;
     if ( do_wildcards ) {
 	pt = spt;
-	wild = xmalloc((u_strlen(spt)+2)*sizeof(uint32_t));
+	wild = xmalloc((u32_strlen(spt)+2)*sizeof(uint32_t));
 	u_strcpy(wild,pt);
 	uc_strcat(wild,"*");
     }
 
-    match_len = u_strlen(spt);
+    match_len = u32_strlen(spt);
     ret = NULL;
     for ( doit=0; doit<2; ++doit ) {
 	cnt=0;
@@ -4024,7 +4024,7 @@ return( NULL );
 			int len;
 			u_strncpy(temp,basept,spt-basept);
 			utf82u_strcpy(temp+(spt-basept),sc->name);
-			len = u_strlen(temp);
+			len = u32_strlen(temp);
 			if ( sc->unicodeenc>32 && add_char_to_name_list &&
 				!( sc->unicodeenc<0x7f && isalpha(sc->unicodeenc)) &&
 			        !isprivateuse(sc->unicodeenc)) {

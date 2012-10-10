@@ -412,9 +412,9 @@ static void MVSetFeatures(MetricsView *mv) {
 
     script = DEFAULT_SCRIPT;
     lang = DEFAULT_LANG;
-    if ( u_strlen(pt)>=4 )
+    if ( u32_strlen(pt)>=4 )
 	script = (pt[0]<<24) | (pt[1]<<16) | (pt[2]<<8) | pt[3];
-    if ( pt[4]=='{' && u_strlen(pt)>=9 )
+    if ( pt[4]=='{' && u32_strlen(pt)>=9 )
 	lang = (pt[5]<<24) | (pt[6]<<16) | (pt[7]<<8) | pt[8];
     if ( (uint32_t)mv->oldscript!=script || (uint32_t)mv->oldlang!=lang )
 	stds = StdFeaturesOfScript(script);
@@ -790,10 +790,10 @@ static void MVRemetric(MetricsView *mv) {
     }
     _script = _GGadgetGetTitle(mv->script);
     script = DEFAULT_SCRIPT; lang = DEFAULT_LANG;
-    if ( u_strlen(_script)>=4 && (u_strchr(_script,'{')==NULL || u_strchr(_script,'{')-_script>=4)) {
+    if ( u32_strlen(_script)>=4 && (u_strchr(_script,'{')==NULL || u_strchr(_script,'{')-_script>=4)) {
 	uint32_t *pt;
 	script = (_script[0]<<24) | (_script[1]<<16) | (_script[2]<<8) | _script[3];
-	if ( (pt = u_strchr(_script,'{'))!=NULL && u_strlen(pt+1)>=4 &&
+	if ( (pt = u_strchr(_script,'{'))!=NULL && u32_strlen(pt+1)>=4 &&
 		(u_strchr(pt+1,'}')==NULL || u_strchr(pt+1,'}')-(pt+1)>=4 ))
 	    lang = (pt[1]<<24) | (pt[2]<<16) | (pt[3]<<8) | pt[4];
     }
@@ -1542,7 +1542,7 @@ static void MVTextChanged(MetricsView *mv) {
     break;
     if ( i==mv->clen && *pt=='\0' )
 return;					/* Nothing changed */
-    for ( ept=ret+u_strlen(ret)-1, ei=mv->clen-1; ; --ei, --ept )
+    for ( ept=ret+u32_strlen(ret)-1, ei=mv->clen-1; ; --ei, --ept )
 	if ( ei<0 || ept<ret || (*ept!=mv->chars[ei]->unicodeenc &&
 		!MVOddMatch(mv,*ept,mv->chars[ei]))) {
 	    ++ei; ++ept;
@@ -1553,9 +1553,9 @@ return;					/* Nothing changed */
 	}
     if ( ei==i && ept==pt )
 	IError("No change when there should have been one in MV_TextChanged");
-    if ( u_strlen(ret)>=mv->cmax ) {
+    if ( u32_strlen(ret)>=mv->cmax ) {
 	int oldmax=mv->cmax;
-	mv->cmax = u_strlen(ret)+10;
+	mv->cmax = u32_strlen(ret)+10;
 	mv->chars = xrealloc(mv->chars,mv->cmax*sizeof(SplineChar *));
 	memset(mv->chars+oldmax,'\0',(mv->cmax-oldmax)*sizeof(SplineChar *));
     }
@@ -1596,7 +1596,7 @@ return;					/* Nothing changed */
 	    mv->chars[j] = hold[j];
 	free(hold);
     }
-    mv->clen = u_strlen(ret)-missing;
+    mv->clen = u32_strlen(ret)-missing;
     mv->chars[mv->clen] = NULL;
     MVRemetric(mv);
     GDrawRequestExpose(mv->v,NULL,false);
@@ -1773,11 +1773,11 @@ static int MV_ScriptLangChanged(GGadget *g, GEvent *e) {
 	    GGadgetSetTitle8(g,mv->scriptlangs[e->u.control.u.tf_changed.from_pulldown].userdata );
 	    sstr = _GGadgetGetTitle(g);
 	} else {
-	    if ( u_strlen(sstr)<4 || !isalpha(sstr[0]) || !isalnum(sstr[1]) /*|| !isalnum(sstr[2]) || !isalnum(sstr[3])*/ )
+	    if ( u32_strlen(sstr)<4 || !isalpha(sstr[0]) || !isalnum(sstr[1]) /*|| !isalnum(sstr[2]) || !isalnum(sstr[3])*/ )
 return( true );
-	    if ( u_strlen(sstr)==4 )
+	    if ( u32_strlen(sstr)==4 )
 		/* No language, we'll use default */;
-	    else if ( u_strlen(sstr)!=10 || sstr[4]!='{' || sstr[9]!='}' ||
+	    else if ( u32_strlen(sstr)!=10 || sstr[4]!='{' || sstr[9]!='}' ||
 		    !isalpha(sstr[5]) || !isalpha(sstr[6]) || !isalpha(sstr[7])  )
 return( true );
 	}

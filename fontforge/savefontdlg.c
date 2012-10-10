@@ -1493,7 +1493,7 @@ GFileChooserFilterWernerSFDs (GGadget * g, GDirEntry * ent,
 
   if (ret == fc_show && !ent->isdir)
     {
-      char *filename = xmalloc (u_strlen (dir) + u_strlen (ent->name) + 5);
+      char *filename = xmalloc (u32_strlen (dir) + u32_strlen (ent->name) + 5);
       cu_strcpy (filename, dir);
       strcat (filename, "/");
       cu_strcat (filename, ent->name);
@@ -2312,7 +2312,7 @@ BitmapName (struct gfc_data *d)
   if (format != ff_none)
     return;
 
-  dup = x_gc_malloc_atomic ((u_strlen (ret) + 30) * sizeof (uint32_t));
+  dup = x_gc_malloc_atomic ((u32_strlen (ret) + 30) * sizeof (uint32_t));
   u_strcpy (dup, ret);
 
   pt = u_strrchr (dup, '.');
@@ -2320,7 +2320,7 @@ BitmapName (struct gfc_data *d)
   if (pt < tpt)
     pt = NULL;
   if (pt == NULL)
-    pt = dup + u_strlen (dup);
+    pt = dup + u32_strlen (dup);
   if (u8_strcmp (x_gc_u32_to_u8 (pt - 5), ".bmap.bin") == 0)
     pt -= 5;
   if (u8_strcmp (x_gc_u32_to_u8 (pt - 4), ".ttf.bin") == 0)
@@ -2365,7 +2365,7 @@ GFD_Format (GGadget * g, GEvent * e)
         }
 
       ret = GGadgetGetTitle (d->gfc);
-      dup = xmalloc ((u_strlen (ret) + 30) * sizeof (uint32_t));
+      dup = xmalloc ((u32_strlen (ret) + 30) * sizeof (uint32_t));
       u_strcpy (dup, ret);
       free (ret);
       pt = u_strrchr (dup, '.');
@@ -2373,7 +2373,7 @@ GFD_Format (GGadget * g, GEvent * e)
       if (pt < tpt)
         pt = NULL;
       if (pt == NULL)
-        pt = dup + u_strlen (dup);
+        pt = dup + u32_strlen (dup);
       if (u8_strcmp (x_gc_u32_to_u8 (pt - 5), ".bmap.bin") == 0)
         pt -= 5;
       if (u8_strcmp (x_gc_u32_to_u8 (pt - 4), ".ttf.bin") == 0)

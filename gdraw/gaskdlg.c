@@ -131,7 +131,7 @@ static int FindLineBreaks(const uint32_t *question, GTextInfo linebreaks[GLINE_M
 	pt = last;
     }
     if ( *pt!='\0' )
-	linebreaks[++lb].text = (uint32_t *) pt+u_strlen(pt);
+	linebreaks[++lb].text = (uint32_t *) pt+u32_strlen(pt);
     for ( i=0; i<lb; ++i ) {
 	int temp = linebreaks[i+1].text - linebreaks[i].text;
 	if ( linebreaks[i+1].text[-1]==' ' || linebreaks[i+1].text[-1]=='\n' )
@@ -139,7 +139,7 @@ static int FindLineBreaks(const uint32_t *question, GTextInfo linebreaks[GLINE_M
 	linebreaks[i].text = x_u32_strnchardup (linebreaks[i].text,temp);
     }
 
-    if ( question[u_strlen(question)-1]=='\n' )
+    if ( question[u32_strlen(question)-1]=='\n' )
 	--lb;
 return( lb );
 }

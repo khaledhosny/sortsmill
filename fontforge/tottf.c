@@ -4040,7 +4040,7 @@ return;		/* Should not happen, but it did */
 		uint32_t *uin = utf82u_copy(utf8name);
 		outlen = 3*strlen(utf8name)+10;
 		out = space = xmalloc(outlen+2);
-		in = (char *) uin; inlen = 2*u_strlen(uin);
+		in = (char *) uin; inlen = 2*u32_strlen(uin);
 		iconv(enc->fromunicode,NULL,NULL,NULL,NULL);	/* should not be needed, but just in case */
 		iconv(enc->fromunicode,&in,&inlen,&out,&outlen);
 		out[0] = '\0'; out[1] = '\0';

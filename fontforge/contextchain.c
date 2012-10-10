@@ -1578,12 +1578,12 @@ return( NULL );
     wild = NULL;
     if ( do_wildcards ) {
 	pt = spt;
-	wild = xmalloc((u_strlen(spt)+2)*sizeof(uint32_t));
+	wild = xmalloc((u32_strlen(spt)+2)*sizeof(uint32_t));
 	u_strcpy(wild,pt);
 	uc_strcat(wild,"*");
     }
 
-    match_len = u_strlen(spt);
+    match_len = u32_strlen(spt);
     ret = NULL;
     for ( doit=0; doit<2; ++doit ) {
 	cnt=0;
@@ -1607,7 +1607,7 @@ return( NULL );
 			int len;
 			u_strncpy(temp,basept,spt-basept);
 			utf82u_strcpy(temp+(spt-basept),str);
-			len = u_strlen(temp);
+			len = u32_strlen(temp);
 			ret[cnt] = temp;
 		    }
 		}

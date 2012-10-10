@@ -1074,7 +1074,7 @@ static void parsekernstr(uint32_t *buffer,struct kernsets *ks) {
     int i,j,k;
 
     /* Any line not parseable as a kern pair is ignored */
-    if ( u_strlen(buffer)!=2 )
+    if ( u32_strlen(buffer)!=2 )
 return;
 
     for ( i=0 ; i<ks->cur && buffer[0]>ks->ch1[i]; ++i );
@@ -1098,11 +1098,11 @@ return;
 	ks->ch2s[i][0] = '\0';
 	++ks->cur;
     }
-    if ( (u_strlen(ks->ch2s[i])+1)%50 == 0 )
-	ks->ch2s[i] = xrealloc(ks->ch2s[i],(u_strlen(ks->ch2s[i])+50)*sizeof(uint32_t));
+    if ( (u32_strlen(ks->ch2s[i])+1)%50 == 0 )
+	ks->ch2s[i] = xrealloc(ks->ch2s[i],(u32_strlen(ks->ch2s[i])+50)*sizeof(uint32_t));
     for ( j=0 ; ks->ch2s[i][j]!=0 && buffer[1]>ks->ch2s[i][j]; ++j );
     if ( ks->ch2s[i][j]!=buffer[1] ) {
-	for ( k=u_strlen(ks->ch2s[i])+1; k>j; --k )
+	for ( k=u32_strlen(ks->ch2s[i])+1; k>j; --k )
 	    ks->ch2s[i][k] = ks->ch2s[i][k-1];
 	ks->ch2s[i][j] = buffer[1];
     }
@@ -1151,7 +1151,7 @@ return( false );
 
     for ( i=max=0; i<ks->cur; ++i )
 	if ( ks->ch1[i]!='\0' )
-	    max += u_strlen(ks->ch2s[i]);
+	    max += u32_strlen(ks->ch2s[i]);
     ch2s = xmalloc((max+1)*sizeof(uint32_t));
     for ( i=0; i<ks->cur && ks->ch1[i]=='\0'; ++i );
     u_strcpy(ch2s,ks->ch2s[i]);
@@ -1160,13 +1160,13 @@ return( false );
 	    for ( cpt = ch2s; *cpt!='\0' && *upt<*cpt; ++cpt );
 	    if ( *cpt==*upt )	/* already listed */
 	continue;
-	    for ( k=u_strlen(cpt)+1; k>0; --k )
+	    for ( k=u32_strlen(cpt)+1; k>0; --k )
 		cpt[k] = cpt[k-1];
 	    *cpt = *upt;
 	}
     }
 
-    wi->right = xmalloc((u_strlen(ch2s)+1)*sizeof(struct charone *));
+    wi->right = xmalloc((u32_strlen(ch2s)+1)*sizeof(struct charone *));
     for ( cnt=0,cpt=ch2s; *cpt ; ++cpt ) {
 	j = SFFindExistingSlot(sf,*cpt,NULL);
 	if ( j!=-1 && sf->glyphs[j]!=NULL &&

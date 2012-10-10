@@ -1370,19 +1370,19 @@ static int DSP_ScriptLangChanged(GGadget *g, GEvent *e) {
 	    GGadgetSetTitle8(g,di->scriptlangs[e->u.control.u.tf_changed.from_pulldown].userdata );
 	    sstr = _GGadgetGetTitle(g);
 	} else {
-	    if ( u_strlen(sstr)<4 || !isalpha(sstr[0]) || !isalnum(sstr[1]) /*|| !isalnum(sstr[2]) || !isalnum(sstr[3])*/ )
+	    if ( u32_strlen(sstr)<4 || !isalpha(sstr[0]) || !isalnum(sstr[1]) /*|| !isalnum(sstr[2]) || !isalnum(sstr[3])*/ )
 return( true );
-	    if ( u_strlen(sstr)==4 )
+	    if ( u32_strlen(sstr)==4 )
 		/* No language, we'll use default */;
-	    else if ( u_strlen(sstr)!=10 || sstr[4]!='{' || sstr[9]!='}' ||
+	    else if ( u32_strlen(sstr)!=10 || sstr[4]!='{' || sstr[9]!='}' ||
 		    !isalpha(sstr[5]) || !isalpha(sstr[6]) || !isalpha(sstr[7])  )
 return( true );
 	}
 	script = DEFAULT_SCRIPT;
 	lang = DEFAULT_LANG;
-	if ( u_strlen(sstr)>=4 )
+	if ( u32_strlen(sstr)>=4 )
 	    script = (sstr[0]<<24) | (sstr[1]<<16) | (sstr[2]<<8) | sstr[3];
-	if ( sstr[4]=='{' && u_strlen(sstr)>=9 )
+	if ( sstr[4]=='{' && u32_strlen(sstr)>=9 )
 	    lang = (sstr[5]<<24) | (sstr[6]<<16) | (sstr[7]<<8) | sstr[8];
 	SFTFSetScriptLang(GWidgetGetControl(di->gw,CID_SampleText),-1,-1,script,lang);
     }

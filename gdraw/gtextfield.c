@@ -250,7 +250,7 @@ static void GTextFieldPangoRefigureLines(GTextField *gt, int start_of_change) {
     }
 
     if ( gt->password ) {
-	int cnt = u_strlen(gt->text);
+	int cnt = u32_strlen(gt->text);
 	utf8_text = xmalloc(cnt+1);
 	memset(utf8_text,'*',cnt);
 	utf8_text[cnt] = '\0';
@@ -309,10 +309,10 @@ return;
 	}
 	if ( i==0 ) {
 	    gt->lines8[i] = strlen(utf8_text);
-	    gt->lines[i] = u_strlen(gt->text);
+	    gt->lines[i] = u32_strlen(gt->text);
 	} else {
 	    gt->lines8[i] = gt->lines8[i-1] +   strlen( utf8_text + gt->lines8[i-1]);
-	    gt->lines [i] = gt->lines [i-1] + u_strlen(  gt->text + gt->lines [i-1]);
+	    gt->lines [i] = gt->lines [i-1] + u32_strlen(  gt->text + gt->lines [i-1]);
 	}
     }
     if ( gt->lcnt!=i ) {
@@ -360,7 +360,7 @@ return;
 
 static void _GTextFieldReplace(GTextField *gt, const uint32_t *str) {
     uint32_t *old = gt->oldtext;
-    uint32_t *new = xmalloc((u_strlen(gt->text)-(gt->sel_end-gt->sel_start) + u_strlen(str)+1)*sizeof(uint32_t));
+    uint32_t *new = xmalloc((u32_strlen(gt->text)-(gt->sel_end-gt->sel_start) + u32_strlen(str)+1)*sizeof(uint32_t));
 
     gt->oldtext = gt->text;
     gt->sel_oldstart = gt->sel_start;
@@ -369,7 +369,7 @@ static void _GTextFieldReplace(GTextField *gt, const uint32_t *str) {
 
     u_strncpy(new,gt->text,gt->sel_start);
     u_strcpy(new+gt->sel_start,str);
-    gt->sel_start = u_strlen(new);
+    gt->sel_start = u32_strlen(new);
     u_strcpy(new+gt->sel_start,gt->text+gt->sel_end);
     gt->text = new;
     gt->sel_end = gt->sel_base = gt->sel_start;
@@ -418,7 +418,7 @@ static int GTextField_Show(GTextField *gt, int pos) {
 	width = ge->fieldrect.width - 2*(gt->g.inner.x - gt->g.r.x);
 
     if ( pos < 0 ) pos = 0;
-    if ( pos > u_strlen(gt->text)) pos = u_strlen(gt->text);
+    if ( pos > u32_strlen(gt->text)) pos = u32_strlen(gt->text);
     i = GTextFieldFindLine(gt,pos);
 
     loff = gt->loff_top;
@@ -558,14 +558,14 @@ static void GTextFieldGrabSelection(GTextField *gt, enum selnames sel ) {
 	u_strncpy(temp+1,gt->text+gt->sel_start,gt->sel_end-gt->sel_start);
 	ctemp = u2utf8_copy(temp+1);
 	ctemp2 = u2def_copy(temp+1);
-	GDrawAddSelectionType(gt->g.base,sel,"text/plain;charset=ISO-10646-UCS-4",temp,u_strlen(temp),
+	GDrawAddSelectionType(gt->g.base,sel,"text/plain;charset=ISO-10646-UCS-4",temp,u32_strlen(temp),
 		sizeof(uint32_t),
 		NULL,NULL);
 	u2temp = xmalloc((gt->sel_end-gt->sel_start + 2)*sizeof(uint16_t));
 	for ( i=0; temp[i]!=0; ++i )
 	    u2temp[i] = temp[i];
 	u2temp[i] = 0;
-	GDrawAddSelectionType(gt->g.base,sel,"text/plain;charset=ISO-10646-UCS-2",u2temp,u_strlen(temp),
+	GDrawAddSelectionType(gt->g.base,sel,"text/plain;charset=ISO-10646-UCS-2",u2temp,u32_strlen(temp),
 		2,
 		NULL,NULL);
 	GDrawAddSelectionType(gt->g.base,sel,"UTF8_STRING",xstrdup_or_null(ctemp),strlen(ctemp),
@@ -719,7 +719,7 @@ static int gtextfield_editcmd(GGadget *g,enum editor_commands cmd) {
     switch ( cmd ) {
       case ec_selectall:
 	gt->sel_start = 0;
-	gt->sel_end = u_strlen(gt->text);
+	gt->sel_end = u32_strlen(gt->text);
 return( true );
       case ec_clear:
 	GTextField_Replace(gt,nullstr);
@@ -867,7 +867,7 @@ return( NULL );
 	  uint32_t *new_text = x_u32_strconv_from_locale (buffer);
 	  u32_strncpy (upt, new_text, end - upt);
 	  free (new_text);
-          upt += u_strlen (upt);
+          upt += u32_strlen (upt);
 	}
     }
     *upt = '\0';
@@ -1212,7 +1212,7 @@ return( false );
 	    if ( *upt=='\n' )
 		++upt;
 	    upt = u_strchr(upt,'\n');
-	    if ( upt==NULL ) upt=gt->text+u_strlen(gt->text);
+	    if ( upt==NULL ) upt=gt->text+u32_strlen(gt->text);
 	    if ( !(event->u.chr.state&ksm_shift) ) {
 		gt->sel_start = gt->sel_base = gt->sel_end =upt-gt->text;
 	    } else {
@@ -1223,9 +1223,9 @@ return( 2 );
 	  break;
 	  case GK_End: case GK_KP_End:
 	    if ( !(event->u.chr.state&ksm_shift) ) {
-		gt->sel_start = gt->sel_base = gt->sel_end = u_strlen(gt->text);
+		gt->sel_start = gt->sel_base = gt->sel_end = u32_strlen(gt->text);
 	    } else {
-		gt->sel_start = gt->sel_base; gt->sel_end = u_strlen(gt->text);
+		gt->sel_start = gt->sel_base; gt->sel_end = u32_strlen(gt->text);
 	    }
 	    GTextField_Show(gt,gt->sel_start);
 return( 2 );
@@ -1400,7 +1400,7 @@ static void GTextFieldDrawLineSel(GWindow pixmap, GTextField *gt, int line ) {
     selr = gt->g.inner; selr.y = y; selr.height = gt->fh;
     if ( !gt->g.has_focus ) --selr.height;
     llen = gt->lines[line+1]==-1?
-	    u_strlen(gt->text+gt->lines[line])+gt->lines[line]:
+	    u32_strlen(gt->text+gt->lines[line])+gt->lines[line]:
 	    gt->lines[line+1];
     s = gt->sel_start<gt->lines[line]?gt->lines[line]:gt->sel_start;
     e = gt->sel_end>gt->lines[line+1] && gt->lines[line+1]!=-1?gt->lines[line+1]-1:
@@ -1584,7 +1584,7 @@ static int GTextFieldDoDrop(GTextField *gt,GEvent *event,int endpos) {
 		uint32_t *old=gt->oldtext, *temp;
 		int pos=0;
 		if ( event->u.mouse.state&ksm_control ) {
-		    temp = xmalloc((u_strlen(gt->text)+gt->sel_end-gt->sel_start+1)*sizeof(uint32_t));
+		    temp = xmalloc((u32_strlen(gt->text)+gt->sel_end-gt->sel_start+1)*sizeof(uint32_t));
 		    memcpy(temp,gt->text,endpos*sizeof(uint32_t));
 		    memcpy(temp+endpos,gt->text+gt->sel_start,
 			    (gt->sel_end-gt->sel_start)*sizeof(uint32_t));
@@ -1679,7 +1679,7 @@ return( true );
 	if ( i<0 ) i = 0;
 	if ( !gt->multi_line ) i = 0;
 	if ( i>=gt->lcnt )
-	    end = gt->text+u_strlen(gt->text);
+	    end = gt->text+u32_strlen(gt->text);
 	else
 	    end = GTextFieldGetPtFromPos(gt,i,event->u.mouse.x);
     }
@@ -1698,7 +1698,7 @@ return( true );
 	gt->wordsel = gt->linesel = false;
 	if ( event->u.mouse.button==1 && event->u.mouse.clicks>=3 ) {
 	    gt->sel_start = gt->lines[i]; gt->sel_end = gt->lines[i+1];
-	    if ( gt->sel_end==-1 ) gt->sel_end = u_strlen(gt->text);
+	    if ( gt->sel_end==-1 ) gt->sel_end = u32_strlen(gt->text);
 	    gt->wordsel = false; gt->linesel = true;
 	} else if ( event->u.mouse.button==1 && event->u.mouse.clicks==2 ) {
 	    gt->sel_start = gt->sel_end = gt->sel_base = end-gt->text;
@@ -1731,7 +1731,7 @@ return( true );
 
 	if ( gt->pressed==NULL )
 	    gt->pressed = GDrawRequestTimer(gt->g.base,200,100,NULL);
-	if ( gt->sel_start > u_strlen( gt->text ))	/* Ok to have selection at end, but beyond is an error */
+	if ( gt->sel_start > u32_strlen( gt->text ))	/* Ok to have selection at end, but beyond is an error */
 	    fprintf( stderr, "About to crash\n" );
 	_ggadget_redraw(g);
 return( true );
@@ -1743,10 +1743,10 @@ return( true );
 	} else if ( gt->linesel ) {
 	    int j, e;
 	    gt->sel_start = gt->lines[i]; gt->sel_end = gt->lines[i+1];
-	    if ( gt->sel_end==-1 ) gt->sel_end = u_strlen(gt->text);
+	    if ( gt->sel_end==-1 ) gt->sel_end = u32_strlen(gt->text);
 	    for ( j=0; gt->lines[i+1]!=-1 && gt->sel_base>=gt->lines[i+1]; ++j );
 	    if ( gt->sel_start<gt->lines[i] ) gt->sel_start = gt->lines[i];
-	    e = gt->lines[j+1]==-1 ? u_strlen(gt->text): gt->lines[j+1];
+	    e = gt->lines[j+1]==-1 ? u32_strlen(gt->text): gt->lines[j+1];
 	    if ( e>gt->sel_end ) gt->sel_end = e;
 	} else if ( gt->wordsel )
 	    GTextFieldSelectWords(gt,end-gt->text);
@@ -1766,7 +1766,7 @@ return( true );
 		GTextField_Show(gt,gt->sel_start);
 	    GTextFieldChanged(gt,-1);
 	}
-	if ( gt->sel_end > u_strlen( gt->text ))
+	if ( gt->sel_end > u32_strlen( gt->text ))
 	    fprintf( stderr, "About to crash\n" );
 	if ( refresh )
 	    _ggadget_redraw(g);
@@ -1814,7 +1814,7 @@ return( false );
       case 4:
 	/* We should try name completion */
 	if ( gt->completionfield && ((GCompletionField *) gt)->completion!=NULL &&
-		gt->was_completing && gt->sel_start == u_strlen(gt->text))
+		gt->was_completing && gt->sel_start == u32_strlen(gt->text))
 	    GTextFieldComplete(gt,false);
 	else
 	    GTextFieldChanged(gt,-1);
@@ -1958,7 +1958,7 @@ return( false );
     i = (event->u.drag_drop.y-g->inner.y)/gt->fh + gt->loff_top;
     if ( !gt->multi_line ) i = 0;
     if ( i>=gt->lcnt )
-	end = gt->text+u_strlen(gt->text);
+	end = gt->text+u32_strlen(gt->text);
     else
 	end = GTextFieldGetPtFromPos(gt,i,event->u.drag_drop.x);
     if ( event->type == et_drag ) {
@@ -2020,7 +2020,7 @@ return;
     free(old);
     free(gt->utf8_text);
     gt->utf8_text = u2utf8_copy(gt->text);
-    gt->sel_start = gt->sel_end = gt->sel_base = u_strlen(tit);
+    gt->sel_start = gt->sel_end = gt->sel_base = u32_strlen(tit);
     GTextFieldRefigureLines(gt,0);
     GTextField_Show(gt,gt->sel_start);
     _ggadget_redraw(g);
@@ -2054,12 +2054,12 @@ void GTextFieldSelect(GGadget *g,int start, int end) {
 
     GTextFieldGrabPrimarySelection(gt);
     if ( end<0 ) {
-	end = u_strlen(gt->text);
+	end = u32_strlen(gt->text);
 	if ( start<0 ) start = end;
     }
     if ( start>end ) { int temp = start; start = end; end = temp; }
-    if ( end>u_strlen(gt->text)) end = u_strlen(gt->text);
-    if ( start>u_strlen(gt->text)) start = end;
+    if ( end>u32_strlen(gt->text)) end = u32_strlen(gt->text);
+    if ( start>u32_strlen(gt->text)) start = end;
     else if ( start<0 ) start=0;
     gt->sel_start = gt->sel_base = start;
     gt->sel_end = end;
@@ -2659,7 +2659,7 @@ static GTextField *_GTextFieldCreate(GTextField *gt, struct gwindow *base, GGadg
 	    gt->text = x_u32_strdup_or_null((uint32_t *) GStringGetResource((intptr_t) gd->label->text,&gt->g.mnemonic));
 	else
 	    gt->text = x_u32_strdup_or_null(gd->label->text);
-	gt->sel_start = gt->sel_end = gt->sel_base = u_strlen(gt->text);
+	gt->sel_start = gt->sel_end = gt->sel_base = u32_strlen(gt->text);
     }
     if ( gt->text==NULL )
 	gt->text = xcalloc(1,sizeof(uint32_t));
@@ -2757,7 +2757,7 @@ static uint32_t **GListField_NameCompletion(GGadget *t,int from_tab) {
     if ( spt==NULL )
 return( NULL );
 
-    match_len = u_strlen(spt);
+    match_len = u32_strlen(spt);
     ti = GGadgetGetList(t,&len);
     ret = NULL;
     for ( doit=0; doit<2; ++doit ) {
@@ -2958,8 +2958,8 @@ static void GTextFieldComplete(GTextField *gt,int from_tab) {
 	    GTextFieldChanged(gt,-1);
 	free(ret);
     } else {
-	orig_len = u_strlen(gt->text);
-	len = u_strlen(ret[0]);
+	orig_len = u32_strlen(gt->text);
+	len = u32_strlen(ret[0]);
 	for ( i=1; ret[i]!=NULL; ++i ) {
 	    for ( pt1=ret[0], pt2=ret[i]; *pt1==*pt2 && pt1-ret[0]<len ; ++pt1, ++pt2 );
 	    len = pt1-ret[0];
@@ -3001,7 +3001,7 @@ static void GTextFieldComplete(GTextField *gt,int from_tab) {
 				ret2[c2][len+1+c3] = ret[i][len];
 				uc_strcpy(ret2[c2]+len+2+c3,"] ...");
 			    } else if ( doit ) {
-				ret2[cnt] = xmalloc((u_strlen(ret[i])+5)*sizeof(uint32_t));
+				ret2[cnt] = xmalloc((u32_strlen(ret[i])+5)*sizeof(uint32_t));
 				u_strcpy(ret2[cnt],ret[i]);
 			    }
 			    ++cnt;

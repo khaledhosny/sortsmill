@@ -348,13 +348,13 @@ static uint32_t *ArrayOrder(const uint32_t *old,int args,int val1,int val2) {
     }
 
     u_sprintf(ubuf,format,val1);
-    new = xmalloc(2*(u_strlen(ubuf)+u_strlen(old)+10)*sizeof(uint32_t));
+    new = xmalloc(2*(u32_strlen(ubuf)+u32_strlen(old)+10)*sizeof(uint32_t));
 
     pt = new;
     *pt++ = '[';
     for ( k=0; k<i; ++k ) {
 	u_sprintf(pt,format,array[k]);
-	pt += u_strlen(pt);
+	pt += u32_strlen(pt);
 	if ( k==i-1 )
 	    *pt++ = ']';
 	else

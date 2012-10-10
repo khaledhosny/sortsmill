@@ -117,13 +117,13 @@ static void GIOdispatch(GIOControl *gc, enum giofuncs gf) {
 		pt = gc->path;
 	    else {
 		pt=u_strchr(pt+3,'/');
-		if ( pt==NULL ) pt = gc->path+u_strlen(gc->path);
+		if ( pt==NULL ) pt = gc->path+u32_strlen(gc->path);
 	    }
 	    if (( tpt = uc_strstr(gc->topath,"://"))== NULL )
 		tpt = gc->topath;
 	    else {
 		tpt=u_strchr(tpt+3,'/');
-		if ( tpt==NULL ) tpt = gc->topath+u_strlen(gc->topath);
+		if ( tpt==NULL ) tpt = gc->topath+u32_strlen(gc->topath);
 	    }
 	    if ( tpt-gc->topath!=pt-gc->path ||
 		    u_strnmatch(gc->path,gc->topath,pt-gc->path)!=0 ) {
@@ -143,7 +143,7 @@ return;
 	    gc->return_code = 501;
 	    gc->error = err501;
 	    uc_strcpy(gc->status,"No support for browsing: ");
-	    u_strncpy(gc->status+u_strlen(gc->status), gc->path, pt-gc->path );
+	    u_strncpy(gc->status+u32_strlen(gc->status), gc->path, pt-gc->path );
 	    gc->done = true;
 	    (gc->receiveerror)(gc);
 return;

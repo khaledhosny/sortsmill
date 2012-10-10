@@ -344,12 +344,12 @@ static int GFD_Format(GGadget *g, GEvent *e) {
 	uint32_t *pt, *file, *f2;
 	int format = (intptr_t) (GGadgetGetListItemSelected(d->format)->userdata);
 	file = GGadgetGetTitle(d->gfc);
-	f2 = xmalloc(sizeof(uint32_t) * (u_strlen(file)+6));
+	f2 = xmalloc(sizeof(uint32_t) * (u32_strlen(file)+6));
 	u_strcpy(f2,file);
 	free(file);
 	pt = u_strrchr(f2,'.');
 	if ( pt==NULL )
-	    pt = f2+u_strlen(f2);
+	    pt = f2+u32_strlen(f2);
 	if ( d->bc!=NULL )
 	    uc_strcpy(pt,format==0?".xbm":format==1?".bmp":".png");
 #ifndef _NO_PYTHON

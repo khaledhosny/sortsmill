@@ -243,7 +243,7 @@ static char *copy_count(GWindow gw,int cid,int *cnt) {
 return( NULL );
     }
 
-    ret = pt = xmalloc(u_strlen(u)+1);
+    ret = pt = xmalloc(u32_strlen(u)+1);
     c = 0;
     for ( upt=u; *upt; ) {
 	if ( *upt==' ' ) {
@@ -906,7 +906,7 @@ return;
 	    sprintf( buf, "Class %d\n", c );
 	    uc_strcat(space,buf);
 	    classes = GMatrixEditGet(GWidgetGetControl(smd->gw,CID_Classes),&len);
-	    len = u_strlen(space);
+	    len = u32_strlen(space);
 	    pt = strstr(classes[c].u.md_str,": ");
 	    if ( pt==NULL ) pt = classes[c].u.md_str;
 	    else pt += 2;
@@ -919,8 +919,8 @@ return;
 	}
 	if ( space[0]=='\0' )
 return;
-	if ( space[u_strlen(space)-1]=='\n' )
-	    space[u_strlen(space)-1]='\0';
+	if ( space[u32_strlen(space)-1]=='\n' )
+	    space[u32_strlen(space)-1]='\0';
 	GGadgetPreparePopup(smd->gw,space);
     } else if ( event->u.mouse.x<smd->xstart2 || event->u.mouse.y<smd->ystart2 )
 return;

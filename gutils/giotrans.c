@@ -55,8 +55,8 @@ _GIO_translateURL (uint32_t *path, enum giofuncs gf)
           && u32_strncmp (path, test->old, test->olen) == 0)
         {
           uint32_t *res =
-            xmalloc ((u_strlen (path) - test->olen + u_strlen (test->new) +
-                      1) * sizeof (uint32_t));
+            xmalloc ((u32_strlen (path) - test->olen +
+                      u32_strlen (test->new) + 1) * sizeof (uint32_t));
           u_strcpy (res, test->new);
           u_strcat (res, path + test->olen);
           return (res);

@@ -141,12 +141,12 @@ return( NULL );
 return( NULL );
     if ( do_wildcards ) {
 	pt = spt;
-	spt = xmalloc((u_strlen(spt)+2)*sizeof(uint32_t));
+	spt = xmalloc((u32_strlen(spt)+2)*sizeof(uint32_t));
 	u_strcpy(spt,pt);
 	uc_strcat(spt,"*");
     }
 
-    match_len = u_strlen(spt);
+    match_len = u32_strlen(spt);
     ret = NULL;
     for ( doit=0; doit<2; ++doit ) {
 	cnt=0;

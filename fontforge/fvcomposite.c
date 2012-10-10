@@ -2657,7 +2657,7 @@ return;
 
 static int SCMakeRightToLeftLig(SplineChar *sc,SplineFont *sf,
 	int layer, const uint32_t *start,BDFFont *bdf,int disp_only) {
-    int cnt = u_strlen(start);
+    int cnt = u32_strlen(start);
     int ret, ch, alt_ch;
     const uint32_t *pt;
 

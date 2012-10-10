@@ -3454,7 +3454,7 @@ PrtBuildDef (SplineFont *sf, void *tf,
                 if (randoms[rcnt] != '\0')
                   {
                     utf82u_strcpy (ret + len, randoms[rcnt]);
-                    len += u_strlen (ret + len);
+                    len += u32_strlen (ret + len);
                     ret[len++] = '\n';
                     ret[len] = '\0';
                     if (langsyscallback != NULL)
@@ -3503,7 +3503,7 @@ PrtBuildDef (SplineFont *sf, void *tf,
               if (ret)
                 {
                   utf82u_strcpy (ret + len, buffer);
-                  len += u_strlen (ret + len);
+                  len += u32_strlen (ret + len);
                   ret[len++] = '\n';
                   ret[len] = '\0';
                   if (langsyscallback != NULL)
@@ -3793,7 +3793,7 @@ FileToUString (char *filename, int max)
 	  uint32_t *new_text = x_u32_strconv_from_locale (buffer);
 	  u32_strncpy (upt, new_text, end - upt);
 	  free (new_text);
-          upt += u_strlen (upt);
+          upt += u32_strlen (upt);
         }
     }
   *upt = 0;
@@ -3838,7 +3838,7 @@ ScriptPrint (FontViewBase * fv, int type, int32_t * pointsizes,
                        (void (*)(void *, int, uint32_t, uint32_t))
                        LayoutInfoInitLangSys);
       else
-        LayoutInfoInitLangSys (li, u_strlen (sample), DEFAULT_SCRIPT,
+        LayoutInfoInitLangSys (li, u32_strlen (sample), DEFAULT_SCRIPT,
                                DEFAULT_LANG);
       LayoutInfoSetTitle (li, sample, width);
       pi.sample = li;

@@ -403,7 +403,7 @@ void LayoutInfoRefigureLines(LayoutInfo *li, int start_of_change,
     }
 
     if ( end_of_change==-1 )
-	end_of_change = start_of_change + u_strlen(li->text+start_of_change);
+	end_of_change = start_of_change + u32_strlen(li->text+start_of_change);
     if ( li->ps==-1 ) {
 	ps = 0; pe = li->pcnt;
 	ls = 0; le = li->lcnt;
@@ -738,8 +738,8 @@ return;
 int LayoutInfoReplace(LayoutInfo *li, const uint32_t *str,
 	int sel_start, int sel_end, int width) {
     uint32_t *old = li->oldtext;
-    int rpllen = u_strlen(str);
-    uint32_t *new = xmalloc((u_strlen(li->text)-(sel_end-sel_start) + rpllen+1)*sizeof(uint32_t));
+    int rpllen = u32_strlen(str);
+    uint32_t *new = xmalloc((u32_strlen(li->text)-(sel_end-sel_start) + rpllen+1)*sizeof(uint32_t));
 
     li->oldtext = li->text;
     LayoutInfoChangeFontList(li,rpllen,sel_start,sel_end);
@@ -1303,7 +1303,7 @@ void LayoutInfoSetTitle(LayoutInfo *li,const uint32_t *tit,int width) {
 
 static int LI_NormalizeStartEnd(LayoutInfo *li, int start, int *_end) {
     int end = *_end;
-    int len = u_strlen(li->text);
+    int len = u32_strlen(li->text);
 
     if ( li->generated==NULL ) {
 	start = 0;

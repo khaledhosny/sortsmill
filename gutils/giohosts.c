@@ -54,7 +54,7 @@ return( cu_copy(url));
 
     pt2 = u_strchr(pt,'/');
     if ( pt2==NULL ) {
-	pt2 = pt+u_strlen(pt);
+	pt2 = pt+u32_strlen(pt);
 	path = xstrdup("/");
     } else {
 	path = cu_copy(pt2);

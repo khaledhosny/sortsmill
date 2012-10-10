@@ -1489,12 +1489,12 @@ return( false );
     ((FInfo *) (info.finderInfo))->fdCreator = mb->creator;
     pt = strrchr(fname,'/');
     filename = x_u32_strconv_from_locale (pt==NULL?fname:pt+1);
-    { UniChar *ucs2fn = xmalloc((u_strlen(filename)+1) * sizeof(UniChar));
+    { UniChar *ucs2fn = xmalloc((u32_strlen(filename)+1) * sizeof(UniChar));
       int i;
 	for ( i=0; filename[i]!=0; ++i )
 	    ucs2fn[i] = filename[i];
 	ucs2fn[i] = 0;
-	ret = FSCreateFileUnicode(&parentref,u_strlen(filename), ucs2fn,
+	ret = FSCreateFileUnicode(&parentref,u32_strlen(filename), ucs2fn,
 		    kFSCatInfoFinderInfo, &info, &ref, NULL);
 	free(ucs2fn);
     }

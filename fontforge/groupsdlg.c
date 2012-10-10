@@ -864,7 +864,7 @@ static int Group_ToSelection(GGadget *g, GEvent *e) {
 	memset(fv->b.selected,0,fv->b.map->enccount);
 	while ( *ret ) {
 	    end = u_strchr(ret,' ');
-	    if ( end==NULL ) end = ret+u_strlen(ret);
+	    if ( end==NULL ) end = ret+u32_strlen(ret);
 	    nm = cu_copybetween(ret,end);
 	    for ( ret = end; isspace(*ret); ++ret);
 	    if ( (nm[0]=='U' || nm[0]=='u') && nm[1]=='+' ) {
@@ -937,7 +937,7 @@ static int Group_FromSelection(GGadget *g, GEvent *e) {
 		else
 		    sc = SCBuildDummy(&dummy,sf,fv->b.map,i);
 		uc_strcpy(pt,sc->name);
-		pt += u_strlen(pt);
+		pt += u32_strlen(pt);
 		*pt++ = ' ';
 	    }
 	    if ( pt>vals ) pt[-1]='\0';
