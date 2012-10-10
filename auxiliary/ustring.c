@@ -80,20 +80,6 @@ u_strnmatch (const uint32_t *str1, const uint32_t *str2, int len)
 }
 
 long
-u_strncmp (const uint32_t *str1, const uint32_t *str2, int n)
-{
-  long ch1, ch2;
-  while (--n >= 0)
-    {
-      ch1 = *str1++;
-      ch2 = *str2++;
-      if (ch1 != ch2 || ch1 == '\0')
-        return (ch1 - ch2);
-    }
-  return (0);
-}
-
-long
 u_strmatch (const uint32_t *str1, const uint32_t *str2)
 {
   long ch1, ch2;

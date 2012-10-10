@@ -2763,7 +2763,8 @@ return( NULL );
     for ( doit=0; doit<2; ++doit ) {
 	cnt=0;
 	for ( i=0; i<len; ++i ) {
-	    if ( u_strncmp(ti[i]->text,spt,match_len)==0 ) {
+	  // FIXME: Should this u32_strncmp be a normalized comparison?
+	  if ( u32_strncmp(ti[i]->text,spt,match_len)==0 ) {
 		if ( doit )
 		    ret[cnt] = x_u32_strdup_or_null(ti[i]->text);
 		++cnt;
