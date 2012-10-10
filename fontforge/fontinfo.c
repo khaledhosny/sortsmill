@@ -2223,7 +2223,8 @@ static int GFI_NameChange(GGadget *g, GEvent *e)
 	    }
 	  /* If the postscript name ends with "Regular" it is recommended not
 	   * to include it in the full name */
-	  if(u32_endswith(cp,c_to_u(" Regular")) || u32_endswith(cp,c_to_u(" regular")))
+	  if(u32_endswith(cp, x_gc_u8_to_u32 (" Regular"))
+	     || u32_endswith(cp, x_gc_u8_to_u32 (" regular")))
 	    {
 	      cp[u32_strlen(cp) - strlen(" Regular")] ='\0';
 	    }

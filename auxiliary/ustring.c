@@ -471,14 +471,6 @@ u_to_c (const uint32_t *ubuf)
 }
 
 uint32_t *
-c_to_u (const char *buf)
-{
-  static uint32_t ubuf[400];
-  uc_strncpy (ubuf, buf, sizeof (ubuf));
-  return (ubuf);
-}
-
-uint32_t *
 utf82u_strncpy (uint32_t *ubuf, const char *utf8buf, int len)
 {
   uint32_t *upt = ubuf, *uend = ubuf + len - 1;
