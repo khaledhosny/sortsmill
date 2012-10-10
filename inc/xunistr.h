@@ -64,9 +64,9 @@ VISIBLE const uint16_t *u16_force_valid (const uint16_t *string);
 VISIBLE const uint32_t *u32_force_valid (const uint32_t *string);
 
 // Copy up to n characters (as opposed to storage units).
-VISIBLE uint8_t *x_u8_strnchardup (const uint8_t *string, size_t n);
-VISIBLE uint16_t *x_u16_strnchardup (const uint16_t *string, size_t n);
-VISIBLE uint32_t *x_u32_strnchardup (const uint32_t *string, size_t n);
+VISIBLE uint8_t *x_u8_mbstrndup (const uint8_t *string, size_t n);
+VISIBLE uint16_t *x_u16_mbstrndup (const uint16_t *string, size_t n);
+VISIBLE uint32_t *x_u32_mbstrndup (const uint32_t *string, size_t n);
 
 static inline uint8_t *
 x_u8_strdup (const uint8_t *string)
@@ -176,19 +176,22 @@ u32_valid (const uint32_t *string)
   return (u32_check (string, u32_strlen (string)) == NULL);
 }
 
-static inline uint8_t *x_gc_u8_strnchardup (const uint8_t *string, size_t n)
+static inline uint8_t *
+x_gc_u8_mbstrndup (const uint8_t *string, size_t n)
 {
-  return x_gc_u8_grabstr (x_u8_strnchardup (string, n));
+  return x_gc_u8_grabstr (x_u8_mbstrndup (string, n));
 }
 
-static inline uint16_t *x_gc_u16_strnchardup (const uint16_t *string, size_t n)
+static inline uint16_t *
+x_gc_u16_mbstrndup (const uint16_t *string, size_t n)
 {
-  return x_gc_u16_grabstr (x_u16_strnchardup (string, n));
+  return x_gc_u16_grabstr (x_u16_mbstrndup (string, n));
 }
 
-static inline uint32_t *x_gc_u32_strnchardup (const uint32_t *string, size_t n)
+static inline uint32_t *
+x_gc_u32_mbstrndup (const uint32_t *string, size_t n)
 {
-  return x_gc_u32_grabstr (x_u32_strnchardup (string, n));
+  return x_gc_u32_grabstr (x_u32_mbstrndup (string, n));
 }
 
 #endif // _FONTFORGE_XUNISTR_H

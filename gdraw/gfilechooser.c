@@ -409,7 +409,7 @@ static void GFileChooserScanDir(GFileChooser *gfc,uint32_t *dir) {
 	if ( ept!=dir ) {
 	    if ( ti!=NULL ) {
 		ti[tot-cnt] = xcalloc(1,sizeof(GTextInfo));
-		ti[tot-cnt]->text = x_u32_strnchardup (dir,ept-dir);
+		ti[tot-cnt]->text = x_u32_mbstrndup (dir,ept-dir);
 		ti[tot-cnt]->fg = ti[tot-cnt]->bg = COLOR_DEFAULT;
 	    }
 	    cnt = 1;
@@ -418,7 +418,7 @@ static void GFileChooserScanDir(GFileChooser *gfc,uint32_t *dir) {
 	    for ( ept = pt; *ept!='/' && *ept!='\0'; ++ept );
 	    if ( ti!=NULL ) {
 		ti[tot-cnt] = xcalloc(1,sizeof(GTextInfo));
-		ti[tot-cnt]->text = x_u32_strnchardup (pt,ept-pt);
+		ti[tot-cnt]->text = x_u32_mbstrndup (pt,ept-pt);
 		ti[tot-cnt]->fg = ti[tot-cnt]->bg = COLOR_DEFAULT;
 	    }
 	    ++cnt;
@@ -1119,14 +1119,14 @@ return;
     uint32_t *dir;
 
     if( GFileIsAbsolute (x_gc_u32_strconv_to_locale(spt)) )
-      dir = x_gc_u32_grabstr (x_u32_strnchardup (spt,slashpt-spt));
+      dir = x_gc_u32_grabstr (x_u32_mbstrndup (spt,slashpt-spt));
     else
       {
 	uint32_t *curdir = GFileChooserGetCurDir(gfc,-1);
 
 	if ( slashpt!=spt )
 	  {
-	    temp = x_u32_strnchardup (spt,slashpt-spt);
+	    temp = x_u32_mbstrndup (spt,slashpt-spt);
 	    dir = u32_GFileAppendFile(curdir,temp,true);
 	    free(temp);
 	  }
@@ -1221,7 +1221,7 @@ return;
 	if(!base) base = (uint32_t*) tit;
 	if(pt > base && pt[1] && (pt[1]!='.' || pt[2]!='\0')){
 	    gfc->lastname = x_u32_strdup_or_null(pt+1);
-	    dir = x_u32_strnchardup (tit, pt-tit);
+	    dir = x_u32_mbstrndup (tit, pt-tit);
 	}
 	else{
 	    dir = x_u32_strdup_or_null(tit);
@@ -1235,7 +1235,7 @@ return;
 	free(curdir);
     } else {
 	curdir = GFileChooserGetCurDir(gfc,-1);
-	temp = x_u32_strnchardup (tit,pt-tit);
+	temp = x_u32_mbstrndup (tit,pt-tit);
 	dir = u32_GFileAppendFile(curdir,temp,true);
 	free(temp); free(curdir);
 	free(gfc->lastname);

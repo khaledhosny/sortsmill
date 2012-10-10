@@ -177,31 +177,31 @@ u32_force_valid (const uint32_t *string)
   return (u32_valid (string)) ? string : empty_string;
 }
 
-uint8_t *x_u8_strnchardup (const uint8_t *string, size_t n)
+uint8_t *x_u8_mbstrndup (const uint8_t *string, size_t n)
 {
   // FIXME? This may not be the fastest implementation using
   // libunistring, although it is simple and likely will suffice.
   uint32_t *s32 = x_u8_to_u32 (string);
-  uint32_t *s32_copy = x_u32_strnchardup (s32, n);
+  uint32_t *s32_copy = x_u32_mbstrndup (s32, n);
   free (s32);
   uint8_t *s8_copy = x_u32_to_u8 (s32_copy);
   free (s32_copy);
   return s8_copy;
 }
 
-uint16_t *x_u16_strnchardup (const uint16_t *string, size_t n)
+uint16_t *x_u16_mbstrndup (const uint16_t *string, size_t n)
 {
   // FIXME? This may not be the fastest implementation using
   // libunistring, although it is simple and likely will suffice.
   uint32_t *s32 = x_u16_to_u32 (string);
-  uint32_t *s32_copy = x_u32_strnchardup (s32, n);
+  uint32_t *s32_copy = x_u32_mbstrndup (s32, n);
   free (s32);
   uint16_t *s16_copy = x_u32_to_u16 (s32_copy);
   free (s32_copy);
   return s16_copy;
 }
 
-uint32_t *x_u32_strnchardup (const uint32_t *string, size_t n)
+uint32_t *x_u32_mbstrndup (const uint32_t *string, size_t n)
 {
   uint32_t *copy;
 

@@ -2249,7 +2249,7 @@ static int GFI_NameChange(GGadget *g, GEvent *e)
 	    ept = temp;
 	  if (( temp = u_strchr(uname,'-'))!=NULL && temp!=uname )
 	    ept = temp;
-	  temp = x_u32_strnchardup (uname,ept-uname);
+	  temp = x_u32_mbstrndup (uname,ept-uname);
 	  GGadgetSetTitle(GWidgetGetControl(gw,CID_Family),temp);
 	}
     }
