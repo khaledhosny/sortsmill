@@ -1139,7 +1139,7 @@ static void bUCS4(Context *c) {
 	ScriptError( c, "Wrong number of arguments" );
     else if ( c->a.vals[1].type==v_str ) {
 	const char *pt = c->a.vals[1].u.sval;
-	int i, len = utf8_strlen(pt);
+	int i, len = u8_mbsnlen (pt, u8_strlen (pt));
 	c->return_val.type = v_arrfree;
 	c->return_val.u.aval = xmalloc(sizeof(Array));
 	c->return_val.u.aval->argc = len;

@@ -1194,7 +1194,7 @@ void FontImage(SplineFont *sf,char *filename,Array *arr,int width,int height) {
     cnt = arr->argc/2;
     len = 1;
     for ( i=0; i<cnt; ++i )
-	len += utf8_strlen( arr->vals[2*i+1].u.sval )+1;
+      len += u8_mbsnlen (arr->vals[2*i+1].u.sval, u8_strlen (arr->vals[2*i+1].u.sval))+1;
     
     li->text = xmalloc(len*sizeof(uint32_t));
     len = 0;
@@ -1213,7 +1213,7 @@ void FontImage(SplineFont *sf,char *filename,Array *arr,int width,int height) {
 	script = DEFAULT_SCRIPT;
 	for ( upt = li->text+len; *upt && script==DEFAULT_SCRIPT; ++upt )
 	    script = ScriptFromUnicode(*upt,NULL);
-	len += utf8_strlen( arr->vals[2*i+1].u.sval );
+	len += u8_mbsnlen(arr->vals[2*i+1].u.sval, u8_strlen (arr->vals[2*i+1].u.sval));
 	li->text[len++] = '\n';
 
 	last->end = len-1;

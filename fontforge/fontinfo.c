@@ -3767,7 +3767,7 @@ static void StoreTTFNames(struct gfi_data *d) {
 	}
 	tln->names[strings[3*i+1].u.md_ival] = xstrdup_or_null(strings[3*i+2].u.md_str );
 	if ( strings[3*i+2].u.md_str!=NULL )
-	    len += 2*utf8_strlen(strings[3*i+2].u.md_str);
+	  len += 2*u8_mbsnlen (strings[3*i+2].u.md_str, u8_strlen (strings[3*i+2].u.md_str));
     }
 #if 0
     /* Windows has decided that this was an error */

@@ -1475,7 +1475,7 @@ return;
 	if ( str==NULL )
 	    str = xstrdup("");
 	if ( str!=NULL &&
-		(utf8_strlen(str)>40 || strchr(str,'\n')!=NULL || gme->col_data[c].me_type == me_bigstr))
+	     (u8_mbsnlen(str, u8_strlen (str))>40 || strchr(str,'\n')!=NULL || gme->col_data[c].me_type == me_bigstr))
 	    GME_StrBigEdit(gme,str);
 	else
 	    GME_StrSmallEdit(gme,str,event);

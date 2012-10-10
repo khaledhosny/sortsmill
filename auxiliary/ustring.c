@@ -846,17 +846,6 @@ utf8_db (char *utf8_text)
 }
 
 int
-utf8_strlen (const char *utf8_str)
-{
-  /* how many characters in the string NOT bytes */
-  int len = 0;
-
-  while (utf8_ildb (&utf8_str) > 0)
-    ++len;
-  return (len);
-}
-
-int
 utf82u_strlen (const char *utf8_str)
 {
   /* how many shorts needed to represent it in UCS2 */

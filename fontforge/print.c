@@ -1218,8 +1218,7 @@ pdf_gen_type3 (PI * pi, int sfid)
     }
 
   SplineFontFindBounds (sf, &bb);
-  sfbit->our_font_objs =
-    xmalloc ((map->enccount / 256 + 1) * sizeof (int *));
+  sfbit->our_font_objs = xmalloc ((map->enccount / 256 + 1) * sizeof (int *));
   sfbit->fonts = xmalloc ((map->enccount / 256 + 1) * sizeof (int *));
   for (i = 0; i < map->enccount; i += 256)
     {
@@ -1837,9 +1836,9 @@ PIDownloadFont (PI * pi, SplineFont *sf, EncMap * map)
         (sfbit->fontfile, sf,
          pi->printtype ==
          pt_pdf ? ff_pfb : sf->multilayer ? ff_ptype3 : is_mm ? ff_mma :
-         sfbit->istype42cid ? ff_type42cid : sfbit->
-         iscid ? ff_cid : sfbit->twobyte ? ff_ptype0 : ff_pfa,
-         ps_flag_identitycidmap, map, NULL, ly_fore))
+         sfbit->istype42cid ? ff_type42cid : sfbit->iscid ? ff_cid : sfbit->
+         twobyte ? ff_ptype0 : ff_pfa, ps_flag_identitycidmap, map, NULL,
+         ly_fore))
     error = true;
 
   ff_progress_end_indicator ();
@@ -2833,7 +2832,7 @@ static char *_antigone[] = {
   NULL
 };
 
-                                                                                                             /* Hebrew *//* Seder */
+                                                                                                                         /* Hebrew *//* Seder */
 static char *_hebrew[] = {
   "וְאָתָא מַלְאַךְ הַמָּוֶת, וְשָׁחַט לְשּׁוׂחֵט, רְּשָׁחַט לְתוׂרָא, רְּשָׁתַה לְמַּיָּא, דְּכָכָה לְנוּרָא, דְּשָׂרַף לְחוּטְרָא, דְּהִכָּה לְכַלְכָּא, דְּנָשַׁךְ לְשׁוּנְרָא, דְּאָכְלָה לְגַדְיָא, דִּזְבַן אַבָּא בִּתְרֵי זוּזֵי. חַד גַּדְיָא, חַד גַּדְיָא.",
   "וְאָתָא הַקָּדוֹשׁ כָּדוּךְ הוּא, וְשָׁחַט לְמַלְאַךְ הַמָּוֶת, רְּשָׁחַט לְשּׁוׂחֵט, רְּשָׁחַט לְתוׂרָא, רְּשָׁתַה לְמַּיָּא, דְּכָכָה לְנוּרָא, דְּשָׂרַף לְחוּטְרָא, דְּהִכָּה לְכַלְכָּא, דְּנָשַׁךְ לְשׁוּנְרָא, דְּאָכְלָה לְגַדְיָא, דִּזְבַן אַבָּא בִּתְרֵי זוּזֵי. חַד גַּדְיָא, חַד גַּדְיָא.",
@@ -3088,13 +3087,13 @@ static char *_swahilijohn[] = {
   NULL
 };
 
-                                                                                                /* thai *//* I'm sure I've made transcription errors here, I can't figure out what "0xe27, 0xe38, 0xe4d" really is */
+                                                                                                          /* thai *//* I'm sure I've made transcription errors here, I can't figure out what "0xe27, 0xe38, 0xe4d" really is */
 static char *_thaijohn[] = {
   "๏ ในทีเดิมนะนพวุํลอโฆเปนอยู่ แลเปนอยู่ดว้ยกันกับ พวุํเฆ้า",
   NULL
 };
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   /* Mayan K'iche' of Guatemala *//* Prolog to Popol Wuj *//* Provided by Daniel Johnson */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            /* Mayan K'iche' of Guatemala *//* Prolog to Popol Wuj *//* Provided by Daniel Johnson */
 static char *_mayanPopolWuj[] = {
   "Are u xe' ojer tzij waral, C'i Che' u bi'. Waral xchikatz'ibaj-wi, xchikatiquiba-wi ojer tzij, u ticaribal, u xe'nabal puch ronojel xban pa tinamit C'i Che', ramak C'i Che' winak.",
   NULL
@@ -3372,7 +3371,7 @@ AllChars (SplineFont *sf, const char *str)
 }
 
 static int
-ScriptInList (uint32_t script, uint32_t * scripts, int scnt)
+ScriptInList (uint32_t script, uint32_t *scripts, int scnt)
 {
   int s;
 
@@ -3431,7 +3430,7 @@ PrtBuildDef (SplineFont *sf, void *tf,
                 {
                   if (ret)
                     utf82u_strcpy (ret + len, cur[j]);
-                  len += utf8_strlen (cur[j]);
+                  len += u8_mbsnlen (cur[j], u8_strlen (cur[j]));
                   if (ret)
                     ret[len] = '\n';
                   ++len;
@@ -3472,7 +3471,9 @@ PrtBuildDef (SplineFont *sf, void *tf,
                   *randoms[rcnt] = '\0';
                 else
                   {
-                    len += utf8_strlen (randoms[rcnt]) + 2;
+                    len +=
+                      u8_mbsnlen (randoms[rcnt],
+                                  u8_strlen (randoms[rcnt])) + 2;
                     foundsomething = true;
                   }
               }
@@ -3510,7 +3511,7 @@ PrtBuildDef (SplineFont *sf, void *tf,
                     (langsyscallback) (tf, len, DEFAULT_SCRIPT, DEFAULT_LANG);
                 }
               else
-                len += utf8_strlen (buffer) + 1;
+                len += u8_mbsnlen (buffer, u8_strlen (buffer)) + 1;
             }
         }
 
@@ -3790,9 +3791,9 @@ FileToUString (char *filename, int max)
       char buffer[512];
       while (fgets (buffer, sizeof (buffer), file) != NULL)
         {
-	  uint32_t *new_text = x_u32_strconv_from_locale (buffer);
-	  u32_strncpy (upt, new_text, end - upt);
-	  free (new_text);
+          uint32_t *new_text = x_u32_strconv_from_locale (buffer);
+          u32_strncpy (upt, new_text, end - upt);
+          free (new_text);
           upt += u32_strlen (upt);
         }
     }
@@ -3802,7 +3803,7 @@ FileToUString (char *filename, int max)
 }
 
 void
-ScriptPrint (FontViewBase * fv, int type, int32_t * pointsizes,
+ScriptPrint (FontViewBase * fv, int type, int32_t *pointsizes,
              char *samplefile, uint32_t *sample, char *outputfile)
 {
   PI pi;
