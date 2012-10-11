@@ -1,8 +1,6 @@
 [Desktop Entry]
 _Name=FontForge
-Name[eo]=FontForge
 _Comment=An outline font editor
-Comment[eo]=Tipardosiero-redaktilo
 Exec=fontforge %U
 Icon=fontforge
 StartupWMClass=fontforge
