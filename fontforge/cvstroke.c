@@ -445,7 +445,7 @@ static void Stroke_PressureSet(StrokeDlg *sd,int cid, GEvent *event) {
     double old;
     int i = cid==CID_Pressure1?0:1;
 
-    old = u_strtol(ret,NULL,10);
+    old = u32_strtol(ret,NULL,10);
     if ( event->u.mouse.pressure==0 )
 	sd->up[i] = true;
     else if ( sd->up[i] || event->u.mouse.pressure>old ) {
@@ -2454,7 +2454,7 @@ static uint32_t getcol(GGadget *g,int *err) {
     uint32_t col = COLOR_INHERITED;
 
     if ( *ret=='#' ) ++ret;
-    col = u_strtol(ret,&end,16);
+    col = u32_strtol(ret,&end,16);
     if ( col<0 || col>0xffffff || *end!='\0' ) {
 	*err = true;
 	ff_post_error(_("Bad Color"),_("Bad Color"));
@@ -2517,7 +2517,7 @@ return( true );
 	    ret = _GGadgetGetTitle(GWidgetGetControl(gw,CID_Dashes));
 	    while ( *ret==' ' || *ret=='[' ) ++ret;
 	    for ( i=0; ; ++i ) {
-		long val = u_strtol(ret,&end,10);
+		long val = u32_strtol(ret,&end,10);
 		if ( *end=='\0' )
 	    break;
 		if ( val<0 || val>255 ) {

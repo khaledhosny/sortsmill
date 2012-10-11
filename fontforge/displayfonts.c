@@ -854,7 +854,7 @@ static BDFFont *DSP_BestMatchDlg(PD *di) {
     if ( sel==NULL )
 return( NULL );
     sf = sel->userdata;
-    val = u_strtol(_GGadgetGetTitle(GWidgetGetControl(di->gw,CID_Size)),&end,10);
+    val = u32_strtol(_GGadgetGetTitle(GWidgetGetControl(di->gw,CID_Size)),&end,10);
     if ( *end!='\0' || val<4 )
 return( NULL );
 
@@ -874,7 +874,7 @@ return( type );
 
 static void DSP_SetFont(PD *di,int doall) {
     uint32_t *end;
-    int size = u_strtol(_GGadgetGetTitle(GWidgetGetControl(di->gw,CID_Size)),&end,10);
+    int size = u32_strtol(_GGadgetGetTitle(GWidgetGetControl(di->gw,CID_Size)),&end,10);
     GTextInfo *sel = GGadgetGetListItemSelected(GWidgetGetControl(di->gw,CID_Font));
     SplineFont *sf;
     int aa = GGadgetIsChecked(GWidgetGetControl(di->gw,CID_AA));
@@ -1094,7 +1094,7 @@ static int DSP_AAChange(GGadget *g, GEvent *e) {
     if ( e->type==et_controlevent && e->u.control.subtype == et_radiochanged ) {
 	PD *di = GDrawGetUserData(GGadgetGetWindow(g));
 	if ( GGadgetIsChecked(GWidgetGetControl(di->gw,CID_bitmap)) ) {
-	    int val = u_strtol(_GGadgetGetTitle(GWidgetGetControl(di->gw,CID_Size)),NULL,10);
+	    int val = u32_strtol(_GGadgetGetTitle(GWidgetGetControl(di->gw,CID_Size)),NULL,10);
 	    int bestdiff = 8000, bdfdiff;
 	    BDFFont *bdf, *best=NULL;
 	    GTextInfo *sel = GGadgetGetListItemSelected(GWidgetGetControl(di->gw,CID_Font));

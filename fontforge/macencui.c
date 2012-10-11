@@ -722,7 +722,7 @@ return( false );
 		MacSettingListFree(sd->changing);
 	} else if ( GGadgetGetCid(event->u.control.g) == CID_OK ) {
 	    ret1 = _GGadgetGetTitle(GWidgetGetControl(sd->gw,CID_Id));
-	    val1 = u_strtol(ret1,&end,10);
+	    val1 = u32_strtol(ret1,&end,10);
 	    if ( *end!='\0' ) {
 		ff_post_error(_("Bad Number"),_("Bad Number"));
 return( true );
@@ -1022,7 +1022,7 @@ return( false );
 	    MacNameListFree(GGadgetGetUserData(GWidgetGetControl(fd->gw,CID_NameList)));
 	} else if ( GGadgetGetCid(event->u.control.g) == CID_OK ) {
 	    ret1 = _GGadgetGetTitle(GWidgetGetControl(fd->gw,CID_Id));
-	    val1 = u_strtol(ret1,&end,10);
+	    val1 = u32_strtol(ret1,&end,10);
 	    if ( *end!='\0' ) {
 		ff_post_error(_("Bad Number"),_("Bad Number"));
 return( true );

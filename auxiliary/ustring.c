@@ -385,51 +385,6 @@ u_strtod (const uint32_t *str, uint32_t **ptr)
   return (val);
 }
 
-long
-u_strtol (const uint32_t *str, uint32_t **ptr, int base)
-{
-  char buf[60], *pt, *ret;
-  const uint32_t *upt;
-  long val;
-
-  upt = str;
-  pt = buf;
-  while (*upt < 128 && *upt != '\0' && pt < buf + sizeof (buf) - 1)
-    *pt++ = *upt++;
-  *pt = '\0';
-  val = strtol (buf, &ret, base);
-  if (ptr != NULL)
-    {
-      if (pt == ret)
-        *ptr = (uint32_t *) upt;
-      else
-        *ptr = (uint32_t *) (str + (ret - buf));
-    }
-  return (val);
-}
-
-unsigned long
-u_strtoul (const uint32_t *str, uint32_t **ptr, int base)
-{
-  char buf[60], *pt, *ret;
-  const uint32_t *upt;
-  unsigned long val;
-
-  for (upt = str, pt = buf;
-       *upt < 128 && *upt != '\0' && pt < buf + sizeof (buf) - 1;)
-    *pt++ = *upt++;
-  *pt = '\0';
-  val = strtoul (buf, &ret, base);
-  if (ptr != NULL)
-    {
-      if (pt == ret)
-        *ptr = (uint32_t *) upt;
-      else
-        *ptr = (uint32_t *) (str + (ret - buf));
-    }
-  return (val);
-}
-
 uint32_t *
 cu_strstartmatch (const char *key, const uint32_t *str)
 {

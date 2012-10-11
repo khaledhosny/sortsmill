@@ -2297,7 +2297,7 @@ static int GFI_EmChanged(GGadget *g, GEvent *e) {
 	char buf[20]; uint32_t ubuf[20];
 	struct gfi_data *d = GDrawGetUserData(GGadgetGetWindow(g));
 	const uint32_t *ret = _GGadgetGetTitle(g); uint32_t *end;
-	int val = u_strtol(ret,&end,10), ascent, descent;
+	int val = u32_strtol(ret,&end,10), ascent, descent;
 	if ( *end )
 return( true );
 	switch ( GGadgetGetCid(g)) {
@@ -2308,14 +2308,14 @@ return( true );
 	  case CID_Ascent:
 	    ascent = val;
 	    ret = _GGadgetGetTitle(GWidgetGetControl(d->gw,CID_Descent));
-	    descent = u_strtol(ret,&end,10);
+	    descent = u32_strtol(ret,&end,10);
 	    if ( *end )
 return( true );
 	  break;
 	  case CID_Descent:
 	    descent = val;
 	    ret = _GGadgetGetTitle(GWidgetGetControl(d->gw,CID_Ascent));
-	    ascent = u_strtol(ret,&end,10);
+	    ascent = u32_strtol(ret,&end,10);
 	    if ( *end )
 return( true );
 	  break;
@@ -3919,7 +3919,7 @@ static void hexparse(GWindow gw, int cid, char *name, uint32_t *data, int len, i
 return;
 	    }
 	}
-	data[len-1-i] = u_strtoul(end,&end,16);
+	data[len-1-i] = u32_strtoul(end,&end,16);
     }
     if ( *end!='\0' ) {
 	*err = true;
@@ -4195,7 +4195,7 @@ return(true);
 	    /* Only use the normal routine if we get no value, because */
 	    /*  "400 Book" is a reasonable setting, but would cause GetInt */
 	    /*  to complain */
-	    weight = u_strtol(_GGadgetGetTitle(GWidgetGetControl(gw,CID_WeightClass)),NULL,10);
+	    weight = u32_strtol(_GGadgetGetTitle(GWidgetGetControl(gw,CID_WeightClass)),NULL,10);
 	    if ( weight == 0 ) {
 		int i;
 		char *wc = GGadgetGetTitle8(GWidgetGetControl(gw,CID_WeightClass));
@@ -5337,13 +5337,13 @@ static int OS2_UnicodeChange(GGadget *g, GEvent *e) {
 	GGadget *list;
 
 	ret = _GGadgetGetTitle(g);
-	flags[3] = u_strtoul(ret,&end,16);
+	flags[3] = u32_strtoul(ret,&end,16);
 	while ( !ishexdigit(*end) && *end!='\0' ) ++end;
-	flags[2] = u_strtoul(end,&end,16);
+	flags[2] = u32_strtoul(end,&end,16);
 	while ( !ishexdigit(*end) && *end!='\0' ) ++end;
-	flags[1] = u_strtoul(end,&end,16);
+	flags[1] = u32_strtoul(end,&end,16);
 	while ( !ishexdigit(*end) && *end!='\0' ) ++end;
-	flags[0] = u_strtoul(end,&end,16);
+	flags[0] = u32_strtoul(end,&end,16);
 
 	list = GWidgetGetControl(gw,CID_UnicodeList);
 
@@ -5405,9 +5405,9 @@ static int OS2_CodePageChange(GGadget *g, GEvent *e) {
 	GGadget *list;
 
 	ret = _GGadgetGetTitle(g);
-	flags[1] = u_strtoul(ret,&end,16);
+	flags[1] = u32_strtoul(ret,&end,16);
 	while ( !ishexdigit(*end) && *end!='\0' ) ++end;
-	flags[0] = u_strtoul(end,&end,16);
+	flags[0] = u32_strtoul(end,&end,16);
 
 	list = GWidgetGetControl(gw,CID_CodePageList);
 

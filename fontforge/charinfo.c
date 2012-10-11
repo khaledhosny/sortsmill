@@ -466,11 +466,11 @@ static int ParseUValue(GWindow gw, int cid, int minusoneok) {
     int val;
 
     if (( *ret=='U' || *ret=='u' ) && ret[1]=='+' )
-	val = u_strtoul(ret+2,&end,16);
+	val = u32_strtoul(ret+2,&end,16);
     else if ( *ret=='#' )
-	val = u_strtoul(ret+1,&end,16);
+	val = u32_strtoul(ret+1,&end,16);
     else
-	val = u_strtoul(ret,&end,16);
+	val = u32_strtoul(ret,&end,16);
     if ( val==-1 && minusoneok )
 return( -1 );
     if ( *end || val<0 || val>0x10ffff ) {
@@ -2012,7 +2012,7 @@ static int CI_SName(GGadget *g, GEvent *e) {	/* Set From Name */
 	    /* But that names outside of BMP should be uXXXX or uXXXXX or uXXXXXX */
 	    if ( ret[0]=='u' && ret[1]!='n' && u32_strlen(ret)<=1+6 ) {
 		uint32_t *end;
-		i = u_strtol(ret+1,&end,16);
+		i = u32_strtol(ret+1,&end,16);
 		if ( *end )
 		    i = -1;
 		else		/* Make sure it is properly capitalized */
@@ -2095,7 +2095,7 @@ static int CI_UValChanged(GGadget *g, GEvent *e) {
 
 	if (( *ret=='U' || *ret=='u' ) && ret[1]=='+' )
 	    ret += 2;
-	val = u_strtol(ret,&end,16);
+	val = u32_strtol(ret,&end,16);
 	if ( *end=='\0' )
 	    CI_SetNameList(ci,val);
     }

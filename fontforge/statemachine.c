@@ -350,7 +350,7 @@ return( false );
 	    while ( *ret==' ' ) ++ret;
 	    if ( *ret=='\0' )
 	break;
-	    kbuf[kerns] = u_strtol(ret,&end,10);
+	    kbuf[kerns] = u32_strtol(ret,&end,10);
 	    if ( end==ret ) {
 		GGadgetProtest8(_("Kern Values:"));
 return( false );

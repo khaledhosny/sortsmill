@@ -94,7 +94,7 @@ static int32_t *ParseList(GWindow gw, int cid,int *err, int final) {
     for ( i=0, pt = val; *pt!='\0' ; ) {
 	sizes[i]=u_strtod(pt,&end);
 	if ( *end=='@' )
-	    ret[i] = (u_strtol(end+1,&end,10)<<16);
+	    ret[i] = (u32_strtol(end+1,&end,10)<<16);
 	else
 	    ret[i] = 0x10000;
 	if ( sizes[i]>0 ) ++i;

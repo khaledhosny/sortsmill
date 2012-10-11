@@ -293,7 +293,7 @@ ParseBitmapSizes (GGadget * g, char *msg, int *err)
       else if (*end != '@')
         sizes[i] |= 0x10000;
       else
-        sizes[i] |= (u_strtol (end + 1, &end, 10) << 16);
+        sizes[i] |= (u32_strtol (end + 1, &end, 10) << 16);
       if (sizes[i] > 0)
         ++i;
       if (*end != ' ' && *end != ',' && *end != '\0')

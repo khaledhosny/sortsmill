@@ -151,8 +151,8 @@ static int GI_MatchPtChange(GGadget *g, GEvent *e) {
 	if ( isdigit(*t1) && isdigit(*t2)) {
 	    BasePoint inbase, inref;
 	    int basept, refpt;
-	    basept = u_strtol(t1,NULL,10);
-	    refpt = u_strtol(t2,NULL,10);
+	    basept = u32_strtol(t1,NULL,10);
+	    refpt = u32_strtol(t2,NULL,10);
 	    if ( ttfFindPointInSC(ci->cv->b.sc,CVLayer((CharViewBase *) ci->cv),basept,&inbase,ci->rf)==-1 &&
 		    ttfFindPointInSC(ci->rf->sc,CVLayer((CharViewBase *) ci->cv),refpt,&inref,NULL)==-1 ) {
 		char buffer[40];
@@ -1256,7 +1256,7 @@ static int AI_MatchChanged(GGadget *g, GEvent *e) {
 	if ( isdigit(*t1)) {
 	    BasePoint here;
 	    int pt;
-	    pt = u_strtol(t1,&end,10);
+	    pt = u32_strtol(t1,&end,10);
 	    if ( *end=='\0' && ttfFindPointInSC(ci->cv->b.sc,CVLayer((CharViewBase *) ci->cv),pt,&here,NULL)==-1 ) {
 		char buffer[40];
 		sprintf(buffer,"%g",(double) here.x);

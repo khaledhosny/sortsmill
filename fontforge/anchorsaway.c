@@ -473,12 +473,12 @@ return;
 	const uint32_t *ret;
 
 	ret = _GGadgetGetTitle(GWidgetGetControl(a->gw,CID_XCor));
-	xcor = u_strtol(ret,&end,10);
+	xcor = u32_strtol(ret,&end,10);
 	while ( *end==' ' ) ++end;
 	if ( *end!='\0' || xcor<-128 || xcor>127 )
 	    xcor = 0;
 	ret = _GGadgetGetTitle(GWidgetGetControl(a->gw,CID_YCor));
-	ycor = u_strtol(ret,&end,10);
+	ycor = u32_strtol(ret,&end,10);
 	while ( *end==' ' ) ++end;
 	if ( *end!='\0' || ycor<-128 || ycor>127 )
 	    ycor = 0;
@@ -782,7 +782,7 @@ static int AnchorD_DisplaySizeChanged(GGadget *g, GEvent *e) {
     if ( e->type==et_controlevent && e->u.control.subtype == et_textchanged ) {
 	const uint32_t *ret = _GGadgetGetTitle(GWidgetGetControl(a->gw,CID_DisplaySize));
 	uint32_t *end;
-	int pixelsize = u_strtol(ret,&end,10);
+	int pixelsize = u32_strtol(ret,&end,10);
 
 	while ( *end==' ' ) ++end;
 	if ( pixelsize>4 && pixelsize<400 && *end=='\0' ) {
@@ -820,7 +820,7 @@ static int AnchorD_CorrectionChanged(GGadget *g, GEvent *e) {
 	const uint32_t *ret = _GGadgetGetTitle(g);
 	int is_y = GGadgetGetCid(g)==CID_YCor;
 	uint32_t *end;
-	int correction = u_strtol(ret,&end,10);
+	int correction = u32_strtol(ret,&end,10);
 
 	while ( *end==' ' ) ++end;
 	if ( *end!='\0' )
@@ -842,7 +842,7 @@ static int AnchorD_PositionChanged(GGadget *g, GEvent *e) {
 	const uint32_t *ret = _GGadgetGetTitle(g);
 	int is_y = GGadgetGetCid(g)==CID_Y;
 	uint32_t *end;
-	int val = u_strtol(ret,&end,10);
+	int val = u32_strtol(ret,&end,10);
 
 	while ( *end==' ' ) ++end;
 	if ( *end!='\0' )

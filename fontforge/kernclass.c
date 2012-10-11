@@ -355,7 +355,7 @@ return( true );
 static void KCD_Finalize(KernClassDlg *kcd) {
     const uint32_t *ret = _GGadgetGetTitle(GWidgetGetControl(kcd->gw,CID_KernOffset));
     uint32_t *end;
-    int val = u_strtol(ret,&end,10);
+    int val = u32_strtol(ret,&end,10);
 
     if ( kcd->old_pos==-1 )
 return;
@@ -443,7 +443,7 @@ static void KCD_KernMouse(KernClassDlg *kcd,GEvent *event) {
     double scale;
 
     scale = kcd->pixelsize/(double) (kcd->sf->ascent+kcd->sf->descent);
-    kern = u_strtol(_GGadgetGetTitle(GWidgetGetControl(kcd->gw,CID_KernOffset)),NULL,10);
+    kern = u32_strtol(_GGadgetGetTitle(GWidgetGetControl(kcd->gw,CID_KernOffset)),NULL,10);
     pkern = kcd->magfactor*rint( kern*scale );	/* rounding can't include magnification */
 
     if ( !kcd->isv ) {
@@ -572,7 +572,7 @@ static void KCD_KernExpose(KernClassDlg *kcd,GWindow pixmap,GEvent *event) {
     int em = sf->ascent+sf->descent;
     int as = kcd->magfactor*rint(sf->ascent*kcd->pixelsize/(double) em);
     const uint32_t *ret = _GGadgetGetTitle(GWidgetGetControl(kcd->gw,CID_KernOffset));
-    int kern = u_strtol(ret,NULL,10);
+    int kern = u32_strtol(ret,NULL,10);
     int baseline, xbaseline;
 
 
@@ -582,7 +582,7 @@ static void KCD_KernExpose(KernClassDlg *kcd,GWindow pixmap,GEvent *event) {
 	uint32_t *end;
 
 	ret = _GGadgetGetTitle(GWidgetGetControl(kcd->gw,CID_Correction));
-	correction = u_strtol(ret,&end,10);
+	correction = u32_strtol(ret,&end,10);
 	while ( *end==' ' ) ++end;
 	if ( *end=='\0' && correction>=-128 && correction<=127 )
 	    kern += correction*kcd->magfactor;
@@ -664,7 +664,7 @@ return;
 static void _KCD_DisplaySizeChanged(KernClassDlg *kcd) {
     const uint32_t *ret = _GGadgetGetTitle(GWidgetGetControl(kcd->gw,CID_DisplaySize));
     uint32_t *end;
-    int pixelsize = u_strtol(ret,&end,10);
+    int pixelsize = u32_strtol(ret,&end,10);
 
     while ( *end==' ' ) ++end;
     if ( pixelsize>4 && pixelsize<400 && *end=='\0' ) {
@@ -721,7 +721,7 @@ static int KCD_CorrectionChanged(GGadget *g, GEvent *e) {
     if ( e->type==et_controlevent && e->u.control.subtype == et_textchanged ) {
 	const uint32_t *ret = _GGadgetGetTitle(GWidgetGetControl(kcd->gw,CID_Correction));
 	uint32_t *end;
-	int correction = u_strtol(ret,&end,10);
+	int correction = u32_strtol(ret,&end,10);
 
 	while ( *end==' ' ) ++end;
 	if ( *end!='\0' )
@@ -780,7 +780,7 @@ static void KPD_RestoreGlyphs(KernClassDlg *kcd) {
 static int KPD_FinishKP(KernClassDlg *kcd) {
     KernPair *kp;
     const uint32_t *ret = _GGadgetGetTitle(GWidgetGetControl(kcd->gw,CID_KernOffset));
-    int offset = u_strtol(ret,NULL,10);
+    int offset = u32_strtol(ret,NULL,10);
 
     if ( kcd->scf!=NULL && kcd->scs!=NULL ) {
 	for ( kp = kcd->isv?kcd->scf->vkerns:kcd->scf->kerns; kp!=NULL && kp->sc!=kcd->scs; kp=kp->next );

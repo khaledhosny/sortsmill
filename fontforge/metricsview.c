@@ -925,7 +925,7 @@ return( true );
 return( true );
     if ( e->u.control.subtype == et_textchanged ) {
 	uint32_t *end;
-	int val = u_strtol(_GGadgetGetTitle(g),&end,10);
+	int val = u32_strtol(_GGadgetGetTitle(g),&end,10);
 	SplineChar *sc = mv->glyphs[which].sc;
 	if (!isValidInt(end))
 	    GDrawBeep(NULL);
@@ -1180,7 +1180,7 @@ return( true );
 return( true );
     if ( e->u.control.subtype == et_textchanged ) {
 	uint32_t *end;
-	int val = u_strtol(_GGadgetGetTitle(g),&end,10);
+	int val = u32_strtol(_GGadgetGetTitle(g),&end,10);
 
 	if ( *end && !(*end=='-' && end[1]=='\0'))
 	    GDrawBeep(NULL);

@@ -1691,14 +1691,14 @@ set_e_h (GWindow gw, GEvent * event)
       else if (event->u.control.g == sd->ok)
         {
           ret1 = _GGadgetGetTitle (sd->set_code);
-          on = u_strtol (ret1, &end, 10);
+          on = u32_strtol (ret1, &end, 10);
           if (*end != '\0')
             {
               ff_post_error (_("Bad Number"), _("Bad Number"));
               return (true);
             }
           ret1 = _GGadgetGetTitle (sd->feature);
-          feat = u_strtol (ret1, &end, 10);
+          feat = u32_strtol (ret1, &end, 10);
           if (*end != '\0' && *end != ' ')
             {
               ff_post_error (_("Bad Number"), _("Bad Number"));
@@ -1708,8 +1708,8 @@ set_e_h (GWindow gw, GEvent * event)
           for (i = 0; i < len; ++i)
             if (i != sd->index)
               {
-                val1 = u_strtol (ti[i]->text, &end, 10);
-                val2 = u_strtol (end + 1, NULL, 10);
+                val1 = u32_strtol (ti[i]->text, &end, 10);
+                val2 = u32_strtol (end + 1, NULL, 10);
                 if (val1 == feat && val2 == on)
                   {
                     static char *buts[3];
@@ -1883,7 +1883,7 @@ AskSetting (struct macsettingname *temp, GGadget * list, int index,
   GGadgetSetList (sd.feature, ti, true);
   for (i = 0; i < len; ++i)
     {
-      int val = u_strtol (ti[i]->text, NULL, 10);
+      int val = u32_strtol (ti[i]->text, NULL, 10);
       if (val == temp->mac_feature_type)
         {
           GGadgetSetTitle (sd.feature, ti[i]->text);

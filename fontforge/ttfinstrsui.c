@@ -1030,7 +1030,7 @@ return( true );
 	    sv->comments[sv->active] = new;
 	}
     } else {
-	val = u_strtol(ret,&end,10);
+	val = u32_strtol(ret,&end,10);
 	if ( *ret=='\0' || *end!='\0' || val<-32768 || val>32767 ) {
 	    if ( showerr )
 		ff_post_error(_("Bad Number"),_("Bad Number"));

@@ -693,7 +693,7 @@ return( false );
 	    switch( GGadgetGetCid(event->u.control.g)) {
 	      case CID_SumAround: case CID_BarWidth:
 		ret = _GGadgetGetTitle(event->u.control.g);
-		temp = u_strtol(ret,&end,10);
+		temp = u32_strtol(ret,&end,10);
 		if ( temp<0 || *end )
 	      break;
 		if ( GGadgetGetCid(event->u.control.g)==CID_SumAround ) {

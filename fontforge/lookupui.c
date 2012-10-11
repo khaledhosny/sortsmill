@@ -2973,7 +2973,7 @@ static int PSTKD_DisplaySizeChanged(GGadget *g, GEvent *e) {
 	PSTKernDlg *pstkd = GDrawGetUserData(GGadgetGetWindow(g));
 	const uint32_t *ret = _GGadgetGetTitle(GWidgetGetControl(pstkd->gw,CID_PixelSize));
 	uint32_t *end;
-	int pixelsize = u_strtol(ret,&end,10);
+	int pixelsize = u32_strtol(ret,&end,10);
 
 	while ( *end==' ' ) ++end;
 	if ( pixelsize>4 && pixelsize<400 && *end=='\0' ) {
@@ -3000,7 +3000,7 @@ static int FigureValue(struct matrix_data *old,int rcol,int c, int startc,
     DeviceTable dt;
 
     if ( c==startc && tf!=NULL )
-	val = u_strtol(_GGadgetGetTitle(tf),NULL,10);
+	val = u32_strtol(_GGadgetGetTitle(tf),NULL,10);
     else
 	val = old[rcol+startc].u.md_ival;
     val = rint(val*scale);
