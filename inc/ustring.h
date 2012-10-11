@@ -68,8 +68,6 @@ VISIBLE extern uint32_t *uc_strstrmatch (const uint32_t *, const char *);
 VISIBLE extern uint32_t *u_strstrmatch (const uint32_t *, const uint32_t *);
 VISIBLE extern char *strstrmatch (const char *, const char *);
 
-VISIBLE extern double u_strtod (const uint32_t *, uint32_t **);
-
 VISIBLE extern uint32_t *u_strstartmatch (const uint32_t *initial,
                                    const uint32_t *full);
 VISIBLE extern uint32_t *cu_strstartmatch (const char *initial,

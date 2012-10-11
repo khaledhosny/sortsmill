@@ -2666,7 +2666,10 @@ return( false );
     /*  number, it can be a real (which we can check for with strtod) or */
     /*  it can be a "radix number" which is <intval>'#'<intval>. I'll only */
     /*  do a cursory test for that */
-    u_strtod(ufamily,&end);
+    //
+    // FIXME FIXME FIXME: What about 'INFINITY' or 'NAN'! This test needs to be modified.
+    //
+    u32_strtod(ufamily,&end);
     if ( *end=='\0' || (isdigit(ufamily[0]) && u_strchr(ufamily,'#')!=NULL) ) {
 	ff_post_error(_("Bad Font Family Name"),_("A PostScript name may not be a number"));
 return( false );
@@ -2691,7 +2694,10 @@ return( false );
 	++ufamily;
     }
 
-    u_strtod(ufont,&end);
+    //
+    // FIXME FIXME FIXME: What about 'INFINITY' or 'NAN'! This test needs to be modified.
+    //
+    u32_strtod(ufont,&end);
     if ( (*end=='\0' || (isdigit(ufont[0]) && u_strchr(ufont,'#')!=NULL)) &&
 	    *ufont!='\0' ) {
 	ff_post_error(_("Bad Font Name"),_("A PostScript name may not be a number"));
@@ -4111,7 +4117,7 @@ return( true );
 return( true );
 	}
 	txt = _GGadgetGetTitle(GWidgetGetControl(gw,CID_ItalicAngle));
-	ia = u_strtod(txt,&end);
+	ia = u32_strtod(txt,&end);
 	if ( *end!='\0' ) {
 	    GGadgetProtest8(_("_Italic Angle:"));
 return(true);
@@ -4619,18 +4625,18 @@ return;
 
     if ( cid == CID_TypoAscentIsOff ) {
 	const uint32_t *as = _GGadgetGetTitle(GWidgetGetControl(d->gw,CID_Ascent));
-	double av=u_strtod(as,&end);
+	double av=u32_strtod(as,&end);
 	b.maxy = *end=='\0' ? av : d->sf->ascent;
     } else if ( cid == CID_TypoDescentIsOff ) {
 	const uint32_t *ds = _GGadgetGetTitle(GWidgetGetControl(d->gw,CID_Descent));
-	double dv=u_strtod(ds,&end);
+	double dv=u32_strtod(ds,&end);
 	b.miny = *end=='\0' ? -dv : -d->sf->descent;
     } else {
 	CIDLayerFindBounds(d->sf,ly_fore,&b);
 	if ( cid == CID_WinDescentIsOff ) b.miny = -b.miny;
     }
 
-    val = u_strtod(_GGadgetGetTitle(GWidgetGetControl(d->gw,ocid)),NULL);
+    val = u32_strtod(_GGadgetGetTitle(GWidgetGetControl(d->gw,ocid)),NULL);
     if ( isoffset )
 	sprintf( buf,"%g",rint( val-(ismax ? b.maxy : b.miny)) );
     else
@@ -4770,7 +4776,7 @@ static void _GFI_SubSuperDefault(struct gfi_data *d) {
 	const uint32_t *ds = _GGadgetGetTitle(GWidgetGetControl(d->gw,CID_Descent));
 	const uint32_t *ia = _GGadgetGetTitle(GWidgetGetControl(d->gw,CID_Descent));
 	uint32_t *aend, *dend, *iend;
-	double av=u_strtod(as,&aend),dv=u_strtod(ds,&dend),iav=u_strtod(ia,&iend);
+	double av=u32_strtod(as,&aend),dv=u32_strtod(ds,&dend),iav=u32_strtod(ia,&iend);
 	struct pfminfo info;
 	if ( *aend!='\0' ) av = d->sf->ascent;
 	if ( *dend!='\0' ) dv = d->sf->descent;
@@ -4796,7 +4802,7 @@ static void TTFSetup(struct gfi_data *d) {
     const uint32_t *as = _GGadgetGetTitle(GWidgetGetControl(d->gw,CID_Ascent));
     const uint32_t *ds = _GGadgetGetTitle(GWidgetGetControl(d->gw,CID_Descent));
     uint32_t *aend, *dend;
-    double av=u_strtod(as,&aend),dv=u_strtod(ds,&dend);
+    double av=u32_strtod(as,&aend),dv=u32_strtod(ds,&dend);
 
     info = d->sf->pfminfo;
     if ( !info.pfmset ) {

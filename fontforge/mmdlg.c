@@ -488,7 +488,7 @@ GetWeights (GWindow gw, real blends[MmMax], MMSet *mm,
   sum = 0;
   for (i = 0, upt = ret; i < instance_count && *upt; ++i)
     {
-      blends[i] = u_strtod (upt, &uend);
+      blends[i] = u32_strtod (upt, &uend);
       sum += blends[i];
       if (upt == uend)
         break;
@@ -1252,7 +1252,7 @@ EditStyleName (MMW * mmw, int index)
         {
           for (i = 0, ++pt; i < 4 && (*pt != ']' || *pt != '\0'); ++i)
             {
-              axes[i] = u_strtod (pt, &end);
+              axes[i] = u32_strtod (pt, &end);
               pt = end;
             }
         }
@@ -1532,7 +1532,7 @@ ParseWeights (GWindow gw, int cid, char *str,
   for (pt = ret; *pt == ' '; ++pt);
   for (; *pt;)
     {
-      list[cnt++] = u_strtod (pt, &endpt);
+      list[cnt++] = u32_strtod (pt, &endpt);
       if (pt == endpt || (*endpt != '\0' && *endpt != ' '))
         {
           if (tabset_cid != -1)
@@ -1594,7 +1594,7 @@ ParseList (GWindow gw, int cid, char *str8, int *err, real start,
   for (pt = ret; *pt == ' '; ++pt);
   for (; *pt;)
     {
-      val = u_strtod (pt, &endpt);
+      val = u32_strtod (pt, &endpt);
       if (!defdone && val > def)
         {
           list[cnt++] = def;
@@ -2165,7 +2165,7 @@ MMW_ParseNamedStyles (MMSet *setto, MMW * mmw)
               for (j = 0, ++upt; j < setto->axis_count; ++j)
                 {
                   setto->named_instances[i].coords[j] =
-                    rint (u_strtod (upt, &end) * 8096) / 8096;
+                    rint (u32_strtod (upt, &end) * 8096) / 8096;
                   if (*end == ' ')
                     ++end;
                   upt = end;

@@ -287,7 +287,7 @@ ParseBitmapSizes (GGadget * g, char *msg, int *err)
 
   for (i = 0, pt = val; *pt != '\0';)
     {
-      sizes[i] = rint (u_strtod (pt, &end));
+      sizes[i] = rint (u32_strtod (pt, &end));
       if (msg != _("Pixel List"))
         /* No bit depth allowed */ ;
       else if (*end != '@')

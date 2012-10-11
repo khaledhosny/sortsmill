@@ -92,7 +92,7 @@ static int32_t *ParseList(GWindow gw, int cid,int *err, int final) {
     ret = xmalloc((i+1)*sizeof(int32_t));
 
     for ( i=0, pt = val; *pt!='\0' ; ) {
-	sizes[i]=u_strtod(pt,&end);
+	sizes[i]=u32_strtod(pt,&end);
 	if ( *end=='@' )
 	    ret[i] = (u32_strtol(end+1,&end,10)<<16);
 	else

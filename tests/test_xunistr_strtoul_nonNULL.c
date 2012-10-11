@@ -8,6 +8,8 @@
 static int
 test (const char *filename, int base, int encoding)
 {
+  printf ("%s %d %d\n", filename, base, encoding);
+
   FILE *tests = fopen (filename, "r");
   if (tests == NULL)
     abort ();
@@ -33,7 +35,7 @@ test (const char *filename, int base, int encoding)
           uint16_t *end16;
           val2 = u16_strtoul (s16, &end16, base);
           uchar_count = u16_mbsnlen (s16, end16 - s16);
-          ulc_fprintf (stdout, "|%lU| %lu %lu %zu %zu", s16, val1, val2,
+          ulc_fprintf (stdout, "|%lU| %lu %lu %zu %zu\n", s16, val1, val2,
                        char_count, uchar_count);
         }
       else if (encoding == 32)
@@ -42,7 +44,7 @@ test (const char *filename, int base, int encoding)
           uint32_t *end32;
           val2 = u32_strtoul (s32, &end32, base);
           uchar_count = u32_mbsnlen (s32, end32 - s32);
-          ulc_fprintf (stdout, "|%llU| %lu %lu %zu %zu", s32, val1, val2,
+          ulc_fprintf (stdout, "|%llU| %lu %lu %zu %zu\n", s32, val1, val2,
                        char_count, uchar_count);
         }
       else
@@ -50,13 +52,13 @@ test (const char *filename, int base, int encoding)
           uint8_t *end8;
           val2 = u8_strtoul (s8, &end8, base);
           uchar_count = u8_mbsnlen (s8, end8 - s8);
-          ulc_fprintf (stdout, "|%U| %lu %lu %zu %zu", s8, val1, val2,
+          ulc_fprintf (stdout, "|%U| %lu %lu %zu %zu\n", s8, val1, val2,
                        char_count, uchar_count);
         }
       if (val1 != val2)
-	exit_status += 0x01;
+        exit_status += 0x01;
       if (char_count != uchar_count)
-	exit_status += 0x02;
+        exit_status += 0x02;
       num_read = getline (&line, &n, tests);
     }
 

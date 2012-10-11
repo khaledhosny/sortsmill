@@ -1034,7 +1034,7 @@ static void GTFPopupMenu(GTextField *gt, GEvent *event) {
 static void GTextFieldIncrement(GTextField *gt,int amount)
 {
   uint32_t *end;
-  double d = u_strtod(gt->text,&end);
+  double d = u32_strtod(gt->text,&end);
   char buf[40];
 
   while ( *end==' ' ) ++end;

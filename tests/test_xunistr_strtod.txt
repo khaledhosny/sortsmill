@@ -1,0 +1,20 @@
+FIXME: Include a thorough list of strtod test cases.
+
+  
+0
+12345
+  -12345e-10
+  +12345 
+  -012345 
+  +012345E+000005 
+  +012345E+35 
+eĥoŝanĝo
+ĉiuĵaŭde
+ ĉiuĵaŭde
+INF
+INFINITY
+NAN
+inf
+infinity
+nan
+

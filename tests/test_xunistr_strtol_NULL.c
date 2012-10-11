@@ -8,6 +8,8 @@
 static int
 test (const char *filename, int base, int encoding)
 {
+  printf ("%s %d %d\n", filename, base, encoding);
+
   FILE *tests = fopen (filename, "r");
   if (tests == NULL)
     abort ();
@@ -27,18 +29,18 @@ test (const char *filename, int base, int encoding)
         {
           uint16_t *s16 = x_gc_u8_to_u16 (s8);
           val2 = u16_strtol (s16, NULL, base);
-          ulc_fprintf (stdout, "|%lU| %ld %ld", s16, val1, val2);
+          ulc_fprintf (stdout, "|%lU| %ld %ld\n", s16, val1, val2);
         }
       else if (encoding == 32)
         {
           uint32_t *s32 = x_gc_u8_to_u32 (s8);
           val2 = u32_strtol (s32, NULL, base);
-          ulc_fprintf (stdout, "|%llU| %ld %ld", s32, val1, val2);
+          ulc_fprintf (stdout, "|%llU| %ld %ld\n", s32, val1, val2);
         }
       else
         {
           val2 = u8_strtol (s8, NULL, base);
-          ulc_fprintf (stdout, "|%U| %ld %ld", s8, val1, val2);
+          ulc_fprintf (stdout, "|%U| %ld %ld\n", s8, val1, val2);
         }
       exit_status = (val1 == val2) ? 0 : 1;
       num_read = getline (&line, &n, tests);

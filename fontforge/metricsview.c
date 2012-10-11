@@ -959,7 +959,7 @@ return( true );
 return( true );
     if ( e->u.control.subtype == et_textchanged ) {
 	uint32_t *end;
-	double val = u_strtod(_GGadgetGetTitle(g),&end);
+	double val = u32_strtod(_GGadgetGetTitle(g),&end);
 	SplineChar *sc = mv->glyphs[which].sc;
 	DBounds bb;
 	SplineCharFindBounds(sc,&bb);
@@ -1000,7 +1000,7 @@ return( true );
 return( true );
     if ( e->u.control.subtype == et_textchanged ) {
 	uint32_t *end;
-	int val = u_strtod(_GGadgetGetTitle(g),&end);
+	int val = u32_strtod(_GGadgetGetTitle(g),&end);
 	SplineChar *sc = mv->glyphs[which].sc;
 	DBounds bb;
 	SplineCharFindBounds(sc,&bb);
@@ -3742,7 +3742,7 @@ static void MVChar(MetricsView *mv,GEvent *event) {
 	    event->u.chr.keysym == GK_Down || event->u.chr.keysym==GK_KP_Down ) {
 	    GGadget *active = GWindowGetFocusGadgetOfWindow(mv->gw);
 	    uint32_t *end;
-	    double val = u_strtod(_GGadgetGetTitle(active),&end);
+	    double val = u32_strtod(_GGadgetGetTitle(active),&end);
 	    if (isValidInt(end)) {
 		int dir = ( event->u.chr.keysym == GK_Up || event->u.chr.keysym==GK_KP_Up ) ? 1 : -1;
 		if( event->u.chr.state&ksm_control && event->u.chr.state&ksm_shift ) {

@@ -124,3 +124,8 @@ check_xunistr_h([test_xunistr_strtoul_NULL "${abs_srcdir}"/test_xunistr_strtol.t
 check_xunistr_h([test_xunistr_strtoul_nonNULL "${abs_srcdir}"/test_xunistr_strtol.txt],
                 [0],[ignore],[])
 
+check_xunistr_h([test_xunistr_strtod_NULL "${abs_srcdir}"/test_xunistr_strtod.txt],
+                [0],[ignore],[])
+
+check_xunistr_h([test_xunistr_strtod_nonNULL "${abs_srcdir}"/test_xunistr_strtod.txt],
+                [0],[ignore],[])

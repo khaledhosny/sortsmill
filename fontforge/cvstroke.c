@@ -2502,10 +2502,10 @@ return( true );
 
 	ret = _GGadgetGetTitle(GWidgetGetControl(gw,CID_Trans));
 	while ( *ret==' ' || *ret=='[' ) ++ret;
-	temp.stroke_pen.trans[0] = u_strtod(ret,&end);
-	temp.stroke_pen.trans[1] = u_strtod(end,&end);
-	temp.stroke_pen.trans[2] = u_strtod(end,&end);
-	temp.stroke_pen.trans[3] = u_strtod(end,&end2);
+	temp.stroke_pen.trans[0] = u32_strtod(ret,&end);
+	temp.stroke_pen.trans[1] = u32_strtod(end,&end);
+	temp.stroke_pen.trans[2] = u32_strtod(end,&end);
+	temp.stroke_pen.trans[3] = u32_strtod(end,&end2);
 	for ( ret = end2 ; *ret==' ' || *ret==']' ; ++ret );
 	if ( end2==end || *ret!='\0' || temp.stroke_pen.trans[0] ==0 || temp.stroke_pen.trans[3]==0 ) {
 	    ff_post_error(_("Bad Transformation Matrix"),_("Bad Transformation Matrix"));

@@ -261,3 +261,45 @@ STRTOI_FUNC (u16_strtoul, 16, unsigned long int, strtoul, x_gc_u16_to_u8);
 STRTOI_FUNC (u32_strtoul, 32, unsigned long int, strtoul, x_gc_u32_to_u8);
 
 //-------------------------------------------------------------------------
+
+// NOTE: This implementation copies the entire pure-ASCII prefix of
+// the string, so you should not use it directly on a very long
+// string.
+
+#define STRTOF_FUNC(NAME, SIZE, FTYPE, STRTOF, CONVERSION)		\
+  FTYPE									\
+  NAME (const uint##SIZE##_t *nptr, uint##SIZE##_t **endptr)		\
+  {									\
+    ucs4_t c;								\
+									\
+    size_t i = 0;							\
+    const uint##SIZE##_t *p = u##SIZE##_next (&c, nptr);		\
+    while (p != NULL && c < 128)					\
+      {									\
+	i++;								\
+	p = u##SIZE##_next (&c, p);					\
+      }									\
+									\
+    uint##SIZE##_t *substring = x_gc_u##SIZE##_strmbndup (nptr, i);	\
+    char *csubstring = (char *) CONVERSION (substring);			\
+									\
+    char *endp;								\
+    FTYPE value = STRTOF (csubstring, &endp);				\
+									\
+    if (endptr != NULL)							\
+      {									\
+	size_t n = endp - csubstring;					\
+	const uint##SIZE##_t *p = nptr;					\
+	for (size_t j = 0; j < n; j++)					\
+	  p = u##SIZE##_next (&c, p);					\
+	*endptr = (uint##SIZE##_t *) p;					\
+      }									\
+									\
+    return value;							\
+  }
+
+STRTOF_FUNC (u8_strtod, 8, double, strtod, /* no conversion */ );
+STRTOF_FUNC (u16_strtod, 16, double, strtod, x_gc_u16_to_u8);
+STRTOF_FUNC (u32_strtod, 32, double, strtod, x_gc_u32_to_u8);
+
+//-------------------------------------------------------------------------

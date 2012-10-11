@@ -331,7 +331,7 @@ static uint32_t *ArrayOrder(const uint32_t *old,int args,int val1,int val2) {
     if ( *old=='[' ) ++old;
 
     for ( i=0; i<40 && *old!=']' && *old!='\0'; ++i ) {
-	array[i] = u_strtod(old,&end);
+	array[i] = u32_strtod(old,&end);
 	if ( old==end )
     break;
 	old = end;

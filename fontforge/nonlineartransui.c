@@ -236,7 +236,7 @@ static real GetQuietReal(GWindow gw,int cid,int *err) {
     real val;
 
     txt = _GGadgetGetTitle(GWidgetGetControl(gw,cid));
-    val = u_strtod(txt,&end);
+    val = u32_strtod(txt,&end);
     if ( *end!='\0' )
 	*err = true;
 return( val );

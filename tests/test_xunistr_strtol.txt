@@ -1,6 +1,7 @@
 FIXME: Include a thorough list of strtol test cases.
 
   
+0
 12345
   -0x12345 
   +0x12345 
