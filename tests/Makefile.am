@@ -66,7 +66,8 @@ $(TESTSUITE): $(srcdir)/testsuite.at $(srcdir)/package.m4 $(MY_AT_FILES)
 MY_AT_FILES = xuniconv_h.at xuninorm_h.at xunistr_h.at gfile_c.at	\
 	psMat.at old_python_tests.at
 
-TESTS_XUNISTRING_H = test_xuniconv_h test_xuninorm_h test_xunistr_h
+TESTS_XUNISTRING_H = test_xuniconv_h test_xuninorm_h test_xunistr_h	\
+	test_xunistr_strtol_NULL test_xunistr_strtol_nonNULL
 
 TESTS_GFILE_C = test_GFileGetUserConfigDir test_GFileGetUserCacheDir	\
 	test_GFileGetUserDataDir test_GFileGetHomeDir test_GFileBuildName	\
@@ -84,6 +85,8 @@ LDADD = $(top_builddir)/fontforge/libsortsmillff_fontforgeexe.la	\
 AM_LDFLAGS = -export-dynamic -avoid-version
 
 EXTRA_DIST += $(MY_AT_FILES)
+
+EXTRA_DIST += test_xunistr_strtol.txt
 
 EXTRA_DIST += test_psMat_identity.py test_psMat_inverse.py			\
 	test_psMat_compose.py test_psMat_rotate.py test_psMat_scale.py	\

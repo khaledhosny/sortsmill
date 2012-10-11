@@ -56,6 +56,7 @@ VISIBLE inline uint8_t *x_gc_u16_to_u8 (const uint16_t *string);
 VISIBLE inline uint32_t *x_gc_u16_to_u32 (const uint16_t *string);
 VISIBLE inline uint8_t *x_gc_u32_to_u8 (const uint32_t *string);
 VISIBLE inline uint16_t *x_gc_u32_to_u16 (const uint32_t *string);
+
 VISIBLE inline bool u8_valid (const uint8_t *string);
 VISIBLE inline bool u16_valid (const uint16_t *string);
 VISIBLE inline bool u32_valid (const uint32_t *string);
@@ -70,6 +71,18 @@ VISIBLE uint32_t *x_u32_strmbndup (const uint32_t *string, size_t n);
 VISIBLE uint8_t *x_gc_u8_strmbndup (const uint8_t *string, size_t n);
 VISIBLE uint16_t *x_gc_u16_strmbndup (const uint16_t *string, size_t n);
 VISIBLE uint32_t *x_gc_u32_strmbndup (const uint32_t *string, size_t n);
+
+VISIBLE long int u8_strtol (const uint8_t *nptr, uint8_t **endptr, int base);
+VISIBLE long int u16_strtol (const uint16_t *nptr, uint16_t **endptr,
+                             int base);
+VISIBLE long int u32_strtol (const uint32_t *nptr, uint32_t **endptr,
+                             int base);
+VISIBLE unsigned long int u8_strtoul (const uint8_t *nptr, uint8_t **endptr,
+                                      int base);
+VISIBLE unsigned long int u16_strtoul (const uint16_t *nptr,
+                                       uint16_t **endptr, int base);
+VISIBLE unsigned long int u32_strtoul (const uint32_t *nptr,
+                                       uint32_t **endptr, int base);
 
 static inline uint8_t *
 x_u8_strdup (const uint8_t *string)

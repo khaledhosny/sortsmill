@@ -112,3 +112,8 @@ Eĥoŝanĝo ĉiuĵaŭde
 ],[])
 ])
 
+check_xunistr_h([test_xunistr_strtol_NULL "${abs_srcdir}"/test_xunistr_strtol.txt],
+                [0],[ignore],[])
+
+check_xunistr_h([test_xunistr_strtol_nonNULL "${abs_srcdir}"/test_xunistr_strtol.txt],
+                [0],[ignore],[])

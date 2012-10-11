@@ -392,8 +392,9 @@ u_strtol (const uint32_t *str, uint32_t **ptr, int base)
   const uint32_t *upt;
   long val;
 
-  for (upt = str, pt = buf;
-       *upt < 128 && *upt != '\0' && pt < buf + sizeof (buf) - 1;)
+  upt = str;
+  pt = buf;
+  while (*upt < 128 && *upt != '\0' && pt < buf + sizeof (buf) - 1)
     *pt++ = *upt++;
   *pt = '\0';
   val = strtol (buf, &ret, base);

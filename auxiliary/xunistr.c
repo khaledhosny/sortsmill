@@ -215,3 +215,45 @@ STRMBNDUP_FUNC (x_gc_u16_strmbndup, 16, x_gc_malloc);
 STRMBNDUP_FUNC (x_gc_u32_strmbndup, 32, x_gc_malloc);
 
 //-------------------------------------------------------------------------
+
+#define STRTOI_FUNC(NAME, SIZE, ITYPE, STRTOI, CONVERSION)		\
+  ITYPE									\
+  NAME (const uint##SIZE##_t *nptr, uint##SIZE##_t **endptr, int base)	\
+  {									\
+    ucs4_t c;								\
+									\
+    size_t i = 0;							\
+    const uint##SIZE##_t *p = u##SIZE##_next (&c, nptr);		\
+    while (p != NULL && c < 128)					\
+      {									\
+	i++;								\
+	p = u##SIZE##_next (&c, p);					\
+      }									\
+									\
+    uint##SIZE##_t *substring = x_gc_u##SIZE##_strmbndup (nptr, i);	\
+    char *csubstring = (char *) CONVERSION (substring);			\
+									\
+    char *endp;								\
+    ITYPE value = STRTOI (csubstring, &endp, base);			\
+									\
+    if (endptr != NULL)							\
+      {									\
+	size_t n = endp - csubstring;					\
+	const uint##SIZE##_t *p = nptr;					\
+	for (size_t j = 0; j < n; j++)					\
+	  p = u##SIZE##_next (&c, p);					\
+	*endptr = (uint##SIZE##_t *) p;					\
+      }									\
+									\
+    return value;							\
+  }
+
+STRTOI_FUNC (u8_strtol, 8, long int, strtol, /* no conversion */ );
+STRTOI_FUNC (u16_strtol, 16, long int, strtol, x_gc_u16_to_u8);
+STRTOI_FUNC (u32_strtol, 32, long int, strtol, x_gc_u32_to_u8);
+
+STRTOI_FUNC (u8_strtoul, 8, unsigned long int, strtoul, /* no conversion */ );
+STRTOI_FUNC (u16_strtoul, 16, unsigned long int, strtoul, x_gc_u16_to_u8);
+STRTOI_FUNC (u32_strtoul, 32, unsigned long int, strtoul, x_gc_u32_to_u8);
+
+//-------------------------------------------------------------------------

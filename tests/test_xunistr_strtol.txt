@@ -1,0 +1,8 @@
+FIXME: Include a thorough list of strtol test cases.
+
+  
+12345
+  -0x12345 
+eĥoŝanĝo
+ĉiuĵaŭde
+ ĉiuĵaŭde
