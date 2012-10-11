@@ -32,6 +32,7 @@
 #define _(str)		gettext(str)
 #define C_(ctx,str)	pgettext(ctx,str)
 #define N_(str)		(str)
+#define P_(str1,str_non1,n)	ngettext(str1,str_non1,n)
 
 /* For messages in the shortcuts domain */
 #define H_(str)		(str)

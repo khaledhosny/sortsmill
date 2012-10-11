@@ -1453,7 +1453,7 @@ return( cnt );
 static char *EncNameFromGroups(Group *group) {
     Group *first = NULL, *second = NULL;
     int cnt = GroupSelCnt(group,&first,&second);
-    char *prefix = ngettext("Group","Groups",cnt);
+    char *prefix = P_("Group","Groups",cnt);
     char *ret;
 
     switch ( cnt ) {
