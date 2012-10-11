@@ -103,7 +103,6 @@ VISIBLE extern char *u2utf8_copyn (const uint32_t *ubuf, int len);
 VISIBLE extern char *u2def_strncpy (char *to, const uint32_t *ufrom, int n);
 VISIBLE extern char *u2def_copy (const uint32_t *ufrom);
 
-VISIBLE extern int u_sprintf (uint32_t *str, const uint32_t *format, ...);
 VISIBLE extern int u_snprintf (uint32_t *str, int len, const uint32_t *format, ...);
 VISIBLE extern int u_vsnprintf (uint32_t *str, int len, const uint32_t *format,
                         va_list ap);

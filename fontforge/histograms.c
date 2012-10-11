@@ -325,7 +325,6 @@ static uint32_t *ArrayOrder(const uint32_t *old,int args,int val1,int val2) {
     uint32_t *end;
     double array[40];
     int i,j,k;
-    static uint32_t format[] = { '%', 'g', '\0' };
     uint32_t *new, *pt;
     uint32_t ubuf[40];
 
@@ -347,13 +346,13 @@ static uint32_t *ArrayOrder(const uint32_t *old,int args,int val1,int val2) {
 	array[k] = temp;
     }
 
-    u_sprintf(ubuf,format,val1);
+    u32_sprintf (ubuf, "%g", val1);
     new = xmalloc(2*(u32_strlen(ubuf)+u32_strlen(old)+10)*sizeof(uint32_t));
 
     pt = new;
     *pt++ = '[';
     for ( k=0; k<i; ++k ) {
-	u_sprintf(pt,format,array[k]);
+	u32_sprintf (pt, "%g", array[k]);
 	pt += u32_strlen(pt);
 	if ( k==i-1 )
 	    *pt++ = ']';
@@ -366,7 +365,6 @@ return( new );
 
 static void HistPress(struct hist_dlg *hist,GEvent *e) {
     int x = e->u.mouse.x;
-    static uint32_t fullformat[] = { '[', '%', 'd', ']', '\0' };
     uint32_t ubuf[20];
 
     x /= hist->barwidth;
@@ -401,7 +399,7 @@ return;
 	GGadgetSetVisible(GWidgetGetControl(hist->gw,CID_BlueMsg),hist->is_pending);
     } else {
 	if ( !( e->u.mouse.state&ksm_shift )) {
-	    u_sprintf(ubuf,fullformat,x);
+	    u32_sprintf (ubuf, "[%d]", x);
 	    GGadgetSetTitle(GWidgetGetControl(hist->gw,CID_MainVal),ubuf);
 	    GGadgetSetTitle(GWidgetGetControl(hist->gw,CID_SecondaryVal),ubuf);
 	} else {
