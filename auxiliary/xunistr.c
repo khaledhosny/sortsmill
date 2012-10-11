@@ -216,6 +216,10 @@ STRMBNDUP_FUNC (x_gc_u32_strmbndup, 32, x_gc_malloc);
 
 //-------------------------------------------------------------------------
 
+// NOTE: This implementation copies the entire pure-ASCII prefix of
+// the string, so you should not use it directly on a very long
+// string.
+
 #define STRTOI_FUNC(NAME, SIZE, ITYPE, STRTOI, CONVERSION)		\
   ITYPE									\
   NAME (const uint##SIZE##_t *nptr, uint##SIZE##_t **endptr, int base)	\
