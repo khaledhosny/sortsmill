@@ -63,5 +63,7 @@ Suggestions:
 
 EOF
    fi
+
+   echo >> config-summary
 fi
 ])
