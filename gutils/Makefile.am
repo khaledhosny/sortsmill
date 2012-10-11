@@ -36,7 +36,7 @@ libsortsmillff_gutils_la_SOURCES = divisors.c gfile.c gcol.c gimage.c	\
 	gimagereadpng.c gimagereadras.c gimagereadrgb.c gimagereadtiff.c	\
 	gimagereadxbm.c gimagereadxpm.c gimagewritebmp.c					\
 	gimagewritegimage.c gimagewritejpeg.c gimagewritepng.c				\
-	gimagewritexbm.c gimagewritexpm.c gio.c giofile.c			\
+	gimagewritexbm.c gimagewritexpm.c gwwintl.c gio.c giofile.c			\
 	giohosts.c giomime.c giothread.c giotrans.c gimagebmpP.h			\
 	giofuncP.h gioP.h gioftp.c gioftpP.h
 

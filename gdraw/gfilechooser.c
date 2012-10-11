@@ -1003,7 +1003,7 @@ static int GFileChooserBookmarks(GGadget *g, GEvent *e) {
 	    bgotten = true;
 	    for ( i=0; gfcbookmarkmenu[i].ti.text!=NULL || gfcbookmarkmenu[i].ti.line; ++i )
 		if ( gfcbookmarkmenu[i].ti.text!=NULL )
-		    gfcbookmarkmenu[i].ti.text = (uint32_t *) _( (char *) gfcbookmarkmenu[i].ti.text);
+		    gfcbookmarkmenu[i].ti.text = (uint32_t *) S_( (char *) gfcbookmarkmenu[i].ti.text);
 	}
 	for ( mcnt=0; gfcbookmarkmenu[mcnt].ti.text!=NULL || gfcbookmarkmenu[mcnt].ti.line; ++mcnt );
 	bcnt = 0;

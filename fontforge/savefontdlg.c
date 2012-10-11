@@ -3021,7 +3021,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
   gcd[4].gd.pos.width = -1;
   gcd[4].gd.pos.height = 0;
   gcd[4].gd.flags = gg_visible | gg_enabled;
-  label[4].text = (uint32_t *) _("Directory|_New");
+  label[4].text = (uint32_t *) S_ ("Directory|_New");
   label[4].text_is_1byte = true;
   label[4].text_in_resource = true;
   label[4].image = &_GIcon_dir;

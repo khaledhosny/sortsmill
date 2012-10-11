@@ -206,7 +206,7 @@ static void initmaclangs(void) {
     if ( !inited ) {
 	inited = true;
 	for ( i=0; maclanguages[i].text!=NULL; ++i )
-	    maclanguages[i].text = (uint32_t *) _( (char *) maclanguages[i].text);
+	    maclanguages[i].text = (uint32_t *) S_( (char *) maclanguages[i].text);
     }
 }
 
@@ -652,7 +652,7 @@ int GCDBuildNames(GGadgetCreateData *gcd,GTextInfo *label,int pos,struct macname
 
     gcd[pos].gd.pos.x = 6; gcd[pos].gd.pos.y = gcd[pos-1].gd.pos.y+gcd[pos-1].gd.pos.height+10;
     gcd[pos].gd.flags = gg_visible | gg_enabled;
-    label[pos].text = (uint32_t *) _("MacName|_New...");
+    label[pos].text = (uint32_t *) S_("MacName|_New...");
     label[pos].text_is_1byte = true;
     label[pos].text_in_resource = true;
     gcd[pos].gd.label = &label[pos];
@@ -1171,7 +1171,7 @@ static char *AskFeature(MacFeat *changing,MacFeat *all,GGadget *list, int index)
 
     gcd[i].gd.pos.x = 6; gcd[i].gd.pos.y = gcd[i-1].gd.pos.y+gcd[i-1].gd.pos.height+10;
     gcd[i].gd.flags = gg_visible | gg_enabled;
-    label[i].text = (uint32_t *) _("MacSetting|_New...");
+    label[i].text = (uint32_t *) S_("MacSetting|_New...");
     label[i].text_is_1byte = true;
     label[i].text_in_resource = true;
     gcd[i].gd.label = &label[i];
@@ -1363,7 +1363,7 @@ void GCDFillMacFeat(GGadgetCreateData *mfgcd,GTextInfo *mflabels, int width,
 
     mfgcd[sgc].gd.pos.x = 6; mfgcd[sgc].gd.pos.y = mfgcd[sgc-1].gd.pos.y+mfgcd[sgc-1].gd.pos.height+10;
     mfgcd[sgc].gd.flags = gg_visible | gg_enabled;
-    mflabels[sgc].text = (uint32_t *) _("MacFeature|_New...");
+    mflabels[sgc].text = (uint32_t *) S_("MacFeature|_New...");
     mflabels[sgc].text_is_1byte = true;
     mflabels[sgc].text_in_resource = true;
     mfgcd[sgc].gd.label = &mflabels[sgc];
@@ -1399,7 +1399,7 @@ void GCDFillMacFeat(GGadgetCreateData *mfgcd,GTextInfo *mflabels, int width,
     mfgcd[sgc].gd.pos.x = mfgcd[sgc-1].gd.pos.x+10+GIntGetResource(_NUM_Buttonsize)*100/GIntGetResource(_NUM_ScaleFactor);
     mfgcd[sgc].gd.pos.y = mfgcd[sgc-1].gd.pos.y;
     mfgcd[sgc].gd.flags = gg_visible|gg_enabled ;
-    mflabels[sgc].text = (uint32_t *) _("MacFeature|Default");
+    mflabels[sgc].text = (uint32_t *) S_("MacFeature|Default");
     mflabels[sgc].text_is_1byte = true;
     mfgcd[sgc].gd.label = &mflabels[sgc];
     mfgcd[sgc].gd.handle_controlevent = Pref_DefaultFeat;

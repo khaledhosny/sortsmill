@@ -4459,7 +4459,7 @@ static int PickCMap(struct cmap_encs *cmap_encs,int enccnt,int def) {
 	if ( cmap_encs[i].platform==1 && cmap_encs[i].specific<32 ) {
 	    encname = macscripts[cmap_encs[i].specific];
 	    if ( encname!=NULL )
-		encname = _(encname);
+		encname = S_(encname);
 	} else if ( cmap_encs[i].platform==0 ) {
 	    switch ( cmap_encs[i].specific ) {
 	      case 0:

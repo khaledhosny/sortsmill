@@ -1440,12 +1440,12 @@ return;
     for ( j=0; j<2; ++j ) {
 	for ( i=0; i<10; ++i )
 	    if ( lookup_type_names[j][i]!=NULL )
-		lookup_type_names[j][i] = _((char *) lookup_type_names[j][i]);
+		lookup_type_names[j][i] = S_((char *) lookup_type_names[j][i]);
     }
     for ( i=0; localscripts[i].text!=NULL; ++i )
-	localscripts[i].text = _(localscripts[i].text);
+	localscripts[i].text = S_(localscripts[i].text);
     for ( i=0; friendlies[i].friendlyname!=NULL; ++i )
-	friendlies[i].friendlyname = _(friendlies[i].friendlyname);
+	friendlies[i].friendlyname = S_(friendlies[i].friendlyname);
 }
 
 char *TagFullName(SplineFont *sf,uint32_t tag, int ismac, int onlyifknown) {
@@ -1522,7 +1522,7 @@ void NameOTLookup(OTLookup *otl,SplineFont *sf) {
 	    else if ( (otl->lookup_type>>8)<2 && (otl->lookup_type&0xff)<10 )
 		lookuptype = _(lookup_type_names[otl->lookup_type>>8][otl->lookup_type&0xff]);
 	    else
-		lookuptype = _("LookupType|Unknown");
+		lookuptype = S_("LookupType|Unknown");
 	    for ( fl=otl->features; fl!=NULL && !fl->ismac; fl=fl->next );
 	    if ( fl==NULL )
 		userfriendly = xstrdup_or_null(lookuptype);
@@ -1564,7 +1564,7 @@ void NameOTLookup(OTLookup *otl,SplineFont *sf) {
 		script_tag = found->script;
 		for ( j=0; localscripts[j].text!=NULL && script_tag!=localscripts[j].tag; ++j );
 		if ( localscripts[j].text!=NULL )
-		    script = xstrdup_or_null( _((char *) localscripts[j].text) );
+		    script = xstrdup_or_null( S_((char *) localscripts[j].text) );
 		else {
 		    buf[0] = '\'';
 		    buf[1] = fl->scripts->script>>24;

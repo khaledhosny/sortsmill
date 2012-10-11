@@ -483,7 +483,7 @@ return;
     done = true;
     for ( i=0; i<sizeof(encodingtypes)/sizeof(encodingtypes[0])-1; ++i ) {
 	if ( !encodingtypes[i].line )
-	    encodingtypes[i].text = (uint32_t *) _((char *) encodingtypes[i].text);
+	    encodingtypes[i].text = (uint32_t *) S_((char *) encodingtypes[i].text);
     }
 }
 

@@ -1293,7 +1293,7 @@ void DefineGroups(FontView *fv) {
     gcd[k++].creator = GCheckBoxCreate;
 
     for ( kk=0; kk<3; ++kk )
-	std_colors[kk].text = (uint32_t *) _((char *) std_colors[kk].text);
+	std_colors[kk].text = (uint32_t *) S_((char *) std_colors[kk].text);
     std_colors[1].image = GGadgetImageCache("colorwheel.png");
     std_colors[0].selected = true;
     gcd[k].gd.pos.x = 10; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+15;

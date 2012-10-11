@@ -1,4 +1,4 @@
-/* Copyright (C) 2005-2012 by George Williams */
+/* Copyright (C) 2000-2008 by George Williams */
 /*
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -25,19 +25,19 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _INTL_H
-#define _INTL_H
+#include <config.h>
 
-#include "gettext.h"
-#define _(str)		gettext(str)
-#define C_(ctx,str)	pgettext(ctx,str)
-#define N_(str)		(str)
-#define S_(str)		sgettext(str)
-#define P_(str1,str_non1,n)	ngettext(str1,str_non1,n)
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <basics.h>
+#include <intl.h>
 
-/* For messages in the shortcuts domain */
-#define H_(str)		(str)
-
-VISIBLE char *sgettext(const char *msgid);
-
-#endif /* _INTL_H */
+char *sgettext(const char *msgid) {
+    const char *msgval = _(msgid);
+    char *found;
+    if (msgval == msgid)
+	if ( (found = strrchr (msgid, '|'))!=NULL )
+	    msgval = found+1;
+return (char *) msgval;
+}

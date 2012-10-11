@@ -408,7 +408,7 @@ static void FilterDlg(void) {
     GHVBoxSetExpandableRow(boxes[0].ret,0);
     GHVBoxSetExpandableCol(boxes[2].ret,gb_expandgluesame);
     GHVBoxFitWindow(boxes[0].ret);
-    GMatrixEditSetNewText(gcd[0].ret,_("Filter|New"));
+    GMatrixEditSetNewText(gcd[0].ret,S_("Filter|New"));
     d.gme = gcd[0].ret;
     
     GDrawSetVisible(gw,true);
@@ -707,7 +707,7 @@ uint32_t *FVOpenFont(char *title, const char *defaultfile, int mult) {
     gcd[i].gd.pos.x = -(spacing+bs)*100/GIntGetResource(_NUM_ScaleFactor)-12; gcd[i].gd.pos.y = gcd[i-1].gd.pos.y+3;
     gcd[i].gd.pos.width = -1;
     gcd[i].gd.flags = gg_visible | gg_enabled;
-    label[i].text = (uint32_t *) _("Font|_New");
+    label[i].text = (uint32_t *) S_("Font|_New");
     label[i].text_is_1byte = true;
     label[i].text_in_resource = true;
     gcd[i].gd.mnemonic = 'N';

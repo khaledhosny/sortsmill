@@ -2050,13 +2050,13 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
     memcpy(addlookup_list+1,lookup_list,(i+1)*sizeof(GTextInfo));
     addrmlookup_list = xcalloc(i+3,sizeof(GTextInfo));
     memcpy(addrmlookup_list+2,lookup_list,(i+1)*sizeof(GTextInfo));
-    addlookup_list[0].text = (uint32_t *) _("Add Lookup");
+    addlookup_list[0].text = (uint32_t *) S_("Add Lookup");
     addlookup_list[0].text_is_1byte = true;
     addlookup_list[0].selected = true;
-    addrmlookup_list[0].text = (uint32_t *) _("Add Lookup");
+    addrmlookup_list[0].text = (uint32_t *) S_("Add Lookup");
     addrmlookup_list[0].text_is_1byte = true;
     addrmlookup_list[0].selected = true;
-    addrmlookup_list[1].text = (uint32_t *) _("Remove Lookup");
+    addrmlookup_list[1].text = (uint32_t *) S_("Remove Lookup");
     addrmlookup_list[1].text_is_1byte = true;
     addrmlookup_list[1].selected = false;
     addrmlookup_list[1].userdata = (void *) (intptr_t) -1;
@@ -2065,21 +2065,21 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
 
     if ( !inited ) {
 	inited = true;
-	section[0].text = (uint32_t *) _( (char *) section[0].text);
-	section[1].text = (uint32_t *) _( (char *) section[1].text);
-	classlist_ci[0].title = class_ci[0].title = _(class_ci[0].title);
-	classlist_ci[1].title = class_ci[1].title = _(class_ci[1].title);
-	coverage_ci[0].title = _(coverage_ci[0].title);
-	seqlookup_ci[0].title = _(seqlookup_ci[0].title);
-	seqlookup_ci[1].title = _(seqlookup_ci[1].title);
-	glyphrules_ci[0].title = _(glyphrules_ci[0].title);
-	classrules_ci[0].title = _(classrules_ci[0].title);
-	coveragesimple_ci[0].title = _(coveragesimple_ci[0].title);
-	coveragesimple_ci[1].title = _(coveragesimple_ci[1].title);
-	coveragesimple_ci[2].title = _(coveragesimple_ci[2].title);
-	rcoveragesimple_ci[0].title = _(rcoveragesimple_ci[0].title);
-	rcoveragesimple_ci[1].title = _(rcoveragesimple_ci[1].title);
-	glyph_ci[0].title = _(glyph_ci[0].title);
+	section[0].text = (uint32_t *) S_( (char *) section[0].text);
+	section[1].text = (uint32_t *) S_( (char *) section[1].text);
+	classlist_ci[0].title = class_ci[0].title = S_(class_ci[0].title);
+	classlist_ci[1].title = class_ci[1].title = S_(class_ci[1].title);
+	coverage_ci[0].title = S_(coverage_ci[0].title);
+	seqlookup_ci[0].title = S_(seqlookup_ci[0].title);
+	seqlookup_ci[1].title = S_(seqlookup_ci[1].title);
+	glyphrules_ci[0].title = S_(glyphrules_ci[0].title);
+	classrules_ci[0].title = S_(classrules_ci[0].title);
+	coveragesimple_ci[0].title = S_(coveragesimple_ci[0].title);
+	coveragesimple_ci[1].title = S_(coveragesimple_ci[1].title);
+	coveragesimple_ci[2].title = S_(coveragesimple_ci[2].title);
+	rcoveragesimple_ci[0].title = S_(rcoveragesimple_ci[0].title);
+	rcoveragesimple_ci[1].title = S_(rcoveragesimple_ci[1].title);
+	glyph_ci[0].title = S_(glyph_ci[0].title);
     }
 
     ccd = (struct contextchaindlg *) xzalloc(sizeof (struct contextchaindlg));
@@ -2824,7 +2824,7 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
 		cc = (&tempfpst->nccnt)[i];
 	    class_mi[i].initial_row_cnt = cc;
 	    md = xcalloc(3*cc+3,sizeof(struct matrix_data));
-	    md[0+0].u.md_str = xstrdup_or_null(classnames==NULL || cc==0 || classnames[0]==NULL?_("Glyphs|All_Others"):classnames[0]);
+	    md[0+0].u.md_str = xstrdup_or_null(classnames==NULL || cc==0 || classnames[0]==NULL?S_("Glyphs|All_Others"):classnames[0]);
 	    md[3*0+1].u.md_str = xstrdup_or_null(_("{Everything Else}"));
 	    md[3*0+1].frozen = true;
 	    md[0+2].u.md_str = xstrdup_or_null(md[0+0].u.md_str);
@@ -3001,7 +3001,7 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
 /* TRANSLATORS: This is the default class name for the class containing any glyphs_simple */
 /* which aren't specified in other classes_simple. The class name may NOT */
 /* contain spaces. Use an underscore or something similar instead */
-	    md[0+0].u.md_str = xstrdup_or_null(classnames==NULL || cc==0 || classnames[0]==NULL?_("Glyphs|All_Others"):classnames[0]);
+	    md[0+0].u.md_str = xstrdup_or_null(classnames==NULL || cc==0 || classnames[0]==NULL?S_("Glyphs|All_Others"):classnames[0]);
 	    md[0+1].u.md_str = xstrdup_or_null(_("{Everything Else}"));
 	    md[0+1].frozen = true;
 	    md[0+2].u.md_str = xstrdup_or_null(md[0+0].u.md_str);
