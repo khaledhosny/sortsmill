@@ -3,6 +3,9 @@ FIXME: Include a thorough list of strtol test cases.
   
 12345
   -0x12345 
+  +0x12345 
+  -012345 
+  +012345 
 eĥoŝanĝo
 ĉiuĵaŭde
  ĉiuĵaŭde

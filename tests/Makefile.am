@@ -67,7 +67,8 @@ MY_AT_FILES = xuniconv_h.at xuninorm_h.at xunistr_h.at gfile_c.at	\
 	psMat.at old_python_tests.at
 
 TESTS_XUNISTRING_H = test_xuniconv_h test_xuninorm_h test_xunistr_h	\
-	test_xunistr_strtol_NULL test_xunistr_strtol_nonNULL
+	test_xunistr_strtol_NULL test_xunistr_strtol_nonNULL			\
+	test_xunistr_strtoul_NULL test_xunistr_strtoul_nonNULL
 
 TESTS_GFILE_C = test_GFileGetUserConfigDir test_GFileGetUserCacheDir	\
 	test_GFileGetUserDataDir test_GFileGetHomeDir test_GFileBuildName	\
