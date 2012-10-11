@@ -68,8 +68,6 @@ VISIBLE extern uint32_t *uc_strstrmatch (const uint32_t *, const char *);
 VISIBLE extern uint32_t *u_strstrmatch (const uint32_t *, const uint32_t *);
 VISIBLE extern char *strstrmatch (const char *, const char *);
 
-VISIBLE extern char *u_to_c (const uint32_t *);
-
 VISIBLE extern unsigned long u_strtoul (const uint32_t *, uint32_t **, int);
 VISIBLE extern long u_strtol (const uint32_t *, uint32_t **, int);
 VISIBLE extern double u_strtod (const uint32_t *, uint32_t **);

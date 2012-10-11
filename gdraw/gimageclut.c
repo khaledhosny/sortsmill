@@ -1037,7 +1037,7 @@ return( -1 );
 }
 
 Color GImageColourFName(uint32_t *name) {
-return( _GImage_ColourFName(u_to_c(name)) );
+  return( _GImage_ColourFName(x_gc_u32_to_u8(name)) );
 }
 
 char *GImageNameFColour(Color col) {

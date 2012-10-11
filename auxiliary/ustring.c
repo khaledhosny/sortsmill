@@ -462,14 +462,6 @@ u_strstartmatch (const uint32_t *initial, const uint32_t *full)
     }
 }
 
-char *
-u_to_c (const uint32_t *ubuf)
-{
-  static char buf[400];
-  cu_strncpy (buf, ubuf, sizeof (buf));
-  return (buf);
-}
-
 uint32_t *
 utf82u_strncpy (uint32_t *ubuf, const char *utf8buf, int len)
 {
