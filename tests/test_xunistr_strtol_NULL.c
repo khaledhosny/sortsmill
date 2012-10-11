@@ -18,27 +18,28 @@ test (const char *filename, int base, int encoding)
   ssize_t num_read = getline (&line, &n, tests);
   while (exit_status == 0 && 0 <= num_read)
     {
-      uint8_t *s8 = (uint8_t *) line;
-      long int val1 = strtol ((char *) s8, NULL, base);
+      long int val1 = strtol (line, NULL, base);
       long int val2;
 
+      uint8_t *s8 = (uint8_t *) line;
+
       if (encoding == 16)
-	{
-	  uint16_t *s16 = x_gc_u8_to_u16 (s8);
-	  val2 = u16_strtol (s16, NULL, base);
-	  ulc_fprintf (stdout, "|%lU| %ld %ld", s16, val1, val2);
-	}
+        {
+          uint16_t *s16 = x_gc_u8_to_u16 (s8);
+          val2 = u16_strtol (s16, NULL, base);
+          ulc_fprintf (stdout, "|%lU| %ld %ld", s16, val1, val2);
+        }
       else if (encoding == 32)
-	{
-	  uint32_t *s32 = x_gc_u8_to_u32 (s8);
-	  val2 = u32_strtol (s32, NULL, base);
-	  ulc_fprintf (stdout, "|%llU| %ld %ld", s32, val1, val2);
-	}
+        {
+          uint32_t *s32 = x_gc_u8_to_u32 (s8);
+          val2 = u32_strtol (s32, NULL, base);
+          ulc_fprintf (stdout, "|%llU| %ld %ld", s32, val1, val2);
+        }
       else
-	{
-	  val2 = u8_strtol (s8, NULL, base);
-	  ulc_fprintf (stdout, "|%U| %ld %ld", s8, val1, val2);
-	}
+        {
+          val2 = u8_strtol (s8, NULL, base);
+          ulc_fprintf (stdout, "|%U| %ld %ld", s8, val1, val2);
+        }
       exit_status = (val1 == val2) ? 0 : 1;
       num_read = getline (&line, &n, tests);
     }
@@ -62,7 +63,7 @@ main (int argc, char **argv)
     {
       test (argv[1], 0, encoding[i]);
       for (int base = 2; base <= 36; base++)
-	test (argv[1], base, encoding[i]);
+        test (argv[1], base, encoding[i]);
       i++;
     }
 }

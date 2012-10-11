@@ -18,32 +18,45 @@ test (const char *filename, int base, int encoding)
   ssize_t num_read = getline (&line, &n, tests);
   while (exit_status == 0 && 0 <= num_read)
     {
-      uint8_t *s8 = (uint8_t *) line;
       char *endp;
-      long int val1 = strtol ((char *) s8, &endp, base);
+      long int val1 = strtol (line, &endp, base);
       long int val2;
 
+      size_t char_count = endp - line;
+      size_t uchar_count;
+
+      uint8_t *s8 = (uint8_t *) line;
+
       if (encoding == 16)
-	{
-	  uint16_t *s16 = x_gc_u8_to_u16 (s8);
-	  uint16_t *end16;
-	  val2 = u16_strtol (s16, &end16, base);
-	  ulc_fprintf (stdout, "|%lU| %ld %ld", s16, val1, val2);
-	}
+        {
+          uint16_t *s16 = x_gc_u8_to_u16 (s8);
+          uint16_t *end16;
+          val2 = u16_strtol (s16, &end16, base);
+          uchar_count = u16_mbsnlen (s16, end16 - s16);
+          ulc_fprintf (stdout, "|%lU| %ld %ld %zu %zu", s16, val1, val2,
+                       char_count, uchar_count);
+        }
       else if (encoding == 32)
-	{
-	  uint32_t *s32 = x_gc_u8_to_u32 (s8);
-	  uint32_t *end32;
-	  val2 = u32_strtol (s32, &end32, base);
-	  ulc_fprintf (stdout, "|%llU| %ld %ld", s32, val1, val2);
-	}
+        {
+          uint32_t *s32 = x_gc_u8_to_u32 (s8);
+          uint32_t *end32;
+          val2 = u32_strtol (s32, &end32, base);
+          uchar_count = u32_mbsnlen (s32, end32 - s32);
+          ulc_fprintf (stdout, "|%llU| %ld %ld %zu %zu", s32, val1, val2,
+                       char_count, uchar_count);
+        }
       else
-	{
-	  uint8_t *end8;
-	  val2 = u8_strtol (s8, &end8, base);
-	  ulc_fprintf (stdout, "|%U| %ld %ld", s8, val1, val2);
-	}
-      exit_status = (val1 == val2) ? 0 : 1;
+        {
+          uint8_t *end8;
+          val2 = u8_strtol (s8, &end8, base);
+          uchar_count = u8_mbsnlen (s8, end8 - s8);
+          ulc_fprintf (stdout, "|%U| %ld %ld %zu %zu", s8, val1, val2,
+                       char_count, uchar_count);
+        }
+      if (val1 != val2)
+	exit_status += 0x01;
+      if (char_count != uchar_count)
+	exit_status += 0x02;
       num_read = getline (&line, &n, tests);
     }
 
@@ -66,7 +79,7 @@ main (int argc, char **argv)
     {
       test (argv[1], 0, encoding[i]);
       for (int base = 2; base <= 36; base++)
-	test (argv[1], base, encoding[i]);
+        test (argv[1], base, encoding[i]);
       i++;
     }
 }
