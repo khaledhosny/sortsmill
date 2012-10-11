@@ -12,6 +12,7 @@ git clone git://git.sv.gnu.org/gnulib.git
 ln -s `pwd`/gnulib/gnulib-tool ${HOME}/bin/
 cd fontforge
 gnulib-tool --update
-autoreconf -iv
+intltoolize --copy --force --automake
+autoreconf --install --verbose
 
 Then follow the instructions in ‘INSTALL’.
