@@ -1,4 +1,5 @@
 [encoding: UTF-8]
+desktop/fontforge.desktop.in
 fontforge/alignment.c
 fontforge/anchorsaway.c
 fontforge/autotrace.c
