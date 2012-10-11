@@ -555,7 +555,7 @@ return;
 	    ps_offsets[i]=getushort(ttf);
 	glyphs = getCoverageTable(ttf,stoffset+coverage,info);
 	if ( glyphs==NULL ) {
-/* GT: This continues a multi-line error message, hence the leading space */
+/* TRANSLATORS: This continues a multi-line error message, hence the leading space */
 	    LogError( _(" Bad pairwise kerning table, ignored\n") );
 return;
 	}
@@ -598,7 +598,7 @@ return;
 	class2 = getClassDefTable(ttf, stoffset+cd2, info);
 	glyphs = getCoverageTable(ttf,stoffset+coverage,info);
 	if ( glyphs==NULL ) {
-/* GT: This continues a multi-line error message, hence the leading space */
+/* TRANSLATORS: This continues a multi-line error message, hence the leading space */
 	    LogError( _(" Bad kerning class table, ignored\n") );
 return;
 	}
@@ -730,7 +730,7 @@ return;
     }
     glyphs = getCoverageTable(ttf,stoffset+coverage,info);
     if ( glyphs==NULL ) {
-/* GT: This continues a multi-line error message, hence the leading space */
+/* TRANSLATORS: This continues a multi-line error message, hence the leading space */
 	LogError( _(" Bad cursive alignment table, ignored\n") );
 	free(offsets);
 return;
@@ -1031,7 +1031,7 @@ static void g___ContextSubTable1(FILE *ttf, int stoffset,
 	rules[i].offsets = getushort(ttf)+stoffset;
     glyphs = getCoverageTable(ttf,stoffset+coverage,info);
     if ( glyphs==NULL ) {
-/* GT: This continues a multi-line error message, hence the leading space */
+/* TRANSLATORS: This continues a multi-line error message, hence the leading space */
 	LogError( _(" Bad contextual table, ignored\n") );
 return;
     }
@@ -1366,7 +1366,7 @@ return;
 	/* Just in case they used the coverage table to redefine class 0 */
 	glyphs = getCoverageTable(ttf,stoffset+coverage,info);
 	if ( glyphs==NULL ) {
-/* GT: This continues a multi-line error message, hence the leading space */
+/* TRANSLATORS: This continues a multi-line error message, hence the leading space */
 	    LogError( _(" Bad contextual substitution table, ignored\n") );
 return;
 	}
@@ -1521,7 +1521,7 @@ return;
 	/* Just in case they used the coverage table to redefine class 0 */
 	glyphs = getCoverageTable(ttf,stoffset+coverage,info);
 	if ( glyphs==NULL ) {
-/* GT: This continues a multi-line error message, hence the leading space */
+/* TRANSLATORS: This continues a multi-line error message, hence the leading space */
 	    LogError( _(" Bad contextual chaining substitution table, ignored\n") );
 return;
 	}
@@ -3226,10 +3226,10 @@ return( subs[nest_index] );
     otl->lookup_type = gsub_single;
     otl->subtables = (struct lookup_subtable *) xzalloc(sizeof (struct lookup_subtable));
     otl->subtables->lookup = otl;
-/* GT: This is to give the name to a nested substitution lookup invoked by */
-/* GT: a statemachine. The %s is the name of the statemachine('s lookup) */
-/* GT: and the %d is n, where this lookup is the n'th defined for this state */
-/* GT: machine */
+/* TRANSLATORS: This is to give the name to a nested substitution lookup invoked by */
+/* a statemachine. The %s is the name of the statemachine('s lookup) */
+/* and the %d is n, where this lookup is the n'th defined for this state */
+/* machine */
     format = _("%s nested-substitutions %d");
     name = xmalloc(strlen(parent->lookup_name)+strlen(format)+10);
     sprintf( name, format, parent->lookup_name, nest_index );
@@ -3721,8 +3721,8 @@ return;
     ++ sm->cnt;
     if ( sm->cnt>=10000 ) {
 	if ( sm->cnt==10000 )
-/* GT: This is a reference to "Much Ado About Nothing". The string should read */
-/* GT: "A ligature sub-table in Apple's 'mort'/'morx' table is too\ncomplex for me to understand. I shall give up on it.\nYour ligatures may not be complete." */
+/* TRANSLATORS: This is a reference to "Much Ado About Nothing". The string should read */
+/* "A ligature sub-table in Apple's 'mort'/'morx' table is too\ncomplex for me to understand. I shall give up on it.\nYour ligatures may not be complete." */
 	    LogError(_("In an attempt to process the ligatures of this font, I've concluded\nthat the state machine in Apple's mort/morx table is\n(like the learned constable) too cunning to be understood.\nI shall give up on it. Your ligatures may be incomplete.\n") );
 	info->bad_gx = true;
 return;
@@ -5879,8 +5879,8 @@ static void NameOTJSTFLookup(OTLookup *otl,struct ttfinfo *info) {
     int cnt;
 
     if ( info->jstf_isShrink )
-/* GT: This string is used to generate a name for an OpenType lookup. */
-/* GT:  the %c%c... is the language followed by the script (OT tags) */
+/* TRANSLATORS: This string is used to generate a name for an OpenType lookup. */
+/* the %c%c... is the language followed by the script (OT tags) */
 	snprintf(buffer,sizeof(buffer), _("JSTF shrinkage max at priority %d #%d for %c%c%c%c in %c%c%c%c"),
 		info->jstf_prio, info->jstf_lcnt++,
 		info->jstf_lang>>24,

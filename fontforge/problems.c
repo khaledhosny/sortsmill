@@ -2948,29 +2948,29 @@ static int Prob_OK(GGadget *g, GEvent *e) {
 	    p->vadvancewidth = false;
 	p->explain = true;
 	if ( doxnear )
-	    p->xval = xval = GetReal8(gw,CID_XNearVal,U_("_X near¹"),&errs);
+	    p->xval = xval = GetReal8(gw,CID_XNearVal,_("_X near¹"),&errs);
 	if ( doynear )
-	    p->yval = yval = GetReal8(gw,CID_YNearVal,U_("_Y near¹"),&errs);
+	    p->yval = yval = GetReal8(gw,CID_YNearVal,_("_Y near¹"),&errs);
 	if ( hintwidth )
-	    widthval = p->widthval = GetReal8(gw,CID_HintWidth,U_("Hint _Width Near¹"),&errs);
+	    widthval = p->widthval = GetReal8(gw,CID_HintWidth,_("Hint _Width Near¹"),&errs);
 	if ( p->advancewidth )
-	    advancewidthval = p->advancewidthval = GetInt8(gw,CID_AdvanceWidthVal,U_("Advance Width not"),&errs);
+	    advancewidthval = p->advancewidthval = GetInt8(gw,CID_AdvanceWidthVal,_("Advance Width not"),&errs);
 	if ( p->vadvancewidth )
-	    vadvancewidthval = p->vadvancewidthval = GetInt8(gw,CID_VAdvanceWidthVal,U_("Vertical Advance not"),&errs);
+	    vadvancewidthval = p->vadvancewidthval = GetInt8(gw,CID_VAdvanceWidthVal,_("Vertical Advance not"),&errs);
 	if ( p->bbymax )
-	    bbymax_val = p->bbymax_val = GetInt8(gw,CID_BBYMaxVal,U_("Bounding box above"),&errs);
+	    bbymax_val = p->bbymax_val = GetInt8(gw,CID_BBYMaxVal,_("Bounding box above"),&errs);
 	if ( p->bbymin )
-	    bbymin_val = p->bbymin_val = GetInt8(gw,CID_BBYMinVal,U_("Bounding box below"),&errs);
+	    bbymin_val = p->bbymin_val = GetInt8(gw,CID_BBYMinVal,_("Bounding box below"),&errs);
 	if ( p->bbxmax )
-	    bbxmax_val = p->bbxmax_val = GetInt8(gw,CID_BBXMaxVal,U_("Bounding box right of"),&errs);
+	    bbxmax_val = p->bbxmax_val = GetInt8(gw,CID_BBXMaxVal,_("Bounding box right of"),&errs);
 	if ( p->bbxmin )
-	    bbxmin_val = p->bbxmin_val = GetInt8(gw,CID_BBXMinVal,U_("Bounding box left of"),&errs);
+	    bbxmin_val = p->bbxmin_val = GetInt8(gw,CID_BBXMinVal,_("Bounding box left of"),&errs);
 	if ( toomanypoints )
 	    p->pointsmax = pointsmax = GetInt8(gw,CID_PointsMax,_("_More points than:"),&errs);
 	if ( toomanyhints )
 	    p->hintsmax = hintsmax = GetInt8(gw,CID_HintsMax,_("_More hints than:"),&errs);
 	if ( toodeeprefs )
-/* GT: Refs is an abbreviation for References. Space is somewhat constrained here */
+/* TRANSLATORS: Refs is an abbreviation for References. Space is somewhat constrained here */
 	    p->refdepthmax = refdepthmax = GetInt8(gw,CID_RefDepthMax,_("Refs neste_d deeper than:"),&errs);
 	if ( irrelevantcp )
 	    p->irrelevantfactor = irrelevantfactor = GetReal8(gw,CID_IrrelevantFactor,_("Irrelevant _Factor:"),&errs)/100.0;
@@ -3138,7 +3138,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     pgcd[0].creator = GCheckBoxCreate;
     parray[0] = &pgcd[0];
 
-    plabel[1].text = (uint32_t *) U_("_X near¹");
+    plabel[1].text = (uint32_t *) _("_X near¹");
     plabel[1].text_is_1byte = true;
     plabel[1].text_in_resource = true;
     pgcd[1].gd.label = &plabel[1];
@@ -3168,7 +3168,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     pboxes[2].creator = GHBoxCreate;
     parray[1] = &pboxes[2];
 
-    plabel[3].text = (uint32_t *) U_("_Y near¹");
+    plabel[3].text = (uint32_t *) _("_Y near¹");
     plabel[3].text_is_1byte = true;
     plabel[3].text_in_resource = true;
     pgcd[3].gd.label = &plabel[3];
@@ -3198,7 +3198,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     pboxes[3].creator = GHBoxCreate;
     parray[2] = &pboxes[3];
 
-    plabel[5].text = (uint32_t *) U_("Y near¹ _standard heights");
+    plabel[5].text = (uint32_t *) _("Y near¹ _standard heights");
     plabel[5].text_is_1byte = true;
     plabel[5].text_in_resource = true;
     pgcd[5].gd.label = &plabel[5];
@@ -3435,7 +3435,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     rfgcd[0].creator = GCheckBoxCreate;
     rfarray[0] = &rfgcd[0];
 
-/* GT: Refs is an abbreviation for References. Space is somewhat constrained here */
+/* TRANSLATORS: Refs is an abbreviation for References. Space is somewhat constrained here */
     rflabel[1].text = (uint32_t *) _("Refs with bad tt transformation matrices");
     rflabel[1].text_is_1byte = true;
     rflabel[1].text_in_resource = true;
@@ -3462,7 +3462,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     rfgcd[2].creator = GCheckBoxCreate;
     rfarray[2] = &rfgcd[2];
 
-/* GT: Refs is an abbreviation for References. Space is somewhat constrained here */
+/* TRANSLATORS: Refs is an abbreviation for References. Space is somewhat constrained here */
     rflabel[3].text = (uint32_t *) _("Refs with bad ps transformation matrices");
     rflabel[3].text_is_1byte = true;
     rflabel[3].text_in_resource = true;
@@ -3476,7 +3476,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     rfgcd[3].creator = GCheckBoxCreate;
     rfarray[3] = &rfgcd[3];
 
-/* GT: Refs is an abbreviation for References. Space is somewhat constrained here */
+/* TRANSLATORS: Refs is an abbreviation for References. Space is somewhat constrained here */
     rflabel[4].text = (uint32_t *) _("Refs neste_d deeper than:");
     rflabel[4].text_is_1byte = true;
     rflabel[4].text_in_resource = true;
@@ -3555,7 +3555,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     hgcd[0].creator = GCheckBoxCreate;
     harray[0] = &hgcd[0];
 
-    hlabel[1].text = (uint32_t *) U_("_Points near¹ hint edges");
+    hlabel[1].text = (uint32_t *) _("_Points near¹ hint edges");
     hlabel[1].text_is_1byte = true;
     hlabel[1].text_in_resource = true;
     hgcd[1].gd.label = &hlabel[1];
@@ -3568,7 +3568,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     hgcd[1].creator = GCheckBoxCreate;
     harray[1] = &hgcd[1];
 
-    hlabel[2].text = (uint32_t *) U_("Hint _Width Near¹");
+    hlabel[2].text = (uint32_t *) _("Hint _Width Near¹");
     hlabel[2].text_is_1byte = true;
     hlabel[2].text_in_resource = true;
     hgcd[2].gd.label = &hlabel[2];
@@ -3598,7 +3598,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     hboxes[2].creator = GHBoxCreate;
     harray[2] = &hboxes[2];
 
-/* GT: The _3 is used to mark an accelerator */
+/* TRANSLATORS: The _3 is used to mark an accelerator */
     hlabel[4].text = (uint32_t *) _("Almost stem_3 hint");
     hlabel[4].text_is_1byte = true;
     hlabel[4].text_in_resource = true;
@@ -4024,7 +4024,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     aspects[i].text_is_1byte = true;
     aspects[i++].gcd = paboxes;
 
-/* GT: Refs is an abbreviation for References. Space is tight here */
+/* TRANSLATORS: Refs is an abbreviation for References. Space is tight here */
     aspects[i].text = (uint32_t *) _("Refs");
     aspects[i].text_is_1byte = true;
     aspects[i++].gcd = rfboxes;
@@ -4094,7 +4094,7 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     mgcd[3].creator = GLineCreate;
     marray[2][0] = &mgcd[3]; marray[2][1] = NULL;
 
-    mlabel[4].text = (uint32_t *) U_("¹ \"Near\" means within");
+    mlabel[4].text = (uint32_t *) _("¹ \"Near\" means within");
     mlabel[4].text_is_1byte = true;
     mgcd[4].gd.label = &mlabel[4];
     mgcd[4].gd.mnemonic = 'N';
@@ -5173,8 +5173,8 @@ return;
 	if ( !vw->needs_blue )
 	    vs &= ~pds_missingblue;
 	if ( vs!=0 ) {
-	    /* GT: "Private" is a keyword (sort of) in PostScript. Perhaps it */
-	    /* GT: should remain untranslated? */
+	    /* TRANSLATORS: "Private" is a keyword (sort of) in PostScript. Perhaps it */
+	    /* should remain untranslated? */
 	    GDrawDrawText8(pixmap,r.x+r.width+2,y,_("Private Dictionary"),-1,0x000000 );
 	    y += vw->fh;
 	    for ( m=0, bit=1 ; bit!=0; ++m, bit<<=1 ) {

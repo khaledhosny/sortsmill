@@ -377,11 +377,11 @@ void FVInterpolateFonts(FontView *fv) {
 
     gcd[3].gd.pos.x = 5; gcd[3].gd.pos.y = 51+6;
     gcd[3].gd.flags = gg_visible | gg_enabled;
-/* GT: The dialog looks like: */
-/* GT:   Interpolating between <fontname> and: */
-/* GT: <list of possible fonts> */
-/* GT:   by  <50>% */
-/* GT: So "by" means how much to interpolate. */
+/* TRANSLATORS: The dialog looks like: */
+/*   Interpolating between <fontname> and: */
+/* <list of possible fonts> */
+/*   by  <50>% */
+/* So "by" means how much to interpolate. */
     label[3].text = (uint32_t *) _("by");
     label[3].text_is_1byte = true;
     gcd[3].gd.label = &label[3];

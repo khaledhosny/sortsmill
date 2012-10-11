@@ -656,12 +656,12 @@ static void MVMakeLabels(MetricsView *mv) {
     gd.pos.y += mv->fh+4;
     mv->widthlab = GLabelCreate(mv->gw,&gd,NULL);
 
-/* GT: Top/Left (side) bearing */
+/* TRANSLATORS: Top/Left (side) bearing */
     label.text = (uint32_t *) (mv->vertical ? _("TBearing:") : _("LBearing:") );
     gd.pos.y += mv->fh+4;
     mv->lbearinglab = GLabelCreate(mv->gw,&gd,NULL);
 
-/* GT: Bottom/Right (side) bearing */
+/* TRANSLATORS: Bottom/Right (side) bearing */
     label.text = (uint32_t *) (mv->vertical ? _("BBearing:") : _("RBearing:") );
     gd.pos.y += mv->fh+4;
     mv->rbearinglab = GLabelCreate(mv->gw,&gd,NULL);

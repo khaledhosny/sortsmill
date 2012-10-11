@@ -37,7 +37,7 @@ AC_INIT([Sorts Mill FontForge],
 
 AC_CONFIG_SRCDIR([fontforge/splinerefigure.c])
 
-AC_CONFIG_MACRO_DIR([m4])          dnl Where autoconf scripts go.
+AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([config])        dnl Where things like install-sh go.
 AC_CONFIG_TESTDIR([tests],[fontforge]) dnl Test suite setup.
 AC_CANONICAL_BUILD                 dnl On what platform are we compiling?
@@ -315,6 +315,12 @@ AM_CONDITIONAL([MACINTOSH],[test x"${gww_ismac}" = xyes])
 AM_CONDITIONAL([FONTTOOLS],[test x != x])
 
 FONTFORGE_OBSCURE_CONFIGURATION
+
+GETTEXT_PACKAGE=$PACKAGE
+AC_SUBST(GETTEXT_PACKAGE)
+IT_PROG_INTLTOOL(0.41)
+AM_GLIB_GNU_GETTEXT
+
 FONTFORGE_SET_MY_CFLAGS
 FONTFORGE_SET_MY_LIBS
 FONTFORGE_CREATE_MAKEFILES

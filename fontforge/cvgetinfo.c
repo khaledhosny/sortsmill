@@ -1486,15 +1486,15 @@ return;
 	hvarray[4] = &gcd[j]; hvarray[5] = NULL;
 	++j;
 
-/* GT: Cursive Entry. This defines a point on the glyph that should be matched */
-/* GT: with the "Cursive Exit" point of the preceding glyph.  */
-/* GT: This is a special way of joining letters which was developed for Urdu */
-/* GT: fonts. Essentially every glyph has an entry point and an exit point. */
-/* GT: When written the glyphs in sequence are aligned so that the exit point */
-/* GT: of each glyph matches the entry point of the following. It means you */
-/* GT: get a join such as might be expected for script. Urdu is odd because */
-/* GT: letters within a word crawl diagonally up the page, but with each word */
-/* GT: the writing point starts at the baseline. */
+/* TRANSLATORS: Cursive Entry. This defines a point on the glyph that should be matched */
+/* with the "Cursive Exit" point of the preceding glyph.  */
+/* This is a special way of joining letters which was developed for Urdu */
+/* fonts. Essentially every glyph has an entry point and an exit point. */
+/* When written the glyphs in sequence are aligned so that the exit point */
+/* of each glyph matches the entry point of the following. It means you */
+/* get a join such as might be expected for script. Urdu is odd because */
+/* letters within a word crawl diagonally up the page, but with each word */
+/* the writing point starts at the baseline. */
 	label[j].text = (uint32_t *) _("CursEntry");
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
@@ -1506,9 +1506,9 @@ return;
 	hvarray[6] = &gcd[j];
 	++j;
 
-/* GT: Cursive Exit. This defines a point on the glyph that should be matched */
-/* GT: with the "Cursive Entry" point of the following glyph. This allows */
-/* GT: scripts such as Urdu to work */
+/* TRANSLATORS: Cursive Exit. This defines a point on the glyph that should be matched */
+/* with the "Cursive Entry" point of the following glyph. This allows */
+/* scripts such as Urdu to work */
 	label[j].text = (uint32_t *) _("CursExit");
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
@@ -2821,7 +2821,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	hvarray1[l++] = &gcd[j];
 	++j;
 
-	label[j].text = (uint32_t *) U_("°");
+	label[j].text = (uint32_t *) _("°");
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = gcd[j-1].gd.pos.x+gcd[j-1].gd.pos.width+2; gcd[j].gd.pos.y = gcd[j-3].gd.pos.y; 
@@ -2928,7 +2928,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	hvarray2[l++] = &gcd[j];
 	++j;
 
-	label[j].text = (uint32_t *) U_("°");
+	label[j].text = (uint32_t *) _("°");
 	label[j].text_is_1byte = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = gcd[j-1].gd.pos.x+gcd[j-1].gd.pos.width+2; gcd[j].gd.pos.y = gcd[j-3].gd.pos.y; 

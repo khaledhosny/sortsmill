@@ -294,10 +294,10 @@ return( oldflags );
     memset(&boxes,0,sizeof(boxes));
 
     k = 0;
-/* GT: The following strings should be concatenated together, the result */
-/* GT: translated, and then broken into lines by hand. I'm sure it would */
-/* GT: be better to specify this all as one string, but my widgets won't support */
-/* GT: that */
+/* TRANSLATORS: The following strings should be concatenated together, the result */
+/* translated, and then broken into lines by hand. I'm sure it would */
+/* be better to specify this all as one string, but my widgets won't support */
+/* that */
     label[k].text = (uint32_t *) _("FontForge has some bugs in its remove overlap\n"
 				    "function which may cause you problems, so\n"
 				    "I give you the option of turning it off.\n"
@@ -419,7 +419,7 @@ static GTextInfo formats[] = {
 static GTextInfo fvformats[] = {
     { (uint32_t *) N_("BDF"), NULL, 0, 0, (void *) fv_bdf, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0' },
     { (uint32_t *) N_("TTF"), NULL, 0, 0, (void *) fv_ttf, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) NU_("ΤεΧ Bitmap Fonts"), NULL, 0, 0, (void *) fv_pk, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("ΤεΧ Bitmap Fonts"), NULL, 0, 0, (void *) fv_pk, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     { (uint32_t *) N_("PCF (pmf)"), NULL, 0, 0, (void *) fv_pcf, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     { (uint32_t *) N_("Mac Bitmap"), NULL, 0, 0, (void *) fv_mac, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     { (uint32_t *) N_("Win FON"), NULL, 0, 0, (void *) fv_win, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },

@@ -15,6 +15,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n>1\n"
 
+#: ../desktop/fontforge.desktop.in.h:1
+msgid "FontForge"
+msgstr "FontForge"
+
+#: ../desktop/fontforge.desktop.in.h:2
+msgid "An outline font editor"
+msgstr "Un constructeur des polices"
+
 #: alignment.c:298 anchorsaway.c:1247 combinations.c:1210 cvhints.c:490
 #: cvhints.c:677 cvhints.c:780 displayfonts.c:3480 displayfonts.c:3812
 msgid "_Size:"

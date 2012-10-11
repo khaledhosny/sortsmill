@@ -757,10 +757,10 @@ MMChangeBlend (MMSet *mm, FontView * fv, int tonew)
       memset (&label, 0, sizeof (label));
 
       k = 0;
-/* GT: The following strings should be concatenated together, the result */
-/* GT: translated, and then broken into lines by hand. I'm sure it would */
-/* GT: be better to specify this all as one string, but my widgets won't support */
-/* GT: that */
+/* TRANSLATORS: The following strings should be concatenated together, the result */
+/* translated, and then broken into lines by hand. I'm sure it would */
+/* be better to specify this all as one string, but my widgets won't support */
+/* that */
       label[k].text =
         (uint32_t *) (tonew ?
                        _("You may specify the new instance of this font") :

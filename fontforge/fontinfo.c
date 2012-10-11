@@ -59,10 +59,10 @@ GTextInfo emsizes[] = {
 };
 
 GTextInfo interpretations[] = {
-/* GT: See the long comment at "Property|New" */
-/* GT: The msgstr should contain a translation of "None", ignore "Interpretation|" */
-/* GT: In french this could be "Aucun" or "Aucune" depending on the gender */
-/* GT:  of "Interpretation" */
+/* TRANSLATORS: See the long comment at "Property|New" */
+/* The msgstr should contain a translation of "None", ignore "Interpretation|" */
+/* In french this could be "Aucun" or "Aucune" depending on the gender */
+/* of "Interpretation" */
     { (uint32_t *) N_("Interpretation|None"), NULL, 0, 0, (void *) ui_none, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
 /*  { (uint32_t *) N_("Adobe Public Use Defs."), NULL, 0, 0, (void *) ui_adobe, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'}, */
 /*  { (uint32_t *) N_("Greek"), NULL, 0, 0, (void *) ui_greek, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'}, */
@@ -118,10 +118,10 @@ static GTextInfo pfmfamily[] = {
     { (uint32_t *) N_("Serif"), NULL, 0, 0, (void *) 0x11, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) N_("Sans-Serif"), NULL, 0, 0, (void *) 0x21, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) N_("Monospace"), NULL, 0, 0, (void *) 0x31, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-/* GT: See the long comment at "Property|New" */
-/* GT: The msgstr should contain a translation of "Script", ignore "cursive|" */
-/* GT: English uses "script" to me a general writing style (latin, greek, kanji) */
-/* GT: and the cursive handwriting style. Here we mean cursive handwriting. */
+/* TRANSLATORS: See the long comment at "Property|New" */
+/* The msgstr should contain a translation of "Script", ignore "cursive|" */
+/* English uses "script" to me a general writing style (latin, greek, kanji) */
+/* and the cursive handwriting style. Here we mean cursive handwriting. */
     { (uint32_t *) N_("cursive|Script"), NULL, 0, 0, (void *) 0x41, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) N_("Decorative"), NULL, 0, 0, (void *) 0x51, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
@@ -215,10 +215,10 @@ static GTextInfo panfamily[] = {
     { (uint32_t *) N_("PanoseFamily|Any"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) N_("PanoseFamily|No Fit"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) N_("Latin: Text & Display"), NULL, 0, 0, (void *) 2, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-/* GT: See the long comment at "Property|New" */
-/* GT: The msgstr should contain a translation of "Script", ignore "cursive|" */
-/* GT: English uses "script" to me a general writing style (latin, greek, kanji) */
-/* GT: and the cursive handwriting style. Here we mean cursive handwriting. */
+/* TRANSLATORS: See the long comment at "Property|New" */
+/* The msgstr should contain a translation of "Script", ignore "cursive|" */
+/* English uses "script" to me a general writing style (latin, greek, kanji) */
+/* and the cursive handwriting style. Here we mean cursive handwriting. */
     { (uint32_t *) N_("cursive|Latin: Handwritten"), NULL, 0, 0, (void *) 3, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) N_("Latin: Decorative"), NULL, 0, 0, (void *) 4, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) N_("Latin: Pictorial/Symbol"), NULL, 0, 0, (void *) 5, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
@@ -789,8 +789,8 @@ static struct titlelist { char *name; GTextInfo *variants; } panoses[][9] = {
 static GTextInfo mslanguages[] = {
     { (uint32_t *) N_("Afrikaans"), NULL, 0, 0, (void *) 0x436, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) N_("Albanian"), NULL, 0, 0, (void *) 0x41c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-/* GT: See the long comment at "Property|New" */
-/* GT: The msgstr should contain a translation of "Malayalam", ignore "Lang|" */
+/* TRANSLATORS: See the long comment at "Property|New" */
+/* The msgstr should contain a translation of "Malayalam", ignore "Lang|" */
     { (uint32_t *) N_("Lang|Amharic"), NULL, 0, 0, (void *) 0x45e, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) N_("Arabic (Saudi Arabia)"), NULL, 0, 0, (void *) 0x401, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) N_("Arabic (Iraq)"), NULL, 0, 0, (void *) 0x801, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
@@ -863,11 +863,11 @@ static GTextInfo mslanguages[] = {
     { (uint32_t *) N_("French Luxembourg"), NULL, 0, 0, (void *) 0x140c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) N_("French Monaco"), NULL, 0, 0, (void *) 0x180c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) N_("French West Indies"), NULL, 0, 0, (void *) 0x1c0c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (uint32_t *) NU_("French Réunion"), NULL, 0, 0, (void *) 0x200c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("French Réunion"), NULL, 0, 0, (void *) 0x200c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) N_("French D.R. Congo"), NULL, 0, 0, (void *) 0x240c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) N_("French Senegal"), NULL, 0, 0, (void *) 0x280c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) N_("French Camaroon"), NULL, 0, 0, (void *) 0x2c0c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (uint32_t *) NU_("French Côte d'Ivoire"), NULL, 0, 0, (void *) 0x300c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) N_("French Côte d'Ivoire"), NULL, 0, 0, (void *) 0x300c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) N_("French Mali"), NULL, 0, 0, (void *) 0x340c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) N_("French Morocco"), NULL, 0, 0, (void *) 0x380c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) N_("French Haiti"), NULL, 0, 0, (void *) 0x3c0c, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
@@ -2009,9 +2009,9 @@ return;
 		free(val);
 		GGadgetRedraw(g);
 	    } else
-/* GT: The words "true" and "false" should be left untranslated. We are restricted */
-/* GT: here by what PostScript understands, and it only understands the English */
-/* GT: words. You may, of course, change it to something like ("true" (vrai) ou "false" (faux)) */
+/* TRANSLATORS: The words "true" and "false" should be left untranslated. We are restricted */
+/* here by what PostScript understands, and it only understands the English */
+/* words. You may, of course, change it to something like ("true" (vrai) ou "false" (faux)) */
 		gwwv_post_notice(_("Bad type"),_("Expected boolean value.\n(\"true\" or \"false\")"));
 	} else if ( KnownPrivates[i].type==pt_code ) {
 	    if ( *pt!='\0' && (*pt!='{' || (ept>=pt && *ept!='}')) )
@@ -3618,7 +3618,7 @@ static void BDFsSetAsDs(SplineFont *sf) {
 
 static char *texparams[] = { N_("Slant:"), N_("Space:"), N_("Stretch:"),
 	N_("Shrink:"), N_("XHeight:"), N_("Quad:"),
-/* GT: Extra Space, see below for a full comment */
+/* TRANSLATORS: Extra Space, see below for a full comment */
 	N_("Extra Sp:"), NULL };
 static char *texpopups[] = { N_("In an italic font the horizontal change per unit vertical change"),
     N_("The amount of space between words when using this font"),
@@ -4064,7 +4064,7 @@ return( true );
 		int cid;
 		char *tit, *msg;
 	    } msgs[] = {
-		{ CID_Notice, N_("Bad Copyright"), NU_("Copyright text (in the Names pane) must be entirely ASCII. So, use (c) instead of ©.")},
+		{ CID_Notice, N_("Bad Copyright"), N_("Copyright text (in the Names pane) must be entirely ASCII. So, use (c) instead of ©.")},
 		{ CID_Human, N_("Bad Human Fontname"), N_("The human-readable fontname text (in the Names pane) must be entirely ASCII.")},
 		{ CID_Weight, N_("Bad Weight"), N_("The weight text (in the Names pane) must be entirely ASCII.")},
 		{ CID_Version, N_("Bad Version"), N_("The version text (in the Names pane) must be entirely ASCII.")},
@@ -4939,8 +4939,8 @@ static void TTFSetup(struct gfi_data *d) {
 }
 
 static char *mathparams[] = {
-/* GT: TeX parameters for math fonts. "Num" means numerator, "Denom" */
-/* GT: means denominator, "Sup" means superscript, "Sub" means subscript */
+/* TRANSLATORS: TeX parameters for math fonts. "Num" means numerator, "Denom" */
+/* means denominator, "Sup" means superscript, "Sub" means subscript */
     N_("Num1:"),
     N_("Num2:"),  N_("Num3:"), N_("Denom1:"),
     N_("Denom2:"), N_("Sup1:"), N_("Sup2:"), N_("Sup3:"), N_("Sub1:"), N_("Sub2:"),
@@ -4962,11 +4962,11 @@ static char *mathpopups[] = { N_("Amount to raise baseline for numerators in dis
     N_("Size of comb delimiters in non-display styles"),
     N_("Height of fraction bar above base line"),
     0 };
-/* GT: Default Rule Thickness. A rule being a typographic term for a straight */
-/* GT: black line on a printed page. */
+/* TRANSLATORS: Default Rule Thickness. A rule being a typographic term for a straight */
+/* black line on a printed page. */
 static char *extparams[] = { N_("Def Rule Thick:"),
-/* GT: I don't really understand these "Big Op Space" things. They have */
-/* GT: something to do with TeX and are roughly defined a few strings down */
+/* TRANSLATORS: I don't really understand these "Big Op Space" things. They have */
+/* something to do with TeX and are roughly defined a few strings down */
 	N_("Big Op Space1:"),
 	N_("Big Op Space2:"),
 	N_("Big Op Space3:"),
@@ -5043,7 +5043,7 @@ return( true );
 	wattrs.restrict_input_to_me = 1;
 	wattrs.undercursor = 1;
 	wattrs.cursor = ct_pointer;
-/* GT: More Parameters */
+/* TRANSLATORS: More Parameters */
 	wattrs.utf8_window_title = _("More Params");
 	pos.x = pos.y = 0;
 	pos.width =GDrawPointsToPixels(NULL,GGadgetScale(180));
@@ -5134,7 +5134,7 @@ static int GFI_TeXChanged(GGadget *g, GEvent *e) {
 
 	if ( GGadgetGetCid(g)==CID_TeXText ) {
 	    GGadgetSetTitle8(extrasp,
-/* GT: Extra Space */
+/* TRANSLATORS: Extra Space */
 		    _("Extra Sp:"));
 	    GGadgetSetEnabled(GWidgetGetControl(d->gw,CID_MoreParams),false);
 	} else {
@@ -5170,7 +5170,7 @@ static void DefaultTeX(struct gfi_data *d) {
     else {
 	GGadgetSetChecked(GWidgetGetControl(d->gw,CID_TeXText), true);
 	GGadgetSetTitle8(GWidgetGetControl(d->gw,CID_TeXExtraSpLabel),
-/* GT: Extra Space */
+/* TRANSLATORS: Extra Space */
 		_("Extra Sp:"));
 	GGadgetSetEnabled(GWidgetGetControl(d->gw,CID_MoreParams),false);
     }
@@ -7670,7 +7670,7 @@ return;
     ngcd[12].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     ngcd[12].creator = GLabelCreate;
 
-/* GT: The space in front of "Same" makes things line up better */
+/* TRANSLATORS: The space in front of "Same" makes things line up better */
     nlabel[13].text = (uint32_t *) _(" Same as Fontname");
     nlabel[13].text_is_1byte = true;
     ngcd[13].gd.label = &nlabel[13];
@@ -8798,7 +8798,7 @@ return;
     ssgcd[i++].creator = GLabelCreate;
 
     ssgcd[i].gd.pos.x = 120; ssgcd[i].gd.pos.y = ssgcd[i-1].gd.pos.y-4;
-/* GT: X is a coordinate, the leading spaces help to align it */
+/* TRANSLATORS: X is a coordinate, the leading spaces help to align it */
     sslabel[i].text = (uint32_t *) _("  X");
     sslabel[i].text_is_1byte = true;
     ssgcd[i].gd.label = &sslabel[i];
@@ -8807,7 +8807,7 @@ return;
     ssgcd[i++].creator = GLabelCreate;
 
     ssgcd[i].gd.pos.x = 180; ssgcd[i].gd.pos.y = ssgcd[i-1].gd.pos.y;
-/* GT: Y is a coordinate, the leading spaces help to align it */
+/* TRANSLATORS: Y is a coordinate, the leading spaces help to align it */
     sslabel[i].text = (uint32_t *) _("Y");
     sslabel[i].text_is_1byte = true;
     ssgcd[i].gd.label = &sslabel[i];
@@ -9517,10 +9517,10 @@ return;
     tngcd[4].creator = GMatrixEditCreate;
 
     tngcd[5].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-/* GT: when translating this please leave the "SIL Open Font License" in */
-/* GT: English (possibly translating it in parentheses). I believe there */
-/* GT: are legal reasons for this. */
-/* GT: So "Añadir SIL Open Font License (licencia de fuentes libres)" */
+/* TRANSLATORS: when translating this please leave the "SIL Open Font License" in */
+/* English (possibly translating it in parentheses). I believe there */
+/* are legal reasons for this. */
+/* So "Añadir SIL Open Font License (licencia de fuentes libres)" */
     tnlabel[5].text = (uint32_t *) S_("Add SIL ");
     tnlabel[5].image_precedes = false;
     tnlabel[5].image = &OFL_logo;
@@ -9815,7 +9815,7 @@ return;
     memset(&txgcd,0,sizeof(txgcd));
 
     k=0;
-    txlabel[k].text = (uint32_t *) U_("ΤεΧ General");
+    txlabel[k].text = (uint32_t *) _("ΤεΧ General");
     txlabel[k].text_is_1byte = true;
     txgcd[k].gd.label = &txlabel[k];
     txgcd[k].gd.pos.x = 10; txgcd[k].gd.pos.y = 10;
@@ -9824,7 +9824,7 @@ return;
     txgcd[k].gd.handle_controlevent = GFI_TeXChanged;
     txgcd[k++].creator = GRadioCreate;
 
-    txlabel[k].text = (uint32_t *) U_("ΤεΧ Math Symbol");
+    txlabel[k].text = (uint32_t *) _("ΤεΧ Math Symbol");
     txlabel[k].text_is_1byte = true;
     txgcd[k].gd.label = &txlabel[k];
     txgcd[k].gd.pos.x = 80; txgcd[k].gd.pos.y = txgcd[k-1].gd.pos.y;
@@ -9833,7 +9833,7 @@ return;
     txgcd[k].gd.handle_controlevent = GFI_TeXChanged;
     txgcd[k++].creator = GRadioCreate;
 
-    txlabel[k].text = (uint32_t *) U_("ΤεΧ Math Extension");
+    txlabel[k].text = (uint32_t *) _("ΤεΧ Math Extension");
     txlabel[k].text_is_1byte = true;
     txgcd[k].gd.label = &txlabel[k];
     txgcd[k].gd.pos.x = 155; txgcd[k].gd.pos.y = txgcd[k-1].gd.pos.y;
@@ -9863,7 +9863,7 @@ return;
     txgcd[k-2].gd.cid = CID_TeXExtraSpLabel;
     txarray2[j++] = NULL;
 
-/* GT: More Parameters */
+/* TRANSLATORS: More Parameters */
     txlabel[k].text = (uint32_t *) _("More Params");
     txlabel[k].text_is_1byte = true;
     txgcd[k].gd.label = &txlabel[k];
@@ -10516,8 +10516,7 @@ return;
     aspects[i++].gcd = gaspboxes;
 
     d->tx_aspect = i;
-/* xgettext won't use non-ASCII messages */
-    aspects[i].text = (uint32_t *) U_("ΤεΧ");	/* Tau epsilon Chi, in greek */
+    aspects[i].text = (uint32_t *) _("ΤεΧ");	/* Tau epsilon Chi, in greek */
     aspects[i].text_is_1byte = true;
     aspects[i++].gcd = txbox;
 
@@ -10544,7 +10543,7 @@ return;
     aspects[i].text_is_1byte = true;
     aspects[i++].gcd = msbox;
 
-/* GT: OpenType GPOS/GSUB lookups */
+/* TRANSLATORS: OpenType GPOS/GSUB lookups */
     if ( sf->cidmaster!=NULL ) aspects[i].disabled = true;
     aspects[i].text = (uint32_t *) S_("OpenType|Lookups");
     aspects[i].text_is_1byte = true;

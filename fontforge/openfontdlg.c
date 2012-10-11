@@ -129,7 +129,7 @@ struct openfilefilters def_font_filters[] = {
 	"}"
 	"{.gz,.Z,.bz2,.lzma,}"
     },
-    { NU_("ΤεΧ Bitmap Fonts"), "*{pk,gf}" },
+    { N_("ΤεΧ Bitmap Fonts"), "*{pk,gf}" },
     { N_("PostScript"), "*.{pfa,pfb,t42,otf,cef,cff,gai,pf3,pt3,gsf,cid}{.gz,.Z,.bz,.bz2,.lzma,}" },
     { N_("TrueType"), "*.{ttf,t42,ttc}{.gz,.Z,.bz,.bz2,.lzma,}" },
     { N_("OpenType"), "*.{ttf,otf}{.gz,.Z,.bz,.bz2,.lzma,}" },

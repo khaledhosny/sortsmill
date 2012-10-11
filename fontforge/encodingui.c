@@ -452,7 +452,7 @@ GTextInfo encodingtypes[] = {
     { (uint32_t *) N_("Windows Latin (\"ANSI\")"), NULL, 0, 0, (void *) "win", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     { (uint32_t *) N_("Adobe Standard"), NULL, 0, 0, (void *) "AdobeStandard", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     { (uint32_t *) N_("Symbol"), NULL, 0, 0, (void *) "Symbol", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) NU_("ΤεΧ Base (8r)"), NULL, 0, 0, (void *) "TeX-Base-Encoding", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) N_("ΤεΧ Base (8r)"), NULL, 0, 0, (void *) "TeX-Base-Encoding", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     { NULL, NULL, 0, 0, NULL, NULL, 1, 0, 0, 0, 0, 1, 0, 0, 0, '\0'},	/* Line */
     { (uint32_t *) N_("ISO 10646-1 (Unicode, BMP)"), NULL, 0, 0, (void *) "UnicodeBmp", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     { (uint32_t *) N_("ISO 10646-1 (Unicode, Full)"), NULL, 0, 0, (void *) "UnicodeFull", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },

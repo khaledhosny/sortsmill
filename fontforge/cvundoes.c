@@ -2784,14 +2784,14 @@ static OTLookup **GetLookupsToCopy(SplineFont *sf,OTLookup ***backpairlist, int 
 			list1[cnt] = otl;
 			choices[cnt++] = xstrdup_or_null(otl->lookup_name);
 			if ( otl->lookup_type==gpos_pair ) {
-/* GT: I'm not happy with this phrase. Suggestions for improvements are welcome */
-/* GT:  Here I am generating a list of lookup names representing data that can */
-/* GT:  be copied from one glyph to another. For a kerning (pairwise) lookup */
-/* GT:  the first entry in the list (marked by the lookup name by itself) will */
-/* GT:  mean all data where the current glyph is the first glyph in a kerning */
-/* GT:  pair. But we can also (separatedly) copy data where the current glyph */
-/* GT:  is the second glyph in the kerning pair, and that's what this line */
-/* GT:  refers to. The "%s" will be filled in with the lookup name */
+/* TRANSLATORS: I'm not happy with this phrase. Suggestions for improvements are welcome */
+/* Here I am generating a list of lookup names representing data that can */
+/* be copied from one glyph to another. For a kerning (pairwise) lookup */
+/* the first entry in the list (marked by the lookup name by itself) will */
+/* mean all data where the current glyph is the first glyph in a kerning */
+/* pair. But we can also (separatedly) copy data where the current glyph */
+/* is the second glyph in the kerning pair, and that's what this line */
+/* refers to. The "%s" will be filled in with the lookup name */
 			    char *format = _("Second glyph of %s");
 			    char *space = xmalloc(strlen(format)+strlen(otl->lookup_name)+1);
 			    sprintf(space, format, otl->lookup_name );

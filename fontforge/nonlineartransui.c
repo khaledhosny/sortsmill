@@ -81,7 +81,7 @@ void NonLinearDlg(FontView *fv,CharView *cv) {
     memset(boxes,0,sizeof(boxes));
     memset(label,0,sizeof(label));
 
-/* GT: an expression describing the transformation applied to the X coordinate */
+/* TRANSLATORS: an expression describing the transformation applied to the X coordinate */
     label[0].text = (uint32_t *) _("X Expr:");
     label[0].text_is_1byte = true;
     gcd[0].gd.label = &label[0];
@@ -104,7 +104,7 @@ void NonLinearDlg(FontView *fv,CharView *cv) {
     gcd[1].creator = GTextFieldCreate;
     hvarray[0][1] = &gcd[1]; hvarray[0][2] = NULL;
 
-/* GT: an expression describing the transformation applied to the Y coordinate */
+/* TRANSLATORS: an expression describing the transformation applied to the Y coordinate */
     label[2].text = (uint32_t *) _("Y Expr:");
     label[2].text_is_1byte = true;
     gcd[2].gd.label = &label[2];
@@ -208,7 +208,7 @@ void NonLinearDlg(FontView *fv,CharView *cv) {
 static GTextInfo originx[] = {
     { (uint32_t *) N_("Glyph Origin"), NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     { (uint32_t *) N_("Center of Selection"), NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-/* GT: The (x,y) position on the window where the user last pressed a mouse button */
+/* TRANSLATORS: The (x,y) position on the window where the user last pressed a mouse button */
     { (uint32_t *) N_("Last Press"), NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     { (uint32_t *) N_("Value"), NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     GTEXTINFO_EMPTY
@@ -216,7 +216,7 @@ static GTextInfo originx[] = {
 static GTextInfo originy[] = {
     { (uint32_t *) N_("Glyph Origin"), NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     { (uint32_t *) N_("Center of Selection"), NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-/* GT: The (x,y) position on the window where the user last pressed a mouse button */
+/* TRANSLATORS: The (x,y) position on the window where the user last pressed a mouse button */
     { (uint32_t *) N_("Last Press"), NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     { (uint32_t *) N_("Value"), NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     GTEXTINFO_EMPTY
@@ -472,7 +472,7 @@ int PointOfViewDlg(struct pov_data *pov, SplineFont *sf, int flags) {
     gcd[k++].creator = GTextFieldCreate;
     harray3[0] = &gcd[k-1];
 
-    label[k].text = (uint32_t *) U_("°");
+    label[k].text = (uint32_t *) _("°");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = gcd[k-1].gd.pos.x+gcd[k-1].gd.pos.width+3; gcd[k].gd.pos.y = gcd[k-2].gd.pos.y;
@@ -504,7 +504,7 @@ int PointOfViewDlg(struct pov_data *pov, SplineFont *sf, int flags) {
     gcd[k++].creator = GTextFieldCreate;
     harray4[0] = &gcd[k-1];
 
-    label[k].text = (uint32_t *) U_("°");
+    label[k].text = (uint32_t *) _("°");
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = gcd[k-1].gd.pos.x+gcd[k-1].gd.pos.width+3; gcd[k].gd.pos.y = gcd[k-2].gd.pos.y;

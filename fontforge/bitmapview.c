@@ -170,13 +170,13 @@ static char *BVMakeTitles(BitmapView *bv, BDFChar *bc,char *buf) {
     BDFFont *bdf = bv->bdf;
 
     sc = bc->sc;
-/* GT: This is the title for a window showing a bitmap character */
-/* GT: It will look something like: */
-/* GT:  exclam at 33 size 12 from Arial */
-/* GT: $1 is the name of the glyph */
-/* GT: $2 is the glyph's encoding */
-/* GT: $3 is the pixel size of the bitmap font */
-/* GT: $4 is the font name */
+/* TRANSLATORS: This is the title for a window showing a bitmap character */
+/* It will look something like: */
+/*  exclam at 33 size 12 from Arial */
+/* $1 is the name of the glyph */
+/* $2 is the glyph's encoding */
+/* $3 is the pixel size of the bitmap font */
+/* $4 is the font name */
     sprintf(buf,_("%1$.80s at %2$d size %3$d from %4$.80s"),
 	    sc!=NULL ? sc->name : "<Nameless>", bv->enc, bdf->pixelsize, sc==NULL ? "" : sc->parent->fontname);
     title = xstrdup_or_null(buf);
@@ -2098,11 +2098,11 @@ static void BVMenuContextualHelp(GWindow base,struct gmenuitem *mi,GEvent *e) {
 }
 
 char *BVFlipNames[] = { N_("Flip Horizontally"), N_("Flip Vertically"),
-/* GT: "CW" means Clockwise */
-    NU_("Rotate 90° CW"),
-/* GT: "CW" means Counter-Clockwise */
-    NU_("Rotate 90° CCW"),
-    NU_("Rotate 180°"),
+/* TRANSLATORS: "CW" means Clockwise */
+    N_("Rotate 90° CW"),
+/* TRANSLATORS: "CW" means Counter-Clockwise */
+    N_("Rotate 90° CCW"),
+    N_("Rotate 180°"),
     N_("Skew..."), NULL };
 
 static GMenuItem2 dummyitem[] = {
@@ -2153,9 +2153,9 @@ static GMenuItem2 edlist[] = {
 static GMenuItem2 trlist[] = {
     { { (uint32_t *) N_("Flip _Horizontally"), (GImage *) "transformfliphor.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'H' }, H_("Flip Horizontally|No Shortcut"), NULL, NULL, BVMenuRotateInvoked, bvt_fliph },
     { { (uint32_t *) N_("Flip _Vertically"), (GImage *) "transformflipvert.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'V' }, H_("Flip Vertically|No Shortcut"), NULL, NULL, BVMenuRotateInvoked, bvt_flipv },
-    { { (uint32_t *) NU_("_Rotate 90° CW"), (GImage *) "transformrotatecw.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'R' }, H_("Rotate 90 CW|No Shortcut"), NULL, NULL, BVMenuRotateInvoked, bvt_rotate90cw },
-    { { (uint32_t *) NU_("Rotate _90° CCW"), (GImage *) "transformrotateccw.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, '9' }, H_("Rotate 90 CCW|No Shortcut"), NULL, NULL, BVMenuRotateInvoked, bvt_rotate90ccw },
-    { { (uint32_t *) NU_("Rotate _180°"), (GImage *) "transformrotate180.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, '1' }, H_("Rotate 180|No Shortcut"), NULL, NULL, BVMenuRotateInvoked, bvt_rotate180 },
+    { { (uint32_t *) N_("_Rotate 90° CW"), (GImage *) "transformrotatecw.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'R' }, H_("Rotate 90 CW|No Shortcut"), NULL, NULL, BVMenuRotateInvoked, bvt_rotate90cw },
+    { { (uint32_t *) N_("Rotate _90° CCW"), (GImage *) "transformrotateccw.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, '9' }, H_("Rotate 90 CCW|No Shortcut"), NULL, NULL, BVMenuRotateInvoked, bvt_rotate90ccw },
+    { { (uint32_t *) N_("Rotate _180°"), (GImage *) "transformrotate180.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, '1' }, H_("Rotate 180|No Shortcut"), NULL, NULL, BVMenuRotateInvoked, bvt_rotate180 },
     { { (uint32_t *) N_("_Skew..."), (GImage *) "transformskew.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'S' }, H_("Skew...|No Shortcut"), NULL, NULL, BVMenuRotateInvoked, bvt_skew },
     GMENUITEM2_EMPTY
 };

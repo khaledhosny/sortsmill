@@ -962,11 +962,10 @@ static void GlyphDiffSCError(struct font_diff *fd, SplineChar *sc, char *format,
     if ( fd->last_sc==sc ) {
 	if ( fd->held[0] ) {
 	    fputs("  ",fd->diffs);
-/* GT: FontForge needs to recognize the quotes used here(“”). If you change them */
-/* GT: (in the translated strings) let me know. It currently also recognizes */
-/* GT: guillemets and a couple of other quotes as well. */
-/* GT:   pfaedit@users.sourceforge.net */
-	    fprintf( fd->diffs, U_("Glyph “%s” differs\n"), sc->name );
+/* TRANSLATORS: FontForge needs to recognize the quotes used here(“”). If you change them */
+/* (in the translated strings) let me know. It currently also recognizes */
+/* guillemets and a couple of other quotes as well. */
+	    fprintf( fd->diffs, _("Glyph “%s” differs\n"), sc->name );
 	    fprintf( fd->diffs, "   %s", fd->held );
 	    fd->held[0] = '\0';
 	}
@@ -1031,7 +1030,7 @@ static int fdRefCheck(struct font_diff *fd, SplineChar *sc1,
 		    (r1->point_match &&
 			(r1->match_pt_base!=r2->match_pt_base && r1->match_pt_ref!=r2->match_pt_ref))) {
 		if ( complain )
-		    GlyphDiffSCError(fd,sc1,U_("Glyph “%s” refers to %s with a different truetype point matching scheme\n"),
+		    GlyphDiffSCError(fd,sc1,_("Glyph “%s” refers to %s with a different truetype point matching scheme\n"),
 			    sc1->name, r1->sc->name );
 		ret = 2;
 	    }
@@ -1043,12 +1042,12 @@ static int fdRefCheck(struct font_diff *fd, SplineChar *sc1,
 	    }
 	    if ( r2==NULL ) {
 		if ( complain )
-		    GlyphDiffSCError(fd,sc1,U_("Glyph “%s” contains a reference to %s in %s\n"),
+		    GlyphDiffSCError(fd,sc1,_("Glyph “%s” contains a reference to %s in %s\n"),
 			    sc1->name, r1->sc->name, fd->name1 );
 		ret = false;
 	    } else {
 		if ( complain )
-		    GlyphDiffSCError(fd,sc1,U_("Glyph “%s” refers to %s with a different transformation matrix\n"),
+		    GlyphDiffSCError(fd,sc1,_("Glyph “%s” refers to %s with a different transformation matrix\n"),
 			    sc1->name, r1->sc->name, fd->name1 );
 		ret = false;
 		r2->checked = true;
@@ -1058,7 +1057,7 @@ static int fdRefCheck(struct font_diff *fd, SplineChar *sc1,
 
     for ( r2 = ref2; r2!=NULL; r2=r2->next ) if ( !r2->checked ) {
 	if ( complain )
-	    GlyphDiffSCError(fd,sc1,U_("Glyph “%s” contains a reference to %s in %s\n"),
+	    GlyphDiffSCError(fd,sc1,_("Glyph “%s” contains a reference to %s in %s\n"),
 		    sc1->name, r2->sc->name, fd->name2 );
 	ret = false;
     }
@@ -1099,7 +1098,7 @@ static void SCCompare(SplineChar *sc1,SplineChar *sc2,struct font_diff *fd) {
     SplinePoint *hmfail;
 
     if ( sc1->parent->multilayer && sc1->layer_cnt!=sc2->layer_cnt )
-	GlyphDiffSCError(fd,sc1,U_("Glyph “%s” has a different number of layers\n"),
+	GlyphDiffSCError(fd,sc1,_("Glyph “%s” has a different number of layers\n"),
 		sc1->name );
     else {
 	last = ly_fore;
@@ -1107,10 +1106,10 @@ static void SCCompare(SplineChar *sc1,SplineChar *sc2,struct font_diff *fd) {
 	    last = sc1->layer_cnt-1;
 	for ( layer=ly_fore; layer<=last; ++layer ) {
 	    if ( sc1->layers[layer].dofill != sc2->layers[layer].dofill )
-		GlyphDiffSCError(fd,sc1,U_("Glyph “%s” has a different fill in layer %d\n"),
+		GlyphDiffSCError(fd,sc1,_("Glyph “%s” has a different fill in layer %d\n"),
 			sc1->name, layer );
 	    if ( sc1->layers[layer].dostroke != sc2->layers[layer].dostroke )
-		GlyphDiffSCError(fd,sc1,U_("Glyph “%s” has a different stroke in layer %d\n"),
+		GlyphDiffSCError(fd,sc1,_("Glyph “%s” has a different stroke in layer %d\n"),
 			sc1->name, layer );
 	    if ( !(fd->flags&fcf_exact) ) {
 		int tdiff, rd;
@@ -1128,13 +1127,13 @@ static void SCCompare(SplineChar *sc1,SplineChar *sc2,struct font_diff *fd) {
 		}
 		tdiff = fd->diff;
 		if ( rd==2 )
-		    GlyphDiffSCError(fd,sc1,U_("Glyph “%s” contains a reference which has different truetype point match specifications\n"),
+		    GlyphDiffSCError(fd,sc1,_("Glyph “%s” contains a reference which has different truetype point match specifications\n"),
 			    sc1->name );
 		if ( (val&SS_ContourMatch) && (fd->flags&fcf_warn_not_exact) )
-		    GlyphDiffSCError(fd,sc1,U_("Glyph “%s” does not have splines which match exactly, but they are close\n"),
+		    GlyphDiffSCError(fd,sc1,_("Glyph “%s” does not have splines which match exactly, but they are close\n"),
 			    sc1->name );
 		if ( (val&SS_UnlinkRefMatch) && (fd->flags&fcf_warn_not_ref_exact) )
-		    GlyphDiffSCError(fd,sc1,U_("A match was found after unlinking references in glyph “%s”\n"),
+		    GlyphDiffSCError(fd,sc1,_("A match was found after unlinking references in glyph “%s”\n"),
 			    sc1->name );
 		fd->diff = tdiff;	/* those are warnings, not errors */
 	    } else {
@@ -1144,11 +1143,11 @@ static void SCCompare(SplineChar *sc1,SplineChar *sc2,struct font_diff *fd) {
 	    }
 	    if ( val&SS_NoMatch ) {
 		if ( val & SS_DiffContourCount )
-		    GlyphDiffSCError(fd,sc1,U_("Different number of contours in glyph “%s”\n"), sc1->name);
+		    GlyphDiffSCError(fd,sc1,_("Different number of contours in glyph “%s”\n"), sc1->name);
 		else if ( val & SS_MismatchOpenClosed )
-		    GlyphDiffSCError(fd,sc1,U_("Open/Closed contour mismatch in glyph “%s”\n"), sc1->name);
+		    GlyphDiffSCError(fd,sc1,_("Open/Closed contour mismatch in glyph “%s”\n"), sc1->name);
 		else
-		    GlyphDiffSCError(fd,sc1,U_("Spline mismatch in glyph “%s”\n"), sc1->name);
+		    GlyphDiffSCError(fd,sc1,_("Spline mismatch in glyph “%s”\n"), sc1->name);
 	    }
 	}
     }
@@ -1156,29 +1155,29 @@ static void SCCompare(SplineChar *sc1,SplineChar *sc2,struct font_diff *fd) {
 	SCAddBackgrounds(sc1,sc2,fd);
 
     if ( sc1->width!=sc2->width )
-	GlyphDiffSCError(fd,sc1,U_("Glyph “%s” has advance width %d in %s but %d in %s\n"),
+	GlyphDiffSCError(fd,sc1,_("Glyph “%s” has advance width %d in %s but %d in %s\n"),
 		sc1->name, sc1->width, fd->name1, sc2->width, fd->name2 );
     if ( sc1->vwidth!=sc2->vwidth )
-	GlyphDiffSCError(fd,sc1,U_("Glyph “%s” has vertical advance width %d in %s but %d in %s\n"),
+	GlyphDiffSCError(fd,sc1,_("Glyph “%s” has vertical advance width %d in %s but %d in %s\n"),
 		sc1->name, sc1->vwidth, fd->name1, sc2->vwidth, fd->name2 );
 
     if ( ( fd->flags&fcf_hintmasks ) && !(val&SS_NoMatch) &&
 	    (sc1->hconflicts || sc1->vconflicts || !(fd->flags&fcf_hmonlywithconflicts)) &&
 	    hmfail!=NULL )
-	GlyphDiffSCError(fd,sc1,U_("Hint masks differ in glyph “%s” at (%g,%g)\n"),
+	GlyphDiffSCError(fd,sc1,_("Hint masks differ in glyph “%s” at (%g,%g)\n"),
 		sc1->name, hmfail->me.x, hmfail->me.y );
     if ( ( fd->flags&fcf_hinting ) && !SCCompareHints( sc1,sc2 ))
-	GlyphDiffSCError(fd,sc1,U_("Hints differ in glyph “%s”\n"), sc1->name);
+	GlyphDiffSCError(fd,sc1,_("Hints differ in glyph “%s”\n"), sc1->name);
     if (( fd->flags&fcf_hinting ) && (sc1->ttf_instrs_len!=0 || sc2->ttf_instrs_len!=0)) {
 	if ( sc1->ttf_instrs_len==0 )
-	    GlyphDiffSCError(fd,sc1,U_("Glyph “%s” in %s has no truetype instructions\n"),
+	    GlyphDiffSCError(fd,sc1,_("Glyph “%s” in %s has no truetype instructions\n"),
 		    sc1->name, fd->name1 );
 	else if ( sc2->ttf_instrs_len==0 )
-	    GlyphDiffSCError(fd,sc1,U_("Glyph “%s” in %s has no truetype instructions\n"),
+	    GlyphDiffSCError(fd,sc1,_("Glyph “%s” in %s has no truetype instructions\n"),
 		    sc1->name, fd->name2 );
 	else if ( sc1->ttf_instrs_len!=sc2->ttf_instrs_len ||
 		memcmp(sc1->ttf_instrs,sc2->ttf_instrs,sc1->ttf_instrs_len)!=0 )
-	    GlyphDiffSCError(fd,sc1,U_("Glyph “%s” has different truetype instructions\n"),
+	    GlyphDiffSCError(fd,sc1,_("Glyph “%s” has different truetype instructions\n"),
 		    sc1->name );
     }
     GlyphDiffSCFinish(fd);
@@ -1217,7 +1216,7 @@ static void comparefontglyphs(struct font_diff *fd) {
 	    }
 	    fd->local_diff = fd->top_diff = fd->diff = true;
 	    fputs("  ",fd->diffs);
-	    fprintf( fd->diffs, U_("Glyph “%s” missing from %s\n"), sc->name, fd->name2 );
+	    fprintf( fd->diffs, _("Glyph “%s” missing from %s\n"), sc->name, fd->name2 );
 	}
     }
 
@@ -1232,7 +1231,7 @@ static void comparefontglyphs(struct font_diff *fd) {
 	    }
 	    fd->local_diff = fd->top_diff = fd->diff = true;
 	    fputs("  ",fd->diffs);
-	    fprintf( fd->diffs, U_("Glyph “%s” missing from %s\n"), sc->name, fd->name1 );
+	    fprintf( fd->diffs, _("Glyph “%s” missing from %s\n"), sc->name, fd->name1 );
 	    if ( fd->flags&fcf_addmissing )
 		FDAddMissingGlyph(fd,sc);
 	}
@@ -1291,7 +1290,7 @@ static void comparebitmapglyphs(struct font_diff *fd, BDFFont *bdf1, BDFFont *bd
 		}
 		fd->local_diff = fd->middle_diff = fd->top_diff = fd->diff = true;
 		fputs("   ",fd->diffs);
-		fprintf( fd->diffs, U_("Glyph “%s” missing from %s at %d@%d\n"),
+		fprintf( fd->diffs, _("Glyph “%s” missing from %s at %d@%d\n"),
 			bdfc->sc->name, fd->name2, bdf1->pixelsize, BDFDepth(bdf1) );
 	    }
 	}
@@ -1314,7 +1313,7 @@ static void comparebitmapglyphs(struct font_diff *fd, BDFFont *bdf1, BDFFont *bd
 	    }
 	    fd->local_diff = fd->middle_diff = fd->top_diff = fd->diff = true;
 	    fputs("   ",fd->diffs);
-	    fprintf( fd->diffs, U_("Glyph “%s” missing from %s at %d@%d\n"),
+	    fprintf( fd->diffs, _("Glyph “%s” missing from %s at %d@%d\n"),
 		    bdfc->sc->name, fd->name1, bdf1->pixelsize, BDFDepth(bdf1) );
 	}
 
@@ -1345,25 +1344,25 @@ static void comparebitmapglyphs(struct font_diff *fd, BDFFont *bdf1, BDFFont *bd
 		if ( ((val&SS_WidthMismatch)!=0) + ((val&SS_VWidthMismatch)!=0) +
 			((val&(BC_BoundingBoxMismatch|BC_BitmapMismatch))!=0)>1 ) {
 		    fputs(leader,fd->diffs);
-		    fprintf( fd->diffs, U_("Glyph “%s” differs at %d@%d\n"),
+		    fprintf( fd->diffs, _("Glyph “%s” differs at %d@%d\n"),
 			    bdfc->sc->name,bdf1->pixelsize, BDFDepth(bdf1) );
 		    leader = "    ";
 		}
 		if ( val&SS_WidthMismatch ) {
 		    fputs(leader,fd->diffs);
-		    fprintf(fd->diffs,U_("Glyph “%s” has advance width %d in %s but %d in %s at %d@%d\n"),
+		    fprintf(fd->diffs,_("Glyph “%s” has advance width %d in %s but %d in %s at %d@%d\n"),
 			    bdfc->sc->name, bdfc->width, fd->name1, bdfc2->width, fd->name2,
 			    bdf1->pixelsize, BDFDepth(bdf1));
 		}
 		if ( val&SS_VWidthMismatch ) {
 		    fputs(leader,fd->diffs);
-		    fprintf(fd->diffs,U_("Glyph “%s” has vertical advance width %d in %s but %d in %s at %d@%d\n"),
+		    fprintf(fd->diffs,_("Glyph “%s” has vertical advance width %d in %s but %d in %s at %d@%d\n"),
 			    bdfc->sc->name, bdfc->vwidth, fd->name1, bdfc2->vwidth, fd->name2,
 			    bdf1->pixelsize, BDFDepth(bdf1));
 		}
 		if ( val&(BC_BoundingBoxMismatch|BC_BitmapMismatch) ) {
 		    fputs(leader,fd->diffs);
-		    fprintf(fd->diffs,U_("Glyph “%s” has a different bitmap at %d@%d\n"),
+		    fprintf(fd->diffs,_("Glyph “%s” has a different bitmap at %d@%d\n"),
 			    bdfc->sc->name, bdf1->pixelsize, BDFDepth(bdf1));
 		}
 		fd->local_diff = fd->middle_diff = fd->top_diff = fd->diff = true;
@@ -2008,7 +2007,7 @@ static void complainscfeature(struct font_diff *fd, SplineChar *sc, char *format
     if ( fd->last_sc==sc ) {
 	if ( fd->held[0] ) {
 	    fputs("   ",fd->diffs);
-	    fprintf( fd->diffs, U_("Glyph “%s” differs\n"), sc->name );
+	    fprintf( fd->diffs, _("Glyph “%s” differs\n"), sc->name );
 	    fprintf( fd->diffs, "    %s", fd->held );
 	    if ( fd->held[strlen(fd->held)-1]!='\n' )
 		putc('\n',fd->diffs);
@@ -2025,29 +2024,29 @@ static void complainscfeature(struct font_diff *fd, SplineChar *sc, char *format
 
 static void complainapfeature(struct font_diff *fd,SplineChar *sc,
 	AnchorPoint *ap,char *missingname) {
-    complainscfeature(fd, sc, U_("“%s” in %s did not contain an anchor point (%g,%g) class %s\n"),
+    complainscfeature(fd, sc, _("“%s” in %s did not contain an anchor point (%g,%g) class %s\n"),
 	    sc->name, missingname, ap->me.x, ap->me.y, ap->anchor->name);
 }
 
 static void complainapfeature2(struct font_diff *fd,SplineChar *sc,
 	AnchorPoint *ap,char *missingname) {
-    complainscfeature(fd, sc, U_("“%s” in %s contains an anchor point (%g,%g) class %s which differs from its counterpart by point matching\n"),
+    complainscfeature(fd, sc, _("“%s” in %s contains an anchor point (%g,%g) class %s which differs from its counterpart by point matching\n"),
 	    sc->name, missingname, ap->me.x, ap->me.y, ap->anchor->name);
 }
 
 static void complainpstfeature(struct font_diff *fd,SplineChar *sc,
 	PST *pst,char *missingname) {
     if ( pst->type==pst_position ) {
-	complainscfeature(fd, sc, U_("“%s” in %s did not contain a positioning lookup ∆x=%d ∆y=%d ∆x_adv=%d ∆y_adv=%d\n"),
+	complainscfeature(fd, sc, _("“%s” in %s did not contain a positioning lookup ∆x=%d ∆y=%d ∆x_adv=%d ∆y_adv=%d\n"),
 		sc->name, missingname, pst->u.pos.xoff, pst->u.pos.yoff, pst->u.pos.h_adv_off, pst->u.pos.v_adv_off );
     } else if ( pst->type==pst_pair ) {
-	complainscfeature(fd, sc, U_("“%s” in %s did not contain a pairwise positioning lookup ∆x=%d ∆y=%d ∆x_adv=%d ∆y_adv=%d to %s ∆x=%d ∆y=%d ∆x_adv=%d ∆y_adv=%d\n"),
+	complainscfeature(fd, sc, _("“%s” in %s did not contain a pairwise positioning lookup ∆x=%d ∆y=%d ∆x_adv=%d ∆y_adv=%d to %s ∆x=%d ∆y=%d ∆x_adv=%d ∆y_adv=%d\n"),
 		sc->name, missingname, 
 		pst->u.pair.vr[0].xoff, pst->u.pair.vr[0].yoff, pst->u.pair.vr[0].h_adv_off, pst->u.pair.vr[0].v_adv_off,
 		pst->u.pair.paired,
 	    pst->u.pair.vr[1].xoff, pst->u.pair.vr[1].yoff, pst->u.pair.vr[1].h_adv_off, pst->u.pair.vr[1].v_adv_off );
     } else if ( pst->type==pst_substitution || pst->type==pst_alternate || pst->type==pst_multiple || pst->type==pst_ligature ) {
-	complainscfeature(fd, sc, U_("“%s” in %s did not contain a substitution lookup to %s\n"),
+	complainscfeature(fd, sc, _("“%s” in %s did not contain a substitution lookup to %s\n"),
 		sc->name, missingname, pst->u.subs.variant );
     }
 }
@@ -2157,17 +2156,17 @@ return;
 		    }
 		    if ( kp2!=NULL ) {
 			if ( kp2->off!=kp1->off )
-			    complainscfeature(fd, sc1, U_("Kerning between “%s” and %s is %d in %s and %d in %s\n"),
+			    complainscfeature(fd, sc1, _("Kerning between “%s” and %s is %d in %s and %d in %s\n"),
 				    sc1->name, kp1->sc->name, kp1->off, fd->name1, kp2->off, fd->name2 );
 			kp2->kcid = 1;
 		    } else {
-			complainscfeature(fd, sc1, U_("No kerning between “%s” and %s in %s whilst it is %d in %s\n"),
+			complainscfeature(fd, sc1, _("No kerning between “%s” and %s in %s whilst it is %d in %s\n"),
 				sc1->name, kp1->sc->name, fd->name2, kp1->off, fd->name1 );
 		    }
 		}
 		for ( kp2= isv ? sc2->vkerns : sc2->kerns ; kp2!=NULL; kp2=kp2->next )
 		    if ( !kp2->kcid && kp2->subtable == fd->cur_sub2 )
-			complainscfeature(fd, sc1, U_("No kerning between “%s” and %s in %s whilst it is %d in %s\n"),
+			complainscfeature(fd, sc1, _("No kerning between “%s” and %s in %s whilst it is %d in %s\n"),
 				sc2->name, kp2->sc->name, fd->name1, kp2->off, fd->name2 );
 		}
 	}
