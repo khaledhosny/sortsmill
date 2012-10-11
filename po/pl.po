@@ -18,6 +18,14 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%"
 "100>=20) ? 1 : 2);\n"
 
+#: ../desktop/fontforge.desktop.in.h:1
+msgid "FontForge"
+msgstr "FontForge"
+
+#: ../desktop/fontforge.desktop.in.h:2
+msgid "An outline font editor"
+msgstr "Edytor fontów"
+
 #: alignment.c:297 anchorsaway.c:1233 combinations.c:1115 cvhints.c:483 cvhints.c:786
 #: displayfonts.c:1132 displayfonts.c:1633
 msgid "_Size:"
