@@ -34,10 +34,10 @@ include $(top_srcdir)/mk/layout.am
 SUBDIRS = lib inc auxiliary gutils
 
 if GRAPHICAL_USER_INTERFACE
-SUBDIRS += gdraw desktop
+SUBDIRS += gdraw data
 endif GRAPHICAL_USER_INTERFACE
 
-SUBDIRS += fontforge po scheme doc htdocs cidmap tests
+SUBDIRS += fontforge po scheme doc htdocs tests
 
 if PYTHON_SCRIPTING
 SUBDIRS += pycontrib
@@ -60,7 +60,7 @@ EXTRA_DIST = COPYING.permissive README-Mac.html README-MS.html	\
 	INSTALL.git
 
 uninstall-local:
-	(cd desktop; $(MAKE) $(AM_MAKEFLAGS) uninstall)
+	(cd data; $(MAKE) $(AM_MAKEFLAGS) uninstall)
 
 distclean-local:
 	rm -f config-summary

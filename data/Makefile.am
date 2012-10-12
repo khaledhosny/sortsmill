@@ -27,6 +27,8 @@
 
 include $(top_srcdir)/mk/layout.am
 
+SUBDIRS = cidmap pixmaps
+
 desktop_in_files = fontforge.desktop.in
 nodist_desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 
