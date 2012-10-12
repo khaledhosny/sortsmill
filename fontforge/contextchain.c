@@ -1561,7 +1561,7 @@ return( NULL );
     if ( namecnt==0 )		/* No classes_simple specified yet, can't help */
 return( NULL );
 
-    if (( spt = u_strrchr(spt,' '))== NULL )
+    if (( spt = u32_strrchr(spt,' '))== NULL )
 	spt = basept;
     else {
 	pt = ++spt;

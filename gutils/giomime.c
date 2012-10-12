@@ -109,7 +109,7 @@ uint32_t *GIOguessMimeType(const uint32_t *path,int isdir) {
     if ( isdir )
 return( dir );
     path = u32_GFileBaseName(path);
-    pt = u_strrchr(path,'.');
+    pt = u32_strrchr(path,'.');
 
     if ( pt==NULL ) {
 	if ( uc_strmatch(path,"makefile")==0 || uc_strmatch(path,"makefile~")==0 )

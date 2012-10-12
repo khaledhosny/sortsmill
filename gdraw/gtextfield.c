@@ -284,7 +284,7 @@ return;
 
 	upt = gt->text;
 	i = 0;
-	while ( ( uept = u_strchr(upt,'\n'))!=NULL ) {
+	while ( ( uept = u32_strchr(upt,'\n'))!=NULL ) {
 	    gt->lines[i++] = upt-gt->text;
 	    upt = uept+1;
 	}
@@ -1212,7 +1212,7 @@ return( false );
 	    upt = gt->text+gt->sel_base;
 	    if ( *upt=='\n' )
 		++upt;
-	    upt = u_strchr(upt,'\n');
+	    upt = u32_strchr(upt,'\n');
 	    if ( upt==NULL ) upt=gt->text+u32_strlen(gt->text);
 	    if ( !(event->u.chr.state&ksm_shift) ) {
 		gt->sel_start = gt->sel_base = gt->sel_end =upt-gt->text;

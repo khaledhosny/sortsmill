@@ -790,11 +790,11 @@ static void MVRemetric(MetricsView *mv) {
     }
     _script = _GGadgetGetTitle(mv->script);
     script = DEFAULT_SCRIPT; lang = DEFAULT_LANG;
-    if ( u32_strlen(_script)>=4 && (u_strchr(_script,'{')==NULL || u_strchr(_script,'{')-_script>=4)) {
+    if ( u32_strlen(_script)>=4 && (u32_strchr(_script,'{')==NULL || u32_strchr(_script,'{')-_script>=4)) {
 	uint32_t *pt;
 	script = (_script[0]<<24) | (_script[1]<<16) | (_script[2]<<8) | _script[3];
-	if ( (pt = u_strchr(_script,'{'))!=NULL && u32_strlen(pt+1)>=4 &&
-		(u_strchr(pt+1,'}')==NULL || u_strchr(pt+1,'}')-(pt+1)>=4 ))
+	if ( (pt = u32_strchr(_script,'{'))!=NULL && u32_strlen(pt+1)>=4 &&
+		(u32_strchr(pt+1,'}')==NULL || u32_strchr(pt+1,'}')-(pt+1)>=4 ))
 	    lang = (pt[1]<<24) | (pt[2]<<16) | (pt[3]<<8) | pt[4];
     }
 

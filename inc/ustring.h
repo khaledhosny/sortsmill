@@ -52,12 +52,8 @@ VISIBLE extern void uc_strcat (uint32_t *, const char *);
 VISIBLE extern void uc_strncat (uint32_t *, const char *, int len);
 VISIBLE extern void cu_strcat (char *, const uint32_t *);
 VISIBLE extern void cu_strncat (char *, const uint32_t *, int len);
-VISIBLE extern uint32_t *u_strchr (const uint32_t *, uint32_t);
-VISIBLE extern uint32_t *u_strrchr (const uint32_t *, uint32_t);
 VISIBLE extern uint32_t *uc_strstr (const uint32_t *, const char *);
-VISIBLE extern uint32_t *u_strstr (const uint32_t *, const uint32_t *);
 VISIBLE extern uint32_t *uc_strstrmatch (const uint32_t *, const char *);
-VISIBLE extern uint32_t *u_strstrmatch (const uint32_t *, const uint32_t *);
 VISIBLE extern char *strstrmatch (const char *, const char *);
 
 VISIBLE extern uint32_t *u_strstartmatch (const uint32_t *initial,

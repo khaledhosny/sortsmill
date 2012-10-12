@@ -155,30 +155,6 @@ cu_strncat (char *to, const uint32_t *from, int len)
 }
 
 uint32_t *
-u_strchr (const uint32_t *str, uint32_t ch)
-{
-  register uint32_t test;
-
-  while ((test = *(str++)) != '\0')
-    if (test == ch)
-      return ((uint32_t *) str - 1);
-
-  return (NULL);
-}
-
-uint32_t *
-u_strrchr (const uint32_t *str, uint32_t ch)
-{
-  register uint32_t test, *last = NULL;
-
-  while ((test = *(str++)) != '\0')
-    if (test == ch)
-      last = (uint32_t *) str - 1;
-
-  return (last);
-}
-
-uint32_t *
 uc_strstr (const uint32_t *longer, const char *substr)
 {
   long ch1, ch2;
@@ -203,29 +179,6 @@ uc_strstr (const uint32_t *longer, const char *substr)
 }
 
 uint32_t *
-u_strstr (const uint32_t *longer, const uint32_t *substr)
-{
-  long ch1, ch2;
-  const uint32_t *lpt, *str1, *str2;
-
-  for (lpt = longer; *lpt != '\0'; ++lpt)
-    {
-      str1 = lpt;
-      str2 = substr;
-      for (;;)
-        {
-          ch1 = *str1++;
-          ch2 = *str2++;
-          if (ch2 == '\0')
-            return ((uint32_t *) lpt);
-          if (ch1 != ch2)
-            break;
-        }
-    }
-  return (NULL);
-}
-
-uint32_t *
 uc_strstrmatch (const uint32_t *longer, const char *substr)
 {
   long ch1, ch2;
@@ -236,31 +189,6 @@ uc_strstrmatch (const uint32_t *longer, const char *substr)
     {
       str1 = lpt;
       str2 = (unsigned char *) substr;
-      for (;;)
-        {
-          ch1 = *str1++;
-          ch2 = *str2++;
-          ch1 = tolower (ch1);
-          ch2 = tolower (ch2);
-          if (ch2 == '\0')
-            return ((uint32_t *) lpt);
-          if (ch1 != ch2)
-            break;
-        }
-    }
-  return (NULL);
-}
-
-uint32_t *
-u_strstrmatch (const uint32_t *longer, const uint32_t *substr)
-{
-  long ch1, ch2;
-  const uint32_t *lpt, *str1, *str2;
-
-  for (lpt = longer; *lpt != '\0'; ++lpt)
-    {
-      str1 = lpt;
-      str2 = substr;
       for (;;)
         {
           ch1 = *str1++;

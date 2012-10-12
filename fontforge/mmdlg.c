@@ -1245,7 +1245,7 @@ EditStyleName (MMW * mmw, int index)
       ti = GGadgetGetListItem (list, index);
       if (ti != NULL)
         {
-          pt = u_strchr (ti->text, '[');
+          pt = u32_strchr (ti->text, '[');
           mn = ti->userdata;
         }
       if (pt != NULL)
@@ -2159,7 +2159,7 @@ MMW_ParseNamedStyles (MMSet *setto, MMW * mmw)
         {
           setto->named_instances[i].coords =
             xcalloc (setto->axis_count, sizeof (real));
-          upt = u_strchr (ti[i]->text, '[');
+          upt = u32_strchr (ti[i]->text, '[');
           if (upt != NULL)
             {
               for (j = 0, ++upt; j < setto->axis_count; ++j)

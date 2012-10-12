@@ -80,7 +80,7 @@ static int32_t *ParseList(GWindow gw, int cid,int *err, int final) {
 
     *err = false;
     end2 = NULL;
-    for ( i=1, pt = val; (end = u_strchr(pt,',')) || (end2=u_strchr(pt,' ')); ++i ) {
+    for ( i=1, pt = val; (end = u32_strchr(pt,',')) || (end2=u32_strchr(pt,' ')); ++i ) {
 	if ( end!=NULL && end2!=NULL ) {
 	    if ( end2<end ) end = end2;
 	} else if ( end2!=NULL )

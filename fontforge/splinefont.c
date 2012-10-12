@@ -1494,7 +1494,7 @@ const uint32_t *_uGetModifiers(const uint32_t *fontname, const uint32_t *familyn
      /* "NimbusSanL-Regu" vs "Nimbus Sans L" (note "San" vs "Sans") */
      /* so look for a '-' if there is one and use that as the break point... */
 
-     if ( (fpt=u_strchr(fontname,'-'))!=NULL ) {
+     if ( (fpt=u32_strchr(fontname,'-'))!=NULL ) {
 	  ++fpt;
 	  if ( *fpt=='\0' )
 	       fpt = NULL;

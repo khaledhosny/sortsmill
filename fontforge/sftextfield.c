@@ -1085,7 +1085,7 @@ return( false );
 	    upt = st->li.text+st->sel_base;
 	    if ( *upt=='\n' )
 		++upt;
-	    upt = u_strchr(upt,'\n');
+	    upt = u32_strchr(upt,'\n');
 	    if ( upt==NULL ) upt=st->li.text+u32_strlen(st->li.text);
 	    if ( !(event->u.chr.state&ksm_shift) ) {
 		st->sel_start = st->sel_base = st->sel_end =upt-st->li.text;

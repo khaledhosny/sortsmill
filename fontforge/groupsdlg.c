@@ -863,7 +863,7 @@ static int Group_ToSelection(GGadget *g, GEvent *e) {
 	GDrawRaise(fv->gw);
 	memset(fv->b.selected,0,fv->b.map->enccount);
 	while ( *ret ) {
-	    end = u_strchr(ret,' ');
+	    end = u32_strchr(ret,' ');
 	    if ( end==NULL ) end = ret+u32_strlen(ret);
 	    nm = cu_copybetween(ret,end);
 	    for ( ret = end; isspace(*ret); ++ret);

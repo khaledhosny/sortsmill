@@ -2248,7 +2248,7 @@ static int GFI_NameChange(GGadget *g, GEvent *e)
 	    ept = temp;
 	  if (( temp = uc_strstrmatch(uname,"slanted"))!=NULL && temp<ept && temp!=uname )
 	    ept = temp;
-	  if (( temp = u_strchr(uname,'-'))!=NULL && temp!=uname )
+	  if (( temp = u32_strchr(uname,'-'))!=NULL && temp!=uname )
 	    ept = temp;
 	  temp = x_u32_strmbndup (uname,ept-uname);
 	  GGadgetSetTitle(GWidgetGetControl(gw,CID_Family),temp);
@@ -2670,7 +2670,7 @@ return( false );
     // FIXME FIXME FIXME: What about 'INFINITY' or 'NAN'! This test needs to be modified.
     //
     u32_strtod(ufamily,&end);
-    if ( *end=='\0' || (isdigit(ufamily[0]) && u_strchr(ufamily,'#')!=NULL) ) {
+    if ( *end=='\0' || (isdigit(ufamily[0]) && u32_strchr(ufamily,'#')!=NULL) ) {
 	ff_post_error(_("Bad Font Family Name"),_("A PostScript name may not be a number"));
 return( false );
     }
@@ -2698,7 +2698,7 @@ return( false );
     // FIXME FIXME FIXME: What about 'INFINITY' or 'NAN'! This test needs to be modified.
     //
     u32_strtod(ufont,&end);
-    if ( (*end=='\0' || (isdigit(ufont[0]) && u_strchr(ufont,'#')!=NULL)) &&
+    if ( (*end=='\0' || (isdigit(ufont[0]) && u32_strchr(ufont,'#')!=NULL)) &&
 	    *ufont!='\0' ) {
 	ff_post_error(_("Bad Font Name"),_("A PostScript name may not be a number"));
 return( false );

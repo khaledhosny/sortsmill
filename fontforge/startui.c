@@ -221,8 +221,8 @@ SplashLayout ()
   lines[linecnt] = pt;
   linecnt++;
   lines[linecnt] = NULL;
-  is = u_strchr (msg, '(');
-  ie = u_strchr (msg, ')');
+  is = u32_strchr (msg, '(');
+  ie = u32_strchr (msg, ')');
 }
 
 void

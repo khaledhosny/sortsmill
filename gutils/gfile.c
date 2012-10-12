@@ -166,7 +166,7 @@ u32_GFileNormalize (uint32_t *name)
 
   if ((pt = uc_strstr (name, "://")) != NULL)
     {
-      base = u_strchr (pt + 3, '/');
+      base = u32_strchr (pt + 3, '/');
       if (base == NULL)
         return (name);
       ++base;

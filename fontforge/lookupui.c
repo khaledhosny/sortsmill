@@ -3964,7 +3964,7 @@ uint32_t **SFGlyphNameCompletion(SplineFont *sf,GGadget *t,int from_tab,
     if ( pt==NULL || *pt=='\0' )
 return( NULL );
     if ( new_name_after_space ) {
-	if (( spt = u_strrchr(spt,' '))== NULL )
+	if (( spt = u32_strrchr(spt,' '))== NULL )
 	    spt = basept;
 	else {
 	    pt = ++spt;

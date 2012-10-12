@@ -564,7 +564,7 @@ return( true );
 	GDrawSetFont(popup,popup_font);
 	do {
 	    temp = -1;
-	    if (( ept = u_strchr(pt,'\n'))!=NULL )
+	    if (( ept = u32_strchr(pt,'\n'))!=NULL )
 		temp = ept-pt;
 	    temp = GDrawGetTextWidth(popup,pt,temp);
 	    if ( temp>width ) width = temp;
@@ -615,7 +615,7 @@ return( true );
 	    y += as;
 	    do {
 		temp = -1;
-		if (( ept = u_strchr(pt,'\n'))!=NULL )
+		if (( ept = u32_strchr(pt,'\n'))!=NULL )
 		    temp = ept-pt;
 		GDrawDrawText(popup,x,y,pt,temp,popup_foreground);
 		y += fh;

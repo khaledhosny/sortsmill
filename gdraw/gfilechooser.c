@@ -399,7 +399,7 @@ static void GFileChooserScanDir(GFileChooser *gfc,uint32_t *dir) {
 	ept = dir;
 	cnt = 0;
 	if ( (pt=uc_strstr(dir,"://"))!=NULL ) {
-	    ept = u_strchr(pt+3,'/');
+	    ept = u32_strchr(pt+3,'/');
 	    if ( ept==NULL )
 		ept = pt+u32_strlen(pt);
 	    else
@@ -1103,7 +1103,7 @@ void GFileChooserFilterIt(GGadget *g) {
 return;
     }
 
-    if (( slashpt = u_strrchr(spt,'/'))==NULL )
+    if (( slashpt = u32_strrchr(spt,'/'))==NULL )
 	slashpt = spt;
     else
 	++slashpt;
@@ -1212,7 +1212,7 @@ static void GFileChooserSetTitle(GGadget *g,const uint32_t *tit) {
 return;
     }
 
-    pt = u_strrchr(tit,'/');
+    pt = u32_strrchr(tit,'/');
     free(gfc->lastname);
     gfc->lastname = NULL;
 

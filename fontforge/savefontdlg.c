@@ -271,7 +271,7 @@ ParseBitmapSizes (GGadget * g, char *msg, int *err)
   *err = false;
   end2 = NULL;
   for (i = 1, pt = val;
-       (end = u_strchr (pt, ',')) || (end2 = u_strchr (pt, ' ')); ++i)
+       (end = u32_strchr (pt, ',')) || (end2 = u32_strchr (pt, ' ')); ++i)
     {
       if (end != NULL && end2 != NULL)
         {
@@ -2311,8 +2311,8 @@ BitmapName (struct gfc_data *d)
   dup = x_gc_malloc_atomic ((u32_strlen (ret) + 30) * sizeof (uint32_t));
   u32_strcpy (dup, ret);
 
-  pt = u_strrchr (dup, '.');
-  tpt = u_strrchr (dup, '/');
+  pt = u32_strrchr (dup, '.');
+  tpt = u32_strrchr (dup, '/');
   if (pt < tpt)
     pt = NULL;
   if (pt == NULL)
@@ -2364,8 +2364,8 @@ GFD_Format (GGadget * g, GEvent * e)
       dup = xmalloc ((u32_strlen (ret) + 30) * sizeof (uint32_t));
       u32_strcpy (dup, ret);
       free (ret);
-      pt = u_strrchr (dup, '.');
-      tpt = u_strrchr (dup, '/');
+      pt = u32_strrchr (dup, '.');
+      tpt = u32_strrchr (dup, '/');
       if (pt < tpt)
         pt = NULL;
       if (pt == NULL)

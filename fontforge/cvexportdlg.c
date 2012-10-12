@@ -347,7 +347,7 @@ static int GFD_Format(GGadget *g, GEvent *e) {
 	f2 = xmalloc(sizeof(uint32_t) * (u32_strlen(file)+6));
 	u32_strcpy(f2,file);
 	free(file);
-	pt = u_strrchr(f2,'.');
+	pt = u32_strrchr(f2,'.');
 	if ( pt==NULL )
 	    pt = f2+u32_strlen(f2);
 	if ( d->bc!=NULL )

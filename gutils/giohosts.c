@@ -57,7 +57,7 @@ _GIO_decomposeURL(const uint32_t *url,char **host, int *port, char **username,
   cu_strncpy(proto,url,pt-url<sizeof(proto)?pt-url:sizeof(proto));
   pt += 3;
 
-  pt2 = u_strchr(pt,'/');
+  pt2 = u32_strchr(pt,'/');
   if ( pt2==NULL )
     {
       pt2 = pt+u32_strlen(pt);
@@ -68,10 +68,10 @@ _GIO_decomposeURL(const uint32_t *url,char **host, int *port, char **username,
       path = x_u32_to_u8 (u32_force_valid (pt2));
     }
 
-  upt = u_strchr(pt,'@');
+  upt = u32_strchr(pt,'@');
   if ( upt!=NULL && upt<pt2 )
     {
-      ppt = u_strchr(pt,':');
+      ppt = u32_strchr(pt,':');
       if ( ppt==NULL )
 	*username = x_u32_to_u8 (x_gc_u32_strmbndup (pt,upt-pt));
       else
@@ -82,7 +82,7 @@ _GIO_decomposeURL(const uint32_t *url,char **host, int *port, char **username,
       pt = upt+1;
     }
 
-  ppt = u_strchr(pt,':');
+  ppt = u32_strchr(pt,':');
   if ( ppt!=NULL && ppt<pt2 )
     {
       char *temp = x_u32_to_u8 (x_gc_u32_strmbndup (ppt+1,pt2-ppt-1));

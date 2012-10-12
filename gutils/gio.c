@@ -116,13 +116,13 @@ static void GIOdispatch(GIOControl *gc, enum giofuncs gf) {
 	    if (( pt = uc_strstr(gc->path,"://"))== NULL )
 		pt = gc->path;
 	    else {
-		pt=u_strchr(pt+3,'/');
+		pt=u32_strchr(pt+3,'/');
 		if ( pt==NULL ) pt = gc->path+u32_strlen(gc->path);
 	    }
 	    if (( tpt = uc_strstr(gc->topath,"://"))== NULL )
 		tpt = gc->topath;
 	    else {
-		tpt=u_strchr(tpt+3,'/');
+		tpt=u32_strchr(tpt+3,'/');
 		if ( tpt==NULL ) tpt = gc->topath+u32_strlen(gc->topath);
 	    }
 	    if ( tpt-gc->topath!=pt-gc->path ||
