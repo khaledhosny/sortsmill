@@ -37,8 +37,6 @@
 #include <basics.h>
 #include <xunistring.h>
 
-VISIBLE extern uint32_t *u_concat (const uint32_t *, const uint32_t *);
-
 VISIBLE extern long uc_strmatch (const uint32_t *, const char *);
 VISIBLE extern long uc_strnmatch (const uint32_t *, const char *, int);
 VISIBLE extern long u_strnmatch (const uint32_t *str1, const uint32_t *str2,

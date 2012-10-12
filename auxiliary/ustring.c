@@ -307,24 +307,6 @@ u_strstrmatch (const uint32_t *longer, const uint32_t *substr)
 }
 
 uint32_t *
-u_concat (const uint32_t *s1, const uint32_t *s2)
-{
-  long len1, len2;
-  uint32_t *pt;
-
-  if (s1 == NULL)
-    return (x_u32_strdup_or_null (s2));
-  else if (s2 == NULL)
-    return (x_u32_strdup_or_null (s1));
-  len1 = u32_strlen (s1);
-  len2 = u32_strlen (s2);
-  pt = (uint32_t *) xmalloc ((len1 + len2 + 1) * sizeof (uint32_t));
-  u_strcpy (pt, s1);
-  u_strcpy (pt + len1, s2);
-  return (pt);
-}
-
-uint32_t *
 cu_strstartmatch (const char *key, const uint32_t *str)
 {
   if (key && str)
