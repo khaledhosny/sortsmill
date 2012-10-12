@@ -4407,7 +4407,7 @@ return;
     }
     oldtext = _GGadgetGetTitle(mv->text);
     newtext = xmalloc((mv->clen+cnt+1)*sizeof(uint32_t));
-    u_strcpy(newtext,oldtext);
+    u32_strcpy(newtext,oldtext);
     newtext[mv->clen+cnt]='\0';
     for ( i=mv->clen+cnt; i>=within+cnt; --i ) {
 	newtext[i] = newtext[i-cnt];

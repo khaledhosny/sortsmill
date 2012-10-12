@@ -143,7 +143,7 @@ return;
 	    gc->return_code = 501;
 	    gc->error = err501;
 	    uc_strcpy(gc->status,"No support for browsing: ");
-	    u_strncpy(gc->status+u32_strlen(gc->status), gc->path, pt-gc->path );
+	    u32_strncat (gc->status, gc->path, pt - gc->path);
 	    gc->done = true;
 	    (gc->receiveerror)(gc);
 return;

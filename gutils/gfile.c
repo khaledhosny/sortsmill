@@ -178,16 +178,16 @@ u32_GFileNormalize (uint32_t *name)
   for (pt = base; *pt != '\0';)
     {
       if (*pt == '/')
-        u_strcpy (pt, pt + 1);
+        u32_strcpy (pt, pt + 1);
       else if (u8_strncmp (x_gc_u32_to_u8 (u32_force_valid (pt)), "./", 2) == 0)
-        u_strcpy (pt, pt + 2);
+        u32_strcpy (pt, pt + 2);
       else if (u8_strncmp (x_gc_u32_to_u8 (u32_force_valid (pt)), "../", 2) == 0)
         {
           for (ppt = pt - 2; ppt >= base && *ppt != '/'; --ppt);
           ++ppt;
           if (ppt >= base)
             {
-              u_strcpy (ppt, pt + 3);
+              u32_strcpy (ppt, pt + 3);
               pt = ppt;
             }
           else

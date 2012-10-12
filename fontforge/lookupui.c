@@ -3997,7 +3997,7 @@ return( NULL );
     if ( do_wildcards ) {
 	pt = spt;
 	wild = xmalloc((u32_strlen(spt)+2)*sizeof(uint32_t));
-	u_strcpy(wild,pt);
+	u32_strcpy(wild,pt);
 	uc_strcat(wild,"*");
     }
 
@@ -4022,7 +4022,7 @@ return( NULL );
 		    } else {
 			uint32_t *temp = xmalloc((spt-basept+strlen(sc->name)+4)*sizeof(uint32_t));
 			int len;
-			u_strncpy(temp,basept,spt-basept);
+			u32_strncpy(temp,basept,spt-basept);
 			utf82u_strcpy(temp+(spt-basept),sc->name);
 			len = u32_strlen(temp);
 			if ( sc->unicodeenc>32 && add_char_to_name_list &&

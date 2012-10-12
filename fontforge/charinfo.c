@@ -1739,7 +1739,7 @@ return( AdobeLigatureFormat(name));
 	components = xstrdup("ff l");
     else if ( alt!=NULL ) {
 	if ( alt[1]==0x2044 && (alt[2]==0 || alt[3]==0) && alt_lig==1 ) {
-	    u_strcpy(hack,alt);
+	    u32_strcpy(hack,alt);
 	    hack[1] = '/';
 	    alt = hack;
 	} else if ( alt_lig>0 )
@@ -1748,7 +1748,7 @@ return( NULL );
 	if ( isarabisolated(uni) || isarabinitial(uni) || isarabmedial(uni) || isarabfinal(uni) ) {
 	    /* If it is arabic, then convert from the unformed version to the formed */
 	    if ( u32_strlen(alt)<sizeof(hack)/sizeof(hack[0])-1 ) {
-		u_strcpy(hack,alt);
+		u32_strcpy(hack,alt);
 		for ( upt=hack ; *upt ; ++upt ) {
 		    /* Make everything medial */
 		    if ( *upt>=0x600 && *upt<=0x6ff )

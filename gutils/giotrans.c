@@ -57,8 +57,8 @@ _GIO_translateURL (uint32_t *path, enum giofuncs gf)
           uint32_t *res =
             xmalloc ((u32_strlen (path) - test->olen +
                       u32_strlen (test->new) + 1) * sizeof (uint32_t));
-          u_strcpy (res, test->new);
-          u_strcat (res, path + test->olen);
+          u32_strcpy (res, test->new);
+          u32_strcat (res, path + test->olen);
           return (res);
         }
     }

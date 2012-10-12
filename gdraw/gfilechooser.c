@@ -464,7 +464,7 @@ static void GFileChooserScanDir(GFileChooser *gfc,uint32_t *dir) {
     freeme = NULL;
     if ( dir[u32_strlen(dir)-1]!='/' ) {
 	freeme = xmalloc((u32_strlen(dir)+3)*sizeof(uint32_t));
-	u_strcpy(freeme,dir);
+	u32_strcpy(freeme,dir);
 	uc_strcat(freeme,"/");
 	dir = freeme;
     }
@@ -551,7 +551,7 @@ return( NULL );		/* Can't complete if not in cur directory or has wildcards */
 		    if ( ti[i]->checked /* isdirectory */ ) {
 			int len = u32_strlen(ti[i]->text);
 			ret[cnt] = xmalloc((len+2)*sizeof(uint32_t));
-			u_strcpy(ret[cnt],ti[i]->text);
+			u32_strcpy(ret[cnt],ti[i]->text);
 			ret[cnt][len] = '/';
 			ret[cnt][len+1] = '\0';
 		    } else 
@@ -584,7 +584,7 @@ static uint32_t *GFileChooserGetCurDir(GFileChooser *gfc,int dirindex) {
 	cnt += u32_strlen(ti[j]->text)+1;
     pt = dir = xmalloc((cnt+1)*sizeof(uint32_t));
     for ( j=len-1; j>=dirindex; --j ) {
-	u_strcpy(pt,ti[j]->text);
+	u32_strcpy(pt,ti[j]->text);
 	pt += u32_strlen(pt);
 	if ( pt[-1]!='/' )
 	    *pt++ = '/';
@@ -668,7 +668,7 @@ return(true);
 	    gfc->lastname = GGadgetGetTitle(&gfc->name->g);
 	if ( ti->checked ) {
 	    uint32_t *val = xmalloc((u32_strlen(ti->text)+2)*sizeof(uint32_t));
-	    u_strcpy(val,ti->text);
+	    u32_strcpy(val,ti->text);
 	    uc_strcat(val,"/");
 	    GGadgetSetTitle(&gfc->name->g,val);
 	    free(val);
@@ -686,7 +686,7 @@ return(true);
 	val = upt;
 	for ( i=0; i<listlen; ++i ) {
 	    if ( all[i]->selected ) {
-		u_strcpy(upt,all[i]->text);
+		u32_strcpy(upt,all[i]->text);
 		upt += u32_strlen(upt);
 		if ( --cnt>0 ) {
 		    uc_strcpy(upt,"; ");
@@ -957,7 +957,7 @@ static void GFCBookmark(GWindow gw,struct gmenuitem *mi,GEvent *e) {
 	uint32_t *space;
 	space = xmalloc((strlen(home)+u32_strlen(bookmarks[mi->mid])+2)*sizeof(uint32_t));
 	uc_strcpy(space,home);
-	u_strcat(space,bookmarks[mi->mid]+1);
+	u32_strcat(space,bookmarks[mi->mid]+1);
 	GFileChooserScanDir(gfc,space);
 	free(space);
     } else
@@ -973,7 +973,7 @@ static void GFCPath(GWindow gw,struct gmenuitem *mi,GEvent *e) {
 	uint32_t *space;
 	space = xmalloc((strlen(home)+u32_strlen(bookmarks[mi->mid])+2)*sizeof(uint32_t));
 	uc_strcpy(space,home);
-	u_strcat(space,gfc->paths[mi->mid]+1);
+	u32_strcat(space,gfc->paths[mi->mid]+1);
 	GFileChooserScanDir(gfc,space);
 	free(space);
     } else

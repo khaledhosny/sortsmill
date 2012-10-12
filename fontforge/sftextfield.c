@@ -342,10 +342,9 @@ static void *genunicodedata(void *_gt,int32_t *len) {
     SFTextArea *st = _gt;
     uint32_t *temp;
     *len = st->sel_end-st->sel_start + 1;
-    temp = xmalloc((*len+2)*sizeof(uint32_t));
+    temp = xzalloc((*len+2)*sizeof(uint32_t));
     temp[0] = 0xfeff;		/* KDE expects a byte order flag */
-    u_strncpy(temp+1,st->li.text+st->sel_start,st->sel_end-st->sel_start);
-    temp[*len+1] = 0;
+    u32_strncpy(temp+1,st->li.text+st->sel_start,st->sel_end-st->sel_start);
 return( temp );
 }
 
@@ -421,9 +420,9 @@ static void SFTextAreaGrabSelection(SFTextArea *st, enum selnames sel ) {
 	uint16_t *u2temp;
 
 	GDrawGrabSelection(st->g.base,sel);
-	temp = xmalloc((st->sel_end-st->sel_start + 2)*sizeof(uint32_t));
+	temp = xzalloc((st->sel_end-st->sel_start + 2)*sizeof(uint32_t));
 	temp[0] = 0xfeff;		/* KDE expects a byte order flag */
-	u_strncpy(temp+1,st->li.text+st->sel_start,st->sel_end-st->sel_start);
+	u32_strncpy(temp+1,st->li.text+st->sel_start,st->sel_end-st->sel_start);
 	ctemp = u2utf8_copy(temp);
 	GDrawAddSelectionType(st->g.base,sel,"text/plain;charset=ISO-10646-UCS-4",temp,u32_strlen(temp),
 		sizeof(uint32_t),
@@ -1382,7 +1381,7 @@ static int SFTextAreaDoDrop(SFTextArea *st,GEvent *event,int endpos) {
 		    memcpy(temp,st->li.text,endpos*sizeof(uint32_t));
 		    memcpy(temp+endpos,st->li.text+st->sel_start,
 			    (st->sel_end-st->sel_start)*sizeof(uint32_t));
-		    u_strcpy(temp+endpos+st->sel_end-st->sel_start,st->li.text+endpos);
+		    u32_strcpy(temp+endpos+st->sel_end-st->sel_start,st->li.text+endpos);
 		} else if ( endpos>=st->sel_end ) {
 		    temp = x_u32_strdup_or_null(st->li.text);
 		    memcpy(temp+st->sel_start,temp+st->sel_end,

@@ -1,6 +1,5 @@
-#include <config.h>
+#include <config.h>		/* -*- coding: utf-8 -*- */
 
-/* -*- coding: utf-8 -*- */
 /* Copyright (C) 2007-2012 by George Williams */
 /*
  * Redistribution and use in source and binary forms, with or without
@@ -744,9 +743,9 @@ int LayoutInfoReplace(LayoutInfo *li, const uint32_t *str,
     li->oldtext = li->text;
     LayoutInfoChangeFontList(li,rpllen,sel_start,sel_end);
 
-    u_strncpy(new,li->text,sel_start);
-    u_strcpy(new+sel_start,str);
-    u_strcpy(new+sel_start+rpllen,li->text+sel_end);
+    u32_strncpy(new,li->text,sel_start);
+    u32_strcpy(new+sel_start,str);
+    u32_strcpy(new+sel_start+rpllen,li->text+sel_end);
     li->text = new;
     free(old);
 

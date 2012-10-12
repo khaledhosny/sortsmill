@@ -235,7 +235,7 @@ return;
 	    if ( trans->oldstate==mykey_state ) {
 		gdisp->mykey_state = trans->newstate;
 		if ( trans->resch=='\0' )
-		    u_strcpy(gevent->u.chr.chars,gevent->u.chr.chars+1);
+		    u32_strcpy(gevent->u.chr.chars,gevent->u.chr.chars+1);
 		else {
 		    gevent->u.chr.chars[0] = trans->resch;
 		    gdisp->mykeybuild = false;
@@ -243,7 +243,7 @@ return;
 return;
 	    } else if ( trans->oldstate==_gdraw_chrs_any ) {
 		gdisp->mykey_state |= trans->newstate;
-		u_strcpy(gevent->u.chr.chars,gevent->u.chr.chars+1);
+		u32_strcpy(gevent->u.chr.chars,gevent->u.chr.chars+1);
 return;
 	    }
 	}
@@ -252,7 +252,7 @@ return;
     GDrawBeep(gdisp);
     if ( mykey_state==0 || mykey_state==0x8000000 )
 return;
-    u_strcpy(hold,gevent->u.chr.chars+1);
+    u32_strcpy(hold,gevent->u.chr.chars+1);
     if ( strt!=NULL ) for ( mask=0x1; mask<0x8000000; mask<<=1 ) {
 	if ( (mykey_state&~mask)== 0 )
     break;			/* otherwise dotabove a gives us ae */

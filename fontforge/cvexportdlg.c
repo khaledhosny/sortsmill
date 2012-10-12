@@ -345,7 +345,7 @@ static int GFD_Format(GGadget *g, GEvent *e) {
 	int format = (intptr_t) (GGadgetGetListItemSelected(d->format)->userdata);
 	file = GGadgetGetTitle(d->gfc);
 	f2 = xmalloc(sizeof(uint32_t) * (u32_strlen(file)+6));
-	u_strcpy(f2,file);
+	u32_strcpy(f2,file);
 	free(file);
 	pt = u_strrchr(f2,'.');
 	if ( pt==NULL )

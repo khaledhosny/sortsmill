@@ -1,6 +1,5 @@
-#include <config.h>
+#include <config.h>   /* -*- coding: utf-8 -*- */
 
-/* -*- coding: utf-8 -*- */
 /* Copyright (C) 2000-2012 by George Williams */
 /*
  * Redistribution and use in source and binary forms, with or without
@@ -1064,7 +1063,7 @@ return( NULL );
 	    ch = (ch<<4) + (isdigit(upt[4]) ? upt[4]-'0' : islower(upt[4]) ? upt[4]-'a'+10 : upt[4]-'A'+10);
 	    ch = (ch<<4) + (isdigit(upt[5]) ? upt[5]-'0' : islower(upt[5]) ? upt[5]-'a'+10 : upt[5]-'A'+10);
 	    *upt = ch;
-	    u_strcpy(upt+1,upt+6);
+	    u32_strcpy(upt+1,upt+6);
 	}
     }
 return( buffer );
@@ -1154,7 +1153,7 @@ return( false );
 	    max += u32_strlen(ks->ch2s[i]);
     ch2s = xmalloc((max+1)*sizeof(uint32_t));
     for ( i=0; i<ks->cur && ks->ch1[i]=='\0'; ++i );
-    u_strcpy(ch2s,ks->ch2s[i]);
+    u32_strcpy(ch2s,ks->ch2s[i]);
     for ( ++i; i<ks->cur; ++i ) if ( ks->ch1[i]!='\0' ) {
 	for ( upt=ks->ch2s[i]; *upt!='\0'; ++upt ) {
 	    for ( cpt = ch2s; *cpt!='\0' && *upt<*cpt; ++cpt );

@@ -391,7 +391,7 @@ return( true );
 	    if ( sel!=NULL ) {
 		const uint32_t *lang = sel->text;
 		full = xmalloc((u32_strlen(lang)+strlen(temp)+6)*sizeof(uint32_t));
-		u_strcpy(full,lang);
+		u32_strcpy(full,lang);
 	    } else {
 		char *hunh = "???";
 		full = xmalloc((strlen(hunh)+strlen(temp)+6)*sizeof(uint32_t));

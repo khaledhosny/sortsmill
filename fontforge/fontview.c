@@ -3436,7 +3436,7 @@ return;
 	uc_strcat (title, "*");
     if ( file!=NULL ) {
 	uc_strcat (title, "  ");
-	u_strcat (title, x_gc_u32_strconv_from_locale (GFileBaseName (file)));
+	u32_strcat (title, x_gc_u32_strconv_from_locale (GFileBaseName (file)));
     }
     uc_strcat(title, " (" );
     if ( fv->b.normal ) { utf82u_strcat(title,_("Compact")); uc_strcat(title," "); }

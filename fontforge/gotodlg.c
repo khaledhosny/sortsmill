@@ -142,7 +142,7 @@ return( NULL );
     if ( do_wildcards ) {
 	pt = spt;
 	spt = xmalloc((u32_strlen(spt)+2)*sizeof(uint32_t));
-	u_strcpy(spt,pt);
+	u32_strcpy(spt,pt);
 	uc_strcat(spt,"*");
     }
 

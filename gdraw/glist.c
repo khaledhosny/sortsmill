@@ -694,7 +694,7 @@ return( true );
 	    else
 		gl->sofar = xrealloc(gl->sofar,(gl->sofar_max = sofar_pos+len+10)*sizeof(uint32_t));
 	}
-	u_strcpy(gl->sofar+sofar_pos,event->u.chr.chars);
+	u32_strcpy(gl->sofar+sofar_pos,event->u.chr.chars);
 	gl->sofar_pos = sofar_pos + len;
 	sel = GListFindPosition(gl,gl->sofar);
 	gl->enduser = GDrawRequestTimer(gl->g.base,GListTypeTime,0,NULL);

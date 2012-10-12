@@ -2309,7 +2309,7 @@ BitmapName (struct gfc_data *d)
     return;
 
   dup = x_gc_malloc_atomic ((u32_strlen (ret) + 30) * sizeof (uint32_t));
-  u_strcpy (dup, ret);
+  u32_strcpy (dup, ret);
 
   pt = u_strrchr (dup, '.');
   tpt = u_strrchr (dup, '/');
@@ -2362,7 +2362,7 @@ GFD_Format (GGadget * g, GEvent * e)
 
       ret = GGadgetGetTitle (d->gfc);
       dup = xmalloc ((u32_strlen (ret) + 30) * sizeof (uint32_t));
-      u_strcpy (dup, ret);
+      u32_strcpy (dup, ret);
       free (ret);
       pt = u_strrchr (dup, '.');
       tpt = u_strrchr (dup, '/');

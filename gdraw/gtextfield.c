@@ -367,10 +367,10 @@ static void _GTextFieldReplace(GTextField *gt, const uint32_t *str) {
     gt->sel_oldend = gt->sel_end;
     gt->sel_oldbase = gt->sel_base;
 
-    u_strncpy(new,gt->text,gt->sel_start);
-    u_strcpy(new+gt->sel_start,str);
+    u32_strncpy(new,gt->text,gt->sel_start);
+    u32_strcpy(new+gt->sel_start,str);
     gt->sel_start = u32_strlen(new);
-    u_strcpy(new+gt->sel_start,gt->text+gt->sel_end);
+    u32_strcpy(new+gt->sel_start,gt->text+gt->sel_end);
     gt->text = new;
     gt->sel_end = gt->sel_base = gt->sel_start;
     free(old);
@@ -467,15 +467,16 @@ static int GTextField_Show(GTextField *gt, int pos) {
 return( refresh );
 }
 
-static void *genunicodedata(void *_gt,int32_t *len) {
-    GTextField *gt = _gt;
-    uint32_t *temp;
-    *len = gt->sel_end-gt->sel_start + 1;
-    temp = xmalloc((*len+2)*sizeof(uint32_t));
-    temp[0] = 0xfeff;		/* KDE expects a byte order flag */
-    u_strncpy(temp+1,gt->text+gt->sel_start,gt->sel_end-gt->sel_start);
-    temp[*len+1] = 0;
-return( temp );
+static void *
+genunicodedata(void *_gt,int32_t *len)
+{
+  GTextField *gt = _gt;
+  uint32_t *temp;
+  *len = gt->sel_end - gt->sel_start + 1;
+  temp = xzalloc ((*len + 2) * sizeof (uint32_t));
+  temp[0] = 0xfeff;		// KDE expects a byte order flag.
+  u32_strncpy (temp + 1, gt->text + gt->sel_start, gt->sel_end - gt->sel_start);
+  return temp;
 }
 
 static void *genutf8data(void *_gt,int32_t *len) {
@@ -553,9 +554,9 @@ static void GTextFieldGrabSelection(GTextField *gt, enum selnames sel ) {
 	uint16_t *u2temp;
 
 	GDrawGrabSelection(gt->g.base,sel);
-	temp = xmalloc((gt->sel_end-gt->sel_start + 2)*sizeof(uint32_t));
+	temp = xzalloc((gt->sel_end-gt->sel_start + 2)*sizeof(uint32_t));
 	temp[0] = 0xfeff;		/* KDE expects a byte order flag */
-	u_strncpy(temp+1,gt->text+gt->sel_start,gt->sel_end-gt->sel_start);
+	u32_strncpy(temp+1,gt->text+gt->sel_start,gt->sel_end-gt->sel_start);
 	ctemp = u2utf8_copy(temp+1);
 	ctemp2 = u2def_copy(temp+1);
 	GDrawAddSelectionType(gt->g.base,sel,"text/plain;charset=ISO-10646-UCS-4",temp,u32_strlen(temp),
@@ -1588,7 +1589,7 @@ static int GTextFieldDoDrop(GTextField *gt,GEvent *event,int endpos) {
 		    memcpy(temp,gt->text,endpos*sizeof(uint32_t));
 		    memcpy(temp+endpos,gt->text+gt->sel_start,
 			    (gt->sel_end-gt->sel_start)*sizeof(uint32_t));
-		    u_strcpy(temp+endpos+gt->sel_end-gt->sel_start,gt->text+endpos);
+		    u32_strcpy(temp+endpos+gt->sel_end-gt->sel_start,gt->text+endpos);
 		} else if ( endpos>=gt->sel_end ) {
 		    temp = x_u32_strdup_or_null(gt->text);
 		    memcpy(temp+gt->sel_start,temp+gt->sel_end,
@@ -3002,7 +3003,7 @@ static void GTextFieldComplete(GTextField *gt,int from_tab) {
 				uc_strcpy(ret2[c2]+len+2+c3,"] ...");
 			    } else if ( doit ) {
 				ret2[cnt] = xmalloc((u32_strlen(ret[i])+5)*sizeof(uint32_t));
-				u_strcpy(ret2[cnt],ret[i]);
+				u32_strcpy(ret2[cnt],ret[i]);
 			    }
 			    ++cnt;
 			    last_ch = ret[i][len];
