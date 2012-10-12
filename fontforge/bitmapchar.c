@@ -70,8 +70,8 @@ VISIBLE struct std_bdf_props StandardProps[] = {
 	{ "RAW_DESCENT", prt_int|prt_property, true },
 	{ "ITALIC_ANGLE", prt_int|prt_property, true },
 	{ "NORM_SPACE", prt_int|prt_property, true },
-	{ "QUAD_WIDTH", prt_int|prt_property, true },	/* Depreciated */
-	{ "RESOLUTION", prt_uint|prt_property, true },	/* Depreciated */
+	{ "QUAD_WIDTH", prt_int|prt_property, true },	/* Deprecated */
+	{ "RESOLUTION", prt_uint|prt_property, true },	/* Deprecated */
 	{ "RELATIVE_SETWIDTH", prt_uint|prt_property, true },
 	{ "RELATIVE_WEIGHT", prt_uint|prt_property, true },
 	{ "SUPERSCRIPT_X", prt_int|prt_property, true },
@@ -777,9 +777,9 @@ void Default_Properties(BDFFont *bdf,EncMap *map,char *onlyme) {
 
     if ( onlyme!=NULL ) {
 	/* Only generate these oddities if they ask for them... */
-	if ( strcasecmp(onlyme,"QUAD_WIDTH")==0 )		/* Depreciated */
+	if ( strcasecmp(onlyme,"QUAD_WIDTH")==0 )		/* Deprecated */
 	    BDFPropAddInt(bdf,"QUAD_WIDTH",bdf->pixelsize,onlyme);
-	if ( components.res_x==components.res_y )	/* Depreciated */
+	if ( components.res_x==components.res_y )	/* Deprecated */
 	    /* This isn't dpi (why not???!), it is 1/100 pixels per point */
 	    BDFPropAddInt(bdf,"RESOLUTION",7227/components.res_y,onlyme);
     }

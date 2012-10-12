@@ -1882,7 +1882,7 @@ DoSave (struct gfc_data *d, uint32_t *path)
       post_warned = true;
       ff_post_notice (_("The 'POST' type1 format is probably deprecated"),
                       _
-                      ("The 'POST' type1 format is probably depreciated and may not work in future version of the mac."));
+                      ("The 'POST' type1 format is probably deprecated and may not work in future version of the mac."));
     }
 
   if (d->family)
