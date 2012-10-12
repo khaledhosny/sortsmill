@@ -1041,7 +1041,7 @@ return( false );
 	pt = strrchr(entry->d_name,'.');
 	if ( pt==NULL )
     continue;
-	if ( strmatch(pt,ext)!=0 )
+	if ( strcasecmp(pt,ext)!=0 )
     continue;
 	if ( !(
 		(isu && entry->d_name[0]=='u' && entry->d_name[1]=='n' && entry->d_name[2]=='i' && (val=strtol(entry->d_name+3,&end,16), end==pt)) ||

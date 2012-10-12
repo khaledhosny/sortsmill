@@ -854,7 +854,7 @@ char *EncodingName(Encoding *map) {
     int len = strlen(name);
     char *pt;
 
-    if ( strmatch(name,"AdobeStandard")==0 )
+    if ( strcasecmp(name,"AdobeStandard")==0 )
 return( "AdobeStandardEncoding" );
     if (( strstr(name,"8859")!=NULL && name[len-1]=='1' &&
 	     (!isdigit(name[len-2]) || name[len-2]=='9') ) ||
@@ -862,18 +862,18 @@ return( "AdobeStandardEncoding" );
 return( "ISOLatin1Encoding" );
     else if ( map->is_unicodebmp || map->is_unicodefull )
 return( "ISO10646-1" );
-    else if ( strmatch(name,"mac")==0 || strmatch(name,"macintosh")==0 ||
-	    strmatch(name,"macroman")==0 )
+    else if ( strcasecmp(name,"mac")==0 || strcasecmp(name,"macintosh")==0 ||
+	    strcasecmp(name,"macroman")==0 )
 return( "MacRoman" );
-    else if ( strmatch(name,"ms-ansi")==0 || strstrmatch(name,"1252")!=NULL )
+    else if ( strcasecmp(name,"ms-ansi")==0 || strstrmatch(name,"1252")!=NULL )
 return( "WinRoman" );
-    else if ( strmatch(name,"sjis")==0 ||
+    else if ( strcasecmp(name,"sjis")==0 ||
 	    ((pt = strstrmatch(name,"jp"))!=NULL && pt[2]=='\0' &&
 		    strstr(name,"646")==NULL ))
 return( "JISX0208.1997" );
     else if ( map->is_japanese )
 return( "JISX0212.1990" );
-    else if ( strmatch(name,"johab")==0 )
+    else if ( strcasecmp(name,"johab")==0 )
 return( "Johab" );
     else if ( map->is_korean )
 return( "KSC5601.1992" );
@@ -2184,7 +2184,7 @@ int PfmSplineFont(FILE *pfm, SplineFont *sf, int type0,EncMap *map,int layer) {
     else if ( map->enc->is_custom )
 	windows_encoding = 2;
     else
-	windows_encoding = strmatch(map->enc->enc_name,"symbol")==0?2:0;
+	windows_encoding = strcasecmp(map->enc->enc_name,"symbol")==0?2:0;
     if ( windows_encoding==0 )
 	if ( !inwin(sf,winmap))
 	    windows_encoding = 0xff;

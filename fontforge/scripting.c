@@ -693,7 +693,7 @@ static void bStrcasecmp(Context *c) {
 	ScriptError( c, "Bad type for argument" );
 
     c->return_val.type = v_int;
-    c->return_val.u.ival = strmatch(c->a.vals[1].u.sval,c->a.vals[2].u.sval);
+    c->return_val.u.ival = strcasecmp(c->a.vals[1].u.sval,c->a.vals[2].u.sval);
 }
 
 static void bStrtol(Context *c) {
@@ -1762,11 +1762,11 @@ static void bSave(Context *c) {
 	locfilename = utf82def_copy(t);
 #ifdef VMS
 	pt = strrchr(locfilename,'_');
-	if ( pt!=NULL && strmatch(pt,"_sfdir")==0 )
+	if ( pt!=NULL && strcasecmp(pt,"_sfdir")==0 )
 	    s2d = true;
 #else
 	pt = strrchr(locfilename,'.');
-	if ( pt!=NULL && strmatch(pt,".sfdir")==0 )
+	if ( pt!=NULL && strcasecmp(pt,".sfdir")==0 )
 	    s2d = true;
 #endif
 	if ( !SFDWrite(locfilename,sf,c->curfv->map,c->curfv->normal,s2d))
@@ -2080,27 +2080,27 @@ static void bImport(Context *c) {
 	    ScriptErrorString( c, "No extension in", filename);
     }
     back = 0; flags = -1;
-    if ( strmatch(ext,".bdf")==0 || strmatch(ext-4,".bdf.gz")==0 )
+    if ( strcasecmp(ext,".bdf")==0 || strcasecmp(ext-4,".bdf.gz")==0 )
 	format = fv_bdf;
-    else if ( strmatch(ext,".pcf")==0 || strmatch(ext-4,".pcf.gz")==0 )
+    else if ( strcasecmp(ext,".pcf")==0 || strcasecmp(ext-4,".pcf.gz")==0 )
 	format = fv_pcf;
-    else if ( strmatch(ext,".ttf")==0 || strmatch(ext,".otf")==0 || strmatch(ext,".otb")==0 )
+    else if ( strcasecmp(ext,".ttf")==0 || strcasecmp(ext,".otf")==0 || strcasecmp(ext,".otb")==0 )
 	format = fv_ttf;
-    else if ( strmatch(ext,"pk")==0 || strmatch(ext,".pk")==0 ) {
+    else if ( strcasecmp(ext,"pk")==0 || strcasecmp(ext,".pk")==0 ) {
 	format = fv_pk;
 	back = true;
-    } else if ( strmatch(ext,".eps")==0 || strmatch(ext,".ps")==0 ||
-	    strmatch(ext,".art")==0 ) {
+    } else if ( strcasecmp(ext,".eps")==0 || strcasecmp(ext,".ps")==0 ||
+	    strcasecmp(ext,".art")==0 ) {
 	if ( strchr(filename,'*')!=NULL )
 	    format = fv_epstemplate;
 	else
 	    format = fv_eps;
-    } else if ( strmatch(ext,".pdf")==0 ) {
+    } else if ( strcasecmp(ext,".pdf")==0 ) {
 	if ( strchr(filename,'*')!=NULL )
 	    format = fv_pdftemplate;
 	else
 	    format = fv_pdf;
-    } else if ( strmatch(ext,".svg")==0 ) {
+    } else if ( strcasecmp(ext,".svg")==0 ) {
 	if ( strchr(filename,'*')!=NULL )
 	    format = fv_svgtemplate;
 	else
@@ -2171,23 +2171,23 @@ static void bExport(Context *c) {
 	format_spec = pt;
 	pt = strrchr(pt,'.')+1;
     }
-    if ( strmatch(pt,"eps")==0 )
+    if ( strcasecmp(pt,"eps")==0 )
 	format = 0;
-    else if ( strmatch(pt,"fig")==0 )
+    else if ( strcasecmp(pt,"fig")==0 )
 	format = 1;
-    else if ( strmatch(pt,"svg")==0 )
+    else if ( strcasecmp(pt,"svg")==0 )
 	format = 2;
-    else if ( strmatch(pt,"glif")==0 )
+    else if ( strcasecmp(pt,"glif")==0 )
 	format = 3;
-    else if ( strmatch(pt,"pdf")==0 )
+    else if ( strcasecmp(pt,"pdf")==0 )
 	format = 4;
-    else if ( strmatch(pt,"plate")==0 )
+    else if ( strcasecmp(pt,"plate")==0 )
 	format = 5;
-    else if ( strmatch(pt,"xbm")==0 )
+    else if ( strcasecmp(pt,"xbm")==0 )
 	format = 6;
-    else if ( strmatch(pt,"bmp")==0 )
+    else if ( strcasecmp(pt,"bmp")==0 )
 	format = 7;
-    else if ( strmatch(pt,"png")==0 )
+    else if ( strcasecmp(pt,"png")==0 )
 	format = 8;
     else
 	ScriptError( c, "Bad format (first arg must be eps/fig/xbm/bmp/png)");
@@ -2228,8 +2228,8 @@ static void bFontImage(Context *c) {
 
     t = script2utf8_copy(c->a.vals[1].u.sval);
     pt = strrchr(t,'.');
-    if ( pt==NULL || (strmatch(pt,".bmp")!=0
-	    && strmatch(pt,".png")!=0
+    if ( pt==NULL || (strcasecmp(pt,".bmp")!=0
+	    && strcasecmp(pt,".png")!=0
 	    ))
 	ScriptError( c, "Unsupported image format");
 
@@ -2893,22 +2893,22 @@ static void bSelectByColor(Context *c) {
     if ( c->a.vals[1].type==v_int )
 	col = c->a.vals[1].u.ival;
     else {
-	if ( strmatch(c->a.vals[1].u.sval,"Red")==0 )
+	if ( strcasecmp(c->a.vals[1].u.sval,"Red")==0 )
 	    col = 0xff0000;
-	else if ( strmatch(c->a.vals[1].u.sval,"Green")==0 )
+	else if ( strcasecmp(c->a.vals[1].u.sval,"Green")==0 )
 	    col = 0x00ff00;
-	else if ( strmatch(c->a.vals[1].u.sval,"Blue")==0 )
+	else if ( strcasecmp(c->a.vals[1].u.sval,"Blue")==0 )
 	    col = 0x0000ff;
-	else if ( strmatch(c->a.vals[1].u.sval,"Magenta")==0 )
+	else if ( strcasecmp(c->a.vals[1].u.sval,"Magenta")==0 )
 	    col = 0xff00ff;
-	else if ( strmatch(c->a.vals[1].u.sval,"Cyan")==0 )
+	else if ( strcasecmp(c->a.vals[1].u.sval,"Cyan")==0 )
 	    col = 0x00ffff;
-	else if ( strmatch(c->a.vals[1].u.sval,"Yellow")==0 )
+	else if ( strcasecmp(c->a.vals[1].u.sval,"Yellow")==0 )
 	    col = 0xffff00;
-	else if ( strmatch(c->a.vals[1].u.sval,"White")==0 )
+	else if ( strcasecmp(c->a.vals[1].u.sval,"White")==0 )
 	    col = 0xffffff;
-	else if ( strmatch(c->a.vals[1].u.sval,"none")==0 ||
-		strmatch(c->a.vals[1].u.sval,"Default")==0 )
+	else if ( strcasecmp(c->a.vals[1].u.sval,"none")==0 ||
+		strcasecmp(c->a.vals[1].u.sval,"Default")==0 )
 	    col = COLOR_DEFAULT;
 	else
 	    ScriptErrorString(c,"Unknown color", c->a.vals[1].u.sval);
@@ -2938,7 +2938,7 @@ static void bReencode(Context *c) {
 	ScriptError(c,"Bad argument type");
     if ( c->a.argc==3 )
 	force = c->a.vals[2].u.ival;
-    if ( strmatch(c->a.vals[1].u.sval,"compacted")==0 ) {
+    if ( strcasecmp(c->a.vals[1].u.sval,"compacted")==0 ) {
 	c->curfv->normal = EncMapCopy(c->curfv->map);
 	CompactEncMap(c->curfv->map,c->curfv->sf);
     } else {
@@ -3494,15 +3494,15 @@ static void bSetOS2Value(Context *c) {
 
     SFDefaultOS2Info(&sf->pfminfo,sf,sf->fontname);
 
-    if ( strmatch(c->a.vals[1].u.sval,"Weight")==0 ) {
+    if ( strcasecmp(c->a.vals[1].u.sval,"Weight")==0 ) {
 	setint16(&sf->pfminfo.weight,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"Width")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"Width")==0 ) {
 	setint16(&sf->pfminfo.width,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"FSType")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"FSType")==0 ) {
 	setint16(&sf->pfminfo.fstype,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"IBMFamily")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"IBMFamily")==0 ) {
 	setint16(&sf->pfminfo.os2_family_class,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"VendorID")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"VendorID")==0 ) {
 	char *pt1, *pt2;
 	if ( c->a.vals[2].type!=v_str )
 	    ScriptError(c,"Bad argument type");
@@ -3513,49 +3513,49 @@ static void bSetOS2Value(Context *c) {
 	memset(pt2,' ',4);
 	while ( *pt1!='\0' )
 	    *pt2++ = *pt1++;
-    } else if ( strmatch(c->a.vals[1].u.sval,"WinAscent")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"WinAscent")==0 ) {
 	setint16(&sf->pfminfo.os2_winascent,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"WinAscentIsOffset")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"WinAscentIsOffset")==0 ) {
 	if ( c->a.vals[2].type!=v_int )
 	    ScriptError(c,"Bad argument type");
 	sf->pfminfo.winascent_add = c->a.vals[2].u.ival;
-    } else if ( strmatch(c->a.vals[1].u.sval,"WinDescent")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"WinDescent")==0 ) {
 	setint16(&sf->pfminfo.os2_windescent,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"WinDescentIsOffset")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"WinDescentIsOffset")==0 ) {
 	if ( c->a.vals[2].type!=v_int )
 	    ScriptError(c,"Bad argument type");
 	sf->pfminfo.windescent_add = c->a.vals[2].u.ival;
-    } else if ( strmatch(c->a.vals[1].u.sval,"typoAscent")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"typoAscent")==0 ) {
 	setint16(&sf->pfminfo.os2_typoascent,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"typoAscentIsOffset")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"typoAscentIsOffset")==0 ) {
 	if ( c->a.vals[2].type!=v_int )
 	    ScriptError(c,"Bad argument type");
 	sf->pfminfo.typoascent_add = c->a.vals[2].u.ival;
-    } else if ( strmatch(c->a.vals[1].u.sval,"typoDescent")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"typoDescent")==0 ) {
 	setint16(&sf->pfminfo.os2_typodescent,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"typoDescentIsOffset")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"typoDescentIsOffset")==0 ) {
 	if ( c->a.vals[2].type!=v_int )
 	    ScriptError(c,"Bad argument type");
 	sf->pfminfo.typodescent_add = c->a.vals[2].u.ival;
-    } else if ( strmatch(c->a.vals[1].u.sval,"typoLineGap")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"typoLineGap")==0 ) {
 	setint16(&sf->pfminfo.os2_typolinegap,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"hheadAscent")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"hheadAscent")==0 ) {
 	setint16(&sf->pfminfo.hhead_ascent,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"hheadAscentIsOffset")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"hheadAscentIsOffset")==0 ) {
 	if ( c->a.vals[2].type!=v_int )
 	    ScriptError(c,"Bad argument type");
 	sf->pfminfo.hheadascent_add = c->a.vals[2].u.ival;
-    } else if ( strmatch(c->a.vals[1].u.sval,"hheadDescent")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"hheadDescent")==0 ) {
 	setint16(&sf->pfminfo.hhead_descent,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"hheadDescentIsOffset")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"hheadDescentIsOffset")==0 ) {
 	if ( c->a.vals[2].type!=v_int )
 	    ScriptError(c,"Bad argument type");
 	sf->pfminfo.hheaddescent_add = c->a.vals[2].u.ival;
-    } else if ( strmatch(c->a.vals[1].u.sval,"LineGap")==0 || strmatch(c->a.vals[1].u.sval,"HHeadLineGap")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"LineGap")==0 || strcasecmp(c->a.vals[1].u.sval,"HHeadLineGap")==0 ) {
 	setint16(&sf->pfminfo.linegap,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"VLineGap")==0 || strmatch(c->a.vals[1].u.sval,"VHeadLineGap")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"VLineGap")==0 || strcasecmp(c->a.vals[1].u.sval,"VHeadLineGap")==0 ) {
 	setint16(&sf->pfminfo.vlinegap,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"Panose")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"Panose")==0 ) {
 	if ( c->a.vals[2].type!=v_arr && c->a.vals[2].type!=v_arrfree )
 	    ScriptError(c,"Bad argument type");
 	if ( c->a.vals[2].u.aval->argc!=10 )
@@ -3568,25 +3568,25 @@ static void bSetOS2Value(Context *c) {
 	    sf->pfminfo.panose[i] =  c->a.vals[2].u.aval->vals[i].u.ival;
 	}
 	sf->pfminfo.panose_set = true;
-    } else if ( strmatch(c->a.vals[1].u.sval,"SubXSize")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"SubXSize")==0 ) {
 	setss16(&sf->pfminfo.os2_subxsize,sf,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"SubYSize")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"SubYSize")==0 ) {
 	setss16(&sf->pfminfo.os2_subysize,sf,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"SubXOffset")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"SubXOffset")==0 ) {
 	setss16(&sf->pfminfo.os2_subxoff,sf,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"SubYOffset")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"SubYOffset")==0 ) {
 	setss16(&sf->pfminfo.os2_subyoff,sf,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"supXSize")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"supXSize")==0 ) {
 	setss16(&sf->pfminfo.os2_supxsize,sf,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"supYSize")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"supYSize")==0 ) {
 	setss16(&sf->pfminfo.os2_supysize,sf,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"supXOffset")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"supXOffset")==0 ) {
 	setss16(&sf->pfminfo.os2_supxoff,sf,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"supYOffset")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"supYOffset")==0 ) {
 	setss16(&sf->pfminfo.os2_supyoff,sf,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"StrikeOutSize")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"StrikeOutSize")==0 ) {
 	setss16(&sf->pfminfo.os2_strikeysize,sf,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"StrikeOutPos")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"StrikeOutPos")==0 ) {
 	setss16(&sf->pfminfo.os2_strikeypos,sf,c);
     } else {
 	ScriptErrorString(c,"Unknown OS/2 field: ", c->a.vals[1].u.sval );
@@ -3609,48 +3609,48 @@ static void bGetOS2Value(Context *c) {
     if ( c->a.vals[1].type!=v_str )
 	ScriptError(c,"Bad argument type");
 
-    if ( strmatch(c->a.vals[1].u.sval,"Weight")==0 ) {
+    if ( strcasecmp(c->a.vals[1].u.sval,"Weight")==0 ) {
 	os2getint(sf->pfminfo.weight,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"Width")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"Width")==0 ) {
 	os2getint(sf->pfminfo.width,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"FSType")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"FSType")==0 ) {
 	os2getint(sf->pfminfo.fstype,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"IBMFamily")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"IBMFamily")==0 ) {
 	os2getint(sf->pfminfo.os2_family_class,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"VendorID")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"VendorID")==0 ) {
 	c->return_val.type = v_str;
 	c->return_val.u.sval = xstrndup_or_null(sf->pfminfo.os2_vendor,4);
-    } else if ( strmatch(c->a.vals[1].u.sval,"WinAscent")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"WinAscent")==0 ) {
 	os2getint(sf->pfminfo.os2_winascent,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"WinAscentIsOffset")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"WinAscentIsOffset")==0 ) {
 	os2getint(sf->pfminfo.winascent_add,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"WinDescent")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"WinDescent")==0 ) {
 	os2getint(sf->pfminfo.os2_windescent,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"WinDescentIsOffset")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"WinDescentIsOffset")==0 ) {
 	os2getint(sf->pfminfo.windescent_add,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"typoAscent")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"typoAscent")==0 ) {
 	os2getint(sf->pfminfo.os2_typoascent,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"typoAscentIsOffset")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"typoAscentIsOffset")==0 ) {
 	os2getint(sf->pfminfo.typoascent_add,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"typoDescent")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"typoDescent")==0 ) {
 	os2getint(sf->pfminfo.os2_typodescent,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"typoDescentIsOffset")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"typoDescentIsOffset")==0 ) {
 	os2getint(sf->pfminfo.typodescent_add,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"typoLineGap")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"typoLineGap")==0 ) {
 	os2getint(sf->pfminfo.os2_typolinegap,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"hheadAscent")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"hheadAscent")==0 ) {
 	os2getint(sf->pfminfo.hhead_ascent,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"hheadAscentIsOffset")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"hheadAscentIsOffset")==0 ) {
 	os2getint(sf->pfminfo.hheadascent_add,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"hheadDescent")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"hheadDescent")==0 ) {
 	os2getint(sf->pfminfo.hhead_descent,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"hheadDescentIsOffset")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"hheadDescentIsOffset")==0 ) {
 	os2getint(sf->pfminfo.hheaddescent_add,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"LineGap")==0 || strmatch(c->a.vals[1].u.sval,"HHeadLineGap")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"LineGap")==0 || strcasecmp(c->a.vals[1].u.sval,"HHeadLineGap")==0 ) {
 	os2getint(sf->pfminfo.linegap,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"VLineGap")==0 || strmatch(c->a.vals[1].u.sval,"VHeadLineGap")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"VLineGap")==0 || strcasecmp(c->a.vals[1].u.sval,"VHeadLineGap")==0 ) {
 	os2getint(sf->pfminfo.vlinegap,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"Panose")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"Panose")==0 ) {
 	c->return_val.type = v_arrfree;
 	c->return_val.u.aval = xmalloc(sizeof(Array));
 	c->return_val.u.aval->argc = 10;
@@ -3659,25 +3659,25 @@ static void bGetOS2Value(Context *c) {
 	    c->return_val.u.aval->vals[i].type = v_int;
 	    c->return_val.u.aval->vals[i].u.ival = sf->pfminfo.panose[i];
 	}
-    } else if ( strmatch(c->a.vals[1].u.sval,"SubXSize")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"SubXSize")==0 ) {
 	os2getint(sf->pfminfo.os2_subxsize,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"SubYSize")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"SubYSize")==0 ) {
 	os2getint(sf->pfminfo.os2_subysize,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"SubXOffset")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"SubXOffset")==0 ) {
 	os2getint(sf->pfminfo.os2_subxoff,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"SubYOffset")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"SubYOffset")==0 ) {
 	os2getint(sf->pfminfo.os2_subyoff,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"supXSize")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"supXSize")==0 ) {
 	os2getint(sf->pfminfo.os2_supxsize,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"supYSize")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"supYSize")==0 ) {
 	os2getint(sf->pfminfo.os2_supysize,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"supXOffset")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"supXOffset")==0 ) {
 	os2getint(sf->pfminfo.os2_supxoff,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"supYOffset")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"supYOffset")==0 ) {
 	os2getint(sf->pfminfo.os2_supyoff,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"StrikeOutSize")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"StrikeOutSize")==0 ) {
 	os2getint(sf->pfminfo.os2_strikeysize,c);
-    } else if ( strmatch(c->a.vals[1].u.sval,"StrikeOutPos")==0 ) {
+    } else if ( strcasecmp(c->a.vals[1].u.sval,"StrikeOutPos")==0 ) {
 	os2getint(sf->pfminfo.os2_strikeypos,c);
     } else {
 	ScriptErrorString(c,"Unknown OS/2 field: ", c->a.vals[1].u.sval );
@@ -3706,17 +3706,17 @@ static void bSetMaxpValue(Context *c) {
 	tab->data[15] = 2;			/* Default zones to 2 */
 	tab->len = tab->maxlen = 32;
     }
-    if ( strmatch(c->a.vals[1].u.sval,"Zones")==0 )
+    if ( strcasecmp(c->a.vals[1].u.sval,"Zones")==0 )
 	memputshort(tab->data,7*sizeof(uint16_t),c->a.vals[2].u.ival);
-    else if ( strmatch(c->a.vals[1].u.sval,"TwilightPntCnt")==0 )
+    else if ( strcasecmp(c->a.vals[1].u.sval,"TwilightPntCnt")==0 )
 	memputshort(tab->data,8*sizeof(uint16_t),c->a.vals[2].u.ival);
-    else if ( strmatch(c->a.vals[1].u.sval,"StorageCnt")==0 )
+    else if ( strcasecmp(c->a.vals[1].u.sval,"StorageCnt")==0 )
 	memputshort(tab->data,9*sizeof(uint16_t),c->a.vals[2].u.ival);
-    else if ( strmatch(c->a.vals[1].u.sval,"MaxStackDepth")==0 )
+    else if ( strcasecmp(c->a.vals[1].u.sval,"MaxStackDepth")==0 )
 	memputshort(tab->data,12*sizeof(uint16_t),c->a.vals[2].u.ival);
-    else if ( strmatch(c->a.vals[1].u.sval,"FDEFs")==0 )
+    else if ( strcasecmp(c->a.vals[1].u.sval,"FDEFs")==0 )
 	memputshort(tab->data,10*sizeof(uint16_t),c->a.vals[2].u.ival);
-    else if ( strmatch(c->a.vals[1].u.sval,"IDEFs")==0 )
+    else if ( strcasecmp(c->a.vals[1].u.sval,"IDEFs")==0 )
 	memputshort(tab->data,11*sizeof(uint16_t),c->a.vals[2].u.ival);
     else
 	ScriptErrorString(c,"Unknown 'maxp' field: ", c->a.vals[1].u.sval );
@@ -3744,17 +3744,17 @@ static void bGetMaxpValue(Context *c) {
 	data = tab->data;
 
     c->return_val.type = v_int;
-    if ( strmatch(c->a.vals[1].u.sval,"Zones")==0 )
+    if ( strcasecmp(c->a.vals[1].u.sval,"Zones")==0 )
 	c->return_val.u.ival = memushort(data,32,7*sizeof(uint16_t));
-    else if ( strmatch(c->a.vals[1].u.sval,"TwilightPntCnt")==0 )
+    else if ( strcasecmp(c->a.vals[1].u.sval,"TwilightPntCnt")==0 )
 	c->return_val.u.ival = memushort(data,32,8*sizeof(uint16_t));
-    else if ( strmatch(c->a.vals[1].u.sval,"StorageCnt")==0 )
+    else if ( strcasecmp(c->a.vals[1].u.sval,"StorageCnt")==0 )
 	c->return_val.u.ival = memushort(data,32,9*sizeof(uint16_t));
-    else if ( strmatch(c->a.vals[1].u.sval,"MaxStackDepth")==0 )
+    else if ( strcasecmp(c->a.vals[1].u.sval,"MaxStackDepth")==0 )
 	c->return_val.u.ival = memushort(data,32,12*sizeof(uint16_t));
-    else if ( strmatch(c->a.vals[1].u.sval,"FDEFs")==0 )
+    else if ( strcasecmp(c->a.vals[1].u.sval,"FDEFs")==0 )
 	c->return_val.u.ival = memushort(data,32,10*sizeof(uint16_t));
-    else if ( strmatch(c->a.vals[1].u.sval,"IDEFs")==0 )
+    else if ( strcasecmp(c->a.vals[1].u.sval,"IDEFs")==0 )
 	c->return_val.u.ival = memushort(data,32,11*sizeof(uint16_t));
     else
 	ScriptErrorString(c,"Unknown 'maxp' field: ", c->a.vals[1].u.sval );
@@ -3895,17 +3895,17 @@ static void bSetGlyphClass(Context *c) {
 	ScriptError( c, "Wrong number of arguments");
     else if ( c->a.vals[1].type!=v_str )
 	ScriptError(c,"Bad argument type");
-    if ( strmatch(c->a.vals[1].u.sval,"automatic")==0 )
+    if ( strcasecmp(c->a.vals[1].u.sval,"automatic")==0 )
 	class = 0;
-    else if ( strmatch(c->a.vals[1].u.sval,"none")==0 )
+    else if ( strcasecmp(c->a.vals[1].u.sval,"none")==0 )
 	class = 1;
-    else if ( strmatch(c->a.vals[1].u.sval,"base")==0 )
+    else if ( strcasecmp(c->a.vals[1].u.sval,"base")==0 )
 	class = 2;
-    else if ( strmatch(c->a.vals[1].u.sval,"ligature")==0 )
+    else if ( strcasecmp(c->a.vals[1].u.sval,"ligature")==0 )
 	class = 3;
-    else if ( strmatch(c->a.vals[1].u.sval,"mark")==0 )
+    else if ( strcasecmp(c->a.vals[1].u.sval,"mark")==0 )
 	class = 4;
-    else if ( strmatch(c->a.vals[1].u.sval,"component")==0 )
+    else if ( strcasecmp(c->a.vals[1].u.sval,"component")==0 )
 	class = 5;
     else
 	ScriptErrorString(c,"Unknown glyph class: ", c->a.vals[1].u.sval );
@@ -5471,11 +5471,11 @@ static void bClearHints(Context *c) {
 	int x_dir = 0, y_dir = 0;
 	int i, gid;
 	FontViewBase *fv = c->curfv;
-	if ( strmatch(c->a.vals[1].u.sval,"vertical")==0 )
+	if ( strcasecmp(c->a.vals[1].u.sval,"vertical")==0 )
 	    y_dir = 1;
-	else if ( strmatch(c->a.vals[1].u.sval,"horizontal")==0 )
+	else if ( strcasecmp(c->a.vals[1].u.sval,"horizontal")==0 )
 	    x_dir = 1;
-	else if ( strmatch(c->a.vals[1].u.sval,"diagonal")==0 ) {
+	else if ( strcasecmp(c->a.vals[1].u.sval,"diagonal")==0 ) {
             x_dir = 1; y_dir = 1;
         } else
 	    ScriptError(c,"Argument must be a string and must be \"Horizontal\", \"Vertical\" or \"Diagonal\".");
@@ -6417,11 +6417,11 @@ static void bAddAnchorClass(Context *c) {
     if ( ac->subtable==NULL )
 	ScriptErrorString(c,"Unknown lookup subtable",c->a.vals[3].u.sval);
 
-    if ( strmatch(c->a.vals[2].u.sval,"default")==0 || strmatch(c->a.vals[2].u.sval,"mark")==0 )
+    if ( strcasecmp(c->a.vals[2].u.sval,"default")==0 || strcasecmp(c->a.vals[2].u.sval,"mark")==0 )
 	ac->type = act_mark;
-    else if ( strmatch(c->a.vals[2].u.sval,"mk-mk")==0 || strmatch(c->a.vals[2].u.sval,"mkmk")==0)
+    else if ( strcasecmp(c->a.vals[2].u.sval,"mk-mk")==0 || strcasecmp(c->a.vals[2].u.sval,"mkmk")==0)
 	ac->type = act_mkmk;
-    else if ( strmatch(c->a.vals[2].u.sval,"cursive")==0 || strmatch(c->a.vals[2].u.sval,"curs")==0)
+    else if ( strcasecmp(c->a.vals[2].u.sval,"cursive")==0 || strcasecmp(c->a.vals[2].u.sval,"curs")==0)
 	ac->type = act_curs;
     else
 	ScriptErrorString(c,"Unknown type of anchor class. Must be one of \"default\", \"mk-mk\", or \"cursive\". ",  c->a.vals[2].u.sval);
@@ -6472,19 +6472,19 @@ static void bAddAnchorPoint(Context *c) {
 	ScriptErrorString(c,"This font does not contain an anchor class with this name: ", c->a.vals[1].u.sval );
 
     sc = GetOneSelChar(c);
-    if ( strmatch(c->a.vals[2].u.sval,"mark")==0 )
+    if ( strcasecmp(c->a.vals[2].u.sval,"mark")==0 )
 	type = at_mark;
-    else if ( strmatch(c->a.vals[2].u.sval,"basechar")==0 || strmatch(c->a.vals[2].u.sval,"base")==0 )
+    else if ( strcasecmp(c->a.vals[2].u.sval,"basechar")==0 || strcasecmp(c->a.vals[2].u.sval,"base")==0 )
 	type = at_basechar;
-    else if ( strmatch(c->a.vals[2].u.sval,"baselig")==0 || strmatch(c->a.vals[2].u.sval,"ligature")==0 )
+    else if ( strcasecmp(c->a.vals[2].u.sval,"baselig")==0 || strcasecmp(c->a.vals[2].u.sval,"ligature")==0 )
 	type = at_baselig;
-    else if ( strmatch(c->a.vals[2].u.sval,"basemark")==0 )
+    else if ( strcasecmp(c->a.vals[2].u.sval,"basemark")==0 )
 	type = at_basemark;
-    else if ( strmatch(c->a.vals[2].u.sval,"cursentry")==0 || strmatch(c->a.vals[2].u.sval,"entry")==0 )
+    else if ( strcasecmp(c->a.vals[2].u.sval,"cursentry")==0 || strcasecmp(c->a.vals[2].u.sval,"entry")==0 )
 	type = at_centry;
-    else if ( strmatch(c->a.vals[2].u.sval,"cursexit")==0 || strmatch(c->a.vals[2].u.sval,"exit")==0 )
+    else if ( strcasecmp(c->a.vals[2].u.sval,"cursexit")==0 || strcasecmp(c->a.vals[2].u.sval,"exit")==0 )
 	type = at_cexit;
-    else if ( strmatch(c->a.vals[2].u.sval,"default")==0 ) {
+    else if ( strcasecmp(c->a.vals[2].u.sval,"default")==0 ) {
 	int val = IsAnchorClassUsed(sc,t);
 	PST *pst;
 	for ( pst = sc->possub; pst!=NULL && pst->type!=pst_ligature; pst=pst->next );
@@ -6820,43 +6820,43 @@ static void bAddLookup(Context *c) {
 	    (c->a.argc==6 && c->a.vals[5].type!=v_str))
 	ScriptError( c, "Bad type for argument");
 
-    if ( strmatch(c->a.vals[2].u.sval,"gsub_single")==0 )
+    if ( strcasecmp(c->a.vals[2].u.sval,"gsub_single")==0 )
 	type = gsub_single;
-    else if ( strmatch(c->a.vals[2].u.sval,"gsub_multiple")==0 )
+    else if ( strcasecmp(c->a.vals[2].u.sval,"gsub_multiple")==0 )
 	type = gsub_multiple;
-    else if ( strmatch(c->a.vals[2].u.sval,"gsub_alternate")==0 )
+    else if ( strcasecmp(c->a.vals[2].u.sval,"gsub_alternate")==0 )
 	type = gsub_alternate;
-    else if ( strmatch(c->a.vals[2].u.sval,"gsub_ligature")==0 )
+    else if ( strcasecmp(c->a.vals[2].u.sval,"gsub_ligature")==0 )
 	type = gsub_ligature;
-    else if ( strmatch(c->a.vals[2].u.sval,"gsub_context")==0 )
+    else if ( strcasecmp(c->a.vals[2].u.sval,"gsub_context")==0 )
 	type = gsub_context;
-    else if ( strmatch(c->a.vals[2].u.sval,"gsub_contextchain")==0 )
+    else if ( strcasecmp(c->a.vals[2].u.sval,"gsub_contextchain")==0 )
 	type = gsub_contextchain;
-    else if ( strmatch(c->a.vals[2].u.sval,"gsub_reversecchain")==0 )
+    else if ( strcasecmp(c->a.vals[2].u.sval,"gsub_reversecchain")==0 )
 	type = gsub_reversecchain;
-    else if ( strmatch(c->a.vals[2].u.sval,"morx_indic")==0 )
+    else if ( strcasecmp(c->a.vals[2].u.sval,"morx_indic")==0 )
 	type = morx_indic;
-    else if ( strmatch(c->a.vals[2].u.sval,"morx_context")==0 )
+    else if ( strcasecmp(c->a.vals[2].u.sval,"morx_context")==0 )
 	type = morx_context;
-    else if ( strmatch(c->a.vals[2].u.sval,"morx_insert")==0 )
+    else if ( strcasecmp(c->a.vals[2].u.sval,"morx_insert")==0 )
 	type = morx_insert;
-    else if ( strmatch(c->a.vals[2].u.sval,"gpos_single")==0 )
+    else if ( strcasecmp(c->a.vals[2].u.sval,"gpos_single")==0 )
 	type = gpos_single;
-    else if ( strmatch(c->a.vals[2].u.sval,"gpos_pair")==0 )
+    else if ( strcasecmp(c->a.vals[2].u.sval,"gpos_pair")==0 )
 	type = gpos_pair;
-    else if ( strmatch(c->a.vals[2].u.sval,"gpos_cursive")==0 )
+    else if ( strcasecmp(c->a.vals[2].u.sval,"gpos_cursive")==0 )
 	type = gpos_cursive;
-    else if ( strmatch(c->a.vals[2].u.sval,"gpos_mark2base")==0 || strmatch(c->a.vals[2].u.sval,"gpos_marktobase")==0 )
+    else if ( strcasecmp(c->a.vals[2].u.sval,"gpos_mark2base")==0 || strcasecmp(c->a.vals[2].u.sval,"gpos_marktobase")==0 )
 	type = gpos_mark2base;
-    else if ( strmatch(c->a.vals[2].u.sval,"gpos_mark2ligature")==0 || strmatch(c->a.vals[2].u.sval,"gpos_marktoligature")==0 )
+    else if ( strcasecmp(c->a.vals[2].u.sval,"gpos_mark2ligature")==0 || strcasecmp(c->a.vals[2].u.sval,"gpos_marktoligature")==0 )
 	type = gpos_mark2ligature;
-    else if ( strmatch(c->a.vals[2].u.sval,"gpos_mark2mark")==0 || strmatch(c->a.vals[2].u.sval,"gpos_marktomark")==0 )
+    else if ( strcasecmp(c->a.vals[2].u.sval,"gpos_mark2mark")==0 || strcasecmp(c->a.vals[2].u.sval,"gpos_marktomark")==0 )
 	type = gpos_mark2mark;
-    else if ( strmatch(c->a.vals[2].u.sval,"gpos_context")==0 )
+    else if ( strcasecmp(c->a.vals[2].u.sval,"gpos_context")==0 )
 	type = gpos_context;
-    else if ( strmatch(c->a.vals[2].u.sval,"gpos_contextchain")==0 )
+    else if ( strcasecmp(c->a.vals[2].u.sval,"gpos_contextchain")==0 )
 	type = gpos_contextchain;
-    else if ( strmatch(c->a.vals[2].u.sval,"kern_statemachine")==0 )
+    else if ( strcasecmp(c->a.vals[2].u.sval,"kern_statemachine")==0 )
 	type = kern_statemachine;
     else
 	ScriptErrorString(c,"Unknown lookup type",c->a.vals[2].u.sval);
@@ -7054,9 +7054,9 @@ static void bGetLookups(Context *c) {
     else if ( c->a.vals[1].type!=v_str )
 	ScriptError( c, "Bad type for argument");
 
-    if ( strmatch(c->a.vals[1].u.sval,"GPOS")==0 )
+    if ( strcasecmp(c->a.vals[1].u.sval,"GPOS")==0 )
 	base = sf->gpos_lookups;
-    else if ( strmatch(c->a.vals[1].u.sval,"GSUB")==0 )
+    else if ( strcasecmp(c->a.vals[1].u.sval,"GSUB")==0 )
 	base = sf->gsub_lookups;
     else
 	ScriptError( c, "Argument to \"GetLookups\" must be either \"GPOS\" or \"GSUB\"");
@@ -7422,15 +7422,15 @@ static void bCharInfo(Context *c) {
     c->return_val.type = v_int;
     if ( c->a.argc==3 ) {
 	int ch2;
-	if ( strmatch( c->a.vals[1].u.sval,"XExtrema")==0 ||
-		strmatch( c->a.vals[1].u.sval,"YExtrema")==0 ) {
+	if ( strcasecmp( c->a.vals[1].u.sval,"XExtrema")==0 ||
+		strcasecmp( c->a.vals[1].u.sval,"YExtrema")==0 ) {
 	    if ( c->a.vals[2].type!=v_int )
 		ScriptError( c, "Bad type for argument");
 	    FigureExtrema(c,sc,c->a.vals[2].u.ival,*c->a.vals[1].u.sval=='x' || *c->a.vals[1].u.sval=='X');
 return;
 	}
-	else if ( strmatch( c->a.vals[1].u.sval,"XProfile")==0 ||
-		strmatch( c->a.vals[1].u.sval,"YProfile")==0 ) {
+	else if ( strcasecmp( c->a.vals[1].u.sval,"XProfile")==0 ||
+		strcasecmp( c->a.vals[1].u.sval,"YProfile")==0 ) {
 	    if ( c->a.vals[2].type!=v_int )
 		ScriptError( c, "Bad type for argument");
 	    FigureProfile(c,sc,c->a.vals[2].u.ival,*c->a.vals[1].u.sval=='x' || *c->a.vals[1].u.sval=='X');
@@ -7440,7 +7440,7 @@ return;
 	gid2 = ch2==-1 ? -1 : map->map[ch2];
 	if ( gid2==-1 )
 	    /* Do Nothing */;
-	else if ( strmatch( c->a.vals[1].u.sval,"Kern")==0 ) {
+	else if ( strcasecmp( c->a.vals[1].u.sval,"Kern")==0 ) {
 	    c->return_val.u.ival = 0;
 	    if ( sf->glyphs[gid2]!=NULL ) { KernPair *kp; KernClass *kc;
 		for ( kp = sc->kerns; kp!=NULL && kp->sc!=sf->glyphs[gid2]; kp=kp->next );
@@ -7453,7 +7453,7 @@ return;
 		    }
 		}
 	    }
-	} else if ( strmatch( c->a.vals[1].u.sval,"VKern")==0 ) {
+	} else if ( strcasecmp( c->a.vals[1].u.sval,"VKern")==0 ) {
 	    c->return_val.u.ival = 0;
 	    if ( sf->glyphs[gid2]!=NULL ) { KernPair *kp;
 		for ( kp = sc->vkerns; kp!=NULL && kp->sc!=sf->glyphs[gid2]; kp=kp->next );
@@ -7469,42 +7469,42 @@ return;
 	} else
 	    ScriptErrorString(c,"Unknown tag", c->a.vals[1].u.sval);
     } else {
-	if ( strmatch( c->a.vals[1].u.sval,"Name")==0 ) {
+	if ( strcasecmp( c->a.vals[1].u.sval,"Name")==0 ) {
 	    c->return_val.type = v_str;
 	    c->return_val.u.sval = xstrdup_or_null(sc->name);
-	} else if ( strmatch( c->a.vals[1].u.sval,"Unicode")==0 )
+	} else if ( strcasecmp( c->a.vals[1].u.sval,"Unicode")==0 )
 	    c->return_val.u.ival = sc->unicodeenc;
-	else if ( strmatch( c->a.vals[1].u.sval,"Encoding")==0 )
+	else if ( strcasecmp( c->a.vals[1].u.sval,"Encoding")==0 )
 	    c->return_val.u.ival = c->curfv->map->backmap[sc->orig_pos];
-	else if ( strmatch( c->a.vals[1].u.sval,"Width")==0 )
+	else if ( strcasecmp( c->a.vals[1].u.sval,"Width")==0 )
 	    c->return_val.u.ival = sc->width;
-	else if ( strmatch( c->a.vals[1].u.sval,"VWidth")==0 )
+	else if ( strcasecmp( c->a.vals[1].u.sval,"VWidth")==0 )
 	    c->return_val.u.ival = sc->vwidth;
-	else if ( strmatch( c->a.vals[1].u.sval,"TeXHeight")==0 )
+	else if ( strcasecmp( c->a.vals[1].u.sval,"TeXHeight")==0 )
 	    c->return_val.u.ival = sc->tex_height;
-	else if ( strmatch( c->a.vals[1].u.sval,"TeXDepth")==0 )
+	else if ( strcasecmp( c->a.vals[1].u.sval,"TeXDepth")==0 )
 	    c->return_val.u.ival = sc->tex_depth;
-	else if ( strmatch( c->a.vals[1].u.sval,"Changed")==0 )
+	else if ( strcasecmp( c->a.vals[1].u.sval,"Changed")==0 )
 	    c->return_val.u.ival = sc->changed;
-	else if ( strmatch( c->a.vals[1].u.sval,"DontAutoHint")==0 )
+	else if ( strcasecmp( c->a.vals[1].u.sval,"DontAutoHint")==0 )
 	    c->return_val.u.ival = sc->manualhints;
-	else if ( strmatch( c->a.vals[1].u.sval,"Color")==0 )
+	else if ( strcasecmp( c->a.vals[1].u.sval,"Color")==0 )
 	    c->return_val.u.ival = sc->color;
-	else if ( strmatch( c->a.vals[1].u.sval,"GlyphIndex")==0 )
+	else if ( strcasecmp( c->a.vals[1].u.sval,"GlyphIndex")==0 )
 	    c->return_val.u.ival = sc->orig_pos;
-	else if ( strmatch( c->a.vals[1].u.sval,"LayerCount")==0 )
+	else if ( strcasecmp( c->a.vals[1].u.sval,"LayerCount")==0 )
 	    c->return_val.u.ival = sc->layer_cnt;
-	else if ( strmatch( c->a.vals[1].u.sval,"PointCount")==0 )
+	else if ( strcasecmp( c->a.vals[1].u.sval,"PointCount")==0 )
 	    c->return_val.u.ival = SCNumberPoints(sc,ly_fore);
-	else if ( strmatch( c->a.vals[1].u.sval,"ValidationState")==0 )
+	else if ( strcasecmp( c->a.vals[1].u.sval,"ValidationState")==0 )
 	    c->return_val.u.ival = sc->layers[ly_fore].validation_state;
-	else if ( strmatch( c->a.vals[1].u.sval,"RefCount")==0 ) {
+	else if ( strcasecmp( c->a.vals[1].u.sval,"RefCount")==0 ) {
 	    for ( i=0, layer=0; layer<sc->layer_cnt; ++layer )
 		for ( ref=sc->layers[layer].refs; ref!=NULL; ref=ref->next, ++i )
 		    ;
 	    c->return_val.u.ival = i;
-	} else if ( strmatch( c->a.vals[1].u.sval,"RefName")==0 ||
-		strmatch( c->a.vals[1].u.sval,"RefNames")==0 ) {
+	} else if ( strcasecmp( c->a.vals[1].u.sval,"RefName")==0 ||
+		strcasecmp( c->a.vals[1].u.sval,"RefNames")==0 ) {
 	    for ( i=0, layer=0; layer<sc->layer_cnt; ++layer )
 		for ( ref=sc->layers[layer].refs; ref!=NULL; ref=ref->next, ++i )
 		    ;
@@ -7518,7 +7518,7 @@ return;
 		    c->return_val.u.aval->vals[i].type = v_str;
 		}
 	    }
-	} else if ( strmatch( c->a.vals[1].u.sval,"RefTransform")==0 ) {
+	} else if ( strcasecmp( c->a.vals[1].u.sval,"RefTransform")==0 ) {
 	    for ( i=0, layer=0; layer<sc->layer_cnt; ++layer )
 		for ( ref=sc->layers[layer].refs; ref!=NULL; ref=ref->next, ++i )
 		    ;
@@ -7538,18 +7538,18 @@ return;
 		    }
 		}
 	    }
-	} else if ( strmatch( c->a.vals[1].u.sval,"Comment")==0 ) {
+	} else if ( strcasecmp( c->a.vals[1].u.sval,"Comment")==0 ) {
 	    c->return_val.type = v_str;
 	    c->return_val.u.sval = sc->comment?xstrdup_or_null(sc->comment):xstrdup_or_null("");
 	} else {
 	    SplineCharFindBounds(sc,&b);
-	    if ( strmatch( c->a.vals[1].u.sval,"LBearing")==0 )
+	    if ( strcasecmp( c->a.vals[1].u.sval,"LBearing")==0 )
 		c->return_val.u.ival = b.minx;
-	    else if ( strmatch( c->a.vals[1].u.sval,"RBearing")==0 )
+	    else if ( strcasecmp( c->a.vals[1].u.sval,"RBearing")==0 )
 		c->return_val.u.ival = sc->width-b.maxx;
-	    else if ( strmatch( c->a.vals[1].u.sval,"BBox")==0 ||
-		    strmatch( c->a.vals[1].u.sval,"BoundingBox")==0 ||
-		    strmatch( c->a.vals[1].u.sval,"BB")==0 ) {
+	    else if ( strcasecmp( c->a.vals[1].u.sval,"BBox")==0 ||
+		    strcasecmp( c->a.vals[1].u.sval,"BoundingBox")==0 ||
+		    strcasecmp( c->a.vals[1].u.sval,"BB")==0 ) {
 		c->return_val.type = v_arrfree;
 		c->return_val.u.aval = xmalloc(sizeof(Array));
 		c->return_val.u.aval->argc = 4;

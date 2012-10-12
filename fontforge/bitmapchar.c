@@ -777,7 +777,7 @@ void Default_Properties(BDFFont *bdf,EncMap *map,char *onlyme) {
 
     if ( onlyme!=NULL ) {
 	/* Only generate these oddities if they ask for them... */
-	if ( strmatch(onlyme,"QUAD_WIDTH")==0 )		/* Depreciated */
+	if ( strcasecmp(onlyme,"QUAD_WIDTH")==0 )		/* Depreciated */
 	    BDFPropAddInt(bdf,"QUAD_WIDTH",bdf->pixelsize,onlyme);
 	if ( components.res_x==components.res_y )	/* Depreciated */
 	    /* This isn't dpi (why not???!), it is 1/100 pixels per point */

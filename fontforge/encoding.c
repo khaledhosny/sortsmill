@@ -333,13 +333,13 @@ _FindOrMakeEncoding (const char *name, int make_it)
            || strcasecmp (name, "Adobe") == 0)
     name = "AdobeStandard";
   for (enc = enclist; enc != NULL; enc = enc->next)
-    if (strmatch (name, enc->enc_name) == 0 ||
-        (enc->iconv_name != NULL && strmatch (name, enc->iconv_name) == 0))
+    if (strcasecmp (name, enc->enc_name) == 0 ||
+        (enc->iconv_name != NULL && strcasecmp (name, enc->iconv_name) == 0))
       return (enc);
-  if (strmatch (name, "unicode") == 0 || strmatch (name, "iso10646") == 0
-      || strmatch (name, "iso10646-1") == 0)
+  if (strcasecmp (name, "unicode") == 0 || strcasecmp (name, "iso10646") == 0
+      || strcasecmp (name, "iso10646-1") == 0)
     return (&unicodebmp);
-  if (strmatch (name, "unicode4") == 0 || strmatch (name, "ucs4") == 0)
+  if (strcasecmp (name, "unicode4") == 0 || strcasecmp (name, "ucs4") == 0)
     return (&unicodefull);
 
   iconv_name = name;
@@ -512,11 +512,11 @@ _FindOrMakeEncoding (const char *name, int make_it)
   if (strstrmatch (name, "ISO8859") != NULL &&
       strtol (name + strlen (name) - 2, NULL, 10) >= 16)
     /* Not in our menu, don't hide */ ;
-  else if (iconv_name != name || strmatch (name, "mac") == 0
+  else if (iconv_name != name || strcasecmp (name, "mac") == 0
            || strstrmatch (name, "ISO8859") != NULL
-           || strmatch (name, "koi8-r") == 0 || strmatch (name, "sjis") == 0
-           || strmatch (name, "big5") == 0
-           || strmatch (name, "big5hkscs") == 0)
+           || strcasecmp (name, "koi8-r") == 0 || strcasecmp (name, "sjis") == 0
+           || strcasecmp (name, "big5") == 0
+           || strcasecmp (name, "big5hkscs") == 0)
     enc->hidden = true;
 
   return (enc);

@@ -1268,7 +1268,7 @@ pdf_build_type0 (PI * pi, int sfid)
            sfbit->istype42cid ? 2 : 0);
   fprintf (pi->out, "    /BaseFont /%s\n", cidmaster->fontname);
   if (cidmaster->cidregistry != NULL
-      && strmatch (cidmaster->cidregistry, "Adobe") == 0)
+      && strcasecmp (cidmaster->cidregistry, "Adobe") == 0)
     fprintf (pi->out,
              "    /CIDSystemInfo << /Registry (%s) /Ordering (%s) /Supplement %d >>\n",
              cidmaster->cidregistry, cidmaster->ordering,

@@ -301,7 +301,7 @@ int MSLanguageFromLocale(void) {
 
     langcode = langlocalecode = -1;
     for ( i=0; ms_2_locals[i].loc_name!=NULL; ++i ) {
-	if ( strmatch(langcountry,ms_2_locals[i].loc_name)==0 ) {
+	if ( strcasecmp(langcountry,ms_2_locals[i].loc_name)==0 ) {
 	    langlocalecode = ms_2_locals[i].local_id;
 	    langcode = langlocalecode&0x3ff;
     break;

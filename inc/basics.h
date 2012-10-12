@@ -48,6 +48,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <string.h>
+#include <strings.h>
 #include <math.h>
 #include <limits.h>
 #include <null_passthru.h>

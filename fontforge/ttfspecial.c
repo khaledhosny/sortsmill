@@ -1962,11 +1962,11 @@ static int BDFPropCntMergedComments(BDFFont *bdf) {
     cnt = 0;
     for ( i=0; i<bdf->prop_cnt; ++i ) {
 	++cnt;
-	if ( strmatch(bdf->props[i].name,"COMMENT")==0 )
+	if ( strcasecmp(bdf->props[i].name,"COMMENT")==0 )
     break;
     }
     for ( ; i<bdf->prop_cnt; ++i ) {
-	if ( strmatch(bdf->props[i].name,"COMMENT")==0 )
+	if ( strcasecmp(bdf->props[i].name,"COMMENT")==0 )
     continue;
 	++cnt;
     }
@@ -1979,7 +1979,7 @@ static char *MergeComments(BDFFont *bdf) {
 
     len = 0;
     for ( i=0; i<bdf->prop_cnt; ++i ) {
-	if ( strmatch(bdf->props[i].name,"COMMENT")==0 &&
+	if ( strcasecmp(bdf->props[i].name,"COMMENT")==0 &&
 		((bdf->props[i].type & ~prt_property)==prt_string ||
 		 (bdf->props[i].type & ~prt_property)==prt_atom ))
 	    len += strlen( bdf->props[i].u.atom ) + 1;
@@ -1990,7 +1990,7 @@ return( xstrdup_or_null( "" ));
     str = xmalloc( len+1 );
     len = 0;
     for ( i=0; i<bdf->prop_cnt; ++i ) {
-	if ( strmatch(bdf->props[i].name,"COMMENT")==0 &&
+	if ( strcasecmp(bdf->props[i].name,"COMMENT")==0 &&
 		((bdf->props[i].type & ~prt_property)==prt_string ||
 		 (bdf->props[i].type & ~prt_property)==prt_atom )) {
 	    strcpy(str+len,bdf->props[i].u.atom );
@@ -2042,7 +2042,7 @@ return(true);
 	    int saw_comment=0;
 	    char *str;
 	    for ( j=0; j<bdf->prop_cnt; ++j ) {
-		if ( strmatch(bdf->props[j].name,"COMMENT")==0 && saw_comment )
+		if ( strcasecmp(bdf->props[j].name,"COMMENT")==0 && saw_comment )
 	    continue;
 		/* Try to reuse keyword names in string space */
 		for ( k=0 ; k<acnt; ++k ) {
@@ -2062,7 +2062,7 @@ return(true);
 		    fwrite(bdf->props[j].name,1,strlen(bdf->props[j].name)+1,strings);
 		}
 		str = bdf->props[j].u.str;
-		if ( strmatch(bdf->props[j].name,"COMMENT")==0 ) {
+		if ( strcasecmp(bdf->props[j].name,"COMMENT")==0 ) {
 		    str = MergeComments(bdf);
 		    saw_comment = true;
 		}

@@ -839,16 +839,16 @@ return( res );
 	ch = *end; *end = '\0';
 	old = res;
 	res = tmpfile();
-	if ( strmatch("ASCIIHexDecode",pt)==0 ) {
+	if ( strcasecmp("ASCIIHexDecode",pt)==0 ) {
 	    pdf_hexfilter(res,old);
 	    pt += strlen("ASCIIHexDecode");
-	} else if ( strmatch("ASCII85Decode",pt)==0 ) {
+	} else if ( strcasecmp("ASCII85Decode",pt)==0 ) {
 	    pdf_85filter(res,old);
 	    pt += strlen("ASCII85Decode");
-	} else if ( strmatch("FlateDecode",pt)==0 ) {
+	} else if ( strcasecmp("FlateDecode",pt)==0 ) {
 	    pdf_zfilter(res,old);
 	    pt += strlen("FlateDecode");
-	} else if ( strmatch("RunLengthDecode",pt)==0 ) {
+	} else if ( strcasecmp("RunLengthDecode",pt)==0 ) {
 	    pdf_rlefilter(res,old);
 	    pt += strlen("RunLengthDecode");
 	} else {

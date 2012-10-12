@@ -4007,7 +4007,7 @@ return;		/* Should not happen, but it did */
     specific =  nt->encoding_name->is_korean ? 5 :	/* Wansung, korean */
 		nt->encoding_name->is_japanese ? 2 :	/* SJIS */
 		nt->encoding_name->is_simplechinese ? 3 :/* packed gb2312, don't know the real name */
-		strmatch(nt->encoding_name->enc_name,"EUC-GB12345")==0 ? 3 :/* Lie */
+		strcasecmp(nt->encoding_name->enc_name,"EUC-GB12345")==0 ? 3 :/* Lie */
 		nt->encoding_name->is_tradchinese ? 4 :	/* Big5, traditional Chinese */
 			-1;
     if ( specific != -1 ) {
@@ -4029,7 +4029,7 @@ return;		/* Should not happen, but it did */
 	    size_t inlen, outlen;
 	    ne->offset  = ftell(nt->strings);
 	    encname     = nt->encoding_name->is_japanese ? "SJIS" :
-			strmatch(nt->encoding_name->enc_name,"JOHAB")==0 ? "JOHAB" :
+			strcasecmp(nt->encoding_name->enc_name,"JOHAB")==0 ? "JOHAB" :
 			nt->encoding_name->is_korean ? "EUC-KR" :
 			nt->encoding_name->is_simplechinese ? "EUC-CN" :
 			    nt->encoding_name->enc_name;
@@ -5755,7 +5755,7 @@ static int initTables(struct alltabs *at, SplineFont *sf,enum fontformat format,
     BDFFont *bdf;
     struct ttf_table *tab;
 
-   if ( strmatch(at->map->enc->enc_name,"symbol")==0 && format==ff_ttf )
+   if ( strcasecmp(at->map->enc->enc_name,"symbol")==0 && format==ff_ttf )
   	format = ff_ttfsym;
 
     tab = SFFindTable(sf,CHR('c','v','t',' '));

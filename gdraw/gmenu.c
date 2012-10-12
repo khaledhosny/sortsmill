@@ -125,10 +125,10 @@ static void GMenuInit() {
     menu_font = _GGadgetInitDefaultBox("GMenu.",&menu_box,menubar_font);
     keystr = GResourceFindString("Keyboard");
     if ( keystr!=NULL ) {
-	if ( strmatch(keystr,"mac")==0 ) keyboard = kb_mac;
-	else if ( strmatch(keystr,"sun")==0 ) keyboard = kb_sun;
-	else if ( strmatch(keystr,"ppc")==0 ) keyboard = kb_ppc;
-	else if ( strmatch(keystr,"ibm")==0 || strmatch(keystr,"pc")==0 ) keyboard = kb_ibm;
+	if ( strcasecmp(keystr,"mac")==0 ) keyboard = kb_mac;
+	else if ( strcasecmp(keystr,"sun")==0 ) keyboard = kb_sun;
+	else if ( strcasecmp(keystr,"ppc")==0 ) keyboard = kb_ppc;
+	else if ( strcasecmp(keystr,"ibm")==0 || strcasecmp(keystr,"pc")==0 ) keyboard = kb_ibm;
 	else if ( strtol(keystr,&end,10), *end=='\0' )
 	    keyboard = strtol(keystr,NULL,10);
     }

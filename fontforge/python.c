@@ -12513,7 +12513,7 @@ return( -1 );
     if ( PyErr_Occurred()!=NULL )
 return( -1 );
 #endif /* PY_MAJOR_VERSION >= 3 */
-    if ( strmatch(encname,"compacted")==0 ) {
+    if ( strcasecmp(encname,"compacted")==0 ) {
 	fv->normal = EncMapCopy(fv->map);
 	CompactEncMap(fv->map,fv->sf);
     } else {
@@ -12761,17 +12761,17 @@ return( -1 );
 	    tab->data[15] = 2;			/* Default zones to 2 */
 	tab->len = tab->maxlen = 32;
     }
-    if ( strmatch(str,"Zones")==0 )
+    if ( strcasecmp(str,"Zones")==0 )
 	memputshort(tab->data,7*sizeof(uint16_t),val);
-    else if ( strmatch(str,"TwilightPntCnt")==0 )
+    else if ( strcasecmp(str,"TwilightPntCnt")==0 )
 	memputshort(tab->data,8*sizeof(uint16_t),val);
-    else if ( strmatch(str,"StorageCnt")==0 )
+    else if ( strcasecmp(str,"StorageCnt")==0 )
 	memputshort(tab->data,9*sizeof(uint16_t),val);
-    else if ( strmatch(str,"MaxStackDepth")==0 )
+    else if ( strcasecmp(str,"MaxStackDepth")==0 )
 	memputshort(tab->data,12*sizeof(uint16_t),val);
-    else if ( strmatch(str,"FDEFs")==0 )
+    else if ( strcasecmp(str,"FDEFs")==0 )
 	memputshort(tab->data,10*sizeof(uint16_t),val);
-    else if ( strmatch(str,"IDEFs")==0 )
+    else if ( strcasecmp(str,"IDEFs")==0 )
 	memputshort(tab->data,11*sizeof(uint16_t),val);
 return( 0 );
 }
@@ -12796,17 +12796,17 @@ return (NULL);
     } else
 	data = tab->data;
 
-    if ( strmatch(str,"Zones")==0 )
+    if ( strcasecmp(str,"Zones")==0 )
 	val = memushort(data,32,7*sizeof(uint16_t));
-    else if ( strmatch(str,"TwilightPntCnt")==0 )
+    else if ( strcasecmp(str,"TwilightPntCnt")==0 )
 	val = memushort(data,32,8*sizeof(uint16_t));
-    else if ( strmatch(str,"StorageCnt")==0 )
+    else if ( strcasecmp(str,"StorageCnt")==0 )
 	val = memushort(data,32,9*sizeof(uint16_t));
-    else if ( strmatch(str,"MaxStackDepth")==0 )
+    else if ( strcasecmp(str,"MaxStackDepth")==0 )
 	val = memushort(data,32,12*sizeof(uint16_t));
-    else if ( strmatch(str,"FDEFs")==0 )
+    else if ( strcasecmp(str,"FDEFs")==0 )
 	val = memushort(data,32,10*sizeof(uint16_t));
-    else if ( strmatch(str,"IDEFs")==0 )
+    else if ( strcasecmp(str,"IDEFs")==0 )
 	val = memushort(data,32,11*sizeof(uint16_t));
     else
 	val = -1;
@@ -13418,13 +13418,13 @@ return( NULL );
 return( NULL );
 	}
     }
-    if ( strmatch(ext,".bdf")==0 || strmatch(ext-4,".bdf.gz")==0 )
+    if ( strcasecmp(ext,".bdf")==0 || strcasecmp(ext-4,".bdf.gz")==0 )
 	format = fv_bdf;
-    else if ( strmatch(ext,".pcf")==0 || strmatch(ext-4,".pcf.gz")==0 )
+    else if ( strcasecmp(ext,".pcf")==0 || strcasecmp(ext-4,".pcf.gz")==0 )
 	format = fv_pcf;
-    else if ( strmatch(ext,".ttf")==0 || strmatch(ext,".otf")==0 || strmatch(ext,".otb")==0 )
+    else if ( strcasecmp(ext,".ttf")==0 || strcasecmp(ext,".otf")==0 || strcasecmp(ext,".otb")==0 )
 	format = fv_ttf;
-    else if ( strmatch(ext,"pk")==0 || strmatch(ext,".pk")==0 ) {
+    else if ( strcasecmp(ext,"pk")==0 || strcasecmp(ext,".pk")==0 ) {
 	format = fv_pk;
 	back = true;
     } else {
@@ -15405,11 +15405,11 @@ return( NULL );
 	free(filename);
 #ifdef VMS
 	pt = strrchr(locfilename,'_');
-	if ( pt!=NULL && strmatch(pt,"_sfdir")==0 )
+	if ( pt!=NULL && strcasecmp(pt,"_sfdir")==0 )
 	    s2d = true;
 #else
 	pt = strrchr(locfilename,'.');
-	if ( pt!=NULL && strmatch(pt,".sfdir")==0 )
+	if ( pt!=NULL && strcasecmp(pt,".sfdir")==0 )
 	    s2d = true;
 #endif
 	if ( !SFDWrite(locfilename,fv->sf,fv->map,fv->normal,s2d)) {

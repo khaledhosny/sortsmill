@@ -740,13 +740,13 @@ static uint32_t AxisNameToTag(char *name) {
     char buf[4];
     int i;
 
-    if ( strmatch(name,"Weight")==0 )
+    if ( strcasecmp(name,"Weight")==0 )
 return( CHR('w','g','h','t'));
-    if ( strmatch(name,"Width")==0 )
+    if ( strcasecmp(name,"Width")==0 )
 return( CHR('w','d','t','h'));
-    if ( strmatch(name,"OpticalSize")==0 )
+    if ( strcasecmp(name,"OpticalSize")==0 )
 return( CHR('o','p','s','z'));
-    if ( strmatch(name,"Slant")==0 )
+    if ( strcasecmp(name,"Slant")==0 )
 return( CHR('s','l','n','t'));
 
     memset(buf,0,sizeof(buf));

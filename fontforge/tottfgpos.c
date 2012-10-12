@@ -203,9 +203,9 @@ return( script );
     } else if ( sf!=NULL ) {
 	if ( sf->cidmaster!=NULL || sf->subfontcnt!=0 ) {
 	    if ( sf->cidmaster!=NULL ) sf = sf->cidmaster;
-	    if ( strmatch(sf->ordering,"Identity")==0 )
+	    if ( strcasecmp(sf->ordering,"Identity")==0 )
 return( DEFAULT_SCRIPT );
-	    else if ( strmatch(sf->ordering,"Korean")==0 )
+	    else if ( strcasecmp(sf->ordering,"Korean")==0 )
 return( CHR('h','a','n','g'));
 	    else
 return( CHR('h','a','n','i') );

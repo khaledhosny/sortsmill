@@ -422,14 +422,14 @@ static Encoding *BDFParseEnc(char *encname, int encoff) {
     char buffer[200];
 
     enc = NULL;
-    if ( strmatch(encname,"ISO10646")==0 || strmatch(encname,"ISO-10646")==0 || strmatch(encname,"ISO_10646")==0 ||
-	    strmatch(encname,"Unicode")==0 )
+    if ( strcasecmp(encname,"ISO10646")==0 || strcasecmp(encname,"ISO-10646")==0 || strcasecmp(encname,"ISO_10646")==0 ||
+	    strcasecmp(encname,"Unicode")==0 )
 	enc = FindOrMakeEncoding("Unicode");
     if ( enc==NULL ) {
 	sprintf( buffer, "%.150s-%d", encname, encoff );
 	enc = FindOrMakeEncoding(buffer);
     }
-    if ( enc==NULL && strmatch(encname,"ISOLatin1Encoding")==0 )
+    if ( enc==NULL && strcasecmp(encname,"ISOLatin1Encoding")==0 )
 	enc = FindOrMakeEncoding("ISO8859-1");
     if ( enc==NULL )
 	enc = FindOrMakeEncoding(encname);
@@ -662,11 +662,11 @@ static int slurp_header(FILE *bdf, int *_as, int *_ds, Encoding **_enc,
 
     *_enc = BDFParseEnc(encname,enc);
 
-    if ( strmatch(italic,"I")==0 )
+    if ( strcasecmp(italic,"I")==0 )
 	strcpy(italic,"Italic");
-    else if ( strmatch(italic,"O")==0 )
+    else if ( strcasecmp(italic,"O")==0 )
 	strcpy(italic,"Oblique");
-    else if ( strmatch(italic,"R")==0 )
+    else if ( strcasecmp(italic,"R")==0 )
 	strcpy(italic,"");		/* Ignore roman */
     sprintf(mods,"%s%s", weight, italic );
     if ( comments[0]!='\0' && comments[strlen(comments)-1]=='\n' )
@@ -1541,11 +1541,11 @@ return(-2);
     
     *_enc = BDFParseEnc(encname,enc);
 
-    if ( strmatch(italic,"I")==0 )
+    if ( strcasecmp(italic,"I")==0 )
 	strcpy(italic,"Italic");
-    else if ( strmatch(italic,"O")==0 )
+    else if ( strcasecmp(italic,"O")==0 )
 	strcpy(italic,"Oblique");
-    else if ( strmatch(italic,"R")==0 )
+    else if ( strcasecmp(italic,"R")==0 )
 	strcpy(italic,"");		/* Ignore roman */
     sprintf(mods,"%s%s", weight, italic );
     if ( full[0]=='\0' ) {

@@ -165,7 +165,7 @@ static int match(char **list, char *val) {
     int i;
 
     for ( i=0; list[i]!=NULL; ++i )
-	if ( strmatch(val,list[i])==0 )
+	if ( strcasecmp(val,list[i])==0 )
 return( i );
 
 return( -1 );
@@ -219,7 +219,7 @@ void *GResource_font_cvt(char *val, void *def) {
 	if ( ret==-1 && isdigit(*pt)) {
 	    char *e;
 	    ret = strtol(pt,&e,10);
-	    if ( strmatch(e,"pt")==0 )
+	    if ( strcasecmp(e,"pt")==0 )
 		rq.point_size = ret;
 	    else if ( *e=='\0' )
 		rq.weight = ret;

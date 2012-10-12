@@ -1136,56 +1136,56 @@ return( NULL );
 
     if ( sf!=NULL )
 	/* good */;
-    else if (( strmatch(fullname+strlen(fullname)-4, ".sfd")==0 ||
-	 strmatch(fullname+strlen(fullname)-5, ".sfd~")==0 ) && checked!='f' ) {
+    else if (( strcasecmp(fullname+strlen(fullname)-4, ".sfd")==0 ||
+	 strcasecmp(fullname+strlen(fullname)-5, ".sfd~")==0 ) && checked!='f' ) {
 	sf = SFDRead(fullname);
 	fromsfd = true;
-    } else if (( strmatch(fullname+strlen(fullname)-4, ".ttf")==0 ||
-		strmatch(fullname+strlen(strippedname)-4, ".ttc")==0 ||
-		strmatch(fullname+strlen(fullname)-4, ".gai")==0 ||
-		strmatch(fullname+strlen(fullname)-4, ".otf")==0 ||
-		strmatch(fullname+strlen(fullname)-4, ".otb")==0 ) && checked!='t') {
+    } else if (( strcasecmp(fullname+strlen(fullname)-4, ".ttf")==0 ||
+		strcasecmp(fullname+strlen(strippedname)-4, ".ttc")==0 ||
+		strcasecmp(fullname+strlen(fullname)-4, ".gai")==0 ||
+		strcasecmp(fullname+strlen(fullname)-4, ".otf")==0 ||
+		strcasecmp(fullname+strlen(fullname)-4, ".otb")==0 ) && checked!='t') {
 	sf = SFReadTTF(fullname,0,openflags);
-    } else if ( strmatch(fullname+strlen(strippedname)-4, ".svg")==0 && checked!='S' ) {
+    } else if ( strcasecmp(fullname+strlen(strippedname)-4, ".svg")==0 && checked!='S' ) {
 	sf = SFReadSVG(fullname,0);
-    } else if ( strmatch(fullname+strlen(fullname)-4, ".ufo")==0 && checked!='u' ) {
+    } else if ( strcasecmp(fullname+strlen(fullname)-4, ".ufo")==0 && checked!='u' ) {
 	sf = SFReadUFO(fullname,0);
-    } else if ( strmatch(fullname+strlen(fullname)-4, ".bdf")==0 && checked!='b' ) {
+    } else if ( strcasecmp(fullname+strlen(fullname)-4, ".bdf")==0 && checked!='b' ) {
 	sf = SFFromBDF(fullname,0,false);
-    } else if ( strmatch(fullname+strlen(fullname)-2, "pk")==0 ) {
+    } else if ( strcasecmp(fullname+strlen(fullname)-2, "pk")==0 ) {
 	sf = SFFromBDF(fullname,1,true);
-    } else if ( strmatch(fullname+strlen(fullname)-2, "gf")==0 ) {
+    } else if ( strcasecmp(fullname+strlen(fullname)-2, "gf")==0 ) {
 	sf = SFFromBDF(fullname,3,true);
-    } else if ( strmatch(fullname+strlen(fullname)-4, ".pcf")==0 ||
-		 strmatch(fullname+strlen(fullname)-4, ".pmf")==0 ) {
+    } else if ( strcasecmp(fullname+strlen(fullname)-4, ".pcf")==0 ||
+		 strcasecmp(fullname+strlen(fullname)-4, ".pmf")==0 ) {
 	/* Sun seems to use a variant of the pcf format which they call pmf */
 	/*  the encoding actually starts at 0x2000 and the one I examined was */
 	/*  for a pixel size of 200. Some sort of printer font? */
 	sf = SFFromBDF(fullname,2,false);
-    } else if ( strmatch(fullname+strlen(strippedname)-4, ".bin")==0 ||
-		strmatch(fullname+strlen(strippedname)-4, ".hqx")==0 ||
-		strmatch(fullname+strlen(strippedname)-6, ".dfont")==0 ) {
+    } else if ( strcasecmp(fullname+strlen(strippedname)-4, ".bin")==0 ||
+		strcasecmp(fullname+strlen(strippedname)-4, ".hqx")==0 ||
+		strcasecmp(fullname+strlen(strippedname)-6, ".dfont")==0 ) {
 	sf = SFReadMacBinary(fullname,0,openflags);
-    } else if ( strmatch(fullname+strlen(strippedname)-4, ".fon")==0 ||
-		strmatch(fullname+strlen(strippedname)-4, ".fnt")==0 ) {
+    } else if ( strcasecmp(fullname+strlen(strippedname)-4, ".fon")==0 ||
+		strcasecmp(fullname+strlen(strippedname)-4, ".fnt")==0 ) {
 	sf = SFReadWinFON(fullname,0);
-    } else if ( strmatch(fullname+strlen(strippedname)-4, ".pdb")==0 ) {
+    } else if ( strcasecmp(fullname+strlen(strippedname)-4, ".pdb")==0 ) {
 	sf = SFReadPalmPdb(fullname,0);
-    } else if ( (strmatch(fullname+strlen(fullname)-4, ".pfa")==0 ||
-		strmatch(fullname+strlen(fullname)-4, ".pfb")==0 ||
-		strmatch(fullname+strlen(fullname)-4, ".pf3")==0 ||
-		strmatch(fullname+strlen(fullname)-4, ".cid")==0 ||
-		strmatch(fullname+strlen(fullname)-4, ".gsf")==0 ||
-		strmatch(fullname+strlen(fullname)-4, ".pt3")==0 ||
-		strmatch(fullname+strlen(fullname)-3, ".ps")==0 ) && checked!='p' ) {
+    } else if ( (strcasecmp(fullname+strlen(fullname)-4, ".pfa")==0 ||
+		strcasecmp(fullname+strlen(fullname)-4, ".pfb")==0 ||
+		strcasecmp(fullname+strlen(fullname)-4, ".pf3")==0 ||
+		strcasecmp(fullname+strlen(fullname)-4, ".cid")==0 ||
+		strcasecmp(fullname+strlen(fullname)-4, ".gsf")==0 ||
+		strcasecmp(fullname+strlen(fullname)-4, ".pt3")==0 ||
+		strcasecmp(fullname+strlen(fullname)-3, ".ps")==0 ) && checked!='p' ) {
 	sf = SFReadPostScript(fullname);
-    } else if ( strmatch(fullname+strlen(fullname)-4, ".cff")==0 && checked!='c' ) {
+    } else if ( strcasecmp(fullname+strlen(fullname)-4, ".cff")==0 && checked!='c' ) {
 	sf = CFFParse(fullname);
-    } else if ( strmatch(fullname+strlen(fullname)-3, ".mf")==0 ) {
+    } else if ( strcasecmp(fullname+strlen(fullname)-3, ".mf")==0 ) {
 	sf = SFFromMF(fullname);
-    } else if ( strmatch(strippedname+strlen(strippedname)-4, ".pdf")==0 && checked!='P' ) {
+    } else if ( strcasecmp(strippedname+strlen(strippedname)-4, ".pdf")==0 && checked!='P' ) {
 	sf = SFReadPdfFont(fullname,openflags);
-    } else if ( strmatch(fullname+strlen(fullname)-3, ".ik")==0 && checked!='i' ) {
+    } else if ( strcasecmp(fullname+strlen(fullname)-3, ".ik")==0 && checked!='i' ) {
 	sf = SFReadIkarus(fullname);
     } else {
 	sf = SFReadMacBinary(fullname,0,openflags);

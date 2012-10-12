@@ -181,7 +181,7 @@ return NULL;
     else
 	base = &names['z'-'a'];
 
-    for ( cur= *base; cur!=NULL && strmatch(cur->hostname,host)!=0; cur = cur->next );
+    for ( cur= *base; cur!=NULL && strcasecmp(cur->hostname,host)!=0; cur = cur->next );
     if ( cur!=NULL ) {
 #ifdef HAVE_PTHREAD_H
 	pthread_mutex_unlock(&mutex);

@@ -300,11 +300,11 @@ return;
 		*(int *) (info->val) = val;
 	} else if ( info->type == rt_bool ) {
 	    int val = -1;
-	    if ( strmatch(_GResource_Res[pos].val,"true")==0 ||
-		    strmatch(_GResource_Res[pos].val,"on")==0 || strcmp(_GResource_Res[pos].val,"1")==0 )
+	    if ( strcasecmp(_GResource_Res[pos].val,"true")==0 ||
+		    strcasecmp(_GResource_Res[pos].val,"on")==0 || strcmp(_GResource_Res[pos].val,"1")==0 )
 		val = 1;
-	    else if ( strmatch(_GResource_Res[pos].val,"false")==0 ||
-		    strmatch(_GResource_Res[pos].val,"off")==0 || strcmp(_GResource_Res[pos].val,"0")==0 )
+	    else if ( strcasecmp(_GResource_Res[pos].val,"false")==0 ||
+		    strcasecmp(_GResource_Res[pos].val,"off")==0 || strcmp(_GResource_Res[pos].val,"0")==0 )
 		val = 0;
 	    if ( val==-1 ) {
 		fprintf( stderr, "Can't convert %s to a boolean for resource: %s\n",
@@ -352,11 +352,11 @@ int GResourceFindBool(char *name, int def) {
     if ( pos==-1 )
 return( def );
 
-    if ( strmatch(_GResource_Res[pos].val,"true")==0 ||
-	    strmatch(_GResource_Res[pos].val,"on")==0 || strcmp(_GResource_Res[pos].val,"1")==0 )
+    if ( strcasecmp(_GResource_Res[pos].val,"true")==0 ||
+	    strcasecmp(_GResource_Res[pos].val,"on")==0 || strcmp(_GResource_Res[pos].val,"1")==0 )
 	val = 1;
-    else if ( strmatch(_GResource_Res[pos].val,"false")==0 ||
-	    strmatch(_GResource_Res[pos].val,"off")==0 || strcmp(_GResource_Res[pos].val,"0")==0 )
+    else if ( strcasecmp(_GResource_Res[pos].val,"false")==0 ||
+	    strcasecmp(_GResource_Res[pos].val,"off")==0 || strcmp(_GResource_Res[pos].val,"0")==0 )
 	val = 0;
 
     if ( val==-1 )

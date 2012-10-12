@@ -1029,14 +1029,14 @@ int GenerateScript(SplineFont *sf,char *filename,char *bitmaptype, int fmflags,
     char **former;
 
     if ( sf->bitmaps==NULL ) i = bf_none;
-    else if ( strmatch(bitmaptype,"otf")==0 ) i = bf_ttf;
-    else if ( strmatch(bitmaptype,"ms")==0 ) i = bf_ttf;
-    else if ( strmatch(bitmaptype,"apple")==0 ) i = bf_ttf;
-    else if ( strmatch(bitmaptype,"sbit")==0 ) i = bf_sfnt_dfont;
-    else if ( strmatch(bitmaptype,"nfnt")==0 ) i = bf_nfntmacbin;
-    else if ( strmatch(bitmaptype,"ps")==0 ) i = bf_ptype3;
+    else if ( strcasecmp(bitmaptype,"otf")==0 ) i = bf_ttf;
+    else if ( strcasecmp(bitmaptype,"ms")==0 ) i = bf_ttf;
+    else if ( strcasecmp(bitmaptype,"apple")==0 ) i = bf_ttf;
+    else if ( strcasecmp(bitmaptype,"sbit")==0 ) i = bf_sfnt_dfont;
+    else if ( strcasecmp(bitmaptype,"nfnt")==0 ) i = bf_nfntmacbin;
+    else if ( strcasecmp(bitmaptype,"ps")==0 ) i = bf_ptype3;
     else for ( i=0; bitmaps[i]!=NULL; ++i ) {
-	if ( strmatch(bitmaptype,bitmaps[i])==0 )
+	if ( strcasecmp(bitmaptype,bitmaps[i])==0 )
     break;
     }
     oldbitmapstate = i;
@@ -1044,35 +1044,35 @@ int GenerateScript(SplineFont *sf,char *filename,char *bitmaptype, int fmflags,
     for ( i=0; savefont_extensions[i]!=NULL; ++i ) {
 	if ( strlen( savefont_extensions[i])>0 &&
 		end-filename>=strlen(savefont_extensions[i]) &&
-		strmatch(end-strlen(savefont_extensions[i]),savefont_extensions[i])==0 )
+		strcasecmp(end-strlen(savefont_extensions[i]),savefont_extensions[i])==0 )
     break;
     }
-    if ( end-filename>8 && strmatch(end-strlen(".ttf.bin"),".ttf.bin")==0 )
+    if ( end-filename>8 && strcasecmp(end-strlen(".ttf.bin"),".ttf.bin")==0 )
 	i = ff_ttfmacbin;
-    else if ( end-filename>5 && strmatch(end-strlen(".suit"),".suit")==0 )	/* Different extensions for Mac/non Mac, support both always */
+    else if ( end-filename>5 && strcasecmp(end-strlen(".suit"),".suit")==0 )	/* Different extensions for Mac/non Mac, support both always */
 	i = ff_ttfmacbin;
-    else if ( end-filename>4 && strmatch(end-strlen(".bin"),".bin")==0 )
+    else if ( end-filename>4 && strcasecmp(end-strlen(".bin"),".bin")==0 )
 	i = ff_pfbmacbin;
-    else if ( end-filename>4 && strmatch(end-strlen(".res"),".res")==0 )
+    else if ( end-filename>4 && strcasecmp(end-strlen(".res"),".res")==0 )
 	i = ff_pfbmacbin;
-    else if ( end-filename>8 && strmatch(end-strlen(".sym.ttf"),".sym.ttf")==0 )
+    else if ( end-filename>8 && strcasecmp(end-strlen(".sym.ttf"),".sym.ttf")==0 )
 	i = ff_ttfsym;
-    else if ( end-filename>8 && strmatch(end-strlen(".cid.cff"),".cid.cff")==0 )
+    else if ( end-filename>8 && strcasecmp(end-strlen(".cid.cff"),".cid.cff")==0 )
 	i = ff_cffcid;
-    else if ( end-filename>8 && strmatch(end-strlen(".cid.t42"),".cid.t42")==0 )
+    else if ( end-filename>8 && strcasecmp(end-strlen(".cid.t42"),".cid.t42")==0 )
 	i = ff_type42cid;
-    else if ( end-filename>7 && strmatch(end-strlen(".mm.pfa"),".mm.pfa")==0 )
+    else if ( end-filename>7 && strcasecmp(end-strlen(".mm.pfa"),".mm.pfa")==0 )
 	i = ff_mma;
-    else if ( end-filename>7 && strmatch(end-strlen(".mm.pfb"),".mm.pfb")==0 )
+    else if ( end-filename>7 && strcasecmp(end-strlen(".mm.pfb"),".mm.pfb")==0 )
 	i = ff_mmb;
-    else if ( end-filename>7 && strmatch(end-strlen(".mult"),".mult")==0 )
+    else if ( end-filename>7 && strcasecmp(end-strlen(".mult"),".mult")==0 )
 	i = ff_multiple;
     else if (( i==ff_pfa || i==ff_pfb ) && strstr(filename,"%s")!=NULL )
 	i = ff_multiple;
     if ( savefont_extensions[i]==NULL ) {
 	for ( i=0; bitmaps[i]!=NULL; ++i ) {
 	    if ( end-filename>strlen(bitmaps[i]) &&
-		    strmatch(end-strlen(bitmaps[i]),bitmaps[i])==0 )
+		    strcasecmp(end-strlen(bitmaps[i]),bitmaps[i])==0 )
 	break;
 	}
 	if ( *filename=='\0' || end[-1]=='.' )
@@ -1084,7 +1084,7 @@ int GenerateScript(SplineFont *sf,char *filename,char *bitmaptype, int fmflags,
 	    i = ff_none;
 	}
     }
-    if ( i==ff_ttfdfont && strmatch(end-strlen(".otf.dfont"),".otf.dfont")==0 )
+    if ( i==ff_ttfdfont && strcasecmp(end-strlen(".otf.dfont"),".otf.dfont")==0 )
 	i = ff_otfdfont;
     if ( sf->cidmaster!=NULL ) {
 	if ( i==ff_otf ) i = ff_otfcid;
@@ -1098,7 +1098,7 @@ int GenerateScript(SplineFont *sf,char *filename,char *bitmaptype, int fmflags,
 	    (oldbitmapstate==bf_ttf || oldbitmapstate==bf_sfnt_dfont || oldbitmapstate==bf_otb)) {
 	freeme = xmalloc(strlen(filename)+8);
 	strcpy(freeme,filename);
-	if ( strmatch(bitmaptype,"otf")==0 )
+	if ( strcasecmp(bitmaptype,"otf")==0 )
 	    strcat(freeme,"otf");
 	else if ( oldbitmapstate==bf_otb )
 	    strcat(freeme,"otb");

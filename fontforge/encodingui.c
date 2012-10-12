@@ -507,8 +507,8 @@ GMenuItem *GetEncodingMenu(void (*func)(GWindow,GMenuItem *,GEvent *),
 	if ( !mi[i].ti.line ) {
 	    mi[i].ti.text = utf82u_copy((char *) (mi[i].ti.text));
 	    mi[i].ti.checkable = true;
-	    if ( strmatch(mi[i].ti.userdata,current->enc_name)==0 ||
-		    (current->iconv_name!=NULL && strmatch(mi[i].ti.userdata,current->iconv_name)==0))
+	    if ( strcasecmp(mi[i].ti.userdata,current->enc_name)==0 ||
+		    (current->iconv_name!=NULL && strcasecmp(mi[i].ti.userdata,current->iconv_name)==0))
 		mi[i].ti.checked = true;
 	}
 	mi[i].ti.text_is_1byte = false;

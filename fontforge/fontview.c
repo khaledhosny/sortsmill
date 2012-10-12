@@ -2719,7 +2719,7 @@ static void _FVMenuChangeChar(FontView *fv,int mid ) {
 			    pos = 0xa1a1;
 		    }
 		} else if ( map->enc->is_simplechinese ) {
-		    if ( strmatch(iconv_name,"EUC-CN")==0 && selpos<0xa1a1 )
+		    if ( strcasecmp(iconv_name,"EUC-CN")==0 && selpos<0xa1a1 )
 			pos = 0xa1a1;
 		}
 		if ( pos>=map->enccount )

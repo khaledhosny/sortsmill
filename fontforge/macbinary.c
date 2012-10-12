@@ -830,7 +830,7 @@ static uint32_t SFToFOND(FILE *res,SplineFont *sf,uint32_t id,int dottf,
     putlong(res,0);			/* Reserved, MBZ */
     if ( strnmatch(sf->familyname,sf->fontname,strlen(sf->familyname))!=0 )
 	strcnt = 1;
-    else if ( strmatch(sf->familyname,sf->fontname)==0 )
+    else if ( strcasecmp(sf->familyname,sf->fontname)==0 )
 	strcnt = 1;
     else if ( sf->fontname[strlen(sf->familyname)]=='-' )
 	strcnt = 4;
@@ -873,9 +873,9 @@ static uint32_t SFToFOND(FILE *res,SplineFont *sf,uint32_t id,int dottf,
     /* GWW: Hmm. ATM refuses to use postscript fonts that have */
     /*  glyph encoding tables. Printer drivers use them ok. ATM will only */
     /*  work on fonts with mac roman encodings */
-    if ( strmatch(map->enc->enc_name,"mac")!=0 &&
-	    strmatch(map->enc->enc_name,"macintosh")!=0 &&
-	    strmatch(map->enc->enc_name,"macroman")!=0 ) {
+    if ( strcasecmp(map->enc->enc_name,"mac")!=0 &&
+	    strcasecmp(map->enc->enc_name,"macintosh")!=0 &&
+	    strcasecmp(map->enc->enc_name,"macroman")!=0 ) {
 	if ( !dottf ) ff_post_notice(_("The generated font won't work with ATM"),_("ATM requires that fonts be encoded with the Macintosh Latin encoding. This postscript font will print fine, but only the bitmap versions will be displayed on the screen"));
 	glyphenc = ftell( res );
 	fseek(res,geoffset,SEEK_SET);
@@ -1224,9 +1224,9 @@ static uint32_t SFsToFOND(FILE *res,struct sflist *sfs,uint32_t id,int format,in
     /* GWW: Hmm. ATM refuses to use postscript fonts that have */
     /*  glyph encoding tables. Printer drivers use them ok. ATM will only */
     /*  work on fonts with mac roman encodings */
-    if ( strmatch(psfaces[0]->map->enc->enc_name,"mac")!=0 &&
-	    strmatch(psfaces[0]->map->enc->enc_name,"macintosh")!=0 &&
-	    strmatch(psfaces[0]->map->enc->enc_name,"macroman")!=0 ) {
+    if ( strcasecmp(psfaces[0]->map->enc->enc_name,"mac")!=0 &&
+	    strcasecmp(psfaces[0]->map->enc->enc_name,"macintosh")!=0 &&
+	    strcasecmp(psfaces[0]->map->enc->enc_name,"macroman")!=0 ) {
 	if ( format==ff_pfbmacbin )
 	    ff_post_notice(_("The generated font won't work with ATM"),_("ATM requires that fonts be encoded with the Macintosh Latin encoding. This postscript font will print fine, but only the bitmap versions will be displayed on the screen"));
 	glyphenc = ftell( res );
@@ -1741,7 +1741,7 @@ int WriteMacBitmaps(char *filename,SplineFont *sf, int32_t *sizes, int is_dfont,
     dpt = strrchr(pt,'.');
     if ( dpt==NULL )
 	dpt = pt+strlen(pt);
-    else if ( strmatch(dpt,".bin")==0 || strmatch(dpt,".dfont")==0 ) {
+    else if ( strcasecmp(dpt,".bin")==0 || strcasecmp(dpt,".dfont")==0 ) {
 	*dpt = '\0';
 	dpt = strrchr(pt,'.');
 	if ( dpt==NULL )

@@ -950,7 +950,7 @@ Color _GImage_ColourFName(char *name) {
     Color col;
 
     for ( i=0; predefn[i].name!=NULL; ++i )
-	if ( strmatch(name,predefn[i].name)==0 )
+	if ( strcasecmp(name,predefn[i].name)==0 )
 return( predefn[i].value );
 
     if ( sscanf(name,"%d %d %d", &r, &g, &b )==3 ||

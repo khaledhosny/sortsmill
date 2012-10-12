@@ -3416,28 +3416,28 @@ return( NULL );
 		if ( strnmatch((char *) name,"normal",6)==0 ) {
 		    sf->pfminfo.panose[3] = 3;
 		    sf->pfminfo.width = 5;
-		} else if ( strmatch((char *) name,"ultra-condensed")==0 ) {
+		} else if ( strcasecmp((char *) name,"ultra-condensed")==0 ) {
 		    sf->pfminfo.panose[3] = 8;
 		    sf->pfminfo.width = 1;
-		} else if ( strmatch((char *) name,"extra-condensed")==0 ) {
+		} else if ( strcasecmp((char *) name,"extra-condensed")==0 ) {
 		    sf->pfminfo.panose[3] = 8;
 		    sf->pfminfo.width = 2;
-		} else if ( strmatch((char *) name,"condensed")==0 ) {
+		} else if ( strcasecmp((char *) name,"condensed")==0 ) {
 		    sf->pfminfo.panose[3] = 6;
 		    sf->pfminfo.width = 3;
-		} else if ( strmatch((char *) name,"semi-condensed")==0 ) {
+		} else if ( strcasecmp((char *) name,"semi-condensed")==0 ) {
 		    sf->pfminfo.panose[3] = 6;
 		    sf->pfminfo.width = 4;
-		} else if ( strmatch((char *) name,"ultra-expanded")==0 ) {
+		} else if ( strcasecmp((char *) name,"ultra-expanded")==0 ) {
 		    sf->pfminfo.panose[3] = 7;
 		    sf->pfminfo.width = 9;
-		} else if ( strmatch((char *) name,"extra-expanded")==0 ) {
+		} else if ( strcasecmp((char *) name,"extra-expanded")==0 ) {
 		    sf->pfminfo.panose[3] = 7;
 		    sf->pfminfo.width = 8;
-		} else if ( strmatch((char *) name,"expanded")==0 ) {
+		} else if ( strcasecmp((char *) name,"expanded")==0 ) {
 		    sf->pfminfo.panose[3] = 5;
 		    sf->pfminfo.width = 7;
-		} else if ( strmatch((char *) name,"semi-expanded")==0 ) {
+		} else if ( strcasecmp((char *) name,"semi-expanded")==0 ) {
 		    sf->pfminfo.panose[3] = 5;
 		    sf->pfminfo.width = 6;
 		}

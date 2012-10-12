@@ -5110,7 +5110,7 @@ SFDParseGradient (FILE *sfd, char *tok)
 
   copy_to_tok (tok, getname (sfd));
   for (i = 0; spreads[i] != NULL; ++i)
-    if (strmatch (spreads[i], tok) == 0)
+    if (strcasecmp (spreads[i], tok) == 0)
       break;
   if (spreads[i] == NULL)
     i = 0;
@@ -5217,7 +5217,7 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
           SplineCharFree (sc);
           return (NULL);
         }
-      if (strmatch (tok, "Encoding:") == 0)
+      if (strcasecmp (tok, "Encoding:") == 0)
         {
           int enc;
           getint (sfd, &enc);
@@ -5258,7 +5258,7 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
             }
           SFDSetEncMap (sf, sc->orig_pos, enc);
         }
-      else if (strmatch (tok, "AltUni:") == 0)
+      else if (strcasecmp (tok, "AltUni:") == 0)
         {
           int uni;
           while (getint (sfd, &uni) == 1)
@@ -5271,7 +5271,7 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
               sc->altuni = altuni;
             }
         }
-      else if (strmatch (tok, "AltUni2:") == 0)
+      else if (strcasecmp (tok, "AltUni2:") == 0)
         {
           uint32_t uni[3];
           while (gethexints (sfd, uni, 3))
@@ -5284,12 +5284,12 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
               sc->altuni = altuni;
             }
         }
-      else if (strmatch (tok, "OldEncoding:") == 0)
+      else if (strcasecmp (tok, "OldEncoding:") == 0)
         {
           int old_enc;          /* Obsolete info */
           getint (sfd, &old_enc);
         }
-      else if (strmatch (tok, "Script:") == 0)
+      else if (strcasecmp (tok, "Script:") == 0)
         {
           /* Obsolete. But still used for parsing obsolete ligature/subs tags */
           while ((ch = nlgetc (sfd)) == ' ' || ch == '\t');
@@ -5301,35 +5301,35 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
               script = gettag (sfd);
             }
         }
-      else if (strmatch (tok, "Width:") == 0)
+      else if (strcasecmp (tok, "Width:") == 0)
         {
           getsint (sfd, &sc->width);
         }
-      else if (strmatch (tok, "VWidth:") == 0)
+      else if (strcasecmp (tok, "VWidth:") == 0)
         {
           getsint (sfd, &sc->vwidth);
         }
-      else if (strmatch (tok, "GlyphClass:") == 0)
+      else if (strcasecmp (tok, "GlyphClass:") == 0)
         {
           getint (sfd, &temp);
           sc->glyph_class = temp;
         }
-      else if (strmatch (tok, "UnlinkRmOvrlpSave:") == 0)
+      else if (strcasecmp (tok, "UnlinkRmOvrlpSave:") == 0)
         {
           getint (sfd, &temp);
           sc->unlink_rm_ovrlp_save_undo = temp;
         }
-      else if (strmatch (tok, "InSpiro:") == 0)
+      else if (strcasecmp (tok, "InSpiro:") == 0)
         {
           getint (sfd, &temp);
           sc->inspiro = temp;
         }
-      else if (strmatch (tok, "LigCaretCntFixed:") == 0)
+      else if (strcasecmp (tok, "LigCaretCntFixed:") == 0)
         {
           getint (sfd, &temp);
           sc->lig_caret_cnt_fixed = temp;
         }
-      else if (strmatch (tok, "Flags:") == 0)
+      else if (strcasecmp (tok, "Flags:") == 0)
         {
           while (isspace (ch = nlgetc (sfd)) && ch != '\n' && ch != '\r');
           while (ch != '\n' && ch != '\r')
@@ -5350,7 +5350,7 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
               || sc->layers[ly_fore].order2)
             sc->changedsincelasthinted = false;
         }
-      else if (strmatch (tok, "TeX:") == 0)
+      else if (strcasecmp (tok, "TeX:") == 0)
         {
           getsint (sfd, &sc->tex_height);
           getsint (sfd, &sc->tex_depth);
@@ -5366,17 +5366,17 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
                 sc->tex_height = sc->tex_depth = TEX_UNDEF;
             }
         }
-      else if (strmatch (tok, "ItalicCorrection:") == 0)
+      else if (strcasecmp (tok, "ItalicCorrection:") == 0)
         {
           SFDParseMathValueRecord (sfd, &sc->italic_correction,
                                    &sc->italic_adjusts);
         }
-      else if (strmatch (tok, "TopAccentHorizontal:") == 0)
+      else if (strcasecmp (tok, "TopAccentHorizontal:") == 0)
         {
           SFDParseMathValueRecord (sfd, &sc->top_accent_horiz,
                                    &sc->top_accent_adjusts);
         }
-      else if (strmatch (tok, "GlyphCompositionVerticalIC:") == 0)
+      else if (strcasecmp (tok, "GlyphCompositionVerticalIC:") == 0)
         {
           if (sc->vert_variants == NULL)
             sc->vert_variants =
@@ -5385,7 +5385,7 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
           SFDParseMathValueRecord (sfd, &sc->vert_variants->italic_correction,
                                    &sc->vert_variants->italic_adjusts);
         }
-      else if (strmatch (tok, "GlyphCompositionHorizontalIC:") == 0)
+      else if (strcasecmp (tok, "GlyphCompositionHorizontalIC:") == 0)
         {
           if (sc->horiz_variants == NULL)
             sc->horiz_variants =
@@ -5395,13 +5395,13 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
                                    &sc->horiz_variants->italic_correction,
                                    &sc->horiz_variants->italic_adjusts);
         }
-      else if (strmatch (tok, "IsExtendedShape:") == 0)
+      else if (strcasecmp (tok, "IsExtendedShape:") == 0)
         {
           int temp;
           getint (sfd, &temp);
           sc->is_extended_shape = temp;
         }
-      else if (strmatch (tok, "GlyphVariantsVertical:") == 0)
+      else if (strcasecmp (tok, "GlyphVariantsVertical:") == 0)
         {
           if (sc->vert_variants == NULL)
             sc->vert_variants =
@@ -5410,7 +5410,7 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
           geteol (sfd, tok);
           sc->vert_variants->variants = xstrdup_or_null (tok);
         }
-      else if (strmatch (tok, "GlyphVariantsHorizontal:") == 0)
+      else if (strcasecmp (tok, "GlyphVariantsHorizontal:") == 0)
         {
           if (sc->horiz_variants == NULL)
             sc->horiz_variants =
@@ -5419,38 +5419,38 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
           geteol (sfd, tok);
           sc->horiz_variants->variants = xstrdup_or_null (tok);
         }
-      else if (strmatch (tok, "GlyphCompositionVertical:") == 0)
+      else if (strcasecmp (tok, "GlyphCompositionVertical:") == 0)
         {
           sc->vert_variants =
             SFDParseGlyphComposition (sfd, sc->vert_variants, tok);
         }
-      else if (strmatch (tok, "GlyphCompositionHorizontal:") == 0)
+      else if (strcasecmp (tok, "GlyphCompositionHorizontal:") == 0)
         {
           sc->horiz_variants =
             SFDParseGlyphComposition (sfd, sc->horiz_variants, tok);
         }
-      else if (strmatch (tok, "TopRightVertex:") == 0)
+      else if (strcasecmp (tok, "TopRightVertex:") == 0)
         {
           if (sc->mathkern == NULL)
             sc->mathkern =
               (struct mathkern *) xzalloc (sizeof (struct mathkern));
           SFDParseVertexKern (sfd, &sc->mathkern->top_right);
         }
-      else if (strmatch (tok, "TopLeftVertex:") == 0)
+      else if (strcasecmp (tok, "TopLeftVertex:") == 0)
         {
           if (sc->mathkern == NULL)
             sc->mathkern =
               (struct mathkern *) xzalloc (sizeof (struct mathkern));
           SFDParseVertexKern (sfd, &sc->mathkern->top_left);
         }
-      else if (strmatch (tok, "BottomRightVertex:") == 0)
+      else if (strcasecmp (tok, "BottomRightVertex:") == 0)
         {
           if (sc->mathkern == NULL)
             sc->mathkern =
               (struct mathkern *) xzalloc (sizeof (struct mathkern));
           SFDParseVertexKern (sfd, &sc->mathkern->bottom_right);
         }
-      else if (strmatch (tok, "BottomLeftVertex:") == 0)
+      else if (strcasecmp (tok, "BottomLeftVertex:") == 0)
         {
           if (sc->mathkern == NULL)
             sc->mathkern =
@@ -5458,31 +5458,31 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
           SFDParseVertexKern (sfd, &sc->mathkern->bottom_left);
 #if HANYANG
         }
-      else if (strmatch (tok, "CompositionUnit:") == 0)
+      else if (strcasecmp (tok, "CompositionUnit:") == 0)
         {
           getsint (sfd, &sc->jamo);
           getsint (sfd, &sc->varient);
           sc->compositionunit = true;
 #endif
         }
-      else if (strmatch (tok, "HStem:") == 0)
+      else if (strcasecmp (tok, "HStem:") == 0)
         {
           sc->hstem = SFDReadHints (sfd);
           sc->hconflicts = StemListAnyConflicts (sc->hstem);
         }
-      else if (strmatch (tok, "VStem:") == 0)
+      else if (strcasecmp (tok, "VStem:") == 0)
         {
           sc->vstem = SFDReadHints (sfd);
           sc->vconflicts = StemListAnyConflicts (sc->vstem);
         }
-      else if (strmatch (tok, "DStem:") == 0)
+      else if (strcasecmp (tok, "DStem:") == 0)
         {
           sc->dstem = SFDReadDHints (sc->parent, sfd, true);
           had_old_dstems = true;
         }
-      else if (strmatch (tok, "DStem2:") == 0)
+      else if (strcasecmp (tok, "DStem2:") == 0)
         sc->dstem = SFDReadDHints (sc->parent, sfd, false);
-      else if (strmatch (tok, "CounterMasks:") == 0)
+      else if (strcasecmp (tok, "CounterMasks:") == 0)
         {
           getsint (sfd, &sc->countermask_cnt);
           sc->countermasks = xcalloc (sc->countermask_cnt, sizeof (HintMask));
@@ -5494,9 +5494,9 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
               SFDGetHintMask (sfd, &sc->countermasks[i]);
             }
         }
-      else if (strmatch (tok, "AnchorPoint:") == 0)
+      else if (strcasecmp (tok, "AnchorPoint:") == 0)
         lastap = SFDReadAnchorPoints (sfd, sc, lastap);
-      else if (strmatch (tok, "Fore") == 0)
+      else if (strcasecmp (tok, "Fore") == 0)
         {
           while (isspace (ch = nlgetc (sfd)));
           ungetc (ch, sfd);
@@ -5508,15 +5508,15 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
             }
           current_layer = ly_fore;
         }
-      else if (strmatch (tok, "MinimumDistance:") == 0)
+      else if (strcasecmp (tok, "MinimumDistance:") == 0)
         /* parse and ignore MinimumDistance */
         SFDGetMinimumDistances (sfd, sc);
-      else if (strmatch (tok, "Validated:") == 0)
+      else if (strcasecmp (tok, "Validated:") == 0)
         getsint (sfd,
                  (int16_t *) &sc->layers[current_layer].validation_state);
-      else if (strmatch (tok, "PickledData:") == 0)
+      else if (strcasecmp (tok, "PickledData:") == 0)
         sc->python_persistent = SFDUnPickle (sfd);
-      else if (strmatch (tok, "Back") == 0)
+      else if (strcasecmp (tok, "Back") == 0)
         {
           while (isspace (ch = nlgetc (sfd)));
           ungetc (ch, sfd);
@@ -5529,7 +5529,7 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
             }
           current_layer = ly_back;
         }
-      else if (strmatch (tok, "LayerCount:") == 0)
+      else if (strcasecmp (tok, "LayerCount:") == 0)
         {
           getint (sfd, &temp);
           if (temp > sc->layer_cnt)
@@ -5541,7 +5541,7 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
           sc->layer_cnt = temp;
           current_layer = ly_fore;
         }
-      else if (strmatch (tok, "Layer:") == 0)
+      else if (strcasecmp (tok, "Layer:") == 0)
         {
           int layer;
           int dofill, dostroke, fillfirst, linejoin, linecap;
@@ -5569,14 +5569,14 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
               getreal (sfd, &strokewidth);
               copy_to_tok (tok, getname (sfd));
               for (i = 0; joins[i] != NULL; ++i)
-                if (strmatch (joins[i], tok) == 0)
+                if (strcasecmp (joins[i], tok) == 0)
                   break;
               if (joins[i] == NULL)
                 --i;
               linejoin = i;
               copy_to_tok (tok, getname (sfd));
               for (i = 0; caps[i] != NULL; ++i)
-                if (strmatch (caps[i], tok) == 0)
+                if (strcasecmp (caps[i], tok) == 0)
                   break;
               if (caps[i] == NULL)
                 --i;
@@ -5625,22 +5625,22 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
           lasti = NULL;
           lastr = NULL;
         }
-      else if (strmatch (tok, "FillGradient:") == 0)
+      else if (strcasecmp (tok, "FillGradient:") == 0)
         sc->layers[current_layer].fill_brush.gradient =
           SFDParseGradient (sfd, tok);
-      else if (strmatch (tok, "FillPattern:") == 0)
+      else if (strcasecmp (tok, "FillPattern:") == 0)
         sc->layers[current_layer].fill_brush.pattern =
           SFDParsePattern (sfd, tok);
-      else if (strmatch (tok, "StrokeGradient:") == 0)
+      else if (strcasecmp (tok, "StrokeGradient:") == 0)
         sc->layers[current_layer].stroke_pen.brush.gradient =
           SFDParseGradient (sfd, tok);
-      else if (strmatch (tok, "StrokePattern:") == 0)
+      else if (strcasecmp (tok, "StrokePattern:") == 0)
         sc->layers[current_layer].stroke_pen.brush.pattern =
           SFDParsePattern (sfd, tok);
-      else if (strmatch (tok, "SplineSet") == 0)
+      else if (strcasecmp (tok, "SplineSet") == 0)
         sc->layers[current_layer].splines =
           SFDGetSplineSet (sf, sfd, sc->layers[current_layer].order2);
-      else if (strmatch (tok, "Ref:") == 0 || strmatch (tok, "Refer:") == 0)
+      else if (strcasecmp (tok, "Ref:") == 0 || strcasecmp (tok, "Refer:") == 0)
         {
           /* I should be depending on the version number here, but I made */
           /*  a mistake and bumped the version too late. So the version is */
@@ -5650,14 +5650,14 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
           /*  after that (eventually version 3) any layer could. */
           if (oldback || !had_sf_layer_cnt)
             current_layer = ly_fore;
-          ref = SFDGetRef (sfd, strmatch (tok, "Ref:") == 0);
+          ref = SFDGetRef (sfd, strcasecmp (tok, "Ref:") == 0);
           if (sc->layers[current_layer].refs == NULL)
             sc->layers[current_layer].refs = ref;
           else
             lastr->next = ref;
           lastr = ref;
         }
-      else if (strmatch (tok, "Image:") == 0)
+      else if (strcasecmp (tok, "Image:") == 0)
         {
           int ly = current_layer;
           if (!multilayer && !sc->layers[ly].background)
@@ -5669,17 +5669,17 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
             lasti->next = img;
           lasti = img;
         }
-      else if (strmatch (tok, "OrigType1:") == 0)
+      else if (strcasecmp (tok, "OrigType1:") == 0)
         /* Accept, slurp, ignore contents */
         SFDGetType1 (sfd, sc);
-      else if (strmatch (tok, "TtfInstrs:") == 0)
+      else if (strcasecmp (tok, "TtfInstrs:") == 0)
         /* Binary format */
         SFDGetTtfInstrs (sfd, sc);
-      else if (strmatch (tok, "TtInstrs:") == 0)
+      else if (strcasecmp (tok, "TtInstrs:") == 0)
         /* ASCII format */
         SFDGetTtInstrs (sfd, sc);
-      else if (strmatch (tok, "Kerns2:") == 0
-               || strmatch (tok, "VKerns2:") == 0)
+      else if (strcasecmp (tok, "Kerns2:") == 0
+               || strcasecmp (tok, "VKerns2:") == 0)
         {
           KernPair *kp, *last = NULL;
           int isv = *tok == 'V';
@@ -5720,16 +5720,16 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
               last = kp;
             }
         }
-      else if (strmatch (tok, "Kerns:") == 0
-               || strmatch (tok, "KernsSLI:") == 0
-               || strmatch (tok, "KernsSLIF:") == 0
-               || strmatch (tok, "VKernsSLIF:") == 0
-               || strmatch (tok, "KernsSLIFO:") == 0
-               || strmatch (tok, "VKernsSLIFO:") == 0)
+      else if (strcasecmp (tok, "Kerns:") == 0
+               || strcasecmp (tok, "KernsSLI:") == 0
+               || strcasecmp (tok, "KernsSLIF:") == 0
+               || strcasecmp (tok, "VKernsSLIF:") == 0
+               || strcasecmp (tok, "KernsSLIFO:") == 0
+               || strcasecmp (tok, "VKernsSLIFO:") == 0)
         {
           KernPair1 *kp, *last = NULL;
           int index, off, sli, flags = 0;
-          int hassli = (strmatch (tok, "KernsSLI:") == 0);
+          int hassli = (strcasecmp (tok, "KernsSLI:") == 0);
           int isv = *tok == 'V';
           int has_orig = strstr (tok, "SLIFO:") != NULL;
           if (sf->sfd_version >= 2)
@@ -5738,10 +5738,10 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
                 ("Found an old style kerning pair inside a version 2 (or higher) sfd file.");
               exit (1);
             }
-          if (strmatch (tok, "KernsSLIF:") == 0
-              || strmatch (tok, "KernsSLIFO:") == 0
-              || strmatch (tok, "VKernsSLIF:") == 0
-              || strmatch (tok, "VKernsSLIFO:") == 0)
+          if (strcasecmp (tok, "KernsSLIF:") == 0
+              || strcasecmp (tok, "KernsSLIFO:") == 0
+              || strcasecmp (tok, "VKernsSLIF:") == 0
+              || strcasecmp (tok, "VKernsSLIFO:") == 0)
             hassli = 2;
           while ((hassli == 1
                   && fscanf (sfd, "%d %d %d", &index, &off, &sli) == 3)
@@ -5799,20 +5799,20 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
               last = kp;
             }
         }
-      else if ((ispos = (strmatch (tok, "Position:") == 0))
-               || (ispos = (strmatch (tok, "Position2:") == 0))
-               || (ispair = (strmatch (tok, "PairPos:") == 0))
-               || (ispair = (strmatch (tok, "PairPos2:") == 0))
-               || (islcar = (strmatch (tok, "LCarets:") == 0))
-               || (islcar = (strmatch (tok, "LCarets2:") == 0))
-               || (isliga = (strmatch (tok, "Ligature:") == 0))
-               || (isliga = (strmatch (tok, "Ligature2:") == 0))
-               || (issubs = (strmatch (tok, "Substitution:") == 0))
-               || (issubs = (strmatch (tok, "Substitution2:") == 0))
-               || (ismult = (strmatch (tok, "MultipleSubs:") == 0))
-               || (ismult = (strmatch (tok, "MultipleSubs2:") == 0))
-               || strmatch (tok, "AlternateSubs:") == 0
-               || strmatch (tok, "AlternateSubs2:") == 0)
+      else if ((ispos = (strcasecmp (tok, "Position:") == 0))
+               || (ispos = (strcasecmp (tok, "Position2:") == 0))
+               || (ispair = (strcasecmp (tok, "PairPos:") == 0))
+               || (ispair = (strcasecmp (tok, "PairPos2:") == 0))
+               || (islcar = (strcasecmp (tok, "LCarets:") == 0))
+               || (islcar = (strcasecmp (tok, "LCarets2:") == 0))
+               || (isliga = (strcasecmp (tok, "Ligature:") == 0))
+               || (isliga = (strcasecmp (tok, "Ligature2:") == 0))
+               || (issubs = (strcasecmp (tok, "Substitution:") == 0))
+               || (issubs = (strcasecmp (tok, "Substitution2:") == 0))
+               || (ismult = (strcasecmp (tok, "MultipleSubs:") == 0))
+               || (ismult = (strcasecmp (tok, "MultipleSubs2:") == 0))
+               || strcasecmp (tok, "AlternateSubs:") == 0
+               || strcasecmp (tok, "AlternateSubs2:") == 0)
         {
           PST *pst;
           int old, type;
@@ -5972,28 +5972,28 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
             CvtOldMacFeature ((PST1 *) pst);
 #endif
         }
-      else if (strmatch (tok, "Colour:") == 0)
+      else if (strcasecmp (tok, "Colour:") == 0)
         {
           uint32_t temp;
           gethex (sfd, &temp);
           sc->color = temp;
         }
-      else if (strmatch (tok, "Comment:") == 0)
+      else if (strcasecmp (tok, "Comment:") == 0)
         {
           sc->comment = SFDReadUTF7Str (sfd);
         }
-      else if (strmatch (tok, "TileMargin:") == 0)
+      else if (strcasecmp (tok, "TileMargin:") == 0)
         {
           getreal (sfd, &sc->tile_margin);
         }
-      else if (strmatch (tok, "TileBounds:") == 0)
+      else if (strcasecmp (tok, "TileBounds:") == 0)
         {
           getreal (sfd, &sc->tile_bounds.minx);
           getreal (sfd, &sc->tile_bounds.miny);
           getreal (sfd, &sc->tile_bounds.maxx);
           getreal (sfd, &sc->tile_bounds.maxy);
         }
-      else if (strmatch (tok, "EndChar") == 0)
+      else if (strcasecmp (tok, "EndChar") == 0)
         {
           if (sc->orig_pos < sf->glyphcnt)
             sf->glyphs[sc->orig_pos] = sc;
@@ -6873,9 +6873,9 @@ SFDParseChainContext (FILE *sfd, SplineFont *sf, FPST * fpst, char *tok,
     pst_chainsub : pst_reversesub;
   copy_to_tok (tok, getname (sfd));
   fpst->format =
-    strmatch (tok, "glyph") == 0 ?
-    pst_glyphs : strmatch (tok, "class") == 0 ?
-    pst_class : strmatch (tok, "coverage") == 0 ?
+    strcasecmp (tok, "glyph") == 0 ?
+    pst_glyphs : strcasecmp (tok, "class") == 0 ?
+    pst_class : strcasecmp (tok, "coverage") == 0 ?
     pst_coverage : pst_reversecoverage;
   if (old)
     {
@@ -8033,119 +8033,119 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
           geteol (sfd, tok);
           continue;
         }
-      if (strmatch (tok, "FontName:") == 0)
+      if (strcasecmp (tok, "FontName:") == 0)
         {
           copy_to_tok (tok, getname (sfd));
           sf->fontname = xstrdup_or_null (tok);
         }
-      else if (strmatch (tok, "FullName:") == 0)
+      else if (strcasecmp (tok, "FullName:") == 0)
         {
           geteol (sfd, tok);
           sf->fullname = xstrdup_or_null (tok);
         }
-      else if (strmatch (tok, "FamilyName:") == 0)
+      else if (strcasecmp (tok, "FamilyName:") == 0)
         {
           geteol (sfd, tok);
           sf->familyname = xstrdup_or_null (tok);
         }
-      else if (strmatch (tok, "DefaultBaseFilename:") == 0)
+      else if (strcasecmp (tok, "DefaultBaseFilename:") == 0)
         {
           geteol (sfd, tok);
           sf->defbasefilename = xstrdup_or_null (tok);
         }
-      else if (strmatch (tok, "Weight:") == 0)
+      else if (strcasecmp (tok, "Weight:") == 0)
         {
           char *token = getprotectedname (sfd);
           sf->weight = xstrdup_or_null (token);    // FIXME: What if token == NULL?
         }
-      else if (strmatch (tok, "Copyright:") == 0)
+      else if (strcasecmp (tok, "Copyright:") == 0)
         {
           sf->copyright = getquotedeol (sfd);
         }
-      else if (strmatch (tok, "Comments:") == 0)
+      else if (strcasecmp (tok, "Comments:") == 0)
         {
           char *temp = getquotedeol (sfd);
           sf->comments = latin1_2_utf8_copy (temp);
           free (temp);
         }
-      else if (strmatch (tok, "UComments:") == 0)
+      else if (strcasecmp (tok, "UComments:") == 0)
         {
           sf->comments = SFDReadUTF7Str (sfd);
         }
-      else if (strmatch (tok, "FontLog:") == 0)
+      else if (strcasecmp (tok, "FontLog:") == 0)
         {
           sf->fontlog = SFDReadUTF7Str (sfd);
         }
-      else if (strmatch (tok, "Version:") == 0)
+      else if (strcasecmp (tok, "Version:") == 0)
         {
           geteol (sfd, tok);
           sf->version = xstrdup_or_null (tok);
         }
-      else if (strmatch (tok, "FONDName:") == 0)
+      else if (strcasecmp (tok, "FONDName:") == 0)
         {
           geteol (sfd, tok);
           sf->fondname = xstrdup_or_null (tok);
         }
-      else if (strmatch (tok, "ItalicAngle:") == 0)
+      else if (strcasecmp (tok, "ItalicAngle:") == 0)
         {
           getreal (sfd, &sf->italicangle);
         }
-      else if (strmatch (tok, "StrokeWidth:") == 0)
+      else if (strcasecmp (tok, "StrokeWidth:") == 0)
         {
           getreal (sfd, &sf->strokewidth);
         }
-      else if (strmatch (tok, "UnderlinePosition:") == 0)
+      else if (strcasecmp (tok, "UnderlinePosition:") == 0)
         {
           getreal (sfd, &sf->upos);
         }
-      else if (strmatch (tok, "UnderlineWidth:") == 0)
+      else if (strcasecmp (tok, "UnderlineWidth:") == 0)
         {
           getreal (sfd, &sf->uwidth);
         }
-      else if (strmatch (tok, "ModificationTime:") == 0)
+      else if (strcasecmp (tok, "ModificationTime:") == 0)
         {
           getlonglong (sfd, &sf->modificationtime);
         }
-      else if (strmatch (tok, "CreationTime:") == 0)
+      else if (strcasecmp (tok, "CreationTime:") == 0)
         {
           getlonglong (sfd, &sf->creationtime);
           hadtimes = true;
         }
-      else if (strmatch (tok, "PfmFamily:") == 0)
+      else if (strcasecmp (tok, "PfmFamily:") == 0)
         {
           int temp;
           getint (sfd, &temp);
           sf->pfminfo.pfmfamily = temp;
           sf->pfminfo.pfmset = true;
         }
-      else if (strmatch (tok, "LangName:") == 0)
+      else if (strcasecmp (tok, "LangName:") == 0)
         {
           sf->names = SFDGetLangName (sfd, sf->names);
         }
-      else if (strmatch (tok, "GaspTable:") == 0)
+      else if (strcasecmp (tok, "GaspTable:") == 0)
         {
           SFDGetGasp (sfd, sf);
         }
-      else if (strmatch (tok, "DesignSize:") == 0)
+      else if (strcasecmp (tok, "DesignSize:") == 0)
         {
           SFDGetDesignSize (sfd, sf);
         }
-      else if (strmatch (tok, "OtfFeatName:") == 0)
+      else if (strcasecmp (tok, "OtfFeatName:") == 0)
         {
           SFDGetOtfFeatName (sfd, sf);
         }
-      else if (strmatch (tok, "PfmWeight:") == 0
-               || strmatch (tok, "TTFWeight:") == 0)
+      else if (strcasecmp (tok, "PfmWeight:") == 0
+               || strcasecmp (tok, "TTFWeight:") == 0)
         {
           getsint (sfd, &sf->pfminfo.weight);
           sf->pfminfo.pfmset = true;
         }
-      else if (strmatch (tok, "TTFWidth:") == 0)
+      else if (strcasecmp (tok, "TTFWidth:") == 0)
         {
           getsint (sfd, &sf->pfminfo.width);
           sf->pfminfo.pfmset = true;
         }
-      else if (strmatch (tok, "Panose:") == 0)
+      else if (strcasecmp (tok, "Panose:") == 0)
         {
           int temp, i;
           for (i = 0; i < 10; ++i)
@@ -8155,150 +8155,150 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
             }
           sf->pfminfo.panose_set = true;
         }
-      else if (strmatch (tok, "LineGap:") == 0)
+      else if (strcasecmp (tok, "LineGap:") == 0)
         {
           getsint (sfd, &sf->pfminfo.linegap);
           sf->pfminfo.pfmset = true;
         }
-      else if (strmatch (tok, "VLineGap:") == 0)
+      else if (strcasecmp (tok, "VLineGap:") == 0)
         {
           getsint (sfd, &sf->pfminfo.vlinegap);
           sf->pfminfo.pfmset = true;
         }
-      else if (strmatch (tok, "HheadAscent:") == 0)
+      else if (strcasecmp (tok, "HheadAscent:") == 0)
         {
           getsint (sfd, &sf->pfminfo.hhead_ascent);
         }
-      else if (strmatch (tok, "HheadAOffset:") == 0)
+      else if (strcasecmp (tok, "HheadAOffset:") == 0)
         {
           int temp;
           getint (sfd, &temp);
           sf->pfminfo.hheadascent_add = temp;
         }
-      else if (strmatch (tok, "HheadDescent:") == 0)
+      else if (strcasecmp (tok, "HheadDescent:") == 0)
         {
           getsint (sfd, &sf->pfminfo.hhead_descent);
         }
-      else if (strmatch (tok, "HheadDOffset:") == 0)
+      else if (strcasecmp (tok, "HheadDOffset:") == 0)
         {
           int temp;
           getint (sfd, &temp);
           sf->pfminfo.hheaddescent_add = temp;
         }
-      else if (strmatch (tok, "OS2TypoLinegap:") == 0)
+      else if (strcasecmp (tok, "OS2TypoLinegap:") == 0)
         {
           getsint (sfd, &sf->pfminfo.os2_typolinegap);
         }
-      else if (strmatch (tok, "OS2TypoAscent:") == 0)
+      else if (strcasecmp (tok, "OS2TypoAscent:") == 0)
         {
           getsint (sfd, &sf->pfminfo.os2_typoascent);
         }
-      else if (strmatch (tok, "OS2TypoAOffset:") == 0)
+      else if (strcasecmp (tok, "OS2TypoAOffset:") == 0)
         {
           int temp;
           getint (sfd, &temp);
           sf->pfminfo.typoascent_add = temp;
         }
-      else if (strmatch (tok, "OS2TypoDescent:") == 0)
+      else if (strcasecmp (tok, "OS2TypoDescent:") == 0)
         {
           getsint (sfd, &sf->pfminfo.os2_typodescent);
         }
-      else if (strmatch (tok, "OS2TypoDOffset:") == 0)
+      else if (strcasecmp (tok, "OS2TypoDOffset:") == 0)
         {
           int temp;
           getint (sfd, &temp);
           sf->pfminfo.typodescent_add = temp;
         }
-      else if (strmatch (tok, "OS2WinAscent:") == 0)
+      else if (strcasecmp (tok, "OS2WinAscent:") == 0)
         {
           getsint (sfd, &sf->pfminfo.os2_winascent);
         }
-      else if (strmatch (tok, "OS2WinDescent:") == 0)
+      else if (strcasecmp (tok, "OS2WinDescent:") == 0)
         {
           getsint (sfd, &sf->pfminfo.os2_windescent);
         }
-      else if (strmatch (tok, "OS2WinAOffset:") == 0)
+      else if (strcasecmp (tok, "OS2WinAOffset:") == 0)
         {
           int temp;
           getint (sfd, &temp);
           sf->pfminfo.winascent_add = temp;
         }
-      else if (strmatch (tok, "OS2WinDOffset:") == 0)
+      else if (strcasecmp (tok, "OS2WinDOffset:") == 0)
         {
           int temp;
           getint (sfd, &temp);
           sf->pfminfo.windescent_add = temp;
         }
-      else if (strmatch (tok, "HHeadAscent:") == 0)
+      else if (strcasecmp (tok, "HHeadAscent:") == 0)
         {
           getsint (sfd, &sf->pfminfo.hhead_ascent);
         }
-      else if (strmatch (tok, "HHeadDescent:") == 0)
+      else if (strcasecmp (tok, "HHeadDescent:") == 0)
         {
           getsint (sfd, &sf->pfminfo.hhead_descent);
         }
-      else if (strmatch (tok, "HHeadAOffset:") == 0)
+      else if (strcasecmp (tok, "HHeadAOffset:") == 0)
         {
           int temp;
           getint (sfd, &temp);
           sf->pfminfo.hheadascent_add = temp;
         }
-      else if (strmatch (tok, "HHeadDOffset:") == 0)
+      else if (strcasecmp (tok, "HHeadDOffset:") == 0)
         {
           int temp;
           getint (sfd, &temp);
           sf->pfminfo.hheaddescent_add = temp;
         }
-      else if (strmatch (tok, "MacStyle:") == 0)
+      else if (strcasecmp (tok, "MacStyle:") == 0)
         {
           getsint (sfd, &sf->macstyle);
         }
-      else if (strmatch (tok, "OS2SubXSize:") == 0)
+      else if (strcasecmp (tok, "OS2SubXSize:") == 0)
         {
           getsint (sfd, &sf->pfminfo.os2_subxsize);
           sf->pfminfo.subsuper_set = true;
         }
-      else if (strmatch (tok, "OS2SubYSize:") == 0)
+      else if (strcasecmp (tok, "OS2SubYSize:") == 0)
         {
           getsint (sfd, &sf->pfminfo.os2_subysize);
         }
-      else if (strmatch (tok, "OS2SubXOff:") == 0)
+      else if (strcasecmp (tok, "OS2SubXOff:") == 0)
         {
           getsint (sfd, &sf->pfminfo.os2_subxoff);
         }
-      else if (strmatch (tok, "OS2SubYOff:") == 0)
+      else if (strcasecmp (tok, "OS2SubYOff:") == 0)
         {
           getsint (sfd, &sf->pfminfo.os2_subyoff);
         }
-      else if (strmatch (tok, "OS2SupXSize:") == 0)
+      else if (strcasecmp (tok, "OS2SupXSize:") == 0)
         {
           getsint (sfd, &sf->pfminfo.os2_supxsize);
         }
-      else if (strmatch (tok, "OS2SupYSize:") == 0)
+      else if (strcasecmp (tok, "OS2SupYSize:") == 0)
         {
           getsint (sfd, &sf->pfminfo.os2_supysize);
         }
-      else if (strmatch (tok, "OS2SupXOff:") == 0)
+      else if (strcasecmp (tok, "OS2SupXOff:") == 0)
         {
           getsint (sfd, &sf->pfminfo.os2_supxoff);
         }
-      else if (strmatch (tok, "OS2SupYOff:") == 0)
+      else if (strcasecmp (tok, "OS2SupYOff:") == 0)
         {
           getsint (sfd, &sf->pfminfo.os2_supyoff);
         }
-      else if (strmatch (tok, "OS2StrikeYSize:") == 0)
+      else if (strcasecmp (tok, "OS2StrikeYSize:") == 0)
         {
           getsint (sfd, &sf->pfminfo.os2_strikeysize);
         }
-      else if (strmatch (tok, "OS2StrikeYPos:") == 0)
+      else if (strcasecmp (tok, "OS2StrikeYPos:") == 0)
         {
           getsint (sfd, &sf->pfminfo.os2_strikeypos);
         }
-      else if (strmatch (tok, "OS2FamilyClass:") == 0)
+      else if (strcasecmp (tok, "OS2FamilyClass:") == 0)
         {
           getsint (sfd, &sf->pfminfo.os2_family_class);
         }
-      else if (strmatch (tok, "OS2Vendor:") == 0)
+      else if (strcasecmp (tok, "OS2Vendor:") == 0)
         {
           while (isspace (nlgetc (sfd)));
           sf->pfminfo.os2_vendor[0] = nlgetc (sfd);
@@ -8307,37 +8307,37 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
           sf->pfminfo.os2_vendor[3] = nlgetc (sfd);
           (void) nlgetc (sfd);
         }
-      else if (strmatch (tok, "OS2CodePages:") == 0)
+      else if (strcasecmp (tok, "OS2CodePages:") == 0)
         {
           gethexints (sfd, sf->pfminfo.codepages, 2);
           sf->pfminfo.hascodepages = true;
         }
-      else if (strmatch (tok, "OS2UnicodeRanges:") == 0)
+      else if (strcasecmp (tok, "OS2UnicodeRanges:") == 0)
         {
           gethexints (sfd, sf->pfminfo.unicoderanges, 4);
           sf->pfminfo.hasunicoderanges = true;
         }
-      else if (strmatch (tok, "DisplaySize:") == 0)
+      else if (strcasecmp (tok, "DisplaySize:") == 0)
         {
           getint (sfd, &sf->display_size);
         }
-      else if (strmatch (tok, "DisplayLayer:") == 0)
+      else if (strcasecmp (tok, "DisplayLayer:") == 0)
         {
           getint (sfd, &sf->display_layer);
         }
-      else if (strmatch (tok, "ExtremaBound:") == 0)
+      else if (strcasecmp (tok, "ExtremaBound:") == 0)
         {
           getint (sfd, &sf->extrema_bound);
         }
-      else if (strmatch (tok, "WidthSeparation:") == 0)
+      else if (strcasecmp (tok, "WidthSeparation:") == 0)
         {
           getint (sfd, &sf->width_separation);
         }
-      else if (strmatch (tok, "TopEncoding:") == 0)
+      else if (strcasecmp (tok, "TopEncoding:") == 0)
         {                       /* Obsolete */
           getint (sfd, &sf->top_enc);
         }
-      else if (strmatch (tok, "WinInfo:") == 0)
+      else if (strcasecmp (tok, "WinInfo:") == 0)
         {
           int temp1, temp2;
           getint (sfd, &sf->top_enc);
@@ -8352,73 +8352,73 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
           sf->desired_col_cnt = temp1;
           sf->desired_row_cnt = temp2;
         }
-      else if (strmatch (tok, "AntiAlias:") == 0)
+      else if (strcasecmp (tok, "AntiAlias:") == 0)
         {
           int temp;
           getint (sfd, &temp);
           sf->display_antialias = temp;
         }
-      else if (strmatch (tok, "FitToEm:") == 0)
+      else if (strcasecmp (tok, "FitToEm:") == 0)
         {
           int temp;
           getint (sfd, &temp);
           sf->display_bbsized = temp;
         }
-      else if (strmatch (tok, "OnlyBitmaps:") == 0)
+      else if (strcasecmp (tok, "OnlyBitmaps:") == 0)
         {
           int temp;
           getint (sfd, &temp);
           sf->onlybitmaps = temp;
         }
-      else if (strmatch (tok, "Ascent:") == 0)
+      else if (strcasecmp (tok, "Ascent:") == 0)
         {
           getint (sfd, &sf->ascent);
         }
-      else if (strmatch (tok, "Descent:") == 0)
+      else if (strcasecmp (tok, "Descent:") == 0)
         {
           getint (sfd, &sf->descent);
         }
-      else if (strmatch (tok, "woffMajor:") == 0)
+      else if (strcasecmp (tok, "woffMajor:") == 0)
         {
           getint (sfd, &sf->woffMajor);
         }
-      else if (strmatch (tok, "woffMinor:") == 0)
+      else if (strcasecmp (tok, "woffMinor:") == 0)
         {
           getint (sfd, &sf->woffMinor);
         }
-      else if (strmatch (tok, "woffMetadata:") == 0)
+      else if (strcasecmp (tok, "woffMetadata:") == 0)
         {
           sf->woffMetadata = SFDReadUTF7Str (sfd);
         }
-      else if (strmatch (tok, "UFOAscent:") == 0)
+      else if (strcasecmp (tok, "UFOAscent:") == 0)
         {
           getreal (sfd, &sf->ufo_ascent);
         }
-      else if (strmatch (tok, "UFODescent:") == 0)
+      else if (strcasecmp (tok, "UFODescent:") == 0)
         {
           getreal (sfd, &sf->ufo_descent);
         }
-      else if (strmatch (tok, "sfntRevision:") == 0)
+      else if (strcasecmp (tok, "sfntRevision:") == 0)
         {
           // FIXME: Should sf->sfntRevision be unsigned int?
           uint32_t revision;
           gethex (sfd, &revision);
           sf->sfntRevision = revision;
         }
-      else if (strmatch (tok, "Order2:") == 0)
+      else if (strcasecmp (tok, "Order2:") == 0)
         {
           getint (sfd, &old_style_order2);
           sf->grid.order2 = old_style_order2;
           sf->layers[ly_back].order2 = old_style_order2;
           sf->layers[ly_fore].order2 = old_style_order2;
         }
-      else if (strmatch (tok, "GridOrder2:") == 0)
+      else if (strcasecmp (tok, "GridOrder2:") == 0)
         {
           int o2;
           getint (sfd, &o2);
           sf->grid.order2 = o2;
         }
-      else if (strmatch (tok, "LayerCount:") == 0)
+      else if (strcasecmp (tok, "LayerCount:") == 0)
         {
           had_layer_cnt = true;
           getint (sfd, &sf->layer_cnt);
@@ -8430,7 +8430,7 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
                       (sf->layer_cnt - 2) * sizeof (LayerInfo));
             }
         }
-      else if (strmatch (tok, "Layer:") == 0)
+      else if (strcasecmp (tok, "Layer:") == 0)
         {
           int layer, o2, bk;
           getint (sfd, &layer);
@@ -8463,53 +8463,53 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
               sf->layers[layer].background = bk;
             }
         }
-      else if (strmatch (tok, "StrokedFont:") == 0)
+      else if (strcasecmp (tok, "StrokedFont:") == 0)
         {
           int temp;
           getint (sfd, &temp);
           sf->strokedfont = temp;
         }
-      else if (strmatch (tok, "MultiLayer:") == 0)
+      else if (strcasecmp (tok, "MultiLayer:") == 0)
         {
           int temp;
           getint (sfd, &temp);
           sf->multilayer = temp;
         }
-      else if (strmatch (tok, "NeedsXUIDChange:") == 0)
+      else if (strcasecmp (tok, "NeedsXUIDChange:") == 0)
         {
           int temp;
           getint (sfd, &temp);
           sf->changed_since_xuidchanged = temp;
         }
-      else if (strmatch (tok, "VerticalOrigin:") == 0)
+      else if (strcasecmp (tok, "VerticalOrigin:") == 0)
         {
           int temp;
           getint (sfd, &temp);
           sf->hasvmetrics = true;
         }
-      else if (strmatch (tok, "HasVMetrics:") == 0)
+      else if (strcasecmp (tok, "HasVMetrics:") == 0)
         {
           int temp;
           getint (sfd, &temp);
           sf->hasvmetrics = temp;
         }
-      else if (strmatch (tok, "Justify:") == 0)
+      else if (strcasecmp (tok, "Justify:") == 0)
         {
           SFDParseJustify (sfd, sf, tok);
         }
-      else if (strmatch (tok, "BaseHoriz:") == 0)
+      else if (strcasecmp (tok, "BaseHoriz:") == 0)
         {
           sf->horiz_base = SFDParseBase (sfd);
           last_base = sf->horiz_base;
           last_base_script = NULL;
         }
-      else if (strmatch (tok, "BaseVert:") == 0)
+      else if (strcasecmp (tok, "BaseVert:") == 0)
         {
           sf->vert_base = SFDParseBase (sfd);
           last_base = sf->vert_base;
           last_base_script = NULL;
         }
-      else if (strmatch (tok, "BaseScript:") == 0)
+      else if (strcasecmp (tok, "BaseScript:") == 0)
         {
           struct basescript *bs = SFDParseBaseScript (sfd, last_base, tok);
           if (last_base == NULL)
@@ -8523,86 +8523,86 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
             last_base->scripts = bs;
           last_base_script = bs;
         }
-      else if (strmatch (tok, "FSType:") == 0)
+      else if (strcasecmp (tok, "FSType:") == 0)
         {
           getsint (sfd, &sf->pfminfo.fstype);
         }
-      else if (strmatch (tok, "OS2Version:") == 0)
+      else if (strcasecmp (tok, "OS2Version:") == 0)
         {
           getsint (sfd, &sf->os2_version);
         }
-      else if (strmatch (tok, "OS2_WeightWidthSlopeOnly:") == 0)
+      else if (strcasecmp (tok, "OS2_WeightWidthSlopeOnly:") == 0)
         {
           int temp;
           getint (sfd, &temp);
           sf->weight_width_slope_only = temp;
         }
-      else if (strmatch (tok, "OS2_UseTypoMetrics:") == 0)
+      else if (strcasecmp (tok, "OS2_UseTypoMetrics:") == 0)
         {
           int temp;
           getint (sfd, &temp);
           sf->use_typo_metrics = temp;
         }
-      else if (strmatch (tok, "UseUniqueID:") == 0)
+      else if (strcasecmp (tok, "UseUniqueID:") == 0)
         {
           int temp;
           getint (sfd, &temp);
           sf->use_uniqueid = temp;
         }
-      else if (strmatch (tok, "UseXUID:") == 0)
+      else if (strcasecmp (tok, "UseXUID:") == 0)
         {
           int temp;
           getint (sfd, &temp);
           sf->use_xuid = temp;
         }
-      else if (strmatch (tok, "UniqueID:") == 0)
+      else if (strcasecmp (tok, "UniqueID:") == 0)
         {
           getint (sfd, &sf->uniqueid);
         }
-      else if (strmatch (tok, "XUID:") == 0)
+      else if (strcasecmp (tok, "XUID:") == 0)
         {
           geteol (sfd, tok);
           sf->xuid = xstrdup_or_null (tok);
         }
-      else if (strmatch (tok, "Encoding:") == 0)
+      else if (strcasecmp (tok, "Encoding:") == 0)
         {
           enc = SFDGetEncoding (sfd, tok, sf);
           if (sf->map != NULL)
             sf->map->enc = enc;
         }
-      else if (strmatch (tok, "OldEncoding:") == 0)
+      else if (strcasecmp (tok, "OldEncoding:") == 0)
         {
           /* old_encname = */ (void) SFDGetEncoding (sfd, tok, sf);
         }
-      else if (strmatch (tok, "UnicodeInterp:") == 0)
+      else if (strcasecmp (tok, "UnicodeInterp:") == 0)
         {
           sf->uni_interp = SFDGetUniInterp (sfd, tok, sf);
         }
-      else if (strmatch (tok, "NameList:") == 0)
+      else if (strcasecmp (tok, "NameList:") == 0)
         {
           SFDGetNameList (sfd, tok, sf);
         }
-      else if (strmatch (tok, "Compacted:") == 0)
+      else if (strcasecmp (tok, "Compacted:") == 0)
         {
           int temp;
           getint (sfd, &temp);
           sf->compacted = temp;
         }
-      else if (strmatch (tok, "Registry:") == 0)
+      else if (strcasecmp (tok, "Registry:") == 0)
         {
           geteol (sfd, tok);
           sf->cidregistry = xstrdup_or_null (tok);
         }
-      else if (strmatch (tok, "Ordering:") == 0)
+      else if (strcasecmp (tok, "Ordering:") == 0)
         {
           geteol (sfd, tok);
           sf->ordering = xstrdup_or_null (tok);
         }
-      else if (strmatch (tok, "Supplement:") == 0)
+      else if (strcasecmp (tok, "Supplement:") == 0)
         {
           getint (sfd, &sf->supplement);
         }
-      else if (strmatch (tok, "RemapN:") == 0)
+      else if (strcasecmp (tok, "RemapN:") == 0)
         {
           int n;
           getint (sfd, &n);
@@ -8612,7 +8612,7 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
           if (sf->map != NULL)
             sf->map->remap = remap;
         }
-      else if (strmatch (tok, "Remap:") == 0)
+      else if (strcasecmp (tok, "Remap:") == 0)
         {
           uint32_t f, l;
           int p;
@@ -8627,17 +8627,17 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
               mappos++;
             }
         }
-      else if (strmatch (tok, "CIDVersion:") == 0)
+      else if (strcasecmp (tok, "CIDVersion:") == 0)
         {
           real temp;
           getreal (sfd, &temp);
           sf->cidversion = temp;
         }
-      else if (strmatch (tok, "Grid") == 0)
+      else if (strcasecmp (tok, "Grid") == 0)
         {
           sf->grid.splines = SFDGetSplineSet (sf, sfd, sf->grid.order2);
         }
-      else if (strmatch (tok, "ScriptLang:") == 0)
+      else if (strcasecmp (tok, "ScriptLang:") == 0)
         {
           int i, j, k;
           int imax, jmax, kmax;
@@ -8674,7 +8674,7 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
                 }
             }
         }
-      else if (strmatch (tok, "Lookup:") == 0)
+      else if (strcasecmp (tok, "Lookup:") == 0)
         {
           OTLookup *otl;
           int temp;
@@ -8709,7 +8709,7 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
             }
           SFDParseLookup (sfd, sf, otl);
         }
-      else if (strmatch (tok, "MarkAttachClasses:") == 0)
+      else if (strcasecmp (tok, "MarkAttachClasses:") == 0)
         {
           getint (sfd, &sf->mark_class_cnt);
           sf->mark_classes = xmalloc (sf->mark_class_cnt * sizeof (char *));
@@ -8731,7 +8731,7 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
               fread (sf->mark_classes[i], 1, temp, sfd);
             }
         }
-      else if (strmatch (tok, "MarkAttachSets:") == 0)
+      else if (strcasecmp (tok, "MarkAttachSets:") == 0)
         {
           getint (sfd, &sf->mark_set_cnt);
           sf->mark_sets = xmalloc (sf->mark_set_cnt * sizeof (char *));
@@ -8750,10 +8750,10 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
               fread (sf->mark_sets[i], 1, temp, sfd);
             }
         }
-      else if (strmatch (tok, "KernClass2:") == 0
-               || strmatch (tok, "VKernClass2:") == 0
-               || strmatch (tok, "KernClass:") == 0
-               || strmatch (tok, "VKernClass:") == 0)
+      else if (strcasecmp (tok, "KernClass2:") == 0
+               || strcasecmp (tok, "VKernClass2:") == 0
+               || strcasecmp (tok, "KernClass:") == 0
+               || strcasecmp (tok, "VKernClass:") == 0)
         {
           int temp, classstart = 1;
           int isv = tok[0] == 'V';
@@ -8850,16 +8850,16 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
               lastvkc = kc;
             }
         }
-      else if (strmatch (tok, "ContextPos2:") == 0
-               || strmatch (tok, "ContextSub2:") == 0
-               || strmatch (tok, "ChainPos2:") == 0
-               || strmatch (tok, "ChainSub2:") == 0
-               || strmatch (tok, "ReverseChain2:") == 0
-               || strmatch (tok, "ContextPos:") == 0
-               || strmatch (tok, "ContextSub:") == 0
-               || strmatch (tok, "ChainPos:") == 0
-               || strmatch (tok, "ChainSub:") == 0
-               || strmatch (tok, "ReverseChain:") == 0)
+      else if (strcasecmp (tok, "ContextPos2:") == 0
+               || strcasecmp (tok, "ContextSub2:") == 0
+               || strcasecmp (tok, "ChainPos2:") == 0
+               || strcasecmp (tok, "ChainSub2:") == 0
+               || strcasecmp (tok, "ReverseChain2:") == 0
+               || strcasecmp (tok, "ContextPos:") == 0
+               || strcasecmp (tok, "ContextSub:") == 0
+               || strcasecmp (tok, "ChainPos:") == 0
+               || strcasecmp (tok, "ChainSub:") == 0
+               || strcasecmp (tok, "ReverseChain:") == 0)
         {
           FPST *fpst;
           int old;
@@ -8885,18 +8885,18 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
           lastfp = fpst;
           SFDParseChainContext (sfd, sf, fpst, tok, old);
         }
-      else if (strmatch (tok, "MacIndic2:") == 0
-               || strmatch (tok, "MacContext2:") == 0
-               || strmatch (tok, "MacLigature2:") == 0
-               || strmatch (tok, "MacSimple2:") == 0
-               || strmatch (tok, "MacKern2:") == 0
-               || strmatch (tok, "MacInsert2:") == 0
-               || strmatch (tok, "MacIndic:") == 0
-               || strmatch (tok, "MacContext:") == 0
-               || strmatch (tok, "MacLigature:") == 0
-               || strmatch (tok, "MacSimple:") == 0
-               || strmatch (tok, "MacKern:") == 0
-               || strmatch (tok, "MacInsert:") == 0)
+      else if (strcasecmp (tok, "MacIndic2:") == 0
+               || strcasecmp (tok, "MacContext2:") == 0
+               || strcasecmp (tok, "MacLigature2:") == 0
+               || strcasecmp (tok, "MacSimple2:") == 0
+               || strcasecmp (tok, "MacKern2:") == 0
+               || strcasecmp (tok, "MacInsert2:") == 0
+               || strcasecmp (tok, "MacIndic:") == 0
+               || strcasecmp (tok, "MacContext:") == 0
+               || strcasecmp (tok, "MacLigature:") == 0
+               || strcasecmp (tok, "MacSimple:") == 0
+               || strcasecmp (tok, "MacKern:") == 0
+               || strcasecmp (tok, "MacInsert:") == 0)
         {
           ASM *sm;
           if (strchr (tok, '2') != NULL)
@@ -8921,11 +8921,11 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
           lastsm = sm;
           SFDParseStateMachine (sfd, sf, sm, tok, old);
         }
-      else if (strmatch (tok, "MacFeat:") == 0)
+      else if (strcasecmp (tok, "MacFeat:") == 0)
         {
           sf->features = SFDParseMacFeatures (sfd, tok);
         }
-      else if (strmatch (tok, "TeXData:") == 0)
+      else if (strcasecmp (tok, "TeXData:") == 0)
         {
           int temp;
           getint (sfd, &temp);
@@ -9059,15 +9059,15 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
               lastan = an;
             }
         }
-      else if (strmatch (tok, "TtfTable:") == 0)
+      else if (strcasecmp (tok, "TtfTable:") == 0)
         {                       /* Old, binary format */
           SFDGetTtfTable (sfd, sf, lastttf);    /* still used for maxp and unknown tables */
         }
-      else if (strmatch (tok, "TtTable:") == 0)
+      else if (strcasecmp (tok, "TtTable:") == 0)
         {                       /* text instruction format */
           SFDGetTtTable (sfd, sf, lastttf);
         }
-      else if (strmatch (tok, "ShortTable:") == 0)
+      else if (strcasecmp (tok, "ShortTable:") == 0)
         {                       /* text number format */
           SFDGetShortTable (sfd, sf, lastttf);
         }
@@ -9075,7 +9075,7 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
         {
           SFDParseMathItem (sfd, sf, tok);
         }
-      else if (strmatch (tok, "TableOrder:") == 0)
+      else if (strcasecmp (tok, "TableOrder:") == 0)
         {
           int temp;
           struct table_ordering *ord;
@@ -9112,19 +9112,19 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
             lastord->next = ord;
           lastord = ord;
         }
-      else if (strmatch (tok, "BeginPrivate:") == 0)
+      else if (strcasecmp (tok, "BeginPrivate:") == 0)
         {
           SFDGetPrivate (sfd, sf);
         }
-      else if (strmatch (tok, "BeginSubrs:") == 0)
+      else if (strcasecmp (tok, "BeginSubrs:") == 0)
         {                       /* leave in so we don't croak on old sfd files */
           SFDGetSubrs (sfd, sf);
         }
-      else if (strmatch (tok, "PickledData:") == 0)
+      else if (strcasecmp (tok, "PickledData:") == 0)
         {
           sf->python_persistent = SFDUnPickle (sfd);
         }
-      else if (strmatch (tok, "MMCounts:") == 0)
+      else if (strcasecmp (tok, "MMCounts:") == 0)
         {
           MMSet *mm = sf->mm = (MMSet *) xzalloc (sizeof (MMSet));
           getint (sfd, &mm->instance_count);
@@ -9149,7 +9149,7 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
               xcalloc (mm->named_instance_count,
                        sizeof (struct named_instance));
         }
-      else if (strmatch (tok, "MMAxis:") == 0)
+      else if (strcasecmp (tok, "MMAxis:") == 0)
         {
           MMSet *mm = sf->mm;
           if (mm != NULL)
@@ -9161,7 +9161,7 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
                 }
             }
         }
-      else if (strmatch (tok, "MMPositions:") == 0)
+      else if (strcasecmp (tok, "MMPositions:") == 0)
         {
           MMSet *mm = sf->mm;
           if (mm != NULL)
@@ -9170,7 +9170,7 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
                 getreal (sfd, &mm->positions[i]);
             }
         }
-      else if (strmatch (tok, "MMWeights:") == 0)
+      else if (strcasecmp (tok, "MMWeights:") == 0)
         {
           MMSet *mm = sf->mm;
           if (mm != NULL)
@@ -9179,7 +9179,7 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
                 getreal (sfd, &mm->defweights[i]);
             }
         }
-      else if (strmatch (tok, "MMAxisMap:") == 0)
+      else if (strcasecmp (tok, "MMAxisMap:") == 0)
         {
           MMSet *mm = sf->mm;
           if (mm != NULL)
@@ -9205,7 +9205,7 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
               lastnamedinstance = NULL;
             }
         }
-      else if (strmatch (tok, "MMNamedInstance:") == 0)
+      else if (strcasecmp (tok, "MMNamedInstance:") == 0)
         {
           MMSet *mm = sf->mm;
           if (mm != NULL)
@@ -9220,7 +9220,7 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
               lastaxismap = NULL;
             }
         }
-      else if (strmatch (tok, "MacName:") == 0)
+      else if (strcasecmp (tok, "MacName:") == 0)
         {
           struct macname *names = SFDParseMacNames (sfd, tok);
           if (lastaxismap != NULL)
@@ -9229,19 +9229,19 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
             lastnamedinstance->names = names;
           pushedbacktok = true;
         }
-      else if (strmatch (tok, "MMCDV:") == 0)
+      else if (strcasecmp (tok, "MMCDV:") == 0)
         {
           MMSet *mm = sf->mm;
           if (mm != NULL)
             mm->cdv = SFDParseMMSubroutine (sfd);
         }
-      else if (strmatch (tok, "MMNDV:") == 0)
+      else if (strcasecmp (tok, "MMNDV:") == 0)
         {
           MMSet *mm = sf->mm;
           if (mm != NULL)
             mm->ndv = SFDParseMMSubroutine (sfd);
         }
-      else if (strmatch (tok, "BeginMMFonts:") == 0)
+      else if (strcasecmp (tok, "BeginMMFonts:") == 0)
         {
           int cnt;
           getint (sfd, &cnt);
@@ -9251,7 +9251,7 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
           MMInferStuff (sf->mm);
           break;
         }
-      else if (strmatch (tok, "BeginSubFonts:") == 0)
+      else if (strcasecmp (tok, "BeginSubFonts:") == 0)
         {
           getint (sfd, &sf->subfontcnt);
           sf->subfonts = xcalloc (sf->subfontcnt, sizeof (SplineFont *));
@@ -9261,7 +9261,7 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
           ff_progress_change_total (realcnt);
           break;
         }
-      else if (strmatch (tok, "BeginChars:") == 0)
+      else if (strcasecmp (tok, "BeginChars:") == 0)
         {
           int charcnt;
           getint (sfd, &charcnt);
@@ -9285,7 +9285,7 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
           break;
 #if HANYANG
         }
-      else if (strmatch (tok, "BeginCompositionRules") == 0)
+      else if (strcasecmp (tok, "BeginCompositionRules") == 0)
         {
           sf->rules = SFDReadCompositionRules (sfd);
 #endif
@@ -9355,7 +9355,7 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
         break;
       else if (strcmp (tok, "BitmapFont:") == 0)
         SFDGetBitmapFont (sfd, sf, false, NULL);
-      else if (strmatch (tok, "DupEnc:") == 0)
+      else if (strcasecmp (tok, "DupEnc:") == 0)
         {
           int enc, orig;
           haddupenc = true;
@@ -9546,7 +9546,7 @@ SFDReadOneChar (SplineFont *cur_sf, const char *name)
                   break;
                 }
             }
-          else if (strmatch (tok, "BeginChars:") == 0)
+          else if (strcasecmp (tok, "BeginChars:") == 0)
             {
               chars_seen = true;
             }
@@ -9555,7 +9555,7 @@ SFDReadOneChar (SplineFont *cur_sf, const char *name)
               /* Don't try to look for things in the file header any more */
               /* The "Layer" keyword has a different meaning in this context */
             }
-          else if (strmatch (tok, "Order2:") == 0)
+          else if (strcasecmp (tok, "Order2:") == 0)
             {
               int order2;
               getint (sfd, &order2);
@@ -9563,7 +9563,7 @@ SFDReadOneChar (SplineFont *cur_sf, const char *name)
               sf.layers[ly_back].order2 = order2;
               sf.layers[ly_fore].order2 = order2;
             }
-          else if (strmatch (tok, "LayerCount:") == 0)
+          else if (strcasecmp (tok, "LayerCount:") == 0)
             {
               had_layer_cnt = true;
               getint (sfd, &sf.layer_cnt);
@@ -9572,7 +9572,7 @@ SFDReadOneChar (SplineFont *cur_sf, const char *name)
                   sf.layers = xcalloc (sf.layer_cnt, sizeof (LayerInfo));
                 }
             }
-          else if (strmatch (tok, "Layer:") == 0)
+          else if (strcasecmp (tok, "Layer:") == 0)
             {
               int layer, o2;
               getint (sfd, &layer);
@@ -9581,23 +9581,23 @@ SFDReadOneChar (SplineFont *cur_sf, const char *name)
                 sf.layers[layer].order2 = o2;
               free (SFDReadUTF7Str (sfd));
             }
-          else if (strmatch (tok, "MultiLayer:") == 0)
+          else if (strcasecmp (tok, "MultiLayer:") == 0)
             {
               int ml;
               getint (sfd, &ml);
               sf.multilayer = ml;
             }
-          else if (strmatch (tok, "StrokedFont:") == 0)
+          else if (strcasecmp (tok, "StrokedFont:") == 0)
             {
               int stk;
               getint (sfd, &stk);
               sf.strokedfont = stk;
             }
-          else if (strmatch (tok, "Ascent:") == 0)
+          else if (strcasecmp (tok, "Ascent:") == 0)
             {
               getint (sfd, &sf.ascent);
             }
-          else if (strmatch (tok, "Descent:") == 0)
+          else if (strcasecmp (tok, "Descent:") == 0)
             {
               getint (sfd, &sf.descent);
             }
@@ -9993,7 +9993,7 @@ NamesReadSFD (char *filename)
               geteol (sfd, tok);
               continue;
             }
-          if (strmatch (tok, "FontName:") == 0)
+          if (strcasecmp (tok, "FontName:") == 0)
             {
               copy_to_tok (tok, getname (sfd));
               ret = xmalloc (2 * sizeof (char *));
