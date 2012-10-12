@@ -36,55 +36,67 @@
 #include <netdb.h>
 #endif
 
-char *_GIO_decomposeURL(const uint32_t *url,char **host, int *port, char **username,
-	char **password) {
-    uint32_t *pt, *pt2, *upt, *ppt;
-    char *path;
-    char proto[40];
-    /* ftp://[user[:password]@]ftpserver[:port]/url-path */
+char *
+_GIO_decomposeURL(const uint32_t *url,char **host, int *port, char **username,
+		  char **password)
+{
+  uint32_t *pt, *pt2, *upt, *ppt;
+  char *path;
+  char proto[40];
+  /* ftp://[user[:password]@]ftpserver[:port]/url-path */
 
-    *username = NULL; *password = NULL; *port = -1;
-    pt = uc_strstr(url,"://");
-    if ( pt==NULL ) {
-	*host = NULL;
-	return( x_u32_to_u8 (u32_force_valid (url)));
+  *username = NULL;
+  *password = NULL;
+  *port = -1;
+  pt = uc_strstr(url,"://");
+  if ( pt==NULL )
+    {
+      *host = NULL;
+      return( x_u32_to_u8 (u32_force_valid (url)));
     }
-    cu_strncpy(proto,url,pt-url<sizeof(proto)?pt-url:sizeof(proto));
-    pt += 3;
+  cu_strncpy(proto,url,pt-url<sizeof(proto)?pt-url:sizeof(proto));
+  pt += 3;
 
-    pt2 = u_strchr(pt,'/');
-    if ( pt2==NULL ) {
-	pt2 = pt+u32_strlen(pt);
-	path = xstrdup("/");
-    } else {
+  pt2 = u_strchr(pt,'/');
+  if ( pt2==NULL )
+    {
+      pt2 = pt+u32_strlen(pt);
+      path = xstrdup("/");
+    }
+  else
+    {
       path = x_u32_to_u8 (u32_force_valid (pt2));
     }
 
-    upt = u_strchr(pt,'@');
-    if ( upt!=NULL && upt<pt2 ) {
-	ppt = u_strchr(pt,':');
-	if ( ppt==NULL )
-	    *username = cu_copyn(pt,upt-pt);
-	else {
-	    *username = cu_copyn(pt,ppt-pt);
-	    *password = cu_copyn(ppt+1,upt-ppt-1);
+  upt = u_strchr(pt,'@');
+  if ( upt!=NULL && upt<pt2 )
+    {
+      ppt = u_strchr(pt,':');
+      if ( ppt==NULL )
+	*username = x_u32_to_u8 (x_gc_u32_strmbndup (pt,upt-pt));
+      else
+	{
+	  *username = x_u32_to_u8 (x_gc_u32_strmbndup (pt,ppt-pt));
+	  *password = x_u32_to_u8 (x_gc_u32_strmbndup (ppt+1,upt-ppt-1));
 	}
-	pt = upt+1;
+      pt = upt+1;
     }
 
-    ppt = u_strchr(pt,':');
-    if ( ppt!=NULL && ppt<pt2 ) {
-	char *temp = cu_copyn(ppt+1,pt2-ppt-1), *end;
-	*port = strtol(temp,&end,10);
-	if ( *end!='\0' )
-	    *port = -2;
-	free(temp);
-	pt2 = ppt;
+  ppt = u_strchr(pt,':');
+  if ( ppt!=NULL && ppt<pt2 )
+    {
+      char *temp = x_u32_to_u8 (x_gc_u32_strmbndup (ppt+1,pt2-ppt-1));
+      char *end;
+      *port = strtol(temp,&end,10);
+      if ( *end!='\0' )
+	*port = -2;
+      free(temp);
+      pt2 = ppt;
     }
-    *host = cu_copyn(pt,pt2-pt);
-    if ( *username )
-	*password = GIO_PasswordCache(proto,*host,*username,*password);
-return( path );
+  *host = x_u32_to_u8 (x_gc_u32_strmbndup (pt,pt2-pt));
+  if ( *username )
+    *password = GIO_PasswordCache(proto,*host,*username,*password);
+  return( path );
 }
 
 struct passwd_cache {

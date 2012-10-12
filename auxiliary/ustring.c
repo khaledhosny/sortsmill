@@ -324,24 +324,6 @@ u_concat (const uint32_t *s1, const uint32_t *s2)
   return (pt);
 }
 
-char *
-cu_copyn (const uint32_t *pt, int len)
-{
-  char *res, *rpt;
-
-  if (!pt)
-    return (NULL);
-
-#ifdef MEMORY_MASK
-  if ((len + 1) >= MEMORY_MASK)
-    len = MEMORY_MASK - 1;
-#endif
-  res = (char *) xmalloc (len + 1);
-  for (rpt = res; --len >= 0; *rpt++ = *pt++);
-  *rpt = '\0';
-  return (res);
-}
-
 uint32_t *
 cu_strstartmatch (const char *key, const uint32_t *str)
 {
