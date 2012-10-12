@@ -33,7 +33,7 @@
 #include <xunistring.h>
 
 int
-u8_compare (const uint8_t * s1, const uint8_t * s2)
+u8_compare (const uint8_t *s1, const uint8_t *s2)
 {
   int result;
   int error =
@@ -45,7 +45,7 @@ u8_compare (const uint8_t * s1, const uint8_t * s2)
 }
 
 int
-u16_compare (const uint16_t * s1, const uint16_t * s2)
+u16_compare (const uint16_t *s1, const uint16_t *s2)
 {
   int result;
   int error =
@@ -58,7 +58,7 @@ u16_compare (const uint16_t * s1, const uint16_t * s2)
 }
 
 int
-u32_compare (const uint32_t * s1, const uint32_t * s2)
+u32_compare (const uint32_t *s1, const uint32_t *s2)
 {
   int result;
   int error =

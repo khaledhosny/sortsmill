@@ -30,10 +30,11 @@
 #include <assert.h>
 #include <errno.h>
 #include <xalloc.h>
+#include <basics.h>
 #include <xunistring.h>
 
 int
-u8_casecompare (const uint8_t * s1, const uint8_t * s2)
+u8_casecompare (const uint8_t *s1, const uint8_t *s2)
 {
   int result;
   int error =
@@ -46,7 +47,7 @@ u8_casecompare (const uint8_t * s1, const uint8_t * s2)
 }
 
 int
-u16_casecompare (const uint16_t * s1, const uint16_t * s2)
+u16_casecompare (const uint16_t *s1, const uint16_t *s2)
 {
   int result;
   int error = u16_casecmp (s1, u16_strlen (s1), s2, u16_strlen (s2),
@@ -58,11 +59,53 @@ u16_casecompare (const uint16_t * s1, const uint16_t * s2)
 }
 
 int
-u32_casecompare (const uint32_t * s1, const uint32_t * s2)
+u32_casecompare (const uint32_t *s1, const uint32_t *s2)
 {
   int result;
   int error = u32_casecmp (s1, u32_strlen (s1), s2, u32_strlen (s2),
                            uc_locale_language (), UNINORM_NFD, &result);
+  if (error != 0 && errno == ENOMEM)
+    xalloc_die ();
+  assert (error == 0);
+  return result;
+}
+
+int
+u8_ncasecompare (const uint8_t *s1, const uint8_t *s2, size_t n)
+{
+  int result;
+  int error =
+    u8_casecmp (s1, szmin (n, u8_strlen (s1)), s2, szmin (n, u8_strlen (s2)),
+                uc_locale_language (),
+                UNINORM_NFD, &result);
+  if (error != 0 && errno == ENOMEM)
+    xalloc_die ();
+  assert (error == 0);
+  return result;
+}
+
+int
+u16_ncasecompare (const uint16_t *s1, const uint16_t *s2, size_t n)
+{
+  int result;
+  int error =
+    u16_casecmp (s1, szmin (n, u16_strlen (s1)), s2,
+                 szmin (n, u16_strlen (s2)),
+                 uc_locale_language (), UNINORM_NFD, &result);
+  if (error != 0 && errno == ENOMEM)
+    xalloc_die ();
+  assert (error == 0);
+  return result;
+}
+
+int
+u32_ncasecompare (const uint32_t *s1, const uint32_t *s2, size_t n)
+{
+  int result;
+  int error =
+    u32_casecmp (s1, szmin (n, u32_strlen (s1)), s2,
+                 szmin (n, u32_strlen (s2)),
+                 uc_locale_language (), UNINORM_NFD, &result);
   if (error != 0 && errno == ENOMEM)
     xalloc_die ();
   assert (error == 0);

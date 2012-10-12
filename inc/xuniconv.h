@@ -45,15 +45,15 @@
 VISIBLE inline uint8_t *x_u8_strconv_from_locale (const char *string);
 VISIBLE inline uint16_t *x_u16_strconv_from_locale (const char *string);
 VISIBLE inline uint32_t *x_u32_strconv_from_locale (const char *string);
-VISIBLE inline char *x_u8_strconv_to_locale (const uint8_t * string);
-VISIBLE inline char *x_u16_strconv_to_locale (const uint16_t * string);
-VISIBLE inline char *x_u32_strconv_to_locale (const uint32_t * string);
+VISIBLE inline char *x_u8_strconv_to_locale (const uint8_t *string);
+VISIBLE inline char *x_u16_strconv_to_locale (const uint16_t *string);
+VISIBLE inline char *x_u32_strconv_to_locale (const uint32_t *string);
 VISIBLE inline uint8_t *x_gc_u8_strconv_from_locale (const char *string);
 VISIBLE inline uint16_t *x_gc_u16_strconv_from_locale (const char *string);
 VISIBLE inline uint32_t *x_gc_u32_strconv_from_locale (const char *string);
-VISIBLE inline char *x_gc_u8_strconv_to_locale (const uint8_t * string);
-VISIBLE inline char *x_gc_u16_strconv_to_locale (const uint16_t * string);
-VISIBLE inline char *x_gc_u32_strconv_to_locale (const uint32_t * string);
+VISIBLE inline char *x_gc_u8_strconv_to_locale (const uint8_t *string);
+VISIBLE inline char *x_gc_u16_strconv_to_locale (const uint16_t *string);
+VISIBLE inline char *x_gc_u32_strconv_to_locale (const uint32_t *string);
 
 inline uint8_t *
 x_u8_strconv_from_locale (const char *string)
@@ -74,19 +74,19 @@ x_u32_strconv_from_locale (const char *string)
 }
 
 inline char *
-x_u8_strconv_to_locale (const uint8_t * string)
+x_u8_strconv_to_locale (const uint8_t *string)
 {
   return XDIE_ON_ENOMEM (u8_strconv_to_locale (string));
 }
 
 inline char *
-x_u16_strconv_to_locale (const uint16_t * string)
+x_u16_strconv_to_locale (const uint16_t *string)
 {
   return XDIE_ON_ENOMEM (u16_strconv_to_locale (string));
 }
 
 inline char *
-x_u32_strconv_to_locale (const uint32_t * string)
+x_u32_strconv_to_locale (const uint32_t *string)
 {
   return XDIE_ON_ENOMEM (u32_strconv_to_locale (string));
 }
@@ -110,19 +110,19 @@ x_gc_u32_strconv_from_locale (const char *string)
 }
 
 inline char *
-x_gc_u8_strconv_to_locale (const uint8_t * string)
+x_gc_u8_strconv_to_locale (const uint8_t *string)
 {
   return x_gc_grabstr (x_u8_strconv_to_locale (string));
 }
 
 inline char *
-x_gc_u16_strconv_to_locale (const uint16_t * string)
+x_gc_u16_strconv_to_locale (const uint16_t *string)
 {
   return x_gc_grabstr (x_u16_strconv_to_locale (string));
 }
 
 inline char *
-x_gc_u32_strconv_to_locale (const uint32_t * string)
+x_gc_u32_strconv_to_locale (const uint32_t *string)
 {
   return x_gc_grabstr (x_u32_strconv_to_locale (string));
 }

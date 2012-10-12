@@ -44,154 +44,153 @@
 #include <null_passthru.h>
 #include <xgc.h>
 
-VISIBLE uint16_t *x_u8_to_u16 (const uint8_t * string);
-VISIBLE uint32_t *x_u8_to_u32 (const uint8_t * string);
-VISIBLE uint8_t *x_u16_to_u8 (const uint16_t * string);
-VISIBLE uint32_t *x_u16_to_u32 (const uint16_t * string);
-VISIBLE uint8_t *x_u32_to_u8 (const uint32_t * string);
-VISIBLE uint16_t *x_u32_to_u16 (const uint32_t * string);
-VISIBLE inline uint16_t *x_gc_u8_to_u16 (const uint8_t * string);
-VISIBLE inline uint32_t *x_gc_u8_to_u32 (const uint8_t * string);
-VISIBLE inline uint8_t *x_gc_u16_to_u8 (const uint16_t * string);
-VISIBLE inline uint32_t *x_gc_u16_to_u32 (const uint16_t * string);
-VISIBLE inline uint8_t *x_gc_u32_to_u8 (const uint32_t * string);
-VISIBLE inline uint16_t *x_gc_u32_to_u16 (const uint32_t * string);
+VISIBLE uint16_t *x_u8_to_u16 (const uint8_t *string);
+VISIBLE uint32_t *x_u8_to_u32 (const uint8_t *string);
+VISIBLE uint8_t *x_u16_to_u8 (const uint16_t *string);
+VISIBLE uint32_t *x_u16_to_u32 (const uint16_t *string);
+VISIBLE uint8_t *x_u32_to_u8 (const uint32_t *string);
+VISIBLE uint16_t *x_u32_to_u16 (const uint32_t *string);
+VISIBLE inline uint16_t *x_gc_u8_to_u16 (const uint8_t *string);
+VISIBLE inline uint32_t *x_gc_u8_to_u32 (const uint8_t *string);
+VISIBLE inline uint8_t *x_gc_u16_to_u8 (const uint16_t *string);
+VISIBLE inline uint32_t *x_gc_u16_to_u32 (const uint16_t *string);
+VISIBLE inline uint8_t *x_gc_u32_to_u8 (const uint32_t *string);
+VISIBLE inline uint16_t *x_gc_u32_to_u16 (const uint32_t *string);
 
-VISIBLE inline bool u8_valid (const uint8_t * string);
-VISIBLE inline bool u16_valid (const uint16_t * string);
-VISIBLE inline bool u32_valid (const uint32_t * string);
-VISIBLE const uint8_t *u8_force_valid (const uint8_t * string);
-VISIBLE const uint16_t *u16_force_valid (const uint16_t * string);
-VISIBLE const uint32_t *u32_force_valid (const uint32_t * string);
+VISIBLE inline bool u8_valid (const uint8_t *string);
+VISIBLE inline bool u16_valid (const uint16_t *string);
+VISIBLE inline bool u32_valid (const uint32_t *string);
+VISIBLE const uint8_t *u8_force_valid (const uint8_t *string);
+VISIBLE const uint16_t *u16_force_valid (const uint16_t *string);
+VISIBLE const uint32_t *u32_force_valid (const uint32_t *string);
 
 // Copy up to n characters (as opposed to storage units).
-VISIBLE uint8_t *x_u8_strmbndup (const uint8_t * string, size_t n);
-VISIBLE uint16_t *x_u16_strmbndup (const uint16_t * string, size_t n);
-VISIBLE uint32_t *x_u32_strmbndup (const uint32_t * string, size_t n);
-VISIBLE uint8_t *x_gc_u8_strmbndup (const uint8_t * string, size_t n);
-VISIBLE uint16_t *x_gc_u16_strmbndup (const uint16_t * string, size_t n);
-VISIBLE uint32_t *x_gc_u32_strmbndup (const uint32_t * string, size_t n);
+VISIBLE uint8_t *x_u8_strmbndup (const uint8_t *string, size_t n);
+VISIBLE uint16_t *x_u16_strmbndup (const uint16_t *string, size_t n);
+VISIBLE uint32_t *x_u32_strmbndup (const uint32_t *string, size_t n);
+VISIBLE uint8_t *x_gc_u8_strmbndup (const uint8_t *string, size_t n);
+VISIBLE uint16_t *x_gc_u16_strmbndup (const uint16_t *string, size_t n);
+VISIBLE uint32_t *x_gc_u32_strmbndup (const uint32_t *string, size_t n);
 
-VISIBLE long int u8_strtol (const uint8_t * nptr, uint8_t ** endptr,
-                            int base);
-VISIBLE long int u16_strtol (const uint16_t * nptr, uint16_t ** endptr,
+VISIBLE long int u8_strtol (const uint8_t *nptr, uint8_t **endptr, int base);
+VISIBLE long int u16_strtol (const uint16_t *nptr, uint16_t **endptr,
                              int base);
-VISIBLE long int u32_strtol (const uint32_t * nptr, uint32_t ** endptr,
+VISIBLE long int u32_strtol (const uint32_t *nptr, uint32_t **endptr,
                              int base);
-VISIBLE unsigned long int u8_strtoul (const uint8_t * nptr, uint8_t ** endptr,
+VISIBLE unsigned long int u8_strtoul (const uint8_t *nptr, uint8_t **endptr,
                                       int base);
-VISIBLE unsigned long int u16_strtoul (const uint16_t * nptr,
-                                       uint16_t ** endptr, int base);
-VISIBLE unsigned long int u32_strtoul (const uint32_t * nptr,
-                                       uint32_t ** endptr, int base);
-VISIBLE double u8_strtod (const uint8_t * nptr, uint8_t ** endptr);
-VISIBLE double u16_strtod (const uint16_t * nptr, uint16_t ** endptr);
-VISIBLE double u32_strtod (const uint32_t * nptr, uint32_t ** endptr);
+VISIBLE unsigned long int u16_strtoul (const uint16_t *nptr,
+                                       uint16_t **endptr, int base);
+VISIBLE unsigned long int u32_strtoul (const uint32_t *nptr,
+                                       uint32_t **endptr, int base);
+VISIBLE double u8_strtod (const uint8_t *nptr, uint8_t **endptr);
+VISIBLE double u16_strtod (const uint16_t *nptr, uint16_t **endptr);
+VISIBLE double u32_strtod (const uint32_t *nptr, uint32_t **endptr);
 
 static inline uint8_t *
-x_u8_strdup (const uint8_t * string)
+x_u8_strdup (const uint8_t *string)
 {
   return XDIE_ON_ENOMEM (u8_strdup (string));
 }
 
 static inline uint16_t *
-x_u16_strdup (const uint16_t * string)
+x_u16_strdup (const uint16_t *string)
 {
   return XDIE_ON_ENOMEM (u16_strdup (string));
 }
 
 static inline uint32_t *
-x_u32_strdup (const uint32_t * string)
+x_u32_strdup (const uint32_t *string)
 {
   return XDIE_ON_ENOMEM (u32_strdup (string));
 }
 
 static inline uint8_t *
-x_gc_u8_strdup (const uint8_t * string)
+x_gc_u8_strdup (const uint8_t *string)
 {
   return x_gc_u8_grabstr (x_u8_strdup (string));
 }
 
 static inline uint16_t *
-x_gc_u16_strdup (const uint16_t * string)
+x_gc_u16_strdup (const uint16_t *string)
 {
   return x_gc_u16_grabstr (x_u16_strdup (string));
 }
 
 static inline uint32_t *
-x_gc_u32_strdup (const uint32_t * string)
+x_gc_u32_strdup (const uint32_t *string)
 {
   return x_gc_u32_grabstr (x_u32_strdup (string));
 }
 
 static inline uint8_t *
-x_u8_strdup_or_null (const uint8_t * string)
+x_u8_strdup_or_null (const uint8_t *string)
 {
   return NULL_PASSTHRU (string, x_u8_strdup (string));
 }
 
 static inline uint16_t *
-x_u16_strdup_or_null (const uint16_t * string)
+x_u16_strdup_or_null (const uint16_t *string)
 {
   return NULL_PASSTHRU (string, x_u16_strdup (string));
 }
 
 static inline uint32_t *
-x_u32_strdup_or_null (const uint32_t * string)
+x_u32_strdup_or_null (const uint32_t *string)
 {
   return NULL_PASSTHRU (string, x_u32_strdup (string));
 }
 
 inline uint16_t *
-x_gc_u8_to_u16 (const uint8_t * string)
+x_gc_u8_to_u16 (const uint8_t *string)
 {
   return x_gc_u16_grabstr (x_u8_to_u16 (string));
 }
 
 inline uint32_t *
-x_gc_u8_to_u32 (const uint8_t * string)
+x_gc_u8_to_u32 (const uint8_t *string)
 {
   return x_gc_u32_grabstr (x_u8_to_u32 (string));
 }
 
 inline uint8_t *
-x_gc_u16_to_u8 (const uint16_t * string)
+x_gc_u16_to_u8 (const uint16_t *string)
 {
   return x_gc_u8_grabstr (x_u16_to_u8 (string));
 }
 
 inline uint32_t *
-x_gc_u16_to_u32 (const uint16_t * string)
+x_gc_u16_to_u32 (const uint16_t *string)
 {
   return x_gc_u32_grabstr (x_u16_to_u32 (string));
 }
 
 inline uint8_t *
-x_gc_u32_to_u8 (const uint32_t * string)
+x_gc_u32_to_u8 (const uint32_t *string)
 {
   return x_gc_u8_grabstr (x_u32_to_u8 (string));
 }
 
 inline uint16_t *
-x_gc_u32_to_u16 (const uint32_t * string)
+x_gc_u32_to_u16 (const uint32_t *string)
 {
   return x_gc_u16_grabstr (x_u32_to_u16 (string));
 }
 
 inline bool
-u8_valid (const uint8_t * string)
+u8_valid (const uint8_t *string)
 {
   return (u8_check (string, u8_strlen (string)) == NULL);
 }
 
 inline bool
-u16_valid (const uint16_t * string)
+u16_valid (const uint16_t *string)
 {
   return (u16_check (string, u16_strlen (string)) == NULL);
 }
 
 inline bool
-u32_valid (const uint32_t * string)
+u32_valid (const uint32_t *string)
 {
   return (u32_check (string, u32_strlen (string)) == NULL);
 }

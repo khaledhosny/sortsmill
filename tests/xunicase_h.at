@@ -9,15 +9,49 @@ AT_CHECK_UNQUOTED([LC_ALL="${utf8_locale}" LANGUAGE="${utf8_locale}" "${abs_buil
 AT_CLEANUP
 ])
 
-check_xunicase_h([test_xunicase_h A b],[0],[A|b,A|b,A|b,A|b,-1|-1|-1,],[])
-check_xunicase_h([test_xunicase_h A a],[0],[A|a,A|a,A|a,A|a,0|0|0,],[])
-check_xunicase_h([test_xunicase_h C b],[0],[C|b,C|b,C|b,C|b,1|1|1,],[])
+#--------------------------------------------------------------------------
 
-check_xunicase_h([test_xunicase_h a B],[0],[a|B,a|B,a|B,a|B,-1|-1|-1,],[])
-check_xunicase_h([test_xunicase_h a A],[0],[a|A,a|A,a|A,a|A,0|0|0,],[])
-check_xunicase_h([test_xunicase_h c B],[0],[c|B,c|B,c|B,c|B,1|1|1,],[])
+check_xunicase_h([test_xunicase_compare A b],[0],[A|b,A|b,A|b,A|b,-1|-1|-1,],[])
+check_xunicase_h([test_xunicase_compare A a],[0],[A|a,A|a,A|a,A|a,0|0|0,],[])
+check_xunicase_h([test_xunicase_compare C b],[0],[C|b,C|b,C|b,C|b,1|1|1,],[])
+
+check_xunicase_h([test_xunicase_compare a B],[0],[a|B,a|B,a|B,a|B,-1|-1|-1,],[])
+check_xunicase_h([test_xunicase_compare a A],[0],[a|A,a|A,a|A,a|A,0|0|0,],[])
+check_xunicase_h([test_xunicase_compare c B],[0],[c|B,c|B,c|B,c|B,1|1|1,],[])
 
 # These should compare as equal: ‘ĉ’ is an Esperanto letter ‘cho’, and
 # ‘ĉ’ is the letter c followed by a combining circumflex.
-check_xunicase_h([test_xunicase_h Ĉ ĉ],[0],[Ĉ|ĉ,Ĉ|ĉ,Ĉ|ĉ,Ĉ|ĉ,0|0|0,],[])
-check_xunicase_h([test_xunicase_h ĉ Ĉ],[0],[ĉ|Ĉ,ĉ|Ĉ,ĉ|Ĉ,ĉ|Ĉ,0|0|0,],[])
+check_xunicase_h([test_xunicase_compare Ĉ ĉ],[0],[Ĉ|ĉ,Ĉ|ĉ,Ĉ|ĉ,Ĉ|ĉ,0|0|0,],[])
+check_xunicase_h([test_xunicase_compare ĉ Ĉ],[0],[ĉ|Ĉ,ĉ|Ĉ,ĉ|Ĉ,ĉ|Ĉ,0|0|0,],[])
+
+#--------------------------------------------------------------------------
+
+# "Ĉiuĵ" requires 6 units in UTF-8, but only 4 units in UTF-16 or
+# UTF-32.
+check_xunicase_h([test_xunicase_ncompare Ĉiuĵaŭde Ĉiuĵ 6 8],[0],[0],[])
+check_xunicase_h([test_xunicase_ncompare Ĉiuĵaŭde Ĉiuĵ 6 16],[0],[1],[])
+check_xunicase_h([test_xunicase_ncompare Ĉiuĵaŭde Ĉiuĵ 6 32],[0],[1],[])
+check_xunicase_h([test_xunicase_ncompare Ĉiuĵ Ĉiuĵaŭde 6 8],[0],[0],[])
+check_xunicase_h([test_xunicase_ncompare Ĉiuĵ Ĉiuĵaŭde 6 16],[0],[-1],[])
+check_xunicase_h([test_xunicase_ncompare Ĉiuĵ Ĉiuĵaŭde 6 32],[0],[-1],[])
+
+# "Ĉiu", however, requires only 4 units in UTF-8.
+check_xunicase_h([test_xunicase_ncompare Ĉiuĵaŭde Ĉiuĵ 4 8],[0],[0],[])
+check_xunicase_h([test_xunicase_ncompare Ĉiuĵaŭde Ĉiuĵ 4 16],[0],[0],[])
+check_xunicase_h([test_xunicase_ncompare Ĉiuĵaŭde Ĉiuĵ 4 32],[0],[0],[])
+check_xunicase_h([test_xunicase_ncompare Ĉiuĵ Ĉiuĵaŭde 4 8],[0],[0],[])
+check_xunicase_h([test_xunicase_ncompare Ĉiuĵ Ĉiuĵaŭde 4 16],[0],[0],[])
+check_xunicase_h([test_xunicase_ncompare Ĉiuĵ Ĉiuĵaŭde 4 32],[0],[0],[])
+
+check_xunicase_h([test_xunicase_ncompare Ĉiuĵ Ĉiuĵaŭde 0 8],[0],[0],[])
+check_xunicase_h([test_xunicase_ncompare Ĉiuĵ Ĉiuĵaŭde 0 16],[0],[0],[])
+check_xunicase_h([test_xunicase_ncompare Ĉiuĵ Ĉiuĵaŭde 0 32],[0],[0],[])
+
+check_xunicase_h([test_xunicase_ncompare Ĉiuĵaŭde Ĉiuĵ 7 8],[0],[1],[])
+check_xunicase_h([test_xunicase_ncompare Ĉiuĵaŭde Ĉiuĵ 7 16],[0],[1],[])
+check_xunicase_h([test_xunicase_ncompare Ĉiuĵaŭde Ĉiuĵ 7 32],[0],[1],[])
+check_xunicase_h([test_xunicase_ncompare Ĉiuĵ Ĉiuĵaŭde 7 8],[0],[-1],[])
+check_xunicase_h([test_xunicase_ncompare Ĉiuĵ Ĉiuĵaŭde 7 16],[0],[-1],[])
+check_xunicase_h([test_xunicase_ncompare Ĉiuĵ Ĉiuĵaŭde 7 32],[0],[-1],[])
+
+#--------------------------------------------------------------------------
