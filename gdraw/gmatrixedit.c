@@ -2295,9 +2295,7 @@ return;
 	memset(label,0,sizeof(label));
 	i = 0;
 
-/* I want the 2 pronged arrow, but gdraw can't find a nice one */
-/*	label[i].text = (uint32_t *) "⇑";	*//* Up Arrow */
-	label[i].text = (uint32_t *) "↑";	/* Up Arrow */
+	label[i].text = (uint32_t *) "⇑";	/* Up Arrow */
 	label[i].text_is_1byte = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.flags = gg_visible /*| gg_enabled*/ ;
@@ -2305,9 +2303,7 @@ return;
 	gcd[i].data = gme;
 	gcd[i++].creator = GButtonCreate;
 
-/* I want the 2 pronged arrow, but gdraw can't find a nice one */
-/*	label[i].text = (uint32_t *) "⇓";	*//* Down Arrow */
-	label[i].text = (uint32_t *) "↓";	/* Down Arrow */
+	label[i].text = (uint32_t *) "⇓";	/* Down Arrow */
 	label[i].text_is_1byte = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.flags = gg_visible /*| gg_enabled*/ ;
