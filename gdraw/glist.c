@@ -314,7 +314,7 @@ static int GListFindPosition(GList *gl,uint32_t *text)
     {
       for ( i=0; i<gl->ltot; ++i )
 	{
-	  if (u_strmatch(text,gl->ti[i]->text)==0 )
+	  if (u32_casecompare(text,gl->ti[i]->text)==0 )
 	    return( i );
 	}
     }
@@ -351,7 +351,7 @@ static void GListScrollToText(GGadget *g,const uint32_t *text,int32_t sel) {
     pos = GListFindPosition(gl,(uint32_t *) text);
     if ( sel && pos<gl->ltot ) {
 	GListClearSel(gl);
-	if ( gl->exactly_one || u_strmatch(text,gl->ti[pos]->text)==0 )
+	if ( gl->exactly_one || u32_casecompare(text,gl->ti[pos]->text)==0 )
 	    gl->ti[pos]->selected = true;
     }
     gl->loff = GListAdjustPos(g,pos);
