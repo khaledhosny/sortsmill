@@ -46,8 +46,6 @@ lib_LTLIBRARIES = libsortsmillff_fontforge.la	\
 
 #--------------------------------------------------------------------------
 
-SUBDIRS = pixmaps
-
 FFSCRIPT_HEADER = "\#!$(bindir)/fontforge -lang=ff"
 
 %: %.pe
