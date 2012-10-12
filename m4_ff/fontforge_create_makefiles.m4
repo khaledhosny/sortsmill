@@ -20,7 +20,7 @@ AC_CONFIG_FILES([pycontrib/Makefile])
 AC_CONFIG_FILES([pyhook/Makefile])
 AC_CONFIG_FILES([cidmap/Makefile])
 AC_CONFIG_FILES([tests/Makefile])
-AC_CONFIG_FILES([desktop/Makefile])
+AC_CONFIG_FILES([data/Makefile])
 AC_CONFIG_FILES([fonttools/Makefile])
 AC_CONFIG_FILES([scheme/Makefile])
 
