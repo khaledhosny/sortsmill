@@ -1758,7 +1758,7 @@ static void readttfcopyrights(FILE *ttf,struct ttfinfo *info) {
     /* OpenType spec says the version string should begin with "Version " and */
     /*  end with a space and have a number in between */
     if ( info->version==NULL ) info->version = xstrdup("1.0");
-    else if ( strnmatch(info->version,"Version ",8)==0 ) {
+    else if ( strncasecmp(info->version,"Version ",8)==0 ) {
 	char *temp = xstrdup_or_null(info->version+8);
 	if ( temp[strlen(temp)-1]==' ' )
 	    temp[strlen(temp)-1] = '\0';

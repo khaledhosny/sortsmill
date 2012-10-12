@@ -2170,16 +2170,16 @@ int PfmSplineFont(FILE *pfm, SplineFont *sf, int type0,EncMap *map,int layer) {
     int windows_encoding;
 
     if ( map->enc->is_japanese ||
-	    (sf->cidmaster!=NULL && strnmatch(sf->cidmaster->ordering,"Japan",5)==0 ))
+	    (sf->cidmaster!=NULL && strncasecmp(sf->cidmaster->ordering,"Japan",5)==0 ))
 	windows_encoding = 128;
     else if ( map->enc->is_korean ||
-	    (sf->cidmaster!=NULL && strnmatch(sf->cidmaster->ordering,"Korea",5)==0 ))
+	    (sf->cidmaster!=NULL && strncasecmp(sf->cidmaster->ordering,"Korea",5)==0 ))
 	windows_encoding = 129;
     else if ( map->enc->is_tradchinese ||
-	    (sf->cidmaster!=NULL && strnmatch(sf->cidmaster->ordering,"CNS",3)==0 ))
+	    (sf->cidmaster!=NULL && strncasecmp(sf->cidmaster->ordering,"CNS",3)==0 ))
 	windows_encoding = 136;
     else if ( map->enc->is_simplechinese ||
-	    (sf->cidmaster!=NULL && strnmatch(sf->cidmaster->ordering,"GB",2)==0 ))
+	    (sf->cidmaster!=NULL && strncasecmp(sf->cidmaster->ordering,"GB",2)==0 ))
 	windows_encoding = 134;
     else if ( map->enc->is_custom )
 	windows_encoding = 2;

@@ -6866,10 +6866,10 @@ SFDParseChainContext (FILE *sfd, SplineFont *sf, FPST * fpst, char *tok,
   SplineFont *sli_sf = sf->cidmaster ? sf->cidmaster : sf;
 
   fpst->type =
-    strnmatch (tok, "ContextPos", 10) == 0 ?
-    pst_contextpos : strnmatch (tok, "ContextSub", 10) == 0 ?
-    pst_contextsub : strnmatch (tok, "ChainPos", 8) == 0 ?
-    pst_chainpos : strnmatch (tok, "ChainSub", 8) == 0 ?
+    strncasecmp (tok, "ContextPos", 10) == 0 ?
+    pst_contextpos : strncasecmp (tok, "ContextSub", 10) == 0 ?
+    pst_contextsub : strncasecmp (tok, "ChainPos", 8) == 0 ?
+    pst_chainpos : strncasecmp (tok, "ChainSub", 8) == 0 ?
     pst_chainsub : pst_reversesub;
   copy_to_tok (tok, getname (sfd));
   fpst->format =
@@ -7072,11 +7072,11 @@ SFDParseStateMachine (FILE *sfd, SplineFont *sf, ASM * sm, char *tok, int old)
   int i, temp;
 
   sm->type =
-    strnmatch (tok, "MacIndic", 8) == 0 ?
-    asm_indic : strnmatch (tok, "MacContext", 10) == 0 ?
-    asm_context : strnmatch (tok, "MacLigature", 11) == 0 ?
-    asm_lig : strnmatch (tok, "MacSimple", 9) == 0 ?
-    asm_simple : strnmatch (tok, "MacKern", 7) == 0 ? asm_kern : asm_insert;
+    strncasecmp (tok, "MacIndic", 8) == 0 ?
+    asm_indic : strncasecmp (tok, "MacContext", 10) == 0 ?
+    asm_context : strncasecmp (tok, "MacLigature", 11) == 0 ?
+    asm_lig : strncasecmp (tok, "MacSimple", 9) == 0 ?
+    asm_simple : strncasecmp (tok, "MacKern", 7) == 0 ? asm_kern : asm_insert;
   if (old)
     {
       getusint (sfd, &((ASM1 *) sm)->feature);
@@ -8942,7 +8942,7 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
               sf->texdata.params[i] = foo;
             }
         }
-      else if (strnmatch (tok, "AnchorClass", 11) == 0)
+      else if (strncasecmp (tok, "AnchorClass", 11) == 0)
         {
           char *name;
           AnchorClass *lastan = NULL, *an;

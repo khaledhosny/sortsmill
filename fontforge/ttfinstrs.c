@@ -343,7 +343,7 @@ return( NULL );
 		}
 
 		numberstack[npos++] = val;
-	    } else if ( strnmatch(pt,"cvt",3)==0 ) {
+	    } else if ( strncasecmp(pt,"cvt",3)==0 ) {
 		pt += 3;
 		while ( *pt==' ' || *pt=='\t' ) ++pt;
 		if ( *pt!='(' ) {
@@ -436,11 +436,11 @@ return( NULL );
 	for ( end= pt; *end!='\n' && *end!=' ' && *end!='\0'; ++end )
 	    if ( *end=='[' || *end=='_' ) brack=end;
 	for ( i=0; i<256; ++i )
-	    if ( strnmatch(pt,ff_ttf_instrnames[i],end-pt)==0 && end-pt==strlen(ff_ttf_instrnames[i]))
+	    if ( strncasecmp(pt,ff_ttf_instrnames[i],end-pt)==0 && end-pt==strlen(ff_ttf_instrnames[i]))
 	break;
 	if ( i==256 && brack!=NULL ) {
 	    for ( i=0; i<256; ++i )
-		if ( strnmatch(pt,ff_ttf_instrnames[i],brack-pt+1)==0 ) 
+		if ( strncasecmp(pt,ff_ttf_instrnames[i],brack-pt+1)==0 ) 
 	    break;
 	    val = strtol(brack+1,&bend,2);	/* Stuff in brackets should be in binary */
 	    while ( *bend==' ' || *bend=='\t' ) ++bend;

@@ -3368,11 +3368,11 @@ return( NULL );
 	    }
 	    name = xmlGetProp(kids,(xmlChar *) "font-weight");
 	    if ( name!=NULL ) {
-		if ( strnmatch((char *) name,"normal",6)==0 ) {
+		if ( strncasecmp((char *) name,"normal",6)==0 ) {
 		    sf->pfminfo.weight = 400;
 		    sf->weight = xstrdup("Regular");
 		    sf->pfminfo.panose[2] = 5;
-		} else if ( strnmatch((char *) name,"bold",4)==0 ) {
+		} else if ( strncasecmp((char *) name,"bold",4)==0 ) {
 		    sf->pfminfo.weight = 700;
 		    sf->weight = xstrdup("Bold");
 		    sf->pfminfo.panose[2] = 8;
@@ -3413,7 +3413,7 @@ return( NULL );
 	    }
 	    name = xmlGetProp(kids,(xmlChar *) "font-stretch");
 	    if ( name!=NULL ) {
-		if ( strnmatch((char *) name,"normal",6)==0 ) {
+		if ( strncasecmp((char *) name,"normal",6)==0 ) {
 		    sf->pfminfo.panose[3] = 3;
 		    sf->pfminfo.width = 5;
 		} else if ( strcasecmp((char *) name,"ultra-condensed")==0 ) {

@@ -828,7 +828,7 @@ static uint32_t SFToFOND(FILE *res,SplineFont *sf,uint32_t id,int dottf,
     geoffset = ftell(res);
     putlong(res,0);			/* Offset to glyph encoding table */ /* Fill in later */
     putlong(res,0);			/* Reserved, MBZ */
-    if ( strnmatch(sf->familyname,sf->fontname,strlen(sf->familyname))!=0 )
+    if ( strncasecmp(sf->familyname,sf->fontname,strlen(sf->familyname))!=0 )
 	strcnt = 1;
     else if ( strcasecmp(sf->familyname,sf->fontname)==0 )
 	strcnt = 1;
@@ -1154,7 +1154,7 @@ static uint32_t SFsToFOND(FILE *res,struct sflist *sfs,uint32_t id,int format,in
     famlen = strlen(familyname);
     if ( (pt=strchr(familyname,'-'))!=NULL )
 	famlen = pt-familyname;
-    else if ( strnmatch(psfaces[0]->sf->familyname,psfaces[0]->sf->fontname,
+    else if ( strncasecmp(psfaces[0]->sf->familyname,psfaces[0]->sf->fontname,
 	    strlen(psfaces[0]->sf->familyname))==0 )
 	famlen = strlen(psfaces[0]->sf->familyname);
     has_hyphen = (familyname[famlen]=='-');

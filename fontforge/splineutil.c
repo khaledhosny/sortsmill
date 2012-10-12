@@ -2157,13 +2157,13 @@ static void SplineFontMetaData(SplineFont *sf,struct fontdict *fd) {
     sf->supplement = fd->supplement;
     sf->pfminfo.fstype = fd->fontinfo->fstype;
     if ( sf->ordering!=NULL ) {
-	if ( strnmatch(sf->ordering,"Japan",5)==0 )
+	if ( strncasecmp(sf->ordering,"Japan",5)==0 )
 	    sf->uni_interp = ui_japanese;
-	else if ( strnmatch(sf->ordering,"Korea",5)==0 )
+	else if ( strncasecmp(sf->ordering,"Korea",5)==0 )
 	    sf->uni_interp = ui_korean;
-	else if ( strnmatch(sf->ordering,"CNS",3)==0 )
+	else if ( strncasecmp(sf->ordering,"CNS",3)==0 )
 	    sf->uni_interp = ui_trad_chinese;
-	else if ( strnmatch(sf->ordering,"GB",2)==0 )
+	else if ( strncasecmp(sf->ordering,"GB",2)==0 )
 	    sf->uni_interp = ui_simp_chinese;
     }
 }
