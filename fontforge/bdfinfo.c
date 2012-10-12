@@ -1,6 +1,5 @@
-#include <config.h>
+#include <config.h>		/* -*- coding: utf-8 -*- */
 
-/* -*- coding: utf-8 -*- */
 /* Copyright (C) 2000-2012 by George Williams */
 /*
  * Redistribution and use in source and binary forms, with or without
@@ -544,7 +543,7 @@ static void BdfP_Expose(struct bdf_dlg *bd, GWindow pixmap) {
 static void BdfP_Invoked(GWindow v, GMenuItem *mi, GEvent *e) {
     struct bdf_dlg *bd = (struct bdf_dlg *) GDrawGetUserData(v);
     BDFFont *bdf = bd->cur->bdf;
-    char *prop_name = cu_copy(mi->ti.text);
+    char *prop_name = x_u32_to_u8 (u32_force_valid (mi->ti.text));
     int sel = bd->cur->sel_prop;
     int i;
 

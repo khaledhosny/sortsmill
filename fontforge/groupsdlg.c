@@ -760,7 +760,7 @@ return( true );
 static int GroupFinishOld(struct groupdlg *grp) {
     if ( grp->oldsel!=NULL ) {
 	const uint32_t *gu = _GGadgetGetTitle(grp->glyphs);
-	char *g = cu_copy(gu);
+	char *g = x_u32_to_u8 (u32_force_valid (gu));
 	int oldunique = grp->oldsel->unique;
 
 	if ( !GroupValidateGlyphs(grp->oldsel,g,gu,GGadgetIsChecked(grp->unique))) {

@@ -28,7 +28,7 @@
 include $(top_srcdir)/mk/layout.am
 
 desktop_in_files = fontforge.desktop.in
-desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
+nodist_desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 
 @INTLTOOL_DESKTOP_RULE@
 
@@ -56,3 +56,5 @@ EXTRA_DIST = icons/src/icon-16x16-apps-fontforge.svg	\
 	icons/src/icon-24x24-apps-fontforge.svg				\
 	icons/src/icon-32x32-apps-fontforge.svg				\
 	$(desktop_in_files)
+
+DISTCLEANFILES = $(nodist_desktop_DATA)

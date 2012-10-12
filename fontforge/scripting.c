@@ -99,7 +99,7 @@ static char *script2latin1_copy(const char *str) {
 return( xstrdup_or_null(str));
     else {
 	uint32_t *t = utf82u_copy(str);
-	char *ret = cu_copy(t);
+	char *ret = x_u32_to_u8 (u32_force_valid (t));
 	free(t);
 return( ret );
     }

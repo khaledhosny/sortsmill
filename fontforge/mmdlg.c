@@ -2206,8 +2206,8 @@ MMW_DoOK (MMW * mmw)
     }
 
   familyname =
-    cu_copy (_GGadgetGetTitle
-             (GWidgetGetControl (mmw->subwins[mmw_counts], CID_FamilyName)));
+    x_u32_to_u8 (u32_force_valid (_GGadgetGetTitle
+				  (GWidgetGetControl (mmw->subwins[mmw_counts], CID_FamilyName))));
   /* They only need specify a family name if there are new fonts */
   if (*familyname == '\0')
     {
@@ -2553,9 +2553,9 @@ MMW_DoNext (MMW * mmw)
         {
           free (mmw->mm->axes[i]);
           mmw->mm->axes[i] =
-            cu_copy (_GGadgetGetTitle
-                     (GWidgetGetControl
-                      (mmw->subwins[mmw_axes], CID_AxisType + i * 100)));
+            x_u32_to_u8 (u32_force_valid (_GGadgetGetTitle
+					  (GWidgetGetControl
+					   (mmw->subwins[mmw_axes], CID_AxisType + i * 100))));
           if (*mmw->mm->axes[i] == '\0')
             {
               GTabSetSetSel (GWidgetGetControl
@@ -2806,11 +2806,11 @@ MMW_DoNext (MMW * mmw)
       free (mmw->mm->ndv);
       free (mmw->mm->cdv);
       mmw->mm->ndv =
-        cu_copy (_GGadgetGetTitle
-                 (GWidgetGetControl (mmw->subwins[mmw_funcs], CID_NDV)));
+        x_u32_to_u8 (u32_force_valid (_GGadgetGetTitle
+				      (GWidgetGetControl (mmw->subwins[mmw_funcs], CID_NDV))));
       mmw->mm->cdv =
-        cu_copy (_GGadgetGetTitle
-                 (GWidgetGetControl (mmw->subwins[mmw_funcs], CID_CDV)));
+        x_u32_to_u8 (u32_force_valid (_GGadgetGetTitle
+				      (GWidgetGetControl (mmw->subwins[mmw_funcs], CID_CDV))));
     }
 
   if (mmw->state == mmw_designs && !isapple)

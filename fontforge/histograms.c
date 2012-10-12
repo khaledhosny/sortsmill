@@ -561,7 +561,6 @@ static void HistResize(struct hist_dlg *hist) {
 	
 static void HistSet(struct hist_dlg *hist) {
     char *primary, *secondary;
-    char *temp;
     struct psdict *p = hist->private ? hist->private : hist->sf->private;
     const uint32_t *ret1, *ret2;
 
@@ -588,8 +587,8 @@ return;
 	p->keys = xcalloc(10,sizeof(char *));
 	p->values = xcalloc(10,sizeof(char *));
     }
-    PSDictChangeEntry(p,primary,temp=cu_copy(ret1)); free(temp);
-    PSDictChangeEntry(p,secondary,temp=cu_copy(ret2)); free(temp);
+    PSDictChangeEntry(p,primary, x_gc_u32_to_u8 (u32_force_valid (ret1)));
+    PSDictChangeEntry(p,secondary, x_gc_u32_to_u8 (u32_force_valid (ret2)));
 }
 
 static int leftside_e_h(GWindow gw, GEvent *event) {

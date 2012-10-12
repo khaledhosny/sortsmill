@@ -47,7 +47,7 @@ char *_GIO_decomposeURL(const uint32_t *url,char **host, int *port, char **usern
     pt = uc_strstr(url,"://");
     if ( pt==NULL ) {
 	*host = NULL;
-return( cu_copy(url));
+	return( x_u32_to_u8 (u32_force_valid (url)));
     }
     cu_strncpy(proto,url,pt-url<sizeof(proto)?pt-url:sizeof(proto));
     pt += 3;
@@ -57,7 +57,7 @@ return( cu_copy(url));
 	pt2 = pt+u32_strlen(pt);
 	path = xstrdup("/");
     } else {
-	path = cu_copy(pt2);
+      path = x_u32_to_u8 (u32_force_valid (pt2));
     }
 
     upt = u_strchr(pt,'@');

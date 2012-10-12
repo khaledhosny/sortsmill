@@ -1,6 +1,5 @@
-#include <config.h>
+#include <config.h>   /* -*- coding: utf-8 -*- */
 
-/* -*- coding: utf-8 -*- */
 /* Copyright (C) 2000-2012 by George Williams */
 /*
  * Redistribution and use in source and binary forms, with or without
@@ -2221,7 +2220,7 @@ static int MGA_Rpl(GGadget *g, GEvent *e) {
     if ( e->type==et_controlevent && e->u.control.subtype == et_buttonactivate ) {
 	struct mgask_data *d = GDrawGetUserData(GGadgetGetWindow(g));
 	const uint32_t *_rpl = _GGadgetGetTitle(GWidgetGetControl(d->gw,CID_RplText));
-	char *rpl = cu_copy(_rpl);
+	char *rpl = x_u32_to_u8 (u32_force_valid (_rpl));
 	if ( GGadgetIsChecked(GWidgetGetControl(d->gw,CID_Always)))
 	    mark_to_replace(d->p,d,rpl);
 	mgreplace(d->_str,d->start,d->end,rpl,d->sc,d->pst);

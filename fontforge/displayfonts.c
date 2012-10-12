@@ -125,10 +125,11 @@ return(true);
 	} else if ( uc_strstr(ret,"B5")!=NULL ) {
 	    pgwidth = 516; pgheight = 728;
 	} else {
-	    char *cret = cu_copy(ret), *pt;
-	    float pw,ph, scale;
-	    if ( sscanf(cret,"%gx%g",&pw,&ph)!=2 ) {
-		IError("Bad Pagesize must be a known name or <num>x<num><units>\nWhere <units> is one of pt (points), mm, cm, in" );
+	  char *cret = x_u32_to_u8 (u32_force_valid (ret));
+	  char *pt;
+	  float pw,ph, scale;
+	  if ( sscanf(cret,"%gx%g",&pw,&ph)!=2 ) {
+	    IError("Bad Pagesize must be a known name or <num>x<num><units>\nWhere <units> is one of pt (points), mm, cm, in" );
 return( true );
 	    }
 	    pt = cret+strlen(cret)-1;
@@ -152,7 +153,7 @@ return( true );
 	ret = _GGadgetGetTitle(GWidgetGetControl(pi->setup,CID_Printer));
 	if ( u8_strcmp(x_gc_u32_to_u8 (u32_force_valid (ret)),"<default>")==0 || *ret=='\0' )
 	    ret = NULL;
-	pi->pi.printer = cu_copy(ret);
+	pi->pi.printer = x_u32_to_u8 (u32_force_valid (ret));
 	pi->pi.pagewidth = pgwidth; pi->pi.pageheight = pgheight;
 	pi->pi.copies = copies;
 
@@ -166,7 +167,7 @@ return( true );
 	    pi->pi.printtype = pt_pdf;
 	else if ( GGadgetIsChecked(GWidgetGetControl(pi->setup,CID_Other))) {
 	    pi->pi.printtype = pt_other;
-	    printcommand = cu_copy(_GGadgetGetTitle(GWidgetGetControl(pi->setup,CID_OtherCmd)));
+	    printcommand = x_u32_to_u8 (u32_force_valid (_GGadgetGetTitle(GWidgetGetControl(pi->setup,CID_OtherCmd))));
 	} else
 	    pi->pi.printtype = pt_file;
 

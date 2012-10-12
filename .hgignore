@@ -22,6 +22,7 @@ syntax: regexp
 ^.deps/
 ^m4/(?!gnulib-cache.m4)
 ^config/(?!config.rpath)
+^po/Makefile.in.in
 
 .gitignore$
 aclocal.m4$

@@ -258,7 +258,7 @@ static void DoExport(struct gfc_data *d,uint32_t *path) {
     char *temp;
     int format, good;
 
-    temp = cu_copy(path);
+    temp = x_u32_to_u8 (u32_force_valid (path));
     last_format = format = (intptr_t) (GGadgetGetListItemSelected(d->format)->userdata);
     if ( d->bc )
 	last_format += BITMAP_FORMAT_START;

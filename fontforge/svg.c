@@ -3681,8 +3681,8 @@ return( NULL );
 	font = SVGPickFont(fonts,filename);
 	name = xmlGetProp(font,(xmlChar *) "id");
 	if ( name!=NULL ) {
-	    chosenname = cu_copy(utf82u_copy((char *) name));
-	    xmlFree(name);
+	  chosenname = x_u32_to_u8 (u32_force_valid (utf82u_copy((char *) name)));
+	  xmlFree(name);
 	}
     }
     free(fonts);

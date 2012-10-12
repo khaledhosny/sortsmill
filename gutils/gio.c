@@ -275,7 +275,7 @@ void GIOSetDefAuthorizer(int32_t (*getauth)(struct giocontrol *)) {
 
 void GIOSetUserAgent(uint32_t *agent) {
     free( _GIO_stdfuncs.useragent );
-    _GIO_stdfuncs.useragent = cu_copy(agent);
+    _GIO_stdfuncs.useragent = x_u32_to_u8 (u32_force_valid (agent));
 }
 
 void GIO_SetThreadCallback(void (*callback)(void *,void *,void *)) {

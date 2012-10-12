@@ -270,7 +270,7 @@ void _GIO_localDispatch(GIOControl *gc) {
 	_gio_file_deldir(gc,path);
       break;
       case gf_renamefile:
-	topath = cu_copy(gc->topath);
+	topath = x_u32_to_u8 (u32_force_valid (gc->topath));
 	_gio_file_renamefile(gc,path,topath);
 	free(topath);
       break;

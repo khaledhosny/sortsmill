@@ -1909,7 +1909,7 @@ ChangeSetting (GGadget * list, int index, GGadget * flist)
   char *str;
   uint32_t *ustr;
 
-  str = cu_copy (ti[index]->text);
+  str = x_u32_to_u8 (u32_force_valid (ti[index]->text));
   ParseMacMapping (str, &temp);
   free (str);
   if ((ustr = AskSetting (&temp, list, index, flist)) == NULL)
@@ -2186,11 +2186,11 @@ Prefs_Ok (GGadget * g, GEvent * e)
                     free (*((char **) (pl->val)));
                     *((char **) (pl->val)) = NULL;
                     if (ret != NULL && *ret != '\0')
-                      *((char **) (pl->val)) = /* u2def_ */ cu_copy (ret);
+                      *((char **) (pl->val)) = x_u32_to_u8 (u32_force_valid (ret));
                   }
                 else
                   {
-                    char *cret = cu_copy (ret);
+                    char *cret = x_u32_to_u8 (u32_force_valid (ret));
                     (pl->set) (cret);
                     free (cret);
                   }
@@ -3210,11 +3210,11 @@ PrefsSubSet_Ok (GGadget * g, GEvent * e)
               free (*((char **) (pl->val)));
               *((char **) (pl->val)) = NULL;
               if (ret != NULL && *ret != '\0')
-                *((char **) (pl->val)) = /* u2def_ */ cu_copy (ret);
+                *((char **) (pl->val)) = x_u32_to_u8 (u32_force_valid (ret));
             }
           else
             {
-              char *cret = cu_copy (ret);
+              char *cret = x_u32_to_u8 (u32_force_valid (ret));
               (pl->set) (cret);
               free (cret);
             }

@@ -2639,10 +2639,10 @@ static int SetFontName(GWindow gw, SplineFont *sf) {
     free(sf->fontname);
     free(sf->weight);
     free(sf->fullname);
-    sf->familyname = cu_copy(ufamily);
-    sf->fontname = cu_copy(ufont);
-    sf->weight = cu_copy(uweight);
-    sf->fullname = cu_copy(uhum);
+    sf->familyname = x_u32_to_u8 (u32_force_valid (ufamily));
+    sf->fontname = x_u32_to_u8 (u32_force_valid (ufont));
+    sf->weight = x_u32_to_u8 (u32_force_valid (uweight));
+    sf->fullname = x_u32_to_u8 (u32_force_valid (uhum));
 return( diff );
 }
 
@@ -4346,7 +4346,7 @@ return(true);
 		ttfuniqueidfixup(sf,d);
 	} else {
 	    free(sf->xuid);
-	    sf->xuid = *txt=='\0'?NULL:cu_copy(txt);
+	    sf->xuid = *txt=='\0'?NULL:x_u32_to_u8 (u32_force_valid (txt));
 	}
 	sf->use_xuid = usexuid;
 	sf->use_uniqueid = useuniqueid;
@@ -4389,7 +4389,7 @@ return(true);
 	sf->fontstyle_id = styleid;
 
 	txt = _GGadgetGetTitle(GWidgetGetControl(gw,CID_Notice));
-	free(sf->copyright); sf->copyright = cu_copy(txt);
+	free(sf->copyright); sf->copyright = x_u32_to_u8 (u32_force_valid (txt));
 	txt = _GGadgetGetTitle(GWidgetGetControl(gw,CID_Comment));
 	free(sf->comments); sf->comments = u2utf8_copy(*txt?txt:NULL);
 	txt = _GGadgetGetTitle(GWidgetGetControl(gw,CID_FontLog));
@@ -4402,12 +4402,12 @@ return(true);
 	    sf->cidversion = cidversion;
 	} else {
 	    txt = _GGadgetGetTitle(GWidgetGetControl(gw,CID_Version));
-	    free(sf->version); sf->version = cu_copy(txt);
+	    free(sf->version); sf->version = x_u32_to_u8 (u32_force_valid (txt));
 	}
 	fond = _GGadgetGetTitle(GWidgetGetControl(gw,CID_MacFOND));
 	free(sf->fondname); sf->fondname = NULL;
 	if ( *fond )
-	    sf->fondname = cu_copy(fond);
+	  sf->fondname = x_u32_to_u8 (u32_force_valid (fond));
 	sf->macstyle = mcs;
 	sf->italicangle = ia;
 	sf->upos = upos;
@@ -4661,17 +4661,17 @@ static void _GFI_PanoseDefault(struct gfi_data *d) {
 	GGadgetSetEnabled(GWidgetGetControl(d->gw,CID_PanFamilyLab+i),!isdefault);
     }
     if ( isdefault ) {
-	char *n = cu_copy(_GGadgetGetTitle(GWidgetGetControl(d->gw,CID_Fontname)));
-	struct pfminfo info;
-	int old1, old2;
-	memset(&info,0,sizeof(info));
-	old1 = d->sf->pfminfo.pfmset; old2 = d->sf->pfminfo.panose_set;
-	d->sf->pfminfo.pfmset = false; d->sf->pfminfo.panose_set = false;
-	SFDefaultOS2Info(&info,d->sf,n);
-	d->sf->pfminfo.pfmset = old1; d->sf->pfminfo.panose_set = old2;
-	free(n);
-	for ( i=0; i<10; ++i )
-	    GGadgetSelectOneListItem(GWidgetGetControl(d->gw,CID_PanFamily+i),info.panose[i]);
+      char *n = x_u32_to_u8 (u32_force_valid (_GGadgetGetTitle(GWidgetGetControl(d->gw,CID_Fontname))));
+      struct pfminfo info;
+      int old1, old2;
+      memset(&info,0,sizeof(info));
+      old1 = d->sf->pfminfo.pfmset; old2 = d->sf->pfminfo.panose_set;
+      d->sf->pfminfo.pfmset = false; d->sf->pfminfo.panose_set = false;
+      SFDefaultOS2Info(&info,d->sf,n);
+      d->sf->pfminfo.pfmset = old1; d->sf->pfminfo.panose_set = old2;
+      free(n);
+      for ( i=0; i<10; ++i )
+	GGadgetSelectOneListItem(GWidgetGetControl(d->gw,CID_PanFamily+i),info.panose[i]);
     }
 }
 
@@ -4805,7 +4805,8 @@ static void TTFSetup(struct gfi_data *d) {
     double av=u32_strtod(as,&aend),dv=u32_strtod(ds,&dend);
 
     info = d->sf->pfminfo;
-    if ( !info.pfmset ) {
+    if ( !info.pfmset )
+      {
 	/* Base this stuff on the CURRENT name */
 	/* if the user just created a font, and named it *Bold, then the sf */
 	/*  won't yet have Bold in its name, and basing the weight on it would*/
@@ -4813,23 +4814,24 @@ static void TTFSetup(struct gfi_data *d) {
 	/*  get to one of the ttf aspects, it gives the user time to set the */
 	/*  name properly */
 	/* And on CURRENT values of ascent and descent */
-	char *n = cu_copy(_GGadgetGetTitle(GWidgetGetControl(d->gw,CID_Fontname)));
-	if ( *aend=='\0' && *dend=='\0' ) {
+	char *n = x_u32_to_u8 (u32_force_valid (_GGadgetGetTitle(GWidgetGetControl(d->gw,CID_Fontname))));
+	if ( *aend=='\0' && *dend=='\0' )
+	  {
 	    if ( info.linegap==0 )
-		info.linegap = rint(.09*(av+dv));
+	      info.linegap = rint(.09*(av+dv));
 	    if ( info.vlinegap==0 )
-		info.vlinegap = info.linegap;
+	      info.vlinegap = info.linegap;
 	    if ( info.os2_typolinegap==0 )
-		info.os2_typolinegap = info.linegap;
-	}
+	      info.os2_typolinegap = info.linegap;
+	  }
 	lg = info.linegap; vlg = info.vlinegap; tlg = info.os2_typolinegap;
 	SFDefaultOS2Info(&info,d->sf,n);
 	if ( lg != 0 )
-	    info.linegap = lg;
+	  info.linegap = lg;
 	if ( vlg!= 0 )
-	    info.vlinegap = vlg;
+	  info.vlinegap = vlg;
 	if ( tlg!=0 )
-	    info.os2_typolinegap = tlg;
+	  info.os2_typolinegap = tlg;
 	free(n);
     }
 

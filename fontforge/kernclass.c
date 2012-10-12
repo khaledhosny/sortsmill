@@ -638,14 +638,14 @@ static void KCD_UpdateGlyph(KernClassDlg *kcd,int which) {
     BDFCharFree(*scpos);
     *scpos = NULL;
     if ( kcd->iskernpair ) {
-	temp = cu_copy(_GGadgetGetTitle(GWidgetGetControl(kcd->gw,
-		which==0 ? CID_First : CID_Second )));
+	temp = x_u32_to_u8 (u32_force_valid (_GGadgetGetTitle(GWidgetGetControl(kcd->gw,
+										which==0 ? CID_First : CID_Second ))));
     } else {
 	GTextInfo *sel = GGadgetGetListItemSelected(GWidgetGetControl(kcd->gw,
 		which==0 ? CID_First : CID_Second ));
 	if ( sel==NULL )
 return;
-	temp = cu_copy(sel->text);
+	temp = x_u32_to_u8 (u32_force_valid (sel->text));
     }
 
     *possc = sc = SFGetChar(kcd->sf,-1,temp);
