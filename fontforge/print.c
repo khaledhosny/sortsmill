@@ -308,7 +308,7 @@ figure_fontdesc (PI * pi, int sfid, struct fontdesc *fd, int fonttype,
   else
     fd->flags |= 1 << (6 - 1);
   /* I can't tell whether it's script (flag=0x10) */
-  if (strstrmatch (sf->fontname, "script"))
+  if (strcasestr (sf->fontname, "script"))
     fd->flags |= 0x10;
   if (sf->italicangle != 0)
     fd->flags |= (1 << (7 - 1));

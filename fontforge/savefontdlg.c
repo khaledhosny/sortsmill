@@ -1525,20 +1525,20 @@ GetWernerSFDFile (SplineFont *sf, EncMap * map)
                        sf->ordering, supl);
               def = buffer;
             }
-          else if (strstrmatch (map->enc->enc_name, "big") != NULL &&
+          else if (strcasestr (map->enc->enc_name, "big") != NULL &&
                    strchr (map->enc->enc_name, '5') != NULL)
             {
-              if (strstrmatch (map->enc->enc_name, "hkscs") != NULL)
+              if (strcasestr (map->enc->enc_name, "hkscs") != NULL)
                 def = "Big5HKSCS.sfd";
               else
                 def = "Big5.sfd";
             }
-          else if (strstrmatch (map->enc->enc_name, "sjis") != NULL)
+          else if (strcasestr (map->enc->enc_name, "sjis") != NULL)
             def = "Sjis.sfd";
-          else if (strstrmatch (map->enc->enc_name, "Wansung") != NULL ||
-                   strstrmatch (map->enc->enc_name, "EUC-KR") != NULL)
+          else if (strcasestr (map->enc->enc_name, "Wansung") != NULL ||
+                   strcasestr (map->enc->enc_name, "EUC-KR") != NULL)
             def = "Wansung.sfd";
-          else if (strstrmatch (map->enc->enc_name, "johab") != NULL)
+          else if (strcasestr (map->enc->enc_name, "johab") != NULL)
             def = "Johab.sfd";
           else if (map->enc->is_unicodebmp || map->enc->is_unicodefull)
             def = "Unicode.sfd";

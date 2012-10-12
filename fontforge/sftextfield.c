@@ -848,9 +848,9 @@ return;
 	    x += line[j]->advance_width + line[j]->vr.h_adv_off;
 	}
     }
-    if ( strstrmatch(cret,".png")!=NULL )
+    if ( strcasestr(cret,".png")!=NULL )
 	ret = GImageWritePng(image,cret,false);
-    else if ( strstrmatch(cret,".bmp")!=NULL )
+    else if ( strcasestr(cret,".bmp")!=NULL )
 	ret = GImageWriteBmp(image,cret);
     else
 	ff_post_error(_("Unsupported image format"),

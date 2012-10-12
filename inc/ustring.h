@@ -53,7 +53,6 @@ VISIBLE extern void cu_strcat (char *, const uint32_t *);
 VISIBLE extern void cu_strncat (char *, const uint32_t *, int len);
 VISIBLE extern uint32_t *uc_strstr (const uint32_t *, const char *);
 VISIBLE extern uint32_t *uc_strstrmatch (const uint32_t *, const char *);
-VISIBLE extern char *strstrmatch (const char *, const char *);
 
 VISIBLE extern uint32_t *u_strstartmatch (const uint32_t *initial,
                                    const uint32_t *full);

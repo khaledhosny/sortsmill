@@ -1925,7 +1925,7 @@ return;
 	enc = FindOrMakeEncoding(pt+1);
     if ( enc==NULL ) {
 	for ( i=0; bdf_2_ff_enc[i].bdf!=NULL; ++i )
-	    if ( strstrmatch(fn,bdf_2_ff_enc[i].bdf)!=NULL ) {
+	    if ( strcasestr(fn,bdf_2_ff_enc[i].bdf)!=NULL ) {
 		enc = FindOrMakeEncoding(bdf_2_ff_enc[i].ff);
 	break;
 	    }
@@ -1971,46 +1971,46 @@ void SFSetFontName(SplineFont *sf, char *family, char *mods,char *full) {
 	free(sf->fontname); sf->fontname = n;
 	free(sf->familyname); sf->familyname = xstrdup_or_null(family);
 	free(sf->weight); sf->weight = NULL;
-	if ( strstrmatch(mods,"extralight")!=NULL || strstrmatch(mods,"extra-light")!=NULL )
+	if ( strcasestr(mods,"extralight")!=NULL || strcasestr(mods,"extra-light")!=NULL )
 	    sf->weight = xstrdup("ExtraLight");
-	else if ( strstrmatch(mods,"demilight")!=NULL || strstrmatch(mods,"demi-light")!=NULL )
+	else if ( strcasestr(mods,"demilight")!=NULL || strcasestr(mods,"demi-light")!=NULL )
 	    sf->weight = xstrdup("DemiLight");
-	else if ( strstrmatch(mods,"demibold")!=NULL || strstrmatch(mods,"demi-bold")!=NULL )
+	else if ( strcasestr(mods,"demibold")!=NULL || strcasestr(mods,"demi-bold")!=NULL )
 	    sf->weight = xstrdup("DemiBold");
-	else if ( strstrmatch(mods,"semibold")!=NULL || strstrmatch(mods,"semi-bold")!=NULL )
+	else if ( strcasestr(mods,"semibold")!=NULL || strcasestr(mods,"semi-bold")!=NULL )
 	    sf->weight = xstrdup("SemiBold");
-	else if ( strstrmatch(mods,"demiblack")!=NULL || strstrmatch(mods,"demi-black")!=NULL )
+	else if ( strcasestr(mods,"demiblack")!=NULL || strcasestr(mods,"demi-black")!=NULL )
 	    sf->weight = xstrdup("DemiBlack");
-	else if ( strstrmatch(mods,"extrabold")!=NULL || strstrmatch(mods,"extra-bold")!=NULL )
+	else if ( strcasestr(mods,"extrabold")!=NULL || strcasestr(mods,"extra-bold")!=NULL )
 	    sf->weight = xstrdup("ExtraBold");
-	else if ( strstrmatch(mods,"extrablack")!=NULL || strstrmatch(mods,"extra-black")!=NULL )
+	else if ( strcasestr(mods,"extrablack")!=NULL || strcasestr(mods,"extra-black")!=NULL )
 	    sf->weight = xstrdup("ExtraBlack");
-	else if ( strstrmatch(mods,"book")!=NULL )
+	else if ( strcasestr(mods,"book")!=NULL )
 	    sf->weight = xstrdup("Book");
-	else if ( strstrmatch(mods,"regular")!=NULL )
+	else if ( strcasestr(mods,"regular")!=NULL )
 	    sf->weight = xstrdup("Regular");
-	else if ( strstrmatch(mods,"roman")!=NULL )
+	else if ( strcasestr(mods,"roman")!=NULL )
 	    sf->weight = xstrdup("Roman");
-	else if ( strstrmatch(mods,"normal")!=NULL )
+	else if ( strcasestr(mods,"normal")!=NULL )
 	    sf->weight = xstrdup("Normal");
-	else if ( strstrmatch(mods,"demi")!=NULL )
+	else if ( strcasestr(mods,"demi")!=NULL )
 	    sf->weight = xstrdup("Demi");
-	else if ( strstrmatch(mods,"medium")!=NULL )
+	else if ( strcasestr(mods,"medium")!=NULL )
 	    sf->weight = xstrdup("Medium");
-	else if ( strstrmatch(mods,"bold")!=NULL )
+	else if ( strcasestr(mods,"bold")!=NULL )
 	    sf->weight = xstrdup("Bold");
-	else if ( strstrmatch(mods,"heavy")!=NULL )
+	else if ( strcasestr(mods,"heavy")!=NULL )
 	    sf->weight = xstrdup("Heavy");
-	else if ( strstrmatch(mods,"black")!=NULL )
+	else if ( strcasestr(mods,"black")!=NULL )
 	    sf->weight = xstrdup("Black");
-	else if ( strstrmatch(mods,"Nord")!=NULL )
+	else if ( strcasestr(mods,"Nord")!=NULL )
 	    sf->weight = xstrdup("Nord");
 /* Sigh. URW uses 4 letter abreviations... */
-	else if ( strstrmatch(mods,"Regu")!=NULL )
+	else if ( strcasestr(mods,"Regu")!=NULL )
 	    sf->weight = xstrdup("Regular");
-	else if ( strstrmatch(mods,"Medi")!=NULL )
+	else if ( strcasestr(mods,"Medi")!=NULL )
 	    sf->weight = xstrdup("Medium");
-	else if ( strstrmatch(mods,"blac")!=NULL )
+	else if ( strcasestr(mods,"blac")!=NULL )
 	    sf->weight = xstrdup("Black");
 	else
 	    sf->weight = xstrdup("Medium");

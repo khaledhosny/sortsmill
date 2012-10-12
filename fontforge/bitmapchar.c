@@ -415,7 +415,7 @@ void def_Charset_Enc(EncMap *map,char *reg,char *enc) {
     } else if ( strstr(map->enc->enc_name, "2312")!=NULL ) {
 	strcpy( reg, "GB2312.1980" );
 	strcpy( enc, "0" );
-    } else if ( strstrmatch(map->enc->enc_name, "JISX0208")!=NULL ) {
+    } else if ( strcasestr(map->enc->enc_name, "JISX0208")!=NULL ) {
 	strcpy( reg, "JISX0208.1997" );
 	strcpy( enc, "0" );
     } else {
@@ -445,9 +445,9 @@ static void decomposename(BDFFont *font, char *fontname, char *family_name, char
 	strcpy(squeeze,"Normal");
 /* Sigh. I don't use "Italic" and "Oblique" because urw truncates these to 4 */
 /*  characters each. */
-	if (( ital = strstrmatch(fontname,"Ital"))!=NULL )
+	if (( ital = strcasestr(fontname,"Ital"))!=NULL )
 	    strcpy(slant,"I");
-	else if (( ital = strstrmatch(fontname,"Kurs"))!=NULL )
+	else if (( ital = strcasestr(fontname,"Kurs"))!=NULL )
 	    strcpy(slant,"I");
 	else if (( ital = strstr(fontname,"Obli"))!=NULL )
 	    strcpy(slant,"O");

@@ -127,13 +127,13 @@ static uint16_t HashToId(char *fontname,SplineFont *sf,EncMap *map) {
     if ( sf->cidmaster!=NULL || sf->subfontcnt!=0 ) {
 	if ( sf->cidmaster != NULL ) sf = sf->cidmaster;
 	if ( sf->ordering != NULL ) {
-	    if ( strstrmatch(sf->ordering,"Japan")!=NULL ) {
+	    if ( strcasestr(sf->ordering,"Japan")!=NULL ) {
 		low = 0x4000; high = 0x41ff;
-	    } else if ( strstrmatch(sf->ordering,"Korea")!=NULL ) {
+	    } else if ( strcasestr(sf->ordering,"Korea")!=NULL ) {
 		low = 0x4400; high = 0x45ff;
-	    } else if ( strstrmatch(sf->ordering,"CNS")!=NULL ) {
+	    } else if ( strcasestr(sf->ordering,"CNS")!=NULL ) {
 		low = 0x4200; high = 0x43ff;
-	    } else if ( strstrmatch(sf->ordering,"GB")!=NULL ) {
+	    } else if ( strcasestr(sf->ordering,"GB")!=NULL ) {
 		low = 0x7200; high = 0x73ff;
 	    }
 	}
@@ -651,34 +651,34 @@ enum psstyle_flags { psf_bold = 1, psf_italic = 2, psf_outline = 4,
 uint16_t _MacStyleCode( char *styles, SplineFont *sf, uint16_t *psstylecode ) {
     unsigned short stylecode= 0, psstyle=0;
 
-    if ( strstrmatch( styles, "Bold" ) || strstrmatch(styles,"Demi") ||
-	    strstrmatch( styles,"Heav") || strstrmatch(styles,"Blac") ||
+    if ( strcasestr( styles, "Bold" ) || strcasestr(styles,"Demi") ||
+	    strcasestr( styles,"Heav") || strcasestr(styles,"Blac") ||
 /* A few fonts have German/French styles in their names */
-	    strstrmatch( styles,"Fett") || strstrmatch(styles,"Gras") ) {
+	    strcasestr( styles,"Fett") || strcasestr(styles,"Gras") ) {
 	stylecode = sf_bold;
 	psstyle = psf_bold;
     } else if ( sf!=NULL && sf->weight!=NULL &&
-	    (strstrmatch( sf->weight, "Bold" ) || strstrmatch(sf->weight,"Demi") ||
-	     strstrmatch( sf->weight,"Heav") || strstrmatch(sf->weight,"Blac") ||
-	     strstrmatch( sf->weight,"Fett") || strstrmatch(sf->weight,"Gras")) ) {
+	    (strcasestr( sf->weight, "Bold" ) || strcasestr(sf->weight,"Demi") ||
+	     strcasestr( sf->weight,"Heav") || strcasestr(sf->weight,"Blac") ||
+	     strcasestr( sf->weight,"Fett") || strcasestr(sf->weight,"Gras")) ) {
 	stylecode = sf_bold;
 	psstyle = psf_bold;
     }
     /* URW uses four leter abbreviations of Italic and Oblique */
     /* Somebody else uses two letter abbrevs */
     if ( (sf!=NULL && sf->italicangle!=0) ||
-	    strstrmatch( styles, "Ital" ) ||
-	    strstrmatch( styles, "Obli" ) ||
-	    strstrmatch(styles, "Slanted") ||
-	    strstrmatch(styles, "Kurs") ||
+	    strcasestr( styles, "Ital" ) ||
+	    strcasestr( styles, "Obli" ) ||
+	    strcasestr(styles, "Slanted") ||
+	    strcasestr(styles, "Kurs") ||
 	    strstr( styles,"It" ) ) {
 	stylecode |= sf_italic;
 	psstyle |= psf_italic;
     }
-    if ( strstrmatch( styles, "Underline" ) ) {
+    if ( strcasestr( styles, "Underline" ) ) {
 	stylecode |= sf_underline;
     }
-    if ( strstrmatch( styles, "Outl" ) ) {
+    if ( strcasestr( styles, "Outl" ) ) {
 	stylecode |= sf_outline;
 	psstyle |= psf_outline;
     }
@@ -686,12 +686,12 @@ uint16_t _MacStyleCode( char *styles, SplineFont *sf, uint16_t *psstylecode ) {
 	stylecode |= sf_shadow;
 	psstyle |= psf_shadow;
     }
-    if ( strstrmatch( styles, "Cond" ) || strstr( styles,"Cn") ||
-	    strstrmatch( styles, "Narrow") ) {
+    if ( strcasestr( styles, "Cond" ) || strstr( styles,"Cn") ||
+	    strcasestr( styles, "Narrow") ) {
 	stylecode |= sf_condense;
 	psstyle |= psf_condense;
     }
-    if ( strstrmatch( styles, "Exte" ) || strstr( styles,"Ex") ) {
+    if ( strcasestr( styles, "Exte" ) || strstr( styles,"Ex") ) {
 	stylecode |= sf_extend;
 	psstyle |= psf_extend;
     }
@@ -2641,7 +2641,7 @@ return( test );
 	for ( which=cnt-1; which>=0; --which )
 	    if ( strcmp(names[which],find)==0 )
 	break;
-	if ( which==-1 && strstrmatch(find,test->fondname)!=NULL )
+	if ( which==-1 && strcasestr(find,test->fondname)!=NULL )
 	    which = GuessStyle(find,styles,cnt);
 	if ( which==-1 ) {
 	    char *fn = xstrdup_or_null(filename);

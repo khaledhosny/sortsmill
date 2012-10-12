@@ -5910,20 +5910,20 @@ return;
 		((gid=map->map[pos])==-1 || !SCWorthOutputting(sf->glyphs[gid])); ++pos );
 	if ( pos>=map->enccount ) {
 	    if ( enc->is_tradchinese ) {
-		if ( strstrmatch(enc->enc_name,"hkscs")!=NULL ) {
+		if ( strcasestr(enc->enc_name,"hkscs")!=NULL ) {
 		    if ( CVCurEnc(cv)<0x8140 )
 			pos = 0x8140;
 		} else {
 		    if ( CVCurEnc(cv)<0xa140 )
 			pos = 0xa140;
 		}
-	    } else if ( CVCurEnc(cv)<0x8431 && strstrmatch(enc->enc_name,"johab")!=NULL )
+	    } else if ( CVCurEnc(cv)<0x8431 && strcasestr(enc->enc_name,"johab")!=NULL )
 		pos = 0x8431;
-	    else if ( CVCurEnc(cv)<0xa1a1 && strstrmatch(enc->iconv_name?enc->iconv_name:enc->enc_name,"EUC")!=NULL )
+	    else if ( CVCurEnc(cv)<0xa1a1 && strcasestr(enc->iconv_name?enc->iconv_name:enc->enc_name,"EUC")!=NULL )
 		pos = 0xa1a1;
-	    else if ( CVCurEnc(cv)<0x8140 && strstrmatch(enc->enc_name,"sjis")!=NULL )
+	    else if ( CVCurEnc(cv)<0x8140 && strcasestr(enc->enc_name,"sjis")!=NULL )
 		pos = 0x8140;
-	    else if ( CVCurEnc(cv)<0xe040 && strstrmatch(enc->enc_name,"sjis")!=NULL )
+	    else if ( CVCurEnc(cv)<0xe040 && strcasestr(enc->enc_name,"sjis")!=NULL )
 		pos = 0xe040;
 	    if ( pos>=map->enccount )
 return;

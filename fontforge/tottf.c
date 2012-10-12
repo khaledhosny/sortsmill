@@ -2136,12 +2136,12 @@ static void dumpcffprivate(SplineFont *sf,struct alltabs *at,int subfont,
     if ( (pt=PSDictHasEntry(sf->private,"ForceBold"))!=NULL ) {
 	dumpintoper(private,*pt=='t'||*pt=='T',(12<<8)|14);
     } else if ( sf->weight!=NULL &&
-	    (strstrmatch(sf->weight,"Bold")!=NULL ||
-	     strstrmatch(sf->weight,"Demi")!=NULL ||
-	     strstrmatch(sf->weight,"Fett")!=NULL ||
-	     strstrmatch(sf->weight,"Gras")!=NULL ||
-	     strstrmatch(sf->weight,"Heavy")!=NULL ||
-	     strstrmatch(sf->weight,"Black")!=NULL))
+	    (strcasestr(sf->weight,"Bold")!=NULL ||
+	     strcasestr(sf->weight,"Demi")!=NULL ||
+	     strcasestr(sf->weight,"Fett")!=NULL ||
+	     strcasestr(sf->weight,"Gras")!=NULL ||
+	     strcasestr(sf->weight,"Heavy")!=NULL ||
+	     strcasestr(sf->weight,"Black")!=NULL))
 	dumpintoper(private,1,(12<<8)|14);
     if ( (pt=PSDictHasEntry(sf->private,"LanguageGroup"))!=NULL )
 	DumpStrDouble(pt,private,(12<<8)+17);
@@ -3005,37 +3005,37 @@ static void sethhead(struct hhead *hhead,struct hhead *vhead,struct alltabs *at,
 static void OS2WeightCheck(struct pfminfo *pfminfo,char *weight) {
     if ( weight==NULL ) {
 	/* default it */
-    } else if ( strstrmatch(weight,"medi")!=NULL ) {
+    } else if ( strcasestr(weight,"medi")!=NULL ) {
 	pfminfo->weight = 500;
 	pfminfo->panose[2] = 6;
-    } else if ( strstrmatch(weight,"demi")!=NULL ||
-		strstrmatch(weight,"halb")!=NULL ||
-		(strstrmatch(weight,"semi")!=NULL &&
-		    strstrmatch(weight,"bold")!=NULL) ) {
+    } else if ( strcasestr(weight,"demi")!=NULL ||
+		strcasestr(weight,"halb")!=NULL ||
+		(strcasestr(weight,"semi")!=NULL &&
+		    strcasestr(weight,"bold")!=NULL) ) {
 	pfminfo->weight = 600;
 	pfminfo->panose[2] = 7;
-    } else if ( strstrmatch(weight,"bold")!=NULL ||
-		strstrmatch(weight,"fett")!=NULL ||
-		strstrmatch(weight,"gras")!=NULL ) {
+    } else if ( strcasestr(weight,"bold")!=NULL ||
+		strcasestr(weight,"fett")!=NULL ||
+		strcasestr(weight,"gras")!=NULL ) {
 	pfminfo->weight = 700;
 	pfminfo->panose[2] = 8;
-    } else if ( strstrmatch(weight,"heavy")!=NULL ) {
+    } else if ( strcasestr(weight,"heavy")!=NULL ) {
 	pfminfo->weight = 800;
 	pfminfo->panose[2] = 9;
-    } else if ( strstrmatch(weight,"black")!=NULL ) {
+    } else if ( strcasestr(weight,"black")!=NULL ) {
 	pfminfo->weight = 900;
 	pfminfo->panose[2] = 10;
-    } else if ( strstrmatch(weight,"nord")!=NULL ) {
+    } else if ( strcasestr(weight,"nord")!=NULL ) {
 	pfminfo->weight = 950;
 	pfminfo->panose[2] = 11;
-    } else if ( strstrmatch(weight,"thin")!=NULL ) {
+    } else if ( strcasestr(weight,"thin")!=NULL ) {
 	pfminfo->weight = 100;
 	pfminfo->panose[2] = 2;
-    } else if ( strstrmatch(weight,"extra")!=NULL ||
-	    strstrmatch(weight,"light")!=NULL ) {
+    } else if ( strcasestr(weight,"extra")!=NULL ||
+	    strcasestr(weight,"light")!=NULL ) {
 	pfminfo->weight = 200;
 	pfminfo->panose[2] = 3;
-    } else if ( strstrmatch(weight,"light")!=NULL ) {
+    } else if ( strcasestr(weight,"light")!=NULL ) {
 	pfminfo->weight = 300;
 	pfminfo->panose[2] = 4;
     }
@@ -3099,9 +3099,9 @@ void SFDefaultOS2Info(struct pfminfo *pfminfo,SplineFont *sf,char *fontname) {
 	if ( samewid>0 ) {
 	    pfminfo->pfmfamily = 0x30;
 	    /* pfminfo->panose[3] = 9; */ /* This is done later */
-	} else if ( strstrmatch(fontname,"sans")!=NULL )
+	} else if ( strcasestr(fontname,"sans")!=NULL )
 	    pfminfo->pfmfamily = 0x20;
-	else if ( strstrmatch(fontname,"script")!=NULL ) {
+	else if ( strcasestr(fontname,"script")!=NULL ) {
 	    pfminfo->pfmfamily = 0x40;
 	    pfminfo->panose[0] = 3;
 	}
@@ -3113,35 +3113,35 @@ void SFDefaultOS2Info(struct pfminfo *pfminfo,SplineFont *sf,char *fontname) {
 	    OS2WeightCheck(pfminfo,weight);
 	OS2WeightCheck(pfminfo,fontname);
 
-	if ( strstrmatch(fontname,"ultra")!=NULL &&
-		strstrmatch(fontname,"condensed")!=NULL ) {
+	if ( strcasestr(fontname,"ultra")!=NULL &&
+		strcasestr(fontname,"condensed")!=NULL ) {
 	    pfminfo->width = 1;
 	    pfminfo->panose[3] = 8;
-	} else if ( strstrmatch(fontname,"extra")!=NULL &&
-		strstrmatch(fontname,"condensed")!=NULL ) {
+	} else if ( strcasestr(fontname,"extra")!=NULL &&
+		strcasestr(fontname,"condensed")!=NULL ) {
 	    pfminfo->width = 2;
 	    pfminfo->panose[3] = 8;
-	} else if ( strstrmatch(fontname,"semi")!=NULL &&
-		strstrmatch(fontname,"condensed")!=NULL ) {
+	} else if ( strcasestr(fontname,"semi")!=NULL &&
+		strcasestr(fontname,"condensed")!=NULL ) {
 	    pfminfo->width = 4;
 	    pfminfo->panose[3] = 6;
-	} else if ( strstrmatch(fontname,"condensed")!=NULL ||
-		strstrmatch(fontname,"narrow")!=NULL ) {
+	} else if ( strcasestr(fontname,"condensed")!=NULL ||
+		strcasestr(fontname,"narrow")!=NULL ) {
 	    pfminfo->width = 3;
 	    pfminfo->panose[3] = 6;
-	} else if ( strstrmatch(fontname,"ultra")!=NULL &&
-		strstrmatch(fontname,"expanded")!=NULL ) {
+	} else if ( strcasestr(fontname,"ultra")!=NULL &&
+		strcasestr(fontname,"expanded")!=NULL ) {
 	    pfminfo->width = 9;
 	    pfminfo->panose[3] = 7;
-	} else if ( strstrmatch(fontname,"extra")!=NULL &&
-		strstrmatch(fontname,"expanded")!=NULL ) {
+	} else if ( strcasestr(fontname,"extra")!=NULL &&
+		strcasestr(fontname,"expanded")!=NULL ) {
 	    pfminfo->width = 8;
 	    pfminfo->panose[3] = 7;
-	} else if ( strstrmatch(fontname,"semi")!=NULL &&
-		strstrmatch(fontname,"expanded")!=NULL ) {
+	} else if ( strcasestr(fontname,"semi")!=NULL &&
+		strcasestr(fontname,"expanded")!=NULL ) {
 	    pfminfo->width = 6;
 	    pfminfo->panose[3] = 5;
-	} else if ( strstrmatch(fontname,"expanded")!=NULL ) {
+	} else if ( strcasestr(fontname,"expanded")!=NULL ) {
 	    pfminfo->width = 7;
 	    pfminfo->panose[3] = 5;
 	}
@@ -3414,12 +3414,12 @@ static void setos2(struct os2 *os2,struct alltabs *at, SplineFont *sf,
     os2->yStrikeoutSize = sf->pfminfo.os2_strikeysize;
     os2->yStrikeoutPos = sf->pfminfo.os2_strikeypos;
     os2->fsSel = (at->head.macstyle&1?32:0)|(at->head.macstyle&2?1:0);
-    if ( sf->fullname!=NULL && strstrmatch(sf->fullname,"outline")!=NULL )
+    if ( sf->fullname!=NULL && strcasestr(sf->fullname,"outline")!=NULL )
 	os2->fsSel |= 8;
     if ( os2->fsSel==0 && sf->pfminfo.weight>=400 && sf->pfminfo.weight<=500 )
 	os2->fsSel = 64;		/* Regular */
     if ( os2->version>=4 ) {
-	if ( strstrmatch(sf->fontname,"Obli")!=NULL ) {
+	if ( strcasestr(sf->fontname,"Obli")!=NULL ) {
 	    os2->fsSel &= ~1;		/* Turn off Italic */
 	    os2->fsSel |= 512;		/* Turn on Oblique */
 	}
@@ -4291,7 +4291,7 @@ static FILE *_Gen816Enc(SplineFont *sf,int *tlen,EncMap *map) {
     *tlen = 0;
 
     base2 = -1; base2bound = -2;
-    if ( map->enc->is_tradchinese && strstrmatch(encname,"hkscs")!=NULL ) {
+    if ( map->enc->is_tradchinese && strcasestr(encname,"hkscs")!=NULL ) {
 	base = 0x81;
 	basebound = 0xfe;
 	subheadcnt = basebound-base+1;
@@ -4304,19 +4304,19 @@ static FILE *_Gen816Enc(SplineFont *sf,int *tlen,EncMap *map) {
 	lbase = 0x40;
 	planesize = 191;
 	isbig5 = true;
-    } else if ( strstrmatch(encname,"euc")!=NULL ) {
+    } else if ( strcasestr(encname,"euc")!=NULL ) {
 	base = 0xa1;
 	basebound = 0xfd;
 	lbase = 0xa1;
 	subheadcnt = basebound-base+1;
 	planesize = 0xfe - lbase +1;
-    } else if ( strstrmatch(encname,"johab")!=NULL ) {
+    } else if ( strcasestr(encname,"johab")!=NULL ) {
 	base = 0x84;
 	basebound = 0xf9;
 	lbase = 0x31;
 	subheadcnt = basebound-base+1;
 	planesize = 0xfe -0x31+1;	/* Stupid gcc bug, thinks 0xfe- is ambiguous (exponant) */
-    } else if ( strstrmatch(encname,"sjis")!=NULL  || strstrmatch(encname,"cp932")!=NULL ) {
+    } else if ( strcasestr(encname,"sjis")!=NULL  || strcasestr(encname,"cp932")!=NULL ) {
 	base = 129;
 	basebound = 159;
 	lbase = 64;
@@ -4508,17 +4508,17 @@ static FILE *Needs816Enc(SplineFont *sf,int *tlen,EncMap *map, FILE **apple, int
     }
     if ( sf->cidmaster!=NULL || sf->subfontcnt!=0 )
 return( NULL );
-    if ( (strstrmatch(encname,"big")!=NULL && strchr(encname,'5')!=NULL) ||
-	    strstrmatch(encname,"johab")!=NULL ||
-	    strstrmatch(encname,"sjis")!=NULL ||
-	    strstrmatch(encname,"cp932")!=NULL ||
-	    strstrmatch(encname,"euc-kr")!=NULL ||
-	    strstrmatch(encname,"euc-cn")!=NULL )
+    if ( (strcasestr(encname,"big")!=NULL && strchr(encname,'5')!=NULL) ||
+	    strcasestr(encname,"johab")!=NULL ||
+	    strcasestr(encname,"sjis")!=NULL ||
+	    strcasestr(encname,"cp932")!=NULL ||
+	    strcasestr(encname,"euc-kr")!=NULL ||
+	    strcasestr(encname,"euc-cn")!=NULL )
 	/* Already properly encoded */;
-    else if ( strstrmatch(encname,"2022")!=NULL &&
-	    (strstrmatch(encname,"JP2")!=NULL ||
-	     strstrmatch(encname,"JP-2")!=NULL ||
-	     strstrmatch(encname,"JP-3")!=NULL ))
+    else if ( strcasestr(encname,"2022")!=NULL &&
+	    (strcasestr(encname,"JP2")!=NULL ||
+	     strcasestr(encname,"JP-2")!=NULL ||
+	     strcasestr(encname,"JP-3")!=NULL ))
 return( NULL );		/* No 8/16 encoding for JP2 nor JP3 */
     else if ( sf->uni_interp>=ui_japanese && sf->uni_interp<=ui_korean ) {
 	enc = FindOrMakeEncoding(
@@ -4538,13 +4538,13 @@ return( NULL );
     /*  their extension (cp932), and another table based on plain sjis for Apple*/
     /* Don't know if this is true of other cjk encodings... for the moment I */
     /*  will just use standard encodings for them */
-    if ( strstrmatch(encname,"sjis")!=NULL ) {
+    if ( strcasestr(encname,"sjis")!=NULL ) {
 	enc = FindOrMakeEncoding("cp932");
 	if ( enc!=NULL ) {
 	    applemap = map;
 	    map = EncMapFromEncoding(sf,enc);
 	}
-    } else if ( strstrmatch(encname,"cp932")!=NULL )
+    } else if ( strcasestr(encname,"cp932")!=NULL )
 	applemap = EncMapFromEncoding(sf,FindOrMakeEncoding("sjis"));
 
     if ( applemap!=NULL )
@@ -4994,7 +4994,7 @@ static void dumpcmap(struct alltabs *at, SplineFont *sf,enum fontformat format) 
 	if ( format12!=NULL )
 	    enccnt = 5;
 	if ( format2!=NULL ) {
-	    if ( strstrmatch(map->enc->enc_name,"johab")!=NULL ) {
+	    if ( strcasestr(map->enc->enc_name,"johab")!=NULL ) {
 		++enccnt;
 	    } else {
 		enccnt+=2;
@@ -5064,7 +5064,7 @@ static void dumpcmap(struct alltabs *at, SplineFont *sf,enum fontformat format) 
     if ( format2!=NULL ) {
 	putshort(at->cmap,3);		/* ms platform */
 	putshort(at->cmap,		/* plat specific enc */
-		strstrmatch(map->enc->enc_name,"johab")!=NULL ? 6 :
+		strcasestr(map->enc->enc_name,"johab")!=NULL ? 6 :
 		map->enc->is_korean || sf->uni_interp==ui_korean ?		5 :
 		map->enc->is_japanese || sf->uni_interp==ui_japanese ?		2 :
 		map->enc->is_simplechinese || sf->uni_interp==ui_simp_chinese ?	3 :

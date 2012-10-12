@@ -47,28 +47,3 @@ strnmatch (const char *str1, const char *str2, int n)
     }
   return (0);
 }
-
-char *
-strstrmatch (const char *longer, const char *substr)
-{
-  int ch1, ch2;
-  const char *lpt, *str1, *str2;
-
-  for (lpt = longer; *lpt != '\0'; ++lpt)
-    {
-      str1 = lpt;
-      str2 = substr;
-      for (;;)
-        {
-          ch1 = *str1++;
-          ch2 = *str2++;
-          ch1 = tolower (ch1);
-          ch2 = tolower (ch2);
-          if (ch2 == '\0')
-            return ((char *) lpt);
-          if (ch1 != ch2)
-            break;
-        }
-    }
-  return (NULL);
-}

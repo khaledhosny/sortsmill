@@ -906,10 +906,10 @@ static void OFLibSortSearch(OFLibDlg *d) {
 	    include = true;
 	  break;
 	  case st_author:
-	    include = strstrmatch(d->all.fonts[i].author,search)!=NULL;
+	    include = strcasestr(d->all.fonts[i].author,search)!=NULL;
 	  break;
 	  case st_name:
-	    include = strstrmatch(d->all.fonts[i].name,search)!=NULL;
+	    include = strcasestr(d->all.fonts[i].name,search)!=NULL;
 	  break;
 	  case st_license:
 	    include = (isofl && d->all.fonts[i].license==ofll_ofl) ||
@@ -924,7 +924,7 @@ static void OFLibSortSearch(OFLibDlg *d) {
 	    break;
 		for ( end=start; *end!=',' && *end!='\0'; ++end );
 		ch = *end; *end = '\0';
-		found = strstrmatch(d->all.fonts[i].taglist, start);
+		found = strcasestr(d->all.fonts[i].taglist, start);
 		*end = ch;
 		if ( found==NULL ) {
 		    include = false;

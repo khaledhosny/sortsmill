@@ -194,7 +194,7 @@ int LoadKerningDataFromAmfm(SplineFont *sf, char *filename,EncMap *map) {
 
     if ( mm!=NULL )
 	file = fopen(filename,"r");
-    pt = strstrmatch(filename,".amfm");
+    pt = strcasestr(filename,".amfm");
     if ( pt!=NULL ) {
 	char *afmname = xstrdup_or_null(filename);
 	strcpy(afmname+(pt-filename),isupper(pt[1])?".AFM":".afm");
@@ -206,12 +206,12 @@ return( 0 );
 
     ff_progress_change_line2(_("Reading AFM file"));
     while ( fgets(buffer,sizeof(buffer),file)!=NULL ) {
-	if ( strstrmatch(buffer,"StartMaster")!=NULL )
+	if ( strcasestr(buffer,"StartMaster")!=NULL )
     break;
     }
     index = -1; lastname[0] = '\0';
     while ( fgets(buffer,sizeof(buffer),file)!=NULL ) {
-	if ( strstrmatch(buffer,"EndMaster")!=NULL ) {
+	if ( strcasestr(buffer,"EndMaster")!=NULL ) {
 	    if ( lastname[0]!='\0' && index!=-1 && index<mm->instance_count )
 		CheckMMAfmFile(mm->instances[index],filename,lastname,map);
 	    index = -1; lastname[0] = '\0';
@@ -858,17 +858,17 @@ char *EncodingName(Encoding *map) {
 return( "AdobeStandardEncoding" );
     if (( strstr(name,"8859")!=NULL && name[len-1]=='1' &&
 	     (!isdigit(name[len-2]) || name[len-2]=='9') ) ||
-	    strstrmatch(name,"latin1")!=NULL )
+	    strcasestr(name,"latin1")!=NULL )
 return( "ISOLatin1Encoding" );
     else if ( map->is_unicodebmp || map->is_unicodefull )
 return( "ISO10646-1" );
     else if ( strcasecmp(name,"mac")==0 || strcasecmp(name,"macintosh")==0 ||
 	    strcasecmp(name,"macroman")==0 )
 return( "MacRoman" );
-    else if ( strcasecmp(name,"ms-ansi")==0 || strstrmatch(name,"1252")!=NULL )
+    else if ( strcasecmp(name,"ms-ansi")==0 || strcasestr(name,"1252")!=NULL )
 return( "WinRoman" );
     else if ( strcasecmp(name,"sjis")==0 ||
-	    ((pt = strstrmatch(name,"jp"))!=NULL && pt[2]=='\0' &&
+	    ((pt = strcasestr(name,"jp"))!=NULL && pt[2]=='\0' &&
 		    strstr(name,"646")==NULL ))
 return( "JISX0208.1997" );
     else if ( map->is_japanese )
@@ -879,7 +879,7 @@ return( "Johab" );
 return( "KSC5601.1992" );
     else if ( map->is_simplechinese )
 return( "GB2312.1980" );
-    else if ( strstrmatch(name,"hkscs")!=NULL )
+    else if ( strcasestr(name,"hkscs")!=NULL )
 return( "BIG5HKSCS.2001" );
     else if ( map->is_tradchinese )
 return( "BIG5" );			/* 2002? */
@@ -3005,10 +3005,10 @@ static int _OTfmSplineFont(FILE *tfm, SplineFont *sf, int formattype,EncMap *map
 	header.face = 1;
     if ( style&sf_bold )
 	header.face+=2;
-    else if ( strstrmatch(sf->fontname,"Ligh") ||
-	    strstrmatch(sf->fontname,"Thin") ||
-	    strstrmatch(sf->fontname,"Maigre") ||
-	    strstrmatch(sf->fontname,"Mager") )
+    else if ( strcasestr(sf->fontname,"Ligh") ||
+	    strcasestr(sf->fontname,"Thin") ||
+	    strcasestr(sf->fontname,"Maigre") ||
+	    strcasestr(sf->fontname,"Mager") )
 	header.face += 4;
     if ( style&sf_condense )
 	header.face += 6;
@@ -3481,17 +3481,17 @@ return( mf_pfm );
 
     /* I don't see any distinquishing marks for a feature file */
 
-    if ( strstrmatch(filename,".afm")!=NULL )
+    if ( strcasestr(filename,".afm")!=NULL )
 return( mf_afm );
-    if ( strstrmatch(filename,".amfm")!=NULL )
+    if ( strcasestr(filename,".amfm")!=NULL )
 return( mf_amfm );
-    if ( strstrmatch(filename,".tfm")!=NULL )
+    if ( strcasestr(filename,".tfm")!=NULL )
 return( mf_tfm );
-    if ( strstrmatch(filename,".ofm")!=NULL )
+    if ( strcasestr(filename,".ofm")!=NULL )
 return( mf_ofm );
-    if ( strstrmatch(filename,".pfm")!=NULL )
+    if ( strcasestr(filename,".pfm")!=NULL )
 return( mf_pfm );
-    if ( strstrmatch(filename,".fea")!=NULL )
+    if ( strcasestr(filename,".fea")!=NULL )
 return( mf_feat );
 
 return( mf_none );

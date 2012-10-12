@@ -2896,7 +2896,7 @@ static int CheckActiveStyleTranslation(struct gfi_data *d,
 	continue;
 	    for ( j=0; stylelist[i][j].str!=NULL; ++j ) {
 		if ( stylelist[i][j].lang == 0x409 &&
-			(pt = strstrmatch(new,stylelist[i][j].str))!=NULL ) {
+			(pt = strcasestr(new,stylelist[i][j].str))!=NULL ) {
 		    if ( pt==new && strlen(stylelist[i][j].str)==strlen(new) ) {
 			free(new);
 			free(strings[3*r+2].u.md_str);
@@ -7925,7 +7925,7 @@ return;
     psgcd[9].gd.pos.width = -1; psgcd[9].gd.pos.height = 0;
     psgcd[9].gd.pos.x = psgcd[3].gd.pos.x+psgcd[3].gd.pos.width-
 	    GIntGetResource(_NUM_Buttonsize)*100/GIntGetResource(_NUM_ScaleFactor);
-    /*if ( strstrmatch(sf->fontname,"Italic")!=NULL ||strstrmatch(sf->fontname,"Oblique")!=NULL )*/
+    /*if ( strcasestr(sf->fontname,"Italic")!=NULL ||strcasestr(sf->fontname,"Oblique")!=NULL )*/
 	psgcd[9].gd.flags = gg_visible | gg_enabled;
     pslabel[9].text = (uint32_t *) _("_Guess");
     pslabel[9].text_is_1byte = true;

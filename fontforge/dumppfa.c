@@ -1510,11 +1510,11 @@ return( false );
     /*hasxuid = PSDictHasEntry(sf->private,"XUID")!=NULL;*/
     haslg = PSDictHasEntry(sf->private,"LanguageGroup")!=NULL;
     if ( sf->weight!=NULL &&
-	    (strstrmatch(sf->weight,"Bold")!=NULL ||
-	     strstrmatch(sf->weight,"Heavy")!=NULL ||
-	     strstrmatch(sf->weight,"Black")!=NULL ||
-	     strstrmatch(sf->weight,"Grass")!=NULL ||
-	     strstrmatch(sf->weight,"Fett")!=NULL))
+	    (strcasestr(sf->weight,"Bold")!=NULL ||
+	     strcasestr(sf->weight,"Heavy")!=NULL ||
+	     strcasestr(sf->weight,"Black")!=NULL ||
+	     strcasestr(sf->weight,"Grass")!=NULL ||
+	     strcasestr(sf->weight,"Fett")!=NULL))
 	isbold = true;
     if ( sf->pfminfo.pfmset && sf->pfminfo.weight>=700 )
 	isbold = true;

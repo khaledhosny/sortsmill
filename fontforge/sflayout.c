@@ -1255,10 +1255,10 @@ void FontImage(SplineFont *sf,char *filename,Array *arr,int width,int height) {
 	    x += line[j]->advance_width + line[j]->vr.h_adv_off;
 	}
     }
-    if ( strstrmatch(filename,".png")!=NULL )
+    if ( strcasestr(filename,".png")!=NULL )
 	ret = GImageWritePng(image,filename,false);
     else
-    if ( strstrmatch(filename,".bmp")!=NULL )
+    if ( strcasestr(filename,".bmp")!=NULL )
 	ret = GImageWriteBmp(image,filename);
     else
 	ff_post_error(_("Unsupported image format"),

@@ -259,7 +259,7 @@ void _SCAutoTrace(SplineChar *sc, int layer, char **args) {
     prog = FindAutoTraceName();
     if ( prog==NULL )
 	return;
-    ispotrace = (strstrmatch(prog,"potrace")!=NULL );
+    ispotrace = (strcasestr(prog,"potrace")!=NULL );
     for ( images = sc->layers[ly_back].images; images!=NULL; images=images->next ) {
 	ib = images->image->list_len==0 ? images->image->u.image : images->image->u.images[0];
 	if ( ib->width==0 || ib->height==0 ) {
@@ -354,7 +354,7 @@ return;
     prog = FindAutoTraceName();
     if ( prog==NULL )
 return;
-    ispotrace = (strstrmatch(prog,"potrace")!=NULL );
+    ispotrace = (strcasestr(prog,"potrace")!=NULL );
     for ( images = sc->layers[ly_back].images; images!=NULL; images=images->next ) {
 /* the linker tells me not to use tempnam(). Which does almost exactly what */
 /*  I want. So we go through a much more complex set of machinations to make */

@@ -643,7 +643,7 @@ static void bStrcasestr(Context *c) {
 	ScriptError( c, "Bad type for argument" );
 
     c->return_val.type = v_int;
-    pt = strstrmatch(c->a.vals[1].u.sval,c->a.vals[2].u.sval);
+    pt = strcasestr(c->a.vals[1].u.sval,c->a.vals[2].u.sval);
     c->return_val.u.ival = pt==NULL ? -1 : pt-c->a.vals[1].u.sval;
 }
 

@@ -549,10 +549,10 @@ return( false );
     lputshort(file,					/* external_leading */
 		    rint(pfminfo.linegap*font->pixelsize/(bigreal)(font->sf->ascent+font->sf->descent)) );
     if ( font->sf->italicangle!=0 ||
-	    strstrmatch(font->sf->fontname,"ital")!=NULL ||
-	    strstrmatch(font->sf->fontname,"kurs")!=NULL ||
-	    strstrmatch(font->sf->fontname,"slanted")!=NULL ||
-	    strstrmatch(font->sf->fontname,"obli")!=NULL )
+	    strcasestr(font->sf->fontname,"ital")!=NULL ||
+	    strcasestr(font->sf->fontname,"kurs")!=NULL ||
+	    strcasestr(font->sf->fontname,"slanted")!=NULL ||
+	    strcasestr(font->sf->fontname,"obli")!=NULL )
 	putc('\1',file);
     else
 	putc('\0',file);				/* italic */

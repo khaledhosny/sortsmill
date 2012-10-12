@@ -2697,21 +2697,21 @@ static void _FVMenuChangeChar(FontView *fv,int mid ) {
 		else if ( strstr(iconv_name,"EUC")!=NULL && selpos<0xa1a1 )
 		    pos = 0xa1a1;
 		else if ( map->enc->is_tradchinese ) {
-		    if ( strstrmatch(map->enc->enc_name,"HK")!=NULL &&
+		    if ( strcasestr(map->enc->enc_name,"HK")!=NULL &&
 			    selpos<0x8140 )
 			pos = 0x8140;
 		    else
 			pos = 0xa140;
 		} else if ( map->enc->is_japanese ) {
-		    if ( strstrmatch(iconv_name,"SJIS")!=NULL ||
-			    (strstrmatch(iconv_name,"JIS")!=NULL && strstrmatch(iconv_name,"SHIFT")!=NULL )) {
+		    if ( strcasestr(iconv_name,"SJIS")!=NULL ||
+			    (strcasestr(iconv_name,"JIS")!=NULL && strcasestr(iconv_name,"SHIFT")!=NULL )) {
 			if ( selpos<0x8100 )
 			    pos = 0x8100;
 			else if ( selpos<0xb000 )
 			    pos = 0xb000;
 		    }
 		} else if ( map->enc->is_korean ) {
-		    if ( strstrmatch(iconv_name,"JOHAB")!=NULL ) {
+		    if ( strcasestr(iconv_name,"JOHAB")!=NULL ) {
 			if ( selpos<0x8431 )
 			    pos = 0x8431;
 		    } else {	/* Wansung, EUC-KR */

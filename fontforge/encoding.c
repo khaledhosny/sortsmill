@@ -497,23 +497,23 @@ _FindOrMakeEncoding (const char *name, int make_it)
       enc->char_cnt = 256;
       enc->only_1byte = true;
     }
-  if (strstrmatch (iconv_name, "JP") != NULL ||
-      strstrmatch (iconv_name, "sjis") != NULL ||
-      strstrmatch (iconv_name, "cp932") != NULL)
+  if (strcasestr (iconv_name, "JP") != NULL ||
+      strcasestr (iconv_name, "sjis") != NULL ||
+      strcasestr (iconv_name, "cp932") != NULL)
     enc->is_japanese = true;
-  else if (strstrmatch (iconv_name, "KR") != NULL)
+  else if (strcasestr (iconv_name, "KR") != NULL)
     enc->is_korean = true;
-  else if (strstrmatch (iconv_name, "CN") != NULL)
+  else if (strcasestr (iconv_name, "CN") != NULL)
     enc->is_simplechinese = true;
-  else if (strstrmatch (iconv_name, "BIG") != NULL
-           && strstrmatch (iconv_name, "5") != NULL)
+  else if (strcasestr (iconv_name, "BIG") != NULL
+           && strcasestr (iconv_name, "5") != NULL)
     enc->is_tradchinese = true;
 
-  if (strstrmatch (name, "ISO8859") != NULL &&
+  if (strcasestr (name, "ISO8859") != NULL &&
       strtol (name + strlen (name) - 2, NULL, 10) >= 16)
     /* Not in our menu, don't hide */ ;
   else if (iconv_name != name || strcasecmp (name, "mac") == 0
-           || strstrmatch (name, "ISO8859") != NULL
+           || strcasestr (name, "ISO8859") != NULL
            || strcasecmp (name, "koi8-r") == 0 || strcasecmp (name, "sjis") == 0
            || strcasecmp (name, "big5") == 0
            || strcasecmp (name, "big5hkscs") == 0)
@@ -2053,13 +2053,13 @@ MakeCIDMaster (SplineFont *sf, EncMap * oldmap, int bycmap,
     }
   if (sf->uni_interp != ui_none && sf->uni_interp != ui_unset)
     cidmaster->uni_interp = sf->uni_interp;
-  else if (strstrmatch (cidmaster->ordering, "japan") != NULL)
+  else if (strcasestr (cidmaster->ordering, "japan") != NULL)
     cidmaster->uni_interp = ui_japanese;
-  else if (strstrmatch (cidmaster->ordering, "CNS") != NULL)
+  else if (strcasestr (cidmaster->ordering, "CNS") != NULL)
     cidmaster->uni_interp = ui_trad_chinese;
-  else if (strstrmatch (cidmaster->ordering, "GB") != NULL)
+  else if (strcasestr (cidmaster->ordering, "GB") != NULL)
     cidmaster->uni_interp = ui_simp_chinese;
-  else if (strstrmatch (cidmaster->ordering, "Korea") != NULL)
+  else if (strcasestr (cidmaster->ordering, "Korea") != NULL)
     cidmaster->uni_interp = ui_korean;
   sf->uni_interp = cidmaster->uni_interp;
   cidmaster->fontname = xstrdup_or_null (sf->fontname);
