@@ -1,7 +1,6 @@
-#include <config.h>
-
-/* Copyright (C) 2012 by Barry Schwartz */
 /*
+ * Copyright (C) 2012 by Barry Schwartz
+  
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
 
@@ -27,45 +26,15 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <assert.h>
-#include <errno.h>
-#include <xalloc.h>
-#include <xunistring.h>
+#ifndef _FONTFORGE_XUNICASE_H
+#define _FONTFORGE_XUNICASE_H
 
-int
-u8_compare (const uint8_t * s1, const uint8_t * s2)
-{
-  int result;
-  int error =
-    u8_normcmp (s1, u8_strlen (s1), s2, u8_strlen (s2), UNINORM_NFD, &result);
-  if (error != 0 && errno == ENOMEM)
-    xalloc_die ();
-  assert (error == 0);
-  return result;
-}
+#include <config.h>
 
-int
-u16_compare (const uint16_t * s1, const uint16_t * s2)
-{
-  int result;
-  int error =
-    u16_normcmp (s1, u16_strlen (s1), s2, u16_strlen (s2), UNINORM_NFD,
-                 &result);
-  if (error != 0 && errno == ENOMEM)
-    xalloc_die ();
-  assert (error == 0);
-  return result;
-}
+#include <unicase.h>
 
-int
-u32_compare (const uint32_t * s1, const uint32_t * s2)
-{
-  int result;
-  int error =
-    u32_normcmp (s1, u32_strlen (s1), s2, u32_strlen (s2), UNINORM_NFD,
-                 &result);
-  if (error != 0 && errno == ENOMEM)
-    xalloc_die ();
-  assert (error == 0);
-  return result;
-}
+VISIBLE int u8_casecompare (const uint8_t * s1, const uint8_t * s2);
+VISIBLE int u16_casecompare (const uint16_t * s1, const uint16_t * s2);
+VISIBLE int u32_casecompare (const uint32_t * s1, const uint32_t * s2);
+
+#endif // _FONTFORGE_XUNICASE_H

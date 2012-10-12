@@ -33,11 +33,12 @@
 #include <xunistring.h>
 
 int
-u8_compare (const uint8_t * s1, const uint8_t * s2)
+u8_casecompare (const uint8_t * s1, const uint8_t * s2)
 {
   int result;
   int error =
-    u8_normcmp (s1, u8_strlen (s1), s2, u8_strlen (s2), UNINORM_NFD, &result);
+    u8_casecmp (s1, u8_strlen (s1), s2, u8_strlen (s2), uc_locale_language (),
+                UNINORM_NFD, &result);
   if (error != 0 && errno == ENOMEM)
     xalloc_die ();
   assert (error == 0);
@@ -45,12 +46,11 @@ u8_compare (const uint8_t * s1, const uint8_t * s2)
 }
 
 int
-u16_compare (const uint16_t * s1, const uint16_t * s2)
+u16_casecompare (const uint16_t * s1, const uint16_t * s2)
 {
   int result;
-  int error =
-    u16_normcmp (s1, u16_strlen (s1), s2, u16_strlen (s2), UNINORM_NFD,
-                 &result);
+  int error = u16_casecmp (s1, u16_strlen (s1), s2, u16_strlen (s2),
+                           uc_locale_language (), UNINORM_NFD, &result);
   if (error != 0 && errno == ENOMEM)
     xalloc_die ();
   assert (error == 0);
@@ -58,12 +58,11 @@ u16_compare (const uint16_t * s1, const uint16_t * s2)
 }
 
 int
-u32_compare (const uint32_t * s1, const uint32_t * s2)
+u32_casecompare (const uint32_t * s1, const uint32_t * s2)
 {
   int result;
-  int error =
-    u32_normcmp (s1, u32_strlen (s1), s2, u32_strlen (s2), UNINORM_NFD,
-                 &result);
+  int error = u32_casecmp (s1, u32_strlen (s1), s2, u32_strlen (s2),
+                           uc_locale_language (), UNINORM_NFD, &result);
   if (error != 0 && errno == ENOMEM)
     xalloc_die ();
   assert (error == 0);

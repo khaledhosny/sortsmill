@@ -2,6 +2,7 @@ AT_INIT
 AT_COPYRIGHT([Copyright (C) 2012 by George Williams])
 
 AT_BANNER([auxiliary])
+m4_include([xunicase_h.at])
 m4_include([xuniconv_h.at])
 m4_include([xuninorm_h.at])
 m4_include([xunistr_h.at])

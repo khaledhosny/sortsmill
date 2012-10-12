@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000-2012 by Barry Schwartz
+ * Copyright (C) 2012 by Barry Schwartz
   
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -33,8 +33,8 @@
 
 #include <uninorm.h>
 
-VISIBLE int u8_compare (const uint8_t *s1, const uint8_t *s2);
-VISIBLE int u16_compare (const uint16_t *s1, const uint16_t *s2);
-VISIBLE int u32_compare (const uint32_t *s1, const uint32_t *s2);
+VISIBLE int u8_compare (const uint8_t * s1, const uint8_t * s2);
+VISIBLE int u16_compare (const uint16_t * s1, const uint16_t * s2);
+VISIBLE int u32_compare (const uint32_t * s1, const uint32_t * s2);
 
 #endif // _FONTFORGE_XUNINORM_H

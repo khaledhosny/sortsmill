@@ -33,7 +33,7 @@ lib_LTLIBRARIES = libsortsmillff_aux.la
 
 libsortsmillff_aux_la_SOURCES = ArabicForms.c alphabet.c backtrns.c	\
 	cjk.c ucharmap.c unialt.c ustring.c utype.c combiners.h			\
-	xdie_on_null.c xgc.c xuniconv.c xuninorm.c xunistr.c
+	xdie_on_null.c xgc.c xunicase.c xuniconv.c xuninorm.c xunistr.c
 
 libsortsmillff_aux_la_LIBADD = $(top_builddir)/lib/libgnu.la
 libsortsmillff_aux_la_LDFLAGS = $(call ldflags)

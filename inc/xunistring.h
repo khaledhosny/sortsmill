@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000-2012 by Barry Schwartz
+ * Copyright (C) 2012 by Barry Schwartz
   
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -41,7 +41,7 @@
 #include <uniwbrk.h>
 #include <unilbrk.h>
 #include <xuninorm.h>
-#include <unicase.h>
+#include <xunicase.h>
 //#include <uniregex.h>   This is not yet implemented.
 #include <unistring/version.h>
 

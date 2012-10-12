@@ -63,13 +63,14 @@ $(TESTSUITE): $(srcdir)/testsuite.at $(srcdir)/package.m4 $(MY_AT_FILES)
 	$(AUTOTEST) -I '$(srcdir)' -o $@.tmp $@.at
 	mv $@.tmp $@
 
-MY_AT_FILES = xuniconv_h.at xuninorm_h.at xunistr_h.at gfile_c.at	\
-	psMat.at old_python_tests.at
+MY_AT_FILES = xunicase_h.at xuniconv_h.at xuninorm_h.at xunistr_h.at	\
+	gfile_c.at psMat.at old_python_tests.at
 
-TESTS_XUNISTRING_H = test_xuniconv_h test_xuninorm_h test_xunistr_h	\
-	test_xunistr_strtol_NULL test_xunistr_strtol_nonNULL			\
-	test_xunistr_strtoul_NULL test_xunistr_strtoul_nonNULL			\
-	test_xunistr_strtod_NULL test_xunistr_strtod_nonNULL
+TESTS_XUNISTRING_H = test_xunicase_h test_xuniconv_h test_xuninorm_h	\
+	test_xunistr_h test_xunistr_strtol_NULL								\
+	test_xunistr_strtol_nonNULL test_xunistr_strtoul_NULL				\
+	test_xunistr_strtoul_nonNULL test_xunistr_strtod_NULL				\
+	test_xunistr_strtod_nonNULL
 
 TESTS_GFILE_C = test_GFileGetUserConfigDir test_GFileGetUserCacheDir	\
 	test_GFileGetUserDataDir test_GFileGetHomeDir test_GFileBuildName	\

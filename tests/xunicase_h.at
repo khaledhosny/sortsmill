@@ -1,0 +1,23 @@
+# -*- coding: utf-8 -*-
+
+m4_defun([check_xunicase_h],
+[
+AT_SETUP([$1])
+AT_KEYWORDS([auxiliary xunicase.c xunicase.h xunistring.h unit])
+AT_SKIP_IF([test x"${utf8_locale}" = x])
+AT_CHECK_UNQUOTED([LC_ALL="${utf8_locale}" LANGUAGE="${utf8_locale}" "${abs_builddir}"/$1],[$2],[$3],[$4])
+AT_CLEANUP
+])
+
+check_xunicase_h([test_xunicase_h A b],[0],[A|b,A|b,A|b,A|b,-1|-1|-1,],[])
+check_xunicase_h([test_xunicase_h A a],[0],[A|a,A|a,A|a,A|a,0|0|0,],[])
+check_xunicase_h([test_xunicase_h C b],[0],[C|b,C|b,C|b,C|b,1|1|1,],[])
+
+check_xunicase_h([test_xunicase_h a B],[0],[a|B,a|B,a|B,a|B,-1|-1|-1,],[])
+check_xunicase_h([test_xunicase_h a A],[0],[a|A,a|A,a|A,a|A,0|0|0,],[])
+check_xunicase_h([test_xunicase_h c B],[0],[c|B,c|B,c|B,c|B,1|1|1,],[])
+
+# These should compare as equal: ‘ĉ’ is an Esperanto letter ‘cho’, and
+# ‘ĉ’ is the letter c followed by a combining circumflex.
+check_xunicase_h([test_xunicase_h Ĉ ĉ],[0],[Ĉ|ĉ,Ĉ|ĉ,Ĉ|ĉ,Ĉ|ĉ,0|0|0,],[])
+check_xunicase_h([test_xunicase_h ĉ Ĉ],[0],[ĉ|Ĉ,ĉ|Ĉ,ĉ|Ĉ,ĉ|Ĉ,0|0|0,],[])

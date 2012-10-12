@@ -291,28 +291,34 @@ return;
 	GScrollBarSetPos(&gl->vsb->g,gl->loff);
 }
 
-static int GListFindPosition(GList *gl,uint32_t *text) {
-    GTextInfo temp, *ptemp=&temp;
-    int i, order;
+static int GListFindPosition(GList *gl,uint32_t *text)
+{
+  GTextInfo temp, *ptemp=&temp;
+  int i, order;
 
-    if ( gl->orderer!=NULL ) {
-	memset(&temp,'\0',sizeof(temp));
-	temp.text = text;
+  if ( gl->orderer!=NULL )
+    {
+      memset(&temp,'\0',sizeof(temp));
+      temp.text = text;
 
-	/* I don't think I need to write a binary search here... */
-	for ( i=0; i<gl->ltot; ++i ) {
-	    order = (gl->orderer)(&ptemp,&gl->ti[i]);
-	    if (( order<= 0 && !gl->backwards ) || ( order>=0 && gl->backwards ))
-return( i );
+      /* I don't think I need to write a binary search here... */
+      for ( i=0; i<gl->ltot; ++i )
+	{
+	  order = (gl->orderer)(&ptemp,&gl->ti[i]);
+	  if (( order<= 0 && !gl->backwards ) || ( order>=0 && gl->backwards ))
+	    return( i );
 	}
-return( 0 );
-    } else {
-	for ( i=0; i<gl->ltot; ++i ) {
-	    if (u_strmatch(text,gl->ti[i]->text)==0 )
-return( i );
+      return( 0 );
+    }
+  else
+    {
+      for ( i=0; i<gl->ltot; ++i )
+	{
+	  if (u_strmatch(text,gl->ti[i]->text)==0 )
+	    return( i );
 	}
     }
-return( 0 );
+  return( 0 );
 }
 
 static int GListAdjustPos(GGadget *g,int pos) {
