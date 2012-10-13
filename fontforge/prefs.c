@@ -2422,7 +2422,7 @@ DoPrefs (void)
   msgcd[sgc].gd.pos.y =
     msgcd[sgc - 1].gd.pos.y + msgcd[sgc - 1].gd.pos.height + 10;
   msgcd[sgc].gd.flags = gg_visible | gg_enabled;
-  mslabels[sgc].text = (uint32_t *) S_ ("MacMap|_New...");
+  mslabels[sgc].text = (uint32_t *) C_("MacMap", "_New...");
   mslabels[sgc].text_is_1byte = true;
   mslabels[sgc].text_in_resource = true;
   msgcd[sgc].gd.label = &mslabels[sgc];
@@ -2469,7 +2469,7 @@ DoPrefs (void)
     GIntGetResource (_NUM_ScaleFactor);
   msgcd[sgc].gd.pos.y = msgcd[sgc - 1].gd.pos.y;
   msgcd[sgc].gd.flags = gg_visible | gg_enabled;
-  mslabels[sgc].text = (uint32_t *) S_ ("MacMapping|Default");
+  mslabels[sgc].text = (uint32_t *) C_("MacMapping", "Default");
   mslabels[sgc].text_is_1byte = true;
   mslabels[sgc].text_in_resource = true;
   msgcd[sgc].gd.label = &mslabels[sgc];

@@ -27,8 +27,6 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <config.h>
-
 #include <stdbool.h>
 #include "fontforgeui.h"
 #include <chardata.h>
@@ -2050,13 +2048,13 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
     memcpy(addlookup_list+1,lookup_list,(i+1)*sizeof(GTextInfo));
     addrmlookup_list = xcalloc(i+3,sizeof(GTextInfo));
     memcpy(addrmlookup_list+2,lookup_list,(i+1)*sizeof(GTextInfo));
-    addlookup_list[0].text = (uint32_t *) S_("Add Lookup");
+    addlookup_list[0].text = (uint32_t *) _("Add Lookup");
     addlookup_list[0].text_is_1byte = true;
     addlookup_list[0].selected = true;
-    addrmlookup_list[0].text = (uint32_t *) S_("Add Lookup");
+    addrmlookup_list[0].text = (uint32_t *) _("Add Lookup");
     addrmlookup_list[0].text_is_1byte = true;
     addrmlookup_list[0].selected = true;
-    addrmlookup_list[1].text = (uint32_t *) S_("Remove Lookup");
+    addrmlookup_list[1].text = (uint32_t *) _("Remove Lookup");
     addrmlookup_list[1].text_is_1byte = true;
     addrmlookup_list[1].selected = false;
     addrmlookup_list[1].userdata = (void *) (intptr_t) -1;
@@ -2824,7 +2822,7 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
 		cc = (&tempfpst->nccnt)[i];
 	    class_mi[i].initial_row_cnt = cc;
 	    md = xcalloc(3*cc+3,sizeof(struct matrix_data));
-	    md[0+0].u.md_str = xstrdup_or_null(classnames==NULL || cc==0 || classnames[0]==NULL?S_("Glyphs|All_Others"):classnames[0]);
+	    md[0+0].u.md_str = xstrdup_or_null(classnames==NULL || cc==0 || classnames[0]==NULL?C_("Glyphs", "All_Others"):classnames[0]);
 	    md[3*0+1].u.md_str = xstrdup_or_null(_("{Everything Else}"));
 	    md[3*0+1].frozen = true;
 	    md[0+2].u.md_str = xstrdup_or_null(md[0+0].u.md_str);
@@ -2998,10 +2996,12 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
 		cc = (&tempfpst->nccnt)[i];
 	    class_mi[i].initial_row_cnt = cc;
 	    md = xcalloc(3*cc+3,sizeof(struct matrix_data));
-/* TRANSLATORS: This is the default class name for the class containing any glyphs_simple */
-/* which aren't specified in other classes_simple. The class name may NOT */
-/* contain spaces. Use an underscore or something similar instead */
-	    md[0+0].u.md_str = xstrdup_or_null(classnames==NULL || cc==0 || classnames[0]==NULL?S_("Glyphs|All_Others"):classnames[0]);
+/* TRANSLATORS:
+ * This is the default class name for the class containing any glyphs_simple
+ * which aren't specified in other classes_simple. The class name may NOT
+ * contain spaces. Use an underscore or something similar instead
+ */
+	    md[0+0].u.md_str = xstrdup_or_null(classnames==NULL || cc==0 || classnames[0]==NULL?C_("Glyphs", "All_Others"):classnames[0]);
 	    md[0+1].u.md_str = xstrdup_or_null(_("{Everything Else}"));
 	    md[0+1].frozen = true;
 	    md[0+2].u.md_str = xstrdup_or_null(md[0+0].u.md_str);

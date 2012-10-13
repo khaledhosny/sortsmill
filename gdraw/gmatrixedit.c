@@ -1643,7 +1643,7 @@ static void GMatrixEdit_SubExpose(GMatrixEdit *gme,GWindow pixmap,GEvent *event)
 			if ( gme->newtext!=NULL )
 			    strncpy(buf+1,gme->newtext,sizeof(buf)-2);
 			else
-			    strncpy(buf+1,S_("Row|New"),sizeof(buf)-2);
+			    strncpy(buf+1,C_("Row", "New"),sizeof(buf)-2);
 			buf[18] = '\0';
 			k = strlen(buf);
 			buf[k] = '>'; buf[k+1] = '\0';
@@ -2250,7 +2250,7 @@ int GMatrixEditGetActiveCol(GGadget *g) {
 return( gme->active_col );
 }
 
-void GMatrixEditSetNewText(GGadget *g, char *text) {
+void GMatrixEditSetNewText(GGadget *g, const char *text) {
     GMatrixEdit *gme = (GMatrixEdit *) g;
 
     free(gme->newtext);

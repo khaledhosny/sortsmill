@@ -228,7 +228,7 @@ static uint32_t *GWidgetSaveAsFileWithGadget(const uint32_t *title, const uint32
     gcd[3].gd.pos.x = gcd[2].gd.pos.x; gcd[3].gd.pos.y = 192;
     gcd[3].gd.pos.width = -1;
     gcd[3].gd.flags = gg_visible | gg_enabled;
-    label[3].text = (uint32_t *) S_("Directory|_New");
+    label[3].text = (uint32_t *) C_("Directory", "_New");
     label[3].text_is_1byte = true;
     label[3].text_in_resource = true;
     label[3].image = &_GIcon_dir;

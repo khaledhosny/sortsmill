@@ -374,7 +374,7 @@ static struct baselangextent *SFBaselang(SplineFont *sf,struct baselangextent *o
     GHVBoxSetExpandableCol(box[3].ret,gb_expandgluesame);
 
     buttongcd[0].gd.flags = gg_visible;
-    buttonlabel[0].text = (uint32_t *) S_("Set Feature Extents");
+    buttonlabel[0].text = (uint32_t *) _("Set Feature Extents");
     buttonlabel[0].text_is_1byte = true;
     buttonlabel[0].text_in_resource = true;
     buttongcd[0].gd.label = &buttonlabel[0];
@@ -884,7 +884,7 @@ struct Base *SFBaselines(SplineFont *sf,struct Base *old,int is_vertical) {
     GHVBoxSetExpandableCol(box[3].ret,gb_expandgluesame);
 
     buttongcd[0].gd.flags = gg_visible;
-    buttonlabel[0].text = (uint32_t *) S_("Set Extents");
+    buttonlabel[0].text = (uint32_t *) _("Set Extents");
     buttonlabel[0].text_is_1byte = true;
     buttonlabel[0].text_in_resource = true;
     buttongcd[0].gd.label = &buttonlabel[0];

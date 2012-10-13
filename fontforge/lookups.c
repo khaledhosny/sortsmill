@@ -1302,131 +1302,131 @@ static struct {
     char *text;
     uint32_t tag;
 } localscripts[] = {
-/* TRANSLATORS: See the long comment at "Property|New" */
-/* The msgstr should contain a translation of "Arabic", ignore "Script|" */
-    { N_("Script|Arabic"), CHR('a','r','a','b') },
-    { N_("Script|Aramaic"), CHR('a','r','a','m') },
-    { N_("Script|Armenian"), CHR('a','r','m','n') },
-    { N_("Script|Avestan"), CHR('a','v','e','s') },
-    { N_("Script|Balinese"), CHR('b','a','l','i') },
-    { N_("Script|Batak"), CHR('b','a','t','k') },
-    { N_("Script|Bengali"), CHR('b','e','n','g') },
-    { N_("Script|Bengali2"), CHR('b','n','g','2') },
-    { N_("Bliss Symbolics"), CHR('b','l','i','s') },
-    { N_("Bopomofo"), CHR('b','o','p','o') },
-    { N_("Brāhmī"), CHR('b','r','a','h') },
-    { N_("Braille"), CHR('b','r','a','i') },
-    { N_("Script|Buginese"), CHR('b','u','g','i') },
-    { N_("Script|Buhid"), CHR('b','u','h','d') },
-    { N_("Byzantine Music"), CHR('b','y','z','m') },
-    { N_("Canadian Syllabics"), CHR('c','a','n','s') },
-    { N_("Carian"), CHR('c','a','r','i') },
-    { N_("Cherokee"), CHR('c','h','a','m') },
-    { N_("Script|Cham"), CHR('c','h','a','m') },
-    { N_("Script|Cherokee"), CHR('c','h','e','r') },
-    { N_("Cirth"), CHR('c','i','r','t') },
-    { N_("CJK Ideographic"), CHR('h','a','n','i') },
-    { N_("Script|Coptic"), CHR('c','o','p','t') },
-    { N_("Cypro-Minoan"), CHR('c','p','r','t') },
-    { N_("Cypriot syllabary"), CHR('c','p','m','n') },
-    { N_("Cyrillic"), CHR('c','y','r','l') },
-    { N_("Script|Default"), CHR('D','F','L','T') },
-    { N_("Deseret (Mormon)"), CHR('d','s','r','t') },
-    { N_("Devanagari"), CHR('d','e','v','a') },
-    { N_("Devanagari2"), CHR('d','e','v','2') },
-/*  { N_("Egyptian demotic"), CHR('e','g','y','d') }, */
-/*  { N_("Egyptian hieratic"), CHR('e','g','y','h') }, */
-/* TRANSLATORS: Someone asked if FontForge actually was prepared generate hieroglyph output */
-/* because of this string. No. But OpenType and Unicode have placeholders for */
-/* dealing with these scripts against the day someone wants to use them. So */
-/* FontForge must be prepared to deal with those placeholders if nothing else. */
-/*  { N_("Egyptian hieroglyphs"), CHR('e','g','y','p') }, */
-    { N_("Script|Ethiopic"), CHR('e','t','h','i') },
-    { N_("Script|Georgian"), CHR('g','e','o','r') },
-    { N_("Glagolitic"), CHR('g','l','a','g') },
-    { N_("Gothic"), CHR('g','o','t','h') },
-    { N_("Script|Greek"), CHR('g','r','e','k') },
-    { N_("Script|Gujarati"), CHR('g','u','j','r') },
-    { N_("Script|Gujarati2"), CHR('g','j','r','2') },
-    { N_("Gurmukhi"), CHR('g','u','r','u') },
-    { N_("Gurmukhi2"), CHR('g','u','r','2') },
-    { N_("Hangul Jamo"), CHR('j','a','m','o') },
-    { N_("Hangul"), CHR('h','a','n','g') },
-    { N_("Script|Hanunóo"), CHR('h','a','n','o') },
-    { N_("Script|Hebrew"), CHR('h','e','b','r') },
-/*  { N_("Pahawh Hmong"), CHR('h','m','n','g') },*/
-/*  { N_("Indus (Harappan)"), CHR('i','n','d','s') },*/
-    { N_("Script|Javanese"), CHR('j','a','v','a') },
-    { N_("Kayah Li"), CHR('k','a','l','i') },
-    { N_("Hiragana & Katakana"), CHR('k','a','n','a') },
-    { N_("Kharoṣṭhī"), CHR('k','h','a','r') },
-    { N_("Script|Kannada"), CHR('k','n','d','a') },
-    { N_("Script|Kannada2"), CHR('k','n','d','2') },
-    { N_("Script|Khmer"), CHR('k','h','m','r') },
-    { N_("Script|Kharosthi"), CHR('k','h','a','r') },
-    { N_("Script|Lao") , CHR('l','a','o',' ') },
-    { N_("Script|Latin"), CHR('l','a','t','n') },
-    { N_("Lepcha (Róng)"), CHR('l','e','p','c') },
-    { N_("Script|Limbu"), CHR('l','i','m','b') },	/* Not in ISO 15924 !!!!!, just guessing */
-    { N_("Linear A"), CHR('l','i','n','a') },
-    { N_("Linear B"), CHR('l','i','n','b') },
-    { N_("Lycian"), CHR('l','y','c','i') },
-    { N_("Lydian"), CHR('l','y','d','i') },
-    { N_("Script|Mandaean"), CHR('m','a','n','d') },
-/*  { N_("Mayan hieroglyphs"), CHR('m','a','y','a') },*/
-    { N_("Script|Malayālam"), CHR('m','l','y','m') },
-    { N_("Script|Malayālam2"), CHR('m','l','m','2') },
-    { N_("Mathematical Alphanumeric Symbols"), CHR('m','a','t','h') },
-    { N_("Script|Mongolian"), CHR('m','o','n','g') },
-    { N_("Musical"), CHR('m','u','s','c') },
-    { N_("Script|Myanmar"), CHR('m','y','m','r') },
-    { N_("New Tai Lue"), CHR('t','a','l','u') },
-    { N_("N'Ko"), CHR('n','k','o',' ') },
-    { N_("Ogham"), CHR('o','g','a','m') },
-    { N_("Ol Chiki"), CHR('o','l','c','k') },
-    { N_("Old Italic (Etruscan, Oscan, etc.)"), CHR('i','t','a','l') },
-    { N_("Script|Old Permic"), CHR('p','e','r','m') },
-    { N_("Old Persian cuneiform"), CHR('x','p','e','o') },
-    { N_("Script|Oriya"), CHR('o','r','y','a') },
-    { N_("Script|Oriya2"), CHR('o','r','y','2') },
-    { N_("Osmanya"), CHR('o','s','m','a') },
-    { N_("Script|Pahlavi"), CHR('p','a','l','v') },
-    { N_("Script|Phags-pa"), CHR('p','h','a','g') },
-    { N_("Script|Phoenician"), CHR('p','h','n','x') },
-    { N_("Phaistos"), CHR('p','h','s','t') },
-    { N_("Pollard Phonetic"), CHR('p','l','r','d') },
-    { N_("Rejang"), CHR('r','j','n','g') },
-    { N_("Rongorongo"), CHR('r','o','r','o') },
-    { N_("Runic"), CHR('r','u','n','r') },
-    { N_("Saurashtra"), CHR('s','a','u','r') },
-    { N_("Shavian"), CHR('s','h','a','w') },
-    { N_("Script|Sinhala"), CHR('s','i','n','h') },
-    { N_("Script|Sumero-Akkadian Cuneiform"), CHR('x','s','u','x') },
-    { N_("Script|Sundanese"), CHR('s','u','n','d') },
-    { N_("Script|Syloti Nagri"), CHR('s','y','l','o') },
-    { N_("Script|Syriac"), CHR('s','y','r','c') },
-    { N_("Script|Tagalog"), CHR('t','g','l','g') },
-    { N_("Script|Tagbanwa"), CHR('t','a','g','b') },
-    { N_("Tai Le"), CHR('t','a','l','e') },	/* Not in ISO 15924 !!!!!, just guessing */
-    { N_("Tai Lu"), CHR('t','a','l','a') },	/* Not in ISO 15924 !!!!!, just guessing */
-    { N_("Script|Tamil"), CHR('t','a','m','l') },
-    { N_("Script|Tamil2"), CHR('t','m','l','2') },
-    { N_("Script|Telugu"), CHR('t','e','l','u') },
-    { N_("Script|Telugu2"), CHR('t','e','l','2') },
-    { N_("Tengwar"), CHR('t','e','n','g') },
-    { N_("Thaana"), CHR('t','h','a','a') },
-    { N_("Script|Thai"), CHR('t','h','a','i') },
-    { N_("Script|Tibetan"), CHR('t','i','b','t') },
-    { N_("Tifinagh (Berber)"), CHR('t','f','n','g') },
-    { N_("Script|Ugaritic"), CHR('u','g','r','t') },	/* Not in ISO 15924 !!!!!, just guessing */
-    { N_("Script|Vai"), CHR('v','a','i',' ') },
-/*  { N_("Visible Speech"), CHR('v','i','s','p') },*/
-    { N_("Cuneiform, Ugaritic"), CHR('x','u','g','a') },
-    { N_("Script|Yi")  , CHR('y','i',' ',' ') },
-/*  { N_("Private Use Script 1"), CHR('q','a','a','a') },*/
-/*  { N_("Private Use Script 2"), CHR('q','a','a','b') },*/
-/*  { N_("Undetermined Script"), CHR('z','y','y','y') },*/
-/*  { N_("Uncoded Script"), CHR('z','z','z','z') },*/
+    { NC_("Script", "Arabic"), CHR('a','r','a','b') },
+    { NC_("Script", "Aramaic"), CHR('a','r','a','m') },
+    { NC_("Script", "Armenian"), CHR('a','r','m','n') },
+    { NC_("Script", "Avestan"), CHR('a','v','e','s') },
+    { NC_("Script", "Balinese"), CHR('b','a','l','i') },
+    { NC_("Script", "Batak"), CHR('b','a','t','k') },
+    { NC_("Script", "Bengali"), CHR('b','e','n','g') },
+    { NC_("Script", "Bengali2"), CHR('b','n','g','2') },
+    { NC_("Script", "Bliss Symbolics"), CHR('b','l','i','s') },
+    { NC_("Script", "Bopomofo"), CHR('b','o','p','o') },
+    { NC_("Script", "Brāhmī"), CHR('b','r','a','h') },
+    { NC_("Script", "Braille"), CHR('b','r','a','i') },
+    { NC_("Script", "Buginese"), CHR('b','u','g','i') },
+    { NC_("Script", "Buhid"), CHR('b','u','h','d') },
+    { NC_("Script", "Byzantine Music"), CHR('b','y','z','m') },
+    { NC_("Script", "Canadian Syllabics"), CHR('c','a','n','s') },
+    { NC_("Script", "Carian"), CHR('c','a','r','i') },
+    { NC_("Script", "Cherokee"), CHR('c','h','a','m') },
+    { NC_("Script", "Cham"), CHR('c','h','a','m') },
+    { NC_("Script", "Cherokee"), CHR('c','h','e','r') },
+    { NC_("Script", "Cirth"), CHR('c','i','r','t') },
+    { NC_("Script", "CJK Ideographic"), CHR('h','a','n','i') },
+    { NC_("Script", "Coptic"), CHR('c','o','p','t') },
+    { NC_("Script", "Cypro-Minoan"), CHR('c','p','r','t') },
+    { NC_("Script", "Cypriot syllabary"), CHR('c','p','m','n') },
+    { NC_("Script", "Cyrillic"), CHR('c','y','r','l') },
+    { NC_("Script", "Default"), CHR('D','F','L','T') },
+    { NC_("Script", "Deseret (Mormon)"), CHR('d','s','r','t') },
+    { NC_("Script", "Devanagari"), CHR('d','e','v','a') },
+    { NC_("Script", "Devanagari2"), CHR('d','e','v','2') },
+/*  { NC_("Script", "Egyptian demotic"), CHR('e','g','y','d') }, */
+/*  { NC_("Script", "Egyptian hieratic"), CHR('e','g','y','h') }, */
+/* TRANSLATORS:
+ * Someone asked if FontForge actually was prepared generate hieroglyph output
+ * because of this string. No. But OpenType and Unicode have placeholders for
+ * dealing with these scripts against the day someone wants to use them. So
+ * FontForge must be prepared to deal with those placeholders if nothing else.
+ */
+/*  { NC_("Script", "Egyptian hieroglyphs"), CHR('e','g','y','p') }, */
+    { NC_("Script", "Ethiopic"), CHR('e','t','h','i') },
+    { NC_("Script", "Georgian"), CHR('g','e','o','r') },
+    { NC_("Script", "Glagolitic"), CHR('g','l','a','g') },
+    { NC_("Script", "Gothic"), CHR('g','o','t','h') },
+    { NC_("Script", "Greek"), CHR('g','r','e','k') },
+    { NC_("Script", "Gujarati"), CHR('g','u','j','r') },
+    { NC_("Script", "Gujarati2"), CHR('g','j','r','2') },
+    { NC_("Script", "Gurmukhi"), CHR('g','u','r','u') },
+    { NC_("Script", "Gurmukhi2"), CHR('g','u','r','2') },
+    { NC_("Script", "Hangul Jamo"), CHR('j','a','m','o') },
+    { NC_("Script", "Hangul"), CHR('h','a','n','g') },
+    { NC_("Script", "Hanunóo"), CHR('h','a','n','o') },
+    { NC_("Script", "Hebrew"), CHR('h','e','b','r') },
+/*  { NC_("Script", "Pahawh Hmong"), CHR('h','m','n','g') },*/
+/*  { NC_("Script", "Indus (Harappan)"), CHR('i','n','d','s') },*/
+    { NC_("Script", "Javanese"), CHR('j','a','v','a') },
+    { NC_("Script", "Kayah Li"), CHR('k','a','l','i') },
+    { NC_("Script", "Hiragana & Katakana"), CHR('k','a','n','a') },
+    { NC_("Script", "Kharoṣṭhī"), CHR('k','h','a','r') },
+    { NC_("Script", "Kannada"), CHR('k','n','d','a') },
+    { NC_("Script", "Kannada2"), CHR('k','n','d','2') },
+    { NC_("Script", "Khmer"), CHR('k','h','m','r') },
+    { NC_("Script", "Kharosthi"), CHR('k','h','a','r') },
+    { NC_("Script", "Lao") , CHR('l','a','o',' ') },
+    { NC_("Script", "Latin"), CHR('l','a','t','n') },
+    { NC_("Script", "Lepcha (Róng)"), CHR('l','e','p','c') },
+    { NC_("Script", "Limbu"), CHR('l','i','m','b') },	/* Not in ISO 15924 !!!!!, just guessing */
+    { NC_("Script", "Linear A"), CHR('l','i','n','a') },
+    { NC_("Script", "Linear B"), CHR('l','i','n','b') },
+    { NC_("Script", "Lycian"), CHR('l','y','c','i') },
+    { NC_("Script", "Lydian"), CHR('l','y','d','i') },
+    { NC_("Script", "Mandaean"), CHR('m','a','n','d') },
+/*  { NC_("Script", "Mayan hieroglyphs"), CHR('m','a','y','a') },*/
+    { NC_("Script", "Malayālam"), CHR('m','l','y','m') },
+    { NC_("Script", "Malayālam2"), CHR('m','l','m','2') },
+    { NC_("Script", "Mathematical Alphanumeric Symbols"), CHR('m','a','t','h') },
+    { NC_("Script", "Mongolian"), CHR('m','o','n','g') },
+    { NC_("Script", "Musical"), CHR('m','u','s','c') },
+    { NC_("Script", "Myanmar"), CHR('m','y','m','r') },
+    { NC_("Script", "New Tai Lue"), CHR('t','a','l','u') },
+    { NC_("Script", "N'Ko"), CHR('n','k','o',' ') },
+    { NC_("Script", "Ogham"), CHR('o','g','a','m') },
+    { NC_("Script", "Ol Chiki"), CHR('o','l','c','k') },
+    { NC_("Script", "Old Italic (Etruscan, Oscan, etc.)"), CHR('i','t','a','l') },
+    { NC_("Script", "Old Permic"), CHR('p','e','r','m') },
+    { NC_("Script", "Old Persian cuneiform"), CHR('x','p','e','o') },
+    { NC_("Script", "Oriya"), CHR('o','r','y','a') },
+    { NC_("Script", "Oriya2"), CHR('o','r','y','2') },
+    { NC_("Script", "Osmanya"), CHR('o','s','m','a') },
+    { NC_("Script", "Pahlavi"), CHR('p','a','l','v') },
+    { NC_("Script", "Phags-pa"), CHR('p','h','a','g') },
+    { NC_("Script", "Phoenician"), CHR('p','h','n','x') },
+    { NC_("Script", "Phaistos"), CHR('p','h','s','t') },
+    { NC_("Script", "Pollard Phonetic"), CHR('p','l','r','d') },
+    { NC_("Script", "Rejang"), CHR('r','j','n','g') },
+    { NC_("Script", "Rongorongo"), CHR('r','o','r','o') },
+    { NC_("Script", "Runic"), CHR('r','u','n','r') },
+    { NC_("Script", "Saurashtra"), CHR('s','a','u','r') },
+    { NC_("Script", "Shavian"), CHR('s','h','a','w') },
+    { NC_("Script", "Sinhala"), CHR('s','i','n','h') },
+    { NC_("Script", "Sumero-Akkadian Cuneiform"), CHR('x','s','u','x') },
+    { NC_("Script", "Sundanese"), CHR('s','u','n','d') },
+    { NC_("Script", "Syloti Nagri"), CHR('s','y','l','o') },
+    { NC_("Script", "Syriac"), CHR('s','y','r','c') },
+    { NC_("Script", "Tagalog"), CHR('t','g','l','g') },
+    { NC_("Script", "Tagbanwa"), CHR('t','a','g','b') },
+    { NC_("Script", "Tai Le"), CHR('t','a','l','e') },	/* Not in ISO 15924 !!!!!, just guessing */
+    { NC_("Script", "Tai Lu"), CHR('t','a','l','a') },	/* Not in ISO 15924 !!!!!, just guessing */
+    { NC_("Script", "Tamil"), CHR('t','a','m','l') },
+    { NC_("Script", "Tamil2"), CHR('t','m','l','2') },
+    { NC_("Script", "Telugu"), CHR('t','e','l','u') },
+    { NC_("Script", "Telugu2"), CHR('t','e','l','2') },
+    { NC_("Script", "Tengwar"), CHR('t','e','n','g') },
+    { NC_("Script", "Thaana"), CHR('t','h','a','a') },
+    { NC_("Script", "Thai"), CHR('t','h','a','i') },
+    { NC_("Script", "Tibetan"), CHR('t','i','b','t') },
+    { NC_("Script", "Tifinagh (Berber)"), CHR('t','f','n','g') },
+    { NC_("Script", "Ugaritic"), CHR('u','g','r','t') },	/* Not in ISO 15924 !!!!!, just guessing */
+    { NC_("Script", "Vai"), CHR('v','a','i',' ') },
+/*  { NC_("Script", "Visible Speech"), CHR('v','i','s','p') },*/
+    { NC_("Script", "Cuneiform, Ugaritic"), CHR('x','u','g','a') },
+    { NC_("Script", "Yi")  , CHR('y','i',' ',' ') },
+/*  { NC_("Script", "Private Use Script 1"), CHR('q','a','a','a') },*/
+/*  { NC_("Script", "Private Use Script 2"), CHR('q','a','a','b') },*/
+/*  { NC_("Script", "Undetermined Script"), CHR('z','y','y','y') },*/
+/*  { NC_("Script", "Uncoded Script"), CHR('z','z','z','z') },*/
     { NULL, 0 }
 };
 
@@ -1440,12 +1440,12 @@ return;
     for ( j=0; j<2; ++j ) {
 	for ( i=0; i<10; ++i )
 	    if ( lookup_type_names[j][i]!=NULL )
-		lookup_type_names[j][i] = S_((char *) lookup_type_names[j][i]);
+		lookup_type_names[j][i] = _(lookup_type_names[j][i]);
     }
     for ( i=0; localscripts[i].text!=NULL; ++i )
-	localscripts[i].text = S_(localscripts[i].text);
+	localscripts[i].text = (char *) g_dpgettext2(NULL, "Script", localscripts[i].text);
     for ( i=0; friendlies[i].friendlyname!=NULL; ++i )
-	friendlies[i].friendlyname = S_(friendlies[i].friendlyname);
+	friendlies[i].friendlyname = _(friendlies[i].friendlyname);
 }
 
 char *TagFullName(SplineFont *sf,uint32_t tag, int ismac, int onlyifknown) {
@@ -1496,7 +1496,7 @@ return( xstrdup_or_null( ubuf ));
 void NameOTLookup(OTLookup *otl,SplineFont *sf) {
     char *userfriendly = NULL, *script;
     FeatureScriptLangList *fl;
-    char *lookuptype;
+    const char *lookuptype;
     char *format;
     struct lookup_subtable *subtable;
     int k;
@@ -1522,7 +1522,7 @@ void NameOTLookup(OTLookup *otl,SplineFont *sf) {
 	    else if ( (otl->lookup_type>>8)<2 && (otl->lookup_type&0xff)<10 )
 		lookuptype = _(lookup_type_names[otl->lookup_type>>8][otl->lookup_type&0xff]);
 	    else
-		lookuptype = S_("LookupType|Unknown");
+		lookuptype = C_("LookupType", "Unknown");
 	    for ( fl=otl->features; fl!=NULL && !fl->ismac; fl=fl->next );
 	    if ( fl==NULL )
 		userfriendly = xstrdup_or_null(lookuptype);
@@ -1564,7 +1564,7 @@ void NameOTLookup(OTLookup *otl,SplineFont *sf) {
 		script_tag = found->script;
 		for ( j=0; localscripts[j].text!=NULL && script_tag!=localscripts[j].tag; ++j );
 		if ( localscripts[j].text!=NULL )
-		    script = xstrdup_or_null( S_((char *) localscripts[j].text) );
+		    script = xstrdup_or_null( g_dpgettext2(NULL, "Script", (char *) localscripts[j].text) );
 		else {
 		    buf[0] = '\'';
 		    buf[1] = fl->scripts->script>>24;

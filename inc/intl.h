@@ -28,16 +28,17 @@
 #ifndef _INTL_H
 #define _INTL_H
 
-#include "gettext.h"
-#define _(str)		gettext(str)
-#define C_(ctx,str)	pgettext(ctx,str)
-#define N_(str)		(str)
-#define S_(str)		sgettext(str)
+#define GTimer GTimer_GTK
+#define GList GList_GTK
+#include <glib.h>
+#include <glib/gi18n.h>
+#undef GTimer
+#undef GList
+
+#define S_(str)		(char*) Q_(str)
 #define P_(str1,str_non1,n)	ngettext(str1,str_non1,n)
 
 /* For messages in the shortcuts domain */
 #define H_(str)		(str)
-
-VISIBLE char *sgettext(const char *msgid);
 
 #endif /* _INTL_H */

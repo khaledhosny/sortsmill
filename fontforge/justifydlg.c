@@ -26,6 +26,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 #include "fontforgeui.h"
 #include <ustring.h>
 #include <chardata.h>
@@ -290,7 +291,7 @@ char *GlyphListDlg(SplineFont *sf, char *glyphstr) {
     }
     free( mi.matrix_data );
 
-    GMatrixEditSetNewText(gcd[0].ret,S_("GlyphName|New"));
+    GMatrixEditSetNewText(gcd[0].ret, C_("GlyphName", "New"));
     GMatrixEditSetColumnCompletion(gcd[0].ret, 0, JSTF_Glyph_Completion );
     GHVBoxSetExpandableCol(boxes[0].ret,gb_expandgluesame);
 
@@ -494,7 +495,7 @@ static char *JSTF_LookupListDlg(GGadget *g, int r, int c) {
 
     free( mi.matrix_data );
 
-    GMatrixEditSetNewText(gcd[0].ret,S_("LookupName|New"));
+    GMatrixEditSetNewText(gcd[0].ret, C_("LookupName", "New"));
     GHVBoxSetExpandableCol(boxes[0].ret,gb_expandgluesame);
 
     GHVBoxFitWindow(boxes[1].ret);
@@ -813,7 +814,7 @@ static char *JSTF_Langs(GGadget *g, int r, int c) {
     }
     free( mi.matrix_data );
 
-    GMatrixEditSetNewText(gcd[0].ret,S_("Language|New"));
+    GMatrixEditSetNewText(gcd[0].ret, C_("Language", "New"));
     GMatrixEditSetUpDownVisible(gcd[0].ret,true);
     GHVBoxSetExpandableCol(boxes[0].ret,gb_expandgluesame);
 
@@ -1009,7 +1010,7 @@ void JustifyDlg(SplineFont *sf) {
     }
     free( mi.matrix_data );
 
-    GMatrixEditSetNewText(gcd[0].ret,S_("Script|New"));
+    GMatrixEditSetNewText(gcd[0].ret, C_("Script", "New"));
     GMatrixEditSetUpDownVisible(gcd[0].ret,true);
     GMatrixEditShowColumn(gcd[0].ret,3,false);
     GHVBoxSetExpandableCol(boxes[0].ret,gb_expandgluesame);
