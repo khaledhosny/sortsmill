@@ -1722,7 +1722,7 @@ return;
 static void UniOut(FILE *out,char *name ) {
     int ch;
 
-    while ( (ch = utf8_ildb((const char **) &name))!=0 ) {
+    while ( (ch = u8_get_next((const uint8_t **) &name))!=0 ) {
 	if ( ch<' ' || ch>='\177' || ch=='\\' || ch=='"' )
 	    fprintf( out, "\\%04x", ch );
 	else
@@ -1771,7 +1771,7 @@ static void dump_gsubgpos(FILE *out, SplineFont *sf) {
 			    char *pt;
 			    fprintf( out, "  sizemenuname 3 1 0x%x \"", nm->lang );
 			    for ( pt = nm->name; ; ) {
-				int ch = utf8_ildb((const char **) &pt);
+				int ch = u8_get_next((const uint8_t **) &pt);
 			        if ( ch=='\0' )
 			    break;
 				if ( ch>=' ' && ch<=0x7f && ch!='"' && ch!='\\' )

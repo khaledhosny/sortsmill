@@ -1850,10 +1850,10 @@ static int isvowel(int index, struct lang_frequencies *lf) {
     if ( lf->vowels==NULL || index==-1 )
 return( -1 );
     pt = lf->cnts[index].utf8_letter;
-    ch = utf8_ildb(&pt);
+    ch = u8_get_next((const uint8_t **) &pt);
 
     pt = lf->vowels;
-    while ( (ch2 = utf8_ildb(&pt))!=0 )
+    while ( (ch2 = u8_get_next((const uint8_t **) &pt))!=0 )
 	if ( ch2==ch )
 return( true );
 
@@ -1880,8 +1880,8 @@ return( i );
 
 static int SFHasUtf8Sequence(SplineFont *sf,const char *str) {
     int ch1, ch2;
-    ch1 = utf8_ildb(&str);
-    ch2 = utf8_ildb(&str);
+    ch1 = u8_get_next((const uint8_t **) &str);
+    ch2 = u8_get_next((const uint8_t **) &str);
 
     if ( ch2!=0 && !SCWorthOutputting(SFGetChar(sf,ch2,NULL)))
 return( false );
@@ -2008,7 +2008,7 @@ static char *RandomWord(struct lang_frequencies *lf, SplineFont *sf) {
 		    for ( last=0; freq[last].utf8_letter!=NULL; ++last )
 			if ( strncmp(word_buf,freq[last].utf8_letter,strlen(freq[last].utf8_letter))==0 )
 		    break;
-		    (void) utf8_ildb((const char **) &pt); laster = -1;
+		    (void) u8_get_next((const uint8_t **) &pt); laster = -1;
 		    i = 0;
     continue;
 		}

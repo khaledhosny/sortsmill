@@ -134,7 +134,7 @@ check_xunistr_h([test_xunistr_strtod_nonNULL "${abs_srcdir}"/test_xunistr_strtod
 check_xunistr_h([test_xunistr_valid_prefix "Eĥoŝanĝo ĉiuĵaŭde" 255 8],
                 [0],[Eĥoŝanĝo ĉiuĵaŭde|Eĥoŝanĝo ĉiuĵaŭde|Eĥoŝanĝo ĉiuĵaŭde|],[])
 
-# An invalid \xFF character.
+# An invalid \xFF 'character'.
 check_xunistr_h([test_xunistr_valid_prefix "Eĥoŝanĝo ĉiuĵ#aŭde" 255 8],
                 [0],[Eĥoŝanĝo ĉiuĵ|Eĥoŝanĝo ĉiuĵ|Eĥoŝanĝo ĉiuĵ|],[])
 
@@ -163,3 +163,18 @@ check_xunistr_h([test_xunistr_valid_prefix "###E###-###o####" 0 0 0 0 0 0 0 0 0 
 # character.
 check_xunistr_h([test_xunistr_valid_prefix "###E###-########" 0 0 0 0 0 0 0 17 0 0 0 0 0 0 32],
                 [0],[E-|E-|E-|],[])
+
+# A valid UTF-8 string.
+check_xunistr_h([test_xunistr_get_next "Eĥoŝanĝo ĉiuĵaŭde" 8],[0],[Eĥoŝanĝo ĉiuĵaŭde|0],[])
+
+# An invalid UTF-8 string (\xFF 'character').
+check_xunistr_h([test_xunistr_get_next "Eĥoŝanĝo ĉiuĵ#aŭde" 255 8],[0],[Eĥoŝanĝo ĉiuĵ|-1],[])
+
+# Another invalid UTF-8 string (truncated ĵ character).
+check_xunistr_h([test_xunistr_get_next "Eĥoŝanĝo ĉiu##aŭde" 196 0 8],[0],[Eĥoŝanĝo ĉiu|-1],[])
+
+# A valid UTF-16 string.
+check_xunistr_h([test_xunistr_get_next "#E#-#o##" 0 0 0 0 0 16],[0],[E-o|0],[])
+
+# A valid UTF-32 string.
+check_xunistr_h([test_xunistr_get_next "###E###-###o####" 0 0 0 0 0 0 0 0 0 0 0 0 0 32],[0],[E-o|0],[])

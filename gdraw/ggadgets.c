@@ -1155,7 +1155,7 @@ void GGadgetSetTitle8WithMn(GGadget *g,const char *title) {
 
     if ( pt!=NULL ) {
 	char *pos = pt+1;
-	mnc = utf8_ildb((const char **) &pos);
+	mnc = u8_get_next((const uint8_t **) &pos);
 	g->mnemonic = mnc;
 	freeme = xstrdup_or_null(title);
 	for ( pt = freeme + (pt-title); *pt; ++pt )

@@ -1220,7 +1220,7 @@ return( ret );
 return( NULL );
 
     ret = xmalloc(strlen(ustr)+1);
-    for ( rpt = ret; (ch=utf8_ildb(&ustr)); ) {
+    for ( rpt = ret; (ch=u8_get_next((const uint8_t **) &ustr)); ) {
 	for ( i=0; i<256; ++i )
 	    if ( table[i]==ch ) {
 		*rpt++ = i;

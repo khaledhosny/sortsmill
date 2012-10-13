@@ -405,7 +405,7 @@ return;
     r->u.glyph.names = GlyphNameListDeUnicode(freeme = xstrndup_or_null(ruletext,pt-1-ruletext));
     free(freeme);
     ruletext = pt+2;
-    for ( pt2=ruletext; (ch=utf8_ildb((const char **) &pt2))!='\0' && ch!=0x21d2; );
+    for ( pt2=ruletext; (ch=u8_get_next((const uint8_t **) &pt2))!='\0' && ch!=0x21d2; );
     if ( ch=='\0' )
 return;
     if ( pt2!=ruletext ) {
@@ -485,15 +485,15 @@ static void classruleitem2rule(SplineFont *sf,const char *ruletext,struct fpst_r
 
     len = 0; i=1;
     for ( pt=ruletext; *pt; ) {
-	ch = utf8_ildb((const char **) &pt);
+	ch = u8_get_next((const uint8_t **) &pt);
 	while ( ch!='|' && ch!=0x21d2 && ch!='\0' ) {
 	    while ( isspace(ch))
-		ch = utf8_ildb((const char **) &pt);
+		ch = u8_get_next((const uint8_t **) &pt);
 	    if ( ch=='|' || ch== 0x21d2 || ch=='\0' )
 	break;
 	    ++len;
 	    while ( !isspace(ch) && ch!='|' && ch!=0x21d2 && ch!='\0' )
-		ch = utf8_ildb((const char **) &pt);
+		ch = u8_get_next((const uint8_t **) &pt);
 	}
 	(&r->u.class.ncnt)[i] = len;
 	(&r->u.class.nclasses)[i] = xmalloc(len*sizeof(uint16_t));
@@ -508,18 +508,18 @@ static void classruleitem2rule(SplineFont *sf,const char *ruletext,struct fpst_r
     len = 0; i=1;
     for ( pt=ruletext; *pt; ) {
 	start = pt;
-	ch = utf8_ildb((const char **) &pt);
+	ch = u8_get_next((const uint8_t **) &pt);
 	while ( ch!='|' && ch!=0x21d2 && ch!='\0' ) {
 	    while ( isspace(ch)) {
 		start = pt;
-		ch = utf8_ildb((const char **) &pt);
+		ch = u8_get_next((const uint8_t **) &pt);
 	    }
 	    if ( ch=='|' || ch== 0x21d2 || ch=='\0' )
 	break;
 	    nstart = start;
 	    while ( !isspace(ch) && ch!='|' && ch!=0x21d2 && ch!='\0' ) {
 		nstart = pt;
-		ch = utf8_ildb((const char **) &pt);
+		ch = u8_get_next((const uint8_t **) &pt);
 	    }
 	    (&r->u.class.nclasses)[i][len] = strtol(start,&end,10);
 	    if ( end<nstart ) {		/* Not a number, must be a class name */

@@ -185,7 +185,7 @@ static int u2utf8_index(int pos,const char *start) {
     const char *pt = start;
 
     while ( --pos>=0 )
-	utf8_ildb(&pt);
+	u8_get_next((const uint8_t **) &pt);
 return( pt-start );
 }
 
@@ -194,7 +194,7 @@ static int utf82u_index(int pos, const char *start) {
     const char *end = start+pos;
 
     while ( start<end ) {
-	utf8_ildb(&start);
+	u8_get_next((const uint8_t **) &start);
 	++uc;
     }
 return( uc );
@@ -303,7 +303,7 @@ return;
 	    ept = utf8_text + gt->lines8[i];
 	    while ( pt<ept ) {
 		++uc;
-		utf8_ildb((const char **) &pt);
+		u8_get_next((const uint8_t **) &pt);
 	    }
 	    gt->lines[i] = uc;
 	}

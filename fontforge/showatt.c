@@ -2204,7 +2204,7 @@ static char *findstartquote(char *str) {
 
     for ( cur=str; *cur!='\0'; ) {
 	last = cur;
-	ch = utf8_ildb((const char **) &cur);
+	ch = u8_get_next((const uint8_t **) &cur);
 	for ( i=0; quotes[i]!=0; ++i )
 	    if ( ch==quotes[i] )
 return( last );
@@ -2217,10 +2217,10 @@ static char *findendquote(char *str) {
     char *last, *cur;
     int i, ch;
 
-    /* startquote =*/ utf8_ildb((const char **) &str);
+    /* startquote =*/ u8_get_next((const uint8_t **) &str);
     for ( cur=str; *cur!='\0'; ) {
 	last = cur;
-	ch = utf8_ildb((const char **) &cur);
+	ch = u8_get_next((const uint8_t **) &cur);
 	if ( ch==' ' )
 return( NULL );
 	for ( i=0; endquotes[i]!=0; ++i )
@@ -2401,7 +2401,7 @@ return;
     pt2 = findendquote(pt);
     if ( pt2==NULL )
 return;
-    utf8_ildb((const char **) &pt);
+    u8_get_next((const uint8_t **) &pt);
     ch = *pt2; *pt2 = '\0';
     if ( att->fv1!=NULL )
 	sc1 = SFGetChar(att->fv1->b.sf,-1,pt);

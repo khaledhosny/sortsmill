@@ -71,7 +71,7 @@ TESTS_XUNISTRING_H = test_xunicase_compare test_xunicase_ncompare	\
 	test_xunistr_strtol_NULL test_xunistr_strtol_nonNULL			\
 	test_xunistr_strtoul_NULL test_xunistr_strtoul_nonNULL			\
 	test_xunistr_strtod_NULL test_xunistr_strtod_nonNULL			\
-	test_xunistr_valid_prefix
+	test_xunistr_valid_prefix test_xunistr_get_next
 
 TESTS_GFILE_C = test_GFileGetUserConfigDir test_GFileGetUserCacheDir	\
 	test_GFileGetUserDataDir test_GFileGetHomeDir test_GFileBuildName	\

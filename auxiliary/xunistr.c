@@ -226,13 +226,13 @@ u32_trim_invalid_suffix (uint32_t *string)
     return prefix;							\
   }
 
-VALID_PREFIX_FUNC(x_u8_valid_prefix, 8, xmalloc);
-VALID_PREFIX_FUNC(x_u16_valid_prefix, 16, xmalloc);
-VALID_PREFIX_FUNC(x_u32_valid_prefix, 32, xmalloc);
+VALID_PREFIX_FUNC (x_u8_valid_prefix, 8, xmalloc);
+VALID_PREFIX_FUNC (x_u16_valid_prefix, 16, xmalloc);
+VALID_PREFIX_FUNC (x_u32_valid_prefix, 32, xmalloc);
 
-VALID_PREFIX_FUNC(x_gc_u8_valid_prefix, 8, x_gc_malloc);
-VALID_PREFIX_FUNC(x_gc_u16_valid_prefix, 16, x_gc_malloc);
-VALID_PREFIX_FUNC(x_gc_u32_valid_prefix, 32, x_gc_malloc);
+VALID_PREFIX_FUNC (x_gc_u8_valid_prefix, 8, x_gc_malloc);
+VALID_PREFIX_FUNC (x_gc_u16_valid_prefix, 16, x_gc_malloc);
+VALID_PREFIX_FUNC (x_gc_u32_valid_prefix, 32, x_gc_malloc);
 
 //-------------------------------------------------------------------------
 
@@ -358,5 +358,31 @@ STRTOI_FUNC (u32_strtoul, 32, unsigned long int, strtoul, x_gc_u32_to_u8);
 STRTOF_FUNC (u8_strtod, 8, double, strtod, /* no conversion */ );
 STRTOF_FUNC (u16_strtod, 16, double, strtod, x_gc_u16_to_u8);
 STRTOF_FUNC (u32_strtod, 32, double, strtod, x_gc_u32_to_u8);
+
+//-------------------------------------------------------------------------
+
+// A replacement for the 'u8_get_next' function that used to be in
+// FontForge. New code should use 'u8_next', instead. It is a standard
+// part of libunistring, and it avoids using signed integers to
+// represent UCS-4 values.
+
+#define GETNEXT_FUNC(NAME, SIZE)			\
+  int							\
+  NAME (const uint##SIZE##_t **sptrptr)			\
+  {							\
+    int c;						\
+    int len = u##SIZE##_strmbtouc (&c, *sptrptr);	\
+    if (len < 0)					\
+      c = -1;						\
+    else if (len == 0)					\
+      (*sptrptr) += 1;					\
+    else						\
+      (*sptrptr) += len;				\
+    return c;						\
+  }
+
+GETNEXT_FUNC (u8_get_next, 8);
+GETNEXT_FUNC (u16_get_next, 16);
+GETNEXT_FUNC (u32_get_next, 32);
 
 //-------------------------------------------------------------------------

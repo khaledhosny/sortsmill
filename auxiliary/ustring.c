@@ -271,7 +271,7 @@ utf8_strchr (const char *str, int search)
   int ch;
   const char *old = str;
 
-  while ((ch = utf8_ildb (&str)) != 0)
+  while ((ch = u8_get_next ((const uint8_t **) &str)) != 0)
     {
       if (ch == search)
         return ((char *) old);
@@ -328,7 +328,7 @@ utf8_2_latin1_copy (const char *utf8buf)
 
   len = strlen (utf8buf);
   pt = lbuf = (char *) xmalloc (len + 1);
-  for (upt = utf8buf; (ch = utf8_ildb (&upt)) != '\0';)
+  for (upt = utf8buf; (ch = u8_get_next ((const uint8_t **) &upt)) != '\0';)
     if (ch >= 0xff)
       *pt++ = '?';
     else
@@ -365,52 +365,6 @@ u2utf8_copyn (const uint32_t *ubuf, int len)
     pt = utf8_idpb (pt, *ubuf++);
   *pt = '\0';
   return (utf8buf);
-}
-
-int32_t
-utf8_ildb (const char **_text)
-{
-  int32_t val = -1;
-  int ch;
-  const uint8_t *text = (const uint8_t *) *_text;
-  /* Increment and load character */
-
-  if ((ch = *text++) < 0x80)
-    {
-      val = ch;
-    }
-  else if (ch <= 0xbf)
-    {
-      /* error */
-    }
-  else if (ch <= 0xdf)
-    {
-      if (*text >= 0x80 && *text < 0xc0)
-        val = ((ch & 0x1f) << 6) | (*text++ & 0x3f);
-    }
-  else if (ch <= 0xef)
-    {
-      if (*text >= 0x80 && *text < 0xc0 && text[1] >= 0x80 && text[1] < 0xc0)
-        {
-          val =
-            ((ch & 0xf) << 12) | ((text[0] & 0x3f) << 6) | (text[1] & 0x3f);
-          text += 2;
-        }
-    }
-  else
-    {
-      int w = (((ch & 0x7) << 2) | ((text[0] & 0x30) >> 4)) - 1, w2;
-      w = (w << 6) | ((text[0] & 0xf) << 2) | ((text[1] & 0x30) >> 4);
-      w2 = ((text[1] & 0xf) << 6) | (text[2] & 0x3f);
-      val = w * 0x400 + w2 + 0x10000;
-      if (*text < 0x80 || text[1] < 0x80 || text[2] < 0x80 ||
-          *text >= 0xc0 || text[1] >= 0xc0 || text[2] >= 0xc0)
-        val = -1;
-      else
-        text += 3;
-    }
-  *_text = (const char *) text;
-  return (val);
 }
 
 char *
@@ -500,7 +454,7 @@ utf82u_strlen (const char *utf8_str)
   int ch;
   int len = 0;
 
-  while ((ch = utf8_ildb (&utf8_str)) > 0)
+  while ((ch = u8_get_next ((const uint8_t **) &utf8_str)) > 0)
     if (ch > 0x10000)
       len += 2;
     else
@@ -515,7 +469,7 @@ utf8_strncpy (register char *to, const char *from, int len)
   const char *old = from;
   while (len && *old)
     {
-      utf8_ildb (&old);
+      u8_get_next ((const uint8_t **) &old);
       len--;
     }
   strncpy (to, from, old - from);
@@ -534,7 +488,7 @@ StripToASCII (const char *utf8_str)
   len = strlen (utf8_str);
   pt = newcr = (char *) xmalloc (len + 1);
   end = pt + len;
-  while ((ch = utf8_ildb (&utf8_str)) != '\0')
+  while ((ch = u8_get_next ((const uint8_t **) &utf8_str)) != '\0')
     {
       if (pt >= end)
         {

@@ -6154,7 +6154,7 @@ static void utf82u_annot_strncat(uint32_t *to, const char *from, int len) {
     register uint32_t ch;
 
     to += u32_strlen(to);
-    while ( (ch = utf8_ildb(&from)) != '\0' && --len>=0 ) {
+    while ( (ch = u8_get_next((const uint8_t **) &from)) != '\0' && --len>=0 ) {
 	if ( ch=='\t' ) {
 	    *(to++) = ' ';
 	    ch = ' ';

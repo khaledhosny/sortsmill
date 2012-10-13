@@ -938,7 +938,7 @@ return;
 		first = false;
 	    }
 	}
-	mi->shortcut = utf8_ildb((const char **) &sh);
+	mi->shortcut = u8_get_next((const uint8_t **) &sh);
 	if ( *sh!='\0' ) {
 	    fprintf( stderr, "Unexpected characters at end of short cut: %s\n", shortcut );
 return;

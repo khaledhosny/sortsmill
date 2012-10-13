@@ -1505,22 +1505,22 @@ static int IsSubSetOf(const char *substr,const char *fullstr ) {
     const char *pt1, *pt2;
     uint32_t ch1, ch2;
 
-    for ( pt1=substr, pt2=fullstr, ch1=utf8_ildb(&pt1); ch1!=0 ; ) {
+    for ( pt1=substr, pt2=fullstr, ch1=u8_get_next((const uint8_t **) &pt1); ch1!=0 ; ) {
 	if ( *pt2=='\0' )
     break;
-	ch2 = utf8_ildb(&pt2);
+	ch2 = u8_get_next((const uint8_t **) &pt2);
 	if ( ch1==ch2 )
-	    ch1 = utf8_ildb(&pt1);
+	    ch1 = u8_get_next((const uint8_t **) &pt1);
     }
     if ( ch1=='\0' )
 return( true );
 
-    for ( pt1=substr, pt2=fullstr, ch1=utf8_ildb(&pt1); ch1!=0 ; ) {
+    for ( pt1=substr, pt2=fullstr, ch1=u8_get_next((const uint8_t **) &pt1); ch1!=0 ; ) {
 	if ( *pt2=='\0' )
     break;
-	ch2 = utf8_ildb(&pt2);
+	ch2 = u8_get_next((const uint8_t **) &pt2);
 	if ( ch1==ch2 || ch1=='?' )
-	    ch1 = utf8_ildb(&pt1);
+	    ch1 = u8_get_next((const uint8_t **) &pt1);
     }
 return( ch1=='\0' );
 }

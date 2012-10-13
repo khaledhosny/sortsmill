@@ -2040,11 +2040,11 @@ return( true );
     for ( j=0; j<2; ++j ) {
 	for ( i=0; j==0 ? i<parent->layer_cnt : strmatch[i].str!=NULL; ++i ) {
 	    for ( foo = j==0 ? parent->layers[i].name : _(strmatch[i].str);
-		    (ch=utf8_ildb((const char **) &foo))!=0; )
+		    (ch=u8_get_next((const uint8_t **) &foo))!=0; )
 		if ( ch=='_' )
 	    break;
 	    if ( ch=='_' )
-		mnc = utf8_ildb((const char **) &foo);
+		mnc = u8_get_next((const uint8_t **) &foo);
 	    else
 		mnc = 0;
 	    mn = mnc;

@@ -1836,9 +1836,9 @@ PIDownloadFont (PI * pi, SplineFont *sf, EncMap * map)
         (sfbit->fontfile, sf,
          pi->printtype ==
          pt_pdf ? ff_pfb : sf->multilayer ? ff_ptype3 : is_mm ? ff_mma :
-         sfbit->istype42cid ? ff_type42cid : sfbit->iscid ? ff_cid : sfbit->
-         twobyte ? ff_ptype0 : ff_pfa, ps_flag_identitycidmap, map, NULL,
-         ly_fore))
+         sfbit->istype42cid ? ff_type42cid : sfbit->
+         iscid ? ff_cid : sfbit->twobyte ? ff_ptype0 : ff_pfa,
+         ps_flag_identitycidmap, map, NULL, ly_fore))
     error = true;
 
   ff_progress_end_indicator ();
@@ -2832,7 +2832,7 @@ static char *_antigone[] = {
   NULL
 };
 
-                                                                                                                         /* Hebrew *//* Seder */
+                                                                                                                                     /* Hebrew *//* Seder */
 static char *_hebrew[] = {
   "וְאָתָא מַלְאַךְ הַמָּוֶת, וְשָׁחַט לְשּׁוׂחֵט, רְּשָׁחַט לְתוׂרָא, רְּשָׁתַה לְמַּיָּא, דְּכָכָה לְנוּרָא, דְּשָׂרַף לְחוּטְרָא, דְּהִכָּה לְכַלְכָּא, דְּנָשַׁךְ לְשׁוּנְרָא, דְּאָכְלָה לְגַדְיָא, דִּזְבַן אַבָּא בִּתְרֵי זוּזֵי. חַד גַּדְיָא, חַד גַּדְיָא.",
   "וְאָתָא הַקָּדוֹשׁ כָּדוּךְ הוּא, וְשָׁחַט לְמַלְאַךְ הַמָּוֶת, רְּשָׁחַט לְשּׁוׂחֵט, רְּשָׁחַט לְתוׂרָא, רְּשָׁתַה לְמַּיָּא, דְּכָכָה לְנוּרָא, דְּשָׂרַף לְחוּטְרָא, דְּהִכָּה לְכַלְכָּא, דְּנָשַׁךְ לְשׁוּנְרָא, דְּאָכְלָה לְגַדְיָא, דִּזְבַן אַבָּא בִּתְרֵי זוּזֵי. חַד גַּדְיָא, חַד גַּדְיָא.",
@@ -3087,13 +3087,13 @@ static char *_swahilijohn[] = {
   NULL
 };
 
-                                                                                                          /* thai *//* I'm sure I've made transcription errors here, I can't figure out what "0xe27, 0xe38, 0xe4d" really is */
+                                                                                                                    /* thai *//* I'm sure I've made transcription errors here, I can't figure out what "0xe27, 0xe38, 0xe4d" really is */
 static char *_thaijohn[] = {
   "๏ ในทีเดิมนะนพวุํลอโฆเปนอยู่ แลเปนอยู่ดว้ยกันกับ พวุํเฆ้า",
   NULL
 };
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            /* Mayan K'iche' of Guatemala *//* Prolog to Popol Wuj *//* Provided by Daniel Johnson */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     /* Mayan K'iche' of Guatemala *//* Prolog to Popol Wuj *//* Provided by Daniel Johnson */
 static char *_mayanPopolWuj[] = {
   "Are u xe' ojer tzij waral, C'i Che' u bi'. Waral xchikatz'ibaj-wi, xchikatiquiba-wi ojer tzij, u ticaribal, u xe'nabal puch ronojel xban pa tinamit C'i Che', ramak C'i Che' winak.",
   NULL
@@ -3328,7 +3328,7 @@ AllChars (SplineFont *sf, const char *str)
 
   if (sf->subfontcnt == 0)
     {
-      while ((ch = utf8_ildb (&str)) != '\0')
+      while ((ch = u8_get_next ((const uint8_t **) &str)) != '\0')
         {
           for (i = 0; i < sf->glyphcnt; ++i)
             if ((sc = sf->glyphs[i]) != NULL)
@@ -3351,7 +3351,7 @@ AllChars (SplineFont *sf, const char *str)
       for (i = 0; i < sf->subfontcnt; ++i)
         if (sf->subfonts[i]->glyphcnt > max)
           max = sf->subfonts[i]->glyphcnt;
-      while ((ch = utf8_ildb (&str)) != '\0')
+      while ((ch = u8_get_next ((const uint8_t **) &str)) != '\0')
         {
           for (i = 0; i < max; ++i)
             {

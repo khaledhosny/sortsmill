@@ -239,7 +239,7 @@ int NameToEncoding(SplineFont *sf,EncMap *map,const char *name) {
     char *end, *freeme=NULL;
     const char *upt = name;
 
-    ch = utf8_ildb(&upt);
+    ch = u8_get_next((const uint8_t **) &upt);
     if ( *upt=='\0' ) {
 	enc = SFFindSlot(sf,map,ch,NULL);
 	if ( enc!=-1 )

@@ -96,6 +96,10 @@ VISIBLE double u8_strtod (const uint8_t *nptr, uint8_t **endptr);
 VISIBLE double u16_strtod (const uint16_t *nptr, uint16_t **endptr);
 VISIBLE double u32_strtod (const uint32_t *nptr, uint32_t **endptr);
 
+VISIBLE int u8_get_next (const uint8_t **sptrptr);
+VISIBLE int u16_get_next (const uint16_t **sptrptr);
+VISIBLE int u32_get_next (const uint32_t **sptrptr);
+
 static inline uint8_t *
 x_u8_strdup (const uint8_t *string)
 {

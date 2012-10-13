@@ -784,7 +784,7 @@ static void bisupper(Context *c) {
 	ScriptError( c, "Wrong number of arguments" );
     else if ( c->a.vals[1].type==v_str ) {
 	pt = c->a.vals[1].u.sval;
-	ch = utf8_ildb(&pt);
+	ch = u8_get_next((const uint8_t **) &pt);
 	c->return_val.u.ival = ch>=0 && ch<=0x10000?isupper(ch):0;
     } else if ( c->a.vals[1].type==v_int || c->a.vals[1].type==v_unicode )
 	c->return_val.u.ival = isupper(c->a.vals[1].u.ival);
@@ -801,7 +801,7 @@ static void bislower(Context *c) {
 	ScriptError( c, "Wrong number of arguments" );
     else if ( c->a.vals[1].type==v_str ) {
 	pt = c->a.vals[1].u.sval;
-	ch = utf8_ildb(&pt);
+	ch = u8_get_next((const uint8_t **) &pt);
 	c->return_val.u.ival = ch>=0 && ch<=0x10000?islower(ch):0;
     } else if ( c->a.vals[1].type==v_int || c->a.vals[1].type==v_unicode )
 	c->return_val.u.ival = islower(c->a.vals[1].u.ival);
@@ -818,7 +818,7 @@ static void bisdigit(Context *c) {
 	ScriptError( c, "Wrong number of arguments" );
     else if ( c->a.vals[1].type==v_str ) {
 	pt = c->a.vals[1].u.sval;
-	ch = utf8_ildb(&pt);
+	ch = u8_get_next((const uint8_t **) &pt);
 	c->return_val.u.ival = ch>=0 && ch<=0x10000?isdigit(ch):0;
     } else if ( c->a.vals[1].type==v_int || c->a.vals[1].type==v_unicode )
 	c->return_val.u.ival = isdigit(c->a.vals[1].u.ival);
@@ -835,7 +835,7 @@ static void bishexdigit(Context *c) {
 	ScriptError( c, "Wrong number of arguments" );
     else if ( c->a.vals[1].type==v_str ) {
 	pt = c->a.vals[1].u.sval;
-	ch = utf8_ildb(&pt);
+	ch = u8_get_next((const uint8_t **) &pt);
 	c->return_val.u.ival = ch>=0 && ch<=0x10000?ishexdigit(ch):0;
     } else if ( c->a.vals[1].type==v_int || c->a.vals[1].type==v_unicode )
 	c->return_val.u.ival = ishexdigit(c->a.vals[1].u.ival);
@@ -852,7 +852,7 @@ static void bisalpha(Context *c) {
 	ScriptError( c, "Wrong number of arguments" );
     else if ( c->a.vals[1].type==v_str ) {
 	pt = c->a.vals[1].u.sval;
-	ch = utf8_ildb(&pt);
+	ch = u8_get_next((const uint8_t **) &pt);
 	c->return_val.u.ival = ch>=0 && ch<=0x10000?isalpha(ch):0;
     } else if ( c->a.vals[1].type==v_int || c->a.vals[1].type==v_unicode )
 	c->return_val.u.ival = isalpha(c->a.vals[1].u.ival);
@@ -869,7 +869,7 @@ static void bisalnum(Context *c) {
 	ScriptError( c, "Wrong number of arguments" );
     else if ( c->a.vals[1].type==v_str ) {
 	pt = c->a.vals[1].u.sval;
-	ch = utf8_ildb(&pt);
+	ch = u8_get_next((const uint8_t **) &pt);
 	c->return_val.u.ival = ch>=0 && ch<=0x10000?isalnum(ch):0;
     } else if ( c->a.vals[1].type==v_int || c->a.vals[1].type==v_unicode )
 	c->return_val.u.ival = isalnum(c->a.vals[1].u.ival);
@@ -886,7 +886,7 @@ static void bisspace(Context *c) {
 	ScriptError( c, "Wrong number of arguments" );
     else if ( c->a.vals[1].type==v_str ) {
 	pt = c->a.vals[1].u.sval;
-	ch = utf8_ildb(&pt);
+	ch = u8_get_next((const uint8_t **) &pt);
 	c->return_val.u.ival = ch>=0 && ch<=0x10000?isspace(ch):0;
     } else if ( c->a.vals[1].type==v_int || c->a.vals[1].type==v_unicode )
 	c->return_val.u.ival = isspace(c->a.vals[1].u.ival);
@@ -904,7 +904,7 @@ static void btoupper(Context *c) {
 	c->return_val.type = v_str;
 	c->return_val.u.sval = pt = xstrdup_or_null(ipt = c->a.vals[1].u.sval);
 	while ( *ipt ) {
-	    ch = utf8_ildb(&ipt);
+	    ch = u8_get_next((const uint8_t **) &ipt);
 	    if ( ch==-1 )
 	break;
 	    if ( ch<0x10000 ) ch = toupper(ch);
@@ -928,7 +928,7 @@ static void btolower(Context *c) {
 	c->return_val.type = v_str;
 	c->return_val.u.sval = pt = xstrdup_or_null(ipt = c->a.vals[1].u.sval);
 	while ( *ipt ) {
-	    ch = utf8_ildb(&ipt);
+	    ch = u8_get_next((const uint8_t **) &ipt);
 	    if ( ch==-1 )
 	break;
 	    if ( ch<0x10000 ) ch = tolower(ch);
@@ -952,7 +952,7 @@ static void btomirror(Context *c) {
 	c->return_val.type = v_str;
 	c->return_val.u.sval = pt = xstrdup_or_null(ipt = c->a.vals[1].u.sval);
 	while ( *ipt ) {
-	    ch = utf8_ildb(&ipt);
+	    ch = u8_get_next((const uint8_t **) &ipt);
 	    if ( ch==-1 )
 	break;
 	    if ( ch<0x10000 ) ch = tomirror(ch);
@@ -1146,7 +1146,7 @@ static void bUCS4(Context *c) {
 	c->return_val.u.aval->vals = xmalloc(len*sizeof(Val));
 	for ( i=0; i<len; ++i ) {
 	    c->return_val.u.aval->vals[i].type = v_int;
-	    c->return_val.u.aval->vals[i].u.ival = utf8_ildb(&pt);
+	    c->return_val.u.aval->vals[i].u.ival = u8_get_next((const uint8_t **) &pt);
 	}
     } else
 	ScriptError( c, "Bad type for argument" );

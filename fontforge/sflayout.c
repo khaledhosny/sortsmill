@@ -1117,7 +1117,7 @@ static Array *SFDefaultScriptsLines(Array *arr,SplineFont *sf) {
 	  }
 	  anyhere = false;
 	  for ( pt=str; *pt; ) {
-	      int ch = utf8_ildb((const char **) &pt);
+	      int ch = u8_get_next((const uint8_t **) &pt);
 	      if ( ch==' ' )
 	  continue;
 	      if ( SFGetChar(sf,ch,NULL)!=NULL ) {
