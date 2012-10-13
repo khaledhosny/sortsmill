@@ -3855,19 +3855,21 @@ static void dumppstr(FILE *file,char *str) {
     fwrite(str,sizeof(char),strlen(str),file);
 }
 
-char *utf8_verify_copy(const char *str) {
-    /* When given a postscript string it SHOULD be in ASCII. But it will often*/
-    /* contain a copyright symbol (sometimes in latin1, sometimes in macroman)*/
-    /* unfortunately both encodings use 0xa9 for copyright so we can't distinguish */
-    /* guess that it's latin1 (or that copyright is the only odd char which */
-    /* means a latin1 conversion will work for macs too). */
+char *utf8_verify_copy(const char *str)
+{
+  /* When given a postscript string it SHOULD be in ASCII. But it will
+     often contain a copyright symbol (sometimes in Latin-1, sometimes
+     in Mac Roman) unfortunately both encodings use 0xa9 for copyright
+     so we can't distinguish.  Guess that it's Latin-1 (or that
+     copyright is the only odd char which means a Latin-1 conversion
+     will work for Macs too). */
 
-    if ( str==NULL )
-return( NULL );
+  if ( str==NULL )
+    return( NULL );
 
-    if ( utf8_valid(str))
-return( xstrdup_or_null(str));		/* Either in ASCII (good) or appears to be utf8*/
-return( latin1_2_utf8_copy(str));
+  if (u8_check (str, u8_strlen (str)) != NULL)
+    return( xstrdup_or_null(str));		/* Either in ASCII (good) or appears to be utf8*/
+  return( latin1_2_utf8_copy(str));
 }
 
 /* Oh. If the encoding is symbol (platform=3, specific=0) then Windows won't */

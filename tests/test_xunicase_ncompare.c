@@ -48,7 +48,7 @@ main (int argc, char **argv)
       uint8_t *s1_8 = x_gc_u8_strconv_from_locale (s1);
       uint8_t *s2_8 = x_gc_u8_strconv_from_locale (s2);
       fprintf (stdout, "%d", abs1 (u8_ncasecompare (s1_8, s2_8, n)));
-    }  
+    }
 
   return 0;
 }

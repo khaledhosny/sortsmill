@@ -129,3 +129,37 @@ check_xunistr_h([test_xunistr_strtod_NULL "${abs_srcdir}"/test_xunistr_strtod.tx
 
 check_xunistr_h([test_xunistr_strtod_nonNULL "${abs_srcdir}"/test_xunistr_strtod.txt],
                 [0],[ignore],[])
+
+# A valid UTF-8 string.
+check_xunistr_h([test_xunistr_valid_prefix "Eĥoŝanĝo ĉiuĵaŭde" 255 8],
+                [0],[Eĥoŝanĝo ĉiuĵaŭde|Eĥoŝanĝo ĉiuĵaŭde|Eĥoŝanĝo ĉiuĵaŭde|],[])
+
+# An invalid \xFF character.
+check_xunistr_h([test_xunistr_valid_prefix "Eĥoŝanĝo ĉiuĵ#aŭde" 255 8],
+                [0],[Eĥoŝanĝo ĉiuĵ|Eĥoŝanĝo ĉiuĵ|Eĥoŝanĝo ĉiuĵ|],[])
+
+# A ĵ character truncated after the first of its two bytes.
+check_xunistr_h([test_xunistr_valid_prefix "Eĥoŝanĝo ĉiu##aŭde" 196 0 8],
+                [0],[Eĥoŝanĝo ĉiu|Eĥoŝanĝo ĉiu|Eĥoŝanĝo ĉiu|],[])
+
+# A valid UTF-16 string.
+check_xunistr_h([test_xunistr_valid_prefix "#E#-#o##" 0 0 0 0 0 16],
+                [0],[E-o|E-o|E-o|],[])
+
+# A \xDC00 appearing illegally in a UTF-16 string.
+# (It should appear only as a trailing surrogate.)
+check_xunistr_h([test_xunistr_valid_prefix "#E#-####" 0 0 220 0 0 0 16],
+                [0],[E-|E-|E-|],[])
+
+# Truncation after a UTF-16 \xD800 lead surrogate.
+check_xunistr_h([test_xunistr_valid_prefix "#E#-####" 0 0 216 0 0 0 16],
+                [0],[E-|E-|E-|],[])
+
+# A valid UTF-32 string.
+check_xunistr_h([test_xunistr_valid_prefix "###E###-###o####" 0 0 0 0 0 0 0 0 0 0 0 0 0 32],
+                [0],[E-o|E-o|E-o|],[])
+
+# A UCS-4 string that is invalid as UTF-32, due to a \x110000
+# character.
+check_xunistr_h([test_xunistr_valid_prefix "###E###-########" 0 0 0 0 0 0 0 17 0 0 0 0 0 0 32],
+                [0],[E-|E-|E-|],[])

@@ -63,6 +63,15 @@ VISIBLE inline bool u32_valid (const uint32_t *string);
 VISIBLE const uint8_t *u8_force_valid (const uint8_t *string);
 VISIBLE const uint16_t *u16_force_valid (const uint16_t *string);
 VISIBLE const uint32_t *u32_force_valid (const uint32_t *string);
+VISIBLE void u8_trim_invalid_suffix (uint8_t *string);
+VISIBLE void u16_trim_invalid_suffix (uint16_t *string);
+VISIBLE void u32_trim_invalid_suffix (uint32_t *string);
+VISIBLE uint8_t *x_u8_valid_prefix (const uint8_t *string);
+VISIBLE uint16_t *x_u16_valid_prefix (const uint16_t *string);
+VISIBLE uint32_t *x_u32_valid_prefix (const uint32_t *string);
+VISIBLE uint8_t *x_gc_u8_valid_prefix (const uint8_t *string);
+VISIBLE uint16_t *x_gc_u16_valid_prefix (const uint16_t *string);
+VISIBLE uint32_t *x_gc_u32_valid_prefix (const uint32_t *string);
 
 // Copy up to n characters (as opposed to storage units).
 VISIBLE uint8_t *x_u8_strmbndup (const uint8_t *string, size_t n);

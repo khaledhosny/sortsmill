@@ -510,41 +510,6 @@ utf8_ib (char *utf8_text)
     return (utf8_text + 4);
 }
 
-int
-utf8_valid (const char *str)
-{
-  /* Is this a valid utf8 string? */
-  int ch;
-
-  while ((ch = utf8_ildb (&str)) != '\0')
-    if (ch == -1)
-      return (false);
-
-  return (true);
-}
-
-void
-utf8_truncatevalid (char *str)
-{
-  /* There are certain cases where we have a fixed amount of space to display */
-  /*  something, and if it doesn't fit in that, then we truncate it. But... */
-  /*  that can leave us with a half completed utf8 byte sequence. So truncate */
-  /*  again, right before the start of the bad sequence */
-  int ch;
-  char *old;
-
-  old = str;
-  while ((ch = utf8_ildb ((const char **) &str)) != '\0')
-    {
-      if (ch == -1)
-        {
-          *old = '\0';
-          return;
-        }
-      old = str;
-    }
-}
-
 char *
 utf8_db (char *utf8_text)
 {

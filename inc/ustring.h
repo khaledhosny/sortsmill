@@ -60,8 +60,6 @@ VISIBLE extern int32_t utf8_ildb (const char **utf8_text);
 VISIBLE extern char *utf8_idpb (char *utf8_text, uint32_t ch);
 VISIBLE extern char *utf8_db (char *utf8_text);
 VISIBLE extern char *utf8_ib (char *utf8_text);
-VISIBLE extern int utf8_valid (const char *str);
-VISIBLE extern void utf8_truncatevalid (char *str);
 VISIBLE extern char *latin1_2_utf8_strcpy (char *utf8buf, const char *lbuf);
 VISIBLE extern char *latin1_2_utf8_copy (const char *lbuf);
 VISIBLE extern char *utf8_2_latin1_copy (const char *utf8buf);

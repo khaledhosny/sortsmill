@@ -88,10 +88,9 @@ int
 u16_ncasecompare (const uint16_t *s1, const uint16_t *s2, size_t n)
 {
   int result;
-  int error =
-    u16_casecmp (s1, szmin (n, u16_strlen (s1)), s2,
-                 szmin (n, u16_strlen (s2)),
-                 uc_locale_language (), UNINORM_NFD, &result);
+  int error = u16_casecmp (s1, szmin (n, u16_strlen (s1)), s2,
+                           szmin (n, u16_strlen (s2)),
+                           uc_locale_language (), UNINORM_NFD, &result);
   if (error != 0 && errno == ENOMEM)
     xalloc_die ();
   assert (error == 0);
@@ -102,10 +101,9 @@ int
 u32_ncasecompare (const uint32_t *s1, const uint32_t *s2, size_t n)
 {
   int result;
-  int error =
-    u32_casecmp (s1, szmin (n, u32_strlen (s1)), s2,
-                 szmin (n, u32_strlen (s2)),
-                 uc_locale_language (), UNINORM_NFD, &result);
+  int error = u32_casecmp (s1, szmin (n, u32_strlen (s1)), s2,
+                           szmin (n, u32_strlen (s2)),
+                           uc_locale_language (), UNINORM_NFD, &result);
   if (error != 0 && errno == ENOMEM)
     xalloc_die ();
   assert (error == 0);

@@ -156,6 +156,12 @@ x_u32_to_u16 (const uint32_t *string)
   return result;
 }
 
+//-------------------------------------------------------------------------
+//
+// These functions force a valid string in a way that should be
+// considered arbitrary. (The current implementation returns an empty
+// string in place of an invalid one.)
+
 const uint8_t *
 u8_force_valid (const uint8_t *string)
 {
@@ -176,6 +182,57 @@ u32_force_valid (const uint32_t *string)
   static const uint32_t empty_string[1] = { 0 };
   return (u32_valid (string)) ? string : empty_string;
 }
+
+//-------------------------------------------------------------------------
+
+void
+u8_trim_invalid_suffix (uint8_t *string)
+{
+  uint8_t *p = (uint8_t *) u8_check (string, u8_strlen (string));
+  if (p != NULL)
+    *p = 0;
+}
+
+void
+u16_trim_invalid_suffix (uint16_t *string)
+{
+  uint16_t *p = (uint16_t *) u16_check (string, u16_strlen (string));
+  if (p != NULL)
+    *p = 0;
+}
+
+void
+u32_trim_invalid_suffix (uint32_t *string)
+{
+  uint32_t *p = (uint32_t *) u32_check (string, u32_strlen (string));
+  if (p != NULL)
+    *p = 0;
+}
+
+//-------------------------------------------------------------------------
+
+#define VALID_PREFIX_FUNC(NAME, SIZE, ALLOCATOR)			\
+  uint##SIZE##_t *							\
+  NAME (const uint##SIZE##_t *string)					\
+  {									\
+    uint##SIZE##_t *prefix;						\
+    size_t length = u##SIZE##_strlen (string);				\
+    const uint##SIZE##_t *p = u##SIZE##_check (string, length);		\
+    if (p != NULL)							\
+      length = p - string;						\
+    prefix = ALLOCATOR ((length + 1) * sizeof (uint##SIZE##_t));	\
+    prefix[0] = 0;							\
+    u##SIZE##_strncat (prefix, string, length);				\
+    return prefix;							\
+  }
+
+VALID_PREFIX_FUNC(x_u8_valid_prefix, 8, xmalloc);
+VALID_PREFIX_FUNC(x_u16_valid_prefix, 16, xmalloc);
+VALID_PREFIX_FUNC(x_u32_valid_prefix, 32, xmalloc);
+
+VALID_PREFIX_FUNC(x_gc_u8_valid_prefix, 8, x_gc_malloc);
+VALID_PREFIX_FUNC(x_gc_u16_valid_prefix, 16, x_gc_malloc);
+VALID_PREFIX_FUNC(x_gc_u32_valid_prefix, 32, x_gc_malloc);
 
 //-------------------------------------------------------------------------
 

@@ -41,7 +41,9 @@ VISIBLE int u32_casecompare (const uint32_t *s1, const uint32_t *s2);
 // multibyte characters. (They are appropriate, for example, where 'n'
 // equals the difference of two pointers.)
 VISIBLE int u8_ncasecompare (const uint8_t *s1, const uint8_t *s2, size_t n);
-VISIBLE int u16_ncasecompare (const uint16_t *s1, const uint16_t *s2, size_t n);
-VISIBLE int u32_ncasecompare (const uint32_t *s1, const uint32_t *s2, size_t n);
+VISIBLE int u16_ncasecompare (const uint16_t *s1, const uint16_t *s2,
+                              size_t n);
+VISIBLE int u32_ncasecompare (const uint32_t *s1, const uint32_t *s2,
+                              size_t n);
 
 #endif // _FONTFORGE_XUNICASE_H

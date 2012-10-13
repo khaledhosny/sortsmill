@@ -3389,7 +3389,7 @@ getquotedeol (FILE *sfd)
   /* these strings should be in utf8 now, but some old sfd files might
      have latin1. Not a severe problems because they SHOULD be in
      ASCII. So any non-ascii strings are erroneous anyway */
-  if (!utf8_valid (str))
+  if (u8_check (str, u8_strlen (str)) != NULL)
     {
       pt = latin1_2_utf8_copy (str);
       free (str);

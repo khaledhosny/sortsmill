@@ -1347,7 +1347,7 @@ return;
 	    len = strlen(space);
 	    strncpy(space+len,str,sizeof(space)/2-2 - len);
 	    space[sizeof(space)/2-2] = '\0';
-	    utf8_truncatevalid(space+len);
+	    u8_trim_invalid_suffix(space+len);
 	    strcat(space+strlen(space),"\n");
 	}
 	if ( event->u.mouse.x>=kcd->xstart2 && c<kcd->second_cnt ) {
@@ -1359,7 +1359,7 @@ return;
 	    len = strlen(space);
 	    strncpy(space+len,str,sizeof(space)-1 - len);
 	    space[sizeof(space)-1] = '\0';
-	    utf8_truncatevalid(space+len);
+	    u8_trim_invalid_suffix(space+len);
 	}
 	if ( space[0]=='\0' )
 return;
