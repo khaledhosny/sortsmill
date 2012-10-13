@@ -4440,17 +4440,18 @@ return( cnt>=2 ? ui_ams : ui_none );
 
 static int PickCMap(struct cmap_encs *cmap_encs,int enccnt,int def) {
     char buffer[500];
-    char **choices, *encname;
+    char **choices;
+    const char *encname;
     int i, ret;
-    static char *macscripts[]= { N_("Script|Roman"), N_("Script|Japanese"), N_("Script|Traditional Chinese"), N_("Script|Korean"),
-	N_("Script|Arabic"), N_("Script|Hebrew"),  N_("Script|Greek"),
+    static char *macscripts[]= { NC_("Script", "Roman"), NC_("Script", "Japanese"), NC_("Script", "Traditional Chinese"), NC_("Script", "Korean"),
+	NC_("Script", "Arabic"), NC_("Script", "Hebrew"),  NC_("Script", "Greek"),
 /* TRANSLATORS: Don't ask me what RSymbol means, I don't know either. It's in apple's */
 /* docs though */
-	N_("Script|Cyrillic"), N_("Script|RSymbol"), N_("Script|Devanagari"),
-/* 10*/ N_("Script|Gurmukhi"), N_("Script|Gujarati"), NULL, NULL, NULL,
+	NC_("Script", "Cyrillic"), NC_("Script", "RSymbol"), NC_("Script", "Devanagari"),
+/* 10*/ NC_("Script", "Gurmukhi"), NC_("Script", "Gujarati"), NULL, NULL, NULL,
 	NULL, NULL, NULL, NULL, NULL,
-/* 20*/	NULL, N_("Script|Thai"), NULL, NULL, NULL, N_("Script|Simplified Chinese"),
-	NULL, NULL, NULL, N_("Script|Central European"),
+/* 20*/	NULL, NC_("Script", "Thai"), NULL, NULL, NULL, NC_("Script", "Simplified Chinese"),
+	NULL, NULL, NULL, NC_("Script", "Central European"),
 /* 30*/ NULL, NULL, NULL };
 
     choices = xmalloc(enccnt*sizeof(char *));
@@ -4459,7 +4460,7 @@ static int PickCMap(struct cmap_encs *cmap_encs,int enccnt,int def) {
 	if ( cmap_encs[i].platform==1 && cmap_encs[i].specific<32 ) {
 	    encname = macscripts[cmap_encs[i].specific];
 	    if ( encname!=NULL )
-		encname = S_(encname);
+		encname = g_dpgettext2(NULL, "Script", encname);
 	} else if ( cmap_encs[i].platform==0 ) {
 	    switch ( cmap_encs[i].specific ) {
 	      case 0:

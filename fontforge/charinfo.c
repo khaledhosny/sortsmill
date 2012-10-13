@@ -146,8 +146,8 @@ static GTextInfo glyphclasses[] = {
 #define CUSTOM_COLOR	9
 #define COLOR_CHOOSE	(-10)
 static GTextInfo std_colors[] = {
-    { (uint32_t *) N_("Color|Choose..."), NULL, 0, 0, (void *) COLOR_CHOOSE, NULL, 0, 1, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) N_("Color|Default"), &def_image, 0, 0, (void *) COLOR_DEFAULT, NULL, 0, 1, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) NC_("Color", "Choose..."), NULL, 0, 0, (void *) COLOR_CHOOSE, NULL, 0, 1, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { (uint32_t *) NC_("Color", "Default"), &def_image, 0, 0, (void *) COLOR_DEFAULT, NULL, 0, 1, 0, 0, 0, 0, 1, 0, 0, '\0' },
     { NULL, &white_image, 0, 0, (void *) 0xffffff, NULL, 0, 1, 0, 0, 0, 0, 0, 0, 0, '\0' },
     { NULL, &red_image, 0, 0, (void *) 0xff0000, NULL, 0, 1, 0, 0, 0, 0, 0, 0, 0, '\0' },
     { NULL, &green_image, 0, 0, (void *) 0x00ff00, NULL, 0, 1, 0, 0, 0, 0, 0, 0, 0, '\0' },
@@ -5298,7 +5298,7 @@ return;
 }
 
 void CharInfoInit(void) {
-    static GTextInfo *lists[] = { glyphclasses, std_colors, truefalse, NULL };
+    static GTextInfo *lists[] = { glyphclasses, truefalse, NULL };
     static int done = 0;
     int i, j;
     static char **cnames[] = { newstrings, NULL };
@@ -5310,9 +5310,11 @@ void CharInfoInit(void) {
     if ( done )
 return;
     done = true;
+    for (i=0; std_colors[i].text != NULL; ++i)
+	std_colors[i].text = (uint32_t *) g_dpgettext2(NULL, "Color", (char *) std_colors[i].text);
     for ( i=0; lists[i]!=NULL; ++i )
 	for ( j=0; lists[i][j].text!=NULL; ++j )
-	    lists[i][j].text = (uint32_t *) S_((char *) lists[i][j].text);
+	    lists[i][j].text = (uint32_t *) _((char *) lists[i][j].text);
     for ( i=0; cnames[i]!=NULL; ++i )
 	for ( j=0; cnames[i][j]!=NULL; ++j )
 	    cnames[i][j] = _(cnames[i][j]);

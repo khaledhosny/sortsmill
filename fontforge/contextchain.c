@@ -1929,17 +1929,17 @@ return( ret );
 }
 
 static GTextInfo section[] = {
-    { (uint32_t *) N_("Section|Continue"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
-    { (uint32_t *) N_("Section|Start"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) NC_("Section", "Continue"), NULL, 0, 0, (void *) 0, NULL, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0'},
+    { (uint32_t *) NC_("Section", "Start"), NULL, 0, 0, (void *) 1, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static struct col_init class_ci[] = {
-    { me_string, NULL, NULL, NULL, N_("Class|Name") },
+    { me_string, NULL, NULL, NULL, NC_("Class", "Name") },
     { me_funcedit, CCD_PickGlyphsForClass, NULL, NULL, N_("Glyphs in the class") },
     { me_string, NULL, NULL, NULL, "Old Name (hidden)" },
     };
 static struct col_init classlist_ci[] = {
-    { me_string, NULL, NULL, NULL, N_("Class|Name") },
+    { me_string, NULL, NULL, NULL, NC_("Class", "Name") },
     { me_string, NULL, NULL, NULL, N_("Glyphs in the class") },
     };
 static struct col_init coverage_ci[] = {
@@ -2063,21 +2063,21 @@ void ContextChainEdit(SplineFont *sf,FPST *fpst,
 
     if ( !inited ) {
 	inited = true;
-	section[0].text = (uint32_t *) S_( (char *) section[0].text);
-	section[1].text = (uint32_t *) S_( (char *) section[1].text);
-	classlist_ci[0].title = class_ci[0].title = S_(class_ci[0].title);
-	classlist_ci[1].title = class_ci[1].title = S_(class_ci[1].title);
-	coverage_ci[0].title = S_(coverage_ci[0].title);
-	seqlookup_ci[0].title = S_(seqlookup_ci[0].title);
-	seqlookup_ci[1].title = S_(seqlookup_ci[1].title);
-	glyphrules_ci[0].title = S_(glyphrules_ci[0].title);
-	classrules_ci[0].title = S_(classrules_ci[0].title);
-	coveragesimple_ci[0].title = S_(coveragesimple_ci[0].title);
-	coveragesimple_ci[1].title = S_(coveragesimple_ci[1].title);
-	coveragesimple_ci[2].title = S_(coveragesimple_ci[2].title);
-	rcoveragesimple_ci[0].title = S_(rcoveragesimple_ci[0].title);
-	rcoveragesimple_ci[1].title = S_(rcoveragesimple_ci[1].title);
-	glyph_ci[0].title = S_(glyph_ci[0].title);
+	section[0].text = (uint32_t *) g_dpgettext2(NULL, "Section", (char *) section[0].text);
+	section[1].text = (uint32_t *) g_dpgettext2(NULL, "Section", (char *) section[1].text);
+	classlist_ci[0].title = class_ci[0].title = (char *) g_dpgettext2(NULL, "Class", class_ci[0].title);
+	classlist_ci[1].title = class_ci[1].title = _(class_ci[1].title);
+	coverage_ci[0].title = _(coverage_ci[0].title);
+	seqlookup_ci[0].title = _(seqlookup_ci[0].title);
+	seqlookup_ci[1].title = _(seqlookup_ci[1].title);
+	glyphrules_ci[0].title = _(glyphrules_ci[0].title);
+	classrules_ci[0].title = _(classrules_ci[0].title);
+	coveragesimple_ci[0].title = _(coveragesimple_ci[0].title);
+	coveragesimple_ci[1].title = _(coveragesimple_ci[1].title);
+	coveragesimple_ci[2].title = _(coveragesimple_ci[2].title);
+	rcoveragesimple_ci[0].title = _(rcoveragesimple_ci[0].title);
+	rcoveragesimple_ci[1].title = _(rcoveragesimple_ci[1].title);
+	glyph_ci[0].title = _(glyph_ci[0].title);
     }
 
     ccd = (struct contextchaindlg *) xzalloc(sizeof (struct contextchaindlg));

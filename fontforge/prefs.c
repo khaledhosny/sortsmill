@@ -2798,24 +2798,25 @@ DoPrefs (void)
       if (visible_prefs_list[k].pl == args_list)
         {
           static char *text[] = {
-/* TRANSLATORS: See the long comment at "Property|New" */
-/* This and the next few strings show a limitation of my widget set which */
-/* cannot handle multi-line text labels. These strings should be concatenated */
-/* (after striping off "Prefs_App|") together, translated, and then broken up */
-/* to fit the dialog. There is an extra blank line, not used in English, */
-/* into which your text may extend if needed. */
-            N_("Prefs_App|Normally FontForge will find applications by searching for"),
-            N_("Prefs_App|them in your PATH environment variable, if you want"),
-            N_("Prefs_App|to alter that behavior you may set an environment"),
-            N_("Prefs_App|variable giving the full path spec of the application."),
-            N_("Prefs_App|FontForge recognizes BROWSER, MF and AUTOTRACE."),
-            N_("Prefs_App| "),  /* A blank line */
+/* TRANSLATORS:
+ * This and the next few strings show a limitation of my widget set which
+ * cannot handle multi-line text labels. These strings should be concatenated
+ * together, translated, and then broken up to fit the dialog. There is an
+ * extra blank line, not used in English, into which your text may extend if
+ * needed.
+ */
+            NC_("Prefs_App", "Normally FontForge will find applications by searching for"),
+            NC_("Prefs_App", "them in your PATH environment variable, if you want"),
+            NC_("Prefs_App", "to alter that behavior you may set an environment"),
+            NC_("Prefs_App", "variable giving the full path spec of the application."),
+            NC_("Prefs_App", "FontForge recognizes BROWSER, MF and AUTOTRACE."),
+            NC_("Prefs_App", " "),  /* A blank line */
             NULL
           };
           y += 8;
           for (i = 0; text[i] != 0; ++i)
             {
-              plabel[gc].text = (uint32_t *) S_ (text[i]);
+              plabel[gc].text = (uint32_t *) g_dpgettext2 (NULL, "Prefs_App", text[i]);
               plabel[gc].text_is_1byte = true;
               pgcd[gc].gd.label = &plabel[gc];
               pgcd[gc].gd.pos.x = 8;

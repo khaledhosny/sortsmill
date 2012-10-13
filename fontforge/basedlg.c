@@ -411,7 +411,7 @@ GTextInfo baselinetags[] = {
 };
 
 static struct col_init baselinesci[10] = {
-    { me_stringchoicetag , NULL, scripts, NULL, N_("writing system|Script") },
+    { me_stringchoicetag , NULL, scripts, NULL, NC_("writing system", "Script") },
     { me_enum , NULL, baselinetags, NULL, N_("Default Baseline") },
     { me_int, NULL, NULL, NULL, "hang" },
     { me_int, NULL, NULL, NULL, "icfb" },
@@ -684,14 +684,14 @@ static void BaseUIInit(void) {
     if ( inited )
 return;
 
-    baselinesci[0].title = S_(baselinesci[0].title);
-    baselinesci[1].title = S_(baselinesci[1].title);
-    baselangci[0].title = S_(baselangci[0].title);
-    baselangci[1].title = S_(baselangci[1].title);
-    baselangci[2].title = S_(baselangci[2].title);
-    basefeatci[0].title = S_(basefeatci[0].title);
-    basefeatci[1].title = S_(basefeatci[1].title);
-    basefeatci[2].title = S_(basefeatci[2].title);
+    baselinesci[0].title = (char *) g_dpgettext2(NULL, "writing system", baselinesci[0].title);
+    baselinesci[1].title = _(baselinesci[1].title);
+    baselangci[0].title = _(baselangci[0].title);
+    baselangci[1].title = _(baselangci[1].title);
+    baselangci[2].title = _(baselangci[2].title);
+    basefeatci[0].title = _(basefeatci[0].title);
+    basefeatci[1].title = _(basefeatci[1].title);
+    basefeatci[2].title = _(basefeatci[2].title);
     inited = true;
 }
 

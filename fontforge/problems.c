@@ -27,8 +27,6 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <config.h>
-
 #include <stdbool.h>
 #include "fontforgeui.h"
 #include "ttf.h"
@@ -4814,11 +4812,11 @@ static void VWMenuSelect(GWindow gw,struct gmenuitem *mi,GEvent *e) {
 }
 
 static GMenuItem vw_subselect[] = {
-    { { (uint32_t *) N_("problselect|Errors"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuSelect, MID_SelectErrors },
-    { { (uint32_t *) N_("problselect|Open Contours"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuSelect, MID_SelectOpen },
-    { { (uint32_t *) N_("problselect|Bad Direction"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuSelect, MID_SelectDir },
-    { { (uint32_t *) N_("problselect|Self Intersections"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuSelect, MID_SelectRO },
-    { { (uint32_t *) N_("problselect|Missing Extrema"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuSelect, MID_SelectExtr },
+    { { (uint32_t *) NC_("Select problems", "Errors"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuSelect, MID_SelectErrors },
+    { { (uint32_t *) NC_("Select problems", "Open Contours"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuSelect, MID_SelectOpen },
+    { { (uint32_t *) NC_("Select problems", "Bad Direction"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuSelect, MID_SelectDir },
+    { { (uint32_t *) NC_("Select problems", "Self Intersections"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuSelect, MID_SelectRO },
+    { { (uint32_t *) NC_("Select problems", "Missing Extrema"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuSelect, MID_SelectExtr },
     GMENUITEM_EMPTY
 };
 
@@ -5013,13 +5011,13 @@ static void VWMenuManySimplify(GWindow gw,struct gmenuitem *mi,GEvent *e) {
 }
 
 static GMenuItem vw_subfixup[] = {
-    { { (uint32_t *) N_("problfixup|Open Contours"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuManyConnect, 0 },
-    { { (uint32_t *) N_("problfixup|Self Intersections"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuManyOverlap, 0 },
-    { { (uint32_t *) N_("problfixup|Mark for Overlap fix before Save"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuManyMark, 0 },
-    { { (uint32_t *) N_("problfixup|Bad Directions"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuManyCorrectDir, 0 },
-    { { (uint32_t *) N_("problfixup|Missing Extrema (cautiously)"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuManyGoodExtrema, 0 },
-    { { (uint32_t *) N_("problfixup|Missing Extrema"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuManyAllExtrema, 0 },
-    { { (uint32_t *) N_("problfixup|Too Many Points"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuManySimplify, 0 },
+    { { (uint32_t *) NC_("Fixup problems", "Open Contours"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuManyConnect, 0 },
+    { { (uint32_t *) NC_("Fixup problems", "Self Intersections"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuManyOverlap, 0 },
+    { { (uint32_t *) NC_("Fixup problems", "Mark for Overlap fix before Save"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuManyMark, 0 },
+    { { (uint32_t *) NC_("Fixup problems", "Bad Directions"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuManyCorrectDir, 0 },
+    { { (uint32_t *) NC_("Fixup problems", "Missing Extrema (cautiously)"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuManyGoodExtrema, 0 },
+    { { (uint32_t *) NC_("Fixup problems", "Missing Extrema"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuManyAllExtrema, 0 },
+    { { (uint32_t *) NC_("Fixup problems", "Too Many Points"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuManySimplify, 0 },
     GMENUITEM_EMPTY
 };
 
@@ -5088,11 +5086,11 @@ return;
 
 	    for (i=0; vw_subfixup[i].ti.text!=NULL || vw_subfixup[i].ti.line; ++i )
 		if ( vw_subfixup[i].ti.text!=NULL )
-		    vw_subfixup[i].ti.text = (uint32_t *) S_( (char *)vw_subfixup[i].ti.text);
+		    vw_subfixup[i].ti.text = (uint32_t *) g_dpgettext2(NULL, "Fixup problems", (char *) vw_subfixup[i].ti.text);
 
 	    for (i=0; vw_subselect[i].ti.text!=NULL || vw_subselect[i].ti.line; ++i )
 		if ( vw_subselect[i].ti.text!=NULL )
-		    vw_subselect[i].ti.text = (uint32_t *) S_( (char *)vw_subselect[i].ti.text);
+		    vw_subselect[i].ti.text = (uint32_t *) g_dpgettext2(NULL, "Select problems", (char *) vw_subselect[i].ti.text);
 	}
 	vw_popuplist[0].ti.disabled = (sc->layers[vw->layer].validation_state&vs_opencontour)?0:1;
 	vw_popuplist[1].ti.disabled = (SCValidate(sc,vw->layer,true)&vs_selfintersects)?0:1;
