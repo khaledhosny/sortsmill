@@ -28,7 +28,9 @@
 #ifndef _INTL_H
 #define _INTL_H
 
+#include <locale.h>
 #include "gettext.h"
+
 #define _(str)		gettext(str)
 #define C_(ctx,str)	pgettext(ctx,str)
 #define N_(str)		(str)

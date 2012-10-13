@@ -1062,26 +1062,29 @@ int GIntGetResource(int index) {
     if ( index<2 ) {
 	static int gt_intarray[2];
 	if ( gt_intarray[0]==0 ) {
-	    char *pt, *end;
-/* TRANSLATORS: This is an unusual string. It is used to get around a limitation in */
-/* FontForge's widget set. You should put a number here (do NOT translate */
-/* "GGadget|ButtonSize|", that's only to provide context. The number should */
-/* be the number of points used for a standard sized button. It should be */
-/* big enough to contain "OK", "Cancel", "New...", "Edit...", "Delete" */
-/* (in their translated forms of course). */
-	    pt = S_("GGadget|ButtonSize|55");
+	    const char *pt;
+	    char *end;
+/* TRANSLATORS:
+ * This is an unusual string. It is used to get around a limitation in
+ * FontForge's widget set. You should put a number here.  The number should be
+ * the number of points used for a standard sized button.  It should be big
+ * enough to contain "OK", "Cancel", "New...", "Edit...", "Delete" (in their
+ * translated forms of course).
+ */
+	    pt = C_("GGadget button size", "55");
 	    gt_intarray[0] = strtol(pt,&end,10);
 	    if ( pt==end || gt_intarray[0]<20 || gt_intarray[0]>4000 )
 		gt_intarray[0]=55;
-/* TRANSLATORS: This is an unusual string. It is used to get around a limitation in */
-/* FontForge's widget set. You should put a number here (do NOT translate */
-/* "GGadget|ScaleFactor|", that's only to provide context. The number should */
-/* be a percentage and indicates the ratio of the length of a string in */
-/* your language to the same string's length in English. */
-/* Suppose it takes 116 pixels to say "Ne pas enregistrer" in French but */
-/* only 67 pixels to say "Don't Save" in English. Then a value for ScaleFactor */
-/* might be 116*100/67 = 173 */
-	    pt = S_("GGadget|ScaleFactor|100");
+/* TRANSLATORS:
+ * This is an unusual string. It is used to get around a limitation in
+ * FontForge's widget set. You should put a number here.  The number should be
+ * a percentage and indicates the ratio of the length of a string in your
+ * language to the same string's length in English.  Suppose it takes 116
+ * pixels to say "Ne pas enregistrer" in French but only 67 pixels to say
+ * "Don't Save" in English. Then a value for ScaleFactor might be
+ * 116*100/67 = 173
+ */
+	    pt = C_("GGadget scale factor", "100");
 	    gt_intarray[1] = strtol(pt,&end,10);
 	    if ( pt==end || gt_intarray[1]<20 || gt_intarray[1]>4000 )
 		gt_intarray[1]=100;
