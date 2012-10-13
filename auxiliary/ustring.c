@@ -63,22 +63,6 @@ uc_strnmatch (const uint32_t *str1, const char *str2, int len)
   return (0);
 }
 
-long
-u_strnmatch (const uint32_t *str1, const uint32_t *str2, int len)
-{
-  long ch1, ch2;
-  for (; --len >= 0;)
-    {
-      ch1 = *str1++;
-      ch2 = *str2++;
-      ch1 = tolower (ch1);
-      ch2 = tolower (ch2);
-      if (ch1 != ch2 || ch1 == '\0' || len <= 0)
-        return (ch1 - ch2);
-    }
-  return (0);
-}
-
 void
 cu_strcpy (char *to, const uint32_t *from)
 {

@@ -126,7 +126,7 @@ static void GIOdispatch(GIOControl *gc, enum giofuncs gf) {
 		if ( tpt==NULL ) tpt = gc->topath+u32_strlen(gc->topath);
 	    }
 	    if ( tpt-gc->topath!=pt-gc->path ||
-		    u_strnmatch(gc->path,gc->topath,pt-gc->path)!=0 ) {
+		    u32_ncasecompare (gc->path,gc->topath,pt-gc->path)!=0 ) {
 		_GIO_reporterror(gc,EXDEV);
 return;
 	    }
@@ -136,7 +136,7 @@ return;
     pt = uc_strstr(gc->path,"://");
     if ( pt!=NULL ) {
 	for ( i=0; i<plen; ++i )
-	    if ( u_strnmatch(protocols[i].proto,gc->path,pt-gc->path)==0 )
+	    if ( u32_ncasecompare (protocols[i].proto,gc->path,pt-gc->path)==0 )
 	break;
 	if ( i>=plen && !AddProtocol(gc->path,pt-gc->path) ) {
 	    gc->protocol_index = -2;

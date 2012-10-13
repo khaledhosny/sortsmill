@@ -39,8 +39,6 @@
 
 VISIBLE extern long uc_strmatch (const uint32_t *, const char *);
 VISIBLE extern long uc_strnmatch (const uint32_t *, const char *, int);
-VISIBLE extern long u_strnmatch (const uint32_t *str1, const uint32_t *str2,
-                         int len);
 VISIBLE extern void uc_strcpy (uint32_t *, const char *);
 VISIBLE extern void cu_strcpy (char *, const uint32_t *);
 VISIBLE extern void cu_strncpy (char *to, const uint32_t *from, int len);
