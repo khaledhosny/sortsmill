@@ -1174,7 +1174,7 @@ ESD_OK (GGadget * g, GEvent * e)
       name =
         xmalloc (((pt - buffer) + strlen (style) + 1) * sizeof (uint32_t));
       utf82u_strcpy (name, style);
-      uc_strcat (name, buffer);
+      u32_strcat (name, x_gc_u8_to_u32 ( buffer));
       free (style);
       if (esd->index == -1)
         GListAppendLine (esd->list, name, false)->userdata = mn;
@@ -2016,8 +2016,8 @@ NamedDesigns (MMW * mmw)
         xmalloc ((strlen (buffer) + 3 +
                    strlen (ustyle)) * sizeof (uint32_t));
       utf82u_strcpy (ti[i].text, ustyle);
-      uc_strcat (ti[i].text, " ");
-      uc_strcat (ti[i].text, buffer);
+      u32_strcat (ti[i].text, x_gc_u8_to_u32 ( " "));
+      u32_strcat (ti[i].text, x_gc_u8_to_u32 ( buffer));
       ti[i].userdata = MacNameCopy (mmw->old->named_instances[i].names);
       free (ustyle);
     }

@@ -3995,7 +3995,7 @@ return( NULL );
 	pt = spt;
 	wild = xmalloc((u32_strlen(spt)+2)*sizeof(uint32_t));
 	u32_strcpy(wild,pt);
-	uc_strcat(wild,"*");
+	u32_strcat (wild, x_gc_u8_to_u32 ("*"));
     }
 
     match_len = u32_strlen(spt);

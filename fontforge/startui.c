@@ -207,16 +207,16 @@ SplashLayout ()
   u32_strcpy (pt, x_gc_u8_to_u32 ( " FontForge used to be named PfaEdit."));
   pt += u32_strlen (pt);
   lines[linecnt++] = pt;
-  uc_strcat (pt, " ");
-  uc_strcat (pt, PACKAGE_STRING);
+  u32_strcat (pt, x_gc_u8_to_u32 ( " "));
+  u32_strcat (pt, x_gc_u8_to_u32 ( PACKAGE_STRING));
 #ifdef FREETYPE_HAS_DEBUGGER
-  uc_strcat (pt, "-TtfDb");
+  u32_strcat (pt, x_gc_u8_to_u32 ( "-TtfDb"));
 #endif
 #ifdef _NO_PYTHON
-  uc_strcat (pt, "-NoPython");
+  u32_strcat (pt, x_gc_u8_to_u32 ( "-NoPython"));
 #endif
 #ifdef FONTFORGE_CONFIG_USE_DOUBLE
-  uc_strcat (pt, "-D");
+  u32_strcat (pt, x_gc_u8_to_u32 ( "-D"));
 #endif
   pt += u32_strlen (pt);
   lines[linecnt] = pt;

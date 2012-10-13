@@ -3433,15 +3433,15 @@ return;
     title = xmalloc((len+1)*sizeof(uint32_t));
     u32_strcpy(title, x_gc_u8_to_u32 (fv->b.sf->fontname));
     if ( fv->b.sf->changed )
-	uc_strcat (title, "*");
+	u32_strcat (title, x_gc_u8_to_u32 ( "*"));
     if ( file!=NULL ) {
-	uc_strcat (title, "  ");
+	u32_strcat (title, x_gc_u8_to_u32 ( "  "));
 	u32_strcat (title, x_gc_u32_strconv_from_locale (GFileBaseName (file)));
     }
-    uc_strcat(title, " (" );
-    if ( fv->b.normal ) { utf82u_strcat(title,_("Compact")); uc_strcat(title," "); }
-    uc_strcat(title,enc);
-    uc_strcat(title, ")" );
+    u32_strcat (title, x_gc_u8_to_u32 ( " (" ));
+    if ( fv->b.normal ) { utf82u_strcat(title,_("Compact")); u32_strcat (title, x_gc_u8_to_u32 (" ")); }
+    u32_strcat (title, x_gc_u8_to_u32 (enc));
+    u32_strcat (title, x_gc_u8_to_u32 ( ")" ));
     free(enc);
 
     ititle = x_u8_to_u32 (u8_force_valid (fv->b.sf->fontname));
@@ -5941,7 +5941,7 @@ return;
 	uni = UniFromName(buffer,fv->b.sf->uni_interp,map->enc);
 	if ( uni!=-1 ) {
 	    sprintf( buffer, "U+%04X ", uni );
-	    uc_strcat(ubuffer,buffer);
+	    u32_strcat (ubuffer, x_gc_u8_to_u32 (buffer));
 	}
 	fg = 0x707070;
     }
@@ -6228,14 +6228,14 @@ void SCPreparePopup(GWindow gw,SplineChar *sc,struct remap *remap, int localenc,
     if (uniannot != NULL) {
 	int left = sizeof(space)/sizeof(space[0]) - u32_strlen(space)-1;
 	if ( left>4 ) {
-	    uc_strcat(space,"\n");
+	    u32_strcat (space, x_gc_u8_to_u32 ("\n"));
             utf82u_annot_strncat(space, uniannot, left-2);
 	}
     }
     if ( sc->comment!=NULL ) {
 	int left = sizeof(space)/sizeof(space[0]) - u32_strlen(space)-1;
 	if ( left>4 ) {
-	    uc_strcat(space,"\n\n");
+	    u32_strcat (space, x_gc_u8_to_u32 ("\n\n"));
 	    utf82u_strncpy(space+u32_strlen(space),sc->comment,left-2);
 	}
     }

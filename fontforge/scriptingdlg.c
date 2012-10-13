@@ -67,7 +67,7 @@ return(true);
 	insert = xmalloc((strlen(fn)+10)*sizeof(uint32_t));
 	*insert = '"';
 	utf82u_strcpy(insert+1,fn);
-	uc_strcat(insert,"\"()");
+	u32_strcat (insert, x_gc_u8_to_u32 ("\"()"));
 	GTextFieldReplace(GWidgetGetControl(GGadgetGetWindow(g),CID_Script),insert);
 	free(insert);
 	free(fn);

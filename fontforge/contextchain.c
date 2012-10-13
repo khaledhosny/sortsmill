@@ -934,7 +934,7 @@ return;
 	ubuf[0]=' ';
 	utf82u_strncpy(ubuf-1,classes[cols*r+0].u.md_str,sizeof(ubuf)/sizeof(ubuf[0])-2 );
 	ubuf[sizeof(ubuf)/sizeof(ubuf[0])-2] = '\0';
-	uc_strcat(ubuf," ");
+	u32_strcat (ubuf, x_gc_u8_to_u32 (" "));
     }
     GTextFieldReplace(tf,ubuf);
 return;
@@ -1578,7 +1578,7 @@ return( NULL );
 	pt = spt;
 	wild = xmalloc((u32_strlen(spt)+2)*sizeof(uint32_t));
 	u32_strcpy(wild,pt);
-	uc_strcat(wild,"*");
+	u32_strcat (wild, x_gc_u8_to_u32 ("*"));
     }
 
     match_len = u32_strlen(spt);

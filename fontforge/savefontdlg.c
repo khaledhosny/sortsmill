@@ -257,7 +257,7 @@ extern int oldbitmapstate;
 static const char *pfaeditflag = "SplineFontDB:";
 
 int32_t *
-ParseBitmapSizes (GGadget * g, char *msg, int *err)
+ParseBitmapSizes (GGadget *g, char *msg, int *err)
 {
   const uint32_t *val = _GGadgetGetTitle (g), *pt;
   uint32_t *end, *end2;
@@ -315,7 +315,7 @@ ParseBitmapSizes (GGadget * g, char *msg, int *err)
 }
 
 static int
-OPT_PSHints (GGadget * g, GEvent * e)
+OPT_PSHints (GGadget *g, GEvent * e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_radiochanged)
     {
@@ -343,7 +343,7 @@ OPT_PSHints (GGadget * g, GEvent * e)
 }
 
 static int
-OPT_Applemode (GGadget * g, GEvent * e)
+OPT_Applemode (GGadget *g, GEvent * e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_radiochanged)
     {
@@ -355,7 +355,7 @@ OPT_Applemode (GGadget * g, GEvent * e)
 }
 
 static int
-OPT_OldKern (GGadget * g, GEvent * e)
+OPT_OldKern (GGadget *g, GEvent * e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_radiochanged)
     {
@@ -699,7 +699,7 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.flags = gg_enabled | gg_visible | gg_pos_in_pixels;
   gcd[k++].creator = GGroupCreate;
 
-  label[k].text = (uint32_t *) _ ("PostScript®");
+  label[k].text = (uint32_t *) _("PostScript®");
   label[k].text_is_1byte = true;
   gcd[k].gd.label = &label[k];
   gcd[k].gd.pos.x = 8;
@@ -790,7 +790,8 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   label[k].text_is_1byte = true;
   gcd[k].gd.popup_msg =
     (uint32_t *)
-    _("The AFM file contains metrics information that many word-processors will read when using a PostScript® font.");
+    _
+    ("The AFM file contains metrics information that many word-processors will read when using a PostScript® font.");
   gcd[k].gd.label = &label[k];
   gcd[k].gd.cid = CID_PS_AFM;
   gcd[k++].creator = GCheckBoxCreate;
@@ -805,7 +806,8 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   label[k].text_is_1byte = true;
   gcd[k].gd.popup_msg =
     (uint32_t *)
-    _("The AFM format allows some information about composites\n(roughly the same as mark to base anchor classes) to be\nincluded. However it tends to make AFM files huge as it\nis not stored in an efficient manner.");
+    _
+    ("The AFM format allows some information about composites\n(roughly the same as mark to base anchor classes) to be\nincluded. However it tends to make AFM files huge as it\nis not stored in an efficient manner.");
   gcd[k].gd.label = &label[k];
   gcd[k].gd.cid = CID_PS_AFMmarks;
   gcd[k++].creator = GCheckBoxCreate;
@@ -820,7 +822,8 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   label[k].text_is_1byte = true;
   gcd[k].gd.popup_msg =
     (uint32_t *)
-    _("The PFM file contains information Windows needs to install a PostScript® font.");
+    _
+    ("The PFM file contains information Windows needs to install a PostScript® font.");
   gcd[k].gd.label = &label[k];
   gcd[k].gd.cid = CID_PS_PFM;
   gcd[k++].creator = GCheckBoxCreate;
@@ -835,7 +838,8 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   label[k].text_is_1byte = true;
   gcd[k].gd.popup_msg =
     (uint32_t *)
-    _("The tfm and enc files contain information TeX needs to install a PostScript® font.");
+    _
+    ("The tfm and enc files contain information TeX needs to install a PostScript® font.");
   gcd[k].gd.label = &label[k];
   gcd[k].gd.cid = CID_PS_TFM;
   gcd[k++].creator = GCheckBoxCreate;
@@ -1025,8 +1029,7 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.flags = gg_visible | gg_utf8_popup;
   label[k].text = (uint32_t *) _("Save Colors");
   label[k].text_is_1byte = true;
-  gcd[k].gd.popup_msg =
-    (uint32_t *) _("Save glyph colors in the PfEd table");
+  gcd[k].gd.popup_msg = (uint32_t *) _("Save glyph colors in the PfEd table");
   gcd[k].gd.label = &label[k];
   gcd[k].gd.cid = CID_TTF_PfEdColors;
   gcd[k++].creator = GCheckBoxCreate;
@@ -1070,8 +1073,8 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   label[k].text_is_1byte = true;
   gcd[k].gd.popup_msg =
     (uint32_t *) _("Preserve any background and spiro layers.\n"
-                    "Also if we output a truetype font from a\n"
-                    "cubic database, save the cubic splines.");
+                   "Also if we output a truetype font from a\n"
+                   "cubic database, save the cubic splines.");
   gcd[k].gd.label = &label[k];
   gcd[k].gd.cid = CID_TTF_PfEdLayers;
   gcd[k++].creator = GCheckBoxCreate;
@@ -1480,7 +1483,7 @@ SearchDirForWernerFile (char *dir, char *filename)
 }
 
 static enum fchooserret
-GFileChooserFilterWernerSFDs (GGadget * g, GDirEntry * ent,
+GFileChooserFilterWernerSFDs (GGadget *g, GDirEntry * ent,
                               const uint32_t *dir)
 {
   enum fchooserret ret = GFileChooserDefFilter (g, ent, dir);
@@ -1489,10 +1492,11 @@ GFileChooserFilterWernerSFDs (GGadget * g, GDirEntry * ent,
 
   if (ret == fc_show && !ent->isdir)
     {
-      char *filename = xmalloc (u32_strlen (dir) + u32_strlen (ent->name) + 5);
-      cu_strcpy (filename, dir);
+      char *filename =
+        xmalloc (u32_strlen (dir) + u32_strlen (ent->name) + 5);
+      u8_strcpy (filename, x_gc_u32_to_u8 (dir));
       strcat (filename, "/");
-      cu_strcat (filename, ent->name);
+      u8_strcat (filename, x_gc_u32_to_u8 (ent->name));
       file = fopen (filename, "r");
       if (file == NULL)
         ret = fc_hide;
@@ -1718,8 +1722,8 @@ DoSave (struct gfc_data *d, uint32_t *path)
   if (d->family == gf_none)
     layer =
       (intptr_t)
-      GGadgetGetListItemSelected (GWidgetGetControl (d->gw, CID_Layers))->
-      userdata;
+      GGadgetGetListItemSelected (GWidgetGetControl
+                                  (d->gw, CID_Layers))->userdata;
 
   temp = u2def_copy (path);
   oldformatstate = GGadgetGetFirstListSelectedItem (d->pstype);
@@ -2176,7 +2180,7 @@ _GFD_SaveOk (struct gfc_data *d)
 }
 
 static int
-GFD_SaveOk (GGadget * g, GEvent * e)
+GFD_SaveOk (GGadget *g, GEvent * e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
     {
@@ -2187,7 +2191,7 @@ GFD_SaveOk (GGadget * g, GEvent * e)
 }
 
 static int
-GFD_Cancel (GGadget * g, GEvent * e)
+GFD_Cancel (GGadget *g, GEvent * e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
     {
@@ -2227,7 +2231,7 @@ GFD_FigureWhich (struct gfc_data *d)
 }
 
 static int
-GFD_Options (GGadget * g, GEvent * e)
+GFD_Options (GGadget *g, GEvent * e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
     {
@@ -2267,7 +2271,7 @@ GFD_dircreatefailed (GIOControl * gio)
 }
 
 static int
-GFD_NewDir (GGadget * g, GEvent * e)
+GFD_NewDir (GGadget *g, GEvent * e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
     {
@@ -2327,12 +2331,12 @@ BitmapName (struct gfc_data *d)
     pt -= 2;
   if (u8_strncmp (x_gc_u32_to_u8 (pt - 2), "-*", 2) == 0)
     pt -= 2;
-  u32_strcpy (pt, x_gc_u8_to_u32 ( bitmapextensions[bf]));
+  u32_strcpy (pt, x_gc_u8_to_u32 (bitmapextensions[bf]));
   GGadgetSetTitle (d->gfc, dup);
 }
 
 static int
-GFD_Format (GGadget * g, GEvent * e)
+GFD_Format (GGadget *g, GEvent * e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_listselected)
     {
@@ -2382,7 +2386,7 @@ GFD_Format (GGadget * g, GEvent * e)
         pt -= 2;
       if (u8_strncmp (x_gc_u32_to_u8 (pt - 2), "-*", 2) == 0)
         pt -= 2;
-      u32_strcpy (pt, x_gc_u8_to_u32 ( savefont_extensions[format]));
+      u32_strcpy (pt, x_gc_u8_to_u32 (savefont_extensions[format]));
       GGadgetSetTitle (d->gfc, dup);
       free (dup);
 
@@ -2446,7 +2450,7 @@ GFD_Format (GGadget * g, GEvent * e)
 }
 
 static int
-GFD_BitmapFormat (GGadget * g, GEvent * e)
+GFD_BitmapFormat (GGadget *g, GEvent * e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_listselected)
     {
@@ -2469,7 +2473,7 @@ GFD_BitmapFormat (GGadget * g, GEvent * e)
 }
 
 static int
-GFD_ToggleFontLog (GGadget * g, GEvent * e)
+GFD_ToggleFontLog (GGadget *g, GEvent * e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_radiochanged)
     {
@@ -2494,7 +2498,7 @@ GFD_ToggleFontLog (GGadget * g, GEvent * e)
 }
 
 static int
-GFD_ToggleOFLib (GGadget * g, GEvent * e)
+GFD_ToggleOFLib (GGadget *g, GEvent * e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_radiochanged)
     {
@@ -2526,7 +2530,7 @@ GFD_ToggleOFLib (GGadget * g, GEvent * e)
 }
 
 static int
-GFD_OFLibHelp (GGadget * g, GEvent * e)
+GFD_OFLibHelp (GGadget *g, GEvent * e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
     {
@@ -2536,7 +2540,7 @@ GFD_OFLibHelp (GGadget * g, GEvent * e)
 }
 
 static int
-GFD_OFLibRegister (GGadget * g, GEvent * e)
+GFD_OFLibRegister (GGadget *g, GEvent * e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
     {
@@ -2546,7 +2550,7 @@ GFD_OFLibRegister (GGadget * g, GEvent * e)
 }
 
 static int
-GFD_OFLibPreviewBrowse (GGadget * g, GEvent * e)
+GFD_OFLibPreviewBrowse (GGadget *g, GEvent * e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
     {
@@ -3021,7 +3025,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
   gcd[4].gd.pos.width = -1;
   gcd[4].gd.pos.height = 0;
   gcd[4].gd.flags = gg_visible | gg_enabled;
-  label[4].text = (uint32_t *) C_("Directory", "_New");
+  label[4].text = (uint32_t *) C_ ("Directory", "_New");
   label[4].text_is_1byte = true;
   label[4].text_in_resource = true;
   label[4].image = &_GIcon_dir;
@@ -3921,20 +3925,21 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
           gcd[k].gd.popup_msg =
             (uint32_t *)
             xstrdup (_
-		     ("FontForge can generate two styles of ttc file.\n"
-		      "In the first each font is a separate entity\n"
-		      "with no connection to other fonts. In the second\n"
-		      "FontForge will attempt to use the same glyph table\n"
-		      "for all fonts, merging duplicate glyphs. It will\n"
-		      "also attempt to use the same space for tables in\n"
-		      "different fonts which are bit by bit the same.\n\n"
-		      "FontForge isn't always able to perform a merge, in\n"
-		      "which case it falls back on generating independent\n"
-		      "fonts within the ttc.\n" " FontForge cannot merge if:\n"
-		      "  * The fonts have different em-sizes\n"
-		      "  * Bitmaps are involved\n"
-		      "  * The merged glyf table has more than 65534 glyphs\n\n"
-		      "(Merging will take longer)"));
+                     ("FontForge can generate two styles of ttc file.\n"
+                      "In the first each font is a separate entity\n"
+                      "with no connection to other fonts. In the second\n"
+                      "FontForge will attempt to use the same glyph table\n"
+                      "for all fonts, merging duplicate glyphs. It will\n"
+                      "also attempt to use the same space for tables in\n"
+                      "different fonts which are bit by bit the same.\n\n"
+                      "FontForge isn't always able to perform a merge, in\n"
+                      "which case it falls back on generating independent\n"
+                      "fonts within the ttc.\n"
+                      " FontForge cannot merge if:\n"
+                      "  * The fonts have different em-sizes\n"
+                      "  * Bitmaps are involved\n"
+                      "  * The merged glyf table has more than 65534 glyphs\n\n"
+                      "(Merging will take longer)"));
           gcd[k++].creator = GCheckBoxCreate;
           famarray[f++] = &gcd[k - 1];
           famarray[f++] = GCD_ColSpan;
@@ -3948,7 +3953,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
           gcd[k].gd.popup_msg =
             (uint32_t *)
             xstrdup (_
-		     ("Put CFF fonts into the ttc rather than TTF.\n These seem to work on the mac and linux\n but are documented not to work on Windows."));
+                     ("Put CFF fonts into the ttc rather than TTF.\n These seem to work on the mac and linux\n but are documented not to work on Windows."));
           gcd[k++].creator = GCheckBoxCreate;
           famarray[f++] = &gcd[k - 1];
           famarray[f++] = GCD_ColSpan;
@@ -3997,10 +4002,11 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
     char *fn = master->defbasefilename != NULL ? master->defbasefilename :
       master->fontname;
     uint32_t *temp = xmalloc (sizeof (uint32_t) * (strlen (fn) + 30));
-    u32_strcpy (temp, x_gc_u8_to_u32 ( fn));
-    uc_strcat (temp,
-               savefont_extensions[ofs] !=
-               NULL ? savefont_extensions[ofs] : bitmapextensions[old]);
+    u32_strcpy (temp, x_gc_u8_to_u32 (fn));
+    u32_strcat (temp,
+                x_gc_u8_to_u32 (savefont_extensions[ofs] !=
+                                NULL ? savefont_extensions[ofs] :
+                                bitmapextensions[old]));
     GGadgetSetTitle (gcd[0].ret, temp);
     free (temp);
   }

@@ -465,7 +465,7 @@ static void GFileChooserScanDir(GFileChooser *gfc,uint32_t *dir) {
     if ( dir[u32_strlen(dir)-1]!='/' ) {
 	freeme = xmalloc((u32_strlen(dir)+3)*sizeof(uint32_t));
 	u32_strcpy(freeme,dir);
-	uc_strcat(freeme,"/");
+	u32_strcat (freeme, x_gc_u8_to_u32 ("/"));
 	dir = freeme;
     }
     if ( gfc->hpos>=gfc->hmax )
@@ -669,7 +669,7 @@ return(true);
 	if ( ti->checked ) {
 	    uint32_t *val = xmalloc((u32_strlen(ti->text)+2)*sizeof(uint32_t));
 	    u32_strcpy(val,ti->text);
-	    uc_strcat(val,"/");
+	    u32_strcat (val, x_gc_u8_to_u32 ("/"));
 	    GGadgetSetTitle(&gfc->name->g,val);
 	    free(val);
 	    if ( gfc->filterb!=NULL && gfc->ok!=NULL )

@@ -64,15 +64,6 @@ uc_strnmatch (const uint32_t *str1, const char *str2, int len)
 }
 
 void
-cu_strcpy (char *to, const uint32_t *from)
-{
-  register uint32_t ch;
-  while ((ch = *from++) != '\0')
-    *(to++) = ch;
-  *to = 0;
-}
-
-void
 cu_strncpy (register char *to, const uint32_t *from, int len)
 {
   register uint32_t ch;
@@ -91,21 +82,9 @@ uc_strncpy (register uint32_t *to, const char *from, int len)
 }
 
 void
-uc_strcat (uint32_t *to, const char *from)
-{
-  u32_strcpy (to + u32_strlen (to), x_gc_u8_to_u32 (from));
-}
-
-void
 uc_strncat (uint32_t *to, const char *from, int len)
 {
   uc_strncpy (to + u32_strlen (to), from, len);
-}
-
-void
-cu_strcat (char *to, const uint32_t *from)
-{
-  cu_strcpy (to + strlen (to), from);
 }
 
 void

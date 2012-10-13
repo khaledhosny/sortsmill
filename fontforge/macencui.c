@@ -398,7 +398,7 @@ return( true );
 		full = xmalloc((strlen(hunh)+strlen(temp)+6)*sizeof(uint32_t));
 		u32_strcpy(full, x_gc_u8_to_u32 (hunh));
 	    }
-	    uc_strcat(full,spacer);
+	    u32_strcat (full, x_gc_u8_to_u32 (spacer));
 	    utf82u_strcpy(full+u32_strlen(full),temp);
 
 	    if ( nd->index==-1 )

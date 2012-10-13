@@ -904,7 +904,7 @@ return;
 	}
 	if ( event->u.mouse.x>=smd->xstart2 && c<smd->class_cnt ) {
 	    sprintf( buf, "Class %d\n", c );
-	    uc_strcat(space,buf);
+	    u32_strcat (space, x_gc_u8_to_u32 (buf));
 	    classes = GMatrixEditGet(GWidgetGetControl(smd->gw,CID_Classes),&len);
 	    len = u32_strlen(space);
 	    pt = strstr(classes[c].u.md_str,": ");
