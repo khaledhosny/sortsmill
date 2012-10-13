@@ -929,7 +929,7 @@ static void CCD_ClassSelected(GGadget *g, int r, int c) {
 return;
     if ( classes[cols*r+0].u.md_str == NULL || classes[cols*r+0].u.md_str[0]=='\0' ) {
 	sprintf( buf, " %d ", r );
-	uc_strcpy(ubuf,buf);
+	u32_strcpy(ubuf, x_gc_u8_to_u32 (buf));
     } else {
 	ubuf[0]=' ';
 	utf82u_strncpy(ubuf-1,classes[cols*r+0].u.md_str,sizeof(ubuf)/sizeof(ubuf[0])-2 );

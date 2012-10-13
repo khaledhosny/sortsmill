@@ -3000,7 +3000,7 @@ static void GTextFieldComplete(GTextField *gt,int from_tab) {
 				    ret2[c2][len] = '[';
 				}
 				ret2[c2][len+1+c3] = ret[i][len];
-				uc_strcpy(ret2[c2]+len+2+c3,"] ...");
+				u32_strcpy(ret2[c2]+len+2+c3, x_gc_u8_to_u32 ("] ..."));
 			    } else if ( doit ) {
 				ret2[cnt] = xmalloc((u32_strlen(ret[i])+5)*sizeof(uint32_t));
 				u32_strcpy(ret2[cnt],ret[i]);
@@ -3010,7 +3010,7 @@ static void GTextFieldComplete(GTextField *gt,int from_tab) {
 			} else if ( doit && !type2 ) {
 			    int j;
 			    for ( j=len+1; ret[i][j]!='\0' && ret[i][j] == ret2[cnt-1][j]; ++j );
-			    uc_strcpy(ret2[cnt-1]+j," ...");
+			    u32_strcpy(ret2[cnt-1]+j, x_gc_u8_to_u32 (" ..."));
 			}
 		    }
 		    if ( cnt>=MAXLINES*MAXBRACKETS )

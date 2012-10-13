@@ -101,7 +101,7 @@ static void RH_SetupHint(ReviewHintData *hd) {
 		h2->start-h->start == h3->start-h2->start )
 	    strcat( buffer, hd->ishstem ? " hstem3" : " vstem3" );
     }
-    uc_strcpy(ubuf,buffer);
+    u32_strcpy(ubuf, x_gc_u8_to_u32 (buffer));
     GGadgetSetTitle(GWidgetGetControl(hd->gw,CID_Count),ubuf);
     
     if ( hd->active==NULL ) {
@@ -111,11 +111,11 @@ static void RH_SetupHint(ReviewHintData *hd) {
     } else {
 	hd->active->active = true;
 	sprintf( buffer,"%g", (double) (!hd->active->ghost ? hd->active->start : hd->active->start+hd->active->width) );
-	uc_strcpy(ubuf,buffer);
+	u32_strcpy(ubuf, x_gc_u8_to_u32 (buffer));
 	GGadgetSetTitle(GWidgetGetControl(hd->gw,CID_Base),ubuf);
 	GTextFieldShow(GWidgetGetControl(hd->gw,CID_Base),0);
 	sprintf( buffer,"%g", (double) (!hd->active->ghost ? hd->active->width : -hd->active->width) );
-	uc_strcpy(ubuf,buffer);
+	u32_strcpy(ubuf, x_gc_u8_to_u32 (buffer));
 	GGadgetSetTitle(GWidgetGetControl(hd->gw,CID_Width),ubuf);
 	GTextFieldShow(GWidgetGetControl(hd->gw,CID_Width),0);
 	GGadgetSetVisible(GWidgetGetControl(hd->gw,CID_Overlap),hd->active->hasconflicts);
@@ -872,7 +872,7 @@ void CVCreateHint(CharView *cv,int ishstem,int preservehints) {
     } else {
 	gw = chd.gw;
 	sprintf( buffer, "%g", (double) (ishstem ? cv->p.cy : cv->p.cx) );
-	uc_strcpy(ubuf,buffer);
+	u32_strcpy(ubuf, x_gc_u8_to_u32 (buffer));
 	GGadgetSetTitle(GWidgetGetControl(gw,CID_Base),ubuf);
 	GDrawSetTransientFor(gw,(GWindow) -1);
     }

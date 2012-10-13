@@ -539,7 +539,7 @@ return( true );
 	msg = xmalloc((len+2)*sizeof(uint32_t));
 	len = 0;
 	for ( cnt=0; fontnames[cnt]!=NULL; ++cnt ) {
-	    uc_strcpy(msg+len,fontnames[cnt]);
+	    u32_strcpy(msg+len, x_gc_u8_to_u32 (fontnames[cnt]));
 	    len += strlen(fontnames[cnt]);
 	    msg[len++] = '\n';
 	}

@@ -41,645 +41,804 @@
 static char *last = NULL;
 static char *last_bits = NULL;
 
-struct sizebits {
-    GWindow gw;
-    int *pixels, *bits;
-    unsigned int done: 1;
-    unsigned int good: 1;
+struct sizebits
+{
+  GWindow gw;
+  int *pixels, *bits;
+  unsigned int done:1;
+  unsigned int good:1;
 };
 
 #define CID_Size	1000
 #define CID_Bits	1001
 
-static int SB_OK(GGadget *g, GEvent *e) {
-    if ( e->type==et_controlevent && e->u.control.subtype == et_buttonactivate ) {
-	struct sizebits *d = GDrawGetUserData(GGadgetGetWindow(g));
-	int err=0;
-	*d->pixels = GetInt8(d->gw,CID_Size,_("Pixel size:"),&err);
-	*d->bits   = GetInt8(d->gw,CID_Bits,_("Bits/Pixel:"),&err);
-	if ( err )
-return( true );
-	if ( *d->bits!=1 && *d->bits!=2 && *d->bits!=4 && *d->bits!=8 ) {
-	    ff_post_error(_("The only valid values for bits/pixel are 1, 2, 4 or 8"),_("The only valid values for bits/pixel are 1, 2, 4 or 8"));
-return( true );
-	}
-	free( last ); free( last_bits );
-	last = GGadgetGetTitle8(GWidgetGetControl(d->gw,CID_Size));
-	last_bits = GGadgetGetTitle8(GWidgetGetControl(d->gw,CID_Bits));
-	d->done = true;
-	d->good = true;
+static int
+SB_OK (GGadget *g, GEvent * e)
+{
+  if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
+    {
+      struct sizebits *d = GDrawGetUserData (GGadgetGetWindow (g));
+      int err = 0;
+      *d->pixels = GetInt8 (d->gw, CID_Size, _("Pixel size:"), &err);
+      *d->bits = GetInt8 (d->gw, CID_Bits, _("Bits/Pixel:"), &err);
+      if (err)
+        return (true);
+      if (*d->bits != 1 && *d->bits != 2 && *d->bits != 4 && *d->bits != 8)
+        {
+          ff_post_error (_
+                         ("The only valid values for bits/pixel are 1, 2, 4 or 8"),
+                         _
+                         ("The only valid values for bits/pixel are 1, 2, 4 or 8"));
+          return (true);
+        }
+      free (last);
+      free (last_bits);
+      last = GGadgetGetTitle8 (GWidgetGetControl (d->gw, CID_Size));
+      last_bits = GGadgetGetTitle8 (GWidgetGetControl (d->gw, CID_Bits));
+      d->done = true;
+      d->good = true;
     }
-return( true );
+  return (true);
 }
 
-static int SB_Cancel(GGadget *g, GEvent *e) {
-    if ( e->type==et_controlevent && e->u.control.subtype == et_buttonactivate ) {
-	struct sizebits *d = GDrawGetUserData(GGadgetGetWindow(g));
-	d->done = true;
+static int
+SB_Cancel (GGadget *g, GEvent * e)
+{
+  if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
+    {
+      struct sizebits *d = GDrawGetUserData (GGadgetGetWindow (g));
+      d->done = true;
     }
-return( true );
+  return (true);
 }
 
-static int sb_e_h(GWindow gw, GEvent *event) {
-    if ( event->type==et_close ) {
-	struct sizebits *d = GDrawGetUserData(gw);
-	d->done = true;
+static int
+sb_e_h (GWindow gw, GEvent * event)
+{
+  if (event->type == et_close)
+    {
+      struct sizebits *d = GDrawGetUserData (gw);
+      d->done = true;
     }
-return( event->type!=et_char );
+  return (event->type != et_char);
 }
 
-static int AskSizeBits(int *pixelsize,int *bitsperpixel) {
-    GRect pos;
-    GWindow gw;
-    GWindowAttrs wattrs;
-    GGadgetCreateData gcd[8], boxes[5], *hvarray[7][4], *barray[10];
-    GTextInfo label[8];
-    struct sizebits sb;
+static int
+AskSizeBits (int *pixelsize, int *bitsperpixel)
+{
+  GRect pos;
+  GWindow gw;
+  GWindowAttrs wattrs;
+  GGadgetCreateData gcd[8], boxes[5], *hvarray[7][4], *barray[10];
+  GTextInfo label[8];
+  struct sizebits sb;
 
-    memset(&sb,'\0',sizeof(sb));
-    sb.pixels = pixelsize; sb.bits = bitsperpixel;
+  memset (&sb, '\0', sizeof (sb));
+  sb.pixels = pixelsize;
+  sb.bits = bitsperpixel;
 
-    memset(&wattrs,0,sizeof(wattrs));
-    wattrs.mask = wam_events|wam_cursor|wam_utf8_wtitle|wam_undercursor|wam_isdlg|wam_restrict;
-    wattrs.event_masks = ~(1<<et_charup);
-    wattrs.restrict_input_to_me = 1;
-    wattrs.undercursor = 1;
-    wattrs.cursor = ct_pointer;
-    wattrs.utf8_window_title = _("Pixel size?");
-    wattrs.is_dlg = true;
-    pos.x = pos.y = 0;
-    pos.width = GGadgetScale(GDrawPointsToPixels(NULL,140));
-    pos.height = GDrawPointsToPixels(NULL,100);
-    sb.gw = gw = GDrawCreateTopWindow(NULL,&pos,sb_e_h,&sb,&wattrs);
+  memset (&wattrs, 0, sizeof (wattrs));
+  wattrs.mask =
+    wam_events | wam_cursor | wam_utf8_wtitle | wam_undercursor | wam_isdlg |
+    wam_restrict;
+  wattrs.event_masks = ~(1 << et_charup);
+  wattrs.restrict_input_to_me = 1;
+  wattrs.undercursor = 1;
+  wattrs.cursor = ct_pointer;
+  wattrs.utf8_window_title = _("Pixel size?");
+  wattrs.is_dlg = true;
+  pos.x = pos.y = 0;
+  pos.width = GGadgetScale (GDrawPointsToPixels (NULL, 140));
+  pos.height = GDrawPointsToPixels (NULL, 100);
+  sb.gw = gw = GDrawCreateTopWindow (NULL, &pos, sb_e_h, &sb, &wattrs);
 
-    memset(&label,0,sizeof(label));
-    memset(&gcd,0,sizeof(gcd));
-    memset(&boxes,0,sizeof(boxes));
+  memset (&label, 0, sizeof (label));
+  memset (&gcd, 0, sizeof (gcd));
+  memset (&boxes, 0, sizeof (boxes));
 
-    label[0].text = (uint32_t *) _("Pixel size:");
-    label[0].text_is_1byte = true;
-    gcd[0].gd.label = &label[0];
-    gcd[0].gd.pos.x = 8; gcd[0].gd.pos.y = 8+6; 
-    gcd[0].gd.flags = gg_enabled|gg_visible;
-    gcd[0].creator = GLabelCreate;
-    hvarray[0][0] = &gcd[0];
+  label[0].text = (uint32_t *) _("Pixel size:");
+  label[0].text_is_1byte = true;
+  gcd[0].gd.label = &label[0];
+  gcd[0].gd.pos.x = 8;
+  gcd[0].gd.pos.y = 8 + 6;
+  gcd[0].gd.flags = gg_enabled | gg_visible;
+  gcd[0].creator = GLabelCreate;
+  hvarray[0][0] = &gcd[0];
 
-    gcd[1].gd.pos.x = 70; gcd[1].gd.pos.y = 8;  gcd[1].gd.pos.width = 65;
-    label[1].text = (uint32_t *) (last==NULL ? "100" : last);
-    label[1].text_is_1byte = true;
-    gcd[1].gd.label = &label[1];
-    gcd[1].gd.flags = gg_enabled|gg_visible;
-    gcd[1].gd.cid = CID_Size;
-    gcd[1].creator = GNumericFieldCreate;
-    hvarray[0][1] = &gcd[1]; hvarray[0][2] = GCD_Glue; hvarray[0][3] = NULL;
+  gcd[1].gd.pos.x = 70;
+  gcd[1].gd.pos.y = 8;
+  gcd[1].gd.pos.width = 65;
+  label[1].text = (uint32_t *) (last == NULL ? "100" : last);
+  label[1].text_is_1byte = true;
+  gcd[1].gd.label = &label[1];
+  gcd[1].gd.flags = gg_enabled | gg_visible;
+  gcd[1].gd.cid = CID_Size;
+  gcd[1].creator = GNumericFieldCreate;
+  hvarray[0][1] = &gcd[1];
+  hvarray[0][2] = GCD_Glue;
+  hvarray[0][3] = NULL;
 
-    label[2].text = (uint32_t *) _("Bits/Pixel:");
-    label[2].text_is_1byte = true;
-    gcd[2].gd.label = &label[2];
-    gcd[2].gd.pos.x = 8; gcd[2].gd.pos.y = 38+6; 
-    gcd[2].gd.flags = gg_enabled|gg_visible;
-    gcd[2].creator = GLabelCreate;
-    hvarray[1][0] = &gcd[2];
+  label[2].text = (uint32_t *) _("Bits/Pixel:");
+  label[2].text_is_1byte = true;
+  gcd[2].gd.label = &label[2];
+  gcd[2].gd.pos.x = 8;
+  gcd[2].gd.pos.y = 38 + 6;
+  gcd[2].gd.flags = gg_enabled | gg_visible;
+  gcd[2].creator = GLabelCreate;
+  hvarray[1][0] = &gcd[2];
 
-    gcd[3].gd.pos.x = 70; gcd[3].gd.pos.y = 38;  gcd[3].gd.pos.width = 65;
-    label[3].text = (uint32_t *) (last_bits==NULL? "1" : last_bits);
-    label[3].text_is_1byte = true;
-    gcd[3].gd.label = &label[3];
-    gcd[3].gd.flags = gg_enabled|gg_visible;
-    gcd[3].gd.cid = CID_Bits;
-    gcd[3].creator = GNumericFieldCreate;
-    hvarray[1][1] = &gcd[3]; hvarray[1][2] = GCD_Glue; hvarray[1][3] = NULL;
-    hvarray[2][0] = hvarray[2][1] = hvarray[2][2] = GCD_Glue; hvarray[2][3] = NULL;
+  gcd[3].gd.pos.x = 70;
+  gcd[3].gd.pos.y = 38;
+  gcd[3].gd.pos.width = 65;
+  label[3].text = (uint32_t *) (last_bits == NULL ? "1" : last_bits);
+  label[3].text_is_1byte = true;
+  gcd[3].gd.label = &label[3];
+  gcd[3].gd.flags = gg_enabled | gg_visible;
+  gcd[3].gd.cid = CID_Bits;
+  gcd[3].creator = GNumericFieldCreate;
+  hvarray[1][1] = &gcd[3];
+  hvarray[1][2] = GCD_Glue;
+  hvarray[1][3] = NULL;
+  hvarray[2][0] = hvarray[2][1] = hvarray[2][2] = GCD_Glue;
+  hvarray[2][3] = NULL;
 
-    gcd[4].gd.pos.x = 10-3; gcd[4].gd.pos.y = 38+30-3;
-    gcd[4].gd.pos.width = -1; gcd[4].gd.pos.height = 0;
-    gcd[4].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    label[4].text = (uint32_t *) _("_OK");
-    label[4].text_is_1byte = true;
-    label[4].text_in_resource = true;
-    gcd[4].gd.mnemonic = 'O';
-    gcd[4].gd.label = &label[4];
-    gcd[4].gd.handle_controlevent = SB_OK;
-    gcd[4].creator = GButtonCreate;
-    barray[0] = GCD_Glue; barray[1] = &gcd[4]; barray[2] = barray[3] = barray[4] = barray[5] = GCD_Glue;
+  gcd[4].gd.pos.x = 10 - 3;
+  gcd[4].gd.pos.y = 38 + 30 - 3;
+  gcd[4].gd.pos.width = -1;
+  gcd[4].gd.pos.height = 0;
+  gcd[4].gd.flags = gg_visible | gg_enabled | gg_but_default;
+  label[4].text = (uint32_t *) _("_OK");
+  label[4].text_is_1byte = true;
+  label[4].text_in_resource = true;
+  gcd[4].gd.mnemonic = 'O';
+  gcd[4].gd.label = &label[4];
+  gcd[4].gd.handle_controlevent = SB_OK;
+  gcd[4].creator = GButtonCreate;
+  barray[0] = GCD_Glue;
+  barray[1] = &gcd[4];
+  barray[2] = barray[3] = barray[4] = barray[5] = GCD_Glue;
 
-    gcd[5].gd.pos.x = -10; gcd[5].gd.pos.y = 38+30;
-    gcd[5].gd.pos.width = -1; gcd[5].gd.pos.height = 0;
-    gcd[5].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    label[5].text = (uint32_t *) _("_Cancel");
-    label[5].text_is_1byte = true;
-    label[5].text_in_resource = true;
-    gcd[5].gd.label = &label[5];
-    gcd[5].gd.mnemonic = 'C';
-    gcd[5].gd.handle_controlevent = SB_Cancel;
-    gcd[5].creator = GButtonCreate;
-    barray[5] = &gcd[5]; barray[6] = GCD_Glue; barray[7] = NULL;
+  gcd[5].gd.pos.x = -10;
+  gcd[5].gd.pos.y = 38 + 30;
+  gcd[5].gd.pos.width = -1;
+  gcd[5].gd.pos.height = 0;
+  gcd[5].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
+  label[5].text = (uint32_t *) _("_Cancel");
+  label[5].text_is_1byte = true;
+  label[5].text_in_resource = true;
+  gcd[5].gd.label = &label[5];
+  gcd[5].gd.mnemonic = 'C';
+  gcd[5].gd.handle_controlevent = SB_Cancel;
+  gcd[5].creator = GButtonCreate;
+  barray[5] = &gcd[5];
+  barray[6] = GCD_Glue;
+  barray[7] = NULL;
 
-    boxes[2].gd.flags = gg_enabled | gg_visible;
-    boxes[2].gd.u.boxelements = barray;
-    boxes[2].creator = GHBoxCreate;
-    hvarray[3][0] = &boxes[2]; hvarray[3][1] = GCD_ColSpan; hvarray[3][2] = GCD_Glue; hvarray[3][3] = NULL;
-    hvarray[4][0] = NULL;
+  boxes[2].gd.flags = gg_enabled | gg_visible;
+  boxes[2].gd.u.boxelements = barray;
+  boxes[2].creator = GHBoxCreate;
+  hvarray[3][0] = &boxes[2];
+  hvarray[3][1] = GCD_ColSpan;
+  hvarray[3][2] = GCD_Glue;
+  hvarray[3][3] = NULL;
+  hvarray[4][0] = NULL;
 
-    boxes[0].gd.pos.x = boxes[0].gd.pos.y = 2;
-    boxes[0].gd.flags = gg_enabled | gg_visible;
-    boxes[0].gd.u.boxelements = hvarray[0];
-    boxes[0].creator = GHVGroupCreate;
+  boxes[0].gd.pos.x = boxes[0].gd.pos.y = 2;
+  boxes[0].gd.flags = gg_enabled | gg_visible;
+  boxes[0].gd.u.boxelements = hvarray[0];
+  boxes[0].creator = GHVGroupCreate;
 
-    GGadgetsCreate(gw,boxes);
-    GHVBoxSetExpandableRow(boxes[0].ret,gb_expandglue);
-    GHVBoxSetExpandableCol(boxes[0].ret,gb_expandglue);
-    GHVBoxSetExpandableCol(boxes[2].ret,gb_expandgluesame);
-    GHVBoxFitWindow(boxes[0].ret);
-    GWidgetIndicateFocusGadget(GWidgetGetControl(gw,CID_Size));
-    GTextFieldSelect(GWidgetGetControl(gw,CID_Size),0,-1);
+  GGadgetsCreate (gw, boxes);
+  GHVBoxSetExpandableRow (boxes[0].ret, gb_expandglue);
+  GHVBoxSetExpandableCol (boxes[0].ret, gb_expandglue);
+  GHVBoxSetExpandableCol (boxes[2].ret, gb_expandgluesame);
+  GHVBoxFitWindow (boxes[0].ret);
+  GWidgetIndicateFocusGadget (GWidgetGetControl (gw, CID_Size));
+  GTextFieldSelect (GWidgetGetControl (gw, CID_Size), 0, -1);
 
-    GDrawSetVisible(gw,true);
-    while ( !sb.done )
-	GDrawProcessOneEvent(NULL);
-    GDrawDestroyWindow(gw);
-return( sb.good );
+  GDrawSetVisible (gw, true);
+  while (!sb.done)
+    GDrawProcessOneEvent (NULL);
+  GDrawDestroyWindow (gw);
+  return (sb.good);
 }
 
-static int ExportXBM(char *filename,SplineChar *sc, int layer, int format) {
-    char *ans;
-    int pixelsize, bitsperpixel;
+static int
+ExportXBM (char *filename, SplineChar *sc, int layer, int format)
+{
+  char *ans;
+  int pixelsize, bitsperpixel;
 
-    if ( format==0 ) {
-	ans = gwwv_ask_string(_("Pixel size?"),"100",_("Pixel size?"));
-	if ( ans==NULL )
-return( 0 );
-	if ( (pixelsize=strtol(ans,NULL,10))<=0 )
-return( 0 );
-	free(last);
-	last = ans;
-	bitsperpixel=1;
-    } else {
-	if ( !AskSizeBits(&pixelsize,&bitsperpixel) )
-return( 0 );
+  if (format == 0)
+    {
+      ans = gwwv_ask_string (_("Pixel size?"), "100", _("Pixel size?"));
+      if (ans == NULL)
+        return (0);
+      if ((pixelsize = strtol (ans, NULL, 10)) <= 0)
+        return (0);
+      free (last);
+      last = ans;
+      bitsperpixel = 1;
     }
-    if ( autohint_before_generate && sc->changedsincelasthinted && !sc->manualhints )
-	SplineCharAutoHint(sc,layer,NULL);
-return( ExportImage(filename,sc, layer, format, pixelsize, bitsperpixel));
+  else
+    {
+      if (!AskSizeBits (&pixelsize, &bitsperpixel))
+        return (0);
+    }
+  if (autohint_before_generate && sc->changedsincelasthinted
+      && !sc->manualhints)
+    SplineCharAutoHint (sc, layer, NULL);
+  return (ExportImage (filename, sc, layer, format, pixelsize, bitsperpixel));
 }
-struct gfc_data {
-    int done;
-    int ret;
-    GGadget *gfc;
-    GGadget *format;
-    SplineChar *sc;
-    BDFChar *bc;
-    int layer;
+
+struct gfc_data
+{
+  int done;
+  int ret;
+  GGadget *gfc;
+  GGadget *format;
+  SplineChar *sc;
+  BDFChar *bc;
+  int layer;
 };
 
 
 static GTextInfo bcformats[] = {
-    { (uint32_t *) N_("X Bitmap"), NULL, 0, 0, (void *) 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) N_("BMP"), NULL, 0, 0, (void *) 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) N_("png"), NULL, 0, 0, (void *) 2, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    GTEXTINFO_EMPTY
+  {(uint32_t *) N_("X Bitmap"), NULL, 0, 0, (void *) 0, 0, 0, 0, 0, 0, 0, 0,
+   1, 0, 0, '\0'},
+  {(uint32_t *) N_("BMP"), NULL, 0, 0, (void *) 1, 0, 0, 0, 0, 0, 0, 0, 1, 0,
+   0, '\0'},
+  {(uint32_t *) N_("png"), NULL, 0, 0, (void *) 2, 0, 0, 0, 0, 0, 0, 0, 1, 0,
+   0, '\0'},
+  GTEXTINFO_EMPTY
 };
 
 static GTextInfo formats[] = {
-    { (uint32_t *) N_("EPS"), NULL, 0, 0, (void *) 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) N_("XFig"), NULL, 0, 0, (void *) 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) N_("SVG"), NULL, 0, 0, (void *) 2, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) N_("Glif"), NULL, 0, 0, (void *) 3, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) N_("PDF"), NULL, 0, 0, (void *) 4, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) N_("Raph's plate"), NULL, 0, 0, (void *) 5, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
+  {(uint32_t *) N_("EPS"), NULL, 0, 0, (void *) 0, 0, 0, 0, 0, 0, 1, 0, 1, 0,
+   0, '\0'},
+  {(uint32_t *) N_("XFig"), NULL, 0, 0, (void *) 1, 0, 0, 0, 0, 0, 0, 0, 1, 0,
+   0, '\0'},
+  {(uint32_t *) N_("SVG"), NULL, 0, 0, (void *) 2, 0, 0, 0, 0, 0, 0, 0, 1, 0,
+   0, '\0'},
+  {(uint32_t *) N_("Glif"), NULL, 0, 0, (void *) 3, 0, 0, 0, 0, 0, 0, 0, 1, 0,
+   0, '\0'},
+  {(uint32_t *) N_("PDF"), NULL, 0, 0, (void *) 4, 0, 0, 0, 0, 0, 0, 0, 1, 0,
+   0, '\0'},
+  {(uint32_t *) N_("Raph's plate"), NULL, 0, 0, (void *) 5, 0, 0, 0, 0, 0, 0,
+   0, 1, 0, 0, '\0'},
 #define BITMAP_FORMAT_START	6
-    { (uint32_t *) N_("X Bitmap"), NULL, 0, 0, (void *) BITMAP_FORMAT_START, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) N_("BMP"), NULL, 0, 0, (void *) (BITMAP_FORMAT_START+1), 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) N_("png"), NULL, 0, 0, (void *) (BITMAP_FORMAT_START+2), 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    GTEXTINFO_EMPTY
+  {(uint32_t *) N_("X Bitmap"), NULL, 0, 0, (void *) BITMAP_FORMAT_START, 0,
+   0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+  {(uint32_t *) N_("BMP"), NULL, 0, 0, (void *) (BITMAP_FORMAT_START + 1), 0,
+   0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+  {(uint32_t *) N_("png"), NULL, 0, 0, (void *) (BITMAP_FORMAT_START + 2), 0,
+   0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+  GTEXTINFO_EMPTY
 };
+
 static int last_format = 0;
 
-static void DoExport(struct gfc_data *d,uint32_t *path) {
-    char *temp;
-    int format, good;
+static void
+DoExport (struct gfc_data *d, uint32_t *path)
+{
+  char *temp;
+  int format, good;
 
-    temp = x_u32_to_u8 (u32_force_valid (path));
-    last_format = format = (intptr_t) (GGadgetGetListItemSelected(d->format)->userdata);
-    if ( d->bc )
-	last_format += BITMAP_FORMAT_START;
-    if ( d->bc!=NULL )
-	good = BCExportXBM(temp,d->bc,format);
-    else if ( format==0 )
-	good = ExportEPS(temp,d->sc,d->layer);
-    else if ( format==1 )
-	good = ExportFig(temp,d->sc,d->layer);
-    else if ( format==2 )
-	good = ExportSVG(temp,d->sc,d->layer);
-    else if ( format==3 )
-	good = ExportGlif(temp,d->sc,d->layer);
-    else if ( format==4 )
-	good = ExportPDF(temp,d->sc,d->layer);
-    else if ( format==5 )
-	good = ExportPlate(temp,d->sc,d->layer);
-    else if ( format<fv_pythonbase )
-	good = ExportXBM(temp,d->sc,d->layer,format-BITMAP_FORMAT_START);
+  temp = x_u32_to_u8 (u32_force_valid (path));
+  last_format = format =
+    (intptr_t) (GGadgetGetListItemSelected (d->format)->userdata);
+  if (d->bc)
+    last_format += BITMAP_FORMAT_START;
+  if (d->bc != NULL)
+    good = BCExportXBM (temp, d->bc, format);
+  else if (format == 0)
+    good = ExportEPS (temp, d->sc, d->layer);
+  else if (format == 1)
+    good = ExportFig (temp, d->sc, d->layer);
+  else if (format == 2)
+    good = ExportSVG (temp, d->sc, d->layer);
+  else if (format == 3)
+    good = ExportGlif (temp, d->sc, d->layer);
+  else if (format == 4)
+    good = ExportPDF (temp, d->sc, d->layer);
+  else if (format == 5)
+    good = ExportPlate (temp, d->sc, d->layer);
+  else if (format < fv_pythonbase)
+    good = ExportXBM (temp, d->sc, d->layer, format - BITMAP_FORMAT_START);
 #ifndef _NO_PYTHON
-    else if ( format>=fv_pythonbase )
-	PyFF_SCExport(d->sc,format-fv_pythonbase,temp,d->layer);
+  else if (format >= fv_pythonbase)
+    PyFF_SCExport (d->sc, format - fv_pythonbase, temp, d->layer);
 #endif
-    if ( !good )
-	ff_post_error(_("Save Failed"),_("Save Failed"));
-    free(temp);
-    d->done = good;
-    d->ret = good;
+  if (!good)
+    ff_post_error (_("Save Failed"), _("Save Failed"));
+  free (temp);
+  d->done = good;
+  d->ret = good;
 }
 
-static void GFD_doesnt(GIOControl *gio) {
-    /* The filename the user chose doesn't exist, so everything is happy */
-    struct gfc_data *d = gio->userdata;
-    DoExport(d,gio->path);
-    GFileChooserReplaceIO(d->gfc,NULL);
+static void
+GFD_doesnt (GIOControl * gio)
+{
+  /* The filename the user chose doesn't exist, so everything is happy */
+  struct gfc_data *d = gio->userdata;
+  DoExport (d, gio->path);
+  GFileChooserReplaceIO (d->gfc, NULL);
 }
 
-static void GFD_exists(GIOControl *gio) {
-    /* The filename the user chose exists, ask user if s/he wants to overwrite */
-    struct gfc_data *d = gio->userdata;
-    char *rcb[3], *temp;
+static void
+GFD_exists (GIOControl * gio)
+{
+  /* The filename the user chose exists, ask user if s/he wants to overwrite */
+  struct gfc_data *d = gio->userdata;
+  char *rcb[3], *temp;
 
-    rcb[2]=NULL;
-    rcb[0] =  _("_Replace");
-    rcb[1] =  _("_Cancel");
+  rcb[2] = NULL;
+  rcb[0] = _("_Replace");
+  rcb[1] = _("_Cancel");
 
-    if ( gwwv_ask(_("File Exists"),(const char **) rcb,0,1,_("File, %s, exists. Replace it?"),
-	    temp = u2utf8_copy(u32_GFileBaseName(gio->path)))==0 ) {
-	DoExport(d,gio->path);
+  if (gwwv_ask
+      (_("File Exists"), (const char **) rcb, 0, 1,
+       _("File, %s, exists. Replace it?"), temp =
+       u2utf8_copy (u32_GFileBaseName (gio->path))) == 0)
+    {
+      DoExport (d, gio->path);
     }
-    free(temp);
-    GFileChooserReplaceIO(d->gfc,NULL);
+  free (temp);
+  GFileChooserReplaceIO (d->gfc, NULL);
 }
 
-static int GFD_SaveOk(GGadget *g, GEvent *e) {
-    if ( e->type==et_controlevent && e->u.control.subtype == et_buttonactivate ) {
-	struct gfc_data *d = GDrawGetUserData(GGadgetGetWindow(g));
-	GGadget *tf;
-	GFileChooserGetChildren(d->gfc,NULL,NULL,&tf);
-	if ( *_GGadgetGetTitle(tf)!='\0' ) {
-	    uint32_t *ret = GGadgetGetTitle(d->gfc);
+static int
+GFD_SaveOk (GGadget *g, GEvent * e)
+{
+  if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
+    {
+      struct gfc_data *d = GDrawGetUserData (GGadgetGetWindow (g));
+      GGadget *tf;
+      GFileChooserGetChildren (d->gfc, NULL, NULL, &tf);
+      if (*_GGadgetGetTitle (tf) != '\0')
+        {
+          uint32_t *ret = GGadgetGetTitle (d->gfc);
 
-	    GIOfileExists(GFileChooserReplaceIO(d->gfc,
-		    GIOCreate(ret,d,GFD_exists,GFD_doesnt)));
-	    free(ret);
-	}
+          GIOfileExists (GFileChooserReplaceIO (d->gfc,
+                                                GIOCreate (ret, d, GFD_exists,
+                                                           GFD_doesnt)));
+          free (ret);
+        }
     }
-return( true );
+  return (true);
 }
 
-static int GFD_Cancel(GGadget *g, GEvent *e) {
-    if ( e->type==et_controlevent && e->u.control.subtype == et_buttonactivate ) {
-	struct gfc_data *d = GDrawGetUserData(GGadgetGetWindow(g));
-	d->done = true;
-	d->ret = false;
+static int
+GFD_Cancel (GGadget *g, GEvent * e)
+{
+  if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
+    {
+      struct gfc_data *d = GDrawGetUserData (GGadgetGetWindow (g));
+      d->done = true;
+      d->ret = false;
     }
-return( true );
+  return (true);
 }
 
-static int GFD_Format(GGadget *g, GEvent *e) {
-    if ( e->type==et_controlevent && e->u.control.subtype == et_listselected ) {
-	struct gfc_data *d = GDrawGetUserData(GGadgetGetWindow(g));
-	uint32_t *pt, *file, *f2;
-	int format = (intptr_t) (GGadgetGetListItemSelected(d->format)->userdata);
-	file = GGadgetGetTitle(d->gfc);
-	f2 = xmalloc(sizeof(uint32_t) * (u32_strlen(file)+6));
-	u32_strcpy(f2,file);
-	free(file);
-	pt = u32_strrchr(f2,'.');
-	if ( pt==NULL )
-	    pt = f2+u32_strlen(f2);
-	if ( d->bc!=NULL )
-	    uc_strcpy(pt,format==0?".xbm":format==1?".bmp":".png");
+static int
+GFD_Format (GGadget *g, GEvent * e)
+{
+  if (e->type == et_controlevent && e->u.control.subtype == et_listselected)
+    {
+      struct gfc_data *d = GDrawGetUserData (GGadgetGetWindow (g));
+      uint32_t *pt, *file, *f2;
+      int format =
+        (intptr_t) (GGadgetGetListItemSelected (d->format)->userdata);
+      file = GGadgetGetTitle (d->gfc);
+      f2 = xmalloc (sizeof (uint32_t) * (u32_strlen (file) + 6));
+      u32_strcpy (f2, file);
+      free (file);
+      pt = u32_strrchr (f2, '.');
+      if (pt == NULL)
+        pt = f2 + u32_strlen (f2);
+      if (d->bc != NULL)
+        u32_strcpy (pt,
+                    x_gc_u8_to_u32 (format == 0 ? ".xbm" : format ==
+                                    1 ? ".bmp" : ".png"));
 #ifndef _NO_PYTHON
-	else if ( format>=fv_pythonbase )
-	    uc_strcpy(pt+1,py_ie[format-fv_pythonbase].extension);
+      else if (format >= fv_pythonbase)
+        u32_strcpy (pt + 1,
+                    x_gc_u8_to_u32 (py_ie[format - fv_pythonbase].extension));
 #endif
-	else
-	    uc_strcpy(pt,format==0?".eps":
-			 format==1?".fig":
-			 format==2?".svg":
-			 format==3?".glif":
-			 format==4?".pdf":
-			 format==5?".plate":
-			 format==6?".xbm":
-			 format==7?".bmp":
-				   ".png");
-	GGadgetSetTitle(d->gfc,f2);
-	free(f2);
+      else
+        u32_strcpy (pt, x_gc_u8_to_u32 (format == 0 ? ".eps" :
+                                        format == 1 ? ".fig" :
+                                        format == 2 ? ".svg" :
+                                        format == 3 ? ".glif" :
+                                        format == 4 ? ".pdf" :
+                                        format == 5 ? ".plate" :
+                                        format == 6 ? ".xbm" :
+                                        format == 7 ? ".bmp" : ".png"));
+      GGadgetSetTitle (d->gfc, f2);
+      free (f2);
     }
-return( true );
+  return (true);
 }
 
-static void GFD_dircreated(GIOControl *gio) {
-    struct gfc_data *d = gio->userdata;
-    uint32_t *dir = x_u32_strdup_or_null(gio->path);
+static void
+GFD_dircreated (GIOControl * gio)
+{
+  struct gfc_data *d = gio->userdata;
+  uint32_t *dir = x_u32_strdup_or_null (gio->path);
 
-    GFileChooserReplaceIO(d->gfc,NULL);
-    GFileChooserSetDir(d->gfc,dir);
-    free(dir);
+  GFileChooserReplaceIO (d->gfc, NULL);
+  GFileChooserSetDir (d->gfc, dir);
+  free (dir);
 }
 
-static void GFD_dircreatefailed(GIOControl *gio) {
-    /* We couldn't create the directory */
-    struct gfc_data *d = gio->userdata;
-    char *temp;
+static void
+GFD_dircreatefailed (GIOControl * gio)
+{
+  /* We couldn't create the directory */
+  struct gfc_data *d = gio->userdata;
+  char *temp;
 
-    ff_post_notice(_("Couldn't create directory"),_("Couldn't create directory: %s"),
-		temp = u2utf8_copy(u32_GFileBaseName(gio->path)));
-    free(temp);
-    GFileChooserReplaceIO(d->gfc,NULL);
-    GFileChooserReplaceIO(d->gfc,NULL);
+  ff_post_notice (_("Couldn't create directory"),
+                  _("Couldn't create directory: %s"), temp =
+                  u2utf8_copy (u32_GFileBaseName (gio->path)));
+  free (temp);
+  GFileChooserReplaceIO (d->gfc, NULL);
+  GFileChooserReplaceIO (d->gfc, NULL);
 }
 
-static int GFD_NewDir(GGadget *g, GEvent *e) {
-    if ( e->type==et_controlevent && e->u.control.subtype == et_buttonactivate ) {
-	struct gfc_data *d = GDrawGetUserData(GGadgetGetWindow(g));
-	char *newdir;
-	uint32_t *utemp;
+static int
+GFD_NewDir (GGadget *g, GEvent * e)
+{
+  if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
+    {
+      struct gfc_data *d = GDrawGetUserData (GGadgetGetWindow (g));
+      char *newdir;
+      uint32_t *utemp;
 
-	newdir = gwwv_ask_string(_("Create directory"),NULL,_("Directory name?"));
-	if ( newdir==NULL )
-return( true );
-	if ( !GFileIsAbsolute(newdir)) {
-	    char *basedir = u2utf8_copy(GFileChooserGetDir(d->gfc));
-	    char *temp = GFileAppendFile(basedir,newdir,false);
-	    free(newdir); free(basedir);
-	    newdir = temp;
-	}
-	utemp = utf82u_copy(newdir); free(newdir);
-	GIOmkDir(GFileChooserReplaceIO(d->gfc,
-		GIOCreate(utemp,d,GFD_dircreated,GFD_dircreatefailed)));
-	free(utemp);
+      newdir =
+        gwwv_ask_string (_("Create directory"), NULL, _("Directory name?"));
+      if (newdir == NULL)
+        return (true);
+      if (!GFileIsAbsolute (newdir))
+        {
+          char *basedir = u2utf8_copy (GFileChooserGetDir (d->gfc));
+          char *temp = GFileAppendFile (basedir, newdir, false);
+          free (newdir);
+          free (basedir);
+          newdir = temp;
+        }
+      utemp = utf82u_copy (newdir);
+      free (newdir);
+      GIOmkDir (GFileChooserReplaceIO (d->gfc,
+                                       GIOCreate (utemp, d, GFD_dircreated,
+                                                  GFD_dircreatefailed)));
+      free (utemp);
     }
-return( true );
+  return (true);
 }
 
-static int e_h(GWindow gw, GEvent *event) {
-    if ( event->type==et_close ) {
-	struct gfc_data *d = GDrawGetUserData(gw);
-	d->done = true;
-	d->ret = false;
-    } else if ( event->type == et_char ) {
-return( false );
-    } else if ( event->type==et_map ) {
-	GDrawRaise(gw);
-    } else if ( event->type == et_mousemove ||
-	    (event->type==et_mousedown && event->u.mouse.button==3 )) {
-	struct gfc_data *d = GDrawGetUserData(gw);
-	GFileChooserPopupCheck(d->gfc,event);
-    } else if (( event->type==et_mouseup || event->type==et_mousedown ) &&
-	    (event->u.mouse.button>=4 && event->u.mouse.button<=7) ) {
-	struct gfc_data *d = GDrawGetUserData(gw);
-return( GGadgetDispatchEvent((GGadget *) (d->gfc),event));
+static int
+e_h (GWindow gw, GEvent * event)
+{
+  if (event->type == et_close)
+    {
+      struct gfc_data *d = GDrawGetUserData (gw);
+      d->done = true;
+      d->ret = false;
     }
-return( true );
+  else if (event->type == et_char)
+    {
+      return (false);
+    }
+  else if (event->type == et_map)
+    {
+      GDrawRaise (gw);
+    }
+  else if (event->type == et_mousemove ||
+           (event->type == et_mousedown && event->u.mouse.button == 3))
+    {
+      struct gfc_data *d = GDrawGetUserData (gw);
+      GFileChooserPopupCheck (d->gfc, event);
+    }
+  else if ((event->type == et_mouseup || event->type == et_mousedown) &&
+           (event->u.mouse.button >= 4 && event->u.mouse.button <= 7))
+    {
+      struct gfc_data *d = GDrawGetUserData (gw);
+      return (GGadgetDispatchEvent ((GGadget *) (d->gfc), event));
+    }
+  return (true);
 }
 
-static int CanBeAPlateFile(SplineChar *sc) {
-    int open_cnt;
-    SplineSet *ss;
+static int
+CanBeAPlateFile (SplineChar *sc)
+{
+  int open_cnt;
+  SplineSet *ss;
 
-    if ( sc->parent->multilayer )
-return( false );
-    /* Plate files can't handle refs */
-    if ( sc->layers[ly_fore].refs!=NULL )
-return( false );
+  if (sc->parent->multilayer)
+    return (false);
+  /* Plate files can't handle refs */
+  if (sc->layers[ly_fore].refs != NULL)
+    return (false);
 
-    /* Plate files can only handle 1 open contour */
-    open_cnt = 0;
-    for ( ss= sc->layers[ly_fore].splines; ss!=NULL; ss=ss->next ) {
-	if ( ss->first->prev==NULL ) {
-	    if ( ss->first->next!=NULL )
-		++open_cnt;
-	}
+  /* Plate files can only handle 1 open contour */
+  open_cnt = 0;
+  for (ss = sc->layers[ly_fore].splines; ss != NULL; ss = ss->next)
+    {
+      if (ss->first->prev == NULL)
+        {
+          if (ss->first->next != NULL)
+            ++open_cnt;
+        }
     }
-return( open_cnt<=1 );
+  return (open_cnt <= 1);
 }
 
-static int _Export(SplineChar *sc,BDFChar *bc,int layer) {
-    GRect pos;
-    GWindow gw;
-    GWindowAttrs wattrs;
-    GGadgetCreateData gcd[8], boxes[4], *hvarray[8], *harray[5], *barray[10];
-    GTextInfo label[7];
-    struct gfc_data d;
-    GGadget *pulldown, *files, *tf;
-    char buffer[100]; uint32_t ubuf[100];
-    char *ext;
-    int _format, i;
-    int /*bs = GIntGetResource(_NUM_Buttonsize), bsbigger,*/ totwid;
-    static int done = false;
-    GTextInfo *cur_formats;
+static int
+_Export (SplineChar *sc, BDFChar * bc, int layer)
+{
+  GRect pos;
+  GWindow gw;
+  GWindowAttrs wattrs;
+  GGadgetCreateData gcd[8], boxes[4], *hvarray[8], *harray[5], *barray[10];
+  GTextInfo label[7];
+  struct gfc_data d;
+  GGadget *pulldown, *files, *tf;
+  char buffer[100];
+  uint32_t ubuf[100];
+  char *ext;
+  int _format, i;
+  int /*bs = GIntGetResource(_NUM_Buttonsize), bsbigger, */ totwid;
+  static int done = false;
+  GTextInfo *cur_formats;
 
-    if ( !done ) {
-	for ( i=0; formats[i].text!=NULL; ++i )
-	    formats[i].text= (uint32_t *) _((char *) formats[i].text);
-	for ( i=0; bcformats[i].text!=NULL; ++i )
-	    bcformats[i].text= (uint32_t *) _((char *) bcformats[i].text);
-	done = true;
+  if (!done)
+    {
+      for (i = 0; formats[i].text != NULL; ++i)
+        formats[i].text = (uint32_t *) _((char *) formats[i].text);
+      for (i = 0; bcformats[i].text != NULL; ++i)
+        bcformats[i].text = (uint32_t *) _((char *) bcformats[i].text);
+      done = true;
     }
-    if ( bc==NULL )
-	formats[5].disabled = !CanBeAPlateFile(sc);
-    cur_formats = bc==NULL ? formats : bcformats;
+  if (bc == NULL)
+    formats[5].disabled = !CanBeAPlateFile (sc);
+  cur_formats = bc == NULL ? formats : bcformats;
 #ifndef _NO_PYTHON
-    if ( bc==NULL && py_ie!=NULL ) {
-	int cnt, extras;
-	for ( cnt=0; formats[cnt].text!=NULL; ++cnt );
-	for ( i=extras=0; py_ie[i].name!=NULL; ++i )
-	    if ( py_ie[i].export!=NULL )
-		++extras;
-	if ( extras!=0 ) {
-	    cur_formats = xcalloc(extras+cnt+1,sizeof(GTextInfo));
-	    for ( cnt=0; formats[cnt].text!=NULL; ++cnt ) {
-		cur_formats[cnt] = formats[cnt];
-		cur_formats[cnt].text = (uint32_t *) xstrdup_or_null( (char *) formats[cnt].text );
-	    }
-	    for ( i=extras=0; py_ie[i].name!=NULL; ++i ) {
-		if ( py_ie[i].export!=NULL ) {
-		    cur_formats[cnt+extras].text = (uint32_t *) xstrdup_or_null(py_ie[i].name);
-		    cur_formats[cnt+extras].text_is_1byte = true;
-		    cur_formats[cnt+extras].userdata = (void *) (intptr_t) (fv_pythonbase+i);
-		    ++extras;
-		}
-	    }
-	}
+  if (bc == NULL && py_ie != NULL)
+    {
+      int cnt, extras;
+      for (cnt = 0; formats[cnt].text != NULL; ++cnt);
+      for (i = extras = 0; py_ie[i].name != NULL; ++i)
+        if (py_ie[i].export != NULL)
+          ++extras;
+      if (extras != 0)
+        {
+          cur_formats = xcalloc (extras + cnt + 1, sizeof (GTextInfo));
+          for (cnt = 0; formats[cnt].text != NULL; ++cnt)
+            {
+              cur_formats[cnt] = formats[cnt];
+              cur_formats[cnt].text =
+                (uint32_t *) xstrdup_or_null ((char *) formats[cnt].text);
+            }
+          for (i = extras = 0; py_ie[i].name != NULL; ++i)
+            {
+              if (py_ie[i].export != NULL)
+                {
+                  cur_formats[cnt + extras].text =
+                    (uint32_t *) xstrdup_or_null (py_ie[i].name);
+                  cur_formats[cnt + extras].text_is_1byte = true;
+                  cur_formats[cnt + extras].userdata =
+                    (void *) (intptr_t) (fv_pythonbase + i);
+                  ++extras;
+                }
+            }
+        }
     }
 #endif
 
-    memset(&wattrs,0,sizeof(wattrs));
-    wattrs.mask = wam_events|wam_cursor|wam_utf8_wtitle|wam_undercursor|wam_restrict|wam_isdlg;
-    wattrs.event_masks = ~(1<<et_charup);
-    wattrs.restrict_input_to_me = 1;
-    wattrs.is_dlg = 1;
-    wattrs.undercursor = 1;
-    wattrs.cursor = ct_pointer;
-    wattrs.utf8_window_title = _("Export");
-    pos.x = pos.y = 0;
-    totwid = GGadgetScale(300);
-    pos.width = GDrawPointsToPixels(NULL,200);
-    pos.height = GDrawPointsToPixels(NULL,255);
-    gw = GDrawCreateTopWindow(NULL,&pos,e_h,&d,&wattrs);
+  memset (&wattrs, 0, sizeof (wattrs));
+  wattrs.mask =
+    wam_events | wam_cursor | wam_utf8_wtitle | wam_undercursor | wam_restrict
+    | wam_isdlg;
+  wattrs.event_masks = ~(1 << et_charup);
+  wattrs.restrict_input_to_me = 1;
+  wattrs.is_dlg = 1;
+  wattrs.undercursor = 1;
+  wattrs.cursor = ct_pointer;
+  wattrs.utf8_window_title = _("Export");
+  pos.x = pos.y = 0;
+  totwid = GGadgetScale (300);
+  pos.width = GDrawPointsToPixels (NULL, 200);
+  pos.height = GDrawPointsToPixels (NULL, 255);
+  gw = GDrawCreateTopWindow (NULL, &pos, e_h, &d, &wattrs);
 
-    memset(&label,0,sizeof(label));
-    memset(&gcd,0,sizeof(gcd));
-    memset(&boxes,0,sizeof(boxes));
+  memset (&label, 0, sizeof (label));
+  memset (&gcd, 0, sizeof (gcd));
+  memset (&boxes, 0, sizeof (boxes));
 
-    gcd[0].gd.flags = gg_visible | gg_enabled;
-    gcd[0].creator = GFileChooserCreate;
-    hvarray[0] = &gcd[0]; hvarray[1] = NULL;
+  gcd[0].gd.flags = gg_visible | gg_enabled;
+  gcd[0].creator = GFileChooserCreate;
+  hvarray[0] = &gcd[0];
+  hvarray[1] = NULL;
 
-    gcd[1].gd.flags = gg_visible | gg_enabled | gg_but_default;
-    label[1].text = (uint32_t *) _("_Save");
-    label[1].text_is_1byte = true;
-    label[1].text_in_resource = true;
-    gcd[1].gd.label = &label[1];
-    gcd[1].gd.handle_controlevent = GFD_SaveOk;
-    gcd[1].creator = GButtonCreate;
-    barray[0] = GCD_Glue; barray[1] = &gcd[1]; barray[2] = GCD_Glue;
+  gcd[1].gd.flags = gg_visible | gg_enabled | gg_but_default;
+  label[1].text = (uint32_t *) _("_Save");
+  label[1].text_is_1byte = true;
+  label[1].text_in_resource = true;
+  gcd[1].gd.label = &label[1];
+  gcd[1].gd.handle_controlevent = GFD_SaveOk;
+  gcd[1].creator = GButtonCreate;
+  barray[0] = GCD_Glue;
+  barray[1] = &gcd[1];
+  barray[2] = GCD_Glue;
 
-    gcd[2].gd.flags = gg_visible | gg_enabled;
-    label[2].text = (uint32_t *) _("_Filter");
-    label[2].text_is_1byte = true;
-    label[2].text_in_resource = true;
-    gcd[2].gd.label = &label[2];
-    gcd[2].gd.handle_controlevent = GFileChooserFilterEh;
-    gcd[2].creator = GButtonCreate;
-    barray[3] = GCD_Glue; barray[4] = &gcd[2]; barray[5] = GCD_Glue;
+  gcd[2].gd.flags = gg_visible | gg_enabled;
+  label[2].text = (uint32_t *) _("_Filter");
+  label[2].text_is_1byte = true;
+  label[2].text_in_resource = true;
+  gcd[2].gd.label = &label[2];
+  gcd[2].gd.handle_controlevent = GFileChooserFilterEh;
+  gcd[2].creator = GButtonCreate;
+  barray[3] = GCD_Glue;
+  barray[4] = &gcd[2];
+  barray[5] = GCD_Glue;
 
-    gcd[3].gd.pos.x = -gcd[1].gd.pos.x; gcd[3].gd.pos.y = 224; gcd[3].gd.pos.width = -1; gcd[3].gd.pos.height = 0;
-    gcd[3].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-    label[3].text = (uint32_t *) _("_Cancel");
-    label[3].text_is_1byte = true;
-    label[3].text_in_resource = true;
-    gcd[3].gd.label = &label[3];
-    gcd[3].gd.handle_controlevent = GFD_Cancel;
-    gcd[3].creator = GButtonCreate;
-    barray[6] = GCD_Glue; barray[7] = &gcd[3]; barray[8] = GCD_Glue;
-    barray[9] = NULL;
+  gcd[3].gd.pos.x = -gcd[1].gd.pos.x;
+  gcd[3].gd.pos.y = 224;
+  gcd[3].gd.pos.width = -1;
+  gcd[3].gd.pos.height = 0;
+  gcd[3].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
+  label[3].text = (uint32_t *) _("_Cancel");
+  label[3].text_is_1byte = true;
+  label[3].text_in_resource = true;
+  gcd[3].gd.label = &label[3];
+  gcd[3].gd.handle_controlevent = GFD_Cancel;
+  gcd[3].creator = GButtonCreate;
+  barray[6] = GCD_Glue;
+  barray[7] = &gcd[3];
+  barray[8] = GCD_Glue;
+  barray[9] = NULL;
 
-    boxes[2].gd.flags = gg_enabled|gg_visible;
-    boxes[2].gd.u.boxelements = barray;
-    boxes[2].creator = GHBoxCreate;
-    hvarray[4] = &boxes[2]; hvarray[5] = NULL;
+  boxes[2].gd.flags = gg_enabled | gg_visible;
+  boxes[2].gd.u.boxelements = barray;
+  boxes[2].creator = GHBoxCreate;
+  hvarray[4] = &boxes[2];
+  hvarray[5] = NULL;
 
-    gcd[4].gd.pos.x = gcd[3].gd.pos.x; gcd[4].gd.pos.y = 194; gcd[4].gd.pos.width = -1; gcd[4].gd.pos.height = 0;
-    gcd[4].gd.flags = gg_visible | gg_enabled;
-    label[4].text = (uint32_t *) C_("Directory", "_New");
-    label[4].text_is_1byte = true;
-    label[4].text_in_resource = true;
-    label[4].image = &_GIcon_dir;
-    label[4].image_precedes = false;
-    gcd[4].gd.label = &label[4];
-    gcd[4].gd.handle_controlevent = GFD_NewDir;
-    gcd[4].creator = GButtonCreate;
+  gcd[4].gd.pos.x = gcd[3].gd.pos.x;
+  gcd[4].gd.pos.y = 194;
+  gcd[4].gd.pos.width = -1;
+  gcd[4].gd.pos.height = 0;
+  gcd[4].gd.flags = gg_visible | gg_enabled;
+  label[4].text = (uint32_t *) C_ ("Directory", "_New");
+  label[4].text_is_1byte = true;
+  label[4].text_in_resource = true;
+  label[4].image = &_GIcon_dir;
+  label[4].image_precedes = false;
+  gcd[4].gd.label = &label[4];
+  gcd[4].gd.handle_controlevent = GFD_NewDir;
+  gcd[4].creator = GButtonCreate;
 
-    gcd[5].gd.pos.x = 12; gcd[5].gd.pos.y = 200; gcd[5].gd.pos.width = 0; gcd[5].gd.pos.height = 0;
-    gcd[5].gd.flags = gg_visible | gg_enabled;
-    label[5].text = (uint32_t *) _("Format:");
-    label[5].text_is_1byte = true;
-    gcd[5].gd.label = &label[5];
-    gcd[5].creator = GLabelCreate;
-    harray[0] = &gcd[5];
+  gcd[5].gd.pos.x = 12;
+  gcd[5].gd.pos.y = 200;
+  gcd[5].gd.pos.width = 0;
+  gcd[5].gd.pos.height = 0;
+  gcd[5].gd.flags = gg_visible | gg_enabled;
+  label[5].text = (uint32_t *) _("Format:");
+  label[5].text_is_1byte = true;
+  gcd[5].gd.label = &label[5];
+  gcd[5].creator = GLabelCreate;
+  harray[0] = &gcd[5];
 
-    _format = last_format;
-    if ( bc!=NULL ) {
-	_format-=2;
-	if ( _format<0 || _format>2 ) _format = 0;
+  _format = last_format;
+  if (bc != NULL)
+    {
+      _format -= 2;
+      if (_format < 0 || _format > 2)
+        _format = 0;
     }
-    gcd[6].gd.pos.x = 55; gcd[6].gd.pos.y = 194; 
-    gcd[6].gd.flags = gg_visible | gg_enabled ;
-    gcd[6].gd.u.list = cur_formats;
-    if ( bc!=NULL ) {
-	bcformats[0].disabled = bc->byte_data;
-	if ( _format==0 ) _format=1;
+  gcd[6].gd.pos.x = 55;
+  gcd[6].gd.pos.y = 194;
+  gcd[6].gd.flags = gg_visible | gg_enabled;
+  gcd[6].gd.u.list = cur_formats;
+  if (bc != NULL)
+    {
+      bcformats[0].disabled = bc->byte_data;
+      if (_format == 0)
+        _format = 1;
     }
-    gcd[6].gd.label = &cur_formats[_format];
-    gcd[6].gd.u.list[0].selected = true;
-    gcd[6].gd.handle_controlevent = GFD_Format;
-    gcd[6].creator = GListButtonCreate;
-    for ( i=0; cur_formats[i].text!=NULL; ++i )
-	cur_formats[i].selected =false;
-    cur_formats[_format].selected = true;
-    harray[1] = &gcd[6];
-    harray[2] = GCD_Glue;
-    harray[3] = &gcd[4];
-    harray[4] = NULL;
+  gcd[6].gd.label = &cur_formats[_format];
+  gcd[6].gd.u.list[0].selected = true;
+  gcd[6].gd.handle_controlevent = GFD_Format;
+  gcd[6].creator = GListButtonCreate;
+  for (i = 0; cur_formats[i].text != NULL; ++i)
+    cur_formats[i].selected = false;
+  cur_formats[_format].selected = true;
+  harray[1] = &gcd[6];
+  harray[2] = GCD_Glue;
+  harray[3] = &gcd[4];
+  harray[4] = NULL;
 
-    boxes[3].gd.flags = gg_enabled|gg_visible;
-    boxes[3].gd.u.boxelements = harray;
-    boxes[3].creator = GHBoxCreate;
-    hvarray[2] = &boxes[3]; hvarray[3] = NULL;
-    hvarray[6] = NULL;
+  boxes[3].gd.flags = gg_enabled | gg_visible;
+  boxes[3].gd.u.boxelements = harray;
+  boxes[3].creator = GHBoxCreate;
+  hvarray[2] = &boxes[3];
+  hvarray[3] = NULL;
+  hvarray[6] = NULL;
 
-    boxes[0].gd.pos.x = boxes[0].gd.pos.y = 2;
-    boxes[0].gd.flags = gg_enabled|gg_visible;
-    boxes[0].gd.u.boxelements = hvarray;
-    boxes[0].creator = GHVGroupCreate;
+  boxes[0].gd.pos.x = boxes[0].gd.pos.y = 2;
+  boxes[0].gd.flags = gg_enabled | gg_visible;
+  boxes[0].gd.u.boxelements = hvarray;
+  boxes[0].creator = GHVGroupCreate;
 
-    GGadgetsCreate(gw,boxes);
-    GGadgetSetUserData(gcd[2].ret,gcd[0].ret);
+  GGadgetsCreate (gw, boxes);
+  GGadgetSetUserData (gcd[2].ret, gcd[0].ret);
 
-    GHVBoxSetExpandableRow(boxes[0].ret,0);
-    GHVBoxSetExpandableCol(boxes[2].ret,gb_expandgluesame);
-    GHVBoxSetExpandableCol(boxes[3].ret,gb_expandglue);
+  GHVBoxSetExpandableRow (boxes[0].ret, 0);
+  GHVBoxSetExpandableCol (boxes[2].ret, gb_expandgluesame);
+  GHVBoxSetExpandableCol (boxes[3].ret, gb_expandglue);
 
-    GFileChooserConnectButtons(gcd[0].ret,gcd[1].ret,gcd[2].ret);
-    if ( bc!=NULL )
-	ext = _format==0 ? "xbm" : _format==1 ? "bmp" : "png";
+  GFileChooserConnectButtons (gcd[0].ret, gcd[1].ret, gcd[2].ret);
+  if (bc != NULL)
+    ext = _format == 0 ? "xbm" : _format == 1 ? "bmp" : "png";
 #ifndef _NO_PYTHON
-    else if ( _format>=fv_pythonbase )
-	ext = py_ie[_format-fv_pythonbase].extension;
+  else if (_format >= fv_pythonbase)
+    ext = py_ie[_format - fv_pythonbase].extension;
 #endif
-    else
-	ext = _format==0?"eps":_format==1?"fig":_format==2?"svg":
-		_format==3?"glif":
-		_format==4?"pdf":_format==5?"plate":
-		_format==6?"xbm":_format==7?"bmp":"png";
+  else
+    ext = _format == 0 ? "eps" : _format == 1 ? "fig" : _format == 2 ? "svg" :
+      _format == 3 ? "glif" :
+      _format == 4 ? "pdf" : _format == 5 ? "plate" :
+      _format == 6 ? "xbm" : _format == 7 ? "bmp" : "png";
 #if defined( __CygWin ) || defined(__Mac)
-    /* Windows file systems are not case conscious */
-    { char *pt, *bpt, *end;
-    bpt = buffer; end = buffer+40;
-    for ( pt=sc->name; *pt!='\0' && bpt<end; ) {
-	if ( isupper( *pt ))
-	    *bpt++ = '$';
-	*bpt++ = *pt++;
-    }
-    sprintf( bpt, "_%.40s.%s", sc->parent->fontname, ext);
-    }
+  /* Windows file systems are not case conscious */
+  {
+    char *pt, *bpt, *end;
+    bpt = buffer;
+    end = buffer + 40;
+    for (pt = sc->name; *pt != '\0' && bpt < end;)
+      {
+        if (isupper (*pt))
+          *bpt++ = '$';
+        *bpt++ = *pt++;
+      }
+    sprintf (bpt, "_%.40s.%s", sc->parent->fontname, ext);
+  }
 #else
-    sprintf( buffer, "%.40s_%.40s.%s", sc->name, sc->parent->fontname, ext);
+  sprintf (buffer, "%.40s_%.40s.%s", sc->name, sc->parent->fontname, ext);
 #endif
-    uc_strcpy(ubuf,buffer);
-    GGadgetSetTitle(gcd[0].ret,ubuf);
-    GFileChooserGetChildren(gcd[0].ret,&pulldown,&files,&tf);
-    GWidgetIndicateFocusGadget(tf);
+  u32_strcpy (ubuf, x_gc_u8_to_u32 (buffer));
+  GGadgetSetTitle (gcd[0].ret, ubuf);
+  GFileChooserGetChildren (gcd[0].ret, &pulldown, &files, &tf);
+  GWidgetIndicateFocusGadget (tf);
 
-    if ( cur_formats!=formats && cur_formats!=bcformats )
-	GTextInfoListFree(cur_formats);
+  if (cur_formats != formats && cur_formats != bcformats)
+    GTextInfoListFree (cur_formats);
 
-    memset(&d,'\0',sizeof(d));
-    d.sc = sc;
-    d.bc = bc;
-    d.layer = layer;
-    d.gfc = gcd[0].ret;
-    d.format = gcd[6].ret;
+  memset (&d, '\0', sizeof (d));
+  d.sc = sc;
+  d.bc = bc;
+  d.layer = layer;
+  d.gfc = gcd[0].ret;
+  d.format = gcd[6].ret;
 
-    GHVBoxFitWindow(boxes[0].ret);
+  GHVBoxFitWindow (boxes[0].ret);
 
-    GDrawSetVisible(gw,true);
-    while ( !d.done )
-	GDrawProcessOneEvent(NULL);
-    GDrawDestroyWindow(gw);
-return(d.ret);
+  GDrawSetVisible (gw, true);
+  while (!d.done)
+    GDrawProcessOneEvent (NULL);
+  GDrawDestroyWindow (gw);
+  return (d.ret);
 }
 
-int CVExport(CharView *cv) {
-return( _Export(cv->b.sc,NULL,CVLayer((CharViewBase *)cv)));
+int
+CVExport (CharView * cv)
+{
+  return (_Export (cv->b.sc, NULL, CVLayer ((CharViewBase *) cv)));
 }
 
-int BVExport(BitmapView *bv) {
-return( _Export(bv->bc->sc,bv->bc,ly_fore));
+int
+BVExport (BitmapView * bv)
+{
+  return (_Export (bv->bc->sc, bv->bc, ly_fore));
 }

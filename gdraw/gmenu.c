@@ -208,7 +208,7 @@ return;
 
     for ( i=7; i>=0 ; --i ) {
 	if ( short_mask&(1<<i) ) {
-	    uc_strcpy(pt,mods[i].modifier);
+	    u32_strcpy(pt, x_gc_u8_to_u32 (mods[i].modifier));
 	    pt += u32_strlen(pt);
 	}
     }

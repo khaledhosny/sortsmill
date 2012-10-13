@@ -421,16 +421,16 @@ static void instr_expose(struct instrinfo *ii,GWindow pixmap,GRect *rect) {
 	    temp_indent = indent;
 	    sprintf( loc, "%d", i );
 	    if ( ii->instrdata->bts[i]==bt_wordhi ) {
-		sprintf( ins, " %02x%02x", ii->instrdata->instrs[i], ii->instrdata->instrs[i+1]); uc_strcpy(uins,ins);
+		sprintf( ins, " %02x%02x", ii->instrdata->instrs[i], ii->instrdata->instrs[i+1]); u32_strcpy(uins, x_gc_u8_to_u32 (ins));
 		sprintf( val, " %d", (short) ((ii->instrdata->instrs[i]<<8) | ii->instrdata->instrs[i+1]) );
-		uc_strcpy(uname,val);
+		u32_strcpy(uname, x_gc_u8_to_u32 (val));
 		++i;
 	    } else if ( ii->instrdata->bts[i]==bt_cnt || ii->instrdata->bts[i]==bt_byte ) {
-		sprintf( ins, " %02x", ii->instrdata->instrs[i] ); uc_strcpy(uins,ins);
+		sprintf( ins, " %02x", ii->instrdata->instrs[i] ); u32_strcpy(uins, x_gc_u8_to_u32 (ins));
 		sprintf( val, " %d", ii->instrdata->instrs[i]);
-		uc_strcpy(uname,val);
+		u32_strcpy(uname, x_gc_u8_to_u32 (val));
 	    } else if ( ii->instrdata->bts[i]==bt_impliedreturn ) {
-		uc_strcpy(uname,_("<return>"));
+		u32_strcpy(uname, x_gc_u8_to_u32 (_("<return>")));
 		uins[0] = '\0';
 	    } else {
 		int instr = ii->instrdata->instrs[i];
@@ -439,8 +439,8 @@ static void instr_expose(struct instrinfo *ii,GWindow pixmap,GRect *rect) {
 		temp_indent = indent;
 		if ( instr == ttf_else )
 		    --temp_indent;
-		sprintf( ins, "%02x", instr ); uc_strcpy(uins,ins);
-		uc_strcpy(uname, ff_ttf_instrnames[instr]);
+		sprintf( ins, "%02x", instr ); u32_strcpy(uins, x_gc_u8_to_u32 (ins));
+		u32_strcpy(uname, x_gc_u8_to_u32 ( ff_ttf_instrnames[instr]));
 		if ( instr == ttf_if || instr==ttf_idef || instr == ttf_fdef )
 		    ++indent;
 	    }

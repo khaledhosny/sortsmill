@@ -3431,7 +3431,7 @@ return;
     if ( file!=NULL )
 	len += 2+strlen(file);
     title = xmalloc((len+1)*sizeof(uint32_t));
-    uc_strcpy(title,fv->b.sf->fontname);
+    u32_strcpy(title, x_gc_u8_to_u32 (fv->b.sf->fontname));
     if ( fv->b.sf->changed )
 	uc_strcat (title, "*");
     if ( file!=NULL ) {
@@ -5690,9 +5690,9 @@ static void FVExpose(FontView *fv,GWindow pixmap, GEvent *event) {
 	      case gl_unicode:
 		if ( sc->unicodeenc!=-1 ) {
 		    sprintf(cbuf,"%04x",sc->unicodeenc);
-		    uc_strcpy(buf,cbuf);
+		    u32_strcpy(buf, x_gc_u8_to_u32 (cbuf));
 		} else
-		    uc_strcpy(buf,"?");
+		    u32_strcpy(buf, x_gc_u8_to_u32 ("?"));
 	      break;
 	      case gl_encoding:
 		if ( fv->b.map->enc->only_1byte ||
@@ -5700,7 +5700,7 @@ static void FVExpose(FontView *fv,GWindow pixmap, GEvent *event) {
 		    sprintf(cbuf,"%02x",index);
 		else
 		    sprintf(cbuf,"%04x",index);
-		uc_strcpy(buf,cbuf);
+		u32_strcpy(buf, x_gc_u8_to_u32 (cbuf));
 	      break;
 	      case gl_glyph:
 		if ( uni==0xad )
@@ -6201,7 +6201,7 @@ void SCPreparePopup(GWindow gw,SplineChar *sc,struct remap *remap, int localenc,
 #endif
     else {
 	snprintf( cspace, sizeof(cspace), "%u 0x%x U+???? \"%.25s\" ", localenc, localenc, sc->name==NULL?"":sc->name );
-	uc_strcpy(space,cspace);
+	u32_strcpy(space, x_gc_u8_to_u32 (cspace));
 	done = true;
     }
 

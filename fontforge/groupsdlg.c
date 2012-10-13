@@ -936,7 +936,7 @@ static int Group_FromSelection(GGadget *g, GEvent *e) {
 		    sc = sf->glyphs[gid];
 		else
 		    sc = SCBuildDummy(&dummy,sf,fv->b.map,i);
-		uc_strcpy(pt,sc->name);
+		u32_strcpy(pt, x_gc_u8_to_u32 (sc->name));
 		pt += u32_strlen(pt);
 		*pt++ = ' ';
 	    }
@@ -963,7 +963,7 @@ static int Group_FromSelection(GGadget *g, GEvent *e) {
 			    else
 				sprintf( buffer, "U+%04X ", start );
 			    if ( vals!=NULL )
-				uc_strcpy(vals+len,buffer);
+				u32_strcpy(vals+len, x_gc_u8_to_u32 (buffer));
 			    len += strlen(buffer);
 			}
 			start = last = sc->unicodeenc;
@@ -975,7 +975,7 @@ static int Group_FromSelection(GGadget *g, GEvent *e) {
 		    else
 			sprintf( buffer, "U+%04X ", start );
 		    if ( vals!=NULL )
-			uc_strcpy(vals+len,buffer);
+			u32_strcpy(vals+len, x_gc_u8_to_u32 (buffer));
 		    len += strlen(buffer);
 		}
 		if ( !k )
@@ -1020,7 +1020,7 @@ static int Group_AddColor(GGadget *g, GEvent *e) {
 	if ( set ) {
 	    char buffer[40]; uint32_t ubuf[40];
 	    sprintf(buffer," color=#%06x", xcol );
-	    uc_strcpy(ubuf,buffer);
+	    u32_strcpy(ubuf, x_gc_u8_to_u32 (buffer));
 	    GTextFieldReplace(grp->glyphs,ubuf);
 	    if ( grp->showchange==NULL )
 		GroupShowChange(grp);

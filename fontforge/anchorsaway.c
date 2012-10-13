@@ -553,10 +553,10 @@ static void AnchorD_DrawPos(AnchorDlg *a) {
     uint32_t ubuf[20];
 
     sprintf( buffer, "%g", (double) a->apos.x );
-    uc_strcpy(ubuf,buffer);
+    u32_strcpy(ubuf, x_gc_u8_to_u32 (buffer));
     GGadgetSetTitle(GWidgetGetControl(a->gw,CID_X),ubuf);
     sprintf( buffer, "%g", (double) a->apos.y );
-    uc_strcpy(ubuf,buffer);
+    u32_strcpy(ubuf, x_gc_u8_to_u32 (buffer));
     GGadgetSetTitle(GWidgetGetControl(a->gw,CID_Y),ubuf);
 
     r.x = a->ctl_len;
@@ -793,7 +793,7 @@ static int AnchorD_DisplaySizeChanged(GGadget *g, GEvent *e) {
 		    pixelsize<=a->xadjust.last_pixel_size ) {
 		sprintf( buffer, "%d", a->xadjust.corrections[
 			pixelsize-a->xadjust.first_pixel_size]);
-		uc_strcpy(ubuf,buffer);
+		u32_strcpy(ubuf, x_gc_u8_to_u32 (buffer));
 	    }
 	    GGadgetSetTitle(GWidgetGetControl(a->gw,CID_XCor),ubuf);
 	    ubuf[0] = '0'; ubuf[1] = '\0';
@@ -802,7 +802,7 @@ static int AnchorD_DisplaySizeChanged(GGadget *g, GEvent *e) {
 		    pixelsize<=a->yadjust.last_pixel_size ) {
 		sprintf( buffer, "%d", a->yadjust.corrections[
 			pixelsize-a->yadjust.first_pixel_size]);
-		uc_strcpy(ubuf,buffer);
+		u32_strcpy(ubuf, x_gc_u8_to_u32 (buffer));
 	    }
 	    GGadgetSetTitle(GWidgetGetControl(a->gw,CID_YCor),ubuf);
 	    a->xoff = pixelsize*a->xoff/a->pixelsize;
@@ -917,7 +917,7 @@ static void AnchorD_SetDevTabs(AnchorDlg *a) {
 	    a->pixelsize<=a->xadjust.last_pixel_size ) {
 	sprintf( buffer, "%d", a->xadjust.corrections[
 		a->pixelsize-a->xadjust.first_pixel_size]);
-	uc_strcpy(ubuf,buffer);
+	u32_strcpy(ubuf, x_gc_u8_to_u32 (buffer));
     }
     GGadgetSetTitle(GWidgetGetControl(a->gw,CID_XCor),ubuf);
     ubuf[0] = '0'; ubuf[1] = '\0';
@@ -926,7 +926,7 @@ static void AnchorD_SetDevTabs(AnchorDlg *a) {
 	    a->pixelsize<=a->yadjust.last_pixel_size ) {
 	sprintf( buffer, "%d", a->yadjust.corrections[
 		a->pixelsize-a->yadjust.first_pixel_size]);
-	uc_strcpy(ubuf,buffer);
+	u32_strcpy(ubuf, x_gc_u8_to_u32 (buffer));
     }
     GGadgetSetTitle(GWidgetGetControl(a->gw,CID_YCor),ubuf);
 }

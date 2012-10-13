@@ -2327,7 +2327,7 @@ BitmapName (struct gfc_data *d)
     pt -= 2;
   if (u8_strncmp (x_gc_u32_to_u8 (pt - 2), "-*", 2) == 0)
     pt -= 2;
-  uc_strcpy (pt, bitmapextensions[bf]);
+  u32_strcpy (pt, x_gc_u8_to_u32 ( bitmapextensions[bf]));
   GGadgetSetTitle (d->gfc, dup);
 }
 
@@ -2382,7 +2382,7 @@ GFD_Format (GGadget * g, GEvent * e)
         pt -= 2;
       if (u8_strncmp (x_gc_u32_to_u8 (pt - 2), "-*", 2) == 0)
         pt -= 2;
-      uc_strcpy (pt, savefont_extensions[format]);
+      u32_strcpy (pt, x_gc_u8_to_u32 ( savefont_extensions[format]));
       GGadgetSetTitle (d->gfc, dup);
       free (dup);
 
@@ -3997,7 +3997,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
     char *fn = master->defbasefilename != NULL ? master->defbasefilename :
       master->fontname;
     uint32_t *temp = xmalloc (sizeof (uint32_t) * (strlen (fn) + 30));
-    uc_strcpy (temp, fn);
+    u32_strcpy (temp, x_gc_u8_to_u32 ( fn));
     uc_strcat (temp,
                savefont_extensions[ofs] !=
                NULL ? savefont_extensions[ofs] : bitmapextensions[old]);

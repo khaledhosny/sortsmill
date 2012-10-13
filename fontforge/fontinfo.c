@@ -2197,8 +2197,9 @@ static int GFI_NameChange(GGadget *g, GEvent *e)
 	    {
 	      if ( uc_strstrmatch(uname,noticeweights[j][i])!=NULL )
 		{
-		  uc_strcpy(ubuf, noticeweights[j]==knownweights ?
-			    realweights[i] : noticeweights[j][i]);
+		  u32_strcpy(ubuf,
+			     x_gc_u8_to_u32 (noticeweights[j]==knownweights ?
+					     realweights[i] : noticeweights[j][i]));
 		  GGadgetSetTitle(GWidgetGetControl(gw,CID_Weight),ubuf);
 		  break;
 		}
@@ -2321,11 +2322,11 @@ return( true );
 return( true );
 	  break;
 	}
-	sprintf( buf, "%d", ascent ); if ( ascent==0 ) buf[0]='\0'; uc_strcpy(ubuf,buf);
+	sprintf( buf, "%d", ascent ); if ( ascent==0 ) buf[0]='\0'; u32_strcpy(ubuf, x_gc_u8_to_u32 (buf));
 	GGadgetSetTitle(GWidgetGetControl(d->gw,CID_Ascent),ubuf);
-	sprintf( buf, "%d", descent ); if ( descent==0 ) buf[0]='\0'; uc_strcpy(ubuf,buf);
+	sprintf( buf, "%d", descent ); if ( descent==0 ) buf[0]='\0'; u32_strcpy(ubuf, x_gc_u8_to_u32 (buf));
 	GGadgetSetTitle(GWidgetGetControl(d->gw,CID_Descent),ubuf);
-	sprintf( buf, "%d", ascent+descent ); if ( ascent+descent==0 ) buf[0]='\0'; uc_strcpy(ubuf,buf);
+	sprintf( buf, "%d", ascent+descent ); if ( ascent+descent==0 ) buf[0]='\0'; u32_strcpy(ubuf, x_gc_u8_to_u32 (buf));
 	GGadgetSetTitle(GWidgetGetControl(d->gw,CID_Em),ubuf);
     }
 return( true );
@@ -2337,7 +2338,7 @@ static int GFI_GuessItalic(GGadget *g, GEvent *e) {
 	double val = SFGuessItalicAngle(d->sf);
 	char buf[30]; uint32_t ubuf[30];
 	sprintf( buf, "%.1f", val);
-	uc_strcpy(ubuf,buf);
+	u32_strcpy(ubuf, x_gc_u8_to_u32 (buf));
 	GGadgetSetTitle(GWidgetGetControl(d->gw,CID_ItalicAngle),ubuf);
     }
 return( true );
@@ -4724,45 +4725,45 @@ static void GFI_SubSuperSet(struct gfi_data *d, struct pfminfo *info) {
     uint32_t ubuf[40];
 
     sprintf( buffer, "%d", info->os2_subxsize );
-    uc_strcpy(ubuf,buffer);
+    u32_strcpy(ubuf, x_gc_u8_to_u32 (buffer));
     GGadgetSetTitle(GWidgetGetControl(d->gw,CID_SubXSize),ubuf);
 
     sprintf( buffer, "%d", info->os2_subysize );
-    uc_strcpy(ubuf,buffer);
+    u32_strcpy(ubuf, x_gc_u8_to_u32 (buffer));
     GGadgetSetTitle(GWidgetGetControl(d->gw,CID_SubYSize),ubuf);
 
     sprintf( buffer, "%d", info->os2_subxoff );
-    uc_strcpy(ubuf,buffer);
+    u32_strcpy(ubuf, x_gc_u8_to_u32 (buffer));
     GGadgetSetTitle(GWidgetGetControl(d->gw,CID_SubXOffset),ubuf);
 
     sprintf( buffer, "%d", info->os2_subyoff );
-    uc_strcpy(ubuf,buffer);
+    u32_strcpy(ubuf, x_gc_u8_to_u32 (buffer));
     GGadgetSetTitle(GWidgetGetControl(d->gw,CID_SubYOffset),ubuf);
 
 
     sprintf( buffer, "%d", info->os2_supxsize );
-    uc_strcpy(ubuf,buffer);
+    u32_strcpy(ubuf, x_gc_u8_to_u32 (buffer));
     GGadgetSetTitle(GWidgetGetControl(d->gw,CID_SuperXSize),ubuf);
 
     sprintf( buffer, "%d", info->os2_supysize );
-    uc_strcpy(ubuf,buffer);
+    u32_strcpy(ubuf, x_gc_u8_to_u32 (buffer));
     GGadgetSetTitle(GWidgetGetControl(d->gw,CID_SuperYSize),ubuf);
 
     sprintf( buffer, "%d", info->os2_supxoff );
-    uc_strcpy(ubuf,buffer);
+    u32_strcpy(ubuf, x_gc_u8_to_u32 (buffer));
     GGadgetSetTitle(GWidgetGetControl(d->gw,CID_SuperXOffset),ubuf);
 
     sprintf( buffer, "%d", info->os2_supyoff );
-    uc_strcpy(ubuf,buffer);
+    u32_strcpy(ubuf, x_gc_u8_to_u32 (buffer));
     GGadgetSetTitle(GWidgetGetControl(d->gw,CID_SuperYOffset),ubuf);
 
 
     sprintf( buffer, "%d", info->os2_strikeysize );
-    uc_strcpy(ubuf,buffer);
+    u32_strcpy(ubuf, x_gc_u8_to_u32 (buffer));
     GGadgetSetTitle(GWidgetGetControl(d->gw,CID_StrikeoutSize),ubuf);
 
     sprintf( buffer, "%d", info->os2_strikeypos );
-    uc_strcpy(ubuf,buffer);
+    u32_strcpy(ubuf, x_gc_u8_to_u32 (buffer));
     GGadgetSetTitle(GWidgetGetControl(d->gw,CID_StrikeoutPos),ubuf);
 }
 
@@ -4873,7 +4874,7 @@ static void TTFSetup(struct gfi_data *d) {
     } else if ( TTFFoundry!=NULL )
 	uc_strncpy(ubuf,TTFFoundry,4);
     else
-	uc_strcpy(ubuf,"PfEd");
+	u32_strcpy(ubuf, x_gc_u8_to_u32 ("PfEd"));
     GGadgetSetTitle(GWidgetGetControl(d->gw,CID_Vendor),ubuf);
 
 
@@ -4898,46 +4899,46 @@ static void TTFSetup(struct gfi_data *d) {
     d->ttf_set = true;
     /* FSType is already set */
     sprintf( buffer, "%d", info.linegap );
-    uc_strcpy(ubuf,buffer);
+    u32_strcpy(ubuf, x_gc_u8_to_u32 (buffer));
     GGadgetSetTitle(GWidgetGetControl(d->gw,CID_LineGap),ubuf);
     sprintf( buffer, "%d", info.vlinegap );
-    uc_strcpy(ubuf,buffer);
+    u32_strcpy(ubuf, x_gc_u8_to_u32 (buffer));
     GGadgetSetTitle(GWidgetGetControl(d->gw,CID_VLineGap),ubuf);
     sprintf( buffer, "%d", info.os2_typolinegap );
-    uc_strcpy(ubuf,buffer);
+    u32_strcpy(ubuf, x_gc_u8_to_u32 (buffer));
     GGadgetSetTitle(GWidgetGetControl(d->gw,CID_TypoLineGap),ubuf);
 
     GGadgetSetChecked(GWidgetGetControl(d->gw,CID_WinAscentIsOff),info.winascent_add);
     GFI_AsDsLab(d,CID_WinAscentIsOff,true);
     sprintf( buffer, "%d", info.os2_winascent );
-    uc_strcpy(ubuf,buffer);
+    u32_strcpy(ubuf, x_gc_u8_to_u32 (buffer));
     GGadgetSetTitle(GWidgetGetControl(d->gw,CID_WinAscent),ubuf);
     GGadgetSetChecked(GWidgetGetControl(d->gw,CID_WinDescentIsOff),info.windescent_add);
     GFI_AsDsLab(d,CID_WinDescentIsOff,true);
     sprintf( buffer, "%d", info.os2_windescent );
-    uc_strcpy(ubuf,buffer);
+    u32_strcpy(ubuf, x_gc_u8_to_u32 (buffer));
     GGadgetSetTitle(GWidgetGetControl(d->gw,CID_WinDescent),ubuf);
 
     GGadgetSetChecked(GWidgetGetControl(d->gw,CID_TypoAscentIsOff),info.typoascent_add);
     GFI_AsDsLab(d,CID_TypoAscentIsOff,true);
     sprintf( buffer, "%d", info.os2_typoascent );
-    uc_strcpy(ubuf,buffer);
+    u32_strcpy(ubuf, x_gc_u8_to_u32 (buffer));
     GGadgetSetTitle(GWidgetGetControl(d->gw,CID_TypoAscent),ubuf);
     GGadgetSetChecked(GWidgetGetControl(d->gw,CID_TypoDescentIsOff),info.typodescent_add);
     GFI_AsDsLab(d,CID_TypoDescentIsOff,true);
     sprintf( buffer, "%d", info.os2_typodescent );
-    uc_strcpy(ubuf,buffer);
+    u32_strcpy(ubuf, x_gc_u8_to_u32 (buffer));
     GGadgetSetTitle(GWidgetGetControl(d->gw,CID_TypoDescent),ubuf);
 
     GGadgetSetChecked(GWidgetGetControl(d->gw,CID_HHeadAscentIsOff),info.hheadascent_add);
     GFI_AsDsLab(d,CID_HHeadAscentIsOff,true);
     sprintf( buffer, "%d", info.hhead_ascent );
-    uc_strcpy(ubuf,buffer);
+    u32_strcpy(ubuf, x_gc_u8_to_u32 (buffer));
     GGadgetSetTitle(GWidgetGetControl(d->gw,CID_HHeadAscent),ubuf);
     GGadgetSetChecked(GWidgetGetControl(d->gw,CID_HHeadDescentIsOff),info.hheaddescent_add);
     GFI_AsDsLab(d,CID_HHeadDescentIsOff,true);
     sprintf( buffer, "%d", info.hhead_descent );
-    uc_strcpy(ubuf,buffer);
+    u32_strcpy(ubuf, x_gc_u8_to_u32 (buffer));
     GGadgetSetTitle(GWidgetGetControl(d->gw,CID_HHeadDescent),ubuf);
 }
 

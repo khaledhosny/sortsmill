@@ -176,7 +176,7 @@ static uint32_t *CounterMaskLine(SplineChar *sc, HintMask *hm) {
 		sprintf( buffer, "H<%g,%g>, ",
 			rint(h->start*100)/100, rint(h->width*100)/100 );
 		if ( textmask!=NULL )
-		    uc_strcpy(textmask+len,buffer);
+		    u32_strcpy(textmask+len, x_gc_u8_to_u32 (buffer));
 		len += strlen(buffer);
 	    }
 	}
@@ -185,7 +185,7 @@ static uint32_t *CounterMaskLine(SplineChar *sc, HintMask *hm) {
 		sprintf( buffer, "V<%g,%g>, ",
 			rint(h->start*100)/100, rint(h->width*100)/100 );
 		if ( textmask!=NULL )
-		    uc_strcpy(textmask+len,buffer);
+		    u32_strcpy(textmask+len, x_gc_u8_to_u32 (buffer));
 		len += strlen(buffer);
 	    }
 	}
@@ -3924,7 +3924,7 @@ static void CIFillup(CharInfo *ci) {
 	uint32_t *upt=temp;
 	while ( *bits!='\0' ) {
 	    sprintf(buffer, "U+%04x ", *bits );
-	    uc_strcpy(upt,buffer);
+	    u32_strcpy(upt, x_gc_u8_to_u32 (buffer));
 	    upt += u32_strlen(upt);
 	    ++bits;
 	}

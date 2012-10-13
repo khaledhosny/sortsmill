@@ -900,7 +900,7 @@ return;
 	space[0] = '\0';
 	if ( event->u.mouse.y>=smd->ystart2 && s<smd->state_cnt ) {
 	    sprintf( buf, "State %d\n", s );
-	    uc_strcpy(space,buf);
+	    u32_strcpy(space, x_gc_u8_to_u32 (buf));
 	}
 	if ( event->u.mouse.x>=smd->xstart2 && c<smd->class_cnt ) {
 	    sprintf( buf, "Class %d\n", c );

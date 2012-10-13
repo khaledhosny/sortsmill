@@ -451,7 +451,7 @@ static void Stroke_PressureSet(StrokeDlg *sd,int cid, GEvent *event) {
     else if ( sd->up[i] || event->u.mouse.pressure>old ) {
 	sd->up[i] = false;
 	sprintf(buff,"%d",(int) event->u.mouse.pressure);
-	uc_strcpy(ubuf,buff);
+	u32_strcpy(ubuf, x_gc_u8_to_u32 (buff));
 	GGadgetSetTitle(GWidgetGetControl(sd->gw,cid),ubuf);
 	StrokePressureCheck(sd);
     }

@@ -347,7 +347,7 @@ PoV_DoVanish (struct nldlg *d)
       y += cos (dir) * vp;
       sprintf (buf, "%g%s%g", x, coord_sep, y);
     }
-  uc_strcpy (ubuf, buf);
+  u32_strcpy (ubuf, x_gc_u8_to_u32 ( buf));
   GGadgetSetTitle (GWidgetGetControl (d->gw, CID_Vanish), ubuf);
 }
 

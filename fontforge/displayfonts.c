@@ -1064,7 +1064,7 @@ return( true );
 		GGadgetSetEnabled(GWidgetGetControl(di->gw,i),false);
 	    if ( best!=NULL ) {
 		sprintf( size, "%d", best->pixelsize );
-		uc_strcpy(usize,size);
+		u32_strcpy(usize, x_gc_u8_to_u32 (size));
 		GGadgetSetTitle(GWidgetGetControl(di->gw,CID_Size),usize);
 	    }
 	    pick = true;
@@ -1118,7 +1118,7 @@ return( true );
 	    if ( best!=NULL ) {
 		char size[12]; uint32_t usize[12];
 		sprintf( size, "%d", best->pixelsize );
-		uc_strcpy(usize,size);
+		u32_strcpy(usize, x_gc_u8_to_u32 (size));
 		GGadgetSetTitle(GWidgetGetControl(di->gw,CID_Size),usize);
 	    }
 	    DSP_SetFont(di,false);
@@ -1173,7 +1173,7 @@ return( true );
 		best = DSP_BestMatchDlg(di);
 		if ( best!=NULL ) {
 		    sprintf( buf, "%d", best->pixelsize);
-		    uc_strcpy(ubuf,buf);
+		    u32_strcpy(ubuf, x_gc_u8_to_u32 (buf));
 		    GGadgetSetTitle(GWidgetGetControl(di->gw,CID_Size),ubuf);
 		    size = best->pixelsize;
 		}
@@ -1346,7 +1346,7 @@ static int DSP_RadioSet(GGadget *g, GEvent *e) {
 		if ( best!=NULL ) {
 		    sprintf( size, "%g",
 			    rint(best->pixelsize*72.0/SFTFGetDPI(GWidgetGetControl(di->gw,CID_SampleText))) );
-		    uc_strcpy(usize,size);
+		    u32_strcpy(usize, x_gc_u8_to_u32 (size));
 		    GGadgetSetTitle(GWidgetGetControl(di->gw,CID_Size),usize);
 		}
 	    }
@@ -1479,7 +1479,7 @@ static int DSP_TextChanged(GGadget *g, GEvent *e) {
 		buf[1] = (script>>16)&0xff;
 		buf[2] = (script>>8 )&0xff;
 		buf[3] = (script    )&0xff;
-		uc_strcpy(buf+4,"{dflt}");
+		u32_strcpy(buf+4, x_gc_u8_to_u32 ("{dflt}"));
 		GGadgetSetTitle(GWidgetGetControl(di->gw,CID_ScriptLang),buf);
 	    }
 	    di->script_unknown = false;

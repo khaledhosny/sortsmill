@@ -469,7 +469,7 @@ return;
 		GDrawSetCursor(kcd->subw,ct_pointer);
 		if ( kcd->down && kcd->orig_kern!=kern ) {
 		    sprintf(buf, "%d", kcd->orig_kern);
-		    uc_strcpy(ubuf,buf);
+		    u32_strcpy(ubuf, x_gc_u8_to_u32 (buf));
 		    GGadgetSetTitle(GWidgetGetControl(kcd->gw,CID_KernOffset),ubuf);
 		    GDrawRequestExpose(kcd->subw,NULL,false);
 		}
@@ -494,7 +494,7 @@ return;
 	    int nkern = kcd->orig_kern + rint(2*(event->u.mouse.x-kcd->downpos)/scale/kcd->magfactor);
 	    if ( kern!=nkern ) {
 		sprintf(buf, "%d", nkern);
-		uc_strcpy(ubuf,buf);
+		u32_strcpy(ubuf, x_gc_u8_to_u32 (buf));
 		GGadgetSetTitle(GWidgetGetControl(kcd->gw,CID_KernOffset),ubuf);
 		GDrawRequestExpose(kcd->subw,NULL,false);
 	    }
@@ -525,7 +525,7 @@ return;
 		GDrawSetCursor(kcd->subw,ct_pointer);
 		if ( kcd->down && kcd->orig_kern!=kern ) {
 		    sprintf(buf, "%d", kcd->orig_kern);
-		    uc_strcpy(ubuf,buf);
+		    u32_strcpy(ubuf, x_gc_u8_to_u32 (buf));
 		    GGadgetSetTitle(GWidgetGetControl(kcd->gw,CID_KernOffset),ubuf);
 		    GDrawRequestExpose(kcd->subw,NULL,false);
 		}
@@ -548,7 +548,7 @@ return;
 	    int nkern = kcd->orig_kern + rint((event->u.mouse.y-kcd->downpos)/scale)/kcd->magfactor;
 	    if ( kern!=nkern ) {
 		sprintf(buf, "%d", nkern);
-		uc_strcpy(ubuf,buf);
+		u32_strcpy(ubuf, x_gc_u8_to_u32 (buf));
 		GGadgetSetTitle(GWidgetGetControl(kcd->gw,CID_KernOffset),ubuf);
 		GDrawRequestExpose(kcd->subw,NULL,false);
 	    }
@@ -675,7 +675,7 @@ static void _KCD_DisplaySizeChanged(KernClassDlg *kcd) {
 		pixelsize<=kcd->active_adjust.last_pixel_size ) {
 	    sprintf( buffer, "%d", kcd->active_adjust.corrections[
 		    pixelsize-kcd->active_adjust.first_pixel_size]);
-	    uc_strcpy(ubuf,buffer);
+	    u32_strcpy(ubuf, x_gc_u8_to_u32 (buffer));
 	}
 	GGadgetSetTitle(GWidgetGetControl(kcd->gw,CID_Correction),ubuf);
 	kcd->pixelsize = pixelsize;
@@ -838,7 +838,7 @@ static void KCD_SetDevTab(KernClassDlg *kcd) {
 		kcd->pixelsize<=kcd->active_adjust.last_pixel_size ) {
 	    sprintf( buffer, "%d", kcd->active_adjust.corrections[
 		    kcd->pixelsize-kcd->active_adjust.first_pixel_size]);
-	    uc_strcpy(ubuf,buffer);
+	    u32_strcpy(ubuf, x_gc_u8_to_u32 (buffer));
 	}
     }
     GGadgetSetTitle(GWidgetGetControl(kcd->gw,CID_Correction),ubuf);
@@ -934,7 +934,7 @@ static void KPD_PairSearch(KernClassDlg *kcd) {
     }
 
     sprintf(buf, "%d", offset);
-    uc_strcpy(ubuf,buf);
+    u32_strcpy(ubuf, x_gc_u8_to_u32 (buf));
     GGadgetSetTitle(GWidgetGetControl(kcd->gw,CID_KernOffset),ubuf);
     KCD_SetDevTab(kcd);
 }
@@ -1045,7 +1045,7 @@ static void KCD_EditOffset(KernClassDlg *kcd, int first, int second) {
 
 	kcd->orig_kern_offset = kcd->offsets[kcd->st_pos];
 	sprintf( buf, "%d", kcd->offsets[kcd->st_pos]);
-	uc_strcpy(ubuf,buf);
+	u32_strcpy(ubuf, x_gc_u8_to_u32 (buf));
 	GGadgetSetTitle(GWidgetGetControl(kcd->gw,CID_KernOffset),ubuf);
 
 	kcd->active_adjust = kcd->adjusts[kcd->st_pos];

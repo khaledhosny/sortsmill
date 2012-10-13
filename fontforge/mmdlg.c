@@ -746,7 +746,7 @@ MMChangeBlend (MMSet *mm, FontView * fv, int tonew)
         }
       if (pt > buffer)
         pt[-2] = '\0';
-      uc_strcpy (ubuf, buffer);
+      u32_strcpy (ubuf, x_gc_u8_to_u32 (buffer));
 
       pos.width = GDrawPointsToPixels (NULL, GGadgetScale (270));
       pos.height = GDrawPointsToPixels (NULL, 200);
@@ -1854,14 +1854,14 @@ MMW_FuncsValid (MMW * mmw)
           for (i = 0; i < mmw->axis_count; ++i)
             pos += strlen (lines[i]);
           ut = xmalloc ((pos + 20) * sizeof (uint32_t));
-          uc_strcpy (ut, "{\n");
+          u32_strcpy (ut, x_gc_u8_to_u32 ( "{\n"));
           pos = 2;
           for (i = 0; i < mmw->axis_count; ++i)
             {
-              uc_strcpy (ut + pos, lines[i]);
+              u32_strcpy (ut + pos, x_gc_u8_to_u32 ( lines[i]));
               pos += strlen (lines[i]);
             }
-          uc_strcpy (ut + pos, "}");
+          u32_strcpy (ut + pos, x_gc_u8_to_u32 ( "}"));
         }
       GGadgetSetTitle (GWidgetGetControl (mmw->subwins[mmw_funcs], CID_NDV),
                        ut);
@@ -2135,7 +2135,7 @@ MMW_DesignsSetup (MMW * mmw)
         }
       if (pt > buffer)
         pt[-1] = '\0';
-      uc_strcpy (ubuf, buffer);
+      u32_strcpy (ubuf, x_gc_u8_to_u32 ( buffer));
       GGadgetSetTitle (GWidgetGetControl
                        (mmw->subwins[mmw_designs],
                         CID_AxisWeights + i * DesignScaleFactor), ubuf);

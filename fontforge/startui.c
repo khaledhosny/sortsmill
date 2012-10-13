@@ -173,10 +173,11 @@ SplashLayout ()
 {
   uint32_t *start, *pt, *lastspace;
 
-  uc_strcpy (msg, "When my father finished his book on Renaissance printing"
-             " (The Craft of Printing and the Publication of Shakespeare's Works)"
-             " he told me that I would have to write the chapter on"
-             " computer typography. This is my attempt to do so.");
+  u32_strcpy (msg,
+	      x_gc_u8_to_u32 ("When my father finished his book on Renaissance printing"
+			      " (The Craft of Printing and the Publication of Shakespeare's Works)"
+			      " he told me that I would have to write the chapter on"
+			      " computer typography. This is my attempt to do so."));
 
   GDrawSetFont (splashw, splash_font);
   linecnt = 0;
@@ -203,7 +204,7 @@ SplashLayout ()
       if (*pt)
         ++pt;
     }
-  uc_strcpy (pt, " FontForge used to be named PfaEdit.");
+  u32_strcpy (pt, x_gc_u8_to_u32 ( " FontForge used to be named PfaEdit."));
   pt += u32_strlen (pt);
   lines[linecnt++] = pt;
   uc_strcat (pt, " ");

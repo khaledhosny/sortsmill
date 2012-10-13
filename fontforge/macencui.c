@@ -289,7 +289,7 @@ static GTextInfo *Pref_SettingsList(struct macsetting *all) {
 	    full = x_u8_to_u32 (buf);
 	else {
 	    full = xmalloc((strlen(buf)+strlen(temp)+1)*sizeof(uint32_t));
-	    uc_strcpy(full,buf);
+	    u32_strcpy(full, x_gc_u8_to_u32 (buf));
 	    utf82u_strcpy(full+u32_strlen(full),temp);
 	    free(temp);
 	}
@@ -317,7 +317,7 @@ static GTextInfo *Pref_FeaturesList(MacFeat *all) {
 	    full = x_u8_to_u32 (buf);
 	else {
 	    full = xmalloc((strlen(buf)+strlen(temp)+1)*sizeof(uint32_t));
-	    uc_strcpy(full,buf);
+	    u32_strcpy(full, x_gc_u8_to_u32 (buf));
 	    utf82u_strcpy(full+u32_strlen(full),temp);
 	    free(temp);
 	}
@@ -396,7 +396,7 @@ return( true );
 	    } else {
 		char *hunh = "???";
 		full = xmalloc((strlen(hunh)+strlen(temp)+6)*sizeof(uint32_t));
-		uc_strcpy(full,hunh);
+		u32_strcpy(full, x_gc_u8_to_u32 (hunh));
 	    }
 	    uc_strcat(full,spacer);
 	    utf82u_strcpy(full+u32_strlen(full),temp);
@@ -754,7 +754,7 @@ return( true );
 	    temp = PickNameFromMacName(sd->changing->setname);
 	    len = strlen(temp);
 	    res = xmalloc( (strlen(buf)+len+3)*sizeof(uint32_t) );
-	    uc_strcpy(res,buf);
+	    u32_strcpy(res, x_gc_u8_to_u32 (buf));
 	    utf82u_strcpy(res+u32_strlen(res),temp);
 	    free(temp);
 
@@ -1056,7 +1056,7 @@ return( true );
 	    temp = PickNameFromMacName(fd->changing->featname);
 	    len = strlen(temp);
 	    res = xmalloc( (strlen(buf)+len+3)*sizeof(uint32_t) );
-	    uc_strcpy(res,buf);
+	    u32_strcpy(res, x_gc_u8_to_u32 (buf));
 	    utf82u_strcpy(res+u32_strlen(res),temp);
 	    free(temp);
 

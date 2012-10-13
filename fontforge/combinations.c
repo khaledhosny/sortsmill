@@ -989,7 +989,7 @@ return( true );
 		    kpd->kerns[index].second->unicodeenc );
 	    if ( kpd->kerns[index].second->unicodeenc==-1 )
 		strcpy(buffer+strlen(buffer)-4, "????");
-	    uc_strcpy(upopupbuf,buffer);
+	    u32_strcpy(upopupbuf, x_gc_u8_to_u32 (buffer));
 	    GGadgetPreparePopup(gw,upopupbuf);
 	    KP_Cursor(kpd,event);
 	} else if ( kpd->pressed && kpd->pressed_x!=-1 ) {
@@ -1032,7 +1032,7 @@ static void kpdpopup(KPData *kpd) {
 	sprintf( buffer, "total anchored pairs=%d\nbase char cnt=%d",
 		kpd->kcnt, kpd->firstcnt );
     }
-    uc_strcpy(upopupbuf,buffer);
+    u32_strcpy(upopupbuf, x_gc_u8_to_u32 (buffer));
     GGadgetPreparePopup(kpd->gw,upopupbuf);
 }
 

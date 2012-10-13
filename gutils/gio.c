@@ -142,7 +142,7 @@ return;
 	    gc->protocol_index = -2;
 	    gc->return_code = 501;
 	    gc->error = err501;
-	    uc_strcpy(gc->status,"No support for browsing: ");
+	    u32_strcpy(gc->status, x_gc_u8_to_u32 ("No support for browsing: "));
 	    u32_strncat (gc->status, gc->path, pt - gc->path);
 	    gc->done = true;
 	    (gc->receiveerror)(gc);
@@ -155,7 +155,7 @@ return;
 #ifndef HAVE_PTHREAD_H
 	    gc->return_code = 501;
 	    gc->error = err501;
-	    uc_strcpy(gc->status,"No support for protocol");
+	    u32_strcpy(gc->status, x_gc_u8_to_u32 ("No support for protocol"));
 	    gc->done = true;
 	    (gc->receiveerror)(gc);
 return;
@@ -164,7 +164,7 @@ return;
 	    static pthread_mutex_t initmutex = PTHREAD_MUTEX_INITIALIZER;
 	    /* could put stuff here to queue functions if we get too many */
 	    /*  threads, or perhaps even a thread pool */
-	    uc_strcpy(gc->status,"Queued");
+	    u32_strcpy(gc->status, x_gc_u8_to_u32 ("Queued"));
 	    gc->threaddata = (struct gio_threaddata *) xmalloc(sizeof(struct gio_threaddata));
 	    gc->threaddata->mutex = initmutex;
 	    gc->threaddata->cond = initcond;

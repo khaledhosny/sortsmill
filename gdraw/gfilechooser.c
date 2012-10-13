@@ -689,7 +689,7 @@ return(true);
 		u32_strcpy(upt,all[i]->text);
 		upt += u32_strlen(upt);
 		if ( --cnt>0 ) {
-		    uc_strcpy(upt,"; ");
+		    u32_strcpy(upt, x_gc_u8_to_u32 ("; "));
 		    upt += 2;
 		}
 	    }
@@ -956,7 +956,7 @@ static void GFCBookmark(GWindow gw,struct gmenuitem *mi,GEvent *e) {
 	home = GFileGetHomeDir();
 	uint32_t *space;
 	space = xmalloc((strlen(home)+u32_strlen(bookmarks[mi->mid])+2)*sizeof(uint32_t));
-	uc_strcpy(space,home);
+	u32_strcpy(space, x_gc_u8_to_u32 (home));
 	u32_strcat(space,bookmarks[mi->mid]+1);
 	GFileChooserScanDir(gfc,space);
 	free(space);
@@ -972,7 +972,7 @@ static void GFCPath(GWindow gw,struct gmenuitem *mi,GEvent *e) {
 	home = GFileGetHomeDir();
 	uint32_t *space;
 	space = xmalloc((strlen(home)+u32_strlen(bookmarks[mi->mid])+2)*sizeof(uint32_t));
-	uc_strcpy(space,home);
+	u32_strcpy(space, x_gc_u8_to_u32 (home));
 	u32_strcat(space,gfc->paths[mi->mid]+1);
 	GFileChooserScanDir(gfc,space);
 	free(space);

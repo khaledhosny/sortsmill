@@ -1535,18 +1535,18 @@ const uint32_t *_uGetModifiers(const uint32_t *fontname, const uint32_t *familyn
 	     {
 	       if ( u8_strcmp(utf8_fpt, u8_force_valid (mods[i][j]))==0 )
 		 {
-		   uc_strcpy(space,fullmods[i][j]);
+		   u32_strcpy(space, x_gc_u8_to_u32 (fullmods[i][j]));
 		   return( space );
 		 }
 	     }
 	 if ( u8_strcmp(utf8_fpt,"BoldItal")==0 )
 	   {
-	     uc_strcpy(space,"BoldItalic");
+	     u32_strcpy(space, x_gc_u8_to_u32 ("BoldItalic"));
 	     return( space );
 	   }
 	 else if ( u8_strcmp(utf8_fpt,"BoldObli")==0 )
 	   {
-	     uc_strcpy(space,"BoldOblique");
+	     u32_strcpy(space, x_gc_u8_to_u32 ("BoldOblique"));
 	     return( space );
 	   }
 	 return( fpt );

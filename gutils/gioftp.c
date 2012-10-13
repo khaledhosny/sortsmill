@@ -86,7 +86,7 @@ static int ftpsend(GIOControl *gc,int ctl, char *cmd) {
 	if (( ret = select(ctl+1,NULL,&wts,NULL,&tv))<0 ) {
 	    if ( errno==EINTR )
   goto restart;
-	    uc_strcpy(gc->status, "Connection closed by foreign host");
+	    u32_strcpy(gc->status, x_gc_u8_to_u32 ( "Connection closed by foreign host"));
 	    gc->return_code = 600;
 return( -1 );
 	} else if ( gc->abort ) {
@@ -96,14 +96,14 @@ return( -1 );
 	++i;
     }
     if ( ret==0 ) {
-	uc_strcpy(gc->status, "Connection timed out");
+	u32_strcpy(gc->status, x_gc_u8_to_u32 ( "Connection timed out"));
 	gc->return_code = 601;
 return( -1 );
     }
     if ( send(ctl,cmd,strlen(cmd),MSG_NOSIGNAL)<=0 ) {
 	if ( errno==EINTR )	/* interrupted, try again */
   goto restart;
-	uc_strcpy(gc->status, "FTP connection closed by foreign host");
+	u32_strcpy(gc->status, x_gc_u8_to_u32 ( "FTP connection closed by foreign host"));
 	gc->return_code = 600;
 return( -1 );
     }
@@ -150,7 +150,7 @@ return( ftp->buffer[ftp->base]=='2' || ftp->buffer[ftp->base]=='1' );
 	    if (( ret = select(ctl+1,&rds,NULL,NULL,&tv))<0 ) {
 		if ( errno==EINTR )
   goto restart;
-		uc_strcpy(gc->status, "Connection closed by foreign host");
+		u32_strcpy(gc->status, x_gc_u8_to_u32 ( "Connection closed by foreign host"));
 		gc->return_code = 600;
 return( -1 );
 	    } else if ( gc->abort ) {
@@ -160,13 +160,13 @@ return( -1 );
 	    ++i;
 	}
 	if ( ret==0 ) {
-	    uc_strcpy(gc->status, "Connection timed out");
+	    u32_strcpy(gc->status, x_gc_u8_to_u32 ( "Connection timed out"));
 	    gc->return_code = 601;
 return( -1 );
 	}
 	len = read(ctl,ftp->buffer+ftp->rlen,sizeof(ftp->buffer)-1-ftp->rlen);
 	if ( len==0 ) {
-	    uc_strcpy(gc->status, "Connection closed by foreign host");
+	    u32_strcpy(gc->status, x_gc_u8_to_u32 ( "Connection closed by foreign host"));
 	    gc->return_code = 600;
 return( -1 );
 	}
@@ -477,7 +477,7 @@ return( ret );
 	    close(data);
 	free(buf); free(line);
 	gc->return_code = 602;
-	uc_strcpy(gc->status,"FTP Data Connect failed" );
+	u32_strcpy(gc->status, x_gc_u8_to_u32 ("FTP Data Connect failed" ));
 return( 0 );
     }
 
@@ -499,7 +499,7 @@ return( ret );
   goto restart;
 		close(data); free(buf); free(line);
 		(stdfuncs->FreeDirEntries)(last);
-		uc_strcpy(gc->status, "Connection closed by foreign host");
+		u32_strcpy(gc->status, x_gc_u8_to_u32 ( "Connection closed by foreign host"));
 		gc->return_code = 600;
 return( -1 );
 	    } else if ( gc->abort ) {
@@ -513,7 +513,7 @@ return( -1 );
 	if ( ret==0 ) {
 	    (stdfuncs->FreeDirEntries)(last);
 	    close(data); free(buf); free(line);
-	    uc_strcpy(gc->status, "Connection timed out");
+	    u32_strcpy(gc->status, x_gc_u8_to_u32 ( "Connection timed out"));
 	    gc->return_code = 601;
 return( -1 );
 	}
