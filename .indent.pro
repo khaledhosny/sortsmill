@@ -22,6 +22,7 @@
 -T AnchorPoint
 -T BDFFont
 -T Encoding
+-T GEvent
 -T GGadget
 -T GImage
 -T GResStruct
