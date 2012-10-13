@@ -1819,26 +1819,26 @@ static float WEL_vowel_run[] = {
 };
 
 static struct lang_frequencies { uint32_t script, lang; char *note; struct letter_frequencies *cnts; float *wordlens; char *vowels; float *consonant_run, *all_consonants, *vowel_run; } lang_frequencies[] = {
-    { CHR('l','a','t','n'), CHR('C','S','Y',' '), N_("Czech"),     CSY_counts, CSY_word_lens, "aeiouyráéíóúýěů", CSY_consonant_run, CSY_all_consonants, CSY_vowel_run },
-    { CHR('l','a','t','n'), CHR('N','L','D',' '), N_("Dutch"),     NLD_counts, NLD_word_lens, "aeiouyàéêëïòó", NLD_consonant_run, NLD_all_consonants, NLD_vowel_run },
-    { CHR('l','a','t','n'), CHR('E','N','G',' '), N_("English"),   ENG_counts, ENG_word_lens, "aeiouy", ENG_consonant_run, ENG_all_consonants, ENG_vowel_run },
-    { CHR('l','a','t','n'), CHR('F','R','A',' '), N_("French"),    FRA_counts, FRA_word_lens, "aeiouyàâæèéêëîïôùû", FRA_consonant_run, FRA_all_consonants, FRA_vowel_run },
-    { CHR('l','a','t','n'), CHR('D','E','U',' '), N_("German"),    DEU_counts, DEU_word_lens, "aeiouyäöü", DEU_consonant_run, DEU_all_consonants, DEU_vowel_run },
-    { CHR('g','r','e','k'), CHR('E','L','L',' '), N_("Lang|Greek"),ELL_counts, ELL_word_lens, "ΐάέήίαειουωϊόύώ", ELL_consonant_run, ELL_all_consonants, ELL_vowel_run },
-    { CHR('h','e','b','r'), CHR('I','W','R',' '), N_("Lang|Hebrew"),IWR_counts, IWR_word_lens, NULL, NULL, NULL, NULL },
-    { CHR('d','e','v','a'), CHR('H','I','N',' '), N_("Hindi"),     HIN_counts, HIN_word_lens, NULL, NULL, NULL, NULL },
-    { CHR('l','a','t','n'), CHR('H','U','N',' '), N_("Hungarian"), HUN_counts, HUN_word_lens, "aeiouáéëíóöúüőű", HUN_consonant_run, HUN_all_consonants, HUN_vowel_run },
-    { CHR('l','a','t','n'), CHR('I','T','A',' '), N_("Italian"),   ITA_counts, ITA_word_lens, "aeiouyàèìíòôùü", ITA_consonant_run, ITA_all_consonants, ITA_vowel_run },
-    { CHR('k','a','n','a'), CHR('J','A','P',' '), N_("Hiragana"),  JAP_counts, JAP_word_lens, NULL, NULL, NULL, NULL },
-    { CHR('k','a','n','a'), CHR('J','A','P',' '), N_("Katakana"),  JAP_kata_counts, JAP_word_lens, NULL, NULL, NULL, NULL },
-    { CHR('k','a','n','a'), CHR('L','T','H',' '), N_("Lithuanian"),LTH_counts, LTH_word_lens, "aeiouyąęėįųū", LTH_consonant_run, LTH_all_consonants, LTH_vowel_run },
-    { CHR('l','a','t','n'), CHR('P','L','K',' '), N_("Polish"),    PLK_counts, PLK_word_lens, "aeiouàâèéêîòóôąęű", PLK_consonant_run, PLK_all_consonants, PLK_vowel_run },
-    { CHR('c','y','r','l'), CHR('R','U','S',' '), N_("Russian"),   RUS_counts, RUS_word_lens, "аеийоуэюяё", RUS_consonant_run, RUS_all_consonants, RUS_vowel_run },
-    { CHR('l','a','t','n'), CHR('E','S','P',' '), N_("Spanish"),   ESP_counts, ESP_word_lens, "aeiouyáéíñóúü", ESP_consonant_run, ESP_all_consonants, ESP_vowel_run },
-    { CHR('d','e','v','a'), CHR('S','A','N',' '), N_("Sanskrit"),  SAN_counts, SAN_word_lens, NULL, NULL, NULL, NULL },
-    { CHR('l','a','t','n'), CHR('S','V','E',' '), N_("Swedish"),   SVE_counts, SVE_word_lens, "aeiouyäåæéö", SVE_consonant_run, SVE_all_consonants, SVE_vowel_run },
-    { CHR('l','a','t','n'), CHR('T','R','K',' '), N_("Turkish"),   TRK_counts, TRK_word_lens, "aeiouyıüö", TRK_consonant_run, TRK_all_consonants, TRK_vowel_run },
-    { CHR('l','a','t','n'), CHR('W','E','L',' '), N_("Welsh"),     WEL_counts, WEL_word_lens, "aeiouyw", WEL_consonant_run, WEL_all_consonants, WEL_vowel_run },
+    { CHR('l','a','t','n'), CHR('C','S','Y',' '), NC_("Language", "Czech"),     CSY_counts, CSY_word_lens, "aeiouyráéíóúýěů", CSY_consonant_run, CSY_all_consonants, CSY_vowel_run },
+    { CHR('l','a','t','n'), CHR('N','L','D',' '), NC_("Language", "Dutch"),     NLD_counts, NLD_word_lens, "aeiouyàéêëïòó", NLD_consonant_run, NLD_all_consonants, NLD_vowel_run },
+    { CHR('l','a','t','n'), CHR('E','N','G',' '), NC_("Language", "English"),   ENG_counts, ENG_word_lens, "aeiouy", ENG_consonant_run, ENG_all_consonants, ENG_vowel_run },
+    { CHR('l','a','t','n'), CHR('F','R','A',' '), NC_("Language", "French"),    FRA_counts, FRA_word_lens, "aeiouyàâæèéêëîïôùû", FRA_consonant_run, FRA_all_consonants, FRA_vowel_run },
+    { CHR('l','a','t','n'), CHR('D','E','U',' '), NC_("Language", "German"),    DEU_counts, DEU_word_lens, "aeiouyäöü", DEU_consonant_run, DEU_all_consonants, DEU_vowel_run },
+    { CHR('g','r','e','k'), CHR('E','L','L',' '), NC_("Language", "Greek"),     ELL_counts, ELL_word_lens, "ΐάέήίαειουωϊόύώ", ELL_consonant_run, ELL_all_consonants, ELL_vowel_run },
+    { CHR('h','e','b','r'), CHR('I','W','R',' '), NC_("Language", "Hebrew"),    IWR_counts, IWR_word_lens, NULL, NULL, NULL, NULL },
+    { CHR('d','e','v','a'), CHR('H','I','N',' '), NC_("Language", "Hindi"),     HIN_counts, HIN_word_lens, NULL, NULL, NULL, NULL },
+    { CHR('l','a','t','n'), CHR('H','U','N',' '), NC_("Language", "Hungarian"), HUN_counts, HUN_word_lens, "aeiouáéëíóöúüőű", HUN_consonant_run, HUN_all_consonants, HUN_vowel_run },
+    { CHR('l','a','t','n'), CHR('I','T','A',' '), NC_("Language", "Italian"),   ITA_counts, ITA_word_lens, "aeiouyàèìíòôùü", ITA_consonant_run, ITA_all_consonants, ITA_vowel_run },
+    { CHR('k','a','n','a'), CHR('J','A','P',' '), NC_("Language", "Hiragana"),  JAP_counts, JAP_word_lens, NULL, NULL, NULL, NULL },
+    { CHR('k','a','n','a'), CHR('J','A','P',' '), NC_("Language", "Katakana"),  JAP_kata_counts, JAP_word_lens, NULL, NULL, NULL, NULL },
+    { CHR('k','a','n','a'), CHR('L','T','H',' '), NC_("Language", "Lithuanian"),LTH_counts, LTH_word_lens, "aeiouyąęėįųū", LTH_consonant_run, LTH_all_consonants, LTH_vowel_run },
+    { CHR('l','a','t','n'), CHR('P','L','K',' '), NC_("Language", "Polish"),    PLK_counts, PLK_word_lens, "aeiouàâèéêîòóôąęű", PLK_consonant_run, PLK_all_consonants, PLK_vowel_run },
+    { CHR('c','y','r','l'), CHR('R','U','S',' '), NC_("Language", "Russian"),   RUS_counts, RUS_word_lens, "аеийоуэюяё", RUS_consonant_run, RUS_all_consonants, RUS_vowel_run },
+    { CHR('l','a','t','n'), CHR('E','S','P',' '), NC_("Language", "Spanish"),   ESP_counts, ESP_word_lens, "aeiouyáéíñóúü", ESP_consonant_run, ESP_all_consonants, ESP_vowel_run },
+    { CHR('d','e','v','a'), CHR('S','A','N',' '), NC_("Language", "Sanskrit"),  SAN_counts, SAN_word_lens, NULL, NULL, NULL, NULL },
+    { CHR('l','a','t','n'), CHR('S','V','E',' '), NC_("Language", "Swedish"),   SVE_counts, SVE_word_lens, "aeiouyäåæéö", SVE_consonant_run, SVE_all_consonants, SVE_vowel_run },
+    { CHR('l','a','t','n'), CHR('T','R','K',' '), NC_("Language", "Turkish"),   TRK_counts, TRK_word_lens, "aeiouyıüö", TRK_consonant_run, TRK_all_consonants, TRK_vowel_run },
+    { CHR('l','a','t','n'), CHR('W','E','L',' '), NC_("Language", "Welsh"),     WEL_counts, WEL_word_lens, "aeiouyw", WEL_consonant_run, WEL_all_consonants, WEL_vowel_run },
     { 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL }
 };
 
@@ -2336,7 +2336,7 @@ char **SFScriptLangs(SplineFont *sf,struct lang_frequencies ***_freq) {
 	for ( i=0; lang_frequencies[i].script!=0; ++i ) {
 	    if ( lang_frequencies[i].script==scripts[s] ) {
 		sprintf( buffer, "%.70s %c%c%c%c{%c%c%c%c}",
-			S_(lang_frequencies[i].note),
+			g_dpgettext2(NULL, "Language", lang_frequencies[i].note),
 			scripts[s]>>24, scripts[s]>>16, scripts[s]>>8, scripts[s],
 			lang_frequencies[i].lang>>24, lang_frequencies[i].lang>>16, lang_frequencies[i].lang>>8, lang_frequencies[i].lang );
 		freq[pos] = &lang_frequencies[i];

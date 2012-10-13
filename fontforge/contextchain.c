@@ -1934,7 +1934,7 @@ static GTextInfo section[] = {
     GTEXTINFO_EMPTY
 };
 static struct col_init class_ci[] = {
-    { me_string, NULL, NULL, NULL, N_("Class|Name") },
+    { me_string, NULL, NULL, NULL, NC_("Class", "Name") },
     { me_funcedit, CCD_PickGlyphsForClass, NULL, NULL, N_("Glyphs in the class") },
     { me_string, NULL, NULL, NULL, "Old Name (hidden)" },
     };

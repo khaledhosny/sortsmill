@@ -62,7 +62,7 @@ static struct col_init jstf_lang_ci[] = {
 };
 
 static struct col_init justify_ci[] = {
-    { me_stringchoicetag , NULL, scripts, NULL, N_("writing system|Script") },
+    { me_stringchoicetag , NULL, scripts, NULL, NC_("writing system", "Script") },
     { me_funcedit, JSTF_GlyphDlg, NULL, NULL, N_("Extenders") },
     { me_button, JSTF_Langs, NULL, NULL, N_("Language info") },
     { me_addr, NULL, NULL, NULL, N_("Hidden") },
@@ -105,8 +105,9 @@ return;
     for ( j=0; needswork[j]!=NULL; ++j ) {
 	for ( i=0; needswork[j][i].title!=NULL; ++i )
 	    if ( needswork[j][i].title!=NULL )
-		needswork[j][i].title = S_(needswork[j][i].title);
+		needswork[j][i].title = _(needswork[j][i].title);
     }
+    justify_ci[0].title = (char *) g_dpgettext2(NULL, "writing system", justify_ci[0].title);
 }
 
 /* ************************************************************************** */
