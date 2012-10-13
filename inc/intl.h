@@ -28,12 +28,13 @@
 #ifndef _INTL_H
 #define _INTL_H
 
-#include <locale.h>
-#include "gettext.h"
+#define GTimer GTimer_GTK
+#define GList GList_GTK
+#include <glib.h>
+#include <glib/gi18n.h>
+#undef GTimer
+#undef GList
 
-#define _(str)		gettext(str)
-#define C_(ctx,str)	pgettext(ctx,str)
-#define N_(str)		(str)
 #define S_(str)		sgettext(str)
 #define P_(str1,str_non1,n)	ngettext(str1,str_non1,n)
 
