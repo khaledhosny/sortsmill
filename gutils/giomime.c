@@ -112,73 +112,73 @@ return( dir );
     pt = u32_strrchr(path,'.');
 
     if ( pt==NULL ) {
-	if ( uc_strmatch(path,"makefile")==0 || uc_strmatch(path,"makefile~")==0 )
+	if ( u32_casecompare (path, x_gc_u8_to_u32 ("makefile"))==0 || u32_casecompare (path, x_gc_u8_to_u32 ("makefile~"))==0 )
 return( textmake );
-	else if ( uc_strmatch(path,"core")==0 )
+	else if ( u32_casecompare (path, x_gc_u8_to_u32 ("core"))==0 )
 return( core );
-    } else if ( uc_strmatch(pt,".text")==0 || uc_strmatch(pt,".txt")==0 ||
-	    uc_strmatch(pt,".text~")==0 || uc_strmatch(pt,".txt~")==0 )
+    } else if ( u32_casecompare (pt, x_gc_u8_to_u32 (".text"))==0 || u32_casecompare (pt, x_gc_u8_to_u32 (".txt"))==0 ||
+	    u32_casecompare (pt, x_gc_u8_to_u32 (".text~"))==0 || u32_casecompare (pt, x_gc_u8_to_u32 (".txt~"))==0 )
 return( textplain );
-    else if ( uc_strmatch(pt,".c")==0 || uc_strmatch(pt,".h")==0 ||
-	    uc_strmatch(pt,".c~")==0 || uc_strmatch(pt,".h~")==0 )
+    else if ( u32_casecompare (pt, x_gc_u8_to_u32 (".c"))==0 || u32_casecompare (pt, x_gc_u8_to_u32 (".h"))==0 ||
+	    u32_casecompare (pt, x_gc_u8_to_u32 (".c~"))==0 || u32_casecompare (pt, x_gc_u8_to_u32 (".h~"))==0 )
 return( textc );
-    else if ( uc_strmatch(pt,".java")==0 || uc_strmatch(pt,".java~")==0 )
+    else if ( u32_casecompare (pt, x_gc_u8_to_u32 (".java"))==0 || u32_casecompare (pt, x_gc_u8_to_u32 (".java~"))==0 )
 return( textjava );
-    else if ( uc_strmatch(pt,".css")==0 || uc_strmatch(pt,".css~")==0 )
+    else if ( u32_casecompare (pt, x_gc_u8_to_u32 (".css"))==0 || u32_casecompare (pt, x_gc_u8_to_u32 (".css~"))==0 )
 return( textcss );
-    else if ( uc_strmatch(pt,".html")==0 || uc_strmatch(pt,".htm")==0 ||
-	    uc_strmatch(pt,".html~")==0 || uc_strmatch(pt,".htm~")==0 )
+    else if ( u32_casecompare (pt, x_gc_u8_to_u32 (".html"))==0 || u32_casecompare (pt, x_gc_u8_to_u32 (".htm"))==0 ||
+	    u32_casecompare (pt, x_gc_u8_to_u32 (".html~"))==0 || u32_casecompare (pt, x_gc_u8_to_u32 (".htm~"))==0 )
 return( texthtml );
-    else if ( uc_strmatch(pt,".xml")==0 || uc_strmatch(pt,".xml~")==0 )
+    else if ( u32_casecompare (pt, x_gc_u8_to_u32 (".xml"))==0 || u32_casecompare (pt, x_gc_u8_to_u32 (".xml~"))==0 )
 return( textxml );
-    else if ( uc_strmatch(pt,".pfa")==0 || uc_strmatch(pt,".pfb")==0 ||
-	    uc_strmatch(pt,".pt3")==0 || uc_strmatch(pt,".cff")==0 )
+    else if ( u32_casecompare (pt, x_gc_u8_to_u32 (".pfa"))==0 || u32_casecompare (pt, x_gc_u8_to_u32 (".pfb"))==0 ||
+	    u32_casecompare (pt, x_gc_u8_to_u32 (".pt3"))==0 || u32_casecompare (pt, x_gc_u8_to_u32 (".cff"))==0 )
 return( textpsfont );
-    else if ( uc_strmatch(pt,".sfd")==0 )
+    else if ( u32_casecompare (pt, x_gc_u8_to_u32 (".sfd"))==0 )
 return( sfdfont );
-    else if ( uc_strmatch(pt,".ttf")==0 )
+    else if ( u32_casecompare (pt, x_gc_u8_to_u32 (".ttf"))==0 )
 return( fontttf );
-    else if ( uc_strmatch(pt,".otf")==0 || uc_strmatch(pt,".otb")==0 ||
-	    uc_strmatch(pt,".gai")==0 )
+    else if ( u32_casecompare (pt, x_gc_u8_to_u32 (".otf"))==0 || u32_casecompare (pt, x_gc_u8_to_u32 (".otb"))==0 ||
+	    u32_casecompare (pt, x_gc_u8_to_u32 (".gai"))==0 )
 return( fontotf );
-    else if ( uc_strmatch(pt,".cid")==0 )
+    else if ( u32_casecompare (pt, x_gc_u8_to_u32 (".cid"))==0 )
 return( fontcid );
-    else if ( uc_strmatch(pt,".ps")==0 || uc_strmatch(pt,".eps")==0 )
+    else if ( u32_casecompare (pt, x_gc_u8_to_u32 (".ps"))==0 || u32_casecompare (pt, x_gc_u8_to_u32 (".eps"))==0 )
 return( textps );
-    else if ( uc_strmatch(pt,".bdf")==0 )
+    else if ( u32_casecompare (pt, x_gc_u8_to_u32 (".bdf"))==0 )
 return( textbdffont );
-    else if ( uc_strmatch(pt,".pdf")==0 )
+    else if ( u32_casecompare (pt, x_gc_u8_to_u32 (".pdf"))==0 )
 return( pdf );
-    else if ( uc_strmatch(pt,".gif")==0 )
+    else if ( u32_casecompare (pt, x_gc_u8_to_u32 (".gif"))==0 )
 return( imagegif );
-    else if ( uc_strmatch(pt,".png")==0 )
+    else if ( u32_casecompare (pt, x_gc_u8_to_u32 (".png"))==0 )
 return( imagepng );
-    else if ( uc_strmatch(pt,".svg")==0 )
+    else if ( u32_casecompare (pt, x_gc_u8_to_u32 (".svg"))==0 )
 return( imagesvg );
-    else if ( uc_strmatch(pt,".jpeg")==0 || uc_strmatch(pt,".jpg")==0 )
+    else if ( u32_casecompare (pt, x_gc_u8_to_u32 (".jpeg"))==0 || u32_casecompare (pt, x_gc_u8_to_u32 (".jpg"))==0 )
 return( imagejpeg );
-    else if ( uc_strmatch(pt,".mov")==0 || uc_strmatch(pt,".movie")==0 )
+    else if ( u32_casecompare (pt, x_gc_u8_to_u32 (".mov"))==0 || u32_casecompare (pt, x_gc_u8_to_u32 (".movie"))==0 )
 return( videoquick );
-    else if ( uc_strmatch(pt,".wav")==0 )
+    else if ( u32_casecompare (pt, x_gc_u8_to_u32 (".wav"))==0 )
 return( audiowav );
-    else if ( uc_strmatch(pt,".o")==0 || uc_strmatch(pt,".obj")==0 )
+    else if ( u32_casecompare (pt, x_gc_u8_to_u32 (".o"))==0 || u32_casecompare (pt, x_gc_u8_to_u32 (".obj"))==0 )
 return( object );
-    else if ( uc_strmatch(pt,".bin")==0 )
+    else if ( u32_casecompare (pt, x_gc_u8_to_u32 (".bin"))==0 )
 return( macbin );
-    else if ( uc_strmatch(pt,".hqx")==0 )
+    else if ( u32_casecompare (pt, x_gc_u8_to_u32 (".hqx"))==0 )
 return( machqx );
-    else if ( uc_strmatch(pt,".dfont")==0 )
+    else if ( u32_casecompare (pt, x_gc_u8_to_u32 (".dfont"))==0 )
 return( macdfont );
-    else if ( uc_strmatch(pt,".gz")==0 || uc_strmatch(pt,".tgz")==0 ||
-	    uc_strmatch(pt,".Z")==0 || uc_strmatch(pt,".zip")==0 ||
-	    uc_strmatch(pt,".bz2")==0 || uc_strmatch(pt,".tbz")==0 ||
-	    uc_strmatch(pt,".rpm")==0 )
+    else if ( u32_casecompare (pt, x_gc_u8_to_u32 (".gz"))==0 || u32_casecompare (pt, x_gc_u8_to_u32 (".tgz"))==0 ||
+	    u32_casecompare (pt, x_gc_u8_to_u32 (".Z"))==0 || u32_casecompare (pt, x_gc_u8_to_u32 (".zip"))==0 ||
+	    u32_casecompare (pt, x_gc_u8_to_u32 (".bz2"))==0 || u32_casecompare (pt, x_gc_u8_to_u32 (".tbz"))==0 ||
+	    u32_casecompare (pt, x_gc_u8_to_u32 (".rpm"))==0 )
 return( compressed );
-    else if ( uc_strmatch(pt,".tar")==0 )
+    else if ( u32_casecompare (pt, x_gc_u8_to_u32 (".tar"))==0 )
 return( tar );
-    else if ( uc_strmatch(pt,".pcf")==0 )
+    else if ( u32_casecompare (pt, x_gc_u8_to_u32 (".pcf"))==0 )
 return( fontpcf );
-    else if ( uc_strmatch(pt,".snf")==0 )
+    else if ( u32_casecompare (pt, x_gc_u8_to_u32 (".snf"))==0 )
 return( fontsnf );
 
 return( unknown );

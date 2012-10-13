@@ -33,21 +33,6 @@
 #include "utype.h"
 
 long
-uc_strmatch (const uint32_t *str1, const char *str2)
-{
-  long ch1, ch2;
-  for (;;)
-    {
-      ch1 = *str1++;
-      ch2 = *(unsigned char *) str2++;
-      ch1 = tolower (ch1);
-      ch2 = tolower (ch2);
-      if (ch1 != ch2 || ch1 == '\0')
-        return (ch1 - ch2);
-    }
-}
-
-long
 uc_strnmatch (const uint32_t *str1, const char *str2, int len)
 {
   long ch1, ch2;
