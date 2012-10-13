@@ -372,7 +372,7 @@ STRTOF_FUNC (u32_strtod, 32, double, strtod, x_gc_u32_to_u8);
   {							\
     int c;						\
     int len = u##SIZE##_strmbtouc (&c, *sptrptr);	\
-    if (len < 0)					\
+    if (len < 0 || 0x10FFFF < c)			\
       c = -1;						\
     else if (len == 0)					\
       (*sptrptr) += 1;					\

@@ -176,5 +176,19 @@ check_xunistr_h([test_xunistr_get_next "Eĥoŝanĝo ĉiu##aŭde" 196 0 8],[0],[E
 # A valid UTF-16 string.
 check_xunistr_h([test_xunistr_get_next "#E#-#o##" 0 0 0 0 0 16],[0],[E-o|0],[])
 
+# A \xDC00 appearing illegally in a UTF-16 string.
+# (It should appear only as a trailing surrogate.)
+check_xunistr_h([test_xunistr_get_next "#E#-####" 0 0 220 0 0 0 16],[0],[E-|-1],[])
+
+# Truncation after a UTF-16 \xD800 lead surrogate.
+check_xunistr_h([test_xunistr_get_next "#E#-####" 0 0 216 0 0 0 16],[0],[E-|-1],[])
+
 # A valid UTF-32 string.
-check_xunistr_h([test_xunistr_get_next "###E###-###o####" 0 0 0 0 0 0 0 0 0 0 0 0 0 32],[0],[E-o|0],[])
+check_xunistr_h([test_xunistr_get_next "###E###-###o####" 0 0 0 0 0 0 0 0 0 0 0 0 0 32],
+                [0],[E-o|0],[])
+
+# A UCS-4 string that is invalid as UTF-32, due to a \x110000
+# character.
+check_xunistr_h([test_xunistr_get_next "###E###-########" 0 0 0 0 0 0 0 17 0 0 0 0 0 0 32],
+                [0],[E-|-1],[])
+
