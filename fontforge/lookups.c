@@ -1496,7 +1496,7 @@ return( xstrdup_or_null( ubuf ));
 void NameOTLookup(OTLookup *otl,SplineFont *sf) {
     char *userfriendly = NULL, *script;
     FeatureScriptLangList *fl;
-    char *lookuptype;
+    const char *lookuptype;
     char *format;
     struct lookup_subtable *subtable;
     int k;
@@ -1522,7 +1522,7 @@ void NameOTLookup(OTLookup *otl,SplineFont *sf) {
 	    else if ( (otl->lookup_type>>8)<2 && (otl->lookup_type&0xff)<10 )
 		lookuptype = _(lookup_type_names[otl->lookup_type>>8][otl->lookup_type&0xff]);
 	    else
-		lookuptype = S_("LookupType|Unknown");
+		lookuptype = C_("LookupType", "Unknown");
 	    for ( fl=otl->features; fl!=NULL && !fl->ismac; fl=fl->next );
 	    if ( fl==NULL )
 		userfriendly = xstrdup_or_null(lookuptype);

@@ -3057,7 +3057,7 @@ return;
 
     gcd[1].gd.pos.x = 10; gcd[1].gd.pos.y = gcd[0].gd.pos.y+gcd[0].gd.pos.height+4;
     gcd[1].gd.flags = gg_visible | gg_enabled;
-    label[1].text = (uint32_t *) S_("KernClass|_New Lookup...");
+    label[1].text = (uint32_t *) C_("KernClass", "_New Lookup...");
     label[1].text_is_1byte = true;
     label[1].text_in_resource = true;
     gcd[1].gd.label = &label[1];

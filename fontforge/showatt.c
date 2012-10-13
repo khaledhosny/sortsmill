@@ -1870,11 +1870,11 @@ return;
 	    strcat(buf," ");
 	} else
 	    buf[7]='\0';
-/* TRANSLATORS: See the long comment at "Property|New" */
-/* The msgstr should contain a translation of "Script", ignore "writing system|" */
-/* English uses "script" to mean a general writing style (latin, greek, kanji) */
-/* and the cursive handwriting style. Here we mean the general writing system. */
-	strcat(buf,S_("writing system|Script"));
+/* TRANSLATORS:
+ * English uses "script" to mean a general writing style (latin, greek, kanji)
+ * and the cursive handwriting style. Here we mean the general writing system.
+ */
+	strcat(buf, C_("writing system", "Script"));
 	scriptnodes[i].label = xstrdup_or_null(buf);
 	scriptnodes[i].build = BuildGSUBscript;
 	scriptnodes[i].parent = node;
@@ -1908,11 +1908,7 @@ static void BuildJSTFTable(struct node *node,struct att_dlg *att) {
 	    strcat(buf," ");
 	} else
 	    buf[7]='\0';
-/* TRANSLATORS: See the long comment at "Property|New" */
-/* The msgstr should contain a translation of "Script", ignore "writing system|" */
-/* English uses "script" to me a general writing style (latin, greek, kanji) */
-/* and the cursive handwriting style. Here we mean the general writing system. */
-	strcat(buf,S_("writing system|Script"));
+	strcat(buf, C_("writing system", "Script"));
 	scriptnodes[i].label = xstrdup_or_null(buf);
 	scriptnodes[i].build = BuildJSTFscript;
 	scriptnodes[i].parent = node;

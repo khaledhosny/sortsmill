@@ -27,8 +27,6 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <config.h>
-
 #include <stdbool.h>
 #include "fontforgeui.h"
 #include <chardata.h>
@@ -1183,7 +1181,7 @@ static char *LK_ScriptsDlg(GGadget *g, int r, int c) {
     }
     free( mi.matrix_data );
 
-    GMatrixEditSetNewText(gcd[0].ret,S_("OpenTypeFeature|New"));
+    GMatrixEditSetNewText(gcd[0].ret, C_("OpenTypeFeature", "New"));
     GHVBoxSetExpandableRow(boxes[1].ret,0);
     GHVBoxSetExpandableCol(boxes[0].ret,gb_expandgluesame);
 
@@ -1955,7 +1953,7 @@ int EditLookup(OTLookup *otl,int isgpos,SplineFont *sf) {
     }
     free( mi.matrix_data );
 
-    GMatrixEditSetNewText(gcd[2].ret,S_("OpenTypeFeature|New"));
+    GMatrixEditSetNewText(gcd[2].ret, C_("OpenTypeFeature", "New"));
     GHVBoxSetExpandableRow(boxes[5].ret,1);
     GHVBoxSetExpandableCol(boxes[4].ret,gb_expandgluesame);
     GHVBoxSetExpandableCol(boxes[3].ret,1);
@@ -2324,7 +2322,7 @@ static void AnchorClassD(SplineFont *sf, struct lookup_subtable *sub, int def_la
     GMatrixEditShowColumn(gcd[0].ret,1,false);
 
     gcd[i].gd.flags = gg_visible | gg_enabled;
-    label[i].text = (uint32_t *) S_("Anchor Control...");
+    label[i].text = (uint32_t *) _("Anchor Control...");
     label[i].text_is_1byte = true;
     label[i].text_in_resource = true;
     gcd[i].gd.label = &label[i];
@@ -2334,7 +2332,7 @@ static void AnchorClassD(SplineFont *sf, struct lookup_subtable *sub, int def_la
 
     GMatrixEditAddButtons(gcd[0].ret,gcd+i);
     GMatrixEditSetOtherButtonEnable(gcd[0].ret,AC_EnableOtherButtons);
-    GMatrixEditSetNewText(gcd[0].ret,S_("New Anchor Class"));
+    GMatrixEditSetNewText(gcd[0].ret, _("New Anchor Class"));
 
     GDrawSetVisible(acd.gw,true);
     while ( !acd.done )

@@ -2250,7 +2250,7 @@ int GMatrixEditGetActiveCol(GGadget *g) {
 return( gme->active_col );
 }
 
-void GMatrixEditSetNewText(GGadget *g, char *text) {
+void GMatrixEditSetNewText(GGadget *g, const char *text) {
     GMatrixEdit *gme = (GMatrixEdit *) g;
 
     free(gme->newtext);

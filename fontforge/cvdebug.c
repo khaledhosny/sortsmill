@@ -26,6 +26,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 #include "fontforgeui.h"
 #include <math.h>
 #include <gkeysym.h>
@@ -1853,7 +1854,7 @@ static void DVCreatePoints(DebugView *dv) {
     gcd[2].gd.cid = CID_Current;
     gcd[2].creator = GRadioCreate;
 
-    label[3].text = (uint32_t *) S_("Points|Original");
+    label[3].text = (uint32_t *) C_("Points", "Original");
     label[3].text_is_1byte = true;
     gcd[3].gd.label = &label[3];
     gcd[3].gd.pos.x = gcd[1].gd.pos.x; gcd[3].gd.pos.y = gcd[2].gd.pos.y;

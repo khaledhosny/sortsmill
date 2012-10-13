@@ -451,7 +451,7 @@ VISIBLE void GMatrixEditActivateRowCol(GGadget *g, int r, int c);
 VISIBLE void GMatrixEditDeleteRow(GGadget *g,int row);
 VISIBLE void GMatrixEditScrollToRowCol(GGadget *g,int r, int c);
 VISIBLE int GMatrixEditStringDlg(GGadget *g,int row,int col);
-VISIBLE void GMatrixEditSetNewText(GGadget *g, char *text);
+VISIBLE void GMatrixEditSetNewText(GGadget *g, const char *text);
 VISIBLE void GMatrixEditSetOtherButtonEnable(GGadget *g, void (*sob)(GGadget *g, int r, int c));
 VISIBLE void GMatrixEditSetMouseMoveReporter(GGadget *g, void (*rmm)(GGadget *g, int r, int c));
 VISIBLE void GMatrixEditSetTextChangeReporter(GGadget *g, void (*tcr)(GGadget *g, int r, int c, GGadget *text));

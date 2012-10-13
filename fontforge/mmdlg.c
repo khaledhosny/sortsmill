@@ -2095,7 +2095,7 @@ FontList (MMW * mmw, int instance, int *sel)
   if (pos == -1)
     pos = cnt;
   ti[cnt] = xcalloc (1, sizeof (GTextInfo));
-  ti[cnt]->text = utf82u_copy (S_ ("Font|New"));
+  ti[cnt]->text = utf82u_copy (C_("Font", "New"));
   ti[cnt]->bg = ti[cnt]->fg = COLOR_DEFAULT;
   ++cnt;
   ti[cnt] = xcalloc (1, sizeof (GTextInfo));
@@ -2597,7 +2597,7 @@ MMW_DoNext (MMW * mmw)
               def =
                 rint (GetReal8
                       (mmw->subwins[mmw_axes], CID_AxisDefault + i * 100,
-                       S_ ("AxisValue|Default"), &err) * 8096) / 8096;
+                       (char *) C_("AxisValue", "Default"), &err) * 8096) / 8096;
               start = rint (start * 8096) / 8096;
               end = rint (end * 8096) / 8096;
             }
@@ -3770,7 +3770,7 @@ MMWizard (MMSet *mm)
   ngcd[2].gd.pos.y = ngcd[1].gd.pos.y + ngcd[1].gd.pos.height + 5;
   ngcd[2].gd.pos.width = -1;
   ngcd[2].gd.flags = gg_visible | gg_enabled;
-  nlabel[2].text = (uint32_t *) S_ ("Design|_New...");
+  nlabel[2].text = (uint32_t *) C_("Design", "_New...");
   nlabel[2].text_is_1byte = true;
   nlabel[2].text_in_resource = true;
   ngcd[2].gd.label = &nlabel[2];
