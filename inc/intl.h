@@ -35,12 +35,10 @@
 #undef GTimer
 #undef GList
 
-#define S_(str)		sgettext(str)
+#define S_(str)		(char*) Q_(str)
 #define P_(str1,str_non1,n)	ngettext(str1,str_non1,n)
 
 /* For messages in the shortcuts domain */
 #define H_(str)		(str)
-
-VISIBLE char *sgettext(const char *msgid);
 
 #endif /* _INTL_H */
