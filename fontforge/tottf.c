@@ -3967,7 +3967,12 @@ return;		/* Should not happen, but it did */
     ne->lang     = lang;
     ne->strid    = strid;
     ne->offset   = ftell(nt->strings);
-    ne->len      = 2*utf82u_strlen(utf8name);
+
+    // FIXME: Is this really supposed to be UTF-16? Maybe it is. Had
+    // better research this.
+    uint16_t *utf16 = x_gc_u8_to_u16 (utf8name);
+    ne->len = 2 * u16_mbsnlen (utf16, u16_strlen (utf16));
+
     dumpustr(nt->strings,utf8name);
     ++ne;
 

@@ -299,10 +299,11 @@ return( 0 );
 	     * cells and horizontal scrollbars, the magic number 40 is the max
 	     * length of characters after which we use GME_StrBigEdit below */
 	    char buf[1024];
-	    utf8_strncpy(buf, str, 40);
+	    u8_strcpy (buf, x_gc_u8_strmbndup (str, 40));
 	    pt = strchr(buf,'\n');
-	    cur = GDrawGetText8Width(gme->g.base,buf, pt==NULL ? -1: pt-buf);
-	    if ( cur>max ) max = cur;
+	    cur = GDrawGetText8Width(gme->g.base,buf, (pt==NULL ? -1: pt-buf));
+	    if ( cur>max )
+	      max = cur;
 	    free(freeme);
 	}
 	if ( max < 10*GDrawGetText8Width(gme->g.base,"n", 1) )

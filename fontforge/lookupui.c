@@ -4697,7 +4697,11 @@ GTextInfo **SFSubtablesOfType(SplineFont *sf, int lookup_type, int kernclass,
 	    if ( otl->lookup_type==lookup_type && otl->subtables!=NULL ) {
 		if ( k ) {
 		    ti[pos] = xcalloc(1,sizeof(GTextInfo));
-		    ti[pos]->text = xmalloc((utf82u_strlen(otl->lookup_name)+2)*sizeof(uint32_t));
+
+		    // FIXME: Why does this mix UTF-16 and UTF-32 quantities?
+		    uint16_t *utf16 = x_gc_u8_to_u16 (otl->lookup_name);
+		    ti[pos]->text = xmalloc((u16_mbsnlen (utf16, u16_strlen (utf16)) + 2)*sizeof(uint32_t));
+
 		    ti[pos]->text[0] = ' ';
 		    utf82u_strcpy(ti[pos]->text+1,otl->lookup_name);
 		    ti[pos]->fg = ti[pos]->bg = COLOR_DEFAULT;
