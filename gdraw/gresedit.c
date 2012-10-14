@@ -82,36 +82,36 @@ static void GRE_RefreshAll(GRE *gre) {
     GDrawRequestExpose(GTabSetGetSubwindow(gre->tabset,GTabSetGetSel(gre->tabset)),NULL,false);
 }
 
-static char *GFontSpec2String(GFont *font) {
-    int len;
-    char *fontname;
-    FontRequest rq;
+static char *
+GFontSpec2String(GFont *font)
+{
+  int len;
+  char *fontname;
+  FontRequest rq;
 
-    if ( font==NULL )
-return( xstrdup(""));
+  if ( font==NULL )
+    return( xstrdup(""));
 
-    GDrawDecomposeFont(font,&rq);
-    if ( rq.family_name!=NULL )
-	len = 4*u32_strlen(rq.family_name);
-    else
-	len = strlen(rq.utf8_family_name);
-    len += 6 /* point size */ + 1 +
-	    5 /* weight */ + 1 +
-	    10 /* style */;
-    fontname = xmalloc(len);
-    if ( rq.family_name!=NULL ) {
-	char *utf8_name = u2utf8_copy(rq.family_name);
-	sprintf( fontname, "%d %s%dpt %s", rq.weight,
-	    rq.style&1 ? "italic " : "",
-	    rq.point_size,
-	    utf8_name );
-	free(utf8_name );
-    } else
-	sprintf( fontname, "%d %s%dpt %s", rq.weight,
-	    rq.style&1 ? "italic " : "",
-	    rq.point_size,
-	    rq.utf8_family_name );
-return( fontname );
+  GDrawDecomposeFont(font,&rq);
+  if ( rq.family_name!=NULL )
+    len = 4*u32_strlen(rq.family_name);
+  else
+    len = strlen(rq.utf8_family_name);
+  len += 6 /* point size */ + 1 +
+    5 /* weight */ + 1 +
+    10 /* style */;
+  fontname = xmalloc(len);
+  if ( rq.family_name!=NULL )
+    sprintf( fontname, "%d %s%dpt %s", rq.weight,
+	     rq.style&1 ? "italic " : "",
+	     rq.point_size,
+	     x_gc_u32_to_u8 (rq.family_name));
+  else
+    sprintf( fontname, "%d %s%dpt %s", rq.weight,
+	     rq.style&1 ? "italic " : "",
+	     rq.point_size,
+	     rq.utf8_family_name );
+  return( fontname );
 }
 
 static void GRE_Reflow(GRE *gre,GResInfo *res) {

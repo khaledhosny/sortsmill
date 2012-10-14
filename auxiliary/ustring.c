@@ -338,36 +338,6 @@ utf8_2_latin1_copy (const char *utf8buf)
 }
 
 char *
-u2utf8_copy (const uint32_t *ubuf)
-{
-  int len;
-  char *utf8buf;
-
-  if (ubuf == NULL)
-    return (NULL);
-
-  len = u32_strlen (ubuf);
-  utf8buf = (char *) xmalloc ((len + 1) * 4);
-  return (u2utf8_strcpy (utf8buf, ubuf));
-}
-
-char *
-u2utf8_copyn (const uint32_t *ubuf, int len)
-{
-  int i;
-  char *utf8buf, *pt;
-
-  if (ubuf == NULL)
-    return (NULL);
-
-  utf8buf = pt = (char *) xmalloc ((len + 1) * 4);
-  for (i = 0; i < len && *ubuf != '\0'; ++i)
-    pt = utf8_idpb (pt, *ubuf++);
-  *pt = '\0';
-  return (utf8buf);
-}
-
-char *
 utf8_idpb (char *utf8_text, uint32_t ch)
 {
   /* Increment and deposit character */

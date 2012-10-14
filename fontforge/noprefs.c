@@ -667,8 +667,7 @@ return;
 	fprintf( p, "Recent:\t%s\n", RecentFiles[i]);
     for ( i=0; i<SCRIPT_MENU_MAX && script_filenames[i]!=NULL; ++i ) {
 	fprintf( p, "MenuScript:\t%s\n", script_filenames[i]);
-	fprintf( p, "MenuName:\t%s\n", temp = u2utf8_copy(script_menu_names[i]));
-	free(temp);
+	ulc_fprintf( p, "MenuName:\t%llU\n", script_menu_names[i]);
     }
 #if 0
     if ( user_font_filters!=NULL ) {

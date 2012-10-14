@@ -1087,12 +1087,9 @@ return( *fdbase );
     *fdbase = fd = pango_font_description_new();
 
     if ( font->rq.utf8_family_name != NULL )
-	pango_font_description_set_family(fd,font->rq.utf8_family_name);
-    else {
-	char *temp = u2utf8_copy(font->rq.family_name);
-	pango_font_description_set_family(fd,temp);
-	free(temp);
-    }
+      pango_font_description_set_family(fd,font->rq.utf8_family_name);
+    else
+      pango_font_description_set_family(fd, x_gc_u32_to_u8 (font->rq.family_name));
     pango_font_description_set_style(fd,(font->rq.style&fs_italic)?
 	    PANGO_STYLE_ITALIC:
 	    PANGO_STYLE_NORMAL);
@@ -1177,11 +1174,15 @@ return( rect.width );
 
 static int32_t _GXPDraw_DoText(GWindow w, int32_t x, int32_t y,
 	const uint32_t *text, int32_t cnt, Color col,
-	enum text_funcs drawit, struct tf_arg *arg) {
-    char *temp = cnt>=0 ? u2utf8_copyn(text,cnt) : u2utf8_copy(text);
-    int width = _GXPDraw_DoText8(w,x,y,temp,-1,col,drawit,arg);
-    free(temp);
-return(width);
+	enum text_funcs drawit, struct tf_arg *arg)
+{
+  uint8_t *utf8;
+  if (0 <= cnt)
+    utf8 = x_gc_u32_to_u8 (x_gc_u32_strmbndup (text, cnt));
+  else
+    utf8 = x_gc_u32_to_u8 (text);
+  int width = _GXPDraw_DoText8 (w, x, y, utf8, -1, col, drawit, arg);
+  return width;
 }
 
 void GDrawGetFontMetrics(GWindow w, GFont *fi, int *as, int *ds, int *ld) {

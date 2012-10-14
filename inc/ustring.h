@@ -70,8 +70,6 @@ VISIBLE extern void utf82u_strcat (uint32_t *ubuf, const char *utf8buf);
 VISIBLE extern uint32_t *utf82u_copyn (const char *utf8buf, int len);
 VISIBLE extern uint32_t *utf82u_copy (const char *utf8buf);
 VISIBLE extern char *u2utf8_strcpy (char *utf8buf, const uint32_t *ubuf);
-VISIBLE extern char *u2utf8_copy (const uint32_t *ubuf);
-VISIBLE extern char *u2utf8_copyn (const uint32_t *ubuf, int len);
 VISIBLE extern char *u2def_strncpy (char *to, const uint32_t *ufrom, int n);
 VISIBLE extern char *u2def_copy (const uint32_t *ufrom);
 

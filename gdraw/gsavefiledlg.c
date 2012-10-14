@@ -51,22 +51,20 @@ static void GFD_doesnt(GIOControl *gio) {
     GFileChooserReplaceIO(d->gfc,NULL);
 }
 
-static void GFD_exists(GIOControl *gio) {
-    /* The filename the user chose exists, ask user if s/he wants to overwrite */
-    struct gfc_data *d = gio->userdata;
+static void GFD_exists(GIOControl *gio)
+{
+  /* The filename the user chose exists, ask user if s/he wants to overwrite */
+  struct gfc_data *d = gio->userdata;
 
-    const char *rcb[3];
-    char *temp;
-    rcb[2]=NULL;
-    rcb[0] = _("Replace");
-    rcb[1] = _("Cancel");
+  const char *rcb[3];
+  rcb[2]=NULL;
+  rcb[0] = _("Replace");
+  rcb[1] = _("Cancel");
 
-    if ( GWidgetAsk8(_("File Exists"),rcb,0,1,_("File, %s, exists. Replace it?"),
-	temp = u2utf8_copy(u32_GFileBaseName(d->ret)))==0 ) {
-	d->done = true;
-    }
-    free(temp);
-    GFileChooserReplaceIO(d->gfc,NULL);
+  if ( GWidgetAsk8(_("File Exists"),rcb,0,1,_("File, %s, exists. Replace it?"),
+		   x_gc_u32_to_u8 (u32_GFileBaseName(d->ret)))==0 )
+      d->done = true;
+  GFileChooserReplaceIO (d->gfc, NULL);
 }
 
 static int GFD_SaveOk(GGadget *g, GEvent *e) {
@@ -100,18 +98,17 @@ static void GFD_dircreated(GIOControl *gio) {
     free(dir);
 }
 
-static void GFD_dircreatefailed(GIOControl *gio) {
-    /* We couldn't create the directory */
-    struct gfc_data *d = gio->userdata;
+static void GFD_dircreatefailed(GIOControl *gio)
+{
+  /* We couldn't create the directory */
+  struct gfc_data *d = gio->userdata;
 
-    char *t1=NULL, *t2=NULL;
-    GWidgetError8(_("Couldn't create directory"),
-	_("Couldn't create directory: %1$s\n%2$s\n%3$s"),
-	gio->error!=NULL ? t1 = u2utf8_copy(gio->error) : "",
-	t2 = u2utf8_copy(gio->status));
-    free(t1); free(t2);
+  GWidgetError8(_("Couldn't create directory"),
+		_("Couldn't create directory: %1$s\n%2$s\n%3$s"),
+		(gio->error != NULL ? (char *) x_gc_u32_to_u8 (gio->error) : ""),
+		(char *) NULL_PASSTHRU (gio->status, x_gc_u32_to_u8 (gio->status)));
 
-    GFileChooserReplaceIO(d->gfc,NULL);
+  GFileChooserReplaceIO(d->gfc,NULL);
 }
 
 static int GFD_NewDir(GGadget *g, GEvent *e) {
@@ -319,7 +316,7 @@ char *GWidgetSaveAsFileWithGadget8(const char *title, const char *defaultfile,
 	free(mimes);
     }
     free(filt); free(def); free(tit);
-    utf8_ret = u2utf8_copy(ret);
+    utf8_ret = NULL_PASSTHRU(ret, x_u32_to_u8 (ret));
     free(ret);
 return( utf8_ret );
 }

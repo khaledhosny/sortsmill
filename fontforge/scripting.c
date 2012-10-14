@@ -427,14 +427,8 @@ static void bPostNotice(Context *c)
   if ( !no_windowing_ui )
     {
       if ( !use_utf8_in_script )
-	{
-	  uint32_t *t1 = x_u8_to_u32 (u8_force_valid (loc));
-	  loc = u2utf8_copy(t1);
-	  free(t1);
-	}
+	loc = x_gc_u8_valid_prefix (loc);
       ff_post_notice(_("Attention"), "%.200s", loc );
-      if ( loc != c->a.vals[1].u.sval )
-	free(loc);
     }
   else
     {
@@ -1112,9 +1106,10 @@ static void bUtf8(Context *c) {
     else if ( c->a.vals[1].type==v_int ) {
 	if ( c->a.vals[1].u.ival<0 || c->a.vals[1].u.ival>0x10ffff )
 	    ScriptError( c, "Bad value for argument" );
-	buf[0] = c->a.vals[1].u.ival; buf[1] = 0;
+	buf[0] = c->a.vals[1].u.ival;
+	buf[1] = 0;
 	c->return_val.type = v_str;
-	c->return_val.u.sval = u2utf8_copy(buf);
+	c->return_val.u.sval = x_u32_to_u8 (buf);
     } else if ( c->a.vals[1].type==v_arr || c->a.vals[1].type==v_arrfree ) {
 	Array *arr = c->a.vals[1].u.aval;
 	temp = xmalloc((arr->argc+1)*sizeof(int32_t));
@@ -1127,7 +1122,7 @@ static void bUtf8(Context *c) {
 	}
 	temp[i] = 0;
 	c->return_val.type = v_str;
-	c->return_val.u.sval = u2utf8_copy(temp);
+	c->return_val.u.sval = x_u32_to_u8 (temp);
 	free(temp);
     } else
 	ScriptError( c, "Bad type for argument" );

@@ -87,7 +87,7 @@ return;
 	if ( result==NULL )
 	    /* Oh. An error. How fun. See below */;
 	else if ( !PyInt_Check(result)) {
-	    char *menu_item_name = u2utf8_copy(mi->ti.text);
+	  char *menu_item_name = NULL_PASSTHRU (mi->ti.text, x_u32_to_u8 (mi->ti.text));
 	    LogError(_("Return from enabling function for menu item %s must be boolean"), menu_item_name );
 	    free( menu_item_name );
 	    mi->ti.disabled = true;
@@ -273,7 +273,7 @@ static void InsertSubMenus(PyObject *args,GMenuItem2 **mn, int is_cv) {
 		mmn[j].shortcut = shortcut_str;
 		mmn[j].invoke = is_cv ? cvpy_menuactivate : fvpy_menuactivate;
 		mmn[j].mid = MenuDataAdd(func,check,data,is_cv);
-		fprintf( stderr, "Redefining menu item %s\n", u2utf8_copy(submenuu) );
+		ulc_fprintf( stderr, "Redefining menu item %llU\n", submenuu);
 		free(submenuu);
 	    }
 	}

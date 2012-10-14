@@ -2795,29 +2795,33 @@ return( true );
 static int ttfspecials[] = { ttf_copyright, ttf_family, ttf_fullname,
 	ttf_subfamily, ttf_version, -1 };
 
-static char *tn_recalculatedef(struct gfi_data *d,int cur_id) {
-    char versionbuf[40], *v;
+static char *tn_recalculatedef(struct gfi_data *d,int cur_id)
+{
+  char versionbuf[40], *v;
 
-    switch ( cur_id ) {
-      case ttf_copyright:
-return( GGadgetGetTitle8(GWidgetGetControl(d->gw,CID_Notice)));
-      case ttf_family:
-return( GGadgetGetTitle8(GWidgetGetControl(d->gw,CID_Family)));
-      case ttf_fullname:
-return( GGadgetGetTitle8(GWidgetGetControl(d->gw,CID_Human)));
-      case ttf_subfamily:
-return( u2utf8_copy(_uGetModifiers(
-		_GGadgetGetTitle(GWidgetGetControl(d->gw,CID_Fontname)),
-		_GGadgetGetTitle(GWidgetGetControl(d->gw,CID_Family)),
-		_GGadgetGetTitle(GWidgetGetControl(d->gw,CID_Weight)))));
-      case ttf_version:
-	sprintf(versionbuf,_("Version %.20s"),
-		v=GGadgetGetTitle8(GWidgetGetControl(d->gw,CID_Version)));
-	free(v);
-return( xstrdup_or_null(versionbuf));
-      default:
-return( NULL );
+  switch ( cur_id ) {
+  case ttf_copyright:
+    return( GGadgetGetTitle8(GWidgetGetControl(d->gw,CID_Notice)));
+  case ttf_family:
+    return( GGadgetGetTitle8(GWidgetGetControl(d->gw,CID_Family)));
+  case ttf_fullname:
+    return( GGadgetGetTitle8(GWidgetGetControl(d->gw,CID_Human)));
+  case ttf_subfamily:
+    {
+      const uint32_t *temp =
+	_uGetModifiers(_GGadgetGetTitle(GWidgetGetControl(d->gw,CID_Fontname)),
+		       _GGadgetGetTitle(GWidgetGetControl(d->gw,CID_Family)),
+		       _GGadgetGetTitle(GWidgetGetControl(d->gw,CID_Weight)));
+      return NULL_PASSTHRU(temp, x_u32_to_u8 (temp));
     }
+  case ttf_version:
+    sprintf(versionbuf,_("Version %.20s"),
+	    v=GGadgetGetTitle8(GWidgetGetControl(d->gw,CID_Version)));
+    free(v);
+    return( xstrdup_or_null(versionbuf));
+  default:
+    return( NULL );
+  }
 }
 
 static char *TN_DefaultName(GGadget *g, int r, int c) {
@@ -4358,12 +4362,9 @@ return( true );
 
 	nlitem = GGadgetGetListItemSelected(GWidgetGetControl(gw,CID_Namelist));
 	if ( nlitem==NULL )
-	    nl = DefaultNameListForNewFonts();
-	else {
-	    char *name = u2utf8_copy(nlitem->text);
-	    nl = NameListByName(name);
-	    free(name);
-	}
+	  nl = DefaultNameListForNewFonts();
+	else
+	  nl = NameListByName(NULL_PASSTHRU (nlitem->text, x_gc_u32_to_u8 (nlitem->text)));
 	if ( nl->uses_unicode && !allow_utf8_glyphnames ) {
 	    ff_post_error(_("Namelist contains non-ASCII names"),_("Glyph names should be limited to characters in the ASCII character set,\nbut there are names in this namelist which use characters outside\nthat range."));
 return(true);
@@ -4466,15 +4467,19 @@ return(true);
 	sf->fontstyle_id = styleid;
 
 	txt = _GGadgetGetTitle(GWidgetGetControl(gw,CID_Notice));
-	free(sf->copyright); sf->copyright = x_u32_to_u8 (u32_force_valid (txt));
+	free(sf->copyright);
+	sf->copyright = x_u32_to_u8 (u32_force_valid (txt));
 	txt = _GGadgetGetTitle(GWidgetGetControl(gw,CID_Comment));
-	free(sf->comments); sf->comments = u2utf8_copy(*txt?txt:NULL);
+	free(sf->comments);
+	sf->comments = (*txt) ? x_u32_to_u8 (txt) : NULL;
 	txt = _GGadgetGetTitle(GWidgetGetControl(gw,CID_FontLog));
-	free(sf->fontlog); sf->fontlog = u2utf8_copy(*txt?txt:NULL);
+	free(sf->fontlog);
+	sf->fontlog = (*txt) ? x_u32_to_u8 (txt) : NULL;
 	txt = _GGadgetGetTitle(GWidgetGetControl(gw,CID_DefBaseName));
 	if ( *txt=='\0' || GGadgetIsChecked(GWidgetGetControl(gw,CID_SameAsFontname)) )
 	    txt = NULL;
-	free(sf->defbasefilename); sf->defbasefilename = u2utf8_copy(txt);
+	free(sf->defbasefilename);
+	sf->defbasefilename = NULL_PASSTHRU (txt, x_u32_to_u8 (txt));
 	if ( sf->subfontcnt!=0 ) {
 	    sf->cidversion = cidversion;
 	} else {

@@ -1,4 +1,4 @@
-#include <config.h>		/* -*- coding: utf-8 -*- */
+#include <config.h>             /* -*- coding: utf-8 -*- */
 
 /* Copyright (C) 2000-2012 by George Williams */
 /*
@@ -37,576 +37,711 @@
 #include <gresource.h>
 #include "encoding.h"
 
-static GTextInfo *EncodingList(void) {
+static GTextInfo *
+EncodingList (void)
+{
   GTextInfo *ti;
   int i;
   Encoding *item;
 
   i = 0;
-  for ( item=enclist; item!=NULL ; item=item->next )
-    if ( !item->builtin )
+  for (item = enclist; item != NULL; item = item->next)
+    if (!item->builtin)
       ++i;
-  ti = xcalloc(i+1,sizeof(GTextInfo));
+  ti = xcalloc (i + 1, sizeof (GTextInfo));
   i = 0;
-  for ( item=enclist; item!=NULL ; item=item->next )
-    if ( !item->builtin )
+  for (item = enclist; item != NULL; item = item->next)
+    if (!item->builtin)
       ti[i++].text = x_u8_to_u32 (u8_force_valid (item->enc_name));
-  if ( i!=0 )
+  if (i != 0)
     ti[0].selected = true;
-  return( ti );
+  return (ti);
 }
 
 #define CID_Encodings	1001
 
-static int DE_Delete(GGadget *g, GEvent *e) {
-    GWindow gw;
-    int *done;
-    GGadget *list;
-    int sel,i;
-    Encoding *item;
+static int
+DE_Delete (GGadget *g, GEvent *e)
+{
+  GWindow gw;
+  int *done;
+  GGadget *list;
+  int sel, i;
+  Encoding *item;
 
-    if ( e->type==et_controlevent &&
-	    (e->u.control.subtype == et_buttonactivate ||
-	     e->u.control.subtype == et_listdoubleclick )) {
-	gw = GGadgetGetWindow(g);
-	done = GDrawGetUserData(gw);
-	list = GWidgetGetControl(gw,CID_Encodings);
-	sel = GGadgetGetFirstListSelectedItem(list);
-	i=0;
-	for ( item=enclist; item!=NULL; item=item->next ) {
-	    if ( item->builtin )
-		/* Do Nothing */;
-	    else if ( i==sel )
-	break;
-	    else
-		++i;
-	}
-	if ( item!=NULL )
-	    DeleteEncoding(item);
-	*done = true;
+  if (e->type == et_controlevent &&
+      (e->u.control.subtype == et_buttonactivate ||
+       e->u.control.subtype == et_listdoubleclick))
+    {
+      gw = GGadgetGetWindow (g);
+      done = GDrawGetUserData (gw);
+      list = GWidgetGetControl (gw, CID_Encodings);
+      sel = GGadgetGetFirstListSelectedItem (list);
+      i = 0;
+      for (item = enclist; item != NULL; item = item->next)
+        {
+          if (item->builtin)
+            /* Do Nothing */ ;
+          else if (i == sel)
+            break;
+          else
+            ++i;
+        }
+      if (item != NULL)
+        DeleteEncoding (item);
+      *done = true;
     }
-return( true );
+  return (true);
 }
 
-static int DE_Cancel(GGadget *g, GEvent *e) {
-    GWindow gw;
-    int *done;
+static int
+DE_Cancel (GGadget *g, GEvent *e)
+{
+  GWindow gw;
+  int *done;
 
-    if ( e->type==et_controlevent && e->u.control.subtype == et_buttonactivate ) {
-	gw = GGadgetGetWindow(g);
-	done = GDrawGetUserData(gw);
-	*done = true;
+  if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
+    {
+      gw = GGadgetGetWindow (g);
+      done = GDrawGetUserData (gw);
+      *done = true;
     }
-return( true );
+  return (true);
 }
 
-static int de_e_h(GWindow gw, GEvent *event) {
-    if ( event->type==et_close ) {
-	int *done = GDrawGetUserData(gw);
-	*done = true;
-    } else if ( event->type == et_char ) {
-return( false );
+static int
+de_e_h (GWindow gw, GEvent *event)
+{
+  if (event->type == et_close)
+    {
+      int *done = GDrawGetUserData (gw);
+      *done = true;
     }
-return( true );
-}
-
-void RemoveEncoding(void) {
-    GRect pos;
-    GWindow gw;
-    GWindowAttrs wattrs;
-    GGadgetCreateData gcd[5];
-    GTextInfo label[5];
-    Encoding *item;
-    int done = 0;
-
-    for ( item=enclist; item!=NULL && item->builtin; item=item->next );
-    if ( item==NULL )
-return;
-
-    memset(&gcd,0,sizeof(gcd));
-    memset(&label,0,sizeof(label));
-    memset(&wattrs,0,sizeof(wattrs));
-    wattrs.mask = wam_events|wam_cursor|wam_utf8_wtitle|wam_undercursor|wam_restrict|wam_isdlg;
-    wattrs.event_masks = ~(1<<et_charup);
-    wattrs.restrict_input_to_me = 1;
-    wattrs.is_dlg = 1;
-    wattrs.undercursor = 1;
-    wattrs.cursor = ct_pointer;
-    wattrs.utf8_window_title = _("Remove Encoding");
-    pos.x = pos.y = 0;
-    pos.width = GGadgetScale(GDrawPointsToPixels(NULL,150));
-    pos.height = GDrawPointsToPixels(NULL,110);
-    gw = GDrawCreateTopWindow(NULL,&pos,de_e_h,&done,&wattrs);
-
-    gcd[0].gd.pos.x = 10; gcd[0].gd.pos.y = 6;
-    gcd[0].gd.pos.width = 130; gcd[0].gd.pos.height = 5*12+10;
-    gcd[0].gd.flags = gg_visible | gg_enabled;
-    gcd[0].gd.cid = CID_Encodings;
-    gcd[0].gd.u.list = EncodingList();
-    gcd[0].gd.handle_controlevent = DE_Delete;
-    gcd[0].creator = GListCreate;
-
-    gcd[2].gd.pos.x = -10; gcd[2].gd.pos.y = gcd[0].gd.pos.y+gcd[0].gd.pos.height+5;
-    gcd[2].gd.pos.width = -1; gcd[2].gd.pos.height = 0;
-    gcd[2].gd.flags = gg_visible | gg_enabled | gg_but_cancel ;
-    label[2].text = (uint32_t *) _("_Cancel");
-    label[2].text_is_1byte = true;
-    label[2].text_in_resource = true;
-    gcd[2].gd.label = &label[2];
-    gcd[2].gd.mnemonic = 'C';
-    gcd[2].gd.handle_controlevent = DE_Cancel;
-    gcd[2].creator = GButtonCreate;
-
-    gcd[1].gd.pos.x = 10-3; gcd[1].gd.pos.y = gcd[2].gd.pos.y-3;
-    gcd[1].gd.pos.width = -1; gcd[1].gd.pos.height = 0;
-    gcd[1].gd.flags = gg_visible | gg_enabled | gg_but_default ;
-    label[1].text = (uint32_t *) _("_Delete");
-    label[1].text_is_1byte = true;
-    label[1].text_in_resource = true;
-    gcd[1].gd.mnemonic = 'D';
-    gcd[1].gd.label = &label[1];
-    gcd[1].gd.handle_controlevent = DE_Delete;
-    gcd[1].creator = GButtonCreate;
-
-    gcd[3].gd.pos.x = 2; gcd[3].gd.pos.y = 2;
-    gcd[3].gd.pos.width = pos.width-4; gcd[3].gd.pos.height = pos.height-2;
-    gcd[3].gd.flags = gg_enabled | gg_visible | gg_pos_in_pixels;
-    gcd[3].creator = GGroupCreate;
-
-    GGadgetsCreate(gw,gcd);
-    GTextInfoListFree(gcd[0].gd.u.list);
-
-    GDrawSetVisible(gw,true);
-    while ( !done )
-	GDrawProcessOneEvent(NULL);
-    GDrawDestroyWindow(gw);
-}
-
-Encoding *MakeEncoding(SplineFont *sf,EncMap *map) {
-    char *name;
-    int i, gid;
-    Encoding *item, *temp;
-    SplineChar *sc;
-
-    if ( map->enc!=&custom )
-return(NULL);
-
-    name = gwwv_ask_string(_("Please name this encoding"),NULL,_("Please name this encoding"));
-    if ( name==NULL )
-return(NULL);
-    item = xcalloc(1,sizeof(Encoding));
-    item->enc_name = name;
-    item->only_1byte = item->has_1byte = true;
-    item->char_cnt = map->enccount;
-    item->unicode = xcalloc(map->enccount,sizeof(int32_t));
-    for ( i=0; i<map->enccount; ++i ) if ( (gid = map->map[i])!=-1 && (sc=sf->glyphs[gid])!=NULL ) {
-	if ( sc->unicodeenc!=-1 )
-	    item->unicode[i] = sc->unicodeenc;
-	else if ( strcmp(sc->name,".notdef")!=0 ) {
-	    if ( item->psnames==NULL )
-		item->psnames = xcalloc(map->enccount,sizeof(uint32_t *));
-	    item->psnames[i] = xstrdup_or_null(sc->name);
-	}
+  else if (event->type == et_char)
+    {
+      return (false);
     }
-    RemoveMultiples(item);
+  return (true);
+}
 
-    if ( enclist == NULL )
-	enclist = item;
-    else {
-	for ( temp=enclist; temp->next!=NULL; temp=temp->next );
-	temp->next = item;
+void
+RemoveEncoding (void)
+{
+  GRect pos;
+  GWindow gw;
+  GWindowAttrs wattrs;
+  GGadgetCreateData gcd[5];
+  GTextInfo label[5];
+  Encoding *item;
+  int done = 0;
+
+  for (item = enclist; item != NULL && item->builtin; item = item->next);
+  if (item == NULL)
+    return;
+
+  memset (&gcd, 0, sizeof (gcd));
+  memset (&label, 0, sizeof (label));
+  memset (&wattrs, 0, sizeof (wattrs));
+  wattrs.mask =
+    wam_events | wam_cursor | wam_utf8_wtitle | wam_undercursor | wam_restrict
+    | wam_isdlg;
+  wattrs.event_masks = ~(1 << et_charup);
+  wattrs.restrict_input_to_me = 1;
+  wattrs.is_dlg = 1;
+  wattrs.undercursor = 1;
+  wattrs.cursor = ct_pointer;
+  wattrs.utf8_window_title = _("Remove Encoding");
+  pos.x = pos.y = 0;
+  pos.width = GGadgetScale (GDrawPointsToPixels (NULL, 150));
+  pos.height = GDrawPointsToPixels (NULL, 110);
+  gw = GDrawCreateTopWindow (NULL, &pos, de_e_h, &done, &wattrs);
+
+  gcd[0].gd.pos.x = 10;
+  gcd[0].gd.pos.y = 6;
+  gcd[0].gd.pos.width = 130;
+  gcd[0].gd.pos.height = 5 * 12 + 10;
+  gcd[0].gd.flags = gg_visible | gg_enabled;
+  gcd[0].gd.cid = CID_Encodings;
+  gcd[0].gd.u.list = EncodingList ();
+  gcd[0].gd.handle_controlevent = DE_Delete;
+  gcd[0].creator = GListCreate;
+
+  gcd[2].gd.pos.x = -10;
+  gcd[2].gd.pos.y = gcd[0].gd.pos.y + gcd[0].gd.pos.height + 5;
+  gcd[2].gd.pos.width = -1;
+  gcd[2].gd.pos.height = 0;
+  gcd[2].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
+  label[2].text = (uint32_t *) _("_Cancel");
+  label[2].text_is_1byte = true;
+  label[2].text_in_resource = true;
+  gcd[2].gd.label = &label[2];
+  gcd[2].gd.mnemonic = 'C';
+  gcd[2].gd.handle_controlevent = DE_Cancel;
+  gcd[2].creator = GButtonCreate;
+
+  gcd[1].gd.pos.x = 10 - 3;
+  gcd[1].gd.pos.y = gcd[2].gd.pos.y - 3;
+  gcd[1].gd.pos.width = -1;
+  gcd[1].gd.pos.height = 0;
+  gcd[1].gd.flags = gg_visible | gg_enabled | gg_but_default;
+  label[1].text = (uint32_t *) _("_Delete");
+  label[1].text_is_1byte = true;
+  label[1].text_in_resource = true;
+  gcd[1].gd.mnemonic = 'D';
+  gcd[1].gd.label = &label[1];
+  gcd[1].gd.handle_controlevent = DE_Delete;
+  gcd[1].creator = GButtonCreate;
+
+  gcd[3].gd.pos.x = 2;
+  gcd[3].gd.pos.y = 2;
+  gcd[3].gd.pos.width = pos.width - 4;
+  gcd[3].gd.pos.height = pos.height - 2;
+  gcd[3].gd.flags = gg_enabled | gg_visible | gg_pos_in_pixels;
+  gcd[3].creator = GGroupCreate;
+
+  GGadgetsCreate (gw, gcd);
+  GTextInfoListFree (gcd[0].gd.u.list);
+
+  GDrawSetVisible (gw, true);
+  while (!done)
+    GDrawProcessOneEvent (NULL);
+  GDrawDestroyWindow (gw);
+}
+
+Encoding *
+MakeEncoding (SplineFont *sf, EncMap * map)
+{
+  char *name;
+  int i, gid;
+  Encoding *item, *temp;
+  SplineChar *sc;
+
+  if (map->enc != &custom)
+    return (NULL);
+
+  name =
+    gwwv_ask_string (_("Please name this encoding"), NULL,
+                     _("Please name this encoding"));
+  if (name == NULL)
+    return (NULL);
+  item = xcalloc (1, sizeof (Encoding));
+  item->enc_name = name;
+  item->only_1byte = item->has_1byte = true;
+  item->char_cnt = map->enccount;
+  item->unicode = xcalloc (map->enccount, sizeof (int32_t));
+  for (i = 0; i < map->enccount; ++i)
+    if ((gid = map->map[i]) != -1 && (sc = sf->glyphs[gid]) != NULL)
+      {
+        if (sc->unicodeenc != -1)
+          item->unicode[i] = sc->unicodeenc;
+        else if (strcmp (sc->name, ".notdef") != 0)
+          {
+            if (item->psnames == NULL)
+              item->psnames = xcalloc (map->enccount, sizeof (uint32_t *));
+            item->psnames[i] = xstrdup_or_null (sc->name);
+          }
+      }
+  RemoveMultiples (item);
+
+  if (enclist == NULL)
+    enclist = item;
+  else
+    {
+      for (temp = enclist; temp->next != NULL; temp = temp->next);
+      temp->next = item;
     }
-    DumpPfaEditEncodings();
-return( item );
+  DumpPfaEditEncodings ();
+  return (item);
 }
 
-void LoadEncodingFile(void) {
-    static char filter[] = "*.{ps,PS,txt,TXT,enc,ENC}";
-    char *fn;
-    char *filename;
+void
+LoadEncodingFile (void)
+{
+  static char filter[] = "*.{ps,PS,txt,TXT,enc,ENC}";
+  char *fn;
+  char *filename;
 
-    fn = gwwv_open_filename(_("Load Encoding"), NULL, filter, NULL);
-    if ( fn==NULL )
-return;
-    filename = utf82def_copy(fn);
-    ParseEncodingFile(filename, NULL);
-    free(fn); free(filename);
-    DumpPfaEditEncodings();
+  fn = gwwv_open_filename (_("Load Encoding"), NULL, filter, NULL);
+  if (fn == NULL)
+    return;
+  filename = utf82def_copy (fn);
+  ParseEncodingFile (filename, NULL);
+  free (fn);
+  free (filename);
+  DumpPfaEditEncodings ();
 }
 
-void SFFindNearTop(SplineFont *sf) {
-    FontView *fv;
-    EncMap *map;
-    int i,k,gid;
+void
+SFFindNearTop (SplineFont *sf)
+{
+  FontView *fv;
+  EncMap *map;
+  int i, k, gid;
 
-    if ( sf->cidmaster!=NULL )
-	sf = sf->cidmaster;
-    if ( sf->subfontcnt==0 ) {
-	for ( fv=(FontView *) sf->fv; fv!=NULL; fv=(FontView *) (fv->b.nextsame) ) {
-	    map = fv->b.map;
-	    fv->sc_near_top = NULL;
-	    for ( i=fv->rowoff*fv->colcnt; i<map->enccount && i<(fv->rowoff+fv->rowcnt)*fv->colcnt; ++i )
-		if ( (gid=map->map[i])!=-1 && sf->glyphs[gid]!=NULL ) {
-		    fv->sc_near_top = sf->glyphs[gid];
-	    break;
-		}
-	}
-    } else {
-	for ( fv=(FontView *) sf->fv; fv!=NULL; fv=(FontView *) (fv->b.nextsame) ) {
-	    map = fv->b.map;
-	    fv->sc_near_top = NULL;
-	    for ( i=fv->rowoff*fv->colcnt; i<map->enccount && i<(fv->rowoff+fv->rowcnt)*fv->colcnt; ++i ) {
-		for ( k=0; k<sf->subfontcnt; ++k )
-		    if ( (gid=map->map[i])!=-1 &&
-			    gid<sf->subfonts[k]->glyphcnt &&
-			    sf->subfonts[k]->glyphs[gid]!=NULL )
-			fv->sc_near_top = sf->subfonts[k]->glyphs[gid];
-	    }
-	}
+  if (sf->cidmaster != NULL)
+    sf = sf->cidmaster;
+  if (sf->subfontcnt == 0)
+    {
+      for (fv = (FontView *) sf->fv; fv != NULL;
+           fv = (FontView *) (fv->b.nextsame))
+        {
+          map = fv->b.map;
+          fv->sc_near_top = NULL;
+          for (i = fv->rowoff * fv->colcnt;
+               i < map->enccount
+               && i < (fv->rowoff + fv->rowcnt) * fv->colcnt; ++i)
+            if ((gid = map->map[i]) != -1 && sf->glyphs[gid] != NULL)
+              {
+                fv->sc_near_top = sf->glyphs[gid];
+                break;
+              }
+        }
+    }
+  else
+    {
+      for (fv = (FontView *) sf->fv; fv != NULL;
+           fv = (FontView *) (fv->b.nextsame))
+        {
+          map = fv->b.map;
+          fv->sc_near_top = NULL;
+          for (i = fv->rowoff * fv->colcnt;
+               i < map->enccount
+               && i < (fv->rowoff + fv->rowcnt) * fv->colcnt; ++i)
+            {
+              for (k = 0; k < sf->subfontcnt; ++k)
+                if ((gid = map->map[i]) != -1 &&
+                    gid < sf->subfonts[k]->glyphcnt &&
+                    sf->subfonts[k]->glyphs[gid] != NULL)
+                  fv->sc_near_top = sf->subfonts[k]->glyphs[gid];
+            }
+        }
     }
 }
 
-void SFRestoreNearTop(SplineFont *sf) {
-    FontView *fv;
+void
+SFRestoreNearTop (SplineFont *sf)
+{
+  FontView *fv;
 
-    for ( fv=(FontView *) sf->fv; fv!=NULL; fv=(FontView *) (fv->b.nextsame) ) if ( fv->sc_near_top!=NULL ) {
-	/* Note: For CID keyed fonts, we don't care if sc is in the currently */
-	/*  displayed font, all we care about is the CID */
-	int enc = fv->b.map->backmap[fv->sc_near_top->orig_pos];
-	if ( enc!=-1 ) {
-	    fv->rowoff = enc/fv->colcnt;
-	    GScrollBarSetPos(fv->vsb,fv->rowoff);
-	    /* Don't ask for an expose event yet. We'll get one soon enough */
-	}
-    }
+  for (fv = (FontView *) sf->fv; fv != NULL;
+       fv = (FontView *) (fv->b.nextsame))
+    if (fv->sc_near_top != NULL)
+      {
+        /* Note: For CID keyed fonts, we don't care if sc is in the currently */
+        /*  displayed font, all we care about is the CID */
+        int enc = fv->b.map->backmap[fv->sc_near_top->orig_pos];
+        if (enc != -1)
+          {
+            fv->rowoff = enc / fv->colcnt;
+            GScrollBarSetPos (fv->vsb, fv->rowoff);
+            /* Don't ask for an expose event yet. We'll get one soon enough */
+          }
+      }
 }
 
-struct block {
-    int cur, tot;
-    char **maps;
-    char **dirs;
+struct block
+{
+  int cur, tot;
+  char **maps;
+  char **dirs;
 };
 
-static void AddToBlock(struct block *block,char *mapname, char *dir) {
-    int i, val, j;
-    int len = strlen(mapname);
+static void
+AddToBlock (struct block *block, char *mapname, char *dir)
+{
+  int i, val, j;
+  int len = strlen (mapname);
 
-    if ( mapname[len-7]=='.' ) len -= 7;
-    for ( i=0; i<block->cur; ++i ) {
-	if ( (val=strncmp(block->maps[i],mapname,len))==0 )
-return;		/* Duplicate */
-	else if ( val>0 )
-    break;
+  if (mapname[len - 7] == '.')
+    len -= 7;
+  for (i = 0; i < block->cur; ++i)
+    {
+      if ((val = strncmp (block->maps[i], mapname, len)) == 0)
+        return;                 /* Duplicate */
+      else if (val > 0)
+        break;
     }
-    if ( block->tot==0 ) {
-	block->tot = 10;
-	block->maps = xmalloc(10*sizeof(char *));
-	block->dirs = xmalloc(10*sizeof(char *));
-    } else if ( block->cur>=block->tot ) {
-	block->tot += 10;
-	block->maps = xrealloc(block->maps,block->tot*sizeof(char *));
-	block->dirs = xrealloc(block->dirs,block->tot*sizeof(char *));
+  if (block->tot == 0)
+    {
+      block->tot = 10;
+      block->maps = xmalloc (10 * sizeof (char *));
+      block->dirs = xmalloc (10 * sizeof (char *));
     }
-    for ( j=block->cur; j>=i; --j ) {
-	block->maps[j+1] = block->maps[j];
-	block->dirs[j+1] = block->dirs[j];
+  else if (block->cur >= block->tot)
+    {
+      block->tot += 10;
+      block->maps = xrealloc (block->maps, block->tot * sizeof (char *));
+      block->dirs = xrealloc (block->dirs, block->tot * sizeof (char *));
     }
-    block->maps[i] = xstrndup_or_null(mapname,len);
-    block->dirs[i] = dir;
-    ++block->cur;
+  for (j = block->cur; j >= i; --j)
+    {
+      block->maps[j + 1] = block->maps[j];
+      block->dirs[j + 1] = block->dirs[j];
+    }
+  block->maps[i] = xstrndup_or_null (mapname, len);
+  block->dirs[i] = dir;
+  ++block->cur;
 }
 
-static void FindMapsInDir(struct block *block,char *dir) {
-    struct dirent *ent;
-    DIR *d;
-    int len;
-    char *pt, *pt2;
+static void
+FindMapsInDir (struct block *block, char *dir)
+{
+  struct dirent *ent;
+  DIR *d;
+  int len;
+  char *pt, *pt2;
 
-    if ( dir==NULL )
-return;
-    /* format of cidmap filename "?*-?*-[0-9]*.cidmap" */
-    d = opendir(dir);
-    if ( d==NULL )
-return;
-    while ( (ent = readdir(d))!=NULL ) {
-	if ( (len = strlen(ent->d_name))<8 )
-    continue;
-	if ( strcmp(ent->d_name+len-7,".cidmap")!=0 )
-    continue;
-	pt = strchr(ent->d_name, '-');
-	if ( pt==NULL || pt==ent->d_name )
-    continue;
-	pt2 = strchr(pt+1, '-' );
-	if ( pt2==NULL || pt2==pt+1 || !isdigit(pt2[1]))
-    continue;
-	AddToBlock(block,ent->d_name,dir);
+  if (dir == NULL)
+    return;
+  /* format of cidmap filename "?*-?*-[0-9]*.cidmap" */
+  d = opendir (dir);
+  if (d == NULL)
+    return;
+  while ((ent = readdir (d)) != NULL)
+    {
+      if ((len = strlen (ent->d_name)) < 8)
+        continue;
+      if (strcmp (ent->d_name + len - 7, ".cidmap") != 0)
+        continue;
+      pt = strchr (ent->d_name, '-');
+      if (pt == NULL || pt == ent->d_name)
+        continue;
+      pt2 = strchr (pt + 1, '-');
+      if (pt2 == NULL || pt2 == pt + 1 || !isdigit (pt2[1]))
+        continue;
+      AddToBlock (block, ent->d_name, dir);
     }
-    closedir(d);
+  closedir (d);
 }
 
-struct cidmap *AskUserForCIDMap(void) {
-    struct block block;
-    struct cidmap *map = NULL;
-    char buffer[200];
-    char **choices;
-    int i,ret;
-    char *filename=NULL;
-    char *reg, *ord, *pt;
-    int supplement;
+struct cidmap *
+AskUserForCIDMap (void)
+{
+  struct block block;
+  struct cidmap *map = NULL;
+  char buffer[200];
+  char **choices;
+  int i, ret;
+  char *filename = NULL;
+  char *reg, *ord, *pt;
+  int supplement;
 
-    memset(&block,'\0',sizeof(block));
-    for ( map = cidmaps; map!=NULL; map = map->next ) {
-	sprintf(buffer,"%s-%s-%d", map->registry, map->ordering, map->supplement);
-	AddToBlock(&block,buffer,NULL);
+  memset (&block, '\0', sizeof (block));
+  for (map = cidmaps; map != NULL; map = map->next)
+    {
+      sprintf (buffer, "%s-%s-%d", map->registry, map->ordering,
+               map->supplement);
+      AddToBlock (&block, buffer, NULL);
     }
-    FindMapsInDir(&block,".");
-    FindMapsInDir(&block, SHAREDIR);
+  FindMapsInDir (&block, ".");
+  FindMapsInDir (&block, SHAREDIR);
 
-    choices = xcalloc(block.cur+2,sizeof(uint32_t *));
-    choices[0] = xstrdup_or_null(_("Browse..."));
-    for ( i=0; i<block.cur; ++i )
-	choices[i+1] = xstrdup_or_null(block.maps[i]);
-    ret = gwwv_choose(_("Find a cidmap file..."),(const char **) choices,i+1,0,_("Please select a CID ordering"));
-    for ( i=0; i<=block.cur; ++i )
-	free( choices[i] );
-    free(choices);
-    if ( ret==0 ) {
-	filename = gwwv_open_filename(_("Find a cidmap file..."),NULL,
-		"?*-?*-[0-9]*.cidmap",NULL);
-	if ( filename==NULL )
-	    ret = -1;
+  choices = xcalloc (block.cur + 2, sizeof (uint32_t *));
+  choices[0] = xstrdup_or_null (_("Browse..."));
+  for (i = 0; i < block.cur; ++i)
+    choices[i + 1] = xstrdup_or_null (block.maps[i]);
+  ret =
+    gwwv_choose (_("Find a cidmap file..."), (const char **) choices, i + 1,
+                 0, _("Please select a CID ordering"));
+  for (i = 0; i <= block.cur; ++i)
+    free (choices[i]);
+  free (choices);
+  if (ret == 0)
+    {
+      filename = gwwv_open_filename (_("Find a cidmap file..."), NULL,
+                                     "?*-?*-[0-9]*.cidmap", NULL);
+      if (filename == NULL)
+        ret = -1;
     }
-    if ( ret!=-1 ) {
-	if ( filename!=NULL )
-	    /* Do nothing for now */;
-	else if ( block.dirs[ret-1]!=NULL ) {
-	    filename = xmalloc(strlen(block.dirs[ret-1])+strlen(block.maps[ret-1])+3+8);
-	    strcpy(filename,block.dirs[ret-1]);
-	    strcat(filename,"/");
-	    strcat(filename,block.maps[ret-1]);
-	    strcat(filename,".cidmap");
-	}
-	if ( ret!=0 )
-	    reg = block.maps[ret-1];
-	else {
-	    reg = strrchr(filename,'/');
-	    if ( reg==NULL ) reg = filename;
-	    else ++reg;
-	    reg = xstrdup_or_null(reg);
-	}
-	pt = strchr(reg,'-');
-	if ( pt==NULL )
-	    ret = -1;
-	else {
-	    *pt = '\0';
-	    ord = pt+1;
-	    pt = strchr(ord,'-');
-	    if ( pt==NULL )
-		ret = -1;
-	    else {
-		*pt = '\0';
-		supplement = strtol(pt+1,NULL,10);
-	    }
-	}
-	if ( ret == -1 )
-	    /* No map */;
-	else if ( filename==NULL )
-	    map = FindCidMap(reg,ord,supplement,NULL);
-	else {
-	    map = LoadMapFromFile(filename,reg,ord,supplement);
-	    free(filename);
-	}
-	if ( ret!=0 && reg!=block.maps[ret-1] )
-	    free(reg);
-	/*free(filename);*/	/* Freed by loadmap */
+  if (ret != -1)
+    {
+      if (filename != NULL)
+        /* Do nothing for now */ ;
+      else if (block.dirs[ret - 1] != NULL)
+        {
+          filename =
+            xmalloc (strlen (block.dirs[ret - 1]) +
+                     strlen (block.maps[ret - 1]) + 3 + 8);
+          strcpy (filename, block.dirs[ret - 1]);
+          strcat (filename, "/");
+          strcat (filename, block.maps[ret - 1]);
+          strcat (filename, ".cidmap");
+        }
+      if (ret != 0)
+        reg = block.maps[ret - 1];
+      else
+        {
+          reg = strrchr (filename, '/');
+          if (reg == NULL)
+            reg = filename;
+          else
+            ++reg;
+          reg = xstrdup_or_null (reg);
+        }
+      pt = strchr (reg, '-');
+      if (pt == NULL)
+        ret = -1;
+      else
+        {
+          *pt = '\0';
+          ord = pt + 1;
+          pt = strchr (ord, '-');
+          if (pt == NULL)
+            ret = -1;
+          else
+            {
+              *pt = '\0';
+              supplement = strtol (pt + 1, NULL, 10);
+            }
+        }
+      if (ret == -1)
+        /* No map */ ;
+      else if (filename == NULL)
+        map = FindCidMap (reg, ord, supplement, NULL);
+      else
+        {
+          map = LoadMapFromFile (filename, reg, ord, supplement);
+          free (filename);
+        }
+      if (ret != 0 && reg != block.maps[ret - 1])
+        free (reg);
+      /*free(filename); *//* Freed by loadmap */
     }
-    for ( i=0; i<block.cur; ++i )
-	free( block.maps[i]);
-    free(block.maps);
-    free(block.dirs);
-return( map );
+  for (i = 0; i < block.cur; ++i)
+    free (block.maps[i]);
+  free (block.maps);
+  free (block.dirs);
+  return (map);
 }
 
 GTextInfo encodingtypes[] = {
-    { (uint32_t *) NC_("Encoding", "Custom"), NULL, 0, 0, (void *) "Custom", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) NC_("Encoding", "Glyph Order"), NULL, 0, 0, (void *) "Original", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { NULL, NULL, 0, 0, NULL, NULL, 1, 0, 0, 0, 0, 1, 0, 0, 0, '\0'},	/* Line */
-    { (uint32_t *) NC_("Encoding", "ISO 8859-1  (Latin1)"), NULL, 0, 0, (void *) "iso8859-1", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) NC_("Encoding", "ISO 8859-15  (Latin0)"), NULL, 0, 0, (void *) "iso8859-15", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) NC_("Encoding", "ISO 8859-2  (Latin2)"), NULL, 0, 0, (void *) "iso8859-2", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) NC_("Encoding", "ISO 8859-3  (Latin3)"), NULL, 0, 0, (void *) "iso8859-3", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) NC_("Encoding", "ISO 8859-4  (Latin4)"), NULL, 0, 0, (void *) "iso8859-4", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) NC_("Encoding", "ISO 8859-9  (Latin5)"), NULL, 0, 0, (void *) "iso8859-9", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) NC_("Encoding", "ISO 8859-10  (Latin6)"), NULL, 0, 0, (void *) "iso8859-10", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) NC_("Encoding", "ISO 8859-13  (Latin7)"), NULL, 0, 0, (void *) "iso8859-13", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) NC_("Encoding", "ISO 8859-14  (Latin8)"), NULL, 0, 0, (void *) "iso8859-14", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { NULL, NULL, 0, 0, NULL, NULL, 1, 0, 0, 0, 0, 1, 0, 0, 0, '\0'},	/* Line */
-    { (uint32_t *) NC_("Encoding", "ISO 8859-5 (Cyrillic)"), NULL, 0, 0, (void *) "iso8859-5", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) NC_("Encoding", "KOI8-R (Cyrillic)"), NULL, 0, 0, (void *) "koi8-r", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) NC_("Encoding", "ISO 8859-6 (Arabic)"), NULL, 0, 0, (void *) "iso8859-6", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) NC_("Encoding", "ISO 8859-7 (Greek)"), NULL, 0, 0, (void *) "iso8859-7", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) NC_("Encoding", "ISO 8859-8 (Hebrew)"), NULL, 0, 0, (void *) "iso8859-8", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) NC_("Encoding", "ISO 8859-11 (Thai)"), NULL, 0, 0, (void *) "iso8859-11", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { NULL, NULL, 0, 0, NULL, NULL, 1, 0, 0, 0, 0, 1, 0, 0, 0, '\0'},	/* Line */
-    { (uint32_t *) NC_("Encoding", "Macintosh Latin"), NULL, 0, 0, (void *) "mac", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) NC_("Encoding", "Windows Latin (\"ANSI\")"), NULL, 0, 0, (void *) "win", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) NC_("Encoding", "Adobe Standard"), NULL, 0, 0, (void *) "AdobeStandard", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) NC_("Encoding", "Symbol"), NULL, 0, 0, (void *) "Symbol", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) NC_("Encoding", "ΤεΧ Base (8r)"), NULL, 0, 0, (void *) "TeX-Base-Encoding", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { NULL, NULL, 0, 0, NULL, NULL, 1, 0, 0, 0, 0, 1, 0, 0, 0, '\0'},	/* Line */
-    { (uint32_t *) NC_("Encoding", "ISO 10646-1 (Unicode, BMP)"), NULL, 0, 0, (void *) "UnicodeBmp", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) NC_("Encoding", "ISO 10646-1 (Unicode, Full)"), NULL, 0, 0, (void *) "UnicodeFull", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    /*{ (uint32_t *) NC_("Encoding", "ISO 10646-? (by plane) ..."), NULL, 0, 0, (void *) em_unicodeplanes, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' }, */
-    { NULL, NULL, 0, 0, NULL, NULL, 1, 0, 0, 0, 0, 1, 0, 0, 0, '\0'},	/* Line */
-    { (uint32_t *) NC_("Encoding", "SJIS (Kanji)"), NULL, 0, 0, (void *) "sjis", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) NC_("Encoding", "JIS 208 (Kanji)"), NULL, 0, 0, (void *) "jis208", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) NC_("Encoding", "JIS 212 (Kanji)"), NULL, 0, 0, (void *) "jis212", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) NC_("Encoding", "Wansung (Korean)"), NULL, 0, 0, (void *) "wansung", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) NC_("Encoding", "KSC 5601-1987 (Korean)"), NULL, 0, 0, (void *) "ksc5601", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) NC_("Encoding", "Johab (Korean)"), NULL, 0, 0, (void *) "johab", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) NC_("Encoding", "GB 2312 (Simp. Chinese)"), NULL, 0, 0, (void *) "gb2312", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) NC_("Encoding", "EUC GB 2312 (Chinese)"), NULL, 0, 0, (void *) "gb2312pk", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-#if 0 /* defined( FONTFORGE_CONFIG_GB12345 ) -- Why was this here? It goes on the enclist */
-    { (uint32_t *) NC_("Encoding", "EUC-GB12345"), NULL, 0, 0, (void *) "EUC-GB12345", NULL, 0, 0, 0, 0, 0, 0, 1, 0},
+  {(uint32_t *) NC_ ("Encoding", "Custom"), NULL, 0, 0, (void *) "Custom",
+   NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+  {(uint32_t *) NC_ ("Encoding", "Glyph Order"), NULL, 0, 0,
+   (void *) "Original", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+  {NULL, NULL, 0, 0, NULL, NULL, 1, 0, 0, 0, 0, 1, 0, 0, 0, '\0'},      /* Line */
+  {(uint32_t *) NC_ ("Encoding", "ISO 8859-1  (Latin1)"), NULL, 0, 0,
+   (void *) "iso8859-1", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+  {(uint32_t *) NC_ ("Encoding", "ISO 8859-15  (Latin0)"), NULL, 0, 0,
+   (void *) "iso8859-15", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+  {(uint32_t *) NC_ ("Encoding", "ISO 8859-2  (Latin2)"), NULL, 0, 0,
+   (void *) "iso8859-2", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+  {(uint32_t *) NC_ ("Encoding", "ISO 8859-3  (Latin3)"), NULL, 0, 0,
+   (void *) "iso8859-3", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+  {(uint32_t *) NC_ ("Encoding", "ISO 8859-4  (Latin4)"), NULL, 0, 0,
+   (void *) "iso8859-4", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+  {(uint32_t *) NC_ ("Encoding", "ISO 8859-9  (Latin5)"), NULL, 0, 0,
+   (void *) "iso8859-9", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+  {(uint32_t *) NC_ ("Encoding", "ISO 8859-10  (Latin6)"), NULL, 0, 0,
+   (void *) "iso8859-10", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+  {(uint32_t *) NC_ ("Encoding", "ISO 8859-13  (Latin7)"), NULL, 0, 0,
+   (void *) "iso8859-13", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+  {(uint32_t *) NC_ ("Encoding", "ISO 8859-14  (Latin8)"), NULL, 0, 0,
+   (void *) "iso8859-14", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+  {NULL, NULL, 0, 0, NULL, NULL, 1, 0, 0, 0, 0, 1, 0, 0, 0, '\0'},      /* Line */
+  {(uint32_t *) NC_ ("Encoding", "ISO 8859-5 (Cyrillic)"), NULL, 0, 0,
+   (void *) "iso8859-5", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+  {(uint32_t *) NC_ ("Encoding", "KOI8-R (Cyrillic)"), NULL, 0, 0,
+   (void *) "koi8-r", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+  {(uint32_t *) NC_ ("Encoding", "ISO 8859-6 (Arabic)"), NULL, 0, 0,
+   (void *) "iso8859-6", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+  {(uint32_t *) NC_ ("Encoding", "ISO 8859-7 (Greek)"), NULL, 0, 0,
+   (void *) "iso8859-7", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+  {(uint32_t *) NC_ ("Encoding", "ISO 8859-8 (Hebrew)"), NULL, 0, 0,
+   (void *) "iso8859-8", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+  {(uint32_t *) NC_ ("Encoding", "ISO 8859-11 (Thai)"), NULL, 0, 0,
+   (void *) "iso8859-11", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+  {NULL, NULL, 0, 0, NULL, NULL, 1, 0, 0, 0, 0, 1, 0, 0, 0, '\0'},      /* Line */
+  {(uint32_t *) NC_ ("Encoding", "Macintosh Latin"), NULL, 0, 0,
+   (void *) "mac", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+  {(uint32_t *) NC_ ("Encoding", "Windows Latin (\"ANSI\")"), NULL, 0, 0,
+   (void *) "win", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+  {(uint32_t *) NC_ ("Encoding", "Adobe Standard"), NULL, 0, 0,
+   (void *) "AdobeStandard", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+  {(uint32_t *) NC_ ("Encoding", "Symbol"), NULL, 0, 0, (void *) "Symbol",
+   NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+  {(uint32_t *) NC_ ("Encoding", "ΤεΧ Base (8r)"), NULL, 0, 0,
+   (void *) "TeX-Base-Encoding", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+  {NULL, NULL, 0, 0, NULL, NULL, 1, 0, 0, 0, 0, 1, 0, 0, 0, '\0'},      /* Line */
+  {(uint32_t *) NC_ ("Encoding", "ISO 10646-1 (Unicode, BMP)"), NULL, 0, 0,
+   (void *) "UnicodeBmp", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+  {(uint32_t *) NC_ ("Encoding", "ISO 10646-1 (Unicode, Full)"), NULL, 0, 0,
+   (void *) "UnicodeFull", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+  /*{ (uint32_t *) NC_("Encoding", "ISO 10646-? (by plane) ..."), NULL, 0, 0, (void *) em_unicodeplanes, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' }, */
+  {NULL, NULL, 0, 0, NULL, NULL, 1, 0, 0, 0, 0, 1, 0, 0, 0, '\0'},      /* Line */
+  {(uint32_t *) NC_ ("Encoding", "SJIS (Kanji)"), NULL, 0, 0, (void *) "sjis",
+   NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+  {(uint32_t *) NC_ ("Encoding", "JIS 208 (Kanji)"), NULL, 0, 0,
+   (void *) "jis208", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+  {(uint32_t *) NC_ ("Encoding", "JIS 212 (Kanji)"), NULL, 0, 0,
+   (void *) "jis212", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+  {(uint32_t *) NC_ ("Encoding", "Wansung (Korean)"), NULL, 0, 0,
+   (void *) "wansung", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+  {(uint32_t *) NC_ ("Encoding", "KSC 5601-1987 (Korean)"), NULL, 0, 0,
+   (void *) "ksc5601", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+  {(uint32_t *) NC_ ("Encoding", "Johab (Korean)"), NULL, 0, 0,
+   (void *) "johab", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+  {(uint32_t *) NC_ ("Encoding", "GB 2312 (Simp. Chinese)"), NULL, 0, 0,
+   (void *) "gb2312", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+  {(uint32_t *) NC_ ("Encoding", "EUC GB 2312 (Chinese)"), NULL, 0, 0,
+   (void *) "gb2312pk", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+#if 0                           /* defined( FONTFORGE_CONFIG_GB12345 ) -- Why was this here? It goes on the enclist */
+  {(uint32_t *) NC_ ("Encoding", "EUC-GB12345"), NULL, 0, 0,
+   (void *) "EUC-GB12345", NULL, 0, 0, 0, 0, 0, 0, 1, 0},
 #endif
-    { (uint32_t *) NC_("Encoding", "Big5 (Trad. Chinese)"), NULL, 0, 0, (void *) "big5", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) NC_("Encoding", "Big5 HKSCS (Trad. Chinese)"), NULL, 0, 0, (void *) "big5hkscs", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    GTEXTINFO_EMPTY
+  {(uint32_t *) NC_ ("Encoding", "Big5 (Trad. Chinese)"), NULL, 0, 0,
+   (void *) "big5", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+  {(uint32_t *) NC_ ("Encoding", "Big5 HKSCS (Trad. Chinese)"), NULL, 0, 0,
+   (void *) "big5hkscs", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
+  GTEXTINFO_EMPTY
 };
 
-static void EncodingInit(void) {
-    int i;
-    static int done = false;
+static void
+EncodingInit (void)
+{
+  int i;
+  static int done = false;
 
-    if ( done )
-return;
-    done = true;
-    for ( i=0; i<sizeof(encodingtypes)/sizeof(encodingtypes[0])-1; ++i ) {
-	if ( !encodingtypes[i].line )
-	    encodingtypes[i].text = (uint32_t *) g_dpgettext2(NULL, "Encoding", (char *) encodingtypes[i].text);
+  if (done)
+    return;
+  done = true;
+  for (i = 0; i < sizeof (encodingtypes) / sizeof (encodingtypes[0]) - 1; ++i)
+    {
+      if (!encodingtypes[i].line)
+        encodingtypes[i].text =
+          (uint32_t *) g_dpgettext2 (NULL, "Encoding",
+                                     (char *) encodingtypes[i].text);
     }
 }
 
-GMenuItem *GetEncodingMenu(void (*func)(GWindow,GMenuItem *,GEvent *),
-	Encoding *current) {
-    GMenuItem *mi;
-    int i, cnt;
-    Encoding *item;
+GMenuItem *
+GetEncodingMenu (void (*func) (GWindow, GMenuItem *, GEvent *),
+                 Encoding *current)
+{
+  GMenuItem *mi;
+  int i, cnt;
+  Encoding *item;
 
-    EncodingInit();
+  EncodingInit ();
 
-    cnt = 0;
-    for ( item=enclist; item!=NULL ; item=item->next )
-	if ( !item->hidden )
-	    ++cnt;
-    i = cnt+1;
-    i += sizeof(encodingtypes)/sizeof(encodingtypes[0]);
-    mi = xcalloc(i+1,sizeof(GMenuItem));
-    for ( i=0; i<sizeof(encodingtypes)/sizeof(encodingtypes[0])-1; ++i ) {
-	mi[i].ti = encodingtypes[i];
-	if ( !mi[i].ti.line ) {
-	    mi[i].ti.text = utf82u_copy((char *) (mi[i].ti.text));
-	    mi[i].ti.checkable = true;
-	    if ( strcasecmp(mi[i].ti.userdata,current->enc_name)==0 ||
-		    (current->iconv_name!=NULL && strcasecmp(mi[i].ti.userdata,current->iconv_name)==0))
-		mi[i].ti.checked = true;
-	}
-	mi[i].ti.text_is_1byte = false;
-	mi[i].ti.fg = mi[i].ti.bg = COLOR_DEFAULT;
-	mi[i].invoke = func;
+  cnt = 0;
+  for (item = enclist; item != NULL; item = item->next)
+    if (!item->hidden)
+      ++cnt;
+  i = cnt + 1;
+  i += sizeof (encodingtypes) / sizeof (encodingtypes[0]);
+  mi = xcalloc (i + 1, sizeof (GMenuItem));
+  for (i = 0; i < sizeof (encodingtypes) / sizeof (encodingtypes[0]) - 1; ++i)
+    {
+      mi[i].ti = encodingtypes[i];
+      if (!mi[i].ti.line)
+        {
+          mi[i].ti.text = utf82u_copy ((char *) (mi[i].ti.text));
+          mi[i].ti.checkable = true;
+          if (strcasecmp (mi[i].ti.userdata, current->enc_name) == 0 ||
+              (current->iconv_name != NULL
+               && strcasecmp (mi[i].ti.userdata, current->iconv_name) == 0))
+            mi[i].ti.checked = true;
+        }
+      mi[i].ti.text_is_1byte = false;
+      mi[i].ti.fg = mi[i].ti.bg = COLOR_DEFAULT;
+      mi[i].invoke = func;
     }
-    if ( cnt!=0 ) {
-	mi[i].ti.fg = mi[i].ti.bg = COLOR_DEFAULT;
-	mi[i++].ti.line = true;
-	for ( item=enclist; item!=NULL ; item=item->next )
-	    if ( !item->hidden ) {
-		mi[i].ti.text = utf82u_copy(item->enc_name);
-		mi[i].ti.userdata = (void *) item->enc_name;
-		mi[i].ti.fg = mi[i].ti.bg = COLOR_DEFAULT;
-		mi[i].ti.checkable = true;
-		if ( item==current )
-		    mi[i].ti.checked = true;
-		mi[i++].invoke = func;
-	    }
+  if (cnt != 0)
+    {
+      mi[i].ti.fg = mi[i].ti.bg = COLOR_DEFAULT;
+      mi[i++].ti.line = true;
+      for (item = enclist; item != NULL; item = item->next)
+        if (!item->hidden)
+          {
+            mi[i].ti.text = utf82u_copy (item->enc_name);
+            mi[i].ti.userdata = (void *) item->enc_name;
+            mi[i].ti.fg = mi[i].ti.bg = COLOR_DEFAULT;
+            mi[i].ti.checkable = true;
+            if (item == current)
+              mi[i].ti.checked = true;
+            mi[i++].invoke = func;
+          }
     }
-return( mi );
+  return (mi);
 }
 
-GTextInfo *GetEncodingTypes(void)
+GTextInfo *
+GetEncodingTypes (void)
 {
   GTextInfo *ti;
   int i, cnt;
   Encoding *item;
 
-  EncodingInit();
+  EncodingInit ();
 
   cnt = 0;
-  for ( item=enclist; item!=NULL ; item=item->next )
-    if ( !item->hidden )
+  for (item = enclist; item != NULL; item = item->next)
+    if (!item->hidden)
       ++cnt;
-  i = cnt + sizeof(encodingtypes)/sizeof(encodingtypes[0]);
-  ti = xcalloc(i+1,sizeof(GTextInfo));
-  memcpy(ti,encodingtypes,sizeof(encodingtypes)-sizeof(encodingtypes[0]));
-  for ( i=0; i<sizeof(encodingtypes)/sizeof(encodingtypes[0])-1; ++i )
-    ti[i].text = (uint32_t *) xstrdup_or_null((char *) ti[i].text);
-  if ( cnt!=0 )
+  i = cnt + sizeof (encodingtypes) / sizeof (encodingtypes[0]);
+  ti = xcalloc (i + 1, sizeof (GTextInfo));
+  memcpy (ti, encodingtypes,
+          sizeof (encodingtypes) - sizeof (encodingtypes[0]));
+  for (i = 0; i < sizeof (encodingtypes) / sizeof (encodingtypes[0]) - 1; ++i)
+    ti[i].text = (uint32_t *) xstrdup_or_null ((char *) ti[i].text);
+  if (cnt != 0)
     {
       ti[i++].line = true;
-      for ( item=enclist; item!=NULL ; item=item->next )
-	if ( !item->hidden )
-	  {
-	    ti[i].text = x_u8_to_u32 (u8_force_valid (item->enc_name));
-	    ti[i++].userdata = (void *) item->enc_name;
-	  }
+      for (item = enclist; item != NULL; item = item->next)
+        if (!item->hidden)
+          {
+            ti[i].text = x_u8_to_u32 (u8_force_valid (item->enc_name));
+            ti[i++].userdata = (void *) item->enc_name;
+          }
     }
-  return( ti );
+  return (ti);
 }
 
-GTextInfo *EncodingTypesFindEnc(GTextInfo *encodingtypes, Encoding *enc) {
-    int i;
-    char *name;
-    Encoding *new_enc;
+GTextInfo *
+EncodingTypesFindEnc (GTextInfo * encodingtypes, Encoding *enc)
+{
+  int i;
+  char *name;
+  Encoding *new_enc;
 
-    for ( i=0; encodingtypes[i].text!=NULL || encodingtypes[i].line; ++i ) {
-	if ( encodingtypes[i].text==NULL )
-    continue;
-	name = encodingtypes[i].userdata;
-	new_enc = FindOrMakeEncoding(name);
-	if ( new_enc==NULL )
-    continue;
-	if ( enc==new_enc )
-return( &encodingtypes[i] );
+  for (i = 0; encodingtypes[i].text != NULL || encodingtypes[i].line; ++i)
+    {
+      if (encodingtypes[i].text == NULL)
+        continue;
+      name = encodingtypes[i].userdata;
+      new_enc = FindOrMakeEncoding (name);
+      if (new_enc == NULL)
+        continue;
+      if (enc == new_enc)
+        return (&encodingtypes[i]);
     }
-return( NULL );
+  return (NULL);
 }
 
 Encoding *
-ParseEncodingNameFromList(GGadget *listfield)
+ParseEncodingNameFromList (GGadget *listfield)
 {
-  const uint32_t *name = _GGadgetGetTitle(listfield);
+  const uint32_t *name = _GGadgetGetTitle (listfield);
   int32_t len;
-  GTextInfo **ti = GGadgetGetList(listfield,&len);
+  GTextInfo **ti = GGadgetGetList (listfield, &len);
   int i;
   Encoding *enc = NULL;
 
-  for ( i=0; i<len; ++i )
-    if ( ti[i]->text!=NULL )
+  for (i = 0; i < len; ++i)
+    if (ti[i]->text != NULL)
       {
-	// FIXME: Should this be a normalized comparison?
-	if ( u32_strcmp(name,ti[i]->text)==0 )
-	  {
-	    enc = FindOrMakeEncoding(ti[i]->userdata);
-	    break;
-	  }
+        // FIXME: Should this be a normalized comparison?
+        if (u32_strcmp (name, ti[i]->text) == 0)
+          {
+            enc = FindOrMakeEncoding (ti[i]->userdata);
+            break;
+          }
       }
 
-  if ( enc == NULL )
-    {
-      char *temp = u2utf8_copy(name);
-      enc = FindOrMakeEncoding(temp);
-      free(temp);
-    }
-  if ( enc==NULL )
-    ff_post_error(_("Bad Encoding"),_("Bad Encoding"));
-  return( enc );
+  if (enc == NULL)
+    enc = FindOrMakeEncoding (NULL_PASSTHRU (name, x_gc_u32_to_u8 (name)));
+  if (enc == NULL)
+    ff_post_error (_("Bad Encoding"), _("Bad Encoding"));
+  return (enc);
 }

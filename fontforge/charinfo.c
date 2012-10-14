@@ -1453,7 +1453,7 @@ return( false );
 	free(hicdt); free(vicdt);
 return( false );
     }
-    name = u2utf8_copy( nm );
+    name = NULL_PASSTHRU (nm, x_u32_to_u8 ( nm ));
     comment = GGadgetGetTitle8(GWidgetGetControl(ci->gw,CID_Comment));
     if ( comment!=NULL && *comment=='\0' ) {
 	free(comment);
@@ -2003,7 +2003,7 @@ static int CI_SName(GGadget *g, GEvent *e) {	/* Set From Name */
 	const uint32_t *ret = _GGadgetGetTitle(GWidgetGetControl(ci->gw,CID_UName));
 	int i;
 	char buf[40], *ctemp; uint32_t ubuf[2], *temp;
-	ctemp = u2utf8_copy(ret);
+	ctemp = NULL_PASSTHRU (ret, x_u32_to_u8 (ret));
 	i = UniFromName(ctemp,ui_none,&custom);
 	free(ctemp);
 	if ( i==-1 ) {

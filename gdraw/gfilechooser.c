@@ -912,40 +912,45 @@ static void GFCAddCur(GWindow gw,struct gmenuitem *mi,GEvent *e) {
 	(prefs_changed)(prefs_changed_data);
 }
 
-static void GFCRemoveBook(GWindow gw,struct gmenuitem *mi,GEvent *e) {
-    int i,bcnt;
-    char **books;
-    char *sel;
-    char *buts[2];
+static void
+GFCRemoveBook(GWindow gw,struct gmenuitem *mi,GEvent *e)
+{
+  int i, bcnt;
+  char **books;
+  char *sel;
+  char *buts[2];
 
-    if ( bookmarks==NULL || bookmarks[0]==NULL )
-return;		/* All gone */
-    for ( bcnt=0; bookmarks[bcnt]!=NULL; ++bcnt );
-    sel = xcalloc(bcnt,1);
-    books = xcalloc(bcnt+1,sizeof(char *));
-    for ( bcnt=0; bookmarks[bcnt]!=NULL; ++bcnt )
-	books[bcnt] = u2utf8_copy(bookmarks[bcnt]);
-    books[bcnt] = NULL;
-    buts[0] = _("_Remove");
-    buts[1] = _("_Cancel");
-    if ( GWidgetChoicesBM8( _("Remove bookmarks"),(const char **) books,sel,bcnt,buts,
-	    _("Remove selected bookmarks"))==0 ) {
-	for ( i=bcnt=0; bookmarks[bcnt]!=NULL; ++bcnt ) {
-	    if ( sel[bcnt] ) {
+  if ( bookmarks != NULL && bookmarks[0] != NULL )
+    {
+      for ( bcnt=0; bookmarks[bcnt]!=NULL; ++bcnt )
+	;
+      sel = xcalloc(bcnt,1);
+      books = xcalloc(bcnt+1,sizeof(char *));
+      for ( bcnt=0; bookmarks[bcnt]!=NULL; ++bcnt )
+	books[bcnt] = x_u32_to_u8 (bookmarks[bcnt]);
+      books[bcnt] = NULL;
+      buts[0] = _("_Remove");
+      buts[1] = _("_Cancel");
+      if ( GWidgetChoicesBM8( _("Remove bookmarks"),(const char **) books,sel,bcnt,buts,
+			      _("Remove selected bookmarks"))==0 )
+	{
+	  for ( i=bcnt=0; bookmarks[bcnt]!=NULL; ++bcnt )
+	    {
+	      if ( sel[bcnt] )
 		free(bookmarks[bcnt]);
-	    } else {
+	      else
 		bookmarks[i++] = bookmarks[bcnt];
 	    }
-	}
-	bookmarks[i] = NULL;
+	  bookmarks[i] = NULL;
 
-	if ( prefs_changed!=NULL )
+	  if ( prefs_changed!=NULL )
 	    (prefs_changed)(prefs_changed_data);
-    }
-    for ( i=0; books[i]!=NULL; ++i )
+	}
+      for ( i=0; books[i]!=NULL; ++i )
 	free(books[i]);
-    free(books);
-    free(sel);
+      free(books);
+      free(sel);
+    }
 }
 
 static void GFCBookmark(GWindow gw,struct gmenuitem *mi,GEvent *e) {

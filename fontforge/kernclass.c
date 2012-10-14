@@ -1214,7 +1214,7 @@ static int KCD_TextSelect(GGadget *g, GEvent *e) {
 	int i;
 
 	for ( upt=uname; *upt!='(' && *upt!=' '; ++upt );
-	name = u2utf8_copyn(uname,upt-uname);
+	name = x_u32_to_u8 (x_gc_u32_strmbndup (uname, upt - uname));
 	nlen = strlen(name);
 
 	for ( i=0; i<rows; ++i ) {

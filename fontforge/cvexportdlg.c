@@ -53,7 +53,7 @@ struct sizebits
 #define CID_Bits	1001
 
 static int
-SB_OK (GGadget *g, GEvent * e)
+SB_OK (GGadget *g, GEvent *e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
     {
@@ -82,7 +82,7 @@ SB_OK (GGadget *g, GEvent * e)
 }
 
 static int
-SB_Cancel (GGadget *g, GEvent * e)
+SB_Cancel (GGadget *g, GEvent *e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
     {
@@ -93,7 +93,7 @@ SB_Cancel (GGadget *g, GEvent * e)
 }
 
 static int
-sb_e_h (GWindow gw, GEvent * event)
+sb_e_h (GWindow gw, GEvent *event)
 {
   if (event->type == et_close)
     {
@@ -370,7 +370,7 @@ GFD_exists (GIOControl * gio)
 {
   /* The filename the user chose exists, ask user if s/he wants to overwrite */
   struct gfc_data *d = gio->userdata;
-  char *rcb[3], *temp;
+  char *rcb[3];
 
   rcb[2] = NULL;
   rcb[0] = _("_Replace");
@@ -378,17 +378,14 @@ GFD_exists (GIOControl * gio)
 
   if (gwwv_ask
       (_("File Exists"), (const char **) rcb, 0, 1,
-       _("File, %s, exists. Replace it?"), temp =
-       u2utf8_copy (u32_GFileBaseName (gio->path))) == 0)
-    {
-      DoExport (d, gio->path);
-    }
-  free (temp);
+       _("File, %s, exists. Replace it?"),
+       x_gc_u32_to_u8 (u32_GFileBaseName (gio->path))) == 0)
+    DoExport (d, gio->path);
   GFileChooserReplaceIO (d->gfc, NULL);
 }
 
 static int
-GFD_SaveOk (GGadget *g, GEvent * e)
+GFD_SaveOk (GGadget *g, GEvent *e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
     {
@@ -409,7 +406,7 @@ GFD_SaveOk (GGadget *g, GEvent * e)
 }
 
 static int
-GFD_Cancel (GGadget *g, GEvent * e)
+GFD_Cancel (GGadget *g, GEvent *e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
     {
@@ -421,7 +418,7 @@ GFD_Cancel (GGadget *g, GEvent * e)
 }
 
 static int
-GFD_Format (GGadget *g, GEvent * e)
+GFD_Format (GGadget *g, GEvent *e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_listselected)
     {
@@ -476,18 +473,16 @@ GFD_dircreatefailed (GIOControl * gio)
 {
   /* We couldn't create the directory */
   struct gfc_data *d = gio->userdata;
-  char *temp;
 
   ff_post_notice (_("Couldn't create directory"),
-                  _("Couldn't create directory: %s"), temp =
-                  u2utf8_copy (u32_GFileBaseName (gio->path)));
-  free (temp);
+                  _("Couldn't create directory: %s"),
+                  x_gc_u32_to_u8 (u32_GFileBaseName (gio->path)));
   GFileChooserReplaceIO (d->gfc, NULL);
   GFileChooserReplaceIO (d->gfc, NULL);
 }
 
 static int
-GFD_NewDir (GGadget *g, GEvent * e)
+GFD_NewDir (GGadget *g, GEvent *e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
     {
@@ -501,7 +496,7 @@ GFD_NewDir (GGadget *g, GEvent * e)
         return (true);
       if (!GFileIsAbsolute (newdir))
         {
-          char *basedir = u2utf8_copy (GFileChooserGetDir (d->gfc));
+          char *basedir = x_u32_to_u8 (GFileChooserGetDir (d->gfc));
           char *temp = GFileAppendFile (basedir, newdir, false);
           free (newdir);
           free (basedir);
@@ -518,7 +513,7 @@ GFD_NewDir (GGadget *g, GEvent * e)
 }
 
 static int
-e_h (GWindow gw, GEvent * event)
+e_h (GWindow gw, GEvent *event)
 {
   if (event->type == et_close)
     {

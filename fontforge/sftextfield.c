@@ -351,7 +351,7 @@ return( temp );
 static void *genutf8data(void *_gt,int32_t *len) {
     SFTextArea *st = _gt;
     uint32_t *temp = x_u32_strmbndup (st->li.text+st->sel_start,st->sel_end-st->sel_start);
-    char *ret = u2utf8_copy(temp);
+    char *ret = x_u32_to_u8 (temp);
     free(temp);
     *len = strlen(ret);
 return( ret );
@@ -423,7 +423,7 @@ static void SFTextAreaGrabSelection(SFTextArea *st, enum selnames sel ) {
 	temp = xzalloc((st->sel_end-st->sel_start + 2)*sizeof(uint32_t));
 	temp[0] = 0xfeff;		/* KDE expects a byte order flag */
 	u32_strncpy(temp+1,st->li.text+st->sel_start,st->sel_end-st->sel_start);
-	ctemp = u2utf8_copy(temp);
+	ctemp = x_u32_to_u8 (temp);
 	GDrawAddSelectionType(st->g.base,sel,"text/plain;charset=ISO-10646-UCS-4",temp,u32_strlen(temp),
 		sizeof(uint32_t),
 		NULL,NULL);

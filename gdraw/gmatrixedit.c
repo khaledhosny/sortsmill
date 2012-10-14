@@ -1335,7 +1335,8 @@ return;
 	buf[4] = '\0';
 	gme->data[r*gme->cols+c].u.md_str = xstrdup_or_null( buf );
     } else
-	gme->data[r*gme->cols+c].u.md_str = u2utf8_copy( mi->ti.text );
+	gme->data[r*gme->cols+c].u.md_str =
+	  NULL_PASSTHRU (mi->ti.text, x_u32_to_u8 (mi->ti.text));
 
     if ( gme->finishedit != NULL )
 	(gme->finishedit)(&gme->g,r,c,gme->wasnew);

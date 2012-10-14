@@ -243,19 +243,22 @@ static void GTextFieldPangoRefigureLines(GTextField *gt, int start_of_change) {
     GRect size;
 
     free(gt->utf8_text);
-    if ( gt->lines8==NULL ) {
+    if ( gt->lines8==NULL )
+      {
 	gt->lines8 = xmalloc(szmax(1, gt->lmax*sizeof(int32_t)));
 	gt->lines8[0] = 0;
 	gt->lines8[1] = -1;
-    }
+      }
 
-    if ( gt->password ) {
+    if ( gt->password )
+      {
 	int cnt = u32_strlen(gt->text);
 	utf8_text = xmalloc(cnt+1);
 	memset(utf8_text,'*',cnt);
 	utf8_text[cnt] = '\0';
-    } else
-	utf8_text = u2utf8_copy(gt->text);
+      }
+    else
+      utf8_text = NULL_PASSTHRU (gt->text, x_u32_to_u8 (gt->text));
     gt->utf8_text = utf8_text;
     GDrawLayoutInit(gt->g.base,utf8_text,-1,NULL);
 
@@ -482,7 +485,7 @@ genunicodedata(void *_gt,int32_t *len)
 static void *genutf8data(void *_gt,int32_t *len) {
     GTextField *gt = _gt;
     uint32_t *temp = x_u32_strmbndup (gt->text+gt->sel_start,gt->sel_end-gt->sel_start);
-    char *ret = u2utf8_copy(temp);
+    char *ret = x_u32_to_u8 (temp);
     free(temp);
     *len = strlen(ret);
 return( ret );
@@ -557,7 +560,7 @@ static void GTextFieldGrabSelection(GTextField *gt, enum selnames sel ) {
 	temp = xzalloc((gt->sel_end-gt->sel_start + 2)*sizeof(uint32_t));
 	temp[0] = 0xfeff;		/* KDE expects a byte order flag */
 	u32_strncpy(temp+1,gt->text+gt->sel_start,gt->sel_end-gt->sel_start);
-	ctemp = u2utf8_copy(temp+1);
+	ctemp = x_u32_to_u8 (temp+1);
 	ctemp2 = u2def_copy(temp+1);
 	GDrawAddSelectionType(gt->g.base,sel,"text/plain;charset=ISO-10646-UCS-4",temp,u32_strlen(temp),
 		sizeof(uint32_t),
@@ -2020,7 +2023,7 @@ return;
     gt->text = x_u32_strdup_or_null(tit);		/* tit might be oldtext, so must copy before freeing */
     free(old);
     free(gt->utf8_text);
-    gt->utf8_text = u2utf8_copy(gt->text);
+    gt->utf8_text = NULL_PASSTHRU (gt->text, x_u32_to_u8 (gt->text));
     gt->sel_start = gt->sel_end = gt->sel_base = u32_strlen(tit);
     GTextFieldRefigureLines(gt,0);
     GTextField_Show(gt,gt->sel_start);

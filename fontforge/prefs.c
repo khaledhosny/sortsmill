@@ -85,10 +85,10 @@ extern char *xuid;
 extern char *SaveTablesPref;
 static char *LastFonts[2 * RECENT_MAX];
 static int LastFontIndex = 0, LastFontsPreserving = 0;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           /*struct cvshows CVShows = { 1, 1, 1, 1, 1, 0, 1 }; *//* in charview */
-                                                                                                                                                                                                                                                                                                                                                                            /* int default_fv_font_size = 24; *//* in fontview */
-                                                                                                                                                                                                                                                                                                                                                                                              /* int default_fv_antialias = false *//* in fontview */
-                                                                                                                                                                                                                                                                                                                                                                            /* int default_fv_bbsized = false *//* in fontview */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   /*struct cvshows CVShows = { 1, 1, 1, 1, 1, 0, 1 }; *//* in charview */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            /* int default_fv_font_size = 24; *//* in fontview */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      /* int default_fv_antialias = false *//* in fontview */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            /* int default_fv_bbsized = false *//* in fontview */
 extern int default_fv_row_count;        /* in fontview */
 extern int default_fv_col_count;        /* in fontview */
 extern int default_fv_showhmetrics;     /* in fontview */
@@ -1042,12 +1042,14 @@ PrefsUI_GetPrefs (char *name, Val * val)
                 if (*((NameList **) (pf->val)) == NULL)
                   val->u.sval = xstrdup_or_null ("NULL");
                 else
-                  val->u.sval = xstrdup_or_null ((*((Encoding **) (pf->val)))->enc_name);
+                  val->u.sval =
+                    xstrdup_or_null ((*((Encoding **) (pf->val)))->enc_name);
               }
             else if (pf->type == pr_namelist)
               {
                 val->type = v_str;
-                val->u.sval = xstrdup_or_null ((*((NameList **) (pf->val)))->title);
+                val->u.sval =
+                  xstrdup_or_null ((*((NameList **) (pf->val)))->title);
               }
             else if (pf->type == pr_real || pf->type == pr_angle)
               {
@@ -1492,9 +1494,7 @@ PrefsUI_SavePrefs (int not_if_script)
   for (i = 0; i < SCRIPT_MENU_MAX && script_filenames[i] != NULL; ++i)
     {
       fprintf (p, "MenuScript:\t%s\n", script_filenames[i]);
-      fprintf (p, "MenuName:\t%s\n", temp =
-               u2utf8_copy (script_menu_names[i]));
-      free (temp);
+      ulc_fprintf (p, "MenuName:\t%llU\n", script_menu_names[i]);
     }
   if (user_font_filters != NULL)
     {
@@ -1533,7 +1533,7 @@ struct pref_data
 };
 
 static int
-Prefs_ScriptBrowse (GGadget * g, GEvent * e)
+Prefs_ScriptBrowse (GGadget *g, GEvent *e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
     {
@@ -1556,7 +1556,7 @@ Prefs_ScriptBrowse (GGadget * g, GEvent * e)
 }
 
 static int
-Prefs_BrowseFile (GGadget * g, GEvent * e)
+Prefs_BrowseFile (GGadget *g, GEvent *e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
     {
@@ -1604,7 +1604,7 @@ Pref_MappingList (int use_user)
 }
 
 void
-GListAddStr (GGadget * list, uint32_t *str, void *ud)
+GListAddStr (GGadget *list, uint32_t *str, void *ud)
 {
   int32_t i, len;
   GTextInfo **ti = GGadgetGetList (list, &len);
@@ -1625,7 +1625,7 @@ GListAddStr (GGadget * list, uint32_t *str, void *ud)
 }
 
 void
-GListReplaceStr (GGadget * list, int index, uint32_t *str, void *ud)
+GListReplaceStr (GGadget *list, int index, uint32_t *str, void *ud)
 {
   int32_t i, len;
   GTextInfo **ti = GGadgetGetList (list, &len);
@@ -1660,7 +1660,7 @@ struct setdata
 };
 
 static int
-set_e_h (GWindow gw, GEvent * event)
+set_e_h (GWindow gw, GEvent *event)
 {
   struct setdata *sd = GDrawGetUserData (gw);
   int i;
@@ -1755,8 +1755,8 @@ set_e_h (GWindow gw, GEvent * event)
 }
 
 static uint32_t *
-AskSetting (struct macsettingname *temp, GGadget * list, int index,
-            GGadget * flist)
+AskSetting (struct macsettingname *temp, GGadget *list, int index,
+            GGadget *flist)
 {
   GRect pos;
   GWindow gw;
@@ -1901,7 +1901,7 @@ AskSetting (struct macsettingname *temp, GGadget * list, int index,
 }
 
 static void
-ChangeSetting (GGadget * list, int index, GGadget * flist)
+ChangeSetting (GGadget *list, int index, GGadget *flist)
 {
   struct macsettingname temp;
   int32_t len;
@@ -1918,7 +1918,7 @@ ChangeSetting (GGadget * list, int index, GGadget * flist)
 }
 
 static int
-Pref_NewMapping (GGadget * g, GEvent * e)
+Pref_NewMapping (GGadget *g, GEvent *e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
     {
@@ -1940,7 +1940,7 @@ Pref_NewMapping (GGadget * g, GEvent * e)
 }
 
 static int
-Pref_DelMapping (GGadget * g, GEvent * e)
+Pref_DelMapping (GGadget *g, GEvent *e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
     {
@@ -1953,7 +1953,7 @@ Pref_DelMapping (GGadget * g, GEvent * e)
 }
 
 static int
-Pref_EditMapping (GGadget * g, GEvent * e)
+Pref_EditMapping (GGadget *g, GEvent *e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
     {
@@ -1966,7 +1966,7 @@ Pref_EditMapping (GGadget * g, GEvent * e)
 }
 
 static int
-Pref_MappingSel (GGadget * g, GEvent * e)
+Pref_MappingSel (GGadget *g, GEvent *e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_listselected)
     {
@@ -1998,7 +1998,7 @@ Pref_MappingSel (GGadget * g, GEvent * e)
 }
 
 static int
-Pref_DefaultMapping (GGadget * g, GEvent * e)
+Pref_DefaultMapping (GGadget *g, GEvent *e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
     {
@@ -2015,7 +2015,7 @@ Pref_DefaultMapping (GGadget * g, GEvent * e)
 }
 
 static int
-Prefs_Ok (GGadget * g, GEvent * e)
+Prefs_Ok (GGadget *g, GEvent *e)
 {
   int i, j, mi;
   int err = 0, enc;
@@ -2161,7 +2161,8 @@ Prefs_Ok (GGadget * g, GEvent * e)
                                                                    + i));
                   if (ti != NULL)
                     {
-                      char *name = u2utf8_copy (ti->text);
+                      char *name =
+                        NULL_PASSTHRU (ti->text, x_u32_to_u8 (ti->text));
                       nl = NameListByName (name);
                       free (name);
                       if (nl != NULL && nl->uses_unicode
@@ -2186,7 +2187,8 @@ Prefs_Ok (GGadget * g, GEvent * e)
                     free (*((char **) (pl->val)));
                     *((char **) (pl->val)) = NULL;
                     if (ret != NULL && *ret != '\0')
-                      *((char **) (pl->val)) = x_u32_to_u8 (u32_force_valid (ret));
+                      *((char **) (pl->val)) =
+                        x_u32_to_u8 (u32_force_valid (ret));
                   }
                 else
                   {
@@ -2229,7 +2231,9 @@ Prefs_Ok (GGadget * g, GEvent * e)
         }
       for (i = 0; i < len; ++i)
         {
-          char *utf8 = XDIE_ON_NULL (u2utf8_copy (list[i]->text));
+          char *utf8 =
+            XDIE_ON_NULL (NULL_PASSTHRU
+                          (list[i]->text, x_u32_to_u8 (list[i]->text)));
           char *str = xstr_iconv (utf8, MY_ICONV_UTF8_STRING,
                                   MY_ICONV_MAC_STRING);
           ParseMacMapping (str, &user_macfeat_otftag[i]);
@@ -2270,7 +2274,7 @@ Prefs_Ok (GGadget * g, GEvent * e)
 }
 
 static int
-Prefs_Cancel (GGadget * g, GEvent * e)
+Prefs_Cancel (GGadget *g, GEvent *e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
     {
@@ -2284,7 +2288,7 @@ Prefs_Cancel (GGadget * g, GEvent * e)
 }
 
 static int
-e_h (GWindow gw, GEvent * event)
+e_h (GWindow gw, GEvent *event)
 {
   if (event->type == et_close)
     {
@@ -2422,7 +2426,7 @@ DoPrefs (void)
   msgcd[sgc].gd.pos.y =
     msgcd[sgc - 1].gd.pos.y + msgcd[sgc - 1].gd.pos.height + 10;
   msgcd[sgc].gd.flags = gg_visible | gg_enabled;
-  mslabels[sgc].text = (uint32_t *) C_("MacMap", "_New...");
+  mslabels[sgc].text = (uint32_t *) C_ ("MacMap", "_New...");
   mslabels[sgc].text_is_1byte = true;
   mslabels[sgc].text_in_resource = true;
   msgcd[sgc].gd.label = &mslabels[sgc];
@@ -2469,7 +2473,7 @@ DoPrefs (void)
     GIntGetResource (_NUM_ScaleFactor);
   msgcd[sgc].gd.pos.y = msgcd[sgc - 1].gd.pos.y;
   msgcd[sgc].gd.flags = gg_visible | gg_enabled;
-  mslabels[sgc].text = (uint32_t *) C_("MacMapping", "Default");
+  mslabels[sgc].text = (uint32_t *) C_ ("MacMapping", "Default");
   mslabels[sgc].text_is_1byte = true;
   mslabels[sgc].text_in_resource = true;
   msgcd[sgc].gd.label = &mslabels[sgc];
@@ -2541,8 +2545,7 @@ DoPrefs (void)
       sgcd[sgc].gd.pos.y = y2;
       sgcd[sgc].gd.flags = gg_visible | gg_enabled;
       slabel[sgc].text =
-        (uint32_t *) (script_filenames[i] ==
-                       NULL ? "" : script_filenames[i]);
+        (uint32_t *) (script_filenames[i] == NULL ? "" : script_filenames[i]);
       slabel[sgc].text_is_1byte = true;
       sgcd[sgc].gd.label = &slabel[sgc];
       sgcd[sgc].gd.cid = i + CID_ScriptMFileBase;
@@ -2779,7 +2782,7 @@ DoPrefs (void)
               plabel[gc].text = (uint32_t *) xstrdup_or_null (buf);
               pgcd[gc++].creator = GTextFieldCreate;
               hvarray[si++] = &pgcd[gc - 1];
-              plabel[gc].text = (uint32_t *) _ ("°");
+              plabel[gc].text = (uint32_t *) _("°");
               plabel[gc].text_is_1byte = true;
               pgcd[gc].gd.label = &plabel[gc];
               pgcd[gc].gd.pos.x =
@@ -2805,18 +2808,24 @@ DoPrefs (void)
  * extra blank line, not used in English, into which your text may extend if
  * needed.
  */
-            NC_("Prefs_App", "Normally FontForge will find applications by searching for"),
-            NC_("Prefs_App", "them in your PATH environment variable, if you want"),
-            NC_("Prefs_App", "to alter that behavior you may set an environment"),
-            NC_("Prefs_App", "variable giving the full path spec of the application."),
-            NC_("Prefs_App", "FontForge recognizes BROWSER, MF and AUTOTRACE."),
-            NC_("Prefs_App", " "),  /* A blank line */
+            NC_ ("Prefs_App",
+                 "Normally FontForge will find applications by searching for"),
+            NC_ ("Prefs_App",
+                 "them in your PATH environment variable, if you want"),
+            NC_ ("Prefs_App",
+                 "to alter that behavior you may set an environment"),
+            NC_ ("Prefs_App",
+                 "variable giving the full path spec of the application."),
+            NC_ ("Prefs_App",
+                 "FontForge recognizes BROWSER, MF and AUTOTRACE."),
+            NC_ ("Prefs_App", " "),     /* A blank line */
             NULL
           };
           y += 8;
           for (i = 0; text[i] != 0; ++i)
             {
-              plabel[gc].text = (uint32_t *) g_dpgettext2 (NULL, "Prefs_App", text[i]);
+              plabel[gc].text =
+                (uint32_t *) g_dpgettext2 (NULL, "Prefs_App", text[i]);
               plabel[gc].text_is_1byte = true;
               pgcd[gc].gd.label = &plabel[gc];
               pgcd[gc].gd.pos.x = 8;
@@ -3128,7 +3137,7 @@ struct prefs_list pointer_dialog_list[] = {
 };
 
 static int
-PrefsSubSet_Ok (GGadget * g, GEvent * e)
+PrefsSubSet_Ok (GGadget *g, GEvent *e)
 {
   GWindow gw = GGadgetGetWindow (g);
   struct pref_data *p = GDrawGetUserData (GGadgetGetWindow (g));
@@ -3189,7 +3198,7 @@ PrefsSubSet_Ok (GGadget * g, GEvent * e)
                                                                            i));
             if (ti != NULL)
               {
-                char *name = u2utf8_copy (ti->text);
+                char *name = NULL_PASSTHRU (ti->text, x_u32_to_u8 (ti->text));
                 nl = NameListByName (name);
                 free (name);
                 if (nl != NULL && nl->uses_unicode && !allow_utf8_glyphnames)
@@ -3310,7 +3319,7 @@ PrefsSubSetDlg (CharView * cv, char *windowTitle, struct prefs_list *plist)
       plabel[gc].text_is_1byte = true;
       pgcd[gc].gd.label = &plabel[gc];
       pgcd[gc].gd.mnemonic = '\0';
-      pgcd[gc].gd.popup_msg = (uint32_t *) 0;  //_(pl->popup);
+      pgcd[gc].gd.popup_msg = (uint32_t *) 0;   //_(pl->popup);
       pgcd[gc].gd.pos.x = 8;
       pgcd[gc].gd.pos.y = y + 6;
       pgcd[gc].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
@@ -3320,7 +3329,7 @@ PrefsSubSetDlg (CharView * cv, char *windowTitle, struct prefs_list *plist)
       plabel[gc].text_is_1byte = true;
       pgcd[gc].gd.label = &plabel[gc];
       pgcd[gc].gd.mnemonic = '\0';
-      pgcd[gc].gd.popup_msg = (uint32_t *) 0;  //_(pl->popup);
+      pgcd[gc].gd.popup_msg = (uint32_t *) 0;   //_(pl->popup);
       pgcd[gc].gd.pos.x = 110;
       pgcd[gc].gd.pos.y = y;
       pgcd[gc].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
@@ -3482,7 +3491,7 @@ PrefsSubSetDlg (CharView * cv, char *windowTitle, struct prefs_list *plist)
           plabel[gc].text = (uint32_t *) xstrdup_or_null (buf);
           pgcd[gc++].creator = GTextFieldCreate;
           hvarray[si++] = &pgcd[gc - 1];
-          plabel[gc].text = (uint32_t *) _ ("°");
+          plabel[gc].text = (uint32_t *) _("°");
           plabel[gc].text_is_1byte = true;
           pgcd[gc].gd.label = &plabel[gc];
           pgcd[gc].gd.pos.x =

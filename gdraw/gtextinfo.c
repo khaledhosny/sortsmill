@@ -646,30 +646,32 @@ return;
     free(ti);
 }
 
-int GTextInfoCompare(GTextInfo *ti1, GTextInfo *ti2) {
-    GTextInfo2 *_ti1 = (GTextInfo2 *) ti1, *_ti2 = (GTextInfo2 *) ti2;
+int GTextInfoCompare(GTextInfo *ti1, GTextInfo *ti2)
+{
+  GTextInfo2 *_ti1 = (GTextInfo2 *) ti1, *_ti2 = (GTextInfo2 *) ti2;
 
-    if ( _ti1->sort_me_first_in_list != _ti2->sort_me_first_in_list ) {
-	if ( _ti1->sort_me_first_in_list )
-return( -1 );
-	else
-return( 1 );
+  if ( _ti1->sort_me_first_in_list != _ti2->sort_me_first_in_list )
+    {
+      if ( _ti1->sort_me_first_in_list )
+	return( -1 );
+      else
+	return( 1 );
     }
 
-    if ( ti1->text == NULL && ti2->text==NULL )
-return( 0 );
-    else if ( ti1->text==NULL )
-return( -1 );
-    else if ( ti2->text==NULL )
-return( 1 );
-    else {
-	char *t1, *t2;
-	int ret;
-	t1 = u2utf8_copy(ti1->text);
-	t2 = u2utf8_copy(ti2->text);
-	ret = strcoll(t1,t2);
-	free(t1); free(t2);
-return( ret );
+  if ( ti1->text == NULL && ti2->text==NULL )
+    return( 0 );
+  else if ( ti1->text==NULL )
+    return( -1 );
+  else if ( ti2->text==NULL )
+    return( 1 );
+  else
+    {
+      int ret;
+      int error = u32_normcoll (ti1->text, u32_strlen (ti1->text),
+				ti2->text, u32_strlen (ti2->text),
+				UNINORM_NFC, &ret);
+      ret = (error == 0) ? ret : 0;
+      return( ret );
     }
 }
 

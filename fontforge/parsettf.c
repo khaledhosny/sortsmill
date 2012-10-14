@@ -486,7 +486,7 @@ return( NULL );
 	} else {
 	    str = x_u8_to_u32 ("");
 	}
-	ret = u2utf8_copy(str);
+	ret = NULL_PASSTHRU (str, x_u32_to_u8 (str));
 	free(str);
     }
     fseek(ttf,pos,SEEK_SET);

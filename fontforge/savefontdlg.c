@@ -315,7 +315,7 @@ ParseBitmapSizes (GGadget *g, char *msg, int *err)
 }
 
 static int
-OPT_PSHints (GGadget *g, GEvent * e)
+OPT_PSHints (GGadget *g, GEvent *e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_radiochanged)
     {
@@ -343,7 +343,7 @@ OPT_PSHints (GGadget *g, GEvent * e)
 }
 
 static int
-OPT_Applemode (GGadget *g, GEvent * e)
+OPT_Applemode (GGadget *g, GEvent *e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_radiochanged)
     {
@@ -355,7 +355,7 @@ OPT_Applemode (GGadget *g, GEvent * e)
 }
 
 static int
-OPT_OldKern (GGadget *g, GEvent * e)
+OPT_OldKern (GGadget *g, GEvent *e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_radiochanged)
     {
@@ -367,7 +367,7 @@ OPT_OldKern (GGadget *g, GEvent * e)
 }
 
 static int
-sod_e_h (GWindow gw, GEvent * event)
+sod_e_h (GWindow gw, GEvent *event)
 {
   if (event->type == et_close)
     {
@@ -1187,7 +1187,7 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
 }
 
 static int
-br_e_h (GWindow gw, GEvent * event)
+br_e_h (GWindow gw, GEvent *event)
 {
   if (event->type == et_close)
     {
@@ -1595,7 +1595,7 @@ OFLibUploadGather (struct gfc_data *d, uint32_t *path)
 
   memset (&oflib, 0, sizeof (oflib));
   oflib.sf = d->sf;
-  oflib.pathspec = u2utf8_copy (path);
+  oflib.pathspec = NULL_PASSTHRU (path, x_u32_to_u8 (path));
   oflib.username =
     GGadgetGetTitle8 (GWidgetGetControl (d->gw, CID_OFLibUsername));
   oflib.password =
@@ -1679,7 +1679,7 @@ DoSave (struct gfc_data *d, uint32_t *path)
   char **former;
   NameList *rename_to;
   GTextInfo *ti = GGadgetGetListItemSelected (d->rename);
-  char *nlname = u2utf8_copy (ti->text);
+  char *nlname = NULL_PASSTHRU (ti->text, x_u32_to_u8 (ti->text));
   extern NameList *force_names_when_saving;
   int notdef_pos = SFFindNotdef (d->sf, -1);
   int layer = ly_fore;
@@ -2103,7 +2103,6 @@ GFD_exists (GIOControl * gio)
 {
   /* The filename the user chose exists, ask user if s/he wants to overwrite */
   struct gfc_data *d = gio->userdata;
-  char *temp;
   const char *rcb[3];
 
   rcb[2] = NULL;
@@ -2111,12 +2110,9 @@ GFD_exists (GIOControl * gio)
   rcb[1] = _("_Cancel");
 
   if (gwwv_ask
-      (_("File Exists"), rcb, 0, 1, _("File, %s, exists. Replace it?"), temp =
-       u2utf8_copy (u32_GFileBaseName (gio->path))) == 0)
-    {
-      DoSave (d, gio->path);
-    }
-  free (temp);
+      (_("File Exists"), rcb, 0, 1, _("File, %s, exists. Replace it?"),
+       x_gc_u32_to_u8 (u32_GFileBaseName (gio->path))) == 0)
+    DoSave (d, gio->path);
   GFileChooserReplaceIO (d->gfc, NULL);
 }
 
@@ -2180,7 +2176,7 @@ _GFD_SaveOk (struct gfc_data *d)
 }
 
 static int
-GFD_SaveOk (GGadget *g, GEvent * e)
+GFD_SaveOk (GGadget *g, GEvent *e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
     {
@@ -2191,7 +2187,7 @@ GFD_SaveOk (GGadget *g, GEvent * e)
 }
 
 static int
-GFD_Cancel (GGadget *g, GEvent * e)
+GFD_Cancel (GGadget *g, GEvent *e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
     {
@@ -2231,7 +2227,7 @@ GFD_FigureWhich (struct gfc_data *d)
 }
 
 static int
-GFD_Options (GGadget *g, GEvent * e)
+GFD_Options (GGadget *g, GEvent *e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
     {
@@ -2261,17 +2257,15 @@ GFD_dircreatefailed (GIOControl * gio)
 {
   /* We couldn't create the directory */
   struct gfc_data *d = gio->userdata;
-  char *temp;
 
   ff_post_notice (_("Couldn't create directory"),
-                  _("Couldn't create directory: %s"), temp =
-                  u2utf8_copy (u32_GFileBaseName (gio->path)));
-  free (temp);
+                  _("Couldn't create directory: %s"),
+                  x_gc_u32_to_u8 (u32_GFileBaseName (gio->path)));
   GFileChooserReplaceIO (d->gfc, NULL);
 }
 
 static int
-GFD_NewDir (GGadget *g, GEvent * e)
+GFD_NewDir (GGadget *g, GEvent *e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
     {
@@ -2285,7 +2279,7 @@ GFD_NewDir (GGadget *g, GEvent * e)
         return (true);
       if (!GFileIsAbsolute (newdir))
         {
-          char *olddir = u2utf8_copy (GFileChooserGetDir (d->gfc));
+          char *olddir = x_u32_to_u8 (GFileChooserGetDir (d->gfc));
           char *temp = GFileAppendFile (olddir, newdir, false);
           free (newdir);
           free (olddir);
@@ -2336,7 +2330,7 @@ BitmapName (struct gfc_data *d)
 }
 
 static int
-GFD_Format (GGadget *g, GEvent * e)
+GFD_Format (GGadget *g, GEvent *e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_listselected)
     {
@@ -2450,7 +2444,7 @@ GFD_Format (GGadget *g, GEvent * e)
 }
 
 static int
-GFD_BitmapFormat (GGadget *g, GEvent * e)
+GFD_BitmapFormat (GGadget *g, GEvent *e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_listselected)
     {
@@ -2473,7 +2467,7 @@ GFD_BitmapFormat (GGadget *g, GEvent * e)
 }
 
 static int
-GFD_ToggleFontLog (GGadget *g, GEvent * e)
+GFD_ToggleFontLog (GGadget *g, GEvent *e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_radiochanged)
     {
@@ -2498,7 +2492,7 @@ GFD_ToggleFontLog (GGadget *g, GEvent * e)
 }
 
 static int
-GFD_ToggleOFLib (GGadget *g, GEvent * e)
+GFD_ToggleOFLib (GGadget *g, GEvent *e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_radiochanged)
     {
@@ -2530,7 +2524,7 @@ GFD_ToggleOFLib (GGadget *g, GEvent * e)
 }
 
 static int
-GFD_OFLibHelp (GGadget *g, GEvent * e)
+GFD_OFLibHelp (GGadget *g, GEvent *e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
     {
@@ -2540,7 +2534,7 @@ GFD_OFLibHelp (GGadget *g, GEvent * e)
 }
 
 static int
-GFD_OFLibRegister (GGadget *g, GEvent * e)
+GFD_OFLibRegister (GGadget *g, GEvent *e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
     {
@@ -2550,7 +2544,7 @@ GFD_OFLibRegister (GGadget *g, GEvent * e)
 }
 
 static int
-GFD_OFLibPreviewBrowse (GGadget *g, GEvent * e)
+GFD_OFLibPreviewBrowse (GGadget *g, GEvent *e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
     {
@@ -2580,7 +2574,7 @@ GFD_OFLibPreviewBrowse (GGadget *g, GEvent * e)
 }
 
 static int
-e_h (GWindow gw, GEvent * event)
+e_h (GWindow gw, GEvent *event)
 {
   if (event->type == et_close)
     {
@@ -3893,8 +3887,8 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
           if (old == bf_none)
             gcd[k].gd.flags &= ~gg_enabled;
           temp =
-            familysfs[fc][j]->cidmaster ? familysfs[fc][j]->
-            cidmaster : familysfs[fc][j];
+            familysfs[fc][j]->
+            cidmaster ? familysfs[fc][j]->cidmaster : familysfs[fc][j];
           label[k].text = BitmapList (temp);
           gcd[k].gd.label = &label[k];
           gcd[k].gd.cid = CID_Family + i * 10 + 1;
