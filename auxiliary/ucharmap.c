@@ -79,12 +79,6 @@ u2def_copy (const uint32_t *ufrom)
 }
 
 char *
-def2utf8_copy (const char *from)
-{
-  return (char *) NULL_PASSTHRU (from, x_u8_strconv_from_locale (from));
-}
-
-char *
 utf82def_copy (const char *ufrom)
 {
   return NULL_PASSTHRU (ufrom,

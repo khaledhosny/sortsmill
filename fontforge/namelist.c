@@ -554,10 +554,14 @@ return( NULL );
 
     nl = (NameList *) xzalloc(sizeof (NameList));
     pt = strrchr(filename,'/');
-    if ( pt==NULL ) pt = filename; else ++pt;
-    nl->title = def2utf8_copy(pt);
+    if ( pt==NULL )
+      pt = filename;
+    else
+      ++pt;
+    nl->title = x_u8_strconv_from_locale (pt);
     pt = strrchr(nl->title,'.');
-    if ( pt!=NULL ) *pt = '\0';
+    if ( pt!=NULL )
+      *pt = '\0';
 
     while ( fgets(buffer,sizeof(buffer),file)!=NULL ) {
 	if ( buffer[0]=='#' || buffer[0]=='\n' || buffer[0]=='\r' )

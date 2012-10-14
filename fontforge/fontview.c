@@ -561,11 +561,11 @@ int _FVMenuSaveAs(FontView *fv)
   GTextInfo label;
 
   if ( fv->b.cidmaster!=NULL && fv->b.cidmaster->filename!=NULL )
-    temp=def2utf8_copy(fv->b.cidmaster->filename);
+    temp = x_u8_strconv_from_locale (fv->b.cidmaster->filename);
   else if ( fv->b.sf->mm!=NULL && fv->b.sf->mm->normal->filename!=NULL )
-    temp=def2utf8_copy(fv->b.sf->mm->normal->filename);
+    temp = x_u8_strconv_from_locale (fv->b.sf->mm->normal->filename);
   else if ( fv->b.sf->filename!=NULL )
-    temp=def2utf8_copy(fv->b.sf->filename);
+    temp = x_u8_strconv_from_locale (fv->b.sf->filename);
   else
     {
       SplineFont *sf = fv->b.cidmaster?fv->b.cidmaster:
@@ -916,7 +916,7 @@ char *GetPostScriptFontName(char *dir, int mult) {
     char *u_dir;
     char *temp;
 
-    u_dir = def2utf8_copy(dir);
+    u_dir = NULL_PASSTHRU (dir, x_u8_strconv_from_locale (dir));
     ret = FVOpenFont(_("Open Font"), u_dir, mult);
     temp = u2def_copy(ret);
     free(ret);
@@ -4697,28 +4697,32 @@ static void FVMenuRemoveEncoding(GWindow UNUSED(gw), struct gmenuitem *UNUSED(mi
     RemoveEncoding();
 }
 
-static void FVMenuMakeNamelist(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    FontView *fv = (FontView *) GDrawGetUserData(gw);
-    char buffer[1025];
-    char *filename, *temp;
-    FILE *file;
+static void
+FVMenuMakeNamelist(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e))
+{
+  FontView *fv = (FontView *) GDrawGetUserData(gw);
+  char *filename;
+  FILE *file;
 
-    snprintf(buffer, sizeof(buffer),"%s/%s.nam", getUserDataDir(), fv->b.sf->fontname );
-    temp = def2utf8_copy(buffer);
-    filename = gwwv_save_filename(_("Make Namelist"), temp,"*.nam");
-    free(temp);
-    if ( filename==NULL )
-return;
-    temp = utf82def_copy(filename);
-    file = fopen(temp,"w");
-    free(temp);
-    if ( file==NULL ) {
-	ff_post_error(_("Namelist creation failed"),_("Could not write %s"), filename);
-	free(filename);
-return;
+  char buffer[strlen (getUserDataDir ()) + strlen (fv->b.sf->fontname) + 20];
+  sprintf (buffer, "%s/%s.nam", getUserDataDir(), fv->b.sf->fontname);
+
+  filename =
+    gwwv_save_filename(_("Make Namelist"),
+		       x_gc_u8_strconv_from_locale (buffer),
+		       "*.nam");
+  if ( filename==NULL )
+    return;
+  file = fopen (x_gc_u8_strconv_from_locale (filename), "w");
+  if ( file==NULL )
+    {
+      ff_post_error(_("Namelist creation failed"),
+		    _("Could not write %s"), filename);
+      free(filename);
+      return;
     }
-    FVB_MakeNamelist((FontViewBase *) fv, file);
-    fclose(file);
+  FVB_MakeNamelist((FontViewBase *) fv, file);
+  fclose(file);
 }
 
 static void FVMenuLoadNamelist(GWindow UNUSED(gw), struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {

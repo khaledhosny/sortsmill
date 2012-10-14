@@ -55,7 +55,6 @@ VISIBLE extern char *utf8_idpb (char *utf8_text, uint32_t ch);
 VISIBLE extern char *latin1_2_utf8_strcpy (char *utf8buf, const char *lbuf);
 VISIBLE extern char *latin1_2_utf8_copy (const char *lbuf);
 VISIBLE extern char *utf8_2_latin1_copy (const char *utf8buf);
-VISIBLE extern char *def2utf8_copy (const char *from);
 VISIBLE extern char *utf82def_copy (const char *ufrom);
 VISIBLE extern char *utf8_strchr (const char *utf8_str, int search_char);
 

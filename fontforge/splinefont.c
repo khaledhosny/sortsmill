@@ -920,7 +920,7 @@ return(xstrdup_or_null(tmpfilename));			/* The filename does not exist */
 /*  by LoadSplineFont (which does) and by RevertFile (which knows what it's doing) */
 SplineFont *_ReadSplineFont(FILE *file,char *filename,enum openflags openflags) {
     SplineFont *sf;
-    char ubuf[250], *temp;
+    char ubuf[250];
     int fromsfd = false;
     int i;
     char *pt, *ext2, *strippedname, *oldstrippedname, *tmpfile=NULL, *paren=NULL, *fullname=filename, *rparen;
@@ -1017,10 +1017,9 @@ return( NULL );
     strcpy(ubuf,_("Loading font from "));
     len = strlen(ubuf);
     if ( !wasurl || i==-1 )	/* If it wasn't compressed, or it wasn't an url, then the fullname is reasonable, else use the original name */
-	strncat(ubuf,temp = def2utf8_copy(GFileBaseName(fullname)),100);
+      strncat(ubuf, x_gc_u8_strconv_from_locale (GFileBaseName(fullname)), 100);
     else
-	strncat(ubuf,temp = def2utf8_copy(GFileBaseName(filename)),100);
-    free(temp);
+      strncat(ubuf, x_gc_u8_strconv_from_locale (GFileBaseName(filename)), 100);
     ubuf[100+len] = '\0';
     ff_progress_start_indicator(FontViewFirst()==NULL?0:10,_("Loading..."),ubuf,_("Reading Glyphs"),0,1);
     ff_progress_enable_stop(0);

@@ -737,7 +737,7 @@ return( 1 );
     if ( oldbitmapstate==bf_bdf )
 	++filecnt;
 #endif
-    path = def2utf8_copy(newname);
+    path = x_u8_strconv_from_locale (newname);
     ff_progress_start_indicator(10,_("Saving font"),
 	    _("Saving Multiple PostScript Fonts"),
 	    path,256,(max+1)*filecnt );
@@ -781,7 +781,6 @@ return( false );
 
 int _DoSave(SplineFont *sf,char *newname,int32_t *sizes,int res,
 	EncMap *map, char *subfontdefinition,int layer) {
-    char *path;
     int err=false;
     int iscid = oldformatstate==ff_cid || oldformatstate==ff_cffcid ||
 	    oldformatstate==ff_otfcid || oldformatstate==ff_otfciddfont;
@@ -801,19 +800,17 @@ return( WriteMultiplePSFont(sf,newname,sizes,res,subfontdefinition,map,layer));
     if ( oldformatstate<=ff_cffcid && oldbitmapstate==bf_otb )
 	flags = old_psotb_flags;
 
-    path = def2utf8_copy(newname);
     ff_progress_start_indicator(10,_("Saving font"),
-		oldformatstate==ff_ttf || oldformatstate==ff_ttfsym ||
-		     oldformatstate==ff_ttfmacbin ?_("Saving TrueType Font") :
-		 oldformatstate==ff_otf || oldformatstate==ff_otfdfont ?_("Saving OpenType Font"):
-		 oldformatstate==ff_cid || oldformatstate==ff_cffcid ||
-		  oldformatstate==ff_otfcid || oldformatstate==ff_otfciddfont ?_("Saving CID keyed font") :
-		  oldformatstate==ff_mma || oldformatstate==ff_mmb ?_("Saving multi-master font") :
-		  oldformatstate==ff_svg ?_("Saving SVG font") :
-		  oldformatstate==ff_ufo ?_("Saving Unified Font Object") :
-		 _("Saving PostScript Font"),
-	    path,sf->glyphcnt,1);
-    free(path);
+				oldformatstate==ff_ttf || oldformatstate==ff_ttfsym ||
+				oldformatstate==ff_ttfmacbin ?_("Saving TrueType Font") :
+				oldformatstate==ff_otf || oldformatstate==ff_otfdfont ?_("Saving OpenType Font"):
+				oldformatstate==ff_cid || oldformatstate==ff_cffcid ||
+				oldformatstate==ff_otfcid || oldformatstate==ff_otfciddfont ?_("Saving CID keyed font") :
+				oldformatstate==ff_mma || oldformatstate==ff_mmb ?_("Saving multi-master font") :
+				oldformatstate==ff_svg ?_("Saving SVG font") :
+				oldformatstate==ff_ufo ?_("Saving Unified Font Object") :
+				_("Saving PostScript Font"),
+				x_gc_u8_strconv_from_locale (newname), sf->glyphcnt, 1);
     if ( oldformatstate!=ff_none ) {
 	int oerr = 0;
 	int bmap = oldbitmapstate;

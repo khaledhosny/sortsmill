@@ -267,7 +267,7 @@ static void unexpected(Context *c,enum token_type got) {
 
 void ScriptError( Context *c, const char *msg ) {
     char *t1 = script2utf8_copy(msg);
-    char *ufile = def2utf8_copy(c->filename);
+    char *ufile = NULL_PASSTHRU (c->filename, x_u8_strconv_from_locale (c->filename));
 
     /* All of fontforge's internal errors are in ASCII where there is */
     /*  no difference between latin1 and utf8. User errors are a different */
@@ -289,7 +289,7 @@ void ScriptError( Context *c, const char *msg ) {
 void ScriptErrorString( Context *c, const char *msg, const char *name) {
     char *t1 = script2utf8_copy(msg);
     char *t2 = script2utf8_copy(name);
-    char *ufile = def2utf8_copy(c->filename);
+    char *ufile = NULL_PASSTHRU (c->filename, x_u8_strconv_from_locale (c->filename));
 
     if ( verbose>0 )
 	fflush(stdout);
@@ -305,26 +305,26 @@ void ScriptErrorString( Context *c, const char *msg, const char *name) {
 }
 
 void ScriptErrorF( Context *c, const char *format, ... ) {
-    char *ufile = def2utf8_copy(c->filename);
-    /* All string arguments here assumed to be utf8 */
-    char errbuf[400];
-    va_list ap;
+  char *ufile = NULL_PASSTHRU (c->filename, x_u8_strconv_from_locale (c->filename));
+  /* All string arguments here assumed to be utf8 */
+  char errbuf[400];
+  va_list ap;
 
-    va_start(ap,format);
-    vsnprintf(errbuf,sizeof(errbuf),format,ap);
-    va_end(ap);
+  va_start(ap,format);
+  vsnprintf(errbuf,sizeof(errbuf),format,ap);
+  va_end(ap);
     
-    if ( verbose>0 )
-	fflush(stdout);
-    if ( c->lineno!=0 )
-	LogError( _("%s line: %d %s\n"), ufile, c->lineno, errbuf );
-    else
-	LogError( "%s: %s\n", ufile, errbuf );
-    if ( !no_windowing_ui ) {
-	ff_post_error(NULL,"%s: %d  %s",ufile, c->lineno, errbuf );
-    }
-    free(ufile);
-    traceback(c);
+  if ( verbose>0 )
+    fflush(stdout);
+  if ( c->lineno!=0 )
+    LogError( _("%s line: %d %s\n"), ufile, c->lineno, errbuf );
+  else
+    LogError( "%s: %s\n", ufile, errbuf );
+  if ( !no_windowing_ui ) {
+    ff_post_error(NULL,"%s: %d  %s",ufile, c->lineno, errbuf );
+  }
+  free(ufile);
+  traceback(c);
 }
 
 static char *forcePSName_copy(Context *c,char *str) {
@@ -463,9 +463,7 @@ static void bAskUser(Context *c) {
 	} else if ( buffer[0]=='\0' || buffer[0]=='\n' || buffer[0]=='\r' )
 	    c->return_val.u.sval = xstrdup_or_null(def);
 	else {
-	    t1 = def2utf8_copy(buffer);
-	    c->return_val.u.sval = utf82script_copy(t1);
-	    free(t1);
+	    c->return_val.u.sval = utf82script_copy(x_gc_u8_strconv_from_locale (buffer));
 	}
     } else {
 	char *t1, *t2, *ret;
@@ -8902,10 +8900,10 @@ static void handlename(Context *c,Val *val) {
 		    }
 		}
 		val->type = v_str;
-		t = def2utf8_copy(sf==NULL?"":
-			sf->filename!=NULL?sf->filename:sf->origname);
-		val->u.sval = utf82script_copy(t);
-		free(t);
+		t = (sf==NULL) ? "" :
+		  ((sf->filename!=NULL) ? sf->filename :
+		   ((sf->origname != NULL) ? sf->origname : NULL));
+		val->u.sval = utf82script_copy (x_gc_u8_strconv_from_locale (t));
 	    } else if ( strcmp(name,"$mmcount")==0 ) {
 		if ( c->curfv==NULL ) ScriptError(c,"No current font");
 		if ( c->curfv->sf->mm==NULL )
@@ -9850,11 +9848,8 @@ void ProcessNativeScript(int argc, char *argv[], FILE *script) {
     c.dontfree = xcalloc(c.a.argc,sizeof(Array*));
     c.donteval = dry;
     for ( j=i; j<argc; ++j ) {
-	char *t;
 	c.a.vals[j-i].type = v_str;
-	t = def2utf8_copy(argv[j]);
-	c.a.vals[j-i].u.sval = utf82script_copy(t);
-	free(t);
+	c.a.vals[j-i].u.sval = utf82script_copy (x_gc_u8_strconv_from_locale (argv[j]));
     }
     c.return_val.type = v_void;
     if ( script!=NULL ) {
