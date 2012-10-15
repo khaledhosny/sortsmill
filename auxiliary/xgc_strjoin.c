@@ -60,11 +60,11 @@ x_gc_vstrjoin (const char *s1, va_list ap)
       size_t length = strlen (s1);
 
       size_t total_length = length;
-      char *s = va_arg (ap, char *);
+      char *s = va_arg (aq, char *);
       while (s != NULL)
         {
           total_length += strlen (s);
-          s = va_arg (ap, char *);
+          s = va_arg (aq, char *);
         }
       va_end (aq);
 
