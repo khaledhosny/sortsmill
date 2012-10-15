@@ -42,6 +42,7 @@
 
 #include <stdlib.h>
 #include <stdint.h>
+#include <stdarg.h>
 #include <xalloc.h>
 #include <xdie_on_null.h>
 
@@ -55,6 +56,9 @@ VISIBLE inline void *x_gc_malloc_stubborn (size_t sz);
 VISIBLE inline char *x_gc_strdup (const char *s);
 
 VISIBLE char *x_gc_strndup (const char *s, size_t n);
+
+VISIBLE char *x_gc_strjoin (const char *s1, ...);
+VISIBLE char *x_gc_vstrjoin (const char *s1, va_list ap);
 
 VISIBLE inline char *x_gc_grabstr (char *s);
 VISIBLE uint8_t *x_gc_u8_grabstr (uint8_t *s);

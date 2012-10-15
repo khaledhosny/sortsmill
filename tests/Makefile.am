@@ -67,7 +67,7 @@ MY_AT_FILES = xgc_h.at xunicase_h.at xuniconv_h.at xuninorm_h.at	\
 	xunistr_h.at gfile_c.at ps_number_c.at psMat.at					\
 	old_python_tests.at
 
-TESTS_XGC_H = test_x_gc_strndup
+TESTS_XGC_H = test_x_gc_strndup test_x_gc_strjoin
 
 TESTS_XUNISTRING_H = test_xunicase_compare test_xunicase_ncompare	\
 	test_xuniconv_h test_xuninorm_h test_xunistr_h					\

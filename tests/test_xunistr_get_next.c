@@ -75,11 +75,11 @@ main (int argc, char **argv)
       const uint32_t *s = (uint32_t *) str;
       int c = u32_get_next (&s);
       while (0 < c)
-	{
-	  ch[0] = c;
-	  ulc_fprintf (stdout, "%llU", ch);
-	  c = u32_get_next (&s);
-	}
+        {
+          ch[0] = c;
+          ulc_fprintf (stdout, "%llU", ch);
+          c = u32_get_next (&s);
+        }
       ulc_fprintf (stdout, "|%d", c);
     }
   else if (encoding == 16)
@@ -88,11 +88,11 @@ main (int argc, char **argv)
       const uint16_t *s = (uint16_t *) str;
       int c = u16_get_next (&s);
       while (0 < c)
-	{
-	  ch[0] = c;
-	  ulc_fprintf (stdout, "%llU", ch);
-	  c = u16_get_next (&s);
-	}
+        {
+          ch[0] = c;
+          ulc_fprintf (stdout, "%llU", ch);
+          c = u16_get_next (&s);
+        }
       ulc_fprintf (stdout, "|%d", c);
     }
   else
@@ -100,11 +100,11 @@ main (int argc, char **argv)
       const uint8_t *s = (uint8_t *) str;
       int c = u8_get_next (&s);
       while (0 < c)
-	{
-	  ch[0] = c;
-	  ulc_fprintf (stdout, "%llU", ch);
-	  c = u8_get_next (&s);
-	}
+        {
+          ch[0] = c;
+          ulc_fprintf (stdout, "%llU", ch);
+          c = u8_get_next (&s);
+        }
       ulc_fprintf (stdout, "|%d", c);
     }
 
