@@ -53,6 +53,9 @@ VISIBLE inline void *x_gc_malloc_ignore_off_page (size_t sz);
 VISIBLE inline void *x_gc_malloc_atomic_ignore_off_page (size_t sz);
 VISIBLE inline void *x_gc_malloc_stubborn (size_t sz);
 VISIBLE inline char *x_gc_strdup (const char *s);
+
+VISIBLE char *x_gc_strndup (const char *s, size_t n);
+
 VISIBLE inline char *x_gc_grabstr (char *s);
 VISIBLE uint8_t *x_gc_u8_grabstr (uint8_t *s);
 VISIBLE uint16_t *x_gc_u16_grabstr (uint16_t *s);

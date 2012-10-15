@@ -1,0 +1,18 @@
+# -*- coding: utf-8 -*-
+
+m4_defun([check_xgc_h],
+[
+AT_SETUP([$1])
+AT_KEYWORDS([auxiliary xgc.c xgc.h unit])
+AT_CHECK_UNQUOTED(["${abs_builddir}"/$1],[$2],[$3],[$4])
+AT_CLEANUP
+])
+
+check_xgc_h([test_x_gc_strndup '' 0],[0],[],[])
+check_xgc_h([test_x_gc_strndup '' 1],[0],[],[])
+check_xgc_h([test_x_gc_strndup 'This is a test' 0],[0],[],[])
+check_xgc_h([test_x_gc_strndup 'This is a test' 1],[0],[T],[])
+check_xgc_h([test_x_gc_strndup 'This is a test' 13],[0],[This is a tes],[])
+check_xgc_h([test_x_gc_strndup 'This is a test' 14],[0],[This is a test],[])
+check_xgc_h([test_x_gc_strndup 'This is a test' 15],[0],[This is a test],[])
+check_xgc_h([test_x_gc_strndup 'This is a test' 1000],[0],[This is a test],[])

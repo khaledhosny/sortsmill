@@ -29,6 +29,7 @@
 
 #include <xgc.h>
 #include <unistr.h>
+#include <string.h>
 
 // The following bunch of declarations should result in non-inline
 // versions being generated.
@@ -42,16 +43,17 @@ void *x_gc_malloc_stubborn (size_t sz);
 char *x_gc_strdup (const char *s);
 char *x_gc_grabstr (char *s);
 
-uint8_t *x_gc_u8_grabstr (uint8_t *s)
+uint8_t *
+x_gc_u8_grabstr (uint8_t *s)
 {
-  uint8_t *copy =
-    x_gc_malloc_atomic ((u8_strlen (s) + 1) * sizeof (uint8_t));
+  uint8_t *copy = x_gc_malloc_atomic ((u8_strlen (s) + 1) * sizeof (uint8_t));
   u8_strcpy (copy, s);
   free (s);
   return copy;
 }
 
-uint16_t *x_gc_u16_grabstr (uint16_t *s)
+uint16_t *
+x_gc_u16_grabstr (uint16_t *s)
 {
   uint16_t *copy =
     x_gc_malloc_atomic ((u16_strlen (s) + 1) * sizeof (uint16_t));
@@ -60,11 +62,24 @@ uint16_t *x_gc_u16_grabstr (uint16_t *s)
   return copy;
 }
 
-uint32_t *x_gc_u32_grabstr (uint32_t *s)
+uint32_t *
+x_gc_u32_grabstr (uint32_t *s)
 {
   uint32_t *copy =
     x_gc_malloc_atomic ((u32_strlen (s) + 1) * sizeof (uint32_t));
   u32_strcpy (copy, s);
   free (s);
   return copy;
+}
+
+char *
+x_gc_strndup (const char *s, size_t n)
+{
+  size_t i = 0;
+  while (i < n && s[i] != '\0')
+    i++;
+  char *p = x_gc_malloc_atomic ((i + 1) * sizeof (char));
+  p[0] = '\0';
+  strncat (p, s, i);
+  return p;
 }

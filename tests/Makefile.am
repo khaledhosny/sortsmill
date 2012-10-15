@@ -63,8 +63,11 @@ $(TESTSUITE): $(srcdir)/testsuite.at $(srcdir)/package.m4 $(MY_AT_FILES)
 	$(AUTOTEST) -I '$(srcdir)' -o $@.tmp $@.at
 	mv $@.tmp $@
 
-MY_AT_FILES = xunicase_h.at xuniconv_h.at xuninorm_h.at xunistr_h.at	\
-	gfile_c.at ps_number_c.at psMat.at old_python_tests.at
+MY_AT_FILES = xgc_h.at xunicase_h.at xuniconv_h.at xuninorm_h.at	\
+	xunistr_h.at gfile_c.at ps_number_c.at psMat.at					\
+	old_python_tests.at
+
+TESTS_XGC_H = test_x_gc_strndup
 
 TESTS_XUNISTRING_H = test_xunicase_compare test_xunicase_ncompare	\
 	test_xuniconv_h test_xuninorm_h test_xunistr_h					\
@@ -79,8 +82,8 @@ TESTS_GFILE_C = test_GFileGetUserConfigDir test_GFileGetUserCacheDir	\
 
 TESTS_PS_NUMBER_C = test_ps_number_c
 
-check_PROGRAMS = $(TESTS_XUNISTRING_H) $(TESTS_GFILE_C)	\
-	$(TESTS_PS_NUMBER_C)
+check_PROGRAMS = $(TESTS_XGC_H) $(TESTS_XUNISTRING_H)	\
+	$(TESTS_GFILE_C) $(TESTS_PS_NUMBER_C)
 
 AM_DEFAULT_SOURCE_EXT = .c
 LDADD = $(top_builddir)/fontforge/libsortsmillff_fontforgeexe.la	\
