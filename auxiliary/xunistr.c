@@ -52,9 +52,10 @@ x_u8_to_u16 (const uint8_t *string)
 
   // Use alloc’d space rather than a variable-length array (which may
   // be on the stack), so longer strings can be handled.
-  uint16_t *buffer = xcalloc (length + 1, sizeof (uint16_t));
+  uint16_t *buffer = xmalloc ((length + 1) * sizeof (uint16_t));
 
   (void) u8_to_u16 (string, n, buffer, &length);
+  buffer[length] = 0;
   uint16_t *result = XDIE_ON_ENOMEM (u16_cpy_alloc (buffer, length + 1));
   free (buffer);
 
@@ -71,9 +72,10 @@ x_u8_to_u32 (const uint8_t *string)
 
   // Use alloc’d space rather than a variable-length array (which may
   // be on the stack), so longer strings can be handled.
-  uint32_t *buffer = xcalloc (length + 1, sizeof (uint32_t));
+  uint32_t *buffer = xmalloc ((length + 1) * sizeof (uint32_t));
 
   (void) u8_to_u32 (string, n, buffer, &length);
+  buffer[length] = 0;
   uint32_t *result = XDIE_ON_ENOMEM (u32_cpy_alloc (buffer, length + 1));
   free (buffer);
 
@@ -90,9 +92,10 @@ x_u16_to_u8 (const uint16_t *string)
 
   // Use alloc’d space rather than a variable-length array (which may
   // be on the stack), so longer strings can be handled.
-  uint8_t *buffer = xcalloc (length + 1, sizeof (uint8_t));
+  uint8_t *buffer = xmalloc ((length + 1) * sizeof (uint8_t));
 
   (void) u16_to_u8 (string, n, buffer, &length);
+  buffer[length] = 0;
   uint8_t *result = XDIE_ON_ENOMEM (u8_cpy_alloc (buffer, length + 1));
   free (buffer);
 
@@ -109,9 +112,10 @@ x_u16_to_u32 (const uint16_t *string)
 
   // Use alloc’d space rather than a variable-length array (which may
   // be on the stack), so longer strings can be handled.
-  uint32_t *buffer = xcalloc (length + 1, sizeof (uint32_t));
+  uint32_t *buffer = xmalloc ((length + 1) * sizeof (uint32_t));
 
   (void) u16_to_u32 (string, n, buffer, &length);
+  buffer[length] = 0;
   uint32_t *result = XDIE_ON_ENOMEM (u32_cpy_alloc (buffer, length + 1));
   free (buffer);
 
@@ -128,9 +132,10 @@ x_u32_to_u8 (const uint32_t *string)
 
   // Use alloc’d space rather than a variable-length array (which may
   // be on the stack), so longer strings can be handled.
-  uint8_t *buffer = xcalloc (length + 1, sizeof (uint8_t));
+  uint8_t *buffer = xmalloc ((length + 1) * sizeof (uint8_t));
 
   (void) u32_to_u8 (string, n, buffer, &length);
+  buffer[length] = 0;
   uint8_t *result = XDIE_ON_ENOMEM (u8_cpy_alloc (buffer, length + 1));
   free (buffer);
 
@@ -147,9 +152,10 @@ x_u32_to_u16 (const uint32_t *string)
 
   // Use alloc’d space rather than a variable-length array (which may
   // be on the stack), so longer strings can be handled.
-  uint16_t *buffer = xcalloc (length + 1, sizeof (uint16_t));
+  uint16_t *buffer = xmalloc ((length + 1) * sizeof (uint16_t));
 
   (void) u32_to_u16 (string, n, buffer, &length);
+  buffer[length] = 0;
   uint16_t *result = XDIE_ON_ENOMEM (u16_cpy_alloc (buffer, length + 1));
   free (buffer);
 
