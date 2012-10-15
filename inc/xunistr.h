@@ -81,6 +81,13 @@ VISIBLE uint8_t *x_gc_u8_strmbndup (const uint8_t *string, size_t n);
 VISIBLE uint16_t *x_gc_u16_strmbndup (const uint16_t *string, size_t n);
 VISIBLE uint32_t *x_gc_u32_strmbndup (const uint32_t *string, size_t n);
 
+VISIBLE uint8_t *x_gc_u8_strjoin (const uint8_t *s1, ...);
+VISIBLE uint16_t *x_gc_u16_strjoin (const uint16_t *s1, ...);
+VISIBLE uint32_t *x_gc_u32_strjoin (const uint32_t *s1, ...);
+VISIBLE uint8_t *x_gc_u8_vstrjoin (const uint8_t *s1, va_list ap);
+VISIBLE uint16_t *x_gc_u16_vstrjoin (const uint16_t *s1, va_list ap);
+VISIBLE uint32_t *x_gc_u32_vstrjoin (const uint32_t *s1, va_list ap);
+
 VISIBLE long int u8_strtol (const uint8_t *nptr, uint8_t **endptr, int base);
 VISIBLE long int u16_strtol (const uint16_t *nptr, uint16_t **endptr,
                              int base);

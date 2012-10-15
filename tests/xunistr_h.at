@@ -3,7 +3,7 @@
 m4_defun([check_xunistr_h],
 [
 AT_SETUP([$1])
-AT_KEYWORDS([auxiliary xunistr.c xunistr.h xunistring.h unit])
+AT_KEYWORDS([auxiliary xunistr.h xunistring.h unit])
 AT_SKIP_IF([test x"${utf8_locale}" = x])
 AT_CHECK_UNQUOTED([LC_ALL="${utf8_locale}" LANGUAGE="${utf8_locale}" "${abs_builddir}"/$1],[$2],[$3],[$4])
 AT_CLEANUP
@@ -192,3 +192,20 @@ check_xunistr_h([test_xunistr_get_next "###E###-###o####" 0 0 0 0 0 0 0 0 0 0 0 
 check_xunistr_h([test_xunistr_get_next "###E###-########" 0 0 0 0 0 0 0 17 0 0 0 0 0 0 32],
                 [0],[E-|-1],[])
 
+check_xunistr_h([test_x_gc_uNN_strjoin 8],[0],[],[])
+check_xunistr_h([test_x_gc_uNN_strjoin One 8],[0],[One],[])
+check_xunistr_h([test_x_gc_uNN_strjoin Two strings 8],[0],[Twostrings],[])
+check_xunistr_h([test_x_gc_uNN_strjoin One more string 8],[0],[Onemorestring],[])
+check_xunistr_h([test_x_gc_uNN_strjoin Four strings in all 8],[0],[Fourstringsinall],[])
+
+check_xunistr_h([test_x_gc_uNN_strjoin 16],[0],[],[])
+check_xunistr_h([test_x_gc_uNN_strjoin One 16],[0],[One],[])
+check_xunistr_h([test_x_gc_uNN_strjoin Two strings 16],[0],[Twostrings],[])
+check_xunistr_h([test_x_gc_uNN_strjoin One more string 16],[0],[Onemorestring],[])
+check_xunistr_h([test_x_gc_uNN_strjoin Four strings in all 16],[0],[Fourstringsinall],[])
+
+check_xunistr_h([test_x_gc_uNN_strjoin 32],[0],[],[])
+check_xunistr_h([test_x_gc_uNN_strjoin One 32],[0],[One],[])
+check_xunistr_h([test_x_gc_uNN_strjoin Two strings 32],[0],[Twostrings],[])
+check_xunistr_h([test_x_gc_uNN_strjoin One more string 32],[0],[Onemorestring],[])
+check_xunistr_h([test_x_gc_uNN_strjoin Four strings in all 32],[0],[Fourstringsinall],[])

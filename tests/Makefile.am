@@ -64,7 +64,7 @@ $(TESTSUITE): $(srcdir)/testsuite.at $(srcdir)/package.m4 $(MY_AT_FILES)
 	mv $@.tmp $@
 
 MY_AT_FILES = xgc_h.at xunicase_h.at xuniconv_h.at xuninorm_h.at	\
-	xunistr_h.at gfile_c.at ps_number_c.at psMat.at					\
+	xunistr_h.at gfile_c.at ps_number_h.at psMat.at					\
 	old_python_tests.at
 
 TESTS_XGC_H = test_x_gc_strndup test_x_gc_strjoin
@@ -74,16 +74,17 @@ TESTS_XUNISTRING_H = test_xunicase_compare test_xunicase_ncompare	\
 	test_xunistr_strtol_NULL test_xunistr_strtol_nonNULL			\
 	test_xunistr_strtoul_NULL test_xunistr_strtoul_nonNULL			\
 	test_xunistr_strtod_NULL test_xunistr_strtod_nonNULL			\
-	test_xunistr_valid_prefix test_xunistr_get_next
+	test_xunistr_valid_prefix test_xunistr_get_next					\
+	test_x_gc_uNN_strjoin
 
 TESTS_GFILE_C = test_GFileGetUserConfigDir test_GFileGetUserCacheDir	\
 	test_GFileGetUserDataDir test_GFileGetHomeDir test_GFileBuildName	\
 	test_GFileBaseName test_GFileAppendFile
 
-TESTS_PS_NUMBER_C = test_ps_number_c
+TESTS_PS_NUMBER_H = test_ps_number_h
 
 check_PROGRAMS = $(TESTS_XGC_H) $(TESTS_XUNISTRING_H)	\
-	$(TESTS_GFILE_C) $(TESTS_PS_NUMBER_C)
+	$(TESTS_GFILE_C) $(TESTS_PS_NUMBER_H)
 
 AM_DEFAULT_SOURCE_EXT = .c
 LDADD = $(top_builddir)/fontforge/libsortsmillff_fontforgeexe.la	\
