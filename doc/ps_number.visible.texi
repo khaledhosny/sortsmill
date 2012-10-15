@@ -1,0 +1,36 @@
+
+@deftypefun {VISIBLE bool} is_postscript_integer (const char *@var{s})
+
+Test if the @code{NULL}-terminated string @var{s} represents
+a PostScript integer, such as
+`@code{555}', `@code{+034}', or `@code{-1234}'.
+
+@end deftypefun
+
+
+@deftypefun {VISIBLE bool} is_postscript_real (const char *@var{s})
+
+Test if the @code{NULL}-terminated string @var{s} represents
+a PostScript real, such as
+`@code{555.}', `@code{+.034}', `@code{-01234E56}', or
+`@code{1.9e+23}'.
+
+@end deftypefun
+
+
+@deftypefun {VISIBLE bool} is_postscript_radix_number (const char *@var{s})
+
+Test if the @code{NULL}-terminated string @var{s} represents
+a PostScript radix number, such as
+`@code{2#01011}', `@code{008#555}', or `@code{16#9ABCdef0}'.
+
+@end deftypefun
+
+
+@deftypefun {VISIBLE bool} is_postscript_number (const char *@var{s})
+
+Test if the @code{NULL}-terminated string @var{s} represents
+a PostScript integer, real, or radix number.
+
+@end deftypefun
+

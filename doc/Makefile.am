@@ -27,7 +27,8 @@
 #--------------------------------------------------------------------------
 
 info_TEXINFOS = sortsmill-fontforge.texi
-sortsmill_fontforge_TEXINFOS = psMat.interface.texi
+sortsmill_fontforge_TEXINFOS = psMat.interface.texi	\
+	ps_number.intro.texi ps_number.visible.texi
 
 #--------------------------------------------------------------------------
 

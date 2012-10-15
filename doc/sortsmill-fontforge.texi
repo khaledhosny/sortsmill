@@ -38,6 +38,7 @@ Copyright @copyright{} 2012 Barry Schwartz
 * Introduction::    What is Sorts Mill FontForge?
 * Installing::      How to install Sorts Mill FontForge.
 * psMat::           The psMat Python module.
+* Implementation::  The implementation of Sorts Mill FontForge.
 @end menu
 
 @end ifnottex
@@ -58,5 +59,14 @@ accompanies the source code.
 @chapter The psMat Python module
 
 @include psMat.interface.texi
+
+@node Implementation
+@chapter The implementation of Sorts Mill FontForge
+
+@section @file{libsortsmillff_aux.la} (subdirectory @file{auxiliary})
+
+@subsection @file{ps_number.c}
+@include ps_number.intro.texi
+@include ps_number.visible.texi
 
 @bye

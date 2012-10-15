@@ -41,6 +41,21 @@ libsortsmillff_aux_la_LDFLAGS = $(call ldflags)
 libsortsmillff_aux_la_DEPENDENCIES = Makefile $(libsortsmillff_aux_la_LIBADD)
 
 #--------------------------------------------------------------------------
+
+extract_text = $(GAWK) ' \
+BEGIN { pattern = "^[[:space:]]*(//|[*])[[:space:]]*$1--[[:space:]]*(.*)[[:space:]]*" } \
+$$0 ~ pattern { match($$0, pattern, matches); print matches[2] }'
+
+$(top_srcdir)/doc/%.intro.texi: %.c
+	$(call extract_text,intro) $< > $@
+
+$(top_srcdir)/doc/%.visible.texi: %.c
+	$(call extract_text,vis) $< > $@
+
+extract-text: $(top_srcdir)/doc/ps_number.intro.texi	\
+	$(top_srcdir)/doc/ps_number.visible.texi
+
+#--------------------------------------------------------------------------
 #
 # Targets for maintainers to use when a new version of Unicode is
 # adopted.

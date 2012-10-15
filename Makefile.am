@@ -74,6 +74,13 @@ distclean-local:
 
 #--------------------------------------------------------------------------
 
+extract-text:
+	for dir in auxiliary pycontrib; do \
+		(cd "$${dir}"; $(MAKE) $(AM_MAKEFLAGS) extract-text); \
+	done
+
+#--------------------------------------------------------------------------
+
 include $(top_builddir)/mk/xgettext_search.mk
 
 XGETTEXT_OPTIONS = --keyword=H_ --from-code=utf-8 --language=C	\
