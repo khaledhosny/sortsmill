@@ -52,14 +52,11 @@ x_gc_vstrjoin (const char *s1, va_list ap)
   else
     {
       va_list aq;
-      va_list ar;
-
-      va_copy (aq, ap);
-      va_copy (ar, ap);
 
       size_t length = strlen (s1);
 
       size_t total_length = length;
+      va_copy (aq, ap);
       char *s = va_arg (aq, char *);
       while (s != NULL)
         {
@@ -72,15 +69,16 @@ x_gc_vstrjoin (const char *s1, va_list ap)
 
       memcpy (p, s1, length * sizeof (char));
       total_length = length;
-      s = va_arg (ar, char *);
+      va_copy (aq, ap);
+      s = va_arg (aq, char *);
       while (s != NULL)
         {
           length = strlen (s);
           memcpy (p + total_length, s, length * sizeof (char));
           total_length += length;
-          s = va_arg (ar, char *);
+          s = va_arg (aq, char *);
         }
-      va_end (ar);
+      va_end (aq);
     }
 
   return p;
