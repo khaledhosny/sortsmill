@@ -197,6 +197,49 @@ x_gc_u32_to_u16 (const uint32_t *string)
   return x_gc_u16_grabstr (x_u32_to_u16 (string));
 }
 
+//-------------------------------------------------------------------------
+//
+// Some phony 'conversions' that may be useful, especially, in macros
+// that take the encoding unit size (8, 16, or 32) as a parameter.
+
+static inline uint8_t *
+x_u8_to_u8 (const uint8_t *string)
+{
+  return x_u8_strdup (string);
+}
+
+static inline uint16_t *
+x_u16_to_u16 (const uint16_t *string)
+{
+  return x_u16_strdup (string);
+}
+
+static inline uint32_t *
+x_u32_to_u32 (const uint32_t *string)
+{
+  return x_u32_strdup (string);
+}
+
+static inline uint8_t *
+x_gc_u8_to_u8 (const uint8_t *string)
+{
+  return x_gc_u8_strdup (string);
+}
+
+static inline uint16_t *
+x_gc_u16_to_u16 (const uint16_t *string)
+{
+  return x_gc_u16_strdup (string);
+}
+
+static inline uint32_t *
+x_gc_u32_to_u32 (const uint32_t *string)
+{
+  return x_gc_u32_strdup (string);
+}
+
+//-------------------------------------------------------------------------
+
 inline bool
 u8_valid (const uint8_t *string)
 {

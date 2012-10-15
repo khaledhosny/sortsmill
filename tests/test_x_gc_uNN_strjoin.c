@@ -4,7 +4,7 @@
 #include <xunistring.h>
 #include <locale.h>
 
-#define TEST_FUNC(NAME, SIZE, FORMAT)					\
+#define TEST_FUNC(NAME, SIZE)						\
   static void								\
   NAME (int argc, uint##SIZE##_t **argv)				\
   {									\
@@ -57,12 +57,12 @@
 				  NULL);				\
 	break;								\
       }									\
-    ulc_fprintf (stdout, FORMAT, s);					\
+    ulc_fprintf (stdout, "%U", x_gc_u##SIZE##_to_u8 (s));		\
   }
 
-TEST_FUNC (test_u8, 8, "%U");
-TEST_FUNC (test_u16, 16, "%lU");
-TEST_FUNC (test_u32, 32, "%llU");
+TEST_FUNC (test_u8, 8);
+TEST_FUNC (test_u16, 16);
+TEST_FUNC (test_u32, 32);
 
 int
 main (int argc, char **argv)
