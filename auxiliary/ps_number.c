@@ -27,10 +27,6 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// intro--
-// intro-- Header file: @file{ps_number.h}
-// intro--
-
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -93,15 +89,6 @@ is_decimal_fraction (const char *s)
   return is_dec_frac;
 }
 
-// vis--
-// vis-- @deftypefun {VISIBLE bool} is_postscript_integer (const char *@var{s})
-// vis--
-// vis-- Test if the @code{NULL}-terminated string @var{s} represents
-// vis-- a PostScript integer, such as
-// vis-- `@code{555}', `@code{+034}', or `@code{-1234}'.
-// vis--
-// vis-- @end deftypefun
-// vis--
 bool
 is_postscript_integer (const char *s)
 {
@@ -123,16 +110,6 @@ is_postscript_integer (const char *s)
   return is_integer;
 }
 
-// vis--
-// vis-- @deftypefun {VISIBLE bool} is_postscript_real (const char *@var{s})
-// vis--
-// vis-- Test if the @code{NULL}-terminated string @var{s} represents
-// vis-- a PostScript real, such as
-// vis-- `@code{555.}', `@code{+.034}', `@code{-01234E56}', or
-// vis-- `@code{1.9e+23}'.
-// vis--
-// vis-- @end deftypefun
-// vis--
 bool
 is_postscript_real (const char *s)
 {
@@ -157,15 +134,6 @@ is_postscript_real (const char *s)
   return is_real;
 }
 
-// vis--
-// vis-- @deftypefun {VISIBLE bool} is_postscript_radix_number (const char *@var{s})
-// vis--
-// vis-- Test if the @code{NULL}-terminated string @var{s} represents
-// vis-- a PostScript radix number, such as
-// vis-- `@code{2#01011}', `@code{008#555}', or `@code{16#9ABCdef0}'.
-// vis--
-// vis-- @end deftypefun
-// vis--
 bool
 is_postscript_radix_number (const char *s)
 {
@@ -195,14 +163,6 @@ is_postscript_radix_number (const char *s)
   return is_radix_number;
 }
 
-// vis--
-// vis-- @deftypefun {VISIBLE bool} is_postscript_number (const char *@var{s})
-// vis--
-// vis-- Test if the @code{NULL}-terminated string @var{s} represents
-// vis-- a PostScript integer, real, or radix number.
-// vis--
-// vis-- @end deftypefun
-// vis--
 bool
 is_postscript_number (const char *s)
 {

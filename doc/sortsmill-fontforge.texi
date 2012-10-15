@@ -65,8 +65,7 @@ accompanies the source code.
 
 @section @file{libsortsmillff_aux.la} (subdirectory @file{auxiliary})
 
-@subsection @file{ps_number.c}
-@include ps_number.intro.texi
+@subsection Handling of PostScript numbers
 @include ps_number.visible.texi
 
 @bye

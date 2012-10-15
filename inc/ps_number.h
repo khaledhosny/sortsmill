@@ -37,9 +37,53 @@
 
 #include <stdbool.h>
 
+// vis--
+// vis-- The following items are declared in header file
+// vis-- @file{ps_number.h}.
+// vis--
+
+// vis--
+// vis-- @deftypefun {VISIBLE bool} is_postscript_integer (const char *@var{s})
+// vis--
+// vis-- Test if the @code{NULL}-terminated string @var{s} represents
+// vis-- a PostScript integer, such as
+// vis-- `@code{555}', `@code{+034}', or `@code{-1234}'.
+// vis--
+// vis-- @end deftypefun
+// vis--
 VISIBLE bool is_postscript_integer (const char *s);
+
+// vis--
+// vis-- @deftypefun {VISIBLE bool} is_postscript_real (const char *@var{s})
+// vis--
+// vis-- Test if the @code{NULL}-terminated string @var{s} represents
+// vis-- a PostScript real, such as
+// vis-- `@code{555.}', `@code{+.034}', `@code{-01234E56}', or
+// vis-- `@code{1.9e+23}'.
+// vis--
+// vis-- @end deftypefun
+// vis--
 VISIBLE bool is_postscript_real (const char *s);
+
+// vis--
+// vis-- @deftypefun {VISIBLE bool} is_postscript_radix_number (const char *@var{s})
+// vis--
+// vis-- Test if the @code{NULL}-terminated string @var{s} represents
+// vis-- a PostScript radix number, such as
+// vis-- `@code{2#01011}', `@code{008#555}', or `@code{16#9ABCdef0}'.
+// vis--
+// vis-- @end deftypefun
+// vis--
 VISIBLE bool is_postscript_radix_number (const char *s);
+
+// vis--
+// vis-- @deftypefun {VISIBLE bool} is_postscript_number (const char *@var{s})
+// vis--
+// vis-- Test if the @code{NULL}-terminated string @var{s} represents
+// vis-- a PostScript integer, real, or radix number.
+// vis--
+// vis-- @end deftypefun
+// vis--
 VISIBLE bool is_postscript_number (const char *s);
 
 #endif // _PS_NUMBER_H

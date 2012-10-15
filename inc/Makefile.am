@@ -31,3 +31,17 @@ noinst_HEADERS = basics.h chardata.h config.h gdraw.h gfile.h			\
 	annotations_base.h ffthread.h null_passthru.h xgc.h xunistring.h	\
 	xunicase.h xuniconv.h xuninorm.h xunistr.h xdie_on_null.h			\
 	config-extra.h ps_number.h
+
+#--------------------------------------------------------------------------
+
+extract_text = $(GAWK) ' \
+BEGIN { pattern = "^[[:space:]]*(//|[*])[[:space:]]*$1--[[:space:]]*(.*)[[:space:]]*" } \
+$$0 ~ pattern { match($$0, pattern, matches); print matches[2] }'
+
+$(top_srcdir)/doc/%.visible.texi: %.h
+	$(call extract_text,vis) $< > $@
+
+extract-text: $(top_srcdir)/doc/ps_number.visible.texi
+
+#--------------------------------------------------------------------------
+

@@ -1,4 +1,8 @@
 
+The following items are declared in header file
+@file{ps_number.h}.
+
+
 @deftypefun {VISIBLE bool} is_postscript_integer (const char *@var{s})
 
 Test if the @code{NULL}-terminated string @var{s} represents
