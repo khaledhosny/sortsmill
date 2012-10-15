@@ -209,3 +209,8 @@ check_xunistr_h([test_x_gc_uNN_strjoin One 32],[0],[One],[])
 check_xunistr_h([test_x_gc_uNN_strjoin Two strings 32],[0],[Twostrings],[])
 check_xunistr_h([test_x_gc_uNN_strjoin One more string 32],[0],[Onemorestring],[])
 check_xunistr_h([test_x_gc_uNN_strjoin Four strings in all 32],[0],[Fourstringsinall],[])
+
+check_xunistr_h([test_uNN_to_uMM_boundaries 0 1],[0],[],[])
+check_xunistr_h([test_uNN_to_uMM_boundaries 1 1000],[0],[],[])
+check_xunistr_h([test_uNN_to_uMM_boundaries 1000 1000],[0],[],[])
+check_xunistr_h([test_uNN_to_uMM_boundaries 10000 100],[0],[],[])
