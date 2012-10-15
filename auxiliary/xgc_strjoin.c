@@ -65,7 +65,7 @@ x_gc_vstrjoin (const char *s1, va_list ap)
         }
       va_end (aq);
 
-      p = x_gc_malloc_atomic ((total_length + 1) * sizeof (char));
+      p = (char *) x_gc_malloc_atomic ((total_length + 1) * sizeof (char));
 
       memcpy (p, s1, length * sizeof (char));
       total_length = length;
@@ -78,6 +78,7 @@ x_gc_vstrjoin (const char *s1, va_list ap)
           total_length += length;
           s = va_arg (aq, char *);
         }
+      p[total_length] = '\0';
       va_end (aq);
     }
 
