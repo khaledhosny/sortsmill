@@ -55,7 +55,7 @@ x_u8_to_u16 (const uint8_t *string)
   uint16_t *buffer = xcalloc (length + 1, sizeof (uint16_t));
 
   (void) u8_to_u16 (string, n, buffer, &length);
-  uint16_t *result = XDIE_ON_ENOMEM (u16_cpy_alloc (buffer, length));
+  uint16_t *result = XDIE_ON_ENOMEM (u16_cpy_alloc (buffer, length + 1));
   free (buffer);
 
   return result;
