@@ -32,135 +32,43 @@
 #include <xunistring.h>
 
 // Generate non-inline versions of these functions.
-uint16_t *x_gc_u8_to_u16 (const uint8_t *string);
-uint32_t *x_gc_u8_to_u32 (const uint8_t *string);
-uint8_t *x_gc_u16_to_u8 (const uint16_t *string);
-uint32_t *x_gc_u16_to_u32 (const uint16_t *string);
-uint8_t *x_gc_u32_to_u8 (const uint32_t *string);
-uint16_t *x_gc_u32_to_u16 (const uint32_t *string);
 bool u8_valid (const uint8_t *string);
 bool u16_valid (const uint16_t *string);
 bool u32_valid (const uint32_t *string);
 
-uint16_t *
-x_u8_to_u16 (const uint8_t *string)
-{
-  size_t n = u8_strlen (string);
-  assert (u8_check (string, n) == NULL);
+//-------------------------------------------------------------------------
 
-  size_t length = n;            // Enough for UTF-16.
+#define U_TO_U_FUNC(NAME, SIZE1, SIZE2, BUFSIZE_FACTOR, ALLOCATOR,	\
+		    REALLOCATOR)					\
+  uint##SIZE2##_t *							\
+  NAME (const uint##SIZE1##_t *string)					\
+  {									\
+    size_t n = u##SIZE1##_strlen (string);				\
+    assert (u##SIZE1##_check (string, n) == NULL);			\
+									\
+    size_t length = BUFSIZE_FACTOR * n;					\
+    uint##SIZE2##_t *buffer =						\
+      ALLOCATOR ((length + 1) * sizeof (uint##SIZE2##_t));		\
+    memset (buffer, 0, (length + 1) * sizeof (uint##SIZE2##_t));	\
+									\
+    (void) u##SIZE1##_to_u##SIZE2 (string, n, buffer, &length);		\
+    return REALLOCATOR (buffer, (u##SIZE2##_strlen (buffer) + 1)	\
+			* sizeof (uint##SIZE2##_t));			\
+  }
 
-  // Use alloc’d space rather than a variable-length array (which may
-  // be on the stack), so longer strings can be handled.
-  uint16_t *buffer = xmalloc ((length + 1) * sizeof (uint16_t));
+U_TO_U_FUNC (x_u8_to_u16, 8, 16, 1, xmalloc, xrealloc);
+U_TO_U_FUNC (x_u8_to_u32, 8, 32, 1, xmalloc, xrealloc);
+U_TO_U_FUNC (x_u16_to_u8, 16, 8, 3, xmalloc, xrealloc);
+U_TO_U_FUNC (x_u16_to_u32, 16, 32, 1, xmalloc, xrealloc);
+U_TO_U_FUNC (x_u32_to_u8, 32, 8, 4, xmalloc, xrealloc);
+U_TO_U_FUNC (x_u32_to_u16, 32, 16, 2, xmalloc, xrealloc);
 
-  (void) u8_to_u16 (string, n, buffer, &length);
-  buffer[length] = 0;
-  uint16_t *result = XDIE_ON_ENOMEM (u16_cpy_alloc (buffer, length + 1));
-  free (buffer);
-
-  return result;
-}
-
-uint32_t *
-x_u8_to_u32 (const uint8_t *string)
-{
-  size_t n = u8_strlen (string);
-  assert (u8_check (string, n) == NULL);
-
-  size_t length = n;            // Enough for UTF-32.
-
-  // Use alloc’d space rather than a variable-length array (which may
-  // be on the stack), so longer strings can be handled.
-  uint32_t *buffer = xmalloc ((length + 1) * sizeof (uint32_t));
-
-  (void) u8_to_u32 (string, n, buffer, &length);
-  buffer[length] = 0;
-  uint32_t *result = XDIE_ON_ENOMEM (u32_cpy_alloc (buffer, length + 1));
-  free (buffer);
-
-  return result;
-}
-
-uint8_t *
-x_u16_to_u8 (const uint16_t *string)
-{
-  size_t n = u16_strlen (string);
-  assert (u16_check (string, n) == NULL);
-
-  size_t length = 2 * n;        // Enough for UTF-8.
-
-  // Use alloc’d space rather than a variable-length array (which may
-  // be on the stack), so longer strings can be handled.
-  uint8_t *buffer = xmalloc ((length + 1) * sizeof (uint8_t));
-
-  (void) u16_to_u8 (string, n, buffer, &length);
-  buffer[length] = 0;
-  uint8_t *result = XDIE_ON_ENOMEM (u8_cpy_alloc (buffer, length + 1));
-  free (buffer);
-
-  return result;
-}
-
-uint32_t *
-x_u16_to_u32 (const uint16_t *string)
-{
-  size_t n = u16_strlen (string);
-  assert (u16_check (string, n) == NULL);
-
-  size_t length = n;            // Enough for UTF-32.
-
-  // Use alloc’d space rather than a variable-length array (which may
-  // be on the stack), so longer strings can be handled.
-  uint32_t *buffer = xmalloc ((length + 1) * sizeof (uint32_t));
-
-  (void) u16_to_u32 (string, n, buffer, &length);
-  buffer[length] = 0;
-  uint32_t *result = XDIE_ON_ENOMEM (u32_cpy_alloc (buffer, length + 1));
-  free (buffer);
-
-  return result;
-}
-
-uint8_t *
-x_u32_to_u8 (const uint32_t *string)
-{
-  size_t n = u32_strlen (string);
-  assert (u32_check (string, n) == NULL);
-
-  size_t length = 4 * n;        // Enough for UTF-8.
-
-  // Use alloc’d space rather than a variable-length array (which may
-  // be on the stack), so longer strings can be handled.
-  uint8_t *buffer = xmalloc ((length + 1) * sizeof (uint8_t));
-
-  (void) u32_to_u8 (string, n, buffer, &length);
-  buffer[length] = 0;
-  uint8_t *result = XDIE_ON_ENOMEM (u8_cpy_alloc (buffer, length + 1));
-  free (buffer);
-
-  return result;
-}
-
-uint16_t *
-x_u32_to_u16 (const uint32_t *string)
-{
-  size_t n = u32_strlen (string);
-  assert (u32_check (string, n) == NULL);
-
-  size_t length = 2 * n;        // Enough for UTF-16.
-
-  // Use alloc’d space rather than a variable-length array (which may
-  // be on the stack), so longer strings can be handled.
-  uint16_t *buffer = xmalloc ((length + 1) * sizeof (uint16_t));
-
-  (void) u32_to_u16 (string, n, buffer, &length);
-  buffer[length] = 0;
-  uint16_t *result = XDIE_ON_ENOMEM (u16_cpy_alloc (buffer, length + 1));
-  free (buffer);
-
-  return result;
-}
+U_TO_U_FUNC (x_gc_u8_to_u16, 8, 16, 1, x_gc_malloc, x_gc_realloc);
+U_TO_U_FUNC (x_gc_u8_to_u32, 8, 32, 1, x_gc_malloc, x_gc_realloc);
+U_TO_U_FUNC (x_gc_u16_to_u8, 16, 8, 3, x_gc_malloc, x_gc_realloc);
+U_TO_U_FUNC (x_gc_u16_to_u32, 16, 32, 1, x_gc_malloc, x_gc_realloc);
+U_TO_U_FUNC (x_gc_u32_to_u8, 32, 8, 4, x_gc_malloc, x_gc_realloc);
+U_TO_U_FUNC (x_gc_u32_to_u16, 32, 16, 2, x_gc_malloc, x_gc_realloc);
 
 //-------------------------------------------------------------------------
 //

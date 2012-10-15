@@ -50,12 +50,12 @@ VISIBLE uint8_t *x_u16_to_u8 (const uint16_t *string);
 VISIBLE uint32_t *x_u16_to_u32 (const uint16_t *string);
 VISIBLE uint8_t *x_u32_to_u8 (const uint32_t *string);
 VISIBLE uint16_t *x_u32_to_u16 (const uint32_t *string);
-VISIBLE inline uint16_t *x_gc_u8_to_u16 (const uint8_t *string);
-VISIBLE inline uint32_t *x_gc_u8_to_u32 (const uint8_t *string);
-VISIBLE inline uint8_t *x_gc_u16_to_u8 (const uint16_t *string);
-VISIBLE inline uint32_t *x_gc_u16_to_u32 (const uint16_t *string);
-VISIBLE inline uint8_t *x_gc_u32_to_u8 (const uint32_t *string);
-VISIBLE inline uint16_t *x_gc_u32_to_u16 (const uint32_t *string);
+VISIBLE uint16_t *x_gc_u8_to_u16 (const uint8_t *string);
+VISIBLE uint32_t *x_gc_u8_to_u32 (const uint8_t *string);
+VISIBLE uint8_t *x_gc_u16_to_u8 (const uint16_t *string);
+VISIBLE uint32_t *x_gc_u16_to_u32 (const uint16_t *string);
+VISIBLE uint8_t *x_gc_u32_to_u8 (const uint32_t *string);
+VISIBLE uint16_t *x_gc_u32_to_u16 (const uint32_t *string);
 
 VISIBLE inline bool u8_valid (const uint8_t *string);
 VISIBLE inline bool u16_valid (const uint16_t *string);
@@ -159,42 +159,6 @@ static inline uint32_t *
 x_u32_strdup_or_null (const uint32_t *string)
 {
   return NULL_PASSTHRU (string, x_u32_strdup (string));
-}
-
-inline uint16_t *
-x_gc_u8_to_u16 (const uint8_t *string)
-{
-  return x_gc_u16_grabstr (x_u8_to_u16 (string));
-}
-
-inline uint32_t *
-x_gc_u8_to_u32 (const uint8_t *string)
-{
-  return x_gc_u32_grabstr (x_u8_to_u32 (string));
-}
-
-inline uint8_t *
-x_gc_u16_to_u8 (const uint16_t *string)
-{
-  return x_gc_u8_grabstr (x_u16_to_u8 (string));
-}
-
-inline uint32_t *
-x_gc_u16_to_u32 (const uint16_t *string)
-{
-  return x_gc_u32_grabstr (x_u16_to_u32 (string));
-}
-
-inline uint8_t *
-x_gc_u32_to_u8 (const uint32_t *string)
-{
-  return x_gc_u8_grabstr (x_u32_to_u8 (string));
-}
-
-inline uint16_t *
-x_gc_u32_to_u16 (const uint32_t *string)
-{
-  return x_gc_u16_grabstr (x_u32_to_u16 (string));
 }
 
 //-------------------------------------------------------------------------
