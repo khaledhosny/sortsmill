@@ -1,0 +1,51 @@
+m4_defun([check_rexp_h],
+[
+AT_SETUP([$1])
+AT_KEYWORDS([auxiliary rexp.h unit rexp regex re regexp])
+AT_CHECK_UNQUOTED(["${abs_builddir}"/$1],[$2],[$3],[$4])
+AT_CLEANUP
+])
+
+check_rexp_h([test_rexp_h haystack needle match],[20],[ignore],[])
+check_rexp_h([test_rexp_h haystack hay match],[20],[ignore],[])
+
+check_rexp_h([test_rexp_h 'hay(stack)?' hay match],[0],
+[0: 0 3 |hay|
+1: -1 -1 |(NULL)|
+2: -1 -1 |(NULL)|
+],[])
+
+check_rexp_h([test_rexp_h hay haystack match],[0],
+[0: 0 3 |hay|
+1: -1 -1 |(NULL)|
+],[])
+
+check_rexp_h([test_rexp_h '((hay)(stack){2})' haystackstack match],[0],
+[0: 0 13 |haystackstack|
+1: 0 13 |haystackstack|
+2: 0 3 |hay|
+3: 8 13 |stack|
+4: -1 -1 |(NULL)|
+],[])
+
+check_rexp_h([test_rexp_h haystack needle search],[20],[ignore],[])
+check_rexp_h([test_rexp_h haystack hay search],[20],[ignore],[])
+
+check_rexp_h([test_rexp_h 'hay(stack)?' hay search],[0],
+[0: 0 3 |hay|
+1: -1 -1 |(NULL)|
+2: -1 -1 |(NULL)|
+],[])
+
+check_rexp_h([test_rexp_h hay haystack search],[0],
+[0: 0 3 |hay|
+1: -1 -1 |(NULL)|
+],[])
+
+check_rexp_h([test_rexp_h '((hay)(stack){2})' haystackstack search],[0],
+[0: 0 13 |haystackstack|
+1: 0 13 |haystackstack|
+2: 0 3 |hay|
+3: 8 13 |stack|
+4: -1 -1 |(NULL)|
+],[])

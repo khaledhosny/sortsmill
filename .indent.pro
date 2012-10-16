@@ -14,10 +14,12 @@
 -T uint32_t
 -T intptr_t
 -T uintptr_t
--T unichar_t
-
 -T cairo_t
+-T regoff_t
+-T pcre
 
+-T rexp_t
+-T rexp_match_t
 -T real
 -T AnchorPoint
 -T BDFFont

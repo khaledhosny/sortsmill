@@ -64,7 +64,7 @@ $(TESTSUITE): $(srcdir)/testsuite.at $(srcdir)/package.m4 $(MY_AT_FILES)
 	mv $@.tmp $@
 
 MY_AT_FILES = xgc_h.at xunicase_h.at xuniconv_h.at xuninorm_h.at	\
-	xunistr_h.at gfile_c.at ps_number_h.at psMat.at					\
+	xunistr_h.at gfile_c.at ps_number_h.at rexp_h.at psMat.at		\
 	old_python_tests.at
 
 TESTS_XGC_H = test_x_gc_strndup test_x_gc_strjoin
@@ -83,8 +83,10 @@ TESTS_GFILE_C = test_GFileGetUserConfigDir test_GFileGetUserCacheDir	\
 
 TESTS_PS_NUMBER_H = test_ps_number_h
 
-check_PROGRAMS = $(TESTS_XGC_H) $(TESTS_XUNISTRING_H)	\
-	$(TESTS_GFILE_C) $(TESTS_PS_NUMBER_H)
+TESTS_REXP_H = test_rexp_h
+
+check_PROGRAMS = $(TESTS_XGC_H) $(TESTS_XUNISTRING_H)		\
+	$(TESTS_GFILE_C) $(TESTS_PS_NUMBER_H) $(TESTS_REXP_H)
 
 AM_DEFAULT_SOURCE_EXT = .c
 LDADD = $(top_builddir)/fontforge/libsortsmillff_fontforgeexe.la	\

@@ -1,5 +1,6 @@
 [encoding: UTF-8]
 data/fontforge.desktop.in
+auxiliary/rexp.c
 fontforge/alignment.c
 fontforge/anchorsaway.c
 fontforge/autotrace.c

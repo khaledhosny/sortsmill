@@ -199,6 +199,7 @@ i_do_have_native_callbacks="${fontforge_cv_native_callbacks}"
 # Checks for libraries.
 
 FONTFORGE_CONFIG_X_LIBRARIES
+FONTFORGE_LIBPCRE
 PKG_CHECK_MODULES([ZLIB],[zlib])
 PKG_CHECK_MODULES([GLIB],[glib-2.0 >= 2.6])
 PKG_CHECK_MODULES([LIBPNG],[libpng])

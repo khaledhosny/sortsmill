@@ -53,18 +53,17 @@ main (int argc, char **argv)
 
   int exit_status = 0;
 
-  uint32_t s32[] = 
-    {
-      0x0001,
-      0x007F,
-      0x0080,
-      0xD7FF,
-      0xE000,
-      0xFFFF,
-      0x10000,
-      0x10FFFF,
-      0
-    };
+  uint32_t s32[] = {
+    0x0001,
+    0x007F,
+    0x0080,
+    0xD7FF,
+    0xE000,
+    0xFFFF,
+    0x10000,
+    0x10FFFF,
+    0
+  };
 
   exit_status = test_x (s32);
   if (exit_status == 0)
@@ -79,11 +78,11 @@ main (int argc, char **argv)
   while (exit_status == 0 && i < atoi (argv[2]))
     {
       for (size_t j = 0; j < big_size; j++)
-	big_s[j] = s32[rand () % s32_length];
+        big_s[j] = s32[rand () % s32_length];
       big_s[big_size] = 0;
       exit_status = test_x (big_s);
       if (exit_status == 0)
-	exit_status = test_x_gc (big_s);
+        exit_status = test_x_gc (big_s);
       i++;
     }
 
