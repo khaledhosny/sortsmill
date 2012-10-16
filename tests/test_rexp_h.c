@@ -24,8 +24,10 @@ main (int argc, char **argv)
   matcher my_matcher = NULL;
   if (strcmp (operation, "match") == 0)
     my_matcher = rexp_match;
-  else
+  else if (strcmp (operation, "search") == 0)
     my_matcher = rexp_search;
+  else
+    abort ();
 
   int exit_status = 0;
 
@@ -55,7 +57,7 @@ main (int argc, char **argv)
       // object.
       rexp_match_t m = my_matcher (NULL, string);
       if (m)
-	exit_status = 30;
+        exit_status = 30;
     }
 
   GC_gcollect ();

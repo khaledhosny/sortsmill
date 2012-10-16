@@ -6,6 +6,8 @@ AT_CHECK_UNQUOTED(["${abs_builddir}"/$1],[$2],[$3],[$4])
 AT_CLEANUP
 ])
 
+//-------------------------------------------------------------------------
+
 check_rexp_h([test_rexp_h haystack needle match],[20],[ignore],[])
 check_rexp_h([test_rexp_h haystack hay match],[20],[ignore],[])
 
@@ -49,3 +51,35 @@ check_rexp_h([test_rexp_h '((hay)(stack){2})' haystackstack search],[0],
 3: 8 13 |stack|
 4: -1 -1 |(NULL)|
 ],[])
+
+//-------------------------------------------------------------------------
+
+check_rexp_h([test_rexp_h haystack Xneedle match],[20],[ignore],[])
+check_rexp_h([test_rexp_h haystack Xhay match],[20],[ignore],[])
+check_rexp_h([test_rexp_h 'hay(stack)?' Xhay match],[20],[ignore],[])
+check_rexp_h([test_rexp_h hay Xhaystack match],[20],[ignore],[])
+check_rexp_h([test_rexp_h '((hay)(stack){2})' Xhaystackstack match],[20],[ignore],[])
+
+check_rexp_h([test_rexp_h haystack Xneedle search],[20],[ignore],[])
+check_rexp_h([test_rexp_h haystack Xhay search],[20],[ignore],[])
+
+check_rexp_h([test_rexp_h 'hay(stack)?' Xhay search],[0],
+[0: 1 4 |hay|
+1: -1 -1 |(NULL)|
+2: -1 -1 |(NULL)|
+],[])
+
+check_rexp_h([test_rexp_h hay Xhaystack search],[0],
+[0: 1 4 |hay|
+1: -1 -1 |(NULL)|
+],[])
+
+check_rexp_h([test_rexp_h '((hay)(stack){2})' Xhaystackstack search],[0],
+[0: 1 14 |haystackstack|
+1: 1 14 |haystackstack|
+2: 1 4 |hay|
+3: 9 14 |stack|
+4: -1 -1 |(NULL)|
+],[])
+
+//-------------------------------------------------------------------------
