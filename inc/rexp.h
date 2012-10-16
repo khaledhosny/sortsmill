@@ -41,6 +41,7 @@
 struct rexp
 {
   pcre *pcre_ptr;
+  pcre_extra *extra;
   size_t capture_count;
 };
 typedef struct rexp *rexp_t;
@@ -61,6 +62,22 @@ typedef struct rexp_interval_t rexp_interval_t;
 
 VISIBLE rexp_t rexp_compile_opt (const char *pattern, int options);
 VISIBLE rexp_t rexp_compile (const char *pattern);
+VISIBLE rexp_t rexp_compile_study (const char *pattern);
+VISIBLE rexp_t rexp_compile_jit (const char *pattern);
+
+/* The following functions return the same rexp_t, but altered (except
+   for rexp_identity, which simply returns its argument). Thus they
+   violate our usual preference to avoid this kind of side effect, but
+   in this case it seems worth it, so one can write something like
+
+      m = rexp_search (rexp_study (rexp_compile (pattern), s));
+
+*/
+VISIBLE rexp_t rexp_study_opt (rexp_t re, int options);
+VISIBLE rexp_t rexp_study (rexp_t re);
+VISIBLE rexp_t rexp_jit (rexp_t re);
+VISIBLE rexp_t rexp_identity (rexp_t re);
+
 VISIBLE rexp_match_t rexp_search_opt (rexp_t re, const char *s, int options);
 VISIBLE rexp_match_t rexp_match (rexp_t re, const char *s);
 VISIBLE rexp_match_t rexp_search (rexp_t re, const char *s);

@@ -41,7 +41,11 @@
 static void
 finalize_rexp_t (void *obj, void *UNUSED (client_data))
 {
-  pcre_free (((rexp_t) obj)->pcre_ptr);
+  rexp_t re = (rexp_t) obj;
+  if (re->pcre_ptr != NULL)
+    pcre_free (re->pcre_ptr);
+  if (re->extra != NULL)
+    pcre_free_study (re->extra);
 }
 
 static void
@@ -55,7 +59,10 @@ register_rexp_t_finalizer (rexp_t re)
 rexp_t
 rexp_compile_opt (const char *pattern, int options)
 {
+  // x_gc_malloc clears memory, leaving (re->extra == NULL), as we
+  // want.
   rexp_t re = x_gc_malloc (sizeof (struct rexp));
+
   int error_code;
   const char *error;
   int error_offset;
@@ -64,7 +71,7 @@ rexp_compile_opt (const char *pattern, int options)
     pcre_compile2 (pattern, 0, &error_code, &error, &error_offset, NULL);
   if (re->pcre_ptr != NULL)
     {
-      (void) pcre_fullinfo (re->pcre_ptr, NULL, PCRE_INFO_CAPTURECOUNT,
+      (void) pcre_fullinfo (re->pcre_ptr, re->extra, PCRE_INFO_CAPTURECOUNT,
                             &capture_count);
       re->capture_count = (size_t) capture_count;
       register_rexp_t_finalizer (re);
@@ -90,6 +97,63 @@ rexp_compile (const char *pattern)
   return rexp_compile_opt (pattern, 0);
 }
 
+rexp_t
+rexp_compile_study (const char *pattern)
+{
+  return rexp_study (rexp_compile (pattern));
+}
+
+rexp_t
+rexp_compile_jit (const char *pattern)
+{
+  return rexp_jit (rexp_compile (pattern));
+}
+
+rexp_t
+rexp_study_opt (rexp_t re, int options)
+{
+  rexp_t new_re = re;
+
+  if (re != NULL)
+    {
+      if (re->extra != NULL)
+        pcre_free_study (re->extra);
+
+      const char *error;
+      re->extra = pcre_study (re->pcre_ptr, options, &error);
+      if (re->extra == NULL || error != NULL)
+        {
+          // FIXME: Do something better than the following.
+
+#ifndef NDEBUG
+          fprintf (stderr, _("%s\n"), error);
+#endif
+
+          new_re = NULL;
+        }
+    }
+
+  return new_re;
+}
+
+rexp_t
+rexp_study (rexp_t re)
+{
+  return rexp_study_opt (re, 0);
+}
+
+rexp_t
+rexp_jit (rexp_t re)
+{
+  return rexp_study_opt (re, PCRE_STUDY_JIT_COMPILE);
+}
+
+rexp_t
+rexp_identity (rexp_t re)
+{
+  return re;
+}
+
 rexp_match_t
 rexp_search_opt (rexp_t re, const char *s, int options)
 {
@@ -103,7 +167,7 @@ rexp_search_opt (rexp_t re, const char *s, int options)
       int ovecsize = 3 * (re->capture_count + 1);
       m->ovector = x_gc_malloc_atomic (ovecsize * sizeof (int));
       m->capture_count = re->capture_count;
-      int exec_return = pcre_exec (re->pcre_ptr, NULL, s, strlen (s), 0,
+      int exec_return = pcre_exec (re->pcre_ptr, re->extra, s, strlen (s), 0,
                                    options, m->ovector, ovecsize);
       if (exec_return < 0)
         {

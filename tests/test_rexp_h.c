@@ -9,6 +9,8 @@
 #include <rexp.h>
 
 typedef rexp_match_t (*matcher) (rexp_t re, const char *s);
+typedef rexp_t (*compiler) (const char *s);
+typedef rexp_t (*filter) (rexp_t re);
 
 int
 main (int argc, char **argv)
@@ -20,6 +22,7 @@ main (int argc, char **argv)
   char *pattern = argv[1];
   char *string = argv[2];
   char *operation = argv[3];
+  char *study = argv[4];
 
   matcher my_matcher = NULL;
   if (strcmp (operation, "match") == 0)
@@ -29,9 +32,40 @@ main (int argc, char **argv)
   else
     abort ();
 
+  filter my_filter = NULL;
+  compiler my_compiler = NULL;
+  if (strcmp (study, "study") == 0)
+    {
+      my_compiler = rexp_compile;
+      my_filter = rexp_study;
+    }
+  else if (strcmp (study, "jit") == 0)
+    {
+      my_compiler = rexp_compile;
+      my_filter = rexp_jit;
+    }
+  else if (strcmp (study, "identity") == 0)
+    {
+      my_compiler = rexp_compile;
+      my_filter = rexp_identity;
+    }
+  else if (strcmp (study, "compile_study") == 0)
+    {
+      my_compiler = rexp_compile_study;
+      my_filter = rexp_identity;
+    }
+
+  else if (strcmp (study, "compile_jit") == 0)
+    {
+      my_compiler = rexp_compile_jit;
+      my_filter = rexp_identity;
+    }
+  else
+    abort ();
+
   int exit_status = 0;
 
-  rexp_t re = rexp_compile (pattern);
+  rexp_t re = my_filter (my_compiler (pattern));
   if (re == NULL)
     exit_status = 10;
   else
