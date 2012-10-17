@@ -1,650 +1,857 @@
-<HTML>
-<HEAD>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux (vers 25 March 2009), see www.w3.org" />
   <!-- Created with AOLpress/2.0 -->
   <!-- AP: Created on: 18-Jul-2003 -->
   <!-- AP: Last modified: 28-Apr-2010 -->
-  <TITLE>FontForge's math</TITLE>
-  <LINK REL="icon" href="fftype16.png">
-  <LINK REL="stylesheet" TYPE="text/css" HREF="FontForge.css">
-</HEAD>
-<BODY>
-<DIV id="in">
-  <H1 ALIGN=Center>
-    FontForge's math
-  </H1>
-  <P>
-  <EM>Being a brief description of the mathematics underlying various of
-  FontForge's commands <BR>
-  It is presumed that you understand about parameterized splines, if not look
-  at the description of <A HREF="bezier.html">B&eacute;zier curves</A>.</EM>
-  <UL>
-    <LI>
-      <A HREF="pfaeditmath.html#Linear">Linear Transformations</A>
-    <LI>
-      <A HREF="pfaeditmath.html#maxima">Finding maxima and minima of a spline</A>
-    <LI>
-      <A HREF="#Rasterizing">Rasterizing a Glyph</A>
-      <UL>
-	<LI>
-	  finding intersections
-	<LI>
-	  removing overlap
-      </UL>
-    <LI>
-      <A HREF="pfaeditmath.html#Approximating">Approximating a spline</A>
-    <LI>
-      <A HREF="pfaeditmath.html#Stroke">Stroking a spline</A>
-    <LI>
-      <A HREF="bezier.html#ps2ttf">Approximating a cubic spline by a series of
-      quadratic splines</A>
-  </UL>
-  <P>
-    <HR>
-  <H2>
-    <A NAME="Linear">Linear</A> Transformations
-  </H2>
-  <P>
-  A linear transformation is one where the spline described by transforming
-  the end and control points will match the transformed spline. This includes
-  most of the common transformations you might wish:
-  <UL>
-    <LI>
-      translation
-      <TABLE CELLPADDING="2">
-	<TR>
-	  <TD><I>x'</I></TD>
-	  <TD>=</TD>
-	  <TD><I>x + dx</I></TD>
-	</TR>
-	<TR>
-	  <TD><I>y'</I></TD>
-	  <TD>=</TD>
-	  <TD><I>y + dy</I></TD>
-	</TR>
-      </TABLE>
-    <LI>
-      scaling
-      <TABLE CELLPADDING="2">
-	<TR>
-	  <TD><I>x'</I></TD>
-	  <TD>=</TD>
-	  <TD><I>s<SUB>x</SUB> * x</I></TD>
-	</TR>
-	<TR>
-	  <TD><I>y'</I></TD>
-	  <TD>=</TD>
-	  <TD><I>s<SUB>y</SUB> * y</I></TD>
-	</TR>
-      </TABLE>
-    <LI>
-      rotation
-      <TABLE CELLPADDING="2">
-	<TR>
-	  <TD><I>x'</I></TD>
-	  <TD>=</TD>
-	  <TD><I>cos(A)*x + sin(A)*y</I></TD>
-	</TR>
-	<TR>
-	  <TD><I>y'</I></TD>
-	  <TD>=</TD>
-	  <TD><I>-sin(X)*x + cos(A)*y</I></TD>
-	</TR>
-      </TABLE>
-    <LI>
-      skewing
-      <TABLE CELLPADDING="2">
-	<TR>
-	  <TD><I>x'</I></TD>
-	  <TD>=</TD>
-	  <TD><I>x + sin(A)*y</I></TD>
-	</TR>
-	<TR>
-	  <TD><I>y'</I></TD>
-	  <TD>=</TD>
-	  <TD><I>y</I></TD>
-	</TR>
-      </TABLE>
-  </UL>
-  <P>
-    <HR>
-  <H2>
-    Finding <A NAME="maxima">maxima</A> and minima of a spline
-  </H2>
-  <P>
-  The maximum or minimum of a spline (along either the x or y axes) may be
-  found by taking the first derivative of that spline with respect to t. So
-  if we have a spline
-  <BLOCKQUOTE>
-    <PRE>    x = a<SUB>x</SUB>*t<SUP>3</SUP> + b<SUB>x</SUB>*t<SUP>2</SUP> + c<SUB>x</SUB>*t +d<SUB>x</SUB>
-    y = a<SUB>y</SUB>*t<SUP>3</SUP> + b<SUB>y</SUB>*t<SUP>2</SUP> + c<SUB>y</SUB>*t +d<SUB>y</SUB>
-</PRE>
-  </BLOCKQUOTE>
-  <P>
-  and we wish to find the maximum point with respect to the x axis we set:
-  <BLOCKQUOTE>
-    <PRE>    dx/dt = 0
-    3*a<SUB>x</SUB>*t<SUP>2</SUP> + 2*b<SUB>x</SUB>*t + c<SUB>x</SUB> = 0
+
+  <title>FontForge's math</title>
+  <link rel="icon" href="fftype16.png" />
+  <link rel="stylesheet" type="text/css" href="FontForge.css" />
+  <style type="text/css">
+/*<![CDATA[*/
+  p.c3 {text-align: center}
+  td.c2 {font-style: italic}
+  h1.c1 {text-align: center}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <div id="in">
+    <h1 class="c1">FontForge's math</h1>
+
+    <p><em>Being a brief description of the mathematics underlying
+    various of FontForge's commands<br />
+    It is presumed that you understand about parameterized splines,
+    if not look at the description of <a href="bezier.html">Bézier
+    curves</a>.</em></p>
+
+    <ul>
+      <li><a href="pfaeditmath.html#Linear">Linear
+      Transformations</a></li>
+
+      <li><a href="pfaeditmath.html#maxima">Finding maxima and
+      minima of a spline</a></li>
+
+      <li>
+        <a href="#Rasterizing">Rasterizing a Glyph</a>
+
+        <ul>
+          <li>finding intersections</li>
+
+          <li>removing overlap</li>
+        </ul>
+      </li>
+
+      <li><a href="pfaeditmath.html#Approximating">Approximating a
+      spline</a></li>
+
+      <li><a href="pfaeditmath.html#Stroke">Stroking a
+      spline</a></li>
+
+      <li><a href="bezier.html#ps2ttf">Approximating a cubic spline
+      by a series of quadratic splines</a></li>
+    </ul>
+    <hr />
+
+    <h2><a name="Linear" id="Linear">Linear</a>
+    Transformations</h2>
+
+    <p>A linear transformation is one where the spline described by
+    transforming the end and control points will match the
+    transformed spline. This includes most of the common
+    transformations you might wish:</p>
+
+    <ul>
+      <li>translation
+
+        <table cellpadding="2">
+          <tr>
+            <td class="c2">x'</td>
+
+            <td>=</td>
+
+            <td class="c2">x + dx</td>
+          </tr>
+
+          <tr>
+            <td class="c2">y'</td>
+
+            <td>=</td>
+
+            <td class="c2">y + dy</td>
+          </tr>
+        </table>
+      </li>
+
+      <li>scaling
+
+        <table cellpadding="2">
+          <tr>
+            <td class="c2">x'</td>
+
+            <td>=</td>
+
+            <td class="c2">s<sub>x</sub> * x</td>
+          </tr>
+
+          <tr>
+            <td class="c2">y'</td>
+
+            <td>=</td>
+
+            <td class="c2">s<sub>y</sub> * y</td>
+          </tr>
+        </table>
+      </li>
+
+      <li>rotation
+
+        <table cellpadding="2">
+          <tr>
+            <td class="c2">x'</td>
+
+            <td>=</td>
+
+            <td class="c2">cos(A)*x + sin(A)*y</td>
+          </tr>
+
+          <tr>
+            <td class="c2">y'</td>
+
+            <td>=</td>
+
+            <td class="c2">-sin(X)*x + cos(A)*y</td>
+          </tr>
+        </table>
+      </li>
+
+      <li>skewing
+
+        <table cellpadding="2">
+          <tr>
+            <td class="c2">x'</td>
+
+            <td>=</td>
+
+            <td class="c2">x + sin(A)*y</td>
+          </tr>
+
+          <tr>
+            <td class="c2">y'</td>
+
+            <td>=</td>
+
+            <td class="c2">y</td>
+          </tr>
+        </table>
+      </li>
+    </ul>
+    <hr />
+
+    <h2>Finding <a name="maxima" id="maxima">maxima</a> and minima
+    of a spline</h2>
+
+    <p>The maximum or minimum of a spline (along either the x or y
+    axes) may be found by taking the first derivative of that
+    spline with respect to t. So if we have a spline</p>
+
+    <blockquote>
+      <pre>
+    x = a<sub>x</sub>*t<sup>3</sup> + b<sub>x</sub>*t<sup>2</sup> + c<sub>x</sub>*t +d<sub>x</sub>
+    y = a<sub>y</sub>*t<sup>3</sup> + b<sub>y</sub>*t<sup>2</sup> + c<sub>y</sub>*t +d<sub>y</sub>
+</pre>
+    </blockquote>
+
+    <p>and we wish to find the maximum point with respect to the x
+    axis we set:</p>
+
+    <blockquote>
+      <pre>
+    dx/dt = 0
+    3*a<sub>x</sub>*t<sup>2</sup> + 2*b<sub>x</sub>*t + c<sub>x</sub> = 0
  
-</PRE>
-  </BLOCKQUOTE>
-  <P>
-  and then using the quadratic formula we can solve for t:
-  <TABLE CELLPADDING="2">
-    <TR>
-      <TD ROWSPAN=3>t=</TD>
-      <TD><P ALIGN=Center>
-	-2*b<SUB>x </SUB>&#177; sqrt(4*b<SUB>x</SUB><SUP>2</SUP> -
-	4*3*a<SUB>x</SUB>*c<SUB>x</SUB>)</TD>
-    </TR>
-    <TR>
-      <TD><P ALIGN=Center>
-	-----------------------------------</TD>
-    </TR>
-    <TR>
-      <TD><P ALIGN=Center>
-	2*3*a<SUB>x</SUB></TD>
-    </TR>
-  </TABLE>
-  <P>
-    <HR>
-  <H2>
-    <A NAME="POI">Finding points of inflection</A> of a spline
-  </H2>
-  <P>
-  A point of inflection occurs when d<SUP>2</SUP>y/dx<SUP>2</SUP>==0 (or infinity).
-  <P>
-  Unfortunately this does not mean that d<SUP>2</SUP>y/dt<SUP>2</SUP>==0 or
-  d<SUP>2</SUP>x/dt<SUP>2</SUP>==0.
-  <TABLE CELLPADDING="2">
-    <TR>
-      <TD>d<SUP>2</SUP>y/dx<SUP>2 </SUP>=</TD>
-      <TD>d/dt ((dy/dt)/(dx/dt)) / dx/dt</TD>
-    </TR>
-    <TR>
-      <TD></TD>
-      <TD>( ((dx/dt) * d<SUP>2</SUP>y/dt<SUP>2</SUP>) - ((dy/dt) *
-	d<SUP>2</SUP>x/dt<SUP>2</SUP>)) / (dx/dt)<SUP>3</SUP></TD>
-    </TR>
-  </TABLE>
-  <P>
-  After a lot of algebra this boils down to the quadratic in t:
-  <TABLE CELLPADDING="2">
-    <TR>
-      <TD ROWSPAN=3>&nbsp;</TD>
-      <TD>3*(a<SUB>x</SUB>*b<SUB>y</SUB>-a<SUB>y</SUB>*b<SUB>x</SUB>)*t<SUP>2</SUP>
-	+</TD>
-      <TD></TD>
-    </TR>
-    <TR>
-      <TD>3*(c<SUB>x</SUB>*a<SUB>y</SUB>-c<SUB>y</SUB>*a<SUB>x</SUB>)*t +</TD>
-      <TD></TD>
-    </TR>
-    <TR>
-      <TD>c<SUB>x</SUB>*b<SUB>y</SUB>-c<SUB>y</SUB>*b<SUB>x</SUB></TD>
-      <TD>= 0</TD>
-    </TR>
-  </TABLE>
-  <P>
-  If you examine this closely you will note that a quadratic spline
-  (a<SUB>y</SUB>==a<SUB>x</SUB>==0) can never have a point of inflection.
-  <P>
-    <HR>
-  <H2>
-    <A NAME="Rasterizing">Rasterizing</A> a glyph
-  </H2>
-  <P>
-    <HR>
-  <H2>
-    <A NAME="Approximating">Approximating</A> a spline
-  </H2>
-  <P>
-  Many of FontForge's commands need to fit a spline to a series of points.
-  The most obvious of these are the Edit-&gt;Merge, and Element-&gt;Simplify
-  commands, but many others rely on the same technique. Let us consider the
-  case of the Merge command, suppose we have the following splines and we wish
-  to remove the middle point and generate a new spline that approximates the
-  original two:
-  <P>
-  &nbsp; &nbsp; &nbsp;
-  <IMG SRC="mergepre.png" WIDTH="192" HEIGHT="120" ALIGN="Middle"> =&gt;
-  <IMG SRC="mergepost.png" WIDTH="192" HEIGHT="120" ALIGN="Middle">
-  <P>
-  FontForge uses a least squares approximation to determine the new spline.
-  It calculates the locations of several points along the old splines, and
-  then it guesses<SUP><A HREF="#guess-t">1</A></SUP> at t values for those
-  points.
-  <P>
-  Now a cubic <A href="bezier.html">B&eacute;zier</A> spline is determined
-  by its two end points (P<SUB>0</SUB> and P<SUB>1</SUB>) and two control points
-  (CP<SUB>0</SUB> and CP<SUB>1</SUB>, which specify the slope at those end
-  points). Here we know the end points, so all we need is to find the control
-  points. The spline can also be expressed as a cubic polynomial:
-  <BLOCKQUOTE>
-    S(t) = a*t<SUP>3</SUP> + b*t<SUP>2</SUP> + c*t +d<BR>
-    &nbsp; &nbsp; -- with --<BR>
-    d = P0<BR>
-    c = 3*CP0 - 3*P0<BR>
-    b = 3*CP1 - 6*CP0 + 3*P0<BR>
-    a = P1 - 3*CP1 + 3*CP0 - P0<BR>
-    <!--S<SUB>x</SUB>(t) = a<SUB>x</SUB>*t<SUP>3</SUP> + b<SUB>x</SUB>*t<SUP>2</SUP>
+</pre>
+    </blockquote>
+
+    <p>and then using the quadratic formula we can solve for t:</p>
+
+    <table cellpadding="2">
+      <tr>
+        <td rowspan="3">t=</td>
+
+        <td>
+          <p class="c3">-2*b<sub>x</sub> ±
+          sqrt(4*b<sub>x</sub><sup>2</sup> -
+          4*3*a<sub>x</sub>*c<sub>x</sub>)</p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <p class="c3">-----------------------------------</p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <p class="c3">2*3*a<sub>x</sub></p>
+        </td>
+      </tr>
+    </table>
+    <hr />
+
+    <h2><a name="POI" id="POI">Finding points of inflection</a> of
+    a spline</h2>
+
+    <p>A point of inflection occurs when
+    d<sup>2</sup>y/dx<sup>2</sup>==0 (or infinity).</p>
+
+    <p>Unfortunately this does not mean that
+    d<sup>2</sup>y/dt<sup>2</sup>==0 or
+    d<sup>2</sup>x/dt<sup>2</sup>==0.</p>
+
+    <table cellpadding="2">
+      <tr>
+        <td>d<sup>2</sup>y/dx<sup>2</sup> =</td>
+
+        <td>d/dt ((dy/dt)/(dx/dt)) / dx/dt</td>
+      </tr>
+
+      <tr>
+        <td></td>
+
+        <td>( ((dx/dt) * d<sup>2</sup>y/dt<sup>2</sup>) - ((dy/dt)
+        * d<sup>2</sup>x/dt<sup>2</sup>)) /
+        (dx/dt)<sup>3</sup></td>
+      </tr>
+    </table>
+
+    <p>After a lot of algebra this boils down to the quadratic in
+    t:</p>
+
+    <table cellpadding="2">
+      <tr>
+        <td rowspan="3">&nbsp;</td>
+
+        <td>
+        3*(a<sub>x</sub>*b<sub>y</sub>-a<sub>y</sub>*b<sub>x</sub>)*t<sup>2</sup>
+        +</td>
+
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>
+        3*(c<sub>x</sub>*a<sub>y</sub>-c<sub>y</sub>*a<sub>x</sub>)*t
+        +</td>
+
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>
+        c<sub>x</sub>*b<sub>y</sub>-c<sub>y</sub>*b<sub>x</sub></td>
+
+        <td>= 0</td>
+      </tr>
+    </table>
+
+    <p>If you examine this closely you will note that a quadratic
+    spline (a<sub>y</sub>==a<sub>x</sub>==0) can never have a point
+    of inflection.</p>
+    <hr />
+
+    <h2><a name="Rasterizing" id="Rasterizing">Rasterizing</a> a
+    glyph</h2>
+    <hr />
+
+    <h2><a name="Approximating" id=
+    "Approximating">Approximating</a> a spline</h2>
+
+    <p>Many of FontForge's commands need to fit a spline to a
+    series of points. The most obvious of these are the
+    Edit-&gt;Merge, and Element-&gt;Simplify commands, but many
+    others rely on the same technique. Let us consider the case of
+    the Merge command, suppose we have the following splines and we
+    wish to remove the middle point and generate a new spline that
+    approximates the original two:</p>
+
+    <p>&nbsp; &nbsp; &nbsp; <img src="mergepre.png" width="192"
+    height="120" align="middle" /> =&gt; <img src="mergepost.png"
+    width="192" height="120" align="middle" /></p>
+
+    <p>FontForge uses a least squares approximation to determine
+    the new spline. It calculates the locations of several points
+    along the old splines, and then it guesses<sup><a href=
+    "#guess-t">1</a></sup> at t values for those points.</p>
+
+    <p>Now a cubic <a href="bezier.html">Bézier</a> spline is
+    determined by its two end points (P<sub>0</sub> and
+    P<sub>1</sub>) and two control points (CP<sub>0</sub> and
+    CP<sub>1</sub>, which specify the slope at those end points).
+    Here we know the end points, so all we need is to find the
+    control points. The spline can also be expressed as a cubic
+    polynomial:</p>
+
+    <blockquote>
+      S(t) = a*t<sup>3</sup> + b*t<sup>2</sup> + c*t +d<br />
+      &nbsp; &nbsp; -- with --<br />
+      d = P0<br />
+      c = 3*CP0 - 3*P0<br />
+      b = 3*CP1 - 6*CP0 + 3*P0<br />
+      a = P1 - 3*CP1 + 3*CP0 - P0<br />
+      <!--S<SUB>x</SUB>(t) = a<SUB>x</SUB>*t<SUP>3</SUP> + b<SUB>x</SUB>*t<SUP>2</SUP>
     +
     c<SUB>x</SUB>*t +d<SUB>x</SUB><BR>
     S<SUB>y</SUB>(t) = a<SUB>y</SUB>*t<SUP>3</SUP> + b<SUB>y</SUB>*t<SUP>2</SUP>
     +
-    c<SUB>y</SUB>*t +d<SUB>y</SUB>--> &nbsp; &nbsp; substituting<BR>
-    S(t) = (P1 - 3*CP1 + 3*CP0 - P0)*t<SUP>3</SUP> +<BR>
-    &nbsp; (3*CP1 - 6*CP0 + 3*P0)*t<SUP>2</SUP> +<BR>
-    &nbsp; (3*CP0 - 3*P0)*t +<BR>
-    &nbsp; P0<BR>
-    &nbsp; &nbsp; rearranging<BR>
-    S(t) = (-3*t<SUP>3</SUP> + 3*t<SUP>2</SUP>) * CP1 +<BR>
-    &nbsp; (3*t<SUP>3</SUP> - 6*t<SUP>2</SUP> + 3*t) * CP0 +<BR>
-    &nbsp; (P1-P0)*t<SUP>3</SUP> + 3*P0*t<SUP>2</SUP> - 3*P0*t + P0
-  </BLOCKQUOTE>
-  <P>
-  Now we want to minimize the sum of the squares of the difference between
-  the value we approximate with the new spline, S(t<SUB>i</SUB>), and the actual
-  value we were given, P<SUB>i</SUB>.
-  <TABLE>
-    <TR>
-      <TD>&nbsp; &nbsp; &nbsp; &nbsp;</TD>
-      <TD><IMG src="Sigma28x33.png" width="28" height="33"></TD>
-      <TD>[ S(t<SUB>i</SUB>) - P<SUB>i</SUB>]<SUP>2</SUP></TD>
-    </TR>
-  </TABLE>
-  <P>
-  Now we have four unknown variables, the x and y coordinates of the two control
-  points. To find the minimum of the above error term we must take the derivative
-  with respect to each variable, and set that to zero. Then we have four equations
-  with four unknowns and we can solve for each variable.
-  <TABLE>
-    <TR>
-      <TD>&nbsp; &nbsp; &nbsp; &nbsp;</TD>
-      <TD><IMG src="Sigma28x33.png" width="28" height="33"></TD>
-      <TD>2* (-3*t<SUP>3</SUP> + 3*t<SUP>2</SUP>)*[
-	S<SUB>x</SUB>(t<SUB>i</SUB>) - P<SUB>i.x</SUB>] = 0</TD>
-    </TR>
-    <TR>
-      <TD>&nbsp; &nbsp; &nbsp; &nbsp;</TD>
-      <TD><IMG src="Sigma28x33.png" width="28" height="33"></TD>
-      <TD>2* (-3*t<SUP>3</SUP> + 3*t<SUP>2</SUP>)*[
-	S<SUB>y</SUB>(t<SUB>i</SUB>) - P<SUB>i.y</SUB>] = 0</TD>
-    </TR>
-    <TR>
-      <TD>&nbsp; &nbsp; &nbsp; &nbsp;</TD>
-      <TD><IMG src="Sigma28x33.png" width="28" height="33"></TD>
-      <TD>2* (3*t<SUP>3</SUP> - 6*t<SUP>2</SUP> + 3*t)*[
-	S<SUB>x</SUB>(t<SUB>i</SUB>) - P<SUB>i.x</SUB>] = 0</TD>
-    </TR>
-    <TR>
-      <TD>&nbsp; &nbsp; &nbsp; &nbsp;</TD>
-      <TD><IMG src="Sigma28x33.png" width="28" height="33"></TD>
-      <TD>2* (3*t<SUP>3</SUP> - 6*t<SUP>2</SUP> + 3*t)*[
-	S<SUB>y</SUB>(t<SUB>i</SUB>) - P<SUB>i.y</SUB>] = 0</TD>
-    </TR>
-  </TABLE>
-  <P>
-  Happily for us, the x and y terms do not interact and my be solved separately.
-  The procedure is the same for each coordinate, so I shall only show one:
-  <TABLE>
-    <TR>
-      <TD>&nbsp; &nbsp; &nbsp; &nbsp;</TD>
-      <TD><IMG src="Sigma28x33.png" width="28" height="33"></TD>
-      <TD colspan="3">2* (-3*t<SUP>3</SUP> + 3*t<SUP>2</SUP>)*[
-	S<SUB>x</SUB>(t<SUB>i</SUB>) - P<SUB>i.x</SUB>] = 0</TD>
-    </TR>
-    <TR>
-      <TD>&nbsp; &nbsp; &nbsp; &nbsp;</TD>
-      <TD><IMG src="Sigma28x33.png" width="28" height="33"></TD>
-      <TD colspan="3">2* (3*t<SUP>3</SUP> - 6*t<SUP>2</SUP> + 3*t)*[
-	S<SUB>x</SUB>(t<SUB>i</SUB>) - P<SUB>i.x</SUB>] = 0</TD>
-    </TR>
-    <TR>
-      <TD colspan="5" align="center">=&gt;</TD>
-    </TR>
-    <TR>
-      <TD>&nbsp; &nbsp; &nbsp; &nbsp;</TD>
-      <TD><IMG src="Sigma28x33.png" width="28" height="33"></TD>
-      <TD>(-3*t<SUP>3</SUP> + 3*t<SUP>2</SUP>)*</TD>
-      <TD>[ (-3*t<SUP>3</SUP> + 3*t<SUP>2</SUP>) * CP1<SUB>x</SUB> +<BR>
-	&nbsp; (3*t<SUP>3</SUP> - 6*t<SUP>2</SUP> + 3*t) * CP0<SUB>x</SUB> +<BR>
-	&nbsp; (P1<SUB>x</SUB>-P0<SUB>x</SUB>)*t<SUP>3</SUP> +
-	3*P0<SUB>x</SUB>*t<SUP>2</SUP> - 3*P0<SUB>x</SUB>*t + P0<SUB>x</SUB> -
-	P<SUB>i.x</SUB> ]</TD>
-      <TD>= 0</TD>
-    </TR>
-  </TABLE>
-  <TABLE>
-    <TR>
-      <TD>&nbsp; &nbsp; &nbsp; &nbsp;</TD>
-      <TD>CP1<SUB>x</SUB></TD>
-      <TD><IMG src="Sigma28x33.png" width="28" height="33"></TD>
-      <TD>(-3*t<SUP>3</SUP> + 3*t<SUP>2</SUP>)*(-3*t<SUP>3</SUP> + 3*t<SUP>2</SUP>)</TD>
-      <TD>=</TD>
-      <TD>-</TD>
-      <TD><IMG src="Sigma28x33.png" width="28" height="33"></TD>
-      <TD>(-3*t<SUP>3</SUP> + 3*t<SUP>2</SUP>)*</TD>
-      <TD>[ (3*t<SUP>3</SUP> - 6*t<SUP>2</SUP> + 3*t) * CP0<SUB>x</SUB> +<BR>
-	&nbsp; (P1<SUB>x</SUB>-P0<SUB>x</SUB>)*t<SUP>3</SUP> +
-	3*P0<SUB>x</SUB>*t<SUP>2</SUP> - 3*P0<SUB>x</SUB>*t + P0<SUB>x</SUB> -
-	P<SUB>i.x</SUB> ]</TD>
-    </TR>
-  </TABLE>
-  <TABLE>
-    <TR>
-      <TD rowspan="3">&nbsp; &nbsp; &nbsp; &nbsp;</TD>
-      <TD rowspan="3">CP1<SUB>x</SUB></TD>
-      <TD rowspan="3">=</TD>
-      <TD rowspan="3">-</TD>
-      <TD><IMG src="Sigma28x33.png" width="28" height="33"></TD>
-      <TD>(-3*t<SUP>3</SUP> + 3*t<SUP>2</SUP>)*</TD>
-      <TD>[ (3*t<SUP>3</SUP> - 6*t<SUP>2</SUP> + 3*t) * CP0<SUB>x</SUB> +<BR>
-	&nbsp; (P1<SUB>x</SUB>-P0<SUB>x</SUB>)*t<SUP>3</SUP> +
-	3*P0<SUB>x</SUB>*t<SUP>2</SUP> - 3*P0<SUB>x</SUB>*t + P0<SUB>x</SUB> -
-	P<SUB>i.x</SUB> ]</TD>
-    </TR>
-    <TR>
-      <TD colspan="3">
-	  <HR>
-      </TD>
-    </TR>
-    <TR>
-      <TD colspan="3"><TABLE align="center">
-	  <TR>
-	    <TD><IMG src="Sigma28x33.png" width="28" height="33"></TD>
-	    <TD>(-3*t<SUP>3</SUP> + 3*t<SUP>2</SUP>)*(-3*t<SUP>3</SUP> + 3*t<SUP>2</SUP>)</TD>
-	  </TR>
-	</TABLE>
-      </TD>
-    </TR>
-  </TABLE>
-  <P>
-  Now this can be plugged into the other equation
-  <TABLE>
-    <TR>
-      <TD>&nbsp; &nbsp; &nbsp; &nbsp;</TD>
-      <TD><IMG src="Sigma28x33.png" width="28" height="33"></TD>
-      <TD>(3*t<SUP>3</SUP> - 6*t<SUP>2</SUP> + 3*t)*</TD>
-      <TD>[ (-3*t<SUP>3</SUP> + 3*t<SUP>2</SUP>) * CP1<SUB>x</SUB> +<BR>
-	&nbsp; (3*t<SUP>3</SUP> - 6*t<SUP>2</SUP> + 3*t) * CP0<SUB>x</SUB> +<BR>
-	&nbsp; (P1<SUB>x</SUB>-P0<SUB>x</SUB>)*t<SUP>3</SUP> +
-	3*P0<SUB>x</SUB>*t<SUP>2</SUP> - 3*P0<SUB>x</SUB>*t + P0<SUB>x</SUB> -
-	P<SUB>i.x</SUB> ]</TD>
-      <TD>= 0</TD>
-    </TR>
-  </TABLE>
-  <P>
-  And we can solve for CP0<SUB>x</SUB> and then CP1<SUB>x</SUB>. The algebra
-  becomes very messy, with lots of terms, but the concepts are simple.
-  <P>
-  Thus we know where the control points are. We know where the end points are.
-  We have our spline.
-  <H3>
-    Why that didn't (quite) work
-  </H3>
-  <P>
-  The above matrix yields a curve which is a good approximation to the original
-  two. But it has one flaw: There is no constraint placed on the slopes, and
-  (surprisingly) the slopes at the end-points of the above method are not close
-  enough to those of the original, and the human eye can now detect the join
-  between this generated spline and the two that connect to it.
-  <P>
-  Generally we will know the slopes at the end points as well as the end points
-  themselves.
-  <P>
-  Let's try another approach, based on better geometry. Givens:
-  <UL>
-    <LI>
-      the start point
-    <LI>
-      the slope at the start point
-    <LI>
-      the end point
-    <LI>
-      the slope at the end point
-  </UL>
-  <P>
-  We want to find the two control points. Now it may seem that specifying the
-  slope specifies the control point but this is not so, it merely specifies
-  the direction in which the control point lies. The control point may be anywhere
-  along the line through the start point in that direction, and each position
-  will give a different curve.
-  <P>
-  So we can express the control point by saying it is CP<SUB>0</SUB> =
-  P<SUB>0</SUB> + r<SUB>0</SUB>
-  <IMG src="delta0.png" width="28" height="28" align="top"> where
-  <IMG src="delta0.png" width="28" height="28" align="top"> is a vector in
-  the direction of the slope, and r<SUB>0</SUB> is the distance in that direction.
-  Similarly for the end point: CP<SUB>1</SUB> = P<SUB>1</SUB> + r<SUB>1</SUB>
-  <IMG src="delta1.png" width="28" height="28" align="top">
-  <P>
-  We want to find r<SUB>0</SUB> and r<SUB>1</SUB>.
-  <P>
-  Converting from bezier control points into a polynomial gives us<BR/>
-  S(t) = a*t<SUP>3</SUP> + b*t<SUP>2</SUP> + c*t + d
-  <UL>
-    <LI>
-      d = P<SUB>0</SUB>
-    <LI>
-      c = 3*(CP<SUB>0</SUB> - P<SUB>0</SUB>)
-    <LI>
-      b = 3*(CP<SUB>1</SUB> - CP<SUB>0</SUB>) - c
-    <LI>
-      a = P<SUB>1</SUB>-P<SUB>0</SUB> - c - b
-  </UL>
-  <P>
-  Substituting we get
-  <UL>
-    <LI>
-      d = P<SUB>0</SUB>
-    <LI>
-      c =
-      3*r<SUB>0</SUB>*<IMG src="delta0.png" width="28" height="28" align="top">
-    <LI>
-      b =
-      3*(P<SUB>1</SUB>-P<SUB>0</SUB>+r<SUB>1</SUB>*<IMG src="delta1.png" width="28"
-	  height="28" align="top">-2*r<SUB>0</SUB><IMG src="delta0.png" width="28"
-	  height="28" align="top">)
-    <LI>
-      a = 2*(P<SUB>0</SUB>-P<SUB>1</SUB>) +
-      3*(r<SUB>0</SUB><IMG src="delta0.png" width="28" height="28" align="top">
-      - r<SUB>1</SUB>*<IMG src="delta1.png" width="28" height="28" align="top">)
-  </UL>
-  <P>
-  For least squares we want to minimize
-  <IMG src="Sigma13x16.png" width="13" height="16">(S(t<SUB>i</SUB>) -
-  P<SUB>i</SUB>)<SUP>2</SUP>.<BR/>
-  taking derivatives with both r0 and r1 we get:
-  <TABLE>
-    <TR>
-      <TD>&nbsp; &nbsp; &nbsp; &nbsp;</TD>
-      <TD><IMG src="Sigma28x33.png" width="28" height="33"></TD>
-      <TD colspan="3">2* (3*t<SUP>3</SUP> - 6*t<SUP>2</SUP> +
-	3*t)*<IMG src="delta0.png" width="28" height="28" align="top">*[
-	S(t<SUB>i</SUB>) - P<SUB>i</SUB>] = 0</TD>
-    </TR>
-    <TR>
-      <TD>&nbsp; &nbsp; &nbsp; &nbsp;</TD>
-      <TD><IMG src="Sigma28x33.png" width="28" height="33"></TD>
-      <TD colspan="3">2* (-3*t<SUP>3</SUP> +
-	3*t<SUP>2</SUP>)*<IMG src="delta1.png" width="28" height="28" align="top">*[
-	S(t<SUB>i</SUB>) - P<SUB>i</SUB>] = 0</TD>
-      <TD colspan="5" align="center">dividing by constants and substituting, we
-	get</TD>
-      <TD>&nbsp; &nbsp; &nbsp; &nbsp;</TD>
-      <TD><IMG src="Sigma28x33.png" width="28" height="33"></TD>
-      <TD>(3*t<SUP>3</SUP> - 6*t<SUP>2</SUP> + 3*t)*[</TD>
-      <TD>P<SUB>0</SUB> - P<SUB>i</SUB> + 3 *
-	(P<SUB>1</SUB>-P<SUB>0</SUB>*t<SUP>2</SUP> + 2 * (P<SUB>0</SUB> -
-	P<SUB>1</SUB>)*t<SUP>3</SUP> +<BR>
-	<IMG src="delta0.png" width="28" height="28" align="top">*(3*t -
-	6*t<SUP>2</SUP> + 3*t<SUP>3</SUP>) * r<SUB>0</SUB> + <BR>
-	<IMG src="delta1.png" width="28" height="28" align="top">*(3*t<SUP>2</SUP>
-	- 3*t<SUP>3</SUP>) * r<SUB>1</SUB> +</TD>
-      <TD>] = 0</TD>
-      <TD>&nbsp; &nbsp; &nbsp; &nbsp;</TD>
-      <TD><IMG src="Sigma28x33.png" width="28" height="33"></TD>
-      <TD>(-3*t<SUP>3</SUP> + 3*t<SUP>2</SUP>)*[</TD>
-      <TD>P<SUB>0</SUB> - P<SUB>i</SUB> + 3 *
-	(P<SUB>1</SUB>-P<SUB>0</SUB>*t<SUP>2</SUP> + 2 * (P<SUB>0</SUB> -
-	P<SUB>1</SUB>)*t<SUP>3</SUP> +<BR>
-	<IMG src="delta0.png" width="28" height="28" align="top">*(3*t -
-	6*t<SUP>2</SUP> + 3*t<SUP>3</SUP>) * r<SUB>0</SUB> + <BR>
-	<IMG src="delta1.png" width="28" height="28" align="top">*(3*t<SUP>2</SUP>
-	- 3*t<SUP>3</SUP>) * r<SUB>1</SUB> +</TD>
-      <TD>] = 0</TD>
-    </TR>
-  </TABLE>
-  <P>
-  Again we have two linear equations in two unknowns (r0, and r1), and (after
-  a lot of algebraic grubbing) we can solve for them. One interesting thing
-  here is that the x and y terms do not separate but must be summed together.
-  <H3>
-    Singular matrices
-  </H3>
-  <P>
-  Very occasionally, a singular matrix will pop out of these equations. Then
-  what I do is calculate the slope vectors at the endpoints and then try many
-  reasonable lengths for those vectors and see which yields the best approximation
-  to the original curve (this gives us our new control points).
-  <P>
-  This is very, very slow. 
-    <HR>
-  <H4>
-    <SUP><A NAME="guess-t">1</A></SUP>Guessing values for t
-  </H4>
-  <P>
-  FontForge approximates the lengths of the two splines being merged. If
-  Point<SUB>i </SUB>= Spline1(old-t<SUB>i</SUB>), then we approximate ti by<BR>
-  &nbsp; &nbsp; t<SUB>i</SUB> = old-t<SUB>i</SUB>
-  *len(spline1)/(len(spline1)+len(spline2)<BR>
-  and if Point<SUB>i </SUB>= Spline2(old-t<SUB>i</SUB>)<BR>
-  &nbsp; &nbsp; t<SUB>i</SUB> = len(spline1)/(len(spline1)+len(spline2) +
-  old-t<SUB>i</SUB> *len(spline2)/(len(spline1)+len(spline2)<BR>
-  That is we do a linear interpolation of t based on the relative lengths of
-  the two splines.
-  <P>
-    <HR>
-  <H2>
-    Calculating the outline of a <A NAME="Stroke">stroked</A> path
-  </H2>
-  <H3>
-    A circular pen
-  </H3>
-  <P>
-  PostScript supports several variants on the theme of a circular pen, and
-  FontForge tries to emulate them all. Basically PostScript "stroke"s a path
-  at a certain width by:
-  <P>
-  at every location on the curve<BR>
-  &nbsp; &nbsp; find the normal vector at that location<BR>
-  &nbsp; &nbsp; find the two points which are width/2 away from the curve<BR>
-  &nbsp; &nbsp; filling in between those two points<BR>
-  end
-  <P>
-  This is essentially what a circular pen does. The only aberrations appear
-  at the end-points of a contour, or at points where two splines join but their
-  slopes are not continuous. PostScript allows the user to specify the behavior
-  at joints and at end-points.
-  <P>
-  &nbsp; &nbsp; <IMG SRC="expand-pre.png" WIDTH="126" HEIGHT="86" ALIGN="Middle">
-  =&gt; <IMG SRC="expand-post.png" WIDTH="131" HEIGHT="91" ALIGN="Middle">
-  <P>
-  FontForge can't deal with an infinite number of locations, so it samples
-  the curve (approximately every em unit), and finds the two normal points.
-  These are on the edge of the area to be stroked, so FontForge can approximate
-  new contours from these edge points (using the <A href="#Approximating">above
-  algorithm</A>).
-  <P>
-  PostScript pens can end in
-  <UL>
-    <LI>
-      A flat edge -- this is easy, we just draw a line from the end of one spline
-      to the end of the other
-    <LI>
-      A rounded edge -- here we just draw a semi-circle (making sure it goes in
-      the right direction).
-    <LI>
-      A butt edge -- just draw lines continuing the two splines, moving with the
-      same slope and width/2 units long, and then join those end-points with a
-      straight line.
-  </UL>
-  <P>
-  Things are a bit more complex at a joint
-  <IMG SRC="expand-joint-pre.png" WIDTH="61" HEIGHT="78" ALIGN="Middle"> =&gt;
-  <IMG SRC="expand-joint-post.png" WIDTH="69" HEIGHT="80" ALIGN="Middle">,
-  the green lines in the right image show where the path would have gone had
-  it not been constrained by a joint, so on the inside of the joint FontForge
-  must figure out where this intersection occurs. While on the outside FontForge
-  must figure out either a round, miter or bevelled edge.
-  <P>
-  Unfortunately, the normal points are not always on the edge of the filled
-  region. If the curve makes a sharp bend, then one of the normal points may
-  end up inside the pen when it is centered somewhere else on the original
-  contour (similar to the case of a joint above).
-  <P>
-  So FontForge makes another pass through the edge points and figures out which
-  ones are actually internal points. After that it will approximate contours.
-  <P>
-  Now if we start with an open contour, (a straight line, for example) then
-  we will end up with one closed contour. While if we start with a closed contour
-  we will end up with two closed contours (one on the inside, and one on the
-  outside). Unless there are places where the curve doubles back on itself,
-  then when can get arbetrarily many closed contours.
-  <H3>
-    An elliptical pen
-  </H3>
-  <P>
-  This is really just the same as a circular pen. Let us say we want an ellipse
-  which is twice as wide as it is high. Then before stroking the path, let's
-  scale it to 50% in the horizontal direction, then stroke it with a circular
-  pen, and then scale it back by 200% horizontally. The result will be as if
-  we had used an elliptical pen.
-  <P>
-  Obviously if the ellipse is at an angle to the glyph's axes, we must apply
-  a more complicated transformation which involves both rotation and scaling.
-  <H3>
-    A rectangular pen (a calligraphic pen)
-  </H3>
-  <P>
-  Things are subtly different between a rectangular pen and a circular pen.
-  We can no longer just find the points which are a given distance away and
-  normal to the curve. Except where the spline is parallel to one edge of the
-  pen, a the outer contour of a rectangular pen will be stroked by one of its
-  end-points. So all we need do is figure out where a spline is parallel to
-  the pen's sides, and look at the problem in little chunks between those difficult
-  points.
-  <P>
-  If we are between difficult points then life is very simple indeed. The edge
-  will always be stroked by the same end-point, which is a fixed distance from
-  the center of the pen, so all we need to do is translate the original spline
-  by this distance (and then fix it up so that t goes from [0,1], but that's
-  another easy transformation).
-  <P>
-  When we reach a point where the spline's slope is parallel to one edge of
-  the pen, then on the outside path we draw a copy of that edge of of the pen,
-  and on the inside edge we calculate a join as above.
-  <H3>
-    An arbitrary convex polygonal pen
-  </H3>
-  <P>
-  The same method which works for a rectangle can be extended without too much
-  difficulty to any convex polygon. (MetaFont fonts can be drawn with such
-  a pen. I don't know if any are)
-  <H3>
-    A pen of variable width
-  </H3>
-  <P>
-  <!--If you have a wacom tablet then FontForge also supports variable width
+    c<SUB>y</SUB>*t +d<SUB>y</SUB>--> &nbsp; &nbsp;
+substituting<br />
+      S(t) = (P1 - 3*CP1 + 3*CP0 - P0)*t<sup>3</sup> +<br />
+      &nbsp; (3*CP1 - 6*CP0 + 3*P0)*t<sup>2</sup> +<br />
+      &nbsp; (3*CP0 - 3*P0)*t +<br />
+      &nbsp; P0<br />
+      &nbsp; &nbsp; rearranging<br />
+      S(t) = (-3*t<sup>3</sup> + 3*t<sup>2</sup>) * CP1 +<br />
+      &nbsp; (3*t<sup>3</sup> - 6*t<sup>2</sup> + 3*t) * CP0
+      +<br />
+      &nbsp; (P1-P0)*t<sup>3</sup> + 3*P0*t<sup>2</sup> - 3*P0*t +
+      P0
+    </blockquote>
+
+    <p>Now we want to minimize the sum of the squares of the
+    difference between the value we approximate with the new
+    spline, S(t<sub>i</sub>), and the actual value we were given,
+    P<sub>i</sub>.</p>
+
+    <table>
+      <tr>
+        <td>&nbsp; &nbsp; &nbsp; &nbsp;</td>
+
+        <td><img src="Sigma28x33.png" width="28" height=
+        "33" /></td>
+
+        <td>[ S(t<sub>i</sub>) - P<sub>i</sub>]<sup>2</sup></td>
+      </tr>
+    </table>
+
+    <p>Now we have four unknown variables, the x and y coordinates
+    of the two control points. To find the minimum of the above
+    error term we must take the derivative with respect to each
+    variable, and set that to zero. Then we have four equations
+    with four unknowns and we can solve for each variable.</p>
+
+    <table>
+      <tr>
+        <td>&nbsp; &nbsp; &nbsp; &nbsp;</td>
+
+        <td><img src="Sigma28x33.png" width="28" height=
+        "33" /></td>
+
+        <td>2* (-3*t<sup>3</sup> + 3*t<sup>2</sup>)*[
+        S<sub>x</sub>(t<sub>i</sub>) - P<sub>i.x</sub>] = 0</td>
+      </tr>
+
+      <tr>
+        <td>&nbsp; &nbsp; &nbsp; &nbsp;</td>
+
+        <td><img src="Sigma28x33.png" width="28" height=
+        "33" /></td>
+
+        <td>2* (-3*t<sup>3</sup> + 3*t<sup>2</sup>)*[
+        S<sub>y</sub>(t<sub>i</sub>) - P<sub>i.y</sub>] = 0</td>
+      </tr>
+
+      <tr>
+        <td>&nbsp; &nbsp; &nbsp; &nbsp;</td>
+
+        <td><img src="Sigma28x33.png" width="28" height=
+        "33" /></td>
+
+        <td>2* (3*t<sup>3</sup> - 6*t<sup>2</sup> + 3*t)*[
+        S<sub>x</sub>(t<sub>i</sub>) - P<sub>i.x</sub>] = 0</td>
+      </tr>
+
+      <tr>
+        <td>&nbsp; &nbsp; &nbsp; &nbsp;</td>
+
+        <td><img src="Sigma28x33.png" width="28" height=
+        "33" /></td>
+
+        <td>2* (3*t<sup>3</sup> - 6*t<sup>2</sup> + 3*t)*[
+        S<sub>y</sub>(t<sub>i</sub>) - P<sub>i.y</sub>] = 0</td>
+      </tr>
+    </table>
+
+    <p>Happily for us, the x and y terms do not interact and my be
+    solved separately. The procedure is the same for each
+    coordinate, so I shall only show one:</p>
+
+    <table>
+      <tr>
+        <td>&nbsp; &nbsp; &nbsp; &nbsp;</td>
+
+        <td><img src="Sigma28x33.png" width="28" height=
+        "33" /></td>
+
+        <td colspan="3">2* (-3*t<sup>3</sup> + 3*t<sup>2</sup>)*[
+        S<sub>x</sub>(t<sub>i</sub>) - P<sub>i.x</sub>] = 0</td>
+      </tr>
+
+      <tr>
+        <td>&nbsp; &nbsp; &nbsp; &nbsp;</td>
+
+        <td><img src="Sigma28x33.png" width="28" height=
+        "33" /></td>
+
+        <td colspan="3">2* (3*t<sup>3</sup> - 6*t<sup>2</sup> +
+        3*t)*[ S<sub>x</sub>(t<sub>i</sub>) - P<sub>i.x</sub>] =
+        0</td>
+      </tr>
+
+      <tr>
+        <td colspan="5" align="center">=&gt;</td>
+      </tr>
+
+      <tr>
+        <td>&nbsp; &nbsp; &nbsp; &nbsp;</td>
+
+        <td><img src="Sigma28x33.png" width="28" height=
+        "33" /></td>
+
+        <td>(-3*t<sup>3</sup> + 3*t<sup>2</sup>)*</td>
+
+        <td>[ (-3*t<sup>3</sup> + 3*t<sup>2</sup>) *
+        CP1<sub>x</sub> +<br />
+        &nbsp; (3*t<sup>3</sup> - 6*t<sup>2</sup> + 3*t) *
+        CP0<sub>x</sub> +<br />
+        &nbsp; (P1<sub>x</sub>-P0<sub>x</sub>)*t<sup>3</sup> +
+        3*P0<sub>x</sub>*t<sup>2</sup> - 3*P0<sub>x</sub>*t +
+        P0<sub>x</sub> - P<sub>i.x</sub> ]</td>
+
+        <td>= 0</td>
+      </tr>
+    </table>
+
+    <table>
+      <tr>
+        <td>&nbsp; &nbsp; &nbsp; &nbsp;</td>
+
+        <td>CP1<sub>x</sub></td>
+
+        <td><img src="Sigma28x33.png" width="28" height=
+        "33" /></td>
+
+        <td>(-3*t<sup>3</sup> + 3*t<sup>2</sup>)*(-3*t<sup>3</sup>
+        + 3*t<sup>2</sup>)</td>
+
+        <td>=</td>
+
+        <td>-</td>
+
+        <td><img src="Sigma28x33.png" width="28" height=
+        "33" /></td>
+
+        <td>(-3*t<sup>3</sup> + 3*t<sup>2</sup>)*</td>
+
+        <td>[ (3*t<sup>3</sup> - 6*t<sup>2</sup> + 3*t) *
+        CP0<sub>x</sub> +<br />
+        &nbsp; (P1<sub>x</sub>-P0<sub>x</sub>)*t<sup>3</sup> +
+        3*P0<sub>x</sub>*t<sup>2</sup> - 3*P0<sub>x</sub>*t +
+        P0<sub>x</sub> - P<sub>i.x</sub> ]</td>
+      </tr>
+    </table>
+
+    <table>
+      <tr>
+        <td rowspan="3">&nbsp; &nbsp; &nbsp; &nbsp;</td>
+
+        <td rowspan="3">CP1<sub>x</sub></td>
+
+        <td rowspan="3">=</td>
+
+        <td rowspan="3">-</td>
+
+        <td><img src="Sigma28x33.png" width="28" height=
+        "33" /></td>
+
+        <td>(-3*t<sup>3</sup> + 3*t<sup>2</sup>)*</td>
+
+        <td>[ (3*t<sup>3</sup> - 6*t<sup>2</sup> + 3*t) *
+        CP0<sub>x</sub> +<br />
+        &nbsp; (P1<sub>x</sub>-P0<sub>x</sub>)*t<sup>3</sup> +
+        3*P0<sub>x</sub>*t<sup>2</sup> - 3*P0<sub>x</sub>*t +
+        P0<sub>x</sub> - P<sub>i.x</sub> ]</td>
+      </tr>
+
+      <tr>
+        <td colspan="3">
+          <hr />
+        </td>
+      </tr>
+
+      <tr>
+        <td colspan="3">
+          <table align="center">
+            <tr>
+              <td><img src="Sigma28x33.png" width="28" height=
+              "33" /></td>
+
+              <td>(-3*t<sup>3</sup> +
+              3*t<sup>2</sup>)*(-3*t<sup>3</sup> +
+              3*t<sup>2</sup>)</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+
+    <p>Now this can be plugged into the other equation</p>
+
+    <table>
+      <tr>
+        <td>&nbsp; &nbsp; &nbsp; &nbsp;</td>
+
+        <td><img src="Sigma28x33.png" width="28" height=
+        "33" /></td>
+
+        <td>(3*t<sup>3</sup> - 6*t<sup>2</sup> + 3*t)*</td>
+
+        <td>[ (-3*t<sup>3</sup> + 3*t<sup>2</sup>) *
+        CP1<sub>x</sub> +<br />
+        &nbsp; (3*t<sup>3</sup> - 6*t<sup>2</sup> + 3*t) *
+        CP0<sub>x</sub> +<br />
+        &nbsp; (P1<sub>x</sub>-P0<sub>x</sub>)*t<sup>3</sup> +
+        3*P0<sub>x</sub>*t<sup>2</sup> - 3*P0<sub>x</sub>*t +
+        P0<sub>x</sub> - P<sub>i.x</sub> ]</td>
+
+        <td>= 0</td>
+      </tr>
+    </table>
+
+    <p>And we can solve for CP0<sub>x</sub> and then
+    CP1<sub>x</sub>. The algebra becomes very messy, with lots of
+    terms, but the concepts are simple.</p>
+
+    <p>Thus we know where the control points are. We know where the
+    end points are. We have our spline.</p>
+
+    <h3>Why that didn't (quite) work</h3>
+
+    <p>The above matrix yields a curve which is a good
+    approximation to the original two. But it has one flaw: There
+    is no constraint placed on the slopes, and (surprisingly) the
+    slopes at the end-points of the above method are not close
+    enough to those of the original, and the human eye can now
+    detect the join between this generated spline and the two that
+    connect to it.</p>
+
+    <p>Generally we will know the slopes at the end points as well
+    as the end points themselves.</p>
+
+    <p>Let's try another approach, based on better geometry.
+    Givens:</p>
+
+    <ul>
+      <li>the start point</li>
+
+      <li>the slope at the start point</li>
+
+      <li>the end point</li>
+
+      <li>the slope at the end point</li>
+    </ul>
+
+    <p>We want to find the two control points. Now it may seem that
+    specifying the slope specifies the control point but this is
+    not so, it merely specifies the direction in which the control
+    point lies. The control point may be anywhere along the line
+    through the start point in that direction, and each position
+    will give a different curve.</p>
+
+    <p>So we can express the control point by saying it is
+    CP<sub>0</sub> = P<sub>0</sub> + r<sub>0</sub> <img src=
+    "delta0.png" width="28" height="28" align="top" /> where
+    <img src="delta0.png" width="28" height="28" align="top" /> is
+    a vector in the direction of the slope, and r<sub>0</sub> is
+    the distance in that direction. Similarly for the end point:
+    CP<sub>1</sub> = P<sub>1</sub> + r<sub>1</sub> <img src=
+    "delta1.png" width="28" height="28" align="top" /></p>
+
+    <p>We want to find r<sub>0</sub> and r<sub>1</sub>.</p>
+
+    <p>Converting from bezier control points into a polynomial
+    gives us<br />
+    S(t) = a*t<sup>3</sup> + b*t<sup>2</sup> + c*t + d</p>
+
+    <ul>
+      <li>d = P<sub>0</sub></li>
+
+      <li>c = 3*(CP<sub>0</sub> - P<sub>0</sub>)</li>
+
+      <li>b = 3*(CP<sub>1</sub> - CP<sub>0</sub>) - c</li>
+
+      <li>a = P<sub>1</sub>-P<sub>0</sub> - c - b</li>
+    </ul>
+
+    <p>Substituting we get</p>
+
+    <ul>
+      <li>d = P<sub>0</sub></li>
+
+      <li>c = 3*r<sub>0</sub>*<img src="delta0.png" width="28"
+      height="28" align="top" /></li>
+
+      <li>b =
+      3*(P<sub>1</sub>-P<sub>0</sub>+r<sub>1</sub>*<img src="delta1.png"
+      width="28" height="28" align=
+      "top" />-2*r<sub>0</sub><img src="delta0.png" width="28"
+      height="28" align="top" />)</li>
+
+      <li>a = 2*(P<sub>0</sub>-P<sub>1</sub>) +
+      3*(r<sub>0</sub><img src="delta0.png" width="28" height="28"
+      align="top" /> - r<sub>1</sub>*<img src="delta1.png" width=
+      "28" height="28" align="top" />)</li>
+    </ul>
+
+    <p>For least squares we want to minimize <img src=
+    "Sigma13x16.png" width="13" height="16" />(S(t<sub>i</sub>) -
+    P<sub>i</sub>)<sup>2</sup>.<br />
+    taking derivatives with both r0 and r1 we get:</p>
+
+    <table>
+      <tr>
+        <td>&nbsp; &nbsp; &nbsp; &nbsp;</td>
+
+        <td><img src="Sigma28x33.png" width="28" height=
+        "33" /></td>
+
+        <td colspan="3">2* (3*t<sup>3</sup> - 6*t<sup>2</sup> +
+        3*t)*<img src="delta0.png" width="28" height="28" align=
+        "top" />*[ S(t<sub>i</sub>) - P<sub>i</sub>] = 0</td>
+      </tr>
+
+      <tr>
+        <td>&nbsp; &nbsp; &nbsp; &nbsp;</td>
+
+        <td><img src="Sigma28x33.png" width="28" height=
+        "33" /></td>
+
+        <td colspan="3">2* (-3*t<sup>3</sup> +
+        3*t<sup>2</sup>)*<img src="delta1.png" width="28" height=
+        "28" align="top" />*[ S(t<sub>i</sub>) - P<sub>i</sub>] =
+        0</td>
+
+        <td colspan="5" align="center">dividing by constants and
+        substituting, we get</td>
+
+        <td>&nbsp; &nbsp; &nbsp; &nbsp;</td>
+
+        <td><img src="Sigma28x33.png" width="28" height=
+        "33" /></td>
+
+        <td>(3*t<sup>3</sup> - 6*t<sup>2</sup> + 3*t)*[</td>
+
+        <td>P<sub>0</sub> - P<sub>i</sub> + 3 *
+        (P<sub>1</sub>-P<sub>0</sub>*t<sup>2</sup> + 2 *
+        (P<sub>0</sub> - P<sub>1</sub>)*t<sup>3</sup> +<br />
+        <img src="delta0.png" width="28" height="28" align=
+        "top" />*(3*t - 6*t<sup>2</sup> + 3*t<sup>3</sup>) *
+        r<sub>0</sub> +<br />
+        <img src="delta1.png" width="28" height="28" align=
+        "top" />*(3*t<sup>2</sup> - 3*t<sup>3</sup>) *
+        r<sub>1</sub> +</td>
+
+        <td>] = 0</td>
+
+        <td>&nbsp; &nbsp; &nbsp; &nbsp;</td>
+
+        <td><img src="Sigma28x33.png" width="28" height=
+        "33" /></td>
+
+        <td>(-3*t<sup>3</sup> + 3*t<sup>2</sup>)*[</td>
+
+        <td>P<sub>0</sub> - P<sub>i</sub> + 3 *
+        (P<sub>1</sub>-P<sub>0</sub>*t<sup>2</sup> + 2 *
+        (P<sub>0</sub> - P<sub>1</sub>)*t<sup>3</sup> +<br />
+        <img src="delta0.png" width="28" height="28" align=
+        "top" />*(3*t - 6*t<sup>2</sup> + 3*t<sup>3</sup>) *
+        r<sub>0</sub> +<br />
+        <img src="delta1.png" width="28" height="28" align=
+        "top" />*(3*t<sup>2</sup> - 3*t<sup>3</sup>) *
+        r<sub>1</sub> +</td>
+
+        <td>] = 0</td>
+      </tr>
+    </table>
+
+    <p>Again we have two linear equations in two unknowns (r0, and
+    r1), and (after a lot of algebraic grubbing) we can solve for
+    them. One interesting thing here is that the x and y terms do
+    not separate but must be summed together.</p>
+
+    <h3>Singular matrices</h3>
+
+    <p>Very occasionally, a singular matrix will pop out of these
+    equations. Then what I do is calculate the slope vectors at the
+    endpoints and then try many reasonable lengths for those
+    vectors and see which yields the best approximation to the
+    original curve (this gives us our new control points).</p>
+
+    <p>This is very, very slow.</p>
+    <hr />
+
+    <h4><sup><a name="guess-t" id="guess-t">1</a></sup>Guessing
+    values for t</h4>
+
+    <p>FontForge approximates the lengths of the two splines being
+    merged. If Point<sub>i</sub> = Spline1(old-t<sub>i</sub>), then
+    we approximate ti by<br />
+    &nbsp; &nbsp; t<sub>i</sub> = old-t<sub>i</sub>
+    *len(spline1)/(len(spline1)+len(spline2)<br />
+    and if Point<sub>i</sub> = Spline2(old-t<sub>i</sub>)<br />
+    &nbsp; &nbsp; t<sub>i</sub> =
+    len(spline1)/(len(spline1)+len(spline2) + old-t<sub>i</sub>
+    *len(spline2)/(len(spline1)+len(spline2)<br />
+    That is we do a linear interpolation of t based on the relative
+    lengths of the two splines.</p>
+    <hr />
+
+    <h2>Calculating the outline of a <a name="Stroke" id=
+    "Stroke">stroked</a> path</h2>
+
+    <h3>A circular pen</h3>
+
+    <p>PostScript supports several variants on the theme of a
+    circular pen, and FontForge tries to emulate them all.
+    Basically PostScript "stroke"s a path at a certain width
+    by:</p>
+
+    <p>at every location on the curve<br />
+    &nbsp; &nbsp; find the normal vector at that location<br />
+    &nbsp; &nbsp; find the two points which are width/2 away from
+    the curve<br />
+    &nbsp; &nbsp; filling in between those two points<br />
+    end</p>
+
+    <p>This is essentially what a circular pen does. The only
+    aberrations appear at the end-points of a contour, or at points
+    where two splines join but their slopes are not continuous.
+    PostScript allows the user to specify the behavior at joints
+    and at end-points.</p>
+
+    <p>&nbsp; &nbsp; <img src="expand-pre.png" width="126" height=
+    "86" align="middle" /> =&gt; <img src="expand-post.png" width=
+    "131" height="91" align="middle" /></p>
+
+    <p>FontForge can't deal with an infinite number of locations,
+    so it samples the curve (approximately every em unit), and
+    finds the two normal points. These are on the edge of the area
+    to be stroked, so FontForge can approximate new contours from
+    these edge points (using the <a href="#Approximating">above
+    algorithm</a>).</p>
+
+    <p>PostScript pens can end in</p>
+
+    <ul>
+      <li>A flat edge -- this is easy, we just draw a line from the
+      end of one spline to the end of the other</li>
+
+      <li>A rounded edge -- here we just draw a semi-circle (making
+      sure it goes in the right direction).</li>
+
+      <li>A butt edge -- just draw lines continuing the two
+      splines, moving with the same slope and width/2 units long,
+      and then join those end-points with a straight line.</li>
+    </ul>
+
+    <p>Things are a bit more complex at a joint <img src=
+    "expand-joint-pre.png" width="61" height="78" align="middle" />
+    =&gt; <img src="expand-joint-post.png" width="69" height="80"
+    align="middle" />, the green lines in the right image show
+    where the path would have gone had it not been constrained by a
+    joint, so on the inside of the joint FontForge must figure out
+    where this intersection occurs. While on the outside FontForge
+    must figure out either a round, miter or bevelled edge.</p>
+
+    <p>Unfortunately, the normal points are not always on the edge
+    of the filled region. If the curve makes a sharp bend, then one
+    of the normal points may end up inside the pen when it is
+    centered somewhere else on the original contour (similar to the
+    case of a joint above).</p>
+
+    <p>So FontForge makes another pass through the edge points and
+    figures out which ones are actually internal points. After that
+    it will approximate contours.</p>
+
+    <p>Now if we start with an open contour, (a straight line, for
+    example) then we will end up with one closed contour. While if
+    we start with a closed contour we will end up with two closed
+    contours (one on the inside, and one on the outside). Unless
+    there are places where the curve doubles back on itself, then
+    when can get arbetrarily many closed contours.</p>
+
+    <h3>An elliptical pen</h3>
+
+    <p>This is really just the same as a circular pen. Let us say
+    we want an ellipse which is twice as wide as it is high. Then
+    before stroking the path, let's scale it to 50% in the
+    horizontal direction, then stroke it with a circular pen, and
+    then scale it back by 200% horizontally. The result will be as
+    if we had used an elliptical pen.</p>
+
+    <p>Obviously if the ellipse is at an angle to the glyph's axes,
+    we must apply a more complicated transformation which involves
+    both rotation and scaling.</p>
+
+    <h3>A rectangular pen (a calligraphic pen)</h3>
+
+    <p>Things are subtly different between a rectangular pen and a
+    circular pen. We can no longer just find the points which are a
+    given distance away and normal to the curve. Except where the
+    spline is parallel to one edge of the pen, a the outer contour
+    of a rectangular pen will be stroked by one of its end-points.
+    So all we need do is figure out where a spline is parallel to
+    the pen's sides, and look at the problem in little chunks
+    between those difficult points.</p>
+
+    <p>If we are between difficult points then life is very simple
+    indeed. The edge will always be stroked by the same end-point,
+    which is a fixed distance from the center of the pen, so all we
+    need to do is translate the original spline by this distance
+    (and then fix it up so that t goes from [0,1], but that's
+    another easy transformation).</p>
+
+    <p>When we reach a point where the spline's slope is parallel
+    to one edge of the pen, then on the outside path we draw a copy
+    of that edge of of the pen, and on the inside edge we calculate
+    a join as above.</p>
+
+    <h3>An arbitrary convex polygonal pen</h3>
+
+    <p>The same method which works for a rectangle can be extended
+    without too much difficulty to any convex polygon. (MetaFont
+    fonts can be drawn with such a pen. I don't know if any
+    are)</p>
+
+    <h3>A pen of variable width</h3>
+
+    <p>
+    <!--If you have a wacom tablet then FontForge also supports variable width
   pens.
-  Extending the above algorithms is fairly simple.-->FontForge does not currently
-  support this (some of the assumptions behind this algorithm are broken if
-  the pen changes shape too rapidly).
-  <H3>
-    A pen at a varying angle
-  </H3>
-  <P>
-  FontForge does not support this.
-  <P>
-</DIV>
-</BODY></HTML>
+  Extending the above algorithms is fairly simple.-->FontForge does
+not currently support this (some of the assumptions behind this
+algorithm are broken if the pen changes shape too rapidly).</p>
+
+    <h3>A pen at a varying angle</h3>
+
+    <p>FontForge does not support this.</p>
+  </div>
+</body>
+</html>

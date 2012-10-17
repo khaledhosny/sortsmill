@@ -1,17 +1,24 @@
-<HTML>
-<HEAD>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux (vers 25 March 2009), see www.w3.org" />
   <!-- Created with AOLpress/2.0 -->
   <!-- AP: Created on: 11-Feb-2001 -->
   <!-- AP: Last modified: 2-Mar-2004 -->
-  <LINK REL="icon" href="fftype16.png">
-  <TITLE>UI data structures for FontForge</TITLE>
-  <LINK REL="stylesheet" TYPE="text/css" HREF="FontForge.css">
-</HEAD>
-<BODY>
-<DIV id="in">
-<P>
-<BLOCKQUOTE>
-  <PRE>/* Copyright (C) 2000-2003 by George Williams */
+  <link rel="icon" href="fftype16.png" />
+
+  <title>UI data structures for FontForge</title>
+  <link rel="stylesheet" type="text/css" href="FontForge.css" />
+</head>
+
+<body>
+  <div id="in">
+    <blockquote>
+      <pre>
+/* Copyright (C) 2000-2003 by George Williams */
 /*
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -59,46 +66,46 @@ typedef struct drect {
 } DRect;
 
 typedef struct pressedOn {
-    int x,y;			/* screen location of the press */
-    double cx, cy;		/* Translated into character space */
+    int x,y;                    /* screen location of the press */
+    double cx, cy;              /* Translated into character space */
     SplinePoint *sp;
-    unsigned int nextcp: 1;	/* Is the cursor on the "next" control point of */
-    unsigned int prevcp: 1;	/*  the spline point, or the "prev" control point */
-    unsigned int anysel: 1;	/* did we hit anything? */
-    unsigned int width: 1;	/* we're moving the width rather than a spline */
+    unsigned int nextcp: 1;     /* Is the cursor on the "next" control point of */
+    unsigned int prevcp: 1;     /*  the spline point, or the "prev" control point */
+    unsigned int anysel: 1;     /* did we hit anything? */
+    unsigned int width: 1;      /* we're moving the width rather than a spline */
     unsigned int pressed: 1;
     unsigned int rubberbanding: 1;
     unsigned int transany: 1;
     unsigned int transanyrefs: 1;
     Spline *spline;
-    double t;			/* location on the spline where we pressed */
+    double t;                   /* location on the spline where we pressed */
     RefChar *ref;
-    SplinePointList *spl;	/* containing spline or point */
+    SplinePointList *spl;       /* containing spline or point */
     ImageList *img;
-    float ex, ey;		/* end of last rubber band rectangle */
-    BasePoint constrain;	/* Point to which we constrain movement */
-    BasePoint cp;		/* Original control point position */
+    float ex, ey;               /* end of last rubber band rectangle */
+    BasePoint constrain;        /* Point to which we constrain movement */
+    BasePoint cp;               /* Original control point position */
 } PressedOn;
 
 /* Note: These are ordered as they are displayed in the tools palette */
 enum cvtools { cvt_pointer, cvt_magnify,
-	cvt_curve, cvt_corner, cvt_tangent, cvt_pen,
-	cvt_knife, cvt_ruler,
-	cvt_scale, cvt_flip,
-	cvt_rotate, cvt_skew,
-	cvt_rect, cvt_poly,
-	cvt_ellipse, cvt_star,
-	cvt_minify, cvt_max=cvt_minify,
-	cvt_none = -1};
+        cvt_curve, cvt_corner, cvt_tangent, cvt_pen,
+        cvt_knife, cvt_ruler,
+        cvt_scale, cvt_flip,
+        cvt_rotate, cvt_skew,
+        cvt_rect, cvt_poly,
+        cvt_ellipse, cvt_star,
+        cvt_minify, cvt_max=cvt_minify,
+        cvt_none = -1};
 enum bvtools { bvt_pointer, bvt_magnify,
-	bvt_pencil, bvt_line,
-	bvt_shift, bvt_hand,
-	bvt_minify, bvt_max=bvt_minify,
-	bvt_rect, bvt_filledrect,
-	bvt_ellipse, bvt_filledellipse,
-	bvt_max2 = bvt_filledellipse,
-	bvt_none = -1,
-	bvt_fliph=0, bvt_flipv, bvt_rotate90cw, bvt_rotate90ccw, bvt_rotate180, bvt_skew };
+        bvt_pencil, bvt_line,
+        bvt_shift, bvt_hand,
+        bvt_minify, bvt_max=bvt_minify,
+        bvt_rect, bvt_filledrect,
+        bvt_ellipse, bvt_filledellipse,
+        bvt_max2 = bvt_filledellipse,
+        bvt_none = -1,
+        bvt_fliph=0, bvt_flipv, bvt_rotate90cw, bvt_rotate90ccw, bvt_rotate180, bvt_skew };
 enum drawmode { dm_fore, dm_back, dm_grid, dm_max };
 
 typedef struct charview {
@@ -109,11 +116,11 @@ typedef struct charview {
     unsigned int showhints:1;
     unsigned int showpoints:1;
     unsigned int showfilled:1;
-    unsigned int needsrasterize:1;		/* Rasterization (of fill or fontview) needed on mouse up */
-    unsigned int recentchange:1;		/* a change happened in the grids or background. don't need to rasterize */
+    unsigned int needsrasterize:1;              /* Rasterization (of fill or fontview) needed on mouse up */
+    unsigned int recentchange:1;                /* a change happened in the grids or background. don't need to rasterize */
     unsigned int drawmode:2;
-    unsigned int info_within: 1;		/* cursor is within main window */
-    unsigned int back_img_out_of_date: 1;	/* Force redraw of back image pixmap */
+    unsigned int info_within: 1;                /* cursor is within main window */
+    unsigned int back_img_out_of_date: 1;       /* Force redraw of back image pixmap */
     unsigned int cntrldown:1;
     SplinePointList **heads[dm_max];
     Undoes **uheads[dm_max];
@@ -135,7 +142,7 @@ typedef struct charview {
     GWindow icon;
     PressedOn p;
     GWindow tools, layers;
-    int8 b1_tool, cb1_tool, b2_tool, cb2_tool;		/* Button 3 does a popup */
+    int8 b1_tool, cb1_tool, b2_tool, cb2_tool;          /* Button 3 does a popup */
     int8 showing_tool, pressed_tool, pressed_display, had_control, active_tool;
     SplinePointList *active_spl;
     SplinePoint *active_sp;
@@ -146,11 +153,11 @@ typedef struct charview {
     GTimer *pressed;
     GWindow backimgs;
     enum expandedge { ee_none, ee_nw, ee_up, ee_ne, ee_right, ee_se, ee_down,
-	    ee_sw, ee_left, ee_max } expandedge;
+            ee_sw, ee_left, ee_max } expandedge;
     BasePoint expandorigin;
     double expandwidth, expandheight;
     SplinePointList *active_shape;
-} <A NAME="CharView">CharView</A>;
+} <a name="CharView" id="CharView">CharView</a>;
 
 typedef struct bitmapview {
     BDFChar *bc;
@@ -172,36 +179,36 @@ typedef struct bitmapview {
     unsigned int clearing:1;
     GWindow tools, layers;
     GGadget *recalc;
-    int8 b1_tool, cb1_tool, b2_tool, cb2_tool;		/* Button 3 does a popup */
+    int8 b1_tool, cb1_tool, b2_tool, cb2_tool;          /* Button 3 does a popup */
     int8 showing_tool, pressed_tool, pressed_display, had_control, active_tool;
     int pressed_x, pressed_y;
     int info_x, info_y;
     int event_x, event_y;
     GFont *small;
     int16 sas, sfh;
-} <A NAME="BitmapView">BitmapView</A>;
+} <a name="BitmapView" id="BitmapView">BitmapView</a>;
 
 typedef struct metricsview {
     struct fontview *fv;
     int pixelsize;
-    BDFFont *bdf;		/* We can also see metric info on a bitmap font */
+    BDFFont *bdf;               /* We can also see metric info on a bitmap font */
     GWindow gw;
     int16 width, height;
     int16 mbh,sbh;
-    int16 topend;		/* y value of the end of the region containing the text field */
-    int16 displayend;		/* y value of the end of the region showing filled characters */
+    int16 topend;               /* y value of the end of the region containing the text field */
+    int16 displayend;           /* y value of the end of the region showing filled characters */
     GFont *font;
     int16 fh, as;
     GGadget *hsb, *mb, *text;
     GGadget *namelab, *widthlab, *lbearinglab, *rbearinglab, *kernlab;
     struct metricchar {
-	SplineChar *sc;
-	BDFChar *show;
-	int16 dx, dwidth;	/* position and width of the displayed char */
-	int16 mx, mwidth;	/* position and width of the text underneath */
-	int16 kernafter;
-	unsigned int selected: 1;
-	GGadget *width, *lbearing, *rbearing, *kern, *name;
+        SplineChar *sc;
+        BDFChar *show;
+        int16 dx, dwidth;       /* position and width of the displayed char */
+        int16 mx, mwidth;       /* position and width of the text underneath */
+        int16 kernafter;
+        unsigned int selected: 1;
+        GGadget *width, *lbearing, *rbearing, *kern, *name;
     } *perchar;
     int16 mwidth, mbase;
     int16 charcnt, max;
@@ -214,18 +221,18 @@ typedef struct metricsview {
     unsigned int pressedwidth: 1;
     unsigned int pressedkern: 1;
     unsigned int showgrid: 1;
-} <A NAME="MetricsView">MetricsView</A>;
+} <a name="MetricsView" id="MetricsView">MetricsView</a>;
 
 
 typedef struct fontview {
     SplineFont *sf;
     BDFFont *show, *filled;
     GWindow gw, v;
-    int width, height;		/* of v */
+    int width, height;          /* of v */
     int mbh;
     int colcnt, rowcnt;
     int rowoff, rowltot;
-    int cbw,cbh;		/* width/height of a character box */
+    int cbw,cbh;                /* width/height of a character box */
     GFont *header;
     GGadget *vsb, *mb;
     struct fontview *next;
@@ -235,14 +242,14 @@ typedef struct fontview {
     MetricsView *metrics;
     unsigned int onlycopydisplayed: 1;
     unsigned int antialias:1;
-} <A NAME="FontView">FontView</A>;
+} <a name="FontView" id="FontView">FontView</a>;
 
 typedef struct findsel {
     GEvent *e;
-    double fudge;		/* One pixel fudge factor */
-    double xl,xh, yl, yh;	/* One pixel fudge factor */
-    unsigned int select_controls: 1;	/* notice control points */
-    unsigned int seek_controls: 1;	/* notice control points before base points */
+    double fudge;               /* One pixel fudge factor */
+    double xl,xh, yl, yh;       /* One pixel fudge factor */
+    unsigned int select_controls: 1;    /* notice control points */
+    unsigned int seek_controls: 1;      /* notice control points before base points */
     double scale;
     PressedOn *p;
 } FindSel;
@@ -280,7 +287,7 @@ extern void FVAutoKern(FontView *fv);
 extern void FVAutoWidth(FontView *fv);
 
 extern void CVDrawSplineSet(CharView *cv, GWindow pixmap, SplinePointList *set,
-	Color fg, int dopoints, DRect *clip );
+        Color fg, int dopoints, DRect *clip );
 
 extern GWindow CVMakeTools(CharView *cv);
 extern GWindow CVMakeLayers(CharView *cv);
@@ -296,7 +303,7 @@ extern void CVToolsPopup(CharView *cv, GEvent *event);
 extern void BVToolsPopup(BitmapView *bv, GEvent *event);
 extern void CVTransFunc(CharView *cv,double transform[6]);
 extern void TransformDlgCreate(void *data,void (*transfunc)(void *,double *,int),
-	int (*getorigin)(void *,BasePoint *,int));
+        int (*getorigin)(void *,BasePoint *,int));
 extern void BitmapDlg(FontView *fv,SplineChar *sc, int isavail);
 extern void CVReviewHints(CharView *cv);
 extern void CVCreateHint(CharView *cv,int ishstem);
@@ -321,7 +328,7 @@ extern void SCOutOfDateBackground(SplineChar *sc);
 extern SplinePointList *CVAnySelPointList(CharView *cv);
 extern SplinePoint *CVAnySelPoint(CharView *cv);
 extern int CVOneThingSel(CharView *cv, SplinePoint **sp, SplinePointList **spl,
-	RefChar **ref, ImageList **img);
+        RefChar **ref, ImageList **img);
 extern void CVInfoDrawText(CharView *cv, GWindow pixmap );
 extern void CVImport(CharView *cv);
 extern void BVImport(BitmapView *bv);
@@ -338,7 +345,7 @@ extern void CVChangeSC(CharView *cv, SplineChar *sc );
 
 extern void CVAdjustPoint(CharView *cv, SplinePoint *sp);
 extern void CVMergeSplineSets(CharView *cv, SplinePoint *active, SplineSet *activess,
-	SplinePoint *merge, SplineSet *mergess);
+        SplinePoint *merge, SplineSet *mergess);
 extern void CVChar(CharView *cv, GEvent *event );
 extern void CVMoveSelection(CharView *cv, double dx, double dy);
 extern void CVMouseDownPoint(CharView *cv);
@@ -387,7 +394,7 @@ extern void PasteIntoFV(FontView *fv);
 extern void WindowMenuBuild(GWindow base,struct gmenuitem *mi);
 
 extern GImage GIcon_sel2ptr, GIcon_rightpointer, GIcon_angle, GIcon_distance,
-	GIcon_selectedpoint;
+        GIcon_selectedpoint;
 
 extern BitmapView *BitmapViewCreate(BDFChar *bc, BDFFont *bdf, FontView *fv);
 extern BitmapView *BitmapViewCreatePick(int enc, FontView *fv);
@@ -401,7 +408,7 @@ extern void BVMenuRotateInvoked(GWindow gw,struct gmenuitem *mi);
 extern void BVRotateBitmap(BitmapView *bv,enum bvtools type );
 extern void BCSetPoint(BDFChar *bc, int x, int y, int clear);
 extern void BCGeneralFunction(BitmapView *bv,
-	void (*SetPoint)(BitmapView *,int x, int y, void *data),void *data);
+        void (*SetPoint)(BitmapView *,int x, int y, void *data),void *data);
 extern unichar_t *BVFlipNames[];
 extern void BVChangeBC(BitmapView *bv, BDFChar *bc, int fitit );
 extern void BVChar(BitmapView *cv, GEvent *event );
@@ -416,7 +423,8 @@ extern void LoadPrefs(void);
 extern void SavePrefs(void);
 extern void DoPrefs(void);
 #endif
-</PRE>
-</BLOCKQUOTE>
-</DIV>
-</BODY></HTML>
+</pre>
+    </blockquote>
+  </div>
+</body>
+</html>

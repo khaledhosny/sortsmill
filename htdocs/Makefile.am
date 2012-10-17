@@ -235,63 +235,6 @@ ROOT_DOC_LIST = AA-Comparison.html aacutebase.png aacutemid.png			\
 	fontforge-banner-420.jpeg FontForge.css Metal-fontforge-600.jpeg	\
 	MetalType.jpeg
 
-JA_DOC_LIST = ja/AA-Comparison.html ja/AmbrosiaFV.png ja/BDFgrey.html	\
-	ja/BitmapView.png ja/FontForge.css ja/GenerateFamily.png			\
-	ja/GenerateOptions.png ja/GlossaryFS.html ja/GlossaryFrame.html		\
-	ja/HotKeys.html ja/IndexFS.html ja/IndexFrame.html					\
-	ja/MacFeatName.png ja/MacMapping.png ja/MetaFont.html				\
-	ja/MetricsView.png ja/PageSetup.png ja/PfaEdit-TeX.html				\
-	ja/TrueOpenTables.html ja/UniqueID.html ja/VerticalMetrics.png		\
-	ja/accented.html ja/acorn2sfd.html ja/agetinfo.png					\
-	ja/anchorcontrol.html ja/autotrace.html ja/autowidth.html			\
-	ja/bdfinfo.html ja/bezier.html ja/bibliography.html					\
-	ja/bitmapsavail.png ja/bitmapview.html ja/changelog.html			\
-	ja/charinfo.html ja/charview.html ja/charview2.png					\
-	ja/cidmapformat.html ja/cidmenu.html ja/cliargs.html				\
-	ja/contextchain.html ja/corpchar.html ja/definegroups.png			\
-	ja/diffs.html ja/display.html ja/displaygroups.png					\
-	ja/editexample.html ja/editexample2.html ja/editexample3.html		\
-	ja/editexample4.html ja/editexample5.html ja/editexample6-5.html	\
-	ja/editexample6.html ja/editexample7.html ja/editmenu.html			\
-	ja/elementmenu.html ja/encodingmenu.html ja/errrecovery.html		\
-	ja/expandstroke.png ja/faq.html ja/faqFS.html ja/faqFrame.html		\
-	ja/filemenu.html ja/files.html ja/fontcompdlg.png					\
-	ja/fontcompresults.png ja/fontinfo-comment.png						\
-	ja/fontinfo-macstyle.png ja/fontinfo-panose.png						\
-	ja/fontinfo-private.png ja/fontinfo-ps.png ja/fontinfo-size.png		\
-	ja/fontinfo-statemach.png ja/fontinfo-subsup.png					\
-	ja/fontinfo-tex.png ja/fontinfo-ttfmetrics.png						\
-	ja/fontinfo-ttfvals.png ja/fontinfo.html ja/fontinfo.png			\
-	ja/fontutils.html ja/fontview-grouped.png ja/fontview.html			\
-	ja/future.html ja/generate.html ja/generate.png ja/getinfo.html		\
-	ja/glossary.html ja/gposgsub.html ja/greymapsavail.png				\
-	ja/groups.html ja/helpmenu.html ja/hinting.html ja/hintsmenu.html	\
-	ja/histogram.html ja/index.html ja/kernpairs.html ja/layerdlg.png	\
-	ja/license.html ja/locale.html ja/mac-install.html					\
-	ja/macFeatureSetting.png ja/macfeature.png ja/macformats.html		\
-	ja/mad.html ja/metricsmenu.html ja/metricsview.html					\
-	ja/mmmenu.html ja/ms-install.html ja/multilayer.html				\
-	ja/multiplemaster.html ja/nix-install.html ja/non-standard.html		\
-	ja/nonBMP/index.html ja/nvd.html ja/oldchangelog.html				\
-	ja/otherlinks.html ja/overview.html ja/palmfonts.html				\
-	ja/pcf-format.html ja/pfaeditchangelog.html ja/pfaeditmath.html		\
-	ja/plugins.html ja/pointinfo-interp.png ja/pointinfo.png			\
-	ja/pointmenu.html ja/prefs-apps.png ja/prefs-editing.png			\
-	ja/prefs-font.png ja/prefs-generic.png ja/prefs-macfeat.png			\
-	ja/prefs-macmap.png ja/prefs-script.png ja/prefs.html				\
-	ja/print.html ja/privatekey.png ja/privatekeymenu.png				\
-	ja/problems.html ja/quotations.html ja/realindex.html				\
-	ja/rgetinfo.png ja/ref-caveats.html ja/running.html					\
-	ja/scripting-alpha.html ja/scripting-tutorial.html					\
-	ja/scripting.html ja/scriptnotes.html ja/search.html				\
-	ja/selectbyatt.html ja/selections.html ja/sfd.html					\
-	ja/sfddiff.html ja/sfdformat.html ja/showatt.html					\
-	ja/source-build.html ja/splinefont.html ja/src.html					\
-	ja/statemachine.html ja/tilepath.html ja/transform.html				\
-	ja/ttfinstrs.html ja/typofeat.html ja/uninstall.html				\
-	ja/viewmenu.html ja/views.html ja/vms-install.html ja/wacom.html	\
-	ja/windowmenu.html ja/xim.html ja/xres.html
-
 FLAGS_DOC_LIST = flags/BrasilFlag.png flags/English.gif				\
 	flags/GermanFlag.png flags/Greece.png flags/Nisshoki-Japan.png	\
 	flags/Polish.png flags/RussianFlag.png flags/StarsStripes.gif	\
@@ -300,7 +243,6 @@ FLAGS_DOC_LIST = flags/BrasilFlag.png flags/English.gif				\
 
 NONBMP_DOC_LIST = nonBMP/index.html
 
-# Leave out the Japanese docs, because they are long unmaintained.
 INSTALLED_DOC_LIST = $(ROOT_DOC_LIST) $(NONBMP_DOC_LIST)	\
 	$(FLAGS_DOC_LIST)
 
@@ -309,7 +251,26 @@ UNINSTALLED_DOC_LIST = ListeDesGlyphes.nam englishkernpairs.txt
 
 DOC_LIST = $(INSTALLED_DOC_LIST) $(UNINSTALLED_DOC_LIST)
 
-nobase_htdocs_DATA = $(INSTALLED_DOC_LIST) .htaccess
+nobase_htdocs_DATA = $(INSTALLED_DOC_LIST)
 
-EXTRA_DIST = $(DOC_LIST) .htaccess
+EXTRA_DIST = $(DOC_LIST)
 
+#--------------------------------------------------------------------------
+
+TIDYFLAGS = -asxml -utf8 -clean -indent -modify
+TIDY_COMMAND = $(TIDY) $(TIDYFLAGS)
+
+tidy:
+	$(MKDIR_P) nonBMP
+	@for f in $(filter %.html, $(DOC_LIST)); do \
+		echo "$(TIDY_COMMAND) $(srcdir)/$${f}"; \
+		if $(TIDY_COMMAND) -f $${f}.messages $(srcdir)/$${f}; then \
+			rm $${f}.messages; \
+		else \
+			echo "** SEE MESSAGES: $${f}.messages"; \
+		fi; \
+	done
+
+MOSTLYCLEANFILES = $(addsuffix .messages, $(filter %.html, $(DOC_LIST)))
+
+#--------------------------------------------------------------------------

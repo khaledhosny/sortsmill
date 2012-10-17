@@ -1,152 +1,349 @@
-<HTML>
-<HEAD>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux (vers 25 March 2009), see www.w3.org" />
   <!-- Created with AOLpress/2.0 -->
   <!-- AP: Created on: 26-Oct-2006 -->
   <!-- AP: Last modified: 11-Sep-2009 -->
-  <TITLE>fontimage -- generate a font thumbnail image</TITLE>
-  <LINK REL="icon" href="fftype16.png">
-  <LINK REL="stylesheet" TYPE="text/css" HREF="FontForge.css">
-</HEAD>
-<BODY>
-<DIV id="in">
-  <H1 ALIGN=Center>
-    fontimage<BR>
-    <SMALL>generate a font thumbnail image</SMALL>
-  </H1>
-  <P>
-  <CODE>fontimage [--o outfile] [--width num] [--height num] [--pixelsize num]
-  [--fontname] [--text string] [--version] [--help] fontfile</CODE>
-  <P>
-  <EM>Fontimage</EM> produces a thumbnail image of a font (which may be in
-  any format <A HREF="overview.html">fontforge</A> can read).
-  <P>
-  You may either explicitly specify text to be displayed in the font, or rely
-  on fontimage's default behavior, which is to check for various scripts it
-  knows about and display something appropriate for each one present.
-  <DL>
-    <DT>
-      --help
-    <DD>
-      Displays a list of arguments and descriptions of each.
-    <DT>
-      --width num
-    <DD>
-      Specifies the width (in pixels) of the output image. If omitted the image
-      will be as wide as it needs to be to display the text.
-    <DT>
-      --height num
-    <DD>
-      Specifies the height (in pixels) of the output image. If omitted the image
-      will be as high as it needs to be to display the text.
-    <DT>
-      --o outputfile
-    <DD>
-      Specifies the name of the output image file. The format is determined by
-      the extension. Currently only ".bmp" and ".png" are supported. If omitted,
-      fontimage will choose a filename based on the fontname of the font.
-    <DT>
-      --pixelsize num
-    <DD>
-      Specifies the pixelsize at which to display text. This may be specified multiple
-      times. Each specification applies to any --text arguments which occur after
-      it.
-    <DT>
-      --fontname
-    <DD>
-      Include the fontname as a line of text.
-    <DT>
-      --text string
-    <DD>
-      Specifies a string to be displayed. The string <EM>must</EM> be in UTF-8.
-      This option may be provided multiple times to supply more than one line of
-      text. If omitted entirely, fontimage will examine the scripts it knows about
-      in the font and will display text appropriate to each one present.
-    <DT>
-      --version
-    <DD>
-      Displays the fontimage version.
-  </DL>
-  <H3>
-    See Also
-  </H3>
-  <P>
-  <A HREF="overview.html">FontForge</A> 
-    <HR>
-  <H3>
-    Example
-  </H3>
-  <FORM action="/cgi-bin/fontimage-cgi" method="post" accept-charset="UTF-8"
-  enctype="multipart/form-data" target="fontimage-window">
-    Font: 
-    <SELECT name="font"> 
-    <OPTION value="AmbrosiaBold.sfd.bz2">Ambrosia Bold
-    <OPTION value="AmbrosiaItalic.sfd.bz2">Ambrosia Italic
-    <OPTION value="AmbrosiaOutline.sfd.bz2">Ambrosia Outline
-    <OPTION value="Ambrosia.sfd.bz2">Ambrosia
-    <OPTION value="AndradeSwash.sfd.bz2">Andrade Swash
-    <OPTION value="Baldur.sfd.bz2">Baldur 
-    <OPTION value="Bastarda.sfd.bz2">Bastarda
-    <OPTION value="Bocklin.sfd.bz2">Bocklin 
-    <OPTION value="Caliban.sfd.gz">Caliban 
-    <OPTION value="Caprice.sfd.bz2">Caprice 
-    <OPTION value="Carmen.sfd.bz2">Carmen
-    <OPTION value="Caslon-Black.sfd.gz">Caslon Black
-    <OPTION value="CaslonItalic.sfd.gz">Caslon Italic
-    <OPTION value="CaslonRoman.sfd.gz" selected>Caslon Roman
-    <OPTION value="CaslonBold.sfd.gz">Caslon Bold
-    <OPTION value="Crystal.sfd.bz2">Crystal
-    <OPTION value="CupolaBoldItalic.sfd.bz2">Cupola BoldItalic
-    <OPTION value="CupolaBold.sfd.bz2">Cupola Bold
-    <OPTION value="CupolaItalic.sfd.bz2">Cupola Italic
-    <OPTION value="Cupola.sfd.bz2">Cupola
-    <OPTION value="CupolaSmallCaps.sfd.bz2">Cupola SmallCaps
-    <OPTION value="Decorative.sfd.bz2">Decorative
-    <OPTION value="DufreneType3.sfd.bz2">Dufrene Type3
-    <OPTION value="EddaFilled.sfd.bz2">Edda Filled
-    <OPTION value="EddaNarrow.sfd.bz2">Edda Narrow
-    <OPTION value="EddaOutline.sfd.bz2">Edda Outline
-    <OPTION value="ExtravagantCapitals.sfd.bz2">Extravagant Capitals
-    <OPTION value="FantasieArtistique.sfd.bz2">Fantasie Artistique
-    <OPTION value="Flash.sfd.bz2">Flash 
-    <OPTION value="FloralCaps.sfd.bz2">Floral Caps
-    <OPTION value="FormalScriptBold.sfd.bz2">Formal Script Bold
-    <OPTION value="FormalScript.sfd.bz2">Formal Script
-    <OPTION value="Fractur.sfd.bz2">Fractur
-    <OPTION value="GothicBamboo.sfd.bz2">Gothic Bamboo
-    <OPTION value="HohenzollernInitials.sfd.bz2">Hohenzollern Initials
-    <OPTION value="HumanisticCursive.sfd.bz2">Humanistic Cursive
-    <OPTION value="Humanistic.sfd.bz2">Humanistic
-    <OPTION value="ItalicHand.sfd.bz2">Italic Hand
-    <OPTION value="LombardicMix.sfd.bz2">Lombardic Mix
-    <OPTION value="Lombardic.sfd.bz2">Lombardic
-    <OPTION value="Mirage.sfd.bz2">Mirage 
-    <OPTION value="Monopol.sfd.bz2">Monopol
-    <OPTION value="MonospaceBold.sfd.gz">Monospace Bold
-    <OPTION value="MonospaceOblique.sfd.gz">Monospace Oblique
-    <OPTION value="MonospaceRegular.sfd.gz">Monospace Regular
-    <OPTION value="Morris-Initials.sfd.bz2">Morris Initials
-    <OPTION value="Parisian.sfd.bz2">Parisian
-    <OPTION value="Peignot.sfd.bz2">Peignot
-    <OPTION value="PicadillyBizarre.sfd.bz2">Picadilly Bizarre
-    <OPTION value="Picadilly.sfd.bz2">Picadilly
-    <OPTION value="RingletBlack.sfd.bz2">Ringlet Black
-    <OPTION value="Ringlet.sfd.bz2">Ringlet
-    <OPTION value="RomanUncialModern.sfd.bz2">Roman Uncial Modern
-    <OPTION value="Rotunda.sfd.bz2">Rotunda
-    <OPTION value="SquareCaps.sfd.bz2">Square Caps
-    <OPTION value="TexturaModern.sfd.bz2">Textura Modern
-    <OPTION value="UncialAnimals.sfd.bz2">Uncial Animals
-    <OPTION value="Versal.sfd.bz2">Versal </SELECT> Point size:
-    <INPUT type="text" value="24" size="4" name="size"> DPI:
-    <INPUT type="text" value="100" size="4" name="dpi"><BR>
-    Text: <SMALL>(If you leave this blank, fontimage will generate some default
-    text showing all scripts in the font)</SMALL><BR>
-    <TEXTAREA name="text" cols=80 rows=8></TEXTAREA><BR>
-    <INPUT type="submit" value="Display">
-  </FORM>
-  <P>
-  <IFRAME name="fontimage-window" SRC="http://fontforge.sf.net/cgi-bin/fontimage-cgi?size=24&dpi=100&font=CaslonRoman.sfd.gz"
-  WIDTH="100%" HEIGHT=500> IFrame doesn't work in your browser. Try pressing
-  the [Display] button </IFRAME>
-</DIV>
-</BODY></HTML>
+
+  <title>fontimage -- generate a font thumbnail image</title>
+  <link rel="icon" href="fftype16.png" />
+  <link rel="stylesheet" type="text/css" href="FontForge.css" />
+  <style type="text/css">
+/*<![CDATA[*/
+  h1.c1 {text-align: center}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <div id="in">
+    <h1 class="c1">fontimage<br />
+    <small>generate a font thumbnail image</small></h1>
+
+    <p><code>fontimage [--o outfile] [--width num] [--height num]
+    [--pixelsize num] [--fontname] [--text string] [--version]
+    [--help] fontfile</code></p>
+
+    <p><em>Fontimage</em> produces a thumbnail image of a font
+    (which may be in any format <a href=
+    "overview.html">fontforge</a> can read).</p>
+
+    <p>You may either explicitly specify text to be displayed in
+    the font, or rely on fontimage's default behavior, which is to
+    check for various scripts it knows about and display something
+    appropriate for each one present.</p>
+
+    <dl>
+      <dt>--help</dt>
+
+      <dd>Displays a list of arguments and descriptions of
+      each.</dd>
+
+      <dt>--width num</dt>
+
+      <dd>Specifies the width (in pixels) of the output image. If
+      omitted the image will be as wide as it needs to be to
+      display the text.</dd>
+
+      <dt>--height num</dt>
+
+      <dd>Specifies the height (in pixels) of the output image. If
+      omitted the image will be as high as it needs to be to
+      display the text.</dd>
+
+      <dt>--o outputfile</dt>
+
+      <dd>Specifies the name of the output image file. The format
+      is determined by the extension. Currently only ".bmp" and
+      ".png" are supported. If omitted, fontimage will choose a
+      filename based on the fontname of the font.</dd>
+
+      <dt>--pixelsize num</dt>
+
+      <dd>Specifies the pixelsize at which to display text. This
+      may be specified multiple times. Each specification applies
+      to any --text arguments which occur after it.</dd>
+
+      <dt>--fontname</dt>
+
+      <dd>Include the fontname as a line of text.</dd>
+
+      <dt>--text string</dt>
+
+      <dd>Specifies a string to be displayed. The string
+      <em>must</em> be in UTF-8. This option may be provided
+      multiple times to supply more than one line of text. If
+      omitted entirely, fontimage will examine the scripts it knows
+      about in the font and will display text appropriate to each
+      one present.</dd>
+
+      <dt>--version</dt>
+
+      <dd>Displays the fontimage version.</dd>
+    </dl>
+
+    <h3>See Also</h3>
+
+    <p><a href="overview.html">FontForge</a></p>
+    <hr />
+
+    <h3>Example</h3>
+
+    <form action="/cgi-bin/fontimage-cgi" method="post"
+    accept-charset="UTF-8" enctype="multipart/form-data" target=
+    "fontimage-window">
+      Font: <select name="font">
+        <option value="AmbrosiaBold.sfd.bz2">
+          Ambrosia Bold
+        </option>
+
+        <option value="AmbrosiaItalic.sfd.bz2">
+          Ambrosia Italic
+        </option>
+
+        <option value="AmbrosiaOutline.sfd.bz2">
+          Ambrosia Outline
+        </option>
+
+        <option value="Ambrosia.sfd.bz2">
+          Ambrosia
+        </option>
+
+        <option value="AndradeSwash.sfd.bz2">
+          Andrade Swash
+        </option>
+
+        <option value="Baldur.sfd.bz2">
+          Baldur
+        </option>
+
+        <option value="Bastarda.sfd.bz2">
+          Bastarda
+        </option>
+
+        <option value="Bocklin.sfd.bz2">
+          Bocklin
+        </option>
+
+        <option value="Caliban.sfd.gz">
+          Caliban
+        </option>
+
+        <option value="Caprice.sfd.bz2">
+          Caprice
+        </option>
+
+        <option value="Carmen.sfd.bz2">
+          Carmen
+        </option>
+
+        <option value="Caslon-Black.sfd.gz">
+          Caslon Black
+        </option>
+
+        <option value="CaslonItalic.sfd.gz">
+          Caslon Italic
+        </option>
+
+        <option value="CaslonRoman.sfd.gz" selected="selected">
+          Caslon Roman
+        </option>
+
+        <option value="CaslonBold.sfd.gz">
+          Caslon Bold
+        </option>
+
+        <option value="Crystal.sfd.bz2">
+          Crystal
+        </option>
+
+        <option value="CupolaBoldItalic.sfd.bz2">
+          Cupola BoldItalic
+        </option>
+
+        <option value="CupolaBold.sfd.bz2">
+          Cupola Bold
+        </option>
+
+        <option value="CupolaItalic.sfd.bz2">
+          Cupola Italic
+        </option>
+
+        <option value="Cupola.sfd.bz2">
+          Cupola
+        </option>
+
+        <option value="CupolaSmallCaps.sfd.bz2">
+          Cupola SmallCaps
+        </option>
+
+        <option value="Decorative.sfd.bz2">
+          Decorative
+        </option>
+
+        <option value="DufreneType3.sfd.bz2">
+          Dufrene Type3
+        </option>
+
+        <option value="EddaFilled.sfd.bz2">
+          Edda Filled
+        </option>
+
+        <option value="EddaNarrow.sfd.bz2">
+          Edda Narrow
+        </option>
+
+        <option value="EddaOutline.sfd.bz2">
+          Edda Outline
+        </option>
+
+        <option value="ExtravagantCapitals.sfd.bz2">
+          Extravagant Capitals
+        </option>
+
+        <option value="FantasieArtistique.sfd.bz2">
+          Fantasie Artistique
+        </option>
+
+        <option value="Flash.sfd.bz2">
+          Flash
+        </option>
+
+        <option value="FloralCaps.sfd.bz2">
+          Floral Caps
+        </option>
+
+        <option value="FormalScriptBold.sfd.bz2">
+          Formal Script Bold
+        </option>
+
+        <option value="FormalScript.sfd.bz2">
+          Formal Script
+        </option>
+
+        <option value="Fractur.sfd.bz2">
+          Fractur
+        </option>
+
+        <option value="GothicBamboo.sfd.bz2">
+          Gothic Bamboo
+        </option>
+
+        <option value="HohenzollernInitials.sfd.bz2">
+          Hohenzollern Initials
+        </option>
+
+        <option value="HumanisticCursive.sfd.bz2">
+          Humanistic Cursive
+        </option>
+
+        <option value="Humanistic.sfd.bz2">
+          Humanistic
+        </option>
+
+        <option value="ItalicHand.sfd.bz2">
+          Italic Hand
+        </option>
+
+        <option value="LombardicMix.sfd.bz2">
+          Lombardic Mix
+        </option>
+
+        <option value="Lombardic.sfd.bz2">
+          Lombardic
+        </option>
+
+        <option value="Mirage.sfd.bz2">
+          Mirage
+        </option>
+
+        <option value="Monopol.sfd.bz2">
+          Monopol
+        </option>
+
+        <option value="MonospaceBold.sfd.gz">
+          Monospace Bold
+        </option>
+
+        <option value="MonospaceOblique.sfd.gz">
+          Monospace Oblique
+        </option>
+
+        <option value="MonospaceRegular.sfd.gz">
+          Monospace Regular
+        </option>
+
+        <option value="Morris-Initials.sfd.bz2">
+          Morris Initials
+        </option>
+
+        <option value="Parisian.sfd.bz2">
+          Parisian
+        </option>
+
+        <option value="Peignot.sfd.bz2">
+          Peignot
+        </option>
+
+        <option value="PicadillyBizarre.sfd.bz2">
+          Picadilly Bizarre
+        </option>
+
+        <option value="Picadilly.sfd.bz2">
+          Picadilly
+        </option>
+
+        <option value="RingletBlack.sfd.bz2">
+          Ringlet Black
+        </option>
+
+        <option value="Ringlet.sfd.bz2">
+          Ringlet
+        </option>
+
+        <option value="RomanUncialModern.sfd.bz2">
+          Roman Uncial Modern
+        </option>
+
+        <option value="Rotunda.sfd.bz2">
+          Rotunda
+        </option>
+
+        <option value="SquareCaps.sfd.bz2">
+          Square Caps
+        </option>
+
+        <option value="TexturaModern.sfd.bz2">
+          Textura Modern
+        </option>
+
+        <option value="UncialAnimals.sfd.bz2">
+          Uncial Animals
+        </option>
+
+        <option value="Versal.sfd.bz2">
+          Versal
+        </option>
+      </select> Point size: <input type="text" value="24" size="4"
+      name="size" /> DPI: <input type="text" value="100" size="4"
+      name="dpi" /><br />
+      Text: <small>(If you leave this blank, fontimage will
+      generate some default text showing all scripts in the
+      font)</small><br />
+      <textarea name="text" cols="80" rows="8">
+</textarea><br />
+      <input type="submit" value="Display" />
+    </form>
+
+    <p><iframe name="fontimage-window" src=
+    "http://fontforge.sf.net/cgi-bin/fontimage-cgi?size=24&amp;dpi=100&amp;font=CaslonRoman.sfd.gz"
+    width="100%" height="500" id="fontimage-window">IFrame doesn't
+    work in your browser. Try pressing the [Display]
+    button</iframe></p>
+  </div>
+</body>
+</html>

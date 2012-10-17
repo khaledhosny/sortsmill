@@ -1,24 +1,39 @@
-<HTML>
-<HEAD>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux (vers 25 March 2009), see www.w3.org" />
   <!-- Created with AOLpress/2.0 -->
   <!-- AP: Created on: 26-Oct-2005 -->
   <!-- AP: Last modified: 14-Sep-2009 -->
-  <TITLE>FontForge install procedures for cygwin (MS/Windows)</TITLE>
-  <LINK REL="icon" href="fftype16.png">
-  <LINK REL="stylesheet" TYPE="text/css" HREF="FontForge.css">
-</HEAD>
-<BODY>
-<DIV id="in">
-  <H1 ALIGN=Center>
-    FontForge install procedures<BR>
-    <SMALL>for cygwin under MS Windows</SMALL>
-  </H1>
-  <P>
-  <STRONG><FONT color="red">I no longer provide pre-built packages. You may
-  either compile from source or download a package from another site (cygwin
-  has a fontforge package).</FONT></STRONG>
-  <UL>
-    <!--
+
+  <title>FontForge install procedures for cygwin
+  (MS/Windows)</title>
+  <link rel="icon" href="fftype16.png" />
+  <link rel="stylesheet" type="text/css" href="FontForge.css" />
+  <style type="text/css">
+/*<![CDATA[*/
+  span.c3 {color: gray}
+  span.c2 {color: red}
+  h1.c1 {text-align: center}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <div id="in">
+    <h1 class="c1">FontForge install procedures<br />
+    <small>for cygwin under MS Windows</small></h1>
+
+    <p><strong><span class="c2">I no longer provide pre-built
+    packages. You may either compile from source or download a
+    package from another site (cygwin has a fontforge
+    package).</span></strong></p>
+
+    <ul>
+      <!--
     <LI>
     <A HREF="#Installing">Installing from a pre-built cygwin package</A>
     <UL>
@@ -34,206 +49,248 @@
     <A HREF="#Notes">Notes</A>
     </UL>
     -->
-    <LI>
-      <A HREF="nix-install.html">Installing on a unix/linux system</A>
-    <LI>
-      <A HREF="mac-install.html">Installing on a mac</A>
-    <LI>
-      <A HREF="vms-install.html">Installing on VMS</A>
-    <LI>
-      <A HREF="source-build.html#MS">Building and installing from source</A>
-    <LI>
-      <A HREF="source-build.html#Dependencies">Dependencies (external libraries/helper
-      programs)</A>
-    <LI>
-      <A HREF="source-build.html#Documentation">Installing documentation</A>
-    <LI>
-      <A HREF="running.html#cygwin">Running FontForge</A>
-    <LI>
-      <A HREF="running.html#cygwin-troubles">Troubleshooting</A>
-    <LI>
-      <A HREF="uninstall.html">Uninstalling</A>
-  </UL>
-  <H2>
-    <A NAME="Installing">Installing</A> from a pre-built cygwin package
-  </H2>
-  <H3>
-    <A NAME="Before">Before</A> you install
-  </H3>
-  <P>
-  You must insure that you have <A HREF="http://www.cygwin.com/">cygwin</A>
-  installed on your system. Cygwin is free. (cygwin makes MS Windows look enough
-  like unix to allow fontforge to run there). Getting all the bits of cygwin
-  seems to be the hardest part of installing fontforge -- probably because
-  it is the least expected part.
-  <UL>
-    <LI>
-      First download the setup.exe program from
-      <A TARGET="_top" HREF="http://www.cygwin.com/">http://www.cygwin.com/</A>
-    <LI>
-      Run it. It will ask you what components of cygwin you wish to install
-    <LI>
-      You will need the default stuff, plus the X window system, binutils, libpng,
-      libjpeg, and libxml2.
-      <P>
-      Most of what you need you get by default. But you must explicitly request
-      X11 and the libraries.
-    <LI>
-      Once you have cygwin installed, start it. This should give you a terminal
-      window running bash (a unix shell)
-  </UL>
-  <H3>
-    <A NAME="Alternatives">Alternatives</A> to cygwin.
-  </H3>
-  <P>
-  There are now alternatives to cygwin.
-  <P>
-  Someone has ported fontforge to mingw, which is much simpler to download
-  than cygwin:
-  <UL>
-    <LI>
-      <A HREF="http://www.geocities.jp/meir000/fontforge/">fontforge-mingw</A>
-  </UL>
-  <P>
-  Instead of downloading cygwin you can install one of the virtual machines
-  (or something similar) which run linux, and then install fontforge from a
-  linux package.
-  <UL>
-    <LI>
-      <A HREF="http://www.andlinux.org/">andLinux</A>
-  </UL>
-  <H3>
-    <A NAME="Obtaining">Obtaining</A> one of my pre-built packages
-  </H3>
-  <P>
-  I used post a cygwin install package on
-  <A HREF="http://sourceforge.net/projects/fontforge/files/fontforge-executables/">sourceforge's
-  file release system</A>. <STRONG>Old versions are still there, but they are
-  out of date now.</STRONG> There's a certain amount of pother involved in
-  using the file release system, but you get the file eventually.
-  <UL>
-    <LI>
-      If you follow the
-      <A HREF="http://sourceforge.net/projects/fontforge/files/fontforge-executables/">link
-      above </A>you will end up on a page showing many releases of FontForge for
-      many systems<BR>
-      in most cases you will want the most recent release.
-    <LI>
-      Then click on the executable package you want to download:
-      <UL>
-	<LI>
-	  The cygwin release will be called something like
-	  "fontforge_cygwin-200xxxxx.tar.bz2
-      </UL>
-    <LI>
-      Then you have the joy of choosing a mirror site (pick one that's on the same
-      continent you are) and click on the little icon in the download column
-    <LI>
-      Then you wait. After a bit you get another copy of this same page. After
-      an even longer time your browser notices that you've started a download.
-  </UL>
-  <H3>
-    <A NAME="install">Installing</A>
-  </H3>
-  <P>
-  I have no idea where your browser put the package you have just downloaded.
-  This is unfortunate as I can't tell you exactly what to do next. But find
-  the package (often it's on the desktop) and then move it into
-  C:\cygwin\home\&lt;username&gt;. (where &lt;username&gt; is whatever name
-  cygwin gave you)
-  <UL>
-    <LI>
-      Then open a cygwin window (by clicking on the cygwin icon)
-    <LI>
-      With luck you will now be in the directory containing the package you downloaded.
-    <LI>
-      Now type (do not type the "$"):
-      <BLOCKQUOTE>
-	<PRE><FONT COLOR="Gray">$ </FONT>bunzip2 fontforge_cygwin-*.tar.bz2
-<FONT COLOR="Gray">$ </FONT>tar xf fontforge_cygwin-*.tar
-<FONT COLOR="Gray">$ </FONT>cd fontforge
-<FONT COLOR="Gray">$ </FONT>./doinstall
-</PRE>
-      </BLOCKQUOTE>
-    <LI>
-      Then each time you want to run fontforge, start X11
-      <UL>
-	<LI>
-	  On recent cygwin systems you may start X by invoking:
-	  <BLOCKQUOTE>
-	    <PRE>C:\cygwin\usr\X11R6\bin\startxwin.bat
-</PRE>
-	  </BLOCKQUOTE>
-	<LI>
-	  Or:
-	  <BLOCKQUOTE>
-	    <PRE>startx
-</PRE>
-	  </BLOCKQUOTE>
-	<LI>
-	  While on older systems try:
-	  <BLOCKQUOTE>
-	    <PRE><FONT COLOR="Gray">$ </FONT>xinit
-</PRE>
-	  </BLOCKQUOTE>
-	<LI>
-	  This should bring up X in a large window that covers the screen and within
-	  that should be a subwindow, an xterm, running bash.
-	<LI>
-	  From the xterm you first start a window manager
-	  <BLOCKQUOTE>
-	    <PRE><FONT COLOR="Gray">$ </FONT>twm &amp;
-</PRE>
-	  </BLOCKQUOTE>
-	<LI>
-	  And then you should be able start FontForge.
-	  <BLOCKQUOTE>
-	    <PRE><FONT COLOR="Gray">$ </FONT>fontforge -new
-</PRE>
-	  </BLOCKQUOTE>
-      </UL>
-      <H3>
-	<A NAME="Notes">Notes</A>
-      </H3>
-      <P>
-      <FONT COLOR="Red"><STRONG>Caveat: </STRONG></FONT>cygwin has a different
-      approach to the file system than Windows. A filename like
-      <CODE>C:\windows\fonts\arial.ttf </CODE>will be called
-      <CODE>/cygdrive/c/windows/fonts/arial.ttf </CODE>under cygwin (backslashes
-      are replaced by slashes, and the initial drive "<CODE>C:</CODE>" becomes
-      "<CODE>/cygdrive/c</CODE>".
-      <P>
-      Similarly a cygwin filename
-      "<CODE>/home/&lt;username&gt;/myfont.ttf</CODE>" becomes
-      "<CODE>C:\cygwin\home\&lt;username&gt;\myfont.ttf</CODE>"
-      <P>
-      <STRONG><FONT COLOR="Red">Caveat</FONT>:</STRONG> Do <STRONG>NOT</STRONG>
-      try to install a font by using fontforge to write the font directly to the
-      Windows\Fonts directory. This doesn't work. Windows needs to do some magic
-      when installing a font that it can't do if fontforge writes directly there.
-      Instead have fontforge create the font somewhere else and then use Windows'
-      own drag &amp; drop technique to move the font from there into Windows\Fonts.
-      <P>
-      <STRONG><FONT COLOR="Red">Caveat</FONT>:</STRONG> I've been told that on
-      Win 98 you need to have "Microsoft Network Login" installed to run X. I never
-      found this to be true myself, but if you have problems it might be something
-      to try.
-      <P>
-	<HR>
-      <UL>
-	<LI>
-	  <A HREF="source-build.html#MS">Building and installing from source</A>
-	<LI>
-	  <A HREF="source-build.html#Dependencies">Dependencies (external libraries/helper
-	  programs)</A>
-	<LI>
-	  <A HREF="source-build.html#Documentation">Installing documentation</A>
-	<LI>
-	  <A HREF="running.html#cygwin">Running FontForge</A>
-	<LI>
-	  <A HREF="running.html#cygwin-troubles">Troubleshooting</A>
-      </UL>
-      <P>
-  </UL>
-</DIV>
-</BODY></HTML>
+
+      <li><a href="nix-install.html">Installing on a unix/linux
+      system</a></li>
+
+      <li><a href="mac-install.html">Installing on a mac</a></li>
+
+      <li><a href="vms-install.html">Installing on VMS</a></li>
+
+      <li><a href="source-build.html#MS">Building and installing
+      from source</a></li>
+
+      <li><a href="source-build.html#Dependencies">Dependencies
+      (external libraries/helper programs)</a></li>
+
+      <li><a href="source-build.html#Documentation">Installing
+      documentation</a></li>
+
+      <li><a href="running.html#cygwin">Running FontForge</a></li>
+
+      <li><a href=
+      "running.html#cygwin-troubles">Troubleshooting</a></li>
+
+      <li><a href="uninstall.html">Uninstalling</a></li>
+    </ul>
+
+    <h2><a name="Installing" id="Installing">Installing</a> from a
+    pre-built cygwin package</h2>
+
+    <h3><a name="Before" id="Before">Before</a> you install</h3>
+
+    <p>You must insure that you have <a href=
+    "http://www.cygwin.com/">cygwin</a> installed on your system.
+    Cygwin is free. (cygwin makes MS Windows look enough like unix
+    to allow fontforge to run there). Getting all the bits of
+    cygwin seems to be the hardest part of installing fontforge --
+    probably because it is the least expected part.</p>
+
+    <ul>
+      <li>First download the setup.exe program from <a target=
+      "_top" href=
+      "http://www.cygwin.com/">http://www.cygwin.com/</a></li>
+
+      <li>Run it. It will ask you what components of cygwin you
+      wish to install</li>
+
+      <li>You will need the default stuff, plus the X window
+      system, binutils, libpng, libjpeg, and libxml2.
+
+        <p>Most of what you need you get by default. But you must
+        explicitly request X11 and the libraries.</p>
+      </li>
+
+      <li>Once you have cygwin installed, start it. This should
+      give you a terminal window running bash (a unix shell)</li>
+    </ul>
+
+    <h3><a name="Alternatives" id="Alternatives">Alternatives</a>
+    to cygwin.</h3>
+
+    <p>There are now alternatives to cygwin.</p>
+
+    <p>Someone has ported fontforge to mingw, which is much simpler
+    to download than cygwin:</p>
+
+    <ul>
+      <li><a href=
+      "http://www.geocities.jp/meir000/fontforge/">fontforge-mingw</a></li>
+    </ul>
+
+    <p>Instead of downloading cygwin you can install one of the
+    virtual machines (or something similar) which run linux, and
+    then install fontforge from a linux package.</p>
+
+    <ul>
+      <li><a href="http://www.andlinux.org/">andLinux</a></li>
+    </ul>
+
+    <h3><a name="Obtaining" id="Obtaining">Obtaining</a> one of my
+    pre-built packages</h3>
+
+    <p>I used post a cygwin install package on <a href=
+    "http://sourceforge.net/projects/fontforge/files/fontforge-executables/">
+    sourceforge's file release system</a>. <strong>Old versions are
+    still there, but they are out of date now.</strong> There's a
+    certain amount of pother involved in using the file release
+    system, but you get the file eventually.</p>
+
+    <ul>
+      <li>If you follow the <a href=
+      "http://sourceforge.net/projects/fontforge/files/fontforge-executables/">
+      link above</a> you will end up on a page showing many
+      releases of FontForge for many systems<br />
+      in most cases you will want the most recent release.</li>
+
+      <li>Then click on the executable package you want to
+      download:
+
+        <ul>
+          <li>The cygwin release will be called something like
+          "fontforge_cygwin-200xxxxx.tar.bz2</li>
+        </ul>
+      </li>
+
+      <li>Then you have the joy of choosing a mirror site (pick one
+      that's on the same continent you are) and click on the little
+      icon in the download column</li>
+
+      <li>Then you wait. After a bit you get another copy of this
+      same page. After an even longer time your browser notices
+      that you've started a download.</li>
+    </ul>
+
+    <h3><a name="install" id="install">Installing</a></h3>
+
+    <p>I have no idea where your browser put the package you have
+    just downloaded. This is unfortunate as I can't tell you
+    exactly what to do next. But find the package (often it's on
+    the desktop) and then move it into
+    C:\cygwin\home\&lt;username&gt;. (where &lt;username&gt; is
+    whatever name cygwin gave you)</p>
+
+    <ul>
+      <li>Then open a cygwin window (by clicking on the cygwin
+      icon)</li>
+
+      <li>With luck you will now be in the directory containing the
+      package you downloaded.</li>
+
+      <li>Now type (do not type the "$"):
+
+        <blockquote>
+          <pre>
+<span class="c3">$ </span>bunzip2 fontforge_cygwin-*.tar.bz2
+<span class="c3">$ </span>tar xf fontforge_cygwin-*.tar
+<span class="c3">$ </span>cd fontforge
+<span class="c3">$ </span>./doinstall
+</pre>
+        </blockquote>
+      </li>
+
+      <li>Then each time you want to run fontforge, start X11
+
+        <ul>
+          <li>On recent cygwin systems you may start X by invoking:
+
+            <blockquote>
+              <pre>
+C:\cygwin\usr\X11R6\bin\startxwin.bat
+</pre>
+            </blockquote>
+          </li>
+
+          <li>Or:
+
+            <blockquote>
+              <pre>
+startx
+</pre>
+            </blockquote>
+          </li>
+
+          <li>While on older systems try:
+
+            <blockquote>
+              <pre>
+<span class="c3">$ </span>xinit
+</pre>
+            </blockquote>
+          </li>
+
+          <li>This should bring up X in a large window that covers
+          the screen and within that should be a subwindow, an
+          xterm, running bash.</li>
+
+          <li>From the xterm you first start a window manager
+
+            <blockquote>
+              <pre>
+<span class="c3">$ </span>twm &amp;
+</pre>
+            </blockquote>
+          </li>
+
+          <li>And then you should be able start FontForge.
+
+            <blockquote>
+              <pre>
+<span class="c3">$ </span>fontforge -new
+</pre>
+            </blockquote>
+          </li>
+        </ul>
+
+        <h3><a name="Notes" id="Notes">Notes</a></h3>
+
+        <p><span class="c2"><strong>Caveat:</strong></span> cygwin
+        has a different approach to the file system than Windows. A
+        filename like <code>C:\windows\fonts\arial.ttf</code> will
+        be called <code>/cygdrive/c/windows/fonts/arial.ttf</code>
+        under cygwin (backslashes are replaced by slashes, and the
+        initial drive "<code>C:</code>" becomes
+        "<code>/cygdrive/c</code>".</p>
+
+        <p>Similarly a cygwin filename
+        "<code>/home/&lt;username&gt;/myfont.ttf</code>" becomes
+        "<code>C:\cygwin\home\&lt;username&gt;\myfont.ttf</code>"</p>
+
+        <p><strong><span class="c2">Caveat</span>:</strong> Do
+        <strong>NOT</strong> try to install a font by using
+        fontforge to write the font directly to the Windows\Fonts
+        directory. This doesn't work. Windows needs to do some
+        magic when installing a font that it can't do if fontforge
+        writes directly there. Instead have fontforge create the
+        font somewhere else and then use Windows' own drag &amp;
+        drop technique to move the font from there into
+        Windows\Fonts.</p>
+
+        <p><strong><span class="c2">Caveat</span>:</strong> I've
+        been told that on Win 98 you need to have "Microsoft
+        Network Login" installed to run X. I never found this to be
+        true myself, but if you have problems it might be something
+        to try.</p>
+        <hr />
+
+        <ul>
+          <li><a href="source-build.html#MS">Building and
+          installing from source</a></li>
+
+          <li><a href="source-build.html#Dependencies">Dependencies
+          (external libraries/helper programs)</a></li>
+
+          <li><a href="source-build.html#Documentation">Installing
+          documentation</a></li>
+
+          <li><a href="running.html#cygwin">Running
+          FontForge</a></li>
+
+          <li><a href=
+          "running.html#cygwin-troubles">Troubleshooting</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</body>
+</html>

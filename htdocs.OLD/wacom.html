@@ -1,0 +1,32 @@
+<HTML>
+<HEAD>
+  <!-- Created with AOLpress/2.0 -->
+  <!-- AP: Created on: 13-Nov-2002 -->
+  <!-- AP: Last modified: 30-May-2005 -->
+  <TITLE>Wacom graphics tablets and FontForge</TITLE>
+  <LINK REL="icon" href="fftype16.png">
+  <LINK REL="stylesheet" TYPE="text/css" HREF="FontForge.css">
+</HEAD>
+<BODY>
+<DIV id="in">
+<H1 ALIGN=Center>
+  Wacom graphics tablets and FontForge
+</H1>
+<P>
+I have added support to FontForge for the wacom graphics tablet. Eventually
+I will write some drawing tools that depend on pressure (and tilt perhaps).
+<P>
+To install a wacom tablet on your (linux) machine you must do two things:
+<UL>
+  <LI>
+    Install a kernel module "wacom.o" into your system<BR>
+    Unfortunately the module which ships with linux (Nov 2002) does not work
+    but John Joganic has <A HREF="http://linuxwacom.sf.net/">an excellent
+    website</A> that will help you install a working driver.
+  <LI>
+    Install an X11 driver "wacom_drv.o"<BR>
+    Again the X11 driver that ships with X does not work for USB tablets. Again
+    John's website provides a patched driver.
+</UL>
+</DIV>
+</BODY></HTML>

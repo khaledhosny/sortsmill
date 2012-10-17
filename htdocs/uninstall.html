@@ -1,23 +1,36 @@
-<HTML>
-<HEAD>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux (vers 25 March 2009), see www.w3.org" />
   <!-- Created with AOLpress/2.0 -->
   <!-- AP: Created on: 8-May-2006 -->
   <!-- AP: Last modified: 16-Dec-2008 -->
-  <TITLE>Uninstalling</TITLE>
-  <LINK REL="icon" href="fftype16.png">
-  <LINK REL="stylesheet" TYPE="text/css" HREF="FontForge.css">
-</HEAD>
-<BODY>
-<DIV id="in">
-  <H1 ALIGN=Center>
-    Uninstalling FontForge
-  </H1>
-  <P>
-  I've never bothered to make this easy.
-  <P>
-  If you installed in /usr/local (the default) then you type either:
-  <BLOCKQUOTE>
-    <PRE>$ su
+
+  <title>Uninstalling</title>
+  <link rel="icon" href="fftype16.png" />
+  <link rel="stylesheet" type="text/css" href="FontForge.css" />
+  <style type="text/css">
+/*<![CDATA[*/
+  h1.c1 {text-align: center}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <div id="in">
+    <h1 class="c1">Uninstalling FontForge</h1>
+
+    <p>I've never bothered to make this easy.</p>
+
+    <p>If you installed in /usr/local (the default) then you type
+    either:</p>
+
+    <blockquote>
+      <pre>
+$ su
 password:
 $ rm -rf /usr/local/bin/{fontforge,sfddiff,fontimage,fontlint} \
 /usr/local/lib/{libgdraw,libgunicode,libuninameslist,libspiro,libfontforge,libgutils,libgioftp}* \
@@ -27,12 +40,14 @@ $ rm -rf /usr/local/bin/{fontforge,sfddiff,fontimage,fontlint} \
 /usr/local/share/fontforge \
 /usr/local/share/locale/*/LC_MESSAGES/FontForge.mo \
 /usr/local/include/fontforge
-</PRE>
-  </BLOCKQUOTE>
-  <P>
-  or if you are on a mac:
-  <BLOCKQUOTE>
-    <PRE>$ sudo rm -rf /usr/local/bin/{fontforge,sfddiff,fontimage,fontlint} \
+</pre>
+    </blockquote>
+
+    <p>or if you are on a mac:</p>
+
+    <blockquote>
+      <pre>
+$ sudo rm -rf /usr/local/bin/{fontforge,sfddiff,fontimage,fontlint} \
 /usr/local/lib/{libgdraw,libgunicode,libuninameslist,libspiro,libfontforge,libgutils,libgioftp}* \
 /usr/local/lib/pkgconfig/fontforge.pc \
 /usr/local/man/man1/{fontforge,sfddiff,fontimage,fontlint}.1 \
@@ -42,12 +57,14 @@ $ rm -rf /usr/local/bin/{fontforge,sfddiff,fontimage,fontlint} \
 /usr/local/include/fontforge \
 /Applications/FontForge.app
 password:
-</PRE>
-  </BLOCKQUOTE>
-  <P>
-  or if you are on cygwin:
-  <BLOCKQUOTE>
-    <PRE>$ rm -rf /usr/local/bin/{fontforge,sfddiff,fontimage,fontlint} \
+</pre>
+    </blockquote>
+
+    <p>or if you are on cygwin:</p>
+
+    <blockquote>
+      <pre>
+$ rm -rf /usr/local/bin/{fontforge,sfddiff,fontimage,fontlint} \
 /usr/local/lib/{libgdraw,libgunicode,libuninameslist,libspiro,libfontforge,libgutils,libgioftp}* \
 /usr/local/lib/pkgconfig/fontforge.pc \
 /usr/local/man/man1/{fontforge,sfddiff,fontimage,fontlint}.1 \
@@ -55,10 +72,11 @@ password:
 /usr/local/share/fontforge \
 /usr/local/share/locale/*/LC_MESSAGES/FontForge.mo \
 /usr/local/include/fontforge
-</PRE>
-  </BLOCKQUOTE>
-  <P>
-  If you've installed to a different prefix (/usr perhaps) then simply substitute
-  /usr for /usr/local above.
-</DIV>
-</BODY></HTML>
+</pre>
+    </blockquote>
+
+    <p>If you've installed to a different prefix (/usr perhaps)
+    then simply substitute /usr for /usr/local above.</p>
+  </div>
+</body>
+</html>

@@ -1,32 +1,46 @@
-<HTML>
-<HEAD>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux (vers 25 March 2009), see www.w3.org" />
   <!-- Created with AOLpress/2.0 -->
   <!-- AP: Created on: 13-Nov-2002 -->
   <!-- AP: Last modified: 30-May-2005 -->
-  <TITLE>Wacom graphics tablets and FontForge</TITLE>
-  <LINK REL="icon" href="fftype16.png">
-  <LINK REL="stylesheet" TYPE="text/css" HREF="FontForge.css">
-</HEAD>
-<BODY>
-<DIV id="in">
-<H1 ALIGN=Center>
-  Wacom graphics tablets and FontForge
-</H1>
-<P>
-I have added support to FontForge for the wacom graphics tablet. Eventually
-I will write some drawing tools that depend on pressure (and tilt perhaps).
-<P>
-To install a wacom tablet on your (linux) machine you must do two things:
-<UL>
-  <LI>
-    Install a kernel module "wacom.o" into your system<BR>
-    Unfortunately the module which ships with linux (Nov 2002) does not work
-    but John Joganic has <A HREF="http://linuxwacom.sf.net/">an excellent
-    website</A> that will help you install a working driver.
-  <LI>
-    Install an X11 driver "wacom_drv.o"<BR>
-    Again the X11 driver that ships with X does not work for USB tablets. Again
-    John's website provides a patched driver.
-</UL>
-</DIV>
-</BODY></HTML>
+
+  <title>Wacom graphics tablets and FontForge</title>
+  <link rel="icon" href="fftype16.png" />
+  <link rel="stylesheet" type="text/css" href="FontForge.css" />
+  <style type="text/css">
+/*<![CDATA[*/
+  h1.c1 {text-align: center}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <div id="in">
+    <h1 class="c1">Wacom graphics tablets and FontForge</h1>
+
+    <p>I have added support to FontForge for the wacom graphics
+    tablet. Eventually I will write some drawing tools that depend
+    on pressure (and tilt perhaps).</p>
+
+    <p>To install a wacom tablet on your (linux) machine you must
+    do two things:</p>
+
+    <ul>
+      <li>Install a kernel module "wacom.o" into your system<br />
+      Unfortunately the module which ships with linux (Nov 2002)
+      does not work but John Joganic has <a href=
+      "http://linuxwacom.sf.net/">an excellent website</a> that
+      will help you install a working driver.</li>
+
+      <li>Install an X11 driver "wacom_drv.o"<br />
+      Again the X11 driver that ships with X does not work for USB
+      tablets. Again John's website provides a patched driver.</li>
+    </ul>
+  </div>
+</body>
+</html>

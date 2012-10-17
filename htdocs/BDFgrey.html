@@ -1,78 +1,102 @@
-<HTML>
-<HEAD>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux (vers 25 March 2009), see www.w3.org" />
   <!-- Created with AOLpress/2.0 -->
   <!-- AP: Created on: 5-Jun-2002 -->
   <!-- AP: Last modified: 2-Mar-2004 -->
-  <LINK REL="icon" href="fftype16.png">
-  <TITLE>Extensions to Adobe's Bitmap Distribution Format for greymap (anti-aliased)
-  fonts</TITLE>
-  <LINK REL="stylesheet" TYPE="text/css" HREF="FontForge.css">
-</HEAD>
-<BODY>
-<DIV id="in">
-<H1 ALIGN=Center>
-  Extensions to
-  <A HREF="http://partners.adobe.com/asn/developer/PDFS/TN/5005.BDF_Spec.pdf">Adobe's
-  BDF</A> for greymap fonts
-</H1>
-<P>
-Adobe has defined a file format for distributing bitmap fonts called BDF.
-MicroSoft extended this format to support greymap (anti-aliased, each pixel
-representing various levels of grey rather than just black/white) fonts.
-Recently others have started using this same format
-(<A HREF="http://crl.nmsu.edu/~mleisher/xmbdfed.html">xmbdfed</A>,
-<A HREF="http://freetype.sf.net/">freetype</A> and
-<A HREF="index.html">fontforge</A>).
-<P>
-In Section 3.1 of the format description Adobe defines a "SIZE" keyword.
-MicroSoft has added an optional fourth parameter to this keyword<BR>
-<BIG><CODE>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;SIZE <I>PointSize XRes YRes
-[Bits_Per_Pixel]</I></CODE></BIG><BR>
-This fourth parameter may take the values 1, 2, 4 and 8. If omitted it is
-assumed to be 1. (FontForge will also read in fonts with values of 16 and
-32, but it will simply ignore any low order data and only retain the high
-order byte).
-<P>
-FontForge will also include a font property<BR>
-<BIG><CODE>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;BITS_PER_PIXEL
-<I>Value</I></CODE></BIG><BR>
-in all greymap fonts it generates.
-<P>
-FontForge will also mark all such fonts as version 2.3 of the bdf standard
-<BR>
-<BIG><CODE>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;STARTFONT 2.3</CODE></BIG>
-<P>
-The bitmap data are stored with 8, 4, 2 or 1 pixels packed into a byte depending
-on whether BITS_PER_PIXEL is 1, 2, 4 or 8. As in Adobe's spec all data are
-presented in hex and an even number of nibbles must be present.
-<P>
-<B>Example:</B><BR>
-<CODE>&nbsp; BITMAP<BR>
-&nbsp; C8<BR>
-&nbsp; ENDCHAR</CODE><BR>
-Would represent the pixel sequences
-<TABLE BORDER CELLPADDING="2">
-  <TR>
-    <TH>Bits/Pixel</TH>
-    <TH>Pixels</TH>
-  </TR>
-  <TR>
-    <TH>1</TH>
-    <TD>1,1,0,0,1,0,0,0</TD>
-  </TR>
-  <TR>
-    <TH>2</TH>
-    <TD>3,0,2,0</TD>
-  </TR>
-  <TR>
-    <TH>4</TH>
-    <TD>C,8</TD>
-  </TR>
-  <TR>
-    <TH>8</TH>
-    <TD>C8</TD>
-  </TR>
-</TABLE>
-<P>
-</DIV>
-</BODY></HTML>
+  <link rel="icon" href="fftype16.png" />
+
+  <title>Extensions to Adobe's Bitmap Distribution Format for
+  greymap (anti-aliased) fonts</title>
+  <link rel="stylesheet" type="text/css" href="FontForge.css" />
+  <style type="text/css">
+/*<![CDATA[*/
+  h1.c1 {text-align: center}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <div id="in">
+    <h1 class="c1">Extensions to <a href=
+    "http://partners.adobe.com/asn/developer/PDFS/TN/5005.BDF_Spec.pdf">
+    Adobe's BDF</a> for greymap fonts</h1>
+
+    <p>Adobe has defined a file format for distributing bitmap
+    fonts called BDF. MicroSoft extended this format to support
+    greymap (anti-aliased, each pixel representing various levels
+    of grey rather than just black/white) fonts. Recently others
+    have started using this same format (<a href=
+    "http://crl.nmsu.edu/~mleisher/xmbdfed.html">xmbdfed</a>,
+    <a href="http://freetype.sf.net/">freetype</a> and <a href=
+    "index.html">fontforge</a>).</p>
+
+    <p>In Section 3.1 of the format description Adobe defines a
+    "SIZE" keyword. MicroSoft has added an optional fourth
+    parameter to this keyword<br />
+    <big><code>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;SIZE <i>PointSize
+    XRes YRes [Bits_Per_Pixel]</i></code></big><br />
+    This fourth parameter may take the values 1, 2, 4 and 8. If
+    omitted it is assumed to be 1. (FontForge will also read in
+    fonts with values of 16 and 32, but it will simply ignore any
+    low order data and only retain the high order byte).</p>
+
+    <p>FontForge will also include a font property<br />
+    <big><code>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;BITS_PER_PIXEL
+    <i>Value</i></code></big><br />
+    in all greymap fonts it generates.</p>
+
+    <p>FontForge will also mark all such fonts as version 2.3 of
+    the bdf standard<br />
+    <big><code>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;STARTFONT
+    2.3</code></big></p>
+
+    <p>The bitmap data are stored with 8, 4, 2 or 1 pixels packed
+    into a byte depending on whether BITS_PER_PIXEL is 1, 2, 4 or
+    8. As in Adobe's spec all data are presented in hex and an even
+    number of nibbles must be present.</p>
+
+    <p><b>Example:</b><br />
+    <code>&nbsp; BITMAP<br />
+    &nbsp; C8<br />
+    &nbsp; ENDCHAR</code><br />
+    Would represent the pixel sequences</p>
+
+    <table border="1" cellpadding="2">
+      <tr>
+        <th>Bits/Pixel</th>
+
+        <th>Pixels</th>
+      </tr>
+
+      <tr>
+        <th>1</th>
+
+        <td>1,1,0,0,1,0,0,0</td>
+      </tr>
+
+      <tr>
+        <th>2</th>
+
+        <td>3,0,2,0</td>
+      </tr>
+
+      <tr>
+        <th>4</th>
+
+        <td>C,8</td>
+      </tr>
+
+      <tr>
+        <th>8</th>
+
+        <td>C8</td>
+      </tr>
+    </table>
+  </div>
+</body>
+</html>

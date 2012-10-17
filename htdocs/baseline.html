@@ -1,85 +1,110 @@
-<HTML>
-<HEAD>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux (vers 25 March 2009), see www.w3.org" />
   <!-- Created with AOLpress/2.0 -->
   <!-- AP: Created on: 17-Mar-2008 -->
   <!-- AP: Last modified: 21-Mar-2008 -->
-  <TITLE>The baseline dialog, and the OpenType BASE table.</TITLE>
-</HEAD>
-<BODY>
-<P>
-<IMG SRC="BASEdlg.png" WIDTH="439" HEIGHT="411" ALIGN="Right">This dialog
-may be invoked by <CODE>Element-&gt;Other Info-&gt;Horizontal Baselines
-</CODE>(or <CODE>Vertical Baselines</CODE>). It allows you to control the
-baseline (in either horizontal or vertical orientation) on which the glyphs
-of a particular script line up. You may also control the spacing between
-baselines, and the interline (or intercolumn) spacing on a per-script, or
-even per-language basis.
-<P>
-See the <A HREF="overview.html#Baseline">Baseline section </A>in the overview
-for a description of why this is important.
-<P>
-There are currently seven standard baselines. The distinctions between them
-are described in the OpenType standard. (See the
-<A HREF="http://partners.adobe.com/public/developer/opentype/index_tag4.html">baseline
-tags section</A>)
-<P>
-Basically most alphabetic scripts will use the 'romn' baseline, most CJK
-scripts will use the 'ideo'graphic baseline. Tibetan and other Indic scripts
-will use the 'hang'ing baseline, and math fonts might use the 'math' baseline.
-<P>
-Roughly the ideographic baseline will line up with the descenders of a Latin
-(Greek, Cyrillic) script, and the hanging baseline will line up with the
-ascenders.
-<P>
-You need to select which baselines your font will support. You may want to
-specify baselines that apply to scripts which aren't in your font -- this
-will mean your font is positioned reasonable when used with glyphs from other
-fonts. In the example above, the font has no Indic characters, but it still
-specifies a hanging baseline.
-<P>
-You select which baselines you will support by turning on the appropriate
-checkboxes. All scripts will have the same set of baselines. In every script
-one baseline will be the default baseline. Generally glyphs in that script
-will be drawn with their vertical origin (If you are working on horizontal
-baselines, that is) on that baseline. You then should specify how other baselines
-are offset from this one.<BR CLEAR="ALL">
-<P>
-<IMG SRC="BASElang.png" WIDTH="439" HEIGHT="305" ALIGN="Left">You may also
-set the minimum and maximum extent of the font for each script (by pressing
-the <CODE>[Set Extents] </CODE>button). This corresponds roughly to a per-script
-line spacing (or column spacing).
-<P>
-You may specify a default spacing for the script in general, and then more
-specific spacings for a given language.
-<P>
-In the example at left the default spacing for the Latin script allows room
-for one accent above capital letters. Now English doesn't have any accents
-(usually), so it might make sense that English could use a tighter line spacing
-(and, traditionally this has been done). On the other hand Vietnamese stacks
-multiple accents above one another, so it needs more room than the default.
-<P>
-But suppose you are typesetting French. Now French sometimes is printed with
-capital accented letters, but sometimes a "&Agrave;" will be drawn just as
-"A" with no accent. So you might create at feature that maps capital accented
-letters to their unaccented forms:
-<BLOCKQUOTE>
-  <PRE>feature NoAc {
+
+  <title>The baseline dialog, and the OpenType BASE table.</title>
+  <style type="text/css">
+/*<![CDATA[*/
+  p.c1 {text-align: center}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <p><img src="BASEdlg.png" width="439" height="411" align=
+  "right" />This dialog may be invoked by <code>Element-&gt;Other
+  Info-&gt;Horizontal Baselines</code> (or <code>Vertical
+  Baselines</code>). It allows you to control the baseline (in
+  either horizontal or vertical orientation) on which the glyphs of
+  a particular script line up. You may also control the spacing
+  between baselines, and the interline (or intercolumn) spacing on
+  a per-script, or even per-language basis.</p>
+
+  <p>See the <a href="overview.html#Baseline">Baseline section</a>
+  in the overview for a description of why this is important.</p>
+
+  <p>There are currently seven standard baselines. The distinctions
+  between them are described in the OpenType standard. (See the
+  <a href=
+  "http://partners.adobe.com/public/developer/opentype/index_tag4.html">
+  baseline tags section</a>)</p>
+
+  <p>Basically most alphabetic scripts will use the 'romn'
+  baseline, most CJK scripts will use the 'ideo'graphic baseline.
+  Tibetan and other Indic scripts will use the 'hang'ing baseline,
+  and math fonts might use the 'math' baseline.</p>
+
+  <p>Roughly the ideographic baseline will line up with the
+  descenders of a Latin (Greek, Cyrillic) script, and the hanging
+  baseline will line up with the ascenders.</p>
+
+  <p>You need to select which baselines your font will support. You
+  may want to specify baselines that apply to scripts which aren't
+  in your font -- this will mean your font is positioned reasonable
+  when used with glyphs from other fonts. In the example above, the
+  font has no Indic characters, but it still specifies a hanging
+  baseline.</p>
+
+  <p>You select which baselines you will support by turning on the
+  appropriate checkboxes. All scripts will have the same set of
+  baselines. In every script one baseline will be the default
+  baseline. Generally glyphs in that script will be drawn with
+  their vertical origin (If you are working on horizontal
+  baselines, that is) on that baseline. You then should specify how
+  other baselines are offset from this one.<br clear="all" /></p>
+
+  <p><img src="BASElang.png" width="439" height="305" align=
+  "left" />You may also set the minimum and maximum extent of the
+  font for each script (by pressing the <code>[Set Extents]</code>
+  button). This corresponds roughly to a per-script line spacing
+  (or column spacing).</p>
+
+  <p>You may specify a default spacing for the script in general,
+  and then more specific spacings for a given language.</p>
+
+  <p>In the example at left the default spacing for the Latin
+  script allows room for one accent above capital letters. Now
+  English doesn't have any accents (usually), so it might make
+  sense that English could use a tighter line spacing (and,
+  traditionally this has been done). On the other hand Vietnamese
+  stacks multiple accents above one another, so it needs more room
+  than the default.</p>
+
+  <p>But suppose you are typesetting French. Now French sometimes
+  is printed with capital accented letters, but sometimes a "À"
+  will be drawn just as "A" with no accent. So you might create at
+  feature that maps capital accented letters to their unaccented
+  forms:</p>
+
+  <blockquote>
+    <pre>
+feature NoAc {
   sub Agrave by A;
   sub Aacute by A;
   ...
   sub Egrave by E;
   ...
 } NoAc;
-</PRE>
-</BLOCKQUOTE>
-<P>
-Then it would be convenient to be change the baseline spacing if these feature
-were active. And, indeed you can. Simply select the line for French (in this
-case the default language works for French) and press the [Set Feature Extents]
-button.
-<P ALIGN=Center>
-<IMG SRC="BASEfeat.png" WIDTH="331" HEIGHT="252">
-<P>
-It is possible to set Extent information even if you do not provide baseline
-data (that is, if all the baselines are unselected).
-</BODY></HTML>
+</pre>
+  </blockquote>
+
+  <p>Then it would be convenient to be change the baseline spacing
+  if these feature were active. And, indeed you can. Simply select
+  the line for French (in this case the default language works for
+  French) and press the [Set Feature Extents] button.</p>
+
+  <p class="c1"><img src="BASEfeat.png" width="331" height=
+  "252" /></p>
+
+  <p>It is possible to set Extent information even if you do not
+  provide baseline data (that is, if all the baselines are
+  unselected).</p>
+</body>
+</html>

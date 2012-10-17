@@ -1,371 +1,478 @@
-<HTML>
-<HEAD>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux (vers 25 March 2009), see www.w3.org" />
   <!-- Created with AOLpress/2.0 -->
   <!-- AP: Created on: 5-Feb-2004 -->
   <!-- AP: Last modified: 23-Jul-2008 -->
-  <TITLE>Multiple Master menu</TITLE>
-  <LINK REL="icon" href="fftype16.png">
-  <LINK REL="stylesheet" TYPE="text/css" HREF="FontForge.css">
-</HEAD>
-<BODY id="menued">
-<P ALIGN=CENTER>
-<IMG SRC="fontforge-banner-420.jpeg" WIDTH=420 HEIGHT=80>
-<DIV class="menucontainer">
-  <UL class="menubar">
-    <LI class="menu">
-      <A href="http://sourceforge.net/projects/fontforge/files/">Download</A>
-      <UL>
-	<LI>
-	  <A href="http://sourceforge.net/projects/fontforge/files/fontforge-docs/"
-	      >Documentation</A>
-	<LI>
-	  <A href="http://sourceforge.net/projects/fontforge/files/fontforge-source/"
-	      >Source</A>
-      </UL>
-    <LI>
-      <A HREF="overview.html#TOC">Introduction</A>
-    <LI>
-      <A href="editexample.html">Tutorial</A>
-    <LI class="menu">
-      <A href="fontview.html">Windows</A>
-      <UL>
-	<LI>
-	  <A href="fontview.html" >Font</A>
-	<LI>
-	  <A href="charview.html" >Outline Glyph</A>
-	<LI>
-	  <small><A href="charview.html#Debugging" >&nbsp; &nbsp;Debugging TrueType</A></small>
-	<LI>
-	  <small><A href="multilayer.html" >&nbsp; &nbsp;Type3 Glyphs</A></small>
-	<LI>
-	  <A href="bitmapview.html" >Bitmap Glyph</A>
-	<LI>
-	  <A href="metricsview.html" >Metrics</A>
-      </UL>
-    <LI class="menu">
-      <A href="fontinfo.html">Dialogs 1</A>
-      <UL>
-	<LI>
-	  <A href="fontinfo.html" >Font Information</A>
-	<LI>
-	  <small><A href="histogram.html" >&nbsp; &nbsp;Histogram Dialog</A></small>
-	<LI>
-	  <A href="charinfo.html" >Glyph Information</A>
-	<LI>
-	  <A href="getinfo.html" >Point, Reference Information</A>
-	<LI>
-	  <A href="multilayer.html#Layer" >Type3 Layer Information</A>
-	<LI>
-	  <A href="bdfinfo.html" >Bitmap Properties</A>
-	<LI>
-	  <A href="baseline.html" >Baseline Information</A>
-	<LI>
-	  <A HREF="justify.html">Justification Information</A>
-	<LI>
-	  <A href="math.html" >Math Information</A>
-	<LI>
-	  <A href="multiplemaster.html" >Multiple Master Information</A>
-	<LI>
-	  <HR>
-	<LI>
-	  <A href="lookups.html" >Lookups &amp; subtables</A>
-	<LI>
-	  <A href="metricsview.html#kernpair" >Kerning glyph pairs 1</A>
-	<LI>
-	  <A href="kernpairs.html" >Kerning glyph pairs 2</A>
-	<LI>
-	  <A href="metricsview.html#kernclass" >Kerning by classes</A>
-	<LI>
-	  <A href="anchorcontrol.html" >Anchor Control</A>
-	<LI>
-	  <A href="contextchain.html" >Contextual lookup dialog</A>
-	<LI>
-	  <A href="statemachine.html" >Apple State Machine dialog</A>
-	<LI>
-	  <A href="showatt.html" >Show Advanced Typography</A>
-	<LI>
-	  <HR>
-	<LI>
-	  <A href="problems.html" >Potential Problems dialog</A>
-	<LI>
-	  <A href="validation.html" >Font Validation dialog</A>
-      </UL>
-    <LI class="menu">
-      <A href="generate.html">Dialogs 2</A>
-      <UL>
-	<LI>
-	  <A href="filemenu.html#Open" >Open Fonts dialog</A>
-	<LI>
-	  <A href="oflib.html" >Browsing OFLib dialog</A>
-	<LI>
-	  <A href="generate.html" >Generate Fonts dialog</A>
-	<LI>
-	  <A href="generate.html#Mac" >Generate Mac Family dialog</A>
-	<LI>
-	  <HR>
-	<LI>
-	  <A href="display.html" >Print &amp; Display dialog</A>
-	<LI>
-	  <A href="prefs.html" >Preferences dialog</A>
-	<LI>
-	  <A href="groups.html" >Groups dialog</A>
-	<LI>
-	  <HR>
-	<LI>
-	  <A href="elementmenu.html#Bitmaps">Manage Bitmap Strikes</A>
-	<LI>
-	  <A href="elementmenu.html#Regenerate">Re-Rasterize Bitmap Strikes</A>
-	<LI>
-	  <HR>
-	<LI>
-	  <A href="search.html" >Search &amp; Replace dialog</A>
-	<LI>
-	  <A href="Styles.html" >Style Transformation dialogs</A>
-	<LI>
-	  <A href="transform.html" >Transformation dialog</A>
-	<LI>
-	  <A href="elementmenu.html#Expand" >Expand Stroke dialog</A>
-	<LI>
-	  <A href="tilepath.html" >Tile Path dialog</A>
-	<LI>
-	  <A href="InsertTextDlg.html" >Insert Text dialog</A>
-	<LI>
-	  <HR>
-	<LI>
-	  <A href="metricsmenu.html#Width">Set width dialogs</A>
-	<LI>
-	  <A href="metricsmenu.html#Width">Set left/right bearings</A>
-	<LI>
-	  <A href="autowidth.html" >Auto Width &amp; Kern dialogs</A>
-	<LI>
-	  <HR>
-	<LI>
-	  <A href="hintsmenu.html#Review" >Review PS Hints dialog</A>
-	<LI>
-	  <A href="ttfinstrs.html" >TrueType Instruction Editor</A>
-	<LI>
-	  <A href="ttfinstrs.html#cvt" >TrueType 'cvt ' Editor</A>
-	<LI>
-	  <HR>
-	<LI>
-	  <A href="selectbyatt.html" >Select by feature dialog</A>
-	<LI>
-	  <A href="elementmenu.html#MassRename" >Rename Glyphs dialog</A>
-	<LI>
-	  <A href="elementmenu.html#CompareFonts" >Compare Fonts dialog</A>
-      </UL>
-    <LI class="menu">
-      <A href="filemenu.html">Menus</A>
-      <UL>
-	<LI>
-	  <A href="filemenu.html" >File</A>
-	<LI>
-	  <A href="editmenu.html" >Edit</A>
-	<LI>
-	  <A href="pointmenu.html" >Point</A>
-	<LI>
-	  <A href="elementmenu.html">Element</A>
-	<LI>
-	  <A href="toolsmenu.html">Tools</A>
-	<LI>
-	  <A href="hintsmenu.html" >Hints</A>
-	<LI>
-	  <A href="encodingmenu.html" >Encoding</A>
-	<LI>
-	  <A href="viewmenu.html" >View</A>
-	<LI>
-	  <A href="metricsmenu.html" >Metrics</A>
-	<LI>
-	  <A href="cidmenu.html" >CID</A>
-	<LI>
-	  <A href="mmmenu.html" >Multi Master</A>
-	<LI>
-	  <A href="windowmenu.html" >Window</A>
-	<LI>
-	  <A href="helpmenu.html" >Help</A>
-      </UL>
-    <LI>
-      <A href="faqFS.html">FAQ</A>
-    <LI>
-      <A href="IndexFS.html">Index</A>
-    <LI>
-      <A href="GlossaryFS.html">Glossary</A>
-  </UL>
-</DIV>
-<DIV id="in">
-  <H1 ALIGN=Center>
-    The Multiple Master Menu
-  </H1>
-  <P>
-  The MM Menu provides a few commands for manipulating
-  <A HREF="multiplemaster.html#MM">Multiple Master or Apple distortable
-  fonts</A>. If the current font is a MM itself font the menu also includes
-  a list of all font instances that make up this one. This menu is available
-  in the <A HREF="mmmenu.html#fontview">font view</A> and the
-  <A HREF="mmmenu.html#outline-char">outline glyph view</A>.
-  <H3>
-    The menu as it appears in the <A NAME="fontview">font view</A>
-  </H3>
-  <UL>
-    <LI>
-      <A HREF="mmmenu.html#Create">Create MM</A>...
-    <LI>
-      <A HREF="mmmenu.html#Valid">MM Valid</A>
-    <LI>
-      <A HREF="mmmenu.html#Info">MM Info</A>...
-    <LI>
-      <A HREF="#NewFont">Blend to New Font</A>...
-    <LI>
-      <A HREF="mmmenu.html#DefWeights">MM Change Default Weights</A>... 
-	<HR>
-    <LI>
-      &lt;sub font names&gt;
-  </UL>
-  <P>
-  <DL>
-    <DT>
-      <A NAME="Create">Create MM</A>
-    <DD>
-      Brings up the <A HREF="multiplemaster.html">multiple master dialog</A> and
-      allows you to create your own multiple master font from scratch.
-    <DT>
-      <A NAME="Valid">MM Valid</A>
-    <DD>
-      Checks that the current multiple master font can be saved. So each master
-      design must match in:
-      <UL>
-	<LI>
-	  Contours
-	  <UL>
-	    <LI>
-	      There must be the same number of contours and
-	    <LI>
-	      each contour must have the same number of points and
-	    <LI>
-	      each spline on the contour must be the same type (ie it can't correspond
-	      to a straight line in one font and a curve in another)
-	  </UL>
-	<LI>
-	  References
-	  <UL>
-	    <LI>
-	      There must be the same number of references and
-	    <LI>
-	      Each corresponding reference must refer to the same encoding
-	  </UL>
-	<LI>
-	  Hints
-	  <UL>
-	    <LI>
-	      Same number of hints
-	  </UL>
-	<LI>
-	  HintMasks (Counter masks are not supported here)
-	  <UL>
-	    <LI>
-	      HintMasks at corresponding points must specify a corresponding set of hints
-	  </UL>
-	<LI>
-	  Kerning
-	  <UL>
-	    <LI>
-	      If a glyph kerns with another glyph in one font, then a corresponding kerning
-	      pair must exist in all designs
-	  </UL>
-      </UL>
-    <DT>
-      <A NAME="Info">MM Info</A>
-    <DD>
-      Brings up the <A HREF="multiplemaster.html">multiple master dialog</A> and
-      allows you to modify the current multiple master font.
-    <DT>
-      <A NAME="NewFont">Blend to New Font</A>...
-    <DD>
-      Allows you to create a blended version of the current multiple master font
-      set as a stand alone font.
-    <DT>
-      <A NAME="DefWeights">MM Change Default Weights</A>
-    <DD>
-      Allows you to change the default weights assigned to each master design used
-      in blending the default instance of the font 
-	<HR>
-    <DT>
-      &lt;sub font name&gt;
-    <DD>
-      Clicking on a different sub font name in the menu will cause that sub-font
-      to be displayed instead of the current one. The subfonts are the master designs
-      and the default blended font.
-  </DL>
-  <H3>
-    The menu as it appears in the <A NAME="outline-char">outline glyph </A>view
-  </H3>
-  <UL>
-    <LI>
-      <A HREF="mmmenu.html#Reblend">MM Reblend </A> 
-	<HR>
-    <LI>
-      <A HREF="mmmenu.html#View">View </A> 
-	<HR>
-    <LI>
-      &lt;sub font names&gt;
-  </UL>
-  <P>
-  <DL>
-    <DT>
-      MM <A NAME="Reblend">Reblend</A>
-    <DD>
-      Reblends the default version of the current glyph
-    <DT>
-      <A NAME="View">View</A>
-    <DD>
-      A submenu which allows you to choose which of the designs of this glyph you
-      want displayed in the background of the view 
-	<HR>
-    <DT>
-      &lt;sub font name&gt;
-    <DD>
-      Clicking on a different sub font name in the menu will cause the glyph from
-      that sub-font to be displayed instead of the current one. The subfonts are
-      the master designs and the default blended font.
-  </DL>
-  <P>
-  <H2>
-    Other menus
-  </H2>
-  <UL>
-    <LI>
-      <A HREF="filemenu.html">File</A>
-    <LI>
-      <A HREF="editmenu.html">Edit</A>
-    <LI>
-      <A HREF="pointmenu.html">Point</A>
-    <LI>
-      <A HREF="elementmenu.html">Element</A>
-    <LI>
-      <A href="toolsmenu.html">Tools</A>
-    <LI>
-      <A HREF="hintsmenu.html">Hints</A>
-    <LI>
-      <A HREF="encodingmenu.html">Encoding</A>
-    <LI>
-      <A HREF="viewmenu.html">View</A>
-    <LI>
-      <A HREF="metricsmenu.html">Metrics</A>
-    <LI>
-      <A HREF="cidmenu.html">CID</A>
-    <LI>
-      <A HREF="mmmenu.html">MM</A>
-    <LI>
-      <A HREF="windowmenu.html">Window</A>
-    <LI>
-      <A HREF="helpmenu.html">Help</A>
-    <LI>
-      <A HREF="HotKeys.html">Hot Keys</A>
-  </UL>
-  <P ALIGN=Center>
-  -- <A HREF="cidmenu.html">Prev</A> -- <A HREF="overview.html">TOC</A> --
-  <A HREF="windowmenu.html">Next</A> --
-  <P>
-  <P>
-</DIV>
-</BODY></HTML>
+
+  <title>Multiple Master menu</title>
+  <link rel="icon" href="fftype16.png" />
+  <link rel="stylesheet" type="text/css" href="FontForge.css" />
+  <style type="text/css">
+/*<![CDATA[*/
+  h1.c2 {text-align: center}
+  p.c1 {text-align: center}
+  /*]]>*/
+  </style>
+</head>
+
+<body id="menued">
+  <p class="c1"><img src="fontforge-banner-420.jpeg" width="420"
+  height="80" /></p>
+
+  <div class="menucontainer">
+    <ul class="menubar">
+      <li class="menu">
+        <a href=
+        "http://sourceforge.net/projects/fontforge/files/">Download</a>
+
+        <ul>
+          <li><a href=
+          "http://sourceforge.net/projects/fontforge/files/fontforge-docs/">
+          Documentation</a></li>
+
+          <li><a href=
+          "http://sourceforge.net/projects/fontforge/files/fontforge-source/">
+          Source</a></li>
+        </ul>
+      </li>
+
+      <li><a href="overview.html#TOC">Introduction</a></li>
+
+      <li><a href="editexample.html">Tutorial</a></li>
+
+      <li class="menu">
+        <a href="fontview.html">Windows</a>
+
+        <ul>
+          <li><a href="fontview.html">Font</a></li>
+
+          <li><a href="charview.html">Outline Glyph</a></li>
+
+          <li><small><a href="charview.html#Debugging">&nbsp;
+          &nbsp;Debugging TrueType</a></small></li>
+
+          <li><small><a href="multilayer.html">&nbsp; &nbsp;Type3
+          Glyphs</a></small></li>
+
+          <li><a href="bitmapview.html">Bitmap Glyph</a></li>
+
+          <li><a href="metricsview.html">Metrics</a></li>
+        </ul>
+      </li>
+
+      <li class="menu">
+        <a href="fontinfo.html">Dialogs 1</a>
+
+        <ul>
+          <li><a href="fontinfo.html">Font Information</a></li>
+
+          <li><small><a href="histogram.html">&nbsp;
+          &nbsp;Histogram Dialog</a></small></li>
+
+          <li><a href="charinfo.html">Glyph Information</a></li>
+
+          <li><a href="getinfo.html">Point, Reference
+          Information</a></li>
+
+          <li><a href="multilayer.html#Layer">Type3 Layer
+          Information</a></li>
+
+          <li><a href="bdfinfo.html">Bitmap Properties</a></li>
+
+          <li><a href="baseline.html">Baseline Information</a></li>
+
+          <li><a href="justify.html">Justification
+          Information</a></li>
+
+          <li><a href="math.html">Math Information</a></li>
+
+          <li><a href="multiplemaster.html">Multiple Master
+          Information</a></li>
+
+          <li>
+            <hr />
+          </li>
+
+          <li><a href="lookups.html">Lookups &amp;
+          subtables</a></li>
+
+          <li><a href="metricsview.html#kernpair">Kerning glyph
+          pairs 1</a></li>
+
+          <li><a href="kernpairs.html">Kerning glyph pairs
+          2</a></li>
+
+          <li><a href="metricsview.html#kernclass">Kerning by
+          classes</a></li>
+
+          <li><a href="anchorcontrol.html">Anchor Control</a></li>
+
+          <li><a href="contextchain.html">Contextual lookup
+          dialog</a></li>
+
+          <li><a href="statemachine.html">Apple State Machine
+          dialog</a></li>
+
+          <li><a href="showatt.html">Show Advanced
+          Typography</a></li>
+
+          <li>
+            <hr />
+          </li>
+
+          <li><a href="problems.html">Potential Problems
+          dialog</a></li>
+
+          <li><a href="validation.html">Font Validation
+          dialog</a></li>
+        </ul>
+      </li>
+
+      <li class="menu">
+        <a href="generate.html">Dialogs 2</a>
+
+        <ul>
+          <li><a href="filemenu.html#Open">Open Fonts
+          dialog</a></li>
+
+          <li><a href="oflib.html">Browsing OFLib dialog</a></li>
+
+          <li><a href="generate.html">Generate Fonts
+          dialog</a></li>
+
+          <li><a href="generate.html#Mac">Generate Mac Family
+          dialog</a></li>
+
+          <li>
+            <hr />
+          </li>
+
+          <li><a href="display.html">Print &amp; Display
+          dialog</a></li>
+
+          <li><a href="prefs.html">Preferences dialog</a></li>
+
+          <li><a href="groups.html">Groups dialog</a></li>
+
+          <li>
+            <hr />
+          </li>
+
+          <li><a href="elementmenu.html#Bitmaps">Manage Bitmap
+          Strikes</a></li>
+
+          <li><a href="elementmenu.html#Regenerate">Re-Rasterize
+          Bitmap Strikes</a></li>
+
+          <li>
+            <hr />
+          </li>
+
+          <li><a href="search.html">Search &amp; Replace
+          dialog</a></li>
+
+          <li><a href="Styles.html">Style Transformation
+          dialogs</a></li>
+
+          <li><a href="transform.html">Transformation
+          dialog</a></li>
+
+          <li><a href="elementmenu.html#Expand">Expand Stroke
+          dialog</a></li>
+
+          <li><a href="tilepath.html">Tile Path dialog</a></li>
+
+          <li><a href="InsertTextDlg.html">Insert Text
+          dialog</a></li>
+
+          <li>
+            <hr />
+          </li>
+
+          <li><a href="metricsmenu.html#Width">Set width
+          dialogs</a></li>
+
+          <li><a href="metricsmenu.html#Width">Set left/right
+          bearings</a></li>
+
+          <li><a href="autowidth.html">Auto Width &amp; Kern
+          dialogs</a></li>
+
+          <li>
+            <hr />
+          </li>
+
+          <li><a href="hintsmenu.html#Review">Review PS Hints
+          dialog</a></li>
+
+          <li><a href="ttfinstrs.html">TrueType Instruction
+          Editor</a></li>
+
+          <li><a href="ttfinstrs.html#cvt">TrueType 'cvt '
+          Editor</a></li>
+
+          <li>
+            <hr />
+          </li>
+
+          <li><a href="selectbyatt.html">Select by feature
+          dialog</a></li>
+
+          <li><a href="elementmenu.html#MassRename">Rename Glyphs
+          dialog</a></li>
+
+          <li><a href="elementmenu.html#CompareFonts">Compare Fonts
+          dialog</a></li>
+        </ul>
+      </li>
+
+      <li class="menu">
+        <a href="filemenu.html">Menus</a>
+
+        <ul>
+          <li><a href="filemenu.html">File</a></li>
+
+          <li><a href="editmenu.html">Edit</a></li>
+
+          <li><a href="pointmenu.html">Point</a></li>
+
+          <li><a href="elementmenu.html">Element</a></li>
+
+          <li><a href="toolsmenu.html">Tools</a></li>
+
+          <li><a href="hintsmenu.html">Hints</a></li>
+
+          <li><a href="encodingmenu.html">Encoding</a></li>
+
+          <li><a href="viewmenu.html">View</a></li>
+
+          <li><a href="metricsmenu.html">Metrics</a></li>
+
+          <li><a href="cidmenu.html">CID</a></li>
+
+          <li><a href="mmmenu.html">Multi Master</a></li>
+
+          <li><a href="windowmenu.html">Window</a></li>
+
+          <li><a href="helpmenu.html">Help</a></li>
+        </ul>
+      </li>
+
+      <li><a href="faqFS.html">FAQ</a></li>
+
+      <li><a href="IndexFS.html">Index</a></li>
+
+      <li><a href="GlossaryFS.html">Glossary</a></li>
+    </ul>
+  </div>
+
+  <div id="in">
+    <h1 class="c2">The Multiple Master Menu</h1>
+
+    <p>The MM Menu provides a few commands for manipulating
+    <a href="multiplemaster.html#MM">Multiple Master or Apple
+    distortable fonts</a>. If the current font is a MM itself font
+    the menu also includes a list of all font instances that make
+    up this one. This menu is available in the <a href=
+    "mmmenu.html#fontview">font view</a> and the <a href=
+    "mmmenu.html#outline-char">outline glyph view</a>.</p>
+
+    <h3>The menu as it appears in the <a name="fontview" id=
+    "fontview">font view</a></h3>
+
+    <ul>
+      <li><a href="mmmenu.html#Create">Create MM</a>...</li>
+
+      <li><a href="mmmenu.html#Valid">MM Valid</a></li>
+
+      <li><a href="mmmenu.html#Info">MM Info</a>...</li>
+
+      <li><a href="#NewFont">Blend to New Font</a>...</li>
+
+      <li>
+        <a href="mmmenu.html#DefWeights">MM Change Default
+        Weights</a>...
+        <hr />
+      </li>
+
+      <li>&lt;sub font names&gt;</li>
+    </ul>
+
+    <dl>
+      <dt><a name="Create" id="Create">Create MM</a></dt>
+
+      <dd>Brings up the <a href="multiplemaster.html">multiple
+      master dialog</a> and allows you to create your own multiple
+      master font from scratch.</dd>
+
+      <dt><a name="Valid" id="Valid">MM Valid</a></dt>
+
+      <dd>
+        Checks that the current multiple master font can be saved.
+        So each master design must match in:
+
+        <ul>
+          <li>Contours
+
+            <ul>
+              <li>There must be the same number of contours
+              and</li>
+
+              <li>each contour must have the same number of points
+              and</li>
+
+              <li>each spline on the contour must be the same type
+              (ie it can't correspond to a straight line in one
+              font and a curve in another)</li>
+            </ul>
+          </li>
+
+          <li>References
+
+            <ul>
+              <li>There must be the same number of references
+              and</li>
+
+              <li>Each corresponding reference must refer to the
+              same encoding</li>
+            </ul>
+          </li>
+
+          <li>Hints
+
+            <ul>
+              <li>Same number of hints</li>
+            </ul>
+          </li>
+
+          <li>HintMasks (Counter masks are not supported here)
+
+            <ul>
+              <li>HintMasks at corresponding points must specify a
+              corresponding set of hints</li>
+            </ul>
+          </li>
+
+          <li>Kerning
+
+            <ul>
+              <li>If a glyph kerns with another glyph in one font,
+              then a corresponding kerning pair must exist in all
+              designs</li>
+            </ul>
+          </li>
+        </ul>
+      </dd>
+
+      <dt><a name="Info" id="Info">MM Info</a></dt>
+
+      <dd>Brings up the <a href="multiplemaster.html">multiple
+      master dialog</a> and allows you to modify the current
+      multiple master font.</dd>
+
+      <dt><a name="NewFont" id="NewFont">Blend to New
+      Font</a>...</dt>
+
+      <dd>Allows you to create a blended version of the current
+      multiple master font set as a stand alone font.</dd>
+
+      <dt><a name="DefWeights" id="DefWeights">MM Change Default
+      Weights</a></dt>
+
+      <dd>
+        Allows you to change the default weights assigned to each
+        master design used in blending the default instance of the
+        font
+        <hr />
+      </dd>
+
+      <dt>&lt;sub font name&gt;</dt>
+
+      <dd>Clicking on a different sub font name in the menu will
+      cause that sub-font to be displayed instead of the current
+      one. The subfonts are the master designs and the default
+      blended font.</dd>
+    </dl>
+
+    <h3>The menu as it appears in the <a name="outline-char" id=
+    "outline-char">outline glyph</a> view</h3>
+
+    <ul>
+      <li>
+        <a href="mmmenu.html#Reblend">MM Reblend</a>
+        <hr />
+      </li>
+
+      <li>
+        <a href="mmmenu.html#View">View</a>
+        <hr />
+      </li>
+
+      <li>&lt;sub font names&gt;</li>
+    </ul>
+
+    <dl>
+      <dt>MM <a name="Reblend" id="Reblend">Reblend</a></dt>
+
+      <dd>Reblends the default version of the current glyph</dd>
+
+      <dt><a name="View" id="View">View</a></dt>
+
+      <dd>
+        A submenu which allows you to choose which of the designs
+        of this glyph you want displayed in the background of the
+        view
+        <hr />
+      </dd>
+
+      <dt>&lt;sub font name&gt;</dt>
+
+      <dd>Clicking on a different sub font name in the menu will
+      cause the glyph from that sub-font to be displayed instead of
+      the current one. The subfonts are the master designs and the
+      default blended font.</dd>
+    </dl>
+
+    <h2>Other menus</h2>
+
+    <ul>
+      <li><a href="filemenu.html">File</a></li>
+
+      <li><a href="editmenu.html">Edit</a></li>
+
+      <li><a href="pointmenu.html">Point</a></li>
+
+      <li><a href="elementmenu.html">Element</a></li>
+
+      <li><a href="toolsmenu.html">Tools</a></li>
+
+      <li><a href="hintsmenu.html">Hints</a></li>
+
+      <li><a href="encodingmenu.html">Encoding</a></li>
+
+      <li><a href="viewmenu.html">View</a></li>
+
+      <li><a href="metricsmenu.html">Metrics</a></li>
+
+      <li><a href="cidmenu.html">CID</a></li>
+
+      <li><a href="mmmenu.html">MM</a></li>
+
+      <li><a href="windowmenu.html">Window</a></li>
+
+      <li><a href="helpmenu.html">Help</a></li>
+
+      <li><a href="HotKeys.html">Hot Keys</a></li>
+    </ul>
+
+    <p class="c1">-- <a href="cidmenu.html">Prev</a> -- <a href=
+    "overview.html">TOC</a> -- <a href="windowmenu.html">Next</a>
+    --</p>
+  </div>
+</body>
+</html>
