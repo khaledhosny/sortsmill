@@ -8,8 +8,8 @@
 #include <xunistring.h>
 #include <rexp.h>
 
-typedef rexp_match_t (*matcher) (rexp_t re, const char *s);
-typedef rexp_t (*compiler) (const char *s);
+typedef rexp_match_t (*matcher) (rexp_t re, const uint8_t *s);
+typedef rexp_t (*compiler) (const uint8_t *s);
 typedef rexp_t (*filter) (rexp_t re);
 
 int
@@ -19,16 +19,16 @@ main (int argc, char **argv)
 
   setlocale (LC_ALL, "");
 
-  char *pattern = (uint8_t *) argv[1];
-  char *string = (uint8_t *) argv[2];
+  uint8_t *pattern = (uint8_t *) argv[1];
+  uint8_t *string = (uint8_t *) argv[2];
   char *operation = argv[3];
   char *study = argv[4];
 
   matcher my_matcher = NULL;
   if (strcmp (operation, "match") == 0)
-    my_matcher = rexp_match;
+    my_matcher = u8_rexp_match;
   else if (strcmp (operation, "search") == 0)
-    my_matcher = rexp_search;
+    my_matcher = u8_rexp_search;
   else
     abort ();
 
@@ -36,39 +36,39 @@ main (int argc, char **argv)
   compiler my_compiler = NULL;
   if (strcmp (study, "study") == 0)
     {
-      my_compiler = rexp_compile;
+      my_compiler = u8_rexp_compile;
       my_filter = rexp_study;
     }
   else if (strcmp (study, "jit") == 0)
     {
-      my_compiler = rexp_compile;
+      my_compiler = u8_rexp_compile;
       my_filter = rexp_jit;
     }
   else if (strcmp (study, "identity") == 0)
     {
-      my_compiler = rexp_compile;
+      my_compiler = u8_rexp_compile;
       my_filter = rexp_identity;
     }
   else if (strcmp (study, "compile_study") == 0)
     {
-      my_compiler = rexp_compile_study;
+      my_compiler = u8_rexp_compile_study;
       my_filter = rexp_identity;
     }
 
   else if (strcmp (study, "compile_jit") == 0)
     {
-      my_compiler = rexp_compile_jit;
+      my_compiler = u8_rexp_compile_jit;
       my_filter = rexp_identity;
     }
   else if (strcmp (study, "redo_study") == 0)
     {
-      my_compiler = rexp_compile_jit;
+      my_compiler = u8_rexp_compile_jit;
       my_filter = rexp_study;
     }
 
   else if (strcmp (study, "redo_jit") == 0)
     {
-      my_compiler = rexp_compile_study;
+      my_compiler = u8_rexp_compile_study;
       my_filter = rexp_jit;
     }
   else
@@ -89,7 +89,7 @@ main (int argc, char **argv)
           for (size_t i = 0; i < rexp_num_subexpr (m) + 1; i++)
             {
               rexp_interval_t interv = rexp_interval (m, i);
-              uint8_t *substr = rexp_substr (m, string, i);
+              uint8_t *substr = u8_rexp_substr (m, string, i);
               ulc_fprintf (stdout, "%zu: %d %d |%U|\n", i, interv.i_start,
                            interv.i_end, substr);
             }

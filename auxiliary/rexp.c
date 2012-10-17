@@ -68,7 +68,8 @@ rexp_compile_opt (const char *pattern, int options)
   int error_offset;
   int capture_count;
   re->pcre_ptr =
-    pcre_compile2 (pattern, 0, &error_code, &error, &error_offset, NULL);
+    pcre_compile2 (pattern, options, &error_code, &error, &error_offset,
+                   NULL);
   if (re->pcre_ptr != NULL)
     {
       (void) pcre_fullinfo (re->pcre_ptr, re->extra, PCRE_INFO_CAPTURECOUNT,
@@ -112,13 +113,13 @@ rexp_compile_jit (const char *pattern)
 rexp_t
 u8_rexp_compile_opt (const uint8_t *pattern, int options)
 {
-  return rexp_compile_opt ((const char *) pattern, options | PCRE_UTF8);
+  return rexp_compile_opt ((const char *) pattern, options);
 }
 
 rexp_t
 u8_rexp_compile (const uint8_t *pattern)
 {
-  return u8_rexp_compile_opt (pattern, 0);
+  return u8_rexp_compile_opt (pattern, (PCRE_UTF8 | PCRE_UCP));
 }
 
 rexp_t
