@@ -60,6 +60,17 @@ main (int argc, char **argv)
       my_compiler = rexp_compile_jit;
       my_filter = rexp_identity;
     }
+  else if (strcmp (study, "redo_study") == 0)
+    {
+      my_compiler = rexp_compile_jit;
+      my_filter = rexp_study;
+    }
+
+  else if (strcmp (study, "redo_jit") == 0)
+    {
+      my_compiler = rexp_compile_study;
+      my_filter = rexp_jit;
+    }
   else
     abort ();
 
@@ -92,6 +103,14 @@ main (int argc, char **argv)
       rexp_match_t m = my_matcher (NULL, string);
       if (m)
         exit_status = 30;
+    }
+
+  if (exit_status == 0)
+    {
+      ulc_fprintf (stderr, "study: %s\n", (re->extra != NULL ? "yes" : "no"));
+      int jit;
+      pcre_fullinfo(re->pcre_ptr, re->extra, PCRE_INFO_JIT, &jit);
+      ulc_fprintf (stderr, "jit:   %s\n", (jit ? "yes" : "no"));
     }
 
   GC_gcollect ();
