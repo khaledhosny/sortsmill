@@ -1,0 +1,960 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux (vers 25 March 2009), see www.w3.org" />
+  <!-- Created with AOLpress/2.0 -->
+  <!-- AP: Created on: 13-Feb-2003 -->
+  <!-- AP: Last modified: 20-Mar-2008 -->
+
+  <title>TrueType and OpenType tables supported by
+  FontForge</title>
+  <link rel="icon" href="fftype16.png" />
+  <link rel="stylesheet" type="text/css" href="FontForge.css" />
+  <style type="text/css">
+/*<![CDATA[*/
+  p.c2 {text-align: center}
+  h1.c1 {text-align: center}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <div id="in">
+    <h1 class="c1">TrueType and OpenType tables supported by
+    FontForge</h1>
+
+    <p><a href=
+    "http://developer.apple.com/fonts/TTRefMan/RM06/Chap6.html">Apple</a>,
+    <a href="http://www.microsoft.com/typography/tt/tt.htm">MS</a>
+    and <a href=
+    "http://partners.adobe.com/public/developer/opentype/index_spec.html">
+    Adobe</a> all have their descriptions of TrueType and OpenType.
+    MS and Adobe's versions are essentially the same, while Apple's
+    differ significantly from either.</p>
+
+    <table border="1" cellpadding="2">
+      <tr>
+        <th>name</th>
+
+        <th>long name</th>
+
+        <th>FontForge's use</th>
+
+        <th>Apple<br />
+        docs</th>
+
+        <th>Adobe<br />
+        docs</th>
+      </tr>
+
+      <tr>
+        <td>avar</td>
+
+        <td>axis variation</td>
+
+        <td>Used to specify piecewise linear sections of axes for
+        distortable fonts</td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://developer.apple.com/fonts/TTRefMan/RM06/Chap6avar.html">
+          avar</a></p>
+        </td>
+
+        <td>
+          <p class="c2">*</p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>BASE</td>
+
+        <td>baseline data</td>
+
+        <td>Provides information on baseline positioning and
+        per-script line heights in OpenType.</td>
+
+        <td>
+          <p class="c2">*</p>
+        </td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://partners.adobe.com/public/developer/opentype/index_base.html">
+          BASE</a></p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>bsln</td>
+
+        <td>baseline data</td>
+
+        <td>Provides information on baseline positioning for
+        AAT.</td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://developer.apple.com/textfonts/TTRefMan/RM06/Chap6bsln.html">
+          bsln</a></p>
+        </td>
+
+        <td>
+          <p class="c2">*</p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>BDF&nbsp;</td>
+
+        <td>X11 BDF header</td>
+
+        <td>This table is not part of the official TrueType or
+        OpenType specs. It contains the header information from old
+        bdf fonts. I describe its format <a href=
+        "non-standard.html">here</a>.</td>
+
+        <td>
+          <p class="c2">*</p>
+        </td>
+
+        <td>
+          <p class="c2">*</p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>bdat</td>
+
+        <td>bitmap data</td>
+
+        <td>Provides the actual bitmap data for all bitmap glyphs
+        in Apple fonts. 'EBDT' is used by MS/Adobe instead (and has
+        the same format)</td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://developer.apple.com/fonts/TTRefMan/RM06/Chap6bdat.html">
+          bdat</a></p>
+        </td>
+
+        <td>
+          <p class="c2">*</p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>bhed</td>
+
+        <td>bitmap font header</td>
+
+        <td>Replaces the 'head' table in Apple's bitmap only fonts.
+        (similar to 'head')</td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://developer.apple.com/fonts/TTRefMan/RM06/Chap6bhed.html">
+          bhed</a></p>
+        </td>
+
+        <td>
+          <p class="c2">*</p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>bloc</td>
+
+        <td>bitmap location data</td>
+
+        <td>Provides pointers to the appropriate bitmap data for
+        each bitmap glyph in Apple fonts. 'EBLC' is used by
+        MS/Adobe instead (and has the same format)</td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://developer.apple.com/fonts/TTRefMan/RM06/Chap6bloc.html">
+          bloc</a></p>
+        </td>
+
+        <td>
+          <p class="c2">*</p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>CFF</td>
+
+        <td><a href=
+        "http://partners.adobe.com/asn/developer/pdfs/tn/5176.CFF.pdf">
+        Compact Font Format</a></td>
+
+        <td>Provides all the outline data (and sometimes glyph
+        names as well) for the PostScript <a href=
+        "http://partners.adobe.com/asn/developer/pdfs/tn/5177.Type2.pdf">
+        Type2</a> font that is the heart of an OpenType font.
+        Vaguely equivalent to 'glyf' , 'loca' and 'post'
+        combined.</td>
+
+        <td>
+          <p class="c2">*</p>
+        </td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://partners.adobe.com/public/developer/opentype/index_cff.html">
+          CFF</a></p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>cmap</td>
+
+        <td>character code mapping</td>
+
+        <td>
+          Provides at least one encoding from a stream of bytes to
+          glyphs in the font. FontForge provides at least three
+          encodings in every font (one for Mac Roman, one for Mac
+          Unicode, one for MS Unicode). For some fonts it will
+          additionally provide a CJK encoding (Big5, SJIS, etc) or
+          an extended unicode encoding which will cover code points
+          outside of the BMP.
+
+          <p>For fonts with special 1-byte encodings (such as
+          symbol) it will provide a "symbol" encoding which maps a
+          known page in the corporate use area to the glyphs.</p>
+        </td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://developer.apple.com/fonts/TTRefMan/RM06/Chap6cmap.html">
+          cmap</a></p>
+        </td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://partners.adobe.com/public/developer/opentype/index_cmap.html">
+          cmap</a></p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>cvar</td>
+
+        <td>variations on cvt table</td>
+
+        <td>Used to specify hinting differences in distortable
+        fonts</td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://developer.apple.com/fonts/TTRefMan/RM06/Chap6cvar.html">
+          cvar</a></p>
+        </td>
+
+        <td>
+          <p class="c2">*</p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>cvt</td>
+
+        <td>control value table</td>
+
+        <td>FontForge uses this when it attempts to hint truetype
+        fonts (FontForge will read it from a font and save it into
+        another).</td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://developer.apple.com/fonts/TTRefMan/RM06/Chap6cvt.html">
+          cvt</a></p>
+        </td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://partners.adobe.com/public/developer/opentype/index_cvt.html">
+          cvt</a></p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>EBDT</td>
+
+        <td>embedded bitmap data</td>
+
+        <td>Provides the actual bitmap data for all bitmap glyphs
+        in MS/Adobe fonts. 'bdat' is used by Apple instead (and has
+        the same format)</td>
+
+        <td>
+          <p class="c2">*</p>
+        </td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://partners.adobe.com/public/developer/opentype/index_ebdt.html">
+          EBDT</a></p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>EBLC</td>
+
+        <td>embedded bitmap location</td>
+
+        <td>Provides pointers to the appropriate bitmap data for
+        each bitmap glyph in MS/Adobe fonts. 'bloc' is used by
+        Apple instead (and has the same format)</td>
+
+        <td>
+          <p class="c2">*</p>
+        </td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://partners.adobe.com/public/developer/opentype/index_eblc.html">
+          EBLC</a></p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>EBSC</td>
+
+        <td>embedded bitmap scaling</td>
+
+        <td>Provides information on how to scale bitmaps (on those
+        rare occasions where this is desirable). FontForge uses it
+        when making bitmap only fonts for windows.</td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://developer.apple.com/fonts/TTRefMan/RM06/Chap6EBSC.html">
+          EBSC</a></p>
+        </td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://partners.adobe.com/public/developer/opentype/index_ebsc.html">
+          EBSC</a></p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>feat</td>
+
+        <td>layout feature table</td>
+
+        <td>Maps features specified in Apple's 'morx' (or 'mort')
+        tables into names provided in the 'name' table. FontForge
+        generates this when it generates a 'morx' table.</td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://developer.apple.com/fonts/TTRefMan/RM06/Chap6feat.html">
+          feat</a></p>
+        </td>
+
+        <td>
+          <p class="c2">*</p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>FFTM</td>
+
+        <td>FontForge timestamp</td>
+
+        <td>This table is unique to FontForge. It contains three
+        timestamps: First FontForge's version date, then when the
+        font was generated, and when the font was created. I
+        describe its format <a href=
+        "non-standard.html">here</a>.</td>
+
+        <td>
+          <p class="c2">*</p>
+        </td>
+
+        <td>
+          <p class="c2">*</p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>fpgm</td>
+
+        <td>font program</td>
+
+        <td>FontForge never generates this, but it will preserve it
+        and allows users to edit it.</td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://developer.apple.com/fonts/TTRefMan/RM06/Chap6fpgm.html">
+          fpgm</a></p>
+        </td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://partners.adobe.com/public/developer/opentype/index_fpgm.html">
+          fpgm</a></p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>fvar</td>
+
+        <td>font variations</td>
+
+        <td>Provides top level information about distortable fonts.
+        Specifies the types of distortions possible.</td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://developer.apple.com/fonts/TTRefMan/RM06/Chap6fvar.html">
+          fvar</a></p>
+        </td>
+
+        <td>
+          <p class="c2">*</p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>gasp</td>
+
+        <td>grid-fitting and scan conversion</td>
+
+        <td>When FontForge does not attempt to hint a truetype font
+        it will generate this table which tells the rasterizer not
+        to to do grid-fitting (hinting) but to do anti-aliasing
+        instead.</td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://developer.apple.com/fonts/TTRefMan/RM06/Chap6gasp.html">
+          gasp</a></p>
+        </td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://partners.adobe.com/public/developer/opentype/index_gasp.html">
+          gasp</a></p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>GDEF</td>
+
+        <td>glyph definition</td>
+
+        <td>Divides glyphs into various classes that make using the
+        GPOS/GSUB tables easier. Also provides internal caret
+        positions for ligatures. It is approximately equivalent to
+        Apple's 'prop' and 'lcar' tables combined.</td>
+
+        <td>
+          <p class="c2">*</p>
+        </td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://partners.adobe.com/public/developer/opentype/index_table_formats5.html">
+          GDEF</a></p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>glyf</td>
+
+        <td>glyph outline</td>
+
+        <td>Provides outline information for truetype glyphs.
+        Vaguely equivalent to 'CFF '.</td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://developer.apple.com/fonts/TTRefMan/RM06/Chap6glyf.html">
+          glyf</a></p>
+        </td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://partners.adobe.com/public/developer/opentype/index_glyf.html">
+          glyf</a></p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>GPOS</td>
+
+        <td>glyph positioning</td>
+
+        <td>Provides kerning information, mark-to-base, etc. for
+        opentype fonts. See the <a href=
+        "gposgsub.html#GPOS">chapter on GPOS</a> in FontForge for
+        more information. Vaguely equivalent to 'kern' and 'opbd'
+        tables.</td>
+
+        <td>
+          <p class="c2">*</p>
+        </td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://partners.adobe.com/public/developer/opentype/index_table_formats1.html">
+          GPOS</a></p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>GSUB</td>
+
+        <td>glyph substitution</td>
+
+        <td>Provides ligature information, swash, etc. for opentype
+        fonts. See the <a href="gposgsub.html#GSUB">chapter on
+        GSUB</a> in FontForge for more information. Vaguely
+        equivalent to 'morx'.</td>
+
+        <td>
+          <p class="c2">*</p>
+        </td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://partners.adobe.com/public/developer/opentype/index_table_formats1.html">
+          GSUB</a></p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>gvar</td>
+
+        <td>glyph variations</td>
+
+        <td>This table contains the meat of a distortable font. It
+        specifies how each glyph can be distorted.</td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://developer.apple.com/fonts/TTRefMan/RM06/Chap6gvar.html">
+          gvar</a></p>
+        </td>
+
+        <td>
+          <p class="c2">*</p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>head</td>
+
+        <td>font header</td>
+
+        <td>Contains general font information, such as the size of
+        the em-square, a time stamp, check sum infomation,
+        etc.</td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://developer.apple.com/fonts/TTRefMan/RM06/Chap6head.html">
+          head</a></p>
+        </td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://partners.adobe.com/public/developer/opentype/index_head.html">
+          head</a></p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>hhea</td>
+
+        <td>horizontal header</td>
+
+        <td>This table contains font-wide horizontal metric
+        information.</td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://developer.apple.com/fonts/TTRefMan/RM06/Chap6hhea.html">
+          hhea</a></p>
+        </td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://partners.adobe.com/public/developer/opentype/index_hhea.html">
+          hhea</a></p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>hmtx</td>
+
+        <td>horizontal metrics</td>
+
+        <td>This contains the per-glyph horizontal metrics.</td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://developer.apple.com/fonts/TTRefMan/RM06/Chap6hmtx.html">
+          hmtx</a></p>
+        </td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://partners.adobe.com/public/developer/opentype/index_hmtx.html">
+          hmtx</a></p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>kern</td>
+
+        <td>kerning</td>
+
+        <td>Provides kerning information for Apple's truetype fonts
+        (and for older MS truetype fonts). In OpenType fonts this
+        information is contained in the GPOS table.</td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://developer.apple.com/fonts/TTRefMan/RM06/Chap6kern.html">
+          kern</a></p>
+        </td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://partners.adobe.com/public/developer/opentype/index_kern.html">
+          kern</a></p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>lcar</td>
+
+        <td>ligature caret</td>
+
+        <td>This table provides the location of carets within
+        ligatures in an Apple font. This information is contained
+        in the GDEF table in opentype fonts.</td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://developer.apple.com/fonts/TTRefMan/RM06/Chap6lcar.html">
+          lcar</a></p>
+        </td>
+
+        <td>
+          <p class="c2">*</p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>loca</td>
+
+        <td>glyph location</td>
+
+        <td>This provides a pointer into the 'glyf' table for each
+        glyph in the font. It is required for truetype and
+        meaningless for opentype (where vaguely equivalent
+        information is provided in the CFF table).</td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://developer.apple.com/fonts/TTRefMan/RM06/Chap6loca.html">
+          loca</a></p>
+        </td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://partners.adobe.com/public/developer/opentype/index_loca.html">
+          loca</a></p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>MATH</td>
+
+        <td>mathematical typesetting</td>
+
+        <td>Provides general information needed for mathematical
+        typesetting.<br />
+        This is a new table (August 2007) and there is currently no
+        publicly available documentation for it.</td>
+
+        <td>
+          <p class="c2">*</p>
+        </td>
+
+        <td>
+          <p class="c2">*</p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>maxp</td>
+
+        <td>maximum profile</td>
+
+        <td>Provides general "maximum" information about the font.
+        This contains: the maximum number of glyphs in a font, the
+        maximum number of points in a glyph, the maximum number of
+        references in a glyph, etc.</td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://developer.apple.com/fonts/TTRefMan/RM06/Chap6maxp.html">
+          maxp</a></p>
+        </td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://partners.adobe.com/public/developer/opentype/index_maxp.html">
+          maxp</a></p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>mort</td>
+
+        <td>metamorphosis</td>
+
+        <td>FontForge will read this table but not generate it.
+        This table has been replaced by the 'morx' table which will
+        be generated instead. It is vaguely equivalent to the GSUB
+        table.</td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://developer.apple.com/fonts/TTRefMan/RM06/Chap6mort.html">
+          mort</a></p>
+        </td>
+
+        <td>
+          <p class="c2">*</p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>morx</td>
+
+        <td>extended metamorphosis</td>
+
+        <td>Provides ligature information, swash, etc. for apple's
+        truetype fonts. FontForge can read and write this table.
+        See the <a href="gposgsub.html#AAT">chapter on morx</a> in
+        FontForge for more information. Vaguely equivalent to
+        'GSUB'.</td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://developer.apple.com/fonts/TTRefMan/RM06/Chap6morx.html">
+          morx</a></p>
+        </td>
+
+        <td>
+          <p class="c2">*</p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>name</td>
+
+        <td>name</td>
+
+        <td>Provides certain standard strings relevant to the font
+        (font name, family name, license, etc.) in various
+        languages. In Apple fonts also provides the names of
+        various features of the 'morx'/'mort' table.</td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://developer.apple.com/fonts/TTRefMan/RM06/Chap6name.html">
+          name</a></p>
+        </td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://partners.adobe.com/public/developer/opentype/index_name.html">
+          name</a></p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>opbd</td>
+
+        <td>optical bounds</td>
+
+        <td>This table provides optical bound information for each
+        glyph in the table in an Apple font. This information may
+        also be provided in the GPOS table of an opentype
+        font.</td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://developer.apple.com/fonts/TTRefMan/RM06/Chap6opbd.html">
+          opbd</a></p>
+        </td>
+
+        <td>
+          <p class="c2">*</p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>PfEd</td>
+
+        <td>FontForge's personal table</td>
+
+        <td>This table is unique to FontForge. It can contain
+        things like FontForge's comments, and colors.I describe its
+        format <a href="non-standard.html">here</a>.</td>
+
+        <td>
+          <p class="c2">*</p>
+        </td>
+
+        <td>
+          <p class="c2">*</p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>post</td>
+
+        <td>glyph name and postscript compatibility</td>
+
+        <td>This table provides some additional postscript
+        information (italic angle), but mostly it provides names
+        for all glyphs.</td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://developer.apple.com/fonts/TTRefMan/RM06/Chap6post.html">
+          post</a></p>
+        </td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://partners.adobe.com/public/developer/opentype/index_post.html">
+          post</a></p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>prep</td>
+
+        <td>cvt program</td>
+
+        <td>FontForge never generatest this table itself, but it
+        will retain it when reading other fonts, and it allows
+        users to edit it.</td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://developer.apple.com/fonts/TTRefMan/RM06/Chap6prep.html">
+          prep</a></p>
+        </td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://partners.adobe.com/public/developer/opentype/index_prep.html">
+          prep</a></p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>prop</td>
+
+        <td>glyph properties</td>
+
+        <td>Provides the unicode properties of each glyph for an
+        Apple font. This table bears some similarities to the GDEF
+        table.</td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://developer.apple.com/fonts/TTRefMan/RM06/Chap6prop.html">
+          prop</a></p>
+        </td>
+
+        <td>
+          <p class="c2">*</p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>TeX</td>
+
+        <td>TeX information</td>
+
+        <td>This table is unique to FontForge and is for use by
+        TeX. I describe its format <a href=
+        "non-standard.html">here</a>.</td>
+
+        <td>
+          <p class="c2">*</p>
+        </td>
+
+        <td>
+          <p class="c2">*</p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>vhea</td>
+
+        <td>vertical header</td>
+
+        <td>FontForge generates this table for fonts with vertical
+        metrics. This table contains font-wide vertical metric
+        information.</td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://developer.apple.com/fonts/TTRefMan/RM06/Chap6vhea.html">
+          vhea</a></p>
+        </td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://partners.adobe.com/public/developer/opentype/index_vhea.html">
+          vhea</a></p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>vmtx</td>
+
+        <td>vertical metrics</td>
+
+        <td>FontForge generates this table for fonts with vertical
+        metrics. This contains the per-glyph vertical metrics.</td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://developer.apple.com/fonts/TTRefMan/RM06/Chap6vmtx.html">
+          vmtx</a></p>
+        </td>
+
+        <td>
+          <p class="c2"><a href=
+          "http://partners.adobe.com/public/developer/opentype/index_vmtx.html">
+          vmtx</a></p>
+        </td>
+      </tr>
+    </table>
+
+    <p><a href="gposgsub.html">Advanced Typography tables in
+    FontForge</a></p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux (vers 25 March 2009), see www.w3.org" />
+  <!-- Created with AOLpress/2.0 -->
+  <!-- AP: Created on: 17-Dec-2000 -->
+  <!-- AP: Last modified: 5-Sep-2006 -->
+
+  <title>Error Recovery</title>
+  <link rel="icon" href="fftype16.png" />
+  <link rel="stylesheet" type="text/css" href="FontForge.css" />
+  <style type="text/css">
+/*<![CDATA[*/
+  p.c2 {text-align: center}
+  h1.c1 {text-align: center}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <div id="in">
+    <h1 class="c1">Error Recovery</h1>
+
+    <p>All programs crash, and new programs (like this one) crash a
+    lot.</p>
+
+    <p>Every minute or so FontForge looks around and sees if
+    anything has changed since the last time it checked. If it
+    finds a font that has had changes, it will save a small file in
+    its private directory (~/.FontForge/autosave) which consists of
+    all changed glyphs in the changed font.</p>
+
+    <p>When FontForge starts up it checks this directory, and if it
+    finds anything there it attempts to apply those changes to the
+    original font. So if FontForge crashes, or if your machine
+    crashes, the next time you start FontForge it will figure out
+    what you were doing and recover it as best it can.</p>
+
+    <p>When editing CID-keyed fonts there are a few potential
+    gotchas:</p>
+
+    <ul>
+      <li>FontForge does not keep track of gross changes (like
+      adding or removing a sub font)</li>
+
+      <li>FontForge does not keep track of which sub font a change
+      occurred in, instead at recovery time it will look for a
+      subfont that is contains a glyph at the CID that was changed.
+      In almost all cases this will be right, but if you add glyphs
+      or if you have two sub-fonts defining the same CID, FontForge
+      may guess wrong.</li>
+    </ul>
+
+    <p class="c2">-- <a href="PfaEdit-TeX.html">Prev</a> --
+    <a href="overview.html">TOC</a> -- <a href="xres.html">Next</a>
+    --</p>
+  </div>
+</body>
+</html>

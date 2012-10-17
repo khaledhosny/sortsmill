@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux (vers 25 March 2009), see www.w3.org" />
+  <!-- Created with AOLpress/2.0 -->
+  <!-- AP: Created on: 27-Oct-2005 -->
+  <!-- AP: Last modified: 8-May-2006 -->
+
+  <title>FontForge install procedures for VMS</title>
+  <link rel="icon" href="fftype16.png" />
+  <link rel="stylesheet" type="text/css" href="FontForge.css" />
+  <style type="text/css">
+/*<![CDATA[*/
+  h1.c1 {text-align: center}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <div id="in">
+    <h1 class="c1">FontForge install procedures<br />
+    <small>for VMS</small></h1>
+
+    <ul>
+      <li><a href="#Installing">Installing from a pre-built vms
+      package</a></li>
+
+      <li><a href="nix-install.html">Installing on a unix/linux
+      system</a></li>
+
+      <li><a href="mac-install.html">Installing on a mac</a></li>
+
+      <li><a href="ms-install.html">Installing on
+      MS/Windows</a></li>
+
+      <li><a href="source-build.html">Building and installing from
+      source</a></li>
+
+      <li><a href="source-build.html#Dependencies">Dependencies
+      (external libraries/helper programs)</a></li>
+
+      <li><a href="source-build.html#Documentation">Installing
+      documentation</a></li>
+
+      <li><a href="running.html">Running FontForge</a></li>
+
+      <li><a href="uninstall.html">Uninstalling</a></li>
+    </ul>
+
+    <h2><a name="Installing" id="Installing">Installing</a> from a
+    VMS package</h2>
+
+    <p>I'm afraid I have absolutely no idea what you need to do.
+    All I can say is that Jacob Jansen has provided a vms package
+    at:</p>
+
+    <ul>
+      <li><a href="ftp://nchrem.tnw.tudelft.nl/pfaedit/">An OpenVMS
+      executable</a></li>
+
+      <li><a href=
+      "ftp://nchrem.tnw.tudelft.nl/openvms/software2.html#FONTFORGE">
+      With some information on dependencies</a></li>
+    </ul>
+
+    <p>He has provided the following notes:</p>
+
+    <p>Notes for VMS created on 17 November 2005</p>
+
+    <p>Compilation :</p>
+
+    <ul>
+      <li>-use MMS or MMK in the main directory (the one containing
+      this file)</li>
+
+      <li>-Ignore all messages about undefined symbols during
+      linking of the shareable images. I have no idea how to
+      supress them.</li>
+    </ul>
+
+    <p>To use :</p>
+
+    <ul>
+      <li>the file [.libs]libfontforge.exe should be in a directory
+      defined by the logical SYS$SHARE. So either copy it to it or
+      redefine it i.e.: assign
+      dev:[fontforge.fontforge.fontforge.libs],sys$sysroot:[syslib]
+      sys$share</li>
+
+      <li>To use the plugins (an example is in the [.plugins]
+      directory) you have to create a logical FONTFORGE$PLUGINS
+      pointing to all directories to be scanned for plugins i.e.
+      define/job/trans=(concealed)/nolog fontforge$plugins
+      dev:[fontforge.fontforge.fontforge.plugins.] Note that the
+      final "." before the "]" is essential. Note that both
+      logicals FONTFORGE$PLUGINS and SYS$SHARE can be defined
+      system-wide, for a group of users or for a single user
+      only.</li>
+    </ul>
+  </div>
+</body>
+</html>

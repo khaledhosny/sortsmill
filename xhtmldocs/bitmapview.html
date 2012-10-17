@@ -1,0 +1,453 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux (vers 25 March 2009), see www.w3.org" />
+  <!-- Created with AOLpress/2.0 -->
+  <!-- AP: Created on: 6-Dec-2000 -->
+  <!-- AP: Last modified: 27-Mar-2009 -->
+
+  <title>Bitmap Character View</title>
+  <link rel="icon" href="fftype16.png" />
+  <link rel="stylesheet" type="text/css" href="FontForge.css" />
+  <style type="text/css">
+/*<![CDATA[*/
+  h1.c2 {text-align: center}
+  p.c1 {text-align: center}
+  /*]]>*/
+  </style>
+</head>
+
+<body id="menued">
+  <p class="c1"><img src="fontforge-banner-420.jpeg" width="420"
+  height="80" /></p>
+
+  <div class="menucontainer">
+    <ul class="menubar">
+      <li class="menu">
+        <a href=
+        "http://sourceforge.net/projects/fontforge/files/">Download</a>
+
+        <ul>
+          <li><a href=
+          "http://sourceforge.net/projects/fontforge/files/fontforge-docs/">
+          Documentation</a></li>
+
+          <li><a href=
+          "http://sourceforge.net/projects/fontforge/files/fontforge-source/">
+          Source</a></li>
+        </ul>
+      </li>
+
+      <li><a href="overview.html#TOC">Introduction</a></li>
+
+      <li><a href="editexample.html">Tutorial</a></li>
+
+      <li class="menu">
+        <a href="fontview.html">Windows</a>
+
+        <ul>
+          <li><a href="fontview.html">Font</a></li>
+
+          <li><a href="charview.html">Outline Glyph</a></li>
+
+          <li><small><a href="charview.html#Debugging">&nbsp;
+          &nbsp;Debugging TrueType</a></small></li>
+
+          <li><small><a href="multilayer.html">&nbsp; &nbsp;Type3
+          Glyphs</a></small></li>
+
+          <li><a href="bitmapview.html">Bitmap Glyph</a></li>
+
+          <li><a href="metricsview.html">Metrics</a></li>
+        </ul>
+      </li>
+
+      <li class="menu">
+        <a href="fontinfo.html">Dialogs 1</a>
+
+        <ul>
+          <li><a href="fontinfo.html">Font Information</a></li>
+
+          <li><small><a href="histogram.html">&nbsp;
+          &nbsp;Histogram Dialog</a></small></li>
+
+          <li><a href="charinfo.html">Glyph Information</a></li>
+
+          <li><a href="getinfo.html">Point, Reference
+          Information</a></li>
+
+          <li><a href="multilayer.html#Layer">Type3 Layer
+          Information</a></li>
+
+          <li><a href="bdfinfo.html">Bitmap Properties</a></li>
+
+          <li><a href="baseline.html">Baseline Information</a></li>
+
+          <li><a href="justify.html">Justification
+          Information</a></li>
+
+          <li><a href="math.html">Math Information</a></li>
+
+          <li><a href="multiplemaster.html">Multiple Master
+          Information</a></li>
+
+          <li>
+            <hr />
+          </li>
+
+          <li><a href="lookups.html">Lookups &amp;
+          subtables</a></li>
+
+          <li><a href="metricsview.html#kernpair">Kerning glyph
+          pairs 1</a></li>
+
+          <li><a href="kernpairs.html">Kerning glyph pairs
+          2</a></li>
+
+          <li><a href="metricsview.html#kernclass">Kerning by
+          classes</a></li>
+
+          <li><a href="anchorcontrol.html">Anchor Control</a></li>
+
+          <li><a href="contextchain.html">Contextual lookup
+          dialog</a></li>
+
+          <li><a href="statemachine.html">Apple State Machine
+          dialog</a></li>
+
+          <li><a href="showatt.html">Show Advanced
+          Typography</a></li>
+
+          <li>
+            <hr />
+          </li>
+
+          <li><a href="problems.html">Potential Problems
+          dialog</a></li>
+
+          <li><a href="validation.html">Font Validation
+          dialog</a></li>
+        </ul>
+      </li>
+
+      <li class="menu">
+        <a href="generate.html">Dialogs 2</a>
+
+        <ul>
+          <li><a href="filemenu.html#Open">Open Fonts
+          dialog</a></li>
+
+          <li><a href="oflib.html">Browsing OFLib dialog</a></li>
+
+          <li><a href="generate.html">Generate Fonts
+          dialog</a></li>
+
+          <li><a href="generate.html#Mac">Generate Mac Family
+          dialog</a></li>
+
+          <li>
+            <hr />
+          </li>
+
+          <li><a href="display.html">Print &amp; Display
+          dialog</a></li>
+
+          <li><a href="prefs.html">Preferences dialog</a></li>
+
+          <li><a href="groups.html">Groups dialog</a></li>
+
+          <li>
+            <hr />
+          </li>
+
+          <li><a href="elementmenu.html#Bitmaps">Manage Bitmap
+          Strikes</a></li>
+
+          <li><a href="elementmenu.html#Regenerate">Re-Rasterize
+          Bitmap Strikes</a></li>
+
+          <li>
+            <hr />
+          </li>
+
+          <li><a href="search.html">Search &amp; Replace
+          dialog</a></li>
+
+          <li><a href="Styles.html">Style Transformation
+          dialogs</a></li>
+
+          <li><a href="transform.html">Transformation
+          dialog</a></li>
+
+          <li><a href="elementmenu.html#Expand">Expand Stroke
+          dialog</a></li>
+
+          <li><a href="tilepath.html">Tile Path dialog</a></li>
+
+          <li><a href="InsertTextDlg.html">Insert Text
+          dialog</a></li>
+
+          <li>
+            <hr />
+          </li>
+
+          <li><a href="metricsmenu.html#Width">Set width
+          dialogs</a></li>
+
+          <li><a href="metricsmenu.html#Width">Set left/right
+          bearings</a></li>
+
+          <li><a href="autowidth.html">Auto Width &amp; Kern
+          dialogs</a></li>
+
+          <li>
+            <hr />
+          </li>
+
+          <li><a href="hintsmenu.html#Review">Review PS Hints
+          dialog</a></li>
+
+          <li><a href="ttfinstrs.html">TrueType Instruction
+          Editor</a></li>
+
+          <li><a href="ttfinstrs.html#cvt">TrueType 'cvt '
+          Editor</a></li>
+
+          <li>
+            <hr />
+          </li>
+
+          <li><a href="selectbyatt.html">Select by feature
+          dialog</a></li>
+
+          <li><a href="elementmenu.html#MassRename">Rename Glyphs
+          dialog</a></li>
+
+          <li><a href="elementmenu.html#CompareFonts">Compare Fonts
+          dialog</a></li>
+        </ul>
+      </li>
+
+      <li class="menu">
+        <a href="filemenu.html">Menus</a>
+
+        <ul>
+          <li><a href="filemenu.html">File</a></li>
+
+          <li><a href="editmenu.html">Edit</a></li>
+
+          <li><a href="pointmenu.html">Point</a></li>
+
+          <li><a href="elementmenu.html">Element</a></li>
+
+          <li><a href="toolsmenu.html">Tools</a></li>
+
+          <li><a href="hintsmenu.html">Hints</a></li>
+
+          <li><a href="encodingmenu.html">Encoding</a></li>
+
+          <li><a href="viewmenu.html">View</a></li>
+
+          <li><a href="metricsmenu.html">Metrics</a></li>
+
+          <li><a href="cidmenu.html">CID</a></li>
+
+          <li><a href="mmmenu.html">Multi Master</a></li>
+
+          <li><a href="windowmenu.html">Window</a></li>
+
+          <li><a href="helpmenu.html">Help</a></li>
+        </ul>
+      </li>
+
+      <li><a href="faqFS.html">FAQ</a></li>
+
+      <li><a href="IndexFS.html">Index</a></li>
+
+      <li><a href="GlossaryFS.html">Glossary</a></li>
+    </ul>
+  </div>
+
+  <div id="in">
+    <h1 class="c2">Bitmap Glyph View</h1>
+
+    <table align="right">
+      <tr>
+        <td align="center"><img src="BitmapReference.png" width=
+        "359" height="457" /><br />
+        A bitmap glyph composed of two bitmap references</td>
+      </tr>
+    </table>
+
+    <p><img src="BitmapView.png" width="254" height="273" /></p>
+
+    <p>The bitmap view is vaguely similar to the <a href=
+    "charview.html">outline view</a>. It is also designed for
+    editing glyph shapes, but here bitmap glyph shapes.</p>
+
+    <p>At the top of the view is a small region showing an
+    unmagnified view of the glyph, to the right of that are two
+    information displays, the first shows the current location of
+    the mouse pointer, and the second shows (if the mouse button
+    has been depressed and not released yet) the offset from the
+    place where the mouse was pressed to the current pointer
+    location. The coordinate system here is in pixels with the
+    origin at the glyph's origin. Next to this is a button (here
+    truncated) that allows you to recalculate the bitmap (rasterize
+    the outline and place the result in the window for
+    editing).</p>
+
+    <p>Underneath is the main display, showing the bits in the
+    image, the outline of the glyph and a grid.</p>
+
+    <p>As in the outline view you may choose to make the palettes
+    free floating windows by unchecking View-&gt;Palettes-&gt;Dock
+    Palettes.</p>
+
+    <h2><a name="Layers" id="Layers">Layers</a></h2>
+
+    <p><img src="bvlayers.png" width="77" height="77" /></p>
+
+    <p>There are three layers to the bitmap view, the bitmap
+    itself, the outline glyph and the grid lines. You are always
+    editing in the bitmap layer so there is no control over what
+    layer is editable, just which ones are visible.</p>
+
+    <h2><a name="Tools" id="Tools">Tools</a></h2>
+
+    <p><img src="bvtools.png" width="57" height="83" /></p>
+
+    <p>There are only six tools on the bitmap palette (there are
+    some others available by right clicking in the view, this
+    generates a popup menu.</p>
+
+    <p>The pointer tool allows you to select a region of the
+    screen, and move it around or copy it (a copy when nothing is
+    selected copies the entire bitmap). The arrow keys will also
+    move the selection around. In a bitmap only font the pointer
+    tool can change the advance width.</p>
+
+    <p>The if you click with the magnifying tool the view is
+    magnified, centered around the point at which you clicked. If
+    you hold down the <a href=
+    "charview.html#alt-meta-capslock">Meta (or Alt or CapsLock)</a>
+    key during the click then the view will be minified.</p>
+
+    <p>The pencil tool allows you to set or clear bits. If you
+    depress the mouse button then the pencil will toggle the bit
+    under the cursor, if you then drag it over other bits they will
+    be set if the first bit was set, and cleared if the first was
+    cleared.</p>
+
+    <p>The line tool (the pencil with the line beside it) will draw
+    straight lines. It behaves like the pencil tool on whether it
+    sets or clears a line. The Shift key does not constrain this
+    window.</p>
+
+    <p>The four-arrow tool moves the entire bitmap.</p>
+
+    <p>The hand scrolls the screen.</p>
+
+    <h3>Additional tools from the popup menu.</h3>
+
+    <ul>
+      <li>Draw an open rectangle</li>
+
+      <li>Draw a filled rectangle</li>
+
+      <li>Draw an open ellipse</li>
+
+      <li>Draw a filled ellipse</li>
+
+      <li>Rotate the bitmap 90° Counter Clockwise.</li>
+
+      <li>Rotate it 90° Clockwise.</li>
+
+      <li>Rotate it 180°.</li>
+
+      <li>Flip it horizontally</li>
+
+      <li>Flip it vertically.</li>
+
+      <li>Set Width<br />
+      This is only available if there is no outline font (ie. if
+      you opened a bdf file directly).<br />
+      It sets the width (glyph advance) of the bitmap.</li>
+    </ul>
+
+    <h2><a name="AA" id="AA">Anti-Aliased Glyphs</a></h2>
+
+    <p><img src="greymapedit.png" width="274" height="273" align=
+    "right" />This window may also be used to edit anti-aliased
+    glyphs (glyphs which are represented by shades of grey rather
+    than by black and white. In the information area there is a
+    little rectangle which shows the current color that will be
+    used by the pencil (line, rectangle, etc.) tool.</p>
+
+    <p>The behavior of the drawing tools is slightly different
+    here. In a bitmap glyph the color used for drawing is the
+    opposite of whatever color is currently under the cursor, but
+    that doesn't work in an environment with more than two colors.
+    So you must select what color you are going to draw with
+    manually.</p>
+
+    <p>There are two ways to select the drawing color:</p>
+
+    <ul>
+      <li>With the pencil tool selected, hold down the Alt (Meta)
+      key. The cursor changes to an eyedropper. Position the cursor
+      over a pixel with the right color and click the mouse.</li>
+
+      <li>Use the <a href="#Shades">Shades</a> palette.</li>
+    </ul>
+
+    <p><br clear="right" /></p>
+
+    <h2><a name="Shades" id="Shades">Shades</a></h2>
+
+    <table cellpadding="2">
+      <tr>
+        <td>
+          <p class="c1"><img src="Shades.png" width="156" height=
+          "175" /><br />
+          Shades of grey available<br />
+          with 8 bits/pixel</p>
+        </td>
+
+        <td>
+          <p class="c1"><img src="Shades4.png" width="156" height=
+          "175" /><br />
+          Shades of grey available<br />
+          with 4 bits/pixel</p>
+        </td>
+
+        <td>
+          <p class="c1"><img src="Shades2.png" width="156" height=
+          "175" /><br />
+          Shades of grey available<br />
+          with 2 bits/pixel</p>
+        </td>
+      </tr>
+    </table>
+
+    <p>The shades palette is only visible in an anti-aliased glyph.
+    The palette displays all the possible shades of grey available
+    to this glyph. Glyphs with more bits per pixel will have more
+    shades of grey.</p>
+
+    <p>The currently selected drawing color is outlined in green.
+    To select a new color, move the cursor to the desired color and
+    click the mouse.</p>
+
+    <p>As the cursor moves over the bitmap in the bitmap view, the
+    color under the cursor will be outlined in white.</p>
+
+    <p class="c1">-- <a href="charview.html">Prev</a> -- <a href=
+    "overview.html">TOC</a> -- <a href="metricsview.html">Next</a>
+    --</p>
+  </div>
+</body>
+</html>

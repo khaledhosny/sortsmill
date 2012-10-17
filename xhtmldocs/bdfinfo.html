@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux (vers 25 March 2009), see www.w3.org" />
+  <!-- Created with AOLpress/2.0 -->
+  <!-- AP: Created on: 14-Jan-2006 -->
+  <!-- AP: Last modified: 14-Jan-2006 -->
+
+  <title>BDF Info (Properties) Dialog</title>
+  <link rel="icon" href="fftype16.png" />
+  <link rel="stylesheet" type="text/css" href="FontForge.css" />
+  <style type="text/css">
+/*<![CDATA[*/
+  h1.c1 {text-align: center}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <div id="in">
+    <h1 class="c1">BDF Info Dialog</h1>
+
+    <p><img src="bdfinfo.png" width="446" height="476" alt=
+    "BDF Info dialog" align="right" />If your font contains bitmaps
+    you may want control over the BDF Properties associated with
+    those bitmaps. Each pixel size (bitmap strike) has its own set
+    of properties.</p>
+
+    <p>The X11 consortium has defined certain conventional
+    properties and defines their meaning in the <a href=
+    "http://ftp.xfree86.org/pub/XFree86/4.5.0/doc/xlfd.txt">X Long
+    Font Descriptor</a> specification.</p>
+
+    <p>When you first create a bitmap strike (with <a href=
+    "elementmenu.html#Bitmaps">Element-&gt;Bitmaps Available</a>)
+    it will have no properties associated with it. If you then
+    generate a bdf file based on that FontForge will give you some
+    default properties.</p>
+
+    <p>You may view these default properties in this dialog by
+    pressing the <code>[Default All]</code> button -- this will
+    remove any current properties (except for <code><a href=
+    "#res-y">RESOLUTION_Y</a></code>) and replace them with the
+    defaults that FontForge calculates).</p>
+
+    <p>You may select any property and press the <code>[Default
+    This]</code> button to find its default value (There are some
+    properties that FontForge cannot default, you'll have to figure
+    these out yourself).</p>
+
+    <p>You may use the <code>[Delete]</code> button to remove a
+    property.</p>
+
+    <p>You may use the up and down arrows buttons to move the
+    selected property up or down in the list (as far as I know,
+    there is no functional reason for doing this, but if your
+    esthetics prefer a different ordering you may enforce it).</p>
+
+    <p>To change a property name depress the mouse on it. You
+    should get a list of all standard properties. At the bottom of
+    the property list is a special line labeled "New...", clicking
+    on it brings up the same popup menu and allows you to create a
+    new property.</p>
+
+    <p>To change the value of a property, click in the value field
+    and type in the new version.</p>
+
+    <p>To select a property without bringing up the popup menu or
+    the editing field, click on the extreme left of the
+    property.</p>
+
+    <p>The one essential <a name="res-y" id="res-y">property</a>
+    that FontForge can't always guess correctly is the resolution
+    (in particular <code>RESOLUTION_Y</code>). When you press
+    <code>[Default All]</code> FontForge will retain the current
+    value of this property and base the others on it.</p>
+  </div>
+</body>
+</html>

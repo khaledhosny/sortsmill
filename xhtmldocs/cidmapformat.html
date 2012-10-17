@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux (vers 25 March 2009), see www.w3.org" />
+  <!-- Created with AOLpress/2.0 -->
+  <!-- AP: Created on: 10-Aug-2005 -->
+  <!-- AP: Last modified: 10-Aug-2005 -->
+
+  <title>Cidmap files</title>
+  <link rel="icon" href="fftype16.png" />
+  <link rel="stylesheet" type="text/css" href="FontForge.css" />
+  <style type="text/css">
+/*<![CDATA[*/
+  h1.c1 {text-align: center}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <div id="in">
+    <h1 class="c1">Cidmap files</h1>
+
+    <p>These are FontForge's own files which it uses to map from
+    CIDs in one Registry-Ordering-Supplement to unicode code
+    points.</p>
+
+    <p>Cidmap files generally live in $(PREFIX)/share/fontforge
+    (often /usr/local/share/fontforge or /usr/share/fontforge),
+    though they will also be found if they are in the directory
+    containing fontforge itself or the current directory. They are
+    named
+    &lt;registry&gt;-&lt;Ordering&gt;-&lt;Supplement&gt;.cidmap. So
+    "Adobe-Japan1-6.cidmap", or "Adobe-CNS1-4.cidmap".</p>
+
+    <p>The first line of the file consists of two numbers, usually
+    the same, which are the total number of CIDs defined by this
+    ROS.</p>
+
+    <p>Subsequent lines have one of three formats</p>
+
+    <ul>
+      <li>&lt;cid&gt; &lt;unicode&gt;</li>
+
+      <li>&lt;cid1&gt;..&lt;cid2&gt; &lt;unicode&gt;</li>
+
+      <li>&lt;cid&gt; &lt;postscript-name&gt;</li>
+    </ul>
+
+    <p>A &lt;cid&gt; is just a decimal number, &lt;unicode&gt; is a
+    hex number, and &lt;postscript-name&gt; is a PostScript name
+    token preceded by a slash.</p>
+
+    <p>The first few lines of Adobe-Japan1-6.cidmap look like:</p>
+
+    <blockquote>
+      <pre>
+23057 23057
+0 /.notdef
+1..60 0020
+61 00a5
+62..92 005d
+93 00a6
+</pre>
+    </blockquote>
+
+    <p>So there are 23057 cids in this ROS. CID 0 is mapped to the
+    postscript name "/.notdef", cids 1-60 are mapped to space
+    (U+0020), exclam (U+0021), ..., lbracket (U+005b), CID 61 is
+    mapped to yen (U+00a5), and so forth.</p>
+  </div>
+</body>
+</html>

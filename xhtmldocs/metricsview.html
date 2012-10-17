@@ -1,0 +1,1225 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux (vers 25 March 2009), see www.w3.org" />
+  <!-- Created with AOLpress/2.0 -->
+  <!-- AP: Created on: 6-Dec-2000 -->
+  <!-- AP: Last modified: 11-Nov-2009 -->
+
+  <title>The Metrics View</title>
+  <link rel="icon" href="fftype16.png" />
+  <link rel="stylesheet" type="text/css" href="FontForge.css" />
+  <style type="text/css">
+/*<![CDATA[*/
+  span.c3 {color: blue}
+  h1.c2 {text-align: center}
+  p.c1 {text-align: center}
+  /*]]>*/
+  </style>
+</head>
+
+<body id="menued">
+  <p class="c1"><img src="fontforge-banner-420.jpeg" width="420"
+  height="80" /></p>
+
+  <div class="menucontainer">
+    <ul class="menubar">
+      <li class="menu">
+        <a href=
+        "http://sourceforge.net/projects/fontforge/files/">Download</a>
+
+        <ul>
+          <li><a href=
+          "http://sourceforge.net/projects/fontforge/files/fontforge-docs/">
+          Documentation</a></li>
+
+          <li><a href=
+          "http://sourceforge.net/projects/fontforge/files/fontforge-source/">
+          Source</a></li>
+        </ul>
+      </li>
+
+      <li><a href="overview.html#TOC">Introduction</a></li>
+
+      <li><a href="editexample.html">Tutorial</a></li>
+
+      <li class="menu">
+        <a href="fontview.html">Windows</a>
+
+        <ul>
+          <li><a href="fontview.html">Font</a></li>
+
+          <li><a href="charview.html">Outline Glyph</a></li>
+
+          <li><small><a href="charview.html#Debugging">&nbsp;
+          &nbsp;Debugging TrueType</a></small></li>
+
+          <li><small><a href="multilayer.html">&nbsp; &nbsp;Type3
+          Glyphs</a></small></li>
+
+          <li><a href="bitmapview.html">Bitmap Glyph</a></li>
+
+          <li><a href="metricsview.html">Metrics</a></li>
+        </ul>
+      </li>
+
+      <li class="menu">
+        <a href="fontinfo.html">Dialogs 1</a>
+
+        <ul>
+          <li><a href="fontinfo.html">Font Information</a></li>
+
+          <li><small><a href="histogram.html">&nbsp;
+          &nbsp;Histogram Dialog</a></small></li>
+
+          <li><a href="charinfo.html">Glyph Information</a></li>
+
+          <li><a href="getinfo.html">Point, Reference
+          Information</a></li>
+
+          <li><a href="multilayer.html#Layer">Type3 Layer
+          Information</a></li>
+
+          <li><a href="bdfinfo.html">Bitmap Properties</a></li>
+
+          <li><a href="baseline.html">Baseline Information</a></li>
+
+          <li><a href="justify.html">Justification
+          Information</a></li>
+
+          <li><a href="math.html">Math Information</a></li>
+
+          <li><a href="multiplemaster.html">Multiple Master
+          Information</a></li>
+
+          <li>
+            <hr />
+          </li>
+
+          <li><a href="lookups.html">Lookups &amp;
+          subtables</a></li>
+
+          <li><a href="metricsview.html#kernpair">Kerning glyph
+          pairs 1</a></li>
+
+          <li><a href="kernpairs.html">Kerning glyph pairs
+          2</a></li>
+
+          <li><a href="metricsview.html#kernclass">Kerning by
+          classes</a></li>
+
+          <li><a href="anchorcontrol.html">Anchor Control</a></li>
+
+          <li><a href="contextchain.html">Contextual lookup
+          dialog</a></li>
+
+          <li><a href="statemachine.html">Apple State Machine
+          dialog</a></li>
+
+          <li><a href="showatt.html">Show Advanced
+          Typography</a></li>
+
+          <li>
+            <hr />
+          </li>
+
+          <li><a href="problems.html">Potential Problems
+          dialog</a></li>
+
+          <li><a href="validation.html">Font Validation
+          dialog</a></li>
+        </ul>
+      </li>
+
+      <li class="menu">
+        <a href="generate.html">Dialogs 2</a>
+
+        <ul>
+          <li><a href="filemenu.html#Open">Open Fonts
+          dialog</a></li>
+
+          <li><a href="oflib.html">Browsing OFLib dialog</a></li>
+
+          <li><a href="generate.html">Generate Fonts
+          dialog</a></li>
+
+          <li><a href="generate.html#Mac">Generate Mac Family
+          dialog</a></li>
+
+          <li>
+            <hr />
+          </li>
+
+          <li><a href="display.html">Print &amp; Display
+          dialog</a></li>
+
+          <li><a href="prefs.html">Preferences dialog</a></li>
+
+          <li><a href="groups.html">Groups dialog</a></li>
+
+          <li>
+            <hr />
+          </li>
+
+          <li><a href="elementmenu.html#Bitmaps">Manage Bitmap
+          Strikes</a></li>
+
+          <li><a href="elementmenu.html#Regenerate">Re-Rasterize
+          Bitmap Strikes</a></li>
+
+          <li>
+            <hr />
+          </li>
+
+          <li><a href="search.html">Search &amp; Replace
+          dialog</a></li>
+
+          <li><a href="Styles.html">Style Transformation
+          dialogs</a></li>
+
+          <li><a href="transform.html">Transformation
+          dialog</a></li>
+
+          <li><a href="elementmenu.html#Expand">Expand Stroke
+          dialog</a></li>
+
+          <li><a href="tilepath.html">Tile Path dialog</a></li>
+
+          <li><a href="InsertTextDlg.html">Insert Text
+          dialog</a></li>
+
+          <li>
+            <hr />
+          </li>
+
+          <li><a href="metricsmenu.html#Width">Set width
+          dialogs</a></li>
+
+          <li><a href="metricsmenu.html#Width">Set left/right
+          bearings</a></li>
+
+          <li><a href="autowidth.html">Auto Width dialog</a></li>
+
+          <li>
+            <hr />
+          </li>
+
+          <li><a href="hintsmenu.html#Review">Review PS Hints
+          dialog</a></li>
+
+          <li><a href="ttfinstrs.html">TrueType Instruction
+          Editor</a></li>
+
+          <li><a href="ttfinstrs.html#cvt">TrueType 'cvt '
+          Editor</a></li>
+
+          <li>
+            <hr />
+          </li>
+
+          <li><a href="selectbyatt.html">Select by feature
+          dialog</a></li>
+
+          <li><a href="elementmenu.html#MassRename">Rename Glyphs
+          dialog</a></li>
+
+          <li><a href="elementmenu.html#CompareFonts">Compare Fonts
+          dialog</a></li>
+        </ul>
+      </li>
+
+      <li class="menu">
+        <a href="filemenu.html">Menus</a>
+
+        <ul>
+          <li><a href="filemenu.html">File</a></li>
+
+          <li><a href="editmenu.html">Edit</a></li>
+
+          <li><a href="pointmenu.html">Point</a></li>
+
+          <li><a href="elementmenu.html">Element</a></li>
+
+          <li><a href="toolsmenu.html">Tools</a></li>
+
+          <li><a href="hintsmenu.html">Hints</a></li>
+
+          <li><a href="encodingmenu.html">Encoding</a></li>
+
+          <li><a href="viewmenu.html">View</a></li>
+
+          <li><a href="metricsmenu.html">Metrics</a></li>
+
+          <li><a href="cidmenu.html">CID</a></li>
+
+          <li><a href="mmmenu.html">Multi Master</a></li>
+
+          <li><a href="windowmenu.html">Window</a></li>
+
+          <li><a href="helpmenu.html">Help</a></li>
+        </ul>
+      </li>
+
+      <li><a href="faqFS.html">FAQ</a></li>
+
+      <li><a href="IndexFS.html">Index</a></li>
+
+      <li><a href="GlossaryFS.html">Glossary</a></li>
+    </ul>
+  </div>
+
+  <div id="in">
+    <h1 class="c2">The Metrics View</h1>
+
+    <p><img src="MetricsView.png" width="479" height="331" /></p>
+
+    <p>The metrics view allows you to examine how glyphs look
+    together and to alter the spacing between them. You may apply
+    various OpenType features to those glyphs and see how they are
+    altered.</p>
+
+    <p>If the metrics view is created from the font view then any
+    selected glyphs (well, the first 15 or so) will be displayed in
+    the view in the order they were selected. If it is created from
+    an outline or bitmap glyph view then only that glyph is
+    displayed. If it is created from a bitmap glyph view (or from
+    the font view when that view is displaying a bitmap font) then
+    the metrics view will display bitmaps, but will not allow you
+    to edit the bitmaps metrics (you must do your metrics editing
+    in a view displaying outlines).</p>
+
+    <p>Underneath the menu bar is a series of fields. The first
+    shows the current script and language combination being used to
+    determine what lookups to apply within the selected features,
+    the next is a text field which allows you to enter additional
+    unicode characters to be displayed, and finally there is a
+    pulldown list of lookup subtables, this will be used if you
+    create a kerning pair (the kerning pair will become part of
+    that subtable). Underneath that is a list showing all features
+    defined in the font. You may select which ones you want to be
+    active in this display. (Note the features are listed in
+    alphabetic order -- this is not the order in which the lookups
+    will be executed (or not usually the order)).</p>
+
+    <p>If you wish to enter characters you cannot type:</p>
+
+    <ol>
+      <li>Select the character (or glyph) in the fontview and then
+      drag and drop it into the metrics view at the appropriate
+      place</li>
+
+      <li>Use the View menu to change or insert a character or
+      glyph (View-&gt;Insert Glyph After)</li>
+
+      <li>Select the characters individually and in order in the
+      font view before you open the metrics view, when you do open
+      it the characters will appear in the order you selected
+      them</li>
+
+      <li>FontForge has its own funky <a href="#Entering">input
+      method</a></li>
+    </ol>
+
+    <p>The mid portion of the view is taken up with the displayed
+    glyphs. For outline glyphs these are sized so that the
+    em-height of the font just fits in this region. There are grey
+    lines between the glyphs marking the origin of the glyph on the
+    right and the width of the glyph on the left. The baseline is
+    also drawn in grey.</p>
+
+    <p>A metrics view may be in one of three modes
+    (Metrics-&gt;Window Type)</p>
+
+    <ul>
+      <li>Kerning only -- you may adjust the kerning between any
+      pairs of glyphs shown, but you may not set any advance
+      widths</li>
+
+      <li>Advance Width only -- you may adjust the advance width of
+      any glyph shown, but you may not set kerning</li>
+
+      <li>Both -- see below</li>
+    </ul>
+
+    <p>One of the glyphs is active. That glyph has a green line on
+    its left (at its origin) and a blue line on its right (its
+    width). You may change the width by dragging this line. You may
+    change the left side bearing (lbearing) of the glyph by
+    clicking on the glyph and dragging it left or right. You may
+    change the kerning between this glyph and the one to its left
+    by dragging the green line around. (If you wish to create a
+    <a href="#DeviceTable">Device Table</a> for small pixel sizes
+    you must use the <a href="metricsview.html#kernpair">Kern Pair
+    Closeup dialog</a>)</p>
+
+    <table border="1" cellpadding="2">
+      <caption>
+        Kerning
+      </caption>
+
+      <tr>
+        <td><img src="To-unkerned.png" width="204" height=
+        "323" /></td>
+
+        <td><img src="To-kerned.png" width="204" height=
+        "323" /></td>
+      </tr>
+    </table>
+
+    <p>The active glyph may be changed by clicking on any of the
+    glyphs.</p>
+
+    <p>Underneath the display area are a set of text fields. You
+    may type in new numbers for any of these fields to change the
+    corresponding metrics of the glyph.</p>
+
+    <p>The up and down arrow keys will increase and decrease the
+    field's value by a single unit. Holding Shift-up or -down will
+    accelerate this by 10 and Ctrl-Shift-up or -down by 5. Holding
+    Alt-up, -down, -left or -right will move the cursor to the
+    field above, below, left or right.</p>
+
+    <p>Sometimes it is handy to be able to load a list of words
+    into the metrics view (so that you don't have to type them one
+    by one). The text entry field has a pull down list, and at the
+    bottom of this list is an entry to load a word list from a
+    file. Once you select this, and your file, the pulldown list
+    will ill up with choices. You may use the up/down arrow keys to
+    move through the word list.</p>
+
+    <p>If the first glyph to be displayed is in Hebrew or Arabic
+    (or any other right to left language) then the entire display
+    area will be shown right to left</p>
+
+    <p><strong>Note</strong> there is a very complicated algorithm
+    given in the Unicode spec for displaying mixed right to left
+    and left to right passages. This is not followed here. The
+    direction determination is done by the first glyph alone.</p>
+
+    <p><img src="VerticalMetrics.png" width="270" height="573"
+    align="right" /><img src="HebrewMetrics.png" width="511"
+    height="323" /></p>
+
+    <p>You can make the window display vertical metrics and kerning
+    by View-&gt;Vertical. (This is only available if your font has
+    vertical metrics enabled, Element-&gt;Font
+    Info-&gt;General-&gt;Has Vertical Metrics). In this mode you
+    can change vertical width, vertical kerning, etc.</p>
+
+    <p>If you double click on one of the displayed glyphs then
+    FontForge will bring up a outline glyph view to allow you to
+    edit that glyph.</p>
+
+    <p><img src="MetricsView-features.png" width="463" height="330"
+    align="left" /><br clear="right" />
+    In the example at left, the input text is an "f" followed by an
+    "i", and as the 'liga' feature is turned on, this becomes the
+    "fi" ligature. Then an "a" followed by a "b", but as the 'smcp'
+    (small caps) feature is on these become small-caps letters
+    rather than lower case. Finally "1", "/" and "2" were entered,
+    and as the 'frac' (diagonal fractions) feature is turned on
+    these three input glyphs become the onehalf glyph on
+    output.</p>
+
+    <p>Note: This window is not a full blown layout engine. All the
+    glyphs will be treated as if they were in the same script, and
+    all features will be applied to all glyphs. Baseline alignment
+    will not be done.<br clear="all" /></p>
+
+    <h2><a name="Entering" id="Entering">Entering non-ASCII
+    characters</a></h2>
+
+    <p>Most of us are stuck with keyboards that only have ASCII
+    characters on them. Or at best some sub-set of ISO 8859-1
+    characters. How can the full range of unicode characters be
+    entered?</p>
+
+    <p>X supplies a sophisticated mechanism for entering characters
+    via stand-alone <a href="xim.html">input method servers</a>.
+    FontForge supports this to some extent now.</p>
+
+    <p>Aside from that, many versions of X supply a "Compose
+    Character" key, or something equivalent. The X software will
+    map a sequence of keystrokes to one character in whatever the
+    native encoding may be.</p>
+
+    <p>My keyboard doesn't have such a key, and my X doesn't do
+    this. But I have implemented something along those lines for
+    those of us with less expensive keyboards. If you are in a mode
+    where text entry is possible then press the F12 key and follow
+    it by a series of keystrokes. Accented characters may be built
+    using the following:</p>
+
+    <table cellpadding="2">
+      <tr>
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+
+        <td>`</td>
+
+        <td>grave accent</td>
+
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+
+        <td>0</td>
+
+        <td>ring</td>
+
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+
+        <td>"</td>
+
+        <td>double grave (or tonos)</td>
+      </tr>
+
+      <tr>
+        <td></td>
+
+        <td>'</td>
+
+        <td>acute accent</td>
+
+        <td></td>
+
+        <td>/</td>
+
+        <td>slash</td>
+
+        <td></td>
+
+        <td>.</td>
+
+        <td>dot above</td>
+      </tr>
+
+      <tr>
+        <td></td>
+
+        <td>:</td>
+
+        <td>diaeresis (umlaut)</td>
+
+        <td></td>
+
+        <td>7</td>
+
+        <td>breve</td>
+
+        <td></td>
+
+        <td>,</td>
+
+        <td>dot below</td>
+      </tr>
+
+      <tr>
+        <td></td>
+
+        <td>^</td>
+
+        <td>circumflex</td>
+
+        <td></td>
+
+        <td>6</td>
+
+        <td>caron</td>
+
+        <td></td>
+
+        <td>5</td>
+
+        <td>cedilla</td>
+      </tr>
+
+      <tr>
+        <td></td>
+
+        <td>~</td>
+
+        <td>tilde</td>
+
+        <td></td>
+
+        <td>_</td>
+
+        <td>macron</td>
+
+        <td></td>
+
+        <td>4</td>
+
+        <td>ogonec</td>
+      </tr>
+    </table>
+
+    <p>So Â may be built by <kbd>[F12] ^ A</kbd>, and A with
+    diaeresis and macron may be built with <kbd>[F12] : _
+    A</kbd>.</p>
+
+    <p>Greek letters may also be created. If you start with
+    <kbd>[F12] @</kbd> and follow with:</p>
+
+    <table cellpadding="2">
+      <tr>
+        <td>&nbsp;&nbsp;&nbsp;</td>
+
+        <td>A</td>
+
+        <td>Alpha</td>
+
+        <td>&nbsp;&nbsp;&nbsp;</td>
+
+        <td>B</td>
+
+        <td>Beta</td>
+
+        <td>&nbsp;&nbsp;&nbsp;</td>
+
+        <td>C</td>
+
+        <td>Chi</td>
+      </tr>
+
+      <tr>
+        <td></td>
+
+        <td>D</td>
+
+        <td>Delta</td>
+
+        <td></td>
+
+        <td>E</td>
+
+        <td>Epsilon</td>
+
+        <td></td>
+
+        <td>F</td>
+
+        <td>Phi</td>
+      </tr>
+
+      <tr>
+        <td></td>
+
+        <td>G</td>
+
+        <td>Gamma</td>
+
+        <td></td>
+
+        <td>H</td>
+
+        <td>Eta</td>
+
+        <td></td>
+
+        <td>I</td>
+
+        <td>Iota</td>
+      </tr>
+
+      <tr>
+        <td></td>
+
+        <td>J</td>
+
+        <td>(technical) Theta</td>
+
+        <td></td>
+
+        <td>K</td>
+
+        <td>Kappa</td>
+
+        <td></td>
+
+        <td>L</td>
+
+        <td>Lamda</td>
+      </tr>
+
+      <tr>
+        <td></td>
+
+        <td>M</td>
+
+        <td>Mu</td>
+
+        <td></td>
+
+        <td>N</td>
+
+        <td>Nu</td>
+
+        <td></td>
+
+        <td>O</td>
+
+        <td>Omicron</td>
+      </tr>
+
+      <tr>
+        <td></td>
+
+        <td>P</td>
+
+        <td>Pi</td>
+
+        <td></td>
+
+        <td>Q</td>
+
+        <td>Theta</td>
+
+        <td></td>
+
+        <td>R</td>
+
+        <td>Rho</td>
+      </tr>
+
+      <tr>
+        <td></td>
+
+        <td>S</td>
+
+        <td>Sigma</td>
+
+        <td></td>
+
+        <td>T</td>
+
+        <td>Tau</td>
+
+        <td></td>
+
+        <td>U</td>
+
+        <td>Upsilon</td>
+      </tr>
+
+      <tr>
+        <td></td>
+
+        <td>V</td>
+
+        <td>final sigma</td>
+
+        <td></td>
+
+        <td>W</td>
+
+        <td>Omega</td>
+
+        <td></td>
+
+        <td>X</td>
+
+        <td>Xi</td>
+      </tr>
+
+      <tr>
+        <td></td>
+
+        <td>Y</td>
+
+        <td>Psi</td>
+
+        <td></td>
+
+        <td>Z</td>
+
+        <td>Zeta</td>
+
+        <td></td>
+
+        <td></td>
+
+        <td></td>
+      </tr>
+    </table>
+
+    <p>This is the mapping used by the Symbol font. (Lower case
+    letters are created similarly so <kbd>[F12] @ a</kbd> yields a
+    lower case alpha). Accented greek letters may also be built up,
+    <kbd>[F12] @ " A</kbd> yields Alpha tonos.</p>
+
+    <p>Finally the following special characters may be built:</p>
+
+    <table cellpadding="2">
+      <tr>
+        <td>&nbsp;&nbsp;&nbsp;</td>
+
+        <td>[F12] &lt;space&gt;</td>
+
+        <td>&lt;no break space&gt;</td>
+
+        <td>&nbsp;&nbsp;&nbsp;</td>
+
+        <td>[F12] *</td>
+
+        <td>°</td>
+
+        <td>&nbsp;&nbsp;&nbsp;</td>
+
+        <td>[F12] @ *</td>
+
+        <td>&lt;bullet&gt;</td>
+      </tr>
+
+      <tr>
+        <td></td>
+
+        <td>[F12] @ &lt;space&gt;</td>
+
+        <td>&lt;em space&gt;</td>
+
+        <td></td>
+
+        <td>[F12] #</td>
+
+        <td>£</td>
+
+        <td></td>
+
+        <td>[F12] @ #</td>
+
+        <td>¥</td>
+      </tr>
+
+      <tr>
+        <td></td>
+
+        <td>[F12] $</td>
+
+        <td>&lt;euro&gt;</td>
+
+        <td></td>
+
+        <td>[F12] @ $</td>
+
+        <td>¢</td>
+
+        <td></td>
+
+        <td>[F12] !</td>
+
+        <td>¡</td>
+      </tr>
+
+      <tr>
+        <td></td>
+
+        <td>[F12] +</td>
+
+        <td>±</td>
+
+        <td></td>
+
+        <td>[F12] -</td>
+
+        <td>&lt;soft-hyphen&gt;</td>
+
+        <td></td>
+
+        <td>[F12] @ -</td>
+
+        <td>&lt;en dash&gt;</td>
+      </tr>
+
+      <tr>
+        <td></td>
+
+        <td>[F12] @ .</td>
+
+        <td>·</td>
+
+        <td></td>
+
+        <td>[F12] 7 2</td>
+
+        <td>½</td>
+
+        <td></td>
+
+        <td>[F12] ;</td>
+
+        <td>. . .</td>
+      </tr>
+
+      <tr>
+        <td></td>
+
+        <td>[F12] &lt;</td>
+
+        <td>&lt;less or equal&gt;</td>
+
+        <td></td>
+
+        <td>[F12] &gt;</td>
+
+        <td>&lt;greater or equal&gt;</td>
+
+        <td></td>
+
+        <td>[F12] @ &gt;</td>
+
+        <td>&lt;triangle bullet&gt;</td>
+      </tr>
+
+      <tr>
+        <td></td>
+
+        <td>[F12] =</td>
+
+        <td>&lt;quote dash&gt;</td>
+
+        <td></td>
+
+        <td>[F12] ?</td>
+
+        <td>¿</td>
+
+        <td></td>
+
+        <td>[F12] A</td>
+
+        <td>Å</td>
+      </tr>
+
+      <tr>
+        <td></td>
+
+        <td>[F12] C</td>
+
+        <td>Ç</td>
+
+        <td></td>
+
+        <td>[F12] H</td>
+
+        <td>&lt;right index&gt;</td>
+
+        <td></td>
+
+        <td>[F12] O</td>
+
+        <td>&lt;OE lig&gt;</td>
+      </tr>
+
+      <tr>
+        <td></td>
+
+        <td>[F12] P</td>
+
+        <td>§</td>
+
+        <td></td>
+
+        <td>[F12] [</td>
+
+        <td>&lt;single right quote&gt;</td>
+
+        <td></td>
+
+        <td>[F12] ]</td>
+
+        <td>&lt;single right quote&gt;</td>
+      </tr>
+
+      <tr>
+        <td></td>
+
+        <td>[F12] \</td>
+
+        <td>«</td>
+
+        <td></td>
+
+        <td>[F12] @ \</td>
+
+        <td>&lt;single guillemot&gt;</td>
+
+        <td></td>
+
+        <td>[F12] a</td>
+
+        <td>å</td>
+      </tr>
+
+      <tr>
+        <td></td>
+
+        <td>[F12] c</td>
+
+        <td>ç</td>
+
+        <td></td>
+
+        <td>[F12] f</td>
+
+        <td>&lt;female sign&gt;</td>
+
+        <td></td>
+
+        <td>[F12] g</td>
+
+        <td>©</td>
+      </tr>
+
+      <tr>
+        <td></td>
+
+        <td>[F12] h</td>
+
+        <td>&lt;left index&gt;</td>
+
+        <td></td>
+
+        <td>[F12] m</td>
+
+        <td>&lt;male sign&gt;</td>
+
+        <td></td>
+
+        <td>[F12] o</td>
+
+        <td>&lt;oe lig&gt;</td>
+      </tr>
+
+      <tr>
+        <td></td>
+
+        <td>[F12] p</td>
+
+        <td>¶</td>
+
+        <td></td>
+
+        <td>[F12] r</td>
+
+        <td>®</td>
+
+        <td></td>
+
+        <td>[F12] s</td>
+
+        <td>ß</td>
+      </tr>
+
+      <tr>
+        <td></td>
+
+        <td>[F12] t</td>
+
+        <td>TM</td>
+
+        <td></td>
+
+        <td>[F12] z</td>
+
+        <td>&lt;long s&gt;</td>
+
+        <td></td>
+
+        <td>[F12] {</td>
+
+        <td>&lt;left dbl quote&gt;</td>
+      </tr>
+
+      <tr>
+        <td></td>
+
+        <td>[F12] }</td>
+
+        <td>&lt;right dbl quote&gt;</td>
+
+        <td></td>
+
+        <td>[F12] |</td>
+
+        <td>»</td>
+
+        <td></td>
+
+        <td>[F12] @ |</td>
+
+        <td>&lt;right single guillemot&gt;</td>
+      </tr>
+    </table>
+
+    <p>This still misses most unicode characters. But pressing
+    [F12] twice will bring up a dialog which will allow you to
+    select any character in unicode.</p>
+
+    <p>If you type [F12] by mistake then an Escape will get you out
+    of accent mode.</p>
+
+    <h2><a name="kernclass" id="kernclass">Kerning By
+    Class</a></h2>
+
+    <p>Often it is a good idea to create classes of glyphs which
+    kern alike. For example A, À, Á, Â, Â, Ã and Ä probably all
+    kern alike (but note that o and ô probably kern quite
+    differently after a T), and rather than create separate kerning
+    pairs for each of the "A"s above, they could all be placed in a
+    class of glyphs which kern alike.</p>
+
+    <p>The <a href="lookups.html">Element-&gt;Font
+    Info-&gt;Lookups</a> provides an interface to this.<img src=
+    "kerningformat.png" width="444" height="704" align="right" />
+    It brings up a dialog showing all the GPOS lookups (of which
+    kerning is one) and their subtables. Each set of kerning
+    classes lives in its own subtable. When you create a kerning
+    subtable you will be asked whether you want a set of individual
+    kerning pairs or a matrix based on kerning classes.</p>
+
+    <p>If you choose the latter then you may have fontforge try to
+    guess a good set of classes for you (it will look at the glyphs
+    selected and divide them into classes). The <code>Intra Class
+    Distance</code> gives you some control over how picky fontforge
+    will be about what goes into a class. (This can be thought of
+    as being in em-units and being, roughly, the average error in
+    how two different glyphs interact with other glyphs). A value
+    of 1 is very picky and almost all classes will have one member.
+    A value of 20 (in a 1000em font) is fairly loose.</p>
+
+    <p>The <code>Default Separation</code> and <code>Min
+    Kern</code> fields are used in AutoKerning. The goal of kerning
+    to to make the optical separation between all glyphs to be
+    constant, and the <code>Default Separation</code> field
+    specifies that desired value. The <code>Min Kern</code> value
+    is simply to prevent the dialog from filling with useless junk.
+    If AutoKerning suggests that two glyphs should be kerned by 1
+    em unit then this won't make any difference to the human eye
+    and there is no point in including it. So if the kerning value
+    (in absolute value) suggested by AutoKern is less than
+    <code>Min Kern</code> then fontforge will ignore that value.
+    Selecting <code>[] Touching</code> makes AutoKerning work in a
+    slightly different way, instead of trying to make the optical
+    distance be the desired value this attempts to make the minimum
+    separation be the desired value (This is rarely useful, but
+    occasionally people want to set text where the letters actually
+    touch one another). The <code>[] Only kern glyphs closer</code>
+    flag means that FontForge will only generate negative kerning
+    offsets, that is, offsets which will move glyphs closer
+    together.<br clear="all" /></p>
+
+    <p><img src="kerningclass.png" width="1037" height="588" align=
+    "top" />Each kerning class belongs to a <a href=
+    "lookups.html">lookup subtable</a> and the subtable name is
+    displayed at the top of the dialog.</p>
+
+    <p>But the more interesting stuff follows this. A kerning by
+    class actually consists of two sets of classes -- one set for
+    the first glyph of the pair and one for the second glyph of the
+    pair. A glyph class consists of a space separated list of glyph
+    names (For most glyphs you may also enter the unicode character
+    itself, and fontforge will convert that to a glyph name).</p>
+
+    <p>To edit a class, simply type in it (at the very bottom of
+    the class list is an entry called <span class=
+    "c3">&lt;New&gt;</span>, clicking here will create a new
+    class). Pressing the little rectangle at the right of the class
+    will allow you to define your class as a selection in a font
+    view widget. You may delete a class by selecting it (clicking
+    in it) and pressing the [Delete] button.</p>
+
+    <p>The kerning classes can be fairly complex. You can search
+    for a glyph by typing its name in the "Select Glyph" field.
+    This will highlight the class containing that glyph.</p>
+
+    <p>Class 0 is usually magic. You almost never set it, it
+    contains any glyphs not mentioned elsewhere. In OpenType, class
+    0 of the first character can be set and behaves normally.</p>
+
+    <p>Underneath the classes is a display of kerning values. The
+    possible first glyph classes are listed vertically, the
+    possible second glyph classes are listed horizontally. When you
+    select a class (in one of the class lists above) the display of
+    kerning values will scroll to display that class. If you move
+    the mouse into the display and let it rest, a popup window will
+    appear showing the glyphs that make up the classes which
+    intersect at that point. If you click on a kerning value in the
+    display, the dlg displays a visual representation of that
+    amount of kerning.</p>
+
+    <p>The kerning dialog displays a representative glyph from each
+    class and allows you to adjust the kerning between them (and
+    all other class members of each class). You can select which
+    glyphs to display in the pulldown menus. You can enter a new
+    kerning offset by typing in a value, or you can click on the
+    second glyph of the kern pair and drag it around.</p>
+
+    <p>You can also create something called a "<a name=
+    "DeviceTable" id="DeviceTable">Device Table</a>", a name which
+    is not very informative. When a font is rasterized at small
+    pixel sizes rounding errors become important, and this is
+    particularly true of kerning, there are three things that get
+    rounded: The locations of the outlines (to fit them to a pixel
+    grid), the advance widths of the glyphs, and the kerning value
+    itself. The result is that something which looks perfectly
+    kerned at 150pixels may be either too close or too far apart at
+    12pixels</p>
+
+    <table align="center" cellpadding="2">
+      <tr>
+        <td><img src="kern-We-150.png" width="170" height=
+        "131" /></td>
+
+        <td>
+          <p class="c1"><img src="kern-We-12.png" width="32"
+          height="26" /></p>
+        </td>
+      </tr>
+
+      <tr valign="top">
+        <td>
+          <p class="c1">Kerning at 150 pixels</p>
+        </td>
+
+        <td>
+          <p class="c1">Kerning at 12 pixels<br />
+          (magnified by 2)</p>
+        </td>
+      </tr>
+    </table>
+
+    <p>You could adjust the kerning value slightly until it looked
+    right at 12pixels, of course, but that might break it at 14
+    pixels. So OpenType has the concept of a Device Table which
+    allows you to add small corrections at particular point sizes.
+    Simply set the Display Size to a small, but common, value (say
+    10-24) and examine the kerning. If the results are ugly then
+    type a value into the "Device Table Correction" field, and this
+    will change the spacing by that many pixels at the given
+    display size (and no other). In the case above a correction of
+    1 might be appropriate for the 12px display.</p>
+
+    <p>Because small pixel sizes can be hard to examine, you can
+    change the magnification (rasterized at the same size, but each
+    pixel made twice as big).</p>
+
+    <p><a href="metricsview.html#DeviceTable">Device Tables</a> may
+    also be created in a number of other cases. The example above
+    was for a kerning class. <a name="kernpair" id=
+    "kernpair">Kerning pairs</a> may also have tables attached to
+    them with the Metrics-&gt;Kern Pair Closeup dialog, which looks
+    similar to the Kerning Class dialog above.</p>
+
+    <p class="c1"><img src="kernpairclose.png" width="560" height=
+    "284" /></p>
+
+    <p><br /></p>
+
+    <p class="c1">-- <a href="bitmapview.html">Prev</a> -- <a href=
+    "overview.html">TOC</a> -- <a href="filemenu.html">Next</a>
+    --</p>
+  </div>
+</body>
+</html>

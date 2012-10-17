@@ -121,21 +121,29 @@ AC_PROG_MAKE_SET
 AC_PROG_MKDIR_P
 AC_PROG_SED
 PKG_PROG_PKG_CONFIG
-#AX_PKG_SWIG([2.0.4],[],[AC_MSG_ERROR([SWIG is required to build ${PACKAGE}.])])
-AC_PATH_PROG([MY_SORT],[sort],[cat]) dnl FIXME: Should we get rid of this?
-AC_PATH_PROG([TR],[tr],[tr])
-AC_PATH_PROG([GAWK],[gawk],[gawk])
-AC_PATH_PROG([MSGFMT],[msgfmt],[msgfmt])
-AC_PATH_PROG([XGETTEXT],[xgettext],[xgettext])
-AC_PATH_PROG([INDENT],[indent],[indent])
-AC_PATH_PROG([UNZIP],[unzip],[unzip])
-AC_PATH_PROG([WGET],[wget],[wget])
-AC_PATH_PROG([UPDATE_MIME_DATABASE],[update-mime-database],[update-mime-database])
-AC_PATH_PROG([UPDATE_DESKTOP_DATABASE],[update-desktop-database],[update-desktop-database])
-AC_PATH_PROG([PLUTIL],[plutil],[:])
 
 GUILE_PROGS
 #GUILE_SITE_DIR
+
+# General utilities.
+AC_PATH_PROG([GAWK],[gawk],[gawk])
+AC_PATH_PROG([TR],[tr],[tr])
+AC_PATH_PROG([UNZIP],[unzip],[unzip])
+AC_PATH_PROG([WGET],[wget],[wget])
+
+# Code quality programs.
+AC_PATH_PROG([INDENT],[indent],[indent]) dnl  GNU Indent.
+AC_PATH_PROG([TIDY],[tidy],[tidy])       dnl  HTML Tidy.
+
+# Gettext programs.
+AC_PATH_PROG([MSGFMT],[msgfmt],[msgfmt])
+AC_PATH_PROG([XGETTEXT],[xgettext],[xgettext])
+
+# Freedesktop programs.
+AC_PATH_PROG([UPDATE_MIME_DATABASE],[update-mime-database],[update-mime-database])
+AC_PATH_PROG([UPDATE_DESKTOP_DATABASE],[update-desktop-database],[update-desktop-database])
+
+#AX_PKG_SWIG([2.0.4],[],[AC_MSG_ERROR([SWIG is required to build ${PACKAGE}.])])
 
 #--------------------------------------------------------------------------
 

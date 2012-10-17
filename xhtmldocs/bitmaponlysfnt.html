@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux (vers 25 March 2009), see www.w3.org" />
+  <!-- Created with AOLpress/2.0 -->
+  <!-- AP: Created on: 31-Aug-2006 -->
+  <!-- AP: Last modified: 2-Sep-2006 -->
+
+  <title>Several formats for bitmap only sfnts (truetype
+  files)</title>
+  <link rel="icon" href="fftype16.png" />
+  <link rel="stylesheet" type="text/css" href="FontForge.css" />
+  <style type="text/css">
+/*<![CDATA[*/
+  h1.c1 {text-align: center}
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <div id="in">
+    <h1 class="c1">Several formats for bitmap only sfnts<br />
+    <small><small>(the file type which holds a truetype or opentype
+    font)</small></small></h1>
+
+    <p>Unfortunately every system has its own way of storing bitmap
+    only fonts into an sfnt wrapper (or the system just doesn't
+    support it)</p>
+
+    <ul>
+      <li><a href="bitmaponlysfnt.html#Apple">Apple</a></li>
+
+      <li><a href="bitmaponlysfnt.html#X11">X11
+      (Unix/Linux)</a></li>
+
+      <li><a href="bitmaponlysfnt.html#MS">MS</a></li>
+    </ul>
+
+    <h2><a name="Apple" id="Apple">Apple</a></h2>
+
+    <p>Apple documents the existence of a bitmap only format, and
+    gives some hints about the requirements of it. Their
+    documentation is far from complete and the following is
+    determined in part by that documentation, in part by examining
+    the (few) bitmap only fonts of theirs I have found, and in part
+    by error messages given by some of their tools.</p>
+
+    <ul>
+      <li>As is expected on Apple, the bitmap data reside in
+      '<code><a href=
+      "http://developer.apple.com/fonts/TTRefMan/RM06/Chap6bloc.html">bloc</a></code>'
+      and '<code><a href=
+      "http://developer.apple.com/fonts/TTRefMan/RM06/Chap6bdat.html">bdat</a></code>'
+      tables.<br />
+      (These are identical in format to the '<code><a href=
+      "http://partners.adobe.com/public/developer/opentype/index_eblc.html">EBLC</a></code>'
+      and '<code><a href=
+      "http://partners.adobe.com/public/developer/opentype/index_ebdt.html">EBDT</a></code>'
+      tables used in OpenType)</li>
+
+      <li>The '<code><a href=
+      "http://developer.apple.com/fonts/TTRefMan/RM06/Chap6head.html">head</a></code>'
+      table is replaced by a '<code><a href=
+      "http://developer.apple.com/fonts/TTRefMan/RM06/Chap6head.html">bhed</a></code>'
+      table which is byte for byte identical</li>
+
+      <li>There are no '<code><a href=
+      "http://partners.adobe.com/public/developer/opentype/index_glyf.html">glyf</a></code>',
+      '<code><a href=
+      "http://partners.adobe.com/public/developer/opentype/index_loca.html">loca</a></code>'
+      nor '<code>CFF</code> ' tables.</li>
+
+      <li>There are no '<code>hhea</code>' nor '<code>hmtx</code>'
+      tables (metrics data are provided in the bitmap strikes
+      themselves)</li>
+
+      <li>(Presumably there are no '<code>vhea</code>' nor
+      '<code>vmtx</code>' tables either)</li>
+
+      <li>'<code><a href=
+      "http://developer.apple.com/fonts/TTRefMan/RM06/Chap6maxp.html">maxp</a></code>'.<code>numGlyphs</code>
+      is set to the number of bitmap glyphs</li>
+    </ul>
+
+    <h2><a name="X11" id="X11">X11</a> (Unix/Linux)</h2>
+
+    <p>The X consortium have devised their own format which they
+    call "OpenType Bitmap" with extension .otb.</p>
+
+    <ul>
+      <li>The bitmap data reside in '<code><a href=
+      "http://partners.adobe.com/public/developer/opentype/index_eblc.html">EBLC</a></code>'
+      and '<code><a href=
+      "http://partners.adobe.com/public/developer/opentype/index_ebdt.html">EBDT</a></code>'
+      tables.</li>
+
+      <li>There is a zero length '<code><a href=
+      "http://partners.adobe.com/public/developer/opentype/index_glyf.html">glyf</a></code>'
+      table</li>
+
+      <li>There is a '<code><a href=
+      "http://partners.adobe.com/public/developer/opentype/index_loca.html">loca</a></code>'
+      table with one entry in it</li>
+
+      <li>There is a '<code><a href=
+      "http://partners.adobe.com/public/developer/opentype/index_head.html">head</a></code>'
+      table (not a '<code>bhed</code>')</li>
+
+      <li>'<code><a href=
+      "http://partners.adobe.com/public/developer/opentype/index_maxp.html">maxp</a></code>'.<code>numGlyphs</code>
+      is set to the number of bitmap glyphs, not to the size of the
+      '<code><a href=
+      "http://partners.adobe.com/public/developer/opentype/index_loca.html">loca</a></code>'
+      table
+        <hr />
+      </li>
+
+      <li>The fonts I generate also contain the metrics tables as
+      appropriate</li>
+    </ul>
+
+    <h2><a name="MS" id="MS">MS</a></h2>
+
+    <p>MicroSoft Windows provides no support for a bitmap only
+    sfnt. So I have created a faked up format which should work in
+    most cases</p>
+
+    <ul>
+      <li>The bitmap data reside in '<code><a href=
+      "http://partners.adobe.com/public/developer/opentype/index_eblc.html">EBLC</a></code>'
+      and '<code><a href=
+      "http://partners.adobe.com/public/developer/opentype/index_ebdt.html">EBDT</a></code>'
+      tables.</li>
+
+      <li>There are '<code><a href=
+      "http://partners.adobe.com/public/developer/opentype/index_glyf.html">glyf</a></code>'
+      / '<code><a href=
+      "http://partners.adobe.com/public/developer/opentype/index_loca.html">loca</a></code>'
+      tables with entries for every glyph. If used the entries will
+      produce blank glyphs (spaces).</li>
+
+      <li>There is an '<code><a href=
+      "http://partners.adobe.com/public/developer/opentype/index_ebsc.html">EBSC</a></code>'
+      table which maps common pixel sizes to the supplied pixel
+      sizes. (so if a user asked for a 20 pixel strike s/he might
+      get an 18 pixel strike -- as opposed to getting a set of
+      blanks.</li>
+
+      <li>There is a '<code><a href=
+      "http://partners.adobe.com/public/developer/opentype/index_head.html">head</a></code>'
+      table (not a '<code>bhed</code>')</li>
+
+      <li>Since these fonts try to look like scalable fonts (to MS
+      anyway) they contain metrics tables.</li>
+    </ul>
+  </div>
+</body>
+</html>
