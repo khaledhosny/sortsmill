@@ -251,15 +251,26 @@ UNINSTALLED_DOC_LIST = ListeDesGlyphes.nam englishkernpairs.txt
 
 DOC_LIST = $(INSTALLED_DOC_LIST) $(UNINSTALLED_DOC_LIST)
 
-nobase_htdocs_DATA = $(INSTALLED_DOC_LIST) .htaccess
+nobase_htdocs_DATA = $(INSTALLED_DOC_LIST)
 
-EXTRA_DIST = $(DOC_LIST) .htaccess
+EXTRA_DIST = $(DOC_LIST)
 
 #--------------------------------------------------------------------------
 
-TIDY_COMMAND = $(TIDY) -asxml -clean -indent -modify
+TIDYFLAGS = -asxml -utf8 -clean -indent -modify
+TIDY_COMMAND = $(TIDY) $(TIDYFLAGS)
 
 tidy:
-	echo $(TIDY_COMMAND) $(filter %.html, $(DOC_LIST))
+	$(MKDIR_P) nonBMP
+	@for f in $(filter %.html, $(DOC_LIST)); do \
+		echo "$(TIDY_COMMAND) $(srcdir)/$${f}"; \
+		if $(TIDY_COMMAND) -f $${f}.messages $(srcdir)/$${f}; then \
+			rm $${f}.messages; \
+		else \
+			echo "** SEE MESSAGES: $${f}.messages"; \
+		fi; \
+	done
+
+MOSTLYCLEANFILES = $(addsuffix .messages, $(filter %.html, $(DOC_LIST)))
 
 #--------------------------------------------------------------------------
