@@ -109,7 +109,7 @@ main (int argc, char **argv)
     {
       ulc_fprintf (stderr, "study: %s\n", (re->extra != NULL ? "yes" : "no"));
       int jit;
-      pcre_fullinfo(re->pcre_ptr, re->extra, PCRE_INFO_JIT, &jit);
+      pcre_fullinfo (re->pcre_ptr, re->extra, PCRE_INFO_JIT, &jit);
       ulc_fprintf (stderr, "jit:   %s\n", (jit ? "yes" : "no"));
     }
 
