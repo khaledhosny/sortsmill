@@ -8,6 +8,8 @@ AT_CLEANUP
 
 //-------------------------------------------------------------------------
 
+m4_foreach_w([test_program],[test_rexp_h test_rexp_h_u8],
+[
 m4_foreach_w([filter],[identity study jit compile_study compile_jit redo_study redo_jit],
 [
 
@@ -26,27 +28,27 @@ jit:   no
           [redo_study],[study_text],
           [ignore])])
 
-check_rexp_h([test_rexp_h haystack Xneedle match filter],[20],[ignore],[ignore])
-check_rexp_h([test_rexp_h haystack Xhay match filter],[20],[ignore],[ignore])
-check_rexp_h([test_rexp_h 'hay(stack)?' Xhay match filter],[20],[ignore],[ignore])
-check_rexp_h([test_rexp_h hay Xhaystack match filter],[20],[ignore],[ignore])
-check_rexp_h([test_rexp_h '((hay)(stack){2})' Xhaystackstack match filter],[20],[ignore],[ignore])
+check_rexp_h([test_program haystack Xneedle match filter],[20],[ignore],[ignore])
+check_rexp_h([test_program haystack Xhay match filter],[20],[ignore],[ignore])
+check_rexp_h([test_program 'hay(stack)?' Xhay match filter],[20],[ignore],[ignore])
+check_rexp_h([test_program hay Xhaystack match filter],[20],[ignore],[ignore])
+check_rexp_h([test_program '((hay)(stack){2})' Xhaystackstack match filter],[20],[ignore],[ignore])
 
-check_rexp_h([test_rexp_h haystack Xneedle search filter],[20],[ignore],[ignore])
-check_rexp_h([test_rexp_h haystack Xhay search filter],[20],[ignore],[ignore])
+check_rexp_h([test_program haystack Xneedle search filter],[20],[ignore],[ignore])
+check_rexp_h([test_program haystack Xhay search filter],[20],[ignore],[ignore])
 
-check_rexp_h([test_rexp_h 'hay(stack)?' Xhay search filter],[0],
+check_rexp_h([test_program 'hay(stack)?' Xhay search filter],[0],
 [0: 1 4 |hay|
 1: -1 -1 |(NULL)|
 2: -1 -1 |(NULL)|
 ],[stderr_text(filter)])
 
-check_rexp_h([test_rexp_h hay Xhaystack search filter],[0],
+check_rexp_h([test_program hay Xhaystack search filter],[0],
 [0: 1 4 |hay|
 1: -1 -1 |(NULL)|
 ],[stderr_text(filter)])
 
-check_rexp_h([test_rexp_h '((hay)(stack){2})' Xhaystackstack search filter],[0],
+check_rexp_h([test_program '((hay)(stack){2})' Xhaystackstack search filter],[0],
 [0: 1 14 |haystackstack|
 1: 1 14 |haystackstack|
 2: 1 4 |hay|
@@ -54,6 +56,7 @@ check_rexp_h([test_rexp_h '((hay)(stack){2})' Xhaystackstack search filter],[0],
 4: -1 -1 |(NULL)|
 ],[stderr_text(filter)])
 
+])
 ])
 
 //-------------------------------------------------------------------------

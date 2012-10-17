@@ -83,7 +83,7 @@ TESTS_GFILE_C = test_GFileGetUserConfigDir test_GFileGetUserCacheDir	\
 
 TESTS_PS_NUMBER_H = test_ps_number_h
 
-TESTS_REXP_H = test_rexp_h
+TESTS_REXP_H = test_rexp_h test_rexp_h_u8
 
 check_PROGRAMS = $(TESTS_XGC_H) $(TESTS_XUNISTRING_H)		\
 	$(TESTS_GFILE_C) $(TESTS_PS_NUMBER_H) $(TESTS_REXP_H)

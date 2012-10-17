@@ -37,6 +37,7 @@
 
 #include <stdio.h>
 #include <pcre.h>
+#include <xunistring.h>
 
 struct rexp
 {
@@ -65,6 +66,11 @@ VISIBLE rexp_t rexp_compile (const char *pattern);
 VISIBLE rexp_t rexp_compile_study (const char *pattern);
 VISIBLE rexp_t rexp_compile_jit (const char *pattern);
 
+VISIBLE rexp_t u8_rexp_compile_opt (const uint8_t *pattern, int options);
+VISIBLE rexp_t u8_rexp_compile (const uint8_t *pattern);
+VISIBLE rexp_t u8_rexp_compile_study (const uint8_t *pattern);
+VISIBLE rexp_t u8_rexp_compile_jit (const uint8_t *pattern);
+
 /* The following functions return the same rexp_t, but altered (except
    for rexp_identity, which simply returns its argument). Thus they
    violate our usual preference to avoid this kind of side effect, but
@@ -85,5 +91,12 @@ VISIBLE size_t rexp_num_subexpr (rexp_match_t m);
 VISIBLE rexp_interval_t rexp_interval (rexp_match_t m, size_t subexpression);
 VISIBLE char *rexp_substr (rexp_match_t m, const char *s,
                            size_t subexpression);
+
+VISIBLE rexp_match_t u8_rexp_search_opt (rexp_t re, const uint8_t *s,
+                                         int options);
+VISIBLE rexp_match_t u8_rexp_match (rexp_t re, const uint8_t *s);
+VISIBLE rexp_match_t u8_rexp_search (rexp_t re, const uint8_t *s);
+VISIBLE uint8_t *u8_rexp_substr (rexp_match_t m, const uint8_t *s,
+                                 size_t subexpression);
 
 #endif // _FONTFORGE_REXP_H

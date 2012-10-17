@@ -110,6 +110,30 @@ rexp_compile_jit (const char *pattern)
 }
 
 rexp_t
+u8_rexp_compile_opt (const uint8_t *pattern, int options)
+{
+  return rexp_compile_opt ((const char *) pattern, options | PCRE_UTF8);
+}
+
+rexp_t
+u8_rexp_compile (const uint8_t *pattern)
+{
+  return u8_rexp_compile_opt (pattern, 0);
+}
+
+rexp_t
+u8_rexp_compile_study (const uint8_t *pattern)
+{
+  return rexp_study (u8_rexp_compile (pattern));
+}
+
+rexp_t
+u8_rexp_compile_jit (const uint8_t *pattern)
+{
+  return rexp_jit (u8_rexp_compile (pattern));
+}
+
+rexp_t
 rexp_study_opt (rexp_t re, int options)
 {
   rexp_t new_re = re;
@@ -234,4 +258,28 @@ rexp_substr (rexp_match_t m, const char *s, size_t subexpression)
     subexpr =
       x_gc_strndup (s + interv.i_start, interv.i_end - interv.i_start);
   return subexpr;
+}
+
+rexp_match_t
+u8_rexp_search_opt (rexp_t re, const uint8_t *s, int options)
+{
+  return rexp_search_opt (re, (const char *) s, options);
+}
+
+rexp_match_t
+u8_rexp_match (rexp_t re, const uint8_t *s)
+{
+  return u8_rexp_search_opt (re, s, PCRE_ANCHORED);
+}
+
+rexp_match_t
+u8_rexp_search (rexp_t re, const uint8_t *s)
+{
+  return u8_rexp_search_opt (re, s, 0);
+}
+
+uint8_t *
+u8_rexp_substr (rexp_match_t m, const uint8_t *s, size_t subexpression)
+{
+  return (uint8_t *) rexp_substr (m, (const char *) s, subexpression);
 }
