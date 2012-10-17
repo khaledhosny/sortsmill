@@ -46,7 +46,7 @@
 #include <sys/time.h>
 #include <gkeysym.h>
 #include <sys/types.h>
-#include <regex.h>
+#include <rexp.h>
 #include "trim.h"
 #include "filename.h"
 #include "filenamecat.h"
@@ -114,38 +114,12 @@ static void AppendSupportedLocale(char *fullspec) {
 // See http://en.wikipedia.org/wiki/URI_scheme
 static const char *uri_pattern = "^([[:alpha:]][-+.[:alnum:]]*):(.*)$";
 
-#ifndef NDEBUG
-static bool re_pattern_error(int error)
-{
-    return (error == REG_BADPAT ||
-	    error == REG_ECOLLATE ||
-	    error == REG_ECTYPE ||
-	    error == REG_EESCAPE ||
-	    error == REG_ESUBREG ||
-	    error == REG_EBRACK ||
-	    error == REG_EPAREN ||
-	    error == REG_EBRACE ||
-	    error == REG_BADBR ||
-	    error == REG_ERANGE ||
-	    error == REG_EEND ||
-	    error == REG_ESIZE);
-}
-#endif // ! NDEBUG
-
 // FIXME: Put this in an URI-processing module.
-static bool looks_like_uri(const char *url)
+static bool
+looks_like_uri(const char *url)
 {
-    regex_t re;
-    int error = regcomp(&re, uri_pattern, REG_EXTENDED | REG_NOSUB);
-    assert(!re_pattern_error(error));
-
-    bool matched = false;
-    if (error == 0) {
-	int match_code = regexec(&re, url, 0, NULL, 0);
-	matched = (match_code == 0);
-	regfree(&re);
-    }
-    return matched;
+  rexp_match_t m = rexp_search (rexp_compile (uri_pattern), url);
+  return (bool) m;
 }
 
 static char *absolute_help_file(const char *file)
