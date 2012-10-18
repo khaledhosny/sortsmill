@@ -9413,7 +9413,7 @@ SFDStartsCorrectly (FILE *sfd, char *tok)
       -- Sorts Mill considers this context-sensitive backslash-newline
          such a bad idea that, in the future, it may reject any SFD
          labeled version 4. Write your own utility to convert the
-         file.
+         file. Have fun parsing it byte-by-byte.
 
    */
   if (dval != 0 && dval != 1 && dval != 2.0 && dval != 3.0 && dval != 4.0)
