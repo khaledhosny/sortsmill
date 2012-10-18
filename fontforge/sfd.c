@@ -9407,8 +9407,15 @@ SFDStartsCorrectly (FILE *sfd, char *tok)
   /* We don't yet generate version 4 of sfd. It will contain backslash */
   /*  newline in the middle of very long lines. I've put in code to parse */
   /*  this sequence, but I don't yet generate it. I want the parser to */
-  /*  perculate through to users before I introduce the new format so there */
-  /*  will be fewer complaints when it happens */
+  /*  percolate through to users before I introduce the new format so there */
+  /*  will be fewer complaints when it happens.
+
+      -- Sorts Mill considers this context-sensitive backslash-newline
+         such a bad idea that, in the future, it may reject any SFD
+         labeled version 4. Write your own utility to convert the
+         file.
+
+   */
   if (dval != 0 && dval != 1 && dval != 2.0 && dval != 3.0 && dval != 4.0)
     {
       LogError (_("Bad SFD Version number %.1f"), dval);
