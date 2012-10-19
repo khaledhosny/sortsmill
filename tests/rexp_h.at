@@ -45,6 +45,10 @@ jit:   no
           [study],[study_text],
           [compile_study],[study_text],
           [redo_study],[study_text],
+          [once_identity],[no_study_text],
+          [once_study],[study_text],
+          [compile_once_study],[study_text],
+          [redo_once_study],[study_text],
           [ignore])])
 
 check_rexp_h([test_program 'broken[(]re' anything match filter],[10],[ignore],[ignore])
