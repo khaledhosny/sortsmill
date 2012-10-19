@@ -27,12 +27,14 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <atomic_ops.h>
+#include <xgc.h>                // Includes gc.h and pthreads.h in the right order.
+
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
-#include <xgc.h>
 #include <xunistring.h>
 #include <pcre.h>
 #include <rexp.h>
@@ -56,12 +58,20 @@ register_rexp_t_finalizer (rexp_t re)
   GC_REGISTER_FINALIZER (re, finalize_rexp_t, NULL, &ofn, &ocd);
 }
 
+static void
+deregister_rexp_t_finalizer (rexp_t re)
+{
+  GC_finalization_proc ofn;
+  void *ocd;
+  GC_REGISTER_FINALIZER (re, NULL, NULL, &ofn, &ocd);
+}
+
 rexp_t
 rexp_compile_opt (const char *pattern, int options)
 {
   // x_gc_malloc clears memory, leaving (re->extra == NULL), as we
   // want.
-  rexp_t re = x_gc_malloc (sizeof (struct rexp));
+  rexp_t re = x_gc_malloc (sizeof (rexp_buffer_t));
 
   int error_code;
   const char *error;
@@ -111,6 +121,48 @@ rexp_compile_jit (const char *pattern)
 }
 
 rexp_t
+rexp_compile_once_opt (rexp_buffer_t *re_buf_ptr, const char *pattern,
+                       int options)
+{
+  if (!AO_load_acquire_read (&re_buf_ptr->is_initialized))
+    {
+      pthread_mutex_lock (&re_buf_ptr->mutex);
+      if (!re_buf_ptr->is_initialized)
+        {
+          rexp_t new_re = rexp_compile_opt (pattern, options);
+          if (new_re != NULL)
+            {
+              deregister_rexp_t_finalizer (new_re);
+              re_buf_ptr->pcre_ptr = new_re->pcre_ptr;
+              re_buf_ptr->extra = new_re->extra;
+              re_buf_ptr->capture_count = new_re->capture_count;
+            }
+          AO_store_release_write (&re_buf_ptr->is_initialized, true);
+        }
+      pthread_mutex_unlock (&re_buf_ptr->mutex);
+    }
+  return re_buf_ptr;
+}
+
+rexp_t
+rexp_compile_once (rexp_buffer_t *re_buf_ptr, const char *pattern)
+{
+  return rexp_compile_once_opt (re_buf_ptr, pattern, 0);
+}
+
+rexp_t
+rexp_compile_once_study (rexp_buffer_t *re_buf_ptr, const char *pattern)
+{
+  return rexp_study (rexp_compile_once (re_buf_ptr, pattern));
+}
+
+rexp_t
+rexp_compile_once_jit (rexp_buffer_t *re_buf_ptr, const char *pattern)
+{
+  return rexp_jit (rexp_compile_once (re_buf_ptr, pattern));
+}
+
+rexp_t
 u8_rexp_compile_opt (const uint8_t *pattern, int options)
 {
   return rexp_compile_opt ((const char *) pattern, options);
@@ -132,6 +184,32 @@ rexp_t
 u8_rexp_compile_jit (const uint8_t *pattern)
 {
   return rexp_jit (u8_rexp_compile (pattern));
+}
+
+rexp_t
+u8_rexp_compile_once_opt (rexp_buffer_t *re_buf_ptr, const uint8_t *pattern,
+                          int options)
+{
+  return rexp_compile_once_opt (re_buf_ptr, (const char *) pattern, options);
+}
+
+rexp_t
+u8_rexp_compile_once (rexp_buffer_t *re_buf_ptr, const uint8_t *pattern)
+{
+  return u8_rexp_compile_once_opt (re_buf_ptr, pattern,
+                                   (PCRE_UTF8 | PCRE_UCP));
+}
+
+rexp_t
+u8_rexp_compile_once_study (rexp_buffer_t *re_buf_ptr, const uint8_t *pattern)
+{
+  return rexp_study (u8_rexp_compile_once (re_buf_ptr, pattern));
+}
+
+rexp_t
+u8_rexp_compile_once_jit (rexp_buffer_t *re_buf_ptr, const uint8_t *pattern)
+{
+  return rexp_jit (u8_rexp_compile_once (re_buf_ptr, pattern));
 }
 
 rexp_t
@@ -188,7 +266,7 @@ rexp_search_opt (rexp_t re, const char *s, int options)
 
   if (re != NULL)
     {
-      m = x_gc_malloc (sizeof (struct rexp_match));
+      m = x_gc_malloc (sizeof (rexp_match_buffer_t));
       int ovecsize = 3 * (re->capture_count + 1);
       m->ovector = x_gc_malloc_atomic (ovecsize * sizeof (int));
       m->capture_count = re->capture_count;

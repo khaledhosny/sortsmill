@@ -24,7 +24,12 @@ AT_CLEANUP
 
 m4_foreach_w([test_program],[test_rexp_h test_rexp_h_u8],
 [
-m4_foreach_w([filter],[identity study jit compile_study compile_jit redo_study redo_jit],
+m4_foreach_w([filter],[identity study jit
+                       compile_study compile_jit
+                       redo_study redo_jit
+                       once_identity once_study once_jit
+                       compile_once_study compile_once_jit
+                       redo_once_study redo_once_jit],
 [
 
 # Do not test stderr for JIT cases, because we do not know whether the

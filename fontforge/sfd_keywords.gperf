@@ -1,0 +1,276 @@
+/* Copyright (C) 2012 by Barry Schwartz
+
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+
+ * Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
+
+ * The name of the author may not be used to endorse or promote products
+ * derived from this software without specific prior written permission.
+
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
+ * EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/* *INDENT-OFF* */
+
+%language=ANSI-C
+%compare-strncmp
+%ignore-case
+%readonly-tables
+%pic
+%struct-type
+%omit-struct-type
+%define initializer-suffix ,""
+%define lookup-function-name sfd_keyword_lookup
+
+%{
+
+/* *INDENT-ON* */
+
+#include <config.h>
+
+#include <sfd_keywords.h>
+#include <string.h>
+
+/* *INDENT-OFF* */
+
+%}
+
+ /* *INDENT-ON* */
+
+struct sfd_keyword
+{
+  int name;
+  const char *arg_types;
+};
+
+/* *INDENT-OFF* */
+
+/*
+ * I imagine, perhaps incorrectly, that the "DEI:" keyword alludes to
+ * a fraternity prank involving an inscription on the Voyager
+ * spacecraft. Anyway, we, not enjoying being left in ignorance, but
+ * accepting our fate, just read in the DEI field as a string to be
+ * ignored later. -- Barry Schwartz
+ */
+
+%%
+AntiAlias:, "I"
+Ascent:, "I"
+Base:, "S"
+BaseHoriz:, "#T"
+BaseScript:, "="
+BaseVert:, "#T"
+BeginChars:
+BeginMMFonts:
+BeginPrivate:
+BeginSubFonts:
+BeginSubrs:
+BitmapFont:
+ChainPos:
+ChainPos2:
+ChainSub:
+ChainSub2:
+CIDVersion:, "R"
+Colour:, "X"
+Comment:, "U"
+Comments:, "S"
+Compacted:
+ContextPos:
+ContextPos2:
+ContextSub:
+ContextSub2:
+Copyright:
+CreationTime:
+DefaultBaseFilename:, "S"
+DEI:, "S"
+Descent:, "I"
+DesignSize:
+DisplayLayer:, "I"
+DisplaySize:, "I"
+DupEnc:
+Encoding:, "S"
+EndASM
+EndBitmapFont
+EndChar
+EndChars
+EndFPST
+EndJustify
+EndMacFeatures
+EndMMFonts
+EndMMSubroutine
+EndPrivate
+EndShort
+EndSplineFont
+EndSplineSet
+EndSubFonts
+EndSubSplineFont
+EndTTInstrs
+ExtremaBound:
+FamilyName:, "S"
+FitToEm:, "I"
+FONDName:
+FontLog:, "U"
+FontName:, "S"
+FSType:
+FullName:, "S"
+GaspTable:
+Grid
+GridOrder2:
+HasVMetrics:, "I"
+HHeadAOffset:, "I"
+HHeadAscent:, "I"
+HHeadDescent:, "I"
+HHeadDOffset:, "I"
+ItalicAngle:, "R"
+JstfDisableExtend:
+JstfDisableShrink:
+JstfEnableExtend:
+JstfEnableShrink:
+JstfExtender:
+JstfLang:
+JstfMaxExtend:
+JstfMaxShrink:
+JstfPrio:
+Justify:
+KernClass:
+KernClass2:
+LangName:
+Layer:, "="
+LayerCount:, "I"
+LineGap:
+Lookup:
+MacContext:
+MacContext2:
+MacFeat:
+MacIndic:
+MacIndic2:
+MacInsert:
+MacInsert2:
+MacKern:
+MacKern2:
+MacLigature:
+MacLigature2:
+MacName:
+MacSimple:
+MacSimple2:
+MacStyle:, "I"
+MarkAttachClasses:
+MarkAttachSets:
+MATH:
+MMAxis:
+MMAxisMap:
+MMCDV:
+MMCounts:
+MMNamedInstance:
+MMNDV:
+MMPositions:
+MMWeights:
+ModificationTime:
+MultiLayer:
+NameList:
+NeedsXUIDChange:
+OldEncoding:
+OnlyBitmaps:, "I"
+Order2:, "I"
+Ordering:
+OS2CodePages:
+OS2FamilyClass:
+OS2StrikeYPos:, "I"
+OS2StrikeYSize:, "I"
+OS2SubXOff:, "I"
+OS2SubXSize:, "I"
+OS2SubYOff:, "I"
+OS2SubYSize:, "I"
+OS2SupXOff:, "I"
+OS2SupXSize:, "I"
+OS2SupYOff:, "I"
+OS2SupYSize:, "I"
+OS2TypoAOffset:, "I"
+OS2TypoAscent:, "I"
+OS2TypoDescent:, "I"
+OS2TypoDOffset:, "I"
+OS2TypoLinegap:, "I"
+OS2UnicodeRanges:
+OS2_UseTypoMetrics:
+OS2Vendor:
+OS2Version:
+OS2_WeightWidthSlopeOnly:
+OS2WinAOffset:, "I"
+OS2WinAscent:, "I"
+OS2WinDescent:, "I"
+OS2WinDOffset:, "I"
+OtfFeatName:
+Panose:
+PfmFamily:
+PfmWeight:
+PickledData:
+Registry:
+Remap:
+RemapN:
+ReverseChain:
+ReverseChain2:
+ScriptLang:
+sfntRevision:
+ShortTable:
+SplineFontDB:, "R"
+SplineSet
+StartChar:
+StrokedFont:
+StrokeWidth:, "R"
+Supplement:
+TableOrder:
+TeXData:
+TileBounds:, "RRRR"
+TileMargin:, "R"
+TopEncoding:
+TtfTable:
+TTFWeight:
+TTFWidth:
+TtTable:
+UComments:, "U"
+UFOAscent:, "R"
+UFODescent:, "R"
+UnderlinePosition:, "R"
+UnderlineWidth:, "R"
+UnicodeInterp:
+UniqueID:
+UseUniqueID:, "I"
+UseXUID:, "S"
+Version:, "S"
+VerticalOrigin:
+VKernClass:
+VKernClass2:
+VLineGap:
+Weight:, "S"
+WidthSeparation:
+WinInfo:
+woffMajor:
+woffMetadata:
+woffMinor:
+XUID:, "S"
+%%
+
+/* *INDENT-ON* */
+
+#include <rexp.h>
+
+const char *
+sfd_pool_string (int name)
+{
+  return (const char *) (stringpool + name);
+}

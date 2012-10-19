@@ -14,12 +14,19 @@
 -T uint32_t
 -T intptr_t
 -T uintptr_t
+-T pthread_mutex_t
 -T cairo_t
 -T regoff_t
 -T pcre
+-T AO_t
+-T Hash_table
 
+-T rexp_buffer_t
 -T rexp_t
+-T rexp_match_buffer_t
 -T rexp_match_t
+-T rexp_interval_t
+
 -T real
 -T AnchorPoint
 -T BDFFont

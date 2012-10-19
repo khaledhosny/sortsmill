@@ -125,12 +125,6 @@ PKG_PROG_PKG_CONFIG
 GUILE_PROGS
 #GUILE_SITE_DIR
 
-# General utilities.
-AC_PATH_PROG([GAWK],[gawk],[gawk])
-AC_PATH_PROG([TR],[tr],[tr])
-AC_PATH_PROG([UNZIP],[unzip],[unzip])
-AC_PATH_PROG([WGET],[wget],[wget])
-
 # Code quality programs.
 AC_PATH_PROG([INDENT],[indent],[indent]) dnl  GNU Indent.
 AC_PATH_PROG([TIDY],[tidy],[tidy])       dnl  HTML Tidy.
@@ -144,6 +138,11 @@ AC_PATH_PROG([UPDATE_MIME_DATABASE],[update-mime-database],[update-mime-database
 AC_PATH_PROG([UPDATE_DESKTOP_DATABASE],[update-desktop-database],[update-desktop-database])
 
 #AX_PKG_SWIG([2.0.4],[],[AC_MSG_ERROR([SWIG is required to build ${PACKAGE}.])])
+
+# Assorted programs.
+AC_PATH_PROG([GAWK],[gawk],[gawk])
+AC_PATH_PROG([GPERF],[gperf],[gperf])
+AC_PATH_PROG([WGET],[wget],[wget])
 
 #--------------------------------------------------------------------------
 
@@ -206,6 +205,8 @@ i_do_have_native_callbacks="${fontforge_cv_native_callbacks}"
 #
 # Checks for libraries.
 
+AC_SEARCH_LIBS([AO_locks],[atomic_ops])
+
 FONTFORGE_CONFIG_X_LIBRARIES
 FONTFORGE_LIBPCRE
 PKG_CHECK_MODULES([ZLIB],[zlib])
@@ -248,7 +249,7 @@ fi
 #
 # Checks for header files.
 
-AC_CHECK_HEADERS([libintl.h limits.h memory.h pthread.h])
+AC_CHECK_HEADERS([atomic_ops.h libintl.h limits.h memory.h pthread.h])
 
 #--------------------------------------------------------------------------
 #

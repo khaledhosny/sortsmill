@@ -1,4 +1,6 @@
 #include <config.h>
+
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -10,6 +12,7 @@
 
 typedef rexp_match_t (*matcher) (rexp_t re, const char *s);
 typedef rexp_t (*compiler) (const char *s);
+typedef rexp_t (*compiler_once) (rexp_buffer_t *buf, const char *s);
 typedef rexp_t (*filter) (rexp_t re);
 
 int
@@ -34,6 +37,7 @@ main (int argc, char **argv)
 
   filter my_filter = NULL;
   compiler my_compiler = NULL;
+  compiler_once my_compiler_once = NULL;
   if (strcmp (study, "study") == 0)
     {
       my_compiler = rexp_compile;
@@ -54,7 +58,6 @@ main (int argc, char **argv)
       my_compiler = rexp_compile_study;
       my_filter = rexp_identity;
     }
-
   else if (strcmp (study, "compile_jit") == 0)
     {
       my_compiler = rexp_compile_jit;
@@ -65,10 +68,44 @@ main (int argc, char **argv)
       my_compiler = rexp_compile_jit;
       my_filter = rexp_study;
     }
-
   else if (strcmp (study, "redo_jit") == 0)
     {
       my_compiler = rexp_compile_study;
+      my_filter = rexp_jit;
+    }
+  else if (strcmp (study, "once_study") == 0)
+    {
+      my_compiler_once = rexp_compile_once;
+      my_filter = rexp_study;
+    }
+  else if (strcmp (study, "once_jit") == 0)
+    {
+      my_compiler_once = rexp_compile_once;
+      my_filter = rexp_jit;
+    }
+  else if (strcmp (study, "once_identity") == 0)
+    {
+      my_compiler_once = rexp_compile_once;
+      my_filter = rexp_identity;
+    }
+  else if (strcmp (study, "compile_once_study") == 0)
+    {
+      my_compiler_once = rexp_compile_once_study;
+      my_filter = rexp_identity;
+    }
+  else if (strcmp (study, "compile_once_jit") == 0)
+    {
+      my_compiler_once = rexp_compile_once_jit;
+      my_filter = rexp_identity;
+    }
+  else if (strcmp (study, "redo_once_study") == 0)
+    {
+      my_compiler_once = rexp_compile_once_jit;
+      my_filter = rexp_study;
+    }
+  else if (strcmp (study, "redo_once_jit") == 0)
+    {
+      my_compiler_once = rexp_compile_once_study;
       my_filter = rexp_jit;
     }
   else
@@ -76,7 +113,24 @@ main (int argc, char **argv)
 
   int exit_status = 0;
 
-  rexp_t re = my_filter (my_compiler (pattern));
+  static rexp_buffer_t re_buf = REXP_BUFFER_T_INITIALIZER;
+
+  rexp_t re;
+  if (my_compiler != NULL)
+    re = my_filter (my_compiler (pattern));
+  else
+    {
+      re = my_filter (my_compiler_once (&re_buf, pattern));
+      assert (re == NULL || (re == &re_buf && re_buf.is_initialized));
+      if (re != NULL)
+        {
+	  // Verify that the regex is not re-compiled on a second
+	  // call.
+          rexp_t re2 = my_filter (my_compiler_once (&re_buf, pattern));
+          assert (memcmp (re2, re, sizeof (rexp_buffer_t)) == 0);
+        }
+    }
+
   if (re == NULL)
     exit_status = 10;
   else
