@@ -1,3 +1,11 @@
+/* *INDENT-OFF* */
+
+%{
+
+/* *INDENT-ON* */
+
+#include <config.h>
+
 /* Copyright (C) 2012 by Barry Schwartz
 
  * Redistribution and use in source and binary forms, with or without
@@ -25,7 +33,12 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <sfd_read.h>
+#include <string.h>
+
 /* *INDENT-OFF* */
+
+%}
 
 %language=ANSI-C
 %compare-strncmp
@@ -37,20 +50,7 @@
 %define initializer-suffix ,""
 %define lookup-function-name sfd_keyword_lookup
 
-%{
-
 /* *INDENT-ON* */
-
-#include <config.h>
-
-#include <sfd_keywords.h>
-#include <string.h>
-
-/* *INDENT-OFF* */
-
-%}
-
- /* *INDENT-ON* */
 
 struct sfd_keyword
 {
@@ -265,10 +265,16 @@ XUID:, "S"
 
 /* *INDENT-ON* */
 
-#include <rexp.h>
-
 const char *
 sfd_pool_string (int name)
 {
   return (const char *) (stringpool + name);
 }
+
+/*-----------------------------------------------------------------------*/
+/*
+ * local variables:
+ * mode: fundamental
+ * c-file-style: "gnu"
+ * end:
+ */

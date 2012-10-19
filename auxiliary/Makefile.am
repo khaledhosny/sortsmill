@@ -34,11 +34,17 @@ lib_LTLIBRARIES = libsortsmillff_aux.la
 libsortsmillff_aux_la_SOURCES = ArabicForms.c alphabet.c backtrns.c	\
 	cjk.c ucharmap.c unialt.c ustring.c utype.c combiners.h			\
 	xdie_on_null.c xgc.c xgc_strjoin.c xunicase.c xuniconv.c		\
-	xuninorm.c xunistr.c xunistr_strjoin.c ps_number.c rexp.c
+	xuninorm.c xunistr.c xunistr_strjoin.c ps_number.c rexp.c		\
+	sfd_read.c $(srcdir)/sfd_read_keywords.c
 
 libsortsmillff_aux_la_LIBADD = $(top_builddir)/lib/libgnu.la
 libsortsmillff_aux_la_LDFLAGS = $(call ldflags)
 libsortsmillff_aux_la_DEPENDENCIES = Makefile $(libsortsmillff_aux_la_LIBADD)
+
+$(srcdir)/%.c: %.gperf
+	$(GPERF) $< > $@
+
+EXTRA_DIST = sfd_read_keywords.gperf
 
 #--------------------------------------------------------------------------
 #

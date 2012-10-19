@@ -124,6 +124,12 @@ rexp_t
 rexp_compile_once_opt (rexp_buffer_t *re_buf_ptr, const char *pattern,
                        int options)
 {
+  // "Double-checked locking": This code first uses libatomic_ops
+  // to read the 'is_initialized' field, thus avoiding the need for a
+  // pthread lock if the field is already set.
+  //
+  // See http://www.hpl.hp.com/research/linux/atomic_ops/example.php4
+  //
   if (!AO_load_acquire_read (&re_buf_ptr->is_initialized))
     {
       pthread_mutex_lock (&re_buf_ptr->mutex);

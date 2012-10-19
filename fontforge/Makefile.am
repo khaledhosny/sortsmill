@@ -94,7 +94,7 @@ libsortsmillff_fontforge_la_SOURCES = asmfpst.c autohint.c autosave.c	\
 	tottfaat.c tottfgpos.c tottf.c tottfvar.c ttfinstrs.c				\
 	ttfspecial.c ufo.c unicoderange.c utils.c winfonts.c zapfnomen.c	\
 	groups.c langfreq.c ftdelta.c autowidth2.c woff.c activeinui.c		\
-	is_LIGATURE.c flaglist.c sfd_keywords.c
+	is_LIGATURE.c flaglist.c
 EXTRA_libsortsmillff_fontforge_la_SOURCES = splinerefigure.c
 
 libsortsmillff_fontforge_la_LIBADD = splinerefigure.lo $(LIBADD)	\
@@ -115,9 +115,6 @@ is_LIGATURE:
 \#include <config.h>\
 \#include <is_LIGATURE.h>\
 ' $(srcdir)/is_LIGATURE.c
-
-%.c: %.gperf
-	$(GPERF) $< > $@
 
 #--------------------------------------------------------------------------
 

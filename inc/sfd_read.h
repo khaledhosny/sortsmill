@@ -26,8 +26,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _SFD_KEYWORDS_H
-#define _SFD_KEYWORDS_H 1
+#ifndef _SFD_READ_H
+#define _SFD_READ_H 1
 
 #include <config.h>
 
@@ -42,4 +42,7 @@ const char *sfd_pool_string (int name);
 const struct sfd_keyword *sfd_keyword_lookup (const char *str,
                                               unsigned int len);
 
-#endif // _SFD_KEYWORDS_H
+VISIBLE char *get_sfd_line_from_file (void *file);
+VISIBLE void sfd_to_scheme (char *(get_next_line) (void *), void *source_of_lines);
+
+#endif // _SFD_READ_H

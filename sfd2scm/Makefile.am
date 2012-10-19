@@ -25,22 +25,11 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-noinst_HEADERS = basics.h chardata.h config.h gdraw.h gfile.h			\
-	ggadget.h gicons.h gimage.h gio.h gkeysym.h gprogress.h				\
-	gresedit.h gresource.h gwidget.h intl.h ustring.h utype.h			\
-	annotations_base.h ffthread.h null_passthru.h xgc.h xunistring.h	\
-	xunicase.h xuniconv.h xuninorm.h xunistr.h xdie_on_null.h			\
-	config-extra.h ps_number.h rexp.h sfd_read.h
+include $(top_srcdir)/mk/flags.am
 
-#--------------------------------------------------------------------------
+bin_PROGRAMS = sfd2scm
+sfd2scm_SOURCES = sfd2scm.c
 
-extract_text = $(GAWK) ' \
-BEGIN { pattern = "^[[:space:]]*(//|[*])[[:space:]]*$1--[[:space:]]*(.*)[[:space:]]*" } \
-$$0 ~ pattern { match($$0, pattern, matches); print matches[2] }'
-
-$(top_srcdir)/doc/%.visible.texi: %.h
-	$(call extract_text,vis) $< > $@
-
-extract-text: $(top_srcdir)/doc/ps_number.visible.texi
-
-#--------------------------------------------------------------------------
+LDADD = $(top_builddir)/auxiliary/libsortsmillff_aux.la	\
+	$(top_builddir)/lib/libgnu.la
+AM_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS)
