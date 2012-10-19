@@ -47,6 +47,53 @@ jit:   no
           [redo_study],[study_text],
           [ignore])])
 
+check_rexp_h([test_program 'broken[(]re' anything match filter],[10],[ignore],[ignore])
+check_rexp_h([test_program 'broken[(]re' anything search filter],[10],[ignore],[ignore])
+
+check_rexp_h([test_program haystack needle match filter],[20],[ignore],[ignore])
+check_rexp_h([test_program haystack hay match filter],[20],[ignore],[ignore])
+
+check_rexp_h([test_program 'hay(stack)?' hay match filter],[0],
+[0: 0 3 |hay|
+1: -1 -1 |(NULL)|
+2: -1 -1 |(NULL)|
+],[stderr_text(filter)])
+
+check_rexp_h([test_program hay haystack match filter],[0],
+[0: 0 3 |hay|
+1: -1 -1 |(NULL)|
+],[stderr_text(filter)])
+
+check_rexp_h([test_program '((hay)(stack){2})' haystackstack match filter],[0],
+[0: 0 13 |haystackstack|
+1: 0 13 |haystackstack|
+2: 0 3 |hay|
+3: 8 13 |stack|
+4: -1 -1 |(NULL)|
+],[stderr_text(filter)])
+
+check_rexp_h([test_program haystack needle search filter],[20],[ignore],[ignore])
+check_rexp_h([test_program haystack hay search filter],[20],[ignore],[ignore])
+
+check_rexp_h([test_program 'hay(stack)?' hay search filter],[0],
+[0: 0 3 |hay|
+1: -1 -1 |(NULL)|
+2: -1 -1 |(NULL)|
+],[stderr_text(filter)])
+
+check_rexp_h([test_program hay haystack search filter],[0],
+[0: 0 3 |hay|
+1: -1 -1 |(NULL)|
+],[stderr_text(filter)])
+
+check_rexp_h([test_program '((hay)(stack){2})' haystackstack search filter],[0],
+[0: 0 13 |haystackstack|
+1: 0 13 |haystackstack|
+2: 0 3 |hay|
+3: 8 13 |stack|
+4: -1 -1 |(NULL)|
+],[stderr_text(filter)])
+
 check_rexp_h([test_program haystack Xneedle match filter],[20],[ignore],[ignore])
 check_rexp_h([test_program haystack Xhay match filter],[20],[ignore],[ignore])
 check_rexp_h([test_program 'hay(stack)?' Xhay match filter],[20],[ignore],[ignore])
