@@ -57,6 +57,10 @@ installcheck-local: atconfig atlocal $(TESTSUITE)
 clean-local:
 	test ! -f '$(TESTSUITE)' || $(SHELL) '$(TESTSUITE)' --clean
 
+check-local: override TESTSUITEFLAGS += DOING_INSTALLCHECK=no
+
+installcheck-local: override TESTSUITEFLAGS += -k '!unit' DOING_INSTALLCHECK=yes
+
 AUTOM4TE = $(SHELL) $(srcdir)/build-aux/missing --run autom4te
 AUTOTEST = $(AUTOM4TE) --language=autotest
 $(TESTSUITE): $(srcdir)/testsuite.at $(srcdir)/package.m4 $(MY_AT_FILES)
