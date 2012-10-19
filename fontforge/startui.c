@@ -33,7 +33,6 @@
 #include <gfile.h>
 #include <gresource.h>
 #include <ustring.h>
-#include <ltdl.h>
 #include <time.h>
 #include <sys/time.h>
 #include <locale.h>
