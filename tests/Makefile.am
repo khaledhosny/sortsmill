@@ -57,9 +57,10 @@ installcheck-local: atconfig atlocal $(TESTSUITE)
 clean-local:
 	test ! -f '$(TESTSUITE)' || $(SHELL) '$(TESTSUITE)' --clean
 
-check-local: override TESTSUITEFLAGS += DOING_INSTALLCHECK=no
+check-local: override TESTSUITEFLAGS +=	DOING_INSTALLCHECK=no \
+	PYTHONPATH="$(abs_top_builddir)/pycontrib:$(abs_top_srcdir)/pycontrib"
 
-installcheck-local: override TESTSUITEFLAGS += -k '!unit' DOING_INSTALLCHECK=yes
+installcheck-local: override TESTSUITEFLAGS += DOING_INSTALLCHECK=yes
 
 AUTOM4TE = $(SHELL) $(srcdir)/build-aux/missing --run autom4te
 AUTOTEST = $(AUTOM4TE) --language=autotest

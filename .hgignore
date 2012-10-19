@@ -58,5 +58,7 @@ libltdl$
 Makefile$
 Makefile.in$
 
+^auxiliary/sfd_read_keywords.c$
+
 version.texi$
 stamp-vti$

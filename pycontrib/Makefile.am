@@ -28,10 +28,10 @@
 include $(top_srcdir)/mk/layout.am
 
 # FIXME: Maybe this should go in a separate package.
-dist_python_SCRIPTS = psMat.py
+dist_python_PYTHON = psMat.py
 
-nodist_pkgpythondata_SCRIPTS = site_init.py
-dist_pycontrib_SCRIPTS = __init__.py excepthook.py
+nodist_pkgpythondata_PYTHON = site_init.py
+dist_pycontrib_PYTHON = __init__.py excepthook.py
 
 extract_text = $(GAWK) ' \
 BEGIN { pattern = "^[[:space:]]*\#[[:space:]]*$1--[[:space:]]*(.*)[[:space:]]*" } \
@@ -41,3 +41,7 @@ $(top_srcdir)/doc/%.interface.texi: %.py
 	$(call extract_text,i) $< > $@
 
 extract-text: $(top_srcdir)/doc/psMat.interface.texi
+
+mostlyclean-local:
+	-rm -f $(builddir)/*.pyc $(builddir)/*.pyo
+	-rm -f $(srcdir)/*.pyc $(srcdir)/*.pyo
