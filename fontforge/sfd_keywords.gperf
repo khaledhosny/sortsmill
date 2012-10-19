@@ -61,11 +61,9 @@ struct sfd_keyword
 /* *INDENT-OFF* */
 
 /*
- * I imagine, perhaps incorrectly, that the "DEI:" keyword alludes to
- * a fraternity prank involving an inscription on the Voyager
- * spacecraft. Anyway, we, not enjoying being left in ignorance, but
- * accepting our fate, just read in the DEI field as a string to be
- * ignored later. -- Barry Schwartz
+ * I imagine, perhaps incorrectly, that the "DEI:" keyword is a
+ * fraternity prank. Anyway, we just read in the DEI field as a string
+ * to be ignored later. -- Barry Schwartz
  */
 
 %%
