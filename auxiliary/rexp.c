@@ -141,7 +141,13 @@ rexp_compile_once_opt (rexp_buffer_t *re_buf_ptr, const char *pattern,
         }
       pthread_mutex_unlock (&re_buf_ptr->mutex);
     }
-  return re_buf_ptr;
+
+  rexp_t re;
+  if (re_buf_ptr->pcre_ptr != NULL)
+    re = re_buf_ptr;
+  else
+    re = NULL;
+  return re;
 }
 
 rexp_t
