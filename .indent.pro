@@ -14,6 +14,7 @@
 -T uint32_t
 -T intptr_t
 -T uintptr_t
+-T SCM
 -T pthread_mutex_t
 -T cairo_t
 -T regoff_t

@@ -29,6 +29,22 @@
 
 #include <sfd_read.h>
 #include <rexp.h>
+#include <xgc.h>
+
+SCM
+get_sfd_line (SCM port, SCM continuation_allowed)
+{
+  SCM line = SCM_CAR (scm_read_line (port));
+  //  if (scm_is_true (continuation_allowed)
+  //      && scm_is_true (scm_string_suffix_p (
+}
+
+
+
+
+
+
+
 
 // Break a keyword pair into its two main parts. For example:
 //

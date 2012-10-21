@@ -31,6 +31,9 @@
 
 #include <config.h>
 
+#include <stdio.h>
+#include <libguile.h>
+
 struct sfd_keyword
 {
   int name;
@@ -41,6 +44,16 @@ const char *sfd_pool_string (int name);
 
 const struct sfd_keyword *sfd_keyword_lookup (const char *str,
                                               unsigned int len);
+
+
+
+SCM get_sfd_line (SCM port, SCM continuation_allowed);
+
+
+
+
+
+
 
 VISIBLE char *get_sfd_line_from_file (void *file);
 VISIBLE void sfd_to_scheme (char *(get_next_line) (void *), void *source_of_lines);
