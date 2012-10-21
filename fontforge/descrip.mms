@@ -40,7 +40,7 @@ fontforge_UIOBJECTS = alignment.obj,anchorsaway.obj,basedlg.obj,\
  searchview.obj,sftextfield.obj,showatt.obj,simplifydlg.obj,splashimage.obj,\
  startui.obj,statemachine.obj,tilepath.obj,transform.obj,ttfinstrsui.obj,uiutil.obj
 
-fontforge_UIOBJECTS1=windowmenu.obj,oflib.obj,deltaui.obj,unicoderange.obj,\
+fontforge_UIOBJECTS1=windowmenu.obj,deltaui.obj,unicoderange.obj,\
 	justifydlg.obj,ftdelta.obj,autowidth2dlg.obj
 
 fontforge.exe : $(fontforge_UIOBJECTS) $(fontforge_UIOBJECTS1) lff.opt xlib.opt\
@@ -261,7 +261,6 @@ ttfinstrsui.obj : ttfinstrsui.c
 clipui.obj : clipui.c
 layer2layer.obj : layer2layer.c
 basedlg.obj : basedlg.c
-oflib.obj : oflib.c
 ftdelta.obj : ftdelta.c
 autowidth2.obj : autowidth2.c
 woff.obj : woff.c

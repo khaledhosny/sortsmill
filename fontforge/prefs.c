@@ -111,8 +111,6 @@ extern int old_sfnt_flags;      /* in savefont.c */
 extern int old_ps_flags;        /* in savefont.c */
 extern int old_validate;        /* in savefontdlg.c */
 extern int old_fontlog;         /* in savefontdlg.c */
-extern char *oflib_username;    /* in savefontdlg.c */
-extern char *oflib_password;    /* in savefontdlg.c */
 extern int oldsystem;           /* in bitmapdlg.c */
 extern int preferpotrace;       /* in autotrace.c */
 extern int autotrace_ask;       /* in autotrace.c */
@@ -172,7 +170,6 @@ extern int ps_pointcnt;         /* from cvpalettes.c */
 extern float star_percent;      /* from cvpalettes.c */
 extern int home_char;           /* from fontview.c */
 extern int compact_font_on_open;        /* from fontview.c */
-extern int oflib_automagic_preview;     /* from oflib.c */
 extern int aa_pixelsize;        /* from anchorsaway.c */
 extern enum cvtools cv_b1_tool, cv_cb1_tool, cv_b2_tool, cv_cb2_tool;   /* cvpalettes.c */
 extern int show_kerning_pane_in_class;  /* kernclass.c */
@@ -738,12 +735,6 @@ N_("UseNewIndicScripts"), pr_bool, &use_second_indic_scripts, NULL, NULL,
   {
   "SaveFontLogAsk", pr_int, &old_fontlog, NULL, NULL, '\0', NULL, 1, NULL},
   {
-  "OFLibUsername", pr_string, &oflib_username, NULL, NULL, '\0', NULL, 1,
-      NULL},
-  {
-  "OFLibPassword", pr_string, &oflib_password, NULL, NULL, '\0', NULL, 1,
-      NULL},
-  {
   "DefaultSFNTflags", pr_int, &old_sfnt_flags, NULL, NULL, '\0', NULL, 1,
       NULL},
   {
@@ -811,9 +802,6 @@ N_("UseNewIndicScripts"), pr_bool, &use_second_indic_scripts, NULL, NULL,
   "FCDirPlacement", pr_int, &gfc_dirplace, NULL, NULL, '\0', NULL, 1, NULL},
   {
   "FCBookmarks", pr_string, &gfc_bookmarks, NULL, NULL, '\0', NULL, 1, NULL},
-  {
-  "OFLibAutomagicPreview", pr_int, &oflib_automagic_preview, NULL, NULL,
-      '\0', NULL, 1, NULL},
   {
   "DefaultMVWidth", pr_int, &mv_width, NULL, NULL, '\0', NULL, 1, NULL},
   {
