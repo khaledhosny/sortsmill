@@ -20,11 +20,13 @@
  (ice-9 optargs)
  (ice-9 rdelim)
  (ice-9 regex)
- (srfi srfi-69)
  )
 
 ;; FIXME: Get epsilon a better way, such as from the C library or GSL.
 (define epsilon 2.2204460492503131e-16)
+
+(define (fuzzy= a b)
+  (<= (abs (- a b)) (max (abs a) (abs b))))
 
 (define sfd-line-end-re
   (make-regexp "^[[:space:]]*$"))
@@ -104,9 +106,9 @@
 
 (define* (sfd-check-version version #:key port)
   (if (or
-       (<= (- (abs version) 1.0) epsilon)
-       (<= (- (abs version) 2.0) epsilon)
-       (<= (- (abs version) 3.0) epsilon))
+       (fuzzy= 1.0 epsilon)
+       (fuzzy= 2.0 epsilon)
+       (fuzzy= 3.0 epsilon))
       '()
       (throw 'unrecognized-sfd-version (list version (sfd-source-info port)))))
 
