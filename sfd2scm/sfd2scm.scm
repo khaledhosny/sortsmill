@@ -106,9 +106,9 @@
 
 (define* (sfd-check-version version #:key port)
   (if (or
-       (fuzzy= 1.0 epsilon)
-       (fuzzy= 2.0 epsilon)
-       (fuzzy= 3.0 epsilon))
+       (fuzzy= 1.0 version)
+       (fuzzy= 2.0 version)
+       (fuzzy= 3.0 version))
       '()
       (throw 'unrecognized-sfd-version (list version (sfd-source-info port)))))
 
