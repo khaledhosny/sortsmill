@@ -26,7 +26,7 @@
 (define epsilon 2.2204460492503131e-16)
 
 (define (fuzzy= a b)
-  (<= (abs (- a b)) (max (abs a) (abs b))))
+  (<= (abs (- a b)) (* (max (abs a) (abs b)) epsilon)))
 
 (define sfd-line-end-re
   (make-regexp "^[[:space:]]*$"))
