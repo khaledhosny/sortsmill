@@ -76,7 +76,6 @@ fontforge/nonlineartrans.c
 fontforge/nonlineartransui.c
 fontforge/noprefs.c
 fontforge/nowakowskittfinstr.c
-fontforge/oflib.c
 fontforge/openfontdlg.c
 fontforge/othersubrs.c
 fontforge/palmfonts.c
