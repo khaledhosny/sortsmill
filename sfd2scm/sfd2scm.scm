@@ -54,8 +54,8 @@
      ((eof-object? line) line)
      ((and continuation-allowed (string-suffix? "\\" line))
       (string-append (string-drop-right line 1)
-                      (sfd-read-line port #:continuation-allowed
-                                     continuation-allowed)))
+                     (sfd-read-line port #:continuation-allowed
+                                    continuation-allowed)))
      (else line))))
 
 ;; Convert "SplineFontDB:" to 'splinefontdb, etc.
