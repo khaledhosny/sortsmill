@@ -7,7 +7,7 @@ m4_defun([check_rexp_h],
 AT_SETUP([$1])
 AT_KEYWORDS([auxiliary rexp.h unit rexp regex re regexp])
 AT_SKIP_IF([test x${DOING_INSTALLCHECK} = xyes])
-AT_SKIP_IF([test x"${posix_locale}" = x])
+AT_SKIP_IF([test x"${posix_locale}" = x -o x"${posix_locale}" = xnone])
 AT_CHECK_UNQUOTED([LC_ALL="${posix_locale}" "${abs_builddir}"/$1],[$2],[$3],[$4])
 AT_CLEANUP
 ])
@@ -17,7 +17,7 @@ m4_defun([check_rexp_h_utf8],
 AT_SETUP([$1])
 AT_KEYWORDS([auxiliary rexp.h unit rexp regex re regexp])
 AT_SKIP_IF([test x${DOING_INSTALLCHECK} = xyes])
-AT_SKIP_IF([test x"${utf8_locale}" = x])
+AT_SKIP_IF([test x"${utf8_locale}" = xnone])
 AT_CHECK_UNQUOTED([LC_ALL="${utf8_locale}" "${abs_builddir}"/$1],[$2],[$3],[$4])
 AT_CLEANUP
 ])
