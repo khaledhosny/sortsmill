@@ -40,7 +40,7 @@ endif GRAPHICAL_USER_INTERFACE
 SUBDIRS += fontforge po scheme doc htdocs tests
 
 if THE_PROGRAMS
-SUBDIRS += sfd2scm
+#SUBDIRS += sfd2scm
 endif THE_PROGRAMS
 
 if PYTHON_SCRIPTING
