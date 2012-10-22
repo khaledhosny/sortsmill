@@ -85,16 +85,30 @@
             (throw 'expected-a-keyword (sfd-source-info port))
             #f))))
 
-;; Return either a list (real-value start-pos end-pos), or #f if no
-;; real number is found.
+;; Return either a list (real-value real-string start-pos end-pos), or
+;; #f if no real number is found.
 (define* (sfd-get-real line start #:key port (mandatory #t))
   (let ((m (regexp-exec sfd-real-re line start)))
     (if m
         (list (string->number (match:substring m 1))
+              (match:substring m 1)
               (match:start m 1)
               (match:end m 1))
         (if mandatory
             (throw 'expected-a-real (sfd-source-info port))
+            #f))))
+
+;; Return either a list (integer-value integer-string start-pos
+;; end-pos), or #f if no integer number is found.
+(define* (sfd-get-integer line start #:key port (mandatory #t))
+  (let ((m (regexp-exec sfd-integer-re line start)))
+    (if m
+        (list (string->number (match:substring m 1))
+              (match:substring m 1)
+              (match:start m 1)
+              (match:end m 1))
+        (if mandatory
+            (throw 'expected-an-integer (sfd-source-info port))
             #f))))
 
 (define* (sfd-get-line-end line start #:key port (mandatory #t))
@@ -112,57 +126,108 @@
       '()
       (throw 'unrecognized-sfd-version (list version (sfd-source-info port)))))
 
-(define* (sfd-get-real-field-value line start #:key key port values)
-  (let ((field-value
+(define sfd-empty-contents
+  (list (list 'fields)))
+
+(define sfd-add-field contents key value
+  (let ((old-fields (assq 'fields contents)))
+    (assq! contents 'fields (acons key value old-fields))))
+
+(define* (sfd-read-real-field contents key line start #:key port)
+  (let ((field-str
          (match (sfd-get-real line start #:port port)
-                ((value _ end)
+                ((_ str _ end)
                  (sfd-get-line-end line end #:port port)
-                 value))))
-    (cons (cons key field-value) values)))
+                 str))))
+    (sfd-add-field contents key field-str)))
+
+(define* (sfd-read-integer-field contents key line start #:key port)
+  (let ((field-str
+         (match (sfd-get-integer line start #:port port)
+                ((_ str _ end)
+                 (sfd-get-line-end line end #:port port)
+                 str))))
+    (sfd-add-field contents key field-str)))
 
 (define* (sfd-read-contents port version
-                            #:key (values (list)))
+                            #:optional (contents sfd-empty-contents))
   (let ((line (sfd-read-line port)))
     (if (eof-object? line)
-        values
+        (cons 'fields (reverse fields))
         (match (sfd-get-keyword line #:port port
                                 #:mandatory #f) ;; FIXME: this is temporary.
-               ((key start end)
-                (match key
-                       ((or 'italicangle
-                            'strokewidth
-                            'tilemargin
-                            'underlineposition
-                            'underlinewidth
-                            'cidversion
-                            'ufoascent
-                            'ufodescent)
-                        (let ((v (sfd-get-real-field-value line end
-                                                           #:key key
-                                                           #:port port
-                                                           #:values values)))
-                          (sfd-read-contents port version #:values v)))
+               (((and
+                  (or 'italicangle
+                      'strokewidth
+                      'tilemargin
+                      'underlineposition
+                      'underlinewidth
+                      'cidversion
+                      'ufoascent
+                      'ufodescent)
+                  key) start end)
+                (sfd-read-contents port version
+                                   (sfd-read-real-field contents
+                                                        key line end
+                                                        #port port)))
 
-                       (_ (sfd-read-contents port version #:values values)) ;; FIXME: this is temporary.
-                       ))
-               (_ (sfd-read-contents port version #:values values)) ;; FIXME: this is temporary.
-               ))))
+               (((and
+                  (or 'ascent
+                      'descent
+
+                      'hheadascent
+                      'hheadaoffset
+                      'hheaddescent
+                      'hheaddoffset
+                      'os2typoascent
+                      'os2typoaoffset
+                      'os2typodescent
+                      'os2typodoffset
+                      'os2winascent
+                      'os2winaoffset
+                      'os2windescent
+                      'os2windoffset
+
+                      'os2subxsize
+                      'os2subysize
+                      'os2subxoff
+                      'os2subyoff
+                      'os2supxsize
+                      'os2supysize
+                      'os2supxoff
+                      'os2supyoff
+                      'os2strikeysize
+                      'os2strikeypos
+                      )
+                  key) start end)
+                (sfd-read-contents port version
+                                   (sfd-read-integer-field contents
+                                                           key line end
+                                                           #port port)))
+
+               (_ (sfd-read-contents port version contents)) ;; FIXME: this is temporary.
+               )
+        )))
 
 (define* (sfd-read #:optional (port (current-input-port)))
   (let ((line (sfd-read-line port)))
     (match (sfd-get-keyword line #:port port)
            (('splinefontdb start end)
             (match (sfd-get-real line end #:port port)
-                   ((version start end)
+                   ((version version-string start end)
                     (sfd-get-line-end line end #:port port)
                     (sfd-check-version version #:port port)
                     (let ((contents (sfd-read-contents port version)))
-                      (list 'splinefontdb version contents)))))
+                      (list 'splinefontdb
+                            (list '@ (list 'version version-string))
+                            contents)))))
 
            (_ (throw 'expected-sfd (sfd-source-info port))))))
 
 
 
 
+(use-modules (ice-9 pretty-print))
+
 (with-input-from-file "Fanwood-Italic.sfd"
-  (lambda () (write (sfd-read))))
+  (lambda () (pretty-print (sfd-read))))
