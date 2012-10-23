@@ -27,9 +27,9 @@
 
 include $(top_srcdir)/mk/flags.am
 
-bin_PROGRAMS = sfd2scm
-sfd2scm_SOURCES = sfd2scm.c
+lib_LTLIBRARIES = libguile-sortsmillff_iconv.la
 
-LDADD = $(top_builddir)/auxiliary/libsortsmillff_aux.la	\
-	$(top_builddir)/lib/libgnu.la
-AM_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS)
+libguile_sortsmillff_iconv_la_SOURCES = guile_iconv.c
+libguile_sortsmillff_iconv_la_LIBADD = $(top_builddir)/lib/libgnu.la
+
+AM_LDFLAGS = -module $(MY_CFLAGS) $(MY_LIBS)

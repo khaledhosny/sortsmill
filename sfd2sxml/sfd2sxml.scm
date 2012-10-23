@@ -22,6 +22,9 @@
  (ice-9 regex)
  )
 
+;; FIXME: Hide this in a module.
+(load-extension "libguile-sortsmillff_iconv" "init_guile_iconv")
+
 ;; FIXME: Get epsilon a better way, such as from the C library or GSL.
 (define epsilon 2.2204460492503131e-16)
 
@@ -43,7 +46,12 @@
                               "[[:digit:]]+\\.?[[:digit:]]*([Ee][-+]?[[:digit:]]+)?"
                               "|[-+]?\\.?[[:digit:]]+([Ee][-+]?[[:digit:]]+)?)")))
 
+;; A string going to the end of the line, with leading and trailing
+;; space trimmed away.
 (define sfd-string-to-eol-re (make-regexp "^[[:space:]]*(.*[^[:space:]]|)"))
+
+;; A UTF-7 string surrounded by double quotes.
+(define sfd-utf7-string-re (make-regexp "^[[:space:]]*\"([^\"]*)\""))
 
 ;; Convert "SplineFontDB:" to 'splinefontdb, etc.
 (define (sfd-string-to-symbol s)
@@ -111,6 +119,19 @@
           (match:start m 1)
           (match:end m 1))))
 
+(define* (sfd-get-utf7-string line start #:key port (mandatory #f))
+  (let ((m (regexp-exec sfd-utf7-string-re line start)))
+    (if m
+        (list (embedded-utf7->string (match:substring m 1))
+;              (match:substring m 1)
+              (match:substring m 1)
+              (match:start m 1)
+              (match:end m 1))
+        (if mandatory
+            (throw 'expected-a-string-utf7-encoded
+                   (sfd-source-info port))
+            #f))))
+
 (define* (sfd-get-line-end line start #:key port (mandatory #t))
   (if (regexp-exec sfd-line-end-re line start)
       #t
@@ -162,6 +183,14 @@
          (match (sfd-get-string-to-eol line start #:port port)
                 ((str _ end)
                  str))))
+    (sfd-add-field contents key field-str)))
+
+(define* (sfd-read-utf7-string-field contents key line start #:key port)
+  (let ((field-str
+         (match (sfd-get-utf7-string line start #:port port)
+                ((utf8-str _ _ end)
+                 (sfd-get-line-end line (+ end 1) #:port port)
+                 utf8-str))))
     (sfd-add-field contents key field-str)))
 
 ;; Replace \n with a newline and \\ with a single backslash.
@@ -308,6 +337,22 @@
                                                  key line end
                                                  #:port port)))
 
+         ;; UTF-7 strings.
+         (((and
+            (or 'comment
+                'ucomments
+                'fontlog
+                'woffmetadata
+                )
+            key)
+           start end)
+
+          (sfd-read-contents
+           port version
+           (sfd-read-utf7-string-field contents
+                                       key line end
+                                       #:port port)))
+
          ;; Everything else.
          (_ (sfd-read-contents port version contents)) ;; FIXME: this is temporary.
          ))))
@@ -343,7 +388,8 @@
 (with-fluids
  ((%default-port-encoding "UTF-8")
   (%default-port-conversion-strategy 'substitute))
- (with-input-from-file "Fanwood-Italic.sfd"
+; (with-input-from-file "Fanwood-Italic.sfd"
+ (with-input-from-file "GoudyBookltr1911-Titling.sfd"
    (lambda ()
      (let ((sfd (sfd-read)))
        (pretty-print sfd)

@@ -1,8 +1,8 @@
 dnl -*- autoconf -*-
 
 
-dnl FONTFORGE_ICONV_CHOOSE_ENCODING
-dnl -------------------------------
+dnl FONTFORGE_ICONV_CHOOSE_ENCODING(var, encoding1 encoding2 ...)
+dnl -------------------------------------------------------------
 AC_DEFUN([FONTFORGE_ICONV_CHOOSE_ENCODING],
 [
     if test x"[$]{$1}" != x; then
@@ -27,8 +27,8 @@ to an appropriate name. Consider using GNU libiconv instead.
 ])
 
 
-dnl FONTFORGE_ICONV_TRY_ENCODINGS
-dnl -----------------------------
+dnl FONTFORGE_ICONV_TRY_ENCODINGS(var, encoding1 encoding2 ...)
+dnl ----------------------------------------xs-------------------
 AC_DEFUN([FONTFORGE_ICONV_TRY_ENCODINGS],
 [
 __encoding=""
@@ -41,7 +41,7 @@ m4_foreach_w([__enc],[$2],
          fi
       fi
    ])
-AC_CACHE_CHECK([a name iconv_open(3) recognizes for $1],
+AC_CACHE_CHECK([names iconv_open(3) might recognize for $1],
                [AS_TR_SH(fontforge_cv_lib_iconv_open_name_$1)],
 [
    AS_TR_SH(fontforge_cv_lib_iconv_open_name_$1)="${__encoding}"
@@ -51,8 +51,8 @@ $1_STRING="\"${AS_TR_SH(fontforge_cv_lib_iconv_open_name_$1)}\""
 ])
 
 
-dnl FONTFORGE_ICONV_SUPPORTS_ENCODING
-dnl ---------------------------------
+dnl FONTFORGE_ICONV_SUPPORTS_ENCODING(encoding)
+dnl -------------------------------------------
 dnl Test if iconv_open(3) recognizes a given encoding.
 AC_DEFUN([FONTFORGE_ICONV_SUPPORTS_ENCODING],
 [
@@ -76,4 +76,53 @@ return 0;
 AC_LANG_POP
 CFLAGS="${__cflags}"
 LIBS="${__libs}"
+])
+
+
+dnl FONTFORGE_ICONV_TOCODE_SUFFIX(macro-name, suffix, tocode, fromcode)
+dnl -------------------------------------------------------------------
+dnl Test if iconv_open(3) recognizes a tocode-suffix, such as
+dnl "//TRANSLIT" or "//IGNORE", and define programming items
+dnl accordingly
+AC_DEFUN([FONTFORGE_ICONV_TOCODE_SUFFIX],
+[
+AM_ICONV
+__cflags="${CFLAGS} ${INCICONV}"
+__libs="${LIBS} ${LIBICONV}"
+AC_LANG_PUSH([C])
+AC_CACHE_CHECK([whether iconv_open(3) recognizes the suffix $2],
+               [AS_TR_SH([fontforge_cv_lib_iconv_open_suffix_$1])],
+[AC_RUN_IFELSE(
+        [AC_LANG_PROGRAM(
+                [#include <iconv.h>],
+                [
+if (iconv_open("$3$2", "$4") == -1) return 1;
+return 0;
+])],
+        [AS_TR_SH([fontforge_cv_lib_iconv_open_suffix_$1])=yes],
+        [AS_TR_SH([fontforge_cv_lib_iconv_open_suffix_$1])=no])])
+AC_LANG_POP
+CFLAGS="${__cflags}"
+LIBS="${__libs}"
+
+if test x"${AS_TR_SH([fontforge_cv_lib_iconv_open_suffix_$1])}" = xyes; then
+   __macro='$2'
+   __string_macro='"$2"'
+else
+   __macro=
+   __string_macro='""'
+fi
+
+AC_DEFINE_UNQUOTED([$1],[[$]{__macro}],
+   [Define as $2 if that suffix is recognized by iconv_open(3);
+    otherwise define as empty.])
+AC_DEFINE_UNQUOTED([$1_STRING],[[$]{__string_macro}],
+   [Define as "$2" if that suffix is recognized by iconv_open(3);
+    otherwise define as "".])
+
+AC_SUBST([$1],[[$]{__macro}])
+AC_SUBST([$1_STRING],[[$]{__string_macro}])
+
+$1="${__macro}"
+$1_STRING="${__string_macro}"
 ])
