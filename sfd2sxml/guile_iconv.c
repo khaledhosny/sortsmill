@@ -59,7 +59,8 @@ scm_embedded_utf7_to_string (SCM str)
   if (descriptor != (iconv_t) (-1))
     {
       size_t utf7_length = strlen (utf7);
-      size_t utf8_length = utf7_length * 6;
+      size_t utf8_length = utf7_length * 6; /* FIXME: What is a good
+					       length here? */
       utf8 = scm_gc_malloc_pointerless ((utf8_length + 1) * sizeof (char),
                                         "string");
       memset (utf8, 0, (utf8_length + 1) * sizeof (char));
