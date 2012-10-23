@@ -35,11 +35,18 @@
 // Export symbols that are very unlikely to conflict, taking advantage
 // of Guile’s dependence on ltdl. See "Using libltdl" in the libtool
 // manual to learn how this method works.
-#define init_guile_iconv libguile_sortsmillff_iconv_LTX_init_guile_iconv
+//
+// We assume these very long symbol names can be handled.
+//
+#define init_guile_sortsmillff_iconv \
+  libguile_sortsmillff_iconv_LTX_init_guile_sortsmillff_iconv
+#define scm_embedded_utf7_to_string \
+  libguile_sortsmillff_iconv_LTX_scm_embedded_utf7_to_string
 
-VISIBLE void init_guile_iconv (void);
+VISIBLE void init_guile_sortsmillff_iconv (void);
+VISIBLE SCM scm_embedded_utf7_to_string (SCM str);
 
-static SCM
+SCM
 scm_embedded_utf7_to_string (SCM str)
 {
   char *utf8;
@@ -90,7 +97,7 @@ scm_embedded_utf7_to_string (SCM str)
 }
 
 void
-init_guile_iconv (void)
+init_guile_sortsmillff_iconv (void)
 {
   (void) scm_c_define_gsubr ("embedded-utf7->string", 1, 0, 0,
                              scm_embedded_utf7_to_string);
