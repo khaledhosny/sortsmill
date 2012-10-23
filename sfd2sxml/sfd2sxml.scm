@@ -43,20 +43,7 @@
                               "[[:digit:]]+\\.?[[:digit:]]*([Ee][-+]?[[:digit:]]+)?"
                               "|[-+]?\\.?[[:digit:]]+([Ee][-+]?[[:digit:]]+)?)")))
 
-;; Read a line of input, with optional backslash-newline processing:
-;;
-;; (sfd-read-line [port] [#:continuation-allowed true-or-false])
-;;
-(define* (sfd-read-line #:optional (port (current-input-port))
-                        #:key (continuation-allowed #t))
-  (let ((line (read-line port)))
-    (cond
-     ((eof-object? line) line)
-     ((and continuation-allowed (string-suffix? "\\" line))
-      (string-append (string-drop-right line 1)
-                     (sfd-read-line port #:continuation-allowed
-                                    continuation-allowed)))
-     (else line))))
+(define sfd-string-to-eol-re (make-regexp "^[[:space:]]*(.*[^[:space:]]|)"))
 
 ;; Convert "SplineFontDB:" to 'splinefontdb, etc.
 (define (sfd-string-to-symbol s)
@@ -111,6 +98,19 @@
             (throw 'expected-an-integer (sfd-source-info port))
             #f))))
 
+;; Return a list (string start-pos end-pos). The string has leading
+;; and trailing spaces trimmed. (NOTE: I believe the old FontForge
+;; parser does not trim trailing spaces, so you might get different
+;; results in some cases. But SFD was supposed to be safe for e-mail,
+;; I believe, and that means no significant trailing spaces.) If the
+;; string is empty, start-pos and end-pos will both indicate the end
+;; of the line.
+(define* (sfd-get-string-to-eol line start #:key port (mandatory #f))
+  (let ((m (regexp-exec sfd-string-to-eol-re line start)))
+    (list (match:substring m 1)
+          (match:start m 1)
+          (match:end m 1))))
+
 (define* (sfd-get-line-end line start #:key port (mandatory #t))
   (if (regexp-exec sfd-line-end-re line start)
       #t
@@ -118,6 +118,7 @@
           (throw 'expected-end-of-line (sfd-source-info port))
           #f)))
 
+;; SFD version 4.0 is not supported, due to prejudice against it.
 (define* (sfd-check-version version #:key port)
   (if (or
        (fuzzy= 1.0 version)
@@ -156,85 +157,195 @@
                  str))))
     (sfd-add-field contents key field-str)))
 
+(define* (sfd-read-string-to-eol-field contents key line start #:key port)
+  (let ((field-str
+         (match (sfd-get-string-to-eol line start #:port port)
+                ((str _ end)
+                 str))))
+    (sfd-add-field contents key field-str)))
+
+;; Replace \n with a newline and \\ with a single backslash.
+;; The current implementation drops all other backslashes.
+(define (sfd-process-escapes s)
+  (let ((i (string-index  s #\\)))
+    (if i
+        (string-append
+         (string-take s i)
+         (let ((s1 (string-drop s (+ i 1))))
+           (cond
+            ((string-prefix? "n" s1)
+             (string-append "\n" (sfd-process-escapes
+                                  (string-drop s1 1))))
+            ((string-prefix? "\\" s1)
+             (string-append "\\" (sfd-process-escapes
+                                  (string-drop s1 1))))
+            (else (sfd-process-escapes s1)))))
+        s)))
+
+(define* (sfd-read-escaped-string-to-eol-field contents key line start
+                                               #:key port)
+  (let ((field-str
+         (match (sfd-get-string-to-eol line start #:port port)
+                ((str _ end)
+                 (sfd-process-escapes str)))))
+    (sfd-add-field contents key field-str)))
+
 (define* (sfd-read-contents port version
                             #:optional (contents sfd-empty-contents))
-  (let ((line (sfd-read-line port)))
+  (let ((line (read-line port)))
     (if (eof-object? line)
+
         (sfd-reverse-fields contents)
-        (match (sfd-get-keyword line #:port port
-                                #:mandatory #f) ;; FIXME: this is temporary.
-               (((and
-                  (or 'italicangle
-                      'strokewidth
-                      'tilemargin
-                      'underlineposition
-                      'underlinewidth
-                      'cidversion
-                      'ufoascent
-                      'ufodescent)
-                  key) start end)
-                (sfd-read-contents port version
-                                   (sfd-read-real-field contents
-                                                        key line end
-                                                        #:port port)))
 
-               (((and
-                  (or 'ascent
-                      'descent
+        (match
+         (sfd-get-keyword line #:port port
+                          #:mandatory #f) ;; FIXME: this is temporary.
 
-                      'hheadascent
-                      'hheadaoffset
-                      'hheaddescent
-                      'hheaddoffset
-                      'os2typoascent
-                      'os2typoaoffset
-                      'os2typodescent
-                      'os2typodoffset
-                      'os2winascent
-                      'os2winaoffset
-                      'os2windescent
-                      'os2windoffset
+         ;; Reals.
+         (((and
+            (or 'italicangle
+                'strokewidth
+                'tilemargin
+                'underlineposition
+                'underlinewidth
+                'cidversion
+                'ufoascent
+                'ufodescent)
+            key)
+           start end)
 
-                      'os2subxsize
-                      'os2subysize
-                      'os2subxoff
-                      'os2subyoff
-                      'os2supxsize
-                      'os2supysize
-                      'os2supxoff
-                      'os2supyoff
-                      'os2strikeysize
-                      'os2strikeypos
-                      )
-                  key) start end)
-                (sfd-read-contents port version
-                                   (sfd-read-integer-field contents
-                                                           key line end
-                                                           #:port port)))
+          (sfd-read-contents
+           port version
+           (sfd-read-real-field contents
+                                key line end
+                                #:port port)))
 
-               (_ (sfd-read-contents port version contents)) ;; FIXME: this is temporary.
-               )
-        )))
+         ;; Integers.
+         (((and
+            (or 'ascent
+                'descent
+
+                'hheadascent
+                'hheadaoffset
+                'hheaddescent
+                'hheaddoffset
+                'os2typoascent
+                'os2typoaoffset
+                'os2typodescent
+                'os2typodoffset
+                'os2winascent
+                'os2winaoffset
+                'os2windescent
+                'os2windoffset
+
+                'os2subxsize
+                'os2subysize
+                'os2subxoff
+                'os2subyoff
+                'os2supxsize
+                'os2supysize
+                'os2supxoff
+                'os2supyoff
+                'os2strikeysize
+                'os2strikeypos
+
+                'antialias
+                'displaylayer
+                'displaysize
+                'extremabound
+                'fittoem
+                'isextendedshape
+                'linegap
+                'macstyle
+                'onlybitmaps
+                'pfmfamily
+                'pfmweight
+                'topencoding
+                'ttfweight
+                'ttfwidth
+                'vlinegap
+                'widthseparation
+                )
+            key)
+           start end)
+
+          (sfd-read-contents
+           port version
+           (sfd-read-integer-field contents
+                                   key line end
+                                   #:port port)))
+
+         ;; Strings.
+         (((and
+            (or 'familyname
+                'fontname
+                'fullname
+                'weight
+                'defaultbasefilename
+                'version
+                'fondname
+                )
+            key)
+           start end)
+
+          (sfd-read-contents
+           port version
+           (sfd-read-string-to-eol-field contents
+                                         key line end
+                                         #:port port)))
+
+         ;; Strings with escaped newlines: \n
+         (((and
+            (or 'copyright
+                'comments
+                )
+            key)
+           start end)
+
+          (sfd-read-contents
+           port version
+           (sfd-read-escaped-string-to-eol-field contents
+                                                 key line end
+                                                 #:port port)))
+
+         ;; Everything else.
+         (_ (sfd-read-contents port version contents)) ;; FIXME: this is temporary.
+         ))))
 
 (define* (sfd-read #:optional (port (current-input-port)))
-  (let ((line (sfd-read-line port)))
-    (match (sfd-get-keyword line #:port port)
-           (('splinefontdb start end)
-            (match (sfd-get-real line end #:port port)
-                   ((version version-string start end)
-                    (sfd-get-line-end line end #:port port)
-                    (sfd-check-version version #:port port)
-                    (let ((contents (sfd-read-contents port version)))
+  (let ((line (read-line port)))
+    (match
+     (sfd-get-keyword line #:port port)
+     (('splinefontdb start end)
+      (match (sfd-get-real line end #:port port)
+             ((version version-string start end)
+              (sfd-get-line-end line end #:port port)
+              (sfd-check-version version #:port port)
+              (let ((contents (sfd-read-contents port version)))
+                (list '*TOP*
+                      '(*PI* xml "version=\"1.0\" encoding=\"UTF-8\"")
                       (cons 'splinefontdb
                             (cons (list '@ (list 'version version-string))
-                                  contents))))))
+                                  contents)))))))
 
-           (_ (throw 'expected-sfd (sfd-source-info port))))))
-
-
+     (_ (throw 'expected-sfd (sfd-source-info port))))))
 
 
-(use-modules (ice-9 pretty-print))
 
-(with-input-from-file "Fanwood-Italic.sfd"
-  (lambda () (pretty-print (sfd-read))))
+
+
+
+
+(use-modules
+ (ice-9 pretty-print)
+ (sxml simple))
+
+(with-fluids
+ ((%default-port-encoding "UTF-8")
+  (%default-port-conversion-strategy 'substitute))
+ (with-input-from-file "Fanwood-Italic.sfd"
+   (lambda ()
+     (let ((sfd (sfd-read)))
+       (pretty-print sfd)
+;       (sxml->xml sfd)
+       ))))
