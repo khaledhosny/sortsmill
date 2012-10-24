@@ -49,9 +49,7 @@ struct openfilefilters def_font_filters[] = {
    "pfb,"
    "pt3,"
    "t42," "sfd," "ttf," "bdf," "otf," "otb," "cff," "cef," "gai," "woff,"
-#ifndef _NO_LIBXML
    "svg," "ufo,"
-#endif
    "pf3,"
    "ttc,"
    "gsf,"
@@ -66,9 +64,7 @@ struct openfilefilters def_font_filters[] = {
    "*.{"
    "pfa,"
    "pfb," "pt3," "t42," "sfd," "ttf," "otf," "cff," "cef," "gai," "woff,"
-#ifndef _NO_LIBXML
    "svg," "ufo,"
-#endif
    "pf3,"
    "ttc,"
    "gsf,"
@@ -91,9 +87,7 @@ struct openfilefilters def_font_filters[] = {
   {N_("Type1"), "*.{pfa,pfb,gsf,cid}{.gz,.Z,.bz2,.lzma,}"},
   {N_("Type2"), "*.{otf,cef,cff,gai}{.gz,.Z,.bz2,.lzma,}"},
   {N_("Type3"), "*.{pf3,pt3}{.gz,.Z,.bz2,.lzma,}"},
-#ifndef _NO_LIBXML
   {N_("SVG"), "*.svg{.gz,.Z,.bz2,.lzma,}"},
-#endif
   {N_("FontForge's SFD"), "*.sfd{.gz,.Z,.bz2,.lzma,}"},
   {N_("Backup SFD"), "*.sfd~"},
   {N_("Extract from PDF"), "*.pdf{.gz,.Z,.bz2,.lzma,}"},

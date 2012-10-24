@@ -3441,11 +3441,9 @@ static void edlistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
 	    mi->ti.disabled = i==-1 ||
 		(!CopyContainsSomething() &&
 		    !GDrawSelectionHasType(mv->gw,sn_clipboard,"image/png") &&
-#ifndef _NO_LIBXML
 		    !GDrawSelectionHasType(mv->gw,sn_clipboard,"image/svg+xml") &&
 		    !GDrawSelectionHasType(mv->gw,sn_clipboard,"image/svg-xml") &&
 		    !GDrawSelectionHasType(mv->gw,sn_clipboard,"image/svg") &&
-#endif
 		    !GDrawSelectionHasType(mv->gw,sn_clipboard,"image/bmp") &&
 		    !GDrawSelectionHasType(mv->gw,sn_clipboard,"image/ps") &&
 		    !GDrawSelectionHasType(mv->gw,sn_clipboard,"image/eps"));

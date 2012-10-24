@@ -889,21 +889,6 @@ return( NULL );
 return( NULL );
 }
 
-#ifdef _NO_LIBXML
-int HasUFO(void) {
-return( false );
-}
-
-SplineFont *SFReadUFO(char *filename, int flags) {
-return( NULL );
-}
-
-SplineSet *SplinePointListInterpretGlif(char *filename,char *memory, int memlen,
-	int em_size,int ascent,int is_stroked) {
-return( NULL );
-}
-#else
-
 #ifndef HAVE_ICONV_H
 # undef iconv
 # undef iconv_t
@@ -2011,4 +1996,3 @@ return( ss );
 int HasUFO(void) {
 return( libxml_init_base());
 }
-#endif

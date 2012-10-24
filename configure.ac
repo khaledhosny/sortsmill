@@ -88,7 +88,6 @@ AC_SUBST([GUILE_API])
 freetype_url="http://www.freetype.org/"
 giflib_url="http://giflib.sourceforge.net/"
 libpng_url="http://www.libpng.org/"
-libxml_url="http://www.xmlsoft.org/"
 libspiro_url="http://libspiro.sourceforge.net/"
 libunicodenames_url="https://github.com/sortsmill/libunicodenames"
 numpy_url="http://numpy.scipy.org/"
@@ -212,6 +211,7 @@ FONTFORGE_LIBPCRE
 PKG_CHECK_MODULES([ZLIB],[zlib])
 PKG_CHECK_MODULES([GLIB],[glib-2.0 >= 2.6])
 PKG_CHECK_MODULES([LIBPNG],[libpng])
+PKG_CHECK_MODULES([LIBXML],[libxml-2.0])
 PKG_CHECK_MODULES([GUILE],[guile-${GUILE_API}])
 
 PKG_CHECK_MODULES([BOEHM_GC],[bdw-gc >= 7.1])
@@ -234,7 +234,6 @@ AC_ARG_VAR([FREETYPE_SOURCE],
 FONTFORGE_ARG_WITH_GIFLIB
 FONTFORGE_ARG_WITH_LIBJPEG
 FONTFORGE_ARG_WITH_LIBTIFF
-FONTFORGE_ARG_WITH_LIBXML
 FONTFORGE_ARG_WITH_LIBSPIRO
 FONTFORGE_ARG_WITH_LIBUNICODENAMES
 
