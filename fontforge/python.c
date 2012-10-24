@@ -28,8 +28,6 @@
  */
 /*			   Python Interface to FontForge		      */
 
-#include <config.h>
-
 #ifndef _NO_PYTHON
 #include "Python.h"
 #include "structmember.h"
@@ -41,6 +39,7 @@
 #include "flaglist.h"
 #include "scripting.h"
 #include "scriptfuncs.h"
+#include "gio.h"
 #include <math.h>
 #include <unistd.h>
 #include <sys/types.h>
@@ -7486,7 +7485,7 @@ static struct flaglist import_ps_flags[] = {
 static PyObject *PyFFGlyph_import(PyObject *self, PyObject *args) {
     SplineChar *sc = ((PyFF_Glyph *) self)->sc;
     char *filename;
-    char *locfilename = NULL, *pt;
+    char *locfilename = NULL, *pt, *mime;
     PyObject *flags=NULL;
 
     if ( !PyArg_ParseTuple(args,"es|O","UTF-8",&filename, &flags) )
@@ -7502,9 +7501,10 @@ return( NULL );
     }
 
     pt = strrchr(locfilename,'.');
+    mime = GIOGetMimeType (locfilename, true);
     if ( pt==NULL ) pt=locfilename;
 
-    if ( strcasecmp(pt,".eps")==0 || strcasecmp(pt,".ps")==0 || strcasecmp(pt,".art")==0 ) {
+    if ( strcasecmp(mime, "image/x-eps") == 0 || strcasecmp(mime, "application/postscript") == 0) {
 	int psflags = FlagsFromTuple(flags,import_ps_flags,"PostScript import flag");
 	if ( psflags==FLAG_UNKNOWN ) {
 	    free(locfilename);
@@ -7512,7 +7512,7 @@ return( NULL );
 	}
 	SCImportPS(sc,((PyFF_Glyph *) self)->layer,locfilename,false,psflags);
     }
-    else if ( strcasecmp(pt,".svg")==0 ) {
+    else if (strcasecmp(mime, "image/svg+xml") == 0) {
 	SCImportSVG(sc,((PyFF_Glyph *) self)->layer,locfilename,NULL,0,false);
     }
     else if ( strcasecmp(pt,".glif")==0 ) {
