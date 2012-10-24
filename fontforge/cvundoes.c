@@ -2025,9 +2025,9 @@ return;
     type = 0;
     /* SVG is a better format (than eps) if we've got it because it doesn't */
     /*  force conversion of quadratic to cubic and back */
-    if ( HasSVG() && ((sx = ClipboardHasType("image/svg+xml")) ||
+    if ( (sx = ClipboardHasType("image/svg+xml")) ||
 			(s_x = ClipboardHasType("image/svg-xml")) ||
-			ClipboardHasType("image/svg")) )
+			ClipboardHasType("image/svg") )
 	type = sx ? 1 : s_x ? 2 : 3;
     else if ( ClipboardHasType("image/eps") )
 	type = 4;

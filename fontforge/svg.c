@@ -1096,10 +1096,6 @@ return( !ferror(svg));
 # define xmlFree free
 #endif
 
-static int libxml_init_base() {
-return( true );
-}
-
 /* Find a node with the given id */
 static xmlNodePtr XmlFindID(xmlNodePtr xml, char *name) {
     xmlChar *id;
@@ -3691,11 +3687,6 @@ SplineFont *SFReadSVG(char *filename, int flags) {
     xmlDocPtr doc;
     char *temp=filename, *pt, *lparen;
 
-    if ( !libxml_init_base()) {
-	LogError( _("Can't find libxml2.\n") );
-return( NULL );
-    }
-
     pt = strrchr(filename,'/');
     if ( pt==NULL ) pt = filename;
     if ( (lparen=strchr(pt,'('))!=NULL && strchr(lparen,')')!=NULL ) {
@@ -3716,11 +3707,6 @@ return( _SFReadSVG(doc,filename));
 SplineFont *SFReadSVGMem(char *data, int flags) {
     xmlDocPtr doc;
 
-    if ( !libxml_init_base()) {
-	LogError( _("Can't find libxml2.\n") );
-return( NULL );
-    }
-
     doc = xmlParseMemory(data,strlen(data));
     if ( doc==NULL ) {
 	/* Can I get an error message from libxml? */
@@ -3735,11 +3721,6 @@ char **NamesReadSVG(char *filename) {
     char **ret=NULL;
     int cnt;
     xmlChar *name;
-
-    if ( !libxml_init_base()) {
-	LogError( _("Can't find libxml2.\n") );
-return( NULL );
-    }
 
     doc = xmlParseFile(filename);
     if ( doc==NULL ) {
@@ -3779,10 +3760,6 @@ Entity *EntityInterpretSVG(char *filename,char *memory, int memlen,int em_size,i
     Entity *ret;
     int order2;
 
-    if ( !libxml_init_base()) {
-	LogError( _("Can't find libxml2.\n") );
-return( NULL );
-    }
     if ( filename!=NULL )
 	doc = xmlParseFile(filename);
     else
@@ -3819,8 +3796,4 @@ SplineSet *SplinePointListInterpretSVG(char *filename,char *memory, int memlen,i
     Entity *ret = EntityInterpretSVG(filename, memory, memlen, em_size, ascent);
     int flags = -1;
 return( SplinesFromEntities(ret,&flags,is_stroked));
-}
-
-int HasSVG(void) {
-return( libxml_init_base());
 }

@@ -3081,9 +3081,7 @@ VISIBLE extern void SFUntickAll(SplineFont *sf);
 
 VISIBLE extern void BDFOrigFixup(BDFFont *bdf,int orig_cnt,SplineFont *sf);
 
-extern int HasSVG(void);
 VISIBLE extern void SCImportSVG(SplineChar *sc,int layer,char *path,char  *memory, int memlen,int doclear);
-extern int HasUFO(void);
 VISIBLE extern void SCImportGlif(SplineChar *sc,int layer,char *path,char  *memory, int memlen,int doclear);
 extern void SCImportPS(SplineChar *sc,int layer,char *path,int doclear, int flags);
 VISIBLE extern void SCImportPSFile(SplineChar *sc,int layer,FILE *ps,int doclear,int flags);
