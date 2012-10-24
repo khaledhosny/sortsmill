@@ -129,39 +129,6 @@ uc_strstrmatch (const uint32_t *longer, const char *substr)
 }
 
 uint32_t *
-cu_strstartmatch (const char *key, const uint32_t *str)
-{
-  if (key && str)
-    {
-      while (*key)
-        {
-          if (tolower (*key) != tolower (*str))
-            return 0;
-          key++;
-          str++;
-        }
-    }
-  return (uint32_t *) str;
-}
-
-uint32_t *
-u_strstartmatch (const uint32_t *initial, const uint32_t *full)
-{
-  int ch1, ch2;
-  for (;;)
-    {
-      ch1 = *initial++;
-      ch2 = *full++;
-      if (ch1 == '\0')
-        return ((uint32_t *) full);
-      ch1 = tolower (ch1);
-      ch2 = tolower (ch2);
-      if (ch1 != ch2 || ch1 == '\0')
-        return (NULL);
-    }
-}
-
-uint32_t *
 utf82u_strncpy (uint32_t *ubuf, const char *utf8buf, int len)
 {
   uint32_t *upt = ubuf, *uend = ubuf + len - 1;

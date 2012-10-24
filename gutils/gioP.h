@@ -45,7 +45,6 @@
 #endif
 
 struct stdfuncs {
-    uint32_t *(*guessMimeType)(const uint32_t *path,int isdir);
     char *(*decomposeURL)(const uint32_t *url,char **host, int *port,
 	char **username, char **password);
     void (*PostSuccess)(GIOControl *gc);
@@ -94,6 +93,4 @@ extern void *GIO_dispatch(GIOControl *gc);
 extern void GIO_cancel(GIOControl *gc);
 extern void GIO_init(void *handle,struct stdfuncs *_stdfuncs,int index);
 extern void GIO_term(void);
-
-extern uint32_t *_GioMacMime(const char *path);
 #endif

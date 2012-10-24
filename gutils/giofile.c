@@ -124,9 +124,7 @@ return;
 	cur->modtime = statb.st_mtime;
 	cur->isdir   = S_ISDIR(cur->mode);
 	cur->isexe   = !cur->isdir && (cur->mode & 0100);
-#if __Mac
-	cur->mimetype=u_copy(_GioMacMime(buffer));
-#endif
+	cur->mimetype= x_u8_strdup_or_null (GIOGetMimeType (buffer));
 	if ( last==NULL )
 	    head = last = cur;
 	else {

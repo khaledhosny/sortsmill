@@ -608,35 +608,6 @@ return( 3 );
 	    unicode212[i], unicode212[i+1], unicode212[i+2], unicode212[i+3],
 	    unicode212[i+4], unicode212[i+5], unicode212[i+6], unicode212[i+7]);
 
-    first = last = -1;
-    for ( k=0; k<256; ++k ) {
-	if ( table[k]!=NULL ) {
-	    if ( first==-1 ) first = k;
-	    last = k;
-	    plane = table[k];
-	    fprintf( output, "static const unsigned short jis_from_unicode_%x[] = {\n", k );
-	    for ( i=0; i<256-8; i+=8 ) {
-		fprintf( output, "  0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x,",
-			plane[i], plane[i+1], plane[i+2], plane[i+3],
-			plane[i+4], plane[i+5], plane[i+6], plane[i+7]);
-		add_data_comment_at_EOL(output, i);
-	    }
-	    fprintf( output, "  0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x\n};\n\n",
-			plane[i], plane[i+1], plane[i+2], plane[i+3],
-			plane[i+4], plane[i+5], plane[i+6], plane[i+7]);
-	}
-    }
-    fprintf( output, "static const unsigned short * const jis_from_unicode_[] = {\n" );
-    for ( k=first; k<=last; ++k )
-	if ( table[k]!=NULL )
-	    fprintf( output, "    jis_from_unicode_%x%s", k, k!=last?",\n":"\n" );
-	else
-	    fprintf( output, "    u_allzeros,\n" );
-    fprintf( output, "};\n\n" );
-    fprintf( header, "extern struct charmap2 jis_from_unicode;\n" );
-    fprintf( output, "struct charmap2 jis_from_unicode = { %d, %d, (unsigned short **) jis_from_unicode_, (uint32_t *) unicode_from_%s };\n\n",
-	    first, last, cjknames[j]);
-
     for ( k=first; k<=last; ++k )
 	free(table[k]);
 return( 0 );				/* no errors encountered */
@@ -1097,43 +1068,6 @@ return( 3 );
 		junicode[i], junicode[i+1], junicode[i+2], junicode[i+3],
 		junicode[i+4], junicode[i+5], junicode[i+6], junicode[i+7]);
 
-	first = last = -1;
-	for ( k=0; k<256; ++k ) {
-	    if ( jtable[k]!=NULL ) {
-		if ( first==-1 ) first = k;
-		last = k;
-		plane = jtable[k];
-		fprintf( output, "static unsigned short johab_from_unicode_%x[] = {\n", k );
-		for ( i=0; i<256-8; i+=8 ) {
-		    fprintf( output, "  0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x,",
-			    plane[i], plane[i+1], plane[i+2], plane[i+3],
-			    plane[i+4], plane[i+5], plane[i+6], plane[i+7]);
-		    add_data_comment_at_EOL(output, i);
-		}
-		fprintf( output, "  0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x, 0x%04x\n};\n\n",
-			    plane[i], plane[i+1], plane[i+2], plane[i+3],
-			    plane[i+4], plane[i+5], plane[i+6], plane[i+7]);
-	    }
-	}
-	fprintf( output, "static const unsigned short * const johab_from_unicode_[] = {\n" );
-	for ( k=first; k<=last; ++k )
-	    if ( jtable[k]!=NULL )
-		fprintf( output, "    johab_from_unicode_%x%s", k, k!=last?",\n":"\n" );
-	    else
-		fprintf( output, "    u_allzeros,\n" );
-	fprintf( output, "};\n\n" );
-	fprintf( header, "extern struct charmap2 johab_from_unicode;\n" );
-	fprintf( output, "struct charmap2 johab_from_unicode = { %d, %d, (unsigned short **) johab_from_unicode_, (uint32_t *) unicode_from_johab };\n\n",
-		first, last );
-
-	if ( first==-1 )
-	    fprintf( stderr, "No Johab\n" );
-	else for ( k=first; k<=last; ++k ) {
-	    free(table[k]);
-	    table[k]=NULL;
-	    if ( jtable[k] != NULL )
-		free(jtable[k]);
-	}
 return( 0 );				/* no errors encountered */
 }
 

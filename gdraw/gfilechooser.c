@@ -167,7 +167,7 @@ GFileChooserDefFilter(GGadget *g,GDirEntry *ent,const uint32_t *dir)
 {
   GFileChooser *gfc = (GFileChooser *) g;
   int i;
-  uint32_t *mime;
+  char *mime;
 
   uint8_t *utf8_ent_name = x_gc_u32_to_u8 (u32_force_valid (ent->name));
 
@@ -188,9 +188,9 @@ GFileChooserDefFilter(GGadget *g,GDirEntry *ent,const uint32_t *dir)
   if ( gfc->mimetypes==NULL )
     return( fc_hide );
   /* match the mimetypes */
-  mime = ent->mimetype==NULL?GIOguessMimeType(ent->name,ent->isdir):ent->mimetype;
+  mime = ent->mimetype==NULL?GIOGetMimeType(utf8_ent_name):ent->mimetype;
   for ( i=0; gfc->mimetypes[i]!=NULL; ++i )
-    if ( u_strstartmatch(gfc->mimetypes[i],mime))
+    if (strcasecmp(gfc->mimetypes[i], mime) == 0)
       return( fc_show );
 
   return( fc_hide );
@@ -199,71 +199,76 @@ GFileChooserDefFilter(GGadget *g,GDirEntry *ent,const uint32_t *dir)
 static GImage *
 GFileChooserPickIcon(GDirEntry *e)
 {
-  uint32_t *m = e->mimetype;
+  char *mime = e->mimetype;
+  uint8_t *utf8_ent_name = x_gc_u32_to_u8 (u32_force_valid (e->name));
 
   InitChooserIcons();
 
   if ( e->isdir ) {
-    if ( u8_strcmp(x_gc_u32_to_u8 (u32_force_valid (e->name)),"..")==0 )
+    if ( u8_strcmp(utf8_ent_name,"..")==0 )
       return( &_GIcon_updir );
     return( &_GIcon_dir );
   }
-  if ( m==NULL ) m = GIOguessMimeType(e->name,e->isdir);
-  if ( cu_strstartmatch("text/",m)) {
-    if ( cu_strstartmatch("text/html",m))
+  if ( mime==NULL ) mime = GIOGetMimeType(utf8_ent_name);
+  if (strncasecmp("text/", mime, 5) == 0) {
+    if (strcasecmp("text/html", mime) == 0)
       return( &_GIcon_texthtml );
-    if ( cu_strstartmatch("text/xml",m))
+    if (strcasecmp("text/xml", mime) == 0)
       return( &_GIcon_textxml );
-    if ( cu_strstartmatch("text/css",m))
+    if (strcasecmp("text/css", mime) == 0)
       return( &_GIcon_textcss );
-    if ( cu_strstartmatch("text/c",m))
+    if (strcasecmp("text/c", mime) == 0)
       return( &_GIcon_textc );
-    if ( cu_strstartmatch("text/java",m))
+    if (strcasecmp("text/java", mime) == 0)
       return( &_GIcon_textjava );
-    if ( cu_strstartmatch("text/make",m))
+    if (strcasecmp("text/x-makefile", mime) == 0)
       return( &_GIcon_textmake );
-    if ( cu_strstartmatch("text/fontps",m))
+    if (strcasecmp("text/fontps", mime) == 0)
       return( &_GIcon_textfontps );
-    if ( cu_strstartmatch("text/font",m))
+    if (strcasecmp("text/font", mime) == 0)
       return( &_GIcon_textfontbdf );
-    if ( cu_strstartmatch("text/ps",m))
+    if (strcasecmp("text/ps", mime) == 0)
       return( &_GIcon_textps );
 
     return( &_GIcon_textplain );
   }
 
-  if ( cu_strstartmatch("image/",m))
+  if (strncasecmp("image/", mime, 6) == 0)
     return( &_GIcon_image );
-  if ( cu_strstartmatch("video/",m))
+  if (strncasecmp("video/", mime, 6) == 0)
     return( &_GIcon_video );
-  if ( cu_strstartmatch("audio/",m))
+  if (strncasecmp("audio/", mime, 6) == 0)
     return( &_GIcon_audio );
-  if ( cu_strstartmatch("application/x-navid",m))
+  if (strcasecmp("application/x-navidir", mime) == 0 ||
+      strcasecmp("inode/directory", mime) == 0)
     return( &_GIcon_dir );
-  if ( cu_strstartmatch("application/x-object",m) )
+  if (strcasecmp("application/x-object", mime) == 0)
     return( &_GIcon_object );
-  if ( cu_strstartmatch("application/x-core",m) )
+  if (strcasecmp("application/x-core", mime) == 0)
     return( &_GIcon_core );
-  if ( cu_strstartmatch("application/x-tar",m) )
+  if (strcasecmp("application/x-tar", mime) == 0)
     return( &_GIcon_tar );
-  if ( cu_strstartmatch("application/x-compressed",m) )
+  if (strcasecmp("application/x-compressed", mime) == 0)
     return( &_GIcon_compressed );
-  if ( cu_strstartmatch("application/pdf",m) )
+  if (strcasecmp("application/pdf", mime) == 0)
     return( &_GIcon_texthtml );
-  if ( cu_strstartmatch("application/vnd.font-fontforge-sfd",m))
+  if (strcasecmp("application/vnd.font-fontforge-sfd", mime) == 0)
     return( &_GIcon_textfontsfd );
-  if ( cu_strstartmatch("application/x-font-type1",m))
+  if (strcasecmp("application/x-font-type1", mime) == 0)
     return( &_GIcon_textfontps );
-  if ( cu_strstartmatch("application/x-font-ttf",m) || cu_strstartmatch("application/x-font-otf",m))
+  if (strcasecmp("application/x-font-ttf", mime) == 0 ||
+      strcasecmp("application/x-font-otf", mime) == 0)
     return( &_GIcon_ttf );
-  if ( cu_strstartmatch("application/x-font-cid",m) )
+  if (strcasecmp("application/x-font-cid", mime) == 0 )
     return( &_GIcon_cid );
-  if ( cu_strstartmatch("application/x-macbinary",m) || cu_strstartmatch("application/x-mac-binhex40",m) )
+  if (strcasecmp("application/x-macbinary", mime) == 0 ||
+      strcasecmp("application/x-mac-binhex40", mime) == 0 )
     return( &_GIcon_mac );
-  if ( cu_strstartmatch("application/x-mac-dfont",m) ||
-       cu_strstartmatch("application/x-mac-suit",m) )
+  if (strcasecmp("application/x-mac-dfont", mime) == 0 ||
+      strcasecmp("application/x-mac-suit", mime) == 0 )
     return( &_GIcon_macttf );
-  if ( cu_strstartmatch("application/x-font-pcf",m) || cu_strstartmatch("application/x-font-snf",m))
+  if (strcasecmp("application/x-font-pcf", mime) == 0 ||
+      strcasecmp("application/x-font-snf", mime) == 0)
     return( &_GIcon_textfontbdf );
 
   return( &_GIcon_unknown );
@@ -1181,7 +1186,7 @@ GFileChooserFilterType GFileChooserGetFilterFunc(GGadget *g) {
 return( gfc->filter );
 }
 
-void GFileChooserSetMimetypes(GGadget *g,uint32_t **mimetypes) {
+void GFileChooserSetMimetypes(GGadget *g, char **mimetypes) {
     GFileChooser *gfc = (GFileChooser *) g;
     int i;
 
@@ -1192,15 +1197,15 @@ void GFileChooserSetMimetypes(GGadget *g,uint32_t **mimetypes) {
     }
     if ( mimetypes ) {
 	for ( i=0; mimetypes[i]!=NULL; ++i );
-	gfc->mimetypes = xmalloc((i+1)*sizeof(uint32_t *));
+	gfc->mimetypes = xmalloc((i+1)*sizeof(char *));
 	for ( i=0; mimetypes[i]!=NULL; ++i )
-	    gfc->mimetypes[i] = x_u32_strdup_or_null(mimetypes[i]);
+	    gfc->mimetypes[i] = x_u8_strdup_or_null(mimetypes[i]);
 	gfc->mimetypes[i] = NULL;
     } else
 	gfc->mimetypes = NULL;
 }
 
-uint32_t **GFileChooserGetMimetypes(GGadget *g) {
+char **GFileChooserGetMimetypes(GGadget *g) {
     GFileChooser *gfc = (GFileChooser *) g;
 return( gfc->mimetypes );
 }

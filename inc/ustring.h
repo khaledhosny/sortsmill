@@ -45,11 +45,6 @@ VISIBLE extern void cu_strncat (char *, const uint32_t *, int len);
 VISIBLE extern uint32_t *uc_strstr (const uint32_t *, const char *);
 VISIBLE extern uint32_t *uc_strstrmatch (const uint32_t *, const char *);
 
-VISIBLE extern uint32_t *u_strstartmatch (const uint32_t *initial,
-                                          const uint32_t *full);
-VISIBLE extern uint32_t *cu_strstartmatch (const char *initial,
-                                           const uint32_t *full);
-
 #define utf82u_strncpy utf82U_strncpy
 VISIBLE extern char *utf8_idpb (char *utf8_text, uint32_t ch);
 VISIBLE extern char *latin1_2_utf8_strcpy (char *utf8buf, const char *lbuf);
