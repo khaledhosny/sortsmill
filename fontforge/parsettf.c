@@ -4196,6 +4196,7 @@ static int badencoding(struct ttfinfo *info) {
 return( -1 );
 }
 
+// FIXME: all the nicode_from_* arrays below should be replaced with iconv calls.
 static int umodenc(int enc,int modtype, struct ttfinfo *info) {
     if ( modtype==-1 )
 return( -1 );
