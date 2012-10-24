@@ -21,27 +21,39 @@
 #include "ustring.h"
 
 char *
-GIOGetMimeType (const char *path)
+GIOGetMimeType (const char *path, bool sniff_data)
 {
-  GFile *file;
-  GFileInfo *file_info;
-  GError *error = NULL;
-  const char *content_type;
-  char *mime;
+  char *content_type, *mime;
+  int sniff_length = 4096;
+  guchar sniff_buffer[sniff_length];
+  gboolean uncertain;
 
-  file = g_file_new_for_path (path);
-  file_info = g_file_query_info (file,
-                                 G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
-                                 0, NULL, &error);
-  if (!error)
+  content_type = g_content_type_guess (path, NULL, 0, NULL);
+
+  if (sniff_data)
     {
-      content_type = g_file_info_get_content_type (file_info);
-      mime = g_content_type_get_mime_type (content_type);
+      FILE *fp = fopen (path, "rb");
+      if (fp)
+        {
+          size_t res = fread (sniff_buffer, 1, sniff_length, fp);
+          fclose (fp);
+          if (res >= 0)
+            {
+              g_free (content_type);
+              content_type = g_content_type_guess (NULL, sniff_buffer, res, &uncertain);
+              if (uncertain)
+                {
+                  g_content_type_guess (path, sniff_buffer, res, NULL);
+                }
+            }
+        }
     }
-  else
-    {
-      mime = "*/*";
-    }
+
+  mime = g_content_type_get_mime_type (content_type);
+  g_free (content_type);
+
+  if (!mime)
+    mime = "*/*";
 
   return mime;
 }
