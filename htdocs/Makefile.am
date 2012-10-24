@@ -241,9 +241,7 @@ FLAGS_DOC_LIST = flags/BrasilFlag.png flags/English.gif				\
 	flags/Tricolor.gif flags/UnionJack.gif flags/VietnamFlag.png	\
 	flags/taiwan.png
 
-NONBMP_DOC_LIST = nonBMP/index.html
-
-INSTALLED_DOC_LIST = $(ROOT_DOC_LIST) $(NONBMP_DOC_LIST)	\
+INSTALLED_DOC_LIST = $(ROOT_DOC_LIST)	\
 	$(FLAGS_DOC_LIST)
 
 # FIXME: Are these wanted?
@@ -261,7 +259,6 @@ TIDYFLAGS = -asxml -utf8 -clean -indent -modify
 TIDY_COMMAND = $(TIDY) $(TIDYFLAGS)
 
 tidy:
-	$(MKDIR_P) nonBMP
 	@for f in $(filter %.html, $(DOC_LIST)); do \
 		echo "$(TIDY_COMMAND) $(srcdir)/$${f}"; \
 		if $(TIDY_COMMAND) -f $${f}.messages $(srcdir)/$${f}; then \
