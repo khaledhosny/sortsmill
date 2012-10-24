@@ -121,8 +121,8 @@ AC_PROG_MKDIR_P
 AC_PROG_SED
 PKG_PROG_PKG_CONFIG
 
+# Guile 2.0 programs.
 GUILE_PROGS
-#GUILE_SITE_DIR
 
 # Code quality programs.
 AC_PATH_PROG([INDENT],[indent],[indent]) dnl  GNU Indent.

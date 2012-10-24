@@ -20,11 +20,8 @@
  (ice-9 optargs)
  (ice-9 rdelim)
  (ice-9 regex)
+ (sortsmill-fontforge iconv)
  )
-
-;; FIXME: Hide this in a module.
-(load-extension "libguile-sortsmillff_iconv"
-                "init_guile_sortsmillff_iconv")
 
 ;; FIXME: Get epsilon a better way, such as from the C library or GSL.
 (define epsilon 2.2204460492503131e-16)
