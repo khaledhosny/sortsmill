@@ -630,29 +630,19 @@ Py_RETURN_NONE;
 }
 
 
-// FIXME: Plugins currently are not supported. Either remedy that or
-// deprecate this Python feature.
-static PyObject *PyFF_LoadPlugin(PyObject *UNUSED(self), PyObject *args)
+static PyObject *
+PyFF_LoadPlugin (PyObject *UNUSED (self), PyObject *UNUSED (args))
 {
-  const char *filename;
-
-  /* here we do want the default encoding */
-  if ( !PyArg_ParseTuple(args,"s", &filename) )
-    return( NULL );
-
+  PyErr_WarnEx (PyExc_DeprecationWarning,
+                "loadPlugin() is deprecated and will be ignored", 1);
   Py_RETURN_NONE;
 }
 
-// FIXME: Plugins currently are not supported. Either remedy that or
-// deprecate this Python feature.
-static PyObject *PyFF_LoadPluginDir(PyObject *UNUSED(self), PyObject *args)
+static PyObject *
+PyFF_LoadPluginDir (PyObject *UNUSED (self), PyObject *UNUSED (args))
 {
-  const char *filename;
-
-  /* here we do want the default encoding */
-  if ( !PyArg_ParseTuple(args,"s", &filename) )
-    return( NULL );
-
+  PyErr_WarnEx (PyExc_DeprecationWarning,
+                "loadPluginDir() is deprecated and will be ignored", 1);
   Py_RETURN_NONE;
 }
 
@@ -17777,10 +17767,8 @@ static PyMethodDef FontForge_methods[] = {
     { "loadNamelist", PyFF_LoadNamelist, METH_VARARGS, "Load a namelist into the list of namelists" },
     { "loadNamelistDir", PyFF_LoadNamelistDir, METH_VARARGS, "Load a directory of namelist files into the list of namelists" },
 
-    // FIXME: Plugins currently are not supported. Either remedy that
-    // or deprecate these Python features.
-    { "loadPlugin", PyFF_LoadPlugin, METH_VARARGS, "Load a FontForge plugin" },
-    { "loadPluginDir", PyFF_LoadPluginDir, METH_VARARGS, "Load a directory of FontForge plugin files" },
+    { "loadPlugin", PyFF_LoadPlugin, METH_VARARGS, "Deprecated, does nothing" },
+    { "loadPluginDir", PyFF_LoadPluginDir, METH_VARARGS, "Deprecated, does nothing" },
 
     { "preloadCidmap", PyFF_PreloadCidmap, METH_VARARGS, "Load a cidmap file" },
     { "unicodeFromName", PyFF_UnicodeFromName, METH_VARARGS, "Given a name, look it up in the namelists and find what unicode code point it maps to (returns -1 if not found)" },
