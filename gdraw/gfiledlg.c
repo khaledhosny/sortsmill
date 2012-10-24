@@ -99,7 +99,7 @@ e_h (GWindow gw, GEvent *event)
 
 static uint32_t *
 GWidgetOpenFileWPath (const uint32_t *title, const uint32_t *defaultfile,
-                      const uint32_t *initial_filter, uint32_t **mimetypes,
+                      const uint32_t *initial_filter, char **mimetypes,
                       GFileChooserFilterType filter, char **path)
 {
   GRect pos;
@@ -237,9 +237,8 @@ GWidgetOpenFileWPath8 (const char *title, const char *defaultfile,
                        const char *initial_filter, char **mimetypes,
                        GFileChooserFilterType filter, char **path)
 {
-  uint32_t *tit = NULL, *def = NULL, *filt = NULL, **mimes = NULL, *ret;
+  uint32_t *tit = NULL, *def = NULL, *filt = NULL, *ret;
   char *utf8_ret;
-  int i;
 
   if (title != NULL)
     tit = utf82u_copy (title);
@@ -249,21 +248,7 @@ GWidgetOpenFileWPath8 (const char *title, const char *defaultfile,
     def = utf82u_copy (path[0]);
   if (initial_filter != NULL)
     filt = utf82u_copy (initial_filter);
-  if (mimetypes != NULL)
-    {
-      for (i = 0; mimetypes[i] != NULL; ++i);
-      mimes = xmalloc ((i + 1) * sizeof (uint32_t *));
-      for (i = 0; mimetypes[i] != NULL; ++i)
-        mimes[i] = utf82u_copy (mimetypes[i]);
-      mimes[i] = NULL;
-    }
-  ret = GWidgetOpenFileWPath (tit, def, filt, mimes, filter, path);
-  if (mimes != NULL)
-    {
-      for (i = 0; mimes[i] != NULL; ++i)
-        free (mimes[i]);
-      free (mimes);
-    }
+  ret = GWidgetOpenFileWPath (tit, def, filt, mimetypes, filter, path);
   free (filt);
   free (def);
   free (tit);

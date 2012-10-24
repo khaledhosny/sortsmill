@@ -382,7 +382,7 @@ typedef struct gfilechooser {
     GList *files, *subdirs;
     GListButton *directories;
     GButton *ok, *filterb;	/* Not created by us, can be set by user to give chooser a better appearance */
-    uint32_t **mimetypes;
+    char **mimetypes;
     uint32_t *wildcard;
     uint32_t *lastname;
     GFileChooserFilterType filter;

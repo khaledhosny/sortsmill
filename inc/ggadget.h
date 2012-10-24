@@ -419,8 +419,8 @@ VISIBLE struct giocontrol *GFileChooserReplaceIO(GGadget *g,struct giocontrol *g
 VISIBLE uint32_t *GFileChooserGetDir(GGadget *g);
 uint32_t *GFileChooserGetFilterText(GGadget *g);
 GFileChooserFilterType GFileChooserGetFilterFunc(GGadget *g);
-void GFileChooserSetMimetypes(GGadget *g,uint32_t **mimetypes);
-uint32_t **GFileChooserGetMimetypes(GGadget *g);
+void GFileChooserSetMimetypes(GGadget *g, char **mimetypes);
+char **GFileChooserGetMimetypes(GGadget *g);
 VISIBLE void GFileChooserGetChildren(GGadget *g,GGadget **pulldown, GGadget **list, GGadget **tf);
 VISIBLE int GFileChooserPosIsDir(GGadget *g, int pos);
 VISIBLE uint32_t *GFileChooserFileNameOfPos(GGadget *g, int pos);

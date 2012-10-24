@@ -156,7 +156,7 @@ return( true );
 }
 
 static uint32_t *GWidgetSaveAsFileWithGadget(const uint32_t *title, const uint32_t *defaultfile,
-	const uint32_t *initial_filter, uint32_t **mimetypes,
+	const uint32_t *initial_filter, char **mimetypes,
 	GFileChooserFilterType filter, GGadgetCreateData *optional_gcd) {
     GRect pos;
     GWindow gw;
@@ -292,9 +292,8 @@ return(d.ret);
 char *GWidgetSaveAsFileWithGadget8(const char *title, const char *defaultfile,
 	const char *initial_filter, char **mimetypes,
 	GFileChooserFilterType filter, GGadgetCreateData *optional_gcd) {
-    uint32_t *tit=NULL, *def=NULL, *filt=NULL, **mimes=NULL, *ret;
+    uint32_t *tit=NULL, *def=NULL, *filt=NULL, *ret;
     char *utf8_ret;
-    int i;
 
     if ( title!=NULL )
 	tit = utf82u_copy(title);
@@ -302,19 +301,7 @@ char *GWidgetSaveAsFileWithGadget8(const char *title, const char *defaultfile,
 	def = utf82u_copy(defaultfile);
     if ( initial_filter!=NULL )
 	filt = utf82u_copy(initial_filter);
-    if ( mimetypes!=NULL ) {
-	for ( i=0; mimetypes[i]!=NULL; ++i );
-	mimes = xmalloc((i+1)*sizeof(uint32_t *));
-	for ( i=0; mimetypes[i]!=NULL; ++i )
-	    mimes[i] = utf82u_copy(mimetypes[i]);
-	mimes[i] = NULL;
-    }
-    ret = GWidgetSaveAsFileWithGadget(tit,def,filt,mimes,filter,optional_gcd);
-    if ( mimes!=NULL ) {
-	for ( i=0; mimes[i]!=NULL; ++i )
-	    free(mimes[i]);
-	free(mimes);
-    }
+    ret = GWidgetSaveAsFileWithGadget(tit,def,filt,mimetypes,filter,optional_gcd);
     free(filt); free(def); free(tit);
     utf8_ret = NULL_PASSTHRU(ret, x_u32_to_u8 (ret));
     free(ret);
