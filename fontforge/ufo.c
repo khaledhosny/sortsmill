@@ -889,21 +889,6 @@ return( NULL );
 return( NULL );
 }
 
-#ifdef _NO_LIBXML
-int HasUFO(void) {
-return( false );
-}
-
-SplineFont *SFReadUFO(char *filename, int flags) {
-return( NULL );
-}
-
-SplineSet *SplinePointListInterpretGlif(char *filename,char *memory, int memlen,
-	int em_size,int ascent,int is_stroked) {
-return( NULL );
-}
-#else
-
 #ifndef HAVE_ICONV_H
 # undef iconv
 # undef iconv_t
@@ -923,10 +908,6 @@ return( NULL );
 /* Nasty kludge, but xmlFree doesn't work on cygwin (or I can't get it to) */
 # define xmlFree free
 #endif
-
-static int libxml_init_base() {
-return( true );
-}
 
 static xmlNodePtr FindNode(xmlNodePtr kids,char *name) {
     while ( kids!=NULL ) {
@@ -1659,11 +1640,6 @@ SplineFont *SFReadUFO(char *basedir, int flags) {
     char oldloc[24], *end;
     int as = -1, ds= -1, em= -1;
 
-    if ( !libxml_init_base()) {
-	LogError( _("Can't find libxml2.\n") );
-return( NULL );
-    }
-
     glyphdir = buildname(basedir,"glyphs");
     glyphlist = buildname(glyphdir,"contents.plist");
     if ( !GFileExists(glyphlist)) {
@@ -1983,10 +1959,6 @@ SplineSet *SplinePointListInterpretGlif(char *filename,char *memory, int memlen,
     SplineChar *sc;
     SplineSet *ss;
 
-    if ( !libxml_init_base()) {
-	LogError( _("Can't find libxml2.\n") );
-return( NULL );
-    }
     if ( filename!=NULL )
 	doc = xmlParseFile(filename);
     else
@@ -2007,8 +1979,3 @@ return( NULL );
     SplineCharFree(sc);
 return( ss );
 }
-
-int HasUFO(void) {
-return( libxml_init_base());
-}
-#endif

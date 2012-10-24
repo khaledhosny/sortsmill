@@ -295,7 +295,6 @@ return;
     SCCharChangedUpdate(sc,layer);
 }
 
-#ifndef _NO_LIBXML
 void SCImportSVG(SplineChar *sc,int layer,char *path,char *memory, int memlen, int doclear) {
     SplinePointList *spl, *espl, **head;
 
@@ -359,7 +358,6 @@ return;
 
     SCCharChangedUpdate(sc,layer);
 }
-#endif
 
 /**************************** Fig File Import *********************************/
 
@@ -967,14 +965,12 @@ return(false);
 	    }
 	    ++tot;
 	    SCAddScaleImage(sc,image,true,toback?ly_back:ly_fore);
-#ifndef _NO_LIBXML
 	} else if ( format==fv_svg ) {
 	    SCImportSVG(sc,toback?ly_back:fv->active_layer,start,NULL,0,flags&sf_clearbeforeinput);
 	    ++tot;
 	} else if ( format==fv_glif ) {
 	    SCImportGlif(sc,toback?ly_back:fv->active_layer,start,NULL,0,flags&sf_clearbeforeinput);
 	    ++tot;
-#endif
 	} else if ( format==fv_eps ) {
 	    SCImportPS(sc,toback?ly_back:fv->active_layer,start,flags&sf_clearbeforeinput,flags&~sf_clearbeforeinput);
 	    ++tot;
@@ -1080,14 +1076,12 @@ return( false );
 	    }
 	    ++tot;
 	    SCAddScaleImage(sc,image,true,toback?ly_back:ly_fore);
-#ifndef _NO_LIBXML
 	} else if ( format==fv_svgtemplate ) {
 	    SCImportSVG(sc,toback?ly_back:fv->active_layer,start,NULL,0,flags&sf_clearbeforeinput);
 	    ++tot;
 	} else if ( format==fv_gliftemplate ) {
 	    SCImportGlif(sc,toback?ly_back:fv->active_layer,start,NULL,0,flags&sf_clearbeforeinput);
 	    ++tot;
-#endif
 	} else if ( format==fv_pdftemplate ) {
 	    SCImportPDF(sc,toback?ly_back:fv->active_layer,start,flags&sf_clearbeforeinput,flags&~sf_clearbeforeinput);
 	    ++tot;

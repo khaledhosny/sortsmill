@@ -78,18 +78,6 @@ AC_DEFUN([FONTFORGE_ARG_WITH_LIBTIFF_fallback],
 ])
 
 
-dnl FONTFORGE_ARG_WITH_LIBXML
-dnl -------------------------
-AC_DEFUN([FONTFORGE_ARG_WITH_LIBXML],
-[
-FONTFORGE_ARG_WITH([libxml],
-        [AS_HELP_STRING([--without-libxml],[build without libxml2])],
-        [libxml-2.0],
-        [FONTFORGE_WARN_PKG_NOT_FOUND([LIBXML])],
-        [_NO_LIBXML])
-])
-
-
 dnl A macro that will not be needed if we can count on libspiro
 dnl having a pkg-config file. 
 dnl

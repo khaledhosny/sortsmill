@@ -94,10 +94,6 @@ More complex installations
 	    # cd /usr/local/share/doc/fontforge
 	    # gunzip *.tgz; tar xf *.tar
 
-BUILDING for OpenVMS
-    Jouk Jansen has provided me with OpenVMS makefile scripts. There should
-    be mms files in all the appropriate directories.
-
 BUILDING without X11
     FontForge can be built without X11. You will probably only want to do this
     if your system lacks X (in which case configure should figure that out and

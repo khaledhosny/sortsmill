@@ -38,7 +38,6 @@ Optional dependencies:
   giflib             ${i_do_have_giflib}  	${giflib_url}
   libjpeg            ${i_do_have_libjpeg}  	${libjpeg_url}
   libtiff            ${i_do_have_libtiff}  	${libtiff_url}
-  libxml             ${i_do_have_libxml}  	${libxml_url}
   libspiro           ${i_do_have_libspiro}  	${libspiro_url}
   libunicodenames    ${i_do_have_libunicodenames}  	${libunicodenames_url}
   X Window System    ${i_do_have_x}
