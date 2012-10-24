@@ -219,7 +219,6 @@
 
    ;; Reals.
    (((and
-      sfd-real-entry-keywords
       (or 'italicangle 'strokewidth 'tilemargin 'underlineposition
           'underlinewidth 'cidversion 'ufoascent 'ufodescent)
       key)
@@ -250,19 +249,13 @@
     (sfd-read-string-to-eol-entry contents key line end #:port port))
 
    ;; Strings with escaped newlines: \n
-   (((and
-      (or 'copyright
-          'comments
-          )
-      key)
+   (((and (or 'copyright 'comments) key)
      start end)
     (sfd-read-escaped-string-to-eol-entry contents key line end
                                           #:port port))
 
    ;; UTF-7 strings.
-   (((and
-      (or 'comment 'ucomments 'fontlog 'woffmetadata)
-      key)
+   (((and (or 'comment 'ucomments 'fontlog 'woffmetadata) key)
      start end)
     (sfd-read-utf7-string-entry contents key line end #:port port))
 
