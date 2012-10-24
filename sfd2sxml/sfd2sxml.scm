@@ -32,6 +32,10 @@
 (define (fuzzy= a b)
   (<= (abs (- a b)) (* (max (abs a) (abs b)) epsilon)))
 
+(define (remove-embedded-nul-chars s)
+  (list->string (filter (lambda (c) (not (char=? c #\nul)))
+                        (string->list s))))
+
 (define sfd-line-end-re
   (make-regexp "^[[:space:]]*$"))
 
@@ -123,7 +127,8 @@
 (define* (sfd-get-utf7-string line start #:key port (mandatory #f))
   (let ((m (regexp-exec sfd-utf7-string-re line start)))
     (if m
-        (list (embedded-utf7->string (match:substring m 1))
+        (list (remove-embedded-nul-chars
+               (embedded-utf7->string (match:substring m 1)))
 ;              (match:substring m 1)
               (match:substring m 1)
               (match:start m 1)
@@ -375,7 +380,6 @@
                                   contents)))))))
 
      (_ (throw 'expected-sfd (sfd-source-info port))))))
-
 
 
 

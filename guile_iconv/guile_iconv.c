@@ -38,9 +38,9 @@
 //
 // We assume these very long symbol names can be handled.
 //
-#define init_guile_sortsmillff_iconv \
+#define init_guile_sortsmillff_iconv				\
   libguile_sortsmillff_iconv_LTX_init_guile_sortsmillff_iconv
-#define scm_embedded_utf7_to_string \
+#define scm_embedded_utf7_to_string				\
   libguile_sortsmillff_iconv_LTX_scm_embedded_utf7_to_string
 
 VISIBLE void init_guile_sortsmillff_iconv (void);
@@ -49,12 +49,14 @@ VISIBLE SCM scm_embedded_utf7_to_string (SCM str);
 SCM
 scm_embedded_utf7_to_string (SCM str)
 {
+  size_t utf7_length;
+  size_t utf8_length;
   char *utf8;
 
   scm_dynwind_begin (0);
 
   // Treat the string as UTF-7 embedded in ASCII/UTF-8.
-  char *utf7 = scm_to_utf8_stringn (str, NULL);
+  char *utf7 = scm_to_utf8_stringn (str, &utf7_length);
   scm_dynwind_free (utf7);
 
   // I doubt the MY_ICONV_SUFFIX_TRANSLIT_STRING here has any effect,
@@ -65,31 +67,31 @@ scm_embedded_utf7_to_string (SCM str)
 
   if (descriptor != (iconv_t) (-1))
     {
-      size_t utf7_length = strlen (utf7);
-      size_t utf8_length = utf7_length * 6; /* FIXME: What is a good
-					       length here? */
-      utf8 = scm_gc_malloc_pointerless ((utf8_length + 1) * sizeof (char),
+      size_t utf8_bufsize = utf7_length * 6; /* FIXME: What is a good
+						size here? */
+      utf8 = scm_gc_malloc_pointerless (utf8_bufsize * sizeof (char),
                                         "string");
-      memset (utf8, 0, (utf8_length + 1) * sizeof (char));
 
       // iconv(3) modifies these pointers and integers.
       char *utf7_p = utf7;
       char *utf8_p = utf8;
       size_t utf7_n = utf7_length;
-      size_t utf8_n = utf8_length;
+      size_t utf8_n = utf8_bufsize;
 
       (void) iconv (descriptor, &utf7_p, &utf7_n, &utf8_p, &utf8_n);
+      utf8_length = utf8_p - utf8;
 
       iconv_close (descriptor);
     }
   else
     {
-      utf8 = scm_gc_malloc_pointerless ((strlen (utf7) + 1) * sizeof (char),
+      utf8 = scm_gc_malloc_pointerless (utf7_length * sizeof (char),
                                         "string");
-      strcpy (utf8, utf7);
+      memcpy (utf8, utf7, utf7_length * sizeof (char));
+      utf8_length = utf7_length;
     }
 
-  SCM result = scm_from_utf8_string (utf8);
+  SCM result = scm_from_utf8_stringn (utf8, utf8_length);
 
   scm_dynwind_end ();
 

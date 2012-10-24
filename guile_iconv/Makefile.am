@@ -1,4 +1,3 @@
-# Copyright (C) 2000-2012 by George Williams
 # Copyright (C) 2012 by Barry Schwartz
 #
 # Redistribution and use in source and binary forms, with or without
