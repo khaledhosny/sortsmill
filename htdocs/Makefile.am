@@ -229,7 +229,7 @@ ROOT_DOC_LIST = AA-Comparison.html aacutebase.png aacutemid.png			\
 	tutorial-zh_TW.png twolines.png u432Italic.png u433Italic.png		\
 	ucEItalic.png uitranslationnotes.html uninstall.html				\
 	UniqueID.html validation.html validation.png VerticalMetrics.png	\
-	viewmenu.html views.html vItalic.png vms-install.html wacom.html	\
+	viewmenu.html views.html vItalic.png wacom.html	\
 	windowmenu.html wItalic.png x-height.png xim.html xItalic.png		\
 	xres.html Big5.txt colorpicker.jpeg corpchar.txt fftype300.svg		\
 	fontforge-banner-420.jpeg FontForge.css Metal-fontforge-600.jpeg	\
