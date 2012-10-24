@@ -212,142 +212,70 @@
                  (sfd-process-escapes str)))))
     (sfd-add-entry contents key entry-str)))
 
+(define (sfd-update-contents contents line port version)
+  (match
+   (sfd-get-keyword line #:port port
+                    #:mandatory #f) ;; FIXME: this is temporary.
+
+   ;; Reals.
+   (((and
+      sfd-real-entry-keywords
+      (or 'italicangle 'strokewidth 'tilemargin 'underlineposition
+          'underlinewidth 'cidversion 'ufoascent 'ufodescent)
+      key)
+     start end)
+    (sfd-read-real-entry contents key line end #:port port))
+
+   ;; Integers.
+   (((and
+      (or 'ascent 'descent 'hheadascent 'hheadaoffset 'hheaddescent
+          'hheaddoffset 'os2typoascent 'os2typoaoffset 'os2typodescent
+          'os2typodoffset 'os2winascent 'os2winaoffset 'os2windescent
+          'os2windoffset 'os2subxsize 'os2subysize 'os2subxoff 'os2subyoff
+          'os2supxsize 'os2supysize 'os2supxoff 'os2supyoff 'os2strikeysize
+          'os2strikeypos 'antialias 'displaylayer 'displaysize 'extremabound
+          'fittoem 'isextendedshape 'linegap 'macstyle 'onlybitmaps
+          'pfmfamily 'pfmweight 'topencoding 'ttfweight 'ttfwidth 'vlinegap
+          'widthseparation)
+      key)
+     start end)
+    (sfd-read-integer-entry contents key line end #:port port))
+
+   ;; Strings.
+   (((and
+      (or 'familyname 'fontname 'fullname 'weight 'defaultbasefilename
+          'version 'fondname )
+      key)
+     start end)
+    (sfd-read-string-to-eol-entry contents key line end #:port port))
+
+   ;; Strings with escaped newlines: \n
+   (((and
+      (or 'copyright
+          'comments
+          )
+      key)
+     start end)
+    (sfd-read-escaped-string-to-eol-entry contents key line end
+                                          #:port port))
+
+   ;; UTF-7 strings.
+   (((and
+      (or 'comment 'ucomments 'fontlog 'woffmetadata)
+      key)
+     start end)
+    (sfd-read-utf7-string-entry contents key line end #:port port))
+
+   ;; Everything else.
+   (_ contents) ;; FIXME: this is temporary.
+   ))
+
 (define* (sfd-read-contents port version #:optional (contents '()))
   (let ((line (read-line port)))
     (if (eof-object? line)
-
         (reverse contents)
-
-        (match
-         (sfd-get-keyword line #:port port
-                          #:mandatory #f) ;; FIXME: this is temporary.
-
-         ;; Reals.
-         (((and
-            (or 'italicangle
-                'strokewidth
-                'tilemargin
-                'underlineposition
-                'underlinewidth
-                'cidversion
-                'ufoascent
-                'ufodescent)
-            key)
-           start end)
-
-          (sfd-read-contents
-           port version
-           (sfd-read-real-entry contents
-                                key line end
-                                #:port port)))
-
-         ;; Integers.
-         (((and
-            (or 'ascent
-                'descent
-
-                'hheadascent
-                'hheadaoffset
-                'hheaddescent
-                'hheaddoffset
-                'os2typoascent
-                'os2typoaoffset
-                'os2typodescent
-                'os2typodoffset
-                'os2winascent
-                'os2winaoffset
-                'os2windescent
-                'os2windoffset
-
-                'os2subxsize
-                'os2subysize
-                'os2subxoff
-                'os2subyoff
-                'os2supxsize
-                'os2supysize
-                'os2supxoff
-                'os2supyoff
-                'os2strikeysize
-                'os2strikeypos
-
-                'antialias
-                'displaylayer
-                'displaysize
-                'extremabound
-                'fittoem
-                'isextendedshape
-                'linegap
-                'macstyle
-                'onlybitmaps
-                'pfmfamily
-                'pfmweight
-                'topencoding
-                'ttfweight
-                'ttfwidth
-                'vlinegap
-                'widthseparation
-                )
-            key)
-           start end)
-
-          (sfd-read-contents
-           port version
-           (sfd-read-integer-entry contents
-                                   key line end
-                                   #:port port)))
-
-         ;; Strings.
-         (((and
-            (or 'familyname
-                'fontname
-                'fullname
-                'weight
-                'defaultbasefilename
-                'version
-                'fondname
-                )
-            key)
-           start end)
-
-          (sfd-read-contents
-           port version
-           (sfd-read-string-to-eol-entry contents
-                                         key line end
-                                         #:port port)))
-
-         ;; Strings with escaped newlines: \n
-         (((and
-            (or 'copyright
-                'comments
-                )
-            key)
-           start end)
-
-          (sfd-read-contents
-           port version
-           (sfd-read-escaped-string-to-eol-entry contents
-                                                 key line end
-                                                 #:port port)))
-
-         ;; UTF-7 strings.
-         (((and
-            (or 'comment
-                'ucomments
-                'fontlog
-                'woffmetadata
-                )
-            key)
-           start end)
-
-          (sfd-read-contents
-           port version
-           (sfd-read-utf7-string-entry contents
-                                       key line end
-                                       #:port port)))
-
-         ;; Everything else.
-         (_ (sfd-read-contents port version contents)) ;; FIXME: this is temporary.
-         ))))
+        (sfd-read-contents
+         port version (sfd-update-contents contents line port version)))))
 
 (define* (sfd-read #:optional (port (current-input-port)))
   (let ((line (read-line port)))
@@ -379,8 +307,8 @@
 (with-fluids
  ((%default-port-encoding "UTF-8")
   (%default-port-conversion-strategy 'substitute))
-; (with-input-from-file "Fanwood-Italic.sfd"
- (with-input-from-file "GoudyBookltr1911-Titling.sfd"
+ (with-input-from-file "Fanwood-Italic.sfd"
+   ;; (with-input-from-file "GoudyBookltr1911-Titling.sfd"
    (lambda ()
      (let ((sfd (sfd-read)))
        (pretty-print sfd)
