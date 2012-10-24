@@ -151,50 +151,40 @@
       '()
       (throw 'unrecognized-sfd-version (list version (sfd-source-info port)))))
 
-(define sfd-empty-contents
-  (list (list 'fields)))
+;; Add an entry to the contents list by consing.
+(define (sfd-add-entry contents key value)
+  (cons (list key value) contents))
 
-;; Add a field to the @code{'fields} list by consing.
-(define (sfd-add-field contents key value)
-  (let ((old-fields (cdr (assq 'fields contents))))
-    (assq-set! contents 'fields (cons (list key value) old-fields))))
-
-;; @code{sfd-add-field} makes the @code{'fields} list by consing, so
-;; reverse it to get the original order.
-(define (sfd-reverse-fields contents)
-  (let ((old-fields (cdr (assq 'fields contents))))
-    (assq-set! contents 'fields (reverse old-fields))))
-
-(define* (sfd-read-real-field contents key line start #:key port)
-  (let ((field-str
+(define* (sfd-read-real-entry contents key line start #:key port)
+  (let ((entry-str
          (match (sfd-get-real line start #:port port)
                 ((_ str _ end)
                  (sfd-get-line-end line end #:port port)
                  str))))
-    (sfd-add-field contents key field-str)))
+    (sfd-add-entry contents key entry-str)))
 
-(define* (sfd-read-integer-field contents key line start #:key port)
-  (let ((field-str
+(define* (sfd-read-integer-entry contents key line start #:key port)
+  (let ((entry-str
          (match (sfd-get-integer line start #:port port)
                 ((_ str _ end)
                  (sfd-get-line-end line end #:port port)
                  str))))
-    (sfd-add-field contents key field-str)))
+    (sfd-add-entry contents key entry-str)))
 
-(define* (sfd-read-string-to-eol-field contents key line start #:key port)
-  (let ((field-str
+(define* (sfd-read-string-to-eol-entry contents key line start #:key port)
+  (let ((entry-str
          (match (sfd-get-string-to-eol line start #:port port)
                 ((str _ end)
                  str))))
-    (sfd-add-field contents key field-str)))
+    (sfd-add-entry contents key entry-str)))
 
-(define* (sfd-read-utf7-string-field contents key line start #:key port)
-  (let ((field-str
+(define* (sfd-read-utf7-string-entry contents key line start #:key port)
+  (let ((entry-str
          (match (sfd-get-utf7-string line start #:port port)
                 ((utf8-str _ _ end)
                  (sfd-get-line-end line (+ end 1) #:port port)
                  utf8-str))))
-    (sfd-add-field contents key field-str)))
+    (sfd-add-entry contents key entry-str)))
 
 ;; Replace \n with a newline and \\ with a single backslash.
 ;; The current implementation drops all other backslashes.
@@ -214,20 +204,19 @@
             (else (sfd-process-escapes s1)))))
         s)))
 
-(define* (sfd-read-escaped-string-to-eol-field contents key line start
+(define* (sfd-read-escaped-string-to-eol-entry contents key line start
                                                #:key port)
-  (let ((field-str
+  (let ((entry-str
          (match (sfd-get-string-to-eol line start #:port port)
                 ((str _ end)
                  (sfd-process-escapes str)))))
-    (sfd-add-field contents key field-str)))
+    (sfd-add-entry contents key entry-str)))
 
-(define* (sfd-read-contents port version
-                            #:optional (contents sfd-empty-contents))
+(define* (sfd-read-contents port version #:optional (contents '()))
   (let ((line (read-line port)))
     (if (eof-object? line)
 
-        (sfd-reverse-fields contents)
+        (reverse contents)
 
         (match
          (sfd-get-keyword line #:port port
@@ -248,7 +237,7 @@
 
           (sfd-read-contents
            port version
-           (sfd-read-real-field contents
+           (sfd-read-real-entry contents
                                 key line end
                                 #:port port)))
 
@@ -303,7 +292,7 @@
 
           (sfd-read-contents
            port version
-           (sfd-read-integer-field contents
+           (sfd-read-integer-entry contents
                                    key line end
                                    #:port port)))
 
@@ -322,7 +311,7 @@
 
           (sfd-read-contents
            port version
-           (sfd-read-string-to-eol-field contents
+           (sfd-read-string-to-eol-entry contents
                                          key line end
                                          #:port port)))
 
@@ -336,7 +325,7 @@
 
           (sfd-read-contents
            port version
-           (sfd-read-escaped-string-to-eol-field contents
+           (sfd-read-escaped-string-to-eol-entry contents
                                                  key line end
                                                  #:port port)))
 
@@ -352,7 +341,7 @@
 
           (sfd-read-contents
            port version
-           (sfd-read-utf7-string-field contents
+           (sfd-read-utf7-string-entry contents
                                        key line end
                                        #:port port)))
 
@@ -395,5 +384,5 @@
    (lambda ()
      (let ((sfd (sfd-read)))
        (pretty-print sfd)
-;       (sxml->xml sfd)
+       (sxml->xml sfd)
        ))))
