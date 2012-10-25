@@ -28,47 +28,42 @@
 #include <config.h>
 
 #include "gimage.h"
-#include <string.h>
-#include <strings.h>
-#include <ustring.h>
-
-// FIXME: It should not be necessary to use the filename extension to
-// decide what the type of an image is or to read it.
+#include "gio.h"
+#include "gfile.h"
 
 GImage *
 GImageRead (char *filename)
 {
-  char *pt;
+  char *mime;
 
-  if (filename == NULL)
+  if (filename == NULL || !GFileExists (filename))
     return (NULL);
 
-  pt = strrchr (filename, '.');
-  if (pt == NULL)
-    pt = "";
-  if (strcasecmp (pt, ".bmp") == 0)
+  mime = GIOGetMimeType (filename, true);
+
+  if (strcasecmp (mime, "image/bmp") == 0)
     return (GImageReadBmp (filename));
-  else if (strcasecmp (pt, ".xbm") == 0)
+  else if (strcasecmp (mime, "image/x-xbitmap") == 0)
     return (GImageReadXbm (filename));
-  else if (strcasecmp (pt, ".xpm") == 0)
+  else if (strcasecmp (mime, "image/x-xpixmap") == 0)
     return (GImageReadXpm (filename));
 #ifndef _NO_LIBTIFF
-  else if (strcasecmp (pt, ".tiff") == 0 || strcasecmp (pt, ".tif") == 0)
+  else if (strcasecmp (mime, "image/tiff") == 0)
     return (GImageReadTiff (filename));
 #endif
 #ifndef _NO_LIBJPEG
-  else if (strcasecmp (pt, ".jpeg") == 0 || strcasecmp (pt, ".jpg") == 0)
+  else if (strcasecmp (mime, "image/jpeg") == 0)
     return (GImageReadJpeg (filename));
 #endif
-  else if (strcasecmp (pt, ".png") == 0)
+  else if (strcasecmp (mime, "image/png") == 0)
     return (GImageReadPng (filename));
 #ifndef _NO_LIBUNGIF
-  else if (strcasecmp (pt, ".gif") == 0)
+  else if (strcasecmp (mime, "image/gif") == 0)
     return (GImageReadGif (filename));
 #endif
-  else if (strcasecmp (pt, ".ras") == 0)
+  else if (strcasecmp (mime, "image/x-cmu-raster") == 0)
     return (GImageReadRas (filename));  /* Sun raster */
-  else if (strcasecmp (pt, ".rgb") == 0)
+  else if (strcasecmp (mime, "image/x-rgb") == 0)
     return (GImageReadRgb (filename));  /* SGI format */
 
   return (NULL);
