@@ -39,7 +39,7 @@ GImageRead (char *filename)
   if (filename == NULL || !GFileExists (filename))
     return (NULL);
 
-  mime = GIOGetMimeType (filename, true);
+  mime = GIOGetMimeType (filename);
 
   if (strcasecmp (mime, "image/bmp") == 0)
     return (GImageReadBmp (filename));

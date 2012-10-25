@@ -7501,7 +7501,7 @@ return( NULL );
     }
 
     pt = strrchr(locfilename,'.');
-    mime = GIOGetMimeType (locfilename, true);
+    mime = GIOGetMimeType (locfilename);
     if ( pt==NULL ) pt=locfilename;
 
     if ( strcasecmp(mime, "image/x-eps") == 0 || strcasecmp(mime, "application/postscript") == 0) {

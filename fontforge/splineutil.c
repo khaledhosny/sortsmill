@@ -2082,7 +2082,7 @@ copyparse(char *str)
 	*rpt++ = *str++;
     }
   *rpt = '\0';
-  if (u8_check (ret, u8_strlen (ret)) != NULL)
+  if (!u8_valid (ret))
     {
       /* Assume latin1, convert to utf8 */
       rpt = latin1_2_utf8_copy(ret);
