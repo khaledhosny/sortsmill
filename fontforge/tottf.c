@@ -3867,7 +3867,7 @@ char *utf8_verify_copy(const char *str)
   if ( str==NULL )
     return( NULL );
 
-  if (u8_check (str, u8_strlen (str)) == NULL)
+  if (u8_valid (str))
     return( xstrdup_or_null(str));		/* Either in ASCII (good) or appears to be utf8*/
   return( latin1_2_utf8_copy(str));
 }
