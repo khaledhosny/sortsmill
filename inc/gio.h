@@ -100,7 +100,7 @@ VISIBLE extern GIOControl *GIOCreate(uint32_t *path,void *userdata,
 extern void GIOSetDefAuthorizer(int32_t (*getauth)(struct giocontrol *));
 extern void GIOSetUserAgent(uint32_t *agent);
 
-VISIBLE extern char *GIOGetMimeType(const char *path, bool sniff_data);
+VISIBLE extern char *GIOGetMimeType(const char *path);
 
 VISIBLE extern char *GIO_PasswordCache(char *proto,char *host,char *username,char *password);
 VISIBLE extern char *_GIO_decomposeURL(const uint32_t *url,char **host, int *port, char **username,

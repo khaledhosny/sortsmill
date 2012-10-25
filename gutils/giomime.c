@@ -21,30 +21,30 @@
 #include "ustring.h"
 
 char *
-GIOGetMimeType (const char *path, bool sniff_data)
+GIOGetMimeType (const char *path)
 {
   char *content_type, *mime;
   int sniff_length = 4096;
   guchar sniff_buffer[sniff_length];
   gboolean uncertain;
+  FILE *fp;
+  size_t res;
 
   content_type = g_content_type_guess (path, NULL, 0, NULL);
 
-  if (sniff_data)
+  fp = fopen (path, "rb");
+  if (fp)
     {
-      FILE *fp = fopen (path, "rb");
-      if (fp)
+      res = fread (sniff_buffer, 1, sniff_length, fp);
+      fclose (fp);
+      if (res >= 0)
         {
-          size_t res = fread (sniff_buffer, 1, sniff_length, fp);
-          fclose (fp);
-          if (res >= 0)
+          g_free (content_type);
+          content_type = g_content_type_guess (NULL, sniff_buffer, res, &uncertain);
+          if (uncertain)
             {
               g_free (content_type);
-              content_type = g_content_type_guess (NULL, sniff_buffer, res, &uncertain);
-              if (uncertain)
-                {
-                  g_content_type_guess (path, sniff_buffer, res, NULL);
-                }
+              content_type = g_content_type_guess (path, sniff_buffer, res, NULL);
             }
         }
     }

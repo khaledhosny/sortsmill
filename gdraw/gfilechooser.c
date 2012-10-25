@@ -188,7 +188,7 @@ GFileChooserDefFilter(GGadget *g,GDirEntry *ent,const uint32_t *dir)
   if ( gfc->mimetypes==NULL )
     return( fc_hide );
   /* match the mimetypes */
-  mime = ent->mimetype==NULL?GIOGetMimeType(utf8_ent_name, false):ent->mimetype;
+  mime = ent->mimetype==NULL?GIOGetMimeType(utf8_ent_name):ent->mimetype;
   for ( i=0; gfc->mimetypes[i]!=NULL; ++i )
     if (strcasecmp(gfc->mimetypes[i], mime) == 0)
       return( fc_show );
@@ -209,7 +209,7 @@ GFileChooserPickIcon(GDirEntry *e)
       return( &_GIcon_updir );
     return( &_GIcon_dir );
   }
-  if ( mime==NULL ) mime = GIOGetMimeType(utf8_ent_name, false);
+  if ( mime==NULL ) mime = GIOGetMimeType(utf8_ent_name);
   if (strncasecmp("text/", mime, 5) == 0) {
     if (strcasecmp("text/html", mime) == 0)
       return( &_GIcon_texthtml );
