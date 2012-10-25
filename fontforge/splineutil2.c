@@ -4084,9 +4084,9 @@ SplineFont *SplineFontBlank(int charcnt) {
     sf->origname = XDIE_ON_NULL (canonicalize_filename_mode (buffer, CAN_MISSING));
     sf->weight = xstrdup("Medium");
     if ( author!=NULL )
-	sprintf( buffer, "Created by %.50s with FontForge 2.0 (http://fontforge.sf.net)", author );
+	sprintf( buffer, "Created by %.50s with %s <%s>", author, PACKAGE_STRING, PACKAGE_URL );
     else
-	strcpy( buffer, "Created with FontForge 2.0 (http://fontforge.sf.net)" );
+	sprintf( buffer, "Created with %s <%s>", PACKAGE_STRING, PACKAGE_URL );
     sf->copyright = xstrdup_or_null(buffer);
     if ( xuid!=NULL ) {
 	sf->xuid = xmalloc(strlen(xuid)+20);
