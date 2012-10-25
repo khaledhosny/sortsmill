@@ -29,6 +29,12 @@ AM_LDFLAGS = -module $(MY_CFLAGS) $(MY_LIBS)
 install-data-hook:
 #	Make sure the source module is no younger than the compiled
 #	module.
-	touch $(addprefix $(DESTDIR)$(guileobjmoduledir)/, $(nodist_guileobjmodule_DATA))
+	@for f in $(addprefix $(DESTDIR)$(guileobjmoduledir)/,	\
+					$(nodist_guileobjmodule_DATA));	do		\
+		if test -f "$${f}"; then 							\
+			echo touch "$${f}";								\
+			touch "$${f}";									\
+		fi													\
+	done
 
 MOSTLYCLEANFILES = iconv.go
