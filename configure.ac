@@ -85,7 +85,6 @@ AC_SUBST([GUILE_API])
 #
 # URLs for dependencies.
 
-freetype_url="http://www.freetype.org/"
 giflib_url="http://giflib.sourceforge.net/"
 libpng_url="http://www.libpng.org/"
 libspiro_url="http://libspiro.sourceforge.net/"
@@ -165,7 +164,7 @@ FONTFORGE_ARG_DISABLE_PYTHON_EXTENSION
 
 AC_ARG_ENABLE([freetype-debugger],
         [AS_HELP_STRING([--enable-freetype-debugger[[=DIR]]],
-                [use freetype's internal debugger within fontforge; requires source code of the
+                [use internal freetype debugger within fontforge; requires source code of the
                  freetype library with which fontforge will be linked.
                  You need to set DIR to the top directory of the freetype sources,
                  or alternatively set the environment variable FREETYPE_SOURCE (see below)])],
@@ -218,6 +217,7 @@ PKG_CHECK_MODULES([BOEHM_GC],[bdw-gc >= 7.1])
 AC_DEFINE([GC_THREADS],[1],[Define to 1 if Boehm GC has to co-exist with POSIX threads.])
 
 if test x"${i_do_have_gui}" = xyes; then
+   PKG_CHECK_MODULES([FREETYPE],[freetype2])
    PKG_CHECK_MODULES([CAIRO],[cairo >= 1.6])
    PKG_CHECK_MODULES([PANGO],[pango >= 1.10 pangocairo])
 fi
@@ -226,7 +226,6 @@ if test x"${HAVE_LIBUNISTRING}" != xyes; then
    AC_MSG_ERROR([Cannot find GNU libunistring. ${PACKAGE_NAME} cannot be built without it.])
 fi
 
-FONTFORGE_ARG_WITH_FREETYPE
 AC_ARG_VAR([FREETYPE_SOURCE],
         [directory where freetype source code is located for --enable-freetype-debugger;
          however, if --enable-freetype-debugger=DIR is specified, then DIR overrides

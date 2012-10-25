@@ -30,7 +30,7 @@
 #include "fffreetype.h"
 #include <math.h>
 
-#if _NO_FREETYPE || ! defined HAVE_MMAP
+#ifndef HAVE_MMAP
 
 int hasFreeType(void) {
 return( false );

@@ -34,7 +34,6 @@ Optional features:
 
 Optional dependencies:
 
-  freetype           ${i_do_have_freetype}  	${freetype_url}
   giflib             ${i_do_have_giflib}  	${giflib_url}
   libjpeg            ${i_do_have_libjpeg}  	${libjpeg_url}
   libtiff            ${i_do_have_libtiff}  	${libtiff_url}
