@@ -217,7 +217,9 @@ PKG_CHECK_MODULES([BOEHM_GC],[bdw-gc >= 7.1])
 AC_DEFINE([GC_THREADS],[1],[Define to 1 if Boehm GC has to co-exist with POSIX threads.])
 
 if test x"${i_do_have_gui}" = xyes; then
-   PKG_CHECK_MODULES([FREETYPE],[freetype2])
+   # 11.0.5 is the "libtool" version corresponding to 2.4.0 release as reported by pkg-config
+   # check doc/VERSION.DLL for mapping between libtool and release versions
+   PKG_CHECK_MODULES([FREETYPE],[freetype2 >= 11.0.5])
    PKG_CHECK_MODULES([CAIRO],[cairo >= 1.6])
    PKG_CHECK_MODULES([PANGO],[pango >= 1.10 pangocairo])
 fi

@@ -2841,7 +2841,6 @@ VISIBLE extern void SCCopyLayerToLayer(SplineChar *sc, int from, int to,int docl
 VISIBLE extern int hasFreeType(void);
 VISIBLE extern int hasFreeTypeDebugger(void);
 VISIBLE extern int hasFreeTypeByteCode(void);
-VISIBLE extern int FreeTypeAtLeast(int major, int minor, int patch);
 VISIBLE extern char *FreeTypeStringVersion(void);
 extern void doneFreeType(void);
 VISIBLE extern void *_FreeTypeFontContext(SplineFont *sf,SplineChar *sc,struct fontviewbase *fv,

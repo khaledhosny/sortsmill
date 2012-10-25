@@ -55,25 +55,11 @@ void CVDebugPointPopup(CharView *cv) {
 #else
 #include <ft2build.h>
 #include FT_FREETYPE_H
-#if defined(__MINGW32__)
-# if FREETYPE_MINOR>=2
-#  include <freetype/internal/internal.h>
-# endif
-# include <freetype/truetype/ttinterp.h>
-#else
-# if FREETYPE_MINOR>=2
-#  include <internal/internal.h>
-# endif
-# include "ttinterp.h"
-#endif
+#include <internal/internal.h>
+#include "ttinterp.h"
 
-#if FREETYPE_MAJOR==2 && (FREETYPE_MINOR<3 || (FREETYPE_MINOR==3 && FREETYPE_PATCH<5))
-# define PPEMX(exc)	((exc)->size->metrics.x_ppem)
-# define PPEMY(exc)	((exc)->size->metrics.y_ppem)
-#else
-# define PPEMX(exc)	((exc)->size->root.metrics.x_ppem)
-# define PPEMY(exc)	((exc)->size->root.metrics.y_ppem)
-#endif
+#define PPEMX(exc)	((exc)->size->root.metrics.x_ppem)
+#define PPEMY(exc)	((exc)->size->root.metrics.y_ppem)
 
 static Color rasterbackcol = 0xffffff;
 
@@ -388,7 +374,7 @@ static void DVPointsVExpose(GWindow pixmap,DebugView *dv,GEvent *event) {
 	n = r->n_points;
 	pts = show_current ? r->cur : r->org;
 	c = 0;
-	ph = FreeTypeAtLeast(2,1,8)?4:2;	/* number of phantom pts */
+	ph = 4;	/* number of phantom pts */
 
 	actives = dv->active_refs;
 	if ( !show_transformed || show_raw )
@@ -738,10 +724,8 @@ static void DVFigureNewState(DebugView *dv,TT_ExecContext exc) {
 	if ( exc->pts.n_points<=2 )
 	    cv->b.ft_gridfitwidth = 0;
 	/* suport for vertical phantom pts */
-	else if ( FreeTypeAtLeast(2,1,8))
-	    cv->b.ft_gridfitwidth = exc->pts.cur[exc->pts.n_points-3].x * dv->scalex;
 	else
-	    cv->b.ft_gridfitwidth = exc->pts.cur[exc->pts.n_points-1].x * dv->scalex;
+	    cv->b.ft_gridfitwidth = exc->pts.cur[exc->pts.n_points-3].x * dv->scalex;
     }
 
     if ( cv!=NULL )
@@ -1422,7 +1406,7 @@ return( DVChar(dv,event));
 	TT_ExecContext exc = DebuggerGetEContext(dv->dc);
 	i = (event->u.mouse.y-3)/dv->ii.fh+dv->points_offtop;
 	if ( i>=0 && exc!=NULL && !GGadgetIsChecked(GWidgetGetControl(dv->points,CID_Twilight)) ) {
-	    ph = FreeTypeAtLeast(2,1,8)?4:2;	/* number of phantom pts */
+	    ph = 4;	/* number of phantom pts */
 	    for ( j=k=0; j<exc->pts.n_points; ++j ) {
 		l = (j==0) ? exc->pts.n_points-ph : j-1;
 		if ( !(exc->pts.tags[j]&FT_Curve_Tag_On) && !(exc->pts.tags[l]&FT_Curve_Tag_On)) {

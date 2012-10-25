@@ -39,25 +39,11 @@ extern GBox _ggadget_Default_Box;
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
-#if defined(__MINGW32__)
-# if FREETYPE_MINOR>=2
-#  include <freetype/internal/internal.h>
-# endif
-# include <freetype/truetype/ttinterp.h>
-#else
-# if FREETYPE_MINOR>=2
-#  include <internal/internal.h>
-# endif
-# include "ttinterp.h"
-#endif
+#include <internal/internal.h>
+#include "ttinterp.h"
 
-#if FREETYPE_MAJOR==2 && (FREETYPE_MINOR<3 || (FREETYPE_MINOR==3 && FREETYPE_PATCH<5))
-# define PPEMX(exc)	((exc)->size->metrics.x_ppem)
-# define PPEMY(exc)	((exc)->size->metrics.y_ppem)
-#else
-# define PPEMX(exc)	((exc)->size->root.metrics.x_ppem)
-# define PPEMY(exc)	((exc)->size->root.metrics.y_ppem)
-#endif
+#define PPEMX(exc)	((exc)->size->root.metrics.x_ppem)
+#define PPEMY(exc)	((exc)->size->root.metrics.y_ppem)
 
 struct scr {
     int y, fh;
@@ -1052,11 +1038,7 @@ return(1);
 	    (val1&1) ? "(Win 1.7) | ": "",
 	    (val1&2) ? exc->tt_metrics.rotated ? "(rotated) | ": "(not rotated) | " : "",
 	    (val1&4) ? exc->tt_metrics.stretched ? "(stretched) | ": "(not stretched) | " : "",
-#if FREETYPE_MAJOR>2 || (FREETYPE_MAJOR==2 && (FREETYPE_MINOR>1 || (FREETYPE_MINOR==1 && FREETYPE_PATCH>11 )))
 	    (val1&32) ? exc->grayscale ? "(grey scale)": "(black/white)" : ""
-#else
-	    ""
-#endif
 	); 
       break;
       case 0x89:
