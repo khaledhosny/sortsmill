@@ -15,6 +15,7 @@
 
 include $(top_srcdir)/mk/flags.am
 include $(top_srcdir)/mk/guile.mk
+include $(top_srcdir)/mk/recipe-tools.mk
 
 lib_LTLIBRARIES = libguile-sortsmillff_iconv.la
 
@@ -29,12 +30,8 @@ AM_LDFLAGS = -module $(MY_CFLAGS) $(MY_LIBS)
 install-data-hook:
 #	Make sure the source module is no younger than the compiled
 #	module.
-	@for f in $(addprefix $(DESTDIR)$(guileobjmoduledir)/,	\
-					$(nodist_guileobjmodule_DATA));	do		\
-		if test -f "$${f}"; then 							\
-			echo touch "$${f}";								\
-			touch "$${f}";									\
-		fi													\
-	done
+	@$(call touch_files,								\
+		$(addprefix $(DESTDIR)$(guileobjmoduledir)/,	\
+					$(nodist_guileobjmodule_DATA)))
 
 MOSTLYCLEANFILES = iconv.go
