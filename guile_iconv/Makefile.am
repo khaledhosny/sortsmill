@@ -30,3 +30,5 @@ install-data-hook:
 #	Make sure the source module is no younger than the compiled
 #	module.
 	touch $(addprefix $(DESTDIR)$(guileobjmoduledir)/, $(nodist_guileobjmodule_DATA))
+
+MOSTLYCLEANFILES = iconv.go
