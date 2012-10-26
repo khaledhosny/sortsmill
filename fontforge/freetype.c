@@ -113,8 +113,6 @@ void doneFreeType(void) {
 }
 
 int hasFreeTypeByteCode(void) {
-    static int complained = 0;
-
     if ( !hasFreeType())
 return( false );
 
