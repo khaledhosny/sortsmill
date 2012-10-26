@@ -15,7 +15,7 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-(define-module (sortsmill-fontforge iconv)
+(define-module (sortsmillff iconv)
   #:export (embedded-utf7->string))
 
 (load-extension "libguile-sortsmillff_iconv"

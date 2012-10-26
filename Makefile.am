@@ -37,7 +37,7 @@ if GRAPHICAL_USER_INTERFACE
 SUBDIRS += gdraw data
 endif GRAPHICAL_USER_INTERFACE
 
-SUBDIRS += fontforge po scheme guile_iconv doc htdocs tests
+SUBDIRS += fontforge po scheme doc htdocs tests
 
 if THE_PROGRAMS
 #SUBDIRS += sfd2sxml

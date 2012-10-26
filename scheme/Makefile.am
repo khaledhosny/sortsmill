@@ -25,38 +25,76 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 include $(top_srcdir)/mk/flags.am
+include $(top_srcdir)/mk/guile.mk
+include $(top_srcdir)/mk/recipe-tools.mk
 
 #--------------------------------------------------------------------------
 
-dist_guilemodule_DATA = fontforge-main.scm sfd.scm
-guileextension_LTLIBRARIES = libguile-sortsmillff_fontforgeexe.la
+nobase_dist_guileobjmodule_DATA = sortsmillff/iconv.scm	\
+	sortsmillff/sfd-to-sxml.scm
 
-libguile_sortsmillff_fontforgeexe_la_SOURCES = fontforgeexe_ffi.c
-
-libguile_sortsmillff_fontforgeexe_la_CPPFLAGS = \
-	$(AM_CPPFLAGS) 								\
-	-I$(top_builddir)/fontforge					\
-	-I$(top_srcdir)/fontforge
-
-libguile_sortsmillff_fontforgeexe_la_LIBADD =					\
-	$(top_builddir)/auxiliary/libsortsmillff_aux.la				\
-	$(top_builddir)/gutils/libsortsmillff_gutils.la				\
-	$(top_builddir)/fontforge/libsortsmillff_fontforge.la		\
-	$(top_builddir)/fontforge/libsortsmillff_fontforgeexe.la
-
-libguile_sortsmillff_fontforgeexe_la_LDFLAGS = -module	\
-	$(COMMON_LD_FLAGS)
+nobase_nodist_guileobjmodule_DATA = sortsmillff/iconv.go	\
+	sortsmillff/sfd-to-sxml.go
 
 #--------------------------------------------------------------------------
+
+AM_LDFLAGS = -module $(MY_CFLAGS) $(MY_LIBS)
+
+lib_LTLIBRARIES =
+
+lib_LTLIBRARIES += libguile-sortsmillff_iconv.la
+libguile_sortsmillff_iconv_la_SOURCES = guile_iconv.c
+libguile_sortsmillff_iconv_la_LIBADD = $(top_builddir)/lib/libgnu.la
+
+#--------------------------------------------------------------------------
+
+install-data-hook:
+#	Make sure the source module is no younger than the compiled
+#	module.
+	@$(call touch_files,								\
+		$(addprefix $(DESTDIR)$(guileobjmoduledir)/,	\
+					$(nodist_guileobjmodule_DATA)))
+
+MOSTLYCLEANFILES = iconv.go
+
+#--------------------------------------------------------------------------
+
+
+
+
+
+
+##--------------------------------------------------------------------------
 #
-# Experimental start-up of the FontForge UI from a Guile script.
-
-EXTRA_SCRIPTS = fontforge.scm
-
-install-fontforge.scm: fontforge.scm
-	$(INSTALL_SCRIPT) fontforge.scm "$(DESTDIR)$(bindir)/"
-
-uninstall-local:
-	rm -f "$(DESTDIR)$(bindir)/fontforge.scm"
-
-#--------------------------------------------------------------------------
+#dist_guilemodule_DATA = fontforge-main.scm sfd.scm
+#guileextension_LTLIBRARIES = libguile-sortsmillff_fontforgeexe.la
+#
+#libguile_sortsmillff_fontforgeexe_la_SOURCES = fontforgeexe_ffi.c
+#
+#libguile_sortsmillff_fontforgeexe_la_CPPFLAGS = \
+#	$(AM_CPPFLAGS) 								\
+#	-I$(top_builddir)/fontforge					\
+#	-I$(top_srcdir)/fontforge
+#
+#libguile_sortsmillff_fontforgeexe_la_LIBADD =					\
+#	$(top_builddir)/auxiliary/libsortsmillff_aux.la				\
+#	$(top_builddir)/gutils/libsortsmillff_gutils.la				\
+#	$(top_builddir)/fontforge/libsortsmillff_fontforge.la		\
+#	$(top_builddir)/fontforge/libsortsmillff_fontforgeexe.la
+#
+#libguile_sortsmillff_fontforgeexe_la_LDFLAGS = -module	\
+#	$(COMMON_LD_FLAGS)
+#
+##--------------------------------------------------------------------------
+##
+## Experimental start-up of the FontForge UI from a Guile script.
+#
+#EXTRA_SCRIPTS = fontforge.scm
+#
+#install-fontforge.scm: fontforge.scm
+#	$(INSTALL_SCRIPT) fontforge.scm "$(DESTDIR)$(bindir)/"
+#
+#uninstall-local:
+#	rm -f "$(DESTDIR)$(bindir)/fontforge.scm"
+#
+##--------------------------------------------------------------------------

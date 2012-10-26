@@ -62,10 +62,10 @@ plugindir = ${pkglibdir}/plugins
 guileextensiondir = $(libdir)
 
 # Where Guile modules go.
-guilemoduledir = $(datarootdir)/guile/site/$(GUILE_API)/$(PACKAGE)
+guilemoduledir = $(datarootdir)/guile/site/$(GUILE_API)
 
 # Where compiled Guile modules go.
-guileobjmoduledir = $(datarootdir)/guile/site/$(GUILE_API)/$(PACKAGE)
+guileobjmoduledir = $(datarootdir)/guile/site/$(GUILE_API)
 
 # What gets passed as macros to the C sources.
 MY_SHAREDIR = ${pkgdatadir}
