@@ -55,7 +55,7 @@ install-data-hook:
 		$(addprefix $(DESTDIR)$(guileobjmoduledir)/,	\
 					$(nodist_guileobjmodule_DATA)))
 
-MOSTLYCLEANFILES = iconv.go
+MOSTLYCLEANFILES = $(nobase_nodist_guileobjmodule_DATA)
 
 #--------------------------------------------------------------------------
 
