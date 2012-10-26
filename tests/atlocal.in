@@ -38,3 +38,4 @@ utf8_locale="${LOCALE_FR_UTF8}"
 posix_locale="C"
 skip_python="test x@i_do_have_python_scripting@ != xyes"
 
+run_guile="${GUILE} --no-auto-compile -s"

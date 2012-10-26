@@ -69,8 +69,8 @@ $(TESTSUITE): $(srcdir)/testsuite.at $(srcdir)/package.m4 $(MY_AT_FILES)
 	mv $@.tmp $@
 
 MY_AT_FILES = xgc_h.at xunicase_h.at xuniconv_h.at xuninorm_h.at	\
-	xunistr_h.at gfile_c.at ps_number_h.at rexp_h.at psMat.at		\
-	old_python_tests.at
+	xunistr_h.at gfile_c.at ps_number_h.at rexp_h.at				\
+	sortsmillff_iconv.at psMat.at old_python_tests.at
 
 TESTS_XGC_H = test_x_gc_strndup test_x_gc_strjoin
 
@@ -105,6 +105,8 @@ AM_LDFLAGS = -export-dynamic -avoid-version
 EXTRA_DIST += $(MY_AT_FILES)
 
 EXTRA_DIST += test_xunistr_strtol.txt test_xunistr_strtod.txt
+
+EXTRA_DIST += test_utf7_to_string.scm
 
 EXTRA_DIST += test_psMat_identity.py test_psMat_inverse.py			\
 	test_psMat_compose.py test_psMat_rotate.py test_psMat_scale.py	\

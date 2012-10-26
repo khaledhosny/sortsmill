@@ -1,0 +1,35 @@
+# -*- coding: utf-8 -*-
+
+m4_defun([check_iconv],
+[
+AT_SETUP([$1])
+AT_KEYWORDS([sortsmillff_iconv iconv guile scheme unit])
+AT_SKIP_IF([test x"${posix_locale}" = x -o x"${posix_locale}" = xnone])
+AT_CHECK_UNQUOTED([
+export LC_ALL="${posix_locale}"
+if test x${DOING_INSTALLCHECK} = xyes; then
+   :
+else
+   export LTDL_LIBRARY_PATH="${abs_top_builddir}/scheme"
+   export GUILE_LOAD_PATH="${abs_top_srcdir}/scheme"
+fi
+${run_guile} "${abs_srcdir}"/$1
+],
+[$2],[$3],[$4])
+AT_CLEANUP
+])
+
+# Examples from the Wikipedia article on ‘UTF-7’.
+check_iconv([test_utf7_to_string.scm "Hello, World!"],[0],[Hello, World!],[])
+check_iconv([test_utf7_to_string.scm "1 +- 1 = 2"],[0],[1 + 1 = 2],[])
+
+# Examples from RFC-1642.
+check_iconv([test_utf7_to_string.scm "Item 3 is +AKM-1."],[0],[Item 3 is £1.],[])
+check_iconv([test_utf7_to_string.scm "A+ImIDkQ."],[0],[A≢Α.],[])
+check_iconv([test_utf7_to_string.scm "Hi Mom +Jjo-!"],[0],[Hi Mom ☺!],[])
+check_iconv([test_utf7_to_string.scm "+ZeVnLIqe-"],[0],[日本語],[])
+check_iconv(
+[test_utf7_to_string.scm "John H. Jenkins +TpVPXGBG- John+AF8-Jenkins+AEA-taligent.com 5 January 1993"],
+[0],
+[John H. Jenkins 井作恆 John_Jenkins@taligent.com 5 January 1993],
+[])
