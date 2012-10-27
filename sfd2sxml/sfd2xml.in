@@ -41,7 +41,14 @@
 
 (define (show-help)
   (format #t "Usage: ~a [OPTION]... [FILE]\n" program-name)
-  (display "\n")
+  (format #t "Convert FILE or standard input from SFD format to XML.\n")
+  (format #t "If neither -o nor --output is specified then output is to standard output.\n")
+  (format #t "\n")
+  (format #t "Mandatory arguments to long options are mandatory for short options, too.\n")
+  (format #t "  -o, --output=FILE          output to FILE instead of standard output\n")
+  (format #t "      --help                 display this help, then exit\n")
+  (format #t "      --version              output version information, then exit\n")
+  (format #t "\n")
   (format #t "Report ~a bugs at ~a\n" program-name package-bugreport)
   (format #t "~a home page: <~a>\n" package-name package-url))
 
@@ -62,6 +69,11 @@
   (format (current-error-port)
           "Try '~a --help' for more information.\n" program-name))
 
+(define output-option
+  (option '(#\o "output") #t #f
+          (lambda (opt name arg input-filenames output-filename)
+            (values input-filenames arg))))
+
 (define help-option
   (option '("help") #f #f
           (lambda (opt name arg input-filenames output-filename)
@@ -74,17 +86,18 @@
             (show-version)
             (quit))))
 
-(receive (input-filenames output-filename)
-    (args-fold (cdr (command-line))
-               (list help-option version-option)
-               (lambda (opt name arg input-filenames output-filename)
-                 (show-option-error name)
-                 (quit 1))
-               (lambda (arg input-filenames output-filename)
-                 (values (append input-filenames (list arg))
-                         output-filename))
-               '() #f)
+(define (parse-arguments args)
+  (args-fold (cdr (command-line))
+             (list output-option help-option version-option)
+             (lambda (opt name arg input-filenames output-filename)
+               (show-option-error name)
+               (quit 1))
+             (lambda (arg input-filenames output-filename)
+               (values (append input-filenames (list arg))
+                       output-filename))
+             '() #f))
 
+(define (convert-the-data input-filenames output-filename)
   (match (list input-filenames output-filename)
 
          ((() #f) (sfd->xml))
@@ -101,6 +114,12 @@
               (without-output-to-file outfile sfd->xml))))
 
          ((_ _)
-          (show-help)
+          (format (current-error-port)
+                  "~a: too many arguments\n" program-name)
+          (format (current-error-port)
+                  "Try '~a --help' for more information.\n" program-name)
           (quit 1))))
 
+(receive (input-filenames output-filename)
+    (parse-arguments (cdr (command-line)))
+  (convert-the-data input-filenames output-filename))
