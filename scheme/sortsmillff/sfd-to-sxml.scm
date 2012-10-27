@@ -78,7 +78,8 @@
               (match:start m 1)
               (match:end m 1))
         (if mandatory
-            (throw 'expected-a-keyword (sfd-source-info port))
+            (throw 'sfd-error "expected a keyword"
+                   (sfd-source-info port))
             #f))))
 
 ;; Return either a list (real-value real-string start-pos end-pos), or
@@ -91,7 +92,8 @@
               (match:start m 1)
               (match:end m 1))
         (if mandatory
-            (throw 'expected-a-real (sfd-source-info port))
+            (throw 'sfd-error "expected a real"
+                   (sfd-source-info port))
             #f))))
 
 ;; Return either a list (integer-value integer-string start-pos
@@ -104,7 +106,8 @@
               (match:start m 1)
               (match:end m 1))
         (if mandatory
-            (throw 'expected-an-integer (sfd-source-info port))
+            (throw 'sfd-error "expected an integer"
+                   (sfd-source-info port))
             #f))))
 
 ;; Return a list (string start-pos end-pos). The string has leading
@@ -125,12 +128,11 @@
     (if m
         (list (remove-embedded-nul-chars
                (embedded-utf7->string (match:substring m 1)))
-;              (match:substring m 1)
               (match:substring m 1)
               (match:start m 1)
               (match:end m 1))
         (if mandatory
-            (throw 'expected-a-string-utf7-encoded
+            (throw 'sfd-error "expected a string in UTF-7 encoding"
                    (sfd-source-info port))
             #f))))
 
@@ -138,7 +140,8 @@
   (if (regexp-exec sfd-line-end-re line start)
       #t
       (if mandatory
-          (throw 'expected-end-of-line (sfd-source-info port))
+          (throw 'sfd-error "expected end of line"
+                 (sfd-source-info port))
           #f)))
 
 ;; SFD version 4.0 is not supported, due to prejudice against it.
@@ -148,7 +151,10 @@
        (fuzzy= 2.0 version)
        (fuzzy= 3.0 version))
       '()
-      (throw 'unrecognized-sfd-version (list version (sfd-source-info port)))))
+      (throw 'sfd-error
+             (string-append "unrecognized sfd version ("
+                            (number->string version) ")")
+             (sfd-source-info port))))
 
 ;; Add an entry to the contents list by consing.
 (define (sfd-add-entry contents key value)
@@ -286,4 +292,5 @@
                             (cons (list '@ (list 'version version-string))
                                   contents)))))))
 
-     (_ (throw 'expected-sfd (sfd-source-info port))))))
+     (_ (throw 'sfd-error "expected a Spline Font Database (SFD) file"
+               (sfd-source-info port))))))
