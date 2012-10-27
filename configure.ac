@@ -339,7 +339,8 @@ FONTFORGE_SET_MY_LIBS
 FONTFORGE_CREATE_MAKEFILES
 FONTFORGE_CREATE_INDENT_PRO
 AC_CONFIG_FILES([inc/config-extra.h])
-AC_CONFIG_FILES([scheme/fontforge.scm])
+AC_CONFIG_FILES([sfd2sxml/sfd2sxml],[chmod +x sfd2sxml/sfd2sxml])
+AC_CONFIG_FILES([sfd2sxml/sfd2xml],[chmod +x sfd2sxml/sfd2xml])
 AC_CONFIG_FILES([pycontrib/site_init.py pycontrib/psMat.py])
 AC_CONFIG_FILES([fontforge/darwinsetup],[chmod +x fontforge/darwinsetup])
 FONTFORGE_CONFIG_TESTSUITE

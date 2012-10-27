@@ -1,0 +1,106 @@
+#! @GUILE@ \     -*- mode: scheme; coding: utf-8 -*-
+--no-auto-compile -s
+!#
+
+;; Copyright (C) 2012 Barry Schwartz
+;; 
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 3 of the License, or
+;; (at your option) any later version.
+;; 
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;; 
+;; You should have received a copy of the GNU General Public License
+;; along with this program; if not, see <http://www.gnu.org/licenses/>.
+
+(use-modules
+ (sortsmillff sfd-to-sxml)
+ (ice-9 format)
+ (ice-9 match)
+ (ice-9 receive)
+ (srfi srfi-37)
+ (sxml simple))
+
+(define program-name (basename (car (command-line))))
+(define package-name "@PACKAGE_NAME@")
+(define package-version "@PACKAGE_VERSION@")
+(define package-bugreport "@PACKAGE_BUGREPORT@")
+(define package-url "@PACKAGE_URL@")
+
+(define* (sfd->xml #:optional
+                   (input (current-input-port))
+                   (output (current-output-port)))
+  (set-port-encoding! input "UTF-8")
+  (set-port-conversion-strategy! input 'substitute)
+  (set-port-encoding! output "UTF-8")
+  (sxml->xml (sfd->sxml input) output))
+
+(define (show-help)
+  (format #t "Usage: ~a [OPTION]... [FILE]\n" program-name)
+  (display "\n")
+  (format #t "Report ~a bugs at ~a\n" program-name package-bugreport)
+  (format #t "~a home page: <~a>\n" package-name package-url))
+
+(define (show-version)
+  (format #t "~a (~a) ~a\n" program-name package-name package-version)
+  (display
+   (string-append
+    "Copyright (C) 2012 Barry Schwartz.\n"
+    "License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.\n"
+    "This is free software: you are free to change and redistribute it.\n"
+    "There is NO WARRANTY, to the extent permitted by law.\n"
+    "\n"
+    "Written by Barry Schwartz.\n")))
+
+(define (show-option-error option-name)
+  (format (current-error-port)
+          "~a: invalid option -- '~a'\n" program-name option-name)
+  (format (current-error-port)
+          "Try '~a --help' for more information.\n" program-name))
+
+(define help-option
+  (option '("help") #f #f
+          (lambda (opt name arg input-filenames output-filename)
+            (show-help)
+            (quit))))
+
+(define version-option
+  (option '("version") #f #f
+          (lambda (opt name arg input-filenames output-filename)
+            (show-version)
+            (quit))))
+
+(receive (input-filenames output-filename)
+    (args-fold (cdr (command-line))
+               (list help-option version-option)
+               (lambda (opt name arg input-filenames output-filename)
+                 (show-option-error name)
+                 (quit 1))
+               (lambda (arg input-filenames output-filename)
+                 (values (append input-filenames (list arg))
+                         output-filename))
+               '() #f)
+
+  (match (list input-filenames output-filename)
+
+         ((() #f) (sfd->xml))
+
+         (((inpfile) #f)
+          (with-input-from-file inpfile sfd->xml))
+
+         ((() outfile)
+          (with-output-to-file outfile sfd->xml))
+
+         (((inpfile) outfile)
+          (with-input-from-file inpfile
+            (lambda ()
+              (without-output-to-file outfile sfd->xml))))
+
+         ((_ _)
+          (show-help)
+          (quit 1))))
+

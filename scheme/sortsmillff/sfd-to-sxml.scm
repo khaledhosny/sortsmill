@@ -234,7 +234,8 @@
           'os2strikeypos 'antialias 'displaylayer 'displaysize 'extremabound
           'fittoem 'isextendedshape 'linegap 'macstyle 'onlybitmaps
           'pfmfamily 'pfmweight 'topencoding 'ttfweight 'ttfwidth 'vlinegap
-          'widthseparation)
+          'widthseparation 'woffmajor 'woffminor
+          'os2version 'fstype)
       key)
      start end)
     (sfd-read-integer-entry contents key line end #:port port))

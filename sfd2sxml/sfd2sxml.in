@@ -1,4 +1,6 @@
-;; -*- coding: utf-8 -*-
+#! @GUILE@ \     -*- mode: scheme; coding: utf-8 -*-
+--no-auto-compile -s
+!#
 
 ;; Copyright (C) 2012 Barry Schwartz
 ;; 
@@ -16,8 +18,7 @@
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 (use-modules
- (sortsmillff sfd-to-sxml)
- )
+ (sortsmillff sfd-to-sxml))
 
 (use-modules
  (ice-9 pretty-print)

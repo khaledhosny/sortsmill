@@ -23,6 +23,7 @@ AC_CONFIG_FILES([data/cidmap/Makefile])
 AC_CONFIG_FILES([data/pixmaps/Makefile])
 AC_CONFIG_FILES([fonttools/Makefile])
 AC_CONFIG_FILES([scheme/Makefile])
+AC_CONFIG_FILES([sfd2sxml/Makefile])
 
 # Snippets for use with "include".
 AC_CONFIG_FILES([mk/xgettext_search.mk])
