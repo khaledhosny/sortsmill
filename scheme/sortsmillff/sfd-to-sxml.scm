@@ -16,7 +16,7 @@
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 (define-module (sortsmillff sfd-to-sxml)
-  #:export (fontforge sfd->sxml)
+  #:export (sfd->sxml sfd-error-message)
   #:use-module (ice-9 match)
   #:use-module (ice-9 rdelim)
   #:use-module (ice-9 regex)
@@ -61,11 +61,11 @@
                        s)))
     (string->symbol (string-downcase trimmed-s))))
 
-(define (sfd-source-info port)
+(define (sfd-source-info port column)
   (if (input-port? port)
       (list (port-filename port)
             (port-line port)
-            (port-column port))
+            column)
       #f))
 
 ;; Return either a list (keyword-symbol start-pos end-pos), or #f if
@@ -79,7 +79,7 @@
               (match:end m 1))
         (if mandatory
             (throw 'sfd-error "expected a keyword"
-                   (sfd-source-info port))
+                   (sfd-source-info port 0))
             #f))))
 
 ;; Return either a list (real-value real-string start-pos end-pos), or
@@ -93,7 +93,7 @@
               (match:end m 1))
         (if mandatory
             (throw 'sfd-error "expected a real"
-                   (sfd-source-info port))
+                   (sfd-source-info port start))
             #f))))
 
 ;; Return either a list (integer-value integer-string start-pos
@@ -107,7 +107,7 @@
               (match:end m 1))
         (if mandatory
             (throw 'sfd-error "expected an integer"
-                   (sfd-source-info port))
+                   (sfd-source-info port start))
             #f))))
 
 ;; Return a list (string start-pos end-pos). The string has leading
@@ -133,7 +133,7 @@
               (match:end m 1))
         (if mandatory
             (throw 'sfd-error "expected a string in UTF-7 encoding"
-                   (sfd-source-info port))
+                   (sfd-source-info port start))
             #f))))
 
 (define* (sfd-get-line-end line start #:key port (mandatory #t))
@@ -141,11 +141,11 @@
       #t
       (if mandatory
           (throw 'sfd-error "expected end of line"
-                 (sfd-source-info port))
+                 (sfd-source-info port start))
           #f)))
 
 ;; SFD version 4.0 is not supported, due to prejudice against it.
-(define* (sfd-check-version version #:key port)
+(define* (sfd-check-version version #:key port column)
   (if (or
        (fuzzy= 1.0 version)
        (fuzzy= 2.0 version)
@@ -154,7 +154,7 @@
       (throw 'sfd-error
              (string-append "unrecognized sfd version ("
                             (number->string version) ")")
-             (sfd-source-info port))))
+             (sfd-source-info port column))))
 
 ;; Add an entry to the contents list by consing.
 (define (sfd-add-entry contents key value)
@@ -284,7 +284,7 @@
       (match (sfd-get-real line end #:port port)
              ((version version-string start end)
               (sfd-get-line-end line end #:port port)
-              (sfd-check-version version #:port port)
+              (sfd-check-version version #:port port #:column start)
               (let ((contents (sfd-read-contents port version)))
                 (list '*TOP*
                       '(*PI* xml "version=\"1.0\" encoding=\"UTF-8\"")
@@ -293,4 +293,17 @@
                                   contents)))))))
 
      (_ (throw 'sfd-error "expected a Spline Font Database (SFD) file"
-               (sfd-source-info port))))))
+               (sfd-source-info port 0))))))
+
+(define (sfd-error-message msg source-info)
+  (let ((location (match source-info
+                         ((#f line column)
+                          (simple-format #f "line ~A, column ~A"
+                                         (number->string line)
+                                         (number->string (+ column 1))))
+                         ((filename line column)
+                          (simple-format #f "~S, line ~A, column ~A"
+                                         filename
+                                         (number->string line)
+                                         (number->string (+ column 1)))))))
+    (simple-format #f "~A: ~A" location msg)))

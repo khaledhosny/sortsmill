@@ -19,7 +19,6 @@
 
 (use-modules
  (sortsmillff sfd-to-sxml)
- (ice-9 format)
  (ice-9 match)
  (ice-9 receive)
  (srfi srfi-37)
@@ -40,20 +39,20 @@
   (sxml->xml (sfd->sxml input) output))
 
 (define (show-help)
-  (format #t "Usage: ~a [OPTION]... [FILE]\n" program-name)
-  (format #t "Convert FILE or standard input from SFD format to XML.\n")
-  (format #t "If neither -o nor --output is specified then output is to standard output.\n")
-  (format #t "\n")
-  (format #t "Mandatory arguments to long options are mandatory for short options, too.\n")
-  (format #t "  -o, --output=FILE          output to FILE instead of standard output\n")
-  (format #t "      --help                 display this help, then exit\n")
-  (format #t "      --version              output version information, then exit\n")
-  (format #t "\n")
-  (format #t "Report ~a bugs at ~a\n" program-name package-bugreport)
-  (format #t "~a home page: <~a>\n" package-name package-url))
+  (simple-format #t "Usage: ~A [OPTION]... [FILE]\n" program-name)
+  (simple-format #t "Convert FILE or standard input from SFD format to XML.\n")
+  (simple-format #t "If neither -o nor --output is specified then output is to standard output.\n")
+  (simple-format #t "\n")
+  (simple-format #t "Mandatory arguments to long options are mandatory for short options, too.\n")
+  (simple-format #t "  -o, --output=FILE          output to FILE instead of standard output\n")
+  (simple-format #t "      --help                 display this help, then exit\n")
+  (simple-format #t "      --version              output version information, then exit\n")
+  (simple-format #t "\n")
+  (simple-format #t "Report ~A bugs at ~A\n" program-name package-bugreport)
+  (simple-format #t "~A home page: <~A>\n" package-name package-url))
 
 (define (show-version)
-  (format #t "~a (~a) ~a\n" program-name package-name package-version)
+  (simple-format #t "~A (~A) ~A\n" program-name package-name package-version)
   (display
    (string-append
     "Copyright (C) 2012 Barry Schwartz.\n"
@@ -64,10 +63,10 @@
     "Written by Barry Schwartz.\n")))
 
 (define (show-option-error option-name)
-  (format (current-error-port)
-          "~a: invalid option -- '~a'\n" program-name option-name)
-  (format (current-error-port)
-          "Try '~a --help' for more information.\n" program-name))
+  (simple-format (current-error-port)
+                 "~A: invalid option -- '~A'\n" program-name option-name)
+  (simple-format (current-error-port)
+                 "Try '~A --help' for more information.\n" program-name))
 
 (define output-option
   (option '(#\o "output") #t #f
@@ -114,12 +113,18 @@
               (without-output-to-file outfile sfd->xml))))
 
          ((_ _)
-          (format (current-error-port)
-                  "~a: too many arguments\n" program-name)
-          (format (current-error-port)
-                  "Try '~a --help' for more information.\n" program-name)
+          (simple-format (current-error-port)
+                         "~A: too many arguments\n" program-name)
+          (simple-format (current-error-port)
+                         "Try '~A --help' for more information.\n"
+                         program-name)
           (quit 1))))
 
 (receive (input-filenames output-filename)
     (parse-arguments (cdr (command-line)))
-  (convert-the-data input-filenames output-filename))
+  (catch 'sfd-error
+    (lambda () (convert-the-data input-filenames output-filename))
+    (lambda (key msg source-info)
+      (simple-format (current-error-port) "~A\n"
+                     (sfd-error-message msg source-info))
+      (quit 1))))
