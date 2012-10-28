@@ -18175,23 +18175,12 @@ void FontForge_PythonInit(void) {
 /* ************************************************************************** */
 
 static void SetPythonModuleMetadata( PyObject *module ) {
-    //char isodate[32];
     PyObject* pyver;
-    //PyObject* pydate;
 
     /* Make __version__ string */
     pyver = STRING_TO_PY(VERSION_MAJOR"."VERSION_MINOR"."VERSION_PATCH""VERSION_EXTRA_SHORT);
     Py_INCREF(pyver);
     PyModule_AddObject(module, "__version__", pyver);
-
-    // FIXME: What do we really want here?
-    //
-    /* Make __date__ string */
-    //snprintf(isodate, sizeof(isodate), "%04d-%02d-%02d",
-    //         (dt / 10000), (dt / 100) % 100, dt % 100 );
-    //pydate = STRING_TO_PY(isodate);
-    //Py_INCREF(pydate);
-    //PyModule_AddObject(module, "__date__", pydate);
 }
 
 
