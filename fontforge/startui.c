@@ -51,8 +51,6 @@
 #endif
 
 extern int AutoSaveFrequency;
-int splash = 1;
-static int localsplash;
 static int unique = 0;
 static int listen_to_apple_events = false;
 
@@ -68,7 +66,6 @@ _dousage (void)
   printf ("\t-recover none|auto|inquire|clean (control error recovery)\n");
   printf
     ("\t-allglyphs\t\t (load all glyphs in the 'glyf' table\n\t\t\t of a truetype collection)\n");
-  printf ("\t-nosplash\t\t (no splash screen)\n");
   printf
     ("\t-unique\t\t\t (if a fontforge is already running open\n\t\t\t all arguments in it and have this process exit)\n");
   printf ("\t-display display-name\t (sets the X display)\n");
@@ -332,18 +329,6 @@ PingOtherFontForge (int argc, char **argv)
   SendNextArg (&args);
   GDrawEventLoop (NULL);
   exit (0);                     /* But the event loop should never return */
-}
-
-static void
-start_splash_screen (void)
-{
-  GDrawSetVisible (splashw, true);
-  GDrawSync (NULL);
-  GDrawProcessPendingEvents (NULL);
-  GDrawProcessPendingEvents (NULL);
-  splasht = GDrawRequestTimer (splashw, 1000, 1000, NULL);
-
-  localsplash = false;
 }
 
 static int
@@ -629,8 +614,6 @@ fontforge_main_in_guile_mode (int argc, char **argv)
         AddR ("Gdraw.Keyboard", argv[++i]);
       else if (strcmp (pt, "-display") == 0 && i < argc - 1)
         display = argv[++i];
-      else if (strcmp (pt, "-nosplash") == 0)
-        splash = 0;
       else if (strcmp (pt, "-unique") == 0)
         unique = 1;
       else if (strcmp (pt, "-recover") == 0 && i < argc - 1)
@@ -726,10 +709,6 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   GDrawGetFontMetrics (splashw, splash_font, &as, &ds, &ld);
   fh = as + ds + ld;
   SplashLayout ();
-  localsplash = splash;
-
-  if (localsplash && !listen_to_apple_events)
-    start_splash_screen ();
 
   if (AutoSaveFrequency > 0)
     autosave_timer = GDrawRequestTimer (splashw,
@@ -769,8 +748,7 @@ fontforge_main_in_guile_mode (int argc, char **argv)
             if (ViewPostScriptFont (RecentFiles[next_recent++], openflags))
               any = 1;
         }
-      else if (strcmp (pt, "-sync") == 0 || strcmp (pt, "-memory") == 0 ||
-               strcmp (pt, "-nosplash") == 0
+      else if (strcmp (pt, "-sync") == 0 || strcmp (pt, "-memory") == 0
                || strcmp (pt, "-recover=none") == 0
                || strcmp (pt, "-recover=clean") == 0
                || strcmp (pt, "-recover=auto") == 0

@@ -57,7 +57,6 @@
 
 #define RAD2DEG	(180/3.1415926535897932)
 
-extern int splash;
 extern int adjustwidth;
 extern int adjustlbearing;
 extern Encoding *default_encoding;
@@ -324,9 +323,6 @@ static struct prefs_list
       NULL, NULL, 'O', NULL, 0,
       N_
       ("When filling using freetype in the outline view,\nhave freetype render the glyph antialiased.")},
-  {
-  N_("SplashScreen"), pr_bool, &splash, NULL, NULL, 'S', NULL, 0,
-      N_("Show splash screen on start-up")},
   {
   N_("ExportClipboard"), pr_bool, &export_clipboard, NULL, NULL, '\0', NULL,
       0,
