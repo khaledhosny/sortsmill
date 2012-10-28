@@ -179,7 +179,7 @@ ROOT_DOC_LIST = AA-Comparison.html aacutebase.png aacutemid.png			\
 	palmfonts.html PathToBind.png pcf-format.html						\
 	pfaeditchangelog.html pfaeditmath.html PfaEdits.gif					\
 	PfaEdit-TeX.html phi-hints-filled.png phi-hints-outline.png			\
-	phi-nohints-filled.png phi-nohints-outline.png plugins.html			\
+	phi-nohints-filled.png phi-nohints-outline.png		\
 	pnts.gif pointinfo-interp.png pointinfo.png pointmenu.html			\
 	pointsize.png PoV.png prefs-accent.png prefs-apps.png				\
 	prefs-editing.png prefs-font.png prefs-generate.png					\
