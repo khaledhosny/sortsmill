@@ -1502,33 +1502,14 @@ static void bWriteStringToFile(Context *c) {
     }
 }
 
-// FIXME: Plugins currently are not supported. Either remedy that
-// or deprecate this feature.
 static void bLoadPlugin(Context *c)
 {
-  if ( c->a.argc!=2 )
-    ScriptError( c, "Wrong number of arguments" );
-  else if ( c->a.vals[1].type!=v_str )
-    ScriptError( c, "Bad type of argument" );
-  ScriptError(c,"This version of fontforge does not support plugins");
+  ScriptError(c,"Plugins support have been removed, LoadPlugin() is deprecated");
 }
 
-// FIXME: Plugins currently are not supported. Either remedy that
-// or deprecate this feature.
 static void bLoadPluginDir(Context *c)
 {
-  char *dir=NULL, *_dir;
-
-  if ( c->a.argc>2 )
-    ScriptError( c, "Wrong number of arguments" );
-  else if ( c->a.argc==2 ) {
-    if ( c->a.vals[1].type!=v_str )
-      ScriptError( c, "Bad type of argument" );
-    _dir = script2utf8_copy(c->a.vals[1].u.sval);
-    dir = utf82def_copy(_dir); free(_dir);
-  }
-  ScriptError(c,"This version of fontforge does not support plugins");
-  free(dir);
+  ScriptError(c,"Plugins support have been removed, LoadPluginDir() is deprecated");
 }
 
 static void bLoadNamelist(Context *c) {
