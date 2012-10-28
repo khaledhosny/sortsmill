@@ -33,8 +33,13 @@
   (list->string (filter (lambda (c) (not (char=? c #\nul)))
                         (string->list s))))
 
-(define sfd-line-end-re
-  (make-regexp "^[[:space:]]*$"))
+(define (skip-spaces str i)
+  (let ((m (regexp-exec sfd-spaces-re str i)))
+    (match:end m 0)))
+
+(define sfd-spaces-re (make-regexp "^[[:space:]]*"))
+
+(define sfd-line-end-re (make-regexp "^[[:space:]]*$"))
 
 (define sfd-keyword-re
   (make-regexp "^[[:space:]]*([[:alpha:]][[:alnum:]]*:?)"))
@@ -80,7 +85,7 @@
               (match:end m 1))
         (if mandatory
             (throw 'sfd-error (_ "expected a keyword")
-                   (sfd-source-info port 0))
+                   (sfd-source-info port (skip-spaces line 0)))
             #f))))
 
 ;; Return either a list (real-value real-string start-pos end-pos), or
@@ -94,7 +99,7 @@
               (match:end m 1))
         (if mandatory
             (throw 'sfd-error (_ "expected a real")
-                   (sfd-source-info port start))
+                   (sfd-source-info port (skip-spaces line start)))
             #f))))
 
 ;; Return either a list (integer-value integer-string start-pos
@@ -108,7 +113,7 @@
               (match:end m 1))
         (if mandatory
             (throw 'sfd-error (_ "expected an integer")
-                   (sfd-source-info port start))
+                   (sfd-source-info port (skip-spaces line start)))
             #f))))
 
 ;; Return a list (string start-pos end-pos). The string has leading
@@ -134,7 +139,7 @@
               (match:end m 1))
         (if mandatory
             (throw 'sfd-error (_ "expected a string in UTF-7 encoding")
-                   (sfd-source-info port start))
+                   (sfd-source-info port (skip-spaces line start)))
             #f))))
 
 (define* (sfd-get-line-end line start #:key port (mandatory #t))
@@ -142,20 +147,20 @@
       #t
       (if mandatory
           (throw 'sfd-error (_ "expected end of line")
-                 (sfd-source-info port start))
+                 (sfd-source-info port (skip-spaces line start)))
           #f)))
 
 ;; SFD version 4.0 is not supported, due to prejudice against it.
-(define* (sfd-check-version version #:key port column)
+(define* (sfd-check-version version port line column)
   (if (or
        (fuzzy= 1.0 version)
        (fuzzy= 2.0 version)
        (fuzzy= 3.0 version))
       '()
       (throw 'sfd-error
-             (string-append (_ "unrecognized sfd version (")
+             (string-append (_ "unrecognized SFD version (")
                             (number->string version) ")")
-             (sfd-source-info port column))))
+             (sfd-source-info port (skip-spaces line column)))))
 
 ;; Add an entry to the contents list by consing.
 (define (sfd-add-entry contents key value)
@@ -285,7 +290,7 @@
       (match (sfd-get-real line end #:port port)
              ((version version-string start end)
               (sfd-get-line-end line end #:port port)
-              (sfd-check-version version #:port port #:column start)
+              (sfd-check-version version port line start)
               (let ((contents (sfd-read-contents port version)))
                 (list '*TOP*
                       '(*PI* xml "version=\"1.0\" encoding=\"UTF-8\"")
@@ -295,18 +300,16 @@
 
      (_ (throw 'sfd-error
                (_ "expected a Spline Font Database (SFD) file")
-               (sfd-source-info port 0))))))
+               (sfd-source-info port (skip-spaces line 0)))))))
 
 (define (sfd-error-message msg source-info)
   (let ((location (match source-info
                          ((#f line column)
-                          ;; FIXME: Make this nicely gettextable.
-                          (simple-format #f "line ~A, column ~A"
+                          (simple-format #f (_ "<input> @ ~A:~A")
                                          (number->string line)
                                          (number->string (+ column 1))))
                          ((filename line column)
-                          ;; FIXME: Make this nicely gettextable.
-                          (simple-format #f "~S, line ~A, column ~A"
+                          (simple-format #f (_ "~S @ ~A:~A")
                                          filename
                                          (number->string line)
                                          (number->string (+ column 1)))))))
