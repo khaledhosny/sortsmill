@@ -203,8 +203,7 @@ i_do_have_native_callbacks="${fontforge_cv_native_callbacks}"
 #
 # Checks for libraries.
 
-AC_SEARCH_LIBS([AO_locks],[atomic_ops])
-
+FONTFORGE_ATOMIC_OPS
 FONTFORGE_CONFIG_X_LIBRARIES
 FONTFORGE_LIBPCRE
 PKG_CHECK_MODULES([ZLIB],[zlib])
@@ -249,7 +248,7 @@ fi
 #
 # Checks for header files.
 
-AC_CHECK_HEADERS([atomic_ops.h libintl.h limits.h memory.h pthread.h])
+AC_CHECK_HEADERS([libintl.h limits.h memory.h pthread.h])
 
 #--------------------------------------------------------------------------
 #
