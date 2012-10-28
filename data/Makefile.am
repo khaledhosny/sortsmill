@@ -40,7 +40,11 @@ dist_hicolor24x24_DATA = icons/24x24/apps/fontforge.png
 dist_hicolor32x32_DATA = icons/32x32/apps/fontforge.png
 dist_hicolor48x48_DATA = icons/48x48/apps/fontforge.png
 dist_hicolorscalable_DATA = icons/scalable/apps/fontforge.svg
-dist_mimepackages_DATA = fontforge.xml
+
+mimepackages_in_files = fontforge.xml.in
+nodist_mimepackages_DATA = $(mimepackages_in_files:.xml.in=.xml)
+
+@INTLTOOL_XML_RULE@
 
 update-database: update-mime-database update-desktop-database
 
@@ -57,6 +61,8 @@ update-desktop-database:
 EXTRA_DIST = icons/src/icon-16x16-apps-fontforge.svg	\
 	icons/src/icon-24x24-apps-fontforge.svg				\
 	icons/src/icon-32x32-apps-fontforge.svg				\
-	$(desktop_in_files)
+	$(desktop_in_files) \
+	$(mimepackages_in_files)
 
-DISTCLEANFILES = $(nodist_desktop_DATA)
+DISTCLEANFILES = $(nodist_desktop_DATA) \
+	$(nodist_mimepackages_DATA)
