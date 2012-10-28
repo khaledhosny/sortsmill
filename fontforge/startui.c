@@ -138,7 +138,8 @@ struct delayed_event
   void (*func) (void *);
 };
 
-extern GImage splashimage;
+static GImage *splashimage = NULL;
+int splashwidth = 379, splashheight = 375;
 static GWindow splashw;
 static GTimer *autosave_timer;
 static GTimer *splasht;
@@ -154,8 +155,7 @@ ShowAboutScreen (void)
 
   if (first)
     {
-      GDrawResize (splashw, splashimage.u.image->width,
-                   splashimage.u.image->height + linecnt * fh);
+      GDrawResize (splashw, splashwidth, splashheight + linecnt * fh);
       first = false;
     }
   if (splasht != NULL)
@@ -185,8 +185,7 @@ SplashLayout ()
         {
           if (*pt == ' ' || *pt == '\0')
             {
-              if (GDrawGetTextWidth (splashw, start, pt - start) <
-                  splashimage.u.image->width - 10)
+              if (GDrawGetTextWidth (splashw, start, pt - start) < splashwidth - 10)
                 lastspace = pt;
               else
                 break;
@@ -359,9 +358,10 @@ splash_e_h (GWindow gw, GEvent * event)
       break;
     case et_expose:
       GDrawPushClip (gw, &event->u.expose.rect, &old);
-      GDrawDrawImage (gw, &splashimage, NULL, 0, 0);
+      if (splashimage != NULL)
+        GDrawDrawImage (gw, splashimage, NULL, 0, 0);
       GDrawSetFont (gw, splash_font);
-      y = splashimage.u.image->height + as + fh / 2;
+      y = splashheight + as + fh / 2;
       for (i = 1; i < linecnt; ++i)
         {
           if (is >= lines[i - 1] + 1 && is < lines[i])
@@ -398,11 +398,9 @@ splash_e_h (GWindow gw, GEvent * event)
       else if (event->u.timer.timer == splasht)
         {
           if (++splash_cnt == 1)
-            GDrawResize (gw, splashimage.u.image->width,
-                         splashimage.u.image->height - 30);
+            GDrawResize (gw, splashwidth, splashheight - 30);
           else if (splash_cnt == 2)
-            GDrawResize (gw, splashimage.u.image->width,
-                         splashimage.u.image->height);
+            GDrawResize (gw, splashwidth, splashheight);
           else if (splash_cnt >= 7)
             {
               GGadgetEndPopup ();
@@ -529,6 +527,16 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   int ds, ld;
   int openflags = 0;
   int doopen = 0, quit_request = 0;
+
+  if (splashimage == NULL)
+    {
+      splashimage = GImageRead (SHAREDIR "/pixmaps/splash.png");
+      if (splashimage != NULL)
+        {
+          splashwidth = splashimage->u.image->width;
+          splashheight = splashimage->u.image->height;
+        }
+    }
 
   fprintf (stderr,
            "Copyright (c) 2000-2012 by George Williams and others.\n%s"
@@ -683,8 +691,8 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   wattrs.background_color = 0xffffff;
   wattrs.is_dlg = !listen_to_apple_events;
   pos.x = pos.y = 200;
-  pos.width = splashimage.u.image->width;
-  pos.height = splashimage.u.image->height - 56;        /* 54 */
+  pos.width = splashwidth;
+  pos.height = splashheight - 56;       /* 54 */
   GDrawBindSelection (NULL, sn_user1, "FontForge");
   if (unique && GDrawSelectionOwned (NULL, sn_user1))
     {

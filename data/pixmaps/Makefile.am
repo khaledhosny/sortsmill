@@ -98,7 +98,7 @@ PNG_LIST = chooseraudio.png chooserback.png chooserbookmark.png			\
 	pointsmakearc.png pointsmakeline.png pointsnamecontour.png			\
 	pointsspironext.png pointsspiroprev.png pointstangent.png			\
 	ptinfocorner.png ptinfocurve.png ptinfohvcurve.png					\
-	ptinfotangent.png python.png styleschangeweight.png					\
+	ptinfotangent.png python.png splash.png styleschangeweight.png		\
 	styleschangexheight.png stylesextendcondense.png stylesinline.png	\
 	stylesitalic.png stylesoblique.png stylesoutline.png				\
 	stylesshadow.png stylessmallcaps.png stylessubsuper.png				\

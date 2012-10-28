@@ -133,7 +133,7 @@ libsortsmillff_fontforgeexe_la_SOURCES = alignment.c anchorsaway.c	\
 	metricsview.c mmdlg.c nonlineartransui.c openfontdlg.c	\
 	prefs.c problems.c pythonui.c savefontdlg.c scriptingdlg.c		\
 	scstylesui.c searchview.c sftextfield.c showatt.c simplifydlg.c	\
-	splashimage.c startui.c statemachine.c tilepath.c transform.c	\
+	startui.c statemachine.c tilepath.c transform.c	\
 	ttfinstrsui.c uiutil.c windowmenu.c justifydlg.c deltaui.c		\
 	usermenu.c
 
