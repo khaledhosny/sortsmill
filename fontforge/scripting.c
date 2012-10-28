@@ -9056,7 +9056,6 @@ static void handlename(Context *c,Val *val) {
 		val->type = v_str;
 		// FIXME: What do we really want to go here?
 		//
-		//sprintf(name,"%d", library_version_configuration.library_source_versiondate);
 		sprintf(name,"%s", PACKAGE_VERSION);
 		val->u.sval = xstrdup_or_null(name);
 	    } else if ( strcmp(name,"$haspython")==0 ) {

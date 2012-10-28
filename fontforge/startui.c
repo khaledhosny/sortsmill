@@ -684,12 +684,6 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   PyFF_ProcessInitFiles ();
 #endif
 
-  /* Wait until the UI has started, otherwise people who don't have consoles */
-  /*  open won't get our error messages, and it's an important one */
-  /* Scripting doesn't care about a mismatch, because scripting interpretation */
-  /*  all lives in the library */
-  //check_library_version(&exe_library_version_configuration,true,false);
-
   /* the splash screen used not to have a title bar (wam_nodecor) */
   /*  but I found I needed to know how much the window manager moved */
   /*  the window around, which I can determine if I have a positioned */

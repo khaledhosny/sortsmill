@@ -76,26 +76,6 @@ VISIBLE extern Encoding *enclist;
 
 VISIBLE extern MacFeat *default_mac_feature_map;
 
-typedef struct library_version_configuration {
-    uint16_t major, minor;
-    long library_source_modtime;
-    char *library_source_modtime_string;
-    int  library_source_versiondate;
-    uint16_t sizeof_me;
-    uint16_t sizeof_splinefont;
-    uint16_t sizeof_splinechar;
-    uint16_t sizeof_fvbase;
-    uint16_t sizeof_cvbase;
-    uint16_t sizeof_cvcontainer;
-    uint8_t  config_had_devicetables;
-    uint8_t  config_had_multilayer;
-    uint8_t  config_had_python;
-    uint8_t  mba1;		/* Must be all ones (0xff), config values are 0,1 need to distinquish from both */
-} Library_Version_Configuration;
-extern Library_Version_Configuration library_version_configuration;
-
-extern int check_library_version(Library_Version_Configuration *exe_lib_version, int fatal, int quiet);
-
 VISIBLE extern int fontforge_main(int, char **);
 
 #endif

@@ -18178,7 +18178,6 @@ static void SetPythonModuleMetadata( PyObject *module ) {
     //char isodate[32];
     PyObject* pyver;
     //PyObject* pydate;
-    //int dt = library_version_configuration.library_source_versiondate;
 
     /* Make __version__ string */
     pyver = STRING_TO_PY(VERSION_MAJOR"."VERSION_MINOR"."VERSION_PATCH""VERSION_EXTRA_SHORT);
