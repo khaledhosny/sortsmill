@@ -28,3 +28,31 @@
 
 %.go: %.scm
 	$(GUILE_TOOLS) compile -o $@ $<
+
+# Do this here rather than in configure.ac so some of these settings
+# can be overridden when Make is run.
+CONFIGURE_SCHEME =														\
+	$(SED) 																\
+		-e 's|@''GUILE''@|$(GUILE)|g' 									\
+		-e 's|@''SHAREDIR''@|$(SHAREDIR)|g' 							\
+		-e 's|@''DOCDIR''@|$(DOCDIR)|g' 								\
+		-e 's|@''LOCALEDIR''@|$(LOCALEDIR)|g' 							\
+		-e 's|@''FF_TEXTDOMAIN''@|$(FF_TEXTDOMAIN)|g' 					\
+		-e 's|@''FF_SHORTCUTSDOMAIN''@|$(FF_SHORTCUTSDOMAIN)|g'			\
+		-e 's|@''FF_MACSHORTCUTSDOMAIN''@|$(FF_MACSHORTCUTSDOMAIN)|g'	\
+		-e 's|@''VERSION_MAJOR''@|$(VERSION_MAJOR)|g' 					\
+		-e 's|@''VERSION_MINOR''@|$(VERSION_MINOR)|g' 					\
+		-e 's|@''VERSION_PATCH''@|$(VERSION_PATCH)|g' 					\
+		-e 's|@''VERSION_EXTRA''@|$(VERSION_EXTRA)|g' 					\
+		-e 's|@''VERSION_EXTRA_SHORT''@|$(VERSION_EXTRA_SHORT)|g' 		\
+		-e 's|@''PACKAGE''@|$(PACKAGE)|g'				 				\
+		-e 's|@''PACKAGE_BUGREPORT''@|$(PACKAGE_BUGREPORT)|g'			\
+		-e 's|@''PACKAGE_NAME''@|$(PACKAGE_NAME)|g'						\
+		-e 's|@''PACKAGE_STRING''@|$(PACKAGE_STRING)|g'					\
+		-e 's|@''PACKAGE_TARNAME''@|$(PACKAGE_TARNAME)|g'				\
+		-e 's|@''PACKAGE_URL''@|$(PACKAGE_URL)|g'						\
+		-e 's|@''PACKAGE_VERSION''@|$(PACKAGE_VERSION)|g'
+
+%.scm: %.scm.in
+	$(AM_V_GEN)
+	$(AM_V_at)$(CONFIGURE_SCHEME) < $< > $@

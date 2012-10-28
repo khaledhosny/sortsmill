@@ -55,9 +55,6 @@ pkgpythondatadir = ${pkgdatadir}/python
 # Where contributed Python scripts go.
 pycontribdir = ${pythondir}/ffContrib
 
-# Where plugin modules go.
-plugindir = ${pkglibdir}/plugins
-
 # Where Guile shared-library extensions go.
 guileextensiondir = $(libdir)
 

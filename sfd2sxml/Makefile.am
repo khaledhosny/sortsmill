@@ -25,5 +25,15 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 include $(top_srcdir)/mk/flags.am
+include $(top_srcdir)/mk/guile.mk
 
 nodist_bin_SCRIPTS = sfd2sxml sfd2xml
+
+EXTRA_DIST = sfd2sxml.in sfd2xml.in
+
+%: %.in
+	$(AM_V_GEN)
+	$(AM_V_at)$(CONFIGURE_SCHEME) < $< > $@
+	chmod +x $@
+
+CLEANFILES = $(nodist_bin_SCRIPTS)
