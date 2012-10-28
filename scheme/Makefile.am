@@ -33,9 +33,10 @@ include $(top_srcdir)/mk/recipe-tools.mk
 nobase_dist_guileobjmodule_DATA = sortsmillff/iconv.scm	\
 	sortsmillff/sfd-to-sxml.scm
 
-nobase_nodist_guileobjmodule_DATA = sortsmillff/i18n.scm	\
-	sortsmillff/i18n.go sortsmillff/iconv.go				\
-	sortsmillff/sfd-to-sxml.go
+nobase_nodist_guileobjmodule_DATA = sortsmillff/i18n.scm
+#	\
+#	sortsmillff/i18n.go sortsmillff/iconv.go				\
+#	sortsmillff/sfd-to-sxml.go
 
 EXTRA_DIST = sortsmillff/i18n.scm.in
 

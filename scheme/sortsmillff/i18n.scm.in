@@ -20,4 +20,4 @@
 
 (define ff_textdomain "@FF_TEXTDOMAIN@")
 
-(define (_ msg) (gettext msg my_textdomain))
+(define (_ msg) (gettext msg ff_textdomain))

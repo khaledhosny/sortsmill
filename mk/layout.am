@@ -67,7 +67,6 @@ guileobjmoduledir = $(datarootdir)/guile/site/$(GUILE_API)
 # What gets passed as macros to the C sources.
 MY_SHAREDIR = ${pkgdatadir}
 MY_DOCDIR = ${htdocsdir}
-MY_PLUGINDIR = ${plugindir}
 MY_LOCALEDIR = ${localedir}
 
 #--------------------------------------------------------------------------

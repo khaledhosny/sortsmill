@@ -20,6 +20,7 @@
   #:use-module (ice-9 match)
   #:use-module (ice-9 rdelim)
   #:use-module (ice-9 regex)
+  #:use-module (sortsmillff i18n)
   #:use-module (sortsmillff iconv))
 
 ;; FIXME: Get epsilon a better way, such as from the C library or GSL.
@@ -78,7 +79,7 @@
               (match:start m 1)
               (match:end m 1))
         (if mandatory
-            (throw 'sfd-error "expected a keyword"
+            (throw 'sfd-error (_ "expected a keyword")
                    (sfd-source-info port 0))
             #f))))
 
@@ -92,7 +93,7 @@
               (match:start m 1)
               (match:end m 1))
         (if mandatory
-            (throw 'sfd-error "expected a real"
+            (throw 'sfd-error (_ "expected a real")
                    (sfd-source-info port start))
             #f))))
 
@@ -106,7 +107,7 @@
               (match:start m 1)
               (match:end m 1))
         (if mandatory
-            (throw 'sfd-error "expected an integer"
+            (throw 'sfd-error (_ "expected an integer")
                    (sfd-source-info port start))
             #f))))
 
@@ -132,7 +133,7 @@
               (match:start m 1)
               (match:end m 1))
         (if mandatory
-            (throw 'sfd-error "expected a string in UTF-7 encoding"
+            (throw 'sfd-error (_ "expected a string in UTF-7 encoding")
                    (sfd-source-info port start))
             #f))))
 
@@ -140,7 +141,7 @@
   (if (regexp-exec sfd-line-end-re line start)
       #t
       (if mandatory
-          (throw 'sfd-error "expected end of line"
+          (throw 'sfd-error (_ "expected end of line")
                  (sfd-source-info port start))
           #f)))
 
@@ -152,7 +153,7 @@
        (fuzzy= 3.0 version))
       '()
       (throw 'sfd-error
-             (string-append "unrecognized sfd version ("
+             (string-append (_ "unrecognized sfd version (")
                             (number->string version) ")")
              (sfd-source-info port column))))
 
@@ -292,16 +293,19 @@
                             (cons (list '@ (list 'version version-string))
                                   contents)))))))
 
-     (_ (throw 'sfd-error "expected a Spline Font Database (SFD) file"
+     (_ (throw 'sfd-error
+               (_ "expected a Spline Font Database (SFD) file")
                (sfd-source-info port 0))))))
 
 (define (sfd-error-message msg source-info)
   (let ((location (match source-info
                          ((#f line column)
+                          ;; FIXME: Make this nicely gettextable.
                           (simple-format #f "line ~A, column ~A"
                                          (number->string line)
                                          (number->string (+ column 1))))
                          ((filename line column)
+                          ;; FIXME: Make this nicely gettextable.
                           (simple-format #f "~S, line ~A, column ~A"
                                          filename
                                          (number->string line)
