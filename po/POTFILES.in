@@ -152,3 +152,4 @@ gdraw/gscrollbar.c
 gdraw/gtabset.c
 gdraw/gtextfield.c
 gdraw/gtextinfo.c
+scheme/sortsmillff/sfd-to-sxml.scm

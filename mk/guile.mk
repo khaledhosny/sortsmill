@@ -27,7 +27,8 @@
 #--------------------------------------------------------------------------
 
 %.go: %.scm
-	$(GUILE_TOOLS) compile -o $@ $<
+	LTDL_LIBRARY_PATH="$(top_builddir)/scheme:$${LTDL_LIBRARY_PATH}" \
+	$(GUILE_TOOLS) compile -L$(top_builddir)/scheme -L$(top_srcdir)/scheme -o $@ $<
 
 # Do this here rather than in configure.ac so some of these settings
 # can be overridden when Make is run.
