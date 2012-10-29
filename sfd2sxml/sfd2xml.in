@@ -21,6 +21,7 @@
  (sortsmillff sfd-to-sxml)
  (ice-9 match)
  (ice-9 receive)
+ (srfi srfi-26)
  (srfi srfi-37)
  (sxml simple))
 
@@ -38,35 +39,37 @@
   (set-port-encoding! output "UTF-8")
   (sxml->xml (sfd->sxml input) output))
 
+;; FIXME: Is there a format package for Guile that can switch the
+;; order in which items are printed?
 (define (show-help)
-  (simple-format #t "Usage: ~A [OPTION]... [FILE]\n" program-name)
-  (simple-format #t "Convert FILE or standard input from SFD format to XML.\n")
-  (simple-format #t "If neither -o nor --output is specified then output is to standard output.\n")
+  (simple-format #t (_ "Usage: ~A [OPTION]... [FILE]\n") program-name)
+  (simple-format #t (_ "Convert FILE or standard input from SFD format to XML.\n"))
+  (simple-format #t (_ "If neither -o nor --output is specified then output is to standard output.\n"))
   (simple-format #t "\n")
-  (simple-format #t "Mandatory arguments to long options are mandatory for short options, too.\n")
-  (simple-format #t "  -o, --output=FILE          output to FILE instead of standard output\n")
-  (simple-format #t "      --help                 display this help, then exit\n")
-  (simple-format #t "      --version              output version information, then exit\n")
+  (simple-format #t (_ "Mandatory arguments to long options are mandatory for short options, too.\n"))
+  (simple-format #t (_ "  -o, --output=FILE          output to FILE instead of standard output\n"))
+  (simple-format #t (_ "      --help                 display this help, then exit\n"))
+  (simple-format #t (_ "      --version              output version information, then exit\n"))
   (simple-format #t "\n")
-  (simple-format #t "Report ~A bugs at ~A\n" program-name package-bugreport)
-  (simple-format #t "~A home page: <~A>\n" package-name package-url))
+  (simple-format #t (_ "Report ~A bugs at ~A\n" program-name package-bugreport))
+  (simple-format #t (_ "~A home page: <~A>\n" package-name package-url)))
 
 (define (show-version)
   (simple-format #t "~A (~A) ~A\n" program-name package-name package-version)
   (display
    (string-append
-    "Copyright (C) 2012 Barry Schwartz.\n"
-    "License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.\n"
-    "This is free software: you are free to change and redistribute it.\n"
-    "There is NO WARRANTY, to the extent permitted by law.\n"
+    (_ "Copyright (C) 2012 Barry Schwartz.\n")
+    (_ "License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.\n")
+    (_ "This is free software: you are free to change and redistribute it.\n")
+    (_ "There is NO WARRANTY, to the extent permitted by law.\n")
     "\n"
-    "Written by Barry Schwartz.\n")))
+    (_ "Written by Barry Schwartz.\n"))))
 
 (define (show-option-error option-name)
   (simple-format (current-error-port)
-                 "~A: invalid option -- '~A'\n" program-name option-name)
+                 (_ "~A: invalid option -- '~A'\n") program-name option-name)
   (simple-format (current-error-port)
-                 "Try '~A --help' for more information.\n" program-name))
+                 (_ "Try '~A --help' for more information.\n") program-name))
 
 (define output-option
   (option '(#\o "output") #t #f
@@ -74,7 +77,7 @@
             (values input-filenames arg))))
 
 (define help-option
-  (option '("help") #f #f
+  (option '( "help") #f #f
           (lambda (opt name arg input-filenames output-filename)
             (show-help)
             (quit))))
@@ -114,17 +117,35 @@
 
          ((_ _)
           (simple-format (current-error-port)
-                         "~A: too many arguments\n" program-name)
+                         (_ "~A: too many arguments\n") program-name)
           (simple-format (current-error-port)
-                         "Try '~A --help' for more information.\n"
+                         (_ "Try '~A --help' for more information.\n")
                          program-name)
           (quit 1))))
 
+(define (my-throw-handler key . parameters)
+  (match key
+         ('sfd-error
+          (match parameters
+                 ((msg source-info)
+                  (simple-format (current-error-port) "~A: " program-name)
+                  (simple-format (current-error-port) "~A\n"
+                                 (sfd-error-message msg source-info))
+                  (quit 1))))
+
+         ('system-error
+          (match parameters
+                 ((subr msg args errno)
+                  (simple-format (current-error-port) "~A: " program-name)
+                  (apply (cut simple-format (current-error-port) msg <...>)
+                         args)
+                  (newline (current-error-port))
+                  (quit 1))))
+
+         (_ #t)))
+
 (receive (input-filenames output-filename)
     (parse-arguments (cdr (command-line)))
-  (catch 'sfd-error
+  (with-throw-handler #t
     (lambda () (convert-the-data input-filenames output-filename))
-    (lambda (key msg source-info)
-      (simple-format (current-error-port) "~A\n"
-                     (sfd-error-message msg source-info))
-      (quit 1))))
+    my-throw-handler))

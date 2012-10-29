@@ -154,3 +154,5 @@ gdraw/gtabset.c
 gdraw/gtextfield.c
 gdraw/gtextinfo.c
 scheme/sortsmillff/sfd-to-sxml.scm
+sfd2sxml/sfd2sxml.in
+sfd2sxml/sfd2xml.in
