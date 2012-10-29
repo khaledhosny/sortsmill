@@ -39,9 +39,6 @@
 #include <utype.h>
 #include <unistd.h>
 #include <locale.h>
-#if !defined(__MINGW32__)
-# include <pwd.h>
-#endif
 #include <stdarg.h>
 #include <time.h>
 #include "psfont.h"
