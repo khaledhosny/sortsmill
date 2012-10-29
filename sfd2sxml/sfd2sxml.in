@@ -18,19 +18,143 @@
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 (use-modules
- (sortsmillff sfd-to-sxml))
-
-(use-modules
+ (sortsmillff sfd-to-sxml)
+ (sortsmillff i18n)
+ (ice-9 match)
  (ice-9 pretty-print)
- (sxml simple))
+ (ice-9 receive)
+ (srfi srfi-26)
+ (srfi srfi-37))
 
-(with-fluids
- ((%default-port-encoding "UTF-8")
-  (%default-port-conversion-strategy 'substitute))
- (with-input-from-file "Fanwood-Italic.sfd"
-   ;; (with-input-from-file "GoudyBookltr1911-Titling.sfd"
-   (lambda ()
-     (let ((sfd (sfd->sxml)))
-       (pretty-print sfd)
-       (sxml->xml sfd)
-       ))))
+(define program-name (basename (car (command-line))))
+(define package-name "@PACKAGE_NAME@")
+(define package-version "@PACKAGE_VERSION@")
+(define package-bugreport "@PACKAGE_BUGREPORT@")
+(define package-url "@PACKAGE_URL@")
+
+(define* (sfd->xml #:optional
+                   (input (current-input-port))
+                   (output (current-output-port)))
+  (set-port-encoding! input "UTF-8")
+  (set-port-conversion-strategy! input 'substitute)
+  (set-port-encoding! output "UTF-8")
+  (sxml->xml (sfd->sxml input) output))
+
+;; FIXME: Is there a format package for Guile that can switch the
+;; order in which items are printed?
+(define (show-help)
+  (simple-format #t (_ "Usage: ~A [OPTION]... [FILE]\n") program-name)
+  (simple-format #t (_ "Convert FILE or standard input from SFD format to XML.\n"))
+  (simple-format #t (_ "If neither -o nor --output is specified then output is to standard output.\n"))
+  (simple-format #t "\n")
+  (simple-format #t (_ "Mandatory arguments to long options are mandatory for short options, too.\n"))
+  (simple-format #t (_ "  -o, --output=FILE          output to FILE instead of standard output\n"))
+  (simple-format #t (_ "  -c, --compact              output more compactly (default is to pretty-print)\n"))
+  (simple-format #t (_ "      --help                 display this help, then exit\n"))
+  (simple-format #t (_ "      --version              output version information, then exit\n"))
+  (simple-format #t "\n")
+  (simple-format #t (_ "Report ~A bugs at ~A\n") program-name package-bugreport)
+  (simple-format #t (_ "~A home page: <~A>\n") package-name package-url))
+
+(define (show-version)
+  (simple-format #t "~A (~A) ~A\n" program-name package-name package-version)
+  (display
+   (string-append
+    (_ "Copyright (C) 2012 Barry Schwartz.\n")
+    (_ "License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.\n")
+    (_ "This is free software: you are free to change and redistribute it.\n")
+    (_ "There is NO WARRANTY, to the extent permitted by law.\n")
+    "\n"
+    (_ "Written by Barry Schwartz.\n"))))
+
+(define (show-option-error option-name)
+  (simple-format (current-error-port)
+                 (_ "~A: invalid option -- '~A'\n") program-name option-name)
+  (simple-format (current-error-port)
+                 (_ "Try '~A --help' for more information.\n") program-name))
+
+(define output-option
+  (option '(#\o "output") #t #f
+          (lambda (opt name arg input-filenames output-filename printer)
+            (values input-filenames arg printer))))
+
+(define compact-option
+  (option '(#\c "compact") #f #f
+          (lambda (opt name arg input-filenames output-filename printer)
+            (values input-filenames output-filename write))))
+
+(define help-option
+  (option '( "help") #f #f
+          (lambda (opt name arg input-filenames output-filename printer)
+            (show-help)
+            (quit))))
+
+(define version-option
+  (option '("version") #f #f
+          (lambda (opt name arg input-filenames output-filename printer)
+            (show-version)
+            (quit))))
+
+(define (parse-arguments args)
+  (args-fold (cdr (command-line))
+             (list output-option compact-option help-option version-option)
+             (lambda (opt name arg input-filenames output-filename printer)
+               (show-option-error name)
+               (quit 1))
+             (lambda (arg input-filenames output-filename printer)
+               (values (append input-filenames (list arg))
+                       output-filename
+                       printer))
+             '() #f pretty-print))
+
+(define (convert-the-data input-filenames output-filename)
+  (match (list input-filenames output-filename)
+
+         ((() #f) (sfd->sxml))
+
+         (((inpfile) #f)
+          (with-input-from-file inpfile sfd->sxml))
+
+         ((() outfile)
+          (with-output-to-file outfile sfd->sxml))
+
+         (((inpfile) outfile)
+          (with-input-from-file inpfile
+            (lambda ()
+              (with-output-to-file outfile sfd->sxml))))
+
+         ((_ _)
+          (simple-format (current-error-port)
+                         (_ "~A: too many arguments\n") program-name)
+          (simple-format (current-error-port)
+                         (_ "Try '~A --help' for more information.\n")
+                         program-name)
+          (quit 1))))
+
+(define (my-throw-handler key . parameters)
+  (match key
+         ('sfd-error
+          (match parameters
+                 ((msg source-info)
+                  (simple-format (current-error-port) "~A: " program-name)
+                  (simple-format (current-error-port) "~A\n"
+                                 (sfd-error-message msg source-info))
+                  (quit 1))))
+
+         ('system-error
+          (match parameters
+                 ((subr msg args errno)
+                  (simple-format (current-error-port) "~A: " program-name)
+                  (apply (cut simple-format (current-error-port) msg <...>)
+                         args)
+                  (newline (current-error-port))
+                  (quit 1))))
+
+         (_ #t)))
+
+(receive (input-filenames output-filename printer)
+    (parse-arguments (cdr (command-line)))
+  (with-throw-handler #t
+    (lambda () (printer
+                (convert-the-data input-filenames output-filename)))
+    my-throw-handler))
