@@ -8488,6 +8488,11 @@ void InitToolIcons(void) {
         done = true;
         GGadgetInit();
 
+        TryGGadgetImageCache(&GIcon_FontForgeLogo, "fflogo.png");
+        TryGGadgetImageCache(&GIcon_FontForgeBack, "ffback.png");
+        TryGGadgetImageCache(&GIcon_FontForgeGuide, "ffguide.png");
+        TryGGadgetImageCache(&OFL_logo, "ofllogo.png");
+
         /* Large 24x24 icons for CharView tool palettes */
         TryGGadgetImageCache(&GIcon_hand, "palettehand.png");
         TryGGadgetImageCache(&GIcon_line, "paletteline.png");
@@ -8568,6 +8573,47 @@ void InitToolIcons(void) {
         TryGGadgetImageCache(&GIcon_exit, "ttdebugexit.png");
         TryGGadgetImageCache(&GIcon_Stopped, "ttdebugstopped.png");
         TryGGadgetImageCache(&GIcon_Stop, "ttdebugstop.png");
+
+        /* Icons for color menu */
+        TryGGadgetImageCache(&def_image, "colordef.png");
+        TryGGadgetImageCache(&red_image, "colorred.png");
+        TryGGadgetImageCache(&blue_image, "colorblue.png");
+        TryGGadgetImageCache(&green_image, "colorgreen.png");
+        TryGGadgetImageCache(&magenta_image, "colormagenta.png");
+        TryGGadgetImageCache(&yellow_image, "coloryellow.png");
+        TryGGadgetImageCache(&cyan_image, "colorcyan.png");
+        TryGGadgetImageCache(&white_image, "colorwhite.png");
+        TryGGadgetImageCache(&customcolor_image, "colorcustom.png");
+
+        /* icons for bitmap and char views */
+        TryGGadgetImageCache(&GIcon_press2ptr, "bvpress2ptr.png");
+
+        TryGGadgetImageCache(&GIcon_lock, "cvlock.png");
+        TryGGadgetImageCache(&GIcon_mag, "cvmag.png");
+        TryGGadgetImageCache(&GIcon_angle, "cvangle.png");
+        TryGGadgetImageCache(&GIcon_distance, "cvdistance.png");
+        TryGGadgetImageCache(&GIcon_selectedpoint, "cvselectedpoint.png");
+        TryGGadgetImageCache(&GIcon_sel2ptr, "cvsel2ptr.png");
+        TryGGadgetImageCache(&GIcon_rightpointer, "cvrightpointer.png");
+
+        /* icons for scstylesui */
+        TryGGadgetImageCache(&GIcon_u45fItalic, "scu45fitalic.png");
+        TryGGadgetImageCache(&GIcon_u452Italic, "scu452italic.png");
+        TryGGadgetImageCache(&GIcon_u448Italic, "scu448italic.png");
+        TryGGadgetImageCache(&GIcon_u444Italic, "scu444italic.png");
+        TryGGadgetImageCache(&GIcon_u442Italic, "scu442italic.png");
+        TryGGadgetImageCache(&GIcon_u43fItalic, "scu43fitalic.png");
+        TryGGadgetImageCache(&GIcon_u438Italic, "scu438italic.png");
+        TryGGadgetImageCache(&GIcon_pItalic, "scpitalic.png");
+        TryGGadgetImageCache(&GIcon_f2Italic, "scf2italic.png");
+        TryGGadgetImageCache(&GIcon_fItalic, "scfitalic.png");
+        TryGGadgetImageCache(&GIcon_aItalic, "scaitalic.png");
+        TryGGadgetImageCache(&GIcon_FlatSerif, "scflatserif.png");
+        TryGGadgetImageCache(&GIcon_SlantSerif, "scslantserif.png");
+        TryGGadgetImageCache(&GIcon_PenSerif, "scpenserif.png");
+        TryGGadgetImageCache(&GIcon_TopSerifs, "sctopserifs.png");
+        TryGGadgetImageCache(&GIcon_BottomSerifs, "scbottomserifs.png");
+        TryGGadgetImageCache(&GIcon_DiagSerifs, "scdiagserifs.png");
     }
 }
 

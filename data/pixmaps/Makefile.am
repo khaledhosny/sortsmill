@@ -27,7 +27,9 @@
 
 include $(top_srcdir)/mk/layout.am
 
-PNG_LIST = chooseraudio.png \
+PNG_LIST = \
+	bvpress2ptr.png \
+	chooseraudio.png \
 	chooserback.png \
 	chooserbookmark.png \
 	choosercid.png \
@@ -58,7 +60,29 @@ PNG_LIST = chooseraudio.png \
 	chooserunknown.png \
 	chooserupdir.png \
 	chooservideo.png \
+	colorblue.png \
+	colorcustom.png \
+	colorcyan.png \
+	colordef.png \
+	colorgreen.png \
+	colormagenta.png \
+	colorred.png \
 	colorwheel.png \
+	colorwhite.png \
+	coloryellow.png \
+	cvangle.png \
+	cvdistance.png \
+	cvlock.png \
+	cvmag.png \
+	cvrightpointer.png \
+	cvsbeveljoin.png \
+	cvsbuttcap.png \
+	cvsel2ptr.png \
+	cvselectedpoint.png \
+	cvsmiterjoin.png \
+	cvsroundcap.png \
+	cvsroundjoin.png \
+	cvssquarecap.png \
 	editclearback.png \
 	editclear.png \
 	editcopyfg2bg.png \
@@ -119,6 +143,9 @@ PNG_LIST = chooseraudio.png \
 	elementtransform.png \
 	elementvalidate.png \
 	elementvbaselines.png \
+	ffback.png \
+	ffguide.png \
+	fflogo.png \
 	fileclose.png \
 	fileexecute.png \
 	fileexport.png \
@@ -155,6 +182,7 @@ PNG_LIST = chooseraudio.png \
 	metricssetrbearing.png \
 	metricssetvwidth.png \
 	metricssetwidth.png \
+	ofllogo.png \
 	overlapexclude.png \
 	overlapfindinter.png \
 	overlapintersection.png \
@@ -233,6 +261,23 @@ PNG_LIST = chooseraudio.png \
 	ptinfohvcurve.png \
 	ptinfotangent.png \
 	python.png \
+	scaitalic.png \
+	scbottomserifs.png \
+	scdiagserifs.png \
+	scf2italic.png \
+	scfitalic.png \
+	scflatserif.png \
+	scpenserif.png \
+	scpitalic.png \
+	scslantserif.png \
+	sctopserifs.png \
+	scu438italic.png \
+	scu43fitalic.png \
+	scu442italic.png \
+	scu444italic.png \
+	scu448italic.png \
+	scu452italic.png \
+	scu45fitalic.png \
 	splash.png \
 	styleschangeweight.png \
 	styleschangexheight.png \
