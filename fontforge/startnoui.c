@@ -115,11 +115,6 @@ fontforge_main_in_guile_mode (int argc, char **argv)
 #endif
            ".\n", PACKAGE_STRING);
 
-  /* I don't bother to check that the exe's exectations of the library are */
-  /*  valid. The exe only consists of this file, and so it doesn't care. */
-  /*  as long as the library is self consistant, all should be well */
-  /* check_library_version(&exe_library_version_configuration,true,false); */
-
   InitSimpleStuff ();
 
   bind_textdomain_codeset (ff_textdomain (), "UTF-8");

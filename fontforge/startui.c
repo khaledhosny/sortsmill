@@ -51,8 +51,6 @@
 #endif
 
 extern int AutoSaveFrequency;
-int splash = 1;
-static int localsplash;
 static int unique = 0;
 static int listen_to_apple_events = false;
 
@@ -68,7 +66,6 @@ _dousage (void)
   printf ("\t-recover none|auto|inquire|clean (control error recovery)\n");
   printf
     ("\t-allglyphs\t\t (load all glyphs in the 'glyf' table\n\t\t\t of a truetype collection)\n");
-  printf ("\t-nosplash\t\t (no splash screen)\n");
   printf
     ("\t-unique\t\t\t (if a fontforge is already running open\n\t\t\t all arguments in it and have this process exit)\n");
   printf ("\t-display display-name\t (sets the X display)\n");
@@ -141,7 +138,8 @@ struct delayed_event
   void (*func) (void *);
 };
 
-extern GImage splashimage;
+static GImage *splashimage = NULL;
+int splashwidth = 379, splashheight = 375;
 static GWindow splashw;
 static GTimer *autosave_timer;
 static GTimer *splasht;
@@ -157,8 +155,7 @@ ShowAboutScreen (void)
 
   if (first)
     {
-      GDrawResize (splashw, splashimage.u.image->width,
-                   splashimage.u.image->height + linecnt * fh);
+      GDrawResize (splashw, splashwidth, splashheight + linecnt * fh);
       first = false;
     }
   if (splasht != NULL)
@@ -188,8 +185,7 @@ SplashLayout ()
         {
           if (*pt == ' ' || *pt == '\0')
             {
-              if (GDrawGetTextWidth (splashw, start, pt - start) <
-                  splashimage.u.image->width - 10)
+              if (GDrawGetTextWidth (splashw, start, pt - start) < splashwidth - 10)
                 lastspace = pt;
               else
                 break;
@@ -334,18 +330,6 @@ PingOtherFontForge (int argc, char **argv)
   exit (0);                     /* But the event loop should never return */
 }
 
-static void
-start_splash_screen (void)
-{
-  GDrawSetVisible (splashw, true);
-  GDrawSync (NULL);
-  GDrawProcessPendingEvents (NULL);
-  GDrawProcessPendingEvents (NULL);
-  splasht = GDrawRequestTimer (splashw, 1000, 1000, NULL);
-
-  localsplash = false;
-}
-
 static int
 splash_e_h (GWindow gw, GEvent * event)
 {
@@ -374,9 +358,10 @@ splash_e_h (GWindow gw, GEvent * event)
       break;
     case et_expose:
       GDrawPushClip (gw, &event->u.expose.rect, &old);
-      GDrawDrawImage (gw, &splashimage, NULL, 0, 0);
+      if (splashimage != NULL)
+        GDrawDrawImage (gw, splashimage, NULL, 0, 0);
       GDrawSetFont (gw, splash_font);
-      y = splashimage.u.image->height + as + fh / 2;
+      y = splashheight + as + fh / 2;
       for (i = 1; i < linecnt; ++i)
         {
           if (is >= lines[i - 1] + 1 && is < lines[i])
@@ -413,11 +398,9 @@ splash_e_h (GWindow gw, GEvent * event)
       else if (event->u.timer.timer == splasht)
         {
           if (++splash_cnt == 1)
-            GDrawResize (gw, splashimage.u.image->width,
-                         splashimage.u.image->height - 30);
+            GDrawResize (gw, splashwidth, splashheight - 30);
           else if (splash_cnt == 2)
-            GDrawResize (gw, splashimage.u.image->width,
-                         splashimage.u.image->height);
+            GDrawResize (gw, splashwidth, splashheight);
           else if (splash_cnt >= 7)
             {
               GGadgetEndPopup ();
@@ -545,6 +528,16 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   int openflags = 0;
   int doopen = 0, quit_request = 0;
 
+  if (splashimage == NULL)
+    {
+      splashimage = GImageRead (SHAREDIR "/pixmaps/splash.png");
+      if (splashimage != NULL)
+        {
+          splashwidth = splashimage->u.image->width;
+          splashheight = splashimage->u.image->height;
+        }
+    }
+
   fprintf (stderr,
            "Copyright (c) 2000-2012 by George Williams and others.\n%s"
 #ifdef FREETYPE_HAS_DEBUGGER
@@ -629,8 +622,6 @@ fontforge_main_in_guile_mode (int argc, char **argv)
         AddR ("Gdraw.Keyboard", argv[++i]);
       else if (strcmp (pt, "-display") == 0 && i < argc - 1)
         display = argv[++i];
-      else if (strcmp (pt, "-nosplash") == 0)
-        splash = 0;
       else if (strcmp (pt, "-unique") == 0)
         unique = 1;
       else if (strcmp (pt, "-recover") == 0 && i < argc - 1)
@@ -684,12 +675,6 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   PyFF_ProcessInitFiles ();
 #endif
 
-  /* Wait until the UI has started, otherwise people who don't have consoles */
-  /*  open won't get our error messages, and it's an important one */
-  /* Scripting doesn't care about a mismatch, because scripting interpretation */
-  /*  all lives in the library */
-  //check_library_version(&exe_library_version_configuration,true,false);
-
   /* the splash screen used not to have a title bar (wam_nodecor) */
   /*  but I found I needed to know how much the window manager moved */
   /*  the window around, which I can determine if I have a positioned */
@@ -706,8 +691,8 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   wattrs.background_color = 0xffffff;
   wattrs.is_dlg = !listen_to_apple_events;
   pos.x = pos.y = 200;
-  pos.width = splashimage.u.image->width;
-  pos.height = splashimage.u.image->height - 56;        /* 54 */
+  pos.width = splashwidth;
+  pos.height = splashheight - 56;       /* 54 */
   GDrawBindSelection (NULL, sn_user1, "FontForge");
   if (unique && GDrawSelectionOwned (NULL, sn_user1))
     {
@@ -732,10 +717,6 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   GDrawGetFontMetrics (splashw, splash_font, &as, &ds, &ld);
   fh = as + ds + ld;
   SplashLayout ();
-  localsplash = splash;
-
-  if (localsplash && !listen_to_apple_events)
-    start_splash_screen ();
 
   if (AutoSaveFrequency > 0)
     autosave_timer = GDrawRequestTimer (splashw,
@@ -775,8 +756,7 @@ fontforge_main_in_guile_mode (int argc, char **argv)
             if (ViewPostScriptFont (RecentFiles[next_recent++], openflags))
               any = 1;
         }
-      else if (strcmp (pt, "-sync") == 0 || strcmp (pt, "-memory") == 0 ||
-               strcmp (pt, "-nosplash") == 0
+      else if (strcmp (pt, "-sync") == 0 || strcmp (pt, "-memory") == 0
                || strcmp (pt, "-recover=none") == 0
                || strcmp (pt, "-recover=clean") == 0
                || strcmp (pt, "-recover=auto") == 0
