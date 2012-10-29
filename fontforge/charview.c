@@ -1499,7 +1499,7 @@ return;
     GDrawLayoutDraw(pixmap,x-size.width/2,y,fg);
     len = size.width;
     if ( ref->use_my_metrics )
-	GDrawDrawImage(pixmap,&GIcon_lock,NULL,x+len+3,y-cv->sas);
+	GDrawDrawImage2(pixmap, "cvlock.png", NULL,x+len+3,y-cv->sas);
 }
 
 void DrawAnchorPoint(GWindow pixmap,int x, int y,int selected) {
@@ -2075,6 +2075,9 @@ static void CVExpose(CharView *cv, GWindow pixmap, GEvent *event ) {
     enum outlinesfm_flags strokeFillMode = sfm_stroke;
     int GlyphHasBeenFilled = 0;
 
+    GImage *lock_icon = NULL;
+    TryGGadgetImageCache(lock_icon, "cvlock.png");
+
     GDrawPushClip(pixmap,&event->u.expose.rect,&old);
 
     if( shouldShowFilledUsingCairo(cv) ) {
@@ -2220,7 +2223,7 @@ static void CVExpose(CharView *cv, GWindow pixmap, GEvent *event ) {
 	RefChar *lock = HasUseMyMetrics(cv->b.sc,cvlayer);
 	if ( lock!=NULL ) cv->b.sc->width = lock->sc->width;
 	DrawVLine(cv,pixmap,cv->b.sc->width,(!cv->inactive && cv->widthsel)?widthselcol:widthcol,true,
-		lock!=NULL ? &GIcon_lock : NULL, NULL);
+		lock!=NULL ? lock_icon : NULL, NULL);
 	if ( cv->b.sc->italic_correction!=TEX_UNDEF && cv->b.sc->italic_correction!=0 ) {
 	    GDrawSetDashedLine(pixmap,2,2,0);
 	    DrawVLine(cv,pixmap,cv->b.sc->width+cv->b.sc->italic_correction,(!cv->inactive && cv->icsel)?widthselcol:widthcol,
@@ -4479,12 +4482,12 @@ return;
 	GDrawPushClip(pixmap,&expose->u.expose.rect,&old2);
 
 	GDrawDrawLine(pixmap,0,cv->mbh+cv->infoh-1,8096,cv->mbh+cv->infoh-1,def_fg);
-	GDrawDrawImage(pixmap,&GIcon_rightpointer,NULL,RPT_BASE,cv->mbh+2);
-	GDrawDrawImage(pixmap,&GIcon_selectedpoint,NULL,SPT_BASE,cv->mbh+2);
-	GDrawDrawImage(pixmap,&GIcon_sel2ptr,NULL,SOF_BASE,cv->mbh+2);
-	GDrawDrawImage(pixmap,&GIcon_distance,NULL,SDS_BASE,cv->mbh+2);
-	GDrawDrawImage(pixmap,&GIcon_angle,NULL,SAN_BASE,cv->mbh+2);
-	GDrawDrawImage(pixmap,&GIcon_mag,NULL,MAG_BASE,cv->mbh+2);
+	GDrawDrawImage2(pixmap, "cvrightpointer.png", NULL,RPT_BASE,cv->mbh+2);
+	GDrawDrawImage2(pixmap, "cvselectedpoint.png", NULL,SPT_BASE,cv->mbh+2);
+	GDrawDrawImage2(pixmap, "cvsel2ptr.png", NULL,SOF_BASE,cv->mbh+2);
+	GDrawDrawImage2(pixmap, "cvdistance.png", NULL,SDS_BASE,cv->mbh+2);
+	GDrawDrawImage2(pixmap, "cvangle.png", NULL,SAN_BASE,cv->mbh+2);
+	GDrawDrawImage2(pixmap, "cvmag.png", NULL,MAG_BASE,cv->mbh+2);
 	CVInfoDrawText(cv,pixmap);
 	GDrawPopClip(pixmap,&old2);
     }
@@ -4620,6 +4623,8 @@ static void CVHScroll(CharView *cv, struct sbevent *sb) {
 
 static void CVVScroll(CharView *cv, struct sbevent *sb) {
     int newpos = cv->yoff;
+    GImage *lock_icon = NULL;
+    TryGGadgetImageCache(lock_icon, "cvlock.png");
 
     switch( sb->type ) {
       case et_sb_top:
@@ -4665,8 +4670,8 @@ static void CVVScroll(CharView *cv, struct sbevent *sb) {
 	    RefChar *lock = HasUseMyMetrics(cv->b.sc,CVLayer((CharViewBase *) cv));
 	    r.x = 0; r.width = cv->width;
 	    r.height = 2*cv->sfh+6;
-	    if ( lock!=NULL )
-		r.height = cv->sfh+3+GImageGetHeight(&GIcon_lock);
+	    if ( lock!=NULL && lock_icon != NULL)
+		r.height = cv->sfh+3+GImageGetHeight(lock_icon);
 	    if ( diff>0 )
 		r.y = 0;
 	    else
@@ -4690,17 +4695,20 @@ void LogoExpose(GWindow pixmap,GEvent *event, GRect *r,enum drawmode dm) {
 	    event->u.expose.rect.y+event->u.expose.rect.height >= r->y ) {
 	/* Put something into the little box where the two scroll bars meet */
 	int xoff, yoff;
-	GImage *which = (dm==dm_fore) ? &GIcon_FontForgeLogo :
-			(dm==dm_back) ? &GIcon_FontForgeBack :
-			    &GIcon_FontForgeGuide;
-	struct _GImage *base = which->u.image;
-	xoff = (sbsize-base->width);
-	yoff = (sbsize-base->height);
-	GDrawPushClip(pixmap,r,&old);
-	GDrawDrawImage(pixmap,which,NULL,
+	GImage *which;
+	char *name = (dm==dm_fore) ? "fflogo.png" :
+			(dm==dm_back) ? "ffback.png" :
+			    "ffguide.png";
+	bool found = TryGGadgetImageCache(which, name);
+	if (found) {
+	    struct _GImage *base = which->u.image;
+	    xoff = (sbsize-base->width);
+	    yoff = (sbsize-base->height);
+	    GDrawPushClip(pixmap,r,&old);
+	    GDrawDrawImage(pixmap,which,NULL,
 		r->x+(xoff-xoff/2),r->y+(yoff-yoff/2));
-	GDrawPopClip(pixmap,&old);
-	/*GDrawDrawLine(pixmap,r->x+sbsize-1,r->y,r->x+sbsize-1,r->y+sbsize,0x000000);*/
+	    GDrawPopClip(pixmap,&old);
+	}
     }
 }
 

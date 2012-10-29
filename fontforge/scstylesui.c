@@ -2444,7 +2444,7 @@ void ItalicDlg(FontView *fv, CharView *cv) {
     memset(boxes,0,sizeof(boxes));
     memset(label,0,sizeof(label));
 
-    label[k].image = &GIcon_aItalic;
+    label[k].image = (GImage *) "scaitalic.png";
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled | gg_visible;
     if ( last_ii.a_from_d ) gcd[k].gd.flags |= gg_cb_on;
@@ -2452,7 +2452,7 @@ void ItalicDlg(FontView *fv, CharView *cv) {
     gcd[k++].creator = GCheckBoxCreate;
     forms[f++] = &gcd[k-1];
 
-    label[k].image = &GIcon_fItalic;
+    label[k].image = (GImage *) "scfitalic.png";
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled | gg_visible;
     if ( last_ii.f_rotate_top ) gcd[k].gd.flags |= gg_cb_on;
@@ -2460,7 +2460,7 @@ void ItalicDlg(FontView *fv, CharView *cv) {
     gcd[k++].creator = GCheckBoxCreate;
     forms[f++] = &gcd[k-1];
 
-    label[k].image = &GIcon_f2Italic;
+    label[k].image = (GImage *) "scf2italic.png";
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled | gg_visible;
     if ( last_ii.f_long_tail ) gcd[k].gd.flags |= gg_cb_on;
@@ -2476,7 +2476,7 @@ void ItalicDlg(FontView *fv, CharView *cv) {
     forms[f++] = GCD_Glue; forms[f++] = GCD_Glue;
     forms[f++] = GCD_Glue; forms[f++] = NULL;
 
-    label[k].image = &GIcon_u438Italic;
+    label[k].image = (GImage *) "scu438italic.png";
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled | gg_visible;
     if ( last_ii.cyrl_i ) gcd[k].gd.flags |= gg_cb_on;
@@ -2484,7 +2484,7 @@ void ItalicDlg(FontView *fv, CharView *cv) {
     gcd[k++].creator = GCheckBoxCreate;
     forms[f++] = &gcd[k-1];
 
-    label[k].image = &GIcon_u43fItalic;
+    label[k].image = (GImage *) "scu43fitalic.png";
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled | gg_visible;
     if ( last_ii.cyrl_pi ) gcd[k].gd.flags |= gg_cb_on;
@@ -2492,7 +2492,7 @@ void ItalicDlg(FontView *fv, CharView *cv) {
     gcd[k++].creator = GCheckBoxCreate;
     forms[f++] = &gcd[k-1];
 
-    label[k].image = &GIcon_u442Italic;
+    label[k].image = (GImage *) "scu442italic.png";
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled | gg_visible;
     if ( last_ii.cyrl_te ) gcd[k].gd.flags |= gg_cb_on;
@@ -2501,7 +2501,7 @@ void ItalicDlg(FontView *fv, CharView *cv) {
     forms[f++] = &gcd[k-1];
     forms[f++] = GCD_Glue; forms[f++] = NULL;
 
-    label[k].image = &GIcon_u444Italic;
+    label[k].image = (GImage *) "scu444italic.png";
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled | gg_visible;
     if ( last_ii.cyrl_phi ) gcd[k].gd.flags |= gg_cb_on;
@@ -2509,7 +2509,7 @@ void ItalicDlg(FontView *fv, CharView *cv) {
     gcd[k++].creator = GCheckBoxCreate;
     forms[f++] = &gcd[k-1];
 
-    label[k].image = &GIcon_u448Italic;
+    label[k].image = (GImage *) "scu448italic.png";
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled | gg_visible;
     if ( last_ii.cyrl_sha ) gcd[k].gd.flags |= gg_cb_on;
@@ -2517,7 +2517,7 @@ void ItalicDlg(FontView *fv, CharView *cv) {
     gcd[k++].creator = GCheckBoxCreate;
     forms[f++] = &gcd[k-1];
 
-    label[k].image = &GIcon_u452Italic;
+    label[k].image = (GImage *) "scu452italic.png";
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled | gg_visible;
     if ( last_ii.cyrl_dje ) gcd[k].gd.flags |= gg_cb_on;
@@ -2526,7 +2526,7 @@ void ItalicDlg(FontView *fv, CharView *cv) {
     forms[f++] = &gcd[k-1];
     forms[f++] = GCD_Glue; forms[f++] = NULL;
 
-    label[k].image = &GIcon_u45fItalic;
+    label[k].image = (GImage *) "scu45fitalic.png";
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled | gg_visible;
     if ( last_ii.cyrl_dzhe ) gcd[k].gd.flags |= gg_cb_on;
@@ -2550,7 +2550,7 @@ void ItalicDlg(FontView *fv, CharView *cv) {
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     label[k].image_precedes = true;
-    label[k].image = &GIcon_BottomSerifs;
+    label[k].image = (GImage *) "scbottomserifs.png";
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled | gg_visible;
     if ( last_ii.transform_bottom_serifs ) gcd[k].gd.flags |= gg_cb_on;
@@ -2562,7 +2562,7 @@ void ItalicDlg(FontView *fv, CharView *cv) {
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     label[k].image_precedes = true;
-    label[k].image = &GIcon_TopSerifs;
+    label[k].image = (GImage *) "sctopserifs.png";
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled | gg_visible;
     if ( last_ii.transform_top_xh_serifs ) gcd[k].gd.flags |= gg_cb_on;
@@ -2574,7 +2574,7 @@ void ItalicDlg(FontView *fv, CharView *cv) {
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     label[k].image_precedes = true;
-    label[k].image = &GIcon_TopSerifs;
+    label[k].image = (GImage *) "sctopserifs.png";
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled | gg_visible;
     if ( last_ii.transform_top_as_serifs ) gcd[k].gd.flags |= gg_cb_on;
@@ -2586,7 +2586,7 @@ void ItalicDlg(FontView *fv, CharView *cv) {
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     label[k].image_precedes = true;
-    label[k].image = &GIcon_pItalic;
+    label[k].image = (GImage *) "scpitalic.png";
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled | gg_visible;
     if ( last_ii.pq_deserif ) gcd[k].gd.flags |= gg_cb_on;
@@ -2598,7 +2598,7 @@ void ItalicDlg(FontView *fv, CharView *cv) {
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     label[k].image_precedes = true;
-    label[k].image = &GIcon_DiagSerifs;
+    label[k].image = (GImage *) "scdiagserifs.png";
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled | gg_visible;
     if ( last_ii.transform_diagon_serifs ) gcd[k].gd.flags |= gg_cb_on;
@@ -2617,7 +2617,7 @@ void ItalicDlg(FontView *fv, CharView *cv) {
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     label[k].image_precedes = true;
-    label[k].image = &GIcon_FlatSerif;
+    label[k].image = (GImage *) "scflatserif.png";
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled | gg_visible;
     if ( last_ii.secondary_serif==srf_flat ) gcd[k].gd.flags |= gg_cb_on;
@@ -2629,7 +2629,7 @@ void ItalicDlg(FontView *fv, CharView *cv) {
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     label[k].image_precedes = true;
-    label[k].image = &GIcon_SlantSerif;
+    label[k].image = (GImage *) "scslantserif.png";
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled | gg_visible;
     if ( last_ii.secondary_serif==srf_simpleslant ) gcd[k].gd.flags |= gg_cb_on;
@@ -2641,7 +2641,7 @@ void ItalicDlg(FontView *fv, CharView *cv) {
     label[k].text_is_1byte = true;
     label[k].text_in_resource = true;
     label[k].image_precedes = true;
-    label[k].image = &GIcon_PenSerif;
+    label[k].image = (GImage *) "scpenserif.png";
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled | gg_visible;
     if ( last_ii.secondary_serif==srf_complexslant ) gcd[k].gd.flags |= gg_cb_on;

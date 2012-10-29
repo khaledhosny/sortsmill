@@ -531,6 +531,7 @@ GGadget *CreateFileChooser(struct gwindow *base, GGadgetData *gd,void *data);
 GGadget *CreateGadgets(struct gwindow *base, GGadgetCreateData *gcd);
 
 VISIBLE GTextInfo **GTextInfoArrayFromList(GTextInfo *ti, uint16_t *cnt);
+VISIBLE void GTextInfoImageLookup(GTextInfo *ti);
 typedef struct gresimage {
     GImage *image;
     char *filename;
@@ -540,7 +541,7 @@ GResImage *GGadgetResourceFindImage(char *name, GImage *def);
 VISIBLE void GGadgetSetImageDir(char *dir);
 void GGadgetSetImagePath(char *path);
 VISIBLE GImage *GGadgetImageCache(char *filename);
-VISIBLE int TryGGadgetImageCache(GImage *image, char *name);
+VISIBLE bool TryGGadgetImageCache(GImage *image, char *name);
 
 VISIBLE extern uint32_t *utf82u_mncopy(const char *utf8buf,uint32_t *mn);
 

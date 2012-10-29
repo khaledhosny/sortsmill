@@ -667,7 +667,6 @@ fontforge_main_in_guile_mode (int argc, char **argv)
 
   GDrawCreateDisplays (display, argv[0]);
   default_background = GDrawGetDefaultBackground (screen_display);
-  InitToolIcons ();
   InitCursors ();
 
 #ifndef _NO_PYTHON

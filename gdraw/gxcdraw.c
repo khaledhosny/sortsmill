@@ -37,9 +37,9 @@
 
 #include <stdlib.h>
 #include <math.h>
-
 #include <ustring.h>
 #include <utype.h>
+#include <ggadget.h>
 #include "fontP.h"
 
 #ifdef __Mac
@@ -729,6 +729,13 @@ void GDrawDrawImage(GWindow w, GImage *image, GRect *src, int32_t x, int32_t y) 
     cairo_set_source_rgba(gw->cc,0,0,0,0);
 
     gw->cairo_state.fore_col = COLOR_UNKNOWN;
+}
+
+void GDrawDrawImage2(GWindow w, char *name, GRect *src, int32_t x, int32_t y) {
+    GImage *image = xcalloc(1,sizeof(GImage));
+    bool found = TryGGadgetImageCache(image, name);
+    if (found)
+        GDrawDrawImage(w, image, src, x, y);
 }
 
 /* Draw the entire image so that it is approximately the same size on other */

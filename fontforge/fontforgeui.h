@@ -47,46 +47,7 @@ extern GCursor ct_magplus, ct_magminus, ct_mypointer,
 	ct_kerning, ct_rbearing, ct_lbearing, ct_eyedropper,
 	ct_prohibition, ct_ddcursor, ct_spiroright, ct_spiroleft, ct_g2circle,
 	ct_features;
-extern GImage GIcon_midtangent, GIcon_midcurve, GIcon_midcorner, GIcon_midhvcurve;
-extern GImage GIcon_tangent, GIcon_curve, GIcon_hvcurve, GIcon_corner, GIcon_ruler,
-	GIcon_pointer, GIcon_magnify, GIcon_pen, GIcon_knife, GIcon_scale,
-	GIcon_flip, GIcon_rotate, GIcon_skew,
-	GIcon_3drotate, GIcon_perspective,
-	GIcon_squarecap, GIcon_roundcap, GIcon_buttcap,
-	GIcon_miterjoin, GIcon_roundjoin, GIcon_beveljoin,
-	GIcon_rect, GIcon_elipse, GIcon_rrect, GIcon_poly, GIcon_star,
-	GIcon_pencil, GIcon_shift, GIcon_line, GIcon_hand,
-	GIcon_press2ptr, GIcon_freehand, GIcon_greyfree,
-	GIcon_spirodisabled, GIcon_spiroup, GIcon_spirodown,
-	GIcon_spirocurve, GIcon_spirocorner, GIcon_spirog2curve,
-	GIcon_spiroleft, GIcon_spiroright;
-extern GImage GIcon_smallskew, GIcon_smallscale, GIcon_smallrotate,
-	GIcon_small3drotate, GIcon_smallperspective,
-	GIcon_smallflip, GIcon_smalltangent, GIcon_smallcorner,
-	GIcon_smallcurve, GIcon_smallmag, GIcon_smallknife, GIcon_smallpen,
-	GIcon_smallhvcurve,
-	GIcon_smallpointer, GIcon_smallruler, GIcon_smallelipse,
-	GIcon_smallrect, GIcon_smallpoly, GIcon_smallstar,
-	GIcon_smallpencil, GIcon_smallhand,
-	GIcon_smallspirocurve, GIcon_smallspirocorner, GIcon_smallspirog2curve,
-	GIcon_smallspiroleft, GIcon_smallspiroright,
-	GIcon_FontForgeLogo, GIcon_FontForgeBack, GIcon_FontForgeGuide;
-extern GImage GIcon_lock;
-extern GImage GIcon_u45fItalic, GIcon_u452Italic,
-    GIcon_u448Italic, GIcon_u444Italic,
-    GIcon_u442Italic, GIcon_u43fItalic, GIcon_u438Italic,
-    GIcon_pItalic, GIcon_f2Italic, GIcon_fItalic,
-    GIcon_aItalic, GIcon_FlatSerif, GIcon_SlantSerif, GIcon_PenSerif,
-    GIcon_TopSerifs, GIcon_BottomSerifs, GIcon_DiagSerifs;
-extern GImage def_image, red_image, blue_image, green_image, magenta_image,
-VISIBLE 	yellow_image, cyan_image, white_image, customcolor_image;
-extern GImage GIcon_continue, GIcon_stepout, GIcon_stepover, GIcon_stepinto,
-	GIcon_watchpnt, GIcon_menudelta, GIcon_exit;
-extern GImage GIcon_Stopped, GIcon_Stop;
 extern GWindow logo_icon;
-extern GImage GIcon_sel2ptr, GIcon_rightpointer, GIcon_angle, GIcon_distance,
-	GIcon_selectedpoint, GIcon_mag;
-extern GImage OFL_logo;
 
 extern GMenuItem2 cvtoollist[], cvspirotoollist[];
 
@@ -97,7 +58,6 @@ extern GTextInfo *GetEncodingTypes(void);
 extern void cvtoollist_check(GWindow gw,struct gmenuitem *mi,GEvent *e);
 
 extern void InitCursors(void);
-extern void InitToolIcons(void); /* needs image cache already working */
 
 extern int ErrorWindowExists(void);
 extern void ShowErrorWindow(void);

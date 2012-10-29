@@ -645,6 +645,7 @@ static GCheckBox *_GCheckBoxCreate(GCheckBox *gl, struct gwindow *base, GGadgetD
     gl->g.takes_input = true; gl->g.takes_keyboard = true; gl->g.focusable = true;
     gl->font = checkbox_font;
     if ( gd->label!=NULL ) {
+	GTextInfoImageLookup(gd->label);
 	gl->image_precedes = gd->label->image_precedes;
 	if ( gd->label->font!=NULL )
 	    gl->font = gd->label->font;

@@ -452,7 +452,7 @@ static void instr_expose(struct instrinfo *ii,GWindow pixmap,GRect *rect) {
 		x = addr_end - EDGE_SPACING - size.width;
 		GDrawLayoutDraw(pixmap,x,y+ii->as,MAIN_FOREGROUND);
 		if ( ii->bpcheck && ii->bpcheck(ii,i))
-		    GDrawDrawImage(pixmap,&GIcon_Stop,NULL,EDGE_SPACING,
+		    GDrawDrawImage2(pixmap, "ttdebugstop.png", NULL,EDGE_SPACING,
 			    y+(ii->fh-8)/2-5);
 	    }
 	    x = addr_end + EDGE_SPACING;
@@ -462,7 +462,7 @@ static void instr_expose(struct instrinfo *ii,GWindow pixmap,GRect *rect) {
 	    y += ii->fh;
 	}
 	if ( ii->showaddr && ii->lstopped!=-1 ) {
-	    GDrawDrawImage(pixmap,&GIcon_Stopped,NULL,EDGE_SPACING,
+	    GDrawDrawImage2(pixmap, "ttdebugstopped.png", NULL,EDGE_SPACING,
 		    (ii->lstopped-ii->lpos)*ii->fh+(ii->fh-8)/2);
 	}
     }

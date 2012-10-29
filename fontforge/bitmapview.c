@@ -853,8 +853,8 @@ return;
 
 	GDrawPopClip(pixmap,&old2);
 
-	GDrawDrawImage(pixmap,&GIcon_rightpointer,NULL,bv->infoh+RPT_BASE,bv->mbh+8);
-	GDrawDrawImage(pixmap,&GIcon_press2ptr,NULL,bv->infoh+RPT_BASE,bv->mbh+18+bv->sfh);
+	GDrawDrawImage2(pixmap, "cvrightpointer.png", NULL,bv->infoh+RPT_BASE,bv->mbh+8);
+	GDrawDrawImage2(pixmap, "bvpress2ptr.png", NULL,bv->infoh+RPT_BASE,bv->mbh+18+bv->sfh);
 	BVInfoDrawText(bv,pixmap );
 
 	r.x = bv->infoh+RPT_DATA; r.y = bv->mbh+36;
@@ -863,7 +863,7 @@ return;
 		bv->bdf->clut==NULL ? GDrawGetDefaultBackground(NULL) :
 		bv->bdf->clut->clut[bv->color/( 255/((1<<BDFDepth(bv->bdf))-1) )] );
 
-	GDrawDrawImage(pixmap,&GIcon_press2ptr,NULL,bv->infoh+RPT_BASE,bv->mbh+18+bv->sfh);
+	GDrawDrawImage2(pixmap, "bvpress2ptr.png", NULL,bv->infoh+RPT_BASE,bv->mbh+18+bv->sfh);
     }
     GDrawDrawLine(pixmap,0,bv->mbh+bv->infoh-1,bv->width+300,bv->mbh+bv->infoh-1,GDrawGetDefaultForeground(NULL));
 
