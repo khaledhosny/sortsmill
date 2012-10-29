@@ -3700,11 +3700,11 @@ static void CI_SetColorList(CharInfo *ci,Color color) {
     break;
     }
     if ( std_colors[i].image==NULL ) {
-	GImage customcolor_image;
-	bool found = TryGGadgetImageCache(&customcolor_image, "colorcustom.png");
+	GImage *customcolor_image = xcalloc(1,sizeof(GImage));
+	bool found = TryGGadgetImageCache(customcolor_image, "colorcustom.png");
 	if (found) {
-	    std_colors[i].image = &customcolor_image;
-	    customcolor_image.u.image->clut->clut[1] = color;
+	    std_colors[i].image = customcolor_image;
+	    customcolor_image->u.image->clut->clut[1] = color;
 	}
 	std_colors[i].userdata = (void *) (intptr_t) color;
     }

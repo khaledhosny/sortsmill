@@ -2075,7 +2075,7 @@ static void CVExpose(CharView *cv, GWindow pixmap, GEvent *event ) {
     enum outlinesfm_flags strokeFillMode = sfm_stroke;
     int GlyphHasBeenFilled = 0;
 
-    GImage *lock_icon = NULL;
+    GImage *lock_icon = xcalloc(1,sizeof(GImage));
     TryGGadgetImageCache(lock_icon, "cvlock.png");
 
     GDrawPushClip(pixmap,&event->u.expose.rect,&old);
@@ -4623,7 +4623,7 @@ static void CVHScroll(CharView *cv, struct sbevent *sb) {
 
 static void CVVScroll(CharView *cv, struct sbevent *sb) {
     int newpos = cv->yoff;
-    GImage *lock_icon = NULL;
+    GImage *lock_icon = xcalloc(1,sizeof(GImage));
     TryGGadgetImageCache(lock_icon, "cvlock.png");
 
     switch( sb->type ) {
@@ -4695,7 +4695,7 @@ void LogoExpose(GWindow pixmap,GEvent *event, GRect *r,enum drawmode dm) {
 	    event->u.expose.rect.y+event->u.expose.rect.height >= r->y ) {
 	/* Put something into the little box where the two scroll bars meet */
 	int xoff, yoff;
-	GImage *which;
+	GImage *which = xcalloc(1,sizeof(GImage));
 	char *name = (dm==dm_fore) ? "fflogo.png" :
 			(dm==dm_back) ? "ffback.png" :
 			    "ffguide.png";
