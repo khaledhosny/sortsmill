@@ -97,7 +97,6 @@ extern GTextInfo *GetEncodingTypes(void);
 extern void cvtoollist_check(GWindow gw,struct gmenuitem *mi,GEvent *e);
 
 extern void InitCursors(void);
-extern void InitToolIconClut(Color bg);
 extern void InitToolIcons(void); /* needs image cache already working */
 
 extern int ErrorWindowExists(void);
