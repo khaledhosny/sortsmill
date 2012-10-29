@@ -72,17 +72,10 @@ extern GImage GIcon_smallskew, GIcon_smallscale, GIcon_smallrotate,
 	GIcon_smallspiroleft, GIcon_smallspiroright,
 	GIcon_FontForgeLogo, GIcon_FontForgeBack, GIcon_FontForgeGuide;
 extern GImage GIcon_lock;
-extern GImage GIcon_menumark;
-extern GImage GIcon_rmoverlap, GIcon_exclude, GIcon_intersection, GIcon_findinter;
-extern GImage GIcon_bold, GIcon_italic, GIcon_condense, GIcon_oblique, GIcon_smallcaps,
-	GIcon_subsup, GIcon_changexheight, GIcon_styles;
-extern GImage GIcon_outline, GIcon_inline, GIcon_shadow, GIcon_wireframe;
 extern GImage GIcon_u45fItalic, GIcon_u452Italic,
-    GIcon_u448Italic, GIcon_u446Italic, GIcon_u444Italic,
-    GIcon_u442Italic, GIcon_u43fItalic, GIcon_u43cItalic, GIcon_u438Italic,
-    GIcon_u436Italic, GIcon_u434Italic, GIcon_u433Italic, GIcon_u432Italic,
-    GIcon_zItalic, GIcon_yItalic, GIcon_xItalic, GIcon_wItalic, GIcon_vItalic,
-    GIcon_pItalic, GIcon_kItalic, GIcon_gItalic, GIcon_f2Italic, GIcon_fItalic,
+    GIcon_u448Italic, GIcon_u444Italic,
+    GIcon_u442Italic, GIcon_u43fItalic, GIcon_u438Italic,
+    GIcon_pItalic, GIcon_f2Italic, GIcon_fItalic,
     GIcon_aItalic, GIcon_FlatSerif, GIcon_SlantSerif, GIcon_PenSerif,
     GIcon_TopSerifs, GIcon_BottomSerifs, GIcon_DiagSerifs;
 extern GImage def_image, red_image, blue_image, green_image, magenta_image,
@@ -93,7 +86,6 @@ extern GImage GIcon_Stopped, GIcon_Stop;
 extern GWindow logo_icon;
 extern GImage GIcon_sel2ptr, GIcon_rightpointer, GIcon_angle, GIcon_distance,
 	GIcon_selectedpoint, GIcon_mag;
-extern GImage GIcon_up, GIcon_down;
 extern GImage OFL_logo;
 
 extern GMenuItem2 cvtoollist[], cvspirotoollist[];
