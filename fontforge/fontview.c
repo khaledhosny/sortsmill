@@ -6335,7 +6335,7 @@ return;
     }
     if ( event->type == et_mousedown ) {
 	if ( fv->drag_and_drop ) {
-	    GDrawSetCursor(fv->v,ct_mypointer);
+	    GDrawSetCursor(fv->v,ct_pointer);
 	    fv->any_dd_events_sent = fv->drag_and_drop = false;
 	}
 	if ( !(event->u.mouse.state&ksm_shift) && event->u.mouse.clicks<=1 ) {
@@ -6392,7 +6392,7 @@ return;
 		fv->any_dd_events_sent = true;
 	    }
 	    fv->drag_and_drop = fv->has_dd_no_cursor = false;
-	    GDrawSetCursor(fv->v,ct_mypointer);
+	    GDrawSetCursor(fv->v,ct_pointer);
 	    if ( !fv->any_dd_events_sent )
 		FVDeselectAll(fv);
 	    fv->any_dd_events_sent = false;

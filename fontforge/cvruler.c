@@ -397,7 +397,7 @@ static void RulerPlace(CharView *cv, GEvent *event) {
 	memset(&wattrs,0,sizeof(wattrs));
 	wattrs.mask = wam_events|wam_cursor|wam_positioned|wam_nodecor|wam_backcol|wam_bordwidth;
 	wattrs.event_masks = (1<<et_expose)|(1<<et_resize)|(1<<et_mousedown);
-	wattrs.cursor = ct_mypointer;
+	wattrs.cursor = ct_pointer;
 	wattrs.background_color = 0xe0e0c0;
 	wattrs.nodecoration = 1;
 	wattrs.border_width = 1;
@@ -644,7 +644,7 @@ static void CpInfoPlace(CharView *cv, GEvent *event) {
 	memset(&wattrs,0,sizeof(wattrs));
 	wattrs.mask = wam_events|wam_cursor|wam_positioned|wam_nodecor|wam_backcol|wam_bordwidth;
 	wattrs.event_masks = (1<<et_expose)|(1<<et_resize)|(1<<et_mousedown);
-	wattrs.cursor = ct_mypointer;
+	wattrs.cursor = ct_pointer;
 	wattrs.background_color = 0xe0e0c0;
 	wattrs.nodecoration = 1;
 	wattrs.border_width = 1;

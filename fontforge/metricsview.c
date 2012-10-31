@@ -3866,8 +3866,8 @@ static void _MVSubVMouse(MetricsView *mv,GEvent *event) {
 	if ( mv->bdf!=NULL ||
 		( mv->type==mv_kernonly && !onkern ) ||
 		( mv->type==mv_widthonly && !onwidth )) {
-	    if ( mv->cursor!=ct_mypointer )
-		ct = ct_mypointer;
+	    if ( mv->cursor!=ct_pointer )
+		ct = ct_pointer;
 	} else if ( sc!=NULL ) {
 	    if ( mv->cursor!=ct_lbearing )
 		ct = ct_lbearing;
@@ -3878,8 +3878,8 @@ static void _MVSubVMouse(MetricsView *mv,GEvent *event) {
 	    if ( mv->cursor!=ct_kerning )
 		ct = ct_kerning;
 	} else {
-	    if ( mv->cursor!=ct_mypointer )
-		ct = ct_mypointer;
+	    if ( mv->cursor!=ct_pointer )
+		ct = ct_pointer;
 	}
 	if ( ct!=-1 ) {
 	    GDrawSetCursor(mv->gw,ct);
@@ -4151,8 +4151,8 @@ return;
 	if ( mv->bdf!=NULL ||
 		( mv->type==mv_kernonly && !onkern ) ||
 		( mv->type==mv_widthonly && !onwidth )) {
-	    if ( mv->cursor!=ct_mypointer )
-		ct = ct_mypointer;
+	    if ( mv->cursor!=ct_pointer )
+		ct = ct_pointer;
 	} else if ( sc!=NULL ) {
 	    if ( mv->cursor!=ct_lbearing )
 		ct = ct_lbearing;
@@ -4163,8 +4163,8 @@ return;
 	    if ( mv->cursor!=ct_kerning )
 		ct = ct_kerning;
 	} else {
-	    if ( mv->cursor!=ct_mypointer )
-		ct = ct_mypointer;
+	    if ( mv->cursor!=ct_pointer )
+		ct = ct_pointer;
 	}
 	if ( ct!=-1 ) {
 	    GDrawSetCursor(mv->gw,ct);
@@ -4329,9 +4329,9 @@ static void MVMouse(MetricsView *mv,GEvent *event) {
 			mv->fv->b.map->backmap[mv->glyphs[i].sc->orig_pos],
 			mv->glyphs[i].sc->unicodeenc);
 	}
-	if ( mv->cursor!=ct_mypointer ) {
-	    GDrawSetCursor(mv->gw,ct_mypointer);
-	    mv->cursor = ct_mypointer;
+	if ( mv->cursor!=ct_pointer ) {
+	    GDrawSetCursor(mv->gw,ct_pointer);
+	    mv->cursor = ct_pointer;
 	}
 return;
     }
@@ -4681,7 +4681,7 @@ MetricsView *MetricsViewCreate(FontView *fv,SplineChar *sc,BDFFont *bdf) {
     memset(&wattrs,0,sizeof(wattrs));
     wattrs.mask = wam_events|wam_cursor|wam_utf8_wtitle|wam_icon;
     wattrs.event_masks = ~(0);
-    wattrs.cursor = ct_mypointer;
+    wattrs.cursor = ct_pointer;
     MVWindowTitle(buf,sizeof(buf),mv);
     wattrs.utf8_window_title = buf;
     wattrs.icon = icon;
@@ -4794,7 +4794,7 @@ MetricsView *MetricsViewCreate(FontView *fv,SplineChar *sc,BDFFont *bdf) {
     wattrs.mask = wam_events|wam_backcol;
     wattrs.background_color = view_bgcol;
     wattrs.event_masks = -1;
-    wattrs.cursor = ct_mypointer;
+    wattrs.cursor = ct_pointer;
     mv->v = GWidgetCreateSubWindow(mv->gw,&pos,mv_v_e_h,mv,&wattrs);
     MVSetFeatures(mv);
     MVMakeLabels(mv);

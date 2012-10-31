@@ -3140,7 +3140,7 @@ static void PSTKern_Mouse(PSTKernDlg *pstkd,GEvent *event) {
     int diff, col, col2;
     int r2l = pstkd->sub->lookup->lookup_flags&pst_r2l;
     char buffer[20];
-    GCursor ct = ct_mypointer;
+    GCursor ct = ct_pointer;
     GRect size;
 
     if ( (r = GMatrixEditGetActiveRow(pstk))==-1 )

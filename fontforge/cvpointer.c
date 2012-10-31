@@ -383,7 +383,7 @@ static void SetCur(CharView *cv) {
     static GCursor cursors[ee_max];
 
     if ( cursors[ee_nw]==0 ) {
-	cursors[ee_none] = ct_mypointer;
+	cursors[ee_none] = ct_pointer;
 	cursors[ee_nw] = cursors[ee_se] = ct_nwse; cursors[ee_ne] = cursors[ee_sw] = ct_nesw;
 	cursors[ee_left] = cursors[ee_right] = ct_leftright;
 	cursors[ee_up] = cursors[ee_down] = ct_updown;
@@ -1169,7 +1169,7 @@ void CVMouseUpPointer(CharView *cv ) {
 	}
 	SCSynchronizeWidth(cv->b.sc,cv->b.sc->width,cv->oldwidth,NULL);
 	cv->expandedge = ee_none;
-	GDrawSetCursor(cv->v,ct_mypointer);
+	GDrawSetCursor(cv->v,ct_pointer);
     }
     if ( cv->vwidthsel ) {
 	if ( cv->b.sc->vwidth<0 && cv->oldvwidth>=0 ) {
@@ -1177,18 +1177,18 @@ void CVMouseUpPointer(CharView *cv ) {
 		cv->b.sc->vwidth = cv->oldvwidth;
 	}
 	cv->expandedge = ee_none;
-	GDrawSetCursor(cv->v,ct_mypointer);
+	GDrawSetCursor(cv->v,ct_pointer);
     }
     if ( cv->nearcaret!=-1 && cv->lcarets!=NULL ) {
 	cv->nearcaret = -1;
 	cv->expandedge = ee_none;
 	cv->lcarets = NULL;
-	GDrawSetCursor(cv->v,ct_mypointer);
+	GDrawSetCursor(cv->v,ct_pointer);
     }
     if ( cv->expandedge!=ee_none ) {
 	CVUndoCleanup(cv);
 	cv->expandedge = ee_none;
-	GDrawSetCursor(cv->v,ct_mypointer);
+	GDrawSetCursor(cv->v,ct_pointer);
     } else if ( CVAllSelected(cv) && cv->b.drawmode==dm_fore && cv->p.spline==NULL &&
 	    !cv->p.prevcp && !cv->p.nextcp && cv->info.y==cv->p.cy ) {
 	SCUndoSetLBearingChange(cv->b.sc,(int) rint(cv->info.x-cv->p.cx));

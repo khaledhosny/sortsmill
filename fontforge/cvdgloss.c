@@ -1205,7 +1205,7 @@ void DVCreateGloss(DebugView *dv) {
     memset(&wattrs,0,sizeof(wattrs));
     wattrs.mask = wam_events|wam_cursor|wam_utf8_wtitle;
     wattrs.event_masks = -1;
-    wattrs.cursor = ct_mypointer;
+    wattrs.cursor = ct_pointer;
     wattrs.utf8_window_title = _("Instruction Gloss (TrueType)");
     pos.width = GGadgetScale(GDrawPointsToPixels(NULL,230)); pos.height = 169;
     pos.x = CVXPos(dv,143,pos.width); pos.y = 302;

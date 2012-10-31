@@ -616,7 +616,7 @@ return( bdfc2 );
 static void KP_SetCursor(KPData *kpd, int ismove ) {
 
     if ( kpd->movecursor!=ismove ) {
-	GDrawSetCursor(kpd->v,ismove ? ct_leftright : ct_mypointer );
+	GDrawSetCursor(kpd->v,ismove ? ct_leftright : ct_pointer );
 	kpd->movecursor = ismove;
     }
 }

@@ -979,7 +979,7 @@ static void StartDeltaDisplay(QGData *qg) {
     memset(&wattrs,0,sizeof(wattrs));
     wattrs.mask = wam_events|wam_cursor|wam_utf8_wtitle|wam_undercursor|wam_isdlg;
     wattrs.event_masks = -1;
-    wattrs.cursor = ct_mypointer;
+    wattrs.cursor = ct_pointer;
     wattrs.utf8_window_title = _("Potential spots for Delta instructions");
     wattrs.is_dlg = true;
     wattrs.undercursor = 1;
