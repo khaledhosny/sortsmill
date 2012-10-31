@@ -70,6 +70,7 @@ enum cm_type { cmt_default=-1, cmt_current, cmt_copy, cmt_private };
 # include <X11/keysym.h>
 # include <X11/cursorfont.h>
 # include <X11/Xresource.h>
+# include <X11/Xcursor/Xcursor.h>
 
 #define XKeysym_Mask	0x01000000
 
@@ -1245,21 +1246,30 @@ return( NULL );
 return( (GWindow) gw );
 }
 
-GCursor GDrawCreateCursor(GWindow src,GWindow mask,Color fg,Color bg,
-	int16_t x, int16_t y ) {
-    GXDisplay *gdisp = (GXDisplay *) (src->display);
-    Display *display = gdisp->display;
-    XColor fgc, bgc;
-    /* The XServer shipping with redhat 7.1 seems to suffer a protocol change */
-    /*  with the red and blue members of XColor structure reversed */
-    /* The XServer runing on Mac OS/X can only handle 16x16 cursors */
+GCursor
+GDrawCreateCursor (char *name)
+{
+  GXDisplay *gdisp = (GXDisplay *) (screen_display);
+  Display *display = gdisp->display;
+  GCursor cursor;
+  char *path;
 
-    fgc.red = COLOR_RED(fg)*0x101; fgc.green = COLOR_GREEN(fg)*0x101; fgc.blue = COLOR_BLUE(fg)*0x101;
-    bgc.red = COLOR_RED(bg)*0x101; bgc.green = COLOR_GREEN(bg)*0x101; bgc.blue = COLOR_BLUE(bg)*0x101;
-    fgc.pixel = _GXDraw_GetScreenPixel(gdisp,fg); fgc.flags = -1;
-    bgc.pixel = _GXDraw_GetScreenPixel(gdisp,bg); bgc.flags = -1;
-return( ct_user + XCreatePixmapCursor(display,((GXWindow) src)->w, ((GXWindow) mask)->w,
-	&fgc,&bgc, x,y));
+  path = xmalloc (strlen (name) + strlen (SHAREDIR) + 10);
+  sprintf (path, SHAREDIR "/cursors/%s", name);
+
+  // FIXME: we may want to first try cursors from default theme using
+  // XcursorLibraryLoadCursor (display, name), which would allow users to
+  // customise the cursors, but we need to revise our file names and make them
+  // compatible with common themes
+  cursor = XcursorFilenameLoadCursor (display, path);
+  free(path);
+
+  if (cursor)
+    cursor = ct_user + cursor;
+  else
+    cursor = ct_pointer;
+
+  return cursor;
 }
 
 static void GTimerRemoveWindowTimers(GXWindow gw);
