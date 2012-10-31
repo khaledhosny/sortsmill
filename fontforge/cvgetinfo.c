@@ -3055,7 +3055,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	harray3[0] = &gcd[j]; harray3[1] = GCD_Glue; harray3[2] = GCD_Glue;
 	++j;
 
-	label[j].image = &GIcon_midcurve;
+	label[j].image = (GImage *) "ptinfocurve.png";
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = 60; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y-2;
 	gcd[j].gd.flags = gg_enabled|gg_visible;
@@ -3065,7 +3065,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	harray3[3] = &gcd[j]; harray3[4] = GCD_Glue;
 	++j;
 
-	label[j].image = &GIcon_midhvcurve;
+	label[j].image = (GImage *) "ptinfohvcurve.png";
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = 60; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y-2;
 	gcd[j].gd.flags = gg_enabled|gg_visible;
@@ -3075,7 +3075,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	harray3[5] = &gcd[j]; harray3[6] = GCD_Glue;
 	++j;
 
-	label[j].image = &GIcon_midcorner;
+	label[j].image = (GImage *) "ptinfocorner.png";
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = 100; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y;
 	gcd[j].gd.flags = gg_enabled|gg_visible | gg_rad_continueold;
@@ -3085,7 +3085,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	harray3[7] = &gcd[j]; harray3[8] = GCD_Glue;
 	++j;
 
-	label[j].image = &GIcon_midtangent;
+	label[j].image = (GImage *) "ptinfotangent.png";
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = 140; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y;
 	gcd[j].gd.flags = gg_enabled|gg_visible | gg_rad_continueold;
@@ -3504,7 +3504,7 @@ static void SpiroPointGetInfo(CharView *cv, spiro_cp *scp, SplinePointList *spl)
 	harray3[0] = &gcd[j]; harray3[1] = GCD_Glue; harray3[2] = GCD_Glue;
 	++j;
 
-	label[j].image = &GIcon_smallspirocurve;
+	label[j].image = (GImage *) "palettesmallspirocurve.png";
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = 60; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y-2;
 	gcd[j].gd.flags = gg_enabled|gg_visible;
@@ -3514,7 +3514,7 @@ static void SpiroPointGetInfo(CharView *cv, spiro_cp *scp, SplinePointList *spl)
 	harray3[3] = &gcd[j]; harray3[4] = GCD_Glue;
 	++j;
 
-	label[j].image = &GIcon_smallspirog2curve;
+	label[j].image = (GImage *) "palettesmallspirog2curve.png";
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = 60; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y-2;
 	gcd[j].gd.flags = gg_enabled|gg_visible;
@@ -3524,7 +3524,7 @@ static void SpiroPointGetInfo(CharView *cv, spiro_cp *scp, SplinePointList *spl)
 	harray3[5] = &gcd[j]; harray3[6] = GCD_Glue;
 	++j;
 
-	label[j].image = &GIcon_smallspirocorner;
+	label[j].image = (GImage *) "palettesmallspirocorner.png";
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = 100; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y;
 	gcd[j].gd.flags = gg_enabled|gg_visible | gg_rad_continueold;
@@ -3534,7 +3534,7 @@ static void SpiroPointGetInfo(CharView *cv, spiro_cp *scp, SplinePointList *spl)
 	harray3[7] = &gcd[j]; harray3[8] = GCD_Glue;
 	++j;
 
-	label[j].image = &GIcon_smallspiroleft;
+	label[j].image = (GImage *) "palettesmallspiroleft.png";
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = 140; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y;
 	gcd[j].gd.flags = gg_enabled|gg_visible | gg_rad_continueold;
@@ -3544,7 +3544,7 @@ static void SpiroPointGetInfo(CharView *cv, spiro_cp *scp, SplinePointList *spl)
 	harray3[9] = &gcd[j]; harray3[10] = GCD_Glue;
 	++j;
 
-	label[j].image = &GIcon_smallspiroright;
+	label[j].image = (GImage *) "palettesmallspiroright.png";
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = 140; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y;
 	gcd[j].gd.flags = gg_enabled|gg_visible | gg_rad_continueold;

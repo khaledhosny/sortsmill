@@ -634,6 +634,7 @@ static void GListBSelectOne(GGadget *g, int32_t pos) {
     if ( pos>=gl->ltot ) pos = gl->ltot-1;
     if ( pos<0 ) pos = 0;
     if ( gl->ltot>0 ) {
+	GTextInfoImageLookup(gl->ti[pos]);
 	gl->ti[pos]->selected = true;
 	GButtonSetImageTitle(g,gl->ti[pos]->image,gl->ti[pos]->text,gl->ti[pos]->image_precedes);
     }
@@ -1031,6 +1032,7 @@ static GLabel *_GLabelCreate(GLabel *gl, struct gwindow *base, GGadgetData *gd,v
 	_GWidget_SetCancelButton(&gl->g);
     gl->font = def==&label_box ? label_font : button_font;
     if ( gd->label!=NULL ) {
+	GTextInfoImageLookup(gd->label);
 	gl->image_precedes = gd->label->image_precedes;
 	if ( gd->label->font!=NULL )
 	    gl->font = gd->label->font;

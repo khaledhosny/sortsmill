@@ -916,7 +916,7 @@ static void MakeStrokeDlg(void *cv,void (*strokeit)(void *,StrokeInfo *,int),Str
 	label[gcdoff].text = (uint32_t *) _("_Butt");
 	label[gcdoff].text_is_1byte = true;
 	label[gcdoff].text_in_resource = true;
-	label[gcdoff].image = &GIcon_buttcap;
+	label[gcdoff].image = (GImage *) "cvsbuttcap.png";
 	gcd[gcdoff].gd.label = &label[gcdoff];
 	gcd[gcdoff].gd.flags = gg_enabled | gg_visible | (def->cap==lc_butt?gg_cb_on:0);
 	gcd[gcdoff].gd.cid = CID_ButtCap;
@@ -926,7 +926,7 @@ static void MakeStrokeDlg(void *cv,void (*strokeit)(void *,StrokeInfo *,int),Str
 	label[gcdoff].text = (uint32_t *) _("_Round");
 	label[gcdoff].text_is_1byte = true;
 	label[gcdoff].text_in_resource = true;
-	label[gcdoff].image = &GIcon_roundcap;
+	label[gcdoff].image = (GImage *) "cvsroundcap.png";
 	gcd[gcdoff].gd.label = &label[gcdoff];
 	gcd[gcdoff].gd.flags = gg_enabled | gg_visible | (def->cap==lc_round?gg_cb_on:0);
 	gcd[gcdoff].gd.cid = CID_RoundCap;
@@ -936,7 +936,7 @@ static void MakeStrokeDlg(void *cv,void (*strokeit)(void *,StrokeInfo *,int),Str
 	label[gcdoff].text = (uint32_t *) _("S_quare");
 	label[gcdoff].text_is_1byte = true;
 	label[gcdoff].text_in_resource = true;
-	label[gcdoff].image = &GIcon_squarecap;
+	label[gcdoff].image = (GImage *) "cvssquarecap.png";
 	gcd[gcdoff].gd.mnemonic = 'q';
 	gcd[gcdoff].gd.label = &label[gcdoff];
 	gcd[gcdoff].gd.flags = gg_enabled | gg_visible | (def->cap==lc_square?gg_cb_on:0);
@@ -960,7 +960,7 @@ static void MakeStrokeDlg(void *cv,void (*strokeit)(void *,StrokeInfo *,int),Str
 	label[gcdoff].text = (uint32_t *) _("_Miter");
 	label[gcdoff].text_is_1byte = true;
 	label[gcdoff].text_in_resource = true;
-	label[gcdoff].image = &GIcon_miterjoin;
+	label[gcdoff].image = (GImage *) "cvsmiterjoin.png";
 	gcd[gcdoff].gd.label = &label[gcdoff];
 	gcd[gcdoff].gd.flags = gg_enabled | gg_visible | (def->join==lj_miter?gg_cb_on:0);
 	gcd[gcdoff].gd.cid = CID_MiterJoin;
@@ -970,7 +970,7 @@ static void MakeStrokeDlg(void *cv,void (*strokeit)(void *,StrokeInfo *,int),Str
 	label[gcdoff].text = (uint32_t *) _("Ro_und");
 	label[gcdoff].text_is_1byte = true;
 	label[gcdoff].text_in_resource = true;
-	label[gcdoff].image = &GIcon_roundjoin;
+	label[gcdoff].image = (GImage *) "cvsroundjoin.png";
 	gcd[gcdoff].gd.label = &label[gcdoff];
 	gcd[gcdoff].gd.flags = gg_enabled | gg_visible | (def->join==lj_round?gg_cb_on:0);
 	gcd[gcdoff].gd.cid = CID_RoundJoin;
@@ -980,7 +980,7 @@ static void MakeStrokeDlg(void *cv,void (*strokeit)(void *,StrokeInfo *,int),Str
 	label[gcdoff].text = (uint32_t *) _("Be_vel");
 	label[gcdoff].text_is_1byte = true;
 	label[gcdoff].text_in_resource = true;
-	label[gcdoff].image = &GIcon_beveljoin;
+	label[gcdoff].image = (GImage *) "cvsbeveljoin.png";
 	gcd[gcdoff].gd.label = &label[gcdoff];
 	gcd[gcdoff].gd.flags = gg_enabled | gg_visible | (def->join==lj_bevel?gg_cb_on:0);
 	gcd[gcdoff].gd.cid = CID_BevelJoin;
@@ -3176,7 +3176,7 @@ int LayerDialog(Layer *layer,SplineFont *sf) {
     label[gcdoff].text = (uint32_t *) _("_Butt");
     label[gcdoff].text_is_1byte = true;
     label[gcdoff].text_in_resource = true;
-    label[gcdoff].image = &GIcon_buttcap;
+    label[gcdoff].image = (GImage *) "cvsbuttcap.png";
     gcd[gcdoff].gd.mnemonic = 'B';
     gcd[gcdoff].gd.label = &label[gcdoff];
     gcd[gcdoff].gd.pos.x = 15; gcd[gcdoff].gd.pos.y = gcd[gcdoff-2].gd.pos.y+12;
@@ -3188,7 +3188,7 @@ int LayerDialog(Layer *layer,SplineFont *sf) {
     label[gcdoff].text = (uint32_t *) _("_Round");
     label[gcdoff].text_is_1byte = true;
     label[gcdoff].text_in_resource = true;
-    label[gcdoff].image = &GIcon_roundcap;
+    label[gcdoff].image = (GImage *) "cvsroundcap.png";
     gcd[gcdoff].gd.mnemonic = 'R';
     gcd[gcdoff].gd.label = &label[gcdoff];
     gcd[gcdoff].gd.pos.x = 80; gcd[gcdoff].gd.pos.y = gcd[gcdoff-1].gd.pos.y;
@@ -3200,7 +3200,7 @@ int LayerDialog(Layer *layer,SplineFont *sf) {
     label[gcdoff].text = (uint32_t *) _("S_quare");
     label[gcdoff].text_is_1byte = true;
     label[gcdoff].text_in_resource = true;
-    label[gcdoff].image = &GIcon_squarecap;
+    label[gcdoff].image = (GImage *) "cvssquarecap.png";
     gcd[gcdoff].gd.mnemonic = 'q';
     gcd[gcdoff].gd.label = &label[gcdoff];
     gcd[gcdoff].gd.pos.x = 150; gcd[gcdoff].gd.pos.y = gcd[gcdoff-2].gd.pos.y;
@@ -3243,7 +3243,7 @@ int LayerDialog(Layer *layer,SplineFont *sf) {
     label[gcdoff].text = (uint32_t *) _("_Miter");
     label[gcdoff].text_is_1byte = true;
     label[gcdoff].text_in_resource = true;
-    label[gcdoff].image = &GIcon_miterjoin;
+    label[gcdoff].image = (GImage *) "cvsmiterjoin.png";
     gcd[gcdoff].gd.mnemonic = 'M';
     gcd[gcdoff].gd.label = &label[gcdoff];
     gcd[gcdoff].gd.pos.x = gcd[gcdoff-6].gd.pos.x; gcd[gcdoff].gd.pos.y = gcd[gcdoff-2].gd.pos.y+12;
@@ -3255,7 +3255,7 @@ int LayerDialog(Layer *layer,SplineFont *sf) {
     label[gcdoff].text = (uint32_t *) _("Ro_und");
     label[gcdoff].text_is_1byte = true;
     label[gcdoff].text_in_resource = true;
-    label[gcdoff].image = &GIcon_roundjoin;
+    label[gcdoff].image = (GImage *) "cvsroundjoin.png";
     gcd[gcdoff].gd.mnemonic = 'u';
     gcd[gcdoff].gd.label = &label[gcdoff];
     gcd[gcdoff].gd.pos.x = gcd[gcdoff-6].gd.pos.x; gcd[gcdoff].gd.pos.y = gcd[gcdoff-1].gd.pos.y;
@@ -3267,7 +3267,7 @@ int LayerDialog(Layer *layer,SplineFont *sf) {
     label[gcdoff].text = (uint32_t *) _("Be_vel");
     label[gcdoff].text_is_1byte = true;
     label[gcdoff].text_in_resource = true;
-    label[gcdoff].image = &GIcon_beveljoin;
+    label[gcdoff].image = (GImage *) "cvsbeveljoin.png";
     gcd[gcdoff].gd.mnemonic = 'v';
     gcd[gcdoff].gd.label = &label[gcdoff];
     gcd[gcdoff].gd.pos.x = gcd[gcdoff-6].gd.pos.x; gcd[gcdoff].gd.pos.y = gcd[gcdoff-1].gd.pos.y;

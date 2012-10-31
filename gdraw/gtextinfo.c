@@ -140,6 +140,7 @@ int GTextInfoDraw(GWindow base,int x,int y,GTextInfo *ti,
     GTextBounds bounds;
     GRect r, old;
 
+    GTextInfoImageLookup(ti);
     GDrawGetFontMetrics(base,font,&as, &ds, &ld);
     if ( ti->text!=NULL ) {
 	if ( ti->font!=NULL )
@@ -503,9 +504,13 @@ return( _GGadgetImageCache(filename,NULL));
 
 /* Substitutes an image contents with what's found in cache. */
 /* That is, unless there is nothing found in the cache.      */
-int TryGGadgetImageCache(GImage *image, char *name) {
+bool TryGGadgetImageCache(GImage *image, char *name) {
     GImage *loaded = GGadgetImageCache(name);
-    if (loaded != NULL) *image = *loaded;
+    if (loaded != NULL)
+	*image = *loaded;
+    else
+	fprintf (stderr, "Warning: image '%s' was not found\n", name);
+
 return (loaded != NULL);
 }
 
@@ -549,7 +554,7 @@ return( ri );
 return( ri );
 }
     
-static void GTextInfoImageLookup(GTextInfo *ti) {
+void GTextInfoImageLookup(GTextInfo *ti) {
     char *pt;
     int any;
 

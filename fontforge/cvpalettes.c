@@ -744,50 +744,50 @@ static void CVPolyStar(CharView *cv) {
 static void ToolsExpose(GWindow pixmap, CharView *cv, GRect *r) {
     GRect old;
     /* Note: If you change this ordering, change enum cvtools */
-    static GImage *normbuttons[][2] = { { &GIcon_pointer, &GIcon_magnify },
-				    { &GIcon_freehand, &GIcon_hand },
-				    { &GIcon_curve, &GIcon_hvcurve },
-			            { &GIcon_corner, &GIcon_tangent},
-			            { &GIcon_pen, &GIcon_spirodisabled },
-			            { &GIcon_knife, &GIcon_ruler },
-			            { &GIcon_scale, &GIcon_flip },
-			            { &GIcon_rotate, &GIcon_skew },
-			            { &GIcon_3drotate, &GIcon_perspective },
-			            { &GIcon_rect, &GIcon_poly},
-			            { &GIcon_elipse, &GIcon_star}};
-    static GImage *spirobuttons[][2] = { { &GIcon_pointer, &GIcon_magnify },
-				    { &GIcon_freehand, &GIcon_hand },
-				    { &GIcon_spirocurve, &GIcon_spirog2curve },
-			            { &GIcon_spirocorner, &GIcon_spiroleft },
-			            { &GIcon_spiroright, &GIcon_spirodown },
-			            { &GIcon_knife, &GIcon_ruler },
-			            { &GIcon_scale, &GIcon_flip },
-			            { &GIcon_rotate, &GIcon_skew },
-			            { &GIcon_3drotate, &GIcon_perspective },
-			            { &GIcon_rect, &GIcon_poly},
-			            { &GIcon_elipse, &GIcon_star}};
-    static GImage *normsmalls[] = { &GIcon_smallpointer, &GIcon_smallmag,
-				    &GIcon_smallpencil, &GIcon_smallhand,
-				    &GIcon_smallcurve, &GIcon_smallhvcurve,
-			            &GIcon_smallcorner, &GIcon_smalltangent,
-			            &GIcon_smallpen, NULL,
-			            &GIcon_smallknife, &GIcon_smallruler,
-			            &GIcon_smallscale, &GIcon_smallflip,
-			            &GIcon_smallrotate, &GIcon_smallskew,
-			            &GIcon_small3drotate, &GIcon_smallperspective,
-			            &GIcon_smallrect, &GIcon_smallpoly,
-			            &GIcon_smallelipse, &GIcon_smallstar };
-    static GImage *spirosmalls[] = { &GIcon_smallpointer, &GIcon_smallmag,
-				    &GIcon_smallpencil, &GIcon_smallhand,
-				    &GIcon_smallspirocurve, &GIcon_smallspirog2curve,
-			            &GIcon_smallspirocorner, &GIcon_smallspiroleft,
-			            &GIcon_smallspiroright, NULL,
-			            &GIcon_smallknife, &GIcon_smallruler,
-			            &GIcon_smallscale, &GIcon_smallflip,
-			            &GIcon_smallrotate, &GIcon_smallskew,
-			            &GIcon_small3drotate, &GIcon_smallperspective,
-			            &GIcon_smallrect, &GIcon_smallpoly,
-			            &GIcon_smallelipse, &GIcon_smallstar };
+    static char *normbuttons[][2] = { { "palettepointer.png", "palettemagnify.png" },
+				    { "palettefreehand.png", "palettehand.png" },
+				    { "palettecurve.png", "palettehvcurve.png" },
+			            { "palettecorner.png", "palettetangent.png"},
+			            { "palettepen.png", "palettespirodisabled.png" },
+			            { "paletteknife.png", "paletteruler.png" },
+			            { "palettescale.png", "paletteflip.png" },
+			            { "paletterotate.png", "paletteskew.png" },
+			            { "palette3drotate.png", "paletteperspective.png" },
+			            { "paletterect.png", "palettepoly.png"},
+			            { "paletteelipse.png", "palettestar.png"}};
+    static char *spirobuttons[][2] = { { "palettepointer.png", "palettemagnify.png" },
+				    { "palettefreehand.png", "palettehand.png" },
+				    { "palettespirocurve.png", "palettespirog2curve.png" },
+			            { "palettespirocorner.png", "palettespiroleft.png" },
+			            { "palettespiroright.png", "palettespirodown.png" },
+			            { "paletteknife.png", "paletteruler.png" },
+			            { "palettescale.png", "paletteflip.png" },
+			            { "paletterotate.png", "paletteskew.png" },
+			            { "palette3drotate.png", "paletteperspective.png" },
+			            { "paletterect.png", "palettepoly.png"},
+			            { "paletteelipse.png", "palettestar.png"}};
+    static char *normsmalls[] = { "palettesmallpointer.png", "palettesmallmag.png",
+				    "palettesmallpencil.png", "palettesmallhand.png",
+				    "palettesmallcurve.png", "palettesmallhvcurve.png",
+			            "palettesmallcorner.png", "palettesmalltangent.png",
+			            "palettesmallpen.png", NULL,
+			            "palettesmallknife.png", "palettesmallruler.png",
+			            "palettesmallscale.png", "palettesmallflip.png",
+			            "palettesmallrotate.png", "palettesmallskew.png",
+			            "palettesmall3drotate.png", "palettesmallperspective.png",
+			            "palettesmallrect.png", "palettesmallpoly.png",
+			            "palettesmallelipse.png", "palettesmallstar.png" };
+    static char *spirosmalls[] = { "palettesmallpointer.png", "palettesmallmag.png",
+				    "palettesmallpencil.png", "palettesmallhand.png",
+				    "palettesmallspirocurve.png", "palettesmallspirog2curve.png",
+			            "palettesmallspirocorner.png", "palettesmallspiroleft.png",
+			            "palettesmallspiroright.png", NULL,
+			            "palettesmallknife.png", "palettesmallruler.png",
+			            "palettesmallscale.png", "palettesmallflip.png",
+			            "palettesmallrotate.png", "palettesmallskew.png",
+			            "palettesmall3drotate.png", "palettesmallperspective.png",
+			            "palettesmallrect.png", "palettesmallpoly.png",
+			            "palettesmallelipse.png", "palettesmallstar.png" };
     static const uint32_t _Mouse[][9] = {
 	    { 'M', 's', 'e', '1',  '\0' },
 	    { '^', 'M', 's', 'e', '1',  '\0' },
@@ -798,10 +798,10 @@ static void ToolsExpose(GWindow pixmap, CharView *cv, GRect *r) {
     int dither = GDrawSetDither(NULL,false);
     GRect temp;
     int canspiro = hasspiro(), inspiro = canspiro && cv->b.sc->inspiro;
-    GImage *(*buttons)[2] = inspiro ? spirobuttons : normbuttons;
-    GImage **smalls = inspiro ? spirosmalls : normsmalls;
+    char *(*buttons)[2] = inspiro ? spirobuttons : normbuttons;
+    char **smalls = inspiro ? spirosmalls : normsmalls;
 
-    normbuttons[4][1] = canspiro ? &GIcon_spiroup : &GIcon_spirodisabled;
+    normbuttons[4][1] = canspiro ? "palettespiroup.png" : "palettespirodisabled.png";
 
     GDrawPushClip(pixmap,r,&old);
     GDrawFillRect(pixmap,r,GDrawGetDefaultBackground(NULL));
@@ -810,10 +810,7 @@ static void ToolsExpose(GWindow pixmap, CharView *cv, GRect *r) {
 	mi = i;
 	if ( i==(cvt_rect)/2 && ((j==0 && rectelipse) || (j==1 && polystar)) )
 	    ++mi;
-/*	if ( cv->b.sc->parent->order2 && buttons[mi][j]==&GIcon_freehand ) */
-/*	    GDrawDrawImage(pixmap,&GIcon_greyfree,NULL,j*27+1,i*27+1);	 */
-/*	else								 */
-	    GDrawDrawImage(pixmap,buttons[mi][j],NULL,j*27+1,i*27+1);
+	    GDrawDrawImage2(pixmap,buttons[mi][j],NULL,j*27+1,i*27+1);
 	norm = (mi*2+j!=tool);
 	GDrawDrawLine(pixmap,j*27,i*27,j*27+25,i*27,norm?0xe0e0e0:0x707070);
 	GDrawDrawLine(pixmap,j*27,i*27,j*27,i*27+25,norm?0xe0e0e0:0x707070);
@@ -826,7 +823,7 @@ static void ToolsExpose(GWindow pixmap, CharView *cv, GRect *r) {
     for ( j=0; j<4; ++j ) {
 	GDrawDrawText(pixmap,2,i*27+j*12+10,(uint32_t *) _Mouse[j],-1,GDrawGetDefaultForeground(NULL));
 	if ( (&cv->b1_tool)[j]!=cvt_none )
-	    GDrawDrawImage(pixmap,smalls[(&cv->b1_tool)[j]],NULL,52-16,i*27+j*12);
+	    GDrawDrawImage2(pixmap,smalls[(&cv->b1_tool)[j]],NULL,52-16,i*27+j*12);
     }
     GDrawPopClip(pixmap,&old);
     GDrawSetDither(NULL,dither);
@@ -2863,9 +2860,9 @@ static char *bvpopups[] = { N_("Pointer"), N_("Magnify (Minify with alt)"),
 static void BVToolsExpose(GWindow pixmap, BitmapView *bv, GRect *r) {
     GRect old;
     /* Note: If you change this ordering, change enum bvtools */
-    static GImage *buttons[][2] = { { &GIcon_pointer, &GIcon_magnify },
-				    { &GIcon_pencil, &GIcon_line },
-			            { &GIcon_shift, &GIcon_hand }};
+    static char *buttons[][2] = { { "palettepointer.png", "palettemagnify.png" },
+				  { "palettepencil.png", "paletteline.png" },
+			          { "paletteshift.png", "palettehand.png" }};
     int i,j,norm;
     int tool = bv->cntrldown?bv->cb1_tool:bv->b1_tool;
     int dither = GDrawSetDither(NULL,false);
@@ -2873,7 +2870,7 @@ static void BVToolsExpose(GWindow pixmap, BitmapView *bv, GRect *r) {
     GDrawPushClip(pixmap,r,&old);
     GDrawSetLineWidth(pixmap,0);
     for ( i=0; i<sizeof(buttons)/sizeof(buttons[0]); ++i ) for ( j=0; j<2; ++j ) {
-	GDrawDrawImage(pixmap,buttons[i][j],NULL,j*27+1,i*27+1);
+	GDrawDrawImage2(pixmap,buttons[i][j],NULL,j*27+1,i*27+1);
 	norm = (i*2+j!=tool);
 	GDrawDrawLine(pixmap,j*27,i*27,j*27+25,i*27,norm?0xe0e0e0:0x707070);
 	GDrawDrawLine(pixmap,j*27,i*27,j*27,i*27+25,norm?0xe0e0e0:0x707070);

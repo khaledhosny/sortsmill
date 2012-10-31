@@ -384,6 +384,7 @@ VISIBLE extern void GDrawDrawPoly(GWindow w, GPoint *pts, int16_t cnt, Color col
 VISIBLE extern void GDrawFillPoly(GWindow w, GPoint *pts, int16_t cnt, Color col);
 VISIBLE extern void GDrawScroll(GWindow w, GRect *rect, int32_t hor, int32_t vert);
 VISIBLE extern void GDrawDrawImage(GWindow w, GImage *img, GRect *src, int32_t x, int32_t y);
+VISIBLE extern void GDrawDrawImage2(GWindow w, char *name, GRect *src, int32_t x, int32_t y);
 VISIBLE extern void GDrawDrawGlyph(GWindow w, GImage *img, GRect *src, int32_t x, int32_t y);
 VISIBLE extern void GDrawDrawScaledImage(GWindow w, GImage *img, int32_t x, int32_t y);
 VISIBLE extern void GDrawDrawImageMagnified(GWindow w, GImage *img, GRect *src, int32_t x, int32_t y,

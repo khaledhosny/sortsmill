@@ -1803,7 +1803,7 @@ return;
     gcd[11].creator = GListCreate;
     harray2[0] = &gcd[11];
 
-    label[12].image = &GIcon_menudelta;
+    label[12].image = (GImage *) "ttdebugmenudelta.png";
     gcd[12].gd.label = &label[12];
     gcd[12].gd.popup_msg = (uint32_t *) _("Menu");
     gcd[12].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;

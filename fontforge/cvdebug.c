@@ -276,8 +276,7 @@ static void DVStorageExpose(GWindow pixmap,DebugView *dv,GEvent *event) {
 	    else
 		sprintf(buffer, "%3d: %3ld (%.2f)", i, exc->storage[i], exc->storage[i]/64.0 );
 	    if ( i<n_watch && watches!=NULL && watches[i] && y>0 )
-		GDrawDrawImage(pixmap,&GIcon_Stop,NULL,3,
-			    y-dv->ii.as-2);
+		GDrawDrawImage2(pixmap, "ttdebugstop.png", NULL, 3, y-dv->ii.as-2);
 	    GDrawDrawText8(pixmap,23,y,buffer,-1,MAIN_FOREGROUND);
 	    if ( y>event->u.expose.rect.y+event->u.expose.rect.height )
 	break;
@@ -303,8 +302,7 @@ static void DVCvtExpose(GWindow pixmap,DebugView *dv,GEvent *event) {
 	    sprintf(buffer, "%3d: %3ld (%.2f)", dv->cvt_offtop+i,
 		    exc->cvt[dv->cvt_offtop+i], exc->cvt[dv->cvt_offtop+i]/64.0 );
 	    if ( dv->cvt_offtop+i<n_watch && watches!=NULL && watches[dv->cvt_offtop+i] && y>0 )
-		GDrawDrawImage(pixmap,&GIcon_Stop,NULL,3,
-			    y-dv->ii.as-2);
+		GDrawDrawImage2(pixmap, "ttdebugstop.png", NULL, 3, y-dv->ii.as-2);
 	    GDrawDrawText8(pixmap,23,y,buffer,-1,MAIN_FOREGROUND);
 	    if ( y>event->u.expose.rect.y+event->u.expose.rect.height )
 	break;
@@ -409,8 +407,7 @@ static void DVPointsVExpose(GWindow pixmap,DebugView *dv,GEvent *event) {
 			    0x000000);
 	    }
 	    if ( i<n_watch && !show_twilight && watches!=NULL && watches[i] && y>0 )
-		GDrawDrawImage(pixmap,&GIcon_Stop,NULL,3,
-			    y-dv->ii.as-2);
+		GDrawDrawImage2(pixmap, "ttdebugstop.png", NULL, 3, y-dv->ii.as-2);
 	    ScalePoint(&me,&pts[i],dv->scalex,dv->scaley,actives);
 	    if ( show_grid )
 		sprintf(buffer, "%3d: %c%c%c %.2f,%.2f", i,
@@ -2113,7 +2110,7 @@ return;
 	gcd[1].gd.flags = gg_visible|gg_enabled|gg_pos_in_pixels|gg_utf8_popup;
 	gcd[1].gd.cid = dgt_step;
 	gcd[1].gd.label = &label[1];
-	label[1].image = &GIcon_stepinto;
+	label[1].image = (GImage *) "ttdebugstepinto.png";
 	gcd[1].gd.handle_controlevent = DV_Run;
 	gcd[1].gd.popup_msg = (uint32_t *) _("Step into");
 	gcd[1].creator = GButtonCreate;
@@ -2122,7 +2119,7 @@ return;
 	gcd[2].gd.flags = gg_visible|gg_enabled|gg_pos_in_pixels|gg_utf8_popup;
 	gcd[2].gd.cid = dgt_next;
 	gcd[2].gd.label = &label[2];
-	label[2].image = &GIcon_stepover;
+	label[2].image = (GImage *) "ttdebugstepover.png";
 	gcd[2].gd.handle_controlevent = DV_Run;
 	gcd[2].gd.popup_msg = (uint32_t *) _("Step over (Next)");
 	gcd[2].creator = GButtonCreate;
@@ -2131,7 +2128,7 @@ return;
 	gcd[3].gd.flags = gg_visible|gg_enabled|gg_pos_in_pixels|gg_utf8_popup;
 	gcd[3].gd.cid = dgt_stepout;
 	gcd[3].gd.label = &label[3];
-	label[3].image = &GIcon_stepout;
+	label[3].image = (GImage *) "ttdebugstepout.png";
 	gcd[3].gd.handle_controlevent = DV_Run;
 	gcd[3].gd.popup_msg = (uint32_t *) _("Step out of current function");
 	gcd[3].creator = GButtonCreate;
@@ -2140,7 +2137,7 @@ return;
 	gcd[4].gd.flags = gg_visible|gg_enabled|gg_pos_in_pixels|gg_utf8_popup;
 	gcd[4].gd.cid = dgt_continue;
 	gcd[4].gd.label = &label[4];
-	label[4].image = &GIcon_continue;
+	label[4].image = (GImage *) "ttdebugcontinue.png";
 	gcd[4].gd.handle_controlevent = DV_Run;
 	gcd[4].gd.popup_msg = (uint32_t *) _("Continue");
 	gcd[4].creator = GButtonCreate;
@@ -2149,7 +2146,7 @@ return;
 	gcd[5].gd.flags = gg_visible|gg_enabled|gg_pos_in_pixels|gg_utf8_popup;
 	/*gcd[5].gd.cid = dgt_continue;*/
 	gcd[5].gd.label = &label[5];
-	label[5].image = &GIcon_watchpnt;
+	label[5].image = (GImage *) "ttdebugwatchpnt.png";
 	gcd[5].gd.handle_controlevent = DV_WatchPnt;
 	gcd[5].gd.popup_msg = (uint32_t *) _("Watch all selected points\n(stop when a point moves)");
 	gcd[5].creator = GButtonCreate;
@@ -2158,7 +2155,7 @@ return;
 	gcd[6].gd.flags = gg_visible|gg_enabled|gg_pos_in_pixels|gg_utf8_popup;
 	/*gcd[6].gd.cid = dgt_continue;*/
 	gcd[6].gd.label = &label[6];
-	label[6].image = &GIcon_menudelta;
+	label[6].image = (GImage *) "ttdebugmenudelta.png";
 	gcd[6].gd.handle_controlevent = DV_WindowMenu;
 	gcd[6].gd.popup_msg = (uint32_t *) _("Window");
 	gcd[6].creator = GButtonCreate;
@@ -2167,7 +2164,7 @@ return;
 	gcd[7].gd.flags = gg_visible|gg_enabled|gg_pos_in_pixels|gg_utf8_popup;
 	/*gcd[7].gd.cid = dgt_continue;*/
 	gcd[7].gd.label = &label[7];
-	label[7].image = &GIcon_exit;
+	label[7].image = (GImage *) "ttdebugexit.png";
 	gcd[7].gd.handle_controlevent = DV_Exit;
 	gcd[7].gd.popup_msg = (uint32_t *) _("Exit Debugger");
 	gcd[7].creator = GButtonCreate;

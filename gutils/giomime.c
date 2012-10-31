@@ -40,6 +40,9 @@ GIOGetMimeType (const char *path)
       if (res >= 0)
         {
           g_free (content_type);
+	  // first force guessing file type from the content only by passing
+	  // NULL for file name, if the result is not certain try again with
+	  // file name
           content_type = g_content_type_guess (NULL, sniff_buffer, res, &uncertain);
           if (uncertain)
             {

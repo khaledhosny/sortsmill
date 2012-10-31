@@ -40,10 +40,6 @@
 
 VISIBLE int AutoSaveFrequency=30;
 
-#if !defined(__MINGW32__)
-# include <pwd.h>
-#endif
-
 // FIXME: move next 3 functions somewhere else
 char *
 getUserCacheDir (void)

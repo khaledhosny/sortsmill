@@ -48,14 +48,14 @@
 static GTextInfo std_colors[] = {
     { (uint32_t *) N_("Select by Color"), NULL, 0, 0, (void *) COLOR_DEFAULT, NULL, 0, 1, 0, 0, 0, 0, 1, 0, 0, '\0' },
     { (uint32_t *) N_("Color|Choose..."), NULL, 0, 0, (void *) COLOR_CHOOSE, NULL, 0, 1, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { (uint32_t *) N_("Color|Default"), &def_image, 0, 0, (void *) COLOR_DEFAULT, NULL, 0, 1, 0, 0, 0, 0, 1, 0, 0, '\0' },
-    { NULL, &white_image, 0, 0, (void *) 0xffffff, NULL, 0, 1, 0, 0, 0, 0, 0, 0, 0, '\0' },
-    { NULL, &red_image, 0, 0, (void *) 0xff0000, NULL, 0, 1, 0, 0, 0, 0, 0, 0, 0, '\0' },
-    { NULL, &green_image, 0, 0, (void *) 0x00ff00, NULL, 0, 1, 0, 0, 0, 0, 0, 0, 0, '\0' },
-    { NULL, &blue_image, 0, 0, (void *) 0x0000ff, NULL, 0, 1, 0, 0, 0, 0, 0, 0, 0, '\0' },
-    { NULL, &yellow_image, 0, 0, (void *) 0xffff00, NULL, 0, 1, 0, 0, 0, 0, 0, 0, 0, '\0' },
-    { NULL, &cyan_image, 0, 0, (void *) 0x00ffff, NULL, 0, 1, 0, 0, 0, 0, 0, 0, 0, '\0' },
-    { NULL, &magenta_image, 0, 0, (void *) 0xff00ff, NULL, 0, 1, 0, 0, 0, 0, 0, 0, 0, '\0' },
+    { (uint32_t *) N_("Color|Default"), (GImage *) "colordef.png", 0, 0, (void *) COLOR_DEFAULT, NULL, 0, 1, 0, 0, 0, 0, 1, 0, 0, '\0' },
+    { NULL, (GImage *) "colorwhite.png", 0, 0, (void *) 0xffffff, NULL, 0, 1, 0, 0, 0, 0, 0, 0, 0, '\0' },
+    { NULL, (GImage *) "colorred.png", 0, 0, (void *) 0xff0000, NULL, 0, 1, 0, 0, 0, 0, 0, 0, 0, '\0' },
+    { NULL, (GImage *) "colorgreen.png", 0, 0, (void *) 0x00ff00, NULL, 0, 1, 0, 0, 0, 0, 0, 0, 0, '\0' },
+    { NULL, (GImage *) "colorblue.png", 0, 0, (void *) 0x0000ff, NULL, 0, 1, 0, 0, 0, 0, 0, 0, 0, '\0' },
+    { NULL, (GImage *) "coloryellow.png", 0, 0, (void *) 0xffff00, NULL, 0, 1, 0, 0, 0, 0, 0, 0, 0, '\0' },
+    { NULL, (GImage *) "colorcyan.png", 0, 0, (void *) 0x00ffff, NULL, 0, 1, 0, 0, 0, 0, 0, 0, 0, '\0' },
+    { NULL, (GImage *) "colormagenta.png", 0, 0, (void *) 0xff00ff, NULL, 0, 1, 0, 0, 0, 0, 0, 0, 0, '\0' },
     GTEXTINFO_EMPTY
 };
 

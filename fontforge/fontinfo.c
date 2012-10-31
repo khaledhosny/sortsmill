@@ -13023,7 +13023,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   tngcd[5].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
   tnlabel[5].text = (uint32_t *) _("Add SIL ");
   tnlabel[5].image_precedes = false;
-  tnlabel[5].image = &OFL_logo;
+  tnlabel[5].image = (GImage *) "ofllogo.png";
   tnlabel[5].text_is_1byte = true;
   tnlabel[5].text_in_resource = true;
   tngcd[5].gd.label = &tnlabel[5];

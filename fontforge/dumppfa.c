@@ -39,9 +39,6 @@
 #include <utype.h>
 #include <unistd.h>
 #include <locale.h>
-#if !defined(__MINGW32__)
-# include <pwd.h>
-#endif
 #include <stdarg.h>
 #include <time.h>
 #include "psfont.h"
@@ -1781,47 +1778,19 @@ static void dumpfontinfo(void (*dumpchar)(int ch,void *data), void *data, Spline
     dumpstr(dumpchar,data,"end readonly def\n");
 }
 
-const char *GetAuthor(void) {
-#if defined(__MINGW32__)
-    static char author[200] = { '\0' };
-    if ( author[0] == '\0' ){
-	char* name = getenv("USER");
-	if(!name) return NULL;
-	strncpy(author, name, sizeof(author));
-	author[sizeof(author)-1] = '\0';
-    }
-    return author;
-#else
-    struct passwd *pwd;
-    static char author[200] = { '\0' };
-    const char *ret = NULL, *pt;
+const char *
+GetAuthor (void)
+{
+  const char *author;
 
-    if ( author[0]!='\0' )
-return( author );
+  author = x_gc_strdup (g_get_real_name ());
 
-/* Can all be commented out if no pwd routines */
-    pwd = getpwuid(getuid());
-#ifndef __VMS
-    if ( pwd!=NULL && pwd->pw_gecos!=NULL && *pwd->pw_gecos!='\0' ) {
-	strncpy(author,pwd->pw_gecos,sizeof(author));
-	author[sizeof(author)-1] = '\0';
-	ret = author;
-    } else if ( pwd!=NULL && pwd->pw_name!=NULL && *pwd->pw_name!='\0' ) {
-#else
-    if ( pwd!=NULL && pwd->pw_name!=NULL && *pwd->pw_name!='\0' ) {
-#endif
-	strncpy(author,pwd->pw_name,sizeof(author));
-	author[sizeof(author)-1] = '\0';
-	ret = author;
-    } else if ( (pt=getenv("USER"))!=NULL ) {
-	strncpy(author,pt,sizeof(author));
-	author[sizeof(author)-1] = '\0';
-	ret = author;
-    }
-    endpwent();
-/* End comment */
-return( ret );
-#endif
+  // g_get_real_name() returns "Unknown" when it cannot determine real user
+  // name, our code expects NULL in this case
+  if (author == "Unknown")
+    author = NULL;
+
+  return (author);
 }
 
 static void dumpfontcomments(void (*dumpchar)(int ch,void *data), void *data,

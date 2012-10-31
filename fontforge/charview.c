@@ -269,20 +269,21 @@ GDevEventMask input_em[] = {
 const int input_em_cnt = sizeof(input_em)/sizeof(input_em[0])-1;
 
 /* Positions on the info line */
-#define RPT_BASE	5		/* Place to draw the pointer icon */
-#define RPT_DATA	13		/* x,y text after above */
-#define SPT_BASE	73		/* Place to draw selected pt icon */
-#define SPT_DATA	87		/* Any text for it */
-#define SOF_BASE	147		/* Place to draw selection to pointer icon */
-#define SOF_DATA	169		/* Any text for it */
-#define SDS_BASE	229		/* Place to draw distance icon */
-#define SDS_DATA	251		/* Any text for it */
-#define SAN_BASE	281		/* Place to draw angle icon */
-#define SAN_DATA	303		/* Any text for it */
-#define MAG_BASE	333		/* Place to draw magnification icon */
-#define MAG_DATA	344		/* Any text for it */
-#define LAYER_DATA	404		/* Text to show the current layer */
-#define CODERANGE_DATA	474		/* Text to show the current code range (if the debugger be active) */
+#define DATA_WIDTH	70			/* width for text after icons */
+#define RPT_BASE	5			/* Place to draw the pointer icon */
+#define RPT_DATA	RPT_BASE+8		/* x,y text after above */
+#define SPT_BASE	RPT_DATA+DATA_WIDTH	/* Place to draw selected pt icon */
+#define SPT_DATA	SPT_BASE+14		/* Any text for it */
+#define SOF_BASE	SPT_DATA+DATA_WIDTH	/* Place to draw selection to pointer icon */
+#define SOF_DATA	SOF_BASE+22		/* Any text for it */
+#define SDS_BASE	SOF_DATA+DATA_WIDTH	/* Place to draw distance icon */
+#define SDS_DATA	SDS_BASE+22		/* Any text for it */
+#define SAN_BASE	SDS_DATA+DATA_WIDTH	/* Place to draw angle icon */
+#define SAN_DATA	SAN_BASE+22		/* Any text for it */
+#define MAG_BASE	SAN_DATA+DATA_WIDTH	/* Place to draw magnification icon */
+#define MAG_DATA	MAG_BASE+11		/* Any text for it */
+#define LAYER_DATA	MAG_DATA+DATA_WIDTH	/* Text to show the current layer */
+#define CODERANGE_DATA	LAYER_DATA+70		/* Text to show the current code range (if the debugger be active) */
 
 void CVDrawRubberRect(GWindow pixmap, CharView *cv) {
     GRect r;
@@ -1499,7 +1500,7 @@ return;
     GDrawLayoutDraw(pixmap,x-size.width/2,y,fg);
     len = size.width;
     if ( ref->use_my_metrics )
-	GDrawDrawImage(pixmap,&GIcon_lock,NULL,x+len+3,y-cv->sas);
+	GDrawDrawImage2(pixmap, "cvlock.png", NULL,x+len+3,y-cv->sas);
 }
 
 void DrawAnchorPoint(GWindow pixmap,int x, int y,int selected) {
@@ -2075,6 +2076,9 @@ static void CVExpose(CharView *cv, GWindow pixmap, GEvent *event ) {
     enum outlinesfm_flags strokeFillMode = sfm_stroke;
     int GlyphHasBeenFilled = 0;
 
+    GImage *lock_icon = xcalloc(1,sizeof(GImage));
+    TryGGadgetImageCache(lock_icon, "cvlock.png");
+
     GDrawPushClip(pixmap,&event->u.expose.rect,&old);
 
     if( shouldShowFilledUsingCairo(cv) ) {
@@ -2220,7 +2224,7 @@ static void CVExpose(CharView *cv, GWindow pixmap, GEvent *event ) {
 	RefChar *lock = HasUseMyMetrics(cv->b.sc,cvlayer);
 	if ( lock!=NULL ) cv->b.sc->width = lock->sc->width;
 	DrawVLine(cv,pixmap,cv->b.sc->width,(!cv->inactive && cv->widthsel)?widthselcol:widthcol,true,
-		lock!=NULL ? &GIcon_lock : NULL, NULL);
+		lock!=NULL ? lock_icon : NULL, NULL);
 	if ( cv->b.sc->italic_correction!=TEX_UNDEF && cv->b.sc->italic_correction!=0 ) {
 	    GDrawSetDashedLine(pixmap,2,2,0);
 	    DrawVLine(cv,pixmap,cv->b.sc->width+cv->b.sc->italic_correction,(!cv->inactive && cv->icsel)?widthselcol:widthcol,
@@ -2985,18 +2989,18 @@ void CVInfoDrawText(CharView *cv, GWindow pixmap ) {
     spiro_cp *cp;
     
     GDrawSetFont(pixmap,cv->small);
-    r.x = RPT_DATA; r.width = 60;
+    r.x = RPT_DATA; r.width = DATA_WIDTH;
     r.y = cv->mbh; r.height = cv->infoh-1;
     GDrawFillRect(pixmap,&r,bg);
-    r.x = SPT_DATA; r.width = 60;
+    r.x = SPT_DATA; r.width = DATA_WIDTH;
     GDrawFillRect(pixmap,&r,bg);
-    r.x = SOF_DATA; r.width = 60;
+    r.x = SOF_DATA; r.width = DATA_WIDTH;
     GDrawFillRect(pixmap,&r,bg);
-    r.x = SDS_DATA; r.width = 30;
+    r.x = SDS_DATA; r.width = DATA_WIDTH;
     GDrawFillRect(pixmap,&r,bg);
-    r.x = SAN_DATA; r.width = 30;
+    r.x = SAN_DATA; r.width = DATA_WIDTH;
     GDrawFillRect(pixmap,&r,bg);
-    r.x = MAG_DATA; r.width = 60;
+    r.x = MAG_DATA; r.width = DATA_WIDTH;
     GDrawFillRect(pixmap,&r,bg);
     r.x = LAYER_DATA; r.width = 90;
     GDrawFillRect(pixmap,&r,bg);
@@ -4479,12 +4483,12 @@ return;
 	GDrawPushClip(pixmap,&expose->u.expose.rect,&old2);
 
 	GDrawDrawLine(pixmap,0,cv->mbh+cv->infoh-1,8096,cv->mbh+cv->infoh-1,def_fg);
-	GDrawDrawImage(pixmap,&GIcon_rightpointer,NULL,RPT_BASE,cv->mbh+2);
-	GDrawDrawImage(pixmap,&GIcon_selectedpoint,NULL,SPT_BASE,cv->mbh+2);
-	GDrawDrawImage(pixmap,&GIcon_sel2ptr,NULL,SOF_BASE,cv->mbh+2);
-	GDrawDrawImage(pixmap,&GIcon_distance,NULL,SDS_BASE,cv->mbh+2);
-	GDrawDrawImage(pixmap,&GIcon_angle,NULL,SAN_BASE,cv->mbh+2);
-	GDrawDrawImage(pixmap,&GIcon_mag,NULL,MAG_BASE,cv->mbh+2);
+	GDrawDrawImage2(pixmap, "cvrightpointer.png", NULL,RPT_BASE,cv->mbh+2);
+	GDrawDrawImage2(pixmap, "cvselectedpoint.png", NULL,SPT_BASE,cv->mbh+2);
+	GDrawDrawImage2(pixmap, "cvsel2ptr.png", NULL,SOF_BASE,cv->mbh+2);
+	GDrawDrawImage2(pixmap, "cvdistance.png", NULL,SDS_BASE,cv->mbh+2);
+	GDrawDrawImage2(pixmap, "cvangle.png", NULL,SAN_BASE,cv->mbh+2);
+	GDrawDrawImage2(pixmap, "cvmag.png", NULL,MAG_BASE,cv->mbh+2);
 	CVInfoDrawText(cv,pixmap);
 	GDrawPopClip(pixmap,&old2);
     }
@@ -4620,6 +4624,8 @@ static void CVHScroll(CharView *cv, struct sbevent *sb) {
 
 static void CVVScroll(CharView *cv, struct sbevent *sb) {
     int newpos = cv->yoff;
+    GImage *lock_icon = xcalloc(1,sizeof(GImage));
+    TryGGadgetImageCache(lock_icon, "cvlock.png");
 
     switch( sb->type ) {
       case et_sb_top:
@@ -4665,8 +4671,8 @@ static void CVVScroll(CharView *cv, struct sbevent *sb) {
 	    RefChar *lock = HasUseMyMetrics(cv->b.sc,CVLayer((CharViewBase *) cv));
 	    r.x = 0; r.width = cv->width;
 	    r.height = 2*cv->sfh+6;
-	    if ( lock!=NULL )
-		r.height = cv->sfh+3+GImageGetHeight(&GIcon_lock);
+	    if ( lock!=NULL && lock_icon != NULL)
+		r.height = cv->sfh+3+GImageGetHeight(lock_icon);
 	    if ( diff>0 )
 		r.y = 0;
 	    else
@@ -4690,17 +4696,20 @@ void LogoExpose(GWindow pixmap,GEvent *event, GRect *r,enum drawmode dm) {
 	    event->u.expose.rect.y+event->u.expose.rect.height >= r->y ) {
 	/* Put something into the little box where the two scroll bars meet */
 	int xoff, yoff;
-	GImage *which = (dm==dm_fore) ? &GIcon_FontForgeLogo :
-			(dm==dm_back) ? &GIcon_FontForgeBack :
-			    &GIcon_FontForgeGuide;
-	struct _GImage *base = which->u.image;
-	xoff = (sbsize-base->width);
-	yoff = (sbsize-base->height);
-	GDrawPushClip(pixmap,r,&old);
-	GDrawDrawImage(pixmap,which,NULL,
+	GImage *which = xcalloc(1,sizeof(GImage));
+	char *name = (dm==dm_fore) ? "fflogo.png" :
+			(dm==dm_back) ? "ffback.png" :
+			    "ffguide.png";
+	bool found = TryGGadgetImageCache(which, name);
+	if (found) {
+	    struct _GImage *base = which->u.image;
+	    xoff = (sbsize-base->width);
+	    yoff = (sbsize-base->height);
+	    GDrawPushClip(pixmap,r,&old);
+	    GDrawDrawImage(pixmap,which,NULL,
 		r->x+(xoff-xoff/2),r->y+(yoff-yoff/2));
-	GDrawPopClip(pixmap,&old);
-	/*GDrawDrawLine(pixmap,r->x+sbsize-1,r->y,r->x+sbsize-1,r->y+sbsize,0x000000);*/
+	    GDrawPopClip(pixmap,&old);
+	}
     }
 }
 
