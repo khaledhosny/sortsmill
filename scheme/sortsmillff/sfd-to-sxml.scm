@@ -82,7 +82,7 @@
             column)
       #f))
 
-(define (continue-multiline-string string-so-far port)
+(define (continue-multiline-string string-so-far port line-end)
   (let ((line (read-line port)))
     (if (eof-object? line)
         (throw 'sfd-error (_ "unexpected end of file")
@@ -90,24 +90,32 @@
                                               ; here what we want?
         (let ((m1 (regexp-exec sfd-end-quoted-string-re line)))
           (if m1
-              (list line
-                    (sfd-process-escapes
-                     (string-append string-so-far "\n"
-                                    (match:substring m1 1)))
-                    1 (match:end m1 1))
+              (let ((end (match:end m1 1)))
+                (if line-end (sfd-get-line-end line (+ 1 end) port))
+                (list line
+                      (sfd-process-escapes
+                       (string-append string-so-far "\n"
+                                      (match:substring m1 1)))
+                      (+ 1 end)))
               (continue-multiline-string
-               (string-append string-so-far "\n" line) port))))))
+               (string-append string-so-far "\n" line)
+               port line-end))))))
 
-(define* (sfd-get-multiline-string line start port #:key (mandatory #t))
+(define* (sfd-get-multiline-string line start port
+                                   #:key
+                                   (mandatory #t)
+                                   (line-end #f))
   (let ((m1 (regexp-exec sfd-full-quoted-string-re line start)))
     (if m1
-        (list line
-              (sfd-process-escapes (match:substring m1 1))
-              (match:start m1 1)
-              (match:end m1 1))
+        (let ((end (match:end m1 1)))
+          (if line-end (sfd-get-line-end line (+ 1 end) port))
+          (list line
+                (sfd-process-escapes (match:substring m1 1))
+                (+ 1 end)))
         (let ((m2 (regexp-exec sfd-start-quoted-string-re line start)))
           (if m2
-              (continue-multiline-string (match:substring m2 1) port)
+              (continue-multiline-string (match:substring m2 1) port
+                                         line-end)
               (if mandatory
                   (throw 'sfd-error (_ "expected a multiline string")
                          (sfd-source-info port (skip-spaces line start)))
@@ -116,66 +124,79 @@
 ;; Return either a list (keyword-symbol start-pos end-pos), or #f if
 ;; no keyword is found. Keyword symbols are objects like
 ;; 'splinefontdb, 'italicangle, etc.
-(define* (sfd-get-keyword line port #:key (mandatory #t))
+(define* (sfd-get-keyword line port
+                          #:key
+                          (mandatory #t)
+                          (line-end #f))
   (let ((m (regexp-exec sfd-keyword-re line)))
     (if m
-        (list (sfd-string-to-symbol (match:substring m 1))
-              (match:start m 1)
-              (match:end m 1))
+        (let ((end (match:end m 1)))
+          (if line-end (sfd-get-line-end line end port))
+          (list (sfd-string-to-symbol (match:substring m 1)) end))
         (if mandatory
             (throw 'sfd-error (_ "expected a keyword")
                    (sfd-source-info port (skip-spaces line 0)))
             #f))))
 
-;; Return either a list (real-value real-string start-pos end-pos), or
-;; #f if no real number is found.
-(define* (sfd-get-real line start port #:key (mandatory #t))
+;; Return either a list (real-value real-string end-pos), or #f if no
+;; real number is found.
+(define* (sfd-get-real line start port
+                       #:key
+                       (mandatory #t)
+                       (line-end #f))
   (let ((m (regexp-exec sfd-real-re line start)))
     (if m
-        (list (string->number (match:substring m 1))
-              (match:substring m 1)
-              (match:start m 1)
-              (match:end m 1))
+        (let* ((end (match:end m 1))
+               (str (match:substring m 1)))
+          (if line-end (sfd-get-line-end line end port))
+          (list (string->number str) str end))
         (if mandatory
             (throw 'sfd-error (_ "expected a real")
                    (sfd-source-info port (skip-spaces line start)))
             #f))))
 
-;; Return either a list (integer-value integer-string start-pos
-;; end-pos), or #f if no integer number is found.
-(define* (sfd-get-integer line start port #:key (mandatory #t))
+;; Return either a list (integer-value integer-string end-pos), or #f
+;; if no integer number is found.
+(define* (sfd-get-integer line start port
+                          #:key
+                          (mandatory #t)
+                          (line-end #f))
   (let ((m (regexp-exec sfd-integer-re line start)))
     (if m
-        (list (string->number (match:substring m 1))
-              (match:substring m 1)
-              (match:start m 1)
-              (match:end m 1))
+        (let* ((end (match:end m 1))
+               (str (match:substring m 1)))
+          (if line-end (sfd-get-line-end line end port))
+          (list (string->number str) str end))
         (if mandatory
             (throw 'sfd-error (_ "expected an integer")
                    (sfd-source-info port (skip-spaces line start)))
             #f))))
 
-;; Return a list (string start-pos end-pos). The string has leading
-;; and trailing spaces trimmed. (NOTE: I believe the old FontForge
-;; parser does not trim trailing spaces, so you might get different
-;; results in some cases. But SFD was supposed to be safe for e-mail,
-;; I believe, and that means no significant trailing spaces.) If the
-;; string is empty, start-pos and end-pos will both indicate the end
-;; of the line.
-(define* (sfd-get-string-to-eol line start port #:key (mandatory #f))
-  (let ((m (regexp-exec sfd-string-to-eol-re line start)))
-    (list (match:substring m 1)
-          (match:start m 1)
-          (match:end m 1))))
+;; Return a list (string end-pos). The string has leading and trailing
+;; spaces trimmed. (NOTE: I believe the old FontForge parser does not
+;; trim trailing spaces, so you might get different results in some
+;; cases. But SFD was supposed to be safe for e-mail, I believe, and
+;; that means no significant trailing spaces.) If the string is empty,
+;; end-pos will indicate the end of the line.
+(define* (sfd-get-string-to-eol line start port
+                                #:key
+                                (line-end #f))
+  (let* ((m (regexp-exec sfd-string-to-eol-re line start))
+         (end (match:end m 1)))
+    (if line-end (sfd-get-line-end line end port))
+    (list (match:substring m 1) end)))
 
-(define* (sfd-get-utf7-string line start port #:key (mandatory #f))
+(define* (sfd-get-utf7-string line start port
+                              #:key
+                              (mandatory #t)
+                              (line-end #f))
   (let ((m (regexp-exec sfd-utf7-string-re line start)))
     (if m
-        (list (remove-embedded-nul-chars
-               (embedded-utf7->string (match:substring m 1)))
-              (match:substring m 1)
-              (match:start m 1)
-              (match:end m 1))
+        (let ((end (match:end m 1)))
+          (if line-end (sfd-get-line-end line (+ 1 end) port))
+          (list (remove-embedded-nul-chars
+                 (embedded-utf7->string (match:substring m 1)))
+                (match:substring m 1) (+ 1 end)))
         (if mandatory
             (throw 'sfd-error (_ "expected a string in UTF-7 encoding")
                    (sfd-source-info port (skip-spaces line start)))
@@ -190,16 +211,10 @@
           #f)))
 
 ;; SFD version 4.0 is not supported, due to prejudice against it.
-(define (sfd-check-version version port line column)
-  (if (or
-       (fuzzy= 1.0 version)
-       (fuzzy= 2.0 version)
-       (fuzzy= 3.0 version))
-      '()
-      (throw 'sfd-error
-             (string-append (_ "unrecognized SFD version (")
-                            (number->string version) ")")
-             (sfd-source-info port (skip-spaces line column)))))
+(define (sfd-version-supported? version)
+  (or (fuzzy= 1.0 version)
+      (fuzzy= 2.0 version)
+      (fuzzy= 3.0 version)))
 
 ;; Add an entry to the contents list by consing.
 (define (sfd-add-entry contents key value)
@@ -207,43 +222,29 @@
 
 (define (sfd-read-multiline-string-entry contents key line start
                                          port)
-  (let ((entry-str
-         (match (sfd-get-multiline-string line start port)
-                ((line str _ end)
-                 (sfd-get-line-end line (+ 1 end) port)
-                 str))))
-    (sfd-add-entry contents key entry-str)))
+  (sfd-add-entry contents key
+                 (cadr (sfd-get-multiline-string line start port
+                                                 #:line-end #t))))
 
 (define (sfd-read-real-entry contents key line start port)
-  (let ((entry-str
-         (match (sfd-get-real line start port)
-                ((_ str _ end)
-                 (sfd-get-line-end line end port)
-                 str))))
-    (sfd-add-entry contents key entry-str)))
+  (sfd-add-entry contents key
+                 (cadr (sfd-get-real line start port
+                                     #:line-end #t))))
 
 (define (sfd-read-integer-entry contents key line start port)
-  (let ((entry-str
-         (match (sfd-get-integer line start port)
-                ((_ str _ end)
-                 (sfd-get-line-end line end port)
-                 str))))
-    (sfd-add-entry contents key entry-str)))
+  (sfd-add-entry contents key
+                 (cadr (sfd-get-integer line start port
+                                        #:line-end #t))))
 
 (define (sfd-read-string-to-eol-entry contents key line start port)
-  (let ((entry-str
-         (match (sfd-get-string-to-eol line start port)
-                ((str _ end)
-                 str))))
-    (sfd-add-entry contents key entry-str)))
+  (sfd-add-entry contents key
+                 (car (sfd-get-string-to-eol line start port
+                                             #:line-end #t))))
 
 (define (sfd-read-utf7-string-entry contents key line start port)
-  (let ((entry-str
-         (match (sfd-get-utf7-string line start port)
-                ((utf8-str _ _ end)
-                 (sfd-get-line-end line (+ end 1) port)
-                 utf8-str))))
-    (sfd-add-entry contents key entry-str)))
+  (sfd-add-entry contents key
+                 (car (sfd-get-utf7-string line start port
+                                           #:line-end #t))))
 
 ;; Replace \n with a newline, \" with a double quote, and \\ with a
 ;; single backslash.  The current implementation drops all other
@@ -269,27 +270,24 @@
 
 (define (sfd-read-escaped-string-to-eol-entry contents key line start
                                               port)
-  (let ((entry-str
-         (match (sfd-get-string-to-eol line start port)
-                ((str _ end)
-                 (sfd-process-escapes str)))))
-    (sfd-add-entry contents key entry-str)))
-
+  (sfd-add-entry contents key
+                 (sfd-process-escapes
+                  (car (sfd-get-string-to-eol line start port)))))
+                    
 (define (sfd-update-contents contents line port version)
   (match
    (sfd-get-keyword line port
                     #:mandatory #f) ;; FIXME: this is temporary.
 
    ;; Reals.
-   (((and
+   (((and key
       (or 'italicangle 'strokewidth 'tilemargin 'underlineposition
-          'underlinewidth 'cidversion 'ufoascent 'ufodescent)
-      key)
-     start end)
+          'underlinewidth 'cidversion 'ufoascent 'ufodescent))
+     end)
     (sfd-read-real-entry contents key line end port))
 
    ;; Integers.
-   (((and
+   (((and key
       (or 'ascent 'descent 'hheadascent 'hheadaoffset 'hheaddescent
           'hheaddoffset 'os2typoascent 'os2typoaoffset 'os2typodescent
           'os2typodoffset 'os2winascent 'os2winaoffset 'os2windescent
@@ -299,32 +297,29 @@
           'fittoem 'isextendedshape 'linegap 'macstyle 'onlybitmaps
           'pfmfamily 'pfmweight 'topencoding 'ttfweight 'ttfwidth 'vlinegap
           'widthseparation 'woffmajor 'woffminor
-          'os2version 'fstype)
-      key)
-     start end)
+          'os2version 'fstype))
+     end)
     (sfd-read-integer-entry contents key line end port))
 
    ;; Strings.
-   (((and
-      (or 'familyname 'fontname 'fullname 'weight 'defaultbasefilename
-          'version 'fondname )
-      key)
-     start end)
+   (((and key (or 'familyname 'fontname 'fullname 'weight
+                  'defaultbasefilename 'version 'fondname))
+     end)
     (sfd-read-string-to-eol-entry contents key line end port))
 
    ;; Strings with escaped newlines: \n
-   (((and (or 'copyright 'comments) key)
-     start end)
+   (((and key (or 'copyright 'comments))
+     end)
     (sfd-read-escaped-string-to-eol-entry contents key line end
                                           port))
 
    ;; UTF-7 strings.
-   (((and (or 'comment 'ucomments 'fontlog 'woffmetadata) key)
-     start end)
+   (((and key (or 'comment 'ucomments 'fontlog 'woffmetadata))
+     end)
     (sfd-read-utf7-string-entry contents key line end port))
 
    ;; Pickled Python data.
-   (((and 'pickleddata key) start end)
+   (((and key 'pickleddata) end)
     (sfd-read-multiline-string-entry contents key line end port))
 
    ;; Everything else.
@@ -342,11 +337,15 @@
   (let ((line (read-line port)))
     (match
      (sfd-get-keyword line port)
-     (('splinefontdb start end)
-      (match (sfd-get-real line end port)
-             ((version version-string start end)
+     (('splinefontdb keyword-end)
+      (match (sfd-get-real line keyword-end port)
+             ((version version-string end)
               (sfd-get-line-end line end port)
-              (sfd-check-version version port line start)
+              (if (not (sfd-version-supported? version))
+                  (throw 'sfd-error
+                         (simple-format #f (_ "unsupported SFD version (~A)")
+                                        version-string)
+                         (sfd-source-info port (skip-spaces line keyword-end))))
               (let ((contents (sfd-read-contents port version)))
                 (list '*TOP*
                       '(*PI* xml "version=\"1.0\" encoding=\"UTF-8\"")
