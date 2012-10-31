@@ -5252,7 +5252,7 @@ static int VWCheckup(struct val_data *vw) {
     if ( a_change )
 	VW_Remetric(vw);
     if ( !firstv )
-	GDrawSetCursor(vw->v,ct_mypointer);
+	GDrawSetCursor(vw->v,ct_pointer);
 return( a_change );
 }
 
@@ -5390,7 +5390,7 @@ return;
     memset(&wattrs,0,sizeof(wattrs));
     wattrs.mask = wam_events|wam_cursor|wam_utf8_wtitle|wam_undercursor|wam_isdlg;
     wattrs.event_masks = -1;
-    wattrs.cursor = ct_mypointer;
+    wattrs.cursor = ct_pointer;
     sprintf( buffer, _("Validation of %.100s"), sf->fontname );
     wattrs.utf8_window_title = buffer;
     wattrs.is_dlg = true;

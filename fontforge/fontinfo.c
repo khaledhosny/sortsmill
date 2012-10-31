@@ -10091,7 +10091,7 @@ LookupDragDrop (struct gfi_data *gfi, int isgpos, GEvent *event)
     {
       if (event->type == et_mouseup)
         {
-          GDrawSetCursor (gw, ct_mypointer);
+          GDrawSetCursor (gw, ct_pointer);
           gfi->lk_drag_and_drop = gfi->lk_dropablecursor = false;
           return;
         }
@@ -10281,7 +10281,7 @@ LookupDragDrop (struct gfi_data *gfi, int isgpos, GEvent *event)
               GDrawRequestExpose (othergw, NULL, false);
             }
         done_drop:
-          GDrawSetCursor (gw, ct_mypointer);
+          GDrawSetCursor (gw, ct_pointer);
           GDrawRequestExpose (gw, NULL, false);
           gfi->lk_drag_and_drop = gfi->lk_dropablecursor = false;
           return;
@@ -10368,7 +10368,7 @@ LookupMouse (struct gfi_data *gfi, int isgpos, GEvent *event)
             {
               if (gfi->lk_drag_and_drop)
                 {
-                  GDrawSetCursor (gw, ct_mypointer);
+                  GDrawSetCursor (gw, ct_pointer);
                   gfi->lk_drag_and_drop = gfi->lk_dropablecursor = false;
                 }
               if (inbox || event->u.mouse.clicks > 1)

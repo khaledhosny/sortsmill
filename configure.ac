@@ -221,6 +221,7 @@ if test x"${i_do_have_gui}" = xyes; then
    PKG_CHECK_MODULES([FREETYPE],[freetype2 >= 11.0.5])
    PKG_CHECK_MODULES([CAIRO],[cairo >= 1.6])
    PKG_CHECK_MODULES([PANGO],[pango >= 1.10 pangocairo])
+   PKG_CHECK_MODULES([XCURS],[xcursor])
 fi
 
 if test x"${HAVE_LIBUNISTRING}" != xyes; then

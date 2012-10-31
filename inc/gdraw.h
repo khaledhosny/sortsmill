@@ -293,8 +293,7 @@ VISIBLE extern GWindow GDrawCreateTopWindow(GDisplay *gdisp, GRect *pos, int (*e
 VISIBLE extern GWindow GDrawCreateSubWindow(GWindow w, GRect *pos, int (*eh)(GWindow,GEvent *), void *user_data, GWindowAttrs *wattrs);
 VISIBLE extern GWindow GDrawCreatePixmap(GDisplay *gdisp, uint16_t width, uint16_t height);
 VISIBLE extern GWindow GDrawCreateBitmap(GDisplay *gdisp, uint16_t width, uint16_t height, uint8_t *data);
-VISIBLE extern GCursor GDrawCreateCursor(GWindow src,GWindow mask,Color fg,Color bg,
-	int16_t x, int16_t y );
+VISIBLE extern GCursor GDrawCreateCursor(char *name);
 VISIBLE extern void GDrawDestroyWindow(GWindow w);
 VISIBLE extern void GDrawDestroyCursor(GDisplay *gdisp, GCursor ct);
 VISIBLE extern int  GDrawNativeWindowExists(GDisplay *gdisp, void *native);

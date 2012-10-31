@@ -2705,7 +2705,7 @@ void CVChangeSC(CharView *cv, SplineChar *sc ) {
     CVDebugFree(cv->dv);
 
     if ( cv->expandedge != ee_none ) {
-	GDrawSetCursor(cv->v,ct_mypointer);
+	GDrawSetCursor(cv->v,ct_pointer);
 	cv->expandedge = ee_none;
     }
 
@@ -3539,7 +3539,7 @@ static void CVMouseDown(CharView *cv, GEvent *event ) {
 return;		/* I treat this more like a modifier key change than a button press */
 
     if ( cv->expandedge != ee_none )
-	GDrawSetCursor(cv->v,ct_mypointer);
+	GDrawSetCursor(cv->v,ct_pointer);
     if ( event->u.mouse.button==3 ) {
 	CVToolsPopup(cv,event);
 return;
@@ -4873,7 +4873,7 @@ return( GGadgetDispatchEvent(cv->vsb,event));
 		cv->guide_pos = -1;
 		cv->showing_tool = cvt_none;
 		CVToolsSetCursor(cv,event->u.mouse.state&~(1<<(7+event->u.mouse.button)),event->u.mouse.device);		/* X still has the buttons set in the state, even though we just released them. I don't want em */
-		GDrawSetCursor(cv->gw,ct_mypointer);
+		GDrawSetCursor(cv->gw,ct_pointer);
 		cv->ruler_pressed = false;
 		if ( is_h || is_v )
 		    /* Do Nothing */;
@@ -10149,7 +10149,7 @@ static void _CharViewCreate(CharView *cv, SplineChar *sc, FontView *fv,int enc) 
     wattrs.mask = wam_events|wam_cursor|wam_backcol;
     wattrs.background_color = view_bgcol;
     wattrs.event_masks = -1;
-    wattrs.cursor = ct_mypointer;
+    wattrs.cursor = ct_pointer;
     cv->v = GWidgetCreateSubWindow(cv->gw,&pos,v_e_h,cv,&wattrs);
 
     if ( GDrawRequestDeviceEvents(cv->v,input_em_cnt,input_em)>0 ) {
@@ -10292,7 +10292,7 @@ CharView *CharViewCreate(SplineChar *sc, FontView *fv,int enc) {
     memset(&wattrs,0,sizeof(wattrs));
     wattrs.mask = wam_events|wam_cursor|wam_utf8_wtitle|wam_utf8_ititle;
     wattrs.event_masks = -1;
-    wattrs.cursor = ct_mypointer;
+    wattrs.cursor = ct_pointer;
     wattrs.utf8_icon_title = CVMakeTitles(cv,buf);
     wattrs.utf8_window_title = buf;
     wattrs.icon = CharIcon(cv, fv);
@@ -10486,7 +10486,7 @@ void SVCharViewInits(SearchView *sv) {
     memset(&wattrs,0,sizeof(wattrs));
     wattrs.mask = wam_events|wam_cursor;
     wattrs.event_masks = -1;
-    wattrs.cursor = ct_mypointer;
+    wattrs.cursor = ct_pointer;
     sv->cv_rpl.gw = GWidgetCreateSubWindow(sv->gw,&pos,nested_cv_e_h,&sv->cv_rpl,&wattrs);
     _CharViewCreate(&sv->cv_rpl, &sv->sd.sc_rpl, &sv->dummy_fv, 1);
 
@@ -10522,7 +10522,7 @@ void MKDCharViewInits(MathKernDlg *mkd) {
 	memset(&wattrs,0,sizeof(wattrs));
 	wattrs.mask = wam_events|wam_cursor;
 	wattrs.event_masks = -1;
-	wattrs.cursor = ct_mypointer;
+	wattrs.cursor = ct_pointer;
 	(&mkd->cv_topright)[i].gw = GWidgetCreateSubWindow(mkd->cvparent_w,&pos,nested_cv_e_h,(&mkd->cv_topright)+i,&wattrs);
 	_CharViewCreate((&mkd->cv_topright)+i, (&mkd->sc_topright)+i, &mkd->dummy_fv, i);
     }
@@ -10557,7 +10557,7 @@ void TPDCharViewInits(TilePathDlg *tpd, int cid) {
 	memset(&wattrs,0,sizeof(wattrs));
 	wattrs.mask = wam_events|wam_cursor;
 	wattrs.event_masks = -1;
-	wattrs.cursor = ct_mypointer;
+	wattrs.cursor = ct_pointer;
 	(&tpd->cv_first)[i].gw = GWidgetCreateSubWindow(GDrawableGetWindow(GWidgetGetControl(tpd->gw,cid+i)),
 		&pos,nested_cv_e_h,(&tpd->cv_first)+i,&wattrs);
 	_CharViewCreate((&tpd->cv_first)+i, (&tpd->sc_first)+i, &tpd->dummy_fv, i);
@@ -10588,7 +10588,7 @@ void PTDCharViewInits(TilePathDlg *tpd, int cid) {
 	memset(&wattrs,0,sizeof(wattrs));
 	wattrs.mask = wam_events|wam_cursor;
 	wattrs.event_masks = -1;
-	wattrs.cursor = ct_mypointer;
+	wattrs.cursor = ct_pointer;
 	tpd->cv_first.gw = GWidgetCreateSubWindow(GDrawableGetWindow(GWidgetGetControl(tpd->gw,cid)),
 		&pos,nested_cv_e_h,&tpd->cv_first,&wattrs);
 	_CharViewCreate(&tpd->cv_first, &tpd->sc_first, &tpd->dummy_fv, 0);
@@ -10614,7 +10614,7 @@ void GDDCharViewInits(GradientDlg *gdd, int cid) {
     memset(&wattrs,0,sizeof(wattrs));
     wattrs.mask = wam_events|wam_cursor;
     wattrs.event_masks = -1;
-    wattrs.cursor = ct_mypointer;
+    wattrs.cursor = ct_pointer;
 
     pos.y = 1; pos.height = 220;
     pos.width = pos.height; pos.x = 0;
@@ -10642,7 +10642,7 @@ void StrokeCharViewInits(StrokeDlg *sd, int cid) {
     memset(&wattrs,0,sizeof(wattrs));
     wattrs.mask = wam_events|wam_cursor;
     wattrs.event_masks = -1;
-    wattrs.cursor = ct_mypointer;
+    wattrs.cursor = ct_pointer;
 
     pos.y = 1; pos.height = 220;
     pos.width = pos.height; pos.x = 0;

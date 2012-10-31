@@ -26,9 +26,6 @@ AS_CASE([$host],
    [*-apple-darwin*],[
       gww_ismac="yes"
       AC_DEFINE([__Mac],[1],[If you are on a Mac then define __Mac to 1.])
-      AC_DEFINE([_CursorsMustBe16x16],[1],
-                [If you are on a Mac where cursors are restricted to
-                 16x16 pixel boxes then define _CursorsMustBe16x16 to 1.])
       AC_DEFINE([_Keyboard],[1],[Define this to platform-specific keyboard setting number,
                                  if appropriate.])
       MACAPP=FontForge.app/Contents/Info.plist

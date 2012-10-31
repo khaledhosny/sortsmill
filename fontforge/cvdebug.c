@@ -1687,7 +1687,7 @@ static void DVCreateRaster(DebugView *dv) {
     memset(&wattrs,0,sizeof(wattrs));
     wattrs.mask = wam_events|wam_cursor|wam_utf8_wtitle;
     wattrs.event_masks = -1;
-    wattrs.cursor = ct_mypointer;
+    wattrs.cursor = ct_pointer;
     wattrs.utf8_window_title = _("Current Raster (TrueType)");
     pos.width = 50; pos.height = 50;
     pos.x = CVXPos(dv,143,pos.width); pos.y = 1;
@@ -1704,7 +1704,7 @@ static void DVCreateRegs(DebugView *dv) {
     memset(&wattrs,0,sizeof(wattrs));
     wattrs.mask = wam_events|wam_cursor|wam_utf8_wtitle;
     wattrs.event_masks = -1;
-    wattrs.cursor = ct_mypointer;
+    wattrs.cursor = ct_pointer;
     wattrs.utf8_window_title = _("Registers (TrueType)");
     pos.width = 143; pos.height = 269;
     pos.x = CVXPos(dv,0,pos.width); pos.y = 1;
@@ -1730,7 +1730,7 @@ static void DVCreateStack(DebugView *dv) {
     memset(&wattrs,0,sizeof(wattrs));
     wattrs.mask = wam_events|wam_cursor|wam_utf8_wtitle;
     wattrs.event_masks = -1;
-    wattrs.cursor = ct_mypointer;
+    wattrs.cursor = ct_pointer;
     wattrs.utf8_window_title = _("Stack (TrueType)");
     pos.width = 143; pos.height = 269;
     pos.x = CVXPos(dv,0,pos.width); pos.y = 302;
@@ -1756,7 +1756,7 @@ static void DVCreateStore(DebugView *dv) {
     memset(&wattrs,0,sizeof(wattrs));
     wattrs.mask = wam_events|wam_cursor|wam_utf8_wtitle;
     wattrs.event_masks = -1;
-    wattrs.cursor = ct_mypointer;
+    wattrs.cursor = ct_pointer;
     wattrs.utf8_window_title = _("Storage (TrueType)");
     pos.width = 183; pos.height = 100;
     pos.x = CVXPos(dv,0,pos.width); pos.y = 602;
@@ -1799,7 +1799,7 @@ static void DVCreatePoints(DebugView *dv) {
     memset(&wattrs,0,sizeof(wattrs));
     wattrs.mask = wam_events|wam_cursor|wam_utf8_wtitle;
     wattrs.event_masks = -1;
-    wattrs.cursor = ct_mypointer;
+    wattrs.cursor = ct_pointer;
     wattrs.utf8_window_title = _("Points (TrueType)");
     pos.width = GGadgetScale(GDrawPointsToPixels(NULL,129+_GScrollBar_Width)+19);
     pos.height = 269;
@@ -1914,7 +1914,7 @@ static void DVCreateCvt(DebugView *dv) {
     memset(&wattrs,0,sizeof(wattrs));
     wattrs.mask = wam_events|wam_cursor|wam_utf8_wtitle;
     wattrs.event_masks = -1;
-    wattrs.cursor = ct_mypointer;
+    wattrs.cursor = ct_pointer;
     wattrs.utf8_window_title = _("Cvt");
     pos.x = 664; pos.y = 732;
     pos.width = GGadgetScale(GDrawPointsToPixels(NULL,125))+20; pos.height = 169;
@@ -2091,7 +2091,7 @@ return;
 	wattrs.event_masks = -1;
 	wattrs.border_width = 0;
 	wattrs.border_color = 0x000000;
-	wattrs.cursor = ct_mypointer;
+	wattrs.cursor = ct_pointer;
 	pos.x = 0; pos.y = 0;
 	pos.width = dv->dwidth; pos.height = cv->height;
 	dv->dv = GWidgetCreateSubWindow(cv->gw,&pos,dv_e_h,dv,&wattrs);
