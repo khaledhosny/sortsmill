@@ -42,6 +42,9 @@
 # locations of desktop icons, see below.)
 pixmapsdir = ${pkgdatadir}/pixmaps
 
+# Where the application's cursors for internal use go.
+cursorsdir = ${pkgdatadir}/cursors
+
 # Where the FontForge help system goes.
 HTDOCS_SUBDIR = /htdocs
 htdocsdir = ${docdir}$(HTDOCS_SUBDIR)
