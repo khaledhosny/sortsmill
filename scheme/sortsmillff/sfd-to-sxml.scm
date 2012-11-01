@@ -21,7 +21,8 @@
   #:use-module (ice-9 rdelim)
   #:use-module (ice-9 regex)
   #:use-module (sortsmillff i18n)
-  #:use-module (sortsmillff iconv))
+  #:use-module (sortsmillff iconv)
+  #:use-module ((rnrs) :version (6) #:select (assert)))
 
 ;; FIXME: Get epsilon a better way, such as from the C library or GSL.
 (define epsilon 2.2204460492503131e-16)
@@ -32,6 +33,24 @@
 (define (remove-embedded-nul-chars s)
   (list->string (filter (lambda (c) (not (char=? c #\nul)))
                         (string->list s))))
+
+(define (expect-line port)
+  (let ((line (read-line port)))
+    (if (eof-object? line)
+        (throw 'sfd-error (_ "unexpected end of file")
+               (sfd-source-info port 0)) ; FIXME: Is the location we
+                                         ; want?
+        line)))
+
+(define (expect-end-keyword expected-key port)
+  (let* ((line (expect-line port))
+         (key (car (sfd-get-keyword line port #:line-end #t))))
+    (if (not (eq? key expected-key))
+        (throw 'sfd-error
+               (simple-format #f (_ "expected ~S")
+                              (symbol->string expected-key))
+               (sfd-source-info port
+                                (skip-spaces line 0))))))
 
 (define (skip-spaces str i)
   (let ((m (regexp-exec sfd-spaces-re str i)))
@@ -68,6 +87,10 @@
 (define sfd-end-quoted-string-re
   (make-regexp "^(([^\\]|\\\\.)*)\""))
 
+;; A private dictionary entry.
+(define sfd-private-dict-entry-re
+  (make-regexp "^[[:space:]]*([[:graph:]]+)[[:space:]]*([[:digit:]]+) (.*)$"))
+
 ;; Convert "SplineFontDB:" to 'splinefontdb, etc.
 (define (sfd-string-to-symbol s)
   (let ((trimmed-s (if (string-suffix? ":" s)
@@ -82,21 +105,36 @@
             column)
       #f))
 
+(define (sfd-private-dict-entry line)
+  (let ((m (regexp-exec sfd-private-dict-entry-re line)))
+    (if m
+        (let* ((key (match:substring m 1))
+               (length (string->number (match:substring m 2)))
+               (s (match:substring m 3))
+               (s_length (string-length s))
+               (value (substring s 0 (min length s_length))))
+          (cons key value))
+        (throw 'sfd-error (_ "expected a private dictionary entry")
+               (sfd-source-info port 0)))))
+
+(define (sfd-private-dict-entry-tag entry)
+  (list 'privateentry (list '@ (list 'key (car entry))) (cdr entry)))
+
 (define (continue-multiline-string string-so-far port line-end)
   (let ((line (read-line port)))
     (if (eof-object? line)
         (throw 'sfd-error (_ "unexpected end of file")
-               (sfd-source-info port line 1)) ; FIXME: Is the location
-                                              ; here what we want?
+               (sfd-source-info port 0)) ; FIXME: Is the location here
+                                         ; what we want?
         (let ((m1 (regexp-exec sfd-end-quoted-string-re line)))
           (if m1
               (let ((end (match:end m1 1)))
-                (if line-end (sfd-get-line-end line (+ 1 end) port))
+                (if line-end (sfd-get-line-end line (1+ end) port))
                 (list line
                       (sfd-process-escapes
                        (string-append string-so-far "\n"
                                       (match:substring m1 1)))
-                      (+ 1 end)))
+                      (1+ end)))
               (continue-multiline-string
                (string-append string-so-far "\n" line)
                port line-end))))))
@@ -108,10 +146,10 @@
   (let ((m1 (regexp-exec sfd-full-quoted-string-re line start)))
     (if m1
         (let ((end (match:end m1 1)))
-          (if line-end (sfd-get-line-end line (+ 1 end) port))
+          (if line-end (sfd-get-line-end line (1+ end) port))
           (list line
                 (sfd-process-escapes (match:substring m1 1))
-                (+ 1 end)))
+                (1+ end)))
         (let ((m2 (regexp-exec sfd-start-quoted-string-re line start)))
           (if m2
               (continue-multiline-string (match:substring m2 1) port
@@ -193,10 +231,10 @@
   (let ((m (regexp-exec sfd-utf7-string-re line start)))
     (if m
         (let ((end (match:end m 1)))
-          (if line-end (sfd-get-line-end line (+ 1 end) port))
+          (if line-end (sfd-get-line-end line (1+ end) port))
           (list (remove-embedded-nul-chars
                  (embedded-utf7->string (match:substring m 1)))
-                (match:substring m 1) (+ 1 end)))
+                (match:substring m 1) (1+ end)))
         (if mandatory
             (throw 'sfd-error (_ "expected a string in UTF-7 encoding")
                    (sfd-source-info port (skip-spaces line start)))
@@ -245,6 +283,17 @@
   (sfd-add-entry contents key
                  (car (sfd-get-utf7-string line start port
                                            #:line-end #t))))
+
+(define (sfd-read-private-dict contents key line start port)
+  (assert (eq? key 'beginprivate))
+  (let* ((num-entries (car (sfd-get-integer line start port
+                                           #:line-end #t)))
+         (lines (map-in-order (lambda _ (expect-line port))
+                              (make-list num-entries)))
+         (entries (map sfd-private-dict-entry lines))
+         (tags (map sfd-private-dict-entry-tag entries)))
+    (expect-end-keyword 'endprivate port)
+    (sfd-add-entry contents key tags)))
 
 ;; Replace \n with a newline, \" with a double quote, and \\ with a
 ;; single backslash.  The current implementation drops all other
@@ -321,6 +370,10 @@
    ;; Pickled Python data.
    (((and key 'pickleddata) end)
     (sfd-read-multiline-string-entry contents key line end port))
+
+   ;; Private dictionaries.
+   (((and key 'beginprivate) end)
+    (sfd-read-private-dict contents key line end port))
 
    ;; Everything else.
    (_ contents) ;; FIXME: this is temporary.
