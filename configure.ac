@@ -120,9 +120,6 @@ AC_PROG_MKDIR_P
 AC_PROG_SED
 PKG_PROG_PKG_CONFIG
 
-# Guile 2.0 programs.
-GUILE_PROGS
-
 # Code quality programs.
 AC_PATH_PROG([INDENT],[indent],[indent]) dnl  GNU Indent.
 AC_PATH_PROG([TIDY],[tidy],[tidy])       dnl  HTML Tidy.
@@ -135,12 +132,12 @@ AC_PATH_PROG([XGETTEXT],[xgettext],[xgettext])
 AC_PATH_PROG([UPDATE_MIME_DATABASE],[update-mime-database],[update-mime-database])
 AC_PATH_PROG([UPDATE_DESKTOP_DATABASE],[update-desktop-database],[update-desktop-database])
 
-#AX_PKG_SWIG([2.0.4],[],[AC_MSG_ERROR([SWIG is required to build ${PACKAGE}.])])
-
 # Assorted programs.
 AC_PATH_PROG([GAWK],[gawk],[gawk])
 AC_PATH_PROG([GPERF],[gperf],[gperf])
 AC_PATH_PROG([WGET],[wget],[wget])
+GUILE_PROGS
+AX_PKG_SWIG([2.0.4],[],[AC_MSG_ERROR([SWIG is required to build ${PACKAGE}.])])
 
 #--------------------------------------------------------------------------
 

@@ -51,6 +51,17 @@ lib_LTLIBRARIES += libguile-sortsmillff_iconv.la
 libguile_sortsmillff_iconv_la_SOURCES = guile_iconv.c
 libguile_sortsmillff_iconv_la_LIBADD = $(top_builddir)/lib/libgnu.la
 
+lib_LTLIBRARIES += libguile-sortsmillff_gsl.la
+libguile_sortsmillff_gsl_la_SOURCES = guile_gsl.c
+libguile_sortsmillff_gsl_la_LIBADD = $(top_builddir)/lib/libgnu.la
+# FIXME: Calculate gsl flags at configure time.
+libguile_sortsmillff_gsl_la_LDFLAGS = $(AM_LDFLAGS) `$(PKG_CONFIG) --libs gsl`
+#libguile_sortsmillff_gsl_la_CFLAGS = `$(PKG_CONFIG) --cflags gsl` -D"SCM_TO_ULONG(s,i,c)=scm_to_ulong(s)"
+
+guile_gsl.c: gsl.i
+	$(SWIG_TO_GUILE) -o $@ $<
+	$(SWIG_TO_GUILE_POSTPROCESS) $@
+
 #--------------------------------------------------------------------------
 
 install-data-hook:

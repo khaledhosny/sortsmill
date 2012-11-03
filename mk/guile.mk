@@ -57,3 +57,14 @@ CONFIGURE_SCHEME =														\
 %.scm: %.scm.in
 	$(AM_V_GEN)
 	$(AM_V_at)$(CONFIGURE_SCHEME) < $< > $@
+
+SWIG_TO_GUILE_POSTPROCESS = $(PERL) -i -p -e '							\
+$$/ = undef;															\
+s|\#\s*include\s*<libguile.h>|\#include <libguile_wrapper.h>|;			\
+s|\bSCM_STRINGP\b|scm_is_string|g;										\
+s|\bSCM_STRING_LENGTH\b|scm_c_string_length|g;							\
+s|\bSCM_STRING_CHARS\b|repl_scm_string_chars|g;							\
+s|\bscm_sym2var\s*\(([^,]+),\s*scm_module_lookup_closure\(([^)]+)\),\s*SCM_BOOL_T\)|scm_module_ensure_local_variable(\2,\1)|g;'
+
+SWIG_TO_GUILE = $(SWIG) -I/usr/include $(filter -I%,$(MY_CFLAGS))	\
+				-guile -Linkage passive
