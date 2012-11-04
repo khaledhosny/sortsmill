@@ -35,7 +35,8 @@ static GBox scrollbar_box = GBOX_EMPTY; /* Don't initialize here */
 static GBox thumb_box = GBOX_EMPTY; /* Don't initialize here */
 int _GScrollBar_Width = 13;			/* in points */
 int _GScrollBar_StartTime=300, _GScrollBar_RepeatTime=200;
-static int gscrollbar_inited = false;
+static bool _GScrollBar_Arrows = true;
+static bool gscrollbar_inited = false;
 
 static GGadget *GScrollBarCreateInitialized(struct gwindow *base, GGadgetData *gd,void *data);
 static struct scrollbarinit sbinit = { 0, 40, 20, 10 };
@@ -289,8 +290,10 @@ return( false );
     GBoxDrawBorder(pixmap,&r,g->box,g->state,false);
 
     draw_thumb(pixmap,gsb); /* sets line width for arrows too */
-    draw_arrow(pixmap,gsb,gsb->g.vert);
-    draw_arrow(pixmap,gsb,gsb->g.vert|2);
+    if (_GScrollBar_Arrows) {
+	draw_arrow(pixmap,gsb,gsb->g.vert);
+	draw_arrow(pixmap,gsb,gsb->g.vert|2);
+    }
 
     GDrawPopClip(pixmap,&old1);
 return( true );
@@ -505,6 +508,7 @@ static void GScrollBarInit() {
     _GScrollBar_Width = GResourceFindInt("GScrollBar.Width",_GScrollBar_Width);
     _GScrollBar_StartTime = GResourceFindInt("GScrollBar.StartupTime",_GScrollBar_StartTime);
     _GScrollBar_RepeatTime = GResourceFindInt("GScrollBar.RepeatTime",_GScrollBar_RepeatTime);
+    _GScrollBar_Arrows = GResourceFindBool("GScrollBar.Arrows", true);
     gscrollbar_inited = true;
 }
 
@@ -513,10 +517,15 @@ static void GScrollBarFit(GScrollBar *gsb) {
 
     gsb->sbborder = GBoxBorderWidth(gsb->g.base,gsb->g.box);
     gsb->thumbborder = GBoxBorderWidth(gsb->g.base,gsb->thumbbox);
-    gsb->arrowsize = gsb->sbborder +
-	    2*GDrawPointsToPixels(gsb->g.base,2) +
-	    GDrawPointsToPixels(gsb->g.base,_GScrollBar_Width)/2-
-	    2*GDrawPointsToPixels(gsb->g.base,1);
+
+    if (_GScrollBar_Arrows)
+	gsb->arrowsize = gsb->sbborder +
+		2*GDrawPointsToPixels(gsb->g.base,2) +
+		GDrawPointsToPixels(gsb->g.base,_GScrollBar_Width)/2-
+		2*GDrawPointsToPixels(gsb->g.base,1);
+    else
+	gsb->arrowsize = gsb->g.box->padding;
+
     minheight = 2*(gsb->thumbborder+gsb->arrowsize) + GDrawPointsToPixels(gsb->g.base,2);
 
     if ( gsb->g.vert ) {
