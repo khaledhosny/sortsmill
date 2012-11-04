@@ -97,14 +97,17 @@ VISIBLE extern void GIOclose(GIOControl *gc);
 VISIBLE extern GIOControl *GIOCreate(uint32_t *path,void *userdata,
 	void (*receivedata)(struct giocontrol *),
 	void (*receiveerror)(struct giocontrol *));
-extern void GIOSetDefAuthorizer(int32_t (*getauth)(struct giocontrol *));
-extern void GIOSetUserAgent(uint32_t *agent);
 
 VISIBLE extern char *GIOGetMimeType(const char *path);
 
 VISIBLE extern char *GIO_PasswordCache(char *proto,char *host,char *username,char *password);
 VISIBLE extern char *_GIO_decomposeURL(const uint32_t *url,char **host, int *port, char **username,
 				       char **password);
+VISIBLE extern struct hostdata *_GIO_LookupHost(char *host);
+VISIBLE extern void _GIO_reporterror(GIOControl *gc, int errn);
+VISIBLE extern void _GIO_PostSuccess(GIOControl *gc);
+VISIBLE extern void _GIO_PostInter(GIOControl *gc);
+VISIBLE extern void _GIO_PostError(GIOControl *gc);
 
 VISIBLE extern void GIO_SetThreadCallback(void (*callback)(void *,void *,void *));
 

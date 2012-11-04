@@ -38,7 +38,7 @@ libsortsmillff_gutils_la_SOURCES = divisors.c gfile.c gcol.c gimage.c	\
 	gimagewritegimage.c gimagewritejpeg.c gimagewritepng.c				\
 	gimagewritexbm.c gimagewritexpm.c gio.c giofile.c			\
 	giohosts.c giomime.c giothread.c giotrans.c gimagebmpP.h			\
-	giofuncP.h gioP.h gioftp.c gioftpP.h
+	giofuncP.h gioP.h
 
 libsortsmillff_gutils_la_LIBADD = $(top_builddir)/auxiliary/libsortsmillff_aux.la	\
 	$(top_builddir)/lib/libgnu.la

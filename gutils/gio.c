@@ -32,23 +32,6 @@
 #include <ustring.h>
 #include <errno.h>
 
-struct stdfuncs _GIO_stdfuncs = {
-    _GIO_decomposeURL, _GIO_PostSuccess, _GIO_PostInter,
-    _GIO_PostError, _GIO_RequestAuthorization, _GIO_LookupHost,
-    NULL,			/* default authorizer */
-    GIOFreeDirEntries,
-#ifdef GWW_TEST
-    _GIO_ReportHeaders,		/* set to NULL when not debugging */
-#else
-    NULL,
-#endif
-
-#ifdef HAVE_PTHREAD_H
-    PTHREAD_MUTEX_INITIALIZER,
-#endif
-    NULL,
-    NULL
-};
 static struct protocols {
     int index;
     uint32_t *proto;
@@ -94,9 +77,6 @@ static void GIOdispatch(GIOControl *gc, enum giofuncs gf) {
     int i;
 
     gc->gf = gf;
-
-    if ( _GIO_stdfuncs.useragent == NULL )
-	_GIO_stdfuncs.useragent = xstrdup("someone@somewhere.com");
 
     temp = _GIO_translateURL(gc->path,gf);
     if ( temp!=NULL ) {
@@ -168,8 +148,8 @@ return;
 	    gc->threaddata = (struct gio_threaddata *) xmalloc(sizeof(struct gio_threaddata));
 	    gc->threaddata->mutex = initmutex;
 	    gc->threaddata->cond = initcond;
-	    if ( _GIO_stdfuncs.gdraw_sync_thread!=NULL )
-		(_GIO_stdfuncs.gdraw_sync_thread)(NULL,NULL,NULL);
+	    if ( gdraw_sync_thread!=NULL )
+		(gdraw_sync_thread)(NULL,NULL,NULL);
 	    pthread_create(&gc->threaddata->thread,NULL,
 		    (ptread_startfunc_t *) (protocols[i].dispatcher), gc);
 #endif
@@ -269,15 +249,6 @@ GIOControl *GIOCreate(uint32_t *path,void *userdata,
 return(gc);
 }
 
-void GIOSetDefAuthorizer(int32_t (*getauth)(struct giocontrol *)) {
-    _GIO_stdfuncs.getauth = getauth;
-}
-
-void GIOSetUserAgent(uint32_t *agent) {
-    free( _GIO_stdfuncs.useragent );
-    _GIO_stdfuncs.useragent = x_u32_to_u8 (u32_force_valid (agent));
-}
-
 void GIO_SetThreadCallback(void (*callback)(void *,void *,void *)) {
-    _GIO_stdfuncs.gdraw_sync_thread = callback;
+    gdraw_sync_thread = callback;
 }
