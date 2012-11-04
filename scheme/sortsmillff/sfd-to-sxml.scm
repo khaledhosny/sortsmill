@@ -20,12 +20,12 @@
   #:use-module (ice-9 match)
   #:use-module (ice-9 rdelim)
   #:use-module (ice-9 regex)
+  #:use-module ((sortsmillff gsl) #:select (GSL-DBL-EPSILON))
   #:use-module (sortsmillff i18n)
   #:use-module (sortsmillff iconv)
   #:use-module ((rnrs) :version (6) #:select (assert)))
 
-;; FIXME: Get epsilon a better way, such as from the C library or GSL.
-(define epsilon 2.2204460492503131e-16)
+(define epsilon (GSL-DBL-EPSILON))
 
 (define (fuzzy= a b)
   (<= (abs (- a b)) (* (max (abs a) (abs b)) epsilon)))
