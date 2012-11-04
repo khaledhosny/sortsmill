@@ -30,14 +30,16 @@ include $(top_srcdir)/mk/recipe-tools.mk
 
 #--------------------------------------------------------------------------
 
-nobase_dist_guileobjmodule_DATA = sortsmillff/iconv.scm		\
-	sortsmillff/sfd-to-sxml.scm
+nobase_dist_guileobjmodule_DATA = sortsmillff/gsl.scm	\
+	sortsmillff/iconv.scm sortsmillff/sfd-to-sxml.scm
 
-nobase_nodist_guileobjmodule_DATA = sortsmillff/i18n.scm	\
-	sortsmillff/i18n.go sortsmillff/iconv.go				\
+nobase_nodist_guileobjmodule_DATA = sortsmillff/gsl.go				\
+	sortsmillff/i18n.scm sortsmillff/i18n.go sortsmillff/iconv.go	\
 	sortsmillff/sfd-to-sxml.go
 
-sortsmillff/sfd-to-sxml.go: sortsmillff/i18n.go libguile-sortsmillff_iconv.la
+sortsmillff/sfd-to-sxml.go: sortsmillff/gsl.go sortsmillff/i18n.go
+sortsmillff/i18n.go: libguile-sortsmillff_iconv.la
+sortsmillff/gsl.go: libguile-sortsmillff_gsl.la
 
 EXTRA_DIST = sortsmillff/i18n.scm.in
 
@@ -52,15 +54,14 @@ libguile_sortsmillff_iconv_la_SOURCES = guile_iconv.c
 libguile_sortsmillff_iconv_la_LIBADD = $(top_builddir)/lib/libgnu.la
 
 lib_LTLIBRARIES += libguile-sortsmillff_gsl.la
-libguile_sortsmillff_gsl_la_SOURCES = guile_gsl.c
-libguile_sortsmillff_gsl_la_LIBADD = $(top_builddir)/lib/libgnu.la
-# FIXME: Calculate gsl flags at configure time.
-libguile_sortsmillff_gsl_la_LDFLAGS = $(AM_LDFLAGS) `$(PKG_CONFIG) --libs gsl`
-#libguile_sortsmillff_gsl_la_CFLAGS = `$(PKG_CONFIG) --cflags gsl` -D"SCM_TO_ULONG(s,i,c)=scm_to_ulong(s)"
+dist_libguile_sortsmillff_gsl_la_SOURCES = $(srcdir)/guile_gsl.c
+libguile_sortsmillff_gsl_la_LIBADD =				\
+	$(top_builddir)/auxiliary/libsortsmillff_aux.la	\
+	$(top_builddir)/lib/libgnu.la
+libguile_sortsmillff_gsl_la_CFLAGS = $(AM_CFLAGS)	\
+	$(SWIG_GUILE_EXTRA_CFLAGS)
 
-guile_gsl.c: gsl.i
-	$(SWIG_TO_GUILE) -o $@ $<
-	$(SWIG_TO_GUILE_POSTPROCESS) $@
+EXTRA_DIST += guile_gsl.i
 
 #--------------------------------------------------------------------------
 

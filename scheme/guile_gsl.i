@@ -7,6 +7,6 @@ SCM scm_init_gsl_module (void);
 
 %}
 
-%scheme %{ (load-extension "./gsl_wrap.so" "scm_init_gsl_module") %}
+//%scheme %{ (load-extension "./gsl_wrap.so" "scm_init_gsl_module") %}
 
 %include <gsl/gsl_machine.h>

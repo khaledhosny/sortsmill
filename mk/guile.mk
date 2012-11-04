@@ -64,7 +64,15 @@ s|\#\s*include\s*<libguile.h>|\#include <libguile_wrapper.h>|;			\
 s|\bSCM_STRINGP\b|scm_is_string|g;										\
 s|\bSCM_STRING_LENGTH\b|scm_c_string_length|g;							\
 s|\bSCM_STRING_CHARS\b|repl_scm_string_chars|g;							\
-s|\bscm_sym2var\s*\(([^,]+),\s*scm_module_lookup_closure\(([^)]+)\),\s*SCM_BOOL_T\)|scm_module_ensure_local_variable(\2,\1)|g;'
+s|\bscm_sym2var\s*\(([^,]+),\s*scm_module_lookup_closure\(([^)]+)\),\s*SCM_BOOL_T\)|scm_module_ensure_local_variable(\2,\1)|g;	\
+s|(SCM\s+scm_init_[[:alnum:]_]+_module\s*\(\s*void\s*\)\s*{[^}]*}\s*)$$|VISIBLE \1|;'
 
 SWIG_TO_GUILE = $(SWIG) -I/usr/include $(filter -I%,$(MY_CFLAGS))	\
-				-guile -Linkage passive
+	-guile -Linkage module -package sortsmillff
+
+swig_to_guile = $(SWIG_TO_GUILE) -o $(1) $(2);	\
+	$(SWIG_TO_GUILE_POSTPROCESS) $(1)
+
+%.c: %.i
+	$(AM_V_GEN)
+	$(AM_V_at)$(call swig_to_guile, $@, $<)

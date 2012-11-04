@@ -137,6 +137,8 @@ AC_PATH_PROG([GAWK],[gawk],[gawk])
 AC_PATH_PROG([GPERF],[gperf],[gperf])
 AC_PATH_PROG([WGET],[wget],[wget])
 GUILE_PROGS
+
+# FIXME: Make SWIG optional except for maintainers.
 AX_PKG_SWIG([2.0.4],[],[AC_MSG_ERROR([SWIG is required to build ${PACKAGE}.])])
 
 #--------------------------------------------------------------------------
@@ -208,6 +210,7 @@ PKG_CHECK_MODULES([GLIB],[glib-2.0 >= 2.6 gio-2.0])
 PKG_CHECK_MODULES([LIBPNG],[libpng])
 PKG_CHECK_MODULES([LIBXML],[libxml-2.0])
 PKG_CHECK_MODULES([GUILE],[guile-${GUILE_API}])
+PKG_CHECK_MODULES([GSL],[gsl])
 
 PKG_CHECK_MODULES([BOEHM_GC],[bdw-gc >= 7.1])
 AC_DEFINE([GC_THREADS],[1],[Define to 1 if Boehm GC has to co-exist with POSIX threads.])
@@ -276,6 +279,7 @@ test 4 -le ${ac_cv_sizeof_unsigned_int} || \
 
 AX_PTHREAD
 
+AC_SUBST([WARNING_CFLAGS])
 WARNING_CFLAGS=""
 FONTFORGE_COMPILER_FLAGS([WARNING_CFLAGS],
         [-Wunused -Wreturn-type
@@ -287,6 +291,11 @@ FONTFORGE_COMPILER_FLAGS([WARNING_CFLAGS],
 ## Some clang flags to turn off for now.
 #FONTFORGE_COMPILER_FLAGS([WARNING_CFLAGS],
 #        [-Wno-switch -Wno-tautological-compare -Wno-conversion])
+
+AC_SUBST([SWIG_GUILE_EXTRA_CFLAGS])
+SWIG_GUILE_EXTRA_CFLAGS=""
+FONTFORGE_COMPILER_FLAGS([SWIG_GUILE_EXTRA_CFLAGS],
+        [-Wno-unused -Wno-missing-prototypes])
 
 #--------------------------------------------------------------------------
 # Checks for library functions.
