@@ -133,8 +133,6 @@ AC_PATH_PROG([UPDATE_MIME_DATABASE],[update-mime-database],[update-mime-database
 AC_PATH_PROG([UPDATE_DESKTOP_DATABASE],[update-desktop-database],[update-desktop-database])
 
 # Assorted programs.
-AC_PATH_PROG([GAWK],[gawk],[gawk])
-AC_PATH_PROG([GPERF],[gperf],[gperf])
 AC_PATH_PROG([WGET],[wget],[wget])
 GUILE_PROGS
 AX_PKG_SWIG([2.0.4],[:],

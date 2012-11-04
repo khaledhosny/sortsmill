@@ -34,9 +34,8 @@ noinst_HEADERS = basics.h chardata.h config.h gdraw.h gfile.h			\
 
 #--------------------------------------------------------------------------
 
-extract_text = $(GAWK) ' \
-BEGIN { pattern = "^[[:space:]]*(//|[*])[[:space:]]*$1--[[:space:]]*(.*)[[:space:]]*" } \
-$$0 ~ pattern { match($$0, pattern, matches); print matches[2] }'
+extract_text = $(PERL) -n -e											\
+	'print $$_ if (s|^\s*(//\|[*])\s*$(1)--\s*(.*)\s*|\2\n|)'
 
 $(top_srcdir)/doc/%.visible.texi: %.h
 	$(call extract_text,vis) $< > $@

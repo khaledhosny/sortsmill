@@ -33,9 +33,8 @@ dist_python_PYTHON = psMat.py
 nodist_pkgpythondata_PYTHON = site_init.py
 dist_pycontrib_PYTHON = __init__.py excepthook.py
 
-extract_text = $(GAWK) ' \
-BEGIN { pattern = "^[[:space:]]*\#[[:space:]]*$1--[[:space:]]*(.*)[[:space:]]*" } \
-$$0 ~ pattern { match($$0, pattern, matches); print matches[1] }'
+extract_text = $(PERL) -n -e								\
+	'print $$_ if (s|^\s*\#\s*$(1)--\s*(.*)\s*|\1\n|)'
 
 $(top_srcdir)/doc/%.interface.texi: %.py
 	$(call extract_text,i) $< > $@
