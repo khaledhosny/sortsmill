@@ -37,7 +37,7 @@
 #endif
 
 char *
-_GIO_decomposeURL(const uint32_t *url,char **host, int *port, char **username,
+GIODecomposeURL(const uint32_t *url,char **host, int *port, char **username,
 		  char **password)
 {
   uint32_t *pt, *pt2, *upt, *ppt;
@@ -153,72 +153,4 @@ return( password );
 #endif
 
 return( password );
-}
-
-/* simple hash tables */
-static struct hostdata *names[26], *numbers[10];
-
-struct hostdata *_GIO_LookupHost(char *host) {
-#if defined(__MINGW32__)
-return NULL;
-#else
-
-    struct hostdata **base, *cur;
-#ifdef HAVE_PTHREAD_H
-    static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-#endif
-    int i;
-
-#ifdef HAVE_PTHREAD_H
-    pthread_mutex_lock(&mutex);
-#endif
-    if ( isdigit(host[0]))
-	base = &numbers[host[0]-'0'];
-    else if ( isupper(host[0]) && host[0]<127 )
-	base = &names[host[0]-'A'];
-    else if ( islower(host[0]) && host[0]<127 )
-	base = &names[host[0]-'a'];
-    else
-	base = &names['z'-'a'];
-
-    for ( cur= *base; cur!=NULL && strcasecmp(cur->hostname,host)!=0; cur = cur->next );
-    if ( cur!=NULL ) {
-#ifdef HAVE_PTHREAD_H
-	pthread_mutex_unlock(&mutex);
-#endif
-return( cur );
-    }
-
-    cur = xcalloc(1,sizeof(struct hostdata));
-    cur->addr.sin_family = AF_INET;
-    cur->addr.sin_port = 0;
-    if ( isdigit(host[0])) {
-    	if ( !inet_aton(host,&cur->addr.sin_addr)) {
-	    free(cur);
-#ifdef HAVE_PTHREAD_H
-	    pthread_mutex_unlock(&mutex);
-#endif
-return( NULL );
-	}
-    } else {
-	struct hostent *he;
-	he = gethostbyname(host);
-	if ( he==NULL ) {
-	    free(cur);
-#ifdef HAVE_PTHREAD_H
-	    pthread_mutex_unlock(&mutex);
-#endif
-return( NULL );
-	}
-	for ( i=0; he->h_addr_list[i]!=NULL; ++i );
-	memcpy(&cur->addr.sin_addr,he->h_addr_list[rand()%i],he->h_length);
-    }
-    cur->hostname = xstrdup_or_null(host);
-    cur->next = *base;
-    *base = cur;
-#ifdef HAVE_PTHREAD_H
-    pthread_mutex_unlock(&mutex);
-#endif
-return( cur );
-#endif
 }

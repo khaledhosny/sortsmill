@@ -51,7 +51,7 @@ static uint32_t err412[] = { ' ','P','r','e','c','o','n','d','i','t','i','o','n'
 static uint32_t err414[] = { ' ','R','e','q','u','e','s','t','-','U','R','I',' ','T','o','o',' ','L','o','n','g', '\0' };
 static uint32_t err500[] = { ' ','I','n','t','e','r','n','a','l',' ','S','e','r','v','e','r',' ','E','r','r','o','r', '\0' };
 
-void _GIO_reporterror(GIOControl *gc, int errn) {
+static void GIOReporterror(GIOControl *gc, int errn) {
 
 #if 1
     uc_strncpy(gc->status,strerror(errn),sizeof(gc->status)/sizeof(uint32_t));
@@ -103,7 +103,7 @@ static void _gio_file_dir(GIOControl *gc,char *path) {
 
     dir = opendir(path);
     if ( dir==NULL ) {
-	_GIO_reporterror(gc,errno);
+	GIOReporterror(gc,errno);
 return;
     }
 
@@ -169,7 +169,7 @@ static void _gio_file_statfile(GIOControl *gc,char *path)
   struct stat statb;
 
   if ( stat(path,&statb)==-1 )
-    _GIO_reporterror(gc,errno);
+    GIOReporterror(gc,errno);
   else
     {
       cur = (GDirEntry *) xcalloc(1,sizeof(GDirEntry));
@@ -195,43 +195,13 @@ static void _gio_file_statfile(GIOControl *gc,char *path)
 	  (gc->receivedata)(gc);
 	}
       else
-	_GIO_reporterror(gc,errno);
-    }
-}
-
-static void _gio_file_delfile(GIOControl *gc,char *path) {
-    if ( unlink(path)==-1 ) {
-	_GIO_reporterror(gc,errno);
-    } else {
-	gc->return_code = 201;
-	gc->done = true;
-	(gc->receivedata)(gc);
-    }
-}
-
-static void _gio_file_deldir(GIOControl *gc,char *path) {
-    if ( rmdir(path)==-1 ) {
-	_GIO_reporterror(gc,errno);
-    } else {
-	gc->return_code = 201;
-	gc->done = true;
-	(gc->receivedata)(gc);
-    }
-}
-
-static void _gio_file_renamefile(GIOControl *gc,char *path, char *topath) {
-    if ( rename(path,topath)==-1 ) {
-	_GIO_reporterror(gc,errno);
-    } else {
-	gc->return_code = 201;
-	gc->done = true;
-	(gc->receivedata)(gc);
+	GIOReporterror(gc,errno);
     }
 }
 
 static void _gio_file_mkdir(GIOControl *gc,char *path) {
     if ( GFileMkDir(path)==-1 ) {
-	_GIO_reporterror(gc,errno);
+	GIOReporterror(gc,errno);
     } else {
 	gc->return_code = 201;
 	gc->done = true;
@@ -250,26 +220,9 @@ void _GIO_localDispatch(GIOControl *gc) {
       case gf_statfile:
 	_gio_file_statfile(gc,path);
       break;
-#if 0
-      case gf_getfile:
-	_gio_file_getfile(gc,path);
-      break;
-      case gf_putfile:
-	_gio_file_putfile(gc,path);
-      break;
-#endif
       case gf_mkdir:
 	_gio_file_mkdir(gc,path);
       break;
-      case gf_delfile:
-	_gio_file_delfile(gc,path);
-      break;
-      case gf_deldir:
-	_gio_file_deldir(gc,path);
-      break;
-      case gf_renamefile:
-	topath = x_u32_to_u8 (u32_force_valid (gc->topath));
-	_gio_file_renamefile(gc,path,topath);
 	free(topath);
       break;
     }
@@ -279,10 +232,10 @@ void _GIO_localDispatch(GIOControl *gc) {
 /* pathname preceded by "file://" just strip off the "file://" and treat as a */
 /*  filename */
 void *_GIO_fileDispatch(GIOControl *gc) {
-    char *username, *password, *host, *path, *topath;
+    char *username, *password, *host, *path;
     int port;
 
-    path = _GIO_decomposeURL(gc->path,&host,&port,&username,&password);
+    path = GIODecomposeURL(gc->path,&host,&port,&username,&password);
     free(host); free(username); free(password);
     switch ( gc->gf ) {
       case gf_dir:
@@ -291,28 +244,8 @@ void *_GIO_fileDispatch(GIOControl *gc) {
       case gf_statfile:
 	_gio_file_statfile(gc,path);
       break;
-#if 0
-      case gf_getfile:
-	_gio_file_getfile(gc,path);
-      break;
-      case gf_putfile:
-	_gio_file_putfile(gc,path);
-      break;
-#endif
       case gf_mkdir:
 	_gio_file_mkdir(gc,path);
-      break;
-      case gf_delfile:
-	_gio_file_delfile(gc,path);
-      break;
-      case gf_deldir:
-	_gio_file_deldir(gc,path);
-      break;
-      case gf_renamefile:
-	topath = _GIO_decomposeURL(gc->topath,&host,&port,&username,&password);
-	free(host); free(username); free(password); 
-	_gio_file_renamefile(gc,path,topath);
-	free(topath);
       break;
     }
     free(path);
