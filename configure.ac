@@ -137,9 +137,8 @@ AC_PATH_PROG([GAWK],[gawk],[gawk])
 AC_PATH_PROG([GPERF],[gperf],[gperf])
 AC_PATH_PROG([WGET],[wget],[wget])
 GUILE_PROGS
-
-# FIXME: Make SWIG optional except for maintainers.
-AX_PKG_SWIG([2.0.4],[],[AC_MSG_ERROR([SWIG is required to build ${PACKAGE}.])])
+AX_PKG_SWIG([2.0.4],[:],
+        [AC_MSG_WARN([SWIG >= 2.0.4 will be needed if you are going to regenerate some of the source codes.])])
 
 #--------------------------------------------------------------------------
 
@@ -209,7 +208,7 @@ PKG_CHECK_MODULES([ZLIB],[zlib])
 PKG_CHECK_MODULES([GLIB],[glib-2.0 >= 2.6 gio-2.0])
 PKG_CHECK_MODULES([LIBPNG],[libpng])
 PKG_CHECK_MODULES([LIBXML],[libxml-2.0])
-PKG_CHECK_MODULES([GUILE],[guile-${GUILE_API}])
+PKG_CHECK_MODULES([GUILE],[guile-${GUILE_API} >= 2.0.6])
 PKG_CHECK_MODULES([GSL],[gsl])
 
 PKG_CHECK_MODULES([BOEHM_GC],[bdw-gc >= 7.1])
