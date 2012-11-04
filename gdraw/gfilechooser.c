@@ -1596,8 +1596,11 @@ GGadget *GFileChooserCreate(struct gwindow *base, GGadgetData *gd,void *data) {
     if ( gd->flags & gg_group_end )
 	_GGadgetCloseGroup(&gfc->g);
 
-    if ( lastdir==NULL )
+    if ( lastdir==NULL ) {
       lastdir = x_u32_strconv_from_locale (x_gc_grabstr (xgetcwd ()));
+      static uint32_t slashdot[] = { '/', '.',  0 };
+      u32_strcat(lastdir, slashdot);
+    }
     if ( gd->label==NULL || gd->label->text==NULL )
 	GFileChooserSetTitle(&gfc->g,lastdir);
     else if ( GFileIsAbsolute(x_gc_u32_strconv_to_locale(gd->label->text)) )
