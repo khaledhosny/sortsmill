@@ -32,23 +32,6 @@
 #include <ustring.h>
 #include <errno.h>
 
-struct stdfuncs _GIO_stdfuncs = {
-    _GIO_decomposeURL, _GIO_PostSuccess, _GIO_PostInter,
-    _GIO_PostError, _GIO_RequestAuthorization, _GIO_LookupHost,
-    NULL,			/* default authorizer */
-    GIOFreeDirEntries,
-#ifdef GWW_TEST
-    _GIO_ReportHeaders,		/* set to NULL when not debugging */
-#else
-    NULL,
-#endif
-
-#ifdef HAVE_PTHREAD_H
-    PTHREAD_MUTEX_INITIALIZER,
-#endif
-    NULL,
-    NULL
-};
 static struct protocols {
     int index;
     uint32_t *proto;
@@ -90,13 +73,10 @@ return( true );
 }
 
 static void GIOdispatch(GIOControl *gc, enum giofuncs gf) {
-    uint32_t *temp, *pt, *tpt;
+    uint32_t *temp, *pt;
     int i;
 
     gc->gf = gf;
-
-    if ( _GIO_stdfuncs.useragent == NULL )
-	_GIO_stdfuncs.useragent = xstrdup("someone@somewhere.com");
 
     temp = _GIO_translateURL(gc->path,gf);
     if ( temp!=NULL ) {
@@ -111,25 +91,6 @@ static void GIOdispatch(GIOControl *gc, enum giofuncs gf) {
 	if ( temp!=NULL ) {
 	    free(gc->topath);
 	    gc->topath = temp;
-	}
-	if ( gf==gf_renamefile ) {
-	    if (( pt = uc_strstr(gc->path,"://"))== NULL )
-		pt = gc->path;
-	    else {
-		pt=u32_strchr(pt+3,'/');
-		if ( pt==NULL ) pt = gc->path+u32_strlen(gc->path);
-	    }
-	    if (( tpt = uc_strstr(gc->topath,"://"))== NULL )
-		tpt = gc->topath;
-	    else {
-		tpt=u32_strchr(tpt+3,'/');
-		if ( tpt==NULL ) tpt = gc->topath+u32_strlen(gc->topath);
-	    }
-	    if ( tpt-gc->topath!=pt-gc->path ||
-		    u32_ncasecompare (gc->path,gc->topath,pt-gc->path)!=0 ) {
-		_GIO_reporterror(gc,EXDEV);
-return;
-	    }
 	}
     }
 
@@ -168,8 +129,8 @@ return;
 	    gc->threaddata = (struct gio_threaddata *) xmalloc(sizeof(struct gio_threaddata));
 	    gc->threaddata->mutex = initmutex;
 	    gc->threaddata->cond = initcond;
-	    if ( _GIO_stdfuncs.gdraw_sync_thread!=NULL )
-		(_GIO_stdfuncs.gdraw_sync_thread)(NULL,NULL,NULL);
+	    if ( gdraw_sync_thread!=NULL )
+		(gdraw_sync_thread)(NULL,NULL,NULL);
 	    pthread_create(&gc->threaddata->thread,NULL,
 		    (ptread_startfunc_t *) (protocols[i].dispatcher), gc);
 #endif
@@ -184,10 +145,6 @@ void GIOdir(GIOControl *gc) {
     GIOdispatch(gc,gf_dir);
 }
 
-void GIOstatFile(GIOControl *gc) {
-    GIOdispatch(gc,gf_statfile);
-}
-
 void GIOfileExists(GIOControl *gc) {
     /* We can probably do some optimizations here, based on caching and whatnot */
     GIOdispatch(gc,gf_statfile);
@@ -197,19 +154,7 @@ void GIOmkDir(GIOControl *gc) {
     GIOdispatch(gc,gf_mkdir);
 }
 
-void GIOdelFile(GIOControl *gc) {
-    GIOdispatch(gc,gf_delfile);
-}
-
-void GIOdelDir(GIOControl *gc) {
-    GIOdispatch(gc,gf_deldir);
-}
-
-void GIOrenameFile(GIOControl *gc) {
-    GIOdispatch(gc,gf_renamefile);
-}
-
-void GIOFreeDirEntries(GDirEntry *ent) {
+static void GIOFreeDirEntries(GDirEntry *ent) {
     GDirEntry *next;
 
     while ( ent!=NULL ) {
@@ -269,15 +214,6 @@ GIOControl *GIOCreate(uint32_t *path,void *userdata,
 return(gc);
 }
 
-void GIOSetDefAuthorizer(int32_t (*getauth)(struct giocontrol *)) {
-    _GIO_stdfuncs.getauth = getauth;
-}
-
-void GIOSetUserAgent(uint32_t *agent) {
-    free( _GIO_stdfuncs.useragent );
-    _GIO_stdfuncs.useragent = x_u32_to_u8 (u32_force_valid (agent));
-}
-
 void GIO_SetThreadCallback(void (*callback)(void *,void *,void *)) {
-    _GIO_stdfuncs.gdraw_sync_thread = callback;
+    gdraw_sync_thread = callback;
 }

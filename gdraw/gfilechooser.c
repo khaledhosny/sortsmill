@@ -444,7 +444,7 @@ static void GFileChooserScanDir(GFileChooser *gfc,uint32_t *dir) {
 	int port;
 	char proto[40];
 	char *host, *username, *password;
-	free( _GIO_decomposeURL(dir,&host,&port,&username,&password));
+	free( GIODecomposeURL(dir,&host,&port,&username,&password));
 	if ( username!=NULL && password==NULL ) {
 	    password = gwwv_ask_password(_("Password?"),"",_("Enter password for %s@%s"), username, host );
 	    cu_strncpy(proto,dir,pt-dir<sizeof(proto)?pt-dir:sizeof(proto));
@@ -1596,8 +1596,11 @@ GGadget *GFileChooserCreate(struct gwindow *base, GGadgetData *gd,void *data) {
     if ( gd->flags & gg_group_end )
 	_GGadgetCloseGroup(&gfc->g);
 
-    if ( lastdir==NULL )
-      lastdir = x_u32_strconv_from_locale (x_gc_grabstr (xgetcwd ()));
+    if ( lastdir==NULL ) {
+      char *dir = x_gc_grabstr (xgetcwd ());
+      strcat(dir, "/.");
+      lastdir = x_u32_strconv_from_locale (dir);
+    }
     if ( gd->label==NULL || gd->label->text==NULL )
 	GFileChooserSetTitle(&gfc->g,lastdir);
     else if ( GFileIsAbsolute(x_gc_u32_strconv_to_locale(gd->label->text)) )

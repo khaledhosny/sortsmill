@@ -44,23 +44,7 @@
 #include "ffthread.h"
 #endif
 
-struct stdfuncs {
-    char *(*decomposeURL)(const uint32_t *url,char **host, int *port,
-	char **username, char **password);
-    void (*PostSuccess)(GIOControl *gc);
-    void (*PostInter)(GIOControl *gc);
-    void (*PostError)(GIOControl *gc);
-    void (*RequestAuthorization)(GIOControl *gc);
-    struct hostdata *(*LookupHost)(char *name);
-    int32_t (*getauth)(struct giocontrol *);
-    void (*FreeDirEntries)(GDirEntry *lst);
-    void (*reportheaders)(char *, ...);
-#ifdef HAVE_PTHREAD_H
-    pthread_mutex_t hostacccess_mutex;
-#endif
-    char *useragent;
-    void (*gdraw_sync_thread)(void *,void *,void *);
-};
+void (*gdraw_sync_thread)(void *,void *,void *);
 
 struct gio_threaddata {
 #ifdef HAVE_PTHREAD_H
@@ -87,10 +71,4 @@ struct hostdata {
     struct hostaccessdata *had;
     struct hostdata *next;
 };
-
-/* The four functions protocol libraries should define */
-extern void *GIO_dispatch(GIOControl *gc);
-extern void GIO_cancel(GIOControl *gc);
-extern void GIO_init(void *handle,struct stdfuncs *_stdfuncs,int index);
-extern void GIO_term(void);
 #endif

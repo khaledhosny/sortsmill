@@ -32,10 +32,7 @@
 #include <basics.h>
 #include <time.h>
 
-enum giofuncs { gf_dir, gf_statfile, gf_getfile, gf_putfile,
-	gf_mkdir, gf_delfile, gf_deldir, gf_renamefile,
-	/*gf_lockfile, gf_unlockfile,*/
-	gf_max };
+enum giofuncs { gf_dir, gf_statfile, gf_mkdir };
 
 typedef struct giocontrol {
     uint32_t *path;
@@ -80,32 +77,20 @@ typedef struct gdirentry {
 } GDirEntry;
 
 VISIBLE extern void GIOdir(GIOControl *gc);
-extern void GIOstatFile(GIOControl *gc);
 VISIBLE extern void GIOfileExists(GIOControl *gc);
-extern void GIOgetFile(GIOControl *gc);
-extern void GIOputFile(GIOControl *gc);
 VISIBLE extern void GIOmkDir(GIOControl *gc);
-extern void GIOdelFile(GIOControl *gc);
-extern void GIOdelDir(GIOControl *gc);
-extern void GIOrenameFile(GIOControl *gc);
 VISIBLE extern GDirEntry *GIOgetDirData(GIOControl *gc);
-extern int32_t GIOread(GIOControl *gc,void *buffer,int32_t len);
-extern int32_t GIOwrite(GIOControl *gc,void *buffer,int32_t len);
-extern void GIOFreeDirEntries(GDirEntry *lst);
 VISIBLE extern void GIOcancel(GIOControl *gc);
 VISIBLE extern void GIOclose(GIOControl *gc);
 VISIBLE extern GIOControl *GIOCreate(uint32_t *path,void *userdata,
 	void (*receivedata)(struct giocontrol *),
 	void (*receiveerror)(struct giocontrol *));
-extern void GIOSetDefAuthorizer(int32_t (*getauth)(struct giocontrol *));
-extern void GIOSetUserAgent(uint32_t *agent);
 
 VISIBLE extern char *GIOGetMimeType(const char *path);
 
 VISIBLE extern char *GIO_PasswordCache(char *proto,char *host,char *username,char *password);
-VISIBLE extern char *_GIO_decomposeURL(const uint32_t *url,char **host, int *port, char **username,
+VISIBLE extern char *GIODecomposeURL(const uint32_t *url,char **host, int *port, char **username,
 				       char **password);
-
 VISIBLE extern void GIO_SetThreadCallback(void (*callback)(void *,void *,void *));
 
 #endif
