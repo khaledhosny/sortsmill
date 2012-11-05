@@ -1754,7 +1754,7 @@ return( true );
 
         /* Compare the given stem with each of the existing diagonal stem
          * hints. First ensure that it is not an exact duplicate of an already
-         * added stem. Then test if unit vectors are parallel and edges colinear.
+         * added stem. Then test if unit vectors are parallel and edges collinear.
          * In this case we should either preserve the existing stem or replace
          * it with the new one, but not keep them both */
         if (test->unit.x == dn->unit.x && test->unit.y == dn->unit.y &&
@@ -1791,7 +1791,7 @@ return( false );
             }
         } else
             overlap = true;
-        /* It's probably a colinear dstem, as in older SFD files. Treat */
+        /* It's probably a collinear dstem, as in older SFD files. Treat */
         /* it as one more instance for the already added stem */
         if ( !overlap ) {
             for ( hi=dn->where; hi->next != NULL; hi = hi->next ) ;

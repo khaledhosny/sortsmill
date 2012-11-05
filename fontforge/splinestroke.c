@@ -295,7 +295,7 @@ return( Poly_TooFewPoints );
     break;
     }
     if ( i==n )
-return( Poly_Line );		/* Colinear */
+return( Poly_Line );		/* Collinear */
     if ( n==3 ) {
 	/* Triangles are always convex */
 return( Poly_Convex );
@@ -530,7 +530,7 @@ static void LineJoin(StrokeContext *c,int atbreak) {
 
     dot = (nslope.x*pslope.x + nslope.y*pslope.y);
     if ( dot>=.999 )
-return;		/* Essentially colinear */ /* Won't be perfect because control points lie on integers */
+return;		/* Essentially collinear */ /* Won't be perfect because control points lie on integers */
     /* miterlimit of 6, 18 degrees */
     force_bevel = ( c->join==lj_miter && dot<c->miterlimit );
 
@@ -1153,7 +1153,7 @@ static void SquareJoin(StrokeContext *c,int atbreak) {
     dot = nslope.y*pslope.x - nslope.x*pslope.y;
     if ( dot==0 ) {
 	if ( nslope.x*pslope.x + nslope.y*pslope.y > 0 )
-return;		/* Colinear */
+return;		/* Collinear */
 	/* Otherwise we go in the reverse direction */
 	/* We need to know whether we are bending left or right, and a dot of 0 */
 	/*  won't tell us ... so half the time we get this wrong */
@@ -1627,7 +1627,7 @@ static void PolyJoin(StrokeContext *c,int atbreak) {
     dot = nslope.y*pslope.x - nslope.x*pslope.y;
     if ( dot==0 ) {
 	if ( nslope.x*pslope.x + nslope.y*pslope.y > 0 )
-return;		/* Colinear */
+return;		/* Collinear */
 	/* Otherwise we go in the reverse direction */
 	/* We need to know whether we are bending left or right, and a dot of 0 */
 	/*  won't tell us ... so half the time we get this wrong */
@@ -2046,7 +2046,7 @@ static void FindStrokePointsPoly(SplineSet *ss, StrokeContext *c) {
 /* ******************************* To Splines ******************************* */
 /******************************************************************************/
 
-static void SSRemoveColinearPoints(SplineSet *ss) {
+static void SSRemoveCollinearPoints(SplineSet *ss) {
     SplinePoint *sp, *nsp, *nnsp;
     BasePoint dir, ndir;
     bigreal len;
@@ -2974,14 +2974,14 @@ static SplineSet *EdgeEffects(SplineSet *fragments,StrokeContext *c) {
 
 /* This has problems when resolution<1 */
     for ( cur=fragments; cur!=NULL; cur=cur->next ) {
-	SSRemoveColinearPoints(cur);
+	SSRemoveCollinearPoints(cur);
 	if ( !cur->last->prev->knownlinear )
     continue;
 	for ( test=fragments; test!=NULL; test=test->next ) {
 	    if ( !test->first->next->knownlinear )
 	continue;
-	    if ( BpColinear(&cur->last->me,&test->first->me,&cur->last->prev->from->me) &&
-		    BpColinear(&test->first->me,&cur->last->me,&test->first->next->to->me) ) {
+	    if ( BpCollinear(&cur->last->me,&test->first->me,&cur->last->prev->from->me) &&
+		    BpCollinear(&test->first->me,&cur->last->me,&test->first->next->to->me) ) {
 		test->first->me = cur->last->me;
 		test->first->nextcp = cur->last->me;
 		test->first->nonextcp = true;
@@ -3164,7 +3164,7 @@ static SplineSet *RemoveBackForthLine(SplineSet *ss) {
 
     ss->next = NULL;
 
-    SSRemoveColinearPoints(ss);
+    SSRemoveCollinearPoints(ss);
 
     if ( ss->first->prev==NULL )
 return( ss );
@@ -3244,7 +3244,7 @@ return( ss );
 return( ss );
 		}
 		if ( isnext || isprev ) {
-		    /* SSRemoveColinearPoints should have caught this but */
+		    /* SSRemoveCollinearPoints should have caught this but */
 		    /*  it has slightly different rounding conditions and sometimes doesn't */
 		    if ( !isnext ) {
 			SplinePoint *t = sp2;

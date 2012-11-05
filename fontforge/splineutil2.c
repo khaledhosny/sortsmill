@@ -3279,7 +3279,7 @@ void SplineSetJoinCpFixup(SplinePoint *sp) {
 	SplineCharTangentNextCP(sp);
 	SplineCharTangentPrevCP(sp);
 	fixprev = fixnext = 1;
-    } else if ( !BpColinear(&sp->prevcp,&sp->me,&sp->nextcp)) {
+    } else if ( !BpCollinear(&sp->prevcp,&sp->me,&sp->nextcp)) {
 	ndir.x = sp->nextcp.x - sp->me.x;
 	ndir.y = sp->nextcp.y - sp->me.y;
 	nlen = sqrt( ndir.x*ndir.x + ndir.y*ndir.y );

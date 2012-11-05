@@ -91,7 +91,7 @@ static int RulerText(CharView *cv, uint32_t *ubuf, int line) {
 		     ((cv->p.sp->next==NULL && cv->p.sp->prev!=NULL) ||
 		      (cv->p.sp->prev==NULL && cv->p.sp->next!=NULL) ||
 		      (cv->p.sp->next!=NULL && cv->p.sp->prev!=NULL &&
-		        BpColinear(!cv->p.sp->noprevcp ? &cv->p.sp->prevcp : &cv->p.sp->prev->from->me,
+		        BpCollinear(!cv->p.sp->noprevcp ? &cv->p.sp->prevcp : &cv->p.sp->prev->from->me,
 				&cv->p.sp->me,
 			        !cv->p.sp->nonextcp ? &cv->p.sp->nextcp : &cv->p.sp->next->to->me))) ) ) {
 		Spline *spline;

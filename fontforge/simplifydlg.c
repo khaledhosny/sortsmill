@@ -253,7 +253,7 @@ int SimplifyDlg(SplineFont *sf, struct simplifyinfo *smpl) {
 	if ( oldsmooth )
 	    gcd[k].gd.flags |= gg_cb_on;
     }
-    gcd[k].gd.popup_msg = (uint32_t *) _("Simplify will examine corner points whose control points are almost\ncolinear and smooth them into curve points");
+    gcd[k].gd.popup_msg = (uint32_t *) _("Simplify will examine corner points whose control points are almost\ncollinear and smooth them into curve points");
     gcd[k].gd.cid = CID_Smooth;
     gcd[k++].creator = GCheckBoxCreate;
     varray[l][0] = &gcd[k-1]; varray[l++][1] = NULL;

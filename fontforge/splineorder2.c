@@ -364,7 +364,7 @@ return( start );
 	dydt = (3*ps->splines[1].a*t+2*ps->splines[1].b)*t + ps->splines[1].c;
 	/* if the slopes are parallel at the ends there can be no bezier quadratic */
 	/*  (control point is where the splines intersect. But if they are */
-	/*  parallel and colinear then there is a line between 'em */
+	/*  parallel and collinear then there is a line between 'em */
 	if ( ( dxdtmin==0 && dxdt==0 ) || (dydtmin==0 && dydt==0) ||
 		( dxdt!=0 && dxdtmin!=0 &&
 		    RealNearish(dydt/dxdt,dydtmin/dxdtmin)) )

@@ -296,7 +296,7 @@ RefCharsFree (RefChar * ref)
 }
 
 /* Remove line segments which are just one point long */
-/* Merge colinear line segments */
+/* Merge collinear line segments */
 /* Merge two segments each of which involves a single pixel change in one dimension (cut corners) */
 static void
 SimplifyLineList (LineList * prev)
@@ -366,7 +366,7 @@ typedef struct spline1
 } Spline1;
 
 static void
-FigureSpline1 (Spline1 * sp1, bigreal t0, bigreal t1, Spline1D * sp)
+FigureSpline1 (Spline1 *sp1, bigreal t0, bigreal t1, Spline1D *sp)
 {
   bigreal s = (t1 - t0);
   if (sp->a == 0 && sp->b == 0)
@@ -558,7 +558,7 @@ SplineApproximate (Spline * spline, real scale)
 }
 
 static void
-SplineFindBounds (const Spline * sp, DBounds * bounds)
+SplineFindBounds (const Spline * sp, DBounds *bounds)
 {
   real t, b2_fourac, v;
   real min, max;
@@ -643,7 +643,7 @@ SplineFindBounds (const Spline * sp, DBounds * bounds)
 }
 
 static void
-_SplineSetFindBounds (const SplinePointList * spl, DBounds * bounds)
+_SplineSetFindBounds (const SplinePointList * spl, DBounds *bounds)
 {
   Spline *spline, *first;
   /* Ignore contours consisting of a single point (used for hinting, anchors */
@@ -681,8 +681,8 @@ _SplineSetFindBounds (const SplinePointList * spl, DBounds * bounds)
 }
 
 static void
-_SplineSetFindClippedBounds (const SplinePointList * spl, DBounds * bounds,
-                             DBounds * clipb)
+_SplineSetFindClippedBounds (const SplinePointList * spl, DBounds *bounds,
+                             DBounds *clipb)
 {
   Spline *spline, *first;
   /* Ignore contours consisting of a single point (used for hinting, anchors */
@@ -750,7 +750,7 @@ _SplineSetFindClippedBounds (const SplinePointList * spl, DBounds * bounds,
 }
 
 void
-SplineSetFindBounds (const SplinePointList * spl, DBounds * bounds)
+SplineSetFindBounds (const SplinePointList * spl, DBounds *bounds)
 {
   DBounds clipb;
   memset (bounds, '\0', sizeof (*bounds));
@@ -771,7 +771,7 @@ SplineSetFindBounds (const SplinePointList * spl, DBounds * bounds)
 }
 
 static void
-_ImageFindBounds (ImageList * img, DBounds * bounds)
+_ImageFindBounds (ImageList * img, DBounds *bounds)
 {
   if (bounds->minx == 0 && bounds->maxx == 0 && bounds->miny == 0
       && bounds->maxy == 0)
@@ -791,7 +791,7 @@ _ImageFindBounds (ImageList * img, DBounds * bounds)
 }
 
 static void
-_SplineCharLayerFindBounds (SplineChar *sc, int layer, DBounds * bounds)
+_SplineCharLayerFindBounds (SplineChar *sc, int layer, DBounds *bounds)
 {
   RefChar *rf;
   ImageList *img;
@@ -873,7 +873,7 @@ _SplineCharLayerFindBounds (SplineChar *sc, int layer, DBounds * bounds)
 }
 
 void
-SplineCharLayerFindBounds (SplineChar *sc, int layer, DBounds * bounds)
+SplineCharLayerFindBounds (SplineChar *sc, int layer, DBounds *bounds)
 {
 
   if (sc->parent != NULL && sc->parent->multilayer)
@@ -890,7 +890,7 @@ SplineCharLayerFindBounds (SplineChar *sc, int layer, DBounds * bounds)
 }
 
 void
-SplineCharFindBounds (SplineChar *sc, DBounds * bounds)
+SplineCharFindBounds (SplineChar *sc, DBounds *bounds)
 {
   int i;
   int first, last;
@@ -907,7 +907,7 @@ SplineCharFindBounds (SplineChar *sc, DBounds * bounds)
 }
 
 void
-SplineFontLayerFindBounds (SplineFont *sf, int layer, DBounds * bounds)
+SplineFontLayerFindBounds (SplineFont *sf, int layer, DBounds *bounds)
 {
   int i, k, first, last;
 
@@ -935,7 +935,7 @@ SplineFontLayerFindBounds (SplineFont *sf, int layer, DBounds * bounds)
 }
 
 void
-SplineFontFindBounds (SplineFont *sf, DBounds * bounds)
+SplineFontFindBounds (SplineFont *sf, DBounds *bounds)
 {
   int i, k, first, last;
 
@@ -957,7 +957,7 @@ SplineFontFindBounds (SplineFont *sf, DBounds * bounds)
 }
 
 void
-CIDLayerFindBounds (SplineFont *cidmaster, int layer, DBounds * bounds)
+CIDLayerFindBounds (SplineFont *cidmaster, int layer, DBounds *bounds)
 {
   SplineFont *sf;
   int i;
@@ -1020,7 +1020,7 @@ _SplineSetFindTop (SplineSet * ss, BasePoint * top)
 }
 
 void
-SplineSetQuickBounds (SplineSet * ss, DBounds * b)
+SplineSetQuickBounds (SplineSet * ss, DBounds *b)
 {
   SplinePoint *sp;
 
@@ -1056,7 +1056,7 @@ SplineSetQuickBounds (SplineSet * ss, DBounds * b)
 }
 
 void
-SplineCharQuickBounds (SplineChar *sc, DBounds * b)
+SplineCharQuickBounds (SplineChar *sc, DBounds *b)
 {
   RefChar *ref;
   int i, first, last;
@@ -1132,7 +1132,7 @@ SplineCharQuickBounds (SplineChar *sc, DBounds * b)
 }
 
 void
-SplineCharLayerQuickBounds (SplineChar *sc, int layer, DBounds * bounds)
+SplineCharLayerQuickBounds (SplineChar *sc, int layer, DBounds *bounds)
 {
   RefChar *ref;
   DBounds temp;
@@ -1173,7 +1173,7 @@ SplineCharLayerQuickBounds (SplineChar *sc, int layer, DBounds * bounds)
 }
 
 void
-SplineSetQuickConservativeBounds (SplineSet * ss, DBounds * b)
+SplineSetQuickConservativeBounds (SplineSet * ss, DBounds *b)
 {
   SplinePoint *sp;
 
@@ -1225,7 +1225,7 @@ SplineSetQuickConservativeBounds (SplineSet * ss, DBounds * b)
 }
 
 void
-SplineCharQuickConservativeBounds (SplineChar *sc, DBounds * b)
+SplineCharQuickConservativeBounds (SplineChar *sc, DBounds *b)
 {
   RefChar *ref;
   int i, first, last;
@@ -1297,7 +1297,7 @@ SplineCharQuickConservativeBounds (SplineChar *sc, DBounds * b)
 }
 
 void
-SplineFontQuickConservativeBounds (SplineFont *sf, DBounds * b)
+SplineFontQuickConservativeBounds (SplineFont *sf, DBounds *b)
 {
   DBounds bb;
   int i;
@@ -1405,7 +1405,7 @@ SplinePointCatagorize (SplinePoint * sp)
 
       /* find out which side has the shorter control vector. Dot that vector */
       /*  with the normal of the unit vector on the other side. If the */
-      /*  result is less than 1 em-unit then we've got colinear control points */
+      /*  result is less than 1 em-unit then we've got collinear control points */
       /*  (within the resolution of the integer grid) */
       /* Not quite... they could point in the same direction */
       if (nclen != 0 && pclen != 0 &&
@@ -4058,7 +4058,7 @@ SCRefToSplines (SplineChar *sc, RefChar * rf, int layer)
 /*  solns near 0 and 1 that should be ok. -1 is perhaps a little too close */
 /* Sigh. When solutions are near 0, the rounding errors are appalling. */
 int
-_CubicSolve (const Spline1D * sp, bigreal sought, extended ts[3])
+_CubicSolve (const Spline1D *sp, bigreal sought, extended ts[3])
 {
   extended d, xN, yN, delta2, temp, delta, h, t2, t3, theta;
   extended sa = sp->a, sb = sp->b, sc = sp->c, sd = sp->d - sought;
@@ -4139,9 +4139,8 @@ _CubicSolve (const Spline1D * sp, bigreal sought, extended ts[3])
         {
           delta = yN / (2 * sa);
           delta =
-            delta == 0 ? 0 : delta > 0 ? pow (delta, 1. / 3.) : -pow (-delta,
-                                                                      1. /
-                                                                      3.);
+            (delta == 0) ? 0 :
+            ((delta > 0) ? pow (delta, 1. / 3.) : -pow (-delta, 1. / 3.));
           ts[i++] = xN + delta; /* this root twice, but that's irrelevant to me */
           ts[i++] = xN - 2 * delta;
         }
@@ -4174,7 +4173,7 @@ _CubicSolve (const Spline1D * sp, bigreal sought, extended ts[3])
 }
 
 int
-CubicSolve (const Spline1D * sp, bigreal sought, extended ts[3])
+CubicSolve (const Spline1D *sp, bigreal sought, extended ts[3])
 {
   extended t;
   extended ts2[3];
@@ -4359,7 +4358,7 @@ _QuarticSolve (Quartic * q, extended ts[4])
 }
 
 extended
-SplineSolve (const Spline1D * sp, real tmin, real tmax, extended sought)
+SplineSolve (const Spline1D *sp, real tmin, real tmax, extended sought)
 {
   /* We want to find t so that spline(t) = sought */
   /*  the curve must be monotonic */
@@ -4389,7 +4388,7 @@ SplineSolve (const Spline1D * sp, real tmin, real tmax, extended sought)
 /*  are [0,1], let's use 1.0/D_RE_Factor */
 
 extended
-SplineSolveFixup (const Spline1D * sp, real tmin, real tmax, extended sought)
+SplineSolveFixup (const Spline1D *sp, real tmin, real tmax, extended sought)
 {
   extended ts[3];
   int i;
@@ -4482,7 +4481,7 @@ SplineSolveFixup (const Spline1D * sp, real tmin, real tmax, extended sought)
 }
 
 extended
-IterateSplineSolve (const Spline1D * sp, extended tmin, extended tmax,
+IterateSplineSolve (const Spline1D *sp, extended tmin, extended tmax,
                     extended sought)
 {
   extended t, low, high, test;
@@ -4523,7 +4522,13 @@ IterateSplineSolve (const Spline1D * sp, extended tmin, extended tmax,
           if (t == tmax || t == tmin)
             return (t);
           test = ((temp.a * t + temp.b) * t + temp.c) * t + temp.d;
-          if (test == 0)        /* someone complained that this test relied on exact arithmetic. In fact this test will almost never be hit, the real exit test is the line above, when tmin/tmax are so close that there is no space between them in the floating representation */
+          if (test == 0)        /* someone complained that this test
+                                   relied on exact arithmetic. In fact
+                                   this test will almost never be hit.
+                                   The real exit test is the line
+                                   above, when tmin/tmax are so close
+                                   that there is no space between them
+                                   in the floating representation */
             return (t);
           if ((low < 0 && test < 0) || (low > 0 && test > 0))
             tmin = t;
@@ -4540,7 +4545,7 @@ IterateSplineSolve (const Spline1D * sp, extended tmin, extended tmax,
 }
 
 extended
-IterateSplineSolveFixup (const Spline1D * sp, extended tmin, extended tmax,
+IterateSplineSolveFixup (const Spline1D *sp, extended tmin, extended tmax,
                          extended sought)
 {
   extended t;
@@ -4616,7 +4621,7 @@ IterateSplineSolveFixup (const Spline1D * sp, extended tmin, extended tmax,
 }
 
 double
-CheckExtremaForSingleBitErrors (const Spline1D * sp, double t, double othert)
+CheckExtremaForSingleBitErrors (const Spline1D *sp, double t, double othert)
 {
   double u1, um1;
   double slope, slope1, slopem1;
@@ -4664,7 +4669,7 @@ CheckExtremaForSingleBitErrors (const Spline1D * sp, double t, double othert)
 }
 
 static void
-_SplineFindExtrema (const Spline1D * sp, extended * _t1, extended * _t2)
+_SplineFindExtrema (const Spline1D *sp, extended *_t1, extended *_t2)
 {
   extended t1 = -1, t2 = -1;
   extended b2_fourac;
@@ -4719,7 +4724,7 @@ _SplineFindExtrema (const Spline1D * sp, extended * _t1, extended * _t2)
 }
 
 void
-SplineFindExtrema (const Spline1D * sp, extended * _t1, extended * _t2)
+SplineFindExtrema (const Spline1D *sp, extended *_t1, extended *_t2)
 {
   extended t1 = -1, t2 = -1;
   extended b2_fourac;
@@ -4809,7 +4814,7 @@ SplineCurvature (Spline * s, bigreal t)
 }
 
 int
-SplineAtInflection (Spline1D * sp, bigreal t)
+SplineAtInflection (Spline1D *sp, bigreal t)
 {
   /* It's a point of inflection if d sp/dt==0 and d2 sp/dt^2==0 */
   return (RealNear ((3 * sp->a * t + 2 * sp->b) * t + sp->c, 0) &&
@@ -4817,7 +4822,7 @@ SplineAtInflection (Spline1D * sp, bigreal t)
 }
 
 int
-SplineAtMinMax (Spline1D * sp, bigreal t)
+SplineAtMinMax (Spline1D *sp, bigreal t)
 {
   /* It's a point of inflection if d sp/dt==0 and d2 sp/dt^2!=0 */
   return (RealNear ((3 * sp->a * t + 2 * sp->b) * t + sp->c, 0) &&
@@ -4971,7 +4976,7 @@ Spline2DFindPointsOfInflection (const Spline * sp, extended poi[2])
 /*  just going to skip over it, and other things will be confused by this */
 /*  so just remove it. It should be so close the difference won't matter */
 void
-SplineRemoveExtremaTooClose (Spline1D * sp, extended * _t1, extended * _t2)
+SplineRemoveExtremaTooClose (Spline1D *sp, extended *_t1, extended *_t2)
 {
   extended last, test;
   extended t1 = *_t1, t2 = *_t2;
@@ -5114,7 +5119,7 @@ IntersectLinesSlopes (BasePoint * inter,
   bigreal x, y;
 
   if (denom == 0)
-    return (false);             /* Lines are colinear, no intersection */
+    return (false);             /* Lines are collinear, no intersection */
   if (line1->x == line2->x && line1->y == line2->y)
     {
       *inter = *line1;
@@ -5177,7 +5182,7 @@ AddPoint (extended x, extended y, extended t, extended s, BasePoint * pts,
 }
 
 static void
-IterateSolve (const Spline1D * sp, extended ts[3])
+IterateSolve (const Spline1D *sp, extended ts[3])
 {
   /* The closed form solution has too many rounding errors for my taste... */
   int i, j;
@@ -5323,8 +5328,8 @@ ISolveWithin (const Spline * spline, int major,
 }
 
 static int
-ICAddInter (int cnt, BasePoint * foundpos, extended * foundt1,
-            extended * foundt2, const Spline * s1, const Spline * s2,
+ICAddInter (int cnt, BasePoint * foundpos, extended *foundt1,
+            extended *foundt2, const Spline * s1, const Spline * s2,
             extended t1, extended t2, int maxcnt)
 {
 
@@ -5341,8 +5346,8 @@ ICAddInter (int cnt, BasePoint * foundpos, extended * foundt1,
 }
 
 static int
-ICBinarySearch (int cnt, BasePoint * foundpos, extended * foundt1,
-                extended * foundt2, int other, const Spline * s1,
+ICBinarySearch (int cnt, BasePoint * foundpos, extended *foundt1,
+                extended *foundt2, int other, const Spline * s1,
                 const Spline * s2, extended t1low, extended t1high,
                 extended t2low, extended t2high, int maxcnt)
 {
@@ -5389,8 +5394,8 @@ static int
 CubicsIntersect (const Spline * s1, extended lowt1, extended hight1,
                  BasePoint * min1, BasePoint * max1, const Spline * s2,
                  extended lowt2, extended hight2, BasePoint * min2,
-                 BasePoint * max2, BasePoint * foundpos, extended * foundt1,
-                 extended * foundt2, int maxcnt)
+                 BasePoint * max2, BasePoint * foundpos, extended *foundt1,
+                 extended *foundt2, int maxcnt)
 {
   int major, other;
   BasePoint max, min;
@@ -5839,7 +5844,7 @@ SplinesIntersect (const Spline * s1, const Spline * s2, BasePoint pts[9],
             }
           if (found >= 8)
             {
-              /* If the splines are colinear then we might get an unbounded */
+              /* If the splines are collinear then we might get an unbounded */
               /*  number of intersections */
               break;
             }
@@ -8937,8 +8942,8 @@ SSHasDrawn (SplineSet * ss)
 }
 
 int
-SSBoundsWithin (SplineSet * ss, bigreal z1, bigreal z2, bigreal * wmin,
-                bigreal * wmax, int major)
+SSBoundsWithin (SplineSet * ss, bigreal z1, bigreal z2, bigreal *wmin,
+                bigreal *wmax, int major)
 {
   /* if major==0 then find y values when x between z1, z2 */
   /* if major==1 then find x values when y between z1, z2 */

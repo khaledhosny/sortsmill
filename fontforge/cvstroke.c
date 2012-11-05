@@ -211,7 +211,7 @@ static int _Stroke_OK(StrokeDlg *sd,int isapply) {
 			} else if ( pt!=Poly_Convex ) {
 			    err = true;
 			    if ( pt==Poly_PointOnEdge )
-				msg = _("There are at least 3 colinear vertices. Please remove (Edit->Merge) the selected point.");
+				msg = _("There are at least 3 collinear vertices. Please remove (Edit->Merge) the selected point.");
 			    else
 				msg = _("The selected vertex makes this a concave polygon. Please remove (Edit->Merge) it.");
 			    for ( sp=ss->first, cnt=0; cnt<255; ++cnt ) {

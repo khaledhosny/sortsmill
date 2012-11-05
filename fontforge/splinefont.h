@@ -1074,9 +1074,9 @@ typedef struct spline {
     SplinePoint *from, *to;
     Spline1D splines[2];		/* splines[0] is the x spline, splines[1] is y */
     struct linearapprox *approx;
-    /* Posible optimizations:
-	Precalculate bounding box
-	Precalculate min/max/ points of inflection
+    /* Possible optimizations:
+	Precalculate bounding box.
+	Precalculate min/max points of inflection.
     */
 } Spline;
 
@@ -2921,9 +2921,9 @@ extern int32_t EncFromName(const char *name,enum uni_interp interp,Encoding *enc
 
 extern void MatInverse(real into[6], real orig[6]);
 
-VISIBLE extern int BpColinear(BasePoint *first, BasePoint *mid, BasePoint *last);
+VISIBLE extern int BpCollinear(BasePoint *first, BasePoint *mid, BasePoint *last);
 extern int BpWithin(BasePoint *first, BasePoint *mid, BasePoint *last);
-    /* Colinear & between */
+    /* Collinear & between */
 
 enum psstrokeflags { /* sf_removeoverlap=2,*/ sf_handle_eraser=4,
 	sf_correctdir=8, sf_clearbeforeinput=16 };

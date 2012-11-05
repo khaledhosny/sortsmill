@@ -758,7 +758,7 @@
           <li>If we had a spline which almost doubled back on
           itself, sufficiently so that the spline intersector found
           lots of really close points, which it called
-          intersections, but not sufficiently so that our colinear
+          intersections, but not sufficiently so that our collinear
           detector caught it, then we'd generate a ton of
           intersections, overflow certain arrays, and trash the
           stack. =&gt; ff would crash. I didn't think this could
@@ -948,7 +948,7 @@
           default. Make it so FF no longer does so.</li>
 
           <li>When outputing an sfd file, ff would sometimes output
-          a truetype spline as a line if it had a colinear
+          a truetype spline as a line if it had a collinear
           control-point. I thought I'd taken care of that, but
           here's another case which needed fixing.</li>
 
@@ -5802,7 +5802,7 @@ a b =&gt; substitutes
           <li>Johan Winge also points out that I identify points as
           tangents when they should not be. This is because I use
           one measure of sloppiness no matter how close the cps are
-          to the base point when determining colinear. It's
+          to the base point when determining collinear. It's
           probably best to have a variable measure depending on how
           far the cp is from the base point.</li>
 
@@ -5981,7 +5981,7 @@ a b =&gt; substitutes
           undoes).</li>
 
           <li>The Point Info dlg should enforce that curved points
-          cps are colinear (so if the user changes one cp, the dlg
+          cps are collinear (so if the user changes one cp, the dlg
           should change the other to be in the opposite
           direction.</li>
 

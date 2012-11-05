@@ -1224,6 +1224,7 @@ static swig_module_info swig_module = {swig_types, 2, 0, 0, 0, 0};
 
 #include <gsl/gsl_inline.h>
 #include <gsl/gsl_machine.h>
+#include <gsl/gsl_complex.h>
 #include <gsl/gsl_poly.h>
 #include <gsl/gsl_matrix_double.h>
 #include <gsl/gsl_linalg.h>

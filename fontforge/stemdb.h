@@ -94,7 +94,7 @@ typedef struct pointdata {
     unsigned int nextzero: 1;
     unsigned int prevlinear: 1;
     unsigned int prevzero: 1;
-    unsigned int colinear: 1;
+    unsigned int collinear: 1;
     unsigned int symetrical_h: 1;	/* Are next & prev symetrical? */
     unsigned int symetrical_v: 1;	/* Are next & prev symetrical? */
     unsigned int next_hor: 1;

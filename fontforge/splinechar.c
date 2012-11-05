@@ -503,7 +503,7 @@ void SCCopyLayerToLayer(SplineChar *sc, int from, int to,int doclear) {
     SCCharChangedUpdate(sc,to);
 }
 
-int BpColinear(BasePoint *first, BasePoint *mid, BasePoint *last) {
+int BpCollinear(BasePoint *first, BasePoint *mid, BasePoint *last) {
     BasePoint dist_f, unit_f, dist_l, unit_l;
     bigreal len, off_l, off_f;
 
@@ -578,7 +578,7 @@ return;
 	    sp->nonextcp = true;
 	    sp->nextcp = sp->me;
 	} else if ( sp->prev!=NULL && !sp->nonextcp &&
-		BpColinear(&sp->prev->from->me,&sp->me,&sp->nextcp) ) {
+		BpCollinear(&sp->prev->from->me,&sp->me,&sp->nextcp) ) {
 	    /* The current control point is reasonable */
 	} else {
 	    SplineCharTangentNextCP(sp);
@@ -588,13 +588,13 @@ return;
 	    sp->noprevcp = true;
 	    sp->prevcp = sp->me;
 	} else if ( sp->next!=NULL && !sp->noprevcp &&
-		BpColinear(&sp->next->to->me,&sp->me,&sp->prevcp) ) {
+		BpCollinear(&sp->next->to->me,&sp->me,&sp->prevcp) ) {
 	    /* The current control point is reasonable */
 	} else {
 	    SplineCharTangentPrevCP(sp);
 	    if ( sp->prev ) SplineRefigure(sp->prev);
 	}
-    } else if ( (BpColinear(&sp->prevcp,&sp->me,&sp->nextcp) ||
+    } else if ( (BpCollinear(&sp->prevcp,&sp->me,&sp->nextcp) ||
 	    ( sp->nonextcp ^ sp->noprevcp )) &&
 	    ( pointtype!=pt_hvcurve ||
 		(sp->nextcp.x == sp->me.x && sp->nextcp.y != sp->me.y ) ||

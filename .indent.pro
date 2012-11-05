@@ -29,6 +29,8 @@
 -T rexp_interval_t
 
 -T real
+-T bigreal
+-T extended
 -T AnchorPoint
 -T BDFFont
 -T Encoding
@@ -37,8 +39,11 @@
 -T GImage
 -T GResStruct
 -T MMSet
+-T DBounds
 -T SplineChar
 -T SplineFont
+-T Spline1
+-T Spline1D
 -T KernPair
 -T KernPair1
 

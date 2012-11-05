@@ -3631,7 +3631,7 @@ return( false );
 return( false );
 		} else if ( pt!=Poly_Convex ) {
 		    if ( pt==Poly_PointOnEdge )
-			PyErr_Format(PyExc_ValueError, "There are at least 3 colinear vertices.");
+			PyErr_Format(PyExc_ValueError, "There are at least 3 collinear vertices.");
 		    else
 			PyErr_Format(PyExc_ValueError, "The polygonal pen must be a closed, convex polygon. This one is concave." );
 return( false );

@@ -667,7 +667,7 @@ void CVMergeSplineSets(CharView *cv, SplinePoint *active, SplineSet *activess,
     if (( active->pointtype==pt_curve || active->pointtype==pt_hvcurve ) &&
 	    !active->nonextcp && !active->noprevcp &&
 	    !active->nextcpdef && !active->prevcpdef &&
-	    !BpColinear(&active->prevcp,&active->me,&active->nextcp))
+	    !BpCollinear(&active->prevcp,&active->me,&active->nextcp))
 	active->nextcpdef = active->prevcpdef = true;
     SplineSetJoinCpFixup(active);
 }
