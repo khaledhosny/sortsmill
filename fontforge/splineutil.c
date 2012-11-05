@@ -2057,16 +2057,16 @@ ImageListTransform (ImageList * img, real transform[6], int everything)
                 {
                   img->xoff += img->xscale *
                     (img->image->list_len ==
-                     0 ? img->image->u.image : img->image->u.images[0])->
-                    width;
+                     0 ? img->image->u.image : img->image->u.
+                     images[0])->width;
                   img->xscale = -img->xscale;
                 }
               if ((img->yscale *= transform[3]) < 0)
                 {
                   img->yoff += img->yscale *
                     (img->image->list_len ==
-                     0 ? img->image->u.image : img->image->u.images[0])->
-                    height;
+                     0 ? img->image->u.image : img->image->u.
+                     images[0])->height;
                   img->yscale = -img->yscale;
                 }
               img->bb.minx = img->xoff;
@@ -2231,9 +2231,8 @@ SplinePointListTransform (SplinePointList * base, real transform[6],
               if (spline->from->selected || spline->to->selected)
                 TransformPTsInterpolateCPs (&lastpointorig, spline,
                                             spl->first ==
-                                            spline->
-                                            to ? &firstpointorig : &spline->
-                                            to->me, transform);
+                                            spline->to ? &firstpointorig :
+                                            &spline->to->me, transform);
               lastpointorig = orig;
               if (spline->to->selected)
                 anysel = true;
@@ -3460,7 +3459,8 @@ SplineFontFromMMType1 (SplineFont *sf, FontDict * fd,
         {
           static char *arrnames[] =
             { "BlueValues", "OtherBlues", "FamilyBlues", "FamilyOtherBlues",
-"StdHW", "StdVW", "StemSnapH", "StemSnapV", NULL };
+            "StdHW", "StdVW", "StemSnapH", "StemSnapV", NULL
+          };
           static char *scalarnames[] =
             { "ForceBold", "BlueFuzz", "BlueScale", "BlueShift", NULL };
           for (item = 0; scalarnames[item] != NULL; ++item)
@@ -3513,13 +3513,13 @@ SplineFontFromMMType1 (SplineFont *sf, FontDict * fd,
           {                     /* No conflicts */
             for (item = 0; item < mm->instance_count; ++item)
               {
-                free (mm->instances[item]->glyphs[i]->layers[ly_fore].
-                      splines->first->hintmask);
-                mm->instances[item]->glyphs[i]->layers[ly_fore].splines->
-                  first->hintmask = NULL;
+                free (mm->instances[item]->glyphs[i]->
+                      layers[ly_fore].splines->first->hintmask);
+                mm->instances[item]->glyphs[i]->layers[ly_fore].
+                  splines->first->hintmask = NULL;
               }
-            free (mm->normal->glyphs[i]->layers[ly_fore].splines->first->
-                  hintmask);
+            free (mm->normal->glyphs[i]->layers[ly_fore].splines->
+                  first->hintmask);
             mm->normal->glyphs[i]->layers[ly_fore].splines->first->hintmask =
               NULL;
           }
@@ -6422,15 +6422,9 @@ Crossings (Spline * s, BasePoint * pt)
       if (x >= pt->x)           /* Things on the edge are not inside */
         continue;
       if ((ext[i] != 0 && RealApprox (t, ext[i])
-           && SplineAtMinMax (&s->splines[1], ext[i])) || (ext[i + 1] != 1
-                                                           && RealApprox (t,
-                                                                          ext
-                                                                          [i +
-                                                                           1])
-                                                           &&
-                                                           SplineAtMinMax
-                                                           (&s->splines[1],
-                                                            ext[i + 1])))
+           && SplineAtMinMax (&s->splines[1], ext[i]))
+          || (ext[i + 1] != 1 && RealApprox (t, ext[i + 1])
+              && SplineAtMinMax (&s->splines[1], ext[i + 1])))
         continue;               /* Min/Max points don't add to count */
       if ((RealApprox (t, 0) && SplinePrevMinMax (s, yi1 > yi)) ||
           (RealApprox (t, 1) && SplineNextMinMax (s, yi1 > yi)))
@@ -8539,10 +8533,9 @@ SplineRemoveAnnoyingExtrema1 (Spline * s, int which, bigreal err_sq)
            s->splines[1].c) * ts[i] + s->splines[1].d;
         df =
           (pos.x - s->from->me.x) * (pos.x - s->from->me.x) + (pos.y -
-                                                               s->from->me.
-                                                               y) * (pos.y -
-                                                                     s->from->
-                                                                     me.y);
+                                                               s->from->
+                                                               me.y) *
+          (pos.y - s->from->me.y);
         dt =
           (pos.x - s->to->me.x) * (pos.x - s->to->me.x) + (pos.y -
                                                            s->to->me.y) *
