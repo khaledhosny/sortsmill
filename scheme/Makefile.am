@@ -47,6 +47,9 @@ EXTRA_DIST = sortsmillff/i18n.scm.in
 
 AM_LDFLAGS = -module $(MY_CFLAGS) $(MY_LIBS)
 
+SWIG_GUILE_CFLAGS = $(AM_CFLAGS) $(SWIG_GUILE_EXTRA_CFLAGS)	\
+	-Dmalloc=xmalloc -Drealloc=xrealloc -Dstrdup=xstrdup
+
 lib_LTLIBRARIES =
 
 lib_LTLIBRARIES += libguile-sortsmillff_iconv.la
@@ -58,8 +61,9 @@ dist_libguile_sortsmillff_gsl_la_SOURCES = $(srcdir)/guile_gsl.c
 libguile_sortsmillff_gsl_la_LIBADD =				\
 	$(top_builddir)/auxiliary/libsortsmillff_aux.la	\
 	$(top_builddir)/lib/libgnu.la
-libguile_sortsmillff_gsl_la_CFLAGS = $(AM_CFLAGS)	\
-	$(SWIG_GUILE_EXTRA_CFLAGS)
+libguile_sortsmillff_gsl_la_CFLAGS = $(SWIG_GUILE_CFLAGS)
+
+$(srcdir)/guile_gsl.c: $(top_srcdir)/swig/gsl.i
 
 EXTRA_DIST += guile_gsl.i
 

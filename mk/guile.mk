@@ -67,8 +67,9 @@ s|\bSCM_STRING_CHARS\b|repl_scm_string_chars|g;							\
 s|\bscm_sym2var\s*\(([^,]+),\s*scm_module_lookup_closure\(([^)]+)\),\s*SCM_BOOL_T\)|scm_module_ensure_local_variable(\2,\1)|g;	\
 s|(SCM\s+scm_init_[[:alnum:]_]+_module\s*\(\s*void\s*\)\s*{[^}]*}\s*)$$|VISIBLE \1|;'
 
-SWIG_TO_GUILE = $(SWIG) -I/usr/include $(filter -I%,$(MY_CFLAGS))	\
-	-guile -Linkage module -package sortsmillff
+SWIG_TO_GUILE = $(SWIG) -I$(abs_top_builddir)/swig					\
+-I$(abs_top_srcdir)/swig -I/usr/include $(filter -I%,$(MY_CFLAGS))	\
+-guile -Linkage module -package sortsmillff
 
 swig_to_guile = $(SWIG_TO_GUILE) -o $(1) $(2);	\
 	$(SWIG_TO_GUILE_POSTPROCESS) $(1)

@@ -1211,9 +1211,10 @@ SWIG_Guile_GetArgs (SCM *dest, SCM rest,
 
 /* -------- TYPES TABLE (BEGIN) -------- */
 
-#define SWIGTYPE_p_unsigned_long swig_types[0]
-static swig_type_info *swig_types[2];
-static swig_module_info swig_module = {swig_types, 1, 0, 0, 0, 0};
+#define SWIGTYPE_p_double swig_types[0]
+#define SWIGTYPE_p_unsigned_long swig_types[1]
+static swig_type_info *swig_types[3];
+static swig_module_info swig_module = {swig_types, 2, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1221,8 +1222,11 @@ static swig_module_info swig_module = {swig_types, 1, 0, 0, 0, 0};
 
 
 
-SCM scm_init_gsl_module (void);  
+#include <gsl/gsl_inline.h>
 #include <gsl/gsl_machine.h>
+#include <gsl/gsl_poly.h>
+#include <gsl/gsl_matrix_double.h>
+#include <gsl/gsl_linalg.h>
 
 
 static double gswig_const_GSL_DBL_EPSILON = 2.2204460492503131e-16;
@@ -2121,21 +2125,130 @@ _wrap_GSL_LOG_MACH_EPS(SCM s_0)
 }
 
 
+static SCM
+_wrap_gsl_poly_solve_quadratic (SCM s_0, SCM s_1, SCM s_2)
+{
+#define FUNC_NAME "gsl-poly-solve-quadratic"
+  double arg1 ;
+  double arg2 ;
+  double arg3 ;
+  double *arg4 = (double *) 0 ;
+  double *arg5 = (double *) 0 ;
+  double temp4 ;
+  double temp5 ;
+  SCM gswig_result;
+  SWIGUNUSED int gswig_list_p = 0;
+  int result;
+  
+  {
+    arg4 = &temp4;
+  }
+  {
+    arg5 = &temp5;
+  }
+  {
+    arg1 = (double) scm_num2dbl(s_0, FUNC_NAME);
+  }
+  {
+    arg2 = (double) scm_num2dbl(s_1, FUNC_NAME);
+  }
+  {
+    arg3 = (double) scm_num2dbl(s_2, FUNC_NAME);
+  }
+  result = (int)gsl_poly_solve_quadratic(arg1,arg2,arg3,arg4,arg5);
+  {
+    gswig_result = scm_long2num(result);
+  }
+  {
+    SWIG_APPEND_VALUE(scm_make_real(*arg4));
+  }
+  {
+    SWIG_APPEND_VALUE(scm_make_real(*arg5));
+  }
+  
+  
+  GUILE_MAYBE_VALUES
+  return gswig_result;
+#undef FUNC_NAME
+}
+
+
+static SCM
+_wrap_gsl_poly_solve_cubic (SCM s_0, SCM s_1, SCM s_2)
+{
+#define FUNC_NAME "gsl-poly-solve-cubic"
+  double arg1 ;
+  double arg2 ;
+  double arg3 ;
+  double *arg4 = (double *) 0 ;
+  double *arg5 = (double *) 0 ;
+  double *arg6 = (double *) 0 ;
+  double temp4 ;
+  double temp5 ;
+  double temp6 ;
+  SCM gswig_result;
+  SWIGUNUSED int gswig_list_p = 0;
+  int result;
+  
+  {
+    arg4 = &temp4;
+  }
+  {
+    arg5 = &temp5;
+  }
+  {
+    arg6 = &temp6;
+  }
+  {
+    arg1 = (double) scm_num2dbl(s_0, FUNC_NAME);
+  }
+  {
+    arg2 = (double) scm_num2dbl(s_1, FUNC_NAME);
+  }
+  {
+    arg3 = (double) scm_num2dbl(s_2, FUNC_NAME);
+  }
+  result = (int)gsl_poly_solve_cubic(arg1,arg2,arg3,arg4,arg5,arg6);
+  {
+    gswig_result = scm_long2num(result);
+  }
+  {
+    SWIG_APPEND_VALUE(scm_make_real(*arg4));
+  }
+  {
+    SWIG_APPEND_VALUE(scm_make_real(*arg5));
+  }
+  {
+    SWIG_APPEND_VALUE(scm_make_real(*arg6));
+  }
+  
+  
+  
+  GUILE_MAYBE_VALUES
+  return gswig_result;
+#undef FUNC_NAME
+}
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
 
+static swig_type_info _swigt__p_double = {"_p_double", "double *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_unsigned_long = {"_p_unsigned_long", "SCM *|unsigned long *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
+  &_swigt__p_double,
   &_swigt__p_unsigned_long,
 };
 
+static swig_cast_info _swigc__p_double[] = {  {&_swigt__p_double, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_unsigned_long[] = {  {&_swigt__p_unsigned_long, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
+  _swigc__p_double,
   _swigc__p_unsigned_long,
 };
 
@@ -2441,6 +2554,8 @@ SWIG_init(void)
   scm_c_define_gsubr("GSL-ROOT5-MACH-EPS", 0, 0, 0, (swig_guile_proc) _wrap_GSL_ROOT5_MACH_EPS);
   scm_c_define_gsubr("GSL-ROOT6-MACH-EPS", 0, 0, 0, (swig_guile_proc) _wrap_GSL_ROOT6_MACH_EPS);
   scm_c_define_gsubr("GSL-LOG-MACH-EPS", 0, 0, 0, (swig_guile_proc) _wrap_GSL_LOG_MACH_EPS);
+  scm_c_define_gsubr("gsl-poly-solve-quadratic", 3, 0, 0, (swig_guile_proc) _wrap_gsl_poly_solve_quadratic);
+  scm_c_define_gsubr("gsl-poly-solve-cubic", 3, 0, 0, (swig_guile_proc) _wrap_gsl_poly_solve_cubic);
 }
 
 #ifdef __cplusplus
@@ -2451,7 +2566,7 @@ SWIG_init(void)
 static void SWIG_init_helper(void *data)
 {
 SWIG_init();
-scm_c_export("GSL-DBL-EPSILON", "GSL-SQRT-DBL-EPSILON", "GSL-ROOT3-DBL-EPSILON", "GSL-ROOT4-DBL-EPSILON", "GSL-ROOT5-DBL-EPSILON", "GSL-ROOT6-DBL-EPSILON", "GSL-LOG-DBL-EPSILON", "GSL-DBL-MIN", "GSL-SQRT-DBL-MIN", "GSL-ROOT3-DBL-MIN", "GSL-ROOT4-DBL-MIN", "GSL-ROOT5-DBL-MIN", "GSL-ROOT6-DBL-MIN", "GSL-LOG-DBL-MIN", "GSL-DBL-MAX", "GSL-SQRT-DBL-MAX", "GSL-ROOT3-DBL-MAX", "GSL-ROOT4-DBL-MAX", "GSL-ROOT5-DBL-MAX", "GSL-ROOT6-DBL-MAX", "GSL-LOG-DBL-MAX", "GSL-FLT-EPSILON", "GSL-SQRT-FLT-EPSILON", "GSL-ROOT3-FLT-EPSILON", "GSL-ROOT4-FLT-EPSILON", "GSL-ROOT5-FLT-EPSILON", "GSL-ROOT6-FLT-EPSILON", "GSL-LOG-FLT-EPSILON", "GSL-FLT-MIN", "GSL-SQRT-FLT-MIN", "GSL-ROOT3-FLT-MIN", "GSL-ROOT4-FLT-MIN", "GSL-ROOT5-FLT-MIN", "GSL-ROOT6-FLT-MIN", "GSL-LOG-FLT-MIN", "GSL-FLT-MAX", "GSL-SQRT-FLT-MAX", "GSL-ROOT3-FLT-MAX", "GSL-ROOT4-FLT-MAX", "GSL-ROOT5-FLT-MAX", "GSL-ROOT6-FLT-MAX", "GSL-LOG-FLT-MAX", "GSL-SFLT-EPSILON", "GSL-SQRT-SFLT-EPSILON", "GSL-ROOT3-SFLT-EPSILON", "GSL-ROOT4-SFLT-EPSILON", "GSL-ROOT5-SFLT-EPSILON", "GSL-ROOT6-SFLT-EPSILON", "GSL-LOG-SFLT-EPSILON", "GSL-MACH-EPS", "GSL-SQRT-MACH-EPS", "GSL-ROOT3-MACH-EPS", "GSL-ROOT4-MACH-EPS", "GSL-ROOT5-MACH-EPS", "GSL-ROOT6-MACH-EPS", "GSL-LOG-MACH-EPS", NULL);
+scm_c_export("GSL-DBL-EPSILON", "GSL-SQRT-DBL-EPSILON", "GSL-ROOT3-DBL-EPSILON", "GSL-ROOT4-DBL-EPSILON", "GSL-ROOT5-DBL-EPSILON", "GSL-ROOT6-DBL-EPSILON", "GSL-LOG-DBL-EPSILON", "GSL-DBL-MIN", "GSL-SQRT-DBL-MIN", "GSL-ROOT3-DBL-MIN", "GSL-ROOT4-DBL-MIN", "GSL-ROOT5-DBL-MIN", "GSL-ROOT6-DBL-MIN", "GSL-LOG-DBL-MIN", "GSL-DBL-MAX", "GSL-SQRT-DBL-MAX", "GSL-ROOT3-DBL-MAX", "GSL-ROOT4-DBL-MAX", "GSL-ROOT5-DBL-MAX", "GSL-ROOT6-DBL-MAX", "GSL-LOG-DBL-MAX", "GSL-FLT-EPSILON", "GSL-SQRT-FLT-EPSILON", "GSL-ROOT3-FLT-EPSILON", "GSL-ROOT4-FLT-EPSILON", "GSL-ROOT5-FLT-EPSILON", "GSL-ROOT6-FLT-EPSILON", "GSL-LOG-FLT-EPSILON", "GSL-FLT-MIN", "GSL-SQRT-FLT-MIN", "GSL-ROOT3-FLT-MIN", "GSL-ROOT4-FLT-MIN", "GSL-ROOT5-FLT-MIN", "GSL-ROOT6-FLT-MIN", "GSL-LOG-FLT-MIN", "GSL-FLT-MAX", "GSL-SQRT-FLT-MAX", "GSL-ROOT3-FLT-MAX", "GSL-ROOT4-FLT-MAX", "GSL-ROOT5-FLT-MAX", "GSL-ROOT6-FLT-MAX", "GSL-LOG-FLT-MAX", "GSL-SFLT-EPSILON", "GSL-SQRT-SFLT-EPSILON", "GSL-ROOT3-SFLT-EPSILON", "GSL-ROOT4-SFLT-EPSILON", "GSL-ROOT5-SFLT-EPSILON", "GSL-ROOT6-SFLT-EPSILON", "GSL-LOG-SFLT-EPSILON", "GSL-MACH-EPS", "GSL-SQRT-MACH-EPS", "GSL-ROOT3-MACH-EPS", "GSL-ROOT4-MACH-EPS", "GSL-ROOT5-MACH-EPS", "GSL-ROOT6-MACH-EPS", "GSL-LOG-MACH-EPS", "gsl-poly-solve-quadratic", "gsl-poly-solve-cubic", NULL);
 }
 
 VISIBLE SCM
