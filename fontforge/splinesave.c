@@ -750,14 +750,19 @@ static int FindOrBuildHintSubr(struct hintdb *hdb, uint8_t mask[12], int round) 
     *gb.pt++ = 11;			/* return */
 
     /* Replace an old subroutine */
+    int len = gb.pt - gb.base;
     if ( mh!=NULL ) {
-	free( hdb->subrs->values[mh->subr]);
-	hdb->subrs->values[mh->subr] = (uint8_t *) xstrndup_or_null((char *) gb.base,gb.pt-gb.base);
-	hdb->subrs->lens[mh->subr] = gb.pt-gb.base;
+	free (hdb->subrs->values[mh->subr]);
+	hdb->subrs->values[mh->subr] = xmalloc (len + 1);
+	memcpy (hdb->subrs->values[mh->subr], gb.base, len);
+	hdb->subrs->values[mh->subr][len] = 0; // FIXME: is this byte needed?
+	hdb->subrs->lens[mh->subr] = len;
 	memcpy(mh->mask,mask,sizeof(mh->mask));
     } else {
-	hdb->subrs->values[hdb->subrs->next] = (uint8_t *) xstrndup_or_null((char *) gb.base,gb.pt-gb.base);
-	hdb->subrs->lens[hdb->subrs->next] = gb.pt-gb.base;
+	hdb->subrs->values[hdb->subrs->next] = xmalloc (len + 1);
+	memcpy (hdb->subrs->values[hdb->subrs->next], gb.base, len);
+	hdb->subrs->values[hdb->subrs->next][len] = 0; // FIXME: is this byte needed?
+	hdb->subrs->lens[hdb->subrs->next] = len;
 
 	mh = xcalloc(1,sizeof(struct mhlist));
 	memcpy(mh->mask,mask,sizeof(mh->mask));
