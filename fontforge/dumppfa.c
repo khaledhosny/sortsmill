@@ -1240,7 +1240,10 @@ static struct pschars *initsubrs(int needsflex,MMSet *mm) {
     sub->values = xmalloc(10*sizeof(uint8_t *));
     for ( i=0; i<5; ++i ) {
 	++sub->next;
-	sub->values[i] = (uint8_t *) xstrndup_or_null((const char *) subrs[i],subrslens[i]);
+	sub->values[i] = xmalloc (subrslens[i] + 1);
+	memcpy (sub->values[i], subrs[i], subrslens[i]);
+	sub->values[i][subrslens[i]] = 0; /* FIXME: Is this byte
+					     needed? */
 	sub->lens[i] = subrslens[i];
     }
     sub->next = 5;
@@ -1248,7 +1251,10 @@ static struct pschars *initsubrs(int needsflex,MMSet *mm) {
 	static int cnts[] = { 1,2,3,4,6 };
 	for ( ; i<10 && cnts[i-5]*mm->instance_count<22; ++i ) {
 	    ++sub->next;
-	    sub->values[i] = (uint8_t *) xstrndup_or_null((const char *) subrs[i],subrslens[i]);
+	    sub->values[i] = xmalloc (subrslens[i] + 1);
+	    memcpy (sub->values[i], subrs[i], subrslens[i]);
+	    sub->values[i][subrslens[i]] = 0; /* FIXME: Is this byte
+						 needed? */
 	    sub->values[i][0] += cnts[i-5]*mm->instance_count;
 	    sub->lens[i] = subrslens[i];
 	}
