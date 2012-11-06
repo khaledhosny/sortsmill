@@ -39,6 +39,7 @@
 #include <string.h>
 #include <gicons.h>
 #include <gkeysym.h>
+#include <xgc.h>
 #include "psfont.h"
 #include "savefont.h"
 
@@ -2334,7 +2335,7 @@ GFD_ToggleFontLog (GGadget *g, GEvent *e)
       int i, visible = GGadgetIsChecked (g);
 
       for (i = 0; cids[i] != 0; ++i)
-          GGadgetSetVisible (GWidgetGetControl (d->gw, cids[i]), visible);
+        GGadgetSetVisible (GWidgetGetControl (d->gw, cids[i]), visible);
 
       GWidgetToDesiredSize (d->gw);
     }
@@ -2527,9 +2528,22 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
   GRect pos;
   GWindow gw;
   GWindowAttrs wattrs;
-  GGadgetCreateData gcd[20 + 2 * 48 + 5], *varray[13], *hvarray[28],
-    *famarray[3 * 52 + 1], *harray[10], boxes[7];
-  GTextInfo label[20 + 2 * 48 + 4];
+  GGadgetCreateData *gcd =
+    (GGadgetCreateData *) x_gc_malloc ((20 + 2 * 48 + 5) *
+                                       sizeof (GGadgetCreateData));
+  GGadgetCreateData **varray =
+    (GGadgetCreateData **) x_gc_malloc (13 * sizeof (GGadgetCreateData *));
+  GGadgetCreateData **hvarray =
+    (GGadgetCreateData **) x_gc_malloc (46 * sizeof (GGadgetCreateData *));
+  GGadgetCreateData **famarray =
+    (GGadgetCreateData **) x_gc_malloc ((3 * 52 + 1) *
+                                        sizeof (GGadgetCreateData *));
+  GGadgetCreateData **harray =
+    (GGadgetCreateData **) x_gc_malloc (10 * sizeof (GGadgetCreateData *));
+  GGadgetCreateData *boxes =
+    (GGadgetCreateData *) x_gc_malloc (7 * sizeof (GGadgetCreateData));
+  GTextInfo *label =
+    (GTextInfo *) x_gc_malloc ((20 + 2 * 48 + 4) * sizeof (GTextInfo));
   struct gfc_data d;
   GGadget *pulldown, *files, *tf;
   int hvi, i, j, k, f, old, ofs, y, fc, dupfc, dupstyle, rk, vk;
@@ -2714,9 +2728,6 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
     pos.height = GDrawPointsToPixels (NULL, 310);
   gw = GDrawCreateTopWindow (NULL, &pos, e_h, &d, &wattrs);
 
-  memset (&label, 0, sizeof (label));
-  memset (&gcd, 0, sizeof (gcd));
-  memset (&boxes, 0, sizeof (boxes));
   gcd[0].gd.pos.x = 12;
   gcd[0].gd.pos.y = 6;
   gcd[0].gd.pos.width =
@@ -3250,8 +3261,8 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
           if (old == bf_none)
             gcd[k].gd.flags &= ~gg_enabled;
           temp =
-            familysfs[fc][j]->
-            cidmaster ? familysfs[fc][j]->cidmaster : familysfs[fc][j];
+            familysfs[fc][j]->cidmaster ? familysfs[fc][j]->
+            cidmaster : familysfs[fc][j];
           label[k].text = BitmapList (temp);
           gcd[k].gd.label = &label[k];
           gcd[k].gd.cid = CID_Family + i * 10 + 1;
