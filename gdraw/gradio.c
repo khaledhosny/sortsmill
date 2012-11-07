@@ -561,18 +561,8 @@ static void GRadioInit() {
     _GGadgetCopyDefaultBox(&checkbox_box);
     _GGadgetCopyDefaultBox(&checkbox_on_box);
     _GGadgetCopyDefaultBox(&checkbox_off_box);
-    radio_box.padding = 0;
-    radio_box.border_type = bt_none;
-    radio_on_box.border_type = bt_raised;
-    radio_off_box.border_type = bt_lowered;
-    radio_on_box.border_shape = radio_off_box.border_shape = bs_diamond;
-    radio_on_box.flags = radio_off_box.flags |= box_do_depressed_background;
-
-    checkbox_box.padding = 0;
-    checkbox_box.border_type = bt_none;
-    checkbox_on_box.border_type = bt_raised;
-    checkbox_off_box.border_type = bt_lowered;
-    checkbox_on_box.flags = checkbox_off_box.flags |= box_do_depressed_background;
+    radio_box.padding = radio_on_box.padding = radio_off_box.padding = 0;
+    checkbox_box.padding = checkbox_on_box.padding = checkbox_off_box.padding = 0;
     checkbox_font = _GGadgetInitDefaultBox("GRadio.",&radio_box,NULL);
     checkbox_font = _GGadgetInitDefaultBox("GCheckBox.",&checkbox_box,checkbox_font);
     _GGadgetInitDefaultBox("GRadioOn.",&radio_on_box,NULL);
@@ -587,14 +577,14 @@ static void GRadioInit() {
 	checkbox_on_box.depressed_background = checkbox_on_box.active_border;
 	checkbox_off_box.depressed_background = checkbox_off_box.main_background;
     }
-    radon = GGadgetResourceFindImage("GRadioOn.Image",NULL);
-    radoff = GGadgetResourceFindImage("GRadioOff.Image",NULL);
-    checkon = GGadgetResourceFindImage("GCheckBoxOn.Image",NULL);
-    checkoff = GGadgetResourceFindImage("GCheckBoxOff.Image",NULL);
-    raddison = GGadgetResourceFindImage("GRadioOn.DisabledImage",NULL);
-    raddisoff = GGadgetResourceFindImage("GRadioOff.DisabledImage",NULL);
-    checkdison = GGadgetResourceFindImage("GCheckBoxOn.DisabledImage",NULL);
-    checkdisoff = GGadgetResourceFindImage("GCheckBoxOff.DisabledImage",NULL);
+    radon = GGadgetResourceFindImage("GRadioOn.Image", "radio_on.png");
+    radoff = GGadgetResourceFindImage("GRadioOff.Image", "radio_off.png");
+    checkon = GGadgetResourceFindImage("GCheckBoxOn.Image", "check_on.png");
+    checkoff = GGadgetResourceFindImage("GCheckBoxOff.Image", "check_off.png");
+    raddison = GGadgetResourceFindImage("GRadioOn.DisabledImage", "radio_on.png");
+    raddisoff = GGadgetResourceFindImage("GRadioOff.DisabledImage", "radio_off.png");
+    checkdison = GGadgetResourceFindImage("GCheckBoxOn.DisabledImage", "check_on.png");
+    checkdisoff = GGadgetResourceFindImage("GCheckBoxOff.DisabledImage", "check_off.png");
     gradio_inited = true;
 }
 
