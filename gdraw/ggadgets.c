@@ -36,18 +36,18 @@
 #include "gkeysym.h"
 #include "ustring.h"
 
-VISIBLE GBox _ggadget_Default_Box = { bt_raised, bs_rect, 2, 2, 0, 0,
-  COLOR_CREATE (0xd8, 0xd8, 0xd8),      /* border left *//* brightest */
-  COLOR_CREATE (0xd0, 0xd0, 0xd0),      /* border top */
-  COLOR_CREATE (0x80, 0x80, 0x80),      /* border right */
-  COLOR_CREATE (0x66, 0x66, 0x66),      /* border bottom *//* darkest */
-  COLOR_DEFAULT,                /* normal background */
-  COLOR_DEFAULT,                /* normal foreground */
-  COLOR_CREATE (0xd8, 0xd8, 0xd8),      /* disabled background */
-  COLOR_CREATE (0x66, 0x66, 0x66),      /* disabled foreground */
-  COLOR_CREATE (0xff, 0xff, 0x00),      /* active border */
-  COLOR_CREATE (0xa0, 0xa0, 0xa0),      /* pressed background */
-  COLOR_CREATE (0x00, 0x00, 0x00),      /* gradient bg end */
+VISIBLE GBox _ggadget_Default_Box = { bt_none, bs_rect, 1, 2, 0, 0,
+  COLOR_CREATE (0x90, 0x8f, 0x8e),      /* border left *//* brightest */
+  COLOR_CREATE (0x90, 0x8f, 0x8e),      /* border top */
+  COLOR_CREATE (0x90, 0x8f, 0x8e),      /* border right */
+  COLOR_CREATE (0x90, 0x8f, 0x8e),      /* border bottom *//* darkest */
+  COLOR_DEFAULT,                        /* normal background */
+  COLOR_DEFAULT,                        /* normal foreground */
+  COLOR_DEFAULT,                        /* disabled background */
+  COLOR_CREATE (0xb5, 0xb4, 0xb3),      /* disabled foreground */
+  COLOR_CREATE (0x88, 0xb2, 0xde),      /* active border */
+  COLOR_DEFAULT,                        /* pressed background */
+  COLOR_DEFAULT,                        /* gradient bg end */
   COLOR_CREATE (0x00, 0x00, 0x00),      /* border inner */
   COLOR_CREATE (0x00, 0x00, 0x00),      /* border outer */
 };
@@ -55,7 +55,7 @@ VISIBLE GBox _ggadget_Default_Box = { bt_raised, bs_rect, 2, 2, 0, 0,
 GBox _GListMark_Box = GBOX_EMPTY;       /* Don't initialize here */
 FontInstance *_ggadget_default_font = NULL;
 static FontInstance *popup_font = NULL;
-int _GListMarkSize = 12;
+int _GListMarkSize = 8;
 GResImage *_GListMark_Image = NULL, *_GListMark_DisImage;
 static int _GGadget_FirstLine = 6;
 static int _GGadget_LeftMargin = 6;
@@ -489,20 +489,31 @@ GGadgetInit (void)
   };
   if (!_ggadget_inited)
     {
+      Color _def_fg, _def_bg;
+      _def_fg = GDrawGetDefaultForeground (NULL);
+      _def_bg = GDrawGetDefaultBackground (NULL);
+
       _ggadget_inited = true;
+
       GGadgetSetImagePath (GResourceFindString ("GGadget.ImagePath"));
-      _ggadget_Default_Box.main_background = GDrawGetDefaultBackground (NULL);
-      _ggadget_Default_Box.main_foreground = GDrawGetDefaultForeground (NULL);
-      _ggadget_default_font =
-        _GGadgetInitDefaultBox ("GGadget.", &_ggadget_Default_Box, NULL);
+      _ggadget_Default_Box.main_background = _def_bg;
+      _ggadget_Default_Box.main_foreground = _def_fg;
+      _ggadget_Default_Box.disabled_background = _def_bg;
+      _ggadget_Default_Box.depressed_background = _def_bg;
+      _ggadget_Default_Box.gradient_bg_end = _def_bg;
+      _ggadget_default_font = _GGadgetInitDefaultBox ("GGadget.", &_ggadget_Default_Box, NULL);
+
       _GGadgetCopyDefaultBox (&_GListMark_Box);
-      _GListMark_Box.border_width = _GListMark_Box.padding = 1;
-        /*_GListMark_Box.flags = 0;*/
+      _GListMark_Box.border_width = 2;
+      _GListMark_Box.padding = 0;
+      _GListMark_Box.border_brightest = _GListMark_Box.border_brighter = 0xfcfbfa;
+      _GListMark_Box.border_darkest = _GListMark_Box.border_darker = 0xdddcdb;
+      _GListMark_Box.border_inner = 0xadacab;
       _GGadgetInitDefaultBox ("GListMark.", &_GListMark_Box, NULL);
+
       _GListMarkSize = GResourceFindInt ("GListMark.Width", _GListMarkSize);
-      _GListMark_Image = GGadgetResourceFindImage ("GListMark.Image", NULL);
-      _GListMark_DisImage =
-        GGadgetResourceFindImage ("GListMark.DisabledImage", NULL);
+      _GListMark_Image = GGadgetResourceFindImage ("GListMark.Image", "downarrow.png");
+      _GListMark_DisImage = GGadgetResourceFindImage ("GListMark.DisabledImage", "downarrow.png");
       if (_GListMark_Image != NULL && _GListMark_Image->image != NULL)
         {
           int size = GDrawPixelsToPoints (NULL,

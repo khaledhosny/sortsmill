@@ -514,19 +514,19 @@ bool TryGGadgetImageCache(GImage *image, char *name) {
 return (loaded != NULL);
 }
 
-GResImage *GGadgetResourceFindImage(char *name, GImage *def) {
+GResImage *GGadgetResourceFindImage(char *name, char *def) {
     GImage *ret;
     char *fname;
     GResImage *ri;
 
     fname = GResourceFindString(name);
-    if ( fname==NULL && def==NULL )
+    if (fname == NULL)
+	fname = xstrdup_or_null(def);
+    if (fname == NULL)
 return( NULL );
+
     ri = xcalloc(1,sizeof(GResImage));
     ri->filename = fname;
-    ri->image = def;
-    if ( fname==NULL )
-return( ri );
 
     if ( *fname=='/' )
 	ret = GImageRead(fname);

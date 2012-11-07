@@ -536,7 +536,7 @@ typedef struct gresimage {
     GImage *image;
     char *filename;
 } GResImage;
-GResImage *GGadgetResourceFindImage(char *name, GImage *def);
+GResImage *GGadgetResourceFindImage(char *name, char *def);
 
 VISIBLE void GGadgetSetImageDir(char *dir);
 void GGadgetSetImagePath(char *path);

@@ -963,16 +963,16 @@ return;
     GGadgetInit();
     _GGadgetCopyDefaultBox(&label_box);
     _GGadgetCopyDefaultBox(&_GGadget_button_box);
-#ifdef __Mac
+    _GGadget_button_box.main_background = 0xffffff;
+    _GGadget_button_box.gradient_bg_end = 0xe5e4e3;
+    _GGadget_button_box.border_inner = 0xf9f8f7;
+    _GGadget_button_box.border_outer = 0xdddcdb;
     _GGadget_button_box.border_type = bt_box;
-    _GGadget_button_box.border_width = 1;
     _GGadget_button_box.border_shape = bs_roundrect;
-    _GGadget_button_box.flags |= box_do_depressed_background;
-    _GGadget_button_box.padding = 1;
-#else
+    _GGadget_button_box.rr_radius = 3;
     _GGadget_button_box.flags |= box_foreground_border_inner|box_foreground_border_outer|
-	/*box_active_border_inner|*/box_do_depressed_background|box_draw_default;
-#endif
+	box_do_depressed_background|box_gradient_bg;
+
     label_box.border_type = bt_none;
     label_box.border_width = label_box.padding = /*label_box.flags =*/ 0;
     button_font = _GGadgetInitDefaultBox("GButton.",&_GGadget_button_box,NULL);
@@ -980,19 +980,11 @@ return;
     shift_on_press = GResourceFindBool("GButton.ShiftOnPress",false);
     _GGadget_droplist_box = _GGadget_button_box;
     _GGadget_defaultbutton_box = _GGadget_button_box;
-    _GGadget_cancelbutton_box  = _GGadget_button_box;
-#ifdef __Mac
-    _GGadget_defaultbutton_box.flags |= box_gradient_bg;
-    _GGadget_defaultbutton_box.main_background = 0x64a4f2;
-    _GGadget_defaultbutton_box.gradient_bg_end = 0xb7ceeb;
-    _GGadget_cancelbutton_box.flags |= box_gradient_bg;
-    _GGadget_cancelbutton_box.main_background = 0xf27458;
-    _GGadget_cancelbutton_box.gradient_bg_end = 0xebb4a0;
-    _GGadget_droplist_box.border_type = _ggadget_Default_Box.border_type;
-    _GGadget_droplist_box.border_width = _ggadget_Default_Box.border_width;
-    _GGadget_droplist_box.border_shape = _ggadget_Default_Box.border_shape;
-#endif
-    _GGadget_colorbutton_box  = _GGadget_button_box;
+    _GGadget_cancelbutton_box = _GGadget_button_box;
+    _GGadget_colorbutton_box = _GGadget_button_box;
+    _GGadget_defaultbutton_box.border_brightest = _GGadget_defaultbutton_box.border_brighter
+	= _GGadget_defaultbutton_box.border_darkest = _GGadget_defaultbutton_box.border_darker = 0x598ec6;
+    _GGadget_defaultbutton_box.border_outer = 0xbcd2ea;
     _GGadgetInitDefaultBox("GDefaultButton.",&_GGadget_defaultbutton_box,NULL);
     _GGadgetInitDefaultBox("GCancelButton.",&_GGadget_cancelbutton_box,NULL);
     _GGadgetInitDefaultBox("GDropList.",&_GGadget_droplist_box,NULL);
