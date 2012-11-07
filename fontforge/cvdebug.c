@@ -2195,7 +2195,7 @@ return;
 	dv->ii.instrdata = &dv->id;
 
 	if ( monofont==NULL ) {
-	    monofont = GDrawNewFont(cv->gw, MONO_UI_FAMILIES, -12, 400, fs_none);
+	    monofont = GDrawNewFont(cv->gw, "monospace", -12, 400, fs_none);
 	    monofont = GResourceFindFont("DebugView.Font",monofont);
 	}
 	dv->ii.gfont = monofont;

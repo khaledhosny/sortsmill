@@ -255,7 +255,7 @@ void GProgressStartIndicator(
 
 	root = GDrawGetRoot(NULL);
 	if ( progress_font == NULL ) {
-	    progress_font = GDrawNewFont(root, MONO_UI_FAMILIES, 12, 400, fs_none);
+	    progress_font = GDrawNewFont(root, "monospace", 12, 400, fs_none);
 	}
 	new_->font = progress_font;
 	GDrawSetFont(root, progress_font);

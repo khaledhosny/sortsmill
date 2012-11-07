@@ -775,7 +775,7 @@ return;
     bd.value_x = GDrawPointsToPixels(bd.gw,135);
 
     if ( font==NULL ) {
-	font = GDrawNewFont(gw, SANS_UI_FAMILIES, 10, 400, fs_none);
+	font = GDrawNewFont(gw, "sans-serif", 10, 400, fs_none);
 	font = GResourceFindFont("BDFProperties.Font",font);
     }
     bd.font = font;

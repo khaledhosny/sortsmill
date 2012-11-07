@@ -2522,7 +2522,7 @@ static void GTextFieldInit() {
     memset(&rq,0,sizeof(rq));
     GGadgetInit();
     GDrawDecomposeFont(_ggadget_default_font,&rq);
-    _gtextfield_font = GDrawNewFont(NULL, MONO_UI_FAMILIES, rq.point_size, rq.weight, rq.style);
+    _gtextfield_font = GDrawNewFont(NULL, "monospace", rq.point_size, rq.weight, rq.style);
     _GGadgetCopyDefaultBox(&_GGadget_gtextfield_box);
     _GGadget_gtextfield_box.padding = 3;
     /*_GGadget_gtextfield_box.flags = box_active_border_inner;*/

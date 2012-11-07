@@ -790,7 +790,7 @@ void SFHistogram(SplineFont *sf,int layer, struct psdict *private, uint8_t *sele
     hist.gw = gw = GDrawCreateTopWindow(NULL,&pos,hist_e_h,&hist,&wattrs);
 
     if ( font == NULL ) {
-	font = GDrawNewFont(NULL, SANS_UI_FAMILIES, 10, 400, fs_none);
+	font = GDrawNewFont(NULL, "sans-serif", 10, 400, fs_none);
 	font = GResourceFindFont("Histogram.Font",font);
     }
     hist.font = font;

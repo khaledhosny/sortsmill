@@ -93,10 +93,5 @@ extern int default_font_filter_index;
 # define ksm_alt	ksm_capslock
 #endif
 
-#define SERIF_UI_FAMILIES	"dejavu serif,times,caslon,serif,clearlyu,unifont"
-#define SANS_UI_FAMILIES	"dejavu sans,helvetica,caliban,sans,clearlyu,unifont"
-#define MONO_UI_FAMILIES	"courier,monospace,clearlyu,unifont"
-#define FIXED_UI_FAMILIES	"monospace,fixed,clearlyu,unifont"
-
 #define isprivateuse(enc) ((enc)>=0xe000 && (enc)<=0xf8ff)
 #endif

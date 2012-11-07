@@ -5401,7 +5401,7 @@ return;
     valwin->gw = gw = GDrawCreateTopWindow(NULL,&pos,vw_e_h,valwin,&wattrs);
 
     if ( valfont==NULL ) {
-	valfont = GDrawNewFont(gw, SANS_UI_FAMILIES, 11, 400, fs_none);
+	valfont = GDrawNewFont(gw, "sans-serif", 11, 400, fs_none);
 	valfont = GResourceFindFont("Validate.Font",valfont);
     }
     valwin->font = valfont;

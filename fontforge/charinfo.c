@@ -5065,7 +5065,7 @@ return;
 	GHVBoxFitWindow(mbox[0].ret);
 
 	if ( font==NULL ) {
-	    font = GDrawNewFont(ci->gw, MONO_UI_FAMILIES, 12, 400, fs_none);
+	    font = GDrawNewFont(ci->gw, "monospace", 12, 400, fs_none);
 	    font = GResourceFindFont("GlyphInfo.Font",font);
 	}
 	for ( i=0; i<5; ++i )

@@ -14491,7 +14491,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
 
   if (fi_font == NULL)
     {
-      fi_font = GDrawNewFont (gw, SANS_UI_FAMILIES, 12, 400, fs_none);
+      fi_font = GDrawNewFont (gw, "sans-serif", 12, 400, fs_none);
       fi_font = GResourceFindFont ("FontInfo.Font", fi_font);
     }
   d->font = fi_font;

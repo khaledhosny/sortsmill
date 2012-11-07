@@ -525,7 +525,7 @@ static void CreateErrorWindow(void) {
     pos.y = size.height - pos.height - 30;
     errdata.gw = gw = GDrawCreateTopWindow(NULL,&pos,warnings_e_h,&errdata,&wattrs);
 
-    errdata.font = GDrawNewFont(NULL, SANS_UI_FAMILIES, 10, 400, fs_none);
+    errdata.font = GDrawNewFont(NULL, "sans-serif", 10, 400, fs_none);
     errdata.font = GResourceFindFont("Warnings.Font",errdata.font);
     GDrawGetFontMetrics(errdata.gw,errdata.font,&as,&ds,&ld);
     errdata.as = as;

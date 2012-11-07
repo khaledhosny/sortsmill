@@ -857,7 +857,7 @@ static void InstrDlgCreate(struct instrdata *id,char *title) {
     GDrawSetVisible(iv->instrinfo.v,true);
 
     if ( font==NULL ) {
-	font = GDrawNewFont(gw, MONO_UI_FAMILIES, -12, 400, fs_none);
+	font = GDrawNewFont(gw, "monospace", -12, 400, fs_none);
 	font = GResourceFindFont("TTInstruction.Font",font);
     }
     iv->instrinfo.gfont = font;
@@ -1544,7 +1544,7 @@ static void cvtCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32_t tag) {
     GDrawSetVisible(sv->v,true);
 
     if ( font==NULL ) {
-	font = GDrawNewFont(gw, MONO_UI_FAMILIES, -12, 400, fs_none);
+	font = GDrawNewFont(gw, "monospace", -12, 400, fs_none);
 	font = GResourceFindFont("CVT.Font",font);
     }
     sv->gfont = font;

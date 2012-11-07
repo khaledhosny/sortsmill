@@ -688,10 +688,10 @@ return( NULL );
     SVSetTitle(sv);
 
     if ( plainfont==NULL ) {
-	plainfont = GDrawNewFont(NULL, SANS_UI_FAMILIES, 12, 400, fs_none);
+	plainfont = GDrawNewFont(NULL, "sans-serif", 12, 400, fs_none);
 	plainfont = GResourceFindFont("SearchView.Font",plainfont);
 
-	boldfont = GDrawNewFont(NULL, SANS_UI_FAMILIES, 12, 700, fs_none);
+	boldfont = GDrawNewFont(NULL, "sans-serif", 12, 700, fs_none);
 	boldfont = GResourceFindFont("SearchView.BoldFont",boldfont);
     }
     sv->plain = plainfont; sv->bold = boldfont;

@@ -2359,7 +2359,7 @@ BitmapView *BitmapViewCreate(BDFChar *bc, BDFFont *bdf, FontView *fv, int enc) {
 	/*  so the font I used to use isn't found, and a huge monster is */
 	/*  inserted instead */
 	if ( infofamily==NULL )
-	    infofamily = SANS_UI_FAMILIES;
+	    infofamily = "sans-serif";
     }
 
     bv->small = GDrawNewFont(gw, infofamily, -7, 400, fs_none);

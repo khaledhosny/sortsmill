@@ -4717,7 +4717,7 @@ MetricsView *MetricsViewCreate(FontView *fv,SplineChar *sc,BDFFont *bdf) {
     mv->vsb = GScrollBarCreate(gw,&gd,mv);
 
     if ( mvfont==NULL ) {
-	mvfont = GDrawNewFont(gw, SANS_UI_FAMILIES, -12, 400, fs_none);
+	mvfont = GDrawNewFont(gw, "sans-serif", -12, 400, fs_none);
 	mvfont = GResourceFindFont("MetricsView.Font",mvfont);
     }
     mv->font = mvfont;

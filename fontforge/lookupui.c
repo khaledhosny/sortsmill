@@ -5167,10 +5167,10 @@ static int kern_format_dlg( SplineFont *sf, int def_layer,
     kf.gw = GDrawCreateTopWindow(NULL,&pos,kf_e_h,&kf,&wattrs);
 
     if ( plainfont==NULL ) {
-	plainfont = GDrawNewFont(NULL, SANS_UI_FAMILIES, 12, 400, fs_none);
+	plainfont = GDrawNewFont(NULL, "sans-serif", 12, 400, fs_none);
 	plainfont = GResourceFindFont("KernFormat.Font",plainfont);
 
-	boldfont = GDrawNewFont(NULL, SANS_UI_FAMILIES, 12, 700, fs_none);
+	boldfont = GDrawNewFont(NULL, "sans-serif", 12, 700, fs_none);
 	boldfont = GResourceFindFont("KernFormat.BoldFont",boldfont);
     }
     kf.plain = plainfont; kf.bold = boldfont;

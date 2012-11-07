@@ -1212,7 +1212,7 @@ return( cvtools );
     }
 
     if ( toolsfont==NULL ) {
-	toolsfont = GDrawNewFont(NULL, SANS_UI_FAMILIES, -10, 400, fs_none);
+	toolsfont = GDrawNewFont(NULL, "sans-serif", -10, 400, fs_none);
 	toolsfont = GResourceFindFont("ToolsPalette.Font",toolsfont);
     }
 
@@ -1624,7 +1624,7 @@ return;
     memset(&gcd,0,sizeof(gcd));
 
     if ( layersfont==NULL ) {
-	layersfont = GDrawNewFont(cvlayers2, SANS_UI_FAMILIES, -12, 400, fs_none);
+	layersfont = GDrawNewFont(cvlayers2, "sans-serif", -12, 400, fs_none);
 	layersfont = GResourceFindFont("LayersPalette.Font",layersfont);
     }
 
@@ -2632,7 +2632,7 @@ return(bvlayers);
     memset(&boxes,0,sizeof(boxes));
 
     if ( layersfont==NULL ) {
-	layersfont = GDrawNewFont(cvlayers2, SANS_UI_FAMILIES, -12, 400, fs_none);
+	layersfont = GDrawNewFont(cvlayers2, "sans-serif", -12, 400, fs_none);
 	layersfont = GResourceFindFont("LayersPalette.Font",layersfont);
     }
     for ( i=0; i<sizeof(label)/sizeof(label[0]); ++i )

@@ -59,7 +59,7 @@ int home_char='A';
 int compact_font_on_open=0;
 int navigation_mask = 0;		/* Initialized in startui.c */
 
-static char *fv_fontnames = "fontview," MONO_UI_FAMILIES;
+static char *fv_fontnames = "fontview," "monospace";
 
 #define	FV_LAB_HEIGHT	15
 

@@ -556,7 +556,7 @@ static void GroupWCreate(struct groupdlg *grp,GRect *pos) {
     static GFont *font=NULL;
 
     if ( font==NULL ) {
-	font = GDrawNewFont(grp->gw, SANS_UI_FAMILIES, 12, 400, fs_none);
+	font = GDrawNewFont(grp->gw, "sans-serif", 12, 400, fs_none);
 	font = GResourceFindFont("Groups.Font",font);
     }
     grp->font = font;

@@ -249,7 +249,7 @@ GResource_font_cvt (char *val, void *def)
   char *freeme = NULL;
 
   memset (&rq, 0, sizeof (rq));
-  rq.utf8_family_name = SANS_UI_FAMILIES;
+  rq.utf8_family_name = "sans-serif";
   rq.point_size = 10;
   rq.weight = 400;
   rq.style = 0;
@@ -456,7 +456,7 @@ _GGadgetInitDefaultBox (char *class, GBox * box, FontInstance * deffont)
 
   if (fi == NULL)
     {
-      fi = GDrawNewFont (NULL, SANS_UI_FAMILIES, 10, 400, fs_none);
+      fi = GDrawNewFont (NULL, "sans-serif", 10, 400, fs_none);
       if (fi == NULL)
         GDrawFatalError ("Cannot find a default font for gadgets");
     }
@@ -534,7 +534,7 @@ GGadgetInit (void)
       if (popup_font == NULL)
         {
           popup_font =
-            GDrawNewFont (NULL, SANS_UI_FAMILIES, localeptsize (), 400,
+            GDrawNewFont (NULL, "sans-serif", localeptsize (), 400,
                           fs_none);
           if (popup_font == NULL)
             popup_font = _ggadget_default_font;
