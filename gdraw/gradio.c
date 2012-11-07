@@ -561,6 +561,7 @@ static void GRadioInit() {
     _GGadgetCopyDefaultBox(&checkbox_box);
     _GGadgetCopyDefaultBox(&checkbox_on_box);
     _GGadgetCopyDefaultBox(&checkbox_off_box);
+    radio_box.border_type = checkbox_box.border_type = bt_none;
     radio_box.padding = radio_on_box.padding = radio_off_box.padding = 0;
     checkbox_box.padding = checkbox_on_box.padding = checkbox_off_box.padding = 0;
     checkbox_font = _GGadgetInitDefaultBox("GRadio.",&radio_box,NULL);
