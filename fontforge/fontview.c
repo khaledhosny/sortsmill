@@ -6953,7 +6953,7 @@ static FontView *FontView_Create(SplineFont *sf, int hide) {
 
     if ( !fv_fs_init ) {
 	GResEditFind( fontview_re, "FontView.");
-	view_bgcol = GResourceFindColor("View.Background",GDrawGetDefaultBackground(NULL));
+	view_bgcol = GResourceFindColor("View.Background", COLOR_CREATE(0xff,0xff,0xff));
 	fv_fs_init = true;
     }
 
