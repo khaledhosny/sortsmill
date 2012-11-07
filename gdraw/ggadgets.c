@@ -64,8 +64,7 @@ int _GGadget_Skip = 6;
 int _GGadget_TextImageSkip = 4;
 char *_GGadget_ImagePath = NULL;
 static int _ggadget_inited = 0;
-static Color popup_foreground = 0, popup_background =
-COLOR_CREATE (0xff, 0xff, 0xc0);
+static Color popup_foreground = 0x222222, popup_background = 0xbcd2ea;
 static int popup_delay = 1000, popup_lifetime = 20000;
 
 static GResInfo popup_ri;
@@ -473,12 +472,12 @@ localeptsize (void)
     loc = getenv ("LANG");
 
   if (loc == NULL)
-    return (-10);
+    return (8);
   else if (strncmp (loc, "ja", 2) == 0 ||
            strncmp (loc, "zh", 2) == 0 || strncmp (loc, "ko", 2) == 0)
-    return (-16);
+    return (12);
 
-  return (-10);
+  return (8);
 }
 
 void
