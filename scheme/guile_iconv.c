@@ -20,18 +20,9 @@
 #include <iconv.h>
 #include <libguile.h>
 
-// Export symbols that are very unlikely to conflict, taking advantage
-// of Guile’s dependence on ltdl. See "Using libltdl" in the libtool
-// manual to learn how this method works.
-//
-// We assume these very long symbol names can be handled.
-//
-#define init_guile_sortsmillff_iconv				\
-  libguile_sortsmillff_iconv_LTX_init_guile_sortsmillff_iconv
-#define scm_embedded_utf7_to_string				\
-  libguile_sortsmillff_iconv_LTX_scm_embedded_utf7_to_string
-
 VISIBLE void init_guile_sortsmillff_iconv (void);
+
+// FIXME: Move this to a header file.
 VISIBLE SCM scm_embedded_utf7_to_string (SCM str);
 
 SCM

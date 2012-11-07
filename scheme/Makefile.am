@@ -31,11 +31,12 @@ include $(top_srcdir)/mk/recipe-tools.mk
 #--------------------------------------------------------------------------
 
 nobase_dist_guileobjmodule_DATA = sortsmillff/gsl.scm	\
-	sortsmillff/iconv.scm sortsmillff/sfd-to-sxml.scm
+	sortsmillff/iconv.scm sortsmillff/bernstein.scm		\
+	sortsmillff/sfd-to-sxml.scm
 
 nobase_nodist_guileobjmodule_DATA = sortsmillff/gsl.go				\
 	sortsmillff/i18n.scm sortsmillff/i18n.go sortsmillff/iconv.go	\
-	sortsmillff/sfd-to-sxml.go
+	sortsmillff/bernstein.go sortsmillff/sfd-to-sxml.go
 
 sortsmillff/sfd-to-sxml.go: sortsmillff/gsl.go sortsmillff/i18n.go
 sortsmillff/i18n.go: libguile-sortsmillff_iconv.la
@@ -55,6 +56,12 @@ lib_LTLIBRARIES =
 lib_LTLIBRARIES += libguile-sortsmillff_iconv.la
 libguile_sortsmillff_iconv_la_SOURCES = guile_iconv.c
 libguile_sortsmillff_iconv_la_LIBADD = $(top_builddir)/lib/libgnu.la
+
+lib_LTLIBRARIES += libguile-sortsmillff_bernstein.la
+libguile_sortsmillff_bernstein_la_SOURCES = guile_bernstein.c
+libguile_sortsmillff_bernstein_la_LIBADD =			\
+	$(top_builddir)/auxiliary/libsortsmillff_aux.la	\
+	$(top_builddir)/lib/libgnu.la
 
 lib_LTLIBRARIES += libguile-sortsmillff_gsl.la
 dist_libguile_sortsmillff_gsl_la_SOURCES = $(srcdir)/guile_gsl.c

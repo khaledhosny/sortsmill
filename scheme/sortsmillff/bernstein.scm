@@ -15,6 +15,13 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-(define-module (sortsmillff sfd-to-sxml)
-;  #:export (export some stuff)
-  #:use-module (srfi srfi-4))           ; Uniform vectors.
+(define-module (sortsmillff bernstein)
+  #:export (f64vector-sbern->bern
+            f64vector-bern->sbern
+            f64vector-eval-sbern
+            f64vector-eval-bern
+            f64vector-evaldc-sbern
+            f64vector-evaldc-bern))
+
+(load-extension "libguile-sortsmillff_bernstein"
+                "init_guile_sortsmillff_bernstein")

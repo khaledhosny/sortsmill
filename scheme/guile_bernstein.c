@@ -16,76 +16,126 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include <libguile.h>
+#include <bernstein.h>
+#include <xalloc.h>
 
-// // Export symbols that are very unlikely to conflict, taking advantage
-// // of Guile’s dependence on ltdl. See "Using libltdl" in the libtool
-// // manual to learn how this method works.
-// //
-// // We assume these very long symbol names can be handled.
-// //
-// #define init_guile_sortsmillff_iconv				\
-//   libguile_sortsmillff_iconv_LTX_init_guile_sortsmillff_iconv
-// #define scm_embedded_utf7_to_string				\
-//   libguile_sortsmillff_iconv_LTX_scm_embedded_utf7_to_string
-// 
-// VISIBLE void init_guile_sortsmillff_iconv (void);
-// VISIBLE SCM scm_embedded_utf7_to_string (SCM str);
-// 
-// SCM
-// scm_embedded_utf7_to_string (SCM str)
-// {
-//   size_t utf7_length;
-//   size_t utf8_length;
-//   char *utf8;
-// 
-//   scm_dynwind_begin (0);
-// 
-//   // Treat the string as UTF-7 embedded in ASCII/UTF-8.
-//   char *utf7 = scm_to_utf8_stringn (str, &utf7_length);
-//   scm_dynwind_free (utf7);
-// 
-//   // I doubt the MY_ICONV_SUFFIX_TRANSLIT_STRING here has any effect,
-//   // but it should do no harm, either, and demonstrates how to use it.
-//   iconv_t descriptor =
-//     iconv_open (MY_ICONV_UTF8_STRING MY_ICONV_SUFFIX_TRANSLIT_STRING,
-//                 MY_ICONV_UTF7_STRING);
-// 
-//   if (descriptor != (iconv_t) (-1))
-//     {
-//       size_t utf8_bufsize = utf7_length * 6;    /* FIXME: What is a good
-//                                                    size here? */
-//       utf8 = scm_gc_malloc_pointerless (utf8_bufsize * sizeof (char),
-//                                         "string");
-// 
-//       // iconv(3) modifies these pointers and integers.
-//       char *utf7_p = utf7;
-//       char *utf8_p = utf8;
-//       size_t utf7_n = utf7_length;
-//       size_t utf8_n = utf8_bufsize;
-// 
-//       (void) iconv (descriptor, &utf7_p, &utf7_n, &utf8_p, &utf8_n);
-//       utf8_length = utf8_p - utf8;
-// 
-//       iconv_close (descriptor);
-//     }
-//   else
-//     {
-//       utf8 = scm_gc_malloc_pointerless (utf7_length * sizeof (char),
-//                                         "string");
-//       memcpy (utf8, utf7, utf7_length * sizeof (char));
-//       utf8_length = utf7_length;
-//     }
-// 
-//   SCM result = scm_from_utf8_stringn (utf8, utf8_length);
-// 
-//   scm_dynwind_end ();
-// 
-//   return result;
-// }
-// 
-// void
-// init_guile_sortsmillff_iconv (void)
-// {
-//   (void) scm_c_define_gsubr ("embedded-utf7->string", 1, 0, 0,
-//                              scm_embedded_utf7_to_string);
-// }
+VISIBLE void init_guile_sortsmillff_bernstein (void);
+
+// FIXME: Move these to a header file.
+VISIBLE SCM scm_f64vector_sbern_to_bern (SCM spline);
+VISIBLE SCM scm_f64vector_bern_to_sbern (SCM spline);
+VISIBLE SCM scm_f64vector_eval_sbern (SCM spline, SCM t);
+VISIBLE SCM scm_f64vector_eval_bern (SCM spline, SCM t);
+VISIBLE SCM scm_f64vector_evaldc_sbern (SCM spline, SCM t);
+VISIBLE SCM scm_f64vector_evaldc_bern (SCM spline, SCM t);
+
+SCM
+scm_f64vector_sbern_to_bern (SCM spline)
+{
+  scm_t_array_handle handle;
+  size_t len;
+  ssize_t inc;
+  const double *elem = scm_f64vector_elements (spline, &handle, &len, &inc);
+  double *b = xmalloc (len * sizeof (double));
+  for (unsigned int i = 0; i < len; i++)
+    b[i] = elem[inc * i];
+  sbern_to_bern_double (len - 1, b, b);
+  SCM bern = scm_take_f64vector (b, len);
+  scm_array_handle_release (&handle);
+  return bern;
+}
+
+SCM
+scm_f64vector_bern_to_sbern (SCM spline)
+{
+  scm_t_array_handle handle;
+  size_t len;
+  ssize_t inc;
+  const double *elem = scm_f64vector_elements (spline, &handle, &len, &inc);
+  double *b = xmalloc (len * sizeof (double));
+  for (unsigned int i = 0; i < len; i++)
+    b[i] = elem[inc * i];
+  bern_to_sbern_double (len - 1, b, b);
+  SCM sbern = scm_take_f64vector (b, len);
+  scm_array_handle_release (&handle);
+  return sbern;
+}
+
+SCM
+scm_f64vector_eval_sbern (SCM spline, SCM t)
+{
+  scm_t_array_handle handle;
+  size_t len;
+  ssize_t inc;
+  const double *elem = scm_f64vector_elements (spline, &handle, &len, &inc);
+  double b[len];
+  for (unsigned int i = 0; i < len; i++)
+    b[i] = elem[inc * i];
+  double v = eval_sbern_double (len - 1, b, scm_to_double (t));
+  scm_array_handle_release (&handle);
+  return scm_from_double (v);
+}
+
+SCM
+scm_f64vector_eval_bern (SCM spline, SCM t)
+{
+  scm_t_array_handle handle;
+  size_t len;
+  ssize_t inc;
+  const double *elem = scm_f64vector_elements (spline, &handle, &len, &inc);
+  double b[len];
+  for (unsigned int i = 0; i < len; i++)
+    b[i] = elem[inc * i];
+  double v = eval_bern_double (len - 1, b, scm_to_double (t));
+  scm_array_handle_release (&handle);
+  return scm_from_double (v);
+}
+
+SCM
+scm_f64vector_evaldc_sbern (SCM spline, SCM t)
+{
+  scm_t_array_handle handle;
+  size_t len;
+  ssize_t inc;
+  const double *elem = scm_f64vector_elements (spline, &handle, &len, &inc);
+  double b[len];
+  for (unsigned int i = 0; i < len; i++)
+    b[i] = elem[inc * i];
+  double v = evaldc_sbern_double (len - 1, b, scm_to_double (t));
+  scm_array_handle_release (&handle);
+  return scm_from_double (v);
+}
+
+SCM
+scm_f64vector_evaldc_bern (SCM spline, SCM t)
+{
+  scm_t_array_handle handle;
+  size_t len;
+  ssize_t inc;
+  const double *elem = scm_f64vector_elements (spline, &handle, &len, &inc);
+  double b[len];
+  for (unsigned int i = 0; i < len; i++)
+    b[i] = elem[inc * i];
+  double v = evaldc_bern_double (len - 1, b, scm_to_double (t));
+  scm_array_handle_release (&handle);
+  return scm_from_double (v);
+}
+
+void
+init_guile_sortsmillff_bernstein (void)
+{
+  scm_c_define_gsubr ("f64vector-sbern->bern", 1, 0, 0,
+                      scm_f64vector_sbern_to_bern);
+  scm_c_define_gsubr ("f64vector-bern->sbern", 1, 0, 0,
+                      scm_f64vector_bern_to_sbern);
+  scm_c_define_gsubr ("f64vector-eval-sbern", 2, 0, 0,
+                      scm_f64vector_eval_sbern);
+  scm_c_define_gsubr ("f64vector-eval-bern", 2, 0, 0,
+                      scm_f64vector_eval_bern);
+  scm_c_define_gsubr ("f64vector-evaldc-sbern", 2, 0, 0,
+                      scm_f64vector_evaldc_sbern);
+  scm_c_define_gsubr ("f64vector-evaldc-bern", 2, 0, 0,
+                      scm_f64vector_evaldc_bern);
+  //  scm_c_define_gsubr("subdiv-sbern-double", 5, 0, 0, scm_subdiv_sbern_double);
+  //  scm_c_define_gsubr("subdiv-bern-double", 5, 0, 0, scm_subdiv_bern_double);
+}

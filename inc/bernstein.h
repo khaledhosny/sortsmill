@@ -20,24 +20,24 @@
 
 
 // vis--
-// vis-- @deftypefun {void} sbern_to_bern (unsigned int @var{deg}, const double *@var{sbern}, double *@var{bern})
+// vis-- @deftypefun {void} sbern_to_bern_double (unsigned int @var{deg}, const double *@var{sbern}, double *@var{bern})
 // vis--
 // vis-- Convert a spline from scaled Bernstein to Bernstein basis.
 // vis--
 // vis-- @end deftypefun
 // vis--
-VISIBLE void sbern_to_bern (unsigned int deg, const double *sbern,
-                            double *bern);
+VISIBLE void sbern_to_bern_double (unsigned int deg, const double *sbern,
+                                   double *bern);
 
 // vis--
-// vis-- @deftypefun {void} bern_to_sbern (unsigned int @var{deg}, const double *@var{bern}, double *@var{sbern})
+// vis-- @deftypefun {void} bern_to_sbern_double (unsigned int @var{deg}, const double *@var{bern}, double *@var{sbern})
 // vis--
 // vis-- Convert a spline from Bernstein to scaled Bernstein basis.
 // vis--
 // vis-- @end deftypefun
 // vis--
-VISIBLE void bern_to_sbern (unsigned int deg, const double *bern,
-                            double *sbern);
+VISIBLE void bern_to_sbern_double (unsigned int deg, const double *bern,
+                                   double *sbern);
 
 // vis--
 // vis-- @deftypefun {double} eval_sbern_double (unsigned int @var{deg}, const double *@var{spline}, double @var{t});

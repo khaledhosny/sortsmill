@@ -20,7 +20,7 @@
 #include <string.h>
 
 void
-sbern_to_bern (unsigned int deg, const double *sbern, double *bern)
+sbern_to_bern_double (unsigned int deg, const double *sbern, double *bern)
 {
   const int *bc = pascals_triangle_row (deg);
   for (unsigned int i = 0; i <= deg; i++)
@@ -28,7 +28,7 @@ sbern_to_bern (unsigned int deg, const double *sbern, double *bern)
 }
 
 void
-bern_to_sbern (unsigned int deg, const double *bern, double *sbern)
+bern_to_sbern_double (unsigned int deg, const double *bern, double *sbern)
 {
   const int *bc = pascals_triangle_row (deg);
   for (unsigned int i = 0; i <= deg; i++)
@@ -89,7 +89,7 @@ double
 eval_bern_double (unsigned int deg, const double *spline, double t)
 {
   double sbern[deg + 1];
-  bern_to_sbern (deg, spline, sbern);
+  bern_to_sbern_double (deg, spline, sbern);
   return eval_sbern_double (deg, sbern, t);
 }
 
@@ -97,7 +97,7 @@ double
 evaldc_sbern_double (unsigned int deg, const double *spline, double t)
 {
   double b[deg + 1];
-  sbern_to_bern (deg, spline, b);
+  sbern_to_bern_double (deg, spline, b);
   for (unsigned int i = 0; i < deg; i++)
     for (unsigned int j = 0; j < deg; j++)
       b[j] += t * (b[j + 1] - b[j]);
@@ -120,10 +120,10 @@ subdiv_sbern_double (unsigned int deg, const double *spline, double t,
                      double *a, double *b)
 {
   double bern[deg + 1];
-  sbern_to_bern (deg, spline, bern);
+  sbern_to_bern_double (deg, spline, bern);
   subdiv_bern_double (deg, bern, t, a, b);
-  bern_to_sbern (deg, a, a);
-  bern_to_sbern (deg, b, b);
+  bern_to_sbern_double (deg, a, a);
+  bern_to_sbern_double (deg, b, b);
 }
 
 void
