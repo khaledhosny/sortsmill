@@ -64,8 +64,9 @@ void _GGroup_Init(void) {
 return;
     _GGadgetCopyDefaultBox(&_GGroup_LineBox);
     _GGadgetCopyDefaultBox(&group_box);
-    group_box.border_type = _GGroup_LineBox.border_type = bt_engraved;
-    group_box.border_shape = _GGroup_LineBox.border_shape = bs_rect;
+    _GGroup_LineBox.border_type = bt_engraved;
+    _GGroup_LineBox.border_shape = bs_rect;
+    group_box.border_type = bt_none;
     group_box.padding = _GGroup_LineBox.padding = 0;
     /*group_box.flags = _GGroup_LineBox.flags = 0;*/
     group_box.main_background = COLOR_TRANSPARENT;

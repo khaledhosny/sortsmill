@@ -65,11 +65,8 @@ static void _GHVBox_Init(void) {
 return;
     _GGadgetCopyDefaultBox(&hvgroup_box);
     _GGadgetCopyDefaultBox(&hvbox_box);
-    hvgroup_box.border_type = bt_engraved;
-    hvbox_box.border_type = bt_none;
     hvbox_box.border_width = 0;
-    hvgroup_box.border_shape = hvbox_box.border_shape = bs_rect;
-    hvgroup_box.padding = 2;
+    hvgroup_box.padding = 0;
     hvbox_box.padding = 0;
     /*hvgroup_box.flags = hvbox_box.flags = 0;*/
     hvgroup_box.main_background = COLOR_TRANSPARENT;
