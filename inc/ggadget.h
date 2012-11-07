@@ -298,6 +298,8 @@ typedef enum fchooserret (*GFileChooserFilterType)(GGadget *g,struct gdirentry *
 #define _NUM_ScaleFactor	1
 #define __NUM_LastStd		1
 
+extern GBox _GGadget_button_box;
+
 extern void GTextInfoFree(GTextInfo *ti);
 VISIBLE extern void GTextInfoListFree(GTextInfo *ti);
 VISIBLE extern void GTextInfoArrayFree(GTextInfo **ti);

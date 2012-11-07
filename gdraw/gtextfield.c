@@ -2524,21 +2524,40 @@ static void GTextFieldInit() {
     GDrawDecomposeFont(_ggadget_default_font,&rq);
     _gtextfield_font = GDrawNewFont(NULL, "monospace", rq.point_size, rq.weight, rq.style);
     _GGadgetCopyDefaultBox(&_GGadget_gtextfield_box);
-    _GGadget_gtextfield_box.padding = 3;
-    /*_GGadget_gtextfield_box.flags = box_active_border_inner;*/
+    _GGadget_gtextfield_box.flags = box_foreground_border_inner|box_active_border_inner;
+    _GGadget_gtextfield_box.border_type = bt_lowered;
+    _GGadget_gtextfield_box.border_shape = bs_roundrect;
+    _GGadget_gtextfield_box.rr_radius = 3;
+    _GGadget_gtextfield_box.main_background = 0xffffff;
+    _GGadget_gtextfield_box.border_brightest = _GGadget_gtextfield_box.border_brighter = 0xf9f8f7;
+    _GGadget_gtextfield_box.border_darkest = _GGadget_gtextfield_box.border_darker = 0xdddcdb;
+    _GGadget_gtextfield_box.border_inner = 0x757371;
     _gtextfield_font = _GGadgetInitDefaultBox("GTextField.",&_GGadget_gtextfield_box,_gtextfield_font);
+
     glistfield_box = _GGadget_gtextfield_box;
     _GGadgetInitDefaultBox("GComboBox.",&glistfield_box,_gtextfield_font);
-    glistfieldmenu_box = glistfield_box;
-    glistfieldmenu_box.padding = 1;
-    _GGadgetInitDefaultBox("GComboBoxMenu.",&glistfieldmenu_box,_gtextfield_font);
+
     gnumericfield_box = _GGadget_gtextfield_box;
     _GGadgetInitDefaultBox("GNumericField.",&gnumericfield_box,_gtextfield_font);
-    gnumericfieldspinner_box = gnumericfield_box;
-    gnumericfieldspinner_box.border_type = bt_none;
-    gnumericfieldspinner_box.border_width = 0;
-    gnumericfieldspinner_box.padding = 0;
+
+    glistfieldmenu_box = glistfield_box;
+    gnumericfieldspinner_box = glistfieldmenu_box;
+    glistfieldmenu_box.flags = gnumericfieldspinner_box.flags = box_foreground_border_outer|box_gradient_bg;
+    glistfieldmenu_box.border_type = gnumericfieldspinner_box.border_type = bt_box;
+    glistfieldmenu_box.border_brightest = glistfieldmenu_box.border_brighter =
+	glistfieldmenu_box.border_darkest =
+	glistfieldmenu_box.border_darker =
+	gnumericfieldspinner_box.border_brightest =
+	gnumericfieldspinner_box.border_brighter =
+	gnumericfieldspinner_box.border_darkest =
+	gnumericfieldspinner_box.border_darker = 0x908f8e;
+    glistfieldmenu_box.border_inner = gnumericfieldspinner_box.border_inner = 0xf9f8f7;
+    glistfieldmenu_box.border_outer = gnumericfieldspinner_box.border_outer = 0xdddcdb;
+    glistfieldmenu_box.gradient_bg_end = gnumericfieldspinner_box.gradient_bg_end = 0xe5e4e3;
+
+    _GGadgetInitDefaultBox("GComboBoxMenu.",&glistfieldmenu_box,_gtextfield_font);
     _GGadgetInitDefaultBox("GNumericFieldSpinner.",&gnumericfieldspinner_box,_gtextfield_font);
+
     gtextfield_inited = true;
 }
 

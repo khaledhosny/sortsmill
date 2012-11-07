@@ -10593,7 +10593,6 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   struct matrix_data *marks_md, *markc_md;
   int ltype;
   static GBox small_blue_box;
-  extern GBox _GGadget_button_box;
   static GFont *fi_font = NULL;
   char *copied_copyright;
 
