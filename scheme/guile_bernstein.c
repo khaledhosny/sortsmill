@@ -28,6 +28,8 @@ VISIBLE SCM scm_f64vector_eval_sbern (SCM spline, SCM t);
 VISIBLE SCM scm_f64vector_eval_bern (SCM spline, SCM t);
 VISIBLE SCM scm_f64vector_evaldc_sbern (SCM spline, SCM t);
 VISIBLE SCM scm_f64vector_evaldc_bern (SCM spline, SCM t);
+VISIBLE SCM scm_f64vector_subdiv_sbern (SCM spline, SCM t);
+VISIBLE SCM scm_f64vector_subdiv_bern (SCM spline, SCM t);
 
 SCM
 scm_f64vector_sbern_to_bern (SCM spline)
@@ -39,9 +41,9 @@ scm_f64vector_sbern_to_bern (SCM spline)
   double *b = xmalloc (len * sizeof (double));
   for (unsigned int i = 0; i < len; i++)
     b[i] = elem[inc * i];
+  scm_array_handle_release (&handle);
   sbern_to_bern_double (len - 1, b, b);
   SCM bern = scm_take_f64vector (b, len);
-  scm_array_handle_release (&handle);
   return bern;
 }
 
@@ -55,9 +57,9 @@ scm_f64vector_bern_to_sbern (SCM spline)
   double *b = xmalloc (len * sizeof (double));
   for (unsigned int i = 0; i < len; i++)
     b[i] = elem[inc * i];
+  scm_array_handle_release (&handle);
   bern_to_sbern_double (len - 1, b, b);
   SCM sbern = scm_take_f64vector (b, len);
-  scm_array_handle_release (&handle);
   return sbern;
 }
 
@@ -71,8 +73,8 @@ scm_f64vector_eval_sbern (SCM spline, SCM t)
   double b[len];
   for (unsigned int i = 0; i < len; i++)
     b[i] = elem[inc * i];
-  double v = eval_sbern_double (len - 1, b, scm_to_double (t));
   scm_array_handle_release (&handle);
+  double v = eval_sbern_double (len - 1, b, scm_to_double (t));
   return scm_from_double (v);
 }
 
@@ -86,8 +88,8 @@ scm_f64vector_eval_bern (SCM spline, SCM t)
   double b[len];
   for (unsigned int i = 0; i < len; i++)
     b[i] = elem[inc * i];
-  double v = eval_bern_double (len - 1, b, scm_to_double (t));
   scm_array_handle_release (&handle);
+  double v = eval_bern_double (len - 1, b, scm_to_double (t));
   return scm_from_double (v);
 }
 
@@ -101,8 +103,8 @@ scm_f64vector_evaldc_sbern (SCM spline, SCM t)
   double b[len];
   for (unsigned int i = 0; i < len; i++)
     b[i] = elem[inc * i];
-  double v = evaldc_sbern_double (len - 1, b, scm_to_double (t));
   scm_array_handle_release (&handle);
+  double v = evaldc_sbern_double (len - 1, b, scm_to_double (t));
   return scm_from_double (v);
 }
 
@@ -116,9 +118,47 @@ scm_f64vector_evaldc_bern (SCM spline, SCM t)
   double b[len];
   for (unsigned int i = 0; i < len; i++)
     b[i] = elem[inc * i];
-  double v = evaldc_bern_double (len - 1, b, scm_to_double (t));
   scm_array_handle_release (&handle);
+  double v = evaldc_bern_double (len - 1, b, scm_to_double (t));
   return scm_from_double (v);
+}
+
+SCM
+scm_f64vector_subdiv_sbern (SCM spline, SCM t)
+{
+  scm_t_array_handle handle;
+  size_t len;
+  ssize_t inc;
+  const double *elem = scm_f64vector_elements (spline, &handle, &len, &inc);
+  double *b = xmalloc (len * sizeof (double));
+  for (unsigned int i = 0; i < len; i++)
+    b[i] = elem[inc * i];
+  scm_array_handle_release (&handle);
+  double *a = xmalloc (len * sizeof (double));
+  subdiv_sbern_double (len - 1, b, scm_to_double (t), a, b);
+  SCM new_splines[2];
+  new_splines[0] = scm_take_f64vector (a, len);
+  new_splines[1] = scm_take_f64vector (b, len);
+  return scm_c_values (new_splines, 2);
+}
+
+SCM
+scm_f64vector_subdiv_bern (SCM spline, SCM t)
+{
+  scm_t_array_handle handle;
+  size_t len;
+  ssize_t inc;
+  const double *elem = scm_f64vector_elements (spline, &handle, &len, &inc);
+  double *b = xmalloc (len * sizeof (double));
+  for (unsigned int i = 0; i < len; i++)
+    b[i] = elem[inc * i];
+  scm_array_handle_release (&handle);
+  double *a = xmalloc (len * sizeof (double));
+  subdiv_bern_double (len - 1, b, scm_to_double (t), a, b);
+  SCM new_splines[2];
+  new_splines[0] = scm_take_f64vector (a, len);
+  new_splines[1] = scm_take_f64vector (b, len);
+  return scm_c_values (new_splines, 2);
 }
 
 void
@@ -136,6 +176,8 @@ init_guile_sortsmillff_bernstein (void)
                       scm_f64vector_evaldc_sbern);
   scm_c_define_gsubr ("f64vector-evaldc-bern", 2, 0, 0,
                       scm_f64vector_evaldc_bern);
-  //  scm_c_define_gsubr("subdiv-sbern-double", 5, 0, 0, scm_subdiv_sbern_double);
-  //  scm_c_define_gsubr("subdiv-bern-double", 5, 0, 0, scm_subdiv_bern_double);
+  scm_c_define_gsubr ("f64vector-subdiv-sbern", 2, 0, 0,
+                      scm_f64vector_subdiv_sbern);
+  scm_c_define_gsubr ("f64vector-subdiv-bern", 2, 0, 0,
+                      scm_f64vector_subdiv_bern);
 }

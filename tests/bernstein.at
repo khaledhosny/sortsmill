@@ -1,13 +1,20 @@
 m4_defun([check_bernstein],
 [
 AT_SETUP([$1])
-AT_KEYWORDS([auxiliary bernstein.h bernstein unit spline])
+AT_KEYWORDS([auxiliary scheme bernstein.h bernstein.scm bernstein unit spline])
 AT_SKIP_IF([test x${DOING_INSTALLCHECK} = xyes])
-AT_CHECK_UNQUOTED(["${abs_builddir}"/$1],[$2],[$3],[$4])
+AT_CHECK_UNQUOTED([
+export LC_ALL="${posix_locale}"
+export LTDL_LIBRARY_PATH="${abs_top_builddir}/scheme"
+export GUILE_LOAD_PATH="${abs_top_srcdir}/scheme"
+$2],
+[$3],[$4],[$5])
 AT_CLEANUP
 ])
 
-check_bernstein([test_bernstein],[0],
+m4_define([big_check],
+[
+check_bernstein([$1],[$2],[0],
 [eval_sbern_double
 5.000000|5.000000|5.000000|5.000000|5.000000|
 5.000000|4.750000|4.500000|4.250000|4.000000|
@@ -110,3 +117,7 @@ t=0.750000|5.000000|4.250000|0.125000|0.218750|0.734375|0.734375|1.035156|1.0312
 t=1.000000|5.000000|4.000000|-3.000000|2.000000|1.000000|1.000000|1.000000|1.000000|1.000000|1.000000|1
 ],
 [])
+])
+
+big_check([test_bernstein],["${abs_builddir}"/test_bernstein])
+big_check([test_guile_bernstein.scm],[${run_guile} "${abs_srcdir}"/test_guile_bernstein.scm])

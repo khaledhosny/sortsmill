@@ -21,7 +21,9 @@
             f64vector-eval-sbern
             f64vector-eval-bern
             f64vector-evaldc-sbern
-            f64vector-evaldc-bern))
+            f64vector-evaldc-bern
+            f64vector-subdiv-sbern
+            f64vector-subdiv-bern))
 
 (load-extension "libguile-sortsmillff_bernstein"
                 "init_guile_sortsmillff_bernstein")
