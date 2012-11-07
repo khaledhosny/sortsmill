@@ -9,6 +9,8 @@ m4_include([xuninorm_h.at])
 m4_include([xunistr_h.at])
 m4_include([ps_number_h.at])
 m4_include([rexp_h.at])
+m4_include([pascals_triangle.at])
+m4_include([bernstein.at])
 
 AT_BANNER([gutils])
 m4_include([gfile_c.at])

@@ -43,7 +43,7 @@
 // vis--
 
 // vis--
-// vis-- @deftypefun {VISIBLE bool} is_postscript_integer (const char *@var{s})
+// vis-- @deftypefun {bool} is_postscript_integer (const char *@var{s})
 // vis--
 // vis-- Test if the @code{NULL}-terminated string @var{s} represents
 // vis-- a PostScript integer, such as
@@ -54,7 +54,7 @@
 VISIBLE bool is_postscript_integer (const char *s);
 
 // vis--
-// vis-- @deftypefun {VISIBLE bool} is_postscript_real (const char *@var{s})
+// vis-- @deftypefun {bool} is_postscript_real (const char *@var{s})
 // vis--
 // vis-- Test if the @code{NULL}-terminated string @var{s} represents
 // vis-- a PostScript real, such as
@@ -66,7 +66,7 @@ VISIBLE bool is_postscript_integer (const char *s);
 VISIBLE bool is_postscript_real (const char *s);
 
 // vis--
-// vis-- @deftypefun {VISIBLE bool} is_postscript_radix_number (const char *@var{s})
+// vis-- @deftypefun {bool} is_postscript_radix_number (const char *@var{s})
 // vis--
 // vis-- Test if the @code{NULL}-terminated string @var{s} represents
 // vis-- a PostScript radix number, such as
@@ -77,7 +77,7 @@ VISIBLE bool is_postscript_real (const char *s);
 VISIBLE bool is_postscript_radix_number (const char *s);
 
 // vis--
-// vis-- @deftypefun {VISIBLE bool} is_postscript_number (const char *@var{s})
+// vis-- @deftypefun {bool} is_postscript_number (const char *@var{s})
 // vis--
 // vis-- Test if the @code{NULL}-terminated string @var{s} represents
 // vis-- a PostScript integer, real, or radix number.
