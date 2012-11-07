@@ -993,7 +993,8 @@ static GResInfo glist_ri = {
 
 static void GListInit() {
     _GGadgetCopyDefaultBox(&list_box);
-    list_box.flags |= box_foreground_border_outer;
+    list_box.border_type = bt_box;
+    list_box.main_background = 0xffffff;
     list_font = _GGadgetInitDefaultBox("GList.",&list_box,NULL);
     glist_inited = true;
 }
