@@ -74,12 +74,12 @@ static unsigned char fontview_bits[] = {
 extern int _GScrollBar_Width;
 
 static int fv_fontsize = 11, fv_fs_init=0;
-static Color fvselcol = 0xffff00, fvselfgcol=0x000000;
+static Color fvselcol = 0x88b2de, fvselfgcol=0xffffff;
 Color view_bgcol;
-static Color fvglyphinfocol = 0xff0000;
-static Color fvemtpyslotfgcol = 0xd08080;
-static Color fvchangedcol = 0x000060;
-static Color fvhintingneededcol = 0x0000ff;
+static Color fvglyphinfocol = 0x598ec6;
+static Color fvemtpyslotfgcol = 0xcccbca;
+static Color fvchangedcol = 0x204a87;
+static Color fvhintingneededcol = 0x598ec6;
 
 enum glyphlable { gl_glyph, gl_name, gl_unicode, gl_encoding };
 int default_fv_showhmetrics=false, default_fv_showvmetrics=false,
