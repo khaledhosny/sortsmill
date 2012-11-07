@@ -116,11 +116,9 @@ static void GMenuInit() {
     menu_font = menubar_font = _ggadget_default_font;
     _GGadgetCopyDefaultBox(&menubar_box);
     _GGadgetCopyDefaultBox(&menu_box);
-    menubar_box.border_shape = menu_box.border_shape = bs_rect;
-    menubar_box.border_width = 0;
-    menu_box.padding = 1;
-    menubar_box.flags |= box_foreground_border_outer;
-    menu_box.flags |= box_foreground_border_outer;
+    menubar_box.active_border = 0xffffff;
+    menu_box.padding = 3;
+    menu_box.main_background = 0xffffff;
     menubar_font = _GGadgetInitDefaultBox("GMenuBar.",&menubar_box,menubar_font);
     menu_font = _GGadgetInitDefaultBox("GMenu.",&menu_box,menubar_font);
     keystr = GResourceFindString("Keyboard");
