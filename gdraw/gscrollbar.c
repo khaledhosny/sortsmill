@@ -33,9 +33,9 @@
 
 static GBox scrollbar_box = GBOX_EMPTY; /* Don't initialize here */
 static GBox thumb_box = GBOX_EMPTY; /* Don't initialize here */
-int _GScrollBar_Width = 13;			/* in points */
+int _GScrollBar_Width = 11;			/* in points */
 int _GScrollBar_StartTime=300, _GScrollBar_RepeatTime=200;
-static bool _GScrollBar_Arrows = true;
+static bool _GScrollBar_Arrows = false;
 static bool gscrollbar_inited = false;
 
 static GGadget *GScrollBarCreateInitialized(struct gwindow *base, GGadgetData *gd,void *data);
@@ -495,20 +495,47 @@ struct gfuncs gscrollbar_funcs = {
 static void GScrollBarInit() {
     _GGadgetCopyDefaultBox(&scrollbar_box);
     _GGadgetCopyDefaultBox(&thumb_box);
-    scrollbar_box.border_type = bt_lowered;
-    scrollbar_box.border_width = 1;
-    scrollbar_box.padding = 0;
-    scrollbar_box.flags |= box_foreground_border_outer;
-    scrollbar_box.main_background = GDrawColorBrighten(scrollbar_box.main_background, 0x10);
-    thumb_box.main_background = GDrawColorDarken(thumb_box.main_background,0x8);
-    thumb_box.border_width = 1;
+    scrollbar_box.border_width = 0;
+    scrollbar_box.padding = 2;
+    scrollbar_box.border_brightest =
+	scrollbar_box.border_brighter =
+	scrollbar_box.border_darkest =
+	scrollbar_box.border_darker =
+	scrollbar_box.main_background =
+	scrollbar_box.main_foreground =
+	scrollbar_box.disabled_background =
+	scrollbar_box.disabled_foreground =
+	scrollbar_box.active_border =
+	scrollbar_box.depressed_background =
+	scrollbar_box.gradient_bg_end =
+	scrollbar_box.border_inner =
+	scrollbar_box.border_outer = 0xd6d6d6;
+
+    thumb_box.border_type = bt_box;
+    thumb_box.border_shape = bs_roundrect;
+    thumb_box.border_width = 0;
     thumb_box.padding = 0;
+    thumb_box.rr_radius = 10;
+    thumb_box.border_brightest =
+	thumb_box.border_brighter =
+	thumb_box.border_darkest =
+	thumb_box.border_darker =
+	thumb_box.main_background =
+	thumb_box.main_foreground =
+	thumb_box.disabled_background =
+	thumb_box.disabled_foreground =
+	thumb_box.active_border =
+	thumb_box.depressed_background =
+	thumb_box.gradient_bg_end =
+	thumb_box.border_inner =
+	thumb_box.border_outer = 0x9b9d9e;
+
     _GGadgetInitDefaultBox("GScrollBar.",&scrollbar_box,NULL);
     _GGadgetInitDefaultBox("GScrollBarThumb.",&thumb_box,NULL);
     _GScrollBar_Width = GResourceFindInt("GScrollBar.Width",_GScrollBar_Width);
     _GScrollBar_StartTime = GResourceFindInt("GScrollBar.StartupTime",_GScrollBar_StartTime);
     _GScrollBar_RepeatTime = GResourceFindInt("GScrollBar.RepeatTime",_GScrollBar_RepeatTime);
-    _GScrollBar_Arrows = GResourceFindBool("GScrollBar.Arrows", true);
+    _GScrollBar_Arrows = GResourceFindBool("GScrollBar.Arrows", _GScrollBar_Arrows);
     gscrollbar_inited = true;
 }
 
