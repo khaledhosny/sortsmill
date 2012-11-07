@@ -59,7 +59,7 @@ typedef struct gprogress {
 } GProgress;
 
 static Color progress_background, progress_foreground;
-static Color progress_fillcol = 0xc0c0ff;
+static Color progress_fillcol = 0x88b2de;
 static GFont *progress_font = NULL;
 static int progress_init = false;
 
