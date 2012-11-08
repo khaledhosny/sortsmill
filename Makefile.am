@@ -79,7 +79,7 @@ distclean-local:
 #--------------------------------------------------------------------------
 
 extract-text:
-	for dir in inc pycontrib; do \
+	for dir in inc python; do \
 		(cd "$${dir}"; $(MAKE) $(AM_MAKEFLAGS) extract-text); \
 	done
 

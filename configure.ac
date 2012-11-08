@@ -348,8 +348,8 @@ FONTFORGE_SET_MY_LIBS
 FONTFORGE_CREATE_MAKEFILES
 FONTFORGE_CREATE_INDENT_PRO
 AC_CONFIG_FILES([inc/config-extra.h])
-AC_CONFIG_FILES([python/site_init.py python/psMat.py])
-AC_CONFIG_FILES([fontforge/darwinsetup],[chmod +x fontforge/darwinsetup])
+AC_CONFIG_FILES([python/site_init.py])
+AC_CONFIG_FILES([python/sortsmillff/psMat.py])
 AC_CONFIG_COMMANDS([scheme/sortsmillff],[AS_MKDIR_P([scheme/sortsmillff])])
 FONTFORGE_CONFIG_TESTSUITE
 FONTFORGE_CREATE_SUMMARY

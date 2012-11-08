@@ -30,12 +30,14 @@ include $(top_srcdir)/mk/cython.mk
 
 nodist_pkgpythondata_PYTHON = site_init.py
 
-# FIXME: Move this to sortsmillff/psMat.py with a compatibility module
-# at psMat.py.
+# Compatibility module.
 nodist_python_PYTHON = psMat.py
 
 nobase_dist_python_PYTHON = ffContrib/__init__.py	\
-	ffContrib/excepthook.py sortsmillff/__init__.py
+	ffContrib/excepthook.py
+
+nobase_dist_python_PYTHON += sortsmillff/__init__.py	\
+	sortsmillff/psMat.py
 
 nobase_pyexec_LTLIBRARIES =
 
@@ -54,7 +56,7 @@ AM_CFLAGS += $(NUMPY_CFLAGS) $(CYTHON_EXTRA_CFLAGS)
 extract_text = $(PERL) -n -e								\
 	'print $$_ if (s|^\s*\#\s*$(1)--\s*(.*)\s*|\1\n|)'
 
-$(top_srcdir)/doc/%.interface.texi: %.py
+$(top_srcdir)/doc/%.interface.texi: sortsmillff/%.py
 	$(call extract_text,i) $< > $@
 
 extract-text: $(top_srcdir)/doc/psMat.interface.texi

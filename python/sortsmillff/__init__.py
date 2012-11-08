@@ -17,4 +17,5 @@
 
 __all__ = [
     'bernstein',
+    'psMat',
     ]

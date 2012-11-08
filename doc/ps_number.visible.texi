@@ -3,7 +3,7 @@ The following items are declared in header file
 @file{ps_number.h}.
 
 
-@deftypefun {VISIBLE bool} is_postscript_integer (const char *@var{s})
+@deftypefun {bool} is_postscript_integer (const char *@var{s})
 
 Test if the @code{NULL}-terminated string @var{s} represents
 a PostScript integer, such as
@@ -12,7 +12,7 @@ a PostScript integer, such as
 @end deftypefun
 
 
-@deftypefun {VISIBLE bool} is_postscript_real (const char *@var{s})
+@deftypefun {bool} is_postscript_real (const char *@var{s})
 
 Test if the @code{NULL}-terminated string @var{s} represents
 a PostScript real, such as
@@ -22,7 +22,7 @@ a PostScript real, such as
 @end deftypefun
 
 
-@deftypefun {VISIBLE bool} is_postscript_radix_number (const char *@var{s})
+@deftypefun {bool} is_postscript_radix_number (const char *@var{s})
 
 Test if the @code{NULL}-terminated string @var{s} represents
 a PostScript radix number, such as
@@ -31,7 +31,7 @@ a PostScript radix number, such as
 @end deftypefun
 
 
-@deftypefun {VISIBLE bool} is_postscript_number (const char *@var{s})
+@deftypefun {bool} is_postscript_number (const char *@var{s})
 
 Test if the @code{NULL}-terminated string @var{s} represents
 a PostScript integer, real, or radix number.
