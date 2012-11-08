@@ -512,8 +512,8 @@ GGadgetInit (void)
       _GGadgetInitDefaultBox ("GListMark.", &_GListMark_Box, NULL);
 
       _GListMarkSize = GResourceFindInt ("GListMark.Width", _GListMarkSize);
-      _GListMark_Image = GGadgetResourceFindImage ("GListMark.Image", "downarrow.png");
-      _GListMark_DisImage = GGadgetResourceFindImage ("GListMark.DisabledImage", "downarrow.png");
+      _GListMark_Image = GGadgetResourceFindImage ("GListMark.Image", NULL);
+      _GListMark_DisImage = GGadgetResourceFindImage ("GListMark.DisabledImage", NULL);
       if (_GListMark_Image != NULL && _GListMark_Image->image != NULL)
         {
           int size = GDrawPixelsToPoints (NULL,
@@ -556,40 +556,43 @@ void
 GListMarkDraw (GWindow pixmap, int x, int y, int height,
                enum gadget_state state)
 {
-  GRect r, old;
-  int marklen = GDrawPointsToPixels (pixmap, _GListMarkSize);
-
+  int pt, _width, _height;
   if (state == gs_disabled &&
       _GListMark_DisImage != NULL && _GListMark_DisImage->image != NULL)
     {
-      GDrawDrawScaledImage (pixmap, _GListMark_DisImage->image, x,
-                            y + (height -
-                                 GImageGetScaledHeight (pixmap,
-                                                        _GListMark_DisImage->
-                                                        image)) / 2);
+      _height = GImageGetScaledHeight (pixmap, _GListMark_DisImage->image);
+      y += (height - _height) / 2;
+      GDrawDrawScaledImage (pixmap, _GListMark_DisImage->image, x, y);
     }
   else if (_GListMark_Image != NULL && _GListMark_Image->image != NULL)
     {
-      GDrawDrawScaledImage (pixmap, _GListMark_Image->image, x,
-                            y + (height -
-                                 GImageGetScaledHeight (pixmap,
-                                                        _GListMark_Image->
-                                                        image)) / 2);
+      _height = GImageGetScaledHeight (pixmap, _GListMark_Image->image);
+      y += (height - _height) / 2;
+      GDrawDrawScaledImage (pixmap, _GListMark_Image->image, x, y);
     }
   else
     {
-      r.x = x;
-      r.width = marklen;
-      r.height =
-        2 * GDrawPointsToPixels (pixmap,
-                                 _GListMark_Box.border_width) +
-        GDrawPointsToPixels (pixmap, 3);
-      r.y = y + (height - r.height) / 2;
-      GDrawPushClip (pixmap, &r, &old);
+      cairo_t *cr = GDrawGetCairo (pixmap);
 
-      GBoxDrawBackground (pixmap, &r, &_GListMark_Box, state, false);
-      GBoxDrawBorder (pixmap, &r, &_GListMark_Box, state, false);
-      GDrawPopClip (pixmap, &old);
+      pt = GDrawPointsToPixels (pixmap, 1);
+      _width = GDrawPointsToPixels (pixmap, _GListMarkSize);
+      _width -= (_width & 1); // round
+      _height = 2 * GDrawPointsToPixels (pixmap, _GListMark_Box.border_width) + 3 * pt;
+      y += (height - _height) / 3;
+
+      cairo_new_path (cr);
+      cairo_set_line_width (cr, 2.3 * pt);
+      cairo_set_line_cap (cr, CAIRO_LINE_CAP_ROUND);
+
+      if (state == gs_disabled)
+        cairo_set_source_rgba (cr, .7, .7, .7, 1.);
+      else
+        cairo_set_source_rgba (cr, .5, .5, .5, 1.);
+
+      cairo_move_to (cr, x, y + _height / 2);
+      cairo_line_to (cr, x + _width / 2, y + _height);
+      cairo_line_to (cr, x + _width, y + _height / 2);
+      cairo_stroke (cr);
     }
 }
 

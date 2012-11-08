@@ -85,7 +85,6 @@ PNG_LIST = \
 	cvsroundcap.png \
 	cvsroundjoin.png \
 	cvssquarecap.png \
-	downarrow.png \
 	editclearback.png \
 	editclear.png \
 	editcopyfg2bg.png \
