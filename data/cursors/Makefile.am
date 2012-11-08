@@ -31,14 +31,12 @@ CURSOR_LIST = \
 	linecur \
 	magminus \
 	magplus \
-	Makefile.am \
 	nesw \
 	nwse \
 	pencil \
 	pencur \
 	perspectivecur \
 	pointercic \
-	pointercur \
 	pointerg2cic \
 	pointerhvcic \
 	pointerleft \

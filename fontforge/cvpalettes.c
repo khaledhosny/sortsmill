@@ -876,7 +876,7 @@ void CVToolsSetCursor(CharView *cv, int state, char *device) {
     int cntrl;
 
     if ( tools[0] == ct_pointer ) {
-	tools[cvt_pointer] = ct_mypointer;
+	tools[cvt_pointer] = ct_pointer;
 	tools[cvt_magnify] = ct_magplus;
 	tools[cvt_freehand] = ct_pencil;
 	tools[cvt_hand] = ct_myhand;
@@ -2887,7 +2887,7 @@ void BVToolsSetCursor(BitmapView *bv, int state,char *device) {
     int cntrl;
 
     if ( tools[0] == bvt_none ) {
-	tools[bvt_pointer] = ct_mypointer;
+	tools[bvt_pointer] = ct_pointer;
 	tools[bvt_magnify] = ct_magplus;
 	tools[bvt_pencil] = ct_pencil;
 	tools[bvt_line] = ct_line;

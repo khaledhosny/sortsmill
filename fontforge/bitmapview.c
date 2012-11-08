@@ -1343,13 +1343,13 @@ static void BVMouseUp(BitmapView *bv, GEvent *event) {
       case bvt_pointer:
 	if ( bv->bc->selection!=NULL ) {
 	    /* we've been moving it */
-	    GDrawSetCursor(bv->v,ct_mypointer);
+	    GDrawSetCursor(bv->v,ct_pointer);
 	    if ( !bv->recentchange ) {	/* Oh, we just clicked in it, get rid of it */
 		BCFlattenFloat(bv->bc);
 		BCCharChangedUpdate(bv->bc);
 	    }
 	} else if ( refsel ) {
-	    GDrawSetCursor(bv->v,ct_mypointer);
+	    GDrawSetCursor(bv->v,ct_pointer);
 	    bv->active_tool = bvt_none;
 	    BCCharChangedUpdate(bv->bc);
 	} else {

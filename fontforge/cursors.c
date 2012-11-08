@@ -28,7 +28,7 @@
  */
 #include "fontforgeui.h"
 
-GCursor ct_magplus, ct_magminus, ct_mypointer, ct_circle, ct_square, ct_triangle,
+GCursor ct_magplus, ct_magminus, ct_circle, ct_square, ct_triangle,
 	ct_ruler, ct_pen, ct_knife, ct_rotate, ct_skew, ct_scale, ct_flip,
 	ct_3drotate, ct_perspective, ct_hvcircle, ct_g2circle;
 GCursor ct_rect, ct_elipse, ct_poly, ct_star, ct_pencil, ct_shift, ct_line,
@@ -57,8 +57,6 @@ static unsigned char logo_bits[] = {
 void InitCursors(void) {
     ct_magplus = GDrawCreateCursor("magplus");
     ct_magminus = GDrawCreateCursor("magminus");
-
-    ct_mypointer = GDrawCreateCursor("pointercur");
 
     ct_circle = GDrawCreateCursor("pointercic");
     ct_hvcircle = GDrawCreateCursor("pointerhvcic");
