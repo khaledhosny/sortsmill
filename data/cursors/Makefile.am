@@ -16,6 +16,7 @@
 include $(top_srcdir)/mk/layout.am
 
 CURSOR_LIST = \
+	crossed_circle \
 	ddcursor \
 	elipsecur \
 	eyedropper \
@@ -23,7 +24,7 @@ CURSOR_LIST = \
 	filledelipsecur \
 	filledrectcur \
 	flipcur \
-	hand \
+	grabbing \
 	kerncur \
 	knifecur \
 	lbearcur \
@@ -41,7 +42,6 @@ CURSOR_LIST = \
 	pointersqr \
 	pointertri \
 	polycur \
-	prohibition \
 	rbearcur \
 	rectcur \
 	rotate3dcur \

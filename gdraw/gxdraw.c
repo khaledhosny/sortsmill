@@ -1265,15 +1265,18 @@ GDrawCreateCursor (char *name)
   GCursor cursor;
   char *path;
 
-  path = xmalloc (strlen (name) + strlen (SHAREDIR) + 10);
-  sprintf (path, SHAREDIR "/cursors/%s", name);
+  // try loading the cursor from default theme first
+  cursor = XcursorLibraryLoadCursor (display, name);
 
-  // FIXME: we may want to first try cursors from default theme using
-  // XcursorLibraryLoadCursor (display, name), which would allow users to
-  // customise the cursors, but we need to revise our file names and make them
-  // compatible with common themes
-  cursor = XcursorFilenameLoadCursor (display, path);
-  free(path);
+  // if non was found, load our cursor file
+  if (!cursor)
+    {
+      path = xmalloc (strlen (name) + strlen (SHAREDIR) + 10);
+      sprintf (path, SHAREDIR "/cursors/%s", name);
+
+      cursor = XcursorFilenameLoadCursor (display, path);
+      free (path);
+    }
 
   if (cursor)
     cursor = ct_user + cursor;
