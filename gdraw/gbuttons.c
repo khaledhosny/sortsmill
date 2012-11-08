@@ -94,13 +94,8 @@ static GResInfo gbutton_ri = {
     "GButton",
     "Gdraw",
     true,
-#ifdef __Mac
-    box_do_depressed_background|omf_border_type|omf_border_width|
-	    omf_border_shape|omf_padding,
-#else
     box_foreground_border_inner|box_foreground_border_outer|
-	/*box_active_border_inner|*/box_do_depressed_background|box_draw_default,
-#endif
+	box_do_depressed_background|box_draw_default|box_gradient_bg,
     /* Will be initialized later */
     NULL,
     GBOX_EMPTY,
@@ -126,11 +121,7 @@ static GResInfo gdefault_ri = {
     "GDefaultButton",
     "Gdraw",
     true,
-#ifdef __Mac
-    box_gradient_bg|omf_main_background|omf_gradient_bg_end,
-#else
     0,
-#endif
     NULL,
     GBOX_EMPTY,
     NULL,
@@ -155,11 +146,7 @@ static GResInfo gcancel_ri = {
     "GCancelButton",
     "Gdraw",
     true,
-#ifdef __Mac
-    box_gradient_bg|omf_main_background|omf_gradient_bg_end,
-#else
     0,
-#endif
     NULL,
     GBOX_EMPTY,
     NULL,
@@ -216,11 +203,7 @@ static GResInfo gdroplist_ri = {
     "GDropList",
     "Gdraw",
     true,
-#ifdef __Mac
-    omf_border_type|omf_border_width|omf_border_shape,
-#else
     0,
-#endif
     NULL,
     GBOX_EMPTY,
     NULL,
@@ -954,10 +937,6 @@ return;
 }
 
 void _GButtonInit(void) {
-#ifdef __Mac
-    extern GBox _ggadget_Default_Box;
-#endif
-
     if ( gbutton_inited )
 return;
 
