@@ -448,7 +448,8 @@ GListMarkDraw(pixmap,
 		g->r.x + g->r.width - marklen - spacing/2 - bp,
 		g->inner.y,
 		g->inner.height,
-		g->state);
+		g->state,
+		mt_arrow);
     }
 
     GDrawPopClip(pixmap,&old1);

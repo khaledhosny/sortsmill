@@ -1701,7 +1701,8 @@ static void GMatrixEdit_SubExpose(GMatrixEdit *gme,GWindow pixmap,GEvent *event)
 			mr.x + gme->mark_skip + (gme->mark_size - gme->mark_length)/2,
 			clip.y,
 			clip.height,
-			gme->g.state);
+			gme->g.state,
+			mt_arrow);
 	    }
 	    if ( r+gme->off_top==gme->rows )
 return;

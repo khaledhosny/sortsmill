@@ -55,7 +55,7 @@ VISIBLE GBox _ggadget_Default_Box = { bt_none, bs_rect, 1, 2, 0, 0,
 GBox _GListMark_Box = GBOX_EMPTY;       /* Don't initialize here */
 FontInstance *_ggadget_default_font = NULL;
 static FontInstance *popup_font = NULL;
-int _GListMarkSize = 8;
+int _GListMarkSize = 7;
 GResImage *_GListMark_Image = NULL, *_GListMark_DisImage;
 static int _GGadget_FirstLine = 6;
 static int _GGadget_LeftMargin = 6;
@@ -554,17 +554,18 @@ GGadgetInit (void)
 
 void
 GListMarkDraw (GWindow pixmap, int x, int y, int height,
-               enum gadget_state state)
+               enum gadget_state state,
+	       enum mark_type type)
 {
   int pt, _width, _height;
-  if (state == gs_disabled &&
+  if (type == mt_arrow && state == gs_disabled &&
       _GListMark_DisImage != NULL && _GListMark_DisImage->image != NULL)
     {
       _height = GImageGetScaledHeight (pixmap, _GListMark_DisImage->image);
       y += (height - _height) / 2;
       GDrawDrawScaledImage (pixmap, _GListMark_DisImage->image, x, y);
     }
-  else if (_GListMark_Image != NULL && _GListMark_Image->image != NULL)
+  else if (type == mt_arrow && _GListMark_Image != NULL && _GListMark_Image->image != NULL)
     {
       _height = GImageGetScaledHeight (pixmap, _GListMark_Image->image);
       y += (height - _height) / 2;
@@ -578,20 +579,46 @@ GListMarkDraw (GWindow pixmap, int x, int y, int height,
       _width = GDrawPointsToPixels (pixmap, _GListMarkSize);
       _width -= (_width & 1); // round
       _height = 2 * GDrawPointsToPixels (pixmap, _GListMark_Box.border_width) + 3 * pt;
-      y += (height - _height) / 3;
 
       cairo_new_path (cr);
-      cairo_set_line_width (cr, 2.3 * pt);
-      cairo_set_line_cap (cr, CAIRO_LINE_CAP_ROUND);
 
       if (state == gs_disabled)
         cairo_set_source_rgba (cr, .7, .7, .7, 1.);
       else
         cairo_set_source_rgba (cr, .5, .5, .5, 1.);
 
-      cairo_move_to (cr, x, y + _height / 2);
-      cairo_line_to (cr, x + _width / 2, y + _height);
-      cairo_line_to (cr, x + _width, y + _height / 2);
+      if (type == mt_arrow)
+        {
+          y += (height - _height) / 3;
+
+          cairo_set_line_cap (cr, CAIRO_LINE_CAP_ROUND);
+          cairo_set_line_width (cr, 2.3 * pt);
+
+          cairo_move_to (cr, x, y + _height / 2);
+          cairo_line_to (cr, x + _width / 2, y + _height);
+          cairo_line_to (cr, x + _width, y + _height / 2);
+	}
+      else if (type == mt_plus)
+        {
+          y += (height - _height) / 2;
+
+          cairo_set_line_width (cr, 2 * pt);
+
+          cairo_move_to (cr, x, y + _height / 2);
+	  cairo_line_to (cr, x + _width, y + _height / 2);
+	  cairo_move_to (cr, x + _width / 2, y);
+	  cairo_line_to (cr, x + _width / 2, y + _height);
+	}
+      else if (type == mt_minus)
+        {
+          y += (height - _height) / 2;
+
+          cairo_set_line_width (cr, 2 * pt);
+
+          cairo_move_to (cr, x, y + _height / 2);
+	  cairo_line_to (cr, x + _width, y + _height / 2);
+	}
+
       cairo_stroke (cr);
     }
 }

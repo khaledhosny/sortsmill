@@ -39,14 +39,13 @@
 #include <unistr.h>
 
 VISIBLE GBox _GGadget_gtextfield_box = GBOX_EMPTY; /* Don't initialize here */
+static GBox gmultitextfield_box = GBOX_EMPTY; /* Don't initialize here */
 static GBox glistfield_box = GBOX_EMPTY; /* Don't initialize here */
-static GBox glistfieldmenu_box = GBOX_EMPTY; /* Don't initialize here */
 static GBox gnumericfield_box = GBOX_EMPTY; /* Don't initialize here */
-static GBox gnumericfieldspinner_box = GBOX_EMPTY; /* Don't initialize here */
 FontInstance *_gtextfield_font = NULL;
 static int gtextfield_inited = false;
 
-static GResInfo listfield_ri, listfieldmenu_ri, numericfield_ri, numericfieldspinner_ri;
+static GResInfo listfield_ri, numericfield_ri;
 static GTextInfo text_lab[] = {
     { (uint32_t *) "Disabled", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' },
     { (uint32_t *) "Enabled" , NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' }
@@ -90,7 +89,7 @@ static GGadgetCreateData *tlarray[] = { GCD_Glue, &textlist_gcd[0], GCD_Glue, &t
 static GGadgetCreateData textlistbox =
     { GHVGroupCreate, { { 2, 2, 0, 0 }, NULL, 0, 0, 0, 0, 0, NULL, { (GTextInfo *) tlarray }, gg_visible|gg_enabled, NULL, NULL }, NULL, NULL };
 static GResInfo listfield_ri = {
-    &listfieldmenu_ri, &gtextfield_ri,&listfieldmenu_ri, &listmark_ri,
+    &numericfield_ri, &gtextfield_ri, &listmark_ri, NULL,
     &glistfield_box,
     NULL,
     &textlistbox,
@@ -107,24 +106,6 @@ static GResInfo listfield_ri = {
     NULL,
     NULL
 };
-static GResInfo listfieldmenu_ri = {
-    &numericfield_ri, &listfield_ri, &listmark_ri,NULL,
-    &glistfieldmenu_box,
-    NULL,
-    &textlistbox,
-    NULL,
-    N_("List Field Menu"),
-    N_("Box surrounding the ListMark in a list field (combobox)"),
-    "GComboBoxMenu",
-    "Gdraw",
-    false,
-    omf_padding,
-    NULL,
-    GBOX_EMPTY,
-    NULL,
-    NULL,
-    NULL
-};
 static GGadgetCreateData num_gcd[] = {
     { GNumericFieldCreate, { { 0, 0, 50, 0 }, NULL, 0, 0, 0, 0, 0, &list_choices[0], { NULL }, gg_visible, NULL, NULL }, NULL, NULL },
     { GNumericFieldCreate, { { 0, 0, 50, 0 }, NULL, 0, 0, 0, 0, 0, &list_choices[0], { NULL }, gg_visible|gg_enabled, NULL, NULL }, NULL, NULL }
@@ -133,7 +114,7 @@ static GGadgetCreateData *narray[] = { GCD_Glue, &num_gcd[0], GCD_Glue, &num_gcd
 static GGadgetCreateData numbox =
     { GHVGroupCreate, { { 2, 2, 0, 0 }, NULL, 0, 0, 0, 0, 0, NULL, { (GTextInfo *) narray }, gg_visible|gg_enabled, NULL, NULL }, NULL, NULL };
 static GResInfo numericfield_ri = {
-    &numericfieldspinner_ri, &gtextfield_ri,&numericfieldspinner_ri, NULL,
+    NULL, &gtextfield_ri, NULL, NULL,
     &gnumericfield_box,
     NULL,
     &numbox,
@@ -144,24 +125,6 @@ static GResInfo numericfield_ri = {
     "Gdraw",
     false,
     0,
-    NULL,
-    GBOX_EMPTY,
-    NULL,
-    NULL,
-    NULL
-};
-static GResInfo numericfieldspinner_ri = {
-    NULL, &numericfield_ri,NULL, NULL,
-    &gnumericfieldspinner_box,
-    NULL,
-    &numbox,
-    NULL,
-    N_("Numeric Field Sign"),
-    N_("The box around the up/down arrows of a numeric field (spinner)"),
-    "GNumericFieldSpinner",
-    "Gdraw",
-    false,
-    omf_border_type|omf_border_width|omf_padding,
     NULL,
     GBOX_EMPTY,
     NULL,
@@ -1447,7 +1410,7 @@ static int gtextfield_expose(GWindow pixmap, GGadget *g, GEvent *event) {
     GTextField *gt = (GTextField *) g;
     GListField *ge = (GListField *) g;
     GRect old1, old2, *r = &g->r;
-    Color fg;
+    Color fg, lfg;
     int ll,i, last;
     GRect unpadded_inner;
     int pad;
@@ -1473,6 +1436,7 @@ return( false );
     fg = g->state==gs_disabled?g->box->disabled_foreground:
 		    g->box->main_foreground==COLOR_DEFAULT?GDrawGetDefaultForeground(GDrawGetDisplayOfWindow(pixmap)):
 		    g->box->main_foreground;
+    lfg = g->box->border_inner;
     ll = 0;
     if ( (last = gt->g.inner.height/gt->fh)==0 ) last = 1;
     if ( gt->sel_start != gt->sel_end ) {
@@ -1493,51 +1457,34 @@ return( false );
     GDrawPopClip(pixmap,&old1);
     gt_draw_cursor(pixmap, gt);
 
+    int marklen = GDrawPointsToPixels(pixmap,_GListMarkSize);
     if ( gt->listfield ) {
-	int marklen = GDrawPointsToPixels(pixmap,_GListMarkSize);
-
-	GDrawPushClip(pixmap,&ge->buttonrect,&old1);
-
-	GBoxDrawBackground(pixmap,&ge->buttonrect,&glistfieldmenu_box,
-		g->state==gs_enabled? gs_pressedactive: g->state,false);
-	GBoxDrawBorder(pixmap,&ge->buttonrect,&glistfieldmenu_box,g->state,false);
-
+	GRect r = ge->buttonrect;
+	r.x -= r.width / 2;
+	GBoxDrawVLine(pixmap, &r, g->box);
 	GListMarkDraw(pixmap,
 		ge->buttonrect.x + (ge->buttonrect.width - marklen)/2,
 		g->inner.y,
 		g->inner.height,
-		g->state);
-	GDrawPopClip(pixmap,&old1);
+		g->state,
+		mt_arrow);
     } else if ( gt->numericfield ) {
-	int y, w;
-	int half;
-	GPoint pts[5];
-	int bp = GBoxBorderWidth(gt->g.base,&gnumericfieldspinner_box);
-	Color fg = g->state==gs_disabled?gnumericfieldspinner_box.disabled_foreground:
-			gnumericfieldspinner_box.main_foreground==COLOR_DEFAULT?GDrawGetDefaultForeground(GDrawGetDisplayOfWindow(pixmap)):
-			gnumericfieldspinner_box.main_foreground;
-
-	GBoxDrawBackground(pixmap,&ge->buttonrect,&gnumericfieldspinner_box,
-		g->state==gs_enabled? gs_pressedactive: g->state,false);
-	GBoxDrawBorder(pixmap,&ge->buttonrect,&gnumericfieldspinner_box,g->state,false);
-	/* GDrawDrawRect(pixmap,&ge->buttonrect,fg); */
-
-	y = ge->buttonrect.y + ge->buttonrect.height/2;
-	w = ge->buttonrect.width;
-	w &= ~1;
-	pts[0].x = ge->buttonrect.x+3+bp;
-	pts[1].x = ge->buttonrect.x+w-3-bp;
-	pts[2].x = ge->buttonrect.x + w/2;
-	half = pts[2].x-pts[0].x;
-	GDrawDrawLine(pixmap, pts[0].x-3,y, pts[1].x+3,y, fg );
-	pts[0].y = pts[1].y = y-2;
-	pts[2].y = pts[1].y-half;
-	pts[3] = pts[0];
-	GDrawFillPoly(pixmap,pts,3,fg);
-	pts[0].y = pts[1].y = y+2;
-	pts[2].y = pts[1].y+half;
-	pts[3] = pts[0];
-	GDrawFillPoly(pixmap,pts,3,fg);
+	GRect r = ge->buttonrect;
+	GBoxDrawVLine(pixmap, &r, g->box);
+	r.x -= r.width / 2;
+	GBoxDrawVLine(pixmap, &r, g->box);
+	GListMarkDraw(pixmap,
+		ge->buttonrect.x + (ge->buttonrect.width - marklen) / 4,
+		g->inner.y,
+		g->inner.height,
+		g->state,
+		mt_minus);
+	GListMarkDraw(pixmap,
+		ge->buttonrect.x + (ge->buttonrect.width - marklen * 2),
+		g->inner.y,
+		g->inner.height,
+		g->state,
+		mt_plus);
     }
 return( true );
 }
@@ -1557,7 +1504,7 @@ return( true );
 static int gnumericfield_mouse(GTextField *gt, GEvent *event) {
     GListField *ge = (GListField *) gt;
     if ( event->type==et_mousedown ) {
-	gt->incr_down = event->u.mouse.y > (ge->buttonrect.y + ge->buttonrect.height/2);
+	gt->incr_down = event->u.mouse.x < (ge->buttonrect.x + ge->buttonrect.width/2);
 	GTextFieldIncrement(gt,gt->incr_down?-1:1);
 	if ( gt->numeric_scroll==NULL )
 	    gt->numeric_scroll = GDrawRequestTimer(gt->g.base,200,100,NULL);
@@ -2348,16 +2295,13 @@ static void GTextFieldSetDesiredSize(GGadget *g,GRect *outer,GRect *inner) {
 	int bp = GBoxBorderWidth(g->base,g->box);
 	int extra=0;
 
-	if ( gt->listfield ) {
+	if ( gt->listfield || gt->numericfield )
 	    extra = GDrawPointsToPixels(gt->g.base,_GListMarkSize) +
 		    GDrawPointsToPixels(gt->g.base,_GGadget_TextImageSkip) +
 		    2*GBoxBorderWidth(gt->g.base,&_GListMark_Box) +
-		    GBoxBorderWidth(gt->g.base,&glistfieldmenu_box);
-	} else if ( gt->numericfield ) {
-	    extra = GDrawPointsToPixels(gt->g.base,_GListMarkSize)/2 +
-		    GDrawPointsToPixels(gt->g.base,_GGadget_TextImageSkip) +
-		    2*GBoxBorderWidth(gt->g.base,&gnumericfieldspinner_box);
-	}
+		    GBoxBorderWidth(gt->g.base,&glistfield_box);
+	if ( gt->numericfield )
+	    extra = 2 * extra;
 	g->desired_width = inner->width + 2*bp + extra;
 	g->desired_height = inner->height + 2*bp;
 	if ( gt->multi_line ) {
@@ -2376,16 +2320,13 @@ static void GTextFieldGetDesiredSize(GGadget *g,GRect *outer,GRect *inner) {
     int extra=0;
     int bp = GBoxBorderWidth(g->base,g->box);
 
-    if ( gt->listfield ) {
+    if ( gt->listfield || gt->numericfield )
 	extra = GDrawPointsToPixels(gt->g.base,_GListMarkSize) +
 		GDrawPointsToPixels(gt->g.base,_GGadget_TextImageSkip) +
 		2*GBoxBorderWidth(gt->g.base,&_GListMark_Box) +
-		GBoxBorderWidth(gt->g.base,&glistfieldmenu_box);
-    } else if ( gt->numericfield ) {
-	extra = GDrawPointsToPixels(gt->g.base,_GListMarkSize)/2 +
-		GDrawPointsToPixels(gt->g.base,_GGadget_TextImageSkip) +
-		2*GBoxBorderWidth(gt->g.base,&gnumericfieldspinner_box);
-    }
+		GBoxBorderWidth(gt->g.base,&glistfield_box);
+    if ( gt->numericfield )
+	extra = 2 * extra;
 
     width = GGadgetScale(GDrawPointsToPixels(gt->g.base,80));
     height = gt->multi_line? 4*gt->fh:gt->fh;
@@ -2524,39 +2465,27 @@ static void GTextFieldInit() {
     GDrawDecomposeFont(_ggadget_default_font,&rq);
     _gtextfield_font = GDrawNewFont(NULL, "monospace", rq.point_size, rq.weight, rq.style);
     _GGadgetCopyDefaultBox(&_GGadget_gtextfield_box);
-    _GGadget_gtextfield_box.flags = box_foreground_border_inner|box_active_border_inner;
+    _GGadget_gtextfield_box.flags = box_foreground_border_inner|box_active_border_inner|box_gradient_bg;
     _GGadget_gtextfield_box.border_type = bt_lowered;
     _GGadget_gtextfield_box.border_shape = bs_roundrect;
     _GGadget_gtextfield_box.rr_radius = 3;
-    _GGadget_gtextfield_box.main_background = 0xffffff;
+    _GGadget_gtextfield_box.main_background = 0xe5e4e3;
+    _GGadget_gtextfield_box.gradient_bg_end = 0xffffff;
     _GGadget_gtextfield_box.border_brightest = _GGadget_gtextfield_box.border_brighter = 0xf9f8f7;
     _GGadget_gtextfield_box.border_darkest = _GGadget_gtextfield_box.border_darker = 0xdddcdb;
     _GGadget_gtextfield_box.border_inner = 0x757371;
     _gtextfield_font = _GGadgetInitDefaultBox("GTextField.",&_GGadget_gtextfield_box,_gtextfield_font);
+
+    gmultitextfield_box = _GGadget_gtextfield_box;
+    gmultitextfield_box.flags &= ~box_gradient_bg;
+    gmultitextfield_box.main_background = 0xffffff;
+    _GGadgetInitDefaultBox("GMultiTextField.", &gmultitextfield_box, _gtextfield_font);
 
     glistfield_box = _GGadget_gtextfield_box;
     _GGadgetInitDefaultBox("GComboBox.",&glistfield_box,_gtextfield_font);
 
     gnumericfield_box = _GGadget_gtextfield_box;
     _GGadgetInitDefaultBox("GNumericField.",&gnumericfield_box,_gtextfield_font);
-
-    glistfieldmenu_box = glistfield_box;
-    gnumericfieldspinner_box = glistfieldmenu_box;
-    glistfieldmenu_box.flags = gnumericfieldspinner_box.flags = box_foreground_border_outer|box_gradient_bg;
-    glistfieldmenu_box.border_type = gnumericfieldspinner_box.border_type = bt_box;
-    glistfieldmenu_box.border_brightest = glistfieldmenu_box.border_brighter =
-	glistfieldmenu_box.border_darkest =
-	glistfieldmenu_box.border_darker =
-	gnumericfieldspinner_box.border_brightest =
-	gnumericfieldspinner_box.border_brighter =
-	gnumericfieldspinner_box.border_darkest =
-	gnumericfieldspinner_box.border_darker = 0x908f8e;
-    glistfieldmenu_box.border_inner = gnumericfieldspinner_box.border_inner = 0xf9f8f7;
-    glistfieldmenu_box.border_outer = gnumericfieldspinner_box.border_outer = 0xdddcdb;
-    glistfieldmenu_box.gradient_bg_end = gnumericfieldspinner_box.gradient_bg_end = 0xe5e4e3;
-
-    _GGadgetInitDefaultBox("GComboBoxMenu.",&glistfieldmenu_box,_gtextfield_font);
-    _GGadgetInitDefaultBox("GNumericFieldSpinner.",&gnumericfieldspinner_box,_gtextfield_font);
 
     gtextfield_inited = true;
 }
@@ -2614,15 +2543,13 @@ static void GTextFieldFit(GTextField *gt) {
     GTextFieldGetDesiredSize(&gt->g,&outer,&inner);
     if ( gt->g.r.width==0 ) {
 	int extra=0;
-	if ( gt->listfield ) {
+        if ( gt->listfield || gt->numericfield )
 	    extra = GDrawPointsToPixels(gt->g.base,_GListMarkSize) +
 		    2*GDrawPointsToPixels(gt->g.base,_GGadget_TextImageSkip) +
 		    GBoxBorderWidth(gt->g.base,&_GListMark_Box);
-	} else if ( gt->numericfield ) {
-	    extra = GDrawPointsToPixels(gt->g.base,_GListMarkSize)/2 +
-		    GDrawPointsToPixels(gt->g.base,_GGadget_TextImageSkip) +
-		    2*GBoxBorderWidth(gt->g.base,&gnumericfieldspinner_box);
-	}
+	if ( gt->numericfield )
+	    extra = 2 * extra;
+
 	gt->g.r.width = outer.width;
 	gt->g.inner.width = inner.width;
 	gt->g.inner.x = gt->g.r.x + (outer.width-inner.width-extra)/2;
@@ -2646,24 +2573,18 @@ static void GTextFieldFit(GTextField *gt) {
     }
     if ( gt->listfield || gt->numericfield ) {
 	GListField *ge = (GListField *) gt;
-	int extra;
-	if ( gt->listfield )
-	    extra = GDrawPointsToPixels(gt->g.base,_GListMarkSize) +
+	int extra = GDrawPointsToPixels(gt->g.base,_GListMarkSize) +
 		    GDrawPointsToPixels(gt->g.base,_GGadget_TextImageSkip) +
 		    2*GBoxBorderWidth(gt->g.base,&_GListMark_Box)+
-		    GBoxBorderWidth(gt->g.base,&glistfieldmenu_box);
-	else {
-	    extra = GDrawPointsToPixels(gt->g.base,_GListMarkSize)/2 +
-		    GDrawPointsToPixels(gt->g.base,_GGadget_TextImageSkip) +
-		    2*GBoxBorderWidth(gt->g.base,&gnumericfieldspinner_box);
-	}
-	ge->fieldrect = ge->buttonrect = gt->g.r;
-	ge->fieldrect.width -= extra;
+		    GBoxBorderWidth(gt->g.base,&glistfield_box);
+	if (gt->numericfield)
+	    extra = 2 * extra;
+	ge->fieldrect = gt->g.r;
 	extra -= GDrawPointsToPixels(gt->g.base,_GGadget_TextImageSkip)/2;
-	ge->buttonrect.x = ge->buttonrect.x+ge->buttonrect.width-extra;
+	ge->buttonrect.x = gt->g.r.x+gt->g.r.width - extra;
 	ge->buttonrect.width = extra;
-	if ( gt->numericfield )
-	    ++ge->fieldrect.width;
+	ge->buttonrect.y = gt->g.r.y + bp / 2;
+	ge->buttonrect.height = gt->g.r.height - bp;
     }
 }
 
@@ -2741,7 +2662,7 @@ GGadget *GTextAreaCreate(struct gwindow *base, GGadgetData *gd,void *data) {
     GTextField *gt = xcalloc(1,sizeof(GTextField));
     gt->multi_line = true;
     gt->accepts_returns = true;
-    _GTextFieldCreate(gt,base,gd,data,&_GGadget_gtextfield_box);
+    _GTextFieldCreate(gt,base,gd,data,&gmultitextfield_box);
 
 return( &gt->g );
 }

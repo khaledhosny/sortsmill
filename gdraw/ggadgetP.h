@@ -568,11 +568,13 @@ VISIBLE extern void _ggadget_destroy(GGadget *g);
 
 extern GWindow GListPopupCreate(GGadget *owner,void (*inform)(GGadget *,int), GTextInfo **ti);
 
+enum mark_type { mt_arrow, mt_plus, mt_minus };
+
 extern int GMenuPopupCheckKey(GEvent *event);
 extern int GMenuBarCheckKey(GGadget *g, GEvent *event);
 extern void _GButton_SetDefault(GGadget *g,int32_t is_default);
 VISIBLE extern void _GButtonInit(void);
-extern void GListMarkDraw(GWindow pixmap,int x, int y, int height, enum gadget_state state );
+extern void GListMarkDraw(GWindow pixmap,int x, int y, int height, enum gadget_state state, enum mark_type);
 extern char **_GGadget_GetImagePath(void);
 extern int _GGadget_ImageInCache(GImage *image);
 
