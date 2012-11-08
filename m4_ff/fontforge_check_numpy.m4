@@ -14,6 +14,9 @@ AC_DEFUN([FONTFORGE_CHECK_NUMPY],
          fontforge_cv_python_numpy=no
       fi
    ])
+   if test x"${fontforge_cv_python_numpy}" != xyes; then
+      AC_MSG_ERROR([Python support in ${PACKAGE_NAME} requires the module 'numpy', which was not found.])
+   fi
 ])
 
 
@@ -29,6 +32,9 @@ AC_DEFUN([FONTFORGE_CHECK_NUMPY_LINALG],
          fontforge_cv_python_numpy_linalg=yes
       else
          fontforge_cv_python_numpy_linalg=no
+      fi
+      if test x"${fontforge_cv_python_numpy_linalg}" != xyes; then
+         AC_MSG_ERROR([Python support in ${PACKAGE_NAME} requires the module 'numpy.linalg', which was not found.])
       fi
    ])
 ])
