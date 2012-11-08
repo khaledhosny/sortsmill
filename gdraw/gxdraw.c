@@ -623,6 +623,10 @@ static int cursor_map[ct_user] = { 0,
 	XC_right_ptr,		/* drag and drop */
 	XC_sb_h_double_arrow,   /* leftright */
 	XC_sb_v_double_arrow,   /* updown */
+	XC_top_left_corner,
+	XC_top_right_corner,
+	XC_bottom_left_corner,
+	XC_bottom_right_corner,
 };
 
 static Cursor _GXDraw_GetCursor( GXDisplay *gdisp, enum cursor_types ct ) {

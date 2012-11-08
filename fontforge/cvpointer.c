@@ -384,7 +384,10 @@ static void SetCur(CharView *cv) {
 
     if ( cursors[ee_nw]==0 ) {
 	cursors[ee_none] = ct_pointer;
-	cursors[ee_nw] = cursors[ee_se] = ct_nwse; cursors[ee_ne] = cursors[ee_sw] = ct_nesw;
+	cursors[ee_nw] = ct_topleft;
+	cursors[ee_se] = ct_bottomright;
+	cursors[ee_ne] = ct_topright;
+	cursors[ee_sw] = ct_bottomleft;
 	cursors[ee_left] = cursors[ee_right] = ct_leftright;
 	cursors[ee_up] = cursors[ee_down] = ct_updown;
     }

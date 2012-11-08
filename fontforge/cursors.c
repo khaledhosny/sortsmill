@@ -33,7 +33,6 @@ GCursor ct_magplus, ct_magminus, ct_circle, ct_square, ct_triangle,
 	ct_3drotate, ct_perspective, ct_hvcircle, ct_g2circle;
 GCursor ct_rect, ct_elipse, ct_poly, ct_star, ct_pencil, ct_shift, ct_line,
 	ct_myhand, ct_filledrect, ct_filledelipse, ct_setwidth, ct_eyedropper;
-GCursor ct_nesw, ct_nwse;
 GCursor ct_rbearing, ct_kerning, ct_lbearing;
 GCursor ct_prohibition, ct_ddcursor, ct_features;
 GCursor ct_spiroleft, ct_spiroright;
@@ -82,9 +81,6 @@ void InitCursors(void) {
     ct_elipse = GDrawCreateCursor("elipsecur");
     ct_poly = GDrawCreateCursor("polycur");
     ct_star = GDrawCreateCursor("starcur");
-
-    ct_nwse = GDrawCreateCursor("nwse");
-    ct_nesw = GDrawCreateCursor("nesw");
 
     ct_pencil = GDrawCreateCursor("pencil");
     ct_eyedropper = GDrawCreateCursor("eyedropper");

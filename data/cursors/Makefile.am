@@ -30,8 +30,6 @@ CURSOR_LIST = \
 	linecur \
 	magminus \
 	magplus \
-	nesw \
-	nwse \
 	pencil \
 	pencur \
 	perspectivecur \
