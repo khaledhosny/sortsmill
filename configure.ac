@@ -134,6 +134,7 @@ AC_PATH_PROG([UPDATE_DESKTOP_DATABASE],[update-desktop-database],[update-desktop
 
 # Assorted programs.
 AC_PATH_PROG([WGET],[wget],[wget])
+AC_PATH_PROG([CYTHON],[cython],[cython])
 GUILE_PROGS
 AX_PKG_SWIG([2.0.4],[:],
         [AC_MSG_WARN([SWIG >= 2.0.4 will be needed if you are going to regenerate some of the source codes.])])
@@ -294,6 +295,11 @@ SWIG_GUILE_EXTRA_CFLAGS=""
 FONTFORGE_COMPILER_FLAGS([SWIG_GUILE_EXTRA_CFLAGS],
         [-Wno-unused -Wno-missing-prototypes])
 
+AC_SUBST([CYTHON_EXTRA_CFLAGS])
+CYTHON_EXTRA_CFLAGS=""
+FONTFORGE_COMPILER_FLAGS([CYTHON_EXTRA_CFLAGS],
+        [-Wno-unused -fwrapv -fno-strict-aliasing])
+
 #--------------------------------------------------------------------------
 # Checks for library functions.
 
@@ -342,7 +348,7 @@ FONTFORGE_SET_MY_LIBS
 FONTFORGE_CREATE_MAKEFILES
 FONTFORGE_CREATE_INDENT_PRO
 AC_CONFIG_FILES([inc/config-extra.h])
-AC_CONFIG_FILES([pycontrib/site_init.py pycontrib/psMat.py])
+AC_CONFIG_FILES([python/site_init.py python/psMat.py])
 AC_CONFIG_FILES([fontforge/darwinsetup],[chmod +x fontforge/darwinsetup])
 AC_CONFIG_COMMANDS([scheme/sortsmillff],[AS_MKDIR_P([scheme/sortsmillff])])
 FONTFORGE_CONFIG_TESTSUITE

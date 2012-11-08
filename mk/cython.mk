@@ -1,4 +1,3 @@
-# Copyright (C) 2000-2012 by George Williams
 # Copyright (C) 2012 by Barry Schwartz
 #
 # Redistribution and use in source and binary forms, with or without
@@ -25,22 +24,11 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-include $(top_srcdir)/mk/layout.am
+#--------------------------------------------------------------------------
 
-# FIXME: Maybe this should go in a separate package.
-dist_python_PYTHON = psMat.py
-
-nodist_pkgpythondata_PYTHON = site_init.py
-dist_pycontrib_PYTHON = __init__.py excepthook.py
-
-extract_text = $(PERL) -n -e								\
-	'print $$_ if (s|^\s*\#\s*$(1)--\s*(.*)\s*|\1\n|)'
-
-$(top_srcdir)/doc/%.interface.texi: %.py
-	$(call extract_text,i) $< > $@
-
-extract-text: $(top_srcdir)/doc/psMat.interface.texi
-
-mostlyclean-local:
-	-rm -f $(builddir)/*.pyc $(builddir)/*.pyo
-	-rm -f $(srcdir)/*.pyc $(srcdir)/*.pyo
+%.c: %.pyx
+	$(AM_V_GEN)
+	$(AM_V_at)$(CYTHON) $(CYTHONFLAGS) --force -o $@ $<
+	$(AM_V_at)$(PERL) -i -n -e 'print ("#include <config.h>\n") if $$. == 1;				\
+		s%^PyMODINIT_FUNC(\s*(init|PyInit_).*/\*\s*proto\s*\*/)%VISIBLE PyMODINIT_FUNC\1%;	\
+		print $$_' $@

@@ -58,7 +58,7 @@ clean-local:
 	test ! -f '$(TESTSUITE)' || $(SHELL) '$(TESTSUITE)' --clean
 
 check-local: override TESTSUITEFLAGS +=	DOING_INSTALLCHECK=no \
-	PYTHONPATH="$(abs_top_builddir)/pycontrib:$(abs_top_srcdir)/pycontrib"
+	PYTHONPATH="$(abs_top_builddir)/python:$(abs_top_srcdir)/python"
 
 installcheck-local: override TESTSUITEFLAGS += DOING_INSTALLCHECK=yes
 

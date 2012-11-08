@@ -44,7 +44,7 @@ SUBDIRS += sfd2sxml
 endif THE_PROGRAMS
 
 if PYTHON_SCRIPTING
-SUBDIRS += pycontrib
+SUBDIRS += python
 endif PYTHON_SCRIPTING
 
 if PYTHON_EXTENSION

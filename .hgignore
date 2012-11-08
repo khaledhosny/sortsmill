@@ -16,6 +16,8 @@ syntax: regexp
 \.dll$
 \.obj$
 \.gmo$
+\.pyc$
+\.pyo$
 \.info$
 ^lib/
 ^.libs/
