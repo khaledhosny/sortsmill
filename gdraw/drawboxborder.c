@@ -939,8 +939,6 @@ int GBoxDrawBorder(GWindow gw,GRect *pos,GBox *design,enum gadget_state state,
 	int is_default) {
     int ret = 0;
 
-    if ( state == gs_disabled )
-	GDrawSetStippled(gw,1,0,0);
     switch ( design->border_shape ) {
       case bs_rect:
 	ret = GBoxRectBorder(gw,pos,design,state,is_default);
@@ -955,8 +953,6 @@ int GBoxDrawBorder(GWindow gw,GRect *pos,GBox *design,enum gadget_state state,
 	ret = GBoxDiamondBorder(gw,pos,design,state,is_default);
       break;
     }
-    if ( state == gs_disabled )
-	GDrawSetStippled(gw,0,0,0);
 return( ret );
 }
 
@@ -1073,10 +1069,9 @@ void GBoxDrawBackground(GWindow gw,GRect *pos,GBox *design,
     int def_off = is_default && (design->flags & box_draw_default) ?
 	    GDrawPointsToPixels(gw,1) + GDrawPointsToPixels(gw,2): 0;
 
-    if ( state == gs_disabled ) {
+    if ( state == gs_disabled )
 	ibg=dbg;
-	GDrawSetStippled(gw,1,0,0);
-    } else if ( state == gs_pressedactive && (design->flags & box_do_depressed_background ))
+    else if ( state == gs_pressedactive && (design->flags & box_do_depressed_background ))
 	ibg=pbg;
     else
 	ibg=mbg;
@@ -1127,8 +1122,6 @@ void GBoxDrawBackground(GWindow gw,GRect *pos,GBox *design,
 		GDrawFillRoundRect(gw,pos,rr,ibg);
 	}
     }
-    if ( state == gs_disabled )
-	GDrawSetStippled(gw,0,0,0);
 }
 
 int GBoxBorderWidth(GWindow gw, GBox *box) {
