@@ -16,10 +16,10 @@
 include $(top_srcdir)/mk/layout.am
 
 CURSOR_LIST = \
+	color-picker \
 	crossed_circle \
-	ddcursor \
+	dnd-copy \
 	elipsecur \
-	eyedropper \
 	featurescursor \
 	filledelipsecur \
 	filledrectcur \

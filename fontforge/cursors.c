@@ -83,7 +83,7 @@ void InitCursors(void) {
     ct_star = GDrawCreateCursor("starcur");
 
     ct_pencil = GDrawCreateCursor("pencil");
-    ct_eyedropper = GDrawCreateCursor("eyedropper");
+    ct_eyedropper = GDrawCreateCursor("color-picker");
     ct_shift = GDrawCreateCursor("shift");
     ct_line = GDrawCreateCursor("linecur");
     ct_myhand = GDrawCreateCursor("grabbing");
@@ -95,7 +95,7 @@ void InitCursors(void) {
     ct_lbearing = GDrawCreateCursor("lbearcur");
 
     ct_prohibition = GDrawCreateCursor("crossed_circle");
-    ct_ddcursor = GDrawCreateCursor("ddcursor");
+    ct_ddcursor = GDrawCreateCursor("dnd-copy");
     ct_features = GDrawCreateCursor("featurescursor");
 
     logo_icon = GDrawCreateBitmap(NULL,logo_width,logo_height,logo_bits);
