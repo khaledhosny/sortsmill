@@ -21,6 +21,7 @@ import numpy as np
 cimport numpy as np
 
 cdef extern void sbern_to_bern_double (unsigned int deg, double *sbern, double *bern)
+cdef extern void bern_to_sbern_double (unsigned int deg, double *bern, double *sbern)
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
