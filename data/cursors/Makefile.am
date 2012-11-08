@@ -27,7 +27,6 @@ CURSOR_LIST = \
 	kerncur \
 	knifecur \
 	lbearcur \
-	leftright \
 	linecur \
 	magminus \
 	magplus \
@@ -54,8 +53,7 @@ CURSOR_LIST = \
 	setwidthcur \
 	shift \
 	skewcur \
-	starcur \
-	updown
+	starcur
 
 dist_cursors_DATA = $(CURSOR_LIST)
 
