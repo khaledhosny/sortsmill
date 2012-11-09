@@ -47,8 +47,8 @@ VISIBLE void bern_to_sbern_double (unsigned int deg, const double *bern,
 // vis--
 // vis-- @end deftypefun
 // vis--
-VISIBLE double eval_sbern_double (unsigned int deg, const double *spline,
-                                  double t);
+VISIBLE _GL_ATTRIBUTE_PURE double
+eval_sbern_double (unsigned int deg, const double *spline, double t);
 
 // vis--
 // vis-- @deftypefun {double} eval_bern_double (unsigned int @var{deg}, const double *@var{spline}, double @var{t});
@@ -58,8 +58,8 @@ VISIBLE double eval_sbern_double (unsigned int deg, const double *spline,
 // vis--
 // vis-- @end deftypefun
 // vis--
-VISIBLE double eval_bern_double (unsigned int deg, const double *spline,
-                                 double t);
+VISIBLE _GL_ATTRIBUTE_PURE double
+eval_bern_double (unsigned int deg, const double *spline, double t);
 
 // vis--
 // vis-- @deftypefun {double} eval_sbern_double (unsigned int @var{deg}, const double *@var{spline}, double @var{t});
@@ -72,8 +72,8 @@ VISIBLE double eval_bern_double (unsigned int deg, const double *spline,
 // vis--
 // vis-- @end deftypefun
 // vis--
-VISIBLE double evaldc_sbern_double (unsigned int deg, const double *spline,
-                                    double t);
+VISIBLE _GL_ATTRIBUTE_PURE double
+evaldc_sbern_double (unsigned int deg, const double *spline, double t);
 
 // vis--
 // vis-- @deftypefun {double} eval_bern_double (unsigned int @var{deg}, const double *@var{spline}, double @var{t});
@@ -86,8 +86,8 @@ VISIBLE double evaldc_sbern_double (unsigned int deg, const double *spline,
 // vis--
 // vis-- @end deftypefun
 // vis--
-VISIBLE double evaldc_bern_double (unsigned int deg, const double *spline,
-                                   double t);
+VISIBLE _GL_ATTRIBUTE_PURE double
+evaldc_bern_double (unsigned int deg, const double *spline, double t);
 
 // vis--
 // vis-- @deftypefun {void} subdiv_sbern_double (unsigned int @var{deg}, const double *@var{spline}, double @var{t}, double *@var{a}, double *@var{b});
