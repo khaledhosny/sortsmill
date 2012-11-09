@@ -64,7 +64,7 @@ int _GGadget_Skip = 6;
 int _GGadget_TextImageSkip = 4;
 char *_GGadget_ImagePath = NULL;
 static int _ggadget_inited = 0;
-static Color popup_foreground = 0x222222, popup_background = 0xbcd2ea;
+static Color popup_foreground = 0x222222, popup_background = 0xe7f3fd;
 static int popup_delay = 1000, popup_lifetime = 20000;
 
 static GResInfo popup_ri;
