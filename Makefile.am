@@ -186,3 +186,21 @@ shortcuts-template:
 
 #--------------------------------------------------------------------------
 
+CYCLO_SOURCEFILES = $(top_srcdir)/inc/*.[ch]					\
+	$(top_srcdir)/auxiliary/*.[ch] $(top_srcdir)/gutils/*.[ch]	\
+	$(top_srcdir)/gdraw/*.[ch] $(top_srcdir)/fontforge/*.[ch]
+
+cyclo-fontforge.html: $(CYCLO_SOURCEFILES)
+	$(PMCCABE) $(CYCLO_SOURCEFILES) \
+		| sort -n -r \
+		| $(AWK) -f $(top_srcdir)/config/pmccabe2html \
+			-v lang=html \
+			-v name="$(PACKAGE_NAME)" \
+			-v vcurl="https://github.com/sortsmill/fontforge/blob/master/%FILENAME%" \
+			-v url="https://github.com/sortsmill/fontforge" \
+			-v css=$(top_srcdir)/config/pmccabe.css \
+			-v cut_dir=$(top_srcdir)/ \
+			> $@-tmp
+	mv $@-tmp $@
+
+#--------------------------------------------------------------------------
