@@ -56,6 +56,8 @@ m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 # Libtool-related configuration.
 m4_ifdef([AM_PROG_AR],[AM_PROG_AR]) dnl Support for Microsoft linker.
 LT_INIT([dlopen])                   dnl Initialize libtool.
+LT_OBJDIR="${lt_cv_objdir}/"
+AC_SUBST([LT_OBJDIR])
 
 AC_PATH_XTRA
 i_do_have_x="${have_x}"

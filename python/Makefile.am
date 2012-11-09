@@ -53,6 +53,15 @@ MOSTLYCLEANFILES = sortsmillff/bernstein.c
 AM_LDFLAGS = -module -shared -avoid-version
 AM_CFLAGS += $(NUMPY_CFLAGS) $(CYTHON_EXTRA_CFLAGS)
 
+# FIXME: Maybe support extensions other than .so.
+sortsmillff/%.so: sortsmillff/%.la
+	-rm -f $@
+	cp sortsmillff/$(LT_OBJDIR)$*.so $@
+
+# These shared object files are needed by the test suite.
+all-local: sortsmillff/bernstein.so
+check-local: all-local
+
 extract_text = $(PERL) -n -e								\
 	'print $$_ if (s|^\s*\#\s*$(1)--\s*(.*)\s*|\1\n|)'
 
@@ -66,3 +75,4 @@ mostlyclean-local:
 	-rm -f $(srcdir)/*.pyc $(srcdir)/*.pyo
 	-rm -f $(builddir)/*/*.pyc $(builddir)/*/*.pyo
 	-rm -f $(srcdir)/*/*.pyc $(srcdir)/*/*.pyo
+	-rm -f $(builddir)/sortsmillff/*.so

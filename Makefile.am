@@ -37,7 +37,7 @@ if GRAPHICAL_USER_INTERFACE
 SUBDIRS += gdraw data
 endif GRAPHICAL_USER_INTERFACE
 
-SUBDIRS += fontforge po scheme doc htdocs tests
+SUBDIRS += fontforge po scheme doc htdocs
 
 if THE_PROGRAMS
 SUBDIRS += sfd2sxml
@@ -58,6 +58,8 @@ endif MACINTOSH
 if FONTTOOLS
 SUBDIRS += fonttools
 endif FONTTOOLS
+
+SUBDIRS += tests
 
 EXTRA_DIST = COPYING.permissive README-Mac.html README-MS.html	\
 	README-unix README-Unix.html m4/gnulib-cache.m4	\

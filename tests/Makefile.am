@@ -60,6 +60,9 @@ clean-local:
 check-local: override TESTSUITEFLAGS += DOING_INSTALLCHECK=no	\
 	PYTHONPATH="$(abs_top_builddir)/python"
 
+# FIXME FIXME FIXME: installcheck needs to set PYTHONPATH and such.
+# FIXME FIXME FIXME: Also, once that is done, some installcheck tests
+# FIXME FIXME FIXME: that are skipped might better be performed.
 installcheck-local: override TESTSUITEFLAGS += DOING_INSTALLCHECK=yes
 
 AUTOM4TE = $(SHELL) $(srcdir)/build-aux/missing --run autom4te
@@ -112,7 +115,9 @@ EXTRA_DIST += $(MY_AT_FILES)
 
 EXTRA_DIST += test_xunistr_strtol.txt test_xunistr_strtod.txt
 
-EXTRA_DIST += test_utf7_to_string.scm test_guile_bernstein.scm
+EXTRA_DIST += test_utf7_to_string.scm
+
+EXTRA_DIST += test_guile_bernstein.scm test_python_bernstein.py
 
 EXTRA_DIST += test_psMat_identity.py test_psMat_inverse.py			\
 	test_psMat_compose.py test_psMat_rotate.py test_psMat_scale.py	\
