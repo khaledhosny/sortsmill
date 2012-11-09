@@ -462,24 +462,6 @@ _GGadgetInitDefaultBox (char *class, GBox * box, FontInstance * deffont)
   return (fi);
 }
 
-static int
-localeptsize (void)
-{
-  const char *loc = getenv ("LC_ALL");
-  if (loc == NULL)
-    loc = getenv ("LC_CTYPE");
-  if (loc == NULL)
-    loc = getenv ("LANG");
-
-  if (loc == NULL)
-    return (8);
-  else if (strncmp (loc, "ja", 2) == 0 ||
-           strncmp (loc, "zh", 2) == 0 || strncmp (loc, "ko", 2) == 0)
-    return (12);
-
-  return (8);
-}
-
 void
 GGadgetInit (void)
 {
@@ -544,8 +526,7 @@ GGadgetInit (void)
       if (popup_font == NULL)
         {
           popup_font =
-            GDrawNewFont (NULL, "sans-serif", localeptsize (), 400,
-                          fs_none);
+            GDrawNewFont (NULL, "sans-serif", 10, 400, fs_none);
           if (popup_font == NULL)
             popup_font = _ggadget_default_font;
         }
