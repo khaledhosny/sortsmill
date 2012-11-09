@@ -28,7 +28,8 @@
 
 %.c: %.pyx
 	$(AM_V_GEN)
-	$(AM_V_at)$(CYTHON) $(CYTHONFLAGS) --force -o $@ $<
+	$(AM_V_at)$(CYTHON) $(CYTHONFLAGS) --force -o $@-tmp $<
 	$(AM_V_at)$(PERL) -i -n -e 'print ("#include <config.h>\n") if $$. == 1;				\
 		s%^PyMODINIT_FUNC(\s*(init|PyInit_).*/\*\s*proto\s*\*/)%VISIBLE PyMODINIT_FUNC\1%;	\
-		print $$_' $@
+		print $$_' $@-tmp
+	$(AM_V_at)mv $@-tmp $@

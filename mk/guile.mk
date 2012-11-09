@@ -56,7 +56,8 @@ CONFIGURE_SCHEME =														\
 
 %.scm: %.scm.in
 	$(AM_V_GEN)
-	$(AM_V_at)$(CONFIGURE_SCHEME) < $< > $@
+	$(AM_V_at)$(CONFIGURE_SCHEME) < $< > $@-tmp
+	$(AM_V_at)mv $@-tmp $@
 
 SWIG_TO_GUILE_POSTPROCESS = $(PERL) -i -p -e '							\
 $$/ = undef;															\
@@ -71,8 +72,9 @@ SWIG_TO_GUILE = $(SWIG) -I$(abs_top_builddir)/swig					\
 -I$(abs_top_srcdir)/swig -I/usr/include $(filter -I%,$(MY_CFLAGS))	\
 -guile -Linkage module -package sortsmillff
 
-swig_to_guile = $(SWIG_TO_GUILE) -o $(1) $(2);	\
-	$(SWIG_TO_GUILE_POSTPROCESS) $(1)
+swig_to_guile = $(SWIG_TO_GUILE) -o $(1)-tmp $(2);	\
+	$(SWIG_TO_GUILE_POSTPROCESS) $(1)-tmp;			\
+	mv $(1)-tmp $(1)
 
 %.c: %.i
 	$(AM_V_GEN)
