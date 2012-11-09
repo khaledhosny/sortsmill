@@ -1459,28 +1459,35 @@ return( false );
 
     int marklen = GDrawPointsToPixels(pixmap,_GListMarkSize);
     if ( gt->listfield ) {
+	int margin = (ge->buttonrect.width - marklen) / 2;
+
 	GRect r = ge->buttonrect;
 	r.x -= r.width / 2;
 	GBoxDrawVLine(pixmap, &r, g->box);
+
 	GListMarkDraw(pixmap,
-		ge->buttonrect.x + (ge->buttonrect.width - marklen)/2,
+		ge->buttonrect.x + margin,
 		g->inner.y,
 		g->inner.height,
 		g->state,
 		mt_arrow);
     } else if ( gt->numericfield ) {
+	int margin = ((ge->buttonrect.width / 2) - marklen) / 2;
+
 	GRect r = ge->buttonrect;
-	GBoxDrawVLine(pixmap, &r, g->box);
+	GBoxDrawVLine(pixmap, &r, g->box); // second line
 	r.x -= r.width / 2;
-	GBoxDrawVLine(pixmap, &r, g->box);
+	GBoxDrawVLine(pixmap, &r, g->box); // first line
+
 	GListMarkDraw(pixmap,
-		ge->buttonrect.x + (ge->buttonrect.width - marklen) / 4,
+		ge->buttonrect.x + margin,
 		g->inner.y,
 		g->inner.height,
 		g->state,
 		mt_minus);
+
 	GListMarkDraw(pixmap,
-		ge->buttonrect.x + (ge->buttonrect.width - marklen * 2),
+		ge->buttonrect.x + (ge->buttonrect.width / 2) + margin,
 		g->inner.y,
 		g->inner.height,
 		g->state,

@@ -538,7 +538,8 @@ GListMarkDraw (GWindow pixmap, int x, int y, int height,
                enum gadget_state state,
 	       enum mark_type type)
 {
-  int pt, _width, _height;
+  int pt;
+  double _width, _height;
   if (type == mt_arrow && state == gs_disabled &&
       _GListMark_DisImage != NULL && _GListMark_DisImage->image != NULL)
     {
@@ -558,7 +559,6 @@ GListMarkDraw (GWindow pixmap, int x, int y, int height,
 
       pt = GDrawPointsToPixels (pixmap, 1);
       _width = GDrawPointsToPixels (pixmap, _GListMarkSize);
-      _width -= (_width & 1); // round
       _height = 2 * GDrawPointsToPixels (pixmap, _GListMark_Box.border_width) + 3 * pt;
 
       cairo_new_path (cr);
