@@ -1,6 +1,6 @@
 #! /bin/env python
 
-import psMat
+import sortsmillff.psMat as psMat
 from math import cos, sin, pi
 import sys
 

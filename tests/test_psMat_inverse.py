@@ -6,7 +6,7 @@
 # programming is correct, if the random number generator happens to
 # create some very ill-conditioned matrix.
 
-import psMat
+import sortsmillff.psMat as psMat
 import random
 import sys
 

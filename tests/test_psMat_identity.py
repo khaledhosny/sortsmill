@@ -1,6 +1,6 @@
 #! /bin/env python
 
-import psMat
+import sortsmillff.psMat as psMat
 import sys
 
 eps = sys.float_info.epsilon
