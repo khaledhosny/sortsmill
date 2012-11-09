@@ -70,8 +70,6 @@ libguile_sortsmillff_gsl_la_LIBADD =				\
 	$(top_builddir)/lib/libgnu.la
 libguile_sortsmillff_gsl_la_CFLAGS = $(SWIG_GUILE_CFLAGS)
 
-$(srcdir)/guile_gsl.c: $(top_srcdir)/swig/gsl.i
-
 EXTRA_DIST += guile_gsl.i
 
 #--------------------------------------------------------------------------

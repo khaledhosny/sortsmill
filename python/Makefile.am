@@ -36,7 +36,7 @@ nodist_python_PYTHON = psMat.py
 nobase_dist_python_PYTHON = ffContrib/__init__.py	\
 	ffContrib/excepthook.py
 
-nobase_dist_python_PYTHON += sortsmillff/__init__.py	\
+nobase_nodist_python_PYTHON = sortsmillff/__init__.py	\
 	sortsmillff/psMat.py
 
 nobase_pyexec_LTLIBRARIES =

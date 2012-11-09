@@ -349,6 +349,8 @@ FONTFORGE_CREATE_MAKEFILES
 FONTFORGE_CREATE_INDENT_PRO
 AC_CONFIG_FILES([inc/config-extra.h])
 AC_CONFIG_FILES([python/site_init.py])
+AC_CONFIG_FILES([python/psMat.py])
+AC_CONFIG_FILES([python/sortsmillff/__init__.py])
 AC_CONFIG_FILES([python/sortsmillff/psMat.py])
 AC_CONFIG_COMMANDS([scheme/sortsmillff],[AS_MKDIR_P([scheme/sortsmillff])])
 FONTFORGE_CONFIG_TESTSUITE
