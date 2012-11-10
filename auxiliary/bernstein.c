@@ -20,6 +20,14 @@
 #include <string.h>
 #include <math.h>
 
+#ifndef MY_FAST_FMA
+#ifdef FP_FAST_FMA
+#define MY_FAST_FMA fma
+#else
+#define MY_FAST_FMA(x, y, z) ((x) * (y) + (z))
+#endif
+#endif
+
 void
 sbern_to_bern_double (unsigned int deg, const double *sbern, double *bern)
 {
@@ -49,7 +57,7 @@ eval_sbern_double (unsigned int deg, const double *spline, double t)
       double u = t / s;
       v = spline[deg];
       for (unsigned int i = 1; i <= deg; i++)
-        v = fma (v, u, spline[deg - i]);
+        v = MY_FAST_FMA (v, u, spline[deg - i]);
 
       // Multiply by @var{s} raised to the power @var{deg}.
       double power = s;
@@ -69,7 +77,7 @@ eval_sbern_double (unsigned int deg, const double *spline, double t)
       double u = s / t;
       v = spline[0];
       for (unsigned int i = 1; i <= deg; i++)
-        v = fma (v, u, spline[i]);
+        v = MY_FAST_FMA (v, u, spline[i]);
 
       // Multiply by @var{t} raised to the power @var{deg}.
       double power = t;
