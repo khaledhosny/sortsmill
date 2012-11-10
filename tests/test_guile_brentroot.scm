@@ -22,19 +22,35 @@
  (ice-9 receive)
  (ice-9 format))
 
+(define argc (length (command-line)))
+
 (define func-string (cadr (command-line)))
 (define t1 (string->number (caddr (command-line))))
 (define t2 (string->number (cadddr (command-line))))
 
+(define max-iters
+  (if (<= 5 argc)
+      (string->number (list-ref (command-line) 4))
+      -1))
+
+(define tol
+  (if (<= 6 argc)
+      (string->number (list-ref (command-line) 5))
+      -1))
+
 (define func (eval (call-with-input-string func-string read)
                    (interaction-environment)))
 
-(receive (root err iter-no) (brentroot-values t1 t2 func)
+(receive (root err iter-no) (brentroot-values t1 t2 func
+                                              #:max-iters max-iters
+                                              #:tol tol)
   (if (zero? err)
       (format #t "err = ~d, root = ~,6f, iter_no = ~d" err root iter-no)
       (format #t "err = ~d" err))
 
   ;; Check that brentroot returns the same result as brentroot-values.
-  (if (equal? root (brentroot t1 t2 func))
+  (if (equal? root (brentroot t1 t2 func
+                              #:max-iters max-iters
+                              #:tol tol))
       (exit 0)
       (exit 1)))
