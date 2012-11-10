@@ -34,7 +34,7 @@
       (format #t "err = ~d, root = ~,6f, iter_no = ~d" err root iter-no)
       (format #t "err = ~d" err))
 
-  ;; Check that brentroot returns the same result at brentroot-values.
+  ;; Check that brentroot returns the same result as brentroot-values.
   (if (equal? root (brentroot t1 t2 func))
       (exit 0)
       (exit 1)))
