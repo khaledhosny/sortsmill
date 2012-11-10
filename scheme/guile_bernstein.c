@@ -15,23 +15,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-#include <libguile.h>
+#include <sortsmillff/guile/bernstein.h>
 #include <bernstein.h>
 #include <xalloc.h>
 
-VISIBLE void init_guile_sortsmillff_bernstein (void);
+void init_guile_sortsmillff_bernstein (void);
 
-// FIXME: Move these to a header file.
-VISIBLE SCM scm_f64vector_sbern_to_bern (SCM spline);
-VISIBLE SCM scm_f64vector_bern_to_sbern (SCM spline);
-VISIBLE SCM scm_f64vector_eval_sbern (SCM spline, SCM t);
-VISIBLE SCM scm_f64vector_eval_bern (SCM spline, SCM t);
-VISIBLE SCM scm_f64vector_evaldc_sbern (SCM spline, SCM t);
-VISIBLE SCM scm_f64vector_evaldc_bern (SCM spline, SCM t);
-VISIBLE SCM scm_f64vector_subdiv_sbern (SCM spline, SCM t);
-VISIBLE SCM scm_f64vector_subdiv_bern (SCM spline, SCM t);
-
-SCM
+VISIBLE SCM
 scm_f64vector_sbern_to_bern (SCM spline)
 {
   scm_t_array_handle handle;
@@ -47,7 +37,7 @@ scm_f64vector_sbern_to_bern (SCM spline)
   return bern;
 }
 
-SCM
+VISIBLE SCM
 scm_f64vector_bern_to_sbern (SCM spline)
 {
   scm_t_array_handle handle;
@@ -63,7 +53,7 @@ scm_f64vector_bern_to_sbern (SCM spline)
   return sbern;
 }
 
-SCM
+VISIBLE SCM
 scm_f64vector_eval_sbern (SCM spline, SCM t)
 {
   scm_t_array_handle handle;
@@ -78,7 +68,7 @@ scm_f64vector_eval_sbern (SCM spline, SCM t)
   return scm_from_double (v);
 }
 
-SCM
+VISIBLE SCM
 scm_f64vector_eval_bern (SCM spline, SCM t)
 {
   scm_t_array_handle handle;
@@ -93,7 +83,7 @@ scm_f64vector_eval_bern (SCM spline, SCM t)
   return scm_from_double (v);
 }
 
-SCM
+VISIBLE SCM
 scm_f64vector_evaldc_sbern (SCM spline, SCM t)
 {
   scm_t_array_handle handle;
@@ -108,7 +98,7 @@ scm_f64vector_evaldc_sbern (SCM spline, SCM t)
   return scm_from_double (v);
 }
 
-SCM
+VISIBLE SCM
 scm_f64vector_evaldc_bern (SCM spline, SCM t)
 {
   scm_t_array_handle handle;
@@ -123,7 +113,7 @@ scm_f64vector_evaldc_bern (SCM spline, SCM t)
   return scm_from_double (v);
 }
 
-SCM
+VISIBLE SCM
 scm_f64vector_subdiv_sbern (SCM spline, SCM t)
 {
   scm_t_array_handle handle;
@@ -142,7 +132,7 @@ scm_f64vector_subdiv_sbern (SCM spline, SCM t)
   return scm_c_values (new_splines, 2);
 }
 
-SCM
+VISIBLE SCM
 scm_f64vector_subdiv_bern (SCM spline, SCM t)
 {
   scm_t_array_handle handle;
@@ -161,7 +151,7 @@ scm_f64vector_subdiv_bern (SCM spline, SCM t)
   return scm_c_values (new_splines, 2);
 }
 
-void
+VISIBLE void
 init_guile_sortsmillff_bernstein (void)
 {
   scm_c_define_gsubr ("f64vector-sbern->bern", 1, 0, 0,

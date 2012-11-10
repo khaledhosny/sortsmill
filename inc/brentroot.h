@@ -18,6 +18,8 @@
 
 #include <config.h>
 
+typedef double (*brentroot_func_t) (double, void *);
+
 // vis--
 // vis-- @deftypefun void brentroot (int @var{max_iters}, double @var{tol}, double @var{t1}, double @var{t2}, double (*@var{func}) (double, const void *), const void *@var{data}, double *@var{root}, int *@var{err}, unsigned int *@var{iter_no})
 // vis--
@@ -29,12 +31,8 @@
 // vis--
 // vis-- @end deftypefun
 // vis--
-VISIBLE void
-brentroot (int max_iters,
-           double tol,
-           double t1,
-           double t2,
-           double (*func) (double, const void *),
-           const void *data, double *root, int *err, unsigned int *iter_no);
+VISIBLE void brentroot (int max_iters, double tol, double t1, double t2,
+                        brentroot_func_t func, void *data, double *root,
+                        int *err, unsigned int *iter_no);
 
 #endif // _BRENTROOT_H

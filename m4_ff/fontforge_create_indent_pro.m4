@@ -11,7 +11,10 @@ AC_DEFUN([FONTFORGE_CREATE_INDENT_PRO],
       if test "${ac_srcdir}" -ef "${ac_builddir}"; then
          :
       else
-         for dir in . inc auxiliary gutils gdraw fontforge scheme pyhook tests fonttools; do
+         for dir in . inc inc/sortsmillff inc/sortsmillff/guile \
+                 auxiliary gutils gdraw fontforge scheme pyhook \
+                 tests fonttools; do
+             AS_MKDIR_P(["${ac_builddir}/${dir}"])
              rm -f "${ac_builddir}/${dir}/.indent.pro"
              (cd "${ac_builddir}/${dir}" && ${LN_S} "${ac_srcdir}"/.indent.pro .indent.pro)
          done

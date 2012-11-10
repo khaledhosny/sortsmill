@@ -62,20 +62,21 @@ endif FONTTOOLS
 SUBDIRS += tests
 
 EXTRA_DIST = COPYING.permissive README-Mac.html README-MS.html	\
-	README-unix README-Unix.html m4/gnulib-cache.m4	\
-	INSTALL.git
+	README-unix README-Unix.html m4/gnulib-cache.m4 INSTALL.git
 
 uninstall-local:
 	(cd data; $(MAKE) $(AM_MAKEFLAGS) uninstall)
 
 distclean-local:
 	rm -f config-summary
-	if test '$(top_srcdir)' -ef '$(top_builddir)'; then \
-		:; \
-	else \
-		for dir in . inc auxiliary gutils gdraw fontforge pyhook tests fonttools; do \
-             rm -f "$(top_builddir)/$${dir}/.indent.pro"; \
-		done; \
+	if test '$(top_srcdir)' -ef '$(top_builddir)'; then			\
+		:;														\
+	else														\
+		for dir in . inc inc/sortsmillff inc/sortsmillff/guile	\
+				auxiliary gutils gdraw fontforge pyhook 		\
+				tests fonttools; do								\
+             rm -f "$(top_builddir)/$${dir}/.indent.pro";		\
+		done;													\
 	fi
 
 #--------------------------------------------------------------------------

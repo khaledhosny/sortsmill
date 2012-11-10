@@ -25,6 +25,8 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+include $(top_srcdir)/mk/layout.am
+
 noinst_HEADERS = basics.h chardata.h config.h gdraw.h gfile.h			\
 	ggadget.h gicons.h gimage.h gio.h gkeysym.h gprogress.h				\
 	gresedit.h gresource.h gwidget.h intl.h ustring.h utype.h			\
@@ -32,6 +34,9 @@ noinst_HEADERS = basics.h chardata.h config.h gdraw.h gfile.h			\
 	xunicase.h xuniconv.h xuninorm.h xunistr.h xdie_on_null.h			\
 	config-extra.h ps_number.h rexp.h libguile_wrapper.h bernstein.h	\
 	pascals_triangle.h brentroot.h
+
+nobase_include_HEADERS = sortsmillff/guile/bernstein.h		\
+	sortsmillff/guile/brentroot.h sortsmillff/guile/iconv.h
 
 #--------------------------------------------------------------------------
 

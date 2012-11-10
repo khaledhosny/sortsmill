@@ -141,12 +141,9 @@ step_by_at_least_tolerance (double tolerance, double new_step, double b)
 }
 
 void
-brentroot (int max_iters,
-           double tol,
-           double t1,
-           double t2,
-           double (*func) (double, const void *),
-           const void *data, double *root, int *err, unsigned int *iter_no)
+brentroot (int max_iters, double tol, double t1, double t2,
+           brentroot_func_t func, void *data, double *root, int *err,
+           unsigned int *iter_no)
 {
   double b1, fb1, step, step1;
   double aa, bb, faa, fbb;
