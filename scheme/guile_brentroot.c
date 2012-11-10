@@ -45,7 +45,7 @@ scm_f64_brentroot (SCM max_iters, SCM tol, SCM t1, SCM t2, SCM func)
   brentroot (c_max_iters, c_tol, c_t1, c_t2, call_func, &func, &root,
              &err, &iter_no);
 
-  result[0] = scm_from_double (root);
+  result[0] = (err == 0) ? scm_from_double (root) : SCM_BOOL_F;
   result[1] = scm_from_int (err);
   result[2] = scm_from_uint (iter_no);
 

@@ -25,8 +25,7 @@
 
 (define* (brentroot t1 t2 func #:key (max-iters -1) (tol -1))
   (receive (root err iter-no) (f64-brentroot max-iters tol t1 t2 func)
-    (if (zero? err) root #f)))
+    root))
 
 (define* (brentroot-values t1 t2 func #:key (max-iters -1) (tol -1))
-  (receive (root err iter-no) (f64-brentroot max-iters tol t1 t2 func)
-    (values (if (zero? err) root #f) err iter-no)))
+  (f64-brentroot max-iters tol t1 t2 func))
