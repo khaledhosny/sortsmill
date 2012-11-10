@@ -17,12 +17,12 @@
 //
 
 static double
-my_sine (double x, const void *UNUSED(data))
+my_sine (double x, void *UNUSED(data))
 {
   return sin (x);
 }
 
-static double (*func) (double, const void *) = my_sine;
+static double (*func) (double, void *) = my_sine;
 
 int
 main (int argc, char **argv)
