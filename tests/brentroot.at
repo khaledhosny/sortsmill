@@ -1,0 +1,40 @@
+# FIXME: This test is very inadequate.
+
+m4_defun([check_brentroot],
+[
+AT_SETUP([$2])
+#AT_KEYWORDS([auxiliary scheme python brentroot.h brentroot.scm brentroot unit])
+AT_KEYWORDS([auxiliary brentroot.h brentroot unit])
+AT_SKIP_IF([test x$1 = xskip -a x${DOING_INSTALLCHECK} = xyes])
+AT_CHECK_UNQUOTED([
+export LC_ALL="${posix_locale}"
+export LTDL_LIBRARY_PATH="${abs_top_builddir}/scheme"
+export GUILE_LOAD_PATH="${abs_top_srcdir}/scheme"
+$3$2],
+[$4],[$5],[$6])
+AT_CLEANUP
+])
+
+check_brentroot(
+[skip],
+[test_brentroot sin 0.1 3.0],
+["${abs_builddir}"/],
+[0],
+[err = 1],
+[])
+
+check_brentroot(
+[skip],
+[test_brentroot sin -0.1 0.1],
+["${abs_builddir}"/],
+[0],
+[err = 0, root = 0.000000],
+[])
+
+check_brentroot(
+[skip],
+[test_brentroot sin 3.0 3.5],
+["${abs_builddir}"/],
+[0],
+[err = 0, root = 3.141593],
+[])

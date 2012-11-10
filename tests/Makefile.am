@@ -73,8 +73,8 @@ $(TESTSUITE): $(srcdir)/testsuite.at $(srcdir)/package.m4 $(MY_AT_FILES)
 
 MY_AT_FILES = xgc_h.at xunicase_h.at xuniconv_h.at xuninorm_h.at	\
 	xunistr_h.at gfile_c.at ps_number_h.at rexp_h.at				\
-	pascals_triangle.at bernstein.at sortsmillff_iconv.at psMat.at	\
-	old_python_tests.at
+	pascals_triangle.at bernstein.at brentroot.at					\
+	sortsmillff_iconv.at psMat.at old_python_tests.at
 
 TESTS_XGC_H = test_x_gc_strndup test_x_gc_strjoin
 
@@ -98,9 +98,11 @@ TESTS_PASCALS_TRIANGLE = test_pascals_triangle
 
 TESTS_BERNSTEIN = test_bernstein
 
-check_PROGRAMS = $(TESTS_XGC_H) $(TESTS_XUNISTRING_H)		\
-	$(TESTS_GFILE_C) $(TESTS_PS_NUMBER_H) $(TESTS_REXP_H)	\
-	$(TESTS_PASCALS_TRIANGLE) $(TESTS_BERNSTEIN)
+TESTS_BRENTROOT = test_brentroot
+
+check_PROGRAMS = $(TESTS_XGC_H) $(TESTS_XUNISTRING_H)				\
+	$(TESTS_GFILE_C) $(TESTS_PS_NUMBER_H) $(TESTS_REXP_H)			\
+	$(TESTS_PASCALS_TRIANGLE) $(TESTS_BERNSTEIN) $(TESTS_BRENTROOT)
 
 AM_DEFAULT_SOURCE_EXT = .c
 LDADD = $(top_builddir)/fontforge/libsortsmillff_fontforgeexe.la	\

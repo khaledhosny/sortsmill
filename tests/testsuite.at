@@ -1,7 +1,7 @@
 AT_INIT
 AT_COPYRIGHT([Copyright (C) 2012 by George Williams])
 
-AT_BANNER([auxiliary])
+AT_BANNER([auxiliary (and equivalents for Guile and Python)])
 m4_include([xgc_h.at])
 m4_include([xunicase_h.at])
 m4_include([xuniconv_h.at])
@@ -10,9 +10,8 @@ m4_include([xunistr_h.at])
 m4_include([ps_number_h.at])
 m4_include([rexp_h.at])
 m4_include([pascals_triangle.at])
-
-AT_BANNER([auxiliary/scheme/python])
 m4_include([bernstein.at])
+m4_include([brentroot.at])
 
 AT_BANNER([gutils])
 m4_include([gfile_c.at])
