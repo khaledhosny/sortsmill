@@ -77,7 +77,7 @@ inverse_quadratic (double s, double a, double fa, double b, double fb,
   *q = (fac - 1.0) * (fba - 1.0) * (fbc - 1.0);
 }
 
-static void
+static inline void
 interpolate (double a, double fa, double b, double fb, double fb1,
              double step, double step1, double tolerance,
              double *const new_step, double *const new_step1)

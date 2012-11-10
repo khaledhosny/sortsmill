@@ -42,7 +42,7 @@ main (int argc, char **argv)
   brentroot (-1, -1, t1, t2, func, NULL, &root, &err, &iter_no);
   printf ("err = %d", err);
   if (err == 0)
-    printf (", root = %lf", root);
+    printf (", root = %lf, iter_no = %d", root, iter_no);
 
   return 0;
 }
