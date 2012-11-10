@@ -18,6 +18,7 @@
 #include <bernstein.h>
 #include <pascals_triangle.h>
 #include <string.h>
+#include <math.h>
 
 void
 sbern_to_bern_double (unsigned int deg, const double *sbern, double *bern)
@@ -48,7 +49,7 @@ eval_sbern_double (unsigned int deg, const double *spline, double t)
       double u = t / s;
       v = spline[deg];
       for (unsigned int i = 1; i <= deg; i++)
-        v = v * u + spline[deg - i];
+        v = fma (v, u, spline[deg - i]);
 
       // Multiply by @var{s} raised to the power @var{deg}.
       double power = s;
@@ -68,7 +69,7 @@ eval_sbern_double (unsigned int deg, const double *spline, double t)
       double u = s / t;
       v = spline[0];
       for (unsigned int i = 1; i <= deg; i++)
-        v = v * u + spline[i];
+        v = fma (v, u, spline[i]);
 
       // Multiply by @var{t} raised to the power @var{deg}.
       double power = t;
