@@ -4145,8 +4145,6 @@ void SCCharInfo(SplineChar *sc,int deflayer, EncMap *map,int enc) {
     GGadgetCreateData *tlvarray[6], *tlharray[4], *tlhvarray[4][5];
     int i;
     GTabInfo aspects[17];
-    static GBox smallbox = { bt_raised, bs_rect, 2, 1, 0, 0, 0, 0, 0, 0, COLOR_DEFAULT, COLOR_DEFAULT, 0, 0, 0, 0, 0, 0, 0 };
-    static int boxset=0;
     static GFont *font=NULL;
 
     CharInfoInit();
@@ -4166,13 +4164,6 @@ return;
     if ( enc==-1 )
 	enc = map->backmap[sc->orig_pos];
     ci->enc = enc;
-
-    if ( !boxset ) {
-	GGadgetInit();
-	smallbox = _ggadget_Default_Box;
-	smallbox.padding = 1;
-	boxset = 1;
-    }
 
 	memset(&wattrs,0,sizeof(wattrs));
 	wattrs.mask = wam_events|wam_cursor|wam_utf8_wtitle|wam_undercursor|wam_isdlg|wam_restrict;
@@ -4413,7 +4404,6 @@ return;
 	    psgcd[6][0].gd.flags = gg_visible | gg_enabled;
 	    psgcd[6][0].gd.cid = CID_List+6*100;
 	    psgcd[6][0].gd.handle_controlevent = CI_CounterSelChanged;
-	    psgcd[6][0].gd.box = &smallbox;
 	    psgcd[6][0].creator = GListCreate;
 	    pstvarray[6][0] = &psgcd[6][0];
 
@@ -4425,7 +4415,6 @@ return;
 	    psgcd[6][1].gd.label = &pslabel[6][1];
 	    psgcd[6][1].gd.cid = CID_New+6*100;
 	    psgcd[6][1].gd.handle_controlevent = CI_NewCounter;
-	    psgcd[6][1].gd.box = &smallbox;
 	    psgcd[6][1].creator = GButtonCreate;
 	    pstharray1[6][0] = GCD_Glue; pstharray1[6][1] = &psgcd[6][1];
 
@@ -4437,7 +4426,6 @@ return;
 	    psgcd[6][2].gd.label = &pslabel[6][2];
 	    psgcd[6][2].gd.cid = CID_Delete+6*100;
 	    psgcd[6][2].gd.handle_controlevent = CI_DeleteCounter;
-	    psgcd[6][2].gd.box = &smallbox;
 	    psgcd[6][2].creator = GButtonCreate;
 	    pstharray1[6][2] = GCD_Glue; pstharray1[6][3] = &psgcd[6][2];
 
@@ -4449,7 +4437,6 @@ return;
 	    psgcd[6][3].gd.label = &pslabel[6][3];
 	    psgcd[6][3].gd.cid = CID_Edit+6*100;
 	    psgcd[6][3].gd.handle_controlevent = CI_EditCounter;
-	    psgcd[6][3].gd.box = &smallbox;
 	    psgcd[6][3].creator = GButtonCreate;
 	    pstharray1[6][4] = GCD_Glue; pstharray1[6][5] = &psgcd[6][3]; pstharray1[6][6] = GCD_Glue; pstharray1[6][7] = NULL;
 
