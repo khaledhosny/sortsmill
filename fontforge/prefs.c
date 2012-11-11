@@ -62,7 +62,6 @@ extern int adjustlbearing;
 extern Encoding *default_encoding;
 extern int autohint_before_generate;
 extern int use_freetype_to_rasterize_fv;
-extern int use_freetype_with_aa_fill_cv;
 extern int OpenCharsInNewWindow;
 extern int ItalicConstrained;
 extern int accent_offset;
@@ -318,11 +317,6 @@ static struct prefs_list
       NULL, 'O', NULL, 0,
       N_
       ("Use the FreeType rasterizer (when available)\nto rasterize glyphs in the font view.\nThis generally results in better quality.")},
-  {
-  N_("FreeTypeAAFillInOutlineView"), pr_bool, &use_freetype_with_aa_fill_cv,
-      NULL, NULL, 'O', NULL, 0,
-      N_
-      ("When filling using freetype in the outline view,\nhave freetype render the glyph antialiased.")},
   {
   N_("ExportClipboard"), pr_bool, &export_clipboard, NULL, NULL, '\0', NULL,
       0,
