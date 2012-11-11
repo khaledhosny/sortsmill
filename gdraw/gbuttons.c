@@ -43,6 +43,7 @@ static GBox _GGadget_cancelbutton_box = GBOX_EMPTY; /* Don't initialize here */
 static GBox _GGadget_colorbutton_box = GBOX_EMPTY; /* Don't initialize here */
 static GBox _GGadget_droplist_box = GBOX_EMPTY; /* Don't initialize here */
 static GBox label_box = GBOX_EMPTY; /* Don't initialize here */
+static GBox link_box = GBOX_EMPTY; /* Don't initialize here */
 static int shift_on_press = 0;
 static FontInstance *label_font = NULL, *button_font = NULL;
 static int gbutton_inited = false;
@@ -942,6 +943,7 @@ return;
 
     GGadgetInit();
     _GGadgetCopyDefaultBox(&label_box);
+    _GGadgetCopyDefaultBox(&link_box);
     _GGadgetCopyDefaultBox(&_GGadget_button_box);
     _GGadget_button_box.main_background = 0xffffff;
     _GGadget_button_box.gradient_bg_end = 0xe5e4e3;
@@ -969,6 +971,19 @@ return;
     _GGadgetInitDefaultBox("GCancelButton.",&_GGadget_cancelbutton_box,NULL);
     _GGadgetInitDefaultBox("GDropList.",&_GGadget_droplist_box,NULL);
     _GGadgetInitDefaultBox("GColorButton.",&_GGadget_colorbutton_box,NULL);
+
+    link_box = label_box;
+    link_box.flags = box_foreground_shadow_outer;
+    link_box.border_type = bt_box;
+    link_box.border_shape = bs_rect;
+    link_box.border_width = 0;
+    link_box.padding = 0;
+    link_box.main_foreground = 0x0000ff;
+    link_box.border_darker = link_box.main_foreground;
+    link_box.border_darkest = link_box.border_brighter =
+	link_box.border_brightest =
+	link_box.main_background = GDrawGetDefaultBackground (NULL);
+    _GGadgetInitDefaultBox("GLink.",&link_box,label_font);
     gbutton_inited = true;
 }
 
@@ -1047,6 +1062,7 @@ GGadget *GButtonCreate(struct gwindow *base, GGadgetData *gd,void *data) {
     GLabel *gl = _GLabelCreate(xcalloc(1,sizeof(GLabel)),base,gd,data,
 	    gd->flags & gg_but_default ? &_GGadget_defaultbutton_box :
 	    gd->flags & gg_but_cancel ? &_GGadget_cancelbutton_box :
+	    gd->flags & gg_but_link ? &link_box :
 	    &_GGadget_button_box);
 
     gl->g.takes_input = true; gl->g.takes_keyboard = true; gl->g.focusable = true;
