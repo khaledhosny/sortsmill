@@ -13,8 +13,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-#ifndef _SORTSMILLFF_GUILE_BERNSTEIN_H
-#define _SORTSMILLFF_GUILE_BERNSTEIN_H
+#ifndef _SORTSMILLFF_GUILE_POLYSPLINE_H
+#define _SORTSMILLFF_GUILE_POLYSPLINE_H
 
 #include <libguile.h>
 
@@ -27,4 +27,4 @@ SCM scm_f64vector_evaldc_bern (SCM spline, SCM t);
 SCM scm_f64vector_subdiv_sbern (SCM spline, SCM t);
 SCM scm_f64vector_subdiv_bern (SCM spline, SCM t);
 
-#endif /* _SORTSMILLFF_GUILE_BERNSTEIN_H */
+#endif /* _SORTSMILLFF_GUILE_POLYSPLINE_H */

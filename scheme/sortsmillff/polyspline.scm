@@ -15,7 +15,7 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-(define-module (sortsmillff bernstein)
+(define-module (sortsmillff polyspline)
   #:export (f64vector-sbern->bern
             f64vector-bern->sbern
             f64vector-eval-sbern
@@ -25,5 +25,5 @@
             f64vector-subdiv-sbern
             f64vector-subdiv-bern))
 
-(load-extension "libguile-sortsmillff_bernstein"
-                "init_guile_sortsmillff_bernstein")
+(load-extension "libguile-sortsmillff_polyspline"
+                "init_guile_sortsmillff_polyspline")

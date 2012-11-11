@@ -13,8 +13,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-#ifndef _BERNSTEIN_H
-#define _BERNSTEIN_H
+#ifndef _POLYSPLINE_H
+#define _POLYSPLINE_H
 
 #include <config.h>
 
@@ -110,4 +110,4 @@ VISIBLE void subdiv_sbern_double (unsigned int deg, const double *spline,
 VISIBLE void subdiv_bern_double (unsigned int deg, const double *spline,
                                  double t, double *a, double *b);
 
-#endif // _BERNSTEIN_H
+#endif // _POLYSPLINE_H

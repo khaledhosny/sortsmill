@@ -6,7 +6,7 @@
 #include <locale.h>
 #include <float.h>
 #include <math.h>
-#include <bernstein.h>
+#include <polyspline.h>
 
 int
 main (int argc, char **argv)

@@ -15,11 +15,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-#include <sortsmillff/guile/bernstein.h>
-#include <bernstein.h>
+#include <sortsmillff/guile/polyspline.h>
+#include <polyspline.h>
 #include <xalloc.h>
-
-void init_guile_sortsmillff_bernstein (void);
 
 VISIBLE SCM
 scm_f64vector_sbern_to_bern (SCM spline)
@@ -149,25 +147,4 @@ scm_f64vector_subdiv_bern (SCM spline, SCM t)
   new_splines[0] = scm_take_f64vector (a, len);
   new_splines[1] = scm_take_f64vector (b, len);
   return scm_c_values (new_splines, 2);
-}
-
-VISIBLE void
-init_guile_sortsmillff_bernstein (void)
-{
-  scm_c_define_gsubr ("f64vector-sbern->bern", 1, 0, 0,
-                      scm_f64vector_sbern_to_bern);
-  scm_c_define_gsubr ("f64vector-bern->sbern", 1, 0, 0,
-                      scm_f64vector_bern_to_sbern);
-  scm_c_define_gsubr ("f64vector-eval-sbern", 2, 0, 0,
-                      scm_f64vector_eval_sbern);
-  scm_c_define_gsubr ("f64vector-eval-bern", 2, 0, 0,
-                      scm_f64vector_eval_bern);
-  scm_c_define_gsubr ("f64vector-evaldc-sbern", 2, 0, 0,
-                      scm_f64vector_evaldc_sbern);
-  scm_c_define_gsubr ("f64vector-evaldc-bern", 2, 0, 0,
-                      scm_f64vector_evaldc_bern);
-  scm_c_define_gsubr ("f64vector-subdiv-sbern", 2, 0, 0,
-                      scm_f64vector_subdiv_sbern);
-  scm_c_define_gsubr ("f64vector-subdiv-bern", 2, 0, 0,
-                      scm_f64vector_subdiv_bern);
 }

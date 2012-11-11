@@ -20,7 +20,7 @@ import cython
 import numpy as np
 cimport numpy as np
 
-cdef extern from "bernstein.h":
+cdef extern from "polyspline.h":
     void sbern_to_bern_double (unsigned int deg, double *sbern, double *bern)
     void bern_to_sbern_double (unsigned int deg, double *bern, double *sbern)
     double eval_sbern_double (unsigned int deg, double *spline, double t)

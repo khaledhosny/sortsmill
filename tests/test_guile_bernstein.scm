@@ -18,7 +18,7 @@
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 (use-modules
- (sortsmillff bernstein)
+ (sortsmillff polyspline)
  (sortsmillff gsl)
  (srfi srfi-1)                          ; List operations.
  (srfi srfi-8)                          ; (receive ...)

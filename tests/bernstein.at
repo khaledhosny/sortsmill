@@ -1,7 +1,7 @@
 m4_defun([check_bernstein],
 [
 AT_SETUP([$2])
-AT_KEYWORDS([auxiliary scheme python bernstein.h bernstein.scm bernstein unit spline])
+AT_KEYWORDS([auxiliary scheme guile python polyspline bernstein unit spline])
 AT_SKIP_IF([test x$1 = xskip -a x${DOING_INSTALLCHECK} = xyes])
 AT_CHECK_UNQUOTED([
 export LC_ALL="${posix_locale}"
