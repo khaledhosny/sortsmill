@@ -38,7 +38,7 @@
 #include <xunistring.h>
 #include <unistr.h>
 
-VISIBLE GBox _GGadget_gtextfield_box = GBOX_EMPTY; /* Don't initialize here */
+static GBox gtextfield_box = GBOX_EMPTY; /* Don't initialize here */
 static GBox gmultitextfield_box = GBOX_EMPTY; /* Don't initialize here */
 static GBox glistfield_box = GBOX_EMPTY; /* Don't initialize here */
 static GBox gnumericfield_box = GBOX_EMPTY; /* Don't initialize here */
@@ -65,7 +65,7 @@ static GGadgetCreateData textbox =
     { GHVGroupCreate, { { 2, 2, 0, 0 }, NULL, 0, 0, 0, 0, 0, NULL, { (GTextInfo *) tarray }, gg_visible|gg_enabled, NULL, NULL }, NULL, NULL };
 static GResInfo gtextfield_ri = {
     &listfield_ri, &ggadget_ri,NULL, NULL,
-    &_GGadget_gtextfield_box,
+    &gtextfield_box,
     &_gtextfield_font,
     &textbox,
     NULL,
@@ -2471,27 +2471,27 @@ static void GTextFieldInit() {
     GGadgetInit();
     GDrawDecomposeFont(_ggadget_default_font,&rq);
     _gtextfield_font = GDrawNewFont(NULL, "monospace", rq.point_size, rq.weight, rq.style);
-    _GGadgetCopyDefaultBox(&_GGadget_gtextfield_box);
-    _GGadget_gtextfield_box.flags = box_foreground_border_inner|box_active_border_inner|box_gradient_bg;
-    _GGadget_gtextfield_box.border_type = bt_lowered;
-    _GGadget_gtextfield_box.border_shape = bs_roundrect;
-    _GGadget_gtextfield_box.rr_radius = 3;
-    _GGadget_gtextfield_box.main_background = 0xe5e4e3;
-    _GGadget_gtextfield_box.gradient_bg_end = 0xffffff;
-    _GGadget_gtextfield_box.border_brightest = _GGadget_gtextfield_box.border_brighter = 0xf9f8f7;
-    _GGadget_gtextfield_box.border_darkest = _GGadget_gtextfield_box.border_darker = 0xdddcdb;
-    _GGadget_gtextfield_box.border_inner = 0x757371;
-    _gtextfield_font = _GGadgetInitDefaultBox("GTextField.",&_GGadget_gtextfield_box,_gtextfield_font);
+    _GGadgetCopyDefaultBox(&gtextfield_box);
+    gtextfield_box.flags = box_foreground_border_inner|box_active_border_inner|box_gradient_bg;
+    gtextfield_box.border_type = bt_lowered;
+    gtextfield_box.border_shape = bs_roundrect;
+    gtextfield_box.rr_radius = 3;
+    gtextfield_box.main_background = 0xe5e4e3;
+    gtextfield_box.gradient_bg_end = 0xffffff;
+    gtextfield_box.border_brightest = gtextfield_box.border_brighter = 0xf9f8f7;
+    gtextfield_box.border_darkest = gtextfield_box.border_darker = 0xdddcdb;
+    gtextfield_box.border_inner = 0x757371;
+    _gtextfield_font = _GGadgetInitDefaultBox("GTextField.",&gtextfield_box,_gtextfield_font);
 
-    gmultitextfield_box = _GGadget_gtextfield_box;
+    gmultitextfield_box = gtextfield_box;
     gmultitextfield_box.flags &= ~box_gradient_bg;
     gmultitextfield_box.main_background = 0xffffff;
     _GGadgetInitDefaultBox("GMultiTextField.", &gmultitextfield_box, _gtextfield_font);
 
-    glistfield_box = _GGadget_gtextfield_box;
+    glistfield_box = gtextfield_box;
     _GGadgetInitDefaultBox("GComboBox.",&glistfield_box,_gtextfield_font);
 
-    gnumericfield_box = _GGadget_gtextfield_box;
+    gnumericfield_box = gtextfield_box;
     _GGadgetInitDefaultBox("GNumericField.",&gnumericfield_box,_gtextfield_font);
 
     gtextfield_inited = true;
@@ -2632,13 +2632,13 @@ return( gt );
 }
 
 GGadget *GTextFieldCreate(struct gwindow *base, GGadgetData *gd,void *data) {
-    GTextField *gt = _GTextFieldCreate(xcalloc(1,sizeof(GTextField)),base,gd,data,&_GGadget_gtextfield_box);
+    GTextField *gt = _GTextFieldCreate(xcalloc(1,sizeof(GTextField)),base,gd,data,&gtextfield_box);
 
 return( &gt->g );
 }
 
 GGadget *GPasswordCreate(struct gwindow *base, GGadgetData *gd,void *data) {
-    GTextField *gt = _GTextFieldCreate(xcalloc(1,sizeof(GTextField)),base,gd,data,&_GGadget_gtextfield_box);
+    GTextField *gt = _GTextFieldCreate(xcalloc(1,sizeof(GTextField)),base,gd,data,&gtextfield_box);
     gt->password = true;
     GTextFieldRefigureLines(gt, 0);
 
@@ -2659,7 +2659,7 @@ GGadget *GTextCompletionCreate(struct gwindow *base, GGadgetData *gd,void *data)
     gt->completionfield = true;
     gt->was_completing = true;
     ((GCompletionField *) gt)->completion = gd->u.completion;
-    _GTextFieldCreate(gt,base,gd,data,&_GGadget_gtextfield_box);
+    _GTextFieldCreate(gt,base,gd,data,&gtextfield_box);
     gt->accepts_tabs = ((GCompletionField *) gt)->completion != NULL;
 
 return( &gt->g );
@@ -2741,7 +2741,7 @@ GGadget *GListFieldCreate(struct gwindow *base, GGadgetData *gd,void *data) {
     ge->gt.completionfield = true;
     /* ge->gt.was_completing = true; */
     ((GCompletionField *) ge)->completion = GListField_NameCompletion;
-    _GTextFieldCreate(&ge->gt,base,gd,data,&_GGadget_gtextfield_box);
+    _GTextFieldCreate(&ge->gt,base,gd,data,&gtextfield_box);
     ge->gt.g.funcs = &glistfield_funcs;
 return( &ge->gt.g );
 }
