@@ -18,7 +18,6 @@
 
 #include <config.h>
 
-
 // vis--
 // vis-- @deftypefun {void} sbern_to_bern_double (unsigned int @var{deg}, const double *@var{sbern}, double *@var{bern})
 // vis--

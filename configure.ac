@@ -243,6 +243,7 @@ FONTFORGE_CONFIG_FREETYPE_DEBUGGER
 if test x"${i_do_have_python_scripting}" = xyes -o x"${i_do_have_python_extension}" = xyes; then
    FONTFORGE_CHECK_NUMPY
    FONTFORGE_CHECK_NUMPY_LINALG
+   FONTFORGE_PROG_CYTHON_WORKS
 fi
 
 #--------------------------------------------------------------------------
