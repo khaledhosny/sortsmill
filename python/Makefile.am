@@ -47,8 +47,17 @@ sortsmillff_bernstein_la_LIBADD =					\
 	$(top_builddir)/auxiliary/libsortsmillff_aux.la	\
 	$(top_builddir)/lib/libgnu.la
 
-EXTRA_DIST = sortsmillff/bernstein.pyx
-MOSTLYCLEANFILES = sortsmillff/bernstein.c
+nobase_pyexec_LTLIBRARIES += sortsmillff/brentroot.la
+sortsmillff_brentroot_la_SOURCES = sortsmillff/brentroot.c
+sortsmillff_brentroot_la_LIBADD =					\
+	$(top_builddir)/auxiliary/libsortsmillff_aux.la	\
+	$(top_builddir)/lib/libgnu.la
+sortsmillff_brentroot_la_DEPENDENCIES = sortsmillff/brentroot.pyx	\
+	sortsmillff/brentroot_c.pxd
+
+EXTRA_DIST = sortsmillff/bernstein.pyx sortsmillff/brentroot.pyx	\
+	sortsmillff/brentroot_c.pxd
+MOSTLYCLEANFILES = sortsmillff/bernstein.c sortsmillff/brentroot.c
 
 AM_LDFLAGS = -module -shared -avoid-version
 AM_CFLAGS += $(NUMPY_CFLAGS) $(CYTHON_EXTRA_CFLAGS)

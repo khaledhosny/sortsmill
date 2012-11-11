@@ -15,8 +15,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-__all__ = [
-    'bernstein',
-    'brentroot',
-    'psMat',
-    ]
+cdef extern from "brentroot.h":
+    ctypedef double (*brentroot_func_t) (double, void *)
+
+    void brentroot (int max_iters, double tol,
+                    double t1, double t2,
+                    brentroot_func_t func, void *data,
+                    double *root, int *err,
+                    unsigned int *iter_no)

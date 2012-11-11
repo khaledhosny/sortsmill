@@ -20,14 +20,15 @@ import cython
 import numpy as np
 cimport numpy as np
 
-cdef extern void sbern_to_bern_double (unsigned int deg, double *sbern, double *bern)
-cdef extern void bern_to_sbern_double (unsigned int deg, double *bern, double *sbern)
-cdef extern double eval_sbern_double (unsigned int deg, double *spline, double t)
-cdef extern double eval_bern_double (unsigned int deg, double *spline, double t)
-cdef extern double evaldc_sbern_double (unsigned int deg, double *spline, double t)
-cdef extern double evaldc_bern_double (unsigned int deg, double *spline, double t)
-cdef extern void subdiv_sbern_double (unsigned int deg, double *spline, double t, double *a, double *b)
-cdef extern void subdiv_bern_double (unsigned int deg, double *spline, double t, double *a, double *b)
+cdef extern from "bernstein.h":
+    void sbern_to_bern_double (unsigned int deg, double *sbern, double *bern)
+    void bern_to_sbern_double (unsigned int deg, double *bern, double *sbern)
+    double eval_sbern_double (unsigned int deg, double *spline, double t)
+    double eval_bern_double (unsigned int deg, double *spline, double t)
+    double evaldc_sbern_double (unsigned int deg, double *spline, double t)
+    double evaldc_bern_double (unsigned int deg, double *spline, double t)
+    void subdiv_sbern_double (unsigned int deg, double *spline, double t, double *a, double *b)
+    void subdiv_bern_double (unsigned int deg, double *spline, double t, double *a, double *b)
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
