@@ -37,11 +37,11 @@
 
 static void GListButtonDoPopup(GListButton *);
 
-VISIBLE GBox _GGadget_button_box = GBOX_EMPTY; /* Don't initialize here */
+static GBox button_box = GBOX_EMPTY; /* Don't initialize here */
 GBox _GGadget_defaultbutton_box = GBOX_EMPTY; /* Don't initialize here */
-static GBox _GGadget_cancelbutton_box = GBOX_EMPTY; /* Don't initialize here */
-static GBox _GGadget_colorbutton_box = GBOX_EMPTY; /* Don't initialize here */
-static GBox _GGadget_droplist_box = GBOX_EMPTY; /* Don't initialize here */
+static GBox cancelbutton_box = GBOX_EMPTY; /* Don't initialize here */
+static GBox colorbutton_box = GBOX_EMPTY; /* Don't initialize here */
+static GBox droplist_box = GBOX_EMPTY; /* Don't initialize here */
 static GBox label_box = GBOX_EMPTY; /* Don't initialize here */
 static GBox link_box = GBOX_EMPTY; /* Don't initialize here */
 static int shift_on_press = 0;
@@ -86,7 +86,7 @@ static struct resed gbutton_re[] = {
 };
 static GResInfo gbutton_ri = {
     &gdefault_ri, &ggadget_ri,&gdefault_ri, &gcancel_ri,
-    &_GGadget_button_box,
+    &button_box,
     &button_font,
     &buttonbox,
     gbutton_re,
@@ -138,7 +138,7 @@ static GGadgetCreateData cancelbox =
     {GHVGroupCreate, { {2, 2, 0, 0}, NULL, 0, 0, 0, 0, 0, NULL, { (GTextInfo *) carray }, gg_visible|gg_enabled, NULL, NULL }, NULL, NULL };
 static GResInfo gcancel_ri = {
     &gcolor_ri, &gbutton_ri,&gdefault_ri,NULL,
-    &_GGadget_cancelbutton_box,
+    &cancelbutton_box,
     NULL,
     &cancelbox,
     NULL,
@@ -163,7 +163,7 @@ static GGadgetCreateData colorbox =
     { GHVGroupCreate, { { 2, 2, 0, 0 }, NULL, 0, 0, 0, 0, 0, NULL, { (GTextInfo *) colarray }, gg_visible|gg_enabled, NULL, NULL }, NULL, NULL };
 static GResInfo gcolor_ri = {
     &gdroplist_ri, &gbutton_ri,NULL,NULL,
-    &_GGadget_colorbutton_box,
+    &colorbutton_box,
     NULL,
     &colorbox,
     NULL,
@@ -195,7 +195,7 @@ static GGadgetCreateData droplistbox =
     { GHVGroupCreate, { { 2, 2, 0, 0 }, NULL, 0, 0, 0, 0, 0, NULL, { (GTextInfo *) dlarray }, gg_visible|gg_enabled, NULL, NULL }, NULL, NULL };
 static GResInfo gdroplist_ri = {
     NULL, &gbutton_ri,&listmark_ri,NULL,
-    &_GGadget_droplist_box,
+    &droplist_box,
     NULL,
     &droplistbox,
     NULL,
@@ -944,33 +944,33 @@ return;
     GGadgetInit();
     _GGadgetCopyDefaultBox(&label_box);
     _GGadgetCopyDefaultBox(&link_box);
-    _GGadgetCopyDefaultBox(&_GGadget_button_box);
-    _GGadget_button_box.main_background = 0xffffff;
-    _GGadget_button_box.gradient_bg_end = 0xe5e4e3;
-    _GGadget_button_box.border_inner = 0xf9f8f7;
-    _GGadget_button_box.border_outer = 0xdddcdb;
-    _GGadget_button_box.border_type = bt_box;
-    _GGadget_button_box.border_shape = bs_roundrect;
-    _GGadget_button_box.rr_radius = 3;
-    _GGadget_button_box.flags |= box_foreground_border_inner|box_foreground_border_outer|
+    _GGadgetCopyDefaultBox(&button_box);
+    button_box.main_background = 0xffffff;
+    button_box.gradient_bg_end = 0xe5e4e3;
+    button_box.border_inner = 0xf9f8f7;
+    button_box.border_outer = 0xdddcdb;
+    button_box.border_type = bt_box;
+    button_box.border_shape = bs_roundrect;
+    button_box.rr_radius = 3;
+    button_box.flags |= box_foreground_border_inner|box_foreground_border_outer|
 	box_do_depressed_background|box_gradient_bg;
 
     label_box.border_type = bt_none;
     label_box.border_width = label_box.padding = /*label_box.flags =*/ 0;
-    button_font = _GGadgetInitDefaultBox("GButton.",&_GGadget_button_box,NULL);
+    button_font = _GGadgetInitDefaultBox("GButton.",&button_box,NULL);
     label_font = _GGadgetInitDefaultBox("GLabel.",&label_box,button_font);
     shift_on_press = GResourceFindBool("GButton.ShiftOnPress",false);
-    _GGadget_droplist_box = _GGadget_button_box;
-    _GGadget_defaultbutton_box = _GGadget_button_box;
-    _GGadget_cancelbutton_box = _GGadget_button_box;
-    _GGadget_colorbutton_box = _GGadget_button_box;
+    droplist_box = button_box;
+    _GGadget_defaultbutton_box = button_box;
+    cancelbutton_box = button_box;
+    colorbutton_box = button_box;
     _GGadget_defaultbutton_box.border_brightest = _GGadget_defaultbutton_box.border_brighter
 	= _GGadget_defaultbutton_box.border_darkest = _GGadget_defaultbutton_box.border_darker = 0x598ec6;
     _GGadget_defaultbutton_box.border_outer = 0xbcd2ea;
     _GGadgetInitDefaultBox("GDefaultButton.",&_GGadget_defaultbutton_box,NULL);
-    _GGadgetInitDefaultBox("GCancelButton.",&_GGadget_cancelbutton_box,NULL);
-    _GGadgetInitDefaultBox("GDropList.",&_GGadget_droplist_box,NULL);
-    _GGadgetInitDefaultBox("GColorButton.",&_GGadget_colorbutton_box,NULL);
+    _GGadgetInitDefaultBox("GCancelButton.",&cancelbutton_box,NULL);
+    _GGadgetInitDefaultBox("GDropList.",&droplist_box,NULL);
+    _GGadgetInitDefaultBox("GColorButton.",&colorbutton_box,NULL);
 
     link_box = label_box;
     link_box.flags = box_foreground_shadow_outer;
@@ -1061,9 +1061,9 @@ return( &gl->g );
 GGadget *GButtonCreate(struct gwindow *base, GGadgetData *gd,void *data) {
     GLabel *gl = _GLabelCreate(xcalloc(1,sizeof(GLabel)),base,gd,data,
 	    gd->flags & gg_but_default ? &_GGadget_defaultbutton_box :
-	    gd->flags & gg_but_cancel ? &_GGadget_cancelbutton_box :
+	    gd->flags & gg_but_cancel ? &cancelbutton_box :
 	    gd->flags & gg_but_link ? &link_box :
-	    &_GGadget_button_box);
+	    &button_box);
 
     gl->g.takes_input = true; gl->g.takes_keyboard = true; gl->g.focusable = true;
 return( &gl->g );
@@ -1071,7 +1071,7 @@ return( &gl->g );
 
 GGadget *GImageButtonCreate(struct gwindow *base, GGadgetData *gd,void *data) {
     GImageButton *gl =
-	(GImageButton *) _GLabelCreate(xcalloc(1,sizeof(GImageButton)),base,gd,data,&_GGadget_button_box);
+	(GImageButton *) _GLabelCreate(xcalloc(1,sizeof(GImageButton)),base,gd,data,&button_box);
 
     gl->g.takes_input = true;
     gl->labeltype = 1;
@@ -1098,7 +1098,7 @@ GGadget *GColorButtonCreate(struct gwindow *base, GGadgetData *gd,void *data) {
     gd->label = &ti;
     gl = xcalloc(1,sizeof(GColorButton));
     gl->labeltype = 3;
-    gl = (GColorButton *) _GLabelCreate((GLabel *) gl,base,gd,data,&_GGadget_colorbutton_box);
+    gl = (GColorButton *) _GLabelCreate((GLabel *) gl,base,gd,data,&colorbutton_box);
     gl->g.takes_input = true;
     gl->col = col;
 return( &gl->g );
@@ -1173,7 +1173,7 @@ GGadget *GListButtonCreate(struct gwindow *base, GGadgetData *gd,void *data) {
 	}
 	gd->label = &gd->u.list[i];
     }
-    _GLabelCreate((GLabel *) gl,base,gd,data,&_GGadget_droplist_box);
+    _GLabelCreate((GLabel *) gl,base,gd,data,&droplist_box);
     gl->g.funcs = &glistbutton_funcs;
 return( &gl->g );
 }
