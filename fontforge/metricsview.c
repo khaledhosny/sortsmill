@@ -684,7 +684,7 @@ static void MVCreateFields(MetricsView *mv,int i) {
     int j;
     int udaidx = 1; // we leave element zero to be NULL to allow bounds checking.
     
-    small = _GGadget_gtextfield_box;
+    small = _ggadget_Default_Box;
     small.flags = 0;
     small.border_type = bt_none;
     small.border_shape = bs_rect;
