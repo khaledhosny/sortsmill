@@ -40,10 +40,10 @@
 static GBox gmatrixedit_box = GBOX_EMPTY; /* Don't initialize here */
 static GBox gmatrixedit_button_box = GBOX_EMPTY; /* Don't initialize here */
 static FontInstance *gmatrixedit_font = NULL, *gmatrixedit_titfont = NULL;
-static Color gmatrixedit_title_bg = 0x808080, gmatrixedit_title_fg = 0x000000, gmatrixedit_title_divider = 0xffffff;
-static Color gmatrixedit_rules = 0x000000;
-static Color gmatrixedit_frozencol = 0xff0000,
-	gmatrixedit_activecol = 0x0000ff, gmatrixedit_activebg=0xffffc0;
+static Color gmatrixedit_title_bg = 0xa09f9e, gmatrixedit_title_fg = 0x222222, gmatrixedit_title_divider = 0x757371;
+static Color gmatrixedit_rules = 0x908f8e;
+static Color gmatrixedit_frozencol = 0xa40000,
+	gmatrixedit_activecol = 0x3465a4, gmatrixedit_activebg = 0x88b2de;
 static int gmatrixedit_inited = false;
 
 static struct resed gmatrixedit_re[] = {
@@ -106,7 +106,7 @@ return;
     gmatrixedit_box.border_shape = bs_rect;
     gmatrixedit_box.padding = 0;
     /*gmatrixedit_box.flags = 0;*/
-    gmatrixedit_box.main_background = COLOR_TRANSPARENT;
+    gmatrixedit_box.main_background = 0xffffff;
     gmatrixedit_box.disabled_background = COLOR_TRANSPARENT;
     GDrawDecomposeFont(_ggadget_default_font,&rq);
     gmatrixedit_font = GDrawInstanciateFont(NULL,&rq);
@@ -1701,7 +1701,8 @@ static void GMatrixEdit_SubExpose(GMatrixEdit *gme,GWindow pixmap,GEvent *event)
 			mr.x + gme->mark_skip + (gme->mark_size - gme->mark_length)/2,
 			clip.y,
 			clip.height,
-			gme->g.state);
+			gme->g.state,
+			mt_arrow);
 	    }
 	    if ( r+gme->off_top==gme->rows )
 return;

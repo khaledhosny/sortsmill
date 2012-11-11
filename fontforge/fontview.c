@@ -59,7 +59,7 @@ int home_char='A';
 int compact_font_on_open=0;
 int navigation_mask = 0;		/* Initialized in startui.c */
 
-static char *fv_fontnames = "fontview," MONO_UI_FAMILIES;
+static char *fv_fontnames = "fontview," "monospace";
 
 #define	FV_LAB_HEIGHT	15
 
@@ -74,12 +74,12 @@ static unsigned char fontview_bits[] = {
 extern int _GScrollBar_Width;
 
 static int fv_fontsize = 11, fv_fs_init=0;
-static Color fvselcol = 0xffff00, fvselfgcol=0x000000;
+static Color fvselcol = 0x88b2de, fvselfgcol=0xffffff;
 Color view_bgcol;
-static Color fvglyphinfocol = 0xff0000;
-static Color fvemtpyslotfgcol = 0xd08080;
-static Color fvchangedcol = 0x000060;
-static Color fvhintingneededcol = 0x0000ff;
+static Color fvglyphinfocol = 0x598ec6;
+static Color fvemtpyslotfgcol = 0xcccbca;
+static Color fvchangedcol = 0x204a87;
+static Color fvhintingneededcol = 0x598ec6;
 
 enum glyphlable { gl_glyph, gl_name, gl_unicode, gl_encoding };
 int default_fv_showhmetrics=false, default_fv_showvmetrics=false,
@@ -6953,7 +6953,7 @@ static FontView *FontView_Create(SplineFont *sf, int hide) {
 
     if ( !fv_fs_init ) {
 	GResEditFind( fontview_re, "FontView.");
-	view_bgcol = GResourceFindColor("View.Background",GDrawGetDefaultBackground(NULL));
+	view_bgcol = GResourceFindColor("View.Background", COLOR_CREATE(0xff,0xff,0xff));
 	fv_fs_init = true;
     }
 

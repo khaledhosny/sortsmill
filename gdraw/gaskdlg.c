@@ -206,7 +206,6 @@ static GWindow DlgCreate8(const char *title,const char *question,va_list ap,
     int i, y;
     char buf[1600];
     uint32_t *ubuf;
-    extern GBox _GGadget_defaultbutton_box;
 
     if ( d!=NULL )
 	memset(d,0,sizeof(*d));
@@ -578,7 +577,6 @@ static GWindow ChoiceDlgCreate8(struct dlg_info *d,const char *title,
     int i, y, listi;
     char buf[600];
     uint32_t *ubuf;
-    extern GBox _GGadget_defaultbutton_box;
 
     memset(d,0,sizeof(*d));
     GProgressPauseTimer();

@@ -37,11 +37,10 @@ extern void help(char *filename);
 # include "ggadget.h"
 # include "views.h"
 
-extern GCursor ct_magplus, ct_magminus, ct_mypointer,
+extern GCursor ct_magplus, ct_magminus,
 	ct_circle, ct_square, ct_triangle, ct_pen, ct_hvcircle,
 	ct_ruler, ct_knife, ct_rotate, ct_skew, ct_scale, ct_flip,
 	ct_3drotate, ct_perspective,
-	ct_updown, ct_leftright, ct_nesw, ct_nwse,
 	ct_rect, ct_elipse, ct_poly, ct_star, ct_filledrect, ct_filledelipse,
 	ct_pencil, ct_shift, ct_line, ct_myhand, ct_setwidth,
 	ct_kerning, ct_rbearing, ct_lbearing, ct_eyedropper,
@@ -92,11 +91,6 @@ extern int default_font_filter_index;
 #else
 # define ksm_alt	ksm_capslock
 #endif
-
-#define SERIF_UI_FAMILIES	"dejavu serif,times,caslon,serif,clearlyu,unifont"
-#define SANS_UI_FAMILIES	"dejavu sans,helvetica,caliban,sans,clearlyu,unifont"
-#define MONO_UI_FAMILIES	"courier,monospace,clearlyu,unifont"
-#define FIXED_UI_FAMILIES	"monospace,fixed,clearlyu,unifont"
 
 #define isprivateuse(enc) ((enc)>=0xe000 && (enc)<=0xf8ff)
 #endif

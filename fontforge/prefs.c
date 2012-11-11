@@ -2944,7 +2944,7 @@ DoPrefs (void)
   for (k = 0; k < TOPICS; ++k)
     GHVBoxSetExpandableRow (boxes[2 * k].ret, gb_expandglue);
 
-  font = GDrawNewFont (gw, MONO_UI_FAMILIES, 12, 400, fs_none);
+  font = GDrawNewFont (gw, "monospace", 12, 400, fs_none);
   GGadgetSetFont (mfgcd[0].ret, font);
   GGadgetSetFont (msgcd[0].ret, font);
   GHVBoxFitWindow (mboxes[0].ret);

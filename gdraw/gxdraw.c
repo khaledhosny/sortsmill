@@ -620,7 +620,18 @@ static int cursor_map[ct_user] = { 0,
 	XC_fleur,		/* 4way */
 	XC_xterm,		/* text */
 	XC_watch,		/* watch */
-	XC_right_ptr };		/* drag and drop */
+	XC_right_ptr,		/* drag and drop */
+	XC_sb_h_double_arrow,   /* leftright */
+	XC_sb_v_double_arrow,   /* updown */
+	XC_top_left_corner,
+	XC_top_right_corner,
+	XC_bottom_left_corner,
+	XC_bottom_right_corner,
+	XC_left_side,
+	XC_right_side,
+	XC_top_side,
+	XC_bottom_side,
+};
 
 static Cursor _GXDraw_GetCursor( GXDisplay *gdisp, enum cursor_types ct ) {
     Display *display = gdisp->display;
@@ -630,18 +641,17 @@ return( ct-ct_user );
     else if ( ct==ct_default )
 return( CopyFromParent );
     if ( StdCursor[ct]==0 ) {
-	XColor fb[2];
-	fb[0].red = COLOR_RED(gdisp->def_foreground)*0x101; fb[0].green = COLOR_GREEN(gdisp->def_foreground)*0x101; fb[0].blue = COLOR_BLUE(gdisp->def_foreground)*0x101;
-	fb[1].red = COLOR_RED(gdisp->def_background)*0x101; fb[1].green = COLOR_GREEN(gdisp->def_background)*0x101; fb[1].blue = COLOR_BLUE(gdisp->def_background)*0x101;
 	if ( ct==ct_invisible ) {
 	    static short zeros[16]={0};
+	    XColor fb;
+	    fb.pixel = 0;
+	    fb.red = fb.green = fb.blue = 0;
 	    Pixmap temp = XCreatePixmapFromBitmapData(display,gdisp->root,
 		(char *) zeros,16,16,1,0,1);
-	    StdCursor[ct] = XCreatePixmapCursor(display,temp,temp,&fb[0],&fb[1],0,0);
+	    StdCursor[ct] = XCreatePixmapCursor(display,temp,temp,&fb,&fb,1,1);
 	    XFreePixmap(display,temp);
 	} else {
-	    StdCursor[ct] = XCreateFontCursor(display,cursor_map[ct]);
-	    /*XRecolorCursor(display,StdCursor[ct],&fb[0],&fb[1]);*/
+	    StdCursor[ct] = XcursorShapeLoadCursor(display, cursor_map[ct]);
 	}
     }
 return( StdCursor[ct]);
@@ -1254,15 +1264,18 @@ GDrawCreateCursor (char *name)
   GCursor cursor;
   char *path;
 
-  path = xmalloc (strlen (name) + strlen (SHAREDIR) + 10);
-  sprintf (path, SHAREDIR "/cursors/%s", name);
+  // try loading the cursor from default theme first
+  cursor = XcursorLibraryLoadCursor (display, name);
 
-  // FIXME: we may want to first try cursors from default theme using
-  // XcursorLibraryLoadCursor (display, name), which would allow users to
-  // customise the cursors, but we need to revise our file names and make them
-  // compatible with common themes
-  cursor = XcursorFilenameLoadCursor (display, path);
-  free(path);
+  // if non was found, load our cursor file
+  if (!cursor)
+    {
+      path = xmalloc (strlen (name) + strlen (SHAREDIR) + 10);
+      sprintf (path, SHAREDIR "/cursors/%s", name);
+
+      cursor = XcursorFilenameLoadCursor (display, path);
+      free (path);
+    }
 
   if (cursor)
     cursor = ct_user + cursor;
@@ -3933,8 +3946,8 @@ return( NULL );
     GXResourceInit(gdisp);
 
     gdisp->bs.double_time = GResourceFindInt( "DoubleClickTime", gdisp->bs.double_time );
-    gdisp->def_background = GResourceFindColor( "Background", COLOR_CREATE(0xf5,0xff,0xfa));
-    gdisp->def_foreground = GResourceFindColor( "Foreground", COLOR_CREATE(0x00,0x00,0x00));
+    gdisp->def_background = GResourceFindColor( "Background", COLOR_CREATE(0xed,0xec,0xeb));
+    gdisp->def_foreground = GResourceFindColor( "Foreground", COLOR_CREATE(0x22,0x22,0x22));
     if ( GResourceFindBool("Synchronize", false ))
 	XSynchronize(gdisp->display,true);
 

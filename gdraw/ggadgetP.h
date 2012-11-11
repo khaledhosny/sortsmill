@@ -497,7 +497,7 @@ VISIBLE extern int _GScrollBar_Width;		/* in points */
 extern int _GListMarkSize;		/* in points, def width of popup mark in buttons */
 extern int _GGadget_Skip;		/* in points, def hor space between gadgets */
 extern int _GGadget_TextImageSkip;	/* in points, def hor space text and image */
-extern GBox _GListMark_Box, _GGroup_LineBox;
+extern GBox _GListMark_Box, _GGroup_LineBox, _GGadget_defaultbutton_box;
 extern GResImage *_GListMark_Image;
 VISIBLE extern FontInstance *_ggadget_default_font;
 
@@ -568,11 +568,13 @@ VISIBLE extern void _ggadget_destroy(GGadget *g);
 
 extern GWindow GListPopupCreate(GGadget *owner,void (*inform)(GGadget *,int), GTextInfo **ti);
 
+enum mark_type { mt_arrow, mt_plus, mt_minus };
+
 extern int GMenuPopupCheckKey(GEvent *event);
 extern int GMenuBarCheckKey(GGadget *g, GEvent *event);
 extern void _GButton_SetDefault(GGadget *g,int32_t is_default);
 VISIBLE extern void _GButtonInit(void);
-extern void GListMarkDraw(GWindow pixmap,int x, int y, int height, enum gadget_state state );
+extern void GListMarkDraw(GWindow pixmap,int x, int y, int height, enum gadget_state state, enum mark_type);
 extern char **_GGadget_GetImagePath(void);
 extern int _GGadget_ImageInCache(GImage *image);
 
@@ -583,8 +585,5 @@ extern GResInfo *_GMenuRIHead(void), *_GTabSetRIHead(void), *_GHVBoxRIHead(void)
 extern GResInfo *_GListRIHead(void), *_GMatrixEditRIHead(void), *_GDrawableRIHead(void);
 extern GResInfo *_GProgressRIHead(void);
 
-#define SERIF_UI_FAMILIES	"dejavu serif,times,caslon,serif,clearlyu,unifont"
-#define SANS_UI_FAMILIES	"dejavu sans,helvetica,caliban,sans,clearlyu,unifont"
-#define MONO_UI_FAMILIES	"courier,monospace,clearlyu,unifont"
 #define MENU_ICON_SIZE		18
 #define MENU_ICON_SEP		6

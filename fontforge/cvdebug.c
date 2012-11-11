@@ -34,7 +34,6 @@
 #include <ctype.h>		/* must use ctype here because freetype headers include it (prior to 2.3.5) */
 #include <gresource.h>
 
-extern GBox _ggadget_Default_Box;
 #define MAIN_FOREGROUND (_ggadget_Default_Box.main_foreground)
 
 int debug_wins = dw_registers|dw_stack;
@@ -2195,7 +2194,7 @@ return;
 	dv->ii.instrdata = &dv->id;
 
 	if ( monofont==NULL ) {
-	    monofont = GDrawNewFont(cv->gw, MONO_UI_FAMILIES, -12, 400, fs_none);
+	    monofont = GDrawNewFont(cv->gw, "monospace", -12, 400, fs_none);
 	    monofont = GResourceFindFont("DebugView.Font",monofont);
 	}
 	dv->ii.gfont = monofont;

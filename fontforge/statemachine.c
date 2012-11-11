@@ -1503,7 +1503,7 @@ void StateMachineEdit(SplineFont *sf,ASM *sm,struct gfi_data *d) {
     }
 
     if ( font==NULL ) {
-	font = GDrawNewFont(gw, MONO_UI_FAMILIES, 12, 400, fs_none);
+	font = GDrawNewFont(gw, "monospace", 12, 400, fs_none);
 	font = GResourceFindFont("StateMachine.Font",font);
     }
     smd.font = font;

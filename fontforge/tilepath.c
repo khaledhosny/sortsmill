@@ -1069,10 +1069,10 @@ static int TileAsk(struct tiledata *td,SplineFont *sf) {
     tpd.gw = gw = GDrawCreateTopWindow(NULL,&pos,tpd_e_h,&tpd.cv_first,&wattrs);
 
     if ( font==NULL ) {
-	font = GDrawNewFont(NULL, SANS_UI_FAMILIES, 12, 400, fs_none);
+	font = GDrawNewFont(NULL, "sans-serif", 12, 400, fs_none);
 	font = GResourceFindFont("TilePath.Font",font);
 
-	bold = GDrawNewFont(NULL, SANS_UI_FAMILIES, 12, 700, fs_none);
+	bold = GDrawNewFont(NULL, "sans-serif", 12, 700, fs_none);
 	bold = GResourceFindFont("TilePath.BoldFont",bold);
     }
     tpd.plain = font;

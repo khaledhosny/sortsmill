@@ -1229,7 +1229,7 @@ return;
     kpd.bdf = SplineFontPieceMeal(kpd.sf,kpd.layer,(intptr_t) (gcd[1].gd.label->userdata),72,true,NULL);
 
     if ( font==NULL ) {
-	font = GDrawNewFont(gw, SANS_UI_FAMILIES, -12, 400, fs_none);
+	font = GDrawNewFont(gw, "sans-serif", -12, 400, fs_none);
 	font = GResourceFindFont("Combinations.Font",font);
     }
     kpd.font = font;

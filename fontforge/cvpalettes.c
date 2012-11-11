@@ -876,7 +876,7 @@ void CVToolsSetCursor(CharView *cv, int state, char *device) {
     int cntrl;
 
     if ( tools[0] == ct_pointer ) {
-	tools[cvt_pointer] = ct_mypointer;
+	tools[cvt_pointer] = ct_pointer;
 	tools[cvt_magnify] = ct_magplus;
 	tools[cvt_freehand] = ct_pencil;
 	tools[cvt_hand] = ct_myhand;
@@ -1212,7 +1212,7 @@ return( cvtools );
     }
 
     if ( toolsfont==NULL ) {
-	toolsfont = GDrawNewFont(NULL, SANS_UI_FAMILIES, -10, 400, fs_none);
+	toolsfont = GDrawNewFont(NULL, "sans-serif", -10, 400, fs_none);
 	toolsfont = GResourceFindFont("ToolsPalette.Font",toolsfont);
     }
 
@@ -1595,7 +1595,6 @@ static void CVMakeLayers2(CharView *cv) {
     GWindowAttrs wattrs;
     GGadgetCreateData gcd[25];
     GTextInfo label[25];
-    static GBox radio_box = { bt_none, bs_rect, 0, 0, 0, 0, 0, 0, 0, 0, COLOR_DEFAULT, COLOR_DEFAULT, 0, 0, 0, 0, 0, 0, 0 };
     int i;
     extern int _GScrollBar_Width;
 
@@ -1624,7 +1623,7 @@ return;
     memset(&gcd,0,sizeof(gcd));
 
     if ( layersfont==NULL ) {
-	layersfont = GDrawNewFont(cvlayers2, SANS_UI_FAMILIES, -12, 400, fs_none);
+	layersfont = GDrawNewFont(cvlayers2, "sans-serif", -12, 400, fs_none);
 	layersfont = GResourceFindFont("LayersPalette.Font",layersfont);
     }
 
@@ -1662,21 +1661,18 @@ return;
     gcd[3].gd.flags = gg_enabled|gg_visible|gg_dontcopybox|gg_pos_in_pixels|gg_utf8_popup;
     gcd[3].gd.cid = CID_VGrid;
     gcd[3].gd.popup_msg = (uint32_t *) _("Is Layer Visible?");
-    gcd[3].gd.box = &radio_box;
     gcd[3].creator = GCheckBoxCreate;
 
     gcd[4].gd.pos.x = 5; gcd[4].gd.pos.y = gcd[3].gd.pos.y+CV_LAYERS2_LINE_HEIGHT; 
     gcd[4].gd.flags = gg_enabled|gg_visible|gg_dontcopybox|gg_pos_in_pixels|gg_utf8_popup;
     gcd[4].gd.cid = CID_VBack;
     gcd[4].gd.popup_msg = (uint32_t *) _("Is Layer Visible?");
-    gcd[4].gd.box = &radio_box;
     gcd[4].creator = GCheckBoxCreate;
 
     gcd[5].gd.pos.x = 5; gcd[5].gd.pos.y = gcd[4].gd.pos.y+CV_LAYERS2_LINE_HEIGHT; 
     gcd[5].gd.flags = gg_enabled|gg_visible|gg_dontcopybox|gg_pos_in_pixels|gg_utf8_popup;
     gcd[5].gd.cid = CID_VFore;
     gcd[5].gd.popup_msg = (uint32_t *) _("Is Layer Visible?");
-    gcd[5].gd.box = &radio_box;
     gcd[5].creator = GCheckBoxCreate;
 
     if ( cv->showgrids ) gcd[3].gd.flags |= gg_cb_on;
@@ -2605,7 +2601,6 @@ GWindow BVMakeLayers(BitmapView *bv) {
     GWindowAttrs wattrs;
     GGadgetCreateData gcd[8], boxes[2], *hvarray[5][3];
     GTextInfo label[8];
-    static GBox radio_box = { bt_none, bs_rect, 0, 0, 0, 0, 0, 0, 0, 0, COLOR_DEFAULT, COLOR_DEFAULT, 0, 0, 0, 0, 0, 0, 0 };
     int i;
 
     if ( bvlayers!=NULL )
@@ -2632,7 +2627,7 @@ return(bvlayers);
     memset(&boxes,0,sizeof(boxes));
 
     if ( layersfont==NULL ) {
-	layersfont = GDrawNewFont(cvlayers2, SANS_UI_FAMILIES, -12, 400, fs_none);
+	layersfont = GDrawNewFont(cvlayers2, "sans-serif", -12, 400, fs_none);
 	layersfont = GResourceFindFont("LayersPalette.Font",layersfont);
     }
     for ( i=0; i<sizeof(label)/sizeof(label[0]); ++i )
@@ -2660,7 +2655,6 @@ return(bvlayers);
     gcd[2].gd.flags = gg_enabled|gg_visible|gg_dontcopybox|gg_pos_in_pixels|gg_utf8_popup;
     gcd[2].gd.cid = CID_VFore;
     gcd[2].gd.popup_msg = (uint32_t *) _("Is Layer Visible?");
-    gcd[2].gd.box = &radio_box;
     gcd[2].creator = GCheckBoxCreate;
     label[2].text = (uint32_t *) _("Bitmap");
     label[2].text_is_1byte = true;
@@ -2671,7 +2665,6 @@ return(bvlayers);
     gcd[3].gd.flags = gg_enabled|gg_visible|gg_dontcopybox|gg_pos_in_pixels|gg_utf8_popup;
     gcd[3].gd.cid = CID_VBack;
     gcd[3].gd.popup_msg = (uint32_t *) _("Is Layer Visible?");
-    gcd[3].gd.box = &radio_box;
     gcd[3].creator = GCheckBoxCreate;
     label[3].text = (uint32_t *) _("Outline");
     label[3].text_is_1byte = true;
@@ -2682,7 +2675,6 @@ return(bvlayers);
     gcd[4].gd.flags = gg_enabled|gg_visible|gg_dontcopybox|gg_pos_in_pixels|gg_utf8_popup;
     gcd[4].gd.cid = CID_VGrid;
     gcd[4].gd.popup_msg = (uint32_t *) _("Is Layer Visible?");
-    gcd[4].gd.box = &radio_box;
     gcd[4].creator = GCheckBoxCreate;
     label[4].text = (uint32_t *) _("_Guide");
     label[4].text_is_1byte = true;
@@ -2887,7 +2879,7 @@ void BVToolsSetCursor(BitmapView *bv, int state,char *device) {
     int cntrl;
 
     if ( tools[0] == bvt_none ) {
-	tools[bvt_pointer] = ct_mypointer;
+	tools[bvt_pointer] = ct_pointer;
 	tools[bvt_magnify] = ct_magplus;
 	tools[bvt_pencil] = ct_pencil;
 	tools[bvt_line] = ct_line;

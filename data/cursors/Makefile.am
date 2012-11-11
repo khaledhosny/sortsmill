@@ -16,29 +16,25 @@
 include $(top_srcdir)/mk/layout.am
 
 CURSOR_LIST = \
-	ddcursor \
+	color-picker \
+	crossed_circle \
+	dnd-copy \
 	elipsecur \
-	eyedropper \
 	featurescursor \
 	filledelipsecur \
 	filledrectcur \
 	flipcur \
-	hand \
+	grabbing \
 	kerncur \
 	knifecur \
 	lbearcur \
-	leftright \
 	linecur \
 	magminus \
 	magplus \
-	Makefile.am \
-	nesw \
-	nwse \
 	pencil \
 	pencur \
 	perspectivecur \
 	pointercic \
-	pointercur \
 	pointerg2cic \
 	pointerhvcic \
 	pointerleft \
@@ -46,7 +42,6 @@ CURSOR_LIST = \
 	pointersqr \
 	pointertri \
 	polycur \
-	prohibition \
 	rbearcur \
 	rectcur \
 	rotate3dcur \
@@ -56,8 +51,7 @@ CURSOR_LIST = \
 	setwidthcur \
 	shift \
 	skewcur \
-	starcur \
-	updown
+	starcur
 
 dist_cursors_DATA = $(CURSOR_LIST)
 

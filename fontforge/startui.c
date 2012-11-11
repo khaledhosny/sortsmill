@@ -706,10 +706,10 @@ fontforge_main_in_guile_mode (int argc, char **argv)
       splashw = GDrawCreateTopWindow (NULL, &pos, splash_e_h, NULL, &wattrs);
     }
 
-  splash_font = GDrawNewFont (NULL, SERIF_UI_FAMILIES, 12, 400, fs_none);
+  splash_font = GDrawNewFont (NULL, "serif", 12, 400, fs_none);
   splash_font = GResourceFindFont ("Splash.Font", splash_font);
 
-  splash_italic = GDrawNewFont (NULL, SERIF_UI_FAMILIES, 12, 400, fs_italic);
+  splash_italic = GDrawNewFont (NULL, "serif", 12, 400, fs_italic);
   splash_italic = GResourceFindFont ("Splash.ItalicFont", splash_italic);
   GDrawSetFont (splashw, splash_font);
   GDrawGetFontMetrics (splashw, splash_font, &as, &ds, &ld);

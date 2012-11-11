@@ -682,10 +682,9 @@ static void MVCreateFields(MetricsView *mv,int i) {
     GTextInfo label;
     static uint32_t nullstr[1] = { 0 };
     int j;
-    extern GBox _GGadget_gtextfield_box;
     int udaidx = 1; // we leave element zero to be NULL to allow bounds checking.
     
-    small = _GGadget_gtextfield_box;
+    small = _ggadget_Default_Box;
     small.flags = 0;
     small.border_type = bt_none;
     small.border_shape = bs_rect;
@@ -4717,7 +4716,7 @@ MetricsView *MetricsViewCreate(FontView *fv,SplineChar *sc,BDFFont *bdf) {
     mv->vsb = GScrollBarCreate(gw,&gd,mv);
 
     if ( mvfont==NULL ) {
-	mvfont = GDrawNewFont(gw, SANS_UI_FAMILIES, -12, 400, fs_none);
+	mvfont = GDrawNewFont(gw, "sans-serif", -12, 400, fs_none);
 	mvfont = GResourceFindFont("MetricsView.Font",mvfont);
     }
     mv->font = mvfont;

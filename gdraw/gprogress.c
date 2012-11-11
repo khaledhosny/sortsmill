@@ -59,7 +59,7 @@ typedef struct gprogress {
 } GProgress;
 
 static Color progress_background, progress_foreground;
-static Color progress_fillcol = 0xc0c0ff;
+static Color progress_fillcol = 0x88b2de;
 static GFont *progress_font = NULL;
 static int progress_init = false;
 
@@ -255,7 +255,7 @@ void GProgressStartIndicator(
 
 	root = GDrawGetRoot(NULL);
 	if ( progress_font == NULL ) {
-	    progress_font = GDrawNewFont(root, MONO_UI_FAMILIES, 12, 400, fs_none);
+	    progress_font = GDrawNewFont(root, "sans-serif", 10, 400, fs_none);
 	}
 	new_->font = progress_font;
 	GDrawSetFont(root, progress_font);

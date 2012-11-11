@@ -33,7 +33,6 @@
 #include "ttf.h"
 #include "ttfinstrs.h"
 
-extern GBox _ggadget_Default_Box;
 #define ACTIVE_BORDER   (_ggadget_Default_Box.active_border)
 #define MAIN_FOREGROUND (_ggadget_Default_Box.main_foreground)
 
@@ -369,7 +368,6 @@ static void instr_expose(struct instrinfo *ii,GWindow pixmap,GRect *rect) {
     int addr_end, num_end;
     static uint32_t nums[] = { '0', '0', '0', '0', '0', '0', '\0' };
     int indent;
-    extern GBox _ggadget_Default_Box;
 
     GDrawSetFont(pixmap,ii->gfont);
     GDrawSetLineWidth(pixmap,0);
@@ -857,7 +855,7 @@ static void InstrDlgCreate(struct instrdata *id,char *title) {
     GDrawSetVisible(iv->instrinfo.v,true);
 
     if ( font==NULL ) {
-	font = GDrawNewFont(gw, MONO_UI_FAMILIES, -12, 400, fs_none);
+	font = GDrawNewFont(gw, "monospace", -12, 400, fs_none);
 	font = GResourceFindFont("TTInstruction.Font",font);
     }
     iv->instrinfo.gfont = font;
@@ -1544,7 +1542,7 @@ static void cvtCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32_t tag) {
     GDrawSetVisible(sv->v,true);
 
     if ( font==NULL ) {
-	font = GDrawNewFont(gw, MONO_UI_FAMILIES, -12, 400, fs_none);
+	font = GDrawNewFont(gw, "monospace", -12, 400, fs_none);
 	font = GResourceFindFont("CVT.Font",font);
     }
     sv->gfont = font;

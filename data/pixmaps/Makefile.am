@@ -29,6 +29,8 @@ include $(top_srcdir)/mk/layout.am
 
 PNG_LIST = \
 	bvpress2ptr.png \
+	check_off.png \
+	check_on.png \
 	chooseraudio.png \
 	chooserback.png \
 	chooserbookmark.png \
@@ -261,6 +263,8 @@ PNG_LIST = \
 	ptinfohvcurve.png \
 	ptinfotangent.png \
 	python.png \
+	radio_off.png \
+	radio_on.png \
 	scaitalic.png \
 	scbottomserifs.png \
 	scdiagserifs.png \

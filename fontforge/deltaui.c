@@ -990,7 +990,7 @@ static void StartDeltaDisplay(QGData *qg) {
     qg->done = false;
 
     if ( valfont==NULL ) {
-	valfont = GDrawNewFont(gw, SANS_UI_FAMILIES, 11, 400, fs_none);
+	valfont = GDrawNewFont(gw, "sans-serif", 11, 400, fs_none);
 	valfont = GResourceFindFont("Validate.Font",valfont);
     }
     qg->font = valfont;

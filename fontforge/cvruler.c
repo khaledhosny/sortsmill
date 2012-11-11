@@ -405,7 +405,7 @@ static void RulerPlace(CharView *cv, GEvent *event) {
 	cv->ruler_w = GWidgetCreateTopWindow(NULL,&pos,ruler_e_h,cv,&wattrs);
 
 	if ( rvfont==NULL ) {
-	    rvfont = GDrawNewFont(cv->ruler_w, FIXED_UI_FAMILIES, -12, 400, fs_none);
+	    rvfont = GDrawNewFont(cv->ruler_w, "monospace", -12, 400, fs_none);
 	    rvfont = GResourceFindFont("CharView.Measure.Font",rvfont);
 	}
 	cv->rfont = rvfont;
@@ -652,7 +652,7 @@ static void CpInfoPlace(CharView *cv, GEvent *event) {
 	cv->ruler_w = GWidgetCreateTopWindow(NULL,&pos,cpinfo_e_h,cv,&wattrs);
 
 	if ( rvfont==NULL ) {
-	    rvfont = GDrawNewFont(cv->ruler_w, FIXED_UI_FAMILIES, -12, 400, fs_none);
+	    rvfont = GDrawNewFont(cv->ruler_w, "monospace", -12, 400, fs_none);
 	    rvfont = GResourceFindFont("CharView.Measure.Font",rvfont);
 	}
 	cv->rfont = rvfont;

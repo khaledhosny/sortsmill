@@ -52,7 +52,6 @@
 #include "filenamecat.h"
 #include "findprog.h"
 
-extern GBox _ggadget_Default_Box;
 #define ACTIVE_BORDER   (_ggadget_Default_Box.active_border)
 #define MAIN_FOREGROUND (_ggadget_Default_Box.main_foreground)
 
@@ -414,7 +413,6 @@ GMenuItem warnpopupmenu[] = {
 
 static int warningsv_e_h(GWindow gw, GEvent *event) {
     int i;
-    extern GBox _ggadget_Default_Box;
 
     if (( event->type==et_mouseup || event->type==et_mousedown ) &&
 	    (event->u.mouse.button>=4 && event->u.mouse.button<=7) ) {
@@ -525,7 +523,7 @@ static void CreateErrorWindow(void) {
     pos.y = size.height - pos.height - 30;
     errdata.gw = gw = GDrawCreateTopWindow(NULL,&pos,warnings_e_h,&errdata,&wattrs);
 
-    errdata.font = GDrawNewFont(NULL, SANS_UI_FAMILIES, 10, 400, fs_none);
+    errdata.font = GDrawNewFont(NULL, "sans-serif", 10, 400, fs_none);
     errdata.font = GResourceFindFont("Warnings.Font",errdata.font);
     GDrawGetFontMetrics(errdata.gw,errdata.font,&as,&ds,&ld);
     errdata.as = as;

@@ -40,7 +40,6 @@
 #include <ps_number.h>
 
 extern int _GScrollBar_Width;
-extern GBox _ggadget_Default_Box;
 #define ACTIVE_BORDER   (_ggadget_Default_Box.active_border)
 #define MAIN_FOREGROUND (_ggadget_Default_Box.main_foreground)
 
@@ -9295,7 +9294,6 @@ LookupExpose (GWindow pixmap, struct gfi_data *gfi, int isgpos)
   int lcnt, i, j;
   struct lkdata *lk = &gfi->tables[isgpos];
   GRect r, old;
-  extern GBox _ggadget_Default_Box;
 
   r.x = LK_MARGIN;
   r.width = gfi->lkwidth - 2 * LK_MARGIN;
@@ -10592,8 +10590,6 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
     private_mi;
   struct matrix_data *marks_md, *markc_md;
   int ltype;
-  static GBox small_blue_box;
-  extern GBox _GGadget_button_box;
   static GFont *fi_font = NULL;
   char *copied_copyright;
 
@@ -12425,23 +12421,6 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   memset (&panlabel, 0, sizeof (panlabel));
   memset (&pangcd, 0, sizeof (pangcd));
 
-  if (small_blue_box.main_foreground == 0)
-    {
-      extern void _GButtonInit (void);
-      _GButtonInit ();
-      small_blue_box = _GGadget_button_box;
-      small_blue_box.border_type = bt_box;
-      small_blue_box.border_shape = bs_rect;
-      small_blue_box.border_width = 1;
-      small_blue_box.flags = 0;
-      small_blue_box.padding = 0;
-      small_blue_box.main_foreground = 0x0000ff;
-      small_blue_box.border_darker = small_blue_box.main_foreground;
-      small_blue_box.border_darkest = small_blue_box.border_brighter =
-        small_blue_box.border_brightest =
-        small_blue_box.main_background = GDrawGetDefaultBackground (NULL);
-    }
-
   i = j = 0;
 
   pangcd[i].gd.pos.x = 5;
@@ -12462,8 +12441,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   pangcd[i].gd.label = &panlabel[i];
   pangcd[i].gd.pos.x = 12;
   ugcd[1].gd.pos.y = 10;
-  pangcd[i].gd.flags = gg_visible | gg_enabled | gg_dontcopybox;
-  pangcd[i].gd.box = &small_blue_box;
+  pangcd[i].gd.flags = gg_visible | gg_enabled | gg_dontcopybox | gg_but_link;
   pangcd[i].gd.handle_controlevent = GFI_ShowPanoseDocs;
   pangcd[i++].creator = GButtonCreate;
   panarray[j++] = &pangcd[i - 1];
@@ -14132,8 +14110,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   ugcd[1].gd.label = &ulabel[1];
   ugcd[1].gd.pos.x = 12;
   ugcd[1].gd.pos.y = 10;
-  ugcd[1].gd.flags = gg_visible | gg_enabled | gg_dontcopybox;
-  ugcd[1].gd.box = &small_blue_box;
+  ugcd[1].gd.flags = gg_visible | gg_enabled | gg_dontcopybox | gg_but_link;
   ugcd[1].gd.handle_controlevent = GFI_URangeAspectChange;
   ugcd[1].creator = GButtonCreate;
   uharray[0] = GCD_Glue;
@@ -14491,7 +14468,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
 
   if (fi_font == NULL)
     {
-      fi_font = GDrawNewFont (gw, SANS_UI_FAMILIES, 12, 400, fs_none);
+      fi_font = GDrawNewFont (gw, "sans-serif", 12, 400, fs_none);
       fi_font = GResourceFindFont ("FontInfo.Font", fi_font);
     }
   d->font = fi_font;

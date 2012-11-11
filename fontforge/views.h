@@ -129,7 +129,7 @@ struct freehand {
 };
 
 enum expandedge { ee_none, ee_nw, ee_up, ee_ne, ee_right, ee_se, ee_down,
-		  ee_sw, ee_left, ee_max };
+		  ee_sw, ee_left, ee_leftright, ee_max };
 
 typedef struct charview {
     CharViewBase b;

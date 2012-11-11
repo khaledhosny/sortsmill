@@ -1884,10 +1884,10 @@ void MathKernDialog(SplineChar *sc,int def_layer) {
     mkd.gw = gw = GDrawCreateTopWindow(NULL,&pos,mkd_e_h,&mkd.cv_topright,&wattrs);
 
     if ( mathfont==NULL ) {
-	mathfont = GDrawNewFont(NULL, SANS_UI_FAMILIES, 12, 400, fs_none);
+	mathfont = GDrawNewFont(NULL, "sans-serif", 12, 400, fs_none);
 	mathfont = GResourceFindFont("Math.Font",mathfont);
 
-	mathbold = GDrawNewFont(NULL, SANS_UI_FAMILIES, 12, 700, fs_none);
+	mathbold = GDrawNewFont(NULL, "sans-serif", 12, 700, fs_none);
 	mathbold = GResourceFindFont("Math.BoldFont",mathbold);
     }
     mkd.plain = mathfont;

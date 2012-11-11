@@ -88,11 +88,15 @@ return;
     GGadgetInit();
 
     _GGadgetCopyDefaultBox(&gtabset_box);
-    gtabset_box.border_width = 1; gtabset_box.border_shape = bs_rect;
+    gtabset_box.border_type = bt_box;
+    gtabset_box.border_shape = bs_roundrect;
+    gtabset_box.rr_radius = 2;
     /*gtabset_box.flags = 0;*/
     gtabset_font = _GGadgetInitDefaultBox("GTabSet.",&gtabset_box,NULL);
 
     gvtabset_box = gtabset_box; /* needs this to figure inheritance */
+    gvtabset_box.flags |= box_do_depressed_background;
+    gvtabset_box.depressed_background = 0xffffff;
     _GGadgetInitDefaultBox("GVTabSet.",&gvtabset_box,NULL);
 
     gtabset_inited = true;

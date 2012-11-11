@@ -225,6 +225,9 @@ typedef struct gevent {
 
 typedef enum cursor_types { ct_default, ct_pointer, ct_backpointer, ct_hand,
 	ct_question, ct_cross, ct_4way, ct_text, ct_watch, ct_draganddrop,
+	ct_leftright, ct_updown,
+	ct_topleft, ct_topright, ct_bottomleft, ct_bottomright,
+	ct_leftside, ct_rightside, ct_topside, ct_bottomside,
 	ct_invisible, 
 	ct_user, ct_user2 /* and so on */ } GCursor;
 

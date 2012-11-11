@@ -368,9 +368,9 @@ return( ee_se );
 	    ( cv->info.x > bb->maxx - 4*fudge && cv->info.y > bb->maxy- fudge ))
 return( ee_ne );
     if ( cv->info.x < bb->minx + fudge )
-return( ee_right );
-    if ( cv->info.x > bb->maxx - fudge )
 return( ee_left );
+    if ( cv->info.x > bb->maxx - fudge )
+return( ee_right );
     if ( cv->info.y < bb->miny + fudge )
 return( ee_down );
     if ( cv->info.y > bb->maxy - fudge )
@@ -384,9 +384,15 @@ static void SetCur(CharView *cv) {
 
     if ( cursors[ee_nw]==0 ) {
 	cursors[ee_none] = ct_pointer;
-	cursors[ee_nw] = cursors[ee_se] = ct_nwse; cursors[ee_ne] = cursors[ee_sw] = ct_nesw;
-	cursors[ee_left] = cursors[ee_right] = ct_leftright;
-	cursors[ee_up] = cursors[ee_down] = ct_updown;
+	cursors[ee_nw] = ct_topleft;
+	cursors[ee_se] = ct_bottomright;
+	cursors[ee_ne] = ct_topright;
+	cursors[ee_sw] = ct_bottomleft;
+	cursors[ee_left] = ct_leftside;
+	cursors[ee_right] = ct_rightside;
+	cursors[ee_leftright] = ct_leftright;
+	cursors[ee_up] = ct_topside;
+	cursors[ee_down] = ct_bottomside;
     }
     GDrawSetCursor(cv->v,cursors[cv->expandedge]);
 }
@@ -422,10 +428,10 @@ void CVCheckResizeCursors(CharView *cv) {
 	    if ( cv->showhmetrics && cv->info.x > cv->b.sc->width-fudge &&
 		    cv->info.x<cv->b.sc->width+fudge && cv->b.container==NULL &&
 		    usemymetrics==NULL )
-		cv->expandedge = ee_right;
+		cv->expandedge = ee_leftright;
 	    else if ( cv->showhmetrics && NearCaret(cv->b.sc,cv->info.x,fudge)!=-1 &&
 		    usemymetrics==NULL )
-		cv->expandedge = ee_right;
+		cv->expandedge = ee_leftright;
 	    if ( cv->showvmetrics && cv->b.sc->parent->hasvmetrics && cv->b.container==NULL &&
 		    cv->info.y > /*cv->b.sc->parent->vertical_origin*/-cv->b.sc->vwidth-fudge &&
 		    cv->info.y < /*cv->b.sc->parent->vertical_origin*/-cv->b.sc->vwidth+fudge )
@@ -552,7 +558,7 @@ return;
 		fs->p->cx = cv->b.sc->width;
 		CVInfoDraw(cv,cv->gw);
 		fs->p->anysel = true;
-		cv->expandedge = ee_right;
+		cv->expandedge = ee_leftright;
 	    } else
 		cv->expandedge = ee_none;
 	    SetCur(cv);
@@ -582,7 +588,7 @@ return;
 		fs->p->cx = cv->b.sc->italic_correction+cv->b.sc->width;
 		CVInfoDraw(cv,cv->gw);
 		fs->p->anysel = true;
-		cv->expandedge = ee_right;
+		cv->expandedge = ee_leftright;
 	    } else
 		cv->expandedge = ee_none;
 	    SetCur(cv);
@@ -597,7 +603,7 @@ return;
 		fs->p->cx = cv->b.sc->top_accent_horiz;
 		CVInfoDraw(cv,cv->gw);
 		fs->p->anysel = true;
-		cv->expandedge = ee_right;
+		cv->expandedge = ee_leftright;
 	    } else
 		cv->expandedge = ee_none;
 	    SetCur(cv);
@@ -607,7 +613,7 @@ return;
 	    for ( pst=cv->b.sc->possub; pst!=NULL && pst->type!=pst_lcaret; pst=pst->next );
 	    cv->lcarets = pst;
 	    cv->nearcaret = nearcaret;
-	    cv->expandedge = ee_right;
+	    cv->expandedge = ee_leftright;
 	    SetCur(cv);
 	}
     } else if ( event->u.mouse.clicks<=1 && !(event->u.mouse.state&ksm_shift)) {

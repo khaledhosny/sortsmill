@@ -969,8 +969,6 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
     struct tofree *tofree;
     struct resed *extras;
     int i,j,k,l,cid;
-    static GBox small_blue_box;
-    extern GBox _GGadget_button_box;
     GRE gre;
     GRect pos;
     GWindow gw;
@@ -990,22 +988,6 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
     pos.x = pos.y = 10;
     pos.width = pos.height = 100;
     gre.gw = gw = GDrawCreateTopWindow(NULL,&pos,gre_e_h,&gre,&wattrs);
-
-    if ( small_blue_box.main_foreground==0 ) {
-	extern void _GButtonInit(void);
-	_GButtonInit();
-	small_blue_box = _GGadget_button_box;
-	small_blue_box.border_type = bt_box;
-	small_blue_box.border_shape = bs_rect;
-	small_blue_box.border_width = 0;
-	small_blue_box.flags = box_foreground_shadow_outer;
-	small_blue_box.padding = 0;
-	small_blue_box.main_foreground = 0x0000ff;
-	small_blue_box.border_darker = small_blue_box.main_foreground;
-	small_blue_box.border_darkest = small_blue_box.border_brighter =
-		small_blue_box.border_brightest =
-		small_blue_box.main_background = small_blue_box.main_background;
-    }
 
     for ( res=all, cnt=0; res!=NULL; res=res->next, ++cnt );
 
@@ -1061,8 +1043,7 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 	    lab[k].text = (uint32_t *) S_(res->inherits_from->name);
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
-	    gcd[k].gd.flags = gg_visible|gg_enabled|gg_dontcopybox;
-	    gcd[k].gd.box = &small_blue_box;
+	    gcd[k].gd.flags = gg_visible|gg_enabled|gg_dontcopybox|gg_but_link;
 	    gcd[k].data = res->inherits_from;
 	    gcd[k].gd.handle_controlevent = GRE_ChangePane;
 	    gcd[k++].creator = GButtonCreate;
@@ -2040,8 +2021,7 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 	    lab[k].text = (uint32_t *) S_(res->seealso1->name);
 	    lab[k].text_is_1byte = true;
 	    gcd[k].gd.label = &lab[k];
-	    gcd[k].gd.flags = gg_visible|gg_enabled|gg_dontcopybox;
-	    gcd[k].gd.box = &small_blue_box;
+	    gcd[k].gd.flags = gg_visible|gg_enabled|gg_dontcopybox|gg_but_link;
 	    gcd[k].data = res->seealso1;
 	    gcd[k].gd.handle_controlevent = GRE_ChangePane;
 	    gcd[k++].creator = GButtonCreate;
@@ -2051,8 +2031,7 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 		lab[k].text = (uint32_t *) S_(res->seealso2->name);
 		lab[k].text_is_1byte = true;
 		gcd[k].gd.label = &lab[k];
-		gcd[k].gd.flags = gg_visible|gg_enabled|gg_dontcopybox;
-		gcd[k].gd.box = &small_blue_box;
+		gcd[k].gd.flags = gg_visible|gg_enabled|gg_dontcopybox|gg_but_link;
 		gcd[k].data = res->seealso2;
 		gcd[k].gd.handle_controlevent = GRE_ChangePane;
 		gcd[k++].creator = GButtonCreate;

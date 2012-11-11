@@ -28,12 +28,11 @@
  */
 #include "fontforgeui.h"
 
-GCursor ct_magplus, ct_magminus, ct_mypointer, ct_circle, ct_square, ct_triangle,
+GCursor ct_magplus, ct_magminus, ct_circle, ct_square, ct_triangle,
 	ct_ruler, ct_pen, ct_knife, ct_rotate, ct_skew, ct_scale, ct_flip,
 	ct_3drotate, ct_perspective, ct_hvcircle, ct_g2circle;
 GCursor ct_rect, ct_elipse, ct_poly, ct_star, ct_pencil, ct_shift, ct_line,
 	ct_myhand, ct_filledrect, ct_filledelipse, ct_setwidth, ct_eyedropper;
-GCursor ct_updown, ct_leftright, ct_nesw, ct_nwse;
 GCursor ct_rbearing, ct_kerning, ct_lbearing;
 GCursor ct_prohibition, ct_ddcursor, ct_features;
 GCursor ct_spiroleft, ct_spiroright;
@@ -57,8 +56,6 @@ static unsigned char logo_bits[] = {
 void InitCursors(void) {
     ct_magplus = GDrawCreateCursor("magplus");
     ct_magminus = GDrawCreateCursor("magminus");
-
-    ct_mypointer = GDrawCreateCursor("pointercur");
 
     ct_circle = GDrawCreateCursor("pointercic");
     ct_hvcircle = GDrawCreateCursor("pointerhvcic");
@@ -85,16 +82,11 @@ void InitCursors(void) {
     ct_poly = GDrawCreateCursor("polycur");
     ct_star = GDrawCreateCursor("starcur");
 
-    ct_nwse = GDrawCreateCursor("nwse");
-    ct_nesw = GDrawCreateCursor("nesw");
-    ct_leftright = GDrawCreateCursor("leftright");
-    ct_updown = GDrawCreateCursor("updown");
-
     ct_pencil = GDrawCreateCursor("pencil");
-    ct_eyedropper = GDrawCreateCursor("eyedropper");
+    ct_eyedropper = GDrawCreateCursor("color-picker");
     ct_shift = GDrawCreateCursor("shift");
     ct_line = GDrawCreateCursor("linecur");
-    ct_myhand = GDrawCreateCursor("hand");
+    ct_myhand = GDrawCreateCursor("grabbing");
     ct_filledrect = GDrawCreateCursor("filledrectcur");
     ct_filledelipse = GDrawCreateCursor("filledelipsecur");
 
@@ -102,8 +94,8 @@ void InitCursors(void) {
     ct_rbearing = GDrawCreateCursor("rbearcur");
     ct_lbearing = GDrawCreateCursor("lbearcur");
 
-    ct_prohibition = GDrawCreateCursor("prohibition");
-    ct_ddcursor = GDrawCreateCursor("ddcursor");
+    ct_prohibition = GDrawCreateCursor("crossed_circle");
+    ct_ddcursor = GDrawCreateCursor("dnd-copy");
     ct_features = GDrawCreateCursor("featurescursor");
 
     logo_icon = GDrawCreateBitmap(NULL,logo_width,logo_height,logo_bits);

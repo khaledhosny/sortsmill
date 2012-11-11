@@ -2114,7 +2114,7 @@ struct gfuncs sftextarea_funcs = {
 
 static void SFTextAreaInit() {
     GGadgetInit();
-    sftextarea_font = GDrawNewFont(NULL, MONO_UI_FAMILIES, 12, 400, fs_none);
+    sftextarea_font = GDrawNewFont(NULL, "monospace", 12, 400, fs_none);
     sftextarea_font = GResourceFindFont("SFTextArea.Font",sftextarea_font);
     _GGadgetCopyDefaultBox(&sftextarea_box);
     sftextarea_box.padding = 3;

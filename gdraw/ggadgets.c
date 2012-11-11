@@ -36,18 +36,18 @@
 #include "gkeysym.h"
 #include "ustring.h"
 
-VISIBLE GBox _ggadget_Default_Box = { bt_raised, bs_rect, 2, 2, 0, 0,
-  COLOR_CREATE (0xd8, 0xd8, 0xd8),      /* border left *//* brightest */
-  COLOR_CREATE (0xd0, 0xd0, 0xd0),      /* border top */
-  COLOR_CREATE (0x80, 0x80, 0x80),      /* border right */
-  COLOR_CREATE (0x66, 0x66, 0x66),      /* border bottom *//* darkest */
-  COLOR_DEFAULT,                /* normal background */
-  COLOR_DEFAULT,                /* normal foreground */
-  COLOR_CREATE (0xd8, 0xd8, 0xd8),      /* disabled background */
-  COLOR_CREATE (0x66, 0x66, 0x66),      /* disabled foreground */
-  COLOR_CREATE (0xff, 0xff, 0x00),      /* active border */
-  COLOR_CREATE (0xa0, 0xa0, 0xa0),      /* pressed background */
-  COLOR_CREATE (0x00, 0x00, 0x00),      /* gradient bg end */
+VISIBLE GBox _ggadget_Default_Box = { bt_none, bs_rect, 1, 2, 0, 0,
+  COLOR_CREATE (0x90, 0x8f, 0x8e),      /* border left *//* brightest */
+  COLOR_CREATE (0x90, 0x8f, 0x8e),      /* border top */
+  COLOR_CREATE (0x90, 0x8f, 0x8e),      /* border right */
+  COLOR_CREATE (0x90, 0x8f, 0x8e),      /* border bottom *//* darkest */
+  COLOR_DEFAULT,                        /* normal background */
+  COLOR_DEFAULT,                        /* normal foreground */
+  COLOR_DEFAULT,                        /* disabled background */
+  COLOR_CREATE (0xb5, 0xb4, 0xb3),      /* disabled foreground */
+  COLOR_CREATE (0x88, 0xb2, 0xde),      /* active border */
+  COLOR_DEFAULT,                        /* pressed background */
+  COLOR_DEFAULT,                        /* gradient bg end */
   COLOR_CREATE (0x00, 0x00, 0x00),      /* border inner */
   COLOR_CREATE (0x00, 0x00, 0x00),      /* border outer */
 };
@@ -55,7 +55,7 @@ VISIBLE GBox _ggadget_Default_Box = { bt_raised, bs_rect, 2, 2, 0, 0,
 GBox _GListMark_Box = GBOX_EMPTY;       /* Don't initialize here */
 FontInstance *_ggadget_default_font = NULL;
 static FontInstance *popup_font = NULL;
-int _GListMarkSize = 12;
+int _GListMarkSize = 7;
 GResImage *_GListMark_Image = NULL, *_GListMark_DisImage;
 static int _GGadget_FirstLine = 6;
 static int _GGadget_LeftMargin = 6;
@@ -64,8 +64,7 @@ int _GGadget_Skip = 6;
 int _GGadget_TextImageSkip = 4;
 char *_GGadget_ImagePath = NULL;
 static int _ggadget_inited = 0;
-static Color popup_foreground = 0, popup_background =
-COLOR_CREATE (0xff, 0xff, 0xc0);
+static Color popup_foreground = 0x222222, popup_background = 0xe7f3fd;
 static int popup_delay = 1000, popup_lifetime = 20000;
 
 static GResInfo popup_ri;
@@ -249,7 +248,7 @@ GResource_font_cvt (char *val, void *def)
   char *freeme = NULL;
 
   memset (&rq, 0, sizeof (rq));
-  rq.utf8_family_name = SANS_UI_FAMILIES;
+  rq.utf8_family_name = "sans-serif";
   rq.point_size = 10;
   rq.weight = 400;
   rq.style = 0;
@@ -456,29 +455,11 @@ _GGadgetInitDefaultBox (char *class, GBox * box, FontInstance * deffont)
 
   if (fi == NULL)
     {
-      fi = GDrawNewFont (NULL, SANS_UI_FAMILIES, 10, 400, fs_none);
+      fi = GDrawNewFont (NULL, "sans-serif", 10, 400, fs_none);
       if (fi == NULL)
         GDrawFatalError ("Cannot find a default font for gadgets");
     }
   return (fi);
-}
-
-static int
-localeptsize (void)
-{
-  const char *loc = getenv ("LC_ALL");
-  if (loc == NULL)
-    loc = getenv ("LC_CTYPE");
-  if (loc == NULL)
-    loc = getenv ("LANG");
-
-  if (loc == NULL)
-    return (-10);
-  else if (strncmp (loc, "ja", 2) == 0 ||
-           strncmp (loc, "zh", 2) == 0 || strncmp (loc, "ko", 2) == 0)
-    return (-16);
-
-  return (-10);
 }
 
 void
@@ -490,20 +471,31 @@ GGadgetInit (void)
   };
   if (!_ggadget_inited)
     {
+      Color _def_fg, _def_bg;
+      _def_fg = GDrawGetDefaultForeground (NULL);
+      _def_bg = GDrawGetDefaultBackground (NULL);
+
       _ggadget_inited = true;
+
       GGadgetSetImagePath (GResourceFindString ("GGadget.ImagePath"));
-      _ggadget_Default_Box.main_background = GDrawGetDefaultBackground (NULL);
-      _ggadget_Default_Box.main_foreground = GDrawGetDefaultForeground (NULL);
-      _ggadget_default_font =
-        _GGadgetInitDefaultBox ("GGadget.", &_ggadget_Default_Box, NULL);
+      _ggadget_Default_Box.main_background = _def_bg;
+      _ggadget_Default_Box.main_foreground = _def_fg;
+      _ggadget_Default_Box.disabled_background = _def_bg;
+      _ggadget_Default_Box.depressed_background = _def_bg;
+      _ggadget_Default_Box.gradient_bg_end = _def_bg;
+      _ggadget_default_font = _GGadgetInitDefaultBox ("GGadget.", &_ggadget_Default_Box, NULL);
+
       _GGadgetCopyDefaultBox (&_GListMark_Box);
-      _GListMark_Box.border_width = _GListMark_Box.padding = 1;
-        /*_GListMark_Box.flags = 0;*/
+      _GListMark_Box.border_width = 2;
+      _GListMark_Box.padding = 0;
+      _GListMark_Box.border_brightest = _GListMark_Box.border_brighter = 0xfcfbfa;
+      _GListMark_Box.border_darkest = _GListMark_Box.border_darker = 0xdddcdb;
+      _GListMark_Box.border_inner = 0xadacab;
       _GGadgetInitDefaultBox ("GListMark.", &_GListMark_Box, NULL);
+
       _GListMarkSize = GResourceFindInt ("GListMark.Width", _GListMarkSize);
       _GListMark_Image = GGadgetResourceFindImage ("GListMark.Image", NULL);
-      _GListMark_DisImage =
-        GGadgetResourceFindImage ("GListMark.DisabledImage", NULL);
+      _GListMark_DisImage = GGadgetResourceFindImage ("GListMark.DisabledImage", NULL);
       if (_GListMark_Image != NULL && _GListMark_Image->image != NULL)
         {
           int size = GDrawPixelsToPoints (NULL,
@@ -534,8 +526,7 @@ GGadgetInit (void)
       if (popup_font == NULL)
         {
           popup_font =
-            GDrawNewFont (NULL, SANS_UI_FAMILIES, localeptsize (), 400,
-                          fs_none);
+            GDrawNewFont (NULL, "sans-serif", 10, 400, fs_none);
           if (popup_font == NULL)
             popup_font = _ggadget_default_font;
         }
@@ -544,42 +535,72 @@ GGadgetInit (void)
 
 void
 GListMarkDraw (GWindow pixmap, int x, int y, int height,
-               enum gadget_state state)
+               enum gadget_state state,
+	       enum mark_type type)
 {
-  GRect r, old;
-  int marklen = GDrawPointsToPixels (pixmap, _GListMarkSize);
-
-  if (state == gs_disabled &&
+  int pt;
+  double _width, _height;
+  if (type == mt_arrow && state == gs_disabled &&
       _GListMark_DisImage != NULL && _GListMark_DisImage->image != NULL)
     {
-      GDrawDrawScaledImage (pixmap, _GListMark_DisImage->image, x,
-                            y + (height -
-                                 GImageGetScaledHeight (pixmap,
-                                                        _GListMark_DisImage->
-                                                        image)) / 2);
+      _height = GImageGetScaledHeight (pixmap, _GListMark_DisImage->image);
+      y += (height - _height) / 2;
+      GDrawDrawScaledImage (pixmap, _GListMark_DisImage->image, x, y);
     }
-  else if (_GListMark_Image != NULL && _GListMark_Image->image != NULL)
+  else if (type == mt_arrow && _GListMark_Image != NULL && _GListMark_Image->image != NULL)
     {
-      GDrawDrawScaledImage (pixmap, _GListMark_Image->image, x,
-                            y + (height -
-                                 GImageGetScaledHeight (pixmap,
-                                                        _GListMark_Image->
-                                                        image)) / 2);
+      _height = GImageGetScaledHeight (pixmap, _GListMark_Image->image);
+      y += (height - _height) / 2;
+      GDrawDrawScaledImage (pixmap, _GListMark_Image->image, x, y);
     }
   else
     {
-      r.x = x;
-      r.width = marklen;
-      r.height =
-        2 * GDrawPointsToPixels (pixmap,
-                                 _GListMark_Box.border_width) +
-        GDrawPointsToPixels (pixmap, 3);
-      r.y = y + (height - r.height) / 2;
-      GDrawPushClip (pixmap, &r, &old);
+      cairo_t *cr = GDrawGetCairo (pixmap);
 
-      GBoxDrawBackground (pixmap, &r, &_GListMark_Box, state, false);
-      GBoxDrawBorder (pixmap, &r, &_GListMark_Box, state, false);
-      GDrawPopClip (pixmap, &old);
+      pt = GDrawPointsToPixels (pixmap, 1);
+      _width = GDrawPointsToPixels (pixmap, _GListMarkSize);
+      _height = 2 * GDrawPointsToPixels (pixmap, _GListMark_Box.border_width) + 3 * pt;
+
+      cairo_new_path (cr);
+
+      if (state == gs_disabled)
+        cairo_set_source_rgba (cr, .7, .7, .7, 1.);
+      else
+        cairo_set_source_rgba (cr, .3, .3, .3, 1.);
+
+      if (type == mt_arrow)
+        {
+          y += (height - _height) / 3;
+
+          cairo_set_line_cap (cr, CAIRO_LINE_CAP_ROUND);
+          cairo_set_line_width (cr, 2.3 * pt);
+
+          cairo_move_to (cr, x, y + _height / 2);
+          cairo_line_to (cr, x + _width / 2, y + _height);
+          cairo_line_to (cr, x + _width, y + _height / 2);
+	}
+      else if (type == mt_plus)
+        {
+          y += (height - _height) / 2;
+
+          cairo_set_line_width (cr, 2 * pt);
+
+          cairo_move_to (cr, x, y + _height / 2);
+	  cairo_line_to (cr, x + _width, y + _height / 2);
+	  cairo_move_to (cr, x + _width / 2, y);
+	  cairo_line_to (cr, x + _width / 2, y + _height);
+	}
+      else if (type == mt_minus)
+        {
+          y += (height - _height) / 2;
+
+          cairo_set_line_width (cr, 2 * pt);
+
+          cairo_move_to (cr, x, y + _height / 2);
+	  cairo_line_to (cr, x + _width, y + _height / 2);
+	}
+
+      cairo_stroke (cr);
     }
 }
 
@@ -1037,20 +1058,6 @@ _GGadget_Create (GGadget *g, struct gwindow *base, GGadgetData * gd,
       if (last == NULL)
         {
           g->r.y = GDrawPointsToPixels (base, _GGadget_FirstLine);
-          if (g->r.x == 0)
-            g->r.x = GGadgetLMargin (g, lastopengroup);
-        }
-      else if (gd->flags & gg_pos_newline)
-        {
-          int temp, y = last->r.y, nexty = last->r.y + last->r.height;
-          while (last != NULL && last->r.y == y)
-            {
-              temp = last->r.y + last->r.height;
-              if (temp > nexty)
-                nexty = temp;
-              last = last->prev;
-            }
-          g->r.y = nexty + GDrawPointsToPixels (base, _GGadget_LineSkip);
           if (g->r.x == 0)
             g->r.x = GGadgetLMargin (g, lastopengroup);
         }

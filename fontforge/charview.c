@@ -2586,7 +2586,7 @@ static GWindow CharIcon(CharView *cv, FontView *fv) {
 	uint32_t text[2];
 	int as, ds, ld, width;
 
-	font = GDrawNewFont(NULL, SERIF_UI_FAMILIES, 24, 400, fs_none);
+	font = GDrawNewFont(NULL, "serif", 24, 400, fs_none);
 	GDrawSetFont(icon,font);
 	text[0] = sc->unicodeenc; text[1] = 0;
 	GDrawGetFontMetrics(icon,font,&as,&ds,&ld);
@@ -10162,7 +10162,7 @@ static void _CharViewCreate(CharView *cv, SplineChar *sc, FontView *fv,int enc) 
 	/*  so the font I used to use isn't found, and a huge monster is */
 	/*  inserted instead */
 	if ( infofamily==NULL )
-	    infofamily = SANS_UI_FAMILIES;
+	    infofamily = "sans-serif";
     }
 
     cv->small = GDrawNewFont(cv->gw, infofamily, GResourceFindInt("CharView.Rulers.FontSize", -10), 400, fs_none);

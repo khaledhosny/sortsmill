@@ -33,7 +33,6 @@
 #include <utype.h>
 #include <math.h>
 
-extern GBox _ggadget_Default_Box;
 #define ACTIVE_BORDER   (_ggadget_Default_Box.active_border)
 #define MAIN_FOREGROUND (_ggadget_Default_Box.main_foreground)
 
@@ -2582,7 +2581,7 @@ return;
     kc_width = GDrawPixelsToPoints(NULL,pos.width*100/GGadgetScale(100));
 
     if ( font==NULL ) {
-	font = GDrawNewFont(gw, MONO_UI_FAMILIES, 12, 400, fs_none);
+	font = GDrawNewFont(gw, "monospace", 12, 400, fs_none);
 	font = GResourceFindFont("KernClass.Font",font);
     }
     kcd->font = font;

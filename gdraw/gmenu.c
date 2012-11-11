@@ -116,11 +116,9 @@ static void GMenuInit() {
     menu_font = menubar_font = _ggadget_default_font;
     _GGadgetCopyDefaultBox(&menubar_box);
     _GGadgetCopyDefaultBox(&menu_box);
-    menubar_box.border_shape = menu_box.border_shape = bs_rect;
-    menubar_box.border_width = 0;
-    menu_box.padding = 1;
-    menubar_box.flags |= box_foreground_border_outer;
-    menu_box.flags |= box_foreground_border_outer;
+    menubar_box.active_border = 0xffffff;
+    menu_box.padding = 3;
+    menu_box.main_background = 0xffffff;
     menubar_font = _GGadgetInitDefaultBox("GMenuBar.",&menubar_box,menubar_font);
     menu_font = _GGadgetInitDefaultBox("GMenu.",&menu_box,menubar_font);
     keystr = GResourceFindString("Keyboard");
@@ -316,17 +314,22 @@ return( x );
 static void
 GMenuDrawCheckMark (struct gmenu *m, Color fg, int ybase)
 {
-  int as = m->as;
   int pt = GDrawPointsToPixels (m->w, 1);
+  int as = m->as;
   int x = m->tickoff;
+  cairo_t *cr = GDrawGetCairo (m->w);
 
-  while (pt > 1 && 2 * pt >= as / 3)
-    --pt;
-  GDrawSetLineWidth (m->w, 2 * pt);
-  GDrawDrawLine (m->w, x + pt, ybase - as / 2, x + as / 3, ybase - 2 * pt,
-                 fg);
-  GDrawDrawLine (m->w, x + as / 3, ybase - 2 * pt, x + as, ybase - 8 * pt,
-                 fg);
+  cairo_new_path (cr);
+  cairo_set_line_width (cr, 2 * pt);
+  cairo_set_line_cap (cr, CAIRO_LINE_CAP_ROUND);
+  cairo_set_source_rgba (cr,
+                         COLOR_RED (fg) / 255.0,
+                         COLOR_GREEN (fg) / 255.0,
+                         COLOR_BLUE (fg) / 255.0, 1.0);
+  cairo_move_to (cr, x + pt, ybase - as / 2);
+  cairo_line_to (cr, x + as / 3, ybase - 2 * pt);
+  cairo_line_to (cr, x + as, ybase - 8 * pt);
+  cairo_stroke (cr);
 }
 
 static void
@@ -340,18 +343,19 @@ GMenuDrawArrow (struct gmenu *m, Color fg, int ybase)
   int pt = GDrawPointsToPixels (m->w, 1);
   int as = 2 * (m->as / 3);
   int x = m->rightedge - 2 * pt;
-  GPoint p[3];
+  cairo_t *cr = GDrawGetCairo (m->w);
 
-  GDrawSetLineWidth (m->w, 2 * pt);
-  p[0].x = x;
-  p[0].y = ybase - as / 2;
-  p[1].x = x - 1 * (as / 2);
-  p[1].y = ybase;
-  p[2].x = p[1].x;
-  p[2].y = ybase - as;
-
-  GDrawDrawLine (m->w, p[0].x, p[0].y, p[2].x, p[2].y, fg);
-  GDrawDrawLine (m->w, p[1].x, p[1].y, p[0].x, p[0].y, fg);
+  cairo_new_path (cr);
+  cairo_set_line_width (cr, 2 * pt);
+  cairo_set_line_cap (cr, CAIRO_LINE_CAP_ROUND);
+  cairo_set_source_rgba (cr,
+                         COLOR_RED (fg) / 255.0,
+                         COLOR_GREEN (fg) / 255.0,
+                         COLOR_BLUE (fg) / 255.0, 1.0);
+  cairo_move_to (cr, x - 1 * (as / 2), ybase - as);
+  cairo_line_to (cr, x, ybase - as / 2);
+  cairo_line_to (cr, x - 1 * (as / 2), ybase);
+  cairo_stroke (cr);
 }
 
 static int GMenuDrawMenuLine(struct gmenu *m, GMenuItem *mi, int y,GWindow pixmap) {

@@ -2792,10 +2792,10 @@ static void ShowAttCreateDlg(struct att_dlg *att, SplineFont *sf, int which,
     att->gw = GDrawCreateTopWindow(NULL,&pos,att_e_h,att,&wattrs);
 
     if ( propfont==NULL ) {
-	propfont = GDrawNewFont(att->gw, SANS_UI_FAMILIES, 12, 400, fs_none);
+	propfont = GDrawNewFont(att->gw, "sans-serif", 12, 400, fs_none);
 	propfont = GResourceFindFont("ShowATT.Font",propfont);
 
-	monofont = GDrawNewFont(att->gw, MONO_UI_FAMILIES, 12, 400, fs_none);
+	monofont = GDrawNewFont(att->gw, "monospace", 12, 400, fs_none);
 	monofont = GResourceFindFont("ShowATT.MonoFont",monofont);
     }
     att->font = propfont;
