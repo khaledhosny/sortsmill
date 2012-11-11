@@ -33,7 +33,6 @@
 #include "ttf.h"
 #include "ttfinstrs.h"
 
-extern GBox _ggadget_Default_Box;
 #define ACTIVE_BORDER   (_ggadget_Default_Box.active_border)
 #define MAIN_FOREGROUND (_ggadget_Default_Box.main_foreground)
 
@@ -369,7 +368,6 @@ static void instr_expose(struct instrinfo *ii,GWindow pixmap,GRect *rect) {
     int addr_end, num_end;
     static uint32_t nums[] = { '0', '0', '0', '0', '0', '0', '\0' };
     int indent;
-    extern GBox _ggadget_Default_Box;
 
     GDrawSetFont(pixmap,ii->gfont);
     GDrawSetLineWidth(pixmap,0);

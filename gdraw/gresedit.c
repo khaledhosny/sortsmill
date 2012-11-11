@@ -970,7 +970,6 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
     struct resed *extras;
     int i,j,k,l,cid;
     static GBox small_blue_box;
-    extern GBox _GGadget_button_box;
     GRE gre;
     GRect pos;
     GWindow gw;

@@ -32,7 +32,6 @@
 #include <ustring.h>
 #include <stdarg.h>
 
-extern GBox _ggadget_Default_Box;
 #define MAIN_FOREGROUND (_ggadget_Default_Box.main_foreground)
 
 #ifdef FREETYPE_HAS_DEBUGGER

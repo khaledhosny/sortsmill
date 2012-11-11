@@ -682,7 +682,6 @@ static void MVCreateFields(MetricsView *mv,int i) {
     GTextInfo label;
     static uint32_t nullstr[1] = { 0 };
     int j;
-    extern GBox _GGadget_gtextfield_box;
     int udaidx = 1; // we leave element zero to be NULL to allow bounds checking.
     
     small = _GGadget_gtextfield_box;

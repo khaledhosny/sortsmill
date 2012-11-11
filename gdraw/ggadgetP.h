@@ -497,7 +497,7 @@ VISIBLE extern int _GScrollBar_Width;		/* in points */
 extern int _GListMarkSize;		/* in points, def width of popup mark in buttons */
 extern int _GGadget_Skip;		/* in points, def hor space between gadgets */
 extern int _GGadget_TextImageSkip;	/* in points, def hor space text and image */
-extern GBox _GListMark_Box, _GGroup_LineBox;
+extern GBox _GListMark_Box, _GGroup_LineBox, _GGadget_defaultbutton_box;
 extern GResImage *_GListMark_Image;
 VISIBLE extern FontInstance *_ggadget_default_font;
 

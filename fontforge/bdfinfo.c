@@ -36,7 +36,6 @@
 #include <math.h>
 #include <gkeysym.h>
 
-extern GBox _ggadget_Default_Box;
 #define ACTIVE_BORDER   (_ggadget_Default_Box.active_border)
 #define MAIN_FOREGROUND (_ggadget_Default_Box.main_foreground)
 
@@ -488,7 +487,6 @@ static void BdfP_Expose(struct bdf_dlg *bd, GWindow pixmap) {
     int page = bd->vheight/(bd->fh+1);
     GRect clip, old, r;
     char buffer[40];
-    extern GBox _ggadget_Default_Box;
 
     GDrawSetFont(pixmap,bd->font);
     clip.x = 4; clip.width = bd->value_x-4-2; clip.height = bd->fh;
