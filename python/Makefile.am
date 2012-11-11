@@ -68,7 +68,7 @@ sortsmillff/%.so: sortsmillff/%.la
 	cp sortsmillff/$(LT_OBJDIR)$*.so $@
 
 # These shared object files are needed by the test suite.
-all-local: sortsmillff/bernstein.so
+all-local: sortsmillff/bernstein.so sortsmillff/brentroot.so
 check-local: all-local
 
 extract_text = $(PERL) -n -e								\

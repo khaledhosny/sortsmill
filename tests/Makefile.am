@@ -120,7 +120,7 @@ EXTRA_DIST += test_xunistr_strtol.txt test_xunistr_strtod.txt
 EXTRA_DIST += test_utf7_to_string.scm
 
 EXTRA_DIST += test_guile_bernstein.scm test_python_bernstein.py	\
-	test_guile_brentroot.scm
+	test_guile_brentroot.scm test_python_brentroot.py
 
 EXTRA_DIST += test_psMat_identity.py test_psMat_inverse.py			\
 	test_psMat_compose.py test_psMat_rotate.py test_psMat_scale.py	\
