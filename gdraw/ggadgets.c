@@ -1061,20 +1061,6 @@ _GGadget_Create (GGadget *g, struct gwindow *base, GGadgetData * gd,
           if (g->r.x == 0)
             g->r.x = GGadgetLMargin (g, lastopengroup);
         }
-      else if (gd->flags & gg_pos_newline)
-        {
-          int temp, y = last->r.y, nexty = last->r.y + last->r.height;
-          while (last != NULL && last->r.y == y)
-            {
-              temp = last->r.y + last->r.height;
-              if (temp > nexty)
-                nexty = temp;
-              last = last->prev;
-            }
-          g->r.y = nexty + GDrawPointsToPixels (base, _GGadget_LineSkip);
-          if (g->r.x == 0)
-            g->r.x = GGadgetLMargin (g, lastopengroup);
-        }
       else
         {
           g->r.y = last->r.y;
