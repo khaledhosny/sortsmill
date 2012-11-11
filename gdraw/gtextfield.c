@@ -1410,7 +1410,7 @@ static int gtextfield_expose(GWindow pixmap, GGadget *g, GEvent *event) {
     GTextField *gt = (GTextField *) g;
     GListField *ge = (GListField *) g;
     GRect old1, old2, *r = &g->r;
-    Color fg, lfg;
+    Color fg;
     int ll,i, last;
     GRect unpadded_inner;
     int pad;
@@ -1436,7 +1436,6 @@ return( false );
     fg = g->state==gs_disabled?g->box->disabled_foreground:
 		    g->box->main_foreground==COLOR_DEFAULT?GDrawGetDefaultForeground(GDrawGetDisplayOfWindow(pixmap)):
 		    g->box->main_foreground;
-    lfg = g->box->border_inner;
     ll = 0;
     if ( (last = gt->g.inner.height/gt->fh)==0 ) last = 1;
     if ( gt->sel_start != gt->sel_end ) {
@@ -1461,10 +1460,6 @@ return( false );
     if ( gt->listfield ) {
 	int margin = (ge->buttonrect.width - marklen) / 2;
 
-	GRect r = ge->buttonrect;
-	r.x -= r.width / 2;
-	GBoxDrawVLine(pixmap, &r, g->box);
-
 	GListMarkDraw(pixmap,
 		ge->buttonrect.x + margin,
 		g->inner.y,
@@ -1474,11 +1469,6 @@ return( false );
     } else if ( gt->numericfield ) {
 	int margin = ((ge->buttonrect.width / 2) - marklen) / 2;
 
-	GRect r = ge->buttonrect;
-	GBoxDrawVLine(pixmap, &r, g->box); // second line
-	r.x -= r.width / 2;
-	GBoxDrawVLine(pixmap, &r, g->box); // first line
-
 	GListMarkDraw(pixmap,
 		ge->buttonrect.x + margin,
 		g->inner.y,
@@ -1487,7 +1477,7 @@ return( false );
 		mt_minus);
 
 	GListMarkDraw(pixmap,
-		ge->buttonrect.x + (ge->buttonrect.width / 2) + margin,
+		ge->buttonrect.x + (ge->buttonrect.width / 2),
 		g->inner.y,
 		g->inner.height,
 		g->state,
@@ -2308,7 +2298,7 @@ static void GTextFieldSetDesiredSize(GGadget *g,GRect *outer,GRect *inner) {
 		    2*GBoxBorderWidth(gt->g.base,&_GListMark_Box) +
 		    GBoxBorderWidth(gt->g.base,&glistfield_box);
 	if ( gt->numericfield )
-	    extra = 2 * extra;
+	    extra += GDrawPointsToPixels(gt->g.base, _GListMarkSize);
 	g->desired_width = inner->width + 2*bp + extra;
 	g->desired_height = inner->height + 2*bp;
 	if ( gt->multi_line ) {
@@ -2333,7 +2323,7 @@ static void GTextFieldGetDesiredSize(GGadget *g,GRect *outer,GRect *inner) {
 		2*GBoxBorderWidth(gt->g.base,&_GListMark_Box) +
 		GBoxBorderWidth(gt->g.base,&glistfield_box);
     if ( gt->numericfield )
-	extra = 2 * extra;
+	extra += GDrawPointsToPixels(gt->g.base, _GListMarkSize);
 
     width = GGadgetScale(GDrawPointsToPixels(gt->g.base,80));
     height = gt->multi_line? 4*gt->fh:gt->fh;
@@ -2555,7 +2545,7 @@ static void GTextFieldFit(GTextField *gt) {
 		    2*GDrawPointsToPixels(gt->g.base,_GGadget_TextImageSkip) +
 		    GBoxBorderWidth(gt->g.base,&_GListMark_Box);
 	if ( gt->numericfield )
-	    extra = 2 * extra;
+	    extra += GDrawPointsToPixels(gt->g.base, _GListMarkSize);
 
 	gt->g.r.width = outer.width;
 	gt->g.inner.width = inner.width;
@@ -2585,7 +2575,7 @@ static void GTextFieldFit(GTextField *gt) {
 		    2*GBoxBorderWidth(gt->g.base,&_GListMark_Box)+
 		    GBoxBorderWidth(gt->g.base,&glistfield_box);
 	if (gt->numericfield)
-	    extra = 2 * extra;
+	    extra += GDrawPointsToPixels(gt->g.base, _GListMarkSize);
 	ge->fieldrect = gt->g.r;
 	extra -= GDrawPointsToPixels(gt->g.base,_GGadget_TextImageSkip)/2;
 	ge->buttonrect.x = gt->g.r.x+gt->g.r.width - extra;

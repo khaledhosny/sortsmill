@@ -566,7 +566,7 @@ GListMarkDraw (GWindow pixmap, int x, int y, int height,
       if (state == gs_disabled)
         cairo_set_source_rgba (cr, .7, .7, .7, 1.);
       else
-        cairo_set_source_rgba (cr, .5, .5, .5, 1.);
+        cairo_set_source_rgba (cr, .3, .3, .3, 1.);
 
       if (type == mt_arrow)
         {
