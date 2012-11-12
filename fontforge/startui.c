@@ -43,7 +43,6 @@
 #include <xdie_on_null.h>
 
 extern int AutoSaveFrequency;
-static int unique = 0;
 static int listen_to_apple_events = false;
 
 static void
@@ -58,8 +57,6 @@ _dousage (void)
   printf ("\t-recover none|auto|inquire|clean (control error recovery)\n");
   printf
     ("\t-allglyphs\t\t (load all glyphs in the 'glyf' table\n\t\t\t of a truetype collection)\n");
-  printf
-    ("\t-unique\t\t\t (if a fontforge is already running open\n\t\t\t all arguments in it and have this process exit)\n");
   printf ("\t-display display-name\t (sets the X display)\n");
   printf ("\t-depth val\t\t (sets the display depth if possible)\n");
   printf ("\t-vc val\t\t\t (sets the visual class if possible)\n");
@@ -238,90 +235,6 @@ DoDelayedEvents (GEvent * event)
   GDrawCancelTimer (t);
 }
 
-struct argsstruct
-{
-  int next;
-  int argc;
-  char **argv;
-  int any;
-};
-
-static void
-SendNextArg (struct argsstruct *args)
-{
-  int i;
-  char *msg;
-  static GTimer *timeout;
-
-  if (timeout != NULL)
-    {
-      GDrawCancelTimer (timeout);
-      timeout = NULL;
-    }
-
-  for (i = args->next; i < args->argc; ++i)
-    {
-      if (*args->argv[i] != '-' ||
-          strcmp (args->argv[i], "-quit") == 0
-          || strcmp (args->argv[i], "--quit") == 0
-          || strcmp (args->argv[i], "-new") == 0
-          || strcmp (args->argv[i], "--new") == 0)
-        break;
-    }
-  if (i >= args->argc)
-    {
-      if (args->any)
-        exit (0);               /* Sent everything */
-      msg = "-open";
-    }
-  else
-    msg = args->argv[i];
-  args->next = i + 1;
-  args->any = true;
-
-  GDrawGrabSelection (splashw, sn_user1);
-  GDrawAddSelectionType (splashw, sn_user1, "STRING",
-                         xstrdup (msg), strlen (msg), 1, NULL, NULL);
-
-  /* If we just sent the other fontforge a request to die, it will never */
-  /*  take the selection back. So we should just die quietly */
-  /*  But we can't die instantly, or it will never get our death threat */
-  /*  (it won't have a chance to ask us for the selection if we're dead) */
-  timeout = GDrawRequestTimer (splashw, 1000, 0, NULL);
-}
-
-/* When we want to send filenames to another running fontforge we want a */
-/*  different event handler. We won't have a splash window in that case, */
-/*  just an invisible utility window on which we perform a little selection */
-/*  dance */
-static int
-request_e_h (GWindow gw, GEvent * event)
-{
-  if (event->type == et_selclear)
-    {
-      SendNextArg (GDrawGetUserData (gw));
-    }
-  else if (event->type == et_timer)
-    exit (0);
-
-  return (true);
-}
-
-static void
-PingOtherFontForge (int argc, char **argv)
-{
-  struct argsstruct args;
-
-  args.next = 1;
-  args.argc = argc;
-  args.argv = argv;
-  args.any = false;
-  GDrawSetUserData (splashw, &args);
-  SendNextArg (&args);
-  GDrawEventLoop (NULL);
-  exit (0);                     /* But the event loop should never return */
-}
-
 static int
 splash_e_h (GWindow gw, GEvent * event)
 {
@@ -434,8 +347,6 @@ splash_e_h (GWindow gw, GEvent * event)
             FontNew ();
           else if (strcmp (arg, "-open") == 0 || strcmp (arg, "--open") == 0)
             MenuOpen (NULL, NULL, NULL);
-          else if (strcmp (arg, "-quit") == 0 || strcmp (arg, "--quit") == 0)
-            MenuExit (NULL, NULL, NULL);
           else
             ViewPostScriptFont (arg, 0);
           free (arg);
@@ -512,7 +423,7 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   char *display = NULL;
   int ds, ld;
   int openflags = 0;
-  int doopen = 0, quit_request = 0;
+  int doopen = 0;
 
   if (splashimage == NULL)
     {
@@ -609,8 +520,6 @@ fontforge_main_in_guile_mode (int argc, char **argv)
         AddR ("Gdraw.Keyboard", argv[++i]);
       else if (strcmp (pt, "-display") == 0 && i < argc - 1)
         display = argv[++i];
-      else if (strcmp (pt, "-unique") == 0)
-        unique = 1;
       else if (strcmp (pt, "-recover") == 0 && i < argc - 1)
         {
           ++i;
@@ -646,8 +555,6 @@ fontforge_main_in_guile_mode (int argc, char **argv)
           printf ("%s\n", PACKAGE_STRING);
           exit (0);
         }
-      else if (strcmp (pt, "-quit") == 0)
-        quit_request = true;
       else if (strcmp (pt, "-home") == 0)
         /* already did a chdir earlier, don't need to do it again */ ;
     }
@@ -679,19 +586,7 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   pos.width = splashwidth;
   pos.height = splashheight - 56;       /* 54 */
   GDrawBindSelection (NULL, sn_user1, "FontForge");
-  if (unique && GDrawSelectionOwned (NULL, sn_user1))
-    {
-      /* Different event handler, not a dialog */
-      wattrs.is_dlg = false;
-      splashw = GDrawCreateTopWindow (NULL, &pos, request_e_h, NULL, &wattrs);
-      PingOtherFontForge (argc, argv);
-    }
-  else
-    {
-      if (quit_request)
-        exit (0);
-      splashw = GDrawCreateTopWindow (NULL, &pos, splash_e_h, NULL, &wattrs);
-    }
+  splashw = GDrawCreateTopWindow (NULL, &pos, splash_e_h, NULL, &wattrs);
 
   splash_font = GDrawNewFont (NULL, "serif", 12, 400, fs_none);
   splash_font = GResourceFindFont ("Splash.Font", splash_font);
@@ -746,7 +641,7 @@ fontforge_main_in_guile_mode (int argc, char **argv)
                || strcmp (pt, "-recover=clean") == 0
                || strcmp (pt, "-recover=auto") == 0
                || strcmp (pt, "-dontopenxdevices") == 0
-               || strcmp (pt, "-unique") == 0 || strcmp (pt, "-home") == 0)
+               || strcmp (pt, "-home") == 0)
         /* Already done, needed to be before display opened */ ;
       else if (strncmp (pt, "-psn_", 5) == 0)
         /* Already done */ ;
