@@ -42,14 +42,6 @@
 #include <libguile.h>
 #include <xdie_on_null.h>
 
-#ifndef LOCALEDIR
-#error You must set LOCALEDIR.
-#endif
-
-#ifndef SHAREDIR
-#error You must set SHAREDIR.
-#endif
-
 extern int AutoSaveFrequency;
 static int unique = 0;
 static int listen_to_apple_events = false;
@@ -497,12 +489,6 @@ ReopenLastFonts (void)
   return (any);
 }
 
-static char *
-getLocaleDir (void)
-{
-  return LOCALEDIR;
-}
-
 static void
 GrokNavigationMask (void)
 {
@@ -577,12 +563,13 @@ fontforge_main_in_guile_mode (int argc, char **argv)
 
   InitSimpleStuff ();
 
-  GMenuSetShortcutDomain (ff_shortcutsdomain ());
-  bind_textdomain_codeset (ff_shortcutsdomain (), "UTF-8");
-  bindtextdomain (ff_shortcutsdomain (), getLocaleDir ());
-  bind_textdomain_codeset (ff_textdomain (), "UTF-8");
-  bindtextdomain (ff_textdomain (), getLocaleDir ());
-  textdomain (ff_textdomain ());
+  GMenuSetShortcutDomain (FF_SHORTCUTSDOMAIN);
+  bind_textdomain_codeset (FF_SHORTCUTSDOMAIN, "UTF-8");
+  bindtextdomain (FF_SHORTCUTSDOMAIN, LOCALEDIR);
+
+  bind_textdomain_codeset (FF_TEXTDOMAIN, "UTF-8");
+  bindtextdomain (FF_TEXTDOMAIN, LOCALEDIR);
+  textdomain (FF_TEXTDOMAIN);
 
   GGadgetSetImageDir (SHAREDIR "/pixmaps");
   GResourceAddResourceFile (SHAREDIR "/resources/fontforge.resource", false);
