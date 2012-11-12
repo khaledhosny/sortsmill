@@ -43,7 +43,6 @@
 #include <xdie_on_null.h>
 
 extern int AutoSaveFrequency;
-static int listen_to_apple_events = false;
 
 static void
 _dousage (void)
@@ -127,88 +126,8 @@ struct delayed_event
   void (*func) (void *);
 };
 
-static GImage *splashimage = NULL;
-int splashwidth = 379, splashheight = 375;
-static GWindow splashw;
+static GWindow eventw;
 static GTimer *autosave_timer;
-static GTimer *splasht;
-static GFont *splash_font, *splash_italic;
-static int as, fh, linecnt;
-static uint32_t msg[470];
-static uint32_t *lines[20], *is, *ie;
-
-void
-ShowAboutScreen (void)
-{
-  static int first = 1;
-
-  if (first)
-    {
-      GDrawResize (splashw, splashwidth, splashheight + linecnt * fh);
-      first = false;
-    }
-  if (splasht != NULL)
-    GDrawCancelTimer (splasht);
-  splasht = NULL;
-  GDrawSetVisible (splashw, true);
-}
-
-static void
-SplashLayout ()
-{
-  uint32_t *start, *pt, *lastspace;
-
-  u32_strcpy (msg,
-	      x_gc_u8_to_u32 ("When my father finished his book on Renaissance printing"
-			      " (The Craft of Printing and the Publication of Shakespeare's Works)"
-			      " he told me that I would have to write the chapter on"
-			      " computer typography. This is my attempt to do so."));
-
-  GDrawSetFont (splashw, splash_font);
-  linecnt = 0;
-  lines[linecnt++] = msg - 1;
-  for (start = msg; *start != '\0'; start = pt)
-    {
-      lastspace = NULL;
-      for (pt = start;; ++pt)
-        {
-          if (*pt == ' ' || *pt == '\0')
-            {
-              if (GDrawGetTextWidth (splashw, start, pt - start) < splashwidth - 10)
-                lastspace = pt;
-              else
-                break;
-              if (*pt == '\0')
-                break;
-            }
-        }
-      if (lastspace != NULL)
-        pt = lastspace;
-      lines[linecnt++] = pt;
-      if (*pt)
-        ++pt;
-    }
-  u32_strcpy (pt, x_gc_u8_to_u32 ( " FontForge used to be named PfaEdit."));
-  pt += u32_strlen (pt);
-  lines[linecnt++] = pt;
-  u32_strcat (pt, x_gc_u8_to_u32 ( " "));
-  u32_strcat (pt, x_gc_u8_to_u32 ( PACKAGE_STRING));
-#ifdef FREETYPE_HAS_DEBUGGER
-  u32_strcat (pt, x_gc_u8_to_u32 ( "-TtfDb"));
-#endif
-#ifdef _NO_PYTHON
-  u32_strcat (pt, x_gc_u8_to_u32 ( "-NoPython"));
-#endif
-#ifdef FONTFORGE_CONFIG_USE_DOUBLE
-  u32_strcat (pt, x_gc_u8_to_u32 ( "-D"));
-#endif
-  pt += u32_strlen (pt);
-  lines[linecnt] = pt;
-  linecnt++;
-  lines[linecnt] = NULL;
-  is = u32_strchr (msg, '(');
-  ie = u32_strchr (msg, ')');
-}
 
 void
 DelayEvent (void (*func) (void *), void *data)
@@ -217,7 +136,7 @@ DelayEvent (void (*func) (void *), void *data)
 
   info->data = data;
   info->func = func;
-  GDrawRequestTimer (splashw, 100, 0, info);
+  GDrawRequestTimer (eventw, 100, 0, info);
 }
 
 static void
@@ -236,101 +155,22 @@ DoDelayedEvents (GEvent * event)
 }
 
 static int
-splash_e_h (GWindow gw, GEvent * event)
+event_e_h (GWindow gw, GEvent * event)
 {
-  static int splash_cnt;
-  GRect old;
-  int i, y, x;
-  static char *foolishness[] = {
-/* TRANSLATORS: These strings are for fun. If they are offensive or incomprehensible */
-/* simply translate them as something dull like: "FontForge" */
-/* This is a spoof of political slogans, designed to point out how foolish they are */
-    N_("A free press discriminates\nagainst the illiterate."),
-    N_("A free press discriminates\nagainst the illiterate."),
-/* TRANSLATORS: This is a pun on the old latin drinking song "Gaudeamus igature!" */
-    N_("Gaudeamus Ligature!"),
-    N_("Gaudeamus Ligature!"),
-/* TRANSLATORS: Spoof on the bible */
-    N_("In the beginning was the letter..."),
-/* TRANSLATORS: Some wit at MIT came up with this ("ontology recapitulates phylogony" is the original) */
-    N_("fontology recapitulates file-ogeny")
-  };
-
   switch (event->type)
     {
     case et_create:
       GDrawGrabSelection (gw, sn_user1);
-      break;
-    case et_expose:
-      GDrawPushClip (gw, &event->u.expose.rect, &old);
-      if (splashimage != NULL)
-        GDrawDrawImage (gw, splashimage, NULL, 0, 0);
-      GDrawSetFont (gw, splash_font);
-      y = splashheight + as + fh / 2;
-      for (i = 1; i < linecnt; ++i)
-        {
-          if (is >= lines[i - 1] + 1 && is < lines[i])
-            {
-              x =
-                8 + GDrawDrawText (gw, 8, y, lines[i - 1] + 1,
-                                   is - lines[i - 1] - 1, 0x000000);
-              GDrawSetFont (gw, splash_italic);
-              GDrawDrawText (gw, x, y, is, lines[i] - is, 0x000000);
-            }
-          else if (ie >= lines[i - 1] + 1 && ie < lines[i])
-            {
-              x =
-                8 + GDrawDrawText (gw, 8, y, lines[i - 1] + 1,
-                                   ie - lines[i - 1] - 1, 0x000000);
-              GDrawSetFont (gw, splash_font);
-              GDrawDrawText (gw, x, y, ie, lines[i] - ie, 0x000000);
-            }
-          else
-            GDrawDrawText (gw, 8, y, lines[i - 1] + 1,
-                           lines[i] - lines[i - 1] - 1, 0x000000);
-          y += fh;
-        }
-      GDrawPopClip (gw, &old);
-      break;
-    case et_map:
-      splash_cnt = 0;
       break;
     case et_timer:
       if (event->u.timer.timer == autosave_timer)
         {
           DoAutoSaves ();
         }
-      else if (event->u.timer.timer == splasht)
-        {
-          if (++splash_cnt == 1)
-            GDrawResize (gw, splashwidth, splashheight - 30);
-          else if (splash_cnt == 2)
-            GDrawResize (gw, splashwidth, splashheight);
-          else if (splash_cnt >= 7)
-            {
-              GGadgetEndPopup ();
-              GDrawSetVisible (gw, false);
-              GDrawCancelTimer (splasht);
-              splasht = NULL;
-            }
-        }
       else
         {
           DoDelayedEvents (event);
         }
-      break;
-    case et_char:
-    case et_mousedown:
-    case et_close:
-      GGadgetEndPopup ();
-      GDrawSetVisible (gw, false);
-      break;
-    case et_mousemove:
-      GGadgetPreparePopup8 (gw,
-                            _(foolishness
-                              [rand () %
-                               (sizeof (foolishness) /
-                                sizeof (foolishness[0]))]));
       break;
     case et_selclear:
       /* If this happens, it means someone wants to send us a message with a */
@@ -340,7 +180,7 @@ splash_e_h (GWindow gw, GEvent * event)
         {
           int len;
           char *arg;
-          arg = GDrawRequestSelection (splashw, sn_user1, "STRING", &len);
+          arg = GDrawRequestSelection (eventw, sn_user1, "STRING", &len);
           if (arg == NULL)
             return (true);
           if (strcmp (arg, "-new") == 0 || strcmp (arg, "--new") == 0)
@@ -350,11 +190,11 @@ splash_e_h (GWindow gw, GEvent * event)
           else
             ViewPostScriptFont (arg, 0);
           free (arg);
-          GDrawGrabSelection (splashw, sn_user1);
+          GDrawGrabSelection (eventw, sn_user1);
         }
       break;
     case et_destroy:
-      IError ("Who killed the splash screen?");
+      IError ("Who killed the event window?");
       break;
     }
   return (true);
@@ -400,14 +240,6 @@ ReopenLastFonts (void)
   return (any);
 }
 
-static void
-GrokNavigationMask (void)
-{
-  extern int navigation_mask;
-
-  navigation_mask = GMenuItemParseMask (H_ ("NavigationMask|None"));
-}
-
 //-------------------------------------------------------------------------
 
 static int
@@ -421,19 +253,9 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   GRect pos;
   GWindowAttrs wattrs;
   char *display = NULL;
-  int ds, ld;
   int openflags = 0;
   int doopen = 0;
-
-  if (splashimage == NULL)
-    {
-      splashimage = GImageRead (SHAREDIR "/pixmaps/splash.png");
-      if (splashimage != NULL)
-        {
-          splashwidth = splashimage->u.image->width;
-          splashheight = splashimage->u.image->height;
-        }
-    }
+  extern int navigation_mask;
 
   fprintf (stderr,
            "Copyright (c) 2000-2012 by George Williams and others.\n%s"
@@ -499,7 +321,7 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   if (load_prefs == NULL || (strcasecmp (load_prefs, "Always") != 0 &&  /* Already loaded */
                              strcasecmp (load_prefs, "Never") != 0))
     LoadPrefs ();
-  GrokNavigationMask ();
+  navigation_mask = GMenuItemParseMask (H_ ("NavigationMask|None"));
   for (i = 1; i < argc; ++i)
     {
       char *pt = argv[i];
@@ -567,39 +389,16 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   PyFF_ProcessInitFiles ();
 #endif
 
-  /* the splash screen used not to have a title bar (wam_nodecor) */
-  /*  but I found I needed to know how much the window manager moved */
-  /*  the window around, which I can determine if I have a positioned */
-  /*  decorated window created at the begining */
-  /* Actually I don't care any more */
-  wattrs.mask =
-    wam_events | wam_cursor | wam_bordwidth | wam_backcol | wam_positioned |
-    wam_utf8_wtitle | wam_isdlg;
-  wattrs.event_masks = ~(1 << et_charup);
-  wattrs.positioned = 1;
-  wattrs.cursor = ct_pointer;
-  wattrs.utf8_window_title = "FontForge";
-  wattrs.border_width = 2;
-  wattrs.background_color = 0xffffff;
-  wattrs.is_dlg = !listen_to_apple_events;
-  pos.x = pos.y = 200;
-  pos.width = splashwidth;
-  pos.height = splashheight - 56;       /* 54 */
+  /* This is an invisible window to catch some global events */
+  wattrs.mask = wam_events | wam_isdlg;
+  wattrs.is_dlg = true;
+  pos.x = pos.y = 0;
+  pos.width = pos.height = 1;
   GDrawBindSelection (NULL, sn_user1, "FontForge");
-  splashw = GDrawCreateTopWindow (NULL, &pos, splash_e_h, NULL, &wattrs);
-
-  splash_font = GDrawNewFont (NULL, "serif", 12, 400, fs_none);
-  splash_font = GResourceFindFont ("Splash.Font", splash_font);
-
-  splash_italic = GDrawNewFont (NULL, "serif", 12, 400, fs_italic);
-  splash_italic = GResourceFindFont ("Splash.ItalicFont", splash_italic);
-  GDrawSetFont (splashw, splash_font);
-  GDrawGetFontMetrics (splashw, splash_font, &as, &ds, &ld);
-  fh = as + ds + ld;
-  SplashLayout ();
+  eventw = GDrawCreateTopWindow (NULL, &pos, event_e_h, NULL, &wattrs);
 
   if (AutoSaveFrequency > 0)
-    autosave_timer = GDrawRequestTimer (splashw,
+    autosave_timer = GDrawRequestTimer (eventw,
                                         2 * AutoSaveFrequency * 1000,
                                         AutoSaveFrequency * 1000, NULL);
   GDrawProcessPendingEvents (NULL);

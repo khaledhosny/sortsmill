@@ -993,6 +993,177 @@ void MenuLicense(GWindow UNUSED(base), struct gmenuitem *UNUSED(mi), GEvent *UNU
     help("license.html");
 }
 
+static void
+AboutScreenExpose (GWindow gw, GRect rect)
+{
+  uint32_t *start, *pt, *lastspace;
+  int y, x;
+  int ds, ld;
+  GRect old;
+  int imagewidth = 379, imageheight = 0;
+  GFont *font, *italic;
+  int as, fh, linecnt;
+  uint32_t msg[470];
+  uint32_t *lines[20], *is, *ie;
+  GImage *image = NULL;
+
+  u32_strcpy (msg,
+              x_gc_u8_to_u32
+              ("When my father finished his book on Renaissance printing"
+               " (The Craft of Printing and the Publication of Shakespeare's Works)"
+               " he told me that I would have to write the chapter on"
+               " computer typography. This is my attempt to do so."));
+
+  font = GDrawNewFont (NULL, "serif", 12, 400, fs_none);
+  italic = GDrawNewFont (NULL, "serif", 12, 400, fs_italic);
+
+  image = GImageRead (SHAREDIR "/pixmaps/splash.png");
+  if (image != NULL)
+    {
+      imagewidth = image->u.image->width;
+      imageheight = image->u.image->height;
+    }
+
+  GDrawSetFont (gw, font);
+  GDrawGetFontMetrics (gw, font, &as, &ds, &ld);
+  fh = as + ds + ld;
+
+  linecnt = 0;
+  lines[linecnt++] = msg - 1;
+  for (start = msg; *start != '\0'; start = pt)
+    {
+      lastspace = NULL;
+      for (pt = start;; ++pt)
+        {
+          if (*pt == ' ' || *pt == '\0')
+            {
+              if (GDrawGetTextWidth (gw, start, pt - start) < imagewidth - 10)
+                lastspace = pt;
+              else
+                break;
+              if (*pt == '\0')
+                break;
+            }
+        }
+      if (lastspace != NULL)
+        pt = lastspace;
+      lines[linecnt++] = pt;
+      if (*pt)
+        ++pt;
+    }
+
+  u32_strcpy (pt, x_gc_u8_to_u32 (" FontForge used to be named PfaEdit."));
+  pt += u32_strlen (pt);
+  lines[linecnt++] = pt;
+  u32_strcat (pt, x_gc_u8_to_u32 (" "));
+  u32_strcat (pt, x_gc_u8_to_u32 (PACKAGE_STRING));
+  pt += u32_strlen (pt);
+  lines[linecnt] = pt;
+  linecnt++;
+  lines[linecnt] = NULL;
+  is = u32_strchr (msg, '(');
+  ie = u32_strchr (msg, ')');
+
+  GDrawResize (gw, imagewidth, imageheight + linecnt * fh);
+  GDrawPushClip (gw, &rect, &old);
+
+  if (image != NULL)
+    GDrawDrawImage (gw, image, NULL, 0, 0);
+
+  y = imageheight + as + fh / 2;
+  for (int i = 1; i < linecnt; ++i)
+    {
+      if (is >= lines[i - 1] + 1 && is < lines[i])
+        {
+          x =
+            8 + GDrawDrawText (gw, 8, y, lines[i - 1] + 1,
+                               is - lines[i - 1] - 1, 0x000000);
+          GDrawSetFont (gw, italic);
+          GDrawDrawText (gw, x, y, is, lines[i] - is, 0x000000);
+        }
+      else if (ie >= lines[i - 1] + 1 && ie < lines[i])
+        {
+          x =
+            8 + GDrawDrawText (gw, 8, y, lines[i - 1] + 1,
+                               ie - lines[i - 1] - 1, 0x000000);
+          GDrawSetFont (gw, font);
+          GDrawDrawText (gw, x, y, ie, lines[i] - ie, 0x000000);
+        }
+      else
+        GDrawDrawText (gw, 8, y, lines[i - 1] + 1,
+                       lines[i] - lines[i - 1] - 1, 0x000000);
+      y += fh;
+    }
+  GDrawPopClip (gw, &old);
+}
+
+static int
+about_e_h (GWindow gw, GEvent *event)
+{
+  static char *foolishness[] = {
+    /* TRANSLATORS: These strings are for fun. If they are offensive or incomprehensible */
+    /* simply translate them as something dull like: "FontForge" */
+    /* This is a spoof of political slogans, designed to point out how foolish they are */
+    N_("A free press discriminates\nagainst the illiterate."),
+    N_("A free press discriminates\nagainst the illiterate."),
+    /* TRANSLATORS: This is a pun on the old latin drinking song "Gaudeamus igature!" */
+    N_("Gaudeamus Ligature!"),
+    N_("Gaudeamus Ligature!"),
+    /* TRANSLATORS: Spoof on the bible */
+    N_("In the beginning was the letter..."),
+    /* TRANSLATORS: Some wit at MIT came up with this ("ontology recapitulates phylogony" is the original) */
+    N_("fontology recapitulates file-ogeny")
+  };
+
+  switch (event->type)
+    {
+    case et_expose:
+      AboutScreenExpose (gw, event->u.expose.rect);
+      break;
+    case et_char:
+    case et_mousedown:
+    case et_close:
+      GGadgetEndPopup ();
+      GDrawDestroyWindow (gw);
+      GDrawSync (NULL);
+      GDrawProcessPendingEvents (NULL);
+      break;
+    case et_mousemove:
+      GGadgetPreparePopup8 (gw,
+                            _(foolishness
+                              [rand () %
+                               (sizeof (foolishness) /
+                                sizeof (foolishness[0]))]));
+      break;
+    }
+  return (true);
+}
+
+static void
+ShowAboutScreen (void)
+{
+  GWindow gw;
+  GRect pos;
+  GWindowAttrs wattrs;
+
+  wattrs.mask =
+    wam_events | wam_cursor | wam_bordwidth | wam_backcol | wam_positioned |
+    wam_utf8_wtitle | wam_isdlg;
+  wattrs.event_masks = ~(1 << et_charup);
+  wattrs.positioned = 1;
+  wattrs.cursor = ct_pointer;
+  wattrs.utf8_window_title = "FontForge";
+  wattrs.border_width = 2;
+  wattrs.background_color = 0xffffff;
+  wattrs.is_dlg = true;
+  pos.x = 200;
+  pos.y = 0;
+  pos.width = pos.height = 1;
+
+  gw = GDrawCreateTopWindow (NULL, &pos, about_e_h, NULL, &wattrs);
+  GDrawSetVisible (gw, true);
+}
+
 void MenuAbout(GWindow UNUSED(base), struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
     ShowAboutScreen();
 }
