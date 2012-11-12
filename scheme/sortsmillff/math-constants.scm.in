@@ -16,11 +16,11 @@
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 (define-module (sortsmillff math-constants)
-  #:export (c-flt-epsilon
-            c-flt-epsilon-inexact
-            c-dbl-epsilon
-            c-dbl-epsilon-inexact
-            pi))
+  #:export (
+            c-flt-epsilon        ; FLT_EPSILON as an ‘inexact’ number.
+            c-dbl-epsilon        ; DBL_EPSILON as an ‘inexact’ number.
+            pi              ; Circumference over diameter of a circle.
+            ))
 
 (define c-flt-epsilon
   (let ((data '@C_CONST_FLT_EPSILON@))

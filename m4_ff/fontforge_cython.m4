@@ -27,7 +27,7 @@ CFLAGS="${__cflags}"
 LIBS="${__libs}"
 AC_LANG_POP
 
-rm -r -f cythontest_.pyx
+rm -r -f cythontest_.pyx ./cythontest_.c
 
 AC_MSG_RESULT([${__result}])
 if test x"${__result}" != xyes; then
