@@ -270,17 +270,6 @@ fontforge_main_in_guile_mode (int argc, char **argv)
 #endif
            ".\n", PACKAGE_STRING);
 
-  /* Must be done before we cache the current directory */
-  /* Change to HOME dir if specified on the commandline */
-  for (i = 1; i < argc; ++i)
-    {
-      if (strcmp (argv[i], "-home") == 0)
-        {
-          chdir (GFileGetHomeDir ());
-          break;
-        }
-    }
-
   FF_SetUiInterface (&gdraw_ui_interface);
   FF_SetPrefsInterface (&gdraw_prefs_interface);
   FF_SetSCInterface (&gdraw_sc_interface);
@@ -377,8 +366,6 @@ fontforge_main_in_guile_mode (int argc, char **argv)
           printf ("%s\n", PACKAGE_STRING);
           exit (0);
         }
-      else if (strcmp (pt, "-home") == 0)
-        /* already did a chdir earlier, don't need to do it again */ ;
     }
 
   GDrawCreateDisplays (display, argv[0]);
@@ -439,11 +426,8 @@ fontforge_main_in_guile_mode (int argc, char **argv)
                || strcmp (pt, "-recover=none") == 0
                || strcmp (pt, "-recover=clean") == 0
                || strcmp (pt, "-recover=auto") == 0
-               || strcmp (pt, "-dontopenxdevices") == 0
-               || strcmp (pt, "-home") == 0)
+               || strcmp (pt, "-dontopenxdevices") == 0)
         /* Already done, needed to be before display opened */ ;
-      else if (strncmp (pt, "-psn_", 5) == 0)
-        /* Already done */ ;
       else if ((strcmp (pt, "-depth") == 0 || strcmp (pt, "-vc") == 0 ||
                 strcmp (pt, "-cmap") == 0 || strcmp (pt, "-colormap") == 0 ||
                 strcmp (pt, "-keyboard") == 0 ||
