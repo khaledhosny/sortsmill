@@ -52,7 +52,9 @@ CONFIGURE_SCHEME =														\
 		-e 's|@''PACKAGE_STRING''@|$(PACKAGE_STRING)|g'					\
 		-e 's|@''PACKAGE_TARNAME''@|$(PACKAGE_TARNAME)|g'				\
 		-e 's|@''PACKAGE_URL''@|$(PACKAGE_URL)|g'						\
-		-e 's|@''PACKAGE_VERSION''@|$(PACKAGE_VERSION)|g'
+		-e 's|@''PACKAGE_VERSION''@|$(PACKAGE_VERSION)|g'				\
+		-e 's|@''C_CONST_FLT_EPSILON''@|$(C_CONST_FLT_EPSILON)|g'		\
+		-e 's|@''C_CONST_DBL_EPSILON''@|$(C_CONST_DBL_EPSILON)|g'
 
 %.scm: %.scm.in
 	$(AM_V_GEN)

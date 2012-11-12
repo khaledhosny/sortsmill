@@ -303,6 +303,11 @@ CYTHON_EXTRA_CFLAGS=""
 FONTFORGE_COMPILER_FLAGS([CYTHON_EXTRA_CFLAGS],
         [-Wno-unused -fwrapv -fno-strict-aliasing])
 
+FONTFORGE_C_CONST_FLT_EPSILON
+AC_SUBST([C_CONST_FLT_EPSILON],["${fontforge_cv_c_const_flt_epsilon}"])
+FONTFORGE_C_CONST_DBL_EPSILON
+AC_SUBST([C_CONST_DBL_EPSILON],["${fontforge_cv_c_const_dbl_epsilon}"])
+
 #--------------------------------------------------------------------------
 # Checks for library functions.
 

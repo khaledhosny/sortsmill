@@ -20,15 +20,13 @@
   #:use-module (ice-9 match)
   #:use-module (ice-9 rdelim)
   #:use-module (ice-9 regex)
-  #:use-module ((sortsmillff gsl) #:select (GSL-DBL-EPSILON))
+  #:use-module ((sortsmillff math-constants) #:select (c-dbl-epsilon))
   #:use-module (sortsmillff i18n)
   #:use-module (sortsmillff iconv)
   #:use-module ((rnrs) :version (6) #:select (assert)))
 
-(define epsilon (GSL-DBL-EPSILON))
-
 (define (fuzzy= a b)
-  (<= (abs (- a b)) (* (max (abs a) (abs b)) epsilon)))
+  (<= (abs (- a b)) (* (max (abs a) (abs b)) c-dbl-epsilon)))
 
 (define (remove-embedded-nul-chars s)
   (list->string (filter (lambda (c) (not (char=? c #\nul)))
