@@ -23,10 +23,17 @@ cimport numpy as np
 cdef extern from "polyspline.h":
     void sbern_to_bern_double (unsigned int deg, double *sbern, double *bern)
     void bern_to_sbern_double (unsigned int deg, double *bern, double *sbern)
+    void mono_to_sbern_double (unsigned int deg, double *mono, double *sbern)
+    void sbern_to_mono_double (unsigned int deg, double *sbern, double *mono)
+    void mono_to_bern_double (unsigned int deg, double *mono, double *bern)
+    void bern_to_mono_double (unsigned int deg, double *bern, double *mono)
+
     double eval_sbern_double (unsigned int deg, double *spline, double t)
     double eval_bern_double (unsigned int deg, double *spline, double t)
     double evaldc_sbern_double (unsigned int deg, double *spline, double t)
     double evaldc_bern_double (unsigned int deg, double *spline, double t)
+    double eval_mono_double (unsigned int deg, double *spline, double t)
+
     void subdiv_sbern_double (unsigned int deg, double *spline, double t, double *a, double *b)
     void subdiv_bern_double (unsigned int deg, double *spline, double t, double *a, double *b)
 
@@ -46,6 +53,42 @@ def bern_to_sbern (np.ndarray[double, ndim=1, mode="c"] spline not None):
     result = np.empty_like (spline)
     cdef np.ndarray[double, ndim=1, mode="c"] cresult = result
     bern_to_sbern_double (deg, &spline[0], &cresult[0])
+    return result
+
+@cython.boundscheck(False)
+@cython.wraparound(False)
+def sbern_to_mono (np.ndarray[double, ndim=1, mode="c"] spline not None):
+    cdef int deg = spline.shape[0] - 1
+    result = np.empty_like (spline)
+    cdef np.ndarray[double, ndim=1, mode="c"] cresult = result
+    sbern_to_mono_double (deg, &spline[0], &cresult[0])
+    return result
+
+@cython.boundscheck(False)
+@cython.wraparound(False)
+def mono_to_sbern (np.ndarray[double, ndim=1, mode="c"] spline not None):
+    cdef int deg = spline.shape[0] - 1
+    result = np.empty_like (spline)
+    cdef np.ndarray[double, ndim=1, mode="c"] cresult = result
+    mono_to_sbern_double (deg, &spline[0], &cresult[0])
+    return result
+
+@cython.boundscheck(False)
+@cython.wraparound(False)
+def bern_to_mono (np.ndarray[double, ndim=1, mode="c"] spline not None):
+    cdef int deg = spline.shape[0] - 1
+    result = np.empty_like (spline)
+    cdef np.ndarray[double, ndim=1, mode="c"] cresult = result
+    bern_to_mono_double (deg, &spline[0], &cresult[0])
+    return result
+
+@cython.boundscheck(False)
+@cython.wraparound(False)
+def mono_to_bern (np.ndarray[double, ndim=1, mode="c"] spline not None):
+    cdef int deg = spline.shape[0] - 1
+    result = np.empty_like (spline)
+    cdef np.ndarray[double, ndim=1, mode="c"] cresult = result
+    mono_to_bern_double (deg, &spline[0], &cresult[0])
     return result
 
 @cython.boundscheck(False)
@@ -71,6 +114,12 @@ def evaldc_sbern (np.ndarray[double, ndim=1, mode="c"] spline not None, double t
 def evaldc_bern (np.ndarray[double, ndim=1, mode="c"] spline not None, double t):
     cdef int deg = spline.shape[0] - 1
     return evaldc_bern_double (deg, &spline[0], t)
+
+@cython.boundscheck(False)
+@cython.wraparound(False)
+def eval_mono (np.ndarray[double, ndim=1, mode="c"] spline not None, double t):
+    cdef int deg = spline.shape[0] - 1
+    return eval_mono_double (deg, &spline[0], t)
 
 @cython.boundscheck(False)
 @cython.wraparound(False)

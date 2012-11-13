@@ -19,3 +19,7 @@ check_monomial([skip],["${abs_builddir}"/],[test_monomial 0.818795399890678 -0.5
 check_monomial([skip],[${run_guile} "${abs_srcdir}"/],[test_guile_monomial.scm 100],[0],[],[])
 check_monomial([skip],[${run_guile} "${abs_srcdir}"/],[test_guile_monomial.scm 1 2 3 2 1 0 -1 -2 -3],[0],[],[])
 check_monomial([skip],[${run_guile} "${abs_srcdir}"/],[test_guile_monomial.scm 0.818795399890678 -0.574631286158936 0.807059538353606 -0.328374846399711 0.605562207605404],[0],[],[])
+
+check_monomial([skip],[${PYTHON} "${abs_srcdir}"/],[test_python_monomial.py 100],[0],[],[])
+check_monomial([skip],[${PYTHON} "${abs_srcdir}"/],[test_python_monomial.py 1 2 3 2 1 0 -1 -2 -3],[0],[],[])
+check_monomial([skip],[${PYTHON} "${abs_srcdir}"/],[test_python_monomial.py 0.818795399890678 -0.574631286158936 0.807059538353606 -0.328374846399711 0.605562207605404],[0],[],[])
