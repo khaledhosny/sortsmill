@@ -42,17 +42,7 @@
 #include <libguile.h>
 #include <xdie_on_null.h>
 
-#ifndef LOCALEDIR
-#error You must set LOCALEDIR.
-#endif
-
-#ifndef SHAREDIR
-#error You must set SHAREDIR.
-#endif
-
 extern int AutoSaveFrequency;
-static int unique = 0;
-static int listen_to_apple_events = false;
 
 static void
 _dousage (void)
@@ -66,8 +56,6 @@ _dousage (void)
   printf ("\t-recover none|auto|inquire|clean (control error recovery)\n");
   printf
     ("\t-allglyphs\t\t (load all glyphs in the 'glyf' table\n\t\t\t of a truetype collection)\n");
-  printf
-    ("\t-unique\t\t\t (if a fontforge is already running open\n\t\t\t all arguments in it and have this process exit)\n");
   printf ("\t-display display-name\t (sets the X display)\n");
   printf ("\t-depth val\t\t (sets the display depth if possible)\n");
   printf ("\t-vc val\t\t\t (sets the visual class if possible)\n");
@@ -138,88 +126,8 @@ struct delayed_event
   void (*func) (void *);
 };
 
-static GImage *splashimage = NULL;
-int splashwidth = 379, splashheight = 375;
-static GWindow splashw;
+static GWindow eventw;
 static GTimer *autosave_timer;
-static GTimer *splasht;
-static GFont *splash_font, *splash_italic;
-static int as, fh, linecnt;
-static uint32_t msg[470];
-static uint32_t *lines[20], *is, *ie;
-
-void
-ShowAboutScreen (void)
-{
-  static int first = 1;
-
-  if (first)
-    {
-      GDrawResize (splashw, splashwidth, splashheight + linecnt * fh);
-      first = false;
-    }
-  if (splasht != NULL)
-    GDrawCancelTimer (splasht);
-  splasht = NULL;
-  GDrawSetVisible (splashw, true);
-}
-
-static void
-SplashLayout ()
-{
-  uint32_t *start, *pt, *lastspace;
-
-  u32_strcpy (msg,
-	      x_gc_u8_to_u32 ("When my father finished his book on Renaissance printing"
-			      " (The Craft of Printing and the Publication of Shakespeare's Works)"
-			      " he told me that I would have to write the chapter on"
-			      " computer typography. This is my attempt to do so."));
-
-  GDrawSetFont (splashw, splash_font);
-  linecnt = 0;
-  lines[linecnt++] = msg - 1;
-  for (start = msg; *start != '\0'; start = pt)
-    {
-      lastspace = NULL;
-      for (pt = start;; ++pt)
-        {
-          if (*pt == ' ' || *pt == '\0')
-            {
-              if (GDrawGetTextWidth (splashw, start, pt - start) < splashwidth - 10)
-                lastspace = pt;
-              else
-                break;
-              if (*pt == '\0')
-                break;
-            }
-        }
-      if (lastspace != NULL)
-        pt = lastspace;
-      lines[linecnt++] = pt;
-      if (*pt)
-        ++pt;
-    }
-  u32_strcpy (pt, x_gc_u8_to_u32 ( " FontForge used to be named PfaEdit."));
-  pt += u32_strlen (pt);
-  lines[linecnt++] = pt;
-  u32_strcat (pt, x_gc_u8_to_u32 ( " "));
-  u32_strcat (pt, x_gc_u8_to_u32 ( PACKAGE_STRING));
-#ifdef FREETYPE_HAS_DEBUGGER
-  u32_strcat (pt, x_gc_u8_to_u32 ( "-TtfDb"));
-#endif
-#ifdef _NO_PYTHON
-  u32_strcat (pt, x_gc_u8_to_u32 ( "-NoPython"));
-#endif
-#ifdef FONTFORGE_CONFIG_USE_DOUBLE
-  u32_strcat (pt, x_gc_u8_to_u32 ( "-D"));
-#endif
-  pt += u32_strlen (pt);
-  lines[linecnt] = pt;
-  linecnt++;
-  lines[linecnt] = NULL;
-  is = u32_strchr (msg, '(');
-  ie = u32_strchr (msg, ')');
-}
 
 void
 DelayEvent (void (*func) (void *), void *data)
@@ -228,7 +136,7 @@ DelayEvent (void (*func) (void *), void *data)
 
   info->data = data;
   info->func = func;
-  GDrawRequestTimer (splashw, 100, 0, info);
+  GDrawRequestTimer (eventw, 100, 0, info);
 }
 
 static void
@@ -246,186 +154,23 @@ DoDelayedEvents (GEvent * event)
   GDrawCancelTimer (t);
 }
 
-struct argsstruct
-{
-  int next;
-  int argc;
-  char **argv;
-  int any;
-};
-
-static void
-SendNextArg (struct argsstruct *args)
-{
-  int i;
-  char *msg;
-  static GTimer *timeout;
-
-  if (timeout != NULL)
-    {
-      GDrawCancelTimer (timeout);
-      timeout = NULL;
-    }
-
-  for (i = args->next; i < args->argc; ++i)
-    {
-      if (*args->argv[i] != '-' ||
-          strcmp (args->argv[i], "-quit") == 0
-          || strcmp (args->argv[i], "--quit") == 0
-          || strcmp (args->argv[i], "-new") == 0
-          || strcmp (args->argv[i], "--new") == 0)
-        break;
-    }
-  if (i >= args->argc)
-    {
-      if (args->any)
-        exit (0);               /* Sent everything */
-      msg = "-open";
-    }
-  else
-    msg = args->argv[i];
-  args->next = i + 1;
-  args->any = true;
-
-  GDrawGrabSelection (splashw, sn_user1);
-  GDrawAddSelectionType (splashw, sn_user1, "STRING",
-                         xstrdup (msg), strlen (msg), 1, NULL, NULL);
-
-  /* If we just sent the other fontforge a request to die, it will never */
-  /*  take the selection back. So we should just die quietly */
-  /*  But we can't die instantly, or it will never get our death threat */
-  /*  (it won't have a chance to ask us for the selection if we're dead) */
-  timeout = GDrawRequestTimer (splashw, 1000, 0, NULL);
-}
-
-/* When we want to send filenames to another running fontforge we want a */
-/*  different event handler. We won't have a splash window in that case, */
-/*  just an invisible utility window on which we perform a little selection */
-/*  dance */
 static int
-request_e_h (GWindow gw, GEvent * event)
+event_e_h (GWindow gw, GEvent * event)
 {
-  if (event->type == et_selclear)
-    {
-      SendNextArg (GDrawGetUserData (gw));
-    }
-  else if (event->type == et_timer)
-    exit (0);
-
-  return (true);
-}
-
-static void
-PingOtherFontForge (int argc, char **argv)
-{
-  struct argsstruct args;
-
-  args.next = 1;
-  args.argc = argc;
-  args.argv = argv;
-  args.any = false;
-  GDrawSetUserData (splashw, &args);
-  SendNextArg (&args);
-  GDrawEventLoop (NULL);
-  exit (0);                     /* But the event loop should never return */
-}
-
-static int
-splash_e_h (GWindow gw, GEvent * event)
-{
-  static int splash_cnt;
-  GRect old;
-  int i, y, x;
-  static char *foolishness[] = {
-/* TRANSLATORS: These strings are for fun. If they are offensive or incomprehensible */
-/* simply translate them as something dull like: "FontForge" */
-/* This is a spoof of political slogans, designed to point out how foolish they are */
-    N_("A free press discriminates\nagainst the illiterate."),
-    N_("A free press discriminates\nagainst the illiterate."),
-/* TRANSLATORS: This is a pun on the old latin drinking song "Gaudeamus igature!" */
-    N_("Gaudeamus Ligature!"),
-    N_("Gaudeamus Ligature!"),
-/* TRANSLATORS: Spoof on the bible */
-    N_("In the beginning was the letter..."),
-/* TRANSLATORS: Some wit at MIT came up with this ("ontology recapitulates phylogony" is the original) */
-    N_("fontology recapitulates file-ogeny")
-  };
-
   switch (event->type)
     {
     case et_create:
       GDrawGrabSelection (gw, sn_user1);
-      break;
-    case et_expose:
-      GDrawPushClip (gw, &event->u.expose.rect, &old);
-      if (splashimage != NULL)
-        GDrawDrawImage (gw, splashimage, NULL, 0, 0);
-      GDrawSetFont (gw, splash_font);
-      y = splashheight + as + fh / 2;
-      for (i = 1; i < linecnt; ++i)
-        {
-          if (is >= lines[i - 1] + 1 && is < lines[i])
-            {
-              x =
-                8 + GDrawDrawText (gw, 8, y, lines[i - 1] + 1,
-                                   is - lines[i - 1] - 1, 0x000000);
-              GDrawSetFont (gw, splash_italic);
-              GDrawDrawText (gw, x, y, is, lines[i] - is, 0x000000);
-            }
-          else if (ie >= lines[i - 1] + 1 && ie < lines[i])
-            {
-              x =
-                8 + GDrawDrawText (gw, 8, y, lines[i - 1] + 1,
-                                   ie - lines[i - 1] - 1, 0x000000);
-              GDrawSetFont (gw, splash_font);
-              GDrawDrawText (gw, x, y, ie, lines[i] - ie, 0x000000);
-            }
-          else
-            GDrawDrawText (gw, 8, y, lines[i - 1] + 1,
-                           lines[i] - lines[i - 1] - 1, 0x000000);
-          y += fh;
-        }
-      GDrawPopClip (gw, &old);
-      break;
-    case et_map:
-      splash_cnt = 0;
       break;
     case et_timer:
       if (event->u.timer.timer == autosave_timer)
         {
           DoAutoSaves ();
         }
-      else if (event->u.timer.timer == splasht)
-        {
-          if (++splash_cnt == 1)
-            GDrawResize (gw, splashwidth, splashheight - 30);
-          else if (splash_cnt == 2)
-            GDrawResize (gw, splashwidth, splashheight);
-          else if (splash_cnt >= 7)
-            {
-              GGadgetEndPopup ();
-              GDrawSetVisible (gw, false);
-              GDrawCancelTimer (splasht);
-              splasht = NULL;
-            }
-        }
       else
         {
           DoDelayedEvents (event);
         }
-      break;
-    case et_char:
-    case et_mousedown:
-    case et_close:
-      GGadgetEndPopup ();
-      GDrawSetVisible (gw, false);
-      break;
-    case et_mousemove:
-      GGadgetPreparePopup8 (gw,
-                            _(foolishness
-                              [rand () %
-                               (sizeof (foolishness) /
-                                sizeof (foolishness[0]))]));
       break;
     case et_selclear:
       /* If this happens, it means someone wants to send us a message with a */
@@ -435,23 +180,21 @@ splash_e_h (GWindow gw, GEvent * event)
         {
           int len;
           char *arg;
-          arg = GDrawRequestSelection (splashw, sn_user1, "STRING", &len);
+          arg = GDrawRequestSelection (eventw, sn_user1, "STRING", &len);
           if (arg == NULL)
             return (true);
           if (strcmp (arg, "-new") == 0 || strcmp (arg, "--new") == 0)
             FontNew ();
           else if (strcmp (arg, "-open") == 0 || strcmp (arg, "--open") == 0)
             MenuOpen (NULL, NULL, NULL);
-          else if (strcmp (arg, "-quit") == 0 || strcmp (arg, "--quit") == 0)
-            MenuExit (NULL, NULL, NULL);
           else
             ViewPostScriptFont (arg, 0);
           free (arg);
-          GDrawGrabSelection (splashw, sn_user1);
+          GDrawGrabSelection (eventw, sn_user1);
         }
       break;
     case et_destroy:
-      IError ("Who killed the splash screen?");
+      IError ("Who killed the event window?");
       break;
     }
   return (true);
@@ -497,20 +240,6 @@ ReopenLastFonts (void)
   return (any);
 }
 
-static char *
-getLocaleDir (void)
-{
-  return LOCALEDIR;
-}
-
-static void
-GrokNavigationMask (void)
-{
-  extern int navigation_mask;
-
-  navigation_mask = GMenuItemParseMask (H_ ("NavigationMask|None"));
-}
-
 //-------------------------------------------------------------------------
 
 static int
@@ -524,19 +253,9 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   GRect pos;
   GWindowAttrs wattrs;
   char *display = NULL;
-  int ds, ld;
   int openflags = 0;
-  int doopen = 0, quit_request = 0;
-
-  if (splashimage == NULL)
-    {
-      splashimage = GImageRead (SHAREDIR "/pixmaps/splash.png");
-      if (splashimage != NULL)
-        {
-          splashwidth = splashimage->u.image->width;
-          splashheight = splashimage->u.image->height;
-        }
-    }
+  int doopen = 0;
+  extern int navigation_mask;
 
   fprintf (stderr,
            "Copyright (c) 2000-2012 by George Williams and others.\n%s"
@@ -550,17 +269,6 @@ fontforge_main_in_guile_mode (int argc, char **argv)
            "-D"
 #endif
            ".\n", PACKAGE_STRING);
-
-  /* Must be done before we cache the current directory */
-  /* Change to HOME dir if specified on the commandline */
-  for (i = 1; i < argc; ++i)
-    {
-      if (strcmp (argv[i], "-home") == 0)
-        {
-          chdir (GFileGetHomeDir ());
-          break;
-        }
-    }
 
   FF_SetUiInterface (&gdraw_ui_interface);
   FF_SetPrefsInterface (&gdraw_prefs_interface);
@@ -577,12 +285,13 @@ fontforge_main_in_guile_mode (int argc, char **argv)
 
   InitSimpleStuff ();
 
-  GMenuSetShortcutDomain (ff_shortcutsdomain ());
-  bind_textdomain_codeset (ff_shortcutsdomain (), "UTF-8");
-  bindtextdomain (ff_shortcutsdomain (), getLocaleDir ());
-  bind_textdomain_codeset (ff_textdomain (), "UTF-8");
-  bindtextdomain (ff_textdomain (), getLocaleDir ());
-  textdomain (ff_textdomain ());
+  GMenuSetShortcutDomain (FF_SHORTCUTSDOMAIN);
+  bind_textdomain_codeset (FF_SHORTCUTSDOMAIN, "UTF-8");
+  bindtextdomain (FF_SHORTCUTSDOMAIN, LOCALEDIR);
+
+  bind_textdomain_codeset (FF_TEXTDOMAIN, "UTF-8");
+  bindtextdomain (FF_TEXTDOMAIN, LOCALEDIR);
+  textdomain (FF_TEXTDOMAIN);
 
   GGadgetSetImageDir (SHAREDIR "/pixmaps");
   GResourceAddResourceFile (SHAREDIR "/resources/fontforge.resource", false);
@@ -601,7 +310,7 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   if (load_prefs == NULL || (strcasecmp (load_prefs, "Always") != 0 &&  /* Already loaded */
                              strcasecmp (load_prefs, "Never") != 0))
     LoadPrefs ();
-  GrokNavigationMask ();
+  navigation_mask = GMenuItemParseMask (H_ ("NavigationMask|None"));
   for (i = 1; i < argc; ++i)
     {
       char *pt = argv[i];
@@ -622,8 +331,6 @@ fontforge_main_in_guile_mode (int argc, char **argv)
         AddR ("Gdraw.Keyboard", argv[++i]);
       else if (strcmp (pt, "-display") == 0 && i < argc - 1)
         display = argv[++i];
-      else if (strcmp (pt, "-unique") == 0)
-        unique = 1;
       else if (strcmp (pt, "-recover") == 0 && i < argc - 1)
         {
           ++i;
@@ -659,10 +366,6 @@ fontforge_main_in_guile_mode (int argc, char **argv)
           printf ("%s\n", PACKAGE_STRING);
           exit (0);
         }
-      else if (strcmp (pt, "-quit") == 0)
-        quit_request = true;
-      else if (strcmp (pt, "-home") == 0)
-        /* already did a chdir earlier, don't need to do it again */ ;
     }
 
   GDrawCreateDisplays (display, argv[0]);
@@ -673,51 +376,16 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   PyFF_ProcessInitFiles ();
 #endif
 
-  /* the splash screen used not to have a title bar (wam_nodecor) */
-  /*  but I found I needed to know how much the window manager moved */
-  /*  the window around, which I can determine if I have a positioned */
-  /*  decorated window created at the begining */
-  /* Actually I don't care any more */
-  wattrs.mask =
-    wam_events | wam_cursor | wam_bordwidth | wam_backcol | wam_positioned |
-    wam_utf8_wtitle | wam_isdlg;
-  wattrs.event_masks = ~(1 << et_charup);
-  wattrs.positioned = 1;
-  wattrs.cursor = ct_pointer;
-  wattrs.utf8_window_title = "FontForge";
-  wattrs.border_width = 2;
-  wattrs.background_color = 0xffffff;
-  wattrs.is_dlg = !listen_to_apple_events;
-  pos.x = pos.y = 200;
-  pos.width = splashwidth;
-  pos.height = splashheight - 56;       /* 54 */
+  /* This is an invisible window to catch some global events */
+  wattrs.mask = wam_events | wam_isdlg;
+  wattrs.is_dlg = true;
+  pos.x = pos.y = 0;
+  pos.width = pos.height = 1;
   GDrawBindSelection (NULL, sn_user1, "FontForge");
-  if (unique && GDrawSelectionOwned (NULL, sn_user1))
-    {
-      /* Different event handler, not a dialog */
-      wattrs.is_dlg = false;
-      splashw = GDrawCreateTopWindow (NULL, &pos, request_e_h, NULL, &wattrs);
-      PingOtherFontForge (argc, argv);
-    }
-  else
-    {
-      if (quit_request)
-        exit (0);
-      splashw = GDrawCreateTopWindow (NULL, &pos, splash_e_h, NULL, &wattrs);
-    }
-
-  splash_font = GDrawNewFont (NULL, "serif", 12, 400, fs_none);
-  splash_font = GResourceFindFont ("Splash.Font", splash_font);
-
-  splash_italic = GDrawNewFont (NULL, "serif", 12, 400, fs_italic);
-  splash_italic = GResourceFindFont ("Splash.ItalicFont", splash_italic);
-  GDrawSetFont (splashw, splash_font);
-  GDrawGetFontMetrics (splashw, splash_font, &as, &ds, &ld);
-  fh = as + ds + ld;
-  SplashLayout ();
+  eventw = GDrawCreateTopWindow (NULL, &pos, event_e_h, NULL, &wattrs);
 
   if (AutoSaveFrequency > 0)
-    autosave_timer = GDrawRequestTimer (splashw,
+    autosave_timer = GDrawRequestTimer (eventw,
                                         2 * AutoSaveFrequency * 1000,
                                         AutoSaveFrequency * 1000, NULL);
   GDrawProcessPendingEvents (NULL);
@@ -758,11 +426,8 @@ fontforge_main_in_guile_mode (int argc, char **argv)
                || strcmp (pt, "-recover=none") == 0
                || strcmp (pt, "-recover=clean") == 0
                || strcmp (pt, "-recover=auto") == 0
-               || strcmp (pt, "-dontopenxdevices") == 0
-               || strcmp (pt, "-unique") == 0 || strcmp (pt, "-home") == 0)
+               || strcmp (pt, "-dontopenxdevices") == 0)
         /* Already done, needed to be before display opened */ ;
-      else if (strncmp (pt, "-psn_", 5) == 0)
-        /* Already done */ ;
       else if ((strcmp (pt, "-depth") == 0 || strcmp (pt, "-vc") == 0 ||
                 strcmp (pt, "-cmap") == 0 || strcmp (pt, "-colormap") == 0 ||
                 strcmp (pt, "-keyboard") == 0 ||

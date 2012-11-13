@@ -38,20 +38,6 @@
 #include <stdlib.h>
 #include <libguile.h>
 
-#ifndef LOCALEDIR
-#error You must set LOCALEDIR.
-#endif
-
-#ifndef SHAREDIR
-#error You must set SHAREDIR.
-#endif
-
-static char *
-getLocaleDir (void)
-{
-  return LOCALEDIR;
-}
-
 static void
 _doscriptusage (void)
 {
@@ -117,9 +103,9 @@ fontforge_main_in_guile_mode (int argc, char **argv)
 
   InitSimpleStuff ();
 
-  bind_textdomain_codeset (ff_textdomain (), "UTF-8");
-  bindtextdomain (ff_textdomain (), getLocaleDir ());
-  textdomain (ff_textdomain ());
+  bind_textdomain_codeset (FF_TEXTDOMAIN, "UTF-8");
+  bindtextdomain (FF_TEXTDOMAIN, LOCALEDIR);
+  textdomain (FF_TEXTDOMAIN);
 
   if (default_encoding == NULL)
     default_encoding = FindOrMakeEncoding ("ISO8859-1");

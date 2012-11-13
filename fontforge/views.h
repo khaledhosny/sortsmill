@@ -1019,7 +1019,6 @@ extern uint32_t *FVOpenFont(char *title, const char *defaultfile, int mult);
 
 
 
-extern void ShowAboutScreen(void);
 extern void DelayEvent(void (*func)(void *), void *data);
 
 extern void FindProblems(FontView *fv,CharView *cv,SplineChar *sc);

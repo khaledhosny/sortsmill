@@ -29,6 +29,14 @@
 
 #include <config.h>
 
+#ifndef LOCALEDIR
+#error You must set LOCALEDIR.
+#endif
+
+#ifndef SHAREDIR
+#error You must set SHAREDIR.
+#endif
+
 #ifndef FF_TEXTDOMAIN
 #error You must define FF_TEXTDOMAIN.
 #endif
@@ -100,24 +108,6 @@ static inline char *
 xstrndup_or_null (const char *str, size_t n)
 {
   return NULL_PASSTHRU (str, xstrndup (str, n));
-}
-
-static inline const char *
-ff_textdomain (void)
-{
-  return FF_TEXTDOMAIN;
-}
-
-static inline const char *
-ff_shortcutsdomain (void)
-{
-  return FF_SHORTCUTSDOMAIN;
-}
-
-static inline const char *
-ff_macshortcutsdomain (void)
-{
-  return FF_MACSHORTCUTSDOMAIN;
 }
 
 #endif
