@@ -20,10 +20,17 @@
 
 SCM scm_f64vector_sbern_to_bern (SCM spline);
 SCM scm_f64vector_bern_to_sbern (SCM spline);
+SCM scm_f64vector_sbern_to_mono (SCM spline);
+SCM scm_f64vector_mono_to_sbern (SCM spline);
+SCM scm_f64vector_bern_to_mono (SCM spline);
+SCM scm_f64vector_mono_to_bern (SCM spline);
+
 SCM scm_f64vector_eval_sbern (SCM spline, SCM t);
 SCM scm_f64vector_eval_bern (SCM spline, SCM t);
 SCM scm_f64vector_evaldc_sbern (SCM spline, SCM t);
 SCM scm_f64vector_evaldc_bern (SCM spline, SCM t);
+SCM scm_f64vector_eval_mono (SCM spline, SCM t);
+
 SCM scm_f64vector_subdiv_sbern (SCM spline, SCM t);
 SCM scm_f64vector_subdiv_bern (SCM spline, SCM t);
 

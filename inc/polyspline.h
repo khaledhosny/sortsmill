@@ -39,6 +39,46 @@ VISIBLE void bern_to_sbern_double (unsigned int deg, const double *bern,
                                    double *sbern);
 
 // vis--
+// vis-- @deftypefun {void} sbern_to_mono_double (unsigned int @var{deg}, const double *@var{sbern}, double *@var{mono})
+// vis--
+// vis-- Convert a spline from scaled Bernstein to monomial basis.
+// vis--
+// vis-- @end deftypefun
+// vis--
+VISIBLE void sbern_to_mono_double (unsigned int deg, const double *sbern,
+                                   double *mono);
+
+// vis--
+// vis-- @deftypefun {void} mono_to_sbern_double (unsigned int @var{deg}, const double *@var{mono}, double *@var{sbern})
+// vis--
+// vis-- Convert a spline from monomial basis to scaled Bernstein.
+// vis--
+// vis-- @end deftypefun
+// vis--
+VISIBLE void mono_to_sbern_double (unsigned int deg, const double *mono,
+                                   double *sbern);
+
+// vis--
+// vis-- @deftypefun {void} bern_to_sbern_double (unsigned int @var{deg}, const double *@var{bern}, double *@var{mono})
+// vis--
+// vis-- Convert a spline from Bernstein to monomial basis.
+// vis--
+// vis-- @end deftypefun
+// vis--
+VISIBLE void bern_to_mono_double (unsigned int deg, const double *bern,
+                                  double *mono);
+
+// vis--
+// vis-- @deftypefun {void} mono_to_bern_double (unsigned int @var{deg}, const double *@var{mono}, double *@var{bern})
+// vis--
+// vis-- Convert a spline from monomial basis to Bernstein.
+// vis--
+// vis-- @end deftypefun
+// vis--
+VISIBLE void mono_to_bern_double (unsigned int deg, const double *mono,
+				  double *bern);
+
+// vis--
 // vis-- @deftypefun {double} eval_sbern_double (unsigned int @var{deg}, const double *@var{spline}, double @var{t});
 // vis--
 // vis-- Evaluate a spline in scaled Bernstein basis, using the
@@ -87,6 +127,16 @@ evaldc_sbern_double (unsigned int deg, const double *spline, double t);
 // vis--
 VISIBLE _GL_ATTRIBUTE_PURE double
 evaldc_bern_double (unsigned int deg, const double *spline, double t);
+
+// vis--
+// vis-- @deftypefun {double} eval_mono_double (unsigned int @var{deg}, const double *@var{spline}, double @var{t});
+// vis--
+// vis-- Evaluate a spline in monomial basis.
+// vis--
+// vis-- @end deftypefun
+// vis--
+VISIBLE _GL_ATTRIBUTE_PURE double
+eval_mono_double (unsigned int deg, const double *spline, double t);
 
 // vis--
 // vis-- @deftypefun {void} subdiv_sbern_double (unsigned int @var{deg}, const double *@var{spline}, double @var{t}, double *@var{a}, double *@var{b});

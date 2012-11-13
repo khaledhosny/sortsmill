@@ -11,6 +11,7 @@ m4_include([ps_number_h.at])
 m4_include([rexp_h.at])
 m4_include([pascals_triangle.at])
 m4_include([bernstein.at])
+m4_include([monomial.at])
 m4_include([brentroot.at])
 
 AT_BANNER([gutils])

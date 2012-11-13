@@ -60,8 +60,7 @@ libguile_sortsmillff_iconv_la_SOURCES = guile_iconv.c
 libguile_sortsmillff_iconv_la_LIBADD = $(top_builddir)/lib/libgnu.la
 
 lib_LTLIBRARIES += libguile-sortsmillff_polyspline.la
-libguile_sortsmillff_polyspline_la_SOURCES = guile_polyspline.c	\
-	guile_bernstein.c
+libguile_sortsmillff_polyspline_la_SOURCES = guile_polyspline.c
 libguile_sortsmillff_polyspline_la_LIBADD =			\
 	$(top_builddir)/auxiliary/libsortsmillff_aux.la	\
 	$(top_builddir)/lib/libgnu.la

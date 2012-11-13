@@ -18,10 +18,17 @@
 (define-module (sortsmillff polyspline)
   #:export (f64vector-sbern->bern
             f64vector-bern->sbern
+            f64vector-sbern->mono
+            f64vector-mono->sbern
+            f64vector-bern->mono
+            f64vector-mono->bern
+
             f64vector-eval-sbern
             f64vector-eval-bern
             f64vector-evaldc-sbern
             f64vector-evaldc-bern
+            f64vector-eval-mono
+
             f64vector-subdiv-sbern
             f64vector-subdiv-bern))
 

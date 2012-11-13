@@ -73,7 +73,7 @@ $(TESTSUITE): $(srcdir)/testsuite.at $(srcdir)/package.m4 $(MY_AT_FILES)
 
 MY_AT_FILES = xgc_h.at xunicase_h.at xuniconv_h.at xuninorm_h.at	\
 	xunistr_h.at gfile_c.at ps_number_h.at rexp_h.at				\
-	pascals_triangle.at bernstein.at brentroot.at					\
+	pascals_triangle.at bernstein.at monomial.at brentroot.at		\
 	sortsmillff_iconv.at psMat.at old_python_tests.at
 
 TESTS_XGC_H = test_x_gc_strndup test_x_gc_strjoin
@@ -97,12 +97,14 @@ TESTS_REXP_H = test_rexp_h test_rexp_h_u8
 TESTS_PASCALS_TRIANGLE = test_pascals_triangle
 
 TESTS_BERNSTEIN = test_bernstein
+TESTS_MONOMIAL = test_monomial
 
 TESTS_BRENTROOT = test_brentroot
 
 check_PROGRAMS = $(TESTS_XGC_H) $(TESTS_XUNISTRING_H)				\
 	$(TESTS_GFILE_C) $(TESTS_PS_NUMBER_H) $(TESTS_REXP_H)			\
-	$(TESTS_PASCALS_TRIANGLE) $(TESTS_BERNSTEIN) $(TESTS_BRENTROOT)
+	$(TESTS_PASCALS_TRIANGLE) $(TESTS_BERNSTEIN) $(TESTS_MONOMIAL)	\
+	$(TESTS_BRENTROOT)
 
 AM_DEFAULT_SOURCE_EXT = .c
 LDADD = $(top_builddir)/fontforge/libsortsmillff_fontforgeexe.la	\
@@ -120,7 +122,8 @@ EXTRA_DIST += test_xunistr_strtol.txt test_xunistr_strtod.txt
 EXTRA_DIST += test_utf7_to_string.scm
 
 EXTRA_DIST += test_guile_bernstein.scm test_python_bernstein.py	\
-	test_guile_brentroot.scm test_python_brentroot.py
+	test_guile_monomial.scm test_guile_brentroot.scm			\
+	test_python_brentroot.py
 
 EXTRA_DIST += test_psMat_identity.py test_psMat_inverse.py			\
 	test_psMat_compose.py test_psMat_rotate.py test_psMat_scale.py	\

@@ -19,12 +19,12 @@
 
 (use-modules
  (sortsmillff polyspline)
- (sortsmillff gsl)
+ ((sortsmillff math-constants) #:select (c-dbl-epsilon))
  (srfi srfi-1)                          ; List operations.
  (srfi srfi-8)                          ; (receive ...)
  (ice-9 format))
 
-(define epsilon (GSL-DBL-EPSILON))
+(define epsilon c-dbl-epsilon)
 (define spline1 '(5 4 -3 2 1 0 1 -2 3 4 5))
 (define times '(0 0.25 0.5 0.75 1))
 

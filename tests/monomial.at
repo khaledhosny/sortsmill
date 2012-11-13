@@ -1,0 +1,21 @@
+m4_defun([check_monomial],
+[
+AT_SETUP([$3])
+AT_KEYWORDS([auxiliary scheme guile python polyspline monomial unit spline])
+AT_SKIP_IF([test x$1 = xskip -a x${DOING_INSTALLCHECK} = xyes])
+AT_CHECK_UNQUOTED([
+export LC_ALL="${posix_locale}"
+export LTDL_LIBRARY_PATH="${abs_top_builddir}/scheme"
+export GUILE_LOAD_PATH="${abs_top_builddir}/scheme:${abs_top_srcdir}/scheme"
+$2$3],
+[$4],[$5],[$6])
+AT_CLEANUP
+])
+
+check_monomial([skip],["${abs_builddir}"/],[test_monomial 100],[0],[],[])
+check_monomial([skip],["${abs_builddir}"/],[test_monomial 1 2 3 2 1 0 -1 -2 -3],[0],[],[])
+check_monomial([skip],["${abs_builddir}"/],[test_monomial 0.818795399890678 -0.574631286158936 0.807059538353606 -0.328374846399711 0.605562207605404],[0],[],[])
+
+check_monomial([skip],[${run_guile} "${abs_srcdir}"/],[test_guile_monomial.scm 100],[0],[],[])
+check_monomial([skip],[${run_guile} "${abs_srcdir}"/],[test_guile_monomial.scm 1 2 3 2 1 0 -1 -2 -3],[0],[],[])
+check_monomial([skip],[${run_guile} "${abs_srcdir}"/],[test_guile_monomial.scm 0.818795399890678 -0.574631286158936 0.807059538353606 -0.328374846399711 0.605562207605404],[0],[],[])
