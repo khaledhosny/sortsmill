@@ -44,7 +44,7 @@ void FVOutline(FontViewBase *fv, real width) {
 	if ( (gid=fv->map->map[i])!=-1 && (sc=fv->sf->glyphs[gid])!=NULL &&
 		fv->selected[i] && sc->layers[layer].splines )
 	    ++cnt;
-    ff_progress_start_indicator(10,_("Outlining glyphs"),_("Outlining glyphs"),0,cnt,1);
+    ff_progress_start_indicator(10,_("Outlining glyphs"),_("Outlining glyphs"),0,cnt,1, true);
 
     memset(&si,0,sizeof(si));
     si.removeexternal = true;
@@ -79,7 +79,7 @@ void FVInline(FontViewBase *fv, real width, real inset) {
 	if ( (gid=fv->map->map[i])!=-1 && (sc=fv->sf->glyphs[gid])!=NULL && fv->selected[i] &&
 		sc->layers[layer].splines )
 	    ++cnt;
-    ff_progress_start_indicator(10,_("Inlining glyphs"),_("Inlining glyphs"),0,cnt,1);
+    ff_progress_start_indicator(10,_("Inlining glyphs"),_("Inlining glyphs"),0,cnt,1, true);
 
     memset(&si,0,sizeof(si));
     si.removeexternal = true;
@@ -785,7 +785,7 @@ void FVShadow(FontViewBase *fv,real angle, real outline_width,
 	if ( (gid=fv->map->map[i])!=-1 && (sc=fv->sf->glyphs[gid])!=NULL && fv->selected[i] &&
 		sc->layers[layer].splines )
 	    ++cnt;
-    ff_progress_start_indicator(10,_("Shadowing glyphs"),_("Shadowing glyphs"),0,cnt,1);
+    ff_progress_start_indicator(10,_("Shadowing glyphs"),_("Shadowing glyphs"),0,cnt,1, true);
 
     SFUntickAll(fv->sf);
     for ( i=0; i<fv->map->enccount; ++i )

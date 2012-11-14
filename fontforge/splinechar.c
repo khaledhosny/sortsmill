@@ -1776,7 +1776,7 @@ int SFValidate(SplineFont *sf, int layer, int force) {
 	    ++k;
 	} while ( k<sf->subfontcnt );
 	if ( cnt!=0 )
-	    ff_progress_start_indicator(10,_("Validating..."),_("Validating..."),0,cnt,1);
+	    ff_progress_start_indicator(10,_("Validating..."),_("Validating..."),0,cnt,1, true);
     }
 
     k = 0;

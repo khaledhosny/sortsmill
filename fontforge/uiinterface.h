@@ -96,10 +96,9 @@ VISIBLE struct ui_interface {
 
     /* These routines are for a progress indicator */
     void (*progress_start)(int delay, const char *title, const char *line1,
-	const char *line2, int tot, int stages);
+	const char *line2, int tot, int stages, bool has_stop);
     void (*progress_end)(void);
     void (*progress_show)(void);
-    void (*progress_enable_stop)(int);
     int (*progress_next)(void);
     int (*progress_next_stage)(void);
     int (*progress_increment)(int);
@@ -141,7 +140,6 @@ VISIBLE extern struct ui_interface *ui_interface;
 #define ff_progress_start_indicator	(ui_interface->progress_start)
 #define ff_progress_end_indicator	(ui_interface->progress_end)
 #define ff_progress_show		(ui_interface->progress_show)
-#define ff_progress_enable_stop		(ui_interface->progress_enable_stop)
 #define ff_progress_next		(ui_interface->progress_next)
 #define ff_progress_next_stage		(ui_interface->progress_next_stage)
 #define ff_progress_increment		(ui_interface->progress_increment)

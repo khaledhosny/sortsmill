@@ -1815,10 +1815,9 @@ PIDownloadFont (PI * pi, SplineFont *sf, EncMap * map)
   if (pi->sfid == 0)
     ff_progress_start_indicator (10, _("Printing Font"), _("Printing Font"),
                                  _("Generating PostScript Font"),
-                                 sf->glyphcnt, 1);
+                                 sf->glyphcnt, 1, false);
   else
     ff_progress_reset ();
-  ff_progress_enable_stop (false);
   if (pi->printtype == pt_pdf && sf->multilayer)
     {
       /* These need to be done in line as pdf objects */

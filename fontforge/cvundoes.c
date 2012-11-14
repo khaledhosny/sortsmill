@@ -3591,7 +3591,7 @@ return;
     }
 
     anchor_lost_warning = false;
-    ff_progress_start_indicator(10,_("Pasting..."),_("Pasting..."),0,cnt,1);
+    ff_progress_start_indicator(10,_("Pasting..."),_("Pasting..."),0,cnt,1, true);
 
     if ( cur->undotype==ut_multiple )
 	cur = cur->u.multiple.mult;

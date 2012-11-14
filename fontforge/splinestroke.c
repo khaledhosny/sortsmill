@@ -3904,7 +3904,7 @@ void FVStrokeItScript(void *_fv, StrokeInfo *si,int pointless_argument) {
 
     for ( i=0; i<fv->map->enccount; ++i ) if ( (gid=fv->map->map[i])!=-1 && fv->sf->glyphs[gid]!=NULL && fv->selected[i] )
 	++cnt;
-    ff_progress_start_indicator(10,_("Stroking..."),_("Stroking..."),0,cnt,1);
+    ff_progress_start_indicator(10,_("Stroking..."),_("Stroking..."),0,cnt,1, true);
 
     SFUntickAll(fv->sf);
     for ( i=0; i<fv->map->enccount; ++i ) {

@@ -3144,8 +3144,7 @@ SFDDump (FILE *sfd, SplineFont *sf, EncMap * map, EncMap * normal, int todir,
   for (i = 0, bdf = sf->bitmaps; bdf != NULL; bdf = bdf->next, ++i);
   ff_progress_start_indicator (10, _("Saving..."),
                                _("Saving Spline Font Database"),
-                               _("Saving Outlines"), realcnt, i + 1);
-  ff_progress_enable_stop (false);
+                               _("Saving Outlines"), realcnt, i + 1, false);
   fprintf (sfd, "SplineFontDB: %.1f\n", 3.0);
   if (sf->mm != NULL)
     err = SFD_MMDump (sfd, sf->mm->normal, map, normal, todir, dirname);

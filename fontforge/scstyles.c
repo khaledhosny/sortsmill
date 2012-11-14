@@ -2682,7 +2682,7 @@ return;
 
     MakeSCLookups(sf,c2sc,smcp,ltn,crl,grk,symbols,genchange->petite);
     ff_progress_start_indicator(10,_("Small Capitals"),
-	_("Building small capitals"),NULL,cnt,1);
+	_("Building small capitals"),NULL,cnt,1, true);
     for ( enc=0; enc<fv->map->enccount; ++enc ) {
 	if ( (gid=fv->map->map[enc])!=-1 && fv->selected[enc] && (sc=sf->glyphs[gid])!=NULL ) {
 	    if ( genchange->do_smallcap_symbols || ( sc->unicodeenc<0x10000 &&
@@ -2929,10 +2929,10 @@ return;
 
     if ( genchange->gc==gc_subsuper )
 	ff_progress_start_indicator(10,_("Subscripts/Superscripts"),
-	    _("Building sub/superscripts"),NULL,cnt,1);
+	    _("Building sub/superscripts"),NULL,cnt,1, true);
     else
 	ff_progress_start_indicator(10,_("Generic change"),
-	    _("Changing glyphs"),NULL,cnt,1);
+	    _("Changing glyphs"),NULL,cnt,1, true);
 
     for ( enc=0; enc<fv->map->enccount; ++enc ) {
 	if ( (gid=fv->map->map[enc])!=-1 && fv->selected[enc] && (sc=sf->glyphs[gid])!=NULL ) {
@@ -6824,7 +6824,7 @@ void MakeItalic(FontViewBase *fv,CharViewBase *cv, ItalicInfo *ii) {
 	}
 	if ( cnt!=0 ) {
 	    ff_progress_start_indicator(10,_("Italic"),
-		_("Italic Conversion"),NULL,cnt,1);
+		_("Italic Conversion"),NULL,cnt,1, true);
 
 	    for ( enc=0; enc<fv->map->enccount; ++enc ) {
 		if ( (gid=fv->map->map[enc])!=-1 && fv->selected[enc] &&
@@ -6931,7 +6931,7 @@ void ChangeXHeight(FontViewBase *fv,CharViewBase *cv, struct xheightinfo *xi) {
 	}
 	if ( cnt!=0 ) {
 	    ff_progress_start_indicator(10,_("Change X-Height"),
-		_("Change X-Height"),NULL,cnt,1);
+		_("Change X-Height"),NULL,cnt,1, true);
 
 	    for ( enc=0; enc<fv->map->enccount; ++enc ) {
 		if ( (gid=fv->map->map[enc])!=-1 && fv->selected[enc] &&

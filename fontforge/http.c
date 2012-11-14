@@ -379,8 +379,7 @@ return( NULL );
 
     if ( lock==NULL ) {
 	ff_progress_start_indicator(0,_("Font Download..."),buffer,
-		_("Resolving host"),1,1);
-	ff_progress_enable_stop(false);
+		_("Resolving host"),1,1, false);
 	ff_progress_allow_events();
 	ff_progress_allow_events();
     }
@@ -534,8 +533,7 @@ return( false );
     filename = decomposeURL(url, &host, &port, &username, &password);
 
     ff_progress_start_indicator(0,_("Font Download..."),buffer,
-	    _("Resolving host"),1,1);
-    ff_progress_enable_stop(false);
+	    _("Resolving host"),1,1, false);
     ff_progress_allow_events();
     ff_progress_allow_events();
 
