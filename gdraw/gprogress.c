@@ -225,7 +225,7 @@ static void GProgressResInit(void) {
     }
 }
 
-void GProgressStartIndicator(
+static void GProgressStartIndicator(
     int delay,	// in tenths of seconds
     const uint32_t *win_title, // for the window decoration
     const uint32_t *line1, // First line of description
@@ -320,15 +320,6 @@ void GProgressStartIndicator(
     }
 }
 
-void GProgressStartIndicatorR( int delay, int win_titler, int line1r, int line2r,
-    int tot, int stages ) {
-    GProgressStartIndicator(delay,
-	GStringGetResource(win_titler,NULL),
-	GStringGetResource(line1r,NULL),
-	line2r==0?NULL:GStringGetResource(line2r,NULL),
-	tot,stages);
-}
-
 void GProgressEndIndicator(void) {
     GProgress *old=current;
 
@@ -352,7 +343,7 @@ return;
     GDrawProcessPendingEvents(NULL);
 }
 
-void GProgressChangeLine1(const uint32_t *line1) {
+static void GProgressChangeLine1(const uint32_t *line1) {
     if ( current==NULL )
 return;
     free( current->line1 );
@@ -365,11 +356,7 @@ return;
 	GDrawRequestExpose(current->gw,NULL,false);
 }
 
-void GProgressChangeLine1R(int line1r) {
-    GProgressChangeLine1(GStringGetResource(line1r,NULL));
-}
-
-void GProgressChangeLine2(const uint32_t *line2) {
+static void GProgressChangeLine2(const uint32_t *line2) {
     if ( current==NULL )
 return;
     free( current->line2 );
@@ -380,10 +367,6 @@ return;
     }
     if ( current->visible )
 	GDrawRequestExpose(current->gw,NULL,false);
-}
-
-void GProgressChangeLine2R(int line2r) {
-    GProgressChangeLine2(GStringGetResource(line2r,NULL));
 }
 
 void GProgressChangeTotal(int tot) {
