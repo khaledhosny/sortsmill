@@ -138,8 +138,6 @@ AC_PATH_PROG([UPDATE_DESKTOP_DATABASE],[update-desktop-database],[update-desktop
 AC_PATH_PROG([WGET],[wget],[wget])
 AC_PATH_PROG([CYTHON],[cython],[cython])
 GUILE_PROGS
-AX_PKG_SWIG([2.0.4],[:],
-        [AC_MSG_WARN([SWIG >= 2.0.4 will be needed if you are going to regenerate some of the source codes.])])
 
 #--------------------------------------------------------------------------
 
@@ -292,11 +290,6 @@ FONTFORGE_COMPILER_FLAGS([WARNING_CFLAGS],
 ## Some clang flags to turn off for now.
 #FONTFORGE_COMPILER_FLAGS([WARNING_CFLAGS],
 #        [-Wno-switch -Wno-tautological-compare -Wno-conversion])
-
-AC_SUBST([SWIG_GUILE_EXTRA_CFLAGS])
-SWIG_GUILE_EXTRA_CFLAGS=""
-FONTFORGE_COMPILER_FLAGS([SWIG_GUILE_EXTRA_CFLAGS],
-        [-Wno-unused -Wno-missing-prototypes])
 
 AC_SUBST([CYTHON_EXTRA_CFLAGS])
 CYTHON_EXTRA_CFLAGS=""

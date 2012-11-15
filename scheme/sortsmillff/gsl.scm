@@ -15,5 +15,11 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
+(define-module (sortsmillff gsl)
+  #:export (matrix-f64*
+            matrix-f64+
+            matrix-f64-
+            ))
+
 (load-extension "libguile-sortsmillff_gsl"
-                "scm_init_sortsmillff_gsl_module")
+                "init_guile_sortsmillff_gsl")

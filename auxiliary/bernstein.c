@@ -20,15 +20,7 @@
 #include <string.h>
 #include <math.h>
 
-#ifndef MY_FAST_FMA
-#ifdef FP_FAST_FMA
-#define MY_FAST_FMA fma
-#else
-#define MY_FAST_FMA(x, y, z) ((x) * (y) + (z))
-#endif
-#endif
-
-void
+VISIBLE void
 sbern_to_bern_double (unsigned int deg, const double *sbern, double *bern)
 {
   const int *bc = pascals_triangle_row (deg);
@@ -36,7 +28,7 @@ sbern_to_bern_double (unsigned int deg, const double *sbern, double *bern)
     bern[i] = sbern[i] / bc[i];
 }
 
-void
+VISIBLE void
 bern_to_sbern_double (unsigned int deg, const double *bern, double *sbern)
 {
   const int *bc = pascals_triangle_row (deg);
@@ -44,7 +36,7 @@ bern_to_sbern_double (unsigned int deg, const double *bern, double *sbern)
     sbern[i] = bern[i] * bc[i];
 }
 
-double
+VISIBLE double
 eval_sbern_double (unsigned int deg, const double *spline, double t)
 {
   double v;
@@ -94,7 +86,7 @@ eval_sbern_double (unsigned int deg, const double *spline, double t)
   return v;
 }
 
-double
+VISIBLE double
 eval_bern_double (unsigned int deg, const double *spline, double t)
 {
   double sbern[deg + 1];
@@ -102,7 +94,7 @@ eval_bern_double (unsigned int deg, const double *spline, double t)
   return eval_sbern_double (deg, sbern, t);
 }
 
-double
+VISIBLE double
 evaldc_sbern_double (unsigned int deg, const double *spline, double t)
 {
   double b[deg + 1];
@@ -113,7 +105,7 @@ evaldc_sbern_double (unsigned int deg, const double *spline, double t)
   return b[0];
 }
 
-double
+VISIBLE double
 evaldc_bern_double (unsigned int deg, const double *spline, double t)
 {
   double b[deg + 1];
@@ -124,7 +116,7 @@ evaldc_bern_double (unsigned int deg, const double *spline, double t)
   return b[0];
 }
 
-void
+VISIBLE void
 subdiv_sbern_double (unsigned int deg, const double *spline, double t,
                      double *a, double *b)
 {
@@ -135,7 +127,7 @@ subdiv_sbern_double (unsigned int deg, const double *spline, double t,
   bern_to_sbern_double (deg, b, b);
 }
 
-void
+VISIBLE void
 subdiv_bern_double (unsigned int deg, const double *spline, double t,
                     double *a, double *b)
 {

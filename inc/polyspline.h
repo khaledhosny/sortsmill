@@ -18,6 +18,16 @@
 
 #include <config.h>
 
+// Use floating-point multiply-and-add if there is hardware support
+// for it.
+#ifndef MY_FAST_FMA
+#ifdef FP_FAST_FMA
+#define MY_FAST_FMA fma
+#else
+#define MY_FAST_FMA(x, y, z) ((x) * (y) + (z))
+#endif
+#endif
+
 // vis--
 // vis-- @deftypefun {void} sbern_to_bern_double (unsigned int @var{deg}, const double *@var{sbern}, double *@var{bern})
 // vis--
@@ -25,7 +35,7 @@
 // vis--
 // vis-- @end deftypefun
 // vis--
-VISIBLE void sbern_to_bern_double (unsigned int deg, const double *sbern,
+void sbern_to_bern_double (unsigned int deg, const double *sbern,
                                    double *bern);
 
 // vis--
@@ -35,7 +45,7 @@ VISIBLE void sbern_to_bern_double (unsigned int deg, const double *sbern,
 // vis--
 // vis-- @end deftypefun
 // vis--
-VISIBLE void bern_to_sbern_double (unsigned int deg, const double *bern,
+void bern_to_sbern_double (unsigned int deg, const double *bern,
                                    double *sbern);
 
 // vis--
@@ -45,7 +55,7 @@ VISIBLE void bern_to_sbern_double (unsigned int deg, const double *bern,
 // vis--
 // vis-- @end deftypefun
 // vis--
-VISIBLE void sbern_to_mono_double (unsigned int deg, const double *sbern,
+void sbern_to_mono_double (unsigned int deg, const double *sbern,
                                    double *mono);
 
 // vis--
@@ -55,7 +65,7 @@ VISIBLE void sbern_to_mono_double (unsigned int deg, const double *sbern,
 // vis--
 // vis-- @end deftypefun
 // vis--
-VISIBLE void mono_to_sbern_double (unsigned int deg, const double *mono,
+void mono_to_sbern_double (unsigned int deg, const double *mono,
                                    double *sbern);
 
 // vis--
@@ -65,7 +75,7 @@ VISIBLE void mono_to_sbern_double (unsigned int deg, const double *mono,
 // vis--
 // vis-- @end deftypefun
 // vis--
-VISIBLE void bern_to_mono_double (unsigned int deg, const double *bern,
+void bern_to_mono_double (unsigned int deg, const double *bern,
                                   double *mono);
 
 // vis--
@@ -75,7 +85,7 @@ VISIBLE void bern_to_mono_double (unsigned int deg, const double *bern,
 // vis--
 // vis-- @end deftypefun
 // vis--
-VISIBLE void mono_to_bern_double (unsigned int deg, const double *mono,
+void mono_to_bern_double (unsigned int deg, const double *mono,
 				  double *bern);
 
 // vis--
@@ -86,7 +96,7 @@ VISIBLE void mono_to_bern_double (unsigned int deg, const double *mono,
 // vis--
 // vis-- @end deftypefun
 // vis--
-VISIBLE _GL_ATTRIBUTE_PURE double
+_GL_ATTRIBUTE_PURE double
 eval_sbern_double (unsigned int deg, const double *spline, double t);
 
 // vis--
@@ -97,7 +107,7 @@ eval_sbern_double (unsigned int deg, const double *spline, double t);
 // vis--
 // vis-- @end deftypefun
 // vis--
-VISIBLE _GL_ATTRIBUTE_PURE double
+_GL_ATTRIBUTE_PURE double
 eval_bern_double (unsigned int deg, const double *spline, double t);
 
 // vis--
@@ -111,7 +121,7 @@ eval_bern_double (unsigned int deg, const double *spline, double t);
 // vis--
 // vis-- @end deftypefun
 // vis--
-VISIBLE _GL_ATTRIBUTE_PURE double
+_GL_ATTRIBUTE_PURE double
 evaldc_sbern_double (unsigned int deg, const double *spline, double t);
 
 // vis--
@@ -125,7 +135,7 @@ evaldc_sbern_double (unsigned int deg, const double *spline, double t);
 // vis--
 // vis-- @end deftypefun
 // vis--
-VISIBLE _GL_ATTRIBUTE_PURE double
+_GL_ATTRIBUTE_PURE double
 evaldc_bern_double (unsigned int deg, const double *spline, double t);
 
 // vis--
@@ -135,7 +145,7 @@ evaldc_bern_double (unsigned int deg, const double *spline, double t);
 // vis--
 // vis-- @end deftypefun
 // vis--
-VISIBLE _GL_ATTRIBUTE_PURE double
+_GL_ATTRIBUTE_PURE double
 eval_mono_double (unsigned int deg, const double *spline, double t);
 
 // vis--
@@ -146,7 +156,7 @@ eval_mono_double (unsigned int deg, const double *spline, double t);
 // vis--
 // vis-- @end deftypefun
 // vis--
-VISIBLE void subdiv_sbern_double (unsigned int deg, const double *spline,
+void subdiv_sbern_double (unsigned int deg, const double *spline,
                                   double t, double *a, double *b);
 // vis--
 // vis-- @deftypefun {void} subdiv_bern_double (unsigned int @var{deg}, const double *@var{spline}, double @var{t}, double *@var{a}, double *@var{b});
@@ -156,7 +166,7 @@ VISIBLE void subdiv_sbern_double (unsigned int deg, const double *spline,
 // vis--
 // vis-- @end deftypefun
 // vis--
-VISIBLE void subdiv_bern_double (unsigned int deg, const double *spline,
-                                 double t, double *a, double *b);
+void subdiv_bern_double (unsigned int deg, const double *spline,
+			 double t, double *a, double *b);
 
 #endif // _POLYSPLINE_H

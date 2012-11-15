@@ -20,15 +20,7 @@
 #include <string.h>
 #include <math.h>
 
-#ifndef MY_FAST_FMA
-#ifdef FP_FAST_FMA
-#define MY_FAST_FMA fma
-#else
-#define MY_FAST_FMA(x, y, z) ((x) * (y) + (z))
-#endif
-#endif
-
-void
+VISIBLE void
 sbern_to_mono_double (unsigned int deg, const double *sbern, double *mono)
 {
   double result[deg + 1];
@@ -43,7 +35,7 @@ sbern_to_mono_double (unsigned int deg, const double *sbern, double *mono)
   memcpy (mono, result, (deg + 1) * sizeof (double));
 }
 
-void
+VISIBLE void
 mono_to_sbern_double (unsigned int deg, const double *mono, double *sbern)
 {
   double result[deg + 1];
@@ -58,7 +50,7 @@ mono_to_sbern_double (unsigned int deg, const double *mono, double *sbern)
   memcpy (sbern, result, (deg + 1) * sizeof (double));
 }
 
-void
+VISIBLE void
 bern_to_mono_double (unsigned int deg, const double *bern, double *mono)
 {
   double sbern[deg + 1];
@@ -66,7 +58,7 @@ bern_to_mono_double (unsigned int deg, const double *bern, double *mono)
   sbern_to_mono_double (deg, sbern, mono);
 }
 
-void
+VISIBLE void
 mono_to_bern_double (unsigned int deg, const double *mono, double *bern)
 {
   double sbern[deg + 1];
@@ -74,7 +66,7 @@ mono_to_bern_double (unsigned int deg, const double *mono, double *bern)
   sbern_to_bern_double (deg, sbern, bern);
 }
 
-double
+VISIBLE double
 eval_mono_double (unsigned int deg, const double *spline, double t)
 {
   // Horner’s rule.

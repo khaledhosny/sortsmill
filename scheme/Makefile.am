@@ -72,13 +72,10 @@ libguile_sortsmillff_brentroot_la_LIBADD =			\
 	$(top_builddir)/lib/libgnu.la
 
 lib_LTLIBRARIES += libguile-sortsmillff_gsl.la
-dist_libguile_sortsmillff_gsl_la_SOURCES = $(srcdir)/guile_gsl.c
+dist_libguile_sortsmillff_gsl_la_SOURCES = guile_gsl.c
 libguile_sortsmillff_gsl_la_LIBADD =				\
 	$(top_builddir)/auxiliary/libsortsmillff_aux.la	\
 	$(top_builddir)/lib/libgnu.la
-libguile_sortsmillff_gsl_la_CFLAGS = $(SWIG_GUILE_CFLAGS)
-
-EXTRA_DIST += guile_gsl.i
 
 #--------------------------------------------------------------------------
 
@@ -92,43 +89,3 @@ install-data-hook:
 MOSTLYCLEANFILES = $(nobase_nodist_guileobjmodule_DATA)
 
 #--------------------------------------------------------------------------
-
-
-
-
-
-
-##--------------------------------------------------------------------------
-#
-#dist_guilemodule_DATA = fontforge-main.scm sfd.scm
-#guileextension_LTLIBRARIES = libguile-sortsmillff_fontforgeexe.la
-#
-#libguile_sortsmillff_fontforgeexe_la_SOURCES = fontforgeexe_ffi.c
-#
-#libguile_sortsmillff_fontforgeexe_la_CPPFLAGS = \
-#	$(AM_CPPFLAGS) 								\
-#	-I$(top_builddir)/fontforge					\
-#	-I$(top_srcdir)/fontforge
-#
-#libguile_sortsmillff_fontforgeexe_la_LIBADD =					\
-#	$(top_builddir)/auxiliary/libsortsmillff_aux.la				\
-#	$(top_builddir)/gutils/libsortsmillff_gutils.la				\
-#	$(top_builddir)/fontforge/libsortsmillff_fontforge.la		\
-#	$(top_builddir)/fontforge/libsortsmillff_fontforgeexe.la
-#
-#libguile_sortsmillff_fontforgeexe_la_LDFLAGS = -module	\
-#	$(COMMON_LD_FLAGS)
-#
-##--------------------------------------------------------------------------
-##
-## Experimental start-up of the FontForge UI from a Guile script.
-#
-#EXTRA_SCRIPTS = fontforge.scm
-#
-#install-fontforge.scm: fontforge.scm
-#	$(INSTALL_SCRIPT) fontforge.scm "$(DESTDIR)$(bindir)/"
-#
-#uninstall-local:
-#	rm -f "$(DESTDIR)$(bindir)/fontforge.scm"
-#
-##--------------------------------------------------------------------------
