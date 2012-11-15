@@ -370,6 +370,7 @@ static int ncmp(const void *_ri1, const void *_ri2) {
 return( strcoll(_(ri1->range->name),_(ri2->range->name)));
 }
 
+/* Find and return the Unicode range descriptions for these characters */
 struct rangeinfo *SFUnicodeRanges(SplineFont *sf, enum ur_flags flags) {
     int cnt;
     int i,j, gid;
@@ -391,6 +392,7 @@ struct rangeinfo *SFUnicodeRanges(SplineFont *sf, enum ur_flags flags) {
 	}
     }
 
+    /* count number of ranges to return back in rangeinfo[cnt] */
     for (i=cnt=0; unicoderange[i].name!=NULL; ++i )
 	if ( unicoderange[i].display )
 	    ++cnt;
@@ -401,6 +403,7 @@ struct rangeinfo *SFUnicodeRanges(SplineFont *sf, enum ur_flags flags) {
 
     ri = xcalloc(cnt+1,sizeof(struct rangeinfo));
 
+    /* populate rangeinfo[0..cnt-1] with unicoderanges we will display */
     for (i=cnt=0; unicoderange[i].name!=NULL; ++i )
 	if ( unicoderange[i].display )
 	    ri[cnt++].range = &unicoderange[i];
@@ -410,6 +413,7 @@ struct rangeinfo *SFUnicodeRanges(SplineFont *sf, enum ur_flags flags) {
     ri[cnt++].range = &nonunicode;
     ri[cnt++].range = &unassigned;
 
+    /* count glyphs in each range */
     for ( j=0; j<cnt-2; ++j ) {
 	int top = ri[j].range->last;
 	int bottom = ri[j].range->first;
