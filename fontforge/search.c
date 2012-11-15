@@ -1260,7 +1260,7 @@ void FVBReplaceOutlineWithReference( FontViewBase *fv, double fudge ) {
 	    sf->glyphs[gid]!=NULL )
 	++selcnt;
     ff_progress_start_indicator(10,_("Replace with Reference"),
-	    _("Replace Outline with Reference"),0,selcnt,1);
+	    _("Replace Outline with Reference"),0,selcnt,1, true);
 
     for ( i=0; i<fv->map->enccount; ++i ) if ( selected[i] && (gid=fv->map->map[i])!=-1 &&
 	    (checksc=sf->glyphs[gid])!=NULL ) {
@@ -1451,7 +1451,7 @@ void FVCorrectReferences(FontViewBase *fv) {
 	    ++cnt;
     }
     ff_progress_start_indicator(10,_("Correcting References"),
-	_("Adding new glyphs and referring to them when a glyph contains a bad truetype reference"),NULL,cnt,1);
+	_("Adding new glyphs and referring to them when a glyph contains a bad truetype reference"),NULL,cnt,1, true);
     for ( enc=0; enc<fv->map->enccount; ++enc ) {
 	if ( (gid=fv->map->map[enc])!=-1 && fv->selected[enc] && (sc=sf->glyphs[gid])!=NULL ) {
 	    index = 1;

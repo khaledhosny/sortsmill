@@ -110,7 +110,7 @@ return( xstrdup_or_null(defaultfile) );
 }
 
 static void NOUI_progress_start(int delay, const char *title, const char *line1,
-	const char *line2, int tot, int stages) {
+	const char *line2, int tot, int stages, bool has_stop) {
 }
 
 static void NOUI_void_void_noop(void) {
@@ -150,7 +150,6 @@ static struct ui_interface noui_interface = {
     NOUI_progress_start,
     NOUI_void_void_noop,
     NOUI_void_void_noop,
-    NOUI_void_int_noop,
     NOUI_alwaystrue,
     NOUI_alwaystrue,
     NOUI_int_int_noop,

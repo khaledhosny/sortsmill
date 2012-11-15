@@ -740,8 +740,7 @@ return( 1 );
     path = x_u8_strconv_from_locale (newname);
     ff_progress_start_indicator(10,_("Saving font"),
 	    _("Saving Multiple PostScript Fonts"),
-	    path,256,(max+1)*filecnt );
-    /*ff_progress_enable_stop(false);*/
+	    path,256,(max+1)*filecnt, true);
     free(path);
 
     for ( i=0; i<=max && !err; ++i )
@@ -810,7 +809,7 @@ return( WriteMultiplePSFont(sf,newname,sizes,res,subfontdefinition,map,layer));
 				oldformatstate==ff_svg ?_("Saving SVG font") :
 				oldformatstate==ff_ufo ?_("Saving Unified Font Object") :
 				_("Saving PostScript Font"),
-				x_gc_u8_strconv_from_locale (newname), sf->glyphcnt, 1);
+				x_gc_u8_strconv_from_locale (newname), sf->glyphcnt, 1, true);
     if ( oldformatstate!=ff_none ) {
 	int oerr = 0;
 	int bmap = oldbitmapstate;

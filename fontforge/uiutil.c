@@ -700,7 +700,6 @@ struct ui_interface gdraw_ui_interface = {
     gwwv_progress_start_indicator,
     gwwv_progress_end_indicator,
     gwwv_progress_show,
-    gwwv_progress_enable_stop,
     gwwv_progress_next,
     gwwv_progress_next_stage,
     gwwv_progress_increment,

@@ -1021,8 +1021,7 @@ return( NULL );
     else
       strncat(ubuf, x_gc_u8_strconv_from_locale (GFileBaseName(filename)), 100);
     ubuf[100+len] = '\0';
-    ff_progress_start_indicator(FontViewFirst()==NULL?0:10,_("Loading..."),ubuf,_("Reading Glyphs"),0,1);
-    ff_progress_enable_stop(0);
+    ff_progress_start_indicator(FontViewFirst()==NULL?0:10,_("Loading..."),ubuf,_("Reading Glyphs"),0,1, false);
     if ( FontViewFirst()==NULL && !no_windowing_ui )
 	ff_progress_allow_events();
 

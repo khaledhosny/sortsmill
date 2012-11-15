@@ -33,41 +33,14 @@
 #include <basics.h>
 #include <intl.h>
 
-extern void GProgressStartIndicator (int delay, /* in tenths of seconds */
-                                     const uint32_t *win_title,        /* for the window decoration */
-                                     const uint32_t *line1,    /* First line of description */
-                                     const uint32_t *line2,    /* Second line */
-                                     int tot,   /* Number of sub-entities in the operation */
-                                     int stages /* Number of stages, each processing tot sub-entities */
-  );
-extern void GProgressStartIndicatorR (int delay, int win_titler, int line1r,
-                                      int line2r, int tot, int stages);
-
 /* Ends the topmost indicator */
 VISIBLE extern void GProgressEndIndicator (void);
-
-/* Changes the text in the topmost */
-extern void GProgressChangeLine1 (const uint32_t *line1);
-
-/* Changes the text in the topmost */
-extern void GProgressChangeLine2 (const uint32_t *line2);
-
-/* Changes the text in the topmost */
-extern void GProgressChangeLine1R (int line1r);
-
-/* Changes the text in the topmost */
-extern void GProgressChangeLine2R (int line2r);
 
 /* Changes the expected length in the topmost */
 VISIBLE extern void GProgressChangeTotal (int tot);
 
 /* Changes the expected number of stages in the topmost */
 VISIBLE extern void GProgressChangeStages (int stages);
-
-/* Allows you to disable and enable the stop button if it can't be
-   used in a section of code if any of the next routines returns
-   false, then abort processing */
-VISIBLE extern void GProgressEnableStop (int enabled);
 
 /* Move to the next stage in the topmost indicator */
 VISIBLE extern int GProgressNextStage (void);
@@ -89,10 +62,13 @@ VISIBLE extern void GProgressResumeTimer (void);
 /* Display the damn thing whether we should or not */
 VISIBLE extern void GProgressShow (void);
 
-VISIBLE extern void GProgressStartIndicator8 (int delay, const char *title,
-                                              const char *line1,
-                                              const char *line2, int tot,
-                                              int stages);
+VISIBLE extern void GProgressStartIndicator8 (int delay,         /* in tenths of seconds */
+                                              const char *title, /* for the window decoration */
+                                              const char *line1, /* First line of description */
+                                              const char *line2, /* Second line */
+                                              int tot,           /* Number of sub-entities in the operation */
+                                              int stages,        /* Number of stages, each processing tot sub-entities */
+                                              bool has_stop);
 
 /* Changes the text in the topmost */
 VISIBLE extern void GProgressChangeLine1_8 (const char *line1);
@@ -113,5 +89,4 @@ VISIBLE extern void GProgressChangeLine2_8 (const char *line2);
 #define gwwv_progress_reset		GProgressReset
 #define gwwv_progress_pause_timer	GProgressPauseTimer
 #define gwwv_progress_resume_timer	GProgressResumeTimer
-#define gwwv_progress_enable_stop	GProgressEnableStop
 #endif

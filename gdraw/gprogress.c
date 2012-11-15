@@ -225,23 +225,22 @@ static void GProgressResInit(void) {
     }
 }
 
-void GProgressStartIndicator(
+static void GProgressStartIndicator(
     int delay,	// in tenths of seconds
     const uint32_t *win_title, // for the window decoration
     const uint32_t *line1, // First line of description
     const uint32_t *line2, // Second line
     int tot, // Number of sub-entities in the operation
-    int stages // Number of stages, each processing tot sub-entities
+    int stages, // Number of stages, each processing tot sub-entities
+    bool has_stop
     )
 {
     GProgress *new_;
     GWindowAttrs wattrs;
     GWindow root;
-    GGadgetData gd;
     int ld, as, ds;
     GRect pos;
     struct timeval tv;
-    GTextInfo label;
 
     if ( screen_display != NULL ) {
 	if ( !progress_init )
@@ -291,17 +290,22 @@ void GProgressStartIndicator(
 	new_->gw = GDrawCreateTopWindow(NULL,&pos,progress_eh,new_,&wattrs);
 	free((void *) wattrs.window_title);
 
-	memset(&gd,'\0',sizeof(gd)); memset(&label,'\0',sizeof(label));
-	gd.pos.width = GDrawPointsToPixels(new_->gw,50);
-	gd.pos.x = pos.width-gd.pos.width-10;
-	gd.pos.y = pos.height-GDrawPointsToPixels(new_->gw,29);
-	gd.flags = gg_visible | gg_enabled | gg_pos_in_pixels | gg_pos_use0;
-	gd.mnemonic = 'S';
-	label.text = (uint32_t *) _("_Stop");
-	label.text_is_1byte = true;
-	label.text_in_resource = true;
-	gd.label = &label;
-	GButtonCreate( new_->gw, &gd, NULL);
+	if (has_stop) {
+	    GGadgetData gd;
+	    GTextInfo label;
+	    memset(&gd,'\0',sizeof(gd));
+	    memset(&label,'\0',sizeof(label));
+	    gd.pos.width = GDrawPointsToPixels(new_->gw,50);
+	    gd.pos.x = pos.width-gd.pos.width-10;
+	    gd.pos.y = pos.height-GDrawPointsToPixels(new_->gw,29);
+	    gd.flags = gg_visible | gg_enabled | gg_pos_in_pixels | gg_pos_use0;
+	    gd.mnemonic = 'S';
+	    label.text = (uint32_t *) _("_Stop");
+	    label.text_is_1byte = true;
+	    label.text_in_resource = true;
+	    gd.label = &label;
+	    GButtonCreate( new_->gw, &gd, NULL);
+	}
 
 	/* If there's another progress indicator up, it will not move and ours */
 	/*  won't be visible if we have a delay, so force delay to 0 here */
@@ -318,15 +322,6 @@ void GProgressStartIndicator(
 	current = new_;
 	GProgressTimeCheck();
     }
-}
-
-void GProgressStartIndicatorR( int delay, int win_titler, int line1r, int line2r,
-    int tot, int stages ) {
-    GProgressStartIndicator(delay,
-	GStringGetResource(win_titler,NULL),
-	GStringGetResource(line1r,NULL),
-	line2r==0?NULL:GStringGetResource(line2r,NULL),
-	tot,stages);
 }
 
 void GProgressEndIndicator(void) {
@@ -352,7 +347,7 @@ return;
     GDrawProcessPendingEvents(NULL);
 }
 
-void GProgressChangeLine1(const uint32_t *line1) {
+static void GProgressChangeLine1(const uint32_t *line1) {
     if ( current==NULL )
 return;
     free( current->line1 );
@@ -365,11 +360,7 @@ return;
 	GDrawRequestExpose(current->gw,NULL,false);
 }
 
-void GProgressChangeLine1R(int line1r) {
-    GProgressChangeLine1(GStringGetResource(line1r,NULL));
-}
-
-void GProgressChangeLine2(const uint32_t *line2) {
+static void GProgressChangeLine2(const uint32_t *line2) {
     if ( current==NULL )
 return;
     free( current->line2 );
@@ -380,10 +371,6 @@ return;
     }
     if ( current->visible )
 	GDrawRequestExpose(current->gw,NULL,false);
-}
-
-void GProgressChangeLine2R(int line2r) {
-    GProgressChangeLine2(GStringGetResource(line2r,NULL));
 }
 
 void GProgressChangeTotal(int tot) {
@@ -400,12 +387,6 @@ return;
     current->stages = stages;
     if ( current->stage>=stages )
 	current->stage = stages-1;
-}
-
-void GProgressEnableStop(int enabled) {
-    if ( current==NULL )
-return;
-    GGadgetSetEnabled(GWidgetGetControl(current->gw,0),enabled);
 }
 
 int GProgressNextStage(void) {
@@ -486,11 +467,11 @@ return;
 }
 
 void GProgressStartIndicator8(int delay, const char *title, const char *line1,
-	const char *line2, int tot, int stages) {
+	const char *line2, int tot, int stages, bool has_stop) {
     uint32_t *tit = utf82u_copy(title);
     uint32_t *l1 = utf82u_copy(line1);
     uint32_t *l2 = utf82u_copy(line2);
-    GProgressStartIndicator(delay, tit, l1, l2, tot, stages);
+    GProgressStartIndicator(delay, tit, l1, l2, tot, stages, has_stop);
     free(l1);
     free(l2);
     free(tit);

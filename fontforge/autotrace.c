@@ -562,7 +562,7 @@ return;
 		fv->sf->glyphs[gid]->layers[ly_back].images )
 	    ++cnt;
 
-    ff_progress_start_indicator(10,_("Autotracing..."),_("Autotracing..."),0,cnt,1);
+    ff_progress_start_indicator(10,_("Autotracing..."),_("Autotracing..."),0,cnt,1, true);
 
     SFUntickAll(fv->sf);
     for ( i=cnt=0; i<fv->map->enccount; ++i ) {

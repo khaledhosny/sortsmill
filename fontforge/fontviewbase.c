@@ -367,7 +367,7 @@ void FVBuildDuplicate(FontViewBase *fv) {
     for ( i=0; i<fv->map->enccount; ++i ) if ( fv->selected[i] )
 	++cnt;
     ff_progress_start_indicator(10,_("Building duplicate encodings"),
-	_("Building duplicate encodings"),NULL,cnt,1);
+	_("Building duplicate encodings"),NULL,cnt,1, true);
 
     for ( i=0; i<fv->map->enccount; ++i ) if ( fv->selected[i] ) {
 	SplineChar *sc;
@@ -764,7 +764,7 @@ void FVTransFunc(void *_fv,real transform[6],int otype, BVTFunc *bvts,
 	    ++cnt;
 
 
-    ff_progress_start_indicator(10,_("Transforming..."),_("Transforming..."),0,cnt,1);
+    ff_progress_start_indicator(10,_("Transforming..."),_("Transforming..."),0,cnt,1, true);
 
     SFUntickAll(fv->sf);
     for ( i=0; i<fv->map->enccount; ++i ) if ( fv->selected[i] &&
@@ -849,7 +849,7 @@ void FVOverlap(FontViewBase *fv,enum overlap_type ot) {
 		SCWorthOutputting(fv->sf->glyphs[gid]) )
 	    ++cnt;
 
-    ff_progress_start_indicator(10,_("Removing overlaps..."),_("Removing overlaps..."),0,cnt,1);
+    ff_progress_start_indicator(10,_("Removing overlaps..."),_("Removing overlaps..."),0,cnt,1, true);
 
     SFUntickAll(fv->sf);
     for ( i=0; i<fv->map->enccount; ++i ) if ( fv->selected[i] &&
@@ -883,7 +883,7 @@ void FVAddExtrema(FontViewBase *fv, int force_adding ) {
 	if ( fv->selected[i] && (gid = fv->map->map[i])!=-1 &&
 		SCWorthOutputting(fv->sf->glyphs[gid]) )
 	    ++cnt;
-    ff_progress_start_indicator(10,_("Adding points at Extrema..."),_("Adding points at Extrema..."),0,cnt,1);
+    ff_progress_start_indicator(10,_("Adding points at Extrema..."),_("Adding points at Extrema..."),0,cnt,1, true);
 
     SFUntickAll(fv->sf);
     for ( i=0; i<fv->map->enccount; ++i ) if ( fv->selected[i] &&
@@ -931,7 +931,7 @@ void FVRound2Int(FontViewBase *fv,real factor) {
 	if ( fv->selected[i] && (gid = fv->map->map[i])!=-1 &&
 		SCWorthOutputting(fv->sf->glyphs[gid]) )
 	    ++cnt;
-    ff_progress_start_indicator(10,_("Rounding to integer..."),_("Rounding to integer..."),0,cnt,1);
+    ff_progress_start_indicator(10,_("Rounding to integer..."),_("Rounding to integer..."),0,cnt,1, true);
 
     for ( i=0; i<fv->map->enccount; ++i ) if ( fv->selected[i] &&
 	    (gid = fv->map->map[i])!=-1 && SCWorthOutputting(fv->sf->glyphs[gid]) ) {
@@ -952,7 +952,7 @@ void FVCluster(FontViewBase *fv) {
 	if ( fv->selected[i] && (gid = fv->map->map[i])!=-1 &&
 		SCWorthOutputting(fv->sf->glyphs[gid]) )
 	    ++cnt;
-    ff_progress_start_indicator(10,_("Rounding to integer..."),_("Rounding to integer..."),0,cnt,1);
+    ff_progress_start_indicator(10,_("Rounding to integer..."),_("Rounding to integer..."),0,cnt,1, true);
 
     for ( i=0; i<fv->map->enccount; ++i ) if ( fv->selected[i] &&
 	    (gid = fv->map->map[i])!=-1 && SCWorthOutputting(fv->sf->glyphs[gid]) ) {
@@ -973,7 +973,7 @@ void FVCorrectDir(FontViewBase *fv) {
 	if ( fv->selected[i] && (gid = fv->map->map[i])!=-1 &&
 		SCWorthOutputting(fv->sf->glyphs[gid]) )
 	    ++cnt;
-    ff_progress_start_indicator(10,_("Correcting Direction..."),_("Correcting Direction..."),0,cnt,1);
+    ff_progress_start_indicator(10,_("Correcting Direction..."),_("Correcting Direction..."),0,cnt,1, true);
 
     SFUntickAll(fv->sf);
     for ( i=0; i<fv->map->enccount; ++i ) if ( fv->selected[i] &&
@@ -1038,7 +1038,7 @@ void _FVSimplify(FontViewBase *fv,struct simplifyinfo *smpl) {
 	if ( fv->selected[i] && (gid = fv->map->map[i])!=-1 &&
 		SCWorthOutputting(fv->sf->glyphs[gid]) )
 	    ++cnt;
-    ff_progress_start_indicator(10,_("Simplifying..."),_("Simplifying..."),0,cnt,1);
+    ff_progress_start_indicator(10,_("Simplifying..."),_("Simplifying..."),0,cnt,1, true);
 
     SFUntickAll(fv->sf);
     for ( i=0; i<fv->map->enccount; ++i )
@@ -1080,7 +1080,7 @@ void FVAutoHint(FontViewBase *fv) {
 	    ++cnt;
 	    sc->ticked = false;
 	}
-    ff_progress_start_indicator(10,_("Auto Hinting Font..."),_("Auto Hinting Font..."),0,cnt,1);
+    ff_progress_start_indicator(10,_("Auto Hinting Font..."),_("Auto Hinting Font..."),0,cnt,1, true);
 
     for ( i=0; i<fv->map->enccount; ++i ) if ( fv->selected[i] &&
 	    (gid = fv->map->map[i])!=-1 && SCWorthOutputting(fv->sf->glyphs[gid]) ) {
@@ -1104,7 +1104,7 @@ return;
 	if ( fv->selected[i] && (gid = fv->map->map[i])!=-1 &&
 		SCWorthOutputting(fv->sf->glyphs[gid]) )
 	    ++cnt;
-    ff_progress_start_indicator(10,_("Finding Substitution Points..."),_("Finding Substitution Points..."),0,cnt,1);
+    ff_progress_start_indicator(10,_("Finding Substitution Points..."),_("Finding Substitution Points..."),0,cnt,1, true);
 
     for ( i=0; i<fv->map->enccount; ++i ) if ( fv->selected[i] &&
 	    (gid = fv->map->map[i])!=-1 && SCWorthOutputting(fv->sf->glyphs[gid]) ) {
@@ -1124,7 +1124,7 @@ void FVAutoCounter(FontViewBase *fv) {
 	if ( fv->selected[i] && (gid = fv->map->map[i])!=-1 &&
 		SCWorthOutputting(fv->sf->glyphs[gid]) )
 	    ++cnt;
-    ff_progress_start_indicator(10,_("Finding Counter Masks..."),_("Finding Counter Masks..."),0,cnt,1);
+    ff_progress_start_indicator(10,_("Finding Counter Masks..."),_("Finding Counter Masks..."),0,cnt,1, true);
 
     for ( i=0; i<fv->map->enccount; ++i ) if ( fv->selected[i] &&
 	    (gid = fv->map->map[i])!=-1 && SCWorthOutputting(fv->sf->glyphs[gid]) ) {
@@ -1271,7 +1271,7 @@ void FVAutoInstr(FontViewBase *fv) {
 	if ( fv->selected[i] && (gid = fv->map->map[i])!=-1 &&
 		SCWorthOutputting(fv->sf->glyphs[gid]) )
 	    ++cnt;
-    ff_progress_start_indicator(10,_("Auto Instructing Font..."),_("Auto Instructing Font..."),0,cnt,1);
+    ff_progress_start_indicator(10,_("Auto Instructing Font..."),_("Auto Instructing Font..."),0,cnt,1, true);
 
     for ( i=0; i<fv->map->enccount; ++i ) if ( fv->selected[i] &&
 	    (gid = fv->map->map[i])!=-1 && SCWorthOutputting(fv->sf->glyphs[gid]) ) {
@@ -1393,7 +1393,7 @@ void FVBuildAccent(FontViewBase *fv,int onlyaccents) {
 		SCWorthOutputting(fv->sf->glyphs[gid]) )
 	    ++cnt;
     ff_progress_start_indicator(10,_("Building accented glyphs"),
-	    _("Building accented glyphs"),NULL,cnt,1);
+	    _("Building accented glyphs"),NULL,cnt,1, true);
 
     SFUntickAll(fv->sf);
     for ( i=0; i<fv->map->enccount; ++i ) if ( fv->selected[i] ) {

@@ -147,7 +147,7 @@ static void FVScaleBitmaps(FontViewBase *fv,int32_t *sizes, int rasterize) {
     for ( i=0; sizes[i]!=0 ; ++i ) if ( sizes[i]>0 )
 	++cnt;
     scale = fv->active_bitmap;
-    ff_progress_start_indicator(10,_("Scaling Bitmaps"),_("Scaling Bitmaps"),0,cnt,1);
+    ff_progress_start_indicator(10,_("Scaling Bitmaps"),_("Scaling Bitmaps"),0,cnt,1, true);
 
     for ( i=0; sizes[i]!=0 ; ++i ) if ( !SizeExists(fv->sf->bitmaps,sizes[i]) ) {
 	if ( rasterize )

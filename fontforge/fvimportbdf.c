@@ -2308,8 +2308,7 @@ int FVImportBDF(FontViewBase *fv, char *filename, int ispk, int toback) {
 	{ ++fcnt; fpt += 2; }
 
     sprintf(buf, _("Loading font from %.100s"), filename);
-    ff_progress_start_indicator(10,_("Loading..."),buf,_("Reading Glyphs"),0,fcnt);
-    ff_progress_enable_stop(false);
+    ff_progress_start_indicator(10,_("Loading..."),buf,_("Reading Glyphs"),0,fcnt, false);
 
     file = eod+1;
     do {
@@ -2396,8 +2395,7 @@ int FVImportMult(FontViewBase *fv, char *filename, int toback, int bf) {
     char buf[300];
 
     snprintf(buf, sizeof(buf), _("Loading font from %.100s"), filename);
-    ff_progress_start_indicator(10,_("Loading..."),buf,_("Reading Glyphs"),0,2);
-    ff_progress_enable_stop(false);
+    ff_progress_start_indicator(10,_("Loading..."),buf,_("Reading Glyphs"),0,2, false);
 
     if ( bf == bf_ttf )
 	strikeholder = SFReadTTF(filename,toback?ttf_onlyonestrike|ttf_onlystrikes:ttf_onlystrikes,0);

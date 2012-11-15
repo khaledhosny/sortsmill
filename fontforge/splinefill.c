@@ -1553,8 +1553,7 @@ BDFFont *SplineFontToBDFHeader(SplineFont *_sf, int pixelsize, int indicate) {
 	    aa[sizeof(aa)-1] = '\0';
 	}
 	ff_progress_start_indicator(10,_("Rasterizing..."),
-		aa,size,sf->glyphcnt,1);
-	ff_progress_enable_stop(0);
+		aa,size,sf->glyphcnt,1, false);
     }
     bdf->sf = _sf;
     bdf->glyphcnt = bdf->glyphmax = max;
@@ -1711,8 +1710,7 @@ return( SplineFontRasterize(_sf,layer,pixelsize,true));
 	aa[sizeof(aa)-1] = '\0';
     }
     ff_progress_start_indicator(10,_("Rasterizing..."),
-	    aa,size,sf->glyphcnt,1);
-    ff_progress_enable_stop(0);
+	    aa,size,sf->glyphcnt,1, false);
 
     if ( linear_scale>16 ) linear_scale = 16;	/* can't deal with more than 256 levels of grey */
     if ( linear_scale<=1 ) linear_scale = 2;

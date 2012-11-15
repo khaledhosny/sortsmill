@@ -36,7 +36,8 @@ noinst_HEADERS = basics.h chardata.h config.h gdraw.h gfile.h			\
 	pascals_triangle.h brentroot.h
 
 nobase_include_HEADERS = sortsmillff/guile/polyspline.h		\
-	sortsmillff/guile/brentroot.h sortsmillff/guile/iconv.h
+	sortsmillff/guile/brentroot.h sortsmillff/guile/iconv.h	\
+	sortsmillff/guile/gsl.h
 
 #--------------------------------------------------------------------------
 
