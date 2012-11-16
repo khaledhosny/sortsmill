@@ -124,8 +124,8 @@ main (int argc, char **argv)
       assert (re == NULL || (re == &re_buf && re_buf.is_initialized));
       if (re != NULL)
         {
-	  // Verify that the regex is not re-compiled on a second
-	  // call.
+          // Verify that the regex is not re-compiled on a second
+          // call.
           rexp_t re2 = my_filter (my_compiler_once (&re_buf, pattern));
           assert (memcmp (re2, re, sizeof (rexp_buffer_t)) == 0);
         }

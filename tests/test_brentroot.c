@@ -17,7 +17,7 @@
 //
 
 static double
-my_sine (double x, void *UNUSED(data))
+my_sine (double x, void *UNUSED (data))
 {
   return sin (x);
 }

@@ -24,7 +24,7 @@ main (int argc, char **argv)
       bc[i][0] = 1;
       bc[i][i] = 1;
       for (unsigned int j = 1; j < i; j++)
-	bc[i][j] = bc[i - 1][j - 1] + bc[i - 1][j];
+        bc[i][j] = bc[i - 1][j - 1] + bc[i - 1][j];
     }
 
   int exit_status = 0;
@@ -34,12 +34,12 @@ main (int argc, char **argv)
       const int *row = pascals_triangle_row (i);
       bool bad = false;
       for (unsigned int j = 0; j <= i; j++)
-	bad = (row[j] != bc[i][j]);
+        bad = (row[j] != bc[i][j]);
       if (bad)
-	{
-	  printf ("bad row %u\n", i);
-	  exit_status = 1;
-	}
+        {
+          printf ("bad row %u\n", i);
+          exit_status = 1;
+        }
     }
 
   // Compute Pascal’s triangle with alternating signs, row-by-row, to
@@ -50,7 +50,7 @@ main (int argc, char **argv)
       bca[i][0] = 1;
       bca[i][i] = 1;
       for (unsigned int j = 1; j < i; j++)
-	bca[i][j] = bca[i - 1][j - 1] + bca[i - 1][j];
+        bca[i][j] = bca[i - 1][j - 1] + bca[i - 1][j];
     }
   for (unsigned int i = 1; i < 20; i += 2)
     for (unsigned int j = 0; j < 20; j++)
@@ -61,12 +61,12 @@ main (int argc, char **argv)
       const int *row = pascals_triangle_row_altsigns (i);
       bool bad = false;
       for (unsigned int j = 0; j <= i; j++)
-	bad = (row[j] != bca[i][j]);
+        bad = (row[j] != bca[i][j]);
       if (bad)
-	{
-	  printf ("altsigns bad row %u\n", i);
-	  exit_status = 1;
-	}
+        {
+          printf ("altsigns bad row %u\n", i);
+          exit_status = 1;
+        }
     }
 
   return exit_status;

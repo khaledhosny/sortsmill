@@ -17,39 +17,57 @@
 
 #include <polyspline.h>
 #include <pascals_triangle.h>
+#include <precomputed_data.h>
 #include <string.h>
 #include <math.h>
+#include <gsl/gsl_matrix.h>
+#include <gsl/gsl_blas.h>
 
 VISIBLE void
 sbern_to_mono_double (unsigned int deg, const double *sbern, double *mono)
 {
-  double result[deg + 1];
-  for (unsigned int j = 0; j <= deg; j++)
-    result[j] = 0.0;
-  for (unsigned int j = 0; j <= deg; j++)
+  int num_splines = 1;
+
+  if (0 < num_splines)
     {
-      const int *p = pascals_triangle_row_altsigns (deg - j);
-      for (unsigned int i = j; i <= deg; i++)
-	result[i] += sbern[j] * p[i - j];
+      size_t result_size = num_splines * (deg + 1) * sizeof (double);
+      double result[result_size];
+
+      gsl_matrix m1 =
+        gsl_matrix_const_view_array (sbern, num_splines, deg + 1).matrix;
+      gsl_matrix m2 =
+        gsl_matrix_const_view_array (get_mono_basis_in_sbern (deg), deg + 1,
+                                     deg + 1).matrix;
+      gsl_matrix_view v3 = gsl_matrix_view_array (result, num_splines, deg + 1);
+      gsl_blas_dgemm (CblasNoTrans, CblasNoTrans, 1.0, &m1, &m2, 0.0,
+                      &v3.matrix);
+      memcpy (mono, result, result_size);
     }
-  memcpy (mono, result, (deg + 1) * sizeof (double));
 }
 
 VISIBLE void
 mono_to_sbern_double (unsigned int deg, const double *mono, double *sbern)
 {
-  double result[deg + 1];
-  for (unsigned int j = 0; j <= deg; j++)
-    result[j] = 0.0;
-  for (unsigned int j = 0; j <= deg; j++)
+  int num_splines = 1;
+
+  if (0 < num_splines)
     {
-      const int *p = pascals_triangle_row (deg - j);
-      for (unsigned int i = j; i <= deg; i++)
-	result[i] += mono[j] * p[i - j];
+      size_t result_size = num_splines * (deg + 1) * sizeof (double);
+      double result[result_size];
+
+      gsl_matrix m1 =
+        gsl_matrix_const_view_array (mono, num_splines, deg + 1).matrix;
+      gsl_matrix m2 =
+        gsl_matrix_const_view_array (get_sbern_basis_in_mono (deg), deg + 1,
+                                     deg + 1).matrix;
+      gsl_matrix_view v3 = gsl_matrix_view_array (result, num_splines, deg + 1);
+      gsl_blas_dgemm (CblasNoTrans, CblasNoTrans, 1.0, &m1, &m2, 0.0,
+                      &v3.matrix);
+      memcpy (sbern, result, result_size);
     }
-  memcpy (sbern, result, (deg + 1) * sizeof (double));
 }
 
+// FIXME: Do directly.
 VISIBLE void
 bern_to_mono_double (unsigned int deg, const double *bern, double *mono)
 {
@@ -58,6 +76,7 @@ bern_to_mono_double (unsigned int deg, const double *bern, double *mono)
   sbern_to_mono_double (deg, sbern, mono);
 }
 
+// FIXME: Do directly.
 VISIBLE void
 mono_to_bern_double (unsigned int deg, const double *mono, double *bern)
 {

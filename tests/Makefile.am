@@ -71,10 +71,10 @@ $(TESTSUITE): $(srcdir)/testsuite.at $(srcdir)/package.m4 $(MY_AT_FILES)
 	$(AUTOTEST) -I '$(srcdir)' -o $@.tmp $@.at
 	mv $@.tmp $@
 
-MY_AT_FILES = xgc_h.at xunicase_h.at xuniconv_h.at xuninorm_h.at	\
-	xunistr_h.at gfile_c.at ps_number_h.at rexp_h.at				\
-	pascals_triangle.at bernstein.at monomial.at brentroot.at		\
-	sortsmillff_iconv.at psMat.at old_python_tests.at
+MY_AT_FILES = xgc_h.at xunicase_h.at xuniconv_h.at xuninorm_h.at		\
+	xunistr_h.at gfile_c.at ps_number_h.at rexp_h.at					\
+	precomputed_data.at pascals_triangle.at bernstein.at monomial.at	\
+	brentroot.at sortsmillff_iconv.at psMat.at old_python_tests.at
 
 TESTS_XGC_H = test_x_gc_strndup test_x_gc_strjoin
 
@@ -96,15 +96,16 @@ TESTS_REXP_H = test_rexp_h test_rexp_h_u8
 
 TESTS_PASCALS_TRIANGLE = test_pascals_triangle
 
+TESTS_PRECOMPUTEDDATA = test_precomputed_data
 TESTS_BERNSTEIN = test_bernstein
 TESTS_MONOMIAL = test_monomial
 
 TESTS_BRENTROOT = test_brentroot
 
-check_PROGRAMS = $(TESTS_XGC_H) $(TESTS_XUNISTRING_H)				\
-	$(TESTS_GFILE_C) $(TESTS_PS_NUMBER_H) $(TESTS_REXP_H)			\
-	$(TESTS_PASCALS_TRIANGLE) $(TESTS_BERNSTEIN) $(TESTS_MONOMIAL)	\
-	$(TESTS_BRENTROOT)
+check_PROGRAMS = $(TESTS_XGC_H) $(TESTS_XUNISTRING_H)		\
+	$(TESTS_GFILE_C) $(TESTS_PS_NUMBER_H) $(TESTS_REXP_H)	\
+	$(TESTS_PASCALS_TRIANGLE) $(TESTS_PRECOMPUTEDDATA)		\
+	$(TESTS_BERNSTEIN) $(TESTS_MONOMIAL) $(TESTS_BRENTROOT)
 
 AM_DEFAULT_SOURCE_EXT = .c
 LDADD = $(top_builddir)/fontforge/libsortsmillff_fontforgeexe.la	\

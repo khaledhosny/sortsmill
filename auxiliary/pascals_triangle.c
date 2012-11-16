@@ -78,7 +78,66 @@ static const int *rows[18] = {
   row17
 };
 
-const int *
+static const double frow0[] = { 1 };
+static const double frow1[] = { 1, 1 };
+static const double frow2[] = { 1, 2, 1 };
+static const double frow3[] = { 1, 3, 3, 1 };
+static const double frow4[] = { 1, 4, 6, 4, 1 };
+static const double frow5[] = { 1, 5, 10, 10, 5, 1 };
+static const double frow6[] = { 1, 6, 15, 20, 15, 6, 1 };
+static const double frow7[] = { 1, 7, 21, 35, 35, 21, 7, 1 };
+static const double frow8[] = { 1, 8, 28, 56, 70, 56, 28, 8, 1 };
+static const double frow9[] = { 1, 9, 36, 84, 126, 126, 84, 36, 9, 1 };
+static const double frow10[] = { 1, 10, 45, 120, 210, 252, 210, 120, 45, 10, 1 };
+static const double frow11[] =
+  { 1, 11, 55, 165, 330, 462, 462, 330, 165, 55, 11, 1 };
+static const double frow12[] =
+  { 1, 12, 66, 220, 495, 792, 924, 792, 495, 220, 66, 12, 1 };
+static const double frow13[] =
+  { 1, 13, 78, 286, 715, 1287, 1716, 1716, 1287, 715, 286, 78, 13, 1 };
+
+static const double frow14[] =
+  { 1, 14, 91, 364, 1001, 2002, 3003, 3432, 3003, 2002, 1001, 364, 91, 14,
+  1
+};
+
+static const double frow15[] =
+  { 1, 15, 105, 455, 1365, 3003, 5005, 6435, 6435, 5005, 3003, 1365, 455, 105,
+  15, 1
+};
+
+static const double frow16[] =
+  { 1, 16, 120, 560, 1820, 4368, 8008, 11440, 12870, 11440, 8008, 4368, 1820,
+  560, 120, 16, 1
+};
+
+static const double frow17[] =
+  { 1, 17, 136, 680, 2380, 6188, 12376, 19448, 24310, 24310, 19448, 12376,
+  6188, 2380, 680, 136, 17, 1
+};
+
+static const double *frows[18] = {
+  frow0,
+  frow1,
+  frow2,
+  frow3,
+  frow4,
+  frow5,
+  frow6,
+  frow7,
+  frow8,
+  frow9,
+  frow10,
+  frow11,
+  frow12,
+  frow13,
+  frow14,
+  frow15,
+  frow16,
+  frow17
+};
+
+VISIBLE const int *
 pascals_triangle_row (unsigned int n)
 {
   const int *result;
@@ -87,7 +146,7 @@ pascals_triangle_row (unsigned int n)
     result = rows[n];
   else
     {
-      int *bincoef = x_gc_malloc_atomic ((n + 1) * sizeof (int));
+      int *bincoef = (int *) x_gc_malloc_atomic ((n + 1) * sizeof (int));
       memcpy (bincoef, row17, 18 * sizeof (int));
       for (unsigned int i = 18; i <= n; i++)
         {
@@ -100,14 +159,54 @@ pascals_triangle_row (unsigned int n)
   return result;
 }
 
+// FIXME: Precompute the smaller rows.
+//
 // Pascal’s triangle rows, but with alternating signs. (These are
 // often used to represent powers of 1-t.)
-const int *
+VISIBLE const int *
 pascals_triangle_row_altsigns (unsigned int n)
 {
   const int *bc = pascals_triangle_row (n);
-  int *row = x_gc_malloc_atomic ((n + 1) * sizeof (int));
+  int *row = (int *) x_gc_malloc_atomic ((n + 1) * sizeof (int));
   for (unsigned int j = 0; j <= n; j++)
     row[j] = (j % 2 == 0) ? bc[j] : -bc[j];
   return (const int *) row;
+}
+
+// FIXME: Test this function.
+VISIBLE const double *
+binomial_coefficients (unsigned int n)
+{
+  const double *result;
+
+  if (n <= 17)
+    result = frows[n];
+  else
+    {
+      double *bincoef = (double *) x_gc_malloc_atomic ((n + 1) * sizeof (double));
+      memcpy (bincoef, frow17, 18 * sizeof (double));
+      for (unsigned int i = 18; i <= n; i++)
+        {
+          bincoef[i] = 1;
+          for (unsigned int j = i - 1; 0 < j; j--)
+            bincoef[j] += bincoef[j - 1];
+        }
+      result = (const double *) bincoef;
+    }
+  return result;
+}
+
+// FIXME: Test this function.
+// FIXME: Precompute the smaller rows.
+//
+// Pascal’s triangle rows, but with alternating signs. (These are
+// often used to represent powers of 1-t.)
+VISIBLE const double *
+binomial_coefficients_altsigns (unsigned int n)
+{
+  const double *bc = binomial_coefficients (n);
+  double *row = (double *) x_gc_malloc_atomic ((n + 1) * sizeof (double));
+  for (unsigned int j = 0; j <= n; j++)
+    row[j] = (j % 2 == 0) ? bc[j] : -bc[j];
+  return (const double *) row;
 }

@@ -18,7 +18,9 @@
 
 #include <config.h>
 
-VISIBLE const int *pascals_triangle_row (unsigned int n);
-VISIBLE const int *pascals_triangle_row_altsigns (unsigned int n);
+const int *pascals_triangle_row (unsigned int n);
+const int *pascals_triangle_row_altsigns (unsigned int n);
+const double *binomial_coefficients (unsigned int n);
+const double *binomial_coefficients_altsigns (unsigned int n);
 
 #endif // _PASCALS_TRIANGLE_H

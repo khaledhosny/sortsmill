@@ -31,18 +31,21 @@ include $(top_srcdir)/mk/recipe-tools.mk
 #--------------------------------------------------------------------------
 
 nobase_dist_guileobjmodule_DATA = sortsmillff/gsl.scm		\
-	sortsmillff/iconv.scm sortsmillff/polyspline.scm		\
+	sortsmillff/iconv.scm sortsmillff/linalg.scm			\
+	sortsmillff/precompute.scm sortsmillff/polyspline.scm	\
 	sortsmillff/brentroot.scm sortsmillff/sfd-to-sxml.scm
 
 nobase_nodist_guileobjmodule_DATA = sortsmillff/gsl.go				\
 	sortsmillff/math-constants.scm sortsmillff/math-constants.go	\
 	sortsmillff/i18n.scm sortsmillff/i18n.go sortsmillff/iconv.go	\
+	sortsmillff/linalg.go sortsmillff/precompute.go					\
 	sortsmillff/polyspline.go sortsmillff/brentroot.go				\
 	sortsmillff/sfd-to-sxml.go
 
 sortsmillff/sfd-to-sxml.go: sortsmillff/gsl.go sortsmillff/i18n.go
 sortsmillff/i18n.go: libguile-sortsmillff_iconv.la
 sortsmillff/gsl.go: libguile-sortsmillff_gsl.la
+sortsmillff/precompute.go: sortsmillff/linalg.go
 
 EXTRA_DIST = sortsmillff/math-constants.scm.in sortsmillff/i18n.scm.in
 

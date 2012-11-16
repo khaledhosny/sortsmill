@@ -27,6 +27,7 @@
 -T rexp_match_buffer_t
 -T rexp_match_t
 -T rexp_interval_t
+-T precomputed_data_by_degree_t
 
 -T real
 -T bigreal
