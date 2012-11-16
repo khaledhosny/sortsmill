@@ -18,8 +18,8 @@
 (define-module (sortsmillff precompute)
   #:use-module (srfi srfi-1)            ; List operations.
   #:use-module (srfi srfi-4)            ; Uniform vectors.
-  #:use-module (srfi srfi-11)           ; (let-values ...)
   #:use-module ((rnrs) :version (6) #:select (assert))
+  #:use-module (sortsmillff linalg)
   #:export (binomial-coefficients
             binomial-coefficients-f64vector
             altsigns
@@ -32,7 +32,8 @@
             mono-basis-in-sbern-f64vector
             sbern-basis-in-spower
             sbern-basis-in-spower-f64vector
-            invert-by-gauss-jordan))
+            spower-basis-in-sbern
+            spower-basis-in-sbern-f64vector))
 
 (define (binomial-coefficients n)
   (assert (integer? n))
@@ -115,87 +116,13 @@
          (list-tabulate q top-row)
          (list-tabulate q bottom-row)))))
 
-  (define (sbern-basis-in-spower-f64vector n)
+(define (sbern-basis-in-spower-f64vector n)
   (let ((basis (sbern-basis-in-spower n)))
     (list->f64vector (apply append basis))))
 
-;;-------------------------------------------------------------------------
+(define (spower-basis-in-sbern n)
+  (matrix-invert (sbern-basis-in-spower n)))
 
-(define (invert-by-gauss-jordan mat)
-  (let ((n (length mat)))
-
-    ;; Check that the rows are all of length @var{n}.
-    (assert (fold (lambda (row truth) (and (= (length row) n)) truth) #t mat))
-
-    (let* ((augmented-mat (map append mat (identity-matrix n)))
-
-           (gauss-jordan-step
-            (lambda (i amat)
-              (let ((find-pivot
-                     (lambda (k)
-                       (let* ((pivot-data
-                               (fold (lambda (candidate current)
-                                       (if (< (cadr current) (cadr candidate))
-                                           candidate
-                                           current))
-                                     (list k (abs (list-ref (list-ref amat k) k)))
-                                     (map (lambda (r)
-                                            (list r (abs (list-ref (list-ref amat r) k))))
-                                          (iota (- n k 1) (1+ k)))))
-                              (i-pivot (car pivot-data))
-                              (pivot-size (cadr pivot-data)))
-                         (if (zero? pivot-size)
-                             (error "singular matrix:" mat))
-                         i-pivot))))
-                (let* ((p (find-pivot i))
-                       (m1 (swap-list-elements amat i p))
-                       (m2 (normalize-row m1 i)))
-                  m2))))
-                
-           (inv-amat (fold gauss-jordan-step augmented-mat (iota n))))
-
-      (map (lambda (row) (drop row n)) inv-amat))))
-
-;; Adjust the lead coefficient of row @var{i} to equal 1.
-;; Adjust all the other rows so they are zero in column @var{i}.
-(define (normalize-row amat i)
-  (let*-values
-      (((top-rows other-rows) (split-at amat i))
-       ((row) (car other-rows))
-       ((bottom-rows) (cdr other-rows))
-       ((prefix the-rest) (split-at row i))
-       ((lead) (car the-rest))
-       ((new-row) (append prefix (map (lambda (x) (/ x lead)) the-rest)))
-       ((adjust-row)
-        (lambda (row)
-          (let*-values
-              (((prefix the-rest) (split-at row i))
-               ((value) (car the-rest))
-               ((pivrow) (map (lambda (x) (* x value)) (drop new-row i))))
-            (append prefix (map (lambda (x p) (- x p)) the-rest pivrow))))))
-    (append (map adjust-row top-rows)
-            (list new-row)
-            (map adjust-row bottom-rows))))
-
-(define (identity-matrix n)
-  (let ((ident-row (lambda (i)
-                     (append (make-list i 0)
-                             '(1)
-                             (make-list (- n i 1) 0)))))
-    (list-tabulate n ident-row)))
-
-(define (swap-list-elements lst i j)
-  (if (= i j)
-      lst
-      (let*-values
-          (((i1) (min i j))
-           ((i2) (max i j))
-           ((prefix after-prefix) (split-at lst i1))
-           ((elem1) (car after-prefix))
-           ((middle after-middle) (split-at (cdr after-prefix)
-                                            (- i2 i1 1)))
-           ((elem2) (car after-middle))
-           ((suffix) (cdr after-middle)))
-        (append prefix (list elem2) middle (list elem1) suffix))))
-
-;;-------------------------------------------------------------------------
+(define (spower-basis-in-sbern-f64vector n)
+  (let ((basis (spower-basis-in-sbern n)))
+    (list->f64vector (apply append basis))))
