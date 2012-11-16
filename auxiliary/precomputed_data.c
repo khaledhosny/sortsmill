@@ -44,8 +44,12 @@ VISIBLE const double *get_precomputed_data_by_degree (const char *module_name,
 VISIBLE const double *get_binomial_coefficients (int degree);
 VISIBLE const double *get_altsigns (int degree);
 VISIBLE const double *get_binomial_coefficients_altsigns (int degree);
+VISIBLE const double *get_sbern_basis_in_bern (int degree);
+VISIBLE const double *get_bern_basis_in_sbern (int degree);
 VISIBLE const double *get_sbern_basis_in_mono (int degree);
 VISIBLE const double *get_mono_basis_in_sbern (int degree);
+//VISIBLE const double *get_bern_basis_in_mono (int degree);
+//VISIBLE const double *get_mono_basis_in_bern (int degree);
 
 VISIBLE precomputed_data_by_degree_t precomputed_binomial_coefficients =
   PRECOMPUTED_DATA_BY_DEGREE_INITIALIZER;
@@ -54,10 +58,18 @@ VISIBLE precomputed_data_by_degree_t precomputed_altsigns =
 VISIBLE precomputed_data_by_degree_t
   precomputed_binomial_coefficients_altsigns =
   PRECOMPUTED_DATA_BY_DEGREE_INITIALIZER;
+//VISIBLE precomputed_data_by_degree_t precomputed_sbern_basis_in_bern =
+//  PRECOMPUTED_DATA_BY_DEGREE_INITIALIZER;
+//VISIBLE precomputed_data_by_degree_t precomputed_bern_basis_in_sbern =
+//  PRECOMPUTED_DATA_BY_DEGREE_INITIALIZER;
 VISIBLE precomputed_data_by_degree_t precomputed_sbern_basis_in_mono =
   PRECOMPUTED_DATA_BY_DEGREE_INITIALIZER;
 VISIBLE precomputed_data_by_degree_t precomputed_mono_basis_in_sbern =
   PRECOMPUTED_DATA_BY_DEGREE_INITIALIZER;
+//VISIBLE precomputed_data_by_degree_t precomputed_bern_basis_in_mono =
+//  PRECOMPUTED_DATA_BY_DEGREE_INITIALIZER;
+//VISIBLE precomputed_data_by_degree_t precomputed_mono_basis_in_bern =
+//  PRECOMPUTED_DATA_BY_DEGREE_INITIALIZER;
 
 static const double *
 precompute_data_for_degree (const char *module_name,

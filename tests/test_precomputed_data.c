@@ -11,14 +11,16 @@
 #include <libguile.h>
 #include <precomputed_data.h>
 
-const char *which;
-int deg;
+#include <main_with_guile.x>
 
-static void *
-my_main (void *UNUSED (p))
+static int
+my_main (int argc, char **argv)
 {
   const double *data;
   int length;
+
+  const char *which = argv[1];
+  int deg = atoi (argv[2]);
 
   const int veclength = deg + 1;
   const int matlength = veclength * veclength;
@@ -54,23 +56,5 @@ my_main (void *UNUSED (p))
   for (size_t i = 0; i < length; i++)
     printf ("%lf ", data[i]);
 
-  return NULL;
-}
-
-struct _my_args
-{
-  int argc;
-  char **argv;
-};
-
-int
-main (int argc, char **argv)
-{
-  setlocale (LC_ALL, "");
-
-  which = argv[1];
-  deg = atoi (argv[2]);
-
-  (void) scm_with_guile (my_main, NULL);
   return 0;
 }

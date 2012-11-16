@@ -9,6 +9,8 @@
 #include <libguile.h>
 #include <polyspline.h>
 
+#include <main_with_guile.x>
+
 static int
 my_main (int argc, char **argv)
 {
@@ -23,18 +25,18 @@ my_main (int argc, char **argv)
     mono[i] = atof (argv[i + 1]);
 
   double sbern[deg + 1];
-  mono_to_sbern_double (deg, mono, sbern);
+  mono_to_sbern_double (deg, mono, sbern, 1);
 
   double mono2[deg + 1];
-  sbern_to_mono_double (deg, sbern, mono2);
+  sbern_to_mono_double (deg, sbern, mono2, 1);
   for (unsigned int i = 0; i <= deg; i++)
     if (10 * DBL_EPSILON < fabs (mono[i] - mono2[i]))
       exit (10);
 
   double bern[deg + 1];
-  mono_to_bern_double (deg, mono, bern);
+  mono_to_bern_double (deg, mono, bern, 1);
 
-  bern_to_mono_double (deg, bern, mono2);
+  bern_to_mono_double (deg, bern, mono2, 1);
   for (unsigned int i = 0; i <= deg; i++)
     if (10 * DBL_EPSILON < fabs (mono[i] - mono2[i]))
       exit (20);
@@ -52,32 +54,4 @@ my_main (int argc, char **argv)
     }
 
   return 0;
-}
-
-struct _my_args
-{
-  int argc;
-  char **argv;
-};
-
-static void *
-call_my_main (void *args)
-{
-  struct _my_args a = *(struct _my_args *) args;
-  int *exit_status = xmalloc (sizeof (int));
-  *exit_status = my_main (a.argc, a.argv);
-  return (void *) exit_status;
-}
-
-int
-main (int argc, char **argv)
-{
-  // This looks complicated only because of the need to pass data
-  // around through void pointers.
-
-  struct _my_args args = { argc, argv };
-  int *exit_status = (int *) scm_with_guile (call_my_main, (void *) &args);
-  int status = *exit_status;
-  free (exit_status);
-  return status;
 }

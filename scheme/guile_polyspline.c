@@ -23,7 +23,7 @@ void init_guile_sortsmillff_polyspline (void);
 
 static SCM
 change_basis (SCM spline,
-              void (*changer) (unsigned int, const double *, double *))
+              void (*changer) (unsigned int, const double *, double *, size_t))
 {
   scm_t_array_handle handle;
   size_t len;
@@ -33,7 +33,7 @@ change_basis (SCM spline,
   for (unsigned int i = 0; i < len; i++)
     b[i] = elem[inc * i];
   scm_array_handle_release (&handle);
-  changer (len - 1, b, b);
+  changer (len - 1, b, b, 1);
   SCM result = scm_take_f64vector (b, len);
   return result;
 }
