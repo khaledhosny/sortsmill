@@ -30,65 +30,6 @@
 #include "fffreetype.h"
 #include <math.h>
 
-#ifndef HAVE_MMAP
-
-int hasFreeType(void) {
-return( false );
-}
-
-void doneFreeType(void) {
-}
-
-int hasFreeTypeDebugger(void) {
-return( false );
-}
-
-int hasFreeTypeByteCode(void) {
-return( false );
-}
-
-char *FreeTypeStringVersion(void) {
-return( "" );
-}
-
-void *_FreeTypeFontContext(SplineFont *sf,SplineChar *sc,FontViewBase *fv,
-	int layer, enum fontformat ff,int flags, void *share) {
-return( NULL );
-}
-
-BDFFont *SplineFontFreeTypeRasterize(void *freetypecontext,int pixelsize,int depth) {
-return( NULL );
-}
-
-BDFFont *SplineFontFreeTypeRasterizeNoHints(SplineFont *sf,int layer,int pixelsize,int depth) {
-return( NULL );
-}
-
-BDFChar *SplineCharFreeTypeRasterize(void *freetypecontext,int gid,int ptsize,int dpi,int depth) {
-return( NULL );
-}
-
-void FreeTypeFreeContext(void *freetypecontext) {
-}
-
-struct freetype_raster *FreeType_GetRaster(void *single_glyph_context,
-	int enc, real ptsizey, real ptsizex, int dpi, int depth) {
-return( NULL );
-}
-
-SplineSet *FreeType_GridFitChar(void *single_glyph_context,
-	int enc, real ptsizey, real ptsizex, int dpi, uint16_t *width,
-	SplineChar *sc, int depth, int scaled) {
-return( NULL );
-}
-
-BDFChar *SplineCharFreeTypeRasterizeNoHints(SplineChar *sc,int layer,
-	int ptsize,int dpi,int depth) {
-return( NULL );
-}
-
-#else /* do use FreeType */
-
 FT_Library ff_ft_context;
 
 int hasFreeType(void) {
@@ -173,8 +114,12 @@ return;
 	FT_Done_Face(ftc->face);
     if ( ftc->shared_ftc )
 return;
-    if ( ftc->mappedfile )
-	munmap(ftc->mappedfile,ftc->len);
+#if defined(HAVE_MMAP) || defined(__MINGW32__)
+    if (ftc->memoryfile)
+	munmap (ftc->memoryfile,ftc->len);
+#else
+    free (ftc->memoryfile);
+#endif
     if ( ftc->file!=NULL )
 	fclose(ftc->file);
     free(ftc->glyph_indeces);
@@ -326,16 +271,25 @@ return( NULL );
 
 	fseek(ftc->file,0,SEEK_END);
 	ftc->len = ftell(ftc->file);
-	ftc->mappedfile = mmap(NULL,ftc->len,PROT_READ,MAP_PRIVATE,fileno(ftc->file),0);
-	if ( ftc->mappedfile==MAP_FAILED )
+	fseek(ftc->file,0,SEEK_SET);
+#if defined(HAVE_MMAP) || defined(__MINGW32__)
+	ftc->memoryfile = mmap(NULL,ftc->len,PROT_READ,MAP_PRIVATE,fileno(ftc->file),0);
+	if ( ftc->memoryfile==MAP_FAILED )
  goto fail;
+#else
+	ftc->memoryfile = malloc (ftc->len);
+	if (ftc->memoryfile == NULL)
+	    goto fail;
+	if (fread (ftc->memoryfile, 1, ftc->len, ftc->file) != ftc->len)
+	    goto fail;
+#endif
 	if ( sf->glyphs!=old ) {
 	    free(sf->glyphs);
 	    sf->glyphs = old;
 	}
     }
 
-    if ( FT_New_Memory_Face(context,ftc->mappedfile,ftc->len,0,&ftc->face))
+    if ( FT_New_Memory_Face(context,ftc->memoryfile,ftc->len,0,&ftc->face))
  goto fail;
     GlyphHashFree(sf);		/* If we created a tiny font, our hash table may reflect that */
     
@@ -1138,7 +1092,6 @@ BDFFont *SplineFontFreeTypeRasterizeNoHints(SplineFont *sf,int layer,int pixelsi
     ff_progress_end_indicator();
 return( bdf );
 }
-#endif
 
 void *FreeTypeFontContext(SplineFont *sf,SplineChar *sc,FontViewBase *fv,int layer) {
 return( _FreeTypeFontContext(sf,sc,fv,layer,sf->subfontcnt!=0?ff_otfcid:

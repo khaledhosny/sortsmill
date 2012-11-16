@@ -28,7 +28,6 @@
 #ifndef _FFFREETYPE_H
 #define _FFFREETYPE_H
 
-#ifdef HAVE_MMAP
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_OUTLINE_H
@@ -37,10 +36,12 @@
 #endif
 #include <unistd.h>
 
-#if defined(__MINGW32__)
-# include "winmmap.h"
-#else
+#ifdef HAVE_MMAP
 # include <sys/mman.h>
+#else
+# ifdef __MINGW32__
+#  include "winmmap.h"
+# endif
 #endif
 
 VISIBLE extern FT_Library ff_ft_context;
@@ -55,11 +56,11 @@ typedef struct freetypecontext {
     SplineFont *sf;
     int layer;
     FILE *file;
-    void *mappedfile;
+    void *memoryfile;
     long len;
     int *glyph_indeces;
     FT_Face face;
-    struct freetypecontext *shared_ftc;	/* file, mappedfile, glyph_indeces are shared with this ftc */
+    struct freetypecontext *shared_ftc;	/* file, memoryfile, glyph_indeces are shared with this ftc */
 				/*  We have a new face, but that's it. This is so we can */
 			        /*  have multiple pointsizes without loading the font many */
 			        /*  times */
@@ -71,7 +72,5 @@ VISIBLE extern void *__FreeTypeFontContext(FT_Library context,
 	SplineFont *sf,SplineChar *sc,FontViewBase *fv,
 	int layer,
 	enum fontformat ff,int flags,void *shared_ftc);
-
-#endif /* we do have FreeType */
 
 #endif /* _FFFREETYPE_H */
