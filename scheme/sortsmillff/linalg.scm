@@ -15,13 +15,24 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                              ;;
+;; FIXME: Write tests for this. ;;
+;;                              ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (define-module (sortsmillff linalg)
   #:use-module (srfi srfi-1)            ; List operations.
   #:use-module (srfi srfi-11)           ; (let-values ...)
   #:use-module ((rnrs) :version (6) #:select (assert))
   #:export (matrix-invert
             matrix-invert-by-gauss-jordan
-            identity-matrix))
+            zero-matrix
+            identity-matrix
+            matrix-transpose
+            matrix*
+            matrix+
+            matrix-))
 
 (define (matrix-invert-by-gauss-jordan mat)
   (let ((n (length mat)))
@@ -79,7 +90,14 @@
             (list new-row)
             (map adjust-row bottom-rows))))
 
+;;-------------------------------------------------------------------------
+
 (define matrix-invert matrix-invert-by-gauss-jordan)
+
+;;-------------------------------------------------------------------------
+
+(define (zero-matrix n)
+  (make-list n (make-list n 0)))
 
 (define (identity-matrix n)
   (let ((ident-row (lambda (i)
@@ -88,6 +106,117 @@
                              (make-list (- n i 1) 0)))))
     (list-tabulate n ident-row)))
 
+;;-------------------------------------------------------------------------
+
+(define (matrix-transpose mat)
+  (if (null-list? (car mat))
+      '()
+      (let ((first-col (map car mat))
+            (other-cols (map cdr mat)))
+        (cons first-col (matrix-transpose other-cols)))))
+
+;;-------------------------------------------------------------------------
+
+(define (matrix* . rest)
+  (reduce (lambda (b a) (_matrix* a b)) 1 rest))
+
+(define (_matrix* a b)
+  (if (number? a)
+      (if (number? b)
+          (* a b)
+          (_number*matrix a b))
+      (if (number? b)
+          (_matrix*number a b)
+          (_matrix*matrix a b))))
+
+(define (_number*matrix a b)
+  (map (lambda (row) (map (lambda (x) (* a x)) row)) b))
+
+(define (_matrix*number a b)
+  (map (lambda (row) (map (lambda (x) (* x b)) row)) a))
+
+(define (_matrix*matrix a b)
+  (let* ((na (length a))
+         (ma (length (car a)))
+         (nb (length b))
+         (mb (length (car b))))
+    (if (not (= ma nb))
+        (error "matrices not conformable for multiplication:" a '* b))
+    (let ((b^ (matrix-transpose b)))
+      (map (lambda (row)
+             (map (lambda (col) (apply + (map * row col))) b^))
+           a))))
+
+;;-------------------------------------------------------------------------
+    
+(define (matrix+ . rest)
+  (reduce (lambda (b a) (_matrix+ a b)) 0 rest))
+
+(define (_matrix+ a b)
+  (if (number? a)
+      (if (number? b)
+          (+ a b)
+          (_number+matrix a b))
+      (if (number? b)
+          (_matrix+number a b)
+          (_matrix+matrix a b))))
+
+(define (_number+matrix a b)
+  (if (zero? a)
+      b
+      (error "number and matrix not conformable for addition:" a '+ b)))
+
+(define (_matrix+number a b)
+  (if (zero? b)
+      a
+      (error "matrix and number not conformable for addition:" a '+ b)))
+
+(define (_matrix+matrix a b)
+  (let* ((na (length a))
+         (ma (length (car a)))
+         (nb (length b))
+         (mb (length (car b))))
+    (if (or (not (= na nb)) (not (= ma mb)))
+        (error "matrices not conformable for addition:" a '+ b))
+    (map (lambda (a_row b_row) (map + a_row b_row)) a b)))
+    
+;;-------------------------------------------------------------------------
+
+(define (matrix- a . rest)
+  (if (null-list? rest)
+      (if (number? a)
+          (- a)
+          (map (lambda (row) (map - row)) a))
+      (fold (lambda (c b) (_matrix- b c)) a rest)))
+
+(define (_matrix- a b)
+  (if (number? a)
+      (if (number? b)
+          (- a b)
+          (_number-matrix a b))
+      (if (number? b)
+          (_matrix-number a b)
+          (_matrix-matrix a b))))
+
+(define (_number-matrix a b)
+  (if (zero? a)
+      (map (lambda (row) (map - row)) b)
+      (error "number and matrix not conformable for subtraction:" a '- b)))
+
+(define (_matrix-number a b)
+  (if (zero? b)
+      a
+      (error "matrix and number not conformable for subtraction:" a '- b)))
+
+(define (_matrix-matrix a b)
+  (let* ((na (length a))
+         (ma (length (car a)))
+         (nb (length b))
+         (mb (length (car b))))
+    (if (or (not (= na nb)) (not (= ma mb)))
+        (error "matrices not conformable for subtraction:" a '- b))
+    (map (lambda (a_row b_row) (map - a_row b_row)) a b)))
+    
 ;;-------------------------------------------------------------------------
 
 ;; FIXME: Put this in a module somewhere.
