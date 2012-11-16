@@ -31,6 +31,7 @@
             identity-matrix
             matrix-transpose
             matrix*
+            matrix/
             matrix+
             matrix-))
 
@@ -146,6 +147,25 @@
       (map (lambda (row)
              (map (lambda (col) (apply + (map * row col))) b^))
            a))))
+
+;;-------------------------------------------------------------------------
+
+(define (matrix/ a . rest)
+  (if (null-list? rest)
+      (if (number? a)
+          (/ a)
+          (error "cannot divide by a matrix:" a))
+      (fold (lambda (c b) (_matrix/ b c)) a rest)))
+
+(define (_matrix/ a b)
+  (if (number? b)
+      (if (number? a)
+          (/ a b)
+          (_matrix/number a b))
+      (error "cannot divide by a matrix:" b)))
+
+(define (_matrix/number a b)
+  (map (lambda (row) (map (lambda (x) (/ x b)) row)) a))  
 
 ;;-------------------------------------------------------------------------
     
