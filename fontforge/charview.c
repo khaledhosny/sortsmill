@@ -282,7 +282,7 @@ const int input_em_cnt = sizeof(input_em)/sizeof(input_em[0])-1;
 #define MAG_BASE	SAN_DATA+DATA_WIDTH	/* Place to draw magnification icon */
 #define MAG_DATA	MAG_BASE+11		/* Any text for it */
 #define LAYER_DATA	MAG_DATA+DATA_WIDTH	/* Text to show the current layer */
-#define CODERANGE_DATA	LAYER_DATA+70		/* Text to show the current code range (if the debugger be active) */
+#define CODERANGE_DATA	LAYER_DATA+170		/* Text to show the current code range (if the debugger be active) */
 
 void CVDrawRubberRect(GWindow pixmap, CharView *cv) {
     GRect r;
@@ -2996,7 +2996,7 @@ void CVInfoDrawText(CharView *cv, GWindow pixmap ) {
     GDrawFillRect(pixmap,&r,bg);
     r.x = MAG_DATA; r.width = DATA_WIDTH;
     GDrawFillRect(pixmap,&r,bg);
-    r.x = LAYER_DATA; r.width = 90;
+    r.x = LAYER_DATA; r.width = 170;
     GDrawFillRect(pixmap,&r,bg);
     r.x = CODERANGE_DATA; r.width = 200;
     GDrawFillRect(pixmap,&r,bg);
