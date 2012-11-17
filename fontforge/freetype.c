@@ -32,9 +32,9 @@
 
 FT_Library ff_ft_context;
 
-int hasFreeType(void) {
-    static int done=false;
-    static int ok=false;
+bool hasFreeType(void) {
+    static bool done = false;
+    static bool ok = false;
 
     if ( done )
 return(ok);
@@ -53,7 +53,7 @@ void doneFreeType(void) {
     ff_ft_context = NULL;
 }
 
-int hasFreeTypeByteCode(void) {
+bool hasFreeTypeByteCode(void) {
     if ( !hasFreeType())
 return( false );
 
@@ -64,7 +64,7 @@ return( false );
 # endif
 }
 
-int hasFreeTypeDebugger(void) {
+bool hasFreeTypeDebugger(void) {
     if ( !hasFreeTypeByteCode())
 return( false );
 #if FREETYPE_HAS_DEBUGGER
