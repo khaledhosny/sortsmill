@@ -2838,9 +2838,9 @@ int ttfcopyfile(FILE *ttf, FILE *other, int pos, char *table_name);
 
 VISIBLE extern void SCCopyLayerToLayer(SplineChar *sc, int from, int to,int doclear);
 
-VISIBLE extern int hasFreeType(void);
-VISIBLE extern int hasFreeTypeDebugger(void);
-VISIBLE extern int hasFreeTypeByteCode(void);
+VISIBLE extern bool hasFreeType(void);
+VISIBLE extern bool hasFreeTypeDebugger(void);
+VISIBLE extern bool hasFreeTypeByteCode(void);
 VISIBLE extern char *FreeTypeStringVersion(void);
 extern void doneFreeType(void);
 VISIBLE extern void *_FreeTypeFontContext(SplineFont *sf,SplineChar *sc,struct fontviewbase *fv,
