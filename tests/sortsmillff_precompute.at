@@ -1,0 +1,63 @@
+# -*- coding: utf-8 -*-
+
+m4_defun([check_precompute],
+[
+AT_SETUP([$1])
+AT_KEYWORDS([sortsmillff_precompute precompute guile scheme unit])
+AT_CHECK_UNQUOTED([
+export LC_ALL="${posix_locale}"
+if test x${DOING_INSTALLCHECK} = xyes; then
+   # FIXME: Set the environment correctly, so distcheck works without
+   # having the modules installed.
+   :
+else
+   export LTDL_LIBRARY_PATH="${abs_top_builddir}/scheme"
+   export GUILE_LOAD_PATH="${abs_top_srcdir}/scheme"
+fi
+${run_guile} "${abs_srcdir}"/$1
+],
+[$2],[$3],[$4])
+AT_CLEANUP
+])
+
+check_precompute([test_guile_precompute.scm "(binomial-coefficients 0)"],[0],[(1)],[])
+check_precompute([test_guile_precompute.scm "(binomial-coefficients 1)"],[0],[(1 1)],[])
+check_precompute([test_guile_precompute.scm "(binomial-coefficients 2)"],[0],[(1 2 1)],[])
+check_precompute([test_guile_precompute.scm "(binomial-coefficients 17)"],[0],[(1 17 136 680 2380 6188 12376 19448 24310 24310 19448 12376 6188 2380 680 136 17 1)],[])
+check_precompute([test_guile_precompute.scm "(binomial-coefficients-f64vector 2)"],[0],[#f64(1.0 2.0 1.0)],[])
+
+check_precompute([test_guile_precompute.scm "(altsigns 0)"],[0],[(1)],[])
+check_precompute([test_guile_precompute.scm "(altsigns 1)"],[0],[(1 -1)],[])
+check_precompute([test_guile_precompute.scm "(altsigns 2)"],[0],[(1 -1 1)],[])
+check_precompute([test_guile_precompute.scm "(altsigns 17)"],[0],[(1 -1 1 -1 1 -1 1 -1 1 -1 1 -1 1 -1 1 -1 1 -1)],[])
+check_precompute([test_guile_precompute.scm "(altsigns-f64vector 2)"],[0],[#f64(1.0 -1.0 1.0)],[])
+
+check_precompute([test_guile_precompute.scm "(binomial-coefficients-altsigns 0)"],[0],[(1)],[])
+check_precompute([test_guile_precompute.scm "(binomial-coefficients-altsigns 1)"],[0],[(1 -1)],[])
+check_precompute([test_guile_precompute.scm "(binomial-coefficients-altsigns 2)"],[0],[(1 -2 1)],[])
+check_precompute([test_guile_precompute.scm "(binomial-coefficients-altsigns 17)"],[0],[(1 -17 136 -680 2380 -6188 12376 -19448 24310 -24310 19448 -12376 6188 -2380 680 -136 17 -1)],[])
+check_precompute([test_guile_precompute.scm "(binomial-coefficients-altsigns-f64vector 2)"],[0],[#f64(1.0 -2.0 1.0)],[])
+
+check_precompute([test_guile_precompute.scm "(sbern-basis-in-mono 0)"],[0],[((1))],[])
+check_precompute([test_guile_precompute.scm "(sbern-basis-in-mono 1)"],[0],[((1 1) (0 1))],[])
+check_precompute([test_guile_precompute.scm "(sbern-basis-in-mono 3)"],[0],[((1 3 3 1) (0 1 2 1) (0 0 1 1) (0 0 0 1))],[])
+check_precompute([test_guile_precompute.scm "(sbern-basis-in-mono-f64vector 1)"],[0],[#f64(1.0 1.0 0.0 1.0)],[])
+
+check_precompute([test_guile_precompute.scm "(mono-basis-in-sbern 0)"],[0],[((1))],[])
+check_precompute([test_guile_precompute.scm "(mono-basis-in-sbern 1)"],[0],[((1 -1) (0 1))],[])
+check_precompute([test_guile_precompute.scm "(mono-basis-in-sbern 3)"],[0],[((1 -3 3 -1) (0 1 -2 1) (0 0 1 -1) (0 0 0 1))],[])
+check_precompute([test_guile_precompute.scm "(mono-basis-in-sbern-f64vector 1)"],[0],[#f64(1.0 -1.0 0.0 1.0)],[])
+
+check_precompute([test_guile_precompute.scm "(sbern-basis-in-spower 0)"],[0],[((1))],[])
+check_precompute([test_guile_precompute.scm "(sbern-basis-in-spower 1)"],[0],[((1 0) (0 1))],[])
+check_precompute([test_guile_precompute.scm "(sbern-basis-in-spower 2)"],[0],[((1 1 0) (0 1 0) (0 1 1))],[])
+check_precompute([test_guile_precompute.scm "(sbern-basis-in-spower 3)"],[0],[((1 2 1 0) (0 1 0 0) (0 0 1 0) (0 1 2 1))],[])
+check_precompute([test_guile_precompute.scm "(sbern-basis-in-spower 4)"],[0],[((1 3 3 1 0) (0 1 1 0 0) (0 0 1 0 0) (0 0 1 1 0) (0 1 3 3 1))],[])
+check_precompute([test_guile_precompute.scm "(sbern-basis-in-spower-f64vector 2)"],[0],[#f64(1.0 1.0 0.0 0.0 1.0 0.0 0.0 1.0 1.0)],[])
+
+check_precompute([test_guile_precompute.scm "(matrix* (sbern-basis-in-spower 0) (spower-basis-in-sbern 0))"],[0],[((1))],[])
+check_precompute([test_guile_precompute.scm "(matrix* (sbern-basis-in-spower 1) (spower-basis-in-sbern 1))"],[0],[((1 0) (0 1))],[])
+check_precompute([test_guile_precompute.scm "(matrix* (sbern-basis-in-spower 2) (spower-basis-in-sbern 2))"],[0],[((1 0 0) (0 1 0) (0 0 1))],[])
+check_precompute([test_guile_precompute.scm "(matrix* (sbern-basis-in-spower 3) (spower-basis-in-sbern 3))"],[0],[((1 0 0 0) (0 1 0 0) (0 0 1 0) (0 0 0 1))],[])
+check_precompute([test_guile_precompute.scm "(matrix* (sbern-basis-in-spower 4) (spower-basis-in-sbern 4))"],[0],[((1 0 0 0 0) (0 1 0 0 0) (0 0 1 0 0) (0 0 0 1 0) (0 0 0 0 1))],[])
+check_precompute([test_guile_precompute.scm "(spower-basis-in-sbern-f64vector 2)"],[0],[#f64(1.0 -1.0 0.0 0.0 1.0 0.0 0.0 -1.0 1.0)],[])

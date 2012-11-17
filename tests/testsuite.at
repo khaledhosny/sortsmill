@@ -20,6 +20,7 @@ m4_include([gfile_c.at])
 AT_BANNER([scheme])
 m4_include([sortsmillff_iconv.at])
 m4_include([sortsmillff_linalg.at])
+m4_include([sortsmillff_precompute.at])
 
 AT_BANNER([python])
 m4_include([psMat.at])

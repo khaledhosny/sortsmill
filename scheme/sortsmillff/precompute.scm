@@ -18,7 +18,7 @@
 (define-module (sortsmillff precompute)
   #:use-module (srfi srfi-1)            ; List operations.
   #:use-module (srfi srfi-4)            ; Uniform vectors.
-  #:use-module ((rnrs) :version (6) #:select (assert))
+  #:use-module ((rnrs) :version (6) #:select (assert div-and-mod))
   #:use-module (sortsmillff linalg)
   #:export (binomial-coefficients
             binomial-coefficients-f64vector
@@ -96,7 +96,7 @@
 (define (sbern-basis-in-spower n)
   (assert (integer? n))
   (assert (<= 0 n))
-  (let* ((q (+ (quotient n 2) (remainder n 2)))
+  (let* ((q (call-with-values (lambda () (div-and-mod n 2)) +))
          (top-row
           (lambda (i) (append (make-list i 0)
                               (binomial-coefficients (- n (* i 2) 1))
