@@ -231,14 +231,6 @@ static double rpt(CharView *cv, double pt) {
     return cv->snapoutlines ? rint(pt) : pt;
 }
 
-// FIXME: do we want to suppport freetype fill mode?
-static int shouldShowFilledUsingCairo(CharView *cv) {
-    if ( cv->showfilled /*&& GDrawHasCairo(cv->v)&gc_buildpath*/ ) {
-	return 1;
-    }
-    return 0;
-}
-
 void CVColInit( void ) {
     if ( cvcolsinited )
 return;
@@ -1064,10 +1056,6 @@ static void CVDrawLayerSplineSet(CharView *cv, GWindow pixmap, Layer *layer,
 	if ( layer->stroke_pen.brush.col!=COLOR_INHERITED &&
 		layer->stroke_pen.brush.col!=view_bgcol )
 	    fg = layer->stroke_pen.brush.col;
-#if 0
-	if ( layer->stroke_pen.width!=WIDTH_INHERITED )
-	    GDrawSetLineWidth(pixmap,rint(layer->stroke_pen.width*layer->stroke_pen.trans[0]*cv->scale));
-#endif
     }
     if ( ml && layer->dofill ) {
 	if ( layer->fill_brush.col!=COLOR_INHERITED &&
@@ -1077,16 +1065,12 @@ static void CVDrawLayerSplineSet(CharView *cv, GWindow pixmap, Layer *layer,
     if ( ml && !active && layer!=&cv->b.sc->layers[ly_back] )
 	GDrawSetDashedLine(pixmap,5,5,cv->xoff+cv->height-cv->yoff);
     enum outlinesfm_flags refsfm = sfm_stroke;
-    if( shouldShowFilledUsingCairo(cv) ) {
+    if( cv->showfilled ) {
 	refsfm = sfm_fill;
     }
     CVDrawSplineSetSpecialized(cv,pixmap,layer->splines,fg,dopoints && active,clip,refsfm);
     if ( ml && !active && layer!=&cv->b.sc->layers[ly_back] )
 	GDrawSetDashedLine(pixmap,0,0,0);
-#if 0
-    if ( layer->dostroke && layer->stroke_pen.width!=WIDTH_INHERITED )
-	GDrawSetLineWidth(pixmap,0);
-#endif
 }
 
 static void CVDrawTemplates(CharView *cv,GWindow pixmap,SplineChar *template,DRect *clip) {
@@ -2053,7 +2037,7 @@ static int CVExposeGlyphFill(CharView *cv, GWindow pixmap, GEvent *event, DRect*
 	filled = 1;
     }
 
-    if( shouldShowFilledUsingCairo(cv) ) {
+    if( cv->showfilled ) {
 	layer = cvlayer;
 	if ( layer>=0 ) {
 	    CVDrawLayerSplineSet(cv,pixmap,&cv->b.sc->layers[layer],foreoutlinecol,
@@ -2080,7 +2064,7 @@ static void CVExpose(CharView *cv, GWindow pixmap, GEvent *event ) {
 
     GDrawPushClip(pixmap,&event->u.expose.rect,&old);
 
-    if( shouldShowFilledUsingCairo(cv) ) {
+    if( cv->showfilled ) {
 	strokeFillMode = sfm_fill;
     }
 
@@ -2186,7 +2170,7 @@ static void CVExpose(CharView *cv, GWindow pixmap, GEvent *event ) {
      *     clippathcol for some splines, so we can't really avoid a
      *     restroke unless we are sure
      *     FOR-ALL(splines):spl->is_clip_path==0 */
-    if( shouldShowFilledUsingCairo(cv) ) {
+    if( cv->showfilled ) {
 	strokeFillMode = sfm_stroke;
     }
     if( GlyphHasBeenFilled ) {
@@ -2202,7 +2186,7 @@ static void CVExpose(CharView *cv, GWindow pixmap, GEvent *event ) {
 	    if ( cv->showrefnames )
 		CVDrawRefName(cv,pixmap,rf,0);
 	    enum outlinesfm_flags refsfm = sfm_stroke;
-	    if( shouldShowFilledUsingCairo(cv) ) {
+	    if( cv->showfilled ) {
 		refsfm = sfm_fill;
 	    }
 	    for ( rlayer=0; rlayer<rf->layer_cnt; ++rlayer )
@@ -3411,7 +3395,6 @@ static void CVSetConstrainPoint(CharView *cv, GEvent *event) {
 static void CVDoSnaps(CharView *cv, FindSel *fs) {
     PressedOn *p = fs->p;
 
-#if 1
     if ( cv->b.drawmode!=dm_grid && cv->b.layerheads[dm_grid]->splines!=NULL ) {
 	PressedOn temp;
 	int oldseek = fs->seek_controls;
@@ -3436,7 +3419,7 @@ static void CVDoSnaps(CharView *cv, FindSel *fs) {
 	fs->p = p;
 	fs->seek_controls = oldseek;
     }
-#endif
+
     if ( p->cx>-fs->fudge && p->cx<fs->fudge )
 	p->cx = 0;
     else if ( p->cx>cv->b.sc->width-fs->fudge && p->cx<cv->b.sc->width+fs->fudge &&
@@ -3445,30 +3428,8 @@ static void CVDoSnaps(CharView *cv, FindSel *fs) {
     else if ( cv->widthsel && p!=&cv->p &&
 	    p->cx>cv->oldwidth-fs->fudge && p->cx<cv->oldwidth+fs->fudge )
 	p->cx = cv->oldwidth;
-#if 0
-    else if ( cv->b.sc->parent->hsnaps!=NULL && cv->b.drawmode!=dm_grid ) {
-	int i, *hsnaps = cv->b.sc->parent->hsnaps;
-	for ( i=0; hsnaps[i]!=0x80000000; ++i ) {
-	    if ( p->cx>hsnaps[i]-fs->fudge && p->cx<hsnaps[i]+fs->fudge ) {
-		p->cx = hsnaps[i];
-	break;
-	    }
-	}
-    }
-#endif
     if ( p->cy>-fs->fudge && p->cy<fs->fudge )
 	p->cy = 0;
-#if 0
-    else if ( cv->b.sc->parent->vsnaps!=NULL && cv->b.drawmode!=dm_grid ) {
-	int i, *vsnaps = cv->b.sc->parent->vsnaps;
-	for ( i=0; vsnaps[i]!=0x80000000; ++i ) {
-	    if ( p->cy>vsnaps[i]-fs->fudge && p->cy<vsnaps[i]+fs->fudge ) {
-		p->cy = vsnaps[i];
-	break;
-	    }
-	}
-    }
-#endif
 }
 
 static int _CVTestSelectFromEvent(CharView *cv,FindSel *fs) {
@@ -3844,11 +3805,6 @@ static void CVMouseMove(CharView *cv, GEvent *event ) {
     int has_spiro = hasspiro();
     int spacebar_changed;
 
-#if 0		/* Debug wacom !!!! */
- printf( "dev=%s (%d,%d) 0x%x\n", event->u.mouse.device!=NULL?event->u.mouse.device:"<None>",
-     event->u.mouse.x, event->u.mouse.y, event->u.mouse.state);
-#endif
-
     spacebar_changed = update_spacebar_hand_tool(cv);
 
     if ( event->u.mouse.device!=NULL || spacebar_changed )
@@ -3932,11 +3888,6 @@ return;
     /*  current point as it moves across the screen (jerkily) */
     if ( cv->active_tool == cvt_hand || cv->active_tool == cvt_freehand )
 	/* Don't snap to points */;
-#if 0
-    else if ( cv->active_tool == cvt_pointer &&
-	    ( cv->p.nextcp || cv->p.prevcp))
-	/* Don't snap to points when moving control points */;
-#endif
     else if ( !cv->joinvalid ||
 	    ((!cv->b.sc->inspiro || has_spiro) && !CheckPoint(&fs,&cv->joinpos,NULL)) ||
 	    (  cv->b.sc->inspiro && has_spiro  && !CheckSpiroPoint(&fs,&cv->joincp,NULL,0))) {
@@ -4335,9 +4286,6 @@ return( GGadgetDispatchEvent(cv->vsb,event));
 	if ( event->u.focus.gained_focus ) {
 	    if ( cv->gic!=NULL )
 		GDrawSetGIC(gw,cv->gic,0,20);
-#if 0
-	    CVPaletteActivate(cv);
-#endif
 	}
       break;
     }
@@ -4470,10 +4418,6 @@ return;
     GDrawPushClip(pixmap,&expose->u.expose.rect,&old1);
     GDrawSetLineWidth(pixmap,0);
     if ( expose->u.expose.rect.y< cv->mbh+cv->infoh ) {
-#if 0
-	r.x = 0; r.width = 8096;
-	r.y = cv->mbh; r.height = cv->infoh;
-#endif
 	GDrawPushClip(pixmap,&expose->u.expose.rect,&old2);
 
 	GDrawDrawLine(pixmap,0,cv->mbh+cv->infoh-1,8096,cv->mbh+cv->infoh-1,def_fg);
@@ -4904,9 +4848,6 @@ return( GGadgetDispatchEvent(cv->vsb,event));
 	if ( event->u.focus.gained_focus ) {
 	    if ( cv->gic!=NULL )
 		GDrawSetGIC(gw,cv->gic,0,20);
-#if 0
-	    CVPaletteActivate(cv);
-#endif
 	}
       break;
     }
@@ -5988,12 +5929,6 @@ return;
 	}
 #endif
 
-#if 0
-    if ( event->u.chr.keysym == GK_F4 ) {
-	RepeatFromFile(cv);
-    }
-#endif
-
     if ( !HaveModifiers && event->u.chr.keysym==' ' && cv->spacebar_hold==0 ) {
 	cv->p.x = event->u.mouse.x;
 	cv->p.y = event->u.mouse.y;
@@ -6589,13 +6524,6 @@ static void CVMerge(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e))
     _CVMerge(cv,false);
 }
 
-#if 0
-static void CVElide(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    CharView *cv = (CharView *) GDrawGetUserData(gw);
-    _CVMerge(cv,true);
-}
-#endif
-
 static void _CVJoin(CharView *cv) {
     int anyp = 0, changed;
     extern float joinsnap;
@@ -6806,11 +6734,6 @@ static void cv_edlistcheck(CharView *cv, struct gmenuitem *mi) {
 	  case MID_Merge:
 	    mi->ti.disabled = !anypoints;
 	  break;
-#if 0
-	  case MID_Elide:
-	    mi->ti.disabled = !anypoints;
-	  break;
-#endif
 	  case MID_Clear: case MID_Cut: /*case MID_Copy:*/
 	    /* If nothing is selected, copy copies everything */
 	    /* In spiro mode copy will copy all contours with at least (spiro) one point selected */
@@ -7106,9 +7029,6 @@ static void cv_ptlistcheck(CharView *cv, struct gmenuitem *mi) {
 	  break;
 	  case MID_AddAnchor:
 	    mi->ti.disabled = cv->b.container!=NULL;
-#if 0
-	    mi->ti.disabled = AnchorClassUnused(cv->b.sc,&waslig)==NULL;
-#endif
 	  break;
 	}
     }
