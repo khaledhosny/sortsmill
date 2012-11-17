@@ -88,8 +88,7 @@
                ((pivrow) (map (lambda (x) (* x value)) (drop new-row i))))
             (append prefix (map (lambda (x p) (- x p)) the-rest pivrow))))))
     (append (map adjust-row top-rows)
-            (list new-row)
-            (map adjust-row bottom-rows))))
+            (cons new-row (map adjust-row bottom-rows)))))
 
 ;;-------------------------------------------------------------------------
 
@@ -103,8 +102,7 @@
 (define (identity-matrix n)
   (let ((ident-row (lambda (i)
                      (append (make-list i 0)
-                             '(1)
-                             (make-list (- n i 1) 0)))))
+                             (cons 1 (make-list (- n i 1) 0))))))
     (list-tabulate n ident-row)))
 
 ;;-------------------------------------------------------------------------
@@ -252,6 +250,6 @@
                                             (- i2 i1 1)))
            ((elem2) (car after-middle))
            ((suffix) (cdr after-middle)))
-        (append prefix (list elem2) middle (list elem1) suffix))))
+        (append prefix (cons elem2 middle) (cons elem1 suffix)))))
 
 ;;-------------------------------------------------------------------------
