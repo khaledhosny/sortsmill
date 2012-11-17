@@ -5,15 +5,11 @@ m4_defun([check_iconv],
 AT_SETUP([$1])
 AT_KEYWORDS([sortsmillff_iconv iconv guile scheme unit])
 AT_SKIP_IF([test x"${posix_locale}" = x -o x"${posix_locale}" = xnone])
-
-# FIXME: Maybe restore this or somehow make this test optional at
-# installcheck, with default of _not_ doing it (so distcheck does not
-# have to deal with it).
-AT_SKIP_IF([test x${DOING_INSTALLCHECK} = xyes])
-
 AT_CHECK_UNQUOTED([
 export LC_ALL="${posix_locale}"
 if test x${DOING_INSTALLCHECK} = xyes; then
+   # FIXME: Set the environment correctly, so distcheck works without
+   # having the modules installed.
    :
 else
    export LTDL_LIBRARY_PATH="${abs_top_builddir}/scheme"

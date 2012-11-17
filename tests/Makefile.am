@@ -73,8 +73,9 @@ $(TESTSUITE): $(srcdir)/testsuite.at $(srcdir)/package.m4 $(MY_AT_FILES)
 
 MY_AT_FILES = xgc_h.at xunicase_h.at xuniconv_h.at xuninorm_h.at	\
 	xunistr_h.at gfile_c.at ps_number_h.at rexp_h.at				\
-	precomputed_data.at bernstein.at monomial.at brentroot.at		\
-	sortsmillff_iconv.at psMat.at old_python_tests.at
+	sortsmillff_linalg.at precomputed_data.at bernstein.at			\
+	monomial.at brentroot.at sortsmillff_iconv.at psMat.at			\
+	old_python_tests.at
 
 TESTS_XGC_H = test_x_gc_strndup test_x_gc_strjoin
 
@@ -124,7 +125,7 @@ EXTRA_DIST += $(MY_AT_FILES)
 
 EXTRA_DIST += test_xunistr_strtol.txt test_xunistr_strtod.txt
 
-EXTRA_DIST += test_utf7_to_string.scm
+EXTRA_DIST += test_utf7_to_string.scm test_guile_linalg.scm
 
 EXTRA_DIST += test_guile_bernstein.scm test_python_bernstein.py	\
 	test_guile_monomial.scm test_python_monomial.py				\

@@ -15,18 +15,12 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;                              ;;
-;; FIXME: Write tests for this. ;;
-;;                              ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (define-module (sortsmillff linalg)
   #:use-module (srfi srfi-1)            ; List operations.
   #:use-module (srfi srfi-11)           ; (let-values ...)
   #:use-module ((rnrs) :version (6) #:select (assert))
-  #:export (matrix-invert
-            matrix-invert-by-gauss-jordan
+  #:export (matrix-inverse
+            matrix-inverse-by-gauss-jordan
             zero-matrix
             identity-matrix
             matrix-transpose
@@ -35,7 +29,9 @@
             matrix+
             matrix-))
 
-(define (matrix-invert-by-gauss-jordan mat)
+;;-------------------------------------------------------------------------
+
+(define (matrix-inverse-by-gauss-jordan mat)
   (let ((n (length mat)))
 
     ;; Check that the rows are all of length @var{n}.
@@ -92,14 +88,16 @@
 
 ;;-------------------------------------------------------------------------
 
-(define matrix-invert matrix-invert-by-gauss-jordan)
+(define matrix-inverse matrix-inverse-by-gauss-jordan)
 
 ;;-------------------------------------------------------------------------
 
 (define (zero-matrix n)
+  (assert (< 0 n))
   (make-list n (make-list n 0)))
 
 (define (identity-matrix n)
+  (assert (< 0 n))
   (let ((ident-row (lambda (i)
                      (append (make-list i 0)
                              (cons 1 (make-list (- n i 1) 0))))))

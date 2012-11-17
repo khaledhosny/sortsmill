@@ -121,7 +121,7 @@
     (list->f64vector (apply append basis))))
 
 (define (spower-basis-in-sbern n)
-  (matrix-invert (sbern-basis-in-spower n)))
+  (matrix-inverse (sbern-basis-in-spower n)))
 
 (define (spower-basis-in-sbern-f64vector n)
   (let ((basis (spower-basis-in-sbern n)))

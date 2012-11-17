@@ -1,0 +1,101 @@
+# -*- coding: utf-8 -*-
+
+m4_defun([check_linalg],
+[
+AT_SETUP([$1])
+AT_KEYWORDS([sortsmillff_linalg linalg guile scheme unit])
+AT_CHECK_UNQUOTED([
+export LC_ALL="${posix_locale}"
+if test x${DOING_INSTALLCHECK} = xyes; then
+   # FIXME: Set the environment correctly, so distcheck works without
+   # having the modules installed.
+   :
+else
+   export LTDL_LIBRARY_PATH="${abs_top_builddir}/scheme"
+   export GUILE_LOAD_PATH="${abs_top_srcdir}/scheme"
+fi
+${run_guile} "${abs_srcdir}"/$1
+],
+[$2],[$3],[$4])
+AT_CLEANUP
+])
+
+check_linalg([test_guile_linalg.scm "(zero-matrix 1)"],[0],[((0))],[])
+check_linalg([test_guile_linalg.scm "(zero-matrix 2)"],[0],[((0 0) (0 0))],[])
+check_linalg([test_guile_linalg.scm "(zero-matrix 3)"],[0],[((0 0 0) (0 0 0) (0 0 0))],[])
+check_linalg([test_guile_linalg.scm "(zero-matrix 4)"],[0],[((0 0 0 0) (0 0 0 0) (0 0 0 0) (0 0 0 0))],[])
+check_linalg([test_guile_linalg.scm "(zero-matrix 5)"],[0],[((0 0 0 0 0) (0 0 0 0 0) (0 0 0 0 0) (0 0 0 0 0) (0 0 0 0 0))],[])
+
+check_linalg([test_guile_linalg.scm "(identity-matrix 1)"],[0],[((1))],[])
+check_linalg([test_guile_linalg.scm "(identity-matrix 2)"],[0],[((1 0) (0 1))],[])
+check_linalg([test_guile_linalg.scm "(identity-matrix 3)"],[0],[((1 0 0) (0 1 0) (0 0 1))],[])
+check_linalg([test_guile_linalg.scm "(identity-matrix 4)"],[0],[((1 0 0 0) (0 1 0 0) (0 0 1 0) (0 0 0 1))],[])
+check_linalg([test_guile_linalg.scm "(identity-matrix 5)"],[0],[((1 0 0 0 0) (0 1 0 0 0) (0 0 1 0 0) (0 0 0 1 0) (0 0 0 0 1))],[])
+
+check_linalg([test_guile_linalg.scm "(matrix-transpose '((5)))"],[0],[((5))],[])
+check_linalg([test_guile_linalg.scm "(matrix-transpose '((1 2) (3 4)))"],[0],[((1 3) (2 4))],[])
+check_linalg([test_guile_linalg.scm "(matrix-transpose '((1 2 3 4 5 6 7 8)))"],[0],[((1) (2) (3) (4) (5) (6) (7) (8))],[])
+check_linalg([test_guile_linalg.scm "(matrix-transpose '((1) (2) (3) (4) (5) (6) (7) (8)))"],[0],[((1 2 3 4 5 6 7 8))],[])
+check_linalg([test_guile_linalg.scm "(matrix-transpose '((1 2 3 4) (5 6 7 8) (9 10 11 12)))"],[0],[((1 5 9) (2 6 10) (3 7 11) (4 8 12))],[])
+
+check_linalg([test_guile_linalg.scm "(matrix*)"],[0],[1],[])
+check_linalg([test_guile_linalg.scm "(matrix* 7)"],[0],[7],[])
+check_linalg([test_guile_linalg.scm "(matrix* '((1 2 5) (3 4 6)))"],[0],[((1 2 5) (3 4 6))],[])
+check_linalg([test_guile_linalg.scm "(matrix* 2 7)"],[0],[14],[])
+check_linalg([test_guile_linalg.scm "(matrix* 2 9 1/3)"],[0],[6],[])
+check_linalg([test_guile_linalg.scm "(matrix* 2 '((1 2) (3 4)))"],[0],[((2 4) (6 8))],[])
+check_linalg([test_guile_linalg.scm "(matrix* '((1 2) (3 4)) 2)"],[0],[((2 4) (6 8))],[])
+check_linalg([test_guile_linalg.scm "(matrix* 3 '((1 2) (3 4)) 2)"],[0],[((6 12) (18 24))],[])
+check_linalg([test_guile_linalg.scm "(matrix* '((1 2 5) (3 4 6)) '((1 -1) (-1 1) (2 3)))"],[0],[((9 16) (11 19))],[])
+check_linalg([test_guile_linalg.scm "(matrix* '((21 37)) '((1 2 5) (3 4 6)) '((1 -1) (-1 1) (2 3)) '((-31) (52)))"],[0],[((35552))],[])
+check_linalg([test_guile_linalg.scm "(matrix* '((1 2 3)) '((4 5 6)))"],[1],[],[ignore])dnl  Non-conformable matrices.
+
+check_linalg([test_guile_linalg.scm "(matrix/ 7)"],[0],[1/7],[])
+check_linalg([test_guile_linalg.scm "(matrix/ '((1 2 5) (3 4 6)))"],[1],[],[ignore])dnl  Division by a matrix.
+check_linalg([test_guile_linalg.scm "(matrix/ 2 7)"],[0],[2/7],[])
+check_linalg([test_guile_linalg.scm "(matrix/ 2 9 1/3)"],[0],[2/3],[])
+check_linalg([test_guile_linalg.scm "(matrix/ 2 '((1 2) (3 4)))"],[1],[],[ignore])dnl  Division by a matrix.
+check_linalg([test_guile_linalg.scm "(matrix/ '((1 2) (3 4)) 2)"],[0],[((1/2 1) (3/2 2))],[])
+check_linalg([test_guile_linalg.scm "(matrix/ '((1 2) (3 4)) 2 -1/5)"],[0],[((-5/2 -5) (-15/2 -10))],[])
+check_linalg([test_guile_linalg.scm "(matrix/ '((1 2) (3 4)) 2 -1/5 '((2)))"],[1],[],[ignore])dnl  Division by a matrix.
+
+check_linalg([test_guile_linalg.scm "(matrix+)"],[0],[0],[])
+check_linalg([test_guile_linalg.scm "(matrix+ 7)"],[0],[7],[])
+check_linalg([test_guile_linalg.scm "(matrix+ '((1 2 5) (3 4 6)))"],[0],[((1 2 5) (3 4 6))],[])
+check_linalg([test_guile_linalg.scm "(matrix+ 2 7)"],[0],[9],[])
+check_linalg([test_guile_linalg.scm "(matrix+ 2 9 1/3)"],[0],[34/3],[])
+check_linalg([test_guile_linalg.scm "(matrix+ '((2)) '((9)) '((1/3)))"],[0],[((34/3))],[])
+check_linalg([test_guile_linalg.scm "(matrix+ 0 '((1 2) (3 4)))"],[0],[((1 2) (3 4))],[])dnl  We allow addition with scalar zero.
+check_linalg([test_guile_linalg.scm "(matrix+ '((1 2) (3 4)) 0)"],[0],[((1 2) (3 4))],[])dnl  We allow addition with scalar zero.
+check_linalg([test_guile_linalg.scm "(matrix+ 2 '((1 2) (3 4)))"],[1],[],[ignore])dnl  Non-conformable.
+check_linalg([test_guile_linalg.scm "(matrix+ 0 0 '((1 2) (3 4)) 2)"],[1],[],[ignore])dnl  Non-conformable.
+check_linalg([test_guile_linalg.scm "(matrix+ 0 0 '((1 2) (3 4)) 0 0 '((1 2) (3 4)))"],[0],[((2 4) (6 8))],[])
+check_linalg([test_guile_linalg.scm "(matrix+ '((1 2 3) (3 4 5)) '((1 2 -4) (3 4 -6)))"],[0],[((2 4 -1) (6 8 -1))],[])
+check_linalg([test_guile_linalg.scm "(matrix+ '((1 2) (3 4)) '((1 2 -4) (3 4 -6)))"],[1],[],[ignore])dnl  Non-conformable.
+check_linalg([test_guile_linalg.scm "(matrix+ '((1 2) (3 4)) '((1 2) (3 4) (5 6)))"],[1],[],[ignore])dnl  Non-conformable.
+
+check_linalg([test_guile_linalg.scm "(matrix- 7)"],[0],[-7],[])
+check_linalg([test_guile_linalg.scm "(matrix- '((1 2 5) (3 4 6)))"],[0],[((-1 -2 -5) (-3 -4 -6))],[])
+check_linalg([test_guile_linalg.scm "(matrix- 2 7)"],[0],[-5],[])
+check_linalg([test_guile_linalg.scm "(matrix- 2 9 1/3)"],[0],[-22/3],[])
+check_linalg([test_guile_linalg.scm "(matrix- '((2)) '((9)) '((1/3)))"],[0],[((-22/3))],[])
+check_linalg([test_guile_linalg.scm "(matrix- 0 '((1 2) (3 4)))"],[0],[((-1 -2) (-3 -4))],[])dnl  We allow subtraction with scalar zero.
+check_linalg([test_guile_linalg.scm "(matrix- '((1 2) (3 4)) 0)"],[0],[((1 2) (3 4))],[])dnl  We allow subtraction with scalar zero.
+check_linalg([test_guile_linalg.scm "(matrix- 2 '((1 2) (3 4)))"],[1],[],[ignore])dnl  Non-conformable.
+check_linalg([test_guile_linalg.scm "(matrix- 0 0 '((1 2) (3 4)) 2)"],[1],[],[ignore])dnl  Non-conformable.
+check_linalg([test_guile_linalg.scm "(matrix- 0 0 '((1 2) (3 4)) 0 0 '((1 2) (3 4)))"],[0],[((-2 -4) (-6 -8))],[])
+check_linalg([test_guile_linalg.scm "(matrix- '((1 2 3) (3 4 5)) '((-1 -2 4) (-3 -4 6)))"],[0],[((2 4 -1) (6 8 -1))],[])
+check_linalg([test_guile_linalg.scm "(matrix- '((1 2) (3 4)) '((1 2 -4) (3 4 -6)))"],[1],[],[ignore])dnl  Non-conformable.
+check_linalg([test_guile_linalg.scm "(matrix- '((1 2) (3 4)) '((1 2) (3 4) (5 6)))"],[1],[],[ignore])dnl  Non-conformable.
+
+check_linalg([test_guile_linalg.scm "(matrix-inverse '((7)))"],[0],[((1/7))],[])
+check_linalg([test_guile_linalg.scm "(matrix-inverse '((1 2 3) (4 5 6) (7 8 10)))"],[0],[((-2/3 -4/3 1) (-2/3 11/3 -2) (1 -2 1))],[])
+check_linalg([test_guile_linalg.scm "(matrix-inverse '((-2/3 -4/3 1) (-2/3 11/3 -2) (1 -2 1)))"],[0],[((1 2 3) (4 5 6) (7 8 10))],[])
+check_linalg([test_guile_linalg.scm "(matrix-inverse '((1 1) (0 0)))"],[1],[],[ignore])dnl  Singular matrix.
+check_linalg([test_guile_linalg.scm "(matrix-inverse '((1 2 3) (4 5 6) (7 8 9)))"],[1],[],[ignore])dnl  Singular matrix.
+
+check_linalg([test_guile_linalg.scm "(matrix-inverse-by-gauss-jordan '((7)))"],[0],[((1/7))],[])
+check_linalg([test_guile_linalg.scm "(matrix-inverse-by-gauss-jordan '((1 2 3) (4 5 6) (7 8 10)))"],[0],[((-2/3 -4/3 1) (-2/3 11/3 -2) (1 -2 1))],[])
+check_linalg([test_guile_linalg.scm "(matrix-inverse-by-gauss-jordan '((-2/3 -4/3 1) (-2/3 11/3 -2) (1 -2 1)))"],[0],[((1 2 3) (4 5 6) (7 8 10))],[])
+check_linalg([test_guile_linalg.scm "(matrix-inverse-by-gauss-jordan '((1 1) (0 0)))"],[1],[],[ignore])dnl  Singular matrix.
+check_linalg([test_guile_linalg.scm "(matrix-inverse-by-gauss-jordan '((1 2 3) (4 5 6) (7 8 9)))"],[1],[],[ignore])dnl  Singular matrix.
