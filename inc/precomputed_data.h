@@ -47,14 +47,10 @@ extern precomputed_data_by_degree_t precomputed_binomial_coefficients;
 extern precomputed_data_by_degree_t precomputed_altsigns;
 extern precomputed_data_by_degree_t
   precomputed_binomial_coefficients_altsigns;
-//extern precomputed_data_by_degree_t precomputed_sbern_basis_in_bern;
-//extern precomputed_data_by_degree_t precomputed_bern_basis_in_sbern;
 extern precomputed_data_by_degree_t precomputed_sbern_basis_in_mono;
 extern precomputed_data_by_degree_t precomputed_mono_basis_in_sbern;
-//extern precomputed_data_by_degree_t precomputed_bern_basis_in_mono;
-//extern precomputed_data_by_degree_t precomputed_mono_basis_in_bern;
 
-// These functions are not thread-safe.
+// WARNING: these functions are not thread-safe.
 void precompute_data_up_to_degree (const char *module_name,
                                    const char *function_name,
                                    int degree,
@@ -68,12 +64,8 @@ inline const double *get_precomputed_data_by_degree (const char *module_name,
 inline const double *get_binomial_coefficients (int degree);
 inline const double *get_altsigns (int degree);
 inline const double *get_binomial_coefficients_altsigns (int degree);
-//inline const double *get_sbern_basis_in_bern (int degree);
-//inline const double *get_bern_basis_in_sbern (int degree);
 inline const double *get_sbern_basis_in_mono (int degree);
 inline const double *get_mono_basis_in_sbern (int degree);
-//inline const double *get_bern_basis_in_mono (int degree);
-//inline const double *get_mono_basis_in_bern (int degree);
 
 inline const double *
 get_precomputed_data_by_degree (const char *module_name,
@@ -112,26 +104,6 @@ get_binomial_coefficients_altsigns (int degree)
                                          &precomputed_binomial_coefficients_altsigns);
 }
 
-// // FIXME: test this.
-// inline const double *
-// get_sbern_basis_in_bern (int degree)
-// {
-//   return get_precomputed_data_by_degree ("sortsmillff precompute",
-//                                          "sbern-basis-in-bern-f64vector",
-//                                          degree,
-//                                          &precomputed_sbern_basis_in_bern);
-// }
-// 
-// // FIXME: test this.
-// inline const double *
-// get_bern_basis_in_sbern (int degree)
-// {
-//   return get_precomputed_data_by_degree ("sortsmillff precompute",
-//                                          "bern-basis-in-sbern-f64vector",
-//                                          degree,
-//                                          &precomputed_bern_basis_in_sbern);
-// }
-
 inline const double *
 get_sbern_basis_in_mono (int degree)
 {
@@ -149,25 +121,5 @@ get_mono_basis_in_sbern (int degree)
                                          degree,
                                          &precomputed_mono_basis_in_sbern);
 }
-
-// // FIXME: test this.
-// inline const double *
-// get_bern_basis_in_mono (int degree)
-// {
-//   return get_precomputed_data_by_degree ("sortsmillff precompute",
-//                                          "bern-basis-in-mono-f64vector",
-//                                          degree,
-//                                          &precomputed_bern_basis_in_mono);
-// }
-// 
-// // FIXME: test this.
-// inline const double *
-// get_mono_basis_in_bern (int degree)
-// {
-//   return get_precomputed_data_by_degree ("sortsmillff precompute",
-//                                          "mono-basis-in-bern-f64vector",
-//                                          degree,
-//                                          &precomputed_mono_basis_in_bern);
-// }
 
 #endif // _PRECOMPUTED_DATA_H

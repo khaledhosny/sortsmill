@@ -26,18 +26,10 @@
             altsigns-f64vector
             binomial-coefficients-altsigns
             binomial-coefficients-altsigns-f64vector
-;;            sbern-basis-in-bern
-;;            sbern-basis-in-bern-f64vector
-;;            bern-basis-in-sbern
-;;            bern-basis-in-sbern-f64vector
             sbern-basis-in-mono
             sbern-basis-in-mono-f64vector
             mono-basis-in-sbern
             mono-basis-in-sbern-f64vector
-;;            bern-basis-in-mono
-;;            bern-basis-in-mono-f64vector
-;;            mono-basis-in-bern
-;;            mono-basis-in-bern-f64vector
             sbern-basis-in-spower
             sbern-basis-in-spower-f64vector
             spower-basis-in-sbern
@@ -77,34 +69,6 @@
   (let ((bca (binomial-coefficients-altsigns n)))
     (list->f64vector bca)))
 
-;; (define (sbern-basis-in-bern n)
-;;   (assert (integer? n))
-;;   (assert (<= 0 n))
-;;   (let* ((bc (binomial-coefficients n))
-;;          (row (lambda (i)
-;;                 (append (make-list i 0)
-;;                         (list (list-ref bc i))
-;;                         (make-list (- n i) 0)))))
-;;     (list-tabulate (1+ n) row)))
-;; 
-;; (define (sbern-basis-in-bern-f64vector n)
-;;   (let ((basis (sbern-basis-in-bern n)))
-;;     (list->f64vector (apply append basis))))
-;; 
-;; (define (bern-basis-in-sbern n)
-;;   (assert (integer? n))
-;;   (assert (<= 0 n))
-;;   (let* ((bc (binomial-coefficients n))
-;;          (row (lambda (i)
-;;                 (append (make-list i 0)
-;;                         (list (/ (list-ref bc i)))
-;;                         (make-list (- n i) 0)))))
-;;     (list-tabulate (1+ n) row)))
-;; 
-;; (define (bern-basis-in-sbern-f64vector n)
-;;   (let ((basis (bern-basis-in-sbern n)))
-;;     (list->f64vector (apply append basis))))
-
 (define (sbern-basis-in-mono n)
   (assert (integer? n))
   (assert (<= 0 n))
@@ -128,20 +92,6 @@
 (define (mono-basis-in-sbern-f64vector n)
   (let ((basis (mono-basis-in-sbern n)))
     (list->f64vector (apply append basis))))
-
-;;(define (bern-basis-in-mono n)
-;;  (matrix* (sbern-basis-in-mono n) (bern-basis-in-sbern n)))
-
-;;(define (bern-basis-in-mono-f64vector n)
-;;  (let ((basis (bern-basis-in-mono n)))
-;;    (list->f64vector (apply append basis))))
-
-;;(define (mono-basis-in-bern n)
-;;  (matrix* (sbern-basis-in-bern n) (mono-basis-in-sbern n)))
-
-;;(define (mono-basis-in-bern-f64vector n)
-;;  (let ((basis (mono-basis-in-bern n)))
-;;    (list->f64vector (apply append basis))))
 
 (define (sbern-basis-in-spower n)
   (assert (integer? n))

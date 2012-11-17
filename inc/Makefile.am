@@ -32,8 +32,8 @@ noinst_HEADERS = basics.h chardata.h config.h gdraw.h gfile.h			\
 	gresedit.h gresource.h gwidget.h intl.h ustring.h utype.h			\
 	annotations_base.h ffthread.h null_passthru.h xgc.h xunistring.h	\
 	xunicase.h xuniconv.h xuninorm.h xunistr.h xdie_on_null.h			\
-	config-extra.h ps_number.h rexp.h libguile_wrapper.h polyspline.h	\
-	pascals_triangle.h brentroot.h precomputed_data.h
+	config-extra.h ps_number.h rexp.h libguile_wrapper.h				\
+	precomputed_data.h polyspline.h brentroot.h
 
 nobase_include_HEADERS = sortsmillff/guile/polyspline.h		\
 	sortsmillff/guile/brentroot.h sortsmillff/guile/iconv.h	\

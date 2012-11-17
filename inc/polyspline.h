@@ -38,7 +38,7 @@
 // vis-- @end deftypefun
 // vis--
 void sbern_to_bern_double (unsigned int deg, const double *sbern,
-			   double *bern, size_t num_splines);
+                           double *bern, size_t num_splines);
 
 // vis--
 // vis-- @deftypefun {void} bern_to_sbern_double (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
@@ -48,7 +48,7 @@ void sbern_to_bern_double (unsigned int deg, const double *sbern,
 // vis-- @end deftypefun
 // vis--
 void bern_to_sbern_double (unsigned int deg, const double *bern,
-			   double *sbern, size_t num_splines);
+                           double *sbern, size_t num_splines);
 
 // vis--
 // vis-- @deftypefun {void} sbern_to_mono_double (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
@@ -58,7 +58,7 @@ void bern_to_sbern_double (unsigned int deg, const double *bern,
 // vis-- @end deftypefun
 // vis--
 void sbern_to_mono_double (unsigned int deg, const double *sbern,
-			   double *mono, size_t num_splines);
+                           double *mono, size_t num_splines);
 
 // vis--
 // vis-- @deftypefun {void} mono_to_sbern_double (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
@@ -68,7 +68,7 @@ void sbern_to_mono_double (unsigned int deg, const double *sbern,
 // vis-- @end deftypefun
 // vis--
 void mono_to_sbern_double (unsigned int deg, const double *mono,
-			   double *sbern, size_t num_splines);
+                           double *sbern, size_t num_splines);
 
 // vis--
 // vis-- @deftypefun {void} bern_to_sbern_double (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
@@ -78,7 +78,7 @@ void mono_to_sbern_double (unsigned int deg, const double *mono,
 // vis-- @end deftypefun
 // vis--
 void bern_to_mono_double (unsigned int deg, const double *bern,
-			  double *mono, size_t num_splines);
+                          double *mono, size_t num_splines);
 
 // vis--
 // vis-- @deftypefun {void} mono_to_bern_double (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
@@ -88,7 +88,7 @@ void bern_to_mono_double (unsigned int deg, const double *bern,
 // vis-- @end deftypefun
 // vis--
 void mono_to_bern_double (unsigned int deg, const double *mono,
-			  double *bern, size_t num_splines);
+                          double *bern, size_t num_splines);
 
 // vis--
 // vis-- @deftypefun {double} eval_sbern_double (unsigned int @var{deg}, const double *@var{spline}, double @var{t});
@@ -159,7 +159,7 @@ eval_mono_double (unsigned int deg, const double *spline, double t);
 // vis-- @end deftypefun
 // vis--
 void subdiv_sbern_double (unsigned int deg, const double *spline,
-                                  double t, double *a, double *b);
+                          double t, double *a, double *b);
 // vis--
 // vis-- @deftypefun {void} subdiv_bern_double (unsigned int @var{deg}, const double *@var{spline}, double @var{t}, double *@var{a}, double *@var{b});
 // vis--
@@ -169,6 +169,6 @@ void subdiv_sbern_double (unsigned int deg, const double *spline,
 // vis-- @end deftypefun
 // vis--
 void subdiv_bern_double (unsigned int deg, const double *spline,
-			 double t, double *a, double *b);
+                         double t, double *a, double *b);
 
 #endif // _POLYSPLINE_H

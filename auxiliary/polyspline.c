@@ -60,7 +60,7 @@ VISIBLE CHANGE_BASIS (mono_to_sbern_double, get_sbern_basis_in_mono);
 // than doing it this way.
 VISIBLE void
 bern_to_mono_double (unsigned int deg, const double *from, double *to,
-		     size_t num_splines)
+                     size_t num_splines)
 {
   double sbern[deg + 1];
   bern_to_sbern_double (deg, from, sbern, 1);
@@ -71,7 +71,7 @@ bern_to_mono_double (unsigned int deg, const double *from, double *to,
 // than doing it this way.
 VISIBLE void
 mono_to_bern_double (unsigned int deg, const double *from, double *to,
-		     size_t num_splines)
+                     size_t num_splines)
 {
   double sbern[deg + 1];
   mono_to_sbern_double (deg, from, sbern, 1);
@@ -81,7 +81,7 @@ mono_to_bern_double (unsigned int deg, const double *from, double *to,
 // The matrix here is diagonal, so use the diagonal directly.
 VISIBLE void
 sbern_to_bern_double (unsigned int deg, const double *from, double *to,
-		      size_t num_splines)
+                      size_t num_splines)
 {
   const double *bc = get_binomial_coefficients (deg);
   const unsigned int n = deg + 1;
@@ -92,7 +92,7 @@ sbern_to_bern_double (unsigned int deg, const double *from, double *to,
 // The matrix here is diagonal, so use the diagonal directly.
 VISIBLE void
 bern_to_sbern_double (unsigned int deg, const double *from, double *to,
-		      size_t num_splines)
+                      size_t num_splines)
 {
   const double *bc = get_binomial_coefficients (deg);
   const unsigned int n = deg + 1;

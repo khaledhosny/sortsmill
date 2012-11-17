@@ -160,12 +160,16 @@ scm_array_f64_matrix_mult (SCM a, SCM b)
   if (ma.size2 != mb.size1)
     {
       SCM ten = scm_from_int (10);
-      scm_misc_error ("matrix-f64*", "non-conformable matrices: ~Ax~A multiplied by ~Ax~A",
-                      scm_list_4
-                      (scm_number_to_string (scm_from_int (ma.size1), ten),
-                       scm_number_to_string (scm_from_int (ma.size2), ten),
-                       scm_number_to_string (scm_from_int (mb.size1), ten),
-                       scm_number_to_string (scm_from_int (mb.size2), ten)));
+      scm_misc_error ("matrix-f64*",
+                      "non-conformable matrices: ~Ax~A multiplied by ~Ax~A",
+                      scm_list_4 (scm_number_to_string
+                                  (scm_from_int (ma.size1), ten),
+                                  scm_number_to_string (scm_from_int
+                                                        (ma.size2), ten),
+                                  scm_number_to_string (scm_from_int
+                                                        (mb.size1), ten),
+                                  scm_number_to_string (scm_from_int
+                                                        (mb.size2), ten)));
     }
 
   double buffer[ma.size1 * mb.size2];
@@ -195,12 +199,16 @@ scm_array_f64_matrix_add (SCM a, SCM b)
   if (ma.size1 != mb.size1 || ma.size2 != mb.size2)
     {
       SCM ten = scm_from_int (10);
-      scm_misc_error ("matrix-f64+", "non-conformable matrices: ~Ax~A plus ~Ax~A",
-                      scm_list_4
-                      (scm_number_to_string (scm_from_int (ma.size1), ten),
-                       scm_number_to_string (scm_from_int (ma.size2), ten),
-                       scm_number_to_string (scm_from_int (mb.size1), ten),
-                       scm_number_to_string (scm_from_int (mb.size2), ten)));
+      scm_misc_error ("matrix-f64+",
+                      "non-conformable matrices: ~Ax~A plus ~Ax~A",
+                      scm_list_4 (scm_number_to_string
+                                  (scm_from_int (ma.size1), ten),
+                                  scm_number_to_string (scm_from_int
+                                                        (ma.size2), ten),
+                                  scm_number_to_string (scm_from_int
+                                                        (mb.size1), ten),
+                                  scm_number_to_string (scm_from_int
+                                                        (mb.size2), ten)));
     }
 
   double buffer[ma.size1 * ma.size2];
@@ -231,12 +239,16 @@ scm_array_f64_matrix_sub (SCM a, SCM b)
   if (ma.size1 != mb.size1 || ma.size2 != mb.size2)
     {
       SCM ten = scm_from_int (10);
-      scm_misc_error ("matrix-f64-", "non-conformable matrices: ~Ax~A minus ~Ax~A",
-                      scm_list_4
-                      (scm_number_to_string (scm_from_int (ma.size1), ten),
-                       scm_number_to_string (scm_from_int (ma.size2), ten),
-                       scm_number_to_string (scm_from_int (mb.size1), ten),
-                       scm_number_to_string (scm_from_int (mb.size2), ten)));
+      scm_misc_error ("matrix-f64-",
+                      "non-conformable matrices: ~Ax~A minus ~Ax~A",
+                      scm_list_4 (scm_number_to_string
+                                  (scm_from_int (ma.size1), ten),
+                                  scm_number_to_string (scm_from_int
+                                                        (ma.size2), ten),
+                                  scm_number_to_string (scm_from_int
+                                                        (mb.size1), ten),
+                                  scm_number_to_string (scm_from_int
+                                                        (mb.size2), ten)));
     }
 
   double buffer[ma.size1 * ma.size2];
