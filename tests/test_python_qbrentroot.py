@@ -31,6 +31,8 @@ func = eval (func_string)
 if err == 0:
     write ("err = {:d}, root = {:.6f}, iter_no = {:d}"
            .format (err, float (root1), iter_no))
+    if type (root1) == type (mpq (1)):
+      write (", exact")
 else:
     write ("err = {:d}".format (err))
 

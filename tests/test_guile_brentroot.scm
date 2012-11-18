@@ -26,7 +26,7 @@
 
 (define brent-values (eval-string (list-ref (command-line) 1)))
 (define brent (eval-string (list-ref (command-line) 2)))
-(define func-string (list-ref (command-line) 3))
+(define func (eval-string (list-ref (command-line) 3)))
 (define t1 (string->number (list-ref (command-line) 4)))
 (define t2 (string->number (list-ref (command-line) 5)))
 
@@ -40,14 +40,14 @@
       (string->number (list-ref (command-line) 7))
       -1))
 
-(define func (eval (call-with-input-string func-string read)
-                   (interaction-environment)))
-
 (receive (root err iter-no) (brentroot-values t1 t2 func
                                               #:max-iters max-iters
                                               #:tol tol)
   (if (zero? err)
-      (format #t "err = ~d, root = ~,6f, iter_no = ~d" err root iter-no)
+      (begin
+        (format #t "err = ~d, root = ~,6f, iter_no = ~d" err root iter-no)
+        (if (exact? root)
+            (display ", exact")))
       (format #t "err = ~d" err))
 
   ;; Check that brentroot returns the same result as brentroot-values.
