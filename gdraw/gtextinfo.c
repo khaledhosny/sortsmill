@@ -267,9 +267,6 @@ GTextInfo *GTextInfoCopy(GTextInfo *ti) {
 	    copy->text = utf82u_mncopy((char *) copy->text,&copy->mnemonic);
 	    copy->text_in_resource = false;
 	    copy->text_is_1byte = false;
-	} else if ( ti->text_in_resource ) {
-	    copy->text = x_u32_strdup_or_null((uint32_t *) GStringGetResource((intptr_t) copy->text,&copy->mnemonic));
-	    copy->text_in_resource = false;
 	} else if ( ti->text_is_1byte ) {
 	    copy->text = utf82u_copy((char *) copy->text);
 	    copy->text_is_1byte = false;
@@ -730,8 +727,6 @@ return( NULL );
 	if ( mi[i].ti.text!=NULL ) {
 	    if ( mi[i].ti.text_in_resource && mi[i].ti.text_is_1byte )
 		arr[i].ti.text = utf82u_mncopy((char *) mi[i].ti.text,&arr[i].ti.mnemonic);
-	    else if ( mi[i].ti.text_in_resource )
-		arr[i].ti.text = x_u32_strdup_or_null((uint32_t *) GStringGetResource((intptr_t) mi[i].ti.text,&arr[i].ti.mnemonic));
 	    else if ( mi[i].ti.text_is_1byte )
 		arr[i].ti.text = utf82u_copy((char *) mi[i].ti.text);
 	    else
@@ -974,8 +969,6 @@ return( NULL );
 	if ( mi[i].ti.text!=NULL ) {
 	    if ( mi[i].ti.text_in_resource && mi[i].ti.text_is_1byte )
 		arr[i].ti.text = utf82u_mncopy((char *) mi[i].ti.text,&arr[i].ti.mnemonic);
-	    else if ( mi[i].ti.text_in_resource )
-		arr[i].ti.text = x_u32_strdup_or_null((uint32_t *) GStringGetResource((intptr_t) mi[i].ti.text,&arr[i].ti.mnemonic));
 	    else if ( mi[i].ti.text_is_1byte )
 		arr[i].ti.text = utf82u_copy((char *) mi[i].ti.text);
 	    else
@@ -994,83 +987,11 @@ return( NULL );
 return( arr );
 }
 
-/* **************************** String Resources **************************** */
-
-/* This is obsolete now. I use gettext instead */
-
-/* A string resource file should begin with two shorts, the first containing
-the number of string resources, and the second the number of integer resources.
-(not the number of resources in the file, but the maximum resource index+1)
-String resources look like
-    <resource number-short> <flag,length-short> <mnemonics?> <uint32_t string>
-Integer resources look like:
-    <resource number-short> <resource value-int>
-(numbers are stored with the high byte first)
-
-We include a resource number because translations may not be provided for all
-strings, so we will need to skip around. The flag,length field is a short where
-the high-order bit is a flag indicating whether a mnemonic is present and the
-remaining 15 bits containing the length of the following char string. If a
-mnemonic is present it follows immediately after the flag,length short. After
-that comes the string. After that a new string.
-After all strings comes the integer list.
-
-By convention string resource 0 should always be present and should be the
-name of the language (or some other identifying name).
-The first 10 or so resources are used by gadgets and containers and must be
- present even if the program doesn't set any resources itself.
-Resource 1 should be the translation of "OK"
-Resource 2 should be the translation of "Cancel"
-   ...
-Resource 7 should be the translation of "Replace"
-   ...
-*/
-static uint32_t lang[] = { 'E', 'n', 'g', 'l', 'i', 's', 'h', '\0' };
-static uint32_t ok[] = { 'O', 'k', '\0' };
-static uint32_t cancel[] = { 'C', 'a', 'n', 'c', 'e', 'l', '\0' };
-static uint32_t _open[] = { 'O', 'p', 'e', 'n', '\0' };
-static uint32_t save[] = { 'S', 'a', 'v', 'e', '\0' };
-static uint32_t filter[] = { 'F', 'i', 'l', 't', 'e', 'r', '\0' };
-static uint32_t new[] = { 'N', 'e', 'w', '.', '.', '.', '\0' };
-static uint32_t replace[] = { 'R', 'e', 'p', 'l', 'a', 'c', 'e', '\0' };
-static uint32_t fileexists[] = { 'F','i','l','e',' ','E','x','i','s','t','s',  '\0' };
-/* "File, %s, exists. Replace it?" */
-static uint32_t fileexistspre[] = { 'F','i','l','e',',',' ',  '\0' };
-static uint32_t fileexistspost[] = { ',',' ','e','x','i','s','t','s','.',' ','R','e','p','l','a','c','e',' ','i','t','?',  '\0' };
-static uint32_t createdir[] = { 'C','r','e','a','t','e',' ','d','i','r','e','c','t','o','r','y','.','.','.',  '\0' };
-static uint32_t dirname_[] = { 'D','i','r','e','c','t','o','r','y',' ','n','a','m','e','?',  '\0' };
-static uint32_t couldntcreatedir[] = { 'C','o','u','l','d','n','\'','t',' ','c','r','e','a','t','e',' ','d','i','r','e','c','t','o','r','y',  '\0' };
-static uint32_t selectall[] = { 'S','e','l','e','c','t',' ','A','l','l',  '\0' };
-static uint32_t none[] = { 'N','o','n','e',  '\0' };
-static const uint32_t *deffall[] = { lang, ok, cancel, _open, save, filter, new,
-	replace, fileexists, fileexistspre, fileexistspost, createdir,
-	dirname_, couldntcreatedir, selectall, none, NULL };
-static const uint32_t deffallmn[] = { 0, 'O', 'C', 'O', 'S', 'F', 'N', 'R', 0, 0, 0, 'A', 'N' };
-static const int deffallint[] = { 55, 100 };
-
-static uint32_t **strarray=NULL; static const uint32_t **fallback=deffall;
-static uint32_t *smnemonics=NULL; static const uint32_t *fmnemonics=deffallmn;
-static int *intarray; static const int *fallbackint = deffallint;
-static int slen=0, flen=sizeof(deffall)/sizeof(deffall[0])-1, ilen=0, filen=sizeof(deffallint)/sizeof(deffallint[0]);
-
-const uint32_t *GStringGetResource(int index,uint32_t *mnemonic) {
-    if ( index<0 || (index>=slen && index>=flen ))
-return( NULL );
-    if ( index<slen && strarray[index]!=NULL ) {
-	if ( mnemonic!=NULL ) *mnemonic = smnemonics[index];
-return( strarray[index]);
-    }
-    if ( mnemonic!=NULL && fmnemonics!=NULL )
-	*mnemonic = fmnemonics[index];
-return( fallback[index]);
-}
-
-int GIntGetResource(int index) {
-    if ( index<2 ) {
-	static int gt_intarray[2];
-	if ( gt_intarray[0]==0 ) {
-	    const char *pt;
-	    char *end;
+int GIntGetResource(enum int_res index) {
+    static int ret;
+    const char *pt;
+    char *end;
+    if (index == _NUM_Buttonsize) {
 /* TRANSLATORS:
  * This is an unusual string. It is used to get around a limitation in
  * FontForge's widget set. You should put a number here.  The number should be
@@ -1078,10 +999,11 @@ int GIntGetResource(int index) {
  * enough to contain "OK", "Cancel", "New...", "Edit...", "Delete" (in their
  * translated forms of course).
  */
-	    pt = C_("GGadget button size", "55");
-	    gt_intarray[0] = strtol(pt,&end,10);
-	    if ( pt==end || gt_intarray[0]<20 || gt_intarray[0]>4000 )
-		gt_intarray[0]=55;
+	pt = C_("GGadget button size", "55");
+	ret = strtol(pt,&end,10);
+	if ( pt==end || ret>4000 )
+	    ret=55;
+    } else if (index == _NUM_ScaleFactor) {
 /* TRANSLATORS:
  * This is an unusual string. It is used to get around a limitation in
  * FontForge's widget set. You should put a number here.  The number should be
@@ -1091,180 +1013,14 @@ int GIntGetResource(int index) {
  * "Don't Save" in English. Then a value for ScaleFactor might be
  * 116*100/67 = 173
  */
-	    pt = C_("GGadget scale factor", "100");
-	    gt_intarray[1] = strtol(pt,&end,10);
-	    if ( pt==end || gt_intarray[1]<20 || gt_intarray[1]>4000 )
-		gt_intarray[1]=100;
-	}
-return( gt_intarray[index] );
+	pt = C_("GGadget scale factor", "100");
+	ret = strtol(pt,&end,10);
+	if ( pt==end || ret<20 || ret>4000 )
+	    ret=100;
+    } else {
+	GDrawIError ("Unknown integer resource: %d", index);
+	ret = 0;
     }
 
-    if ( index<0 || (index>=ilen && index>=filen ))
-return( -1 );
-    if ( index<ilen && intarray[index]!=0x80000000 ) {
-return( intarray[index]);
-    }
-return( fallbackint[index]);
-}
-
-static int getushort(FILE *file) {
-    int ch;
-
-    ch = getc(file);
-    if ( ch==EOF )
-return( EOF );
-return( (ch<<8)|getc(file));
-}
-
-static int getint(FILE *file) {
-    int ch;
-
-    ch = getc(file);
-    if ( ch==EOF )
-return( EOF );
-    ch = (ch<<8)|getc(file);
-    ch = (ch<<8)|getc(file);
-return( (ch<<8)|getc(file));
-}
-
-int GStringSetResourceFileV(char *filename,uint32_t checksum) {
-    FILE *res;
-    int scnt, icnt;
-    int strlen;
-    int i,j;
-
-    if ( filename==NULL ) {
-	if ( strarray!=NULL )
-	    for ( i=0; i<slen; ++i ) free( strarray[i]);
-	free(strarray); free(smnemonics); free(intarray);
-	strarray = NULL; smnemonics = NULL; intarray = NULL;
-	slen = ilen = 0;
-return( 1 );
-    }
-
-    res = fopen(filename,"r");
-    if ( res==NULL )
-return( 0 );
-
-    if ( getint(res)!=checksum && checksum!=0xffffffff ) {
-	fprintf( stderr, "Warning: The checksum of the resource file\n\t%s\ndoes not match the expected checksum.\nA set of fallback resources will be used instead.\n", filename );
-	fclose(res);
-return( 0 );
-    }
-
-    scnt = getushort(res);
-    icnt = getushort(res);
-    if ( strarray!=NULL )
-	for ( i=0; i<slen; ++i ) free( strarray[i]);
-    free(strarray); free(smnemonics); free(intarray);
-    strarray = xcalloc(szmax(1, scnt),sizeof(uint32_t *));
-    smnemonics = xcalloc(szmax(1, scnt),sizeof(uint32_t));
-    intarray = xmalloc(szmax(1, icnt*sizeof(int)));
-    for ( i=0; i<icnt; ++i ) intarray[i] = 0x80000000;
-    slen = ilen = 0;
-
-    i = -1;
-    while ( i+1<scnt ) {
-	i = getushort(res);
-	if ( i>=scnt || i==EOF ) {
-	    fclose(res);
-return( 0 );
-	}
-	strlen = getushort(res);
-	if ( strlen&0x8000 ) {
-	    smnemonics[i] = getushort(res);
-	    strlen &= ~0x8000;
-	}
-	strarray[i] = xmalloc((strlen+1)*sizeof(uint32_t));
-	for ( j=0; j<strlen; ++j )
-	    strarray[i][j] = getushort(res);
-	strarray[i][j] = '\0';
-    }
-
-    i = -1;
-    while ( i+1<icnt ) {
-	i = getushort(res);
-	if ( i>=icnt || i==EOF ) {
-	    fclose(res);
-return( 0 );
-	}
-	intarray[i] = getint(res);
-    }
-    fclose(res);
-    slen = scnt; ilen = icnt;
-
-return( true );
-}
-
-int GStringSetResourceFile(char *filename) {
-return( GStringSetResourceFileV(filename,0xffffffff));
-}
-
-/* Read a resource from a file without loading the file */
-/*  I suspect this will just be used to get the language from the file */
-uint32_t *GStringFileGetResource(char *filename, int index,uint32_t *mnemonic) {
-    int scnt;
-    FILE *res;
-    int i,j, strlen;
-    uint32_t *str;
-
-    if ( filename==NULL )
-return( x_u8_to_u32 ("Default"));
-
-    res = fopen(filename,"r");
-    if ( res==NULL )
-return( 0 );
-
-    scnt = getushort(res);
-    /* icnt = */getushort(res);
-    if ( index<0 || index>=scnt ) {
-	fclose(res);
-return( NULL );
-    }
-
-    i = -1;
-    while ( i+1<=scnt ) {
-	i = getushort(res);
-	if ( i>=scnt ) {
-	    fclose(res);
-return( NULL );
-	}
-	strlen = getushort(res);
-	if ( i==index ) {
-	    if ( strlen&0x8000 ) {
-		int temp = getushort(res);
-		if ( mnemonic!=NULL ) *mnemonic = temp;
-		strlen &= ~0x8000;
-	    }
-	    str = xmalloc((strlen+1)*sizeof(uint32_t));
-	    for ( j=0; j<strlen; ++j )
-		str[j] = getushort(res);
-	    str[j] = '\0';
-	    fclose( res );
-return( str );
-	} else {
-	    if ( strlen&0x8000 ) {
-		getushort(res);
-		strlen &= ~0x8000;
-	    }
-	    for ( j=0; j<strlen; ++j )
-		getushort(res);
-	}
-    }
-    fclose( res );
-return( NULL );
-}
-    
-void GStringSetFallbackArray(const uint32_t **array,const uint32_t *mn,const int *ires) {
-    int i=0;
-
-    if ( array!=NULL ) while ( array[i]!=NULL ) ++i;
-    flen = i;
-    fallback = array;
-    fmnemonics = mn;
-
-    i=0;
-    if ( ires!=NULL ) while ( ires[i]!=0x80000000 ) ++i;
-    filen = i;
-
+    return ret;
 }

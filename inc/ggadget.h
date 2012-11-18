@@ -294,26 +294,18 @@ struct gdirentry;
 typedef enum fchooserret (*GFileChooserFilterType)(GGadget *g,struct gdirentry *ent,
 	const uint32_t *dir);
 
-#define _NUM_Buttonsize		0
-#define _NUM_ScaleFactor	1
-#define __NUM_LastStd		1
-
 extern GBox _ggadget_Default_Box;
 
 extern void GTextInfoFree(GTextInfo *ti);
 VISIBLE extern void GTextInfoListFree(GTextInfo *ti);
 VISIBLE extern void GTextInfoArrayFree(GTextInfo **ti);
 VISIBLE extern GTextInfo **GTextInfoFromChars(char **array, int len);
-VISIBLE extern const uint32_t *GStringGetResource(int index,uint32_t *mnemonic);
 VISIBLE extern int GGadgetScale(int xpos);
-VISIBLE extern int GIntGetResource(int index);
-extern int GStringSetResourceFileV(char *filename,uint32_t checksum);
-extern int GStringSetResourceFile(char *filename);	/* returns 1 for success, 0 for failure */
-/* fallback string arrays are null terminated. mnemonics is same length as string */
-/* fallback integer arrays are terminated by 0x80000000 (negative infinity) */
-extern void GStringSetFallbackArray(const uint32_t **array,const uint32_t *mn,
-	const int *ires);
-uint32_t *GStringFileGetResource(char *filename, int index,uint32_t *mnemonic);
+
+enum int_res { _NUM_Buttonsize, _NUM_ScaleFactor };
+
+VISIBLE extern int GIntGetResource(enum int_res index);
+
 extern void *GResource_font_cvt(char *val, void *def);
 VISIBLE extern FontInstance *GResourceFindFont(char *resourcename,FontInstance *deffont);
 
@@ -481,7 +473,6 @@ VISIBLE extern void GGadgetPreparePopupImage(GWindow base,const uint32_t *msg,
 	GImage *(*get_image)(const void *data),
 	void (*free_image)(const void *data,GImage *img));
 VISIBLE extern void GGadgetPreparePopup(GWindow base,const uint32_t *msg);
-extern void GGadgetPreparePopupR(GWindow base,int msg);
 VISIBLE extern void GGadgetPreparePopup8(GWindow base,char *msg);
 VISIBLE extern void GGadgetEndPopup(void);
 VISIBLE extern void GGadgetPopupExternalEvent(GEvent *e);

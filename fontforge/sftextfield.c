@@ -2240,9 +2240,7 @@ static SFTextArea *_SFTextAreaCreate(SFTextArea *st, struct gwindow *base, GGadg
 
     st->g.takes_input = true; st->g.takes_keyboard = true; st->g.focusable = true;
     if ( gd->label!=NULL ) {
-	if ( gd->label->text_in_resource )	/* This one use of GStringGetResource is ligit */
-	    st->li.text = x_u32_strdup_or_null((uint32_t *) GStringGetResource((intptr_t) gd->label->text,&st->g.mnemonic));
-	else if ( gd->label->text_is_1byte )
+	if ( gd->label->text_is_1byte )
 	    st->li.text = utf82u_copy((char *) gd->label->text);
 	else
 	    st->li.text = x_u32_strdup_or_null(gd->label->text);

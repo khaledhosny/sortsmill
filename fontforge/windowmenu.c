@@ -94,9 +94,6 @@ return;
 	} else if ( sub[i].ti.text_is_1byte ) {
 	    sub[i].ti.text = utf82u_copy((char *) sub[i].ti.text);
 	    sub[i].ti.text_is_1byte = false;
-	} else if ( sub[i].ti.text_in_resource ) {
-	    sub[i].ti.text = x_u32_strdup_or_null(GStringGetResource((intptr_t) sub[i].ti.text,NULL));
-	    sub[i].ti.text_in_resource = false;
 	} else
 	    sub[i].ti.text = x_u32_strdup_or_null(sub[i].ti.text);
     }
