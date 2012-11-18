@@ -19,6 +19,8 @@
   #:export (
             c-flt-epsilon        ; FLT_EPSILON as an ‘inexact’ number.
             c-dbl-epsilon        ; DBL_EPSILON as an ‘inexact’ number.
+            c-flt-epsilon-exact  ; FLT_EPSILON as an ‘exact’ number.
+            c-dbl-epsilon-exact  ; DBL_EPSILON as an ‘exact’ number.
             pi              ; Circumference over diameter of a circle.
             ))
 
@@ -28,10 +30,20 @@
      (* (list-ref data 1)
         (expt (list-ref data 2) (list-ref data 3))))))
 
+(define c-flt-epsilon-exact
+  (let ((data '@C_CONST_FLT_EPSILON@))
+    (* (list-ref data 1)
+       (expt (list-ref data 2) (list-ref data 3)))))
+
 (define c-dbl-epsilon
   (let ((data '@C_CONST_DBL_EPSILON@))
     (exact->inexact
      (* (list-ref data 1)
         (expt (list-ref data 2) (list-ref data 3))))))
+
+(define c-dbl-epsilon-exact
+  (let ((data '@C_CONST_DBL_EPSILON@))
+    (* (list-ref data 1)
+       (expt (list-ref data 2) (list-ref data 3)))))
 
 (define pi (* 4 (atan 1)))
