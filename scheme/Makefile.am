@@ -42,10 +42,11 @@ nobase_nodist_guileobjmodule_DATA = sortsmillff/gsl.go				\
 	sortsmillff/polyspline.go sortsmillff/brentroot.go				\
 	sortsmillff/sfd-to-sxml.go
 
-sortsmillff/sfd-to-sxml.go: sortsmillff/gsl.go sortsmillff/i18n.go
+sortsmillff/brentroot.go: sortsmillff/math-constants.go
 sortsmillff/i18n.go: libguile-sortsmillff_iconv.la
 sortsmillff/gsl.go: libguile-sortsmillff_gsl.la
 sortsmillff/precompute.go: sortsmillff/linalg.go
+sortsmillff/sfd-to-sxml.go: sortsmillff/gsl.go sortsmillff/i18n.go
 
 EXTRA_DIST = sortsmillff/math-constants.scm.in sortsmillff/i18n.scm.in
 

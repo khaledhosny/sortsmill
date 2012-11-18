@@ -39,7 +39,10 @@ main (int argc, char **argv)
   double t1 = atof (argv[2]);
   double t2 = atof (argv[3]);
 
-  brentroot (-1, -1, t1, t2, func, NULL, &root, &err, &iter_no);
+  int max_iters = (5 <= argc) ? atoi (argv[4]) : -1;
+  double tol = (6 <= argc) ? atof (argv[5]) : -1.0;
+
+  brentroot (max_iters, tol, t1, t2, func, NULL, &root, &err, &iter_no);
   printf ("err = %d", err);
   if (err == 0)
     printf (", root = %lf, iter_no = %d", root, iter_no);

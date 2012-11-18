@@ -26,7 +26,9 @@
 //
 
 static const unsigned int brentroot_default_max_iters = 1000000;
-static const double brentroot_default_tol = DBL_EPSILON;
+static const double brentroot_default_tol = DBL_EPSILON; /* FIXME: Is
+							    this value
+							    appropriate? */
 
 _GL_ATTRIBUTE_CONST static inline unsigned int
 actual_max_iterations (int max_iters)
@@ -168,7 +170,7 @@ brentroot (int max_iters, double tol, double t1, double t2,
         {
           // Swap a and b.
           step = b - a;
-          step1 = HUGE_VAL;
+          step1 = b - a;
           b1 = b;
           fb1 = fb;
           b = a;
@@ -179,7 +181,7 @@ brentroot (int max_iters, double tol, double t1, double t2,
       else
         {
           step = a - b;
-          step1 = HUGE_VAL;
+          step1 = a - b;
           b1 = a;
           fb1 = fa;
         }

@@ -12,7 +12,7 @@ if test x${DOING_INSTALLCHECK} = xyes; then
    :
 else
    export LTDL_LIBRARY_PATH="${abs_top_builddir}/scheme"
-   export GUILE_LOAD_PATH="${abs_top_srcdir}/scheme"
+   export GUILE_LOAD_PATH="${abs_top_builddir}/scheme:${abs_top_srcdir}/scheme"
 fi
 ${run_guile} "${abs_srcdir}"/$1
 ],

@@ -24,18 +24,20 @@
 
 (define argc (length (command-line)))
 
-(define func-string (cadr (command-line)))
-(define t1 (string->number (caddr (command-line))))
-(define t2 (string->number (cadddr (command-line))))
+(define brent-values (eval-string (list-ref (command-line) 1)))
+(define brent (eval-string (list-ref (command-line) 2)))
+(define func-string (list-ref (command-line) 3))
+(define t1 (string->number (list-ref (command-line) 4)))
+(define t2 (string->number (list-ref (command-line) 5)))
 
 (define max-iters
-  (if (<= 5 argc)
-      (string->number (list-ref (command-line) 4))
+  (if (<= 7 argc)
+      (string->number (list-ref (command-line) 6))
       -1))
 
 (define tol
-  (if (<= 6 argc)
-      (string->number (list-ref (command-line) 5))
+  (if (<= 8 argc)
+      (string->number (list-ref (command-line) 7))
       -1))
 
 (define func (eval (call-with-input-string func-string read)
