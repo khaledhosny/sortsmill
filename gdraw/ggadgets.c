@@ -852,13 +852,6 @@ GGadgetPreparePopup (GWindow base, const uint32_t *msg)
 }
 
 void
-GGadgetPreparePopupR (GWindow base, int msg)
-{
-  GGadgetPreparePopupImage (base, GStringGetResource (msg, NULL), NULL, NULL,
-                            NULL);
-}
-
-void
 GGadgetPreparePopup8 (GWindow base, char *msg)
 {
   static uint32_t popup_msg[500];

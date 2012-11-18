@@ -642,8 +642,6 @@ static GCheckBox *_GCheckBoxCreate(GCheckBox *gl, struct gwindow *base, GGadgetD
 	    gl->font = gd->label->font;
 	if ( gd->label->text_in_resource && gd->label->text_is_1byte )
 	    gl->label = utf82u_mncopy((char *) gd->label->text,&gl->g.mnemonic);
-	else if ( gd->label->text_in_resource )
-	    gl->label = x_u32_strdup_or_null((uint32_t *) GStringGetResource((intptr_t) gd->label->text,&gl->g.mnemonic));
 	else if ( gd->label->text_is_1byte )
 	    gl->label = /*def2u*/ utf82u_copy((char *) gd->label->text);
 	else
