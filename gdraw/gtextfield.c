@@ -2466,7 +2466,7 @@ static void GTextFieldInit() {
     gtextfield_box.border_type = bt_lowered;
     gtextfield_box.border_shape = bs_roundrect;
     gtextfield_box.rr_radius = 3;
-    gtextfield_box.main_background = 0xe5e4e3;
+    gtextfield_box.main_background = 0xf2f2f2;
     gtextfield_box.gradient_bg_end = 0xffffff;
     gtextfield_box.border_brightest = gtextfield_box.border_brighter = 0xf9f8f7;
     gtextfield_box.border_darkest = gtextfield_box.border_darker = 0xdddcdb;
