@@ -222,7 +222,6 @@ void FVMergeFonts(FontView *fv) {
 	label[3].text = (uint32_t *) _("_OK");
 	label[3].text_is_1byte = true;
 	label[3].text_has_mnemonic = true;
-	gcd[3].gd.mnemonic = 'O';
 	gcd[3].gd.label = &label[3];
 	gcd[3].gd.handle_controlevent = MF_OK;
 	gcd[3].creator = GButtonCreate;
@@ -234,7 +233,6 @@ void FVMergeFonts(FontView *fv) {
 	label[4].text_is_1byte = true;
 	label[4].text_has_mnemonic = true;
 	gcd[4].gd.label = &label[4];
-	gcd[4].gd.mnemonic = 'C';
 	gcd[4].gd.handle_controlevent = MF_Cancel;
 	gcd[4].creator = GButtonCreate;
 	barray[0] = barray[2] = barray[3] = barray[4] = barray[6] = GCD_Glue; barray[7] = NULL;
@@ -400,7 +398,6 @@ void FVInterpolateFonts(FontView *fv) {
     label[5].text = (uint32_t *) _("_OK");
     label[5].text_is_1byte = true;
     label[5].text_has_mnemonic = true;
-    gcd[5].gd.mnemonic = 'O';
     gcd[5].gd.label = &label[5];
     gcd[5].gd.handle_controlevent = IF_OK;
     gcd[5].creator = GButtonCreate;
@@ -412,7 +409,6 @@ void FVInterpolateFonts(FontView *fv) {
     label[6].text_is_1byte = true;
     label[6].text_has_mnemonic = true;
     gcd[6].gd.label = &label[6];
-    gcd[6].gd.mnemonic = 'C';
     gcd[6].gd.handle_controlevent = MF_Cancel;
     gcd[6].creator = GButtonCreate;
 

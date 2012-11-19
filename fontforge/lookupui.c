@@ -855,7 +855,6 @@ static char *LK_LangsDlg(GGadget *g, int r, int c) {
 	label[i].text = (uint32_t *) _("_OK");
 	label[i].text_is_1byte = true;
 	label[i].text_has_mnemonic = true;
-	gcd[i].gd.mnemonic = 'O';
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.cid = CID_OK;
 	harray[0] = GCD_Glue; harray[1] = &gcd[i]; harray[2] = GCD_Glue;
@@ -868,7 +867,6 @@ static char *LK_LangsDlg(GGadget *g, int r, int c) {
 	label[i].text_is_1byte = true;
 	label[i].text_has_mnemonic = true;
 	gcd[i].gd.label = &label[i];
-	gcd[i].gd.mnemonic = 'C';
 	gcd[i].gd.cid = CID_Cancel;
 	harray[3] = GCD_Glue; harray[4] = &gcd[i]; harray[5] = GCD_Glue; harray[6] = NULL;
 	gcd[i++].creator = GButtonCreate;

@@ -685,7 +685,6 @@ static void _Import(CharView *cv,BitmapView *bv,FontView *fv) {
     label[2].text = (uint32_t *) _("_Filter");
     label[2].text_is_1byte = true;
     label[2].text_has_mnemonic = true;
-    gcd[2].gd.mnemonic = 'F';
     gcd[2].gd.label = &label[2];
     gcd[2].gd.handle_controlevent = GFileChooserFilterEh;
     gcd[2].creator = GButtonCreate;

@@ -300,7 +300,6 @@ static void GProgressStartIndicator(
 	    gd.pos.x = pos.width-gd.pos.width-10;
 	    gd.pos.y = pos.height-GDrawPointsToPixels(new_->gw,29);
 	    gd.flags = gg_visible | gg_enabled | gg_pos_in_pixels | gg_pos_use0;
-	    gd.mnemonic = 'S';
 	    label.text = (uint32_t *) _("_Stop");
 	    label.text_is_1byte = true;
 	    label.text_has_mnemonic = true;

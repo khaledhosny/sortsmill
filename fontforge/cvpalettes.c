@@ -548,7 +548,6 @@ static int Ask(char *rb1, char *rb2, int rb, char *lab, float *val, int *co,
 	label[4].text = (uint32_t *) _("_OK");
 	label[4].text_is_1byte = true;
 	label[4].text_has_mnemonic = true;
-	gcd[4].gd.mnemonic = 'O';
 	gcd[4].gd.label = &label[4];
 	gcd[4].gd.handle_controlevent = TA_OK;
 	gcd[4].creator = GButtonCreate;
@@ -560,7 +559,6 @@ static int Ask(char *rb1, char *rb2, int rb, char *lab, float *val, int *co,
 	label[5].text_is_1byte = true;
 	label[5].text_has_mnemonic = true;
 	gcd[5].gd.label = &label[5];
-	gcd[5].gd.mnemonic = 'C';
 	gcd[5].gd.handle_controlevent = TA_Cancel;
 	gcd[5].creator = GButtonCreate;
 

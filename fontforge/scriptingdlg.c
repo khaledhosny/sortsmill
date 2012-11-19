@@ -315,7 +315,6 @@ void ScriptDlg(FontView *fv,CharView *cv) {
 	label[i].text = (uint32_t *) _("_OK");
 	label[i].text_is_1byte = true;
 	label[i].text_has_mnemonic = true;
-	gcd[i].gd.mnemonic = 'O';
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.handle_controlevent = SD_OK;
 	gcd[i].gd.cid = CID_OK;
@@ -328,7 +327,6 @@ void ScriptDlg(FontView *fv,CharView *cv) {
 	label[i].text_is_1byte = true;
 	label[i].text_has_mnemonic = true;
 	gcd[i].gd.label = &label[i];
-	gcd[i].gd.mnemonic = 'C';
 	gcd[i].gd.handle_controlevent = SD_Cancel;
 	gcd[i].gd.cid = CID_Cancel;
 	gcd[i++].creator = GButtonCreate;
@@ -340,7 +338,6 @@ void ScriptDlg(FontView *fv,CharView *cv) {
 	label[i].text_is_1byte = true;
 	label[i].text_has_mnemonic = true;
 	gcd[i].gd.label = &label[i];
-	gcd[i].gd.mnemonic = 'a';
 	gcd[i].gd.handle_controlevent = SD_Call;
 	gcd[i].gd.cid = CID_Call;
 	gcd[i++].creator = GButtonCreate;

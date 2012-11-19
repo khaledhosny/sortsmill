@@ -1118,7 +1118,6 @@ static int TileAsk(struct tiledata *td,SplineFont *sf) {
 
     gcd[k].gd.pos.x = 6; gcd[k].gd.pos.y = 6;
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    gcd[k].gd.mnemonic = 'L';
     label[k].text = (uint32_t *) _("_Left");
     label[k].text_is_1byte = true;
     label[k].text_has_mnemonic = true;
@@ -1130,7 +1129,6 @@ static int TileAsk(struct tiledata *td,SplineFont *sf) {
 
     gcd[k].gd.pos.x = 60; gcd[k].gd.pos.y = gcd[0].gd.pos.y;
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    gcd[k].gd.mnemonic = 'C';
     label[k].text = (uint32_t *) _("C_enter");
     label[k].text_is_1byte = true;
     label[k].text_has_mnemonic = true;
@@ -1142,7 +1140,6 @@ static int TileAsk(struct tiledata *td,SplineFont *sf) {
 
     gcd[k].gd.pos.x = 140; gcd[k].gd.pos.y = gcd[1].gd.pos.y;
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    gcd[k].gd.mnemonic = 'R';
     label[k].text = (uint32_t *) _("_Right");
     label[k].text_is_1byte = true;
     label[k].text_has_mnemonic = true;
@@ -1163,7 +1160,6 @@ static int TileAsk(struct tiledata *td,SplineFont *sf) {
 
     gcd[k].gd.pos.x = gcd[0].gd.pos.x; gcd[k].gd.pos.y = gcd[2].gd.pos.y+24;
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    gcd[k].gd.mnemonic = 'T';
     label[k].text = (uint32_t *) _("_Tile");
     label[k].text_is_1byte = true;
     label[k].text_has_mnemonic = true;
@@ -1175,7 +1171,6 @@ static int TileAsk(struct tiledata *td,SplineFont *sf) {
 
     gcd[k].gd.pos.x = gcd[1].gd.pos.x; gcd[k].gd.pos.y = gcd[4].gd.pos.y;
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    gcd[k].gd.mnemonic = 'a';
     label[k].text = (uint32_t *) _("Sc_ale & Tile");
     label[k].text_is_1byte = true;
     label[k].text_has_mnemonic = true;
@@ -1187,7 +1182,6 @@ static int TileAsk(struct tiledata *td,SplineFont *sf) {
 
     gcd[k].gd.pos.x = gcd[2].gd.pos.x; gcd[k].gd.pos.y = gcd[5].gd.pos.y;
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-    gcd[k].gd.mnemonic = 'S';
     label[k].text = (uint32_t *) _("_Scale");
     label[k].text_is_1byte = true;
     label[k].text_has_mnemonic = true;

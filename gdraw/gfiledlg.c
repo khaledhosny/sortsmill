@@ -148,7 +148,6 @@ GWidgetOpenFileWPath (const uint32_t *title, const uint32_t *defaultfile,
   label[1].text = (uint32_t *) _("_OK");
   label[1].text_is_1byte = true;
   label[1].text_has_mnemonic = true;
-  gcd[1].gd.mnemonic = 'O';
   gcd[1].gd.label = &label[1];
   gcd[1].gd.handle_controlevent = GFD_Ok;
   gcd[1].creator = GButtonCreate;
@@ -163,7 +162,6 @@ GWidgetOpenFileWPath (const uint32_t *title, const uint32_t *defaultfile,
   label[2].text = (uint32_t *) _("_Filter");
   label[2].text_is_1byte = true;
   label[2].text_has_mnemonic = true;
-  gcd[2].gd.mnemonic = 'F';
   gcd[2].gd.label = &label[2];
   gcd[2].gd.handle_controlevent = GFileChooserFilterEh;
   gcd[2].creator = GButtonCreate;
@@ -178,7 +176,6 @@ GWidgetOpenFileWPath (const uint32_t *title, const uint32_t *defaultfile,
   label[3].text_is_1byte = true;
   label[3].text_has_mnemonic = true;
   gcd[3].gd.label = &label[3];
-  gcd[3].gd.mnemonic = 'C';
   gcd[3].gd.handle_controlevent = GFD_Cancel;
   gcd[3].creator = GButtonCreate;
   harray[4] = GCD_Glue;

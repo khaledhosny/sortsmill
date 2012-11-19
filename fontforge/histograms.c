@@ -972,7 +972,6 @@ void SFHistogram(SplineFont *sf,int layer, struct psdict *private, uint8_t *sele
     label[i].text_is_1byte = true;
     label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
-    gcd[i].gd.mnemonic = 'C';
     gcd[i].gd.cid = CID_Cancel;
     gcd[i++].creator = GButtonCreate;
     butarray[4] = GCD_Glue; butarray[5] = &gcd[i-1]; butarray[6] = GCD_Glue; butarray[7] = NULL;

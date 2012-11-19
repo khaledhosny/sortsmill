@@ -422,7 +422,6 @@ static void RegionControl(CharView *cv,DBounds *b,int cnt) {
 	label[5].text = (uint32_t *) _("_OK");
 	label[5].text_is_1byte = true;
 	label[5].text_has_mnemonic = true;
-	gcd[5].gd.mnemonic = 'O';
 	gcd[5].gd.label = &label[5];
 	gcd[5].gd.handle_controlevent = RC_OK;
 	gcd[5].creator = GButtonCreate;
@@ -434,7 +433,6 @@ static void RegionControl(CharView *cv,DBounds *b,int cnt) {
 	label[6].text_is_1byte = true;
 	label[6].text_has_mnemonic = true;
 	gcd[6].gd.label = &label[6];
-	gcd[6].gd.mnemonic = 'C';
 	gcd[6].gd.handle_controlevent = RC_Cancel;
 	gcd[6].creator = GButtonCreate;
 	barray[5] = &gcd[6]; barray[6] = GCD_Glue; barray[7] = NULL;

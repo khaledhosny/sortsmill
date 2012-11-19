@@ -190,7 +190,6 @@ AskSizeBits (int *pixelsize, int *bitsperpixel)
   label[4].text = (uint32_t *) _("_OK");
   label[4].text_is_1byte = true;
   label[4].text_has_mnemonic = true;
-  gcd[4].gd.mnemonic = 'O';
   gcd[4].gd.label = &label[4];
   gcd[4].gd.handle_controlevent = SB_OK;
   gcd[4].creator = GButtonCreate;
@@ -207,7 +206,6 @@ AskSizeBits (int *pixelsize, int *bitsperpixel)
   label[5].text_is_1byte = true;
   label[5].text_has_mnemonic = true;
   gcd[5].gd.label = &label[5];
-  gcd[5].gd.mnemonic = 'C';
   gcd[5].gd.handle_controlevent = SB_Cancel;
   gcd[5].creator = GButtonCreate;
   barray[5] = &gcd[5];

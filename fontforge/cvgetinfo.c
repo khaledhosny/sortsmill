@@ -570,7 +570,6 @@ static void RefGetInfo(CharView *cv, RefChar *ref) {
 	label[6+j].text = (uint32_t *) _("_Show");
 	label[6+j].text_is_1byte = true;
 	label[6+j].text_has_mnemonic = true;
-	gcd[6+j].gd.mnemonic = 'S';
 	gcd[6+j].gd.label = &label[6+j];
 	gcd[6+j].gd.handle_controlevent = GI_Show;
 	harray2[0] = GCD_Glue; harray2[1] = &gcd[6+j]; harray2[2] = GCD_Glue; harray2[3] = NULL;
@@ -590,7 +589,6 @@ static void RefGetInfo(CharView *cv, RefChar *ref) {
 	label[6+j].text = (uint32_t *) _("_OK");
 	label[6+j].text_is_1byte = true;
 	label[6+j].text_has_mnemonic = true;
-	gcd[6+j].gd.mnemonic = 'O';
 	gcd[6+j].gd.label = &label[6+j];
 	gcd[6+j].gd.handle_controlevent = GI_ROK;
 	gcd[6+j++].creator = GButtonCreate;
@@ -601,7 +599,6 @@ static void RefGetInfo(CharView *cv, RefChar *ref) {
 	label[6+j].text = (uint32_t *) _("_Cancel");
 	label[6+j].text_is_1byte = true;
 	label[6+j].text_has_mnemonic = true;
-	gcd[6+j].gd.mnemonic = 'C';
 	gcd[6+j].gd.label = &label[6+j];
 	gcd[6+j].gd.handle_controlevent = GI_Cancel;
 	gcd[6+j].creator = GButtonCreate;
@@ -702,7 +699,6 @@ static void ImgGetInfo(CharView *cv, ImageList *img) {
 	label[3].text = (uint32_t *) _("_OK");
 	label[3].text_is_1byte = true;
 	label[3].text_has_mnemonic = true;
-	gcd[3].gd.mnemonic = 'O';
 	gcd[3].gd.label = &label[3];
 	gcd[3].gd.handle_controlevent = GI_Cancel;
 	gcd[3].creator = GButtonCreate;
@@ -3203,7 +3199,6 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	mlabel[j].text = (uint32_t *) _("_OK");
 	mlabel[j].text_is_1byte = true;
 	mlabel[j].text_has_mnemonic = true;
-	mgcd[j].gd.mnemonic = 'O';
 	mgcd[j].gd.label = &mlabel[j];
 	mgcd[j].gd.handle_controlevent = PI_Ok;
 	mgcd[j].creator = GButtonCreate;
@@ -3216,7 +3211,6 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	mlabel[j].text_is_1byte = true;
 	mlabel[j].text_has_mnemonic = true;
 	mgcd[j].gd.label = &mlabel[j];
-	mgcd[j].gd.mnemonic = 'C';
 	mgcd[j].gd.handle_controlevent = PI_Cancel;
 	mgcd[j].creator = GButtonCreate;
 	++j;
@@ -3632,7 +3626,6 @@ static void SpiroPointGetInfo(CharView *cv, spiro_cp *scp, SplinePointList *spl)
 	label[j].text = (uint32_t *) _("_OK");
 	label[j].text_is_1byte = true;
 	label[j].text_has_mnemonic = true;
-	gcd[j].gd.mnemonic = 'O';
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.handle_controlevent = PI_SpiroOk;
 	gcd[j].creator = GButtonCreate;
@@ -3645,7 +3638,6 @@ static void SpiroPointGetInfo(CharView *cv, spiro_cp *scp, SplinePointList *spl)
 	label[j].text_is_1byte = true;
 	label[j].text_has_mnemonic = true;
 	gcd[j].gd.label = &label[j];
-	gcd[j].gd.mnemonic = 'C';
 	gcd[j].gd.handle_controlevent = PI_Cancel;
 	gcd[j].creator = GButtonCreate;
 	harray6[4] = GCD_Glue; harray6[5] = &gcd[j]; harray6[6] = GCD_Glue; harray6[7] = NULL;

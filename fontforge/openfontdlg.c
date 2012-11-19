@@ -783,7 +783,6 @@ FVOpenFont (char *title, const char *defaultfile, int mult)
   label[i].text = (uint32_t *) _("_OK");
   label[i].text_is_1byte = true;
   label[i].text_has_mnemonic = true;
-  gcd[i].gd.mnemonic = 'O';
   gcd[i].gd.label = &label[i];
   gcd[i].gd.handle_controlevent = GFD_Ok;
   harray3[0] = GCD_Glue;
@@ -798,7 +797,6 @@ FVOpenFont (char *title, const char *defaultfile, int mult)
   label[i].text = (uint32_t *) C_ ("Font", "_New");
   label[i].text_is_1byte = true;
   label[i].text_has_mnemonic = true;
-  gcd[i].gd.mnemonic = 'N';
   gcd[i].gd.label = &label[i];
   gcd[i].gd.handle_controlevent = GFD_New;
   harray3[2] = GCD_Glue;
@@ -814,7 +812,6 @@ FVOpenFont (char *title, const char *defaultfile, int mult)
   label[i].text = (uint32_t *) _("_Filter");
   label[i].text_is_1byte = true;
   label[i].text_has_mnemonic = true;
-  gcd[i].gd.mnemonic = 'F';
   gcd[i].gd.label = &label[i];
   gcd[i].gd.handle_controlevent = GFileChooserFilterEh;
   harray3[4] = &gcd[i];
@@ -828,7 +825,6 @@ FVOpenFont (char *title, const char *defaultfile, int mult)
   label[i].text_is_1byte = true;
   label[i].text_has_mnemonic = true;
   gcd[i].gd.label = &label[i];
-  gcd[i].gd.mnemonic = 'C';
   gcd[i].gd.handle_controlevent = GFD_Cancel;
   harray3[5] = GCD_Glue;
   harray3[6] = &gcd[i];

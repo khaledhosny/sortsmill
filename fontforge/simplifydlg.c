@@ -420,7 +420,6 @@ int SimplifyDlg(SplineFont *sf, struct simplifyinfo *smpl) {
     label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
     label[k].text_has_mnemonic = true;
-    gcd[k].gd.mnemonic = 'O';
     gcd[k].gd.label = &label[k];
     gcd[k].gd.handle_controlevent = Sim_OK;
     gcd[k++].creator = GButtonCreate;
@@ -433,7 +432,6 @@ int SimplifyDlg(SplineFont *sf, struct simplifyinfo *smpl) {
     label[k].text_is_1byte = true;
     label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
-    gcd[k].gd.mnemonic = 'C';
     gcd[k].gd.handle_controlevent = Sim_Cancel;
     gcd[k++].creator = GButtonCreate;
     barray[3] = GCD_Glue; barray[4] = &gcd[k-1]; barray[5] = GCD_Glue; barray[6] = NULL;

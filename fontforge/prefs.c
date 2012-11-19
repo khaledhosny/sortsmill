@@ -2882,7 +2882,6 @@ DoPrefs (void)
   label[gc].text = (uint32_t *) _("_OK");
   label[gc].text_is_1byte = true;
   label[gc].text_has_mnemonic = true;
-  gcd[gc].gd.mnemonic = 'O';
   gcd[gc].gd.label = &label[gc];
   gcd[gc].gd.handle_controlevent = Prefs_Ok;
   gcd[gc++].creator = GButtonCreate;
@@ -2900,7 +2899,6 @@ DoPrefs (void)
   label[gc].text_is_1byte = true;
   label[gc].text_has_mnemonic = true;
   gcd[gc].gd.label = &label[gc];
-  gcd[gc].gd.mnemonic = 'C';
   gcd[gc].gd.handle_controlevent = Prefs_Cancel;
   gcd[gc++].creator = GButtonCreate;
   harray[4] = GCD_Glue;
@@ -3500,7 +3498,6 @@ PrefsSubSetDlg (CharView * cv, char *windowTitle, struct prefs_list *plist)
   label[gc].text = (uint32_t *) _("_OK");
   label[gc].text_is_1byte = true;
   label[gc].text_has_mnemonic = true;
-  gcd[gc].gd.mnemonic = 'O';
   gcd[gc].gd.label = &label[gc];
   gcd[gc].gd.handle_controlevent = PrefsSubSet_Ok;
   gcd[gc++].creator = GButtonCreate;

@@ -542,7 +542,6 @@ return;
 	label[1].text = (uint32_t *) _("_Next");
 	label[1].text_is_1byte = true;
 	label[1].text_has_mnemonic = true;
-	gcd[1].gd.mnemonic = 'N';
 	gcd[1].gd.label = &label[1];
 	gcd[1].gd.cid = CID_Next;
 	gcd[1].creator = GButtonCreate;
@@ -553,7 +552,6 @@ return;
 	gcd[6].gd.flags = /*gg_visible |*/ gg_enabled;
 	label[6].text = (uint32_t *) _("Fix");
 	label[6].text_is_1byte = true;
-	gcd[6].gd.mnemonic = 'F';
 	gcd[6].gd.label = &label[6];
 	gcd[6].gd.cid = CID_Fix;
 	gcd[6].creator = GButtonCreate;
@@ -566,7 +564,6 @@ return;
 	label[2].text_is_1byte = true;
 	label[2].text_has_mnemonic = true;
 	gcd[2].gd.label = &label[2];
-	gcd[2].gd.mnemonic = 'S';
 	gcd[2].gd.cid = CID_Stop;
 	gcd[2].creator = GButtonCreate;
 	barray[8] = GCD_Glue; barray[9] = GCD_Glue; barray[10] = GCD_Glue;
@@ -3139,7 +3136,6 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     plabel[1].text_is_1byte = true;
     plabel[1].text_has_mnemonic = true;
     pgcd[1].gd.label = &plabel[1];
-    pgcd[1].gd.mnemonic = 'X';
     pgcd[1].gd.pos.x = 3; pgcd[1].gd.pos.y = pgcd[0].gd.pos.y+17; 
     pgcd[1].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( doxnear ) pgcd[1].gd.flags |= gg_cb_on;
@@ -3169,7 +3165,6 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     plabel[3].text_is_1byte = true;
     plabel[3].text_has_mnemonic = true;
     pgcd[3].gd.label = &plabel[3];
-    pgcd[3].gd.mnemonic = 'Y';
     pgcd[3].gd.pos.x = 3; pgcd[3].gd.pos.y = pgcd[1].gd.pos.y+24; 
     pgcd[3].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( doynear ) pgcd[3].gd.flags |= gg_cb_on;
@@ -3199,7 +3194,6 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     plabel[5].text_is_1byte = true;
     plabel[5].text_has_mnemonic = true;
     pgcd[5].gd.label = &plabel[5];
-    pgcd[5].gd.mnemonic = 'S';
     pgcd[5].gd.pos.x = 3; pgcd[5].gd.pos.y = pgcd[3].gd.pos.y+18; 
     pgcd[5].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( doynearstd ) pgcd[5].gd.flags |= gg_cb_on;
@@ -3212,7 +3206,6 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     plabel[6].text_is_1byte = true;
     plabel[6].text_has_mnemonic = true;
     pgcd[6].gd.label = &plabel[6];
-    pgcd[6].gd.mnemonic = 'C';
     pgcd[6].gd.pos.x = 3; pgcd[6].gd.pos.y = pgcd[5].gd.pos.y+14; 
     pgcd[6].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( cpstd ) pgcd[6].gd.flags |= gg_cb_on;
@@ -3225,7 +3218,6 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     plabel[7].text_is_1byte = true;
     plabel[7].text_has_mnemonic = true;
     pgcd[7].gd.label = &plabel[7];
-    pgcd[7].gd.mnemonic = 'b';
     pgcd[7].gd.pos.x = 3; pgcd[7].gd.pos.y = pgcd[6].gd.pos.y+14; 
     pgcd[7].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( cpodd ) pgcd[7].gd.flags |= gg_cb_on;
@@ -3320,7 +3312,6 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     palabel[0].text_is_1byte = true;
     palabel[0].text_has_mnemonic = true;
     pagcd[0].gd.label = &palabel[0];
-    pagcd[0].gd.mnemonic = 'P';
     pagcd[0].gd.pos.x = 3; pagcd[0].gd.pos.y = 6; 
     pagcd[0].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( openpaths ) pagcd[0].gd.flags |= gg_cb_on;
@@ -3332,7 +3323,6 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     palabel[1].text = (uint32_t *) _("Intersecting Paths");
     palabel[1].text_is_1byte = true;
     pagcd[1].gd.label = &palabel[1];
-    pagcd[1].gd.mnemonic = 'E';
     pagcd[1].gd.pos.x = 3; pagcd[1].gd.pos.y = pagcd[0].gd.pos.y+17; 
     pagcd[1].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( intersectingpaths ) pagcd[1].gd.flags |= gg_cb_on;
@@ -3345,7 +3335,6 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     palabel[2].text_is_1byte = true;
     palabel[2].text_has_mnemonic = true;
     pagcd[2].gd.label = &palabel[2];
-    pagcd[2].gd.mnemonic = 'E';
     pagcd[2].gd.pos.x = 3; pagcd[2].gd.pos.y = pagcd[1].gd.pos.y+17; 
     pagcd[2].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( linestd ) pagcd[2].gd.flags |= gg_cb_on;
@@ -3358,7 +3347,6 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     palabel[3].text_is_1byte = true;
     palabel[3].text_has_mnemonic = true;
     pagcd[3].gd.label = &palabel[3];
-    pagcd[3].gd.mnemonic = 'S';
     pagcd[3].gd.pos.x = 3; pagcd[3].gd.pos.y = pagcd[2].gd.pos.y+17; 
     pagcd[3].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( direction ) pagcd[3].gd.flags |= gg_cb_on;
@@ -3383,7 +3371,6 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     palabel[5].text_is_1byte = true;
     palabel[5].text_has_mnemonic = true;
     pagcd[5].gd.label = &palabel[5];
-    pagcd[5].gd.mnemonic = 'r';
     pagcd[5].gd.pos.x = 3; pagcd[5].gd.pos.y = pagcd[4].gd.pos.y+21; 
     pagcd[5].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( toomanypoints ) pagcd[5].gd.flags |= gg_cb_on;
@@ -3423,7 +3410,6 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     rflabel[0].text_is_1byte = true;
     rflabel[0].text_has_mnemonic = true;
     rfgcd[0].gd.label = &rflabel[0];
-    rfgcd[0].gd.mnemonic = 'r';
     rfgcd[0].gd.pos.x = 3; rfgcd[0].gd.pos.y = 6; 
     rfgcd[0].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( flippedrefs ) rfgcd[0].gd.flags |= gg_cb_on;
@@ -3437,7 +3423,6 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     rflabel[1].text_is_1byte = true;
     rflabel[1].text_has_mnemonic = true;
     rfgcd[1].gd.label = &rflabel[1];
-    rfgcd[1].gd.mnemonic = 'r';
     rfgcd[1].gd.pos.x = 3; rfgcd[1].gd.pos.y = rfgcd[0].gd.pos.y+17; 
     rfgcd[1].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( refsbadtransformttf ) rfgcd[1].gd.flags |= gg_cb_on;
@@ -3450,7 +3435,6 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     rflabel[2].text_is_1byte = true;
     rflabel[2].text_has_mnemonic = true;
     rfgcd[2].gd.label = &rflabel[2];
-    rfgcd[2].gd.mnemonic = 'r';
     rfgcd[2].gd.pos.x = 3; rfgcd[2].gd.pos.y = rfgcd[1].gd.pos.y+17; 
     rfgcd[2].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( mixedcontoursrefs ) rfgcd[2].gd.flags |= gg_cb_on;
@@ -3464,7 +3448,6 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     rflabel[3].text_is_1byte = true;
     rflabel[3].text_has_mnemonic = true;
     rfgcd[3].gd.label = &rflabel[3];
-    rfgcd[3].gd.mnemonic = 'r';
     rfgcd[3].gd.pos.x = 3; rfgcd[3].gd.pos.y = rfgcd[2].gd.pos.y+17; 
     rfgcd[3].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( refsbadtransformps ) rfgcd[3].gd.flags |= gg_cb_on;
@@ -3478,7 +3461,6 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     rflabel[4].text_is_1byte = true;
     rflabel[4].text_has_mnemonic = true;
     rfgcd[4].gd.label = &rflabel[4];
-    rfgcd[4].gd.mnemonic = 'r';
     rfgcd[4].gd.pos.x = 3; rfgcd[4].gd.pos.y = rfgcd[3].gd.pos.y+21; 
     rfgcd[4].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( toodeeprefs ) rfgcd[4].gd.flags |= gg_cb_on;
@@ -3508,7 +3490,6 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     rflabel[6].text_is_1byte = true;
     rflabel[6].text_has_mnemonic = true;
     rfgcd[6].gd.label = &rflabel[6];
-    rfgcd[6].gd.mnemonic = 'r';
     rfgcd[6].gd.pos.x = 3; rfgcd[6].gd.pos.y = rfgcd[5].gd.pos.y+24; 
     rfgcd[6].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( ptmatchrefsoutofdate ) rfgcd[6].gd.flags |= gg_cb_on;
@@ -3521,7 +3502,6 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     rflabel[7].text_is_1byte = true;
     rflabel[7].text_has_mnemonic = true;
     rfgcd[7].gd.label = &rflabel[7];
-    rfgcd[7].gd.mnemonic = 'r';
     rfgcd[7].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( multusemymetrics ) rfgcd[7].gd.flags |= gg_cb_on;
     rfgcd[7].gd.popup_msg = (uint32_t *) _("There may be at most one reference with the use-my-metrics bit set");
@@ -3543,7 +3523,6 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     hlabel[0].text_is_1byte = true;
     hlabel[0].text_has_mnemonic = true;
     hgcd[0].gd.label = &hlabel[0];
-    hgcd[0].gd.mnemonic = 'H';
     hgcd[0].gd.pos.x = 3; hgcd[0].gd.pos.y = 5; 
     hgcd[0].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( hintnopt ) hgcd[0].gd.flags |= gg_cb_on;
@@ -3556,7 +3535,6 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     hlabel[1].text_is_1byte = true;
     hlabel[1].text_has_mnemonic = true;
     hgcd[1].gd.label = &hlabel[1];
-    hgcd[1].gd.mnemonic = 'H';
     hgcd[1].gd.pos.x = 3; hgcd[1].gd.pos.y = hgcd[0].gd.pos.y+17; 
     hgcd[1].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( ptnearhint ) hgcd[1].gd.flags |= gg_cb_on;
@@ -3569,7 +3547,6 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     hlabel[2].text_is_1byte = true;
     hlabel[2].text_has_mnemonic = true;
     hgcd[2].gd.label = &hlabel[2];
-    hgcd[2].gd.mnemonic = 'W';
     hgcd[2].gd.pos.x = 3; hgcd[2].gd.pos.y = hgcd[1].gd.pos.y+21;
     hgcd[2].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( hintwidth ) hgcd[2].gd.flags |= gg_cb_on;
@@ -3600,7 +3577,6 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     hlabel[4].text_is_1byte = true;
     hlabel[4].text_has_mnemonic = true;
     hgcd[4].gd.label = &hlabel[4];
-    hgcd[4].gd.mnemonic = '3';
     hgcd[4].gd.pos.x = 3; hgcd[4].gd.pos.y = hgcd[3].gd.pos.y+19;
     hgcd[4].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( stem3 ) hgcd[4].gd.flags |= gg_cb_on;
@@ -3614,7 +3590,6 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     hlabel[5].text_is_1byte = true;
     hlabel[5].text_has_mnemonic = true;
     hgcd[5].gd.label = &hlabel[5];
-    hgcd[5].gd.mnemonic = 'S';
     hgcd[5].gd.pos.x = hgcd[4].gd.pos.x+5; hgcd[5].gd.pos.y = hgcd[4].gd.pos.y+17;
     hgcd[5].gd.flags = gg_visible | gg_utf8_popup;
     if ( showexactstem3 ) hgcd[5].gd.flags |= gg_cb_on;
@@ -3685,7 +3660,6 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     rlabel[0].text_is_1byte = true;
     rlabel[0].text_has_mnemonic = true;
     rgcd[0].gd.label = &rlabel[0];
-    rgcd[0].gd.mnemonic = 'r';
     rgcd[0].gd.pos.x = 3; rgcd[0].gd.pos.y = 6; 
     rgcd[0].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( bitmaps ) rgcd[0].gd.flags |= gg_cb_on;
@@ -3697,7 +3671,6 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     rlabel[1].text_is_1byte = true;
     rlabel[1].text_has_mnemonic = true;
     rgcd[1].gd.label = &rlabel[1];
-    rgcd[1].gd.mnemonic = 'r';
     rgcd[1].gd.pos.x = 3; rgcd[1].gd.pos.y = 6; 
     rgcd[1].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( bitmapwidths ) rgcd[1].gd.flags |= gg_cb_on;
@@ -3753,7 +3726,6 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     bblabel[0].text_is_1byte = true;
     bblabel[0].text_has_mnemonic = true;
     bbgcd[0].gd.label = &bblabel[0];
-    bbgcd[0].gd.mnemonic = 'r';
     bbgcd[0].gd.pos.x = 3; bbgcd[0].gd.pos.y = 6; 
     bbgcd[0].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( bbymax ) bbgcd[0].gd.flags |= gg_cb_on;
@@ -3782,7 +3754,6 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     bblabel[2].text_is_1byte = true;
     bblabel[2].text_has_mnemonic = true;
     bbgcd[2].gd.label = &bblabel[2];
-    bbgcd[2].gd.mnemonic = 'r';
     bbgcd[2].gd.pos.x = 3; bbgcd[2].gd.pos.y = bbgcd[0].gd.pos.y+21; 
     bbgcd[2].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( bbymin ) bbgcd[2].gd.flags |= gg_cb_on;
@@ -3852,7 +3823,6 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     bblabel[8].text_is_1byte = true;
     bblabel[8].text_has_mnemonic = true;
     bbgcd[8].gd.label = &bblabel[8];
-    bbgcd[8].gd.mnemonic = 'W';
     bbgcd[8].gd.pos.x = 3; bbgcd[8].gd.pos.y = bbgcd[6].gd.pos.y+21;
     bbgcd[8].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( advancewidth ) bbgcd[8].gd.flags |= gg_cb_on;
@@ -3877,7 +3847,6 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     bblabel[10].text = (uint32_t *) _("Check VAdvance:\n");
     bblabel[10].text_is_1byte = true;
     bbgcd[10].gd.label = &bblabel[10];
-    bbgcd[10].gd.mnemonic = 'W';
     bbgcd[10].gd.pos.x = 3; bbgcd[10].gd.pos.y = bbgcd[9].gd.pos.y+24;
     bbgcd[10].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( !sf->hasvmetrics ) bbgcd[10].gd.flags = gg_visible;
@@ -3916,7 +3885,6 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     clabel[0].text_is_1byte = true;
     clabel[0].text_has_mnemonic = true;
     cgcd[0].gd.label = &clabel[0];
-    cgcd[0].gd.mnemonic = 'S';
     cgcd[0].gd.pos.x = 3; cgcd[0].gd.pos.y = 6;
     cgcd[0].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( cidmultiple ) cgcd[0].gd.flags |= gg_cb_on;
@@ -3929,7 +3897,6 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     clabel[1].text_is_1byte = true;
     clabel[1].text_has_mnemonic = true;
     cgcd[1].gd.label = &clabel[1];
-    cgcd[1].gd.mnemonic = 'S';
     cgcd[1].gd.pos.x = 3; cgcd[1].gd.pos.y = cgcd[0].gd.pos.y+17; 
     cgcd[1].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
     if ( cidblank ) cgcd[1].gd.flags |= gg_cb_on;
@@ -4094,7 +4061,6 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     mlabel[4].text = (uint32_t *) _("¹ \"Near\" means within");
     mlabel[4].text_is_1byte = true;
     mgcd[4].gd.label = &mlabel[4];
-    mgcd[4].gd.mnemonic = 'N';
     mgcd[4].gd.pos.x = 6; mgcd[4].gd.pos.y = mgcd[3].gd.pos.y+6+6;
     mgcd[4].gd.flags = gg_visible | gg_enabled;
     mgcd[4].creator = GLabelCreate;
@@ -4129,7 +4095,6 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     mlabel[7].text = (uint32_t *) _("_OK");
     mlabel[7].text_is_1byte = true;
     mlabel[7].text_has_mnemonic = true;
-    mgcd[7].gd.mnemonic = 'O';
     mgcd[7].gd.label = &mlabel[7];
     mgcd[7].gd.handle_controlevent = Prob_OK;
     mgcd[7].creator = GButtonCreate;
@@ -4142,7 +4107,6 @@ void FindProblems(FontView *fv,CharView *cv, SplineChar *sc) {
     mlabel[8].text_is_1byte = true;
     mlabel[8].text_has_mnemonic = true;
     mgcd[8].gd.label = &mlabel[8];
-    mgcd[8].gd.mnemonic = 'C';
     mgcd[8].gd.handle_controlevent = Prob_Cancel;
     mgcd[8].creator = GButtonCreate;
     barray[4] = GCD_Glue; barray[5] = GCD_Glue; barray[6] = &mgcd[8]; barray[7] = GCD_Glue; barray[8] = NULL;

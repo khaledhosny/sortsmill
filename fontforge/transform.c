@@ -735,7 +735,6 @@ void TransformDlgCreate(void *data,void (*transfunc)(void *,real *,int,BVTFunc *
 	label[gci].text = (uint32_t *) _("_OK");
 	label[gci].text_is_1byte = true;
 	label[gci].text_has_mnemonic = true;
-	gcd[gci].gd.mnemonic = 'O';
 	gcd[gci].gd.label = &label[gci];
 	gcd[gci].gd.handle_controlevent = Trans_OK;
 	gcd[gci++].creator = GButtonCreate;
@@ -757,7 +756,6 @@ void TransformDlgCreate(void *data,void (*transfunc)(void *,real *,int,BVTFunc *
 	label[gci].text_is_1byte = true;
 	label[gci].text_has_mnemonic = true;
 	gcd[gci].gd.label = &label[gci];
-	gcd[gci].gd.mnemonic = 'C';
 	gcd[gci].gd.handle_controlevent = Trans_Cancel;
 	gcd[gci++].creator = GButtonCreate;
 	buttons[8] = GCD_Glue; buttons[9] = &gcd[gci-1]; buttons[10] = GCD_Glue;

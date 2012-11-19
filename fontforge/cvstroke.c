@@ -937,7 +937,6 @@ static void MakeStrokeDlg(void *cv,void (*strokeit)(void *,StrokeInfo *,int),Str
 	label[gcdoff].text_is_1byte = true;
 	label[gcdoff].text_has_mnemonic = true;
 	label[gcdoff].image = (GImage *) "cvssquarecap.png";
-	gcd[gcdoff].gd.mnemonic = 'q';
 	gcd[gcdoff].gd.label = &label[gcdoff];
 	gcd[gcdoff].gd.flags = gg_enabled | gg_visible | (def->cap==lc_square?gg_cb_on:0);
 	gcd[gcdoff].gd.cid = CID_SquareCap;
@@ -2867,7 +2866,6 @@ int LayerDialog(Layer *layer,SplineFont *sf) {
 
     label[gcdoff].text = (uint32_t *) _("Stroke");
     label[gcdoff].text_is_1byte = true;
-    gcd[gcdoff].gd.mnemonic = 'S';
     gcd[gcdoff].gd.label = &label[gcdoff];
     gcd[gcdoff].gd.pos.x = 5; gcd[gcdoff].gd.pos.y = gcd[fill_gcd].gd.pos.y+gcd[fill_gcd].gd.pos.height+4;
     gcd[gcdoff].gd.flags = gg_enabled | gg_visible | (layer->dostroke? gg_cb_on : 0);
@@ -2922,7 +2920,6 @@ int LayerDialog(Layer *layer,SplineFont *sf) {
 
     label[gcdoff].text = (uint32_t *) _("Opacity:");
     label[gcdoff].text_is_1byte = true;
-    gcd[gcdoff].gd.mnemonic = 'W';
     gcd[gcdoff].gd.label = &label[gcdoff];
     gcd[gcdoff].gd.pos.x = 5; gcd[gcdoff].gd.pos.y = gcd[gcdoff-1].gd.pos.y+25;
     gcd[gcdoff].gd.flags = gg_enabled | gg_visible;
@@ -3177,7 +3174,6 @@ int LayerDialog(Layer *layer,SplineFont *sf) {
     label[gcdoff].text_is_1byte = true;
     label[gcdoff].text_has_mnemonic = true;
     label[gcdoff].image = (GImage *) "cvsbuttcap.png";
-    gcd[gcdoff].gd.mnemonic = 'B';
     gcd[gcdoff].gd.label = &label[gcdoff];
     gcd[gcdoff].gd.pos.x = 15; gcd[gcdoff].gd.pos.y = gcd[gcdoff-2].gd.pos.y+12;
     gcd[gcdoff].gd.flags = gg_enabled | gg_visible | (layer->stroke_pen.linecap==lc_butt?gg_cb_on:0);
@@ -3189,7 +3185,6 @@ int LayerDialog(Layer *layer,SplineFont *sf) {
     label[gcdoff].text_is_1byte = true;
     label[gcdoff].text_has_mnemonic = true;
     label[gcdoff].image = (GImage *) "cvsroundcap.png";
-    gcd[gcdoff].gd.mnemonic = 'R';
     gcd[gcdoff].gd.label = &label[gcdoff];
     gcd[gcdoff].gd.pos.x = 80; gcd[gcdoff].gd.pos.y = gcd[gcdoff-1].gd.pos.y;
     gcd[gcdoff].gd.flags = gg_enabled | gg_visible | (layer->stroke_pen.linecap==lc_round?gg_cb_on:0);
@@ -3201,7 +3196,6 @@ int LayerDialog(Layer *layer,SplineFont *sf) {
     label[gcdoff].text_is_1byte = true;
     label[gcdoff].text_has_mnemonic = true;
     label[gcdoff].image = (GImage *) "cvssquarecap.png";
-    gcd[gcdoff].gd.mnemonic = 'q';
     gcd[gcdoff].gd.label = &label[gcdoff];
     gcd[gcdoff].gd.pos.x = 150; gcd[gcdoff].gd.pos.y = gcd[gcdoff-2].gd.pos.y;
     gcd[gcdoff].gd.flags = gg_enabled | gg_visible | (layer->stroke_pen.linecap==lc_square?gg_cb_on:0);
@@ -3244,7 +3238,6 @@ int LayerDialog(Layer *layer,SplineFont *sf) {
     label[gcdoff].text_is_1byte = true;
     label[gcdoff].text_has_mnemonic = true;
     label[gcdoff].image = (GImage *) "cvsmiterjoin.png";
-    gcd[gcdoff].gd.mnemonic = 'M';
     gcd[gcdoff].gd.label = &label[gcdoff];
     gcd[gcdoff].gd.pos.x = gcd[gcdoff-6].gd.pos.x; gcd[gcdoff].gd.pos.y = gcd[gcdoff-2].gd.pos.y+12;
     gcd[gcdoff].gd.flags = gg_enabled | gg_visible | (layer->stroke_pen.linejoin==lj_miter?gg_cb_on:0);
@@ -3256,7 +3249,6 @@ int LayerDialog(Layer *layer,SplineFont *sf) {
     label[gcdoff].text_is_1byte = true;
     label[gcdoff].text_has_mnemonic = true;
     label[gcdoff].image = (GImage *) "cvsroundjoin.png";
-    gcd[gcdoff].gd.mnemonic = 'u';
     gcd[gcdoff].gd.label = &label[gcdoff];
     gcd[gcdoff].gd.pos.x = gcd[gcdoff-6].gd.pos.x; gcd[gcdoff].gd.pos.y = gcd[gcdoff-1].gd.pos.y;
     gcd[gcdoff].gd.flags = gg_enabled | gg_visible | (layer->stroke_pen.linejoin==lj_round?gg_cb_on:0);
@@ -3268,7 +3260,6 @@ int LayerDialog(Layer *layer,SplineFont *sf) {
     label[gcdoff].text_is_1byte = true;
     label[gcdoff].text_has_mnemonic = true;
     label[gcdoff].image = (GImage *) "cvsbeveljoin.png";
-    gcd[gcdoff].gd.mnemonic = 'v';
     gcd[gcdoff].gd.label = &label[gcdoff];
     gcd[gcdoff].gd.pos.x = gcd[gcdoff-6].gd.pos.x; gcd[gcdoff].gd.pos.y = gcd[gcdoff-1].gd.pos.y;
     gcd[gcdoff].gd.flags = gg_enabled | gg_visible | (layer->stroke_pen.linejoin==lj_bevel?gg_cb_on:0);
@@ -3278,7 +3269,6 @@ int LayerDialog(Layer *layer,SplineFont *sf) {
 
     label[gcdoff].text = (uint32_t *) _("Inherited");
     label[gcdoff].text_is_1byte = true;
-    gcd[gcdoff].gd.mnemonic = 'q';
     gcd[gcdoff].gd.label = &label[gcdoff];
     gcd[gcdoff].gd.pos.x = 220; gcd[gcdoff].gd.pos.y = gcd[gcdoff-2].gd.pos.y;
     gcd[gcdoff].gd.flags = gg_enabled | gg_visible | (layer->stroke_pen.linejoin==lj_inherited?gg_cb_on:0);

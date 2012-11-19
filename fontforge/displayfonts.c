@@ -296,7 +296,6 @@ static int PageSetup(PD *pi) {
     label[0].text = (uint32_t *) "lp";
     label[0].text_is_1byte = true;
     gcd[0].gd.label = &label[0];
-    gcd[0].gd.mnemonic = 'l';
     gcd[0].gd.pos.x = 40; gcd[0].gd.pos.y = 6; 
     gcd[0].gd.flags = progexists("lp")? (gg_visible | gg_enabled):gg_visible;
     gcd[0].gd.cid = CID_lp;
@@ -307,7 +306,6 @@ static int PageSetup(PD *pi) {
     label[1].text = (uint32_t *) "lpr";
     label[1].text_is_1byte = true;
     gcd[1].gd.label = &label[1];
-    gcd[1].gd.mnemonic = 'r';
     gcd[1].gd.pos.x = gcd[0].gd.pos.x; gcd[1].gd.pos.y = 18+gcd[0].gd.pos.y; 
     gcd[1].gd.flags = progexists("lpr")? (gg_visible | gg_enabled):gg_visible;
     gcd[1].gd.cid = CID_lpr;
@@ -319,7 +317,6 @@ static int PageSetup(PD *pi) {
     label[2].text = (uint32_t *) "ghostview";
     label[2].text_is_1byte = true;
     gcd[2].gd.label = &label[2];
-    gcd[2].gd.mnemonic = 'g';
     gcd[2].gd.pos.x = gcd[0].gd.pos.x+50; gcd[2].gd.pos.y = gcd[0].gd.pos.y;
     gcd[2].gd.flags = gg_visible | gg_enabled | gg_rad_continueold;
     if ( !progexists("ghostview") )
@@ -341,7 +338,6 @@ static int PageSetup(PD *pi) {
     label[3].text_is_1byte = true;
     label[3].text_has_mnemonic = true;
     gcd[3].gd.label = &label[3];
-    gcd[3].gd.mnemonic = 'F';
     gcd[3].gd.pos.x = gcd[2].gd.pos.x; gcd[3].gd.pos.y = gcd[1].gd.pos.y; 
     gcd[3].gd.flags = gg_visible | gg_enabled | gg_rad_continueold;
     gcd[3].gd.cid = CID_File;
@@ -353,7 +349,6 @@ static int PageSetup(PD *pi) {
     label[4].text_is_1byte = true;
     label[4].text_has_mnemonic = true;
     gcd[4].gd.label = &label[4];
-    gcd[4].gd.mnemonic = 'F';
     gcd[4].gd.pos.x = gcd[2].gd.pos.x+70; gcd[4].gd.pos.y = gcd[1].gd.pos.y; 
     gcd[4].gd.flags = gg_visible | gg_enabled | gg_rad_continueold;
     gcd[4].gd.cid = CID_PDFFile;
@@ -365,7 +360,6 @@ static int PageSetup(PD *pi) {
     label[5].text_is_1byte = true;
     label[5].text_has_mnemonic = true;
     gcd[5].gd.label = &label[5];
-    gcd[5].gd.mnemonic = 'O';
     gcd[5].gd.pos.x = gcd[1].gd.pos.x; gcd[5].gd.pos.y = 22+gcd[1].gd.pos.y; 
     gcd[5].gd.flags = gg_visible | gg_enabled | gg_utf8_popup | gg_rad_continueold;
     gcd[5].gd.cid = CID_Other;
@@ -383,7 +377,6 @@ static int PageSetup(PD *pi) {
     label[6].text = (uint32_t *) (printcommand?printcommand:"");
     label[6].text_is_1byte = true;
     gcd[6].gd.label = &label[6];
-    gcd[6].gd.mnemonic = 'O';
     gcd[6].gd.pos.x = gcd[2].gd.pos.x; gcd[6].gd.pos.y = gcd[5].gd.pos.y-4;
     gcd[6].gd.pos.width = 120;
     gcd[6].gd.flags = gg_visible | gg_enabled;
@@ -396,7 +389,6 @@ static int PageSetup(PD *pi) {
     label[7].text_is_1byte = true;
     label[7].text_has_mnemonic = true;
     gcd[7].gd.label = &label[7];
-    gcd[7].gd.mnemonic = 'S';
     gcd[7].gd.pos.x = 5; gcd[7].gd.pos.y = 24+gcd[5].gd.pos.y+6; 
     gcd[7].gd.flags = gg_visible | gg_enabled;
     gcd[7].creator = GLabelCreate;
@@ -419,7 +411,6 @@ static int PageSetup(PD *pi) {
     label[8].text = (uint32_t *) pb;
     label[8].text_is_1byte = true;
     gcd[8].gd.label = &label[8];
-    gcd[8].gd.mnemonic = 'S';
     gcd[8].gd.pos.x = 60; gcd[8].gd.pos.y = gcd[7].gd.pos.y-6;
     gcd[8].gd.pos.width = 90;
     gcd[8].gd.flags = gg_visible | gg_enabled;
@@ -433,7 +424,6 @@ static int PageSetup(PD *pi) {
     label[9].text_is_1byte = true;
     label[9].text_has_mnemonic = true;
     gcd[9].gd.label = &label[9];
-    gcd[9].gd.mnemonic = 'C';
     gcd[9].gd.pos.x = 160; gcd[9].gd.pos.y = gcd[7].gd.pos.y; 
     gcd[9].gd.flags = gg_visible | gg_enabled;
     gcd[9].gd.cid = CID_CopiesLab;
@@ -444,7 +434,6 @@ static int PageSetup(PD *pi) {
     label[10].text = (uint32_t *) buf;
     label[10].text_is_1byte = true;
     gcd[10].gd.label = &label[10];
-    gcd[10].gd.mnemonic = 'C';
     gcd[10].gd.pos.x = 200; gcd[10].gd.pos.y = gcd[8].gd.pos.y;
     gcd[10].gd.pos.width = 40;
     gcd[10].gd.flags = gg_visible | gg_enabled;
@@ -457,7 +446,6 @@ static int PageSetup(PD *pi) {
     label[11].text_is_1byte = true;
     label[11].text_has_mnemonic = true;
     gcd[11].gd.label = &label[11];
-    gcd[11].gd.mnemonic = 'P';
     gcd[11].gd.pos.x = 5; gcd[11].gd.pos.y = 30+gcd[7].gd.pos.y+6; 
     gcd[11].gd.flags = gg_visible | gg_enabled;
     gcd[11].gd.cid = CID_PrinterLab;
@@ -468,7 +456,6 @@ static int PageSetup(PD *pi) {
     label[12].text_is_1byte = true;
     if ( pi->pi.printer!=NULL )
 	gcd[12].gd.label = &label[12];
-    gcd[12].gd.mnemonic = 'P';
     gcd[12].gd.pos.x = 60; gcd[12].gd.pos.y = gcd[11].gd.pos.y-6;
     gcd[12].gd.pos.width = 90;
     gcd[12].gd.flags = gg_visible | gg_enabled;
@@ -486,7 +473,6 @@ static int PageSetup(PD *pi) {
     label[13].text = (uint32_t *) _("_OK");
     label[13].text_is_1byte = true;
     label[13].text_has_mnemonic = true;
-    gcd[13].gd.mnemonic = 'O';
     gcd[13].gd.label = &label[13];
     gcd[13].gd.handle_controlevent = PG_OK;
     gcd[13].creator = GButtonCreate;
@@ -498,7 +484,6 @@ static int PageSetup(PD *pi) {
     label[14].text_is_1byte = true;
     label[14].text_has_mnemonic = true;
     gcd[14].gd.label = &label[14];
-    gcd[14].gd.mnemonic = 'C';
     gcd[14].gd.handle_controlevent = PG_Cancel;
     gcd[14].creator = GButtonCreate;
 
@@ -2021,7 +2006,6 @@ return;
 	mlabel[2].text = (uint32_t *) _("_Print");
 	mlabel[2].text_is_1byte = true;
 	mlabel[2].text_has_mnemonic = true;
-	mgcd[2].gd.mnemonic = 'O';
 	mgcd[2].gd.label = &mlabel[2];
 	mgcd[2].gd.handle_controlevent = PRT_OK;
 	mgcd[2].gd.cid = CID_OK;
@@ -2176,7 +2160,6 @@ return;
 	tlabel[11].text = (uint32_t *) _("_Insert");
 	tlabel[11].text_is_1byte = true;
 	tlabel[11].text_has_mnemonic = true;
-	tgcd[11].gd.mnemonic = 'O';
 	tgcd[11].gd.label = &tlabel[11];
 	tgcd[11].gd.handle_controlevent = PRT_OK;
 	tgcd[11].gd.cid = CID_OK;
