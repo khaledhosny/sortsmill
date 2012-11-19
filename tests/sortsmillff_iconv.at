@@ -5,19 +5,7 @@ m4_defun([check_iconv],
 AT_SETUP([$1])
 AT_KEYWORDS([sortsmillff_iconv iconv guile scheme unit])
 AT_SKIP_IF([test x"${posix_locale}" = x -o x"${posix_locale}" = xnone])
-AT_CHECK_UNQUOTED([
-export LC_ALL="${posix_locale}"
-if test x${DOING_INSTALLCHECK} = xyes; then
-   # FIXME: Set the environment correctly, so distcheck works without
-   # having the modules installed.
-   :
-else
-   export LTDL_LIBRARY_PATH="${abs_top_builddir}/scheme"
-   export GUILE_LOAD_PATH="${abs_top_builddir}/scheme:${abs_top_srcdir}/scheme"
-fi
-${run_guile} "${abs_srcdir}"/$1
-],
-[$2],[$3],[$4])
+AT_CHECK_UNQUOTED([${run_guile} "${abs_srcdir}"/$1],[$2],[$3],[$4])
 AT_CLEANUP
 ])
 

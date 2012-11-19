@@ -23,6 +23,7 @@
 
 (define-module (sortsmillff brentroot)
   #:use-module ((rnrs) :version (6))
+  #:use-module (srfi srfi-31)           ; (rec ...)
   #:use-module (sortsmillff math-constants)
   #:export (flbrentroot
             flbrentroot-values
@@ -44,40 +45,53 @@
 
 ;;-------------------------------------------------------------------------
 
-(define (bracketed f1 f2)
-  (or (<= f1 0 f2) (<= f2 0 f1)))
+(define-syntax bracketed
+  (syntax-rules ()
+    ((_ f1 f2) (or (<= f1 0 f2) (<= f2 0 f1)))))
 
-(define (bisection a b)
-  (/ (- a b) 2))
+(define-syntax bisection
+  (syntax-rules ()
+    ((_ a b) (/ (- a b) 2))))
 
-(define (linear s fa fb)
-  (let ((fba (/ fb fa)))
-    (values (* fba 2 s)
-            (- 1 fba))))
+(define-syntax linear
+  (syntax-rules ()
+    ((_ s fa fb)
+     (let ((fba (/ fb fa)))
+       (values (* fba 2 s)
+               (- 1 fba))))))
 
-(define (inverse-quadratic s a fa b fb fc)
-  (let ((fbc (/ fb fc))
-        (fba (/ fb fa))
-        (fac (/ fa fc)))
-    (values (* fba
-               (- (* 2 s fac (- fac fbc))
-                  (* (- b a) (1- fbc))))
-            (* (1- fac) (1- fba) (1- fbc)))))
+(define-syntax inverse-quadratic
+  (syntax-rules ()
+    ((_ s a fa b fb fc)
+     (let ((fbc (/ fb fc))
+           (fba (/ fb fa))
+           (fac (/ fa fc)))
+       (values (* fba
+                  (- (* 2 s fac (- fac fbc))
+                     (* (- b a) (1- fbc))))
+               (* (1- fac) (1- fba) (1- fbc)))))))
 
-(define (interpolate a fa b fb fb1 step step1 tolerance)
-  (let*-values (((s) (bisection a b))
-                ((p q)
-                 (let-values (((pp qq)
-                               (if (or (= fb1 fa) (= fb1 fb))
-                                   (linear s fa fb)
-                                   (inverse-quadratic s a fa b fb fb1))))
-                   (if (positive? pp)
-                       (values pp (- qq))
-                       (values (- pp) qq)))))
-    (if (< (* 2 p) (min (- (* 3 s q) (abs (* tolerance q)))
-                        (abs (* step1 q))))
-        (values (/ p q) step)
-        (values s s))))
+(define-syntax interpolate
+  (syntax-rules ()
+    ((_ a fa b fb fb1 step step1 tolerance)
+     (let*-values (((s) (bisection a b))
+                   ((p q)
+                    (let-values (((pp qq)
+                                  (if (or (= fb1 fa) (= fb1 fb))
+                                      (linear s fa fb)
+                                      (inverse-quadratic s a fa b fb fb1))))
+                      (if (positive? pp)
+                          (values pp (- qq))
+                          (values (- pp) qq)))))
+       (if (< (* 2 p) (min (- (* 3 s q) (abs (* tolerance q)))
+                           (abs (* step1 q))))
+           (values (/ p q) step)
+           (values s s))))))
+
+(define (initial-iter-args a fa b fb)
+  (if (< (abs fa) (abs fb))
+      (list 0 b fb a fa b fb (- b a) (- b a))
+      (list 0 a fa b fb a fa (- a b) (- a b))))
 
 (define* (brentroot-values t1 t2 func
                            #:key (max-iters -1) (tol -1)
@@ -90,12 +104,12 @@
         (fb (func t2)))
     (if (not (bracketed fa fb))
         (values #f 1 0)         ; err == 1 means 'root not bracketed'.
-        (letrec ((iter
-                  (lambda (iter-no
-                           a fa      ; Point at which func is larger.
-                           b fb      ; Point at which func is smaller.
-                           b1 fb1    ; Earlier values of b, fb.
-                           step step1)  ; Last two step sizes.
+        (let ((iter
+               (rec (self iter-no
+                          a fa       ; Point at which func is larger.
+                          b fb       ; Point at which func is smaller.
+                          b1 fb1     ; Earlier values of b, fb.
+                          step step1)   ; Last two step sizes.
                     (if (<= max-iters iter-no)
                         (values #f 2 iter-no) ; err == 2 means maximum
                                               ; iterations exceeded.
@@ -118,18 +132,16 @@
                                             ((fguess) (func guess)))
                                 (if (bracketed fb fguess)
                                     (if (< (abs fguess) (abs fb))
-                                        (iter (1+ iter-no) b fb guess fguess b fb
+                                        (self (1+ iter-no) b fb guess fguess b fb
                                               new-step old-step)
-                                        (iter (1+ iter-no) guess fguess b fb b fb
+                                        (self (1+ iter-no) guess fguess b fb b fb
                                               new-step old-step))
                                     (if (< (abs fguess) (abs fa))
-                                        (iter (1+ iter-no) a fa guess fguess b fb
+                                        (self (1+ iter-no) a fa guess fguess b fb
                                               (- guess a) (- guess a))
-                                        (iter (1+ iter-no) guess fguess a fa b fb
+                                        (self (1+ iter-no) guess fguess a fa b fb
                                               (- guess a) (- guess a)))))))))))
-          (if (< (abs fa) (abs fb))
-              (iter 0 b fb a fa b fb (- b a) (- b a))
-              (iter 0 a fa b fb a fa (- a b) (- a b)))))))
+          (apply iter (initial-iter-args a fa b fb))))))
 
 (define* (brentroot t1 t2 func
                     #:key (max-iters -1) (tol -1)

@@ -3,13 +3,7 @@ m4_defun([check_precomputed_data],
 AT_SETUP([$1])
 AT_KEYWORDS([auxiliary precomputed_data precomputed_data.h unit])
 AT_SKIP_IF([test x${DOING_INSTALLCHECK} = xyes])
-AT_CHECK_UNQUOTED([
-export LC_ALL="${posix_locale}"
-export LTDL_LIBRARY_PATH="${abs_top_builddir}/scheme"
-export GUILE_LOAD_PATH="${abs_top_builddir}/scheme:${abs_top_srcdir}/scheme"
-${abs_builddir}/$1
-],
-[$2],[$3],[$4])
+AT_CHECK_UNQUOTED([${abs_builddir}/$1],[$2],[$3],[$4])
 AT_CLEANUP
 ])
 

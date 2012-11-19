@@ -57,13 +57,17 @@ installcheck-local: atconfig atlocal $(TESTSUITE)
 clean-local:
 	test ! -f '$(TESTSUITE)' || $(SHELL) '$(TESTSUITE)' --clean
 
-check-local: override TESTSUITEFLAGS += DOING_INSTALLCHECK=no	\
-	PYTHONPATH="$(abs_top_builddir)/python"
+check-local: override TESTSUITEFLAGS += DOING_INSTALLCHECK=no						\
+	LC_ALL="${posix_locale}" PYTHONPATH="$(abs_top_builddir)/python"				\
+	LTDL_LIBRARY_PATH="${abs_top_builddir}/scheme"									\
+	GUILE_LOAD_PATH="${abs_top_builddir}/scheme:${abs_top_srcdir}/scheme"			\
+	GUILE_LOAD_COMPILED_PATH="${abs_top_builddir}/scheme:${abs_top_srcdir}/scheme"
 
-# FIXME FIXME FIXME: installcheck needs to set PYTHONPATH and such.
-# FIXME FIXME FIXME: Also, once that is done, some installcheck tests
-# FIXME FIXME FIXME: that are skipped might better be performed.
-installcheck-local: override TESTSUITEFLAGS += DOING_INSTALLCHECK=yes
+installcheck-local: override TESTSUITEFLAGS += DOING_INSTALLCHECK=yes	\
+	LC_ALL="${posix_locale}" PYTHONPATH="$(pythondir)"					\
+	LTDL_LIBRARY_PATH="$(guileextensiondir)"							\
+	GUILE_LOAD_PATH="$(guilemoduledir)"									\
+	GUILE_LOAD_COMPILED_PATH="$(guileobjmoduledir)"
 
 AUTOM4TE = $(SHELL) $(srcdir)/build-aux/missing --run autom4te
 AUTOTEST = $(AUTOM4TE) --language=autotest
