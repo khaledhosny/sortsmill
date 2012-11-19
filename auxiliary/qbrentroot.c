@@ -72,33 +72,31 @@ vanish (const mpq_t u)
 static inline void
 bisection (mpq_t result, const mpq_t a, const mpq_t b)
 {
-  mpq_t tmp;
   mpq_t two;
 
-  mpq_inits (tmp, two, NULL);
+  mpq_init (two);
   mpq_set_d (two, 2);
-  mpq_sub (tmp, a, b);
-  mpq_div (result, tmp, two);
-  mpq_clears (tmp, two, NULL);
+  mpq_sub (result, a, b);
+  mpq_div (result, result, two);
+  mpq_clear (two);
 }
 
 static inline void
 linear (const mpq_t s, const mpq_t fa, const mpq_t fb, mpq_t p, mpq_t q)
 {
   mpq_t fba;
-  mpq_t tmp;
 
-  mpq_inits (fba, tmp, NULL);
+  mpq_init (fba);
 
   mpq_div (fba, fb, fa);
 
-  mpq_add (tmp, s, s);
-  mpq_mul (p, fba, tmp);
+  mpq_add (p, s, s);
+  mpq_mul (p, p, fba);
 
-  mpq_set_d (tmp, 1);
-  mpq_sub (q, tmp, fba);
+  mpq_set_d (q, 1);
+  mpq_sub (q, q, fba);
 
-  mpq_clears (fba, tmp, NULL);
+  mpq_clear (fba);
 }
 
 static inline void
@@ -108,11 +106,11 @@ inverse_quadratic (const mpq_t s, const mpq_t a, const mpq_t fa,
 {
   mpq_t fbc, fba, fac;
   mpq_t fbc1, fba1, fac1;
-  mpq_t one, tmp1, tmp2, tmp3;
+  mpq_t one, tmp1, tmp2;
 
   mpq_inits (fbc, fba, fac, NULL);
   mpq_inits (fbc1, fba1, fac1, NULL);
-  mpq_inits (one, tmp1, tmp2, tmp3, NULL);
+  mpq_inits (one, tmp1, tmp2, NULL);
 
   mpq_set_d (one, 1);
 
@@ -125,22 +123,22 @@ inverse_quadratic (const mpq_t s, const mpq_t a, const mpq_t fa,
   mpq_sub (fac1, fac, one);
 
   mpq_add (tmp1, s, s);
-  mpq_mul (tmp2, tmp1, fac);
-  mpq_sub (tmp3, fac, fbc);
-  mpq_mul (tmp1, tmp2, tmp3);
+  mpq_mul (tmp1, tmp1, fac);
+  mpq_sub (tmp2, fac, fbc);
+  mpq_mul (tmp1, tmp1, tmp2);
 
   mpq_sub (tmp2, b, a);
-  mpq_mul (tmp3, tmp2, fbc1);
+  mpq_mul (tmp2, tmp2, fbc1);
 
-  mpq_sub (tmp2, tmp1, tmp3);
+  mpq_sub (tmp2, tmp1, tmp2);
   mpq_mul (p, fba, tmp2);
 
-  mpq_mul (tmp1, fac1, fba1);
-  mpq_mul (q, tmp1, fbc1);
+  mpq_mul (q, fac1, fba1);
+  mpq_mul (q, q, fbc1);
 
   mpq_clears (fbc, fba, fac, NULL);
   mpq_clears (fbc1, fba1, fac1, NULL);
-  mpq_clears (one, tmp1, tmp2, tmp3, NULL);
+  mpq_clears (one, tmp1, tmp2, NULL);
 }
 
 static inline void
@@ -155,10 +153,10 @@ interpolate (const mpq_t a, const mpq_t fa, const mpq_t b, const mpq_t fb,
   mpq_t tol1;
   mpq_t tol2;
   mpq_t three;
-  mpq_t tmp1, tmp2, tmp3;
+  mpq_t tmp1, tmp2;
 
   mpq_inits (p, q, s, two_p, tol1, tol2, three, NULL);
-  mpq_inits (tmp1, tmp2, tmp3, NULL);
+  mpq_inits (tmp1, tmp2, NULL);
 
   mpq_set_d (three, 3);
   bisection (s, a, b);
@@ -169,26 +167,20 @@ interpolate (const mpq_t a, const mpq_t fa, const mpq_t b, const mpq_t fb,
     inverse_quadratic (s, a, fa, b, fb, fb1, p, q);
 
   if (0 < mpq_sgn (p))
-    {
-      mpq_neg (tmp1, q);
-      mpq_set (q, tmp1);
-    }
+      mpq_neg (q, q);
   else
-    {
-      mpq_neg (tmp1, p);
-      mpq_set (p, tmp1);
-    }
+      mpq_neg (p, p);
 
   mpq_add (two_p, p, p);
 
-  mpq_mul (tmp1, three, s);
-  mpq_mul (tmp2, tmp1, q);
+  mpq_mul (tmp2, three, s);
+  mpq_mul (tmp2, tmp2, q);
   mpq_mul (tmp1, tolerance, q);
-  mpq_abs (tmp3, tmp1);
-  mpq_sub (tol1, tmp2, tmp3);
+  mpq_abs (tmp1, tmp1);
+  mpq_sub (tol1, tmp2, tmp1);
 
-  mpq_mul (tmp1, step1, q);
-  mpq_abs (tol2, tmp1);
+  mpq_mul (tol2, step1, q);
+  mpq_abs (tol2, tol2);
 
   if (mpq_cmp (two_p, tol1) < 0 && mpq_cmp (two_p, tol2) < 0)
     {
@@ -202,7 +194,7 @@ interpolate (const mpq_t a, const mpq_t fa, const mpq_t b, const mpq_t fb,
     }
 
   mpq_clears (p, q, s, two_p, tol1, tol2, three, NULL);
-  mpq_clears (tmp1, tmp2, tmp3, NULL);
+  mpq_clears (tmp1, tmp2, NULL);
 }
 
 _GL_ATTRIBUTE_CONST static inline bool
@@ -264,7 +256,7 @@ qbrentroot (int max_iters, const mpq_t tol, const mpq_t epsilon,
   mpq_t fguess, guess, new_step, old_step;
   mpq_t tolerance, toler, eps;
   mpq_t abs_fa, abs_fb, abs_fguess;
-  mpq_t tmp1, tmp2, tmp3;
+  mpq_t tmp1, tmp2;
 
   mpq_init (a);
   mpq_init (b);
@@ -288,7 +280,7 @@ qbrentroot (int max_iters, const mpq_t tol, const mpq_t epsilon,
   mpq_init (abs_fa);
   mpq_init (abs_fb);
   mpq_init (abs_fguess);
-  mpq_inits (tmp1, tmp2, tmp3, NULL);
+  mpq_inits (tmp1, tmp2, NULL);
 
   const unsigned int max_iterations = actual_max_iterations (max_iters);
   actual_tolerance (toler, tol);
@@ -328,12 +320,12 @@ qbrentroot (int max_iters, const mpq_t tol, const mpq_t epsilon,
           mpq_set (fb1, fa);
         }
 
-      mpq_abs (tmp1, b);
-      mpq_mul (tmp2, eps, tmp1);
-      mpq_add (tmp3, tmp2, tmp2);
+      mpq_abs (tmp2, b);
+      mpq_mul (tmp2, eps, tmp2);
+      mpq_add (tmp2, tmp2, tmp2);
       mpq_set_d (tmp1, 2);
-      mpq_div (tmp2, toler, tmp1);
-      mpq_add (tolerance, tmp3, tmp2);
+      mpq_div (tmp1, toler, tmp1);
+      mpq_add (tolerance, tmp2, tmp1);
 
       while (!we_are_done (max_iterations, *iter_no, tolerance, step, fb))
         {
@@ -404,12 +396,12 @@ qbrentroot (int max_iters, const mpq_t tol, const mpq_t epsilon,
           mpq_set (b, bb);
           mpq_set (fb, fbb);
 
-          mpq_abs (tmp1, b);
-          mpq_mul (tmp2, eps, tmp1);
-          mpq_add (tmp3, tmp2, tmp2);
-          mpq_set_d (tmp1, 2);
-          mpq_div (tmp2, toler, tmp1);
-          mpq_add (tolerance, tmp3, tmp2);
+	  mpq_abs (tmp2, b);
+	  mpq_mul (tmp2, eps, tmp2);
+	  mpq_add (tmp2, tmp2, tmp2);
+	  mpq_set_d (tmp1, 2);
+	  mpq_div (tmp1, toler, tmp1);
+	  mpq_add (tolerance, tmp2, tmp1);
         }
       if (max_iterations_exceeded (max_iterations, *iter_no))
         *err = 2;               // err == 2 means maximum iterations exceeded.
@@ -439,5 +431,5 @@ qbrentroot (int max_iters, const mpq_t tol, const mpq_t epsilon,
   mpq_clear (abs_fa);
   mpq_clear (abs_fb);
   mpq_clear (abs_fguess);
-  mpq_clears (tmp1, tmp2, tmp3, NULL);
+  mpq_clears (tmp1, tmp2, NULL);
 }
