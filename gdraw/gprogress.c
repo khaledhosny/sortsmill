@@ -95,6 +95,7 @@ static void GProgressDraw(GProgress *p,GWindow pixmap,GRect *rect) {
 
     GDrawPushClip(pixmap,rect,&old);
     GDrawSetFont(pixmap,p->font);
+    GDrawClear(pixmap, rect);
     if ( p->line1!=NULL )
 	GDrawDrawText(pixmap, (p->width-p->l1width)/2, p->l1y, p->line1, -1,
 		progress_foreground );
