@@ -210,6 +210,10 @@ PKG_CHECK_MODULES([LIBXML],[libxml-2.0])
 PKG_CHECK_MODULES([GUILE],[guile-${GUILE_API} >= 2.0.6])
 PKG_CHECK_MODULES([GSL],[gsl])
 
+# FIXME: Do a more sophisticated GMP check.
+AC_CHECK_LIB([gmp],[__gmpz_init],[],
+  [AC_MSG_ERROR([${PACKAGE_NAME} requires GNU MP, but it was not found. See http://gmplib.org/])])
+
 PKG_CHECK_MODULES([BOEHM_GC],[bdw-gc >= 7.1])
 AC_DEFINE([GC_THREADS],[1],[Define to 1 if Boehm GC has to co-exist with POSIX threads.])
 

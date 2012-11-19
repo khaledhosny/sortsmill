@@ -21,14 +21,16 @@
 #include <float.h>
 
 //
-// Brent's method for root-finding.
+// Brent's method for root-finding --
+// double-precision floating point version.
+//
 // See http://en.wikipedia.org/wiki/Brent%27s_method
 //
 
 static const unsigned int brentroot_default_max_iters = 1000000;
-static const double brentroot_default_tol = DBL_EPSILON; /* FIXME: Is
-							    this value
-							    appropriate? */
+static const double brentroot_default_tol = DBL_EPSILON;        /* FIXME: Is
+                                                                   this value
+                                                                   appropriate? */
 
 _GL_ATTRIBUTE_CONST static inline unsigned int
 actual_max_iterations (int max_iters)

@@ -103,7 +103,7 @@ TESTS_PRECOMPUTEDDATA = test_precomputed_data
 TESTS_BERNSTEIN = test_bernstein
 TESTS_MONOMIAL = test_monomial
 
-TESTS_BRENTROOT = test_brentroot
+TESTS_BRENTROOT = test_brentroot test_qbrentroot
 
 check_PROGRAMS = $(TESTS_XGC_H) $(TESTS_XUNISTRING_H)				\
 	$(TESTS_GFILE_C) $(TESTS_PS_NUMBER_H) $(TESTS_REXP_H)			\
