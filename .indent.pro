@@ -21,6 +21,9 @@
 -T pcre
 -T AO_t
 -T Hash_table
+-T mpz_t
+-T mpq_t
+-T mpf_t
 
 -T rexp_buffer_t
 -T rexp_t

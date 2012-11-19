@@ -27,8 +27,8 @@
   #:use-module (sortsmillff math-constants)
   #:export (flbrentroot
             flbrentroot-values
-            brentroot
-            brentroot-values))
+            qbrentroot
+            qbrentroot-values))
 
 (load-extension "libguile-sortsmillff_brentroot"
                 "init_guile_sortsmillff_brentroot")
@@ -39,117 +39,20 @@
   (f64-brentroot max-iters tol t1 t2 func))
 
 (define* (flbrentroot t1 t2 func #:key (max-iters -1) (tol -1))
-  (let-values (((root err iter-no)
+  (let-values (((root _err _iter-no)
                 (f64-brentroot max-iters tol t1 t2 func)))
     root))
 
 ;;-------------------------------------------------------------------------
 
-(define-syntax bracketed
-  (syntax-rules ()
-    ((_ f1 f2) (or (<= f1 0 f2) (<= f2 0 f1)))))
+(define* (qbrentroot-values t1 t2 func
+                            #:key (max-iters -1) (tol -1) (epsilon -1))
+  (mpq-brentroot max-iters tol epsilon t1 t2 func))
 
-(define-syntax bisection
-  (syntax-rules ()
-    ((_ a b) (/ (- a b) 2))))
-
-(define-syntax linear
-  (syntax-rules ()
-    ((_ s fa fb)
-     (let ((fba (/ fb fa)))
-       (values (* fba 2 s)
-               (- 1 fba))))))
-
-(define-syntax inverse-quadratic
-  (syntax-rules ()
-    ((_ s a fa b fb fc)
-     (let ((fbc (/ fb fc))
-           (fba (/ fb fa))
-           (fac (/ fa fc)))
-       (values (* fba
-                  (- (* 2 s fac (- fac fbc))
-                     (* (- b a) (1- fbc))))
-               (* (1- fac) (1- fba) (1- fbc)))))))
-
-(define-syntax interpolate
-  (syntax-rules ()
-    ((_ a fa b fb fb1 step step1 tolerance)
-     (let*-values (((s) (bisection a b))
-                   ((p q)
-                    (let-values (((pp qq)
-                                  (if (or (= fb1 fa) (= fb1 fb))
-                                      (linear s fa fb)
-                                      (inverse-quadratic s a fa b fb fb1))))
-                      (if (positive? pp)
-                          (values pp (- qq))
-                          (values (- pp) qq)))))
-       (if (< (* 2 p) (min (- (* 3 s q) (abs (* tolerance q)))
-                           (abs (* step1 q))))
-           (values (/ p q) step)
-           (values s s))))))
-
-(define (initial-iter-args a fa b fb)
-  (if (< (abs fa) (abs fb))
-      (list 0 b fb a fa b fb (- b a) (- b a))
-      (list 0 a fa b fb a fa (- a b) (- a b))))
-
-(define* (brentroot-values t1 t2 func
-                           #:key (max-iters -1) (tol -1)
-                           (epsilon c-dbl-epsilon-exact))
-  (let ((max-iters (if (negative? max-iters) 1000000 max-iters))
-        (tol (if (negative? tol) c-dbl-epsilon-exact tol)) ; FIXME: Is the default appropriate?
-        (a t1)
-        (b t2)
-        (fa (func t1))
-        (fb (func t2)))
-    (if (not (bracketed fa fb))
-        (values #f 1 0)         ; err == 1 means 'root not bracketed'.
-        (let ((iter
-               (rec (self iter-no
-                          a fa       ; Point at which func is larger.
-                          b fb       ; Point at which func is smaller.
-                          b1 fb1     ; Earlier values of b, fb.
-                          step step1)   ; Last two step sizes.
-                    (if (<= max-iters iter-no)
-                        (values #f 2 iter-no) ; err == 2 means maximum
-                                              ; iterations exceeded.
-                        (let ((tolerance (+ (* 2 epsilon (abs b)) (/ tol 2))))
-                          (if (or (<= (abs step) tolerance) (zero? fb))
-                              (values b 0 iter-no) ; The result.
-                              (let*-values (((new-step old-step)
-                                             (if (or (< (abs step1) tolerance)
-                                                     (<= (abs fa) (abs fb)))
-                                                 ;; Interpolation is stepping too slowly.
-                                                 (let ((s (bisection a b)))                                                
-                                                   (values s s))
-                                                 (interpolate a fa b fb fb1
-                                                              step step1 tolerance)))
-                                            ((guess)
-                                             (cond ((< tolerance (abs new-step))
-                                                    (+ b new-step))
-                                                   ((negative? new-step) (- b tolerance))
-                                                   (else (+ b tolerance))))
-                                            ((fguess) (func guess)))
-                                (if (bracketed fb fguess)
-                                    (if (< (abs fguess) (abs fb))
-                                        (self (1+ iter-no) b fb guess fguess b fb
-                                              new-step old-step)
-                                        (self (1+ iter-no) guess fguess b fb b fb
-                                              new-step old-step))
-                                    (if (< (abs fguess) (abs fa))
-                                        (self (1+ iter-no) a fa guess fguess b fb
-                                              (- guess a) (- guess a))
-                                        (self (1+ iter-no) guess fguess a fa b fb
-                                              (- guess a) (- guess a)))))))))))
-          (apply iter (initial-iter-args a fa b fb))))))
-
-(define* (brentroot t1 t2 func
-                    #:key (max-iters -1) (tol -1)
-                    (epsilon c-dbl-epsilon-exact))
-  (let-values
-      (((root err iter-no)
-        (brentroot-values t1 t2 func #:max-iters max-iters #:tol tol
-                          #:epsilon epsilon)))
+(define* (qbrentroot t1 t2 func
+                     #:key (max-iters -1) (tol -1) (epsilon -1))
+  (let-values (((root _err _iter-no)
+                (mpq-brentroot max-iters tol epsilon t1 t2 func)))
     root))
 
 ;;-------------------------------------------------------------------------

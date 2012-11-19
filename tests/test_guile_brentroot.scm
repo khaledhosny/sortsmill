@@ -40,9 +40,15 @@
       (string->number (list-ref (command-line) 7))
       -1))
 
-(receive (root err iter-no) (brentroot-values t1 t2 func
-                                              #:max-iters max-iters
-                                              #:tol tol)
+;; FIXME: This currently is not used, because flbrentroot doesn’t
+;; accept it as an argument.
+(define epsilon
+  (if (<= 9 argc)
+      (string->number (list-ref (command-line) 8))
+      -1))
+
+(receive (root err iter-no)
+    (brent-values t1 t2 func #:max-iters max-iters #:tol tol)
   (if (zero? err)
       (begin
         (format #t "err = ~d, root = ~,6f, iter_no = ~d" err root iter-no)
@@ -50,9 +56,7 @@
             (display ", exact")))
       (format #t "err = ~d" err))
 
-  ;; Check that brentroot returns the same result as brentroot-values.
-  (if (equal? root (brentroot t1 t2 func
-                              #:max-iters max-iters
-                              #:tol tol))
+  ;; Check that brent returns the same result as brent-values.
+  (if (equal? root (brent t1 t2 func #:max-iters max-iters #:tol tol))
       (exit 0)
       (exit 1)))

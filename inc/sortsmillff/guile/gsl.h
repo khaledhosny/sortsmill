@@ -19,9 +19,11 @@
 #include <libguile.h>
 #include <gsl/gsl_matrix.h>
 
-gsl_matrix_const_view scm_gsl_matrix_const_view_array_handle (scm_t_array_handle *handlep);
-gsl_matrix_view scm_gsl_matrix_view_array_handle (scm_t_array_handle *handlep);
-SCM scm_gsl_matrix_to_array_f64 (const gsl_matrix *m, int low_index);
+gsl_matrix_const_view
+scm_gsl_matrix_const_view_array_handle (scm_t_array_handle * handlep);
+gsl_matrix_view scm_gsl_matrix_view_array_handle (scm_t_array_handle *
+                                                  handlep);
+SCM scm_gsl_matrix_to_array_f64 (const gsl_matrix * m, int low_index);
 
 SCM scm_array_f64_matrix_mult (SCM m1, SCM m2);
 SCM scm_array_f64_matrix_add (SCM m1, SCM m2);

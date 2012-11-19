@@ -19,5 +19,7 @@
 #include <libguile.h>
 
 SCM scm_f64_brentroot (SCM max_iters, SCM tol, SCM t1, SCM t2, SCM func);
+SCM scm_mpq_brentroot (SCM max_iters, SCM tol, SCM epsilon, SCM t1, SCM t2,
+                       SCM func);
 
 #endif /* _SORTSMILLFF_GUILE_BRENTROOT_H */

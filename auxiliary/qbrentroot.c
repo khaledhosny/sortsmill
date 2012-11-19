@@ -167,9 +167,9 @@ interpolate (const mpq_t a, const mpq_t fa, const mpq_t b, const mpq_t fb,
     inverse_quadratic (s, a, fa, b, fb, fb1, p, q);
 
   if (0 < mpq_sgn (p))
-      mpq_neg (q, q);
+    mpq_neg (q, q);
   else
-      mpq_neg (p, p);
+    mpq_neg (p, p);
 
   mpq_add (two_p, p, p);
 
@@ -396,12 +396,12 @@ qbrentroot (int max_iters, const mpq_t tol, const mpq_t epsilon,
           mpq_set (b, bb);
           mpq_set (fb, fbb);
 
-	  mpq_abs (tmp2, b);
-	  mpq_mul (tmp2, eps, tmp2);
-	  mpq_add (tmp2, tmp2, tmp2);
-	  mpq_set_d (tmp1, 2);
-	  mpq_div (tmp1, toler, tmp1);
-	  mpq_add (tolerance, tmp2, tmp1);
+          mpq_abs (tmp2, b);
+          mpq_mul (tmp2, eps, tmp2);
+          mpq_add (tmp2, tmp2, tmp2);
+          mpq_set_d (tmp1, 2);
+          mpq_div (tmp1, toler, tmp1);
+          mpq_add (tolerance, tmp2, tmp1);
         }
       if (max_iterations_exceeded (max_iterations, *iter_no))
         *err = 2;               // err == 2 means maximum iterations exceeded.
