@@ -45,8 +45,8 @@ struct sizebits
 {
   GWindow gw;
   int *pixels, *bits;
-  unsigned int done:1;
-  unsigned int good:1;
+  bool done;
+  bool good;
 };
 
 #define CID_Size	1000

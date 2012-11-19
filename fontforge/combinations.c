@@ -129,7 +129,7 @@ struct kerns {
     SplineChar *first;
     SplineChar *second;
     int newoff, newyoff;
-    unsigned int r2l: 1;
+    bool r2l;
     KernPair *kp;
     AnchorClass *ac;
 };
@@ -153,10 +153,10 @@ typedef struct kpdata {
     int fh, as;
     int uh, wh, off_top, selected, last_index, vpad;
     int pressed_x, old_val;
-    unsigned int done:1;
-    unsigned int first:1;
-    unsigned int pressed:1;
-    unsigned int movecursor:1;
+    bool done;
+    bool first;
+    bool pressed;
+    bool movecursor;
 } KPData;
 
 #define CID_Size	1001

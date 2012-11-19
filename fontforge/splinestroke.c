@@ -42,16 +42,16 @@ typedef struct strokepoint {
     BasePoint left;
     BasePoint right;
     /* double radius_of_curvature; */
-    unsigned int butt_bevel: 1;		/* the butt line cap and bevel line join always produce an edge which will be hidden by the pen. We don't want that to happen so must special case them. */
-    unsigned int left_hidden: 1;
-    unsigned int right_hidden: 1;
-    unsigned int hide_left_if_on_edge: 1;
-    unsigned int hide_right_if_on_edge: 1;
-    unsigned int extemum: 1;
-    unsigned int circle: 1;		/* On a cap or a join, point lies on a circular arc centered at me. So slope is the normal to (left-me) */
-    unsigned int line: 1;		/* On a cap, join or place where slope paralel to poly edge, point lies on a line can find slope by vector (pos,pos-1) or (pos+1,pos) */
-    unsigned int needs_point_left: 1;	/* Contour changes direction abruptly on the left side */
-    unsigned int needs_point_right: 1;
+    bool butt_bevel;		/* the butt line cap and bevel line join always produce an edge which will be hidden by the pen. We don't want that to happen so must special case them. */
+    bool left_hidden;
+    bool right_hidden;
+    bool hide_left_if_on_edge;
+    bool hide_right_if_on_edge;
+    bool extemum;
+    bool circle;		/* On a cap or a join, point lies on a circular arc centered at me. So slope is the normal to (left-me) */
+    bool line;		/* On a cap, join or place where slope paralel to poly edge, point lies on a line can find slope by vector (pos,pos-1) or (pos+1,pos) */
+    bool needs_point_left;	/* Contour changes direction abruptly on the left side */
+    bool needs_point_right;
     uint8_t lt;
     uint8_t rt;
 } StrokePoint;
@@ -93,14 +93,14 @@ typedef struct strokecontext {
     BasePoint *slopes;	/* slope[0] is unitvector corners[1]-corners[0] */
     bigreal largest_distance2;	/* The greatest distance from center of poly to a corner */ /* Used to speed up hit tests */
     bigreal longest_edge;
-    unsigned int open: 1;	/* Original is an open contour */
-    unsigned int remove_inner: 1;
-    unsigned int remove_outer: 1;
-    /* unsigned int rotate_relative_to_direction: 1; */	/* Rotate the polygon pen so it maintains the same orientation with respect to the contour's slope */
+    bool open;	/* Original is an open contour */
+    bool remove_inner;
+    bool remove_outer;
+    /* bool rotate_relative_to_direction; */	/* Rotate the polygon pen so it maintains the same orientation with respect to the contour's slope */
     /* Um, the above is essentially equivalent to a circular pen. No point in duplicating it */
-    unsigned int leave_users_center: 1;			/* Don't move the pen so its center is at the origin */
-    unsigned int scaled_or_rotated: 1;
-    unsigned int transform_needed: 1;
+    bool leave_users_center;			/* Don't move the pen so its center is at the origin */
+    bool scaled_or_rotated;
+    bool transform_needed;
     real transform[6];
     real inverse[6];
 } StrokeContext;

@@ -1305,13 +1305,13 @@ struct pcfmetrics {
 };
 
 struct pcfaccel {
-    unsigned int noOverlap:1;
-    unsigned int constantMetrics:1;
-    unsigned int terminalFont:1;
-    unsigned int constantWidth:1;
-    unsigned int inkInside:1;
-    unsigned int inkMetrics:1;
-    unsigned int drawDirection:1;
+    bool noOverlap;
+    bool constantMetrics;
+    bool terminalFont;
+    bool constantWidth;
+    bool inkInside;
+    bool inkMetrics;
+    bool drawDirection;
     int ascent;
     int descent;
     int maxOverlap;

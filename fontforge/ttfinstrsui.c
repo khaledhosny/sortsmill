@@ -186,7 +186,7 @@ return;
 }
 
 typedef struct instrdlg /* : InstrBase */{
-    unsigned int inedit: 1;
+    bool inedit;
     struct instrdata *instrdata;
     struct instrinfo instrinfo;
     int oc_height;
@@ -982,8 +982,8 @@ typedef struct shortview /* : tableview */ {
     struct ttf_table *table;
     GWindow gw, v;
     SplineFont *sf;
-    unsigned int destroyed: 1;		/* window has been destroyed */
-    unsigned int changed: 1;
+    bool destroyed;		/* window has been destroyed */
+    bool changed;
     GGadget *vsb, *tf;
     GGadget *ok, *cancel, *setsize;
     int lpos, lheight;

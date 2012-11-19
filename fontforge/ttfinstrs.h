@@ -57,7 +57,7 @@ enum ttf_instructions {
 VISIBLE extern const char *ff_ttf_instrnames[];
 
 typedef struct instrbase {
-    unsigned int inedit: 1;
+    bool inedit;
     struct instrdata *instrdata;
     int isel_pos;
     int16_t lheight,lpos;

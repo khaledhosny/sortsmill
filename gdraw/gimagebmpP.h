@@ -48,7 +48,7 @@ struct bmpheader {
     unsigned long clut[256];
     long red_mask, green_mask, blue_mask;
     int red_shift, green_shift, blue_shift;
-    unsigned int invert: 1;
+    bool invert;
     unsigned char *byte_pixels;
     long *long_pixels;
 };

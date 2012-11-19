@@ -31,7 +31,7 @@
 enum settype { st_set, st_scale, st_incr };
 
 typedef struct createwidthdata {
-    unsigned int done: 1;
+    bool done;
     void *_fv;
     void (*doit)(struct createwidthdata *);
     real setto;

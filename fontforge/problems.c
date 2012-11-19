@@ -55,57 +55,57 @@ struct problems {
     SplineChar *sc;
     SplineChar *msc;
     int layer;
-    unsigned int openpaths: 1;
-    unsigned int intersectingpaths: 1;
-    unsigned int nonintegral: 1;
-    unsigned int pointstooclose: 1;
-    unsigned int pointstoofar: 1;
-    unsigned int xnearval: 1;
-    unsigned int ynearval: 1;
-    unsigned int ynearstd: 1;		/* baseline, xheight, cap, ascent, descent, etc. */
-    unsigned int linenearstd: 1;	/* horizontal, vertical, italicangle */
-    unsigned int cpnearstd: 1;		/* control points near: horizontal, vertical, italicangle */
-    unsigned int cpodd: 1;		/* control points beyond points on spline */
-    unsigned int hintwithnopt: 1;
-    unsigned int ptnearhint: 1;
-    unsigned int hintwidthnearval: 1;
-    unsigned int missingextrema: 1;
-    unsigned int direction: 1;
-    unsigned int flippedrefs: 1;
-    unsigned int cidmultiple: 1;
-    unsigned int cidblank: 1;
-    unsigned int bitmaps: 1;
-    unsigned int bitmapwidths: 1;
-    unsigned int advancewidth: 1;
-    unsigned int vadvancewidth: 1;
-    unsigned int stem3: 1;
-    unsigned int showexactstem3: 1;
-    unsigned int irrelevantcontrolpoints: 1;
-    unsigned int multuni: 1;
-    unsigned int multname: 1;
-    unsigned int uninamemismatch: 1;
-    unsigned int missinganchor: 1;
-    unsigned int badsubs: 1;
-    unsigned int missingglyph: 1;
-    unsigned int missingscriptinfeature: 1;
-    unsigned int toomanypoints: 1;
-    unsigned int toomanyhints: 1;
-    unsigned int toodeeprefs: 1;
-    unsigned int ptmatchrefsoutofdate: 1;
-    unsigned int multusemymetrics: 1;
-    unsigned int refsbadtransformttf: 1;
-    unsigned int refsbadtransformps: 1;
-    unsigned int mixedcontoursrefs: 1;
-    unsigned int bbymax: 1;
-    unsigned int bbymin: 1;
-    unsigned int bbxmax: 1;
-    unsigned int bbxmin: 1;
-    unsigned int overlappedhints: 1;
-    unsigned int explain: 1;
-    unsigned int done: 1;
-    unsigned int doneexplain: 1;
-    unsigned int finish: 1;
-    unsigned int ignorethis: 1;
+    bool openpaths;
+    bool intersectingpaths;
+    bool nonintegral;
+    bool pointstooclose;
+    bool pointstoofar;
+    bool xnearval;
+    bool ynearval;
+    bool ynearstd;		/* baseline, xheight, cap, ascent, descent, etc. */
+    bool linenearstd;	/* horizontal, vertical, italicangle */
+    bool cpnearstd;		/* control points near: horizontal, vertical, italicangle */
+    bool cpodd;		/* control points beyond points on spline */
+    bool hintwithnopt;
+    bool ptnearhint;
+    bool hintwidthnearval;
+    bool missingextrema;
+    bool direction;
+    bool flippedrefs;
+    bool cidmultiple;
+    bool cidblank;
+    bool bitmaps;
+    bool bitmapwidths;
+    bool advancewidth;
+    bool vadvancewidth;
+    bool stem3;
+    bool showexactstem3;
+    bool irrelevantcontrolpoints;
+    bool multuni;
+    bool multname;
+    bool uninamemismatch;
+    bool missinganchor;
+    bool badsubs;
+    bool missingglyph;
+    bool missingscriptinfeature;
+    bool toomanypoints;
+    bool toomanyhints;
+    bool toodeeprefs;
+    bool ptmatchrefsoutofdate;
+    bool multusemymetrics;
+    bool refsbadtransformttf;
+    bool refsbadtransformps;
+    bool mixedcontoursrefs;
+    bool bbymax;
+    bool bbymin;
+    bool bbxmax;
+    bool bbxmin;
+    bool overlappedhints;
+    bool explain;
+    bool done;
+    bool doneexplain;
+    bool finish;
+    bool ignorethis;
     double near, xval, yval, widthval;
     char *explaining;
     double found, expected;
@@ -805,8 +805,10 @@ static int HVITest(struct problems *p,BasePoint *to, BasePoint *from,
 	isto = false;
 	if ( &spline->from->me==from || &spline->from->me==to )
 	    spline->from->selected = true;
-	if ( &spline->to->me==from || &spline->to->me==to )
-	    spline->to->selected = isto = true;
+	if ( &spline->to->me==from || &spline->to->me==to ) {
+	    spline->to->selected = true;
+	    isto = true;
+	}
 	if ( from==&spline->from->me || from == &spline->to->me ) {
 	    base = from; other = to;
 	} else {

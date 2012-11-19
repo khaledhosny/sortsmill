@@ -365,8 +365,10 @@ static void MVSetSubtables(SplineFont *sf) {
 			    ti[cnt] = xcalloc(1,sizeof(GTextInfo));
 			    ti[cnt]->text = utf82u_copy(sub->subtable_name);
 			    ti[cnt]->userdata = sub;
-			    if ( sub==mvs->cur_subtable )
-				ti[cnt]->selected = selected = true;
+			    if ( sub==mvs->cur_subtable ) {
+				ti[cnt]->selected = true;
+				selected = true;
+			    }
 			    ti[cnt]->disabled = sub->kc!=NULL;
 			    ti[cnt]->fg = ti[cnt]->bg = COLOR_DEFAULT;
 			}

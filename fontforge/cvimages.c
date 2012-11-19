@@ -609,7 +609,7 @@ struct xspline {
     BasePoint *cp;	/* an array of n control points */
     real *s;		/* an array of n tension values */
     /* for a closed spline cp[0]==cp[n-1], but we may still need to wrap a bit*/
-    unsigned int closed: 1;
+    bool closed;
 };
 
 static real g(real u, real q, real p) {

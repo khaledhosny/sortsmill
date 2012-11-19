@@ -60,7 +60,7 @@ struct revcmap {
 			        /* We can do (small) integer division by */
 			        /*  multiplying by an integer reciprical and */
 			        /*  left shifting */
-    unsigned int is_grey: 1;
+    bool is_grey;
     Color mask;			/* masks off the high order bits that this revclut handles, leaving us with those bits of interest to the subclut */
     struct revitem *cube;
     GCol *greys;		/* 256 entries, if set */
@@ -96,13 +96,13 @@ struct gwindow {
     void *user_data;
     struct gwidgetdata *widget_data;
     void *native_window;
-    unsigned int is_visible: 1;
-    unsigned int is_pixmap: 1;
-    unsigned int is_toplevel: 1;
-    unsigned int visible_request: 1;
-    unsigned int is_dying: 1;
-    unsigned int is_popup: 1;
-    unsigned int disable_expose_requests: 1;
+    bool is_visible;
+    bool is_pixmap;
+    bool is_toplevel;
+    bool visible_request;
+    bool is_dying;
+    bool is_popup;
+    bool disable_expose_requests;
 };
 
 struct ginput_context {
@@ -119,7 +119,7 @@ struct gtimer {
     GWindow owner;
     void *userdata;
     struct gtimer *next;
-    unsigned int active: 1;
+    bool active;
 };
 
 struct gdisplay {
@@ -131,7 +131,7 @@ struct gdisplay {
     uint16_t mykey_state;
     uint16_t mykey_keysym;
     uint16_t mykey_mask;
-    unsigned int mykeybuild: 1;
+    bool mykeybuild;
     /* display specific data */
 };
 #define PointToPixel(points,res)		(((points)*(res)+36)/72)

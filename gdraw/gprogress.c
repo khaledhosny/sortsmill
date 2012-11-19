@@ -48,11 +48,11 @@ typedef struct gprogress {
     int16_t l1width, l2width;
     int16_t l1y, l2y, boxy;
     int16_t last_amount;
-    unsigned int aborted: 1;
-    unsigned int visible: 1;
-    unsigned int dying: 1;
-    unsigned int paused: 1;
-    unsigned int sawmap: 1;
+    bool aborted;
+    bool visible;
+    bool dying;
+    bool paused;
+    bool sawmap;
     GWindow gw;
     GFont *font;
     struct gprogress *prev;

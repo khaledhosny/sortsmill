@@ -286,7 +286,7 @@ static struct prefs_list
   void (*set) (void *);
   char mn;
   struct enums *enums;
-  unsigned int dontdisplay:1;
+  bool dontdisplay;
   char *popup;
 } general_list[] =
 {

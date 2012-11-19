@@ -46,11 +46,6 @@ typedef struct gwidgetcreatedata
   struct ggadgetcreatedata *gcd;
   struct gwidgetcreatedata *wcd;
   uint32_t *title;
-  unsigned int trap_input:1;
-  unsigned int tab_navigation:1;
-  unsigned int arrow_navigation:1;
-  unsigned int do_default:1;
-  unsigned int do_cancel:1;
   Color fore, back;
   void (*e_h) (GWindow, GEvent *);      /* User's event function for window, our eh will call it */
 } GWidgetData;

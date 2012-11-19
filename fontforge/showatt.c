@@ -45,12 +45,12 @@ extern int _GScrollBar_Width;
 
 struct att_dlg;
 struct node {
-    unsigned int open: 1;
-    unsigned int children_checked: 1;
-    unsigned int used: 1;
-    unsigned int macfeat: 1;
-    unsigned int monospace: 1;
-    unsigned int horizontal: 1;
+    bool open;
+    bool children_checked;
+    bool used;
+    bool macfeat;
+    bool monospace;
+    bool horizontal;
     uint16_t cnt;
     struct node *children, *parent;
     void (*build)(struct node *,struct att_dlg *);
@@ -72,7 +72,7 @@ struct node {
 enum dlg_type { dt_show_att, dt_font_comp };
 
 struct att_dlg {
-    unsigned int done: 1;
+    bool done;
     struct node *tables;
     int open_cnt, lines_page, off_top, off_left, page_width, bmargin;
     int maxl;

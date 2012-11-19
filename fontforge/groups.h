@@ -33,10 +33,10 @@ typedef struct group {
     int kid_cnt;		/* Number of sub-groups */
     struct group **kids;	/* The sub-groups */
     char *glyphs;		/* Or, if a terminal node, a list of glyph names/Unicodes */
-    unsigned int unique: 1;	/* If set => set in all kids & a glyph name may only appear once in all terminal groups */
+    bool unique;	/* If set => set in all kids & a glyph name may only appear once in all terminal groups */
 /* Used by the dialog */
-    unsigned int open: 1;
-    unsigned int selected : 1;
+    bool open;
+    bool selected;
     int lpos;
 } Group;
 

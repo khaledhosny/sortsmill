@@ -183,11 +183,13 @@ int CVSetSel(CharView *cv,int mask) {
 	needsupdate = true;
     cv->p.nextcp = cv->p.prevcp = false;
     if ( cv->showhmetrics && !cv->widthsel && (mask&4) && usemymetrics==NULL ) {
-	cv->widthsel = needsupdate = true;
+	cv->widthsel = true;
+	needsupdate = true;
 	cv->oldwidth = cv->b.sc->width;
     }
     if ( cv->showvmetrics && cv->b.sc->parent->hasvmetrics && !cv->vwidthsel && (mask&4) && usemymetrics==NULL ) {
-	cv->vwidthsel = needsupdate = true;
+	cv->vwidthsel = true;
+	needsupdate = true;
 	cv->oldvwidth = cv->b.sc->vwidth;
     }
 return( needsupdate );

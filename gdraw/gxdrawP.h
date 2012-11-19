@@ -72,8 +72,8 @@ typedef struct gcstate {
     Color back_col;		/* desired */
     GRect clip;
     enum draw_func func;
-    unsigned int copy_through_sub_windows: 1;
-    unsigned int bitmap_col: 1;			/* fore_col is mapped for bitmap */
+    bool copy_through_sub_windows;
+    bool bitmap_col;			/* fore_col is mapped for bitmap */
     int16_t dash_len, skip_len;
     int16_t line_width;
     int16_t dash_offset;
@@ -100,21 +100,21 @@ typedef struct gxwindow /* :GWindow */ {
     void *user_data;
     void *widget_data;
     Window w;
-    unsigned int is_visible: 1;		/* Filled in when MapNotify events happen */
-    unsigned int is_pixmap: 1;
-    unsigned int is_toplevel: 1;
-    unsigned int visible_request: 1;
-    unsigned int is_dying: 1;
-    unsigned int is_popup: 1;
-    unsigned int disable_expose_requests: 1;
-    unsigned int is_dlg: 1;
-    unsigned int not_restricted: 1;
-    unsigned int was_positioned: 1;
+    bool is_visible;		/* Filled in when MapNotify events happen */
+    bool is_pixmap;
+    bool is_toplevel;
+    bool visible_request;
+    bool is_dying;
+    bool is_popup;
+    bool disable_expose_requests;
+    bool is_dlg;
+    bool not_restricted;
+    bool was_positioned;
 	/* is_bitmap can be found in the bitmap_col field of the ggc */
-    unsigned int restrict_input_to_me: 1;/* for dialogs, no input outside of dlg */
-    unsigned int redirect_chars_to_me: 1;/* ditto, we get any input outside of us */
-    unsigned int istransient: 1;	/* has transient for hint set */
-    unsigned int isverytransient: 1;
+    bool restrict_input_to_me;/* for dialogs, no input outside of dlg */
+    bool redirect_chars_to_me;/* ditto, we get any input outside of us */
+    bool istransient;	/* has transient for hint set */
+    bool isverytransient;
     GWindow redirect_from;		/* only redirect input from this window and its children */
     GCursor cursor;
     Window parentissimus;
@@ -132,7 +132,7 @@ struct colstate {
     int16_t red_bits_shift, green_bits_shift, blue_bits_shift;
     int32_t alpha_bits;
     RevCMap *rev;
-    unsigned int is_grey: 1;
+    bool is_grey;
 };
 
 struct gatoms {
@@ -235,21 +235,21 @@ typedef struct gxdisplay /* : GDisplay */ {
     uint16_t mykey_state;
     uint16_t mykey_keysym;
     uint16_t mykey_mask;
-    unsigned int mykeybuild: 1;
-    unsigned int default_visual: 1;
-    unsigned int do_dithering: 1;
-    unsigned int focusfollowsmouse: 1;
-    unsigned int top_offsets_set: 1;
-    unsigned int wm_breaks_raiseabove: 1;
-    unsigned int wm_raiseabove_tested: 1;
-    unsigned int endian_mismatch: 1;
-    unsigned int macosx_cmd: 1;		/* if set then map state=0x20 to control */
-    unsigned int twobmouse_win: 1;	/* if set then map state=0x40 to mouse button 2 */
-    unsigned int devicesinit: 1;	/* the devices structure has been initialized. Else call XListInputDevices */
-    unsigned int expecting_core_event: 1;/* when we move an input extension device we generally get two events, one for the device, one later for the core device. eat the core event */
-    unsigned int has_xkb: 1;		/* we were able to initialize the XKB extension */
-    unsigned int supports_alpha_images: 1;
-    unsigned int supports_alpha_windows: 1;
+    bool mykeybuild;
+    bool default_visual;
+    bool do_dithering;
+    bool focusfollowsmouse;
+    bool top_offsets_set;
+    bool wm_breaks_raiseabove;
+    bool wm_raiseabove_tested;
+    bool endian_mismatch;
+    bool macosx_cmd;		/* if set then map state=0x20 to control */
+    bool twobmouse_win;	/* if set then map state=0x40 to mouse button 2 */
+    bool devicesinit;	/* the devices structure has been initialized. Else call XListInputDevices */
+    bool expecting_core_event;/* when we move an input extension device we generally get two events, one for the device, one later for the core device. eat the core event */
+    bool has_xkb;		/* we were able to initialize the XKB extension */
+    bool supports_alpha_images;
+    bool supports_alpha_windows;
     struct gcstate gcstate[2];			/* 0 is state for normal images, 1 for bitmap (pixmaps) */
     Display *display;
     Window root;

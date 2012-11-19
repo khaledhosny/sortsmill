@@ -45,33 +45,33 @@
 struct fontparse {
     FontDict *fd, *mainfd;
     /* always in font data */
-    unsigned int infi:1;
-    unsigned int inchars:1;
-    unsigned int inprivate:1;
-    unsigned int insubs:1;
-    unsigned int inmetrics: 1;
-    unsigned int inmetrics2: 1;
-    unsigned int inbb: 1;
-    unsigned int inencoding: 1;
-    unsigned int simpleencoding: 1;
-    unsigned int multiline: 1;
-    unsigned int incidsysteminfo: 1;
-    unsigned int inblendfi:1;
-    unsigned int inblendprivate:1;
-    unsigned int skipping_mbf: 1;
-    unsigned int inblend: 1;
-    unsigned int iscid: 1;
-    unsigned int iscff: 1;
-    unsigned int useshexstrings: 1;
-    unsigned int doneencoding: 1;
-    unsigned int ignore: 1;
+    bool infi;
+    bool inchars;
+    bool inprivate;
+    bool insubs;
+    bool inmetrics;
+    bool inmetrics2;
+    bool inbb;
+    bool inencoding;
+    bool simpleencoding;
+    bool multiline;
+    bool incidsysteminfo;
+    bool inblendfi;
+    bool inblendprivate;
+    bool skipping_mbf;
+    bool inblend;
+    bool iscid;
+    bool iscff;
+    bool useshexstrings;
+    bool doneencoding;
+    bool ignore;
     int simple_enc_pos;
     int instring;
     int fdindex;
     char **pending_parse;
     FILE *sfnts;
 
-    unsigned int alreadycomplained: 1;
+    bool alreadycomplained;
 
     char *vbuf, *vmax, *vpt;
     int depth;

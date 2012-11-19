@@ -131,7 +131,7 @@ static double def_outline_width = 10, def_gap_width = 20;
 #define CID_Gap		1001
 
 typedef struct outlinedata {
-    unsigned int done: 1;
+    bool done;
     FontView *fv;
     CharView *cv;
     MetricsView *mv;

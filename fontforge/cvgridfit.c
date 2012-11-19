@@ -98,8 +98,8 @@ void SCReGridFit(SplineChar *sc,int layer) {
 #define CID_PointSizeX	1007
 
 typedef struct ftsizedata {
-    unsigned int done: 1;
-    unsigned int debug: 1;
+    bool done;
+    bool debug;
     CharView *cv;
     GWindow gw;
 } FtSizeData;

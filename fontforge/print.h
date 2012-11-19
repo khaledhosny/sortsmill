@@ -51,12 +51,12 @@ struct sfbits {
     		/* the font. -1 => not mapped (no encodings) */
     FILE *fontfile;
     int cidcnt;
-    unsigned int twobyte: 1;
-    unsigned int istype42cid: 1;
-    unsigned int iscid: 1;
-    unsigned int wastwobyte: 1;
-    unsigned int isunicode: 1;
-    unsigned int isunicodefull: 1;
+    bool twobyte;
+    bool istype42cid;
+    bool iscid;
+    bool wastwobyte;
+    bool isunicode;
+    bool isunicodefull;
     struct sfmaps *sfmap;
 };
 
@@ -71,10 +71,10 @@ typedef struct printinfo {
     int32_t *pointsizes;
     int extrahspace, extravspace;
     FILE *out;
-    unsigned int showvm: 1;
-    unsigned int overflow: 1;
-    unsigned int done: 1;
-    unsigned int hadsize: 1;
+    bool showvm;
+    bool overflow;
+    bool done;
+    bool hadsize;
     int ypos;
     int max;		/* max chars per line */
     int chline;		/* High order bits of characters we're outputting */

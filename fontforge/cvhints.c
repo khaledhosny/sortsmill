@@ -46,11 +46,11 @@
 #define CID_TopBox	1014
 
 typedef struct reviewhintdata {
-    unsigned int done: 1;
-    unsigned int ishstem: 1;
-    unsigned int oldmanual: 1;
-    unsigned int undocreated: 1;
-    unsigned int changed: 1;
+    bool done;
+    bool ishstem;
+    bool oldmanual;
+    bool undocreated;
+    bool changed;
     CharView *cv;
     GWindow gw;
     StemInfo *active;
@@ -662,9 +662,9 @@ void CVReviewHints(CharView *cv) {
 }
 
 typedef struct createhintdata {
-    unsigned int done: 1;
-    unsigned int ishstem: 1;
-    unsigned int preservehints: 1;
+    bool done;
+    bool ishstem;
+    bool preservehints;
     CharView *cv;
     GWindow gw;
 } CreateHintData;

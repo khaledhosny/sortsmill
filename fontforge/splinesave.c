@@ -151,14 +151,14 @@ struct hintdb {
     /*SplineChar *sc;*/
     SplineChar **scs;
     int instance_count;
-    unsigned int iscjk: 1;		/* If cjk then don't do stem3 hints */
+    bool iscjk;		/* If cjk then don't do stem3 hints */
 					/* Will be done with counters instead */
 	/* actually, most of the time we can't use stem3s, only if those three*/
 	/* stems are always active and there are no other stems !(h/v)hasoverlap*/
-    unsigned int noconflicts: 1;
-    unsigned int startset: 1;
-    unsigned int skiphm: 1;		/* Set when coming back to the start point of a contour. hintmask should be set the first time, not the second */
-    unsigned int donefirsthm: 1;
+    bool noconflicts;
+    bool startset;
+    bool skiphm;		/* Set when coming back to the start point of a contour. hintmask should be set the first time, not the second */
+    bool donefirsthm;
     int cursub;				/* Current subr number */
     DBasePoint current;
     GlyphInfo *gi;

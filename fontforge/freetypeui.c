@@ -62,18 +62,18 @@ struct debugger_context {
     pthread_t thread;
     pthread_mutex_t parent_mutex, child_mutex;
     pthread_cond_t parent_cond, child_cond;
-    unsigned int terminate: 1;		/* The thread has been started simply to clean itself up and die */
-    unsigned int has_mutexes: 1;
-    unsigned int has_thread: 1;
-    unsigned int has_finished: 1;
-    unsigned int debug_fpgm: 1;
-    unsigned int multi_step: 1;
-    unsigned int found_wp: 1;
-    unsigned int found_wps: 1;
-    unsigned int found_wps_uninit: 1;
-    unsigned int found_wpc: 1;
-    unsigned int initted_pts: 1;
-    unsigned int is_bitmap: 1;
+    bool terminate;		/* The thread has been started simply to clean itself up and die */
+    bool has_mutexes;
+    bool has_thread;
+    bool has_finished;
+    bool debug_fpgm;
+    bool multi_step;
+    bool found_wp;
+    bool found_wps;
+    bool found_wps_uninit;
+    bool found_wpc;
+    bool initted_pts;
+    bool is_bitmap;
     int wp_ptindex, wp_cvtindex, wp_storeindex;
     real ptsizey, ptsizex;
     int dpi;

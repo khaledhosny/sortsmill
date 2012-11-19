@@ -895,7 +895,7 @@ struct bitmapSizeTable {
     uint8_t bitdepth;
     int8_t flags;
     struct bitmapSizeTable *next;
-    unsigned int error: 1;
+    bool error;
 };
 struct indexarray {
     uint16_t first;

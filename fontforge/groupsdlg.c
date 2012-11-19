@@ -60,12 +60,12 @@ static GTextInfo std_colors[] = {
 };
 
 struct groupdlg {
-    unsigned int oked: 1;
-    unsigned int done: 1;
-    unsigned int select_many: 1;
+    bool oked;
+    bool done;
+    bool select_many;
 	/* define groups can only select one group at a time, select/restrict */
 	/*  to groups can select multiple things */
-    unsigned int select_kids_too: 1;
+    bool select_kids_too;
 	/* When we select a parent group do we want to select all the kids? */
     Group *root;
     Group *oldsel;

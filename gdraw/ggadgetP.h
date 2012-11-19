@@ -28,7 +28,7 @@
 #include "gresedit.h"
 
 struct gfuncs {
-    unsigned int is_widget: 1;
+    bool is_widget;
     uint16_t size;
     int (*handle_expose)(GWindow pixmap,GGadget *g,GEvent *event);
     int (*handle_mouse)(GGadget *g,GEvent *event);
@@ -88,16 +88,16 @@ struct ggadget {
     uint32_t shortcut;
     short short_mask;
     struct ggadget *prev;
-    unsigned int takes_input: 1;
-    unsigned int takes_keyboard: 1;
-    unsigned int focusable: 1;
-    unsigned int has_focus: 1;
-    unsigned int free_box: 1;
-    unsigned int was_disabled: 1;
-    unsigned int vert: 1;			/* For lines & scrollbars */
-    unsigned int opengroup: 1;			/* For groupboxes */
-    unsigned int prevlabel: 1;			/* For groupboxes */
-    unsigned int contained: 1;			/* is part of a bigger ggadget (ie. a scrollbar is part of a listbox) */
+    bool takes_input;
+    bool takes_keyboard;
+    bool focusable;
+    bool has_focus;
+    bool free_box;
+    bool was_disabled;
+    bool vert;			/* For lines & scrollbars */
+    bool opengroup;			/* For groupboxes */
+    bool prevlabel;			/* For groupboxes */
+    bool contained;			/* is part of a bigger ggadget (ie. a scrollbar is part of a listbox) */
     short cid;
     void *data;
     GBox *box;
@@ -116,13 +116,13 @@ typedef struct glabel {		/* or simple text, or groupbox */
     GGadget g;
     unsigned int fh:8;
     unsigned int as: 8;
-    unsigned int image_precedes: 1;
-    unsigned int is_default: 1;
-    unsigned int is_cancel: 1;
-    unsigned int pressed: 1;
-    unsigned int within: 1;
+    bool image_precedes;
+    bool is_default;
+    bool is_cancel;
+    bool pressed;
+    bool within;
     unsigned int labeltype: 2;	/* 0=>label/button(this), 1=>imagebutton, 2=>listbutton, 3=>colorbutton */
-    unsigned int shiftonpress: 1;
+    bool shiftonpress;
     FontInstance *font;
     uint32_t *label;
     GImage *image;
@@ -134,13 +134,13 @@ typedef struct gimagebutton {
     GGadget g;
     unsigned int fh:8;
     unsigned int as: 8;
-    unsigned int image_precedes: 1;
-    unsigned int is_default: 1;
-    unsigned int is_cancel: 1;
-    unsigned int pressed: 1;
-    unsigned int within: 1;
+    bool image_precedes;
+    bool is_default;
+    bool is_cancel;
+    bool pressed;
+    bool within;
     unsigned int labeltype: 2;	/* 0=>label, 1=>imagebutton(this), 2=>listbutton */
-    unsigned int shiftonpress: 1;
+    bool shiftonpress;
     FontInstance *font;
     uint32_t *label;
     GImage *image, *img_within, *active, *disabled;
@@ -150,13 +150,13 @@ typedef struct glistbutton {
     GGadget g;
     unsigned int fh:8;
     unsigned int as: 8;
-    unsigned int image_precedes: 1;
-    unsigned int is_default: 1;
-    unsigned int is_cancel: 1;
-    unsigned int pressed: 1;
-    unsigned int within: 1;
+    bool image_precedes;
+    bool is_default;
+    bool is_cancel;
+    bool pressed;
+    bool within;
     unsigned int labeltype: 2;	/* 0=>label, 1=>imagebutton, 2=>listbutton(this) */
-    unsigned int shiftonpress: 1;
+    bool shiftonpress;
     FontInstance *font;
     uint32_t *label;
     GImage *image;
@@ -169,13 +169,13 @@ typedef struct gcolorbutton {
     GGadget g;
     unsigned int fh:8;
     unsigned int as: 8;
-    unsigned int image_precedes: 1;
-    unsigned int is_default: 1;
-    unsigned int is_cancel: 1;
-    unsigned int pressed: 1;
-    unsigned int within: 1;
+    bool image_precedes;
+    bool is_default;
+    bool is_cancel;
+    bool pressed;
+    bool within;
     unsigned int labeltype: 2;	/* 0=>label/button, 1=>imagebutton, 2=>listbutton, 3=>colorbutton(this) */
-    unsigned int shiftonpress: 1;
+    bool shiftonpress;
     FontInstance *font;
     uint32_t *label;
     GImage *image;
@@ -186,11 +186,11 @@ typedef struct gcheck {
     GGadget g;
     unsigned int fh:8;
     unsigned int as: 8;
-    unsigned int image_precedes: 1;
-    unsigned int pressed: 1;
-    unsigned int within: 1;
-    unsigned int isradio: 1;
-    unsigned int ison: 1;
+    bool image_precedes;
+    bool pressed;
+    bool within;
+    bool isradio;
+    bool ison;
     FontInstance *font;
     uint32_t *label;
     GImage *image;
@@ -203,11 +203,11 @@ typedef struct gradio {
     GGadget g;
     unsigned int fh:8;
     unsigned int as: 8;
-    unsigned int image_precedes: 1;
-    unsigned int pressed: 1;
-    unsigned int within: 1;
-    unsigned int isradio: 1;
-    unsigned int ison: 1;
+    bool image_precedes;
+    bool pressed;
+    bool within;
+    bool isradio;
+    bool ison;
     FontInstance *font;
     uint32_t *label;
     GImage *image;
@@ -224,9 +224,9 @@ typedef struct gscrollbar {		/* and slider */
     int32_t sb_mustshow;			/* normally this is sb_pagesize, but might be the height of a single line */
 		    /* if we want people to be able to scroll to see white space */
 		    /* after the document */
-    /*unsigned int vert: 1; */	/* Moved to GGadget, shared with line */
-    unsigned int thumbpressed: 1;
-    unsigned int ignorenext45: 1;
+    /*bool vert; */	/* Moved to GGadget, shared with line */
+    bool thumbpressed;
+    bool ignorenext45;
     int8_t repeatcmd;		/*  sb event to be generated on timer interupts (ie. upline)*/
     int8_t thumbborder;		/* Size of the border of the thumbbox */
     int8_t sbborder;		/* Size of the border of the main scrollbar */
@@ -251,14 +251,14 @@ typedef struct glist {
     GTextInfo **ti;
     struct gscrollbar *vsb;
     int (*orderer)(const void *, const void *);
-    unsigned int backwards: 1;		/* reverse the order given by orderer */
-    unsigned int multiple_sel: 1;	/* Allow multiple selections */
-    unsigned int exactly_one: 1;	/* List must always have something selected */
-    unsigned int parentpressed: 1;	/* For listbuttons, pressed in parent */
-    unsigned int freeti: 1;		/* Free the ti array when we're destroyed */
-    unsigned int ispopup: 1;		/* respond to Return and Escape */
-    unsigned int sameheight: 1;		/* all lines are the same height */
-    unsigned int always_show_sb: 1;	/* display scrollbar even if we don't need it */
+    bool backwards;		/* reverse the order given by orderer */
+    bool multiple_sel;	/* Allow multiple selections */
+    bool exactly_one;	/* List must always have something selected */
+    bool parentpressed;	/* For listbuttons, pressed in parent */
+    bool freeti;		/* Free the ti array when we're destroyed */
+    bool ispopup;		/* respond to Return and Escape */
+    bool sameheight;		/* all lines are the same height */
+    bool always_show_sb;	/* display scrollbar even if we don't need it */
     uint32_t *sofar;			/* user input */
     GTimer *enduser;
     GTimer *pressed;
@@ -267,23 +267,23 @@ typedef struct glist {
 
 typedef struct gtextfield {
     GGadget g;
-    unsigned int cursor_on: 1;
-    unsigned int wordsel: 1;
-    unsigned int linesel: 1;
-    unsigned int listfield: 1;
-    unsigned int drag_and_drop: 1;
-    unsigned int has_dd_cursor: 1;
-    unsigned int hidden_cursor: 1;
-    unsigned int multi_line: 1;
-    unsigned int accepts_tabs: 1;
-    unsigned int accepts_returns: 1;
-    unsigned int wrap: 1;
-    unsigned int password: 1;
-    unsigned int dontdraw: 1;	/* Used when the tf is part of a larger control, and the control determines when to draw the tf */
-    unsigned int numericfield: 1;
-    unsigned int incr_down: 1;	/* Direction of increments when numeric_scroll events happen */
-    unsigned int completionfield: 1;
-    unsigned int was_completing: 1;
+    bool cursor_on;
+    bool wordsel;
+    bool linesel;
+    bool listfield;
+    bool drag_and_drop;
+    bool has_dd_cursor;
+    bool hidden_cursor;
+    bool multi_line;
+    bool accepts_tabs;
+    bool accepts_returns;
+    bool wrap;
+    bool password;
+    bool dontdraw;	/* Used when the tf is part of a larger control, and the control determines when to draw the tf */
+    bool numericfield;
+    bool incr_down;	/* Direction of increments when numeric_scroll events happen */
+    bool completionfield;
+    bool was_completing;
     uint8_t fh;
     uint8_t as;
     uint8_t nw;			/* Width of one character (an "n") */
@@ -335,14 +335,14 @@ typedef struct gmenubar {
     int16_t entry_with_mouse;
     int16_t lastmi;		/* If the menubar doesn't fit across the top the make some of it be vertical. Start here */
     struct gmenu *child;
-    unsigned int pressed: 1;
-    unsigned int initial_press: 1;
-    unsigned int any_unmasked_shortcuts: 1;
+    bool pressed;
+    bool initial_press;
+    bool any_unmasked_shortcuts;
     FontInstance *font;
     GMenuItem fake[2];		/* Used if not enough room for menu... */
 } GMenuBar;
 
-struct tabs { uint32_t *name; int16_t x, width, tw, nesting; unsigned int disabled: 1; GWindow w; };
+struct tabs { uint32_t *name; int16_t x, width, tw, nesting; bool disabled; GWindow w; };
 
 typedef struct gtabset {
     struct ggadget g;
@@ -359,14 +359,14 @@ typedef struct gtabset {
     int16_t arrow_size;		/* size of the actual arrow itself */
     int16_t ds;
     int16_t pressed_sel;
-    unsigned int scrolled: 1;	/* big tabsets either get scrolled or appear in multiple rows */
-    unsigned int haslarrow: 1;
-    unsigned int hasrarrow: 1;
-    unsigned int pressed: 1;
-    unsigned int filllines: 1;	/* If we have multiple lines then fill them so that each row takes up the entire width of the tabset */
-    unsigned int fill1line: 1;
-    unsigned int vertical: 1;
-    unsigned int nowindow: 1;
+    bool scrolled;	/* big tabsets either get scrolled or appear in multiple rows */
+    bool haslarrow;
+    bool hasrarrow;
+    bool pressed;
+    bool filllines;	/* If we have multiple lines then fill them so that each row takes up the entire width of the tabset */
+    bool fill1line;
+    bool vertical;
+    bool nowindow;
     FontInstance *font;
     void (*nested_expose)(GWindow pixmap, GGadget *g, GEvent *event);
     int (*nested_mouse)(GGadget *g, GEvent *event);
@@ -426,12 +426,12 @@ typedef struct gmatrixedit {
     int row_max;
     struct col_data *col_data;
     int hpad, vpad;			/* Internal padding */
-    unsigned int has_titles: 1;
-    unsigned int lr_pointer: 1;
-    unsigned int wasnew: 1;		/* So we need to call newafter when finished editing */
-    unsigned int big_done: 1;
-    unsigned int edit_active: 1;
-    unsigned int no_edit: 1;
+    bool has_titles;
+    bool lr_pointer;
+    bool wasnew;		/* So we need to call newafter when finished editing */
+    bool big_done;
+    bool edit_active;
+    bool no_edit;
     int pressed_col;			/* For changing column spacing */
     struct matrix_data *data;
     int16_t as, fh;
@@ -474,10 +474,10 @@ typedef struct rowcol {
     int rows, cols;
     GFont *font;
     int as, fh;
-    unsigned int hrules: 1;		/* Draw horizontal lines between each row */
-    unsigned int vrules: 1;		/* Draw vertical lines between each column */
-    unsigned int display_only: 1;
-    unsigned int order_entries: 1;	/* normally order rows based on first column entry */
+    bool hrules;		/* Draw horizontal lines between each row */
+    bool vrules;		/* Draw vertical lines between each column */
+    bool display_only;
+    bool order_entries;	/* normally order rows based on first column entry */
     uint8_t hpad;
     int *colx;				/* col+1 entries, last is xmax */
     GTextInfo **labels;

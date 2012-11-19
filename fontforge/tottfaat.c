@@ -518,11 +518,11 @@ struct feature {
     int16_t featureType, featureSetting;
     MacFeat *mf, *smf;
     struct macsetting *ms, *sms;
-    unsigned int vertOnly: 1;
-    unsigned int r2l: 1;	/* I think this is the "descending" flag */
-    unsigned int needsOff: 1;
-    unsigned int singleMutex: 1;
-    unsigned int dummyOff: 1;
+    bool vertOnly;
+    bool r2l;	/* I think this is the "descending" flag */
+    bool needsOff;
+    bool singleMutex;
+    bool dummyOff;
     uint8_t subtable_type;
     int chain;
     int32_t flag, offFlags;

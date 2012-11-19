@@ -54,10 +54,10 @@ typedef struct tracedata {
     struct tracedata *next, *prev;
 
     unsigned int extremum: 3;
-    unsigned int use_as_pt: 1;
-    unsigned int online: 1;
-    unsigned int wasconstrained: 1;
-    unsigned int constrained_corner: 1;
+    bool use_as_pt;
+    bool online;
+    bool wasconstrained;
+    bool constrained_corner;
     uint16_t num;
 } TraceData;
 
