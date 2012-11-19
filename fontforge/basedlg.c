@@ -343,7 +343,7 @@ static struct baselangextent *SFBaselang(SplineFont *sf,struct baselangextent *o
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_default;
     label[i].text = (uint32_t *) _("_OK");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.handle_controlevent = BaseLang_OK;
     gcd[i++].creator = GButtonCreate;
@@ -351,7 +351,7 @@ static struct baselangextent *SFBaselang(SplineFont *sf,struct baselangextent *o
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
     label[i].text = (uint32_t *) _("_Cancel");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.handle_controlevent = BaseLang_Cancel;
     gcd[i++].creator = GButtonCreate;
@@ -376,7 +376,7 @@ static struct baselangextent *SFBaselang(SplineFont *sf,struct baselangextent *o
     buttongcd[0].gd.flags = gg_visible;
     buttonlabel[0].text = (uint32_t *) _("Set Feature Extents");
     buttonlabel[0].text_is_1byte = true;
-    buttonlabel[0].text_in_resource = true;
+    buttonlabel[0].text_has_mnemonic = true;
     buttongcd[0].gd.label = &buttonlabel[0];
     buttongcd[0].gd.cid = CID_Extents;
     buttongcd[0].gd.handle_controlevent = BaseLang_Extents;
@@ -749,7 +749,7 @@ struct Base *SFBaselines(SplineFont *sf,struct Base *old,int is_vertical) {
 
     label[i].text = (uint32_t *) _("hang");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
     gcd[i].gd.popup_msg = (uint32_t *) _("Indic (& Tibetan) hanging baseline");
@@ -760,7 +760,7 @@ struct Base *SFBaselines(SplineFont *sf,struct Base *old,int is_vertical) {
 
     label[i].text = (uint32_t *) _("icfb");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
     gcd[i].gd.popup_msg = (uint32_t *) _("Ideographic character face bottom edge baseline");
@@ -771,7 +771,7 @@ struct Base *SFBaselines(SplineFont *sf,struct Base *old,int is_vertical) {
 
     label[i].text = (uint32_t *) _("icft");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
     gcd[i].gd.popup_msg = (uint32_t *) _("Ideographic character face top edge baseline");
@@ -782,7 +782,7 @@ struct Base *SFBaselines(SplineFont *sf,struct Base *old,int is_vertical) {
 
     label[i].text = (uint32_t *) _("ideo");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
     gcd[i].gd.popup_msg = (uint32_t *) _("Ideographic em-box bottom edge baseline");
@@ -793,7 +793,7 @@ struct Base *SFBaselines(SplineFont *sf,struct Base *old,int is_vertical) {
 
     label[i].text = (uint32_t *) _("idtp");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
     gcd[i].gd.popup_msg = (uint32_t *) _("Ideographic em-box top edge baseline");
@@ -804,7 +804,7 @@ struct Base *SFBaselines(SplineFont *sf,struct Base *old,int is_vertical) {
 
     label[i].text = (uint32_t *) _("math");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
     gcd[i].gd.popup_msg = (uint32_t *) _("Mathematical centerline");
@@ -815,7 +815,7 @@ struct Base *SFBaselines(SplineFont *sf,struct Base *old,int is_vertical) {
 
     label[i].text = (uint32_t *) _("romn");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
     gcd[i].gd.popup_msg = (uint32_t *) _("Baseline used for Latin, Greek, Cyrillic text.");
@@ -853,7 +853,7 @@ struct Base *SFBaselines(SplineFont *sf,struct Base *old,int is_vertical) {
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_default;
     label[i].text = (uint32_t *) _("_OK");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.handle_controlevent = Base_OK;
     gcd[i++].creator = GButtonCreate;
@@ -861,7 +861,7 @@ struct Base *SFBaselines(SplineFont *sf,struct Base *old,int is_vertical) {
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
     label[i].text = (uint32_t *) _("_Cancel");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.handle_controlevent = Base_Cancel;
     gcd[i++].creator = GButtonCreate;
@@ -886,7 +886,7 @@ struct Base *SFBaselines(SplineFont *sf,struct Base *old,int is_vertical) {
     buttongcd[0].gd.flags = gg_visible;
     buttonlabel[0].text = (uint32_t *) _("Set Extents");
     buttonlabel[0].text_is_1byte = true;
-    buttonlabel[0].text_in_resource = true;
+    buttonlabel[0].text_has_mnemonic = true;
     buttongcd[0].gd.label = &buttonlabel[0];
     buttongcd[0].gd.cid = CID_Extents;
     buttongcd[0].gd.handle_controlevent = Base_Extents;

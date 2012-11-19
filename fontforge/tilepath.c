@@ -1107,7 +1107,7 @@ static int TileAsk(struct tiledata *td,SplineFont *sf) {
 	if ( include_whitespace[i] ) gcd[k].gd.flags |= gg_cb_on;
 	label[k].text = (uint32_t *) _("Include Whitespace below Tile");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.popup_msg = (uint32_t *) _("Normally the Tile will consist of everything\nwithin the minimum bounding box of the tile --\nso adjacent tiles will abut directly on one\nanother. If you wish whitespace between tiles\nset this flag");
 	gcd[k].gd.cid = CID_IncludeWhiteSpaceBelowTile+i;
@@ -1121,7 +1121,7 @@ static int TileAsk(struct tiledata *td,SplineFont *sf) {
     gcd[k].gd.mnemonic = 'L';
     label[k].text = (uint32_t *) _("_Left");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.popup_msg = (uint32_t *) _("The tiles should be placed to the left of the path\nas the path is traced from its start point to its end");
     gcd[k].gd.cid = CID_Left;
@@ -1133,7 +1133,7 @@ static int TileAsk(struct tiledata *td,SplineFont *sf) {
     gcd[k].gd.mnemonic = 'C';
     label[k].text = (uint32_t *) _("C_enter");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.popup_msg = (uint32_t *) _("The tiles should be centered on the path");
     gcd[k].gd.cid = CID_Center;
@@ -1145,7 +1145,7 @@ static int TileAsk(struct tiledata *td,SplineFont *sf) {
     gcd[k].gd.mnemonic = 'R';
     label[k].text = (uint32_t *) _("_Right");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.popup_msg = (uint32_t *) _("The tiles should be placed to the right of the path\nas the path is traced from its start point to its end");
     gcd[k].gd.cid = CID_Right;
@@ -1166,7 +1166,7 @@ static int TileAsk(struct tiledata *td,SplineFont *sf) {
     gcd[k].gd.mnemonic = 'T';
     label[k].text = (uint32_t *) _("_Tile");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.popup_msg = (uint32_t *) _("Multiple copies of the selection should be tiled onto the path");
     gcd[k].gd.cid = CID_Tile;
@@ -1178,7 +1178,7 @@ static int TileAsk(struct tiledata *td,SplineFont *sf) {
     gcd[k].gd.mnemonic = 'a';
     label[k].text = (uint32_t *) _("Sc_ale & Tile");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.popup_msg = (uint32_t *) _("An integral number of the selection will be used to cover the path.\nIf the path length is not evenly divisible by the selection's\nheight, then the selection should be scaled slightly.");
     gcd[k].gd.cid = CID_TileScale;
@@ -1190,7 +1190,7 @@ static int TileAsk(struct tiledata *td,SplineFont *sf) {
     gcd[k].gd.mnemonic = 'S';
     label[k].text = (uint32_t *) _("_Scale");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.popup_msg = (uint32_t *) _("The selection should be scaled so that it will cover the path's length");
     gcd[k].gd.cid = CID_Scale;
@@ -1204,7 +1204,7 @@ static int TileAsk(struct tiledata *td,SplineFont *sf) {
 
     label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled|gg_visible|gg_but_default;
     gcd[k].gd.handle_controlevent = TilePathD_OK;
@@ -1212,7 +1212,7 @@ static int TileAsk(struct tiledata *td,SplineFont *sf) {
 
     label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled|gg_visible|gg_but_cancel;
     gcd[k].gd.handle_controlevent = TilePathD_Cancel;
@@ -1874,7 +1874,7 @@ static int TilePatternAsk(struct tiledata *td,SplineFont *sf) {
 
     label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled|gg_visible|gg_but_default;
     gcd[k].gd.handle_controlevent = PTD_OK;
@@ -1882,7 +1882,7 @@ static int TilePatternAsk(struct tiledata *td,SplineFont *sf) {
 
     label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled|gg_visible|gg_but_cancel;
     gcd[k].gd.handle_controlevent = PTD_Cancel;

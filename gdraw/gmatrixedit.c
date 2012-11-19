@@ -1237,7 +1237,7 @@ static void GME_StrBigEdit(GMatrixEdit *gme,char *str) {
     mgcd[1].gd.flags = gg_visible | gg_enabled | gg_but_default;
     mlabel[1].text = (uint32_t *) _("_OK");
     mlabel[1].text_is_1byte = true;
-    mlabel[1].text_in_resource = true;
+    mlabel[1].text_has_mnemonic = true;
     mgcd[1].gd.label = &mlabel[1];
     mgcd[1].gd.cid = CID_OK;
     mgcd[1].creator = GButtonCreate;
@@ -1247,7 +1247,7 @@ static void GME_StrBigEdit(GMatrixEdit *gme,char *str) {
     mgcd[2].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
     mlabel[2].text = (uint32_t *) _("_Cancel");
     mlabel[2].text_is_1byte = true;
-    mlabel[2].text_in_resource = true;
+    mlabel[2].text_has_mnemonic = true;
     mgcd[2].gd.label = &mlabel[2];
     mgcd[2].gd.cid = CID_Cancel;
     mgcd[2].creator = GButtonCreate;

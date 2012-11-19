@@ -176,7 +176,7 @@ NonLinearDlg (FontView * fv, CharView * cv)
   gcd[4].gd.flags = gg_visible | gg_enabled | gg_but_default;
   label[4].text = (uint32_t *) _("_OK");
   label[4].text_is_1byte = true;
-  label[4].text_in_resource = true;
+  label[4].text_has_mnemonic = true;
   gcd[4].gd.label = &label[4];
   gcd[4].gd.cid = true;
   gcd[4].creator = GButtonCreate;
@@ -191,7 +191,7 @@ NonLinearDlg (FontView * fv, CharView * cv)
   gcd[5].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
   label[5].text = (uint32_t *) _("_Cancel");
   label[5].text_is_1byte = true;
-  label[5].text_in_resource = true;
+  label[5].text_has_mnemonic = true;
   gcd[5].gd.label = &label[5];
   gcd[5].gd.cid = false;
   gcd[5].creator = GButtonCreate;
@@ -438,7 +438,7 @@ PointOfViewDlg (struct pov_data *pov, SplineFont *sf, int flags)
 
   label[k].text = (uint32_t *) _("_X");
   label[k].text_is_1byte = true;
-  label[k].text_in_resource = true;
+  label[k].text_has_mnemonic = true;
   gcd[k].gd.label = &label[k];
   gcd[k].gd.pos.x = 10;
   gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 16;
@@ -481,7 +481,7 @@ PointOfViewDlg (struct pov_data *pov, SplineFont *sf, int flags)
 
   label[k].text = (uint32_t *) _("_Y");
   label[k].text_is_1byte = true;
-  label[k].text_in_resource = true;
+  label[k].text_has_mnemonic = true;
   gcd[k].gd.label = &label[k];
   gcd[k].gd.pos.x = gcd[k - 3].gd.pos.x;
   gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 28;
@@ -679,7 +679,7 @@ PointOfViewDlg (struct pov_data *pov, SplineFont *sf, int flags)
   gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
   label[k].text = (uint32_t *) _("_OK");
   label[k].text_is_1byte = true;
-  label[k].text_in_resource = true;
+  label[k].text_has_mnemonic = true;
   gcd[k].gd.label = &label[k];
   gcd[k].gd.cid = true;
   gcd[k++].creator = GButtonCreate;
@@ -694,7 +694,7 @@ PointOfViewDlg (struct pov_data *pov, SplineFont *sf, int flags)
   gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
   label[k].text = (uint32_t *) _("_Cancel");
   label[k].text_is_1byte = true;
-  label[k].text_in_resource = true;
+  label[k].text_has_mnemonic = true;
   gcd[k].gd.label = &label[k];
   gcd[k].gd.cid = false;
   gcd[k++].creator = GButtonCreate;

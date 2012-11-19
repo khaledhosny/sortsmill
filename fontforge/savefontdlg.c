@@ -1108,7 +1108,7 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
   label[k].text = (uint32_t *) _("_OK");
   label[k].text_is_1byte = true;
-  label[k].text_in_resource = true;
+  label[k].text_has_mnemonic = true;
   gcd[k].gd.label = &label[k];
   gcd[k].gd.cid = CID_OK;
   gcd[k++].creator = GButtonCreate;
@@ -1122,7 +1122,7 @@ SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
   gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
   label[k].text = (uint32_t *) _("_Cancel");
   label[k].text_is_1byte = true;
-  label[k].text_in_resource = true;
+  label[k].text_has_mnemonic = true;
   gcd[k].gd.label = &label[k];
   gcd[k++].creator = GButtonCreate;
   harray[3] = GCD_Glue;
@@ -1295,7 +1295,7 @@ AskResolution (int bf, BDFFont *bdf)
 
       label[3].text = (uint32_t *) _("_Guess");
       label[3].text_is_1byte = true;
-      label[3].text_in_resource = true;
+      label[3].text_has_mnemonic = true;
       gcd[3].gd.label = &label[3];
       gcd[3].gd.pos.x = 20;
       gcd[3].gd.pos.y = gcd[2].gd.pos.y + 17;
@@ -1313,7 +1313,7 @@ AskResolution (int bf, BDFFont *bdf)
 
       label[4].text = (uint32_t *) _("_Other");
       label[4].text_is_1byte = true;
-      label[4].text_in_resource = true;
+      label[4].text_has_mnemonic = true;
       gcd[4].gd.label = &label[4];
       gcd[4].gd.pos.x = 20;
       gcd[4].gd.pos.y = gcd[3].gd.pos.y + 17;
@@ -1349,7 +1349,7 @@ AskResolution (int bf, BDFFont *bdf)
       gcd[6].gd.flags = gg_visible | gg_enabled | gg_but_default;
       label[6].text = (uint32_t *) _("_OK");
       label[6].text_is_1byte = true;
-      label[6].text_in_resource = true;
+      label[6].text_has_mnemonic = true;
       gcd[6].gd.mnemonic = 'O';
       gcd[6].gd.label = &label[6];
       gcd[6].gd.cid = 1001;
@@ -1365,7 +1365,7 @@ AskResolution (int bf, BDFFont *bdf)
       gcd[7].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
       label[7].text = (uint32_t *) _("_Cancel");
       label[7].text_is_1byte = true;
-      label[7].text_in_resource = true;
+      label[7].text_has_mnemonic = true;
       gcd[7].gd.label = &label[7];
       gcd[7].gd.mnemonic = 'C';
       /*gcd[7].gd.handle_controlevent = CH_Cancel; */
@@ -2748,7 +2748,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
   gcd[1].gd.flags = gg_visible | gg_enabled | gg_but_default;
   label[1].text = (uint32_t *) _("_Generate");
   label[1].text_is_1byte = true;
-  label[1].text_in_resource = true;
+  label[1].text_has_mnemonic = true;
   gcd[1].gd.mnemonic = 'S';
   gcd[1].gd.label = &label[1];
   gcd[1].gd.handle_controlevent = GFD_SaveOk;
@@ -2763,7 +2763,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
   gcd[2].gd.flags = gg_visible | gg_enabled;
   label[2].text = (uint32_t *) _("_Filter");
   label[2].text_is_1byte = true;
-  label[2].text_in_resource = true;
+  label[2].text_has_mnemonic = true;
   gcd[2].gd.mnemonic = 'F';
   gcd[2].gd.label = &label[2];
   gcd[2].gd.handle_controlevent = GFileChooserFilterEh;
@@ -2778,7 +2778,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
   gcd[3].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
   label[3].text = (uint32_t *) _("_Cancel");
   label[3].text_is_1byte = true;
-  label[3].text_in_resource = true;
+  label[3].text_has_mnemonic = true;
   gcd[3].gd.label = &label[3];
   gcd[3].gd.mnemonic = 'C';
   gcd[3].gd.handle_controlevent = GFD_Cancel;
@@ -2796,7 +2796,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
   gcd[4].gd.flags = gg_visible | gg_enabled;
   label[4].text = (uint32_t *) C_ ("Directory", "_New");
   label[4].text_is_1byte = true;
-  label[4].text_in_resource = true;
+  label[4].text_has_mnemonic = true;
   label[4].image = &_GIcon_dir;
   label[4].image_precedes = false;
   gcd[4].gd.mnemonic = 'N';

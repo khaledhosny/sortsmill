@@ -48,7 +48,7 @@ typedef struct gtextinfo {
     unsigned int selected: 1;			/* Only for lists (used internally for menu(bar)s, when cursor is on the line) */
     unsigned int line: 1;			/* Only for menus */
     unsigned int text_is_1byte: 1;		/* If passed in as 1byte (ie. iso-8859-1) text, will be converted */
-    unsigned int text_in_resource: 1;		/* the text field is actually an index into the string resource table */
+    unsigned int text_has_mnemonic: 1;		/* the text field is actually an index into the string resource table */
     unsigned int changed: 1;			/* If a row/column widget changed this */
     uint32_t mnemonic;				/* Only for menus and menubars */
 						/* should really be in menuitem, but that wastes space and complicates GTextInfoDraw */
@@ -71,7 +71,7 @@ typedef struct gtextinfo2 {
     unsigned int selected: 1;			/* Only for lists (used internally for menu(bar)s, when cursor is on the line) */
     unsigned int line: 1;			/* Only for menus */
     unsigned int text_is_1byte: 1;		/* If passed in as 1byte (ie. iso-8859-1) text, will be converted */
-    unsigned int text_in_resource: 1;		/* the text field is actually an index into the string resource table */
+    unsigned int text_has_mnemonic: 1;		/* the text field is actually an index into the string resource table */
     unsigned int changed: 1;			/* If a row/column widget changed this */
     unsigned int sort_me_first_in_list: 1;	/* used for directories in file chooser widgets */
     uint32_t mnemonic;				/* Only for menus and menubars */
@@ -112,7 +112,7 @@ typedef struct tabinfo {
     unsigned int disabled: 1;
     unsigned int selected: 1;
     unsigned int text_is_1byte: 1;		/* If passed in as 1byte (ie. iso-8859-1) text, will be converted */
-    unsigned int text_in_resource: 1;		/* the text field is actually an index into the string resource table */
+    unsigned int text_has_mnemonic: 1;		/* the text field is actually an index into the string resource table */
     unsigned char nesting;
 } GTabInfo;
 

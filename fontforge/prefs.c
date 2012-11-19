@@ -1773,7 +1773,7 @@ AskSetting (struct macsettingname *temp, GGadget *list, int index,
 
   label[0].text = (uint32_t *) _("_Feature:");
   label[0].text_is_1byte = true;
-  label[0].text_in_resource = true;
+  label[0].text_has_mnemonic = true;
   gcd[0].gd.label = &label[0];
   gcd[0].gd.pos.x = 5;
   gcd[0].gd.pos.y = 5 + 4;
@@ -1806,7 +1806,7 @@ AskSetting (struct macsettingname *temp, GGadget *list, int index,
 
   label[4].text = (uint32_t *) _("_Tag:");
   label[4].text_is_1byte = true;
-  label[4].text_in_resource = true;
+  label[4].text_has_mnemonic = true;
   gcd[4].gd.label = &label[4];
   gcd[4].gd.pos.x = 5;
   gcd[4].gd.pos.y = gcd[3].gd.pos.y + 26;
@@ -1834,7 +1834,7 @@ AskSetting (struct macsettingname *temp, GGadget *list, int index,
   gcd[6].gd.flags = gg_visible | gg_enabled | gg_but_default;
   label[6].text = (uint32_t *) _("_OK");
   label[6].text_is_1byte = true;
-  label[6].text_in_resource = true;
+  label[6].text_has_mnemonic = true;
   gcd[6].gd.label = &label[6];
   /*gcd[6].gd.handle_controlevent = Prefs_Ok; */
   gcd[6].creator = GButtonCreate;
@@ -1846,7 +1846,7 @@ AskSetting (struct macsettingname *temp, GGadget *list, int index,
   gcd[7].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
   label[7].text = (uint32_t *) _("_Cancel");
   label[7].text_is_1byte = true;
-  label[7].text_in_resource = true;
+  label[7].text_has_mnemonic = true;
   gcd[7].gd.label = &label[7];
   gcd[7].creator = GButtonCreate;
 
@@ -2406,7 +2406,7 @@ DoPrefs (void)
   msgcd[sgc].gd.flags = gg_visible | gg_enabled;
   mslabels[sgc].text = (uint32_t *) C_ ("MacMap", "_New...");
   mslabels[sgc].text_is_1byte = true;
-  mslabels[sgc].text_in_resource = true;
+  mslabels[sgc].text_has_mnemonic = true;
   msgcd[sgc].gd.label = &mslabels[sgc];
   msgcd[sgc].gd.handle_controlevent = Pref_NewMapping;
   msgcd[sgc++].creator = GButtonCreate;
@@ -2421,7 +2421,7 @@ DoPrefs (void)
   msgcd[sgc].gd.flags = gg_visible;
   mslabels[sgc].text = (uint32_t *) _("_Delete");
   mslabels[sgc].text_is_1byte = true;
-  mslabels[sgc].text_in_resource = true;
+  mslabels[sgc].text_has_mnemonic = true;
   msgcd[sgc].gd.label = &mslabels[sgc];
   msgcd[sgc].gd.cid = CID_MappingDel;
   msgcd[sgc].gd.handle_controlevent = Pref_DelMapping;
@@ -2437,7 +2437,7 @@ DoPrefs (void)
   msgcd[sgc].gd.flags = gg_visible;
   mslabels[sgc].text = (uint32_t *) _("_Edit...");
   mslabels[sgc].text_is_1byte = true;
-  mslabels[sgc].text_in_resource = true;
+  mslabels[sgc].text_has_mnemonic = true;
   msgcd[sgc].gd.label = &mslabels[sgc];
   msgcd[sgc].gd.cid = CID_MappingEdit;
   msgcd[sgc].gd.handle_controlevent = Pref_EditMapping;
@@ -2453,7 +2453,7 @@ DoPrefs (void)
   msgcd[sgc].gd.flags = gg_visible | gg_enabled;
   mslabels[sgc].text = (uint32_t *) C_ ("MacMapping", "Default");
   mslabels[sgc].text_is_1byte = true;
-  mslabels[sgc].text_in_resource = true;
+  mslabels[sgc].text_has_mnemonic = true;
   msgcd[sgc].gd.label = &mslabels[sgc];
   msgcd[sgc].gd.handle_controlevent = Pref_DefaultMapping;
   msgcd[sgc++].creator = GButtonCreate;
@@ -2881,7 +2881,7 @@ DoPrefs (void)
   gcd[gc].gd.flags = gg_visible | gg_enabled | gg_but_default;
   label[gc].text = (uint32_t *) _("_OK");
   label[gc].text_is_1byte = true;
-  label[gc].text_in_resource = true;
+  label[gc].text_has_mnemonic = true;
   gcd[gc].gd.mnemonic = 'O';
   gcd[gc].gd.label = &label[gc];
   gcd[gc].gd.handle_controlevent = Prefs_Ok;
@@ -2898,7 +2898,7 @@ DoPrefs (void)
   gcd[gc].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
   label[gc].text = (uint32_t *) _("_Cancel");
   label[gc].text_is_1byte = true;
-  label[gc].text_in_resource = true;
+  label[gc].text_has_mnemonic = true;
   gcd[gc].gd.label = &label[gc];
   gcd[gc].gd.mnemonic = 'C';
   gcd[gc].gd.handle_controlevent = Prefs_Cancel;
@@ -3499,7 +3499,7 @@ PrefsSubSetDlg (CharView * cv, char *windowTitle, struct prefs_list *plist)
   gcd[gc].gd.flags = gg_visible | gg_enabled | gg_but_default;
   label[gc].text = (uint32_t *) _("_OK");
   label[gc].text_is_1byte = true;
-  label[gc].text_in_resource = true;
+  label[gc].text_has_mnemonic = true;
   gcd[gc].gd.mnemonic = 'O';
   gcd[gc].gd.label = &label[gc];
   gcd[gc].gd.handle_controlevent = PrefsSubSet_Ok;

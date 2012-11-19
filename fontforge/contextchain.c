@@ -2795,7 +2795,7 @@ ContextChainEdit (SplineFont *sf, FPST * fpst,
   bgcd[1].gd.flags = gg_visible | gg_enabled;
   blabel[1].text = (uint32_t *) _("_OK");
   blabel[1].text_is_1byte = true;
-  blabel[1].text_in_resource = true;
+  blabel[1].text_has_mnemonic = true;
   bgcd[1].gd.label = &blabel[1];
   bgcd[1].gd.cid = CID_OK;
   bgcd[1].gd.handle_controlevent = CCD_OK;
@@ -2806,7 +2806,7 @@ ContextChainEdit (SplineFont *sf, FPST * fpst,
   bgcd[2].gd.flags = gg_visible;
   blabel[2].text = (uint32_t *) _("< _Prev");
   blabel[2].text_is_1byte = true;
-  blabel[2].text_in_resource = true;
+  blabel[2].text_has_mnemonic = true;
   bgcd[2].gd.label = &blabel[2];
   bgcd[2].gd.handle_controlevent = CCD_Prev;
   bgcd[2].gd.cid = CID_Prev;
@@ -2817,7 +2817,7 @@ ContextChainEdit (SplineFont *sf, FPST * fpst,
   bgcd[3].gd.flags = gg_visible;
   blabel[3].text = (uint32_t *) _("_Next >");
   blabel[3].text_is_1byte = true;
-  blabel[3].text_in_resource = true;
+  blabel[3].text_has_mnemonic = true;
   bgcd[3].gd.label = &blabel[3];
   bgcd[3].gd.handle_controlevent = CCD_Next;
   bgcd[3].gd.cid = CID_Next;
@@ -2828,7 +2828,7 @@ ContextChainEdit (SplineFont *sf, FPST * fpst,
   bgcd[4].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
   blabel[4].text = (uint32_t *) _("_Cancel");
   blabel[4].text_is_1byte = true;
-  blabel[4].text_in_resource = true;
+  blabel[4].text_has_mnemonic = true;
   bgcd[4].gd.label = &blabel[4];
   bgcd[4].gd.handle_controlevent = CCD_Cancel;
   bgcd[4].gd.cid = CID_Cancel;

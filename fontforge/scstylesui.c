@@ -170,7 +170,7 @@ void CondenseExtendDlg(FontView *fv, CharView *cv) {
 
     label[k].text = (uint32_t *) _("Scale By");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled | gg_visible;
     gcd[k++].creator = GLabelCreate;
@@ -179,7 +179,7 @@ void CondenseExtendDlg(FontView *fv, CharView *cv) {
 
     label[k].text = (uint32_t *) _("Add");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled | gg_visible;
     gcd[k++].creator = GLabelCreate;
@@ -188,7 +188,7 @@ void CondenseExtendDlg(FontView *fv, CharView *cv) {
 
     label[k].text = (uint32_t *) _("Counters:");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled | gg_visible;
     gcd[k++].creator = GLabelCreate;
@@ -206,7 +206,7 @@ void CondenseExtendDlg(FontView *fv, CharView *cv) {
 
     label[k].text = (uint32_t *) " % + ";
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled | gg_visible;
     gcd[k++].creator = GLabelCreate;
@@ -225,7 +225,7 @@ void CondenseExtendDlg(FontView *fv, CharView *cv) {
 
     label[k].text = (uint32_t *) _("Side Bearings:");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled | gg_visible;
     gcd[k++].creator = GLabelCreate;
@@ -243,7 +243,7 @@ void CondenseExtendDlg(FontView *fv, CharView *cv) {
 
     label[k].text = (uint32_t *) " % + ";
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled | gg_visible;
     gcd[k++].creator = GLabelCreate;
@@ -262,7 +262,7 @@ void CondenseExtendDlg(FontView *fv, CharView *cv) {
 
     label[k].text = (uint32_t *) _("Correct for Italic Angle");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled | gg_visible | gg_utf8_popup | (last_ci.correct_italic?gg_cb_on:0);
     gcd[k].gd.cid = CID_CorrectItalic;
@@ -280,7 +280,7 @@ void CondenseExtendDlg(FontView *fv, CharView *cv) {
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
     label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.handle_controlevent = CondenseExtend_OK;
     gcd[k++].creator = GButtonCreate;
@@ -291,7 +291,7 @@ void CondenseExtendDlg(FontView *fv, CharView *cv) {
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
     label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.handle_controlevent = CondenseExtend_Cancel;
     gcd[k].creator = GButtonCreate;
@@ -997,7 +997,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 		"to the original name, and it will copy a modified version of\n"
 		"the original glyph into the new one.");
 	    label[k].text_is_1byte = true;
-	    label[k].text_in_resource = true;
+	    label[k].text_has_mnemonic = true;
 	    gcd[k].gd.label = &label[k];
 	    gcd[k].gd.flags = gg_enabled | gg_visible;
 	    gcd[k++].creator = GLabelCreate;
@@ -1011,7 +1011,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 
 	    label[k].text = (uint32_t *) _("Feature Tag:");
 	    label[k].text_is_1byte = true;
-	    label[k].text_in_resource = true;
+	    label[k].text_has_mnemonic = true;
 	    gcd[k].gd.label = &label[k];
 	    gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+31;
 	    gcd[k].gd.flags = gg_enabled | gg_visible;
@@ -1030,7 +1030,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 
 	    label[k].text = (uint32_t *) _("Glyph Extension:");
 	    label[k].text_is_1byte = true;
-	    label[k].text_in_resource = true;
+	    label[k].text_has_mnemonic = true;
 	    gcd[k].gd.label = &label[k];
 	    gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+31;
 	    gcd[k].gd.flags = gg_enabled | gg_visible;
@@ -1052,7 +1052,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 
 	    label[k].text = (uint32_t *) _("Vertical Offset:");
 	    label[k].text_is_1byte = true;
-	    label[k].text_in_resource = true;
+	    label[k].text_has_mnemonic = true;
 	    gcd[k].gd.label = &label[k];
 	    gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+31;
 	    gcd[k].gd.flags = gg_enabled | gg_visible;
@@ -1091,7 +1091,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 		"FontForge will create (or reuse) a glyph named \"a.sc\", and\n"
 		"it will copy a modified version of the \"A\" glyph into \"a.sc\".");
 	    label[k].text_is_1byte = true;
-	    label[k].text_in_resource = true;
+	    label[k].text_has_mnemonic = true;
 	    gcd[k].gd.label = &label[k];
 	    gcd[k].gd.flags = gg_enabled | gg_visible;
 	    gcd[k++].creator = GLabelCreate;
@@ -1104,7 +1104,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 
 	    label[k].text = (uint32_t *) _("Small Caps");
 	    label[k].text_is_1byte = true;
-	    label[k].text_in_resource = true;
+	    label[k].text_has_mnemonic = true;
 	    gcd[k].gd.label = &label[k];
 	    gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+31;
 	    gcd[k].gd.flags = gg_visible | gg_enabled | gg_cb_on;
@@ -1115,7 +1115,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 
 	    label[k].text = (uint32_t *) _("Petite Caps");
 	    label[k].text_is_1byte = true;
-	    label[k].text_in_resource = true;
+	    label[k].text_has_mnemonic = true;
 	    gcd[k].gd.label = &label[k];
 	    gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+31;
 	    gcd[k].gd.flags = gg_visible | gg_enabled ;
@@ -1131,7 +1131,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 
 	    label[k].text = (uint32_t *) _("Glyph Extensions");
 	    label[k].text_is_1byte = true;
-	    label[k].text_in_resource = true;
+	    label[k].text_has_mnemonic = true;
 	    gcd[k].gd.label = &label[k];
 	    gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+31;
 	    gcd[k].gd.flags = gg_visible | gg_enabled;
@@ -1140,7 +1140,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 
 	    label[k].text = (uint32_t *) _("Letters:");
 	    label[k].text_is_1byte = true;
-	    label[k].text_in_resource = true;
+	    label[k].text_has_mnemonic = true;
 	    gcd[k].gd.label = &label[k];
 	    gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+31;
 	    gcd[k].gd.flags = gg_visible | gg_enabled;
@@ -1156,7 +1156,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 
 	    label[k].text = (uint32_t *) _("Symbols:");
 	    label[k].text_is_1byte = true;
-	    label[k].text_in_resource = true;
+	    label[k].text_has_mnemonic = true;
 	    gcd[k].gd.label = &label[k];
 	    gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+31;
 	    gcd[k].gd.flags = gg_visible | gg_enabled;
@@ -1179,7 +1179,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 
 	    label[k].text = (uint32_t *) _("Create small caps variants for symbols as well as letters");
 	    label[k].text_is_1byte = true;
-	    label[k].text_in_resource = true;
+	    label[k].text_has_mnemonic = true;
 	    gcd[k].gd.label = &label[k];
 	    gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+31;
 	    gcd[k].gd.flags = gg_enabled | gg_visible;
@@ -1211,7 +1211,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 
 	label[k].text = (uint32_t *) _("Uniform scaling for stems of any width and direction");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+31;
 	gcd[k].gd.flags = gg_enabled | gg_visible | gg_cb_on;
@@ -1222,7 +1222,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 
 	label[k].text = (uint32_t *) _("Separate ratios for thin and thick stems");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+31;
 	gcd[k].gd.flags = gg_enabled | gg_visible;
@@ -1233,7 +1233,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 
 	label[k].text = (uint32_t *) _("Threshold between \"thin\" and \"thick\":");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+31;
 	gcd[k].gd.flags = gg_enabled | gg_visible;
@@ -1252,7 +1252,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 
 	label[k].text = (uint32_t *) _("em-units");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+31;
 	gcd[k].gd.flags = gg_enabled | gg_visible;
@@ -1268,7 +1268,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 	
 	label[k].text = (uint32_t *) _("Separate ratios for horizontal and vertical stems");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+31;
 	gcd[k].gd.flags = gg_enabled | gg_visible | gg_rad_continueold;
@@ -1297,7 +1297,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 
 	label[k].text = (uint32_t *) _("% +");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+31;
 	gcd[k].gd.flags = gg_enabled | gg_visible;
@@ -1316,7 +1316,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 
 	label[k].text = (uint32_t *) _("em-units");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+31;
 	gcd[k].gd.flags = gg_enabled | gg_visible;
@@ -1342,7 +1342,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 
 	label[k].text = (uint32_t *) _("% +");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+31;
 	gcd[k].gd.flags = gg_enabled | gg_visible;
@@ -1360,7 +1360,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 
 	label[k].text = (uint32_t *) _("em-units");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+31;
 	gcd[k].gd.flags = gg_enabled | gg_visible;
@@ -1376,7 +1376,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 
 	label[k].text = (uint32_t *) _("Activate diagonal stem processing");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+31;
 	gcd[k].gd.flags = gg_enabled | gg_visible | gg_cb_on;
@@ -1397,7 +1397,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 
 	label[k].text = (uint32_t *) _("Retain current advance width, center glyph within that width");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+31;
 	gcd[k].gd.flags = gg_enabled | gg_visible;
@@ -1408,7 +1408,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 
 	label[k].text = (uint32_t *) _("Retain current advance width, scale side bearings proportionally");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+31;
 	gcd[k].gd.flags = gg_enabled | gg_visible;
@@ -1419,7 +1419,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 
 	label[k].text = (uint32_t *) _("Uniform scaling for horizontal counters and side bearings");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+31;
 	gcd[k].gd.flags = gg_enabled | gg_visible | gg_cb_on;
@@ -1430,7 +1430,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 
 	label[k].text = (uint32_t *) _("Non uniform scaling for horizontal counters and side bearings");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+31;
 	gcd[k].gd.flags = gg_enabled | gg_visible;
@@ -1441,7 +1441,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 
 	label[k].text = (uint32_t *) _("Counter Size:");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.flags = gg_enabled | gg_visible;
 	gcd[k++].creator = GLabelCreate;
@@ -1459,7 +1459,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 
 	label[k].text = (uint32_t *) _("% +");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.flags = gg_enabled | gg_visible;
 	gcd[k++].creator = GLabelCreate;
@@ -1477,7 +1477,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 
 	label[k].text = (uint32_t *) _("em-units");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.flags = gg_enabled | gg_visible;
 	gcd[k++].creator = GLabelCreate;
@@ -1486,7 +1486,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 
 	label[k].text = (uint32_t *) _("Left Side Bearing:");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.flags = gg_enabled | gg_visible;
 	gcd[k++].creator = GLabelCreate;
@@ -1503,7 +1503,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 
 	label[k].text = (uint32_t *) _("% +");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.flags = gg_enabled | gg_visible;
 	gcd[k++].creator = GLabelCreate;
@@ -1520,7 +1520,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 
 	label[k].text = (uint32_t *) _("em-units");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.flags = gg_enabled | gg_visible;
 	gcd[k++].creator = GLabelCreate;
@@ -1529,7 +1529,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 
 	label[k].text = (uint32_t *) _("Right Side Bearing:");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.flags = gg_enabled | gg_visible;
 	gcd[k++].creator = GLabelCreate;
@@ -1546,7 +1546,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 
 	label[k].text = (uint32_t *) _("% +");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.flags = gg_enabled | gg_visible;
 	gcd[k++].creator = GLabelCreate;
@@ -1563,7 +1563,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 
 	label[k].text = (uint32_t *) _("em-units");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.flags = gg_enabled | gg_visible;
 	gcd[k++].creator = GLabelCreate;
@@ -1589,7 +1589,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 
 	label[k].text = (uint32_t *) _("Control Vertical Counters (use for CJK)");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.flags = gg_enabled | gg_visible;
 	gcd[k].gd.handle_controlevent = CG_UseVCounters;
@@ -1599,7 +1599,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 
 	label[k].text = (uint32_t *) _("Vertical Counters:");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.flags = gg_enabled | gg_visible;
 	gcd[k++].creator = GLabelCreate;
@@ -1616,7 +1616,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 
 	label[k].text = (uint32_t *) _("% +");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.flags = gg_enabled | gg_visible;
 	gcd[k++].creator = GLabelCreate;
@@ -1633,7 +1633,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 
 	label[k].text = (uint32_t *) _("em-units");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.flags = gg_enabled | gg_visible;
 	gcd[k++].creator = GLabelCreate;
@@ -1650,7 +1650,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 
 	label[k].text = (uint32_t *) _("Control Vertical Mapping (use for Latin, Greek, Cyrillic)");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.flags = gg_enabled | gg_visible | gg_utf8_popup | gg_cb_on | gg_rad_continueold;
 	gcd[k].gd.popup_msg = (uint32_t *) _("These mappings may be used to fix certain standard heights.");
@@ -1662,7 +1662,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 	s = 0;
 	label[k].text = (uint32_t *) _("Vertical Scale:");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.flags = gg_enabled | gg_visible;
 	gcd[k++].creator = GLabelCreate;
@@ -1680,7 +1680,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 
 	label[k].text = (uint32_t *) _("%");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.flags = gg_enabled | gg_visible;
 	gcd[k++].creator = GLabelCreate;
@@ -1725,7 +1725,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 	gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
 	label[k].text = (uint32_t *) _("_OK");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.handle_controlevent = GlyphChange_OK;
 	gcd[k++].creator = GButtonCreate;
@@ -1735,7 +1735,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 	gcd[k].gd.popup_msg = (uint32_t *) _("Everything to its default value");
 	label[k].text = (uint32_t *) _("Reset");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.handle_controlevent = GlyphChange_Default;
 	gcd[k++].creator = GButtonCreate;
@@ -1746,7 +1746,7 @@ void GlyphChangeDlg(FontView *fv,CharView *cv, enum glyphchange_type gc) {
 	gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
 	label[k].text = (uint32_t *) _("_Cancel");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.handle_controlevent = CondenseExtend_Cancel;
 	gcd[k].creator = GButtonCreate;
@@ -1937,7 +1937,7 @@ void EmboldenDlg(FontView *fv, CharView *cv) {
     memset(label,0,sizeof(label));
     label[k].text = (uint32_t *) _("Embolden by:");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled | gg_visible;
     gcd[k++].creator = GLabelCreate;
@@ -1955,7 +1955,7 @@ void EmboldenDlg(FontView *fv, CharView *cv) {
 
     label[k].text = (uint32_t *) _("em units");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+31;
     gcd[k].gd.flags = gg_enabled | gg_visible;
@@ -1966,7 +1966,7 @@ void EmboldenDlg(FontView *fv, CharView *cv) {
     label[k].text = (uint32_t *) _("_LCG");
     gcd[k].gd.popup_msg = (uint32_t *) _("Embolden as appropriate for Latin, Cyrillic and Greek scripts");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled | gg_visible | gg_utf8_popup;
     gcd[k].gd.cid = CID_LCG;
@@ -1977,7 +1977,7 @@ void EmboldenDlg(FontView *fv, CharView *cv) {
     label[k].text = (uint32_t *) _("_CJK");
     gcd[k].gd.popup_msg = (uint32_t *) _("Embolden as appropriate for Chinese, Japanese, Korean scripts");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled | gg_visible | gg_utf8_popup;
     gcd[k].gd.cid = CID_CJK;
@@ -1988,7 +1988,7 @@ void EmboldenDlg(FontView *fv, CharView *cv) {
     label[k].text = (uint32_t *) _("_Auto");
     gcd[k].gd.popup_msg = (uint32_t *) _("Choose the appropriate method depending on the glyph's script");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled | gg_visible | gg_utf8_popup;
     gcd[k].gd.cid = CID_Auto;
@@ -1999,7 +1999,7 @@ void EmboldenDlg(FontView *fv, CharView *cv) {
     label[k].text = (uint32_t *) _("C_ustom");
     gcd[k].gd.popup_msg = (uint32_t *) _("User controls the emboldening with the next two fields");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled | gg_visible | gg_utf8_popup;
     gcd[k].gd.cid = CID_Custom;
@@ -2019,7 +2019,7 @@ void EmboldenDlg(FontView *fv, CharView *cv) {
 
     label[k].text = (uint32_t *) _("_Top hint:");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+31;
     gcd[k].gd.flags = gg_enabled | gg_visible;
@@ -2041,7 +2041,7 @@ void EmboldenDlg(FontView *fv, CharView *cv) {
 
     label[k].text = (uint32_t *) _("_Zone:");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+31;
     gcd[k].gd.flags = gg_enabled | gg_visible;
@@ -2064,7 +2064,7 @@ void EmboldenDlg(FontView *fv, CharView *cv) {
 
     label[k].text = (uint32_t *) _("_Bottom hint:");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+31;
     gcd[k].gd.flags = gg_enabled | gg_visible;
@@ -2085,7 +2085,7 @@ void EmboldenDlg(FontView *fv, CharView *cv) {
 
     label[k].text = (uint32_t *) _("Zone:");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+31;
     gcd[k].gd.flags = gg_enabled | gg_visible;
@@ -2108,7 +2108,7 @@ void EmboldenDlg(FontView *fv, CharView *cv) {
 
     label[k].text = (uint32_t *) _("Serif Height");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled | gg_visible | gg_utf8_popup ;
     gcd[k].gd.popup_msg = (uint32_t *) _("Any points this high will be assumed to be on serifs,\nand will remain at that height after processing.\n(So serifs should remain the same size).\n(If you do wish the serifs to grow, set this to 0)");
@@ -2129,7 +2129,7 @@ void EmboldenDlg(FontView *fv, CharView *cv) {
 
     label[k].text = (uint32_t *) _("Fuzz");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled | gg_visible | gg_utf8_popup ;
     gcd[k].gd.popup_msg = (uint32_t *) _("Allow the height match to differ by this much");
@@ -2151,7 +2151,7 @@ void EmboldenDlg(FontView *fv, CharView *cv) {
     label[k].text = (uint32_t *) _("Counters:");
     gcd[k].gd.popup_msg = (uint32_t *) _("The simple application of this algorithm will squeeze counters\nThat is not normally seen in bold latin fonts");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled | gg_visible | gg_utf8_popup;
     gcd[k++].creator = GLabelCreate;
@@ -2160,7 +2160,7 @@ void EmboldenDlg(FontView *fv, CharView *cv) {
     label[k].text = (uint32_t *) _("Squish");
     gcd[k].gd.popup_msg = (uint32_t *) _("Make the counters narrower");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled | gg_visible | gg_utf8_popup;
     gcd[k].gd.cid = CID_Squish;
@@ -2171,7 +2171,7 @@ void EmboldenDlg(FontView *fv, CharView *cv) {
     label[k].text = (uint32_t *) _("Retain");
     gcd[k].gd.popup_msg = (uint32_t *) _("Try to insure that the counters are as wide\nafterward as they were before");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled | gg_visible | gg_utf8_popup;
     gcd[k].gd.cid = CID_Retain;
@@ -2182,7 +2182,7 @@ void EmboldenDlg(FontView *fv, CharView *cv) {
     label[k].text = (uint32_t *) _("Auto");
     gcd[k].gd.popup_msg = (uint32_t *) _("Retain counter size for glyphs using latin algorithm\nSquish them for those using CJK." );
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled | gg_visible | gg_utf8_popup | gg_cb_on;
     gcd[k].gd.cid = CID_CounterAuto;
@@ -2198,7 +2198,7 @@ void EmboldenDlg(FontView *fv, CharView *cv) {
 
     label[k].text = (uint32_t *) _("Cleanup Self Intersect");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled | gg_visible | gg_utf8_popup | (last_overlap?gg_cb_on:0);
     gcd[k].gd.cid = CID_CleanupSelfIntersect;
@@ -2213,7 +2213,7 @@ void EmboldenDlg(FontView *fv, CharView *cv) {
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
     label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.handle_controlevent = Embolden_OK;
     gcd[k++].creator = GButtonCreate;
@@ -2224,7 +2224,7 @@ void EmboldenDlg(FontView *fv, CharView *cv) {
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
     label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.handle_controlevent = Embolden_Cancel;
     gcd[k].creator = GButtonCreate;
@@ -2548,7 +2548,7 @@ void ItalicDlg(FontView *fv, CharView *cv) {
 
     label[k].text = (uint32_t *) _("Transform baseline serifs");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     label[k].image_precedes = true;
     label[k].image = (GImage *) "scbottomserifs.png";
     gcd[k].gd.label = &label[k];
@@ -2560,7 +2560,7 @@ void ItalicDlg(FontView *fv, CharView *cv) {
 
     label[k].text = (uint32_t *) _("Transform x-height serifs");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     label[k].image_precedes = true;
     label[k].image = (GImage *) "sctopserifs.png";
     gcd[k].gd.label = &label[k];
@@ -2572,7 +2572,7 @@ void ItalicDlg(FontView *fv, CharView *cv) {
 
     label[k].text = (uint32_t *) _("Transform ascender serifs");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     label[k].image_precedes = true;
     label[k].image = (GImage *) "sctopserifs.png";
     gcd[k].gd.label = &label[k];
@@ -2584,7 +2584,7 @@ void ItalicDlg(FontView *fv, CharView *cv) {
 
     label[k].text = (uint32_t *) _("Transform descender serifs");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     label[k].image_precedes = true;
     label[k].image = (GImage *) "scpitalic.png";
     gcd[k].gd.label = &label[k];
@@ -2596,7 +2596,7 @@ void ItalicDlg(FontView *fv, CharView *cv) {
 
     label[k].text = (uint32_t *) _("Transform diagonal serifs");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     label[k].image_precedes = true;
     label[k].image = (GImage *) "scdiagserifs.png";
     gcd[k].gd.label = &label[k];
@@ -2615,7 +2615,7 @@ void ItalicDlg(FontView *fv, CharView *cv) {
 
     label[k].text = (uint32_t *) _("Flat");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     label[k].image_precedes = true;
     label[k].image = (GImage *) "scflatserif.png";
     gcd[k].gd.label = &label[k];
@@ -2627,7 +2627,7 @@ void ItalicDlg(FontView *fv, CharView *cv) {
 
     label[k].text = (uint32_t *) _("Slanted");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     label[k].image_precedes = true;
     label[k].image = (GImage *) "scslantserif.png";
     gcd[k].gd.label = &label[k];
@@ -2639,7 +2639,7 @@ void ItalicDlg(FontView *fv, CharView *cv) {
 
     label[k].text = (uint32_t *) _("Pen Slanted");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     label[k].image_precedes = true;
     label[k].image = (GImage *) "scpenserif.png";
     gcd[k].gd.label = &label[k];
@@ -2825,7 +2825,7 @@ void ItalicDlg(FontView *fv, CharView *cv) {
 
     label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled|gg_visible|gg_but_default;
     gcd[k].gd.handle_controlevent = Ital_Ok;
@@ -2833,7 +2833,7 @@ void ItalicDlg(FontView *fv, CharView *cv) {
 
     label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled|gg_visible|gg_but_cancel;
     gcd[k].gd.handle_controlevent = CondenseExtend_Cancel;
@@ -2942,7 +2942,7 @@ void ChangeXHeightDlg(FontView *fv,CharView *cv) {
 
     label[k].text = (uint32_t *) _("Current x-height:");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = 0;
     gcd[k].gd.flags = gg_visible | gg_enabled ;
@@ -2959,7 +2959,7 @@ void ChangeXHeightDlg(FontView *fv,CharView *cv) {
 
     label[k].text = (uint32_t *) _("Desired x-height:");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+31;
     gcd[k].gd.flags = gg_visible  | gg_enabled;
@@ -2976,7 +2976,7 @@ void ChangeXHeightDlg(FontView *fv,CharView *cv) {
 
     label[k].text = (uint32_t *) _("Serif height:");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+31;
     gcd[k].gd.flags = gg_visible  | gg_enabled;
@@ -2996,7 +2996,7 @@ void ChangeXHeightDlg(FontView *fv,CharView *cv) {
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
     label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.handle_controlevent = XHeight_OK;
     gcd[k++].creator = GButtonCreate;
@@ -3007,7 +3007,7 @@ void ChangeXHeightDlg(FontView *fv,CharView *cv) {
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
     label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.handle_controlevent = CondenseExtend_Cancel;
     gcd[k].creator = GButtonCreate;

@@ -230,7 +230,7 @@ void OutlineDlg(FontView *fv, CharView *cv,MetricsView *mv,int isinline) {
 	i = k = 0;
 	label[i].text = (uint32_t *) _("Outline Width:");
 	label[i].text_is_1byte = true;
-	label[i].text_in_resource = true;
+	label[i].text_has_mnemonic = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.pos.x = 7; gcd[i].gd.pos.y = 7+3; 
 	gcd[i].gd.flags = gg_enabled|gg_visible;
@@ -251,7 +251,7 @@ void OutlineDlg(FontView *fv, CharView *cv,MetricsView *mv,int isinline) {
 	if ( isinline ) {
 	    label[i].text = (uint32_t *) _("_Gap:");
 	    label[i].text_is_1byte = true;
-	    label[i].text_in_resource = true;
+	    label[i].text_has_mnemonic = true;
 	    gcd[i].gd.label = &label[i];
 	    gcd[i].gd.pos.x = 90; gcd[i].gd.pos.y = 7+3; 
 	    gcd[i].gd.flags = gg_enabled|gg_visible;
@@ -276,7 +276,7 @@ void OutlineDlg(FontView *fv, CharView *cv,MetricsView *mv,int isinline) {
 	gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_default;
 	label[i].text = (uint32_t *) _("_OK");
 	label[i].text_is_1byte = true;
-	label[i].text_in_resource = true;
+	label[i].text_has_mnemonic = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.handle_controlevent = OD_OK;
 	gcd[i++].creator = GButtonCreate;
@@ -287,7 +287,7 @@ void OutlineDlg(FontView *fv, CharView *cv,MetricsView *mv,int isinline) {
 	gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
 	label[i].text = (uint32_t *) _("_Cancel");
 	label[i].text_is_1byte = true;
-	label[i].text_in_resource = true;
+	label[i].text_has_mnemonic = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.handle_controlevent = OD_Cancel;
 	gcd[i++].creator = GButtonCreate;
@@ -483,7 +483,7 @@ void ShadowDlg(FontView *fv, CharView *cv,MetricsView *mv,int wireframe) {
 	gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_default;
 	label[i].text = (uint32_t *) _("_OK");
 	label[i].text_is_1byte = true;
-	label[i].text_in_resource = true;
+	label[i].text_has_mnemonic = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.handle_controlevent = SD_OK;
 	gcd[i++].creator = GButtonCreate;
@@ -494,7 +494,7 @@ void ShadowDlg(FontView *fv, CharView *cv,MetricsView *mv,int wireframe) {
 	gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
 	label[i].text = (uint32_t *) _("_Cancel");
 	label[i].text_is_1byte = true;
-	label[i].text_in_resource = true;
+	label[i].text_has_mnemonic = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.handle_controlevent = OD_Cancel;
 	gcd[i++].creator = GButtonCreate;

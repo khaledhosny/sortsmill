@@ -784,7 +784,7 @@ static char *GlyphConstruction_Dlg(GGadget *g, int r, int c) {
     mgcd[1].gd.flags = gg_visible | gg_enabled | gg_but_default;
     mlabel[1].text = (uint32_t *) _("_OK");
     mlabel[1].text_is_1byte = true;
-    mlabel[1].text_in_resource = true;
+    mlabel[1].text_has_mnemonic = true;
     mgcd[1].gd.label = &mlabel[1];
     mgcd[1].gd.handle_controlevent = GVC_OK;
     mgcd[1].creator = GButtonCreate;
@@ -792,7 +792,7 @@ static char *GlyphConstruction_Dlg(GGadget *g, int r, int c) {
     mgcd[2].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
     mlabel[2].text = (uint32_t *) _("_Cancel");
     mlabel[2].text_is_1byte = true;
-    mlabel[2].text_in_resource = true;
+    mlabel[2].text_has_mnemonic = true;
     mgcd[2].gd.label = &mlabel[2];
     mgcd[2].gd.handle_controlevent = MATH_Cancel;
     mgcd[2].creator = GButtonCreate;
@@ -1080,7 +1080,7 @@ return;
 
 	label[page][row].text = (uint32_t *) math_constants_descriptor[i].ui_name;
 	label[page][row].text_is_1byte = true;
-	label[page][row].text_in_resource = true;
+	label[page][row].text_has_mnemonic = true;
 	gcd[page][row][0].gd.label = &label[page][row];
 	gcd[page][row][0].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
 	gcd[page][row][0].gd.popup_msg = (uint32_t *) math_constants_descriptor[i].message;
@@ -1151,7 +1151,7 @@ return;
     mgcd[1].gd.flags = gg_visible | gg_enabled | gg_but_default;
     mlabel[1].text = (uint32_t *) _("_OK");
     mlabel[1].text_is_1byte = true;
-    mlabel[1].text_in_resource = true;
+    mlabel[1].text_has_mnemonic = true;
     mgcd[1].gd.label = &mlabel[1];
     mgcd[1].gd.handle_controlevent = MATH_OK;
     mgcd[1].creator = GButtonCreate;
@@ -1159,7 +1159,7 @@ return;
     mgcd[2].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
     mlabel[2].text = (uint32_t *) _("_Cancel");
     mlabel[2].text_is_1byte = true;
-    mlabel[2].text_in_resource = true;
+    mlabel[2].text_has_mnemonic = true;
     mgcd[2].gd.label = &mlabel[2];
     mgcd[2].gd.handle_controlevent = MATH_Cancel;
     mgcd[2].creator = GButtonCreate;
@@ -1946,7 +1946,7 @@ void MathKernDialog(SplineChar *sc,int def_layer) {
 
     label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled|gg_visible|gg_but_default;
     gcd[k].gd.handle_controlevent = MathKernD_OK;
@@ -1954,7 +1954,7 @@ void MathKernDialog(SplineChar *sc,int def_layer) {
 
     label[k].text = (uint32_t *) _("_Done");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled|gg_visible|gg_but_cancel;
     gcd[k].gd.handle_controlevent = MathKernD_Cancel;

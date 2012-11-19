@@ -2836,7 +2836,7 @@ static void ShowAttCreateDlg(struct att_dlg *att, SplineFont *sf, int which,
     gcd[2].gd.flags = gg_visible | gg_enabled | gg_but_default | gg_but_cancel | gg_pos_in_pixels;
     label[2].text = (uint32_t *) _("_OK");
     label[2].text_is_1byte = true;
-    label[2].text_in_resource = true;
+    label[2].text_has_mnemonic = true;
     gcd[2].gd.label = &label[2];
     gcd[2].creator = GButtonCreate;
 
@@ -3143,7 +3143,7 @@ void FontCompareDlg(FontView *fv) {
 	    gcd[k].gd.flags = gg_visible | gg_enabled | ((last_flags&fcf_outlines)?gg_cb_on:0);
 	label[k].text = (uint32_t *) _("Compare _Outlines");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.cid = CID_Outlines;
 	gcd[k++].creator = GCheckBoxCreate;
@@ -3155,7 +3155,7 @@ void FontCompareDlg(FontView *fv) {
 	    gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup | ((last_flags&fcf_exact)?gg_cb_on:0);
 	label[k].text = (uint32_t *) _("_Exact");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.cid = CID_Exact;
 	gcd[k].gd.popup_msg = (uint32_t *) _("Accept outlines which exactly match the original");
@@ -3168,7 +3168,7 @@ void FontCompareDlg(FontView *fv) {
 	    gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup | ((last_flags&fcf_exact)?0:gg_cb_on);
 	label[k].text = (uint32_t *) _("_Accept inexact");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.cid = CID_Fuzzy;
 	gcd[k].gd.popup_msg = (uint32_t *) _("Accept an outline which is a close approximation to the original.\nIt may be off by an em-unit, or have a reference which matches a contour.");
@@ -3181,7 +3181,7 @@ void FontCompareDlg(FontView *fv) {
 	    gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup | ((last_flags&fcf_warn_not_exact)?gg_cb_on:0);
 	label[k].text = (uint32_t *) _("_Warn if inexact");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.cid = CID_Warn;
 	gcd[k].gd.popup_msg = (uint32_t *) _("Warn if the outlines are close but not exactly the same");
@@ -3194,7 +3194,7 @@ void FontCompareDlg(FontView *fv) {
 	    gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup | ((last_flags&fcf_warn_not_ref_exact)?gg_cb_on:0);
 	label[k].text = (uint32_t *) _("Warn if _unlinked references");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.cid = CID_RefContourWarn;
 	gcd[k].gd.popup_msg = (uint32_t *) _("Warn if one glyph contains an outline while the other contains a reference (but the reference describes the same outline)");
@@ -3207,7 +3207,7 @@ void FontCompareDlg(FontView *fv) {
 	    gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup | ((last_flags&fcf_hinting)?gg_cb_on:0);
 	label[k].text = (uint32_t *) _("Compare _Hints");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.cid = CID_Hinting;
 	gcd[k].gd.popup_msg = (uint32_t *) _("Compare postscript hints and hintmasks and truetype instructions");
@@ -3220,7 +3220,7 @@ void FontCompareDlg(FontView *fv) {
 	    gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup | (((last_flags&fcf_hintmasks) && !(last_flags&fcf_hmonlywithconflicts))?gg_cb_on:0);
 	label[k].text = (uint32_t *) _("Compare Hint_Masks");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.cid = CID_HintMasks;
 	gcd[k].gd.popup_msg = (uint32_t *) _("Compare hintmasks");
@@ -3233,7 +3233,7 @@ void FontCompareDlg(FontView *fv) {
 	    gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup | ((last_flags&fcf_hmonlywithconflicts)?gg_cb_on:0);
 	label[k].text = (uint32_t *) _("HintMasks only if conflicts");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.cid = CID_HintMasksWConflicts;
 	gcd[k].gd.popup_msg = (uint32_t *) _("Don't compare hintmasks if the glyph has no hint conflicts");
@@ -3246,7 +3246,7 @@ void FontCompareDlg(FontView *fv) {
 	    gcd[k].gd.flags = gg_visible | gg_enabled | ((last_flags&fcf_hintmasks)?0:gg_cb_on);
 	label[k].text = (uint32_t *) _("Don't Compare HintMasks");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.cid = CID_NoHintMasks;
 	gcd[k++].creator = GRadioCreate;
@@ -3258,7 +3258,7 @@ void FontCompareDlg(FontView *fv) {
 	    gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup | ((last_flags&fcf_adddiff2sf1)?gg_cb_on:0);
 	label[k].text = (uint32_t *) _("_Add Diff Outlines to Background");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.cid = CID_AddDiffs;
 	gcd[k].gd.popup_msg = (uint32_t *) _("If two glyphs differ, then add the outlines of the second glyph\nto the background layer of the first (So when opening the first\nthe differences will be visible).");
@@ -3271,7 +3271,7 @@ void FontCompareDlg(FontView *fv) {
 	    gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup | ((last_flags&fcf_addmissing)?gg_cb_on:0);
 	label[k].text = (uint32_t *) _("Add _Missing Glyphs");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.cid = CID_AddMissing;
 	gcd[k].gd.popup_msg = (uint32_t *) _("If a glyph in the second font is missing from the first, then\nadd it to the first with the outlines of the second font in\nthe background");
@@ -3284,7 +3284,7 @@ void FontCompareDlg(FontView *fv) {
 	    gcd[k].gd.flags = gg_visible | gg_enabled | ((last_flags&fcf_bitmaps)?gg_cb_on:0);
 	label[k].text = (uint32_t *) _("Compare _Bitmaps");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.cid = CID_Bitmaps;
 	gcd[k++].creator = GCheckBoxCreate;
@@ -3293,7 +3293,7 @@ void FontCompareDlg(FontView *fv) {
 	gcd[k].gd.flags = gg_visible | gg_enabled | ((last_flags&fcf_names)?gg_cb_on:0);
 	label[k].text = (uint32_t *) _("Compare _Names");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.cid = CID_Names;
 	gcd[k++].creator = GCheckBoxCreate;
@@ -3302,7 +3302,7 @@ void FontCompareDlg(FontView *fv) {
 	gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup | ((last_flags&fcf_gpos)?gg_cb_on:0);
 	label[k].text = (uint32_t *) _("Compare Glyph _Positioning");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.cid = CID_GPos;
 	gcd[k].gd.popup_msg = (uint32_t *) _("Kerning & such");
@@ -3312,7 +3312,7 @@ void FontCompareDlg(FontView *fv) {
 	gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup | ((last_flags&fcf_gsub)?gg_cb_on:0);
 	label[k].text = (uint32_t *) _("Compare Glyph _Substitution");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.cid = CID_GSub;
 	gcd[k].gd.popup_msg = (uint32_t *) _("Ligatures & such");
@@ -3323,7 +3323,7 @@ void FontCompareDlg(FontView *fv) {
 	gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
 	label[k].text = (uint32_t *) _("_OK");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.handle_controlevent = FC_OK;
 	gcd[k++].creator = GButtonCreate;
@@ -3333,7 +3333,7 @@ void FontCompareDlg(FontView *fv) {
 	gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
 	label[k].text = (uint32_t *) _("_Cancel");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.handle_controlevent = FC_Cancel;
 	gcd[k++].creator = GButtonCreate;

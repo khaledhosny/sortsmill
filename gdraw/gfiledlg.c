@@ -147,7 +147,7 @@ GWidgetOpenFileWPath (const uint32_t *title, const uint32_t *defaultfile,
   gcd[1].gd.flags = gg_visible | gg_enabled | gg_but_default;
   label[1].text = (uint32_t *) _("_OK");
   label[1].text_is_1byte = true;
-  label[1].text_in_resource = true;
+  label[1].text_has_mnemonic = true;
   gcd[1].gd.mnemonic = 'O';
   gcd[1].gd.label = &label[1];
   gcd[1].gd.handle_controlevent = GFD_Ok;
@@ -162,7 +162,7 @@ GWidgetOpenFileWPath (const uint32_t *title, const uint32_t *defaultfile,
   gcd[2].gd.flags = gg_visible | gg_enabled;
   label[2].text = (uint32_t *) _("_Filter");
   label[2].text_is_1byte = true;
-  label[2].text_in_resource = true;
+  label[2].text_has_mnemonic = true;
   gcd[2].gd.mnemonic = 'F';
   gcd[2].gd.label = &label[2];
   gcd[2].gd.handle_controlevent = GFileChooserFilterEh;
@@ -176,7 +176,7 @@ GWidgetOpenFileWPath (const uint32_t *title, const uint32_t *defaultfile,
   gcd[3].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
   label[3].text = (uint32_t *) _("_Cancel");
   label[3].text_is_1byte = true;
-  label[3].text_in_resource = true;
+  label[3].text_has_mnemonic = true;
   gcd[3].gd.label = &label[3];
   gcd[3].gd.mnemonic = 'C';
   gcd[3].gd.handle_controlevent = GFD_Cancel;

@@ -254,7 +254,7 @@ char *GlyphListDlg(SplineFont *sf, char *glyphstr) {
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
     label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.handle_controlevent = JSTF_Glyph_OK;
     gcd[k].gd.cid = CID_OK;
@@ -265,7 +265,7 @@ char *GlyphListDlg(SplineFont *sf, char *glyphstr) {
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
     label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.handle_controlevent = JSTF_Glyph_Cancel;
     gcd[k].gd.cid = CID_Cancel;
@@ -461,7 +461,7 @@ static char *JSTF_LookupListDlg(GGadget *g, int r, int c) {
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
     label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.handle_controlevent = JSTF_Lookup_OK;
     gcd[k].gd.cid = CID_OK;
@@ -472,7 +472,7 @@ static char *JSTF_LookupListDlg(GGadget *g, int r, int c) {
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
     label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.handle_controlevent = JSTF_Glyph_Cancel;
     gcd[k].gd.cid = CID_Cancel;
@@ -777,7 +777,7 @@ static char *JSTF_Langs(GGadget *g, int r, int c) {
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
     label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.handle_controlevent = JSTF_Language_OK;
     gcd[k].gd.cid = CID_OK;
@@ -788,7 +788,7 @@ static char *JSTF_Langs(GGadget *g, int r, int c) {
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
     label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.handle_controlevent = JSTF_Language_Cancel;
     gcd[k].gd.cid = CID_Cancel;
@@ -973,7 +973,7 @@ void JustifyDlg(SplineFont *sf) {
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
     label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.handle_controlevent = JSTF_Script_OK;
     gcd[k].gd.cid = CID_OK;
@@ -984,7 +984,7 @@ void JustifyDlg(SplineFont *sf) {
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
     label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.handle_controlevent = Justify_Cancel;
     gcd[k].gd.cid = CID_Cancel;

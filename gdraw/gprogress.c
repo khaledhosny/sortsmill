@@ -303,7 +303,7 @@ static void GProgressStartIndicator(
 	    gd.mnemonic = 'S';
 	    label.text = (uint32_t *) _("_Stop");
 	    label.text_is_1byte = true;
-	    label.text_in_resource = true;
+	    label.text_has_mnemonic = true;
 	    gd.label = &label;
 	    GButtonCreate( new_->gw, &gd, NULL);
 	}

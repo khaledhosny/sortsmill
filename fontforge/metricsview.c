@@ -2889,7 +2889,7 @@ static void MVMenuPointSize(GWindow mgw, struct gmenuitem *UNUSED(mi), GEvent *U
 
     label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_visible|gg_enabled | gg_but_default;
     gcd[k].gd.handle_controlevent = PXSZ_OK;
@@ -2897,7 +2897,7 @@ static void MVMenuPointSize(GWindow mgw, struct gmenuitem *UNUSED(mi), GEvent *U
 
     label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_visible|gg_enabled | gg_but_cancel;
     gcd[k].gd.handle_controlevent = PXSZ_Cancel;

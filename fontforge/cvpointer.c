@@ -1449,7 +1449,7 @@ void CVSelectPointAt(CharView *cv) {
 	k = 0;
 	label[k].text = (uint32_t *) _("_X:");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = 10; gcd[k].gd.pos.y = 8+4;
 	gcd[k].gd.flags = gg_enabled|gg_visible;
@@ -1462,7 +1462,7 @@ void CVSelectPointAt(CharView *cv) {
 
 	label[k].text = (uint32_t *) _("_Y:");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = 80; gcd[k].gd.pos.y = gcd[k-2].gd.pos.y;
 	gcd[k].gd.flags = gg_enabled|gg_visible;
@@ -1475,7 +1475,7 @@ void CVSelectPointAt(CharView *cv) {
 
 	label[k].text = (uint32_t *) _("_Exact");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+23;
 	gcd[k].gd.flags = gg_enabled|gg_visible|gg_cb_on;
@@ -1484,7 +1484,7 @@ void CVSelectPointAt(CharView *cv) {
 
 	label[k].text = (uint32_t *) _("_Around");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+13;
 	gcd[k].gd.flags = gg_enabled|gg_visible;
@@ -1493,7 +1493,7 @@ void CVSelectPointAt(CharView *cv) {
 
 	label[k].text = (uint32_t *) _("W_ithin Rectangle");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+16+24;
 	gcd[k].gd.flags = gg_enabled|gg_visible;
@@ -1502,7 +1502,7 @@ void CVSelectPointAt(CharView *cv) {
 
 	label[k].text = (uint32_t *) _("_Radius:");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = 15; gcd[k].gd.pos.y = gcd[k-2].gd.pos.y+17+4;
 	gcd[k].gd.flags = gg_enabled|gg_visible;
@@ -1510,7 +1510,7 @@ void CVSelectPointAt(CharView *cv) {
 
 	label[k].text = (uint32_t *) _("3");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = 52; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y-4;  gcd[k].gd.pos.width = 40;
 	gcd[k].gd.flags = gg_enabled|gg_visible;
@@ -1520,7 +1520,7 @@ void CVSelectPointAt(CharView *cv) {
 
 	label[k].text = (uint32_t *) _("_Width:");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = 15; gcd[k].gd.pos.y = gcd[k-3].gd.pos.y+17+4;
 	gcd[k].gd.flags = gg_enabled|gg_visible;
@@ -1534,7 +1534,7 @@ void CVSelectPointAt(CharView *cv) {
 
 	label[k].text = (uint32_t *) _("_Height:");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = 100; gcd[k].gd.pos.y = gcd[k-2].gd.pos.y;
 	gcd[k].gd.flags = gg_enabled|gg_visible;
@@ -1556,7 +1556,7 @@ void CVSelectPointAt(CharView *cv) {
 	gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
 	label[k].text = (uint32_t *) _("_OK");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.handle_controlevent = SPA_OK;
 	gcd[k++].creator = GButtonCreate;
@@ -1566,7 +1566,7 @@ void CVSelectPointAt(CharView *cv) {
 	gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
 	label[k].text = (uint32_t *) _("_Cancel");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.handle_controlevent = SPA_Cancel;
 	gcd[k++].creator = GButtonCreate;

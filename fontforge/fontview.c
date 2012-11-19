@@ -596,7 +596,7 @@ int _FVMenuSaveAs(FontView *fv)
   gcd.gd.flags = s2d ? (gg_visible | gg_enabled | gg_cb_on) : (gg_visible | gg_enabled);
   label.text = (uint32_t *) _("Save as _Directory");
   label.text_is_1byte = true;
-  label.text_in_resource = true;
+  label.text_has_mnemonic = true;
   gcd.gd.label = &label;
   gcd.gd.handle_controlevent = SaveAs_FormatChange;
   gcd.data = &s2d;
@@ -1996,7 +1996,7 @@ static void FVSelectByScript(FontView *fv,int merge) {
 
     label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_visible|gg_enabled | gg_but_default;
     gcd[k].gd.handle_controlevent = SS_OK;
@@ -2004,7 +2004,7 @@ static void FVSelectByScript(FontView *fv,int merge) {
 
     label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_visible|gg_enabled | gg_but_cancel;
     gcd[k].gd.handle_controlevent = SS_Cancel;
@@ -2258,7 +2258,7 @@ static void FVMenuSelectByName(GWindow _gw, struct gmenuitem *UNUSED(mi), GEvent
 
     label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_visible|gg_enabled | gg_but_default;
     gcd[k].gd.handle_controlevent = SS_OK;
@@ -2266,7 +2266,7 @@ static void FVMenuSelectByName(GWindow _gw, struct gmenuitem *UNUSED(mi), GEvent
 
     label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_visible|gg_enabled | gg_but_cancel;
     gcd[k].gd.handle_controlevent = SS_Cancel;
@@ -3222,7 +3222,7 @@ static void FVMenuShowMetrics(GWindow fvgw,struct gmenuitem *mi, GEvent *UNUSED(
 
     label[4].text = (uint32_t *) _("_OK");
     label[4].text_is_1byte = true;
-    label[4].text_in_resource = true;
+    label[4].text_has_mnemonic = true;
     gcd[4].gd.label = &label[4];
     gcd[4].gd.pos.x = 20-3; gcd[4].gd.pos.y = GDrawPixelsToPoints(NULL,pos.height)-35-3;
     gcd[4].gd.pos.width = -1; gcd[4].gd.pos.height = 0;
@@ -3232,7 +3232,7 @@ static void FVMenuShowMetrics(GWindow fvgw,struct gmenuitem *mi, GEvent *UNUSED(
 
     label[5].text = (uint32_t *) _("_Cancel");
     label[5].text_is_1byte = true;
-    label[5].text_in_resource = true;
+    label[5].text_has_mnemonic = true;
     gcd[5].gd.label = &label[5];
     gcd[5].gd.pos.x = -20; gcd[5].gd.pos.y = gcd[4].gd.pos.y+3;
     gcd[5].gd.pos.width = -1; gcd[5].gd.pos.height = 0;
@@ -7640,7 +7640,7 @@ char *GlyphSetFromSelection(SplineFont *sf,int def_layer,char *current) {
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_default;
     label[i].text = (uint32_t *) _("_OK");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.handle_controlevent = GS_OK;
     gcd[i++].creator = GButtonCreate;
@@ -7648,7 +7648,7 @@ char *GlyphSetFromSelection(SplineFont *sf,int def_layer,char *current) {
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
     label[i].text = (uint32_t *) _("_Cancel");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.handle_controlevent = GS_Cancel;
     gcd[i++].creator = GButtonCreate;

@@ -709,7 +709,7 @@ static void SMD_EditState(SMD *smd) {
 
     label[k].text = (uint32_t *) _("_Up↑");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = (SMDE_WIDTH-GIntGetResource(_NUM_Buttonsize)*100/GIntGetResource(_NUM_ScaleFactor))/2;
     gcd[k].gd.pos.y = SMDE_HEIGHT-SMD_DIRDROP;
@@ -721,7 +721,7 @@ static void SMD_EditState(SMD *smd) {
 
     label[k].text = (uint32_t *) _("←_Left");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 10; gcd[k].gd.pos.y = SMDE_HEIGHT-SMD_DIRDROP+13;
     gcd[k].gd.pos.width = -1;
@@ -732,7 +732,7 @@ static void SMD_EditState(SMD *smd) {
 
     label[k].text = (uint32_t *) _("_Right→");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = -10; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y;
     gcd[k].gd.pos.width = -1;
@@ -743,7 +743,7 @@ static void SMD_EditState(SMD *smd) {
 
     label[k].text = (uint32_t *) _("↓_Down");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = gcd[k-3].gd.pos.x; gcd[k].gd.pos.y = SMDE_HEIGHT-SMD_DIRDROP+26;
     gcd[k].gd.pos.width = -1;
@@ -754,7 +754,7 @@ static void SMD_EditState(SMD *smd) {
 
     label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 30-3; gcd[k].gd.pos.y = SMDE_HEIGHT-SMD_CANCELDROP-3;
     gcd[k].gd.pos.width = -1;
@@ -764,7 +764,7 @@ static void SMD_EditState(SMD *smd) {
 
     label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = -30; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+3;
     gcd[k].gd.pos.width = -1;
@@ -1463,7 +1463,7 @@ void StateMachineEdit(SplineFont *sf,ASM *sm,struct gfi_data *d) {
 
     label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 30-3; gcd[k].gd.pos.y = SMD_HEIGHT-SMD_CANCELDROP-3;
     gcd[k].gd.pos.width = -1;
@@ -1474,7 +1474,7 @@ void StateMachineEdit(SplineFont *sf,ASM *sm,struct gfi_data *d) {
 
     label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = -30; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+3;
     gcd[k].gd.pos.width = -1;

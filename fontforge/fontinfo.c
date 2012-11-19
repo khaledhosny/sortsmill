@@ -7466,7 +7466,7 @@ GFI_MoreParams (GGadget *g, GEvent *e)
       txgcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
       txlabel[k].text = (uint32_t *) _("_OK");
       txlabel[k].text_is_1byte = true;
-      txlabel[k].text_in_resource = true;
+      txlabel[k].text_has_mnemonic = true;
       txgcd[k].gd.label = &txlabel[k];
       txgcd[k].gd.cid = true;
       txgcd[k++].creator = GButtonCreate;
@@ -7478,7 +7478,7 @@ GFI_MoreParams (GGadget *g, GEvent *e)
       txgcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
       txlabel[k].text = (uint32_t *) _("_Cancel");
       txlabel[k].text_is_1byte = true;
-      txlabel[k].text_in_resource = true;
+      txlabel[k].text_has_mnemonic = true;
       txgcd[k].gd.label = &txlabel[k];
       txgcd[k].gd.cid = false;
       txgcd[k++].creator = GButtonCreate;
@@ -9156,7 +9156,7 @@ GFI_LookupImportLookup (GGadget *g, GEvent *e)
       i = 0;
       label[i].text = (uint32_t *) _("Select lookups from other fonts");
       label[i].text_is_1byte = true;
-      label[i].text_in_resource = true;
+      label[i].text_has_mnemonic = true;
       gcd[i].gd.label = &label[i];
       gcd[i].gd.pos.x = 12;
       gcd[i].gd.pos.y = 6 + 6;
@@ -9176,7 +9176,7 @@ GFI_LookupImportLookup (GGadget *g, GEvent *e)
       gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_default;
       label[i].text = (uint32_t *) _("_Import");
       label[i].text_is_1byte = true;
-      label[i].text_in_resource = true;
+      label[i].text_has_mnemonic = true;
       gcd[i].gd.label = &label[i];
       gcd[i].gd.cid = CID_OK;
       harray[0] = GCD_Glue;
@@ -9187,7 +9187,7 @@ GFI_LookupImportLookup (GGadget *g, GEvent *e)
       gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
       label[i].text = (uint32_t *) _("_Cancel");
       label[i].text_is_1byte = true;
-      label[i].text_in_resource = true;
+      label[i].text_has_mnemonic = true;
       gcd[i].gd.label = &label[i];
       gcd[i].gd.cid = CID_Cancel;
       harray[3] = GCD_Glue;
@@ -10638,7 +10638,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
 
   nlabel[0].text = (uint32_t *) _("Fo_ntname:");
   nlabel[0].text_is_1byte = true;
-  nlabel[0].text_in_resource = true;
+  nlabel[0].text_has_mnemonic = true;
   ngcd[0].gd.label = &nlabel[0];
   ngcd[0].gd.pos.x = 12;
   ngcd[0].gd.pos.y = 6 + 6;
@@ -10658,7 +10658,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
 
   nlabel[2].text = (uint32_t *) _("_Family Name:");
   nlabel[2].text_is_1byte = true;
-  nlabel[2].text_in_resource = true;
+  nlabel[2].text_has_mnemonic = true;
   ngcd[2].gd.label = &nlabel[2];
   ngcd[2].gd.pos.x = 12;
   ngcd[2].gd.pos.y = ngcd[0].gd.pos.y + 26;
@@ -10684,7 +10684,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   ngcd[4].gd.pos.y = ngcd[3].gd.pos.y + 26 + 6;
   nlabel[4].text = (uint32_t *) _("Name For Human_s:");
   nlabel[4].text_is_1byte = true;
-  nlabel[4].text_in_resource = true;
+  nlabel[4].text_has_mnemonic = true;
   ngcd[4].gd.label = &nlabel[4];
   ngcd[4].gd.flags = gg_visible | gg_enabled;
   ngcd[4].creator = GLabelCreate;
@@ -10705,7 +10705,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
 
   nlabel[6].text = (uint32_t *) _("_Weight");
   nlabel[6].text_is_1byte = true;
-  nlabel[6].text_in_resource = true;
+  nlabel[6].text_has_mnemonic = true;
   ngcd[6].gd.label = &nlabel[6];
   ngcd[6].gd.pos.x = ngcd[4].gd.pos.x;
   ngcd[6].gd.pos.y = ngcd[4].gd.pos.y + 26;
@@ -10726,7 +10726,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   ngcd[8].gd.pos.y = ngcd[6].gd.pos.y + 26;
   nlabel[8].text = (uint32_t *) _("_Version:");
   nlabel[8].text_is_1byte = true;
-  nlabel[8].text_in_resource = true;
+  nlabel[8].text_has_mnemonic = true;
   ngcd[8].gd.label = &nlabel[8];
   ngcd[8].gd.flags = gg_visible | gg_enabled;
   ngcd[8].creator = GLabelCreate;
@@ -10748,7 +10748,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
 
   nlabel[10].text = (uint32_t *) _("sfnt _Revision:");
   nlabel[10].text_is_1byte = true;
-  nlabel[10].text_in_resource = true;
+  nlabel[10].text_has_mnemonic = true;
   ngcd[10].gd.label = &nlabel[10];
   ngcd[10].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
   ngcd[10].gd.popup_msg =
@@ -10773,7 +10773,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
 
   nlabel[12].text = (uint32_t *) _("_Base Filename:");
   nlabel[12].text_is_1byte = true;
-  nlabel[12].text_in_resource = true;
+  nlabel[12].text_has_mnemonic = true;
   ngcd[12].gd.label = &nlabel[12];
   ngcd[12].gd.popup_msg =
     (uint32_t *)
@@ -10813,7 +10813,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   ngcd[16].gd.flags = gg_visible | gg_enabled;
   nlabel[16].text = (uint32_t *) _("Copy_right:");
   nlabel[16].text_is_1byte = true;
-  nlabel[16].text_in_resource = true;
+  nlabel[16].text_has_mnemonic = true;
   ngcd[16].gd.label = &nlabel[16];
   ngcd[16].creator = GLabelCreate;
 
@@ -10902,14 +10902,14 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   xulabel[0].text =
     (uint32_t *) _("(Adobe now considers XUID/UniqueID unnecessary)");
   xulabel[0].text_is_1byte = true;
-  xulabel[0].text_in_resource = true;
+  xulabel[0].text_has_mnemonic = true;
   xugcd[0].gd.label = &xulabel[0];
   xugcd[0].gd.flags = gg_visible | gg_enabled;
   xugcd[0].creator = GLabelCreate;
 
   xulabel[1].text = (uint32_t *) _("Use XUID");
   xulabel[1].text_is_1byte = true;
-  xulabel[1].text_in_resource = true;
+  xulabel[1].text_has_mnemonic = true;
   xugcd[1].gd.label = &xulabel[1];
   xugcd[1].gd.flags = gg_visible | gg_enabled;
   if (sf->use_xuid)
@@ -10923,7 +10923,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   xugcd[2].gd.flags = gg_visible | gg_enabled;
   xulabel[2].text = (uint32_t *) _("_XUID:");
   xulabel[2].text_is_1byte = true;
-  xulabel[2].text_in_resource = true;
+  xulabel[2].text_has_mnemonic = true;
   xugcd[2].gd.label = &xulabel[2];
   xugcd[2].creator = GLabelCreate;
 
@@ -10941,7 +10941,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
 
   xulabel[4].text = (uint32_t *) _("Use UniqueID");
   xulabel[4].text_is_1byte = true;
-  xulabel[4].text_in_resource = true;
+  xulabel[4].text_has_mnemonic = true;
   xugcd[4].gd.label = &xulabel[4];
   xugcd[4].gd.flags = gg_visible | gg_enabled;
   if (sf->use_uniqueid)
@@ -10952,7 +10952,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
 
   xulabel[5].text = (uint32_t *) _("_UniqueID:");
   xulabel[5].text_is_1byte = true;
-  xulabel[5].text_in_resource = true;
+  xulabel[5].text_has_mnemonic = true;
   xugcd[5].gd.label = &xulabel[5];
   xugcd[5].gd.flags = gg_visible | gg_enabled;
   xugcd[5].creator = GLabelCreate;
@@ -11005,7 +11005,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   psgcd[0].gd.flags = gg_visible | gg_enabled;
   pslabel[0].text = (uint32_t *) _("_Ascent:");
   pslabel[0].text_is_1byte = true;
-  pslabel[0].text_in_resource = true;
+  pslabel[0].text_has_mnemonic = true;
   psgcd[0].gd.label = &pslabel[0];
   psgcd[0].creator = GLabelCreate;
 
@@ -11026,7 +11026,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   psgcd[2].gd.flags = gg_visible | gg_enabled;
   pslabel[2].text = (uint32_t *) _("_Descent:");
   pslabel[2].text_is_1byte = true;
-  pslabel[2].text_in_resource = true;
+  pslabel[2].text_has_mnemonic = true;
   psgcd[2].gd.label = &pslabel[2];
   psgcd[2].creator = GLabelCreate;
 
@@ -11047,7 +11047,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   psgcd[4].gd.flags = gg_visible | gg_enabled;
   pslabel[4].text = (uint32_t *) _(" _Em Size:");
   pslabel[4].text_is_1byte = true;
-  pslabel[4].text_in_resource = true;
+  pslabel[4].text_has_mnemonic = true;
   psgcd[4].gd.label = &pslabel[4];
   psgcd[4].creator = GLabelCreate;
 
@@ -11069,7 +11069,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   psgcd[6].gd.flags = gg_visible | gg_enabled | gg_cb_on;
   pslabel[6].text = (uint32_t *) _("_Scale Outlines");
   pslabel[6].text_is_1byte = true;
-  pslabel[6].text_in_resource = true;
+  pslabel[6].text_has_mnemonic = true;
   psgcd[6].gd.label = &pslabel[6];
   psgcd[6].gd.cid = CID_Scale;
   psgcd[6].creator = GCheckBoxCreate;
@@ -11083,7 +11083,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   psgcd[8].gd.flags = gg_visible | gg_enabled;
   pslabel[8].text = (uint32_t *) _("_Italic Angle:");
   pslabel[8].text_is_1byte = true;
-  pslabel[8].text_in_resource = true;
+  pslabel[8].text_has_mnemonic = true;
   psgcd[8].gd.label = &pslabel[8];
   psgcd[8].creator = GLabelCreate;
 
@@ -11108,7 +11108,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   psgcd[9].gd.flags = gg_visible | gg_enabled;
   pslabel[9].text = (uint32_t *) _("_Guess");
   pslabel[9].text_is_1byte = true;
-  pslabel[9].text_in_resource = true;
+  pslabel[9].text_has_mnemonic = true;
   psgcd[9].gd.label = &pslabel[9];
   psgcd[9].gd.handle_controlevent = GFI_GuessItalic;
   psgcd[9].creator = GButtonCreate;
@@ -11122,7 +11122,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   psgcd[11].gd.flags = gg_visible | gg_enabled;
   pslabel[11].text = (uint32_t *) _("Underline _Position:");
   pslabel[11].text_is_1byte = true;
-  pslabel[11].text_in_resource = true;
+  pslabel[11].text_has_mnemonic = true;
   psgcd[11].gd.label = &pslabel[11];
   psgcd[11].creator = GLabelCreate;
 
@@ -11142,7 +11142,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   psgcd[12].gd.flags = gg_visible | gg_enabled;
   pslabel[12].text = (uint32_t *) C_ ("Underline", "_Height:");
   pslabel[12].text_is_1byte = true;
-  pslabel[12].text_in_resource = true;
+  pslabel[12].text_has_mnemonic = true;
   psgcd[12].gd.label = &pslabel[12];
   psgcd[12].creator = GLabelCreate;
 
@@ -11161,7 +11161,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   psgcd[14].gd.pos.y = psgcd[13].gd.pos.y + 26;
   pslabel[14].text = (uint32_t *) _("Has _Vertical Metrics");
   pslabel[14].text_is_1byte = true;
-  pslabel[14].text_in_resource = true;
+  pslabel[14].text_has_mnemonic = true;
   psgcd[14].gd.label = &pslabel[14];
   psgcd[14].gd.cid = CID_HasVerticalMetrics;
   psgcd[14].gd.flags = gg_visible | gg_enabled;
@@ -11176,7 +11176,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   psgcd[k].gd.flags = gg_visible | gg_enabled;
   pslabel[k].text = (uint32_t *) _("Interpretation:");
   pslabel[k].text_is_1byte = true;
-  pslabel[k].text_in_resource = true;
+  pslabel[k].text_has_mnemonic = true;
   psgcd[k].gd.label = &pslabel[k];
   psgcd[k++].creator = GLabelCreate;
 
@@ -11204,7 +11204,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   psgcd[k].gd.flags = gg_visible | gg_enabled;
   pslabel[k].text = (uint32_t *) _("Name List:");
   pslabel[k].text_is_1byte = true;
-  pslabel[k].text_in_resource = true;
+  pslabel[k].text_has_mnemonic = true;
   psgcd[k].gd.label = &pslabel[k];
   psgcd[k++].creator = GLabelCreate;
 
@@ -11313,7 +11313,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   lgcd[k].gd.pos.y = 0;
   llabel[k].text = (uint32_t *) _("Font Type:");
   llabel[k].text_is_1byte = true;
-  llabel[k].text_in_resource = true;
+  llabel[k].text_has_mnemonic = true;
   lgcd[k].gd.label = &llabel[k];
   lgcd[k].gd.flags = (gg_visible | gg_enabled);
   lgcd[k++].creator = GLabelCreate;
@@ -11327,7 +11327,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   lgcd[k].gd.pos.y = lgcd[k - 1].gd.pos.y + k;
   llabel[k].text = (uint32_t *) _("_Outline Font");
   llabel[k].text_is_1byte = true;
-  llabel[k].text_in_resource = true;
+  llabel[k].text_has_mnemonic = true;
   lgcd[k].gd.label = &llabel[k];
   lgcd[k].gd.flags = (!sf->strokedfont && !sf->multilayer) ?
     (gg_visible | gg_enabled | gg_cb_on) : (gg_visible | gg_enabled);
@@ -11343,7 +11343,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   lgcd[k].gd.pos.y = lgcd[k - 1].gd.pos.y + 14;
   llabel[k].text = (uint32_t *) _("_Type3 Multi Layered Font");
   llabel[k].text_is_1byte = true;
-  llabel[k].text_in_resource = true;
+  llabel[k].text_has_mnemonic = true;
   lgcd[k].gd.label = &llabel[k];
   lgcd[k].gd.flags =
     ltype !=
@@ -11368,7 +11368,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   lgcd[k].gd.pos.y = lgcd[k - 1].gd.pos.y + 14;
   llabel[k].text = (uint32_t *) _("_Stroked Font");
   llabel[k].text_is_1byte = true;
-  llabel[k].text_in_resource = true;
+  llabel[k].text_has_mnemonic = true;
   lgcd[k].gd.label = &llabel[k];
   lgcd[k].gd.flags =
     sf->
@@ -11388,7 +11388,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   lgcd[k].gd.pos.y = lgcd[k - 1].gd.pos.y + 20;
   llabel[k].text = (uint32_t *) _("  Stroke _Width:");
   llabel[k].text_is_1byte = true;
-  llabel[k].text_in_resource = true;
+  llabel[k].text_has_mnemonic = true;
   lgcd[k].gd.label = &llabel[k];
   lgcd[k].gd.flags = gg_visible | gg_enabled;
   lgcd[k++].creator = GLabelCreate;
@@ -11416,7 +11416,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
 
   llabel[k].text = (uint32_t *) _("All layers _cubic");
   llabel[k].text_is_1byte = true;
-  llabel[k].text_in_resource = true;
+  llabel[k].text_has_mnemonic = true;
   lgcd[k].gd.label = &llabel[k];
   lgcd[k].gd.flags = ltype == 0 || sf->multilayer ?
     (gg_visible | gg_enabled | gg_cb_on | gg_utf8_popup) :
@@ -11432,7 +11432,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
 
   llabel[k].text = (uint32_t *) _("All layers _quadratic");
   llabel[k].text_is_1byte = true;
-  llabel[k].text_in_resource = true;
+  llabel[k].text_has_mnemonic = true;
   lgcd[k].gd.label = &llabel[k];
   lgcd[k].gd.flags = sf->multilayer ? (gg_visible | gg_utf8_popup) :
     ltype == 1 ? (gg_visible | gg_enabled | gg_cb_on | gg_utf8_popup) :
@@ -11447,7 +11447,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
 
   llabel[k].text = (uint32_t *) _("_Mixed");
   llabel[k].text_is_1byte = true;
-  llabel[k].text_in_resource = true;
+  llabel[k].text_has_mnemonic = true;
   lgcd[k].gd.label = &llabel[k];
   lgcd[k].gd.flags = sf->multilayer ? (gg_visible | gg_utf8_popup) :
     ltype < 0 ? (gg_visible | gg_enabled | gg_cb_on | gg_utf8_popup) :
@@ -11477,7 +11477,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   lgcd[k].gd.pos.y = 0;
   llabel[k].text = (uint32_t *) _("Guidelines:");
   llabel[k].text_is_1byte = true;
-  llabel[k].text_in_resource = true;
+  llabel[k].text_has_mnemonic = true;
   lgcd[k].gd.label = &llabel[k];
   lgcd[k].gd.flags = (gg_visible | gg_enabled);
   lgcd[k++].creator = GLabelCreate;
@@ -11485,7 +11485,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
 
   llabel[k].text = (uint32_t *) _("Quadratic");
   llabel[k].text_is_1byte = true;
-  llabel[k].text_in_resource = true;
+  llabel[k].text_has_mnemonic = true;
   lgcd[k].gd.label = &llabel[k];
   lgcd[k].gd.flags = sf->multilayer
     || ltype >=
@@ -11512,7 +11512,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   lgcd[k].gd.pos.y = 0;
   llabel[k].text = (uint32_t *) _("\nLayers:");
   llabel[k].text_is_1byte = true;
-  llabel[k].text_in_resource = true;
+  llabel[k].text_has_mnemonic = true;
   lgcd[k].gd.label = &llabel[k];
   lgcd[k].gd.flags = (gg_visible | gg_enabled);
   lgcd[k++].creator = GLabelCreate;
@@ -11570,7 +11570,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   privategcd_def[0].gd.flags = gg_visible;
   privatelabel_def[0].text = (uint32_t *) _("_Guess");
   privatelabel_def[0].text_is_1byte = true;
-  privatelabel_def[0].text_in_resource = true;
+  privatelabel_def[0].text_has_mnemonic = true;
   privategcd_def[0].gd.label = &privatelabel_def[0];
   privategcd_def[0].gd.handle_controlevent = PI_Guess;
   privategcd_def[0].gd.cid = CID_Guess;
@@ -11579,7 +11579,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   privategcd_def[1].gd.flags = gg_visible | gg_utf8_popup;
   privatelabel_def[1].text = (uint32_t *) _("_Histogram");
   privatelabel_def[1].text_is_1byte = true;
-  privatelabel_def[1].text_in_resource = true;
+  privatelabel_def[1].text_has_mnemonic = true;
   privategcd_def[1].gd.label = &privatelabel_def[1];
   privategcd_def[1].gd.handle_controlevent = PI_Hist;
   privategcd_def[1].gd.cid = CID_Hist;
@@ -11594,7 +11594,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   vgcd[0].gd.pos.y = 12;
   vlabel[0].text = (uint32_t *) _("_Weight Class");
   vlabel[0].text_is_1byte = true;
-  vlabel[0].text_in_resource = true;
+  vlabel[0].text_has_mnemonic = true;
   vgcd[0].gd.label = &vlabel[0];
   vgcd[0].gd.flags = gg_visible | gg_enabled;
   vgcd[0].creator = GLabelCreate;
@@ -11611,7 +11611,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   vgcd[2].gd.pos.y = vgcd[1].gd.pos.y + 26 + 6;
   vlabel[2].text = (uint32_t *) _("Width _Class");
   vlabel[2].text_is_1byte = true;
-  vlabel[2].text_in_resource = true;
+  vlabel[2].text_has_mnemonic = true;
   vgcd[2].gd.label = &vlabel[2];
   vgcd[2].gd.flags = gg_visible | gg_enabled;
   vgcd[2].creator = GLabelCreate;
@@ -11627,7 +11627,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   vgcd[4].gd.pos.y = vgcd[3].gd.pos.y + 26 + 6;
   vlabel[4].text = (uint32_t *) _("P_FM Family");
   vlabel[4].text_is_1byte = true;
-  vlabel[4].text_in_resource = true;
+  vlabel[4].text_has_mnemonic = true;
   vgcd[4].gd.label = &vlabel[4];
   vgcd[4].gd.flags = gg_visible | gg_enabled;
   vgcd[4].creator = GLabelCreate;
@@ -11644,7 +11644,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   vgcd[6].gd.pos.y = vgcd[5].gd.pos.y + 26 + 6;
   vlabel[6].text = (uint32_t *) _("_Embeddable");
   vlabel[6].text_is_1byte = true;
-  vlabel[6].text_in_resource = true;
+  vlabel[6].text_has_mnemonic = true;
   vgcd[6].gd.label = &vlabel[6];
   vgcd[6].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
   vgcd[6].gd.popup_msg =
@@ -11724,7 +11724,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   vgcd[12].gd.pos.y = vgcd[11].gd.pos.y + 24 + 6;
   vlabel[12].text = (uint32_t *) _("_IBM Family:");
   vlabel[12].text_is_1byte = true;
-  vlabel[12].text_in_resource = true;
+  vlabel[12].text_has_mnemonic = true;
   vgcd[12].gd.label = &vlabel[12];
   vgcd[12].gd.flags = gg_visible | gg_enabled;
   vgcd[12].creator = GLabelCreate;
@@ -11741,7 +11741,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   vgcd[14].gd.pos.y = vgcd[13].gd.pos.y + 24 + 6;
   vlabel[14].text = (uint32_t *) _("Weight, Width, Slope Only");
   vlabel[14].text_is_1byte = true;
-  vlabel[14].text_in_resource = true;
+  vlabel[14].text_has_mnemonic = true;
   vgcd[14].gd.label = &vlabel[14];
   vgcd[14].gd.cid = CID_WeightWidthSlopeOnly;
   vgcd[14].gd.popup_msg =
@@ -11755,7 +11755,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   vgcd[15].gd.pos.y = vgcd[11].gd.pos.y + 24 + 6;
   vlabel[15].text = (uint32_t *) _("_OS/2 Version");
   vlabel[15].text_is_1byte = true;
-  vlabel[15].text_in_resource = true;
+  vlabel[15].text_has_mnemonic = true;
   vgcd[15].gd.label = &vlabel[15];
   vgcd[15].gd.popup_msg =
     (uint32_t *)
@@ -11833,7 +11833,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   metgcd[i].gd.pos.y = 9;
   metlabel[i].text = (uint32_t *) _("Win _Ascent Offset:");
   metlabel[i].text_is_1byte = true;
-  metlabel[i].text_in_resource = true;
+  metlabel[i].text_has_mnemonic = true;
   metgcd[i].gd.label = &metlabel[i];
   metgcd[i].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
   metgcd[i].gd.popup_msg =
@@ -11872,7 +11872,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   metgcd[i].gd.pos.y = metgcd[i - 2].gd.pos.y + 26 + 4;
   metlabel[i].text = (uint32_t *) _("Win _Descent Offset:");
   metlabel[i].text_is_1byte = true;
-  metlabel[i].text_in_resource = true;
+  metlabel[i].text_has_mnemonic = true;
   metgcd[i].gd.label = &metlabel[i];
   metgcd[i].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
   metgcd[i].gd.popup_msg = metgcd[i - 1].gd.popup_msg;
@@ -11926,7 +11926,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   metgcd[i].gd.pos.y = metgcd[i - 2].gd.pos.y + 26 + 4;
   metlabel[i].text = (uint32_t *) _("_Typo Ascent Offset:");
   metlabel[i].text_is_1byte = true;
-  metlabel[i].text_in_resource = true;
+  metlabel[i].text_has_mnemonic = true;
   metgcd[i].gd.label = &metlabel[i];
   metgcd[i].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
   metgcd[i].gd.popup_msg =
@@ -11965,7 +11965,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   metgcd[i].gd.pos.y = metgcd[i - 2].gd.pos.y + 26 + 4;
   metlabel[i].text = (uint32_t *) _("T_ypo Descent Offset:");
   metlabel[i].text_is_1byte = true;
-  metlabel[i].text_in_resource = true;
+  metlabel[i].text_has_mnemonic = true;
   metgcd[i].gd.label = &metlabel[i];
   metgcd[i].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
   metgcd[i].gd.popup_msg = metgcd[i - 1].gd.popup_msg;
@@ -12001,7 +12001,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   metgcd[i].gd.pos.y = metgcd[i - 2].gd.pos.y + 26 + 4;
   metlabel[i].text = (uint32_t *) _("Typo Line _Gap:");
   metlabel[i].text_is_1byte = true;
-  metlabel[i].text_in_resource = true;
+  metlabel[i].text_has_mnemonic = true;
   metgcd[i].gd.label = &metlabel[i];
   metgcd[i].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
   metgcd[i].gd.popup_msg =
@@ -12026,7 +12026,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   metgcd[i].gd.pos.y = metgcd[i - 1].gd.pos.y + 26 + 4;
   metlabel[i].text = (uint32_t *) _("_HHead Ascent Offset:");
   metlabel[i].text_is_1byte = true;
-  metlabel[i].text_in_resource = true;
+  metlabel[i].text_has_mnemonic = true;
   metgcd[i].gd.label = &metlabel[i];
   metgcd[i].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
   metgcd[i].gd.popup_msg =
@@ -12064,7 +12064,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   metgcd[i].gd.pos.x = 10;
   metgcd[i].gd.pos.y = metgcd[i - 2].gd.pos.y + 26 + 4;
   metlabel[i].text = (uint32_t *) _("HHead De_scent Offset:");
-  metlabel[i].text_in_resource = true;
+  metlabel[i].text_has_mnemonic = true;
   metlabel[i].text_is_1byte = true;
   metgcd[i].gd.label = &metlabel[i];
   metgcd[i].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
@@ -12101,7 +12101,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   metgcd[i].gd.pos.y = metgcd[i - 2].gd.pos.y + 26 + 4;
   metlabel[i].text = (uint32_t *) _("HHead _Line Gap:");
   metlabel[i].text_is_1byte = true;
-  metlabel[i].text_in_resource = true;
+  metlabel[i].text_has_mnemonic = true;
   metgcd[i].gd.label = &metlabel[i];
   metgcd[i].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
   metgcd[i].gd.popup_msg =
@@ -12126,7 +12126,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   metgcd[i].gd.pos.y = metgcd[i - 1].gd.pos.y + 26 + 6;
   metlabel[i].text = (uint32_t *) _("VHead _Column Spacing:");
   metlabel[i].text_is_1byte = true;
-  metlabel[i].text_in_resource = true;
+  metlabel[i].text_has_mnemonic = true;
   metgcd[i].gd.label = &metlabel[i];
   metgcd[i].gd.flags =
     sf->
@@ -12451,7 +12451,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   pangcd[i].gd.pos.y = pangcd[i - 1].gd.pos.y + 14 + 4;
   panlabel[i].text = (uint32_t *) C_ ("Panose", "_Family");
   panlabel[i].text_is_1byte = true;
-  panlabel[i].text_in_resource = true;
+  panlabel[i].text_has_mnemonic = true;
   pangcd[i].gd.label = &panlabel[i];
   pangcd[i].gd.cid = CID_PanFamilyLab;
   pangcd[i].gd.flags = gg_visible | gg_enabled;
@@ -12473,7 +12473,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   pangcd[i].gd.pos.y = pangcd[i - 1].gd.pos.y + 26 + 5;
   panlabel[i].text = (uint32_t *) _("_Serifs");
   panlabel[i].text_is_1byte = true;
-  panlabel[i].text_in_resource = true;
+  panlabel[i].text_has_mnemonic = true;
   pangcd[i].gd.label = &panlabel[i];
   pangcd[i].gd.cid = CID_PanSerifsLab;
   pangcd[i].gd.flags = gg_visible | gg_enabled;
@@ -12494,7 +12494,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   pangcd[i].gd.pos.y = pangcd[i - 1].gd.pos.y + 26 + 5;
   panlabel[i].text = (uint32_t *) C_ ("Panose", "_Weight");
   panlabel[i].text_is_1byte = true;
-  panlabel[i].text_in_resource = true;
+  panlabel[i].text_has_mnemonic = true;
   pangcd[i].gd.label = &panlabel[i];
   pangcd[i].gd.cid = CID_PanWeightLab;
   pangcd[i].gd.flags = gg_visible | gg_enabled;
@@ -12515,7 +12515,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   pangcd[i].gd.pos.y = pangcd[i - 1].gd.pos.y + 26 + 5;
   panlabel[i].text = (uint32_t *) _("_Proportion");
   panlabel[i].text_is_1byte = true;
-  panlabel[i].text_in_resource = true;
+  panlabel[i].text_has_mnemonic = true;
   pangcd[i].gd.label = &panlabel[i];
   pangcd[i].gd.cid = CID_PanPropLab;
   pangcd[i].gd.flags = gg_visible | gg_enabled;
@@ -12536,7 +12536,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   pangcd[i].gd.pos.y = pangcd[i - 1].gd.pos.y + 26 + 5;
   panlabel[i].text = (uint32_t *) _("_Contrast");
   panlabel[i].text_is_1byte = true;
-  panlabel[i].text_in_resource = true;
+  panlabel[i].text_has_mnemonic = true;
   pangcd[i].gd.label = &panlabel[i];
   pangcd[i].gd.cid = CID_PanContrastLab;
   pangcd[i].gd.flags = gg_visible | gg_enabled;
@@ -12557,7 +12557,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   pangcd[i].gd.pos.y = pangcd[i - 1].gd.pos.y + 26 + 5;
   panlabel[i].text = (uint32_t *) _("Stroke _Variation");
   panlabel[i].text_is_1byte = true;
-  panlabel[i].text_in_resource = true;
+  panlabel[i].text_has_mnemonic = true;
   pangcd[i].gd.label = &panlabel[i];
   pangcd[i].gd.cid = CID_PanStrokeVarLab;
   pangcd[i].gd.flags = gg_visible | gg_enabled;
@@ -12578,7 +12578,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   pangcd[i].gd.pos.y = pangcd[i - 1].gd.pos.y + 26 + 5;
   panlabel[i].text = (uint32_t *) _("_Arm Style");
   panlabel[i].text_is_1byte = true;
-  panlabel[i].text_in_resource = true;
+  panlabel[i].text_has_mnemonic = true;
   pangcd[i].gd.label = &panlabel[i];
   pangcd[i].gd.cid = CID_PanArmStyleLab;
   pangcd[i].gd.flags = gg_visible | gg_enabled;
@@ -12599,7 +12599,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   pangcd[i].gd.pos.y = pangcd[i - 1].gd.pos.y + 26 + 5;
   panlabel[i].text = (uint32_t *) _("_Letterform");
   panlabel[i].text_is_1byte = true;
-  panlabel[i].text_in_resource = true;
+  panlabel[i].text_has_mnemonic = true;
   pangcd[i].gd.label = &panlabel[i];
   pangcd[i].gd.cid = CID_PanLetterformLab;
   pangcd[i].gd.flags = gg_visible | gg_enabled;
@@ -12620,7 +12620,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   pangcd[i].gd.pos.y = pangcd[i - 1].gd.pos.y + 26 + 5;
   panlabel[i].text = (uint32_t *) _("_Midline");
   panlabel[i].text_is_1byte = true;
-  panlabel[i].text_in_resource = true;
+  panlabel[i].text_has_mnemonic = true;
   pangcd[i].gd.label = &panlabel[i];
   pangcd[i].gd.cid = CID_PanMidLineLab;
   pangcd[i].gd.flags = gg_visible | gg_enabled;
@@ -12641,7 +12641,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   pangcd[i].gd.pos.y = pangcd[i - 1].gd.pos.y + 26 + 5;
   panlabel[i].text = (uint32_t *) _("_X-Height");
   panlabel[i].text_is_1byte = true;
-  panlabel[i].text_in_resource = true;
+  panlabel[i].text_has_mnemonic = true;
   pangcd[i].gd.label = &panlabel[i];
   pangcd[i].gd.cid = CID_PanXHeightLab;
   pangcd[i].gd.flags = gg_visible | gg_enabled;
@@ -12852,7 +12852,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
 
   gasplabel[i].text = (uint32_t *) C_ ("Gasp", "_Version");
   gasplabel[i].text_is_1byte = true;
-  gasplabel[i].text_in_resource = true;
+  gasplabel[i].text_has_mnemonic = true;
   gaspgcd[i].gd.label = &gasplabel[i];
   gaspgcd[i].gd.flags = gg_visible | gg_enabled;
   gaspharray[j++] = &gaspgcd[i];
@@ -12874,7 +12874,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
 
   gasplabel[i].text = (uint32_t *) _("Optimized For ClearType");
   gasplabel[i].text_is_1byte = true;
-  gasplabel[i].text_in_resource = true;
+  gasplabel[i].text_has_mnemonic = true;
   gaspgcd[i].gd.label = &gasplabel[i];
   gaspgcd[i].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
   gaspgcd[i].gd.cid = CID_HeadClearType;
@@ -12922,7 +12922,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   gaspgcd_def[0].gd.flags = gg_visible | gg_enabled;
   gasplabel[4].text = (uint32_t *) C_ ("Gasp", "_Default");
   gasplabel[4].text_is_1byte = true;
-  gasplabel[4].text_in_resource = true;
+  gasplabel[4].text_has_mnemonic = true;
   gaspgcd_def[0].gd.label = &gasplabel[4];
   gaspgcd_def[0].gd.handle_controlevent = Gasp_Default;
   gaspgcd_def[0].creator = GButtonCreate;
@@ -12948,7 +12948,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   tngcd[1].gd.cid = CID_TNLangSort;
   tnlabel[1].text = (uint32_t *) _("_Language");
   tnlabel[1].text_is_1byte = true;
-  tnlabel[1].text_in_resource = true;
+  tnlabel[1].text_has_mnemonic = true;
   tngcd[1].gd.label = &tnlabel[1];
   tngcd[1].creator = GRadioCreate;
   tngcd[1].gd.handle_controlevent = GFI_SortBy;
@@ -12960,7 +12960,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   tngcd[2].gd.cid = CID_TNStringSort;
   tnlabel[2].text = (uint32_t *) _("_String Type");
   tnlabel[2].text_is_1byte = true;
-  tnlabel[2].text_in_resource = true;
+  tnlabel[2].text_has_mnemonic = true;
   tngcd[2].gd.label = &tnlabel[2];
   tngcd[2].creator = GRadioCreate;
   tngcd[2].gd.handle_controlevent = GFI_SortBy;
@@ -13003,7 +13003,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   tnlabel[5].image_precedes = false;
   tnlabel[5].image = (GImage *) "ofllogo.png";
   tnlabel[5].text_is_1byte = true;
-  tnlabel[5].text_in_resource = true;
+  tnlabel[5].text_has_mnemonic = true;
   tngcd[5].gd.label = &tnlabel[5];
   tngcd[5].gd.handle_controlevent = GFI_AddOFL;
 /* TRANSLATORS:
@@ -13028,7 +13028,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   tngcd[6].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
   tnlabel[6].text = (uint32_t *) _("OFL website");
   tnlabel[6].text_is_1byte = true;
-  tnlabel[6].text_in_resource = true;
+  tnlabel[6].text_has_mnemonic = true;
   tngcd[6].gd.label = &tnlabel[6];
   tngcd[6].gd.handle_controlevent = GFI_HelpOFL;
   tngcd[6].gd.popup_msg = (uint32_t *) _("\n"
@@ -13453,7 +13453,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
 
   szlabel[k].text = (uint32_t *) _("De_sign Size:");
   szlabel[k].text_is_1byte = true;
-  szlabel[k].text_in_resource = true;
+  szlabel[k].text_has_mnemonic = true;
   szgcd[k].gd.label = &szlabel[k];
   szgcd[k].gd.pos.x = 10;
   szgcd[k].gd.pos.y = 9;
@@ -13504,7 +13504,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
 
   szlabel[k].text = (uint32_t *) _("_Bottom:");
   szlabel[k].text_is_1byte = true;
-  szlabel[k].text_in_resource = true;
+  szlabel[k].text_has_mnemonic = true;
   szgcd[k].gd.label = &szlabel[k];
   szgcd[k].gd.pos.x = 14;
   szgcd[k].gd.pos.y = szgcd[k - 2].gd.pos.y + 18;
@@ -13528,7 +13528,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
 
   szlabel[k].text = (uint32_t *) _("_Top:");
   szlabel[k].text_is_1byte = true;
-  szlabel[k].text_in_resource = true;
+  szlabel[k].text_has_mnemonic = true;
   szgcd[k].gd.label = &szlabel[k];
   szgcd[k].gd.pos.x = 140;
   szgcd[k].gd.pos.y = szgcd[k - 2].gd.pos.y;
@@ -13552,7 +13552,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
 
   szlabel[k].text = (uint32_t *) _("Style _ID:");
   szlabel[k].text_is_1byte = true;
-  szlabel[k].text_in_resource = true;
+  szlabel[k].text_has_mnemonic = true;
   szgcd[k].gd.label = &szlabel[k];
   szgcd[k].gd.pos.x = 14;
   szgcd[k].gd.pos.y =
@@ -13764,7 +13764,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
     ("Moves the currently selected lookup to be first in the lookup ordering\nor moves the currently selected subtable to be first in its lookup.");
   lkbuttonslabel[i].text = (uint32_t *) _("_Top");
   lkbuttonslabel[i].text_is_1byte = true;
-  lkbuttonslabel[i].text_in_resource = true;
+  lkbuttonslabel[i].text_has_mnemonic = true;
   lkbuttonsgcd[i].gd.label = &lkbuttonslabel[i];
   lkbuttonsgcd[i].gd.cid = CID_LookupTop;
   lkbuttonsgcd[i].gd.handle_controlevent = GFI_LookupOrder;
@@ -13778,7 +13778,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
     ("Moves the currently selected lookup before the previous lookup\nor moves the currently selected subtable before the previous subtable.");
   lkbuttonslabel[i].text = (uint32_t *) _("_Up");
   lkbuttonslabel[i].text_is_1byte = true;
-  lkbuttonslabel[i].text_in_resource = true;
+  lkbuttonslabel[i].text_has_mnemonic = true;
   lkbuttonsgcd[i].gd.label = &lkbuttonslabel[i];
   lkbuttonsgcd[i].gd.cid = CID_LookupUp;
   lkbuttonsgcd[i].gd.handle_controlevent = GFI_LookupOrder;
@@ -13792,7 +13792,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
     ("Moves the currently selected lookup after the next lookup\nor moves the currently selected subtable after the next subtable.");
   lkbuttonslabel[i].text = (uint32_t *) _("_Down");
   lkbuttonslabel[i].text_is_1byte = true;
-  lkbuttonslabel[i].text_in_resource = true;
+  lkbuttonslabel[i].text_has_mnemonic = true;
   lkbuttonsgcd[i].gd.label = &lkbuttonslabel[i];
   lkbuttonsgcd[i].gd.cid = CID_LookupDown;
   lkbuttonsgcd[i].gd.handle_controlevent = GFI_LookupOrder;
@@ -13806,7 +13806,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
     ("Moves the currently selected lookup to the end of the lookup chain\nor moves the currently selected subtable to be the last subtable in the lookup");
   lkbuttonslabel[i].text = (uint32_t *) _("_Bottom");
   lkbuttonslabel[i].text_is_1byte = true;
-  lkbuttonslabel[i].text_in_resource = true;
+  lkbuttonslabel[i].text_has_mnemonic = true;
   lkbuttonsgcd[i].gd.label = &lkbuttonslabel[i];
   lkbuttonsgcd[i].gd.cid = CID_LookupBottom;
   lkbuttonsgcd[i].gd.handle_controlevent = GFI_LookupOrder;
@@ -13819,7 +13819,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
     _("Sorts the lookups in a default ordering based on feature tags");
   lkbuttonslabel[i].text = (uint32_t *) _("_Sort");
   lkbuttonslabel[i].text_is_1byte = true;
-  lkbuttonslabel[i].text_in_resource = true;
+  lkbuttonslabel[i].text_has_mnemonic = true;
   lkbuttonsgcd[i].gd.label = &lkbuttonslabel[i];
   lkbuttonsgcd[i].gd.cid = CID_LookupSort;
   lkbuttonsgcd[i].gd.handle_controlevent = GFI_LookupSort;
@@ -13837,7 +13837,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
     ("Adds a new lookup after the selected lookup\nor at the start of the lookup list if nothing is selected.");
   lkbuttonslabel[i].text = (uint32_t *) _("Add _Lookup");
   lkbuttonslabel[i].text_is_1byte = true;
-  lkbuttonslabel[i].text_in_resource = true;
+  lkbuttonslabel[i].text_has_mnemonic = true;
   lkbuttonsgcd[i].gd.label = &lkbuttonslabel[i];
   lkbuttonsgcd[i].gd.cid = CID_AddLookup;
   lkbuttonsgcd[i].gd.handle_controlevent = GFI_LookupAddLookup;
@@ -13851,7 +13851,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
     ("Adds a new lookup subtable after the selected subtable\nor at the start of the lookup if nothing is selected.");
   lkbuttonslabel[i].text = (uint32_t *) _("Add Sub_table");
   lkbuttonslabel[i].text_is_1byte = true;
-  lkbuttonslabel[i].text_in_resource = true;
+  lkbuttonslabel[i].text_has_mnemonic = true;
   lkbuttonsgcd[i].gd.label = &lkbuttonslabel[i];
   lkbuttonsgcd[i].gd.cid = CID_AddSubtable;
   lkbuttonsgcd[i].gd.handle_controlevent = GFI_LookupAddSubtable;
@@ -13863,7 +13863,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
     (uint32_t *) _("Edits a lookup or lookup subtable.");
   lkbuttonslabel[i].text = (uint32_t *) _("Edit _Metadata");
   lkbuttonslabel[i].text_is_1byte = true;
-  lkbuttonslabel[i].text_in_resource = true;
+  lkbuttonslabel[i].text_has_mnemonic = true;
   lkbuttonsgcd[i].gd.label = &lkbuttonslabel[i];
   lkbuttonsgcd[i].gd.cid = CID_EditMetadata;
   lkbuttonsgcd[i].gd.handle_controlevent = GFI_LookupEditMetadata;
@@ -13875,7 +13875,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
     (uint32_t *) _("Edits the transformations in a lookup subtable.");
   lkbuttonslabel[i].text = (uint32_t *) _("_Edit Data");
   lkbuttonslabel[i].text_is_1byte = true;
-  lkbuttonslabel[i].text_in_resource = true;
+  lkbuttonslabel[i].text_has_mnemonic = true;
   lkbuttonsgcd[i].gd.label = &lkbuttonslabel[i];
   lkbuttonsgcd[i].gd.cid = CID_EditSubtable;
   lkbuttonsgcd[i].gd.handle_controlevent = GFI_LookupEditSubtableContents;
@@ -13889,7 +13889,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
     ("Deletes any selected lookups and their subtables, or deletes any selected subtables.\nThis will also delete any transformations associated with those subtables.");
   lkbuttonslabel[i].text = (uint32_t *) _("De_lete");
   lkbuttonslabel[i].text_is_1byte = true;
-  lkbuttonslabel[i].text_in_resource = true;
+  lkbuttonslabel[i].text_has_mnemonic = true;
   lkbuttonsgcd[i].gd.label = &lkbuttonslabel[i];
   lkbuttonsgcd[i].gd.cid = CID_DeleteLookup;
   lkbuttonsgcd[i].gd.handle_controlevent = GFI_LookupDeleteLookup;
@@ -13903,7 +13903,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
     ("Merges two selected (and compatible) lookups into one,\nor merges two selected subtables of a lookup into one");
   lkbuttonslabel[i].text = (uint32_t *) _("_Merge");
   lkbuttonslabel[i].text_is_1byte = true;
-  lkbuttonslabel[i].text_in_resource = true;
+  lkbuttonslabel[i].text_has_mnemonic = true;
   lkbuttonsgcd[i].gd.label = &lkbuttonslabel[i];
   lkbuttonsgcd[i].gd.cid = CID_MergeLookup;
   lkbuttonsgcd[i].gd.handle_controlevent = GFI_LookupMergeLookup;
@@ -13917,7 +13917,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
     ("Reverts the lookup list to its original condition.\nBut any changes to subtable data will remain.");
   lkbuttonslabel[i].text = (uint32_t *) _("_Revert");
   lkbuttonslabel[i].text_is_1byte = true;
-  lkbuttonslabel[i].text_in_resource = true;
+  lkbuttonslabel[i].text_has_mnemonic = true;
   lkbuttonsgcd[i].gd.label = &lkbuttonslabel[i];
   lkbuttonsgcd[i].gd.cid = CID_RevertLookups;
   lkbuttonsgcd[i].gd.handle_controlevent = GFI_LookupRevertLookup;
@@ -13930,7 +13930,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
     _("Imports a lookup (and all its subtables) from another font.");
   lkbuttonslabel[i].text = (uint32_t *) _("_Import");
   lkbuttonslabel[i].text_is_1byte = true;
-  lkbuttonslabel[i].text_in_resource = true;
+  lkbuttonslabel[i].text_has_mnemonic = true;
   lkbuttonsgcd[i].gd.label = &lkbuttonslabel[i];
   lkbuttonsgcd[i].gd.cid = CID_ImportLookups;
   lkbuttonsgcd[i].gd.handle_controlevent = GFI_LookupImportLookup;
@@ -14028,7 +14028,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
 
   dlabel[0].text = (uint32_t *) _("Creation Date:");
   dlabel[0].text_is_1byte = true;
-  dlabel[0].text_in_resource = true;
+  dlabel[0].text_has_mnemonic = true;
   dgcd[0].gd.label = &dlabel[0];
   dgcd[0].gd.pos.x = 12;
   dgcd[0].gd.pos.y = 6 + 6;
@@ -14052,7 +14052,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
 
   dlabel[2].text = (uint32_t *) _("Modification Date:");
   dlabel[2].text_is_1byte = true;
-  dlabel[2].text_in_resource = true;
+  dlabel[2].text_has_mnemonic = true;
   dgcd[2].gd.label = &dlabel[2];
   dgcd[2].gd.pos.x = 12;
   dgcd[2].gd.pos.y = dgcd[0].gd.pos.y + 14;
@@ -14124,7 +14124,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
 
   ulabel[2].text = (uint32_t *) _("Include Empty Blocks");
   ulabel[2].text_is_1byte = true;
-  ulabel[2].text_in_resource = true;
+  ulabel[2].text_has_mnemonic = true;
   ugcd[2].gd.label = &ulabel[2];
   ugcd[2].gd.pos.x = 12;
   ugcd[2].gd.pos.y = 10;
@@ -14293,7 +14293,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   mgcd[1].gd.flags = gg_visible | gg_enabled | gg_but_default;
   mlabel[1].text = (uint32_t *) _("_OK");
   mlabel[1].text_is_1byte = true;
-  mlabel[1].text_in_resource = true;
+  mlabel[1].text_has_mnemonic = true;
   mgcd[1].gd.label = &mlabel[1];
   mgcd[1].gd.handle_controlevent = GFI_OK;
   mgcd[1].gd.cid = CID_OK;
@@ -14306,7 +14306,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   mgcd[2].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
   mlabel[2].text = (uint32_t *) _("_Cancel");
   mlabel[2].text_is_1byte = true;
-  mlabel[2].text_in_resource = true;
+  mlabel[2].text_has_mnemonic = true;
   mgcd[2].gd.label = &mlabel[2];
   mgcd[2].gd.handle_controlevent = GFI_Cancel;
   mgcd[2].gd.cid = CID_Cancel;

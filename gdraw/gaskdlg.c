@@ -227,7 +227,7 @@ return( NULL );
     for ( bcnt=0; answers[bcnt]!=NULL; ++bcnt) {
 	blabels[bcnt].text = (uint32_t *) answers[bcnt];
 	blabels[bcnt].text_is_1byte = true;
-	blabels[bcnt].text_in_resource = true;	/* Look for mnemonics in the utf8 string (preceded by _) */
+	blabels[bcnt].text_has_mnemonic = true;	/* Look for mnemonics in the utf8 string (preceded by _) */
     }
 
     memset(&wattrs,0,sizeof(wattrs));
@@ -695,7 +695,7 @@ static GWindow ChoiceDlgCreate8(struct dlg_info *d,const char *title,
 	gcd[i].gd.label = &blabel[2];
         blabel[2].text = (uint32_t *) _("Select _All");
         blabel[2].text_is_1byte = true;
-	blabel[2].text_in_resource = true;
+	blabel[2].text_has_mnemonic = true;
 	gcd[i].gd.cid = CID_SelectAll;
 	gcd[i].gd.handle_controlevent = GCD_Select;
 	gcd[i++].creator = GButtonCreate;
@@ -709,7 +709,7 @@ static GWindow ChoiceDlgCreate8(struct dlg_info *d,const char *title,
 	gcd[i].gd.label = &blabel[3];
         blabel[3].text = (uint32_t *) _("_None");
         blabel[3].text_is_1byte = true;
-	blabel[3].text_in_resource = true;
+	blabel[3].text_has_mnemonic = true;
 	gcd[i].gd.cid = CID_SelectNone;
 	gcd[i].gd.handle_controlevent = GCD_Select;
 	gcd[i++].creator = GButtonCreate;
@@ -731,7 +731,7 @@ static GWindow ChoiceDlgCreate8(struct dlg_info *d,const char *title,
     gcd[i].gd.label = &blabel[0];
     blabel[0].text = (uint32_t *) buts[0];
     blabel[0].text_is_1byte = true;
-    blabel[0].text_in_resource = true;
+    blabel[0].text_has_mnemonic = true;
     gcd[i].gd.cid = CID_OK;
     gcd[i++].creator = GButtonCreate;
     barray[0] = GCD_Glue; barray[1] = &gcd[i-1]; barray[2] = GCD_Glue; barray[3] = GCD_Glue;
@@ -744,7 +744,7 @@ static GWindow ChoiceDlgCreate8(struct dlg_info *d,const char *title,
     gcd[i].gd.label = &blabel[1];
     blabel[1].text = (uint32_t *) buts[1];
     blabel[1].text_is_1byte = true;
-    blabel[1].text_in_resource = true;
+    blabel[1].text_has_mnemonic = true;
     gcd[i].gd.cid = CID_Cancel;
     gcd[i++].creator = GButtonCreate;
     barray[4] = barray[5] = barray[6] = GCD_Glue; barray[7] = &gcd[i-1]; barray[8] = GCD_Glue; barray[9] = NULL;

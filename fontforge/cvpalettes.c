@@ -547,7 +547,7 @@ static int Ask(char *rb1, char *rb2, int rb, char *lab, float *val, int *co,
 	gcd[4].gd.flags = gg_visible | gg_enabled | gg_but_default;
 	label[4].text = (uint32_t *) _("_OK");
 	label[4].text_is_1byte = true;
-	label[4].text_in_resource = true;
+	label[4].text_has_mnemonic = true;
 	gcd[4].gd.mnemonic = 'O';
 	gcd[4].gd.label = &label[4];
 	gcd[4].gd.handle_controlevent = TA_OK;
@@ -558,7 +558,7 @@ static int Ask(char *rb1, char *rb2, int rb, char *lab, float *val, int *co,
 	gcd[5].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
 	label[5].text = (uint32_t *) _("_Cancel");
 	label[5].text_is_1byte = true;
-	label[5].text_in_resource = true;
+	label[5].text_has_mnemonic = true;
 	gcd[5].gd.label = &label[5];
 	gcd[5].gd.mnemonic = 'C';
 	gcd[5].gd.handle_controlevent = TA_Cancel;
@@ -620,7 +620,7 @@ static int Ask(char *rb1, char *rb2, int rb, char *lab, float *val, int *co,
 
 		label[8].text = (uint32_t *) _("_X");
 		label[8].text_is_1byte = true;
-		label[8].text_in_resource = true;
+		label[8].text_has_mnemonic = true;
 		gcd[8].gd.label = &label[8];
 		gcd[8].gd.pos.x = 70; gcd[8].gd.pos.y = gcd[7].gd.pos.y+15;
 		gcd[8].gd.flags = gg_enabled|gg_visible;
@@ -628,7 +628,7 @@ static int Ask(char *rb1, char *rb2, int rb, char *lab, float *val, int *co,
 
 		label[9].text = (uint32_t *) _("_Y");
 		label[9].text_is_1byte = true;
-		label[9].text_in_resource = true;
+		label[9].text_has_mnemonic = true;
 		gcd[9].gd.label = &label[9];
 		gcd[9].gd.pos.x = 120; gcd[9].gd.pos.y = gcd[8].gd.pos.y;
 		gcd[9].gd.flags = gg_enabled|gg_visible;
@@ -636,7 +636,7 @@ static int Ask(char *rb1, char *rb2, int rb, char *lab, float *val, int *co,
 
 		label[10].text = (uint32_t *) (co[rb] ? _("C_enter") : _("C_orner") );
 		label[10].text_is_1byte = true;
-		label[10].text_in_resource = true;
+		label[10].text_has_mnemonic = true;
 		gcd[10].gd.label = &label[10];
 		gcd[10].gd.pos.x = 5; gcd[10].gd.pos.y = gcd[8].gd.pos.y+17;
 		gcd[10].gd.flags = gg_enabled|gg_visible;
@@ -2158,7 +2158,7 @@ return( cvlayers );
 /* GT: Guide layer, make it short */
     label[base].text = (uint32_t *) _("_Guide");
     label[base].text_is_1byte = true;
-    label[base].text_in_resource = true;
+    label[base].text_has_mnemonic = true;
     gcd[base].gd.label = &label[base];
     gcd[base].gd.pos.x = 27; gcd[base].gd.pos.y = 55; 
     gcd[base].gd.flags = gg_enabled|gg_visible|gg_dontcopybox|gg_pos_in_pixels|gg_utf8_popup;
@@ -2170,7 +2170,7 @@ return( cvlayers );
 /* GT: Background, make it short */
     label[base+1].text = (uint32_t *) _("_Back");
     label[base+1].text_is_1byte = true;
-    label[base+1].text_in_resource = true;
+    label[base+1].text_has_mnemonic = true;
     gcd[base+1].gd.label = &label[base+1];
     gcd[base+1].gd.pos.x = 27; gcd[base+1].gd.pos.y = 38; 
     gcd[base+1].gd.flags = gg_enabled|gg_visible|gg_dontcopybox|gg_pos_in_pixels|gg_utf8_popup;
@@ -2181,7 +2181,7 @@ return( cvlayers );
 /* GT: Foreground, make it short */
     label[base+2].text = (uint32_t *) _("F_ore");
     label[base+2].text_is_1byte = true;
-    label[base+2].text_in_resource = true;
+    label[base+2].text_has_mnemonic = true;
     gcd[base+2].gd.label = &label[base+2];
     gcd[base+2].gd.pos.x = 27; gcd[base+2].gd.pos.y = 21; 
     gcd[base+2].gd.flags = gg_enabled|gg_visible|gg_dontcopybox|gg_pos_in_pixels|gg_utf8_popup;
@@ -2313,7 +2313,7 @@ void CVToolsPopup(CharView *cv, GEvent *event) {
 	    mi[i++].ti.bg = COLOR_DEFAULT;
 	    for ( j=0;j<3; ++j, ++i ) {
 		mi[i].ti.text = (uint32_t *) _(editablelayers[j]);
-		mi[i].ti.text_in_resource = true;
+		mi[i].ti.text_has_mnemonic = true;
 		mi[i].ti.text_is_1byte = true;
 		mi[i].ti.fg = COLOR_DEFAULT;
 		mi[i].ti.bg = COLOR_DEFAULT;
@@ -2678,7 +2678,7 @@ return(bvlayers);
     gcd[4].creator = GCheckBoxCreate;
     label[4].text = (uint32_t *) _("_Guide");
     label[4].text_is_1byte = true;
-    label[4].text_in_resource = true;
+    label[4].text_has_mnemonic = true;
     gcd[4].gd.label = &label[4];
     hvarray[3][0] = &gcd[4]; hvarray[3][1] = GCD_ColSpan; hvarray[3][2] = NULL;
     hvarray[4][0] = NULL;
@@ -3148,7 +3148,7 @@ void BVToolsPopup(BitmapView *bv, GEvent *event) {
 	mi[i++].ti.line = true;
 	mi[i].ti.text = (uint32_t *) _("Set _Width...");
 	mi[i].ti.text_is_1byte = true;
-	mi[i].ti.text_in_resource = true;
+	mi[i].ti.text_has_mnemonic = true;
 	mi[i].ti.fg = COLOR_DEFAULT;
 	mi[i].ti.bg = COLOR_DEFAULT;
 	mi[i].mid = bvt_setwidth;

@@ -842,7 +842,7 @@ MMChangeBlend (MMSet *mm, FontView * fv, int tonew)
       gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
       label[k].text = (uint32_t *) _("_OK");
       label[k].text_is_1byte = true;
-      label[k].text_in_resource = true;
+      label[k].text_has_mnemonic = true;
       gcd[k].gd.label = &label[k];
       gcd[k].gd.handle_controlevent = MMCB_OK;
       gcd[k++].creator = GButtonCreate;
@@ -853,7 +853,7 @@ MMChangeBlend (MMSet *mm, FontView * fv, int tonew)
       gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
       label[k].text = (uint32_t *) _("_Cancel");
       label[k].text_is_1byte = true;
-      label[k].text_in_resource = true;
+      label[k].text_has_mnemonic = true;
       gcd[k].gd.label = &label[k];
       gcd[k].gd.handle_controlevent = MMCB_Cancel;
       gcd[k++].creator = GButtonCreate;
@@ -916,7 +916,7 @@ MMChangeBlend (MMSet *mm, FontView * fv, int tonew)
       gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
       label[k].text = (uint32_t *) _("_OK");
       label[k].text_is_1byte = true;
-      label[k].text_in_resource = true;
+      label[k].text_has_mnemonic = true;
       gcd[k].gd.label = &label[k];
       gcd[k].gd.handle_controlevent = MMCB_OKApple;
       gcd[k++].creator = GButtonCreate;
@@ -927,7 +927,7 @@ MMChangeBlend (MMSet *mm, FontView * fv, int tonew)
       gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
       label[k].text = (uint32_t *) _("_Cancel");
       label[k].text_is_1byte = true;
-      label[k].text_in_resource = true;
+      label[k].text_has_mnemonic = true;
       gcd[k].gd.label = &label[k];
       gcd[k].gd.handle_controlevent = MMCB_Cancel;
       gcd[k++].creator = GButtonCreate;
@@ -1293,7 +1293,7 @@ EditStyleName (MMW * mmw, int index)
   gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
   label[k].text = (uint32_t *) _("_OK");
   label[k].text_is_1byte = true;
-  label[k].text_in_resource = true;
+  label[k].text_has_mnemonic = true;
   gcd[k].gd.label = &label[k];
   gcd[k].gd.handle_controlevent = ESD_OK;
   gcd[k++].creator = GButtonCreate;
@@ -1305,7 +1305,7 @@ EditStyleName (MMW * mmw, int index)
   gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
   label[k].text = (uint32_t *) _("_Cancel");
   label[k].text_is_1byte = true;
-  label[k].text_in_resource = true;
+  label[k].text_has_mnemonic = true;
   gcd[k].gd.label = &label[k];
   gcd[k].gd.handle_controlevent = ESD_Cancel;
   gcd[k++].creator = GButtonCreate;
@@ -3278,7 +3278,7 @@ MMWizard (MMSet *mm)
   bgcd[0].gd.flags = gg_visible | gg_enabled;
   blabel[0].text = (uint32_t *) _("_OK");
   blabel[0].text_is_1byte = true;
-  blabel[0].text_in_resource = true;
+  blabel[0].text_has_mnemonic = true;
   bgcd[0].gd.label = &blabel[0];
   bgcd[0].gd.cid = CID_OK;
   bgcd[0].gd.handle_controlevent = MMW_OK;
@@ -3292,7 +3292,7 @@ MMWizard (MMSet *mm)
   bgcd[1].gd.flags = gg_visible;
   blabel[1].text = (uint32_t *) _("< _Prev");
   blabel[1].text_is_1byte = true;
-  blabel[1].text_in_resource = true;
+  blabel[1].text_has_mnemonic = true;
   bgcd[1].gd.label = &blabel[1];
   bgcd[1].gd.handle_controlevent = MMW_Prev;
   bgcd[1].gd.cid = CID_Prev;
@@ -3304,7 +3304,7 @@ MMWizard (MMSet *mm)
   bgcd[2].gd.pos.height = 0;
   bgcd[2].gd.flags = gg_visible;
   blabel[2].text = (uint32_t *) _("_Next >");
-  blabel[2].text_in_resource = true;
+  blabel[2].text_has_mnemonic = true;
   blabel[2].text_is_1byte = true;
   bgcd[2].gd.label = &blabel[2];
   bgcd[2].gd.handle_controlevent = MMW_Next;
@@ -3317,7 +3317,7 @@ MMWizard (MMSet *mm)
   bgcd[3].gd.pos.height = 0;
   bgcd[3].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
   blabel[3].text = (uint32_t *) _("_Cancel");
-  blabel[3].text_in_resource = true;
+  blabel[3].text_has_mnemonic = true;
   blabel[3].text_is_1byte = true;
   bgcd[3].gd.label = &blabel[3];
   bgcd[3].gd.handle_controlevent = MMW_Cancel;
@@ -3419,7 +3419,7 @@ MMWizard (MMSet *mm)
 
   cntlabel[k].text = (uint32_t *) _("_Family Name:");
   cntlabel[k].text_is_1byte = true;
-  cntlabel[k].text_in_resource = true;
+  cntlabel[k].text_has_mnemonic = true;
   cntgcd[k].gd.label = &cntlabel[k];
   cntgcd[k].gd.pos.x = 10;
   cntgcd[k].gd.pos.y = cntgcd[k - 1].gd.pos.y + 30;
@@ -3772,7 +3772,7 @@ MMWizard (MMSet *mm)
   ngcd[2].gd.flags = gg_visible | gg_enabled;
   nlabel[2].text = (uint32_t *) C_("Design", "_New...");
   nlabel[2].text_is_1byte = true;
-  nlabel[2].text_in_resource = true;
+  nlabel[2].text_has_mnemonic = true;
   ngcd[2].gd.label = &nlabel[2];
   ngcd[2].gd.cid = CID_NamedNew;
   ngcd[2].gd.handle_controlevent = MMW_NamedNew;
@@ -3784,7 +3784,7 @@ MMWizard (MMSet *mm)
   ngcd[3].gd.flags = gg_visible;
   nlabel[3].text = (uint32_t *) _("_Delete");
   nlabel[3].text_is_1byte = true;
-  nlabel[3].text_in_resource = true;
+  nlabel[3].text_has_mnemonic = true;
   ngcd[3].gd.label = &nlabel[3];
   ngcd[3].gd.cid = CID_NamedDelete;
   ngcd[3].gd.handle_controlevent = MMW_NamedDelete;
@@ -3796,7 +3796,7 @@ MMWizard (MMSet *mm)
   ngcd[4].gd.flags = gg_visible;
   nlabel[4].text = (uint32_t *) _("_Edit...");
   nlabel[4].text_is_1byte = true;
-  nlabel[4].text_in_resource = true;
+  nlabel[4].text_has_mnemonic = true;
   ngcd[4].gd.label = &nlabel[4];
   ngcd[4].gd.cid = CID_NamedEdit;
   ngcd[4].gd.handle_controlevent = MMW_NamedEdit;

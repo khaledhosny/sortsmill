@@ -229,7 +229,7 @@ void CVFtPpemDlg(CharView *cv,int debug) {
     k=r=0;
     label[k].text = (uint32_t *) _("Debug _fpgm/prep");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 80; gcd[k].gd.pos.y = 4; 
     gcd[k].gd.flags = debug ? (gg_enabled|gg_visible) : 0;
@@ -241,7 +241,7 @@ void CVFtPpemDlg(CharView *cv,int debug) {
 
     label[k].text = (uint32_t *) _("Scale X/Y the same");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 110; gcd[k].gd.pos.y = 17+5+6; 
     gcd[k].gd.flags = gg_enabled|gg_visible;
@@ -254,7 +254,7 @@ void CVFtPpemDlg(CharView *cv,int debug) {
 
     label[k].text = (uint32_t *) _("_DPI:");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 110; gcd[k].gd.pos.y = 17+5+6; 
     gcd[k].gd.flags = gg_enabled|gg_visible;
@@ -278,7 +278,7 @@ void CVFtPpemDlg(CharView *cv,int debug) {
 
     label[k].text = (uint32_t *) _("_Pointsize Y:");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = 17+5+6; 
     gcd[k].gd.flags = gg_enabled|gg_visible;
@@ -303,7 +303,7 @@ void CVFtPpemDlg(CharView *cv,int debug) {
 
     label[k].text = (uint32_t *) _("_X:");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = 17+5+6; 
     gcd[k].gd.flags = gg_enabled|gg_visible;
@@ -329,7 +329,7 @@ void CVFtPpemDlg(CharView *cv,int debug) {
 
     label[k].text = (uint32_t *) _("_Mono");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 20; gcd[k].gd.pos.y = 14+31; 
     gcd[k].gd.flags = gridfit_depth==1 ? (gg_enabled|gg_visible|gg_cb_on) : (gg_enabled|gg_visible);
@@ -339,7 +339,7 @@ void CVFtPpemDlg(CharView *cv,int debug) {
 
     label[k].text = (uint32_t *) _("_Anti-Aliased");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 80; gcd[k].gd.pos.y = gcd[9].gd.pos.y; 
     gcd[k].gd.flags = gridfit_depth!=1 ? (gg_enabled|gg_visible|gg_cb_on) : (gg_enabled|gg_visible);
@@ -357,7 +357,7 @@ void CVFtPpemDlg(CharView *cv,int debug) {
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
     label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.mnemonic = 'O';
     gcd[k].gd.label = &label[k];
     gcd[k].gd.handle_controlevent = FtPpem_OK;
@@ -369,7 +369,7 @@ void CVFtPpemDlg(CharView *cv,int debug) {
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
     label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.mnemonic = 'C';
     gcd[k].gd.handle_controlevent = FtPpem_Cancel;

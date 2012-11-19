@@ -748,7 +748,7 @@ return( NULL );
 
     label[k].text = (uint32_t *) _("_Match Fuzziness:");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled|gg_visible;
     gcd[k].creator = GLabelCreate;
@@ -757,7 +757,7 @@ return( NULL );
     sprintf(fudgebuf,"%g",old_fudge);
     label[k].text = (uint32_t *) fudgebuf;
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_enabled|gg_visible;
     gcd[k].gd.cid = CID_Fuzzy;
@@ -837,7 +837,7 @@ return( NULL );
 
     label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 0; gcd[k].gd.pos.y = gcd[k-3].gd.pos.y;
     gcd[k].gd.flags = gg_enabled|gg_visible|gg_but_cancel;

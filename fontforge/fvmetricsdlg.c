@@ -212,7 +212,7 @@ static void FVCreateWidth(void *_fv,void (*doit)(CreateWidthData *),
 	gcd[6].gd.flags = gg_visible | gg_enabled | gg_but_default;
 	label[6].text = (uint32_t *) _("_OK");
 	label[6].text_is_1byte = true;
-	label[6].text_in_resource = true;
+	label[6].text_has_mnemonic = true;
 	gcd[6].gd.mnemonic = 'O';
 	gcd[6].gd.label = &label[6];
 	gcd[6].gd.handle_controlevent = CW_OK;
@@ -221,7 +221,7 @@ static void FVCreateWidth(void *_fv,void (*doit)(CreateWidthData *),
 	gcd[7].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
 	label[7].text = (uint32_t *) _("_Cancel");
 	label[7].text_is_1byte = true;
-	label[7].text_in_resource = true;
+	label[7].text_has_mnemonic = true;
 	gcd[7].gd.label = &label[7];
 	gcd[7].gd.mnemonic = 'C';
 	gcd[7].gd.handle_controlevent = CW_Cancel;
