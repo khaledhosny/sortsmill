@@ -28,5 +28,5 @@
 #define _GRESOURCE_H_
 
 int _GResource_FindResName(char *name);
-extern struct _GResource_Res { char *res, *val; unsigned int generic: 1; unsigned int new: 1; } *_GResource_Res;
+extern struct _GResource_Res { char *res, *val; bool generic; bool new; } *_GResource_Res;
 #endif

@@ -37,7 +37,7 @@ libsortsmillff_gdraw_la_SOURCES = choosericons.c ctlvalues.c			\
 	gresource.c gresourceimage.c gresedit.c gsavefiledlg.c				\
 	gscrollbar.c gtabset.c gtextfield.c gtextinfo.c gwidgets.c			\
 	gxdraw.c gxcdraw.c ghvbox.c gmatrixedit.c gdrawable.c gspacer.c		\
-	xkeysyms_unicode.c colorP.h gdrawP.h gimagebmpP.h gresourceP.h		\
+	xkeysyms_unicode.c colorP.h gdrawP.h gresourceP.h		\
 	gxcdrawP.h fontP.h ggadgetP.h gwidgetP.h gxdrawP.h
 
 libsortsmillff_gdraw_la_LIBADD =					\

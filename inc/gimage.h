@@ -57,7 +57,7 @@ struct hslrgba {
 
 typedef struct clut {
     int16_t clut_len;
-    unsigned int is_grey: 1;
+    bool is_grey;
     uint32_t trans_index; /* will be ignored for cluts in images, use base->trans instead */
     Color clut[256];
 } GClut;

@@ -32,8 +32,8 @@ typedef struct hints {
     real base, width;
     real b1, b2, e1, e2;
     real ab, ae;
-    unsigned int adjustb: 1;
-    unsigned int adjuste: 1;
+    bool adjustb;
+    bool adjuste;
     struct hints *next;
 } Hints;
 
@@ -47,9 +47,9 @@ typedef struct edge {
     real tmin, tmax;
     real o_mmin, o_mmax;
     real t_cur, o_cur, m_cur;
-    unsigned int up: 1;		/* line is directed up in the spline list */
-    unsigned int max_adjusted: 1;	/* by hstem hints */
-    unsigned int min_adjusted: 1;
+    bool up;		/* line is directed up in the spline list */
+    bool max_adjusted;	/* by hstem hints */
+    bool min_adjusted;
     Spline *spline;		/* spline which generated this segment */
     struct edge *esnext, *aenext;
     struct edge *before, *after;
@@ -70,7 +70,7 @@ typedef struct edgelist {
     int layer;
     char *interesting;
     int major, other;
-    unsigned int genmajoredges: 1;	/* generate a list of edges parallel to the major axis */
+    bool genmajoredges;	/* generate a list of edges parallel to the major axis */
     Edge *majors;		/* ordered so that lowest edge is first */
     Edge *majorhold;		/* to hold major edges as we pass them and they become useless */
     Hints *hhints, *vhints;
@@ -96,18 +96,18 @@ typedef struct edgeinfo {
     real tmin, tmax;
     real coordmin[2];
     real coordmax[2];
-    unsigned int up: 1;
-    unsigned int hv: 1;
-    unsigned int hvbottom: 1;
-    unsigned int hvtop: 1;
-    unsigned int hor: 1;
-    unsigned int vert: 1;
-    unsigned int almosthor: 1;
-    unsigned int almostvert: 1;
-    unsigned int horattmin: 1;
-    unsigned int horattmax: 1;
-    unsigned int vertattmin: 1;
-    unsigned int vertattmax: 1;
+    bool up;
+    bool hv;
+    bool hvbottom;
+    bool hvtop;
+    bool hor;
+    bool vert;
+    bool almosthor;
+    bool almostvert;
+    bool horattmin;
+    bool horattmax;
+    bool vertattmin;
+    bool vertattmax;
     unsigned hup: 1;
     unsigned vup: 1;
     real tcur;		/* Value of t for current major coord */

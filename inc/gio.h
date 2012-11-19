@@ -45,9 +45,9 @@ typedef struct giocontrol {
     void (*receivedata)(struct giocontrol *);
     void (*receiveintermediate)(struct giocontrol *);
     void (*receiveerror)(struct giocontrol *);
-    unsigned int done: 1;
-    unsigned int direntrydata: 1;
-    unsigned int abort: 1;
+    bool done;
+    bool direntrydata;
+    bool abort;
     enum giofuncs gf;
     int protocol_index;
     struct giocontrol *next;
@@ -59,16 +59,16 @@ typedef struct giocontrol {
 typedef struct gdirentry {
     uint32_t *name;
     char *mimetype;
-    unsigned int isdir: 1;
-    unsigned int isexe: 1;
-    unsigned int islnk: 1;
-    unsigned int hasdir: 1;
-    unsigned int hasexe: 1;
-    unsigned int haslnk: 1;
-    unsigned int hasmode: 1;
-    unsigned int hassize: 1;
-    unsigned int hastime: 1;
-    unsigned int timezoneknown: 1;	/* We got a time, but we don't know the timezone. might be off by 24 hours either way */
+    bool isdir;
+    bool isexe;
+    bool islnk;
+    bool hasdir;
+    bool hasexe;
+    bool haslnk;
+    bool hasmode;
+    bool hassize;
+    bool hastime;
+    bool timezoneknown;	/* We got a time, but we don't know the timezone. might be off by 24 hours either way */
     unsigned int fcdata: 2;
     short mode;
     uint32_t size;

@@ -7941,7 +7941,7 @@ return;		/* Need a spline */
 
     label[0].text = (uint32_t *) _("_X:");
     label[0].text_is_1byte = true;
-    label[0].text_in_resource = true;
+    label[0].text_has_mnemonic = true;
     gcd[0].gd.label = &label[0];
     gcd[0].gd.pos.x = 5; gcd[0].gd.pos.y = 5;
     gcd[0].gd.flags = gg_enabled|gg_visible|gg_cb_on;
@@ -7952,7 +7952,7 @@ return;		/* Need a spline */
 
     label[1].text = (uint32_t *) _("_Y:");
     label[1].text_is_1byte = true;
-    label[1].text_in_resource = true;
+    label[1].text_has_mnemonic = true;
     gcd[1].gd.label = &label[1];
     gcd[1].gd.pos.x = 5; gcd[1].gd.pos.y = 32;
     gcd[1].gd.flags = gg_enabled|gg_visible|gg_rad_continueold ;
@@ -7980,8 +7980,7 @@ return;		/* Need a spline */
     gcd[4].gd.flags = gg_visible | gg_enabled | gg_but_default;
     label[4].text = (uint32_t *) _("_OK");
     label[4].text_is_1byte = true;
-    label[4].text_in_resource = true;
-    gcd[4].gd.mnemonic = 'O';
+    label[4].text_has_mnemonic = true;
     gcd[4].gd.label = &label[4];
     gcd[4].gd.handle_controlevent = IOSA_OK;
     gcd[4].creator = GButtonCreate;
@@ -7991,9 +7990,8 @@ return;		/* Need a spline */
     gcd[5].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
     label[5].text = (uint32_t *) _("_Cancel");
     label[5].text_is_1byte = true;
-    label[5].text_in_resource = true;
+    label[5].text_has_mnemonic = true;
     gcd[5].gd.label = &label[5];
-    gcd[5].gd.mnemonic = 'C';
     gcd[5].gd.handle_controlevent = IOSA_Cancel;
     gcd[5].creator = GButtonCreate;
 

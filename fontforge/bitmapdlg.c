@@ -526,8 +526,7 @@ void BitmapDlg(FontView *fv,SplineChar *sc, int isavail) {
     gcd[j].gd.flags = gg_visible | gg_enabled | gg_but_default;
     label[j].text = (uint32_t *) _("_OK");
     label[j].text_is_1byte = true;
-    label[j].text_in_resource = true;
-    gcd[j].gd.mnemonic = 'O';
+    label[j].text_has_mnemonic = true;
     gcd[j].gd.label = &label[j];
     gcd[j].gd.handle_controlevent = CB_OK;
     gcd[j++].creator = GButtonCreate;
@@ -538,9 +537,8 @@ void BitmapDlg(FontView *fv,SplineChar *sc, int isavail) {
     gcd[j].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
     label[j].text = (uint32_t *) _("_Cancel");
     label[j].text_is_1byte = true;
-    label[j].text_in_resource = true;
+    label[j].text_has_mnemonic = true;
     gcd[j].gd.label = &label[j];
-    gcd[j].gd.mnemonic = 'C';
     gcd[j].gd.handle_controlevent = CB_Cancel;
     gcd[j++].creator = GButtonCreate;
     harray[5][3] = GCD_Glue; harray[5][4] = &gcd[j-1]; harray[5][5] = GCD_Glue;

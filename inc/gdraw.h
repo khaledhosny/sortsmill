@@ -58,8 +58,8 @@ typedef struct ggc {
     Color bg;
     GRect clip;
     enum draw_func func;
-    unsigned int copy_through_sub_windows: 1;
-    unsigned int bitmap_col: 1;			/* window is mapped for bitmap */
+    bool copy_through_sub_windows;
+    bool bitmap_col;			/* window is mapped for bitmap */
     int16_t skip_len, dash_len;
     int16_t line_width;
     int16_t ts;
@@ -168,22 +168,22 @@ typedef struct gevent {
 	struct {
 	    GRect size;
 	    int16_t dx, dy, dwidth, dheight;
-	    unsigned int moved: 1;
-	    unsigned int sized: 1;
+	    bool moved;
+	    bool sized;
 	} resize;
 	struct {
 	    char *device;		/* for wacom devices */
 	    uint32_t time;
 	    int16_t state;
 	    int16_t x,y;
-	    unsigned int entered: 1;
+	    bool entered;
 	} crossing;
 	struct {
-	    unsigned int gained_focus: 1;
+	    bool gained_focus;
 	    unsigned int mnemonic_focus: 2;
 	} focus;
 	struct {
-	    unsigned int is_visible: 1;
+	    bool is_visible;
 	} map;
 	struct {
 	    enum selnames sel;
@@ -252,18 +252,18 @@ typedef struct gwindow_attrs {
     /* Remainder is only for top level windows */
     const uint32_t *window_title;
     const uint32_t *icon_title;
-    struct gwindow *icon;		/* A bitmap pixmap, or NULL */
-    unsigned int nodecoration: 1;	/* no wm decoration */
-    unsigned int positioned: 1;		/* position information is important */
-    unsigned int centered: 2;		/* center the window on the screen. pos.width&pos.height are used */
-    unsigned int undercursor: 1;	/* center the window under the cursor. */
-    unsigned int noresize: 1;		/* set min and max sizes to current size */
-    unsigned int restrict_input_to_me: 1;/* for dialogs, no input outside of dlg */
-    unsigned int redirect_chars_to_me: 1;/* ditto, we get any input outside of us */
-    unsigned int is_dlg: 1;		/* 1 for dlg, 0 for main window */
-    unsigned int not_restricted: 1;	/* gets events if if a restricted (modal) dlg is up */
-    GWindow redirect_from;		/* only redirect input from this window and its children */
-    GWindow transient;			/* the Transient_FOR hint */
+    struct gwindow *icon;	/* A bitmap pixmap, or NULL */
+    bool nodecoration;		/* no wm decoration */
+    bool positioned;		/* position information is important */
+    bool centered;		/* center the window on the screen. pos.width&pos.height are used */
+    bool undercursor;		/* center the window under the cursor. */
+    bool noresize;		/* set min and max sizes to current size */
+    bool restrict_input_to_me;	/* for dialogs, no input outside of dlg */
+    bool redirect_chars_to_me;	/* ditto, we get any input outside of us */
+    bool is_dlg;		/* 1 for dlg, 0 for main window */
+    bool not_restricted;	/* gets events if if a restricted (modal) dlg is up */
+    GWindow redirect_from;	/* only redirect input from this window and its children */
+    GWindow transient;		/* the Transient_FOR hint */
     const char *utf8_window_title;
     const char *utf8_icon_title;
 } GWindowAttrs;

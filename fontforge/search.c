@@ -673,7 +673,8 @@ return( false );
 		    break;
 			}
 			if ( s->tryreverse && SPMatches(sp,s,s_r_spl,spl->first,1-first)) {
-			    s->wasreversed = found = true;
+			    s->wasreversed = true;
+			    found = true;
 		    break;
 			}
 			sp = sp->next->to;

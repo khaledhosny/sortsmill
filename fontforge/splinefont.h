@@ -201,9 +201,9 @@ typedef struct strokeinfo {
     enum linejoin join;
     enum linecap cap;
     enum si_type stroke_type;
-    unsigned int removeinternal: 1;
-    unsigned int removeexternal: 1;
-    unsigned int leave_users_center: 1;			/* Don't move the pen so its center is at the origin */
+    bool removeinternal;
+    bool removeexternal;
+    bool leave_users_center;			/* Don't move the pen so its center is at the origin */
     real penangle;
     real minorradius;
     struct splinepointlist *poly;
@@ -252,16 +252,16 @@ typedef struct italicinfo {
     struct hsquash lc, uc, neither;
     enum serif_type secondary_serif;
 
-    unsigned int transform_bottom_serifs: 1;
-    unsigned int transform_top_xh_serifs: 1;	/* Those at x-height */
-    unsigned int transform_top_as_serifs: 1;	/* Those at ascender-height */
-    unsigned int transform_diagon_serifs: 1;	/* Those at baseline/xheight */
+    bool transform_bottom_serifs;
+    bool transform_top_xh_serifs;	/* Those at x-height */
+    bool transform_top_as_serifs;	/* Those at ascender-height */
+    bool transform_diagon_serifs;	/* Those at baseline/xheight */
 
-    unsigned int a_from_d: 1;		/* replace the "a" glyph with the variant which looks like a "d" without an ascender */
+    bool a_from_d;		/* replace the "a" glyph with the variant which looks like a "d" without an ascender */
   /* When I say "f" I also mean "f_f" ligature, "longs", cyrillic phi and other things shaped like "f" */
-    unsigned int f_long_tail: 1;	/* Some Italic fonts have the "f" grow an extension of the main stem below the baseline */
-    unsigned int f_rotate_top: 1;	/* Most Italic fonts take the top curve of the "f", rotate it 180 and attach to the bottom */
-    unsigned int pq_deserif: 1;		/* Remove a serif from the descender of p or q and replace with a secondary serif as above */
+    bool f_long_tail;	/* Some Italic fonts have the "f" grow an extension of the main stem below the baseline */
+    bool f_rotate_top;	/* Most Italic fonts take the top curve of the "f", rotate it 180 and attach to the bottom */
+    bool pq_deserif;		/* Remove a serif from the descender of p or q and replace with a secondary serif as above */
 
   /* Unsupported */
     /* e becomes rounder, cross bar slightly slanted */
@@ -269,13 +269,13 @@ typedef struct italicinfo {
     /* k closed counter at top */
     /* v-z diagonal stems become more curvatious */
 
-    unsigned int cyrl_phi: 1;		/* Gains an "f" like top, bottom treated like "f" */
-    unsigned int cyrl_i: 1;		/* Turns into a latin u */
-    unsigned int cyrl_pi: 1;		/* Turns into a latin n */
-    unsigned int cyrl_te: 1;		/* Turns into a latin m */
-    unsigned int cyrl_sha: 1;		/* Turns into a latin m rotated 180 */
-    unsigned int cyrl_dje: 1;		/* Turns into a latin smallcaps T */
-    unsigned int cyrl_dzhe: 1;		/* Turns into a latin u */
+    bool cyrl_phi;		/* Gains an "f" like top, bottom treated like "f" */
+    bool cyrl_i;		/* Turns into a latin u */
+    bool cyrl_pi;		/* Turns into a latin n */
+    bool cyrl_te;		/* Turns into a latin m */
+    bool cyrl_sha;		/* Turns into a latin m rotated 180 */
+    bool cyrl_dje;		/* Turns into a latin smallcaps T */
+    bool cyrl_dzhe;		/* Turns into a latin u */
 		    /* Is there a difference between dzhe and i? both look like u to me */
 
   /* Unsupported */
@@ -330,7 +330,7 @@ typedef struct bluedata {
 typedef struct bdffloat {
     int16_t xmin,xmax,ymin,ymax;
     int16_t bytes_per_line;
-    unsigned int byte_data:1;
+    bool byte_data;
     uint8_t depth;
     uint8_t *bitmap;
 } BDFFloat;
@@ -422,7 +422,7 @@ typedef struct featurescriptlanglist {
     uint32_t featuretag;
     struct scriptlanglist *scripts;
     struct featurescriptlanglist *next;
-    unsigned int ismac: 1;	/* treat the featuretag as a mac feature/setting */
+    bool ismac;	/* treat the featuretag as a mac feature/setting */
 } FeatureScriptLangList;
 
 enum pst_flags { pst_r2l=1, pst_ignorebaseglyphs=2, pst_ignoreligatures=4,
@@ -434,14 +434,14 @@ struct lookup_subtable {
     char *suffix;			/* for gsub_single, used to find a default replacement */
     int16_t separation, minkern;	/* for gpos_pair, used to guess default kerning values */
     struct otlookup *lookup;
-    unsigned int unused: 1;
-    unsigned int per_glyph_pst_or_kern: 1;
-    unsigned int anchor_classes: 1;
-    unsigned int vertical_kerning: 1;
-    unsigned int ticked: 1;
-    unsigned int kerning_by_touch: 1;	/* for gpos_pair, calculate kerning so that glyphs will touch */
-    unsigned int onlyCloser: 1;		/* for kerning classes */
-    unsigned int dontautokern: 1;		/* for kerning classes */
+    bool unused;
+    bool per_glyph_pst_or_kern;
+    bool anchor_classes;
+    bool vertical_kerning;
+    bool ticked;
+    bool kerning_by_touch;	/* for gpos_pair, calculate kerning so that glyphs will touch */
+    bool onlyCloser;		/* for kerning classes */
+    bool dontautokern;		/* for kerning classes */
     struct kernclass *kc;
     struct generic_fpst *fpst;
     struct generic_asm  *sm;
@@ -468,18 +468,18 @@ typedef struct otlookup {
     char *lookup_name;
     FeatureScriptLangList *features;
     struct lookup_subtable *subtables;
-    unsigned int unused: 1;	/* No subtable is used (call SFFindUnusedLookups before examining) */
-    unsigned int empty: 1;	/* No subtable is used, and no anchor classes are used */
-    unsigned int store_in_afm: 1;	/* Used for ligatures, some get stored */
+    bool unused;	/* No subtable is used (call SFFindUnusedLookups before examining) */
+    bool empty;	/* No subtable is used, and no anchor classes are used */
+    bool store_in_afm;	/* Used for ligatures, some get stored */
     					/*  'liga' generally does, but 'frac' doesn't */
-    unsigned int needs_extension: 1;	/* Used during opentype generation */
-    unsigned int temporary_kern: 1;	/* Used when decomposing kerning classes into kern pairs for older formats */
-    unsigned int def_lang_checked: 1;
-    unsigned int def_lang_found: 1;
-    unsigned int ticked: 1;
-    unsigned int in_gpos: 1;
-    unsigned int in_jstf: 1;
-    unsigned int only_jstf: 1;
+    bool needs_extension;	/* Used during opentype generation */
+    bool temporary_kern;	/* Used when decomposing kerning classes into kern pairs for older formats */
+    bool def_lang_checked;
+    bool def_lang_found;
+    bool ticked;
+    bool in_gpos;
+    bool in_jstf;
+    bool only_jstf;
     int16_t subcnt;		/* Actual number of subtables we will output */
 				/* Some of our subtables may contain no data */
 			        /* Some may be too big and need to be broken up.*/
@@ -530,9 +530,9 @@ typedef struct anchorpoint {
     BasePoint me;
     DeviceTable xadjust, yadjust;
     unsigned int type: 4;
-    unsigned int selected: 1;
-    unsigned int ticked: 1;
-    unsigned int has_ttf_pt: 1;
+    bool selected;
+    bool ticked;
+    bool has_ttf_pt;
     uint16_t ttf_pt_index;
     int16_t  lig_index;
     struct anchorpoint *next;
@@ -581,8 +581,8 @@ struct vr {
 };
 
 typedef struct generic_pst {
-    unsigned int ticked: 1;
-    unsigned int temporary: 1;		/* Used in afm ligature closure */
+    bool ticked;
+    bool temporary;		/* Used in afm ligature closure */
     /* enum possub_type*/ uint8_t type;
     struct lookup_subtable *subtable;
     struct generic_pst *next;
@@ -741,8 +741,8 @@ struct opentype_str {
     struct vr vr;		/* Scaled and rounded gpos modifications (device table info included in xoff, etc. not in adjusts) */
     struct kernpair *kp;
     struct kernclass *kc;
-    unsigned int prev_kc0: 1;
-    unsigned int next_kc0: 1;
+    bool prev_kc0;
+    bool next_kc0;
     int16_t advance_width;	/* Basic advance, modifications in vr, scaled and rounded */
 	/* Er... not actually set by ApplyLookups, but somewhere the caller */
 	/*  can stash info. (Extract width from hinted bdf if possible, tt */
@@ -752,8 +752,8 @@ struct opentype_str {
     int16_t context_pos;		/* When doing a contextual match remember which glyphs are used, and where in the match they occur. Skipped glyphs have -1 */
     int32_t orig_index;
     void *fl;
-    unsigned int line_break_after: 1;
-    unsigned int r2l: 1;
+    bool line_break_after;
+    bool r2l;
     int16_t bsln_off;
 };
 
@@ -785,7 +785,7 @@ struct macsetting {
     uint16_t setting;
     uint16_t strid;
     struct macname *setname;
-    unsigned int initially_enabled: 1;
+    bool initially_enabled;
 };
 
 typedef struct macfeat {
@@ -799,8 +799,8 @@ typedef struct macfeat {
 } MacFeat;
 
 typedef struct refbdfc {
-    unsigned int checked: 1;
-    unsigned int selected: 1;
+    bool checked;
+    bool selected;
     int8_t xoff;
     int8_t yoff;
     uint16_t gid;
@@ -825,11 +825,11 @@ typedef struct bdfchar {
     struct bitmapview *views;
     struct undoes *undoes;
     struct undoes *redoes;
-    unsigned int changed: 1;
-    unsigned int byte_data: 1;	/* for anti-aliased chars entries are grey-scale bytes not bw bits */
-    unsigned int widthgroup: 1;	/* for ttf bitmap output */
-    unsigned int isreference: 1;	/* for ttf bitmap input, */
-    unsigned int ticked: 1;
+    bool changed;
+    bool byte_data;	/* for anti-aliased chars entries are grey-scale bytes not bw bits */
+    bool widthgroup;	/* for ttf bitmap output */
+    bool isreference;	/* for ttf bitmap input, */
+    bool ticked;
     uint8_t depth;			/* for ttf bitmap output */
     uint16_t vwidth;
     BDFFloat *selection;
@@ -847,8 +847,8 @@ enum undotype { ut_none=0, ut_state, ut_tstate, ut_statehint, ut_statename,
 typedef struct undoes {
     struct undoes *next;
     enum undotype undotype;
-    unsigned int was_modified: 1;
-    unsigned int was_order2: 1;
+    bool was_modified;
+    bool was_order2;
     union {
 	struct {
 	    int16_t width, vwidth;
@@ -867,9 +867,9 @@ typedef struct undoes {
 	    AnchorPoint *anchor;
 	    struct brush fill_brush;
 	    struct pen stroke_pen;
-	    unsigned int dofill: 1;
-	    unsigned int dostroke: 1;
-	    unsigned int fillfirst: 1;
+	    bool dofill;
+	    bool dostroke;
+	    bool fillfirst;
 	} state;
 	int width;	/* used by both ut_width and ut_vwidth */
 	int lbearing;	/* used by ut_lbearing */
@@ -900,20 +900,20 @@ typedef struct enc {
     int32_t *unicode;	/* unicode value for each encoding point */
     char **psnames;	/* optional postscript name for each encoding point */
     struct enc *next;
-    unsigned int builtin: 1;
-    unsigned int hidden: 1;
-    unsigned int only_1byte: 1;
-    unsigned int has_1byte: 1;
-    unsigned int has_2byte: 1;
-    unsigned int is_unicodebmp: 1;
-    unsigned int is_unicodefull: 1;
-    unsigned int is_custom: 1;
-    unsigned int is_original: 1;
-    unsigned int is_compact: 1;
-    unsigned int is_japanese: 1;
-    unsigned int is_korean: 1;
-    unsigned int is_tradchinese: 1;
-    unsigned int is_simplechinese: 1;
+    bool builtin;
+    bool hidden;
+    bool only_1byte;
+    bool has_1byte;
+    bool has_2byte;
+    bool is_unicodebmp;
+    bool is_unicodefull;
+    bool is_custom;
+    bool is_original;
+    bool is_compact;
+    bool is_japanese;
+    bool is_korean;
+    bool is_tradchinese;
+    bool is_simplechinese;
     char iso_2022_escape[8];
     int iso_2022_escape_len;
     int low_page, high_page;
@@ -922,7 +922,7 @@ typedef struct enc {
     iconv_t *fromunicode;
     int (*tounicode_func)(int);
     int (*fromunicode_func)(int);
-    unsigned int is_temporary: 1;	/* freed when the map gets freed */
+    bool is_temporary;	/* freed when the map gets freed */
     int char_max;			/* Used by temporary encodings */
 } Encoding;
 
@@ -954,7 +954,7 @@ typedef struct encmap {		/* A per-font map of encoding to glyph id */
     int backmax;		/* allocated size of the backmap array */
     struct remap *remap;
     Encoding *enc;
-    unsigned int ticked: 1;
+    bool ticked;
 } EncMap;
 
 enum property_type { prt_string, prt_atom, prt_int, prt_uint, prt_property=0x10 };
@@ -976,11 +976,11 @@ typedef struct bdffont {
     int16_t pixelsize;
     int16_t ascent, descent;
     int16_t layer;		/* for piecemeal fonts */
-    unsigned int piecemeal: 1;
-    unsigned int bbsized: 1;
-    unsigned int ticked: 1;
-    unsigned int unhinted_freetype: 1;
-    unsigned int recontext_freetype: 1;
+    bool piecemeal;
+    bool bbsized;
+    bool ticked;
+    bool unhinted_freetype;
+    bool recontext_freetype;
     struct bdffont *next;
     struct clut *clut;
     char *foundry;
@@ -1001,20 +1001,20 @@ typedef struct splinepoint {
     BasePoint me;
     BasePoint nextcp;		/* control point */
     BasePoint prevcp;		/* control point */
-    unsigned int nonextcp:1;
-    unsigned int noprevcp:1;
-    unsigned int nextcpdef:1;
-    unsigned int prevcpdef:1;
-    unsigned int selected:1;	/* for UI */
+    bool nonextcp;
+    bool noprevcp;
+    bool nextcpdef;
+    bool prevcpdef;
+    bool selected;	/* for UI */
     unsigned int pointtype:2;
-    unsigned int isintersection: 1;
-    unsigned int flexy: 1;	/* When "freetype_markup" is on in charview.c:DrawPoint */
-    unsigned int flexx: 1;	/* flexy means select nextcp, and flexx means draw circle around nextcp */
-    unsigned int roundx: 1;	/* For true type hinting */
-    unsigned int roundy: 1;	/* For true type hinting */
-    unsigned int dontinterpolate: 1;	/* in ttf, don't imply point by interpolating between cps */
-    unsigned int ticked: 1;
-    unsigned int watched: 1;
+    bool isintersection;
+    bool flexy;	/* When "freetype_markup" is on in charview.c:DrawPoint */
+    bool flexx;	/* flexy means select nextcp, and flexx means draw circle around nextcp */
+    bool roundx;	/* For true type hinting */
+    bool roundy;	/* For true type hinting */
+    bool dontinterpolate;	/* in ttf, don't imply point by interpolating between cps */
+    bool ticked;
+    bool watched;
 	/* 1 bits left... */
     uint16_t ptindex;		/* Temporary value used by metafont routine */
     uint16_t ttfindex;		/* Truetype point index */
@@ -1044,9 +1044,9 @@ typedef struct linelist {
 
 typedef struct linearapprox {
     real scale;
-    unsigned int oneline: 1;
-    unsigned int onepoint: 1;
-    unsigned int any: 1;		/* refers to a particular screen */
+    bool oneline;
+    bool onepoint;
+    bool any;		/* refers to a particular screen */
     struct linelist *lines;
     struct linearapprox *next;
 } LinearApprox;
@@ -1056,21 +1056,21 @@ typedef struct spline1d {
 } Spline1D;
 
 typedef struct spline {
-    unsigned int islinear: 1;		/* No control points */
-    unsigned int isquadratic: 1;	/* probably read in from ttf */
-    unsigned int isticked: 1;
-    unsigned int isneeded: 1;		/* Used in remove overlap */
-    unsigned int isunneeded: 1;		/* Used in remove overlap */
-    unsigned int exclude: 1;		/* Used in remove overlap varient: exclude */
-    unsigned int ishorvert: 1;
-    unsigned int knowncurved: 1;	/* We know that it curves */
-    unsigned int knownlinear: 1;	/* it might have control points, but still traces out a line */
+    bool islinear;		/* No control points */
+    bool isquadratic;	/* probably read in from ttf */
+    bool isticked;
+    bool isneeded;		/* Used in remove overlap */
+    bool isunneeded;		/* Used in remove overlap */
+    bool exclude;		/* Used in remove overlap varient: exclude */
+    bool ishorvert;
+    bool knowncurved;	/* We know that it curves */
+    bool knownlinear;	/* it might have control points, but still traces out a line */
 	/* If neither knownlinear nor curved then we haven't checked */
-    unsigned int order2: 1;		/* It's a bezier curve with only one cp */
-    unsigned int touched: 1;
-    unsigned int leftedge: 1;
-    unsigned int rightedge: 1;
-    unsigned int acceptableextrema: 1;	/* This spline has extrema, but we don't care */
+    bool order2;		/* It's a bezier curve with only one cp */
+    bool touched;
+    bool leftedge;
+    bool rightedge;
+    bool acceptableextrema;	/* This spline has extrema, but we don't care */
     SplinePoint *from, *to;
     Spline1D splines[2];		/* splines[0] is the x spline, splines[1] is y */
     struct linearapprox *approx;
@@ -1123,16 +1123,16 @@ typedef struct imagelist {
     real xscale, yscale;	/* scale to convert one pixel of image to one unit of character space */
     DBounds bb;
     struct imagelist *next;
-    unsigned int selected: 1;
+    bool selected;
 } ImageList;
 
 struct reflayer {
-    unsigned int background: 1;
-    unsigned int order2: 1;
-    unsigned int anyflexes: 1;
-    unsigned int dofill: 1;
-    unsigned int dostroke: 1;
-    unsigned int fillfirst: 1;
+    bool background;
+    bool order2;
+    bool anyflexes;
+    bool dofill;
+    bool dostroke;
+    bool fillfirst;
     struct brush fill_brush;
     struct pen stroke_pen;
     SplinePointList *splines;
@@ -1140,18 +1140,18 @@ struct reflayer {
 };
 
 typedef struct refchar {
-    unsigned int checked: 1;
-    unsigned int selected: 1;
-    unsigned int point_match: 1;	/* match_pt* are point indexes */
+    bool checked;
+    bool selected;
+    bool point_match;	/* match_pt* are point indexes */
 					/*  and need to be converted to a */
 			                /*  translation after truetype readin */
-    unsigned int encoded: 1;		/* orig_pos is actually an encoded value, used for old sfd files */
-    unsigned int justtranslated: 1;	/* The transformation matrix specifies a translation (or is identity) */
-    unsigned int use_my_metrics: 1;	/* Retain the ttf "use_my_metrics" info. */
+    bool encoded;		/* orig_pos is actually an encoded value, used for old sfd files */
+    bool justtranslated;	/* The transformation matrix specifies a translation (or is identity) */
+    bool use_my_metrics;	/* Retain the ttf "use_my_metrics" info. */
 	/* important for glyphs with instructions which change the width used */
 	/* inside composites */
-    unsigned int round_translation_to_grid: 1;	/* Retain the ttf "round_to_grid" info. */
-    unsigned int point_match_out_of_date: 1;	/* Someone has edited a base glyph */
+    bool round_translation_to_grid;	/* Retain the ttf "round_to_grid" info. */
+    bool point_match_out_of_date;	/* Someone has edited a base glyph */
     int16_t adobe_enc;
     int orig_pos;
     int unicode_enc;		/* used by paste */
@@ -1171,7 +1171,7 @@ typedef struct refchar {
 typedef struct hintinstance {
     real begin;			/* location in the non-major direction*/
     real end;				/* width/height in non-major direction*/
-    unsigned int closed: 1;
+    bool closed;
     short int counternumber;
     struct hintinstance *next;
 } HintInstance;
@@ -1182,25 +1182,25 @@ typedef real _MMArray[2][MmMax];
 typedef struct steminfo {
     struct steminfo *next;
     unsigned int hinttype: 2;	/* Only used by undoes */
-    unsigned int ghost: 1;	/* this is a ghost stem hint. As such truetype should ignore it, type2 output should negate it, and type1 should use as is */
+    bool ghost;	/* this is a ghost stem hint. As such truetype should ignore it, type2 output should negate it, and type1 should use as is */
 		    /* stored width will be either 20 or 21 */
 		    /* Type2 says: -20 is "width" of top edge, -21 is "width" of bottom edge, type1 accepts either */
-    unsigned int haspointleft:1;
-    unsigned int haspointright:1;
-    unsigned int hasconflicts:1;/* Does this stem have conflicts within its cluster? */
-    unsigned int used: 1;	/* Temporary for counter hints or hint substitution */
-    unsigned int tobeused: 1;	/* Temporary for counter hints or hint substitution */
-    unsigned int active: 1;	/* Currently active hint in Review Hints dlg */
+    bool haspointleft;
+    bool haspointright;
+    bool hasconflicts;/* Does this stem have conflicts within its cluster? */
+    bool used;	/* Temporary for counter hints or hint substitution */
+    bool tobeused;	/* Temporary for counter hints or hint substitution */
+    bool active;	/* Currently active hint in Review Hints dlg */
 				/*  displayed differently in char display */
-    unsigned int enddone: 1;	/* Used by ttf instructing, indicates a prev */
+    bool enddone;	/* Used by ttf instructing, indicates a prev */
 				/*  hint had the same end as this one (so */
 			        /*  the points on the end line have been */
 			        /*  instructed already */
-    unsigned int startdone: 1;	/* Used by ttf instructing */
-    /*unsigned int backwards: 1;*/	/* If we think this hint is better done with a negative width */
-    unsigned int reordered: 1;	/* In AutoHinting. Means we changed the start of the hint, need to test for out of order */
-    unsigned int pendingpt: 1;	/* A pending stem creation, not a true stem */
-    unsigned int linearedges: 1;/* If we have a nice rectangle then we aren't */
+    bool startdone;	/* Used by ttf instructing */
+    /*bool backwards;*/	/* If we think this hint is better done with a negative width */
+    bool reordered;	/* In AutoHinting. Means we changed the start of the hint, need to test for out of order */
+    bool pendingpt;	/* A pending stem creation, not a true stem */
+    bool linearedges;/* If we have a nice rectangle then we aren't */
 				/*  interested in the orientation which is */
 			        /*  wider than long */
     int16_t hintnumber;		/* when dumping out hintmasks we need to know */
@@ -1218,18 +1218,18 @@ typedef struct steminfo {
 typedef struct dsteminfo {
     struct dsteminfo *next;	/* First two fields match those in steminfo */
     unsigned int hinttype: 2;	/* Only used by undoes */
-    unsigned int used: 1;	/* used only by tottf.c:gendinstrs, metafont.c to mark a hint that has been dealt with */
+    bool used;	/* used only by tottf.c:gendinstrs, metafont.c to mark a hint that has been dealt with */
     BasePoint left, right, unit;
     HintInstance *where;	/* location(s) along the unit vector */
 } DStemInfo;
 
 typedef struct layer /* : reflayer */{
-    unsigned int background: 1;
-    unsigned int order2: 1;
-    unsigned int anyflexes: 1;
-    unsigned int dofill: 1;
-    unsigned int dostroke: 1;
-    unsigned int fillfirst: 1;
+    bool background;
+    bool order2;
+    bool anyflexes;
+    bool dofill;
+    bool dostroke;
+    bool fillfirst;
     struct brush fill_brush;
     struct pen stroke_pen;
     SplinePointList *splines;
@@ -1249,7 +1249,7 @@ enum layer_type { ly_all=-2, ly_grid= -1, ly_back=0, ly_fore=1,
 
 struct gv_part {
     char *component;
-    unsigned int is_extender: 1;	/* This component may be skipped or repeated */
+    bool is_extender;	/* This component may be skipped or repeated */
     uint16_t startConnectorLength;
     uint16_t endConnectorLength;
     uint16_t fullAdvance;
@@ -1378,32 +1378,32 @@ typedef struct splinechar {
     struct charviewbase *views;
     struct charinfo *charinfo;
     struct splinefont *parent;
-    unsigned int changed: 1;
-    unsigned int changedsincelasthinted: 1;
-    unsigned int manualhints: 1;
-    unsigned int ticked: 1;	/* For reference character processing */
+    bool changed;
+    bool changedsincelasthinted;
+    bool manualhints;
+    bool ticked;	/* For reference character processing */
 				/* And fontview processing */
-    unsigned int changed_since_autosave: 1;
-    unsigned int widthset: 1;	/* needed so an emspace char doesn't disappear */
-    unsigned int vconflicts: 1;	/* Any hint overlaps in the vstem list? */
-    unsigned int hconflicts: 1;	/* Any hint overlaps in the hstem list? */
-    unsigned int searcherdummy: 1;
-    unsigned int changed_since_search: 1;
-    unsigned int wasopen: 1;
-    unsigned int namechanged: 1;
-    unsigned int blended: 1;	/* An MM blended character */
-    unsigned int ticked2: 1;
+    bool changed_since_autosave;
+    bool widthset;	/* needed so an emspace char doesn't disappear */
+    bool vconflicts;	/* Any hint overlaps in the vstem list? */
+    bool hconflicts;	/* Any hint overlaps in the hstem list? */
+    bool searcherdummy;
+    bool changed_since_search;
+    bool wasopen;
+    bool namechanged;
+    bool blended;	/* An MM blended character */
+    bool ticked2;
     unsigned int glyph_class: 3; /* 0=> fontforge determines class automagically, else one more than the class value in gdef so 2+1=>lig, 3+1=>mark */
-    unsigned int numberpointsbackards: 1;
-    unsigned int instructions_out_of_date: 1;
-    unsigned int complained_about_ptnums: 1;
-    unsigned int vs_open: 1;
-    unsigned int unlink_rm_ovrlp_save_undo: 1;
-    unsigned int inspiro: 1;
-    unsigned int lig_caret_cnt_fixed: 1;
+    bool numberpointsbackards;
+    bool instructions_out_of_date;
+    bool complained_about_ptnums;
+    bool vs_open;
+    bool unlink_rm_ovrlp_save_undo;
+    bool inspiro;
+    bool lig_caret_cnt_fixed;
     /* 6 bits left (one more if we ignore compositionunit below) */
 #if HANYANG
-    unsigned int compositionunit: 1;
+    bool compositionunit;
     int16_t jamo, varient;
 #endif
     struct splinecharlist *dependents;
@@ -1427,7 +1427,7 @@ typedef struct splinechar {
     int16_t tex_height, tex_depth;
 /* TeX also uses italic_correction and glyph variants below */
 /* For the 'MATH' table (and for TeX) */
-    unsigned int is_extended_shape: 1;
+    bool is_extended_shape;
     int16_t italic_correction;
     int16_t top_accent_horiz;		/* MATH table allows you to specific a*/
 		/* horizontal anchor for accent attachments, vertical */
@@ -1597,10 +1597,10 @@ enum loadvalidation_state {
 
 typedef struct layerinfo {
     char *name;
-    unsigned int background: 1;			/* Layer is to be treated as background: No width, images, not worth outputting */
-    unsigned int order2: 1;			/* Layer's data are order 2 bezier splines (truetype) rather than order 3 (postscript) */
+    bool background;			/* Layer is to be treated as background: No width, images, not worth outputting */
+    bool order2;			/* Layer's data are order 2 bezier splines (truetype) rather than order 3 (postscript) */
 						/* In all glyphs in the font */
-    unsigned int ticked: 1;
+    bool ticked;
 } LayerInfo;
 
 /* Baseline data from the 'BASE' table */
@@ -1629,19 +1629,19 @@ struct Base {
 };
 
 struct pfminfo {		/* A misnomer now. OS/2 info would be more accurate, but that's stuff in here from all over ttf files */
-    unsigned int pfmset: 1;
-    unsigned int winascent_add: 1;
-    unsigned int windescent_add: 1;
-    unsigned int hheadascent_add: 1;
-    unsigned int hheaddescent_add: 1;
-    unsigned int typoascent_add: 1;
-    unsigned int typodescent_add: 1;
-    unsigned int subsuper_set: 1;
-    unsigned int panose_set: 1;
-    unsigned int hheadset: 1;
-    unsigned int vheadset: 1;
-    unsigned int hascodepages: 1;
-    unsigned int hasunicoderanges: 1;
+    bool pfmset;
+    bool winascent_add;
+    bool windescent_add;
+    bool hheadascent_add;
+    bool hheaddescent_add;
+    bool typoascent_add;
+    bool typodescent_add;
+    bool subsuper_set;
+    bool panose_set;
+    bool hheadset;
+    bool vheadset;
+    bool hascodepages;
+    bool hasunicoderanges;
     unsigned char pfmfamily;
     int16_t weight;
     int16_t width;
@@ -1692,39 +1692,39 @@ typedef struct splinefont {
     int uniqueid;				/* Not copied when reading in!!!! */
     int glyphcnt, glyphmax;			/* allocated size of glyphs array */
     SplineChar **glyphs;
-    unsigned int changed: 1;
-    unsigned int changed_since_autosave: 1;
-    unsigned int changed_since_xuidchanged: 1;
-    unsigned int display_antialias: 1;
-    unsigned int display_bbsized: 1;
-    unsigned int dotlesswarn: 1;		/* User warned that font doesn't have a dotless i character */
-    unsigned int onlybitmaps: 1;		/* it's a bdf editor, not a postscript editor */
-    unsigned int serifcheck: 1;			/* Have we checked to see if we have serifs? */
-    unsigned int issans: 1;			/* We have no serifs */
-    unsigned int isserif: 1;			/* We have serifs. If neither set then we don't know. */
-    unsigned int hasvmetrics: 1;		/* We've got vertical metric data and should output vhea/vmtx/VORG tables */
-    unsigned int loading_cid_map: 1;
-    unsigned int dupnamewarn: 1;		/* Warn about duplicate names when loading bdf font */
-    unsigned int encodingchanged: 1;		/* Font's encoding has changed since it was loaded */
-    unsigned int multilayer: 1;			/* only applies if TYPE3 is set, means this font can contain strokes & fills */
+    bool changed;
+    bool changed_since_autosave;
+    bool changed_since_xuidchanged;
+    bool display_antialias;
+    bool display_bbsized;
+    bool dotlesswarn;		/* User warned that font doesn't have a dotless i character */
+    bool onlybitmaps;		/* it's a bdf editor, not a postscript editor */
+    bool serifcheck;			/* Have we checked to see if we have serifs? */
+    bool issans;			/* We have no serifs */
+    bool isserif;			/* We have serifs. If neither set then we don't know. */
+    bool hasvmetrics;		/* We've got vertical metric data and should output vhea/vmtx/VORG tables */
+    bool loading_cid_map;
+    bool dupnamewarn;		/* Warn about duplicate names when loading bdf font */
+    bool encodingchanged;		/* Font's encoding has changed since it was loaded */
+    bool multilayer;			/* only applies if TYPE3 is set, means this font can contain strokes & fills */
 						/*  I leave it in so as to avoid cluttering up code with #ifdefs */
-    unsigned int strokedfont: 1;
-//    unsigned int new_: 1;			/* A new and unsaved font */ <-- Switch to this later.
-    unsigned int new: 1;			/* A new and unsaved font */
-    unsigned int compacted: 1;			/* only used when opening a font */
+    bool strokedfont;
+//    bool new_;			/* A new and unsaved font */ <-- Switch to this later.
+    bool new;			/* A new and unsaved font */
+    bool compacted;			/* only used when opening a font */
     unsigned int backedup: 2;			/* 0=>don't know, 1=>no, 2=>yes */
-    unsigned int use_typo_metrics: 1;		/* The standard says to. But MS */
+    bool use_typo_metrics;		/* The standard says to. But MS */
     						/* seems to feel that isn't good */
 			                        /* enough and has created a bit */
 			                        /* to mean "really use them" */
-    unsigned int weight_width_slope_only: 1;	/* This bit seems stupid to me */
-    unsigned int save_to_dir: 1;		/* Loaded from an sfdir collection rather than a simple sfd file */
-    unsigned int head_optimized_for_cleartype: 1;/* Bit in the 'head' flags field, if unset "East Asian fonts in the Windows Presentation Framework (Avalon) will not be hinted" */
-    unsigned int ticked: 1;
-    unsigned int internal_temp: 1;		/* Internal temporary font to be passed to freetype for rasterizing. Don't complain about oddities. Don't generate GPOS/GSUB tables, etc. */
-    unsigned int complained_about_spiros: 1;
-    unsigned int use_xuid: 1;			/* Adobe has deprecated these two */
-    unsigned int use_uniqueid: 1;		/* fields. Mostly we don't want to use them */
+    bool weight_width_slope_only;	/* This bit seems stupid to me */
+    bool save_to_dir;		/* Loaded from an sfdir collection rather than a simple sfd file */
+    bool head_optimized_for_cleartype;/* Bit in the 'head' flags field, if unset "East Asian fonts in the Windows Presentation Framework (Avalon) will not be hinted" */
+    bool ticked;
+    bool internal_temp;		/* Internal temporary font to be passed to freetype for rasterizing. Don't complain about oddities. Don't generate GPOS/GSUB tables, etc. */
+    bool complained_about_spiros;
+    bool use_xuid;			/* Adobe has deprecated these two */
+    bool use_uniqueid;		/* fields. Mostly we don't want to use them */
 	/* 2 bits left */
     struct fontviewbase *fv;
     struct metricsview *metrics;
@@ -1869,8 +1869,8 @@ typedef struct mmset {
     char *cdv, *ndv;	/* for adobe */
     int named_instance_count;
     struct named_instance *named_instances;
-    unsigned int changed: 1;
-    unsigned int apple: 1;
+    bool changed;
+    bool apple;
 } MMSet;
 
 /* mac styles. Useful idea we'll just steal it */
@@ -1897,7 +1897,7 @@ typedef struct anchorpos {
     AnchorPoint *apm;		/* The anchor point in sc used to position it */
     AnchorPoint *apb;		/* The anchor point in the base character against which we are positioned */
     int base_index;		/* Index in this array to the base character (-1=> original base char) */
-    unsigned int ticked: 1;	/* Used as a mark to mark */
+    bool ticked;	/* Used as a mark to mark */
 } AnchorPos;
 
 enum ttf_flags { ttf_flag_shortps = 1, ttf_flag_nohints = 2,

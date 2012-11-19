@@ -93,7 +93,7 @@ typedef struct layoutinfo {
     struct fontlist *oldstart, *oldend;
     FontData *generated;
     float dpi;
-    unsigned int wrap: 1;
+    bool wrap;
 } LayoutInfo;
 
 extern void GImageDrawRect(GImage *img,GRect *r,Color col);

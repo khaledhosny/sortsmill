@@ -48,11 +48,11 @@ typedef struct gprogress {
     int16_t l1width, l2width;
     int16_t l1y, l2y, boxy;
     int16_t last_amount;
-    unsigned int aborted: 1;
-    unsigned int visible: 1;
-    unsigned int dying: 1;
-    unsigned int paused: 1;
-    unsigned int sawmap: 1;
+    bool aborted;
+    bool visible;
+    bool dying;
+    bool paused;
+    bool sawmap;
     GWindow gw;
     GFont *font;
     struct gprogress *prev;
@@ -95,6 +95,7 @@ static void GProgressDraw(GProgress *p,GWindow pixmap,GRect *rect) {
 
     GDrawPushClip(pixmap,rect,&old);
     GDrawSetFont(pixmap,p->font);
+    GDrawClear(pixmap, rect);
     if ( p->line1!=NULL )
 	GDrawDrawText(pixmap, (p->width-p->l1width)/2, p->l1y, p->line1, -1,
 		progress_foreground );
@@ -299,10 +300,9 @@ static void GProgressStartIndicator(
 	    gd.pos.x = pos.width-gd.pos.width-10;
 	    gd.pos.y = pos.height-GDrawPointsToPixels(new_->gw,29);
 	    gd.flags = gg_visible | gg_enabled | gg_pos_in_pixels | gg_pos_use0;
-	    gd.mnemonic = 'S';
 	    label.text = (uint32_t *) _("_Stop");
 	    label.text_is_1byte = true;
-	    label.text_in_resource = true;
+	    label.text_has_mnemonic = true;
 	    gd.label = &label;
 	    GButtonCreate( new_->gw, &gd, NULL);
 	}

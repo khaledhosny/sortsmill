@@ -247,7 +247,7 @@ int GotoChar(SplineFont *sf,EncMap *map,int *merge_with_selection) {
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
     label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.handle_controlevent = Goto_OK;
     gcd[k].creator = GButtonCreate;
@@ -256,7 +256,7 @@ int GotoChar(SplineFont *sf,EncMap *map,int *merge_with_selection) {
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
     label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.handle_controlevent = Goto_Cancel;
     gcd[k].creator = GButtonCreate;

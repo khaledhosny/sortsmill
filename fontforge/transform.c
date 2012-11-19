@@ -362,7 +362,7 @@ static GGadgetCreateData *MakeTransBlock(TransData *td,int bnum,
 
     label[1].text = (uint32_t *) _("_X");
     label[1].text_is_1byte = true;
-    label[1].text_in_resource = true;
+    label[1].text_has_mnemonic = true;
     gcd[1].gd.label = &label[1];
     gcd[1].gd.pos.x = TBlock_XStart; gcd[1].gd.pos.y = 15; 
     gcd[1].gd.flags = bnum==0? (gg_enabled|gg_visible) : gg_enabled;
@@ -381,7 +381,7 @@ static GGadgetCreateData *MakeTransBlock(TransData *td,int bnum,
 
     label[3].text = (uint32_t *) _("_Y");
     label[3].text_is_1byte = true;
-    label[3].text_in_resource = true;
+    label[3].text_has_mnemonic = true;
     gcd[3].gd.label = &label[3];
     gcd[3].gd.pos.x = TBlock_XStart+70; gcd[3].gd.pos.y = 15; 
     gcd[3].gd.flags = bnum==0? (gg_enabled|gg_visible) : gg_enabled;
@@ -628,7 +628,7 @@ void TransformDlgCreate(void *data,void (*transfunc)(void *,real *,int,BVTFunc *
 
 	label[0].text = (uint32_t *) _("Origin:");
 	label[0].text_is_1byte = true;
-	label[0].text_in_resource = true;
+	label[0].text_has_mnemonic = true;
 	gcd[0].gd.label = &label[0];
 	gcd[0].gd.pos.x = 5; gcd[0].gd.pos.y = 4;
 	gcd[0].gd.flags = (getorigin==NULL) ? gg_visible : (gg_visible | gg_enabled);
@@ -663,7 +663,7 @@ void TransformDlgCreate(void *data,void (*transfunc)(void *,real *,int,BVTFunc *
 	    gcd[gci].gd.flags = (flags&tdf_enableback) ? (gg_visible | gg_enabled) : gg_visible;
 	    label[gci].text = (uint32_t *) _("Transform _All Layers");
 	    label[gci].text_is_1byte = true;
-	    label[gci].text_in_resource = true;
+	    label[gci].text_has_mnemonic = true;
 	    gcd[gci].gd.label = &label[gci];
 	    gcd[gci].gd.cid = CID_AllLayers;
 	    gcd[gci++].creator = GCheckBoxCreate;
@@ -674,7 +674,7 @@ void TransformDlgCreate(void *data,void (*transfunc)(void *,real *,int,BVTFunc *
 	    gcd[gci].gd.flags = (flags&tdf_enableback) ? (gg_visible | gg_enabled) : gg_visible;
 	    label[gci].text = (uint32_t *) _("Transform _Guide Layer Too");
 	    label[gci].text_is_1byte = true;
-	    label[gci].text_in_resource = true;
+	    label[gci].text_has_mnemonic = true;
 	    gcd[gci].gd.label = &label[gci];
 	    gcd[gci].gd.cid = CID_DoGrid;
 	    gcd[gci++].creator = GCheckBoxCreate;
@@ -685,7 +685,7 @@ void TransformDlgCreate(void *data,void (*transfunc)(void *,real *,int,BVTFunc *
 	    gcd[gci].gd.flags = (flags&tdf_enableback) ? (gg_visible | gg_enabled | gg_cb_on) : gg_visible;
 	    label[gci].text = (uint32_t *) _("Transform _Width Too");
 	    label[gci].text_is_1byte = true;
-	    label[gci].text_in_resource = true;
+	    label[gci].text_has_mnemonic = true;
 	    gcd[gci].gd.label = &label[gci];
 	    gcd[gci].gd.cid = CID_DoWidth;
 	    gcd[gci++].creator = GCheckBoxCreate;
@@ -697,7 +697,7 @@ void TransformDlgCreate(void *data,void (*transfunc)(void *,real *,int,BVTFunc *
 		    (flags&tdf_defaultkerns ? gg_cb_on : 0);
 	    label[gci].text = (uint32_t *) _("Transform kerning _classes too");
 	    label[gci].text_is_1byte = true;
-	    label[gci].text_in_resource = true;
+	    label[gci].text_has_mnemonic = true;
 	    gcd[gci].gd.label = &label[gci];
 	    gcd[gci].gd.cid = CID_DoKerns;
 	    gcd[gci++].creator = GCheckBoxCreate;
@@ -710,7 +710,7 @@ void TransformDlgCreate(void *data,void (*transfunc)(void *,real *,int,BVTFunc *
 		    (flags&tdf_enablekerns ? gg_cb_on : 0);
 	    label[gci].text = (uint32_t *) _("Transform simple positioning features & _kern pairs");
 	    label[gci].text_is_1byte = true;
-	    label[gci].text_in_resource = true;
+	    label[gci].text_has_mnemonic = true;
 	    gcd[gci].gd.label = &label[gci];
 	    gcd[gci].gd.cid = CID_DoSimplePos;
 	    gcd[gci++].creator = GCheckBoxCreate;
@@ -721,7 +721,7 @@ void TransformDlgCreate(void *data,void (*transfunc)(void *,real *,int,BVTFunc *
 	    gcd[gci].gd.flags = gg_visible | gg_enabled;
 	    label[gci].text = (uint32_t *) _("Round To _Int");
 	    label[gci].text_is_1byte = true;
-	    label[gci].text_in_resource = true;
+	    label[gci].text_has_mnemonic = true;
 	    gcd[gci].gd.label = &label[gci];
 	    gcd[gci].gd.cid = CID_Round2Int;
 	    gcd[gci++].creator = GCheckBoxCreate;
@@ -734,8 +734,7 @@ void TransformDlgCreate(void *data,void (*transfunc)(void *,real *,int,BVTFunc *
 	gcd[gci].gd.flags = gg_visible | gg_enabled | gg_but_default;
 	label[gci].text = (uint32_t *) _("_OK");
 	label[gci].text_is_1byte = true;
-	label[gci].text_in_resource = true;
-	gcd[gci].gd.mnemonic = 'O';
+	label[gci].text_has_mnemonic = true;
 	gcd[gci].gd.label = &label[gci];
 	gcd[gci].gd.handle_controlevent = Trans_OK;
 	gcd[gci++].creator = GButtonCreate;
@@ -744,7 +743,7 @@ void TransformDlgCreate(void *data,void (*transfunc)(void *,real *,int,BVTFunc *
 	gcd[gci].gd.flags = gg_visible | gg_enabled;
 	label[gci].text = (uint32_t *) _("_Apply");
 	label[gci].text_is_1byte = true;
-	label[gci].text_in_resource = true;
+	label[gci].text_has_mnemonic = true;
 	gcd[gci].gd.label = &label[gci];
 	gcd[gci].gd.handle_controlevent = Trans_OK;
 	gcd[gci].gd.cid = CID_Apply;
@@ -755,9 +754,8 @@ void TransformDlgCreate(void *data,void (*transfunc)(void *,real *,int,BVTFunc *
 	gcd[gci].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
 	label[gci].text = (uint32_t *) _("_Cancel");
 	label[gci].text_is_1byte = true;
-	label[gci].text_in_resource = true;
+	label[gci].text_has_mnemonic = true;
 	gcd[gci].gd.label = &label[gci];
-	gcd[gci].gd.mnemonic = 'C';
 	gcd[gci].gd.handle_controlevent = Trans_Cancel;
 	gcd[gci++].creator = GButtonCreate;
 	buttons[8] = GCD_Glue; buttons[9] = &gcd[gci-1]; buttons[10] = GCD_Glue;

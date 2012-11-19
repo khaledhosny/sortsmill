@@ -162,7 +162,7 @@ void FVAutoWidth2(FontView *fv) {
 
     label[i].text = (uint32_t *) _( "_Separation:" );
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.pos.x = 5; gcd[i].gd.pos.y = 6;
     gcd[i].gd.flags = gg_visible | gg_enabled;
@@ -189,7 +189,7 @@ void FVAutoWidth2(FontView *fv) {
 
     label[i].text = (uint32_t *) _( "_Min:" );
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.pos.x = 5; gcd[i].gd.pos.y = 6;
     gcd[i].gd.flags = gg_visible | gg_enabled;
@@ -214,7 +214,7 @@ void FVAutoWidth2(FontView *fv) {
 
     label[i].text = (uint32_t *) _( "Ma_x:" );
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.pos.x = 5; gcd[i].gd.pos.y = 6;
     gcd[i].gd.flags = gg_visible | gg_enabled;
@@ -238,7 +238,7 @@ void FVAutoWidth2(FontView *fv) {
 
     label[i].text = (uint32_t *) _( "_Height:" );
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.pos.x = 5; gcd[i].gd.pos.y = 6;
     gcd[i].gd.flags = /* gg_visible |*/ gg_enabled;
@@ -257,7 +257,7 @@ void FVAutoWidth2(FontView *fv) {
 
     label[i].text = (uint32_t *) _( "_Loops:" );
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.pos.x = 5; gcd[i].gd.pos.y = 6;
     gcd[i].gd.flags = /* gg_visible |*/ gg_enabled;
@@ -282,7 +282,7 @@ void FVAutoWidth2(FontView *fv) {
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_default;
     label[i].text = (uint32_t *) _("_OK");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.handle_controlevent = AW2_OK;
     gcd[i++].creator = GButtonCreate;
@@ -291,7 +291,7 @@ void FVAutoWidth2(FontView *fv) {
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
     label[i].text = (uint32_t *) _("_Cancel");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.handle_controlevent = AW2_Cancel;
     gcd[i++].creator = GButtonCreate;

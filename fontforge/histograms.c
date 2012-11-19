@@ -961,7 +961,7 @@ void SFHistogram(SplineFont *sf,int layer, struct psdict *private, uint8_t *sele
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_default;
     label[i].text = (uint32_t *) _("_OK");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.cid = CID_OK;
     gcd[i++].creator = GButtonCreate;
@@ -970,9 +970,8 @@ void SFHistogram(SplineFont *sf,int layer, struct psdict *private, uint8_t *sele
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
     label[i].text = (uint32_t *) _("_Cancel");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
-    gcd[i].gd.mnemonic = 'C';
     gcd[i].gd.cid = CID_Cancel;
     gcd[i++].creator = GButtonCreate;
     butarray[4] = GCD_Glue; butarray[5] = &gcd[i-1]; butarray[6] = GCD_Glue; butarray[7] = NULL;

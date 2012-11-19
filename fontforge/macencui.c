@@ -462,7 +462,7 @@ static char *AskName(struct macname *changing,struct macname *all,GGadget *list,
 
     label[0].text = (uint32_t *) _("_Language:");
     label[0].text_is_1byte = true;
-    label[0].text_in_resource = true;
+    label[0].text_has_mnemonic = true;
     gcd[0].gd.label = &label[0];
     gcd[0].gd.pos.x = 5; gcd[0].gd.pos.y = 5+4;
     gcd[0].gd.flags = gg_enabled|gg_visible;
@@ -486,7 +486,7 @@ static char *AskName(struct macname *changing,struct macname *all,GGadget *list,
 
     label[2].text = (uint32_t *) _("_Name:");
     label[2].text_is_1byte = true;
-    label[2].text_in_resource = true;
+    label[2].text_has_mnemonic = true;
     gcd[2].gd.label = &label[2];
     gcd[2].gd.pos.x = 5; gcd[2].gd.pos.y = gcd[0].gd.pos.y+28;
     gcd[2].gd.flags = gg_enabled|gg_visible;
@@ -508,7 +508,7 @@ static char *AskName(struct macname *changing,struct macname *all,GGadget *list,
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_default;
     label[i].text = (uint32_t *) _("_OK");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.cid = CID_OK;
     /*gcd[i].gd.handle_controlevent = Prefs_Ok;*/
@@ -519,7 +519,7 @@ static char *AskName(struct macname *changing,struct macname *all,GGadget *list,
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
     label[i].text = (uint32_t *) _("_Cancel");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.cid = CID_Cancel;
     gcd[i].creator = GButtonCreate;
@@ -653,7 +653,7 @@ int GCDBuildNames(GGadgetCreateData *gcd,GTextInfo *label,int pos,struct macname
     gcd[pos].gd.flags = gg_visible | gg_enabled;
     label[pos].text = (uint32_t *) C_("MacName", "_New...");
     label[pos].text_is_1byte = true;
-    label[pos].text_in_resource = true;
+    label[pos].text_has_mnemonic = true;
     gcd[pos].gd.label = &label[pos];
     gcd[pos].gd.handle_controlevent = Pref_NewName;
     gcd[pos].gd.cid = CID_NameNew;
@@ -664,7 +664,7 @@ int GCDBuildNames(GGadgetCreateData *gcd,GTextInfo *label,int pos,struct macname
     gcd[pos].gd.flags = gg_visible ;
     label[pos].text = (uint32_t *) _("_Delete");
     label[pos].text_is_1byte = true;
-    label[pos].text_in_resource = true;
+    label[pos].text_has_mnemonic = true;
     gcd[pos].gd.label = &label[pos];
     gcd[pos].gd.cid = CID_NameDel;
     gcd[pos].gd.handle_controlevent = Pref_DelName;
@@ -675,7 +675,7 @@ int GCDBuildNames(GGadgetCreateData *gcd,GTextInfo *label,int pos,struct macname
     gcd[pos].gd.flags = gg_visible ;
     label[pos].text = (uint32_t *) _("_Edit...");
     label[pos].text_is_1byte = true;
-    label[pos].text_in_resource = true;
+    label[pos].text_has_mnemonic = true;
     gcd[pos].gd.label = &label[pos];
     gcd[pos].gd.cid = CID_NameEdit;
     gcd[pos].gd.handle_controlevent = Pref_EditName;
@@ -835,7 +835,7 @@ static char *AskSetting(struct macsetting *changing,struct macsetting *all,
 
     label[2].text = (uint32_t *) _("_Enabled");
     label[2].text_is_1byte = true;
-    label[2].text_in_resource = true;
+    label[2].text_has_mnemonic = true;
     gcd[2].gd.label = &label[2];
     gcd[2].gd.pos.x = 110; gcd[2].gd.pos.y = 5;
     gcd[2].gd.flags = gg_enabled|gg_visible | (changing->initially_enabled?gg_cb_on:0);
@@ -844,7 +844,7 @@ static char *AskSetting(struct macsetting *changing,struct macsetting *all,
 
     label[3].text = (uint32_t *) _("_Name:");
     label[3].text_is_1byte = true;
-    label[3].text_in_resource = true;
+    label[3].text_has_mnemonic = true;
     gcd[3].gd.label = &label[3];
     gcd[3].gd.pos.x = 5; gcd[3].gd.pos.y = 5+24;
     gcd[3].gd.flags = gg_enabled|gg_visible;
@@ -858,7 +858,7 @@ static char *AskSetting(struct macsetting *changing,struct macsetting *all,
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_default;
     label[i].text = (uint32_t *) _("_OK");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.cid = CID_OK;
     /*gcd[i].gd.handle_controlevent = Prefs_Ok;*/
@@ -869,7 +869,7 @@ static char *AskSetting(struct macsetting *changing,struct macsetting *all,
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
     label[i].text = (uint32_t *) _("_Cancel");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.cid = CID_Cancel;
     gcd[i].creator = GButtonCreate;
@@ -1144,7 +1144,7 @@ static char *AskFeature(MacFeat *changing,MacFeat *all,GGadget *list, int index)
 
     label[3].text = (uint32_t *) _("_Name:");
     label[3].text_is_1byte = true;
-    label[3].text_in_resource = true;
+    label[3].text_has_mnemonic = true;
     gcd[3].gd.label = &label[3];
     gcd[3].gd.pos.x = 5; gcd[3].gd.pos.y = 5+24;
     gcd[3].gd.flags = gg_enabled|gg_visible;
@@ -1172,7 +1172,7 @@ static char *AskFeature(MacFeat *changing,MacFeat *all,GGadget *list, int index)
     gcd[i].gd.flags = gg_visible | gg_enabled;
     label[i].text = (uint32_t *) C_("MacSetting", "_New...");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.handle_controlevent = Pref_NewSetting;
     gcd[i++].creator = GButtonCreate;
@@ -1182,7 +1182,7 @@ static char *AskFeature(MacFeat *changing,MacFeat *all,GGadget *list, int index)
     gcd[i].gd.flags = gg_visible ;
     label[i].text = (uint32_t *) _("_Delete");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.cid = CID_SettingDel;
     gcd[i].gd.handle_controlevent = Pref_DelSetting;
@@ -1193,7 +1193,7 @@ static char *AskFeature(MacFeat *changing,MacFeat *all,GGadget *list, int index)
     gcd[i].gd.flags = gg_visible ;
     label[i].text = (uint32_t *) _("_Edit...");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.cid = CID_SettingEdit;
     gcd[i].gd.handle_controlevent = Pref_EditSetting;
@@ -1204,7 +1204,7 @@ static char *AskFeature(MacFeat *changing,MacFeat *all,GGadget *list, int index)
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_default;
     label[i].text = (uint32_t *) _("_OK");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.cid = CID_OK;
     /*gcd[i].gd.handle_controlevent = Prefs_Ok;*/
@@ -1215,7 +1215,7 @@ static char *AskFeature(MacFeat *changing,MacFeat *all,GGadget *list, int index)
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
     label[i].text = (uint32_t *) _("_Cancel");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.cid = CID_Cancel;
     gcd[i].creator = GButtonCreate;
@@ -1364,7 +1364,7 @@ void GCDFillMacFeat(GGadgetCreateData *mfgcd,GTextInfo *mflabels, int width,
     mfgcd[sgc].gd.flags = gg_visible | gg_enabled;
     mflabels[sgc].text = (uint32_t *) C_("MacFeature", "_New...");
     mflabels[sgc].text_is_1byte = true;
-    mflabels[sgc].text_in_resource = true;
+    mflabels[sgc].text_has_mnemonic = true;
     mfgcd[sgc].gd.label = &mflabels[sgc];
     /*mfgcd[sgc].gd.cid = CID_AnchorRename;*/
     mfgcd[sgc].gd.handle_controlevent = Pref_NewFeat;
@@ -1376,7 +1376,7 @@ void GCDFillMacFeat(GGadgetCreateData *mfgcd,GTextInfo *mflabels, int width,
     mfgcd[sgc].gd.flags = gg_visible ;
     mflabels[sgc].text = (uint32_t *) _("_Delete");
     mflabels[sgc].text_is_1byte = true;
-    mflabels[sgc].text_in_resource = true;
+    mflabels[sgc].text_has_mnemonic = true;
     mfgcd[sgc].gd.label = &mflabels[sgc];
     mfgcd[sgc].gd.cid = CID_FeatureDel;
     mfgcd[sgc].gd.handle_controlevent = Pref_DelFeat;
@@ -1388,7 +1388,7 @@ void GCDFillMacFeat(GGadgetCreateData *mfgcd,GTextInfo *mflabels, int width,
     mfgcd[sgc].gd.flags = gg_visible ;
     mflabels[sgc].text = (uint32_t *) _("_Edit...");
     mflabels[sgc].text_is_1byte = true;
-    mflabels[sgc].text_in_resource = true;
+    mflabels[sgc].text_has_mnemonic = true;
     mfgcd[sgc].gd.label = &mflabels[sgc];
     mfgcd[sgc].gd.cid = CID_FeatureEdit;
     mfgcd[sgc].gd.handle_controlevent = Pref_EditFeat;

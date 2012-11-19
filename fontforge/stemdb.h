@@ -90,18 +90,18 @@ typedef struct pointdata {
     int nextcnt, prevcnt;
     double nextlen, prevlen;
     int value;                          /* Temporary value, used to compare points assigned to the same edge and determine which one can be used as a reference point*/
-    unsigned int nextlinear: 1;
-    unsigned int nextzero: 1;
-    unsigned int prevlinear: 1;
-    unsigned int prevzero: 1;
-    unsigned int collinear: 1;
-    unsigned int symetrical_h: 1;	/* Are next & prev symetrical? */
-    unsigned int symetrical_v: 1;	/* Are next & prev symetrical? */
-    unsigned int next_hor: 1;
-    unsigned int next_ver: 1;
-    unsigned int prev_hor: 1;
-    unsigned int prev_ver: 1;
-    unsigned int ticked: 1;
+    bool nextlinear;
+    bool nextzero;
+    bool prevlinear;
+    bool prevzero;
+    bool collinear;
+    bool symetrical_h;	/* Are next & prev symetrical? */
+    bool symetrical_v;	/* Are next & prev symetrical? */
+    bool next_hor;
+    bool next_ver;
+    bool prev_hor;
+    bool prev_ver;
+    bool ticked;
     uint8_t touched, affected;
     uint8_t x_extr, y_extr;
     uint8_t x_corner, y_corner;

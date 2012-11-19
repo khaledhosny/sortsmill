@@ -641,7 +641,7 @@ struct hslrgba GWidgetColorA(const char *title,struct hslrgba *defcol,struct hsl
     for ( i=0; i<7; ++i ) {
 	label[k].text = (uint32_t *) _(labnames[i]);
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.flags = gg_visible | gg_enabled ;
 	gcd[k++].creator = GLabelCreate;
@@ -675,7 +675,7 @@ struct hslrgba GWidgetColorA(const char *title,struct hslrgba *defcol,struct hsl
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
     label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.handle_controlevent = GCol_OK;
     gcd[k++].creator = GButtonCreate;
@@ -684,7 +684,7 @@ struct hslrgba GWidgetColorA(const char *title,struct hslrgba *defcol,struct hsl
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
     label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.handle_controlevent = GCol_Cancel;
     gcd[k].creator = GButtonCreate;

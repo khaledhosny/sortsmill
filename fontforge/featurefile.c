@@ -2198,11 +2198,11 @@ struct parseState {
     int line[MAXI];
     char *filename[MAXI];
     int err_count;
-    unsigned int warned_about_not_cid: 1;
-    unsigned int lookup_in_sf_warned: 1;
-    unsigned int in_vkrn: 1;
-    unsigned int backedup: 1;
-    unsigned int skipping: 1;
+    bool warned_about_not_cid;
+    bool lookup_in_sf_warned;
+    bool in_vkrn;
+    bool backedup;
+    bool skipping;
     SplineFont *sf;
     struct scriptlanglist *def_langsyses;
     struct glyphclasses *classes;
@@ -3202,15 +3202,15 @@ struct ligcomponent {
 };
 
 struct markedglyphs {
-    unsigned int has_marks: 1;		/* Are there any marked glyphs in the entire sequence? */
-    unsigned int is_cursive: 1;		/* Only in a position sequence */
-    unsigned int is_mark: 1;		/* Only in a position sequence/mark keyword=>mark2mark */
-    unsigned int is_lookup: 1;		/* Or a lookup when parsing a subs replacement list */
-    unsigned int is_mark2base: 1;
-    unsigned int is_mark2mark: 1;
-    unsigned int is_mark2lig: 1;
-    unsigned int is_name: 1;		/* Otherwise a class */
-    unsigned int hidden_marked_glyphs: 1;/* for glyphs with marked marks in a mark2base sequence */
+    bool has_marks;		/* Are there any marked glyphs in the entire sequence? */
+    bool is_cursive;		/* Only in a position sequence */
+    bool is_mark;		/* Only in a position sequence/mark keyword=>mark2mark */
+    bool is_lookup;		/* Or a lookup when parsing a subs replacement list */
+    bool is_mark2base;
+    bool is_mark2mark;
+    bool is_mark2lig;
+    bool is_name;		/* Otherwise a class */
+    bool hidden_marked_glyphs;/* for glyphs with marked marks in a mark2base sequence */
     uint16_t mark_count;			/* 0=>unmarked, 1=>first mark, etc. */
     char *name_or_class;		/* Glyph name / class contents */
     struct vr *vr;			/* A value record. Only in position sequences */

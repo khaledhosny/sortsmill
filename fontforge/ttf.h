@@ -88,19 +88,19 @@ struct ttfinfo {
     int vertical_origin;	/* if vmetrics are present */
     int width_cnt;		/* from the hhea table, in the hmtx table */
     int glyph_cnt;		/* from maxp table (or cff table) */
-    unsigned int index_to_loc_is_long:1;	/* in head table */
-    unsigned int is_ttc:1;			/* Is it a font collection? */
-    unsigned int is_onebyte:1;			/* Is it a one byte encoding? */
-    unsigned int twobytesymbol:1;		/* it had a symbol encoding which we converted to unicode */
-    unsigned int complainedbeyondglyfend:1;	/* Don't complain about this more than once */
-    unsigned int extensionrequested:1;		/* Only ask once for a copy of a font containing extension subtables */
-    unsigned int to_order2:1;			/* We are to leave the font as truetype (order2) splines, else convert to ps */
-    unsigned int complainedmultname:1;	/* Don't complain about this more than once */
-    unsigned int strokedfont: 1;		/* painttype==2 for otf */
-    unsigned int use_typo_metrics: 1;
-    unsigned int weight_width_slope_only: 1;
-    unsigned int optimized_for_cleartype: 1;
-    unsigned int apply_lsb: 1;
+    bool index_to_loc_is_long;		/* in head table */
+    bool is_ttc;			/* Is it a font collection? */
+    bool is_onebyte;			/* Is it a one byte encoding? */
+    bool twobytesymbol;			/* it had a symbol encoding which we converted to unicode */
+    bool complainedbeyondglyfend;	/* Don't complain about this more than once */
+    bool extensionrequested;		/* Only ask once for a copy of a font containing extension subtables */
+    bool to_order2;			/* We are to leave the font as truetype (order2) splines, else convert to ps */
+    bool complainedmultname;		/* Don't complain about this more than once */
+    bool strokedfont;			/* painttype==2 for otf */
+    bool use_typo_metrics;
+    bool weight_width_slope_only;
+    bool optimized_for_cleartype;
+    bool apply_lsb;
     int sfntRevision;
     enum openflags openflags;
     /* Mac fonts platform=0/1, platform specific enc id, roman=0, english is lang code 0 */
@@ -239,17 +239,17 @@ struct ttfinfo {
     uint32_t prep_start, prep_len;
     uint32_t fpgm_start, fpgm_len;
 
-    unsigned int one_of_many: 1;	/* A TTCF file, or a opentype font with multiple fonts */
-    unsigned int obscomplain: 1;	/* We've complained about obsolete format 3 in EBDT table */
-    unsigned int cmpcomplain: 1;	/* We've complained about compressed format 4 in EBDT */
-    unsigned int unkcomplain: 1;	/* We've complained about unknown formats in EBDT */
-    unsigned int comcomplain: 1;	/* We've complained about composit formats in EBDT */
-    unsigned int onlystrikes: 1;	/* Only read in the bitmaps, not the outlines */
-    unsigned int onlyonestrike: 1;	/* Only read in one bitmap (strike) */
-    unsigned int barecff: 1;		/* pay attention to the encoding in the cff file, we won't have a cmap */
-    unsigned int wdthcomplain: 1;	/* We've complained about advance widths exceding the max */
-    unsigned int bbcomplain: 1;		/* We've complained about glyphs being outside the bounding box */
-    unsigned int gbbcomplain: 1;	/* We've complained about points being outside the bounding box */
+    bool one_of_many;	/* A TTCF file, or a opentype font with multiple fonts */
+    bool obscomplain;	/* We've complained about obsolete format 3 in EBDT table */
+    bool cmpcomplain;	/* We've complained about compressed format 4 in EBDT */
+    bool unkcomplain;	/* We've complained about unknown formats in EBDT */
+    bool comcomplain;	/* We've complained about composit formats in EBDT */
+    bool onlystrikes;	/* Only read in the bitmaps, not the outlines */
+    bool onlyonestrike;	/* Only read in one bitmap (strike) */
+    bool barecff;	/* pay attention to the encoding in the cff file, we won't have a cmap */
+    bool wdthcomplain;	/* We've complained about advance widths exceding the max */
+    bool bbcomplain;	/* We've complained about glyphs being outside the bounding box */
+    bool gbbcomplain;	/* We've complained about points being outside the bounding box */
 
     int platform, specific;		/* values of the encoding we chose to use */
 
@@ -307,16 +307,16 @@ struct ttfinfo {
     struct gasp *gasp;
     struct MATH *math;
     /* Set of errors we found when loading the font */
-    unsigned int bad_ps_fontname: 1;
-    unsigned int bad_glyph_data: 1;
-    unsigned int bad_cff: 1;
-    unsigned int bad_metrics: 1;
-    unsigned int bad_cmap: 1;
-    unsigned int bad_embedded_bitmap: 1;
-    unsigned int bad_gx: 1;
-    unsigned int bad_ot: 1;
-    unsigned int bad_os2_version: 1;
-    unsigned int bad_sfnt_header: 1;
+    bool bad_ps_fontname;
+    bool bad_glyph_data;
+    bool bad_cff;
+    bool bad_metrics;
+    bool bad_cmap;
+    bool bad_embedded_bitmap;
+    bool bad_gx;
+    bool bad_ot;
+    bool bad_os2_version;
+    bool bad_sfnt_header;
     Layer guidelines;
     struct Base *horiz_base, *vert_base;
     Justify *justify;
@@ -571,11 +571,11 @@ struct glyphinfo {
     int flags;
     int fixed_width;
     int32_t *bsizes;
-    unsigned int dovariations: 1;
-    unsigned int onlybitmaps: 1;
-    unsigned int has_instrs: 1;
-    unsigned int is_ttf: 1;
-    unsigned int ttc_composite_font: 1;
+    bool dovariations;
+    bool onlybitmaps;
+    bool has_instrs;
+    bool is_ttf;
+    bool ttc_composite_font;
     SplineFont *sf;
     int32_t *pointcounts;
     int *bygid;			/* glyph list */
@@ -712,17 +712,17 @@ struct alltabs {
     int sidcnt;
     int lenpos;
     int privatelen;
-    unsigned int sidlongoffset: 1;
-    unsigned int cfflongoffset: 1;
-    unsigned int applemode: 1;		/* Where apple & ms differ do things apple's way (bitmaps, name table PostScript) */
-    unsigned int opentypemode: 1;	/* Where apple & ms differ do things opentype's way (bitmaps, name table PostScript) */
-	    /* If both are set then try to generate both types of tables. Some things can't be fudged though (name table postscript) */
-    unsigned int msbitmaps: 1;
-    unsigned int applebitmaps: 1;
-    unsigned int otbbitmaps: 1;
-    unsigned int isotf: 1;
-    unsigned int dovariations: 1;	/* Output Apple *var tables (for mm fonts) */
-    unsigned int error: 1;
+    bool sidlongoffset;
+    bool cfflongoffset;
+    bool applemode;	/* Where apple & ms differ do things apple's way (bitmaps, name table PostScript) */
+    bool opentypemode;	/* Where apple & ms differ do things opentype's way (bitmaps, name table PostScript) */
+	    		/* If both are set then try to generate both types of tables. Some things can't be fudged though (name table postscript) */
+    bool msbitmaps;
+    bool applebitmaps;
+    bool otbbitmaps;
+    bool isotf;
+    bool dovariations;	/* Output Apple *var tables (for mm fonts) */
+    bool error;
     struct glyphinfo gi;
     int isfixed;
     struct fd2data *fds;

@@ -173,9 +173,8 @@ RemoveEncoding (void)
   gcd[2].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
   label[2].text = (uint32_t *) _("_Cancel");
   label[2].text_is_1byte = true;
-  label[2].text_in_resource = true;
+  label[2].text_has_mnemonic = true;
   gcd[2].gd.label = &label[2];
-  gcd[2].gd.mnemonic = 'C';
   gcd[2].gd.handle_controlevent = DE_Cancel;
   gcd[2].creator = GButtonCreate;
 
@@ -186,8 +185,7 @@ RemoveEncoding (void)
   gcd[1].gd.flags = gg_visible | gg_enabled | gg_but_default;
   label[1].text = (uint32_t *) _("_Delete");
   label[1].text_is_1byte = true;
-  label[1].text_in_resource = true;
-  gcd[1].gd.mnemonic = 'D';
+  label[1].text_has_mnemonic = true;
   gcd[1].gd.label = &label[1];
   gcd[1].gd.handle_controlevent = DE_Delete;
   gcd[1].creator = GButtonCreate;

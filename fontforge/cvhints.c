@@ -46,11 +46,11 @@
 #define CID_TopBox	1014
 
 typedef struct reviewhintdata {
-    unsigned int done: 1;
-    unsigned int ishstem: 1;
-    unsigned int oldmanual: 1;
-    unsigned int undocreated: 1;
-    unsigned int changed: 1;
+    bool done;
+    bool ishstem;
+    bool oldmanual;
+    bool undocreated;
+    bool changed;
     CharView *cv;
     GWindow gw;
     StemInfo *active;
@@ -430,7 +430,7 @@ void CVReviewHints(CharView *cv) {
 
 	label[k].text = (uint32_t *) _("_HStem");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.flags = gg_enabled|gg_visible|gg_cb_on;
 	gcd[k].gd.cid = CID_HStem;
@@ -440,7 +440,7 @@ void CVReviewHints(CharView *cv) {
 
 	label[k].text = (uint32_t *) _("_VStem");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.flags = gg_enabled|gg_visible;
 	gcd[k].gd.cid = CID_VStem;
@@ -458,7 +458,7 @@ void CVReviewHints(CharView *cv) {
 
 	label[k].text = (uint32_t *) _("_Move Points");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
 	gcd[k].gd.cid = CID_MovePoints;
@@ -468,7 +468,7 @@ void CVReviewHints(CharView *cv) {
 
 	label[k].text = (uint32_t *) _("_Base:");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = 14+17+5+3; 
 	gcd[k].gd.flags = gg_enabled|gg_visible;
@@ -484,7 +484,7 @@ void CVReviewHints(CharView *cv) {
 
 	label[k].text = (uint32_t *) _("_Size:");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.flags = gg_enabled|gg_visible;
 	gcd[k].creator = GLabelCreate;
@@ -510,7 +510,7 @@ void CVReviewHints(CharView *cv) {
 	gcd[k].gd.flags = gg_visible | gg_enabled;
 	label[k].text = (uint32_t *) _("Cr_eate");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.cid = CID_Add;
 	gcd[k].gd.handle_controlevent = RH_Add;
@@ -520,7 +520,7 @@ void CVReviewHints(CharView *cv) {
 	gcd[k].gd.flags = gg_visible | gg_enabled;
 	label[k].text = (uint32_t *) _("Re_move");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.cid = CID_Remove;
 	gcd[k].gd.handle_controlevent = RH_Remove;
@@ -535,7 +535,7 @@ void CVReviewHints(CharView *cv) {
 	gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
 	label[k].text = (uint32_t *) _("< _Prev");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.cid = CID_Prev;
 	gcd[k].gd.popup_msg = (uint32_t *) _("Previous Hint.");
@@ -546,7 +546,7 @@ void CVReviewHints(CharView *cv) {
 	gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
 	label[k].text = (uint32_t *) _("_Next >");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.cid = CID_Next;
 	gcd[k].gd.popup_msg = (uint32_t *) _("Next Hint.");
@@ -556,7 +556,7 @@ void CVReviewHints(CharView *cv) {
 
 	label[k].text = (uint32_t *) _("Regenerate Hint Substitution Points");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.flags = gg_enabled|gg_visible|gg_cb_on|gg_utf8_popup;
 	gcd[k].gd.cid = CID_RegenHM;
@@ -567,7 +567,7 @@ void CVReviewHints(CharView *cv) {
 	gcd[k].gd.flags = gg_visible | gg_enabled;
 	label[k].text = (uint32_t *) _("_OK");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.handle_controlevent = RH_OK;
 	gcd[k].creator = GButtonCreate;
@@ -576,7 +576,7 @@ void CVReviewHints(CharView *cv) {
 	gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
 	label[k].text = (uint32_t *) _("_Cancel");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.handle_controlevent = RH_Cancel;
 	gcd[k].creator = GButtonCreate;
@@ -662,9 +662,9 @@ void CVReviewHints(CharView *cv) {
 }
 
 typedef struct createhintdata {
-    unsigned int done: 1;
-    unsigned int ishstem: 1;
-    unsigned int preservehints: 1;
+    bool done;
+    bool ishstem;
+    bool preservehints;
     CharView *cv;
     GWindow gw;
 } CreateHintData;
@@ -767,7 +767,7 @@ void CVCreateHint(CharView *cv,int ishstem,int preservehints) {
 
 	label[0].text = (uint32_t *) _("_Base:");
 	label[0].text_is_1byte = true;
-	label[0].text_in_resource = true;
+	label[0].text_has_mnemonic = true;
 	gcd[0].gd.label = &label[0];
 	gcd[0].gd.pos.x = 5; gcd[0].gd.pos.y = 17+5+6; 
 	gcd[0].gd.flags = gg_enabled|gg_visible;
@@ -786,7 +786,7 @@ void CVCreateHint(CharView *cv,int ishstem,int preservehints) {
 
 	label[2].text = (uint32_t *) _("_Size:");
 	label[2].text_is_1byte = true;
-	label[2].text_in_resource = true;
+	label[2].text_has_mnemonic = true;
 	gcd[2].gd.label = &label[2];
 	gcd[2].gd.pos.x = 90; gcd[2].gd.pos.y = 17+5+6; 
 	gcd[2].gd.flags = gg_enabled|gg_visible;
@@ -807,8 +807,7 @@ void CVCreateHint(CharView *cv,int ishstem,int preservehints) {
 	gcd[4].gd.flags = gg_visible | gg_enabled | gg_but_default;
 	label[4].text = (uint32_t *) _("_OK");
 	label[4].text_is_1byte = true;
-	label[4].text_in_resource = true;
-	gcd[4].gd.mnemonic = 'O';
+	label[4].text_has_mnemonic = true;
 	gcd[4].gd.label = &label[4];
 	gcd[4].gd.handle_controlevent = CH_OK;
 	gcd[4].creator = GButtonCreate;
@@ -819,9 +818,8 @@ void CVCreateHint(CharView *cv,int ishstem,int preservehints) {
 	gcd[5].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
 	label[5].text = (uint32_t *) _("_Cancel");
 	label[5].text_is_1byte = true;
-	label[5].text_in_resource = true;
+	label[5].text_has_mnemonic = true;
 	gcd[5].gd.label = &label[5];
-	gcd[5].gd.mnemonic = 'C';
 	gcd[5].gd.handle_controlevent = CH_Cancel;
 	gcd[5].creator = GButtonCreate;
 	barray[3] = GCD_Glue; barray[4] = &gcd[5]; barray[5] = GCD_Glue; barray[6] = NULL;

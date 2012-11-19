@@ -43,7 +43,7 @@ static GWindow error;
 enum err_type { et_info, et_warn, et_error, et_fatal };
 static struct errinfo {
     uint32_t *lines[ERR_LINE_MAX];
-    unsigned int dismissed: 1;
+    bool dismissed;
     int width;
     enum err_type err_type;
 } errinfo;

@@ -283,7 +283,7 @@ void ScriptDlg(FontView *fv,CharView *cv) {
 	gcd[i].gd.cid = CID_Python;
 	label[i].text = (uint32_t *) _("_Python");
 	label[i].text_is_1byte = true;
-	label[i].text_in_resource = true;
+	label[i].text_has_mnemonic = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.handle_controlevent = SD_LangChanged;
 	gcd[i++].creator = GRadioCreate;
@@ -294,7 +294,7 @@ void ScriptDlg(FontView *fv,CharView *cv) {
 	gcd[i].gd.cid = CID_FF;
 	label[i].text = (uint32_t *) _("_FF");
 	label[i].text_is_1byte = true;
-	label[i].text_in_resource = true;
+	label[i].text_has_mnemonic = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.handle_controlevent = SD_LangChanged;
 	gcd[i++].creator = GRadioCreate;
@@ -314,8 +314,7 @@ void ScriptDlg(FontView *fv,CharView *cv) {
 	gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_default;
 	label[i].text = (uint32_t *) _("_OK");
 	label[i].text_is_1byte = true;
-	label[i].text_in_resource = true;
-	gcd[i].gd.mnemonic = 'O';
+	label[i].text_has_mnemonic = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.handle_controlevent = SD_OK;
 	gcd[i].gd.cid = CID_OK;
@@ -326,9 +325,8 @@ void ScriptDlg(FontView *fv,CharView *cv) {
 	gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
 	label[i].text = (uint32_t *) _("_Cancel");
 	label[i].text_is_1byte = true;
-	label[i].text_in_resource = true;
+	label[i].text_has_mnemonic = true;
 	gcd[i].gd.label = &label[i];
-	gcd[i].gd.mnemonic = 'C';
 	gcd[i].gd.handle_controlevent = SD_Cancel;
 	gcd[i].gd.cid = CID_Cancel;
 	gcd[i++].creator = GButtonCreate;
@@ -338,9 +336,8 @@ void ScriptDlg(FontView *fv,CharView *cv) {
 	gcd[i].gd.flags = gg_visible | gg_enabled;
 	label[i].text = (uint32_t *) _("C_all...");
 	label[i].text_is_1byte = true;
-	label[i].text_in_resource = true;
+	label[i].text_has_mnemonic = true;
 	gcd[i].gd.label = &label[i];
-	gcd[i].gd.mnemonic = 'a';
 	gcd[i].gd.handle_controlevent = SD_Call;
 	gcd[i].gd.cid = CID_Call;
 	gcd[i++].creator = GButtonCreate;

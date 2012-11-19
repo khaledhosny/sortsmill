@@ -164,7 +164,7 @@ int SimplifyDlg(SplineFont *sf, struct simplifyinfo *smpl) {
     k=l=0;
     label[k].text = (uint32_t *) _("_Error Limit:");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 10; gcd[k].gd.pos.y = 12;
     gcd[k].gd.flags = gg_enabled|gg_visible;
@@ -198,7 +198,7 @@ int SimplifyDlg(SplineFont *sf, struct simplifyinfo *smpl) {
 
     label[k].text = (uint32_t *) _("Allow _removal of extrema");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 8; gcd[k].gd.pos.y = gcd[k-2].gd.pos.y+24;
     gcd[k].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
@@ -211,7 +211,7 @@ int SimplifyDlg(SplineFont *sf, struct simplifyinfo *smpl) {
 
     label[k].text = (uint32_t *) _("Allow _slopes to change");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 8; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+14;
     gcd[k].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
@@ -224,7 +224,7 @@ int SimplifyDlg(SplineFont *sf, struct simplifyinfo *smpl) {
 
     label[k].text = (uint32_t *) _("Start contours at e_xtrema");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 8; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+14;
     gcd[k].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
@@ -243,7 +243,7 @@ int SimplifyDlg(SplineFont *sf, struct simplifyinfo *smpl) {
 
     label[k].text = (uint32_t *) _("Allow _curve smoothing");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 8; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+4;
     if ( sf->layers[ly_fore].order2 )
@@ -287,7 +287,7 @@ int SimplifyDlg(SplineFont *sf, struct simplifyinfo *smpl) {
 
     label[k].text = (uint32_t *) _("S_nap to horizontal/vertical");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 17; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+24; 
     if ( sf->layers[ly_fore].order2 )
@@ -309,7 +309,7 @@ int SimplifyDlg(SplineFont *sf, struct simplifyinfo *smpl) {
 
     label[k].text = (uint32_t *) _("_Flatten bumps on lines");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.pos.x = 8; gcd[k].gd.pos.y = gcd[k-1].gd.pos.y+14; 
     if ( sf->layers[ly_fore].order2 )
@@ -419,8 +419,7 @@ int SimplifyDlg(SplineFont *sf, struct simplifyinfo *smpl) {
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
     label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
-    gcd[k].gd.mnemonic = 'O';
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.handle_controlevent = Sim_OK;
     gcd[k++].creator = GButtonCreate;
@@ -431,9 +430,8 @@ int SimplifyDlg(SplineFont *sf, struct simplifyinfo *smpl) {
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
     label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
-    gcd[k].gd.mnemonic = 'C';
     gcd[k].gd.handle_controlevent = Sim_Cancel;
     gcd[k++].creator = GButtonCreate;
     barray[3] = GCD_Glue; barray[4] = &gcd[k-1]; barray[5] = GCD_Glue; barray[6] = NULL;

@@ -78,9 +78,9 @@ struct instrinfo {
     int16_t as, fh;
     struct instrdata *instrdata;
     GFont *gfont;
-    unsigned int showaddr: 1;
-    unsigned int showhex: 1;
-    unsigned int mousedown: 1;
+    bool showaddr;
+    bool showhex;
+    bool mousedown;
     void *userdata;
     void (*selection_callback)(struct instrinfo *,int ip);
     int  (*bpcheck)(struct instrinfo *,int ip);
@@ -134,52 +134,52 @@ enum expandedge { ee_none, ee_nw, ee_up, ee_ne, ee_right, ee_se, ee_down,
 typedef struct charview {
     CharViewBase b;
     uint32_t showback[BACK_LAYER_MAX/32];
-    unsigned int showfore:1;
-    unsigned int showgrids:1;
-    unsigned int showhhints:1;
-    unsigned int showvhints:1;
-    unsigned int showdhints:1;
-    unsigned int showpoints:1;
-    unsigned int showfilled:1;
-    unsigned int showrulers:1;
+    bool showfore;
+    bool showgrids;
+    bool showhhints;
+    bool showvhints;
+    bool showdhints;
+    bool showpoints;
+    bool showfilled;
+    bool showrulers;
     unsigned int showrounds:2;		/* 0=>no, 1=>auto, 2=>always */
-    unsigned int showmdx:1;
-    unsigned int showmdy:1;
-    unsigned int showhmetrics:1;
-    unsigned int showvmetrics:1;
-    unsigned int showblues:1;	/* 16 */
-    unsigned int showfamilyblues:1;
-    unsigned int showanchor:1;
-    unsigned int showpointnumbers:1;
-    unsigned int markextrema:1;
-    unsigned int markpoi:1;
-    unsigned int needsrasterize:1;		/* Rasterization (of fill or fontview) needed on mouse up */
-    unsigned int recentchange:1;		/* a change happened in the grids or background. don't need to rasterize */
-    unsigned int info_within: 1;		/* cursor is within main window */
-    unsigned int back_img_out_of_date: 1;	/* Force redraw of back image pixmap */
-    unsigned int cntrldown:1;
-    unsigned int joinvalid:1;
-    unsigned int widthsel:1;
-    unsigned int vwidthsel:1;
-    unsigned int icsel:1;
-    unsigned int tah_sel:1;
-    unsigned int inactive:1;			/* When in a search view */
-    unsigned int show_ft_results: 1;	/* 32 */
+    bool showmdx;
+    bool showmdy;
+    bool showhmetrics;
+    bool showvmetrics;
+    bool showblues;	/* 16 */
+    bool showfamilyblues;
+    bool showanchor;
+    bool showpointnumbers;
+    bool markextrema;
+    bool markpoi;
+    bool needsrasterize;		/* Rasterization (of fill or fontview) needed on mouse up */
+    bool recentchange;		/* a change happened in the grids or background. don't need to rasterize */
+    bool info_within;		/* cursor is within main window */
+    bool back_img_out_of_date;	/* Force redraw of back image pixmap */
+    bool cntrldown;
+    bool joinvalid;
+    bool widthsel;
+    bool vwidthsel;
+    bool icsel;
+    bool tah_sel;
+    bool inactive;			/* When in a search view */
+    bool show_ft_results;	/* 32 */
     unsigned int coderange: 2;			/* For the debugger */
-    unsigned int autonomous_ruler_w: 1;
-    unsigned int showcpinfo: 1;
-    unsigned int showtabs: 1;
-    unsigned int showsidebearings: 1;
-    unsigned int showing_spiro_pt_menu: 1;
-    unsigned int ruler_pressed: 1;
-    unsigned int ruler_pressedv: 1;
-    unsigned int showrefnames: 1;
-    unsigned int snapoutlines: 1;
-    unsigned int showalmosthvlines: 1;
-    unsigned int showalmosthvcurves: 1;
-    unsigned int checkselfintersects: 1;
-    unsigned int showdebugchanges: 1;
-    unsigned int inPreviewMode: 1;
+    bool autonomous_ruler_w;
+    bool showcpinfo;
+    bool showtabs;
+    bool showsidebearings;
+    bool showing_spiro_pt_menu;
+    bool ruler_pressed;
+    bool ruler_pressedv;
+    bool showrefnames;
+    bool snapoutlines;
+    bool showalmosthvlines;
+    bool showalmosthvcurves;
+    bool checkselfintersects;
+    bool showdebugchanges;
+    bool inPreviewMode;
     int hvoffset;		/* for showalmosthvlines */
     int layers_off_top;
     real scale;
@@ -279,14 +279,14 @@ typedef struct bitmapview {
     int scale;
     real scscale;
     struct bitmapview *next;
-    unsigned int showfore:1;
-    unsigned int showoutline:1;
-    unsigned int showgrid:1;
-    unsigned int cntrldown:1;
-    unsigned int recentchange:1;
-    unsigned int clearing:1;
-    unsigned int shades_hidden:1;
-    unsigned int shades_down:1;
+    bool showfore;
+    bool showoutline;
+    bool showgrid;
+    bool cntrldown;
+    bool recentchange;
+    bool clearing;
+    bool shades_hidden;
+    bool shades_down;
     /*GWindow tools, layers;*/
     int8_t b1_tool, cb1_tool, b2_tool, cb2_tool;		/* Button 3 does a popup */
     int8_t s1_tool, s2_tool, er_tool;			/* Bindings for wacom stylus and eraser */
@@ -314,7 +314,7 @@ struct metricchar {
     int xoff, yoff;
     int16_t mx, mwidth;	/* position and width of the text underneath */
     int16_t kernafter;
-    unsigned int selected: 1;
+    bool selected;
     GGadget *width, *lbearing, *rbearing, *kern, *name;
     GGadget* updownkparray[10]; /* Cherry picked elements from width...kern allowing up/down key navigation */
 };
@@ -350,13 +350,13 @@ typedef struct metricsview {
     int16_t activeoff;
     int xoff, coff, yoff;
     struct metricsview *next;
-    unsigned int right_to_left: 1;
-    unsigned int pressed: 1;
-    unsigned int pressedwidth: 1;
-    unsigned int pressedkern: 1;
+    bool right_to_left;
+    bool pressed;
+    bool pressedwidth;
+    bool pressedkern;
     unsigned int showgrid: 2;
-    unsigned int antialias: 1;
-    unsigned int vertical: 1;
+    bool antialias;
+    bool vertical;
     unsigned int type: 2;		/* enum mv_type */
     unsigned int pixelsize_set_by_window;
     int xp, yp, ap_owner;
@@ -393,23 +393,23 @@ typedef struct fontview {
     int32_t rowoff, rowltot;		/* Can be really big in full unicode */
     int16_t cbw,cbh;			/* width/height of a character box */
     int pressed_pos, end_pos;
-    unsigned int antialias:1;
-    unsigned int bbsized:1;		/* displayed bitmap should be scaled by bounding box rather than emsize */
-    unsigned int wasonlybitmaps:1;
+    bool antialias;
+    bool bbsized;		/* displayed bitmap should be scaled by bounding box rather than emsize */
+    bool wasonlybitmaps;
     /*unsigned int refstate: 3;*/	/* 0x1 => paste orig of all non exist refs, 0x2=>don't, 0x3 => don't warn about non-exist refs with no source font */
-    unsigned int touched: 1;
+    bool touched;
     unsigned int showhmetrics: 4;
     unsigned int showvmetrics: 4;
-    unsigned int drag_and_drop: 1;
-    unsigned int has_dd_no_cursor: 1;
-    unsigned int any_dd_events_sent: 1;
-    unsigned int resize_expected: 1;
+    bool drag_and_drop;
+    bool has_dd_no_cursor;
+    bool any_dd_events_sent;
+    bool resize_expected;
 	/* Some window managers do not honour my resize requests (if window is*/
 	/*  maximized for example), but we depend on the resize request to    */
 	/*  fix up the window. We do get a configure notify, but the window   */
 	/*  stays the same size, so kludge things */
     unsigned int glyphlabel: 2;
-    unsigned int notactive:1;			/* When embedded in a dlg */
+    bool notactive;			/* When embedded in a dlg */
     int16_t magnify;
     int16_t user_requested_magnify;
     struct searchview *sv;
@@ -424,9 +424,9 @@ typedef struct findsel {
     real fudge;		/* One pixel fudge factor */
     real xl,xh, yl, yh;	/* One pixel fudge factor */
     real c_xl,c_xh, c_yl, c_yh;		/* fudge rectangle for control points, larger than above if alt is depressed */
-    unsigned int select_controls: 1;	/* notice control points */
-    unsigned int seek_controls: 1;	/* notice control points before base points */
-    unsigned int all_controls: 1;	/* notice control points even if the base points aren't selected (in truetype point numbering mode where all cps are visible) */
+    bool select_controls;	/* notice control points */
+    bool seek_controls;	/* notice control points before base points */
+    bool all_controls;	/* notice control points even if the base points aren't selected (in truetype point numbering mode where all cps are visible) */
     real scale;
     PressedOn *p;
 } FindSel;
@@ -453,11 +453,11 @@ typedef struct searchview {
     short button_height, button_width;
 /* ****** */
     SearchData sd;
-    unsigned int showsfindnext: 1;
-    unsigned int findenabled: 1;
-    unsigned int rplallenabled: 1;
-    unsigned int rplenabled: 1;
-    unsigned int isvisible: 1;
+    bool showsfindnext;
+    bool findenabled;
+    bool rplallenabled;
+    bool rplenabled;
+    bool isvisible;
 } SearchView;
 
 typedef struct mathkernview {
@@ -578,19 +578,19 @@ extern void StrokeCharViewInits(StrokeDlg *sd,int cid);
 
 struct lksubinfo {
     struct lookup_subtable *subtable;
-    unsigned int deleted: 1;
-    unsigned int new: 1;
-    unsigned int selected: 1;
-    unsigned int moved: 1;
+    bool deleted;
+    bool new;
+    bool selected;
+    bool moved;
 };
 
 struct lkinfo {
     OTLookup *lookup;
-    unsigned int open: 1;
-    unsigned int deleted: 1;
-    unsigned int new: 1;
-    unsigned int selected: 1;
-    unsigned int moved: 1;
+    bool open;
+    bool deleted;
+    bool new;
+    bool selected;
+    bool moved;
     int16_t subtable_cnt, subtable_max;
     struct lksubinfo *subtables;
 };
@@ -616,12 +616,12 @@ struct gfi_data {		/* FontInfo */
     int old_sel, old_aspect, old_lang, old_strid;
     int ttf_set, names_set, tex_set;
     int langlocalecode;	/* MS code for the current locale */
-    unsigned int family_untitled: 1;
-    unsigned int human_untitled: 1;
-    unsigned int done: 1;
-    unsigned int mpdone: 1;
-    unsigned int lk_drag_and_drop: 1;
-    unsigned int lk_dropablecursor: 1;
+    bool family_untitled;
+    bool human_untitled;
+    bool done;
+    bool mpdone;
+    bool lk_drag_and_drop;
+    bool lk_dropablecursor;
     struct anchor_shows anchor_shows[2];
     struct texdata texdata;
     GFont *font;

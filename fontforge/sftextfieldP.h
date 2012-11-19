@@ -33,24 +33,24 @@
 
 typedef struct sftextarea {
     GGadget g;
-    unsigned int cursor_on: 1;
-    unsigned int wordsel: 1;
-    unsigned int linesel: 1;
-    unsigned int listfield: 1;
-    unsigned int drag_and_drop: 1;
-    unsigned int has_dd_cursor: 1;
-    unsigned int hidden_cursor: 1;
-    unsigned int multi_line: 1;
-    unsigned int accepts_tabs: 1;
-    unsigned int accepts_returns: 1;
-    unsigned int tf_wrap: 1;
-    unsigned int _dobitext: 1;	/* has at least one right to left character */
-    unsigned int password: 1;
-    unsigned int dontdraw: 1;	/* Used when the tf is part of a larger control, and the control determines when to draw the tf */
-    unsigned int numericfield: 1;
-    unsigned int incr_down: 1;	/* Direction of increments when numeric_scroll events happen */
-    unsigned int completionfield: 1;
-    unsigned int was_completing: 1;
+    bool cursor_on;
+    bool wordsel;
+    bool linesel;
+    bool listfield;
+    bool drag_and_drop;
+    bool has_dd_cursor;
+    bool hidden_cursor;
+    bool multi_line;
+    bool accepts_tabs;
+    bool accepts_returns;
+    bool tf_wrap;
+    bool _dobitext;	/* has at least one right to left character */
+    bool password;
+    bool dontdraw;	/* Used when the tf is part of a larger control, and the control determines when to draw the tf */
+    bool numericfield;
+    bool incr_down;	/* Direction of increments when numeric_scroll events happen */
+    bool completionfield;
+    bool was_completing;
     uint8_t fh;
     uint8_t as;
     uint8_t nw;			/* Width of one character (an "n") */

@@ -60,7 +60,7 @@ struct expr {
 
 struct context {
     char *start, *cur;
-    unsigned int had_error: 1;
+    bool had_error;
     enum operator backed_token;
     real backed_val;
 

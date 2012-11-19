@@ -579,9 +579,9 @@ static void dumparabicdata(FILE *header) {
     FILE *data;
     struct arabicforms {
 	unsigned short initial, medial, final, isolated;
-	unsigned int isletter: 1;
-	unsigned int joindual: 1;
-	unsigned int required_lig_with_alef: 1;
+	bool isletter;
+	bool joindual;
+	bool required_lig_with_alef;
     } forms[256];
     int i, j, index;
 
@@ -594,7 +594,7 @@ static void dumparabicdata(FILE *header) {
 	    /* No op (not a letter, no fancy forms) */
 	    forms[j].initial = forms[j].medial = forms[j].final = forms[j].isolated = i;
 	else {
-	    forms[j].isletter = 1;
+	    forms[j].isletter = true;
 	    forms[j].initial = forms[j].medial = forms[j].final = forms[j].isolated = i;
 	    if ( (index = find(names[i]," ISOLATED FORM"))!= -1 )
 		forms[j].isolated = index;
@@ -605,16 +605,16 @@ static void dumparabicdata(FILE *header) {
 	    if ( (index = find(names[i]," MEDIAL FORM"))!= -1 )
 		forms[j].medial = index;
 	    if ( forms[j].initial!=i && forms[j].medial!=i )
-		forms[j].joindual = 1;
+		forms[j].joindual = true;
 	}
     }
-    forms[0x44/* 0x644 == LAM */].required_lig_with_alef = 1;
+    forms[0x44/* 0x644 == LAM */].required_lig_with_alef = true;
 
     fprintf(header,"\nextern struct arabicforms {\n" );
     fprintf(header,"    unsigned short initial, medial, final, isolated;\n" );
-    fprintf(header,"    unsigned int isletter: 1;\n" );
-    fprintf(header,"    unsigned int joindual: 1;\n" );
-    fprintf(header,"    unsigned int required_lig_with_alef: 1;\n" );
+    fprintf(header,"    bool isletter;\n" );
+    fprintf(header,"    bool joindual;\n" );
+    fprintf(header,"    bool required_lig_with_alef;\n" );
     fprintf(header,"} ArabicForms[256];\t/* for chars 0x600-0x6ff, subtract 0x600 to use array */\n" );
 
     data = fopen( "ArabicForms.c","w");

@@ -45,16 +45,16 @@ typedef struct pressedOn {
     int x,y;			/* screen location of the press */
     real cx, cy;		/* Translated into character space */
     SplinePoint *sp;
-    unsigned int nextcp: 1;	/* Is the cursor on the "next" control point of */
-    unsigned int prevcp: 1;	/*  the spline point, or the "prev" control point */
-    unsigned int anysel: 1;	/* did we hit anything? */
-/*    unsigned int width: 1;	/ * we're moving the width rather than a spline */
-/*    unsigned int vwidth: 1;	/ * we're moving the width rather than a spline */
-    unsigned int pressed: 1;
-    unsigned int rubberbanding: 1;
-    unsigned int rubberlining: 1;
-    unsigned int transany: 1;
-    unsigned int transanyrefs: 1;
+    bool nextcp;	/* Is the cursor on the "next" control point of */
+    bool prevcp;	/*  the spline point, or the "prev" control point */
+    bool anysel;	/* did we hit anything? */
+/*    bool width;	/ * we're moving the width rather than a spline */
+/*    bool vwidth;	/ * we're moving the width rather than a spline */
+    bool pressed;
+    bool rubberbanding;
+    bool rubberlining;
+    bool transany;
+    bool transanyrefs;
     Spline *spline;
     real t;			/* location on the spline where we pressed */
     RefChar *ref;
@@ -503,21 +503,21 @@ typedef struct searchdata {
     int pointcnt, rpointcnt;
     real fudge;
     real fudge_percent;			/* a value of .05 here represents 5% (we don't store the integer) */
-    unsigned int tryreverse: 1;
-    unsigned int tryflips: 1;
-    unsigned int tryrotate: 1;
-    unsigned int tryscale: 1;
-    unsigned int endpoints: 1;		/* Don't match endpoints, use them for direction only */
-    unsigned int onlyselected: 1;
-    unsigned int subpatternsearch: 1;
-    unsigned int doreplace: 1;
-    unsigned int replaceall: 1;
-    unsigned int findall: 1;
-    unsigned int searchback: 1;
-    unsigned int wrap: 1;
-    unsigned int wasreversed: 1;
-    unsigned int replacewithref: 1;
-    unsigned int already_complained: 1;	/* User has already been alerted to the fact that we've converted splines to refs and lost the instructions */
+    bool tryreverse;
+    bool tryflips;
+    bool tryrotate;
+    bool tryscale;
+    bool endpoints;		/* Don't match endpoints, use them for direction only */
+    bool onlyselected;
+    bool subpatternsearch;
+    bool doreplace;
+    bool replaceall;
+    bool findall;
+    bool searchback;
+    bool wrap;
+    bool wasreversed;
+    bool replacewithref;
+    bool already_complained;	/* User has already been alerted to the fact that we've converted splines to refs and lost the instructions */
     SplineSet *matched_spl;
     SplinePoint *matched_sp, *last_sp;
     real matched_rot, matched_scale;
@@ -565,8 +565,8 @@ struct instrdata {
     uint8_t *instrs;
     int instr_cnt, max;
     uint8_t *bts;
-    unsigned int changed: 1;
-    unsigned int in_composit: 1;
+    bool changed;
+    bool in_composit;
     SplineFont *sf;
     SplineChar *sc;
     uint32_t tag;

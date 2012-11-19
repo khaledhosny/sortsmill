@@ -137,15 +137,15 @@ static void GMenuInit() {
 }
 
 typedef struct gmenu {
-    unsigned int hasticks: 1;
-    unsigned int pressed: 1;
-    unsigned int initial_press: 1;
-    unsigned int scrollup: 1;
-    unsigned int freemi: 1;
-    unsigned int disabled: 1;
-    unsigned int dying: 1;
-    unsigned int hidden: 1;
-    unsigned int any_unmasked_shortcuts: 1;		/* Only set for popup menus. Else info in menubar */
+    bool hasticks;
+    bool pressed;
+    bool initial_press;
+    bool scrollup;
+    bool freemi;
+    bool disabled;
+    bool dying;
+    bool hidden;
+    bool any_unmasked_shortcuts;		/* Only set for popup menus. Else info in menubar */
     int bp;
     int tickoff, tioff, rightedge;
     int width, height;

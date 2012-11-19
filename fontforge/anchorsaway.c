@@ -1554,7 +1554,7 @@ AnchorControl (SplineChar *sc, AnchorPoint *ap, int layer)
 
   label[k].text = (uint32_t *) _("_Size:");
   label[k].text_is_1byte = true;
-  label[k].text_in_resource = true;
+  label[k].text_has_mnemonic = true;
   gcd[k].gd.label = &label[k];
   gcd[k].gd.pos.x = 5;
   gcd[k].gd.pos.y = 9;
@@ -1610,7 +1610,7 @@ AnchorControl (SplineChar *sc, AnchorPoint *ap, int layer)
 
   label[k].text = (uint32_t *) _("_X");
   label[k].text_is_1byte = true;
-  label[k].text_in_resource = true;
+  label[k].text_has_mnemonic = true;
   gcd[k].gd.label = &label[k];
   gcd[k].gd.pos.x = 5;
   gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 30;
@@ -1672,7 +1672,7 @@ AnchorControl (SplineChar *sc, AnchorPoint *ap, int layer)
 
   label[k].text = (uint32_t *) _("_Y");
   label[k].text_is_1byte = true;
-  label[k].text_in_resource = true;
+  label[k].text_has_mnemonic = true;
   gcd[k].gd.label = &label[k];
   gcd[k].gd.pos.x = 5;
   gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 30;
@@ -1741,7 +1741,7 @@ AnchorControl (SplineChar *sc, AnchorPoint *ap, int layer)
 
   label[k].text = (uint32_t *) _("_OK");
   label[k].text_is_1byte = true;
-  label[k].text_in_resource = true;
+  label[k].text_has_mnemonic = true;
   gcd[k].gd.label = &label[k];
   gcd[k].gd.pos.x = 5;
   gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 40;
@@ -1755,7 +1755,7 @@ AnchorControl (SplineChar *sc, AnchorPoint *ap, int layer)
 
   label[k].text = (uint32_t *) _("_Cancel");
   label[k].text_is_1byte = true;
-  label[k].text_in_resource = true;
+  label[k].text_has_mnemonic = true;
   gcd[k].gd.label = &label[k];
   gcd[k].gd.pos.x = 80;
   gcd[k].gd.pos.y = gcd[k - 1].gd.pos.y + 3;

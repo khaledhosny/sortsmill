@@ -203,8 +203,7 @@ static uint32_t *GWidgetSaveAsFileWithGadget(const uint32_t *title, const uint32
     gcd[1].gd.flags = gg_visible | gg_enabled | gg_but_default;
     label[1].text = (uint32_t *) _("_Save");
     label[1].text_is_1byte = true;
-    label[1].text_in_resource = true;
-    gcd[1].gd.mnemonic = 'S';
+    label[1].text_has_mnemonic = true;
     gcd[1].gd.label = &label[1];
     gcd[1].gd.handle_controlevent = GFD_SaveOk;
     gcd[1].creator = GButtonCreate;
@@ -215,8 +214,7 @@ static uint32_t *GWidgetSaveAsFileWithGadget(const uint32_t *title, const uint32
     gcd[2].gd.flags = gg_visible | gg_enabled;
     label[2].text = (uint32_t *) _("_Filter");
     label[2].text_is_1byte = true;
-    label[2].text_in_resource = true;
-    gcd[2].gd.mnemonic = 'F';
+    label[2].text_has_mnemonic = true;
     gcd[2].gd.label = &label[2];
     gcd[2].gd.handle_controlevent = GFileChooserFilterEh;
     gcd[2].creator = GButtonCreate;
@@ -227,10 +225,9 @@ static uint32_t *GWidgetSaveAsFileWithGadget(const uint32_t *title, const uint32
     gcd[3].gd.flags = gg_visible | gg_enabled;
     label[3].text = (uint32_t *) C_("Directory", "_New");
     label[3].text_is_1byte = true;
-    label[3].text_in_resource = true;
+    label[3].text_has_mnemonic = true;
     label[3].image = &_GIcon_dir;
     label[3].image_precedes = false;
-    gcd[3].gd.mnemonic = 'N';
     gcd[3].gd.label = &label[3];
     gcd[3].gd.handle_controlevent = GFD_NewDir;
     gcd[3].creator = GButtonCreate;
@@ -241,9 +238,8 @@ static uint32_t *GWidgetSaveAsFileWithGadget(const uint32_t *title, const uint32
     gcd[4].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
     label[4].text = (uint32_t *) _("_Cancel");
     label[4].text_is_1byte = true;
-    label[4].text_in_resource = true;
+    label[4].text_has_mnemonic = true;
     gcd[4].gd.label = &label[4];
-    gcd[4].gd.mnemonic = 'C';
     gcd[4].gd.handle_controlevent = GFD_Cancel;
     gcd[4].creator = GButtonCreate;
     harray[6] = GCD_Glue; harray[7] = &gcd[4]; harray[8] = GCD_Glue; harray[9] = NULL;

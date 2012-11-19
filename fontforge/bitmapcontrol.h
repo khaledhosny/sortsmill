@@ -33,7 +33,7 @@ typedef struct createbitmapdata {
     int isavail;
     int which;
     int rasterize;
-    unsigned int done: 1;
+    bool done;
 } CreateBitmapData;
 
 enum { bd_all, bd_selected, bd_current };

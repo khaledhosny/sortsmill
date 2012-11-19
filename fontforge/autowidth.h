@@ -42,9 +42,9 @@ typedef struct widthinfo {
     SplineFont *sf;
     FontViewBase *fv;
     int layer;
-    unsigned int done: 1;
-    unsigned int autokern: 1;
-    unsigned int onlynegkerns: 1;
+    bool done;
+    bool autokern;
+    bool onlynegkerns;
     struct lookup_subtable *subtable;
 } WidthInfo;
 

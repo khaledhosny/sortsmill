@@ -96,7 +96,7 @@ typedef struct preintersection {
     BasePoint inter;
     Monotonic *m1; bigreal t1;
     Monotonic *m2; bigreal t2;
-    unsigned int is_close: 1;
+    bool is_close;
     struct preintersection *next;
 } PreIntersection;    
 

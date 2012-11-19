@@ -39,7 +39,7 @@ static struct protocols {
     void *(*dispatcher)(GIOControl *gc);
     void (*cancel)(GIOControl *gc);
     void (*term)(void *);
-    unsigned int dothread: 1;
+    bool dothread;
 } *protocols;
 static int plen, pmax;
 typedef void *(ptread_startfunc_t)(void *);

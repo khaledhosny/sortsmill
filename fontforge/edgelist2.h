@@ -34,10 +34,10 @@ typedef struct monotonic {
     struct monotonic *next, *prev;	/* along original contour */
     uint8_t xup;				/* increasing t => increasing x */
     uint8_t yup;
-    unsigned int isneeded : 1;
-    unsigned int isunneeded : 1;
-    unsigned int mutual_collapse : 1;
-    unsigned int exclude : 1;
+    bool isneeded;
+    bool isunneeded;
+    bool mutual_collapse;
+    bool exclude;
     struct intersection *start;
     struct intersection *end;
     DBounds b;

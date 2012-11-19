@@ -129,7 +129,7 @@ struct kerns {
     SplineChar *first;
     SplineChar *second;
     int newoff, newyoff;
-    unsigned int r2l: 1;
+    bool r2l;
     KernPair *kp;
     AnchorClass *ac;
 };
@@ -153,10 +153,10 @@ typedef struct kpdata {
     int fh, as;
     int uh, wh, off_top, selected, last_index, vpad;
     int pressed_x, old_val;
-    unsigned int done:1;
-    unsigned int first:1;
-    unsigned int pressed:1;
-    unsigned int movecursor:1;
+    bool done;
+    bool first;
+    bool pressed;
+    bool movecursor;
 } KPData;
 
 #define CID_Size	1001
@@ -1116,7 +1116,7 @@ return;
 
     label[0].text = (uint32_t *) _("_Size:");
     label[0].text_is_1byte = true;
-    label[0].text_in_resource = true;
+    label[0].text_has_mnemonic = true;
     gcd[0].gd.label = &label[0];
     gcd[0].gd.pos.x = 5; gcd[0].gd.pos.y = 5+6; 
     gcd[0].gd.flags = gg_enabled|gg_visible;
@@ -1182,7 +1182,7 @@ return;
     gcd[6].gd.flags = gg_visible | gg_enabled | gg_but_default;
     label[6].text = (uint32_t *) _("_OK");
     label[6].text_is_1byte = true;
-    label[6].text_in_resource = true;
+    label[6].text_has_mnemonic = true;
     gcd[6].gd.label = &label[6];
     gcd[6].gd.cid = CID_OK;
     gcd[6].gd.handle_controlevent = KP_OK;
@@ -1193,7 +1193,7 @@ return;
     gcd[7].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
     label[7].text = (uint32_t *) _("_Cancel");
     label[7].text_is_1byte = true;
-    label[7].text_in_resource = true;
+    label[7].text_has_mnemonic = true;
     gcd[7].gd.label = &label[7];
     gcd[7].gd.cid = CID_Cancel;
     gcd[7].gd.handle_controlevent = KP_Cancel;

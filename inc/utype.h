@@ -139,9 +139,9 @@ VISIBLE extern const uint32_t	____codepointassigned[];	/* 1bit_boolean_flag x 32
 
 struct arabicforms {
     unsigned short initial, medial, final, isolated;
-    unsigned int isletter: 1;
-    unsigned int joindual: 1;
-    unsigned int required_lig_with_alef: 1;
+    bool isletter;
+    bool joindual;
+    bool required_lig_with_alef;
 };
 
 /* for chars 0x600-0x6ff, subtract 0x600 to use array */

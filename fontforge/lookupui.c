@@ -854,8 +854,7 @@ static char *LK_LangsDlg(GGadget *g, int r, int c) {
 	gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_default;
 	label[i].text = (uint32_t *) _("_OK");
 	label[i].text_is_1byte = true;
-	label[i].text_in_resource = true;
-	gcd[i].gd.mnemonic = 'O';
+	label[i].text_has_mnemonic = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.cid = CID_OK;
 	harray[0] = GCD_Glue; harray[1] = &gcd[i]; harray[2] = GCD_Glue;
@@ -866,9 +865,8 @@ static char *LK_LangsDlg(GGadget *g, int r, int c) {
 	gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
 	label[i].text = (uint32_t *) _("_Cancel");
 	label[i].text_is_1byte = true;
-	label[i].text_in_resource = true;
+	label[i].text_has_mnemonic = true;
 	gcd[i].gd.label = &label[i];
-	gcd[i].gd.mnemonic = 'C';
 	gcd[i].gd.cid = CID_Cancel;
 	harray[3] = GCD_Glue; harray[4] = &gcd[i]; harray[5] = GCD_Glue; harray[6] = NULL;
 	gcd[i++].creator = GButtonCreate;
@@ -1141,7 +1139,7 @@ static char *LK_ScriptsDlg(GGadget *g, int r, int c) {
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
     label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.handle_controlevent = Script_OK;
     gcd[k].gd.cid = CID_OK;
@@ -1152,7 +1150,7 @@ static char *LK_ScriptsDlg(GGadget *g, int r, int c) {
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
     label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.handle_controlevent = Script_Cancel;
     gcd[k].gd.cid = CID_Cancel;
@@ -1724,7 +1722,7 @@ int EditLookup(OTLookup *otl,int isgpos,SplineFont *sf) {
 
     label[0].text = (uint32_t *) _("Type:");
     label[0].text_is_1byte = true;
-    label[0].text_in_resource = true;
+    label[0].text_has_mnemonic = true;
     gcd[0].gd.label = &label[0];
     gcd[0].gd.pos.x = 12; gcd[0].gd.pos.y = 6+6; 
     gcd[0].gd.flags = gg_visible | gg_enabled;
@@ -1910,7 +1908,7 @@ int EditLookup(OTLookup *otl,int isgpos,SplineFont *sf) {
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
     label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.handle_controlevent = Lookup_OK;
     gcd[k].gd.cid = CID_OK;
@@ -1921,7 +1919,7 @@ int EditLookup(OTLookup *otl,int isgpos,SplineFont *sf) {
     gcd[k+1].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
     label[k+1].text = (uint32_t *) _("_Cancel");
     label[k+1].text_is_1byte = true;
-    label[k+1].text_in_resource = true;
+    label[k+1].text_has_mnemonic = true;
     gcd[k+1].gd.label = &label[k+1];
     gcd[k+1].gd.handle_controlevent = Lookup_Cancel;
     gcd[k+1].gd.cid = CID_Cancel;
@@ -2285,7 +2283,7 @@ static void AnchorClassD(SplineFont *sf, struct lookup_subtable *sub, int def_la
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_default;
     label[i].text = (uint32_t *) _("_OK");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.handle_controlevent = AC_OK;
     gcd[i].gd.cid = CID_OK;
@@ -2296,7 +2294,7 @@ static void AnchorClassD(SplineFont *sf, struct lookup_subtable *sub, int def_la
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
     label[i].text = (uint32_t *) _("_Cancel");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.handle_controlevent = AC_Cancel;
     gcd[i].gd.cid = CID_Cancel;
@@ -2323,7 +2321,7 @@ static void AnchorClassD(SplineFont *sf, struct lookup_subtable *sub, int def_la
     gcd[i].gd.flags = gg_visible | gg_enabled;
     label[i].text = (uint32_t *) _("Anchor Control...");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.cid = CID_ShowAnchors;
     gcd[i].gd.handle_controlevent = AnchorClassD_ShowAnchors;
@@ -4141,7 +4139,7 @@ static void PSTKernD(SplineFont *sf, struct lookup_subtable *sub, int def_layer)
     i = k = 0;
     label[i].text = (uint32_t *) _("_Alphabetic");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.pos.x = 5; gcd[i].gd.pos.y = 5+4; 
     gcd[i].gd.flags = isalphabetic ? (gg_enabled|gg_visible|gg_cb_on|gg_utf8_popup) : (gg_enabled|gg_visible|gg_utf8_popup);
@@ -4153,7 +4151,7 @@ static void PSTKernD(SplineFont *sf, struct lookup_subtable *sub, int def_layer)
 
     label[i].text = (uint32_t *) _("_Unicode");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.pos.x = 5; gcd[i].gd.pos.y = 5+4; 
     gcd[i].gd.flags = !isalphabetic ? (gg_enabled|gg_visible|gg_cb_on|gg_utf8_popup) : (gg_enabled|gg_visible|gg_utf8_popup);
@@ -4165,7 +4163,7 @@ static void PSTKernD(SplineFont *sf, struct lookup_subtable *sub, int def_layer)
 
     label[i].text = (uint32_t *) _("_By Base Char");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.pos.x = 5; gcd[i].gd.pos.y = 5+4; 
     gcd[i].gd.flags = stemming ? (gg_enabled|gg_visible|gg_cb_on|gg_utf8_popup) : (gg_enabled|gg_visible|gg_utf8_popup);
@@ -4177,7 +4175,7 @@ static void PSTKernD(SplineFont *sf, struct lookup_subtable *sub, int def_layer)
 
     label[i].text = (uint32_t *) _("By _Scripts");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.pos.x = 5; gcd[i].gd.pos.y = 5+4; 
     gcd[i].gd.flags = byscripts ? (gg_enabled|gg_visible|gg_cb_on|gg_utf8_popup) : (gg_enabled|gg_visible|gg_utf8_popup);
@@ -4200,7 +4198,7 @@ static void PSTKernD(SplineFont *sf, struct lookup_subtable *sub, int def_layer)
     if ( sub->lookup->lookup_type == gpos_pair || sub->lookup->lookup_type == gpos_single ) {
 	label[i].text = (uint32_t *) _("_Hide Unused Columns");
 	label[i].text_is_1byte = true;
-	label[i].text_in_resource = true;
+	label[i].text_has_mnemonic = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.pos.x = 5; gcd[i].gd.pos.y = 5+4; 
 	gcd[i].gd.flags = lookup_hideunused ? (gg_enabled|gg_visible|gg_cb_on|gg_utf8_popup) : (gg_enabled|gg_visible|gg_utf8_popup);
@@ -4225,7 +4223,7 @@ static void PSTKernD(SplineFont *sf, struct lookup_subtable *sub, int def_layer)
     if ( lookup_type==gpos_pair )
 	buttonlabel[0].text = (uint32_t *) _("Auto_Kern");
     buttonlabel[0].text_is_1byte = true;
-    buttonlabel[0].text_in_resource = true;
+    buttonlabel[0].text_has_mnemonic = true;
     buttongcd[0].gd.label = &buttonlabel[0];
     buttongcd[0].gd.pos.x = 5; buttongcd[0].gd.pos.y = 5+4;
     buttongcd[0].gd.flags =
@@ -4247,7 +4245,7 @@ static void PSTKernD(SplineFont *sf, struct lookup_subtable *sub, int def_layer)
     if ( lookup_type==gpos_pair )
 	buttonlabel[1].text = (uint32_t *) _("_AutoKern Selected");
     buttonlabel[1].text_is_1byte = true;
-    buttonlabel[1].text_in_resource = true;
+    buttonlabel[1].text_has_mnemonic = true;
     buttongcd[1].gd.label = &buttonlabel[1];
     buttongcd[1].gd.pos.x = 5; buttongcd[1].gd.pos.y = 5+4;
     buttongcd[1].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
@@ -4264,7 +4262,7 @@ static void PSTKernD(SplineFont *sf, struct lookup_subtable *sub, int def_layer)
 
     buttonlabel[2].text = (uint32_t *) _("_Remove Empty");
     buttonlabel[2].text_is_1byte = true;
-    buttonlabel[2].text_in_resource = true;
+    buttonlabel[2].text_has_mnemonic = true;
     buttongcd[2].gd.label = &buttonlabel[2];
     buttongcd[2].gd.pos.x = 5; buttongcd[2].gd.pos.y = 5+4;
     buttongcd[2].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
@@ -4278,7 +4276,7 @@ static void PSTKernD(SplineFont *sf, struct lookup_subtable *sub, int def_layer)
 
     buttonlabel[3].text = (uint32_t *) _("Remove All");
     buttonlabel[3].text_is_1byte = true;
-    buttonlabel[3].text_in_resource = true;
+    buttonlabel[3].text_has_mnemonic = true;
     buttongcd[3].gd.label = &buttonlabel[3];
     buttongcd[3].gd.pos.x = 5; buttongcd[3].gd.pos.y = 5+4;
     buttongcd[3].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
@@ -4289,7 +4287,7 @@ static void PSTKernD(SplineFont *sf, struct lookup_subtable *sub, int def_layer)
     if ( sub->lookup->lookup_type == gsub_single ) {
 	label[i].text = (uint32_t *) _("_Default Using Suffix:");
 	label[i].text_is_1byte = true;
-	label[i].text_in_resource = true;
+	label[i].text_has_mnemonic = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.pos.x = 5; gcd[i].gd.pos.y = 5+4; 
 	gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
@@ -4305,7 +4303,7 @@ static void PSTKernD(SplineFont *sf, struct lookup_subtable *sub, int def_layer)
 
 	label[i].text = (uint32_t *) sub->suffix;
 	label[i].text_is_1byte = true;
-	label[i].text_in_resource = true;
+	label[i].text_has_mnemonic = true;
 	gcd[i].gd.label = sub->suffix==NULL ? NULL : &label[i];
 	gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
 	gcd[i].gd.popup_msg = gcd[i-1].gd.popup_msg;
@@ -4320,7 +4318,7 @@ static void PSTKernD(SplineFont *sf, struct lookup_subtable *sub, int def_layer)
     } else if ( sub->lookup->lookup_type == gpos_single ) {
 	label[i].text = (uint32_t *) _("_Default New Entries to First");
 	label[i].text_is_1byte = true;
-	label[i].text_in_resource = true;
+	label[i].text_has_mnemonic = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.pos.x = 5; gcd[i].gd.pos.y = 5+4; 
 	gcd[i].gd.flags = gg_enabled|gg_visible|gg_cb_on|gg_utf8_popup;
@@ -4334,7 +4332,7 @@ static void PSTKernD(SplineFont *sf, struct lookup_subtable *sub, int def_layer)
     } else if ( sub->lookup->lookup_type == gpos_pair ) {
 	label[i].text = (uint32_t *) _("_Default Separation:");
 	label[i].text_is_1byte = true;
-	label[i].text_in_resource = true;
+	label[i].text_has_mnemonic = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.pos.x = 5; gcd[i].gd.pos.y = 5+4; 
 	gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
@@ -4348,7 +4346,7 @@ static void PSTKernD(SplineFont *sf, struct lookup_subtable *sub, int def_layer)
 	sprintf( sepbuf, "%d", sub->separation );
 	label[i].text = (uint32_t *) sepbuf;
 	label[i].text_is_1byte = true;
-	label[i].text_in_resource = true;
+	label[i].text_has_mnemonic = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.pos.width = 50;
 	gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
@@ -4359,7 +4357,7 @@ static void PSTKernD(SplineFont *sf, struct lookup_subtable *sub, int def_layer)
 
 	label[i].text = (uint32_t *) _("_Min Kern:");
 	label[i].text_is_1byte = true;
-	label[i].text_in_resource = true;
+	label[i].text_has_mnemonic = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.pos.x = 5; gcd[i].gd.pos.y = 5+4; 
 	gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
@@ -4372,7 +4370,7 @@ static void PSTKernD(SplineFont *sf, struct lookup_subtable *sub, int def_layer)
 	sprintf( mkbuf, "%d", sub->minkern );
 	label[i].text = (uint32_t *) mkbuf;
 	label[i].text_is_1byte = true;
-	label[i].text_in_resource = true;
+	label[i].text_has_mnemonic = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.pos.width = 50;
 	gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
@@ -4383,7 +4381,7 @@ static void PSTKernD(SplineFont *sf, struct lookup_subtable *sub, int def_layer)
 
 	label[i].text = (uint32_t *) _("_Touching");
 	label[i].text_is_1byte = true;
-	label[i].text_in_resource = true;
+	label[i].text_has_mnemonic = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.pos.x = 5; gcd[i].gd.pos.y = 5+4; 
 	gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
@@ -4408,7 +4406,7 @@ static void PSTKernD(SplineFont *sf, struct lookup_subtable *sub, int def_layer)
 
 	label[i].text = (uint32_t *) _("Only kern glyphs closer");
 	label[i].text_is_1byte = true;
-	label[i].text_in_resource = true;
+	label[i].text_has_mnemonic = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
 	if ( sub->onlyCloser )
@@ -4422,7 +4420,7 @@ static void PSTKernD(SplineFont *sf, struct lookup_subtable *sub, int def_layer)
 
 	label[i].text = (uint32_t *) _("Autokern new entries");
 	label[i].text_is_1byte = true;
-	label[i].text_in_resource = true;
+	label[i].text_has_mnemonic = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
 	if ( !sub->dontautokern )
@@ -4495,7 +4493,7 @@ static void PSTKernD(SplineFont *sf, struct lookup_subtable *sub, int def_layer)
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_default;
     label[i].text = (uint32_t *) _("_OK");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.handle_controlevent = PSTKD_Ok;
     gcd[i++].creator = GButtonCreate;
@@ -4505,7 +4503,7 @@ static void PSTKernD(SplineFont *sf, struct lookup_subtable *sub, int def_layer)
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
     label[i].text = (uint32_t *) _("_Cancel");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.handle_controlevent = PSTKD_Cancel;
     gcd[i].gd.cid = CID_Cancel;
@@ -5181,7 +5179,7 @@ static int kern_format_dlg( SplineFont *sf, int def_layer,
 
     label[i].text = (uint32_t *) _("Use individual kerning pairs");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup|gg_cb_on;
     gcd[i].gd.popup_msg = (uint32_t *) _(
@@ -5194,7 +5192,7 @@ static int kern_format_dlg( SplineFont *sf, int def_layer,
 
     label[i].text = (uint32_t *) _("Use a matrix of kerning classes");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup|gg_rad_continueold;
     gcd[i].gd.popup_msg = (uint32_t *) _(
@@ -5208,7 +5206,7 @@ static int kern_format_dlg( SplineFont *sf, int def_layer,
 
     label[i].text = (uint32_t *) _("FontForge will guess kerning classes for selected glyphs");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.flags = gg_visible|gg_utf8_popup|gg_cb_on;
     gcd[i].gd.popup_msg = (uint32_t *) _(
@@ -5225,7 +5223,7 @@ static int kern_format_dlg( SplineFont *sf, int def_layer,
 
     label[i].text = (uint32_t *) _("Intra Class Distance:");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.pos.x = 5; gcd[i].gd.pos.y = 5+4; 
     gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
@@ -5243,7 +5241,7 @@ static int kern_format_dlg( SplineFont *sf, int def_layer,
     sprintf( distancebuf, "%g", (sf->ascent+sf->descent)/100. );
     label[i].text = (uint32_t *) distancebuf;
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.pos.width = 50;
     gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
@@ -5260,7 +5258,7 @@ static int kern_format_dlg( SplineFont *sf, int def_layer,
 
 	label[i].text = (uint32_t *) _("_Default Separation:");
 	label[i].text_is_1byte = true;
-	label[i].text_in_resource = true;
+	label[i].text_has_mnemonic = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.pos.x = 5; gcd[i].gd.pos.y = 5+4; 
 	gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
@@ -5274,7 +5272,7 @@ static int kern_format_dlg( SplineFont *sf, int def_layer,
 	sprintf( sepbuf, "%d", sub->separation );
 	label[i].text = (uint32_t *) sepbuf;
 	label[i].text_is_1byte = true;
-	label[i].text_in_resource = true;
+	label[i].text_has_mnemonic = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.pos.width = 50;
 	gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
@@ -5285,7 +5283,7 @@ static int kern_format_dlg( SplineFont *sf, int def_layer,
 
 	label[i].text = (uint32_t *) _("_Min Kern:");
 	label[i].text_is_1byte = true;
-	label[i].text_in_resource = true;
+	label[i].text_has_mnemonic = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.pos.x = 5; gcd[i].gd.pos.y = 5+4; 
 	gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
@@ -5298,7 +5296,7 @@ static int kern_format_dlg( SplineFont *sf, int def_layer,
 	sprintf( mkbuf, "%d", sub->minkern );
 	label[i].text = (uint32_t *) mkbuf;
 	label[i].text_is_1byte = true;
-	label[i].text_in_resource = true;
+	label[i].text_has_mnemonic = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.pos.width = 50;
 	gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
@@ -5309,7 +5307,7 @@ static int kern_format_dlg( SplineFont *sf, int def_layer,
 
 	label[i].text = (uint32_t *) _("_Touching");
 	label[i].text_is_1byte = true;
-	label[i].text_in_resource = true;
+	label[i].text_has_mnemonic = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.pos.x = 5; gcd[i].gd.pos.y = 5+4; 
 	gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
@@ -5334,7 +5332,7 @@ static int kern_format_dlg( SplineFont *sf, int def_layer,
 
 	label[i].text = (uint32_t *) _("Only kern glyphs closer");
 	label[i].text_is_1byte = true;
-	label[i].text_in_resource = true;
+	label[i].text_has_mnemonic = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup|gg_cb_on;
 	if ( sub->onlyCloser )
@@ -5348,7 +5346,7 @@ static int kern_format_dlg( SplineFont *sf, int def_layer,
 
 	label[i].text = (uint32_t *) _("Autokern new entries");
 	label[i].text_is_1byte = true;
-	label[i].text_in_resource = true;
+	label[i].text_has_mnemonic = true;
 	gcd[i].gd.label = &label[i];
 	gcd[i].gd.flags = gg_enabled|gg_visible|gg_utf8_popup;
 	if ( !sub->dontautokern )
@@ -5375,7 +5373,7 @@ static int kern_format_dlg( SplineFont *sf, int def_layer,
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_default;
     label[i].text = (uint32_t *) _("_OK");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.handle_controlevent = KF_OK;
     gcd[i++].creator = GButtonCreate;
@@ -5383,7 +5381,7 @@ static int kern_format_dlg( SplineFont *sf, int def_layer,
     gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
     label[i].text = (uint32_t *) _("_Cancel");
     label[i].text_is_1byte = true;
-    label[i].text_in_resource = true;
+    label[i].text_has_mnemonic = true;
     gcd[i].gd.label = &label[i];
     gcd[i].gd.handle_controlevent = KF_Cancel;
     gcd[i++].creator = GButtonCreate;
@@ -5808,7 +5806,7 @@ void AddRmLang(SplineFont *sf, struct lkdata *lk,int add_lang) {
 
     label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_visible|gg_enabled | gg_but_default;
     gcd[k].gd.handle_controlevent = ARL_OK;
@@ -5816,7 +5814,7 @@ void AddRmLang(SplineFont *sf, struct lkdata *lk,int add_lang) {
 
     label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_visible|gg_enabled | gg_but_cancel;
     gcd[k].gd.handle_controlevent = ARL_Cancel;
@@ -6185,7 +6183,7 @@ void FVMassGlyphRename(FontView *fv) {
 
     label[k].text = (uint32_t *) _("_OK");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_visible|gg_enabled | gg_but_default;
     gcd[k].gd.handle_controlevent = MRD_OK;
@@ -6193,7 +6191,7 @@ void FVMassGlyphRename(FontView *fv) {
 
     label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.flags = gg_visible|gg_enabled | gg_but_cancel;
     gcd[k].gd.handle_controlevent = MRD_Cancel;

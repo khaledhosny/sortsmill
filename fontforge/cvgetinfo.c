@@ -408,7 +408,7 @@ static void RefGetInfo(CharView *cv, RefChar *ref) {
 	varray[l++] = &boxes[2];
 
 	label[6+j].text = (uint32_t *) _("_Use My Metrics");
-	label[6+j].text_in_resource = true;
+	label[6+j].text_has_mnemonic = true;
 	label[6+j].text_is_1byte = true;
 	gcd[6+j].gd.label = &label[6+j];
 	gcd[6+j].gd.pos.x = 5; gcd[6+j].gd.pos.y = gcd[6+j-1].gd.pos.y+21;
@@ -419,7 +419,7 @@ static void RefGetInfo(CharView *cv, RefChar *ref) {
 	gcd[6+j++].creator = GCheckBoxCreate;
 
 	label[6+j].text = (uint32_t *) _("_Round To Grid");
-	label[6+j].text_in_resource = true;
+	label[6+j].text_has_mnemonic = true;
 	label[6+j].text_is_1byte = true;
 	gcd[6+j].gd.label = &label[6+j];
 	gcd[6+j].gd.pos.x = 5; gcd[6+j].gd.pos.y = gcd[6+j-1].gd.pos.y+14;
@@ -430,7 +430,7 @@ static void RefGetInfo(CharView *cv, RefChar *ref) {
 	gcd[6+j++].creator = GCheckBoxCreate;
 
 	label[6+j].text = (uint32_t *) _("TrueType Point _Matching:");
-	label[6+j].text_in_resource = true;
+	label[6+j].text_has_mnemonic = true;
 	label[6+j].text_is_1byte = true;
 	gcd[6+j].gd.label = &label[6+j];
 	gcd[6+j].gd.pos.x = 5; gcd[6+j].gd.pos.y = gcd[6+j-1].gd.pos.y+17;
@@ -441,7 +441,7 @@ static void RefGetInfo(CharView *cv, RefChar *ref) {
 
 	label[6+j].text = (uint32_t *) _("_Base:");
 	label[6+j].text_is_1byte = true;
-	label[6+j].text_in_resource = true;
+	label[6+j].text_has_mnemonic = true;
 	gcd[6+j].gd.label = &label[6+j];
 	gcd[6+j].gd.pos.x = 8; gcd[6+j].gd.pos.y = gcd[6+j-1].gd.pos.y+19;
 	gcd[6+j].gd.flags = cv->b.sc->layers[ly_fore].order2 ? (gg_enabled|gg_visible|gg_utf8_popup) : (gg_visible|gg_utf8_popup);
@@ -569,8 +569,7 @@ static void RefGetInfo(CharView *cv, RefChar *ref) {
 	gcd[6+j].gd.flags = gg_visible | gg_enabled ;
 	label[6+j].text = (uint32_t *) _("_Show");
 	label[6+j].text_is_1byte = true;
-	label[6+j].text_in_resource = true;
-	gcd[6+j].gd.mnemonic = 'S';
+	label[6+j].text_has_mnemonic = true;
 	gcd[6+j].gd.label = &label[6+j];
 	gcd[6+j].gd.handle_controlevent = GI_Show;
 	harray2[0] = GCD_Glue; harray2[1] = &gcd[6+j]; harray2[2] = GCD_Glue; harray2[3] = NULL;
@@ -589,8 +588,7 @@ static void RefGetInfo(CharView *cv, RefChar *ref) {
 	gcd[6+j].gd.flags = gg_visible | gg_enabled | gg_but_default;
 	label[6+j].text = (uint32_t *) _("_OK");
 	label[6+j].text_is_1byte = true;
-	label[6+j].text_in_resource = true;
-	gcd[6+j].gd.mnemonic = 'O';
+	label[6+j].text_has_mnemonic = true;
 	gcd[6+j].gd.label = &label[6+j];
 	gcd[6+j].gd.handle_controlevent = GI_ROK;
 	gcd[6+j++].creator = GButtonCreate;
@@ -600,8 +598,7 @@ static void RefGetInfo(CharView *cv, RefChar *ref) {
 	gcd[6+j].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
 	label[6+j].text = (uint32_t *) _("_Cancel");
 	label[6+j].text_is_1byte = true;
-	label[6+j].text_in_resource = true;
-	gcd[6+j].gd.mnemonic = 'C';
+	label[6+j].text_has_mnemonic = true;
 	gcd[6+j].gd.label = &label[6+j];
 	gcd[6+j].gd.handle_controlevent = GI_Cancel;
 	gcd[6+j].creator = GButtonCreate;
@@ -701,8 +698,7 @@ static void ImgGetInfo(CharView *cv, ImageList *img) {
 	gcd[3].gd.flags = gg_visible | gg_enabled | gg_but_default | gg_but_cancel;
 	label[3].text = (uint32_t *) _("_OK");
 	label[3].text_is_1byte = true;
-	label[3].text_in_resource = true;
-	gcd[3].gd.mnemonic = 'O';
+	label[3].text_has_mnemonic = true;
 	gcd[3].gd.label = &label[3];
 	gcd[3].gd.handle_controlevent = GI_Cancel;
 	gcd[3].creator = GButtonCreate;
@@ -1379,7 +1375,7 @@ return;
 
 	label[j].text = (uint32_t *) _("_X:");
 	label[j].text_is_1byte = true;
-	label[j].text_in_resource = true;
+	label[j].text_has_mnemonic = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = 5; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y+34;
 	gcd[j].gd.flags = gg_enabled|gg_visible;
@@ -1398,7 +1394,7 @@ return;
 
 	label[j].text = (uint32_t *) _("_Y:");
 	label[j].text_is_1byte = true;
-	label[j].text_in_resource = true;
+	label[j].text_has_mnemonic = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = 85; gcd[j].gd.pos.y = gcd[j-2].gd.pos.y;
 	gcd[j].gd.flags = gg_enabled|gg_visible;
@@ -1551,7 +1547,7 @@ return;
 
 	label[j].text = (uint32_t *) C_("AnchorPoint", "_New");
 	label[j].text_is_1byte = true;
-	label[j].text_in_resource = true;
+	label[j].text_has_mnemonic = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = 5; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y+30;
 	gcd[j].gd.pos.width = -1;
@@ -1564,7 +1560,7 @@ return;
 
 	label[j].text = (uint32_t *) _("_Delete");
 	label[j].text_is_1byte = true;
-	label[j].text_in_resource = true;
+	label[j].text_has_mnemonic = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = -5; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y;
 	gcd[j].gd.pos.width = -1;
@@ -1582,7 +1578,7 @@ return;
 
 	label[j].text = (uint32_t *) _("< _Prev");
 	label[j].text_is_1byte = true;
-	label[j].text_in_resource = true;
+	label[j].text_has_mnemonic = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = 15; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y+28;
 	gcd[j].gd.pos.width = -1;
@@ -1595,7 +1591,7 @@ return;
 
 	label[j].text = (uint32_t *) _("_Next >");
 	label[j].text_is_1byte = true;
-	label[j].text_in_resource = true;
+	label[j].text_has_mnemonic = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = -15; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y;
 	gcd[j].gd.pos.width = -1;
@@ -1621,7 +1617,7 @@ return;
 
 	label[j].text = (uint32_t *) _("_OK");
 	label[j].text_is_1byte = true;
-	label[j].text_in_resource = true;
+	label[j].text_has_mnemonic = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = 5; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y+4;
 	gcd[j].gd.pos.width = -1;
@@ -1633,7 +1629,7 @@ return;
 
 	label[j].text = (uint32_t *) _("_Cancel");
 	label[j].text_is_1byte = true;
-	label[j].text_in_resource = true;
+	label[j].text_has_mnemonic = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = -5; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y+3;
 	gcd[j].gd.pos.width = -1;
@@ -2670,7 +2666,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 
 	label[j].text = (uint32_t *) _("_Normal");
 	label[j].text_is_1byte = true;
-	label[j].text_in_resource = true;
+	label[j].text_has_mnemonic = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = 5; gcd[j].gd.pos.y = 5;
 	gcd[j].gd.flags = gg_enabled|gg_visible|gg_cb_on;
@@ -2682,7 +2678,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 
 	label[j].text = (uint32_t *) _("_Interpolated");
 	label[j].text_is_1byte = true;
-	label[j].text_in_resource = true;
+	label[j].text_has_mnemonic = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = 70; gcd[j].gd.pos.y = 5;
 	gcd[j].gd.flags = gg_enabled|gg_visible | gg_rad_continueold;
@@ -2699,7 +2695,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 
 	label[j].text = (uint32_t *) _("N_ever Interpolate");
 	label[j].text_is_1byte = true;
-	label[j].text_in_resource = true;
+	label[j].text_has_mnemonic = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = 5; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y+16;
 	gcd[j].gd.flags = cv->b.layerheads[cv->b.drawmode]->order2 ? (gg_enabled|gg_visible) : gg_visible;
@@ -2712,7 +2708,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	gi.normal_start = j;
 	label[j].text = (uint32_t *) _("_Base:");
 	label[j].text_is_1byte = true;
-	label[j].text_in_resource = true;
+	label[j].text_has_mnemonic = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = 5; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y+17+6; 
 	gcd[j].gd.flags = gg_enabled|gg_visible|gg_dontcopybox;
@@ -2971,7 +2967,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	l = 0;
 	label[j].text = (uint32_t *) _("_Base:");
 	label[j].text_is_1byte = true;
-	label[j].text_in_resource = true;
+	label[j].text_has_mnemonic = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.pos.x = 5; gcd[j].gd.pos.y = gcd[gi.normal_start].gd.pos.y; 
 	gcd[j].gd.flags = gg_enabled|gg_visible|gg_dontcopybox;
@@ -3151,7 +3147,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	mgcd[j].gd.flags = gg_visible | gg_enabled;
 	mlabel[j].text = (uint32_t *) _("< _Prev");
 	mlabel[j].text_is_1byte = true;
-	mlabel[j].text_in_resource = true;
+	mlabel[j].text_has_mnemonic = true;
 	mgcd[j].gd.label = &mlabel[j];
 	mgcd[j].gd.cid = CID_Prev;
 	mgcd[j].gd.handle_controlevent = PI_NextPrev;
@@ -3163,7 +3159,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	mgcd[j].gd.flags = gg_visible | gg_enabled;
 	mlabel[j].text = (uint32_t *) _("_Next >");
 	mlabel[j].text_is_1byte = true;
-	mlabel[j].text_in_resource = true;
+	mlabel[j].text_has_mnemonic = true;
 	mgcd[j].gd.label = &mlabel[j];
 	mgcd[j].gd.cid = CID_Next;
 	mgcd[j].gd.handle_controlevent = PI_NextPrev;
@@ -3202,8 +3198,7 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	mgcd[j].gd.flags = gg_visible | gg_enabled | gg_but_default;
 	mlabel[j].text = (uint32_t *) _("_OK");
 	mlabel[j].text_is_1byte = true;
-	mlabel[j].text_in_resource = true;
-	mgcd[j].gd.mnemonic = 'O';
+	mlabel[j].text_has_mnemonic = true;
 	mgcd[j].gd.label = &mlabel[j];
 	mgcd[j].gd.handle_controlevent = PI_Ok;
 	mgcd[j].creator = GButtonCreate;
@@ -3214,9 +3209,8 @@ static void PointGetInfo(CharView *cv, SplinePoint *sp, SplinePointList *spl) {
 	mgcd[j].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
 	mlabel[j].text = (uint32_t *) _("_Cancel");
 	mlabel[j].text_is_1byte = true;
-	mlabel[j].text_in_resource = true;
+	mlabel[j].text_has_mnemonic = true;
 	mgcd[j].gd.label = &mlabel[j];
-	mgcd[j].gd.mnemonic = 'C';
 	mgcd[j].gd.handle_controlevent = PI_Cancel;
 	mgcd[j].creator = GButtonCreate;
 	++j;
@@ -3458,7 +3452,7 @@ static void SpiroPointGetInfo(CharView *cv, spiro_cp *scp, SplinePointList *spl)
 
 	label[j].text = (uint32_t *) _("_X:");
 	label[j].text_is_1byte = true;
-	label[j].text_in_resource = true;
+	label[j].text_has_mnemonic = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.flags = gg_enabled|gg_visible;
 	gcd[j].creator = GLabelCreate;
@@ -3475,7 +3469,7 @@ static void SpiroPointGetInfo(CharView *cv, spiro_cp *scp, SplinePointList *spl)
 
 	label[j].text = (uint32_t *) _("_Y:");
 	label[j].text_is_1byte = true;
-	label[j].text_in_resource = true;
+	label[j].text_has_mnemonic = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.flags = gg_enabled|gg_visible;
 	gcd[j].creator = GLabelCreate;
@@ -3566,7 +3560,7 @@ static void SpiroPointGetInfo(CharView *cv, spiro_cp *scp, SplinePointList *spl)
 	gcd[j].gd.flags = gg_visible | gg_enabled;
 	label[j].text = (uint32_t *) _("< _Prev");
 	label[j].text_is_1byte = true;
-	label[j].text_in_resource = true;
+	label[j].text_has_mnemonic = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.cid = CID_Prev;
 	gcd[j].gd.handle_controlevent = PI_SpiroNextPrev;
@@ -3577,7 +3571,7 @@ static void SpiroPointGetInfo(CharView *cv, spiro_cp *scp, SplinePointList *spl)
 	gcd[j].gd.flags = gg_visible | gg_enabled;
 	label[j].text = (uint32_t *) _("_Next >");
 	label[j].text_is_1byte = true;
-	label[j].text_in_resource = true;
+	label[j].text_has_mnemonic = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.cid = CID_Next;
 	gcd[j].gd.handle_controlevent = PI_SpiroNextPrev;
@@ -3631,8 +3625,7 @@ static void SpiroPointGetInfo(CharView *cv, spiro_cp *scp, SplinePointList *spl)
 	gcd[j].gd.flags = gg_visible | gg_enabled | gg_but_default;
 	label[j].text = (uint32_t *) _("_OK");
 	label[j].text_is_1byte = true;
-	label[j].text_in_resource = true;
-	gcd[j].gd.mnemonic = 'O';
+	label[j].text_has_mnemonic = true;
 	gcd[j].gd.label = &label[j];
 	gcd[j].gd.handle_controlevent = PI_SpiroOk;
 	gcd[j].creator = GButtonCreate;
@@ -3643,9 +3636,8 @@ static void SpiroPointGetInfo(CharView *cv, spiro_cp *scp, SplinePointList *spl)
 	gcd[j].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
 	label[j].text = (uint32_t *) _("_Cancel");
 	label[j].text_is_1byte = true;
-	label[j].text_in_resource = true;
+	label[j].text_has_mnemonic = true;
 	gcd[j].gd.label = &label[j];
-	gcd[j].gd.mnemonic = 'C';
 	gcd[j].gd.handle_controlevent = PI_Cancel;
 	gcd[j].creator = GButtonCreate;
 	harray6[4] = GCD_Glue; harray6[5] = &gcd[j]; harray6[6] = GCD_Glue; harray6[7] = NULL;

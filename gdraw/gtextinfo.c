@@ -263,9 +263,9 @@ GTextInfo *GTextInfoCopy(GTextInfo *ti) {
 	copy->fg = copy->bg = COLOR_UNKNOWN;
     }
     if ( ti->text!=NULL ) {
-	if ( ti->text_is_1byte && ti->text_in_resource ) {
+	if ( ti->text_is_1byte && ti->text_has_mnemonic ) {
 	    copy->text = utf82u_mncopy((char *) copy->text,&copy->mnemonic);
-	    copy->text_in_resource = false;
+	    copy->text_has_mnemonic = false;
 	    copy->text_is_1byte = false;
 	} else if ( ti->text_is_1byte ) {
 	    copy->text = utf82u_copy((char *) copy->text);
@@ -620,7 +620,7 @@ return( i );
 }
 
 void GTextInfoFree(GTextInfo *ti) {
-    if ( !ti->text_in_resource )
+    if ( !ti->text_has_mnemonic )
 	free(ti->text);
     free(ti);
 }
@@ -632,7 +632,7 @@ void GTextInfoListFree(GTextInfo *ti) {
 return;
 
     for ( i=0; ti[i].text!=NULL || ti[i].image!=NULL || ti[i].line; ++i )
-	if ( !ti[i].text_in_resource )
+	if ( !ti[i].text_has_mnemonic )
 	    free(ti[i].text);
     free(ti);
 }
@@ -725,13 +725,13 @@ return( NULL );
 	arr[i] = mi[i];
 	GTextInfoImageLookup(&arr[i].ti);
 	if ( mi[i].ti.text!=NULL ) {
-	    if ( mi[i].ti.text_in_resource && mi[i].ti.text_is_1byte )
+	    if ( mi[i].ti.text_has_mnemonic && mi[i].ti.text_is_1byte )
 		arr[i].ti.text = utf82u_mncopy((char *) mi[i].ti.text,&arr[i].ti.mnemonic);
 	    else if ( mi[i].ti.text_is_1byte )
 		arr[i].ti.text = utf82u_copy((char *) mi[i].ti.text);
 	    else
 		arr[i].ti.text = x_u32_strdup_or_null(mi[i].ti.text);
-	    arr[i].ti.text_in_resource = arr[i].ti.text_is_1byte = false;
+	    arr[i].ti.text_has_mnemonic = arr[i].ti.text_is_1byte = false;
 	}
 	if ( islower(arr[i].ti.mnemonic))
 	    arr[i].ti.mnemonic = toupper(arr[i].ti.mnemonic);
@@ -967,13 +967,13 @@ return( NULL );
 	if ( mi[i].shortcut!=NULL )
 	    GMenuItemParseShortCut(&arr[i],mi[i].shortcut);
 	if ( mi[i].ti.text!=NULL ) {
-	    if ( mi[i].ti.text_in_resource && mi[i].ti.text_is_1byte )
+	    if ( mi[i].ti.text_has_mnemonic && mi[i].ti.text_is_1byte )
 		arr[i].ti.text = utf82u_mncopy((char *) mi[i].ti.text,&arr[i].ti.mnemonic);
 	    else if ( mi[i].ti.text_is_1byte )
 		arr[i].ti.text = utf82u_copy((char *) mi[i].ti.text);
 	    else
 		arr[i].ti.text = x_u32_strdup_or_null(mi[i].ti.text);
-	    arr[i].ti.text_in_resource = arr[i].ti.text_is_1byte = false;
+	    arr[i].ti.text_has_mnemonic = arr[i].ti.text_is_1byte = false;
 	}
 	if ( islower(arr[i].ti.mnemonic))
 	    arr[i].ti.mnemonic = toupper(arr[i].ti.mnemonic);

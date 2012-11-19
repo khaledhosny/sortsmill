@@ -67,7 +67,7 @@ typedef struct aw_data {
     int loop_cnt;		/* Number of times to iterate... */
     int desired_separation;
     int min_sidebearing, max_sidebearing;
-    unsigned int normalize: 1;
+    bool normalize;
     real denom;
 #if !defined(_NO_PYTHON)
     void *python_data;

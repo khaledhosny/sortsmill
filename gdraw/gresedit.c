@@ -2307,7 +2307,7 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 
     toplab[1].text = (uint32_t *) _("_OK");
     toplab[1].text_is_1byte = true;
-    toplab[1].text_in_resource = true;
+    toplab[1].text_has_mnemonic = true;
     topgcd[1].gd.label = &toplab[1];
     topgcd[1].gd.flags = gg_visible|gg_enabled | gg_but_default;
     topgcd[1].gd.handle_controlevent = GRE_OK;
@@ -2315,7 +2315,7 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 
     toplab[2].text = (uint32_t *) _("_Save As...");
     toplab[2].text_is_1byte = true;
-    toplab[2].text_in_resource = true;
+    toplab[2].text_has_mnemonic = true;
     topgcd[2].gd.label = &toplab[2];
     topgcd[2].gd.flags = gg_visible|gg_enabled;
     topgcd[2].gd.handle_controlevent = GRE_Save;
@@ -2323,7 +2323,7 @@ static void GResEditDlg(GResInfo *all,const char *def_res_file,void (*change_res
 
     toplab[3].text = (uint32_t *) _("_Cancel");
     toplab[3].text_is_1byte = true;
-    toplab[3].text_in_resource = true;
+    toplab[3].text_has_mnemonic = true;
     topgcd[3].gd.label = &toplab[3];
     topgcd[3].gd.flags = gg_visible|gg_enabled | gg_but_cancel;
     topgcd[3].gd.handle_controlevent = GRE_Cancel;

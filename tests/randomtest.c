@@ -87,9 +87,9 @@ static struct fontlist
 {
   char *name;
   int len;
-  unsigned int isbinary:1;
-  unsigned int isascii:1;
-  unsigned int ishex:1;
+  bool isbinary;
+  bool isascii;
+  bool ishex;
 } *fontlist;
 static int fcnt;
 

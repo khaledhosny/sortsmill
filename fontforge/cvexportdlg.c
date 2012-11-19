@@ -45,8 +45,8 @@ struct sizebits
 {
   GWindow gw;
   int *pixels, *bits;
-  unsigned int done:1;
-  unsigned int good:1;
+  bool done;
+  bool good;
 };
 
 #define CID_Size	1000
@@ -189,8 +189,7 @@ AskSizeBits (int *pixelsize, int *bitsperpixel)
   gcd[4].gd.flags = gg_visible | gg_enabled | gg_but_default;
   label[4].text = (uint32_t *) _("_OK");
   label[4].text_is_1byte = true;
-  label[4].text_in_resource = true;
-  gcd[4].gd.mnemonic = 'O';
+  label[4].text_has_mnemonic = true;
   gcd[4].gd.label = &label[4];
   gcd[4].gd.handle_controlevent = SB_OK;
   gcd[4].creator = GButtonCreate;
@@ -205,9 +204,8 @@ AskSizeBits (int *pixelsize, int *bitsperpixel)
   gcd[5].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
   label[5].text = (uint32_t *) _("_Cancel");
   label[5].text_is_1byte = true;
-  label[5].text_in_resource = true;
+  label[5].text_has_mnemonic = true;
   gcd[5].gd.label = &label[5];
-  gcd[5].gd.mnemonic = 'C';
   gcd[5].gd.handle_controlevent = SB_Cancel;
   gcd[5].creator = GButtonCreate;
   barray[5] = &gcd[5];
@@ -659,7 +657,7 @@ _Export (SplineChar *sc, BDFChar * bc, int layer)
   gcd[1].gd.flags = gg_visible | gg_enabled | gg_but_default;
   label[1].text = (uint32_t *) _("_Save");
   label[1].text_is_1byte = true;
-  label[1].text_in_resource = true;
+  label[1].text_has_mnemonic = true;
   gcd[1].gd.label = &label[1];
   gcd[1].gd.handle_controlevent = GFD_SaveOk;
   gcd[1].creator = GButtonCreate;
@@ -670,7 +668,7 @@ _Export (SplineChar *sc, BDFChar * bc, int layer)
   gcd[2].gd.flags = gg_visible | gg_enabled;
   label[2].text = (uint32_t *) _("_Filter");
   label[2].text_is_1byte = true;
-  label[2].text_in_resource = true;
+  label[2].text_has_mnemonic = true;
   gcd[2].gd.label = &label[2];
   gcd[2].gd.handle_controlevent = GFileChooserFilterEh;
   gcd[2].creator = GButtonCreate;
@@ -685,7 +683,7 @@ _Export (SplineChar *sc, BDFChar * bc, int layer)
   gcd[3].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
   label[3].text = (uint32_t *) _("_Cancel");
   label[3].text_is_1byte = true;
-  label[3].text_in_resource = true;
+  label[3].text_has_mnemonic = true;
   gcd[3].gd.label = &label[3];
   gcd[3].gd.handle_controlevent = GFD_Cancel;
   gcd[3].creator = GButtonCreate;
@@ -707,7 +705,7 @@ _Export (SplineChar *sc, BDFChar * bc, int layer)
   gcd[4].gd.flags = gg_visible | gg_enabled;
   label[4].text = (uint32_t *) C_ ("Directory", "_New");
   label[4].text_is_1byte = true;
-  label[4].text_in_resource = true;
+  label[4].text_has_mnemonic = true;
   label[4].image = &_GIcon_dir;
   label[4].image_precedes = false;
   gcd[4].gd.label = &label[4];

@@ -59,7 +59,7 @@ typedef struct textunit {
 
 struct filledsplines {
     SplineSet *splines;
-    unsigned int isfillable: 1;		/* All splinesets are closed */
+    bool isfillable;		/* All splinesets are closed */
     Pen fill, stroke;			/* A value of 0xffffffff means do not fill or stroke */
     float stroke_width;
     enum linejoin join;
@@ -101,7 +101,7 @@ typedef struct entity {
 typedef struct entlayer {
     Entity *entities;
     char *name;
-    unsigned int isvisible: 1;
+    bool isvisible;
 } EntLayer;
 
 typedef struct tile {

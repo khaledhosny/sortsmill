@@ -186,7 +186,7 @@ return;
 }
 
 typedef struct instrdlg /* : InstrBase */{
-    unsigned int inedit: 1;
+    bool inedit;
     struct instrdata *instrdata;
     struct instrinfo instrinfo;
     int oc_height;
@@ -761,7 +761,7 @@ static void InstrDlgCreate(struct instrdata *id,char *title) {
     gcd[0].gd.pos.width = -1;
     label[0].text = (uint32_t *) _("_OK");
     label[0].text_is_1byte = true;
-    label[0].text_in_resource = true;
+    label[0].text_has_mnemonic = true;
     gcd[0].gd.label = &label[0];
     gcd[0].gd.flags = gg_visible|gg_enabled|gg_but_default;
     gcd[0].creator = GButtonCreate;
@@ -771,7 +771,7 @@ static void InstrDlgCreate(struct instrdata *id,char *title) {
     gcd[1].gd.pos.width = -1;
     label[1].text = (uint32_t *) _("_Cancel");
     label[1].text_is_1byte = true;
-    label[1].text_in_resource = true;
+    label[1].text_has_mnemonic = true;
     gcd[1].gd.label = &label[1];
     gcd[1].gd.flags = gg_visible|gg_enabled|gg_but_cancel;
     gcd[1].creator = GButtonCreate;
@@ -780,7 +780,7 @@ static void InstrDlgCreate(struct instrdata *id,char *title) {
     gcd[2] = gcd[1];
     label[2].text = (uint32_t *) _("_Edit");
     label[2].text_is_1byte = true;
-    label[2].text_in_resource = true;
+    label[2].text_has_mnemonic = true;
     gcd[2].gd.flags = gg_visible|gg_enabled;
     gcd[2].gd.label = &label[2];
     gcd[2].creator = GButtonCreate;
@@ -982,8 +982,8 @@ typedef struct shortview /* : tableview */ {
     struct ttf_table *table;
     GWindow gw, v;
     SplineFont *sf;
-    unsigned int destroyed: 1;		/* window has been destroyed */
-    unsigned int changed: 1;
+    bool destroyed;		/* window has been destroyed */
+    bool changed;
     GGadget *vsb, *tf;
     GGadget *ok, *cancel, *setsize;
     int lpos, lheight;
@@ -1454,7 +1454,7 @@ static void cvtCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32_t tag) {
     gcd[0].gd.pos.width = -1;
     label[0].text = (uint32_t *) _("_OK");
     label[0].text_is_1byte = true;
-    label[0].text_in_resource = true;
+    label[0].text_has_mnemonic = true;
     gcd[0].gd.label = &label[0];
     gcd[0].gd.flags = gg_visible|gg_enabled|gg_but_default;
     gcd[0].creator = GButtonCreate;
@@ -1465,7 +1465,7 @@ static void cvtCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32_t tag) {
     gcd[1].gd.pos.width = -1;
     label[1].text = (uint32_t *) _("_Cancel");
     label[1].text_is_1byte = true;
-    label[1].text_in_resource = true;
+    label[1].text_has_mnemonic = true;
     gcd[1].gd.label = &label[1];
     gcd[1].gd.flags = gg_visible|gg_enabled|gg_but_cancel;
     gcd[1].creator = GButtonCreate;
@@ -1475,7 +1475,7 @@ static void cvtCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32_t tag) {
     gcd[2] = gcd[1];
     label[2].text = (uint32_t *) _("Change Length");
     label[2].text_is_1byte = true;
-    label[2].text_in_resource = true;
+    label[2].text_has_mnemonic = true;
     gcd[2].gd.flags = gg_visible|gg_enabled;
     gcd[2].gd.label = &label[2];
     gcd[2].creator = GButtonCreate;
@@ -1772,7 +1772,7 @@ static void maxpCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32_t tag) 
 	k=hv=0;
 	label[k].text = (uint32_t *) _("_Zones:");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = 5; gcd[k].gd.pos.y = 16; 
 	gcd[k].gd.flags = gg_enabled|gg_visible;
@@ -1793,7 +1793,7 @@ static void maxpCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32_t tag) 
 
 	label[k].text = (uint32_t *) _("_Twilight Pnt Cnt:");
 	label[k].text_is_1byte = true;
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = 120; gcd[k].gd.pos.y = gcd[k-2].gd.pos.y; 
 	gcd[k].gd.flags = gg_enabled|gg_visible;
@@ -1813,7 +1813,7 @@ static void maxpCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32_t tag) 
 	hvarray[hv++] = &gcd[k-1]; hvarray[hv++] = NULL;
 
 	label[k].text = (uint32_t *) _("St_orage:");
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	label[k].text_is_1byte = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = gcd[k-4].gd.pos.x; gcd[k].gd.pos.y = gcd[k-3].gd.pos.y+24+6; 
@@ -1834,7 +1834,7 @@ static void maxpCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32_t tag) 
 	hvarray[hv++] = &gcd[k-1];
 
 	label[k].text = (uint32_t *) _("Max _Stack Depth:");
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	label[k].text_is_1byte = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = gcd[k-4].gd.pos.x; gcd[k].gd.pos.y = gcd[k-2].gd.pos.y; 
@@ -1855,7 +1855,7 @@ static void maxpCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32_t tag) 
 	hvarray[hv++] = &gcd[k-1]; hvarray[hv++] = NULL;
 
 	label[k].text = (uint32_t *) _("_FDEF");
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	label[k].text_is_1byte = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = gcd[k-4].gd.pos.x; gcd[k].gd.pos.y = gcd[k-3].gd.pos.y+24+6; 
@@ -1875,7 +1875,7 @@ static void maxpCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32_t tag) 
 	hvarray[hv++] = &gcd[k-1];
 
 	label[k].text = (uint32_t *) _("_IDEFs");
-	label[k].text_in_resource = true;
+	label[k].text_has_mnemonic = true;
 	label[k].text_is_1byte = true;
 	gcd[k].gd.label = &label[k];
 	gcd[k].gd.pos.x = gcd[k-4].gd.pos.x; gcd[k].gd.pos.y = gcd[k-2].gd.pos.y; 
@@ -1904,7 +1904,7 @@ static void maxpCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32_t tag) 
     gcd[k].gd.pos.width = -1; gcd[k].gd.pos.height = 0;
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_default;
     label[k].text = (uint32_t *) _("_OK");
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     label[k].text_is_1byte = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.handle_controlevent = Maxp_OK;
@@ -1916,7 +1916,7 @@ static void maxpCreateEditor(struct ttf_table *tab,SplineFont *sf,uint32_t tag) 
     gcd[k].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
     label[k].text = (uint32_t *) _("_Cancel");
     label[k].text_is_1byte = true;
-    label[k].text_in_resource = true;
+    label[k].text_has_mnemonic = true;
     gcd[k].gd.label = &label[k];
     gcd[k].gd.handle_controlevent = Maxp_Cancel;
     gcd[k++].creator = GButtonCreate;

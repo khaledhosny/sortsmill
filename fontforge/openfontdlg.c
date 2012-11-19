@@ -377,7 +377,7 @@ FilterDlg (void)
   gcd[1].gd.flags = gg_visible | gg_enabled | gg_but_default;
   label[1].text = (uint32_t *) _("_OK");
   label[1].text_is_1byte = true;
-  label[1].text_in_resource = true;
+  label[1].text_has_mnemonic = true;
   gcd[1].gd.label = &label[1];
   gcd[1].gd.handle_controlevent = Filter_OK;
   gcd[1].creator = GButtonCreate;
@@ -392,7 +392,7 @@ FilterDlg (void)
   gcd[2].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
   label[2].text = (uint32_t *) _("_Cancel");
   label[2].text_is_1byte = true;
-  label[2].text_in_resource = true;
+  label[2].text_has_mnemonic = true;
   gcd[2].gd.label = &label[2];
   gcd[2].gd.handle_controlevent = Filter_Cancel;
   gcd[2].creator = GButtonCreate;
@@ -782,8 +782,7 @@ FVOpenFont (char *title, const char *defaultfile, int mult)
   gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_default;
   label[i].text = (uint32_t *) _("_OK");
   label[i].text_is_1byte = true;
-  label[i].text_in_resource = true;
-  gcd[i].gd.mnemonic = 'O';
+  label[i].text_has_mnemonic = true;
   gcd[i].gd.label = &label[i];
   gcd[i].gd.handle_controlevent = GFD_Ok;
   harray3[0] = GCD_Glue;
@@ -797,8 +796,7 @@ FVOpenFont (char *title, const char *defaultfile, int mult)
   gcd[i].gd.flags = gg_visible | gg_enabled;
   label[i].text = (uint32_t *) C_ ("Font", "_New");
   label[i].text_is_1byte = true;
-  label[i].text_in_resource = true;
-  gcd[i].gd.mnemonic = 'N';
+  label[i].text_has_mnemonic = true;
   gcd[i].gd.label = &label[i];
   gcd[i].gd.handle_controlevent = GFD_New;
   harray3[2] = GCD_Glue;
@@ -813,8 +811,7 @@ FVOpenFont (char *title, const char *defaultfile, int mult)
   gcd[i].gd.flags = /* gg_visible | */ gg_enabled;
   label[i].text = (uint32_t *) _("_Filter");
   label[i].text_is_1byte = true;
-  label[i].text_in_resource = true;
-  gcd[i].gd.mnemonic = 'F';
+  label[i].text_has_mnemonic = true;
   gcd[i].gd.label = &label[i];
   gcd[i].gd.handle_controlevent = GFileChooserFilterEh;
   harray3[4] = &gcd[i];
@@ -826,9 +823,8 @@ FVOpenFont (char *title, const char *defaultfile, int mult)
   gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
   label[i].text = (uint32_t *) _("_Cancel");
   label[i].text_is_1byte = true;
-  label[i].text_in_resource = true;
+  label[i].text_has_mnemonic = true;
   gcd[i].gd.label = &label[i];
-  gcd[i].gd.mnemonic = 'C';
   gcd[i].gd.handle_controlevent = GFD_Cancel;
   harray3[5] = GCD_Glue;
   harray3[6] = &gcd[i];
