@@ -29,10 +29,12 @@ cdef extern from "Python.h":
                                  PyObject *args)
   double PyFloat_AsDouble (PyObject *)
 
+#--------------------------------------------------------------------------
+
 cdef double _call_func (double x, void *func_p):
   args = (x,)
   result = PyObject_CallObject (<PyObject *> func_p,
-                                 <PyObject *> args)
+                                <PyObject *> args)
   return PyFloat_AsDouble (result)
 
 def brentroot (double t1, double t2, func not None,
@@ -234,5 +236,88 @@ def qbrentroot_values (t1, t2, func not None,
       root = b
 
   return (root, err, iter_no)
+
+#--------------------------------------------------------------------------
+#
+# qbrentroot_values_c and qbrentroot_c: An implementation of
+# qbrentroot using callbacks from C.
+#
+# qbrentroot_values and qbrentroot, above, written in Python, may be
+# faster. The C versions are here mainly to document how they were
+# implemented. Also, someone might figure out how to speed them up, so
+# they can replace the Python version.
+#
+# Until that happens, however, use of qbrentroot_values_c or
+# qbrentroot_c is discouraged.
+#
+
+from gmpy cimport *
+include "gmpy.pxi"
+
+cdef void _call_qfunc (__mpq_struct *result, __mpq_struct *x, void *func_p):
+  py_x = py_from_mpq (x)
+  args = (py_x,)
+  py_result = PyObject_CallObject (<PyObject *> func_p, <PyObject *> args)
+  py_obj = mpq (<object> py_result)
+  py_to_mpq (py_obj, result)
+
+def qbrentroot_values_c (t1 not None, t2 not None, func not None,
+                         int max_iters = -1,
+                         tol not None = mpq (-1),
+                         epsilon not None = mpq (-1)):
+  Py_INCREF (func)
+
+  cdef int err
+  cdef unsigned int iter_no
+
+  t1 = mpq (t1)
+  t2 = mpq (t2)
+  tol = mpq (tol)
+  epsilon = mpq (epsilon)
+
+  cdef mpq_t c_t1
+  cdef mpq_t c_t2
+  cdef mpq_t c_tol
+  cdef mpq_t c_epsilon
+  cdef mpq_t c_root
+
+  mpq_init (c_t1)
+  mpq_init (c_t2)
+  mpq_init (c_tol)
+  mpq_init (c_epsilon)
+  mpq_init (c_root)
+
+  py_to_mpq (t1, c_t1)
+  py_to_mpq (t2, c_t2)
+  py_to_mpq (tol, c_tol)
+  py_to_mpq (epsilon, c_epsilon)
+  
+  cdef void (*qbrent) (int, __mpq_struct *, __mpq_struct *,
+                       __mpq_struct *, __mpq_struct *,
+                       void (*) (__mpq_struct *, __mpq_struct *, void *),
+                       void *, __mpq_struct *, int *, unsigned int *)
+  qbrent = <void (*) (int, __mpq_struct *, __mpq_struct *,
+                       __mpq_struct *, __mpq_struct *,
+                       void (*) (__mpq_struct *, __mpq_struct *, void *),
+                      void *, __mpq_struct *, int *,
+                      unsigned int *)> &brentroot_c.qbrentroot  
+  qbrent (max_iters, c_tol, c_epsilon, c_t1, c_t2,
+          _call_qfunc, <PyObject *> func,
+          c_root, &err, &iter_no)
+
+  root = py_from_mpq (c_root)
+
+  mpq_clear (c_t1)
+  mpq_clear (c_t2)
+  mpq_clear (c_tol)
+  mpq_clear (c_epsilon)
+  mpq_clear (c_root)
+
+  Py_DECREF (func)
+  return ((root if err == 0 else None), err, iter_no)
+
+def qbrentroot_c (t1, t2, func not None,
+                  max_iters = -1, tol = -1, epsilon = -1):
+  return (qbrentroot_values_c (t1, t2, func, max_iters, tol, epsilon))[0]
 
 #--------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8; python-indent: 2; -*-
 
 # Copyright (C) 2012 Barry Schwartz
 # 
@@ -15,11 +15,23 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-cdef extern from "brentroot.h":
-    ctypedef double (*brentroot_func_t) (double, void *)
+from gmpy cimport *
 
-    void brentroot (int max_iters, double tol,
-                    double t1, double t2,
-                    brentroot_func_t func, void *data,
-                    double *root, int *err,
-                    unsigned int *iter_no)
+cdef extern from "brentroot.h":
+  ctypedef double (*brentroot_func_t) (double, void *)
+
+  void brentroot (int max_iters, double tol,
+                  double t1, double t2,
+                  brentroot_func_t func, void *data,
+                  double *root, int *err,
+                  unsigned int *iter_no)
+
+cdef extern from "qbrentroot.h":
+  ctypedef void (*qbrentroot_func_t) (__mpq_struct *, __mpq_struct *, void *)
+
+  void qbrentroot (int max_iters, __mpq_struct *tol,
+                   __mpq_struct *epsilon,
+                   __mpq_struct *t1, __mpq_struct *t2,
+                   qbrentroot_func_t func, void *data,
+                   __mpq_struct *root, int *err,
+                   unsigned int *iter_no)
