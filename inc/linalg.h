@@ -30,9 +30,15 @@ void mpq_matrix_set_all (unsigned int m, unsigned int n, mpq_t A[m][n],
                          const mpq_t x);
 void mpq_matrix_set_zero (unsigned int m, unsigned int n, mpq_t A[m][n]);
 
+void mpq_matrix_memcpy (unsigned int m, unsigned int n,
+                        mpq_t result[m][n], mpq_t A[m][n]);
+
+void mpq_matrix_swap (unsigned int m, unsigned int n,
+		      mpq_t A[m][n], mpq_t B[m][n]);
+
 // Matrix transposition, not in place.
 void mpq_matrix_transpose_memcpy (unsigned int m, unsigned int n,
-				  mpq_t result[n][m], mpq_t A[m][n]);
+                                  mpq_t result[n][m], mpq_t A[m][n]);
 
 // Matrix scaling, in place.
 void mpq_matrix_scale (unsigned int m, unsigned int n, mpq_t A[m][n],

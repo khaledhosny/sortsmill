@@ -109,6 +109,7 @@ TESTS_GMP_CONSTANTS = test_gmp_constants
 TESTS_BRENTROOT = test_brentroot test_qbrentroot
 
 TESTS_LINALG = test_mpq_matrix_set_all test_mpq_matrix_set_zero	\
+	test_mpq_matrix_memcpy test_mpq_matrix_swap					\
 	test_mpq_matrix_transpose_memcpy test_mpq_matrix_scale		\
 	test_mpq_matrix_gemm
 
