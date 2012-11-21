@@ -38,6 +38,8 @@ void mpq_matrix_transpose_memcpy (unsigned int m, unsigned int n,
 void mpq_matrix_scale (unsigned int m, unsigned int n, mpq_t A[m][n],
                        const mpq_t x);
 
+// General matrix multiplication.
+// See http://en.wikipedia.org/wiki/General_Matrix_Multiply
 void mpq_matrix_gemm (CBLAS_TRANSPOSE_t TransA, CBLAS_TRANSPOSE_t TransB,
                       unsigned int m, unsigned int n, unsigned int k,
                       const mpq_t alpha,
