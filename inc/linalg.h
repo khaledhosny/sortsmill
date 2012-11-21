@@ -29,6 +29,7 @@ void mpq_matrix_clear (unsigned int m, unsigned int n, mpq_t A[m][n]);
 void mpq_matrix_set_all (unsigned int m, unsigned int n, mpq_t A[m][n],
                          const mpq_t x);
 void mpq_matrix_set_zero (unsigned int m, unsigned int n, mpq_t A[m][n]);
+void mpq_matrix_set_identity (unsigned int m, unsigned int n, mpq_t A[m][n]);
 
 void mpq_matrix_memcpy (unsigned int m, unsigned int n,
                         mpq_t result[m][n], mpq_t A[m][n]);

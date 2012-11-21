@@ -20,6 +20,13 @@ check_linalg([test_mpq_matrix_set_zero 2 3],[0],[ 0 0 0 | 0 0 0 |],[])
 
 #--------------------------------------------------------------------------
 
+check_linalg([test_mpq_matrix_set_identity 1 1],[0],[ 1 |],[])
+check_linalg([test_mpq_matrix_set_identity 2 3],[0],[ 1 0 0 | 0 1 0 |],[])
+check_linalg([test_mpq_matrix_set_identity 3 2],[0],[ 1 0 | 0 1 | 0 0 |],[])
+check_linalg([test_mpq_matrix_set_identity 3 3],[0],[ 1 0 0 | 0 1 0 | 0 0 1 |],[])
+
+#--------------------------------------------------------------------------
+
 check_linalg([test_mpq_matrix_memcpy 1 1 123/246],[0],[ 1/2 |],[])
 check_linalg([test_mpq_matrix_memcpy 3 2 1 2 3 4 5 6],[0],[ 1 2 | 3 4 | 5 6 |],[])
 check_linalg([test_mpq_matrix_memcpy 2 3 1 2 3 4 5 6],[0],[ 1 2 3 | 4 5 6 |],[])

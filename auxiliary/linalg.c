@@ -51,6 +51,16 @@ mpq_matrix_set_zero (unsigned int m, unsigned int n, mpq_t A[m][n])
 }
 
 VISIBLE void
+mpq_matrix_set_identity (unsigned int m, unsigned int n, mpq_t A[m][n])
+{
+  const __mpq_struct *zero = mpq_zero ();
+  const __mpq_struct *one = mpq_one ();
+  for (unsigned int i = 0; i < m; i++)
+    for (unsigned int j = 0; j < n; j++)
+      mpq_set (A[i][j], ((i == j) ? one : zero));
+}
+
+VISIBLE void
 mpq_matrix_memcpy (unsigned int m, unsigned int n,
                    mpq_t result[m][n], mpq_t A[m][n])
 {
