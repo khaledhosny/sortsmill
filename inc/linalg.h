@@ -34,7 +34,7 @@ void mpq_matrix_memcpy (unsigned int m, unsigned int n,
                         mpq_t result[m][n], mpq_t A[m][n]);
 
 void mpq_matrix_swap (unsigned int m, unsigned int n,
-		      mpq_t A[m][n], mpq_t B[m][n]);
+                      mpq_t A[m][n], mpq_t B[m][n]);
 
 // Matrix transposition, not in place.
 void mpq_matrix_transpose_memcpy (unsigned int m, unsigned int n,

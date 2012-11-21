@@ -60,8 +60,7 @@ mpq_matrix_memcpy (unsigned int m, unsigned int n,
 }
 
 VISIBLE void
-mpq_matrix_swap (unsigned int m, unsigned int n,
-		 mpq_t A[m][n], mpq_t B[m][n])
+mpq_matrix_swap (unsigned int m, unsigned int n, mpq_t A[m][n], mpq_t B[m][n])
 {
   for (unsigned int i = 0; i < m; i++)
     for (unsigned int j = 0; j < n; j++)
