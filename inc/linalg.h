@@ -30,11 +30,11 @@ void mpq_matrix_set_all (unsigned int m, unsigned int n, mpq_t A[m][n],
                          const mpq_t x);
 void mpq_matrix_set_zero (unsigned int m, unsigned int n, mpq_t A[m][n]);
 
-// Matrix transposition, not in-place. (Be careful, because argument
-// order is different from that of similar GSL operations.)
+// Matrix transposition, not in place.
 void mpq_matrix_transpose_memcpy (unsigned int m, unsigned int n,
-                                  mpq_t A[m][n], mpq_t result[n][m]);
+				  mpq_t result[n][m], mpq_t A[m][n]);
 
+// Matrix scaling, in place.
 void mpq_matrix_scale (unsigned int m, unsigned int n, mpq_t A[m][n],
                        const mpq_t x);
 

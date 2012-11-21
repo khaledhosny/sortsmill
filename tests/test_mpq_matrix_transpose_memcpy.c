@@ -35,7 +35,7 @@ my_main (int argc, char **argv)
         i_argv++;
       }
 
-  mpq_matrix_transpose_memcpy (rows, cols, A, B);
+  mpq_matrix_transpose_memcpy (rows, cols, B, A);
 
   for (unsigned int i = 0; i < cols; i++)
     {

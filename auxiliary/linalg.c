@@ -52,7 +52,7 @@ mpq_matrix_set_zero (unsigned int m, unsigned int n, mpq_t A[m][n])
 
 VISIBLE void
 mpq_matrix_transpose_memcpy (unsigned int m, unsigned int n,
-                             mpq_t A[m][n], mpq_t result[n][m])
+                             mpq_t result[n][m], mpq_t A[m][n])
 {
   for (unsigned int i = 0; i < m; i++)
     for (unsigned int j = 0; j < n; j++)
