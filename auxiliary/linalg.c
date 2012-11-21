@@ -78,6 +78,32 @@ mpq_matrix_swap (unsigned int m, unsigned int n, mpq_t A[m][n], mpq_t B[m][n])
 }
 
 VISIBLE void
+mpq_matrix_swap_rows (unsigned int m, unsigned int n, mpq_t A[m][n],
+                      unsigned int i, unsigned int j)
+{
+  if (i != j)
+    for (unsigned int p = 0; p < n; p++)
+      mpq_swap (A[i][p], A[j][p]);
+}
+
+VISIBLE void
+mpq_matrix_swap_columns (unsigned int m, unsigned int n, mpq_t A[m][n],
+                         unsigned int i, unsigned int j)
+{
+  if (i != j)
+    for (unsigned int p = 0; p < m; p++)
+      mpq_swap (A[p][i], A[p][j]);
+}
+
+VISIBLE void
+mpq_matrix_swap_rowcol (unsigned int m, mpq_t A[m][m],
+                        unsigned int i, unsigned int j)
+{
+  for (unsigned int p = 0; p < m; p++)
+    mpq_swap (A[i][p], A[p][j]);
+}
+
+VISIBLE void
 mpq_matrix_transpose_memcpy (unsigned int m, unsigned int n,
                              mpq_t result[n][m], mpq_t A[m][n])
 {

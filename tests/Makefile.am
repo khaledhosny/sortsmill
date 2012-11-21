@@ -110,8 +110,10 @@ TESTS_BRENTROOT = test_brentroot test_qbrentroot
 
 TESTS_LINALG = test_mpq_matrix_set_all test_mpq_matrix_set_zero	\
 	test_mpq_matrix_set_identity test_mpq_matrix_memcpy			\
-	test_mpq_matrix_swap test_mpq_matrix_transpose_memcpy		\
-	test_mpq_matrix_scale test_mpq_matrix_gemm
+	test_mpq_matrix_swap test_mpq_matrix_swap_rows				\
+	test_mpq_matrix_swap_columns test_mpq_matrix_swap_rowcol	\
+	test_mpq_matrix_transpose_memcpy test_mpq_matrix_scale		\
+	test_mpq_matrix_gemm
 
 check_PROGRAMS = $(TESTS_XGC_H) $(TESTS_XUNISTRING_H)				\
 	$(TESTS_GFILE_C) $(TESTS_PS_NUMBER_H) $(TESTS_REXP_H)			\
