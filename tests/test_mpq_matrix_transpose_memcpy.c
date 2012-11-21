@@ -40,7 +40,7 @@ my_main (int argc, char **argv)
   for (unsigned int i = 0; i < cols; i++)
     {
       for (unsigned int j = 0; j < rows; j++)
-	gmp_printf (" %Qd", B[i][j]);
+        gmp_printf (" %Qd", B[i][j]);
       printf (" |");
     }
 

@@ -84,25 +84,60 @@ _trans_col (CBLAS_TRANSPOSE_t trans, unsigned int i, unsigned int j)
 }
 
 static inline void
-_mul_by_alpha (mpq_t x, bool alpha_is_one, const mpq_t alpha)
+_mpq_matmul_alpha1_beta1 (CBLAS_TRANSPOSE_t TransA, CBLAS_TRANSPOSE_t TransB,
+                          unsigned int m, unsigned int n, unsigned int k,
+                          mpq_t _FF_TRANSMATRIX (A, TransA, m, k),
+                          mpq_t _FF_TRANSMATRIX (B, TransB, k, n),
+                          mpq_t C[m][n])
 {
-  if (!alpha_is_one)
-    mpq_mul (x, x, alpha);
+  mpq_t product;
+
+  mpq_init (product);
+
+  for (unsigned int i = 0; i < m; i++)
+    for (unsigned int j = 0; j < n; j++)
+      {
+        for (unsigned int p = 0; p < k; p++)
+          {
+            const unsigned int rA = _trans_row (TransA, i, p);
+            const unsigned int cA = _trans_col (TransA, i, p);
+            const unsigned int rB = _trans_row (TransB, p, j);
+            const unsigned int cB = _trans_col (TransB, p, j);
+            mpq_mul (product, A[rA][cA], B[rB][cB]);
+            mpq_add (C[i][j], C[i][j], product);
+          }
+      }
+
+  mpq_clear (product);
 }
 
 static inline void
-_set_C_entry (mpq_t C_entry, bool beta_is_zero, bool beta_is_one,
-              const mpq_t beta, const mpq_t x)
+_mpq_matmul_beta1 (CBLAS_TRANSPOSE_t TransA, CBLAS_TRANSPOSE_t TransB,
+                   unsigned int m, unsigned int n, unsigned int k,
+                   const mpq_t alpha,
+                   mpq_t _FF_TRANSMATRIX (A, TransA, m, k),
+                   mpq_t _FF_TRANSMATRIX (B, TransB, k, n), mpq_t C[m][n])
 {
-  if (beta_is_zero)
-    mpq_set (C_entry, x);
-  else if (beta_is_one)
-    mpq_add (C_entry, C_entry, x);
-  else
-    {
-      mpq_mul (C_entry, C_entry, beta);
-      mpq_add (C_entry, C_entry, x);
-    }
+  mpq_t product;
+
+  mpq_init (product);
+
+  for (unsigned int i = 0; i < m; i++)
+    for (unsigned int j = 0; j < n; j++)
+      {
+        for (unsigned int p = 0; p < k; p++)
+          {
+            const unsigned int rA = _trans_row (TransA, i, p);
+            const unsigned int cA = _trans_col (TransA, i, p);
+            const unsigned int rB = _trans_row (TransB, p, j);
+            const unsigned int cB = _trans_col (TransB, p, j);
+            mpq_mul (product, A[rA][cA], B[rB][cB]);
+            mpq_mul (product, product, alpha);
+            mpq_add (C[i][j], C[i][j], product);
+          }
+      }
+
+  mpq_clear (product);
 }
 
 VISIBLE void
@@ -113,10 +148,12 @@ mpq_matrix_gemm (CBLAS_TRANSPOSE_t TransA, CBLAS_TRANSPOSE_t TransB,
                  mpq_t _FF_TRANSMATRIX (B, TransB, k, n),
                  const mpq_t beta, mpq_t C[m][n])
 {
-  if (mpq_sgn (alpha) == 0)
-    mpq_matrix_scale (m, n, C, beta);
-  else
+  mpq_matrix_scale (m, n, C, beta);
+  if (mpq_sgn (alpha) != 0)
     {
-      assert ("NOT YET IMPLEMENTED");
+      if (mpq_equal (alpha, mpq_one ()))
+        _mpq_matmul_alpha1_beta1 (TransA, TransB, m, n, k, A, B, C);
+      else
+        _mpq_matmul_beta1 (TransA, TransB, m, n, k, alpha, A, B, C);
     }
 }

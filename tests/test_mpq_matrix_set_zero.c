@@ -28,7 +28,7 @@ my_main (int argc, char **argv)
   for (unsigned int i = 0; i < rows; i++)
     {
       for (unsigned int j = 0; j < cols; j++)
-	gmp_printf (" %Qd", A[i][j]);
+        gmp_printf (" %Qd", A[i][j]);
       printf (" |");
     }
 
