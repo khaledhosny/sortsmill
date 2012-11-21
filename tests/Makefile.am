@@ -78,8 +78,9 @@ $(TESTSUITE): $(srcdir)/testsuite.at $(srcdir)/package.m4 $(MY_AT_FILES)
 MY_AT_FILES = xgc_h.at xunicase_h.at xuniconv_h.at xuninorm_h.at	\
 	xunistr_h.at gfile_c.at ps_number_h.at rexp_h.at				\
 	sortsmillff_linalg.at sortsmillff_precompute.at					\
-	precomputed_data.at bernstein.at monomial.at brentroot.at		\
-	sortsmillff_iconv.at psMat.at old_python_tests.at
+	precomputed_data.at bernstein.at monomial.at gmp_constants.at	\
+	brentroot.at linalg.at sortsmillff_iconv.at psMat.at			\
+	old_python_tests.at
 
 TESTS_XGC_H = test_x_gc_strndup test_x_gc_strjoin
 
@@ -103,12 +104,18 @@ TESTS_PRECOMPUTEDDATA = test_precomputed_data
 TESTS_BERNSTEIN = test_bernstein
 TESTS_MONOMIAL = test_monomial
 
+TESTS_GMP_CONSTANTS = test_gmp_constants
+
 TESTS_BRENTROOT = test_brentroot test_qbrentroot
+
+TESTS_LINALG = test_mpq_matrix_set_all test_mpq_matrix_set_zero	\
+	test_mpq_matrix_transpose_memcpy test_mpq_matrix_scale		\
+	test_mpq_matrix_gemm
 
 check_PROGRAMS = $(TESTS_XGC_H) $(TESTS_XUNISTRING_H)				\
 	$(TESTS_GFILE_C) $(TESTS_PS_NUMBER_H) $(TESTS_REXP_H)			\
 	$(TESTS_PRECOMPUTEDDATA) $(TESTS_BERNSTEIN) $(TESTS_MONOMIAL)	\
-	$(TESTS_BRENTROOT)
+	$(TESTS_GMP_CONSTANTS) $(TESTS_BRENTROOT) $(TESTS_LINALG)
 
 # Just make all C programs dependent, rather than sort out who really
 # is dependent.

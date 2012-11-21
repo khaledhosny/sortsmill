@@ -24,6 +24,9 @@
 -T mpz_t
 -T mpq_t
 -T mpf_t
+-T __mpz_struct
+-T __mpq_struct
+-T __mpf_struct
 
 -T rexp_buffer_t
 -T rexp_t

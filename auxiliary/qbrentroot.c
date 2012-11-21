@@ -19,6 +19,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <float.h>
+#include <gmp_constants.h>
 
 //
 // Brent's method for root-finding --
@@ -72,13 +73,8 @@ vanish (const mpq_t u)
 static inline void
 bisection (mpq_t result, const mpq_t a, const mpq_t b)
 {
-  mpq_t two;
-
-  mpq_init (two);
-  mpq_set_d (two, 2);
   mpq_sub (result, a, b);
-  mpq_div (result, result, two);
-  mpq_clear (two);
+  mpq_div (result, result, mpq_two ());
 }
 
 static inline void
@@ -106,21 +102,19 @@ inverse_quadratic (const mpq_t s, const mpq_t a, const mpq_t fa,
 {
   mpq_t fbc, fba, fac;
   mpq_t fbc1, fba1, fac1;
-  mpq_t one, tmp1, tmp2;
+  mpq_t tmp1, tmp2;
 
   mpq_inits (fbc, fba, fac, NULL);
   mpq_inits (fbc1, fba1, fac1, NULL);
-  mpq_inits (one, tmp1, tmp2, NULL);
-
-  mpq_set_d (one, 1);
+  mpq_inits (tmp1, tmp2, NULL);
 
   mpq_div (fbc, fb, fc);
   mpq_div (fba, fb, fa);
   mpq_div (fac, fa, fc);
 
-  mpq_sub (fbc1, fbc, one);
-  mpq_sub (fba1, fba, one);
-  mpq_sub (fac1, fac, one);
+  mpq_sub (fbc1, fbc, mpq_one ());
+  mpq_sub (fba1, fba, mpq_one ());
+  mpq_sub (fac1, fac, mpq_one ());
 
   mpq_add (tmp1, s, s);
   mpq_mul (tmp1, tmp1, fac);
@@ -138,7 +132,7 @@ inverse_quadratic (const mpq_t s, const mpq_t a, const mpq_t fa,
 
   mpq_clears (fbc, fba, fac, NULL);
   mpq_clears (fbc1, fba1, fac1, NULL);
-  mpq_clears (one, tmp1, tmp2, NULL);
+  mpq_clears (tmp1, tmp2, NULL);
 }
 
 static inline void
@@ -152,13 +146,11 @@ interpolate (const mpq_t a, const mpq_t fa, const mpq_t b, const mpq_t fb,
   mpq_t two_p;
   mpq_t tol1;
   mpq_t tol2;
-  mpq_t three;
   mpq_t tmp1, tmp2;
 
-  mpq_inits (p, q, s, two_p, tol1, tol2, three, NULL);
+  mpq_inits (p, q, s, two_p, tol1, tol2, NULL);
   mpq_inits (tmp1, tmp2, NULL);
 
-  mpq_set_d (three, 3);
   bisection (s, a, b);
 
   if (mpq_equal (fb1, fa) || mpq_equal (fb1, fb))
@@ -173,7 +165,7 @@ interpolate (const mpq_t a, const mpq_t fa, const mpq_t b, const mpq_t fb,
 
   mpq_add (two_p, p, p);
 
-  mpq_mul (tmp2, three, s);
+  mpq_mul (tmp2, mpq_three (), s);
   mpq_mul (tmp2, tmp2, q);
   mpq_mul (tmp1, tolerance, q);
   mpq_abs (tmp1, tmp1);
@@ -193,7 +185,7 @@ interpolate (const mpq_t a, const mpq_t fa, const mpq_t b, const mpq_t fb,
       mpq_set (new_step1, s);
     }
 
-  mpq_clears (p, q, s, two_p, tol1, tol2, three, NULL);
+  mpq_clears (p, q, s, two_p, tol1, tol2, NULL);
   mpq_clears (tmp1, tmp2, NULL);
 }
 
