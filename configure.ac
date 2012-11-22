@@ -188,13 +188,15 @@ FONTFORGE_ARG_ENABLE([tile-path],
 
 # Enable this experimental feature via an obscure cache variable
 # rather than --enable.
-AC_CACHE_CHECK([whether to enable native callbacks (experimental)],
-               [fontforge_cv_native_callbacks],
-               [if test x"${fontforge_cv_native_callbacks}" != yes; then
-                   fontforge_cv_native_callbacks=no
-                fi])
-i_do_have_native_callbacks="${fontforge_cv_native_callbacks}"
-
+#AC_CACHE_CHECK([whether to enable native callbacks (experimental)],
+#               [fontforge_cv_native_callbacks],
+#               [if test x"${fontforge_cv_native_callbacks}" != yes; then
+#                   fontforge_cv_native_callbacks=no
+#                fi])
+#i_do_have_native_callbacks="${fontforge_cv_native_callbacks}"
+i_do_have_native_callbacks=yes
+AC_DEFINE([NATIVE_CALLBACKS],[1],
+   [Define to enable native callbacks. (Currently, having this enable is REQUIRED.)])
 
 #--------------------------------------------------------------------------
 #
