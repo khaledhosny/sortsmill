@@ -13,8 +13,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-#ifndef _FONTFORGE_LINALG_H
-#define _FONTFORGE_LINALG_H
+#if !defined __STDC_VERSION__ || __STDC_VERSION__ < 199901L
+#error C99 is required.
+#endif
+
+#ifndef _SORTSMILLFF_LINALG_H
+#define _SORTSMILLFF_LINALG_H
 
 #include <gmp.h>
 #include <gsl/gsl_blas.h>
@@ -111,4 +115,4 @@ void mpq_matrix_gemm (CBLAS_TRANSPOSE_t TransA, CBLAS_TRANSPOSE_t TransB,
 
 //-------------------------------------------------------------------------
 
-#endif // _FONTFORGE_LINALG_H
+#endif // _SORTSMILLFF_LINALG_H

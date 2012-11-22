@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-#include <linalg.h>
+#include <sortsmillff/linalg.h>
 #include <stdbool.h>
 
 _GL_ATTRIBUTE_PURE static inline bool

@@ -7,7 +7,7 @@
 #include <float.h>
 #include <math.h>
 #include <libguile.h>
-#include <linalg.h>
+#include <sortsmillff/linalg.h>
 
 #include <main_with_guile.x>
 

@@ -34,11 +34,9 @@ noinst_HEADERS = basics.h chardata.h config.h gdraw.h gfile.h			\
 	xunicase.h xuniconv.h xuninorm.h xunistr.h xdie_on_null.h			\
 	config-extra.h ps_number.h rexp.h libguile_wrapper.h				\
 	precomputed_data.h polyspline.h brentroot.h qbrentroot.h gmpy.h		\
-	gmp_constants.h linalg.h
+	gmp_constants.h
 
-nobase_include_HEADERS =
-
-nobase_include_HEADERS += #sortsmillff/linalg.h
+nobase_include_HEADERS = sortsmillff/linalg.h
 
 nobase_include_HEADERS += sortsmillff/guile/polyspline.h	\
 	sortsmillff/guile/brentroot.h sortsmillff/guile/iconv.h	\
