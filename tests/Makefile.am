@@ -151,17 +151,15 @@ EXTRA_DIST += test_xunistr_strtol.txt test_xunistr_strtod.txt
 EXTRA_DIST += test_utf7_to_string.scm test_guile_linalg.scm	\
 	test_guile_precompute.scm
 
-EXTRA_DIST += test_guile_bernstein.scm test_python_bernstein.py		\
-	test_guile_monomial.scm test_python_monomial.py					\
-	test_guile_brentroot.scm test_python_brentroot.py				\
-	test_python_qbrentroot.py test_python_qbrentroot_c.py			\
-	test_python_mpz_matrix_set_all.py								\
-	test_python_mpq_matrix_set_all.py								\
-	test_python_mpz_matrix_set_zero.py								\
-	test_python_mpq_matrix_set_zero.py								\
-	test_python_mpz_matrix_set_identity.py							\
-	test_python_matrix_memcpy.py test_python_mpz_matrix_memcpy.py	\
-	test_python_mpq_matrix_memcpy.py
+EXTRA_DIST += test_guile_bernstein.scm test_python_bernstein.py	\
+	test_guile_monomial.scm test_python_monomial.py				\
+	test_guile_brentroot.scm test_python_brentroot.py			\
+	test_python_qbrentroot.py test_python_qbrentroot_c.py		\
+	test_python_mpz_matrix_set_all.py							\
+	test_python_mpq_matrix_set_all.py							\
+	test_python_mpz_matrix_set_zero.py							\
+	test_python_mpq_matrix_set_zero.py							\
+	test_python_mpz_matrix_set_identity.py
 
 EXTRA_DIST += test_psMat_identity.py test_psMat_inverse.py			\
 	test_psMat_compose.py test_psMat_rotate.py test_psMat_scale.py	\
