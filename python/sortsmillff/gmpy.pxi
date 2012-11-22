@@ -15,12 +15,24 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
 
+import gmpy
+
+cdef inline void py_to_mpz (object x, __mpz_struct *result):
+  cdef PympzObject *obj = <PympzObject *> x
+  mpz_set (result, obj.z)
+
+cdef inline object py_from_mpz (__mpz_struct *z):
+  result = gmpy.mpz (0)  
+  cdef PympzObject *obj = <PympzObject *> result
+  mpz_set (obj.z, z)
+  return result
+
 cdef inline void py_to_mpq (object x, __mpq_struct *result):
   cdef PympqObject *obj = <PympqObject *> x
   mpq_set (result, obj.q)
 
 cdef inline object py_from_mpq (__mpq_struct *q):
-  result = mpq (0)  
+  result = gmpy.mpq (0)  
   cdef PympqObject *obj = <PympqObject *> result
   mpq_set (obj.q, q)
   return result

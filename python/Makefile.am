@@ -41,6 +41,12 @@ nobase_nodist_python_PYTHON = sortsmillff/__init__.py	\
 
 nobase_pyexec_LTLIBRARIES =
 
+nobase_pyexec_LTLIBRARIES += sortsmillff/linalg.la
+sortsmillff_linalg_la_SOURCES = sortsmillff/linalg.c
+sortsmillff_linalg_la_LIBADD =						\
+	$(top_builddir)/auxiliary/libsortsmillff_aux.la	\
+	$(top_builddir)/lib/libgnu.la
+
 nobase_pyexec_LTLIBRARIES += sortsmillff/polyspline.la
 sortsmillff_polyspline_la_SOURCES = sortsmillff/polyspline.c
 sortsmillff_polyspline_la_LIBADD =					\
@@ -56,10 +62,15 @@ sortsmillff_brentroot_la_DEPENDENCIES = sortsmillff/brentroot.pyx	\
 	sortsmillff/brentroot_c.pxd sortsmillff/gmpy.pxd				\
 	sortsmillff/gmpy.pxi
 
-EXTRA_DIST = sortsmillff/polyspline.pyx sortsmillff/brentroot.pyx	\
-	sortsmillff/brentroot_c.pxd sortsmillff/gmpy.pxd				\
-	sortsmillff/gmpy.pxi
-MOSTLYCLEANFILES = sortsmillff/polyspline.c sortsmillff/brentroot.c
+EXTRA_DIST = sortsmillff/brentroot_c.pxd sortsmillff/gmpy.pxd
+
+EXTRA_DIST += sortsmillff/gmpy.pxi
+
+EXTRA_DIST += sortsmillff/linalg.pyx sortsmillff/polyspline.pyx	\
+	sortsmillff/brentroot.pyx
+
+MOSTLYCLEANFILES = sortsmillff/linalg.c sortsmillff/polyspline.c	\
+	sortsmillff/brentroot.c
 
 AM_LDFLAGS = -module -shared -avoid-version
 AM_CFLAGS += $(NUMPY_CFLAGS) $(CYTHON_EXTRA_CFLAGS)
@@ -70,7 +81,9 @@ sortsmillff/%.so: sortsmillff/%.la
 	cp sortsmillff/$(LT_OBJDIR)$*.so $@
 
 # These shared object files are needed by the test suite.
-all-local: sortsmillff/polyspline.so sortsmillff/brentroot.so
+all-local: sortsmillff/linalg.so sortsmillff/polyspline.so	\
+	sortsmillff/brentroot.so
+
 check-local: all-local
 
 extract_text = $(PERL) -n -e								\

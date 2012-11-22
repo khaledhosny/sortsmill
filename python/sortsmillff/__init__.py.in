@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8; python-indent: 2; -*-
 
 # Copyright (C) 2012 Barry Schwartz
 # 
@@ -16,7 +16,7 @@
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 __all__ = [
-    'bernstein',
-    'brentroot',
-    'psMat',
-    ]
+  'bernstein',
+  'brentroot',
+  'psMat',
+  ]

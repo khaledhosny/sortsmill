@@ -17,15 +17,27 @@
 
 cdef extern from "gmp.h":
 
+  ctypedef struct __mpz_struct:
+    pass
+
   ctypedef struct __mpq_struct:
     pass
 
+  ctypedef __mpz_struct mpz_t[1]
   ctypedef __mpq_struct mpq_t[1]
+
+  void mpz_init (__mpz_struct *)
+  void mpz_clear (__mpz_struct *)
+  void mpz_set (__mpz_struct *, __mpz_struct *)
 
   void mpq_init (__mpq_struct *)
   void mpq_clear (__mpq_struct *)
   void mpq_set (__mpq_struct *, __mpq_struct *)
 
 cdef extern from "gmpy.h":
+
+  ctypedef struct PympzObject:
+    __mpz_struct z[1]
+
   ctypedef struct PympqObject:
     __mpq_struct q[1]

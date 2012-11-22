@@ -17,7 +17,7 @@
 
 import cython
 import sys
-from gmpy import mpq, qdiv
+import gmpy
 
 cimport brentroot_c
 from cpython.ref cimport PyObject, Py_INCREF, Py_DECREF
@@ -64,9 +64,10 @@ def brentroot_values (double t1, double t2, func not None,
 #--------------------------------------------------------------------------
 
 qbrentroot_default_max_iters = 1000000
-qbrentroot_default_tol = mpq (sys.float_info.epsilon) # FIXME: Is this
-                                                      # value
-                                                      # appropriate?
+qbrentroot_default_tol = gmpy.mpq (sys.float_info.epsilon) # FIXME: Is
+                                                           # this
+                                                           # value
+                                                           # appropriate?
 
 def qbrentroot (t1, t2, func not None,
                 max_iters = -1, tol = -1,
@@ -77,24 +78,24 @@ def actual_max_iterations (max_iters):
   return max_iters if 0 <= max_iters else qbrentroot_default_max_iters
 
 def actual_tolerance (tol):
-  return mpq (tol) if 0 <= tol else qbrentroot_default_tol
+  return gmpy.mpq (tol) if 0 <= tol else qbrentroot_default_tol
 
 def bracketed (f1, f2):
   return (f1 <= 0 and 0 <= f2) or (f2 <= 0 and 0 <= f1)
 
 def bisection (a, b):
-  return qdiv(a - b, 2)
+  return gmpy.qdiv(a - b, 2)
 
 def linear (s, fa, fb):
-  fba = qdiv (fb, fa)
+  fba = gmpy.qdiv (fb, fa)
   p = fba * 2 * s
   q = 1 - fba
   return (p, q)
 
 def inverse_quadratic (s, a, fa, b, fb, fc):
-  fbc = qdiv (fb, fc)
-  fba = qdiv (fb, fa)
-  fac = qdiv (fa, fc)
+  fbc = gmpy.qdiv (fb, fc)
+  fba = gmpy.qdiv (fb, fa)
+  fac = gmpy.qdiv (fa, fc)
   p = fba * (2 * s * fac * (fac - fbc) - (b - a) * (fbc - 1))
   q = (fac - 1) * (fba - 1) * (fbc - 1)
   return (p, q)
@@ -113,8 +114,8 @@ def interpolate (a, fa, b, fb, fb1, step, step1, tolerance):
     p = -p
 
   if 2 * p < min (3 * s * q - abs (tolerance * q), abs (step1 * q)):
-    new_step = qdiv (p, q)
-    new_step1 = qdiv (step);
+    new_step = gmpy.qdiv (p, q)
+    new_step1 = gmpy.qdiv (step);
   else:
     new_step = s
     new_step1 = s
@@ -143,9 +144,9 @@ def step_by_at_least_tolerance (tolerance, new_step, b):
 def qbrentroot_values (t1, t2, func not None,
                        max_iters = -1, tol = -1,
                        epsilon = sys.float_info.epsilon):
-  t1 = mpq (t1)
-  t2 = mpq (t2)
-  epsilon = mpq (epsilon)
+  t1 = gmpy.mpq (t1)
+  t2 = gmpy.mpq (t2)
+  epsilon = gmpy.mpq (epsilon)
 
   max_iterations = actual_max_iterations (max_iters)
   toler = actual_tolerance (tol)
@@ -156,8 +157,8 @@ def qbrentroot_values (t1, t2, func not None,
 
   a = t1
   b = t2
-  fa = mpq (func (a))
-  fb = mpq (func (b))
+  fa = gmpy.mpq (func (a))
+  fb = gmpy.mpq (func (b))
 
   if not bracketed (fa, fb):
     err = 1                     # err == 1 means 'root not bracketed'.
@@ -177,7 +178,7 @@ def qbrentroot_values (t1, t2, func not None,
       step1 = a - b
       b1 = a
       fb1 = fa
-    tolerance = 2 * epsilon * abs (b) + qdiv (toler, 2)
+    tolerance = 2 * epsilon * abs (b) + gmpy.qdiv (toler, 2)
     while not we_are_done (max_iterations, iter_no, tolerance, step, fb):
       if abs (step1) < tolerance or abs (fa) <= abs (fb):
         # Interpolation is stepping too slowly.
@@ -188,7 +189,7 @@ def qbrentroot_values (t1, t2, func not None,
                                             step, step1, tolerance)
 
       guess = step_by_at_least_tolerance (tolerance, new_step, b)
-      fguess = mpq (func (guess))
+      fguess = gmpy.mpq (func (guess))
 
       iter_no += 1
       if bracketed (fb, fguess):
@@ -228,7 +229,7 @@ def qbrentroot_values (t1, t2, func not None,
       b = bb
       fb = fbb
 
-      tolerance = 2 * epsilon * abs (b) + qdiv (toler, 2)
+      tolerance = 2 * epsilon * abs (b) + gmpy.qdiv (toler, 2)
 
     if max_iterations_exceeded (max_iterations, iter_no):
       err = 2            # err == 2 means maximum iterations exceeded.
@@ -258,22 +259,22 @@ cdef void _call_qfunc (__mpq_struct *result, __mpq_struct *x, void *func_p):
   py_x = py_from_mpq (x)
   args = (py_x,)
   py_result = PyObject_CallObject (<PyObject *> func_p, <PyObject *> args)
-  py_obj = mpq (<object> py_result)
+  py_obj = gmpy.mpq (<object> py_result)
   py_to_mpq (py_obj, result)
 
 def qbrentroot_values_c (t1 not None, t2 not None, func not None,
                          int max_iters = -1,
-                         tol not None = mpq (-1),
-                         epsilon not None = mpq (-1)):
+                         tol not None = gmpy.mpq (-1),
+                         epsilon not None = gmpy.mpq (-1)):
   Py_INCREF (func)
 
   cdef int err
   cdef unsigned int iter_no
 
-  t1 = mpq (t1)
-  t2 = mpq (t2)
-  tol = mpq (tol)
-  epsilon = mpq (epsilon)
+  t1 = gmpy.mpq (t1)
+  t2 = gmpy.mpq (t2)
+  tol = gmpy.mpq (tol)
+  epsilon = gmpy.mpq (epsilon)
 
   cdef mpq_t c_t1
   cdef mpq_t c_t2
@@ -297,8 +298,8 @@ def qbrentroot_values_c (t1 not None, t2 not None, func not None,
                        void (*) (__mpq_struct *, __mpq_struct *, void *),
                        void *, __mpq_struct *, int *, unsigned int *)
   qbrent = <void (*) (int, __mpq_struct *, __mpq_struct *,
-                       __mpq_struct *, __mpq_struct *,
-                       void (*) (__mpq_struct *, __mpq_struct *, void *),
+                      __mpq_struct *, __mpq_struct *,
+                      void (*) (__mpq_struct *, __mpq_struct *, void *),
                       void *, __mpq_struct *, int *,
                       unsigned int *)> &brentroot_c.qbrentroot  
   qbrent (max_iters, c_tol, c_epsilon, c_t1, c_t2,

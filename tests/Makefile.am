@@ -58,13 +58,13 @@ clean-local:
 	test ! -f '$(TESTSUITE)' || $(SHELL) '$(TESTSUITE)' --clean
 
 check-local: override TESTSUITEFLAGS += DOING_INSTALLCHECK=no						\
-	LC_ALL="${posix_locale}" PYTHONPATH="$(abs_top_builddir)/python"				\
+	LC_ALL="C" PYTHONPATH="$(abs_top_builddir)/python"								\
 	LTDL_LIBRARY_PATH="${abs_top_builddir}/scheme"									\
 	GUILE_LOAD_PATH="${abs_top_builddir}/scheme:${abs_top_srcdir}/scheme"			\
 	GUILE_LOAD_COMPILED_PATH="${abs_top_builddir}/scheme:${abs_top_srcdir}/scheme"
 
 installcheck-local: override TESTSUITEFLAGS += DOING_INSTALLCHECK=yes	\
-	LC_ALL="${posix_locale}" PYTHONPATH="$(pythondir)"					\
+	LC_ALL="C" PYTHONPATH="$(pythondir)"								\
 	LTDL_LIBRARY_PATH="$(guileextensiondir)"							\
 	GUILE_LOAD_PATH="$(guilemoduledir)"									\
 	GUILE_LOAD_COMPILED_PATH="$(guileobjmoduledir)"
@@ -154,7 +154,12 @@ EXTRA_DIST += test_utf7_to_string.scm test_guile_linalg.scm	\
 EXTRA_DIST += test_guile_bernstein.scm test_python_bernstein.py	\
 	test_guile_monomial.scm test_python_monomial.py				\
 	test_guile_brentroot.scm test_python_brentroot.py			\
-	test_python_qbrentroot.py test_python_qbrentroot_c.py
+	test_python_qbrentroot.py test_python_qbrentroot_c.py		\
+	test_python_mpz_matrix_set_all.py							\
+	test_python_mpq_matrix_set_all.py							\
+	test_python_mpz_matrix_set_zero.py							\
+	test_python_mpq_matrix_set_zero.py							\
+	test_python_mpz_matrix_set_identity.py
 
 EXTRA_DIST += test_psMat_identity.py test_psMat_inverse.py			\
 	test_psMat_compose.py test_psMat_rotate.py test_psMat_scale.py	\
