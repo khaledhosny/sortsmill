@@ -86,6 +86,7 @@ libguile_sortsmillff_gsl_la_LIBADD =				\
 install-data-hook:
 #	Make sure the source module is no younger than the compiled
 #	module.
+	@sleep 2
 	@$(call touch_files,								\
 		$(addprefix $(DESTDIR)$(guileobjmoduledir)/,	\
 					$(nodist_guileobjmodule_DATA)))
