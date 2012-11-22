@@ -16,7 +16,7 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include <sortsmillff/linalg.h>
-#include <gmp_constants.h>
+#include <sortsmillff/gmp_constants.h>
 
 VISIBLE void
 _GMP_TYPE (_matrix_set_all) (unsigned int m, unsigned int n,

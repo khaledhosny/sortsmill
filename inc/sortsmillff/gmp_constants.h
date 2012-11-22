@@ -13,17 +13,19 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-#ifndef _FONTFORGE_GMP_CONSTANTS_H
-#define _FONTFORGE_GMP_CONSTANTS_H
+#ifndef _SORTSMILLFF_GMP_CONSTANTS_H
+#define _SORTSMILLFF_GMP_CONSTANTS_H
 
-#include <config.h>
+// *INDENT-OFF*
+#ifdef __cplusplus
+extern "C" {
+#endif
+// *INDENT-ON*
 
 #include <gmp.h>
-
 #include <atomic_ops.h>
-#include <xgc.h>                // Includes gc.h and pthreads.h in the right order.
 
-#define _GMP_CONSTANT_DECL(TYPE, NAME)					\
+#define _FF_GMP_CONSTANT_DECL(TYPE, NAME)				\
   extern TYPE##_t _##NAME;						\
   extern volatile AO_t _##NAME##_is_initialized;			\
 									\
@@ -38,22 +40,28 @@
     return _##NAME;							\
   }
 
-_GMP_CONSTANT_DECL (mpz, mpz_zero);
-_GMP_CONSTANT_DECL (mpz, mpz_one);
-_GMP_CONSTANT_DECL (mpz, mpz_neg_one);
-_GMP_CONSTANT_DECL (mpz, mpz_two);
-_GMP_CONSTANT_DECL (mpz, mpz_neg_two);
-_GMP_CONSTANT_DECL (mpz, mpz_three);
-_GMP_CONSTANT_DECL (mpz, mpz_neg_three);
+_FF_GMP_CONSTANT_DECL (mpz, mpz_zero);
+_FF_GMP_CONSTANT_DECL (mpz, mpz_one);
+_FF_GMP_CONSTANT_DECL (mpz, mpz_neg_one);
+_FF_GMP_CONSTANT_DECL (mpz, mpz_two);
+_FF_GMP_CONSTANT_DECL (mpz, mpz_neg_two);
+_FF_GMP_CONSTANT_DECL (mpz, mpz_three);
+_FF_GMP_CONSTANT_DECL (mpz, mpz_neg_three);
 
-_GMP_CONSTANT_DECL (mpq, mpq_zero);
-_GMP_CONSTANT_DECL (mpq, mpq_one_half);
-_GMP_CONSTANT_DECL (mpq, mpq_neg_one_half);
-_GMP_CONSTANT_DECL (mpq, mpq_one);
-_GMP_CONSTANT_DECL (mpq, mpq_neg_one);
-_GMP_CONSTANT_DECL (mpq, mpq_two);
-_GMP_CONSTANT_DECL (mpq, mpq_neg_two);
-_GMP_CONSTANT_DECL (mpq, mpq_three);
-_GMP_CONSTANT_DECL (mpq, mpq_neg_three);
+_FF_GMP_CONSTANT_DECL (mpq, mpq_zero);
+_FF_GMP_CONSTANT_DECL (mpq, mpq_one_half);
+_FF_GMP_CONSTANT_DECL (mpq, mpq_neg_one_half);
+_FF_GMP_CONSTANT_DECL (mpq, mpq_one);
+_FF_GMP_CONSTANT_DECL (mpq, mpq_neg_one);
+_FF_GMP_CONSTANT_DECL (mpq, mpq_two);
+_FF_GMP_CONSTANT_DECL (mpq, mpq_neg_two);
+_FF_GMP_CONSTANT_DECL (mpq, mpq_three);
+_FF_GMP_CONSTANT_DECL (mpq, mpq_neg_three);
 
-#endif // _FONTFORGE_GMP_CONSTANTS_H
+// *INDENT-OFF*
+#ifdef __cplusplus
+}
+#endif
+// *INDENT-ON*
+
+#endif // _SORTSMILLFF_GMP_CONSTANTS_H

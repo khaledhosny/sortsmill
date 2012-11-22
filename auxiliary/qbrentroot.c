@@ -19,7 +19,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <float.h>
-#include <gmp_constants.h>
+#include <sortsmillff/gmp_constants.h>
 
 //
 // Brent's method for root-finding --
