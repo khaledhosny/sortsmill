@@ -10,36 +10,42 @@ write = sys.stdout.write
 rows = int (sys.argv[1])
 cols = int (sys.argv[2])
 
-A = lin.mpz_matrix_set_zero (rows, cols)
+i_argv = 3
 
-B = [[None for i in range (0, cols)] for j in range (0, rows)]
-C = lin.mpz_matrix_set_zero (B)
+A = [[sys.argv[i_argv + i * cols + j] for j in range (0, cols)]
+     for i in range (0, rows)]
+
+B = lin.matrix_memcpy (A)
+
+C = [[None for j in range (0, cols)] for i in range (0, rows)]
+D = lin.matrix_memcpy (C, A)
+
 for i in range (0, rows):
   for j in range (0, cols):
-    if A[i][j] != B[i][j]:
+    if B[i][j] != C[i][j]:
       exit (10)
 for i in range (0, rows):
   for j in range (0, cols):
-    if A[i][j] != C[i][j]:
+    if B[i][j] != D[i][j]:
       exit (20)
 
 for i in range (0, rows):
   for j in range (0, cols):
-    if type (A[i][j]) != type (gmpy.mpz (0)):
+    if type (B[i][j]) != type (''):
       exit (100)
-    if type (B[i][j]) != type (gmpy.mpz (0)):
+    if type (C[i][j]) != type (''):
       exit (110)
-    if type (C[i][j]) != type (gmpy.mpz (0)):
+    if type (D[i][j]) != type (''):
       exit (120)
 
 for i in range (0, rows):
   for j in range (0, cols):
     write (" ")
-    write (str (A[i][j]))
+    write (str (B[i][j]))
   write (" |")
 
 for i in range (0, 10):
   try:
-    lin.mpz_matrix_set_zero (*[None for j in range (0, i)])
+    lin.matrix_memcpy (*[None for j in range (0, i)])
   except:
     pass

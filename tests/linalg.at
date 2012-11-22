@@ -66,16 +66,29 @@ check_linalg_py([test_python_mpq_matrix_set_identity.py 3 3],[0],[ 1 0 0 | 0 1 0
 check_linalg([test_mpz_matrix_memcpy 1 1 123246],[0],[ 123246 |],[])
 check_linalg([test_mpz_matrix_memcpy 3 2 1 2 3 4 5 6],[0],[ 1 2 | 3 4 | 5 6 |],[])
 check_linalg([test_mpz_matrix_memcpy 2 3 1 2 3 4 5 6],[0],[ 1 2 3 | 4 5 6 |],[])
+check_linalg_py([test_python_mpz_matrix_memcpy.py 1 1 123246],[0],[ 123246 |],[])
+check_linalg_py([test_python_mpz_matrix_memcpy.py 3 2 1 2 3 4 5 6],[0],[ 1 2 | 3 4 | 5 6 |],[])
+check_linalg_py([test_python_mpz_matrix_memcpy.py 2 3 1 2 3 4 5 6],[0],[ 1 2 3 | 4 5 6 |],[])
 
 check_linalg([test_mpq_matrix_memcpy 1 1 123/246],[0],[ 1/2 |],[])
 check_linalg([test_mpq_matrix_memcpy 3 2 1 2 3 4 5 6],[0],[ 1 2 | 3 4 | 5 6 |],[])
 check_linalg([test_mpq_matrix_memcpy 2 3 1 2 3 4 5 6],[0],[ 1 2 3 | 4 5 6 |],[])
+check_linalg_py([test_python_mpq_matrix_memcpy.py 1 1 123/246],[0],[ 1/2 |],[])
+check_linalg_py([test_python_mpq_matrix_memcpy.py 3 2 1 2 3 4 5 6],[0],[ 1 2 | 3 4 | 5 6 |],[])
+check_linalg_py([test_python_mpq_matrix_memcpy.py 2 3 1 2 3 4 5 6],[0],[ 1 2 3 | 4 5 6 |],[])
+
+check_linalg_py([test_python_matrix_memcpy.py 1 1 123/246],[0],[ 123/246 |],[])
+check_linalg_py([test_python_matrix_memcpy.py 3 2 1 2 3 4 5 6],[0],[ 1 2 | 3 4 | 5 6 |],[])
+check_linalg_py([test_python_matrix_memcpy.py 2 3 1 2 3 4 5 6],[0],[ 1 2 3 | 4 5 6 |],[])
 
 #--------------------------------------------------------------------------
 
 check_linalg([test_mpz_matrix_swap 1 1 123246 642321],[0],[ 642321 | <-> | 123246 |],[])
 check_linalg([test_mpz_matrix_swap 3 2 1 2 3 4 5 6 7 8 9 10 11 12],[0],[ 7 8 | 9 10 | 11 12 | <-> | 1 2 | 3 4 | 5 6 |],[])
 check_linalg([test_mpz_matrix_swap 2 3 1 2 3 4 5 6 7 8 9 10 11 12],[0],[ 7 8 9 | 10 11 12 | <-> | 1 2 3 | 4 5 6 |],[])
+#check_linalg_py([test_python_mpz_matrix_swap.py 1 1 123246 642321],[0],[ 642321 | <-> | 123246 |],[])
+#check_linalg_py([test_python_mpz_matrix_swap.py 3 2 1 2 3 4 5 6 7 8 9 10 11 12],[0],[ 7 8 | 9 10 | 11 12 | <-> | 1 2 | 3 4 | 5 6 |],[])
+#check_linalg ([test_python_mpz_matrix_swap.py 2 3 1 2 3 4 5 6 7 8 9 10 11 12],[0],[ 7 8 9 | 10 11 12 | <-> | 1 2 3 | 4 5 6 |],[])
 
 check_linalg([test_mpq_matrix_swap 1 1 123/246 642/321],[0],[ 2 | <-> | 1/2 |],[])
 check_linalg([test_mpq_matrix_swap 3 2 1 2 3 4 5 6 7 8 9 10 11 12],[0],[ 7 8 | 9 10 | 11 12 | <-> | 1 2 | 3 4 | 5 6 |],[])

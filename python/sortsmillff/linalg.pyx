@@ -17,6 +17,7 @@
 
 import cython
 import gmpy
+import copy
 
 #--------------------------------------------------------------------------
 
@@ -59,8 +60,7 @@ def mpq_matrix_set_all (*args):
 #--------------------------------------------------------------------------
 
 def mpz_matrix_set_zero (*args):
-  cdef int i, j
-  cdef int m, n
+  cdef int i, j, m, n
   v = gmpy.mpz (0)
   if len (args) == 2:
     (m, n) = args
@@ -76,8 +76,7 @@ def mpz_matrix_set_zero (*args):
   return result
 
 def mpq_matrix_set_zero (*args):
-  cdef int i, j
-  cdef int m, n
+  cdef int i, j, m, n
   v = gmpy.mpq (0)
   if len (args) == 2:
     (m, n) = args
@@ -95,8 +94,7 @@ def mpq_matrix_set_zero (*args):
 #--------------------------------------------------------------------------
 
 def mpz_matrix_set_identity (*args):
-  cdef int i, j
-  cdef int m, n
+  cdef int i, j, m, n
   v = gmpy.mpz (0)
   w = gmpy.mpz (1)
   if len (args) == 2:
@@ -113,8 +111,7 @@ def mpz_matrix_set_identity (*args):
   return result
 
 def mpq_matrix_set_identity (*args):
-  cdef int i, j
-  cdef int m, n
+  cdef int i, j, m, n
   v = gmpy.mpq (0)
   w = gmpy.mpq (1)
   if len (args) == 2:
@@ -129,5 +126,77 @@ def mpq_matrix_set_identity (*args):
   else:
     assert False, "mpq_matrix_set_identity: wrong number of arguments"
   return result
+
+#--------------------------------------------------------------------------
+
+def matrix_memcpy (*args):
+  cdef i, j
+  if len (args) == 1:
+    (A,) = args
+    result = copy.copy (A)
+  elif len (args) == 2:
+    (B, A) = args
+    for i in range (0, len (A)):
+      for j in range (0, len (A[i])):
+        B[i][j] = A[i][j]
+    result = B
+  else:
+    assert False, "matrix_memcpy: wrong number of arguments"
+  return result
+
+def mpz_matrix_memcpy (*args):
+  cdef i, j
+  if len (args) == 1:
+    (A,) = args
+    B = copy.copy (A)
+    result = mpz_matrix_memcpy (B, A)
+  elif len (args) == 2:
+    (B, A) = args
+    for i in range (0, len (A)):
+      for j in range (0, len (A[i])):
+        B[i][j] = gmpy.mpz (A[i][j])
+    result = B
+  else:
+    assert False, "mpz_matrix_memcpy: wrong number of arguments"
+  return result
+
+def mpq_matrix_memcpy (*args):
+  cdef i, j
+  if len (args) == 1:
+    (A,) = args
+    B = copy.copy (A)
+    result = mpq_matrix_memcpy (B, A)
+  elif len (args) == 2:
+    (B, A) = args
+    for i in range (0, len (A)):
+      for j in range (0, len (A[i])):
+        B[i][j] = gmpy.mpq (A[i][j])
+    result = B
+  else:
+    assert False, "mpq_matrix_memcpy: wrong number of arguments"
+  return result
+
+#--------------------------------------------------------------------------
+
+def matrix_swap (A, B):
+  cdef i, j
+  for i in range (0, len (B)):
+    for j in range (0, len (B[i])):
+      A[i][j], B[i][j] = B[i][j], A[i][j]
+  return (A, B)
+
+def mpz_matrix_swap (A, B):
+  cdef i, j
+  for i in range (0, len (B)):
+    for j in range (0, len (B[i])):
+      A[i][j], B[i][j] = gmpy.mpz (B[i][j]), gmpy.mpz (A[i][j])
+  return (A, B)
+
+def mpq_matrix_swap (A, B):
+  cdef i, j
+  for i in range (0, len (B)):
+    for j in range (0, len (B[i])):
+      A[i][j], B[i][j] = gmpy.mpq (B[i][j]), gmpy.mpq (A[i][j])
+  return (A, B)
 
 #--------------------------------------------------------------------------

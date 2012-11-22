@@ -25,6 +25,21 @@ for i in range (0, rows):
 
 for i in range (0, rows):
   for j in range (0, cols):
+    if type (A[i][j]) != type (gmpy.mpq (0)):
+      exit (100)
+    if type (B[i][j]) != type (gmpy.mpq (0)):
+      exit (110)
+    if type (C[i][j]) != type (gmpy.mpq (0)):
+      exit (120)
+
+for i in range (0, rows):
+  for j in range (0, cols):
     write (" ")
     write (str (A[i][j]))
   write (" |")
+
+for i in range (0, 10):
+  try:
+    lin.mpq_matrix_set_identity (*[None for j in range (0, i)])
+  except:
+    pass
