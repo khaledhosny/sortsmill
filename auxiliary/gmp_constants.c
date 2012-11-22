@@ -18,6 +18,12 @@
 #include <gmp_constants.h>
 #include <stdbool.h>
 
+static inline void
+mpz_canonicalize (mpz_t UNUSED (_))
+{
+  // Do nothing.
+}
+
 #define _GMP_CONSTANT_DEFN(TYPE, NAME, VALUE, RADIX)			\
 									\
   VISIBLE TYPE##_t _##NAME;						\
@@ -42,6 +48,14 @@
       }									\
     pthread_mutex_unlock (&_##NAME##_mutex);				\
   }
+
+_GMP_CONSTANT_DEFN (mpz, mpz_zero, "0", 10);
+_GMP_CONSTANT_DEFN (mpz, mpz_one, "1", 10);
+_GMP_CONSTANT_DEFN (mpz, mpz_neg_one, "-1", 10);
+_GMP_CONSTANT_DEFN (mpz, mpz_two, "2", 10);
+_GMP_CONSTANT_DEFN (mpz, mpz_neg_two, "-2", 10);
+_GMP_CONSTANT_DEFN (mpz, mpz_three, "3", 10);
+_GMP_CONSTANT_DEFN (mpz, mpz_neg_three, "-3", 10);
 
 _GMP_CONSTANT_DEFN (mpq, mpq_zero, "0", 10);
 _GMP_CONSTANT_DEFN (mpq, mpq_one_half, "1/2", 10);

@@ -38,9 +38,17 @@ dist_libsortsmillff_aux_la_SOURCES = ArabicForms.c alphabet.c		\
 	rexp.c precomputed_data.c polyspline.c brentroot.c qbrentroot.c	\
 	gmp_constants.c linalg.c
 
+libsortsmillff_aux_la_CFLAGS = $(AM_CFLAGS) -I$(srcdir)
 libsortsmillff_aux_la_LIBADD = $(top_builddir)/lib/libgnu.la
 libsortsmillff_aux_la_LDFLAGS = $(call ldflags)
 libsortsmillff_aux_la_DEPENDENCIES = Makefile $(libsortsmillff_aux_la_LIBADD)
+
+LINALG_EXTRAS = linalg_matrix_init.c linalg_matrix_set.c			\
+	linalg_matrix_copy.c linalg_matrix_swap.c linalg_matrix_mult.c
+
+linalg.lo: $(LINALG_EXTRAS)
+
+EXTRA_DIST = $(LINALG_EXTRAS)
 
 #--------------------------------------------------------------------------
 #

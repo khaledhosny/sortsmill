@@ -5,6 +5,13 @@ AT_KEYWORDS([gmp_constants gmp auxiliary unit])
 AT_CHECK_UNQUOTED(["${abs_builddir}"/test_gmp_constants],
 [0],
 [0
+1
+-1
+2
+-2
+3
+-3
+0
 1/2
 -1/2
 1

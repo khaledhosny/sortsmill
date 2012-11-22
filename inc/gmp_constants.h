@@ -38,6 +38,14 @@
     return _##NAME;							\
   }
 
+_GMP_CONSTANT_DECL (mpz, mpz_zero);
+_GMP_CONSTANT_DECL (mpz, mpz_one);
+_GMP_CONSTANT_DECL (mpz, mpz_neg_one);
+_GMP_CONSTANT_DECL (mpz, mpz_two);
+_GMP_CONSTANT_DECL (mpz, mpz_neg_two);
+_GMP_CONSTANT_DECL (mpz, mpz_three);
+_GMP_CONSTANT_DECL (mpz, mpz_neg_three);
+
 _GMP_CONSTANT_DECL (mpq, mpq_zero);
 _GMP_CONSTANT_DECL (mpq, mpq_one_half);
 _GMP_CONSTANT_DECL (mpq, mpq_neg_one_half);
