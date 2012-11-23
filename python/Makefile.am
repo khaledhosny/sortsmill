@@ -36,19 +36,20 @@ nodist_python_PYTHON = psMat.py
 nobase_dist_python_PYTHON = ffContrib/__init__.py	\
 	ffContrib/excepthook.py
 
-nobase_nodist_python_PYTHON = sortsmillff/__init__.py	\
-	sortsmillff/psMat.py
+nobase_nodist_python_PYTHON = sortsmillff/__init__.py
 
 nobase_pyexec_LTLIBRARIES =
+
+nobase_pyexec_LTLIBRARIES += sortsmillff/psMat.la
+sortsmillff_psMat_la_SOURCES = sortsmillff/psMat.c
+sortsmillff_psMat_la_LDFLAGS = $(GSL_CFLAGS) $(GSL_LIBS) $(AM_LDFLAGS)
+sortsmillff_psMat_la_LIBADD = $(top_builddir)/lib/libgnu.la
 
 nobase_pyexec_LTLIBRARIES += sortsmillff/linalg.la
 sortsmillff_linalg_la_SOURCES = sortsmillff/linalg.c
 sortsmillff_linalg_la_LIBADD =						\
 	$(top_builddir)/auxiliary/libsortsmillff_aux.la	\
 	$(top_builddir)/lib/libgnu.la
-sortsmillff_linalg_la_DEPENDENCIES = sortsmillff/linalg.pyx				\
-	sortsmillff/linalg.pxd sortsmillff/gmpy.pxd sortsmillff/gmpy.pxi	\
-	sortsmillff/brentroot_c.pxd
 
 nobase_pyexec_LTLIBRARIES += sortsmillff/polyspline.la
 sortsmillff_polyspline_la_SOURCES = sortsmillff/polyspline.c
@@ -61,23 +62,27 @@ sortsmillff_brentroot_la_SOURCES = sortsmillff/brentroot.c
 sortsmillff_brentroot_la_LIBADD =					\
 	$(top_builddir)/auxiliary/libsortsmillff_aux.la	\
 	$(top_builddir)/lib/libgnu.la
-sortsmillff_brentroot_la_DEPENDENCIES = sortsmillff/brentroot.pyx	\
-	sortsmillff/brentroot_c.pxd sortsmillff/gmpy.pxd				\
-	sortsmillff/gmpy.pxi
 
-EXTRA_DIST = sortsmillff/linalg.pxd sortsmillff/brentroot_c.pxd	\
-	sortsmillff/gmpy.pxd
+PYX_FILES = sortsmillff/psMat.pyx sortsmillff/linalg.pyx	\
+	sortsmillff/polyspline.pyx sortsmillff/brentroot.pyx
 
-EXTRA_DIST += sortsmillff/gmpy.pxi
+PXD_FILES = sortsmillff/gsl.pxd sortsmillff/linalg.pxd	\
+	sortsmillff/brentroot_c.pxd sortsmillff/gmpy.pxd
 
-EXTRA_DIST += sortsmillff/linalg.pyx sortsmillff/polyspline.pyx	\
-	sortsmillff/brentroot.pyx
+PXI_FILES = sortsmillff/gmpy.pxi
 
-MOSTLYCLEANFILES = sortsmillff/linalg.c sortsmillff/polyspline.c	\
-	sortsmillff/brentroot.c
+# Just make any change in the pxd or pxi files result in a complete
+# rebuild from Cython sources. FIXME: This is inefficient.
+$(PYX_FILES:.pyx=.c): $(PXD_FILES) $(PXI_FILES) sortsmillff/psMat.pxi.in
+
+EXTRA_DIST = $(PYX_FILES) $(PXD_FILES) $(PXI_FILES)
+
+MOSTLYCLEANFILES = sortsmillff/psMat.c sortsmillff/linalg.c	\
+	sortsmillff/polyspline.c sortsmillff/brentroot.c
 
 AM_LDFLAGS = -module -shared -avoid-version
 AM_CFLAGS += $(NUMPY_CFLAGS) $(CYTHON_EXTRA_CFLAGS)
+AM_CYTHONFLAGS = -I$(builddir)/sortsmillff -I$(srcdir)/sortsmillff
 
 # FIXME: Maybe support extensions other than .so.
 sortsmillff/%.so: sortsmillff/%.la
@@ -85,8 +90,8 @@ sortsmillff/%.so: sortsmillff/%.la
 	cp sortsmillff/$(LT_OBJDIR)$*.so $@
 
 # These shared object files are needed by the test suite.
-all-local: sortsmillff/linalg.so sortsmillff/polyspline.so	\
-	sortsmillff/brentroot.so
+all-local: sortsmillff/psMat.so sortsmillff/linalg.so	\
+	sortsmillff/polyspline.so sortsmillff/brentroot.so
 
 check-local: all-local
 
@@ -94,6 +99,9 @@ extract_text = $(PERL) -n -e								\
 	'print $$_ if (s|^\s*\#\s*$(1)--\s*(.*)\s*|\1\n|)'
 
 $(top_srcdir)/doc/%.interface.texi: sortsmillff/%.py
+	$(call extract_text,i) $< > $@
+
+$(top_srcdir)/doc/%.interface.texi: sortsmillff/%.pyx
 	$(call extract_text,i) $< > $@
 
 extract-text: $(top_srcdir)/doc/psMat.interface.texi

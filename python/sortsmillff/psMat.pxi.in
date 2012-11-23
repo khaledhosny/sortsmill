@@ -1,4 +1,8 @@
+# -*- mode: cython; coding: utf-8; python-indent: 2; -*-
+
 # Copyright (C) 2012 by Barry Schwartz
+# Based in part on python.c by George Williams, which is
+#   Copyright (C) 2007-2012 by George Williams
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -24,12 +28,4 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#--------------------------------------------------------------------------
-
-%.c: %.pyx
-	$(AM_V_GEN)
-	$(AM_V_at)$(CYTHON) $(AM_CYTHONFLAGS) $(CYTHONFLAGS) --force -o $@-tmp $<
-	$(AM_V_at)$(PERL) -i -n -e 'print ("#include <config.h>\n") if $$. == 1;				\
-		s%^PyMODINIT_FUNC(\s*(init|PyInit_).*/\*\s*proto\s*\*/)%VISIBLE PyMODINIT_FUNC\1%;	\
-		print $$_' $@-tmp
-	$(AM_V_at)mv $@-tmp $@
+__version__ = '@VERSION_MAJOR@.@VERSION_MINOR@.@VERSION_PATCH@@VERSION_EXTRA_SHORT@'

@@ -43,7 +43,7 @@ def test_inverse (a1):
             if 1e-10 < abs (ident_mat2[i] - (1, 0, 0, 1, 0, 0)[i]):
                 exit (45)
 
-    except:
+    except psMat.psMatGSLError:
         # If the inversion threw an exception, check that that the
         # determinant is vanishing.
         if 1e6 * eps < abs (a1[0] * a1[3] - a1[1] * a1[2]):

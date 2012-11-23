@@ -34,7 +34,8 @@ The matrices are expressed as six-element tuples of floats.
 
 """
 
-__version__ = '@VERSION_MAJOR@.@VERSION_MINOR@.@VERSION_PATCH@@VERSION_EXTRA_SHORT@'
+cimport gsl
+include "psMat.pxi"
 
 # i--
 # i-- @strong{FIXME:} This chapter needs an introductory section,
@@ -44,41 +45,74 @@ __version__ = '@VERSION_MAJOR@.@VERSION_MINOR@.@VERSION_PATCH@@VERSION_EXTRA_SHO
 
 from math import cos, sin, tan
 
-try:
-  import numpy
-  import numpy.linalg
+#--------------------------------------------------------------------------
+#
+# This is ugly but something like it seems necessary.
 
-  # Use a high-quality, already written matrix inversion algorithm if
-  # one is available.
-  def psMat_invert (a):
+def set_error_handler_off ():
+  gsl.gsl_set_error_handler_off ()
+
+set_error_handler_off ()
+
+#--------------------------------------------------------------------------
+
+class psMatException (Exception):
+  """Base class for exceptions raised by psMat."""
+  pass
+
+class psMatGSLError (psMatException):
+  """Raised when a GSL error occurs during a psMat operation."""
+  def __init__ (self, errno):
+    self.errno = errno
+  def __str__ (self):
+    return gsl.gsl_strerror (self.errno)
+
+def psMat_invert (a):
     # Invert a PostScript matrix.
-    a = map (float, a)
-    m = numpy.array ([a[0:2], a[2:4]])
-    minv = numpy.linalg.inv (m)
-    b11 = minv[0][0]
-    b12 = minv[0][1]
-    b21 = minv[1][0]
-    b22 = minv[1][1]
-    c1 = - (a[4] * b11 + a[5] * b21);
-    c2 = - (a[4] * b12 + a[5] * b22);
-    return (b11, b12, b21, b22, c1, c2)
 
-except ImportError:
-
-  # Fall back to the easy but numerically awful Cramer’s method, which
-  # is what FontForge originally used, anyway. (Here we will let
-  # singular matrices throw division-by-zero or overflow exceptions,
-  # which is different from what FontForge did.)
-  def psMat_invert (a):
-    # Invert a PostScript matrix.
     a = map (float, a)
-    det = a[0] * a[3] - a[1] * a[2]
-    b11 = a[3] / det
-    b12 = - a[1] / det
-    b21 = - a[2] / det
-    b22 = a[0] / det
-    c1 = - (a[4] * b11 + a[5] * b21);
-    c2 = - (a[4] * b12 + a[5] * b22);
+
+    cdef double a0 = a[0]
+    cdef double a1 = a[1]
+    cdef double a2 = a[2]
+    cdef double a3 = a[3]
+    cdef double a4 = a[4]
+    cdef double a5 = a[5]
+
+    cdef double mat[4]
+    cdef double mat_inv[4]
+
+    mat[0] = a0
+    mat[1] = a1
+    mat[2] = a2
+    mat[3] = a3
+
+    cdef gsl.gsl_matrix_view m = gsl.gsl_matrix_view_array (mat, 2, 2)
+    cdef gsl.gsl_matrix_view m_inv = gsl.gsl_matrix_view_array (mat_inv, 2, 2)
+
+    cdef gsl.gsl_permutation *p = gsl.gsl_permutation_alloc (2)
+    if p == NULL:
+      raise MemoryError
+
+    cdef int signum
+    cdef int errval
+    errval = gsl.gsl_linalg_LU_decomp (&m.matrix, p, &signum)
+    if errval != gsl.GSL_SUCCESS:
+      raise psMatGSLError (errval)
+    errval = gsl.gsl_linalg_LU_invert (&m.matrix, p, &m_inv.matrix)
+    if errval != gsl.GSL_SUCCESS:
+      raise psMatGSLError (errval)
+
+    cdef double b11 = gsl.gsl_matrix_get (&m_inv.matrix, 0, 0)
+    cdef double b12 = gsl.gsl_matrix_get (&m_inv.matrix, 0, 1)
+    cdef double b21 = gsl.gsl_matrix_get (&m_inv.matrix, 1, 0)
+    cdef double b22 = gsl.gsl_matrix_get (&m_inv.matrix, 1, 1)
+
+    gsl.gsl_permutation_free (p)
+
+    cdef double c1 = - (a4 * b11 + a5 * b21)
+    cdef double c2 = - (a4 * b12 + a5 * b22)
+
     return (b11, b12, b21, b22, c1, c2)
 
 # i--
