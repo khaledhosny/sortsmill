@@ -16,7 +16,7 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include <sortsmillff/guile/polyspline.h>
-#include <polyspline.h>
+#include <sortsmillff/polyspline.h>
 #include <xalloc.h>
 
 void init_guile_sortsmillff_polyspline (void);

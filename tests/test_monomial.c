@@ -7,7 +7,7 @@
 #include <float.h>
 #include <math.h>
 #include <libguile.h>
-#include <polyspline.h>
+#include <sortsmillff/polyspline.h>
 
 #include <main_with_guile.x>
 

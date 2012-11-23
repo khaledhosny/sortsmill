@@ -15,12 +15,22 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-#include <polyspline.h>
+#include <sortsmillff/polyspline.h>
 #include <precomputed_data.h>
 #include <string.h>
 #include <math.h>
 #include <gsl/gsl_matrix.h>
 #include <gsl/gsl_blas.h>
+
+/* Use floating-point multiply-and-add if there is hardware support
+   for it. */
+#ifndef MY_FAST_FMA
+#ifdef FP_FAST_FMA
+#define MY_FAST_FMA fma
+#else
+#define MY_FAST_FMA(x, y, z) ((x) * (y) + (z))
+#endif
+#endif
 
 //-------------------------------------------------------------------------
 //

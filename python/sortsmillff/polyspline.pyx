@@ -20,7 +20,7 @@ import cython
 import numpy as np
 cimport numpy as np
 
-cdef extern from "polyspline.h":
+cdef extern from "sortsmillff/polyspline.h":
   void sbern_to_bern_double (unsigned int deg, double *_from, double *_to, size_t num_splines)
   void bern_to_sbern_double (unsigned int deg, double *_from, double *_to, size_t num_splines)
   void mono_to_sbern_double (unsigned int deg, double *_from, double *_to, size_t num_splines)
