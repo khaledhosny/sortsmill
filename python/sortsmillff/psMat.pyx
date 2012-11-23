@@ -56,6 +56,10 @@ set_error_handler_off ()
 
 #--------------------------------------------------------------------------
 
+#
+# FIXME: Write Texinfo documentation for these exceptions.
+#
+
 class psMatException (Exception):
   """Base class for exceptions raised by psMat."""
   pass
