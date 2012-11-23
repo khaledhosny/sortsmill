@@ -8,7 +8,7 @@
 #include <gc.h>
 #include <locale.h>
 #include <xunistring.h>
-#include <rexp.h>
+#include <sortsmillff/rexp.h>
 
 typedef rexp_match_t (*matcher) (rexp_t re, const char *s);
 typedef rexp_t (*compiler) (const char *s);

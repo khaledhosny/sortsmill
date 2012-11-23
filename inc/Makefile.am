@@ -31,7 +31,7 @@ noinst_HEADERS = config.h config-extra.h intl.h basics.h gmpy.h			\
 	null_passthru.h xunistring.h chardata.h gdraw.h gfile.h ggadget.h	\
 	gicons.h gimage.h gio.h gkeysym.h gprogress.h gresedit.h			\
 	gresource.h gwidget.h ustring.h utype.h annotations_base.h			\
-	ffthread.h polyspline.h rexp.h precomputed_data.h
+	ffthread.h polyspline.h precomputed_data.h
 
 nobase_include_HEADERS = sortsmillff/attributes.h			\
 	sortsmillff/null_passthru.h sortsmillff/xdie_on_null.h	\
@@ -40,7 +40,8 @@ nobase_include_HEADERS = sortsmillff/attributes.h			\
 	sortsmillff/xunicase.h sortsmillff/xuniconv.h			\
 	sortsmillff/xuninorm.h sortsmillff/xunistr.h			\
 	sortsmillff/xunistring.h sortsmillff/ps_number.h		\
-	sortsmillff/brentroot.h sortsmillff/qbrentroot.h
+	sortsmillff/brentroot.h sortsmillff/qbrentroot.h		\
+	sortsmillff/rexp.h
 
 nobase_include_HEADERS += sortsmillff/guile/polyspline.h	\
 	sortsmillff/guile/brentroot.h sortsmillff/guile/iconv.h	\

@@ -35,10 +35,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
-#include <xunistring.h>
-#include <pcre.h>
-#include <rexp.h>
 #include <intl.h>
+#include <sortsmillff/xunistring.h>
+#include <sortsmillff/rexp.h>
 
 static void
 finalize_rexp_t (void *obj, void *UNUSED (client_data))
@@ -66,7 +65,7 @@ deregister_rexp_t_finalizer (rexp_t re)
   GC_REGISTER_FINALIZER (re, NULL, NULL, &ofn, &ocd);
 }
 
-rexp_t
+VISIBLE rexp_t
 rexp_compile_opt (const char *pattern, int options)
 {
   // x_gc_malloc clears memory, leaving (re->extra == NULL), as we
@@ -102,25 +101,25 @@ rexp_compile_opt (const char *pattern, int options)
   return re;
 }
 
-rexp_t
+VISIBLE rexp_t
 rexp_compile (const char *pattern)
 {
   return rexp_compile_opt (pattern, 0);
 }
 
-rexp_t
+VISIBLE rexp_t
 rexp_compile_study (const char *pattern)
 {
   return rexp_study (rexp_compile (pattern));
 }
 
-rexp_t
+VISIBLE rexp_t
 rexp_compile_jit (const char *pattern)
 {
   return rexp_jit (rexp_compile (pattern));
 }
 
-rexp_t
+VISIBLE rexp_t
 rexp_compile_once_opt (rexp_buffer_t *re_buf_ptr, const char *pattern,
                        int options)
 {
@@ -156,75 +155,75 @@ rexp_compile_once_opt (rexp_buffer_t *re_buf_ptr, const char *pattern,
   return re;
 }
 
-rexp_t
+VISIBLE rexp_t
 rexp_compile_once (rexp_buffer_t *re_buf_ptr, const char *pattern)
 {
   return rexp_compile_once_opt (re_buf_ptr, pattern, 0);
 }
 
-rexp_t
+VISIBLE rexp_t
 rexp_compile_once_study (rexp_buffer_t *re_buf_ptr, const char *pattern)
 {
   return rexp_study (rexp_compile_once (re_buf_ptr, pattern));
 }
 
-rexp_t
+VISIBLE rexp_t
 rexp_compile_once_jit (rexp_buffer_t *re_buf_ptr, const char *pattern)
 {
   return rexp_jit (rexp_compile_once (re_buf_ptr, pattern));
 }
 
-rexp_t
+VISIBLE rexp_t
 u8_rexp_compile_opt (const uint8_t *pattern, int options)
 {
   return rexp_compile_opt ((const char *) pattern, options);
 }
 
-rexp_t
+VISIBLE rexp_t
 u8_rexp_compile (const uint8_t *pattern)
 {
   return u8_rexp_compile_opt (pattern, (PCRE_UTF8 | PCRE_UCP));
 }
 
-rexp_t
+VISIBLE rexp_t
 u8_rexp_compile_study (const uint8_t *pattern)
 {
   return rexp_study (u8_rexp_compile (pattern));
 }
 
-rexp_t
+VISIBLE rexp_t
 u8_rexp_compile_jit (const uint8_t *pattern)
 {
   return rexp_jit (u8_rexp_compile (pattern));
 }
 
-rexp_t
+VISIBLE rexp_t
 u8_rexp_compile_once_opt (rexp_buffer_t *re_buf_ptr, const uint8_t *pattern,
                           int options)
 {
   return rexp_compile_once_opt (re_buf_ptr, (const char *) pattern, options);
 }
 
-rexp_t
+VISIBLE rexp_t
 u8_rexp_compile_once (rexp_buffer_t *re_buf_ptr, const uint8_t *pattern)
 {
   return u8_rexp_compile_once_opt (re_buf_ptr, pattern,
                                    (PCRE_UTF8 | PCRE_UCP));
 }
 
-rexp_t
+VISIBLE rexp_t
 u8_rexp_compile_once_study (rexp_buffer_t *re_buf_ptr, const uint8_t *pattern)
 {
   return rexp_study (u8_rexp_compile_once (re_buf_ptr, pattern));
 }
 
-rexp_t
+VISIBLE rexp_t
 u8_rexp_compile_once_jit (rexp_buffer_t *re_buf_ptr, const uint8_t *pattern)
 {
   return rexp_jit (u8_rexp_compile_once (re_buf_ptr, pattern));
 }
 
-rexp_t
+VISIBLE rexp_t
 rexp_study_opt (rexp_t re, int options)
 {
   rexp_t new_re = re;
@@ -251,25 +250,25 @@ rexp_study_opt (rexp_t re, int options)
   return new_re;
 }
 
-rexp_t
+VISIBLE rexp_t
 rexp_study (rexp_t re)
 {
   return rexp_study_opt (re, 0);
 }
 
-rexp_t
+VISIBLE rexp_t
 rexp_jit (rexp_t re)
 {
   return rexp_study_opt (re, PCRE_STUDY_JIT_COMPILE);
 }
 
-rexp_t
+VISIBLE rexp_t
 rexp_identity (rexp_t re)
 {
   return re;
 }
 
-rexp_match_t
+VISIBLE rexp_match_t
 rexp_search_opt (rexp_t re, const char *s, int options)
 {
   assert (s != NULL);
@@ -300,19 +299,19 @@ rexp_search_opt (rexp_t re, const char *s, int options)
   return m;
 }
 
-rexp_match_t
+VISIBLE rexp_match_t
 rexp_match (rexp_t re, const char *s)
 {
   return rexp_search_opt (re, s, PCRE_ANCHORED);
 }
 
-rexp_match_t
+VISIBLE rexp_match_t
 rexp_search (rexp_t re, const char *s)
 {
   return rexp_search_opt (re, s, 0);
 }
 
-size_t
+VISIBLE size_t
 rexp_num_subexpr (rexp_match_t m)
 {
   assert (m != NULL);
@@ -321,7 +320,7 @@ rexp_num_subexpr (rexp_match_t m)
   return (m->capture_count + 1);
 }
 
-rexp_interval_t
+VISIBLE rexp_interval_t
 rexp_interval (rexp_match_t m, size_t subexpression)
 {
   rexp_interval_t interv;
@@ -340,7 +339,7 @@ rexp_interval (rexp_match_t m, size_t subexpression)
   return interv;
 }
 
-char *
+VISIBLE char *
 rexp_substr (rexp_match_t m, const char *s, size_t subexpression)
 {
   rexp_interval_t interv = rexp_interval (m, subexpression);
@@ -351,25 +350,25 @@ rexp_substr (rexp_match_t m, const char *s, size_t subexpression)
   return subexpr;
 }
 
-rexp_match_t
+VISIBLE rexp_match_t
 u8_rexp_search_opt (rexp_t re, const uint8_t *s, int options)
 {
   return rexp_search_opt (re, (const char *) s, options);
 }
 
-rexp_match_t
+VISIBLE rexp_match_t
 u8_rexp_match (rexp_t re, const uint8_t *s)
 {
   return u8_rexp_search_opt (re, s, PCRE_ANCHORED);
 }
 
-rexp_match_t
+VISIBLE rexp_match_t
 u8_rexp_search (rexp_t re, const uint8_t *s)
 {
   return u8_rexp_search_opt (re, s, 0);
 }
 
-uint8_t *
+VISIBLE uint8_t *
 u8_rexp_substr (rexp_match_t m, const uint8_t *s, size_t subexpression)
 {
   return (uint8_t *) rexp_substr (m, (const char *) s, subexpression);
