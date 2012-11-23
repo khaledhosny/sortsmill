@@ -34,8 +34,8 @@
  */
 
 #include <atomic_ops.h>
-#include <sortsmillff/xgc.h> /* Includes gc.h and pthreads.h in the
-				right order. */
+#include <sortsmillff/xgc.h>    /* Includes gc.h and pthreads.h in the
+                                   right order. */
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -88,13 +88,11 @@ rexp_t rexp_compile_study (const char *pattern);
 rexp_t rexp_compile_jit (const char *pattern);
 
 rexp_t rexp_compile_once_opt (rexp_buffer_t *re_buf_ptr,
-                                      const char *pattern, int options);
-rexp_t rexp_compile_once (rexp_buffer_t *re_buf_ptr,
-                                  const char *pattern);
+                              const char *pattern, int options);
+rexp_t rexp_compile_once (rexp_buffer_t *re_buf_ptr, const char *pattern);
 rexp_t rexp_compile_once_study (rexp_buffer_t *re_buf_ptr,
-                                        const char *pattern);
-rexp_t rexp_compile_once_jit (rexp_buffer_t *re_buf_ptr,
-                                      const char *pattern);
+                                const char *pattern);
+rexp_t rexp_compile_once_jit (rexp_buffer_t *re_buf_ptr, const char *pattern);
 
 rexp_t u8_rexp_compile_opt (const uint8_t *pattern, int options);
 rexp_t u8_rexp_compile (const uint8_t *pattern);
@@ -102,13 +100,13 @@ rexp_t u8_rexp_compile_study (const uint8_t *pattern);
 rexp_t u8_rexp_compile_jit (const uint8_t *pattern);
 
 rexp_t u8_rexp_compile_once_opt (rexp_buffer_t *re_buf_ptr,
-                                         const uint8_t *pattern, int options);
+                                 const uint8_t *pattern, int options);
 rexp_t u8_rexp_compile_once (rexp_buffer_t *re_buf_ptr,
-                                     const uint8_t *pattern);
+                             const uint8_t *pattern);
 rexp_t u8_rexp_compile_once_study (rexp_buffer_t *re_buf_ptr,
-                                           const uint8_t *pattern);
+                                   const uint8_t *pattern);
 rexp_t u8_rexp_compile_once_jit (rexp_buffer_t *re_buf_ptr,
-                                         const uint8_t *pattern);
+                                 const uint8_t *pattern);
 
 /*
   The following functions return the same rexp_t, but altered (except
@@ -129,15 +127,13 @@ rexp_match_t rexp_match (rexp_t re, const char *s);
 rexp_match_t rexp_search (rexp_t re, const char *s);
 size_t rexp_num_subexpr (rexp_match_t m);
 rexp_interval_t rexp_interval (rexp_match_t m, size_t subexpression);
-char *rexp_substr (rexp_match_t m, const char *s,
-                           size_t subexpression);
+char *rexp_substr (rexp_match_t m, const char *s, size_t subexpression);
 
-rexp_match_t u8_rexp_search_opt (rexp_t re, const uint8_t *s,
-                                         int options);
+rexp_match_t u8_rexp_search_opt (rexp_t re, const uint8_t *s, int options);
 rexp_match_t u8_rexp_match (rexp_t re, const uint8_t *s);
 rexp_match_t u8_rexp_search (rexp_t re, const uint8_t *s);
 uint8_t *u8_rexp_substr (rexp_match_t m, const uint8_t *s,
-                                 size_t subexpression);
+                         size_t subexpression);
 
 /* *INDENT-OFF* */
 #ifdef __cplusplus
