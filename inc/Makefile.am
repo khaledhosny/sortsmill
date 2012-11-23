@@ -35,7 +35,7 @@ noinst_HEADERS = config.h config-extra.h intl.h basics.h gmpy.h			\
 
 nobase_include_HEADERS = sortsmillff/attributes.h			\
 	sortsmillff/null_passthru.h sortsmillff/xdie_on_null.h	\
-	sortsmillff/xgc.h sortsmillff/gmp_xgc.h					\
+	sortsmillff/xgc.h sortsmillff/gmp_gc.h					\
 	sortsmillff/gmp_constants.h sortsmillff/linalg.h		\
 	sortsmillff/xunicase.h sortsmillff/xuniconv.h			\
 	sortsmillff/xuninorm.h sortsmillff/xunistr.h			\

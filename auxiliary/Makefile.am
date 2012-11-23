@@ -36,7 +36,7 @@ dist_libsortsmillff_aux_la_SOURCES = ArabicForms.c alphabet.c		\
 	combiners.h xdie_on_null.c xgc.c xgc_strjoin.c xunicase.c		\
 	xuniconv.c xuninorm.c xunistr.c xunistr_strjoin.c ps_number.c	\
 	rexp.c precomputed_data.c polyspline.c brentroot.c qbrentroot.c	\
-	gmp_constants.c gmp_xgc.c linalg.c
+	gmp_constants.c gmp_gc.c linalg.c
 
 libsortsmillff_aux_la_CFLAGS = $(AM_CFLAGS) -I$(srcdir)
 libsortsmillff_aux_la_LIBADD = $(top_builddir)/lib/libgnu.la

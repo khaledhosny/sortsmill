@@ -15,8 +15,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-#include <sortsmillff/xgc.h>   // Includes gc.h and pthreads.h in the right order.
 #include <sortsmillff/gmp_constants.h>
+#include <sortsmillff/gmp_gc.h>
+#include <sortsmillff/xgc.h>    /* Includes gc.h and pthreads.h in the
+                                   right order. */
 #include <stdbool.h>
 
 static inline void
@@ -38,9 +40,7 @@ mpz_canonicalize (mpz_t UNUSED (_))
     pthread_mutex_lock (&_##NAME##_mutex);				\
     if (!_##NAME##_is_initialized)					\
       {									\
-	/* Allocate space for the constant. We never     */		\
-	/* bother to recover the space.                  */		\
-	TYPE##_init (_##NAME);						\
+	TYPE##_gc_init (_##NAME);					\
 									\
 	TYPE##_set_str ((_##NAME), (VALUE), (RADIX));			\
 	TYPE##_canonicalize (_##NAME);					\
