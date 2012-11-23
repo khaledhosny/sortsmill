@@ -28,9 +28,11 @@
  */
 
 #include "fontforge.h"
+#include <gsl/gsl_errno.h>
 
 int
 main (int argc, char **argv)
 {
+  gsl_set_error_handler_off ();
   return fontforge_main (argc, argv);
 }
