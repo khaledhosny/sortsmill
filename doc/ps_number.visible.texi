@@ -1,6 +1,6 @@
 
 The following items are declared in header file
-@file{ps_number.h}.
+@file{sortsmillff/ps_number.h}.
 
 
 @deftypefun {bool} is_postscript_integer (const char *@var{s})

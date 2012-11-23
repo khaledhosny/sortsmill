@@ -51,7 +51,7 @@ nobase_include_HEADERS += sortsmillff/guile/polyspline.h	\
 extract_text = $(PERL) -n -e											\
 	'print $$_ if (s|^\s*(//\|[*])\s*$(1)--\s*(.*)\s*|\2\n|)'
 
-$(top_srcdir)/doc/%.visible.texi: %.h
+$(top_srcdir)/doc/%.visible.texi: sortsmillff/%.h
 	$(call extract_text,vis) $< > $@
 
 extract-text: $(top_srcdir)/doc/ps_number.visible.texi
