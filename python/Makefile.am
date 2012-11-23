@@ -47,7 +47,8 @@ sortsmillff_linalg_la_LIBADD =						\
 	$(top_builddir)/auxiliary/libsortsmillff_aux.la	\
 	$(top_builddir)/lib/libgnu.la
 sortsmillff_linalg_la_DEPENDENCIES = sortsmillff/linalg.pyx				\
-	sortsmillff/linalg.pxd sortsmillff/gmpy.pxd sortsmillff/gmpy.pxi
+	sortsmillff/linalg.pxd sortsmillff/gmpy.pxd sortsmillff/gmpy.pxi	\
+	sortsmillff/brentroot_c.pxd
 
 nobase_pyexec_LTLIBRARIES += sortsmillff/polyspline.la
 sortsmillff_polyspline_la_SOURCES = sortsmillff/polyspline.c

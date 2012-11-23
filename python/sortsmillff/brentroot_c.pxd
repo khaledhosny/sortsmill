@@ -17,7 +17,7 @@
 
 from gmpy cimport *
 
-cdef extern from "brentroot.h":
+cdef extern from "sortsmillff/brentroot.h":
   ctypedef double (*brentroot_func_t) (double, void *)
 
   void brentroot (int max_iters, double tol,
@@ -26,7 +26,7 @@ cdef extern from "brentroot.h":
                   double *root, int *err,
                   unsigned int *iter_no)
 
-cdef extern from "qbrentroot.h":
+cdef extern from "sortsmillff/qbrentroot.h":
   ctypedef void (*qbrentroot_func_t) (__mpq_struct *, __mpq_struct *, void *)
 
   void qbrentroot (int max_iters, __mpq_struct *tol,

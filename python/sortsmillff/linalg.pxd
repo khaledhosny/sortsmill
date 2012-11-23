@@ -18,10 +18,11 @@
 cimport gmpy
 
 cdef extern from "sortsmillff/linalg.h":
+  pass
 
-  void mpz_matrix_init (unsigned int m, unsigned int n, mpz_t A[m][n]);
-  void mpz_matrix_clear (unsigned int m, unsigned int n, mpz_t A[m][n]);
+#  void mpz_matrix_init (unsigned int m, unsigned int n, mpz_t A[m][n]);
+#  void mpz_matrix_clear (unsigned int m, unsigned int n, mpz_t A[m][n]);
 
-  void mpq_matrix_init (unsigned int m, unsigned int n, mpq_t A[m][n]);
-  void mpq_matrix_clear (unsigned int m, unsigned int n, mpq_t A[m][n]);
+#  void mpq_matrix_init (unsigned int m, unsigned int n, mpq_t A[m][n]);
+#  void mpq_matrix_clear (unsigned int m, unsigned int n, mpq_t A[m][n]);
 

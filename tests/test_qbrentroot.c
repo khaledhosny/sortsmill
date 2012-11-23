@@ -7,7 +7,7 @@
 #include <float.h>
 #include <math.h>
 #include <gmp.h>
-#include <qbrentroot.h>
+#include <sortsmillff/qbrentroot.h>
 
 //
 // FIXME: This test is far from adequate.

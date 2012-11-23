@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-#include <qbrentroot.h>
+#include <sortsmillff/qbrentroot.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <float.h>
@@ -237,7 +237,7 @@ step_by_at_least_tolerance (mpq_t guess, const mpq_t tolerance,
   mpq_clear (abs_new_step);
 }
 
-void
+VISIBLE void
 qbrentroot (int max_iters, const mpq_t tol, const mpq_t epsilon,
             const mpq_t t1, const mpq_t t2, qbrentroot_func_t func,
             void *data, mpq_t root, int *err, unsigned int *iter_no)

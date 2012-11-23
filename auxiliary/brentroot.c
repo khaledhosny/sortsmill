@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-#include <brentroot.h>
+#include <sortsmillff/brentroot.h>
 #include <stdbool.h>
 #include <math.h>
 #include <float.h>
@@ -144,7 +144,7 @@ step_by_at_least_tolerance (double tolerance, double new_step, double b)
   return guess;
 }
 
-void
+VISIBLE void
 brentroot (int max_iters, double tol, double t1, double t2,
            brentroot_func_t func, void *data, double *root, int *err,
            unsigned int *iter_no)
