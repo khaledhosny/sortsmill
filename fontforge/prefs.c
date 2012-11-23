@@ -43,7 +43,7 @@
 #include <stdlib.h>
 #include <xstriconv.h>
 #include <xunistring.h>
-#include <xdie_on_null.h>
+#include <sortsmillff/xdie_on_null.h>
 
 #include "ttf.h"
 

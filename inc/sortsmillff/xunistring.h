@@ -26,13 +26,20 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _INTERNAL_XUNISTRING_H
-#define _INTERNAL_XUNISTRING_H
+#ifndef _SORTSMILLFF_XUNISTRING_H
+#define _SORTSMILLFF_XUNISTRING_H
 
-#include <config.h>
+#include <unitypes.h>
+#include <sortsmillff/xunistr.h>
+#include <sortsmillff/xuniconv.h>
+#include <unistdio.h>
+#include <uniname.h>
+#include <unictype.h>
+#include <uniwidth.h>
+#include <uniwbrk.h>
+#include <unilbrk.h>
+#include <sortsmillff/xuninorm.h>
+#include <sortsmillff/xunicase.h>
+/* #include <uniregex.h>   This is not yet implemented. */
 
-#include <xalloc.h>
-#include <sortsmillff/xunistring.h>
-#include <unistring/version.h>
-
-#endif // _INTERNAL_XUNISTRING_H
+#endif /* _SORTSMILLFF_XUNISTRING_H */

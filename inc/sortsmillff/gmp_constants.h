@@ -1,26 +1,28 @@
-// Copyright (C) 2012 Barry Schwartz
-// 
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, see <http://www.gnu.org/licenses/>.
+/*
+ * Copyright (C) 2012 Barry Schwartz
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
+*/
 
 #ifndef _SORTSMILLFF_GMP_CONSTANTS_H
 #define _SORTSMILLFF_GMP_CONSTANTS_H
 
-// *INDENT-OFF*
+/* *INDENT-OFF* */
 #ifdef __cplusplus
 extern "C" {
 #endif
-// *INDENT-ON*
+/* *INDENT-ON* */
 
 #include <gmp.h>
 #include <atomic_ops.h>
@@ -58,10 +60,10 @@ _FF_GMP_CONSTANT_DECL (mpq, mpq_neg_two);
 _FF_GMP_CONSTANT_DECL (mpq, mpq_three);
 _FF_GMP_CONSTANT_DECL (mpq, mpq_neg_three);
 
-// *INDENT-OFF*
+/* *INDENT-OFF* */
 #ifdef __cplusplus
 }
 #endif
-// *INDENT-ON*
+/* *INDENT-ON* */
 
-#endif // _SORTSMILLFF_GMP_CONSTANTS_H
+#endif /* _SORTSMILLFF_GMP_CONSTANTS_H */

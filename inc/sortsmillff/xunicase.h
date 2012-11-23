@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000-2012 by Barry Schwartz
+ * Copyright (C) 2012 by Barry Schwartz
   
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -26,53 +26,32 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _XDIE_ON_NULL_H
-#define _XDIE_ON_NULL_H
+#ifndef _SORTSMILLFF_XUNICASE_H
+#define _SORTSMILLFF_XUNICASE_H
 
-#include <config.h>
+#include <unicase.h>
 
-#include <assert.h>
-#include <stddef.h>
-#include <errno.h>
-#include <xalloc.h>
-
-VISIBLE inline void *xdie_on_null (void *p);
-VISIBLE inline void *xdie_on_enomem (void *p);
-
-inline void *
-xdie_on_null (void *p)
-{
-  if (p == NULL)
-    xalloc_die ();
-  return p;
-}
-
-inline void *
-xdie_on_enomem (void *p)
-{
-  if (p == NULL && errno == ENOMEM)
-    xalloc_die ();
-  assert (p != NULL);  // May fail if strings have not been validated.
-  return p;
-}
-
-// The macro XDIE_ON_NULL tries to avoid implicit type-casting between
-// the type of p and (void *). This works with gcc, in particular.
-//
-#ifdef HAVE_TYPEOF
-#define XDIE_ON_NULL(p) ((typeof (p)) xdie_on_null ((void *) (p)))
-#else
-#define XDIE_ON_NULL xdie_on_null
+/* *INDENT-OFF* */
+#ifdef __cplusplus
+extern "C" {
 #endif
+/* *INDENT-ON* */
 
-// The macro XDIE_ON_ENOMEM tries to avoid implicit type-casting
-// between the type of p and (void *). This works with gcc, in
-// particular.
-//
-#ifdef HAVE_TYPEOF
-#define XDIE_ON_ENOMEM(p) ((typeof (p)) xdie_on_enomem ((void *) (p)))
-#else
-#define XDIE_ON_ENOMEM(p) xdie_on_enomem
+int u8_casecompare (const uint8_t *s1, const uint8_t *s2);
+int u16_casecompare (const uint16_t *s1, const uint16_t *s2);
+int u32_casecompare (const uint32_t *s1, const uint32_t *s2);
+
+/* The following routines count numbers of storage units rather than
+   multibyte characters. (They are appropriate, for example, where 'n'
+   equals the difference of two pointers.) */
+int u8_ncasecompare (const uint8_t *s1, const uint8_t *s2, size_t n);
+int u16_ncasecompare (const uint16_t *s1, const uint16_t *s2, size_t n);
+int u32_ncasecompare (const uint32_t *s1, const uint32_t *s2, size_t n);
+
+/* *INDENT-OFF* */
+#ifdef __cplusplus
+}
 #endif
+/* *INDENT-ON* */
 
-#endif // _XDIE_ON_NULL_H
+#endif /* _SORTSMILLFF_XUNICASE_H */

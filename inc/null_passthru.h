@@ -26,11 +26,11 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _NULL_PASSTHRU_H
-#define _NULL_PASSTHRU_H
+#ifndef _INTERNAL_NULL_PASSTHRU_H
+#define _INTERNAL_NULL_PASSTHRU_H
 
-#include <stddef.h>
+#include <sortsmillff/null_passthru.h>
 
-#define NULL_PASSTHRU(x,expr) ((x) == NULL ? NULL : (expr))
+#define NULL_PASSTHRU _FF_NULL_PASSTHRU
 
-#endif // _NULL_PASSTHRU_H
+#endif // _INTERNAL_NULL_PASSTHRU_H

@@ -30,7 +30,7 @@
 
 #include <precomputed_data.h>
 #include <libguile.h>
-#include <xgc.h>
+#include <sortsmillff/xgc.h>
 #include <stdlib.h>
 #include <assert.h>
 

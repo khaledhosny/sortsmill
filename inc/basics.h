@@ -49,7 +49,7 @@
 #error You must define FF_MACSHORTCUTSDOMAIN.
 #endif
 
-#include <xgc.h>
+#include <sortsmillff/xgc.h>
 #include <xstrndup.h>
 #include <xunistring.h>
 #include <stdio.h>

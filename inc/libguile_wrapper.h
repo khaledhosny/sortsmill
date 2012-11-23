@@ -26,7 +26,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <xgc.h>
+#include <sortsmillff/xgc.h>
 #include <libguile.h>
 
 #undef scm_short2num

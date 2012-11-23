@@ -26,13 +26,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _INTERNAL_XUNISTRING_H
-#define _INTERNAL_XUNISTRING_H
+#ifndef _SORTSMILLFF_GMP_XGC_H
+#define _SORTSMILLFF_GMP_XGC_H
 
-#include <config.h>
 
-#include <xalloc.h>
-#include <sortsmillff/xunistring.h>
-#include <unistring/version.h>
-
-#endif // _INTERNAL_XUNISTRING_H
+#endif /* _SORTSMILLFF_GMP_XGC_H */

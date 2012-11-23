@@ -33,7 +33,7 @@
 #include <basics.h>
 #include <xunistring.h>
 
-int
+VISIBLE int
 u8_casecompare (const uint8_t *s1, const uint8_t *s2)
 {
   int result;
@@ -46,7 +46,7 @@ u8_casecompare (const uint8_t *s1, const uint8_t *s2)
   return result;
 }
 
-int
+VISIBLE int
 u16_casecompare (const uint16_t *s1, const uint16_t *s2)
 {
   int result;
@@ -58,7 +58,7 @@ u16_casecompare (const uint16_t *s1, const uint16_t *s2)
   return result;
 }
 
-int
+VISIBLE int
 u32_casecompare (const uint32_t *s1, const uint32_t *s2)
 {
   int result;
@@ -70,7 +70,7 @@ u32_casecompare (const uint32_t *s1, const uint32_t *s2)
   return result;
 }
 
-int
+VISIBLE int
 u8_ncasecompare (const uint8_t *s1, const uint8_t *s2, size_t n)
 {
   int result;
@@ -84,7 +84,7 @@ u8_ncasecompare (const uint8_t *s1, const uint8_t *s2, size_t n)
   return result;
 }
 
-int
+VISIBLE int
 u16_ncasecompare (const uint16_t *s1, const uint16_t *s2, size_t n)
 {
   int result;
@@ -97,7 +97,7 @@ u16_ncasecompare (const uint16_t *s1, const uint16_t *s2, size_t n)
   return result;
 }
 
-int
+VISIBLE int
 u32_ncasecompare (const uint32_t *s1, const uint32_t *s2, size_t n)
 {
   int result;

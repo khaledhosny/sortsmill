@@ -61,4 +61,12 @@
 #define VISIBLE
 #endif
 
+#if defined HAVE_TYPEOF
+// Override the API-compatible declarations in
+// sortsmillff/attributes.h
+#define _FF_HAVE_TYPEOF 1
+#define _FF_TYPEOF(x) typeof (x)
+#define _FF_CAST_TYPEOF(x) (typeof (x))
+#endif
+
 #endif // _CONFIG_EXTRA_H

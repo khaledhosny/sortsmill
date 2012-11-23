@@ -30,15 +30,15 @@
 #include <xunistring.h>
 
 // Generate non-inline versions of these functions.
-uint8_t *x_u8_strconv_from_locale (const char *string);
-uint16_t *x_u16_strconv_from_locale (const char *string);
-uint32_t *x_u32_strconv_from_locale (const char *string);
-char *x_u8_strconv_to_locale (const uint8_t *string);
-char *x_u16_strconv_to_locale (const uint16_t *string);
-char *x_u32_strconv_to_locale (const uint32_t *string);
-uint8_t *x_gc_u8_strconv_from_locale (const char *string);
-uint16_t *x_gc_u16_strconv_from_locale (const char *string);
-uint32_t *x_gc_u32_strconv_from_locale (const char *string);
-char *x_gc_u8_strconv_to_locale (const uint8_t *string);
-char *x_gc_u16_strconv_to_locale (const uint16_t *string);
-char *x_gc_u32_strconv_to_locale (const uint32_t *string);
+VISIBLE uint8_t *x_u8_strconv_from_locale (const char *string);
+VISIBLE uint16_t *x_u16_strconv_from_locale (const char *string);
+VISIBLE uint32_t *x_u32_strconv_from_locale (const char *string);
+VISIBLE char *x_u8_strconv_to_locale (const uint8_t *string);
+VISIBLE char *x_u16_strconv_to_locale (const uint16_t *string);
+VISIBLE char *x_u32_strconv_to_locale (const uint32_t *string);
+VISIBLE uint8_t *x_gc_u8_strconv_from_locale (const char *string);
+VISIBLE uint16_t *x_gc_u16_strconv_from_locale (const char *string);
+VISIBLE uint32_t *x_gc_u32_strconv_from_locale (const char *string);
+VISIBLE char *x_gc_u8_strconv_to_locale (const uint8_t *string);
+VISIBLE char *x_gc_u16_strconv_to_locale (const uint16_t *string);
+VISIBLE char *x_gc_u32_strconv_to_locale (const uint32_t *string);

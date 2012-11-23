@@ -36,7 +36,7 @@
 #include <config.h>
 
 #include <atomic_ops.h>
-#include <xgc.h>                // Includes gc.h and pthreads.h in the right order.
+#include <sortsmillff/xgc.h>                // Includes gc.h and pthreads.h in the right order.
 
 #include <stdio.h>
 #include <stdbool.h>

@@ -36,7 +36,7 @@
 
 //-------------------------------------------------------------------------
 
-uint8_t *
+VISIBLE uint8_t *
 x_gc_u8_strjoin (const uint8_t *s1, ...)
 {
   va_list ap;
@@ -47,7 +47,7 @@ x_gc_u8_strjoin (const uint8_t *s1, ...)
   return p;
 }
 
-uint16_t *
+VISIBLE uint16_t *
 x_gc_u16_strjoin (const uint16_t *s1, ...)
 {
   va_list ap;
@@ -58,7 +58,7 @@ x_gc_u16_strjoin (const uint16_t *s1, ...)
   return p;
 }
 
-uint32_t *
+VISIBLE uint32_t *
 x_gc_u32_strjoin (const uint32_t *s1, ...)
 {
   va_list ap;
@@ -120,8 +120,8 @@ x_gc_u32_strjoin (const uint32_t *s1, ...)
     return p;							\
   }
 
-VSTRJOIN_FUNC (x_gc_u8_vstrjoin, 8);
-VSTRJOIN_FUNC (x_gc_u16_vstrjoin, 16);
-VSTRJOIN_FUNC (x_gc_u32_vstrjoin, 32);
+VISIBLE VSTRJOIN_FUNC (x_gc_u8_vstrjoin, 8);
+VISIBLE VSTRJOIN_FUNC (x_gc_u16_vstrjoin, 16);
+VISIBLE VSTRJOIN_FUNC (x_gc_u32_vstrjoin, 32);
 
 //-------------------------------------------------------------------------

@@ -27,23 +27,23 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <xgc.h>
+#include <sortsmillff/xgc.h>
 #include <unistr.h>
 #include <string.h>
 
 // The following bunch of declarations should result in non-inline
 // versions being generated.
-void *x_gc_malloc (size_t sz);
-void *x_gc_malloc_atomic (size_t sz);
-void *x_gc_malloc_uncollectable (size_t sz);
-void *x_gc_realloc (void *old_pointer, size_t sz);
-void *x_gc_malloc_ignore_off_page (size_t sz);
-void *x_gc_malloc_atomic_ignore_off_page (size_t sz);
-void *x_gc_malloc_stubborn (size_t sz);
-char *x_gc_strdup (const char *s);
-char *x_gc_grabstr (char *s);
+VISIBLE void *x_gc_malloc (size_t sz);
+VISIBLE void *x_gc_malloc_atomic (size_t sz);
+VISIBLE void *x_gc_malloc_uncollectable (size_t sz);
+VISIBLE void *x_gc_realloc (void *old_pointer, size_t sz);
+VISIBLE void *x_gc_malloc_ignore_off_page (size_t sz);
+VISIBLE void *x_gc_malloc_atomic_ignore_off_page (size_t sz);
+VISIBLE void *x_gc_malloc_stubborn (size_t sz);
+VISIBLE char *x_gc_strdup (const char *s);
+VISIBLE char *x_gc_grabstr (char *s);
 
-uint8_t *
+VISIBLE uint8_t *
 x_gc_u8_grabstr (uint8_t *s)
 {
   uint8_t *copy = x_gc_malloc_atomic ((u8_strlen (s) + 1) * sizeof (uint8_t));
@@ -52,7 +52,7 @@ x_gc_u8_grabstr (uint8_t *s)
   return copy;
 }
 
-uint16_t *
+VISIBLE uint16_t *
 x_gc_u16_grabstr (uint16_t *s)
 {
   uint16_t *copy =
@@ -62,7 +62,7 @@ x_gc_u16_grabstr (uint16_t *s)
   return copy;
 }
 
-uint32_t *
+VISIBLE uint32_t *
 x_gc_u32_grabstr (uint32_t *s)
 {
   uint32_t *copy =
@@ -72,7 +72,7 @@ x_gc_u32_grabstr (uint32_t *s)
   return copy;
 }
 
-char *
+VISIBLE char *
 x_gc_strndup (const char *s, size_t n)
 {
   size_t i = 0;

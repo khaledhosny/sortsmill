@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Barry Schwartz
+ * Copyright (C) 2000-2012 by Barry Schwartz
   
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -26,13 +26,13 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _INTERNAL_XUNISTRING_H
-#define _INTERNAL_XUNISTRING_H
+#ifndef _SORTSMILLFF_NULL_PASSTHRU_H
+#define _SORTSMILLFF_NULL_PASSTHRU_H
 
-#include <config.h>
+#include <stddef.h>
 
-#include <xalloc.h>
-#include <sortsmillff/xunistring.h>
-#include <unistring/version.h>
+#ifndef _FF_NULL_PASSTHRU
+#define _FF_NULL_PASSTHRU(x,expr) ((x) == NULL ? NULL : (expr))
+#endif
 
-#endif // _INTERNAL_XUNISTRING_H
+#endif // _SORTSMILLFF_NULL_PASSTHRU_H

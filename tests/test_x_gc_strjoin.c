@@ -1,7 +1,7 @@
 #include <config.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <xgc.h>
+#include <sortsmillff/xgc.h>
 #include <locale.h>
 
 int

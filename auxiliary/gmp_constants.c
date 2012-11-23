@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-#include <xgc.h>   // Includes gc.h and pthreads.h in the right order.
+#include <sortsmillff/xgc.h>   // Includes gc.h and pthreads.h in the right order.
 #include <sortsmillff/gmp_constants.h>
 #include <stdbool.h>
 

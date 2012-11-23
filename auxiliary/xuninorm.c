@@ -32,7 +32,7 @@
 #include <xalloc.h>
 #include <xunistring.h>
 
-int
+VISIBLE int
 u8_compare (const uint8_t *s1, const uint8_t *s2)
 {
   int result;
@@ -44,7 +44,7 @@ u8_compare (const uint8_t *s1, const uint8_t *s2)
   return result;
 }
 
-int
+VISIBLE int
 u16_compare (const uint16_t *s1, const uint16_t *s2)
 {
   int result;
@@ -57,7 +57,7 @@ u16_compare (const uint16_t *s1, const uint16_t *s2)
   return result;
 }
 
-int
+VISIBLE int
 u32_compare (const uint32_t *s1, const uint32_t *s2)
 {
   int result;

@@ -39,7 +39,7 @@
 #include <string.h>
 #include <gicons.h>
 #include <gkeysym.h>
-#include <xgc.h>
+#include <sortsmillff/xgc.h>
 #include "psfont.h"
 #include "savefont.h"
 

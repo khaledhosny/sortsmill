@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 by Barry Schwartz
+ * Copyright (C) 2000-2012 by Barry Schwartz
   
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -26,15 +26,54 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _FONTFORGE_XUNINORM_H
-#define _FONTFORGE_XUNINORM_H
+#ifndef _SORTSMILLFF_XDIE_ON_NULL_H
+#define _SORTSMILLFF_XDIE_ON_NULL_H
 
-#include <config.h>
+#include <assert.h>
+#include <stddef.h>
+#include <errno.h>
+#include <sortsmillff/attributes.h>
 
-#include <uninorm.h>
+/* *INDENT-OFF* */
+#ifdef __cplusplus
+extern "C" {
+#endif
+/* *INDENT-ON* */
 
-VISIBLE int u8_compare (const uint8_t *s1, const uint8_t *s2);
-VISIBLE int u16_compare (const uint16_t *s1, const uint16_t *s2);
-VISIBLE int u32_compare (const uint32_t *s1, const uint32_t *s2);
+_FF_ATTRIBUTE_PURE inline void *xdie_on_null (void *p);
+_FF_ATTRIBUTE_PURE inline void *xdie_on_enomem (void *p);
+void ff_xalloc_die (void);
 
-#endif // _FONTFORGE_XUNINORM_H
+inline void *
+xdie_on_null (void *p)
+{
+  if (p == NULL)
+    ff_xalloc_die ();
+  return p;
+}
+
+inline void *
+xdie_on_enomem (void *p)
+{
+  if (p == NULL && errno == ENOMEM)
+    ff_xalloc_die ();
+  assert (p != NULL);           /* May fail if strings have not been validated. */
+  return p;
+}
+
+/* *INDENT-OFF* */
+#ifdef __cplusplus
+}
+#endif
+/* *INDENT-ON* */
+
+/* The macro XDIE_ON_NULL tries to avoid implicit type-casting between
+   the type of p and (void *). This works with gcc, in particular. */
+#define XDIE_ON_NULL(p) (_FF_CAST_TYPEOF (p) xdie_on_null ((void *) (p)))
+
+/* The macro XDIE_ON_ENOMEM tries to avoid implicit type-casting
+   between the type of p and (void *). This works with gcc, in
+   particular. */
+#define XDIE_ON_ENOMEM(p) (_FF_CAST_TYPEOF (p) xdie_on_enomem ((void *) (p)))
+
+#endif /* _SORTSMILLFF_XDIE_ON_NULL_H */

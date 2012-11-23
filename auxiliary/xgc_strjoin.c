@@ -27,11 +27,11 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <xgc.h>
+#include <sortsmillff/xgc.h>
 #include <stdarg.h>
 #include <string.h>
 
-char *
+VISIBLE char *
 x_gc_strjoin (const char *s1, ...)
 {
   va_list ap;
@@ -42,7 +42,7 @@ x_gc_strjoin (const char *s1, ...)
   return p;
 }
 
-char *
+VISIBLE char *
 x_gc_vstrjoin (const char *s1, va_list ap)
 {
   char *p;

@@ -40,7 +40,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <xalloc.h>
-#include <xdie_on_null.h>
+#include <sortsmillff/xdie_on_null.h>
 #include <canonicalize.h>
 
 static FontViewBase *fv_list=NULL;

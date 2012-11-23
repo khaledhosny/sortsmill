@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include <xgc.h>
+#include <sortsmillff/xgc.h>
 #include <xalloc.h>
 #include <locale.h>
 #include <float.h>

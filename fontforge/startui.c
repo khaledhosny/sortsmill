@@ -40,7 +40,7 @@
 #include <stdlib.h>
 #include <canonicalize.h>
 #include <libguile.h>
-#include <xdie_on_null.h>
+#include <sortsmillff/xdie_on_null.h>
 
 extern int AutoSaveFrequency;
 

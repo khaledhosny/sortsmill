@@ -26,44 +26,50 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _FONTFORGE_XGC_H
-#define _FONTFORGE_XGC_H
+#ifndef _SORTSMILLFF_XGC_H
+#define _SORTSMILLFF_XGC_H
 
-//
-// Boehm GC routines combined with xalloc.
-//
+/*
+ * Boehm GC routines that die on NULL return, like those in GNU
+ * xalloc.h or libiberty.h
+ */
 
-#include <config.h>
-
-// pthread.h should be included _before_ gc.h, if included at all, so
-// let’s play it a little safer and do so here.
+#ifndef _FF_DO_NOT_INCLUDE_PTHREAD_H
+/* pthread.h should be included _before_ gc.h, if included at all, so
+   let’s play it a little safer and do so here. */
 #include <pthread.h>
+#endif
 #include <gc.h>
 
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdarg.h>
-#include <xalloc.h>
-#include <xdie_on_null.h>
+#include <sortsmillff/xdie_on_null.h>
 
-VISIBLE inline void *x_gc_malloc (size_t sz);
-VISIBLE inline void *x_gc_malloc_atomic (size_t sz);
-VISIBLE inline void *x_gc_malloc_uncollectable (size_t sz);
-VISIBLE inline void *x_gc_realloc (void *old_pointer, size_t sz);
-VISIBLE inline void *x_gc_malloc_ignore_off_page (size_t sz);
-VISIBLE inline void *x_gc_malloc_atomic_ignore_off_page (size_t sz);
-VISIBLE inline void *x_gc_malloc_stubborn (size_t sz);
-VISIBLE inline char *x_gc_strdup (const char *s);
+/* *INDENT-OFF* */
+#ifdef __cplusplus
+extern "C" {
+#endif
+/* *INDENT-ON* */
 
-VISIBLE char *x_gc_strndup (const char *s, size_t n);
+inline void *x_gc_malloc (size_t sz);
+inline void *x_gc_malloc_atomic (size_t sz);
+inline void *x_gc_malloc_uncollectable (size_t sz);
+inline void *x_gc_realloc (void *old_pointer, size_t sz);
+inline void *x_gc_malloc_ignore_off_page (size_t sz);
+inline void *x_gc_malloc_atomic_ignore_off_page (size_t sz);
+inline void *x_gc_malloc_stubborn (size_t sz);
+inline char *x_gc_strdup (const char *s);
 
-VISIBLE char *x_gc_strjoin (const char *s1, ...);
-VISIBLE char *x_gc_vstrjoin (const char *s1, va_list ap);
+char *x_gc_strndup (const char *s, size_t n);
 
-VISIBLE inline char *x_gc_grabstr (char *s);
-VISIBLE uint8_t *x_gc_u8_grabstr (uint8_t *s);
-VISIBLE uint16_t *x_gc_u16_grabstr (uint16_t *s);
-VISIBLE uint32_t *x_gc_u32_grabstr (uint32_t *s);
+char *x_gc_strjoin (const char *s1, ...);
+char *x_gc_vstrjoin (const char *s1, va_list ap);
+
+inline char *x_gc_grabstr (char *s);
+uint8_t *x_gc_u8_grabstr (uint8_t *s);
+uint16_t *x_gc_u16_grabstr (uint16_t *s);
+uint32_t *x_gc_u32_grabstr (uint32_t *s);
 
 inline void *
 x_gc_malloc (size_t sz)
@@ -113,22 +119,28 @@ x_gc_strdup (const char *s)
   return XDIE_ON_NULL (GC_STRDUP (s));
 }
 
-// Replace an allocated string with a garbage-collected copy of it.
+/* Replace an allocated string with a garbage-collected copy of it. */
 inline char *
 x_gc_grabstr (char *s)
 {
   char *p = NULL;
   if (s != NULL)
     {
-      // Make the garbage-collected copy. Do not try to free this! Or,
-      // if you must, use GC_FREE(), not free().
+      /* Make the garbage-collected copy. Do not try to free this! Or,
+       * if you must, use GC_FREE(), not free(). */
       p = x_gc_strdup (s);
 
-      // Now free the memory in which the original string was
-      // stored. Do not use it anymore!
+      /* Now free the memory in which the original string was
+         stored. Do not use it anymore! */
       free (s);
     }
   return p;
 }
 
-#endif // _FONTFORGE_XGC_H
+/* *INDENT-OFF* */
+#ifdef __cplusplus
+}
+#endif
+/* *INDENT-ON* */
+
+#endif /* _SORTSMILLFF_XGC_H */

@@ -48,7 +48,7 @@
 #include "scriptfuncs.h"
 #include "flaglist.h"
 #include <canonicalize.h>
-#include <xdie_on_null.h>
+#include <sortsmillff/xdie_on_null.h>
 
 int no_windowing_ui = false;
 int running_script = false;

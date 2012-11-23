@@ -43,7 +43,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <dirent.h>
-#include <xgc.h>
+#include <sortsmillff/xgc.h>
 
 #include <limits.h>             /* For NAME_MAX or _POSIX_NAME_MAX */
 #ifndef NAME_MAX

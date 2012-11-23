@@ -32,9 +32,9 @@
 #include <xunistring.h>
 
 // Generate non-inline versions of these functions.
-bool u8_valid (const uint8_t *string);
-bool u16_valid (const uint16_t *string);
-bool u32_valid (const uint32_t *string);
+VISIBLE bool u8_valid (const uint8_t *string);
+VISIBLE bool u16_valid (const uint16_t *string);
+VISIBLE bool u32_valid (const uint32_t *string);
 
 //-------------------------------------------------------------------------
 
@@ -56,19 +56,19 @@ bool u32_valid (const uint32_t *string);
 			* sizeof (uint##SIZE2##_t));			\
   }
 
-U_TO_U_FUNC (x_u8_to_u16, 8, 16, 1, xmalloc, xrealloc);
-U_TO_U_FUNC (x_u8_to_u32, 8, 32, 1, xmalloc, xrealloc);
-U_TO_U_FUNC (x_u16_to_u8, 16, 8, 3, xmalloc, xrealloc);
-U_TO_U_FUNC (x_u16_to_u32, 16, 32, 1, xmalloc, xrealloc);
-U_TO_U_FUNC (x_u32_to_u8, 32, 8, 4, xmalloc, xrealloc);
-U_TO_U_FUNC (x_u32_to_u16, 32, 16, 2, xmalloc, xrealloc);
+VISIBLE U_TO_U_FUNC (x_u8_to_u16, 8, 16, 1, xmalloc, xrealloc);
+VISIBLE U_TO_U_FUNC (x_u8_to_u32, 8, 32, 1, xmalloc, xrealloc);
+VISIBLE U_TO_U_FUNC (x_u16_to_u8, 16, 8, 3, xmalloc, xrealloc);
+VISIBLE U_TO_U_FUNC (x_u16_to_u32, 16, 32, 1, xmalloc, xrealloc);
+VISIBLE U_TO_U_FUNC (x_u32_to_u8, 32, 8, 4, xmalloc, xrealloc);
+VISIBLE U_TO_U_FUNC (x_u32_to_u16, 32, 16, 2, xmalloc, xrealloc);
 
-U_TO_U_FUNC (x_gc_u8_to_u16, 8, 16, 1, x_gc_malloc, x_gc_realloc);
-U_TO_U_FUNC (x_gc_u8_to_u32, 8, 32, 1, x_gc_malloc, x_gc_realloc);
-U_TO_U_FUNC (x_gc_u16_to_u8, 16, 8, 3, x_gc_malloc, x_gc_realloc);
-U_TO_U_FUNC (x_gc_u16_to_u32, 16, 32, 1, x_gc_malloc, x_gc_realloc);
-U_TO_U_FUNC (x_gc_u32_to_u8, 32, 8, 4, x_gc_malloc, x_gc_realloc);
-U_TO_U_FUNC (x_gc_u32_to_u16, 32, 16, 2, x_gc_malloc, x_gc_realloc);
+VISIBLE U_TO_U_FUNC (x_gc_u8_to_u16, 8, 16, 1, x_gc_malloc, x_gc_realloc);
+VISIBLE U_TO_U_FUNC (x_gc_u8_to_u32, 8, 32, 1, x_gc_malloc, x_gc_realloc);
+VISIBLE U_TO_U_FUNC (x_gc_u16_to_u8, 16, 8, 3, x_gc_malloc, x_gc_realloc);
+VISIBLE U_TO_U_FUNC (x_gc_u16_to_u32, 16, 32, 1, x_gc_malloc, x_gc_realloc);
+VISIBLE U_TO_U_FUNC (x_gc_u32_to_u8, 32, 8, 4, x_gc_malloc, x_gc_realloc);
+VISIBLE U_TO_U_FUNC (x_gc_u32_to_u16, 32, 16, 2, x_gc_malloc, x_gc_realloc);
 
 //-------------------------------------------------------------------------
 //
@@ -76,21 +76,21 @@ U_TO_U_FUNC (x_gc_u32_to_u16, 32, 16, 2, x_gc_malloc, x_gc_realloc);
 // considered arbitrary. (The current implementation returns an empty
 // string in place of an invalid one.)
 
-const uint8_t *
+VISIBLE const uint8_t *
 u8_force_valid (const uint8_t *string)
 {
   static const uint8_t empty_string[1] = { 0 };
   return (u8_valid (string)) ? string : empty_string;
 }
 
-const uint16_t *
+VISIBLE const uint16_t *
 u16_force_valid (const uint16_t *string)
 {
   static const uint16_t empty_string[1] = { 0 };
   return (u16_valid (string)) ? string : empty_string;
 }
 
-const uint32_t *
+VISIBLE const uint32_t *
 u32_force_valid (const uint32_t *string)
 {
   static const uint32_t empty_string[1] = { 0 };
@@ -99,7 +99,7 @@ u32_force_valid (const uint32_t *string)
 
 //-------------------------------------------------------------------------
 
-void
+VISIBLE void
 u8_trim_invalid_suffix (uint8_t *string)
 {
   uint8_t *p = (uint8_t *) u8_check (string, u8_strlen (string));
@@ -107,7 +107,7 @@ u8_trim_invalid_suffix (uint8_t *string)
     *p = 0;
 }
 
-void
+VISIBLE void
 u16_trim_invalid_suffix (uint16_t *string)
 {
   uint16_t *p = (uint16_t *) u16_check (string, u16_strlen (string));
@@ -115,7 +115,7 @@ u16_trim_invalid_suffix (uint16_t *string)
     *p = 0;
 }
 
-void
+VISIBLE void
 u32_trim_invalid_suffix (uint32_t *string)
 {
   uint32_t *p = (uint32_t *) u32_check (string, u32_strlen (string));
@@ -140,13 +140,13 @@ u32_trim_invalid_suffix (uint32_t *string)
     return prefix;							\
   }
 
-VALID_PREFIX_FUNC (x_u8_valid_prefix, 8, xmalloc);
-VALID_PREFIX_FUNC (x_u16_valid_prefix, 16, xmalloc);
-VALID_PREFIX_FUNC (x_u32_valid_prefix, 32, xmalloc);
+VISIBLE VALID_PREFIX_FUNC (x_u8_valid_prefix, 8, xmalloc);
+VISIBLE VALID_PREFIX_FUNC (x_u16_valid_prefix, 16, xmalloc);
+VISIBLE VALID_PREFIX_FUNC (x_u32_valid_prefix, 32, xmalloc);
 
-VALID_PREFIX_FUNC (x_gc_u8_valid_prefix, 8, x_gc_malloc);
-VALID_PREFIX_FUNC (x_gc_u16_valid_prefix, 16, x_gc_malloc);
-VALID_PREFIX_FUNC (x_gc_u32_valid_prefix, 32, x_gc_malloc);
+VISIBLE VALID_PREFIX_FUNC (x_gc_u8_valid_prefix, 8, x_gc_malloc);
+VISIBLE VALID_PREFIX_FUNC (x_gc_u16_valid_prefix, 16, x_gc_malloc);
+VISIBLE VALID_PREFIX_FUNC (x_gc_u32_valid_prefix, 32, x_gc_malloc);
 
 //-------------------------------------------------------------------------
 
@@ -177,13 +177,13 @@ VALID_PREFIX_FUNC (x_gc_u32_valid_prefix, 32, x_gc_malloc);
     return p;								\
   }
 
-STRMBNDUP_FUNC (x_u8_strmbndup, 8, xmalloc);
-STRMBNDUP_FUNC (x_u16_strmbndup, 16, xmalloc);
-STRMBNDUP_FUNC (x_u32_strmbndup, 32, xmalloc);
+VISIBLE STRMBNDUP_FUNC (x_u8_strmbndup, 8, xmalloc);
+VISIBLE STRMBNDUP_FUNC (x_u16_strmbndup, 16, xmalloc);
+VISIBLE STRMBNDUP_FUNC (x_u32_strmbndup, 32, xmalloc);
 
-STRMBNDUP_FUNC (x_gc_u8_strmbndup, 8, x_gc_malloc);
-STRMBNDUP_FUNC (x_gc_u16_strmbndup, 16, x_gc_malloc);
-STRMBNDUP_FUNC (x_gc_u32_strmbndup, 32, x_gc_malloc);
+VISIBLE STRMBNDUP_FUNC (x_gc_u8_strmbndup, 8, x_gc_malloc);
+VISIBLE STRMBNDUP_FUNC (x_gc_u16_strmbndup, 16, x_gc_malloc);
+VISIBLE STRMBNDUP_FUNC (x_gc_u32_strmbndup, 32, x_gc_malloc);
 
 //-------------------------------------------------------------------------
 
@@ -223,13 +223,13 @@ STRMBNDUP_FUNC (x_gc_u32_strmbndup, 32, x_gc_malloc);
     return value;							\
   }
 
-STRTOI_FUNC (u8_strtol, 8, long int, strtol, /* no conversion */ );
-STRTOI_FUNC (u16_strtol, 16, long int, strtol, x_gc_u16_to_u8);
-STRTOI_FUNC (u32_strtol, 32, long int, strtol, x_gc_u32_to_u8);
+VISIBLE STRTOI_FUNC (u8_strtol, 8, long int, strtol, /* no conversion */ );
+VISIBLE STRTOI_FUNC (u16_strtol, 16, long int, strtol, x_gc_u16_to_u8);
+VISIBLE STRTOI_FUNC (u32_strtol, 32, long int, strtol, x_gc_u32_to_u8);
 
-STRTOI_FUNC (u8_strtoul, 8, unsigned long int, strtoul, /* no conversion */ );
-STRTOI_FUNC (u16_strtoul, 16, unsigned long int, strtoul, x_gc_u16_to_u8);
-STRTOI_FUNC (u32_strtoul, 32, unsigned long int, strtoul, x_gc_u32_to_u8);
+VISIBLE STRTOI_FUNC (u8_strtoul, 8, unsigned long int, strtoul, /* no conversion */ );
+VISIBLE STRTOI_FUNC (u16_strtoul, 16, unsigned long int, strtoul, x_gc_u16_to_u8);
+VISIBLE STRTOI_FUNC (u32_strtoul, 32, unsigned long int, strtoul, x_gc_u32_to_u8);
 
 //-------------------------------------------------------------------------
 
@@ -269,9 +269,9 @@ STRTOI_FUNC (u32_strtoul, 32, unsigned long int, strtoul, x_gc_u32_to_u8);
     return value;							\
   }
 
-STRTOF_FUNC (u8_strtod, 8, double, strtod, /* no conversion */ );
-STRTOF_FUNC (u16_strtod, 16, double, strtod, x_gc_u16_to_u8);
-STRTOF_FUNC (u32_strtod, 32, double, strtod, x_gc_u32_to_u8);
+VISIBLE STRTOF_FUNC (u8_strtod, 8, double, strtod, /* no conversion */ );
+VISIBLE STRTOF_FUNC (u16_strtod, 16, double, strtod, x_gc_u16_to_u8);
+VISIBLE STRTOF_FUNC (u32_strtod, 32, double, strtod, x_gc_u32_to_u8);
 
 //-------------------------------------------------------------------------
 
@@ -295,8 +295,8 @@ STRTOF_FUNC (u32_strtod, 32, double, strtod, x_gc_u32_to_u8);
     return c;						\
   }
 
-GETNEXT_FUNC (u8_get_next, 8);
-GETNEXT_FUNC (u16_get_next, 16);
-GETNEXT_FUNC (u32_get_next, 32);
+VISIBLE GETNEXT_FUNC (u8_get_next, 8);
+VISIBLE GETNEXT_FUNC (u16_get_next, 16);
+VISIBLE GETNEXT_FUNC (u32_get_next, 32);
 
 //-------------------------------------------------------------------------

@@ -27,9 +27,16 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <xdie_on_null.h>
+#include <sortsmillff/xdie_on_null.h>
+#include <xalloc.h>
 
 // This should result in a non-inline version being generated.
-void *xdie_on_null (void *p);
-void *xdie_on_enomem (void *p);
+VISIBLE void *xdie_on_null (void *p);
+VISIBLE void *xdie_on_enomem (void *p);
+
+VISIBLE void
+ff_xalloc_die (void)
+{
+  xalloc_die ();
+}
 

@@ -21,25 +21,25 @@ AT_CLEANUP
 
 check_linalg([test_mpz_matrix_set_all 1 1 5],[0],[ 5 |],[])
 check_linalg([test_mpz_matrix_set_all 2 3 -15],[0],[ -15 -15 -15 | -15 -15 -15 |],[])
-check_linalg_py([test_python_mpz_matrix_set_all.py 1 1 5],[0],[ 5 |],[])
-check_linalg_py([test_python_mpz_matrix_set_all.py 2 3 -15],[0],[ -15 -15 -15 | -15 -15 -15 |],[])
+#check_linalg_py([test_python_mpz_matrix_set_all.py 1 1 5],[0],[ 5 |],[])
+#check_linalg_py([test_python_mpz_matrix_set_all.py 2 3 -15],[0],[ -15 -15 -15 | -15 -15 -15 |],[])
 
 check_linalg([test_mpq_matrix_set_all 1 1 100/200],[0],[ 1/2 |],[])
 check_linalg([test_mpq_matrix_set_all 2 3 -14/4],[0],[ -7/2 -7/2 -7/2 | -7/2 -7/2 -7/2 |],[])
-check_linalg_py([test_python_mpq_matrix_set_all.py 1 1 100/200],[0],[ 1/2 |],[])
-check_linalg_py([test_python_mpq_matrix_set_all.py 2 3 -14/4],[0],[ -7/2 -7/2 -7/2 | -7/2 -7/2 -7/2 |],[])
+#check_linalg_py([test_python_mpq_matrix_set_all.py 1 1 100/200],[0],[ 1/2 |],[])
+#check_linalg_py([test_python_mpq_matrix_set_all.py 2 3 -14/4],[0],[ -7/2 -7/2 -7/2 | -7/2 -7/2 -7/2 |],[])
 
 #--------------------------------------------------------------------------
 
 check_linalg([test_mpz_matrix_set_zero 1 1],[0],[ 0 |],[])
 check_linalg([test_mpz_matrix_set_zero 2 3],[0],[ 0 0 0 | 0 0 0 |],[])
-check_linalg_py([test_python_mpz_matrix_set_zero.py 1 1],[0],[ 0 |],[])
-check_linalg_py([test_python_mpz_matrix_set_zero.py 2 3],[0],[ 0 0 0 | 0 0 0 |],[])
+#check_linalg_py([test_python_mpz_matrix_set_zero.py 1 1],[0],[ 0 |],[])
+#check_linalg_py([test_python_mpz_matrix_set_zero.py 2 3],[0],[ 0 0 0 | 0 0 0 |],[])
 
 check_linalg([test_mpq_matrix_set_zero 1 1],[0],[ 0 |],[])
 check_linalg([test_mpq_matrix_set_zero 2 3],[0],[ 0 0 0 | 0 0 0 |],[])
-check_linalg_py([test_python_mpq_matrix_set_zero.py 1 1],[0],[ 0 |],[])
-check_linalg_py([test_python_mpq_matrix_set_zero.py 2 3],[0],[ 0 0 0 | 0 0 0 |],[])
+#check_linalg_py([test_python_mpq_matrix_set_zero.py 1 1],[0],[ 0 |],[])
+#check_linalg_py([test_python_mpq_matrix_set_zero.py 2 3],[0],[ 0 0 0 | 0 0 0 |],[])
 
 #--------------------------------------------------------------------------
 
@@ -47,19 +47,19 @@ check_linalg([test_mpz_matrix_set_identity 1 1],[0],[ 1 |],[])
 check_linalg([test_mpz_matrix_set_identity 2 3],[0],[ 1 0 0 | 0 1 0 |],[])
 check_linalg([test_mpz_matrix_set_identity 3 2],[0],[ 1 0 | 0 1 | 0 0 |],[])
 check_linalg([test_mpz_matrix_set_identity 3 3],[0],[ 1 0 0 | 0 1 0 | 0 0 1 |],[])
-check_linalg_py([test_python_mpz_matrix_set_identity.py 1 1],[0],[ 1 |],[])
-check_linalg_py([test_python_mpz_matrix_set_identity.py 2 3],[0],[ 1 0 0 | 0 1 0 |],[])
-check_linalg_py([test_python_mpz_matrix_set_identity.py 3 2],[0],[ 1 0 | 0 1 | 0 0 |],[])
-check_linalg_py([test_python_mpz_matrix_set_identity.py 3 3],[0],[ 1 0 0 | 0 1 0 | 0 0 1 |],[])
+#check_linalg_py([test_python_mpz_matrix_set_identity.py 1 1],[0],[ 1 |],[])
+#check_linalg_py([test_python_mpz_matrix_set_identity.py 2 3],[0],[ 1 0 0 | 0 1 0 |],[])
+#check_linalg_py([test_python_mpz_matrix_set_identity.py 3 2],[0],[ 1 0 | 0 1 | 0 0 |],[])
+#check_linalg_py([test_python_mpz_matrix_set_identity.py 3 3],[0],[ 1 0 0 | 0 1 0 | 0 0 1 |],[])
 
 check_linalg([test_mpq_matrix_set_identity 1 1],[0],[ 1 |],[])
 check_linalg([test_mpq_matrix_set_identity 2 3],[0],[ 1 0 0 | 0 1 0 |],[])
 check_linalg([test_mpq_matrix_set_identity 3 2],[0],[ 1 0 | 0 1 | 0 0 |],[])
 check_linalg([test_mpq_matrix_set_identity 3 3],[0],[ 1 0 0 | 0 1 0 | 0 0 1 |],[])
-check_linalg_py([test_python_mpq_matrix_set_identity.py 1 1],[0],[ 1 |],[])
-check_linalg_py([test_python_mpq_matrix_set_identity.py 2 3],[0],[ 1 0 0 | 0 1 0 |],[])
-check_linalg_py([test_python_mpq_matrix_set_identity.py 3 2],[0],[ 1 0 | 0 1 | 0 0 |],[])
-check_linalg_py([test_python_mpq_matrix_set_identity.py 3 3],[0],[ 1 0 0 | 0 1 0 | 0 0 1 |],[])
+#check_linalg_py([test_python_mpq_matrix_set_identity.py 1 1],[0],[ 1 |],[])
+#check_linalg_py([test_python_mpq_matrix_set_identity.py 2 3],[0],[ 1 0 0 | 0 1 0 |],[])
+#check_linalg_py([test_python_mpq_matrix_set_identity.py 3 2],[0],[ 1 0 | 0 1 | 0 0 |],[])
+#check_linalg_py([test_python_mpq_matrix_set_identity.py 3 3],[0],[ 1 0 0 | 0 1 0 | 0 0 1 |],[])
 
 #--------------------------------------------------------------------------
 

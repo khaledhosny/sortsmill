@@ -46,7 +46,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <xalloc.h>
-#include <xdie_on_null.h>
+#include <sortsmillff/xdie_on_null.h>
 #include <canonicalize.h>
 
 void SFUntickAll(SplineFont *sf) {
