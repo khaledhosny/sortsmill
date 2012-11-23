@@ -35,6 +35,8 @@ The matrices are expressed as six-element tuples of floats.
 """
 
 cimport gsl
+from libc.math cimport sin, cos, tan
+
 include "psMat.pxi"
 
 # i--
@@ -42,8 +44,6 @@ include "psMat.pxi"
 # i-- for instance describing the tuples that represent
 # i-- PostScript matrices.
 # i--
-
-from math import cos, sin, tan
 
 #--------------------------------------------------------------------------
 #
@@ -182,9 +182,9 @@ def rotate (theta):
   in radians.
 
   """
-  t = float (theta)
-  cosine = cos (t)
-  sine = sin (t)
+  cdef double t = float (theta)
+  cdef double cosine = cos (t)
+  cdef double sine = sin (t)
   return (cosine, sine, -sine, cosine, 0.0, 0.0)
 
 # i--
@@ -214,7 +214,9 @@ def scale (x, y = None):
 # i--
 def skew (theta):
   """Return a matrix that will skew."""
-  return (1.0, 0.0, tan (float (theta)), 1.0, 0.0, 0.0)
+  cdef double t = float (theta)
+  cdef double tangent = tan (t)
+  return (1.0, 0.0, tangent, 1.0, 0.0, 0.0)
 
 # i--
 # i-- @defun translate (@var{x}, @var{y})
