@@ -31,8 +31,7 @@ noinst_HEADERS = config.h config-extra.h intl.h basics.h gmpy.h			\
 	null_passthru.h xunistring.h chardata.h gdraw.h gfile.h ggadget.h	\
 	gicons.h gimage.h gio.h gkeysym.h gprogress.h gresedit.h			\
 	gresource.h gwidget.h ustring.h utype.h annotations_base.h			\
-	ffthread.h polyspline.h rexp.h libguile_wrapper.h					\
-	precomputed_data.h
+	ffthread.h polyspline.h rexp.h precomputed_data.h
 
 nobase_include_HEADERS = sortsmillff/attributes.h			\
 	sortsmillff/null_passthru.h sortsmillff/xdie_on_null.h	\
