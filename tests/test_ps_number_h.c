@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <gc.h>
 #include <locale.h>
-#include <ps_number.h>
+#include <sortsmillff/ps_number.h>
 
 static const char *
 truth_val (bool b)

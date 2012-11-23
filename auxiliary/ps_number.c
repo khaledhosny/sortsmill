@@ -33,7 +33,7 @@
 #include <string.h>
 #include <c-ctype.h>
 #include <xstrndup.h>
-#include <ps_number.h>
+#include <sortsmillff/ps_number.h>
 
 static const char digits[] = "0123456789";
 static const char letters[] = "abcdefghijklmnopqrstuvwxyz";
@@ -89,7 +89,7 @@ is_decimal_fraction (const char *s)
   return is_dec_frac;
 }
 
-bool
+VISIBLE bool
 is_postscript_integer (const char *s)
 {
   assert (s != NULL);
@@ -110,7 +110,7 @@ is_postscript_integer (const char *s)
   return is_integer;
 }
 
-bool
+VISIBLE bool
 is_postscript_real (const char *s)
 {
   assert (s != NULL);
@@ -134,7 +134,7 @@ is_postscript_real (const char *s)
   return is_real;
 }
 
-bool
+VISIBLE bool
 is_postscript_radix_number (const char *s)
 {
   assert (s != NULL);
@@ -163,7 +163,7 @@ is_postscript_radix_number (const char *s)
   return is_radix_number;
 }
 
-bool
+VISIBLE bool
 is_postscript_number (const char *s)
 {
   assert (s != NULL);

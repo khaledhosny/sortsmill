@@ -26,22 +26,29 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _PS_NUMBER_H
-#define _PS_NUMBER_H
+#ifndef _SORTSMILLFF_PS_NUMBER_H
+#define _SORTSMILLFF_PS_NUMBER_H
 
-//
-// PostScript numbers.
-//
-
-#include <config.h>
+/*
+ * PostScript numbers.
+ */
 
 #include <stdbool.h>
 
+/* *INDENT-OFF* */
+#ifdef __cplusplus
+extern "C" {
+#endif
+/* *INDENT-ON* */
+
+/*
 // vis--
 // vis-- The following items are declared in header file
-// vis-- @file{ps_number.h}.
+// vis-- @file{sortsmillff/ps_number.h}.
 // vis--
+*/
 
+/*
 // vis--
 // vis-- @deftypefun {bool} is_postscript_integer (const char *@var{s})
 // vis--
@@ -51,8 +58,10 @@
 // vis--
 // vis-- @end deftypefun
 // vis--
-VISIBLE bool is_postscript_integer (const char *s);
+*/
+bool is_postscript_integer (const char *s);
 
+/*
 // vis--
 // vis-- @deftypefun {bool} is_postscript_real (const char *@var{s})
 // vis--
@@ -63,8 +72,10 @@ VISIBLE bool is_postscript_integer (const char *s);
 // vis--
 // vis-- @end deftypefun
 // vis--
-VISIBLE bool is_postscript_real (const char *s);
+*/
+bool is_postscript_real (const char *s);
 
+/*
 // vis--
 // vis-- @deftypefun {bool} is_postscript_radix_number (const char *@var{s})
 // vis--
@@ -74,8 +85,10 @@ VISIBLE bool is_postscript_real (const char *s);
 // vis--
 // vis-- @end deftypefun
 // vis--
-VISIBLE bool is_postscript_radix_number (const char *s);
+*/
+bool is_postscript_radix_number (const char *s);
 
+/*
 // vis--
 // vis-- @deftypefun {bool} is_postscript_number (const char *@var{s})
 // vis--
@@ -84,6 +97,13 @@ VISIBLE bool is_postscript_radix_number (const char *s);
 // vis--
 // vis-- @end deftypefun
 // vis--
-VISIBLE bool is_postscript_number (const char *s);
+*/
+bool is_postscript_number (const char *s);
 
-#endif // _PS_NUMBER_H
+/* *INDENT-OFF* */
+#ifdef __cplusplus
+}
+#endif
+/* *INDENT-ON* */
+
+#endif /* _SORTSMILLFF_PS_NUMBER_H */
