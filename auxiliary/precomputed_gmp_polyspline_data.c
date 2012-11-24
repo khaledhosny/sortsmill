@@ -50,6 +50,10 @@ initialize__degree_max (void)
   //
   // See http://www.hpl.hp.com/research/linux/atomic_ops/example.php4
   //
+  // (The double-checking may be beyond necessity in this case,
+  // because this initialization routine is called from within a
+  // thread lock, anyway. But it does no harm.)
+  //
   if (!AO_load_acquire_read (&_degree_max_is_initialized))
     {
       pthread_mutex_lock (&_degree_max_mutex);
