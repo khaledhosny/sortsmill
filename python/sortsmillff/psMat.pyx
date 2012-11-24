@@ -37,6 +37,8 @@ The matrices are expressed as six-element tuples of floats.
 cimport gsl
 from libc.math cimport sin, cos, tan
 
+import sys
+
 include "psMat.pxi"
 
 # i--
@@ -72,52 +74,51 @@ class psMatGSLError (psMatException):
     return gsl.gsl_strerror (self.errno)
 
 def psMat_invert (a):
-    # Invert a PostScript matrix.
+  # Invert a PostScript matrix, by singular value decomposition.
 
-    a = map (float, a)
+  a = map (float, a)
 
-    cdef double a0 = a[0]
-    cdef double a1 = a[1]
-    cdef double a2 = a[2]
-    cdef double a3 = a[3]
-    cdef double a4 = a[4]
-    cdef double a5 = a[5]
+  cdef double a0 = a[0]
+  cdef double a1 = a[1]
+  cdef double a2 = a[2]
+  cdef double a3 = a[3]
+  cdef double a4 = a[4]
+  cdef double a5 = a[5]
 
-    cdef double mat[4]
-    cdef double mat_inv[4]
+  cdef int errval
 
-    mat[0] = a0
-    mat[1] = a1
-    mat[2] = a2
-    mat[3] = a3
+  cdef double u_mat[4]
+  cdef gsl.gsl_matrix_view u = gsl.gsl_matrix_view_array (u_mat, 2, 2)
+  cdef double v_mat[4]
+  cdef gsl.gsl_matrix_view v = gsl.gsl_matrix_view_array (v_mat, 2, 2)
+  cdef double s_vec[2]
+  cdef gsl.gsl_vector_view s = gsl.gsl_vector_view_array (s_vec, 2)
+  cdef double work_vec[2]
+  cdef gsl.gsl_vector_view work = gsl.gsl_vector_view_array (work_vec, 2)
 
-    cdef gsl.gsl_matrix_view m = gsl.gsl_matrix_view_array (mat, 2, 2)
-    cdef gsl.gsl_matrix_view m_inv = gsl.gsl_matrix_view_array (mat_inv, 2, 2)
+  u_mat[0] = a0
+  u_mat[1] = a1
+  u_mat[2] = a2
+  u_mat[3] = a3
 
-    cdef gsl.gsl_permutation *p = gsl.gsl_permutation_alloc (2)
-    if p == NULL:
-      raise MemoryError
+  errval = gsl.gsl_linalg_SV_decomp (&u.matrix, &v.matrix, &s.vector, &work.vector)
+  if errval != gsl.GSL_SUCCESS:
+    raise psMatGSLError (errval)
 
-    cdef int signum
-    cdef int errval
-    errval = gsl.gsl_linalg_LU_decomp (&m.matrix, p, &signum)
-    if errval != gsl.GSL_SUCCESS:
-      raise psMatGSLError (errval)
-    errval = gsl.gsl_linalg_LU_invert (&m.matrix, p, &m_inv.matrix)
-    if errval != gsl.GSL_SUCCESS:
-      raise psMatGSLError (errval)
+  # Test for singularity. (Note: rather than do this test, we could
+  # let the divisions below overflow.)
+  if s_vec[1] <= s_vec[0] * 100.0 * sys.float_info.epsilon:
+    raise psMatGSLError (gsl.GSL_ESING)
 
-    cdef double b11 = gsl.gsl_matrix_get (&m_inv.matrix, 0, 0)
-    cdef double b12 = gsl.gsl_matrix_get (&m_inv.matrix, 0, 1)
-    cdef double b21 = gsl.gsl_matrix_get (&m_inv.matrix, 1, 0)
-    cdef double b22 = gsl.gsl_matrix_get (&m_inv.matrix, 1, 1)
+  cdef double b11 = v_mat[0] * u_mat[0] / s_vec[0] + v_mat[1] * u_mat[1] / s_vec[1]
+  cdef double b12 = v_mat[0] * u_mat[2] / s_vec[0] + v_mat[1] * u_mat[3] / s_vec[1]
+  cdef double b21 = v_mat[2] * u_mat[0] / s_vec[0] + v_mat[3] * u_mat[1] / s_vec[1]
+  cdef double b22 = v_mat[2] * u_mat[2] / s_vec[0] + v_mat[3] * u_mat[3] / s_vec[1]
 
-    gsl.gsl_permutation_free (p)
+  cdef double c1 = - (a4 * b11 + a5 * b21)
+  cdef double c2 = - (a4 * b12 + a5 * b22)
 
-    cdef double c1 = - (a4 * b11 + a5 * b21)
-    cdef double c2 = - (a4 * b12 + a5 * b22)
-
-    return (b11, b12, b21, b22, c1, c2)
+  return (b11, b12, b21, b22, c1, c2)  
 
 # i--
 # i-- @defun identity ()
