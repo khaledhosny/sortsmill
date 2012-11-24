@@ -37,6 +37,11 @@
 // Change of basis.
 //
 
+//
+// FIXME FIXME FIXME: 
+// FIXME FIXME FIXME: This needs to return a code for deg too high.
+// FIXME FIXME FIXME: 
+//
 #define CHANGE_BASIS(NAME, GET_MATRIX)					\
   void									\
   NAME (unsigned int deg, const double *from, double *to,		\
@@ -63,9 +68,16 @@
 
 // FIXME: For these, maybe use special matrix multiplication for
 // triangular matrices.
-VISIBLE CHANGE_BASIS (sbern_to_mono_double, get_mono_basis_in_sbern);
-VISIBLE CHANGE_BASIS (mono_to_sbern_double, get_sbern_basis_in_mono);
+//VISIBLE CHANGE_BASIS (sbern_to_mono_double, get_mono_basis_in_sbern);
+//VISIBLE CHANGE_BASIS (mono_to_sbern_double, get_sbern_basis_in_mono);
+VISIBLE CHANGE_BASIS (sbern_to_mono_double, fl_mono_basis_in_sbern);
+VISIBLE CHANGE_BASIS (mono_to_sbern_double, fl_sbern_basis_in_mono);
 
+//
+// FIXME FIXME FIXME: 
+// FIXME FIXME FIXME: This needs to return a code for deg too high.
+// FIXME FIXME FIXME: 
+//
 // Doing this with a single transformation matrix seems less stable
 // than doing it this way.
 VISIBLE void
@@ -77,6 +89,11 @@ bern_to_mono_double (unsigned int deg, const double *from, double *to,
   sbern_to_mono_double (deg, sbern, to, 1);
 }
 
+//
+// FIXME FIXME FIXME: 
+// FIXME FIXME FIXME: This needs to return a code for deg too high.
+// FIXME FIXME FIXME: 
+//
 // Doing this with a single transformation matrix seems less stable
 // than doing it this way.
 VISIBLE void
@@ -88,23 +105,35 @@ mono_to_bern_double (unsigned int deg, const double *from, double *to,
   sbern_to_bern_double (deg, sbern, to, 1);
 }
 
+//
+// FIXME FIXME FIXME: 
+// FIXME FIXME FIXME: This needs to return a code for deg too high.
+// FIXME FIXME FIXME: 
+//
 // The matrix here is diagonal, so use the diagonal directly.
 VISIBLE void
 sbern_to_bern_double (unsigned int deg, const double *from, double *to,
                       size_t num_splines)
 {
-  const double *bc = get_binomial_coefficients (deg);
+  //  const double *bc = get_binomial_coefficients (deg);
+  const double *bc = fl_binomial_coefficients (deg);
   const unsigned int n = deg + 1;
   for (unsigned int i = 0; i < n * num_splines; i++)
     to[i] = from[i] / bc[i % n];
 }
 
+//
+// FIXME FIXME FIXME: 
+// FIXME FIXME FIXME: This needs to return a code for deg too high.
+// FIXME FIXME FIXME: 
+//
 // The matrix here is diagonal, so use the diagonal directly.
 VISIBLE void
 bern_to_sbern_double (unsigned int deg, const double *from, double *to,
                       size_t num_splines)
 {
-  const double *bc = get_binomial_coefficients (deg);
+  //  const double *bc = get_binomial_coefficients (deg);
+    const double *bc = fl_binomial_coefficients (deg);
   const unsigned int n = deg + 1;
   for (unsigned int i = 0; i < n * num_splines; i++)
     to[i] = from[i] * bc[i % n];

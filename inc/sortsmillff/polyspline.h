@@ -19,6 +19,7 @@
 #define _SORTSMILLFF_POLYSPLINE_H
 
 #include <stdlib.h>
+#include <gmp.h>
 #include <sortsmillff/attributes.h>
 
 /* *INDENT-OFF* */
@@ -27,8 +28,40 @@ extern "C" {
 #endif
 /* *INDENT-ON* */
 
-/* FIXME: Rename these in a way somewhat consistent between the
-   different supported languages. */
+/*-----------------------------------------------------------------------*/ 
+/*
+ * FIXME: Document these.
+ */
+
+unsigned int polyspline_degree_max (void);
+
+/* These return NULL if @var{degree} exceeds the compiled-in maximum
+   returned by @code{polyspline_degree_max}. */
+const double *fl_binomial_coefficients (unsigned int degree);
+const double *fl_binomial_coefficients_altsigns (unsigned int degree);
+const double *fl_sbern_basis_in_mono (unsigned int degree);
+const double *fl_mono_basis_in_sbern (unsigned int degree);
+const double *fl_sbern_basis_in_spower (unsigned int degree);
+const double *fl_spower_basis_in_sbern (unsigned int degree);
+
+const __mpz_struct *mpz_binomial_coefficients (unsigned int degree);
+const __mpz_struct *mpz_binomial_coefficients_altsigns (unsigned int degree);
+const __mpz_struct *mpz_sbern_basis_in_mono (unsigned int degree);
+const __mpz_struct *mpz_mono_basis_in_sbern (unsigned int degree);
+const __mpz_struct *mpz_sbern_basis_in_spower (unsigned int degree);
+const __mpz_struct *mpz_spower_basis_in_sbern (unsigned int degree);
+
+const __mpq_struct *mpq_binomial_coefficients (unsigned int degree);
+const __mpq_struct *mpq_binomial_coefficients_altsigns (unsigned int degree);
+const __mpq_struct *mpq_sbern_basis_in_mono (unsigned int degree);
+const __mpq_struct *mpq_mono_basis_in_sbern (unsigned int degree);
+const __mpq_struct *mpq_sbern_basis_in_spower (unsigned int degree);
+const __mpq_struct *mpq_spower_basis_in_sbern (unsigned int degree);
+
+/*-----------------------------------------------------------------------*/ 
+
+/* FIXME: Rename the following in a way somewhat consistent between
+   the different supported languages. */
 
 /*
  * vis--
