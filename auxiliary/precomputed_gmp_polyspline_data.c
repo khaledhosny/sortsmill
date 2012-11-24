@@ -62,7 +62,7 @@ initialize__degree_max (void)
     }
 }
 
-#define _FF_GMP_PRECOMPUTED_DATA(TYPE, NAME)				\
+#define _FF_GMP_DATA_FROM_DOUBLE_DATA(TYPE, NAME)			\
   static volatile AO_t _##TYPE##_##NAME##_is_initialized = false;	\
   static pthread_mutex_t _##TYPE##_##NAME##_mutex =			\
     PTHREAD_MUTEX_INITIALIZER;						\
@@ -107,16 +107,16 @@ initialize__degree_max (void)
   }
 
 
-_FF_GMP_PRECOMPUTED_DATA(mpz, binomial_coefficients);
-_FF_GMP_PRECOMPUTED_DATA(mpz, binomial_coefficients_altsigns);
-_FF_GMP_PRECOMPUTED_DATA(mpz, sbern_basis_in_mono);
-_FF_GMP_PRECOMPUTED_DATA(mpz, mono_basis_in_sbern);
-_FF_GMP_PRECOMPUTED_DATA(mpz, sbern_basis_in_spower);
-_FF_GMP_PRECOMPUTED_DATA(mpz, spower_basis_in_sbern);
+_FF_GMP_DATA_FROM_DOUBLE_DATA(mpz, binomial_coefficients);
+_FF_GMP_DATA_FROM_DOUBLE_DATA(mpz, binomial_coefficients_altsigns);
+_FF_GMP_DATA_FROM_DOUBLE_DATA(mpz, sbern_basis_in_mono);
+_FF_GMP_DATA_FROM_DOUBLE_DATA(mpz, mono_basis_in_sbern);
+_FF_GMP_DATA_FROM_DOUBLE_DATA(mpz, sbern_basis_in_spower);
+_FF_GMP_DATA_FROM_DOUBLE_DATA(mpz, spower_basis_in_sbern);
 					       
-_FF_GMP_PRECOMPUTED_DATA(mpq, binomial_coefficients);
-_FF_GMP_PRECOMPUTED_DATA(mpq, binomial_coefficients_altsigns);
-_FF_GMP_PRECOMPUTED_DATA(mpq, sbern_basis_in_mono);
-_FF_GMP_PRECOMPUTED_DATA(mpq, mono_basis_in_sbern);
-_FF_GMP_PRECOMPUTED_DATA(mpq, sbern_basis_in_spower);
-_FF_GMP_PRECOMPUTED_DATA(mpq, spower_basis_in_sbern);
+_FF_GMP_DATA_FROM_DOUBLE_DATA(mpq, binomial_coefficients);
+_FF_GMP_DATA_FROM_DOUBLE_DATA(mpq, binomial_coefficients_altsigns);
+_FF_GMP_DATA_FROM_DOUBLE_DATA(mpq, sbern_basis_in_mono);
+_FF_GMP_DATA_FROM_DOUBLE_DATA(mpq, mono_basis_in_sbern);
+_FF_GMP_DATA_FROM_DOUBLE_DATA(mpq, sbern_basis_in_spower);
+_FF_GMP_DATA_FROM_DOUBLE_DATA(mpq, spower_basis_in_sbern);
