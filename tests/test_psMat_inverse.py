@@ -2,9 +2,9 @@
 
 # FIXME: There is a risk of failure on this test, as described below.
 #
-# NOTE: It is conceivable that this test could fail even if the
-# programming is correct, if the random number generator happens to
-# create some very ill-conditioned matrix.
+# NOTE: This test can fail even if the programming is correct, if the
+# random number generator happens to create some very ill-conditioned
+# matrix.
 
 import sortsmillff.psMat as psMat
 import random
@@ -34,13 +34,13 @@ def test_inverse (a1):
         ident_mat = matmul (a1[0:4], a[0:4])
         print (ident_mat)
         for i in range (0, 4):
-            if 1e-10 < abs (ident_mat[i] - (1, 0, 0, 1)[i]):
+            if 1e-8 < abs (ident_mat[i] - (1, 0, 0, 1)[i]):
                 exit (40)
 
         ident_mat2 = psMat.compose (a1, a)
         print (ident_mat2)
         for i in range (0, 6):
-            if 1e-10 < abs (ident_mat2[i] - (1, 0, 0, 1, 0, 0)[i]):
+            if 1e-8 < abs (ident_mat2[i] - (1, 0, 0, 1, 0, 0)[i]):
                 exit (45)
 
     except psMat.psMatGSLError:
