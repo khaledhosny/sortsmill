@@ -26,29 +26,35 @@
 
 include $(top_srcdir)/mk/flags.am
 include $(top_srcdir)/mk/guile.mk
-include $(top_srcdir)/mk/recipe-tools.mk
 
 #--------------------------------------------------------------------------
 
-nobase_dist_guileobjmodule_DATA = sortsmillff/gsl.scm		\
-	sortsmillff/iconv.scm sortsmillff/linalg.scm			\
-	sortsmillff/precompute.scm sortsmillff/polyspline.scm	\
-	sortsmillff/brentroot.scm sortsmillff/sfd-to-sxml.scm
+nobase_dist_guilemodule_DATA = $(DIST_SCM_FILES)
+nobase_nodist_guilemodule_DATA = $(NODIST_SCM_FILES)
+EXTRA_DIST = $(DIST_SCM_IN_FILES)
+MOSTLYCLEANFILES = $(NODIST_SCM_FILES) $(GO_FILES)
 
-nobase_nodist_guileobjmodule_DATA = sortsmillff/gsl.go				\
-	sortsmillff/math-constants.scm sortsmillff/math-constants.go	\
-	sortsmillff/i18n.scm sortsmillff/i18n.go sortsmillff/iconv.go	\
-	sortsmillff/linalg.go sortsmillff/precompute.go					\
-	sortsmillff/polyspline.go sortsmillff/brentroot.go				\
-	sortsmillff/sfd-to-sxml.go
+DIST_SCM_FILES = sortsmillff/gsl.scm sortsmillff/iconv.scm	\
+	sortsmillff/linalg.scm sortsmillff/precompute.scm		\
+	sortsmillff/polyspline.scm sortsmillff/brentroot.scm	\
+	sortsmillff/sfd-to-sxml.scm
+
+DIST_SCM_IN_FILES = sortsmillff/math-constants.scm.in	\
+	sortsmillff/i18n.scm.in
+
+NODIST_SCM_FILES = sortsmillff/math-constants.scm	\
+	sortsmillff/i18n.scm
+
+GO_FILES = sortsmillff/gsl.go sortsmillff/math-constants.go			\
+	sortsmillff/i18n.go sortsmillff/iconv.go sortsmillff/linalg.go	\
+	sortsmillff/precompute.go sortsmillff/polyspline.go				\
+	sortsmillff/brentroot.go sortsmillff/sfd-to-sxml.go
 
 sortsmillff/brentroot.go: sortsmillff/math-constants.go
 sortsmillff/i18n.go: libguile-sortsmillff_iconv.la
 sortsmillff/gsl.go: libguile-sortsmillff_gsl.la
 sortsmillff/precompute.go: sortsmillff/linalg.go
 sortsmillff/sfd-to-sxml.go: sortsmillff/gsl.go sortsmillff/i18n.go
-
-EXTRA_DIST = sortsmillff/math-constants.scm.in sortsmillff/i18n.scm.in
 
 #--------------------------------------------------------------------------
 
@@ -86,11 +92,20 @@ libguile_sortsmillff_gsl_la_LIBADD =				\
 install-data-hook:
 #	Make sure the source module is no younger than the compiled
 #	module.
-	@sleep 2
-	@$(call touch_files,								\
-		$(addprefix $(DESTDIR)$(guileobjmoduledir)/,	\
-					$(nodist_guileobjmodule_DATA)))
+	@for f in $(GO_FILES); do												\
+		if test -f "$${f}"; then 											\
+			echo cat "$${f}" '> $(DESTDIR)$(guileobjmoduledir)/'"$${f}";	\
+			cat "$${f}" > $(DESTDIR)$(guileobjmoduledir)/"$${f}";			\
+			chmod 0644 $(DESTDIR)$(guileobjmoduledir)/"$${f}";				\
+		fi																	\
+	done
 
-MOSTLYCLEANFILES = $(nobase_nodist_guileobjmodule_DATA)
+uninstall-local:
+	@for f in $(GO_FILES); do												\
+		if test -f $(DESTDIR)$(guileobjmoduledir)/"$${f}"; then 			\
+			echo 'rm -f $(DESTDIR)$(guileobjmoduledir)/'"$${f}";			\
+			rm -f $(DESTDIR)$(guileobjmoduledir)/"$${f}";					\
+		fi																	\
+	done
 
 #--------------------------------------------------------------------------
