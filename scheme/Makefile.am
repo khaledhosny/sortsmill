@@ -94,7 +94,11 @@ install-data-hook:
 #	module.
 	@for f in $(GO_FILES); do												\
 		if test -f "$${f}"; then 											\
-			echo cat "$${f}" '> $(DESTDIR)$(guileobjmoduledir)/'"$${f}";	\
+			if test -f $(DESTDIR)$(guileobjmoduledir)/"$${f}"; then			\
+				echo "rm -f $(DESTDIR)$(guileobjmoduledir)/$${f}";			\
+				rm -f $(DESTDIR)$(guileobjmoduledir)/"$${f}";				\
+			fi;																\
+			echo "cat $${f} > $(DESTDIR)$(guileobjmoduledir)/$${f}";		\
 			cat "$${f}" > $(DESTDIR)$(guileobjmoduledir)/"$${f}";			\
 			chmod 0644 $(DESTDIR)$(guileobjmoduledir)/"$${f}";				\
 		fi																	\
