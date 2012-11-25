@@ -27,25 +27,23 @@
 
 include $(top_srcdir)/mk/flags.am
 
-# 25 seems significantly greater than the maximum useful degree.
-MAX_POLYSPLINE_DEGREE = 25
+POLYSPLINE_PRECOMPUTED_DEGREE_MAX = 19
 
 #--------------------------------------------------------------------------
 
 lib_LTLIBRARIES = libsortsmillff_aux.la
 
-dist_libsortsmillff_aux_la_SOURCES = ArabicForms.c alphabet.c		\
-	backtrns.c cjk.c ucharmap.c unialt.c ustring.c utype.c			\
-	combiners.h xdie_on_null.c xgc.c xgc_strjoin.c xunicase.c		\
-	xuniconv.c xuninorm.c xunistr.c xunistr_strjoin.c ps_number.c	\
-	rexp.c precomputed_data.c polyspline.c brentroot.c qbrentroot.c	\
-	gmp_constants.c gmp_gc.c linalg.c								\
-	precomputed_gmp_polyspline_data.c
+dist_libsortsmillff_aux_la_SOURCES = ArabicForms.c alphabet.c			\
+	backtrns.c cjk.c ucharmap.c unialt.c ustring.c utype.c				\
+	combiners.h xdie_on_null.c xgc.c xgc_strjoin.c xunicase.c			\
+	xuniconv.c xuninorm.c xunistr.c xunistr_strjoin.c ps_number.c		\
+	rexp.c brentroot.c qbrentroot.c gmp_constants.c gmp_gc.c linalg.c	\
+	precomputed_gmp_polyspline_data.c polyspline_data.c polyspline.c
 
 nodist_libsortsmillff_aux_la_SOURCES = precomputed_polyspline_data.c
 
-libsortsmillff_aux_la_CFLAGS = $(AM_CFLAGS) '-I$(srcdir)'	\
-	'-DMAX_POLYSPLINE_DEGREE=$(MAX_POLYSPLINE_DEGREE)'
+libsortsmillff_aux_la_CFLAGS = $(AM_CFLAGS) '-I$(srcdir)'						\
+	'-D_POLYSPLINE_PRECOMPUTED_DEGREE_MAX=$(POLYSPLINE_PRECOMPUTED_DEGREE_MAX)'
 libsortsmillff_aux_la_LIBADD = $(top_builddir)/lib/libgnu.la
 libsortsmillff_aux_la_LDFLAGS = $(call ldflags)
 libsortsmillff_aux_la_DEPENDENCIES = Makefile $(libsortsmillff_aux_la_LIBADD)
@@ -55,9 +53,9 @@ LINALG_EXTRAS = linalg_matrix_init.c linalg_matrix_set.c			\
 
 linalg.lo: $(LINALG_EXTRAS)
 
-precomputed_polyspline_data.c: precompute-polyspline-data.scm
+precomputed_polyspline_data.c: precompute-polyspline-data.scm Makefile
 	$(AM_V_GEN)
-	$(AM_V_at)$(GUILE) --no-auto-compile -s $< $(MAX_POLYSPLINE_DEGREE) > $@-tmp
+	$(AM_V_at)$(GUILE) --no-auto-compile -s $< $(POLYSPLINE_PRECOMPUTED_DEGREE_MAX) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
 EXTRA_DIST = $(LINALG_EXTRAS) precompute-polyspline-data.scm

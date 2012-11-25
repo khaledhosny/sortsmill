@@ -24,7 +24,7 @@ void init_guile_sortsmillff_polyspline (void);
 static SCM
 change_basis (SCM spline,
               void (*changer) (unsigned int, const double *, double *,
-                               size_t))
+			       size_t))
 {
   scm_t_array_handle handle;
   size_t len;

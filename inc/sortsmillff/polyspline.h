@@ -33,10 +33,6 @@ extern "C" {
  * FIXME: Document these.
  */
 
-unsigned int polyspline_degree_max (void);
-
-/* These return NULL if @var{degree} exceeds the compiled-in maximum
-   returned by @code{polyspline_degree_max}. */
 const double *fl_binomial_coefficients (unsigned int degree);
 const double *fl_binomial_coefficients_altsigns (unsigned int degree);
 const double *fl_sbern_basis_in_mono (unsigned int degree);
@@ -65,7 +61,7 @@ const __mpq_struct *mpq_spower_basis_in_sbern (unsigned int degree);
 
 /*
  * vis--
- * vis-- @deftypefun {void} sbern_to_bern_double (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
+ * vis-- @deftypefun void sbern_to_bern_double (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
  * vis--
  * vis-- Convert a spline from scaled Bernstein to Bernstein basis.
  * vis--
@@ -73,11 +69,11 @@ const __mpq_struct *mpq_spower_basis_in_sbern (unsigned int degree);
  * vis--
  */
 void sbern_to_bern_double (unsigned int deg, const double *sbern,
-                           double *bern, size_t num_splines);
+			   double *bern, size_t num_splines);
 
 /*
  * vis--
- * vis-- @deftypefun {void} bern_to_sbern_double (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
+ * vis-- @deftypefun void bern_to_sbern_double (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
  * vis--
  * vis-- Convert a spline from Bernstein to scaled Bernstein basis.
  * vis--
@@ -85,11 +81,11 @@ void sbern_to_bern_double (unsigned int deg, const double *sbern,
  * vis--
  */
 void bern_to_sbern_double (unsigned int deg, const double *bern,
-                           double *sbern, size_t num_splines);
+			   double *sbern, size_t num_splines);
 
 /*
  * vis--
- * vis-- @deftypefun {void} sbern_to_mono_double (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
+ * vis-- @deftypefun void sbern_to_mono_double (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
  * vis--
  * vis-- Convert a spline from scaled Bernstein to monomial basis.
  * vis--
@@ -97,11 +93,11 @@ void bern_to_sbern_double (unsigned int deg, const double *bern,
  * vis--
  */
 void sbern_to_mono_double (unsigned int deg, const double *sbern,
-                           double *mono, size_t num_splines);
+			   double *mono, size_t num_splines);
 
 /*
  * vis--
- * vis-- @deftypefun {void} mono_to_sbern_double (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
+ * vis-- @deftypefun void mono_to_sbern_double (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
  * vis--
  * vis-- Convert a spline from monomial basis to scaled Bernstein.
  * vis--
@@ -109,11 +105,11 @@ void sbern_to_mono_double (unsigned int deg, const double *sbern,
  * vis--
  */
 void mono_to_sbern_double (unsigned int deg, const double *mono,
-                           double *sbern, size_t num_splines);
+			   double *sbern, size_t num_splines);
 
 /*
  * vis--
- * vis-- @deftypefun {void} bern_to_sbern_double (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
+ * vis-- @deftypefun void bern_to_sbern_double (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
  * vis--
  * vis-- Convert a spline from Bernstein to monomial basis.
  * vis--
@@ -121,11 +117,11 @@ void mono_to_sbern_double (unsigned int deg, const double *mono,
  * vis--
  */
 void bern_to_mono_double (unsigned int deg, const double *bern,
-                          double *mono, size_t num_splines);
+			  double *mono, size_t num_splines);
 
 /*
  * vis--
- * vis-- @deftypefun {void} mono_to_bern_double (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
+ * vis-- @deftypefun void mono_to_bern_double (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
  * vis--
  * vis-- Convert a spline from monomial basis to Bernstein.
  * vis--
@@ -133,7 +129,7 @@ void bern_to_mono_double (unsigned int deg, const double *bern,
  * vis--
  */
 void mono_to_bern_double (unsigned int deg, const double *mono,
-                          double *bern, size_t num_splines);
+			  double *bern, size_t num_splines);
 
 /*
  * vis--

@@ -28,7 +28,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <sortsmillff/polyspline.h>
+#include <precomputed_polyspline_data.h>
 #include <atomic_ops.h>
 #include <sortsmillff/xgc.h>    /* Includes pthread.h and gc.h in the
                                    correct order. */
@@ -59,7 +59,7 @@ initialize__degree_max (void)
       pthread_mutex_lock (&_degree_max_mutex);
       if (!_degree_max_is_initialized)
         {
-          _degree_max = polyspline_degree_max ();
+          _degree_max = polyspline_precomputed_degree_max ();
           AO_store_release_write (&_degree_max_is_initialized, true);
         }
       pthread_mutex_unlock (&_degree_max_mutex);
@@ -111,16 +111,16 @@ initialize__degree_max (void)
   }
 
 
-_FF_GMP_DATA_FROM_DOUBLE_DATA(mpz, binomial_coefficients);
-_FF_GMP_DATA_FROM_DOUBLE_DATA(mpz, binomial_coefficients_altsigns);
-_FF_GMP_DATA_FROM_DOUBLE_DATA(mpz, sbern_basis_in_mono);
-_FF_GMP_DATA_FROM_DOUBLE_DATA(mpz, mono_basis_in_sbern);
-_FF_GMP_DATA_FROM_DOUBLE_DATA(mpz, sbern_basis_in_spower);
-_FF_GMP_DATA_FROM_DOUBLE_DATA(mpz, spower_basis_in_sbern);
+_FF_GMP_DATA_FROM_DOUBLE_DATA(mpz, precomputed_binomial_coefficients);
+_FF_GMP_DATA_FROM_DOUBLE_DATA(mpz, precomputed_binomial_coefficients_altsigns);
+_FF_GMP_DATA_FROM_DOUBLE_DATA(mpz, precomputed_sbern_basis_in_mono);
+_FF_GMP_DATA_FROM_DOUBLE_DATA(mpz, precomputed_mono_basis_in_sbern);
+_FF_GMP_DATA_FROM_DOUBLE_DATA(mpz, precomputed_sbern_basis_in_spower);
+_FF_GMP_DATA_FROM_DOUBLE_DATA(mpz, precomputed_spower_basis_in_sbern);
 					       
-_FF_GMP_DATA_FROM_DOUBLE_DATA(mpq, binomial_coefficients);
-_FF_GMP_DATA_FROM_DOUBLE_DATA(mpq, binomial_coefficients_altsigns);
-_FF_GMP_DATA_FROM_DOUBLE_DATA(mpq, sbern_basis_in_mono);
-_FF_GMP_DATA_FROM_DOUBLE_DATA(mpq, mono_basis_in_sbern);
-_FF_GMP_DATA_FROM_DOUBLE_DATA(mpq, sbern_basis_in_spower);
-_FF_GMP_DATA_FROM_DOUBLE_DATA(mpq, spower_basis_in_sbern);
+_FF_GMP_DATA_FROM_DOUBLE_DATA(mpq, precomputed_binomial_coefficients);
+_FF_GMP_DATA_FROM_DOUBLE_DATA(mpq, precomputed_binomial_coefficients_altsigns);
+_FF_GMP_DATA_FROM_DOUBLE_DATA(mpq, precomputed_sbern_basis_in_mono);
+_FF_GMP_DATA_FROM_DOUBLE_DATA(mpq, precomputed_mono_basis_in_sbern);
+_FF_GMP_DATA_FROM_DOUBLE_DATA(mpq, precomputed_sbern_basis_in_spower);
+_FF_GMP_DATA_FROM_DOUBLE_DATA(mpq, precomputed_spower_basis_in_sbern);

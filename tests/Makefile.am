@@ -100,7 +100,7 @@ TESTS_PS_NUMBER_H = test_ps_number_h
 
 TESTS_REXP_H = test_rexp_h test_rexp_h_u8
 
-TESTS_PRECOMPUTEDDATA = test_precomputed_data
+TESTS_PRECOMPUTEDDATA = #test_precomputed_data
 TESTS_BERNSTEIN = test_bernstein
 TESTS_MONOMIAL = test_monomial
 
