@@ -16,112 +16,105 @@
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 import cython
+import array
+from cpython cimport array
 
-import numpy as np
-cimport numpy as np
+#--------------------------------------------------------------------------
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def sbern_to_bern (np.ndarray[double, ndim=1, mode="c"] spline not None):
-  cdef int deg = spline.shape[0] - 1
-  result = np.empty_like (spline)
-  cdef np.ndarray[double, ndim=1, mode="c"] cresult = result
-  sbern_to_bern_double (deg, &spline[0], &cresult[0], 1)
+def fl_bern_to_sbern (array.array[double] spline not None):
+  cdef int deg = len (spline) - 1
+  cdef array.array[double] result = array.copy (spline)
+  bern_to_sbern_double (deg, &result[0], &result[0], 1)
   return result
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def bern_to_sbern (np.ndarray[double, ndim=1, mode="c"] spline not None):
-  cdef int deg = spline.shape[0] - 1
-  result = np.empty_like (spline)
-  cdef np.ndarray[double, ndim=1, mode="c"] cresult = result
-  bern_to_sbern_double (deg, &spline[0], &cresult[0], 1)
+def fl_sbern_to_bern (array.array[double] spline not None):
+  cdef int deg = len (spline) - 1
+  cdef array.array[double] result = array.copy (spline)
+  sbern_to_bern_double (deg, &result[0], &result[0], 1)
   return result
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def sbern_to_mono (np.ndarray[double, ndim=1, mode="c"] spline not None):
-  cdef int deg = spline.shape[0] - 1
-  result = np.empty_like (spline)
-  cdef np.ndarray[double, ndim=1, mode="c"] cresult = result
-  sbern_to_mono_double (deg, &spline[0], &cresult[0], 1)
+def fl_sbern_to_mono (array.array[double] spline not None):
+  cdef int deg = len (spline) - 1
+  cdef array.array[double] result = array.copy (spline)
+  sbern_to_mono_double (deg, &result[0], &result[0], 1)
   return result
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def mono_to_sbern (np.ndarray[double, ndim=1, mode="c"] spline not None):
-  cdef int deg = spline.shape[0] - 1
-  result = np.empty_like (spline)
-  cdef np.ndarray[double, ndim=1, mode="c"] cresult = result
-  mono_to_sbern_double (deg, &spline[0], &cresult[0], 1)
+def fl_mono_to_sbern (array.array[double] spline not None):
+  cdef int deg = len (spline) - 1
+  cdef array.array[double] result = array.copy (spline)
+  mono_to_sbern_double (deg, &result[0], &result[0], 1)
   return result
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def bern_to_mono (np.ndarray[double, ndim=1, mode="c"] spline not None):
-  cdef int deg = spline.shape[0] - 1
-  result = np.empty_like (spline)
-  cdef np.ndarray[double, ndim=1, mode="c"] cresult = result
-  bern_to_mono_double (deg, &spline[0], &cresult[0], 1)
+def fl_bern_to_mono (array.array[double] spline not None):
+  cdef int deg = len (spline) - 1
+  cdef array.array[double] result = array.copy (spline)
+  bern_to_mono_double (deg, &result[0], &result[0], 1)
   return result
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def mono_to_bern (np.ndarray[double, ndim=1, mode="c"] spline not None):
-  cdef int deg = spline.shape[0] - 1
-  result = np.empty_like (spline)
-  cdef np.ndarray[double, ndim=1, mode="c"] cresult = result
-  mono_to_bern_double (deg, &spline[0], &cresult[0], 1)
+def fl_mono_to_bern (array.array[double] spline not None):
+  cdef int deg = len (spline) - 1
+  cdef array.array[double] result = array.copy (spline)
+  mono_to_bern_double (deg, &result[0], &result[0], 1)
   return result
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def eval_sbern (np.ndarray[double, ndim=1, mode="c"] spline not None, double t):
-  cdef int deg = spline.shape[0] - 1
+def fl_eval_sbern (array.array[double] spline not None, double t):
+  cdef int deg = len (spline) - 1
   return eval_sbern_double (deg, &spline[0], t)
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def eval_bern (np.ndarray[double, ndim=1, mode="c"] spline not None, double t):
-  cdef int deg = spline.shape[0] - 1
+def fl_eval_bern (array.array[double] spline not None, double t):
+  cdef int deg = len (spline) - 1
   return eval_bern_double (deg, &spline[0], t)
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def evaldc_sbern (np.ndarray[double, ndim=1, mode="c"] spline not None, double t):
-  cdef int deg = spline.shape[0] - 1
+def fl_evaldc_sbern (array.array[double] spline not None, double t):
+  cdef int deg = len (spline) - 1
   return evaldc_sbern_double (deg, &spline[0], t)
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def evaldc_bern (np.ndarray[double, ndim=1, mode="c"] spline not None, double t):
-  cdef int deg = spline.shape[0] - 1
+def fl_evaldc_bern (array.array[double] spline not None, double t):
+  cdef int deg = len (spline) - 1
   return evaldc_bern_double (deg, &spline[0], t)
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def eval_mono (np.ndarray[double, ndim=1, mode="c"] spline not None, double t):
-  cdef int deg = spline.shape[0] - 1
+def fl_eval_mono (array.array[double] spline not None, double t):
+  cdef int deg = len (spline) - 1
   return eval_mono_double (deg, &spline[0], t)
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def subdiv_sbern (np.ndarray[double, ndim=1, mode="c"] spline not None, double t):
-  cdef int deg = spline.shape[0] - 1
-  a = np.empty_like (spline)
-  cdef np.ndarray[double, ndim=1, mode="c"] ca = a
-  b = np.empty_like (spline)
-  cdef np.ndarray[double, ndim=1, mode="c"] cb = b
-  subdiv_sbern_double (deg, &spline[0], t, &ca[0], &cb[0])
-  return (a, b)
+def fl_subdiv_sbern (array.array[double] spline not None, double t):
+  cdef int deg = len (spline) - 1
+  cdef array.array[double] result1 = array.copy (spline)
+  cdef array.array[double] result2 = array.copy (spline)
+  subdiv_sbern_double (deg, &result1[0], t, &result1[0], &result2[0])
+  return (result1, result2)
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def subdiv_bern (np.ndarray[double, ndim=1, mode="c"] spline not None, double t):
-  cdef int deg = spline.shape[0] - 1
-  a = np.empty_like (spline)
-  cdef np.ndarray[double, ndim=1, mode="c"] ca = a
-  b = np.empty_like (spline)
-  cdef np.ndarray[double, ndim=1, mode="c"] cb = b
-  subdiv_bern_double (deg, &spline[0], t, &ca[0], &cb[0])
-  return (a, b)
+def fl_subdiv_bern (array.array[double] spline not None, double t):
+  cdef int deg = len (spline) - 1
+  cdef array.array[double] result1 = array.copy (spline)
+  cdef array.array[double] result2 = array.copy (spline)
+  subdiv_bern_double (deg, &result1[0], t, &result1[0], &result2[0])
+  return (result1, result2)
+
+#--------------------------------------------------------------------------
