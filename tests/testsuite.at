@@ -9,9 +9,9 @@ m4_include([xuninorm_h.at])
 m4_include([xunistr_h.at])
 m4_include([ps_number_h.at])
 m4_include([rexp_h.at])
-#m4_include([precomputed_data.at])
-m4_include([bernstein.at])
-m4_include([monomial.at])
+#m4_include([precomputed_data.at]) dnl FIXME: Tests for the new polyspline data implementation.
+m4_include([bernstein.at]) dnl FIXME: Tests for conversions of multiple splines at once.
+m4_include([monomial.at])  dnl FIXME: Tests for conversions of multiple splines at once.
 m4_include([gmp_constants.at])
 m4_include([brentroot.at])
 m4_include([linalg.at])

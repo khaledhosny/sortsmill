@@ -82,7 +82,7 @@ MOSTLYCLEANFILES = sortsmillff/psMat.c sortsmillff/linalg.c	\
 	sortsmillff/polyspline.c sortsmillff/brentroot.c
 
 AM_LDFLAGS = -module -shared -avoid-version
-AM_CFLAGS += $(NUMPY_CFLAGS) $(CYTHON_EXTRA_CFLAGS)
+AM_CFLAGS += $(CYTHON_EXTRA_CFLAGS)
 AM_CYTHONFLAGS = -I$(builddir)/sortsmillff -I$(srcdir)/sortsmillff
 
 # FIXME: Maybe support extensions other than .so.
