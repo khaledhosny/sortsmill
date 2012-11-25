@@ -107,7 +107,7 @@ def psMat_invert (a):
 
   # Test for singularity. (Note: rather than do this test, we could
   # let the divisions below overflow.)
-  if s_vec[1] <= s_vec[0] * 100.0 * sys.float_info.epsilon:
+  if s_vec[1] <= s_vec[0] * 100.0 * <double> sys.float_info.epsilon:
     raise psMatGSLError (gsl.GSL_ESING)
 
   cdef double b11 = v_mat[0] * u_mat[0] / s_vec[0] + v_mat[1] * u_mat[1] / s_vec[1]
