@@ -52,24 +52,29 @@ extern "C" {
 #endif
 /* *INDENT-ON* */
 
-inline void *x_gc_malloc (size_t sz);
-inline void *x_gc_malloc_atomic (size_t sz);
-inline void *x_gc_malloc_uncollectable (size_t sz);
-inline void *x_gc_realloc (void *old_pointer, size_t sz);
-inline void *x_gc_malloc_ignore_off_page (size_t sz);
-inline void *x_gc_malloc_atomic_ignore_off_page (size_t sz);
-inline void *x_gc_malloc_stubborn (size_t sz);
-inline char *x_gc_strdup (const char *s);
+_FF_ATTRIBUTE_MALLOC inline void *x_gc_malloc (size_t sz);
+_FF_ATTRIBUTE_MALLOC inline void *x_gc_malloc_atomic (size_t sz);
+_FF_ATTRIBUTE_MALLOC inline void *x_gc_malloc_uncollectable (size_t sz);
+_FF_ATTRIBUTE_WARN_UNUSED_RESULT inline void *x_gc_realloc (void *old_pointer,
+                                                            size_t sz);
+_FF_ATTRIBUTE_MALLOC inline void *x_gc_malloc_ignore_off_page (size_t sz);
+_FF_ATTRIBUTE_MALLOC inline void *x_gc_malloc_atomic_ignore_off_page (size_t
+                                                                      sz);
+_FF_ATTRIBUTE_MALLOC inline void *x_gc_malloc_stubborn (size_t sz);
+_FF_ATTRIBUTE_MALLOC inline char *x_gc_strdup (const char *s);
 
-char *x_gc_strndup (const char *s, size_t n);
+_FF_ATTRIBUTE_MALLOC char *x_gc_strndup (const char *s, size_t n);
 
-char *x_gc_strjoin (const char *s1, ...);
-char *x_gc_vstrjoin (const char *s1, va_list ap);
+_FF_ATTRIBUTE_MALLOC char *x_gc_strjoin (const char *s1, ...);
+_FF_ATTRIBUTE_MALLOC char *x_gc_vstrjoin (const char *s1, va_list ap);
 
-inline char *x_gc_grabstr (char *s);
-uint8_t *x_gc_u8_grabstr (uint8_t *s);
-uint16_t *x_gc_u16_grabstr (uint16_t *s);
-uint32_t *x_gc_u32_grabstr (uint32_t *s);
+/* In the current implementation, the 'x_gc_grabstr' functions can be
+   marked as __attribute__((__malloc__)), because they copy to freshly
+   allocated memory. */
+_FF_ATTRIBUTE_MALLOC inline char *x_gc_grabstr (char *s);
+_FF_ATTRIBUTE_MALLOC uint8_t *x_gc_u8_grabstr (uint8_t *s);
+_FF_ATTRIBUTE_MALLOC uint16_t *x_gc_u16_grabstr (uint16_t *s);
+_FF_ATTRIBUTE_MALLOC uint32_t *x_gc_u32_grabstr (uint32_t *s);
 
 inline void *
 x_gc_malloc (size_t sz)

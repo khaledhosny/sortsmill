@@ -23,6 +23,7 @@
  */
 
 #include <gmp.h>
+#include <sortsmillff/attributes.h>
 
 /* *INDENT-OFF* */
 #ifdef __cplusplus
@@ -33,8 +34,8 @@ extern "C" {
 void mpz_gc_init (mpz_t x);
 void mpq_gc_init (mpq_t x);
 
-void mpz_gc_inits (mpz_t x, ...);
-void mpq_gc_inits (mpq_t x, ...);
+_FF_ATTRIBUTE_SENTINEL void mpz_gc_inits (mpz_t x, ...);
+_FF_ATTRIBUTE_SENTINEL void mpq_gc_inits (mpq_t x, ...);
 
 /* *INDENT-OFF* */
 #ifdef __cplusplus

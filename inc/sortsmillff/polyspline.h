@@ -28,7 +28,7 @@ extern "C" {
 #endif
 /* *INDENT-ON* */
 
-/*-----------------------------------------------------------------------*/ 
+/*-----------------------------------------------------------------------*/
 /*
  * FIXME: Document these.
  */
@@ -54,7 +54,7 @@ const __mpq_struct *mpq_mono_basis_in_sbern (unsigned int degree);
 const __mpq_struct *mpq_sbern_basis_in_spower (unsigned int degree);
 const __mpq_struct *mpq_spower_basis_in_sbern (unsigned int degree);
 
-/*-----------------------------------------------------------------------*/ 
+/*-----------------------------------------------------------------------*/
 
 /* FIXME: Rename the following in a way somewhat consistent between
    the different supported languages. */
@@ -69,7 +69,7 @@ const __mpq_struct *mpq_spower_basis_in_sbern (unsigned int degree);
  * vis--
  */
 void sbern_to_bern_double (unsigned int deg, const double *sbern,
-			   double *bern, size_t num_splines);
+                           double *bern, size_t num_splines);
 
 /*
  * vis--
@@ -81,7 +81,7 @@ void sbern_to_bern_double (unsigned int deg, const double *sbern,
  * vis--
  */
 void bern_to_sbern_double (unsigned int deg, const double *bern,
-			   double *sbern, size_t num_splines);
+                           double *sbern, size_t num_splines);
 
 /*
  * vis--
@@ -93,7 +93,7 @@ void bern_to_sbern_double (unsigned int deg, const double *bern,
  * vis--
  */
 void sbern_to_mono_double (unsigned int deg, const double *sbern,
-			   double *mono, size_t num_splines);
+                           double *mono, size_t num_splines);
 
 /*
  * vis--
@@ -105,7 +105,7 @@ void sbern_to_mono_double (unsigned int deg, const double *sbern,
  * vis--
  */
 void mono_to_sbern_double (unsigned int deg, const double *mono,
-			   double *sbern, size_t num_splines);
+                           double *sbern, size_t num_splines);
 
 /*
  * vis--
@@ -117,7 +117,7 @@ void mono_to_sbern_double (unsigned int deg, const double *mono,
  * vis--
  */
 void bern_to_mono_double (unsigned int deg, const double *bern,
-			  double *mono, size_t num_splines);
+                          double *mono, size_t num_splines);
 
 /*
  * vis--
@@ -129,7 +129,7 @@ void bern_to_mono_double (unsigned int deg, const double *bern,
  * vis--
  */
 void mono_to_bern_double (unsigned int deg, const double *mono,
-			  double *bern, size_t num_splines);
+                          double *bern, size_t num_splines);
 
 /*
  * vis--

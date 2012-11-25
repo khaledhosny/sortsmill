@@ -31,18 +31,90 @@
 #endif
 
 #if !defined _FF_ATTRIBUTE_CONST
-#if _FF_GNUC_VERSION_AT_LEAST (2, 95)
+#if _FF_GNUC_VERSION_AT_LEAST (2, 5)
 #define _FF_ATTRIBUTE_CONST __attribute__ ((__const__))
 #else
 #define _FF_ATTRIBUTE_CONST     /* empty */
 #endif
 #endif
 
+#if !defined _FF_ATTRIBUTE_HOT
+#if _FF_GNUC_VERSION_AT_LEAST (4, 3)
+#define _FF_ATTRIBUTE_HOT __attribute__ ((__hot__))
+#else
+#define _FF_ATTRIBUTE_HOT       /* empty */
+#endif
+#endif
+
+#if !defined _FF_ATTRIBUTE_COLD
+#if _FF_GNUC_VERSION_AT_LEAST (4, 3)
+#define _FF_ATTRIBUTE_COLD __attribute__ ((__cold__))
+#else
+#define _FF_ATTRIBUTE_COLD      /* empty */
+#endif
+#endif
+
 #if !defined _FF_ATTRIBUTE_DEPRECATED
-#if _FF_GNUC_VERSION_AT_LEAST (3, 0)
+#if defined __GNUC__
 #define _FF_ATTRIBUTE_DEPRECATED __attribute__ ((__deprecated__))
 #else
 #define _FF_ATTRIBUTE_DEPRECATED        /* empty */
+#endif
+#endif
+
+#if !defined _FF_ATTRIBUTE_SENTINEL
+#if defined __GNUC__
+#define _FF_ATTRIBUTE_SENTINEL __attribute__ ((__sentinel__))
+#else
+#define _FF_ATTRIBUTE_SENTINEL  /* empty */
+#endif
+#endif
+
+#if !defined _FF_ATTRIBUTE_WARN_UNUSED_RESULT
+#if defined __GNUC__
+#define _FF_ATTRIBUTE_WARN_UNUSED_RESULT __attribute__ ((__warn_unused_result__))
+#else
+#define _FF_ATTRIBUTE_WARN_UNUSED_RESULT        /* empty */
+#endif
+#endif
+
+#if !defined _FF_ATTRIBUTE_NORETURN
+#if _FF_GNUC_VERSION_AT_LEAST (2, 5)
+#define _FF_ATTRIBUTE_NORETURN __attribute__ ((__noreturn__))
+#else
+#define _FF_ATTRIBUTE_NORETURN  /* empty */
+#endif
+#endif
+
+#if !defined _FF_ATTRIBUTE_NOINLINE
+#if defined __GNUC__
+#define _FF_ATTRIBUTE_NOINLINE __attribute__ ((__noinline__))
+#else
+#define _FF_ATTRIBUTE_NOINLINE  /* empty */
+#endif
+#endif
+
+#if !defined _FF_ATTRIBUTE_ALWAYS_INLINE
+#if defined __GNUC__
+#define _FF_ATTRIBUTE_ALWAYS_INLINE __attribute__ ((__always_inline__))
+#else
+#define _FF_ATTRIBUTE_ALWAYS_INLINE     /* empty */
+#endif
+#endif
+
+#if !defined _FF_ATTRIBUTE_FLATTEN
+#if defined __GNUC__
+#define _FF_ATTRIBUTE_FLATTEN __attribute__ ((__flatten__))
+#else
+#define _FF_ATTRIBUTE_FLATTEN   /* empty */
+#endif
+#endif
+
+#if !defined _FF_ATTRIBUTE_MALLOC
+#if defined __GNUC__
+#define _FF_ATTRIBUTE_MALLOC __attribute__ ((__malloc__))
+#else
+#define _FF_ATTRIBUTE_MALLOC    /* empty */
 #endif
 #endif
 
