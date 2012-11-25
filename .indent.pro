@@ -49,6 +49,8 @@
 -T DBounds
 -T SplineChar
 -T SplineFont
+-T SplineSet
+-T SplinePoint
 -T Spline1
 -T Spline1D
 -T KernPair

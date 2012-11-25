@@ -596,12 +596,12 @@ return( transform[0]==1 && transform[3]==1 && transform[1]==0 && transform[2]==0
 	transform[4]==0 && transform[5]==0 );
 }
 
-static void ECCatagorizePoints( EntityChar *ec ) {
+static void ECCategorizePoints( EntityChar *ec ) {
     Entity *ent;
 
     for ( ent=ec->splines; ent!=NULL; ent=ent->next ) if ( ent->type == et_splines ) {
-	SPLCatagorizePoints( ent->u.splines.splines );
-	SPLCatagorizePoints( ent->clippath );
+	SPLCategorizePoints( ent->u.splines.splines );
+	SPLCategorizePoints( ent->clippath );
     }
 }
 
@@ -2827,7 +2827,7 @@ printf( "-%s-\n", toknames[tok]);
 	SplinePointListsFree(gsaves[gsp].clippath);
     }
     SplinePointListsFree(clippath);
-    ECCatagorizePoints(ec);
+    ECCategorizePoints(ec);
     if ( ec->width == UNDEFINED_WIDTH )
 	ec->width = wrapper->advance_width;
     setlocale(LC_NUMERIC,oldloc);
@@ -4641,7 +4641,7 @@ SplineChar *PSCharStringToSplines(uint8_t *type1, int len, struct pscontext *con
   done:
     if ( pcsp!=0 )
 	LogError( _("end of subroutine reached with no return in %s\n"), name );
-    SCCatagorizePoints(ret);
+    SCCategorizePoints(ret);
 
     ret->hstem = HintsAppend(ret->hstem,activeh); activeh=NULL;
     ret->vstem = HintsAppend(ret->vstem,activev); activev=NULL;

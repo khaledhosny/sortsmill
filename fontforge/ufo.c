@@ -1348,7 +1348,7 @@ return( NULL );
 	}
     }
     xmlFreeDoc(doc);
-    SPLCatagorizePoints(sc->layers[ly_fore].splines);
+    SPLCategorizePoints(sc->layers[ly_fore].splines);
 return( sc );
 }
 

@@ -1808,7 +1808,7 @@ static void PI_FixStuff(GIData *ci) {
 	else
 	    sp->pointtype = pt_curve;
     } else if ( sp->pointtype == pt_tangent )
-	SplinePointCatagorize(sp);	/* Users can change cps so it isn't a tangent, so check */
+	SplinePointCategorize(sp);	/* Users can change cps so it isn't a tangent, so check */
 }
 
 static int PI_Cancel(GGadget *g, GEvent *e) {

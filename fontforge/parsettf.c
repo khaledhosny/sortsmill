@@ -2042,7 +2042,7 @@ return;
 	sc->ttf_instrs = instructions;
     } else
 	free(instructions);
-    SCCatagorizePoints(sc);
+    SCCategorizePoints(sc);
     free(endpt);
     free(flags);
     free(pts);

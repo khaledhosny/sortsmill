@@ -1245,7 +1245,7 @@ return;
     } else {
 	ss->last = current;
     }
-    SPLCatagorizePoints(ss);
+    SPLCategorizePoints(ss);
 }
 
 static void pfed_read_spiro_contour(FILE *ttf,SplineSet *ss,
@@ -1400,7 +1400,7 @@ return;			/* Bad version number */
 	    ss->next = info->guidelines.splines;
 	    info->guidelines.splines = ss;
 	}
-	SPLCatagorizePoints(info->guidelines.splines);
+	SPLCategorizePoints(info->guidelines.splines);
 	free(vs); free(hs);
     }
 }

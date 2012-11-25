@@ -4651,7 +4651,7 @@ static SplineSet *MakeBottomItalicSerif(double stemwidth,double endx,
 	SplinePointListFree(ss);
 	ss = newss;
     } else {
-	SPLCatagorizePoints(ss);
+	SPLCategorizePoints(ss);
     }
     { double temp;
 	if ( (temp = ss->first->me.x-ss->last->me.x)<0 ) temp = -temp;
@@ -4823,7 +4823,7 @@ static SplineSet *MakeItalicDSerif(DStemInfo *d,double stemwidth,
 	SplinePointListFree(ss);
 	ss = newss;
     } else {
-	SPLCatagorizePoints(ss);
+	SPLCategorizePoints(ss);
     }
 return( ss );
 }
