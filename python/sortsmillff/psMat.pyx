@@ -105,8 +105,7 @@ def psMat_invert (a):
   if errval != gsl.GSL_SUCCESS:
     raise psMatGSLError (errval)
 
-  # Test for singularity. (Note: rather than do this test, we could
-  # let the divisions below overflow.)
+  # Test for singularity.
   if s_vec[1] <= s_vec[0] * 100.0 * <double> sys.float_info.epsilon:
     raise psMatGSLError (gsl.GSL_ESING)
 
