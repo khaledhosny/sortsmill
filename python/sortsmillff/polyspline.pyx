@@ -18,6 +18,7 @@
 import cython
 import array
 from cpython cimport array
+cimport polyspline_c as pc
 
 #--------------------------------------------------------------------------
 
@@ -26,7 +27,7 @@ from cpython cimport array
 cdef array.array[double] c_fl_bern_to_sbern (array.array[double] spline):
   cdef int deg = len (spline) - 1
   cdef array.array[double] result = array.copy (spline)
-  bern_to_sbern_double (deg, &result[0], &result[0], 1)
+  pc.fl_bern_to_sbern (deg, &result[0], &result[0], 1)
   return result
 
 @cython.boundscheck(False)
@@ -34,7 +35,7 @@ cdef array.array[double] c_fl_bern_to_sbern (array.array[double] spline):
 cdef array.array[double] c_fl_sbern_to_bern (array.array[double] spline):
   cdef int deg = len (spline) - 1
   cdef array.array[double] result = array.copy (spline)
-  sbern_to_bern_double (deg, &result[0], &result[0], 1)
+  pc.fl_sbern_to_bern (deg, &result[0], &result[0], 1)
   return result
 
 @cython.boundscheck(False)
@@ -42,7 +43,7 @@ cdef array.array[double] c_fl_sbern_to_bern (array.array[double] spline):
 cdef array.array[double] c_fl_sbern_to_mono (array.array[double] spline):
   cdef int deg = len (spline) - 1
   cdef array.array[double] result = array.copy (spline)
-  sbern_to_mono_double (deg, &result[0], &result[0], 1)
+  pc.fl_sbern_to_mono (deg, &result[0], &result[0], 1)
   return result
 
 @cython.boundscheck(False)
@@ -50,7 +51,7 @@ cdef array.array[double] c_fl_sbern_to_mono (array.array[double] spline):
 cdef array.array[double] c_fl_mono_to_sbern (array.array[double] spline):
   cdef int deg = len (spline) - 1
   cdef array.array[double] result = array.copy (spline)
-  mono_to_sbern_double (deg, &result[0], &result[0], 1)
+  pc.fl_mono_to_sbern (deg, &result[0], &result[0], 1)
   return result
 
 @cython.boundscheck(False)
@@ -58,7 +59,7 @@ cdef array.array[double] c_fl_mono_to_sbern (array.array[double] spline):
 cdef array.array[double] c_fl_bern_to_mono (array.array[double] spline):
   cdef int deg = len (spline) - 1
   cdef array.array[double] result = array.copy (spline)
-  bern_to_mono_double (deg, &result[0], &result[0], 1)
+  pc.fl_bern_to_mono (deg, &result[0], &result[0], 1)
   return result
 
 @cython.boundscheck(False)
@@ -66,7 +67,7 @@ cdef array.array[double] c_fl_bern_to_mono (array.array[double] spline):
 cdef array.array[double] c_fl_mono_to_bern (array.array[double] spline):
   cdef int deg = len (spline) - 1
   cdef array.array[double] result = array.copy (spline)
-  mono_to_bern_double (deg, &result[0], &result[0], 1)
+  pc.fl_mono_to_bern (deg, &result[0], &result[0], 1)
   return result
 
 #--------------------------------------------------------------------------
@@ -75,31 +76,31 @@ cdef array.array[double] c_fl_mono_to_bern (array.array[double] spline):
 @cython.wraparound(False)
 cdef double c_fl_eval_sbern (array.array[double] spline, double t):
   cdef int deg = len (spline) - 1
-  return eval_sbern_double (deg, &spline[0], t)
+  return pc.fl_eval_sbern (deg, &spline[0], t)
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
 cdef double c_fl_eval_bern (array.array[double] spline, double t):
   cdef int deg = len (spline) - 1
-  return eval_bern_double (deg, &spline[0], t)
+  return pc.fl_eval_bern (deg, &spline[0], t)
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
 cdef double c_fl_evaldc_sbern (array.array[double] spline, double t):
   cdef int deg = len (spline) - 1
-  return evaldc_sbern_double (deg, &spline[0], t)
+  return pc.fl_evaldc_sbern (deg, &spline[0], t)
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
 cdef double c_fl_evaldc_bern (array.array[double] spline, double t):
   cdef int deg = len (spline) - 1
-  return evaldc_bern_double (deg, &spline[0], t)
+  return pc.fl_evaldc_bern (deg, &spline[0], t)
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
 cdef double c_fl_eval_mono (array.array[double] spline, double t):
   cdef int deg = len (spline) - 1
-  return eval_mono_double (deg, &spline[0], t)
+  return pc.fl_eval_mono (deg, &spline[0], t)
 
 #--------------------------------------------------------------------------
 
@@ -109,7 +110,7 @@ cdef object c_fl_subdiv_sbern (array.array[double] spline, double t):
   cdef int deg = len (spline) - 1
   cdef array.array[double] result1 = array.copy (spline)
   cdef array.array[double] result2 = array.copy (spline)
-  subdiv_sbern_double (deg, &result1[0], t, &result1[0], &result2[0])
+  pc.fl_subdiv_sbern (deg, &result1[0], t, &result1[0], &result2[0])
   return (result1, result2)
 
 @cython.boundscheck(False)
@@ -118,7 +119,7 @@ cdef object c_fl_subdiv_bern (array.array[double] spline, double t):
   cdef int deg = len (spline) - 1
   cdef array.array[double] result1 = array.copy (spline)
   cdef array.array[double] result2 = array.copy (spline)
-  subdiv_bern_double (deg, &result1[0], t, &result1[0], &result2[0])
+  pc.fl_subdiv_bern (deg, &result1[0], t, &result1[0], &result2[0])
   return (result1, result2)
 
 #--------------------------------------------------------------------------

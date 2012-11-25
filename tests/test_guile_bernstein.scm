@@ -28,7 +28,7 @@
 (define spline1 '(5 4 -3 2 1 0 1 -2 3 4 5))
 (define times '(0 0.25 0.5 0.75 1))
 
-(display "eval_sbern_double\n")
+(display "fl_eval_sbern\n")
 (do ((deg 0 (1+ deg))) ((= 11 deg))
   (for-each
    (lambda (t)
@@ -39,7 +39,7 @@
    times)
   (display "\n"))
 
-(display "eval_bern_double\n")
+(display "fl_eval_bern\n")
 (do ((deg 0 (1+ deg))) ((= 11 deg))
   (for-each
    (lambda (t)
@@ -50,7 +50,7 @@
    times)
   (display "\n"))
 
-(display "evaldc_sbern_double\n")
+(display "fl_evaldc_sbern\n")
 (do ((deg 0 (1+ deg))) ((= 11 deg))
   (for-each
    (lambda (t)
@@ -61,7 +61,7 @@
    times)
   (display "\n"))
 
-(display "evaldc_bern_double\n")
+(display "fl_evaldc_bern\n")
 (do ((deg 0 (1+ deg))) ((= 11 deg))
   (for-each
    (lambda (t)
@@ -72,7 +72,7 @@
    times)
   (display "\n"))
 
-(display "subdiv_sbern_double\n");
+(display "fl_subdiv_sbern\n");
 (do ((deg 0 (1+ deg))) ((= 5 deg))
     (for-each
      (lambda (t)
@@ -88,7 +88,7 @@
          (display "\n")))
      times))
     
-(display "subdiv_bern_double\n");
+(display "fl_subdiv_bern\n");
 (do ((deg 0 (1+ deg))) ((= 5 deg))
     (for-each
      (lambda (t)

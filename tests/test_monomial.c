@@ -25,18 +25,18 @@ my_main (int argc, char **argv)
     mono[i] = atof (argv[i + 1]);
 
   double sbern[deg + 1];
-  mono_to_sbern_double (deg, mono, sbern, 1);
+  fl_mono_to_sbern (deg, mono, sbern, 1);
 
   double mono2[deg + 1];
-  sbern_to_mono_double (deg, sbern, mono2, 1);
+  fl_sbern_to_mono (deg, sbern, mono2, 1);
   for (unsigned int i = 0; i <= deg; i++)
     if (10 * DBL_EPSILON < fabs (mono[i] - mono2[i]))
       exit (10);
 
   double bern[deg + 1];
-  mono_to_bern_double (deg, mono, bern, 1);
+  fl_mono_to_bern (deg, mono, bern, 1);
 
-  bern_to_mono_double (deg, bern, mono2, 1);
+  fl_bern_to_mono (deg, bern, mono2, 1);
   for (unsigned int i = 0; i <= deg; i++)
     if (10 * DBL_EPSILON < fabs (mono[i] - mono2[i]))
       exit (20);
@@ -44,9 +44,9 @@ my_main (int argc, char **argv)
   for (unsigned int i = 0; i <= 100; i++)
     {
       double t = i / 100.0;
-      double x1 = eval_mono_double (deg, mono, t);
-      double x2 = evaldc_sbern_double (deg, sbern, t);
-      double x3 = evaldc_bern_double (deg, bern, t);
+      double x1 = fl_eval_mono (deg, mono, t);
+      double x2 = fl_evaldc_sbern (deg, sbern, t);
+      double x3 = fl_evaldc_bern (deg, bern, t);
       if (10 * DBL_EPSILON < fabs (x1 - x2))
         exit (30);
       if (10 * DBL_EPSILON < fabs (x1 - x3))

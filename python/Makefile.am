@@ -68,7 +68,7 @@ PYX_FILES = sortsmillff/psMat.pyx sortsmillff/linalg.pyx	\
 
 PXD_FILES = sortsmillff/gsl.pxd sortsmillff/linalg.pxd	\
 	sortsmillff/brentroot_c.pxd sortsmillff/gmpy.pxd	\
-	sortsmillff/polyspline.pxd
+	sortsmillff/polyspline_c.pxd
 
 PXI_FILES = sortsmillff/gmpy.pxi
 

@@ -56,84 +56,81 @@ const __mpq_struct *mpq_spower_basis_in_sbern (unsigned int degree);
 
 /*-----------------------------------------------------------------------*/
 
-/* FIXME: Rename the following in a way somewhat consistent between
-   the different supported languages. */
-
 /*
  * vis--
- * vis-- @deftypefun void sbern_to_bern_double (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
+ * vis-- @deftypefun void fl_sbern_to_bern (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
  * vis--
  * vis-- Convert a spline from scaled Bernstein to Bernstein basis.
  * vis--
  * vis-- @end deftypefun
  * vis--
  */
-void sbern_to_bern_double (unsigned int deg, const double *sbern,
-                           double *bern, size_t num_splines);
+void fl_sbern_to_bern (unsigned int deg, const double *from, double *to,
+                       size_t num_splines);
 
 /*
  * vis--
- * vis-- @deftypefun void bern_to_sbern_double (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
+ * vis-- @deftypefun void fl_bern_to_sbern (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
  * vis--
  * vis-- Convert a spline from Bernstein to scaled Bernstein basis.
  * vis--
  * vis-- @end deftypefun
  * vis--
  */
-void bern_to_sbern_double (unsigned int deg, const double *bern,
-                           double *sbern, size_t num_splines);
+void fl_bern_to_sbern (unsigned int deg, const double *from, double *to,
+                       size_t num_splines);
 
 /*
  * vis--
- * vis-- @deftypefun void sbern_to_mono_double (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
+ * vis-- @deftypefun void fl_sbern_to_mono (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
  * vis--
  * vis-- Convert a spline from scaled Bernstein to monomial basis.
  * vis--
  * vis-- @end deftypefun
  * vis--
  */
-void sbern_to_mono_double (unsigned int deg, const double *sbern,
-                           double *mono, size_t num_splines);
+void fl_sbern_to_mono (unsigned int deg, const double *from, double *to,
+                       size_t num_splines);
 
 /*
  * vis--
- * vis-- @deftypefun void mono_to_sbern_double (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
+ * vis-- @deftypefun void fl_mono_to_sbern (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
  * vis--
  * vis-- Convert a spline from monomial basis to scaled Bernstein.
  * vis--
  * vis-- @end deftypefun
  * vis--
  */
-void mono_to_sbern_double (unsigned int deg, const double *mono,
-                           double *sbern, size_t num_splines);
+void fl_mono_to_sbern (unsigned int deg, const double *from, double *to,
+                       size_t num_splines);
 
 /*
  * vis--
- * vis-- @deftypefun void bern_to_sbern_double (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
+ * vis-- @deftypefun void fl_bern_to_sbern (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
  * vis--
  * vis-- Convert a spline from Bernstein to monomial basis.
  * vis--
  * vis-- @end deftypefun
  * vis--
  */
-void bern_to_mono_double (unsigned int deg, const double *bern,
-                          double *mono, size_t num_splines);
+void fl_bern_to_mono (unsigned int deg, const double *from, double *to,
+                      size_t num_splines);
 
 /*
  * vis--
- * vis-- @deftypefun void mono_to_bern_double (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
+ * vis-- @deftypefun void fl_mono_to_bern (unsigned int @var{deg}, const double *@var{from}, double *@var{to}, size_t @var{num_splines})
  * vis--
  * vis-- Convert a spline from monomial basis to Bernstein.
  * vis--
  * vis-- @end deftypefun
  * vis--
  */
-void mono_to_bern_double (unsigned int deg, const double *mono,
-                          double *bern, size_t num_splines);
+void fl_mono_to_bern (unsigned int deg, const double *from, double *to,
+                      size_t num_splines);
 
 /*
  * vis--
- * vis-- @deftypefun {double} eval_sbern_double (unsigned int @var{deg}, const double *@var{spline}, double @var{t});
+ * vis-- @deftypefun double fl_eval_sbern (unsigned int @var{deg}, const double *@var{spline}, double @var{t});
  * vis--
  * vis-- Evaluate a spline in scaled Bernstein basis, using the
  * vis-- algorithm of Schumaker and Volk.
@@ -141,12 +138,12 @@ void mono_to_bern_double (unsigned int deg, const double *mono,
  * vis-- @end deftypefun
  * vis--
  */
-_FF_ATTRIBUTE_PURE double
-eval_sbern_double (unsigned int deg, const double *spline, double t);
+_FF_ATTRIBUTE_PURE double fl_eval_sbern (unsigned int deg,
+                                         const double *spline, double t);
 
 /*
  * vis--
- * vis-- @deftypefun {double} eval_bern_double (unsigned int @var{deg}, const double *@var{spline}, double @var{t});
+ * vis-- @deftypefun double fl_eval_bern (unsigned int @var{deg}, const double *@var{spline}, double @var{t});
  * vis--
  * vis-- Evaluate a spline in Bernstein basis, using the
  * vis-- algorithm of Schumaker and Volk.
@@ -154,12 +151,12 @@ eval_sbern_double (unsigned int deg, const double *spline, double t);
  * vis-- @end deftypefun
  * vis--
  */
-_FF_ATTRIBUTE_PURE double
-eval_bern_double (unsigned int deg, const double *spline, double t);
+_FF_ATTRIBUTE_PURE double fl_eval_bern (unsigned int deg,
+                                        const double *spline, double t);
 
 /*
  * vis--
- * vis-- @deftypefun {double} eval_sbern_double (unsigned int @var{deg}, const double *@var{spline}, double @var{t});
+ * vis-- @deftypefun double fl_eval_sbern (unsigned int @var{deg}, const double *@var{spline}, double @var{t});
  * vis--
  * vis-- Evaluate a spline in scaled Bernstein basis, using the
  * vis-- algorithm of De~Casteljau.
@@ -170,12 +167,12 @@ eval_bern_double (unsigned int deg, const double *spline, double t);
  * vis-- @end deftypefun
  * vis--
  */
-_FF_ATTRIBUTE_PURE double
-evaldc_sbern_double (unsigned int deg, const double *spline, double t);
+_FF_ATTRIBUTE_PURE double fl_evaldc_sbern (unsigned int deg,
+                                           const double *spline, double t);
 
 /*
  * vis--
- * vis-- @deftypefun {double} eval_bern_double (unsigned int @var{deg}, const double *@var{spline}, double @var{t});
+ * vis-- @deftypefun double fl_eval_bern (unsigned int @var{deg}, const double *@var{spline}, double @var{t});
  * vis--
  * vis-- Evaluate a spline in Bernstein basis, using the
  * vis-- algorithm of De~Casteljau.
@@ -186,24 +183,24 @@ evaldc_sbern_double (unsigned int deg, const double *spline, double t);
  * vis-- @end deftypefun
  * vis--
  */
-_FF_ATTRIBUTE_PURE double
-evaldc_bern_double (unsigned int deg, const double *spline, double t);
+_FF_ATTRIBUTE_PURE double fl_evaldc_bern (unsigned int deg,
+                                          const double *spline, double t);
 
 /*
  * vis--
- * vis-- @deftypefun {double} eval_mono_double (unsigned int @var{deg}, const double *@var{spline}, double @var{t});
+ * vis-- @deftypefun double fl_eval_mono (unsigned int @var{deg}, const double *@var{spline}, double @var{t});
  * vis--
  * vis-- Evaluate a spline in monomial basis.
  * vis--
  * vis-- @end deftypefun
  * vis--
  */
-_FF_ATTRIBUTE_PURE double
-eval_mono_double (unsigned int deg, const double *spline, double t);
+_FF_ATTRIBUTE_PURE double fl_eval_mono (unsigned int deg,
+                                        const double *spline, double t);
 
 /*
  * vis--
- * vis-- @deftypefun {void} subdiv_sbern_double (unsigned int @var{deg}, const double *@var{spline}, double @var{t}, double *@var{a}, double *@var{b});
+ * vis-- @deftypefun void fl_subdiv_sbern (unsigned int @var{deg}, const double *@var{spline}, double @var{t}, double *@var{a}, double *@var{b});
  * vis--
  * vis-- Subdivide a spline in scaled Bernstein basis, using the
  * vis-- algorithm of De~Casteljau.
@@ -211,12 +208,12 @@ eval_mono_double (unsigned int deg, const double *spline, double t);
  * vis-- @end deftypefun
  * vis--
  */
-void subdiv_sbern_double (unsigned int deg, const double *spline,
-                          double t, double *a, double *b);
+void fl_subdiv_sbern (unsigned int deg, const double *spline, double t,
+                      double *a, double *b);
 
 /*
  * vis--
- * vis-- @deftypefun {void} subdiv_bern_double (unsigned int @var{deg}, const double *@var{spline}, double @var{t}, double *@var{a}, double *@var{b});
+ * vis-- @deftypefun void fl_subdiv_bern (unsigned int @var{deg}, const double *@var{spline}, double @var{t}, double *@var{a}, double *@var{b});
  * vis--
  * vis-- Subdivide a spline in Bernstein basis, using the
  * vis-- algorithm of De~Casteljau.
@@ -224,8 +221,8 @@ void subdiv_sbern_double (unsigned int deg, const double *spline,
  * vis-- @end deftypefun
  * vis--
  */
-void subdiv_bern_double (unsigned int deg, const double *spline,
-                         double t, double *a, double *b);
+void fl_subdiv_bern (unsigned int deg, const double *spline, double t,
+                     double *a, double *b);
 
 /* *INDENT-OFF* */
 #ifdef __cplusplus

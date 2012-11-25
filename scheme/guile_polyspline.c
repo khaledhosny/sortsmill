@@ -42,37 +42,37 @@ change_basis (SCM spline,
 VISIBLE SCM
 scm_f64vector_sbern_to_bern (SCM spline)
 {
-  return change_basis (spline, sbern_to_bern_double);
+  return change_basis (spline, fl_sbern_to_bern);
 }
 
 VISIBLE SCM
 scm_f64vector_bern_to_sbern (SCM spline)
 {
-  return change_basis (spline, bern_to_sbern_double);
+  return change_basis (spline, fl_bern_to_sbern);
 }
 
 VISIBLE SCM
 scm_f64vector_sbern_to_mono (SCM spline)
 {
-  return change_basis (spline, sbern_to_mono_double);
+  return change_basis (spline, fl_sbern_to_mono);
 }
 
 VISIBLE SCM
 scm_f64vector_mono_to_sbern (SCM spline)
 {
-  return change_basis (spline, mono_to_sbern_double);
+  return change_basis (spline, fl_mono_to_sbern);
 }
 
 VISIBLE SCM
 scm_f64vector_bern_to_mono (SCM spline)
 {
-  return change_basis (spline, bern_to_mono_double);
+  return change_basis (spline, fl_bern_to_mono);
 }
 
 VISIBLE SCM
 scm_f64vector_mono_to_bern (SCM spline)
 {
-  return change_basis (spline, mono_to_bern_double);
+  return change_basis (spline, fl_mono_to_bern);
 }
 
 static SCM
@@ -94,31 +94,31 @@ evaluate (SCM spline, SCM t,
 VISIBLE SCM
 scm_f64vector_eval_sbern (SCM spline, SCM t)
 {
-  return evaluate (spline, t, eval_sbern_double);
+  return evaluate (spline, t, fl_eval_sbern);
 }
 
 VISIBLE SCM
 scm_f64vector_eval_bern (SCM spline, SCM t)
 {
-  return evaluate (spline, t, eval_bern_double);
+  return evaluate (spline, t, fl_eval_bern);
 }
 
 VISIBLE SCM
 scm_f64vector_evaldc_sbern (SCM spline, SCM t)
 {
-  return evaluate (spline, t, evaldc_sbern_double);
+  return evaluate (spline, t, fl_evaldc_sbern);
 }
 
 VISIBLE SCM
 scm_f64vector_evaldc_bern (SCM spline, SCM t)
 {
-  return evaluate (spline, t, evaldc_bern_double);
+  return evaluate (spline, t, fl_evaldc_bern);
 }
 
 VISIBLE SCM
 scm_f64vector_eval_mono (SCM spline, SCM t)
 {
-  return evaluate (spline, t, eval_mono_double);
+  return evaluate (spline, t, fl_eval_mono);
 }
 
 VISIBLE SCM
@@ -133,7 +133,7 @@ scm_f64vector_subdiv_sbern (SCM spline, SCM t)
     b[i] = elem[inc * i];
   scm_array_handle_release (&handle);
   double *a = xmalloc (len * sizeof (double));
-  subdiv_sbern_double (len - 1, b, scm_to_double (t), a, b);
+  fl_subdiv_sbern (len - 1, b, scm_to_double (t), a, b);
   SCM new_splines[2];
   new_splines[0] = scm_take_f64vector (a, len);
   new_splines[1] = scm_take_f64vector (b, len);
@@ -152,7 +152,7 @@ scm_f64vector_subdiv_bern (SCM spline, SCM t)
     b[i] = elem[inc * i];
   scm_array_handle_release (&handle);
   double *a = xmalloc (len * sizeof (double));
-  subdiv_bern_double (len - 1, b, scm_to_double (t), a, b);
+  fl_subdiv_bern (len - 1, b, scm_to_double (t), a, b);
   SCM new_splines[2];
   new_splines[0] = scm_take_f64vector (a, len);
   new_splines[1] = scm_take_f64vector (b, len);

@@ -62,35 +62,35 @@
 
 // FIXME: For these, maybe use special matrix multiplication for
 // triangular matrices.
-VISIBLE CHANGE_BASIS (sbern_to_mono_double, fl_mono_basis_in_sbern);
-VISIBLE CHANGE_BASIS (mono_to_sbern_double, fl_sbern_basis_in_mono);
+VISIBLE CHANGE_BASIS (fl_sbern_to_mono, fl_mono_basis_in_sbern);
+VISIBLE CHANGE_BASIS (fl_mono_to_sbern, fl_sbern_basis_in_mono);
 
 // Doing this with a single transformation matrix seems less stable
 // than doing it this way.
 VISIBLE void
-bern_to_mono_double (unsigned int deg, const double *from, double *to,
-                     size_t num_splines)
+fl_bern_to_mono (unsigned int deg, const double *from, double *to,
+                 size_t num_splines)
 {
   double sbern[deg + 1];
-  bern_to_sbern_double (deg, from, sbern, 1);
-  sbern_to_mono_double (deg, sbern, to, 1);
+  fl_bern_to_sbern (deg, from, sbern, 1);
+  fl_sbern_to_mono (deg, sbern, to, 1);
 }
 
 // Doing this with a single transformation matrix seems less stable
 // than doing it this way.
 VISIBLE void
-mono_to_bern_double (unsigned int deg, const double *from, double *to,
-                     size_t num_splines)
+fl_mono_to_bern (unsigned int deg, const double *from, double *to,
+                 size_t num_splines)
 {
   double sbern[deg + 1];
-  mono_to_sbern_double (deg, from, sbern, 1);
-  sbern_to_bern_double (deg, sbern, to, 1);
+  fl_mono_to_sbern (deg, from, sbern, 1);
+  fl_sbern_to_bern (deg, sbern, to, 1);
 }
 
 // The matrix here is diagonal, so use the diagonal directly.
 VISIBLE void
-sbern_to_bern_double (unsigned int deg, const double *from, double *to,
-                      size_t num_splines)
+fl_sbern_to_bern (unsigned int deg, const double *from, double *to,
+                  size_t num_splines)
 {
   const double *bc = fl_binomial_coefficients (deg);
   const unsigned int n = deg + 1;
@@ -100,8 +100,8 @@ sbern_to_bern_double (unsigned int deg, const double *from, double *to,
 
 // The matrix here is diagonal, so use the diagonal directly.
 VISIBLE void
-bern_to_sbern_double (unsigned int deg, const double *from, double *to,
-                      size_t num_splines)
+fl_bern_to_sbern (unsigned int deg, const double *from, double *to,
+                  size_t num_splines)
 {
   const double *bc = fl_binomial_coefficients (deg);
   const unsigned int n = deg + 1;
@@ -115,7 +115,7 @@ bern_to_sbern_double (unsigned int deg, const double *from, double *to,
 //
 
 VISIBLE double
-eval_sbern_double (unsigned int deg, const double *spline, double t)
+fl_eval_sbern (unsigned int deg, const double *spline, double t)
 {
   double v;
 
@@ -165,18 +165,18 @@ eval_sbern_double (unsigned int deg, const double *spline, double t)
 }
 
 VISIBLE double
-eval_bern_double (unsigned int deg, const double *spline, double t)
+fl_eval_bern (unsigned int deg, const double *spline, double t)
 {
   double sbern[deg + 1];
-  bern_to_sbern_double (deg, spline, sbern, 1);
-  return eval_sbern_double (deg, sbern, t);
+  fl_bern_to_sbern (deg, spline, sbern, 1);
+  return fl_eval_sbern (deg, sbern, t);
 }
 
 VISIBLE double
-evaldc_sbern_double (unsigned int deg, const double *spline, double t)
+fl_evaldc_sbern (unsigned int deg, const double *spline, double t)
 {
   double b[deg + 1];
-  sbern_to_bern_double (deg, spline, b, 1);
+  fl_sbern_to_bern (deg, spline, b, 1);
   for (unsigned int i = 0; i < deg; i++)
     for (unsigned int j = 0; j < deg; j++)
       b[j] += t * (b[j + 1] - b[j]);
@@ -184,7 +184,7 @@ evaldc_sbern_double (unsigned int deg, const double *spline, double t)
 }
 
 VISIBLE double
-evaldc_bern_double (unsigned int deg, const double *spline, double t)
+fl_evaldc_bern (unsigned int deg, const double *spline, double t)
 {
   double b[deg + 1];
   memcpy (b, spline, (deg + 1) * sizeof (double));
@@ -195,7 +195,7 @@ evaldc_bern_double (unsigned int deg, const double *spline, double t)
 }
 
 VISIBLE double
-eval_mono_double (unsigned int deg, const double *spline, double t)
+fl_eval_mono (unsigned int deg, const double *spline, double t)
 {
   // Horner’s rule.
   double x = spline[deg];
@@ -210,19 +210,19 @@ eval_mono_double (unsigned int deg, const double *spline, double t)
 //
 
 VISIBLE void
-subdiv_sbern_double (unsigned int deg, const double *spline, double t,
-                     double *a, double *b)
+fl_subdiv_sbern (unsigned int deg, const double *spline, double t,
+                 double *a, double *b)
 {
   double bern[deg + 1];
-  sbern_to_bern_double (deg, spline, bern, 1);
-  subdiv_bern_double (deg, bern, t, a, b);
-  bern_to_sbern_double (deg, a, a, 1);
-  bern_to_sbern_double (deg, b, b, 1);
+  fl_sbern_to_bern (deg, spline, bern, 1);
+  fl_subdiv_bern (deg, bern, t, a, b);
+  fl_bern_to_sbern (deg, a, a, 1);
+  fl_bern_to_sbern (deg, b, b, 1);
 }
 
 VISIBLE void
-subdiv_bern_double (unsigned int deg, const double *spline, double t,
-                    double *a, double *b)
+fl_subdiv_bern (unsigned int deg, const double *spline, double t,
+                double *a, double *b)
 {
   memmove (b, spline, (deg + 1) * sizeof (double));
   for (unsigned int i = 0; i < deg; i++)
