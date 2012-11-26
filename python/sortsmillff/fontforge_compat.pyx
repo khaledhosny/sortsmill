@@ -15,8 +15,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-import array
-
 cimport contour_interface as ci
 from cython cimport view
 from cython.view cimport array as cvarray
@@ -107,6 +105,11 @@ cdef class point (object):
   name = property (__get_name, __set_name)
 
   def __repr__ (self):
+    return ('{}.point(x={:g},y={:g},on_curve={},selected={},name={})'
+            .format (__name__, self.__x, self.__y,
+                     self.__on_curve, self.__selected, self.__name))
+
+  def __str__ (self):
     return ('{}.point({:g},{:g},{})'
             .format (__name__, self.__x, self.__y, self.__on_curve))
 
@@ -204,8 +207,10 @@ cdef class contour (object):
     pass
     # FIXME: Not yet implemented.
 
-#  def __repr__ (self):
-    
+  def __repr__ (self):
+    return (__name__ + '.contour(' + repr (list (self)) +
+            (',closed={},is_quadratic={},name={})'
+             .format (self.__closed, self.__is_quadratic, self.__name)))
 
 #--------------------------------------------------------------------------
 
