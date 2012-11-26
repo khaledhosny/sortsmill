@@ -28,10 +28,34 @@
 include $(top_srcdir)/mk/flags.am
 include $(top_srcdir)/mk/cython.mk
 
+#--------------------------------------------------------------------------
+
+BASELIBADD = $(top_builddir)/lib/libgnu.la
+
+AUXLIBADD = $(BASELIBADD) $(top_builddir)/auxiliary/libsortsmillff_aux.la
+
+FFLIBADD = $(AUXLIBADD)										\
+	$(top_builddir)/fontforge/libsortsmillff_fontforge.la	\
+	$(top_builddir)/gutils/libsortsmillff_gutils.la
+
+if GRAPHICAL_USER_INTERFACE
+FFLIBADD += $(top_builddir)/gdraw/libsortsmillff_gdraw.la	\
+	$(XINPUT_LIBS) $(XKB_LIBS)
+endif GRAPHICAL_USER_INTERFACE
+
+EXELIBADD = $(FFLIBADD)										\
+	$(top_builddir)/fontforge/libsortsmillff_fontforgeexe.la
+
+#--------------------------------------------------------------------------
+
 nodist_pkgpythondata_PYTHON = site_init.py
 
-# Compatibility module.
+# Compatibility module. (FIXME: Make this optional.)
 nodist_python_PYTHON = psMat.py
+
+# Compatibility module. (FIXME: Does not exist yet.
+# FIXME: Make it optional.)
+#nodist_python_PYTHON += fontforge.py
 
 nobase_dist_python_PYTHON = ffContrib/__init__.py	\
 	ffContrib/excepthook.py
@@ -43,32 +67,36 @@ nobase_pyexec_LTLIBRARIES =
 nobase_pyexec_LTLIBRARIES += sortsmillff/psMat.la
 sortsmillff_psMat_la_SOURCES = sortsmillff/psMat.c
 sortsmillff_psMat_la_LDFLAGS = $(GSL_CFLAGS) $(GSL_LIBS) $(AM_LDFLAGS)
-sortsmillff_psMat_la_LIBADD = $(top_builddir)/lib/libgnu.la
+sortsmillff_psMat_la_LIBADD = $(BASELIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmillff/linalg.la
 sortsmillff_linalg_la_SOURCES = sortsmillff/linalg.c
-sortsmillff_linalg_la_LIBADD =						\
-	$(top_builddir)/auxiliary/libsortsmillff_aux.la	\
-	$(top_builddir)/lib/libgnu.la
+sortsmillff_linalg_la_LIBADD = $(AUXLIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmillff/polyspline.la
 sortsmillff_polyspline_la_SOURCES = sortsmillff/polyspline.c
-sortsmillff_polyspline_la_LIBADD =					\
-	$(top_builddir)/auxiliary/libsortsmillff_aux.la	\
-	$(top_builddir)/lib/libgnu.la
+sortsmillff_polyspline_la_LIBADD = $(AUXLIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmillff/brentroot.la
 sortsmillff_brentroot_la_SOURCES = sortsmillff/brentroot.c
-sortsmillff_brentroot_la_LIBADD =					\
-	$(top_builddir)/auxiliary/libsortsmillff_aux.la	\
-	$(top_builddir)/lib/libgnu.la
+sortsmillff_brentroot_la_LIBADD = $(AUXLIBADD)
+
+nobase_pyexec_LTLIBRARIES += sortsmillff/fontforge_compat.la
+sortsmillff_fontforge_compat_la_SOURCES = sortsmillff/fontforge_compat.c
+sortsmillff_fontforge_compat_la_CFLAGS = $(AM_CFLAGS)			\
+	'-I$(top_builddir)/fontforge' '-I$(top_srcdir)/fontforge'
+sortsmillff_fontforge_compat_la_LDFLAGS = $(AM_LDFLAGS) $(MY_CFLAGS)	\
+	$(MY_LIBS)
+sortsmillff_fontforge_compat_la_LIBADD = $(FFLIBADD)
 
 PYX_FILES = sortsmillff/psMat.pyx sortsmillff/linalg.pyx	\
-	sortsmillff/polyspline.pyx sortsmillff/brentroot.pyx
+	sortsmillff/polyspline.pyx sortsmillff/brentroot.pyx	\
+	sortsmillff/fontforge_compat.pyx
 
-PXD_FILES = sortsmillff/gsl.pxd sortsmillff/linalg.pxd	\
-	sortsmillff/brentroot_c.pxd sortsmillff/gmpy.pxd	\
-	sortsmillff/polyspline_c.pxd
+PXD_FILES = sortsmillff/gsl.pxd sortsmillff/linalg.pxd				\
+	sortsmillff/brentroot_c.pxd sortsmillff/gmpy.pxd				\
+	sortsmillff/polyspline_c.pxd sortsmillff/contour_interface.pxd	\
+	sortsmillff/splinefont.pxd
 
 PXI_FILES = sortsmillff/gmpy.pxi
 
@@ -92,7 +120,8 @@ sortsmillff/%.so: sortsmillff/%.la
 
 # These shared object files are needed by the test suite.
 all-local: sortsmillff/psMat.so sortsmillff/linalg.so	\
-	sortsmillff/polyspline.so sortsmillff/brentroot.so
+	sortsmillff/polyspline.so sortsmillff/brentroot.so	\
+	sortsmillff/fontforge_compat.so
 
 check-local: all-local
 
