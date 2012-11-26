@@ -18,9 +18,8 @@
 import array
 
 cimport contour_interface as ci
-from cpython cimport array
-#from cython cimport view
-#from cython.view cimport array as cvarray
+from cython cimport view
+from cython.view cimport array as cvarray
 from libcpp cimport bool
 
 cdef extern from "stdbool.h": pass
@@ -120,6 +119,7 @@ cdef class point (object):
 
 cdef class contour (object):
 
+  cdef size_t __n
   cdef object __x
   cdef object __y
   cdef object __on_curve
@@ -129,20 +129,24 @@ cdef class contour (object):
   cdef object __name
 
   def __init__ (self, points = None, closed = False, is_quadratic = False, name = None):
-    if points is not None:
-      x_vals = [p.x for p in points]
-      y_vals = [p.y for p in points]
-      on_curve_vals = [p.on_curve for p in points]
-      selected_vals = [p.selected for p in points]
-    else:
-      x_vals = []
-      y_vals = []
-      on_curve_vals = []
-      selected_vals = []
-    self.__x = array.array ('d', x_vals)
-    self.__y = array.array ('d', y_vals)
-    self.__on_curve = array.array ('i', on_curve_vals)
-    self.__selected = array.array ('i', selected_vals)
+
+    cdef size_t n = len (points) if points is not None else 0
+
+    self.__n = n
+
+    self.__x = cvarray (shape = (n,), itemsize = sizeof (double), format="d")
+    self.__y = cvarray (shape = (n,), itemsize = sizeof (double), format="d")
+    self.__on_curve = cvarray (shape = (n,), itemsize = sizeof (int), format="i")
+    self.__selected = cvarray (shape = (n,), itemsize = sizeof (int), format="i")
+
+    cdef size_t i
+    for i from 0 <= i < n:
+      p = points[i]
+      self.__x[i] = p.x
+      self.__y[i] = p.y
+      self.__on_curve[i] = p.on_curve
+      self.__selected[i] = p.selected
+
     self.__closed = closed
     self.__is_quadratic = is_quadratic
     self.name = name
@@ -177,33 +181,27 @@ cdef class contour (object):
   name = property (__get_name, __set_name)
 
   def __len__ (self):
-    return len (self.__x)
+    return self.__n
 
   def __getitem__ (self, key):
-    cdef int i
-    cdef array.array[double] x_vals = self.__x
-    cdef array.array[double] y_vals = self.__y
-    cdef array.array[int] on_curve_vals = self.__on_curve
-    cdef array.array[int] selected_vals = self.__selected
-    x = x_vals[key]
-    y = y_vals[key]
-    on_curve = on_curve_vals[key]
-    selected = selected_vals[key]
-    if type (x) == type (self.__x):
+    cdef size_t i
+    x = self.__x[key]
+    y = self.__y[key]
+    on_curve = self.__on_curve[key]
+    selected = self.__selected[key]
+    if isinstance (x, float):
+      result = point (x = x, y = y, on_curve = on_curve,
+                      selected = selected)
+    else:
       result = contour ([point (x = x[i], y = y[i],
                                 on_curve = on_curve[i],
                                 selected = selected[i])
-                         for i from 0 <= i < len (x)])
-    else:
-      result = point (x = x, y = y, on_curve = on_curve,
-                      selected = selected)
+                         for i from 0 <= i < self.__n],
+                        is_quadratic = self.__is_quadratic)
     return result
 
   def __setitem__ (self, key, points):
-    cdef array.array[double] x_vals = self.__x
-    cdef array.array[double] y_vals = self.__y
-    cdef array.array[int] on_curve_vals = self.__on_curve
-    cdef array.array[int] selected_vals = self.__selected
+    pass
     # FIXME: Not yet implemented.
 
 #  def __repr__ (self):
