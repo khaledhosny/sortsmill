@@ -107,7 +107,9 @@ cdef class point (object):
   def __repr__ (self):
     return ('{}.point(x={:g},y={:g},on_curve={},selected={},name={})'
             .format (__name__, self.__x, self.__y,
-                     self.__on_curve, self.__selected, self.__name))
+                     repr (self.__on_curve),
+                     repr (self.__selected),
+                     repr (self.__name)))
 
   def __str__ (self):
     return ('{}.point({:g},{:g},{})'
@@ -119,37 +121,21 @@ cdef class point (object):
     return p
 
 #--------------------------------------------------------------------------
+#
+# FIXME: Some operations on contours in regular FontForge are either
+# broken outright or have unusual semantics. Our current attitude is
+# that these are all bugs, and programs depending on the behaviors
+# therefore are broken. Our ‘contour’ class is a subclass of list and
+# inherits the semantics of lists.
 
-cdef class contour (object):
+cdef class contour (list):
 
-  cdef size_t __n
-  cdef object __x
-  cdef object __y
-  cdef object __on_curve
-  cdef object __selected
   cdef bool __closed
   cdef bool __is_quadratic
   cdef object __name
 
-  def __init__ (self, points = None, closed = False, is_quadratic = False, name = None):
-
-    cdef size_t n = len (points) if points is not None else 0
-
-    self.__n = n
-
-    self.__x = cvarray (shape = (n,), itemsize = sizeof (double), format="d")
-    self.__y = cvarray (shape = (n,), itemsize = sizeof (double), format="d")
-    self.__on_curve = cvarray (shape = (n,), itemsize = sizeof (int), format="i")
-    self.__selected = cvarray (shape = (n,), itemsize = sizeof (int), format="i")
-
-    cdef size_t i
-    for i from 0 <= i < n:
-      p = points[i]
-      self.__x[i] = p.x
-      self.__y[i] = p.y
-      self.__on_curve[i] = p.on_curve
-      self.__selected[i] = p.selected
-
+  def __init__ (self, points = [], closed = False, is_quadratic = False, name = None):
+    super (contour, self).__init__ (points)
     self.__closed = closed
     self.__is_quadratic = is_quadratic
     self.name = name
@@ -183,34 +169,28 @@ cdef class contour (object):
   is_quadratic = property (__get_is_quadratic, __set_is_quadratic)
   name = property (__get_name, __set_name)
 
-  def __len__ (self):
-    return self.__n
-
-  def __getitem__ (self, key):
-    cdef size_t i
-    x = self.__x[key]
-    y = self.__y[key]
-    on_curve = self.__on_curve[key]
-    selected = self.__selected[key]
-    if isinstance (x, float):
-      result = point (x = x, y = y, on_curve = on_curve,
-                      selected = selected)
-    else:
-      result = contour ([point (x = x[i], y = y[i],
-                                on_curve = on_curve[i],
-                                selected = selected[i])
-                         for i from 0 <= i < self.__n],
-                        is_quadratic = self.__is_quadratic)
-    return result
-
-  def __setitem__ (self, key, points):
-    pass
-    # FIXME: Not yet implemented.
-
   def __repr__ (self):
     return (__name__ + '.contour(' + repr (list (self)) +
             (',closed={},is_quadratic={},name={})'
-             .format (self.__closed, self.__is_quadratic, self.__name)))
+             .format (repr (self.__closed),
+                      repr (self.__is_quadratic),
+                      repr (self.__name))))
+
+  def __str__ (self):
+    cdef size_t i
+    s = '<Contour(' + ('quadratic' if self.__is_quadratic else 'cubic') + ')\n'
+    for i from 0 <= i < self.__n:
+      s += '  ({:g},{:g}) {}\n'.format (self.__x[i], self.__y[i],
+                                       'on' if self.__on_curve[i] else 'off')
+    s += '>'
+    return s
+
+  def dup (self):
+    return contour ([p.dup () for p in self], closed = self.__closed,
+                    is_quadratic = self.__is_quadratic, name = self.__name)
+
+  def isEmpty (self):
+    return (len (self) == 0)
 
 #--------------------------------------------------------------------------
 
