@@ -41,7 +41,8 @@ nobase_include_HEADERS = sortsmillff/attributes.h			\
 	sortsmillff/xuninorm.h sortsmillff/xunistr.h			\
 	sortsmillff/xunistring.h sortsmillff/ps_number.h		\
 	sortsmillff/brentroot.h sortsmillff/qbrentroot.h		\
-	sortsmillff/rexp.h sortsmillff/polyspline.h
+	sortsmillff/rexp.h sortsmillff/polyspline.h				\
+	sortsmillff/usermenu.h
 
 nobase_include_HEADERS += sortsmillff/guile/polyspline.h	\
 	sortsmillff/guile/brentroot.h sortsmillff/guile/iconv.h	\
