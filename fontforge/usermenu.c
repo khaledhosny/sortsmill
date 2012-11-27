@@ -230,7 +230,7 @@ InsertSubMenus(menu_info_func func,
     }
 }
 
-void
+VISIBLE void
 RegisterMenuItem(menu_info_func func,
                  menu_info_check check,
                  menu_info_data data,
