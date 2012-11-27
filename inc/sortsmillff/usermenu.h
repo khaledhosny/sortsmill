@@ -38,7 +38,7 @@ typedef void *menu_info_data;
 
 void RegisterMenuItem (menu_info_func func, menu_info_check check,
                        menu_info_data data, int flags,
-                       char *shortcut_str, char **submenu_names);
+                       const char *shortcut_str, const char **submenu_names);
 
 #if 0
 {

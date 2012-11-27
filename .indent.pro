@@ -44,7 +44,9 @@
 -T GEvent
 -T GGadget
 -T GImage
+-T GMenuItem2
 -T GResStruct
+-T GWindow
 -T MMSet
 -T DBounds
 -T SplineChar

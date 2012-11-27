@@ -27,9 +27,9 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "fontforgeui.h"
-#include "usermenu.h"
-#include "ustring.h"
+#include <fontforgeui.h>
+#include <usermenu.h>
+#include <ustring.h>
 
 typedef struct menu_info
 {
@@ -49,8 +49,8 @@ GMenuItem2 *cv_menu;
 GMenuItem2 *fv_menu;
 
 static void
-tl2listcheck (struct gmenuitem *mi,
-              void *owner, struct menu_info *menu_data, int menu_cnt)
+tl2listcheck (struct gmenuitem *mi, void *owner, struct menu_info *menu_data,
+              int menu_cnt)
 {
   int result;
 
@@ -63,7 +63,7 @@ tl2listcheck (struct gmenuitem *mi,
         continue;
       if (mi->mid < 0 || mi->mid >= menu_cnt)
         {
-          fprintf (stderr, "Bad Menu ID in python menu %d\n", mi->mid);
+          fprintf (stderr, _("Bad Menu ID in python menu %d\n"), mi->mid);
           mi->ti.disabled = true;
           continue;
         }
@@ -108,14 +108,14 @@ fv_tl2listcheck (GWindow gw, struct gmenuitem *mi, GEvent *e)
 }
 
 static void
-menuactivate (struct gmenuitem *mi,
-              void *owner, MenuInfo * menu_data, int menu_cnt)
+menuactivate (struct gmenuitem *mi, void *owner, MenuInfo * menu_data,
+              int menu_cnt)
 {
   if (mi->mid == -1)            /* Submenu */
     return;
   if (mi->mid < 0 || mi->mid >= menu_cnt)
     {
-      fprintf (stderr, "Bad Menu ID in python menu %d\n", mi->mid);
+      fprintf (stderr, _("Bad Menu ID in python menu %d\n"), mi->mid);
       return;
     }
   if (menu_data[mi->mid].func == NULL)
@@ -188,11 +188,9 @@ MenuDataAdd (menu_info_func func, menu_info_check check, menu_info_data data,
 }
 
 static void
-InsertSubMenus (menu_info_func func,
-                menu_info_check check,
-                menu_info_data data,
-                char *shortcut_str,
-                char **submenu_names, GMenuItem2 ** mn, int is_cv)
+InsertSubMenus (menu_info_func func, menu_info_check check,
+                menu_info_data data, const char *shortcut_str,
+                const char **submenu_names, GMenuItem2 **mn, int is_cv)
 {
   int i;
   int j;
@@ -247,7 +245,8 @@ InsertSubMenus (menu_info_func func,
               mmn[j].shortcut = xstrdup_or_null (shortcut_str);
               mmn[j].invoke = is_cv ? cv_menuactivate : fv_menuactivate;
               mmn[j].mid = MenuDataAdd (func, check, data, is_cv);
-              fprintf (stderr, "Redefining menu item %s\n", submenu_names[i]);
+              fprintf (stderr, _("Redefining menu item %s\n"),
+                       submenu_names[i]);
               free (submenuu);
             }
         }
@@ -255,10 +254,9 @@ InsertSubMenus (menu_info_func func,
 }
 
 VISIBLE void
-RegisterMenuItem (menu_info_func func,
-                  menu_info_check check,
-                  menu_info_data data,
-                  int flags, char *shortcut_str, char **submenu_names)
+RegisterMenuItem (menu_info_func func, menu_info_check check,
+                  menu_info_data data, int flags, const char *shortcut_str,
+                  const char **submenu_names)
 {
   if (!no_windowing_ui)
     {
