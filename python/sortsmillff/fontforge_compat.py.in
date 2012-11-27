@@ -1,4 +1,4 @@
-# -*- coding: utf-8; python-indent: 2; -*-
+# -*- mode: python; coding: utf-8; python-indent: 2; -*-
 
 # Copyright (C) 2012 Barry Schwartz
 # 
@@ -15,13 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-cimport contour_interface as ci
-from cpython cimport ref
-from cython cimport view
-from cython.view cimport array as cvarray
-from libcpp cimport bool
-
-cdef extern from "stdbool.h": pass
+import sys
 
 #--------------------------------------------------------------------------
 
@@ -49,46 +43,39 @@ def version ():
 
 #--------------------------------------------------------------------------
 
-cdef class point (object):
+class point (object):
 
-  cdef double __x
-  cdef double __y
-  cdef bool __on_curve
-  cdef bool __selected
-  cdef object __name
-
-  def __init__ (self, double x = 0, double y = 0,
-                bool on_curve = True, bool selected = False,
-                name = None):
-    self.__x = x
-    self.__y = y
-    self.__on_curve = on_curve
-    self.__selected = selected
-    self.name = name            # An extension from regular FontForge.
+  def __init__ (self, x = 0, y = 0,
+                on_curve = True, selected = False, name = None):
+    self.x = x
+    self.y = y
+    self.on_curve = on_curve
+    self.selected = selected
+    self.name = name            # An extension over regular FontForge.
 
   def __get_x (self):
     return self.__x
 
-  def __set_x (self, double x):
-    self.__x = x
+  def __set_x (self, x):
+    self.__x = float (x)
 
   def __get_y (self):
     return self.__y
 
-  def __set_y (self, double y):
-    self.__y = y
+  def __set_y (self, y):
+    self.__y = float (y)
 
   def __get_on_curve (self):
     return self.__on_curve
 
-  def __set_on_curve (self, bool on_curve):
-    self.__on_curve = on_curve
+  def __set_on_curve (self, on_curve):
+    self.__on_curve = bool (on_curve)
 
   def __get_selected (self):
     return self.__selected
 
-  def __set_selected (self, bool selected):
-    self.__selected = selected
+  def __set_selected (self, selected):
+    self.__selected = bool (selected)
 
   def __get_name (self):
     return self.__name
@@ -105,16 +92,11 @@ cdef class point (object):
   selected = property (__get_selected, __set_selected)
   name = property (__get_name, __set_name)
 
-  def __richcmp__ (self, other, op):
-    if not isinstance (self, point) or not isinstance (other, point):
-      result = False
-    elif op == 2:               # ==
-      result = (self.x == other.x and self.y == other.y)
-    elif op == 3:               # !=
-      result = (self.x != other.x or self.y != other.y)
-    else:
-      result = False
-    return result
+  def __eq__ (self, other):
+    return (self.x == other.x and self.y == other.y)
+
+  def __ne__ (self, other):
+    return (self.x != other.x or self.y != other.y)
 
   def __repr__ (self):
     return ('{}.point(x={},y={},on_curve={},selected={},name={})'
@@ -128,9 +110,10 @@ cdef class point (object):
             .format (__name__, self.__x, self.__y, self.__on_curve))
 
   def dup (self):
-    p = point (self.__x, self.__y, self.__on_curve)
-    p.__selected = self.__selected
-    return p
+    return point (self.__x, self.__y,
+                  on_curve = self.__on_curve,
+                  selected = self.__selected,
+                  name = self.__name)
 
 #--------------------------------------------------------------------------
 #
@@ -142,30 +125,33 @@ cdef class point (object):
 #
 # Our ‘contour’ class simply borrows the semantics of lists.
 
-cdef class contour (object):
-
-  cdef object __points
-  cdef bool __closed
-  cdef bool __is_quadratic
-  cdef object __name
+class contour (object):
 
   def __init__ (self, points = [], closed = False, is_quadratic = False, name = None):
-
+    if isinstance (points, bool) or isinstance (points, int):
+      # A special workaround for compatibility with a (mis)feature
+      # (perhaps never documented) of regular FontForge: ‘contour’
+      # just a single optional argument, indicating whether the
+      # contour is quadratic. Please use the ‘is_quadratic’ keyword
+      # instead.
+      is_quadratic = bool (points)
+      points = []
     self.__points = list (points)
-    self.__closed = closed
-    self.__is_quadratic = is_quadratic
-    self.name = name
+    self.__closed = bool (closed)
+    self.__is_quadratic = bool (is_quadratic)
+    self.__name = str (name) if name is not None else None
 
   def __get_closed (self):
     return self.__closed
 
-  def __set_closed (self, bool closed):
-    self.__closed = closed
+  def __set_closed (self, closed):
+    self.__closed = bool (closed)
 
   def __get_is_quadratic (self):
     return self.__is_quadratic
 
-  def __set_is_quadratic (self, bool is_quadratic):
+  def __set_is_quadratic (self, is_quadratic):
+    is_quadratic = bool (is_quadratic)
     if ((self.__is_quadratic and not is_quadratic)
         or (not self.__is_quadratic and is_quadratic)):
       # FIXME: Here goes code to change the degree.
@@ -176,10 +162,7 @@ cdef class contour (object):
     return self.__name
 
   def __set_name (self, name):
-    if name == None:
-      self.__name = None
-    else:
-      self.__name = str (name)
+    self.__name = str (name) if name is not None else None
 
   closed = property (__get_closed, __set_closed)
   is_quadratic = property (__get_is_quadratic, __set_is_quadratic)
@@ -193,11 +176,10 @@ cdef class contour (object):
                       repr (self.__name))))
 
   def __str__ (self):
-    cdef size_t i
     s = '<Contour(' + ('quadratic' if self.__is_quadratic else 'cubic') + ')\n'
-    for i from 0 <= i < self.__n:
-      s += '  ({:g},{:g}) {}\n'.format (self.__x[i], self.__y[i],
-                                       'on' if self.__on_curve[i] else 'off')
+    for p in self.__points:
+      s += '  ({:g},{:g}) {}\n'.format (p.x, p.y,
+                                        'on' if p.on_curve else 'off')
     s += '>'
     return s
 
@@ -230,10 +212,10 @@ cdef class contour (object):
     return self.__points.__iter__ ()
 
   def __add__ (self, other):
-    if isinstance (self, contour):
-      result = self.dup ()
+    result = self.dup ()
+    try:
       result.__iadd__ (other)
-    else:
+    except TypeError:
       result = NotImplemented
     return result
 
@@ -243,7 +225,8 @@ cdef class contour (object):
     elif all ((isinstance (p, point) for p in other)):
       # An extension over regular FontForge: accept general
       # iterables of points.
-      if isinstance (other, contour) and self.is_quadratic != other.is_quadratic:
+      if (isinstance (other, contour) and
+          self.is_quadratic != other.is_quadratic):
         raise ValueError ('mixed contour degrees')
       self.__points += list (other)
     else:
@@ -258,35 +241,164 @@ cdef class contour (object):
   def isEmpty (self):
     return (len (self.__points) == 0)
 
-  def moveTo (self, x, y, bool selected = False, name = None):
+  def moveTo (self, x, y, selected = False, name = None):
     if len (self.__points) != 0:
       raise ValueError ('contour not empty')
-    self += point (x, y, on_curve = True, selected = selected, name = name)
-    ref.Py_INCREF (self)
+    self.__points.append (point (x, y, on_curve = True,
+                                 selected = selected, name = name))
     return self
 
-  def lineTo (self, double x, double y, pos = None,
-              bool selected = False, name = None):
-    cdef size_t i = self.__find_on_curve_point (pos)
+  def lineTo (self, x, y, pos = None, selected = False, name = None):
+    i = self.findOnCurvePointBefore (pos)
     self.__points = (self.__points[:i + 1] +
                      [point (x, y, selected = selected, name = name)] +
                      self.__points[i + 1:])
-    ref.Py_INCREF (self)
     return self
 
-  def __find_on_curve_point (self, pos, bool check_empty = True):
-    if check_empty and len (self.__points) == 0:
+  def cubicTo (self, cp1x, cp1y, cp2x, cp2y, x, y,
+               pos = None, selected = False, name = None):
+    if self.__is_quadratic:
+      raise ValueError ('expected a cubic contour, but got a quadratic')
+    i = self.findOnCurvePointBefore (pos)
+    self.__points = (self.__points[:i + 1] +
+                     [point (cp1x, cp1y, on_curve = False),
+                      point (cp2x, cp2y, on_curve = False),
+                      point (x, y, selected = selected, name = name)] +
+                     self.__points[i + 1:])
+    return self
+
+  def quadraticTo (self, cpx, cpy, x, y,
+                   pos = None, selected = False, name = None):
+    if not self.__is_quadratic:
+      raise ValueError ('expected a quadratic contour, but got a cubic')
+    i = self.findOnCurvePointBefore (pos)
+    self.__points = (self.__points[:i + 1] +
+                     [point (cpx, cpy, on_curve = False),
+                      point (x, y, selected = selected, name = name)] +
+                     self.__points[i + 1:])
+    return self
+
+  def insertPoint (*args):
+    # FIXME: Document that this method is unsupported. It is bizarre
+    # and scary. You can insert points by using slice assignment with
+    # a zero-width slice, or by the ‘insert’ method.
+    raise AttributeError ('the insertPoint method is not supported in @PACKAGE_NAME@')
+
+  def makeFirst (self, pos):
+    i = self.findOnCurvePointBefore (pos)
+    self.__points = self.__points[i:] + self.__points[:i]
+    return self
+
+  # An extension over regular FontForge.
+  def findOnCurvePointBefore (self, pos):
+    if len (self.__points) == 0:
       raise ValueError ('contour empty')
     if pos is None:
       pos = len (self.__points) - 1
     if pos < 0 or len (self.__points) <= pos:
       raise IndexError ('expected 0 <= index < ' + str (len (self.__points)))
-    cdef size_t i = pos
+    i = pos
     while 0 < i and not self.__points[i].on_curve:
       i -= 1
     if not self.__points[i].on_curve:
       raise ValueError ('no on-curve points before position ' + str (pos))
     return i
+
+  def reverseDirection (self):
+    self.reverse ()
+    return self
+
+  #-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+  #
+  # Not yet implemented.
+
+  def isClockwise (*args):
+    raise AttributeError ('isClockwise is not yet implemented in @PACKAGE_STRING@')
+
+  def similar (*args):
+    raise AttributeError ('similar is not yet implemented in @PACKAGE_STRING@')
+
+  def xBoundsAtY (*args):
+    raise AttributeError ('xBoundsAtY is not yet implemented in @PACKAGE_STRING@')
+
+  def yBoundsAtX (*args):
+    raise AttributeError ('yBoundsAtX is not yet implemented in @PACKAGE_STRING@')
+
+  def addExtrema (*args):
+    raise AttributeError ('addExtrema is not yet implemented in @PACKAGE_STRING@')
+
+  def cluster (*args):
+    raise AttributeError ('cluster is not yet implemented in @PACKAGE_STRING@')
+
+  def merge (*args):
+    raise AttributeError ('merge is not yet implemented in @PACKAGE_STRING@')
+
+  def round (*args):
+    raise AttributeError ('round is not yet implemented in @PACKAGE_STRING@')
+
+  def selfIntersects (*args):
+    raise AttributeError ('selfIntersects is not yet implemented in @PACKAGE_STRING@')
+
+  def simplify (*args):
+    raise AttributeError ('simplify is not yet implemented in @PACKAGE_STRING@')
+
+  def transform (*args):
+    raise AttributeError ('transform is not yet implemented in @PACKAGE_STRING@')
+
+  def boundingBox (*args):
+    raise AttributeError ('boundingBox is not yet implemented in @PACKAGE_STRING@')
+
+  def getSplineAfterPoint (*args):
+    raise AttributeError ('getSplineAfterPoint is not yet implemented in @PACKAGE_STRING@')
+
+  def draw (*args):
+    raise AttributeError ('draw is not yet implemented in @PACKAGE_STRING@')
+
+  def __reduce__ (*args):
+    raise AttributeError ('__reduce__ is not yet implemented in @PACKAGE_STRING@')
+
+  #-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+  #
+  # List-like extensions over regular FontForge.
+
+  def append (self, p):
+    if not isinstance (p, point):
+      raise TypeError ('expected a point')
+    self.__points__.append (p)
+
+  def extend (self, points):
+    if all ((isinstance (p, point) for p in other)):
+      raise TypeError ('expected points')
+    self.__points__.extend (points)
+
+  def count (self, p):
+    if not isinstance (p, point):
+      raise TypeError ('expected a point')
+    return self.__points__.count (p)
+
+  def index (self, p, i = None, j = None):
+    if not isinstance (p, point):
+      raise TypeError ('expected a point')
+    return self.__points__.index (p, i, j)
+
+  def insert (self, i, p):
+    if not isinstance (p, point):
+      raise TypeError ('expected a point')
+    self.__points__.insert (p)
+
+  def pop (self, i = None):
+    self.__points__.pop (i)
+
+  def remove (self, p):
+    if not isinstance (p, point):
+      raise TypeError ('expected a point')
+    self.__points__.remove (p)
+
+  def reverse (self):
+    self.__points.reverse ()
+
+  def sort (self, cmp = None, key = None, reverse = None):
+    self.__points.sort (cmp, key, reverse)
 
 #--------------------------------------------------------------------------
 

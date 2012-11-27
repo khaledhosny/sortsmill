@@ -60,7 +60,8 @@ nodist_python_PYTHON = psMat.py
 nobase_dist_python_PYTHON = ffContrib/__init__.py	\
 	ffContrib/excepthook.py
 
-nobase_nodist_python_PYTHON = sortsmillff/__init__.py
+nobase_nodist_python_PYTHON = sortsmillff/__init__.py	\
+	sortsmillff/fontforge_compat.py
 
 nobase_pyexec_LTLIBRARIES =
 
@@ -81,17 +82,8 @@ nobase_pyexec_LTLIBRARIES += sortsmillff/brentroot.la
 sortsmillff_brentroot_la_SOURCES = sortsmillff/brentroot.c
 sortsmillff_brentroot_la_LIBADD = $(AUXLIBADD)
 
-nobase_pyexec_LTLIBRARIES += sortsmillff/fontforge_compat.la
-sortsmillff_fontforge_compat_la_SOURCES = sortsmillff/fontforge_compat.c
-sortsmillff_fontforge_compat_la_CFLAGS = $(AM_CFLAGS)			\
-	'-I$(top_builddir)/fontforge' '-I$(top_srcdir)/fontforge'
-sortsmillff_fontforge_compat_la_LDFLAGS = $(AM_LDFLAGS) $(MY_CFLAGS)	\
-	$(MY_LIBS)
-sortsmillff_fontforge_compat_la_LIBADD = $(FFLIBADD)
-
 PYX_FILES = sortsmillff/psMat.pyx sortsmillff/linalg.pyx	\
-	sortsmillff/polyspline.pyx sortsmillff/brentroot.pyx	\
-	sortsmillff/fontforge_compat.pyx
+	sortsmillff/polyspline.pyx sortsmillff/brentroot.pyx
 
 PXD_FILES = sortsmillff/gsl.pxd sortsmillff/linalg.pxd				\
 	sortsmillff/brentroot_c.pxd sortsmillff/gmpy.pxd				\
@@ -120,8 +112,7 @@ sortsmillff/%.so: sortsmillff/%.la
 
 # These shared object files are needed by the test suite.
 all-local: sortsmillff/psMat.so sortsmillff/linalg.so	\
-	sortsmillff/polyspline.so sortsmillff/brentroot.so	\
-	sortsmillff/fontforge_compat.so
+	sortsmillff/polyspline.so sortsmillff/brentroot.so
 
 check-local: all-local
 
