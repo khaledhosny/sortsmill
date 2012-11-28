@@ -41,7 +41,7 @@ from libc.math cimport sin, cos, tan
 
 import sys
 
-__version__ = '{}.{}.{}{}'.format (VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH, VERSION_EXTRA_SHORT)
+__version__ = FF_MODULE_VERSION
 
 # i--
 # i-- @strong{FIXME:} This chapter needs an introductory section,

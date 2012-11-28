@@ -106,7 +106,7 @@ from sortsmillff.legacy.fontforge import (
     spiroLeft,
     )
 
-__version__ = '{}.{}.{}{}'.format (VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH, VERSION_EXTRA_SHORT)
+__version__ = FF_MODULE_VERSION
 
 def version ():
   warnings.warn ('version() is deprecated; use __version__ instead.',

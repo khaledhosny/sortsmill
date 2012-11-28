@@ -15,13 +15,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-from sortsmillff import pkg_info
+include 'config.pxi'
 
-#from sortsmillff import linalg
-#from sortsmillff import bernstein
-from sortsmillff import brentroot
+package = PACKAGE
+package_bugreport = PACKAGE_BUGREPORT
+package_name = PACKAGE_NAME
+package_name = PACKAGE_NAME
+package_string = PACKAGE_STRING
+package_tarname = PACKAGE_TARNAME
+package_url = PACKAGE_URL
+package_version = PACKAGE_VERSION
 
-from sortsmillff import ffcompat
-from sortsmillff import psMat
-
-__version__ = '@VERSION_MAJOR@.@VERSION_MINOR@.@VERSION_PATCH@@VERSION_EXTRA_SHORT@'
+version_major = VERSION_MAJOR
+version_minor = VERSION_MINOR
+version_patch = VERSION_PATCH
+version_extra = VERSION_EXTRA
+version_extra_short = VERSION_EXTRA_SHORT

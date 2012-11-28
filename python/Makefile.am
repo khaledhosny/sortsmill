@@ -85,6 +85,10 @@ sortsmillff_psMat_la_SOURCES = sortsmillff/psMat.c
 sortsmillff_psMat_la_LDFLAGS = $(GSL_CFLAGS) $(GSL_LIBS) $(AM_LDFLAGS)
 sortsmillff_psMat_la_LIBADD = $(BASELIBADD)
 
+nobase_pyexec_LTLIBRARIES += sortsmillff/pkg_info.la
+sortsmillff_pkg_info_la_SOURCES = sortsmillff/pkg_info.c
+sortsmillff_pkg_info_la_LIBADD = $(AUXLIBADD)
+
 nobase_pyexec_LTLIBRARIES += sortsmillff/linalg.la
 sortsmillff_linalg_la_SOURCES = sortsmillff/linalg.c
 sortsmillff_linalg_la_LIBADD = $(AUXLIBADD)
@@ -98,8 +102,8 @@ sortsmillff_brentroot_la_SOURCES = sortsmillff/brentroot.c
 sortsmillff_brentroot_la_LIBADD = $(AUXLIBADD)
 
 PYX_FILES = sortsmillff/ffcompat.pyx sortsmillff/psMat.pyx	\
-	sortsmillff/linalg.pyx sortsmillff/polyspline.pyx		\
-	sortsmillff/brentroot.pyx
+	sortsmillff/pkg_info.pyx sortsmillff/linalg.pyx			\
+	sortsmillff/polyspline.pyx sortsmillff/brentroot.pyx
 
 PXD_FILES = sortsmillff/gsl.pxd sortsmillff/linalg.pxd				\
 	sortsmillff/brentroot_c.pxd sortsmillff/gmpy.pxd				\
@@ -117,8 +121,8 @@ $(PYX_FILES:.pyx=.c): $(PXD_FILES) $(PXI_FILES) $(PXI_IN_FILES)
 EXTRA_DIST = $(PYX_FILES) $(PXD_FILES) $(PXI_FILES)
 
 MOSTLYCLEANFILES = sortsmillff/ffcompat.c sortsmillff/psMat.c	\
-	sortsmillff/linalg.c sortsmillff/polyspline.c				\
-	sortsmillff/brentroot.c
+	sortsmillff/pkg_info.c sortsmillff/linalg.c					\
+	sortsmillff/polyspline.c sortsmillff/brentroot.c
 
 AM_LDFLAGS = -prefer-pic -module -shared -avoid-version
 AM_CFLAGS += $(CYTHON_EXTRA_CFLAGS)
@@ -130,7 +134,8 @@ sortsmillff/%.so: sortsmillff/%.la
 	cp sortsmillff/$(LT_OBJDIR)$*.so $@
 
 # These shared object files are needed by the test suite.
-all-local: sortsmillff/psMat.so sortsmillff/linalg.so	\
+all-local: sortsmillff/psMat.so sortsmillff/ffcompat.so	\
+	sortsmillff/pkg_info.so sortsmillff/linalg.so		\
 	sortsmillff/polyspline.so sortsmillff/brentroot.so
 
 check-local: all-local
