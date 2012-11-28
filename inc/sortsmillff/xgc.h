@@ -65,7 +65,8 @@ _FF_ATTRIBUTE_MALLOC inline char *x_gc_strdup (const char *s);
 
 _FF_ATTRIBUTE_MALLOC char *x_gc_strndup (const char *s, size_t n);
 
-_FF_ATTRIBUTE_MALLOC char *x_gc_strjoin (const char *s1, ...);
+_FF_ATTRIBUTE_SENTINEL
+  _FF_ATTRIBUTE_MALLOC char *x_gc_strjoin (const char *s1, ...);
 _FF_ATTRIBUTE_MALLOC char *x_gc_vstrjoin (const char *s1, va_list ap);
 
 /* In the current implementation, the 'x_gc_grabstr' functions can be
