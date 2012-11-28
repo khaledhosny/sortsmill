@@ -358,7 +358,7 @@ AC_CONFIG_FILES([python/fontforge.py])
 AC_CONFIG_FILES([python/psMat.py])
 AC_CONFIG_FILES([python/sortsmillff/__init__.py])
 AC_CONFIG_FILES([python/sortsmillff/fontforge_compat.py])
-AC_CONFIG_FILES([python/sortsmillff/psMat.pxi])
+AC_CONFIG_FILES([python/sortsmillff/config.pxi])
 AC_CONFIG_FILES([python/sortsmillff/legacy/__init__.py])
 AC_CONFIG_COMMANDS([scheme/sortsmillff],[AS_MKDIR_P([scheme/sortsmillff])])
 FONTFORGE_CONFIG_TESTSUITE

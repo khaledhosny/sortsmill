@@ -3,3 +3,4 @@
 # Compatibility module for the ‘traditional’ fontforge module.
 
 from sortsmillff.ffcompat import *
+from sortsmillff.ffcompat import __version__

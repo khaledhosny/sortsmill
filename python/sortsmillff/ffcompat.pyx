@@ -28,4 +28,91 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from sortsmillff.legacy.fontforge import *
+include 'config.pxi'
+
+import warnings
+
+from sortsmillff.legacy.fontforge import (
+    layer,
+    hasSpiro,
+    activeGlyph,
+    point,
+    preloadCidmap,
+    hooks,
+    askChoices,
+    mathkern,
+    private,
+    loadPlugin,
+    spiroRight,
+    getPrefs,
+    selection,
+    loadEncodingFile,
+    setPrefs,
+    glyphPen,
+    open,
+    contour,
+    glyph,
+    parseTTInstrs,
+    activeFontInUI,
+    savePrefs,
+    activeFont,
+    glyphlayerarray,
+    saveFilename,
+    unParseTTInstrs,
+#    version,
+    layerinfo,
+    nameFromUnicode,
+    defaultOtherSubrs,
+    awcontext,
+    math,
+    registerMenuItem,
+    unitShape,
+    fontlayerarray,
+    activeLayer,
+    glyphlayerrefarray,
+    contouriter,
+    postError,
+    spiroOpen,
+    askString,
+    logWarning,
+    printSetup,
+    loadPrefs,
+    layeriter,
+    registerImportExport,
+    registerGlyphSeparationHook,
+    ask,
+    loadNamelist,
+    fontsInFile,
+    unicodeFromName,
+    cvtiter,
+    glyphlayeriter,
+    awglyphIndex,
+    spiroCorner,
+    awglyph,
+    font,
+    loadPluginDir,
+    cvt,
+    fonts,
+    fontiter,
+    hasUserInterface,
+    readOtherSubrsFile,
+    privateiter,
+    openFilename,
+    postNotice,
+    loadNamelistDir,
+    spiroG4,
+    spiroG2,
+    fontlayeriter,
+    spiroLeft,
+    )
+
+__version__ = '{}.{}.{}{}'.format (VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH, VERSION_EXTRA_SHORT)
+
+def version ():
+  warnings.warn ('version() is deprecated; use __version__ instead.',
+                 DeprecationWarning)
+
+  # A workaround: return a big value so, in old scripts, checking for
+  # a minimal version always succeeds.
+  return '99999999'
+

@@ -34,12 +34,14 @@ The matrices are expressed as six-element tuples of floats.
 
 """
 
+include 'config.pxi'
+
 cimport gsl
 from libc.math cimport sin, cos, tan
 
 import sys
 
-include "psMat.pxi"
+__version__ = '{}.{}.{}{}'.format (VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH, VERSION_EXTRA_SHORT)
 
 # i--
 # i-- @strong{FIXME:} This chapter needs an introductory section,

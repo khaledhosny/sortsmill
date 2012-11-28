@@ -3,3 +3,4 @@
 # Compatibility module for ‘traditional’ psMat.
 
 from sortsmillff.psMat import *
+from sortsmillff.psMat import __version__

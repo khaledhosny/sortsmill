@@ -53,14 +53,15 @@ nodist_pkgpythondata_PYTHON = site_init.py
 # Compatibility module. (FIXME: Make this optional.)
 nodist_python_PYTHON = psMat.py
 
-# Compatibility module. (FIXME: Make it optional.)
+# Compatibility module. (FIXME: Make this optional.)
 nodist_python_PYTHON += fontforge.py
 
 nobase_dist_python_PYTHON = ffContrib/__init__.py	\
 	ffContrib/excepthook.py
 
-nobase_nodist_python_PYTHON = sortsmillff/__init__.py				\
-	sortsmillff/fontforge_compat.py sortsmillff/legacy/__init__.py
+nobase_nodist_python_PYTHON = sortsmillff/__init__.py	\
+	sortsmillff/legacy/__init__.py
+#sortsmillff/fontforge_compat.py
 
 nobase_pyexec_LTLIBRARIES =
 
@@ -107,14 +108,17 @@ PXD_FILES = sortsmillff/gsl.pxd sortsmillff/linalg.pxd				\
 
 PXI_FILES = sortsmillff/gmpy.pxi
 
+PXI_IN_FILES = sortsmillff/config.pxi
+
 # Just make any change in the pxd or pxi files result in a complete
 # rebuild from Cython sources. FIXME: This is inefficient.
-$(PYX_FILES:.pyx=.c): $(PXD_FILES) $(PXI_FILES) sortsmillff/psMat.pxi.in
+$(PYX_FILES:.pyx=.c): $(PXD_FILES) $(PXI_FILES) $(PXI_IN_FILES)
 
 EXTRA_DIST = $(PYX_FILES) $(PXD_FILES) $(PXI_FILES)
 
-MOSTLYCLEANFILES = sortsmillff/psMat.c sortsmillff/linalg.c	\
-	sortsmillff/polyspline.c sortsmillff/brentroot.c
+MOSTLYCLEANFILES = sortsmillff/ffcompat.c sortsmillff/psMat.c	\
+	sortsmillff/linalg.c sortsmillff/polyspline.c				\
+	sortsmillff/brentroot.c
 
 AM_LDFLAGS = -prefer-pic -module -shared -avoid-version
 AM_CFLAGS += $(CYTHON_EXTRA_CFLAGS)
