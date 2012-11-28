@@ -15,16 +15,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-from sortsmillff import guile
-guile.init_guile ()
+#--------------------------------------------------------------------------
 
-from sortsmillff import pkg_info
+# FIXME: Test whether scm_init_guile() is available on the system.
+def init_guile ():
+  scm_init_guile ()
 
-#from sortsmillff import linalg
-#from sortsmillff import bernstein
-from sortsmillff import brentroot
-
-from sortsmillff import ffcompat
-from sortsmillff import psMat
-
-__version__ = '@VERSION_MAJOR@.@VERSION_MINOR@.@VERSION_PATCH@@VERSION_EXTRA_SHORT@'
+#--------------------------------------------------------------------------

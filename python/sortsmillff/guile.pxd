@@ -15,16 +15,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-from sortsmillff import guile
-guile.init_guile ()
+#--------------------------------------------------------------------------
 
-from sortsmillff import pkg_info
+cdef extern from "libguile.h":
 
-#from sortsmillff import linalg
-#from sortsmillff import bernstein
-from sortsmillff import brentroot
+  # Initialization.
+  void *scm_with_guile (void *(*func)(void *), void *data)
+  void scm_init_guile ()
+  void scm_boot_guile (int argc, char **argv, void (*main_func) (void *data, int argc, char **argv), void *data)
+  void scm_shell (int argc, char **argv)
 
-from sortsmillff import ffcompat
-from sortsmillff import psMat
 
-__version__ = '@VERSION_MAJOR@.@VERSION_MINOR@.@VERSION_PATCH@@VERSION_EXTRA_SHORT@'
+#--------------------------------------------------------------------------
