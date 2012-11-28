@@ -129,6 +129,7 @@ fontforge/ttfspecial.c
 fontforge/ufo.c
 fontforge/uiutil.c
 fontforge/unicoderange.c
+fontforge/usermenu.c
 fontforge/windowmenu.c
 fontforge/winfonts.c
 fontforge/woff.c
