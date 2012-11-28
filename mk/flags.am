@@ -52,7 +52,7 @@ GNULIB_LD_FLAGS = $(COS_LIBM) $(FLOOR_LIBM) $(FMA_LIBM)
 
 # Using -release instead of -version-info seems appropriate in the
 # absence of a well defined ABI.
-COMMON_LD_FLAGS = -release $(VERSION) $(MY_CFLAGS) $(MY_LIBS)	\
-	$(GNULIB_LD_FLAGS)
+COMMON_LD_FLAGS = -prefer-pic -release $(VERSION) $(MY_CFLAGS)	\
+	$(MY_LIBS) $(GNULIB_LD_FLAGS)
 
 ldflags = $(COMMON_LD_FLAGS)

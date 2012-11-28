@@ -53,17 +53,31 @@ nodist_pkgpythondata_PYTHON = site_init.py
 # Compatibility module. (FIXME: Make this optional.)
 nodist_python_PYTHON = psMat.py
 
-# Compatibility module. (FIXME: Does not exist yet.
-# FIXME: Make it optional.)
-#nodist_python_PYTHON += fontforge.py
+# Compatibility module. (FIXME: Make it optional.)
+nodist_python_PYTHON += fontforge.py
 
 nobase_dist_python_PYTHON = ffContrib/__init__.py	\
 	ffContrib/excepthook.py
 
-nobase_nodist_python_PYTHON = sortsmillff/__init__.py	\
-	sortsmillff/fontforge_compat.py
+nobase_nodist_python_PYTHON = sortsmillff/__init__.py				\
+	sortsmillff/fontforge_compat.py sortsmillff/legacy/__init__.py
 
 nobase_pyexec_LTLIBRARIES =
+
+nobase_pyexec_LTLIBRARIES += sortsmillff/ffcompat.la
+sortsmillff_ffcompat_la_SOURCES = sortsmillff/ffcompat.c
+sortsmillff_ffcompat_la_CFLAGS = $(AM_CFLAGS)					\
+	'-I$(top_builddir)/fontforge' '-I$(top_srcdir)/fontforge'
+sortsmillff_ffcompat_la_LDFLAGS = $(GSL_CFLAGS) $(GSL_LIBS) $(AM_LDFLAGS)
+sortsmillff_ffcompat_la_LIBADD = $(FFLIBADD)
+
+nobase_pyexec_LTLIBRARIES += sortsmillff/legacy/fontforge.la
+sortsmillff_legacy_fontforge_la_SOURCES =		\
+	sortsmillff/legacy/fontforgepyhook.c
+sortsmillff_legacy_fontforge_la_CFLAGS = $(AM_CFLAGS)			\
+	'-I$(top_builddir)/fontforge' '-I$(top_srcdir)/fontforge'
+sortsmillff_legacy_fontforge_la_LDFLAGS = $(GSL_CFLAGS) $(GSL_LIBS) $(AM_LDFLAGS)
+sortsmillff_legacy_fontforge_la_LIBADD = $(FFLIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmillff/psMat.la
 sortsmillff_psMat_la_SOURCES = sortsmillff/psMat.c
@@ -82,8 +96,9 @@ nobase_pyexec_LTLIBRARIES += sortsmillff/brentroot.la
 sortsmillff_brentroot_la_SOURCES = sortsmillff/brentroot.c
 sortsmillff_brentroot_la_LIBADD = $(AUXLIBADD)
 
-PYX_FILES = sortsmillff/psMat.pyx sortsmillff/linalg.pyx	\
-	sortsmillff/polyspline.pyx sortsmillff/brentroot.pyx
+PYX_FILES = sortsmillff/ffcompat.pyx sortsmillff/psMat.pyx	\
+	sortsmillff/linalg.pyx sortsmillff/polyspline.pyx		\
+	sortsmillff/brentroot.pyx
 
 PXD_FILES = sortsmillff/gsl.pxd sortsmillff/linalg.pxd				\
 	sortsmillff/brentroot_c.pxd sortsmillff/gmpy.pxd				\
@@ -101,7 +116,7 @@ EXTRA_DIST = $(PYX_FILES) $(PXD_FILES) $(PXI_FILES)
 MOSTLYCLEANFILES = sortsmillff/psMat.c sortsmillff/linalg.c	\
 	sortsmillff/polyspline.c sortsmillff/brentroot.c
 
-AM_LDFLAGS = -module -shared -avoid-version
+AM_LDFLAGS = -prefer-pic -module -shared -avoid-version
 AM_CFLAGS += $(CYTHON_EXTRA_CFLAGS)
 AM_CYTHONFLAGS = -I$(builddir)/sortsmillff -I$(srcdir)/sortsmillff
 

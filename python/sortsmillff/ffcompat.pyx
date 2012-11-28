@@ -1,5 +1,8 @@
-# Copyright (C) 2000-2012 by George Williams
+# -*- coding: utf-8; python-indent: 2; -*-
+
 # Copyright (C) 2012 by Barry Schwartz
+# Based in part on python.c by George Williams, which is
+#   Copyright (C) 2007-2012 by George Williams
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -25,18 +28,4 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-include $(top_srcdir)/mk/flags.am
-
-pyexec_LTLIBRARIES = fontforge.la
-
-fontforge_la_SOURCES = fontforgepyhook.c
-fontforge_la_CPPFLAGS = "-I$(top_builddir)/fontforge"	\
-	"-I$(top_srcdir)/fontforge" $(AM_CPPFLAGS)
-fontforge_la_LIBADD = $(LIBADD)
-
-AM_LDFLAGS = -module -shared -avoid-version
-
-LIBADD = $(top_builddir)/auxiliary/libsortsmillff_aux.la	\
-	$(top_builddir)/gutils/libsortsmillff_gutils.la			\
-	$(top_builddir)/fontforge/libsortsmillff_fontforge.la
-
+from sortsmillff.legacy.fontforge import *
