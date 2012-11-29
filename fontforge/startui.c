@@ -27,6 +27,10 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef _NO_PYTHON
+#include <Python.h>
+#endif
+
 #include "fontforgeui.h"
 #include "annotations.h"
 #include <xalloc.h>
@@ -272,6 +276,7 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   FF_SetMVInterface (&gdraw_mv_interface);
   FF_SetClipInterface (&gdraw_clip_interface);
 #ifndef _NO_PYTHON
+  Py_Initialize ();
   PythonUI_Init ();
 #endif
 
