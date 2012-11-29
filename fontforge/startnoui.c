@@ -46,8 +46,6 @@ _doscriptusage (void)
   printf
     ("\t-help\t\t\t (displays this message, invokes a browser)\n\t\t\t\t  (Using the BROWSER environment variable)\n");
   printf ("\t-version\t\t (prints the version of fontforge and exits)\n");
-  printf ("\t-lang=py\t\t use python to execute scripts\n");
-  printf ("\t-lang=ff\t\t use fontforge's old language to execute scripts\n");
   printf ("\t-script scriptfile\t (executes scriptfile)\n");
   printf ("\t-c script-string\t (executes the argument as scripting cmds)\n");
   printf ("\n");

@@ -68,18 +68,10 @@ _dousage (void)
   printf
     ("\t-docs\t\t\t (displays this message, invokes a browser)\n\t\t\t\t (Using the BROWSER environment variable)\n");
   printf ("\t-version\t\t (prints the version of fontforge and exits)\n");
-#ifndef _NO_PYTHON
-  printf ("\t-lang=py\t\t use python for scripts (may precede -script)\n");
-#endif
-#ifndef _NO_FFSCRIPT
-  printf ("\t-lang=ff\t\t use fontforge's legacy scripting language\n");
-#endif
   printf ("\t-script scriptfile\t (executes scriptfile)\n");
-  printf ("\t\tmust be the first option (or follow -lang).\n");
   printf ("\t\tAll others passed to scriptfile.\n");
   printf ("\t-dry scriptfile\t\t (syntax checks scriptfile)\n");
   printf ("\t\tmust be the first option. All others passed to scriptfile.\n");
-  printf ("\t\tOnly for fontforge's own scripting language, not python.\n");
   printf ("\t-c script-string\t (executes argument as scripting cmds)\n");
   printf ("\t\tmust be the first option. All others passed to the script.\n");
   printf ("\n");

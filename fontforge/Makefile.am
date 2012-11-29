@@ -46,11 +46,13 @@ lib_LTLIBRARIES = libsortsmillff_fontforge.la	\
 
 #--------------------------------------------------------------------------
 
-FFSCRIPT_HEADER = "\#!$(bindir)/fontforge -lang=ff"
+FFSCRIPT_HEADER = "\#!$(bindir)/fontforge"
 
+# FIXME: Rewrite these scripts in Guile.
 %: %.pe
-	echo "${FFSCRIPT_HEADER}" | cat - $< > $@
-	chmod +x $@
+	echo "${FFSCRIPT_HEADER}" | cat - $< > $@-tmp
+	chmod +x $@-tmp
+	mv $@-tmp $@
 
 #--------------------------------------------------------------------------
 
