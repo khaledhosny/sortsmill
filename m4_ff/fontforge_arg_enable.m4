@@ -44,19 +44,6 @@ AM_CONDITIONAL([PYTHON_SCRIPTING],[test x"${i_do_have_python_scripting}" = xyes]
 ])
 
 
-dnl FONTFORGE_ARG_DISABLE_PYTHON_EXTENSION
-dnl --------------------------------------
-AC_DEFUN([FONTFORGE_ARG_DISABLE_PYTHON_EXTENSION],
-[
-AC_ARG_ENABLE([python-extension],
-         [AS_HELP_STRING([--disable-python-extension],
-                         [do not build the Python extension module "fontforge"])],
-         [i_do_have_python_extension="${enableval}"],
-         [i_do_have_python_extension=yes])
-AM_CONDITIONAL([PYTHON_EXTENSION],[test x"${i_do_have_python_extension}" = xyes])
-])
-
-
 dnl FONTFORGE_ARG_ENABLE_REAL
 dnl -------------------------
 AC_DEFUN([FONTFORGE_ARG_ENABLE_REAL],

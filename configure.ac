@@ -156,7 +156,6 @@ FONTFORGE_ARG_DISABLE([native-scripting],
 AM_CONDITIONAL([NATIVE_SCRIPTING],[test x"${i_do_have_native_scripting}" = xyes])
 
 FONTFORGE_ARG_DISABLE_PYTHON_SCRIPTING
-FONTFORGE_ARG_DISABLE_PYTHON_EXTENSION
 
 AC_ARG_ENABLE([freetype-debugger],
         [AS_HELP_STRING([--enable-freetype-debugger[[=DIR]]],
