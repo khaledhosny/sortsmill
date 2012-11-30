@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-cimport gmpy
+cimport sortsmillff.cython.gmpy
 
 cdef extern from "sortsmillff/linalg.h":
   pass

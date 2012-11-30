@@ -20,7 +20,7 @@ import array
 from cpython cimport array
 from cython cimport view
 from cython.view cimport array as cvarray
-cimport polyspline_c as pc
+cimport sortsmillff.cython.polyspline as ps
 
 #--------------------------------------------------------------------------
 
@@ -30,7 +30,7 @@ cdef double[::view.contiguous] c_fl_bern_to_sbern (double[::view.contiguous] spl
   cdef unsigned int deg = len (spline) - 1
   cdef double[::view.contiguous] result = \
        cvarray (shape = (len (spline),), itemsize = sizeof(double), format = 'd')
-  pc.fl_bern_to_sbern (deg, &spline[0], &result[0], 1)
+  ps.fl_bern_to_sbern (deg, &spline[0], &result[0], 1)
   return result
 
 @cython.boundscheck(False)
@@ -39,7 +39,7 @@ cdef double[::view.contiguous] c_fl_sbern_to_bern (double[::view.contiguous] spl
   cdef unsigned int deg = len (spline) - 1
   cdef double[::view.contiguous] result = \
        cvarray (shape = (len (spline),), itemsize = sizeof(double), format = 'd')
-  pc.fl_sbern_to_bern (deg, &spline[0], &result[0], 1)
+  ps.fl_sbern_to_bern (deg, &spline[0], &result[0], 1)
   return result
 
 @cython.boundscheck(False)
@@ -48,7 +48,7 @@ cdef double[::view.contiguous] c_fl_mono_to_sbern (double[::view.contiguous] spl
   cdef unsigned int deg = len (spline) - 1
   cdef double[::view.contiguous] result = \
        cvarray (shape = (len (spline),), itemsize = sizeof(double), format = 'd')
-  pc.fl_mono_to_sbern (deg, &spline[0], &result[0], 1)
+  ps.fl_mono_to_sbern (deg, &spline[0], &result[0], 1)
   return result
 
 @cython.boundscheck(False)
@@ -57,7 +57,7 @@ cdef double[::view.contiguous] c_fl_sbern_to_mono (double[::view.contiguous] spl
   cdef unsigned int deg = len (spline) - 1
   cdef double[::view.contiguous] result = \
        cvarray (shape = (len (spline),), itemsize = sizeof(double), format = 'd')
-  pc.fl_sbern_to_mono (deg, &spline[0], &result[0], 1)
+  ps.fl_sbern_to_mono (deg, &spline[0], &result[0], 1)
   return result
 
 @cython.boundscheck(False)
@@ -66,7 +66,7 @@ cdef double[::view.contiguous] c_fl_mono_to_bern (double[::view.contiguous] spli
   cdef unsigned int deg = len (spline) - 1
   cdef double[::view.contiguous] result = \
        cvarray (shape = (len (spline),), itemsize = sizeof(double), format = 'd')
-  pc.fl_mono_to_bern (deg, &spline[0], &result[0], 1)
+  ps.fl_mono_to_bern (deg, &spline[0], &result[0], 1)
   return result
 
 @cython.boundscheck(False)
@@ -75,7 +75,7 @@ cdef double[::view.contiguous] c_fl_bern_to_mono (double[::view.contiguous] spli
   cdef unsigned int deg = len (spline) - 1
   cdef double[::view.contiguous] result = \
        cvarray (shape = (len (spline),), itemsize = sizeof(double), format = 'd')
-  pc.fl_bern_to_mono (deg, &spline[0], &result[0], 1)
+  ps.fl_bern_to_mono (deg, &spline[0], &result[0], 1)
   return result
 
 #--------------------------------------------------------------------------
@@ -84,31 +84,31 @@ cdef double[::view.contiguous] c_fl_bern_to_mono (double[::view.contiguous] spli
 @cython.wraparound(False)
 cdef double c_fl_eval_sbern (double[::view.contiguous] spline, double t):
   cdef unsigned int deg = len (spline) - 1
-  return pc.fl_eval_sbern (deg, &spline[0], t)
+  return ps.fl_eval_sbern (deg, &spline[0], t)
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
 cdef double c_fl_eval_bern (double[::view.contiguous] spline, double t):
   cdef unsigned int deg = len (spline) - 1
-  return pc.fl_eval_bern (deg, &spline[0], t)
+  return ps.fl_eval_bern (deg, &spline[0], t)
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
 cdef double c_fl_evaldc_sbern (double[::view.contiguous] spline, double t):
   cdef unsigned int deg = len (spline) - 1
-  return pc.fl_evaldc_sbern (deg, &spline[0], t)
+  return ps.fl_evaldc_sbern (deg, &spline[0], t)
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
 cdef double c_fl_evaldc_bern (double[::view.contiguous] spline, double t):
   cdef unsigned int deg = len (spline) - 1
-  return pc.fl_evaldc_bern (deg, &spline[0], t)
+  return ps.fl_evaldc_bern (deg, &spline[0], t)
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
 cdef double c_fl_eval_mono (double[::view.contiguous] spline, double t):
   cdef unsigned int deg = len (spline) - 1
-  return pc.fl_eval_mono (deg, &spline[0], t)
+  return ps.fl_eval_mono (deg, &spline[0], t)
 
 #--------------------------------------------------------------------------
 
@@ -120,7 +120,7 @@ cdef object c_fl_subdiv_sbern (double[::view.contiguous] spline, double t):
        cvarray (shape = (len (spline),), itemsize = sizeof(double), format = 'd')
   cdef double[::view.contiguous] result2 = \
        cvarray (shape = (len (spline),), itemsize = sizeof(double), format = 'd')
-  pc.fl_subdiv_sbern (deg, &spline[0], t, &result1[0], &result2[0])
+  ps.fl_subdiv_sbern (deg, &spline[0], t, &result1[0], &result2[0])
   return (result1, result2)
 
 @cython.boundscheck(False)
@@ -131,7 +131,7 @@ cdef object c_fl_subdiv_bern (double[::view.contiguous] spline, double t):
        cvarray (shape = (len (spline),), itemsize = sizeof(double), format = 'd')
   cdef double[::view.contiguous] result2 = \
        cvarray (shape = (len (spline),), itemsize = sizeof(double), format = 'd')
-  pc.fl_subdiv_bern (deg, &spline[0], t, &result1[0], &result2[0])
+  ps.fl_subdiv_bern (deg, &spline[0], t, &result1[0], &result2[0])
   return (result1, result2)
 
 #--------------------------------------------------------------------------

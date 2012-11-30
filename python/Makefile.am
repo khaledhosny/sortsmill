@@ -110,15 +110,19 @@ PYX_FILES = sortsmillff/ffcompat.pyx sortsmillff/psMat.pyx	\
 	sortsmillff/linalg.pyx sortsmillff/polyspline.pyx		\
 	sortsmillff/brentroot.pyx
 
-PXD_FILES = sortsmillff/usermenu.pxd sortsmillff/xgc.pxd				\
-	sortsmillff/guile.pxd sortsmillff/gsl.pxd sortsmillff/linalg.pxd	\
-	sortsmillff/brentroot_c.pxd sortsmillff/gmpy.pxd					\
-	sortsmillff/polyspline_c.pxd sortsmillff/contour_interface.pxd		\
-	sortsmillff/splinefont.pxd
+cythonbuildinc = $(top_builddir)/inc/sortsmillff/cython
+cythonsrcinc = $(top_srcdir)/inc/sortsmillff/cython
 
-PXI_FILES = sortsmillff/gmpy.pxi
+PXD_FILES = $(cythonsrcinc)/usermenu.pxd $(cythonsrcinc)/xgc.pxd	\
+	$(cythonsrcinc)/guile.pxd $(cythonsrcinc)/gsl.pxd				\
+	$(cythonsrcinc)/linalg.pxd $(cythonsrcinc)/brentroot.pxd		\
+	$(cythonsrcinc)/gmpy.pxd $(cythonsrcinc)/polyspline.pxd			\
+	$(cythonsrcinc)/contour_interface.pxd							\
+	$(cythonsrcinc)/splinefont.pxd
 
-PXI_IN_FILES = sortsmillff/config.pxi
+PXI_FILES = $(cythonsrcinc)/gmpy.pxi
+
+PXI_IN_FILES = $(cythonbuildinc)/config.pxi
 
 # Just make any change in the pxd or pxi files result in a complete
 # rebuild from Cython sources. FIXME: This is inefficient.
@@ -132,7 +136,8 @@ MOSTLYCLEANFILES = sortsmillff/ffcompat.c sortsmillff/psMat.c		\
 
 AM_LDFLAGS = -prefer-pic -module -shared -avoid-version
 AM_CFLAGS += $(CYTHON_EXTRA_CFLAGS)
-AM_CYTHONFLAGS = -I$(builddir)/sortsmillff -I$(srcdir)/sortsmillff
+AM_CYTHONFLAGS = '-I$(top_builddir)/inc' '-I$(top_srcdir)/inc'	\
+	'-I$(builddir)/sortsmillff' '-I$(srcdir)/sortsmillff'
 
 # FIXME: Maybe support extensions other than .so.
 sortsmillff/%.so: sortsmillff/%.la

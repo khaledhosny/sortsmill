@@ -34,9 +34,9 @@ The matrices are expressed as six-element tuples of floats.
 
 """
 
-include 'config.pxi'
+include 'sortsmillff/cython/config.pxi'
 
-cimport gsl
+cimport sortsmillff.cython.gsl as gsl
 from libc.math cimport sin, cos, tan
 
 import sys

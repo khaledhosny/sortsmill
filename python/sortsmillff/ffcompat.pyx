@@ -35,8 +35,8 @@ cdef extern from "config.h": pass
 cdef extern from "stdbool.h": pass
 from libcpp cimport bool
 
-cimport usermenu
-cimport xgc
+cimport sortsmillff.cython.usermenu as usermenu
+cimport sortsmillff.cython.xgc as xgc
 from cpython.ref cimport PyObject, Py_XINCREF
 from cpython.object cimport PyObject_CallObject, PyObject_IsTrue
 

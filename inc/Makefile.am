@@ -48,6 +48,17 @@ nobase_include_HEADERS += sortsmillff/guile/polyspline.h	\
 	sortsmillff/guile/brentroot.h sortsmillff/guile/iconv.h	\
 	sortsmillff/guile/gsl.h
 
+if PYTHON_SCRIPTING
+nobase_include_HEADERS += sortsmillff/__init__.pxd						\
+	sortsmillff/cython/__init__.pxd sortsmillff/cython/brentroot.pxd	\
+	sortsmillff/cython/contour_interface.pxd							\
+	sortsmillff/cython/gmpy.pxi sortsmillff/cython/guile.pxd			\
+	sortsmillff/cython/linalg.pxd sortsmillff/cython/splinefont.pxd		\
+	sortsmillff/cython/xgc.pxd sortsmillff/cython/config.pxi			\
+	sortsmillff/cython/gmpy.pxd sortsmillff/cython/gsl.pxd				\
+	sortsmillff/cython/polyspline.pxd sortsmillff/cython/usermenu.pxd
+endif PYTHON_SCRIPTING
+
 #--------------------------------------------------------------------------
 
 extract_text = $(PERL) -n -e											\

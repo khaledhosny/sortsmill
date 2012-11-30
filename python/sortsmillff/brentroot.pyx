@@ -19,7 +19,7 @@ import cython
 import sys
 import gmpy
 
-cimport brentroot_c
+cimport sortsmillff.cython.brentroot as brentroot_c
 from cpython.ref cimport PyObject, Py_INCREF, Py_DECREF
 
 #--------------------------------------------------------------------------
@@ -252,8 +252,8 @@ def qbrentroot_values (t1, t2, func not None,
 # qbrentroot_c is discouraged.
 #
 
-from gmpy cimport *
-include "gmpy.pxi"
+from sortsmillff.cython.gmpy cimport *
+include "sortsmillff/cython/gmpy.pxi"
 
 cdef void _call_qfunc (__mpq_struct *result, __mpq_struct *x, void *func_p):
   py_x = py_from_mpq (x)

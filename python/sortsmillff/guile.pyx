@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
 
+from sortsmillff.cython.guile import scm_init_guile
+
 #--------------------------------------------------------------------------
 
 # FIXME: Test whether scm_init_guile() is available on the system.

@@ -64,6 +64,9 @@ guilemoduledir = $(datarootdir)/guile/site/$(GUILE_API)
 # Where compiled Guile modules go.
 guileobjmoduledir = $(datarootdir)/guile/site/$(GUILE_API)
 
+# Where Cython .pxd and .pxi files go.
+cythonincludedir = $(includedir)
+
 # What gets passed as macros to the C sources.
 MY_SHAREDIR = ${pkgdatadir}
 MY_DOCDIR = ${htdocsdir}
