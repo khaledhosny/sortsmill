@@ -38,13 +38,25 @@ try:
   import ffContrib.excepthook
   import os
 
+  sys_config_dir = '@sysconfdir@'
   user_config_dir = os.environ.get('XDG_CONFIG_HOME', os.path.join(os.path.expanduser("~"), '.config'))
 
   package_name = '@PACKAGE@'
 
+  sys_init_file = 'local_init.py'
   user_init_file = 'user_init.py'
 
+  sys_init = os.path.join(sys_config_dir, package_name, sys_init_file)
   user_init = os.path.join(user_config_dir, package_name, user_init_file)
+
+  if os.path.exists(sys_init):
+    try:
+      execfile(sys_init)
+    except:
+      tb = ''.join (traceback.format_exc ())
+      msg = ''.join (traceback.format_exception_only (sys.exc_type, sys.exc_value))
+      sortsmillff.ffcompat.logWarning (tb.replace('%', '%%'))
+      sortsmillff.ffcompat.postError('Unhandled exception in local_init.py', msg.replace('%','%%'))
 
   if os.path.exists(user_init):
     try:
@@ -52,11 +64,11 @@ try:
     except:
       tb = ''.join (traceback.format_exc ())
       msg = ''.join (traceback.format_exception_only (sys.exc_type, sys.exc_value))
-      fontforge.logWarning (tb.replace('%', '%%'))
-      fontforge.postError('Unhandled exception in user_init.py', msg.replace('%','%%'))
+      sortsmillff.ffcompat.logWarning (tb.replace('%', '%%'))
+      sortsmillff.ffcompat.postError('Unhandled exception in user_init.py', msg.replace('%','%%'))
 
 except:
   tb = ''.join (traceback.format_exc ())
   msg = ''.join (traceback.format_exception_only (sys.exc_type, sys.exc_value))
-  fontforge.logWarning (tb.replace('%', '%%'))
-  fontforge.postError('Unhandled exception in site_init.py', msg.replace('%','%%'))
+  sortsmillff.ffcompat.logWarning (tb.replace('%', '%%'))
+  sortsmillff.ffcompat.postError('Unhandled exception in site_init.py', msg.replace('%','%%'))

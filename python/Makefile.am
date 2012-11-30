@@ -128,11 +128,18 @@ PXI_IN_FILES = $(cythonbuildinc)/config.pxi
 # rebuild from Cython sources. FIXME: This is inefficient.
 $(PYX_FILES:.pyx=.c): $(PXD_FILES) $(PXI_FILES) $(PXI_IN_FILES)
 
-EXTRA_DIST = $(PYX_FILES) $(PXD_FILES) $(PXI_FILES)
+site_init.py: site_init.py.in
+	$(SED) 															\
+		-e 's|@''PACKAGE''@|$(PACKAGE)|g' 							\
+		-e 's|@''sysconfdir''@|$(sysconfdir)|g' < $< > $@-tmp
+	mv $@-tmp $@
 
-MOSTLYCLEANFILES = sortsmillff/ffcompat.c sortsmillff/psMat.c		\
-	sortsmillff/pkg_info.c sortsmillff/guile.c sortsmillff/linalg.c	\
-	sortsmillff/polyspline.c sortsmillff/brentroot.c
+EXTRA_DIST = $(PYX_FILES) $(PXD_FILES) $(PXI_FILES) site_init.py.in
+
+MOSTLYCLEANFILES = site_init.py sortsmillff/ffcompat.c				\
+	sortsmillff/psMat.c sortsmillff/pkg_info.c sortsmillff/guile.c	\
+	sortsmillff/linalg.c sortsmillff/polyspline.c					\
+	sortsmillff/brentroot.c
 
 AM_LDFLAGS = -prefer-pic -module -shared -avoid-version
 AM_CFLAGS += $(CYTHON_EXTRA_CFLAGS)

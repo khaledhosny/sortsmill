@@ -350,7 +350,7 @@ FONTFORGE_CREATE_MAKEFILES
 FONTFORGE_CREATE_INDENT_PRO
 AC_CONFIG_FILES([inc/config-extra.h])
 AC_CONFIG_FILES([inc/sortsmillff/cython/config.pxi])
-AC_CONFIG_FILES([python/site_init.py])
+#AC_CONFIG_FILES([python/site_init.py])
 AC_CONFIG_FILES([python/fontforge.py])
 AC_CONFIG_FILES([python/psMat.py])
 AC_CONFIG_FILES([python/sortsmillff/__init__.py])
