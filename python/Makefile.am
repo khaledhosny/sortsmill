@@ -38,10 +38,10 @@ FFLIBADD = $(AUXLIBADD)										\
 	$(top_builddir)/fontforge/libsortsmillff_fontforge.la	\
 	$(top_builddir)/gutils/libsortsmillff_gutils.la
 
-if GRAPHICAL_USER_INTERFACE
+if HAVE_GUI
 FFLIBADD += $(top_builddir)/gdraw/libsortsmillff_gdraw.la	\
 	$(XINPUT_LIBS) $(XKB_LIBS)
-endif GRAPHICAL_USER_INTERFACE
+endif HAVE_GUI
 
 EXELIBADD = $(FFLIBADD)										\
 	$(top_builddir)/fontforge/libsortsmillff_fontforgeexe.la

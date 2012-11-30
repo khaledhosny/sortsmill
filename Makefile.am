@@ -33,9 +33,9 @@ include $(top_srcdir)/mk/layout.am
 
 SUBDIRS = lib inc auxiliary gutils
 
-if GRAPHICAL_USER_INTERFACE
+if HAVE_GUI
 SUBDIRS += gdraw data
-endif GRAPHICAL_USER_INTERFACE
+endif HAVE_GUI
 
 SUBDIRS += fontforge po scheme doc htdocs
 

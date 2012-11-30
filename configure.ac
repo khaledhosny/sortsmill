@@ -329,7 +329,7 @@ AH_BOTTOM([#include <config-extra.h>])
 
 #--------------------------------------------------------------------------
 
-AM_CONDITIONAL([GRAPHICAL_USER_INTERFACE],[test x"${i_do_have_gui}" = xyes])
+AM_CONDITIONAL([HAVE_GUI],[test x"${i_do_have_gui}" = xyes])
 AM_CONDITIONAL([MACINTOSH],[test x"${gww_ismac}" = xyes])
 
 # The following conditionals are always false, so the directories

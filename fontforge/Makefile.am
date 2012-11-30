@@ -120,7 +120,7 @@ is_LIGATURE:
 
 #--------------------------------------------------------------------------
 
-if GRAPHICAL_USER_INTERFACE
+if HAVE_GUI
 
 libsortsmillff_fontforgeexe_la_SOURCES = alignment.c anchorsaway.c		\
 	autowidth2dlg.c basedlg.c bdfinfo.c bitmapdlg.c bitmapview.c		\
@@ -138,11 +138,11 @@ libsortsmillff_fontforgeexe_la_SOURCES = alignment.c anchorsaway.c		\
 	ttfinstrsui.c uiutil.c windowmenu.c justifydlg.c deltaui.c			\
 	usermenu.c
 
-else !GRAPHICAL_USER_INTERFACE
+else !HAVE_GUI
 
 libsortsmillff_fontforgeexe_la_SOURCES = startnoui.c
 
-endif !GRAPHICAL_USER_INTERFACE
+endif !HAVE_GUI
 
 libsortsmillff_fontforgeexe_la_LIBADD = libsortsmillff_fontforge.la		\
 	$(LTDLDEPS) $(LIBADD) $(GUILIBADD) $(top_builddir)/lib/libgnu.la
@@ -154,10 +154,10 @@ LIBADD = $(top_builddir)/auxiliary/libsortsmillff_aux.la	\
 	$(top_builddir)/gutils/libsortsmillff_gutils.la
 
 GUILIBADD =
-if GRAPHICAL_USER_INTERFACE
+if HAVE_GUI
 GUILIBADD += $(top_builddir)/gdraw/libsortsmillff_gdraw.la	\
 	$(XINPUT_LIBS) $(XKB_LIBS)
-endif GRAPHICAL_USER_INTERFACE
+endif HAVE_GUI
 
 LDADD = $(LIBADD) $(GUILIBADD)
 
