@@ -26,6 +26,7 @@
  */
 
 #include "flaglist.h"
+#include "usermenu.h"
 
 #if PY_MAJOR_VERSION >= 3
 
@@ -56,11 +57,11 @@
 
 #if !defined( Py_RETURN_NONE )
 /* Not defined before 2.4 */
-# define Py_RETURN_NONE		return( Py_INCREF(Py_None), Py_None )
+#define Py_RETURN_NONE		return( Py_INCREF(Py_None), Py_None )
 #endif
 #define Py_RETURN(self)		return( Py_INCREF((PyObject *) (self)), (PyObject *) (self) )
 
-#ifndef PyMODINIT_FUNC	/* declarations for DLL import/export */
+#ifndef PyMODINIT_FUNC          /* declarations for DLL import/export */
 #define PyMODINIT_FUNC void
 #endif
 
@@ -69,7 +70,7 @@
 #define PyBytes_Type PyString_Type
 
 #define PyBytes_Check PyString_Check
-#define PyBytes_CheckExact PyString_CheckExact 
+#define PyBytes_CheckExact PyString_CheckExact
 #define PyBytes_CHECK_INTERNED PyString_CHECK_INTERNED
 #define PyBytes_AS_STRING PyString_AS_STRING
 #define PyBytes_GET_SIZE PyString_GET_SIZE
@@ -104,12 +105,11 @@
 typedef int Py_ssize_t;
 #endif
 
-extern SplineChar *sc_active_in_ui;
-VISIBLE extern FontViewBase *fv_active_in_ui;
-VISIBLE extern int layer_active_in_ui;
-
-VISIBLE extern void FfPy_Replace_MenuItemStub(PyObject *(*func)(PyObject *,PyObject *));
-VISIBLE extern PyObject *PySC_From_SC(SplineChar *sc);
-VISIBLE extern PyObject *PyFV_From_FV(FontViewBase *fv);
-VISIBLE extern int FlagsFromTuple(PyObject *tuple,struct flaglist *flags,const char *flagkind);
-VISIBLE extern void PyFF_Glyph_Set_Layer(SplineChar *sc,int layer);
+void FfPy_Replace_MenuItemStub (PyObject *(*func) (PyObject *, PyObject *));
+PyObject *PySC_From_SC (SplineChar *sc);
+PyObject *PyFV_From_FV (FontViewBase *fv);
+PyObject *PySC_From_SC_I (SplineChar *sc);
+PyObject *PyFV_From_FV_I (FontViewBase *fv);
+int FlagsFromTuple (PyObject *tuple, struct flaglist *flags,
+                    const char *flagkind);
+void PyFF_Glyph_Set_Layer (SplineChar *sc, int layer);

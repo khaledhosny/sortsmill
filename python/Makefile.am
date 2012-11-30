@@ -70,7 +70,7 @@ sortsmillff_ffcompat_la_SOURCES = sortsmillff/ffcompat.c
 sortsmillff_ffcompat_la_CFLAGS = $(AM_CFLAGS)					\
 	'-I$(top_builddir)/fontforge' '-I$(top_srcdir)/fontforge'
 sortsmillff_ffcompat_la_LDFLAGS = $(GSL_CFLAGS) $(GSL_LIBS) $(AM_LDFLAGS)
-sortsmillff_ffcompat_la_LIBADD = $(FFLIBADD)
+sortsmillff_ffcompat_la_LIBADD = $(EXELIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmillff/legacy/fontforge.la
 sortsmillff_legacy_fontforge_la_SOURCES =		\
@@ -110,10 +110,11 @@ PYX_FILES = sortsmillff/ffcompat.pyx sortsmillff/psMat.pyx	\
 	sortsmillff/linalg.pyx sortsmillff/polyspline.pyx		\
 	sortsmillff/brentroot.pyx
 
-PXD_FILES = sortsmillff/guile.pxd sortsmillff/gsl.pxd				\
-	sortsmillff/linalg.pxd sortsmillff/brentroot_c.pxd				\
-	sortsmillff/gmpy.pxd sortsmillff/polyspline_c.pxd				\
-	sortsmillff/contour_interface.pxd sortsmillff/splinefont.pxd
+PXD_FILES = sortsmillff/usermenu.pxd sortsmillff/xgc.pxd				\
+	sortsmillff/guile.pxd sortsmillff/gsl.pxd sortsmillff/linalg.pxd	\
+	sortsmillff/brentroot_c.pxd sortsmillff/gmpy.pxd					\
+	sortsmillff/polyspline_c.pxd sortsmillff/contour_interface.pxd		\
+	sortsmillff/splinefont.pxd
 
 PXI_FILES = sortsmillff/gmpy.pxi
 
@@ -138,15 +139,11 @@ sortsmillff/%.so: sortsmillff/%.la
 	-rm -f $@
 	cp sortsmillff/$(LT_OBJDIR)$*.so $@
 
-sortsmillff/legacy/%.so: sortsmillff/legacy/%.la
-	-rm -f $@
-	cp sortsmillff/legacy/$(LT_OBJDIR)$*.so $@
-
 # These shared object files are needed by the test suite.
-all-local: sortsmillff/legacy/fontforge.so sortsmillff/psMat.so	\
-	sortsmillff/ffcompat.so sortsmillff/pkg_info.so				\
-	sortsmillff/guile.so sortsmillff/linalg.so					\
-	sortsmillff/polyspline.so sortsmillff/brentroot.so
+all-local: sortsmillff/psMat.so sortsmillff/ffcompat.so	\
+	sortsmillff/pkg_info.so sortsmillff/guile.so		\
+	sortsmillff/linalg.so sortsmillff/polyspline.so		\
+	sortsmillff/brentroot.so
 
 check-local: all-local
 

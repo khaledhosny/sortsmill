@@ -31,6 +31,7 @@
 
 #include <basics.h>
 #include <stdio.h>
+#include <stdbool.h>
 #include <string.h>
 #include <intl.h>
 #include "splinefont.h"
@@ -54,7 +55,7 @@ VISIBLE extern int adjustwidth;
 VISIBLE extern int adjustlbearing;
 VISIBLE extern int autohint_before_generate;
 extern int seperate_hint_controls;
-VISIBLE extern int no_windowing_ui;
+extern int no_windowing_ui;
 VISIBLE extern uint32_t default_background;
 extern int use_utf8_in_script;
 
@@ -70,6 +71,8 @@ VISIBLE extern char *printcommand, *printlazyprinter;
 
 VISIBLE extern Encoding *enclist;
 
+bool get_no_windowing_ui (void);
+void set_no_windowing_ui (bool);
 
 #define SCRIPT_MENU_MAX	10
 

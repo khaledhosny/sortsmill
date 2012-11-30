@@ -31,6 +31,7 @@
 #include "fontforgevw.h"
 #include <setjmp.h>
 #include <stdarg.h>
+#include <stdbool.h>
 
 /* If users want to write user defined scripting built-in functions they will */
 /*  need this file. The most relevant structure is the Context */
@@ -129,7 +130,10 @@ VISIBLE void ScriptErrorF( Context *c, const char *fmt, ... );
 	/* Standard printf-style spec. All string arguments assumed to be in */
 	/* utf8 */
 
-VISIBLE extern int running_script;
+extern int running_script;
+
+bool get_running_script (void);
+void set_running_script (bool);
 
 /* Hooks so a scripting dlg can execute fontforge's legacy scripting language */
 VISIBLE extern void ff_VerboseCheck(void);

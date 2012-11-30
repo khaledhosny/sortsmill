@@ -1,5 +1,6 @@
-# Copyright (C) 2012 by Barry Schwartz
+#  -*- mode: python; coding: utf-8; python-indent: 2 -*-
 #
+# Copyright (C) 2012 by Barry Schwartz
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
 #
@@ -24,19 +25,29 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import fontforge
-import psMat
-import ffContrib.excepthook
-import os
+try:
 
-user_config_dir = os.environ.get('XDG_CONFIG_HOME', os.path.join(os.path.expanduser("~"), '.config'))
+  import fontforge
+  import sortsmillff.ffcompat
+  sortsmillff.ffcompat.__windowing_ui (True)
+  sortsmillff.ffcompat.__running_script (False)
+  import psMat
+  import ffContrib.excepthook
+  import os
 
-package_name = '@PACKAGE@'
+  user_config_dir = os.environ.get('XDG_CONFIG_HOME', os.path.join(os.path.expanduser("~"), '.config'))
 
-user_init_file = 'user_init.py'
+  package_name = '@PACKAGE@'
 
-user_init = os.path.join(user_config_dir, package_name, user_init_file)
+  user_init_file = 'user_init.py'
 
-if os.path.exists(user_init):
-    execfile(user_init)
+  user_init = os.path.join(user_config_dir, package_name, user_init_file)
 
+  if os.path.exists(user_init):
+    try:
+      execfile(user_init)
+    except Exception as e:
+      print ("A Python exception occurred in user_init.py: " + str (e))
+
+except Exception as e:
+  print ("A Python exception occurred in site_init.py: " + str (e))

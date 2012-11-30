@@ -62,6 +62,7 @@
 -T Spline1D
 -T KernPair
 -T KernPair1
+-T Val
 
 -T PyFF_Font
 -T PyFF_Glyph

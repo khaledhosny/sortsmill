@@ -193,7 +193,7 @@ typedef struct
 {
   PyObject_HEAD
     /* Type-specific fields go here. */
-  FontViewBase * fv;
+  FontViewBase *fv;
   int by_glyphs;
 } PyFF_Selection;
 static PyTypeObject PyFF_SelectionType;
@@ -217,7 +217,7 @@ typedef struct
 {
   PyObject_HEAD
     /* Type-specific fields go here. */
-  FontViewBase * fv;
+  FontViewBase *fv;
   PyFF_LayerInfoArray *layers;
   PyFF_Private *private;
   PyFF_Cvt *cvt;
@@ -238,7 +238,7 @@ static PyFF_Layer *LayerFromLayer (Layer *, PyFF_Layer *);
 /* Find python objects corresponding to non-python structures */
 /* ************************************************************************** */
 static PyFF_Font *
-PyFF_FontForFV (FontViewBase * fv)
+PyFF_FontForFV (FontViewBase *fv)
 {
   if (fv == NULL)
     return NULL;
@@ -388,7 +388,7 @@ FlagsFromString (char *str, struct flaglist *flags, const char *flagkind)
  * If flagkind is not NULL, then it is used in any error message to identify
  * the kind of flags being parsed.
  */
-int
+VISIBLE int
 FlagsFromTuple (PyObject *tuple, struct flaglist *flags, const char *flagkind)
 {
   int ret = 0, temp;
@@ -462,7 +462,7 @@ FlagsFromTuple (PyObject *tuple, struct flaglist *flags, const char *flagkind)
 }
 
 static PyObject *
-PyFF_ValToObject (Val * val)
+PyFF_ValToObject (Val *val)
 {
   if (val->type == v_int || val->type == v_unicode)
     return (Py_BuildValue ("i", val->u.ival));
@@ -476,8 +476,8 @@ PyFF_ValToObject (Val * val)
   return (NULL);
 }
 
-PyObject *
-PyFV_From_FV (FontViewBase * fv)
+VISIBLE PyObject *
+PyFV_From_FV (FontViewBase *fv)
 {
   if (fv == NULL)
     Py_RETURN_NONE;
@@ -490,15 +490,15 @@ PyFV_From_FV (FontViewBase * fv)
   return (fv->python_fv_object);
 }
 
-static PyObject *
-PyFV_From_FV_I (FontViewBase * fv)
+VISIBLE PyObject *
+PyFV_From_FV_I (FontViewBase *fv)
 {
   PyObject *f = PyFV_From_FV (fv);
   Py_INCREF (f);
   return (f);
 }
 
-PyObject *
+VISIBLE PyObject *
 PySC_From_SC (SplineChar *sc)
 {
   if (sc->python_sc_object == NULL)
@@ -511,7 +511,7 @@ PySC_From_SC (SplineChar *sc)
   return (sc->python_sc_object);
 }
 
-static PyObject *
+VISIBLE PyObject *
 PySC_From_SC_I (SplineChar *sc)
 {
   PyObject *s = PySC_From_SC (sc);
@@ -519,7 +519,7 @@ PySC_From_SC_I (SplineChar *sc)
   return (s);
 }
 
-void
+VISIBLE void
 PyFF_Glyph_Set_Layer (SplineChar *sc, int layer)
 {
   PyObject *pysc = PySC_From_SC (sc);
@@ -750,21 +750,21 @@ PyFF_LoadNamelistDir (PyObject *UNUSED (self), PyObject *args)
 }
 
 
-static PyObject *
-PyFF_LoadPlugin (PyObject *UNUSED (self), PyObject *UNUSED (args))
-{
-  PyErr_WarnEx (PyExc_DeprecationWarning,
-                "loadPlugin() is deprecated and will be ignored", 1);
-  Py_RETURN_NONE;
-}
-
-static PyObject *
-PyFF_LoadPluginDir (PyObject *UNUSED (self), PyObject *UNUSED (args))
-{
-  PyErr_WarnEx (PyExc_DeprecationWarning,
-                "loadPluginDir() is deprecated and will be ignored", 1);
-  Py_RETURN_NONE;
-}
+//static PyObject *
+//PyFF_LoadPlugin (PyObject *UNUSED (self), PyObject *UNUSED (args))
+//{
+//  PyErr_WarnEx (PyExc_DeprecationWarning,
+//                "loadPlugin() is deprecated and will be ignored", 1);
+//  Py_RETURN_NONE;
+//}
+//
+//static PyObject *
+//PyFF_LoadPluginDir (PyObject *UNUSED (self), PyObject *UNUSED (args))
+//{
+//  PyErr_WarnEx (PyExc_DeprecationWarning,
+//                "loadPluginDir() is deprecated and will be ignored", 1);
+//  Py_RETURN_NONE;
+//}
 
 static PyObject *
 PyFF_PreloadCidmap (PyObject *UNUSED (self), PyObject *args)
@@ -1195,34 +1195,34 @@ PyFF_registerImportExport (PyObject *UNUSED (self), PyObject *args)
   Py_RETURN_NONE;
 }
 
-static PyObject *
-PyFF_hasSpiro (PyObject *UNUSED (self), PyObject *UNUSED (args))
-{
-  PyObject *ret = hasspiro ()? Py_True : Py_False;
-
-  Py_INCREF (ret);
-  return (ret);
-}
+//static PyObject *
+//PyFF_hasSpiro (PyObject *UNUSED (self), PyObject *UNUSED (args))
+//{
+//  PyObject *ret = hasspiro ()? Py_True : Py_False;
+//
+//  Py_INCREF (ret);
+//  return (ret);
+//}
 
 /* ************************************************************************** */
 /* ************************ User Interface routines ************************* */
 /* ************************************************************************** */
 
-static PyObject *
-PyFF_registerMenuItemStub (PyObject *UNUSED (self), PyObject *UNUSED (args))
-{
-  /* This is a stub which will be replaced when we've got a UI */
-  Py_RETURN_NONE;
-}
+//static PyObject *
+//PyFF_registerMenuItemStub (PyObject *UNUSED (self), PyObject *UNUSED (args))
+//{
+//  /* This is a stub which will be replaced when we've got a UI */
+//  Py_RETURN_NONE;
+//}
 
-static PyObject *
-PyFF_hasUserInterface (PyObject *UNUSED (self), PyObject *UNUSED (args))
-{
-  PyObject *ret = no_windowing_ui ? Py_False : Py_True;
-
-  Py_INCREF (ret);
-  return (ret);
-}
+//static PyObject *
+//PyFF_hasUserInterface (PyObject *UNUSED (self), PyObject *UNUSED (args))
+//{
+//  PyObject *ret = no_windowing_ui ? Py_False : Py_True;
+//
+//  Py_INCREF (ret);
+//  return (ret);
+//}
 
 static PyObject *
 PyFF_logError (PyObject *UNUSED (self), PyObject *args)
@@ -4556,7 +4556,7 @@ Stroke_Parse (StrokeInfo * si, PyObject *args)
   if (f & 2)
     si->removeexternal = true;
 /*  if ( f&4 )
-                	si->removeoverlapifneeded = true; *//* Obsolete */
+                    	si->removeoverlapifneeded = true; *//* Obsolete */
   si->penangle = angle;
   si->minorradius = minor / 2;
 
@@ -11077,7 +11077,7 @@ PyFFSelection_Invert (PyObject *self, PyObject *UNUSED (args))
 }
 
 static int
-SelIndex (PyObject *arg, FontViewBase * fv, int ints_as_unicode)
+SelIndex (PyObject *arg, FontViewBase *fv, int ints_as_unicode)
 {
   int enc;
 
@@ -11114,7 +11114,7 @@ SelIndex (PyObject *arg, FontViewBase * fv, int ints_as_unicode)
 }
 
 static void
-FVBDeselectAll (FontViewBase * fv)
+FVBDeselectAll (FontViewBase *fv)
 {
   memset (fv->selected, 0, fv->map->enccount);
 }
@@ -16712,7 +16712,7 @@ MakeClassNameTuple (int cnt, char **classes)
 }
 
 static SplineChar **
-GlyphsFromSelection (FontViewBase * fv)
+GlyphsFromSelection (FontViewBase *fv)
 {
   SplineFont *sf;
   EncMap *map;
@@ -16749,7 +16749,7 @@ GlyphsFromSelection (FontViewBase * fv)
 }
 
 static int
-pyBuildClasses (FontViewBase * fv, struct lookup_subtable *sub,
+pyBuildClasses (FontViewBase *fv, struct lookup_subtable *sub,
                 real good_enough, PyObject *list1, PyObject *list2)
 {
   SplineChar **glyphlist, **first, **second;
@@ -16794,7 +16794,7 @@ pyAddOffsetAsIs (void *data, int left_index, int right_index, int kern)
 }
 
 static void
-pyAutoKernAll (FontViewBase * fv, struct lookup_subtable *sub)
+pyAutoKernAll (FontViewBase *fv, struct lookup_subtable *sub)
 {
   char **lefts, **rights;
   int lcnt, rcnt;
@@ -21618,8 +21618,8 @@ static PyMethodDef FontForge_methods[] = {
    "Save FontForge preference items"},
   {"loadPrefs", PyFF_LoadPrefs, METH_NOARGS,
    "Load FontForge preference items"},
-  {"hasSpiro", PyFF_hasSpiro, METH_NOARGS,
-   "Returns whether this fontforge has access to Raph Levien's spiro package"},
+  //  {"hasSpiro", PyFF_hasSpiro, METH_NOARGS,
+  //   "Returns whether this fontforge has access to Raph Levien's spiro package"},
   {"defaultOtherSubrs", PyFF_DefaultOtherSubrs, METH_NOARGS,
    "Use FontForge's default \"othersubrs\" functions for Type1 fonts"},
   {"readOtherSubrsFile", PyFF_ReadOtherSubrsFile, METH_VARARGS,
@@ -21631,9 +21631,9 @@ static PyMethodDef FontForge_methods[] = {
   {"loadNamelistDir", PyFF_LoadNamelistDir, METH_VARARGS,
    "Load a directory of namelist files into the list of namelists"},
 
-  {"loadPlugin", PyFF_LoadPlugin, METH_VARARGS, "Deprecated, does nothing"},
-  {"loadPluginDir", PyFF_LoadPluginDir, METH_VARARGS,
-   "Deprecated, does nothing"},
+  //  {"loadPlugin", PyFF_LoadPlugin, METH_VARARGS, "Deprecated, does nothing"},
+  //  {"loadPluginDir", PyFF_LoadPluginDir, METH_VARARGS,
+  //   "Deprecated, does nothing"},
 
   {"preloadCidmap", PyFF_PreloadCidmap, METH_VARARGS, "Load a cidmap file"},
   {"unicodeFromName", PyFF_UnicodeFromName, METH_VARARGS,
@@ -21668,12 +21668,12 @@ static PyMethodDef FontForge_methods[] = {
    METH_VARARGS,
    "registers a python routine which finds the visual separation between two glyphs. Used in autowidth/kern and optical bound setting."},
   /* Access to the User Interface ... if any */
-  {"hasUserInterface", PyFF_hasUserInterface, METH_NOARGS,
-   "Returns whether this fontforge session has a user interface (True if it has opened windows) or is just running a script (False)"},
+  //  {"hasUserInterface", PyFF_hasUserInterface, METH_NOARGS,
+  //   "Returns whether this fontforge session has a user interface (True if it has opened windows) or is just running a script (False)"},
   {"registerImportExport", PyFF_registerImportExport, METH_VARARGS,
    "Adds an import/export spline conversion module"},
-  {"registerMenuItem", PyFF_registerMenuItemStub, METH_VARARGS,
-   "Adds a menu item (which runs a python script) to the font or glyph (or both) windows -- in the Tools menu"},
+  //  {"registerMenuItem", PyFF_registerMenuItemStub, METH_VARARGS,
+  //   "Adds a menu item (which runs a python script) to the font or glyph (or both) windows -- in the Tools menu"},
   {"logWarning", PyFF_logError, METH_VARARGS,
    "Adds a non-fatal message to the Warnings window"},
   {"postError", PyFF_postError, METH_VARARGS,
@@ -21696,18 +21696,18 @@ static PyMethodDef FontForge_methods[] = {
 /* ************************************************************************** */
 /* ************************* initializer routines *************************** */
 /* ************************************************************************** */
-void
-FfPy_Replace_MenuItemStub (PyObject *(*func) (PyObject *, PyObject *))
-{
-  int i;
-
-  for (i = 0; FontForge_methods[i].ml_name != NULL; ++i)
-    if (strcmp (FontForge_methods[i].ml_name, "registerMenuItem") == 0)
-      {
-        FontForge_methods[i].ml_meth = func;
-        return;
-      }
-}
+//VISIBLE void
+//FfPy_Replace_MenuItemStub (PyObject *(*func) (PyObject *, PyObject *))
+//{
+//  int i;
+//
+//  for (i = 0; FontForge_methods[i].ml_name != NULL; ++i)
+//    if (strcmp (FontForge_methods[i].ml_name, "registerMenuItem") == 0)
+//      {
+//        FontForge_methods[i].ml_meth = func;
+//        return;
+//      }
+//}
 
 #if PY_MAJOR_VERSION >= 3
 static PyModuleDef fontforge_module = {
@@ -22154,123 +22154,121 @@ SetPythonModuleMetadata (PyObject *module)
 }
 
 
-extern int no_windowing_ui, running_script;
+//void
+//PyFF_Stdin (void)
+//{
+//  no_windowing_ui = running_script = true;
+//
+//  PyFF_ProcessInitFiles ();
+//
+//  if (isatty (fileno (stdin)))
+//    PyRun_InteractiveLoop (stdin, "<stdin>");
+//  else
+//    PyRun_SimpleFile (stdin, "<stdin>");
+//  exit (0);
+//}
+
+//#if PY_MAJOR_VERSION >= 3 /*---------------------------------------------*/
+//
+//static wchar_t *
+//copy_to_wide_string (const char *s)
+//{
+//  size_t n;
+//  wchar_t *ws;
+//
+//  ws = NULL;
+//  n = mbstowcs (NULL, s, 0) + 1;
+//  if (n != (size_t) - 1)
+//    {
+//      ws = xcalloc (n, sizeof (wchar_t));
+//      mbstowcs (ws, s, n);
+//    }
+//  return ws;
+//}
+//
+//void
+//PyFF_Main (int argc, char **argv, int start)
+//{
+//  char *arg;
+//  wchar_t **newargv;
+//  int i;
+//  int exit_status;
+//
+//  no_windowing_ui = running_script = true;
+//
+//  PyFF_ProcessInitFiles ();
+//
+//  newargv = xcalloc (argc + 1, sizeof (wchar_t *));
+//  arg = argv[start];
+//  if (*arg == '-' && arg[1] == '-')
+//    ++arg;
+//  if (strcmp (arg, "-script") == 0)
+//    ++start;
+//
+//  newargv[0] = copy_to_wide_string (argv[0]);
+//  if (newargv[0] == NULL)
+//    {
+//      fprintf (stderr,
+//               "argv[0] is an invalid multibyte sequence in the current locale\n");
+//      exit (1);
+//    }
+//  for (i = start; i < argc; ++i)
+//    {
+//      newargv[i - start + 1] = copy_to_wide_string (argv[i]);
+//      if (newargv[i - start + 1] == NULL)
+//        {
+//          fprintf (stderr,
+//                   "argv[%d] is an invalid multibyte sequence in the current locale\n",
+//                   i);
+//          exit (1);
+//        }
+//    }
+//  newargv[i - start + 1] = NULL;
+//
+//  exit_status = Py_Main (2, newargv);
+//
+//  i = 0;
+//  while (newargv[i] != NULL)
+//    {
+//      free (newargv[i]);
+//      i++;
+//    }
+//  free (newargv);
+//
+//  exit (exit_status);
+//}
+//
+//#else /* python 2.x */
+//
+//void
+//PyFF_Main (int argc, char **argv, int start)
+//{
+//  char **newargv, *arg;
+//  int i;
+//
+//  no_windowing_ui = true;
+//  running_script = true;
+//
+//  PyFF_ProcessInitFiles ();
+//
+//  newargv = xcalloc (argc + 1, sizeof (char *));
+//  arg = argv[start];
+//  if (arg[0] == '-' && arg[1] == '-')
+//    ++arg;
+//  if (strcmp (arg, "-script") == 0)
+//    ++start;
+//  newargv[0] = argv[0];
+//  for (i = start; i < argc; ++i)
+//    newargv[i - start + 1] = argv[i];
+//  newargv[i - start + 1] = NULL;
+//  int exit_status = Py_Main (i - start + 1, newargv);
+//  exit (exit_status);
+//}
+//
+//#endif /* python 2.x */
 
 void
-PyFF_Stdin (void)
-{
-  no_windowing_ui = running_script = true;
-
-  PyFF_ProcessInitFiles ();
-
-  if (isatty (fileno (stdin)))
-    PyRun_InteractiveLoop (stdin, "<stdin>");
-  else
-    PyRun_SimpleFile (stdin, "<stdin>");
-  exit (0);
-}
-
-#if PY_MAJOR_VERSION >= 3 /*---------------------------------------------*/
-
-static wchar_t *
-copy_to_wide_string (const char *s)
-{
-  size_t n;
-  wchar_t *ws;
-
-  ws = NULL;
-  n = mbstowcs (NULL, s, 0) + 1;
-  if (n != (size_t) - 1)
-    {
-      ws = xcalloc (n, sizeof (wchar_t));
-      mbstowcs (ws, s, n);
-    }
-  return ws;
-}
-
-void
-PyFF_Main (int argc, char **argv, int start)
-{
-  char *arg;
-  wchar_t **newargv;
-  int i;
-  int exit_status;
-
-  no_windowing_ui = running_script = true;
-
-  PyFF_ProcessInitFiles ();
-
-  newargv = xcalloc (argc + 1, sizeof (wchar_t *));
-  arg = argv[start];
-  if (*arg == '-' && arg[1] == '-')
-    ++arg;
-  if (strcmp (arg, "-script") == 0)
-    ++start;
-
-  newargv[0] = copy_to_wide_string (argv[0]);
-  if (newargv[0] == NULL)
-    {
-      fprintf (stderr,
-               "argv[0] is an invalid multibyte sequence in the current locale\n");
-      exit (1);
-    }
-  for (i = start; i < argc; ++i)
-    {
-      newargv[i - start + 1] = copy_to_wide_string (argv[i]);
-      if (newargv[i - start + 1] == NULL)
-        {
-          fprintf (stderr,
-                   "argv[%d] is an invalid multibyte sequence in the current locale\n",
-                   i);
-          exit (1);
-        }
-    }
-  newargv[i - start + 1] = NULL;
-
-  exit_status = Py_Main (2, newargv);
-
-  i = 0;
-  while (newargv[i] != NULL)
-    {
-      free (newargv[i]);
-      i++;
-    }
-  free (newargv);
-
-  exit (exit_status);
-}
-
-#else /* python 2.x */
-
-void
-PyFF_Main (int argc, char **argv, int start)
-{
-  char **newargv, *arg;
-  int i;
-
-  no_windowing_ui = true;
-  running_script = true;
-
-  PyFF_ProcessInitFiles ();
-
-  newargv = xcalloc (argc + 1, sizeof (char *));
-  arg = argv[start];
-  if (arg[0] == '-' && arg[1] == '-')
-    ++arg;
-  if (strcmp (arg, "-script") == 0)
-    ++start;
-  newargv[0] = argv[0];
-  for (i = start; i < argc; ++i)
-    newargv[i - start + 1] = argv[i];
-  newargv[i - start + 1] = NULL;
-  int exit_status = Py_Main (i - start + 1, newargv);
-  exit (exit_status);
-}
-
-#endif /* python 2.x */
-
-void
-PyFF_ScriptFile (FontViewBase * fv, SplineChar *sc, char *filename)
+PyFF_ScriptFile (FontViewBase *fv, SplineChar *sc, char *filename)
 {
   PyObject *fp = PyFile_FromString (filename, "rb");
 
@@ -22288,7 +22286,7 @@ PyFF_ScriptFile (FontViewBase * fv, SplineChar *sc, char *filename)
 }
 
 void
-PyFF_ScriptString (FontViewBase * fv, SplineChar *sc, int layer, char *str)
+PyFF_ScriptString (FontViewBase *fv, SplineChar *sc, int layer, char *str)
 {
 
   fv_active_in_ui = fv;         /* Make fv known to interpreter */
@@ -22300,7 +22298,7 @@ PyFF_ScriptString (FontViewBase * fv, SplineChar *sc, int layer, char *str)
 }
 
 void
-PyFF_FreeFV (FontViewBase * fv)
+PyFF_FreeFV (FontViewBase *fv)
 {
   if (fv->python_fv_object != NULL)
     {
@@ -22337,7 +22335,7 @@ PyFF_ProcessInitFiles (void)
   if (!done)
     {
       char *init_script =
-        x_gc_strjoin (SHAREDIR, "/python/", py_init_script, NULL);
+      	x_gc_strjoin (SHAREDIR, "/python/", py_init_script, NULL);
       PyObject *fp = PyFile_FromString (init_script, "rb");
       if (fp != NULL)
         PyRun_SimpleFile (PyFile_AsFile (fp), init_script);
@@ -22399,7 +22397,7 @@ PyFF_CallDictFunc (PyObject *dict, char *key, char *argtypes, ...)
 }
 
 void
-PyFF_InitFontHook (FontViewBase * fv)
+PyFF_InitFontHook (FontViewBase *fv)
 {
   /* Ok we just created a new fontview, and attached it to a splinefont */
   /*  We have not added a window or menu to it yet */

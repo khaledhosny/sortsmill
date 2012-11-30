@@ -43,6 +43,7 @@
 #include <time.h>
 #include <locale.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <xalloc.h>
 #include "ttf.h"
 #include "scripting.h"
@@ -51,11 +52,36 @@
 #include <canonicalize.h>
 #include <sortsmillff/xdie_on_null.h>
 
-int no_windowing_ui = false;
-int running_script = false;
-int use_utf8_in_script = true;
+VISIBLE int no_windowing_ui = false;
+VISIBLE int running_script = false;
+VISIBLE int use_utf8_in_script = true;
+
+VISIBLE bool
+get_no_windowing_ui (void)
+{
+  return no_windowing_ui;
+}
+
+VISIBLE void
+set_no_windowing_ui (bool v)
+{
+  no_windowing_ui = v;
+}
+
+VISIBLE bool
+get_running_script (void)
+{
+  return running_script;
+}
+
+VISIBLE void
+set_running_script (bool v)
+{
+  running_script = v;
+}
 
 #ifndef _NO_FFSCRIPT
+
 static int verbose = -1;
 static struct dictionary globals;
 

@@ -391,10 +391,10 @@ PyFF_registerMenuItem (PyObject *self, PyObject *args)
   Py_RETURN_NONE;
 }
 
-void
-PythonUI_Init (void)
-{
-  FfPy_Replace_MenuItemStub (PyFF_registerMenuItem);
-}
+//void
+//PythonUI_Init (void)
+//{
+//  FfPy_Replace_MenuItemStub (PyFF_registerMenuItem);
+//}
 
 #endif

@@ -31,6 +31,7 @@
 #include <Python.h>
 #endif
 
+#include "scripting.h"
 #include "fontforgeui.h"
 #include "annotations.h"
 #include <xalloc.h>
@@ -277,7 +278,7 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   FF_SetClipInterface (&gdraw_clip_interface);
 #ifndef _NO_PYTHON
   Py_Initialize ();
-  PythonUI_Init ();
+  //  PythonUI_Init ();
 #endif
 
   InitSimpleStuff ();

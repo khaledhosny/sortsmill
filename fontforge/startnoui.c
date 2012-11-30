@@ -125,11 +125,8 @@ fontforge_main_in_guile_mode (int argc, char **argv)
           exit (0);
         }
     }
-#if defined(_NO_PYTHON)
+
   ProcessNativeScript (argc, argv, stdin);
-#else
-  PyFF_Stdin ();
-#endif
 
   uninm_names_db_close (names_db);
   return 0;
