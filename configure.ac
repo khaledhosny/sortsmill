@@ -62,6 +62,12 @@ AC_SUBST([LT_OBJDIR])
 AC_PATH_XTRA
 i_do_have_x="${have_x}"
 i_do_have_gui="${i_do_have_x}"
+HAVE_GUI=0
+if test x"${i_do_have_x}" = xyes; then
+   HAVE_GUI=1
+fi
+AC_DEFINE_UNQUOTED([HAVE_GUI],[${HAVE_GUI}],[Define as 1 if building with the GUI; otherwise define as 0.])
+AC_SUBST([HAVE_GUI])
 
 AC_SUBST([HOST],["$host"])
 AC_SUBST([MACAPP])
@@ -215,7 +221,7 @@ if test x"${i_do_have_gui}" = xyes; then
 fi
 
 if test x"${HAVE_LIBUNISTRING}" != xyes; then
-   AC_MSG_ERROR([Cannot find GNU libunistring. ${PACKAGE_NAME} cannot be built without it.])
+   AC_MSG_ERROR([Cannot find GNU libunistring. ${PACKAGE_NAME} cannot be built without it. See http://www.gnu.org/software/libunistring/])
 fi
 
 AC_ARG_VAR([FREETYPE_SOURCE],
@@ -230,7 +236,10 @@ FONTFORGE_ARG_WITH_LIBUNICODENAMES
 
 FONTFORGE_CONFIG_FREETYPE_DEBUGGER
 
-if test x"${i_do_have_python_scripting}" = xyes -o x"${i_do_have_python_extension}" = xyes; then
+if test x"${i_do_have_python_scripting}" = xyes; then
+   if test x"${PYTHON_VERSION}" != x"2.7"; then
+      AC_MSG_ERROR([Python support in ${PACKAGE_NAME} requires Python 2.7.x. You are using Python ${PYTHON_VERSION}.])
+   fi
    FONTFORGE_REQUIRE_PYTHON_MODULE([gmpy])
    FONTFORGE_PROG_CYTHON_WORKS
 fi

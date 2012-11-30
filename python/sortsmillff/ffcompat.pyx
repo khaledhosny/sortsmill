@@ -180,152 +180,159 @@ def hasSpiro ():
 #--------------------------------------------------------------------------
 #
 # Implementation of registerMenuItem.
-#
-# FIXME: Move this to its own module and then import it.
-# FIXME: Make it a do-nothing if there is no GUI support.
 
-ctypedef struct __menu_item_data:
-  int flag
-  PyObject *menu_func
-  PyObject *enable_func
-  PyObject *data
+IF HAVE_GUI:
 
-def __menu_flags (which_window):
-  message = 'expected "Glyph" and/or "Font"'
-  cdef int flags = 0
-  glyph = ["glyph", "char"]
-  font = ["font"]
-  if isinstance (which_window, str):
-    if which_window.lower () in glyph:
-      flags |= usermenu.menu_cv
-    elif which_window.lower () in font:
-      flags |= usermenu.menu_fv
-    else:
-      raise ValueError (message)
-  else:
-    try:
-      for s in which_window:
-        pass
-    except:
-      raise ValueError (message)
-    for s in which_window:
-      if s.lower () in glyph:
+  ctypedef struct __menu_item_data:
+    int flag
+    PyObject *menu_func
+    PyObject *enable_func
+    PyObject *data
+
+  def __menu_flags (which_window):
+    message = 'expected "Glyph" and/or "Font"'
+    cdef int flags = 0
+    glyph = ["glyph", "char"]
+    font = ["font"]
+    if isinstance (which_window, str):
+      if which_window.lower () in glyph:
         flags |= usermenu.menu_cv
-      elif s.lower () in font:
+      elif which_window.lower () in font:
         flags |= usermenu.menu_fv
       else:
         raise ValueError (message)
-  return flags
+    else:
+      try:
+        for s in which_window:
+          pass
+      except:
+        raise ValueError (message)
+      for s in which_window:
+        if s.lower () in glyph:
+          flags |= usermenu.menu_cv
+        elif s.lower () in font:
+          flags |= usermenu.menu_fv
+        else:
+          raise ValueError (message)
+    return flags
 
-cdef char **__submenu_names (object names):
-  if isinstance (names, str):
-    names = [names]
-  cdef size_t length = len (names)
-  cdef char **result = \
-      <char **> xgc.x_gc_malloc ((length + 1) * sizeof (char *))
-  cdef size_t i
-  for i from 0 <= i < length:
-    result[i] = xgc.x_gc_strdup (names[i])
-  return result
+  cdef char **__submenu_names (object names):
+    if isinstance (names, str):
+      names = [names]
+    cdef size_t length = len (names)
+    cdef char **result = \
+        <char **> xgc.x_gc_malloc ((length + 1) * sizeof (char *))
+    cdef size_t i
+    for i from 0 <= i < length:
+      result[i] = xgc.x_gc_strdup (names[i])
+    return result
 
-cdef char *__shortcut_str (object shortcut_string):
-  cdef char *result = NULL
-  if shortcut_string is not None:
-    result = xgc.x_gc_strdup (shortcut_string)
-  return result
+  cdef char *__shortcut_str (object shortcut_string):
+    cdef char *result = NULL
+    if shortcut_string is not None:
+      result = xgc.x_gc_strdup (shortcut_string)
+    return result
 
-cdef PyObject *__ff_obj_to_py (int flag, void *ff_obj):
-  assert (flag == usermenu.menu_cv or flag == usermenu.menu_fv)
-  cdef PyObject *result = NULL
-  if flag == usermenu.menu_cv:
-    result = PySC_From_SC_I (<SplineChar *> ff_obj)
-  elif flag == usermenu.menu_fv:
-    result = PyFV_From_FV_I (<FontViewBase *> ff_obj)
-  return result
+  cdef PyObject *__ff_obj_to_py (int flag, void *ff_obj):
+    assert (flag == usermenu.menu_cv or flag == usermenu.menu_fv)
+    cdef PyObject *result = NULL
+    if flag == usermenu.menu_cv:
+      result = PySC_From_SC_I (<SplineChar *> ff_obj)
+    elif flag == usermenu.menu_fv:
+      result = PyFV_From_FV_I (<FontViewBase *> ff_obj)
+    return result
 
-def __call_python (func not None, data, ff_obj not None,
-                   bool result_is_bool):
-  try:
-    result = func (data, ff_obj)
-    if result_is_bool:
-      result = not not result
-  except:
-    tb = ''.join (traceback.format_exc ())
-    msg = ''.join (traceback.format_exception_only (sys.exc_type, sys.exc_value))
-    logWarning (tb.replace('%', '%%'))
-    postError('Unhandled exception', msg.replace('%','%%'))
-  return result
+  def __call_python (func not None, data, ff_obj not None,
+                     bool result_is_bool):
+    try:
+      result = func (data, ff_obj)
+      if result_is_bool:
+        result = not not result
+    except:
+      tb = ''.join (traceback.format_exc ())
+      msg = ''.join (traceback.format_exception_only (sys.exc_type, sys.exc_value))
+      logWarning (tb.replace('%', '%%'))
+      postError('Unhandled exception', msg.replace('%','%%'))
+    return result
 
-cdef void __menu_info_func (void *data, void *ff_obj):
-  cdef __menu_item_data *py_data = <__menu_item_data *> data
-  cdef PyObject *obj = __ff_obj_to_py (py_data.flag, ff_obj)
-  args = (<object> py_data.menu_func, <object> py_data.data,
-          <object> obj, False)
-  PyObject_CallObject (__call_python, args)
+  cdef void __menu_info_func (void *data, void *ff_obj):
+    cdef __menu_item_data *py_data = <__menu_item_data *> data
+    cdef PyObject *obj = __ff_obj_to_py (py_data.flag, ff_obj)
+    args = (<object> py_data.menu_func, <object> py_data.data,
+            <object> obj, False)
+    PyObject_CallObject (__call_python, args)
 
-cdef int __menu_info_check (void *data, void *ff_obj):
-  cdef bool enabled = True
-  cdef __menu_item_data *py_data = <__menu_item_data *> data
-  cdef PyObject *obj
-  if py_data.enable_func != <PyObject *> None:
-    obj = __ff_obj_to_py (py_data.flag, ff_obj)
-    args = (<object> py_data.enable_func, <object> py_data.data,
-            <object> obj, True)
-    retval = PyObject_CallObject (__call_python, args)
-    enabled = PyObject_IsTrue (retval)
-  return enabled
+  cdef int __menu_info_check (void *data, void *ff_obj):
+    cdef bool enabled = True
+    cdef __menu_item_data *py_data = <__menu_item_data *> data
+    cdef PyObject *obj
+    if py_data.enable_func != <PyObject *> None:
+      obj = __ff_obj_to_py (py_data.flag, ff_obj)
+      args = (<object> py_data.enable_func, <object> py_data.data,
+              <object> obj, True)
+      retval = PyObject_CallObject (__call_python, args)
+      enabled = PyObject_IsTrue (retval)
+    return enabled
 
-cdef void __registerMenuItem (int flag,
-                              object menu_function,
-                              object enable_function,
-                              object data,
-                              object shortcut_string,
-                              object submenu_names):
-  assert hasUserInterface ()
-  cdef __menu_item_data *py_data
-  cdef char **menu_names
-  cdef char *shortcut_str
-  cdef usermenu.menu_info_data menu_data
-  cdef void (*register_menu_item) (usermenu.menu_info_func,
-                                   usermenu.menu_info_check,
-                                   usermenu.menu_info_data, int,
-                                   char *, char **)
-  py_data = <__menu_item_data *> xgc.x_gc_malloc (sizeof (__menu_item_data))
-  Py_XINCREF (<PyObject *> menu_function)
-  Py_XINCREF (<PyObject *> enable_function)
-  Py_XINCREF (<PyObject *> data)
-  py_data.flag = flag
-  py_data.menu_func = <PyObject *> menu_function
-  py_data.enable_func = <PyObject *> enable_function
-  py_data.data = <PyObject *> data
-  menu_names = __submenu_names (submenu_names)
-  menu_data = <usermenu.menu_info_data> py_data
-  shortcut_str = __shortcut_str (shortcut_string)
-  register_menu_item = <void (*) (usermenu.menu_info_func,
-                                  usermenu.menu_info_check,
-                                  usermenu.menu_info_data, int,
-                                  char *, char **)> usermenu.RegisterMenuItem
-  register_menu_item (__menu_info_func, __menu_info_check, menu_data,
-                      flag, shortcut_str, menu_names)
+  cdef void __registerMenuItem (int flag,
+                                object menu_function,
+                                object enable_function,
+                                object data,
+                                object shortcut_string,
+                                object submenu_names):
+    assert hasUserInterface ()
+    cdef __menu_item_data *py_data
+    cdef char **menu_names
+    cdef char *shortcut_str
+    cdef usermenu.menu_info_data menu_data
+    cdef void (*register_menu_item) (usermenu.menu_info_func,
+                                     usermenu.menu_info_check,
+                                     usermenu.menu_info_data, int,
+                                     char *, char **)
+    py_data = <__menu_item_data *> xgc.x_gc_malloc (sizeof (__menu_item_data))
+    Py_XINCREF (<PyObject *> menu_function)
+    Py_XINCREF (<PyObject *> enable_function)
+    Py_XINCREF (<PyObject *> data)
+    py_data.flag = flag
+    py_data.menu_func = <PyObject *> menu_function
+    py_data.enable_func = <PyObject *> enable_function
+    py_data.data = <PyObject *> data
+    menu_names = __submenu_names (submenu_names)
+    menu_data = <usermenu.menu_info_data> py_data
+    shortcut_str = __shortcut_str (shortcut_string)
+    register_menu_item = <void (*) (usermenu.menu_info_func,
+                                    usermenu.menu_info_check,
+                                    usermenu.menu_info_data, int,
+                                    char *, char **)> usermenu.RegisterMenuItem
+    register_menu_item (__menu_info_func, __menu_info_check, menu_data,
+                        flag, shortcut_str, menu_names)
 
-# FIXME: Make this a do-nothing if there is no GUI support.
-def registerMenuItem (menu_function not None,
-                      enable_function,
-                      data,
-                      which_window not None,
-                      shortcut_string,
-                      submenu_names not None):
-  if isinstance (shortcut_string, str):
-    warnings.warn ('registerMenuItem with "None" as shortcut_string is deprecated; use the None object instead.')
-    shortcut_str = None
-  cdef int flags
-  if hasUserInterface ():
-    flags = __menu_flags (which_window)
-    if flags & usermenu.menu_cv != 0:
-      __registerMenuItem (usermenu.menu_cv, menu_function, enable_function,
-                          data, shortcut_string, submenu_names)
-    if flags & usermenu.menu_fv != 0:
-      __registerMenuItem (usermenu.menu_fv, menu_function, enable_function,
-                          data, shortcut_string, submenu_names)
+  def registerMenuItem (menu_function not None,
+                        enable_function,
+                        data,
+                        which_window not None,
+                        shortcut_string,
+                        submenu_names not None):
+    if isinstance (shortcut_string, str):
+      warnings.warn ('registerMenuItem with "None" as shortcut_string is deprecated; use the None object instead.')
+      shortcut_str = None
+    cdef int flags
+    if hasUserInterface ():
+      flags = __menu_flags (which_window)
+      if flags & usermenu.menu_cv != 0:
+        __registerMenuItem (usermenu.menu_cv, menu_function, enable_function,
+                            data, shortcut_string, submenu_names)
+      if flags & usermenu.menu_fv != 0:
+        __registerMenuItem (usermenu.menu_fv, menu_function, enable_function,
+                            data, shortcut_string, submenu_names)
+
+IF not HAVE_GUI:
+  def registerMenuItem (menu_function not None,
+                        enable_function,
+                        data,
+                        which_window not None,
+                        shortcut_string,
+                        submenu_names not None):
+    pass
 
 #--------------------------------------------------------------------------
