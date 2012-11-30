@@ -25,6 +25,9 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import sys
+import traceback
+
 try:
 
   import fontforge
@@ -46,8 +49,14 @@ try:
   if os.path.exists(user_init):
     try:
       execfile(user_init)
-    except Exception as e:
-      print ("A Python exception occurred in user_init.py: " + str (e))
+    except:
+      tb = ''.join (traceback.format_exc ())
+      msg = ''.join (traceback.format_exception_only (sys.exc_type, sys.exc_value))
+      fontforge.logWarning (tb.replace('%', '%%'))
+      fontforge.postError('Unhandled exception in user_init.py', msg.replace('%','%%'))
 
-except Exception as e:
-  print ("A Python exception occurred in site_init.py: " + str (e))
+except:
+  tb = ''.join (traceback.format_exc ())
+  msg = ''.join (traceback.format_exception_only (sys.exc_type, sys.exc_value))
+  fontforge.logWarning (tb.replace('%', '%%'))
+  fontforge.postError('Unhandled exception in site_init.py', msg.replace('%','%%'))

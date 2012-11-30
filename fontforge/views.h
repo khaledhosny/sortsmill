@@ -679,8 +679,6 @@ VISIBLE extern void FVAutoWidth2(FontView *fv);
 
 extern void SC_MarkInstrDlgAsChanged(SplineChar *sc);
 
-extern void PythonUI_Init(void);
-
 extern void SCStroke(SplineChar *sc);
 
 extern void PfaEditSetFallback(void);
@@ -1163,10 +1161,6 @@ extern void FVCompareLayerToLayer(FontView *fv);
 
 extern void MathInit(void);
 extern void SFMathDlg(SplineFont *sf,int def_layer);
-
-extern GMenuItem2 *cvpy_menu, *fvpy_menu;
-extern void cvpy_tllistcheck(GWindow gw,struct gmenuitem *mi,GEvent *e);
-extern void fvpy_tllistcheck(GWindow gw,struct gmenuitem *mi,GEvent *e);
 
 extern GMenuItem2 *cv_menu, *fv_menu;
 extern void cv_tl2listcheck(GWindow gw,struct gmenuitem *mi,GEvent *e);

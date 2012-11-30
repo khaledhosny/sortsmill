@@ -122,21 +122,20 @@ is_LIGATURE:
 
 if GRAPHICAL_USER_INTERFACE
 
-libsortsmillff_fontforgeexe_la_SOURCES = alignment.c anchorsaway.c	\
-	autowidth2dlg.c basedlg.c bdfinfo.c bitmapdlg.c bitmapview.c	\
-	charinfo.c charview.c clipui.c combinations.c contextchain.c	\
-	cursors.c cvaddpoints.c cvdebug.c cvdgloss.c cvexportdlg.c		\
-	cvfreehand.c cvgetinfo.c cvgridfit.c cvhand.c cvhints.c			\
-	cvimportdlg.c cvknife.c cvpalettes.c cvpointer.c cvruler.c		\
-	cvshapes.c cvstroke.c cvtranstools.c displayfonts.c effectsui.c	\
-	encodingui.c fontinfo.c fontview.c freetypeui.c fvfontsdlg.c	\
-	fvmetricsdlg.c gotodlg.c groupsdlg.c histograms.c		\
-	kernclass.c layer2layer.c lookupui.c macencui.c math.c			\
-	metricsview.c mmdlg.c nonlineartransui.c openfontdlg.c	\
-	prefs.c problems.c pythonui.c savefontdlg.c scriptingdlg.c		\
-	scstylesui.c searchview.c sftextfield.c showatt.c simplifydlg.c	\
-	startui.c statemachine.c tilepath.c transform.c	\
-	ttfinstrsui.c uiutil.c windowmenu.c justifydlg.c deltaui.c		\
+libsortsmillff_fontforgeexe_la_SOURCES = alignment.c anchorsaway.c		\
+	autowidth2dlg.c basedlg.c bdfinfo.c bitmapdlg.c bitmapview.c		\
+	charinfo.c charview.c clipui.c combinations.c contextchain.c		\
+	cursors.c cvaddpoints.c cvdebug.c cvdgloss.c cvexportdlg.c			\
+	cvfreehand.c cvgetinfo.c cvgridfit.c cvhand.c cvhints.c				\
+	cvimportdlg.c cvknife.c cvpalettes.c cvpointer.c cvruler.c			\
+	cvshapes.c cvstroke.c cvtranstools.c displayfonts.c effectsui.c		\
+	encodingui.c fontinfo.c fontview.c freetypeui.c fvfontsdlg.c		\
+	fvmetricsdlg.c gotodlg.c groupsdlg.c histograms.c kernclass.c		\
+	layer2layer.c lookupui.c macencui.c math.c metricsview.c mmdlg.c	\
+	nonlineartransui.c openfontdlg.c prefs.c problems.c savefontdlg.c	\
+	scriptingdlg.c scstylesui.c searchview.c sftextfield.c showatt.c	\
+	simplifydlg.c startui.c statemachine.c tilepath.c transform.c		\
+	ttfinstrsui.c uiutil.c windowmenu.c justifydlg.c deltaui.c			\
 	usermenu.c
 
 else !GRAPHICAL_USER_INTERFACE

@@ -63,7 +63,9 @@ cdef extern from "scripting.h":
   bool get_running_script ()
   void set_running_script (bool)
 
+import sys
 import warnings
+import traceback
 
 from sortsmillff.legacy.fontforge import (
   layer,
@@ -241,11 +243,25 @@ cdef PyObject *__ff_obj_to_py (int flag, void *ff_obj):
     result = PyFV_From_FV_I (<FontViewBase *> ff_obj)
   return result
 
+def __call_python (func not None, data, ff_obj not None,
+                   bool result_is_bool):
+  try:
+    result = func (data, ff_obj)
+    if result_is_bool:
+      result = not not result
+  except:
+    tb = ''.join (traceback.format_exc ())
+    msg = ''.join (traceback.format_exception_only (sys.exc_type, sys.exc_value))
+    logWarning (tb.replace('%', '%%'))
+    postError('Unhandled exception', msg.replace('%','%%'))
+  return result
+
 cdef void __menu_info_func (void *data, void *ff_obj):
   cdef __menu_item_data *py_data = <__menu_item_data *> data
   cdef PyObject *obj = __ff_obj_to_py (py_data.flag, ff_obj)
-  args = (<object> py_data.data, <object> obj)
-  PyObject_CallObject (<object> py_data.menu_func, args)
+  args = (<object> py_data.menu_func, <object> py_data.data,
+          <object> obj, False)
+  PyObject_CallObject (__call_python, args)
 
 cdef int __menu_info_check (void *data, void *ff_obj):
   cdef bool enabled = True
@@ -253,8 +269,9 @@ cdef int __menu_info_check (void *data, void *ff_obj):
   cdef PyObject *obj
   if py_data.enable_func != <PyObject *> None:
     obj = __ff_obj_to_py (py_data.flag, ff_obj)
-    args = (<object> py_data.data, <object> obj)
-    retval = PyObject_CallObject (<object> py_data.enable_func, args)
+    args = (<object> py_data.enable_func, <object> py_data.data,
+            <object> obj, True)
+    retval = PyObject_CallObject (__call_python, args)
     enabled = PyObject_IsTrue (retval)
   return enabled
 
@@ -298,6 +315,9 @@ def registerMenuItem (menu_function not None,
                       which_window not None,
                       shortcut_string,
                       submenu_names not None):
+  if isinstance (shortcut_string, str):
+    warnings.warn ('registerMenuItem with "None" as shortcut_string is deprecated; use the None object instead.')
+    shortcut_str = None
   cdef int flags
   if hasUserInterface ():
     flags = __menu_flags (which_window)
