@@ -22051,7 +22051,7 @@ FontForge_PythonInit (void)
 /* ************************************************************************** */
 /* See also _PyInit_fontforge above for the version 3 case */
 
-static void
+VISIBLE void
 initPyFontForge (void)
 {
   PyObject *m;

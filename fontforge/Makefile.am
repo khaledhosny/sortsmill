@@ -31,12 +31,12 @@ include $(top_srcdir)/mk/flags.am
 
 if THE_PROGRAMS
 
-bin_PROGRAMS = fontforge
-dist_man_MANS = fontforge.1
+bin_PROGRAMS = fontforge fontlint
+dist_man_MANS = fontforge.1 fontlint.1
 
 if NATIVE_SCRIPTING
-nodist_bin_SCRIPTS = fontimage fontlint sfddiff
-dist_man_MANS += fontimage.1 fontlint.1 sfddiff.1
+nodist_bin_SCRIPTS = fontimage sfddiff
+dist_man_MANS += fontimage.1 sfddiff.1
 endif NATIVE_SCRIPTING
 
 endif THE_PROGRAMS
@@ -74,6 +74,11 @@ fontforge_SOURCES = main.c
 fontforge_LDADD = libsortsmillff_fontforgeexe.la $(LDADD)	\
 	$(top_builddir)/lib/libgnu.la
 fontforge_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS) -export-dynamic
+
+fontlint_SOURCES = fontlint.c
+fontlint_LDADD = libsortsmillff_fontforge.la $(LDADD)	\
+	$(top_builddir)/lib/libgnu.la
+fontlint_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS)
 
 endif THE_PROGRAMS
 

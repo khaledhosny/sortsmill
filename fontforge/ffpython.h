@@ -113,3 +113,8 @@ PyObject *PyFV_From_FV_I (FontViewBase *fv);
 int FlagsFromTuple (PyObject *tuple, struct flaglist *flags,
                     const char *flagkind);
 void PyFF_Glyph_Set_Layer (SplineChar *sc, int layer);
+
+#if PY_MAJOR_VERSION <= 2
+void initPyFontForge (void);
+#endif
+
