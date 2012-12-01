@@ -22326,22 +22326,22 @@ PyFF_FreeSC (SplineChar *sc)
   Py_XDECREF ((PyObject *) (sc->python_temporary));
 }
 
-static const char py_init_script[] = "site_init.py";
-
-void
-PyFF_ProcessInitFiles (void)
-{
-  static int done = false;
-  if (!done)
-    {
-      char *init_script =
-      	x_gc_strjoin (SHAREDIR, "/python/", py_init_script, NULL);
-      PyObject *fp = PyFile_FromString (init_script, "rb");
-      if (fp != NULL)
-        PyRun_SimpleFile (PyFile_AsFile (fp), init_script);
-      done = true;
-    }
-}
+//static const char py_init_script[] = "site_init.py";
+//
+//void
+//PyFF_ProcessInitFiles (void)
+//{
+//  static int done = false;
+//  if (!done)
+//    {
+//      char *init_script =
+//      	x_gc_strjoin (SHAREDIR, "/python/", py_init_script, NULL);
+//      PyObject *fp = PyFile_FromString (init_script, "rb");
+//      if (fp != NULL)
+//        PyRun_SimpleFile (PyFile_AsFile (fp), init_script);
+//      done = true;
+//    }
+//}
 
 void
 PyFF_CallDictFunc (PyObject *dict, char *key, char *argtypes, ...)

@@ -239,6 +239,23 @@ ReopenLastFonts (void)
 
 //-------------------------------------------------------------------------
 
+static const char site_init_file[] = "site-init.scm";
+
+static void
+site_init (void)
+{
+  char *init_script = x_gc_strjoin (SHAREDIR, "/guile/", site_init_file, NULL);
+  FILE *f = fopen (init_script, "r");
+  if (f != NULL)
+    {
+      // There is a readable init script.
+      fclose (f);
+      scm_c_primitive_load (init_script);
+    }
+}
+
+//-------------------------------------------------------------------------
+
 static int
 fontforge_main_in_guile_mode (int argc, char **argv)
 {
@@ -278,7 +295,6 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   FF_SetClipInterface (&gdraw_clip_interface);
 #ifndef _NO_PYTHON
   Py_Initialize ();
-  //  PythonUI_Init ();
 #endif
 
   InitSimpleStuff ();
@@ -370,9 +386,7 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   default_background = GDrawGetDefaultBackground (screen_display);
   InitCursors ();
 
-#ifndef _NO_PYTHON
-  PyFF_ProcessInitFiles ();
-#endif
+  site_init ();
 
   /* This is an invisible window to catch some global events */
   wattrs.mask = wam_events | wam_isdlg;

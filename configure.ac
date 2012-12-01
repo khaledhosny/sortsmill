@@ -296,6 +296,11 @@ CYTHON_EXTRA_CFLAGS=""
 FONTFORGE_COMPILER_FLAGS([CYTHON_EXTRA_CFLAGS],
         [-Wno-unused -fwrapv -fno-strict-aliasing])
 
+AC_SUBST([VISIBILITY_DEFAULT_EXTRA_CFLAGS])
+VISIBILITY_DEFAULT_EXTRA_CFLAGS=""
+FONTFORGE_COMPILER_FLAGS([VISIBILITY_DEFAULT_EXTRA_CFLAGS],
+        [-fvisibility=default])
+
 FONTFORGE_C_CONST_FLT_EPSILON
 AC_SUBST([C_CONST_FLT_EPSILON],["${fontforge_cv_c_const_flt_epsilon}"])
 FONTFORGE_C_CONST_DBL_EPSILON
@@ -329,6 +334,7 @@ AH_BOTTOM([#include <config-extra.h>])
 
 #--------------------------------------------------------------------------
 
+AM_CONDITIONAL([HAVE_PYTHON_SCRIPTING],[test x"${i_do_have_python_scripting}" = xyes])
 AM_CONDITIONAL([HAVE_GUI],[test x"${i_do_have_gui}" = xyes])
 AM_CONDITIONAL([MACINTOSH],[test x"${gww_ismac}" = xyes])
 
@@ -350,7 +356,6 @@ FONTFORGE_CREATE_MAKEFILES
 FONTFORGE_CREATE_INDENT_PRO
 AC_CONFIG_FILES([inc/config-extra.h])
 AC_CONFIG_FILES([inc/sortsmillff/cython/config.pxi])
-#AC_CONFIG_FILES([python/site_init.py])
 AC_CONFIG_FILES([python/fontforge.py])
 AC_CONFIG_FILES([python/psMat.py])
 AC_CONFIG_FILES([python/sortsmillff/__init__.py])

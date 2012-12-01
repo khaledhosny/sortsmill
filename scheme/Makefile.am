@@ -58,10 +58,30 @@ sortsmillff/sfd-to-sxml.go: sortsmillff/gsl.go sortsmillff/i18n.go
 
 #--------------------------------------------------------------------------
 
-AM_LDFLAGS = -module $(MY_CFLAGS) $(MY_LIBS)
+nodist_pkgguiledata_DATA = site-init.scm
 
-SWIG_GUILE_CFLAGS = $(AM_CFLAGS) $(SWIG_GUILE_EXTRA_CFLAGS)	\
-	-Dmalloc=xmalloc -Drealloc=xrealloc -Dstrdup=xstrdup
+if HAVE_PYTHON_SCRIPTING
+have_python_scripting = t
+else !HAVE_PYTHON_SCRIPTING
+have_python_scripting = f
+endif !HAVE_PYTHON_SCRIPTING
+
+site-init.scm: site-init.scm.in
+	$(AM_V_GEN)
+	$(AM_V_at)$(SED) 													\
+		-e 's|@''PACKAGE''@|$(PACKAGE)|g' 								\
+		-e 's|@''sysconfdir''@|$(sysconfdir)|g'							\
+		-e 's|@''pkgpythondatadir''@|$(pkgpythondatadir)|g'				\
+		-e 's|@''have_python_scripting''@|$(have_python_scripting)|g'	\
+		< $< > $@-tmp
+	$(AM_V_at)mv $@-tmp $@
+
+EXTRA_DIST += site-init.scm.in
+MOSTLYCLEANFILES += site-init.scm
+
+#--------------------------------------------------------------------------
+
+AM_LDFLAGS = -module $(MY_CFLAGS) $(MY_LIBS)
 
 lib_LTLIBRARIES =
 
@@ -82,7 +102,7 @@ libguile_sortsmillff_brentroot_la_LIBADD =			\
 	$(top_builddir)/lib/libgnu.la
 
 lib_LTLIBRARIES += libguile-sortsmillff_gsl.la
-dist_libguile_sortsmillff_gsl_la_SOURCES = guile_gsl.c
+libguile_sortsmillff_gsl_la_SOURCES = guile_gsl.c
 libguile_sortsmillff_gsl_la_LIBADD =				\
 	$(top_builddir)/auxiliary/libsortsmillff_aux.la	\
 	$(top_builddir)/lib/libgnu.la

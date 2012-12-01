@@ -1,0 +1,41 @@
+;; Copyright (C) 2012 Barry Schwartz
+;; 
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 3 of the License, or
+;; (at your option) any later version.
+;; 
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;; 
+;; You should have received a copy of the GNU General Public License
+;; along with this program; if not, see <http://www.gnu.org/licenses/>.
+
+(use-modules (system foreign))
+
+(if #@have_python_scripting@
+    ;;
+    ;; Load site_init.py.
+    ;;
+    (let ((py-init "@pkgpythondatadir@/site_init.py"))
+      (if (file-exists? py-init)
+          (let* ((this (dynamic-link))
+                 (fopen
+                  (pointer->procedure '*
+                                      (dynamic-func "fopen" this)
+                                      (list '* '*)))
+                 (fclose
+                  (pointer->procedure int
+                                      (dynamic-func "fclose" this)
+                                      (list '*)))
+                 (PyRun_SimpleFile
+                  (pointer->procedure int
+                                      (dynamic-func "PyRun_SimpleFile" this)
+                                      (list '* '*)))
+                 (f (fopen (string->pointer py-init)
+                           (string->pointer "rb"))))
+            (if (not (null-pointer? f))
+                (PyRun_SimpleFile f (string->pointer py-init))
+                (fclose f))))))

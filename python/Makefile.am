@@ -129,10 +129,11 @@ PXI_IN_FILES = $(cythonbuildinc)/config.pxi
 $(PYX_FILES:.pyx=.c): $(PXD_FILES) $(PXI_FILES) $(PXI_IN_FILES)
 
 site_init.py: site_init.py.in
-	$(SED) 															\
+	$(AM_V_GEN)
+	$(AM_V_at)$(SED) 												\
 		-e 's|@''PACKAGE''@|$(PACKAGE)|g' 							\
 		-e 's|@''sysconfdir''@|$(sysconfdir)|g' < $< > $@-tmp
-	mv $@-tmp $@
+	$(AM_V_at)mv $@-tmp $@
 
 EXTRA_DIST = $(PYX_FILES) $(PXD_FILES) $(PXI_FILES) site_init.py.in
 

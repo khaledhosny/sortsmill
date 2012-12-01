@@ -52,7 +52,10 @@ htdocsdir = ${docdir}$(HTDOCS_SUBDIR)
 # Where pkg-config files go.
 pkgconfigdir = ${libdir}/pkgconfig
 
-# Where sys-init.py goes.
+# Where sys-init.scm goes.
+pkgguiledatadir = ${pkgdatadir}/guile
+
+# Where sys_init.py goes.
 pkgpythondatadir = ${pkgdatadir}/python
 
 # Where Guile shared-library extensions go.
