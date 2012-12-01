@@ -35,7 +35,7 @@
           (home (getenv "HOME"))
           (user-config-dir
            (cond
-            (xdg-config-home xdg-config-home)
+            (xdg-config-home)
             (home (string-append (getenv "HOME") "/.config"))
             (else #f))))
      (if user-config-dir
