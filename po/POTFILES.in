@@ -91,7 +91,6 @@ fontforge/print.c
 fontforge/problems.c
 fontforge/psread.c
 fontforge/python.c
-fontforge/pythonui.c
 fontforge/savefont.c
 fontforge/savefontdlg.c
 fontforge/scripting.c
