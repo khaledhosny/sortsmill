@@ -12,8 +12,8 @@ struct _my_args
 static void *
 call_my_main (void *args)
 {
-  struct _my_args a = *(struct _my_args *) args;
-  a.exit_status = my_main (a.argc, a.argv);
+  struct _my_args *a = (struct _my_args *) args;
+  a->exit_status = my_main (a->argc, a->argv);
   return NULL;
 }
 
