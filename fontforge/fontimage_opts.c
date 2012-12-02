@@ -25,7 +25,7 @@
 
 #include "fontimage_opts.h"
 
-const char *gengetopt_args_info_purpose = "Produces an image containing representative glyphs of the font.";
+const char *gengetopt_args_info_purpose = "Produce an image containing representative glyphs of the font.";
 
 const char *gengetopt_args_info_usage = "Usage: fontimage [OPTIONS]... FILE";
 

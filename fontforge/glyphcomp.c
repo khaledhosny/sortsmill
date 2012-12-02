@@ -2281,8 +2281,9 @@ static void comparegsub(struct font_diff *fd) {
 
 #include "ttf.h"
 
-int CompareFonts(SplineFont *sf1, EncMap *map1, SplineFont *sf2, FILE *diffs,
-	int flags) {
+VISIBLE int
+CompareFonts(SplineFont *sf1, EncMap *map1, SplineFont *sf2, FILE *diffs, int flags)
+{
     int gid1, gid2;
     SplineChar *sc, *sc2;
     struct font_diff fd;

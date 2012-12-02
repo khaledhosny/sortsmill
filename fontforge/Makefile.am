@@ -30,16 +30,9 @@ include $(top_srcdir)/mk/flags.am
 #--------------------------------------------------------------------------
 
 if THE_PROGRAMS
-
 # FIXME: Update the manpages for the new gengetopt-based options.
-bin_PROGRAMS = fontforge fontlint fontimage
-dist_man_MANS = fontforge.1 fontlint.1 fontimage.1
-
-if NATIVE_SCRIPTING
-nodist_bin_SCRIPTS = sfddiff
-dist_man_MANS += sfddiff.1
-endif NATIVE_SCRIPTING
-
+bin_PROGRAMS = fontforge fontlint fontimage sfddiff
+dist_man_MANS = fontforge.1 fontlint.1 fontimage.1 sfddiff.1
 endif THE_PROGRAMS
 
 lib_LTLIBRARIES = libsortsmillff_fontforge.la	\
@@ -76,17 +69,26 @@ fontforge_LDADD = libsortsmillff_fontforgeexe.la $(LDADD)	\
 	$(top_builddir)/lib/libgnu.la
 fontforge_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS) -export-dynamic
 
-dist_fontlint_SOURCES = fontlint.c $(srcdir)/fontlint_opts.c	\
-	$(srcdir)/fontlint_opts.h
+dist_fontlint_SOURCES = $(srcdir)/fontlint.c			\
+	$(srcdir)/fontlint_opts.c $(srcdir)/fontlint_opts.h
 fontlint_LDADD = libsortsmillff_fontforge.la $(LDADD)	\
 	$(top_builddir)/lib/libgnu.la
 fontlint_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS)
+$(srcdir)/fontlint.c: $(srcdir)/fontlint_opts.h
 
-dist_fontimage_SOURCES = fontimage.c $(srcdir)/fontimage_opts.c	\
-	$(srcdir)/fontimage_opts.h
+dist_fontimage_SOURCES = $(srcdir)/fontimage.c				\
+	$(srcdir)/fontimage_opts.c $(srcdir)/fontimage_opts.h
 fontimage_LDADD = libsortsmillff_fontforge.la $(LDADD)	\
 	$(top_builddir)/lib/libgnu.la
 fontimage_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS)
+$(srcdir)/fontimage.c: $(srcdir)/fontimage_opts.h
+
+dist_sfddiff_SOURCES = $(srcdir)/sfddiff.c $(srcdir)/sfddiff_opts.c	\
+	$(srcdir)/sfddiff_opts.h
+sfddiff_LDADD = libsortsmillff_fontforge.la $(LDADD)	\
+	$(top_builddir)/lib/libgnu.la
+sfddiff_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS)
+$(srcdir)/sfddiff.c: $(srcdir)/sfddiff_opts.h
 
 endif THE_PROGRAMS
 
@@ -197,7 +199,6 @@ stamp-%-ggo: %.ggo
 #--------------------------------------------------------------------------
 
 EXTRA_DIST = sfddiff.pe fontimage.1 fontlint.1 sfddiff.1	\
-	fontlint_opts.ggo fontimage_opts.ggo
-MOSTLYCLEANFILES = sfddiff
+	fontlint_opts.ggo fontimage_opts.ggo sfddiff_opts.ggo
 
 #--------------------------------------------------------------------------

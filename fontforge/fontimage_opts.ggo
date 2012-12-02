@@ -1,5 +1,5 @@
 package "fontimage"
-purpose "Produces an image containing representative glyphs of the font."
+purpose "Produce an image containing representative glyphs of the font."
 usage "fontimage [OPTIONS]... FILE"
 
 option "width"        W      "Specifies the number of pixels wide to make the output image. If this is omitted (or specified as -1) then the image will be made as wide as it needs to be."     optional int

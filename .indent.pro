@@ -64,6 +64,7 @@
 -T KernPair1
 -T Val
 -T Array
+-T Context
 
 -T PyFF_Font
 -T PyFF_Glyph

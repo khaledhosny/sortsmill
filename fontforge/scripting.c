@@ -163,7 +163,7 @@ script2latin1_copy (const char *str)
 #endif /* _NO_FFSCRIPT */
 
 void
-arrayfree (Array * a)
+arrayfree (Array *a)
 {
   int i;
 
@@ -180,7 +180,7 @@ arrayfree (Array * a)
 
 #ifndef _NO_FFSCRIPT
 static Array *
-arraycopy (Array * a)
+arraycopy (Array *a)
 {
   int i;
   Array *c;
@@ -200,7 +200,7 @@ arraycopy (Array * a)
 }
 
 static void
-array_copy_into (Array * dest, int offset, Array * src)
+array_copy_into (Array *dest, int offset, Array *src)
 {
   int i;
 
@@ -234,7 +234,7 @@ DictionaryFree (struct dictionary *dica)
 }
 
 static int
-DicaLookup (struct dictionary *dica, char *name, Val * val)
+DicaLookup (struct dictionary *dica, char *name, Val *val)
 {
   int i;
 
@@ -252,7 +252,7 @@ DicaLookup (struct dictionary *dica, char *name, Val * val)
 }
 
 static void
-DicaNewEntry (struct dictionary *dica, char *name, Val * val)
+DicaNewEntry (struct dictionary *dica, char *name, Val *val)
 {
 
   if (dica->entries == NULL)
@@ -275,7 +275,7 @@ DicaNewEntry (struct dictionary *dica, char *name, Val * val)
 
 
 static void
-calldatafree (Context * c)
+calldatafree (Context *c)
 {
   int i;
 
@@ -295,7 +295,7 @@ calldatafree (Context * c)
 }
 
 static void
-traceback (Context * c)
+traceback (Context *c)
 {
   int cnt = 0;
   while (c != NULL)
@@ -314,7 +314,7 @@ traceback (Context * c)
 }
 
 static void
-showtoken (Context * c, enum token_type got)
+showtoken (Context *c, enum token_type got)
 {
   if (got == tt_name || got == tt_string)
     LogError (" \"%s\"\n", c->tok_text);
@@ -330,7 +330,7 @@ showtoken (Context * c, enum token_type got)
 }
 
 static void
-expect (Context * c, enum token_type expected, enum token_type got)
+expect (Context *c, enum token_type expected, enum token_type got)
 {
   if (got != expected)
     {
@@ -349,7 +349,7 @@ expect (Context * c, enum token_type expected, enum token_type got)
 }
 
 static void
-unexpected (Context * c, enum token_type got)
+unexpected (Context *c, enum token_type got)
 {
   if (verbose > 0)
     fflush (stdout);
@@ -364,7 +364,7 @@ unexpected (Context * c, enum token_type got)
 }
 
 void
-ScriptError (Context * c, const char *msg)
+ScriptError (Context *c, const char *msg)
 {
   char *t1 = script2utf8_copy (msg);
   char *ufile =
@@ -390,7 +390,7 @@ ScriptError (Context * c, const char *msg)
 }
 
 void
-ScriptErrorString (Context * c, const char *msg, const char *name)
+ScriptErrorString (Context *c, const char *msg, const char *name)
 {
   char *t1 = script2utf8_copy (msg);
   char *t2 = script2utf8_copy (name);
@@ -414,7 +414,7 @@ ScriptErrorString (Context * c, const char *msg, const char *name)
 }
 
 void
-ScriptErrorF (Context * c, const char *format, ...)
+ScriptErrorF (Context *c, const char *format, ...)
 {
   char *ufile =
     NULL_PASSTHRU (c->filename, x_u8_strconv_from_locale (c->filename));
@@ -441,7 +441,7 @@ ScriptErrorF (Context * c, const char *format, ...)
 }
 
 static char *
-forcePSName_copy (Context * c, char *str)
+forcePSName_copy (Context *c, char *str)
 {
   char *pt;
 
@@ -458,7 +458,7 @@ forcePSName_copy (Context * c, char *str)
 }
 
 static char *
-forceASCIIcopy (Context * c, char *str)
+forceASCIIcopy (Context *c, char *str)
 {
   char *pt;
 
@@ -471,7 +471,7 @@ forceASCIIcopy (Context * c, char *str)
 }
 
 static void
-dereflvalif (Val * val)
+dereflvalif (Val *val)
 {
   if (val->type == v_lval)
     {
@@ -484,7 +484,7 @@ dereflvalif (Val * val)
 /* *************************** Built in Functions *************************** */
 
 static void
-PrintVal (Val * val)
+PrintVal (Val *val)
 {
   int j;
 
@@ -526,7 +526,7 @@ PrintVal (Val * val)
 }
 
 static void
-bPrint (Context * c)
+bPrint (Context *c)
 {
   int i;
 
@@ -537,7 +537,7 @@ bPrint (Context * c)
 }
 
 static void
-bError (Context * c)
+bError (Context *c)
 {
 
   if (c->a.argc != 2)
@@ -549,7 +549,7 @@ bError (Context * c)
 }
 
 static void
-bPostNotice (Context * c)
+bPostNotice (Context *c)
 {
   char *t1;
   char *loc;
@@ -577,7 +577,7 @@ bPostNotice (Context * c)
 }
 
 static void
-bAskUser (Context * c)
+bAskUser (Context *c)
 {
   char *quest, *def = "";
 
@@ -636,7 +636,7 @@ bAskUser (Context * c)
 }
 
 static void
-bArray (Context * c)
+bArray (Context *c)
 {
   int i;
 
@@ -655,7 +655,7 @@ bArray (Context * c)
 }
 
 static void
-bSizeOf (Context * c)
+bSizeOf (Context *c)
 {
   if (c->a.argc != 2)
     ScriptError (c, "Wrong number of arguments");
@@ -667,7 +667,7 @@ bSizeOf (Context * c)
 }
 
 static void
-bTypeOf (Context * c)
+bTypeOf (Context *c)
 {
   static char *typenames[] =
     { "Integer", "Real", "String", "Unicode", "LValue",
@@ -682,7 +682,7 @@ bTypeOf (Context * c)
 }
 
 static void
-bStrlen (Context * c)
+bStrlen (Context *c)
 {
 
   if (c->a.argc != 2)
@@ -695,7 +695,7 @@ bStrlen (Context * c)
 }
 
 static void
-bStrstr (Context * c)
+bStrstr (Context *c)
 {
   char *pt;
 
@@ -710,7 +710,7 @@ bStrstr (Context * c)
 }
 
 static void
-bStrSplit (Context * c)
+bStrSplit (Context *c)
 {
   char *pt, *pt2, *str1, *str2;
   int max = -1, len2, cnt, k;
@@ -768,7 +768,7 @@ bStrSplit (Context * c)
 }
 
 static void
-bStrJoin (Context * c)
+bStrJoin (Context *c)
 {
   char *str2;
   int len, len2, k, i;
@@ -807,7 +807,7 @@ bStrJoin (Context * c)
 }
 
 static void
-bStrcasestr (Context * c)
+bStrcasestr (Context *c)
 {
   char *pt;
 
@@ -822,7 +822,7 @@ bStrcasestr (Context * c)
 }
 
 static void
-bStrrstr (Context * c)
+bStrrstr (Context *c)
 {
   char *pt;
   char *haystack, *needle;
@@ -844,7 +844,7 @@ bStrrstr (Context * c)
 }
 
 static void
-bStrsub (Context * c)
+bStrsub (Context *c)
 {
   int start, end;
   char *str;
@@ -865,7 +865,7 @@ bStrsub (Context * c)
 }
 
 static void
-bStrcasecmp (Context * c)
+bStrcasecmp (Context *c)
 {
 
   if (c->a.argc != 3)
@@ -879,7 +879,7 @@ bStrcasecmp (Context * c)
 }
 
 static void
-bStrtol (Context * c)
+bStrtol (Context *c)
 {
   int base = 10;
 
@@ -900,7 +900,7 @@ bStrtol (Context * c)
 }
 
 static void
-bStrtod (Context * c)
+bStrtod (Context *c)
 {
 
   if (c->a.argc != 2)
@@ -913,7 +913,7 @@ bStrtod (Context * c)
 }
 
 static void
-bStrskipint (Context * c)
+bStrskipint (Context *c)
 {
   int base = 10;
   char *end;
@@ -936,7 +936,7 @@ bStrskipint (Context * c)
 }
 
 static void
-bStrftime (Context * c)
+bStrftime (Context *c)
 {
   int isgmt = 1;
   char *oldloc = NULL;
@@ -970,7 +970,7 @@ bStrftime (Context * c)
 }
 
 static void
-bisupper (Context * c)
+bisupper (Context *c)
 {
   const char *pt;
   int ch;
@@ -991,7 +991,7 @@ bisupper (Context * c)
 }
 
 static void
-bislower (Context * c)
+bislower (Context *c)
 {
   const char *pt;
   int ch;
@@ -1012,7 +1012,7 @@ bislower (Context * c)
 }
 
 static void
-bisdigit (Context * c)
+bisdigit (Context *c)
 {
   const char *pt;
   int ch;
@@ -1033,7 +1033,7 @@ bisdigit (Context * c)
 }
 
 static void
-bishexdigit (Context * c)
+bishexdigit (Context *c)
 {
   const char *pt;
   int ch;
@@ -1054,7 +1054,7 @@ bishexdigit (Context * c)
 }
 
 static void
-bisalpha (Context * c)
+bisalpha (Context *c)
 {
   const char *pt;
   int ch;
@@ -1075,7 +1075,7 @@ bisalpha (Context * c)
 }
 
 static void
-bisalnum (Context * c)
+bisalnum (Context *c)
 {
   const char *pt;
   int ch;
@@ -1096,7 +1096,7 @@ bisalnum (Context * c)
 }
 
 static void
-bisspace (Context * c)
+bisspace (Context *c)
 {
   const char *pt;
   int ch;
@@ -1117,7 +1117,7 @@ bisspace (Context * c)
 }
 
 static void
-btoupper (Context * c)
+btoupper (Context *c)
 {
   char *pt;
   const char *ipt;
@@ -1152,7 +1152,7 @@ btoupper (Context * c)
 }
 
 static void
-btolower (Context * c)
+btolower (Context *c)
 {
   char *pt;
   const char *ipt;
@@ -1187,7 +1187,7 @@ btolower (Context * c)
 }
 
 static void
-btomirror (Context * c)
+btomirror (Context *c)
 {
   char *pt;
   const char *ipt;
@@ -1222,7 +1222,7 @@ btomirror (Context * c)
 }
 
 static void
-bLoadPrefs (Context * c)
+bLoadPrefs (Context *c)
 {
 
   if (c->a.argc != 1)
@@ -1231,7 +1231,7 @@ bLoadPrefs (Context * c)
 }
 
 static void
-bSavePrefs (Context * c)
+bSavePrefs (Context *c)
 {
 
   if (c->a.argc != 1)
@@ -1241,7 +1241,7 @@ bSavePrefs (Context * c)
 }
 
 static void
-bGetPrefs (Context * c)
+bGetPrefs (Context *c)
 {
 
   if (c->a.argc != 2)
@@ -1253,7 +1253,7 @@ bGetPrefs (Context * c)
 }
 
 static void
-bSetPrefs (Context * c)
+bSetPrefs (Context *c)
 {
   int ret;
 
@@ -1272,7 +1272,7 @@ bSetPrefs (Context * c)
 }
 
 static void
-bDefaultOtherSubrs (Context * c)
+bDefaultOtherSubrs (Context *c)
 {
 
   if (c->a.argc != 1)
@@ -1281,7 +1281,7 @@ bDefaultOtherSubrs (Context * c)
 }
 
 static void
-bReadOtherSubrsFile (Context * c)
+bReadOtherSubrsFile (Context *c)
 {
 
   if (c->a.argc != 2)
@@ -1294,7 +1294,7 @@ bReadOtherSubrsFile (Context * c)
 }
 
 static void
-bGetEnv (Context * c)
+bGetEnv (Context *c)
 {
   char *env;
 
@@ -1309,7 +1309,7 @@ bGetEnv (Context * c)
 }
 
 static void
-bUnicodeFromName (Context * c)
+bUnicodeFromName (Context *c)
 {
   if (c->a.argc != 2)
     ScriptError (c, "Wrong number of arguments");
@@ -1320,7 +1320,7 @@ bUnicodeFromName (Context * c)
 }
 
 static void
-bNameFromUnicode (Context * c)
+bNameFromUnicode (Context *c)
 {
   char buffer[400];
   int uniinterp;
@@ -1359,7 +1359,7 @@ bNameFromUnicode (Context * c)
 }
 
 static void
-bChr (Context * c)
+bChr (Context *c)
 {
   char buf[2];
   char *temp;
@@ -1397,7 +1397,7 @@ bChr (Context * c)
 }
 
 static void
-bUtf8 (Context * c)
+bUtf8 (Context *c)
 {
   uint32_t buf[2];
   int i;
@@ -1436,7 +1436,7 @@ bUtf8 (Context * c)
 }
 
 static void
-bUCS4 (Context * c)
+bUCS4 (Context *c)
 {
 
   if (c->a.argc != 2)
@@ -1461,7 +1461,7 @@ bUCS4 (Context * c)
 }
 
 static void
-bOrd (Context * c)
+bOrd (Context *c)
 {
   if (c->a.argc != 2 && c->a.argc != 3)
     ScriptError (c, "Wrong number of arguments");
@@ -1494,7 +1494,7 @@ bOrd (Context * c)
 }
 
 static void
-bReal (Context * c)
+bReal (Context *c)
 {
   if (c->a.argc != 2)
     ScriptError (c, "Wrong number of arguments");
@@ -1505,7 +1505,7 @@ bReal (Context * c)
 }
 
 static void
-bUCodePoint (Context * c)
+bUCodePoint (Context *c)
 {
   if (c->a.argc != 2)
     ScriptError (c, "Wrong number of arguments");
@@ -1519,7 +1519,7 @@ bUCodePoint (Context * c)
 }
 
 static void
-bInt (Context * c)
+bInt (Context *c)
 {
   if (c->a.argc != 2)
     ScriptError (c, "Wrong number of arguments");
@@ -1533,7 +1533,7 @@ bInt (Context * c)
 }
 
 static void
-bFloor (Context * c)
+bFloor (Context *c)
 {
   if (c->a.argc != 2)
     ScriptError (c, "Wrong number of arguments");
@@ -1544,7 +1544,7 @@ bFloor (Context * c)
 }
 
 static void
-bCeil (Context * c)
+bCeil (Context *c)
 {
   if (c->a.argc != 2)
     ScriptError (c, "Wrong number of arguments");
@@ -1555,7 +1555,7 @@ bCeil (Context * c)
 }
 
 static void
-bRound (Context * c)
+bRound (Context *c)
 {
   if (c->a.argc != 2)
     ScriptError (c, "Wrong number of arguments");
@@ -1566,7 +1566,7 @@ bRound (Context * c)
 }
 
 static void
-bIsNan (Context * c)
+bIsNan (Context *c)
 {
   if (c->a.argc != 2)
     ScriptError (c, "Wrong number of arguments");
@@ -1577,7 +1577,7 @@ bIsNan (Context * c)
 }
 
 static void
-bIsFinite (Context * c)
+bIsFinite (Context *c)
 {
   if (c->a.argc != 2)
     ScriptError (c, "Wrong number of arguments");
@@ -1589,7 +1589,7 @@ bIsFinite (Context * c)
 
 
 static char *
-ToString (Val * val)
+ToString (Val *val)
 {
   int j;
   char buffer[40];
@@ -1647,7 +1647,7 @@ ToString (Val * val)
 }
 
 static void
-bToString (Context * c)
+bToString (Context *c)
 {
   if (c->a.argc != 2)
     ScriptError (c, "Wrong number of arguments");
@@ -1656,7 +1656,7 @@ bToString (Context * c)
 }
 
 static void
-bSqrt (Context * c)
+bSqrt (Context *c)
 {
   double val;
 
@@ -1673,7 +1673,7 @@ bSqrt (Context * c)
 }
 
 static void
-bExp (Context * c)
+bExp (Context *c)
 {
   double val;
 
@@ -1690,7 +1690,7 @@ bExp (Context * c)
 }
 
 static void
-bLog (Context * c)
+bLog (Context *c)
 {
   double val;
 
@@ -1707,7 +1707,7 @@ bLog (Context * c)
 }
 
 static void
-bPow (Context * c)
+bPow (Context *c)
 {
   double val1, val2;
 
@@ -1730,7 +1730,7 @@ bPow (Context * c)
 }
 
 static void
-bSin (Context * c)
+bSin (Context *c)
 {
   double val;
 
@@ -1747,7 +1747,7 @@ bSin (Context * c)
 }
 
 static void
-bCos (Context * c)
+bCos (Context *c)
 {
   double val;
 
@@ -1764,7 +1764,7 @@ bCos (Context * c)
 }
 
 static void
-bTan (Context * c)
+bTan (Context *c)
 {
   double val;
 
@@ -1781,7 +1781,7 @@ bTan (Context * c)
 }
 
 static void
-bATan2 (Context * c)
+bATan2 (Context *c)
 {
   double val1, val2;
 
@@ -1804,7 +1804,7 @@ bATan2 (Context * c)
 }
 
 static void
-bRand (Context * c)
+bRand (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -1813,7 +1813,7 @@ bRand (Context * c)
 }
 
 static void
-bFileAccess (Context * c)
+bFileAccess (Context *c)
 {
   if (c->a.argc != 3 && c->a.argc != 2)
     ScriptError (c, "Wrong number of arguments");
@@ -1826,7 +1826,7 @@ bFileAccess (Context * c)
 }
 
 static void
-bLoadFileToString (Context * c)
+bLoadFileToString (Context *c)
 {
   FILE *f;
   int len;
@@ -1858,7 +1858,7 @@ bLoadFileToString (Context * c)
 }
 
 static void
-bWriteStringToFile (Context * c)
+bWriteStringToFile (Context *c)
 {
   FILE *f;
   int append = 0;
@@ -1891,21 +1891,21 @@ bWriteStringToFile (Context * c)
 }
 
 static void
-bLoadPlugin (Context * c)
+bLoadPlugin (Context *c)
 {
   ScriptError (c,
                "Plugins support have been removed, LoadPlugin() is deprecated");
 }
 
 static void
-bLoadPluginDir (Context * c)
+bLoadPluginDir (Context *c)
 {
   ScriptError (c,
                "Plugins support have been removed, LoadPluginDir() is deprecated");
 }
 
 static void
-bLoadNamelist (Context * c)
+bLoadNamelist (Context *c)
 {
   char *name, *_name;
 
@@ -1921,7 +1921,7 @@ bLoadNamelist (Context * c)
 }
 
 static void
-bLoadNamelistDir (Context * c)
+bLoadNamelistDir (Context *c)
 {
   char *dir = NULL, *_dir;
 
@@ -1942,7 +1942,7 @@ bLoadNamelistDir (Context * c)
 /* **** File menu **** */
 
 static void
-bQuit (Context * c)
+bQuit (Context *c)
 {
   if (verbose > 0)
     putchar ('\n');
@@ -2036,7 +2036,7 @@ GetFontNames (char *filename)
 
 #ifndef _NO_FFSCRIPT
 static void
-bFontsInFile (Context * c)
+bFontsInFile (Context *c)
 {
   char **ret;
   int cnt;
@@ -2070,7 +2070,7 @@ bFontsInFile (Context * c)
 }
 
 static void
-bOpen (Context * c)
+bOpen (Context *c)
 {
   SplineFont *sf;
   int openflags = 0;
@@ -2104,7 +2104,7 @@ bOpen (Context * c)
 }
 
 static void
-bSelectBitmap (Context * c)
+bSelectBitmap (Context *c)
 {
   BDFFont *bdf;
   int depth, size;
@@ -2131,7 +2131,7 @@ bSelectBitmap (Context * c)
 }
 
 static void
-bNew (Context * c)
+bNew (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -2142,7 +2142,7 @@ bNew (Context * c)
 }
 
 static void
-bClose (Context * c)
+bClose (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -2151,7 +2151,7 @@ bClose (Context * c)
 }
 
 static void
-bRevert (Context * c)
+bRevert (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -2159,7 +2159,7 @@ bRevert (Context * c)
 }
 
 static void
-bRevertToBackup (Context * c)
+bRevertToBackup (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -2167,7 +2167,7 @@ bRevertToBackup (Context * c)
 }
 
 static void
-bSave (Context * c)
+bSave (Context *c)
 {
   SplineFont *sf = c->curfv->sf;
   char *t, *pt;
@@ -2209,7 +2209,7 @@ bSave (Context * c)
 }
 
 static void
-bGenerate (Context * c)
+bGenerate (Context *c)
 {
   SplineFont *sf = c->curfv->sf;
   char *bitmaptype = "";
@@ -2225,13 +2225,11 @@ bGenerate (Context * c)
     ScriptError (c, "Wrong number of arguments");
   if (c->a.vals[1].type != v_str
       || (c->a.argc >= 3 && c->a.vals[2].type != v_str) || (c->a.argc >= 4
-                                                            && c->a.
-                                                            vals[3].type !=
-                                                            v_int)
+                                                            && c->a.vals[3].
+                                                            type != v_int)
       || (c->a.argc >= 5 && c->a.vals[4].type != v_int) || (c->a.argc >= 6
-                                                            && c->a.
-                                                            vals[5].type !=
-                                                            v_str)
+                                                            && c->a.vals[5].
+                                                            type != v_str)
       || (c->a.argc >= 7 && c->a.vals[5].type != v_str))
     ScriptError (c, "Bad type of argument");
   if (c->a.argc >= 3)
@@ -2277,7 +2275,7 @@ strtailcmp (char *needle, char *haystack)
 typedef SplineFont *SFArray[48];
 
 static void
-bGenerateFamily (Context * c)
+bGenerateFamily (Context *c)
 {
   SplineFont *sf = NULL;
   char *bitmaptype = "";
@@ -2440,7 +2438,7 @@ bGenerateFamily (Context * c)
 }
 
 static void
-bGenerateFeatureFile (Context * c)
+bGenerateFeatureFile (Context *c)
 {
   SplineFont *sf = c->curfv->sf;
   char *t;
@@ -2478,13 +2476,13 @@ bGenerateFeatureFile (Context * c)
 }
 
 static void
-bControlAfmLigatureOutput (Context * c)
+bControlAfmLigatureOutput (Context *c)
 {
   ScriptError (c, "This scripting function no longer works.");
 }
 
 static void
-Bitmapper (Context * c, int isavail)
+Bitmapper (Context *c, int isavail)
 {
   int32_t *sizes;
   int i;
@@ -2519,7 +2517,7 @@ Bitmapper (Context * c, int isavail)
 }
 
 static void
-bBitmapsAvail (Context * c)
+bBitmapsAvail (Context *c)
 {
   int shows_bitmap = false;
   BDFFont *bdf;
@@ -2544,13 +2542,13 @@ bBitmapsAvail (Context * c)
 }
 
 static void
-bBitmapsRegen (Context * c)
+bBitmapsRegen (Context *c)
 {
   Bitmapper (c, false);
 }
 
 static void
-bImport (Context * c)
+bImport (Context *c)
 {
   char *ext, *filename;
   int format, back, ok, flags;
@@ -2561,9 +2559,8 @@ bImport (Context * c)
     ScriptError (c, "Wrong number of arguments");
   if (c->a.vals[1].type != v_str
       || (c->a.argc >= 3 && c->a.vals[2].type != v_int) || (c->a.argc == 4
-                                                            && c->a.
-                                                            vals[3].type !=
-                                                            v_int))
+                                                            && c->a.vals[3].
+                                                            type != v_int))
     ScriptError (c, "Bad type of argument");
 
   t = script2utf8_copy (c->a.vals[1].u.sval);
@@ -2650,7 +2647,7 @@ bImport (Context * c)
 
 #if FONTFORGE_CONFIG_WRITE_PFM
 static void
-bWritePfm (Context * c)
+bWritePfm (Context *c)
 {
   SplineFont *sf = c->curfv->sf;
   char *t;
@@ -2671,7 +2668,7 @@ bWritePfm (Context * c)
 #endif
 
 static void
-bExport (Context * c)
+bExport (Context *c)
 {
   int format, i, gid;
   BDFFont *bdf;
@@ -2739,7 +2736,7 @@ bExport (Context * c)
 
 /* FontImage("Outputfilename",array of [pointsize,string][,width[,height]]) */
 static void
-bFontImage (Context * c)
+bFontImage (Context *c)
 {
   int i;
   char *pt, *t;
@@ -2751,9 +2748,8 @@ bFontImage (Context * c)
   if (c->a.vals[1].type != v_str
       || (c->a.vals[2].type != v_arr && c->a.vals[2].type != v_arrfree)
       || (c->a.argc >= 4 && c->a.vals[3].type != v_int) || (c->a.argc >= 5
-                                                            && c->a.
-                                                            vals[4].type !=
-                                                            v_int))
+                                                            && c->a.vals[4].
+                                                            type != v_int))
     ScriptError (c, "Bad type of arguments");
 
   t = script2utf8_copy (c->a.vals[1].u.sval);
@@ -2794,7 +2790,7 @@ bFontImage (Context * c)
 }
 
 static void
-bMergeKern (Context * c)
+bMergeKern (Context *c)
 {
   char *t;
   char *locfilename;
@@ -2814,7 +2810,7 @@ bMergeKern (Context * c)
 }
 
 static void
-bPrintSetup (Context * c)
+bPrintSetup (Context *c)
 {
 
   if (c->a.argc != 2 && c->a.argc != 3 && c->a.argc != 5)
@@ -2843,7 +2839,7 @@ bPrintSetup (Context * c)
 }
 
 static void
-bPrintFont (Context * c)
+bPrintFont (Context *c)
 {
   int type, i, inlinesample = false;
   int32_t *pointsizes = NULL;
@@ -2922,7 +2918,7 @@ bPrintFont (Context * c)
 
 /* **** Edit menu **** */
 static void
-bCut (Context * c)
+bCut (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -2931,7 +2927,7 @@ bCut (Context * c)
 }
 
 static void
-bCopy (Context * c)
+bCopy (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -2939,7 +2935,7 @@ bCopy (Context * c)
 }
 
 static void
-bCopyReference (Context * c)
+bCopyReference (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -2947,7 +2943,7 @@ bCopyReference (Context * c)
 }
 
 static void
-bCopyUnlinked (Context * c)
+bCopyUnlinked (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -2955,7 +2951,7 @@ bCopyUnlinked (Context * c)
 }
 
 static void
-bCopyWidth (Context * c)
+bCopyWidth (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -2963,7 +2959,7 @@ bCopyWidth (Context * c)
 }
 
 static void
-bCopyVWidth (Context * c)
+bCopyVWidth (Context *c)
 {
   if (c->curfv != NULL && !c->curfv->sf->hasvmetrics)
     ScriptError (c, "Vertical metrics not enabled in this font");
@@ -2973,7 +2969,7 @@ bCopyVWidth (Context * c)
 }
 
 static void
-bCopyLBearing (Context * c)
+bCopyLBearing (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -2981,7 +2977,7 @@ bCopyLBearing (Context * c)
 }
 
 static void
-bCopyRBearing (Context * c)
+bCopyRBearing (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -2989,7 +2985,7 @@ bCopyRBearing (Context * c)
 }
 
 static void
-bCopyAnchors (Context * c)
+bCopyAnchors (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -2997,7 +2993,7 @@ bCopyAnchors (Context * c)
 }
 
 static int
-GetOneSelCharIndex (Context * c)
+GetOneSelCharIndex (Context *c)
 {
   FontViewBase *fv = c->curfv;
   EncMap *map = fv->map;
@@ -3017,20 +3013,20 @@ GetOneSelCharIndex (Context * c)
 }
 
 static SplineChar *
-GetOneSelChar (Context * c)
+GetOneSelChar (Context *c)
 {
   int found = GetOneSelCharIndex (c);
   return (SFMakeChar (c->curfv->sf, c->curfv->map, found));
 }
 
 static void
-bCopyGlyphFeatures (Context * c)
+bCopyGlyphFeatures (Context *c)
 {
   ScriptError (c, "This scripting function no longer works.");
 }
 
 static void
-bPaste (Context * c)
+bPaste (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -3038,7 +3034,7 @@ bPaste (Context * c)
 }
 
 static void
-bPasteInto (Context * c)
+bPasteInto (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -3046,7 +3042,7 @@ bPasteInto (Context * c)
 }
 
 static void
-bPasteWithOffset (Context * c)
+bPasteWithOffset (Context *c)
 {
   real trans[6];
   memset (trans, 0, sizeof (trans));
@@ -3069,7 +3065,7 @@ bPasteWithOffset (Context * c)
 }
 
 static void
-bClear (Context * c)
+bClear (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -3077,7 +3073,7 @@ bClear (Context * c)
 }
 
 static void
-bClearBackground (Context * c)
+bClearBackground (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -3085,7 +3081,7 @@ bClearBackground (Context * c)
 }
 
 static void
-bCopyFgToBg (Context * c)
+bCopyFgToBg (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -3093,7 +3089,7 @@ bCopyFgToBg (Context * c)
 }
 
 static void
-bUnlinkReference (Context * c)
+bUnlinkReference (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -3101,7 +3097,7 @@ bUnlinkReference (Context * c)
 }
 
 static void
-bJoin (Context * c)
+bJoin (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -3109,7 +3105,7 @@ bJoin (Context * c)
 }
 
 static void
-bSameGlyphAs (Context * c)
+bSameGlyphAs (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -3117,7 +3113,7 @@ bSameGlyphAs (Context * c)
 }
 
 static void
-bMultipleEncodingsToReferences (Context * c)
+bMultipleEncodingsToReferences (Context *c)
 {
   int i, gid;
   FontViewBase *fv = c->curfv;
@@ -3182,7 +3178,7 @@ bMultipleEncodingsToReferences (Context * c)
 }
 
 static void
-bSelectAll (Context * c)
+bSelectAll (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -3190,7 +3186,7 @@ bSelectAll (Context * c)
 }
 
 static void
-bSelectNone (Context * c)
+bSelectNone (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -3198,7 +3194,7 @@ bSelectNone (Context * c)
 }
 
 static void
-bSelectInvert (Context * c)
+bSelectInvert (Context *c)
 {
   int i;
 
@@ -3209,7 +3205,7 @@ bSelectInvert (Context * c)
 }
 
 static int
-ParseCharIdent (Context * c, Val * val, int signal_error)
+ParseCharIdent (Context *c, Val *val, int signal_error)
 {
   SplineFont *sf = c->curfv->sf;
   EncMap *map = c->curfv->map;
@@ -3255,7 +3251,7 @@ ParseCharIdent (Context * c, Val * val, int signal_error)
 }
 
 static int
-bDoSelect (Context * c, int signal_error, int select, int by_ranges)
+bDoSelect (Context *c, int signal_error, int select, int by_ranges)
 {
   int top, bottom, i, j;
   int any = false;
@@ -3310,7 +3306,7 @@ bDoSelect (Context * c, int signal_error, int select, int by_ranges)
 }
 
 static void
-bSelectMore (Context * c)
+bSelectMore (Context *c)
 {
   if (c->a.argc == 1)
     ScriptError (c, "SelectMore needs at least one argument");
@@ -3318,7 +3314,7 @@ bSelectMore (Context * c)
 }
 
 static void
-bSelectFewer (Context * c)
+bSelectFewer (Context *c)
 {
   if (c->a.argc == 1)
     ScriptError (c, "SelectFewer needs at least one argument");
@@ -3326,14 +3322,14 @@ bSelectFewer (Context * c)
 }
 
 static void
-bSelect (Context * c)
+bSelect (Context *c)
 {
   memset (c->curfv->selected, 0, c->curfv->map->enccount);
   bDoSelect (c, true, true, true);
 }
 
 static void
-bSelectMoreIf (Context * c)
+bSelectMoreIf (Context *c)
 {
   if (c->a.argc == 1)
     ScriptError (c, "SelectMore needs at least one argument");
@@ -3342,7 +3338,7 @@ bSelectMoreIf (Context * c)
 }
 
 static void
-bSelectMoreSingletons (Context * c)
+bSelectMoreSingletons (Context *c)
 {
   if (c->a.argc == 1)
     ScriptError (c, "SelectMore needs at least one argument");
@@ -3350,7 +3346,7 @@ bSelectMoreSingletons (Context * c)
 }
 
 static void
-bSelectMoreSingletonsIf (Context * c)
+bSelectMoreSingletonsIf (Context *c)
 {
   if (c->a.argc == 1)
     ScriptError (c, "SelectMore needs at least one argument");
@@ -3359,7 +3355,7 @@ bSelectMoreSingletonsIf (Context * c)
 }
 
 static void
-bSelectFewerSingletons (Context * c)
+bSelectFewerSingletons (Context *c)
 {
   if (c->a.argc == 1)
     ScriptError (c, "SelectFewer needs at least one argument");
@@ -3367,14 +3363,14 @@ bSelectFewerSingletons (Context * c)
 }
 
 static void
-bSelectSingletons (Context * c)
+bSelectSingletons (Context *c)
 {
   memset (c->curfv->selected, 0, c->curfv->map->enccount);
   bDoSelect (c, true, true, false);
 }
 
 static void
-bSelectSingletonsIf (Context * c)
+bSelectSingletonsIf (Context *c)
 {
   memset (c->curfv->selected, 0, c->curfv->map->enccount);
   c->return_val.type = v_int;
@@ -3382,7 +3378,7 @@ bSelectSingletonsIf (Context * c)
 }
 
 static void
-bSelectAllInstancesOf (Context * c)
+bSelectAllInstancesOf (Context *c)
 {
   int i, j, gid;
   SplineChar *sc;
@@ -3422,7 +3418,7 @@ bSelectAllInstancesOf (Context * c)
 }
 
 static void
-bSelectIf (Context * c)
+bSelectIf (Context *c)
 {
   memset (c->curfv->selected, 0, c->curfv->map->enccount);
   c->return_val.type = v_int;
@@ -3430,7 +3426,7 @@ bSelectIf (Context * c)
 }
 
 static void
-bSelectChanged (Context * c)
+bSelectChanged (Context *c)
 {
   int i, gid;
   FontViewBase *fv = c->curfv;
@@ -3464,7 +3460,7 @@ bSelectChanged (Context * c)
 }
 
 static void
-bSelectHintingNeeded (Context * c)
+bSelectHintingNeeded (Context *c)
 {
   int i, gid;
   FontViewBase *fv = c->curfv;
@@ -3491,8 +3487,8 @@ bSelectHintingNeeded (Context * c)
                             ((!order2
                               && sf->glyphs[gid]->changedsincelasthinted)
                              || (order2
-                                 && sf->glyphs[gid]->
-                                 layers[ly_fore].splines != NULL
+                                 && sf->glyphs[gid]->layers[ly_fore].
+                                 splines != NULL
                                  && sf->glyphs[gid]->ttf_instrs_len <= 0)));
     }
   else
@@ -3511,7 +3507,7 @@ bSelectHintingNeeded (Context * c)
 }
 
 static void
-bSelectWorthOutputting (Context * c)
+bSelectWorthOutputting (Context *c)
 {
   int i, gid;
   FontViewBase *fv = c->curfv;
@@ -3545,7 +3541,7 @@ bSelectWorthOutputting (Context * c)
 }
 
 static void
-bSelectGlyphsBoth (Context * c)
+bSelectGlyphsBoth (Context *c)
 {
   FontViewBase *fv = c->curfv;
   int i, gid;
@@ -3583,14 +3579,14 @@ bSelectGlyphsBoth (Context * c)
 }
 
 static void
-bSelectByATT (Context * c)
+bSelectByATT (Context *c)
 {
   ScriptError (c,
                "This scripting function no longer works. It has been replace by SelectByPosSub");
 }
 
 static void
-bSelectByPosSub (Context * c)
+bSelectByPosSub (Context *c)
 {
   struct lookup_subtable *sub;
 
@@ -3611,7 +3607,7 @@ bSelectByPosSub (Context * c)
 }
 
 static void
-bSelectByColor (Context * c)
+bSelectByColor (Context *c)
 {
   int col, sccol;
   int i, any = 0;
@@ -3668,7 +3664,7 @@ bSelectByColor (Context * c)
 
 /* **** Element Menu **** */
 static void
-bReencode (Context * c)
+bReencode (Context *c)
 {
   Encoding *new_enc;
   int force = 0;
@@ -3721,7 +3717,7 @@ bReencode (Context * c)
 }
 
 static void
-bRenameGlyphs (Context * c)
+bRenameGlyphs (Context *c)
 {
   NameList *nl;
 
@@ -3736,7 +3732,7 @@ bRenameGlyphs (Context * c)
 }
 
 static void
-bSetCharCnt (Context * c)
+bSetCharCnt (Context *c)
 {
   EncMap *map = c->curfv->map;
   int newcnt;
@@ -3779,21 +3775,21 @@ bSetCharCnt (Context * c)
 }
 
 static void
-bDetachGlyphs (Context * c)
+bDetachGlyphs (Context *c)
 {
   FontViewBase *fv = c->curfv;
   FVDetachGlyphs (fv);
 }
 
 static void
-bDetachAndRemoveGlyphs (Context * c)
+bDetachAndRemoveGlyphs (Context *c)
 {
   FontViewBase *fv = c->curfv;
   FVDetachAndRemoveGlyphs (fv);
 }
 
 static void
-bRemoveDetachedGlyphs (Context * c)
+bRemoveDetachedGlyphs (Context *c)
 {
   FontViewBase *fv = c->curfv;
   int i, gid;
@@ -3824,7 +3820,7 @@ bRemoveDetachedGlyphs (Context * c)
 }
 
 static void
-bLoadTableFromFile (Context * c)
+bLoadTableFromFile (Context *c)
 {
   SplineFont *sf = c->curfv->sf;
   uint32_t tag;
@@ -3879,7 +3875,7 @@ bLoadTableFromFile (Context * c)
 }
 
 static void
-bSaveTableToFile (Context * c)
+bSaveTableToFile (Context *c)
 {
   SplineFont *sf = c->curfv->sf;
   uint32_t tag;
@@ -3920,7 +3916,7 @@ bSaveTableToFile (Context * c)
 }
 
 static void
-bRemovePreservedTable (Context * c)
+bRemovePreservedTable (Context *c)
 {
   SplineFont *sf = c->curfv->sf;
   uint32_t tag;
@@ -3954,7 +3950,7 @@ bRemovePreservedTable (Context * c)
 }
 
 static void
-bHasPreservedTable (Context * c)
+bHasPreservedTable (Context *c)
 {
   SplineFont *sf = c->curfv->sf;
   uint32_t tag;
@@ -3982,7 +3978,7 @@ bHasPreservedTable (Context * c)
 }
 
 static void
-bLoadEncodingFile (Context * c)
+bLoadEncodingFile (Context *c)
 {
   char *t;
   char *locfilename;
@@ -4003,7 +3999,7 @@ bLoadEncodingFile (Context * c)
 }
 
 static void
-bSetFontOrder (Context * c)
+bSetFontOrder (Context *c)
 {
 
   if (c->a.argc != 2)
@@ -4031,7 +4027,7 @@ bSetFontOrder (Context * c)
 }
 
 static void
-bSetFontHasVerticalMetrics (Context * c)
+bSetFontHasVerticalMetrics (Context *c)
 {
 
   if (c->a.argc != 2)
@@ -4046,7 +4042,7 @@ bSetFontHasVerticalMetrics (Context * c)
 }
 
 static void
-bSetGasp (Context * c)
+bSetGasp (Context *c)
 {
   int i, base;
   struct array *arr;
@@ -4098,7 +4094,7 @@ bSetGasp (Context * c)
 }
 
 static void
-_SetFontNames (Context * c, SplineFont *sf)
+_SetFontNames (Context *c, SplineFont *sf)
 {
   int i;
 
@@ -4141,14 +4137,14 @@ _SetFontNames (Context * c, SplineFont *sf)
 }
 
 static void
-bSetFontNames (Context * c)
+bSetFontNames (Context *c)
 {
   SplineFont *sf = c->curfv->sf;
   _SetFontNames (c, sf);
 }
 
 static void
-bSetFondName (Context * c)
+bSetFondName (Context *c)
 {
   SplineFont *sf = c->curfv->sf;
   if (c->a.argc != 2)
@@ -4163,7 +4159,7 @@ bSetFondName (Context * c)
 }
 
 static void
-bSetTTFName (Context * c)
+bSetTTFName (Context *c)
 {
   SplineFont *sf = c->curfv->sf;
   char *u;
@@ -4217,7 +4213,7 @@ bSetTTFName (Context * c)
 }
 
 static void
-bGetTTFName (Context * c)
+bGetTTFName (Context *c)
 {
   SplineFont *sf = c->curfv->sf;
   int lang, strid;
@@ -4247,7 +4243,7 @@ bGetTTFName (Context * c)
 }
 
 static void
-bSetItalicAngle (Context * c)
+bSetItalicAngle (Context *c)
 {
   double denom = 1;
   double num;
@@ -4270,7 +4266,7 @@ bSetItalicAngle (Context * c)
 }
 
 static void
-bSetMacStyle (Context * c)
+bSetMacStyle (Context *c)
 {
 
   if (c->a.argc != 2)
@@ -4284,7 +4280,7 @@ bSetMacStyle (Context * c)
 }
 
 static void
-bSetPanose (Context * c)
+bSetPanose (Context *c)
 {
   int i;
 
@@ -4324,7 +4320,7 @@ bSetPanose (Context * c)
 }
 
 static void
-setint16 (int16_t *val, Context * c)
+setint16 (int16_t *val, Context *c)
 {
   if (c->a.vals[2].type != v_int)
     ScriptError (c, "Bad argument type");
@@ -4332,7 +4328,7 @@ setint16 (int16_t *val, Context * c)
 }
 
 static void
-setss16 (int16_t *val, SplineFont *sf, Context * c)
+setss16 (int16_t *val, SplineFont *sf, Context *c)
 {
   if (c->a.vals[2].type != v_int)
     ScriptError (c, "Bad argument type");
@@ -4341,7 +4337,7 @@ setss16 (int16_t *val, SplineFont *sf, Context * c)
 }
 
 static void
-bSetOS2Value (Context * c)
+bSetOS2Value (Context *c)
 {
   int i;
   SplineFont *sf = c->curfv->sf;
@@ -4521,14 +4517,14 @@ bSetOS2Value (Context * c)
 }
 
 static void
-os2getint (int val, Context * c)
+os2getint (int val, Context *c)
 {
   c->return_val.type = v_int;
   c->return_val.u.ival = val;
 }
 
 static void
-bGetOS2Value (Context * c)
+bGetOS2Value (Context *c)
 {
   int i;
   SplineFont *sf = c->curfv->sf;
@@ -4680,7 +4676,7 @@ bGetOS2Value (Context * c)
 }
 
 static void
-bSetMaxpValue (Context * c)
+bSetMaxpValue (Context *c)
 {
   SplineFont *sf = c->curfv->sf;
   struct ttf_table *tab;
@@ -4722,7 +4718,7 @@ bSetMaxpValue (Context * c)
 }
 
 static void
-bGetMaxpValue (Context * c)
+bGetMaxpValue (Context *c)
 {
   SplineFont *sf = c->curfv->sf;
   struct ttf_table *tab;
@@ -4764,7 +4760,7 @@ bGetMaxpValue (Context * c)
 }
 
 static void
-bGetFontBoundingBox (Context * c)
+bGetFontBoundingBox (Context *c)
 {
   int i;
   SplineFont *sf = c->curfv->sf;
@@ -4787,7 +4783,7 @@ bGetFontBoundingBox (Context * c)
 }
 
 static void
-bSetUniqueID (Context * c)
+bSetUniqueID (Context *c)
 {
 
   if (c->a.argc != 2)
@@ -4798,7 +4794,7 @@ bSetUniqueID (Context * c)
 }
 
 static void
-bGetTeXParam (Context * c)
+bGetTeXParam (Context *c)
 {
   SplineFont *sf = c->curfv->sf;
 
@@ -4818,7 +4814,7 @@ bGetTeXParam (Context * c)
 }
 
 static void
-bSetTeXParams (Context * c)
+bSetTeXParams (Context *c)
 {
   int i;
 
@@ -4851,12 +4847,12 @@ bSetTeXParams (Context * c)
   for (i = 1; i < c->a.argc - 3; ++i)
     c->curfv->sf->texdata.params[i] =
       ((double) c->a.vals[3 + i].u.ival) * (1 << 20) / (c->curfv->sf->ascent +
-                                                        c->curfv->
-                                                        sf->descent);
+                                                        c->curfv->sf->
+                                                        descent);
 }
 
 static void
-bSetCharName (Context * c)
+bSetCharName (Context *c)
 {
   SplineChar *sc;
   char *name;
@@ -4882,7 +4878,7 @@ bSetCharName (Context * c)
 }
 
 static void
-bSetUnicodeValue (Context * c)
+bSetUnicodeValue (Context *c)
 {
   SplineChar *sc;
   char *name;
@@ -4913,7 +4909,7 @@ bSetUnicodeValue (Context * c)
 }
 
 static void
-bSetGlyphClass (Context * c)
+bSetGlyphClass (Context *c)
 {
   SplineChar *sc;
   int class, gid, i;
@@ -4946,7 +4942,7 @@ bSetGlyphClass (Context * c)
 }
 
 static void
-bSetCharColor (Context * c)
+bSetCharColor (Context *c)
 {
   SplineFont *sf = c->curfv->sf;
   EncMap *map = c->curfv->map;
@@ -4967,7 +4963,7 @@ bSetCharColor (Context * c)
 }
 
 static void
-bSetCharComment (Context * c)
+bSetCharComment (Context *c)
 {
   SplineChar *sc;
 
@@ -4983,7 +4979,7 @@ bSetCharComment (Context * c)
 }
 
 static void
-bSetGlyphChanged (Context * c)
+bSetGlyphChanged (Context *c)
 {
   int i, gid;
   int changed_or_not, changed_any = false;
@@ -5212,7 +5208,7 @@ FVApplySubstitution (FontViewBase *fv, uint32_t script, uint32_t lang,
 }
 
 static void
-bApplySubstitution (Context * c)
+bApplySubstitution (Context *c)
 {
   uint32_t tags[3];
   int i;
@@ -5252,7 +5248,7 @@ bApplySubstitution (Context * c)
 }
 
 static void
-bTransform (Context * c)
+bTransform (Context *c)
 {
   real trans[6];
   BVTFunc bvts[1];
@@ -5274,7 +5270,7 @@ bTransform (Context * c)
 }
 
 static void
-bHFlip (Context * c)
+bHFlip (Context *c)
 {
   real trans[6];
   int otype = 1;
@@ -5303,7 +5299,7 @@ bHFlip (Context * c)
 }
 
 static void
-bVFlip (Context * c)
+bVFlip (Context *c)
 {
   real trans[6];
   int otype = 1;
@@ -5333,7 +5329,7 @@ bVFlip (Context * c)
 }
 
 static void
-bRotate (Context * c)
+bRotate (Context *c)
 {
   real trans[6];
   int otype = 1;
@@ -5386,7 +5382,7 @@ bRotate (Context * c)
 }
 
 static void
-bScale (Context * c)
+bScale (Context *c)
 {
   real trans[6];
   int otype = 1;
@@ -5440,7 +5436,7 @@ bScale (Context * c)
 }
 
 static void
-bSkew (Context * c)
+bSkew (Context *c)
 {
   double args[6];
   int i;
@@ -5497,7 +5493,7 @@ bSkew (Context * c)
 }
 
 static void
-bMove (Context * c)
+bMove (Context *c)
 {
   real trans[6];
   int otype = 1;
@@ -5528,7 +5524,7 @@ bMove (Context * c)
 }
 
 static void
-bScaleToEm (Context * c)
+bScaleToEm (Context *c)
 {
   int i;
   int ascent, descent;
@@ -5584,7 +5580,7 @@ static ItalicInfo default_ii = {
 };
 
 static void
-bItalic (Context * c)
+bItalic (Context *c)
 {
   int i;
 
@@ -5603,7 +5599,7 @@ bItalic (Context * c)
 }
 
 static void
-bSmallCaps (Context * c)
+bSmallCaps (Context *c)
 {
   struct smallcaps small;
   struct genericchange genchange;
@@ -5655,7 +5651,7 @@ FindFirstRef (SplineChar *sc, char **refnames, int *refunis, int refcnt)
 }
 
 static void
-_bMoveReference (Context * c, int position)
+_bMoveReference (Context *c, int position)
 {
   real translate[2], t[6];
   char **refnames;
@@ -5749,19 +5745,19 @@ _bMoveReference (Context * c, int position)
 }
 
 static void
-bMoveReference (Context * c)
+bMoveReference (Context *c)
 {
   _bMoveReference (c, false);
 }
 
 static void
-bPositionReference (Context * c)
+bPositionReference (Context *c)
 {
   _bMoveReference (c, true);
 }
 
 static void
-bNonLinearTransform (Context * c)
+bNonLinearTransform (Context *c)
 {
 
   if (c->a.argc != 3)
@@ -5775,7 +5771,7 @@ bNonLinearTransform (Context * c)
 }
 
 static void
-bExpandStroke (Context * c)
+bExpandStroke (Context *c)
 {
   StrokeInfo si;
   double args[8];
@@ -5854,7 +5850,7 @@ bExpandStroke (Context * c)
 }
 
 static void
-bOutline (Context * c)
+bOutline (Context *c)
 {
 
   if (c->a.argc != 2)
@@ -5865,7 +5861,7 @@ bOutline (Context * c)
 }
 
 static void
-bInline (Context * c)
+bInline (Context *c)
 {
 
   if (c->a.argc != 3)
@@ -5876,7 +5872,7 @@ bInline (Context * c)
 }
 
 static void
-bShadow (Context * c)
+bShadow (Context *c)
 {
   /* Angle, outline width, shadow_len */
   double a;
@@ -5895,7 +5891,7 @@ bShadow (Context * c)
 }
 
 static void
-bWireframe (Context * c)
+bWireframe (Context *c)
 {
   /* Angle, outline width, shadow_len */
   double a;
@@ -5914,7 +5910,7 @@ bWireframe (Context * c)
 }
 
 static void
-bRemoveOverlap (Context * c)
+bRemoveOverlap (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -5922,7 +5918,7 @@ bRemoveOverlap (Context * c)
 }
 
 static void
-bOverlapIntersect (Context * c)
+bOverlapIntersect (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -5930,7 +5926,7 @@ bOverlapIntersect (Context * c)
 }
 
 static void
-bFindIntersections (Context * c)
+bFindIntersections (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -5938,7 +5934,7 @@ bFindIntersections (Context * c)
 }
 
 static void
-bCanonicalStart (Context * c)
+bCanonicalStart (Context *c)
 {
   FontViewBase *fv = c->curfv;
   EncMap *map = fv->map;
@@ -5954,7 +5950,7 @@ bCanonicalStart (Context * c)
 }
 
 static void
-bCanonicalContours (Context * c)
+bCanonicalContours (Context *c)
 {
   FontViewBase *fv = c->curfv;
   EncMap *map = fv->map;
@@ -5970,7 +5966,7 @@ bCanonicalContours (Context * c)
 }
 
 static void
-bSimplify (Context * c)
+bSimplify (Context *c)
 {
   static struct simplifyinfo smpl = { sf_normal, 0.75, 0.2, 10, 0, 0, 0 };
   smpl.err = (c->curfv->sf->ascent + c->curfv->sf->descent) / 1000.;
@@ -6027,7 +6023,7 @@ bSimplify (Context * c)
 }
 
 static void
-bNearlyHvCps (Context * c)
+bNearlyHvCps (Context *c)
 {
   FontViewBase *fv = c->curfv;
   int i, layer, last;
@@ -6073,7 +6069,7 @@ bNearlyHvCps (Context * c)
 }
 
 static void
-bNearlyHvLines (Context * c)
+bNearlyHvLines (Context *c)
 {
   FontViewBase *fv = c->curfv;
   int i, layer, last, gid;
@@ -6117,7 +6113,7 @@ bNearlyHvLines (Context * c)
 }
 
 static void
-bNearlyLines (Context * c)
+bNearlyLines (Context *c)
 {
   FontViewBase *fv = c->curfv;
   int i, layer, last, gid;
@@ -6158,7 +6154,7 @@ bNearlyLines (Context * c)
 }
 
 static void
-bAddExtrema (Context * c)
+bAddExtrema (Context *c)
 {
   if (c->a.argc == 1)
     FVAddExtrema (c->curfv, false);
@@ -6219,7 +6215,7 @@ SCMakeLine (SplineChar *sc)
 }
 
 static void
-bMakeLine (Context * c)
+bMakeLine (Context *c)
 {
   int i, gid;
   FontViewBase *fv = c->curfv;
@@ -6236,7 +6232,7 @@ bMakeLine (Context * c)
 }
 
 static void
-bRoundToInt (Context * c)
+bRoundToInt (Context *c)
 {
   real factor = 1.0;
   int i, gid;
@@ -6265,7 +6261,7 @@ bRoundToInt (Context * c)
 }
 
 static void
-bRoundToCluster (Context * c)
+bRoundToCluster (Context *c)
 {
   real within = .1, max = .5;
   int i, gid;
@@ -6305,7 +6301,7 @@ bRoundToCluster (Context * c)
 }
 
 static void
-bAutotrace (Context * c)
+bAutotrace (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -6313,7 +6309,7 @@ bAutotrace (Context * c)
 }
 
 static void
-bCorrectDirection (Context * c)
+bCorrectDirection (Context *c)
 {
   int i, gid;
   FontViewBase *fv = c->curfv;
@@ -6362,7 +6358,7 @@ bCorrectDirection (Context * c)
 }
 
 static void
-bReplaceOutlineWithReference (Context * c)
+bReplaceOutlineWithReference (Context *c)
 {
   double fudge = .01;
 
@@ -6385,7 +6381,7 @@ bReplaceOutlineWithReference (Context * c)
 }
 
 static void
-bBuildComposit (Context * c)
+bBuildComposit (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -6393,7 +6389,7 @@ bBuildComposit (Context * c)
 }
 
 static void
-bBuildAccented (Context * c)
+bBuildAccented (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -6401,7 +6397,7 @@ bBuildAccented (Context * c)
 }
 
 static void
-bAppendAccent (Context * c)
+bAppendAccent (Context *c)
 {
   int pos = ____NOPOSDATAGIVEN; /* unicode char pos info, see #define for (uint32_t)(utype2[]) */
   char *glyph_name = NULL;      /* unicode char name */
@@ -6434,7 +6430,7 @@ bAppendAccent (Context * c)
 }
 
 static void
-bBuildDuplicate (Context * c)
+bBuildDuplicate (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -6442,7 +6438,7 @@ bBuildDuplicate (Context * c)
 }
 
 static void
-bMergeFonts (Context * c)
+bMergeFonts (Context *c)
 {
   SplineFont *sf;
   int openflags = 0;
@@ -6472,7 +6468,7 @@ bMergeFonts (Context * c)
 }
 
 static void
-bInterpolateFonts (Context * c)
+bInterpolateFonts (Context *c)
 {
   SplineFont *sf;
   int openflags = 0;
@@ -6513,7 +6509,7 @@ bInterpolateFonts (Context * c)
 }
 
 static void
-bDefaultUseMyMetrics (Context * c)
+bDefaultUseMyMetrics (Context *c)
 {
   int i, gid;
   FontViewBase *fv = c->curfv;
@@ -6567,7 +6563,7 @@ bDefaultUseMyMetrics (Context * c)
 }
 
 static void
-bDefaultRoundToGrid (Context * c)
+bDefaultRoundToGrid (Context *c)
 {
   int i, gid;
   FontViewBase *fv = c->curfv;
@@ -6600,7 +6596,7 @@ bDefaultRoundToGrid (Context * c)
 }
 
 static void
-bAutoHint (Context * c)
+bAutoHint (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -6608,7 +6604,7 @@ bAutoHint (Context * c)
 }
 
 static void
-bSubstitutionPoints (Context * c)
+bSubstitutionPoints (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -6616,7 +6612,7 @@ bSubstitutionPoints (Context * c)
 }
 
 static void
-bAutoCounter (Context * c)
+bAutoCounter (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -6624,7 +6620,7 @@ bAutoCounter (Context * c)
 }
 
 static void
-bDontAutoHint (Context * c)
+bDontAutoHint (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -6632,7 +6628,7 @@ bDontAutoHint (Context * c)
 }
 
 static void
-bAutoInstr (Context * c)
+bAutoInstr (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -6718,7 +6714,7 @@ prterror (void *foo, char *msg, int pos)
 }
 
 static void
-bAddInstrs (Context * c)
+bAddInstrs (Context *c)
 {
   int replace;
   SplineChar *sc = NULL;
@@ -6767,7 +6763,7 @@ bAddInstrs (Context * c)
 }
 
 static void
-bFindOrAddCvtIndex (Context * c)
+bFindOrAddCvtIndex (Context *c)
 {
   int sign_matters = 0;
   SplineFont *sf = c->curfv->sf;
@@ -6787,7 +6783,7 @@ bFindOrAddCvtIndex (Context * c)
 }
 
 static void
-bGetCvtAt (Context * c)
+bGetCvtAt (Context *c)
 {
   SplineFont *sf = c->curfv->sf;
   struct ttf_table *tab;
@@ -6806,7 +6802,7 @@ bGetCvtAt (Context * c)
 }
 
 static void
-bReplaceCvtAt (Context * c)
+bReplaceCvtAt (Context *c)
 {
   SplineFont *sf = c->curfv->sf;
   struct ttf_table *tab;
@@ -6824,7 +6820,7 @@ bReplaceCvtAt (Context * c)
 }
 
 static void
-bPrivateToCvt (Context * c)
+bPrivateToCvt (Context *c)
 {
   ScriptError (c, "This command has been removed.");
 #if 0
@@ -6835,7 +6831,7 @@ bPrivateToCvt (Context * c)
 }
 
 static void
-bClearHints (Context * c)
+bClearHints (Context *c)
 {
   if (c->a.argc > 2)
     ScriptError (c, "Wrong number of arguments");
@@ -6892,7 +6888,7 @@ bClearHints (Context * c)
 }
 
 static void
-bClearInstrs (Context * c)
+bClearInstrs (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -6900,7 +6896,7 @@ bClearInstrs (Context * c)
 }
 
 static void
-bClearTable (Context * c)
+bClearTable (Context *c)
 {
   uint32_t tag;
   uint8_t _tag[4];
@@ -6965,7 +6961,7 @@ bClearTable (Context * c)
 }
 
 static void
-bAddDHint (Context * c)
+bAddDHint (Context *c)
 {
   int i, any, gid;
   BasePoint left, right, unit;
@@ -7055,7 +7051,7 @@ bAddDHint (Context * c)
 }
 
 static void
-_AddHint (Context * c, int ish)
+_AddHint (Context *c, int ish)
 {
   int i, any, gid;
   int start, width;
@@ -7113,19 +7109,19 @@ _AddHint (Context * c, int ish)
 }
 
 static void
-bAddHHint (Context * c)
+bAddHHint (Context *c)
 {
   _AddHint (c, true);
 }
 
 static void
-bAddVHint (Context * c)
+bAddVHint (Context *c)
 {
   _AddHint (c, false);
 }
 
 static void
-bClearCharCounterMasks (Context * c)
+bClearCharCounterMasks (Context *c)
 {
   SplineChar *sc;
 
@@ -7138,7 +7134,7 @@ bClearCharCounterMasks (Context * c)
 }
 
 static void
-bSetCharCounterMask (Context * c)
+bSetCharCounterMask (Context *c)
 {
   SplineChar *sc;
   int i;
@@ -7178,7 +7174,7 @@ bSetCharCounterMask (Context * c)
 }
 
 static void
-bReplaceCharCounterMasks (Context * c)
+bReplaceCharCounterMasks (Context *c)
 {
   HintMask *cm;
   SplineChar *sc;
@@ -7212,7 +7208,7 @@ bReplaceCharCounterMasks (Context * c)
 }
 
 static void
-bClearPrivateEntry (Context * c)
+bClearPrivateEntry (Context *c)
 {
   if (c->a.argc != 2)
     ScriptError (c, "Wrong number of arguments");
@@ -7223,7 +7219,7 @@ bClearPrivateEntry (Context * c)
 }
 
 static void
-bPrivateGuess (Context * c)
+bPrivateGuess (Context *c)
 {
   SplineFont *sf = c->curfv->sf;
   char *key;
@@ -7243,7 +7239,7 @@ bPrivateGuess (Context * c)
 }
 
 static void
-bChangePrivateEntry (Context * c)
+bChangePrivateEntry (Context *c)
 {
   SplineFont *sf = c->curfv->sf;
   char *key, *val;
@@ -7268,7 +7264,7 @@ bChangePrivateEntry (Context * c)
 }
 
 static void
-bHasPrivateEntry (Context * c)
+bHasPrivateEntry (Context *c)
 {
   SplineFont *sf = c->curfv->sf;
 
@@ -7283,7 +7279,7 @@ bHasPrivateEntry (Context * c)
 }
 
 static void
-bGetPrivateEntry (Context * c)
+bGetPrivateEntry (Context *c)
 {
   int i;
 
@@ -7301,7 +7297,7 @@ bGetPrivateEntry (Context * c)
 }
 
 static void
-bSetWidth (Context * c)
+bSetWidth (Context *c)
 {
   int incr = 0;
   if (c->a.argc != 2 && c->a.argc != 3)
@@ -7315,7 +7311,7 @@ bSetWidth (Context * c)
 }
 
 static void
-bSetVWidth (Context * c)
+bSetVWidth (Context *c)
 {
   int incr = 0;
   if (c->a.argc != 2 && c->a.argc != 3)
@@ -7329,7 +7325,7 @@ bSetVWidth (Context * c)
 }
 
 static void
-bSetLBearing (Context * c)
+bSetLBearing (Context *c)
 {
   int incr = 0;
   if (c->a.argc != 2 && c->a.argc != 3)
@@ -7343,7 +7339,7 @@ bSetLBearing (Context * c)
 }
 
 static void
-bSetRBearing (Context * c)
+bSetRBearing (Context *c)
 {
   int incr = 0;
   if (c->a.argc != 2 && c->a.argc != 3)
@@ -7357,7 +7353,7 @@ bSetRBearing (Context * c)
 }
 
 static void
-bAutoWidth (Context * c)
+bAutoWidth (Context *c)
 {
   int sep, min = 10, max = -1;
 
@@ -7383,7 +7379,7 @@ bAutoWidth (Context * c)
 }
 
 static void
-bAutoKern (Context * c)
+bAutoKern (Context *c)
 {
   struct lookup_subtable *sub;
 
@@ -7408,7 +7404,7 @@ bAutoKern (Context * c)
 }
 
 static void
-bCenterInWidth (Context * c)
+bCenterInWidth (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -7416,7 +7412,7 @@ bCenterInWidth (Context * c)
 }
 
 static void
-_SetKern (Context * c, int isv)
+_SetKern (Context *c, int isv)
 {
   FontViewBase *fv = c->curfv;
   SplineFont *sf = fv->sf;
@@ -7509,19 +7505,19 @@ _SetKern (Context * c, int isv)
 }
 
 static void
-bSetKern (Context * c)
+bSetKern (Context *c)
 {
   _SetKern (c, false);
 }
 
 static void
-bSetVKern (Context * c)
+bSetVKern (Context *c)
 {
   _SetKern (c, true);
 }
 
 static void
-bClearAllKerns (Context * c)
+bClearAllKerns (Context *c)
 {
 
   if (c->a.argc != 1)
@@ -7530,7 +7526,7 @@ bClearAllKerns (Context * c)
 }
 
 static void
-bClearAllVKerns (Context * c)
+bClearAllVKerns (Context *c)
 {
 
   if (c->a.argc != 1)
@@ -7539,7 +7535,7 @@ bClearAllVKerns (Context * c)
 }
 
 static void
-bVKernFromHKern (Context * c)
+bVKernFromHKern (Context *c)
 {
 
   if (c->a.argc != 1)
@@ -7550,7 +7546,7 @@ bVKernFromHKern (Context * c)
 /* **** MM menu **** */
 
 static void
-bMMInstanceNames (Context * c)
+bMMInstanceNames (Context *c)
 {
   int i;
   MMSet *mm = c->curfv->sf->mm;
@@ -7573,7 +7569,7 @@ bMMInstanceNames (Context * c)
 }
 
 static void
-bMMAxisNames (Context * c)
+bMMAxisNames (Context *c)
 {
   int i;
   MMSet *mm = c->curfv->sf->mm;
@@ -7595,7 +7591,7 @@ bMMAxisNames (Context * c)
 }
 
 static void
-bMMAxisBounds (Context * c)
+bMMAxisBounds (Context *c)
 {
   int i, axis;
   MMSet *mm = c->curfv->sf->mm;
@@ -7622,7 +7618,7 @@ bMMAxisBounds (Context * c)
 }
 
 static void
-bMMWeightedName (Context * c)
+bMMWeightedName (Context *c)
 {
   MMSet *mm = c->curfv->sf->mm;
 
@@ -7636,7 +7632,7 @@ bMMWeightedName (Context * c)
 }
 
 static void
-bMMChangeInstance (Context * c)
+bMMChangeInstance (Context *c)
 {
   int i;
   MMSet *mm = c->curfv->sf->mm;
@@ -7675,7 +7671,7 @@ bMMChangeInstance (Context * c)
 }
 
 static void
-Reblend (Context * c, int tonew)
+Reblend (Context *c, int tonew)
 {
   real blends[MmMax];
   MMSet *mm = c->curfv->sf->mm;
@@ -7704,13 +7700,13 @@ Reblend (Context * c, int tonew)
 }
 
 static void
-bMMChangeWeight (Context * c)
+bMMChangeWeight (Context *c)
 {
   Reblend (c, false);
 }
 
 static void
-bMMBlendToNewFont (Context * c)
+bMMBlendToNewFont (Context *c)
 {
   Reblend (c, true);
 }
@@ -7718,7 +7714,7 @@ bMMBlendToNewFont (Context * c)
 /* **** CID menu **** */
 
 static void
-bPreloadCidmap (Context * c)
+bPreloadCidmap (Context *c)
 {
 
   if (c->a.argc != 5)
@@ -7731,7 +7727,7 @@ bPreloadCidmap (Context * c)
 }
 
 static void
-bConvertToCID (Context * c)
+bConvertToCID (Context *c)
 {
   SplineFont *sf = c->curfv->sf;
   struct cidmap *map;
@@ -7753,7 +7749,7 @@ bConvertToCID (Context * c)
 }
 
 static void
-bConvertByCMap (Context * c)
+bConvertByCMap (Context *c)
 {
   SplineFont *sf = c->curfv->sf;
   char *t;
@@ -7774,7 +7770,7 @@ bConvertByCMap (Context * c)
 }
 
 static void
-bCIDChangeSubFont (Context * c)
+bCIDChangeSubFont (Context *c)
 {
   SplineFont *sf = c->curfv->sf, *new;
   EncMap *map = c->curfv->map;
@@ -7819,7 +7815,7 @@ bCIDChangeSubFont (Context * c)
 }
 
 static void
-bCIDSetFontNames (Context * c)
+bCIDSetFontNames (Context *c)
 {
   SplineFont *sf = c->curfv->sf;
 
@@ -7829,7 +7825,7 @@ bCIDSetFontNames (Context * c)
 }
 
 static void
-bCIDFlatten (Context * c)
+bCIDFlatten (Context *c)
 {
   SplineFont *sf = c->curfv->sf;
 
@@ -7842,7 +7838,7 @@ bCIDFlatten (Context * c)
 }
 
 static void
-bCIDFlattenByCMap (Context * c)
+bCIDFlattenByCMap (Context *c)
 {
   SplineFont *sf = c->curfv->sf;
   char *t;
@@ -7867,7 +7863,7 @@ bCIDFlattenByCMap (Context * c)
 /* **** Info routines **** */
 
 static void
-bCharCnt (Context * c)
+bCharCnt (Context *c)
 {
   if (c->a.argc != 1)
     ScriptError (c, "Wrong number of arguments");
@@ -7876,7 +7872,7 @@ bCharCnt (Context * c)
 }
 
 static void
-bInFont (Context * c)
+bInFont (Context *c)
 {
   SplineFont *sf = c->curfv->sf;
   EncMap *map = c->curfv->map;
@@ -7903,7 +7899,7 @@ bInFont (Context * c)
 }
 
 static void
-bWorthOutputting (Context * c)
+bWorthOutputting (Context *c)
 {
   SplineFont *sf = c->curfv->sf;
   EncMap *map = c->curfv->map;
@@ -7939,7 +7935,7 @@ bWorthOutputting (Context * c)
 }
 
 static void
-bDrawsSomething (Context * c)
+bDrawsSomething (Context *c)
 {
   SplineFont *sf = c->curfv->sf;
   EncMap *map = c->curfv->map;
@@ -7975,13 +7971,13 @@ bDrawsSomething (Context * c)
 }
 
 static void
-bDefaultATT (Context * c)
+bDefaultATT (Context *c)
 {
   ScriptError (c, "This scripting function no longer works.");
 }
 
 static void
-bCheckForAnchorClass (Context * c)
+bCheckForAnchorClass (Context *c)
 {
   AnchorClass *t;
   SplineFont *sf = c->curfv->sf;
@@ -8000,7 +7996,7 @@ bCheckForAnchorClass (Context * c)
 }
 
 static void
-bAddAnchorClass (Context * c)
+bAddAnchorClass (Context *c)
 {
   AnchorClass *ac, *t;
   uint32_t *ustr;
@@ -8055,7 +8051,7 @@ bAddAnchorClass (Context * c)
 }
 
 static void
-bRemoveAnchorClass (Context * c)
+bRemoveAnchorClass (Context *c)
 {
   AnchorClass *t;
   SplineFont *sf = c->curfv->sf;
@@ -8076,7 +8072,7 @@ bRemoveAnchorClass (Context * c)
 }
 
 static void
-bAddAnchorPoint (Context * c)
+bAddAnchorPoint (Context *c)
 {
   AnchorClass *t;
   SplineFont *sf = c->curfv->sf;
@@ -8208,14 +8204,14 @@ bAddAnchorPoint (Context * c)
 }
 
 static void
-bAddATT (Context * c)
+bAddATT (Context *c)
 {
   ScriptError (c,
                "This scripting function no longer works, replaced by AddPosSub.");
 }
 
 static void
-bAddPosSub (Context * c)
+bAddPosSub (Context *c)
 {
   SplineChar *sc;
   PST temp, *pst;
@@ -8311,14 +8307,14 @@ bAddPosSub (Context * c)
 }
 
 static void
-bRemoveATT (Context * c)
+bRemoveATT (Context *c)
 {
   ScriptError (c,
                "This scripting function no longer works. Try RemoveLookupSubtable or RemovePosSub.");
 }
 
 static void
-bRemoveLookup (Context * c)
+bRemoveLookup (Context *c)
 {
   OTLookup *otl;
 
@@ -8333,7 +8329,7 @@ bRemoveLookup (Context * c)
 }
 
 static void
-bMergeLookups (Context * c)
+bMergeLookups (Context *c)
 {
   OTLookup *otl1, *otl2;
   struct lookup_subtable *sub;
@@ -8366,7 +8362,7 @@ bMergeLookups (Context * c)
 }
 
 static void
-bRemoveLookupSubtable (Context * c)
+bRemoveLookupSubtable (Context *c)
 {
   struct lookup_subtable *sub;
 
@@ -8381,7 +8377,7 @@ bRemoveLookupSubtable (Context * c)
 }
 
 static void
-bMergeLookupSubtables (Context * c)
+bMergeLookupSubtables (Context *c)
 {
   struct lookup_subtable *sub1, *sub2;
 
@@ -8403,7 +8399,7 @@ bMergeLookupSubtables (Context * c)
 }
 
 static int32_t
-ParseTag (Context * c, Val * tagstr, int macok, int *wasmac)
+ParseTag (Context *c, Val *tagstr, int macok, int *wasmac)
 {
   char tag[4];
   int feat, set;
@@ -8443,7 +8439,7 @@ ParseTag (Context * c, Val * tagstr, int macok, int *wasmac)
 }
 
 static FeatureScriptLangList *
-ParseFeatureList (Context * c, Array * a)
+ParseFeatureList (Context *c, Array *a)
 {
   FeatureScriptLangList *flhead = NULL, *fltail, *fl;
   struct scriptlanglist *sltail, *sl;
@@ -8527,7 +8523,7 @@ ParseFeatureList (Context * c, Array * a)
 }
 
 static void
-bAddLookup (Context * c)
+bAddLookup (Context *c)
 {
   OTLookup *otl, *after = NULL;
   SplineFont *sf = c->curfv->sf;
@@ -8539,9 +8535,8 @@ bAddLookup (Context * c)
            || c->a.vals[3].type != v_int || (c->a.vals[4].type != v_arr
                                              && c->a.vals[4].type !=
                                              v_arrfree) || (c->a.argc == 6
-                                                            && c->a.
-                                                            vals[5].type !=
-                                                            v_str))
+                                                            && c->a.vals[5].
+                                                            type != v_str))
     ScriptError (c, "Bad type for argument");
 
   if (strcasecmp (c->a.vals[2].u.sval, "gsub_single") == 0)
@@ -8631,7 +8626,7 @@ bAddLookup (Context * c)
 }
 
 static void
-bSetFeatureList (Context * c)
+bSetFeatureList (Context *c)
 {
   OTLookup *otl;
 
@@ -8650,7 +8645,7 @@ bSetFeatureList (Context * c)
 }
 
 static void
-bLookupStoreLigatureInAfm (Context * c)
+bLookupStoreLigatureInAfm (Context *c)
 {
   OTLookup *otl;
 
@@ -8684,7 +8679,7 @@ Tag2Str (uint32_t tag, int ismac)
 }
 
 static void
-bGetLookupInfo (Context * c)
+bGetLookupInfo (Context *c)
 {
   OTLookup *otl;
   FeatureScriptLangList *fl;
@@ -8780,7 +8775,7 @@ bGetLookupInfo (Context * c)
 }
 
 static void
-bGetLookupSubtables (Context * c)
+bGetLookupSubtables (Context *c)
 {
   OTLookup *otl;
   struct lookup_subtable *sub;
@@ -8809,7 +8804,7 @@ bGetLookupSubtables (Context * c)
 }
 
 static void
-bGetLookups (Context * c)
+bGetLookups (Context *c)
 {
   OTLookup *otl, *base;
   int cnt;
@@ -8845,7 +8840,7 @@ bGetLookups (Context * c)
 }
 
 static void
-bAddLookupSubtable (Context * c)
+bAddLookupSubtable (Context *c)
 {
   int isgpos;
   OTLookup *otl, *test;
@@ -8919,7 +8914,7 @@ bAddLookupSubtable (Context * c)
 }
 
 static void
-bGetLookupOfSubtable (Context * c)
+bGetLookupOfSubtable (Context *c)
 {
   struct lookup_subtable *sub;
 
@@ -8935,7 +8930,7 @@ bGetLookupOfSubtable (Context * c)
 }
 
 static void
-bGetSubtableOfAnchorClass (Context * c)
+bGetSubtableOfAnchorClass (Context *c)
 {
   AnchorClass *ac;
   SplineFont *sf = c->curfv->sf;
@@ -8957,7 +8952,7 @@ bGetSubtableOfAnchorClass (Context * c)
 }
 
 static void
-bAddSizeFeature (Context * c)
+bAddSizeFeature (Context *c)
 {
   int i, found_english;
   struct array *arr, *subarr;
@@ -9041,34 +9036,31 @@ FigureSplExt (SplineSet *spl, int pos, int xextrema, double minmax[2])
           if ((xextrema && pos > s->from->me.y && pos > s->from->nextcp.y
                && pos > s->to->me.y && pos > s->to->prevcp.y) || (xextrema
                                                                   && pos <
-                                                                  s->from->
-                                                                  me.y
-                                                                  && pos <
-                                                                  s->
-                                                                  from->nextcp.
+                                                                  s->from->me.
                                                                   y
+                                                                  && pos <
+                                                                  s->from->
+                                                                  nextcp.y
                                                                   && pos <
                                                                   s->to->me.y
                                                                   && pos <
-                                                                  s->
-                                                                  to->prevcp.
-                                                                  y)
+                                                                  s->to->
+                                                                  prevcp.y)
               || (!xextrema && pos > s->from->me.x && pos > s->from->nextcp.x
                   && pos > s->to->me.x && pos > s->to->prevcp.x) || (!xextrema
                                                                      && pos <
-                                                                     s->
-                                                                     from->me.
-                                                                     x
+                                                                     s->from->
+                                                                     me.x
                                                                      && pos <
-                                                                     s->
-                                                                     from->nextcp.
-                                                                     x
+                                                                     s->from->
+                                                                     nextcp.x
                                                                      && pos <
-                                                                     s->
-                                                                     to->me.x
+                                                                     s->to->
+                                                                     me.x
                                                                      && pos <
-                                                                     s->
-                                                                     to->prevcp.x))
+                                                                     s->to->
+                                                                     prevcp.
+                                                                     x))
             continue;           /* can't intersect spline */
           if (CubicSolve (&s->splines[xextrema], pos, ts) == -1)
             continue;           /* didn't intersect */
@@ -9088,7 +9080,7 @@ FigureSplExt (SplineSet *spl, int pos, int xextrema, double minmax[2])
 }
 
 static void
-FigureExtrema (Context * c, SplineChar *sc, int pos, int xextrema)
+FigureExtrema (Context *c, SplineChar *sc, int pos, int xextrema)
 {
   /* If xextrema is true, then pos will be a y value and we want to */
   /*  find the minimum and maximum x values for the contours of the glyph */
@@ -9130,7 +9122,7 @@ FigureExtrema (Context * c, SplineChar *sc, int pos, int xextrema)
 }
 
 static void
-FigureProfile (Context * c, SplineChar *sc, int pos, int xextrema)
+FigureProfile (Context *c, SplineChar *sc, int pos, int xextrema)
 {
 #define MAXSECT 100
   SplineSet *spl;
@@ -9151,34 +9143,31 @@ FigureProfile (Context * c, SplineChar *sc, int pos, int xextrema)
           if ((xextrema && pos > s->from->me.y && pos > s->from->nextcp.y
                && pos > s->to->me.y && pos > s->to->prevcp.y) || (xextrema
                                                                   && pos <
-                                                                  s->from->
-                                                                  me.y
-                                                                  && pos <
-                                                                  s->
-                                                                  from->nextcp.
+                                                                  s->from->me.
                                                                   y
+                                                                  && pos <
+                                                                  s->from->
+                                                                  nextcp.y
                                                                   && pos <
                                                                   s->to->me.y
                                                                   && pos <
-                                                                  s->
-                                                                  to->prevcp.
-                                                                  y)
+                                                                  s->to->
+                                                                  prevcp.y)
               || (!xextrema && pos > s->from->me.x && pos > s->from->nextcp.x
                   && pos > s->to->me.x && pos > s->to->prevcp.x) || (!xextrema
                                                                      && pos <
-                                                                     s->
-                                                                     from->me.
-                                                                     x
+                                                                     s->from->
+                                                                     me.x
                                                                      && pos <
-                                                                     s->
-                                                                     from->nextcp.
-                                                                     x
+                                                                     s->from->
+                                                                     nextcp.x
                                                                      && pos <
-                                                                     s->
-                                                                     to->me.x
+                                                                     s->to->
+                                                                     me.x
                                                                      && pos <
-                                                                     s->
-                                                                     to->prevcp.x))
+                                                                     s->to->
+                                                                     prevcp.
+                                                                     x))
             continue;           /* can't intersect spline */
           if (CubicSolve (&s->splines[xextrema], pos, ts) == -1)
             continue;           /* didn't intersect */
@@ -9282,7 +9271,7 @@ maxsect_reached:
 }
 
 static void
-bCharInfo (Context * c)
+bCharInfo (Context *c)
 {
   SplineFont *sf = c->curfv->sf;
   EncMap *map = c->curfv->map;
@@ -9483,8 +9472,8 @@ bCharInfo (Context * c)
         {
           c->return_val.type = v_str;
           c->return_val.u.sval =
-            sc->
-            comment ? xstrdup_or_null (sc->comment) : xstrdup_or_null ("");
+            sc->comment ? xstrdup_or_null (sc->
+                                           comment) : xstrdup_or_null ("");
         }
       else
         {
@@ -9527,7 +9516,7 @@ static struct flaglist ap_types[] = {
 };
 
 static void
-bGetAnchorPoints (Context * c)
+bGetAnchorPoints (Context *c)
 {
   SplineChar *sc;
   AnchorPoint *ap;
@@ -9573,7 +9562,7 @@ bGetAnchorPoints (Context * c)
 }
 
 static void
-bGetPosSub (Context * c)
+bGetPosSub (Context *c)
 {
   SplineFont *sf = c->curfv->sf, *sf_sl = sf;
   EncMap *map = c->curfv->map;
@@ -9765,7 +9754,7 @@ bGetPosSub (Context * c)
 }
 
 static void
-bRemovePosSub (Context * c)
+bRemovePosSub (Context *c)
 {
   SplineFont *sf = c->curfv->sf, *sf_sl = sf;
   EncMap *map = c->curfv->map;
@@ -9844,7 +9833,7 @@ bRemovePosSub (Context * c)
 }
 
 static void
-bSetGlyphTeX (Context * c)
+bSetGlyphTeX (Context *c)
 {
   SplineFont *sf = c->curfv->sf;
   EncMap *map = c->curfv->map;
@@ -9871,7 +9860,7 @@ bSetGlyphTeX (Context * c)
 }
 
 static void
-bCompareGlyphs (Context * c)
+bCompareGlyphs (Context *c)
 {
   /* Compare selected glyphs against the contents of the clipboard    */
   /* Three comparisons:                                               */
@@ -9940,7 +9929,7 @@ bCompareGlyphs (Context * c)
 
 
 static void
-bCompareFonts (Context * c)
+bCompareFonts (Context *c)
 {
   /* Compare the current font against the named one        */
   /* output to a file (used /dev/null if no output wanted) */
@@ -9985,7 +9974,7 @@ bCompareFonts (Context * c)
 }
 
 static void
-bValidate (Context * c)
+bValidate (Context *c)
 {
   int force = false;
 
@@ -10684,10 +10673,10 @@ HasUserScriptingCommand (char *name)
 
 /* ******************************* Interpreter ****************************** */
 
-static void expr (Context *, Val * val);
+static void expr (Context *, Val *val);
 
 static int
-_cgetc (Context * c)
+_cgetc (Context *c)
 {
   int ch;
 
@@ -10710,7 +10699,7 @@ _cgetc (Context * c)
 }
 
 static int
-cgetc (Context * c)
+cgetc (Context *c)
 {
   int ch;
   if (c->ungotch)
@@ -10733,7 +10722,7 @@ tail_recursion:
 }
 
 static void
-cungetc (int ch, Context * c)
+cungetc (int ch, Context *c)
 {
   if (c->ungotch)
     IError ("Attempt to unget two characters\n");
@@ -10741,7 +10730,7 @@ cungetc (int ch, Context * c)
 }
 
 static long
-ctell (Context * c)
+ctell (Context *c)
 {
   long pos = ftell (c->script);
   if (c->ungotch)
@@ -10750,7 +10739,7 @@ ctell (Context * c)
 }
 
 static void
-cseek (Context * c, long pos)
+cseek (Context *c, long pos)
 {
   fseek (c->script, pos, SEEK_SET);
   c->ungotch = 0;
@@ -10758,7 +10747,7 @@ cseek (Context * c, long pos)
 }
 
 enum token_type
-ff_NextToken (Context * c)
+ff_NextToken (Context *c)
 {
   int ch, nch;
   enum token_type tok = tt_error;
@@ -11117,7 +11106,7 @@ ff_NextToken (Context * c)
 }
 
 void
-ff_backuptok (Context * c)
+ff_backuptok (Context *c)
 {
   if (c->backedup)
     IError ("%s:%d Internal Error: Attempt to back token twice\n",
@@ -11128,7 +11117,7 @@ ff_backuptok (Context * c)
 #define PE_ARG_MAX	25
 
 static void
-docall (Context * c, char *name, Val * val)
+docall (Context *c, char *name, Val *val)
 {
   /* Be prepared for c->donteval */
   Val args[PE_ARG_MAX];
@@ -11278,7 +11267,7 @@ docall (Context * c, char *name, Val * val)
 }
 
 static void
-buildarray (Context * c, Val * val)
+buildarray (Context *c, Val *val)
 {
   /* Be prepared for c->donteval */
   Val *body = NULL;
@@ -11320,7 +11309,7 @@ buildarray (Context * c, Val * val)
 }
 
 static void
-handlename (Context * c, Val * val)
+handlename (Context *c, Val *val)
 {
   char name[TOK_MAX + 1];
   enum token_type tok;
@@ -11482,8 +11471,8 @@ handlename (Context * c, Val * val)
                                  'i' ? c->curfv->sf->origname : strcmp (name,
                                                                         "$fondname")
                                  == 0 ? c->curfv->sf->fondname : name[3] ==
-                                 'p' ? c->curfv->sf->copyright : c->
-                                 curfv->sf->version);
+                                 'p' ? c->curfv->sf->copyright : c->curfv->
+                                 sf->version);
               val->u.sval = utf82script_copy (t);
               if (val->u.sval == NULL)
                 val->u.sval = xstrdup ("");
@@ -11679,7 +11668,7 @@ handlename (Context * c, Val * val)
 }
 
 static void
-term (Context * c, Val * val)
+term (Context *c, Val *val)
 {
   enum token_type tok = ff_NextToken (c);
   Val temp;
@@ -11909,7 +11898,7 @@ term (Context * c, Val * val)
 }
 
 static void
-mul (Context * c, Val * val)
+mul (Context *c, Val *val)
 {
   Val other;
   enum token_type tok;
@@ -11963,7 +11952,7 @@ mul (Context * c, Val * val)
 }
 
 static void
-add (Context * c, Val * val)
+add (Context *c, Val *val)
 {
   Val other;
   enum token_type tok;
@@ -12058,7 +12047,7 @@ add (Context * c, Val * val)
 }
 
 static void
-comp (Context * c, Val * val)
+comp (Context *c, Val *val)
 {
   Val other;
   int cmp;
@@ -12122,7 +12111,7 @@ comp (Context * c, Val * val)
 }
 
 static void
-_and (Context * c, Val * val)
+_and (Context *c, Val *val)
 {
   Val other;
   int old = c->donteval;
@@ -12157,7 +12146,7 @@ _and (Context * c, Val * val)
 }
 
 static void
-_or (Context * c, Val * val)
+_or (Context *c, Val *val)
 {
   Val other;
   int old = c->donteval;
@@ -12194,7 +12183,7 @@ _or (Context * c, Val * val)
 }
 
 static void
-assign (Context * c, Val * val)
+assign (Context *c, Val *val)
 {
   Val other;
   enum token_type tok;
@@ -12308,14 +12297,14 @@ assign (Context * c, Val * val)
 }
 
 static void
-expr (Context * c, Val * val)
+expr (Context *c, Val *val)
 {
   val->type = v_void;
   assign (c, val);
 }
 
 static void
-doforeach (Context * c)
+doforeach (Context *c)
 {
   long here = ctell (c);
   int lineno = c->lineno;
@@ -12378,7 +12367,7 @@ doforeach (Context * c)
 }
 
 static void
-dowhile (Context * c)
+dowhile (Context *c)
 {
   long here = ctell (c);
   int lineno = c->lineno;
@@ -12435,7 +12424,7 @@ dowhile (Context * c)
 }
 
 static void
-doif (Context * c)
+doif (Context *c)
 {
   enum token_type tok;
   Val val;
@@ -12511,7 +12500,7 @@ doif (Context * c)
 }
 
 static void
-doshift (Context * c)
+doshift (Context *c)
 {
   int i;
 
@@ -12532,7 +12521,7 @@ doshift (Context * c)
 }
 
 void
-ff_statement (Context * c)
+ff_statement (Context *c)
 {
   enum token_type tok = ff_NextToken (c);
   Val val;

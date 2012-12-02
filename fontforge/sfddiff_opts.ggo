@@ -1,0 +1,13 @@
+package "sfddiff"
+purpose "Compare two font files."
+usage "sfddiff [OPTIONS]... FILE1 FILE2"
+
+option "ignorehints" - "Do not compare PostScript hints or TrueType instructions." optional
+option "ignorenames" - "Do not compare font names." optional
+option "ignoregpos"  - "Do not compare kerning, etc." optional
+option "ignoregsub"  - "Do not compare ligatures, etc." optional
+option "ignorebitmaps" - "Do not compare bitmap strikes." optional
+option "exact"       - "Normally sfddiff will match contours which are not exact but where the differences are slight (so you could compare TrueType and PostScript and get reasonable answers). Also normally sfddiff will unlink references before it compares (so you can compare a PostScript font [with no references] to the original source [which does have references]). Setting this flag means glyphs must match exactly." optional
+option "warn"        - "Provide a warning when an exact match is not found." optional
+option "merge"       - "Put any outline differences in the backgrounds of appropriate glyphs." optional string
+
