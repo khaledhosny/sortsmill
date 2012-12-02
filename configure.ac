@@ -142,6 +142,7 @@ AC_PATH_PROG([UPDATE_DESKTOP_DATABASE],[update-desktop-database],[update-desktop
 # Assorted programs.
 AC_PATH_PROG([WGET],[wget],[wget])
 AC_PATH_PROG([CYTHON],[cython],[cython])
+AC_PATH_PROG([GENGETOPT],[gengetopt],[gengetopt])
 GUILE_PROGS
 
 #--------------------------------------------------------------------------

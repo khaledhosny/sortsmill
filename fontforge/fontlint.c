@@ -33,15 +33,16 @@
 #include <Python.h>
 #endif
 
-#include <sortsmillff/attributes.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 #include <progname.h>
 #include <libguile.h>
 
 #include <fontforge.h>
 #include <scripting.h>
+#include "fontlint_opts.h"
 
 #ifndef _NO_PYTHON
 #include <ffpython.h>
@@ -50,14 +51,6 @@
 static void initialize (void);
 
 //-------------------------------------------------------------------------
-
-_FF_ATTRIBUTE_NORETURN static void
-usage (void)
-{
-  printf ("Usage: %s FILE [FILE]...\n", program_name);
-  printf ("Validate the listed font files.\n");
-  exit (1);
-}
 
 static void
 failures_of_mask (int mask)
@@ -248,17 +241,25 @@ static int
 my_main (int argc, char **argv)
 {
   set_program_name (argv[0]);
-  if (argc <= 1)
-    usage ();
+  char progname[(strlen (program_name) + 1) * sizeof (char)];
+  strcpy (progname, program_name);
+  argv[0] = progname;
+
+  struct gengetopt_args_info args_info;
+  int errval = cmdline_parser (argc, argv, &args_info);
+  if (errval != 0)
+    exit (1);
 
   initialize ();
 
   bool all_passed = true;
-  for (size_t i = 1; i < argc; i++)
+  for (size_t i = 0; i < args_info.inputs_num; i++)
     {
-      bool passed = validate (argv[i]);
+      bool passed = validate (args_info.inputs[i]);
       all_passed = (all_passed && passed);
     }
+
+  cmdline_parser_free (&args_info);
 
   return (all_passed ? 0 : 1);
 }

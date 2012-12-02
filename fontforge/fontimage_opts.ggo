@@ -1,0 +1,9 @@
+package "fontimage"
+purpose "Produces an image containing representative glyphs of the font."
+usage "fontimage [OPTIONS]... FILE"
+
+option "width"        W      "Specifies the number of pixels wide to make the output image. If this is omitted (or specified as -1) then the image will be made as wide as it needs to be."     optional int
+option "height"       H      "Specifies the number of pixels high to make the output image. If this is omitted (or specified as -1) then the image will be made as high as it needs to be."     optional int
+option "pixelsize"    P      "Specifies the size at which the next piece(s) of text will be printed. This may also be specified multiple times."    optional int
+option "text"         t      "Specifies a line or comma-separated lines of text to be printed on the image. To include a comma in the text, write `\\,'. If STRING is `<fontname>', the fontname will be used instead. May be specified multiple times." optional multiple string
+option "output"       o      "Specifies the name of the output image file. It must have an extension of either `.png' or `.bmp'. If this option is omitted, fontimage will chose a filename based on the font name." optional string
