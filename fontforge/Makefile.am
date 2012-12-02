@@ -40,16 +40,6 @@ lib_LTLIBRARIES = libsortsmillff_fontforge.la	\
 
 #--------------------------------------------------------------------------
 
-FFSCRIPT_HEADER = "\#!$(bindir)/fontforge"
-
-# FIXME: Rewrite these scripts in Guile.
-%: %.pe
-	echo "${FFSCRIPT_HEADER}" | cat - $< > $@-tmp
-	chmod +x $@-tmp
-	mv $@-tmp $@
-
-#--------------------------------------------------------------------------
-
 noinst_HEADERS = fontforgeui.h sftextfieldP.h views.h is_LIGATURE.h		\
 	flaglist.h namelist_data.h autowidth2.h fontforge.h psfont.h		\
 	stemdb.h autowidth.h delta.h fontforgevw.h lookups.h savefont.h		\
@@ -198,7 +188,7 @@ stamp-%-ggo: %.ggo
 
 #--------------------------------------------------------------------------
 
-EXTRA_DIST = sfddiff.pe fontimage.1 fontlint.1 sfddiff.1	\
-	fontlint_opts.ggo fontimage_opts.ggo sfddiff_opts.ggo
+EXTRA_DIST = fontimage.1 fontlint.1 sfddiff.1 fontlint_opts.ggo	\
+	fontimage_opts.ggo sfddiff_opts.ggo
 
 #--------------------------------------------------------------------------
