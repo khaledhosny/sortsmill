@@ -93,7 +93,6 @@ fontforge/psread.c
 fontforge/python.c
 fontforge/savefont.c
 fontforge/savefontdlg.c
-fontforge/scripting.c
 fontforge/scriptingdlg.c
 fontforge/scstyles.c
 fontforge/scstylesui.c

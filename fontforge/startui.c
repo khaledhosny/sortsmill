@@ -31,7 +31,6 @@
 #include <Python.h>
 #endif
 
-#include "scripting.h"
 #include "fontforgeui.h"
 #include "annotations.h"
 #include <xalloc.h>

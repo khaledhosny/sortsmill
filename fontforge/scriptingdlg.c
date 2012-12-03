@@ -40,8 +40,6 @@
 #include <utype.h>
 #include <ustring.h>
 #include <gkeysym.h>
-#include "scripting.h"
-#include "scriptfuncs.h"
 
 struct sd_data
 {

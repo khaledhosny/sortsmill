@@ -58,8 +58,6 @@ cdef extern from "ffpython.h":
 cdef extern from "fontforge.h":
   bool get_no_windowing_ui ()
   void set_no_windowing_ui (bool)
-
-cdef extern from "scripting.h":
   bool get_running_script ()
   void set_running_script (bool)
 

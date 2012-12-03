@@ -1,4 +1,6 @@
-/* Copyright (C) 2006-2012 by George Williams */
+#include <config.h>
+
+/* Copyright (C) 2002-2012 by George Williams */
 /*
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -25,15 +27,20 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _SCRIPTFUNCS_H
-#define _SCRIPTFUNCS_H
+#include <fontimage.h>
 
-#include "scripting.h"
+void
+arrayfree (Array *a)
+{
+  int i;
 
-extern int CompareGlyphs(Context *c, real pt_err, real spline_err,
-	real pixel_off_frac, int bb_err, int comp_hints, int diffs_are_errors );
-extern int CompareLayer(Context *c, const SplineSet *ss1,const SplineSet *ss2,
-	const RefChar *refs1, const RefChar *refs2,
-	real pt_err, real spline_err, const char *name, int diffs_are_errors,
-	SplinePoint **_hmfail);
-#endif /* _SCRIPTFUNCS_H */
+  for (i = 0; i < a->argc; ++i)
+    {
+      if (a->vals[i].type == v_str)
+        free (a->vals[i].u.sval);
+      else if (a->vals[i].type == v_arr)
+        arrayfree (a->vals[i].u.aval);
+    }
+  free (a->vals);
+  free (a);
+}

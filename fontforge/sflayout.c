@@ -1333,7 +1333,7 @@ LIConvertToSplines (LayoutInfo * li, double dpi, int order2)
   return (head);
 }
 
-#include "scripting.h"
+#include "fontimage.h"
 static Array *
 SFDefaultScriptsLines (Array *arr, SplineFont *sf)
 {

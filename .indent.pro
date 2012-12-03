@@ -73,7 +73,9 @@
 -T OTLookup
 -T Layer
 -T EncMap
+-T Undoes
 
+-T PyFF_AWContext
 -T PyFF_Font
 -T PyFF_Glyph
 -T PyObject

@@ -37,8 +37,8 @@
 #include "utype.h"
 #include "ustring.h"
 #include "flaglist.h"
-#include "scripting.h"
-#include "scriptfuncs.h"
+#include "fontimage.h"
+#include "compare.h"
 #include "gio.h"
 #include <math.h>
 #include <unistd.h>
@@ -6768,7 +6768,7 @@ PyFFGlyph_docompare (PyFF_Glyph *self, PyObject *other, double pt_err,
       SplinePoint *dummy;
 
       ret =
-        CompareLayer (NULL, sc->layers[self->layer].splines,
+        CompareLayer (sc->layers[self->layer].splines,
                       sc2->layers[olayer].splines,
                       sc->layers[self->layer].refs, sc2->layers[olayer].refs,
                       pt_err, spline_err, sc->name, false, &dummy);
@@ -20645,7 +20645,7 @@ PyFFFont_compareGlyphs (PyFF_Font *self, PyObject *args)
        &report_errors))
     return (NULL);
   ret =
-    CompareGlyphs (NULL, pt_err, spline_err, bitmaps, bb_err, comp_hints,
+    CompareGlyphs (self->fv, pt_err, spline_err, bitmaps, bb_err, comp_hints,
                    report_errors);
   if (ret == -1)
     return (NULL);

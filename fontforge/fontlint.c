@@ -41,7 +41,7 @@
 #include <libguile.h>
 
 #include <fontforge.h>
-#include <scripting.h>
+#include <compare.h>
 #include "fontlint_opts.h"
 
 #ifndef _NO_PYTHON

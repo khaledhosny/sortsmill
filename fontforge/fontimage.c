@@ -42,7 +42,7 @@
 #include <libguile.h>
 
 #include <fontforge.h>
-#include <scripting.h>
+#include <fontimage.h>
 #include <basics.h>
 #include "fontimage_opts.h"
 

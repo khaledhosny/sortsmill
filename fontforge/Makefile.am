@@ -53,12 +53,12 @@ lib_LTLIBRARIES = libsortsmillff_fontforge.la	\
 noinst_HEADERS = fontforgeui.h sftextfieldP.h views.h is_LIGATURE.h		\
 	flaglist.h namelist_data.h autowidth2.h fontforge.h psfont.h		\
 	stemdb.h autowidth.h delta.h fontforgevw.h lookups.h savefont.h		\
-	ttf.h baseviews.h fvmetrics.h mm.h scriptfuncs.h ttfinstrs.h		\
-	edgelist2.h namehash.h scripting.h uiinterface.h bezctx_ff.h		\
-	edgelist.h groups.h nonlineartrans.h sd.h unicoderange.h			\
-	bitmapcontrol.h encoding.h ofl.h search.h usermenu.h fffreetype.h	\
-	PfEd.h sfd1.h ffpython.h import.h sflayoutP.h print.h				\
-	splinefont.h annotations.h
+	ttf.h baseviews.h fvmetrics.h mm.h ttfinstrs.h edgelist2.h			\
+	namehash.h uiinterface.h bezctx_ff.h edgelist.h groups.h			\
+	nonlineartrans.h sd.h unicoderange.h bitmapcontrol.h encoding.h		\
+	ofl.h search.h usermenu.h fffreetype.h PfEd.h sfd1.h ffpython.h		\
+	import.h sflayoutP.h print.h splinefont.h annotations.h compare.h	\
+	fontimage.h
 
 #--------------------------------------------------------------------------
 
@@ -106,14 +106,15 @@ libsortsmillff_fontforge_la_SOURCES = asmfpst.c autohint.c autosave.c	\
 	noprefs.c nouiutil.c nowakowskittfinstr.c ofl.c othersubrs.c		\
 	palmfonts.c parsepdf.c parsepfa.c parsettfatt.c parsettfbmf.c		\
 	parsettf.c parsettfvar.c print.c psread.c pua.c python.c			\
-	savefont.c scripting.c scstyles.c search.c sfd1.c sfd.c				\
-	sflayout.c spiro.c splinechar.c splinefill.c splinefont.c			\
-	splineorder2.c splineoverlap.c splinesaveafm.c splinesave.c			\
-	splinestroke.c splineutil2.c splineutil.c start.c stemdb.c svg.c	\
-	tottfaat.c tottfgpos.c tottf.c tottfvar.c ttfinstrs.c				\
-	ttfspecial.c ufo.c unicoderange.c utils.c winfonts.c zapfnomen.c	\
-	groups.c langfreq.c autowidth2.c woff.c activeinui.c				\
-	is_LIGATURE.c flaglist.c contour_interface.c freetype.c ftdelta.c
+	savefont.c scstyles.c search.c sfd1.c sfd.c sflayout.c spiro.c		\
+	splinechar.c splinefill.c splinefont.c splineorder2.c				\
+	splineoverlap.c splinesaveafm.c splinesave.c splinestroke.c			\
+	splineutil2.c splineutil.c start.c stemdb.c svg.c tottfaat.c		\
+	tottfgpos.c tottf.c tottfvar.c ttfinstrs.c ttfspecial.c ufo.c		\
+	unicoderange.c utils.c winfonts.c zapfnomen.c groups.c langfreq.c	\
+	autowidth2.c woff.c activeinui.c is_LIGATURE.c flaglist.c			\
+	contour_interface.c freetype.c ftdelta.c some_global_variables.c	\
+	getfontnames.c arrayfree.c
 EXTRA_libsortsmillff_fontforge_la_SOURCES = splinerefigure.c
 
 libsortsmillff_fontforge_la_LIBADD = splinerefigure.lo $(LIBADD)	\

@@ -42,7 +42,7 @@
 #include <libguile.h>
 
 #include <fontforge.h>
-#include <scripting.h>
+#include <compare.h>
 #include <basics.h>
 #include "sfddiff_opts.h"
 

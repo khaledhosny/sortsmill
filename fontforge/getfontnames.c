@@ -27,74 +27,10 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*			   Yet another interpreter			      */
-
-#include "fontforge.h"
+#include <stdio.h>
+#include <string.h>
+#include <fontforge.h>
 #include <gfile.h>
-#include <utype.h>
-#include <ustring.h>
-#include <chardata.h>
-#include <unistd.h>
-#include <math.h>
-#include <setjmp.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <time.h>
-#include <locale.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <xalloc.h>
-#include "ttf.h"
-#include "scripting.h"
-#include "scriptfuncs.h"
-#include "flaglist.h"
-#include <canonicalize.h>
-#include <sortsmillff/xdie_on_null.h>
-
-VISIBLE int no_windowing_ui = false;
-VISIBLE int running_script = false;
-VISIBLE int use_utf8_in_script = true;
-
-VISIBLE bool
-get_no_windowing_ui (void)
-{
-  return no_windowing_ui;
-}
-
-VISIBLE void
-set_no_windowing_ui (bool v)
-{
-  no_windowing_ui = v;
-}
-
-VISIBLE bool
-get_running_script (void)
-{
-  return running_script;
-}
-
-VISIBLE void
-set_running_script (bool v)
-{
-  running_script = v;
-}
-
-void
-arrayfree (Array *a)
-{
-  int i;
-
-  for (i = 0; i < a->argc; ++i)
-    {
-      if (a->vals[i].type == v_str)
-        free (a->vals[i].u.sval);
-      else if (a->vals[i].type == v_arr)
-        arrayfree (a->vals[i].u.aval);
-    }
-  free (a->vals);
-  free (a);
-}
 
 char **
 GetFontNames (char *filename)
@@ -144,7 +80,7 @@ GetFontNames (char *filename)
               ret = NamesReadTTF (filename);
             }
           else if ((ch1 == '%' && ch2 == '!')
-                   || (ch1 == 0x80 && ch2 == '\01'))
+		   || (ch1 == 0x80 && ch2 == '\01'))
             {                   /* PFB header */
               ret = NamesReadPostScript (filename);
             }
