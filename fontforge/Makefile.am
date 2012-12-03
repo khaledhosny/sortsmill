@@ -27,12 +27,22 @@
 
 include $(top_srcdir)/mk/flags.am
 
+bin_PROGRAMS =
+dist_man_MANS =
+
 #--------------------------------------------------------------------------
 
 if THE_PROGRAMS
+
+if HAVE_GUI
+bin_PROGRAMS += fontforge
+dist_man_MANS += fontforge.1
+endif HAVE_GUI
+
 # FIXME: Update the manpages for the new gengetopt-based options.
-bin_PROGRAMS = fontforge fontlint fontimage sfddiff
-dist_man_MANS = fontforge.1 fontlint.1 fontimage.1 sfddiff.1
+bin_PROGRAMS += fontlint fontimage sfddiff
+dist_man_MANS += fontlint.1 fontimage.1 sfddiff.1
+
 endif THE_PROGRAMS
 
 lib_LTLIBRARIES = libsortsmillff_fontforge.la	\
@@ -54,10 +64,12 @@ noinst_HEADERS = fontforgeui.h sftextfieldP.h views.h is_LIGATURE.h		\
 
 if THE_PROGRAMS
 
+if HAVE_GUI
 fontforge_SOURCES = main.c
 fontforge_LDADD = libsortsmillff_fontforgeexe.la $(LDADD)	\
 	$(top_builddir)/lib/libgnu.la
 fontforge_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS) -export-dynamic
+endif HAVE_GUI
 
 dist_fontlint_SOURCES = $(srcdir)/fontlint.c			\
 	$(srcdir)/fontlint_opts.c $(srcdir)/fontlint_opts.h
@@ -88,20 +100,20 @@ libsortsmillff_fontforge_la_SOURCES = asmfpst.c autohint.c autosave.c	\
 	autotrace.c autowidth.c bezctx_ff.c bitmapchar.c bitmapcontrol.c	\
 	bvedit.c clipnoui.c crctab.c cvexport.c cvimages.c cvundoes.c		\
 	dumpbdf.c dumppfa.c effects.c encoding.c featurefile.c				\
-	fontviewbase.c freetype.c fvcomposite.c fvfonts.c fvimportbdf.c		\
-	fvmetrics.c glyphcomp.c http.c ikarus.c lookups.c macbinary.c		\
-	macenc.c mathconstants.c mm.c namelist.c namelist_data.c			\
-	nonlineartrans.c noprefs.c nouiutil.c nowakowskittfinstr.c ofl.c	\
-	othersubrs.c palmfonts.c parsepdf.c parsepfa.c parsettfatt.c		\
-	parsettfbmf.c parsettf.c parsettfvar.c print.c psread.c pua.c		\
-	python.c savefont.c scripting.c scstyles.c search.c sfd1.c sfd.c	\
+	fontviewbase.c fvcomposite.c fvfonts.c fvimportbdf.c fvmetrics.c	\
+	glyphcomp.c http.c ikarus.c lookups.c macbinary.c macenc.c			\
+	mathconstants.c mm.c namelist.c namelist_data.c nonlineartrans.c	\
+	noprefs.c nouiutil.c nowakowskittfinstr.c ofl.c othersubrs.c		\
+	palmfonts.c parsepdf.c parsepfa.c parsettfatt.c parsettfbmf.c		\
+	parsettf.c parsettfvar.c print.c psread.c pua.c python.c			\
+	savefont.c scripting.c scstyles.c search.c sfd1.c sfd.c				\
 	sflayout.c spiro.c splinechar.c splinefill.c splinefont.c			\
 	splineorder2.c splineoverlap.c splinesaveafm.c splinesave.c			\
 	splinestroke.c splineutil2.c splineutil.c start.c stemdb.c svg.c	\
 	tottfaat.c tottfgpos.c tottf.c tottfvar.c ttfinstrs.c				\
 	ttfspecial.c ufo.c unicoderange.c utils.c winfonts.c zapfnomen.c	\
-	groups.c langfreq.c ftdelta.c autowidth2.c woff.c activeinui.c		\
-	is_LIGATURE.c flaglist.c contour_interface.c
+	groups.c langfreq.c autowidth2.c woff.c activeinui.c				\
+	is_LIGATURE.c flaglist.c contour_interface.c freetype.c ftdelta.c
 EXTRA_libsortsmillff_fontforge_la_SOURCES = splinerefigure.c
 
 libsortsmillff_fontforge_la_LIBADD = splinerefigure.lo $(LIBADD)	\
@@ -145,7 +157,7 @@ libsortsmillff_fontforgeexe_la_SOURCES = alignment.c anchorsaway.c		\
 
 else !HAVE_GUI
 
-libsortsmillff_fontforgeexe_la_SOURCES = startnoui.c
+libsortsmillff_fontforgeexe_la_SOURCES = fontforgeexe_stub.c
 
 endif !HAVE_GUI
 

@@ -12723,59 +12723,59 @@ ProcessNativeScript (int argc, char *argv[], FILE *script)
 }
 #endif /* _NO_FFSCRIPT */
 
-#if !defined _NO_FFSCRIPT
-
-static void
-_CheckIsScript (int argc, char *argv[])
-{
-  int i;
-  char *arg;
-
-  if (argc == 1)
-    return;
-  for (i = 1; i < argc; ++i)
-    {
-      arg = argv[i];
-      if (arg[0] == '-' && arg[1] == '-')
-        ++arg;
-      if (strcmp (arg, "-nosplash") == 0)
-        /* Skip it */ ;
-      else if (strcmp (argv[i], "-") == 0)
-        /* Someone thought that, of course, "-" meant read from a
-           script. I guess it makes no sense with anything else... */
-        ProcessNativeScript (argc, argv, stdin);
-      else if (strcmp (argv[i], "-script") == 0
-               || strcmp (argv[i], "-dry") == 0
-               || strcmp (argv[i], "-c") == 0)
-        ProcessNativeScript (argc, argv, NULL);
-      else                      /*if ( access(argv[i],X_OK|R_OK)==0 ) */
-        {
-          FILE *temp = fopen (argv[i], "r");
-          char buffer[200];
-          if (temp == NULL)
-            return;
-          buffer[0] = '\0';
-          fgets (buffer, sizeof (buffer), temp);
-          fclose (temp);
-          if (buffer[0] == '#' && buffer[1] == '!'
-              && (strstr (buffer, "pfaedit") != NULL
-                  || strstr (buffer, "fontforge") != NULL))
-            ProcessNativeScript (argc, argv, NULL);
-        }
-    }
-}
-
-#endif
-
-void
-CheckIsScript (int argc, char *argv[])
-{
-#if defined _NO_FFSCRIPT
-  return;                       /* No scripts of any sort */
-#else
-  _CheckIsScript (argc, argv);
-#endif
-}
+//#if !defined _NO_FFSCRIPT
+//
+//static void
+//_CheckIsScript (int argc, char *argv[])
+//{
+//  int i;
+//  char *arg;
+//
+//  if (argc == 1)
+//    return;
+//  for (i = 1; i < argc; ++i)
+//    {
+//      arg = argv[i];
+//      if (arg[0] == '-' && arg[1] == '-')
+//        ++arg;
+//      if (strcmp (arg, "-nosplash") == 0)
+//        /* Skip it */ ;
+//      else if (strcmp (argv[i], "-") == 0)
+//        /* Someone thought that, of course, "-" meant read from a
+//           script. I guess it makes no sense with anything else... */
+//        ProcessNativeScript (argc, argv, stdin);
+//      else if (strcmp (argv[i], "-script") == 0
+//               || strcmp (argv[i], "-dry") == 0
+//               || strcmp (argv[i], "-c") == 0)
+//        ProcessNativeScript (argc, argv, NULL);
+//      else                      /*if ( access(argv[i],X_OK|R_OK)==0 ) */
+//        {
+//          FILE *temp = fopen (argv[i], "r");
+//          char buffer[200];
+//          if (temp == NULL)
+//            return;
+//          buffer[0] = '\0';
+//          fgets (buffer, sizeof (buffer), temp);
+//          fclose (temp);
+//          if (buffer[0] == '#' && buffer[1] == '!'
+//              && (strstr (buffer, "pfaedit") != NULL
+//                  || strstr (buffer, "fontforge") != NULL))
+//            ProcessNativeScript (argc, argv, NULL);
+//        }
+//    }
+//}
+//
+//#endif
+//
+//void
+//CheckIsScript (int argc, char *argv[])
+//{
+//#if defined _NO_FFSCRIPT
+//  return;                       /* No scripts of any sort */
+//#else
+//  _CheckIsScript (argc, argv);
+//#endif
+//}
 
 #if !defined _NO_FFSCRIPT
 

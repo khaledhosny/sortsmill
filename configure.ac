@@ -157,11 +157,6 @@ AC_ARG_ENABLE([programs],
 AM_CONDITIONAL([THE_PROGRAMS],[test x"${i_do_have_programs}" = xyes])
 AC_SUBST([THE_PROGRAMS],["${i_do_have_programs}"])
 
-FONTFORGE_ARG_DISABLE([native-scripting],
-        [AS_HELP_STRING([--disable-native-scripting],[disable the legacy fontforge scripting language])],
-        [_NO_FFSCRIPT])
-AM_CONDITIONAL([NATIVE_SCRIPTING],[test x"${i_do_have_native_scripting}" = xyes])
-
 FONTFORGE_ARG_DISABLE_PYTHON_SCRIPTING
 
 AC_ARG_ENABLE([freetype-debugger],
@@ -211,6 +206,11 @@ AC_CHECK_LIB([gmp],[__gmpz_init],[],
 
 PKG_CHECK_MODULES([BOEHM_GC],[bdw-gc >= 7.1])
 AC_DEFINE([GC_THREADS],[1],[Define to 1 if Boehm GC has to co-exist with POSIX threads.])
+
+# FIXME: Do we really want this if there is no GUI?
+# 11.0.5 is the "libtool" version corresponding to 2.4.0 release as reported by pkg-config
+# check doc/VERSION.DLL for mapping between libtool and release versions
+PKG_CHECK_MODULES([FREETYPE],[freetype2 >= 11.0.5])
 
 if test x"${i_do_have_gui}" = xyes; then
    # 11.0.5 is the "libtool" version corresponding to 2.4.0 release as reported by pkg-config

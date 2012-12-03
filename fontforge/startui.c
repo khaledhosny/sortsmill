@@ -73,12 +73,6 @@ _dousage (void)
   printf
     ("\t-docs\t\t\t (displays this message, invokes a browser)\n\t\t\t\t (Using the BROWSER environment variable)\n");
   printf ("\t-version\t\t (prints the version of fontforge and exits)\n");
-  printf ("\t-script scriptfile\t (executes scriptfile)\n");
-  printf ("\t\tAll others passed to scriptfile.\n");
-  printf ("\t-dry scriptfile\t\t (syntax checks scriptfile)\n");
-  printf ("\t\tmust be the first option. All others passed to scriptfile.\n");
-  printf ("\t-c script-string\t (executes argument as scripting cmds)\n");
-  printf ("\t\tmust be the first option. All others passed to the script.\n");
   printf ("\n");
   printf
     ("FontForge will read postscript (pfa, pfb, ps, cid), opentype (otf),\n");
@@ -89,15 +83,6 @@ _dousage (void)
   printf
     ("If no fontfiles are specified (and -new is not either and there's nothing\n");
   printf ("\tto recover) then fontforge will produce an open font dlg.\n");
-  printf
-    ("If a scriptfile is specified then FontForge will not open the X display\n");
-  printf
-    ("\tnor will it process any additional arguments. It will execute the\n");
-  printf ("\tscriptfile and give it any remaining arguments\n");
-  printf
-    ("If the first argument is an executable filename, and that file's first\n");
-  printf
-    ("\tline contains \"fontforge\" then it will be treated as a scriptfile.\n\n");
   printf ("For more information see:\n\t%s\n", PACKAGE_URL);
   printf ("Submit bug reports at:\t%s\n", PACKAGE_BUGREPORT);
 }
@@ -317,10 +302,6 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   if (default_encoding == NULL)
     default_encoding = &custom; /* In case iconv is broken */
 
-  CheckIsScript (argc, argv);   /* Will run the script and exit if it is a script */
-
-  /* If there is no UI, there is always a script */
-  /*  and we will never return from the above */
   if (load_prefs == NULL || (strcasecmp (load_prefs, "Always") != 0 &&  /* Already loaded */
                              strcasecmp (load_prefs, "Never") != 0))
     LoadPrefs ();

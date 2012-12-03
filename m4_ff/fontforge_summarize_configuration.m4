@@ -40,4 +40,13 @@ Optional dependencies:
   libunicodenames    ${i_do_have_libunicodenames}  	${libunicodenames_url}
   X Window System    ${i_do_have_x}
 EOF
+
+if test x"${i_do_have_x}" != xyes; then
+   cat >> config-summary <<EOF
+
+Because the X Window System is unavailable, the graphical interface
+will not be built.
+
+EOF
+fi
 ])
