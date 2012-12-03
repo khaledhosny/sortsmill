@@ -1250,7 +1250,7 @@ return;
     PrintDlg(fv,NULL,NULL);
 }
 
-#if !defined(_NO_FFSCRIPT) || !defined(_NO_PYTHON)
+#if !defined(_NO_PYTHON)
 static void FVMenuExecute(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
     FontView *fv = (FontView *) GDrawGetUserData(gw);
 
@@ -4443,13 +4443,8 @@ static GMenuItem2 fllist[] = {
     { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0' }, NULL, NULL, NULL, NULL, 0 }, /* line */
 #if !defined(_NO_PYTHON)
     { { (uint32_t *) N_("E_xecute Script..."), (GImage *) "python.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'x' }, H_("Execute Script...|Ctl+."), NULL, NULL, FVMenuExecute, 0 },
-#elif !defined(_NO_FFSCRIPT)
-    { { (uint32_t *) N_("E_xecute Script..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'x' }, H_("Execute Script...|Ctl+."), NULL, NULL, FVMenuExecute, 0 },
 #endif
-#if !defined(_NO_FFSCRIPT)
-    { { (uint32_t *) N_("Script Menu"), (GImage *) "fileexecute.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'r' }, H_("Script Menu|No Shortcut"), dummyitem, MenuScriptsBuild, NULL, MID_ScriptMenu },
-#endif
-#if !defined(_NO_FFSCRIPT) || !defined(_NO_PYTHON)
+#if !defined(_NO_PYTHON)
     { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0' }, NULL, NULL, NULL, NULL, 0 }, /* line */
 #endif
     { { (uint32_t *) N_("Pr_eferences..."), (GImage *) "fileprefs.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'e' }, H_("Preferences...|No Shortcut"), NULL, NULL, MenuPrefs, 0 },
@@ -6159,16 +6154,16 @@ void FVChar(FontView *fv, GEvent *event) {
     } else if ( event->u.chr.keysym=='\\' && (event->u.chr.state&ksm_control) ) {
 	/* European keyboards need a funky modifier to get \ */
 	FVDoTransform(fv);
-#if !defined(_NO_FFSCRIPT) || !defined(_NO_PYTHON)
-    } else if ( isdigit(event->u.chr.keysym) && (event->u.chr.state&ksm_control) &&
-	    (event->u.chr.state&ksm_meta) ) {
-	/* The Script menu isn't always up to date, so we might get one of */
-	/*  the shortcuts here */
-	int index = event->u.chr.keysym-'1';
-	if ( index<0 ) index = 9;
-	if ( script_filenames[index]!=NULL )
-	    ExecuteScriptFile((FontViewBase *) fv,NULL,script_filenames[index]);
-#endif
+//#if !defined(_NO_PYTHON)
+//    } else if ( isdigit(event->u.chr.keysym) && (event->u.chr.state&ksm_control) &&
+//	    (event->u.chr.state&ksm_meta) ) {
+//	/* The Script menu isn't always up to date, so we might get one of */
+//	/*  the shortcuts here */
+//	int index = event->u.chr.keysym-'1';
+//	if ( index<0 ) index = 9;
+//	if ( script_filenames[index]!=NULL )
+//	    ExecuteScriptFile((FontViewBase *) fv,NULL,script_filenames[index]);
+//#endif
     } else if ( event->u.chr.keysym == GK_Left ||
 	    event->u.chr.keysym == GK_Tab ||
 	    event->u.chr.keysym == GK_BackTab ||
@@ -7193,10 +7188,6 @@ static void FontView_Free(FontView *fv) {
 	    prev->b.nextsame = fv->b.nextsame;
 	}
     }
-#ifndef _NO_FFSCRIPT
-    DictionaryFree(fv->b.fontvars);
-    free(fv->b.fontvars);
-#endif
     free(fv->b.selected);
     free(fv->fontset);
 #ifndef _NO_PYTHON

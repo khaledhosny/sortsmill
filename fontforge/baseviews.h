@@ -256,9 +256,6 @@ typedef struct fontviewbase
   int active_layer;
   BDFFont *active_bitmap;       /* Set if the fontview displays a bitmap strike */
   uint8_t *selected;            /* Current selection */
-#ifndef _NO_FFSCRIPT
-  struct dictionary *fontvars;  /* Scripting */
-#endif
 #ifndef _NO_PYTHON
   void *python_fv_object;
 #endif
@@ -607,10 +604,6 @@ extern int AutoWidthScript (FontViewBase * fv, int spacing);
 extern int AutoKernScript (FontViewBase * fv, int spacing, int threshold,
                            struct lookup_subtable *sub, char *kernfile);
 
-#ifndef _NO_FFSCRIPT
-VISIBLE extern void DictionaryFree (struct dictionary *dica);
-#endif
-
 extern void BCTrans (BDFFont *bdf, BDFChar * bc, BVTFunc * bvts,
                      FontViewBase * fv);
 VISIBLE extern void BCSetPoint (BDFChar * bc, int x, int y, int color);
@@ -670,9 +663,6 @@ VISIBLE extern void MVCopyChar (FontViewBase * fv, BDFFont *bdf,
                                 SplineChar *sc, enum fvcopy_type fullcopy);
 VISIBLE extern void PasteIntoMV (FontViewBase * fv, BDFFont *bdf,
                                  SplineChar *sc, int doclear);
-
-VISIBLE extern void ExecuteScriptFile (FontViewBase * fv, SplineChar *sc,
-                                       char *filename);
 
 enum search_flags
 {

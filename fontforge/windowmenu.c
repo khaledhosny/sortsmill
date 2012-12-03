@@ -177,47 +177,47 @@ return( true );
 return( false );
 }
 
-#if !defined(_NO_FFSCRIPT) || !defined(_NO_PYTHON)
-static void ScriptSelect(GWindow base,struct gmenuitem *mi,GEvent *e) {
-    int index = (intptr_t) (mi->ti.userdata);
-    FontView *fv = (FontView *) GDrawGetUserData(base);
-
-    /* the menu is not always up to date. If user changed prefs and then used */
-    /*  Alt|Ctl|Digit s/he would not get a new menu built and the old one might*/
-    /*  refer to something out of bounds. Hence the check */
-    if ( index<0 || script_filenames[index]==NULL )
-return;
-    ExecuteScriptFile((FontViewBase *) fv,NULL,script_filenames[index]);
-}
-
-/* Builds up a menu containing any user defined scripts */
-void MenuScriptsBuild(GWindow base,struct gmenuitem *mi,GEvent *e) {
-    int i;
-    GMenuItem *sub;
-
-    if ( mi->sub!=NULL ) {
-	GMenuItemArrayFree(mi->sub);
-	mi->sub = NULL;
-    }
-
-    for ( i=0; i<SCRIPT_MENU_MAX && script_menu_names[i]!=NULL; ++i );
-    if ( i==0 ) {
-	/* This can't happen */
-return;
-    }
-    sub = xcalloc(i+1,sizeof(GMenuItem));
-    for ( i=0; i<SCRIPT_MENU_MAX && script_menu_names[i]!=NULL; ++i ) {
-	GMenuItem *mi = &sub[i];
-	mi->ti.userdata = (void *) (intptr_t) i;
-	mi->ti.bg = mi->ti.fg = COLOR_DEFAULT;
-	mi->invoke = ScriptSelect;
-	mi->shortcut = i==9?'0':'1'+i;
-	mi->short_mask = ksm_control|ksm_meta;
-	mi->ti.text = x_u32_strdup_or_null(script_menu_names[i]);
-    }
-    mi->sub = sub;
-}
-#endif
+//#if !defined(_NO_PYTHON)
+//static void ScriptSelect(GWindow base,struct gmenuitem *mi,GEvent *e) {
+//    int index = (intptr_t) (mi->ti.userdata);
+//    FontView *fv = (FontView *) GDrawGetUserData(base);
+//
+//    /* the menu is not always up to date. If user changed prefs and then used */
+//    /*  Alt|Ctl|Digit s/he would not get a new menu built and the old one might*/
+//    /*  refer to something out of bounds. Hence the check */
+//    if ( index<0 || script_filenames[index]==NULL )
+//return;
+//    ExecuteScriptFile((FontViewBase *) fv,NULL,script_filenames[index]);
+//}
+//
+///* Builds up a menu containing any user defined scripts */
+//void MenuScriptsBuild(GWindow base,struct gmenuitem *mi,GEvent *e) {
+//    int i;
+//    GMenuItem *sub;
+//
+//    if ( mi->sub!=NULL ) {
+//	GMenuItemArrayFree(mi->sub);
+//	mi->sub = NULL;
+//    }
+//
+//    for ( i=0; i<SCRIPT_MENU_MAX && script_menu_names[i]!=NULL; ++i );
+//    if ( i==0 ) {
+//	/* This can't happen */
+//return;
+//    }
+//    sub = xcalloc(i+1,sizeof(GMenuItem));
+//    for ( i=0; i<SCRIPT_MENU_MAX && script_menu_names[i]!=NULL; ++i ) {
+//	GMenuItem *mi = &sub[i];
+//	mi->ti.userdata = (void *) (intptr_t) i;
+//	mi->ti.bg = mi->ti.fg = COLOR_DEFAULT;
+//	mi->invoke = ScriptSelect;
+//	mi->shortcut = i==9?'0':'1'+i;
+//	mi->short_mask = ksm_control|ksm_meta;
+//	mi->ti.text = x_u32_strdup_or_null(script_menu_names[i]);
+//    }
+//    mi->sub = sub;
+//}
+//#endif
 
 /* Builds up a menu containing all the anchor classes */
 void _aplistbuild(struct gmenuitem *top,SplineFont *sf,

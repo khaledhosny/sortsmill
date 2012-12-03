@@ -98,47 +98,4 @@ void arrayfree(Array *);
 
 void FontImage(SplineFont *sf,char *filename,Array *arr,int width,int height);
 
- /* Adds a user defined scripting function to the interpretter */
- /* (you can't override a built-in name) */
- /* (you can replace a previous user defined function */
- /* Most functions will require a font to be loaded, but a few do not */
- /*  Open(), Exit(), Sin() don't.  ff uses the needs_font flag to perform */
- /*  this check for you */
- /* Returns 1 if the addition was successful, 2 if it replaced a previous func */
- /* Returns 0 on failure (ie. if it attempts to replace a builtin function) */
-typedef void (*UserDefScriptFunc)(Context *);
-extern int AddScriptingCommand(char *name,UserDefScriptFunc func,int needs_font);
-
- /* Returns whether a user defined scripting command already exists with the */
- /*  given name */
-extern UserDefScriptFunc HasUserScriptingCommand(char *name);
-
- /* Scripts used to be in latin1, and we still support that if the user sets */
- /*  an environment variable. Now scripts are by default utf8. These two funcs */
- /*  will interconvert between latin1 & utf8 if appropriate, or just make a */
- /*  utf8 copy if not. They always make a copy. */
-extern char *utf82script_copy(const char *ustr);
-extern char *script2utf8_copy(const char *str);
-
- /* Various error routines. */
-VISIBLE void ScriptError( Context *c, const char *msg );
-	/* Prints an error message and exits. msg is in the script's encoding */
-VISIBLE void ScriptErrorString( Context *c, const char *msg, const char *name);
-	/* Prints an error message followed by a string and exits. */
-	/*  both strings are in the script's encoding */
-VISIBLE void ScriptErrorF( Context *c, const char *fmt, ... );
-	/* Standard printf-style spec. All string arguments assumed to be in */
-	/* utf8 */
-
-extern int running_script;
-
-bool get_running_script (void);
-void set_running_script (bool);
-
-/* Hooks so a scripting dlg can execute fontforge's legacy scripting language */
-VISIBLE extern void ff_VerboseCheck(void);
-VISIBLE extern enum token_type ff_NextToken(Context *c);
-VISIBLE extern void ff_backuptok(Context *c);
-VISIBLE extern void ff_statement(Context*);
-
 #endif	/* _SCRIPTING_H */

@@ -65,6 +65,14 @@
 -T Val
 -T Array
 -T Context
+-T RefChar
+-T FeatureScriptLangList
+-T PST
+-T FPST
+-T KernClass
+-T OTLookup
+-T Layer
+-T EncMap
 
 -T PyFF_Font
 -T PyFF_Glyph

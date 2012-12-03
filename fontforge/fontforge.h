@@ -41,8 +41,6 @@
 static const int unicode4_size = 17*65536;
     /* Unicode goes up to 0x10ffff */
 
-extern void ProcessNativeScript(int argc, char *argv[], FILE *script);
-
 extern char *AdobeStandardEncoding[256];
 extern int32_t unicode_from_adobestd[256];
 
@@ -55,6 +53,7 @@ VISIBLE extern int adjustlbearing;
 VISIBLE extern int autohint_before_generate;
 extern int seperate_hint_controls;
 extern int no_windowing_ui;
+extern int running_script;
 VISIBLE extern uint32_t default_background;
 extern int use_utf8_in_script;
 
@@ -73,6 +72,10 @@ VISIBLE extern Encoding *enclist;
 bool get_no_windowing_ui (void);
 void set_no_windowing_ui (bool);
 
+bool get_running_script (void);
+void set_running_script (bool);
+
+// FIXME: Eliminate this.
 #define SCRIPT_MENU_MAX	10
 
 

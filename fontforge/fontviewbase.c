@@ -1947,10 +1947,6 @@ static void FontViewBase_Free(FontViewBase *fv) {
 	    prev->nextsame = fv->nextsame;
 	}
     }
-#ifndef _NO_FFSCRIPT
-    DictionaryFree(fv->fontvars);
-    free(fv->fontvars);
-#endif
     free(fv->selected);
 #ifndef _NO_PYTHON
     PyFF_FreeFV(fv);
