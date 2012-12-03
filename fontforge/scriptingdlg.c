@@ -27,6 +27,12 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/*
+ * FIXME: There is no need to have special, compiled-in support for a
+ * Python scripting dialog. It can be implemented as an extension,
+ * perhaps _in_ Python. (REPL dialogs can be, also.)
+ */
+
 #if !defined(_NO_PYTHON)
 
 #include "fontforgeui.h"
@@ -80,7 +86,6 @@ SD_Call (GGadget *g, GEvent *e)
   return (true);
 }
 
-#if !defined(_NO_PYTHON)
 static void
 ExecPython (GGadget *g, GEvent *e)
 {
@@ -94,7 +99,6 @@ ExecPython (GGadget *g, GEvent *e)
   free (str);
   running_script = false;
 }
-#endif
 
 static int
 SD_OK (GGadget *g, GEvent *e)
@@ -285,4 +289,5 @@ ScriptDlg (FontView *fv, CharView *cv)
   GDrawProcessPendingEvents (NULL);
   GDrawSetUserData (gw, NULL);
 }
-#endif /* No scripting */
+
+#endif /* Python */
