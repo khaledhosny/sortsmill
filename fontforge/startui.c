@@ -514,15 +514,15 @@ struct _my_args
 {
   int argc;
   char **argv;
+  int exit_status;
 };
 
 static void *
 call_fontforge (void *args)
 {
-  struct _my_args a = *(struct _my_args *) args;
-  int *exit_status = xmalloc (sizeof (int));
-  *exit_status = fontforge_main_in_guile_mode (a.argc, a.argv);
-  return (void *) exit_status;
+  struct _my_args *a = (struct _my_args *) args;
+  a->exit_status = fontforge_main_in_guile_mode (a->argc, a->argv);
+  return NULL;
 }
 
 int
@@ -531,11 +531,9 @@ fontforge_main (int argc, char **argv)
   // This looks complicated only because of the need to pass data
   // around through void pointers.
 
-  struct _my_args args = { argc, argv };
-  int *exit_status = (int *) scm_with_guile (call_fontforge, (void *) &args);
-  int status = *exit_status;
-  free (exit_status);
-  return status;
+  struct _my_args args = { argc, argv, 0 };
+  (void) scm_with_guile (call_fontforge, (void *) &args);
+  return args.exit_status;
 }
 
 //-------------------------------------------------------------------------
