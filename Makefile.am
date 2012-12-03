@@ -37,7 +37,7 @@ if HAVE_GUI
 SUBDIRS += gdraw data
 endif HAVE_GUI
 
-SUBDIRS += fontforge po scheme doc htdocs
+SUBDIRS += fontforge po guile doc htdocs
 
 if THE_PROGRAMS
 SUBDIRS += sfd2sxml

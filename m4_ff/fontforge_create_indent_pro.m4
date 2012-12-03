@@ -12,7 +12,7 @@ AC_DEFUN([FONTFORGE_CREATE_INDENT_PRO],
          :
       else
          for dir in . inc inc/sortsmillff inc/sortsmillff/guile \
-                 auxiliary gutils gdraw fontforge scheme        \
+                 auxiliary gutils gdraw fontforge guile         \
                  python/sortsmillff tests fonttools
          do
              AS_MKDIR_P(["${ac_builddir}/${dir}"])

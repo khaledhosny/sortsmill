@@ -59,9 +59,9 @@ clean-local:
 
 check-local: override TESTSUITEFLAGS += DOING_INSTALLCHECK=no						\
 	LC_ALL="C" PYTHONPATH="$(abs_top_builddir)/python"								\
-	LTDL_LIBRARY_PATH="${abs_top_builddir}/scheme"									\
-	GUILE_LOAD_PATH="${abs_top_builddir}/scheme:${abs_top_srcdir}/scheme"			\
-	GUILE_LOAD_COMPILED_PATH="${abs_top_builddir}/scheme:${abs_top_srcdir}/scheme"
+	LTDL_LIBRARY_PATH="${abs_top_builddir}/guile"									\
+	GUILE_LOAD_PATH="${abs_top_builddir}/guile:${abs_top_srcdir}/guile"				\
+	GUILE_LOAD_COMPILED_PATH="${abs_top_builddir}/guile:${abs_top_srcdir}/guile"
 
 installcheck-local: override TESTSUITEFLAGS += DOING_INSTALLCHECK=yes	\
 	LC_ALL="C" PYTHONPATH="$(pythondir)"								\
