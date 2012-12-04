@@ -152,11 +152,15 @@ sortsmillff/%.so: sortsmillff/%.la
 	-rm -f $@
 	cp sortsmillff/$(LT_OBJDIR)$*.so $@
 
+sortsmillff/legacy/%.so: sortsmillff/legacy/%.la
+	-rm -f $@
+	cp sortsmillff/legacy/$(LT_OBJDIR)$*.so $@
+
 # These shared object files are needed by the test suite.
-all-local: sortsmillff/psMat.so sortsmillff/ffcompat.so	\
-	sortsmillff/pkg_info.so sortsmillff/guile.so		\
-	sortsmillff/linalg.so sortsmillff/polyspline.so		\
-	sortsmillff/brentroot.so
+all-local: sortsmillff/psMat.so sortsmillff/ffcompat.so			\
+	sortsmillff/pkg_info.so sortsmillff/guile.so				\
+	sortsmillff/linalg.so sortsmillff/polyspline.so				\
+	sortsmillff/brentroot.so sortsmillff/legacy/fontforge.so
 
 check-local: all-local
 
@@ -172,9 +176,9 @@ $(top_srcdir)/doc/%.interface.texi: sortsmillff/%.pyx
 extract-text: $(top_srcdir)/doc/psMat.interface.texi
 
 mostlyclean-local:
-	-rm -f $(builddir)/*.pyc $(builddir)/*.pyo
-	-rm -f $(srcdir)/*.pyc $(srcdir)/*.pyo
-	-rm -f $(builddir)/*/*.pyc $(builddir)/*/*.pyo
-	-rm -f $(srcdir)/*/*.pyc $(srcdir)/*/*.pyo
+	@for f in `find $(builddir) -name '*.py[co]' -print`; do	\
+		echo "rm -f $${f}";										\
+		rm -f "$${f}";											\
+	done
 	-rm -f $(builddir)/sortsmillff/*.so
 	-rm -f $(builddir)/sortsmillff/legacy/*.so
