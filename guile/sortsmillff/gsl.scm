@@ -21,5 +21,5 @@
             matrix-f64-
             ))
 
-(load-extension "libguile-sortsmillff_gsl"
+(load-extension "libguile-sortsmillff_aux"
                 "init_guile_sortsmillff_gsl")

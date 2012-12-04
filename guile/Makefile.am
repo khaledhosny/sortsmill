@@ -89,21 +89,10 @@ lib_LTLIBRARIES += libguile-sortsmillff_iconv.la
 libguile_sortsmillff_iconv_la_SOURCES = guile_iconv.c
 libguile_sortsmillff_iconv_la_LIBADD = $(top_builddir)/lib/libgnu.la
 
-lib_LTLIBRARIES += libguile-sortsmillff_polyspline.la
-libguile_sortsmillff_polyspline_la_SOURCES = guile_polyspline.c
-libguile_sortsmillff_polyspline_la_LIBADD =			\
-	$(top_builddir)/auxiliary/libsortsmillff_aux.la	\
-	$(top_builddir)/lib/libgnu.la
-
-lib_LTLIBRARIES += libguile-sortsmillff_brentroot.la
-libguile_sortsmillff_brentroot_la_SOURCES = guile_brentroot.c
-libguile_sortsmillff_brentroot_la_LIBADD =			\
-	$(top_builddir)/auxiliary/libsortsmillff_aux.la	\
-	$(top_builddir)/lib/libgnu.la
-
-lib_LTLIBRARIES += libguile-sortsmillff_gsl.la
-libguile_sortsmillff_gsl_la_SOURCES = guile_gsl.c
-libguile_sortsmillff_gsl_la_LIBADD =				\
+lib_LTLIBRARIES += libguile-sortsmillff_aux.la
+libguile_sortsmillff_aux_la_SOURCES = guile_polyspline.c	\
+	guile_brentroot.c guile_gsl.c
+libguile_sortsmillff_aux_la_LIBADD =				\
 	$(top_builddir)/auxiliary/libsortsmillff_aux.la	\
 	$(top_builddir)/lib/libgnu.la
 

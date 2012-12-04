@@ -32,5 +32,5 @@
             f64vector-subdiv-sbern
             f64vector-subdiv-bern))
 
-(load-extension "libguile-sortsmillff_polyspline"
+(load-extension "libguile-sortsmillff_aux"
                 "init_guile_sortsmillff_polyspline")

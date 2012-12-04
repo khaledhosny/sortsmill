@@ -30,7 +30,7 @@
             qbrentroot
             qbrentroot-values))
 
-(load-extension "libguile-sortsmillff_brentroot"
+(load-extension "libguile-sortsmillff_aux"
                 "init_guile_sortsmillff_brentroot")
 
 ;;-------------------------------------------------------------------------
