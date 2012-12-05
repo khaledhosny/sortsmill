@@ -46,7 +46,7 @@ nobase_include_HEADERS = sortsmillff/attributes.h			\
 
 nobase_include_HEADERS += sortsmillff/guile/polyspline.h	\
 	sortsmillff/guile/brentroot.h sortsmillff/guile/iconv.h	\
-	sortsmillff/guile/gsl.h
+	sortsmillff/guile/gsl.h sortsmillff/guile/usermenu.h
 
 if PYTHON_SCRIPTING
 nobase_include_HEADERS += sortsmillff/__init__.pxd						\

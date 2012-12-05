@@ -37,7 +37,10 @@ MOSTLYCLEANFILES = $(NODIST_SCM_FILES) $(GO_FILES)
 DIST_SCM_FILES = sortsmillff/gsl.scm sortsmillff/iconv.scm	\
 	sortsmillff/linalg.scm sortsmillff/precompute.scm		\
 	sortsmillff/polyspline.scm sortsmillff/brentroot.scm	\
-	sortsmillff/sfd-to-sxml.scm
+	sortsmillff/sfd-to-sxml.scm	sortsmillff/view.scm
+if HAVE_GUI
+DIST_SCM_FILES += sortsmillff/usermenu.scm
+endif HAVE_GUI
 
 DIST_SCM_IN_FILES = sortsmillff/math-constants.scm.in	\
 	sortsmillff/i18n.scm.in
@@ -48,7 +51,11 @@ NODIST_SCM_FILES = sortsmillff/math-constants.scm	\
 GO_FILES = sortsmillff/gsl.go sortsmillff/math-constants.go			\
 	sortsmillff/i18n.go sortsmillff/iconv.go sortsmillff/linalg.go	\
 	sortsmillff/precompute.go sortsmillff/polyspline.go				\
-	sortsmillff/brentroot.go sortsmillff/sfd-to-sxml.go
+	sortsmillff/brentroot.go sortsmillff/sfd-to-sxml.go				\
+	sortsmillff/view.go
+if HAVE_GUI
+GO_FILES += sortsmillff/usermenu.go
+endif HAVE_GUI
 
 sortsmillff/brentroot.go: sortsmillff/math-constants.go
 sortsmillff/i18n.go: libguile-sortsmillff_iconv.la
@@ -95,6 +102,18 @@ libguile_sortsmillff_aux_la_SOURCES = guile_polyspline.c	\
 libguile_sortsmillff_aux_la_LIBADD =				\
 	$(top_builddir)/auxiliary/libsortsmillff_aux.la	\
 	$(top_builddir)/lib/libgnu.la
+
+if HAVE_GUI
+lib_LTLIBRARIES += libguile-sortsmillff_fontforgeexe.la
+libguile_sortsmillff_fontforgeexe_la_SOURCES = guile_usermenu.c
+libguile_sortsmillff_fontforgeexe_la_LIBADD =					\
+	$(top_builddir)/fontforge/libsortsmillff_fontforgeexe.la	\
+	$(top_builddir)/fontforge/libsortsmillff_fontforge.la		\
+	$(top_builddir)/gdraw/libsortsmillff_gdraw.la				\
+	$(top_builddir)/gutils/libsortsmillff_gutils.la				\
+	$(top_builddir)/auxiliary/libsortsmillff_aux.la				\
+	$(top_builddir)/lib/libgnu.la
+endif HAVE_GUI
 
 #--------------------------------------------------------------------------
 
