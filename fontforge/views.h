@@ -35,1163 +35,1374 @@ struct gfi_data;
 struct contextchaindlg;
 struct statemachinedlg;
 
-extern struct cvshows {
-    int showfore, showback, showgrids, showhhints, showvhints, showdhints;
-    int showpoints, showfilled;
-    int showrulers;
-    int showrounds;		/* 0=>no, 1=>auto, 2=>always */
-    int showmdx, showmdy;	/* minimum distances x,y */
-    int showhmetrics, showvmetrics;	/* show advance width, baseline, etc. */
-    int markextrema;
-    int markpoi;		/* Points of inflection */
-    int showblues, showfamilyblues;
-    int showanchor;
-    int showcpinfo;
-    int showtabs;		/* with the names of former glyphs */
-    int showsidebearings;
-    int showrefnames;
-    int snapoutlines;
-    int showalmosthvlines;
-    int showalmosthvcurves;
-    int hvoffset;
-    int checkselfintersects;	/* Not really something shown, but convenient to keep it here */
-    int showdebugchanges;	/* Changes the way changing rasters are displayed in tt debug mode */
+extern struct cvshows
+{
+  int showfore;
+  int showback;
+  int showgrids;
+  int showhhints;
+  int showvhints;
+  int showdhints;
+  int showpoints;
+  int showfilled;
+  int showrulers;
+  int showrounds;               /* 0=>no, 1=>auto, 2=>always */
+  int showmdx;                  /* minimum distance x */
+  int showmdy;                  /* minimum distance y */
+  int showhmetrics;
+  int showvmetrics;             /* show advance width, baseline, etc. */
+  int markextrema;
+  int markpoi;                  /* Points of inflection */
+  int showblues;
+  int showfamilyblues;
+  int showanchor;
+  int showcpinfo;
+  int showtabs;                 /* with the names of former glyphs */
+  int showsidebearings;
+  int showrefnames;
+  int snapoutlines;
+  int showalmosthvlines;
+  int showalmosthvcurves;
+  int hvoffset;
+  int checkselfintersects;      /* Not really something shown, but convenient to keep it here */
+  int showdebugchanges;         /* Changes the way changing rasters are displayed in tt debug mode */
 } CVShows;
 
-extern struct bvshows {
-    int showfore, showoutline, showgrid;
-    int lastpixelsize;
+extern struct bvshows
+{
+  int showfore;
+  int showoutline;
+  int showgrid;
+  int lastpixelsize;
 } BVShows;
 
-enum debug_wins { dw_registers=0x1, dw_stack=0x2, dw_storage=0x4, dw_points=0x8,
-	dw_cvt=0x10, dw_raster=0x20, dw_gloss=0x40 };
-
-struct instrinfo {
-    int isel_pos;
-    int16_t lheight,lpos;
-    char *scroll, *offset;
-    GWindow v;
-    GGadget *vsb;
-    int16_t sbw;
-    int16_t vheight, vwidth;
-    int16_t lstopped;
-    int16_t as, fh;
-    struct instrdata *instrdata;
-    GFont *gfont;
-    bool showaddr;
-    bool showhex;
-    bool mousedown;
-    void *userdata;
-    void (*selection_callback)(struct instrinfo *,int ip);
-    int  (*bpcheck)(struct instrinfo *,int ip);
-    int  (*handle_char)(struct instrinfo *,GEvent *e);
+enum debug_wins
+{
+  dw_registers = 0x1,
+  dw_stack = 0x2,
+  dw_storage = 0x4,
+  dw_points = 0x8,
+  dw_cvt = 0x10,
+  dw_raster = 0x20,
+  dw_gloss = 0x40
 };
 
-struct reflist {
-    RefChar *ref;
-    struct reflist *parent;
+struct instrinfo
+{
+  int isel_pos;
+  int16_t lheight, lpos;
+  char *scroll, *offset;
+  GWindow v;
+  GGadget *vsb;
+  int16_t sbw;
+  int16_t vheight, vwidth;
+  int16_t lstopped;
+  int16_t as, fh;
+  struct instrdata *instrdata;
+  GFont *gfont;
+  bool showaddr;
+  bool showhex;
+  bool mousedown;
+  void *userdata;
+  void (*selection_callback) (struct instrinfo *, int ip);
+  int (*bpcheck) (struct instrinfo *, int ip);
+  int (*handle_char) (struct instrinfo *, GEvent *e);
 };
 
-typedef struct debugview {
-    struct debugger_context *dc;	/* Local to freetype.c */
-    GWindow dv, v;
-    /* Windows for twilight points, cvt, registers, stack, storage, stack gloss */
-    GWindow regs, stack, storage, points, cvt, raster, gloss;	/* order matters */
-    GWindow points_v;
-    GGadget *cvtsb;
-    GGadget *pts_vsb;
-    GGadget *glosssb;
-    GGadget *storagesb;
-    GGadget *regsb;
-    GGadget *stacksb;
-    struct instrdata id;
-    struct instrinfo ii;
-    int dwidth, toph;
-    struct charview *cv;
-    double scalex, scaley;
-    int pts_head, cvt_offtop, gloss_offtop, storage_offtop, stack_offtop, reg_offtop;
-    int points_offtop;
+struct reflist
+{
+  RefChar *ref;
+  struct reflist *parent;
+};
 
-    int codeSize;
-    uint8_t initialbytes[4];
-    struct reflist *active_refs;
-    int last_npoints;
-    int layer;
+typedef struct debugview
+{
+  struct debugger_context *dc;  /* Local to freetype.c */
+  GWindow dv, v;
+  /* Windows for twilight points, cvt, registers, stack, storage, stack gloss */
+  GWindow regs, stack, storage, points, cvt, raster, gloss;     /* order matters */
+  GWindow points_v;
+  GGadget *cvtsb;
+  GGadget *pts_vsb;
+  GGadget *glosssb;
+  GGadget *storagesb;
+  GGadget *regsb;
+  GGadget *stacksb;
+  struct instrdata id;
+  struct instrinfo ii;
+  int dwidth, toph;
+  struct charview *cv;
+  double scalex, scaley;
+  int pts_head;
+  int cvt_offtop;
+  int gloss_offtop;
+  int storage_offtop;
+  int stack_offtop;
+  int reg_offtop;
+  int points_offtop;
+
+  int codeSize;
+  uint8_t initialbytes[4];
+  struct reflist *active_refs;
+  int last_npoints;
+  int layer;
 } DebugView;
 
-enum dv_coderange { cr_none=0, cr_fpgm, cr_prep, cr_glyph };	/* cleverly chosen to match ttobjs.h */
-
-struct freehand {
-    struct tracedata *head, *last;	/* for the freehand tool */
-    SplinePointList *current_trace;
-    int ignore_wobble;		/* Ignore wiggles smaller than this */
-    int skip_cnt;
+enum dv_coderange               /* cleverly chosen to match ttobjs.h */
+{
+  cr_none = 0,
+  cr_fpgm,
+  cr_prep,
+  cr_glyph
 };
 
-enum expandedge { ee_none, ee_nw, ee_up, ee_ne, ee_right, ee_se, ee_down,
-		  ee_sw, ee_left, ee_leftright, ee_max };
+struct freehand
+{
+  struct tracedata *head, *last;        /* for the freehand tool */
+  SplinePointList *current_trace;
+  int ignore_wobble;            /* Ignore wiggles smaller than this */
+  int skip_cnt;
+};
 
-typedef struct charview {
-    CharViewBase b;
-    uint32_t showback[BACK_LAYER_MAX/32];
-    bool showfore;
-    bool showgrids;
-    bool showhhints;
-    bool showvhints;
-    bool showdhints;
-    bool showpoints;
-    bool showfilled;
-    bool showrulers;
-    unsigned int showrounds:2;		/* 0=>no, 1=>auto, 2=>always */
-    bool showmdx;
-    bool showmdy;
-    bool showhmetrics;
-    bool showvmetrics;
-    bool showblues;	/* 16 */
-    bool showfamilyblues;
-    bool showanchor;
-    bool showpointnumbers;
-    bool markextrema;
-    bool markpoi;
-    bool needsrasterize;		/* Rasterization (of fill or fontview) needed on mouse up */
-    bool recentchange;		/* a change happened in the grids or background. don't need to rasterize */
-    bool info_within;		/* cursor is within main window */
-    bool back_img_out_of_date;	/* Force redraw of back image pixmap */
-    bool cntrldown;
-    bool joinvalid;
-    bool widthsel;
-    bool vwidthsel;
-    bool icsel;
-    bool tah_sel;
-    bool inactive;			/* When in a search view */
-    bool show_ft_results;	/* 32 */
-    unsigned int coderange: 2;			/* For the debugger */
-    bool autonomous_ruler_w;
-    bool showcpinfo;
-    bool showtabs;
-    bool showsidebearings;
-    bool showing_spiro_pt_menu;
-    bool ruler_pressed;
-    bool ruler_pressedv;
-    bool showrefnames;
-    bool snapoutlines;
-    bool showalmosthvlines;
-    bool showalmosthvcurves;
-    bool checkselfintersects;
-    bool showdebugchanges;
-    bool inPreviewMode;
-    int hvoffset;		/* for showalmosthvlines */
-    int layers_off_top;
-    real scale;
-    GWindow gw, v;
-    GGadget *vsb, *hsb, *mb, *tabs;
-    GFont *small, *normal;
-    GWindow icon;
-    GWindow ruler_w;
-    int num_ruler_intersections;
-    int allocated_ruler_intersections;
-    BasePoint *ruler_intersections;
-    GFont *rfont;
-    GTimer *pressed;
-    GWindow backimgs;
-    GIC *gic;
-    GIC *gwgic;
-    int width, height;
-    float xoff, yoff; /* must be floating point, for precise zoom by scroll */
-    int mbh, infoh, rulerh;
-    int16_t sas, sfh, sdh, nas, nfh;
-    BasePoint info;
-    SplinePoint *info_sp;
-    Spline *info_spline;
-    real info_t;
-    GPoint e;					/* mouse location */
-    GPoint olde;
-    BasePoint last_c;
-    BDFChar *filled;
-    GImage gi;					/* used for fill bitmap only */
-    int enc;
-    EncMap *map_of_enc;				/* Only use for comparison against fontview's map to see if our enc be valid */
-						/*  Will not be updated when fontview is reencoded */
-    PressedOn p;
-    SplinePoint *lastselpt;
-    spiro_cp *lastselcp;
-    /*GWindow tools, layers;*/
-    int8_t b1_tool, cb1_tool, b2_tool, cb2_tool;	/* Button 3 does a popup */
-    int8_t b1_tool_old;				/* Used by mingw port */
-    int8_t s1_tool, s2_tool, er_tool;		/* Bindings for wacom stylus and eraser */
-    int8_t showing_tool, pressed_tool, pressed_display, had_control, active_tool;
-    int8_t spacebar_hold;				/* spacebar is held down */
-    SplinePointList *active_spl;
-    SplinePoint *active_sp;
-    spiro_cp *active_cp;
-    IPoint handscroll_base;
-    uint16_t rfh, ras;
-    BasePoint lastknife;
-    struct freehand freehand;
-    enum expandedge expandedge;
-    BasePoint expandorigin;
-    real expandwidth, expandheight;
-    SplinePointList *active_shape;
-    SplinePoint joinpos;
-    spiro_cp joincp;
-    SplineChar *template1, *template2;
-    real oldwidth, oldvwidth;
-    int16_t oldic, oldtah;
+enum expandedge
+{
+  ee_none,
+  ee_nw,
+  ee_up,
+  ee_ne,
+  ee_right,
+  ee_se,
+  ee_down,
+  ee_sw,
+  ee_left,
+  ee_leftright,
+  ee_max
+};
+
+typedef struct charview
+{
+  CharViewBase b;
+  uint32_t showback[BACK_LAYER_MAX / 32];
+  bool showfore;
+  bool showgrids;
+  bool showhhints;
+  bool showvhints;
+  bool showdhints;
+  bool showpoints;
+  bool showfilled;
+  bool showrulers;
+  unsigned int showrounds:2;    /* 0=>no, 1=>auto, 2=>always */
+  bool showmdx;
+  bool showmdy;
+  bool showhmetrics;
+  bool showvmetrics;
+  bool showblues;               /* 16 */
+  bool showfamilyblues;
+  bool showanchor;
+  bool showpointnumbers;
+  bool markextrema;
+  bool markpoi;
+  bool needsrasterize;          /* Rasterization (of fill or fontview) needed on mouse up */
+  bool recentchange;            /* a change happened in the grids or background. don't need to rasterize */
+  bool info_within;             /* cursor is within main window */
+  bool back_img_out_of_date;    /* Force redraw of back image pixmap */
+  bool cntrldown;
+  bool joinvalid;
+  bool widthsel;
+  bool vwidthsel;
+  bool icsel;
+  bool tah_sel;
+  bool inactive;                /* When in a search view */
+  bool show_ft_results;         /* 32 */
+  unsigned int coderange:2;     /* For the debugger */
+  bool autonomous_ruler_w;
+  bool showcpinfo;
+  bool showtabs;
+  bool showsidebearings;
+  bool showing_spiro_pt_menu;
+  bool ruler_pressed;
+  bool ruler_pressedv;
+  bool showrefnames;
+  bool snapoutlines;
+  bool showalmosthvlines;
+  bool showalmosthvcurves;
+  bool checkselfintersects;
+  bool showdebugchanges;
+  bool inPreviewMode;
+  int hvoffset;                 /* for showalmosthvlines */
+  int layers_off_top;
+  real scale;
+  GWindow gw, v;
+  GGadget *vsb, *hsb, *mb, *tabs;
+  GFont *small, *normal;
+  GWindow icon;
+  GWindow ruler_w;
+  int num_ruler_intersections;
+  int allocated_ruler_intersections;
+  BasePoint *ruler_intersections;
+  GFont *rfont;
+  GTimer *pressed;
+  GWindow backimgs;
+  GIC *gic;
+  GIC *gwgic;
+  int width, height;
+  float xoff, yoff;             /* must be floating point, for precise zoom by scroll */
+  int mbh, infoh, rulerh;
+  int16_t sas, sfh, sdh, nas, nfh;
+  BasePoint info;
+  SplinePoint *info_sp;
+  Spline *info_spline;
+  real info_t;
+  GPoint e;                     /* mouse location */
+  GPoint olde;
+  BasePoint last_c;
+  BDFChar *filled;
+  GImage gi;                    /* used for fill bitmap only */
+  int enc;
+  EncMap *map_of_enc;           /* Only use for comparison against fontview's map to see if our enc be valid */
+  /*  Will not be updated when fontview is reencoded */
+  PressedOn p;
+  SplinePoint *lastselpt;
+  spiro_cp *lastselcp;
+  /*GWindow tools, layers; */
+  int8_t b1_tool, cb1_tool, b2_tool, cb2_tool;  /* Button 3 does a popup */
+  int8_t b1_tool_old;           /* Used by mingw port */
+  int8_t s1_tool, s2_tool, er_tool;     /* Bindings for wacom stylus and eraser */
+  int8_t showing_tool, pressed_tool, pressed_display, had_control,
+    active_tool;
+  int8_t spacebar_hold;         /* spacebar is held down */
+  SplinePointList *active_spl;
+  SplinePoint *active_sp;
+  spiro_cp *active_cp;
+  IPoint handscroll_base;
+  uint16_t rfh, ras;
+  BasePoint lastknife;
+  struct freehand freehand;
+  enum expandedge expandedge;
+  BasePoint expandorigin;
+  real expandwidth, expandheight;
+  SplinePointList *active_shape;
+  SplinePoint joinpos;
+  spiro_cp joincp;
+  SplineChar *template1, *template2;
+  real oldwidth, oldvwidth;
+  int16_t oldic, oldtah;
 #if _ModKeysAutoRepeat
-    GTimer *autorpt;
-    int keysym, oldstate;
-    int oldkeyx, oldkeyy;
-    GWindow oldkeyw;
+  GTimer *autorpt;
+  int keysym, oldstate;
+  int oldkeyx, oldkeyy;
+  GWindow oldkeyw;
 #endif
-    PST *lcarets;
-    int16_t nearcaret;
-	/* freetype results display */
-    int16_t ft_dpi, ft_ppemy, ft_ppemx, ft_depth;
-    real ft_pointsizey, ft_pointsizex;
-    struct freetype_raster *raster, *oldraster;
-    DebugView *dv;
-    uint32_t mmvisible;
-    char *former_names[FORMER_MAX];
-    int former_cnt;
-    AnchorPoint *apmine, *apmatch;
-    SplineChar *apsc;
-    int guide_pos;
-    struct qg_data *qg;
-    int16_t note_x, note_y;
+  PST *lcarets;
+  int16_t nearcaret;
+  /* freetype results display */
+  int16_t ft_dpi, ft_ppemy, ft_ppemx, ft_depth;
+  real ft_pointsizey, ft_pointsizex;
+  struct freetype_raster *raster, *oldraster;
+  DebugView *dv;
+  uint32_t mmvisible;
+  char *former_names[FORMER_MAX];
+  int former_cnt;
+  AnchorPoint *apmine, *apmatch;
+  SplineChar *apsc;
+  int guide_pos;
+  struct qg_data *qg;
+  int16_t note_x, note_y;
 } CharView;
 
-typedef struct bitmapview {
-    BDFChar *bc;
-    BDFFont *bdf;
-    struct fontview *fv;
-    EncMap *map_of_enc;
-    int enc;
-    GWindow gw, v;
-    GGadget *vsb, *hsb, *mb;
-    GGadget *recalc;
-    GFont *small;
-    int xoff, yoff;
-    int width, height;
-    int infoh, mbh;
-    int scale;
-    real scscale;
-    struct bitmapview *next;
-    bool showfore;
-    bool showoutline;
-    bool showgrid;
-    bool cntrldown;
-    bool recentchange;
-    bool clearing;
-    bool shades_hidden;
-    bool shades_down;
-    /*GWindow tools, layers;*/
-    int8_t b1_tool, cb1_tool, b2_tool, cb2_tool;		/* Button 3 does a popup */
-    int8_t s1_tool, s2_tool, er_tool;			/* Bindings for wacom stylus and eraser */
-    int8_t showing_tool, pressed_tool, pressed_display, had_control, active_tool;
-    int pressed_x, pressed_y;
-    int info_x, info_y;
-    int event_x, event_y;
-    int16_t sas, sfh;
+typedef struct bitmapview
+{
+  BDFChar *bc;
+  BDFFont *bdf;
+  struct fontview *fv;
+  EncMap *map_of_enc;
+  int enc;
+  GWindow gw, v;
+  GGadget *vsb, *hsb, *mb;
+  GGadget *recalc;
+  GFont *small;
+  int xoff, yoff;
+  int width, height;
+  int infoh, mbh;
+  int scale;
+  real scscale;
+  struct bitmapview *next;
+  bool showfore;
+  bool showoutline;
+  bool showgrid;
+  bool cntrldown;
+  bool recentchange;
+  bool clearing;
+  bool shades_hidden;
+  bool shades_down;
+  /*GWindow tools, layers; */
+  int8_t b1_tool, cb1_tool, b2_tool, cb2_tool;  /* Button 3 does a popup */
+  int8_t s1_tool, s2_tool, er_tool;     /* Bindings for wacom stylus and eraser */
+  int8_t showing_tool, pressed_tool, pressed_display, had_control,
+    active_tool;
+  int pressed_x, pressed_y;
+  int info_x, info_y;
+  int event_x, event_y;
+  int16_t sas, sfh;
 #if _ModKeysAutoRepeat
-    GTimer *autorpt;
-    int keysym, oldstate;
+  GTimer *autorpt;
+  int keysym, oldstate;
 #endif
-    int color;			/* for greyscale fonts (between 0,255) */
-    int color_under_cursor;
+  int color;                    /* for greyscale fonts (between 0,255) */
+  int color_under_cursor;
 } BitmapView;
 
-struct aplist { AnchorPoint *ap; int connected_to, selected; struct aplist *next; };
-
-enum mv_grids { mv_hidegrid, mv_showgrid, mv_partialgrid, mv_hidemovinggrid };
-enum mv_type { mv_kernonly, mv_widthonly, mv_kernwidth };
-
-struct metricchar {
-    int16_t dx, dwidth;	/* position and width of the displayed char */
-    int16_t dy, dheight;	/*  displayed info for vertical metrics */
-    int xoff, yoff;
-    int16_t mx, mwidth;	/* position and width of the text underneath */
-    int16_t kernafter;
-    bool selected;
-    GGadget *width, *lbearing, *rbearing, *kern, *name;
-    GGadget* updownkparray[10]; /* Cherry picked elements from width...kern allowing up/down key navigation */
+struct aplist
+{
+  AnchorPoint *ap;
+  int connected_to, selected;
+  struct aplist *next;
 };
 
-typedef struct metricsview {
-    struct fontview *fv;
-    SplineFont *sf;
-    int pixelsize;		/* If the user has manually requested a pixelsize */
-				/*  then rasterize at that size no matter how large */
-			        /*  the font is zoomed. For non-user requesed sizes */
-			        /*  this is the pixelsize * zoom-factor */
-    BDFFont *bdf;		/* We can also see metric info on a bitmap font */
-    BDFFont *show;		/*  Or the rasterized version of the outline font */
-    GWindow gw, v;
-    GFont *font;
-    GGadget *hsb, *vsb, *mb, *text, *script, *features, *subtable_list;
-    GGadget *namelab, *widthlab, *lbearinglab, *rbearinglab, *kernlab;
-    int16_t xstart;
-    int16_t width, height, dwidth;
-    int16_t vwidth, vheight;
-    int16_t mbh,sbh;
-    int16_t topend;		/* y value of the end of the region containing the text field */
-    int16_t displayend;		/* y value of the end of the region showing filled characters */
-    int16_t fh, as;
-    int16_t cmax, clen; 
-    SplineChar **chars;		/* Character input stream */
-    struct opentype_str *glyphs;/* after going through the various gsub/gpos transformations */
-    struct metricchar *perchar;	/* One for each glyph above */
-    SplineChar **sstr;		/* Character input stream */
-    int16_t mwidth, mbase;
-    int16_t glyphcnt, max;
-    int16_t pressed_x, pressed_y;
-    int16_t activeoff;
-    int xoff, coff, yoff;
-    struct metricsview *next;
-    bool right_to_left;
-    bool pressed;
-    bool pressedwidth;
-    bool pressedkern;
-    unsigned int showgrid: 2;
-    bool antialias;
-    bool vertical;
-    unsigned int type: 2;		/* enum mv_type */
-    unsigned int pixelsize_set_by_window;
-    int xp, yp, ap_owner;
-    BasePoint ap_start;
-    int cursor;
-    int scale_index;
-    struct lookup_subtable *cur_subtable;
-    GTextInfo *scriptlangs;
-    int word_index;
-    int layer;
-    int fake_unicode_base;
-    GIC *gwgic;
-    int ptsize, dpi;
-    int ybaseline;
-    int oldscript, oldlang;
+enum mv_grids
+{
+  mv_hidegrid,
+  mv_showgrid,
+  mv_partialgrid,
+  mv_hidemovinggrid
+};
+
+enum mv_type
+{
+  mv_kernonly,
+  mv_widthonly,
+  mv_kernwidth
+};
+
+struct metricchar
+{
+  int16_t dx, dwidth;           /* position and width of the displayed char */
+  int16_t dy, dheight;          /*  displayed info for vertical metrics */
+  int xoff, yoff;
+  int16_t mx, mwidth;           /* position and width of the text underneath */
+  int16_t kernafter;
+  bool selected;
+  GGadget *width, *lbearing, *rbearing, *kern, *name;
+  GGadget *updownkparray[10];   /* Cherry picked elements from width...kern allowing up/down key navigation */
+};
+
+typedef struct metricsview
+{
+  struct fontview *fv;
+  SplineFont *sf;
+  int pixelsize;                /* If the user has manually requested a pixelsize */
+  /*  then rasterize at that size no matter how large */
+  /*  the font is zoomed. For non-user requesed sizes */
+  /*  this is the pixelsize * zoom-factor */
+  BDFFont *bdf;                 /* We can also see metric info on a bitmap font */
+  BDFFont *show;                /*  Or the rasterized version of the outline font */
+  GWindow gw, v;
+  GFont *font;
+  GGadget *hsb, *vsb, *mb, *text, *script, *features, *subtable_list;
+  GGadget *namelab, *widthlab, *lbearinglab, *rbearinglab, *kernlab;
+  int16_t xstart;
+  int16_t width, height, dwidth;
+  int16_t vwidth, vheight;
+  int16_t mbh, sbh;
+  int16_t topend;               /* y value of the end of the region containing the text field */
+  int16_t displayend;           /* y value of the end of the region showing filled characters */
+  int16_t fh, as;
+  int16_t cmax, clen;
+  SplineChar **chars;           /* Character input stream */
+  struct opentype_str *glyphs;  /* after going through the various gsub/gpos transformations */
+  struct metricchar *perchar;   /* One for each glyph above */
+  SplineChar **sstr;            /* Character input stream */
+  int16_t mwidth, mbase;
+  int16_t glyphcnt, max;
+  int16_t pressed_x, pressed_y;
+  int16_t activeoff;
+  int xoff, coff, yoff;
+  struct metricsview *next;
+  bool right_to_left;
+  bool pressed;
+  bool pressedwidth;
+  bool pressedkern;
+  unsigned int showgrid:2;
+  bool antialias;
+  bool vertical;
+  unsigned int type:2;          /* enum mv_type */
+  unsigned int pixelsize_set_by_window;
+  int xp, yp, ap_owner;
+  BasePoint ap_start;
+  int cursor;
+  int scale_index;
+  struct lookup_subtable *cur_subtable;
+  GTextInfo *scriptlangs;
+  int word_index;
+  int layer;
+  int fake_unicode_base;
+  GIC *gwgic;
+  int ptsize, dpi;
+  int ybaseline;
+  int oldscript, oldlang;
 } MetricsView;
 
-enum fv_metrics { fvm_baseline=1, fvm_origin=2, fvm_advanceat=4, fvm_advanceto=8 };
-typedef struct fontview {
-    FontViewBase b;
-    BDFFont *show, *filled;
-    GWindow gw, v;
-    GFont **fontset;
-    GGadget *vsb, *mb;
-    GTimer *pressed;
-    GTimer *resize;
-    GEvent resize_event;
-    GIC *gic;
-    GIC *gwgic;
-    int width, height;		/* of v */
-    int16_t infoh,mbh;
-    int16_t lab_height, lab_as;
-    int16_t colcnt, rowcnt;		/* of display window */
-    int32_t rowoff, rowltot;		/* Can be really big in full unicode */
-    int16_t cbw,cbh;			/* width/height of a character box */
-    int pressed_pos, end_pos;
-    bool antialias;
-    bool bbsized;		/* displayed bitmap should be scaled by bounding box rather than emsize */
-    bool wasonlybitmaps;
-    /*unsigned int refstate: 3;*/	/* 0x1 => paste orig of all non exist refs, 0x2=>don't, 0x3 => don't warn about non-exist refs with no source font */
-    bool touched;
-    unsigned int showhmetrics: 4;
-    unsigned int showvmetrics: 4;
-    bool drag_and_drop;
-    bool has_dd_no_cursor;
-    bool any_dd_events_sent;
-    bool resize_expected;
-	/* Some window managers do not honour my resize requests (if window is*/
-	/*  maximized for example), but we depend on the resize request to    */
-	/*  fix up the window. We do get a configure notify, but the window   */
-	/*  stays the same size, so kludge things */
-    unsigned int glyphlabel: 2;
-    bool notactive;			/* When embedded in a dlg */
-    int16_t magnify;
-    int16_t user_requested_magnify;
-    struct searchview *sv;
-    SplineChar *sc_near_top;
-    int sel_index;
-    struct lookup_subtable *cur_subtable;
-    struct qg_data *qg;
+enum fv_metrics
+{
+  fvm_baseline = 1,
+  fvm_origin = 2,
+  fvm_advanceat = 4,
+  fvm_advanceto = 8
+};
+
+typedef struct fontview
+{
+  FontViewBase b;
+  BDFFont *show, *filled;
+  GWindow gw, v;
+  GFont **fontset;
+  GGadget *vsb, *mb;
+  GTimer *pressed;
+  GTimer *resize;
+  GEvent resize_event;
+  GIC *gic;
+  GIC *gwgic;
+  int width, height;            /* of v */
+  int16_t infoh, mbh;
+  int16_t lab_height, lab_as;
+  int16_t colcnt, rowcnt;       /* of display window */
+  int32_t rowoff, rowltot;      /* Can be really big in full unicode */
+  int16_t cbw, cbh;             /* width/height of a character box */
+  int pressed_pos, end_pos;
+  bool antialias;
+  bool bbsized;                 /* displayed bitmap should be scaled by bounding box rather than emsize */
+  bool wasonlybitmaps;
+  /*unsigned int refstate: 3; *//* 0x1 => paste orig of all non exist refs, 0x2=>don't, 0x3 => don't warn about non-exist refs with no source font */
+  bool touched;
+  unsigned int showhmetrics:4;
+  unsigned int showvmetrics:4;
+  bool drag_and_drop;
+  bool has_dd_no_cursor;
+  bool any_dd_events_sent;
+  bool resize_expected;
+  /* Some window managers do not honour my resize requests (if window is */
+  /*  maximized for example), but we depend on the resize request to    */
+  /*  fix up the window. We do get a configure notify, but the window   */
+  /*  stays the same size, so kludge things */
+  unsigned int glyphlabel:2;
+  bool notactive;               /* When embedded in a dlg */
+  int16_t magnify;
+  int16_t user_requested_magnify;
+  struct searchview *sv;
+  SplineChar *sc_near_top;
+  int sel_index;
+  struct lookup_subtable *cur_subtable;
+  struct qg_data *qg;
 } FontView;
 
-typedef struct findsel {
-    GEvent *e;
-    real fudge;		/* One pixel fudge factor */
-    real xl,xh, yl, yh;	/* One pixel fudge factor */
-    real c_xl,c_xh, c_yl, c_yh;		/* fudge rectangle for control points, larger than above if alt is depressed */
-    bool select_controls;	/* notice control points */
-    bool seek_controls;	/* notice control points before base points */
-    bool all_controls;	/* notice control points even if the base points aren't selected (in truetype point numbering mode where all cps are visible) */
-    real scale;
-    PressedOn *p;
+typedef struct findsel
+{
+  GEvent *e;
+  real fudge;                   /* One pixel fudge factor */
+  real xl, xh, yl, yh;          /* One pixel fudge factor */
+  real c_xl, c_xh, c_yl, c_yh;  /* fudge rectangle for control points, larger than above if alt is depressed */
+  bool select_controls;         /* notice control points */
+  bool seek_controls;           /* notice control points before base points */
+  bool all_controls;            /* notice control points even if the base points aren't selected (in truetype point numbering mode where all cps are visible) */
+  real scale;
+  PressedOn *p;
 } FindSel;
 
-typedef struct searchview {
-    struct cvcontainer base;
-    FontView dummy_fv;
-    SplineFont dummy_sf;
-    LayerInfo layerinfo[2];
-    SplineChar *chars[2];
-    EncMap dummy_map;
-    int32_t map[2], backmap[2];
-    uint8_t sel[2];
-    CharView cv_srch, cv_rpl;
-    CharView *lastcv;
+typedef struct searchview
+{
+  struct cvcontainer base;
+  FontView dummy_fv;
+  SplineFont dummy_sf;
+  LayerInfo layerinfo[2];
+  SplineChar *chars[2];
+  EncMap dummy_map;
+  int32_t map[2], backmap[2];
+  uint8_t sel[2];
+  CharView cv_srch, cv_rpl;
+  CharView *lastcv;
 /* ****** */
-    GWindow gw;
-    GGadget *mb;
-    GFont *plain, *bold;
-    int mbh;
-    int fh, as;
-    int rpl_x, cv_y;
-    int cv_width, cv_height;
-    short button_height, button_width;
+  GWindow gw;
+  GGadget *mb;
+  GFont *plain, *bold;
+  int mbh;
+  int fh, as;
+  int rpl_x, cv_y;
+  int cv_width, cv_height;
+  short button_height, button_width;
 /* ****** */
-    SearchData sd;
-    bool showsfindnext;
-    bool findenabled;
-    bool rplallenabled;
-    bool rplenabled;
-    bool isvisible;
+  SearchData sd;
+  bool showsfindnext;
+  bool findenabled;
+  bool rplallenabled;
+  bool rplenabled;
+  bool isvisible;
 } SearchView;
 
-typedef struct mathkernview {
-    struct cvcontainer base;
-    FontView dummy_fv;
-    SplineFont dummy_sf;
-    LayerInfo layerinfo[2];
-    SplineChar sc_topright, sc_topleft, sc_bottomright, sc_bottomleft;
-    SplineChar *chars[4];
-    EncMap dummy_map;
-    int32_t map[4], backmap[4];
-    uint8_t sel[4];
-    CharView cv_topright, cv_topleft, cv_bottomright, cv_bottomleft;
-    CharView *lastcv;
+typedef struct mathkernview
+{
+  struct cvcontainer base;
+  FontView dummy_fv;
+  SplineFont dummy_sf;
+  LayerInfo layerinfo[2];
+  SplineChar sc_topright, sc_topleft, sc_bottomright, sc_bottomleft;
+  SplineChar *chars[4];
+  EncMap dummy_map;
+  int32_t map[4], backmap[4];
+  uint8_t sel[4];
+  CharView cv_topright, cv_topleft, cv_bottomright, cv_bottomleft;
+  CharView *lastcv;
 /* ****** */
-    GWindow gw;
-    GWindow cvparent_w;
-    GGadget *mb;
-    GFont *plain, *bold;
-    int mbh;
-    int fh, as;
-    int mid_space, cv_y;
-    int cv_width, cv_height;
-    short button_height, button_width;
+  GWindow gw;
+  GWindow cvparent_w;
+  GGadget *mb;
+  GFont *plain, *bold;
+  int mbh;
+  int fh, as;
+  int mid_space, cv_y;
+  int cv_width, cv_height;
+  short button_height, button_width;
 /* ****** */
-    SplineChar *cursc;
-    int def_layer;
-    struct mathkern *orig_mathkern;
-    uint8_t saved_mathkern;		/* Can't just check if orig is non-NULL, because NULL is a perfectly valid initial state */
-    uint8_t last_aspect;
-    uint8_t done;
+  SplineChar *cursc;
+  int def_layer;
+  struct mathkern *orig_mathkern;
+  uint8_t saved_mathkern;       /* Can't just check if orig is non-NULL, because NULL is a perfectly valid initial state */
+  uint8_t last_aspect;
+  uint8_t done;
 } MathKernDlg;
 
-# ifdef FONTFORGE_CONFIG_TILEPATH
+#ifdef FONTFORGE_CONFIG_TILEPATH
 
-typedef struct tilepathdlg {
-    struct cvcontainer base;
-    FontView dummy_fv;
-    SplineFont dummy_sf;
-    LayerInfo layerinfo[2];
-    SplineChar sc_first, sc_medial, sc_final, sc_isolated;
-    SplineChar *chars[4];
-    EncMap dummy_map;
-    int32_t map[4], backmap[4];
-    uint8_t sel[4];
-    CharView cv_first, cv_medial, cv_final, cv_isolated;
-    CharView *lastcv;
+typedef struct tilepathdlg
+{
+  struct cvcontainer base;
+  FontView dummy_fv;
+  SplineFont dummy_sf;
+  LayerInfo layerinfo[2];
+  SplineChar sc_first, sc_medial, sc_final, sc_isolated;
+  SplineChar *chars[4];
+  EncMap dummy_map;
+  int32_t map[4], backmap[4];
+  uint8_t sel[4];
+  CharView cv_first, cv_medial, cv_final, cv_isolated;
+  CharView *lastcv;
 /* ****** */
-    GWindow gw;
-    GGadget *mb;
-    GFont *plain, *bold;
-    int mbh;
-    int fh, as;
-    int mid_space, cv_y;
-    int cv_width, cv_height;
+  GWindow gw;
+  GGadget *mb;
+  GFont *plain, *bold;
+  int mbh;
+  int fh, as;
+  int mid_space, cv_y;
+  int cv_width, cv_height;
 /* ****** */
-    struct tiledata *td;
-    SplineFont *base_sf;
-    uint8_t done, oked;
+  struct tiledata *td;
+  SplineFont *base_sf;
+  uint8_t done, oked;
 } TilePathDlg;
-extern void TPDCharViewInits(TilePathDlg *tpd, int cid);
-extern void PTDCharViewInits(TilePathDlg *tpd, int cid);
-#endif		/* Tile Path */
 
-typedef struct gradientdlg {
-    struct cvcontainer base;
-    FontView dummy_fv;
-    SplineFont dummy_sf;
-    LayerInfo layerinfo[2];
-    SplineChar sc_grad;
-    SplineChar *chars[1];
-    EncMap dummy_map;
-    int32_t map[1], backmap[1];
-    uint8_t sel[1];
-    CharView cv_grad;
+extern void TPDCharViewInits (TilePathDlg *tpd, int cid);
+extern void PTDCharViewInits (TilePathDlg *tpd, int cid);
+
+#endif /* Tile Path */
+
+typedef struct gradientdlg
+{
+  struct cvcontainer base;
+  FontView dummy_fv;
+  SplineFont dummy_sf;
+  LayerInfo layerinfo[2];
+  SplineChar sc_grad;
+  SplineChar *chars[1];
+  EncMap dummy_map;
+  int32_t map[1], backmap[1];
+  uint8_t sel[1];
+  CharView cv_grad;
 /* ****** */
-    GWindow gw;
-    GGadget *mb;
-    GFont *plain, *bold;
-    int mbh;
-    int fh, as;
-    int mid_space, cv_y;
-    int cv_width, cv_height;
+  GWindow gw;
+  GGadget *mb;
+  GFont *plain, *bold;
+  int mbh;
+  int fh, as;
+  int mid_space, cv_y;
+  int cv_width, cv_height;
 /* ****** */
-    uint8_t done, oked;
-    struct gradient *active;
+  uint8_t done, oked;
+  struct gradient *active;
 } GradientDlg;
-extern void GDDCharViewInits(GradientDlg *gdd,int cid);
 
-typedef struct strokedlg {
-    struct cvcontainer base;
-    FontView dummy_fv;
-    SplineFont dummy_sf;
-    LayerInfo layerinfo[2];
-    SplineChar sc_stroke;
-    SplineChar *chars[1];
-    EncMap dummy_map;
-    int32_t map[1], backmap[1];
-    uint8_t sel[1];
-    CharView cv_stroke;
-    int cv_width, cv_height;
-    GGadget *mb;
-    int mbh;
-    SplineSet *old_poly;
+extern void GDDCharViewInits (GradientDlg *gdd, int cid);
+
+typedef struct strokedlg
+{
+  struct cvcontainer base;
+  FontView dummy_fv;
+  SplineFont dummy_sf;
+  LayerInfo layerinfo[2];
+  SplineChar sc_stroke;
+  SplineChar *chars[1];
+  EncMap dummy_map;
+  int32_t map[1], backmap[1];
+  uint8_t sel[1];
+  CharView cv_stroke;
+  int cv_width, cv_height;
+  GGadget *mb;
+  int mbh;
+  SplineSet *old_poly;
 /* ****** */
-    int done;
-    GWindow gw;
-    CharView *cv;
-    FontView *fv;
-    SplineFont *sf;
-    void (*strokeit)(void *,StrokeInfo *,int);
-    StrokeInfo *si;
-    GRect r1, r2;
-    int up[2];
-    int dontexpand;
+  int done;
+  GWindow gw;
+  CharView *cv;
+  FontView *fv;
+  SplineFont *sf;
+  void (*strokeit) (void *, StrokeInfo *, int);
+  StrokeInfo *si;
+  GRect r1, r2;
+  int up[2];
+  int dontexpand;
 } StrokeDlg;
-extern void StrokeCharViewInits(StrokeDlg *sd,int cid);
 
-struct lksubinfo {
-    struct lookup_subtable *subtable;
-    bool deleted;
-    bool new;
-    bool selected;
-    bool moved;
+extern void StrokeCharViewInits (StrokeDlg *sd, int cid);
+
+struct lksubinfo
+{
+  struct lookup_subtable *subtable;
+  bool deleted;
+  bool new;
+  bool selected;
+  bool moved;
 };
 
-struct lkinfo {
-    OTLookup *lookup;
-    bool open;
-    bool deleted;
-    bool new;
-    bool selected;
-    bool moved;
-    int16_t subtable_cnt, subtable_max;
-    struct lksubinfo *subtables;
+struct lkinfo
+{
+  OTLookup *lookup;
+  bool open;
+  bool deleted;
+  bool new;
+  bool selected;
+  bool moved;
+  int16_t subtable_cnt, subtable_max;
+  struct lksubinfo *subtables;
 };
 
-struct lkdata {
-    int cnt, max;
-    int off_top, off_left;
-    struct lkinfo *all;
+struct lkdata
+{
+  int cnt;
+  int max;
+  int off_top;
+  int off_left;
+  struct lkinfo *all;
 };
 
-struct anchor_shows {
-    CharView *cv;
-    SplineChar *sc;
-    int restart;
+struct anchor_shows
+{
+  CharView *cv;
+  SplineChar *sc;
+  int restart;
 };
 
-struct gfi_data {		/* FontInfo */
-    SplineFont *sf;
-    int def_layer;
-    GWindow gw;
-    int tn_active;
-    int private_aspect, ttfv_aspect, tn_aspect, tx_aspect, unicode_aspect;
-    int old_sel, old_aspect, old_lang, old_strid;
-    int ttf_set, names_set, tex_set;
-    int langlocalecode;	/* MS code for the current locale */
-    bool family_untitled;
-    bool human_untitled;
-    bool done;
-    bool mpdone;
-    bool lk_drag_and_drop;
-    bool lk_dropablecursor;
-    struct anchor_shows anchor_shows[2];
-    struct texdata texdata;
-    GFont *font;
-    int as, fh;
-    struct lkdata tables[2];
-    int lkwidth, lkheight;
-    int first_sel_lookup, first_sel_subtable;
-    int last_panose_family;
+struct gfi_data
+{                               /* FontInfo */
+  SplineFont *sf;
+  int def_layer;
+  GWindow gw;
+  int tn_active;
+  int private_aspect;
+  int ttfv_aspect;
+  int tn_aspect;
+  int tx_aspect;
+  int unicode_aspect;
+  int old_sel;
+  int old_aspect;
+  int old_lang;
+  int old_strid;
+  int ttf_set;
+  int names_set;
+  int tex_set;
+  int langlocalecode;           /* MS code for the current locale */
+  bool family_untitled;
+  bool human_untitled;
+  bool done;
+  bool mpdone;
+  bool lk_drag_and_drop;
+  bool lk_dropablecursor;
+  struct anchor_shows anchor_shows[2];
+  struct texdata texdata;
+  GFont *font;
+  int as;
+  int fh;
+  struct lkdata tables[2];
+  int lkwidth;
+  int lkheight;
+  int first_sel_lookup;
+  int first_sel_subtable;
+  int last_panose_family;
 };
 
-struct kf_dlg /* : fvcontainer */ {
-    struct fvcontainer base;
-    struct lookup_subtable *sub;
-    GWindow gw, dw;
-    GFont *plain, *bold;
-    int fh, as;
-    GGadget *mb, *guts, *topbox;
-    int mbh, label2_y, infoh;
+struct kf_dlg                   /* : fvcontainer */
+{
+  struct fvcontainer base;
+  struct lookup_subtable *sub;
+  GWindow gw, dw;
+  GFont *plain, *bold;
+  int fh, as;
+  GGadget *mb, *guts, *topbox;
+  int mbh, label2_y, infoh;
 
-    SplineFont *sf;
-    int def_layer;
-    struct kf_results *results;
-    int done;
+  SplineFont *sf;
+  int def_layer;
+  struct kf_results *results;
+  int done;
 
-    FontView *active;
-    FontView *first_fv;
-    FontView *second_fv;
+  FontView *active;
+  FontView *first_fv;
+  FontView *second_fv;
 };
 
-enum genfam { gf_none, gf_macfamily, gf_ttc };
+enum genfam
+{
+  gf_none,
+  gf_macfamily,
+  gf_ttc
+};
 
-extern void FVMarkHintsOutOfDate(SplineChar *sc);
-extern void FVRefreshChar(FontView *fv,int gid);
-extern int _FVMenuSave(FontView *fv);
-extern int _FVMenuSaveAs(FontView *fv);
-extern int _FVMenuGenerate(FontView *fv,int family);
-extern void _FVCloseWindows(FontView *fv);
-extern char *GetPostScriptFontName(char *defdir,int mult);
-extern void MergeKernInfo(SplineFont *sf,EncMap *map);
+extern void FVMarkHintsOutOfDate (SplineChar *sc);
+extern void FVRefreshChar (FontView *fv, int gid);
+extern int _FVMenuSave (FontView *fv);
+extern int _FVMenuSaveAs (FontView *fv);
+extern int _FVMenuGenerate (FontView *fv, int family);
+extern void _FVCloseWindows (FontView *fv);
+extern char *GetPostScriptFontName (char *defdir, int mult);
+extern void MergeKernInfo (SplineFont *sf, EncMap *map);
 #if FONTFORGE_CONFIG_WRITE_PFM
-extern int WritePfmFile(char *filename,SplineFont *sf, int type0, EncMap *map);
+extern int WritePfmFile (char *filename, SplineFont *sf, int type0,
+                         EncMap *map);
 #endif
-extern int SFGenerateFont(SplineFont *sf,int layer, int family,EncMap *map);
+extern int SFGenerateFont (SplineFont *sf, int layer, int family,
+                           EncMap *map);
 
-extern void NonLinearDlg(FontView *fv,struct charview *cv);
-extern void FVChangeChar(FontView *fv,int encoding);
-VISIBLE extern void FVMergeFonts(FontView *fv);
-VISIBLE extern void FVInterpolateFonts(FontView *fv);
+extern void NonLinearDlg (FontView *fv, struct charview *cv);
+extern void FVChangeChar (FontView *fv, int encoding);
+VISIBLE extern void FVMergeFonts (FontView *fv);
+VISIBLE extern void FVInterpolateFonts (FontView *fv);
 
-extern void FVDeselectAll(FontView *fv);
+extern void FVDeselectAll (FontView *fv);
 
-VISIBLE extern void FVAutoWidth2(FontView *fv);
+VISIBLE extern void FVAutoWidth2 (FontView *fv);
 /*extern void FVAutoKern(FontView *fv);*/
 /*extern void FVAutoWidth(FontView *fv);*/
 
-extern void SC_MarkInstrDlgAsChanged(SplineChar *sc);
+extern void SC_MarkInstrDlgAsChanged (SplineChar *sc);
 
-extern void SCStroke(SplineChar *sc);
+extern void SCStroke (SplineChar *sc);
 
-extern void PfaEditSetFallback(void);
-extern void RecentFilesRemember(char *filename);
-extern void LastFontsClear(void);
+extern void PfaEditSetFallback (void);
+extern void RecentFilesRemember (char *filename);
+extern void LastFontsClear (void);
 
 
 struct debugger_context;
-extern void DebuggerTerminate(struct debugger_context *dc);
-extern void DebuggerReset(struct debugger_context *dc,real pointsizey, real pointsizex,int dpi,int dbg_fpgm, int is_bitmap);
-extern struct debugger_context *DebuggerCreate(SplineChar *sc,int layer,real pointsizey,real pointsizex,int dpi,int dbg_fpgm, int is_bitmap);
-enum debug_gotype { dgt_continue, dgt_step, dgt_next, dgt_stepout };
-extern void DebuggerGo(struct debugger_context *dc,enum debug_gotype,DebugView *dv);
-extern struct  TT_ExecContextRec_ *DebuggerGetEContext(struct debugger_context *dc);
-extern void DebuggerToggleBp(struct debugger_context *dc,int range,int ip);
-extern int DebuggerBpCheck(struct debugger_context *dc,int range,int ip);
-extern void DebuggerSetWatches(struct debugger_context *dc,int n, uint8_t *w);
-extern uint8_t *DebuggerGetWatches(struct debugger_context *dc, int *n);
-extern void DebuggerSetWatchStores(struct debugger_context *dc,int n, uint8_t *w);
-extern uint8_t *DebuggerGetWatchStores(struct debugger_context *dc, int *n);
-extern int DebuggerIsStorageSet(struct debugger_context *dc, int index);
-extern void DebuggerSetWatchCvts(struct debugger_context *dc,int n, uint8_t *w);
-extern uint8_t *DebuggerGetWatchCvts(struct debugger_context *dc, int *n);
-extern int DebuggingFpgm(struct debugger_context *dc);
+extern void DebuggerTerminate (struct debugger_context *dc);
+extern void DebuggerReset (struct debugger_context *dc, real pointsizey,
+                           real pointsizex, int dpi, int dbg_fpgm,
+                           int is_bitmap);
+extern struct debugger_context *DebuggerCreate (SplineChar *sc, int layer,
+                                                real pointsizey,
+                                                real pointsizex, int dpi,
+                                                int dbg_fpgm, int is_bitmap);
+
+enum debug_gotype
+{
+  dgt_continue,
+  dgt_step,
+  dgt_next,
+  dgt_stepout
+};
+
+extern void DebuggerGo (struct debugger_context *dc, enum debug_gotype,
+                        DebugView *dv);
+extern struct TT_ExecContextRec_ *DebuggerGetEContext (struct debugger_context
+                                                       *dc);
+extern void DebuggerToggleBp (struct debugger_context *dc, int range, int ip);
+extern int DebuggerBpCheck (struct debugger_context *dc, int range, int ip);
+extern void DebuggerSetWatches (struct debugger_context *dc, int n,
+                                uint8_t *w);
+extern uint8_t *DebuggerGetWatches (struct debugger_context *dc, int *n);
+extern void DebuggerSetWatchStores (struct debugger_context *dc, int n,
+                                    uint8_t *w);
+extern uint8_t *DebuggerGetWatchStores (struct debugger_context *dc, int *n);
+extern int DebuggerIsStorageSet (struct debugger_context *dc, int index);
+extern void DebuggerSetWatchCvts (struct debugger_context *dc, int n,
+                                  uint8_t *w);
+extern uint8_t *DebuggerGetWatchCvts (struct debugger_context *dc, int *n);
+extern int DebuggingFpgm (struct debugger_context *dc);
 
 
-extern void PrintDlg(FontView *fv,SplineChar *sc,MetricsView *mv);
-extern void PrintWindowClose(void);
-extern void InsertTextDlg(CharView *cv);
+extern void PrintDlg (FontView *fv, SplineChar *sc, MetricsView *mv);
+extern void PrintWindowClose (void);
+extern void InsertTextDlg (CharView *cv);
 
-extern char *Kern2Text(SplineChar *other,KernPair *kp,int isv);
-extern char *PST2Text(PST *pst,SplineFont *sf);
+extern char *Kern2Text (SplineChar *other, KernPair *kp, int isv);
+extern char *PST2Text (PST *pst, SplineFont *sf);
 
+void EmboldenDlg (FontView *fv, CharView *cv);
+void CondenseExtendDlg (FontView *fv, CharView *cv);
+void AddSmallCapsDlg (FontView *fv);
+void AddSubSupDlg (FontView *fv);
+void ObliqueDlg (FontView *fv, CharView *cv);
+void GlyphChangeDlg (FontView *fv, CharView *cv, enum glyphchange_type gc);
+void ItalicDlg (FontView *fv, CharView *cv);
+VISIBLE void ChangeXHeightDlg (FontView *fv, CharView *cv);
 
+extern int FVParseSelectByPST (FontView *fv, struct lookup_subtable *sub,
+                               int search_type);
+extern void DropChars2Text (GWindow gw, GGadget *glyphs, GEvent *event);
 
-void EmboldenDlg(FontView *fv, CharView *cv);
-void CondenseExtendDlg(FontView *fv, CharView *cv);
-void AddSmallCapsDlg(FontView *fv);
-void AddSubSupDlg(FontView *fv);
-void ObliqueDlg(FontView *fv, CharView *cv);
-void GlyphChangeDlg(FontView *fv, CharView *cv, enum glyphchange_type gc);
-void ItalicDlg(FontView *fv, CharView *cv);
-VISIBLE void ChangeXHeightDlg(FontView *fv,CharView *cv);
+extern void FVReplaceOutlineWithReference (FontView *fv, double fudge);
+extern void SVDestroy (struct searchview *sv);
 
-extern int FVParseSelectByPST(FontView *fv,struct lookup_subtable *sub,
-	int search_type);
-extern void DropChars2Text(GWindow gw, GGadget *glyphs,GEvent *event);
+extern int SLICount (SplineFont *sf);
+extern uint32_t *ClassName (const char *name, uint32_t feature_tag,
+                            uint16_t flags, int script_lang_index,
+                            int merge_with, int act_type, int macfeature,
+                            SplineFont *sf);
+extern uint32_t *DecomposeClassName (const uint32_t *clsnm, uint32_t **name,
+                                     uint32_t *feature_tag, int *macfeature,
+                                     uint16_t *flags,
+                                     uint16_t *script_lang_index,
+                                     int *merge_with, int *act_type,
+                                     SplineFont *sf);
+extern PST *AddSubs (PST *last, uint32_t tag, char *name, uint16_t flags,
+                     uint16_t sli, SplineChar *sc);
 
+extern void FVSetUIToMatch (FontView *destfv, FontView *srcfv);
+extern void FVScrollToChar (FontView *fv, int i);
+extern void FVRegenChar (FontView *fv, SplineChar *sc);
+extern FontView *FontNew (void);
+extern void _MenuWarnings (GWindow gw, struct gmenuitem *mi, GEvent *e);
+extern void MenuPrefs (GWindow base, struct gmenuitem *mi, GEvent *e);
+extern void MenuXRes (GWindow base, struct gmenuitem *mi, GEvent *e);
+extern void MenuSaveAll (GWindow base, struct gmenuitem *mi, GEvent *e);
+extern void MenuExit (GWindow base, struct gmenuitem *mi, GEvent *e);
+extern void MenuOpen (GWindow base, struct gmenuitem *mi, GEvent *e);
+extern void MenuHelp (GWindow base, struct gmenuitem *mi, GEvent *e);
+extern void MenuIndex (GWindow base, struct gmenuitem *mi, GEvent *e);
+extern void MenuAbout (GWindow base, struct gmenuitem *mi, GEvent *e);
+extern void MenuLicense (GWindow base, struct gmenuitem *mi, GEvent *e);
+extern void MenuNew (GWindow gw, struct gmenuitem *mi, GEvent *e);
+extern void WindowMenuBuild (GWindow base, struct gmenuitem *mi, GEvent *);
+extern void MenuRecentBuild (GWindow base, struct gmenuitem *mi, GEvent *);
+extern void MenuScriptsBuild (GWindow base, struct gmenuitem *mi, GEvent *);
+extern void mb2DoGetText (GMenuItem2 *mb);
+extern void mbDoGetText (GMenuItem * mb);
+extern int RecentFilesAny (void);
+extern void _aplistbuild (struct gmenuitem *mi, SplineFont *sf,
+                          void (*func) (GWindow, struct gmenuitem *,
+                                        GEvent *));
+extern int32_t *ParseBitmapSizes (GGadget *g, char *msg, int *err);
+extern GTextInfo *AddMacFeatures (GTextInfo *opentype, enum possub_type type,
+                                  SplineFont *sf);
+extern uint32_t *AskNameTag (char *title, uint32_t *def, uint32_t def_tag,
+                             uint16_t flags, int script_lang_index,
+                             enum possub_type type, SplineFont *sf,
+                             SplineChar *default_script, int merge_with,
+                             int act_type);
+extern uint32_t *ShowScripts (uint32_t *usedef);
+extern GTextInfo *SFLangList (SplineFont *sf, int addfinal,
+                              SplineChar *default_script);
+extern GTextInfo **SFLangArray (SplineFont *sf, int addfinal);
+extern int ScriptLangList (SplineFont *sf, GGadget *list, int sli);
+extern void GListDelSelected (GGadget *list);
+extern void GListMoveSelected (GGadget *list, int offset);
+extern GTextInfo *GListChangeLine (GGadget *list, int pos,
+                                   const uint32_t *line);
+extern GTextInfo *GListAppendLine (GGadget *list, const uint32_t *line,
+                                   int select);
+extern GTextInfo *GListChangeLine8 (GGadget *list, int pos, const char *line);
+extern GTextInfo *GListAppendLine8 (GGadget *list, const char *line,
+                                    int select);
+extern void CharInfoInit (void);
+extern void SCLigCaretCheck (SplineChar *sc, int clean);
+extern char *DevTab_Dlg (GGadget *g, int r, int c);
+extern int DeviceTableOK (char *dvstr, int *_low, int *_high);
+extern void VRDevTabParse (struct vr *vr, struct matrix_data *md);
+extern DeviceTable *DeviceTableParse (DeviceTable *dv, char *dvstr);
+extern void DevTabToString (char **str, DeviceTable *adjust);
+extern void ValDevTabToStrings (struct matrix_data *mds, int first_offset,
+                                ValDevTab * adjust);
+extern void KpMDParse (SplineChar *sc, struct lookup_subtable *sub,
+                       struct matrix_data *possub, int rows, int cols, int i);
+extern void GFI_LookupEnableButtons (struct gfi_data *gfi, int isgpos);
+extern void GFI_LookupScrollbars (struct gfi_data *gfi, int isgpos,
+                                  int refresh);
+extern void FontInfo (SplineFont *sf, int layer, int aspect, int sync);
+extern void FontInfoDestroy (SplineFont *sf);
+extern void FontMenuFontInfo (void *fv);
+extern struct enc *MakeEncoding (SplineFont *sf, EncMap *map);
+extern void LoadEncodingFile (void);
+extern void RemoveEncoding (void);
+extern void SFPrivateInfo (SplineFont *sf);
+extern void FVDelay (FontView *fv, void (*func) (FontView *));
+extern void GFI_FinishContextNew (struct gfi_data *d, FPST *fpst,
+                                  int success);
+extern void SCPreparePopup (GWindow gw, SplineChar *sc, struct remap *remap,
+                            int enc, int actualuni);
 
-extern void FVReplaceOutlineWithReference( FontView *fv, double fudge );
-extern void SVDestroy(struct searchview *sv);
+enum outlinesfm_flags
+{
+  sfm_stroke = 0x1,
+  sfm_fill = 0x2,
+  sfm_nothing = 0x4
+};
 
+extern void CVDrawSplineSetSpecialized (CharView *cv, GWindow pixmap,
+                                        SplinePointList *set, Color fg,
+                                        int dopoints, DRect *clip,
+                                        enum outlinesfm_flags strokeFillMode);
+extern void CVDrawSplineSet (CharView *cv, GWindow pixmap,
+                             SplinePointList *set, Color fg, int dopoints,
+                             DRect *clip);
+extern void CVDrawSplineSetOutlineOnly (CharView *cv, GWindow pixmap,
+                                        SplinePointList *set, Color fg,
+                                        int dopoints, DRect *clip,
+                                        enum outlinesfm_flags strokeFillMode);
+extern GWindow CVMakeTools (CharView *cv);
+extern GWindow CVMakeLayers (CharView *cv);
+extern GWindow BVMakeTools (BitmapView *bv);
+extern GWindow BVMakeLayers (BitmapView *bv);
+extern void CVSetLayer (CharView *cv, int layer);
+extern int CVPaletteMnemonicCheck (GEvent *event);
+extern int TrueCharState (GEvent *event);
+extern void CVToolsPopup (CharView *cv, GEvent *event);
+extern void BVToolsPopup (BitmapView *bv, GEvent *event);
+extern real CVRoundRectRadius (void);
+extern int CVRectElipseCenter (void);
+extern void CVRectEllipsePosDlg (CharView *cv);
+extern real CVStarRatio (void);
+extern int CVPolyStarPoints (void);
+extern StrokeInfo *CVFreeHandInfo (void);
+extern void BVToolsSetCursor (BitmapView *bv, int state, char *device);
+extern void CVToolsSetCursor (CharView *cv, int state, char *device);
+extern int CVPaletteIsVisible (CharView *cv, int which);
+extern void CVPaletteSetVisible (CharView *cv, int which, int visible);
+extern void CVPalettesRaise (CharView *cv);
+extern void CVLayersSet (CharView *cv);
+extern void _CVPaletteActivate (CharView *cv, int force);
+extern void CVPaletteActivate (CharView *cv);
+extern void CV_LayerPaletteCheck (SplineFont *sf);
+extern void CVPalettesHideIfMine (CharView *cv);
+extern int BVPaletteIsVisible (BitmapView *bv, int which);
+extern void BVPaletteSetVisible (BitmapView *bv, int which, int visible);
+extern void BVPaletteActivate (BitmapView *bv);
+extern void BVPalettesHideIfMine (BitmapView *bv);
+extern void BVPaletteColorChange (BitmapView *bv);
+extern void BVPaletteColorUnderChange (BitmapView *bv, int color);
+extern void BVPaletteChangedChar (BitmapView *bv);
+extern void CVPaletteDeactivate (void);
+extern void PalettesChangeDocking (void);
+extern int CVPalettesWidth (void);
+extern int BVPalettesWidth (void);
 
+extern void CVDoTransform (CharView *cv, enum cvtools cvt);
+extern void CVTransFunc (CharView *cv, real transform[6], enum fvtrans_flags);
 
-extern int  SLICount(SplineFont *sf);
-extern uint32_t *ClassName(const char *name,uint32_t feature_tag,
-	uint16_t flags, int script_lang_index, int merge_with, int act_type,
-	int macfeature,SplineFont *sf);
-extern uint32_t *DecomposeClassName(const uint32_t *clsnm, uint32_t **name,
-	uint32_t *feature_tag, int *macfeature,
-	uint16_t *flags, uint16_t *script_lang_index,int *merge_with,int *act_type,
-	SplineFont *sf);
-extern PST *AddSubs(PST *last,uint32_t tag,char *name,uint16_t flags,
-	uint16_t sli,SplineChar *sc);
+enum transdlg_flags
+{
+  tdf_enableback = 0x1,
+  tdf_enablekerns = 0x2,
+  tdf_defaultkerns = 0x4,
+  tdf_addapply = 0x8
+};
 
+extern void TransformDlgCreate (void *data,
+                                void (*transfunc) (void *, real *, int,
+                                                   BVTFunc *,
+                                                   enum fvtrans_flags),
+                                int (*getorigin) (void *, BasePoint *, int),
+                                enum transdlg_flags flags, enum cvtools cvt);
+extern void BitmapDlg (FontView *fv, SplineChar *sc, int isavail);
+extern int SimplifyDlg (SplineFont *sf, struct simplifyinfo *smpl);
+extern void CVReviewHints (CharView *cv);
+extern void CVCreateHint (CharView *cv, int ishstem, int preserveundoes);
+extern int CVExport (CharView *cv);
+extern int BVExport (BitmapView *bv);
 
-extern void FVSetUIToMatch(FontView *destfv,FontView *srcfv);
-extern void FVScrollToChar(FontView *fv,int i);
-extern void FVRegenChar(FontView *fv,SplineChar *sc);
-extern FontView *FontNew(void);
-extern void _MenuWarnings(GWindow gw,struct gmenuitem *mi,GEvent *e);
-extern void MenuPrefs(GWindow base,struct gmenuitem *mi,GEvent *e);
-extern void MenuXRes(GWindow base,struct gmenuitem *mi,GEvent *e);
-extern void MenuSaveAll(GWindow base,struct gmenuitem *mi,GEvent *e);
-extern void MenuExit(GWindow base,struct gmenuitem *mi,GEvent *e);
-extern void MenuOpen(GWindow base,struct gmenuitem *mi,GEvent *e);
-extern void MenuHelp(GWindow base,struct gmenuitem *mi,GEvent *e);
-extern void MenuIndex(GWindow base,struct gmenuitem *mi,GEvent *e);
-extern void MenuAbout(GWindow base,struct gmenuitem *mi,GEvent *e);
-extern void MenuLicense(GWindow base,struct gmenuitem *mi,GEvent *e);
-extern void MenuNew(GWindow gw,struct gmenuitem *mi,GEvent *e);
-extern void WindowMenuBuild(GWindow base,struct gmenuitem *mi,GEvent *);
-extern void MenuRecentBuild(GWindow base,struct gmenuitem *mi,GEvent *);
-extern void MenuScriptsBuild(GWindow base,struct gmenuitem *mi,GEvent *);
-extern void mb2DoGetText(GMenuItem2 *mb);
-extern void mbDoGetText(GMenuItem *mb);
-extern int RecentFilesAny(void);
-extern void _aplistbuild(struct gmenuitem *mi,SplineFont *sf,
-	void (*func)(GWindow,struct gmenuitem *,GEvent *));
-extern int32_t *ParseBitmapSizes(GGadget *g,char *msg,int *err);
-extern GTextInfo *AddMacFeatures(GTextInfo *opentype,enum possub_type type,SplineFont *sf);
-extern uint32_t *AskNameTag(char *title,uint32_t *def,uint32_t def_tag,uint16_t flags,
-	int script_lang_index, enum possub_type type, SplineFont *sf, SplineChar *default_script,
-	int merge_with,int act_type);
-extern uint32_t *ShowScripts(uint32_t *usedef);
-extern GTextInfo *SFLangList(SplineFont *sf,int addfinal,SplineChar *default_script);
-extern GTextInfo **SFLangArray(SplineFont *sf,int addfinal);
-extern int  ScriptLangList(SplineFont *sf,GGadget *list,int sli);
-extern void GListDelSelected(GGadget *list);
-extern void GListMoveSelected(GGadget *list,int offset);
-extern GTextInfo *GListChangeLine(GGadget *list,int pos, const uint32_t *line);
-extern GTextInfo *GListAppendLine(GGadget *list,const uint32_t *line,int select);
-extern GTextInfo *GListChangeLine8(GGadget *list,int pos, const char *line);
-extern GTextInfo *GListAppendLine8(GGadget *list,const char *line,int select);
-extern void CharInfoInit(void);
-extern void SCLigCaretCheck(SplineChar *sc,int clean);
-extern char *DevTab_Dlg(GGadget *g, int r, int c);
-extern int DeviceTableOK(char *dvstr, int *_low, int *_high);
-extern void VRDevTabParse(struct vr *vr,struct matrix_data *md);
-extern DeviceTable *DeviceTableParse(DeviceTable *dv,char *dvstr);
-extern void DevTabToString(char **str,DeviceTable *adjust);
-extern void ValDevTabToStrings(struct matrix_data *mds,int first_offset,ValDevTab *adjust);
-extern void KpMDParse(SplineChar *sc,struct lookup_subtable *sub,
-	struct matrix_data *possub,int rows,int cols,int i);
-extern void GFI_LookupEnableButtons(struct gfi_data *gfi, int isgpos);
-extern void GFI_LookupScrollbars(struct gfi_data *gfi, int isgpos, int refresh);
-extern void FontInfo(SplineFont *sf,int layer,int aspect,int sync);
-extern void FontInfoDestroy(SplineFont *sf);
-extern void FontMenuFontInfo(void *fv);
-extern struct enc *MakeEncoding(SplineFont *sf, EncMap *map);
-extern void LoadEncodingFile(void);
-extern void RemoveEncoding(void);
-extern void SFPrivateInfo(SplineFont *sf);
-extern void FVDelay(FontView *fv,void (*func)(FontView *));
-extern void GFI_FinishContextNew(struct gfi_data *d,FPST *fpst, int success);
-extern void SCPreparePopup(GWindow gw,SplineChar *sc, struct remap *remap, int enc, int actualuni);
-enum outlinesfm_flags { sfm_stroke=0x1, sfm_fill=0x2, sfm_nothing=0x4 };
-extern void CVDrawSplineSetSpecialized(CharView *cv, GWindow pixmap, SplinePointList *set,
-	Color fg, int dopoints, DRect *clip, enum outlinesfm_flags strokeFillMode );
-extern void CVDrawSplineSet(CharView *cv, GWindow pixmap, SplinePointList *set,
-	Color fg, int dopoints, DRect *clip );
-extern void CVDrawSplineSetOutlineOnly(CharView *cv, GWindow pixmap, SplinePointList *set,
-	Color fg, int dopoints, DRect *clip, enum outlinesfm_flags strokeFillMode );
-extern GWindow CVMakeTools(CharView *cv);
-extern GWindow CVMakeLayers(CharView *cv);
-extern GWindow BVMakeTools(BitmapView *bv);
-extern GWindow BVMakeLayers(BitmapView *bv);
-extern void CVSetLayer(CharView *cv,int layer);
-extern int CVPaletteMnemonicCheck(GEvent *event);
-extern int TrueCharState(GEvent *event);
-extern void CVToolsPopup(CharView *cv, GEvent *event);
-extern void BVToolsPopup(BitmapView *bv, GEvent *event);
-extern real CVRoundRectRadius(void);
-extern int CVRectElipseCenter(void);
-extern void CVRectEllipsePosDlg(CharView *cv);
-extern real CVStarRatio(void);
-extern int CVPolyStarPoints(void);
-extern StrokeInfo *CVFreeHandInfo(void);
-extern void BVToolsSetCursor(BitmapView *bv, int state,char *device);
-extern void CVToolsSetCursor(CharView *cv, int state,char *device);
-extern int CVPaletteIsVisible(CharView *cv,int which);
-extern void CVPaletteSetVisible(CharView *cv,int which,int visible);
-extern void CVPalettesRaise(CharView *cv);
-extern void CVLayersSet(CharView *cv);
-extern void _CVPaletteActivate(CharView *cv,int force);
-extern void CVPaletteActivate(CharView *cv);
-extern void CV_LayerPaletteCheck(SplineFont *sf);
-extern void CVPalettesHideIfMine(CharView *cv);
-extern int BVPaletteIsVisible(BitmapView *bv,int which);
-extern void BVPaletteSetVisible(BitmapView *bv,int which,int visible);
-extern void BVPaletteActivate(BitmapView *bv);
-extern void BVPalettesHideIfMine(BitmapView *bv);
-extern void BVPaletteColorChange(BitmapView *bv);
-extern void BVPaletteColorUnderChange(BitmapView *bv,int color);
-extern void BVPaletteChangedChar(BitmapView *bv);
-extern void CVPaletteDeactivate(void);
-extern void PalettesChangeDocking(void);
-extern int CVPalettesWidth(void);
-extern int BVPalettesWidth(void);
+extern void DrawAnchorPoint (GWindow pixmap, int x, int y, int selected);
+extern void DefaultY (GRect *pos);
+extern void CVDrawRubberRect (GWindow pixmap, CharView *cv);
+extern void CVInfoDraw (CharView *cv, GWindow pixmap);
+extern void CVChar (CharView *cv, GEvent *event);
+extern void PI_ShowHints (SplineChar *sc, GGadget *list, int set);
+extern GTextInfo *SCHintList (SplineChar *sc, HintMask *);
+extern void CVResize (CharView *cv);
+extern CharView *CharViewCreate (SplineChar *sc, FontView *fv, int enc);
+extern void CharViewFree (CharView *cv);
+extern int CVValid (SplineFont *sf, SplineChar *sc, CharView *cv);
+extern void CVSetCharChanged (CharView *cv, int changed);
+extern int CVAnySel (CharView *cv, int *anyp, int *anyr, int *anyi,
+                     int *anya);
+extern int CVAnySelPoints (CharView *cv);
+extern void CVSelectPointAt (CharView *cv);
+extern int CVClearSel (CharView *cv);
+extern int CVSetSel (CharView *cv, int mask);
+extern void CVInvertSel (CharView *cv);
+extern int CVAllSelected (CharView *cv);
+extern SplinePointList *CVAnySelPointList (CharView *cv);
+extern int CVAnySelPoint (CharView *cv, SplinePoint **selsp,
+                          spiro_cp **selcp);
+extern int CVOneThingSel (CharView *cv, SplinePoint **sp,
+                          SplinePointList **spl, RefChar **ref,
+                          ImageList **img, AnchorPoint **ap, spiro_cp **cp);
+extern int CVOneContourSel (CharView *cv, SplinePointList **_spl,
+                            RefChar **ref, ImageList **img);
+extern void CVInfoDrawText (CharView *cv, GWindow pixmap);
+extern void CVImport (CharView *cv);
+extern void BVImport (BitmapView *bv);
+extern void FVImport (FontView *bv);
+extern void CVFindCenter (CharView *cv, BasePoint *bp, int nosel);
+extern void CVStroke (CharView *cv);
+extern void FVStroke (FontView *fv);
+extern void FreeHandStrokeDlg (StrokeInfo *si);
+extern void OutlineDlg (FontView *fv, CharView *cv, MetricsView *mv,
+                        int isinline);
+extern void ShadowDlg (FontView *fv, CharView *cv, MetricsView *mv,
+                       int wireframe);
+extern void CVTile (CharView *cv);
+extern void FVTile (FontView *fv);
+extern void CVPatternTile (CharView *cv);
+extern void FVPatternTile (FontView *fv);
+extern void SCCharInfo (SplineChar *sc, int deflayer, EncMap *map, int enc);
+extern void CharInfoDestroy (struct charinfo *ci);
+extern SplineChar *SuffixCheck (SplineChar *sc, char *suffix);
+extern void SCSubtableDefaultSubsCheck (SplineChar *sc,
+                                        struct lookup_subtable *sub,
+                                        struct matrix_data *possub,
+                                        int col_cnt, int r, int layer);
+extern GImage *PST_GetImage (GGadget *pstk, SplineFont *sf, int def_layer,
+                             struct lookup_subtable *sub, int popup_r,
+                             SplineChar *sc);
+extern GImage *NameList_GetImage (SplineFont *sf, SplineChar *sc,
+                                  int def_layer, char *namelist, int isliga);
+extern GImage *GV_GetConstructedImage (SplineChar *sc, int def_layer,
+                                       struct glyphvariants *gv,
+                                       int is_horiz);
+extern GImage *SC_GetLinedImage (SplineChar *sc, int def_layer, int pos,
+                                 int is_italic_cor);
+extern struct glyphvariants *GV_ParseConstruction (struct glyphvariants *gv,
+                                                   struct matrix_data *stuff,
+                                                   int rows, int cols);
+extern void GV_ToMD (GGadget *g, struct glyphvariants *gv);
+extern void CVGetInfo (CharView *cv);
+extern void CVPGetInfo (CharView *cv);
+extern int SCUsedBySubs (SplineChar *sc);
+extern void SCSubBy (SplineChar *sc);
+extern void SCRefBy (SplineChar *sc);
+extern void ApGetInfo (CharView *cv, AnchorPoint *ap);
+extern void CVMakeClipPath (CharView *cv);
+extern void CVAddAnchor (CharView *cv);
+extern AnchorClass *AnchorClassUnused (SplineChar *sc, int *waslig);
+extern void FVSetWidth (FontView *fv, enum widthtype wtype);
+extern void CVSetWidth (CharView *cv, enum widthtype wtype);
+extern void CVChangeSC (CharView *cv, SplineChar *sc);
+extern Undoes *CVPreserveTState (CharView *cv);
+extern void CVRestoreTOriginalState (CharView *cv);
+extern void CVUndoCleanup (CharView *cv);
 
-extern void CVDoTransform(CharView *cv, enum cvtools cvt );
-extern void CVTransFunc(CharView *cv,real transform[6],enum fvtrans_flags);
-enum transdlg_flags { tdf_enableback=0x1, tdf_enablekerns=0x2,
-	tdf_defaultkerns=0x4, tdf_addapply=0x8 };
-extern void TransformDlgCreate(void *data,void (*transfunc)(void *,real *,int,BVTFunc *,enum fvtrans_flags),
-	int (*getorigin)(void *,BasePoint *,int), enum transdlg_flags flags,
-	enum cvtools cvt);
-extern void BitmapDlg(FontView *fv,SplineChar *sc, int isavail);
-extern int SimplifyDlg(SplineFont *sf,struct simplifyinfo *smpl);
-extern void CVReviewHints(CharView *cv);
-extern void CVCreateHint(CharView *cv,int ishstem,int preserveundoes);
-extern int CVExport(CharView *cv);
-extern int BVExport(BitmapView *bv);
+extern void CVAdjustPoint (CharView *cv, SplinePoint *sp);
+extern void CVMergeSplineSets (CharView *cv, SplinePoint *active,
+                               SplineSet *activess, SplinePoint *merge,
+                               SplineSet *mergess);
+extern void CVAdjustControl (CharView *cv, BasePoint *cp, BasePoint *to);
+extern int CVMoveSelection (CharView *cv, real dx, real dy,
+                            uint32_t input_state);
+extern int CVTestSelectFromEvent (CharView *cv, GEvent *event);
+extern void CVMouseMovePen (CharView *cv, PressedOn *p, GEvent *event);
+extern void CVMouseUpPoint (CharView *cv, GEvent *event);
+extern int CVMouseMovePointer (CharView *cv, GEvent *event);
+extern void CVMouseDownPointer (CharView *cv, FindSel *fs, GEvent *event);
+extern void CVMouseDownRuler (CharView *cv, GEvent *event);
+extern void CVMouseMoveRuler (CharView *cv, GEvent *event);
+extern int CVMouseAtSpline (CharView *cv, GEvent *event);
+extern void CVMouseUpRuler (CharView *cv, GEvent *event);
+extern void CVMouseMoveHand (CharView *cv, GEvent *event);
+extern void CVMouseDownFreeHand (CharView *cv, GEvent *event);
+extern void CVMouseMoveFreeHand (CharView *cv, GEvent *event);
+extern void CVMouseUpFreeHand (CharView *cv, GEvent *event);
+extern void CVMouseDownShape (CharView *cv, GEvent *event);
+extern void CPStartInfo (CharView *cv, GEvent *event);
+extern void CPUpdateInfo (CharView *cv, GEvent *event);
+extern void CPEndInfo (CharView *cv);
+extern void BVChar (BitmapView *cv, GEvent *event);
+extern void CVMouseDownPoint (CharView *cv, GEvent *event);
+extern void CVMouseMovePoint (CharView *cv, PressedOn *);
+extern void CVMouseUpPointer (CharView *cv);
+extern void CVCheckResizeCursors (CharView *cv);
+extern void CVMouseDownHand (CharView *cv);
+extern void CVMouseUpHand (CharView *cv);
+extern void CVMouseDownTransform (CharView *cv);
+extern void CVMouseMoveTransform (CharView *cv);
+extern void CVMouseUpTransform (CharView *cv);
+extern void CVMouseDownKnife (CharView *cv);
+extern void CVMouseMoveKnife (CharView *cv, PressedOn *);
+extern void CVMouseUpKnife (CharView *cv, GEvent *event);
+extern void CVMouseMoveShape (CharView *cv);
+extern void CVMouseUpShape (CharView *cv);
+extern void LogoExpose (GWindow pixmap, GEvent *event, GRect *r,
+                        enum drawmode dm);
+extern void CVDebugPointPopup (CharView *cv);
 
-extern void DrawAnchorPoint(GWindow pixmap,int x, int y,int selected);
-extern void DefaultY(GRect *pos);
-extern void CVDrawRubberRect(GWindow pixmap, CharView *cv);
-extern void CVInfoDraw(CharView *cv, GWindow pixmap );
-extern void CVChar(CharView *cv, GEvent *event );
-extern void PI_ShowHints(SplineChar *sc, GGadget *list, int set);
-extern GTextInfo *SCHintList(SplineChar *sc,HintMask *);
-extern void CVResize(CharView *cv );
-extern CharView *CharViewCreate(SplineChar *sc,FontView *fv,int enc);
-extern void CharViewFree(CharView *cv);
-extern int CVValid(SplineFont *sf, SplineChar *sc, CharView *cv);
-extern void CVSetCharChanged(CharView *cv,int changed);
-extern int CVAnySel(CharView *cv, int *anyp, int *anyr, int *anyi, int *anya);
-extern int CVAnySelPoints(CharView *cv);
-extern void CVSelectPointAt(CharView *cv);
-extern int CVClearSel(CharView *cv);
-extern int CVSetSel(CharView *cv,int mask);
-extern void CVInvertSel(CharView *cv);
-extern int CVAllSelected(CharView *cv);
-extern SplinePointList *CVAnySelPointList(CharView *cv);
-extern int CVAnySelPoint(CharView *cv, SplinePoint **selsp, spiro_cp **selcp);
-extern int CVOneThingSel(CharView *cv, SplinePoint **sp, SplinePointList **spl,
-	RefChar **ref, ImageList **img, AnchorPoint **ap, spiro_cp **cp);
-extern int CVOneContourSel(CharView *cv, SplinePointList **_spl,
-	RefChar **ref, ImageList **img);
-extern void CVInfoDrawText(CharView *cv, GWindow pixmap );
-extern void CVImport(CharView *cv);
-extern void BVImport(BitmapView *bv);
-extern void FVImport(FontView *bv);
-extern void CVFindCenter(CharView *cv, BasePoint *bp, int nosel);
-extern void CVStroke(CharView *cv);
-extern void FVStroke(FontView *fv);
-extern void FreeHandStrokeDlg(StrokeInfo *si);
-extern void OutlineDlg(FontView *fv, CharView *cv,MetricsView *mv,int isinline);
-extern void ShadowDlg(FontView *fv, CharView *cv,MetricsView *mv,int wireframe);
-extern void CVTile(CharView *cv);
-extern void FVTile(FontView *fv);
-extern void CVPatternTile(CharView *cv);
-extern void FVPatternTile(FontView *fv);
-extern void SCCharInfo(SplineChar *sc,int deflayer,EncMap *map,int enc);
-extern void CharInfoDestroy(struct charinfo *ci);
-extern SplineChar *SuffixCheck(SplineChar *sc,char *suffix);
-extern void SCSubtableDefaultSubsCheck(SplineChar *sc, struct lookup_subtable *sub, struct matrix_data *possub, int col_cnt, int r,int layer);
-extern GImage *PST_GetImage(GGadget *pstk,SplineFont *sf,int def_layer,
-	struct lookup_subtable *sub,int popup_r, SplineChar *sc );
-extern GImage *NameList_GetImage(SplineFont *sf,SplineChar *sc,int def_layer,
-	char *namelist, int isliga );
-extern GImage *GV_GetConstructedImage(SplineChar *sc,int def_layer, struct glyphvariants *gv,
-	int is_horiz);
-extern GImage *SC_GetLinedImage(SplineChar *sc, int def_layer, int pos, int is_italic_cor);
-extern struct glyphvariants *GV_ParseConstruction(struct glyphvariants *gv,
-	struct matrix_data *stuff, int rows, int cols);
-extern void GV_ToMD(GGadget *g, struct glyphvariants *gv);
-extern void CVGetInfo(CharView *cv);
-extern void CVPGetInfo(CharView *cv);
-extern int  SCUsedBySubs(SplineChar *sc);
-extern void SCSubBy(SplineChar *sc);
-extern void SCRefBy(SplineChar *sc);
-extern void ApGetInfo(CharView *cv, AnchorPoint *ap);
-extern void CVMakeClipPath(CharView *cv);
-extern void CVAddAnchor(CharView *cv);
-extern AnchorClass *AnchorClassUnused(SplineChar *sc,int *waslig);
-extern void FVSetWidth(FontView *fv,enum widthtype wtype);
-extern void CVSetWidth(CharView *cv,enum widthtype wtype);
-extern void CVChangeSC(CharView *cv, SplineChar *sc );
-extern Undoes *CVPreserveTState(CharView *cv);
-extern void CVRestoreTOriginalState(CharView *cv);
-extern void CVUndoCleanup(CharView *cv);
+extern int GotoChar (SplineFont *sf, EncMap *map, int *merge_with_selection);
 
-extern void CVAdjustPoint(CharView *cv, SplinePoint *sp);
-extern void CVMergeSplineSets(CharView *cv, SplinePoint *active, SplineSet *activess,
-	SplinePoint *merge, SplineSet *mergess);
-extern void CVAdjustControl(CharView *cv,BasePoint *cp, BasePoint *to);
-extern int  CVMoveSelection(CharView *cv, real dx, real dy, uint32_t input_state);
-extern int  CVTestSelectFromEvent(CharView *cv,GEvent *event);
-extern void CVMouseMovePen(CharView *cv, PressedOn *p, GEvent *event);
-extern void CVMouseUpPoint(CharView *cv,GEvent *event);
-extern int  CVMouseMovePointer(CharView *cv, GEvent *event);
-extern void CVMouseDownPointer(CharView *cv, FindSel *fs, GEvent *event);
-extern void CVMouseDownRuler(CharView *cv, GEvent *event);
-extern void CVMouseMoveRuler(CharView *cv, GEvent *event);
-extern int CVMouseAtSpline(CharView *cv,GEvent *event);
-extern void CVMouseUpRuler(CharView *cv, GEvent *event);
-extern void CVMouseMoveHand(CharView *cv, GEvent *event);
-extern void CVMouseDownFreeHand(CharView *cv, GEvent *event);
-extern void CVMouseMoveFreeHand(CharView *cv, GEvent *event);
-extern void CVMouseUpFreeHand(CharView *cv, GEvent *event);
-extern void CVMouseDownShape(CharView *cv,GEvent *event);
-extern void CPStartInfo(CharView *cv, GEvent *event);
-extern void CPUpdateInfo(CharView *cv, GEvent *event);
-extern void CPEndInfo(CharView *cv);
-extern void BVChar(BitmapView *cv, GEvent *event );
-extern void CVMouseDownPoint(CharView *cv,GEvent *event);
-extern void CVMouseMovePoint(CharView *cv,PressedOn *);
-extern void CVMouseUpPointer(CharView *cv );
-extern void CVCheckResizeCursors(CharView *cv);
-extern void CVMouseDownHand(CharView *cv);
-extern void CVMouseUpHand(CharView *cv);
-extern void CVMouseDownTransform(CharView *cv);
-extern void CVMouseMoveTransform(CharView *cv);
-extern void CVMouseUpTransform(CharView *cv);
-extern void CVMouseDownKnife(CharView *cv);
-extern void CVMouseMoveKnife(CharView *cv,PressedOn *);
-extern void CVMouseUpKnife(CharView *cv,GEvent *event);
-extern void CVMouseMoveShape(CharView *cv);
-extern void CVMouseUpShape(CharView *cv);
-extern void LogoExpose(GWindow pixmap,GEvent *event, GRect *r,enum drawmode dm);
-extern void CVDebugPointPopup(CharView *cv);
+extern void CVShowPoint (CharView *cv, BasePoint *me);
 
-extern int GotoChar(SplineFont *sf,EncMap *map, int *merge_with_selection);
-
-extern void CVShowPoint(CharView *cv, BasePoint *me);
-
-extern BitmapView *BitmapViewCreate(BDFChar *bc, BDFFont *bdf, FontView *fv,int enc);
-extern BitmapView *BitmapViewCreatePick(int enc, FontView *fv);
-extern void BitmapViewFree(BitmapView *bv);
-extern void BVMenuRotateInvoked(GWindow gw,struct gmenuitem *mi, GEvent *e);
-extern void BVRotateBitmap(BitmapView *bv,enum bvtools type );
-extern int  BVColor(BitmapView *bv);
-extern void BCGeneralFunction(BitmapView *bv,
-	void (*SetPoint)(BitmapView *,int x, int y, void *data),void *data);
+extern BitmapView *BitmapViewCreate (BDFChar *bc, BDFFont *bdf, FontView *fv,
+                                     int enc);
+extern BitmapView *BitmapViewCreatePick (int enc, FontView *fv);
+extern void BitmapViewFree (BitmapView *bv);
+extern void BVMenuRotateInvoked (GWindow gw, struct gmenuitem *mi, GEvent *e);
+extern void BVRotateBitmap (BitmapView *bv, enum bvtools type);
+extern int BVColor (BitmapView *bv);
+extern void BCGeneralFunction (BitmapView *bv,
+                               void (*SetPoint) (BitmapView *, int x, int y,
+                                                 void *data), void *data);
 extern char *BVFlipNames[];
-extern void BVChangeBC(BitmapView *bv, BDFChar *bc, int fitit );
+extern void BVChangeBC (BitmapView *bv, BDFChar *bc, int fitit);
 
-extern void MVSetSCs(MetricsView *mv, SplineChar **scs);
-extern void MVRefreshChar(MetricsView *mv, SplineChar *sc);
-extern void MVRegenChar(MetricsView *mv, SplineChar *sc);
-extern void MVReKern(MetricsView *mv);
-extern MetricsView *MetricsViewCreate(FontView *fv,SplineChar *sc,BDFFont *bdf);
-extern void MetricsViewFree(MetricsView *mv);
-extern void MVRefreshAll(MetricsView *mv);
-extern void MV_FriendlyFeatures(GGadget *g, int pos);
-extern GTextInfo *SLOfFont(SplineFont *sf);
+extern void MVSetSCs (MetricsView *mv, SplineChar **scs);
+extern void MVRefreshChar (MetricsView *mv, SplineChar *sc);
+extern void MVRegenChar (MetricsView *mv, SplineChar *sc);
+extern void MVReKern (MetricsView *mv);
+extern MetricsView *MetricsViewCreate (FontView *fv, SplineChar *sc,
+                                       BDFFont *bdf);
+extern void MetricsViewFree (MetricsView *mv);
+extern void MVRefreshAll (MetricsView *mv);
+extern void MV_FriendlyFeatures (GGadget *g, int pos);
+extern GTextInfo *SLOfFont (SplineFont *sf);
 
-extern void DoPrefs(void);
-extern void DoXRes(void);
-extern void PointerDlg(CharView *cv);
-extern void LastFonts_Activate(void);
-extern void LastFonts_End(int success);
-extern void GListAddStr(GGadget *list,uint32_t *str, void *ud);
-extern void GListReplaceStr(GGadget *list,int index, uint32_t *str, void *ud);
-extern struct macname *NameGadgetsGetNames( GWindow gw );
-extern void NameGadgetsSetEnabled( GWindow gw, int enable );
-extern int GCDBuildNames(GGadgetCreateData *gcd,GTextInfo *label,int pos,struct macname *names);
-extern void GCDFillMacFeat(GGadgetCreateData *mfgcd,GTextInfo *mflabels, int width,
-	MacFeat *all, int fromprefs, GGadgetCreateData *boxes,
-	GGadgetCreateData **array);
-extern void Prefs_ReplaceMacFeatures(GGadget *list);
+extern void DoPrefs (void);
+extern void DoXRes (void);
+extern void PointerDlg (CharView *cv);
+extern void LastFonts_Activate (void);
+extern void LastFonts_End (int success);
+extern void GListAddStr (GGadget *list, uint32_t *str, void *ud);
+extern void GListReplaceStr (GGadget *list, int index, uint32_t *str,
+                             void *ud);
+extern struct macname *NameGadgetsGetNames (GWindow gw);
+extern void NameGadgetsSetEnabled (GWindow gw, int enable);
+extern int GCDBuildNames (GGadgetCreateData *gcd, GTextInfo *label, int pos,
+                          struct macname *names);
+extern void GCDFillMacFeat (GGadgetCreateData *mfgcd, GTextInfo *mflabels,
+                            int width, MacFeat *all, int fromprefs,
+                            GGadgetCreateData *boxes,
+                            GGadgetCreateData **array);
+extern void Prefs_ReplaceMacFeatures (GGadget *list);
 
-extern uint32_t *FVOpenFont(char *title, const char *defaultfile, int mult);
+extern uint32_t *FVOpenFont (char *title, const char *defaultfile, int mult);
 
+extern void DelayEvent (void (*func) (void *), void *data);
 
+extern void FindProblems (FontView *fv, CharView *cv, SplineChar *sc);
+extern void CVConstrainSelection (CharView *cv, int type);
+extern void CVMakeParallel (CharView *cv);
 
+extern void ScriptDlg (FontView *fv, CharView *cv);
 
-extern void DelayEvent(void (*func)(void *), void *data);
+extern SearchView *SVCreate (FontView *fv);
+extern void SVCharViewInits (SearchView *sv);
+extern void SV_DoClose (struct cvcontainer *cvc);
+extern void SVMakeActive (SearchView *sv, CharView *cv);
+extern int SVAttachFV (FontView *fv, int ask_if_difficult);
+extern void SVDetachFV (FontView *fv);
 
-extern void FindProblems(FontView *fv,CharView *cv,SplineChar *sc);
-extern void CVConstrainSelection(CharView *cv,int type);
-extern void CVMakeParallel(CharView *cv);
+extern void MKDMakeActive (MathKernDlg *mkd, CharView *cv);
+extern void MKD_DoClose (struct cvcontainer *cvc);
+extern void MKDCharViewInits (MathKernDlg *mkd);
+extern void MathKernDialog (SplineChar *sc, int def_layer);
 
-extern void ScriptDlg(FontView *fv,CharView *cv);
+extern void ShowAtt (SplineFont *sf, int def_layer);
+extern void FontCompareDlg (FontView *fv);
+extern void SFShowKernPairs (SplineFont *sf, SplineChar *sc, AnchorClass * ac,
+                             int layer);
+extern void SFShowLigatures (SplineFont *sf, SplineChar *sc);
 
-extern SearchView *SVCreate(FontView *fv);
-extern void SVCharViewInits(SearchView *sv);
-extern void SV_DoClose(struct cvcontainer *cvc);
-extern void SVMakeActive(SearchView *sv,CharView *cv);
-extern int SVAttachFV(FontView *fv,int ask_if_difficult);
-extern void SVDetachFV(FontView *fv);
+extern void SCEditInstructions (SplineChar *sc);
+extern void SFEditTable (SplineFont *sf, uint32_t tag);
+extern void IIScrollTo (struct instrinfo *ii, int ip, int mark_stop);
+extern void IIReinit (struct instrinfo *ii, int ip);
+extern int ii_v_e_h (GWindow gw, GEvent *event);
+extern void instr_scroll (struct instrinfo *ii, struct sbevent *sb);
 
-extern void MKDMakeActive(MathKernDlg *mkd,CharView *cv);
-extern void MKD_DoClose(struct cvcontainer *cvc);
-extern void MKDCharViewInits(MathKernDlg *mkd);
-extern void MathKernDialog(SplineChar *sc,int def_layer);
+extern void CVGridFitChar (CharView *cv);
+extern void CVFtPpemDlg (CharView *cv, int debug);
+extern void SCDeGridFit (SplineChar *sc);
+extern void SCReGridFit (SplineChar *sc, int layer);
 
-extern void ShowAtt(SplineFont *sf,int def_layer);
-extern void FontCompareDlg(FontView *fv);
-extern void SFShowKernPairs(SplineFont *sf,SplineChar *sc,AnchorClass *ac,int layer);
-extern void SFShowLigatures(SplineFont *sf,SplineChar *sc);
+extern void CVDebugReInit (CharView *cv, int restart_debug, int dbg_fpgm);
+extern void CVDebugFree (DebugView *dv);
+extern int DVChar (DebugView *dv, GEvent *e);
 
-extern void SCEditInstructions(SplineChar *sc);
-extern void SFEditTable(SplineFont *sf, uint32_t tag);
-extern void IIScrollTo(struct instrinfo *ii,int ip,int mark_stop);
-extern void IIReinit(struct instrinfo *ii,int ip);
-extern int ii_v_e_h(GWindow gw, GEvent *event);
-extern void instr_scroll(struct instrinfo *ii,struct sbevent *sb);
+extern void KernClassD (KernClass *kc, SplineFont *sf, int layer, int isv);
+extern void ShowKernClasses (SplineFont *sf, MetricsView *mv, int layer,
+                             int isv);
+extern void KCLD_End (struct kernclasslistdlg *kcld);
+extern void KCLD_MvDetach (struct kernclasslistdlg *kcld, MetricsView *mv);
+extern void KernPairD (SplineFont *sf, SplineChar *sc1, SplineChar *sc2,
+                       int layer, int isv);
+extern void KCD_DrawGlyph (GWindow pixmap, int x, int baseline, BDFChar *bdfc,
+                           int mag);
+extern GTextInfo *BuildFontList (FontView *except);
+extern void TFFree (GTextInfo *tf);
 
-extern void CVGridFitChar(CharView *cv);
-extern void CVFtPpemDlg(CharView *cv,int debug);
-extern void SCDeGridFit(SplineChar *sc);
-extern void SCReGridFit(SplineChar *sc,int layer);
+extern void AnchorControl (SplineChar *sc, AnchorPoint *ap, int layer);
+extern void AnchorControlClass (SplineFont *_sf, AnchorClass * ac, int layer);
 
-extern void CVDebugReInit(CharView *cv,int restart_debug,int dbg_fpgm);
-extern void CVDebugFree(DebugView *dv);
-extern int DVChar(DebugView *dv, GEvent *e);
+extern void FVSelectByPST (FontView *fv);
 
-extern void KernClassD(KernClass *kc, SplineFont *sf, int layer, int isv);
-extern void ShowKernClasses(SplineFont *sf,MetricsView *mv,int layer,int isv);
-extern void KCLD_End(struct kernclasslistdlg *kcld);
-extern void KCLD_MvDetach(struct kernclasslistdlg *kcld,MetricsView *mv);
-extern void KernPairD(SplineFont *sf,SplineChar *sc1,SplineChar *sc2,int layer, int isv);
-extern void KCD_DrawGlyph(GWindow pixmap,int x,int baseline,BDFChar *bdfc,int mag);
-extern GTextInfo *BuildFontList(FontView *except);
-extern void TFFree(GTextInfo *tf);
+enum hist_type
+{
+  hist_hstem,
+  hist_vstem,
+  hist_blues
+};
 
-extern void AnchorControl(SplineChar *sc,AnchorPoint *ap,int layer);
-extern void AnchorControlClass(SplineFont *_sf,AnchorClass *ac,int layer);
-
-extern void FVSelectByPST(FontView *fv);
-
-enum hist_type { hist_hstem, hist_vstem, hist_blues };
 struct psdict;
-extern void SFHistogram(SplineFont *sf,int layer, struct psdict *private,uint8_t *selected,
-	EncMap *map, enum hist_type which);
 
-extern void ContextChainEdit(SplineFont *sf,FPST *fpst,
-	struct gfi_data *gfi,uint32_t *newname,int layer);
-extern char *cu_copybetween(const uint32_t *start, const uint32_t *end);
+extern void SFHistogram (SplineFont *sf, int layer, struct psdict *private,
+                         uint8_t *selected, EncMap *map,
+                         enum hist_type which);
 
-extern void StateMachineEdit(SplineFont *sf,ASM *sm,struct gfi_data *d);
-extern void GFI_FinishSMNew(struct gfi_data *d,ASM *sm, int success,int isnew);
+extern void ContextChainEdit (SplineFont *sf, FPST *fpst,
+                              struct gfi_data *gfi, uint32_t *newname,
+                              int layer);
+extern char *cu_copybetween (const uint32_t *start, const uint32_t *end);
 
-extern void MMChangeBlend(MMSet *mm,FontView *fv,int tonew);
-extern void MMWizard(MMSet *mm);
+extern void StateMachineEdit (SplineFont *sf, ASM *sm, struct gfi_data *d);
+extern void GFI_FinishSMNew (struct gfi_data *d, ASM *sm, int success,
+                             int isnew);
 
-extern int LayerDialog(Layer *layer,SplineFont *sf);
-extern void CVLayerChange(CharView *cv);
+extern void MMChangeBlend (MMSet *mm, FontView *fv, int tonew);
+extern void MMWizard (MMSet *mm);
 
-extern int PointOfViewDlg(struct pov_data *pov,SplineFont *sf,int flags);
+extern int LayerDialog (Layer *layer, SplineFont *sf);
+extern void CVLayerChange (CharView *cv);
 
-extern SplineChar *FVMakeChar(FontView *fv,int i);
+extern int PointOfViewDlg (struct pov_data *pov, SplineFont *sf, int flags);
 
-extern void CVPointOfView(CharView *cv,struct pov_data *);
+extern SplineChar *FVMakeChar (FontView *fv, int i);
 
-extern void DVCreateGloss(DebugView *dv);
-extern void DVMarkPts(DebugView *dv,SplineSet *ss);
-extern int CVXPos(DebugView *dv,int offset,int width);
+extern void CVPointOfView (CharView *cv, struct pov_data *);
 
-extern GMenuItem *GetEncodingMenu(void (*func)(GWindow,GMenuItem *,GEvent *),
-	Encoding *current);
+extern void DVCreateGloss (DebugView *dv);
+extern void DVMarkPts (DebugView *dv, SplineSet *ss);
+extern int CVXPos (DebugView *dv, int offset, int width);
 
-extern GTextInfo *TIFromName(const char *name);
+extern GMenuItem *
+GetEncodingMenu (void (*func) (GWindow, GMenuItem *, GEvent *),
+                 Encoding *current);
 
-enum subtable_data_flags {
-    /* I have flags for each alternative because I want "unspecified" to be */
-    /*  an option */
-    sdf_kernclass      = 0x01,
-    sdf_kernpair       = 0x02,
-    sdf_verticalkern   = 0x04,
-    sdf_horizontalkern = 0x08,
-    sdf_dontedit       = 0x10
+extern GTextInfo *TIFromName (const char *name);
+
+enum subtable_data_flags
+{
+  /* I have flags for each alternative because I want "unspecified" to be */
+  /*  an option */
+  sdf_kernclass = 0x01,
+  sdf_kernpair = 0x02,
+  sdf_verticalkern = 0x04,
+  sdf_horizontalkern = 0x08,
+  sdf_dontedit = 0x10
 };
-struct subtable_data {
-    int flags;
-    SplineChar *sc;
+struct subtable_data
+{
+  int flags;
+  SplineChar *sc;
 };
 
-extern GTextInfo **SFLookupListFromType(SplineFont *sf, int lookup_type );
-extern GTextInfo *SFLookupArrayFromType(SplineFont *sf, int lookup_type );
-extern GTextInfo *SFLookupArrayFromMask(SplineFont *sf, int lookup_mask );
-extern GTextInfo **SFSubtablesOfType(SplineFont *sf, int lookup_type, int kernclass, int add_none);
-extern GTextInfo *SFSubtableListOfType(SplineFont *sf, int lookup_type, int kernclass, int add_none);
-extern struct lookup_subtable *SFNewLookupSubtableOfType(SplineFont *sf, int lookup_type, struct subtable_data *sd, int def_layer );
-extern int EditLookup(OTLookup *otl,int isgpos,SplineFont *sf);
-extern int EditSubtable(struct lookup_subtable *sub,int isgpos,SplineFont *sf,
-	struct subtable_data *sd,int def_layer);
-extern void _LookupSubtableContents(SplineFont *sf, struct lookup_subtable *sub,
-	struct subtable_data *sd,int def_layer);
-extern char *SCNameUniStr(SplineChar *sc);
-extern uint32_t *uSCNameUniStr(SplineChar *sc);
-extern char *SFNameList2NameUni(SplineFont *sf, char *str);
-extern uint32_t **SFGlyphNameCompletion(SplineFont *sf,GGadget *t,int from_tab,
-	int new_name_after_space);
-extern char *GlyphNameListDeUnicode( char *str );
-extern void AddRmLang(SplineFont *sf, struct lkdata *lk,int add_lang);
-extern void FVMassGlyphRename(FontView *fv);
+extern GTextInfo **SFLookupListFromType (SplineFont *sf, int lookup_type);
+extern GTextInfo *SFLookupArrayFromType (SplineFont *sf, int lookup_type);
+extern GTextInfo *SFLookupArrayFromMask (SplineFont *sf, int lookup_mask);
+extern GTextInfo **SFSubtablesOfType (SplineFont *sf, int lookup_type,
+                                      int kernclass, int add_none);
+extern GTextInfo *SFSubtableListOfType (SplineFont *sf, int lookup_type,
+                                        int kernclass, int add_none);
+extern struct lookup_subtable *SFNewLookupSubtableOfType (SplineFont *sf,
+                                                          int lookup_type,
+                                                          struct subtable_data
+                                                          *sd, int def_layer);
+extern int EditLookup (OTLookup *otl, int isgpos, SplineFont *sf);
+extern int EditSubtable (struct lookup_subtable *sub, int isgpos,
+                         SplineFont *sf, struct subtable_data *sd,
+                         int def_layer);
+extern void _LookupSubtableContents (SplineFont *sf,
+                                     struct lookup_subtable *sub,
+                                     struct subtable_data *sd, int def_layer);
+extern char *SCNameUniStr (SplineChar *sc);
+extern uint32_t *uSCNameUniStr (SplineChar *sc);
+extern char *SFNameList2NameUni (SplineFont *sf, char *str);
+extern uint32_t **SFGlyphNameCompletion (SplineFont *sf, GGadget *t,
+                                         int from_tab,
+                                         int new_name_after_space);
+extern char *GlyphNameListDeUnicode (char *str);
+extern void AddRmLang (SplineFont *sf, struct lkdata *lk, int add_lang);
+extern void FVMassGlyphRename (FontView *fv);
 
-extern void SFBdfProperties(SplineFont *sf, EncMap *map, BDFFont *thisone);
+extern void SFBdfProperties (SplineFont *sf, EncMap *map, BDFFont *thisone);
 
 
 
 extern GMenuItem2 helplist[];
 extern BasePoint last_ruler_offset[];
 
-extern void CVCopyLayerToLayer(CharView *cv);
-extern void FVCopyLayerToLayer(FontView *fv);
-extern void CVCompareLayerToLayer(CharView *cv);
-extern void FVCompareLayerToLayer(FontView *fv);
+extern void CVCopyLayerToLayer (CharView *cv);
+extern void FVCopyLayerToLayer (FontView *fv);
+extern void CVCompareLayerToLayer (CharView *cv);
+extern void FVCompareLayerToLayer (FontView *fv);
 
-extern void MathInit(void);
-extern void SFMathDlg(SplineFont *sf,int def_layer);
+extern void MathInit (void);
+extern void SFMathDlg (SplineFont *sf, int def_layer);
 
 extern GMenuItem2 *cv_menu, *fv_menu;
-extern void cv_tl2listcheck(GWindow gw,struct gmenuitem *mi,GEvent *e);
-extern void fv_tl2listcheck(GWindow gw,struct gmenuitem *mi,GEvent *e);
+extern void cv_tl2listcheck (GWindow gw, struct gmenuitem *mi, GEvent *e);
+extern void fv_tl2listcheck (GWindow gw, struct gmenuitem *mi, GEvent *e);
 
-extern void SFValidationWindow(SplineFont *sf,int layer, enum fontformat format);
-extern void ValidationDestroy(SplineFont *sf);
-
-
-
-extern const char *UI_TTFNameIds(int id);
-extern const char *UI_MSLangString(int language);
-extern void FontInfoInit(void);
-extern void LookupUIInit(void);
-extern enum psstrokeflags Ps_StrokeFlagsDlg(void);
-extern struct cidmap *AskUserForCIDMap(void);
-
-extern void DefineGroups(struct fontview *fv);
-extern void DisplayGroups(struct fontview *fv);
-
-extern struct Base *SFBaselines(SplineFont *sf,struct Base *old,int is_vertical);
-extern void JustifyDlg(SplineFont *sf);
-extern char *GlyphListDlg(SplineFont *sf, char *glyphstr);
-
-extern void DeltaSuggestionDlg(FontView *fv,CharView *cv);
-extern void QGRmFontView(struct qg_data *qg,FontView *fv);
-extern void QGRmCharView(struct qg_data *qg,CharView *cv);
+extern void SFValidationWindow (SplineFont *sf, int layer,
+                                enum fontformat format);
+extern void ValidationDestroy (SplineFont *sf);
 
 
-extern struct hslrgb *SFFontCols(SplineFont *sf,struct hslrgb fontcols[6]);
 
-extern Color view_bgcol;	/* Background color for views */
-extern void MVColInit(void);
-extern void CVColInit( void );
+extern const char *UI_TTFNameIds (int id);
+extern const char *UI_MSLangString (int language);
+extern void FontInfoInit (void);
+extern void LookupUIInit (void);
+extern enum psstrokeflags Ps_StrokeFlagsDlg (void);
+extern struct cidmap *AskUserForCIDMap (void);
 
-extern void FontViewRemove(FontView *fv);
-extern void FVChar(FontView *fv,GEvent *event);
-extern void FVDrawInfo(FontView *fv,GWindow pixmap,GEvent *event);
-extern void KFFontViewInits(struct kf_dlg *kf,GGadget *drawable);
-extern char *GlyphSetFromSelection(SplineFont *sf,int def_layer,char *current);
-extern void ME_ListCheck(GGadget *g,int r, int c, SplineFont *sf);
-extern void ME_SetCheckUnique(GGadget *g,int r, int c, SplineFont *sf);
-extern void ME_ClassCheckUnique(GGadget *g,int r, int c, SplineFont *sf);
+extern void DefineGroups (struct fontview *fv);
+extern void DisplayGroups (struct fontview *fv);
 
-#endif	/* _VIEWS_H */
+extern struct Base *SFBaselines (SplineFont *sf, struct Base *old,
+                                 int is_vertical);
+extern void JustifyDlg (SplineFont *sf);
+extern char *GlyphListDlg (SplineFont *sf, char *glyphstr);
+
+extern void DeltaSuggestionDlg (FontView *fv, CharView *cv);
+extern void QGRmFontView (struct qg_data *qg, FontView *fv);
+extern void QGRmCharView (struct qg_data *qg, CharView *cv);
+
+
+extern struct hslrgb *SFFontCols (SplineFont *sf, struct hslrgb fontcols[6]);
+
+extern Color view_bgcol;        /* Background color for views */
+extern void MVColInit (void);
+extern void CVColInit (void);
+
+extern void FontViewRemove (FontView *fv);
+extern void FVChar (FontView *fv, GEvent *event);
+extern void FVDrawInfo (FontView *fv, GWindow pixmap, GEvent *event);
+extern void KFFontViewInits (struct kf_dlg *kf, GGadget *drawable);
+extern char *GlyphSetFromSelection (SplineFont *sf, int def_layer,
+                                    char *current);
+extern void ME_ListCheck (GGadget *g, int r, int c, SplineFont *sf);
+extern void ME_SetCheckUnique (GGadget *g, int r, int c, SplineFont *sf);
+extern void ME_ClassCheckUnique (GGadget *g, int r, int c, SplineFont *sf);
+
+#endif /* _VIEWS_H */
