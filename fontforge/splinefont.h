@@ -1721,17 +1721,26 @@ typedef struct splinechar
 {
   char *name;
   int unicodeenc;
-  int orig_pos;                 /* Original position in the glyph list */
+  int orig_pos;                 /* Original position in the glyph list. */
   int16_t width, vwidth;
-  int16_t lsidebearing;         /* only used when reading in a type1 font */
-  /*  Or an otf font where it is the subr number of a refered character */
-  /*  or a ttf font without bit 1 of head.flags set */
-  /*  or (once upon a time, but no longer) a ttf font with vert metrics where it is the ymax value when we had a font-wide vertical offset */
-  /*  or when generating morx where it is the mask of tables in which the glyph occurs */
-  /* Always a temporary value */
+  int16_t lsidebearing;         /* Only used when reading in a Type1
+                                   font, or an OTF font where it is
+                                   the subr number of a referred
+                                   character, or a ttf font without
+                                   bit 1 of head.flags set, or (once
+                                   upon a time, but no longer) a TTF
+                                   font with vert metrics where it is
+                                   the ymax value when we had a
+                                   font-wide vertical offset or when
+                                   generating morx where it is the
+                                   mask of tables in which the glyph
+                                   occurs.  Always a temporary
+                                   value */
   int ttf_glyph;                /* only used when writing out a ttf or otf font */
-  Layer *layers;                /* layer[0] is background, layer[1] foreground */
-  /* In type3 fonts 2-n are also foreground, otherwise also background */
+  Layer *layers;                /* layer[0] is background, layer[1]
+                                   foreground. In type3 fonts 2-n are
+                                   also foreground, otherwise also
+                                   background. */
   int layer_cnt;
   StemInfo *hstem;              /* hstem hints have a vertical offset but run horizontally */
   StemInfo *vstem;              /* vstem hints have a horizontal offset but run vertically */
@@ -1742,10 +1751,10 @@ typedef struct splinechar
   bool changed;
   bool changedsincelasthinted;
   bool manualhints;
-  bool ticked;                  /* For reference character processing */
-  /* And fontview processing */
+  bool ticked;                  /* For reference character processing
+                                   and fontview processing. */
   bool changed_since_autosave;
-  bool widthset;                /* needed so an emspace char doesn't disappear */
+  bool widthset;                /* Needed so an emspace char doesn't disappear. */
   bool vconflicts;              /* Any hint overlaps in the vstem list? */
   bool hconflicts;              /* Any hint overlaps in the hstem list? */
   bool searcherdummy;
@@ -1754,7 +1763,10 @@ typedef struct splinechar
   bool namechanged;
   bool blended;                 /* An MM blended character */
   bool ticked2;
-  unsigned int glyph_class:3;   /* 0=> fontforge determines class automagically, else one more than the class value in gdef so 2+1=>lig, 3+1=>mark */
+  unsigned int glyph_class;     /* 0=> fontforge determines class
+                                   automagically, else one more than
+                                   the class value in gdef so
+                                   2+1=>lig, 3+1=>mark */
   bool numberpointsbackards;
   bool instructions_out_of_date;
   bool complained_about_ptnums;
@@ -1762,15 +1774,20 @@ typedef struct splinechar
   bool unlink_rm_ovrlp_save_undo;
   bool inspiro;
   bool lig_caret_cnt_fixed;
-  struct splinecharlist *dependents;
-  /* The dependents list is a list of all characters which refenence */
-  /*  the current character directly */
+  struct splinecharlist *dependents;    /* The dependents list is a list
+                                           of all characters which
+                                           reference the current
+                                           character directly. */
   KernPair *kerns;
   KernPair *vkerns;
-  PST *possub;                  /* If we are a ligature then this tells us what */
-  /*  It may also contain a bunch of other stuff now */
-  LigList *ligofme;             /* If this is the first character of a ligature then this gives us the list of possible ones */
-  /*  this field must be regenerated before the font is saved */
+  PST *possub;                  /* If we are a ligature then this
+                                   tells us what; it may also contain
+                                   a bunch of other stuff now. */
+  LigList *ligofme;             /* If this is the first character of a
+                                   ligature then this gives us the
+                                   list of possible ones. This field
+                                   must be regenerated before the font
+                                   is saved. */
   char *comment;                /* in utf8 */
   uint32_t /*Color */ color;
   AnchorPoint *anchor;
@@ -1779,32 +1796,45 @@ typedef struct splinechar
   int16_t countermask_cnt;
   HintMask *countermasks;
   struct altuni *altuni;
-/* for TeX */
-  int16_t tex_height, tex_depth;
-/* TeX also uses italic_correction and glyph variants below */
-/* For the 'MATH' table (and for TeX) */
+
+  /* For TeX */
+  int16_t tex_height;
+  int16_t tex_depth;
+
+  /* For the 'MATH' table and for TeX */
   bool is_extended_shape;
   int16_t italic_correction;
-  int16_t top_accent_horiz;     /* MATH table allows you to specific a */
-  /* horizontal anchor for accent attachments, vertical */
-  /* positioning is done elsewhere */
+  int16_t top_accent_horiz;     /* MATH table allows you to specific a
+                                   horizontal anchor for accent
+                                   attachments, vertical positioning
+                                   is done elsewhere. */
   DeviceTable *italic_adjusts;
   DeviceTable *top_accent_adjusts;
   struct glyphvariants *vert_variants;
   struct glyphvariants *horiz_variants;
   struct mathkern *mathkern;
-/* End of MATH/TeX fields */
+
+  /* End of MATH/TeX fields */
+
   void *python_sc_object;       /* Used only if Python is supported. */
   void *python_temporary;       /* Used only if Python is supported. */
-  void *python_persistent;      /* If python this will hold a python object, if not python this will hold a string containing a pickled object. We do nothing with it (if not python) except save it back out unchanged */
-  /* If the glyph is used as a tile pattern, then the next two values */
-  /*  determine the amount of white space around the tile. If extra is */
-  /*  non-zero then we add it to the max components of the bbox and   */
-  /*  subtract it from the min components. If extra is 0 then tile_bounds */
-  /*  will be used. If tile_bounds is all zeros then the glyph's bbox */
-  /*  will be used. */
-  real tile_margin;             /* If the glyph is used as a tile */
+
+  void *python_persistent;      /* If python this will hold a python
+                                   object, if not python this will
+                                   hold a string containing a pickled
+                                   object. We do nothing with it (if
+                                   not python) except save it back out
+                                   unchanged. */
+
+  /* If the glyph is used as a tile pattern, then the next two values
+     determine the amount of white space around the tile. If extra is
+     non-zero then we add it to the max components of the bbox and
+     subtract it from the min components. If extra is 0 then
+     tile_bounds will be used. If tile_bounds is all zeros then the
+     glyph's bbox will be used. */
+  real tile_margin;             /* If the glyph is used as a tile. */
   DBounds tile_bounds;
+
 } SplineChar;
 
 #define TEX_UNDEF 0x7fff
@@ -3001,7 +3031,7 @@ VISIBLE extern void XLFD_CreateComponents (BDFFont *bdf, EncMap *map, int res,
                                            struct xlfd_components *comp);
 /* Two lines intersect in at most 1 point */
 /* Two quadratics intersect in at most 4 points */
-                                                                                                                                                                                                                                                                                                                                                                                                                               /* Two cubics intersect in at most 9 points *//* Plus an extra space for a trailing -1 */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           /* Two cubics intersect in at most 9 points *//* Plus an extra space for a trailing -1 */
 VISIBLE extern int SplinesIntersect (const Spline * s1, const Spline * s2,
                                      BasePoint pts[9], extended t1s[10],
                                      extended t2s[10]);

@@ -268,6 +268,9 @@ AC_TYPE_UINT16_T
 AC_TYPE_UINT32_T
 AC_TYPE_UINT8_T
 
+AC_CHECK_SIZEOF([_Bool])
+AC_CHECK_ALIGNOF([_Bool])
+
 # This only checks that an int requires 4 bytes of storage, not that
 # it actually uses all 32 bits. We actually require all 32 bits.
 AC_CHECK_SIZEOF([int])
