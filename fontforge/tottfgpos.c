@@ -2812,7 +2812,6 @@ g___FigureExtensionSubTables (OTLookup *all, int startoffset, int is_gpos)
   bool gotmore;
   FILE *efile;
   int i, offset, cnt;
-  bool any = false;
 
   if (all == NULL)
     return NULL;
@@ -2848,16 +2847,6 @@ g___FigureExtensionSubTables (OTLookup *all, int startoffset, int is_gpos)
                 }
               if (sub != NULL)
                 {
-                  if (!any)
-                    {
-                      ff_post_notice (_("Lookup potentially too big"),
-                                      _("Lookup %s has an\n"
-                                        "offset bigger than 65535 bytes. This means\n"
-                                        "FontForge must use an extension lookup to output it.\n"
-                                        "Not all applications support extension lookups."),
-                                      otf->lookup_name);
-                      any = true;
-                    }
                   otf->needs_extension = true;
                   gotmore = true;
                   len += 8 * otf->subcnt;
