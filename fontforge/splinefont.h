@@ -1722,7 +1722,8 @@ typedef struct splinechar
   char *name;
   int unicodeenc;
   int orig_pos;                 /* Original position in the glyph list. */
-  int16_t width, vwidth;
+  int16_t width;
+  int16_t vwidth;
   int16_t lsidebearing;         /* Only used when reading in a Type1
                                    font, or an OTF font where it is
                                    the subr number of a referred
