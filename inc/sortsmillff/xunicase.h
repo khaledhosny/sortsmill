@@ -31,11 +31,12 @@
 
 #include <unicase.h>
 
-/* *INDENT-OFF* */
 #ifdef __cplusplus
 extern "C" {
 #endif
-/* *INDENT-ON* */
+#if 0
+}
+#endif
 
 int u8_casecompare (const uint8_t *s1, const uint8_t *s2);
 int u16_casecompare (const uint16_t *s1, const uint16_t *s2);
@@ -48,10 +49,11 @@ int u8_ncasecompare (const uint8_t *s1, const uint8_t *s2, size_t n);
 int u16_ncasecompare (const uint16_t *s1, const uint16_t *s2, size_t n);
 int u32_ncasecompare (const uint32_t *s1, const uint32_t *s2, size_t n);
 
-/* *INDENT-OFF* */
+#if 0
+{
+#endif
 #ifdef __cplusplus
 }
 #endif
-/* *INDENT-ON* */
 
 #endif /* _SORTSMILLFF_XUNICASE_H */

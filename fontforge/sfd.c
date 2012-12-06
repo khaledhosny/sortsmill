@@ -1623,10 +1623,6 @@ SFDDumpChar (FILE *sfd, SplineChar *sc, EncMap * map, int *newgids, int todir)
     SFDDumpCharMath (sfd, sc);
   if (sc->python_persistent != NULL)
     SFDPickleMe (sfd, sc->python_persistent);
-#if HANYANG
-  if (sc->compositionunit)
-    fprintf (sfd, "CompositionUnit: %d %d\n", sc->jamo, sc->varient);
-#endif
   SFDDumpHintList (sfd, "HStem: ", sc->hstem);
   SFDDumpHintList (sfd, "VStem: ", sc->vstem);
   SFDDumpDHintList (sfd, "DStem2: ", sc->dstem);
@@ -2830,10 +2826,6 @@ SFD_Dump (FILE *sfd, SplineFont *sf, EncMap * map, EncMap * normal, int todir,
     fprintf (sfd, "OnlyBitmaps: %d\n", sf->onlybitmaps);
   if (sf->private != NULL)
     SFDDumpPrivate (sfd, sf->private);
-#if HANYANG
-  if (sf->rules != NULL)
-    SFDDumpCompositionRules (sfd, sf->rules);
-#endif
   if (sf->grid.splines != NULL)
     {
       if (sf->grid.order2)
@@ -5455,14 +5447,6 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
             sc->mathkern =
               (struct mathkern *) xzalloc (sizeof (struct mathkern));
           SFDParseVertexKern (sfd, &sc->mathkern->bottom_left);
-#if HANYANG
-        }
-      else if (strcasecmp (tok, "CompositionUnit:") == 0)
-        {
-          getsint (sfd, &sc->jamo);
-          getsint (sfd, &sc->varient);
-          sc->compositionunit = true;
-#endif
         }
       else if (strcasecmp (tok, "HStem:") == 0)
         {
@@ -9282,12 +9266,6 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
             }
           SFDSizeMap (sf->map, sf->glyphcnt, charcnt);
           break;
-#if HANYANG
-        }
-      else if (strcasecmp (tok, "BeginCompositionRules") == 0)
-        {
-          sf->rules = SFDReadCompositionRules (sfd);
-#endif
         }
       else
         {

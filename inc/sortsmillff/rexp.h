@@ -42,11 +42,12 @@
 #include <pcre.h>
 #include <sortsmillff/xunistring.h>
 
-/* *INDENT-OFF* */
 #ifdef __cplusplus
 extern "C" {
 #endif
-/* *INDENT-ON* */
+#if 0
+}
+#endif
 
 struct rexp_buffer_t
 {
@@ -135,10 +136,11 @@ rexp_match_t u8_rexp_search (rexp_t re, const uint8_t *s);
 uint8_t *u8_rexp_substr (rexp_match_t m, const uint8_t *s,
                          size_t subexpression);
 
-/* *INDENT-OFF* */
+#if 0
+{
+#endif
 #ifdef __cplusplus
 }
 #endif
-/* *INDENT-ON* */
 
 #endif /* _SORTSMILLFF_REXP_H */

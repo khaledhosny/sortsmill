@@ -17,6 +17,7 @@
 
 (define-module (sortsmillff view)
   #:use-module (system foreign)
+  #:use-module (ice-9 format)
   #:export (font-view
             font-view?
             wrap-font-view
@@ -24,20 +25,24 @@
             glyph-view
             glyph-view?
             wrap-glyph-view
-            unwrap-glyph-view
-            ))
+            unwrap-glyph-view))
 
 (define-wrapped-pointer-type font-view
   font-view?
   wrap-font-view unwrap-font-view
   (lambda (fv port)
-    (simple-format port "#<font-view ~S>"
-                   "FONT NAME GOES HERE")))
+    (format port "#<font-view ~s ~x>"
+            "FONT NAME GOES HERE"
+            (pointer-address (unwrap-font-view fv)))))
 
 (define-wrapped-pointer-type glyph-view
   glyph-view?
   wrap-glyph-view unwrap-glyph-view
-  (lambda (fv port)
-    (simple-format port "#<glyph-view ~S:~S>"
-                   "FONT NAME GOES HERE"
-                   "GLYPH NAME GOES HERE")))
+  (lambda (gv port)
+    (format port "#<glyph-view ~s:~s ~x>"
+            "FONT NAME GOES HERE"
+            "GLYPH NAME GOES HERE"
+            (pointer-address (unwrap-glyph-view gv)))))
+
+(load-extension "libguile-sortsmillff_fontforge"
+                "init_guile_sortsmillff_view")

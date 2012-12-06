@@ -235,9 +235,6 @@ typedef struct charview {
     SplinePoint joinpos;
     spiro_cp joincp;
     SplineChar *template1, *template2;
-#if HANYANG
-    struct jamodisplay *jamodisplay;
-#endif
     real oldwidth, oldvwidth;
     int16_t oldic, oldtah;
 #if _ModKeysAutoRepeat
@@ -1024,14 +1021,6 @@ extern void CVConstrainSelection(CharView *cv,int type);
 extern void CVMakeParallel(CharView *cv);
 
 extern void ScriptDlg(FontView *fv,CharView *cv);
-
-# if HANYANG
-extern void MenuNewComposition(GWindow gw, struct gmenuitem *, GEvent *);
-extern void CVDisplayCompositions(GWindow gw, struct gmenuitem *, GEvent *);
-extern void Disp_DoFinish(struct jamodisplay *d, int cancel);
-extern void Disp_RefreshChar(SplineFont *sf,SplineChar *sc);
-extern void Disp_DefaultTemplate(CharView *cv);
-# endif
 
 extern SearchView *SVCreate(FontView *fv);
 extern void SVCharViewInits(SearchView *sv);

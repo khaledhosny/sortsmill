@@ -34,11 +34,12 @@
 #include <errno.h>
 #include <sortsmillff/attributes.h>
 
-/* *INDENT-OFF* */
 #ifdef __cplusplus
 extern "C" {
 #endif
-/* *INDENT-ON* */
+#if 0
+}
+#endif
 
 _FF_ATTRIBUTE_PURE inline void *xdie_on_null (void *p);
 _FF_ATTRIBUTE_PURE inline void *xdie_on_enomem (void *p);
@@ -61,11 +62,12 @@ xdie_on_enomem (void *p)
   return p;
 }
 
-/* *INDENT-OFF* */
+#if 0
+{
+#endif
 #ifdef __cplusplus
 }
 #endif
-/* *INDENT-ON* */
 
 /* The macro XDIE_ON_NULL tries to avoid implicit type-casting between
    the type of p and (void *). This works with gcc, in particular. */

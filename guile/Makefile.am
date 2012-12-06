@@ -37,7 +37,8 @@ MOSTLYCLEANFILES = $(NODIST_SCM_FILES) $(GO_FILES)
 DIST_SCM_FILES = sortsmillff/gsl.scm sortsmillff/iconv.scm	\
 	sortsmillff/linalg.scm sortsmillff/precompute.scm		\
 	sortsmillff/polyspline.scm sortsmillff/brentroot.scm	\
-	sortsmillff/sfd-to-sxml.scm	sortsmillff/view.scm
+	sortsmillff/sfd-to-sxml.scm sortsmillff/view.scm		\
+	sortsmillff/internal-structures.scm
 if HAVE_GUI
 DIST_SCM_FILES += sortsmillff/usermenu.scm
 endif HAVE_GUI
@@ -52,10 +53,14 @@ GO_FILES = sortsmillff/gsl.go sortsmillff/math-constants.go			\
 	sortsmillff/i18n.go sortsmillff/iconv.go sortsmillff/linalg.go	\
 	sortsmillff/precompute.go sortsmillff/polyspline.go				\
 	sortsmillff/brentroot.go sortsmillff/sfd-to-sxml.go				\
-	sortsmillff/view.go
+	sortsmillff/view.go sortsmillff/internal-structures.go
 if HAVE_GUI
 GO_FILES += sortsmillff/usermenu.go
 endif HAVE_GUI
+
+# The Guile object files do get installed, but by an install hook
+# elsewhere in this Makefile.am.
+noinst_DATA = $(GO_FILES)
 
 sortsmillff/brentroot.go: sortsmillff/math-constants.go
 sortsmillff/i18n.go: libguile-sortsmillff_iconv.la
@@ -101,6 +106,18 @@ libguile_sortsmillff_aux_la_SOURCES = guile_polyspline.c	\
 	guile_brentroot.c guile_gsl.c
 libguile_sortsmillff_aux_la_LIBADD =				\
 	$(top_builddir)/auxiliary/libsortsmillff_aux.la	\
+	$(top_builddir)/lib/libgnu.la
+
+lib_LTLIBRARIES += libguile-sortsmillff_fontforge.la
+libguile_sortsmillff_fontforge_la_SOURCES =		\
+	guile_internal_structures.c
+libguile_sortsmillff_fontforge_la_CFLAGS = $(AM_CFLAGS)			\
+	'-I$(top_builddir)/fontforge' '-I$(top_srcdir)/fontforge'
+libguile_sortsmillff_fontforge_la_LIBADD =					\
+	$(top_builddir)/fontforge/libsortsmillff_fontforge.la	\
+	$(top_builddir)/gdraw/libsortsmillff_gdraw.la			\
+	$(top_builddir)/gutils/libsortsmillff_gutils.la			\
+	$(top_builddir)/auxiliary/libsortsmillff_aux.la			\
 	$(top_builddir)/lib/libgnu.la
 
 if HAVE_GUI

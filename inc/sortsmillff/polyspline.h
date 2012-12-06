@@ -22,11 +22,12 @@
 #include <gmp.h>
 #include <sortsmillff/attributes.h>
 
-/* *INDENT-OFF* */
 #ifdef __cplusplus
 extern "C" {
 #endif
-/* *INDENT-ON* */
+#if 0
+}
+#endif
 
 /*-----------------------------------------------------------------------*/
 /*
@@ -224,10 +225,11 @@ void fl_subdiv_sbern (unsigned int deg, const double *spline, double t,
 void fl_subdiv_bern (unsigned int deg, const double *spline, double t,
                      double *a, double *b);
 
-/* *INDENT-OFF* */
+#if 0
+{
+#endif
 #ifdef __cplusplus
 }
 #endif
-/* *INDENT-ON* */
 
 #endif /* _SORTSMILLFF_POLYSPLINE_H */

@@ -54,9 +54,6 @@ _dousage (void)
   printf ("fontforge [options] [fontfiles]\n");
   printf ("\t-new\t\t\t (creates a new font)\n");
   printf ("\t-last\t\t\t (loads the last sfd file closed)\n");
-#if HANYANG
-  printf ("\t-newkorean\t\t (creates a new korean font)\n");
-#endif
   printf ("\t-recover none|auto|inquire|clean (control error recovery)\n");
   printf
     ("\t-allglyphs\t\t (load all glyphs in the 'glyf' table\n\t\t\t of a truetype collection)\n");
@@ -400,13 +397,6 @@ fontforge_main_in_guile_mode (int argc, char **argv)
         {
           FontNew ();
           any = 1;
-#if HANYANG
-        }
-      else if (strcmp (pt, "-newkorean") == 0)
-        {
-          MenuNewComposition (NULL, NULL, NULL);
-          any = 1;
-#endif
         }
       else if (strcmp (pt, "-last") == 0)
         {

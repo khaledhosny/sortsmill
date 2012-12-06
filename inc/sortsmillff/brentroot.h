@@ -18,11 +18,12 @@
 #ifndef _SORTSMILLFF_BRENTROOT_H
 #define _SORTSMILLFF_BRENTROOT_H
 
-/* *INDENT-OFF* */
 #ifdef __cplusplus
 extern "C" {
 #endif
-/* *INDENT-ON* */
+#if 0
+}
+#endif
 
 typedef double (*brentroot_func_t) (double, void *);
 
@@ -46,10 +47,11 @@ void brentroot (int max_iters, double tol, double t1, double t2,
                 brentroot_func_t func, void *data, double *root,
                 int *err, unsigned int *iter_no);
 
-/* *INDENT-OFF* */
+#if 0
+{
+#endif
 #ifdef __cplusplus
 }
 #endif
-/* *INDENT-ON* */
 
 #endif /* _SORTSMILLFF_BRENTROOT_H */

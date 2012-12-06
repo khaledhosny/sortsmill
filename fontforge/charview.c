@@ -2711,10 +2711,6 @@ void CVChangeSC(CharView *cv, SplineChar *sc ) {
     cv->p.spiro = cv->lastselcp = NULL;
     cv->apmine = cv->apmatch = NULL; cv->apsc = NULL;
     cv->template1 = cv->template2 = NULL;
-#if HANYANG
-    if ( cv->b.sc->parent->rules!=NULL && cv->b.sc->compositionunit )
-	Disp_DefaultTemplate(cv);
-#endif
     if ( cv->b.layerheads[cv->b.drawmode]->order2 )
 	CVCheckPoints(cv);
     if ( cv->showpointnumbers || cv->show_ft_results )
@@ -9092,11 +9088,6 @@ static void cv_vwlistcheck(CharView *cv, struct gmenuitem *mi) {
 	  case MID_FindInFontView:
 	    mi->ti.disabled = cv->b.container!=NULL;
 	  break;
-#if HANYANG
-	  case MID_DisplayCompositions:
-	    mi->ti.disabled = !cv->b.sc->compositionunit || cv->b.sc->parent->rules==NULL;
-	  break;
-#endif
 	}
     }
 }
@@ -9770,10 +9761,6 @@ static GMenuItem2 vwlist[] = {
     { { (uint32_t *) N_("_Fit"), (GImage *) "viewfit.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'F' }, H_("Fit|Ctl+F"), NULL, NULL, CVMenuScale, MID_Fit },
     { { (uint32_t *) N_("Z_oom out"), (GImage *) "viewzoomout.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'o' }, H_("Zoom out|Alt+Ctl+-"), NULL, NULL, CVMenuScale, MID_ZoomOut },
     { { (uint32_t *) N_("Zoom _in"), (GImage *) "viewzoomin.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'i' }, H_("Zoom in|Alt+Ctl+Shft++"), NULL, NULL, CVMenuScale, MID_ZoomIn },
-#if HANYANG
-    { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0' }, NULL, NULL, NULL, NULL, 0 }, /* line */
-    { { (uint32_t *) N_("_Display Compositions..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'i' }, H_("Display Compositions...|No Shortcut"), NULL, NULL, CVDisplayCompositions, MID_DisplayCompositions },
-#endif
     { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0' }, NULL, NULL, NULL, NULL, 0 }, /* line */
     { { (uint32_t *) N_("_Next Glyph"), (GImage *) "viewnext.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'N' }, H_("Next Glyph|Ctl+]"), NULL, NULL, CVMenuChangeChar, MID_Next },
     { { (uint32_t *) N_("_Prev Glyph"), (GImage *) "viewprev.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'P' }, H_("Prev Glyph|Ctl+["), NULL, NULL, CVMenuChangeChar, MID_Prev },
@@ -10101,11 +10088,6 @@ static void _CharViewCreate(CharView *cv, SplineChar *sc, FontView *fv,int enc) 
 	cv->b.drawmode = dm_back;
     }
 
-#if HANYANG
-    if ( sc->parent->rules!=NULL && sc->compositionunit )
-	Disp_DefaultTemplate(cv);
-#endif
-
     cv->olde.x = -1;
 
     cv->ft_dpi = 72; cv->ft_pointsizex = cv->ft_pointsizey = 12.0;
@@ -10255,10 +10237,6 @@ void CharViewFree(CharView *cv) {
     }
     free(cv->gi.u.image->clut);
     free(cv->gi.u.image);
-#if HANYANG
-    if ( cv->jamodisplay!=NULL )
-	Disp_DoFinish(cv->jamodisplay,true);
-#endif
 
     CVDebugFree(cv->dv);
 

@@ -25,11 +25,12 @@
 #include <gmp.h>
 #include <sortsmillff/attributes.h>
 
-/* *INDENT-OFF* */
 #ifdef __cplusplus
 extern "C" {
 #endif
-/* *INDENT-ON* */
+#if 0
+}
+#endif
 
 void mpz_gc_init (mpz_t x);
 void mpq_gc_init (mpq_t x);
@@ -37,10 +38,11 @@ void mpq_gc_init (mpq_t x);
 _FF_ATTRIBUTE_SENTINEL void mpz_gc_inits (mpz_t x, ...);
 _FF_ATTRIBUTE_SENTINEL void mpq_gc_inits (mpq_t x, ...);
 
-/* *INDENT-OFF* */
+#if 0
+{
+#endif
 #ifdef __cplusplus
 }
 #endif
-/* *INDENT-ON* */
 
 #endif /* _SORTSMILLFF_GMP_GC_H */

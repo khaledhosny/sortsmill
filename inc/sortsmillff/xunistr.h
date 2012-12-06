@@ -40,11 +40,12 @@
 #include <sortsmillff/null_passthru.h>
 #include <sortsmillff/xgc.h>
 
-/* *INDENT-OFF* */
 #ifdef __cplusplus
 extern "C" {
 #endif
-/* *INDENT-ON* */
+#if 0
+}
+#endif
 
 uint16_t *x_u8_to_u16 (const uint8_t *string);
 uint32_t *x_u8_to_u32 (const uint8_t *string);
@@ -223,10 +224,11 @@ u32_valid (const uint32_t *string)
   return (u32_check (string, u32_strlen (string)) == NULL);
 }
 
-/* *INDENT-OFF* */
+#if 0
+{
+#endif
 #ifdef __cplusplus
 }
 #endif
-/* *INDENT-ON* */
 
 #endif /* _SORTSMILLFF_XUNISTR_H */

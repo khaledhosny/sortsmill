@@ -15,8 +15,8 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILLFF_GUILE_POLYSPLINE_H
-#define _SORTSMILLFF_GUILE_POLYSPLINE_H
+#ifndef _SORTSMILLFF_GUILE_INTERNAL_STRUCTURES_H
+#define _SORTSMILLFF_GUILE_INTERNAL_STRUCTURES_H
 
 #include <libguile.h>
 
@@ -28,21 +28,15 @@ extern "C"
 }
 #endif
 
-SCM scm_f64vector_sbern_to_bern (SCM spline);
-SCM scm_f64vector_bern_to_sbern (SCM spline);
-SCM scm_f64vector_sbern_to_mono (SCM spline);
-SCM scm_f64vector_mono_to_sbern (SCM spline);
-SCM scm_f64vector_bern_to_mono (SCM spline);
-SCM scm_f64vector_mono_to_bern (SCM spline);
+#define _FF_INTERNAL_STRUCTURES_POINTER_DECL(TYPE)	\
+  SCM scm_ff_##TYPE##_p (SCM obj);			\
+  int scm_is_ff_##TYPE (SCM obj)
 
-SCM scm_f64vector_eval_sbern (SCM spline, SCM t);
-SCM scm_f64vector_eval_bern (SCM spline, SCM t);
-SCM scm_f64vector_evaldc_sbern (SCM spline, SCM t);
-SCM scm_f64vector_evaldc_bern (SCM spline, SCM t);
-SCM scm_f64vector_eval_mono (SCM spline, SCM t);
-
-SCM scm_f64vector_subdiv_sbern (SCM spline, SCM t);
-SCM scm_f64vector_subdiv_bern (SCM spline, SCM t);
+_FF_INTERNAL_STRUCTURES_POINTER_DECL (FontViewBase);
+_FF_INTERNAL_STRUCTURES_POINTER_DECL (SplineFont);
+_FF_INTERNAL_STRUCTURES_POINTER_DECL (SplineChar);
+_FF_INTERNAL_STRUCTURES_POINTER_DECL (EncMap);
+_FF_INTERNAL_STRUCTURES_POINTER_DECL (BDFFont);
 
 #if 0
 {
@@ -51,4 +45,4 @@ SCM scm_f64vector_subdiv_bern (SCM spline, SCM t);
 }
 #endif
 
-#endif /* _SORTSMILLFF_GUILE_POLYSPLINE_H */
+#endif /* _SORTSMILLFF_GUILE_INTERNAL_STRUCTURES_H */

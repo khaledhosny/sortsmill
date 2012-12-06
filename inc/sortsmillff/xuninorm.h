@@ -31,20 +31,22 @@
 
 #include <uninorm.h>
 
-/* *INDENT-OFF* */
 #ifdef __cplusplus
 extern "C" {
 #endif
-/* *INDENT-ON* */
+#if 0
+}
+#endif
 
 int u8_compare (const uint8_t *s1, const uint8_t *s2);
 int u16_compare (const uint16_t *s1, const uint16_t *s2);
 int u32_compare (const uint32_t *s1, const uint32_t *s2);
 
-/* *INDENT-OFF* */
+#if 0
+{
+#endif
 #ifdef __cplusplus
 }
 #endif
-/* *INDENT-ON* */
 
 #endif /* _SORTSMILLFF_XUNINORM_H */

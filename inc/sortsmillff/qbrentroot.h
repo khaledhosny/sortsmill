@@ -20,11 +20,12 @@
 
 #include <gmp.h>
 
-/* *INDENT-OFF* */
 #ifdef __cplusplus
 extern "C" {
 #endif
-/* *INDENT-ON* */
+#if 0
+}
+#endif
 
 typedef void (*qbrentroot_func_t) (mpq_t, const mpq_t, void *);
 
@@ -46,10 +47,11 @@ void qbrentroot (int max_iters, const mpq_t tol, const mpq_t epsilon,
                  qbrentroot_func_t func, void *data, mpq_t root,
                  int *err, unsigned int *iter_no);
 
-/* *INDENT-OFF* */
+#if 0
+{
+#endif
 #ifdef __cplusplus
 }
 #endif
-/* *INDENT-ON* */
 
 #endif /* _SORTSMILLFF_QBRENTROOT_H */

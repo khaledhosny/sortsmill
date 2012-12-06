@@ -13,7 +13,11 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
-*/
+ */
+
+/*
+ * FIXME: Perhaps write a C90 interface for this.
+ */
 
 #if !defined __STDC_VERSION__ || __STDC_VERSION__ < 199901L
 #warning This interface uses C99 variable arrays.

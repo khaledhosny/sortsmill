@@ -18,11 +18,12 @@
 #ifndef _SORTSMILLFF_GMP_CONSTANTS_H
 #define _SORTSMILLFF_GMP_CONSTANTS_H
 
-/* *INDENT-OFF* */
 #ifdef __cplusplus
 extern "C" {
 #endif
-/* *INDENT-ON* */
+#if 0
+}
+#endif
 
 #include <gmp.h>
 #include <atomic_ops.h>
@@ -60,10 +61,11 @@ _FF_GMP_CONSTANT_DECL (mpq, mpq_neg_two);
 _FF_GMP_CONSTANT_DECL (mpq, mpq_three);
 _FF_GMP_CONSTANT_DECL (mpq, mpq_neg_three);
 
-/* *INDENT-OFF* */
+#if 0
+{
+#endif
 #ifdef __cplusplus
 }
 #endif
-/* *INDENT-ON* */
 
 #endif /* _SORTSMILLFF_GMP_CONSTANTS_H */

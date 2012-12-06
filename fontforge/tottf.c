@@ -1383,9 +1383,6 @@ static int AssignTTFGlyph(struct glyphinfo *gi,SplineFont *sf,EncMap *map,int is
     for ( i=0; i<map->enccount; ++i ) if ( map->map[i]!=-1 ) {
 	SplineChar *sc = sf->glyphs[map->map[i]];
 	if ( SCWorthOutputting(sc) && sc->ttf_glyph==-1
-#if HANYANG
-		&& (!iscff || !sc->compositionunit)
-#endif
 	) {
 	    sc->ttf_glyph = j;
 	    bygid[j++] = sc->orig_pos;
@@ -1394,11 +1391,7 @@ static int AssignTTFGlyph(struct glyphinfo *gi,SplineFont *sf,EncMap *map,int is
 
     for ( i=0; i<sf->glyphcnt; ++i ) if ( sf->glyphs[i]!=NULL ) {
 	SplineChar *sc = sf->glyphs[i];
-	if ( SCWorthOutputting(sc) && sc->ttf_glyph==-1 
-#if HANYANG
-		&& (!iscff || !sc->compositionunit)
-#endif
-	) {
+	if ( SCWorthOutputting(sc) && sc->ttf_glyph==-1) {
 	    sc->ttf_glyph = j;
 	    bygid[j++] = i;
 	}

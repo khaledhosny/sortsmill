@@ -15,8 +15,8 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILLFF_GUILE_POLYSPLINE_H
-#define _SORTSMILLFF_GUILE_POLYSPLINE_H
+#ifndef _SORTSMILLFF_GUILE_VIEW_H
+#define _SORTSMILLFF_GUILE_VIEW_H
 
 #include <libguile.h>
 
@@ -28,21 +28,11 @@ extern "C"
 }
 #endif
 
-SCM scm_f64vector_sbern_to_bern (SCM spline);
-SCM scm_f64vector_bern_to_sbern (SCM spline);
-SCM scm_f64vector_sbern_to_mono (SCM spline);
-SCM scm_f64vector_mono_to_sbern (SCM spline);
-SCM scm_f64vector_bern_to_mono (SCM spline);
-SCM scm_f64vector_mono_to_bern (SCM spline);
+SCM scm_font_view_p (SCM obj);
+int scm_is_font_view (SCM obj);
 
-SCM scm_f64vector_eval_sbern (SCM spline, SCM t);
-SCM scm_f64vector_eval_bern (SCM spline, SCM t);
-SCM scm_f64vector_evaldc_sbern (SCM spline, SCM t);
-SCM scm_f64vector_evaldc_bern (SCM spline, SCM t);
-SCM scm_f64vector_eval_mono (SCM spline, SCM t);
-
-SCM scm_f64vector_subdiv_sbern (SCM spline, SCM t);
-SCM scm_f64vector_subdiv_bern (SCM spline, SCM t);
+SCM scm_glyph_view_p (SCM obj);
+int scm_is_glyph_view (SCM obj);
 
 #if 0
 {
@@ -51,4 +41,4 @@ SCM scm_f64vector_subdiv_bern (SCM spline, SCM t);
 }
 #endif
 
-#endif /* _SORTSMILLFF_GUILE_POLYSPLINE_H */
+#endif /* _SORTSMILLFF_GUILE_VIEW_H */

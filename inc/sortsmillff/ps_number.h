@@ -35,11 +35,12 @@
 
 #include <stdbool.h>
 
-/* *INDENT-OFF* */
 #ifdef __cplusplus
 extern "C" {
 #endif
-/* *INDENT-ON* */
+#if 0
+}
+#endif
 
 /*
 // vis--
@@ -100,10 +101,11 @@ bool is_postscript_radix_number (const char *s);
 */
 bool is_postscript_number (const char *s);
 
-/* *INDENT-OFF* */
+#if 0
+{
+#endif
 #ifdef __cplusplus
 }
 #endif
-/* *INDENT-ON* */
 
 #endif /* _SORTSMILLFF_PS_NUMBER_H */

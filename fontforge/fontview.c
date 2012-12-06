@@ -2769,20 +2769,6 @@ static void FVMenuShowGroup(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UN
 }
 #endif
 
-#if HANYANG
-static void FVMenuModifyComposition(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    FontView *fv = (FontView *) GDrawGetUserData(gw);
-    if ( fv->b.sf->rules!=NULL )
-	SFModifyComposition(fv->b.sf);
-}
-
-static void FVMenuBuildSyllables(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
-    FontView *fv = (FontView *) GDrawGetUserData(gw);
-    if ( fv->b.sf->rules!=NULL )
-	SFBuildSyllables(fv->b.sf);
-}
-#endif
-
 static void FVMenuCompareFonts(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
     FontView *fv = (FontView *) GDrawGetUserData(gw);
     FontCompareDlg(fv);
@@ -4316,25 +4302,6 @@ static void mtlistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     }
 }
 
-#if HANYANG
-static void hglistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
-    FontView *fv = (FontView *) GDrawGetUserData(gw);
-
-    for ( mi = mi->sub; mi->ti.text!=NULL || mi->ti.line ; ++mi ) {
-        if ( mi->mid==MID_BuildSyllables || mi->mid==MID_ModifyComposition )
-	    mi->ti.disabled = fv->b.sf->rules==NULL;
-    }
-}
-
-static GMenuItem2 hglist[] = {
-    { { (uint32_t *) N_("_New Composition..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'N' }, H_("New Composition...|Ctl+Shft+N"), NULL, NULL, MenuNewComposition },
-    { { (uint32_t *) N_("_Modify Composition..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'M' }, H_("Modify Composition...|No Shortcut"), NULL, NULL, FVMenuModifyComposition, MID_ModifyComposition },
-    { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, }},
-    { { (uint32_t *) N_("_Build Syllables"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'B' }, H_("Build Syllables|No Shortcut"), NULL, NULL, FVMenuBuildSyllables, MID_BuildSyllables },
-    { NULL }
-};
-#endif
-
 static void balistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     FontView *fv = (FontView *) GDrawGetUserData(gw);
 
@@ -4419,9 +4386,6 @@ static GMenuItem2 dummyitem[] = {
 
 static GMenuItem2 fllist[] = {
     { { (uint32_t *) N_("Font|_New"), (GImage *) "filenew.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'N' }, H_("New|Ctl+N"), NULL, NULL, MenuNew, 0 },
-#if HANYANG
-    { { (uint32_t *) N_("_Hangul"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'H' }, NULL, hglist, hglistcheck, NULL, 0 },
-#endif
     { { (uint32_t *) N_("_Open"), (GImage *) "fileopen.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'O' }, H_("Open|Ctl+O"), NULL, NULL, MenuOpen, 0 },
     { { (uint32_t *) N_("Recen_t"), (GImage *) "filerecent.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 't' }, NULL, dummyitem, MenuRecentBuild, NULL, MID_Recent },
     { { (uint32_t *) N_("_Close"), (GImage *) "fileclose.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'C' }, H_("Close|Ctl+Shft+Q"), NULL, NULL, FVMenuClose, 0 },
@@ -5650,10 +5614,6 @@ return;
 	MVRegenChar(mv,sc);
 
     FVRefreshChar(fv,sc->orig_pos);
-#if HANYANG
-    if ( sc->compositionunit && fv->b.sf->rules!=NULL )
-	Disp_RefreshChar(fv->b.sf,sc);
-#endif
 
     for ( dlist=sc->dependents; dlist!=NULL; dlist=dlist->next )
 	FVRegenChar(fv,dlist->sc);
@@ -5865,15 +5825,6 @@ static void FVExpose(FontView *fv,GWindow pixmap, GEvent *event) {
 		    do_Adobe_Pua(buf,sizeof(buf),uni);
 		} else if ( uni>=0xe0020 && uni<=0xe007e ) {
 		    buf[0] = uni-0xe0000;	/* A map of Ascii for language names */
-#if HANYANG
-		} else if ( sc->compositionunit ) {
-		    if ( sc->jamo<19 )
-			buf[0] = 0x1100+sc->jamo;
-		    else if ( sc->jamo<19+21 )
-			buf[0] = 0x1161 + sc->jamo-19;
-		    else	/* Leave a hole for the blank char */
-			buf[0] = 0x11a8 + sc->jamo-(19+21+1);
-#endif
 		} else if ( uni>0 && uni<unicode4_size ) {
 		    char *pt = utf8_buf;
 		    use_utf8 = true;
@@ -6154,16 +6105,6 @@ void FVChar(FontView *fv, GEvent *event) {
     } else if ( event->u.chr.keysym=='\\' && (event->u.chr.state&ksm_control) ) {
 	/* European keyboards need a funky modifier to get \ */
 	FVDoTransform(fv);
-//#if !defined(_NO_PYTHON)
-//    } else if ( isdigit(event->u.chr.keysym) && (event->u.chr.state&ksm_control) &&
-//	    (event->u.chr.state&ksm_meta) ) {
-//	/* The Script menu isn't always up to date, so we might get one of */
-//	/*  the shortcuts here */
-//	int index = event->u.chr.keysym-'1';
-//	if ( index<0 ) index = 9;
-//	if ( script_filenames[index]!=NULL )
-//	    ExecuteScriptFile((FontViewBase *) fv,NULL,script_filenames[index]);
-//#endif
     } else if ( event->u.chr.keysym == GK_Left ||
 	    event->u.chr.keysym == GK_Tab ||
 	    event->u.chr.keysym == GK_BackTab ||
@@ -6343,16 +6284,6 @@ void SCPreparePopup(GWindow gw,SplineChar *sc,struct remap *remap, int localenc,
 	upos = actualuni;
     else if ( sc->unicodeenc!=-1 )
 	upos = sc->unicodeenc;
-#if HANYANG
-    else if ( sc->compositionunit ) {
-	if ( sc->jamo<19 )
-	    upos = 0x1100+sc->jamo;
-	else if ( sc->jamo<19+21 )
-	    upos = 0x1161 + sc->jamo-19;
-	else		/* Leave a hole for the blank char */
-	    upos = 0x11a8 + sc->jamo-(19+21+1);
-    }
-#endif
     else {
 	snprintf( cspace, sizeof(cspace), "%u 0x%x U+???? \"%.25s\" ", localenc, localenc, sc->name==NULL?"":sc->name );
 	u32_strcpy(space, x_gc_u8_to_u32 (cspace));

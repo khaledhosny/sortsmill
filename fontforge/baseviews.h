@@ -247,18 +247,18 @@ struct fvcontainer_funcs
 
 typedef struct fontviewbase
 {
-  struct fontviewbase *next;    /* Next on list of open fontviews */
-  struct fontviewbase *nextsame;        /* Next fv looking at this font */
-  EncMap *map;                  /* Current encoding info */
-  EncMap *normal;               /* If this is not NULL then we have a compacted encoding in map, and this is the original */
-  SplineFont *sf;               /* Current font */
-  SplineFont *cidmaster;        /* If CID keyed, contains master font */
+  struct fontviewbase *next;    /* Next on list of open fontviews. */
+  struct fontviewbase *nextsame; /* Next fv looking at this font. */
+  EncMap *map;                  /* Current encoding info. */
+  EncMap *normal;               /* If this is not NULL then we have a
+				   compacted encoding in map, and this
+				   is the original. */
+  SplineFont *sf;               /* Current font. */
+  SplineFont *cidmaster;        /* If CID keyed, contains master font. */
   int active_layer;
-  BDFFont *active_bitmap;       /* Set if the fontview displays a bitmap strike */
-  uint8_t *selected;            /* Current selection */
-#ifndef _NO_PYTHON
-  void *python_fv_object;
-#endif
+  BDFFont *active_bitmap;       /* Set if the fontview displays a bitmap strike. */
+  uint8_t *selected;            /* Current selection. */
+  void *python_fv_object;	/* Used only if Python is supported. */
   struct fvcontainer *container;
 } FontViewBase;
 

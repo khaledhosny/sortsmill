@@ -1401,11 +1401,6 @@ typedef struct splinechar {
     bool unlink_rm_ovrlp_save_undo;
     bool inspiro;
     bool lig_caret_cnt_fixed;
-    /* 6 bits left (one more if we ignore compositionunit below) */
-#if HANYANG
-    bool compositionunit;
-    int16_t jamo, varient;
-#endif
     struct splinecharlist *dependents;
 	    /* The dependents list is a list of all characters which refenence*/
 	    /*  the current character directly */
@@ -1438,10 +1433,8 @@ typedef struct splinechar {
     struct glyphvariants *horiz_variants;
     struct mathkern *mathkern;
 /* End of MATH/TeX fields */
-#ifndef _NO_PYTHON
-    void *python_sc_object;
-    void *python_temporary;
-#endif
+    void *python_sc_object;    /* Used only if Python is supported. */
+    void *python_temporary;    /* Used only if Python is supported. */
     void *python_persistent;		/* If python this will hold a python object, if not python this will hold a string containing a pickled object. We do nothing with it (if not python) except save it back out unchanged */
 	/* If the glyph is used as a tile pattern, then the next two values */
 	/*  determine the amount of white space around the tile. If extra is*/
@@ -1747,9 +1740,6 @@ typedef struct splinefont {
     struct splinefont **subfonts;
     struct splinefont *cidmaster;		/* Top level cid font */
     float cidversion;
-#if HANYANG
-    struct compositionrules *rules;
-#endif
     char *comments;	/* Used to be restricted to ASCII, now utf8 */
     char *fontlog;
     int tempuniqueid;
@@ -2977,14 +2967,6 @@ enum font_compare_flags { fcf_outlines=1, fcf_exact=2, fcf_warn_not_exact=4,
 VISIBLE extern int CompareFonts(SplineFont *sf1, EncMap *map1, SplineFont *sf2,
 	FILE *diffs, int flags);
 VISIBLE extern int LayersSimilar(Layer *ly1, Layer *ly2, double spline_err);
-
-
-# if HANYANG
-extern void SFDDumpCompositionRules(FILE *sfd,struct compositionrules *rules);
-extern struct compositionrules *SFDReadCompositionRules(FILE *sfd);
-extern void SFModifyComposition(SplineFont *sf);
-extern void SFBuildSyllables(SplineFont *sf);
-# endif
 
 extern void DefaultOtherSubrs(void);
 VISIBLE extern int ReadOtherSubrsFile(char *filename);

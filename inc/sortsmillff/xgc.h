@@ -46,11 +46,12 @@
 #include <stdarg.h>
 #include <sortsmillff/xdie_on_null.h>
 
-/* *INDENT-OFF* */
 #ifdef __cplusplus
 extern "C" {
 #endif
-/* *INDENT-ON* */
+#if 0
+}
+#endif
 
 _FF_ATTRIBUTE_MALLOC inline void *x_gc_malloc (size_t sz);
 _FF_ATTRIBUTE_MALLOC inline void *x_gc_malloc_atomic (size_t sz);
@@ -143,10 +144,11 @@ x_gc_grabstr (char *s)
   return p;
 }
 
-/* *INDENT-OFF* */
+#if 0
+{
+#endif
 #ifdef __cplusplus
 }
 #endif
-/* *INDENT-ON* */
 
 #endif /* _SORTSMILLFF_XGC_H */

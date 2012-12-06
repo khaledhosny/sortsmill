@@ -2070,11 +2070,6 @@ struct pschars *SplineFont2ChrsSubrs(SplineFont *sf, int iscjk,
     notdef_pos = SFFindNotdef(sf,fixed);
     cnt = 0;
     for ( i=0; i<sf->glyphcnt; ++i )
-#if HANYANG
-	if ( sf->glyphs[i]!=NULL && sf->glyphs[i]->compositionunit )
-	    /* Don't count it */;
-	else
-#endif
 	if ( SCWorthOutputting(sf->glyphs[i]) &&
 		( i==notdef_pos || strcmp(sf->glyphs[i]->name,".notdef")!=0))
 	    ++cnt;
@@ -2107,11 +2102,6 @@ struct pschars *SplineFont2ChrsSubrs(SplineFont *sf, int iscjk,
 	gi.gb[0].sc = sf->glyphs[notdef_pos];
     cnt = 1;
     for ( i=0 ; i<sf->glyphcnt; ++i ) {
-#if HANYANG
-	if ( sf->glyphs[i]!=NULL && sf->glyphs[i]->compositionunit )
-	    /* don't output it, should be in a subroutine */;
-	else
-#endif
 	if ( SCWorthOutputting(sf->glyphs[i]) &&
 		strcmp(sf->glyphs[i]->name,".notdef")!=0)	/* We've already added .notdef */
 	    gi.gb[cnt++].sc = sf->glyphs[i];
@@ -3440,10 +3430,6 @@ struct pschars *CID2ChrsSubrs2(SplineFont *cidmaster,struct fd2data *fds,
 	    Type2NotDefSplines(sf,&dummynotdef,layer);
 	    gi.gb[cnt].sc = sc;
 	    gi.gb[cnt].fd = i = cidmaster->subfontcnt-1;
-#if 0 && HANYANG			/* Too much stuff knows the glyph cnt, can't refigure it here at the end */
-	} else if ( sf->glyphs[cid]->compositionunit ) {
-	    sc=NULL;	/* don't output it, should be in a subroutine */;
-#endif
 	} else {
 	    gi.gb[cnt].sc = sc = sf->glyphs[cid];
 	    gi.gb[cnt].fd = i;
