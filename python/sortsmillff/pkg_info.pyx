@@ -20,7 +20,6 @@ include 'sortsmillff/cython/config.pxi'
 package = PACKAGE
 package_bugreport = PACKAGE_BUGREPORT
 package_name = PACKAGE_NAME
-package_name = PACKAGE_NAME
 package_string = PACKAGE_STRING
 package_tarname = PACKAGE_TARNAME
 package_url = PACKAGE_URL

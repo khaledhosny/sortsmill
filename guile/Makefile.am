@@ -38,22 +38,25 @@ DIST_SCM_FILES = sortsmillff/gsl.scm sortsmillff/iconv.scm	\
 	sortsmillff/linalg.scm sortsmillff/precompute.scm		\
 	sortsmillff/polyspline.scm sortsmillff/brentroot.scm	\
 	sortsmillff/sfd-to-sxml.scm sortsmillff/view.scm		\
-	sortsmillff/internal-structures.scm
+	sortsmillff/internal-types.scm
+#	sortsmillff/internal-structures.scm
 if HAVE_GUI
 DIST_SCM_FILES += sortsmillff/usermenu.scm
 endif HAVE_GUI
 
-DIST_SCM_IN_FILES = sortsmillff/math-constants.scm.in	\
-	sortsmillff/i18n.scm.in
+DIST_SCM_IN_FILES = sortsmillff/pkg-info.scm.in					\
+	sortsmillff/math-constants.scm.in sortsmillff/i18n.scm.in
 
-NODIST_SCM_FILES = sortsmillff/math-constants.scm	\
-	sortsmillff/i18n.scm
+NODIST_SCM_FILES = sortsmillff/pkg-info.scm				\
+	sortsmillff/math-constants.scm sortsmillff/i18n.scm
 
-GO_FILES = sortsmillff/gsl.go sortsmillff/math-constants.go			\
-	sortsmillff/i18n.go sortsmillff/iconv.go sortsmillff/linalg.go	\
-	sortsmillff/precompute.go sortsmillff/polyspline.go				\
-	sortsmillff/brentroot.go sortsmillff/sfd-to-sxml.go				\
-	sortsmillff/view.go sortsmillff/internal-structures.go
+GO_FILES = sortsmillff/pkg-info.go sortsmillff/gsl.go	\
+	sortsmillff/math-constants.go sortsmillff/i18n.go	\
+	sortsmillff/iconv.go sortsmillff/linalg.go			\
+	sortsmillff/precompute.go sortsmillff/polyspline.go	\
+	sortsmillff/brentroot.go sortsmillff/sfd-to-sxml.go	\
+	sortsmillff/view.go sortsmillff/internal-types.go
+# sortsmillff/internal-structures.go
 if HAVE_GUI
 GO_FILES += sortsmillff/usermenu.go
 endif HAVE_GUI

@@ -4,14 +4,15 @@
 
 ;; Example input:
 ;;
+;;   ;; Includes.
 ;;   ("<stdbool.h>"
-;;    "splinefont.h"
-;;    )
+;;    "splinefont.h")
+;;   ;; Instructions.
 ;;   ((sizeof "bool *" "boolptr_t")
+;;    (struct "SplineChar")
 ;;    (sizeof "SplineChar")
 ;;    (field bool "SplineChar" "changed")
-;;    (field int "SplineChar" "italic_correction" "italcorr")
-;;    )
+;;    (field int "SplineChar" "italic_correction" "italcorr"))
 
 (use-modules
    (ice-9 match)
@@ -104,9 +105,11 @@
                               struct-name field-name)))
 
       ;; Example: (struct "struct splinechar" "SplineChar" (sizeof) (field "italic_correction"))
-      (((or 'struct 'union)
+      (((and struct-or-union (or 'struct 'union))
         (? string? struct-name)
         (? string? replacement-struct-name) . t)
+       (format #t "  printf (\"(~a \\\"~a\\\" %zu)\\n\", sizeof (~a));\n"
+               struct-or-union replacement-struct-name struct-name)
        (for-each (lambda (sub-instruction)
                    (write-type-info
                     (insert-struct-names struct-name

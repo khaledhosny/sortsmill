@@ -26,7 +26,7 @@
 
 include $(top_srcdir)/mk/guile.mk
 
-%.c: %.tig
+%.c: %.tig $(top_srcdir)/config/type-inspection-generator.scm
 	$(AM_V_GEN)
 	$(AM_V_at)$(GUILE_INTERPRET) $(top_srcdir)/config/type-inspection-generator.scm < $< > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
