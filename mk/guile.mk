@@ -60,3 +60,5 @@ CONFIGURE_SCHEME =														\
 	$(AM_V_GEN)
 	$(AM_V_at)$(CONFIGURE_SCHEME) < $< > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
+
+GUILE_INTERPRET = $(GUILE) --no-auto-compile -s

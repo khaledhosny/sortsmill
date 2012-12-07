@@ -26,6 +26,7 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 include $(top_srcdir)/mk/flags.am
+include $(top_srcdir)/mk/guile.mk
 
 POLYSPLINE_PRECOMPUTED_DEGREE_MAX = 19
 
@@ -55,7 +56,7 @@ linalg.lo: $(LINALG_EXTRAS)
 
 precomputed_polyspline_data.c: precompute-polyspline-data.scm Makefile
 	$(AM_V_GEN)
-	$(AM_V_at)$(GUILE) --no-auto-compile -s $< $(POLYSPLINE_PRECOMPUTED_DEGREE_MAX) > $@-tmp
+	$(AM_V_at)$(GUILE_INTERPRET) $< $(POLYSPLINE_PRECOMPUTED_DEGREE_MAX) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
 EXTRA_DIST = $(LINALG_EXTRAS) precompute-polyspline-data.scm

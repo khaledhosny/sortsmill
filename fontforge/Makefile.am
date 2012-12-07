@@ -26,6 +26,7 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 include $(top_srcdir)/mk/flags.am
+include $(top_srcdir)/mk/tig.mk
 
 bin_PROGRAMS =
 dist_man_MANS =
@@ -59,6 +60,12 @@ noinst_HEADERS = fontforgeui.h sftextfieldP.h views.h is_LIGATURE.h		\
 	ofl.h search.h usermenu.h fffreetype.h PfEd.h sfd1.h ffpython.h		\
 	import.h sflayoutP.h print.h splinefont.h annotations.h compare.h	\
 	fontimage.h
+
+#--------------------------------------------------------------------------
+
+noinst_PROGRAMS = fontforge_type_inspector
+
+CLEANFILES = fontforge_type_inspector fontforge_type_inspector.c
 
 #--------------------------------------------------------------------------
 

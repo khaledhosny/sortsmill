@@ -58,7 +58,8 @@ endif FONTTOOLS
 SUBDIRS += tests
 
 EXTRA_DIST = COPYING.permissive README-Mac.html README-MS.html	\
-	README-unix README-Unix.html m4/gnulib-cache.m4 INSTALL.git
+	README-unix README-Unix.html m4/gnulib-cache.m4 INSTALL.git \
+	config/type-inspection-generator.scm
 
 uninstall-local:
 	(cd data; $(MAKE) $(AM_MAKEFLAGS) uninstall)
