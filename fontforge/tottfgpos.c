@@ -2803,92 +2803,111 @@ static void dump_script_table(FILE *g___,struct scriptset *ss,struct ginfo *ginf
     }
 }
     
-static FILE *g___FigureExtensionSubTables(OTLookup *all,int startoffset,int is_gpos) {
-    OTLookup *otf;
-    struct lookup_subtable *sub;
-    int len, len2, gotmore;
-    FILE *efile;
-    int i, offset, cnt;
-    int any= false;
+static FILE *
+g___FigureExtensionSubTables (OTLookup *all, int startoffset, int is_gpos)
+{
+  OTLookup *otf;
+  struct lookup_subtable *sub;
+  int len, len2;
+  bool gotmore;
+  FILE *efile;
+  int i, offset, cnt;
 
-    if ( all==NULL )
-return( NULL );
-    gotmore = true; cnt=len=0;
-    while ( gotmore ) {
-	gotmore = false;
-	offset = startoffset + 8*cnt;
-	for ( otf=all; otf!=NULL; otf=otf->next ) if ( otf->lookup_index!=-1 ) {
-	    if ( otf->needs_extension )
-	continue;
-	    for ( sub = otf->subtables; sub!=NULL; sub=sub->next ) {
-		if ( sub->subtable_offset==-1 )
-	    continue;
-		if ( sub->extra_subtables!=NULL ) {
-		    for ( i=0; sub->extra_subtables[i]!=-1; ++i ) {
-			if ( sub->extra_subtables[i]+offset>65535 )
-		    break;
-		    }
-		    if ( sub->extra_subtables[i]!=-1 )
-	    break;
-		} else if ( sub->subtable_offset+offset>65535 )
-	    break;
-	    }
-	    if ( sub!=NULL ) {
-		if ( !any ) {
-		    ff_post_notice(_("Lookup potentially too big"),
-			    _("Lookup %s has an\noffset bigger than 65535 bytes. This means\nFontForge must use an extension lookup to output it.\nNot all applications support extension lookups."),
-			    otf->lookup_name );
-		    any = true;
-		}
-		otf->needs_extension = true;
-		gotmore = true;
-		len += 8*otf->subcnt;
-		++cnt;
-	    }
-	    offset -= 6+2*otf->subcnt;
-	}
+  if (all == NULL)
+    return NULL;
+
+  gotmore = true;
+  cnt = len = 0;
+  while (gotmore)
+    {
+      gotmore = false;
+      offset = startoffset + 8 * cnt;
+      for (otf = all; otf != NULL; otf = otf->next)
+        {
+          if (otf->lookup_index != -1)
+            {
+              if (otf->needs_extension)
+                continue;
+              for (sub = otf->subtables; sub != NULL; sub = sub->next)
+                {
+                  if (sub->subtable_offset == -1)
+                    continue;
+                  if (sub->extra_subtables != NULL)
+                    {
+                      for (i = 0; sub->extra_subtables[i] != -1; ++i)
+                        {
+                          if (sub->extra_subtables[i] + offset > 65535)
+                            break;
+                        }
+                      if (sub->extra_subtables[i] != -1)
+                        break;
+                    }
+                  else if (sub->subtable_offset + offset > 65535)
+                    break;
+                }
+              if (sub != NULL)
+                {
+                  otf->needs_extension = true;
+                  gotmore = true;
+                  len += 8 * otf->subcnt;
+                  ++cnt;
+                }
+              offset -= 6 + 2 * otf->subcnt;
+            }
+        }
     }
 
-    if ( cnt==0 )		/* No offset overflows */
-return( NULL );
+  if (cnt == 0)                 /* No offset overflows */
+    return NULL;
 
-    /* Now we've worked out which lookups need extension tables and marked them*/
-    /* Generate the extension tables, and update the offsets to reflect the size */
-    /* of the extensions */
-    efile = tmpfile();
+  /* Now we've worked out which lookups need extension tables and marked them */
+  /* Generate the extension tables, and update the offsets to reflect the size */
+  /* of the extensions */
+  efile = tmpfile ();
 
-    len2 = 0;
-    for ( otf=all; otf!=NULL; otf=otf->next ) if ( otf->lookup_index!=-1 ) {
-	for ( sub = otf->subtables; sub!=NULL; sub=sub->next ) {
-	    if ( sub->subtable_offset==-1 )
-	continue;
-	    if ( sub->extra_subtables!=NULL ) {
-		for ( i=0; sub->extra_subtables[i]!=-1; ++i ) {
-		    sub->extra_subtables[i] += len;
-		    if ( otf->needs_extension ) {
-			int off = ftell(efile);
-			putshort(efile,1);	/* exten subtable format (there's only one) */
-			putshort(efile,otf->lookup_type&0xff);
-			putlong(efile,sub->extra_subtables[i]-len2);
-			sub->extra_subtables[i] = off;
-			len2+=8;
-		    }
-		}
-	    } else {
-		sub->subtable_offset += len;
-		if ( otf->needs_extension ) {
-		    int off = ftell(efile);
-		    putshort(efile,1);	/* exten subtable format (there's only one) */
-		    putshort(efile,otf->lookup_type&0xff);
-		    putlong(efile,sub->subtable_offset-len2);
-		    sub->subtable_offset = off;
-			len2+=8;
-		}
-	    }
-	}
+  len2 = 0;
+  for (otf = all; otf != NULL; otf = otf->next)
+    {
+      if (otf->lookup_index != -1)
+        {
+          for (sub = otf->subtables; sub != NULL; sub = sub->next)
+            {
+              if (sub->subtable_offset == -1)
+                continue;
+              if (sub->extra_subtables != NULL)
+                {
+                  for (i = 0; sub->extra_subtables[i] != -1; ++i)
+                    {
+                      sub->extra_subtables[i] += len;
+                      if (otf->needs_extension)
+                        {
+                          int off = ftell (efile);
+                          putshort (efile, 1);  /* exten subtable format (there's only one) */
+                          putshort (efile, otf->lookup_type & 0xff);
+                          putlong (efile, sub->extra_subtables[i] - len2);
+                          sub->extra_subtables[i] = off;
+                          len2 += 8;
+                        }
+                    }
+                }
+              else
+                {
+                  sub->subtable_offset += len;
+                  if (otf->needs_extension)
+                    {
+                      int off = ftell (efile);
+                      putshort (efile, 1);      /* exten subtable format (there's only one) */
+                      putshort (efile, otf->lookup_type & 0xff);
+                      putlong (efile, sub->subtable_offset - len2);
+                      sub->subtable_offset = off;
+                      len2 += 8;
+                    }
+                }
+            }
+        }
     }
 
-return( efile );
+  return efile;
 }
 
 struct otffeatname *findotffeatname(uint32_t tag,SplineFont *sf) {

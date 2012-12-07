@@ -24,7 +24,6 @@ Optional features:
 
   real (floating pt) ${my_real_type}
   programs           ${i_do_have_programs}
-  native scripting   ${i_do_have_native_scripting}
   python scripting   ${i_do_have_python_scripting}
   freetype debugger  ${i_do_have_freetype_debugger}
   capslock for alt   ${i_do_have_capslock_for_alt}
