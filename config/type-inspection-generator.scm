@@ -35,14 +35,14 @@
 
 (define (write-includes includes)
    (match includes
-      ; Nothing or an empty list.
+      ;; Nothing or an empty list.
       ((or #f ()) '())
 
-      ; A list of includes.
+      ;; A list of includes.
       (((? string? h) . t) (write-includes h)
                            (write-includes t))
 
-      ; A single include.
+      ;; A single include.
       ((? string? inc)
        (cond
           ((or
@@ -56,10 +56,10 @@
 
 (define (write-type-info instructions)
    (match instructions
-      ; Nothing or an empty list.
+      ;; Nothing or an empty list.
       ((or #f ()) '())
 
-      ; A list of instructions.
+      ;; A list of instructions.
       (((and (_ . _) h) . t) (write-type-info h)
                              (write-type-info t))
 
@@ -69,14 +69,17 @@
                "  printf (\"(sizeof \\\"~a\\\" %zu)\\n\", sizeof (~a));\n"
                replacement-name type-name))
 
-      ; Example: (sizeof "SplineChar")
+      ;; Example: (sizeof "SplineChar")
       (('sizeof (? string? type-name))
        (write-type-info (list 'sizeof type-name type-name)))
 
-      ; Example: (field int "struct splinechar" "italic_correction" "SplineChar" "italcorr")
-      ; For structs and unions.
-      (('field (? symbol? field-type) struct-name field-name
-               replacement-struct-name replacement-field-name)
+      ;; Example: (field int "struct splinechar" "italic_correction" "SplineChar" "italcorr")
+      ;; For structs and unions.
+      (('field (? symbol? field-type)
+               (? string? struct-name)
+               (? string? field-name)
+               (? string? replacement-struct-name)
+               (? string? replacement-field-name))
        (format #t "  {\n")
        (format #t "    ~a x;\n" struct-name)
        (format #t "    printf (\"(field ~a \\\"~a\\\" \\\"~a\\\" %zu %zu)\\n\",\n"
@@ -85,18 +88,54 @@
        (format #t "            sizeof (x.~a));\n" field-name)
        (format #t "  }\n"))
 
-      ; Example: (field int "struct splinechar" "italic_correction" "italcorr")
-      (('field (? symbol? field-type) struct-name field-name
-               replacement-field-name)
+      ;; Example: (field int "struct splinechar" "italic_correction" "italcorr")
+      (('field (? symbol? field-type)
+               (? string? struct-name)
+               (? string? field-name)
+               (? string? replacement-field-name))
        (write-type-info (list 'field field-type struct-name field-name
                               struct-name replacement-field-name)))
 
-      ; Example: (field int "SplineChar" "italic_correction")
-      (('field (? symbol? field-type) struct-name field-name)
+      ;; Example: (field int "SplineChar" "italic_correction")
+      (('field (? symbol? field-type)
+               (? string? struct-name)
+               (? string? field-name))
        (write-type-info (list 'field field-type struct-name field-name
                               struct-name field-name)))
 
+      ;; Example: (struct "struct splinechar" "SplineChar" (sizeof) (field "italic_correction"))
+      (((or 'struct 'union)
+        (? string? struct-name)
+        (? string? replacement-struct-name) . t)
+       (for-each (lambda (sub-instruction)
+                   (write-type-info
+                    (insert-struct-names struct-name
+                                         replacement-struct-name
+                                         sub-instruction)))
+                 t))
+
+      ;; Example: (struct "SplineChar" (sizeof) (field "italic_correction"))
+      (((and struct-or-union (or 'struct 'union))
+        (? string? struct-name) . t)
+       (write-type-info
+        (cons* struct-or-union struct-name struct-name t)))
+
       (instr (error "Unrecognized instructions:" instr))))
+
+(define (insert-struct-names struct-name
+                             replacement-struct-name
+                             sub-instruction)
+  (match sub-instruction
+         (('sizeof) (list 'sizeof struct-name replacement-struct-name))
+         (('field (? symbol? field-type)
+                  (? string? field-name)
+                  (? string? replacement-field-name))
+          (list 'field field-type struct-name field-name
+                replacement-struct-name replacement-field-name))
+         (('field (? symbol? field-type)
+                  (? string? field-name))
+          (list 'field field-type struct-name field-name
+                replacement-struct-name field-name)) ))
 
 (let* ((includes (read))
        (instructions (read)))
