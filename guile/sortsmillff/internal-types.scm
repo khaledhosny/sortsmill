@@ -25,12 +25,20 @@
    )
 
 (export
-   %ff:interface-exported? ; Fluid: are API-definitions being exported?
-   ff:interface-exported?  ; Wrapper around fluid: Are API-definitions
-                           ; being exported?
-   with-ff:interface-exported  ; Export enclosed API-definitions.
-   define-ff:interface         ; Follow an API-definition instruction.
-   read-define-ff:interface    ; Read instructions from a port.
+   ;; Fluid for ‘Are API-definitions being exported?’
+   %ff:interface-exported?
+
+   ;; Are API-definitions being exported?
+   ff:interface-exported?
+
+   ;; Export enclosed API-definitions.
+   with-ff:interface-exported
+
+   ;; Follow an API-definition instruction.
+   define-ff:interface
+
+   ;; Read instructions from a port.
+   read-define-ff:interface
    )
 
 ;;-------------------------------------------------------------------------
@@ -214,8 +222,8 @@
          ((_ (sizeof type-name size))
           #`(begin
                (maybe-export
-                  #,(type-sizeof-var x #'type-name)) ; Example:
-                                                     ; sizeof-ff:SplineChar
+                  ;; Example: sizeof-ff:SplineChar
+                  #,(type-sizeof-var x #'type-name))
                (define #,(type-sizeof-var x #'type-name) size)))
 
          ((_ (struct-or-union type-name size))
@@ -223,28 +231,38 @@
           (let ((tag (type-tag x #'type-name)))
              #`(begin
                   (maybe-export
-                     #,(struct?-func x #'type-name) ; Example:
-                                                    ; ff:SplineChar?
-                     #,(check-struct-func x #'type-name) ; Example:
-                                                         ; check-ff:SplineChar
-                     #,(wrap-struct-func x #'type-name) ; Example:
-                                                        ; pointer->ff:SplineChar
-                     #,(unwrap-struct-func x #'type-name) ; Example:
-                                                          ; ff:SplineChar->pointer
-                     #,(unchecked-unwrap-struct-func x #'type-name) ; Example:
-                                                                    ; unchecked-ff:SplineChar->pointer
-                     #,(malloc-struct-func x #'type-name) ; Example:
-                                                          ; malloc-ff:SplineChar
-                     #,(free-struct-func x #'type-name) ; Example:
-                                                        ; free-ff:SplineChar
-                     #,(unchecked-free-struct-func x #'type-name) ; Example:
-                                                                  ; unchecked-free-ff:SplineChar
-                     #,(gc-malloc-struct-func x #'type-name) ; Example:
-                                                             ; gc-malloc-ff:SplineChar
-                     #,(gc-free-struct-func x #'type-name) ; Example:
-                                                           ; gc-free-ff:SplineChar
-                     #,(unchecked-gc-free-struct-func x #'type-name) ; Example:
-                                                                     ; unchecked-gc-free-ff:SplineChar
+                     ;; Example: ff:SplineChar?
+                     #,(struct?-func x #'type-name)
+
+                     ;; Example: check-ff:SplineChar
+                     #,(check-struct-func x #'type-name)
+
+                     ;; Example: pointer->ff:SplineChar
+                     #,(wrap-struct-func x #'type-name)
+
+                     ;; Example: ff:SplineChar->pointer
+                     #,(unwrap-struct-func x #'type-name)
+
+                     ;; Example: unchecked-ff:SplineChar->pointer
+                     #,(unchecked-unwrap-struct-func x #'type-name)
+
+                     ;; Example: malloc-ff:SplineChar
+                     #,(malloc-struct-func x #'type-name)
+
+                     ;; Example: free-ff:SplineChar
+                     #,(free-struct-func x #'type-name)
+
+                     ;; Example: unchecked-free-ff:SplineChar
+                     #,(unchecked-free-struct-func x #'type-name)
+
+                     ;; Example: gc-malloc-ff:SplineChar
+                     #,(gc-malloc-struct-func x #'type-name)
+
+                     ;; Example: gc-free-ff:SplineChar
+                     #,(gc-free-struct-func x #'type-name)
+
+                     ;; Example: unchecked-gc-free-ff:SplineChar
+                     #,(unchecked-gc-free-struct-func x #'type-name)
                      )
 
                   (define #,(struct?-func x #'type-name)
