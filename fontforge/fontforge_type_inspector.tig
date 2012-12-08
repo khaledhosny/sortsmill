@@ -5,7 +5,7 @@
 (
  (struct "SplineChar"
          (sizeof)
-         (field char* "name")
+         (field * "name")
          (field int "unicodeenc" "unicode")
          (field int "orig_pos" "orig_index")
          (field int "width" "width")

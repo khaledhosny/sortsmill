@@ -114,9 +114,16 @@
    (define (type-tag-name type-name)
       (string-append "tag-ff:" type-name))
 
-   (define (build-type-related-symbol constructor syntax-context type-name)
-      (datum->syntax syntax-context
-         (string->symbol (constructor (syntax->datum type-name)))))
+   (define build-type-related-symbol
+      (case-lambda
+         ((constructor syntax-context type-name)
+          (datum->syntax syntax-context
+             (string->symbol (constructor (syntax->datum type-name)))))
+         ((constructor syntax-context struct-name field-name)
+          (datum->syntax syntax-context
+             (string->symbol (constructor
+                                (syntax->datum struct-name)
+                                (syntax->datum field-name)))))))
 
    (define (type-tag syntax-context type-name)
       (build-type-related-symbol
@@ -186,6 +193,26 @@
       (build-type-related-symbol
          (cute string-append "unchecked-gc-free-ff:" <>)
          syntax-context type-name))
+
+   (define (struct-field-ref-func syntax-context struct-name field-name)
+      (build-type-related-symbol
+         (cute string-append "ff:" <> ":" <> "-ref")
+         syntax-context struct-name field-name))
+
+   (define (unchecked-struct-field-ref-func syntax-context struct-name field-name)
+      (build-type-related-symbol
+         (cute string-append "unchecked-ff:" <> ":" <> "-ref")
+         syntax-context struct-name field-name))
+
+   (define (struct-field-set!-func syntax-context struct-name field-name)
+      (build-type-related-symbol
+         (cute string-append "ff:" <> ":" <> "-set!")
+         syntax-context struct-name field-name))
+
+   (define (unchecked-struct-field-set!-func syntax-context struct-name field-name)
+      (build-type-related-symbol
+         (cute string-append "unchecked-ff:" <> ":" <> "-set!")
+         syntax-context struct-name field-name))
    )
 
 (define-syntax with-ff:interface-exported
@@ -354,7 +381,50 @@
                      (lambda (obj)
                         (GC_free (#,(unchecked-unwrap-struct-func x #'type-name) obj))))
 
-                  ))))))
+                  )))
+
+         ((_ (field field-type struct-name field-name offset size))
+          #`(begin
+               (maybe-export
+                  ;; Example: unchecked-ff:SplineChar:name-ref
+                  #,(unchecked-struct-field-ref-func x #'struct-name #'field-name)
+
+                  ;; Example: ff:SplineChar:name-ref
+                  #,(struct-field-ref-func x #'struct-name #'field-name)
+
+                  ;; Example: unchecked-ff:SplineChar:name-set!
+                  #,(unchecked-struct-field-set!-func x #'struct-name #'field-name)
+
+                  ;; Example: ff:SplineChar:name-set!
+                  #,(struct-field-set!-func x #'struct-name #'field-name)
+                  )
+               
+               (define #,(unchecked-struct-field-ref-func x #'struct-name #'field-name)
+                  (lambda (obj)
+                     ((ff:struct-field-ref field-type offset size) obj)))
+
+               (define #,(struct-field-ref-func x #'struct-name #'field-name)
+                  (lambda (obj)
+                     (#,(check-struct-func x #'struct-name)
+                      #,(struct-field-ref-func x #'struct-name #'field-name)
+                      obj)
+                     (#,(unchecked-struct-field-ref-func x #'struct-name #'field-name)
+                      obj)))
+
+               (define #,(unchecked-struct-field-set!-func x #'struct-name #'field-name)
+                  (lambda (obj v)
+                     ((ff:struct-field-set! field-type offset size) obj v)))
+
+               (define #,(struct-field-set!-func x #'struct-name #'field-name)
+                  (lambda (obj v)
+                     (#,(check-struct-func x #'struct-name)
+                      #,(struct-field-set!-func x #'struct-name #'field-name)
+                      obj)
+                     (#,(unchecked-struct-field-set!-func x #'struct-name #'field-name)
+                      obj v)))
+               ))
+
+         )))
 
 (define read-define-ff:interface
    (case-lambda
@@ -364,7 +434,46 @@
            ((eof-object? instruction))
            (eval (list 'define-ff:interface instruction)
               (interaction-environment))))))
-          
+
+(define-syntax ff:struct-field-ref
+   (syntax-rules (int uint bool *)
+      ((_ int offset 1) (lambda (obj) (bytevector-s8-ref (cdr obj) offset)))
+      ((_ int offset 2) (lambda (obj) (bytevector-s16-native-ref (cdr obj) offset)))
+      ((_ int offset 4) (lambda (obj) (bytevector-s32-native-ref (cdr obj) offset)))
+      ((_ int offset 8) (lambda (obj) (bytevector-s64-native-ref (cdr obj) offset)))
+      ((_ uint offset 1) (lambda (obj) (bytevector-u8-ref (cdr obj) offset)))
+      ((_ uint offset 2) (lambda (obj) (bytevector-u16-native-ref (cdr obj) offset)))
+      ((_ uint offset 4) (lambda (obj) (bytevector-u32-native-ref (cdr obj) offset)))
+      ((_ uint offset 8) (lambda (obj) (bytevector-u64-native-ref (cdr obj) offset)))
+      ((_ bool offset 1) (lambda (obj) (not (zero? (bytevector-u8-ref (cdr obj) offset)))))
+      ((_ bool offset 2) (lambda (obj) (not (zero? (bytevector-u16-native-ref (cdr obj) offset)))))
+      ((_ bool offset 4) (lambda (obj) (not (zero? (bytevector-u32-native-ref (cdr obj) offset)))))
+      ((_ bool offset 8) (lambda (obj) (not (zero? (bytevector-u64-native-ref (cdr obj) offset)))))
+      ((_ * offset 1) (lambda (obj) (make-pointer (bytevector-u8-ref (cdr obj) offset))))
+      ((_ * offset 2) (lambda (obj) (make-pointer (bytevector-u16-native-ref (cdr obj) offset))))
+      ((_ * offset 4) (lambda (obj) (make-pointer (bytevector-u32-native-ref (cdr obj) offset))))
+      ((_ * offset 8) (lambda (obj) (make-pointer (bytevector-u64-native-ref (cdr obj) offset))))
+      ))
+
+(define-syntax ff:struct-field-set!
+   (syntax-rules (int uint bool *)
+      ((_ int offset 1) (lambda (obj v) (bytevector-s8-set! (cdr obj) offset v)))
+      ((_ int offset 2) (lambda (obj v) (bytevector-s16-native-set! (cdr obj) offset v)))
+      ((_ int offset 4) (lambda (obj v) (bytevector-s32-native-set! (cdr obj) offset v)))
+      ((_ int offset 8) (lambda (obj v) (bytevector-s64-native-set! (cdr obj) offset v)))
+      ((_ uint offset 1) (lambda (obj v) (bytevector-u8-set! (cdr obj) offset v)))
+      ((_ uint offset 2) (lambda (obj v) (bytevector-u16-native-set! (cdr obj) offset v)))
+      ((_ uint offset 4) (lambda (obj v) (bytevector-u32-native-set! (cdr obj) offset v)))
+      ((_ uint offset 8) (lambda (obj v) (bytevector-u64-native-set! (cdr obj) offset v)))
+      ((_ bool offset 1) (lambda (obj v) (bytevector-u8-set! (cdr obj) offset (if v 1 0))))
+      ((_ bool offset 2) (lambda (obj v) (bytevector-u16-native-set! (cdr obj) offset (if v 1 0))))
+      ((_ bool offset 4) (lambda (obj v) (bytevector-u32-native-set! (cdr obj) offset (if v 1 0))))
+      ((_ bool offset 8) (lambda (obj v) (bytevector-u64-native-set! (cdr obj) offset (if v 1 0))))
+      ((_ * offset 1) (lambda (obj v) (bytevector-u8-set! (cdr obj) offset (pointer-address v))))
+      ((_ * offset 2) (lambda (obj v) (bytevector-u16-native-set! (cdr obj) offset (pointer-address v))))
+      ((_ * offset 4) (lambda (obj v) (bytevector-u32-native-set! (cdr obj) offset (pointer-address v))))
+      ((_ * offset 8) (lambda (obj v) (bytevector-u64-native-set! (cdr obj) offset (pointer-address v))))
+      ))
 
 #!
 
@@ -372,6 +481,11 @@
    (read-define-ff:interface))
 
 (write sizeof-ff:SplineChar)
+(write (ff:SplineChar:unicode-ref (gc-malloc-ff:SplineChar)))
+(define sc (gc-malloc-ff:SplineChar))
+(write (ff:SplineChar:changed-ref sc))
+(ff:SplineChar:changed-set! sc #t)
+(write (ff:SplineChar:changed-ref sc))
 
 !#
 
