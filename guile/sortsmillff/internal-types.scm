@@ -24,6 +24,15 @@
    (srfi srfi-26)                       ; ‘cut’ and ‘cute’.
    )
 
+(export
+   %ff:interface-exported? ; Fluid: are API-definitions being exported?
+   ff:interface-exported?  ; Wrapper around fluid: Are API-definitions
+                           ; being exported?
+   with-ff:interface-exported  ; Export enclosed API-definitions.
+   define-ff:interface         ; Follow an API-definition instruction.
+   read-define-ff:interface    ; Read instructions from a port.
+   )
+
 ;;-------------------------------------------------------------------------
 ;;
 ;; FIXME: Put these somewhere re-usable.
@@ -66,13 +75,6 @@
       (list '*)))
 
 ;;-------------------------------------------------------------------------
-
-(export
-   %ff:interface-exported?
-   ff:interface-exported?
-   with-ff:interface-exported
-   define-ff:interface
-   )
 
 (eval-when (compile load eval)
    (define %ff:interface-exported? (make-fluid #f))
@@ -209,12 +211,11 @@
    (lambda (x)
       (syntax-case x (struct union sizeof field)
 
-         ;; (expand-internal-type (sizeof "SplineChar" 123))
-         ;;    -> (define sizeof-ff::SplineChar 123)
          ((_ (sizeof type-name size))
           #`(begin
                (maybe-export
-                  #,(type-sizeof-var x #'type-name))
+                  #,(type-sizeof-var x #'type-name)) ; Example:
+                                                     ; sizeof-ff:SplineChar
                (define #,(type-sizeof-var x #'type-name) size)))
 
          ((_ (struct-or-union type-name size))
@@ -222,17 +223,28 @@
           (let ((tag (type-tag x #'type-name)))
              #`(begin
                   (maybe-export
-                     #,(struct?-func x #'type-name)
-                     #,(check-struct-func x #'type-name)
-                     #,(wrap-struct-func x #'type-name)
-                     #,(unwrap-struct-func x #'type-name)
-                     #,(unchecked-unwrap-struct-func x #'type-name)
-                     #,(malloc-struct-func x #'type-name)
-                     #,(free-struct-func x #'type-name)
-                     #,(unchecked-free-struct-func x #'type-name)
-                     #,(gc-malloc-struct-func x #'type-name)
-                     #,(gc-free-struct-func x #'type-name)
-                     #,(unchecked-gc-free-struct-func x #'type-name)
+                     #,(struct?-func x #'type-name) ; Example:
+                                                    ; ff:SplineChar?
+                     #,(check-struct-func x #'type-name) ; Example:
+                                                         ; check-ff:SplineChar
+                     #,(wrap-struct-func x #'type-name) ; Example:
+                                                        ; pointer->ff:SplineChar
+                     #,(unwrap-struct-func x #'type-name) ; Example:
+                                                          ; ff:SplineChar->pointer
+                     #,(unchecked-unwrap-struct-func x #'type-name) ; Example:
+                                                                    ; unchecked-ff:SplineChar->pointer
+                     #,(malloc-struct-func x #'type-name) ; Example:
+                                                          ; malloc-ff:SplineChar
+                     #,(free-struct-func x #'type-name) ; Example:
+                                                        ; free-ff:SplineChar
+                     #,(unchecked-free-struct-func x #'type-name) ; Example:
+                                                                  ; unchecked-free-ff:SplineChar
+                     #,(gc-malloc-struct-func x #'type-name) ; Example:
+                                                             ; gc-malloc-ff:SplineChar
+                     #,(gc-free-struct-func x #'type-name) ; Example:
+                                                           ; gc-free-ff:SplineChar
+                     #,(unchecked-gc-free-struct-func x #'type-name) ; Example:
+                                                                     ; unchecked-gc-free-ff:SplineChar
                      )
 
                   (define #,(struct?-func x #'type-name)
@@ -326,6 +338,25 @@
 
                   ))))))
 
+(define read-define-ff:interface
+   (case-lambda
+      (() (read-define-ff:interface (current-input-port)))
+      ((port)
+       (do ((instruction (read port) (read port)))
+           ((eof-object? instruction))
+           (eval (list 'define-ff:interface instruction)
+              (interaction-environment))))))
+          
+
+#!
+
+(with-ff:interface-exported
+   (read-define-ff:interface))
+
+(write sizeof-ff:SplineChar)
+
+!#
+
 #!
 (with-ff:interface-exported
    (define-ff:interface (sizeof "Foo" 32))
@@ -345,4 +376,3 @@
 (write (gc-free-ff:Foo (gc-malloc-ff:Foo))) (newline)
 (write (unchecked-gc-free-ff:Foo (gc-malloc-ff:Foo))) (newline)
 !#
-
