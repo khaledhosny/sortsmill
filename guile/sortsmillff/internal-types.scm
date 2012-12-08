@@ -20,8 +20,52 @@
 (use-modules
    (sortsmillff pkg-info)
    (rnrs bytevectors)
+   (system foreign)
    (srfi srfi-26)                       ; ‘cut’ and ‘cute’.
    )
+
+;;-------------------------------------------------------------------------
+;;
+;; FIXME: Put these somewhere re-usable.
+
+(define scm_calloc
+   (pointer->procedure '*
+      (dynamic-func "scm_calloc" (dynamic-link))
+      (list size_t)))
+
+(define free
+   (pointer->procedure void
+      (dynamic-func "free" (dynamic-link))
+      (list '*)))
+
+(define _GC_malloc_error
+   (pointer->procedure void
+      (dynamic-func "scm_memory_error" (dynamic-link))
+      (list '*)))
+
+(define _GC_malloc_error_msg
+   (string->pointer "GC_malloc"))
+
+(define (GC-malloc-error)
+   (_GC_malloc_error _GC_malloc_error_msg))
+
+(define _GC_malloc
+   (pointer->procedure '*
+      (dynamic-func "GC_malloc" (dynamic-link))
+      (list size_t)))
+
+(define (GC_malloc size)
+   (let ((ptr (_GC_malloc size)))
+      (when (null-pointer? ptr)
+         (GC-malloc-error))
+      ptr))
+
+(define GC_free
+   (pointer->procedure void
+      (dynamic-func "GC_free" (dynamic-link))
+      (list '*)))
+
+;;-------------------------------------------------------------------------
 
 (export
    %ff:interface-exported?
@@ -102,6 +146,36 @@
       (build-type-related-symbol
          (cute string-append "unchecked-ff:" <> "->pointer")
          syntax-context type-name))
+
+   (define (malloc-struct-func syntax-context type-name)
+      (build-type-related-symbol
+         (cute string-append "malloc-ff:" <>)
+         syntax-context type-name))
+
+   (define (free-struct-func syntax-context type-name)
+      (build-type-related-symbol
+         (cute string-append "free-ff:" <>)
+         syntax-context type-name))
+
+   (define (unchecked-free-struct-func syntax-context type-name)
+      (build-type-related-symbol
+         (cute string-append "unchecked-free-ff:" <>)
+         syntax-context type-name))
+
+   (define (gc-malloc-struct-func syntax-context type-name)
+      (build-type-related-symbol
+         (cute string-append "gc-malloc-ff:" <>)
+         syntax-context type-name))
+
+   (define (gc-free-struct-func syntax-context type-name)
+      (build-type-related-symbol
+         (cute string-append "gc-free-ff:" <>)
+         syntax-context type-name))
+
+   (define (unchecked-gc-free-struct-func syntax-context type-name)
+      (build-type-related-symbol
+         (cute string-append "unchecked-gc-free-ff:" <>)
+         syntax-context type-name))
    )
 
 (define-syntax with-ff:interface-exported
@@ -147,6 +221,20 @@
           (struct-or-union-identifier? #'struct-or-union)
           (let ((tag (type-tag x #'type-name)))
              #`(begin
+                  (maybe-export
+                     #,(struct?-func x #'type-name)
+                     #,(check-struct-func x #'type-name)
+                     #,(wrap-struct-func x #'type-name)
+                     #,(unwrap-struct-func x #'type-name)
+                     #,(unchecked-unwrap-struct-func x #'type-name)
+                     #,(malloc-struct-func x #'type-name)
+                     #,(free-struct-func x #'type-name)
+                     #,(unchecked-free-struct-func x #'type-name)
+                     #,(gc-malloc-struct-func x #'type-name)
+                     #,(gc-free-struct-func x #'type-name)
+                     #,(unchecked-gc-free-struct-func x #'type-name)
+                     )
+
                   (define #,(struct?-func x #'type-name)
                      (lambda (obj)
                         (cond
@@ -204,18 +292,57 @@
                         (#,(check-struct-func x #'type-name)
                          '#,(unwrap-struct-func x #'type-name)
                          obj)
-;                        (check-struct-type
-;                           '#,(unwrap-struct-func x #'type-name)
-;                           type-name size obj)
-                        (write "foo")))
+                        (bytevector->pointer (cdr obj))))
 
                   (define #,(unchecked-unwrap-struct-func x #'type-name)
                      (lambda (obj)
-                        (write "foo")))
-         ))))))
+                        (bytevector->pointer (cdr obj))))
 
-;(with-ff:interface-exported
-;   (define-ff:interface (sizeof "foo" 32))
-;   (define-ff:interface (struct "foo" 32))
-;   (define-ff:interface (union "goo" 32))
-;   )
+                  (define #,(malloc-struct-func x #'type-name)
+                     (lambda ()
+                        (cons '#,tag
+                           (pointer->bytevector (scm_calloc size) size))))
+
+                  (define #,(free-struct-func x #'type-name)
+                     (lambda (obj)
+                        (free (#,(unwrap-struct-func x #'type-name) obj))))
+
+                  (define #,(unchecked-free-struct-func x #'type-name)
+                     (lambda (obj)
+                        (free (#,(unchecked-unwrap-struct-func x #'type-name) obj))))
+
+                  (define #,(gc-malloc-struct-func x #'type-name)
+                     (lambda ()
+                        (cons '#,tag
+                           (pointer->bytevector (GC_malloc size) size))))
+
+                  (define #,(gc-free-struct-func x #'type-name)
+                     (lambda (obj)
+                        (GC_free (#,(unwrap-struct-func x #'type-name) obj))))
+
+                  (define #,(unchecked-gc-free-struct-func x #'type-name)
+                     (lambda (obj)
+                        (GC_free (#,(unchecked-unwrap-struct-func x #'type-name) obj))))
+
+                  ))))))
+
+#!
+(with-ff:interface-exported
+   (define-ff:interface (sizeof "Foo" 32))
+   (define-ff:interface (struct "Foo" 32))
+   (define-ff:interface (union "Goo" 32))
+   )
+
+(define s (cons 'tag-ff:Foo (make-bytevector 32)))
+(write s) (newline)
+(write (ff:Foo? s)) (newline)
+(check-ff:Foo #f s)
+(write (ff:Foo? (pointer->ff:Foo (unchecked-ff:Foo->pointer s)))) (newline)
+(write (ff:Foo? (malloc-ff:Foo))) (newline)
+(write (free-ff:Foo (malloc-ff:Foo))) (newline)
+(write (unchecked-free-ff:Foo (malloc-ff:Foo))) (newline)
+(write (ff:Foo? (gc-malloc-ff:Foo))) (newline)
+(write (gc-free-ff:Foo (gc-malloc-ff:Foo))) (newline)
+(write (unchecked-gc-free-ff:Foo (gc-malloc-ff:Foo))) (newline)
+!#
+
