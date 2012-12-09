@@ -81,7 +81,9 @@ call_func (void *vdata, void *p)
 {
   menu_item_data *data = (menu_item_data *) vdata;
   SCM view = wrap_view_pointer (data->flag, p);
-  (void) scm_call_1 (data->action, view);
+  SCM wrapper =
+    scm_c_private_ref ("sortsmillff usermenu", "menu-entry-error-handling");
+  (void) scm_call_2 (wrapper, data->action, view);
 }
 
 static int
@@ -89,7 +91,9 @@ call_check (void *vdata, void *p)
 {
   menu_item_data *data = (menu_item_data *) vdata;
   SCM view = wrap_view_pointer (data->flag, p);
-  SCM retval = scm_call_1 (data->enabled, view);
+  SCM wrapper =
+    scm_c_private_ref ("sortsmillff usermenu", "menu-entry-error-handling");
+  SCM retval = scm_call_2 (wrapper, data->enabled, view);
   return scm_is_true (retval);
 }
 

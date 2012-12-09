@@ -17,9 +17,22 @@
 
 (define-module (sortsmillff usermenu))
 
-(use-modules (sortsmillff views))
+(use-modules
+   (sortsmillff views)
+   (system repl error-handling))
 
 (export register-fontforge-menu-item)
+
+;; FIXME: Make the error handling more useful, like the Python error
+;; handling.
+(define menu-entry-error-handling
+   (lambda (proc view)
+      (let ((retval #f))
+         (call-with-error-handling
+            (lambda () (set! retval (proc view)))
+            #:on-error 'pass
+            #:post-error 'report)
+         retval)))
 
 (load-extension "libguile-sortsmillff_fontforgeexe"
    "init_guile_sortsmillff_usermenu")

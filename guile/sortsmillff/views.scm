@@ -70,4 +70,3 @@
 
 (define (ff:SplineChar->glyph-view sc)
    (wrap-glyph-view (ff:SplineChar->pointer sc)))
-
