@@ -73,18 +73,19 @@
        )
       (('field (? symbol? field-type) (? string? struct-name)
           (? string? field-name) (? integer? offset) (? integer? size))
-       (format #t "  @property\n")
-       (format #t "  def _~a (self):\n" field-name)
+       (format #t "  def __get_~a (self):\n" field-name)
        (format #t "    return ~a (<void *> &(<char *> self.pointer)[~d])\n"
           (get-value-function field-type size)
           offset)
        (format #t "\n")
-       (format #t "  @_~a.setter\n" field-name)
-       (format #t "  def _~a (self, ~a v):\n"
+       (format #t "  def __set_~a (self, ~a v):\n"
           field-name (value-c-type field-type size))
        (format #t "    ~a (<void *> &(<char *> self.pointer)[~d], v)\n"
           (set-value-function field-type size)
           offset)
+       (format #t "\n")
+       (format #t "  _~a = property (__get_~a, __set_~a)\n"
+          field-name field-name field-name)
        (format #t "\n")
        (format #t "  def _~a_ptr (self):\n" field-name)
        (format #t "    return <intptr_t> <void *> &(<char *> self.pointer)[~d]\n"
