@@ -215,8 +215,6 @@ IF HAVE_GUI:
     return flags
 
   cdef char **__submenu_names (object names):
-    if isinstance (names, str):
-      names = [names]
     cdef size_t length = len (names)
     cdef char **result = \
         <char **> xgc.x_gc_malloc ((length + 1) * sizeof (char *))
@@ -310,10 +308,12 @@ IF HAVE_GUI:
                         data,
                         which_window not None,
                         shortcut_string,
-                        submenu_names not None):
+                        *submenu_names):
     if isinstance (shortcut_string, str):
       warnings.warn ('registerMenuItem with "None" as shortcut_string is deprecated; use the None object instead.')
       shortcut_str = None
+    if submenu_names is None or len (submenu_names) == 0:
+      raise ValueError ('expected a menu entry string')
     cdef int flags
     if hasUserInterface ():
       flags = __menu_flags (which_window)
@@ -330,7 +330,7 @@ IF not HAVE_GUI:
                         data,
                         which_window not None,
                         shortcut_string,
-                        submenu_names not None):
+                        *submenu_names):
     pass
 
 #--------------------------------------------------------------------------
