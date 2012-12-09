@@ -15,7 +15,7 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-(define-module (sortsmillff internal-types))
+(define-module (sortsmillff internal-types-syntax))
 
 (use-modules
    (sortsmillff pkg-info)
@@ -451,14 +451,7 @@
 
          )))
 
-(define read-define-ff:interface
-   (case-lambda
-      (() (read-define-ff:interface (current-input-port)))
-      ((port)
-       (do ((instruction (read port) (read port)))
-           ((eof-object? instruction))
-           (eval (list 'define-ff:interface instruction)
-              (interaction-environment))))))
+;;-------------------------------------------------------------------------
 
 (define-syntax ff:struct-field-ref
    (syntax-rules (int uint bool *)
@@ -503,6 +496,19 @@
 (define-syntax ff:struct-field->pointer
    (syntax-rules ()
       ((_ offset) (lambda (obj) (bytevector->pointer (cdr obj) offset)))))
+
+;;-------------------------------------------------------------------------
+
+(define read-define-ff:interface
+   (case-lambda
+      (() (read-define-ff:interface (current-input-port)))
+      ((port)
+       (do ((instruction (read port) (read port)))
+           ((eof-object? instruction))
+           (eval (list 'define-ff:interface instruction)
+              (interaction-environment))))))
+
+;;-------------------------------------------------------------------------
 
 #!
 

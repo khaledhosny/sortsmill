@@ -146,9 +146,10 @@ scm_register_fontforge_menu_item (SCM window, SCM menu_path, SCM action,
 VISIBLE void
 init_guile_sortsmillff_usermenu (void)
 {
-  font_view_wrapper = scm_c_public_ref ("sortsmillff view", "wrap-font-view");
+  font_view_wrapper =
+    scm_c_public_ref ("sortsmillff views", "wrap-font-view");
   glyph_view_wrapper =
-    scm_c_public_ref ("sortsmillff view", "wrap-glyph-view");
+    scm_c_public_ref ("sortsmillff views", "wrap-glyph-view");
   scm_c_define_gsubr ("internal:register-fontforge-menu-item", 5, 0, 0,
                       scm_register_fontforge_menu_item);
 }

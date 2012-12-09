@@ -37,9 +37,8 @@ MOSTLYCLEANFILES = $(NODIST_SCM_FILES) $(GO_FILES)
 DIST_SCM_FILES = sortsmillff/gsl.scm sortsmillff/iconv.scm	\
 	sortsmillff/linalg.scm sortsmillff/precompute.scm		\
 	sortsmillff/polyspline.scm sortsmillff/brentroot.scm	\
-	sortsmillff/sfd-to-sxml.scm sortsmillff/view.scm		\
-	sortsmillff/internal-types.scm
-#	sortsmillff/internal-structures.scm
+	sortsmillff/sfd-to-sxml.scm sortsmillff/views.scm		\
+	sortsmillff/internal-types-syntax.scm
 if HAVE_GUI
 DIST_SCM_FILES += sortsmillff/usermenu.scm
 endif HAVE_GUI
@@ -49,14 +48,15 @@ DIST_SCM_IN_FILES = sortsmillff/pkg-info.scm.in					\
 
 NODIST_SCM_FILES = sortsmillff/pkg-info.scm				\
 	sortsmillff/math-constants.scm sortsmillff/i18n.scm
+	sortsmillff/internal-types.scm
 
-GO_FILES = sortsmillff/pkg-info.go sortsmillff/gsl.go	\
-	sortsmillff/math-constants.go sortsmillff/i18n.go	\
-	sortsmillff/iconv.go sortsmillff/linalg.go			\
-	sortsmillff/precompute.go sortsmillff/polyspline.go	\
-	sortsmillff/brentroot.go sortsmillff/sfd-to-sxml.go	\
-	sortsmillff/view.go sortsmillff/internal-types.go
-# sortsmillff/internal-structures.go
+GO_FILES = sortsmillff/pkg-info.go sortsmillff/gsl.go			\
+	sortsmillff/math-constants.go sortsmillff/i18n.go			\
+	sortsmillff/iconv.go sortsmillff/linalg.go					\
+	sortsmillff/precompute.go sortsmillff/polyspline.go			\
+	sortsmillff/brentroot.go sortsmillff/sfd-to-sxml.go			\
+	sortsmillff/views.go sortsmillff/internal-types-syntax.go	\
+	sortsmillff/internal-types.go
 if HAVE_GUI
 GO_FILES += sortsmillff/usermenu.go
 endif HAVE_GUI
@@ -65,11 +65,19 @@ endif HAVE_GUI
 # elsewhere in this Makefile.am.
 noinst_DATA = $(GO_FILES)
 
+sortsmillff/internal-types.scm: generate-internal-types.scm	\
+		$(top_builddir)/fontforge/fontforge_type_inspector
+	$(AM_V_GEN)
+	$(AM_V_at)$(GUILE_INTERPRET) generate-internal-types.scm > $@-tmp
+	$(AM_V_at)mv $@-tmp $@
+
 sortsmillff/brentroot.go: sortsmillff/math-constants.go
 sortsmillff/i18n.go: libguile-sortsmillff_iconv.la
+sortsmillff/internal-types.go: sortsmillff/internal-types-syntax.go
 sortsmillff/gsl.go: libguile-sortsmillff_gsl.la
 sortsmillff/precompute.go: sortsmillff/linalg.go
 sortsmillff/sfd-to-sxml.go: sortsmillff/gsl.go sortsmillff/i18n.go
+sortsmillff/views.go: sortsmillff/internal-types.go
 
 #--------------------------------------------------------------------------
 
@@ -111,17 +119,17 @@ libguile_sortsmillff_aux_la_LIBADD =				\
 	$(top_builddir)/auxiliary/libsortsmillff_aux.la	\
 	$(top_builddir)/lib/libgnu.la
 
-lib_LTLIBRARIES += libguile-sortsmillff_fontforge.la
-libguile_sortsmillff_fontforge_la_SOURCES =		\
-	guile_internal_structures.c
-libguile_sortsmillff_fontforge_la_CFLAGS = $(AM_CFLAGS)			\
-	'-I$(top_builddir)/fontforge' '-I$(top_srcdir)/fontforge'
-libguile_sortsmillff_fontforge_la_LIBADD =					\
-	$(top_builddir)/fontforge/libsortsmillff_fontforge.la	\
-	$(top_builddir)/gdraw/libsortsmillff_gdraw.la			\
-	$(top_builddir)/gutils/libsortsmillff_gutils.la			\
-	$(top_builddir)/auxiliary/libsortsmillff_aux.la			\
-	$(top_builddir)/lib/libgnu.la
+#lib_LTLIBRARIES += libguile-sortsmillff_fontforge.la
+#libguile_sortsmillff_fontforge_la_SOURCES =		\
+#	guile_internal_structures.c
+#libguile_sortsmillff_fontforge_la_CFLAGS = $(AM_CFLAGS)			\
+#	'-I$(top_builddir)/fontforge' '-I$(top_srcdir)/fontforge'
+#libguile_sortsmillff_fontforge_la_LIBADD =					\
+#	$(top_builddir)/fontforge/libsortsmillff_fontforge.la	\
+#	$(top_builddir)/gdraw/libsortsmillff_gdraw.la			\
+#	$(top_builddir)/gutils/libsortsmillff_gutils.la			\
+#	$(top_builddir)/auxiliary/libsortsmillff_aux.la			\
+#	$(top_builddir)/lib/libgnu.la
 
 if HAVE_GUI
 lib_LTLIBRARIES += libguile-sortsmillff_fontforgeexe.la

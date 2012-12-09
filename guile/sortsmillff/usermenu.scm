@@ -1,4 +1,4 @@
-;; -*- coding: utf-8 -*-
+;; -*- mode: bee; coding: utf-8 -*-
 
 ;; Copyright (C) 2012 Barry Schwartz
 ;; 
@@ -15,18 +15,19 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
+(define-module (sortsmillff usermenu))
 
-(define-module (sortsmillff usermenu)
-  #:use-module (sortsmillff view)
-  #:export (register-fontforge-menu-item))
+(use-modules (sortsmillff views))
+
+(export register-fontforge-menu-item)
 
 (load-extension "libguile-sortsmillff_fontforgeexe"
-                "init_guile_sortsmillff_usermenu")
+   "init_guile_sortsmillff_usermenu")
   
-(define* (register-fontforge-menu-item #:key
-                                       window menu-path action
-                                       (enabled (const #t))
-                                       (shortcut #f))
-  (internal:register-fontforge-menu-item window menu-path
-                                         action enabled
-                                         shortcut))
+(define* (register-fontforge-menu-item
+            #:key window menu-path action
+            (enabled (const #t))
+            (shortcut #f))
+   (internal:register-fontforge-menu-item window menu-path
+      action enabled
+      shortcut))

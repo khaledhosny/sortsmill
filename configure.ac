@@ -365,6 +365,8 @@ AC_CONFIG_FILES([python/psMat.py])
 AC_CONFIG_FILES([python/sortsmillff/__init__.py])
 AC_CONFIG_FILES([python/sortsmillff/fontforge_compat.py])
 AC_CONFIG_FILES([python/sortsmillff/legacy/__init__.py])
+AC_CONFIG_FILES([guile/generate-internal-types.scm],
+                [chmod +x guile/generate-internal-types.scm])
 AC_CONFIG_COMMANDS([guile/sortsmillff],[AS_MKDIR_P([guile/sortsmillff])])
 FONTFORGE_CONFIG_TESTSUITE
 FONTFORGE_CREATE_SUMMARY
