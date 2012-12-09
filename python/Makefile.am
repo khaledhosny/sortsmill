@@ -27,6 +27,7 @@
 
 include $(top_srcdir)/mk/flags.am
 include $(top_srcdir)/mk/cython.mk
+include $(top_srcdir)/mk/guile.mk
 
 #--------------------------------------------------------------------------
 
@@ -85,6 +86,22 @@ sortsmillff_psMat_la_SOURCES = sortsmillff/psMat.c
 sortsmillff_psMat_la_LDFLAGS = $(GSL_CFLAGS) $(GSL_LIBS) $(AM_LDFLAGS)
 sortsmillff_psMat_la_LIBADD = $(BASELIBADD)
 
+nobase_pyexec_LTLIBRARIES += sortsmillff/internal_types.la
+sortsmillff_internal_types_la_SOURCES = sortsmillff/internal_types.c
+sortsmillff_internal_types_la_LIBADD = $(FFLIBADD)
+
+nobase_pyexec_LTLIBRARIES += sortsmillff/views.la
+sortsmillff_views_la_SOURCES = sortsmillff/views.c
+sortsmillff_views_la_LIBADD = $(FFLIBADD)
+
+if HAVE_GUI
+nobase_pyexec_LTLIBRARIES += sortsmillff/usermenu.la
+sortsmillff_usermenu_la_SOURCES = sortsmillff/usermenu.c
+sortsmillff_usermenu_la_CFLAGS = $(AM_CFLAGS)					\
+	'-I$(top_builddir)/fontforge' '-I$(top_srcdir)/fontforge'
+sortsmillff_usermenu_la_LIBADD = $(FFLIBADD)
+endif HAVE_GUI
+
 nobase_pyexec_LTLIBRARIES += sortsmillff/pkg_info.la
 sortsmillff_pkg_info_la_SOURCES = sortsmillff/pkg_info.c
 sortsmillff_pkg_info_la_LIBADD = $(AUXLIBADD)
@@ -105,10 +122,15 @@ nobase_pyexec_LTLIBRARIES += sortsmillff/brentroot.la
 sortsmillff_brentroot_la_SOURCES = sortsmillff/brentroot.c
 sortsmillff_brentroot_la_LIBADD = $(AUXLIBADD)
 
-PYX_FILES = sortsmillff/ffcompat.pyx sortsmillff/psMat.pyx	\
-	sortsmillff/pkg_info.pyx sortsmillff/guile.pyx			\
-	sortsmillff/linalg.pyx sortsmillff/polyspline.pyx		\
-	sortsmillff/brentroot.pyx
+PYX_FILES = sortsmillff/views.pyx sortsmillff/ffcompat.pyx	\
+	sortsmillff/psMat.pyx sortsmillff/pkg_info.pyx			\
+	sortsmillff/guile.pyx sortsmillff/linalg.pyx			\
+	sortsmillff/polyspline.pyx sortsmillff/brentroot.pyx
+if HAVE_GUI
+PYX_FILES += sortsmillff/usermenu.pyx
+endif HAVE_GUI
+
+NODIST_PYX_FILES = sortsmillff/internal_types.pyx
 
 cythonbuildinc = $(top_builddir)/inc/sortsmillff/cython
 cythonsrcinc = $(top_srcdir)/inc/sortsmillff/cython
@@ -124,9 +146,16 @@ PXI_FILES = $(cythonsrcinc)/gmpy.pxi
 
 PXI_IN_FILES = $(cythonbuildinc)/config.pxi
 
+sortsmillff/internal_types.pyx: generate-internal_types.pyx.scm	\
+		$(top_builddir)/fontforge/fontforge_type_inspector
+	$(AM_V_GEN)
+	$(AM_V_at)$(GUILE_INTERPRET) generate-internal_types.pyx.scm > $@-tmp
+	$(AM_V_at)mv $@-tmp $@
+
 # Just make any change in the pxd or pxi files result in a complete
 # rebuild from Cython sources. FIXME: This is inefficient.
 $(PYX_FILES:.pyx=.c): $(PXD_FILES) $(PXI_FILES) $(PXI_IN_FILES)
+$(NODIST_PYX_FILES:.pyx=.c): $(PXD_FILES) $(PXI_FILES) $(PXI_IN_FILES)
 
 site_init.py: site_init.py.in
 	$(AM_V_GEN)
@@ -137,10 +166,11 @@ site_init.py: site_init.py.in
 
 EXTRA_DIST = $(PYX_FILES) $(PXD_FILES) $(PXI_FILES) site_init.py.in
 
-MOSTLYCLEANFILES = site_init.py sortsmillff/ffcompat.c				\
-	sortsmillff/psMat.c sortsmillff/pkg_info.c sortsmillff/guile.c	\
-	sortsmillff/linalg.c sortsmillff/polyspline.c					\
-	sortsmillff/brentroot.c
+MOSTLYCLEANFILES = site_init.py sortsmillff/internal_types.pyx			\
+	sortsmillff/internal_types.c sortsmillff/views.c					\
+	sortsmillff/usermenu.c sortsmillff/ffcompat.c sortsmillff/psMat.c	\
+	sortsmillff/pkg_info.c sortsmillff/guile.c sortsmillff/linalg.c		\
+	sortsmillff/polyspline.c sortsmillff/brentroot.c
 
 AM_LDFLAGS = -prefer-pic -module -shared -avoid-version
 AM_CFLAGS += $(CYTHON_EXTRA_CFLAGS)
@@ -157,10 +187,16 @@ sortsmillff/legacy/%.so: sortsmillff/legacy/%.la
 	cp sortsmillff/legacy/$(LT_OBJDIR)$*.so $@
 
 # These shared object files are needed by the test suite.
-all-local: sortsmillff/psMat.so sortsmillff/ffcompat.so			\
-	sortsmillff/pkg_info.so sortsmillff/guile.so				\
-	sortsmillff/linalg.so sortsmillff/polyspline.so				\
+all-local: all-local-HAVE_GUI sortsmillff/psMat.so						\
+	sortsmillff/ffcompat.so sortsmillff/internal_types.so				\
+	sortsmillff/views.so sortsmillff/pkg_info.so sortsmillff/guile.so	\
+	sortsmillff/linalg.so sortsmillff/polyspline.so						\
 	sortsmillff/brentroot.so sortsmillff/legacy/fontforge.so
+if HAVE_GUI
+all-local-HAVE_GUI: sortsmillff/usermenu.so
+else !HAVE_GUI
+all-local-HAVE_GUI:
+endif !HAVE_GUI
 
 check-local: all-local
 
