@@ -44,7 +44,7 @@
    (lambda (fv port)
       (let* ((fvb (font-view->ff:FontViewBase fv))
              (sf (pointer->ff:SplineFont (ff:FontViewBase:sf-ref fvb))))
-         (format port "#<font-view ~s ~x>"
+         (format port "#<font-view ~s 0x~x>"
             (pointer->string (ff:SplineFont:font-name-ref sf))
             (pointer-address (unwrap-font-view fv))))))
 
@@ -54,7 +54,7 @@
    (lambda (gv port)
       (let* ((sc (glyph-view->ff:SplineChar gv))
              (sf (pointer->ff:SplineFont (ff:SplineChar:parent-ref sc))))
-         (format port "#<glyph-view ~s:~s ~x>"
+         (format port "#<glyph-view ~s:~s 0x~x>"
             (pointer->string (ff:SplineFont:font-name-ref sf))
             (pointer->string (ff:SplineChar:name-ref sc))
             (pointer-address (unwrap-glyph-view gv))))))

@@ -17,6 +17,8 @@
 
 cdef extern from 'config.h': pass
 
+import sortsmillff.views as views
+
 # FIXME:
 # FIXME: Get rid of this dependency.
 # FIXME:
@@ -29,6 +31,7 @@ cimport sortsmillff.cython.usermenu as usermenu
 cimport sortsmillff.cython.xgc as xgc
 from cpython.ref cimport PyObject, Py_XINCREF
 from cpython.object cimport PyObject_CallObject, PyObject_IsTrue
+from libc.stdint cimport intptr_t
 
 cdef extern from "baseviews.h":
   ctypedef struct FontViewBase:
@@ -37,16 +40,6 @@ cdef extern from "baseviews.h":
 cdef extern from "splinefont.h":
   ctypedef struct SplineChar:
     pass
-
-# FIXME:
-# FIXME: Get rid of this dependency, RIGHT AWAY.
-# FIXME: Finish views.pyx and use that instead.
-# FIXME:
-cdef extern from "ffpython.h":
-  PyObject *PyFV_From_FV (FontViewBase *fv)
-  PyObject *PyFV_From_FV_I (FontViewBase *fv)
-  PyObject *PySC_From_SC (SplineChar *sc)
-  PyObject *PySC_From_SC_I (SplineChar *sc)
 
 cdef extern from "fontforge.h":
   bool get_no_windowing_ui ()
@@ -64,15 +57,15 @@ ctypedef struct __menu_item_data:
   PyObject *enable_func
 
 def __menu_flag (window):
-  message = "expected 'Glyph' or 'Font'"
+  message = "expected 'glyph' or 'font'"
   cdef int flag = 0
   glyph = ["glyph", "char"]
   font = ["font"]
   if isinstance (window, str):
     if window.lower () in glyph:
-      flags = usermenu.menu_cv
+      flag = usermenu.menu_cv
     elif window.lower () in font:
-      flags = usermenu.menu_fv
+      flag = usermenu.menu_fv
     else:
       raise ValueError (message)
   else:
@@ -96,21 +89,13 @@ cdef char *__shortcut_str (object shortcut_string):
     result = xgc.x_gc_strdup (shortcut_string)
   return result
 
-cdef PyObject *__ff_obj_to_py (int flag, void *ff_obj):
+cdef object __ff_obj_to_py (int flag, void *ff_obj):
   assert (flag == usermenu.menu_cv or flag == usermenu.menu_fv)
-  cdef PyObject *result = NULL
+  result = None
   if flag == usermenu.menu_cv:
-    # FIXME:
-    # FIXME: Get rid of this dependency, RIGHT AWAY.
-    # FIXME: Finish views.pyx and use that instead.
-    # FIXME:
-    result = PySC_From_SC_I (<SplineChar *> ff_obj)
+    result = views.glyph_view (<intptr_t> ff_obj)
   elif flag == usermenu.menu_fv:
-    # FIXME:
-    # FIXME: Get rid of this dependency, RIGHT AWAY.
-    # FIXME: Finish views.pyx and use that instead.
-    # FIXME:
-    result = PyFV_From_FV_I (<FontViewBase *> ff_obj)
+    result = views.font_view (<intptr_t> ff_obj)
   return result
 
 def __call_python (func not None, ff_obj not None,
@@ -128,17 +113,16 @@ def __call_python (func not None, ff_obj not None,
 
 cdef void __menu_info_func (void *data, void *ff_obj):
   cdef __menu_item_data *py_data = <__menu_item_data *> data
-  cdef PyObject *obj = __ff_obj_to_py (py_data.flag, ff_obj)
-  args = (<object> py_data.menu_func, <object> obj, False)
+  obj = __ff_obj_to_py (py_data.flag, ff_obj)
+  args = (<object> py_data.menu_func, obj, False)
   PyObject_CallObject (__call_python, args)
 
 cdef int __menu_info_check (void *data, void *ff_obj):
   cdef bint enabled = True
   cdef __menu_item_data *py_data = <__menu_item_data *> data
-  cdef PyObject *obj
   if py_data.enable_func != <PyObject *> None:
     obj = __ff_obj_to_py (py_data.flag, ff_obj)
-    args = (<object> py_data.enable_func, <object> obj, True)
+    args = (<object> py_data.enable_func, obj, True)
     retval = PyObject_CallObject (__call_python, args)
     enabled = PyObject_IsTrue (retval)
   return enabled
@@ -176,8 +160,8 @@ cdef void __registerMenuItem (int flag,
 def register_fontforge_menu_item (window not None,
                                   menu_path not None,
                                   action not None,
-                                  enabled,
-                                  shortcut):
+                                  enabled = lambda _: True,
+                                  shortcut = None):
   cdef int flag
   if not get_no_windowing_ui ():
     flag = __menu_flag (window)

@@ -92,6 +92,8 @@ sortsmillff_internal_types_la_LIBADD = $(FFLIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmillff/views.la
 sortsmillff_views_la_SOURCES = sortsmillff/views.c
+sortsmillff_views_la_CFLAGS = $(AM_CFLAGS)						\
+	'-I$(top_builddir)/fontforge' '-I$(top_srcdir)/fontforge'
 sortsmillff_views_la_LIBADD = $(FFLIBADD)
 
 if HAVE_GUI

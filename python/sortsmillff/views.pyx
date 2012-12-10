@@ -15,58 +15,78 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
 
+cdef extern from 'config.h': pass
+
 import internal_types
 
-#(use-modules
-#   (sortsmillff internal-types)
-#   (system foreign)
-#   (ice-9 format)
-#   )
-#
-#(export
-#   font-view
-#   font-view?
-#   wrap-font-view
-#   unwrap-font-view
-#   glyph-view
-#   glyph-view?
-#   wrap-glyph-view
-#   unwrap-glyph-view
-#   font-view->ff:FontViewBase
-#   ff:FontViewBase->font-view
-#   glyph-view->ff:SplineChar
-#   ff:SplineChar->glyph-view
-#   )
-#
-#(define-wrapped-pointer-type font-view
-#   font-view?
-#   wrap-font-view unwrap-font-view
-#   (lambda (fv port)
-#      (let* ((fvb (font-view->ff:FontViewBase fv))
-#             (sf (pointer->ff:SplineFont (ff:FontViewBase:sf-ref fvb))))
-#         (format port "#<font-view ~s ~x>"
-#            (pointer->string (ff:SplineFont:font-name-ref sf))
-#            (pointer-address (unwrap-font-view fv))))))
-#
-#(define-wrapped-pointer-type glyph-view
-#   glyph-view?
-#   wrap-glyph-view unwrap-glyph-view
-#   (lambda (gv port)
-#      (let* ((sc (glyph-view->ff:SplineChar gv))
-#             (sf (pointer->ff:SplineFont (ff:SplineChar:parent-ref sc))))
-#         (format port "#<glyph-view ~s:~s ~x>"
-#            (pointer->string (ff:SplineFont:font-name-ref sf))
-#            (pointer->string (ff:SplineChar:name-ref sc))
-#            (pointer-address (unwrap-glyph-view gv))))))
-#
-#(define (font-view->ff:FontViewBase fv)
-#   (pointer->ff:FontViewBase (unwrap-font-view fv)))
-#
-#(define (ff:FontViewBase->font-view fvb)
-#   (wrap-font-view (ff:FontViewBase->pointer fvb)))
-#
-#(define (glyph-view->ff:SplineChar gv)
-#   (pointer->ff:SplineChar (unwrap-glyph-view gv)))
-#
-#(define (ff:SplineChar->glyph-view sc)
-#   (wrap-glyph-view (ff:SplineChar->pointer sc)))
+from libc.stdint cimport uintptr_t
+
+cdef class font_view (object):
+
+  cdef uintptr_t ptr
+
+  def __cinit__ (self):
+    self.ptr = <uintptr_t> NULL
+
+  def __init__ (self, uintptr_t ptr):
+    self.ptr = ptr
+
+  def to_internal_type (self):
+    return internal_types.FontViewBase (self.ptr)
+
+  def __repr__ (self):
+    return '{}.font_view(0x{:x})'.format (__name__, self.ptr)
+
+  def __str__ (self):
+    cdef uintptr_t sf_ptr
+    cdef uintptr_t font_name_ptr
+    fvb = self.to_internal_type ()
+    sf_ptr = fvb._sf
+    if sf_ptr == <uintptr_t> NULL:
+      font_name = '<_sf=NULL>'
+    else:
+      sf = internal_types.SplineFont (sf_ptr)
+      font_name_ptr = sf._font_name
+      if font_name_ptr == <uintptr_t> NULL:
+        font_name = '<_font_name=NULL>'
+      else:
+        font_name = str (<char *> font_name_ptr)
+    return ('<font_view "{:s}" 0x{:x}>'.format (font_name, self.ptr))
+
+cdef class glyph_view (object):
+
+  cdef uintptr_t ptr
+
+  def __cinit__ (self):
+    self.ptr = <uintptr_t> NULL
+
+  def __init__ (self, uintptr_t ptr):
+    self.ptr = ptr
+
+  def to_internal_type (self):
+    return internal_types.SplineChar (self.ptr)
+
+  def __repr__ (self):
+    return '{}.glyph_view(0x{:x})'.format (__name__, self.ptr)
+
+  def __str__ (self):
+    cdef uintptr_t sf_ptr
+    cdef uintptr_t font_name_ptr
+    cdef uintptr_t glyph_name_ptr
+    sc = self.to_internal_type ()
+    sf_ptr = sc._parent
+    if sf_ptr == <uintptr_t> NULL:
+      font_name = '<_parent=NULL>'
+    else:
+      sf = internal_types.SplineFont (sf_ptr)
+      font_name_ptr = sf._font_name
+      if font_name_ptr == <uintptr_t> NULL:
+        font_name = '<_font_name=NULL>'
+      else:
+        font_name = str (<char *> font_name_ptr)
+    glyph_name_ptr = <uintptr_t> sc._name
+    if glyph_name_ptr == <uintptr_t> NULL:
+      glyph_name = '<_name=NULL>'
+    else:
+      glyph_name = str (<char *> glyph_name_ptr)
+    return ('<glyph_view "{:s}":"{:s}" 0x{:x}>'.format (font_name, glyph_name, self.ptr))
