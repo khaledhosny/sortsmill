@@ -51,7 +51,7 @@ import sys
 import warnings
 import traceback
 
-ctypedef struct __menu_item_data:
+ctypedef struct __menu_entry_data:
   int flag
   PyObject *menu_func
   PyObject *enable_func
@@ -112,14 +112,14 @@ def __call_python (func not None, ff_obj not None,
   return result
 
 cdef void __menu_info_func (void *data, void *ff_obj):
-  cdef __menu_item_data *py_data = <__menu_item_data *> data
+  cdef __menu_entry_data *py_data = <__menu_entry_data *> data
   obj = __ff_obj_to_py (py_data.flag, ff_obj)
   args = (<object> py_data.menu_func, obj, False)
   PyObject_CallObject (__call_python, args)
 
 cdef int __menu_info_check (void *data, void *ff_obj):
   cdef bint enabled = True
-  cdef __menu_item_data *py_data = <__menu_item_data *> data
+  cdef __menu_entry_data *py_data = <__menu_entry_data *> data
   if py_data.enable_func != <PyObject *> None:
     obj = __ff_obj_to_py (py_data.flag, ff_obj)
     args = (<object> py_data.enable_func, obj, True)
@@ -133,15 +133,15 @@ cdef void __registerMenuItem (int flag,
                               object shortcut_string,
                               object submenu_names):
   assert not get_no_windowing_ui ()
-  cdef __menu_item_data *py_data
+  cdef __menu_entry_data *py_data
   cdef char **menu_names
   cdef char *shortcut_str
   cdef usermenu.menu_info_data menu_data
-  cdef void (*register_menu_item) (usermenu.menu_info_func,
+  cdef void (*register_menu_entry) (usermenu.menu_info_func,
                                    usermenu.menu_info_check,
                                    usermenu.menu_info_data, int,
                                    char *, char **)
-  py_data = <__menu_item_data *> xgc.x_gc_malloc (sizeof (__menu_item_data))
+  py_data = <__menu_entry_data *> xgc.x_gc_malloc (sizeof (__menu_entry_data))
   Py_XINCREF (<PyObject *> menu_function)
   Py_XINCREF (<PyObject *> enable_function)
   py_data.flag = flag
@@ -150,18 +150,18 @@ cdef void __registerMenuItem (int flag,
   menu_names = __submenu_names (submenu_names)
   menu_data = <usermenu.menu_info_data> py_data
   shortcut_str = __shortcut_str (shortcut_string)
-  register_menu_item = <void (*) (usermenu.menu_info_func,
+  register_menu_entry = <void (*) (usermenu.menu_info_func,
                                   usermenu.menu_info_check,
                                   usermenu.menu_info_data, int,
                                   char *, char **)> usermenu.RegisterMenuItem
-  register_menu_item (__menu_info_func, __menu_info_check, menu_data,
+  register_menu_entry (__menu_info_func, __menu_info_check, menu_data,
                       flag, shortcut_str, menu_names)
 
-def register_fontforge_menu_item (window not None,
-                                  menu_path not None,
-                                  action not None,
-                                  enabled = lambda _: True,
-                                  shortcut = None):
+def register_fontforge_menu_entry (window not None,
+                                   menu_path not None,
+                                   action not None,
+                                   enabled = lambda _: True,
+                                   shortcut = None):
   cdef int flag
   if not get_no_windowing_ui ():
     flag = __menu_flag (window)

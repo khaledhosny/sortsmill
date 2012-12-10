@@ -28,8 +28,8 @@ extern "C"
 }
 #endif
 
-SCM scm_register_fontforge_menu_item (SCM window, SCM menu_path, SCM action,
-                                      SCM enabled, SCM shortcut);
+SCM scm_register_fontforge_menu_entry (SCM window, SCM menu_path, SCM action,
+                                       SCM enabled, SCM shortcut);
 
 #if 0
 {

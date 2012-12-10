@@ -31,7 +31,7 @@ typedef struct
   int flag;
   SCM action;
   SCM enabled;
-} menu_item_data;
+} menu_entry_data;
 
 static SCM font_view_wrapper = SCM_UNDEFINED;
 static SCM glyph_view_wrapper = SCM_UNDEFINED;
@@ -39,7 +39,7 @@ static SCM glyph_view_wrapper = SCM_UNDEFINED;
 static void
 raise_window_error (SCM window)
 {
-  scm_misc_error ("register_fontforge_menu_item",
+  scm_misc_error ("register_fontforge_menu_entry",
                   "Expected #:window 'font, 'glyph, or 'char, but got: ~S",
                   scm_list_1 (window));
 }
@@ -79,7 +79,7 @@ wrap_view_pointer (int flag, void *p)
 static void
 call_func (void *vdata, void *p)
 {
-  menu_item_data *data = (menu_item_data *) vdata;
+  menu_entry_data *data = (menu_entry_data *) vdata;
   SCM view = wrap_view_pointer (data->flag, p);
   SCM wrapper =
     scm_c_private_ref ("sortsmillff usermenu", "menu-entry-error-handling");
@@ -89,7 +89,7 @@ call_func (void *vdata, void *p)
 static int
 call_check (void *vdata, void *p)
 {
-  menu_item_data *data = (menu_item_data *) vdata;
+  menu_entry_data *data = (menu_entry_data *) vdata;
   SCM view = wrap_view_pointer (data->flag, p);
   SCM wrapper =
     scm_c_private_ref ("sortsmillff usermenu", "menu-entry-error-handling");
@@ -98,15 +98,15 @@ call_check (void *vdata, void *p)
 }
 
 VISIBLE SCM
-scm_register_fontforge_menu_item (SCM window, SCM menu_path, SCM action,
-                                  SCM enabled, SCM shortcut)
+scm_register_fontforge_menu_entry (SCM window, SCM menu_path, SCM action,
+                                   SCM enabled, SCM shortcut)
 {
   SCM_ASSERT_TYPE (scm_is_symbol (window), window, SCM_ARG1,
-                   "scm_register_fontforge_menu_item", "symbol");
+                   "scm_register_fontforge_menu_entry", "symbol");
   int flag = window_to_flag (window);
 
   SCM_ASSERT_TYPE (scm_is_pair (menu_path), menu_path, SCM_ARG2,
-                   "scm_register_fontforge_menu_item", "string list");
+                   "scm_register_fontforge_menu_entry", "string list");
   size_t path_length = scm_to_size_t (scm_length (menu_path));
   if (0 < path_length)
     {
@@ -118,7 +118,8 @@ scm_register_fontforge_menu_item (SCM window, SCM menu_path, SCM action,
         {
           SCM entry = SCM_CAR (ls);
           SCM_ASSERT_TYPE (scm_is_string (entry), menu_path, SCM_ARG2,
-                           "scm_register_fontforge_menu_item", "string list");
+                           "scm_register_fontforge_menu_entry",
+                           "string list");
           submenu_names[i] = x_gc_grabstr (scm_to_locale_string (entry));
           i++;
         }
@@ -128,12 +129,12 @@ scm_register_fontforge_menu_item (SCM window, SCM menu_path, SCM action,
       if (scm_is_true (shortcut))
         {
           SCM_ASSERT (scm_is_string (shortcut), shortcut, SCM_ARG5,
-                      "scm_register_fontforge_menu_item");
+                      "scm_register_fontforge_menu_entry");
           shortcut_str = x_gc_grabstr (scm_to_locale_string (shortcut));
         }
 
-      menu_item_data *data =
-        (menu_item_data *) x_gc_malloc (sizeof (menu_item_data));
+      menu_entry_data *data =
+        (menu_entry_data *) x_gc_malloc (sizeof (menu_entry_data));
       data->flag = flag;
       data->action = action;
       data->enabled = enabled;
@@ -154,8 +155,8 @@ init_guile_sortsmillff_usermenu (void)
     scm_c_public_ref ("sortsmillff views", "wrap-font-view");
   glyph_view_wrapper =
     scm_c_public_ref ("sortsmillff views", "wrap-glyph-view");
-  scm_c_define_gsubr ("internal:register-fontforge-menu-item", 5, 0, 0,
-                      scm_register_fontforge_menu_item);
+  scm_c_define_gsubr ("internal:register-fontforge-menu-entry", 5, 0, 0,
+                      scm_register_fontforge_menu_entry);
 }
 
 //-------------------------------------------------------------------------

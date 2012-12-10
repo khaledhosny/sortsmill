@@ -21,7 +21,7 @@
    (sortsmillff views)
    (system repl error-handling))
 
-(export register-fontforge-menu-item)
+(export register-fontforge-menu-entry)
 
 ;; FIXME: Make the error handling more useful, like the Python error
 ;; handling.
@@ -37,10 +37,10 @@
 (load-extension "libguile-sortsmillff_fontforgeexe"
    "init_guile_sortsmillff_usermenu")
   
-(define* (register-fontforge-menu-item
+(define* (register-fontforge-menu-entry
             #:key window menu-path action
             (enabled (const #t))
             (shortcut #f))
-   (internal:register-fontforge-menu-item window menu-path
+   (internal:register-fontforge-menu-entry window menu-path
       action enabled
       shortcut))

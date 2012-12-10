@@ -18,6 +18,8 @@
 #ifndef _SORTSMILLFF_USERMENU_H
 #define _SORTSMILLFF_USERMENU_H
 
+#include <stdbool.h>
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -26,8 +28,10 @@ extern "C"
 }
 #endif
 
-enum
-{
+/*-----------------------------------------------------------------------*/
+/* Deprecated interface. */
+
+enum {
   menu_fv = 0x01,
   menu_cv = 0x02
 };
@@ -39,6 +43,24 @@ typedef void *menu_info_data;
 void RegisterMenuItem (menu_info_func func, menu_info_check check,
                        menu_info_data data, int flags,
                        const char *shortcut_str, const char **submenu_names);
+
+/*-----------------------------------------------------------------------*/
+
+enum {
+  FF_FONT_WINDOW = 0x01,
+  FF_GLYPH_WINDOW = 0x02,
+  FF_CHAR_WINDOW = FF_GLYPH_WINDOW
+};
+
+typedef void (*ff_menu_entry_action_t) (void *obj, void *data);
+typedef bool (*ff_menu_entry_enabled_t) (void *obj, void *data);
+
+void register_fontforge_menu_entry (int window,
+				    const char **menu_path,
+				    ff_menu_entry_action_t action,
+				    ff_menu_entry_enabled_t enabled,
+				    const char *shortcut,
+				    void *data);
 
 #if 0
 {
