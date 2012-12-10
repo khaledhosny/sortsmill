@@ -47,7 +47,7 @@ DIST_SCM_IN_FILES = sortsmillff/pkg-info.scm.in					\
 	sortsmillff/math-constants.scm.in sortsmillff/i18n.scm.in
 
 NODIST_SCM_FILES = sortsmillff/pkg-info.scm				\
-	sortsmillff/math-constants.scm sortsmillff/i18n.scm
+	sortsmillff/math-constants.scm sortsmillff/i18n.scm	\
 	sortsmillff/internal-types.scm
 
 GO_FILES = sortsmillff/pkg-info.go sortsmillff/gsl.go			\
@@ -74,7 +74,7 @@ sortsmillff/internal-types.scm: generate-internal-types.scm	\
 sortsmillff/brentroot.go: sortsmillff/math-constants.go
 sortsmillff/i18n.go: libguile-sortsmillff_iconv.la
 sortsmillff/internal-types.go: sortsmillff/internal-types-syntax.go
-sortsmillff/gsl.go: libguile-sortsmillff_gsl.la
+sortsmillff/gsl.go: libguile-sortsmillff_aux.la
 sortsmillff/precompute.go: sortsmillff/linalg.go
 sortsmillff/sfd-to-sxml.go: sortsmillff/gsl.go sortsmillff/i18n.go
 sortsmillff/views.go: sortsmillff/internal-types.go

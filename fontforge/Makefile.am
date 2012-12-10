@@ -31,6 +31,10 @@ include $(top_srcdir)/mk/tig.mk
 bin_PROGRAMS =
 dist_man_MANS =
 
+MOSTLYCLEANFILES =
+CLEANFILES =
+DISTCLEANFILES =
+
 #--------------------------------------------------------------------------
 
 if THE_PROGRAMS
@@ -61,11 +65,21 @@ noinst_HEADERS = fontforgeui.h sftextfieldP.h views.h is_LIGATURE.h		\
 	import.h sflayoutP.h print.h splinefont.h annotations.h compare.h	\
 	fontimage.h
 
+nobase_nodist_include_HEADERS = sortsmillff/internal_types.h
+
+CLEANFILES += $(nobase_nodist_include_HEADERS)
+
+sortsmillff/internal_types.h: generate-internal_types.h.scm	\
+		fontforge_type_inspector
+	$(AM_V_GEN)
+	$(AM_V_at)$(GUILE_INTERPRET) generate-internal_types.h.scm > $@-tmp
+	$(AM_V_at)mv $@-tmp $@
+
 #--------------------------------------------------------------------------
 
 noinst_PROGRAMS = fontforge_type_inspector
 
-CLEANFILES = fontforge_type_inspector fontforge_type_inspector.c
+CLEANFILES += fontforge_type_inspector fontforge_type_inspector.c
 
 #--------------------------------------------------------------------------
 
@@ -122,6 +136,7 @@ libsortsmillff_fontforge_la_SOURCES = asmfpst.c autohint.c autosave.c	\
 	autowidth2.c woff.c activeinui.c is_LIGATURE.c flaglist.c			\
 	contour_interface.c freetype.c ftdelta.c some_global_variables.c	\
 	getfontnames.c arrayfree.c
+nodist_libsortsmillff_fontforge_la_SOURCES = internal_types.c
 EXTRA_libsortsmillff_fontforge_la_SOURCES = splinerefigure.c
 
 libsortsmillff_fontforge_la_LIBADD = splinerefigure.lo $(LIBADD)	\
@@ -131,6 +146,14 @@ libsortsmillff_fontforge_la_DEPENDENCIES = splinerefigure.lo	\
 	$(top_builddir)/lib/libgnu.la
 
 EXTRA_SCRIPTS = generate_codepoint_selector.py
+
+internal_types.c: generate-internal_types.c.scm					\
+		fontforge_type_inspector sortsmillff/internal_types.h
+	$(AM_V_GEN)
+	$(AM_V_at)$(GUILE_INTERPRET) generate-internal_types.c.scm > $@-tmp
+	$(AM_V_at)mv $@-tmp $@
+
+CLEANFILES += internal_types.c
 
 # "make is_LIGATURE" or "make -C fontforge is_LIGATURE" to regenerate
 # is_LIGATURE.[ch].
