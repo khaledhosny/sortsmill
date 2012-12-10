@@ -72,8 +72,14 @@ def __menu_flag (window):
     raise TypeError (message)
   return flag
 
+# FIXME:
+# FIXME: Disallow isinstance (names, str), because it will be of
+# FIXME: questionable usefulness when the entire menu is user-extensible.
+# FIXME:
 cdef char **__submenu_names (object names):
   if isinstance (names, str):
+    warnings.warn ('A string as menu_path is VERY SEVERELY DEPRECATED and VERY soon will be disallowed. Use an iterable of strings.',
+                   UserWarning)
     names = [names]
   cdef size_t length = len (names)
   cdef char **result = \
