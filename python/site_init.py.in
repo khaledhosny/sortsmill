@@ -27,11 +27,11 @@
 
 import sys
 import traceback
+import sortsmillff.ffcompat
 
 try:
 
   import fontforge
-  import sortsmillff.ffcompat
   sortsmillff.ffcompat.__windowing_ui (True)
   sortsmillff.ffcompat.__running_script (False)
   import psMat

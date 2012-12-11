@@ -15,19 +15,27 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-#--------------------------------------------------------------------------
+cdef extern from "config.h":
+  pass
+
+cdef extern from "stdbool.h":
+  pass
+from libcpp cimport bool
+
+cimport sortsmillff.cython.const_pointers as constp
 
 cdef extern from "sortsmillff/usermenu.h":
   enum:
-    menu_fv = 0x01
-    menu_cv = 0x02
+    FF_FONT_WINDOW = 0x01
+    FF_GLYPH_WINDOW = 0x02
+    FF_CHAR_WINDOW = FF_GLYPH_WINDOW
 
-  ctypedef void (*menu_info_func) (void *, void *)
-  ctypedef int (*menu_info_check) (void *, void *)
-  ctypedef void *menu_info_data
+  ctypedef void (*ff_menu_entry_action_t) (void *obj, void *data)
+  ctypedef bool (*ff_menu_entry_enabled_t) (void *obj, void *data)
 
-  void RegisterMenuItem (menu_info_func func, menu_info_check check,
-                         menu_info_data data, int flags,
-                         char *shortcut_str, char **submenu_names)
-
-#--------------------------------------------------------------------------
+  void register_fontforge_menu_entry (int window,
+                                      constp.const_char_ptr_ptr menu_path,
+                                      ff_menu_entry_action_t action,
+                                      ff_menu_entry_enabled_t enabled,
+                                      constp.const_char_ptr shortcut,
+                                      void *data)

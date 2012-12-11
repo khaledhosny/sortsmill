@@ -30,6 +30,7 @@
 #include "baseviews.h"
 
 #include <ggadget.h>
+#include <usermenu.h>
 
 struct gfi_data;
 struct contextchaindlg;
@@ -1358,10 +1359,6 @@ extern void FVCompareLayerToLayer (FontView *fv);
 
 extern void MathInit (void);
 extern void SFMathDlg (SplineFont *sf, int def_layer);
-
-extern GMenuItem2 *cv_menu, *fv_menu;
-extern void cv_tl2listcheck (GWindow gw, struct gmenuitem *mi, GEvent *e);
-extern void fv_tl2listcheck (GWindow gw, struct gmenuitem *mi, GEvent *e);
 
 extern void SFValidationWindow (SplineFont *sf, int layer,
                                 enum fontformat format);

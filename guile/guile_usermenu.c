@@ -49,10 +49,10 @@ window_to_flag (SCM window)
 {
   int flag = 0;
   if (scm_is_eq (window, scm_from_latin1_symbol ("font")))
-    flag = menu_fv;
+    flag = FF_FONT_WINDOW;
   else if (scm_is_eq (window, scm_from_latin1_symbol ("glyph"))
            || scm_is_eq (window, scm_from_latin1_symbol ("char")))
-    flag = menu_cv;
+    flag = FF_GLYPH_WINDOW;
   else
     raise_window_error (window);
   return flag;
@@ -64,10 +64,10 @@ wrap_view_pointer (int flag, void *p)
   SCM view = SCM_UNDEFINED;
   switch (flag)
     {
-    case menu_fv:
+    case FF_FONT_WINDOW:
       view = scm_call_1 (font_view_wrapper, scm_from_pointer (p, NULL));
       break;
-    case menu_cv:
+    case FF_GLYPH_WINDOW:
       view = scm_call_1 (glyph_view_wrapper, scm_from_pointer (p, NULL));
       break;
     default:
@@ -77,7 +77,7 @@ wrap_view_pointer (int flag, void *p)
 }
 
 static void
-call_func (void *vdata, void *p)
+call_action (void *p, void *vdata)
 {
   menu_entry_data *data = (menu_entry_data *) vdata;
   SCM view = wrap_view_pointer (data->flag, p);
@@ -86,8 +86,8 @@ call_func (void *vdata, void *p)
   (void) scm_call_2 (wrapper, data->action, view);
 }
 
-static int
-call_check (void *vdata, void *p)
+static bool
+call_enabled (void *p, void *vdata)
 {
   menu_entry_data *data = (menu_entry_data *) vdata;
   SCM view = wrap_view_pointer (data->flag, p);
@@ -110,7 +110,7 @@ scm_register_fontforge_menu_entry (SCM window, SCM menu_path, SCM action,
   size_t path_length = scm_to_size_t (scm_length (menu_path));
   if (0 < path_length)
     {
-      const char **submenu_names =
+      const char **c_menu_path =
         (const char **) x_gc_malloc ((path_length + 1) *
                                      sizeof (const char *));
       size_t i = 0;
@@ -120,17 +120,17 @@ scm_register_fontforge_menu_entry (SCM window, SCM menu_path, SCM action,
           SCM_ASSERT_TYPE (scm_is_string (entry), menu_path, SCM_ARG2,
                            "scm_register_fontforge_menu_entry",
                            "string list");
-          submenu_names[i] = x_gc_grabstr (scm_to_locale_string (entry));
+          c_menu_path[i] = x_gc_grabstr (scm_to_locale_string (entry));
           i++;
         }
-      submenu_names[i] = NULL;
+      c_menu_path[i] = NULL;
 
-      char *shortcut_str = NULL;
+      char *c_shortcut = NULL;
       if (scm_is_true (shortcut))
         {
           SCM_ASSERT (scm_is_string (shortcut), shortcut, SCM_ARG5,
                       "scm_register_fontforge_menu_entry");
-          shortcut_str = x_gc_grabstr (scm_to_locale_string (shortcut));
+          c_shortcut = x_gc_grabstr (scm_to_locale_string (shortcut));
         }
 
       menu_entry_data *data =
@@ -139,8 +139,8 @@ scm_register_fontforge_menu_entry (SCM window, SCM menu_path, SCM action,
       data->action = action;
       data->enabled = enabled;
 
-      RegisterMenuItem (call_func, call_check, data, data->flag, shortcut_str,
-                        submenu_names);
+      register_fontforge_menu_entry (data->flag, c_menu_path, call_action,
+                                     call_enabled, c_shortcut, data);
     }
 
   return SCM_UNSPECIFIED;

@@ -42,5 +42,4 @@
             (enabled (const #t))
             (shortcut #f))
    (internal:register-fontforge-menu-entry window menu-path
-      action enabled
-      shortcut))
+      action enabled shortcut))

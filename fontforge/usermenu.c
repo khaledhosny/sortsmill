@@ -30,188 +30,226 @@
 #include <fontforgeui.h>
 #include <usermenu.h>
 #include <ustring.h>
+#include <stdio.h>
+#include <stdint.h>
 
-typedef struct menu_info
+GMenuItem2 *cv_menu = NULL;
+GMenuItem2 *fv_menu = NULL;
+
+typedef struct
 {
-  menu_info_func func;
-  menu_info_check check_enabled;
-  menu_info_data data;
-} MenuInfo;
+  ff_menu_entry_action_t action;
+  ff_menu_entry_enabled_t enabled;
+  void *data;
+} menu_info;
 
-static MenuInfo *cv_menu_data = NULL;
-static MenuInfo *fv_menu_data = NULL;
-static int cv_menu_cnt = 0;
-static int cv_menu_max = 0;
-static int fv_menu_cnt = 0;
-static int fv_menu_max = 0;
-
-GMenuItem2 *cv_menu;
-GMenuItem2 *fv_menu;
+static menu_info *cv_menu_info = NULL;
+static menu_info *fv_menu_info = NULL;
+static int cv_menu_size = 0;
+static int cv_menu_max_size = 0;
+static int fv_menu_size = 0;
+static int fv_menu_max_size = 0;
 
 static void
-tl2listcheck (struct gmenuitem *mi, void *owner, struct menu_info *menu_data,
-              int menu_cnt)
+tools_list_check (struct gmenuitem *mi, void *owner, menu_info *info,
+                  int menu_size)
 {
-  int result;
-
-  if (menu_data == NULL)
-    return;
-
-  for (mi = mi->sub; mi->ti.text != NULL || mi->ti.line; ++mi)
-    {
+  if (info != NULL)
+    for (mi = mi->sub; mi->ti.text != NULL || mi->ti.line; mi++)
       if (mi->mid == -1)        /* Submenu */
-        continue;
-      if (mi->mid < 0 || mi->mid >= menu_cnt)
+        ;
+      else if (mi->mid < 0 || menu_size <= mi->mid)
         {
-          fprintf (stderr, _("Bad Menu ID in python menu %d\n"), mi->mid);
+          fprintf (stderr, _("Bad Menu ID in menu %d\n"), mi->mid);
           mi->ti.disabled = true;
-          continue;
         }
-      if (menu_data[mi->mid].check_enabled == NULL)
-        {
-          mi->ti.disabled = false;
-          continue;
-        }
-      result =
-        (*menu_data[mi->mid].check_enabled) (menu_data[mi->mid].data, owner);
-      mi->ti.disabled = (result == 0);
-    }
+      else if (info[mi->mid].enabled == NULL)
+        mi->ti.disabled = false;
+      else
+        mi->ti.disabled =
+          !(*info[mi->mid].enabled) (owner, info[mi->mid].data);
 }
 
 void
-cv_tl2listcheck (GWindow gw, struct gmenuitem *mi, GEvent *e)
+cv_tools_list_check (GWindow gw, struct gmenuitem *mi, GEvent *e)
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
-
-  if (cv_menu_data != NULL)
+  if (cv_menu_info != NULL)
     {
       sc_active_in_ui = cv->b.sc;
       layer_active_in_ui = CVLayer ((CharViewBase *) cv);
-      tl2listcheck (mi, cv->b.sc, cv_menu_data, cv_menu_cnt);
+      tools_list_check (mi, cv->b.sc, cv_menu_info, cv_menu_size);
       sc_active_in_ui = NULL;
       layer_active_in_ui = ly_fore;
     }
 }
 
 void
-fv_tl2listcheck (GWindow gw, struct gmenuitem *mi, GEvent *e)
+fv_tools_list_check (GWindow gw, struct gmenuitem *mi, GEvent *e)
 {
   FontViewBase *fv = (FontViewBase *) GDrawGetUserData (gw);
-
-  if (fv_menu_data != NULL)
+  if (fv_menu_info != NULL)
     {
       fv_active_in_ui = fv;
       layer_active_in_ui = fv->active_layer;
-      tl2listcheck (mi, fv, fv_menu_data, fv_menu_cnt);
+      tools_list_check (mi, fv, fv_menu_info, fv_menu_size);
       fv_active_in_ui = NULL;
     }
 }
 
 static void
-menuactivate (struct gmenuitem *mi, void *owner, MenuInfo * menu_data,
-              int menu_cnt)
+do_action (struct gmenuitem *mi, void *owner, menu_info *info, int menu_size)
 {
   if (mi->mid == -1)            /* Submenu */
-    return;
-  if (mi->mid < 0 || mi->mid >= menu_cnt)
-    {
-      fprintf (stderr, _("Bad Menu ID in python menu %d\n"), mi->mid);
-      return;
-    }
-  if (menu_data[mi->mid].func == NULL)
-    {
-      return;
-    }
-  (*menu_data[mi->mid].func) (menu_data[mi->mid].data, owner);
+    ;
+  else if (mi->mid < 0 || menu_size <= mi->mid)
+    fprintf (stderr, _("Bad Menu ID in menu %d\n"), mi->mid);
+  else if (info[mi->mid].action == NULL)
+    ;
+  else
+    (*info[mi->mid].action) (owner, info[mi->mid].data);
 }
 
 static void
-cv_menuactivate (GWindow gw, struct gmenuitem *mi, GEvent *e)
+cv_do_action (GWindow gw, struct gmenuitem *mi, GEvent *e)
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
-
-  if (cv_menu_data != NULL)
+  if (cv_menu_info != NULL)
     {
       sc_active_in_ui = cv->b.sc;
       layer_active_in_ui = CVLayer ((CharViewBase *) cv);
-      menuactivate (mi, cv->b.sc, cv_menu_data, cv_menu_cnt);
+      do_action (mi, cv->b.sc, cv_menu_info, cv_menu_size);
       sc_active_in_ui = NULL;
       layer_active_in_ui = ly_fore;
     }
 }
 
 static void
-fv_menuactivate (GWindow gw, struct gmenuitem *mi, GEvent *e)
+fv_do_action (GWindow gw, struct gmenuitem *mi, GEvent *e)
 {
   FontViewBase *fv = (FontViewBase *) GDrawGetUserData (gw);
-
-  if (fv_menu_data != NULL)
+  if (fv_menu_info != NULL)
     {
       fv_active_in_ui = fv;
       layer_active_in_ui = fv->active_layer;
-      menuactivate (mi, fv, fv_menu_data, fv_menu_cnt);
+      do_action (mi, fv, fv_menu_info, fv_menu_size);
       fv_active_in_ui = NULL;
     }
 }
 
 static int
-MenuDataAdd (menu_info_func func, menu_info_check check, menu_info_data data,
-             int is_cv)
+menu_info_add (int window, ff_menu_entry_action_t action,
+               ff_menu_entry_enabled_t enabled, void *data)
 {
-  int index;
+  int index = INT_MIN;
 
-  if (is_cv)
+  switch (window)
     {
-      if (cv_menu_cnt >= cv_menu_max)
-        cv_menu_data =
-          xrealloc (cv_menu_data,
-                    (cv_menu_max += 10) * sizeof (struct menu_info));
-      cv_menu_data[cv_menu_cnt].func = func;
-      cv_menu_data[cv_menu_cnt].check_enabled = check;
-      cv_menu_data[cv_menu_cnt].data = data;
-      index = cv_menu_cnt;
-      cv_menu_cnt++;
+    case FF_GLYPH_WINDOW:
+      if (cv_menu_max_size <= cv_menu_size)
+        {
+          cv_menu_max_size += 10;
+          cv_menu_info =
+            xrealloc (cv_menu_info, cv_menu_max_size * sizeof (menu_info));
+        }
+      cv_menu_info[cv_menu_size].action = action;
+      cv_menu_info[cv_menu_size].enabled = enabled;
+      cv_menu_info[cv_menu_size].data = data;
+      index = cv_menu_size;
+      cv_menu_size++;
+      break;
+
+    case FF_FONT_WINDOW:
+      if (fv_menu_max_size <= fv_menu_size)
+        {
+          fv_menu_max_size += 10;
+          fv_menu_info =
+            xrealloc (fv_menu_info, fv_menu_max_size * sizeof (menu_info));
+        }
+      fv_menu_info[fv_menu_size].action = action;
+      fv_menu_info[fv_menu_size].enabled = enabled;
+      fv_menu_info[fv_menu_size].data = data;
+      index = fv_menu_size;
+      fv_menu_size++;
+      break;
+
+    default:
+      assert (false);
     }
-  else
-    {
-      if (fv_menu_cnt >= fv_menu_max)
-        fv_menu_data =
-          xrealloc (fv_menu_data,
-                    (fv_menu_max += 10) * sizeof (struct menu_info));
-      fv_menu_data[fv_menu_cnt].func = func;
-      fv_menu_data[fv_menu_cnt].check_enabled = check;
-      fv_menu_data[fv_menu_cnt].data = data;
-      index = fv_menu_cnt;
-      fv_menu_cnt++;
-    }
+
   return index;
 }
 
+static gmenuitem_moveto_t
+moveto_func (int window)
+{
+  gmenuitem_moveto_t result = NULL;
+  switch (window)
+    {
+    case FF_GLYPH_WINDOW:
+      result = cv_tools_list_check;
+      break;
+    case FF_FONT_WINDOW:
+      result = fv_tools_list_check;
+      break;
+    default:
+      assert (false);
+    }
+  return result;
+}
+
+static gmenuitem_invoke_t
+invoke_func (int window)
+{
+  gmenuitem_invoke_t result = NULL;
+  switch (window)
+    {
+    case FF_GLYPH_WINDOW:
+      result = cv_do_action;
+      break;
+    case FF_FONT_WINDOW:
+      result = fv_do_action;
+      break;
+    default:
+      assert (false);
+    }
+  return result;
+}
+
+static int
+find_sub_menu (GMenuItem2 **mn, uint32_t *submenuu)
+{
+  int j = 0;
+  bool submenu_found = false;
+  while (!submenu_found && ((*mn)[j].ti.text != NULL || (*mn)[j].ti.line))
+    {
+      if ((*mn)[j].ti.text != NULL
+          // FIXME: Should this be a normalized comparison?
+          && u32_strcmp ((*mn)[j].ti.text, submenuu) == 0)
+        submenu_found = true;
+      else
+        j++;
+    }
+  return j;
+}
+
 static void
-InsertSubMenus (menu_info_func func, menu_info_check check,
-                menu_info_data data, const char *shortcut_str,
-                const char **submenu_names, GMenuItem2 **mn, int is_cv)
+insert_sub_menus (int window, const char **menu_path,
+                  ff_menu_entry_action_t action,
+                  ff_menu_entry_enabled_t enabled,
+                  const char *shortcut, void *data, GMenuItem2 **mn)
 {
   int i;
   int j;
   GMenuItem2 *mmn;
 
-  for (i = 0; submenu_names[i] != NULL; ++i)
+  for (i = 0; menu_path[i] != NULL; i++)
     {
-      uint32_t *submenuu = utf82u_copy (submenu_names[i]);
+      uint32_t *submenuu = utf82u_copy (menu_path[i]);
 
       j = 0;
       if (*mn != NULL)
-        {
-          for (j = 0; (*mn)[j].ti.text != NULL || (*mn)[j].ti.line; ++j)
-            {
-              if ((*mn)[j].ti.text == NULL)
-                continue;
-              // FIXME: Should this be a normalized comparison?
-              if (u32_strcmp ((*mn)[j].ti.text, submenuu) == 0)
-                break;
-            }
-        }
+        j = find_sub_menu (mn, submenuu);
 
       if (*mn == NULL || (*mn)[j].ti.text == NULL)
         {
@@ -222,31 +260,31 @@ InsertSubMenus (menu_info_func func, menu_info_check check,
       if (mmn[j].ti.text == NULL)
         {
           mmn[j].ti.text = submenuu;
-          mmn[j].ti.fg = mmn[j].ti.bg = COLOR_DEFAULT;
-          if (submenu_names[i + 1] != NULL)
+          mmn[j].ti.fg = COLOR_DEFAULT;
+          mmn[j].ti.bg = COLOR_DEFAULT;
+          if (menu_path[i + 1] != NULL)
             {
               mmn[j].mid = -1;
-              mmn[j].moveto = is_cv ? cv_tl2listcheck : fv_tl2listcheck;
+              mmn[j].moveto = moveto_func (window);
               mn = &mmn[j].sub;
             }
           else
             {
-              mmn[j].shortcut = xstrdup_or_null (shortcut_str);
-              mmn[j].invoke = is_cv ? cv_menuactivate : fv_menuactivate;
-              mmn[j].mid = MenuDataAdd (func, check, data, is_cv);
+              mmn[j].shortcut = xstrdup_or_null (shortcut);
+              mmn[j].invoke = invoke_func (window);
+              mmn[j].mid = menu_info_add (window, action, enabled, data);
             }
         }
       else
         {
-          if (submenu_names[i + 1] != NULL)
+          if (menu_path[i + 1] != NULL)
             mn = &mmn[j].sub;
           else
             {
-              mmn[j].shortcut = xstrdup_or_null (shortcut_str);
-              mmn[j].invoke = is_cv ? cv_menuactivate : fv_menuactivate;
-              mmn[j].mid = MenuDataAdd (func, check, data, is_cv);
-              fprintf (stderr, _("Redefining menu item %s\n"),
-                       submenu_names[i]);
+              mmn[j].shortcut = xstrdup_or_null (shortcut);
+              mmn[j].invoke = invoke_func (window);
+              mmn[j].mid = menu_info_add (window, action, enabled, data);
+              fprintf (stderr, _("Redefining menu entry %s\n"), menu_path[i]);
               free (submenuu);
             }
         }
@@ -254,17 +292,22 @@ InsertSubMenus (menu_info_func func, menu_info_check check,
 }
 
 VISIBLE void
-RegisterMenuItem (menu_info_func func, menu_info_check check,
-                  menu_info_data data, int flags, const char *shortcut_str,
-                  const char **submenu_names)
+register_fontforge_menu_entry (int window,
+                               const char **menu_path,
+                               ff_menu_entry_action_t action,
+                               ff_menu_entry_enabled_t enabled,
+                               const char *shortcut, void *data)
 {
   if (!no_windowing_ui)
-    {
-      if (flags & menu_fv)
-        InsertSubMenus (func, check, data, shortcut_str,
-                        submenu_names, &fv_menu, false);
-      if (flags & menu_cv)
-        InsertSubMenus (func, check, data, shortcut_str,
-                        submenu_names, &cv_menu, true);
-    }
+    switch (window)
+      {
+      case FF_FONT_WINDOW:
+        insert_sub_menus (window, menu_path, action, enabled, shortcut, data,
+                          &fv_menu);
+        break;
+      case FF_GLYPH_WINDOW:
+        insert_sub_menus (window, menu_path, action, enabled, shortcut, data,
+                          &cv_menu);
+        break;
+      }
 }

@@ -28,25 +28,8 @@ extern "C"
 }
 #endif
 
-/*-----------------------------------------------------------------------*/
-/* Deprecated interface. */
-
 enum {
-  menu_fv = 0x01,
-  menu_cv = 0x02
-};
-
-typedef void (*menu_info_func) (void *, void *);
-typedef int (*menu_info_check) (void *, void *);
-typedef void *menu_info_data;
-
-void RegisterMenuItem (menu_info_func func, menu_info_check check,
-                       menu_info_data data, int flags,
-                       const char *shortcut_str, const char **submenu_names);
-
-/*-----------------------------------------------------------------------*/
-
-enum {
+  /* Values chosen so they can be used in bitarrays. */
   FF_FONT_WINDOW = 0x01,
   FF_GLYPH_WINDOW = 0x02,
   FF_CHAR_WINDOW = FF_GLYPH_WINDOW

@@ -5543,7 +5543,7 @@ static GMenuItem2 mblist[] = {
     { { (uint32_t *) N_("_File"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'F' }, NULL, fllist, fllistcheck, NULL, 0 },
     { { (uint32_t *) N_("_Edit"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'E' }, NULL, edlist, edlistcheck, NULL, 0 },
     { { (uint32_t *) N_("E_lement"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'l' }, NULL, ellist, ellistcheck, NULL, 0 },
-    { { (uint32_t *) N_("_Tools"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 1, 1, 0, 0, 0, 0, 1, 1, 0, 'l' }, NULL, NULL, fv_tl2listcheck, NULL, 0 },
+    { { (uint32_t *) N_("_Tools"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 1, 1, 0, 0, 0, 0, 1, 1, 0, 'l' }, NULL, NULL, fv_tools_list_check, NULL, 0 },
     { { (uint32_t *) N_("H_ints"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'i' }, NULL, htlist, htlistcheck, NULL, 0 },
     { { (uint32_t *) N_("E_ncoding"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'V' }, NULL, enlist, enlistcheck, NULL, 0 },
     { { (uint32_t *) N_("_View"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'V' }, NULL, vwlist, vwlistcheck, NULL, 0 },

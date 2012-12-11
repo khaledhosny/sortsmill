@@ -101,7 +101,7 @@ nobase_pyexec_LTLIBRARIES += sortsmillff/usermenu.la
 sortsmillff_usermenu_la_SOURCES = sortsmillff/usermenu.c
 sortsmillff_usermenu_la_CFLAGS = $(AM_CFLAGS)					\
 	'-I$(top_builddir)/fontforge' '-I$(top_srcdir)/fontforge'
-sortsmillff_usermenu_la_LIBADD = $(FFLIBADD)
+sortsmillff_usermenu_la_LIBADD = $(EXELIBADD)
 endif HAVE_GUI
 
 nobase_pyexec_LTLIBRARIES += sortsmillff/pkg_info.la

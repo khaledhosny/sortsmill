@@ -38,6 +38,7 @@
 -T real
 -T bigreal
 -T extended
+-T menu_info
 -T spiro_cp
 -T ImageList
 -T ASM
@@ -69,6 +70,7 @@
 -T GRect
 -T GBox
 -T MacFeat
+-T MenuInfo
 -T MetricsView
 -T MMSet
 -T DBounds

@@ -80,15 +80,19 @@ typedef struct gtextinfo2 {
 
 #define GTEXTINFO2_EMPTY { NULL, NULL, 0x000000, 0x000000, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '\0' }
 
+struct gmenuitem;
+
+typedef void (*gmenuitem_moveto_t) (struct gwindow *, struct gmenuitem *, GEvent *);
+typedef void (*gmenuitem_invoke_t) (struct gwindow *, struct gmenuitem *, GEvent *);
 
 typedef struct gmenuitem {
-    GTextInfo ti;
-    uint32_t shortcut;
-    short short_mask;
-    struct gmenuitem *sub;
-    void (*moveto)(struct gwindow *base,struct gmenuitem *mi,GEvent *);	/* called before creating submenu */
-    void (*invoke)(struct gwindow *base,struct gmenuitem *mi,GEvent *);	/* called on mouse release */
-    int mid;
+  GTextInfo ti;
+  uint32_t shortcut;
+  short short_mask;
+  struct gmenuitem *sub;
+  gmenuitem_moveto_t moveto;	/* called before creating submenu */
+  gmenuitem_invoke_t invoke;	/* called on mouse release */
+  int mid;
 } GMenuItem;
 
 #define GMENUITEM_EMPTY { GTEXTINFO_EMPTY, '\0', 0, NULL, NULL, NULL, 0 }

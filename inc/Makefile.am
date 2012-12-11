@@ -51,7 +51,9 @@ nobase_include_HEADERS += sortsmillff/guile/polyspline.h				\
 
 if PYTHON_SCRIPTING
 nobase_include_HEADERS += sortsmillff/__init__.pxd						\
-	sortsmillff/cython/__init__.pxd sortsmillff/cython/brentroot.pxd	\
+	sortsmillff/cython/__init__.pxd										\
+	sortsmillff/cython/const_pointers.pxd								\
+	sortsmillff/cython/brentroot.pxd									\
 	sortsmillff/cython/contour_interface.pxd							\
 	sortsmillff/cython/gmpy.pxi sortsmillff/cython/guile.pxd			\
 	sortsmillff/cython/linalg.pxd sortsmillff/cython/splinefont.pxd		\
