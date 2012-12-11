@@ -14,7 +14,7 @@
  * this:
  *
  *    gcc --std=gnu99 -fPIC -shared simple_menu_extension_in_C.c \
- *          -o simple_menu_extension_in_C.so -lsortsmillff_fontforge
+ *          -o simple_menu_extension_in_C.so
  *
  * Add something like the following to
  * ${HOME}/.config/sortsmill-fontforge/user-init.scm:
