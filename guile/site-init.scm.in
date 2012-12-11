@@ -19,6 +19,10 @@
    (system foreign)
    (system repl error-handling))
 
+(let ((guilemoduledir "@guilemoduledir@")
+      (guileobjmoduledir "@guileobjmoduledir@"))
+   (simple-format #t "~s\n~s\n" guilemoduledir guileobjmoduledir))
+
 ;; FIXME: Make the error handling more useful, like the Python error
 ;; handling.
 (call-with-error-handling

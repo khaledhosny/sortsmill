@@ -26,6 +26,7 @@
 
 include $(top_srcdir)/mk/flags.am
 include $(top_srcdir)/mk/guile.mk
+include $(top_srcdir)/mk/scheme.mk
 
 #--------------------------------------------------------------------------
 

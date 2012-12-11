@@ -26,6 +26,7 @@
 
 include $(top_srcdir)/mk/flags.am
 include $(top_srcdir)/mk/guile.mk
+include $(top_srcdir)/mk/scheme.mk
 
 #--------------------------------------------------------------------------
 
@@ -151,6 +152,7 @@ endif HAVE_GUI
 install-data-hook:
 #	Make sure the source module is no younger than the compiled
 #	module.
+	$(MKDIR_P) "$(DESTDIR)$(guileobjmoduledir)/sortsmillff"
 	@for f in $(GO_FILES); do												\
 		if test -f "$${f}"; then 											\
 			if test -f $(DESTDIR)$(guileobjmoduledir)/"$${f}"; then			\
