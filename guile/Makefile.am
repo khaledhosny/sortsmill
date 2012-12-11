@@ -93,16 +93,6 @@ else !HAVE_PYTHON_SCRIPTING
 have_python_scripting = f
 endif !HAVE_PYTHON_SCRIPTING
 
-site-init.scm: site-init.scm.in
-	$(AM_V_GEN)
-	$(AM_V_at)$(SED) 													\
-		-e 's|@''PACKAGE''@|$(PACKAGE)|g' 								\
-		-e 's|@''sysconfdir''@|$(sysconfdir)|g'							\
-		-e 's|@''pkgpythondatadir''@|$(pkgpythondatadir)|g'				\
-		-e 's|@''have_python_scripting''@|$(have_python_scripting)|g'	\
-		< $< > $@-tmp
-	$(AM_V_at)mv $@-tmp $@
-
 EXTRA_DIST += site-init.scm.in
 MOSTLYCLEANFILES += site-init.scm
 

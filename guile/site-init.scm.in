@@ -19,9 +19,18 @@
    (system foreign)
    (system repl error-handling))
 
-(let ((guilemoduledir "@guilemoduledir@")
-      (guileobjmoduledir "@guileobjmoduledir@"))
-   (simple-format #t "~s\n~s\n" guilemoduledir guileobjmoduledir))
+;;
+;; Try to ensure access to Sorts Mill FontForge’s Guile modules.
+;;
+(eval-when (compile load eval)
+   (let ((guilemoduledir "@guilemoduledir@"))
+      (unless (member guilemoduledir %load-path)
+         (add-to-load-path guilemoduledir))))
+(eval-when (compile load eval)
+   (let ((guileobjmoduledir "@guileobjmoduledir@"))
+      (unless (member guileobjmoduledir %load-compiled-path)
+         (set! %load-compiled-path
+            (cons guileobjmoduledir %load-compiled-path)))))
 
 ;; FIXME: Make the error handling more useful, like the Python error
 ;; handling.

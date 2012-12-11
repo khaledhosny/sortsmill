@@ -35,6 +35,9 @@ CONFIGURE_SCHEME =														\
 		-e 's|@''guileextensiondir''@|$(guileextensiondir)|g'			\
 		-e 's|@''guilemoduledir''@|$(guilemoduledir)|g'					\
 		-e 's|@''guileobjmoduledir''@|$(guileobjmoduledir)|g'			\
+		-e 's|@''sysconfdir''@|$(sysconfdir)|g'							\
+		-e 's|@''pkgpythondatadir''@|$(pkgpythondatadir)|g'				\
+		-e 's|@''have_python_scripting''@|$(have_python_scripting)|g'	\
 		-e 's|@''FF_TEXTDOMAIN''@|$(FF_TEXTDOMAIN)|g' 					\
 		-e 's|@''FF_SHORTCUTSDOMAIN''@|$(FF_SHORTCUTSDOMAIN)|g'			\
 		-e 's|@''FF_MACSHORTCUTSDOMAIN''@|$(FF_MACSHORTCUTSDOMAIN)|g'	\

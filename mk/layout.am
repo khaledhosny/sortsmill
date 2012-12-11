@@ -65,7 +65,7 @@ guileextensiondir = $(libdir)
 guilemoduledir = $(datarootdir)/guile/site/$(GUILE_API)
 
 # Where compiled Guile modules go.
-guileobjmoduledir = $(datarootdir)/guile/$(GUILE_API)/site-ccache
+guileobjmoduledir = $(libdir)/guile/$(GUILE_API)/site-ccache
 
 # Where Cython .pxd and .pxi files go.
 cythonincludedir = $(includedir)
