@@ -45,14 +45,14 @@
    (match instruction
       (('struct (? string? struct-name) (? integer? size))
        (format #t "inline void *malloc_ff_~a (void);\n" struct-name)
-       (format #t "inline void *malloc_ff_~a (void) { xdie_on_null (calloc (1, ~d)); }\n"
+       (format #t "inline void *malloc_ff_~a (void) { return xdie_on_null (calloc (1, ~d)); }\n"
           struct-name size)
        (format #t "\n")
        (format #t "inline void free_ff_~a (void *);\n" struct-name)
        (format #t "inline void free_ff_~a (void *p) { free (p); }\n" struct-name)
        (format #t "\n")
        (format #t "inline void *gc_malloc_ff_~a (void);\n" struct-name)
-       (format #t "inline void *gc_malloc_ff_~a (void) { x_gc_malloc (~d); }\n"
+       (format #t "inline void *gc_malloc_ff_~a (void) { return x_gc_malloc (~d); }\n"
           struct-name size)
        (format #t "\n")
        (format #t "inline void gc_free_ff_~a (void *);\n" struct-name)

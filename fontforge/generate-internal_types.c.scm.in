@@ -44,23 +44,23 @@
 (define (write-instruction instruction)
    (match instruction
       (('struct (? string? struct-name) (? integer? size))
-       (format #t "VISIBLE inline void *malloc_ff_~a (void);\n" struct-name)
-       (format #t "VISIBLE inline void free_ff_~a (void *);\n" struct-name)
-       (format #t "VISIBLE inline void *gc_malloc_ff_~a (void);\n" struct-name)
-       (format #t "VISIBLE inline void gc_free_ff_~a (void *);\n" struct-name)
+       (format #t "VISIBLE void *malloc_ff_~a (void);\n" struct-name)
+       (format #t "VISIBLE void free_ff_~a (void *);\n" struct-name)
+       (format #t "VISIBLE void *gc_malloc_ff_~a (void);\n" struct-name)
+       (format #t "VISIBLE void gc_free_ff_~a (void *);\n" struct-name)
        (format #t "\n")
        )
       (('sizeof (? string? struct-name) (? integer? size))
-       (format #t "VISIBLE inline size_t sizeof_ff_~a (void);\n" struct-name)
+       (format #t "VISIBLE size_t sizeof_ff_~a (void);\n" struct-name)
        (format #t "\n")
        )
       (('field (? symbol? field-type) (? string? struct-name)
           (? string? field-name) (? integer? offset) (? integer? size))
-       (format #t "VISIBLE inline ~a get_ff_~a_~a (void *);\n"
+       (format #t "VISIBLE ~a get_ff_~a_~a (void *);\n"
           (value-c-type field-type size) struct-name field-name)
-       (format #t "VISIBLE inline void set_ff_~a_~a (void *, ~a);\n"
+       (format #t "VISIBLE void set_ff_~a_~a (void *, ~a);\n"
           struct-name field-name (value-c-type field-type size))
-       (format #t "VISIBLE inline void *ptr_ff_~a_~a (void *);\n"
+       (format #t "VISIBLE void *ptr_ff_~a_~a (void *);\n"
           struct-name field-name)
        (format #t "\n")
        )
