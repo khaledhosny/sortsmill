@@ -34,11 +34,11 @@ nobase_nodist_guilemodule_DATA = $(NODIST_SCM_FILES)
 EXTRA_DIST = $(DIST_SCM_IN_FILES)
 MOSTLYCLEANFILES = $(NODIST_SCM_FILES) $(GO_FILES)
 
-DIST_SCM_FILES = sortsmillff/gsl.scm sortsmillff/iconv.scm	\
-	sortsmillff/linalg.scm sortsmillff/precompute.scm		\
-	sortsmillff/polyspline.scm sortsmillff/brentroot.scm	\
-	sortsmillff/sfd-to-sxml.scm sortsmillff/views.scm		\
-	sortsmillff/internal-types-syntax.scm
+DIST_SCM_FILES = sortsmillff/gsl.scm sortsmillff/iconv.scm		\
+	sortsmillff/linalg.scm sortsmillff/polyspline.scm			\
+	sortsmillff/brentroot.scm sortsmillff/sfd-to-sxml.scm		\
+	sortsmillff/views.scm sortsmillff/internal-types-syntax.scm
+#sortsmillff/precompute.scm
 if HAVE_GUI
 DIST_SCM_FILES += sortsmillff/usermenu.scm
 endif HAVE_GUI
@@ -50,13 +50,14 @@ NODIST_SCM_FILES = sortsmillff/pkg-info.scm				\
 	sortsmillff/math-constants.scm sortsmillff/i18n.scm	\
 	sortsmillff/internal-types.scm
 
-GO_FILES = sortsmillff/pkg-info.go sortsmillff/gsl.go			\
-	sortsmillff/math-constants.go sortsmillff/i18n.go			\
-	sortsmillff/iconv.go sortsmillff/linalg.go					\
-	sortsmillff/precompute.go sortsmillff/polyspline.go			\
-	sortsmillff/brentroot.go sortsmillff/sfd-to-sxml.go			\
-	sortsmillff/views.go sortsmillff/internal-types-syntax.go	\
+GO_FILES = sortsmillff/pkg-info.go sortsmillff/gsl.go	\
+	sortsmillff/math-constants.go sortsmillff/i18n.go	\
+	sortsmillff/iconv.go sortsmillff/linalg.go			\
+	sortsmillff/polyspline.go sortsmillff/brentroot.go	\
+	sortsmillff/sfd-to-sxml.go sortsmillff/views.go		\
+	sortsmillff/internal-types-syntax.go				\
 	sortsmillff/internal-types.go
+#sortsmillff/precompute.go 
 if HAVE_GUI
 GO_FILES += sortsmillff/usermenu.go
 endif HAVE_GUI
@@ -74,9 +75,11 @@ sortsmillff/internal-types.scm: generate-internal-types.scm	\
 sortsmillff/brentroot.go: sortsmillff/math-constants.go
 sortsmillff/i18n.go: libguile-sortsmillff_iconv.la
 sortsmillff/internal-types.go: sortsmillff/internal-types-syntax.go
+sortsmillff/internal-types-syntax.go: sortsmillff/pkg-info.go
 sortsmillff/gsl.go: libguile-sortsmillff_aux.la
-sortsmillff/precompute.go: sortsmillff/linalg.go
+#sortsmillff/precompute.go: sortsmillff/linalg.go
 sortsmillff/sfd-to-sxml.go: sortsmillff/gsl.go sortsmillff/i18n.go
+sortsmillff/usermenu.go: sortsmillff/views.go
 sortsmillff/views.go: sortsmillff/internal-types.go
 
 #--------------------------------------------------------------------------

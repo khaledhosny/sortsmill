@@ -18,7 +18,6 @@
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 (use-modules
-   (sortsmillff internal-types-syntax)
    (ice-9 popen)
    (ice-9 match)
    (ice-9 format)

@@ -1,0 +1,5 @@
+(module hello
+  (main main))
+
+(define (main x)
+ (display "Hello, world!\n"))
