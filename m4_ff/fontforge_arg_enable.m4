@@ -64,7 +64,7 @@ if test x"${i_do_have_bigloo_api}" = xyes; then
 [release-number specific-version library-safety homeurl shell c-compiler-style c-compiler c-compiler-o-option c-compiler-debug-option c-compiler-optim-flag c-flag c-strip-flag c-prof-flag c-object-file-extension c-string-split c-linker-style c-linker-o-option c-linker-debug-option c-linker-optim-flags ld-library-dir library-directory non-custom-gc-directory zip-directory dll-directory user-libraries c-beautifier dirname-cmd library-base-name heap-debug-copt have-shared-library shared-link-option static-link-option auto-finalizer have-dlopen dlopen-lib have-bigloo-abort java jar java-shell jflags jvflags default-back-end gc-lib gc-custom have-bdb dns-cache-enabled shell-mv shell-rm endianess regexp],
 [
 dnl if `${BIGLOO} -eval '(if (equal? (bigloo-config (quote __key)) #unspecified) (exit 0) (exit 1))'`; then
-   AC_SUBST(__BIGLOO_VAR(__key),[`${BIGLOO} -eval '(let ((v (bigloo-config (quote __key)))) (cond ((string? v) (display v)) ((eq? v #t) (display (quote yes))) ((eq? v #f) (display (quote no))) (else (display "")) ))(exit 0)'`])
+   AC_SUBST(__BIGLOO_VAR(__key),[`${BIGLOO} -eval '(let ((v (bigloo-config (quote __key)))) (cond ((string? v) (display v)) ((symbol? v) (display v)) ((eq? v #t) (display (quote yes))) ((eq? v #f) (display (quote no))) ((eq? v #unspecified) (display "")) (else (write v)) ))(exit 0)'`])
 dnl fi
 ])
    if test x"${BIGLOO_RELEASE_NUMBER}" = x; then
