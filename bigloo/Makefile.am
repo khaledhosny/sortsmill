@@ -36,7 +36,7 @@ hello: hello_c.o hello.so
 	gcc $^ -o $@
 
 hello.so: hello.o
-	bigloo -copt '-fPIC -shared' $< -o hello.so
+	bigloo -v3 -copt '-fPIC -shared' $< -o hello.so
 #	gcc -fPIC -shared $< -o hello.so -lbigloo_s-$(RELEASE) `pkg-config --libs bdw-gc`
 
 hello_c.o: hello_c.c
