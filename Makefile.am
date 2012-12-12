@@ -47,10 +47,6 @@ if PYTHON_SCRIPTING
 SUBDIRS += python
 endif PYTHON_SCRIPTING
 
-if BIGLOO_API
-SUBDIRS += bigloo
-endif BIGLOO_API
-
 if MACINTOSH
 SUBDIRS += mackeys
 endif MACINTOSH

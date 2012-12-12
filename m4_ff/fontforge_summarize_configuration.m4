@@ -25,7 +25,6 @@ Optional features:
   real (floating pt) ${my_real_type}
   programs           ${i_do_have_programs}
   python scripting   ${i_do_have_python_scripting}
-  bigloo API         ${i_do_have_bigloo_api}  	${bigloo_url}
   freetype debugger  ${i_do_have_freetype_debugger}
   capslock for alt   ${i_do_have_capslock_for_alt}
   raw points mode    ${i_do_have_debug_raw_points}
