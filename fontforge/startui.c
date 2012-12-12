@@ -190,34 +190,6 @@ AddR (char *name, char *val)
   free (full);
 }
 
-static int
-ReopenLastFonts (void)
-{
-  char buffer[1024];
-  char *ffdir = getUserCacheDir ();
-  FILE *old;
-  int any = 0;
-
-  if (ffdir == NULL)
-    return (false);
-  sprintf (buffer, "%s/FontsOpenAtLastQuit", ffdir);
-  old = fopen (buffer, "r");
-  if (old == NULL)
-    return (false);
-  while (fgets (buffer, sizeof (buffer), old) != NULL)
-    {
-      int len = strlen (buffer);
-      if (buffer[len - 1] == '\n')
-        buffer[--len] = '\0';
-      if (buffer[len - 1] == '\r')
-        buffer[--len] = '\0';
-      if (ViewPostScriptFont (buffer, 0) != 0)
-        any = 1;
-    }
-  fclose (old);
-  return (any);
-}
-
 //-------------------------------------------------------------------------
 
 static const char site_init_file[] = "site-init.scm";
@@ -487,10 +459,8 @@ fontforge_main_in_guile_mode (int argc, char **argv)
           free (buffer);
         }
     }
-  if (!any && !doopen)
-    any = ReopenLastFonts ();
   if (doopen || !any)
-    MenuOpen (NULL, NULL, NULL);
+    FontNew ();
   GDrawEventLoop (NULL);
 
   uninm_names_db_close (names_db);

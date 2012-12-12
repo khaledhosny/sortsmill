@@ -180,13 +180,13 @@ AM_CYTHONFLAGS = '-I$(top_builddir)/inc' '-I$(top_srcdir)/inc'	\
 	'-I$(builddir)/sortsmillff' '-I$(srcdir)/sortsmillff'
 
 # FIXME: Maybe support extensions other than .so.
-sortsmillff/%.so: sortsmillff/%.la
-	-rm -f $@
-	cp sortsmillff/$(LT_OBJDIR)$*.so $@
-
 sortsmillff/legacy/%.so: sortsmillff/legacy/%.la
 	-rm -f $@
 	cp sortsmillff/legacy/$(LT_OBJDIR)$*.so $@
+
+sortsmillff/%.so: sortsmillff/%.la
+	-rm -f $@
+	cp sortsmillff/$(LT_OBJDIR)$*.so $@
 
 # These shared object files are needed by the test suite.
 all-local: all-local-HAVE_GUI sortsmillff/psMat.so						\

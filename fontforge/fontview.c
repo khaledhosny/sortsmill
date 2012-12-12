@@ -884,11 +884,9 @@ return;
 static void _MenuExit(void *UNUSED(junk)) {
     FontView *fv, *next;
 
-    LastFonts_Activate();
     for ( fv = fv_list; fv!=NULL; fv = next ) {
 	next = (FontView *) (fv->b.next);
 	if ( !_FVMenuClose(fv)) {
-	    LastFonts_End(false);
 return;
 	}
 	if ( fv->b.nextsame!=NULL || fv->b.sf->fv!=&fv->b ) {
@@ -896,7 +894,6 @@ return;
 	    GDrawProcessPendingEvents(NULL);
 	}
     }
-    LastFonts_End(true);
     exit(0);
 }
 
