@@ -97,6 +97,7 @@ giflib_url="http://giflib.sourceforge.net/"
 libpng_url="http://www.libpng.org/"
 libspiro_url="http://libspiro.sourceforge.net/"
 libunicodenames_url="https://github.com/sortsmill/libunicodenames"
+pure_url="http://pure-lang.googlecode.com/"
 
 # Point to the Wikipedia page, primarily because one may want
 # libjpeg-turbo rather than the reference implementation.
@@ -158,6 +159,7 @@ AM_CONDITIONAL([THE_PROGRAMS],[test x"${i_do_have_programs}" = xyes])
 AC_SUBST([THE_PROGRAMS],["${i_do_have_programs}"])
 
 FONTFORGE_ARG_DISABLE_PYTHON_SCRIPTING
+FONTFORGE_ARG_ENABLE_PURE_API
 
 AC_ARG_ENABLE([freetype-debugger],
         [AS_HELP_STRING([--enable-freetype-debugger[[=DIR]]],

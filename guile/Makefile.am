@@ -51,37 +51,11 @@ NODIST_SCM_FILES = sortsmillff/pkg-info.scm				\
 	sortsmillff/math-constants.scm sortsmillff/i18n.scm	\
 	sortsmillff/internal-types.scm
 
-GO_FILES = sortsmillff/pkg-info.go sortsmillff/gsl.go	\
-	sortsmillff/math-constants.go sortsmillff/i18n.go	\
-	sortsmillff/iconv.go sortsmillff/linalg.go			\
-	sortsmillff/polyspline.go sortsmillff/brentroot.go	\
-	sortsmillff/sfd-to-sxml.go sortsmillff/views.go		\
-	sortsmillff/internal-types-syntax.go				\
-	sortsmillff/internal-types.go
-#sortsmillff/precompute.go 
-if HAVE_GUI
-GO_FILES += sortsmillff/usermenu.go
-endif HAVE_GUI
-
-# The Guile object files do get installed, but by an install hook
-# elsewhere in this Makefile.am.
-noinst_DATA = $(GO_FILES)
-
 sortsmillff/internal-types.scm: generate-internal-types.scm	\
 		$(top_builddir)/fontforge/fontforge_type_inspector
 	$(AM_V_GEN)
 	$(AM_V_at)$(GUILE_INTERPRET) generate-internal-types.scm > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
-
-sortsmillff/brentroot.go: sortsmillff/math-constants.go
-sortsmillff/i18n.go: libguile-sortsmillff_iconv.la
-sortsmillff/internal-types.go: sortsmillff/internal-types-syntax.go
-sortsmillff/internal-types-syntax.go: sortsmillff/pkg-info.go
-sortsmillff/gsl.go: libguile-sortsmillff_aux.la
-#sortsmillff/precompute.go: sortsmillff/linalg.go
-sortsmillff/sfd-to-sxml.go: sortsmillff/gsl.go sortsmillff/i18n.go
-sortsmillff/usermenu.go: sortsmillff/views.go
-sortsmillff/views.go: sortsmillff/internal-types.go
 
 #--------------------------------------------------------------------------
 
@@ -139,27 +113,26 @@ endif HAVE_GUI
 
 #--------------------------------------------------------------------------
 
-install-data-hook:
-#	Make sure the source module is no younger than the compiled
-#	module.
-	$(MKDIR_P) "$(DESTDIR)$(guileobjmoduledir)/sortsmillff"
-	@for f in $(GO_FILES); do												\
-		if test -f "$${f}"; then 											\
-			if test -f $(DESTDIR)$(guileobjmoduledir)/"$${f}"; then			\
-				echo "rm -f $(DESTDIR)$(guileobjmoduledir)/$${f}";			\
-				rm -f $(DESTDIR)$(guileobjmoduledir)/"$${f}";				\
-			fi;																\
-			echo "cat $${f} > $(DESTDIR)$(guileobjmoduledir)/$${f}";		\
-			cat "$${f}" > $(DESTDIR)$(guileobjmoduledir)/"$${f}";			\
-			chmod 0644 $(DESTDIR)$(guileobjmoduledir)/"$${f}";				\
-		fi																	\
+install-data-hook: uninstall-guile-object-files
+	@$(MKDIR_P) '$(DESTDIR)$(guileobjmoduledir)/sortsmillff'
+	@echo '   Compiling Guile modules ...'
+	@for f in $(DIST_SCM_FILES) $(NODIST_SCM_FILES); do						\
+		f_go=`echo "$${f}" | $(SED) -e 's/\.scm$$/.go/'`;					\
+		full_go="$(DESTDIR)$(guileobjmoduledir)/$${f_go}";					\
+		cd '$(DESTDIR)$(guilemoduledir)' && 								\
+			LTDL_LIBRARY_PATH='$(abs_top_builddir)/guile'					\
+				$(GUILE_TOOLS) compile -o "$${full_go}" "$${f}"; 			\
 	done
+	@echo '   ... done compiling Guile modules.'
 
-uninstall-local:
-	@for f in $(GO_FILES); do												\
-		if test -f $(DESTDIR)$(guileobjmoduledir)/"$${f}"; then 			\
-			echo 'rm -f $(DESTDIR)$(guileobjmoduledir)/'"$${f}";			\
-			rm -f $(DESTDIR)$(guileobjmoduledir)/"$${f}";					\
+uninstall-local: uninstall-guile-object-files
+
+uninstall-guile-object-files:
+	@for f in $(DIST_SCM_FILES) $(NODIST_SCM_FILES); do						\
+		f_go=`echo "$${f}" | $(SED) -e 's/\.scm$$/.go/'`;					\
+		if test -f $(DESTDIR)$(guileobjmoduledir)/"$${f_go}"; then 			\
+			echo 'rm -f $(DESTDIR)$(guileobjmoduledir)/'"$${f_go}";			\
+			rm -f $(DESTDIR)$(guileobjmoduledir)/"$${f_go}";				\
 		fi																	\
 	done
 

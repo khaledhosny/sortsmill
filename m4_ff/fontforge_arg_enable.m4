@@ -44,6 +44,41 @@ AM_CONDITIONAL([PYTHON_SCRIPTING],[test x"${i_do_have_python_scripting}" = xyes]
 ])
 
 
+dnl FONTFORGE_ARG_ENABLE_PURE_API
+dnl -----------------------------
+AC_DEFUN([FONTFORGE_ARG_ENABLE_PURE_API],
+[
+AC_ARG_VAR([PURE],[Pure interpreter command])
+AC_ARG_VAR([PURE_INCLUDEDIR],[directory for Pure-language included source scripts [DIR=LIBDIR/pure]])
+AC_ARG_VAR([PURE_LIBDIR],[directory for Pure-language dynamic libraries [DIR=LIBDIR/pure]])
+
+AC_SUBST([pure_includedir], ['${libdir}/pure'])
+test x"$PURE_INCLUDEDIR" = x || AC_SUBST([pure_includedir],['${PURE_INCLUDEDIR}'])
+
+AC_SUBST([pure_libdir], ['${libdir}/pure'])
+test x"$PURE_LIBDIR" = x || AC_SUBST([pure_libdir],['${PURE_LIBDIR}'])
+
+AC_ARG_ENABLE([pure-api],
+        [AS_HELP_STRING([--enable-pure-api],[build the Pure API])],
+        [i_do_have_pure_api="${enableval}"],
+        [i_do_have_pure_api=no])
+if test x"${i_do_have_pure_api}" = xyes; then
+   PKG_CHECK_MODULES([PURE],[pure])
+fi
+if test x"${i_do_have_pure_api}" = xyes; then
+   if test x"${PURE}" = x; then
+      AC_MSG_CHECKING([for the `pure' command])
+      AC_PATH_PROG([PURE],[pure])
+      if test x"${PURE}" = x; then
+         AC_MSG_ERROR([could not find `pure'])
+      fi
+      AC_MSG_RESULT([${PURE}])
+   fi
+fi
+AM_CONDITIONAL([PURE_API],[test x"${i_do_have_pure_api}" = xyes])
+])
+
+
 dnl FONTFORGE_ARG_ENABLE_REAL
 dnl -------------------------
 AC_DEFUN([FONTFORGE_ARG_ENABLE_REAL],
