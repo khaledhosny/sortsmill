@@ -27,22 +27,17 @@
 include $(top_srcdir)/mk/flags.am
 include $(top_srcdir)/mk/guile.mk
 include $(top_srcdir)/mk/scheme.mk
+include $(top_srcdir)/mk/bigloo.mk
 
 #--------------------------------------------------------------------------
 
-RELEASE = 3.9a
+noinst_PROGRAMS = hello
 
-hello: hello_c.o hello.so
-	gcc $^ -o $@
+hello_SOURCES = hello.c hello_c.c
+hello_CFLAGS = $(MY_CFLAGS) $(BIGLOO_CFLAGS) $(BIGLOO_EXTRA_CFLAGS)	\
+	$(call bigloo_init_proc,_sortsmillff_hello_init)
+hello_LDFLAGS = $(MY_CFLAGS) $(BIGLOO_LIBS) $(MY_LIBS)
 
-hello.so: hello.o
-	bigloo -v3 -copt '-fPIC -shared' $< -o hello.so
-#	gcc -fPIC -shared $< -o hello.so -lbigloo_s-$(RELEASE) `pkg-config --libs bdw-gc`
-
-hello_c.o: hello_c.c
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
-
-%.o: %.scm
-	bigloo -O2 -copt -fPIC -copt "-DBIGLOO_MAIN=_sortsmillff_$*_init -DBIGLOO_EXIT='BUNSPEC,'" -c $< -o $@
+MOSTLYCLEANFILES = hello.c
 
 #--------------------------------------------------------------------------

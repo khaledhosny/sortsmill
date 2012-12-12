@@ -72,6 +72,10 @@ dnl fi
    fi
    AC_MSG_RESULT([Bigloo release ${BIGLOO_RELEASE_NUMBER}])
 fi
+
+test x"${BGLFLAGS}" == x && BGLFLAGS="-O2"
+AC_SUBST([BGLFLAGS])
+
 AC_SUBST([BIGLOO_API],["${i_do_have_bigloo_api}"])
 AM_CONDITIONAL([BIGLOO_API],[test x"${i_do_have_bigloo_api}" = xyes])
 ])
