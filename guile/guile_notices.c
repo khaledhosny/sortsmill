@@ -59,11 +59,11 @@ scm_post_fontforge_error (SCM title, SCM message)
 VISIBLE void
 init_guile_sortsmillff_notices (void)
 {
-  scm_c_define_gsubr ("log_fontforge_warning", 1, 0, 0,
+  scm_c_define_gsubr ("log-fontforge-warning", 1, 0, 0,
                       scm_log_fontforge_warning);
-  scm_c_define_gsubr ("post_fontforge_notice", 2, 0, 0,
+  scm_c_define_gsubr ("post-fontforge-notice", 2, 0, 0,
                       scm_post_fontforge_notice);
-  scm_c_define_gsubr ("post_fontforge_error", 2, 0, 0,
+  scm_c_define_gsubr ("post-fontforge-error", 2, 0, 0,
                       scm_post_fontforge_error);
 }
 

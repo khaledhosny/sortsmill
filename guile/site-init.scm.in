@@ -18,8 +18,6 @@
 (use-modules
    (system foreign)
    (sortsmillff notices)
-   (ice-9 match)
-   (srfi srfi-26)                       ; ‘cut’ and ‘cute’.
    )
 
 ;;
@@ -35,9 +33,7 @@
          (set! %load-compiled-path
             (cons guileobjmoduledir %load-compiled-path)))))
 
-(define *fontforge-site-init-stack* #f)
-
-(catch #t
+(fontforge-catch "site-init.scm" #t
    (lambda ()
 
       ;;
@@ -45,7 +41,8 @@
       ;;
       (let ((local-init "@sysconfdir@/@PACKAGE@/local-init.scm"))
          (if (file-exists? local-init)
-             (primitive-load local-init)))
+             (fontforge-catch "local-init.scm" #t
+                (lambda () (primitive-load local-init)))))
 
       ;;
       ;; Load user-init.scm.
@@ -61,7 +58,8 @@
              (let ((user-init (string-append user-config-dir
                                  "/@PACKAGE@/user-init.scm")))
                 (if (file-exists? user-init)
-                    (primitive-load user-init)))))
+                    (fontforge-catch "user-init.scm" #t
+                       (lambda () (primitive-load user-init)))))))
 
       (if #@have_python_scripting@
           ;;
@@ -88,29 +86,4 @@
                         (PyRun_SimpleFile f (string->pointer py-init))
                         (fclose f))))))
 
-      )
-
-   ;; Post-unwind handler.
-   (lambda (key . args)
-      (log_fontforge_warning
-         (with-output-to-string
-            (lambda ()
-               (display-backtrace *fontforge-site-init-stack*
-                  (current-output-port)))))
-      (post_fontforge_error "site-init.scm"
-         (let ((in_proc (lambda (proc)
-                           (if proc
-                               (simple-format #f "In procedure ~A : " proc)
-                               ""))))
-         (match args
-            ((proc (? string? str) #f data)
-             (simple-format #f "~A~A" (in_proc proc) str))
-            ((proc (? string? fmt) (? list? args) data)
-             (simple-format #f "~A~A" (in_proc proc)
-                (apply (cute simple-format #f fmt <...>) args)))
-            (_ (simple-format #f "Uncaught throw: '~A . ~A" key args))))))
-
-   ;; Pre-unwind handler.
-   (lambda (key . args)
-      (set! *fontforge-site-init-stack* (make-stack #t)))
-   )
+      ))

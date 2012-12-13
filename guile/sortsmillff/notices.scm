@@ -17,10 +17,55 @@
 
 (define-module (sortsmillff notices))
 
+(use-modules
+   (ice-9 match)
+   (srfi srfi-26)                       ; ‘cut’ and ‘cute’.
+   )
+
 (export
-   log_fontforge_warning
-   post_fontforge_notice
-   post_fontforge_error)
+   log-fontforge-warning
+   post-fontforge-notice
+   post-fontforge-error
+   fontforge-catch
+   *fontforge-pre-unwind-stack*
+   *fontforge-pre-unwind-handler*
+   *fontforge-throw-handler*
+   )
 
 (load-extension "libguile-sortsmillff_fontforge"
    "init_guile_sortsmillff_notices")
+
+(define (fontforge-catch window-title key thunk)
+   (let ((*fontforge-pre-unwind-stack* #f))
+      (let ((*fontforge-pre-unwind-handler*
+              (lambda (key . args)
+                 (set! *fontforge-pre-unwind-stack* (make-stack #t))))
+
+            (*fontforge-throw-handler*
+               (lambda (key . args)
+
+                  (when *fontforge-pre-unwind-stack*
+                     (log-fontforge-warning
+                        (with-output-to-string
+                           (lambda ()
+                              (display-backtrace *fontforge-pre-unwind-stack*
+                                 (current-output-port)))))
+                     (set! *fontforge-pre-unwind-stack* #f))
+
+                  (post-fontforge-error window-title
+                     (let ((in-proc (lambda (proc)
+                                       (if proc
+                                           (simple-format #f "In procedure ~A : " proc)
+                                           ""))))
+                        (match args
+                           ((proc (? string? str) #f data)
+                            (simple-format #f "~A~A" (in-proc proc) str))
+                           ((proc (? string? fmt) (? list? args) data)
+                            (simple-format #f "~A~A" (in-proc proc)
+                               (apply (cute simple-format #f fmt <...>) args)))
+                           (_ (simple-format #f "Uncaught throw: '~A . ~A" key args))))))))
+
+         (catch key
+            thunk
+            *fontforge-throw-handler*
+            *fontforge-pre-unwind-handler*))))
