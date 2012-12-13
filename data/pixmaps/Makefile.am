@@ -28,6 +28,7 @@
 include $(top_srcdir)/mk/layout.am
 
 PNG_LIST = \
+	about.png \
 	bvpress2ptr.png \
 	check_off.png \
 	check_on.png \

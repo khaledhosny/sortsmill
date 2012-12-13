@@ -1004,6 +1004,8 @@ AboutScreenExpose (GWindow gw, GRect rect)
   uint32_t *lines[20], *is, *ie;
   GImage *image = NULL;
 
+  char copyright[40] = "Copyright © 2000-2012 George Williams";
+
   u32_strcpy (msg,
               x_gc_u8_to_u32
               ("When my father finished his book on Renaissance printing"
@@ -1014,7 +1016,7 @@ AboutScreenExpose (GWindow gw, GRect rect)
   font = GDrawNewFont (NULL, "serif", 12, 400, fs_none);
   italic = GDrawNewFont (NULL, "serif", 12, 400, fs_italic);
 
-  image = GImageRead (SHAREDIR "/pixmaps/splash.png");
+  image = GImageRead (SHAREDIR "/pixmaps/about.png");
   if (image != NULL)
     {
       imagewidth = image->u.image->width;
@@ -1066,6 +1068,9 @@ AboutScreenExpose (GWindow gw, GRect rect)
 
   if (image != NULL)
     GDrawDrawImage (gw, image, NULL, 0, 0);
+
+  x = (imagewidth - GDrawGetText8Width (gw, copyright, strlen(copyright))) / 2;
+  GDrawDrawText8(gw, x, imageheight - ds, copyright, strlen(copyright), 0x000000);
 
   y = imageheight + as + fh / 2;
   for (int i = 1; i < linecnt; ++i)
