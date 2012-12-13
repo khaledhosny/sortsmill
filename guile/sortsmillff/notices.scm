@@ -27,9 +27,6 @@
    post-fontforge-notice
    post-fontforge-error
    fontforge-catch
-   *fontforge-pre-unwind-stack*
-   *fontforge-pre-unwind-handler*
-   *fontforge-throw-handler*
    )
 
 (load-extension "libguile-sortsmillff_fontforge"
