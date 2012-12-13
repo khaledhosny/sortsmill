@@ -993,25 +993,22 @@ void MenuLicense(GWindow UNUSED(base), struct gmenuitem *UNUSED(mi), GEvent *UNU
 static void
 AboutScreenExpose (GWindow gw, GRect rect)
 {
-  uint32_t *start, *pt, *lastspace;
+  char *start, *pt, *lastspace;
   int y, x;
   int ds, ld;
   GRect old;
-  int imagewidth = 379, imageheight = 0;
+  int width = 379, height = 0;
   GFont *font, *italic;
   int as, fh, linecnt;
-  uint32_t msg[470];
-  uint32_t *lines[20], *is, *ie;
+  char *lines[20], *is, *ie;
   GImage *image = NULL;
 
   char copyright[40] = "Copyright © 2000-2012 George Williams";
 
-  u32_strcpy (msg,
-              x_gc_u8_to_u32
-              ("When my father finished his book on Renaissance printing"
-               " (The Craft of Printing and the Publication of Shakespeare's Works)"
-               " he told me that I would have to write the chapter on"
-               " computer typography. This is my attempt to do so."));
+  char msg[470] = "When my father finished his book on Renaissance printing"
+    " (The Craft of Printing and the Publication of Shakespeare's Works)"
+    " he told me that I would have to write the chapter on"
+    " computer typography. This is my attempt to do so.";
 
   font = GDrawNewFont (NULL, "serif", 12, 400, fs_none);
   italic = GDrawNewFont (NULL, "serif", 12, 400, fs_italic);
@@ -1019,8 +1016,8 @@ AboutScreenExpose (GWindow gw, GRect rect)
   image = GImageRead (SHAREDIR "/pixmaps/about.png");
   if (image != NULL)
     {
-      imagewidth = image->u.image->width;
-      imageheight = image->u.image->height;
+      width = image->u.image->width;
+      height = image->u.image->height;
     }
 
   GDrawSetFont (gw, font);
@@ -1036,7 +1033,7 @@ AboutScreenExpose (GWindow gw, GRect rect)
         {
           if (*pt == ' ' || *pt == '\0')
             {
-              if (GDrawGetTextWidth (gw, start, pt - start) < imagewidth - 10)
+              if (GDrawGetText8Width (gw, start, pt - start) < width - 10)
                 lastspace = pt;
               else
                 break;
@@ -1051,49 +1048,47 @@ AboutScreenExpose (GWindow gw, GRect rect)
         ++pt;
     }
 
-  u32_strcpy (pt, x_gc_u8_to_u32 (" FontForge used to be named PfaEdit."));
-  pt += u32_strlen (pt);
+  strcpy (pt, (" FontForge used to be named PfaEdit."));
+  pt += strlen (pt);
   lines[linecnt++] = pt;
-  u32_strcat (pt, x_gc_u8_to_u32 (" "));
-  u32_strcat (pt, x_gc_u8_to_u32 (PACKAGE_STRING));
-  pt += u32_strlen (pt);
+  strcat (pt, " ");
+  strcat (pt, PACKAGE_STRING);
+  pt += strlen (pt);
   lines[linecnt] = pt;
   linecnt++;
   lines[linecnt] = NULL;
-  is = u32_strchr (msg, '(');
-  ie = u32_strchr (msg, ')');
+  is = strchr (msg, '(');
+  ie = strchr (msg, ')');
 
-  GDrawResize (gw, imagewidth, imageheight + linecnt * fh);
+  GDrawResize (gw, width, height + linecnt * fh);
   GDrawPushClip (gw, &rect, &old);
 
   if (image != NULL)
     GDrawDrawImage (gw, image, NULL, 0, 0);
 
-  x = (imagewidth - GDrawGetText8Width (gw, copyright, strlen(copyright))) / 2;
-  GDrawDrawText8(gw, x, imageheight - ds, copyright, strlen(copyright), 0x000000);
+  x = (width - GDrawGetText8Width (gw, copyright, -1)) / 2;
+  GDrawDrawText8 (gw, x, height - ds, copyright, -1, 0x000000);
 
-  y = imageheight + as + fh / 2;
+  y = height + as + fh / 2;
   for (int i = 1; i < linecnt; ++i)
     {
       if (is >= lines[i - 1] + 1 && is < lines[i])
         {
-          x =
-            8 + GDrawDrawText (gw, 8, y, lines[i - 1] + 1,
-                               is - lines[i - 1] - 1, 0x000000);
+          x = 8 + GDrawDrawText8 (gw, 8, y, lines[i - 1] + 1,
+                                  is - lines[i - 1] - 1, 0x000000);
           GDrawSetFont (gw, italic);
-          GDrawDrawText (gw, x, y, is, lines[i] - is, 0x000000);
+          GDrawDrawText8 (gw, x, y, is, lines[i] - is, 0x000000);
         }
       else if (ie >= lines[i - 1] + 1 && ie < lines[i])
         {
-          x =
-            8 + GDrawDrawText (gw, 8, y, lines[i - 1] + 1,
-                               ie - lines[i - 1] - 1, 0x000000);
+          x = 8 + GDrawDrawText8 (gw, 8, y, lines[i - 1] + 1,
+                                  ie - lines[i - 1] - 1, 0x000000);
           GDrawSetFont (gw, font);
-          GDrawDrawText (gw, x, y, ie, lines[i] - ie, 0x000000);
+          GDrawDrawText8 (gw, x, y, ie, lines[i] - ie, 0x000000);
         }
       else
-        GDrawDrawText (gw, 8, y, lines[i - 1] + 1,
-                       lines[i] - lines[i - 1] - 1, 0x000000);
+        GDrawDrawText8 (gw, 8, y, lines[i - 1] + 1,
+                        lines[i] - lines[i - 1] - 1, 0x000000);
       y += fh;
     }
   GDrawPopClip (gw, &old);
