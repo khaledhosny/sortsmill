@@ -2077,19 +2077,19 @@ static void CVExpose(CharView *cv, GWindow pixmap, GEvent *event ) {
     GDrawSetLineWidth(pixmap,0);
 
     if ( !cv->show_ft_results && cv->dv==NULL ) {
-	    for ( layer = ly_back; layer<cv->b.sc->layer_cnt; ++layer ) if ( cv->b.sc->layers[layer].images!=NULL ) {
-		if (( sf->multilayer && ((( cv->showback[0]&1 || cvlayer==layer) && layer==ly_back ) ||
-			    ((cv->showfore || cvlayer==layer) && layer>ly_back)) ) ||
-		    ( !sf->multilayer && (((cv->showfore && cvlayer==layer) && layer==ly_fore) ||
-			    (((cv->showback[layer>>5]&(1<<(layer&31))) || cvlayer==layer) && layer!=ly_fore))) ) {
-		    /* This really should be after the grids, but then it would completely*/
-		    /*  hide them. */
-		    DrawImageList(cv,pixmap,cv->b.sc->layers[layer].images);
-		}
+	for ( layer = ly_back; layer<cv->b.sc->layer_cnt; ++layer ) if ( cv->b.sc->layers[layer].images!=NULL ) {
+	    if (( sf->multilayer && ((( cv->showback[0]&1 || cvlayer==layer) && layer==ly_back ) ||
+			((cv->showfore || cvlayer==layer) && layer>ly_back)) ) ||
+		( !sf->multilayer && (((cv->showfore && cvlayer==layer) && layer==ly_fore) ||
+			(((cv->showback[layer>>5]&(1<<(layer&31))) || cvlayer==layer) && layer!=ly_fore))) ) {
+		/* This really should be after the grids, but then it would completely*/
+		/*  hide them. */
+		DrawImageList(cv,pixmap,cv->b.sc->layers[layer].images);
 	    }
-	    cv->back_img_out_of_date = false;
-	    if ( cv->showhhints || cv->showvhints || cv->showdhints || cv->showblues || cv->showfamilyblues)
-		CVShowHints(cv,pixmap);
+	}
+	cv->back_img_out_of_date = false;
+	if ( cv->showhhints || cv->showvhints || cv->showdhints || cv->showblues || cv->showfamilyblues)
+	    CVShowHints(cv,pixmap);
 	if ( cv->backimgs!=NULL ) {
 	    GRect r;
 	    r.x = r.y = 0; r.width = cv->width; r.height = cv->height;
