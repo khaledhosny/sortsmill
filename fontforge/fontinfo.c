@@ -6756,7 +6756,6 @@ GFI_OK (GGadget *g, GEvent *e)
             for (cv = (CharView *) (sf->glyphs[i]->views); cv != NULL;
                  cv = (CharView *) (cv->b.next))
               {
-                cv->back_img_out_of_date = true;
                 GDrawRequestExpose (cv->v, NULL, false);
               }
           }

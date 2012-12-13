@@ -2087,14 +2087,8 @@ static void CVExpose(CharView *cv, GWindow pixmap, GEvent *event ) {
 		DrawImageList(cv,pixmap,cv->b.sc->layers[layer].images);
 	    }
 	}
-	cv->back_img_out_of_date = false;
 	if ( cv->showhhints || cv->showvhints || cv->showdhints || cv->showblues || cv->showfamilyblues)
 	    CVShowHints(cv,pixmap);
-	if ( cv->backimgs!=NULL ) {
-	    GRect r;
-	    r.x = r.y = 0; r.width = cv->width; r.height = cv->height;
-	    GDrawDrawPixmap(pixmap,cv->backimgs,&r,0,0);
-	}
 	if ( cv->showgrids || cv->b.drawmode==dm_grid ) {
 	    CVDrawSplineSet(cv,pixmap,cv->b.fv->sf->grid.splines,guideoutlinecol,
 		    cv->showpoints && cv->b.drawmode==dm_grid,&clip);
@@ -2281,11 +2275,7 @@ static void SC_UpdateAll(SplineChar *sc) {
     }
 }
 
-static void SC_OutOfDateBackground(SplineChar *sc) {
-    CharView *cv;
-
-    for ( cv=(CharView *) (sc->views); cv!=NULL; cv=(CharView *) (cv->b.next) )
-	cv->back_img_out_of_date = true;
+static void SC_OutOfDateBackground(SplineChar *UNUSED(sc)) {
 }
 
 /* CVRegenFill() regenerates data used to show or not show paths as filled */
@@ -2393,7 +2383,6 @@ static void CVNewScale(CharView *cv) {
     GEvent e;
 
     CVRegenFill(cv);
-    cv->back_img_out_of_date = true;
 
     GScrollBarSetBounds(cv->vsb,-20000*cv->scale,8000*cv->scale,cv->height);
     GScrollBarSetBounds(cv->hsb,-8000*cv->scale,32000*cv->scale,cv->width);
@@ -2641,7 +2630,6 @@ return;
 	GGadgetResize(cv->vsb,sbsize.width,sbsize.height+gsize.height);
     }
     GGadgetSetVisible(cv->tabs,makevisible);
-    cv->back_img_out_of_date = true;
     pos.x = 0; pos.y = cv->mbh+cv->infoh;
     pos.width = cv->width; pos.height = cv->height;
     if ( cv->showrulers ) {
@@ -4148,7 +4136,6 @@ static void CVTimer(CharView *cv,GEvent *event) {
 	    else if ( e.u.mouse.y>=cv->height )
 		dy = cv->height/8;
 	    cv->xoff += dx; cv->yoff += dy;
-	    cv->back_img_out_of_date = true;
 	    if ( dy!=0 )
 		GScrollBarSetPos(cv->vsb,cv->yoff-cv->height);
 	    if ( dx!=0 )
@@ -4475,9 +4462,6 @@ return;
 
 	if ( newwidth == cv->width && newheight == cv->height )
 return;
-	if ( cv->backimgs!=NULL )
-	    GDrawDestroyWindow(cv->backimgs);
-	cv->backimgs = NULL;
 
 	/* MenuBar takes care of itself */
 	GDrawResize(cv->v,newwidth,newheight);
@@ -4535,7 +4519,6 @@ static void CVHScroll(CharView *cv, struct sbevent *sb) {
     if ( newpos!=cv->xoff ) {
 	int diff = newpos-cv->xoff;
 	cv->xoff = newpos;
-	cv->back_img_out_of_date = true;
 	GScrollBarSetPos(cv->hsb,-newpos);
 	GDrawScroll(cv->v,NULL,diff,0);
 	if (( cv->showhhints && cv->b.sc->hstem!=NULL ) || cv->showblues || cv->showvmetrics ) {
@@ -4597,7 +4580,6 @@ static void CVVScroll(CharView *cv, struct sbevent *sb) {
     if ( newpos!=cv->yoff ) {
 	int diff = newpos-cv->yoff;
 	cv->yoff = newpos;
-	cv->back_img_out_of_date = true;
 	GScrollBarSetPos(cv->vsb,newpos-cv->height);
 	GDrawScroll(cv->v,NULL,0,diff);
 	if (( cv->showvhints && cv->b.sc->vstem!=NULL) || cv->showhmetrics ) {
@@ -4764,10 +4746,6 @@ return( GGadgetDispatchEvent(cv->vsb,event));
       case et_destroy:
 	CVUnlinkView(cv);
 	CVPalettesHideIfMine(cv);
-	if ( cv->backimgs!=NULL ) {
-	    GDrawDestroyWindow(cv->backimgs);
-	    cv->backimgs = NULL;
-	}
 	if ( cv->icon!=NULL ) {
 	    GDrawDestroyWindow(cv->icon);
 	    cv->icon = NULL;
@@ -5483,23 +5461,18 @@ static void CVMenuShowHints(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e))
     switch ( mi->mid ) {
       case MID_ShowHHints:
 	CVShows.showhhints = cv->showhhints = !cv->showhhints;
-	cv->back_img_out_of_date = true;	/* only this cv */
       break;
       case MID_ShowVHints:
 	CVShows.showvhints = cv->showvhints = !cv->showvhints;
-	cv->back_img_out_of_date = true;	/* only this cv */
       break;
       case MID_ShowDHints:
 	CVShows.showdhints = cv->showdhints = !cv->showdhints;
-	cv->back_img_out_of_date = true;	/* only this cv */
       break;
       case MID_ShowBlueValues:
 	CVShows.showblues = cv->showblues = !cv->showblues;
-	cv->back_img_out_of_date = true;	/* only this cv */
       break;
       case MID_ShowFamilyBlues:
 	CVShows.showfamilyblues = cv->showfamilyblues = !cv->showfamilyblues;
-	cv->back_img_out_of_date = true;	/* only this cv */
       break;
       case MID_ShowAnchors:
 	CVShows.showanchor = cv->showanchor = !cv->showanchor;
@@ -5538,7 +5511,6 @@ static void _CVMenuShowHideRulers(CharView *cv) {
 	cv->height += cv->rulerh;
 	cv->width += cv->rulerh;
     }
-    cv->back_img_out_of_date = true;
     pos.width = cv->width; pos.height = cv->height;
     GDrawMoveResize(cv->v,pos.x,pos.y,pos.width,pos.height);
     GDrawSync(NULL);
@@ -10320,12 +10292,6 @@ static int nested_cv_e_h(GWindow gw, GEvent *event) {
       case et_resize:
 	if ( event->u.resize.sized )
 	    CVResize(cv);
-      break;
-      case et_destroy:
-	if ( cv->backimgs!=NULL ) {
-	    GDrawDestroyWindow(cv->backimgs);
-	    cv->backimgs = NULL;
-	}
       break;
       case et_mouseup: case et_mousedown:
 	GGadgetEndPopup();

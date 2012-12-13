@@ -206,7 +206,6 @@ typedef struct charview
   bool needsrasterize;          /* Rasterization (of fill or fontview) needed on mouse up */
   bool recentchange;            /* a change happened in the grids or background. don't need to rasterize */
   bool info_within;             /* cursor is within main window */
-  bool back_img_out_of_date;    /* Force redraw of back image pixmap */
   bool cntrldown;
   bool joinvalid;
   bool widthsel;
@@ -243,7 +242,6 @@ typedef struct charview
   BasePoint *ruler_intersections;
   GFont *rfont;
   GTimer *pressed;
-  GWindow backimgs;
   GIC *gic;
   GIC *gwgic;
   int width, height;
