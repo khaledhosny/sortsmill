@@ -282,7 +282,6 @@ PNG_LIST = \
 	scu448italic.png \
 	scu452italic.png \
 	scu45fitalic.png \
-	splash.png \
 	styleschangeweight.png \
 	styleschangexheight.png \
 	stylesextendcondense.png \
