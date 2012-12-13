@@ -2657,7 +2657,7 @@ static struct sc_interface noui_sc = {
     SCB_MoreLayers
 };
 
-struct sc_interface *sc_interface = &noui_sc;
+VISIBLE struct sc_interface *sc_interface = &noui_sc;
 
 void FF_SetSCInterface(struct sc_interface *sci) {
     sc_interface = sci;

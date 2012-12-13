@@ -66,6 +66,7 @@ cdef extern from "fontforge.h":
 import sys
 import warnings
 import traceback
+from . import notices
 
 from sortsmillff.legacy.fontforge import (
   layer,
@@ -102,10 +103,8 @@ from sortsmillff.legacy.fontforge import (
   activeLayer,
   glyphlayerrefarray,
   contouriter,
-  postError,
   spiroOpen,
   askString,
-  logWarning,
   printSetup,
   loadPrefs,
   layeriter,
@@ -127,7 +126,6 @@ from sortsmillff.legacy.fontforge import (
   readOtherSubrsFile,
   privateiter,
   openFilename,
-  postNotice,
   loadNamelistDir,
   spiroG4,
   spiroG2,
@@ -176,6 +174,17 @@ def hasUserInterface ():
 
 def hasSpiro ():
   return <bool> hasspiro ()
+
+#--------------------------------------------------------------------------
+
+def logWarning (msg):
+  notices.log_warning (msg)
+
+def postNotice (win_title, msg):
+  notices.post_notice (win_title, msg)
+
+def postError (win_title, msg):
+  notices.post_error (win_title, msg)
 
 #--------------------------------------------------------------------------
 #

@@ -60,7 +60,7 @@ extern void InitCursors(void);
 
 extern int ErrorWindowExists(void);
 extern void ShowErrorWindow(void);
-VISIBLE extern struct ui_interface gdraw_ui_interface;
+extern ui_interface_t gdraw_ui_interface;
 VISIBLE extern struct prefs_interface gdraw_prefs_interface;
 VISIBLE extern struct sc_interface gdraw_sc_interface;
 VISIBLE extern struct cv_interface gdraw_cv_interface;

@@ -1224,36 +1224,36 @@ PyFF_registerImportExport (PyObject *UNUSED (self), PyObject *args)
 //  return (ret);
 //}
 
-static PyObject *
-PyFF_logError (PyObject *UNUSED (self), PyObject *args)
-{
-  char *msg;
-  if (!PyArg_ParseTuple (args, "es", "UTF-8", &msg))
-    return (NULL);
-  LogError (msg);
-  free (msg);
-  Py_RETURN_NONE;
-}
+//static PyObject *
+//PyFF_logError (PyObject *UNUSED (self), PyObject *args)
+//{
+//  char *msg;
+//  if (!PyArg_ParseTuple (args, "es", "UTF-8", &msg))
+//    return (NULL);
+//  LogError (msg);
+//  free (msg);
+//  Py_RETURN_NONE;
+//}
 
-static PyObject *
-PyFF_postError (PyObject *UNUSED (self), PyObject *args)
-{
-  char *msg, *title;
-  if (!PyArg_ParseTuple (args, "eses", "UTF-8", &title, "UTF-8", &msg))
-    return (NULL);
-  ff_post_error (title, msg);   /* Prints to stderr if no ui */
-  Py_RETURN_NONE;
-}
-
-static PyObject *
-PyFF_postNotice (PyObject *UNUSED (self), PyObject *args)
-{
-  char *msg, *title;
-  if (!PyArg_ParseTuple (args, "eses", "UTF-8", &title, "UTF-8", &msg))
-    return (NULL);
-  ff_post_notice (title, msg);  /* Prints to stderr if no ui */
-  Py_RETURN_NONE;
-}
+//static PyObject *
+//PyFF_postError (PyObject *UNUSED (self), PyObject *args)
+//{
+//  char *msg, *title;
+//  if (!PyArg_ParseTuple (args, "eses", "UTF-8", &title, "UTF-8", &msg))
+//    return (NULL);
+//  ff_post_error (title, msg);   /* Prints to stderr if no ui */
+//  Py_RETURN_NONE;
+//}
+//
+//static PyObject *
+//PyFF_postNotice (PyObject *UNUSED (self), PyObject *args)
+//{
+//  char *msg, *title;
+//  if (!PyArg_ParseTuple (args, "eses", "UTF-8", &title, "UTF-8", &msg))
+//    return (NULL);
+//  ff_post_notice (title, msg);  /* Prints to stderr if no ui */
+//  Py_RETURN_NONE;
+//}
 
 static PyObject *
 PyFF_openFilename (PyObject *UNUSED (self), PyObject *args)
@@ -21674,12 +21674,12 @@ static PyMethodDef FontForge_methods[] = {
    "Adds an import/export spline conversion module"},
   //  {"registerMenuItem", PyFF_registerMenuItemStub, METH_VARARGS,
   //   "Adds a menu item (which runs a python script) to the font or glyph (or both) windows -- in the Tools menu"},
-  {"logWarning", PyFF_logError, METH_VARARGS,
-   "Adds a non-fatal message to the Warnings window"},
-  {"postError", PyFF_postError, METH_VARARGS,
-   "Pops up an error dialog box with the given title and message"},
-  {"postNotice", PyFF_postNotice, METH_VARARGS,
-   "Pops up an notice window with the given title and message"},
+  //  {"logWarning", PyFF_logError, METH_VARARGS,
+  //   "Adds a non-fatal message to the Warnings window"},
+  //  {"postError", PyFF_postError, METH_VARARGS,
+  //   "Pops up an error dialog box with the given title and message"},
+  //  {"postNotice", PyFF_postNotice, METH_VARARGS,
+  //   "Pops up an notice window with the given title and message"},
   {"openFilename", PyFF_openFilename, METH_VARARGS,
    "Pops up a file picker dialog asking the user for a filename to open"},
   {"saveFilename", PyFF_saveFilename, METH_VARARGS,

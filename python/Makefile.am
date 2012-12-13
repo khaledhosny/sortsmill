@@ -47,6 +47,9 @@ endif HAVE_GUI
 EXELIBADD = $(FFLIBADD)										\
 	$(top_builddir)/fontforge/libsortsmillff_fontforgeexe.la
 
+FFINCLDIRS = '-I$(top_builddir)/fontforge'		\
+	'-I$(top_srcdir)/fontforge'
+
 #--------------------------------------------------------------------------
 
 nodist_pkgpythondata_PYTHON = site_init.py
@@ -66,16 +69,14 @@ nobase_pyexec_LTLIBRARIES =
 
 nobase_pyexec_LTLIBRARIES += sortsmillff/ffcompat.la
 sortsmillff_ffcompat_la_SOURCES = sortsmillff/ffcompat.c
-sortsmillff_ffcompat_la_CFLAGS = $(AM_CFLAGS)					\
-	'-I$(top_builddir)/fontforge' '-I$(top_srcdir)/fontforge'
+sortsmillff_ffcompat_la_CFLAGS = $(AM_CFLAGS) $(FFINCLDIRS)
 sortsmillff_ffcompat_la_LDFLAGS = $(GSL_CFLAGS) $(GSL_LIBS) $(AM_LDFLAGS)
 sortsmillff_ffcompat_la_LIBADD = $(EXELIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmillff/legacy/fontforge.la
 sortsmillff_legacy_fontforge_la_SOURCES =		\
 	sortsmillff/legacy/fontforgepyhook.c
-sortsmillff_legacy_fontforge_la_CFLAGS = $(AM_CFLAGS)			\
-	'-I$(top_builddir)/fontforge' '-I$(top_srcdir)/fontforge'
+sortsmillff_legacy_fontforge_la_CFLAGS = $(AM_CFLAGS) $(FFINCLDIRS)
 sortsmillff_legacy_fontforge_la_LDFLAGS = $(GSL_CFLAGS) $(GSL_LIBS) $(AM_LDFLAGS)
 sortsmillff_legacy_fontforge_la_LIBADD = $(FFLIBADD)
 
@@ -90,17 +91,20 @@ sortsmillff_internal_types_la_LIBADD = $(FFLIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmillff/views.la
 sortsmillff_views_la_SOURCES = sortsmillff/views.c
-sortsmillff_views_la_CFLAGS = $(AM_CFLAGS)						\
-	'-I$(top_builddir)/fontforge' '-I$(top_srcdir)/fontforge'
+sortsmillff_views_la_CFLAGS = $(AM_CFLAGS) $(FFINCLDIRS)
 sortsmillff_views_la_LIBADD = $(FFLIBADD)
 
 if HAVE_GUI
 nobase_pyexec_LTLIBRARIES += sortsmillff/usermenu.la
 sortsmillff_usermenu_la_SOURCES = sortsmillff/usermenu.c
-sortsmillff_usermenu_la_CFLAGS = $(AM_CFLAGS)					\
-	'-I$(top_builddir)/fontforge' '-I$(top_srcdir)/fontforge'
+sortsmillff_usermenu_la_CFLAGS = $(AM_CFLAGS) $(FFINCLDIRS)
 sortsmillff_usermenu_la_LIBADD = $(EXELIBADD)
 endif HAVE_GUI
+
+nobase_pyexec_LTLIBRARIES += sortsmillff/notices.la
+sortsmillff_notices_la_SOURCES = sortsmillff/notices.c
+sortsmillff_notices_la_CFLAGS = $(AM_CFLAGS) $(FFINCLDIRS)
+sortsmillff_notices_la_LIBADD = $(FFLIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmillff/pkg_info.la
 sortsmillff_pkg_info_la_SOURCES = sortsmillff/pkg_info.c
@@ -124,8 +128,9 @@ sortsmillff_brentroot_la_LIBADD = $(AUXLIBADD)
 
 PYX_FILES = sortsmillff/views.pyx sortsmillff/ffcompat.pyx	\
 	sortsmillff/psMat.pyx sortsmillff/pkg_info.pyx			\
-	sortsmillff/guile.pyx sortsmillff/linalg.pyx			\
-	sortsmillff/polyspline.pyx sortsmillff/brentroot.pyx
+	sortsmillff/notices.pyx sortsmillff/guile.pyx			\
+	sortsmillff/linalg.pyx sortsmillff/polyspline.pyx		\
+	sortsmillff/brentroot.pyx
 if HAVE_GUI
 PYX_FILES += sortsmillff/usermenu.pyx
 endif HAVE_GUI
@@ -170,8 +175,9 @@ EXTRA_DIST = $(PYX_FILES) $(PXD_FILES) $(PXI_FILES) site_init.py.in
 MOSTLYCLEANFILES = site_init.py sortsmillff/internal_types.pyx			\
 	sortsmillff/internal_types.c sortsmillff/views.c					\
 	sortsmillff/usermenu.c sortsmillff/ffcompat.c sortsmillff/psMat.c	\
-	sortsmillff/pkg_info.c sortsmillff/guile.c sortsmillff/linalg.c		\
-	sortsmillff/polyspline.c sortsmillff/brentroot.c
+	sortsmillff/pkg_info.c sortsmillff/notices.c sortsmillff/guile.c	\
+	sortsmillff/linalg.c sortsmillff/polyspline.c						\
+	sortsmillff/brentroot.c
 
 AM_LDFLAGS = -prefer-pic -module -shared -avoid-version
 AM_CFLAGS += $(CYTHON_EXTRA_CFLAGS)

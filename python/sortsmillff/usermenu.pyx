@@ -17,12 +17,7 @@
 
 cdef extern from 'config.h': pass
 
-import sortsmillff.views as views
-
-# FIXME:
-# FIXME: Get rid of this dependency.
-# FIXME:
-from legacy.fontforge import logWarning, postError
+from . import (views, notices)
 
 cdef extern from "stdbool.h":
   pass
@@ -96,8 +91,8 @@ def __call_python (func not None, ff_obj not None,
   except:
     tb = ''.join (traceback.format_exc ())
     msg = ''.join (traceback.format_exception_only (sys.exc_type, sys.exc_value))
-    logWarning (tb.replace('%', '%%'))
-    postError('Unhandled exception', msg.replace('%','%%'))
+    notices.log_warning (tb.replace('%', '%%'))
+    notices.post_error ('Unhandled exception', msg.replace('%','%%'))
   return result
 
 cdef void __do_action (void *ff_obj, void *data):
