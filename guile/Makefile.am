@@ -28,6 +28,9 @@ include $(top_srcdir)/mk/flags.am
 include $(top_srcdir)/mk/guile.mk
 include $(top_srcdir)/mk/scheme.mk
 
+FFINCLDIRS = '-I$(top_builddir)/fontforge'		\
+	'-I$(top_srcdir)/fontforge'
+
 #--------------------------------------------------------------------------
 
 nobase_dist_guilemodule_DATA = $(DIST_SCM_FILES)
@@ -38,7 +41,8 @@ MOSTLYCLEANFILES = $(NODIST_SCM_FILES) $(GO_FILES)
 DIST_SCM_FILES = sortsmillff/gsl.scm sortsmillff/iconv.scm		\
 	sortsmillff/linalg.scm sortsmillff/polyspline.scm			\
 	sortsmillff/brentroot.scm sortsmillff/sfd-to-sxml.scm		\
-	sortsmillff/views.scm sortsmillff/internal-types-syntax.scm
+	sortsmillff/views.scm sortsmillff/internal-types-syntax.scm	\
+	sortsmillff/notices.scm
 #sortsmillff/precompute.scm
 if HAVE_GUI
 DIST_SCM_FILES += sortsmillff/usermenu.scm
@@ -87,17 +91,15 @@ libguile_sortsmillff_aux_la_LIBADD =				\
 	$(top_builddir)/auxiliary/libsortsmillff_aux.la	\
 	$(top_builddir)/lib/libgnu.la
 
-#lib_LTLIBRARIES += libguile-sortsmillff_fontforge.la
-#libguile_sortsmillff_fontforge_la_SOURCES =		\
-#	guile_internal_structures.c
-#libguile_sortsmillff_fontforge_la_CFLAGS = $(AM_CFLAGS)			\
-#	'-I$(top_builddir)/fontforge' '-I$(top_srcdir)/fontforge'
-#libguile_sortsmillff_fontforge_la_LIBADD =					\
-#	$(top_builddir)/fontforge/libsortsmillff_fontforge.la	\
-#	$(top_builddir)/gdraw/libsortsmillff_gdraw.la			\
-#	$(top_builddir)/gutils/libsortsmillff_gutils.la			\
-#	$(top_builddir)/auxiliary/libsortsmillff_aux.la			\
-#	$(top_builddir)/lib/libgnu.la
+lib_LTLIBRARIES += libguile-sortsmillff_fontforge.la
+libguile_sortsmillff_fontforge_la_SOURCES = guile_notices.c
+libguile_sortsmillff_fontforge_la_CFLAGS = $(AM_CFLAGS) $(FFINCLDIRS)
+libguile_sortsmillff_fontforge_la_LIBADD =					\
+	$(top_builddir)/fontforge/libsortsmillff_fontforge.la	\
+	$(top_builddir)/gdraw/libsortsmillff_gdraw.la			\
+	$(top_builddir)/gutils/libsortsmillff_gutils.la			\
+	$(top_builddir)/auxiliary/libsortsmillff_aux.la			\
+	$(top_builddir)/lib/libgnu.la
 
 if HAVE_GUI
 lib_LTLIBRARIES += libguile-sortsmillff_fontforgeexe.la

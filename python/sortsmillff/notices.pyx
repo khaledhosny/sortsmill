@@ -63,14 +63,14 @@ cdef extern from "uiinterface.h":
 
   ui_interface_t *ui_interface
 
-def log_warning (message not None):
+def log_fontforge_warning (message not None):
   try:
     msg = message.encode ('UTF-8')
   except:
     msg = message
   ui_interface.logwarning (msg)
 
-def post_notice (title not None, message not None):
+def post_fontforge_notice (title not None, message not None):
   try:
     titl = title.encode ('UTF-8')
   except:
@@ -81,7 +81,7 @@ def post_notice (title not None, message not None):
     msg = message
   ui_interface.post_warning (titl, msg)
 
-def post_error (title not None, message not None):
+def post_fontforge_error (title not None, message not None):
   try:
     titl = title.encode ('UTF-8')
   except:

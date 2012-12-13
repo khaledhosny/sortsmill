@@ -15,8 +15,8 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILLFF_GUILE_VIEW_H
-#define _SORTSMILLFF_GUILE_VIEW_H
+#ifndef _SORTSMILLFF_GUILE_NOTICES_H
+#define _SORTSMILLFF_GUILE_NOTICES_H
 
 #include <libguile.h>
 
@@ -28,11 +28,9 @@ extern "C"
 }
 #endif
 
-SCM scm_font_view_p (SCM obj);
-int scm_is_font_view (SCM obj);
-
-SCM scm_glyph_view_p (SCM obj);
-int scm_is_glyph_view (SCM obj);
+SCM scm_log_fontforge_warning (SCM message);
+SCM scm_post_fontforge_notice (SCM title, SCM message);
+SCM scm_post_fontforge_error (SCM title, SCM message);
 
 #if 0
 {
@@ -41,4 +39,4 @@ int scm_is_glyph_view (SCM obj);
 }
 #endif
 
-#endif /* _SORTSMILLFF_GUILE_VIEW_H */
+#endif /* _SORTSMILLFF_GUILE_NOTICES_H */

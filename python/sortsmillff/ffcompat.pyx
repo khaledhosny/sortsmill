@@ -178,13 +178,13 @@ def hasSpiro ():
 #--------------------------------------------------------------------------
 
 def logWarning (msg):
-  notices.log_warning (msg)
+  notices.log_fontforge_warning (msg)
 
 def postNotice (win_title, msg):
-  notices.post_notice (win_title, msg)
+  notices.post_fontforge_notice (win_title, msg)
 
 def postError (win_title, msg):
-  notices.post_error (win_title, msg)
+  notices.post_fontforge_error (win_title, msg)
 
 #--------------------------------------------------------------------------
 #

@@ -91,8 +91,8 @@ def __call_python (func not None, ff_obj not None,
   except:
     tb = ''.join (traceback.format_exc ())
     msg = ''.join (traceback.format_exception_only (sys.exc_type, sys.exc_value))
-    notices.log_warning (tb.replace('%', '%%'))
-    notices.post_error ('Unhandled exception', msg.replace('%','%%'))
+    notices.log_fontforge_warning (tb.replace('%', '%%'))
+    notices.post_fontforge_error ('Unhandled exception', msg.replace('%','%%'))
   return result
 
 cdef void __do_action (void *ff_obj, void *data):
