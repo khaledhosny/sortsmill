@@ -97,7 +97,6 @@
             (lambda ()
                (display-backtrace *fontforge-site-init-stack*
                   (current-output-port)))))
-      (write args)
       (post_fontforge_error "site-init.scm"
          (let ((in_proc (lambda (proc)
                            (if proc
