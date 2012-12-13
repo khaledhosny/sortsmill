@@ -717,7 +717,18 @@ ShowErrorWindow (void)
 static void
 _LogError (const char *format, va_list ap)
 {
-  char buffer[500], nbuffer[600], *str, *pt, *npt;
+  // Old settings:
+  //char buffer[500];
+  //char nbuffer[600];
+
+  // FIXME: Come up with a better buffering scheme than this.
+  char buffer[2000];
+  char nbuffer[2400];
+
+  char *str;
+  char *pt;
+  char *npt;
+
   vsnprintf (buffer, sizeof (buffer), format, ap);
   for (pt = buffer, npt = nbuffer;
        *pt != '\0' && npt < nbuffer + sizeof (nbuffer) - 2;)
