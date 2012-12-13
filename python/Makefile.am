@@ -51,11 +51,9 @@ EXELIBADD = $(FFLIBADD)										\
 
 nodist_pkgpythondata_PYTHON = site_init.py
 
-# Compatibility module. (FIXME: Make this optional.)
-nodist_python_PYTHON = psMat.py
-
-# Compatibility module. (FIXME: Make this optional.)
-nodist_python_PYTHON += fontforge.py
+if PYTHON_COMPATIBILITY
+nodist_python_PYTHON = fontforge.py psMat.py
+endif PYTHON_COMPATIBILITY
 
 nobase_dist_python_PYTHON = ffContrib/__init__.py	\
 	ffContrib/excepthook.py
@@ -159,10 +157,11 @@ sortsmillff/internal_types.pyx: generate-internal_types.pyx.scm	\
 $(PYX_FILES:.pyx=.c): $(PXD_FILES) $(PXI_FILES) $(PXI_IN_FILES)
 $(NODIST_PYX_FILES:.pyx=.c): $(PXD_FILES) $(PXI_FILES) $(PXI_IN_FILES)
 
-site_init.py: site_init.py.in
+site_init.py: site_init.py.in Makefile
 	$(AM_V_GEN)
-	$(AM_V_at)$(SED) 												\
-		-e 's|@''PACKAGE''@|$(PACKAGE)|g' 							\
+	$(AM_V_at)$(SED) 													\
+		-e 's|@''PYTHON_COMPATIBILITY''@|$(PYTHON_COMPATIBILITY)|g'		\
+		-e 's|@''PACKAGE''@|$(PACKAGE)|g' 								\
 		-e 's|@''sysconfdir''@|$(sysconfdir)|g' < $< > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 

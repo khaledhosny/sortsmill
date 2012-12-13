@@ -44,6 +44,24 @@ AM_CONDITIONAL([PYTHON_SCRIPTING],[test x"${i_do_have_python_scripting}" = xyes]
 ])
 
 
+dnl FONTFORGE_ARG_DISABLE_PYTHON_COMPATIBILITY
+dnl ------------------------------------------
+AC_DEFUN([FONTFORGE_ARG_DISABLE_PYTHON_COMPATIBILITY],
+[
+AC_ARG_ENABLE([python-compatibility],
+        [AS_HELP_STRING([--disable-python-compatibility],
+                        [do not install the Python modules `fontforge' and `psMat'
+                         that are for compatibility with traditional FontForge;
+                         you can still use `sortsmillff.ffcompat' and `sortsmillff.psMat'
+                         for the same functionality])],
+        [i_do_have_python_compatibility="${enableval}"],
+        [i_do_have_python_compatibility=yes])
+PYTHON_COMPATIBILITY="${i_do_have_python_compatibility}"
+AC_SUBST([PYTHON_COMPATIBILITY])
+AM_CONDITIONAL([PYTHON_COMPATIBILITY],[test x"${i_do_have_python_compatibility}" = xyes])
+])
+
+
 dnl FONTFORGE_ARG_ENABLE_PURE_API
 dnl -----------------------------
 AC_DEFUN([FONTFORGE_ARG_ENABLE_PURE_API],
@@ -59,7 +77,7 @@ AC_SUBST([pure_libdir], ['${libdir}/pure'])
 test x"$PURE_LIBDIR" = x || AC_SUBST([pure_libdir],['${PURE_LIBDIR}'])
 
 AC_ARG_ENABLE([pure-api],
-        [AS_HELP_STRING([--enable-pure-api],[build the Pure API])],
+        [AS_HELP_STRING([--enable-pure-api],[build the API for Pure (http://pure-lang.googlecode.com/)])],
         [i_do_have_pure_api="${enableval}"],
         [i_do_have_pure_api=no])
 if test x"${i_do_have_pure_api}" = xyes; then

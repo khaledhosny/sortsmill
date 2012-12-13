@@ -31,10 +31,13 @@ import sortsmillff.ffcompat
 
 try:
 
-  import fontforge
+  if "@PYTHON_COMPATIBILITY@" == "yes":
+    import fontforge
   sortsmillff.ffcompat.__windowing_ui (True)
   sortsmillff.ffcompat.__running_script (False)
-  import psMat
+  import sortsmillff.psMat
+  if "@PYTHON_COMPATIBILITY@" == "yes":
+    import psMat
   import ffContrib.excepthook
   import os
 

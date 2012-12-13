@@ -151,7 +151,7 @@ GUILE_PROGS
 FONTFORGE_ARG_ENABLE_REAL
 
 AC_ARG_ENABLE([programs],
-        [AS_HELP_STRING([--disable-programs],[do not build "fontforge" and related programs
+        [AS_HELP_STRING([--disable-programs],[do not build `fontforge' and related programs
                                               (but do build libraries and possibly the Python extensions)])],
         [i_do_have_programs="${enableval}"],
         [i_do_have_programs=yes])
@@ -159,6 +159,7 @@ AM_CONDITIONAL([THE_PROGRAMS],[test x"${i_do_have_programs}" = xyes])
 AC_SUBST([THE_PROGRAMS],["${i_do_have_programs}"])
 
 FONTFORGE_ARG_DISABLE_PYTHON_SCRIPTING
+FONTFORGE_ARG_DISABLE_PYTHON_COMPATIBILITY
 FONTFORGE_ARG_ENABLE_PURE_API
 
 AC_ARG_ENABLE([freetype-debugger],
@@ -185,7 +186,7 @@ FONTFORGE_ARG_ENABLE([debug-raw-points],
 
 FONTFORGE_ARG_ENABLE([tile-path],
         [AS_HELP_STRING([--enable-tile-path],
-                [enable a 'tile path' command (a variant of 'expand stroke')])],
+                [enable a `tile path' command (a variant of `expand stroke')])],
         [FONTFORGE_CONFIG_TILEPATH])
 
 #--------------------------------------------------------------------------

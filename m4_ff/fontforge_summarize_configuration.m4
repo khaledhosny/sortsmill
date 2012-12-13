@@ -25,6 +25,7 @@ Optional features:
   real (floating pt) ${my_real_type}
   programs           ${i_do_have_programs}
   python scripting   ${i_do_have_python_scripting}
+  python compat.     ${i_do_have_python_compatibility}
   pure API           ${i_do_have_pure_api}  	${pure_url}
   freetype debugger  ${i_do_have_freetype_debugger}
   capslock for alt   ${i_do_have_capslock_for_alt}
