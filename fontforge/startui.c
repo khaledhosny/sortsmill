@@ -52,7 +52,6 @@ static void
 _dousage (void)
 {
   printf ("fontforge [options] [fontfiles]\n");
-  printf ("\t-new\t\t\t (creates a new font)\n");
   printf ("\t-last\t\t\t (loads the last sfd file closed)\n");
   printf ("\t-recover none|auto|inquire|clean (control error recovery)\n");
   printf
@@ -76,9 +75,6 @@ _dousage (void)
     ("\ttruetype (ttf,ttc), macintosh resource fonts (dfont,bin,hqx),\n");
   printf ("\tand bdf and pcf fonts. It will also read its own format --\n");
   printf ("\tsfd files.\n");
-  printf
-    ("If no fontfiles are specified (and -new is not either and there's nothing\n");
-  printf ("\tto recover) then fontforge will produce an open font dlg.\n");
   printf ("For more information see:\n\t%s\n", PACKAGE_URL);
   printf ("Submit bug reports at:\t%s\n", PACKAGE_BUGREPORT);
 }
@@ -365,12 +361,7 @@ fontforge_main_in_guile_mode (int argc, char **argv)
       GDrawProcessPendingEvents (NULL);
       if (pt[0] == '-' && pt[1] == '-')
         ++pt;
-      if (strcmp (pt, "-new") == 0)
-        {
-          FontNew ();
-          any = 1;
-        }
-      else if (strcmp (pt, "-last") == 0)
+      if (strcmp (pt, "-last") == 0)
         {
           if (next_recent < RECENT_MAX && RecentFiles[next_recent] != NULL)
             if (ViewPostScriptFont (RecentFiles[next_recent++], openflags))
