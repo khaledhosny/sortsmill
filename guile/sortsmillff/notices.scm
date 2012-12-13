@@ -46,8 +46,7 @@
                         (with-output-to-string
                            (lambda ()
                               (display-backtrace *fontforge-pre-unwind-stack*
-                                 (current-output-port)))))
-                     (set! *fontforge-pre-unwind-stack* #f))
+                                 (current-output-port))))))
 
                   (post-fontforge-error window-title
                      (let ((in-proc (lambda (proc)
