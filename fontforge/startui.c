@@ -49,7 +49,7 @@
 extern int AutoSaveFrequency;
 
 static void
-_dousage (void)
+dousage (void)
 {
   printf ("fontforge [options] [fontfiles]\n");
   printf ("\t-last\t\t\t (loads the last sfd file closed)\n");
@@ -65,8 +65,6 @@ _dousage (void)
   printf
     ("\t-keyboard ibm|mac|sun|ppc  (generates appropriate hotkeys in menus)\n");
   printf ("\t-help\t\t\t (displays this message, and exits)\n");
-  printf
-    ("\t-docs\t\t\t (displays this message, invokes a browser)\n\t\t\t\t (Using the BROWSER environment variable)\n");
   printf ("\t-version\t\t (prints the version of fontforge and exits)\n");
   printf ("\n");
   printf
@@ -77,20 +75,6 @@ _dousage (void)
   printf ("\tsfd files.\n");
   printf ("For more information see:\n\t%s\n", PACKAGE_URL);
   printf ("Submit bug reports at:\t%s\n", PACKAGE_BUGREPORT);
-}
-
-static void
-dousage (void)
-{
-  _dousage ();
-  exit (0);
-}
-
-static void
-dohelp (void)
-{
-  _dousage ();
-  help ("overview.html");
   exit (0);
 }
 
@@ -316,8 +300,6 @@ fontforge_main_in_guile_mode (int argc, char **argv)
         recover = 1;
       else if (strcmp (pt, "-recover=inquire") == 0)
         recover = 2;
-      else if (strcmp (pt, "-docs") == 0)
-        dohelp ();
       else if (strcmp (pt, "-help") == 0)
         dousage ();
       else if (strcmp (pt, "-version") == 0)
