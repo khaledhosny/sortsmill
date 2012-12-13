@@ -1571,7 +1571,6 @@ return(true);
 		    cv->showback[0] |= 1;
 		else
 		    cv->showback[0] &= ~1;
-		cv->back_img_out_of_date = true;
 	      break;
 	      case CID_VGrid:
 		CVShows.showgrids = cv->showgrids = GGadgetIsChecked(event->u.control.g);
@@ -1903,7 +1902,6 @@ return( true );
 		    cv->showback[0] |= 1;
 		else
 		    cv->showback[0] &= ~1;
-		cv->back_img_out_of_date = true;
 	      break;
 	      case CID_VGrid:
 		CVShows.showgrids = cv->showgrids = GGadgetIsChecked(event->u.control.g);
@@ -1940,7 +1938,6 @@ return( true );
 			cv->showback[cid>>5] |=  (1<<(cid&31));
 		    else
 			cv->showback[cid>>5] &= ~(1<<(cid&31));
-		    cv->back_img_out_of_date = true;
 		} else {
 		    cid -= CID_EBase;
 		    cv->b.drawmode = dm_back;

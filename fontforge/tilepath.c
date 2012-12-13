@@ -1260,10 +1260,6 @@ static int TileAsk(struct tiledata *td,SplineFont *sf) {
 
     for ( i=0; i<4; ++i ) {
 	CharView *cv = &tpd.cv_first + i;
-	if ( cv->backimgs!=NULL ) {
-	    GDrawDestroyWindow(cv->backimgs);
-	    cv->backimgs = NULL;
-	}
 	CVPalettesHideIfMine(cv);
     }
     GDrawDestroyWindow(tpd.gw);
@@ -1917,10 +1913,6 @@ static int TilePatternAsk(struct tiledata *td,SplineFont *sf) {
 
     {
 	CharView *cv = &ptd.cv_first;
-	if ( cv->backimgs!=NULL ) {
-	    GDrawDestroyWindow(cv->backimgs);
-	    cv->backimgs = NULL;
-	}
 	CVPalettesHideIfMine(cv);
     }
     GDrawDestroyWindow(ptd.gw);

@@ -49,10 +49,9 @@
 extern int AutoSaveFrequency;
 
 static void
-_dousage (void)
+dousage (void)
 {
   printf ("fontforge [options] [fontfiles]\n");
-  printf ("\t-new\t\t\t (creates a new font)\n");
   printf ("\t-last\t\t\t (loads the last sfd file closed)\n");
   printf ("\t-recover none|auto|inquire|clean (control error recovery)\n");
   printf
@@ -66,8 +65,6 @@ _dousage (void)
   printf
     ("\t-keyboard ibm|mac|sun|ppc  (generates appropriate hotkeys in menus)\n");
   printf ("\t-help\t\t\t (displays this message, and exits)\n");
-  printf
-    ("\t-docs\t\t\t (displays this message, invokes a browser)\n\t\t\t\t (Using the BROWSER environment variable)\n");
   printf ("\t-version\t\t (prints the version of fontforge and exits)\n");
   printf ("\n");
   printf
@@ -76,25 +73,8 @@ _dousage (void)
     ("\ttruetype (ttf,ttc), macintosh resource fonts (dfont,bin,hqx),\n");
   printf ("\tand bdf and pcf fonts. It will also read its own format --\n");
   printf ("\tsfd files.\n");
-  printf
-    ("If no fontfiles are specified (and -new is not either and there's nothing\n");
-  printf ("\tto recover) then fontforge will produce an open font dlg.\n");
   printf ("For more information see:\n\t%s\n", PACKAGE_URL);
   printf ("Submit bug reports at:\t%s\n", PACKAGE_BUGREPORT);
-}
-
-static void
-dousage (void)
-{
-  _dousage ();
-  exit (0);
-}
-
-static void
-dohelp (void)
-{
-  _dousage ();
-  help ("overview.html");
   exit (0);
 }
 
@@ -320,8 +300,6 @@ fontforge_main_in_guile_mode (int argc, char **argv)
         recover = 1;
       else if (strcmp (pt, "-recover=inquire") == 0)
         recover = 2;
-      else if (strcmp (pt, "-docs") == 0)
-        dohelp ();
       else if (strcmp (pt, "-help") == 0)
         dousage ();
       else if (strcmp (pt, "-version") == 0)
@@ -365,12 +343,7 @@ fontforge_main_in_guile_mode (int argc, char **argv)
       GDrawProcessPendingEvents (NULL);
       if (pt[0] == '-' && pt[1] == '-')
         ++pt;
-      if (strcmp (pt, "-new") == 0)
-        {
-          FontNew ();
-          any = 1;
-        }
-      else if (strcmp (pt, "-last") == 0)
+      if (strcmp (pt, "-last") == 0)
         {
           if (next_recent < RECENT_MAX && RecentFiles[next_recent] != NULL)
             if (ViewPostScriptFont (RecentFiles[next_recent++], openflags))

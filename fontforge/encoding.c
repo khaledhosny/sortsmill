@@ -2665,7 +2665,8 @@ static int
 MapAddEnc (SplineFont *sf, SplineChar *sc, EncMap * basemap, EncMap * map,
            int baseenc, int gid, FontViewBase * fv)
 {
-  int any = false, enc;
+  bool any = false;
+  int enc;
 
   if (gid >= map->backmax)
     {
@@ -2724,7 +2725,8 @@ void
 SFAddGlyphAndEncode (SplineFont *sf, SplineChar *sc, EncMap * basemap,
                      int baseenc)
 {
-  int gid, mapfound = false;
+  int gid;
+  bool mapfound = false;
   FontViewBase *fv;
   BDFFont *bdf;
 
