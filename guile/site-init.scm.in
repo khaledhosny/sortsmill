@@ -33,7 +33,8 @@
          (set! %load-compiled-path
             (cons guileobjmoduledir %load-compiled-path)))))
 
-(fontforge-catch "site-init.scm" #t
+(fontforge-call-with-error-handling
+   "site-init.scm"
    (lambda ()
 
       ;;
@@ -41,7 +42,8 @@
       ;;
       (let ((local-init "@sysconfdir@/@PACKAGE@/local-init.scm"))
          (if (file-exists? local-init)
-             (fontforge-catch "local-init.scm" #t
+             (fontforge-call-with-error-handling
+                "local-init.scm"
                 (lambda () (primitive-load local-init)))))
 
       ;;
@@ -58,7 +60,8 @@
              (let ((user-init (string-append user-config-dir
                                  "/@PACKAGE@/user-init.scm")))
                 (if (file-exists? user-init)
-                    (fontforge-catch "user-init.scm" #t
+                    (fontforge-call-with-error-handling
+                       "user-init.scm"
                        (lambda () (primitive-load user-init)))))))
 
       (if #@have_python_scripting@

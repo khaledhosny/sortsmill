@@ -18,6 +18,7 @@
 (define-module (sortsmillff notices))
 
 (use-modules
+   (system repl error-handling)
    (ice-9 match)
    (srfi srfi-26)                       ; ‘cut’ and ‘cute’.
    )
@@ -26,42 +27,49 @@
    log-fontforge-warning
    post-fontforge-notice
    post-fontforge-error
-   fontforge-catch
+   fontforge-call-with-error-handling
    )
 
 (load-extension "libguile-sortsmillff_fontforge"
    "init_guile_sortsmillff_notices")
 
-(define (fontforge-catch window-title key thunk)
-   (let ((*fontforge-pre-unwind-stack* #f))
-      (let ((*fontforge-pre-unwind-handler*
-              (lambda (key . args)
-                 (set! *fontforge-pre-unwind-stack* (make-stack #t))))
+(define* (fontforge-call-with-error-handling window-title thunk
+            #:key (value-after-catch *unspecified*))
+   (let ((retval value-after-catch))
+      (call-with-error-handling thunk
 
-            (*fontforge-throw-handler*
-               (lambda (key . args)
+         #:on-error 'pass
+         ;;(lambda (key . args)
+         ;;   (backtrace)
+         ;;   (apply throw key args))
 
-                  (when *fontforge-pre-unwind-stack*
-                     (log-fontforge-warning
-                        (with-output-to-string
-                           (lambda ()
-                              (display-backtrace *fontforge-pre-unwind-stack*
-                                 (current-output-port))))))
+         #:post-error
+         (lambda (key . args)
+            (post-fontforge-error window-title
+               (let ((in-proc (lambda (proc)
+                                 (if proc
+                                     (simple-format #f "In procedure ~A : " proc)
+                                     ""))))
+                  (match args
+                     ;; A conventional Guile-style error exception
+                     ;; without format arguments.
+                     (((? (lambda (p) (or (eq? p #f) (string? p))) proc)
+                       (? string? str)
+                       #f
+                       (? (lambda (d) (or (eq? d #f) (list? d))) data))
+                      (simple-format #f "~A~A" (in-proc proc) str))
 
-                  (post-fontforge-error window-title
-                     (let ((in-proc (lambda (proc)
-                                       (if proc
-                                           (simple-format #f "In procedure ~A : " proc)
-                                           ""))))
-                        (match args
-                           ((proc (? string? str) #f data)
-                            (simple-format #f "~A~A" (in-proc proc) str))
-                           ((proc (? string? fmt) (? list? args) data)
-                            (simple-format #f "~A~A" (in-proc proc)
-                               (apply (cute simple-format #f fmt <...>) args)))
-                           (_ (simple-format #f "Uncaught throw: '~A . ~A" key args))))))))
+                     ;; A conventional Guile-style error exception
+                     ;; with format arguments.
+                     (((? (lambda (p) (or (eq? p #f) (string? p))) proc)
+                       (? string? fmt)
+                       (? list? args)
+                       (? (lambda (d) (or (eq? d #f) (list? d))) data))
+                      (simple-format #f "~A~A" (in-proc proc)
+                         (apply (cute simple-format #f fmt <...>) args)))
 
-         (catch key
-            thunk
-            *fontforge-throw-handler*
-            *fontforge-pre-unwind-handler*))))
+                     ;; Anything else.
+                     (_ (simple-format #f
+                           "Guile exception thrown to key '~A with arguments ~A"
+                           key args)))))))
+      retval))

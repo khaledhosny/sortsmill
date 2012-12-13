@@ -79,22 +79,32 @@ wrap_view_pointer (int flag, void *p)
 static void
 call_action (void *p, void *vdata)
 {
+  scm_dynwind_begin (0);
+
   menu_entry_data *data = (menu_entry_data *) vdata;
   SCM view = wrap_view_pointer (data->flag, p);
   SCM wrapper =
     scm_c_private_ref ("sortsmillff usermenu", "menu-entry-error-handling");
-  (void) scm_call_2 (wrapper, data->action, view);
+  SCM UNUSED (retval) = scm_call_2 (wrapper, data->action, view);
+
+  scm_dynwind_end ();
 }
 
 static bool
 call_enabled (void *p, void *vdata)
 {
+  scm_dynwind_begin (0);
+
   menu_entry_data *data = (menu_entry_data *) vdata;
   SCM view = wrap_view_pointer (data->flag, p);
   SCM wrapper =
     scm_c_private_ref ("sortsmillff usermenu", "menu-entry-error-handling");
   SCM retval = scm_call_2 (wrapper, data->enabled, view);
-  return scm_is_true (retval);
+  bool result = scm_is_true (retval);
+
+  scm_dynwind_end ();
+
+  return result;
 }
 
 VISIBLE SCM
