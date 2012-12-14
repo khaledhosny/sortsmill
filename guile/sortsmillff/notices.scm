@@ -35,13 +35,16 @@
 
 (define* (fontforge-call-with-error-handling window-title thunk
             #:key (value-after-catch *unspecified*))
-   (let ((retval value-after-catch))
+   (let ((retval value-after-catch)
+         (*on-error* (match (getenv "FONTFORGE_GUILE_ON_ERROR")
+                        (#f 'pass)
+                        ("pass" 'pass)
+                        ("debug" 'debug)
+                        (_ 'pass))))
+
       (call-with-error-handling thunk
 
-         #:on-error 'pass
-         ;;(lambda (key . args)
-         ;;   (backtrace)
-         ;;   (apply throw key args))
+         #:on-error *on-error*
 
          #:post-error
          (lambda (key . args)

@@ -23,34 +23,54 @@ void init_guile_sortsmillff_notices (void);
 
 //-------------------------------------------------------------------------
 
-SCM
+VISIBLE SCM
 scm_log_fontforge_warning (SCM message)
 {
+  scm_dynwind_begin (0);
+
   char *msg = scm_to_utf8_stringn (message, NULL);
+  scm_dynwind_free (msg);
+
   ui_interface->logwarning (msg);
-  free (msg);
+
+  scm_dynwind_end ();
+
   return SCM_UNSPECIFIED;
 }
 
-SCM
+VISIBLE SCM
 scm_post_fontforge_notice (SCM title, SCM message)
 {
+  scm_dynwind_begin (0);
+
   char *titl = scm_to_utf8_stringn (title, NULL);
+  scm_dynwind_free (titl);
+
   char *msg = scm_to_utf8_stringn (message, NULL);
+  scm_dynwind_free (msg);
+
   ui_interface->post_warning (titl, msg);
-  free (msg);
-  free (titl);
+
+  scm_dynwind_end ();
+
   return SCM_UNSPECIFIED;
 }
 
-SCM
+VISIBLE SCM
 scm_post_fontforge_error (SCM title, SCM message)
 {
+  scm_dynwind_begin (0);
+
   char *titl = scm_to_utf8_stringn (title, NULL);
+  scm_dynwind_free (titl);
+
   char *msg = scm_to_utf8_stringn (message, NULL);
+  scm_dynwind_free (msg);
+
   ui_interface->post_error (titl, msg);
-  free (msg);
-  free (titl);
+
+  scm_dynwind_end ();
+
   return SCM_UNSPECIFIED;
 }
 
