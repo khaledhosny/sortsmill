@@ -55,6 +55,10 @@ if FONTTOOLS
 SUBDIRS += fonttools
 endif FONTTOOLS
 
+if EXAMPLES
+SUBDIRS += examples
+endif EXAMPLES
+
 SUBDIRS += tests
 
 EXTRA_DIST = COPYING.permissive README-Mac.html README-MS.html		\

@@ -359,6 +359,7 @@ AM_CONDITIONAL([MACINTOSH],[test x"${gww_ismac}" = xyes])
 # never get built by default. Nevertheless, they will be included by
 # "make dist".
 AM_CONDITIONAL([FONTTOOLS],[test x != x])
+AM_CONDITIONAL([EXAMPLES],[test x != x])
 
 FONTFORGE_OBSCURE_CONFIGURATION
 
