@@ -196,9 +196,10 @@ sortsmillff/%.so: sortsmillff/%.la
 # These shared object files are needed by the test suite.
 all-local: all-local-HAVE_GUI sortsmillff/psMat.so						\
 	sortsmillff/ffcompat.so sortsmillff/internal_types.so				\
-	sortsmillff/views.so sortsmillff/pkg_info.so sortsmillff/guile.so	\
-	sortsmillff/linalg.so sortsmillff/polyspline.so						\
-	sortsmillff/brentroot.so sortsmillff/legacy/fontforge.so
+	sortsmillff/views.so sortsmillff/pkg_info.so						\
+	sortsmillff/notices.so sortsmillff/guile.so sortsmillff/linalg.so	\
+	sortsmillff/polyspline.so sortsmillff/brentroot.so					\
+	sortsmillff/legacy/fontforge.so
 if HAVE_GUI
 all-local-HAVE_GUI: sortsmillff/usermenu.so
 else !HAVE_GUI
