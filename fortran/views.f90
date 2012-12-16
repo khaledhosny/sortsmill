@@ -1,4 +1,4 @@
-! -*- mode: F90 -*-
+! -*- mode: f90 -*-
 
 ! Copyright (C) 2012 Barry Schwartz
 ! 

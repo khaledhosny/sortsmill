@@ -28,7 +28,4 @@ include $(top_srcdir)/mk/flags.am
 
 lib_LTLIBRARIES = libsortsmillff_fortran_api.la
 
-libsortsmillff_fortran_api_la_SOURCES = views.f90 usermenu.f90
-
-usermenu.o: views.o
-usermenu.lo: views.lo
+libsortsmillff_fortran_api_la_SOURCES = views.f90
