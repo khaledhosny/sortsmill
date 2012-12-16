@@ -2173,7 +2173,9 @@ return;
 	for ( test=sc->anchor; test!=NULL; test=test->next )
 	    if ( test->anchor==ap->anchor ) {
 		if (( test->type==at_centry && ap->type==at_cexit) ||
-			(test->type==at_cexit && ap->type==at_centry))
+			(test->type==at_cexit && ap->type==at_centry) ||
+			(test->type==at_mark && ap->type==at_basemark) ||
+			(test->type==at_basemark && ap->type==at_mark))
 		    /* It's ok */;
 		else if ( test->type!=at_baselig || ap->type!=at_baselig ||
 			test->lig_index==ap->lig_index )
