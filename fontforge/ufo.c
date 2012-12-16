@@ -487,11 +487,7 @@ static int UFOOutputMetaInfo(char *basedir,SplineFont *sf) {
     if ( plist==NULL )
 return( false );
     PListOutputString(plist,"creator","net.SourceForge.FontForge");
-#ifdef Version_1
-    PListOutputInteger(plist,"formatVersion",1);
-#else
     PListOutputInteger(plist,"formatVersion",2);
-#endif
 return( PListOutputTrailer(plist));
 }
 
@@ -527,14 +523,6 @@ return( false );
     else
 	PListOutputReal(plist,"descender",sf->ufo_descent);
     PListOutputReal(plist,"italicAngle",sf->italicangle);
-#ifdef Version_1
-    PListOutputString(plist,"fullName",sf->fullname);
-    PListOutputString(plist,"fontName",sf->fontname);
-    /* FontForge does not maintain a menuname except possibly in the ttfnames section where there are many different languages of it */
-    PListOutputString(plist,"weightName",sf->weight);
-    /* No longer in the spec. Was it ever? Did I get this wrong? */
-    /* PListOutputString(plist,"curveType",sf->layers[layer].order2 ? "Quadratic" : "Cubic");*/
-#else
     PListOutputString(plist,"note",sf->comments);
     PListOutputDate(plist,"openTypeHeadCreated",sf->creationtime);
     SplineFontFindBounds(sf,&bb);
@@ -664,7 +652,6 @@ return( false );
     }
     if ( sf->fondname!=NULL )
     PListOutputString(plist,"macintoshFONDName",sf->fondname);
-#endif
 return( PListOutputTrailer(plist));
 }
 
@@ -739,7 +726,6 @@ return( PListOutputTrailer(plist));
 return( true );
 }
 
-#ifndef Version_1
 static int UFOOutputFeatures(char *basedir,SplineFont *sf) {
     char *fname = buildname(basedir,"feature.fea");
     FILE *feats = fopen( fname, "w" );
@@ -753,7 +739,6 @@ return( false );
     fclose(feats);
 return( !err );
 }
-#endif
 
 int WriteUFOFont(char *basedir,SplineFont *sf,enum fontformat ff,int flags,
 	EncMap *map,int layer) {
@@ -777,9 +762,7 @@ int WriteUFOFont(char *basedir,SplineFont *sf,enum fontformat ff,int flags,
     err |= !UFOOutputKerning(basedir,sf);
     err |= !UFOOutputVKerning(basedir,sf);
     err |= !UFOOutputLib(basedir,sf);
-#ifndef Version_1
     err |= !UFOOutputFeatures(basedir,sf);
-#endif
 
     if ( err )
 return( false );
@@ -1889,7 +1872,7 @@ return( NULL );
     sf->ascent = as; sf->descent = ds;
     if ( sf->fontname==NULL ) {
 	if ( stylename!=NULL && sf->familyname!=NULL )
-	    sf->fullname = strconcat3(sf->familyname,"-",stylename);
+	    sf->fontname = strconcat3(sf->familyname,"-",stylename);
 	else
 	    sf->fontname = "Untitled";
     }
