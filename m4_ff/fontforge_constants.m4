@@ -35,7 +35,7 @@ AC_LANG_PUSH([C])
 __libs="${LIBS}"
 LIBS="${LIBS} ${FREXP_LIBM}"
 
-AC_RUN_IFELSE(
+AC_LINK_IFELSE(
 [AC_LANG_PROGRAM(
 [
 #include <math.h>
