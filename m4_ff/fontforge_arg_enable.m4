@@ -62,6 +62,18 @@ AM_CONDITIONAL([PYTHON_COMPATIBILITY],[test x"${i_do_have_python_compatibility}"
 ])
 
 
+dnl FONTFORGE_ARG_ENABLE_FORTRAN_API
+dnl --------------------------------
+AC_DEFUN([FONTFORGE_ARG_ENABLE_FORTRAN_API],
+[
+AC_ARG_ENABLE([fortran-api],
+        [AS_HELP_STRING([--enable-fortran-api],[build the API for Fortran])],
+        [i_do_have_fortran_api="${enableval}"],
+        [i_do_have_fortran_api=no])
+AM_CONDITIONAL([FORTRAN_API],[test x"${i_do_have_fortran_api}" = xyes])
+])
+
+
 dnl FONTFORGE_ARG_ENABLE_PURE_API
 dnl -----------------------------
 AC_DEFUN([FONTFORGE_ARG_ENABLE_PURE_API],

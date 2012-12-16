@@ -19,9 +19,15 @@
 
 (use-modules
    (sortsmillff views)
-   (sortsmillff notices))
+   (sortsmillff notices)
+   (system foreign)
+   )
 
-(export register-fontforge-menu-entry)
+(export
+   register-fontforge-menu-entry
+   wrap-ff_menu_entry_action_t
+   wrap-ff_menu_entry_enabled_t
+   )
 
 (define (menu-entry-error-handling proc view)
    (let ((retval #f))
@@ -40,3 +46,31 @@
             (shortcut #f))
    (internal:register-fontforge-menu-entry window menu-path
       action enabled shortcut))
+
+;;-------------------------------------------------------------------------
+;;
+;; Example use of wrappers to register C, Fortran (using BIND(C)), or
+;; similar menu functions from Guile.
+;;
+;;   (let ((dll (dynamic-link "my_extensions"))
+;;        ((my-data-ptr (bytevector->pointer my-data-bytevector))))
+;;      (register-fontforge-menu-entry
+;;            #:window 'glyph
+;;            #:menu-path '("Tools" "My action")
+;;            #:action (wrap-ff_menu_entry_action_t
+;;                        (dynamic-func "my_action" dll) my-data-ptr)
+;;            #:enabled (wrap-ff_menu_entry_enabled_t
+;;                         (dynamic-func "my_enabled" dll) my-data-ptr)
+;;            #:shortcut "My action|F10"))
+
+(define* (wrap-ff_menu_entry_action_t c-action
+            #:optional (data %null-pointer))
+   (let ((proc (pointer->procedure void c-action (list '* '*))))
+      (lambda (view) (proc (unwrap-view view) data))))
+
+(define* (wrap-ff_menu_entry_enabled_t c-enabled
+            #:optional (data %null-pointer))
+   (let ((proc (pointer->procedure (_Bool) c-enabled (list '* '*))))
+      (lambda (view) (not (zero? (proc (unwrap-view view) data))))))
+
+;;-------------------------------------------------------------------------

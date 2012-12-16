@@ -47,6 +47,14 @@ if PYTHON_SCRIPTING
 SUBDIRS += python
 endif PYTHON_SCRIPTING
 
+if FORTRAN_API
+SUBDIRS += fortran
+endif FORTRAN_API
+
+if PURE_API
+SUBDIRS += pure
+endif PURE_API
+
 if MACINTOSH
 SUBDIRS += mackeys
 endif MACINTOSH

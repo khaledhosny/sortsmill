@@ -24,6 +24,8 @@ AC_CONFIG_FILES([data/pixmaps/Makefile])
 AC_CONFIG_FILES([fonttools/Makefile])
 AC_CONFIG_FILES([guile/Makefile])
 AC_CONFIG_FILES([sfd2sxml/Makefile])
+AC_CONFIG_FILES([fortran/Makefile])
+AC_CONFIG_FILES([pure/Makefile])
 AC_CONFIG_FILES([examples/Makefile])
 
 # Snippets for use with "include".

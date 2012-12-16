@@ -26,6 +26,14 @@
 
 lib_LTLIBRARIES =
 
+#********************************************************************
+# FIXME: The ‘simple_menu_extension_in_C’ method of registering
+# probably will be eliminated before long, because reworked menus are
+# likely to be implemented largely in Guile, and have more
+# complicated operations (involving locales, insertions, deletions,
+# and so forth).
+#********************************************************************
+#
 # To try 'simple_menu_extension_in_C' without installing it, use the
 # full path to $(build_dir)/simple_menu_extension_in_C.la in your
 # ${HOME}/.config/sortsmill-fontforge/user-init.scm file:
@@ -40,4 +48,42 @@ simple_menu_extension_in_C_la_SOURCES =	\
 simple_menu_extension_in_C_la_CPPFLAGS = -I$(top_builddir)/inc	\
 	''-I$(top_srcdir)/inc -I$(top_builddir)/fontforge
 simple_menu_extension_in_C_la_LDFLAGS = -prefer-pic	\
-	''-module -shared
+	''-module -shared -avoid-version
+
+# To try 'alternate_simple_menu_extension_in_C' without installing it,
+# use the full path to
+# $(build_dir)/alternate_simple_menu_extension_in_C.la in your
+# ${HOME}/.config/sortsmill-fontforge/user-init.scm file:
+#
+# (let ((dll (dynamic-link
+#              "/full/path/to/alternate_simple_menu_extension_in_C.la")))
+#
+#   (register-fontforge-menu-entry
+#      #:window 'glyph
+#      #:menu-path '("Tools" "Useless tools"
+#                    "Glyph view alternate extension written in C")
+#      #:action (wrap-ff_menu_entry_action_t
+#                  (dynamic-func "glyph_menu_action" dll)
+#                  (string->pointer
+#                     "This is a glyph view, and the glyph is not 'question'."))
+#      #:enabled (wrap-ff_menu_entry_enabled_t
+#                   (dynamic-func "glyph_menu_enabled" dll)))
+#
+#   (register-fontforge-menu-entry
+#      #:window 'font
+#      #:menu-path '("Tools" "Font view alternate extension written in C")
+#      #:action (wrap-ff_menu_entry_action_t
+#                  (dynamic-func "font_menu_action" dll)
+#                  (string->pointer "This is a font view."))))
+#
+# This method requires less C code, and it can be used to register
+# Fortran procedures without resorting to C. Also it lets you send
+# different data to the ‘action’ and ‘enabled’ functions.
+lib_LTLIBRARIES += alternate_simple_menu_extension_in_C.la
+alternate_simple_menu_extension_in_C_la_SOURCES =	\
+	alternate_simple_menu_extension_in_C.c
+alternate_simple_menu_extension_in_C_la_CPPFLAGS =	\
+	''-I$(top_builddir)/inc -I$(top_srcdir)/inc		\
+	-I$(top_builddir)/fontforge
+alternate_simple_menu_extension_in_C_la_LDFLAGS = -prefer-pic -module	\
+	''-shared -avoid-version

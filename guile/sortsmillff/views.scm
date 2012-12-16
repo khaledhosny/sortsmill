@@ -32,6 +32,7 @@
    glyph-view?
    wrap-glyph-view
    unwrap-glyph-view
+   unwrap-view
    font-view->ff:FontViewBase
    ff:FontViewBase->font-view
    glyph-view->ff:SplineChar
@@ -58,6 +59,13 @@
             (pointer->string (ff:SplineFont:font-name-ref sf))
             (pointer->string (ff:SplineChar:name-ref sc))
             (pointer-address (unwrap-glyph-view gv))))))
+
+(define (unwrap-view v)
+   (cond ((font-view? v) (unwrap-font-view v))
+         ((glyph-view? v) (unwrap-glyph-view v))
+         (else (scm-error 'wrong-type-arg "unwrap-view"
+                  "Not a font-view or glyph-view: ~S"
+                  (list v) (list v)))))
 
 (define (font-view->ff:FontViewBase fv)
    (pointer->ff:FontViewBase (unwrap-font-view fv)))

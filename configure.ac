@@ -120,6 +120,10 @@ gl_INIT
 AM_PROG_CC_C_O
 AC_PROG_CPP
 AC_PROG_CXX
+AC_PROG_FC
+AC_FC_SRCEXT([f90])
+AC_FC_PP_SRCEXT([F90])
+AC_PROG_FC_C_O
 AC_PROG_GREP
 AC_PROG_INSTALL
 AC_PROG_LN_S
@@ -160,6 +164,7 @@ AC_SUBST([THE_PROGRAMS],["${i_do_have_programs}"])
 
 FONTFORGE_ARG_DISABLE_PYTHON_SCRIPTING
 FONTFORGE_ARG_DISABLE_PYTHON_COMPATIBILITY
+FONTFORGE_ARG_ENABLE_FORTRAN_API
 FONTFORGE_ARG_ENABLE_PURE_API
 
 AC_ARG_ENABLE([freetype-debugger],
@@ -323,6 +328,31 @@ AC_SUBST([C_CONST_FLT_EPSILON],["${fontforge_cv_c_const_flt_epsilon}"])
 FONTFORGE_C_CONST_DBL_EPSILON
 AC_SUBST([C_CONST_DBL_EPSILON],["${fontforge_cv_c_const_dbl_epsilon}"])
 
+AC_FC_SRCEXT([f90])
+AC_FC_PP_SRCEXT([F90])
+AC_FC_LINE_LENGTH([132])
+AC_FC_IMPLICIT_NONE
+AC_FC_MAIN
+AC_FC_LIBRARY_LDFLAGS
+AC_FC_WRAPPERS
+AC_FC_PP_DEFINE
+AC_FC_FREEFORM
+AC_FC_MODULE_EXTENSION
+AC_FC_MODULE_FLAG
+AC_FC_MODULE_OUTPUT_FLAG
+
+# How to get mangled Fortran names here in configure, for instance to
+# use them from Pure, Guile, or Python ctypes code:
+#
+#AC_FC_FUNC([some_fortran_function])
+#AC_SUBST([some_fortran_function])
+#
+# In code that goes through the C preprocessor you can use the
+# FC_FUNC() and FC_FUNC_() macros defined in inc/config.h.
+#
+# With recent Fortran specifications, you can also use bind(C) in your
+# Fortran code.
+
 #--------------------------------------------------------------------------
 # Checks for library functions.
 
@@ -389,6 +419,8 @@ AC_CONFIG_FILES([python/sortsmillff/legacy/__init__.py])
 AC_CONFIG_FILES([guile/generate-internal-types.scm],
                 [chmod +x guile/generate-internal-types.scm])
 AC_CONFIG_COMMANDS([guile/sortsmillff],[AS_MKDIR_P([guile/sortsmillff])])
+AC_CONFIG_FILES([fortran/generate-internal_types.f90.scm],
+                [chmod +x fortran/generate-internal_types.f90.scm])
 FONTFORGE_CONFIG_TESTSUITE
 FONTFORGE_CREATE_SUMMARY
 
