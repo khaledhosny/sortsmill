@@ -28,7 +28,7 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-AC_PREREQ([2.68])
+AC_PREREQ([2.69])
 AC_INIT([Sorts Mill FontForge],
         [2.0.0_alpha1],
         [https://github.com/sortsmill/fontforge/issues],
@@ -340,6 +340,7 @@ AC_FC_FREEFORM
 AC_FC_MODULE_EXTENSION
 AC_FC_MODULE_FLAG
 AC_FC_MODULE_OUTPUT_FLAG
+FONTFORGE_FC_MODULE_CASE
 
 # How to get mangled Fortran names here in configure, for instance to
 # use them from Pure, Guile, or Python ctypes code:
@@ -384,6 +385,7 @@ AH_BOTTOM([#include <config-extra.h>])
 AM_CONDITIONAL([HAVE_PYTHON_SCRIPTING],[test x"${i_do_have_python_scripting}" = xyes])
 AM_CONDITIONAL([HAVE_GUI],[test x"${i_do_have_gui}" = xyes])
 AM_CONDITIONAL([MACINTOSH],[test x"${gww_ismac}" = xyes])
+AM_CONDITIONAL([HAVE_FORTRAN_MODFILES],[test x"${FC_MODEXT}" != x])
 
 # The following conditionals are always false, so the directories
 # never get built by default. Nevertheless, they will be included by

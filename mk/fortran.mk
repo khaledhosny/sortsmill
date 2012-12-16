@@ -24,45 +24,14 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-include $(top_srcdir)/mk/flags.am
-include $(top_srcdir)/mk/fortran.mk
+# Convert a module name to uppercase. (Actually this is just a generic
+# ASCII ‘convert to uppercase’ function.)
+mod_to_upper=$(shell echo '$(1)' | LC_ALL=C tr '[a-z]' '[A-Z]')
 
-lib_LTLIBRARIES = libsortsmillff_fortran_api.la
+# Convert a module name to the appropriate letter case.
+modcase=$(if $(FC_MODCASE_LOWER),$(1),$(if $(FC_MODCASE_UPPER),$(call mod_to_upper,$(1)),))
 
-libsortsmillff_fortran_api_la_SOURCES = usermenu.f90
-
-FORTRAN_MODULES = sortsmillff_usermenu
-
-install-data-hook: install-module-files
-uninstall-hook: uninstall-module-files
-mostlyclean-local: mostlyclean-module-files
-
-if HAVE_FORTRAN_MODFILES
-
-# Fortran module files are treated in this makefile as a byproduct of
-# the production of targets. They do not appear in rules. Thus hooks
-# are needed to install, uninstall, and clean them.
-
-FORTRAN_MODFILES = $(foreach module,$(FORTRAN_MODULES),$(call modfile,$(module)))
-
-install-module-files:
-	$(INSTALL_DATA) $(FORTRAN_MODFILES) $(DESTDIR)/$(fcmoduleincludedir)
-
-uninstall-module-files:
-	@for f in $(FORTRAN_MODFILES); do 						\
-		echo rm -f $(DESTDIR)/$(fcmoduleincludedir)/$${f};	\
-		rm -f $(DESTDIR)/$(fcmoduleincludedir)/$${f};		\
-	done
-
-mostlyclean-module-files:
-	-rm -f $(FORTRAN_MODFILES)
-
-else !HAVE_FORTRAN_MODFILES
-
-install-module-files:
-
-uninstall-module-files:
-
-mostlyclean-module-files:
-
-endif !HAVE_FORTRAN_MODFILES
+# Convert a module name to the module file name. This file name is the
+# module name in either lowercase or uppercase, depending on the
+# compiler, followed by a compiler-specific extension.
+modfile=$(if $(FC_MODEXT),$(call modcase,$(1)),).$(FC_MODEXT)

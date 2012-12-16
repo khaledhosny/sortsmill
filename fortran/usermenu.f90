@@ -1,4 +1,4 @@
-! -*- mode: f90 -*-
+! -*- mode: F90 -*-
 
 ! Copyright (C) 2012 Barry Schwartz
 ! 
@@ -15,16 +15,27 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-module sortsmillff_views
+module sortsmillff_usermenu
   use iso_c_binding
   implicit none
 
-  type font_view
-     type(c_ptr) :: p
-  end type font_view
+  abstract interface
 
-  type glyph_view
-     type(c_ptr) :: p
-  end type glyph_view
+     ! Fortran equivalent of C type ff_menu_entry_action_t.
+     subroutine ff_menu_entry_action_t (obj, data) bind(c)
+       import
+       type(c_ptr) :: obj
+       type(c_ptr) :: data
+     end subroutine ff_menu_entry_action_t
 
-end module sortsmillff_views
+     ! Fortran equivalent of C type ff_menu_entry_enabled_t.
+     function ff_menu_entry_enabled_t (obj, data) result(enab) bind(c)
+       import
+       type(c_ptr) :: obj
+       type(c_ptr) :: data
+       logical(c_bool) :: enab
+     end function ff_menu_entry_enabled_t
+
+  end interface
+
+end module sortsmillff_usermenu

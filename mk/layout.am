@@ -70,6 +70,9 @@ guileobjmoduledir = $(libdir)/guile/$(GUILE_API)/site-ccache
 # Where Cython .pxd and .pxi files go.
 cythonincludedir = $(includedir)
 
+# Where Fortran module files go.
+fcmoduleincludedir = $(includedir)
+
 # What gets passed as macros to the C sources.
 MY_SHAREDIR = ${pkgdatadir}
 MY_DOCDIR = ${htdocsdir}
