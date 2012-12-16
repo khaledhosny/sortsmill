@@ -34,7 +34,7 @@ libsortsmillff_fortran_api_la_SOURCES = usermenu.f90
 FORTRAN_MODULES = sortsmillff_usermenu
 
 install-data-hook: install-module-files
-uninstall-hook: uninstall-module-files
+uninstall-local: uninstall-module-files
 mostlyclean-local: mostlyclean-module-files
 
 if HAVE_FORTRAN_MODFILES

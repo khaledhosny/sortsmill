@@ -117,12 +117,10 @@ AC_PROG_CC
 AC_PROG_CC_C99
 gl_EARLY
 gl_INIT
-AM_PROG_CC_C_O
+AC_PROG_CC_C_O
 AC_PROG_CPP
 AC_PROG_CXX
 AC_PROG_FC
-AC_FC_SRCEXT([f90])
-AC_FC_PP_SRCEXT([F90])
 AC_PROG_FC_C_O
 AC_PROG_GREP
 AC_PROG_INSTALL
@@ -328,19 +326,19 @@ AC_SUBST([C_CONST_FLT_EPSILON],["${fontforge_cv_c_const_flt_epsilon}"])
 FONTFORGE_C_CONST_DBL_EPSILON
 AC_SUBST([C_CONST_DBL_EPSILON],["${fontforge_cv_c_const_dbl_epsilon}"])
 
-AC_FC_SRCEXT([f90])
-AC_FC_PP_SRCEXT([F90])
-AC_FC_LINE_LENGTH([132])
-AC_FC_IMPLICIT_NONE
-AC_FC_MAIN
-AC_FC_LIBRARY_LDFLAGS
-AC_FC_WRAPPERS
-AC_FC_PP_DEFINE
-AC_FC_FREEFORM
-AC_FC_MODULE_EXTENSION
-AC_FC_MODULE_FLAG
-AC_FC_MODULE_OUTPUT_FLAG
-FONTFORGE_FC_MODULE_CASE
+if test x"${i_do_have_fortran_api}" = xyes; then
+   #AC_FC_SRCEXT([f90])    <-- Save for when some compiler stumbles.
+   #AC_FC_PP_SRCEXT([F90]) <-- Save for when some compiler stumbles.
+   AC_FC_LINE_LENGTH([132])
+   AC_FC_IMPLICIT_NONE([],[:])
+   AC_FC_MAIN
+   AC_FC_LIBRARY_LDFLAGS
+   AC_FC_PP_DEFINE
+   AC_FC_FREEFORM
+   AC_FC_MODULE_EXTENSION
+   AC_FC_MODULE_FLAG
+   FONTFORGE_FC_MODULE_CASE
+fi
 
 # How to get mangled Fortran names here in configure, for instance to
 # use them from Pure, Guile, or Python ctypes code:
@@ -349,10 +347,14 @@ FONTFORGE_FC_MODULE_CASE
 #AC_SUBST([some_fortran_function])
 #
 # In code that goes through the C preprocessor you can use the
-# FC_FUNC() and FC_FUNC_() macros defined in inc/config.h.
-#
-# With recent Fortran specifications, you can also use bind(C) in your
-# Fortran code.
+# FC_FUNC() and FC_FUNC_() macros defined in inc/config.h by:
+
+if test x"${i_do_have_fortran_api}" = xyes; then
+   AC_FC_WRAPPERS
+fi
+
+# With recent Fortran specifications, you can use BIND(C) in your
+# Fortran code and thus avoid name mangling. This method is the best.
 
 #--------------------------------------------------------------------------
 # Checks for library functions.
