@@ -131,21 +131,22 @@ AC_PROG_SED
 PKG_PROG_PKG_CONFIG
 
 # Code quality programs.
-AC_PATH_PROG([INDENT],[indent],[indent]) dnl  GNU Indent.
-AC_PATH_PROG([TIDY],[tidy],[tidy])       dnl  HTML Tidy.
+FONTFORGE_PATH_PROG([INDENT],[indent],[GNU `indent' command])
+FONTFORGE_PATH_PROG([TIDY],[tidy],[HTML Tidy command])
 
 # Gettext programs.
-AC_PATH_PROG([MSGFMT],[msgfmt],[msgfmt])
-AC_PATH_PROG([XGETTEXT],[xgettext],[xgettext])
+FONTFORGE_PATH_PROG([MSGFMT],[msgfmt],[`msgfmt' command from GNU gettext])
+FONTFORGE_PATH_PROG([XGETTEXT],[xgettext],[`xgettext' command from GNU gettext])
 
 # Freedesktop programs.
-AC_PATH_PROG([UPDATE_MIME_DATABASE],[update-mime-database],[update-mime-database])
-AC_PATH_PROG([UPDATE_DESKTOP_DATABASE],[update-desktop-database],[update-desktop-database])
+FONTFORGE_PATH_PROG([UPDATE_MIME_DATABASE],[update-mime-database],
+                    [`update-mime-database' command])
+FONTFORGE_PATH_PROG([UPDATE_DESKTOP_DATABASE],[update-desktop-database],
+                    [`update-desktop-database' command])
 
 # Assorted programs.
-AC_PATH_PROG([WGET],[wget],[wget])
-AC_PATH_PROG([CYTHON],[cython],[cython])
-AC_PATH_PROG([GENGETOPT],[gengetopt],[gengetopt])
+FONTFORGE_PATH_PROG([WGET],[wget],[GNU `wget' command])
+FONTFORGE_PATH_PROG([GENGETOPT],[gengetopt],[GNU `gengetopt' command])
 GUILE_PROGS
 
 #--------------------------------------------------------------------------

@@ -6,6 +6,11 @@ AC_DEFUN([FONTFORGE_PROG_CYTHON_WORKS],
 [
 AC_MSG_CHECKING([whether CYTHON works])
 
+if test -z "${CYTHON}"; then
+   AC_MSG_RESULT([no cython command found])
+   AC_MSG_FAILURE([Building ${PACKAGE_NAME} requires a working Cython.])
+fi
+
 cat > cythontest_.pyx <<EOF
 cdef char *message = "Hello, world!"
 print (message)

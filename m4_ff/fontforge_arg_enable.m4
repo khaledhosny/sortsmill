@@ -34,6 +34,7 @@ AC_ARG_ENABLE([python-scripting],
         [i_do_have_python_scripting="${enableval}"],
         [i_do_have_python_scripting=yes])
 if test x"${i_do_have_python_scripting}" = xyes; then
+   FONTFORGE_PATH_PROG([CYTHON],[cython],[Cython compiler command])
    AM_PATH_PYTHON([2.3])
    PKG_CHECK_MODULES([PYTHON],[python-"${PYTHON_VERSION}"],,[i_do_have_python_scripting=no])
 fi
