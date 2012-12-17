@@ -278,7 +278,20 @@ AC_TYPE_PID_T
 AC_TYPE_SIZE_T
 
 AC_CHECK_SIZEOF([_Bool])
+SIZEOF__BOOL=${ac_cv_sizeof__Bool}
+AC_SUBST([SIZEOF__BOOL])
+
 AC_CHECK_ALIGNOF([_Bool])
+ALIGNOF__BOOL=${ac_cv_alignof__Bool}
+AC_SUBST([ALIGNOF__BOOL])
+
+AC_CHECK_SIZEOF([intptr_t],[],[#include <stdint.h>])
+SIZEOF_INTPTR_T=${ac_cv_sizeof_intptr_t}
+AC_SUBST([SIZEOF_INTPTR_T])
+
+AC_CHECK_SIZEOF([uintptr_t],[],[#include <stdint.h>])
+SIZEOF_UINTPTR_T=${ac_cv_sizeof_uintptr_t}
+AC_SUBST([SIZEOF_UINTPTR_T])
 
 # This only checks that an int requires 4 bytes of storage, not that
 # it actually uses all 32 bits. We actually require all 32 bits.
