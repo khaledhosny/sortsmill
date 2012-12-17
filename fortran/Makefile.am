@@ -26,12 +26,21 @@
 
 include $(top_srcdir)/mk/flags.am
 include $(top_srcdir)/mk/fortran.mk
+include $(top_srcdir)/mk/guile.mk
 
 lib_LTLIBRARIES = libsortsmillff_fortran_api.la
 
 libsortsmillff_fortran_api_la_SOURCES = usermenu.f90
+libsortsmillff_fortran_api_la_SOURCES += fortran_internal_types.c
+nodist_libsortsmillff_fortran_api_la_SOURCES = internal_types.f90
 
-FORTRAN_MODULES = sortsmillff_usermenu
+FORTRAN_MODULES = sortsmillff_internal_types sortsmillff_usermenu
+
+internal_types.f90: generate-internal_types.f90.scm			\
+		$(top_builddir)/fontforge/fontforge_type_inspector
+	$(AM_V_GEN)
+	$(AM_V_at)$(GUILE_INTERPRET) generate-internal_types.f90.scm > $@-tmp
+	$(AM_V_at)mv $@-tmp $@
 
 install-data-hook: install-module-files
 uninstall-local: uninstall-module-files
