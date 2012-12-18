@@ -74,12 +74,14 @@ contains
     sc = SplineChar (obj)
     glyph_name = .cptr. get_name (sc)
     if (c_associated (glyph_name)) then
-       print *, 'Glyph name: ', c_string_to_fortran (glyph_name)
+       message = c_string_to_fortran (glyph_name)
+       print *, 'Glyph name: ', message
        parent = .cptr. get_parent (sc)
        if (c_associated (parent)) then
           font_name = .cptr. get_font_name (SplineFont (parent))
           if (c_associated (font_name)) then
-             print *, 'Font name: ', c_string_to_fortran (font_name)
+             message = c_string_to_fortran (font_name)
+             print *, 'Font name: ', message
           end if
        end if
     end if
@@ -92,11 +94,13 @@ contains
     type(c_ptr), value :: obj, data
 
     type(c_ptr) :: glyph_name
+    character(len=:), allocatable :: s
 
     enabled = .false.
     glyph_name = .cptr. get_name (SplineChar (obj))
     if (c_associated (glyph_name)) then
-       enabled = (c_string_to_fortran (glyph_name) /= 'question')
+       s = c_string_to_fortran (glyph_name)
+       enabled = (s /= 'question')
     end if
   end function glyph_menu_enabled
 
@@ -111,7 +115,8 @@ contains
     if (c_associated (sf)) then
        font_name = .cptr. get_font_name (SplineFont (sf))
        if (c_associated (sf)) then
-          print *, 'Font name: ', c_string_to_fortran (font_name)
+          message = c_string_to_fortran (font_name)
+          print *, 'Font name: ', message
        end if
     end if
     message = c_string_to_fortran (data)
