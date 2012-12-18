@@ -83,7 +83,7 @@ distclean-local:
 	else														\
 		for dir in . inc inc/sortsmillff inc/sortsmillff/guile	\
 				auxiliary gutils gdraw fontforge pyhook 		\
-				tests fonttools; do								\
+				tests fonttools examples; do					\
              rm -f "$(top_builddir)/$${dir}/.indent.pro";		\
 		done;													\
 	fi

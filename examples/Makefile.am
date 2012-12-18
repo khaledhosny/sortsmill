@@ -87,3 +87,38 @@ alternate_simple_menu_extension_in_C_la_CPPFLAGS =	\
 	-I$(top_builddir)/fontforge
 alternate_simple_menu_extension_in_C_la_LDFLAGS = -prefer-pic -module	\
 	''-shared -avoid-version
+
+# To try 'simple_menu_extension_in_Fortran' without installing it,
+# use the full path to
+# $(build_dir)/simple_menu_extension_in_Fortran.la in your
+# ${HOME}/.config/sortsmill-fontforge/user-init.scm file:
+#
+# (let ((dll (dynamic-link
+#              "/full/path/to/simple_menu_extension_in_Fortran.la")))
+#
+#   (register-fontforge-menu-entry
+#      #:window 'glyph
+#      #:menu-path '("Tools" "Useless tools"
+#                    "Glyph view alternate extension written in Fortran")
+#      #:action (wrap-ff_menu_entry_action_t
+#                  (dynamic-func "glyph_menu_action" dll)
+#                  (string->pointer
+#                     "This is a glyph view, and the glyph is not 'question'."))
+#      #:enabled (wrap-ff_menu_entry_enabled_t
+#                   (dynamic-func "glyph_menu_enabled" dll)))
+#
+#   (register-fontforge-menu-entry
+#      #:window 'font
+#      #:menu-path '("Tools" "Font view alternate extension written in Fortran")
+#      #:action (wrap-ff_menu_entry_action_t
+#                  (dynamic-func "font_menu_action" dll)
+#                  (string->pointer "This is a font view."))))
+#
+lib_LTLIBRARIES += simple_menu_extension_in_Fortran.la
+simple_menu_extension_in_Fortran_la_SOURCES =	\
+	simple_menu_extension_in_Fortran.f90
+simple_menu_extension_in_Fortran_la_FCFLAGS = $(AM_FCFLAGS)	\
+	$(FC_MODINC)$(top_builddir)/fortran						\
+	$(FC_MODINC)$(top_srcdir)/fortran
+simple_menu_extension_in_Fortran_la_LDFLAGS = -prefer-pic -module	\
+	''-shared -avoid-version -lsortsmillff_fortran_api

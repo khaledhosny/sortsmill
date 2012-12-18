@@ -24,15 +24,15 @@ module sortsmillff_usermenu
      ! Fortran equivalent of C type ff_menu_entry_action_t.
      subroutine ff_menu_entry_action_t (obj, data) bind(c)
        import
-       type(c_ptr) :: obj
-       type(c_ptr) :: data
+       type(c_ptr), value :: obj
+       type(c_ptr), value :: data
      end subroutine ff_menu_entry_action_t
 
      ! Fortran equivalent of C type ff_menu_entry_enabled_t.
      function ff_menu_entry_enabled_t (obj, data) result(enab) bind(c)
        import
-       type(c_ptr) :: obj
-       type(c_ptr) :: data
+       type(c_ptr), value :: obj
+       type(c_ptr), value :: data
        logical(c_bool) :: enab
      end function ff_menu_entry_enabled_t
 

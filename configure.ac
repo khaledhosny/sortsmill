@@ -343,8 +343,8 @@ FONTFORGE_C_CONST_DBL_EPSILON
 AC_SUBST([C_CONST_DBL_EPSILON],["${fontforge_cv_c_const_dbl_epsilon}"])
 
 if test x"${i_do_have_fortran_api}" = xyes; then
-   #AC_FC_SRCEXT([f90])    <-- Save for when some compiler stumbles.
-   #AC_FC_PP_SRCEXT([F90]) <-- Save for when some compiler stumbles.
+   AC_FC_SRCEXT([f90])
+   AC_FC_PP_SRCEXT([F90])
    AC_FC_LINE_LENGTH([132])
    AC_FC_IMPLICIT_NONE([],[:])
    AC_FC_MAIN
