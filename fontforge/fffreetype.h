@@ -38,10 +38,6 @@
 
 #ifdef HAVE_MMAP
 # include <sys/mman.h>
-#else
-# ifdef __MINGW32__
-#  include "winmmap.h"
-# endif
 #endif
 
 VISIBLE extern FT_Library ff_ft_context;

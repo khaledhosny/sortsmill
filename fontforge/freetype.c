@@ -114,7 +114,7 @@ return;
 	FT_Done_Face(ftc->face);
     if ( ftc->shared_ftc )
 return;
-#if defined(HAVE_MMAP) || defined(__MINGW32__)
+#ifdef HAVE_MMAP
     if (ftc->memoryfile)
 	munmap (ftc->memoryfile,ftc->len);
 #else
@@ -272,7 +272,7 @@ return( NULL );
 	fseek(ftc->file,0,SEEK_END);
 	ftc->len = ftell(ftc->file);
 	fseek(ftc->file,0,SEEK_SET);
-#if defined(HAVE_MMAP) || defined(__MINGW32__)
+#ifdef HAVE_MMAP
 	ftc->memoryfile = mmap(NULL,ftc->len,PROT_READ,MAP_PRIVATE,fileno(ftc->file),0);
 	if ( ftc->memoryfile==MAP_FAILED )
  goto fail;
