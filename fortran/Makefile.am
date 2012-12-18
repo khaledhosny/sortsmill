@@ -31,7 +31,6 @@ include $(top_srcdir)/mk/guile.mk
 lib_LTLIBRARIES = libsortsmillff_fortran_api.la
 
 libsortsmillff_fortran_api_la_SOURCES = usermenu.f90
-libsortsmillff_fortran_api_la_SOURCES += fortran_internal_types.c
 nodist_libsortsmillff_fortran_api_la_SOURCES = internal_types.f90
 
 FORTRAN_MODULES = sortsmillff_internal_types sortsmillff_usermenu
