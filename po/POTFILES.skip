@@ -1,7 +1,1 @@
-lib/c-ctype.c
-lib/error.c
-lib/mbchar.h
-lib/obstack.c
-lib/openat-die.c
-lib/xalloc-die.c
-lib/xsetenv.c
+lib/
