@@ -75,10 +75,10 @@
              (format #t "  module procedure get_~a_~a\n" struct-name field-name)
              (format #t "end interface get_~a\n" field-name)
              (format #t "\n")
-;;             (format #t "interface set_~a\n" field-name)
-;;             (format #t "  module procedure set_~a_~a\n" struct-name field-name)
-;;             (format #t "end interface set_~a\n" field-name)
-;;             (format #t "\n")
+             (format #t "interface set_~a\n" field-name)
+             (format #t "  module procedure set_~a_~a\n" struct-name field-name)
+             (format #t "end interface set_~a\n" field-name)
+             (format #t "\n")
              )
             (_ (lambda (_) *unspecified*))))
       instructions))
@@ -107,27 +107,6 @@
              (begin
                 (write-field-definitions field-type struct-name field-name offset size)
                 ))
-
-
-;;            (('field (? symbol? field-type) (? string? struct-name)
-;;                (? string? field-name) (? integer? offset) (? integer? size))
-;;              (format #t "function get_~a_~a (p) result(q)\n" struct-name field-name)
-;;              (format #t "  type(~a), intent(in) :: p\n" struct-name)
-;;              (format #t "  ~a :: q\n" (get-field-type field-type size))
-;;              (format #t "  ~a, pointer :: i\n" (get-internal-fortran-type field-type size))
-;;              (format #t "  call c_f_pointer (~a, i)\n" (offset-by "p%ptr" offset))
-;;              (convert-get-field field-type size "i" "q")
-;;              (format #t "end function get_~a_~a\n" struct-name field-name)
-;;              (format #t "\n")
-;;              (format #t "subroutine set_~a_~a (p, v)\n" struct-name field-name)
-;;              (format #t "  type(~a), intent(in) :: p\n" struct-name)
-;;              (format #t "  ~a, intent(in) :: v\n" (get-field-type field-type size))
-;;              (format #t "  ~a, pointer :: i\n" (get-internal-fortran-type field-type size))
-;;              (format #t "  call c_f_pointer (~a, i)\n" (offset-by "p%ptr" offset))
-;;              (convert-set-field field-type size "v" "i")
-;;              (format #t "end subroutine set_~a_~a\n" struct-name field-name)
-;;              (format #t "\n")
-;;             )
             (_ (lambda (_) *unspecified*))))
       instructions))
 
@@ -140,7 +119,7 @@
 
 (define (write-int-field-definitions struct-name field-name offset size)
    (write-get-int-field-definition struct-name field-name offset size)
-   )
+   (write-set-int-field-definition struct-name field-name offset size))
 
 (define (write-get-int-field-definition struct-name field-name offset size)
    (case size
@@ -160,39 +139,60 @@
           (format #t "end function get_~a_~a\n" struct-name field-name)
           (format #t "\n")))))
 
-(define (write-uint-field-definitions struct-name field-name offset size)
+(define (write-set-int-field-definition struct-name field-name offset size)
    (case size
-      ((1 2)
+      ((1 2 4)
        (begin
-          (format #t "integer function get_~a_~a (p) result(q)\n" struct-name field-name)
-          (format #t "  type(~a), intent(in) :: p\n" struct-name)
-          (format #t "  q = int (uint~d_to_uint32 (transfer (p%bv(~d:~d), c_int~d_t)), kind (1))\n"
-             (* 8 size) (1+ offset) (+ offset size) (* 8 size))
-          (format #t "end function get_~a_~a\n" struct-name field-name)
-          (format #t "\n")))
-      ((4)
-       (begin
-          (format #t "integer(c_int64_t) function get_~a_~a (p) result(q)\n" struct-name field-name)
-          (format #t "  type(~a), intent(in) :: p\n" struct-name)
-          (format #t "  q = uint32_to_uint64 (transfer (p%bv(~d:~d), c_int32_t))\n"
-             (1+ offset) (+ offset size))
-          (format #t "end function get_~a_~a\n" struct-name field-name)
+          (format #t "subroutine set_~a_~a (p, v)\n" struct-name field-name)
+          (format #t "  type(~a), intent(inout) :: p\n" struct-name)
+          (format #t "  integer, intent(in) :: v\n")
+          (format #t "  p%bv(~d:~d) = transfer (int (v, 1_c_int~d_t), p%bv)\n"
+             (1+ offset) (+ offset size) (* 8 size))
+          (format #t "end subroutine set_~a_~a\n" struct-name field-name)
           (format #t "\n")))
       ((8)
        (begin
-          (format #t "! WARNING: The result for 64-bit integers is SIGNED.\n")
-          (format #t "! Unless the value is very large, this handling\n")
-          (format #t "! likely is sufficient. However, in gfortran you can\n")
-          (format #t "! get an actual unsigned integer by transferring the\n")
-          (format #t "! data to an INTEGER(KIND=C_INT128_T).\n")
-          (format #t "integer(c_int64_t) function get_~a_~a (p) result(q)\n" struct-name field-name)
-          (format #t "  type(~a), intent(in) :: p\n" struct-name)
-          (format #t "  q = transfer (p%bv(~d:~d), c_int64_t)\n" (1+ offset) (+ offset size))
-          (format #t "end function get_~a_~a\n" struct-name field-name)
-          (format #t "\n")))
-      ))
+          (format #t "subroutine set_~a_~a (p, v)\n" struct-name field-name)
+          (format #t "  type(~a), intent(inout) :: p\n" struct-name)
+          (format #t "  integer(c_int64_t), intent(in) :: v\n")
+          (format #t "  p%bv(~d:~d) = transfer (v, p%bv)\n" (1+ offset) (+ offset size))
+          (format #t "end subroutine set_~a_~a\n" struct-name field-name)
+          (format #t "\n")))))
+
+(define (write-uint-field-definitions struct-name field-name offset size)
+   (write-get-uint-field-definitions struct-name field-name offset size)
+   (write-set-uint-field-definitions struct-name field-name offset size))
+   
+(define (write-get-uint-field-definitions struct-name field-name offset size)
+   (format #t "! Unsigned ints are returned as INTEGER(KIND=C_INT64_T).\n")
+   (when (= size 8)
+      (format #t "!\n")
+      (format #t "! WARNING: The returned 64-bit integer is SIGNED.\n")
+      (format #t "! Unless the unsigned value is very large, this handling\n")
+      (format #t "! likely is sufficient. However, in gfortran you can\n")
+      (format #t "! get an actual unsigned integer by transferring the\n")
+      (format #t "! data to an INTEGER(KIND=C_INT128_T).\n"))
+   (format #t "integer(c_int64_t) function get_~a_~a (p) result(q)\n" struct-name field-name)
+   (format #t "  type(~a), intent(in) :: p\n" struct-name)
+   (format #t "  q = uint~d_to_uint64 (transfer (p%bv(~d:~d), 1_c_int~d_t))\n"
+      (* 8 size) (1+ offset) (+ offset size) (* 8 size))
+   (format #t "end function get_~a_~a\n" struct-name field-name)
+   (format #t "\n"))
+
+(define (write-set-uint-field-definitions struct-name field-name offset size)
+   (format #t "subroutine set_~a_~a (p, v)\n" struct-name field-name)
+   (format #t "  type(~a), intent(inout) :: p\n" struct-name)
+   (format #t "  integer(c_int64_t), intent(in) :: v\n")
+   (format #t "  p%bv(~d:~d) = transfer (uint64_to_uint~d (v), p%bv)\n"
+      (1+ offset) (+ offset size) (* 8 size))
+   (format #t "end subroutine set_~a_~a\n" struct-name field-name)
+   (format #t "\n"))
 
 (define (write-bool-field-definitions struct-name field-name offset size)
+   (write-get-bool-field-definition struct-name field-name offset size)
+   (write-set-bool-field-definition struct-name field-name offset size))
+
+(define (write-get-bool-field-definition struct-name field-name offset size)
    (format #t "logical function get_~a_~a (p) result(q)\n" struct-name field-name)
    (format #t "  type(~a), intent(in) :: p\n" struct-name)
    (format #t "  q = (transfer (p%bv(~d:~d), 1_c_int~d_t) /= 0)\n"
@@ -200,12 +200,40 @@
    (format #t "end function get_~a_~a\n" struct-name field-name)
    (format #t "\n"))
 
+(define (write-set-bool-field-definition struct-name field-name offset size)
+   (format #t "subroutine set_~a_~a (p, v)\n" struct-name field-name)
+   (format #t "  type(~a), intent(inout) :: p\n" struct-name)
+   (format #t "  logical, intent(in) :: v\n")
+   (format #t "  integer(c_int8_t) :: i\n")
+   (format #t "  if (v) then\n")
+   (format #t "    i = 1_c_int8_t\n")
+   (format #t "  else\n")
+   (format #t "    i = 0_c_int8_t\n")
+   (format #t "  endif\n")
+   (format #t "  p%bv(~d:~d) = transfer (uint8_to_uint~d (i), p%bv)\n"
+      (1+ offset) (+ offset size) (* 8 size))
+   (format #t "end subroutine set_~a_~a\n" struct-name field-name)
+   (format #t "\n"))
+
 (define (write-pointer-field-definitions struct-name field-name offset size)
+   (write-get-pointer-field-definition struct-name field-name offset size)
+   (write-set-pointer-field-definition struct-name field-name offset size))
+
+(define (write-get-pointer-field-definition struct-name field-name offset size)
    (format #t "integer(c_intptr_t) function get_~a_~a (p) result(q)\n" struct-name field-name)
    (format #t "  type(~a), intent(in) :: p\n" struct-name)
    (format #t "  q = uint~d_to_uint~d (transfer (p%bv(~d:~d), 1_c_int~d_t))\n"
       (* 8 size) (* 8 sizeof-intptr_t) (1+ offset) (+ offset size) (* 8 size))
    (format #t "end function get_~a_~a\n" struct-name field-name)
+   (format #t "\n"))
+
+(define (write-set-pointer-field-definition struct-name field-name offset size)
+   (format #t "subroutine set_~a_~a (p, v)\n" struct-name field-name)
+   (format #t "  type(~a), intent(inout) :: p\n" struct-name)
+   (format #t "  integer(c_intptr_t), intent(in) :: v\n")
+   (format #t "  p%bv(~d:~d) = transfer (uint~d_to_uint~d (v), p%bv)\n"
+      (1+ offset) (+ offset size) (* 8 sizeof-intptr_t) (* 8 size))
+   (format #t "end subroutine set_~a_~a\n" struct-name field-name)
    (format #t "\n"))
 
 (define (write-unsigned-int-conversion from-size to-size)
@@ -287,6 +315,8 @@
    (write-declarations instructions)
    (format #t "contains\n")
    (format #t "\n")
+   (write-unsigned-int-conversion 1 1)
+   (write-unsigned-int-conversion 1 2)
    (write-unsigned-int-conversion 1 4)
    (write-unsigned-int-conversion 2 4)
    (write-unsigned-int-conversion 4 4)
