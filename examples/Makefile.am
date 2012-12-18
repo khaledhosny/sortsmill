@@ -122,3 +122,8 @@ simple_menu_extension_in_Fortran_la_FCFLAGS = $(AM_FCFLAGS)	\
 	$(FC_MODINC)$(top_srcdir)/fortran
 simple_menu_extension_in_Fortran_la_LDFLAGS = -prefer-pic -module	\
 	''-shared -avoid-version -lsortsmillff_fortran_api
+
+mostlyclean-local: mostlyclean-modules
+
+mostlyclean-modules:
+	-test -z "$(FC_MODEXT)" || rm -f *.$(FC_MODEXT)
