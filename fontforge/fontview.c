@@ -1896,40 +1896,70 @@ FVMenuCondense (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 
 #define MID_Warnings	3000
 
+/*
+ * Returns:
+ *   -1     if nothing selected
+ *   index  if exactly one char
+ *   -2     if more than one char
+ */
+static int
+fv_any_char_selected (FontViewBase *fvb)
+{
+  int val = -1;
+
+  // Find a selected char.
+  int i = 0;
+  while (val == -1 && i < fvb->map->enccount)
+    {
+      if (fvb->selected[i])
+	val = i;
+      i++;
+    }
+
+  // See whether any other char also is selected.
+  while (0 <= val && i < fvb->map->enccount)
+    {
+      if (fvb->selected[i])
+	val = -2;
+      i++;
+    }
+  
+  return val;
+}
+
+static bool
+fv_all_selected (FontViewBase *fvb)
+{
+  /* Is everything 'worth outputting' selected? */
+
+  bool something_is_worth_outputting = false;
+  bool one_is_not_selected = false;
+  int i = 0;
+  while (!one_is_not_selected && i < fvb->sf->glyphcnt)
+    {
+      if (SCWorthOutputting (fvb->sf->glyphs[i]))
+	{
+	  something_is_worth_outputting = true;
+	  if (!fvb->selected[fvb->map->backmap[i]])
+	    one_is_not_selected = true;
+	}
+      i++;
+    }
+  return (something_is_worth_outputting && !one_is_not_selected);
+}
+
 /* Returns -1 if nothing selected, if exactly one char return it, -2
    if more than one. */
 static int
 FVAnyCharSelected (FontView *fv)
 {
-  int i, val = -1;
-
-  for (i = 0; i < fv->b.map->enccount; ++i)
-    {
-      if (fv->b.selected[i])
-        {
-          if (val == -1)
-            val = i;
-          else
-            return (-2);
-        }
-    }
-  return (val);
+  return fv_any_char_selected (&fv->b);
 }
 
-static int
+static bool
 FVAllSelected (FontView *fv)
 {
-  int i, any = false;
-  /* Is everything real selected? */
-
-  for (i = 0; i < fv->b.sf->glyphcnt; ++i)
-    if (SCWorthOutputting (fv->b.sf->glyphs[i]))
-      {
-        if (!fv->b.selected[fv->b.map->backmap[i]])
-          return (false);
-        any = true;
-      }
-  return (any);
+  return fv_all_selected (&fv->b);
 }
 
 static void
