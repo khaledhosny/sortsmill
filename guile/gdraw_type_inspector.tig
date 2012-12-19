@@ -1,0 +1,25 @@
+;; -*- mode: bee -*-
+
+("<ggadget.h>")
+
+(
+ (struct "GTextInfo"
+    (sizeof)
+    (field * "text")
+    (field * "image")
+    (field uint "fg")
+    (field uint "bg")
+    (field * "userdata")
+    (field * "font")
+    (field bool "disabled")
+    (field bool "image_precedes")
+    (field bool "checkable")
+    (field bool "checked")
+    (field bool "selected")
+    (field bool "line")
+    (field bool "text_is_1byte")
+    (field bool "text_has_mnemonic")
+    (field bool "changed")
+    (field uint "mnemonic")
+    )
+ )

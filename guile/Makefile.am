@@ -25,18 +25,24 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 include $(top_srcdir)/mk/flags.am
-include $(top_srcdir)/mk/guile.mk
+#include $(top_srcdir)/mk/guile.mk
 include $(top_srcdir)/mk/scheme.mk
+include $(top_srcdir)/mk/tig.mk
 
 FFINCLDIRS = '-I$(top_builddir)/fontforge'		\
 	'-I$(top_srcdir)/fontforge'
+
+EXTRA_DIST =
+MOSTLYCLEANFILES =
+CLEANFILES =
+DISTCLEANFILES =
 
 #--------------------------------------------------------------------------
 
 nobase_dist_guilemodule_DATA = $(DIST_SCM_FILES)
 nobase_nodist_guilemodule_DATA = $(NODIST_SCM_FILES)
-EXTRA_DIST = $(DIST_SCM_IN_FILES)
-MOSTLYCLEANFILES = $(NODIST_SCM_FILES) $(GO_FILES)
+EXTRA_DIST += $(DIST_SCM_IN_FILES)
+MOSTLYCLEANFILES += $(NODIST_SCM_FILES) $(GO_FILES)
 
 DIST_SCM_FILES = sortsmillff/gsl.scm sortsmillff/iconv.scm		\
 	sortsmillff/linalg.scm sortsmillff/polyspline.scm			\
@@ -56,10 +62,31 @@ NODIST_SCM_FILES = sortsmillff/pkg-info.scm				\
 	sortsmillff/internal-types.scm
 
 sortsmillff/internal-types.scm: generate-internal-types.scm	\
+		ff-internal/generate-types.scm						\
 		$(top_builddir)/fontforge/fontforge_type_inspector
 	$(AM_V_GEN)
-	$(AM_V_at)$(GUILE_INTERPRET) generate-internal-types.scm > $@-tmp
+	$(AM_V_at)$(GUILE_INTERPRET) generate-internal-types.scm 	\
+		'(sortsmillff internal-types)'							\
+		'(list "$(top_builddir)/fontforge/fontforge_type_inspector")' \
+			> $@-tmp
 	$(AM_V_at)mv $@-tmp $@
+
+EXTRA_DIST += ff-internal/generate-types.scm
+
+#--------------------------------------------------------------------------
+
+ff-internal/gdraw-types.scm: generate-internal-types.scm	\
+		ff-internal/generate-types.scm gdraw_type_inspector
+	$(AM_V_GEN)
+	$(AM_V_at)$(GUILE_INTERPRET) generate-internal-types.scm	\
+		'(ff-internal gdraw-types)' 							\
+		'(list "$(builddir)/gdraw_type_inspector")' > $@-tmp
+	$(AM_V_at)mv $@-tmp $@
+
+noinst_PROGRAMS = gdraw_type_inspector
+
+MOSTLYCLEANFILES += ff-internal/gdraw-types.scm
+CLEANFILES += gdraw_type_inspector.c
 
 #--------------------------------------------------------------------------
 

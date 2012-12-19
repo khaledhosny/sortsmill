@@ -43,15 +43,16 @@ typedef struct gtextinfo {
     GFont *font;
     bool disabled;
     bool image_precedes;
-    bool checkable;			/* Only for menus */
-    bool checked;			/* Only for menus */
-    bool selected;			/* Only for lists (used internally for menu(bar)s, when cursor is on the line) */
-    bool line;			/* Only for menus */
-    bool text_is_1byte;		/* If passed in as 1byte (ie. iso-8859-1) text, will be converted */
-    bool text_has_mnemonic;		/* the text field is actually an index into the string resource table */
-    bool changed;			/* If a row/column widget changed this */
-    uint32_t mnemonic;				/* Only for menus and menubars */
-						/* should really be in menuitem, but that wastes space and complicates GTextInfoDraw */
+    bool checkable;		/* Only for menus */
+    bool checked;		/* Only for menus */
+    bool selected; /* Only for lists (used internally for menu(bar)s, when cursor is on the line) */
+    bool line;	   /* Only for menus */
+    bool text_is_1byte;	/* If passed in as 1byte (ie. iso-8859-1) text, will be converted */
+    bool text_has_mnemonic; /* the text field is actually an index into the string resource table */
+    bool changed;	    /* If a row/column widget changed this */
+    uint32_t mnemonic;	    /* Only for menus and menubars; should
+			       really be in menuitem, but that wastes
+			       space and complicates GTextInfoDraw. */
 } GTextInfo;
 
 #define GTEXTINFO_EMPTY { NULL, NULL, 0x000000, 0x000000, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, '\0' }

@@ -79,7 +79,7 @@ sortsmillff/internal_types.h: generate-internal_types.h.scm	\
 
 noinst_PROGRAMS = fontforge_type_inspector
 
-CLEANFILES += fontforge_type_inspector fontforge_type_inspector.c
+CLEANFILES += fontforge_type_inspector.c
 
 #--------------------------------------------------------------------------
 
