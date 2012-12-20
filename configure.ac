@@ -45,16 +45,16 @@ AC_CANONICAL_HOST                  dnl For what platform are we compiling?
 AC_CONFIG_HEADERS([inc/config.h])  dnl Where autoheader puts macros.
 AC_USE_SYSTEM_EXTENSIONS           dnl Define such macros as _GNU_SOURCE.
 
-AM_INIT_AUTOMAKE([-Wall -Wno-portability -Werror])
+AM_INIT_AUTOMAKE([1.12.2 -Wall -Wno-portability -Werror])
 AM_MAINTAINER_MODE([enable])
 
-# I am going to try enabling silent-rules by default, so builders are
+# I am going to enable silent-rules by default, so builders are
 # more likely to see warnings. Use --disable-silent-rules or "make
 # V=1" if you need to see the rules.
-m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
+AM_SILENT_RULES([yes])
 
 # Libtool-related configuration.
-m4_ifdef([AM_PROG_AR],[AM_PROG_AR]) dnl Support for Microsoft linker.
+AM_PROG_AR                          dnl Support for Microsoft linker.
 LT_INIT([dlopen])                   dnl Initialize libtool.
 LT_OBJDIR="${lt_cv_objdir}/"
 AC_SUBST([LT_OBJDIR])
@@ -439,7 +439,7 @@ AC_CONFIG_FILES([python/sortsmillff/legacy/__init__.py])
 AC_CONFIG_FILES([guile/generate-internal-types.scm],
                 [chmod +x guile/generate-internal-types.scm])
 AC_CONFIG_COMMANDS([guile/sortsmillff],[AS_MKDIR_P([guile/sortsmillff])])
-AC_CONFIG_COMMANDS([guile/ff-internal],[AS_MKDIR_P([guile/ff-internal])])
+#AC_CONFIG_COMMANDS([guile/ff-internal],[AS_MKDIR_P([guile/ff-internal])])
 AC_CONFIG_FILES([fortran/generate-internal_types.f90.scm],
                 [chmod +x fortran/generate-internal_types.f90.scm])
 FONTFORGE_CONFIG_TESTSUITE
