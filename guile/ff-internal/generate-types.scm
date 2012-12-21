@@ -44,10 +44,12 @@
        (newline)))
 
 ;; Convert ‘_’ to ‘-’, because hyphens are more conventional in
-;; Scheme. (Maybe we should generate BOTH forms, though probably not.)
-(define (underscores->hyphens instruction)
-   (map (lambda (s) (if (string? s) (string-map underscore->hyphen s) s))
-      instruction))
+;; Scheme.
+(define (underscores->hyphens arg)
+   (match arg
+      ((? string? s) (string-map underscore->hyphen s))
+      ((a . b) (cons (underscores->hyphens a) (underscores->hyphens b)))
+      (_ arg)))
 
 (define (underscore->hyphen c)
    (if (char=? c #\_) #\- c))

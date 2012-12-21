@@ -21,6 +21,7 @@
    (sortsmillff pkg-info)
    (rnrs bytevectors)
    (system foreign)
+   (ice-9 match)
    (srfi srfi-26)                       ; ‘cut’ and ‘cute’.
    )
 
@@ -85,19 +86,13 @@
 ;;-------------------------------------------------------------------------
 
 (eval-when (compile load eval)
+
    (define %ff:interface-exported? (make-fluid #f))
 
    (define ff:interface-exported?
       (case-lambda
          (() (fluid-ref %ff:interface-exported?))
          ((v) (fluid-set! %ff:interface-exported? (not (not v))))))
-
-   (define (struct-or-union-identifier? obj)
-      (and
-       (identifier? obj)
-       (or
-        (eq? (syntax->datum obj) 'struct)
-        (eq? (syntax->datum obj) 'union))))
 
    (define (struct-type-error-msg tag size obj)
       (cond
@@ -149,17 +144,17 @@
          (cute string-append "check-ff:" <>)
          syntax-context type-name))
 
-   (define (wrap-struct-func syntax-context type-name)
+   (define (pointer->struct-func syntax-context type-name)
       (build-type-related-symbol
          (cute string-append "pointer->ff:" <>)
          syntax-context type-name))
 
-   (define (unwrap-struct-func syntax-context type-name)
+   (define (struct->pointer-func syntax-context type-name)
       (build-type-related-symbol
          (cute string-append "ff:" <> "->pointer")
          syntax-context type-name))
 
-   (define (unchecked-unwrap-struct-func syntax-context type-name)
+   (define (unchecked-struct->pointer-func syntax-context type-name)
       (build-type-related-symbol
          (cute string-append "unchecked-ff:" <> "->pointer")
          syntax-context type-name))
@@ -223,6 +218,36 @@
       (build-type-related-symbol
          (cute string-append "unchecked-ff:" <> ":" <> "->pointer")
          syntax-context struct-name field-name))
+
+   (define (struct->alist-func syntax-context struct-name)
+      (build-type-related-symbol
+         (cute string-append "ff:" <> "->alist")
+         syntax-context struct-name))
+
+   (define (unchecked-struct->alist-func syntax-context struct-name)
+      (build-type-related-symbol
+         (cute string-append "unchecked-ff:" <> "->alist")
+         syntax-context struct-name))
+
+   (define (struct->alist syntax-context struct-name fields)
+      (datum->syntax syntax-context
+         (map
+            (lambda (pair)
+               (cons
+                  (string->symbol (car pair))
+                  (string->symbol
+                     (match (cdr pair)
+                        ('field
+                           (format #f "unchecked-ff:~a:~a-ref"
+                              (syntax->datum struct-name)
+                              (car pair)))
+                        ('struct-field
+                           (format #f "unchecked-ff:~a:~a->pointer"
+                              (syntax->datum struct-name)
+                              (car pair)))
+                        (else (error "FIXME FIXME FIXME"))))
+                  ))
+            (syntax->datum fields))))
    )
 
 (define-syntax with-ff:interface-exported
@@ -254,7 +279,7 @@
 
 (define-syntax define-ff:interface
    (lambda (x)
-      (syntax-case x (struct union sizeof field)
+      (syntax-case x (struct sizeof field)
 
          ((_ (sizeof type-name size))
           #`(begin
@@ -263,8 +288,7 @@
                   #,(type-sizeof-var x #'type-name))
                (define #,(type-sizeof-var x #'type-name) size)))
 
-         ((_ (struct-or-union type-name size))
-          (struct-or-union-identifier? #'struct-or-union)
+         ((_ (struct type-name size))
           (let ((tag (type-tag x #'type-name)))
              #`(begin
                   (maybe-export
@@ -275,13 +299,13 @@
                      #,(check-struct-func x #'type-name)
 
                      ;; Example: pointer->ff:SplineChar
-                     #,(wrap-struct-func x #'type-name)
+                     #,(pointer->struct-func x #'type-name)
 
                      ;; Example: ff:SplineChar->pointer
-                     #,(unwrap-struct-func x #'type-name)
+                     #,(struct->pointer-func x #'type-name)
 
                      ;; Example: unchecked-ff:SplineChar->pointer
-                     #,(unchecked-unwrap-struct-func x #'type-name)
+                     #,(unchecked-struct->pointer-func x #'type-name)
 
                      ;; Example: malloc-ff:SplineChar
                      #,(malloc-struct-func x #'type-name)
@@ -350,18 +374,18 @@
                              obj))
                            (else *unspecified*))))
 
-                  (define #,(wrap-struct-func x #'type-name)
+                  (define #,(pointer->struct-func x #'type-name)
                      (lambda (ptr)
                         (cons '#,tag (pointer->bytevector ptr size))))
 
-                  (define #,(unwrap-struct-func x #'type-name)
+                  (define #,(struct->pointer-func x #'type-name)
                      (lambda (obj)
                         (#,(check-struct-func x #'type-name)
-                         '#,(unwrap-struct-func x #'type-name)
+                         '#,(struct->pointer-func x #'type-name)
                          obj)
                         (bytevector->pointer (cdr obj))))
 
-                  (define #,(unchecked-unwrap-struct-func x #'type-name)
+                  (define #,(unchecked-struct->pointer-func x #'type-name)
                      (lambda (obj)
                         (bytevector->pointer (cdr obj))))
 
@@ -372,11 +396,11 @@
 
                   (define #,(free-struct-func x #'type-name)
                      (lambda (obj)
-                        (free (#,(unwrap-struct-func x #'type-name) obj))))
+                        (free (#,(struct->pointer-func x #'type-name) obj))))
 
                   (define #,(unchecked-free-struct-func x #'type-name)
                      (lambda (obj)
-                        (free (#,(unchecked-unwrap-struct-func x #'type-name) obj))))
+                        (free (#,(unchecked-struct->pointer-func x #'type-name) obj))))
 
                   (define #,(gc-malloc-struct-func x #'type-name)
                      (lambda ()
@@ -385,11 +409,11 @@
 
                   (define #,(gc-free-struct-func x #'type-name)
                      (lambda (obj)
-                        (GC_free (#,(unwrap-struct-func x #'type-name) obj))))
+                        (GC_free (#,(struct->pointer-func x #'type-name) obj))))
 
                   (define #,(unchecked-gc-free-struct-func x #'type-name)
                      (lambda (obj)
-                        (GC_free (#,(unchecked-unwrap-struct-func x #'type-name) obj))))
+                        (GC_free (#,(unchecked-struct->pointer-func x #'type-name) obj))))
 
                   )))
 
@@ -449,6 +473,40 @@
                      ((ff:struct-field->pointer offset) obj)))
                ))
 
+         ((_ (struct-field struct-name field-name offset size))
+          #`(begin
+               (maybe-export
+                  ;; Example: unchecked-ff:SplineChar:name->pointer
+                  #,(unchecked-struct-field->pointer-func x #'struct-name #'field-name)
+
+                  ;; Example: ff:SplineChar:name->pointer
+                  #,(struct-field->pointer-func x #'struct-name #'field-name)
+                  )
+               
+               (define #,(unchecked-struct-field->pointer-func x #'struct-name #'field-name)
+                  (lambda (obj)
+                     ((ff:struct-field->pointer offset) obj)))
+
+               (define #,(struct-field->pointer-func x #'struct-name #'field-name)
+                  (lambda (obj)
+                     (#,(check-struct-func x #'struct-name)
+                      #,(struct-field->pointer-func x #'struct-name #'field-name)
+                      obj)
+                     ((ff:struct-field->pointer offset) obj)))
+               ))
+
+         ((_ (struct-> struct-name fields))
+          #`(begin
+               (define #,(unchecked-struct->alist-func x #'struct-name)
+                  #,(write (syntax->datum (struct->alist x #'struct-name #'fields))))
+
+               (define #,(struct->alist-func x #'struct-name)
+                  (lambda (obj)
+                     (#,(check-struct-func x #'struct-name)
+                      #,(struct->alist-func x #'struct-name)
+                      obj)
+                     (#,(unchecked-struct->alist-func x #'struct-name) obj)))
+               ))
          )))
 
 ;;-------------------------------------------------------------------------

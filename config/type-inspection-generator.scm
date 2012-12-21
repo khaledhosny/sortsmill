@@ -1,8 +1,8 @@
-#! /usr/bin/guile \
+#! /usr/bin/guile \          -*- mode: bee; coding: utf-8 -*-
 --no-auto-compile -s
 !#
 
-;; Example input:
+;; Example input:         FIXME: Update this.
 ;;
 ;;   ;; Includes.
 ;;   ("<stdbool.h>"
@@ -27,9 +27,22 @@
    (write-includes includes)
    (format #t "\n")
    (format #t "int\nmain (int argc, char **argv)\n{\n")
-   (write-type-info types)
+   (write-type-info (type-info-hash->alist (get-type-info types)))
    (format #t "  return 0;\n}\n")
    )
+
+(define (string-or-symbol? s)
+  (or (string? s) (symbol? s)))
+
+(define (force-string s)
+  (cond ((string? s) s)
+        ((symbol? s) (symbol->string s))
+        (else (scm-error
+               'wrong-type-arg
+               "force-string"
+               "Expected string or symbol, but got: ~S"
+               (list s)
+               (list s)))))
 
 (define angle-brackets-re (make-regexp "<.*>"))
 (define quotes-re (make-regexp "\".*\""))
@@ -40,105 +53,218 @@
       ((or #f ()) '())
 
       ;; A list of includes.
-      (((? string? h) . t) (write-includes h)
-                           (write-includes t))
+      (((? string-or-symbol? h) . t)
+       (write-includes h)
+       (write-includes t))
 
       ;; A single include.
-      ((? string? inc)
+      ((? string-or-symbol? inc)
        (cond
           ((or
-            (regexp-exec angle-brackets-re inc)
-            (regexp-exec quotes-re inc))
+            (regexp-exec angle-brackets-re (force-string inc))
+            (regexp-exec quotes-re (force-string inc)))
            (format #t "#include ~a\n" inc))
           (else
            (format #t "#include \"~a\"\n" inc))))
 
       (inc (error "Unrecognized includes:" inc))))
 
-(define (write-type-info instructions)
-   (match instructions
-      ;; Nothing or an empty list.
-      ((or #f ()) '())
+(define get-type-info
+   (case-lambda
+      ((instructions) (get-type-info instructions (make-hash-table)))
+      ((instructions type-info)
+       (match instructions
+          ;; Nothing or an empty list.
+          ((or #f ()) type-info)
 
-      ;; A list of instructions.
-      (((and (_ . _) h) . t) (write-type-info h)
-                             (write-type-info t))
+          ;; A list of instructions.
+          (((and (_ . _) h) . t)
+           (get-type-info h type-info)
+           (get-type-info t type-info)
+           type-info)
 
-      ; Example: (sizeof "bool *" "boolptr_t")
-      (('sizeof (? string? type-name) (? string? replacement-name))
-       (format #t
-               "  printf (\"(sizeof \\\"~a\\\" %zu)\\n\", sizeof (~a));\n"
-               replacement-name type-name))
+          ; Example: (sizeof "bool *" "boolptr_t")
+          (('sizeof (? string-or-symbol? type-name) (? string-or-symbol? replacement-name))
+           type-info);; IGNORE IT -- FIXME: Do something with this.
 
-      ;; Example: (sizeof "SplineChar")
-      (('sizeof (? string? type-name))
-       (write-type-info (list 'sizeof type-name type-name)))
+          ;; Example: (sizeof "SplineChar")
+          (('sizeof (? string-or-symbol? type-name))
+           (get-type-info (list 'sizeof type-name type-name) symbol-table))
 
-      ;; Example: (field int "struct splinechar" "italic_correction" "SplineChar" "italcorr")
-      ;; For structs and unions.
+          ;; Example: (field int "struct splinechar" "italic_correction" "SplineChar" "italcorr")
+          ;; For structs and unions.
+          (('field (? symbol? field-type)
+              (? string-or-symbol? struct-name)
+              (? string-or-symbol? field-name)
+              (? string-or-symbol? replacement-struct-name)
+              (? string-or-symbol? replacement-field-name))
+           (hash-set! (cdr (hash-ref type-info replacement-struct-name))
+              replacement-field-name
+              (list
+                 (cons 'kind 'field)
+                 (cons 'field-type field-type)
+                 (cons 'struct-name struct-name)
+                 (cons 'field-name field-name)))
+           type-info)
+
+          ;; Example: (field int "SplineChar" "italic_correction" "italcorr")
+          (('field (? symbol? field-type)
+              (? string-or-symbol? struct-name)
+              (? string-or-symbol? field-name)
+              (? string-or-symbol? replacement-field-name))
+           (get-type-info (list 'field field-type struct-name field-name
+                             struct-name replacement-field-name)))
+
+          ;; Example: (field int "SplineChar" "italic_correction")
+          (('field (? symbol? field-type)
+              (? string-or-symbol? struct-name)
+              (? string-or-symbol? field-name))
+           (get-type-info (list 'field field-type struct-name field-name
+                             struct-name field-name)))
+
+          ;; Example: (struct-field "struct gmenuitem" "ti" "GMenuItem" "textinfo")
+          (((or 'struct-field 'array-field)
+            (? string-or-symbol? struct-name)
+            (? string-or-symbol? field-name)
+            (? string-or-symbol? replacement-struct-name)
+            (? string-or-symbol? replacement-field-name))
+           (hash-set! (cdr (hash-ref type-info replacement-struct-name))
+              replacement-field-name
+              (list
+                 (cons 'kind 'struct-field)
+                 (cons 'struct-name struct-name)
+                 (cons 'field-name field-name)))
+           type-info)
+
+          ;; Example: (struct-field "GMenuItem" "ti" "textinfo")
+          (('struct-field (? string-or-symbol? struct-name)
+              (? string-or-symbol? field-name)
+              (? string-or-symbol? replacement-field-name))
+           (get-type-info
+              (list 'struct-field struct-name field-name
+                 struct-name replacement-field-name)
+              type-info))
+
+          ;; Example: (struct-field "GMenuItem" "ti")
+          (((or 'struct-field 'array-field)
+            (? string-or-symbol? struct-name)
+            (? string-or-symbol? field-name))
+           (get-type-info
+              (list 'struct-field struct-name field-name
+                 struct-name field-name)
+              type-info))
+
+          ;; Example: (struct-> "SplineChar")
+          (('struct-> (? string-or-symbol? replacement-struct-name))
+           type-info);; IGNORE IT -- FIXME: Eliminate it.
+
+          ;; Example: (struct "struct splinechar" "SplineChar" (sizeof) (field "italic_correction"))
+          (((or 'struct 'union)
+            (? string-or-symbol? struct-name)
+            (? string-or-symbol? replacement-struct-name) . t)
+           (hash-set! type-info replacement-struct-name
+              (cons struct-name (make-hash-table)))
+           (for-each (lambda (sub-instruction)
+                        (get-type-info
+                           (insert-struct-names struct-name
+                              replacement-struct-name sub-instruction)
+                           type-info))
+              t)
+           type-info)
+
+          ;; Example: (struct "SplineChar" (sizeof) (field "italic_correction"))
+          (((or 'struct 'union)
+            (? string-or-symbol? struct-name) . t)
+           (get-type-info
+              (cons* 'struct struct-name struct-name t)
+              type-info))
+
+          (instr (error "Unrecognized instructions:" instr))))))
+
+(define (type-info-hash->alist type-info)
+   (hash-fold
+      (lambda (k v prior)
+         (cons
+            (cons* k (car v)
+               (hash-fold
+                  (lambda (kk vv priorr)
+                     (acons kk vv priorr)) '() (cdr v)))
+            prior))
+      '() type-info))
+
+(define (write-type-info type-info-alist)
+   (match type-info-alist
+      ('() *unspecified*)
+      (((struct c-struct . fields) . tail)
+       (write-struct-info struct c-struct)
+       (write-fields-info struct c-struct fields)
+       (write-type-info tail))))
+
+(define (write-struct-info struct c-struct)
+  (format #t "  printf (\"(struct \\\"~a\\\" %zu)\\n\", sizeof (~a));\n"
+      struct c-struct)
+   (format #t "  printf (\"(sizeof \\\"~a\\\" %zu)\\n\", sizeof (~a));\n"
+      struct c-struct))
+
+(define (write-fields-info struct c-struct fields)
+   (match fields
+      ('() *unspecified*)
+      (((field . info) . tail)
+       (match (assq-ref info 'kind)
+          ('field
+             (format #t "  {\n")
+             (format #t "    ~a x;\n"
+                (assq-ref info 'struct-name))
+             (format #t "    printf (\"(field ~a \\\"~a\\\" \\\"~a\\\" %zu %zu)\\n\",\n"
+                (assq-ref info 'field-type)
+                struct field)
+             (format #t "            offsetof (~a, ~a),\n"
+                (assq-ref info 'struct-name)
+                (assq-ref info 'field-name))
+             (format #t "            sizeof (x.~a));\n"
+                (assq-ref info 'field-name))
+             (format #t "  }\n"))
+          ('struct-field
+             (format #t "  {\n")
+             (format #t "    ~a x;\n"
+                (assq-ref info 'struct-name))
+             (format #t "    printf (\"(struct-field \\\"~a\\\" \\\"~a\\\" %zu %zu)\\n\",\n"
+                struct field)
+             (format #t "            offsetof (~a, ~a),\n"
+                (assq-ref info 'struct-name)
+                (assq-ref info 'field-name))
+             (format #t "            sizeof (x.~a));\n"
+                (assq-ref info 'field-name))
+             (format #t "  }\n")))
+       (write-fields-info struct c-struct tail))))
+ 
+(define (insert-struct-names struct-name replacement-struct-name sub-instruction)
+   (match sub-instruction
+      (('sizeof) (list 'sizeof struct-name replacement-struct-name))
+
       (('field (? symbol? field-type)
-               (? string? struct-name)
-               (? string? field-name)
-               (? string? replacement-struct-name)
-               (? string? replacement-field-name))
-       (format #t "  {\n")
-       (format #t "    ~a x;\n" struct-name)
-       (format #t "    printf (\"(field ~a \\\"~a\\\" \\\"~a\\\" %zu %zu)\\n\",\n"
-               field-type replacement-struct-name replacement-field-name)
-       (format #t "            offsetof (~a, ~a),\n" struct-name field-name)
-       (format #t "            sizeof (x.~a));\n" field-name)
-       (format #t "  }\n"))
+          (? string-or-symbol? field-name)
+          (? string-or-symbol? replacement-field-name))
+       (list 'field field-type struct-name field-name
+          replacement-struct-name replacement-field-name))
 
-      ;; Example: (field int "struct splinechar" "italic_correction" "italcorr")
       (('field (? symbol? field-type)
-               (? string? struct-name)
-               (? string? field-name)
-               (? string? replacement-field-name))
-       (write-type-info (list 'field field-type struct-name field-name
-                              struct-name replacement-field-name)))
+          (? string-or-symbol? field-name))
+       (list 'field field-type struct-name field-name
+          replacement-struct-name field-name))
 
-      ;; Example: (field int "SplineChar" "italic_correction")
-      (('field (? symbol? field-type)
-               (? string? struct-name)
-               (? string? field-name))
-       (write-type-info (list 'field field-type struct-name field-name
-                              struct-name field-name)))
+      (('struct-field (? string-or-symbol? field-name)
+          (? string-or-symbol? replacement-field-name))
+       (list 'struct-field struct-name field-name
+          replacement-struct-name replacement-field-name))
 
-      ;; Example: (struct "struct splinechar" "SplineChar" (sizeof) (field "italic_correction"))
-      (((and struct-or-union (or 'struct 'union))
-        (? string? struct-name)
-        (? string? replacement-struct-name) . t)
-       (format #t "  printf (\"(~a \\\"~a\\\" %zu)\\n\", sizeof (~a));\n"
-               struct-or-union replacement-struct-name struct-name)
-       (for-each (lambda (sub-instruction)
-                   (write-type-info
-                    (insert-struct-names struct-name
-                                         replacement-struct-name
-                                         sub-instruction)))
-                 t))
+      (('struct-field (? string-or-symbol? field-name))
+       (list 'struct-field struct-name field-name
+          replacement-struct-name field-name))
 
-      ;; Example: (struct "SplineChar" (sizeof) (field "italic_correction"))
-      (((and struct-or-union (or 'struct 'union))
-        (? string? struct-name) . t)
-       (write-type-info
-        (cons* struct-or-union struct-name struct-name t)))
-
-      (instr (error "Unrecognized instructions:" instr))))
-
-(define (insert-struct-names struct-name
-                             replacement-struct-name
-                             sub-instruction)
-  (match sub-instruction
-         (('sizeof) (list 'sizeof struct-name replacement-struct-name))
-         (('field (? symbol? field-type)
-                  (? string? field-name)
-                  (? string? replacement-field-name))
-          (list 'field field-type struct-name field-name
-                replacement-struct-name replacement-field-name))
-         (('field (? symbol? field-type)
-                  (? string? field-name))
-          (list 'field field-type struct-name field-name
-                replacement-struct-name field-name)) ))
+      (('struct->)
+       (list 'struct-> replacement-struct-name))
+      ))
 
 (let* ((includes (read))
        (instructions (read)))

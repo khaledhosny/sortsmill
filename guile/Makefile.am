@@ -39,25 +39,30 @@ DISTCLEANFILES =
 
 #--------------------------------------------------------------------------
 
+DIST_SCM_FILES =
+DIST_SCM_IN_FILES =
+NODIST_SCM_FILES =
+
 nobase_dist_guilemodule_DATA = $(DIST_SCM_FILES)
 nobase_nodist_guilemodule_DATA = $(NODIST_SCM_FILES)
 EXTRA_DIST += $(DIST_SCM_IN_FILES)
-MOSTLYCLEANFILES += $(NODIST_SCM_FILES) $(GO_FILES)
+MOSTLYCLEANFILES += $(NODIST_SCM_FILES)
 
-DIST_SCM_FILES = sortsmillff/gsl.scm sortsmillff/iconv.scm		\
+DIST_SCM_FILES += sortsmillff/gsl.scm sortsmillff/iconv.scm		\
 	sortsmillff/linalg.scm sortsmillff/polyspline.scm			\
 	sortsmillff/brentroot.scm sortsmillff/sfd-to-sxml.scm		\
 	sortsmillff/views.scm sortsmillff/internal-types-syntax.scm	\
-	sortsmillff/notices.scm
+	sortsmillff/notices.scm sortsmillff/gdraw-and-guile.scm
 #sortsmillff/precompute.scm
 if HAVE_GUI
 DIST_SCM_FILES += sortsmillff/usermenu.scm
+NODIST_SCM_FILES += sortsmillff/gdraw-types.scm
 endif HAVE_GUI
 
-DIST_SCM_IN_FILES = sortsmillff/pkg-info.scm.in					\
+DIST_SCM_IN_FILES += sortsmillff/pkg-info.scm.in				\
 	sortsmillff/math-constants.scm.in sortsmillff/i18n.scm.in
 
-NODIST_SCM_FILES = sortsmillff/pkg-info.scm				\
+NODIST_SCM_FILES += sortsmillff/pkg-info.scm			\
 	sortsmillff/math-constants.scm sortsmillff/i18n.scm	\
 	sortsmillff/internal-types.scm
 
@@ -74,18 +79,20 @@ sortsmillff/internal-types.scm: generate-internal-types.scm	\
 EXTRA_DIST += ff-internal/generate-types.scm
 
 #--------------------------------------------------------------------------
+#
+# Use of (sortsmillff gdraw-types) is discouraged because hopefully it
+# will go away completely. It is a transition aid.
 
-ff-internal/gdraw-types.scm: generate-internal-types.scm	\
+sortsmillff/gdraw-types.scm: generate-internal-types.scm	\
 		ff-internal/generate-types.scm gdraw_type_inspector
 	$(AM_V_GEN)
 	$(AM_V_at)$(GUILE_INTERPRET) generate-internal-types.scm	\
-		'(ff-internal gdraw-types)' 							\
+		'(sortsmillff gdraw-types)' 							\
 		'(list "$(builddir)/gdraw_type_inspector")' > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
 noinst_PROGRAMS = gdraw_type_inspector
 
-MOSTLYCLEANFILES += ff-internal/gdraw-types.scm
 CLEANFILES += gdraw_type_inspector.c
 
 #--------------------------------------------------------------------------
