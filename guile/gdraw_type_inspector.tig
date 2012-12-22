@@ -4,7 +4,6 @@
 
 (
  (struct GTextInfo
-    (sizeof)
     (field * text)
     (field * image)
     (field uint fg)
@@ -21,10 +20,8 @@
     (field bool text_has_mnemonic)
     (field bool changed)
     (field uint mnemonic)
-    (struct->)
     )
  (struct GTextInfo2
-    (sizeof)
     (field * text)
     (field * image)
     (field uint fg)
@@ -42,10 +39,8 @@
     (field bool changed)
     (field bool sort_me_first_in_list)
     (field uint mnemonic)
-    (struct->)
     )
  (struct GMenuItem
-    (sizeof)
     (struct-field ti)
     (field uint shortcut)
     (field int short_mask)
@@ -53,16 +48,13 @@
     (field * moveto)
     (field * invoke)
     (field int mid)
-    (struct->)
     )
  (struct GMenuItem2
-    (sizeof)
     (struct-field ti)
     (field uint shortcut)
     (field * sub)
     (field * moveto)
     (field * invoke)
     (field int mid)
-    (struct->)
     )
  )

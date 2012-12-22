@@ -114,6 +114,7 @@
        (format #t "doc = \"The address of the `~a' field, as a ctypes.c_void_p.\")\n" field-name)
        (format #t "\n")
        )
+      (('struct-> . _) (display "Ignoring 'struct->\n" (current-error-port)))
       ))
 
 (define (value-c-type field-type size)

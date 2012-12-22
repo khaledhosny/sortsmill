@@ -2,17 +2,12 @@
 --no-auto-compile -s
 !#
 
-;; Example input:         FIXME: Update this.
+;; Example input:
 ;;
-;;   ;; Includes.
-;;   ("<stdbool.h>"
-;;    "splinefont.h")
-;;   ;; Instructions.
-;;   ((sizeof "bool *" "boolptr_t")
-;;    (struct "SplineChar")
-;;    (sizeof "SplineChar")
-;;    (field bool "SplineChar" "changed")
-;;    (field int "SplineChar" "italic_correction" "italcorr"))
+;;   (<stdbool.h> splinefont.h)
+;;   (struct SplineChar
+;;      (field bool SplineChar changed)
+;;      (field int SplineChar italic_correction italcorr))
 
 (use-modules
    (ice-9 match)
@@ -27,7 +22,7 @@
    (write-includes includes)
    (format #t "\n")
    (format #t "int\nmain (int argc, char **argv)\n{\n")
-   (write-type-info (type-info-hash->alist (get-type-info types)))
+   (write-instructions (type-info-hash->alist (get-type-info types)))
    (format #t "  return 0;\n}\n")
    )
 
@@ -82,14 +77,6 @@
            (get-type-info h type-info)
            (get-type-info t type-info)
            type-info)
-
-          ; Example: (sizeof "bool *" "boolptr_t")
-          (('sizeof (? string-or-symbol? type-name) (? string-or-symbol? replacement-name))
-           type-info);; IGNORE IT -- FIXME: Do something with this.
-
-          ;; Example: (sizeof "SplineChar")
-          (('sizeof (? string-or-symbol? type-name))
-           (get-type-info (list 'sizeof type-name type-name) symbol-table))
 
           ;; Example: (field int "struct splinechar" "italic_correction" "SplineChar" "italcorr")
           ;; For structs and unions.
@@ -154,10 +141,6 @@
                  struct-name field-name)
               type-info))
 
-          ;; Example: (struct-> "SplineChar")
-          (('struct-> (? string-or-symbol? replacement-struct-name))
-           type-info);; IGNORE IT -- FIXME: Eliminate it.
-
           ;; Example: (struct "struct splinechar" "SplineChar" (sizeof) (field "italic_correction"))
           (((or 'struct 'union)
             (? string-or-symbol? struct-name)
@@ -192,21 +175,22 @@
             prior))
       '() type-info))
 
-(define (write-type-info type-info-alist)
+(define (write-instructions type-info-alist)
    (match type-info-alist
       ('() *unspecified*)
       (((struct c-struct . fields) . tail)
-       (write-struct-info struct c-struct)
-       (write-fields-info struct c-struct fields)
-       (write-type-info tail))))
+       (write-struct-instruction struct c-struct)
+       (write-fields-instructions struct fields)
+       (write-struct->-instruction struct c-struct fields)
+       (write-instructions tail))))
 
-(define (write-struct-info struct c-struct)
+(define (write-struct-instruction struct c-struct)
   (format #t "  printf (\"(struct \\\"~a\\\" %zu)\\n\", sizeof (~a));\n"
       struct c-struct)
    (format #t "  printf (\"(sizeof \\\"~a\\\" %zu)\\n\", sizeof (~a));\n"
       struct c-struct))
 
-(define (write-fields-info struct c-struct fields)
+(define (write-fields-instructions struct fields)
    (match fields
       ('() *unspecified*)
       (((field . info) . tail)
@@ -236,7 +220,31 @@
              (format #t "            sizeof (x.~a));\n"
                 (assq-ref info 'field-name))
              (format #t "  }\n")))
-       (write-fields-info struct c-struct tail))))
+       (write-fields-instructions struct tail))))
+
+(define (write-struct->-instruction struct c-struct fields)
+   (format #t "  {\n")
+   (format #t "    ~a x;\n" c-struct)
+   (format #t "    printf (\"(struct-> \\\"~a\\\" \");\n" struct)
+   (for-each
+      (lambda (f)
+         (match f
+            ((fld . info)
+             (format #t "    printf (\"(\\\"~a\\\" ~a ~a %zu %zu\",\n"
+                fld
+                (assq-ref info 'kind)
+                (assq-ref info 'field-type))
+             (format #t "            offsetof (~a, ~a),\n"
+                (assq-ref info 'struct-name)
+                (assq-ref info 'field-name))
+             (format #t "            sizeof (x.~a));\n"
+                (assq-ref info 'field-name))
+             (format #t "    printf (\") \");\n")
+             )))
+      fields)
+   (format #t "    printf (\")\\n\");\n")
+   (format #t "  }\n")
+   )
  
 (define (insert-struct-names struct-name replacement-struct-name sub-instruction)
    (match sub-instruction

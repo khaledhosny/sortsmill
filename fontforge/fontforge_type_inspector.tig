@@ -5,7 +5,6 @@
 
 (
  (struct FontViewBase
-    (sizeof)
     (field * next)
     (field * nextsame next_same)
     (field * map)
@@ -19,7 +18,6 @@
     )
 
  (struct SplineChar
-    (sizeof)
     (field * name)
     (field int unicodeenc unicode)
     (field int orig_pos orig_index)
@@ -53,7 +51,6 @@
     )
 
  (struct SplineFont
-    (sizeof)
     (field * fontname font_name)
     (field * fullname full_name)
     (field * familyname family_name)

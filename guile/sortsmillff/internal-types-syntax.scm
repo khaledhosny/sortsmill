@@ -229,25 +229,25 @@
          (cute string-append "unchecked-ff:" <> "->alist")
          syntax-context struct-name))
 
-   (define (struct->alist syntax-context struct-name fields)
-      (datum->syntax syntax-context
-         (map
-            (lambda (pair)
-               (cons
-                  (string->symbol (car pair))
-                  (string->symbol
-                     (match (cdr pair)
-                        ('field
-                           (format #f "unchecked-ff:~a:~a-ref"
-                              (syntax->datum struct-name)
-                              (car pair)))
-                        ('struct-field
-                           (format #f "unchecked-ff:~a:~a->pointer"
-                              (syntax->datum struct-name)
-                              (car pair)))
-                        (else (error "FIXME FIXME FIXME"))))
-                  ))
-            (syntax->datum fields))))
+;;   (define (struct->alist syntax-context struct-name fields)
+;;      (datum->syntax syntax-context
+;;         (map
+;;            (lambda (pair)
+;;               (cons
+;;                  (string->symbol (car pair))
+;;                  (string->symbol
+;;                     (match (cdr pair)
+;;                        ('field
+;;                           (format #f "unchecked-ff:~a:~a-ref"
+;;                              (syntax->datum struct-name)
+;;                              (car pair)))
+;;                        ('struct-field
+;;                           (format #f "unchecked-ff:~a:~a->pointer"
+;;                              (syntax->datum struct-name)
+;;                              (car pair)))
+;;                        (else (error "FIXME FIXME FIXME"))))
+;;                  ))
+;;            (syntax->datum fields))))
    )
 
 (define-syntax with-ff:interface-exported
@@ -495,10 +495,22 @@
                      ((ff:struct-field->pointer offset) obj)))
                ))
 
-         ((_ (struct-> struct-name fields))
+         ((_ (struct-> struct-name (field-name kind field-type offset size) ...))
           #`(begin
+               (maybe-export
+                  ;; Example: unchecked-ff:SplineChar->alist
+                  #,(unchecked-struct->alist-func x #'struct-name)
+
+                  ;; Example: ff:SplineChar->alist
+                  #,(struct->alist-func x #'struct-name)
+                  )
+
                (define #,(unchecked-struct->alist-func x #'struct-name)
-                  #,(write (syntax->datum (struct->alist x #'struct-name #'fields))))
+                  (lambda (obj)
+                     (list
+                        ((unchecked-ff:struct-field->alist-entry
+                            field-name kind field-type offset size) obj)
+                        ...)))
 
                (define #,(struct->alist-func x #'struct-name)
                   (lambda (obj)
@@ -554,6 +566,22 @@
 (define-syntax ff:struct-field->pointer
    (syntax-rules ()
       ((_ offset) (lambda (obj) (bytevector->pointer (cdr obj) offset)))))
+
+(define-syntax unchecked-ff:struct-field->alist-entry
+   (lambda (x)
+      (syntax-case x (field struct-field)
+         ((_ field-name field field-type offset size)
+          #`(lambda (obj)
+               (cons
+                  (quote #,(datum->syntax x
+                              (string->symbol (syntax->datum #'field-name))))
+                  ((ff:struct-field-ref field-type offset size) obj))))
+         ((_ field-name struct-field _ offset _)
+           #`(lambda (obj)
+                (cons
+                   (quote #,(datum->syntax x
+                               (string->symbol (syntax->datum #'field-name))))
+                   ((ff:struct-field->pointer offset) obj)))))))
 
 ;;-------------------------------------------------------------------------
 

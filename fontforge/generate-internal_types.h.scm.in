@@ -83,6 +83,7 @@
           struct-name field-name offset)
        (format #t "\n")
        )
+      (('struct-> . _) (display "Ignoring 'struct->\n" (current-error-port)))
       ))
 
 (define (value-c-type field-type size)
