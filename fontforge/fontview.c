@@ -7672,9 +7672,9 @@ GMenuItem2 helplist[] = {
   {{(uint32_t *) N_("_About..."), (GImage *) "helpabout.png", COLOR_DEFAULT,
     COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'A'},
    H_ ("About...|No Shortcut"), NULL, NULL, MenuAbout, 0},
-  {{(uint32_t *) N_("_License..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL,
-    NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'A'}, H_ ("License...|No Shortcut"),
-   NULL, NULL, MenuLicense, 0},
+  //  {{(uint32_t *) N_("_License..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL,
+  //    NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'A'}, H_ ("License...|No Shortcut"),
+  //   NULL, NULL, MenuLicense, 0},
   GMENUITEM2_EMPTY
 };
 
