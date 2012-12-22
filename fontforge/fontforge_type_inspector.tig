@@ -48,7 +48,10 @@
     (field bool inspiro in_spiro)
     (field bool lig_caret_cnt_fixed)
     (field uint glyph_class)
-    )
+
+    ;; The following lets us test struct-field support.
+    (struct-field tile_bounds)
+  )
 
  (struct SplineFont
     (field * fontname font_name)

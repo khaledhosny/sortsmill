@@ -228,26 +228,6 @@
       (build-type-related-symbol
          (cute string-append "unchecked-ff:" <> "->alist")
          syntax-context struct-name))
-
-;;   (define (struct->alist syntax-context struct-name fields)
-;;      (datum->syntax syntax-context
-;;         (map
-;;            (lambda (pair)
-;;               (cons
-;;                  (string->symbol (car pair))
-;;                  (string->symbol
-;;                     (match (cdr pair)
-;;                        ('field
-;;                           (format #f "unchecked-ff:~a:~a-ref"
-;;                              (syntax->datum struct-name)
-;;                              (car pair)))
-;;                        ('struct-field
-;;                           (format #f "unchecked-ff:~a:~a->pointer"
-;;                              (syntax->datum struct-name)
-;;                              (car pair)))
-;;                        (else (error "FIXME FIXME FIXME"))))
-;;                  ))
-;;            (syntax->datum fields))))
    )
 
 (define-syntax with-ff:interface-exported

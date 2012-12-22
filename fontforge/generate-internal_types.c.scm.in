@@ -63,7 +63,15 @@
           struct-name field-name)
        (format #t "\n")
        )
-      (('struct-> . _) (display "Ignoring 'struct->\n" (current-error-port)))
+      (('struct-field (? string? struct-name)
+          (? string? field-name) (? integer? offset) (? integer? size))
+       (format #t "VISIBLE void *ptr_ff_~a_~a (void *);\n"
+          struct-name field-name)
+       (format #t "\n")       
+       )
+      
+      ((instruction-symbol . _)
+       (format (current-error-port) "Ignoring '~a\n" instruction-symbol))
       ))
 
 (define (value-c-type field-type size)

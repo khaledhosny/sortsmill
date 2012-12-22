@@ -107,7 +107,10 @@
              (begin
                 (write-field-definitions field-type struct-name field-name offset size)
                 ))
-            (_ (lambda (_) *unspecified*))))
+
+            ((instruction-symbol . _)
+             (format (current-error-port) "Ignoring '~a\n" instruction-symbol))
+            ))
       instructions))
 
 (define (write-field-definitions field-type struct-name field-name offset size)
