@@ -27,7 +27,7 @@ cimport sortsmillff.cython.usermenu as c_usermenu
 cimport sortsmillff.cython.const_pointers as constp
 cimport sortsmillff.cython.xgc as xgc
 from cpython.ref cimport PyObject, Py_XINCREF
-from cpython.object cimport PyObject_CallObject, PyObject_IsTrue
+from cpython.object cimport PyObject_IsTrue
 from libc.stdint cimport uintptr_t
 
 cdef extern from "fontforge.h":
@@ -82,34 +82,21 @@ cdef object __ff_obj_to_py (int window_tag, void *ff_obj):
     result = views.font_view (<uintptr_t> ff_obj)
   return result
 
-def __call_python (func not None, ff_obj not None,
-                   bint result_is_bool):
-  try:
-    result = func (ff_obj)
-    if result_is_bool:
-      result = not not result
-  except:
-    tb = ''.join (traceback.format_exc ())
-    msg = ''.join (traceback.format_exception_only (sys.exc_type, sys.exc_value))
-    notices.log_fontforge_warning (tb.replace('%', '%%'))
-    notices.post_fontforge_error ('Unhandled exception', msg.replace('%','%%'))
-  return result
-
 cdef void __do_action (void *ff_obj, void *data):
   cdef __c_data *py_data = <__c_data *> data
-  obj = __ff_obj_to_py (py_data.window_tag, ff_obj)
-  args = (<object> py_data.action_func, obj, False)
-  PyObject_CallObject (__call_python, args)
+  view = __ff_obj_to_py (py_data.window_tag, ff_obj)
+  action = <object> py_data.action_func
+  call_python_action (action, view)
 
 cdef bool __check_enabled (void *ff_obj, void *data):
-  cdef bint enabled = True
+  cdef bint is_enabled = True
   cdef __c_data *py_data = <__c_data *> data
   if py_data.enable_func != <PyObject *> None:
-    obj = __ff_obj_to_py (py_data.window_tag, ff_obj)
-    args = (<object> py_data.enable_func, obj, True)
-    retval = PyObject_CallObject (__call_python, args)
-    enabled = PyObject_IsTrue (retval)
-  return enabled
+    view = __ff_obj_to_py (py_data.window_tag, ff_obj)
+    enabled = <object> py_data.enable_func
+    retval = call_python_enabled (enabled, view)
+    is_enabled = PyObject_IsTrue (retval)
+  return is_enabled
 
 cdef void __registerMenuItem (int c_window,
                               object action_function,
@@ -136,6 +123,8 @@ cdef void __registerMenuItem (int c_window,
                                             <constp.const_char_ptr> c_shortcut,
                                             <void *> c_data)
 
+#--------------------------------------------------------------------------
+
 def register_fontforge_menu_entry (window not None,
                                    menu_path not None,
                                    action not None,
@@ -144,3 +133,22 @@ def register_fontforge_menu_entry (window not None,
   if not get_no_windowing_ui ():
     __registerMenuItem (__c_window (window), action, enabled,
                         shortcut, menu_path)
+
+#--------------------------------------------------------------------------
+
+def call_python_action (action not None, view not None):
+  try:
+    result = action (view)
+  except:
+    tb = ''.join (traceback.format_exc ())
+    msg = ''.join (traceback.format_exception_only (sys.exc_type, sys.exc_value))
+    notices.log_fontforge_warning (tb.replace('%', '%%'))
+    notices.post_fontforge_error ('Unhandled exception', msg.replace('%','%%'))
+  return result
+
+def call_python_enabled (enabled not None, view not None):
+  # Take advantage of the similarity of ‘action’ and ‘enabled’
+  # functions.
+  return call_python_action ((lambda v: not not (enabled (v))), view)
+
+#--------------------------------------------------------------------------
