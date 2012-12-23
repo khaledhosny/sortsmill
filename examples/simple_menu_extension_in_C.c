@@ -19,9 +19,26 @@
  * Add something like the following to
  * ${HOME}/.config/sortsmill-fontforge/user-init.scm:
  *
- *    (load-extension
- *        "/full/path/to/simple_menu_extension_in_C.so"
- *        "my_menu_extension_init")
+ * (let ((dll (dynamic-link
+ *              "/full/path/to/simple_menu_extension_in_C.so")))
+ *
+ *   (register-fontforge-menu-entry
+ *      #:window 'glyph
+ *      #:menu-path '("Tools" "Useless tools"
+ *                    "Glyph view extension written in C")
+ *      #:action (wrap-ff_menu_entry_action_t
+ *                  (dynamic-func "glyph_menu_action" dll)
+ *                  (string->pointer
+ *                     "This is a glyph view, and the glyph is not 'question'."))
+ *      #:enabled (wrap-ff_menu_entry_enabled_t
+ *                   (dynamic-func "glyph_menu_enabled" dll)))
+ *
+ *   (register-fontforge-menu-entry
+ *      #:window 'font
+ *      #:menu-path '("Tools" "Font view extension written in C")
+ *      #:action (wrap-ff_menu_entry_action_t
+ *                  (dynamic-func "font_menu_action" dll)
+ *                  (string->pointer "This is a font view."))))
  *
  * You do not need use the full path or the .so extension, if you
  * install the shared module somewhere that libltdl can find it. See
@@ -40,28 +57,16 @@
  * optional but helps prevent symbol clashes. See
  * http://www.gnu.org/software/libtool/manual/html_node/Using-libltdl.html
  */
-#define my_menu_extension_init simple_menu_extension_in_C_LTX_my_menu_extension_init
+#define glyph_menu_action simple_menu_extension_in_C_LTX_glyph_menu_action
+#define glyph_menu_enabled simple_menu_extension_in_C_LTX_glyph_menu_enabled
+#define font_menu_action simple_menu_extension_in_C_LTX_font_menu_action
 
-#include <sortsmillff/usermenu.h>
 #include <sortsmillff/internal_types.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
 
-const char *glyph_menu_path[] = {
-  "Tools",
-  "Useless tools",
-  "Glyph view extension written in C",
-  NULL
-};
-
-const char *font_menu_path[] = {
-  "Tools",
-  "Font view extension written in C",
-  NULL
-};
-
-static void
+void
 glyph_menu_action (void *obj, void *data)
 {
   void *glyph_name = get_ff_SplineChar_name (obj);
@@ -77,7 +82,7 @@ glyph_menu_action (void *obj, void *data)
   fprintf (stderr, "The message: %s\n", message);
 }
 
-static bool
+bool
 glyph_menu_enabled (void *obj, void *data)
 {
   void *glyph_name = get_ff_SplineChar_name (obj);
@@ -85,7 +90,7 @@ glyph_menu_enabled (void *obj, void *data)
           && strcmp ((char *) glyph_name, "question") != 0);
 }
 
-static void
+void
 font_menu_action (void *obj, void *data)
 {
   void *sf = get_ff_FontViewBase_sf (obj);
@@ -94,18 +99,4 @@ font_menu_action (void *obj, void *data)
              (char *) get_ff_SplineFont_font_name (sf));
   char *message = (char *) data;
   fprintf (stderr, "The message: %s\n", message);
-}
-
-void
-my_menu_extension_init (void)
-{
-  register_fontforge_menu_entry (FF_GLYPH_WINDOW, glyph_menu_path,
-                                 glyph_menu_action, glyph_menu_enabled,
-                                 NULL,
-                                 (void *)
-                                 "This is a glyph view, and the glyph is not 'question'.");
-  register_fontforge_menu_entry (FF_FONT_WINDOW, font_menu_path,
-                                 font_menu_action, NULL,
-				 "Font view extension written in C|F9",
-                                 (void *) "This is a font view.");
 }

@@ -12,7 +12,7 @@ AC_DEFUN([FONTFORGE_CREATE_INDENT_PRO],
          :
       else
          for dir in . inc inc/sortsmillff inc/sortsmillff/guile \
-                 auxiliary gutils gdraw fontforge guile         \
+                 auxiliary gutils gdraw fontforge guile main    \
                  python/sortsmillff fortran pure tests          \
                  fonttools
          do

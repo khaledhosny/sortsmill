@@ -37,7 +37,15 @@ if HAVE_GUI
 SUBDIRS += gdraw data
 endif HAVE_GUI
 
-SUBDIRS += fontforge po guile doc htdocs
+SUBDIRS += fontforge guile
+
+if THE_PROGRAMS
+if HAVE_GUI
+SUBDIRS += main
+endif HAVE_GUI
+endif THE_PROGRAMS
+
+SUBDIRS += po doc htdocs
 
 if THE_PROGRAMS
 SUBDIRS += sfd2sxml
@@ -82,7 +90,7 @@ distclean-local:
 		:;														\
 	else														\
 		for dir in . inc inc/sortsmillff inc/sortsmillff/guile	\
-				auxiliary gutils gdraw fontforge pyhook 		\
+				auxiliary gutils gdraw fontforge pyhook main	\
 				tests fonttools examples; do					\
              rm -f "$(top_builddir)/$${dir}/.indent.pro";		\
 		done;													\

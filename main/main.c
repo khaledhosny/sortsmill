@@ -27,7 +27,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "fontforge.h"
+#include <sortsmillff/fontforge_main.h>
 #include <gsl/gsl_errno.h>
 
 int

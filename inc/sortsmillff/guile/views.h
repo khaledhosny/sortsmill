@@ -15,8 +15,8 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SORTSMILLFF_USERMENU_H
-#define _SORTSMILLFF_USERMENU_H
+#ifndef _SORTSMILLFF_GUILE_VIEWS_H
+#define _SORTSMILLFF_GUILE_VIEWS_H
 
 #include <libguile.h>
 #include <stdbool.h>
@@ -29,25 +29,23 @@ extern "C"
 }
 #endif
 
-enum {
-  /* Values chosen so they can be used in bitarrays. */
-  FF_FONT_WINDOW = 0x01,
-  FF_GLYPH_WINDOW = 0x02,
-  FF_CHAR_WINDOW = FF_GLYPH_WINDOW,
-  FF_METRICS_WINDOW = 0x04	/* Reserved for future use. */
-};
+SCM scm_pointer_to_font_view (SCM pointer);
+SCM scm_c_pointer_to_font_view (void *p);
 
-//typedef void (*ff_menu_entry_action_t) (SCM view, void *data);
-//typedef bool (*ff_menu_entry_enabled_t) (SCM view, void *data);
+SCM scm_font_view_to_pointer (SCM view);
+void *scm_c_font_view_to_pointer (SCM view);
 
-void register_fontforge_menu_entry (int window,
-				    const char **menu_path,
-				    //				    ff_menu_entry_action_t action,
-				    //				    ff_menu_entry_enabled_t enabled,
-				    SCM action,
-				    SCM enabled,
-				    const char *shortcut);
-//				    void *data);
+SCM scm_font_view_p (SCM view);
+bool scm_is_font_view (SCM view);
+
+SCM scm_pointer_to_glyph_view (SCM pointer);
+SCM scm_c_pointer_to_glyph_view (void *p);
+
+SCM scm_glyph_view_to_pointer (SCM view);
+void *scm_c_glyph_view_to_pointer (SCM view);
+
+SCM scm_glyph_view_p (SCM view);
+bool scm_is_glyph_view (SCM view);
 
 #if 0
 {
@@ -56,4 +54,4 @@ void register_fontforge_menu_entry (int window,
 }
 #endif
 
-#endif /* _SORTSMILLFF_USERMENU_H */
+#endif /* _SORTSMILLFF_GUILE_VIEWS_H */

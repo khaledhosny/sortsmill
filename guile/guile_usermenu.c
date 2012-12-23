@@ -26,15 +26,15 @@ void init_guile_sortsmillff_usermenu (void);
 
 //-------------------------------------------------------------------------
 
-typedef struct
-{
-  int flag;
-  SCM action;
-  SCM enabled;
-} menu_entry_data;
-
-static SCM font_view_wrapper = SCM_UNDEFINED;
-static SCM glyph_view_wrapper = SCM_UNDEFINED;
+//typedef struct
+//{
+//  int flag;
+//  SCM action;
+//  SCM enabled;
+//} menu_entry_data;
+//
+//static SCM font_view_wrapper = SCM_UNDEFINED;
+//static SCM glyph_view_wrapper = SCM_UNDEFINED;
 
 static void
 raise_window_error (SCM window)
@@ -58,54 +58,54 @@ window_to_flag (SCM window)
   return flag;
 }
 
-static SCM
-wrap_view_pointer (int flag, void *p)
-{
-  SCM view = SCM_UNDEFINED;
-  switch (flag)
-    {
-    case FF_FONT_WINDOW:
-      view = scm_call_1 (font_view_wrapper, scm_from_pointer (p, NULL));
-      break;
-    case FF_GLYPH_WINDOW:
-      view = scm_call_1 (glyph_view_wrapper, scm_from_pointer (p, NULL));
-      break;
-    default:
-      assert (false);
-    }
-  return view;
-}
+//static SCM
+//wrap_view_pointer (int flag, void *p)
+//{
+//  SCM view = SCM_UNDEFINED;
+//  switch (flag)
+//    {
+//    case FF_FONT_WINDOW:
+//      view = scm_call_1 (font_view_wrapper, scm_from_pointer (p, NULL));
+//      break;
+//    case FF_GLYPH_WINDOW:
+//      view = scm_call_1 (glyph_view_wrapper, scm_from_pointer (p, NULL));
+//      break;
+//    default:
+//      assert (false);
+//    }
+//  return view;
+//}
 
-static void
-call_action (void *p, void *vdata)
-{
-  scm_dynwind_begin (0);
-
-  menu_entry_data *data = (menu_entry_data *) vdata;
-  SCM view = wrap_view_pointer (data->flag, p);
-  SCM wrapper =
-    scm_c_private_ref ("sortsmillff usermenu", "menu-entry-error-handling");
-  SCM UNUSED (retval) = scm_call_2 (wrapper, data->action, view);
-
-  scm_dynwind_end ();
-}
-
-static bool
-call_enabled (void *p, void *vdata)
-{
-  scm_dynwind_begin (0);
-
-  menu_entry_data *data = (menu_entry_data *) vdata;
-  SCM view = wrap_view_pointer (data->flag, p);
-  SCM wrapper =
-    scm_c_private_ref ("sortsmillff usermenu", "menu-entry-error-handling");
-  SCM retval = scm_call_2 (wrapper, data->enabled, view);
-  bool result = scm_is_true (retval);
-
-  scm_dynwind_end ();
-
-  return result;
-}
+//static void
+//call_action (void *p, void *vdata)
+//{
+//  scm_dynwind_begin (0);
+//
+//  menu_entry_data *data = (menu_entry_data *) vdata;
+//  SCM view = wrap_view_pointer (data->flag, p);
+//  SCM wrapper =
+//    scm_c_private_ref ("sortsmillff usermenu", "menu-entry-error-handling");
+//  SCM UNUSED (retval) = scm_call_2 (wrapper, data->action, view);
+//
+//  scm_dynwind_end ();
+//}
+//
+//static bool
+//call_enabled (void *p, void *vdata)
+//{
+//  scm_dynwind_begin (0);
+//
+//  menu_entry_data *data = (menu_entry_data *) vdata;
+//  SCM view = wrap_view_pointer (data->flag, p);
+//  SCM wrapper =
+//    scm_c_private_ref ("sortsmillff usermenu", "menu-entry-error-handling");
+//  SCM retval = scm_call_2 (wrapper, data->enabled, view);
+//  bool result = scm_is_true (retval);
+//
+//  scm_dynwind_end ();
+//
+//  return result;
+//}
 
 VISIBLE SCM
 scm_register_fontforge_menu_entry (SCM window, SCM menu_path, SCM action,
@@ -143,14 +143,16 @@ scm_register_fontforge_menu_entry (SCM window, SCM menu_path, SCM action,
           c_shortcut = x_gc_grabstr (scm_to_locale_string (shortcut));
         }
 
-      menu_entry_data *data =
-        (menu_entry_data *) x_gc_malloc (sizeof (menu_entry_data));
-      data->flag = flag;
-      data->action = action;
-      data->enabled = enabled;
-
-      register_fontforge_menu_entry (data->flag, c_menu_path, call_action,
-                                     call_enabled, c_shortcut, data);
+//      menu_entry_data *data =
+//        (menu_entry_data *) x_gc_malloc (sizeof (menu_entry_data));
+//      data->flag = flag;
+//      data->action = action;
+//      data->enabled = enabled;
+//
+//      register_fontforge_menu_entry (data->flag, c_menu_path, call_action,
+//                                     call_enabled, c_shortcut, data);
+      register_fontforge_menu_entry (flag, c_menu_path, action, enabled,
+                                     c_shortcut);
     }
 
   return SCM_UNSPECIFIED;
@@ -185,10 +187,13 @@ scm__Bool (void)
 VISIBLE void
 init_guile_sortsmillff_usermenu (void)
 {
-  font_view_wrapper =
-    scm_c_public_ref ("sortsmillff views", "wrap-font-view");
-  glyph_view_wrapper =
-    scm_c_public_ref ("sortsmillff views", "wrap-glyph-view");
+//  // FIXME: Get rid of this.
+//  font_view_wrapper =
+//    scm_c_public_ref ("sortsmillff views", "wrap-font-view");
+//  // FIXME: Get rid of this.
+//  glyph_view_wrapper =
+//    scm_c_public_ref ("sortsmillff views", "wrap-glyph-view");
+
   scm_c_define_gsubr ("internal:register-fontforge-menu-entry", 5, 0, 0,
                       scm_register_fontforge_menu_entry);
   scm_c_define_gsubr ("_Bool", 0, 0, 0, scm__Bool);

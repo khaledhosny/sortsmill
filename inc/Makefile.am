@@ -44,10 +44,10 @@ nobase_include_HEADERS = sortsmillff/attributes.h			\
 	sortsmillff/rexp.h sortsmillff/polyspline.h				\
 	sortsmillff/usermenu.h
 
-nobase_include_HEADERS += sortsmillff/guile/polyspline.h	\
-	sortsmillff/guile/brentroot.h sortsmillff/guile/iconv.h	\
-	sortsmillff/guile/gsl.h sortsmillff/guile/usermenu.h	\
-	sortsmillff/guile/internal-structures.h					\
+nobase_include_HEADERS += sortsmillff/guile/polyspline.h				\
+	sortsmillff/guile/brentroot.h sortsmillff/guile/iconv.h				\
+	sortsmillff/guile/gsl.h sortsmillff/guile/usermenu.h				\
+	sortsmillff/guile/views.h sortsmillff/guile/internal-structures.h	\
 	sortsmillff/guile/notices.h
 
 if PYTHON_SCRIPTING

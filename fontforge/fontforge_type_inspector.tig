@@ -17,6 +17,17 @@
     (field int active_layer)
     )
 
+ (struct CharViewBase
+    (field * next)
+    (field * fv)
+    (field * sc)
+    (array-field layerheads layer_heads)
+    (field uint drawmode draw_mode)
+    (field uint ft_gridfitwidth ft_grid_fit_width)
+    (field * gridfit grid_fit)
+    (field * container)
+    )
+
  (struct SplineChar
     (field * name)
     (field int unicodeenc unicode)

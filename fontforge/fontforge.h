@@ -81,6 +81,4 @@ void set_running_script (bool);
 
 VISIBLE extern MacFeat *default_mac_feature_map;
 
-VISIBLE extern int fontforge_main(int, char **);
-
 #endif

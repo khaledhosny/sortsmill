@@ -13,20 +13,20 @@
 ! this:
 !
 !    gfortran -fPIC -shared -I/usr/include \
-!          alternate_simple_menu_extension_in_Fortran.f90 \
-!          -o alternate_simple_menu_extension_in_Fortran.so \
+!          simple_menu_extension_in_Fortran.f90 \
+!          -o simple_menu_extension_in_Fortran.so \
 !          -lsortsmillff_fortran_api
 !
 ! Add something like the following to
 ! ${HOME}/.config/sortsmill-fontforge/user-init.scm:
 !
 ! (let ((dll (dynamic-link
-!              "/full/path/to/alternate_simple_menu_extension_in_Fortran.so")))
+!              "/full/path/to/simple_menu_extension_in_Fortran.so")))
 !
 !   (register-fontforge-menu-entry
 !      #:window 'glyph
 !      #:menu-path '("Tools" "Useless tools"
-!                    "Glyph view alternate extension written in Fortran")
+!                    "Glyph view extension written in Fortran")
 !      #:action (wrap-ff_menu_entry_action_t
 !                  (dynamic-func "glyph_menu_action" dll)
 !                  (string->pointer
@@ -36,7 +36,7 @@
 !
 !   (register-fontforge-menu-entry
 !      #:window 'font
-!      #:menu-path '("Tools" "Font view alternate extension written in Fortran")
+!      #:menu-path '("Tools" "Font view extension written in Fortran")
 !      #:action (wrap-ff_menu_entry_action_t
 !                  (dynamic-func "font_menu_action" dll)
 !                  (string->pointer "This is a font view."))))

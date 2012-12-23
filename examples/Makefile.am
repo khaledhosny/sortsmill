@@ -26,42 +26,18 @@
 
 lib_LTLIBRARIES =
 
-#********************************************************************
-# FIXME: The ‘simple_menu_extension_in_C’ method of registering
-# probably will be eliminated before long, because reworked menus are
-# likely to be implemented largely in Guile, and have more
-# complicated operations (involving locales, insertions, deletions,
-# and so forth).
-#********************************************************************
-#
-# To try 'simple_menu_extension_in_C' without installing it, use the
-# full path to $(build_dir)/simple_menu_extension_in_C.la in your
-# ${HOME}/.config/sortsmill-fontforge/user-init.scm file:
-#
-#    (load-extension
-#        "/full/path/to/simple_menu_extension_in_C.la"
-#        "my_menu_extension_init")
-#
-lib_LTLIBRARIES += simple_menu_extension_in_C.la
-simple_menu_extension_in_C_la_SOURCES =	\
-	simple_menu_extension_in_C.c
-simple_menu_extension_in_C_la_CPPFLAGS = -I$(top_builddir)/inc	\
-	''-I$(top_srcdir)/inc -I$(top_builddir)/fontforge
-simple_menu_extension_in_C_la_LDFLAGS = -prefer-pic	\
-	''-module -shared -avoid-version
-
-# To try 'alternate_simple_menu_extension_in_C' without installing it,
+# To try 'simple_menu_extension_in_C' without installing it,
 # use the full path to
-# $(build_dir)/alternate_simple_menu_extension_in_C.la in your
+# $(build_dir)/simple_menu_extension_in_C.la in your
 # ${HOME}/.config/sortsmill-fontforge/user-init.scm file:
 #
 # (let ((dll (dynamic-link
-#              "/full/path/to/alternate_simple_menu_extension_in_C.la")))
+#              "/full/path/to/simple_menu_extension_in_C.la")))
 #
 #   (register-fontforge-menu-entry
 #      #:window 'glyph
 #      #:menu-path '("Tools" "Useless tools"
-#                    "Glyph view alternate extension written in C")
+#                    "Glyph view extension written in C")
 #      #:action (wrap-ff_menu_entry_action_t
 #                  (dynamic-func "glyph_menu_action" dll)
 #                  (string->pointer
@@ -71,22 +47,20 @@ simple_menu_extension_in_C_la_LDFLAGS = -prefer-pic	\
 #
 #   (register-fontforge-menu-entry
 #      #:window 'font
-#      #:menu-path '("Tools" "Font view alternate extension written in C")
+#      #:menu-path '("Tools" "Font view extension written in C")
 #      #:action (wrap-ff_menu_entry_action_t
 #                  (dynamic-func "font_menu_action" dll)
 #                  (string->pointer "This is a font view."))))
 #
-# This method requires less C code, and it can be used to register
-# Fortran procedures without resorting to C. Also it lets you send
-# different data to the ‘action’ and ‘enabled’ functions.
-lib_LTLIBRARIES += alternate_simple_menu_extension_in_C.la
-alternate_simple_menu_extension_in_C_la_SOURCES =	\
-	alternate_simple_menu_extension_in_C.c
-alternate_simple_menu_extension_in_C_la_CPPFLAGS =	\
-	''-I$(top_builddir)/inc -I$(top_srcdir)/inc		\
-	-I$(top_builddir)/fontforge
-alternate_simple_menu_extension_in_C_la_LDFLAGS = -prefer-pic -module	\
-	''-shared -avoid-version
+lib_LTLIBRARIES += simple_menu_extension_in_C.la
+simple_menu_extension_in_C_la_SOURCES =	\
+	simple_menu_extension_in_C.c
+simple_menu_extension_in_C_la_CPPFLAGS = -I$(top_builddir)/inc	\
+	''-I$(top_srcdir)/inc -I$(top_builddir)/fontforge
+simple_menu_extension_in_C_la_LDFLAGS = -prefer-pic -module -shared	\
+	''-avoid-version
+
+if FORTRAN_API
 
 # To try 'simple_menu_extension_in_Fortran' without installing it,
 # use the full path to
@@ -99,7 +73,7 @@ alternate_simple_menu_extension_in_C_la_LDFLAGS = -prefer-pic -module	\
 #   (register-fontforge-menu-entry
 #      #:window 'glyph
 #      #:menu-path '("Tools" "Useless tools"
-#                    "Glyph view alternate extension written in Fortran")
+#                    "Glyph view extension written in Fortran")
 #      #:action (wrap-ff_menu_entry_action_t
 #                  (dynamic-func "glyph_menu_action" dll)
 #                  (string->pointer
@@ -109,7 +83,7 @@ alternate_simple_menu_extension_in_C_la_LDFLAGS = -prefer-pic -module	\
 #
 #   (register-fontforge-menu-entry
 #      #:window 'font
-#      #:menu-path '("Tools" "Font view alternate extension written in Fortran")
+#      #:menu-path '("Tools" "Font view extension written in Fortran")
 #      #:action (wrap-ff_menu_entry_action_t
 #                  (dynamic-func "font_menu_action" dll)
 #                  (string->pointer "This is a font view."))))
@@ -123,7 +97,17 @@ simple_menu_extension_in_Fortran_la_FCFLAGS = $(AM_FCFLAGS)	\
 simple_menu_extension_in_Fortran_la_LDFLAGS = -prefer-pic -module	\
 	''-shared -avoid-version -lsortsmillff_fortran_api
 
+endif FORTRAN_API
+
 mostlyclean-local: mostlyclean-modules
+
+if FORTRAN_API
 
 mostlyclean-modules:
 	-test -z "$(FC_MODEXT)" || rm -f *.$(FC_MODEXT)
+
+else !FORTRAN_API
+
+mostlyclean-modules:
+
+endif !FORTRAN_API

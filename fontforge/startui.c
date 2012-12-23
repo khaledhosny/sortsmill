@@ -31,6 +31,8 @@
 #include <Python.h>
 #endif
 
+#include <sortsmillff/fontforge_main.h>
+#include <sortsmillff/xdie_on_null.h>
 #include "fontforgeui.h"
 #include "annotations.h"
 #include <xalloc.h>
@@ -44,7 +46,6 @@
 #include <stdlib.h>
 #include <canonicalize.h>
 #include <libguile.h>
-#include <sortsmillff/xdie_on_null.h>
 
 extern int AutoSaveFrequency;
 
@@ -457,7 +458,7 @@ call_fontforge (void *args)
   return NULL;
 }
 
-int
+VISIBLE int
 fontforge_main (int argc, char **argv)
 {
   // This looks complicated only because of the need to pass data

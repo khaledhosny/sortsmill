@@ -24,18 +24,32 @@ from libcpp cimport bool
 
 cimport sortsmillff.cython.const_pointers as constp
 
+cdef extern from "libguile.h":
+  # FIXME: THIS ASSUMES SCM_DEBUG_TYPING_STRICTNESS == 1
+  # FIXME: Either provide support for the other levels, or
+  # FIXME: force this level more carefully.
+  cdef struct scm_unused_struct:
+    pass
+  ctypedef scm_unused_struct *SCM
+
 cdef extern from "sortsmillff/usermenu.h":
   enum:
     FF_FONT_WINDOW = 0x01
     FF_GLYPH_WINDOW = 0x02
     FF_CHAR_WINDOW = FF_GLYPH_WINDOW
-
-  ctypedef void (*ff_menu_entry_action_t) (void *obj, void *data)
-  ctypedef bool (*ff_menu_entry_enabled_t) (void *obj, void *data)
+    FF_METRICS_WINDOW = 0x03
 
   void register_fontforge_menu_entry (int window,
                                       constp.const_char_ptr_ptr menu_path,
-                                      ff_menu_entry_action_t action,
-                                      ff_menu_entry_enabled_t enabled,
-                                      constp.const_char_ptr shortcut,
-                                      void *data)
+                                      SCM action, SCM enabled,
+                                      constp.const_char_ptr shortcut)
+
+#  ctypedef void (*ff_menu_entry_action_t) (void *obj, void *data)
+#  ctypedef bool (*ff_menu_entry_enabled_t) (void *obj, void *data)
+#
+#  void register_fontforge_menu_entry (int window,
+#                                      constp.const_char_ptr_ptr menu_path,
+#                                      ff_menu_entry_action_t action,
+#                                      ff_menu_entry_enabled_t enabled,
+#                                      constp.const_char_ptr shortcut,
+#                                      void *data)

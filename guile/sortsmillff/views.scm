@@ -26,55 +26,59 @@
 (export
    font-view
    font-view?
-   wrap-font-view
-   unwrap-font-view
+   pointer->font-view
+   font-view->pointer
    glyph-view
    glyph-view?
-   wrap-glyph-view
-   unwrap-glyph-view
-   unwrap-view
+   pointer->glyph-view
+   glyph-view->pointer
+   view->pointer
    font-view->ff:FontViewBase
    ff:FontViewBase->font-view
-   glyph-view->ff:SplineChar
-   ff:SplineChar->glyph-view
+   glyph-view->ff:CharViewBase
+   ff:CharViewBase->glyph-view
    )
 
 (define-wrapped-pointer-type font-view
    font-view?
-   wrap-font-view unwrap-font-view
+   pointer->font-view font-view->pointer
    (lambda (fv port)
       (let* ((fvb (font-view->ff:FontViewBase fv))
              (sf (pointer->ff:SplineFont (ff:FontViewBase:sf-ref fvb))))
          (format port "#<font-view ~s 0x~x>"
             (pointer->string (ff:SplineFont:font-name-ref sf))
-            (pointer-address (unwrap-font-view fv))))))
+            (pointer-address (font-view->pointer fv))))))
 
 (define-wrapped-pointer-type glyph-view
    glyph-view?
-   wrap-glyph-view unwrap-glyph-view
+   pointer->glyph-view glyph-view->pointer
    (lambda (gv port)
-      (let* ((sc (glyph-view->ff:SplineChar gv))
+      (let* ((cvb (glyph-view->ff:CharViewBase gv))
+             (sc (pointer->ff:SplineChar (ff:CharViewBase:sc-ref cvb)))
              (sf (pointer->ff:SplineFont (ff:SplineChar:parent-ref sc))))
          (format port "#<glyph-view ~s:~s 0x~x>"
             (pointer->string (ff:SplineFont:font-name-ref sf))
             (pointer->string (ff:SplineChar:name-ref sc))
-            (pointer-address (unwrap-glyph-view gv))))))
+            (pointer-address (glyph-view->pointer gv))))))
 
-(define (unwrap-view v)
-   (cond ((font-view? v) (unwrap-font-view v))
-         ((glyph-view? v) (unwrap-glyph-view v))
-         (else (scm-error 'wrong-type-arg "unwrap-view"
+(define (view->pointer v)
+   (cond ((font-view? v) (font-view->pointer v))
+         ((glyph-view? v) (glyph-view->pointer v))
+         (else (scm-error 'wrong-type-arg "view->pointer"
                   "Not a font-view or glyph-view: ~S"
                   (list v) (list v)))))
 
 (define (font-view->ff:FontViewBase fv)
-   (pointer->ff:FontViewBase (unwrap-font-view fv)))
+   (pointer->ff:FontViewBase (font-view->pointer fv)))
 
 (define (ff:FontViewBase->font-view fvb)
-   (wrap-font-view (ff:FontViewBase->pointer fvb)))
+   (pointer->font-view (ff:FontViewBase->pointer fvb)))
 
-(define (glyph-view->ff:SplineChar gv)
-   (pointer->ff:SplineChar (unwrap-glyph-view gv)))
+(define (glyph-view->ff:CharViewBase gv)
+   (pointer->ff:CharViewBase (glyph-view->pointer gv)))
 
-(define (ff:SplineChar->glyph-view sc)
-   (wrap-glyph-view (ff:SplineChar->pointer sc)))
+(define (ff:CharViewBase->glyph-view sc)
+   (pointer->glyph-view (ff:CharViewBase->pointer sc)))
+
+(load-extension "libguile-sortsmillff_fontforge"
+   "init_guile_sortsmillff_views")

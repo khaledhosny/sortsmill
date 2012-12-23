@@ -261,12 +261,12 @@
        (list 'field field-type struct-name field-name
           replacement-struct-name field-name))
 
-      (('struct-field (? string-or-symbol? field-name)
+      (((or 'struct-field 'array-field) (? string-or-symbol? field-name)
           (? string-or-symbol? replacement-field-name))
        (list 'struct-field struct-name field-name
           replacement-struct-name replacement-field-name))
 
-      (('struct-field (? string-or-symbol? field-name))
+      (((or 'struct-field 'array-field) (? string-or-symbol? field-name))
        (list 'struct-field struct-name field-name
           replacement-struct-name field-name))
 

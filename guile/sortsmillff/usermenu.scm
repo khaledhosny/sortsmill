@@ -66,11 +66,11 @@
 (define* (wrap-ff_menu_entry_action_t c-action
             #:optional (data %null-pointer))
    (let ((proc (pointer->procedure void c-action (list '* '*))))
-      (lambda (view) (proc (unwrap-view view) data))))
+      (lambda (view) (proc (view->pointer view) data))))
 
 (define* (wrap-ff_menu_entry_enabled_t c-enabled
             #:optional (data %null-pointer))
    (let ((proc (pointer->procedure (_Bool) c-enabled (list '* '*))))
-      (lambda (view) (not (zero? (proc (unwrap-view view) data))))))
+      (lambda (view) (not (zero? (proc (view->pointer view) data))))))
 
 ;;-------------------------------------------------------------------------

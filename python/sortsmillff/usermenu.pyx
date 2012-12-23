@@ -26,9 +26,16 @@ from libcpp cimport bool
 cimport sortsmillff.cython.usermenu as c_usermenu
 cimport sortsmillff.cython.const_pointers as constp
 cimport sortsmillff.cython.xgc as xgc
+from sortsmillff.cython.usermenu cimport SCM
 from cpython.ref cimport PyObject, Py_XINCREF
 from cpython.object cimport PyObject_IsTrue
 from libc.stdint cimport uintptr_t
+
+cdef extern from "libguile.h":
+  ctypedef void (*scm_t_pointer_finalizer) (void *)
+  SCM scm_c_public_variable (constp.const_char_ptr module_name, constp.const_char_ptr name)
+  SCM scm_call_2 (SCM proc, SCM arg1, SCM arg2)
+  SCM scm_from_pointer (void *, scm_t_pointer_finalizer)
 
 cdef extern from "fontforge.h":
   bool get_no_windowing_ui ()
@@ -82,12 +89,14 @@ cdef object __ff_obj_to_py (int window_tag, void *ff_obj):
     result = views.font_view (<uintptr_t> ff_obj)
   return result
 
+# FIXME: Replace this with a more direct Guile wrapper.
 cdef void __do_action (void *ff_obj, void *data):
   cdef __c_data *py_data = <__c_data *> data
   view = __ff_obj_to_py (py_data.window_tag, ff_obj)
   action = <object> py_data.action_func
   call_python_action (action, view)
 
+# FIXME: Replace this with a more direct Guile wrapper.
 cdef bool __check_enabled (void *ff_obj, void *data):
   cdef bint is_enabled = True
   cdef __c_data *py_data = <__c_data *> data
@@ -108,6 +117,13 @@ cdef void __registerMenuItem (int c_window,
   cdef __c_data *c_data
   cdef char **c_menu_path
   cdef char *c_shortcut
+  cdef SCM wrap_action
+  cdef SCM wrap_enabled
+  cdef SCM action
+  cdef SCM enabled
+  cdef SCM data_pointer
+  cdef SCM do_action_pointer
+  cdef SCM check_enabled_pointer
 
   c_data = <__c_data *> xgc.x_gc_malloc (sizeof (__c_data))
   Py_XINCREF (<PyObject *> action_function)
@@ -117,11 +133,19 @@ cdef void __registerMenuItem (int c_window,
   c_data.action_func = <PyObject *> action_function
   c_data.enable_func = <PyObject *> enable_function
   c_shortcut = __c_shortcut (shortcut)
+  wrap_action = scm_c_public_variable ("sortsmillff usermenu",
+                                       "wrap-ff_menu_entry_action_t")
+  wrap_enabled = scm_c_public_variable ("sortsmillff usermenu",
+                                        "wrap-ff_menu_entry_enabled_t")
+  data_pointer = scm_from_pointer (<void *> c_data, <scm_t_pointer_finalizer> NULL)
+  do_action_pointer = scm_from_pointer (<void *> __do_action, <scm_t_pointer_finalizer> NULL)
+  check_enabled_pointer = scm_from_pointer (<void *> __check_enabled, <scm_t_pointer_finalizer> NULL)
+  action = scm_call_2 (wrap_action, do_action_pointer, data_pointer)
+  enabled = scm_call_2 (wrap_action, check_enabled_pointer, data_pointer)
   c_usermenu.register_fontforge_menu_entry (c_window,
                                             <constp.const_char_ptr_ptr> c_menu_path,
-                                            __do_action, __check_enabled,
-                                            <constp.const_char_ptr> c_shortcut,
-                                            <void *> c_data)
+                                            action, enabled,
+                                            <constp.const_char_ptr> c_shortcut)
 
 #--------------------------------------------------------------------------
 

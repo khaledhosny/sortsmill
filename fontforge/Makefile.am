@@ -39,10 +39,10 @@ DISTCLEANFILES =
 
 if THE_PROGRAMS
 
-if HAVE_GUI
-bin_PROGRAMS += fontforge
-dist_man_MANS += fontforge.1
-endif HAVE_GUI
+#if HAVE_GUI
+#bin_PROGRAMS += fontforge
+#dist_man_MANS += fontforge.1
+#endif HAVE_GUI
 
 # FIXME: Update the manpages for the new gengetopt-based options.
 bin_PROGRAMS += fontlint fontimage sfddiff
@@ -85,12 +85,12 @@ CLEANFILES += fontforge_type_inspector.c
 
 if THE_PROGRAMS
 
-if HAVE_GUI
-fontforge_SOURCES = main.c
-fontforge_LDADD = libsortsmillff_fontforgeexe.la $(LDADD)	\
-	$(top_builddir)/lib/libgnu.la
-fontforge_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS) -export-dynamic
-endif HAVE_GUI
+#if HAVE_GUI
+#fontforge_SOURCES = main.c
+#fontforge_LDADD = libsortsmillff_fontforgeexe.la $(LDADD)	\
+#	$(top_builddir)/lib/libgnu.la
+#fontforge_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS) -export-dynamic
+#endif HAVE_GUI
 
 dist_fontlint_SOURCES = $(srcdir)/fontlint.c			\
 	$(srcdir)/fontlint_opts.c $(srcdir)/fontlint_opts.h

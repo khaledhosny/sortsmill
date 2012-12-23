@@ -52,7 +52,8 @@ DIST_SCM_FILES += sortsmillff/gsl.scm sortsmillff/iconv.scm		\
 	sortsmillff/linalg.scm sortsmillff/polyspline.scm			\
 	sortsmillff/brentroot.scm sortsmillff/sfd-to-sxml.scm		\
 	sortsmillff/views.scm sortsmillff/internal-types-syntax.scm	\
-	sortsmillff/notices.scm sortsmillff/gdraw-and-guile.scm
+	sortsmillff/notices.scm
+#sortsmillff/gdraw-and-guile.scm
 #sortsmillff/precompute.scm
 if HAVE_GUI
 DIST_SCM_FILES += sortsmillff/usermenu.scm
@@ -93,6 +94,8 @@ sortsmillff/gdraw-types.scm: generate-internal-types.scm	\
 
 noinst_PROGRAMS = gdraw_type_inspector
 
+gdraw_type_inspector_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS)
+
 CLEANFILES += gdraw_type_inspector.c
 
 #--------------------------------------------------------------------------
@@ -110,7 +113,7 @@ MOSTLYCLEANFILES += site-init.scm
 
 #--------------------------------------------------------------------------
 
-AM_LDFLAGS = -module $(MY_CFLAGS) $(MY_LIBS)
+AM_LDFLAGS = -module -release $(VERSION) $(MY_CFLAGS) $(MY_LIBS)
 
 lib_LTLIBRARIES =
 
@@ -126,7 +129,8 @@ libguile_sortsmillff_aux_la_LIBADD =				\
 	$(top_builddir)/lib/libgnu.la
 
 lib_LTLIBRARIES += libguile-sortsmillff_fontforge.la
-libguile_sortsmillff_fontforge_la_SOURCES = guile_notices.c
+libguile_sortsmillff_fontforge_la_SOURCES = guile_notices.c	\
+	guile_views.c
 libguile_sortsmillff_fontforge_la_CFLAGS = $(AM_CFLAGS) $(FFINCLDIRS)
 libguile_sortsmillff_fontforge_la_LIBADD =					\
 	$(top_builddir)/fontforge/libsortsmillff_fontforge.la	\
