@@ -12092,11 +12092,11 @@ static GMenuItem2 wnmenu[] = {
   {{(uint32_t *) N_("New _Metrics Window"), NULL, COLOR_DEFAULT,
     COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'M'},
    H_ ("New Metrics Window|Ctl+K"), NULL, NULL, CVMenuOpenMetrics, 0},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("Warnings"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL,
     NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'M'}, H_ ("Warnings|No Shortcut"), NULL,
    NULL, _MenuWarnings, MID_Warnings},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   GMENUITEM2_EMPTY
 };
 
@@ -12154,7 +12154,7 @@ static GMenuItem2 fllist[] = {
   {{(uint32_t *) N_("C_lose Tab"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL,
     NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'C'}, H_ ("Close Tab|No Shortcut"), NULL,
    NULL, CVMenuCloseTab, MID_CloseTab},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("_Save"), (GImage *) "filesave.png", COLOR_DEFAULT,
     COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'S'},
    H_ ("Save|Ctl+S"), NULL, NULL, CVMenuSave, 0},
@@ -12176,7 +12176,7 @@ static GMenuItem2 fllist[] = {
   {{(uint32_t *) N_("E_xport..."), (GImage *) "fileexport.png", COLOR_DEFAULT,
     COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 't'},
    H_ ("Export...|No Shortcut"), NULL, NULL, CVMenuExport, 0},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("_Import..."), (GImage *) "fileimport.png", COLOR_DEFAULT,
     COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'I'},
    H_ ("Import...|Ctl+Shft+I"), NULL, NULL, CVMenuImport, 0},
@@ -12187,16 +12187,16 @@ static GMenuItem2 fllist[] = {
     COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'R'},
    H_ ("Revert Glyph|Alt+Ctl+R"), NULL, NULL, CVMenuRevertGlyph,
    MID_RevertGlyph},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("_Print..."), (GImage *) "fileprint.png", COLOR_DEFAULT,
     COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'P'},
    H_ ("Print...|Ctl+P"), NULL, NULL, CVMenuPrint, 0},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
 #if !defined(_NO_PYTHON)
   {{(uint32_t *) N_("E_xecute Script..."), (GImage *) "python.png",
     COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'x'},
    H_ ("Execute Script...|Ctl+."), NULL, NULL, CVMenuExecute, 0},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
 #endif
   {{(uint32_t *) N_("Pr_eferences..."), (GImage *) "fileprefs.png",
     COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'e'},
@@ -12204,7 +12204,7 @@ static GMenuItem2 fllist[] = {
   {{(uint32_t *) N_("_X Resource Editor..."), NULL, COLOR_DEFAULT,
     COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'e'},
    H_ ("X Resource Editor...|No Shortcut"), NULL, NULL, MenuXRes, 0},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("_Quit"), (GImage *) "filequit.png", COLOR_DEFAULT,
     COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'Q'},
    H_ ("Quit|Ctl+Q"), NULL, NULL, MenuExit, MID_Quit},
@@ -12222,7 +12222,7 @@ static GMenuItem2 sllist[] = {
   {{(uint32_t *) N_("_Deselect All"), NULL, COLOR_DEFAULT, COLOR_DEFAULT,
     NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'o'}, H_ ("Deselect All|Escape"),
    NULL, NULL, CVSelectNone, MID_SelNone},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("_First Point"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL,
     NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'F'}, H_ ("First Point|Ctl+."), NULL,
    NULL, CVMenuNextPrevPt, MID_FirstPt},
@@ -12251,7 +12251,7 @@ static GMenuItem2 sllist[] = {
   {{(uint32_t *) N_("Point A_t"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL,
     NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'r'}, H_ ("Point At|Ctl+,"), NULL, NULL,
    CVMenuSelectPointAt, MID_SelPointAt},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("Select All _Points & Refs"), NULL, COLOR_DEFAULT,
     COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'P'},
    H_ ("Select All Points & Refs|Alt+Ctl+A"), NULL, NULL, CVSelectAll,
@@ -12270,7 +12270,7 @@ static GMenuItem2 sllist[] = {
   {{(uint32_t *) N_("_VWidth"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL,
     NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, '\0'}, H_ ("VWidth|No Shortcut"), NULL,
    NULL, CVSelectVWidth, MID_SelectVWidth},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("Select Points Affected by HM"), NULL, COLOR_DEFAULT,
     COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'V'},
    H_ ("Select Points Affected by HM|No Shortcut"), NULL, NULL, CVSelectHM,
@@ -12285,7 +12285,7 @@ static GMenuItem2 edlist[] = {
   {{(uint32_t *) N_("_Redo"), (GImage *) "editredo.png", COLOR_DEFAULT,
     COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'R'},
    H_ ("Redo|Ctl+Y"), NULL, NULL, CVRedo, MID_Redo},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("Cu_t"), (GImage *) "editcut.png", COLOR_DEFAULT,
     COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 't'},
    H_ ("Cut|Ctl+X"), NULL, NULL, CVCut, MID_Cut},
@@ -12338,15 +12338,15 @@ static GMenuItem2 edlist[] = {
     NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, '\0'},
    H_ ("Copy Grid Fit|No Shortcut"), NULL, NULL, CVMenuCopyGridFit,
    MID_CopyGridFit},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("_Select"), (GImage *) "editselect.png", COLOR_DEFAULT,
     COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'S'}, NULL, sllist,
    sllistcheck, NULL, 0},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("U_nlink Reference"), (GImage *) "editunlink.png",
     COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'U'},
    H_ ("Unlink Reference|Ctl+U"), NULL, NULL, CVUnlinkRef, MID_UnlinkRef},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("Remo_ve Undoes"), NULL, COLOR_DEFAULT, COLOR_DEFAULT,
     NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'e'},
    H_ ("Remove Undoes|No Shortcut"), NULL, NULL, CVRemoveUndoes,
@@ -12367,12 +12367,12 @@ static GMenuItem2 ptlist[] = {
   {{(uint32_t *) N_("_Tangent"), (GImage *) "pointstangent.png",
     COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T'},
    H_ ("Tangent|Ctl+4"), NULL, NULL, CVMenuPointType, MID_Tangent},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
 /* TRANSLATORS: Make this (selected) point the first point in the glyph */
   {{(uint32_t *) N_("_Make First"), (GImage *) "menuempty.png", COLOR_DEFAULT,
     COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'M'},
    H_ ("Make First|Ctl+1"), NULL, NULL, CVMenuMakeFirst, MID_MakeFirst},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("Can Be _Interpolated"), NULL, COLOR_DEFAULT,
     COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T'},
    H_ ("Can Be Interpolated|No Shortcut"), NULL, NULL, CVMenuImplicit,
@@ -12385,16 +12385,16 @@ static GMenuItem2 ptlist[] = {
     COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'M'},
    H_ ("Center Between Control Points|No Shortcut"), NULL, NULL,
    CVMenuCenterCP, MID_CenterCP},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("_Add Anchor"), (GImage *) "pointsaddanchor.png",
     COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'A'},
    H_ ("Add Anchor|Ctl+0"), NULL, NULL, CVMenuAddAnchor, MID_AddAnchor},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("Acceptable _Extrema"), NULL, COLOR_DEFAULT,
     COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'C'},
    H_ ("Acceptable Extrema|No Shortcut"), NULL, NULL, CVMenuAcceptableExtrema,
    MID_AcceptableExtrema},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("Make _Line"), (GImage *) "pointsmakeline.png",
     COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'M'},
    H_ ("Make Line|No Shortcut"), NULL, NULL, CVMenuMakeLine, MID_MakeLine},
@@ -12413,7 +12413,7 @@ static GMenuItem2 ptlist[] = {
     NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'M'},
    H_ ("Make Clip Path|No Shortcut"), NULL, NULL, CVMenuClipPath,
    MID_ClipPath},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("Tool_s"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL,
     0, 1, 0, 0, 0, 0, 1, 1, 0, 'M'}, NULL, cvtoollist, cvtoollist_check, NULL,
    MID_Tools},
@@ -12436,22 +12436,22 @@ static GMenuItem2 spiroptlist[] = {
   {{(uint32_t *) N_("_Right Constraint"), (GImage *) "pointsspironext.png",
     COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T'},
    H_ ("Next Constraint|Ctl+5"), NULL, NULL, CVMenuPointType, MID_SpiroRight},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
 /* TRANSLATORS: Make this (selected) point the first point in the glyph */
   {{(uint32_t *) N_("_Make First"), (GImage *) "menuempty.png", COLOR_DEFAULT,
     COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'M'},
    H_ ("Make First|Ctl+1"), NULL, NULL, CVMenuSpiroMakeFirst,
    MID_SpiroMakeFirst},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("_Add Anchor"), (GImage *) "pointsaddanchor.png",
     COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'A'},
    H_ ("Add Anchor|Ctl+0"), NULL, NULL, CVMenuAddAnchor, MID_AddAnchor},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("_Name Contour"), (GImage *) "pointsnamecontour.png",
     COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'M'},
    H_ ("Name Contour|No Shortcut"), NULL, NULL, CVMenuNameContour,
    MID_NameContour},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("Tool_s"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL,
     0, 1, 0, 0, 0, 0, 1, 1, 0, 'M'}, NULL, cvspirotoollist, cvtoollist_check,
    NULL, MID_Tools},
@@ -12471,7 +12471,7 @@ static GMenuItem2 allist[] = {
     NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'R'},
    H_ ("Space Regions...|No Shortcut"), NULL, NULL, CVMenuConstrain,
    MID_SpaceRegion},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("Make _Parallel..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT,
     NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'P'},
    H_ ("Make Parallel...|No Shortcut"), NULL, NULL, CVMenuMakeParallel,
@@ -12632,7 +12632,7 @@ static GMenuItem2 eflist[] = {
     NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, '\0'},
    H_ ("Change Glyph...|No Shortcut"), NULL, NULL, CVMenuChangeGlyph,
    MID_ChangeGlyph},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("In_line..."), (GImage *) "stylesinline.png",
     COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0,
     'O'}, H_ ("Inline|No Shortcut"), NULL, NULL, CVMenuInline, 0},
@@ -12719,7 +12719,7 @@ static GMenuItem2 ellist[] = {
     COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'o'},
    H_ ("Find Problems...|Ctl+E"), NULL, NULL, CVMenuFindProblems,
    MID_FindProblems},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("Bitm_ap strikes Available..."),
     (GImage *) "elementbitmapsavail.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL,
     NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'A'},
@@ -12735,7 +12735,7 @@ static GMenuItem2 ellist[] = {
     NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, '\0'},
    H_ ("Remove Bitmap Glyphs...|No Shortcut"), NULL, NULL, CVMenuBitmaps,
    MID_RemoveBitmaps},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("St_yles"), (GImage *) "elementstyles.png", COLOR_DEFAULT,
     COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, '\0'}, NULL, eflist,
    NULL, NULL, MID_Styles},
@@ -12768,7 +12768,7 @@ static GMenuItem2 ellist[] = {
   {{(uint32_t *) N_("Autot_race"), (GImage *) "elementautotrace.png",
     COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'r'},
    H_ ("Autotrace|Ctl+Shft+T"), NULL, NULL, CVMenuAutotrace, MID_Autotrace},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("A_lign"), (GImage *) "elementalign.png", COLOR_DEFAULT,
     COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'l'}, NULL, allist,
    allistcheck, NULL, MID_Align},
@@ -12778,7 +12778,7 @@ static GMenuItem2 ellist[] = {
   {{(uint32_t *) N_("_Order"), (GImage *) "elementorder.png", COLOR_DEFAULT,
     COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, '\0'}, NULL, orlist,
    orlistcheck, NULL, 0},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("Check Self-Intersection"), NULL, COLOR_DEFAULT,
     COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'o'},
    H_ ("Clockwise|No Shortcut"), NULL, NULL, CVMenuCheckSelf, MID_CheckSelf},
@@ -12800,16 +12800,16 @@ static GMenuItem2 ellist[] = {
     NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'D'},
    H_ ("Reverse Direction|No Shortcut"), NULL, NULL, CVMenuReverseDir,
    MID_ReverseDir},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("Insert Text Outlines..."), NULL, COLOR_DEFAULT,
     COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'D'},
    H_ ("Insert Text Outlines|No Shortcut"), NULL, NULL, CVMenuInsertText,
    MID_InsertText},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("B_uild"), (GImage *) "elementbuildaccent.png",
     COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'u'},
    NULL, balist, balistcheck, NULL, MID_BuildAccent},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("Compare Layers..."),
     (GImage *) "elementcomparelayers.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL,
     NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'u'},
@@ -12833,7 +12833,7 @@ static GMenuItem2 htlist[] = {
     COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'H'},
    H_ ("Don't AutoHint|No Shortcut"), NULL, NULL, CVMenuDontAutoHint,
    MID_DontAutoHint},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("Auto_Instr"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL,
     NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'T'}, H_ ("AutoInstr|Ctl+T"), NULL, NULL,
    CVMenuNowakAutoInstr, MID_AutoInstr},
@@ -12847,7 +12847,7 @@ static GMenuItem2 htlist[] = {
   {{(uint32_t *) N_("S_uggest Deltas..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT,
     NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'l'},
    H_ ("Suggest Deltas|No Shortcut"), NULL, NULL, CVMenuDeltas, MID_Deltas},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("_Clear HStem"), (GImage *) "hintsclearhstems.png",
     COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'C'},
    H_ ("Clear HStem|No Shortcut"), NULL, NULL, CVMenuClearHints,
@@ -12864,7 +12864,7 @@ static GMenuItem2 htlist[] = {
     NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, '\0'},
    H_ ("Clear Instructions|No Shortcut"), NULL, NULL, CVMenuClearInstrs,
    MID_ClearInstr},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("_Add HHint"), (GImage *) "hintsaddhstem.png",
     COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'A'},
    H_ ("Add HHint|No Shortcut"), NULL, NULL, CVMenuAddHint, MID_AddHHint},
@@ -12882,7 +12882,7 @@ static GMenuItem2 htlist[] = {
     NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'e'},
    H_ ("Create VHint...|No Shortcut"), NULL, NULL, CVMenuCreateHint,
    MID_CreateVHint},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("_Review Hints..."), (GImage *) "hintsreviewhints.png",
     COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'R'},
    H_ ("Review Hints...|Alt+Ctl+H"), NULL, NULL, CVMenuReviewHints,
@@ -12960,13 +12960,13 @@ static GMenuItem2 mtlist[] = {
     COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'R'},
    H_ ("Set Both Bearings...|No Shortcut"), NULL, NULL, CVMenuSetWidth,
    MID_SetBearings},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("Set _Vertical Advance..."),
     (GImage *) "metricssetvwidth.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL,
     NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'V'},
    H_ ("Set Vertical Advance...|No Shortcut"), NULL, NULL, CVMenuSetWidth,
    MID_SetVWidth},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("Remove Kern _Pairs"), NULL, COLOR_DEFAULT, COLOR_DEFAULT,
     NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'P'},
    H_ ("Remove Kern Pairs|No Shortcut"), NULL, NULL, CVMenuRemoveKern,
@@ -12989,7 +12989,7 @@ static GMenuItem2 pllist[] = {
   {{(uint32_t *) N_("_Layers"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL,
     NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'L'}, H_ ("Layers|No Shortcut"), NULL,
    NULL, CVMenuPaletteShow, MID_Layers},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("_Docked Palettes"), NULL, COLOR_DEFAULT, COLOR_DEFAULT,
     NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'D'},
    H_ ("Docked Palettes|No Shortcut"), NULL, NULL, CVMenuPalettesDock,
@@ -13162,7 +13162,7 @@ static GMenuItem2 swlist[] = {
   {{(uint32_t *) N_("Previe_w"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL,
     NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'l'}, H_ ("Preview|Ctl+`"), NULL, NULL,
    CVMenuPreview, MID_Preview},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("Pale_ttes"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL,
     NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'P'}, NULL, pllist, pllistcheck, NULL,
    0},
@@ -13172,7 +13172,7 @@ static GMenuItem2 swlist[] = {
   {{(uint32_t *) N_("_Rulers"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL,
     NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'R'}, H_ ("Rulers|No Shortcut"), NULL,
    NULL, CVMenuShowHideRulers, MID_HideRulers},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("_Horizontal Hints"), NULL, COLOR_DEFAULT, COLOR_DEFAULT,
     NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'R'},
    H_ ("Horizontal Hints|No Shortcut"), NULL, NULL, CVMenuShowHints,
@@ -13193,16 +13193,16 @@ static GMenuItem2 swlist[] = {
   {{(uint32_t *) N_("FamilyBl_ues"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL,
     NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'R'}, H_ ("Family Blues|No Shortcut"),
    NULL, NULL, CVMenuShowHints, MID_ShowFamilyBlues},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("_Anchors"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL,
     NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'R'}, H_ ("Anchors|No Shortcut"), NULL,
    NULL, CVMenuShowHints, MID_ShowAnchors},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("Debug Raster Cha_nges"), NULL, COLOR_DEFAULT,
     COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'R'},
    H_ ("Debug Raster Changes|No Shortcut"), NULL, NULL, CVMenuShowHints,
    MID_ShowDebugChanges},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("Hori_zontal Metric Lines"), NULL, COLOR_DEFAULT,
     COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'R'},
    H_ ("Hori_zontal Metric Lines|No Shortcut"), NULL, NULL, CVMenuShowHints,
@@ -13211,7 +13211,7 @@ static GMenuItem2 swlist[] = {
     COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'R'},
    H_ ("Vertical Metric Lines|No Shortcut"), NULL, NULL, CVMenuShowHints,
    MID_ShowVMetrics},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("Snap Outlines to Pi_xel Grid"), NULL, COLOR_DEFAULT,
     COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'R'},
    H_ ("Snap Outlines to Pixel Grid|No Shortcut"), NULL, NULL,
@@ -13229,7 +13229,7 @@ static GMenuItem2 vwlist[] = {
   {{(uint32_t *) N_("Zoom _in"), (GImage *) "viewzoomin.png", COLOR_DEFAULT,
     COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'i'},
    H_ ("Zoom in|Alt+Ctl+Shft++"), NULL, NULL, CVMenuScale, MID_ZoomIn},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("_Next Glyph"), (GImage *) "viewnext.png", COLOR_DEFAULT,
     COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'N'},
    H_ ("Next Glyph|Ctl+]"), NULL, NULL, CVMenuChangeChar, MID_Next},
@@ -13254,7 +13254,7 @@ static GMenuItem2 vwlist[] = {
     COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'V'},
    H_ ("Find In Font View|Ctl+Shft+<"), NULL, NULL, CVMenuFindInFontView,
    MID_FindInFontView},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("N_umber Points"), NULL, COLOR_DEFAULT, COLOR_DEFAULT,
     NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'o'}, NULL, nplist, nplistcheck,
    NULL, 0},
@@ -13263,7 +13263,7 @@ static GMenuItem2 vwlist[] = {
    MID_ShowGridFit},
   {{(uint32_t *) N_("Sho_w"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL,
     0, 1, 0, 0, 0, 0, 1, 1, 0, 'l'}, NULL, swlist, swlistcheck, NULL, 0},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("Com_binations"), NULL, COLOR_DEFAULT, COLOR_DEFAULT,
     NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'b'}, NULL, cblist, cblistcheck,
    NULL, 0},
@@ -13380,7 +13380,7 @@ static GMenuItem2 mmlist[] = {
   {{(uint32_t *) N_("MM _Reblend"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL,
     NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, '\0'}, H_ ("MM Reblend|No Shortcut"),
    NULL, NULL, CVMenuReblend, MID_MMReblend},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 1, 0, 0, 0, '\0'}, NULL, NULL, NULL, NULL, 0}, /* line */
+  GMENUITEM2_LINE,
   {{(uint32_t *) N_("_View"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL,
     0, 1, 0, 0, 0, 0, 1, 1, 0, '\0'}, NULL, mvlist, mvlistcheck, NULL, 0},
   GMENUITEM2_EMPTY

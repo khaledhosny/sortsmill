@@ -9813,7 +9813,7 @@ static GMenuItem lookuppopupmenu[] = {
   {{(uint32_t *) N_("_Sort"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL,
     0, 0, 0, 0, 0, 0, 1, 1, 0, 'o'}, '\0', ksm_control, NULL, NULL,
    lookupmenu_dispatch, CID_LookupSort},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, 0, '\0'}, '\0', 0, NULL, NULL, NULL, 0},      /* line */
+  GMENUITEM_LINE,
   {{(uint32_t *) N_("Add _Lookup"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL,
     NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o'}, '\0', ksm_control, NULL, NULL,
    lookupmenu_dispatch, CID_AddLookup},
@@ -9835,21 +9835,21 @@ static GMenuItem lookuppopupmenu[] = {
   {{(uint32_t *) N_("Sa_ve Lookup..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT,
     NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o'}, '\0', ksm_control, NULL,
    NULL, lookupmenu_dispatch, CID_SaveLookup},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, 0, '\0'}, '\0', 0, NULL, NULL, NULL, 0},      /* line */
+  GMENUITEM_LINE,
   {{(uint32_t *) N_("Add Language to Script..."), NULL, COLOR_DEFAULT,
     COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o'}, '\0',
    ksm_control, NULL, NULL, lookupmenu_dispatch, CID_AddLanguage},
   {{(uint32_t *) N_("Remove Language from Script..."), NULL, COLOR_DEFAULT,
     COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o'}, '\0',
    ksm_control, NULL, NULL, lookupmenu_dispatch, CID_RmLanguage},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, 0, '\0'}, '\0', 0, NULL, NULL, NULL, 0},      /* line */
+  GMENUITEM_LINE,
   {{(uint32_t *) N_("_Add 'aalt' features"), NULL, COLOR_DEFAULT,
     COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o'}, '\0',
    ksm_control, NULL, NULL, lookupmenu_dispatch, CID_AddAllAlternates},
   {{(uint32_t *) N_("Add 'D_FLT' script"), NULL, COLOR_DEFAULT, COLOR_DEFAULT,
     NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o'}, '\0', ksm_control, NULL,
    NULL, lookupmenu_dispatch, CID_AddDFLT},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, 0, '\0'}, '\0', 0, NULL, NULL, NULL, 0},      /* line */
+  GMENUITEM_LINE,
   {{(uint32_t *) N_("_Revert All"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL,
     NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o'}, '\0', ksm_control, NULL, NULL,
    lookupmenu_dispatch, CID_RevertLookups},
