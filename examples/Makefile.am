@@ -97,12 +97,6 @@ simple_menu_extension_in_Fortran_la_FCFLAGS = $(AM_FCFLAGS)	\
 simple_menu_extension_in_Fortran_la_LDFLAGS = -prefer-pic -module	\
 	''-shared -avoid-version -lsortsmillff_fortran_api
 
-endif FORTRAN_API
-
-mostlyclean-local: mostlyclean-modules
-
-if FORTRAN_API
-
 mostlyclean-modules:
 	-test -z "$(FC_MODEXT)" || rm -f *.$(FC_MODEXT)
 
@@ -111,3 +105,5 @@ else !FORTRAN_API
 mostlyclean-modules:
 
 endif !FORTRAN_API
+
+mostlyclean-local: mostlyclean-modules

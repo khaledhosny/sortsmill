@@ -69,14 +69,18 @@
 void
 glyph_menu_action (void *obj, void *data)
 {
-  void *glyph_name = get_ff_SplineChar_name (obj);
-  if (glyph_name != NULL)
+  void *sc = get_ff_CharViewBase_sc (obj);
+  if (sc != NULL)
     {
-      fprintf (stderr, "Glyph name: %s\n", (char *) glyph_name);
-      void *parent = get_ff_SplineChar_parent (obj);
-      if (parent != NULL && get_ff_SplineFont_font_name (parent) != NULL)
-        fprintf (stderr, "Font name: %s\n",
-                 (char *) get_ff_SplineFont_font_name (parent));
+      void *glyph_name = get_ff_SplineChar_name (sc);
+      if (glyph_name != NULL)
+        {
+          fprintf (stderr, "Glyph name: %s\n", (char *) glyph_name);
+          void *parent = get_ff_SplineChar_parent (sc);
+          if (parent != NULL && get_ff_SplineFont_font_name (parent) != NULL)
+            fprintf (stderr, "Font name: %s\n",
+                     (char *) get_ff_SplineFont_font_name (parent));
+        }
     }
   char *message = (char *) data;
   fprintf (stderr, "The message: %s\n", message);
@@ -85,7 +89,8 @@ glyph_menu_action (void *obj, void *data)
 bool
 glyph_menu_enabled (void *obj, void *data)
 {
-  void *glyph_name = get_ff_SplineChar_name (obj);
+  void *sc = get_ff_CharViewBase_sc (obj);
+  void *glyph_name = (sc != NULL) ? get_ff_SplineChar_name (sc) : NULL;
   return (glyph_name != NULL
           && strcmp ((char *) glyph_name, "question") != 0);
 }
