@@ -208,8 +208,8 @@ cyclo-fontforge.html: $(CYCLO_SOURCEFILES)
 		| $(AWK) -f $(top_srcdir)/config/pmccabe2html \
 			-v lang=html \
 			-v name="$(PACKAGE_NAME)" \
-			-v vcurl="https://github.com/sortsmill/fontforge/blob/master/%FILENAME%" \
-			-v url="https://github.com/sortsmill/fontforge" \
+			-v vcurl="http://bitbucket.org/sortsmill/sortsmill-fontforge/raw/master/%FILENAME%" \
+			-v url="http://bitbucket.org/sortsmill/sortsmill-fontforge" \
 			-v css=$(top_srcdir)/config/pmccabe.css \
 			-v cut_dir=$(top_srcdir)/ \
 			> $@-tmp

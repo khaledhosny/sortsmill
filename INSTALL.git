@@ -6,7 +6,7 @@ are doing. :) To run them you will need GNU Autoconf, Automake, and
 Libtool. You probably also need intltool from freedesktop.org, GNU
 gettext, and GNU gperf.
 
-git clone git://github.com/sortsmill/fontforge.git
+git clone git://bitbucket.org/sortsmill/sortsmill-fontforge.git
 git clone git://git.sv.gnu.org/gnulib.git
 ln -s `pwd`/gnulib/gnulib-tool ${HOME}/bin/
 cd fontforge
