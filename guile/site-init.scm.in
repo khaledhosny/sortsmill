@@ -74,15 +74,15 @@
                         (fopen
                            (pointer->procedure '*
                               (dynamic-func "fopen" this)
-                              (list '* '*)))
+                              '(* *)))
                         (fclose
                            (pointer->procedure int
                               (dynamic-func "fclose" this)
-                              (list '*)))
+                              '(*)))
                         (PyRun_SimpleFile
                            (pointer->procedure int
                               (dynamic-func "PyRun_SimpleFile" this)
-                              (list '* '*)))
+                              '(* *)))
                         (f (fopen (string->pointer py-init)
                               (string->pointer "r"))))
                     (if (not (null-pointer? f))
