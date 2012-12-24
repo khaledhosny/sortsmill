@@ -2258,8 +2258,7 @@ static SFTextArea *_SFTextAreaCreate(SFTextArea *st, struct gwindow *base, GGadg
     if ( gd->flags & gg_group_end )
 	_GGadgetCloseGroup(&st->g);
     GWidgetIndicateFocusGadget(&st->g);
-    if ( gd->flags & gg_text_xim )
-	st->gic = GDrawCreateInputContext(base,gic_overspot|gic_orlesser);
+    st->gic = GDrawCreateInputContext(base,gic_overspot|gic_orlesser);
 return( st );
 }
 

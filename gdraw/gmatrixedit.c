@@ -1225,7 +1225,7 @@ static void GME_StrBigEdit(GMatrixEdit *gme,char *str) {
     mgcd[0].gd.pos.x = 4; mgcd[0].gd.pos.y = 6;
     mgcd[0].gd.pos.width = 492;
     mgcd[0].gd.pos.height = 260;
-    mgcd[0].gd.flags = gg_visible | gg_enabled | gg_textarea_wrap | gg_text_xim;
+    mgcd[0].gd.flags = gg_visible | gg_enabled | gg_textarea_wrap;
     mgcd[0].gd.cid = CID_EntryField;
     mgcd[0].creator = GTextAreaCreate;
     varray[0] = &mgcd[0]; varray[1] = NULL;
@@ -2138,7 +2138,7 @@ GGadget *GMatrixEditCreate(struct gwindow *base, GGadgetData *gd,void *data) {
 	sub_gd.pos.width = 40;
 	sub_gd.label = &label;
 	sub_gd.box = &small;
-	sub_gd.flags = gg_enabled | gg_pos_in_pixels | gg_dontcopybox | gg_text_xim;
+	sub_gd.flags = gg_enabled | gg_pos_in_pixels | gg_dontcopybox;
 	gme->tf = GTextCompletionCreate(gme->nested,&sub_gd,gme);
 	((GTextField *) (gme->tf))->accepts_tabs = false;
     }

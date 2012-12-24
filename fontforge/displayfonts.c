@@ -1810,7 +1810,7 @@ return;
 
     gcd[13].gd.pos.x = 5; gcd[13].gd.pos.y = 20+gcd[13].gd.pos.y; 
     gcd[13].gd.pos.width = 400; gcd[13].gd.pos.height = 236; 
-    gcd[13].gd.flags = gg_visible | gg_enabled | gg_textarea_wrap | gg_text_xim;
+    gcd[13].gd.flags = gg_visible | gg_enabled | gg_textarea_wrap;
     gcd[13].gd.handle_controlevent = DSP_TextChanged;
     gcd[13].gd.cid = CID_SampleText;
     gcd[13].creator = SFTextAreaCreate;

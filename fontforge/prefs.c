@@ -2506,7 +2506,7 @@ DoPrefs (void)
     {
       sgcd[sgc].gd.pos.x = 8;
       sgcd[sgc].gd.pos.y = y2;
-      sgcd[sgc].gd.flags = gg_visible | gg_enabled | gg_text_xim;
+      sgcd[sgc].gd.flags = gg_visible | gg_enabled;
       slabel[sgc].text =
         script_menu_names[i] == NULL ? nullstr : script_menu_names[i];
       sgcd[sgc].gd.label = &slabel[sgc];

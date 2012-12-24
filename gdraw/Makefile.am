@@ -31,7 +31,7 @@ lib_LTLIBRARIES = libsortsmillff_gdraw.la
 
 libsortsmillff_gdraw_la_SOURCES = choosericons.c ctlvalues.c			\
 	drawboxborder.c gaskdlg.c gbuttons.c gcolor.c gcontainer.c			\
-	gdraw.c gdrawbuildchars.c gdrawerror.c gdrawtxt.c gfilechooser.c	\
+	gdraw.c gdrawerror.c gdrawtxt.c gfilechooser.c	\
 	gfiledlg.c ggadgets.c ggroupbox.c gimageclut.c gimagecvt.c			\
 	gdrawgimage.c gkeysym.c glist.c gmenu.c gprogress.c gradio.c		\
 	gresource.c gresourceimage.c gresedit.c gsavefiledlg.c				\

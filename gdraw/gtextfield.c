@@ -2614,8 +2614,7 @@ static GTextField *_GTextFieldCreate(GTextField *gt, struct gwindow *base, GGadg
     if ( gd->flags & gg_group_end )
 	_GGadgetCloseGroup(&gt->g);
     GWidgetIndicateFocusGadget(&gt->g);
-    if ( gd->flags & gg_text_xim )
-	gt->gic = GWidgetCreateInputContext(base,gic_overspot|gic_orlesser);
+    gt->gic = GWidgetCreateInputContext(base,gic_overspot|gic_orlesser);
 return( gt );
 }
 
