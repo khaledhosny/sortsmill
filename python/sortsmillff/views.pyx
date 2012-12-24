@@ -64,7 +64,7 @@ cdef class glyph_view (object):
     self.ptr = ptr
 
   def to_internal_type (self):
-    return internal_types.SplineChar (self.ptr)
+    return internal_types.CharViewBase (self.ptr)
 
   def __repr__ (self):
     return '{}.glyph_view(0x{:x})'.format (__name__, self.ptr)
@@ -73,7 +73,7 @@ cdef class glyph_view (object):
     cdef uintptr_t sf_ptr
     cdef uintptr_t font_name_ptr
     cdef uintptr_t glyph_name_ptr
-    sc = self.to_internal_type ()
+    sc = internal_types.CharViewBase (self.to_internal_type ()).sc
     sf_ptr = sc._parent
     if sf_ptr == <uintptr_t> NULL:
       font_name = '<_parent=NULL>'

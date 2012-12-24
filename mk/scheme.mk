@@ -54,4 +54,8 @@ CONFIGURE_SCHEME =														\
 		-e 's|@''PACKAGE_URL''@|$(PACKAGE_URL)|g'						\
 		-e 's|@''PACKAGE_VERSION''@|$(PACKAGE_VERSION)|g'				\
 		-e 's|@''C_CONST_FLT_EPSILON''@|$(C_CONST_FLT_EPSILON)|g'		\
-		-e 's|@''C_CONST_DBL_EPSILON''@|$(C_CONST_DBL_EPSILON)|g'
+		-e 's|@''C_CONST_DBL_EPSILON''@|$(C_CONST_DBL_EPSILON)|g'		\
+		-e 's|@''i_do_have_python_scripting''@|$(i_do_have_python_scripting)|g'	\
+		-e 's|@''Py_single_input''@|$(Py_single_input)|g'				\
+		-e 's|@''Py_file_input''@|$(Py_file_input)|g'					\
+		-e 's|@''Py_eval_input''@|$(Py_eval_input)|g'

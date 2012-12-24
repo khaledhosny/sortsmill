@@ -34,8 +34,12 @@ from libc.stdint cimport uintptr_t
 cdef extern from "libguile.h":
   ctypedef void (*scm_t_pointer_finalizer) (void *)
   SCM scm_c_public_variable (constp.const_char_ptr module_name, constp.const_char_ptr name)
+  SCM scm_variable_ref (SCM var)
   SCM scm_call_2 (SCM proc, SCM arg1, SCM arg2)
   SCM scm_from_pointer (void *, scm_t_pointer_finalizer)
+  SCM scm_pointer_to_procedure (SCM, SCM, SCM)
+  SCM scm_eval_string (SCM)
+  SCM scm_from_latin1_string (constp.const_char_ptr str)
 
 cdef extern from "fontforge.h":
   bool get_no_windowing_ui ()
@@ -124,6 +128,8 @@ cdef void __registerMenuItem (int c_window,
   cdef SCM data_pointer
   cdef SCM do_action_pointer
   cdef SCM check_enabled_pointer
+  cdef SCM do_action_proc
+  cdef SCM check_enabled_proc
 
   c_data = <__c_data *> xgc.x_gc_malloc (sizeof (__c_data))
   Py_XINCREF (<PyObject *> action_function)
@@ -133,6 +139,10 @@ cdef void __registerMenuItem (int c_window,
   c_data.action_func = <PyObject *> action_function
   c_data.enable_func = <PyObject *> enable_function
   c_shortcut = __c_shortcut (shortcut)
+#  wrap_action = scm_c_private_variable ("sortsmillff usermenu",
+#                                        "wrap-ff_menu_entry_action_t-*PRIVATE*")
+#  wrap_enabled = scm_c_private_variable ("sortsmillff usermenu",
+#                                         "wrap-ff_menu_entry_enabled_t-*PRIVATE*")
   wrap_action = scm_c_public_variable ("sortsmillff usermenu",
                                        "wrap-ff_menu_entry_action_t")
   wrap_enabled = scm_c_public_variable ("sortsmillff usermenu",
@@ -140,8 +150,18 @@ cdef void __registerMenuItem (int c_window,
   data_pointer = scm_from_pointer (<void *> c_data, <scm_t_pointer_finalizer> NULL)
   do_action_pointer = scm_from_pointer (<void *> __do_action, <scm_t_pointer_finalizer> NULL)
   check_enabled_pointer = scm_from_pointer (<void *> __check_enabled, <scm_t_pointer_finalizer> NULL)
-  action = scm_call_2 (wrap_action, do_action_pointer, data_pointer)
-  enabled = scm_call_2 (wrap_action, check_enabled_pointer, data_pointer)
+  void_str = "void"
+  # FIXME: THIS SHOULD REALLY BE _Bool RETURN TYPE.
+  bool_str = "uint8"
+  args_str = "'(* *)"
+  do_action_proc = scm_pointer_to_procedure (scm_eval_string (scm_from_latin1_string (void_str)),
+                                             do_action_pointer,
+                                             scm_eval_string (scm_from_latin1_string (args_str)))
+  check_enabled_proc = scm_pointer_to_procedure (scm_eval_string (scm_from_latin1_string (bool_str)),
+                                                 check_enabled_pointer,
+                                                 scm_eval_string (scm_from_latin1_string (args_str)))
+  action = scm_call_2 (wrap_action, do_action_proc, data_pointer)
+  enabled = scm_call_2 (wrap_action, check_enabled_proc, data_pointer)
   c_usermenu.register_fontforge_menu_entry (c_window,
                                             <constp.const_char_ptr_ptr> c_menu_path,
                                             action, enabled,

@@ -61,11 +61,12 @@ NODIST_SCM_FILES += sortsmillff/gdraw-types.scm
 endif HAVE_GUI
 
 DIST_SCM_IN_FILES += sortsmillff/pkg-info.scm.in				\
-	sortsmillff/math-constants.scm.in sortsmillff/i18n.scm.in
+	sortsmillff/math-constants.scm.in sortsmillff/i18n.scm.in	\
+	sortsmillff/python.scm.in
 
-NODIST_SCM_FILES += sortsmillff/pkg-info.scm			\
-	sortsmillff/math-constants.scm sortsmillff/i18n.scm	\
-	sortsmillff/internal-types.scm
+NODIST_SCM_FILES += sortsmillff/pkg-info.scm				\
+	sortsmillff/math-constants.scm sortsmillff/i18n.scm		\
+	sortsmillff/internal-types.scm sortsmillff/python.scm
 
 sortsmillff/internal-types.scm: generate-internal-types.scm	\
 		ff-internal/generate-types.scm						\
@@ -120,6 +121,12 @@ lib_LTLIBRARIES =
 lib_LTLIBRARIES += libguile-sortsmillff_iconv.la
 libguile_sortsmillff_iconv_la_SOURCES = guile_iconv.c
 libguile_sortsmillff_iconv_la_LIBADD = $(top_builddir)/lib/libgnu.la
+
+lib_LTLIBRARIES += libguile-sortsmillff_python.la
+libguile_sortsmillff_python_la_SOURCES = guile_python.c
+libguile_sortsmillff_python_la_LDFLAGS = -module -release $(VERSION)	\
+	$(PYTHON_LIBS)
+libguile_sortsmillff_python_la_LIBADD = $(top_builddir)/lib/libgnu.la
 
 lib_LTLIBRARIES += libguile-sortsmillff_aux.la
 libguile_sortsmillff_aux_la_SOURCES = guile_polyspline.c	\

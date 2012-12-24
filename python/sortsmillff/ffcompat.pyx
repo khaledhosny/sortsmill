@@ -66,7 +66,7 @@ cdef extern from "fontforge.h":
 import sys
 import warnings
 import traceback
-from . import notices
+from . import (notices, internal_types)
 
 from sortsmillff.legacy.fontforge import (
   layer,
@@ -209,7 +209,7 @@ IF HAVE_GUI:
       return w
 
     def convert_glyph_view (gv):
-      cdef uintptr_t p = gv.to_internal_type().ptr
+      cdef uintptr_t p = internal_types.CharViewBase (gv.to_internal_type().ptr).sc
       cdef SplineChar *sc = <SplineChar *> p
       return PySC_From_SC_I (sc)
 

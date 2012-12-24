@@ -20,6 +20,7 @@
 (use-modules
    (sortsmillff views)
    (sortsmillff notices)
+   (sortsmillff python)
    (system foreign)
    )
 
@@ -72,5 +73,71 @@
             #:optional (data %null-pointer))
    (let ((proc (pointer->procedure (_Bool) c-enabled (list '* '*))))
       (lambda (view) (not (zero? (proc (view->pointer view) data))))))
+
+;;-------------------------------------------------------------------------
+;;
+;; Wrappers for registering Python callables.
+
+(if-fontforge-has-python-api
+
+   (export
+      wrap-python-action
+      )
+
+   (define* (compile-python-expression pycode file-name
+               #:key (catch-errors #t))
+      (let* ((compiled-code
+                (Py_CompileString
+                   (string->pointer pycode)
+                   (string->pointer file-name)
+                   Py_eval_input)))             
+         (if (and catch-errors (null-pointer? compiled-code))
+             (if (not (null-pointer? (PyErr_Occurred)))
+                 (begin
+                    ;; FIXME: Better error handling.
+                    (PyErr_Print)
+                    (error "Python compilation failed"))
+                 (py-autoref compiled-code))
+             (py-autoref compiled-code))))
+
+   (define* (eval-compiled-python-code compiled-code globals locals
+               #:key (catch-errors #t))
+      (let ((eval-result (PyEval_EvalCode compiled-code globals locals)))
+         (if (and catch-errors (null-pointer? compiled-code))
+             (if (not (null-pointer? (PyErr_Occurred)))
+                 (begin
+                    ;; FIXME: Better error handling.
+                    (PyErr_Print)
+                    (error "Python evaluation failed"))
+                 (py-autoref eval-result))
+             (py-autoref eval-result))))
+
+   (define* (wrap-python-action-string pycode file-name globals locals
+              #:key (catch-errors #t))
+      (let* ((compiled-code (compile-python-expression pycode file-name
+                               #:catch-errors catch-errors))
+             (eval-result (eval-compiled-python-code compiled-code globals locals
+                             #:catch-errors catch-errors)))
+         
+         (newline (current-error-port))
+         (write eval-result (current-error-port))
+         (write (pointer-address eval-result) (current-error-port))
+         (newline (current-error-port))
+         ))
+
+   (define* (wrap-python-action pycode
+               #:key
+               (globals (py-autoincref (PyEval_GetBuiltins)))
+               (locals %null-pointer)
+               (file-name "usermenu.scm")
+               (catch-errors #t))
+      (cond ((string? pycode)
+             (wrap-python-action-string pycode file-name globals locals
+                #:catch-errors catch-errors))
+            (else (scm-error 'wrong-type-arg "wrap-python-action"
+                     "Expected a string, but got: ~S"
+                     (list pycode) (list pycode)))))
+
+   )
 
 ;;-------------------------------------------------------------------------

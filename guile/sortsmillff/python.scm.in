@@ -1,0 +1,224 @@
+;; -*- mode: bee; coding: utf-8 -*-
+
+;; Copyright (C) 2012 Barry Schwartz
+;; 
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 3 of the License, or
+;; (at your option) any later version.
+;; 
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;; 
+;; You should have received a copy of the GNU General Public License
+;; along with this program; if not, see <http://www.gnu.org/licenses/>.
+
+(define-module (sortsmillff python))
+
+(use-modules
+   (system foreign)
+   (ice-9 match)
+   )
+
+(export if-fontforge-has-python-api)
+
+(define-syntax if-fontforge-has-python-api
+  (lambda (x)
+    (match '@i_do_have_python_scripting@
+       ('yes
+          (syntax-case x ()
+             ((_ e e* ...) #'(begin e e* ...))))
+       ('no
+          (syntax-case x ()
+             ((_ _ _ ...) #'*unspecified*))))))
+
+(if-fontforge-has-python-api
+
+   (export
+      python-dll
+      py-incref
+      py-decref
+      py-autoref
+      py-autoincref
+      Py_IncRef
+      Py_DecRef
+      PyErr_Occurred
+      PyErr_Print
+      PyErr_Clear
+      PyEval_GetBuiltins
+      PyEval_GetGlobals
+      PyEval_GetLocals
+      PyRun_SimpleString
+      PyRun_SimpleFile
+      PyRun_String
+      Py_single_input
+      Py_file_input
+      Py_eval_input
+      Py_CompileString
+      PyEval_EvalCode
+      PyObject_CallObject
+      Py_False
+      Py_True
+      PyBool_FromLong
+      PyObject_IsTrue
+      PyObject_Not
+      PyLong_FromUnsignedLong
+      PyLong_FromSize_t
+      PyLong_FromVoidPtr
+      PyLong_AsVoidPtr
+      PyTuple_New
+      PyTuple_SetItem
+      )
+
+   (define python-dll
+      (dynamic-link "libguile-sortsmillff_python"))
+
+   (dynamic-call "init_guile_sortsmillff_python" python-dll)
+
+   (define Py_single_input @Py_single_input@)
+   (define Py_file_input @Py_file_input@)
+   (define Py_eval_input @Py_eval_input@)
+
+   (define (py-incref pyobj)
+      (Py_IncRef pyobj)
+      pyobj)
+
+   (define (py-decref . pyobjs)
+      (for-each (lambda (obj) (Py_DecRef obj)) pyobjs))
+
+   (define Py_DecRef-pointer (dynamic-func "Py_DecRef" python-dll))
+
+   (define (py-autoref pyobj)
+      (if (null-pointer? pyobj)
+          pyobj
+          (make-pointer (pointer-address pyobj) Py_DecRef-pointer)))
+
+   (define (py-autoincref pyobj)
+      (py-autoref (py-incref pyobj)))
+
+   (define Py_IncRef
+      (pointer->procedure void
+         (dynamic-func "Py_IncRef" python-dll)
+         '(*)))
+
+   (define Py_DecRef
+      (pointer->procedure void
+         (dynamic-func "Py_DecRef" python-dll)
+         '(*)))
+
+   (define PyErr_Occurred
+      (pointer->procedure '*
+         (dynamic-func "PyErr_Occurred" python-dll)
+         '()))
+
+   (define PyErr_Print
+      (pointer->procedure void
+         (dynamic-func "PyErr_Print" python-dll)
+         '()))
+
+   (define PyErr_Clear
+      (pointer->procedure void
+         (dynamic-func "PyErr_Clear" python-dll)
+         '()))
+
+   (define PyEval_GetBuiltins
+      (pointer->procedure '*
+         (dynamic-func "PyEval_GetBuiltins" python-dll)
+         '()))
+   
+   (define PyEval_GetGlobals
+      (pointer->procedure '*
+         (dynamic-func "PyEval_GetGlobals" python-dll)
+         '()))
+   
+   (define PyEval_GetLocals
+      (pointer->procedure '*
+         (dynamic-func "PyEval_GetLocals" python-dll)
+         '()))
+   
+   (define PyRun_SimpleString
+      (pointer->procedure int
+         (dynamic-func "PyRun_SimpleString" python-dll)
+         '(*)))
+
+   (define PyRun_SimpleFile
+      (pointer->procedure int
+         (dynamic-func "PyRun_SimpleFile" python-dll)
+         '(* *)))
+
+   (define PyRun_String
+      (pointer->procedure '*
+         (dynamic-func "PyRun_String" python-dll)
+         `(* ,int * *)))
+
+   (define PyRun_File
+      (pointer->procedure '*
+         (dynamic-func "PyRun_File" python-dll)
+         `(* * ,int * *)))
+
+   (define Py_CompileString
+      (pointer->procedure '*
+         (dynamic-func "Py_CompileString" python-dll)
+         `(* * ,int)))
+
+   (define PyEval_EvalCode
+      (pointer->procedure '*
+         (dynamic-func "PyEval_EvalCode" python-dll)
+         '(* * *)))
+
+   (define PyObject_CallObject
+      (pointer->procedure '*
+         (dynamic-func "PyObject_CallObject" python-dll)
+         '(* *)))
+
+   (define Py_False (get-Py_False))
+   (define Py_True (get-Py_True))
+
+   (define PyBool_FromLong
+      (pointer->procedure '*
+         (dynamic-func "PyBool_FromLong" python-dll)
+         `(,long)))
+
+   (define PyObject_IsTrue
+      (pointer->procedure int
+         (dynamic-func "PyObject_IsTrue" python-dll)
+         '(*)))
+
+   (define PyObject_Not
+      (pointer->procedure int
+         (dynamic-func "PyObject_Not" python-dll)
+         '(*)))
+
+   (define PyLong_FromUnsignedLong
+      (pointer->procedure '*
+         (dynamic-func "PyLong_FromUnsignedLong" python-dll)
+         `(,unsigned-long)))
+
+   (define PyLong_FromSize_t
+      (pointer->procedure '*
+         (dynamic-func "PyLong_FromSize_t" python-dll)
+         `(,size_t)))
+
+   (define PyLong_FromVoidPtr
+      (pointer->procedure '*
+         (dynamic-func "PyLong_FromVoidPtr" python-dll)
+         '(*)))
+
+   (define PyLong_AsVoidPtr
+      (pointer->procedure '*
+         (dynamic-func "PyLong_AsVoidPtr" python-dll)
+         '(*)))
+
+   (define PyTuple_New
+      (pointer->procedure '*
+         (dynamic-func "PyTuple_New" python-dll)
+         `(,size_t)))
+
+   (define PyTuple_SetItem
+      (pointer->procedure int
+         (dynamic-func "PyTuple_SetItem" python-dll)
+         `(* ,size_t *)))
+
+   )

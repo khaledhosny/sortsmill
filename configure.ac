@@ -248,8 +248,22 @@ if test x"${i_do_have_python_scripting}" = xyes; then
    if test x"${PYTHON_VERSION}" != x"2.7"; then
       AC_MSG_ERROR([Python support in ${PACKAGE_NAME} requires Python 2.7.x. You are using Python ${PYTHON_VERSION}.])
    fi
+
    FONTFORGE_REQUIRE_PYTHON_MODULE([gmpy])
    FONTFORGE_PROG_CYTHON_WORKS
+
+   __cflags="${CFLAGS}"
+   __libs="${LIBS}"
+   CFLAGS="${CFLAGS} ${PYTHON_CFLAGS}"
+   LIBS="${LIBS} ${PYTHON_LIBS}"
+   FONTFORGE_C_CONST([Py_single_input],[fontforge_cv_c_const_Py_single_input],["%d"],[#include <Python.h>])
+   FONTFORGE_C_CONST([Py_file_input],[fontforge_cv_c_const_Py_file_input],["%d"],[#include <Python.h>])
+   FONTFORGE_C_CONST([Py_eval_input],[fontforge_cv_c_const_Py_eval_input],["%d"],[#include <Python.h>])
+   AC_SUBST([Py_single_input],["${fontforge_cv_c_const_Py_single_input}"])
+   AC_SUBST([Py_file_input],["${fontforge_cv_c_const_Py_file_input}"])
+   AC_SUBST([Py_eval_input],["${fontforge_cv_c_const_Py_eval_input}"])
+   CFLAGS="${__cflags}"
+   LIBS="${__libs}"
 fi
 
 #--------------------------------------------------------------------------

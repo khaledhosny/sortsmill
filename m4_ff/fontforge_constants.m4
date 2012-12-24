@@ -22,8 +22,8 @@ AC_DEFUN([FONTFORGE_C_CONST_DBL_EPSILON],
 )])
 
 
-dnl FONTFORGE_C_FLOATING_POINT_CONST
-dnl --------------------------------
+dnl FONTFORGE_C_FLOATING_POINT_CONST(expr,cache-var,format1,format2[,action-on-failure])
+dnl ------------------------------------------------------------------------------------
 AC_DEFUN([FONTFORGE_C_FLOATING_POINT_CONST],
 [
 AC_CACHE_CHECK([the value of $1],
@@ -57,11 +57,49 @@ else
 [:])
 ])
 
+if test x"${$2}" = xunknown; then
+   m4_ifval([$5],[$5],
+      [AC_MSG_FAILURE([${PACKAGE_NAME} needs to know the value of $1.])])
+fi
+
 LIBS="${__libs}"
 AC_LANG_POP
 ])
 
-if test x"${$2}" != xunknown; then
-   AC_MSG_FAILURE([${PACKAGE_NAME} needs to know the value of $1.])
+
+dnl FONTFORGE_C_CONST(expr,cache-var,format,includes[,action-on-failure])
+dnl ---------------------------------------------------------------------
+AC_DEFUN([FONTFORGE_C_CONST],
+[
+AC_CACHE_CHECK([the value of $1],
+[$2],
+[
+$2='unknown'
+
+AC_LANG_PUSH([C])
+__libs="${LIBS}"
+LIBS="${LIBS} ${FREXP_LIBM}"
+
+AC_LINK_IFELSE(
+[AC_LANG_PROGRAM(
+[
+$4
+#include <stdio.h>
+#include <stdlib.h>
+],
+[
+  printf (($3), ($1));
+])
+],
+[$2="`./conftest${EXEEXT}`"],
+[:])
+])
+
+if test x"${$2}" = xunknown; then
+   m4_ifval([$5],[$5],
+      [AC_MSG_FAILURE([${PACKAGE_NAME} needs to know the value of $1.])])
 fi
+
+LIBS="${__libs}"
+AC_LANG_POP
 ])
