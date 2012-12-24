@@ -443,8 +443,40 @@ AC_CONFIG_COMMANDS([guile/sortsmillff],[AS_MKDIR_P([guile/sortsmillff])])
 AC_CONFIG_FILES([fortran/generate-internal_types.f90.scm],
                 [chmod +x fortran/generate-internal_types.f90.scm])
 FONTFORGE_CONFIG_TESTSUITE
-FONTFORGE_CREATE_SUMMARY
 
 AC_OUTPUT
+
+AC_MSG_NOTICE([
+
+Optional features:
+
+  real (floating pt) ${my_real_type}
+  programs           ${i_do_have_programs}
+  python scripting   ${i_do_have_python_scripting}
+  python compat.     ${i_do_have_python_compatibility}
+  fortran API        ${i_do_have_fortran_api}
+  pure API           ${i_do_have_pure_api}  	${pure_url}
+  freetype debugger  ${i_do_have_freetype_debugger}
+  capslock for alt   ${i_do_have_capslock_for_alt}
+  raw points mode    ${i_do_have_debug_raw_points}
+  tile path          ${i_do_have_tile_path}
+
+Optional dependencies:
+
+  giflib             ${i_do_have_giflib}  	${giflib_url}
+  libjpeg            ${i_do_have_libjpeg}  	${libjpeg_url}
+  libtiff            ${i_do_have_libtiff}  	${libtiff_url}
+  libspiro           ${i_do_have_libspiro}  	${libspiro_url}
+  libunicodenames    ${i_do_have_libunicodenames}  	${libunicodenames_url}
+  X Window System    ${i_do_have_x}
+])
+
+if test x"${i_do_have_x}" != xyes; then
+   AC_MSG_NOTICE([
+
+Because the X Window System is unavailable, the graphical interface
+will not be built.
+])
+fi
 
 #--------------------------------------------------------------------------
