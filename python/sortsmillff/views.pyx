@@ -73,7 +73,8 @@ cdef class glyph_view (object):
     cdef uintptr_t sf_ptr
     cdef uintptr_t font_name_ptr
     cdef uintptr_t glyph_name_ptr
-    sc = internal_types.CharViewBase (self.to_internal_type ()).sc
+    cvb = self.to_internal_type ()
+    sc = internal_types.SplineChar (cvb._sc)
     sf_ptr = sc._parent
     if sf_ptr == <uintptr_t> NULL:
       font_name = '<_parent=NULL>'

@@ -1,3 +1,7 @@
+// FIXME:
+// FIXME: CONSIDER GETTING RID OF THIS. IT SEEMS BROKEN, ANYWAY.
+// FIXME:
+
 #include <config.h>
 
 // Copyright (C) 2012 Barry Schwartz

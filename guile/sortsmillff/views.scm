@@ -80,5 +80,5 @@
 (define (ff:CharViewBase->glyph-view sc)
    (pointer->glyph-view (ff:CharViewBase->pointer sc)))
 
-(load-extension "libguile-sortsmillff_fontforge"
-   "init_guile_sortsmillff_views")
+;;(load-extension "libguile-sortsmillff_fontforge"
+;;   "init_guile_sortsmillff_views")

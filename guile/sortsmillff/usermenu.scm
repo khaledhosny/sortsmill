@@ -76,68 +76,22 @@
 
 ;;-------------------------------------------------------------------------
 ;;
-;; Wrappers for registering Python callables.
+;; Functions that are privately used in the Python API.
 
-(if-fontforge-has-python-api
+(define font_view_p__
+   (lambda (obj) ((@ (sortsmillff views) font-view?) obj)))
 
-   (export
-      wrap-python-action
-      )
+(define glyph_view_p__
+   (lambda (obj) ((@ (sortsmillff views) glyph-view?) obj)))
 
-   (define* (compile-python-expression pycode file-name
-               #:key (catch-errors #t))
-      (let* ((compiled-code
-                (Py_CompileString
-                   (string->pointer pycode)
-                   (string->pointer file-name)
-                   Py_eval_input)))             
-         (if (and catch-errors (null-pointer? compiled-code))
-             (if (not (null-pointer? (PyErr_Occurred)))
-                 (begin
-                    ;; FIXME: Better error handling.
-                    (PyErr_Print)
-                    (error "Python compilation failed"))
-                 (py-autoref compiled-code))
-             (py-autoref compiled-code))))
+(define font_view_to_pointer__
+   (lambda (obj) ((@ (sortsmillff views) font-view->pointer) obj)))
 
-   (define* (eval-compiled-python-code compiled-code globals locals
-               #:key (catch-errors #t))
-      (let ((eval-result (PyEval_EvalCode compiled-code globals locals)))
-         (if (and catch-errors (null-pointer? compiled-code))
-             (if (not (null-pointer? (PyErr_Occurred)))
-                 (begin
-                    ;; FIXME: Better error handling.
-                    (PyErr_Print)
-                    (error "Python evaluation failed"))
-                 (py-autoref eval-result))
-             (py-autoref eval-result))))
+(define glyph_view_to_pointer__
+   (lambda (obj) ((@ (sortsmillff views) glyph-view->pointer) obj)))
 
-   (define* (wrap-python-action-string pycode file-name globals locals
-              #:key (catch-errors #t))
-      (let* ((compiled-code (compile-python-expression pycode file-name
-                               #:catch-errors catch-errors))
-             (eval-result (eval-compiled-python-code compiled-code globals locals
-                             #:catch-errors catch-errors)))
-         
-         (newline (current-error-port))
-         (write eval-result (current-error-port))
-         (write (pointer-address eval-result) (current-error-port))
-         (newline (current-error-port))
-         ))
-
-   (define* (wrap-python-action pycode
-               #:key
-               (globals (py-autoincref (PyEval_GetBuiltins)))
-               (locals %null-pointer)
-               (file-name "usermenu.scm")
-               (catch-errors #t))
-      (cond ((string? pycode)
-             (wrap-python-action-string pycode file-name globals locals
-                #:catch-errors catch-errors))
-            (else (scm-error 'wrong-type-arg "wrap-python-action"
-                     "Expected a string, but got: ~S"
-                     (list pycode) (list pycode)))))
-
-   )
+(define closure_maker__
+   (lambda (cython-func py-func)
+      (lambda (view) (cython-func view py-func))))
 
 ;;-------------------------------------------------------------------------

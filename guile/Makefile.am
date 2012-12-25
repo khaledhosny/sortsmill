@@ -122,6 +122,7 @@ lib_LTLIBRARIES += libguile-sortsmillff_iconv.la
 libguile_sortsmillff_iconv_la_SOURCES = guile_iconv.c
 libguile_sortsmillff_iconv_la_LIBADD = $(top_builddir)/lib/libgnu.la
 
+# FIXME: Is python.scm needed?
 lib_LTLIBRARIES += libguile-sortsmillff_python.la
 libguile_sortsmillff_python_la_SOURCES = guile_python.c
 libguile_sortsmillff_python_la_LDFLAGS = -module -release $(VERSION)	\
@@ -136,8 +137,8 @@ libguile_sortsmillff_aux_la_LIBADD =				\
 	$(top_builddir)/lib/libgnu.la
 
 lib_LTLIBRARIES += libguile-sortsmillff_fontforge.la
-libguile_sortsmillff_fontforge_la_SOURCES = guile_notices.c	\
-	guile_views.c
+libguile_sortsmillff_fontforge_la_SOURCES = guile_notices.c
+#	guile_views.c
 libguile_sortsmillff_fontforge_la_CFLAGS = $(AM_CFLAGS) $(FFINCLDIRS)
 libguile_sortsmillff_fontforge_la_LIBADD =					\
 	$(top_builddir)/fontforge/libsortsmillff_fontforge.la	\

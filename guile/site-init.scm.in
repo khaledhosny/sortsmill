@@ -38,6 +38,16 @@
    (lambda ()
 
       ;;
+      ;; Link in our Guile extensions. At least some of them include
+      ;; useful C routines.
+      ;;
+      ;(dynamic-link "libguile-sortsmillff_iconv")
+      ;;(dynamic-link "libguile-sortsmillff_python") ; FIXME: Is this one needed?
+      ;(dynamic-link "libguile-sortsmillff_aux")
+      ;(dynamic-link "libguile-sortsmillff_fontforge")
+      ;(dynamic-link "libguile-sortsmillff_fontforgeexe")
+
+      ;;
       ;; Load local-init.scm.
       ;;
       (let ((local-init "@sysconfdir@/@PACKAGE@/local-init.scm"))

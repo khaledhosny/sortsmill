@@ -194,6 +194,9 @@ def postError (win_title, msg):
 IF HAVE_GUI:
   from sortsmillff.usermenu import register_fontforge_menu_entry
 
+  def __default_enabled (view):
+    return True
+
   def registerMenuItem (menu_function not None,
                         enable_function,
                         data,
@@ -209,7 +212,8 @@ IF HAVE_GUI:
       return w
 
     def convert_glyph_view (gv):
-      cdef uintptr_t p = internal_types.CharViewBase (gv.to_internal_type().ptr).sc
+      cvb = gv.to_internal_type()
+      cdef uintptr_t p = cvb._sc
       cdef SplineChar *sc = <SplineChar *> p
       return PySC_From_SC_I (sc)
 
@@ -221,16 +225,22 @@ IF HAVE_GUI:
     if isinstance (which_window, str):
       which_window = (which_window,)
     windows = {canonical_window (w) for w in which_window}
+
     for w in windows:
+
+      convert = convert_font_view
       if w == 'glyph':
         convert = convert_glyph_view
-      else:
-        convert = convert_font_view
+      Py_XINCREF (<PyObject *> convert)
+
       action = lambda obj: menu_function (data, convert (obj))
-      if enable_function is None:
-        enabled = lambda _: True
-      else:
+      Py_XINCREF (<PyObject *> action)
+
+      enabled = __default_enabled
+      if enable_function is not None:
         enabled = lambda obj: enable_function (data, convert (obj))
+      Py_XINCREF (<PyObject *> enabled)
+
       register_fontforge_menu_entry (w, submenu_names, action, enabled,
                                      shortcut_string)
 

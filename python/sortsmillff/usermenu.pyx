@@ -27,19 +27,46 @@ cimport sortsmillff.cython.usermenu as c_usermenu
 cimport sortsmillff.cython.const_pointers as constp
 cimport sortsmillff.cython.xgc as xgc
 from sortsmillff.cython.usermenu cimport SCM
-from cpython.ref cimport PyObject, Py_XINCREF
+from cpython.ref cimport PyObject, Py_XINCREF, Py_XDECREF
 from cpython.object cimport PyObject_IsTrue
 from libc.stdint cimport uintptr_t
 
 cdef extern from "libguile.h":
   ctypedef void (*scm_t_pointer_finalizer) (void *)
   SCM scm_c_public_variable (constp.const_char_ptr module_name, constp.const_char_ptr name)
+  SCM scm_c_private_variable (constp.const_char_ptr module_name, constp.const_char_ptr name)
   SCM scm_variable_ref (SCM var)
+  SCM scm_call_1 (SCM proc, SCM arg1)
   SCM scm_call_2 (SCM proc, SCM arg1, SCM arg2)
   SCM scm_from_pointer (void *, scm_t_pointer_finalizer)
+  void* scm_to_pointer (SCM)
   SCM scm_pointer_to_procedure (SCM, SCM, SCM)
   SCM scm_eval_string (SCM)
   SCM scm_from_latin1_string (constp.const_char_ptr str)
+  SCM scm_from_bool (int val)
+  SCM scm_c_make_gsubr (constp.const_char_ptr name, int req, int opt, int rst, void *fcn)
+  SCM scm_c_define_gsubr (constp.const_char_ptr name, int req, int opt, int rst, void *fcn)
+  SCM scm_load_extension (SCM, SCM)
+  SCM scm_c_public_ref (constp.const_char_ptr module_name, constp.const_char_ptr name)
+  SCM scm_not (SCM x)
+  int scm_to_bool (SCM x)
+  SCM scm_gc_protect_object (SCM obj)
+  SCM scm_gc_unprotect_object (SCM obj)
+  SCM scm_permanent_object (SCM obj)
+
+cdef extern from "sortsmillff/guile/views.h":
+  SCM scm_pointer_to_font_view (SCM pointer)
+  SCM scm_c_pointer_to_font_view (void *p)
+  SCM scm_font_view_to_pointer (SCM view)
+  void *scm_c_font_view_to_pointer (SCM view)
+  SCM scm_font_view_p (SCM view)
+  bool scm_is_font_view (SCM view)
+  SCM scm_pointer_to_glyph_view (SCM pointer)
+  SCM scm_c_pointer_to_glyph_view (void *p)
+  SCM scm_glyph_view_to_pointer (SCM view)
+  void *scm_c_glyph_view_to_pointer (SCM view)
+  SCM scm_glyph_view_p (SCM view)
+  bool scm_is_glyph_view (SCM view)
 
 cdef extern from "fontforge.h":
   bool get_no_windowing_ui ()
@@ -47,10 +74,25 @@ cdef extern from "fontforge.h":
 import sys
 import traceback
 
-ctypedef struct __c_data:
-  int window_tag
-  PyObject *action_func
-  PyObject *enable_func
+cdef bint __scm_is_font_view (SCM obj):
+  cdef SCM font_view_p = \
+      scm_variable_ref (scm_c_private_variable ("sortsmillff usermenu", "font_view_p__"))
+  return scm_to_bool (scm_call_1 (font_view_p, obj))
+
+cdef bint __scm_is_glyph_view (SCM obj):
+  cdef SCM glyph_view_p = \
+      scm_variable_ref (scm_c_private_variable ("sortsmillff usermenu", "glyph_view_p__"))
+  return scm_to_bool (scm_call_1 (glyph_view_p, obj))
+
+cdef void *__scm_c_font_view_to_pointer (SCM obj):
+  cdef SCM font_view_to_pointer = \
+      scm_variable_ref (scm_c_private_variable ("sortsmillff usermenu", "font_view_to_pointer__"))
+  return scm_to_pointer (scm_call_1 (font_view_to_pointer, obj))
+
+cdef void *__scm_c_glyph_view_to_pointer (SCM obj):
+  cdef SCM glyph_view_to_pointer = \
+      scm_variable_ref (scm_c_private_variable ("sortsmillff usermenu", "glyph_view_to_pointer__"))
+  return scm_to_pointer (scm_call_1 (glyph_view_to_pointer, obj))
 
 def __c_window (window):
   message = "expected 'glyph' or 'font'"
@@ -83,33 +125,46 @@ cdef char *__c_shortcut (object shortcut):
     result = xgc.x_gc_strdup (shortcut)
   return result
 
-cdef object __ff_obj_to_py (int window_tag, void *ff_obj):
-  assert (window_tag == c_usermenu.FF_GLYPH_WINDOW
-          or window_tag == c_usermenu.FF_FONT_WINDOW)
-  result = None
-  if window_tag == c_usermenu.FF_GLYPH_WINDOW:
-    result = views.glyph_view (<uintptr_t> ff_obj)
-  elif window_tag == c_usermenu.FF_FONT_WINDOW:
-    result = views.font_view (<uintptr_t> ff_obj)
-  return result
+cdef object __scm_view_to_py_view (SCM scm_view):
+  cdef uintptr_t view_addr
+  if __scm_is_font_view (scm_view):
+    view_addr = <uintptr_t> __scm_c_font_view_to_pointer (scm_view)
+    py_view = views.font_view (view_addr)
+  elif __scm_is_glyph_view (scm_view):
+    view_addr = <uintptr_t> __scm_c_glyph_view_to_pointer (scm_view)
+    py_view = views.glyph_view (view_addr)
+  else:
+    raise ValueError ('expected a Guile font view or glyph view')
+  return py_view
 
-# FIXME: Replace this with a more direct Guile wrapper.
-cdef void __do_action (void *ff_obj, void *data):
-  cdef __c_data *py_data = <__c_data *> data
-  view = __ff_obj_to_py (py_data.window_tag, ff_obj)
-  action = <object> py_data.action_func
-  call_python_action (action, view)
+cdef SCM __scm_do_action (SCM scm_view, SCM py_action):
+  py_view = __scm_view_to_py_view (scm_view)
+  action = <object> <PyObject *> scm_to_pointer (py_action)
+  retval = call_python_action (action, py_view)
+  cdef char *unspecified = "*unspecified*"
+  return scm_eval_string (scm_from_latin1_string (unspecified))
 
-# FIXME: Replace this with a more direct Guile wrapper.
-cdef bool __check_enabled (void *ff_obj, void *data):
-  cdef bint is_enabled = True
-  cdef __c_data *py_data = <__c_data *> data
-  if py_data.enable_func != <PyObject *> None:
-    view = __ff_obj_to_py (py_data.window_tag, ff_obj)
-    enabled = <object> py_data.enable_func
-    retval = call_python_enabled (enabled, view)
-    is_enabled = PyObject_IsTrue (retval)
-  return is_enabled
+cdef SCM __scm_check_enabled (SCM scm_view, SCM py_enabled):
+  py_view = __scm_view_to_py_view (scm_view)
+  enabled = <object> <PyObject *> scm_to_pointer (py_enabled)
+  retval = call_python_enabled (enabled, py_view)
+  cdef bint is_enabled = PyObject_IsTrue (retval) 
+  return scm_from_bool (is_enabled)
+
+cdef SCM __cython_action_func = scm_c_make_gsubr ("ff-python-do-action", 2, 0, 0, <void *> __scm_do_action)
+scm_permanent_object (__cython_action_func)
+cdef SCM __cython_enabled_func = scm_c_make_gsubr ("ff-python-check-enabled", 2, 0, 0, <void *> __scm_check_enabled)
+scm_permanent_object (__cython_enabled_func)
+
+cdef SCM __create_action_closure (object py_action):
+  cdef SCM closure_maker = scm_variable_ref (scm_c_private_variable ("sortsmillff usermenu", "closure_maker__"))
+  cdef SCM py_func = scm_from_pointer (<PyObject *> py_action, NULL)
+  return scm_call_2 (closure_maker, __cython_action_func, py_func)
+
+cdef SCM __create_enabled_closure (object py_enabled):
+  cdef SCM closure_maker = scm_variable_ref (scm_c_private_variable ("sortsmillff usermenu", "closure_maker__"))
+  cdef SCM py_func = scm_from_pointer (<PyObject *> py_enabled, NULL)
+  return scm_call_2 (closure_maker, __cython_enabled_func, py_func)
 
 cdef void __registerMenuItem (int c_window,
                               object action_function,
@@ -118,62 +173,37 @@ cdef void __registerMenuItem (int c_window,
                               object menu_path):
   assert not get_no_windowing_ui ()
 
-  cdef __c_data *c_data
-  cdef char **c_menu_path
-  cdef char *c_shortcut
-  cdef SCM wrap_action
-  cdef SCM wrap_enabled
-  cdef SCM action
-  cdef SCM enabled
-  cdef SCM data_pointer
-  cdef SCM do_action_pointer
-  cdef SCM check_enabled_pointer
-  cdef SCM do_action_proc
-  cdef SCM check_enabled_proc
-
-  c_data = <__c_data *> xgc.x_gc_malloc (sizeof (__c_data))
   Py_XINCREF (<PyObject *> action_function)
   Py_XINCREF (<PyObject *> enable_function)
-  c_data.window_tag = c_window
-  c_menu_path = __c_menu_path (menu_path)
-  c_data.action_func = <PyObject *> action_function
-  c_data.enable_func = <PyObject *> enable_function
-  c_shortcut = __c_shortcut (shortcut)
-#  wrap_action = scm_c_private_variable ("sortsmillff usermenu",
-#                                        "wrap-ff_menu_entry_action_t-*PRIVATE*")
-#  wrap_enabled = scm_c_private_variable ("sortsmillff usermenu",
-#                                         "wrap-ff_menu_entry_enabled_t-*PRIVATE*")
-  wrap_action = scm_c_public_variable ("sortsmillff usermenu",
-                                       "wrap-ff_menu_entry_action_t")
-  wrap_enabled = scm_c_public_variable ("sortsmillff usermenu",
-                                        "wrap-ff_menu_entry_enabled_t")
-  data_pointer = scm_from_pointer (<void *> c_data, <scm_t_pointer_finalizer> NULL)
-  do_action_pointer = scm_from_pointer (<void *> __do_action, <scm_t_pointer_finalizer> NULL)
-  check_enabled_pointer = scm_from_pointer (<void *> __check_enabled, <scm_t_pointer_finalizer> NULL)
-  void_str = "void"
-  # FIXME: THIS SHOULD REALLY BE _Bool RETURN TYPE.
-  bool_str = "uint8"
-  args_str = "'(* *)"
-  do_action_proc = scm_pointer_to_procedure (scm_eval_string (scm_from_latin1_string (void_str)),
-                                             do_action_pointer,
-                                             scm_eval_string (scm_from_latin1_string (args_str)))
-  check_enabled_proc = scm_pointer_to_procedure (scm_eval_string (scm_from_latin1_string (bool_str)),
-                                                 check_enabled_pointer,
-                                                 scm_eval_string (scm_from_latin1_string (args_str)))
-  action = scm_call_2 (wrap_action, do_action_proc, data_pointer)
-  enabled = scm_call_2 (wrap_action, check_enabled_proc, data_pointer)
+  cdef char **c_menu_path = __c_menu_path (menu_path)
+  cdef char *c_shortcut = __c_shortcut (shortcut)
+  cdef SCM scm_action = __create_action_closure (action_function)
+  cdef SCM scm_enabled = __create_enabled_closure (enable_function)
+
+  # These are ‘protected’ rather than ‘permanent’ so they can be freed
+  # by a ‘remove menu item’ feature. FIXME: FREEING NOT YET
+  # IMPLEMENTED even though you already can at least replace a menu
+  # entry.
+  scm_gc_protect_object (scm_action)
+  scm_gc_protect_object (scm_enabled)
+
   c_usermenu.register_fontforge_menu_entry (c_window,
                                             <constp.const_char_ptr_ptr> c_menu_path,
-                                            action, enabled,
+                                            scm_action, scm_enabled,                                            
                                             <constp.const_char_ptr> c_shortcut)
 
 #--------------------------------------------------------------------------
 
+def __default_enabled (view):
+  return True
+
 def register_fontforge_menu_entry (window not None,
                                    menu_path not None,
                                    action not None,
-                                   enabled = lambda _: True,
+                                   enabled = None,
                                    shortcut = None):
+  if enabled is None:
+    enabled = __default_enabled
   if not get_no_windowing_ui ():
     __registerMenuItem (__c_window (window), action, enabled,
                         shortcut, menu_path)
@@ -193,6 +223,8 @@ def call_python_action (action not None, view not None):
 def call_python_enabled (enabled not None, view not None):
   # Take advantage of the similarity of ‘action’ and ‘enabled’
   # functions.
-  return call_python_action ((lambda v: not not (enabled (v))), view)
+  def enabled_action (v):
+    return not not enabled (v)
+  return call_python_action (enabled_action, view)
 
 #--------------------------------------------------------------------------
