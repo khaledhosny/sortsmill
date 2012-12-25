@@ -165,6 +165,14 @@ menu_info_add (int window, SCM action, SCM enabled)
 {
   int index = INT_MIN;
 
+  /* FIXME: Here is one of several places I have been sticking
+     protections against garbage collection. One may want to be more
+     discerning, in case recovering the memory after removal of an
+     extension ever becomes important. */
+  scm_gc_protect_object (action);
+  if (enabled != 0)
+    scm_gc_protect_object (enabled);
+
   switch (window)
     {
     case FF_GLYPH_WINDOW:
