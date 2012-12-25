@@ -917,15 +917,15 @@ return;
 
 static GMenuItem sftf_popuplist[] = {
     { { (uint32_t *) N_("_Undo"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'U' }, 'Z', ksm_control, NULL, NULL, SFTFPopupInvoked, MID_Undo },
-    { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, 0, '\0' }, '\0', 0, NULL, NULL, NULL, 0 }, /* line */
+    GMENUITEM_LINE,
     { { (uint32_t *) N_("Cu_t"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 't' }, 'X', ksm_control, NULL, NULL, SFTFPopupInvoked, MID_Cut },
     { { (uint32_t *) N_("_Copy"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'C' }, 'C', ksm_control, NULL, NULL, SFTFPopupInvoked, MID_Copy },
     { { (uint32_t *) N_("_Paste"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'P' }, 'V', ksm_control, NULL, NULL, SFTFPopupInvoked, MID_Paste },
-    { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, 0, '\0' }, '\0', 0, NULL, NULL, NULL, 0 }, /* line */
+    GMENUITEM_LINE,
     { { (uint32_t *) N_("_Save As..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'S' }, 'S', ksm_control, NULL, NULL, SFTFPopupInvoked, MID_Save },
     { { (uint32_t *) N_("_Import..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'I' }, 'I', ksm_control, NULL, NULL, SFTFPopupInvoked, MID_Import },
     { { (uint32_t *) N_("_Insert Random Text..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'I' }, 'T', ksm_control, NULL, NULL, SFTFPopupInvoked, MID_Insert },
-    { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, 0, '\0' }, '\0', 0, NULL, NULL, NULL, 0 }, /* line */
+    GMENUITEM_LINE,
     { { (uint32_t *) N_("Save As _Image..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'S' }, 'S', ksm_control|ksm_shift, NULL, NULL, SFTFPopupInvoked, MID_SaveImage },
     GMENUITEM_EMPTY
 };
@@ -2258,8 +2258,7 @@ static SFTextArea *_SFTextAreaCreate(SFTextArea *st, struct gwindow *base, GGadg
     if ( gd->flags & gg_group_end )
 	_GGadgetCloseGroup(&st->g);
     GWidgetIndicateFocusGadget(&st->g);
-    if ( gd->flags & gg_text_xim )
-	st->gic = GDrawCreateInputContext(base,gic_overspot|gic_orlesser);
+    st->gic = GDrawCreateInputContext(base,gic_overspot|gic_orlesser);
 return( st );
 }
 

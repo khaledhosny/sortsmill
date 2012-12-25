@@ -4997,13 +4997,13 @@ static GMenuItem vw_popuplist[] = {
     { { (uint32_t *) N_("Add Good Extrema"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0',0, NULL, NULL, VWMenuGoodExtrema, 0 },
     { { (uint32_t *) N_("Add All Extrema"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuAllExtrema, 0 },
     { { (uint32_t *) N_("Simplify"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuSimplify, 0 },
-    { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, 0, '\0' }, '\0', 0, NULL, NULL, NULL, 0 }, /* line */
+    GMENUITEM_LINE,
     { { (uint32_t *) N_("Revalidate All"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuRevalidateAll, 0 },
     { { (uint32_t *) N_("Revalidate"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuRevalidate, 0 },
     { { (uint32_t *) N_("Open Glyph"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuOpenGlyph, 0 },
-    { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, 0, '\0' }, '\0', 0, NULL, NULL, NULL, 0 }, /* line */
+    GMENUITEM_LINE,
     { { (uint32_t *) N_("Scroll To Glyph"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuGotoGlyph, 0 },
-    { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, 0, '\0' }, '\0', 0, NULL, NULL, NULL, 0 }, /* line */
+    GMENUITEM_LINE,
     { { (uint32_t *) N_("Select Glyphs With"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, vw_subselect, NULL, NULL, 0 },
     { { (uint32_t *) N_("Try To Fix Glyphs With"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, vw_subfixup, NULL, NULL, 0 },
     GMENUITEM_EMPTY

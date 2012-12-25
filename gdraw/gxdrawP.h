@@ -232,10 +232,6 @@ typedef struct gxdisplay /* : GDisplay */ {
     int16_t scale_screen_by;			/* When converting screen pixels to printer pixels: multiply by this then divide by 16 */
     GXWindow groot;
     Color def_background, def_foreground;
-    uint16_t mykey_state;
-    uint16_t mykey_keysym;
-    uint16_t mykey_mask;
-    bool mykeybuild;
     bool default_visual;
     bool do_dithering;
     bool focusfollowsmouse;

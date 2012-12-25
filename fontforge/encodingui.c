@@ -517,7 +517,7 @@ GTextInfo encodingtypes[] = {
    NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
   {(uint32_t *) NC_ ("Encoding", "Glyph Order"), NULL, 0, 0,
    (void *) "Original", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-  {NULL, NULL, 0, 0, NULL, NULL, 1, 0, 0, 0, 0, 1, 0, 0, 0, '\0'},      /* Line */
+  GTEXTINFO_LINE,
   {(uint32_t *) NC_ ("Encoding", "ISO 8859-1  (Latin1)"), NULL, 0, 0,
    (void *) "iso8859-1", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
   {(uint32_t *) NC_ ("Encoding", "ISO 8859-15  (Latin0)"), NULL, 0, 0,
@@ -536,7 +536,7 @@ GTextInfo encodingtypes[] = {
    (void *) "iso8859-13", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
   {(uint32_t *) NC_ ("Encoding", "ISO 8859-14  (Latin8)"), NULL, 0, 0,
    (void *) "iso8859-14", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-  {NULL, NULL, 0, 0, NULL, NULL, 1, 0, 0, 0, 0, 1, 0, 0, 0, '\0'},      /* Line */
+  GTEXTINFO_LINE,
   {(uint32_t *) NC_ ("Encoding", "ISO 8859-5 (Cyrillic)"), NULL, 0, 0,
    (void *) "iso8859-5", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
   {(uint32_t *) NC_ ("Encoding", "KOI8-R (Cyrillic)"), NULL, 0, 0,
@@ -549,7 +549,7 @@ GTextInfo encodingtypes[] = {
    (void *) "iso8859-8", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
   {(uint32_t *) NC_ ("Encoding", "ISO 8859-11 (Thai)"), NULL, 0, 0,
    (void *) "iso8859-11", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-  {NULL, NULL, 0, 0, NULL, NULL, 1, 0, 0, 0, 0, 1, 0, 0, 0, '\0'},      /* Line */
+  GTEXTINFO_LINE,
   {(uint32_t *) NC_ ("Encoding", "Macintosh Latin"), NULL, 0, 0,
    (void *) "mac", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
   {(uint32_t *) NC_ ("Encoding", "Windows Latin (\"ANSI\")"), NULL, 0, 0,
@@ -560,13 +560,13 @@ GTextInfo encodingtypes[] = {
    NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
   {(uint32_t *) NC_ ("Encoding", "ΤεΧ Base (8r)"), NULL, 0, 0,
    (void *) "TeX-Base-Encoding", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-  {NULL, NULL, 0, 0, NULL, NULL, 1, 0, 0, 0, 0, 1, 0, 0, 0, '\0'},      /* Line */
+  GTEXTINFO_LINE,
   {(uint32_t *) NC_ ("Encoding", "ISO 10646-1 (Unicode, BMP)"), NULL, 0, 0,
    (void *) "UnicodeBmp", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
   {(uint32_t *) NC_ ("Encoding", "ISO 10646-1 (Unicode, Full)"), NULL, 0, 0,
    (void *) "UnicodeFull", NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
   /*{ (uint32_t *) NC_("Encoding", "ISO 10646-? (by plane) ..."), NULL, 0, 0, (void *) em_unicodeplanes, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0' }, */
-  {NULL, NULL, 0, 0, NULL, NULL, 1, 0, 0, 0, 0, 1, 0, 0, 0, '\0'},      /* Line */
+  GTEXTINFO_LINE,
   {(uint32_t *) NC_ ("Encoding", "SJIS (Kanji)"), NULL, 0, 0, (void *) "sjis",
    NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
   {(uint32_t *) NC_ ("Encoding", "JIS 208 (Kanji)"), NULL, 0, 0,

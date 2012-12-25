@@ -9813,7 +9813,7 @@ static GMenuItem lookuppopupmenu[] = {
   {{(uint32_t *) N_("_Sort"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL,
     0, 0, 0, 0, 0, 0, 1, 1, 0, 'o'}, '\0', ksm_control, NULL, NULL,
    lookupmenu_dispatch, CID_LookupSort},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, 0, '\0'}, '\0', 0, NULL, NULL, NULL, 0},      /* line */
+  GMENUITEM_LINE,
   {{(uint32_t *) N_("Add _Lookup"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL,
     NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o'}, '\0', ksm_control, NULL, NULL,
    lookupmenu_dispatch, CID_AddLookup},
@@ -9835,21 +9835,21 @@ static GMenuItem lookuppopupmenu[] = {
   {{(uint32_t *) N_("Sa_ve Lookup..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT,
     NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o'}, '\0', ksm_control, NULL,
    NULL, lookupmenu_dispatch, CID_SaveLookup},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, 0, '\0'}, '\0', 0, NULL, NULL, NULL, 0},      /* line */
+  GMENUITEM_LINE,
   {{(uint32_t *) N_("Add Language to Script..."), NULL, COLOR_DEFAULT,
     COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o'}, '\0',
    ksm_control, NULL, NULL, lookupmenu_dispatch, CID_AddLanguage},
   {{(uint32_t *) N_("Remove Language from Script..."), NULL, COLOR_DEFAULT,
     COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o'}, '\0',
    ksm_control, NULL, NULL, lookupmenu_dispatch, CID_RmLanguage},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, 0, '\0'}, '\0', 0, NULL, NULL, NULL, 0},      /* line */
+  GMENUITEM_LINE,
   {{(uint32_t *) N_("_Add 'aalt' features"), NULL, COLOR_DEFAULT,
     COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o'}, '\0',
    ksm_control, NULL, NULL, lookupmenu_dispatch, CID_AddAllAlternates},
   {{(uint32_t *) N_("Add 'D_FLT' script"), NULL, COLOR_DEFAULT, COLOR_DEFAULT,
     NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o'}, '\0', ksm_control, NULL,
    NULL, lookupmenu_dispatch, CID_AddDFLT},
-  {{NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, 0, '\0'}, '\0', 0, NULL, NULL, NULL, 0},      /* line */
+  GMENUITEM_LINE,
   {{(uint32_t *) N_("_Revert All"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL,
     NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o'}, '\0', ksm_control, NULL, NULL,
    lookupmenu_dispatch, CID_RevertLookups},
@@ -10800,7 +10800,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   ngcd[14].gd.cid = CID_HasDefBase;
   ngcd[14].creator = GRadioCreate;
 
-  ngcd[15].gd.flags = gg_visible | gg_enabled | gg_text_xim;
+  ngcd[15].gd.flags = gg_visible | gg_enabled;
   nlabel[15].text =
     (uint32_t *) (sf->defbasefilename ? sf->defbasefilename : "");
   nlabel[15].text_is_1byte = true;
@@ -13109,7 +13109,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   comgcd[1].gd.pos.width = ngcd[11].gd.pos.width;
   comgcd[1].gd.pos.height = 230;
   comgcd[1].gd.flags =
-    gg_visible | gg_enabled | gg_textarea_wrap | gg_text_xim;
+    gg_visible | gg_enabled | gg_textarea_wrap;
   comgcd[1].gd.cid = CID_Comment;
   comlabel[1].text = (uint32_t *) sf->comments;
   comlabel[1].text_is_1byte = true;
@@ -13140,7 +13140,7 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   floggcd[0].creator = GLabelCreate;
 
   floggcd[1].gd.flags =
-    gg_visible | gg_enabled | gg_textarea_wrap | gg_text_xim;
+    gg_visible | gg_enabled | gg_textarea_wrap;
   floggcd[1].gd.cid = CID_FontLog;
   floglabel[1].text = (uint32_t *) sf->fontlog;
   floglabel[1].text_is_1byte = true;

@@ -128,10 +128,6 @@ struct gdisplay {
     int16_t scale_screen_by;			/* When converting screen pixels to printer pixels */
     GWindow groot;
     Color def_background, def_foreground;
-    uint16_t mykey_state;
-    uint16_t mykey_keysym;
-    uint16_t mykey_mask;
-    bool mykeybuild;
     /* display specific data */
 };
 #define PointToPixel(points,res)		(((points)*(res)+36)/72)

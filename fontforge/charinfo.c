@@ -3705,6 +3705,7 @@ static void CI_SetColorList(CharInfo *ci,Color color) {
 	if (found) {
 	    std_colors[i].image = customcolor_image;
 	    customcolor_image->u.image->clut->clut[1] = color;
+	    customcolor_image->filename = NULL; /* Don’t let Cairo load it from file */
 	}
 	std_colors[i].userdata = (void *) (intptr_t) color;
     }
@@ -4224,7 +4225,7 @@ return;
 	uhvarray[6] = &ugcd[4];
 
 	ugcd[5].gd.pos.x = 85; ugcd[5].gd.pos.y = 57;
-	ugcd[5].gd.flags = gg_enabled|gg_visible|gg_text_xim;
+	ugcd[5].gd.flags = gg_enabled|gg_visible;
 	ugcd[5].gd.cid = CID_UChar;
 	ugcd[5].gd.handle_controlevent = CI_CharChanged;
 	ugcd[5].creator = GTextFieldCreate;
@@ -4329,7 +4330,7 @@ return;
 
 	cgcd[1].gd.pos.x = 5; cgcd[1].gd.pos.y = cgcd[0].gd.pos.y+13;
 	cgcd[1].gd.pos.height = 7*12+6;
-	cgcd[1].gd.flags = gg_enabled|gg_visible|gg_textarea_wrap|gg_text_xim;
+	cgcd[1].gd.flags = gg_enabled|gg_visible|gg_textarea_wrap;
 	cgcd[1].gd.cid = CID_Comment;
 	cgcd[1].gd.handle_controlevent = CI_CommentChanged;
 	cgcd[1].creator = GTextAreaCreate;

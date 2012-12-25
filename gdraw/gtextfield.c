@@ -962,11 +962,11 @@ return;
 
 static GMenuItem gtf_popuplist[] = {
     { { (uint32_t *) "_Undo", NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, '\0' }, 'Z', ksm_control, NULL, NULL, GTFPopupInvoked, MID_Undo },
-    { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, 0, '\0' }, '\0', 0, NULL, NULL, NULL, 0 }, /* line */
+    GMENUITEM_LINE,
     { { (uint32_t *) "Cu_t", NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, '\0' }, 'X', ksm_control, NULL, NULL, GTFPopupInvoked, MID_Cut },
     { { (uint32_t *) "_Copy", NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, '\0' }, 'C', ksm_control, NULL, NULL, GTFPopupInvoked, MID_Copy },
     { { (uint32_t *) "_Paste", NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, '\0' }, 'V', ksm_control, NULL, NULL, GTFPopupInvoked, MID_Paste },
-    { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, 0, '\0' }, '\0', 0, NULL, NULL, NULL, 0 }, /* line */
+    GMENUITEM_LINE,
     { { (uint32_t *) "_Save in UTF8", NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, '\0' }, 'S', ksm_control, NULL, NULL, GTFPopupInvoked, MID_Save },
     { { (uint32_t *) "Save in _UCS2", NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, '\0' }, '\0', ksm_control, NULL, NULL, GTFPopupInvoked, MID_SaveUCS2 },
     { { (uint32_t *) "_Import", NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, '\0' }, 'I', ksm_control, NULL, NULL, GTFPopupInvoked, MID_Import },
@@ -2614,8 +2614,7 @@ static GTextField *_GTextFieldCreate(GTextField *gt, struct gwindow *base, GGadg
     if ( gd->flags & gg_group_end )
 	_GGadgetCloseGroup(&gt->g);
     GWidgetIndicateFocusGadget(&gt->g);
-    if ( gd->flags & gg_text_xim )
-	gt->gic = GWidgetCreateInputContext(base,gic_overspot|gic_orlesser);
+    gt->gic = GWidgetCreateInputContext(base,gic_overspot|gic_orlesser);
 return( gt );
 }
 

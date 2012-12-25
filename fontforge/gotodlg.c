@@ -221,7 +221,7 @@ int GotoChar(SplineFont *sf,EncMap *map,int *merge_with_selection) {
     gcd[k].creator = GLabelCreate;
     hvarray[j][0] = &gcd[k++]; hvarray[j++][1] = NULL;
 
-    gcd[k].gd.flags = gg_enabled|gg_visible|gg_text_xim;
+    gcd[k].gd.flags = gg_enabled|gg_visible;
     gcd[k].gd.cid = CID_Name;
     if ( ranges==NULL )
 	gcd[k].creator = GTextCompletionCreate;

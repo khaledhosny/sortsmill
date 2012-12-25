@@ -31,9 +31,9 @@
 AC_PREREQ([2.69])
 AC_INIT([Sorts Mill FontForge],
         [2.0.0_alpha1],
-        [https://github.com/sortsmill/fontforge/issues],
+        [http://bitbucket.org/sortsmill/sortsmill-fontforge/issues],
         [sortsmill-fontforge],
-        [https://github.com/sortsmill/fontforge])
+        [http://bitbucket.org/sortsmill/sortsmill-fontforge])
 
 AC_CONFIG_SRCDIR([fontforge/splinerefigure.c])
 
@@ -96,7 +96,7 @@ AC_SUBST([GUILE_API])
 giflib_url="http://giflib.sourceforge.net/"
 libpng_url="http://www.libpng.org/"
 libspiro_url="http://libspiro.sourceforge.net/"
-libunicodenames_url="https://github.com/sortsmill/libunicodenames"
+libunicodenames_url="http://bitbucket.org/sortsmill/libunicodenames"
 pure_url="http://pure-lang.googlecode.com/"
 
 # Point to the Wikipedia page, primarily because one may want

@@ -35,7 +35,6 @@
 #include <time.h>
 #include "ustring.h"
 #include "gio.h"
-#include "gicons.h"
 #include <utype.h>
 
 static char *last = NULL;
@@ -706,7 +705,7 @@ _Export (SplineChar *sc, BDFChar * bc, int layer)
   label[4].text = (uint32_t *) C_ ("Directory", "_New");
   label[4].text_is_1byte = true;
   label[4].text_has_mnemonic = true;
-  label[4].image = &_GIcon_dir;
+  label[4].image = (GImage *) "chooserdir.png";
   label[4].image_precedes = false;
   gcd[4].gd.label = &label[4];
   gcd[4].gd.handle_controlevent = GFD_NewDir;

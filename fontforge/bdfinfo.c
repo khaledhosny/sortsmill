@@ -886,7 +886,7 @@ return;
     gd.pos.width = bd.vwidth-bd.value_x;
     gd.label = &label[0];
     gd.box = &small;
-    gd.flags = gg_enabled | gg_pos_in_pixels | gg_dontcopybox | gg_text_xim;
+    gd.flags = gg_enabled | gg_pos_in_pixels | gg_dontcopybox;
     bd.tf = GTextFieldCreate(bd.v,&gd,&bd);
 
     bd.press_pos = -1;

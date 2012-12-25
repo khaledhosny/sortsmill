@@ -82,13 +82,6 @@ EXTRA_PROGRAMS = makeutype dump
 makeutype_SOURCES = makeutype.c
 dump_SOURCES = dump.c
 
-# I am not sure that makebuildtables is of much use anymore.
-# Is the source file it generates now to be maintained by hand?
-#
-#EXTRA_PROGRAMS += makebuildtables
-#makebuildtables_SOURCES = makebuildtables.c
-#makebuildtables_LDADD = libsortsmillff_aux.la
-
 LINEBREAK_URL = http://unicode.org/Public/UNIDATA/LineBreak.txt
 NAMESLIST_URL = http://unicode.org/Public/UNIDATA/NamesList.txt
 PROPLIST_URL = http://unicode.org/Public/UNIDATA/PropList.txt
@@ -106,7 +99,7 @@ PropList.txt:
 UnicodeData.txt:
 	$(WGET) '$(UNICODEDATA_URL)'
 
-MOSTLYCLEANFILES += makeutype dump makebuildtables
+MOSTLYCLEANFILES += makeutype dump
 DISTCLEANFILES = LineBreak.txt NamesList.txt PropList.txt	\
 	UnicodeData.txt
 

@@ -56,6 +56,7 @@ typedef struct gtextinfo {
 } GTextInfo;
 
 #define GTEXTINFO_EMPTY { NULL, NULL, 0x000000, 0x000000, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, '\0' }
+#define GTEXTINFO_LINE  { NULL, NULL, 0x000000, 0x000000, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, 0, '\0' }
 
 
 typedef struct gtextinfo2 {
@@ -80,6 +81,7 @@ typedef struct gtextinfo2 {
 } GTextInfo2;
 
 #define GTEXTINFO2_EMPTY { NULL, NULL, 0x000000, 0x000000, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '\0' }
+#define GTEXTINFO2_LINE  { NULL, NULL, 0x000000, 0x000000, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, '\0' }
 
 struct gmenuitem;
 
@@ -97,6 +99,7 @@ typedef struct gmenuitem {
 } GMenuItem;
 
 #define GMENUITEM_EMPTY { GTEXTINFO_EMPTY, '\0', 0, NULL, NULL, NULL, 0 }
+#define GMENUITEM_LINE  { GTEXTINFO_LINE,  '\0', 0, NULL, NULL, NULL, 0 }
 
 
 typedef struct gmenuitem2 {
@@ -109,6 +112,7 @@ typedef struct gmenuitem2 {
 } GMenuItem2;
 
 #define GMENUITEM2_EMPTY { GTEXTINFO_EMPTY, NULL, NULL, NULL, NULL, 0 }
+#define GMENUITEM2_LINE  { GTEXTINFO_LINE,  NULL, NULL, NULL, NULL, 0 }
 
 
 typedef struct tabinfo {
@@ -190,7 +194,6 @@ enum gg_flags { gg_visible=1, gg_enabled=2, gg_pos_in_pixels=4,
 		gg_but_link = (int) 0x80000000,
 		/* Reuse some flag values for different widgets */
 		gg_file_pulldown=gg_sb_vert, gg_file_multiple = gg_list_multiplesel,
-		gg_text_xim = gg_tabset_scroll,
 		gg_tabset_vert = gg_sb_vert,
 		gg_utf8_popup = gg_rowcol_displayonly
 };

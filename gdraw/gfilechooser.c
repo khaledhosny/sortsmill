@@ -34,7 +34,6 @@
 #include "gfile.h"
 #include "ustring.h"
 #include "utype.h"
-#include "gicons.h"
 
 #include <stdlib.h>
 #include <xgetcwd.h>
@@ -196,82 +195,83 @@ GFileChooserDefFilter(GGadget *g,GDirEntry *ent,const uint32_t *dir)
   return( fc_hide );
 }
 
-static GImage *
+static char *
 GFileChooserPickIcon(GDirEntry *e)
 {
   char *mime = e->mimetype;
   uint8_t *utf8_ent_name = x_gc_u32_to_u8 (u32_force_valid (e->name));
 
-  InitChooserIcons();
-
-  if ( e->isdir ) {
-    if ( u8_strcmp(utf8_ent_name,"..")==0 )
-      return( &_GIcon_updir );
-    return( &_GIcon_dir );
+  if (e->isdir) {
+    if (u8_strcmp(utf8_ent_name,"..") == 0)
+      return "chooserupdir.png";
+    return "chooserdir.png";
   }
-  if ( mime==NULL ) mime = GIOGetMimeType(utf8_ent_name);
+
+  if (mime == NULL)
+    mime = GIOGetMimeType(utf8_ent_name);
+
   if (strncasecmp("text/", mime, 5) == 0) {
     if (strcasecmp("text/html", mime) == 0)
-      return( &_GIcon_texthtml );
+      return "choosertexthtml.png";
     if (strcasecmp("text/xml", mime) == 0)
-      return( &_GIcon_textxml );
+      return "choosertextxml.png";
     if (strcasecmp("text/css", mime) == 0)
-      return( &_GIcon_textcss );
+      return "choosertextcss.png";
     if (strcasecmp("text/c", mime) == 0)
-      return( &_GIcon_textc );
+      return "choosertextc.png";
     if (strcasecmp("text/java", mime) == 0)
-      return( &_GIcon_textjava );
+      return "choosertextjava.png";
     if (strcasecmp("text/x-makefile", mime) == 0)
-      return( &_GIcon_textmake );
+      return "choosertextmake.png";
     if (strcasecmp("text/fontps", mime) == 0)
-      return( &_GIcon_textfontps );
+      return "choosertextfontps.png";
     if (strcasecmp("text/font", mime) == 0)
-      return( &_GIcon_textfontbdf );
+      return "choosertextfontbdf.png";
     if (strcasecmp("text/ps", mime) == 0)
-      return( &_GIcon_textps );
+      return "choosertextps.png";
 
-    return( &_GIcon_textplain );
+    return "choosertextplain.png";
   }
 
   if (strncasecmp("image/", mime, 6) == 0)
-    return( &_GIcon_image );
+    return "chooserimage.png";
   if (strncasecmp("video/", mime, 6) == 0)
-    return( &_GIcon_video );
+    return "chooservideo.png";
   if (strncasecmp("audio/", mime, 6) == 0)
-    return( &_GIcon_audio );
+    return "chooseraudio.png";
   if (strcasecmp("application/x-navidir", mime) == 0 ||
       strcasecmp("inode/directory", mime) == 0)
-    return( &_GIcon_dir );
+    return "chooserdir.png";
   if (strcasecmp("application/x-object", mime) == 0)
-    return( &_GIcon_object );
+    return "chooserobject.png";
   if (strcasecmp("application/x-core", mime) == 0)
-    return( &_GIcon_core );
+    return "choosercore.png";
   if (strcasecmp("application/x-tar", mime) == 0)
-    return( &_GIcon_tar );
+    return "choosertar.png";
   if (strcasecmp("application/x-compressed", mime) == 0)
-    return( &_GIcon_compressed );
+    return "choosercompressed.png";
   if (strcasecmp("application/pdf", mime) == 0)
-    return( &_GIcon_texthtml );
+    return "choosertexthtml.png";
   if (strcasecmp("application/vnd.font-fontforge-sfd", mime) == 0)
-    return( &_GIcon_textfontsfd );
+    return "choosertextfontsfd.png";
   if (strcasecmp("application/x-font-type1", mime) == 0)
-    return( &_GIcon_textfontps );
+    return "choosertextfontps.png";
   if (strcasecmp("application/x-font-ttf", mime) == 0 ||
       strcasecmp("application/x-font-otf", mime) == 0)
-    return( &_GIcon_ttf );
+    return "chooserttf.png";
   if (strcasecmp("application/x-font-cid", mime) == 0 )
-    return( &_GIcon_cid );
+    return "choosercid.png";
   if (strcasecmp("application/x-macbinary", mime) == 0 ||
       strcasecmp("application/x-mac-binhex40", mime) == 0 )
-    return( &_GIcon_mac );
+    return "choosermac.png";
   if (strcasecmp("application/x-mac-dfont", mime) == 0 ||
       strcasecmp("application/x-mac-suit", mime) == 0 )
-    return( &_GIcon_macttf );
+    return "choosermacttf.png";
   if (strcasecmp("application/x-font-pcf", mime) == 0 ||
       strcasecmp("application/x-font-snf", mime) == 0)
-    return( &_GIcon_textfontbdf );
+    return "choosertextfontbdf.png";
 
-  return( &_GIcon_unknown );
+  return "chooserunknown.png";
 }
 
 static void GFileChooserFillList(GFileChooser *gfc,GDirEntry *first,
@@ -305,7 +305,7 @@ static void GFileChooserFillList(GFileChooser *gfc,GDirEntry *first,
 
 		*me = xcalloc(1,sizeof(GTextInfo));
 		(*me)->text = x_u32_strdup_or_null(e->name);
-		(*me)->image = GFileChooserPickIcon(e);
+		(*me)->image = (GImage *) GFileChooserPickIcon(e);
 		(*me)->fg = COLOR_DEFAULT;
 		(*me)->bg = COLOR_DEFAULT;
 		(*me)->font = NULL;
@@ -325,7 +325,7 @@ static void GFileChooserFillList(GFileChooser *gfc,GDirEntry *first,
 	    if ( e->fcdata!=fc_hide ) {
 		ti[len] = xcalloc(1,sizeof(GTextInfo));
 		ti[len]->text = x_u32_strdup_or_null(e->name);
-		ti[len]->image = GFileChooserPickIcon(e);
+		ti[len]->image = (GImage *) GFileChooserPickIcon(e);
 		ti[len]->fg = COLOR_DEFAULT;
 		ti[len]->bg = COLOR_DEFAULT;
 		ti[len]->font = NULL;
@@ -991,12 +991,12 @@ static void GFCPath(GWindow gw,struct gmenuitem *mi,GEvent *e) {
 }
 
 static GMenuItem gfcbookmarkmenu[] = {
-    { { (uint32_t *) N_("Directory|Back"), &_GIcon_backarrow, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 0, 0, '\0' }, '\0', ksm_control, NULL, NULL, GFCBack, 0 },
-    { { (uint32_t *) N_("Directory|Forward"), &_GIcon_forwardarrow, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 0, 0, '\0' }, '\0', ksm_control, NULL, NULL, GFCForward, 0 },
-    { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, 0, '\0' }, '\0', 0, NULL, NULL, NULL, 0 }, /* line */
-    { { (uint32_t *) N_("Bookmark Current Dir"), &_GIcon_bookmark, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 0, 0, '\0' }, '\0', ksm_control, NULL, NULL, GFCAddCur, 0 },
-    { { (uint32_t *) N_("Remove Bookmark..."), &_GIcon_nobookmark, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 0, 0, '\0' }, '\0', ksm_control, NULL, NULL, GFCRemoveBook, 0 },
-    { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, 0, '\0' }, '\0', 0, NULL, NULL, NULL, 0 }, /* line */
+    { { (uint32_t *) N_("Directory|Back"), (GImage *) "chooserback.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 0, 0, '\0' }, '\0', ksm_control, NULL, NULL, GFCBack, 0 },
+    { { (uint32_t *) N_("Directory|Forward"), (GImage *) "chooserforward.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 0, 0, '\0' }, '\0', ksm_control, NULL, NULL, GFCForward, 0 },
+    GMENUITEM_LINE,
+    { { (uint32_t *) N_("Bookmark Current Dir"), (GImage *) "chooserbookmark.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 0, 0, '\0' }, '\0', ksm_control, NULL, NULL, GFCAddCur, 0 },
+    { { (uint32_t *) N_("Remove Bookmark..."), (GImage *) "choosernobookmark.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 0, 0, '\0' }, '\0', ksm_control, NULL, NULL, GFCRemoveBook, 0 },
+    GMENUITEM_LINE,
     GMENUITEM_EMPTY
 };
 static int bgotten=false;
@@ -1454,7 +1454,7 @@ static void GFileChooserCreateChildren(GFileChooser *gfc, int flags) {
 
     gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
     gcd[k].gd.popup_msg = (uint32_t *) _("Home Folder");
-    label[k].image = &_GIcon_homefolder;
+    label[k].image = (GImage *) "chooserhomefolder.png";
     gcd[k].gd.label = &label[k];
     gcd[k].gd.handle_controlevent = GFileChooserHome;
     homek = k;
@@ -1463,7 +1463,7 @@ static void GFileChooserCreateChildren(GFileChooser *gfc, int flags) {
 
     gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
     gcd[k].gd.popup_msg = (uint32_t *) _("Bookmarks");
-    label[k].image = &_GIcon_bookmark;
+    label[k].image = (GImage *) "chooserbookmark.png";
     gcd[k].gd.label = &label[k];
     gcd[k].gd.handle_controlevent = GFileChooserBookmarks;
     bookk = k;
@@ -1478,7 +1478,7 @@ static void GFileChooserCreateChildren(GFileChooser *gfc, int flags) {
 
     gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
     gcd[k].gd.popup_msg = (uint32_t *) _("Parent Folder");
-    label[k].image = &_GIcon_updir;
+    label[k].image = (GImage *) "chooserupdir.png";
     gcd[k].gd.label = &label[k];
     gcd[k].gd.handle_controlevent = GFileChooserUpDirButton;
     upk = k;
@@ -1487,7 +1487,7 @@ static void GFileChooserCreateChildren(GFileChooser *gfc, int flags) {
 
     gcd[k].gd.flags = gg_visible|gg_enabled|gg_utf8_popup;
     gcd[k].gd.popup_msg = (uint32_t *) _("Configure");
-    label[k].image = &_GIcon_configtool;
+    label[k].image = (GImage *) "chooserconfigtool.png";
     gcd[k].gd.label = &label[k];
     gcd[k].gd.handle_controlevent = GFileChooserConfigure;
     confk = k;
