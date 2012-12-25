@@ -64,15 +64,23 @@
 ;;                         (dynamic-func "my_enabled" dll) my-data-ptr)
 ;;            #:shortcut "My action|F10"))
 
+(define wrapper-guard (make-guardian))
+
 (define* (wrap-ff_menu_entry_action_t c-action
             #:optional (data %null-pointer))
-   (let ((proc (pointer->procedure void c-action (list '* '*))))
-      (lambda (view) (proc (view->pointer view) data))))
+   (let* ((proc (pointer->procedure void c-action (list '* '*)))
+          (wrapped-action (lambda (view) (proc (view->pointer view) data))))
+      (wrapper-guard proc)
+      (wrapper-guard wrapped-action)
+      wrapped-action))
 
 (define* (wrap-ff_menu_entry_enabled_t c-enabled
             #:optional (data %null-pointer))
-   (let ((proc (pointer->procedure (_Bool) c-enabled (list '* '*))))
-      (lambda (view) (not (zero? (proc (view->pointer view) data))))))
+   (let* ((proc (pointer->procedure (_Bool) c-enabled (list '* '*)))
+          (wrapped-enabled (lambda (view) (not (zero? (proc (view->pointer view) data))))))
+      (wrapper-guard proc)
+      (wrapper-guard wrapped-enabled)
+      wrapped-enabled))
 
 ;;-------------------------------------------------------------------------
 ;;

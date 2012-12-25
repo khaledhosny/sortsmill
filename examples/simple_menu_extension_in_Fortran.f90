@@ -63,15 +63,17 @@ module simple_menu_extension_in_Fortran
 
 contains
 
-  subroutine glyph_menu_action (obj, data) &
+  subroutine glyph_menu_action (view, data) &
        bind(c, name='simple_menu_extension_in_Fortran_LTX_glyph_menu_action')
-    type(c_ptr), value :: obj, data
- 
+    type(c_ptr), value, intent(in) :: view, data
+
+    type(CharViewBase) :: cvb
     type(SplineChar) :: sc
     type(c_ptr) :: glyph_name, parent, font_name
     character(len=:), allocatable :: message
 
-    sc = SplineChar (obj)
+    cvb = CharViewBase (view)
+    sc = SplineChar (.cptr. get_sc (cvb))
     glyph_name = .cptr. get_name (sc)
     if (c_associated (glyph_name)) then
        message = c_string_to_fortran (glyph_name)
@@ -89,29 +91,33 @@ contains
     print *, 'The message: ', message
   end subroutine glyph_menu_action
 
-  logical(c_bool) function glyph_menu_enabled (obj, data) result(enabled) &
+  logical(c_bool) function glyph_menu_enabled (view, data) result(enabled) &
        bind(c, name='simple_menu_extension_in_Fortran_LTX_glyph_menu_enabled')
-    type(c_ptr), value :: obj, data
+    type(c_ptr), value, intent(in) :: view, data
 
+    type(CharViewBase) :: cvb
+    type(SplineChar) :: sc
     type(c_ptr) :: glyph_name
     character(len=:), allocatable :: s
 
     enabled = .false.
-    glyph_name = .cptr. get_name (SplineChar (obj))
+    cvb = CharViewBase (view)
+    sc = SplineChar (get_sc (cvb))
+    glyph_name = .cptr. get_name (sc)
     if (c_associated (glyph_name)) then
        s = c_string_to_fortran (glyph_name)
        enabled = (s /= 'question')
     end if
   end function glyph_menu_enabled
 
-  subroutine font_menu_action (obj, data) &
+  subroutine font_menu_action (view, data) &
        bind(c, name='simple_menu_extension_in_Fortran_LTX_font_menu_action')
-    type(c_ptr), value :: obj, data
+    type(c_ptr), value, intent(in) :: view, data
 
     type(c_ptr) :: sf, font_name
     character(len=:), allocatable :: message
 
-    sf = .cptr. get_sf (FontViewBase (obj))
+    sf = .cptr. get_sf (FontViewBase (view))
     if (c_associated (sf)) then
        font_name = .cptr. get_font_name (SplineFont (sf))
        if (c_associated (sf)) then

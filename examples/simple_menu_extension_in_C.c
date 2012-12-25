@@ -67,9 +67,9 @@
 #include <string.h>
 
 void
-glyph_menu_action (void *obj, void *data)
+glyph_menu_action (void *view, void *data)
 {
-  void *sc = get_ff_CharViewBase_sc (obj);
+  void *sc = get_ff_CharViewBase_sc (view);
   if (sc != NULL)
     {
       void *glyph_name = get_ff_SplineChar_name (sc);
@@ -87,18 +87,18 @@ glyph_menu_action (void *obj, void *data)
 }
 
 bool
-glyph_menu_enabled (void *obj, void *data)
+glyph_menu_enabled (void *view, void *data)
 {
-  void *sc = get_ff_CharViewBase_sc (obj);
+  void *sc = get_ff_CharViewBase_sc (view);
   void *glyph_name = (sc != NULL) ? get_ff_SplineChar_name (sc) : NULL;
   return (glyph_name != NULL
           && strcmp ((char *) glyph_name, "question") != 0);
 }
 
 void
-font_menu_action (void *obj, void *data)
+font_menu_action (void *view, void *data)
 {
-  void *sf = get_ff_FontViewBase_sf (obj);
+  void *sf = get_ff_FontViewBase_sf (view);
   if (sf != NULL && get_ff_SplineFont_font_name (sf) != NULL)
     fprintf (stderr, "Font name: %s\n",
              (char *) get_ff_SplineFont_font_name (sf));
