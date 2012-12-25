@@ -36,7 +36,6 @@
 #include "ggadget.h"
 #include "ggadgetP.h"
 #include "gio.h"
-#include "gicons.h"
 
 struct gfc_data {
     int done;
@@ -226,7 +225,7 @@ static uint32_t *GWidgetSaveAsFileWithGadget(const uint32_t *title, const uint32
     label[3].text = (uint32_t *) C_("Directory", "_New");
     label[3].text_is_1byte = true;
     label[3].text_has_mnemonic = true;
-    label[3].image = &_GIcon_dir;
+    label[3].image = (GImage *) "chooserdir.png";
     label[3].image_precedes = false;
     gcd[3].gd.label = &label[3];
     gcd[3].gd.handle_controlevent = GFD_NewDir;

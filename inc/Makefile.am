@@ -29,7 +29,7 @@ include $(top_srcdir)/mk/layout.am
 
 noinst_HEADERS = config.h config-extra.h intl.h basics.h gmpy.h			\
 	null_passthru.h xunistring.h chardata.h gdraw.h gfile.h ggadget.h	\
-	gicons.h gimage.h gio.h gkeysym.h gprogress.h gresedit.h			\
+	gimage.h gio.h gkeysym.h gprogress.h gresedit.h			\
 	gresource.h gwidget.h ustring.h utype.h annotations_base.h			\
 	ffthread.h precomputed_polyspline_data.h contour_interface.h
 

@@ -29,7 +29,7 @@ include $(top_srcdir)/mk/flags.am
 
 lib_LTLIBRARIES = libsortsmillff_gdraw.la
 
-libsortsmillff_gdraw_la_SOURCES = choosericons.c ctlvalues.c			\
+libsortsmillff_gdraw_la_SOURCES = ctlvalues.c			\
 	drawboxborder.c gaskdlg.c gbuttons.c gcolor.c gcontainer.c			\
 	gdraw.c gdrawerror.c gdrawtxt.c gfilechooser.c	\
 	gfiledlg.c ggadgets.c ggroupbox.c gimageclut.c gimagecvt.c			\

@@ -37,7 +37,6 @@
 #include <math.h>
 #include <unistd.h>
 #include <string.h>
-#include <gicons.h>
 #include <gkeysym.h>
 #include <sortsmillff/xgc.h>
 #include "psfont.h"
@@ -2791,7 +2790,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
   label[4].text = (uint32_t *) C_ ("Directory", "_New");
   label[4].text_is_1byte = true;
   label[4].text_has_mnemonic = true;
-  label[4].image = &_GIcon_dir;
+  label[4].image = (GImage *) "chooserdir.png";
   label[4].image_precedes = false;
   gcd[4].gd.label = &label[4];
   gcd[4].gd.handle_controlevent = GFD_NewDir;
