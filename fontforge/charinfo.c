@@ -3705,6 +3705,7 @@ static void CI_SetColorList(CharInfo *ci,Color color) {
 	if (found) {
 	    std_colors[i].image = customcolor_image;
 	    customcolor_image->u.image->clut->clut[1] = color;
+	    customcolor_image->filename = NULL; /* Don’t let Cairo load it from file */
 	}
 	std_colors[i].userdata = (void *) (intptr_t) color;
     }
