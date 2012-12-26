@@ -39,7 +39,7 @@
 (define (read-instructions port)
    (do ((instruction (read port) (read port)))
        ((eof-object? instruction))
-       (write (list 'define-ff:interface
+       (write (list ':interface:
                  (underscores->hyphens instruction)))
        (newline)))
 

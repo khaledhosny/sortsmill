@@ -29,6 +29,12 @@
 (define (string-or-symbol? s)
   (or (string? s) (symbol? s)))
 
+(define (field-type? ft)
+   (match ft
+      ((? symbol? _) #t)                ; Example: uint
+      (('* (? string-or-symbol? _)) #t) ; Example: (* SplineChar)
+      (else #f)))
+
 (define (force-string s)
   (cond ((string? s) s)
         ((symbol? s) (symbol->string s))
@@ -80,7 +86,7 @@
 
           ;; Example: (field int "struct splinechar" "italic_correction" "SplineChar" "italcorr")
           ;; For structs and unions.
-          (('field (? symbol? field-type)
+          (('field (? field-type? field-type)
               (? string-or-symbol? struct-name)
               (? string-or-symbol? field-name)
               (? string-or-symbol? replacement-struct-name)
@@ -95,7 +101,7 @@
            type-info)
 
           ;; Example: (field int "SplineChar" "italic_correction" "italcorr")
-          (('field (? symbol? field-type)
+          (('field (? field-type? field-type)
               (? string-or-symbol? struct-name)
               (? string-or-symbol? field-name)
               (? string-or-symbol? replacement-field-name))
@@ -103,7 +109,7 @@
                              struct-name replacement-field-name)))
 
           ;; Example: (field int "SplineChar" "italic_correction")
-          (('field (? symbol? field-type)
+          (('field (? field-type? field-type)
               (? string-or-symbol? struct-name)
               (? string-or-symbol? field-name))
            (get-type-info (list 'field field-type struct-name field-name
@@ -269,13 +275,13 @@
    (match sub-instruction
       (('sizeof) (list 'sizeof struct-name replacement-struct-name))
 
-      (('field (? symbol? field-type)
+      (('field (? field-type? field-type)
           (? string-or-symbol? field-name)
           (? string-or-symbol? replacement-field-name))
        (list 'field field-type struct-name field-name
           replacement-struct-name replacement-field-name))
 
-      (('field (? symbol? field-type)
+      (('field (? field-type? field-type)
           (? string-or-symbol? field-name))
        (list 'field field-type struct-name field-name
           replacement-struct-name field-name))

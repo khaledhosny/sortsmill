@@ -45,19 +45,19 @@
 
 (export
    ;; Fluid for ‘Are API-definitions being exported?’
-   %ff:interface-exported?
+   %:interface:-exported?
 
    ;; Are API-definitions being exported?
-   ff:interface-exported?
+   :interface:-exported?
 
    ;; Export enclosed API-definitions.
-   with-ff:interface-exported
+   with-:interface:-exported
 
    ;; Follow an API-definition instruction.
-   define-ff:interface
+   :interface:
 
    ;; Read instructions from a port.
-   read-define-ff:interface
+   read-:interface:
 
    )
 
@@ -106,12 +106,12 @@
 
 (eval-when (compile load eval)
 
-   (define %ff:interface-exported? (make-fluid #f))
+   (define %:interface:-exported? (make-fluid #f))
 
-   (define ff:interface-exported?
+   (define :interface:-exported?
       (case-lambda
-         (() (fluid-ref %ff:interface-exported?))
-         ((v) (fluid-set! %ff:interface-exported? (not (not v))))))
+         (() (fluid-ref %:interface:-exported?))
+         ((v) (fluid-set! %:interface:-exported? (not (not v))))))
 
    (define (struct-type-error-msg tag size obj)
       (cond
@@ -249,34 +249,34 @@
          syntax-context struct-name))
    )
 
-(define-syntax with-ff:interface-exported
+(define-syntax with-:interface:-exported
    (syntax-rules ()
       ((_ #t body body* ...)
        (let-syntax ((old-export
                        (syntax-rules ()
-                          ((_) (fluid-ref %ff:interface-exported?)))))
-          (fluid-set! %ff:interface-exported? #t)
+                          ((_) (fluid-ref %:interface:-exported?)))))
+          (fluid-set! %:interface:-exported? #t)
           body body* ...
-          (fluid-set! %ff:interface-exported? (old-export))))
+          (fluid-set! %:interface:-exported? (old-export))))
 
       ((_ #f body body* ...)
        (let-syntax ((old-export
                        (syntax-rules ()
-                          ((_) (fluid-ref %ff:interface-exported?)))))
-          (fluid-set! %ff:interface-exported? #f)
+                          ((_) (fluid-ref %:interface:-exported?)))))
+          (fluid-set! %:interface:-exported? #f)
           body body* ...
-          (fluid-set! %ff:interface-exported? (old-export))))
+          (fluid-set! %:interface:-exported? (old-export))))
 
       ((_ body body* ...)
-       (with-ff:interface-exported #t body body* ...))))
+       (with-:interface:-exported #t body body* ...))))
 
 (define-syntax maybe-export
    (syntax-rules ()
       ((_ id id* ...)
-       (if (ff:interface-exported?)
+       (if (:interface:-exported?)
            (export id id* ...)))))
 
-(define-syntax define-ff:interface
+(define-syntax :interface:
    (lambda (x)
       (syntax-case x (struct sizeof field)
 
@@ -588,13 +588,13 @@
 
 ;;-------------------------------------------------------------------------
 
-(define read-define-ff:interface
+(define read-:interface:
    (case-lambda
-      (() (read-define-ff:interface (current-input-port)))
+      (() (read-:interface: (current-input-port)))
       ((port)
        (do ((instruction (read port) (read port)))
            ((eof-object? instruction))
-           (eval (list 'define-ff:interface instruction)
+           (eval (list ':interface: instruction)
               (interaction-environment))))))
 
 ;;-------------------------------------------------------------------------
