@@ -18,6 +18,7 @@
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 (use-modules
+   (sortsmillff machine)
    (ice-9 popen)
    (ice-9 match)
    (ice-9 format)
@@ -106,73 +107,35 @@
       (('uint . 2) "unsigned int")
       (('uint . 4) "unsigned int")
       (('uint . 8) "uint64_t")
-      (('bool . 1) "bool")
-      (('bool . 2) "bool")
-      (('bool . 4) "bool")
-      (('bool . 8) "bool")
-      (('* . 1) "void *")
-      (('* . 2) "void *")
-      (('* . 4) "void *")
-      (('* . 8) "void *")))
+      (('bool . _) "bool")
+      (('float . _) "double")
+      (('* . _) "void *")))
 
 (define (get-value-expression field-type offset size pointer-expression)
    (let ((address (format #f "((void *) &((char *) (~a))[~d])"
                      pointer-expression offset)))
       (match (cons field-type size)
-         (('int . 1) (format #f "(*(int8_t *) ~a)" address))
-         (('int . 2) (format #f "(*(int16_t *) ~a)" address))
-         (('int . 4) (format #f "(*(int32_t *) ~a)" address))
-         (('int . 8) (format #f "(*(int64_t *) ~a)" address))
-         (('uint . 1) (format #f "(*(uint8_t *) ~a)" address))
-         (('uint . 2) (format #f "(*(uint16_t *) ~a)" address))
-         (('uint . 4) (format #f "(*(uint32_t *) ~a)" address))
-         (('uint . 8) (format #f "(*(uint64_t *) ~a)" address))
-         (('bool . 1) (format #f "((bool) (*(uint8_t *) ~a != 0))" address))
-         (('bool . 2) (format #f "((bool) (*(uint16_t *) ~a != 0))" address))
-         (('bool . 4) (format #f "((bool) (*(uint32_t *) ~a != 0))" address))
-         (('bool . 8) (format #f "((bool) (*(uint64_t *) ~a != 0))" address))
-         (('* . 1) (format #f "((void *) *(uint8_t *) ~a)" address))
-         (('* . 2) (format #f "((void *) *(uint16_t *) ~a)" address))
-         (('* . 4) (format #f "((void *) *(uint32_t *) ~a)" address))
-         (('* . 8) (format #f "((void *) *(uint64_t *) ~a)" address)))))
+         (('int . n) (format #f "(*(~a *) ~a)" (c-int-type n) address))
+         (('uint . n) (format #f "(*(~a *) ~a)" (c-uint-type n) address))
+         (('bool . n) (format #f "((bool) (*(~a *) ~a != 0))" (c-uint-type n) address))
+         (('float . n) (format #f "(*(~a *) ~a)" (c-float-type n) address))
+         (('* . n) (format #f "((void *) *(~a *) ~a)" (c-uint-type n) address)))))
 
 (define (set-value-expression field-type offset size pointer-expression
            value-expression)
    (let ((address (format #f "((void *) &((char *) (~a))[~d])"
                      pointer-expression offset)))
       (match (cons field-type size)
-         (('int . 1) (format #f "(*(int8_t *) ~a = (~a))"
-                        address value-expression))
-         (('int . 2) (format #f "(*(int16_t *) ~a = (~a))"
-                        address value-expression))
-         (('int . 4) (format #f "(*(int32_t *) ~a = (~a))"
-                        address value-expression))
-         (('int . 8) (format #f "(*(int64_t *) ~a = (~a))"
-                        address value-expression))
-         (('uint . 1) (format #f "(*(uint8_t *) ~a = (~a))"
-                         address value-expression))
-         (('uint . 2) (format #f "(*(uint16_t *) ~a = (~a))"
-                         address value-expression))
-         (('uint . 4) (format #f "(*(uint32_t *) ~a = (~a))"
-                         address value-expression))
-         (('uint . 8) (format #f "(*(uint64_t *) ~a = (~a))"
-                         address value-expression))
-         (('bool . 1) (format #f "(*(uint8_t *) ~a = ((~a) != 0))"
-                         address value-expression))
-         (('bool . 2) (format #f "(*(uint16_t *) ~a = ((~a) != 0))"
-                         address value-expression))
-         (('bool . 4) (format #f "(*(uint32_t *) ~a = ((~a) != 0))"
-                         address value-expression))
-         (('bool . 8) (format #f "(*(uint64_t *) ~a = ((~a) != 0))"
-                         address value-expression))
-         (('* . 1) (format #f "(*(uint8_t *) ~a = (uint8_t) (uintptr_t) (~a))"
-                      address value-expression))
-         (('* . 2) (format #f "(*(uint16_t *) ~a = (uint16_t) (uintptr_t) (~a))"
-                      address value-expression))
-         (('* . 4) (format #f "(*(uint32_t *) ~a = (uint32_t) (uintptr_t) (~a))"
-                      address value-expression))
-         (('* . 8) (format #f "(*(uint64_t *) ~a = (uint64_t) (uintptr_t) (~a))"
-                      address value-expression)))))
+         (('int . n) (format #f "(*(~a *) ~a = (~a))"
+                        (c-int-type n) address value-expression))
+         (('uint . n) (format #f "(*(~a *) ~a = (~a))"
+                         (c-uint-type n) address value-expression))
+         (('bool . n) (format #f "(*(~a *) ~a = ((~a) != 0))"
+                         (c-uint-type n) address value-expression))
+         (('float . n) (format #f "(*(~a *) ~a = (~a))"
+                          (c-float-type n)  address value-expression))
+         (('* . n) (format #f "(*(~a *) ~a = (uint8_t) (uintptr_t) (~a))"
+                      (c-uint-type n) address value-expression)))))
 
 (format #t "/* Generated by ~s */\n" (car (command-line)))
 (format #t "\n")

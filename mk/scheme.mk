@@ -55,6 +55,9 @@ CONFIGURE_SCHEME =														\
 		-e 's|@''PACKAGE_VERSION''@|$(PACKAGE_VERSION)|g'				\
 		-e 's|@''C_CONST_FLT_EPSILON''@|$(C_CONST_FLT_EPSILON)|g'		\
 		-e 's|@''C_CONST_DBL_EPSILON''@|$(C_CONST_DBL_EPSILON)|g'		\
+		-e 's|@''SIZEOF__BOOL''@|$(SIZEOF__BOOL)|g'						\
+		-e 's|@''SIZEOF_INTPTR_T''@|$(SIZEOF_INTPTR_T)|g'				\
+		-e 's|@''SIZEOF_UINTPTR_T''@|$(SIZEOF_UINTPTR_T)|g'				\
 		-e 's|@''i_do_have_python_scripting''@|$(i_do_have_python_scripting)|g'	\
 		-e 's|@''Py_single_input''@|$(Py_single_input)|g'				\
 		-e 's|@''Py_file_input''@|$(Py_file_input)|g'					\

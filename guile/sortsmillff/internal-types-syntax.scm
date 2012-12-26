@@ -18,12 +18,30 @@
 (define-module (sortsmillff internal-types-syntax))
 
 (use-modules
+   (sortsmillff machine)
    (sortsmillff pkg-info)
    (rnrs bytevectors)
    (system foreign)
    (ice-9 match)
    (srfi srfi-26)                       ; ‘cut’ and ‘cute’.
    )
+
+;; FIXME: Really we require that floating point numbers be IEEE single
+;; precision or double precision. More than likely, we will support
+;; only machines for which this is true, but these tests should not
+;; hurt.
+(eval-when (compile load eval)
+   (cond
+      ((not (= 4 float-size))
+       (error
+          (simple-format #f
+             "The size of a C float is required to be 4 bytes, but on this machine it is ~A bytes."
+             (number->string float-size))))
+      ((not (= 8 double-size))
+       (error
+          (simple-format #f
+             "The size of a C double is required to be 8 bytes, but on this machine it is ~A bytes."
+             (number->string double-size))))))
 
 (export
    ;; Fluid for ‘Are API-definitions being exported?’
@@ -40,6 +58,7 @@
 
    ;; Read instructions from a port.
    read-define-ff:interface
+
    )
 
 ;;-------------------------------------------------------------------------
@@ -504,7 +523,7 @@
 ;;-------------------------------------------------------------------------
 
 (define-syntax ff:struct-field-ref
-   (syntax-rules (int uint bool *)
+   (syntax-rules (int uint bool float *)
       ((_ int offset 1) (lambda (obj) (bytevector-s8-ref (cdr obj) offset)))
       ((_ int offset 2) (lambda (obj) (bytevector-s16-native-ref (cdr obj) offset)))
       ((_ int offset 4) (lambda (obj) (bytevector-s32-native-ref (cdr obj) offset)))
@@ -517,6 +536,8 @@
       ((_ bool offset 2) (lambda (obj) (not (zero? (bytevector-u16-native-ref (cdr obj) offset)))))
       ((_ bool offset 4) (lambda (obj) (not (zero? (bytevector-u32-native-ref (cdr obj) offset)))))
       ((_ bool offset 8) (lambda (obj) (not (zero? (bytevector-u64-native-ref (cdr obj) offset)))))
+      ((_ float offset 4) (lambda (obj) (bytevector-ieee-single-native-ref (cdr obj) offset)))
+      ((_ float offset 8) (lambda (obj) (bytevector-ieee-double-native-ref (cdr obj) offset)))
       ((_ * offset 1) (lambda (obj) (make-pointer (bytevector-u8-ref (cdr obj) offset))))
       ((_ * offset 2) (lambda (obj) (make-pointer (bytevector-u16-native-ref (cdr obj) offset))))
       ((_ * offset 4) (lambda (obj) (make-pointer (bytevector-u32-native-ref (cdr obj) offset))))
@@ -537,6 +558,8 @@
       ((_ bool offset 2) (lambda (obj v) (bytevector-u16-native-set! (cdr obj) offset (if v 1 0))))
       ((_ bool offset 4) (lambda (obj v) (bytevector-u32-native-set! (cdr obj) offset (if v 1 0))))
       ((_ bool offset 8) (lambda (obj v) (bytevector-u64-native-set! (cdr obj) offset (if v 1 0))))
+      ((_ float offset 4) (lambda (obj v) (bytevector-ieee-single-native-set! (cdr obj) offset v)))
+      ((_ float offset 8) (lambda (obj v) (bytevector-ieee-double-native-set! (cdr obj) offset v)))
       ((_ * offset 1) (lambda (obj v) (bytevector-u8-set! (cdr obj) offset (pointer-address v))))
       ((_ * offset 2) (lambda (obj v) (bytevector-u16-native-set! (cdr obj) offset (pointer-address v))))
       ((_ * offset 4) (lambda (obj v) (bytevector-u32-native-set! (cdr obj) offset (pointer-address v))))

@@ -25,7 +25,6 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 include $(top_srcdir)/mk/flags.am
-#include $(top_srcdir)/mk/guile.mk
 include $(top_srcdir)/mk/scheme.mk
 include $(top_srcdir)/mk/tig.mk
 
@@ -60,12 +59,12 @@ DIST_SCM_FILES += sortsmillff/usermenu.scm
 NODIST_SCM_FILES += sortsmillff/gdraw-types.scm
 endif HAVE_GUI
 
-DIST_SCM_IN_FILES += sortsmillff/pkg-info.scm.in				\
-	sortsmillff/math-constants.scm.in sortsmillff/i18n.scm.in	\
-	sortsmillff/python.scm.in
+DIST_SCM_IN_FILES += sortsmillff/machine.scm.in						\
+	sortsmillff/pkg-info.scm.in sortsmillff/math-constants.scm.in	\
+	sortsmillff/i18n.scm.in sortsmillff/python.scm.in
 
-NODIST_SCM_FILES += sortsmillff/pkg-info.scm				\
-	sortsmillff/math-constants.scm sortsmillff/i18n.scm		\
+NODIST_SCM_FILES += sortsmillff/machine.scm sortsmillff/pkg-info.scm	\
+	sortsmillff/math-constants.scm sortsmillff/i18n.scm					\
 	sortsmillff/internal-types.scm sortsmillff/python.scm
 
 sortsmillff/internal-types.scm: generate-internal-types.scm	\

@@ -37,11 +37,15 @@
        (int orig_pos orig_index)
        (int width width)
        (int vwidth vwidth)
-       (* views)
        (* layers)
        (int layer_cnt layer_count)
+       (* hstem)
+       (* vstem)
+       (* dstem)
+       (* views)
        (* charinfo)
        (* parent)
+
        (bool changed)
        (bool changedsincelasthinted changed_since_last_hinted)
        (bool manualhints not_autohintable)
@@ -63,10 +67,45 @@
        (bool unlink_rm_ovrlp_save_undo)
        (bool inspiro in_spiro)
        (bool lig_caret_cnt_fixed)
-       (uint glyph_class)
 
-       ;; The following lets us test struct-field support.
+       (uint glyph_class)
+       (* dependents)
+       (* kerns)
+       (* vkerns)
+       (* ligofme lig_of_me)
+       (* comment)
+       (uint color)
+       (* anchor)
+       (* ttf_instrs)
+       (int ttf_instrs_len ttf_instrs_length)
+       (int countermask_cnt countermask_count)
+       (* countermasks)
+       (* altuni)
+
+       ;; Mathematics and TeX.
+       (int tex_height)
+       (int tex_depth)
+       (bool is_extended_shape)
+       (int italic_correction)
+       (int top_accent_horiz top_accent_horizontal)
+       (* italic_adjusts italic_adjustments)
+       (* top_accent_adjusts top_accent_adjustments)
+       (* vert_variants vertical_variants)
+       (* horiz_variants horizontal_variants)
+       (* mathkern)
+
+       ;; Python.
+       (* python_sc_object)
+       (* python_temporary)
+       (* python_persistent)
+
+       ;; Tiling.
+       (float tile_margin)
        (struct tile_bounds)
+
+       ;; Fields that are used only during certain I/O operations.
+       (int lsidebearing)
+       (int ttf_glyph)
        ))
 
  (struct SplineFont

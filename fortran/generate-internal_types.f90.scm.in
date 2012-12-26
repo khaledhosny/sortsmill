@@ -18,6 +18,7 @@
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 (use-modules
+   (sortsmillff machine)
    (ice-9 popen)
    (ice-9 match)
    (ice-9 format)
@@ -27,13 +28,11 @@
 (define instruction-sources
    (list "@abs_top_builddir@/fontforge/fontforge_type_inspector"))
 
-(define sizeof-intptr_t @SIZEOF_INTPTR_T@)
-
-(case sizeof-intptr_t
+(case intptr_t-size
    ((4 8) (lambda () *unspecified*))
    (else
     (error "Only sizeof(intptr_t) equal to 4 or 8 is supported. Your sizeof(intptr_t) = ~d."
-       sizeof-intptr_t)))
+       intptr_t-size)))
 
 ;; Collect the instructions into a list for repeated passes.
 (define* (read-instructions port #:optional (lst '()))
@@ -118,6 +117,7 @@
       ('int (write-int-field-definitions struct-name field-name offset size))
       ('uint (write-uint-field-definitions struct-name field-name offset size))
       ('bool (write-bool-field-definitions struct-name field-name offset size))
+      ('float (write-float-field-definitions struct-name field-name offset size))
       ('* (write-pointer-field-definitions struct-name field-name offset size))))
 
 (define (write-int-field-definitions struct-name field-name offset size)
@@ -149,7 +149,7 @@
           (format #t "subroutine set_~a_~a (p, v)\n" struct-name field-name)
           (format #t "  type(~a), intent(inout) :: p\n" struct-name)
           (format #t "  integer, intent(in) :: v\n")
-          (format #t "  p%bv(~d:~d) = transfer (int (v, 1_c_int~d_t), p%bv)\n"
+          (format #t "  p%bv(~d:~d) = transfer (int (v, kind=c_int~d_t), p%bv)\n"
              (1+ offset) (+ offset size) (* 8 size))
           (format #t "end subroutine set_~a_~a\n" struct-name field-name)
           (format #t "\n")))
@@ -218,6 +218,27 @@
    (format #t "end subroutine set_~a_~a\n" struct-name field-name)
    (format #t "\n"))
 
+(define (write-float-field-definitions struct-name field-name offset size)
+   (write-get-float-field-definition struct-name field-name offset size)
+   (write-set-float-field-definition struct-name field-name offset size))
+
+(define (write-get-float-field-definition struct-name field-name offset size)
+   (format #t "real(c_double) function get_~a_~a (p) result(q)\n" struct-name field-name)
+   (format #t "  type(~a), intent(in) :: p\n" struct-name)
+   (format #t "  q = real (transfer (p%bv(~d:~d), 1.0_c_~a), kind=c_double)\n"
+      (1+ offset) (+ offset size) (c-float-type size))
+   (format #t "end function get_~a_~a\n" struct-name field-name)
+   (format #t "\n"))
+
+(define (write-set-float-field-definition struct-name field-name offset size)
+   (format #t "subroutine set_~a_~a (p, v)\n" struct-name field-name)
+   (format #t "  type(~a), intent(inout) :: p\n" struct-name)
+   (format #t "  real(c_double), intent(in) :: v\n")
+   (format #t "  p%bv(~d:~d) = transfer (real (v, kind=c_~a), p%bv)\n"
+      (1+ offset) (+ offset size) (c-float-type size))
+   (format #t "end subroutine set_~a_~a\n" struct-name field-name)
+   (format #t "\n"))
+
 (define (write-pointer-field-definitions struct-name field-name offset size)
    (write-get-pointer-field-definition struct-name field-name offset size)
    (write-set-pointer-field-definition struct-name field-name offset size))
@@ -226,7 +247,7 @@
    (format #t "integer(c_intptr_t) function get_~a_~a (p) result(q)\n" struct-name field-name)
    (format #t "  type(~a), intent(in) :: p\n" struct-name)
    (format #t "  q = uint~d_to_uint~d (transfer (p%bv(~d:~d), 1_c_int~d_t))\n"
-      (* 8 size) (* 8 sizeof-intptr_t) (1+ offset) (+ offset size) (* 8 size))
+      (* 8 size) (* 8 intptr_t-size) (1+ offset) (+ offset size) (* 8 size))
    (format #t "end function get_~a_~a\n" struct-name field-name)
    (format #t "\n"))
 
@@ -235,7 +256,7 @@
    (format #t "  type(~a), intent(inout) :: p\n" struct-name)
    (format #t "  integer(c_intptr_t), intent(in) :: v\n")
    (format #t "  p%bv(~d:~d) = transfer (uint~d_to_uint~d (v), p%bv)\n"
-      (1+ offset) (+ offset size) (* 8 sizeof-intptr_t) (* 8 size))
+      (1+ offset) (+ offset size) (* 8 intptr_t-size) (* 8 size))
    (format #t "end subroutine set_~a_~a\n" struct-name field-name)
    (format #t "\n"))
 
