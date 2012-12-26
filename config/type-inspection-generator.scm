@@ -141,6 +141,25 @@
                  struct-name field-name)
               type-info))
 
+          ;; Example (fields "struct gmenuitem" "GMenuItem" (struct "ti") (uint "shortcut"))
+          (('fields (? string-or-symbol? struct-name)
+              (? string-or-symbol? replacement-struct-name) . fields)
+           (get-type-info
+              (cons* 'struct struct-name replacement-struct-name
+                 (map (lambda (fld)
+                         (match (car fld)
+                            ('struct (cons 'struct-field (cdr fld)))
+                            ('array  (cons 'array-field (cdr fld)))
+                            (other (cons* 'field other (cdr fld)))))
+                    fields))
+              type-info))
+
+          ;; Example (fields "GMenuItem" (struct "ti") (uint "shortcut"))
+          (('fields (? string-or-symbol? struct-name) . fields)
+           (get-type-info
+              (cons* 'fields struct-name struct-name fields)
+              type-info))
+
           ;; Example: (struct "struct splinechar" "SplineChar" (sizeof) (field "italic_correction"))
           (((or 'struct 'union)
             (? string-or-symbol? struct-name)
@@ -269,6 +288,9 @@
       (((or 'struct-field 'array-field) (? string-or-symbol? field-name))
        (list 'struct-field struct-name field-name
           replacement-struct-name field-name))
+
+      (('fields . fields)
+       (cons* 'fields struct-name fields))
 
       (('struct->)
        (list 'struct-> replacement-struct-name))
