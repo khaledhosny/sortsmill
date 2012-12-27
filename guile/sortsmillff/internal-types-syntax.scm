@@ -124,128 +124,126 @@
           "bytevector length is wrong")
          (else #f)))
 
-   (define (type-tag-name type-name)
-      (string-append "tag-ff:" type-name))
-
    (define build-type-related-symbol
       (case-lambda
-         ((constructor syntax-context type-name)
-          (datum->syntax syntax-context
+         ((constructor x type-name)
+          (datum->syntax x
              (string->symbol (constructor (syntax->datum type-name)))))
-         ((constructor syntax-context struct-name field-name)
-          (datum->syntax syntax-context
+         ((constructor x struct-name field-name)
+          (datum->syntax x
              (string->symbol (constructor
                                 (syntax->datum struct-name)
                                 (syntax->datum field-name)))))))
 
-   (define (type-tag syntax-context type-name)
+   (define (type-tag x type-name)
       (build-type-related-symbol
-         type-tag-name syntax-context type-name))
+         (cute string-append "tag-ff:" <>)
+         x type-name))
 
-   (define (type-sizeof-var syntax-context type-name)
+   (define (type-sizeof-var x type-name)
       (build-type-related-symbol
          (cute string-append "sizeof-ff:" <>)
-         syntax-context type-name))
+         x type-name))
 
-   (define (struct?-func syntax-context type-name)
+   (define (struct?-func x type-name)
       (build-type-related-symbol
          (cute string-append "ff:" <> "?")
-         syntax-context type-name))
+         x type-name))
 
-   (define (throw-failed-check-struct-func syntax-context type-name)
+   (define (throw-failed-check-struct-func x type-name)
       (build-type-related-symbol
          (cute string-append "throw-failed-check-ff:" <>)
-         syntax-context type-name))
+         x type-name))
 
-   (define (check-struct-func syntax-context type-name)
+   (define (check-struct-func x type-name)
       (build-type-related-symbol
          (cute string-append "check-ff:" <>)
-         syntax-context type-name))
+         x type-name))
 
-   (define (pointer->struct-func syntax-context type-name)
+   (define (pointer->struct-func x type-name)
       (build-type-related-symbol
          (cute string-append "pointer->ff:" <>)
-         syntax-context type-name))
+         x type-name))
 
-   (define (struct->pointer-func syntax-context type-name)
+   (define (struct->pointer-func x type-name)
       (build-type-related-symbol
          (cute string-append "ff:" <> "->pointer")
-         syntax-context type-name))
+         x type-name))
 
-   (define (unchecked-struct->pointer-func syntax-context type-name)
+   (define (unchecked-struct->pointer-func x type-name)
       (build-type-related-symbol
          (cute string-append "unchecked-ff:" <> "->pointer")
-         syntax-context type-name))
+         x type-name))
 
-   (define (malloc-struct-func syntax-context type-name)
+   (define (malloc-struct-func x type-name)
       (build-type-related-symbol
          (cute string-append "malloc-ff:" <>)
-         syntax-context type-name))
+         x type-name))
 
-   (define (free-struct-func syntax-context type-name)
+   (define (free-struct-func x type-name)
       (build-type-related-symbol
          (cute string-append "free-ff:" <>)
-         syntax-context type-name))
+         x type-name))
 
-   (define (unchecked-free-struct-func syntax-context type-name)
+   (define (unchecked-free-struct-func x type-name)
       (build-type-related-symbol
          (cute string-append "unchecked-free-ff:" <>)
-         syntax-context type-name))
+         x type-name))
 
-   (define (gc-malloc-struct-func syntax-context type-name)
+   (define (gc-malloc-struct-func x type-name)
       (build-type-related-symbol
          (cute string-append "gc-malloc-ff:" <>)
-         syntax-context type-name))
+         x type-name))
 
-   (define (gc-free-struct-func syntax-context type-name)
+   (define (gc-free-struct-func x type-name)
       (build-type-related-symbol
          (cute string-append "gc-free-ff:" <>)
-         syntax-context type-name))
+         x type-name))
 
-   (define (unchecked-gc-free-struct-func syntax-context type-name)
+   (define (unchecked-gc-free-struct-func x type-name)
       (build-type-related-symbol
          (cute string-append "unchecked-gc-free-ff:" <>)
-         syntax-context type-name))
+         x type-name))
 
-   (define (field-ref-func syntax-context struct-name field-name)
+   (define (field-ref-func x struct-name field-name)
       (build-type-related-symbol
          (cute string-append "ff:" <> ":" <> "-ref")
-         syntax-context struct-name field-name))
+         x struct-name field-name))
 
-   (define (unchecked-field-ref-func syntax-context struct-name field-name)
+   (define (unchecked-field-ref-func x struct-name field-name)
       (build-type-related-symbol
          (cute string-append "unchecked-ff:" <> ":" <> "-ref")
-         syntax-context struct-name field-name))
+         x struct-name field-name))
 
-   (define (field-set!-func syntax-context struct-name field-name)
+   (define (field-set!-func x struct-name field-name)
       (build-type-related-symbol
          (cute string-append "ff:" <> ":" <> "-set!")
-         syntax-context struct-name field-name))
+         x struct-name field-name))
 
-   (define (unchecked-field-set!-func syntax-context struct-name field-name)
+   (define (unchecked-field-set!-func x struct-name field-name)
       (build-type-related-symbol
          (cute string-append "unchecked-ff:" <> ":" <> "-set!")
-         syntax-context struct-name field-name))
+         x struct-name field-name))
 
-   (define (field->pointer-func syntax-context struct-name field-name)
+   (define (field->pointer-func x struct-name field-name)
       (build-type-related-symbol
          (cute string-append "ff:" <> ":" <> "->pointer")
-         syntax-context struct-name field-name))
+         x struct-name field-name))
 
-   (define (unchecked-field->pointer-func syntax-context struct-name field-name)
+   (define (unchecked-field->pointer-func x struct-name field-name)
       (build-type-related-symbol
          (cute string-append "unchecked-ff:" <> ":" <> "->pointer")
-         syntax-context struct-name field-name))
+         x struct-name field-name))
 
-   (define (struct->alist-func syntax-context struct-name)
+   (define (struct->alist-func x struct-name)
       (build-type-related-symbol
          (cute string-append "ff:" <> "->alist")
-         syntax-context struct-name))
+         x struct-name))
 
-   (define (unchecked-struct->alist-func syntax-context struct-name)
+   (define (unchecked-struct->alist-func x struct-name)
       (build-type-related-symbol
          (cute string-append "unchecked-ff:" <> "->alist")
-         syntax-context struct-name))
+         x struct-name))
    )
 
 (define-syntax with-:interface:-exported
@@ -531,31 +529,26 @@
                )))))
 
 (define-syntax :interface:
-   (lambda (x)
-      (syntax-case x (struct sizeof field *)
+   (syntax-rules (struct sizeof field *)
+      ((_ (sizeof type-name size)) (expand-sizeof type-name size))
 
-         ((_ (sizeof type-name size))
-          #'(expand-sizeof type-name size))
-               
-         ((_ (struct type-name size))
-          #'(expand-struct type-name size))
+      ((_ (struct type-name size)) (expand-struct type-name size))
 
-         ((_ (field (field-type field-subtype) struct-name field-name offset size))
-          #'(expand-field-without-dereferencing field-type struct-name field-name offset size)
+      ((_ (field (field-type field-subtype) struct-name field-name offset size))
+          (expand-field-without-dereferencing field-type struct-name field-name offset size)
           ;;
           ;; FIXME: Dereferencing and array procedures go here.
           ;;
           )
 
-         ((_ (field field-type struct-name field-name offset size))
-          #'(expand-field-without-dereferencing field-type struct-name field-name offset size))
+      ((_ (field field-type struct-name field-name offset size))
+       (expand-field-without-dereferencing field-type struct-name field-name offset size))
 
-         ((_ (struct-field struct-name field-name offset size))
-          #'(expand-struct-field struct-name field-name offset size))
+      ((_ (struct-field struct-name field-name offset size))
+       (expand-struct-field struct-name field-name offset size))
 
-         ((_ (struct-> struct-name (field-name kind field-type offset size) ...))
-          #'(expand-struct-> struct-name (field-name kind field-type offset size) ...))
-         )))
+      ((_ (struct-> struct-name (field-name kind field-type offset size) ...))
+       (expand-struct-> struct-name (field-name kind field-type offset size) ...)) ))
 
 ;;-------------------------------------------------------------------------
 
