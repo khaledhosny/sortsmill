@@ -33,32 +33,32 @@
    pointer->glyph-view
    glyph-view->pointer
    view->pointer
-   font-view->ff:FontViewBase
-   ff:FontViewBase->font-view
-   glyph-view->ff:CharViewBase
-   ff:CharViewBase->glyph-view
+   font-view->FontViewBase
+   FontViewBase->font-view
+   glyph-view->CharViewBase
+   CharViewBase->glyph-view
    )
 
 (define-wrapped-pointer-type font-view
    font-view?
    pointer->font-view font-view->pointer
    (lambda (fv port)
-      (let* ((fvb (font-view->ff:FontViewBase fv))
-             (sf (ff:FontViewBase:sf-dref fvb)))
+      (let* ((fvb (font-view->FontViewBase fv))
+             (sf (FontViewBase:sf-dref fvb)))
          (format port "#<font-view ~s 0x~x>"
-            (pointer->string (ff:SplineFont:font-name-ref sf))
+            (pointer->string (SplineFont:font-name-ref sf))
             (pointer-address (font-view->pointer fv))))))
 
 (define-wrapped-pointer-type glyph-view
    glyph-view?
    pointer->glyph-view glyph-view->pointer
    (lambda (gv port)
-      (let* ((cvb (glyph-view->ff:CharViewBase gv))
-             (sc (ff:CharViewBase:sc-dref cvb))
-             (sf (ff:SplineChar:parent-dref sc)))
+      (let* ((cvb (glyph-view->CharViewBase gv))
+             (sc (CharViewBase:sc-dref cvb))
+             (sf (SplineChar:parent-dref sc)))
          (format port "#<glyph-view ~s:~s 0x~x>"
-            (pointer->string (ff:SplineFont:font-name-ref sf))
-            (pointer->string (ff:SplineChar:name-ref sc))
+            (pointer->string (SplineFont:font-name-ref sf))
+            (pointer->string (SplineChar:name-ref sc))
             (pointer-address (glyph-view->pointer gv))))))
 
 (define (view->pointer v)
@@ -68,17 +68,17 @@
                   "Not a font-view or glyph-view: ~S"
                   (list v) (list v)))))
 
-(define (font-view->ff:FontViewBase fv)
-   (pointer->ff:FontViewBase (font-view->pointer fv)))
+(define (font-view->FontViewBase fv)
+   (pointer->FontViewBase (font-view->pointer fv)))
 
-(define (ff:FontViewBase->font-view fvb)
-   (pointer->font-view (ff:FontViewBase->pointer fvb)))
+(define (FontViewBase->font-view fvb)
+   (pointer->font-view (FontViewBase->pointer fvb)))
 
-(define (glyph-view->ff:CharViewBase gv)
-   (pointer->ff:CharViewBase (glyph-view->pointer gv)))
+(define (glyph-view->CharViewBase gv)
+   (pointer->CharViewBase (glyph-view->pointer gv)))
 
-(define (ff:CharViewBase->glyph-view sc)
-   (pointer->glyph-view (ff:CharViewBase->pointer sc)))
+(define (CharViewBase->glyph-view sc)
+   (pointer->glyph-view (CharViewBase->pointer sc)))
 
 ;;(load-extension "libguile-sortsmillff_fontforge"
 ;;   "init_guile_sortsmillff_views")

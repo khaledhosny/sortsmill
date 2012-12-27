@@ -23,7 +23,7 @@
 ;;; Scheme objects.
 ;;;
 
-(define-module (sortsmillff ggadget-and-guile))
+(define-module (sortsmillff gdraw-and-guile))
 
 (use-modules
    (sortsmillff gdraw-types)
@@ -51,7 +51,7 @@
 ;;             (get-field-funcs
 ;;                (map
 ;;                   (lambda (f) (f . (eval-string
-;;                                       (string-append "get-ff:"
+;;                                       (string-append "get-"
 ;;                                          struct-name "-" f))))
 ;;                   field-names)))
 ;;         (write get-field-funcs))))

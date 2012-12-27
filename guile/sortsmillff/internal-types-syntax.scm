@@ -137,122 +137,122 @@
 
    (define (type-tag x type-name)
       (build-type-related-symbol
-         (cute simple-format #f "tag-ff:~A" <>)
+         (cute simple-format #f "tag-~A" <>)
          x type-name))
 
    (define (type-sizeof-var x type-name)
       (build-type-related-symbol
-         (cute simple-format #f "sizeof-ff:~A" <>)
+         (cute simple-format #f "sizeof-~A" <>)
          x type-name))
 
    (define (struct?-func x type-name)
       (build-type-related-symbol
-         (cute simple-format #f "ff:~A?" <>)
+         (cute simple-format #f "~A?" <>)
          x type-name))
 
    (define (throw-failed-check-struct-func x type-name)
       (build-type-related-symbol
-         (cute simple-format #f "throw-failed-check-ff:~A" <>)
+         (cute simple-format #f "throw-failed-check-~A" <>)
          x type-name))
 
    (define (check-struct-func x type-name)
       (build-type-related-symbol
-         (cute simple-format #f "check-ff:~A" <>)
+         (cute simple-format #f "check-~A" <>)
          x type-name))
 
    (define (pointer->struct-func x type-name)
       (build-type-related-symbol
-         (cute simple-format #f "pointer->ff:~A" <>)
+         (cute simple-format #f "pointer->~A" <>)
          x type-name))
 
    (define (struct->pointer-func x type-name)
       (build-type-related-symbol
-         (cute simple-format #f "ff:~A->pointer" <>)
+         (cute simple-format #f "~A->pointer" <>)
          x type-name))
 
    (define (unchecked-struct->pointer-func x type-name)
       (build-type-related-symbol
-         (cute simple-format #f "unchecked-ff:~A->pointer" <>)
+         (cute simple-format #f "unchecked-~A->pointer" <>)
          x type-name))
 
    (define (malloc-struct-func x type-name)
       (build-type-related-symbol
-         (cute simple-format #f "malloc-ff:~A" <>)
+         (cute simple-format #f "malloc-~A" <>)
          x type-name))
 
    (define (free-struct-func x type-name)
       (build-type-related-symbol
-         (cute simple-format #f "free-ff:~A" <>)
+         (cute simple-format #f "free-~A" <>)
          x type-name))
 
    (define (unchecked-free-struct-func x type-name)
       (build-type-related-symbol
-         (cute simple-format #f "unchecked-free-ff:~A" <>)
+         (cute simple-format #f "unchecked-free-~A" <>)
          x type-name))
 
    (define (gc-malloc-struct-func x type-name)
       (build-type-related-symbol
-         (cute simple-format #f "gc-malloc-ff:~A" <>)
+         (cute simple-format #f "gc-malloc-~A" <>)
          x type-name))
 
    (define (gc-free-struct-func x type-name)
       (build-type-related-symbol
-         (cute simple-format #f "gc-free-ff:~A" <>)
+         (cute simple-format #f "gc-free-~A" <>)
          x type-name))
 
    (define (unchecked-gc-free-struct-func x type-name)
       (build-type-related-symbol
-         (cute simple-format #f "unchecked-gc-free-ff:~A" <>)
+         (cute simple-format #f "unchecked-gc-free-~A" <>)
          x type-name))
 
    (define (field-ref-func x struct-name field-name)
       (build-type-related-symbol
-         (cute simple-format #f "ff:~A:~A-ref" <> <>)
+         (cute simple-format #f "~A:~A-ref" <> <>)
          x struct-name field-name))
 
    (define (unchecked-field-ref-func x struct-name field-name)
       (build-type-related-symbol
-         (cute simple-format #f "unchecked-ff:~A:~A-ref" <> <>)
+         (cute simple-format #f "unchecked-~A:~A-ref" <> <>)
          x struct-name field-name))
 
    (define (field-dref-func x struct-name field-name)
       (build-type-related-symbol
-         (cute simple-format #f "ff:~A:~A-dref" <> <>)
+         (cute simple-format #f "~A:~A-dref" <> <>)
          x struct-name field-name))
 
    (define (unchecked-field-dref-func x struct-name field-name)
       (build-type-related-symbol
-         (cute simple-format #f "unchecked-ff:~A:~A-dref" <> <>)
+         (cute simple-format #f "unchecked-~A:~A-dref" <> <>)
          x struct-name field-name))
 
    (define (field-set!-func x struct-name field-name)
       (build-type-related-symbol
-         (cute simple-format #f "ff:~A:~A-set!" <> <>)
+         (cute simple-format #f "~A:~A-set!" <> <>)
          x struct-name field-name))
 
    (define (unchecked-field-set!-func x struct-name field-name)
       (build-type-related-symbol
-         (cute simple-format #f "unchecked-ff:~A:~A-set!" <> <>)
+         (cute simple-format #f "unchecked-~A:~A-set!" <> <>)
          x struct-name field-name))
 
    (define (field->pointer-func x struct-name field-name)
       (build-type-related-symbol
-         (cute simple-format #f "ff:~A:~A->pointer" <> <>)
+         (cute simple-format #f "~A:~A->pointer" <> <>)
          x struct-name field-name))
 
    (define (unchecked-field->pointer-func x struct-name field-name)
       (build-type-related-symbol
-         (cute simple-format #f "unchecked-ff:~A:~A->pointer" <> <>)
+         (cute simple-format #f "unchecked-~A:~A->pointer" <> <>)
          x struct-name field-name))
 
    (define (struct->alist-func x struct-name)
       (build-type-related-symbol
-         (cute simple-format #f "ff:~A->alist" <>)
+         (cute simple-format #f "~A->alist" <>)
          x struct-name))
 
    (define (unchecked-struct->alist-func x struct-name)
       (build-type-related-symbol
-         (cute simple-format #f "unchecked-ff:~A->alist" <>)
+         (cute simple-format #f "unchecked-~A->alist" <>)
          x struct-name))
    )
 
@@ -289,7 +289,7 @@
          ((_ type-name size)
           #`(begin
                (maybe-export
-                  ;; Example: sizeof-ff:SplineChar
+                  ;; Example: sizeof-SplineChar
                   #,(type-sizeof-var x #'type-name)
                   )
                (define #,(type-sizeof-var x #'type-name) #'size))))))
@@ -301,37 +301,37 @@
           (let ((tag (type-tag x #'type-name)))
              #`(begin
                   (maybe-export
-                     ;; Example: ff:SplineChar?
+                     ;; Example: SplineChar?
                      #,(struct?-func x #'type-name)
 
-                     ;; Example: check-ff:SplineChar
+                     ;; Example: check-SplineChar
                      #,(check-struct-func x #'type-name)
 
-                     ;; Example: pointer->ff:SplineChar
+                     ;; Example: pointer->SplineChar
                      #,(pointer->struct-func x #'type-name)
 
-                     ;; Example: ff:SplineChar->pointer
+                     ;; Example: SplineChar->pointer
                      #,(struct->pointer-func x #'type-name)
 
-                     ;; Example: unchecked-ff:SplineChar->pointer
+                     ;; Example: unchecked-SplineChar->pointer
                      #,(unchecked-struct->pointer-func x #'type-name)
 
-                     ;; Example: malloc-ff:SplineChar
+                     ;; Example: malloc-SplineChar
                      #,(malloc-struct-func x #'type-name)
 
-                     ;; Example: free-ff:SplineChar
+                     ;; Example: free-SplineChar
                      #,(free-struct-func x #'type-name)
 
-                     ;; Example: unchecked-free-ff:SplineChar
+                     ;; Example: unchecked-free-SplineChar
                      #,(unchecked-free-struct-func x #'type-name)
 
-                     ;; Example: gc-malloc-ff:SplineChar
+                     ;; Example: gc-malloc-SplineChar
                      #,(gc-malloc-struct-func x #'type-name)
 
-                     ;; Example: gc-free-ff:SplineChar
+                     ;; Example: gc-free-SplineChar
                      #,(gc-free-struct-func x #'type-name)
 
-                     ;; Example: unchecked-gc-free-ff:SplineChar
+                     ;; Example: unchecked-gc-free-SplineChar
                      #,(unchecked-gc-free-struct-func x #'type-name)
                      )
 
@@ -351,8 +351,8 @@
                                (symbol->string caller)
                                caller)
                            (if err-msg
-                               "Expected ~A API struct of type `ff:~A', but ~A"
-                               "Expected ~A API struct of type `ff:~A'")
+                               "Expected ~A API struct of type `~A', but ~A"
+                               "Expected ~A API struct of type `~A'")
                            (if err-msg
                                (list pkg-info:package-name type-name err-msg)
                                (list pkg-info:package-name type-name))
@@ -432,57 +432,57 @@
          ((_ field-type struct-name field-name offset size)
           #`(begin
                (maybe-export
-                  ;; Example: unchecked-ff:SplineChar:name-ref
+                  ;; Example: unchecked-SplineChar:name-ref
                   #,(unchecked-field-ref-func x #'struct-name #'field-name)
 
-                  ;; Example: ff:SplineChar:name-ref
+                  ;; Example: SplineChar:name-ref
                   #,(field-ref-func x #'struct-name #'field-name)
 
-                  ;; Example: unchecked-ff:SplineChar:name-set!
+                  ;; Example: unchecked-SplineChar:name-set!
                   #,(unchecked-field-set!-func x #'struct-name #'field-name)
 
-                  ;; Example: ff:SplineChar:name-set!
+                  ;; Example: SplineChar:name-set!
                   #,(field-set!-func x #'struct-name #'field-name)
 
-                  ;; Example: unchecked-ff:SplineChar:name->pointer
+                  ;; Example: unchecked-SplineChar:name->pointer
                   #,(unchecked-field->pointer-func x #'struct-name #'field-name)
 
-                  ;; Example: ff:SplineChar:name->pointer
+                  ;; Example: SplineChar:name->pointer
                   #,(field->pointer-func x #'struct-name #'field-name)
                   )
                
                (define #,(unchecked-field-ref-func x #'struct-name #'field-name)
                   (lambda (obj)
-                     ((ff:field-ref field-type offset size) (cdr obj))))
+                     ((field-ref field-type offset size) (cdr obj))))
 
                (define #,(field-ref-func x #'struct-name #'field-name)
                   (lambda (obj)
                      (#,(check-struct-func x #'struct-name)
                       #,(field-ref-func x #'struct-name #'field-name)
                       obj)
-                     ((ff:field-ref field-type offset size) (cdr obj))))
+                     ((field-ref field-type offset size) (cdr obj))))
 
                (define #,(unchecked-field-set!-func x #'struct-name #'field-name)
                   (lambda (obj v)
-                     ((ff:field-set! field-type offset size) (cdr obj) v)))
+                     ((field-set! field-type offset size) (cdr obj) v)))
 
                (define #,(field-set!-func x #'struct-name #'field-name)
                   (lambda (obj v)
                      (#,(check-struct-func x #'struct-name)
                       #,(field-set!-func x #'struct-name #'field-name)
                       obj)
-                     ((ff:field-set! field-type offset size) (cdr obj) v)))
+                     ((field-set! field-type offset size) (cdr obj) v)))
 
                (define #,(unchecked-field->pointer-func x #'struct-name #'field-name)
                   (lambda (obj)
-                     ((ff:field->pointer offset) (cdr obj))))
+                     ((field->pointer offset) (cdr obj))))
 
                (define #,(field->pointer-func x #'struct-name #'field-name)
                   (lambda (obj)
                      (#,(check-struct-func x #'struct-name)
                       #,(field->pointer-func x #'struct-name #'field-name)
                       obj)
-                     ((ff:field->pointer offset) (cdr obj))))
+                     ((field->pointer offset) (cdr obj))))
                )))))
 
 (define-syntax expand-field-dereferencing
@@ -491,16 +491,16 @@
          ((_ (field-type field-subtype) struct-name field-name offset size)
           #`(begin
                (maybe-export
-                  ;; Example: unchecked-ff:SplineChar:name-ref
+                  ;; Example: unchecked-SplineChar:name-ref
                   #,(unchecked-field-dref-func x #'struct-name #'field-name)
 
-                  ;; Example: ff:SplineChar:name-ref
+                  ;; Example: SplineChar:name-ref
                   #,(field-dref-func x #'struct-name #'field-name)
                   )
 
                (define #,(unchecked-field-dref-func x #'struct-name #'field-name)
                   (lambda (obj)
-                     (let ((pointer ((ff:field-ref field-type offset size) (cdr obj))))
+                     (let ((pointer ((field-ref field-type offset size) (cdr obj))))
                         (#,(pointer->struct-func x #'field-subtype) pointer))))
 
                (define #,(field-dref-func x #'struct-name #'field-name)
@@ -517,23 +517,23 @@
          ((_ struct-name field-name offset size)
           #`(begin
                (maybe-export
-                   Example: unchecked-ff:SplineChar:name->pointer
+                   Example: unchecked-SplineChar:name->pointer
                   #,(unchecked-field->pointer-func x #'struct-name #'field-name)
 
-                   Example: ff:SplineChar:name->pointer
+                   Example: SplineChar:name->pointer
                   #,(field->pointer-func x #'struct-name #'field-name)
                   )
                
                (define #,(unchecked-field->pointer-func x #'struct-name #'field-name)
                   (lambda (obj)
-                     ((ff:field->pointer offset) (cdr obj))))
+                     ((field->pointer offset) (cdr obj))))
 
                (define #,(field->pointer-func x #'struct-name #'field-name)
                   (lambda (obj)
                      (#,(check-struct-func x #'struct-name)
                       #,(field->pointer-func x #'struct-name #'field-name)
                       obj)
-                     ((ff:field->pointer offset) (cdr obj))))
+                     ((field->pointer offset) (cdr obj))))
                )))))
 
 (define-syntax expand-struct->
@@ -542,17 +542,17 @@
          ((_ struct-name (field-name kind field-type offset size) ...)
           #`(begin
                (maybe-export
-                  ;; Example: unchecked-ff:SplineChar->alist
+                  ;; Example: unchecked-SplineChar->alist
                   #,(unchecked-struct->alist-func x #'struct-name)
 
-                  ;; Example: ff:SplineChar->alist
+                  ;; Example: SplineChar->alist
                   #,(struct->alist-func x #'struct-name)
                   )
 
                (define #,(unchecked-struct->alist-func x #'struct-name)
                   (lambda (obj)
                      (list
-                        ((unchecked-ff:field->alist-entry
+                        ((unchecked-field->alist-entry
                             field-name kind field-type offset size) obj)
                         ...)))
 
@@ -586,7 +586,7 @@
 
 ;;-------------------------------------------------------------------------
 
-(define-syntax ff:field-ref
+(define-syntax field-ref
    (syntax-rules (int uint bool float *)
       ((_ int offset 1) (lambda (bv) (bytevector-s8-ref bv offset)))
       ((_ int offset 2) (lambda (bv) (bytevector-s16-native-ref bv offset)))
@@ -608,7 +608,7 @@
       ((_ * offset 8) (lambda (bv) (make-pointer (bytevector-u64-native-ref bv offset))))
       ))
 
-(define-syntax ff:field-set!
+(define-syntax field-set!
    (syntax-rules (int uint bool *)
       ((_ int offset 1) (lambda (bv v) (bytevector-s8-set! bv offset v)))
       ((_ int offset 2) (lambda (bv v) (bytevector-s16-native-set! bv offset v)))
@@ -630,11 +630,11 @@
       ((_ * offset 8) (lambda (bv v) (bytevector-u64-native-set! bv offset (pointer-address v))))
       ))
 
-(define-syntax ff:field->pointer
+(define-syntax field->pointer
    (syntax-rules ()
       ((_ offset) (lambda (bv) (bytevector->pointer bv offset)))))
 
-(define-syntax unchecked-ff:field->alist-entry
+(define-syntax unchecked-field->alist-entry
    (lambda (x)
       (syntax-case x (field struct-field)
          ((_ field-name field (field-type field-subtype) offset size)
@@ -642,19 +642,19 @@
                (cons
                   (quote #,(datum->syntax x
                               (string->symbol (syntax->datum #'field-name))))
-                  ((ff:field-ref field-type offset size) (cdr obj)))))
+                  ((field-ref field-type offset size) (cdr obj)))))
          ((_ field-name field field-type offset size)
           #`(lambda (obj)
                (cons
                   (quote #,(datum->syntax x
                               (string->symbol (syntax->datum #'field-name))))
-                  ((ff:field-ref field-type offset size) (cdr obj)))))
+                  ((field-ref field-type offset size) (cdr obj)))))
          ((_ field-name struct-field _ offset _)
            #`(lambda (obj)
                 (cons
                    (quote #,(datum->syntax x
                                (string->symbol (syntax->datum #'field-name))))
-                   ((ff:field->pointer offset) (cdr obj))))))))
+                   ((field->pointer offset) (cdr obj))))))))
 
 ;;-------------------------------------------------------------------------
 
