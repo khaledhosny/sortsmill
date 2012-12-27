@@ -25,23 +25,33 @@
 (export
    read-instruction-sources
    read-instructions
+   underscores->hyphens
+   underscore->hyphen
    )
 
-(define (read-instruction-sources sources)
+(define* (read-instruction-sources
+            #:optional
+            (sources (list (current-input-port)))
+            (prior '()))
    (match sources
-      (() *unspecified*)
-      ((h . t)
-       (let ((port (open-input-pipe h)))
-          (read-instructions port)
-          (close-pipe port)
-          (read-instruction-sources t)))))
+      (() prior)
+      ((source . more-sources)
+       (let ((instructions
+                (cond
+                   ((string? source) (with-input-from-file source
+                                        (lambda () (read-instructions))))
+                   ((port? source) (read-instructions source)))))
+          (read-instruction-sources more-sources
+             (append prior instructions))))))
 
-(define (read-instructions port)
-   (do ((instruction (read port) (read port)))
-       ((eof-object? instruction))
-       (write (list ':interface:
-                 (underscores->hyphens instruction)))
-       (newline)))
+(define* (read-instructions
+            #:optional
+            (port (current-input-port))
+            (prior '()))
+   (let ((instruction (read port)))
+      (if (eof-object? instruction)
+          (reverse prior)
+          (read-instructions port (cons instruction prior)))))
 
 ;; Convert ‘_’ to ‘-’, because hyphens are more conventional in
 ;; Scheme.

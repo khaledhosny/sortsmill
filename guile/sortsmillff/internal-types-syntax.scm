@@ -44,19 +44,19 @@
 
 (export
    ;; Fluid for ‘Are API-definitions being exported?’
-   %:interface:-exported?
+   %api-exported:--?
 
    ;; Are API-definitions being exported?
-   :interface:-exported?
+   api-exported:--?
 
    ;; Export enclosed API-definitions.
-   with-:interface:-exported
+   with-api-exported:--
 
    ;; Follow an API-definition instruction.
-   :interface:
+   api:--
 
    ;; Read instructions from a port.
-   read-:interface:
+   read-api:--
 
    )
 
@@ -105,12 +105,12 @@
 
 (eval-when (compile load eval)
 
-   (define %:interface:-exported? (make-fluid #f))
+   (define %api-exported:--? (make-fluid #f))
 
-   (define :interface:-exported?
+   (define api-exported:--?
       (case-lambda
-         (() (fluid-ref %:interface:-exported?))
-         ((v) (fluid-set! %:interface:-exported? (not (not v))))))
+         (() (fluid-ref %api-exported:--?))
+         ((v) (fluid-set! %api-exported:--? (not (not v))))))
 
    (define (struct-type-error-msg tag size obj)
       (cond
@@ -256,31 +256,31 @@
          x struct-name))
    )
 
-(define-syntax with-:interface:-exported
+(define-syntax with-api-exported:--
    (syntax-rules ()
       ((_ #t body body* ...)
        (let-syntax ((old-export
                        (syntax-rules ()
-                          ((_) (fluid-ref %:interface:-exported?)))))
-          (fluid-set! %:interface:-exported? #t)
+                          ((_) (fluid-ref %api-exported:--?)))))
+          (fluid-set! %api-exported:--? #t)
           body body* ...
-          (fluid-set! %:interface:-exported? (old-export))))
+          (fluid-set! %api-exported:--? (old-export))))
 
       ((_ #f body body* ...)
        (let-syntax ((old-export
                        (syntax-rules ()
-                          ((_) (fluid-ref %:interface:-exported?)))))
-          (fluid-set! %:interface:-exported? #f)
+                          ((_) (fluid-ref %api-exported:--?)))))
+          (fluid-set! %api-exported:--? #f)
           body body* ...
-          (fluid-set! %:interface:-exported? (old-export))))
+          (fluid-set! %api-exported:--? (old-export))))
 
       ((_ body body* ...)
-       (with-:interface:-exported #t body body* ...))))
+       (with-api-exported:-- #t body body* ...))))
 
 (define-syntax maybe-export
    (syntax-rules ()
       ((_ id id* ...)
-       (if (:interface:-exported?)
+       (if (api-exported:--?)
            (export id id* ...)))))
 
 (define-syntax expand-sizeof
@@ -574,25 +574,31 @@
                      (#,(unchecked-struct->alist-func x #'struct-name) obj)))
                )))))
 
-(define-syntax :interface:
-   (syntax-rules (struct sizeof field *)
-      ((_ (sizeof type-name size)) (expand-sizeof type-name size))
+(define-syntax api:--
+   (lambda (x)
+      (syntax-case x (struct sizeof field *)
+         ((_ (sizeof type-name size)) #'(expand-sizeof type-name size))
 
-      ((_ (struct type-name size)) (expand-struct type-name size))
+         ((_ (struct type-name size)) #'(expand-struct type-name size))
 
-      ((_ (field (field-type field-subtype) struct-name field-name offset size))
-       (begin
-          (expand-field-without-dereferencing field-type struct-name field-name offset size)
-          (expand-field-dereferencing (field-type field-subtype) struct-name field-name offset size)))
+         ((_ (field (field-type field-subtype) struct-name field-name offset size))
+          #'(begin
+             (expand-field-without-dereferencing field-type struct-name field-name offset size)
+             (expand-field-dereferencing (field-type field-subtype) struct-name field-name offset size)))
 
-      ((_ (field field-type struct-name field-name offset size))
-       (expand-field-without-dereferencing field-type struct-name field-name offset size))
+         ((_ (field field-type struct-name field-name offset size))
+          #'(expand-field-without-dereferencing field-type struct-name field-name offset size))
 
-      ((_ (struct-field struct-name field-name offset size))
-       (expand-struct-field struct-name field-name offset size))
+         ((_ (struct-field struct-name field-name offset size))
+          #'(expand-struct-field struct-name field-name offset size))
 
-      ((_ (struct-> struct-name (field-name kind field-type offset size) ...))
-       (expand-struct-> struct-name (field-name kind field-type offset size) ...)) ))
+         ((_ (struct-> struct-name (field-name kind field-type offset size) ...))
+          #'(expand-struct-> struct-name (field-name kind field-type offset size) ...))
+
+         ((_ form form* ...)
+          #'(begin (api:-- form) (api:-- form*) ...))
+
+         )))
 
 ;;-------------------------------------------------------------------------
 
@@ -668,13 +674,13 @@
 
 ;;-------------------------------------------------------------------------
 
-(define read-:interface:
+(define read-api:--
    (case-lambda
-      (() (read-:interface: (current-input-port)))
+      (() (read-api:-- (current-input-port)))
       ((port)
        (do ((instruction (read port) (read port)))
            ((eof-object? instruction))
-           (eval (list ':interface: instruction)
+           (eval (list 'api:-- instruction)
               (interaction-environment))))))
 
 ;;-------------------------------------------------------------------------

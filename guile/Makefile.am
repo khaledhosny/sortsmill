@@ -67,14 +67,13 @@ NODIST_SCM_FILES += sortsmillff/machine.scm sortsmillff/pkg-info.scm	\
 	sortsmillff/math-constants.scm sortsmillff/i18n.scm					\
 	sortsmillff/internal-types.scm sortsmillff/python.scm
 
-sortsmillff/internal-types.scm: generate-internal-types.scm	\
-		ff-internal/generate-types.scm						\
+sortsmillff/internal-types.scm: $(srcdir)/generate-internal-types.scm	\
+		ff-internal/generate-types.scm									\
 		$(top_builddir)/fontforge/fontforge_type_inspector
 	$(AM_V_GEN)
-	$(AM_V_at)$(GUILE_INTERPRET) generate-internal-types.scm 	\
-		'(sortsmillff internal-types)'							\
-		'(list "$(top_builddir)/fontforge/fontforge_type_inspector")' \
-			> $@-tmp
+	$(AM_V_at)$(top_builddir)/fontforge/fontforge_type_inspector |	\
+		$(GUILE_INTERPRET) $(srcdir)/generate-internal-types.scm	\
+			'(sortsmillff internal-types)' > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
 EXTRA_DIST += ff-internal/generate-types.scm
@@ -84,12 +83,12 @@ EXTRA_DIST += ff-internal/generate-types.scm
 # Use of (sortsmillff gdraw-types) is discouraged because hopefully it
 # will go away completely. It is a transition aid.
 
-sortsmillff/gdraw-types.scm: generate-internal-types.scm	\
+sortsmillff/gdraw-types.scm: $(srcdir)/generate-internal-types.scm	\
 		ff-internal/generate-types.scm gdraw_type_inspector
 	$(AM_V_GEN)
-	$(AM_V_at)$(GUILE_INTERPRET) generate-internal-types.scm	\
-		'(sortsmillff gdraw-types)' 							\
-		'(list "$(builddir)/gdraw_type_inspector")' > $@-tmp
+	$(AM_V_at)$(top_builddir)/guile/gdraw_type_inspector |			\
+		$(GUILE_INTERPRET) $(srcdir)/generate-internal-types.scm	\
+			'(sortsmillff gdraw-types)' > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
 noinst_PROGRAMS = gdraw_type_inspector
