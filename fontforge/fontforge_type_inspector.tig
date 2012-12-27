@@ -30,6 +30,14 @@
        (* container)
        ))
 
+ (struct "struct altuni" "AltUni"
+    (fields
+       ((* AltUni) next)
+       (int unienc unicode)
+       (int vs variation_selector)
+       (int fid)
+       ))
+
  (struct SplineChar
     (fields
 
@@ -88,7 +96,7 @@
        (int ttf_instrs_len ttf_instrs_length)
        (int countermask_cnt countermask_count)
        (* countermasks)
-       (* altuni)
+       ((* AltUni) altuni)
 
        ;; Mathematics and TeX.
        (int tex_height)

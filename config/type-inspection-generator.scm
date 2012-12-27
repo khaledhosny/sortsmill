@@ -296,7 +296,7 @@
           replacement-struct-name field-name))
 
       (('fields . fields)
-       (cons* 'fields struct-name fields))
+       (cons* 'fields struct-name replacement-struct-name fields))
 
       (('struct->)
        (list 'struct-> replacement-struct-name))
