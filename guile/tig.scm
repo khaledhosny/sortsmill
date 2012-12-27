@@ -2,12 +2,12 @@
 --no-auto-compile -s
 !#
 
-;; Example input:
 ;;
-;;   (<stdbool.h> splinefont.h)
-;;   (struct SplineChar
-;;      (field bool SplineChar changed)
-;;      (field int SplineChar italic_correction italcorr))
+;; The Type Inspector Generator.
+;;
+;; Writes C code to examine the layout of C types and generate API
+;; instructions.
+;;
 
 (use-modules
    (ice-9 match)

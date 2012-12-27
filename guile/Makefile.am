@@ -36,6 +36,8 @@ MOSTLYCLEANFILES =
 CLEANFILES =
 DISTCLEANFILES =
 
+EXTRA_DIST += tig.scm
+
 #--------------------------------------------------------------------------
 
 DIST_SCM_FILES =
