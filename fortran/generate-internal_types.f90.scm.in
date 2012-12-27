@@ -53,64 +53,88 @@
 
 (define (write-declarations instructions)
    (for-each
-      (lambda (instr)
-         (match instr
-            (('struct (? string? struct-name) (? integer? size))
-             (format #t "type ~a\n" struct-name)
-             (format #t "  ! Represent a C struct or union as a bytevector.\n")
-             (format #t "  integer(c_int8_t), dimension(:), pointer :: bv\n")
-             (format #t "end type ~a\n" struct-name)
-             (format #t "\n")
-             (format #t "! Constructors for ~a.\n" struct-name)
-             (format #t "interface ~a\n" struct-name)
-             (format #t "  module procedure c_ptr_to_~a\n" struct-name)
-             (format #t "  module procedure c_intptr_t_to_~a\n" struct-name)
-             (format #t "end interface ~a\n" struct-name)
-             (format #t "\n")
-             )
-            (('field (? symbol? field-type) (? string? struct-name)
-                (? string? field-name) (? integer? offset) (? integer? size))
-             (format #t "interface get_~a\n" field-name)
-             (format #t "  module procedure get_~a_~a\n" struct-name field-name)
-             (format #t "end interface get_~a\n" field-name)
-             (format #t "\n")
-             (format #t "interface set_~a\n" field-name)
-             (format #t "  module procedure set_~a_~a\n" struct-name field-name)
-             (format #t "end interface set_~a\n" field-name)
-             (format #t "\n")
-             )
-            (_ (lambda (_) *unspecified*))))
+      write-declarations-for-one-instruction
       instructions))
+
+(define (write-declarations-for-one-instruction instruction)
+   (match instruction
+      (('struct (? string? struct-name) (? integer? size))
+       (format #t "type ~a\n" struct-name)
+       (format #t "  ! Represent a C struct or union as a bytevector.\n")
+       (format #t "  integer(c_int8_t), dimension(:), pointer :: bv\n")
+       (format #t "end type ~a\n" struct-name)
+       (format #t "\n")
+       (format #t "! Constructors for ~a.\n" struct-name)
+       (format #t "interface ~a\n" struct-name)
+       (format #t "  module procedure c_ptr_to_~a\n" struct-name)
+       (format #t "  module procedure c_intptr_t_to_~a\n" struct-name)
+       (format #t "end interface ~a\n" struct-name)
+       (format #t "\n")
+       )
+      (('field (? symbol? field-type) (? string? struct-name)
+          (? string? field-name) (? integer? offset) (? integer? size))
+       (format #t "interface get_~a\n" field-name)
+       (format #t "  module procedure get_~a_~a\n" struct-name field-name)
+       (format #t "end interface get_~a\n" field-name)
+       (format #t "\n")
+       (format #t "interface set_~a\n" field-name)
+       (format #t "  module procedure set_~a_~a\n" struct-name field-name)
+       (format #t "end interface set_~a\n" field-name)
+       (format #t "\n")
+       )
+      (('field ((and '* field-type) (? symbol? pointer-type)) (? string? struct-name)
+          (? string? field-name) (? integer? offset) (? integer? size))
+       (write-declarations-for-one-instruction
+          (list 'field field-type struct-name field-name offset size))
+       ;;
+       ;; FIXME: Dereferencing and array procedures go here.
+       ;;
+       )
+
+      ((instruction-symbol . _)
+       (format (current-error-port) "Ignoring '~a in declarations\n" instruction-symbol))
+      ))
 
 (define (write-definitions instructions)
    (for-each
-      (lambda (instr)
-         (match instr
-            (('struct (? string? struct-name) (? integer? size))
-             (begin
-                (format #t "type(~a) function c_ptr_to_~a (p) result(q)\n"
-                   struct-name struct-name)
-                (format #t "  type(c_ptr), intent(in) :: p\n")
-                (format #t "  call c_f_pointer (p, q%bv, [~d])\n" size)
-                (format #t "end function c_ptr_to_~a\n" struct-name)
-                (format #t "\n")
-                (format #t "type(~a) function c_intptr_t_to_~a (p) result(q)\n"
-                   struct-name struct-name)
-                (format #t "  integer(c_intptr_t), intent(in) :: p\n")
-                (format #t "  call c_f_pointer (.cptr. p, q%bv, [~d])\n" size)
-                (format #t "end function c_intptr_t_to_~a\n" struct-name)
-                (format #t "\n")
-                ))
-            (('field (? symbol? field-type) (? string? struct-name)
-                (? string? field-name) (? integer? offset) (? integer? size))
-             (begin
-                (write-field-definitions field-type struct-name field-name offset size)
-                ))
-
-            ((instruction-symbol . _)
-             (format (current-error-port) "Ignoring '~a\n" instruction-symbol))
-            ))
+      write-definitions-for-one-instruction
       instructions))
+
+(define (write-definitions-for-one-instruction instruction)
+   (match instruction
+      (('struct (? string? struct-name) (? integer? size))
+       (begin
+          (format #t "type(~a) function c_ptr_to_~a (p) result(q)\n"
+             struct-name struct-name)
+          (format #t "  type(c_ptr), intent(in) :: p\n")
+          (format #t "  call c_f_pointer (p, q%bv, [~d])\n" size)
+          (format #t "end function c_ptr_to_~a\n" struct-name)
+          (format #t "\n")
+          (format #t "type(~a) function c_intptr_t_to_~a (p) result(q)\n"
+             struct-name struct-name)
+          (format #t "  integer(c_intptr_t), intent(in) :: p\n")
+          (format #t "  call c_f_pointer (.cptr. p, q%bv, [~d])\n" size)
+          (format #t "end function c_intptr_t_to_~a\n" struct-name)
+          (format #t "\n")
+          ))
+      (('field (? symbol? field-type) (? string? struct-name)
+          (? string? field-name) (? integer? offset) (? integer? size))
+       (begin
+          (write-field-definitions field-type struct-name field-name offset size)
+          ))
+      (('field ((and '* field-type) (? symbol? pointer-type)) (? string? struct-name)
+          (? string? field-name) (? integer? offset) (? integer? size))
+       (begin
+          (write-definitions-for-one-instruction
+             (list 'field field-type struct-name field-name offset size))
+          ;;
+          ;; FIXME: Dereferencing and array procedures go here.
+          ;;
+          ))
+
+      ((instruction-symbol . _)
+       (format (current-error-port) "Ignoring '~a in definitions\n" instruction-symbol))
+      ))
 
 (define (write-field-definitions field-type struct-name field-name offset size)
    (match field-type

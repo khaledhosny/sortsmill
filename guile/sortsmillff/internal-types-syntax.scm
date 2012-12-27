@@ -22,7 +22,6 @@
    (sortsmillff pkg-info)
    (rnrs bytevectors)
    (system foreign)
-   (ice-9 match)
    (srfi srfi-26)                       ; ‘cut’ and ‘cute’.
    )
 
@@ -208,32 +207,32 @@
          (cute string-append "unchecked-gc-free-ff:" <>)
          syntax-context type-name))
 
-   (define (struct-field-ref-func syntax-context struct-name field-name)
+   (define (field-ref-func syntax-context struct-name field-name)
       (build-type-related-symbol
          (cute string-append "ff:" <> ":" <> "-ref")
          syntax-context struct-name field-name))
 
-   (define (unchecked-struct-field-ref-func syntax-context struct-name field-name)
+   (define (unchecked-field-ref-func syntax-context struct-name field-name)
       (build-type-related-symbol
          (cute string-append "unchecked-ff:" <> ":" <> "-ref")
          syntax-context struct-name field-name))
 
-   (define (struct-field-set!-func syntax-context struct-name field-name)
+   (define (field-set!-func syntax-context struct-name field-name)
       (build-type-related-symbol
          (cute string-append "ff:" <> ":" <> "-set!")
          syntax-context struct-name field-name))
 
-   (define (unchecked-struct-field-set!-func syntax-context struct-name field-name)
+   (define (unchecked-field-set!-func syntax-context struct-name field-name)
       (build-type-related-symbol
          (cute string-append "unchecked-ff:" <> ":" <> "-set!")
          syntax-context struct-name field-name))
 
-   (define (struct-field->pointer-func syntax-context struct-name field-name)
+   (define (field->pointer-func syntax-context struct-name field-name)
       (build-type-related-symbol
          (cute string-append "ff:" <> ":" <> "->pointer")
          syntax-context struct-name field-name))
 
-   (define (unchecked-struct-field->pointer-func syntax-context struct-name field-name)
+   (define (unchecked-field->pointer-func syntax-context struct-name field-name)
       (build-type-related-symbol
          (cute string-append "unchecked-ff:" <> ":" <> "->pointer")
          syntax-context struct-name field-name))
@@ -276,18 +275,21 @@
        (if (:interface:-exported?)
            (export id id* ...)))))
 
-(define-syntax :interface:
+(define-syntax expand-sizeof
    (lambda (x)
-      (syntax-case x (struct sizeof field)
-
-         ((_ (sizeof type-name size))
+      (syntax-case x ()
+         ((_ type-name size)
           #`(begin
                (maybe-export
                   ;; Example: sizeof-ff:SplineChar
-                  #,(type-sizeof-var x #'type-name))
-               (define #,(type-sizeof-var x #'type-name) size)))
+                  #,(type-sizeof-var x #'type-name)
+                  )
+               (define #,(type-sizeof-var x #'type-name) #'size))))))
 
-         ((_ (struct type-name size))
+(define-syntax expand-struct
+   (lambda (x)
+      (syntax-case x ()
+         ((_ type-name size)
           (let ((tag (type-tag x #'type-name)))
              #`(begin
                   (maybe-export
@@ -414,87 +416,96 @@
                      (lambda (obj)
                         (GC_free (#,(unchecked-struct->pointer-func x #'type-name) obj))))
 
-                  )))
+                  ))))))
 
-         ((_ (field field-type struct-name field-name offset size))
+(define-syntax expand-field-without-dereferencing
+   (lambda (x)
+      (syntax-case x ()
+         ((_ field-type struct-name field-name offset size)
           #`(begin
                (maybe-export
                   ;; Example: unchecked-ff:SplineChar:name-ref
-                  #,(unchecked-struct-field-ref-func x #'struct-name #'field-name)
+                  #,(unchecked-field-ref-func x #'struct-name #'field-name)
 
                   ;; Example: ff:SplineChar:name-ref
-                  #,(struct-field-ref-func x #'struct-name #'field-name)
+                  #,(field-ref-func x #'struct-name #'field-name)
 
                   ;; Example: unchecked-ff:SplineChar:name-set!
-                  #,(unchecked-struct-field-set!-func x #'struct-name #'field-name)
+                  #,(unchecked-field-set!-func x #'struct-name #'field-name)
 
                   ;; Example: ff:SplineChar:name-set!
-                  #,(struct-field-set!-func x #'struct-name #'field-name)
+                  #,(field-set!-func x #'struct-name #'field-name)
 
                   ;; Example: unchecked-ff:SplineChar:name->pointer
-                  #,(unchecked-struct-field->pointer-func x #'struct-name #'field-name)
+                  #,(unchecked-field->pointer-func x #'struct-name #'field-name)
 
                   ;; Example: ff:SplineChar:name->pointer
-                  #,(struct-field->pointer-func x #'struct-name #'field-name)
+                  #,(field->pointer-func x #'struct-name #'field-name)
                   )
                
-               (define #,(unchecked-struct-field-ref-func x #'struct-name #'field-name)
+               (define #,(unchecked-field-ref-func x #'struct-name #'field-name)
                   (lambda (obj)
-                     ((ff:struct-field-ref field-type offset size) obj)))
+                     ((ff:field-ref field-type offset size) obj)))
 
-               (define #,(struct-field-ref-func x #'struct-name #'field-name)
+               (define #,(field-ref-func x #'struct-name #'field-name)
                   (lambda (obj)
                      (#,(check-struct-func x #'struct-name)
-                      #,(struct-field-ref-func x #'struct-name #'field-name)
+                      #,(field-ref-func x #'struct-name #'field-name)
                       obj)
-                     ((ff:struct-field-ref field-type offset size) obj)))
+                     ((ff:field-ref field-type offset size) obj)))
 
-               (define #,(unchecked-struct-field-set!-func x #'struct-name #'field-name)
+               (define #,(unchecked-field-set!-func x #'struct-name #'field-name)
                   (lambda (obj v)
-                     ((ff:struct-field-set! field-type offset size) obj v)))
+                     ((ff:field-set! field-type offset size) obj v)))
 
-               (define #,(struct-field-set!-func x #'struct-name #'field-name)
+               (define #,(field-set!-func x #'struct-name #'field-name)
                   (lambda (obj v)
                      (#,(check-struct-func x #'struct-name)
-                      #,(struct-field-set!-func x #'struct-name #'field-name)
+                      #,(field-set!-func x #'struct-name #'field-name)
                       obj)
-                     ((ff:struct-field-set! field-type offset size) obj v)))
+                     ((ff:field-set! field-type offset size) obj v)))
 
-               (define #,(unchecked-struct-field->pointer-func x #'struct-name #'field-name)
+               (define #,(unchecked-field->pointer-func x #'struct-name #'field-name)
                   (lambda (obj)
-                     ((ff:struct-field->pointer offset) obj)))
+                     ((ff:field->pointer offset) obj)))
 
-               (define #,(struct-field->pointer-func x #'struct-name #'field-name)
+               (define #,(field->pointer-func x #'struct-name #'field-name)
                   (lambda (obj)
                      (#,(check-struct-func x #'struct-name)
-                      #,(struct-field->pointer-func x #'struct-name #'field-name)
+                      #,(field->pointer-func x #'struct-name #'field-name)
                       obj)
-                     ((ff:struct-field->pointer offset) obj)))
-               ))
+                     ((ff:field->pointer offset) obj)))
+               )))))
 
-         ((_ (struct-field struct-name field-name offset size))
+(define-syntax expand-struct-field
+   (lambda (x)
+      (syntax-case x ()
+         ((_ struct-name field-name offset size)
           #`(begin
                (maybe-export
-                  ;; Example: unchecked-ff:SplineChar:name->pointer
-                  #,(unchecked-struct-field->pointer-func x #'struct-name #'field-name)
+                   Example: unchecked-ff:SplineChar:name->pointer
+                  #,(unchecked-field->pointer-func x #'struct-name #'field-name)
 
-                  ;; Example: ff:SplineChar:name->pointer
-                  #,(struct-field->pointer-func x #'struct-name #'field-name)
+                   Example: ff:SplineChar:name->pointer
+                  #,(field->pointer-func x #'struct-name #'field-name)
                   )
                
-               (define #,(unchecked-struct-field->pointer-func x #'struct-name #'field-name)
+               (define #,(unchecked-field->pointer-func x #'struct-name #'field-name)
                   (lambda (obj)
-                     ((ff:struct-field->pointer offset) obj)))
+                     ((ff:field->pointer offset) obj)))
 
-               (define #,(struct-field->pointer-func x #'struct-name #'field-name)
+               (define #,(field->pointer-func x #'struct-name #'field-name)
                   (lambda (obj)
                      (#,(check-struct-func x #'struct-name)
-                      #,(struct-field->pointer-func x #'struct-name #'field-name)
+                      #,(field->pointer-func x #'struct-name #'field-name)
                       obj)
-                     ((ff:struct-field->pointer offset) obj)))
-               ))
+                     ((ff:field->pointer offset) obj)))
+               )))))
 
-         ((_ (struct-> struct-name (field-name kind field-type offset size) ...))
+(define-syntax expand-struct->
+   (lambda (x)
+      (syntax-case x ()
+         ((_ struct-name (field-name kind field-type offset size) ...)
           #`(begin
                (maybe-export
                   ;; Example: unchecked-ff:SplineChar->alist
@@ -507,7 +518,7 @@
                (define #,(unchecked-struct->alist-func x #'struct-name)
                   (lambda (obj)
                      (list
-                        ((unchecked-ff:struct-field->alist-entry
+                        ((unchecked-ff:field->alist-entry
                             field-name kind field-type offset size) obj)
                         ...)))
 
@@ -517,12 +528,38 @@
                       #,(struct->alist-func x #'struct-name)
                       obj)
                      (#,(unchecked-struct->alist-func x #'struct-name) obj)))
-               ))
+               )))))
+
+(define-syntax :interface:
+   (lambda (x)
+      (syntax-case x (struct sizeof field *)
+
+         ((_ (sizeof type-name size))
+          #'(expand-sizeof type-name size))
+               
+         ((_ (struct type-name size))
+          #'(expand-struct type-name size))
+
+         ((_ (field (field-type field-subtype) struct-name field-name offset size))
+          #'(expand-field-without-dereferencing field-type struct-name field-name offset size)
+          ;;
+          ;; FIXME: Dereferencing and array procedures go here.
+          ;;
+          )
+
+         ((_ (field field-type struct-name field-name offset size))
+          #'(expand-field-without-dereferencing field-type struct-name field-name offset size))
+
+         ((_ (struct-field struct-name field-name offset size))
+          #'(expand-struct-field struct-name field-name offset size))
+
+         ((_ (struct-> struct-name (field-name kind field-type offset size) ...))
+          #'(expand-struct-> struct-name (field-name kind field-type offset size) ...))
          )))
 
 ;;-------------------------------------------------------------------------
 
-(define-syntax ff:struct-field-ref
+(define-syntax ff:field-ref
    (syntax-rules (int uint bool float *)
       ((_ int offset 1) (lambda (obj) (bytevector-s8-ref (cdr obj) offset)))
       ((_ int offset 2) (lambda (obj) (bytevector-s16-native-ref (cdr obj) offset)))
@@ -544,7 +581,7 @@
       ((_ * offset 8) (lambda (obj) (make-pointer (bytevector-u64-native-ref (cdr obj) offset))))
       ))
 
-(define-syntax ff:struct-field-set!
+(define-syntax ff:field-set!
    (syntax-rules (int uint bool *)
       ((_ int offset 1) (lambda (obj v) (bytevector-s8-set! (cdr obj) offset v)))
       ((_ int offset 2) (lambda (obj v) (bytevector-s16-native-set! (cdr obj) offset v)))
@@ -566,11 +603,11 @@
       ((_ * offset 8) (lambda (obj v) (bytevector-u64-native-set! (cdr obj) offset (pointer-address v))))
       ))
 
-(define-syntax ff:struct-field->pointer
+(define-syntax ff:field->pointer
    (syntax-rules ()
       ((_ offset) (lambda (obj) (bytevector->pointer (cdr obj) offset)))))
 
-(define-syntax unchecked-ff:struct-field->alist-entry
+(define-syntax unchecked-ff:field->alist-entry
    (lambda (x)
       (syntax-case x (field struct-field)
          ((_ field-name field field-type offset size)
@@ -578,13 +615,13 @@
                (cons
                   (quote #,(datum->syntax x
                               (string->symbol (syntax->datum #'field-name))))
-                  ((ff:struct-field-ref field-type offset size) obj))))
+                  ((ff:field-ref field-type offset size) obj))))
          ((_ field-name struct-field _ offset _)
            #`(lambda (obj)
                 (cons
                    (quote #,(datum->syntax x
                                (string->symbol (syntax->datum #'field-name))))
-                   ((ff:struct-field->pointer offset) obj)))))))
+                   ((ff:field->pointer offset) obj)))))))
 
 ;;-------------------------------------------------------------------------
 

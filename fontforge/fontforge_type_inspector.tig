@@ -32,7 +32,15 @@
 
  (struct SplineChar
     (fields
+
+       ;; FIXME: Include special support for null-terminated
+       ;; strings. For instance:
+       ;;
+       ;;    ((* string) name)
+       ;;    ((* u32string) unicode_text)
+       ;;
        (* name)
+
        (int unicodeenc unicode)
        (int orig_pos orig_index)
        (int width width)
@@ -44,8 +52,7 @@
        (* dstem)
        (* views)
        (* charinfo)
-;       ((* SplineFont) parent)
-       (* parent)
+(* parent);;       ((* SplineFont) parent)
 
        (bool changed)
        (bool changedsincelasthinted changed_since_last_hinted)

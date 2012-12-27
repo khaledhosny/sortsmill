@@ -22,6 +22,7 @@
    (ice-9 popen)
    (ice-9 match)
    (ice-9 format)
+   ((rnrs) #:select (assert))
    )
 
 (define instruction-sources
@@ -115,6 +116,13 @@
        (format #t "doc = \"The address of the `~a' field, as a ctypes.c_void_p.\")\n" field-name)
        (format #t "\n")
        )
+      (('field ((and '* field-type) (? symbol? pointer-type)) (? string? struct-name)
+          (? string? field-name) (? integer? offset) (? integer? size))
+       (write-instruction (list 'field field-type struct-name field-name offset size))
+       ;;
+       ;; FIXME: Put dereferencing and array access here.
+       ;;
+       )
       (('struct-field (? string? struct-name) (? string? field-name)
           (? integer? offset) (? integer? size))
        (format #t "  def __get_~a_ptr (self):\n" field-name)
@@ -134,7 +142,7 @@
              (match flds
                 (((? string? field-name)
                   (? symbol? kind)
-                  (? (lambda (x) (or (not x) (symbol? x))) field-type)
+                  (? (lambda (x) (or (not x) (field-type? x))) field-type)
                   (? integer? offset)
                   (? integer? size))
                  (format #t "        \"~a\" : " field-name)
@@ -153,8 +161,20 @@
        (format (current-error-port) "Ignoring '~a\n" instruction-symbol))
       ))
 
+(define (field-type? ft)
+   (match ft
+      ((? symbol? _) #t)                ; Examples: uint bool *
+      (('* (? symbol? _)) #t)           ; Example: (* SplineChar)
+      (else #f)))
+
+(define (force-pointer-to-void ft)
+   (match ft
+      ((? symbol? _) ft)                ; Examples: uint bool *
+      (('* (? symbol? _)) '*)           ; Example: (* SplineChar)
+      (else (assert #f))))
+
 (define (value-c-type field-type size)
-   (match (cons field-type size)
+   (match (cons (force-pointer-to-void field-type) size)
       (('int . 1) "int8_t")
       (('int . 2) "int16_t")
       (('int . 4) "int32_t")
@@ -163,18 +183,12 @@
       (('uint . 2) "uint16_t")
       (('uint . 4) "uint32_t")
       (('uint . 8) "uint64_t")
-      (('bool . 1) "bint")
-      (('bool . 2) "bint")
-      (('bool . 4) "bint")
-      (('bool . 8) "bint")
+      (('bool . _) "bint")
       (('float . n) (symbol->string (c-float-type n)))
-      (('* . 1) "uintptr_t")
-      (('* . 2) "uintptr_t")
-      (('* . 4) "uintptr_t")
-      (('* . 8) "uintptr_t")))
+      (('* . _) "uintptr_t")))
 
 (define (get-value-function field-type size)
-   (match (cons field-type size)
+   (match (cons (force-pointer-to-void field-type) size)
       (('int . 1) "__get_int8")
       (('int . 2) "__get_int16")
       (('int . 4) "__get_int32")
@@ -196,7 +210,7 @@
       (('* . 8) "__get_ptr64")))
 
 (define (set-value-function field-type size)
-   (match (cons field-type size)
+   (match (cons (force-pointer-to-void field-type) size)
       (('int . 1) "__set_int8")
       (('int . 2) "__set_int16")
       (('int . 4) "__set_int32")

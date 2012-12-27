@@ -63,6 +63,13 @@
           struct-name field-name)
        (format #t "\n")
        )
+      (('field ((and '* field-type) (? symbol? pointer-type)) (? string? struct-name)
+          (? string? field-name) (? integer? offset) (? integer? size))
+       (write-instruction (list 'field field-type struct-name field-name offset size))
+       ;;
+       ;; FIXME: Dereferencing and array procedures go here.
+       ;;
+       )
       (('struct-field (? string? struct-name)
           (? string? field-name) (? integer? offset) (? integer? size))
        (format #t "VISIBLE void *ptr_ff_~a_~a (void *);\n"
