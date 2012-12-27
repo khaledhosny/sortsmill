@@ -6,12 +6,12 @@
 (
  (struct FontViewBase
     (fields
-       (* next)
-       (* nextsame next_same)
+       ((* FontViewBase) next)
+       ((* FontViewBase) nextsame next_same)
        (* map)
        (* normal normal_map)
-       (* sf)
-       (* cidmaster cid_master)
+       ((* SplineFont) sf)
+       ((* SplineFont) cidmaster cid_master)
        (* active_bitmap)
        (* selected)
        (* container)
@@ -20,9 +20,9 @@
 
  (struct CharViewBase
     (fields
-       (* next)
-       (* fv)
-       (* sc)
+       ((* CharViewBase) next)
+       ((* FontViewBase) fv)
+       ((* SplineChar) sc)
        (array layerheads layer_heads)
        (uint drawmode draw_mode)
        (uint ft_gridfitwidth ft_grid_fit_width)
@@ -52,7 +52,7 @@
        (* dstem)
        (* views)
        (* charinfo)
-(* parent);;       ((* SplineFont) parent)
+       ((* SplineFont) parent)
 
        (bool changed)
        (bool changedsincelasthinted changed_since_last_hinted)

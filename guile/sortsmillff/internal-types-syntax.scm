@@ -137,112 +137,122 @@
 
    (define (type-tag x type-name)
       (build-type-related-symbol
-         (cute string-append "tag-ff:" <>)
+         (cute simple-format #f "tag-ff:~A" <>)
          x type-name))
 
    (define (type-sizeof-var x type-name)
       (build-type-related-symbol
-         (cute string-append "sizeof-ff:" <>)
+         (cute simple-format #f "sizeof-ff:~A" <>)
          x type-name))
 
    (define (struct?-func x type-name)
       (build-type-related-symbol
-         (cute string-append "ff:" <> "?")
+         (cute simple-format #f "ff:~A?" <>)
          x type-name))
 
    (define (throw-failed-check-struct-func x type-name)
       (build-type-related-symbol
-         (cute string-append "throw-failed-check-ff:" <>)
+         (cute simple-format #f "throw-failed-check-ff:~A" <>)
          x type-name))
 
    (define (check-struct-func x type-name)
       (build-type-related-symbol
-         (cute string-append "check-ff:" <>)
+         (cute simple-format #f "check-ff:~A" <>)
          x type-name))
 
    (define (pointer->struct-func x type-name)
       (build-type-related-symbol
-         (cute string-append "pointer->ff:" <>)
+         (cute simple-format #f "pointer->ff:~A" <>)
          x type-name))
 
    (define (struct->pointer-func x type-name)
       (build-type-related-symbol
-         (cute string-append "ff:" <> "->pointer")
+         (cute simple-format #f "ff:~A->pointer" <>)
          x type-name))
 
    (define (unchecked-struct->pointer-func x type-name)
       (build-type-related-symbol
-         (cute string-append "unchecked-ff:" <> "->pointer")
+         (cute simple-format #f "unchecked-ff:~A->pointer" <>)
          x type-name))
 
    (define (malloc-struct-func x type-name)
       (build-type-related-symbol
-         (cute string-append "malloc-ff:" <>)
+         (cute simple-format #f "malloc-ff:~A" <>)
          x type-name))
 
    (define (free-struct-func x type-name)
       (build-type-related-symbol
-         (cute string-append "free-ff:" <>)
+         (cute simple-format #f "free-ff:~A" <>)
          x type-name))
 
    (define (unchecked-free-struct-func x type-name)
       (build-type-related-symbol
-         (cute string-append "unchecked-free-ff:" <>)
+         (cute simple-format #f "unchecked-free-ff:~A" <>)
          x type-name))
 
    (define (gc-malloc-struct-func x type-name)
       (build-type-related-symbol
-         (cute string-append "gc-malloc-ff:" <>)
+         (cute simple-format #f "gc-malloc-ff:~A" <>)
          x type-name))
 
    (define (gc-free-struct-func x type-name)
       (build-type-related-symbol
-         (cute string-append "gc-free-ff:" <>)
+         (cute simple-format #f "gc-free-ff:~A" <>)
          x type-name))
 
    (define (unchecked-gc-free-struct-func x type-name)
       (build-type-related-symbol
-         (cute string-append "unchecked-gc-free-ff:" <>)
+         (cute simple-format #f "unchecked-gc-free-ff:~A" <>)
          x type-name))
 
    (define (field-ref-func x struct-name field-name)
       (build-type-related-symbol
-         (cute string-append "ff:" <> ":" <> "-ref")
+         (cute simple-format #f "ff:~A:~A-ref" <> <>)
          x struct-name field-name))
 
    (define (unchecked-field-ref-func x struct-name field-name)
       (build-type-related-symbol
-         (cute string-append "unchecked-ff:" <> ":" <> "-ref")
+         (cute simple-format #f "unchecked-ff:~A:~A-ref" <> <>)
+         x struct-name field-name))
+
+   (define (field-dref-func x struct-name field-name)
+      (build-type-related-symbol
+         (cute simple-format #f "ff:~A:~A-dref" <> <>)
+         x struct-name field-name))
+
+   (define (unchecked-field-dref-func x struct-name field-name)
+      (build-type-related-symbol
+         (cute simple-format #f "unchecked-ff:~A:~A-dref" <> <>)
          x struct-name field-name))
 
    (define (field-set!-func x struct-name field-name)
       (build-type-related-symbol
-         (cute string-append "ff:" <> ":" <> "-set!")
+         (cute simple-format #f "ff:~A:~A-set!" <> <>)
          x struct-name field-name))
 
    (define (unchecked-field-set!-func x struct-name field-name)
       (build-type-related-symbol
-         (cute string-append "unchecked-ff:" <> ":" <> "-set!")
+         (cute simple-format #f "unchecked-ff:~A:~A-set!" <> <>)
          x struct-name field-name))
 
    (define (field->pointer-func x struct-name field-name)
       (build-type-related-symbol
-         (cute string-append "ff:" <> ":" <> "->pointer")
+         (cute simple-format #f "ff:~A:~A->pointer" <> <>)
          x struct-name field-name))
 
    (define (unchecked-field->pointer-func x struct-name field-name)
       (build-type-related-symbol
-         (cute string-append "unchecked-ff:" <> ":" <> "->pointer")
+         (cute simple-format #f "unchecked-ff:~A:~A->pointer" <> <>)
          x struct-name field-name))
 
    (define (struct->alist-func x struct-name)
       (build-type-related-symbol
-         (cute string-append "ff:" <> "->alist")
+         (cute simple-format #f "ff:~A->alist" <>)
          x struct-name))
 
    (define (unchecked-struct->alist-func x struct-name)
       (build-type-related-symbol
-         (cute string-append "unchecked-ff:" <> "->alist")
+         (cute simple-format #f "unchecked-ff:~A->alist" <>)
          x struct-name))
    )
 
@@ -443,36 +453,62 @@
                
                (define #,(unchecked-field-ref-func x #'struct-name #'field-name)
                   (lambda (obj)
-                     ((ff:field-ref field-type offset size) obj)))
+                     ((ff:field-ref field-type offset size) (cdr obj))))
 
                (define #,(field-ref-func x #'struct-name #'field-name)
                   (lambda (obj)
                      (#,(check-struct-func x #'struct-name)
                       #,(field-ref-func x #'struct-name #'field-name)
                       obj)
-                     ((ff:field-ref field-type offset size) obj)))
+                     ((ff:field-ref field-type offset size) (cdr obj))))
 
                (define #,(unchecked-field-set!-func x #'struct-name #'field-name)
                   (lambda (obj v)
-                     ((ff:field-set! field-type offset size) obj v)))
+                     ((ff:field-set! field-type offset size) (cdr obj) v)))
 
                (define #,(field-set!-func x #'struct-name #'field-name)
                   (lambda (obj v)
                      (#,(check-struct-func x #'struct-name)
                       #,(field-set!-func x #'struct-name #'field-name)
                       obj)
-                     ((ff:field-set! field-type offset size) obj v)))
+                     ((ff:field-set! field-type offset size) (cdr obj) v)))
 
                (define #,(unchecked-field->pointer-func x #'struct-name #'field-name)
                   (lambda (obj)
-                     ((ff:field->pointer offset) obj)))
+                     ((ff:field->pointer offset) (cdr obj))))
 
                (define #,(field->pointer-func x #'struct-name #'field-name)
                   (lambda (obj)
                      (#,(check-struct-func x #'struct-name)
                       #,(field->pointer-func x #'struct-name #'field-name)
                       obj)
-                     ((ff:field->pointer offset) obj)))
+                     ((ff:field->pointer offset) (cdr obj))))
+               )))))
+
+(define-syntax expand-field-dereferencing
+   (lambda (x)
+      (syntax-case x ()
+         ((_ (field-type field-subtype) struct-name field-name offset size)
+          #`(begin
+               (maybe-export
+                  ;; Example: unchecked-ff:SplineChar:name-ref
+                  #,(unchecked-field-dref-func x #'struct-name #'field-name)
+
+                  ;; Example: ff:SplineChar:name-ref
+                  #,(field-dref-func x #'struct-name #'field-name)
+                  )
+
+               (define #,(unchecked-field-dref-func x #'struct-name #'field-name)
+                  (lambda (obj)
+                     (let ((pointer ((ff:field-ref field-type offset size) (cdr obj))))
+                        (#,(pointer->struct-func x #'field-subtype) pointer))))
+
+               (define #,(field-dref-func x #'struct-name #'field-name)
+                  (lambda (obj)
+                     (#,(check-struct-func x #'struct-name)
+                      #,(field-dref-func x #'struct-name #'field-name)
+                      obj)
+                     (#,(unchecked-field-dref-func x #'struct-name #'field-name) obj)))
                )))))
 
 (define-syntax expand-struct-field
@@ -490,14 +526,14 @@
                
                (define #,(unchecked-field->pointer-func x #'struct-name #'field-name)
                   (lambda (obj)
-                     ((ff:field->pointer offset) obj)))
+                     ((ff:field->pointer offset) (cdr obj))))
 
                (define #,(field->pointer-func x #'struct-name #'field-name)
                   (lambda (obj)
                      (#,(check-struct-func x #'struct-name)
                       #,(field->pointer-func x #'struct-name #'field-name)
                       obj)
-                     ((ff:field->pointer offset) obj)))
+                     ((ff:field->pointer offset) (cdr obj))))
                )))))
 
 (define-syntax expand-struct->
@@ -535,11 +571,9 @@
       ((_ (struct type-name size)) (expand-struct type-name size))
 
       ((_ (field (field-type field-subtype) struct-name field-name offset size))
+       (begin
           (expand-field-without-dereferencing field-type struct-name field-name offset size)
-          ;;
-          ;; FIXME: Dereferencing and array procedures go here.
-          ;;
-          )
+          (expand-field-dereferencing (field-type field-subtype) struct-name field-name offset size)))
 
       ((_ (field field-type struct-name field-name offset size))
        (expand-field-without-dereferencing field-type struct-name field-name offset size))
@@ -554,67 +588,73 @@
 
 (define-syntax ff:field-ref
    (syntax-rules (int uint bool float *)
-      ((_ int offset 1) (lambda (obj) (bytevector-s8-ref (cdr obj) offset)))
-      ((_ int offset 2) (lambda (obj) (bytevector-s16-native-ref (cdr obj) offset)))
-      ((_ int offset 4) (lambda (obj) (bytevector-s32-native-ref (cdr obj) offset)))
-      ((_ int offset 8) (lambda (obj) (bytevector-s64-native-ref (cdr obj) offset)))
-      ((_ uint offset 1) (lambda (obj) (bytevector-u8-ref (cdr obj) offset)))
-      ((_ uint offset 2) (lambda (obj) (bytevector-u16-native-ref (cdr obj) offset)))
-      ((_ uint offset 4) (lambda (obj) (bytevector-u32-native-ref (cdr obj) offset)))
-      ((_ uint offset 8) (lambda (obj) (bytevector-u64-native-ref (cdr obj) offset)))
-      ((_ bool offset 1) (lambda (obj) (not (zero? (bytevector-u8-ref (cdr obj) offset)))))
-      ((_ bool offset 2) (lambda (obj) (not (zero? (bytevector-u16-native-ref (cdr obj) offset)))))
-      ((_ bool offset 4) (lambda (obj) (not (zero? (bytevector-u32-native-ref (cdr obj) offset)))))
-      ((_ bool offset 8) (lambda (obj) (not (zero? (bytevector-u64-native-ref (cdr obj) offset)))))
-      ((_ float offset 4) (lambda (obj) (bytevector-ieee-single-native-ref (cdr obj) offset)))
-      ((_ float offset 8) (lambda (obj) (bytevector-ieee-double-native-ref (cdr obj) offset)))
-      ((_ * offset 1) (lambda (obj) (make-pointer (bytevector-u8-ref (cdr obj) offset))))
-      ((_ * offset 2) (lambda (obj) (make-pointer (bytevector-u16-native-ref (cdr obj) offset))))
-      ((_ * offset 4) (lambda (obj) (make-pointer (bytevector-u32-native-ref (cdr obj) offset))))
-      ((_ * offset 8) (lambda (obj) (make-pointer (bytevector-u64-native-ref (cdr obj) offset))))
+      ((_ int offset 1) (lambda (bv) (bytevector-s8-ref bv offset)))
+      ((_ int offset 2) (lambda (bv) (bytevector-s16-native-ref bv offset)))
+      ((_ int offset 4) (lambda (bv) (bytevector-s32-native-ref bv offset)))
+      ((_ int offset 8) (lambda (bv) (bytevector-s64-native-ref bv offset)))
+      ((_ uint offset 1) (lambda (bv) (bytevector-u8-ref bv offset)))
+      ((_ uint offset 2) (lambda (bv) (bytevector-u16-native-ref bv offset)))
+      ((_ uint offset 4) (lambda (bv) (bytevector-u32-native-ref bv offset)))
+      ((_ uint offset 8) (lambda (bv) (bytevector-u64-native-ref bv offset)))
+      ((_ bool offset 1) (lambda (bv) (not (zero? (bytevector-u8-ref bv offset)))))
+      ((_ bool offset 2) (lambda (bv) (not (zero? (bytevector-u16-native-ref bv offset)))))
+      ((_ bool offset 4) (lambda (bv) (not (zero? (bytevector-u32-native-ref bv offset)))))
+      ((_ bool offset 8) (lambda (bv) (not (zero? (bytevector-u64-native-ref bv offset)))))
+      ((_ float offset 4) (lambda (bv) (bytevector-ieee-single-native-ref bv offset)))
+      ((_ float offset 8) (lambda (bv) (bytevector-ieee-double-native-ref bv offset)))
+      ((_ * offset 1) (lambda (bv) (make-pointer (bytevector-u8-ref bv offset))))
+      ((_ * offset 2) (lambda (bv) (make-pointer (bytevector-u16-native-ref bv offset))))
+      ((_ * offset 4) (lambda (bv) (make-pointer (bytevector-u32-native-ref bv offset))))
+      ((_ * offset 8) (lambda (bv) (make-pointer (bytevector-u64-native-ref bv offset))))
       ))
 
 (define-syntax ff:field-set!
    (syntax-rules (int uint bool *)
-      ((_ int offset 1) (lambda (obj v) (bytevector-s8-set! (cdr obj) offset v)))
-      ((_ int offset 2) (lambda (obj v) (bytevector-s16-native-set! (cdr obj) offset v)))
-      ((_ int offset 4) (lambda (obj v) (bytevector-s32-native-set! (cdr obj) offset v)))
-      ((_ int offset 8) (lambda (obj v) (bytevector-s64-native-set! (cdr obj) offset v)))
-      ((_ uint offset 1) (lambda (obj v) (bytevector-u8-set! (cdr obj) offset v)))
-      ((_ uint offset 2) (lambda (obj v) (bytevector-u16-native-set! (cdr obj) offset v)))
-      ((_ uint offset 4) (lambda (obj v) (bytevector-u32-native-set! (cdr obj) offset v)))
-      ((_ uint offset 8) (lambda (obj v) (bytevector-u64-native-set! (cdr obj) offset v)))
-      ((_ bool offset 1) (lambda (obj v) (bytevector-u8-set! (cdr obj) offset (if v 1 0))))
-      ((_ bool offset 2) (lambda (obj v) (bytevector-u16-native-set! (cdr obj) offset (if v 1 0))))
-      ((_ bool offset 4) (lambda (obj v) (bytevector-u32-native-set! (cdr obj) offset (if v 1 0))))
-      ((_ bool offset 8) (lambda (obj v) (bytevector-u64-native-set! (cdr obj) offset (if v 1 0))))
-      ((_ float offset 4) (lambda (obj v) (bytevector-ieee-single-native-set! (cdr obj) offset v)))
-      ((_ float offset 8) (lambda (obj v) (bytevector-ieee-double-native-set! (cdr obj) offset v)))
-      ((_ * offset 1) (lambda (obj v) (bytevector-u8-set! (cdr obj) offset (pointer-address v))))
-      ((_ * offset 2) (lambda (obj v) (bytevector-u16-native-set! (cdr obj) offset (pointer-address v))))
-      ((_ * offset 4) (lambda (obj v) (bytevector-u32-native-set! (cdr obj) offset (pointer-address v))))
-      ((_ * offset 8) (lambda (obj v) (bytevector-u64-native-set! (cdr obj) offset (pointer-address v))))
+      ((_ int offset 1) (lambda (bv v) (bytevector-s8-set! bv offset v)))
+      ((_ int offset 2) (lambda (bv v) (bytevector-s16-native-set! bv offset v)))
+      ((_ int offset 4) (lambda (bv v) (bytevector-s32-native-set! bv offset v)))
+      ((_ int offset 8) (lambda (bv v) (bytevector-s64-native-set! bv offset v)))
+      ((_ uint offset 1) (lambda (bv v) (bytevector-u8-set! bv offset v)))
+      ((_ uint offset 2) (lambda (bv v) (bytevector-u16-native-set! bv offset v)))
+      ((_ uint offset 4) (lambda (bv v) (bytevector-u32-native-set! bv offset v)))
+      ((_ uint offset 8) (lambda (bv v) (bytevector-u64-native-set! bv offset v)))
+      ((_ bool offset 1) (lambda (bv v) (bytevector-u8-set! bv offset (if v 1 0))))
+      ((_ bool offset 2) (lambda (bv v) (bytevector-u16-native-set! bv offset (if v 1 0))))
+      ((_ bool offset 4) (lambda (bv v) (bytevector-u32-native-set! bv offset (if v 1 0))))
+      ((_ bool offset 8) (lambda (bv v) (bytevector-u64-native-set! bv offset (if v 1 0))))
+      ((_ float offset 4) (lambda (bv v) (bytevector-ieee-single-native-set! bv offset v)))
+      ((_ float offset 8) (lambda (bv v) (bytevector-ieee-double-native-set! bv offset v)))
+      ((_ * offset 1) (lambda (bv v) (bytevector-u8-set! bv offset (pointer-address v))))
+      ((_ * offset 2) (lambda (bv v) (bytevector-u16-native-set! bv offset (pointer-address v))))
+      ((_ * offset 4) (lambda (bv v) (bytevector-u32-native-set! bv offset (pointer-address v))))
+      ((_ * offset 8) (lambda (bv v) (bytevector-u64-native-set! bv offset (pointer-address v))))
       ))
 
 (define-syntax ff:field->pointer
    (syntax-rules ()
-      ((_ offset) (lambda (obj) (bytevector->pointer (cdr obj) offset)))))
+      ((_ offset) (lambda (bv) (bytevector->pointer bv offset)))))
 
 (define-syntax unchecked-ff:field->alist-entry
    (lambda (x)
       (syntax-case x (field struct-field)
+         ((_ field-name field (field-type field-subtype) offset size)
+          #`(lambda (obj)
+               (cons
+                  (quote #,(datum->syntax x
+                              (string->symbol (syntax->datum #'field-name))))
+                  ((ff:field-ref field-type offset size) (cdr obj)))))
          ((_ field-name field field-type offset size)
           #`(lambda (obj)
                (cons
                   (quote #,(datum->syntax x
                               (string->symbol (syntax->datum #'field-name))))
-                  ((ff:field-ref field-type offset size) obj))))
+                  ((ff:field-ref field-type offset size) (cdr obj)))))
          ((_ field-name struct-field _ offset _)
            #`(lambda (obj)
                 (cons
                    (quote #,(datum->syntax x
                                (string->symbol (syntax->datum #'field-name))))
-                   ((ff:field->pointer offset) obj)))))))
+                   ((ff:field->pointer offset) (cdr obj))))))))
 
 ;;-------------------------------------------------------------------------
 
