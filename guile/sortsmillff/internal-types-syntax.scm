@@ -491,24 +491,34 @@
          ((_ (field-type field-subtype) struct-name field-name offset size)
           #`(begin
                (maybe-export
-                  ;; Example: unchecked-SplineChar:name-ref
+                  ;; Example: unchecked-SplineChar:name-dref
                   #,(unchecked-field-dref-func x #'struct-name #'field-name)
 
-                  ;; Example: SplineChar:name-ref
+                  ;; Example: SplineChar:name-dref
                   #,(field-dref-func x #'struct-name #'field-name)
                   )
 
                (define #,(unchecked-field-dref-func x #'struct-name #'field-name)
-                  (lambda (obj)
-                     (let ((pointer ((field-ref field-type offset size) (cdr obj))))
-                        (#,(pointer->struct-func x #'field-subtype) pointer))))
+                  (case-lambda
+                     ((obj)
+                      (let ((pointer ((field-ref field-type offset size) (cdr obj))))
+                         (#,(pointer->struct-func x #'field-subtype) pointer)))
+                     ((obj i)
+                      (let ((pointer ((field-ref field-type (+ offset (* i size)) size) (cdr obj))))
+                         (#,(pointer->struct-func x #'field-subtype) pointer)))))
 
                (define #,(field-dref-func x #'struct-name #'field-name)
-                  (lambda (obj)
-                     (#,(check-struct-func x #'struct-name)
-                      #,(field-dref-func x #'struct-name #'field-name)
-                      obj)
-                     (#,(unchecked-field-dref-func x #'struct-name #'field-name) obj)))
+                  (case-lambda
+                     ((obj)
+                      (#,(check-struct-func x #'struct-name)
+                       #,(field-dref-func x #'struct-name #'field-name)
+                       obj)
+                      (#,(unchecked-field-dref-func x #'struct-name #'field-name) obj))
+                     ((obj i)
+                      (#,(check-struct-func x #'struct-name)
+                       #,(field-dref-func x #'struct-name #'field-name)
+                       obj)
+                      (#,(unchecked-field-dref-func x #'struct-name #'field-name) obj i))))
                )))))
 
 (define-syntax expand-struct-field
