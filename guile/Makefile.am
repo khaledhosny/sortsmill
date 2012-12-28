@@ -85,7 +85,7 @@ sortsmillff/gdraw-api.scm: $(top_builddir)/gdraw/gdraw.types.apii	\
 			'(sortsmillff gdraw-api)' $< > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
-EXTRA_DIST += ff-internal/generate-types.scm
+EXTRA_DIST += generate-guile-api.scm ff-internal/generate-types.scm
 
 #--------------------------------------------------------------------------
 
