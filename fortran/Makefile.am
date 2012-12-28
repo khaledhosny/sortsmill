@@ -39,8 +39,10 @@ fontforge_api.f90: $(top_builddir)/fontforge/fontforge.types.apii	\
 		$(srcdir)/generate-fortran-api.scm							\
 		$(top_srcdir)/guile/ff-internal/generate-types.scm
 	$(AM_V_GEN)
-	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-fortran-api.scm $< > $@-tmp
+	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-fortran-api.scm $(filter %.apii, $^) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
+
+CLEANFILES = fontforge_api.f90
 
 install-data-hook: install-module-files
 uninstall-local: uninstall-module-files

@@ -156,7 +156,7 @@ sortsmillff/fontforge_api.pyx:								\
 		$(srcdir)/generate-python-api.scm					\
 		$(top_srcdir)/guile/ff-internal/generate-types.scm
 	$(AM_V_GEN)
-	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-python-api.scm $< > $@-tmp
+	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-python-api.scm $(filter %.apii, $^) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
 # Just make any change in the pxd or pxi files result in a complete

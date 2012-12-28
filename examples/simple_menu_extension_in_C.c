@@ -61,7 +61,7 @@
 #define glyph_menu_enabled simple_menu_extension_in_C_LTX_glyph_menu_enabled
 #define font_menu_action simple_menu_extension_in_C_LTX_font_menu_action
 
-#include <sortsmillff/internal_types.h>
+#include <sortsmillff/fontforge_api.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>

@@ -63,14 +63,15 @@ noinst_HEADERS = fontforgeui.h sftextfieldP.h views.h is_LIGATURE.h		\
 	import.h sflayoutP.h print.h splinefont.h annotations.h compare.h	\
 	fontimage.h
 
-nobase_nodist_include_HEADERS = sortsmillff/internal_types.h
+nobase_nodist_include_HEADERS = sortsmillff/fontforge_api.h
 
 CLEANFILES += $(nobase_nodist_include_HEADERS)
 
-sortsmillff/internal_types.h: generate-internal_types.h.scm	\
-		fontforge_type_inspector
+sortsmillff/fontforge_api.h: fontforge.types.apii			\
+		$(srcdir)/generate-c-api.h.scm						\
+		$(top_srcdir)/guile/ff-internal/generate-types.scm
 	$(AM_V_GEN)
-	$(AM_V_at)$(GUILE_INTERPRET) generate-internal_types.h.scm > $@-tmp
+	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-c-api.h.scm $(filter %.apii, $^) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
 #--------------------------------------------------------------------------
@@ -113,7 +114,7 @@ libsortsmillff_fontforge_la_SOURCES = asmfpst.c autohint.c autosave.c	\
 	autowidth2.c woff.c activeinui.c is_LIGATURE.c flaglist.c			\
 	contour_interface.c freetype.c ftdelta.c some_global_variables.c	\
 	getfontnames.c arrayfree.c
-nodist_libsortsmillff_fontforge_la_SOURCES = internal_types.c
+nodist_libsortsmillff_fontforge_la_SOURCES = fontforge_api.c
 EXTRA_libsortsmillff_fontforge_la_SOURCES = splinerefigure.c
 
 libsortsmillff_fontforge_la_LIBADD = splinerefigure.lo $(LIBADD)	\
@@ -132,13 +133,14 @@ splinerefigure.lo: $(srcdir)/splinerefigure.c $(srcdir)/splinefont.h
 
 EXTRA_SCRIPTS = generate_codepoint_selector.py
 
-internal_types.c: generate-internal_types.c.scm					\
-		fontforge_type_inspector sortsmillff/internal_types.h
+fontforge_api.c: fontforge.types.apii sortsmillff/fontforge_api.h	\
+		$(srcdir)/generate-c-api.c.scm								\
+		$(top_srcdir)/guile/ff-internal/generate-types.scm
 	$(AM_V_GEN)
-	$(AM_V_at)$(GUILE_INTERPRET) generate-internal_types.c.scm > $@-tmp
+	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-c-api.c.scm $(filter %.apii, $^) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
-CLEANFILES += internal_types.c
+CLEANFILES += fontforge_api.c
 
 # "make is_LIGATURE" or "make -C fontforge is_LIGATURE" to regenerate
 # is_LIGATURE.[ch].

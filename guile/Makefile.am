@@ -74,7 +74,7 @@ sortsmillff/fontforge-api.scm:							\
 		ff-internal/generate-types.scm
 	$(AM_V_GEN)
 	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-guile-api.scm	\
-			'(sortsmillff fontforge-api)' $< > $@-tmp
+			'(sortsmillff fontforge-api)' $(filter %.apii, $^) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
 sortsmillff/gdraw-api.scm: $(top_builddir)/gdraw/gdraw.types.apii	\

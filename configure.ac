@@ -437,10 +437,6 @@ FONTFORGE_SET_MY_LIBS
 FONTFORGE_CREATE_MAKEFILES
 FONTFORGE_CREATE_INDENT_PRO
 AC_CONFIG_FILES([inc/config-extra.h])
-AC_CONFIG_FILES([fontforge/generate-internal_types.h.scm],
-                [chmod +x fontforge/generate-internal_types.h.scm])
-AC_CONFIG_FILES([fontforge/generate-internal_types.c.scm],
-                [chmod +x fontforge/generate-internal_types.c.scm])
 AC_CONFIG_COMMANDS([fontforge/sortsmillff],[AS_MKDIR_P([fontforge/sortsmillff])])
 AC_CONFIG_FILES([inc/sortsmillff/cython/config.pxi])
 AC_CONFIG_FILES([python/fontforge.py])
