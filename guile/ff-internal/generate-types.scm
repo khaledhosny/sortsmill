@@ -23,11 +23,19 @@
    )
 
 (export
+   read-instructions-from-program-input
    read-instruction-sources
    read-instructions
    underscores->hyphens
    underscore->hyphen
    )
+
+(define (read-instructions-from-program-input)
+   (let* ((sources (cdr (command-line)))
+          (instructions (if (null? sources)
+                            (read-instruction-sources)
+                            (read-instruction-sources sources))))
+      instructions))
 
 (define* (read-instruction-sources
             #:optional

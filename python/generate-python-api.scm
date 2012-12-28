@@ -20,7 +20,6 @@
 (use-modules
    (ff-internal generate-types)
    (sortsmillff machine)
-   (ice-9 popen)
    (ice-9 match)
    (ice-9 format)
    ((rnrs) #:select (assert))
@@ -339,8 +338,5 @@
 (format #t "cdef inline __set_ptr64 (uintptr_t p, uintptr_t v):\n")
 (format #t "  (<uint64_t *> p)[0] = <uint64_t> v\n")
 (format #t "\n")
-(let* ((sources (cdr (command-line)))
-       (instructions (if (null? sources)
-                         (read-instruction-sources)
-                         (read-instruction-sources sources))))
+(let ((instructions (read-instructions-from-program-input)))
    (for-each write-instruction instructions))
