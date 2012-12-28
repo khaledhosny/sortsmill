@@ -17,7 +17,7 @@
 
 cdef extern from 'config.h': pass
 
-import internal_types
+import fontforge_api
 
 from libc.stdint cimport uintptr_t
 
@@ -32,7 +32,7 @@ cdef class font_view (object):
     self.ptr = ptr
 
   def to_internal_type (self):
-    return internal_types.FontViewBase (self.ptr)
+    return fontforge_api.FontViewBase (self.ptr)
 
   def __repr__ (self):
     return '{}.font_view(0x{:x})'.format (__name__, self.ptr)
@@ -45,7 +45,7 @@ cdef class font_view (object):
     if sf_ptr == <uintptr_t> NULL:
       font_name = '<_sf=NULL>'
     else:
-      sf = internal_types.SplineFont (sf_ptr)
+      sf = fontforge_api.SplineFont (sf_ptr)
       font_name_ptr = sf._font_name
       if font_name_ptr == <uintptr_t> NULL:
         font_name = '<_font_name=NULL>'
@@ -64,7 +64,7 @@ cdef class glyph_view (object):
     self.ptr = ptr
 
   def to_internal_type (self):
-    return internal_types.CharViewBase (self.ptr)
+    return fontforge_api.CharViewBase (self.ptr)
 
   def __repr__ (self):
     return '{}.glyph_view(0x{:x})'.format (__name__, self.ptr)
@@ -74,12 +74,12 @@ cdef class glyph_view (object):
     cdef uintptr_t font_name_ptr
     cdef uintptr_t glyph_name_ptr
     cvb = self.to_internal_type ()
-    sc = internal_types.SplineChar (cvb._sc)
+    sc = fontforge_api.SplineChar (cvb._sc)
     sf_ptr = sc._parent
     if sf_ptr == <uintptr_t> NULL:
       font_name = '<_parent=NULL>'
     else:
-      sf = internal_types.SplineFont (sf_ptr)
+      sf = fontforge_api.SplineFont (sf_ptr)
       font_name_ptr = sf._font_name
       if font_name_ptr == <uintptr_t> NULL:
         font_name = '<_font_name=NULL>'

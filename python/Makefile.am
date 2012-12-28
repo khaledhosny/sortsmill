@@ -85,9 +85,9 @@ sortsmillff_psMat_la_SOURCES = sortsmillff/psMat.c
 sortsmillff_psMat_la_LDFLAGS = $(GSL_CFLAGS) $(GSL_LIBS) $(AM_LDFLAGS)
 sortsmillff_psMat_la_LIBADD = $(BASELIBADD)
 
-nobase_pyexec_LTLIBRARIES += sortsmillff/internal_types.la
-sortsmillff_internal_types_la_SOURCES = sortsmillff/internal_types.c
-sortsmillff_internal_types_la_LIBADD = $(FFLIBADD)
+nobase_pyexec_LTLIBRARIES += sortsmillff/fontforge_api.la
+sortsmillff_fontforge_api_la_SOURCES = sortsmillff/fontforge_api.c
+sortsmillff_fontforge_api_la_LIBADD = $(FFLIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmillff/views.la
 sortsmillff_views_la_SOURCES = sortsmillff/views.c
@@ -135,7 +135,7 @@ if HAVE_GUI
 PYX_FILES += sortsmillff/usermenu.pyx
 endif HAVE_GUI
 
-NODIST_PYX_FILES = sortsmillff/internal_types.pyx
+NODIST_PYX_FILES = sortsmillff/fontforge_api.pyx
 
 cythonbuildinc = $(top_builddir)/inc/sortsmillff/cython
 cythonsrcinc = $(top_srcdir)/inc/sortsmillff/cython
@@ -151,10 +151,11 @@ PXI_FILES = $(cythonsrcinc)/gmpy.pxi
 
 PXI_IN_FILES = $(cythonbuildinc)/config.pxi
 
-sortsmillff/internal_types.pyx: generate-internal_types.pyx.scm	\
-		$(top_builddir)/fontforge/fontforge_type_inspector
+sortsmillff/fontforge_api.pyx:							\
+		$(top_builddir)/fontforge/fontforge.types.apii	\
+		$(srcdir)/generate-python-api.scm
 	$(AM_V_GEN)
-	$(AM_V_at)$(GUILE_INTERPRET) generate-internal_types.pyx.scm > $@-tmp
+	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-python-api.scm $< > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
 # Just make any change in the pxd or pxi files result in a complete
@@ -172,8 +173,8 @@ site_init.py: site_init.py.in Makefile
 
 EXTRA_DIST = $(PYX_FILES) $(PXD_FILES) $(PXI_FILES) site_init.py.in
 
-MOSTLYCLEANFILES = site_init.py sortsmillff/internal_types.pyx			\
-	sortsmillff/internal_types.c sortsmillff/views.c					\
+MOSTLYCLEANFILES = site_init.py sortsmillff/fontforge_api.pyx			\
+	sortsmillff/fontforge_api.c sortsmillff/views.c						\
 	sortsmillff/usermenu.c sortsmillff/ffcompat.c sortsmillff/psMat.c	\
 	sortsmillff/pkg_info.c sortsmillff/notices.c sortsmillff/guile.c	\
 	sortsmillff/linalg.c sortsmillff/polyspline.c						\
@@ -195,7 +196,7 @@ sortsmillff/%.so: sortsmillff/%.la
 
 # These shared object files are needed by the test suite.
 all-local: all-local-HAVE_GUI sortsmillff/psMat.so						\
-	sortsmillff/ffcompat.so sortsmillff/internal_types.so				\
+	sortsmillff/ffcompat.so sortsmillff/fontforge_api.so				\
 	sortsmillff/views.so sortsmillff/pkg_info.so						\
 	sortsmillff/notices.so sortsmillff/guile.so sortsmillff/linalg.so	\
 	sortsmillff/polyspline.so sortsmillff/brentroot.so					\

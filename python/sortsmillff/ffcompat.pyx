@@ -66,7 +66,7 @@ cdef extern from "fontforge.h":
 import sys
 import warnings
 import traceback
-from . import (notices, internal_types)
+from . import (notices)
 
 from sortsmillff.legacy.fontforge import (
   layer,

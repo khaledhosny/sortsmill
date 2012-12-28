@@ -443,15 +443,12 @@ AC_CONFIG_FILES([fontforge/generate-internal_types.c.scm],
                 [chmod +x fontforge/generate-internal_types.c.scm])
 AC_CONFIG_COMMANDS([fontforge/sortsmillff],[AS_MKDIR_P([fontforge/sortsmillff])])
 AC_CONFIG_FILES([inc/sortsmillff/cython/config.pxi])
-AC_CONFIG_FILES([python/generate-internal_types.pyx.scm],
-                [chmod +x python/generate-internal_types.pyx.scm])
 AC_CONFIG_FILES([python/fontforge.py])
 AC_CONFIG_FILES([python/psMat.py])
 AC_CONFIG_FILES([python/sortsmillff/__init__.py])
 AC_CONFIG_FILES([python/sortsmillff/fontforge_compat.py])
 AC_CONFIG_FILES([python/sortsmillff/legacy/__init__.py])
 AC_CONFIG_COMMANDS([guile/sortsmillff],[AS_MKDIR_P([guile/sortsmillff])])
-#AC_CONFIG_COMMANDS([guile/ff-internal],[AS_MKDIR_P([guile/ff-internal])])
 AC_CONFIG_FILES([fortran/generate-internal_types.f90.scm],
                 [chmod +x fortran/generate-internal_types.f90.scm])
 FONTFORGE_CONFIG_TESTSUITE

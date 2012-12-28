@@ -18,29 +18,13 @@
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 (use-modules
+   (ff-internal generate-types)
    (sortsmillff machine)
    (ice-9 popen)
    (ice-9 match)
    (ice-9 format)
    ((rnrs) #:select (assert))
    )
-
-(define instruction-sources
-   (list "@abs_top_builddir@/fontforge/fontforge_type_inspector"))
-
-(define (read-instructions port)
-   (do ((instruction (read port) (read port)))
-       ((eof-object? instruction))
-       (write-instruction instruction)))
-
-(define (read-instruction-sources sources)
-   (match sources
-      (() *unspecified*)
-      ((h . t)
-       (let ((port (open-input-pipe h)))
-          (read-instructions port)
-          (close-pipe port)
-          (read-instruction-sources t)))))
 
 (define (write-instruction instruction)
    (match instruction
@@ -355,4 +339,8 @@
 (format #t "cdef inline __set_ptr64 (uintptr_t p, uintptr_t v):\n")
 (format #t "  (<uint64_t *> p)[0] = <uint64_t> v\n")
 (format #t "\n")
-(read-instruction-sources instruction-sources)
+(let* ((sources (cdr (command-line)))
+       (instructions (if (null? sources)
+                         (read-instruction-sources)
+                         (read-instruction-sources sources))))
+   (for-each write-instruction instructions))
