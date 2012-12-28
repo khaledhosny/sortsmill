@@ -449,8 +449,6 @@ AC_CONFIG_FILES([python/sortsmillff/__init__.py])
 AC_CONFIG_FILES([python/sortsmillff/fontforge_compat.py])
 AC_CONFIG_FILES([python/sortsmillff/legacy/__init__.py])
 AC_CONFIG_COMMANDS([guile/sortsmillff],[AS_MKDIR_P([guile/sortsmillff])])
-AC_CONFIG_FILES([fortran/generate-internal_types.f90.scm],
-                [chmod +x fortran/generate-internal_types.f90.scm])
 FONTFORGE_CONFIG_TESTSUITE
 FONTFORGE_CREATE_SUMMARY
 

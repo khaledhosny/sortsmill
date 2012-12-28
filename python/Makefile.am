@@ -151,9 +151,10 @@ PXI_FILES = $(cythonsrcinc)/gmpy.pxi
 
 PXI_IN_FILES = $(cythonbuildinc)/config.pxi
 
-sortsmillff/fontforge_api.pyx:							\
-		$(top_builddir)/fontforge/fontforge.types.apii	\
-		$(srcdir)/generate-python-api.scm
+sortsmillff/fontforge_api.pyx:								\
+		$(top_builddir)/fontforge/fontforge.types.apii		\
+		$(srcdir)/generate-python-api.scm					\
+		$(top_srcdir)/guile/ff-internal/generate-types.scm
 	$(AM_V_GEN)
 	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-python-api.scm $< > $@-tmp
 	$(AM_V_at)mv $@-tmp $@

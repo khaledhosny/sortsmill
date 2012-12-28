@@ -51,7 +51,7 @@
 
 module simple_menu_extension_in_Fortran
   use iso_c_binding
-  use sortsmillff_internal_types
+  use sortsmillff_fontforge_api
   implicit none
 
   interface
