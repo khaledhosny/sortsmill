@@ -29,6 +29,8 @@ include $(top_srcdir)/mk/flags.am
 include $(top_srcdir)/mk/cython.mk
 include $(top_srcdir)/mk/guile.mk
 
+EXTRA_DIST =
+
 #--------------------------------------------------------------------------
 
 BASELIBADD = $(top_builddir)/lib/libgnu.la
@@ -159,6 +161,8 @@ sortsmillff/fontforge_api.pyx:								\
 	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-python-api.scm $(filter %.apii, $^) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
+EXTRA_DIST += generate-python-api.scm
+
 # Just make any change in the pxd or pxi files result in a complete
 # rebuild from Cython sources. FIXME: This is inefficient.
 $(PYX_FILES:.pyx=.c): $(PXD_FILES) $(PXI_FILES) $(PXI_IN_FILES)
@@ -172,7 +176,7 @@ site_init.py: site_init.py.in Makefile
 		-e 's|@''sysconfdir''@|$(sysconfdir)|g' < $< > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
-EXTRA_DIST = $(PYX_FILES) $(PXD_FILES) $(PXI_FILES) site_init.py.in
+EXTRA_DIST += $(PYX_FILES) $(PXD_FILES) $(PXI_FILES) site_init.py.in
 
 MOSTLYCLEANFILES = site_init.py sortsmillff/fontforge_api.pyx			\
 	sortsmillff/fontforge_api.c sortsmillff/views.c						\

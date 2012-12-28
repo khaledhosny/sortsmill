@@ -42,6 +42,8 @@ fontforge_api.f90: $(top_builddir)/fontforge/fontforge.types.apii	\
 	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-fortran-api.scm $(filter %.apii, $^) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
+EXTRA_DIST = generate-fortran-api.scm
+
 CLEANFILES = fontforge_api.f90
 
 install-data-hook: install-module-files

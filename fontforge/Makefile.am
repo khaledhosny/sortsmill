@@ -35,6 +35,7 @@ nodist_noinst_DATA =
 dist_man_MANS =
 
 EXTRA_DIST =
+EXTRA_SCRIPTS =
 
 MOSTLYCLEANFILES =
 CLEANFILES =
@@ -73,6 +74,8 @@ sortsmillff/fontforge_api.h: fontforge.types.apii			\
 	$(AM_V_GEN)
 	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-c-api.h.scm $(filter %.apii, $^) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
+
+EXTRA_DIST += generate-c-api.h.scm
 
 #--------------------------------------------------------------------------
 
@@ -131,7 +134,7 @@ splinerefigure.lo: $(srcdir)/splinerefigure.c $(srcdir)/splinefont.h
 	-DHAVE_CONFIG_H -c -o splinerefigure.lo $(AM_CPPFLAGS)		\
 	$(srcdir)/splinerefigure.c
 
-EXTRA_SCRIPTS = generate_codepoint_selector.py
+EXTRA_SCRIPTS += generate_codepoint_selector.py
 
 fontforge_api.c: fontforge.types.apii sortsmillff/fontforge_api.h	\
 		$(srcdir)/generate-c-api.c.scm								\
@@ -139,6 +142,8 @@ fontforge_api.c: fontforge.types.apii sortsmillff/fontforge_api.h	\
 	$(AM_V_GEN)
 	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-c-api.c.scm $(filter %.apii, $^) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
+
+EXTRA_DIST += generate-c-api.c.scm
 
 CLEANFILES += fontforge_api.c
 
