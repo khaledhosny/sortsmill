@@ -30,6 +30,7 @@ include $(top_srcdir)/mk/tig.mk
 
 bin_PROGRAMS =
 noinst_PROGRAMS =
+lib_LTLIBRARIES =
 nodist_noinst_DATA =
 dist_man_MANS =
 
@@ -39,23 +40,16 @@ MOSTLYCLEANFILES =
 CLEANFILES =
 DISTCLEANFILES =
 
-#--------------------------------------------------------------------------
+LIBADD = $(top_builddir)/auxiliary/libsortsmillff_aux.la	\
+	$(top_builddir)/gutils/libsortsmillff_gutils.la
 
-if THE_PROGRAMS
+GUILIBADD =
+if HAVE_GUI
+GUILIBADD += $(top_builddir)/gdraw/libsortsmillff_gdraw.la	\
+	$(XINPUT_LIBS) $(XKB_LIBS)
+endif HAVE_GUI
 
-#if HAVE_GUI
-#bin_PROGRAMS += fontforge
-#dist_man_MANS += fontforge.1
-#endif HAVE_GUI
-
-# FIXME: Update the manpages for the new gengetopt-based options.
-bin_PROGRAMS += fontlint fontimage sfddiff
-dist_man_MANS += fontlint.1 fontimage.1 sfddiff.1
-
-endif THE_PROGRAMS
-
-lib_LTLIBRARIES = libsortsmillff_fontforge.la	\
-	libsortsmillff_fontforgeexe.la
+LDADD = $(LIBADD) $(GUILIBADD)
 
 #--------------------------------------------------------------------------
 
@@ -98,39 +92,7 @@ CLEANFILES += fontforge_type_inspector.c fontforge.types.apii
 
 #--------------------------------------------------------------------------
 
-if THE_PROGRAMS
-
-#if HAVE_GUI
-#fontforge_SOURCES = main.c
-#fontforge_LDADD = libsortsmillff_fontforgeexe.la $(LDADD)	\
-#	$(top_builddir)/lib/libgnu.la
-#fontforge_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS) -export-dynamic
-#endif HAVE_GUI
-
-dist_fontlint_SOURCES = $(srcdir)/fontlint.c			\
-	$(srcdir)/fontlint_opts.c $(srcdir)/fontlint_opts.h
-fontlint_LDADD = libsortsmillff_fontforge.la $(LDADD)	\
-	$(top_builddir)/lib/libgnu.la
-fontlint_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS)
-$(srcdir)/fontlint.c: $(srcdir)/fontlint_opts.h
-
-dist_fontimage_SOURCES = $(srcdir)/fontimage.c				\
-	$(srcdir)/fontimage_opts.c $(srcdir)/fontimage_opts.h
-fontimage_LDADD = libsortsmillff_fontforge.la $(LDADD)	\
-	$(top_builddir)/lib/libgnu.la
-fontimage_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS)
-$(srcdir)/fontimage.c: $(srcdir)/fontimage_opts.h
-
-dist_sfddiff_SOURCES = $(srcdir)/sfddiff.c $(srcdir)/sfddiff_opts.c	\
-	$(srcdir)/sfddiff_opts.h
-sfddiff_LDADD = libsortsmillff_fontforge.la $(LDADD)	\
-	$(top_builddir)/lib/libgnu.la
-sfddiff_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS)
-$(srcdir)/sfddiff.c: $(srcdir)/sfddiff_opts.h
-
-endif THE_PROGRAMS
-
-#--------------------------------------------------------------------------
+lib_LTLIBRARIES += libsortsmillff_fontforge.la
 
 libsortsmillff_fontforge_la_SOURCES = asmfpst.c autohint.c autosave.c	\
 	autotrace.c autowidth.c bezctx_ff.c bitmapchar.c bitmapcontrol.c	\
@@ -160,6 +122,14 @@ libsortsmillff_fontforge_la_LDFLAGS = $(call ldflags)
 libsortsmillff_fontforge_la_DEPENDENCIES = splinerefigure.lo	\
 	$(top_builddir)/lib/libgnu.la
 
+# In splinerefigure.c, the slight error introduced occasionally by
+# optimization turns out to have disastrous effects. Compile it
+# without optimization.
+splinerefigure.lo: $(srcdir)/splinerefigure.c $(srcdir)/splinefont.h
+	$(AM_V_CC) $(LIBTOOL) $(AM_V_lt) --mode=compile $(CC) -g	\
+	-DHAVE_CONFIG_H -c -o splinerefigure.lo $(AM_CPPFLAGS)		\
+	$(srcdir)/splinerefigure.c
+
 EXTRA_SCRIPTS = generate_codepoint_selector.py
 
 internal_types.c: generate-internal_types.c.scm					\
@@ -182,6 +152,8 @@ is_LIGATURE:
 ' $(srcdir)/is_LIGATURE.c
 
 #--------------------------------------------------------------------------
+
+lib_LTLIBRARIES += libsortsmillff_fontforgeexe.la
 
 if HAVE_GUI
 
@@ -210,43 +182,5 @@ endif !HAVE_GUI
 libsortsmillff_fontforgeexe_la_LIBADD = libsortsmillff_fontforge.la		\
 	$(LTDLDEPS) $(LIBADD) $(GUILIBADD) $(top_builddir)/lib/libgnu.la
 libsortsmillff_fontforgeexe_la_LDFLAGS = $(call ldflags)
-
-#--------------------------------------------------------------------------
-
-LIBADD = $(top_builddir)/auxiliary/libsortsmillff_aux.la	\
-	$(top_builddir)/gutils/libsortsmillff_gutils.la
-
-GUILIBADD =
-if HAVE_GUI
-GUILIBADD += $(top_builddir)/gdraw/libsortsmillff_gdraw.la	\
-	$(XINPUT_LIBS) $(XKB_LIBS)
-endif HAVE_GUI
-
-LDADD = $(LIBADD) $(GUILIBADD)
-
-#--------------------------------------------------------------------------
-
-# In splinerefigure.c, the slight error introduced occasionally by
-# optimization turns out to have disastrous effects. Compile it
-# without optimization.
-splinerefigure.lo: $(srcdir)/splinerefigure.c $(srcdir)/splinefont.h
-	$(AM_V_CC) $(LIBTOOL) $(AM_V_lt) --mode=compile $(CC) -g	\
-	-DHAVE_CONFIG_H -c -o splinerefigure.lo $(AM_CPPFLAGS)		\
-	$(srcdir)/splinerefigure.c
-
-#--------------------------------------------------------------------------
-
-$(srcdir)/%.c $(srcdir)/%.h: stamp-%-ggo
-	@if test ! -f $@; then rm -f $<; else :; fi
-	@if test ! -f $@; then $(MAKE) $(AM_MAKEFLAGS) $<; else :; fi
-
-stamp-%-ggo: %.ggo
-	$(GENGETOPT) --unamed-opts --output-dir=$(srcdir) --file-name=$* < $<
-	@touch $@
-
-#--------------------------------------------------------------------------
-
-EXTRA_DIST += fontimage.1 fontlint.1 sfddiff.1 fontlint_opts.ggo	\
-	fontimage_opts.ggo sfddiff_opts.ggo
 
 #--------------------------------------------------------------------------
