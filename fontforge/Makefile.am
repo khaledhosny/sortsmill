@@ -29,7 +29,11 @@ include $(top_srcdir)/mk/flags.am
 include $(top_srcdir)/mk/tig.mk
 
 bin_PROGRAMS =
+noinst_PROGRAMS =
+nodist_noinst_DATA =
 dist_man_MANS =
+
+EXTRA_DIST =
 
 MOSTLYCLEANFILES =
 CLEANFILES =
@@ -77,9 +81,20 @@ sortsmillff/internal_types.h: generate-internal_types.h.scm	\
 
 #--------------------------------------------------------------------------
 
-noinst_PROGRAMS = fontforge_type_inspector
+# Generate `API instructions' for relatively opaque access to internal
+# types.
+fontforge.types.apii: fontforge_type_inspector
+	./$< > $@
 
-CLEANFILES += fontforge_type_inspector.c
+noinst_PROGRAMS += fontforge_type_inspector
+fontforge_type_inspector_LDADD = $(AM_LDADD)	\
+	$(top_builddir)/lib/libgnu.la
+
+nodist_noinst_DATA += fontforge.types.apii
+
+EXTRA_DIST += fontforge_type_inspector.tig
+
+CLEANFILES += fontforge_type_inspector.c fontforge.types.apii
 
 #--------------------------------------------------------------------------
 
@@ -231,7 +246,7 @@ stamp-%-ggo: %.ggo
 
 #--------------------------------------------------------------------------
 
-EXTRA_DIST = fontimage.1 fontlint.1 sfddiff.1 fontlint_opts.ggo	\
+EXTRA_DIST += fontimage.1 fontlint.1 sfddiff.1 fontlint_opts.ggo	\
 	fontimage_opts.ggo sfddiff_opts.ggo
 
 #--------------------------------------------------------------------------

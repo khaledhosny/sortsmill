@@ -18,7 +18,7 @@
 (define-module (sortsmillff views))
 
 (use-modules
-   (sortsmillff internal-types)
+   (sortsmillff fontforge-api)
    (system foreign)
    (ice-9 format)
    )

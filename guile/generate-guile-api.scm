@@ -41,7 +41,7 @@
    (format #t "\n")
    (format #t "(define-module ~a)\n" module-name)
    (format #t "\n")
-   (format #t "(use-modules (sortsmillff internal-types-syntax))\n")
+   (format #t "(use-modules (sortsmillff api-syntax))\n")
    (format #t "\n")
    (let ((instructions (read-instruction-sources instruction-sources)))
       (pretty-print

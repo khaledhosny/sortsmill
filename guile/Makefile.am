@@ -49,16 +49,15 @@ nobase_nodist_guilemodule_DATA = $(NODIST_SCM_FILES)
 EXTRA_DIST += $(DIST_SCM_IN_FILES)
 MOSTLYCLEANFILES += $(NODIST_SCM_FILES)
 
-DIST_SCM_FILES += sortsmillff/gsl.scm sortsmillff/iconv.scm		\
-	sortsmillff/linalg.scm sortsmillff/polyspline.scm			\
-	sortsmillff/brentroot.scm sortsmillff/sfd-to-sxml.scm		\
-	sortsmillff/views.scm sortsmillff/internal-types-syntax.scm	\
+DIST_SCM_FILES += sortsmillff/gsl.scm sortsmillff/iconv.scm	\
+	sortsmillff/linalg.scm sortsmillff/polyspline.scm		\
+	sortsmillff/brentroot.scm sortsmillff/sfd-to-sxml.scm	\
+	sortsmillff/views.scm sortsmillff/api-syntax.scm		\
 	sortsmillff/notices.scm
-#sortsmillff/gdraw-and-guile.scm
 #sortsmillff/precompute.scm
 if HAVE_GUI
 DIST_SCM_FILES += sortsmillff/usermenu.scm
-NODIST_SCM_FILES += sortsmillff/gdraw-types.scm
+NODIST_SCM_FILES += sortsmillff/gdraw-api.scm
 endif HAVE_GUI
 
 DIST_SCM_IN_FILES += sortsmillff/machine.scm.in						\
@@ -67,37 +66,26 @@ DIST_SCM_IN_FILES += sortsmillff/machine.scm.in						\
 
 NODIST_SCM_FILES += sortsmillff/machine.scm sortsmillff/pkg-info.scm	\
 	sortsmillff/math-constants.scm sortsmillff/i18n.scm					\
-	sortsmillff/internal-types.scm sortsmillff/python.scm
+	sortsmillff/fontforge-api.scm sortsmillff/python.scm
 
-sortsmillff/internal-types.scm: $(srcdir)/generate-internal-types.scm	\
-		ff-internal/generate-types.scm									\
-		$(top_builddir)/fontforge/fontforge_type_inspector
+sortsmillff/fontforge-api.scm:							\
+		$(top_builddir)/fontforge/fontforge.types.apii	\
+		$(srcdir)/generate-guile-api.scm				\
+		ff-internal/generate-types.scm
 	$(AM_V_GEN)
-	$(AM_V_at)$(top_builddir)/fontforge/fontforge_type_inspector |	\
-		$(GUILE_INTERPRET) $(srcdir)/generate-internal-types.scm	\
-			'(sortsmillff internal-types)' > $@-tmp
+	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-guile-api.scm	\
+			'(sortsmillff fontforge-api)' $< > $@-tmp
+	$(AM_V_at)mv $@-tmp $@
+
+sortsmillff/gdraw-api.scm: $(top_builddir)/gdraw/gdraw.types.apii	\
+		$(srcdir)/generate-guile-api.scm							\
+		ff-internal/generate-types.scm
+	$(AM_V_GEN)
+	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-guile-api.scm	\
+			'(sortsmillff gdraw-api)' $< > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
 EXTRA_DIST += ff-internal/generate-types.scm
-
-#--------------------------------------------------------------------------
-#
-# Use of (sortsmillff gdraw-types) is discouraged because hopefully it
-# will go away completely. It is a transition aid.
-
-sortsmillff/gdraw-types.scm: $(srcdir)/generate-internal-types.scm	\
-		ff-internal/generate-types.scm gdraw_type_inspector
-	$(AM_V_GEN)
-	$(AM_V_at)$(top_builddir)/guile/gdraw_type_inspector |			\
-		$(GUILE_INTERPRET) $(srcdir)/generate-internal-types.scm	\
-			'(sortsmillff gdraw-types)' > $@-tmp
-	$(AM_V_at)mv $@-tmp $@
-
-noinst_PROGRAMS = gdraw_type_inspector
-
-gdraw_type_inspector_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS)
-
-CLEANFILES += gdraw_type_inspector.c
 
 #--------------------------------------------------------------------------
 

@@ -26,18 +26,18 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 include $(top_srcdir)/mk/flags.am
+include $(top_srcdir)/mk/tig.mk
 
 lib_LTLIBRARIES = libsortsmillff_gdraw.la
 
-libsortsmillff_gdraw_la_SOURCES = ctlvalues.c			\
-	drawboxborder.c gaskdlg.c gbuttons.c gcolor.c gcontainer.c			\
-	gdraw.c gdrawerror.c gdrawtxt.c gfilechooser.c	\
-	gfiledlg.c ggadgets.c ggroupbox.c gimageclut.c gimagecvt.c			\
-	gdrawgimage.c gkeysym.c glist.c gmenu.c gprogress.c gradio.c		\
-	gresource.c gresourceimage.c gresedit.c gsavefiledlg.c				\
-	gscrollbar.c gtabset.c gtextfield.c gtextinfo.c gwidgets.c			\
-	gxdraw.c gxcdraw.c ghvbox.c gmatrixedit.c gdrawable.c gspacer.c		\
-	xkeysyms_unicode.c colorP.h gdrawP.h gresourceP.h		\
+libsortsmillff_gdraw_la_SOURCES = ctlvalues.c drawboxborder.c			\
+	gaskdlg.c gbuttons.c gcolor.c gcontainer.c gdraw.c gdrawerror.c		\
+	gdrawtxt.c gfilechooser.c gfiledlg.c ggadgets.c ggroupbox.c			\
+	gimageclut.c gimagecvt.c gdrawgimage.c gkeysym.c glist.c gmenu.c	\
+	gprogress.c gradio.c gresource.c gresourceimage.c gresedit.c		\
+	gsavefiledlg.c gscrollbar.c gtabset.c gtextfield.c gtextinfo.c		\
+	gwidgets.c gxdraw.c gxcdraw.c ghvbox.c gmatrixedit.c gdrawable.c	\
+	gspacer.c xkeysyms_unicode.c colorP.h gdrawP.h gresourceP.h			\
 	gxcdrawP.h fontP.h ggadgetP.h gwidgetP.h gxdrawP.h
 
 libsortsmillff_gdraw_la_LIBADD =					\
@@ -46,5 +46,26 @@ libsortsmillff_gdraw_la_LIBADD =					\
 	$(top_builddir)/lib/libgnu.la
 libsortsmillff_gdraw_la_LDFLAGS = $(call ldflags)
 libsortsmillff_gdraw_la_DEPENDENCIES = Makefile $(libsortsmillff_gdraw_la_LIBADD)
+
+#--------------------------------------------------------------------------
+#
+# Use of the gdraw API is discouraged because, hopefully, it will go
+# away completely. It is a transition aid. Meanwhile, here is stuff to
+# help generate it.
+
+# Generate `API instructions' for relatively opaque access to internal
+# types.
+gdraw.types.apii: gdraw_type_inspector
+	./$< > $@
+
+noinst_PROGRAMS = gdraw_type_inspector
+gdraw_type_inspector_LDADD = $(AM_LDADD)		\
+	$(top_builddir)/lib/libgnu.la
+
+nodist_noinst_DATA = gdraw.types.apii
+
+EXTRA_DIST = gdraw_type_inspector.tig
+
+CLEANFILES = gdraw_type_inspector.c gdraw.types.apii
 
 #--------------------------------------------------------------------------
