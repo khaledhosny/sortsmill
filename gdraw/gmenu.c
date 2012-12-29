@@ -2176,15 +2176,8 @@ int
 GMenuAnyUnmaskedShortcuts (GGadget *mb1, GGadget *mb2)
 {
 
-  if (most_recent_popup_menu != NULL
-      && most_recent_popup_menu->any_unmasked_shortcuts)
-    return (true);
-
-  if (mb1 != NULL && ((GMenuBar *) mb1)->any_unmasked_shortcuts)
-    return (true);
-
-  if (mb2 != NULL && ((GMenuBar *) mb2)->any_unmasked_shortcuts)
-    return (true);
-
-  return (false);
+  return ((most_recent_popup_menu != NULL
+           && most_recent_popup_menu->any_unmasked_shortcuts)
+          || (mb1 != NULL && ((GMenuBar *) mb1)->any_unmasked_shortcuts)
+          || (mb2 != NULL && ((GMenuBar *) mb2)->any_unmasked_shortcuts));
 }
