@@ -504,10 +504,8 @@ GMenuDrawMenuLine (struct gmenu *m, GMenuItem *mi, int y, GWindow pixmap)
            && mac_menu_icons)
     {
       _shorttext (mi->shortcut, 0, shortbuf);
-      width =
-        GDrawGetTextWidth (pixmap, shortbuf, -1) + GMenuMacIconsWidth (m,
-                                                                       mi->
-                                                                       short_mask);
+      width = GDrawGetTextWidth (pixmap, shortbuf, -1)
+        + GMenuMacIconsWidth (m, mi->short_mask);
       int x = GMenuDrawMacIcons (m, fg, ybase, m->rightedge - width,
                                  mi->short_mask);
       GDrawDrawText (pixmap, x, ybase, shortbuf, -1, fg);
@@ -983,8 +981,8 @@ GMenuSpecialKeys (struct gmenu *m, uint32_t keysym, GEvent *event)
         {
           m->child = GMenuCreateSubMenu (m, m->mi[m->line_with_mouse].sub,
                                          m->disabled
-                                         || m->mi[m->line_with_mouse].ti.
-                                         disabled);
+                                         || m->mi[m->line_with_mouse].
+                                         ti.disabled);
         }
       else
         {
@@ -1061,8 +1059,8 @@ GMenuSpecialKeys (struct gmenu *m, uint32_t keysym, GEvent *event)
         {
           m->child = GMenuCreateSubMenu (m, m->mi[m->line_with_mouse].sub,
                                          m->disabled
-                                         || m->mi[m->line_with_mouse].ti.
-                                         disabled);
+                                         || m->mi[m->line_with_mouse].
+                                         ti.disabled);
           return (true);
         }
       else if (m->parent == NULL && m->menubar != NULL)
@@ -1744,11 +1742,10 @@ gmenubar_expose (GWindow pixmap, GGadget *g, GEvent *expose)
 {
   GMenuBar *mb = (GMenuBar *) g;
   GRect r, old1, old2, old3;
-  Color fg = g->state == gs_disabled ? g->box->disabled_foreground :
-    g->box->main_foreground ==
-    COLOR_DEFAULT ?
-    GDrawGetDefaultForeground (GDrawGetDisplayOfWindow (pixmap)) : g->box->
-    main_foreground;
+  Color fg = (g->state == gs_disabled) ? g->box->disabled_foreground :
+    ((g->box->main_foreground == COLOR_DEFAULT) ?
+     GDrawGetDefaultForeground (GDrawGetDisplayOfWindow (pixmap))
+     : g->box->main_foreground);
   int i;
 
   if (fg == COLOR_DEFAULT)
@@ -1768,9 +1765,9 @@ gmenubar_expose (GWindow pixmap, GGadget *g, GEvent *expose)
       r.width = mb->xs[i + 1] - mb->xs[i];
       GDrawPushClip (pixmap, &r, &old3);
       GTextInfoDraw (pixmap, r.x, r.y, &mb->mi[i].ti, mb->font,
-                     mb->mi[i].ti.disabled ? mb->g.box->
-                     disabled_foreground : fg, mb->g.box->active_border,
-                     r.y + r.height);
+                     (mb->mi[i].ti.disabled ?
+                      mb->g.box->disabled_foreground : fg),
+                     mb->g.box->active_border, r.y + r.height);
       GDrawPopClip (pixmap, &old3);
     }
   if (i < mb->mtot)
@@ -2090,7 +2087,7 @@ GMenuBarFindMid (GMenuItem *mi, int mid)
       if (mi[i].mid == mid)
         retval = &mi[i];
       else if (mi[i].sub != NULL)
-	retval = GMenuBarFindMid (mi[i].sub, mid);
+        retval = GMenuBarFindMid (mi[i].sub, mid);
       i++;
     }
   return retval;
