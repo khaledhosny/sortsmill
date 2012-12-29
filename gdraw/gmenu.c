@@ -979,10 +979,10 @@ GMenuSpecialKeys (struct gmenu *m, uint32_t keysym, GEvent *event)
         }
       else if (m->mi[m->line_with_mouse].sub != NULL && m->child == NULL)
         {
-          m->child = GMenuCreateSubMenu (m, m->mi[m->line_with_mouse].sub,
-                                         m->disabled
-                                         || m->mi[m->line_with_mouse].
-                                         ti.disabled);
+          m->child =
+            GMenuCreateSubMenu (m, m->mi[m->line_with_mouse].sub,
+                                (m->disabled
+                                 || m->mi[m->line_with_mouse].ti.disabled));
         }
       else
         {
@@ -1057,10 +1057,10 @@ GMenuSpecialKeys (struct gmenu *m, uint32_t keysym, GEvent *event)
       if (m->line_with_mouse != -1 &&
           m->mi[m->line_with_mouse].sub != NULL && m->child == NULL)
         {
-          m->child = GMenuCreateSubMenu (m, m->mi[m->line_with_mouse].sub,
-                                         m->disabled
-                                         || m->mi[m->line_with_mouse].
-                                         ti.disabled);
+          m->child =
+            GMenuCreateSubMenu (m, m->mi[m->line_with_mouse].sub,
+                                (m->disabled
+                                 || m->mi[m->line_with_mouse].ti.disabled));
           return (true);
         }
       else if (m->parent == NULL && m->menubar != NULL)
