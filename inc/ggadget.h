@@ -404,8 +404,8 @@ void GMenuBarSetItemEnabled(GGadget *g, int mid, int enabled);
 void GMenuBarSetItemName(GGadget *g, int mid, const uint32_t *name);
 VISIBLE void GMenuSetShortcutDomain(const char *domain);
 const char *GMenuGetShortcutDomain(void);
-VISIBLE int GMenuIsCommand(GEvent *event,char *shortcut);
-VISIBLE int GMenuMask(void);
+bool GMenuIsCommand(GEvent *event,char *shortcut);
+int GMenuMask(void);
 int GMenuAnyUnmaskedShortcuts(GGadget *mb1, GGadget *mb2);
 
 

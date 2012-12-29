@@ -137,6 +137,12 @@ static struct gmenu *GMenuCreatePulldownMenu (GMenuBar * mb, GMenuItem *mi,
 static int menu_grabs = true;
 static struct gmenu *most_recent_popup_menu = NULL;
 
+static bool
+menu_item_nonempty (GMenuItem *mi)
+{
+  return (mi->ti.text != NULL || mi->ti.image != NULL || mi->ti.line);
+}
+
 static void
 GMenuInit ()
 {
@@ -697,13 +703,9 @@ GMenuChangeSelection (struct gmenu *m, int newsel, GEvent *event)
     m->mi[old].ti.selected = false;
 
   if (newsel == old + 1 && old != -1)
-    {
-      GMenuDrawLines (m, old, 2);
-    }
+    GMenuDrawLines (m, old, 2);
   else if (old == newsel + 1 && newsel != -1)
-    {
-      GMenuDrawLines (m, newsel, 2);
-    }
+    GMenuDrawLines (m, newsel, 2);
   else
     {
       if (newsel != -1)
@@ -942,8 +944,7 @@ GMenuSearchShortcut (GWindow gw, GMenuItem *mi, GEvent *event,
 
   if (keysym < GK_Special && islower (keysym))
     keysym = toupper (keysym);  /*getkey(keysym,event->u.chr.state&0x2000 ); */
-  for (i = 0;
-       mi[i].ti.text != NULL || mi[i].ti.image != NULL || mi[i].ti.line; ++i)
+  for (i = 0; menu_item_nonempty (&mi[i]); ++i)
     {
       if (call_moveto && mi[i].moveto != NULL)
         (mi[i].moveto) (gw, &(mi[i]), event);
@@ -1146,7 +1147,7 @@ gmenu_key (struct gmenu *m, GEvent *event)
   if (event->u.chr.state & ksm_meta
       && !(event->u.chr.state & (menumask & ~(ksm_meta | ksm_shift))))
     {
-      /* Only look for mneumonics in the child */
+      /* Look for mnemonics only in the child. */
       while (m->child != NULL)
         m = m->child;
       for (i = 0; i < m->mcnt; ++i)
@@ -1319,15 +1320,14 @@ _GMenu_Create (GWindow owner, GMenuItem *mi, GPoint *where,
   m->w = GDrawCreateTopWindow (disp, &pos, gmenu_eh, m, &pattrs);
   m->gic = GDrawCreateInputContext (m->w, gic_root | gic_orlesser);
   GDrawGetFontMetrics (m->w, m->font, &m->as, &ds, &ld);
-  m->fh = m->as + ds + 1;       /* I need some extra space, else mneumonic underlines look bad */
+  m->fh = m->as + ds + 1;       /* I need some extra space, else mnemonic underlines look bad. */
   lh = m->fh;
 
   GDrawSetFont (m->w, m->font);
   m->hasticks = false;
   width = 0;
   keywidth = 0;
-  for (i = 0;
-       mi[i].ti.text != NULL || mi[i].ti.image != NULL || mi[i].ti.line; ++i)
+  for (i = 0; menu_item_nonempty (&mi[i]); i++)
     {
       if (mi[i].ti.checkable)
         m->hasticks = true;
@@ -2079,25 +2079,21 @@ GMenu2BarCreate (struct gwindow *base, GGadgetData * gd, void *data)
 }
 
 /* ************************************************************************** */
+
 static GMenuItem *
 GMenuBarFindMid (GMenuItem *mi, int mid)
 {
-  int i;
-  GMenuItem *ret;
-
-  for (i = 0;
-       mi[i].ti.text != NULL || mi[i].ti.image != NULL || mi[i].ti.line; ++i)
+  GMenuItem *retval = NULL;
+  int i = 0;
+  while (retval == NULL && menu_item_nonempty (&mi[i]))
     {
       if (mi[i].mid == mid)
-        return (&mi[i]);
-      if (mi[i].sub != NULL)
-        {
-          ret = GMenuBarFindMid (mi[i].sub, mid);
-          if (ret != NULL)
-            return (ret);
-        }
+        retval = &mi[i];
+      else if (mi[i].sub != NULL)
+	retval = GMenuBarFindMid (mi[i].sub, mid);
+      i++;
     }
-  return (NULL);
+  return retval;
 }
 
 void
@@ -2136,32 +2132,35 @@ GMenuBarSetItemName (GGadget *g, int mid, const uint32_t *name)
     }
 }
 
-/* Check to see if event matches the given shortcut, expressed in our standard*/
-/*  syntax and subject to gettext translation */
-int
+/* Check to see if event matches the given shortcut, expressed in our
+   standard syntax and subject to gettext translation. */
+VISIBLE bool
 GMenuIsCommand (GEvent *event, char *shortcut)
 {
   GMenuItem foo;
   uint32_t keysym = event->u.chr.keysym;
 
-  if (event->type != et_char)
-    return (false);
+  bool result = false;
 
-  if (keysym < GK_Special && islower (keysym))
-    keysym = toupper (keysym);
+  if (event->type == et_char)
+    {
+      if (keysym < GK_Special && islower (keysym))
+        keysym = toupper (keysym);
 
-  memset (&foo, 0, sizeof (foo));
+      memset (&foo, 0, sizeof (foo));
 
-  GMenuItemParseShortCut (&foo, shortcut);
+      GMenuItemParseShortCut (&foo, shortcut);
 
-  return ((menumask & event->u.chr.state) == foo.short_mask
-          && foo.shortcut == keysym);
+      result = ((menumask & event->u.chr.state) == foo.short_mask
+                && foo.shortcut == keysym);
+    }
+  return result;
 }
 
-int
+VISIBLE int
 GMenuMask (void)
 {
-  return (menumask);
+  return menumask;
 }
 
 GResInfo *
@@ -2169,7 +2168,7 @@ _GMenuRIHead (void)
 {
   if (!gmenubar_inited)
     GMenuInit ();
-  return (&gmenubar_ri);
+  return &gmenubar_ri;
 }
 
 int
