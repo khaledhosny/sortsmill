@@ -61,7 +61,7 @@ nodist_python_PYTHON = fontforge.py psMat.py
 endif PYTHON_COMPATIBILITY
 
 nobase_dist_python_PYTHON = ffContrib/__init__.py	\
-	ffContrib/excepthook.py
+	ffContrib/excepthook.py ffContrib/allow_core.py
 
 nobase_nodist_python_PYTHON = sortsmillff/__init__.py	\
 	sortsmillff/legacy/__init__.py
