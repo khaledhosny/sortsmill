@@ -4,6 +4,9 @@
 # one’s shell.
 #
 # Put ‘import ffContrib.allow_core’ in your user_init.py file.
+#
+# To use a core file, say something like ‘gdb fontforge core’
+# or ‘gdb -c core fontforge’.
 
 import resource
 
