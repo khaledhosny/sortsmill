@@ -126,7 +126,6 @@ libguile_sortsmillff_aux_la_LIBADD =				\
 
 lib_LTLIBRARIES += libguile-sortsmillff_fontforge.la
 libguile_sortsmillff_fontforge_la_SOURCES = guile_notices.c
-#	guile_views.c
 libguile_sortsmillff_fontforge_la_CFLAGS = $(AM_CFLAGS) $(FFINCLDIRS)
 libguile_sortsmillff_fontforge_la_LIBADD =					\
 	$(top_builddir)/fontforge/libsortsmillff_fontforge.la	\

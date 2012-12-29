@@ -79,6 +79,3 @@
 
 (define (CharViewBase->glyph-view sc)
    (pointer->glyph-view (CharViewBase->pointer sc)))
-
-;;(load-extension "libguile-sortsmillff_fontforge"
-;;   "init_guile_sortsmillff_views")
