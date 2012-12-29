@@ -54,7 +54,6 @@ DIST_SCM_FILES += sortsmillff/gsl.scm sortsmillff/iconv.scm	\
 	sortsmillff/brentroot.scm sortsmillff/sfd-to-sxml.scm	\
 	sortsmillff/views.scm sortsmillff/api-syntax.scm		\
 	sortsmillff/notices.scm
-# sortsmillff/fortran-syntax.scm
 #sortsmillff/precompute.scm
 if HAVE_GUI
 DIST_SCM_FILES += sortsmillff/usermenu.scm

@@ -42,16 +42,7 @@ fontforge_api.f90: $(top_builddir)/fontforge/fontforge.types.apii	\
 	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-fortran-api.scm $(filter %.apii, $^) > $@-tmp
 	$(AM_V_at)mv $@-tmp $@
 
-#fontforge_api.syn: $(top_builddir)/fontforge/fontforge.types.apii	\
-#		$(srcdir)/generate-fortran-syntax.scm						\
-#		$(top_srcdir)/guile/sortsmillff/fortran-syntax.scm			\
-#		$(top_srcdir)/guile/sortsmillff/node.scm					\
-#		$(top_srcdir)/guile/ff-internal/generate-types.scm
-#	$(AM_V_GEN)
-#	$(AM_V_at)$(GUILE_INTERPRET) $(srcdir)/generate-fortran-syntax.scm $(filter %.apii, $^) > $@-tmp
-#	$(AM_V_at)mv $@-tmp $@
-
-EXTRA_DIST = generate-fortran-api.scm generate-fortran-syntax.scm
+EXTRA_DIST = generate-fortran-api.scm
 
 CLEANFILES = fontforge_api.f90
 
