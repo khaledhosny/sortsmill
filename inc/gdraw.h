@@ -33,7 +33,9 @@
 #include "gimage.h"
 #include <cairo/cairo.h>
 
-enum font_style
+struct ggadget;
+
+typedef enum font_style
 {
   fs_none = 0,
   fs_italic = 1,
@@ -41,34 +43,35 @@ enum font_style
   fs_condensed = 4,
   fs_extended = 8,
   fs_rotated = 16
-};
+} FontStyle;
 
-enum font_type
+typedef enum font_type
 {
-  ft_unknown,
+  ft_unknown = 0,
   ft_serif,
   ft_sans,
   ft_mono,
   ft_cursive,
   ft_max
-};
+} FontType;
 
-enum text_mods
+typedef enum text_mods
 {
   tm_none = 0,
   tm_upper = 1,
   tm_lower = 2,
   tm_initialcaps = 4,
   tm_showsofthyphen = 8
-};
+} TextMods;
 
-enum text_lines
-{ tl_none = 0,
+typedef enum text_lines
+{
+  tl_none = 0,
   tl_under = 1,
   tl_strike = 2,
   tl_over = 4,
   tl_dash = 8
-};
+} TextLines;
 
 typedef struct
 {
@@ -79,24 +82,25 @@ typedef struct
   char *utf8_family_name;
 } FontRequest;
 
-typedef struct font_instance FontInstance, GFont;
+typedef struct font_instance FontInstance;
+typedef struct font_instance GFont;
 
-enum gic_style
+typedef enum gic_style
 {
   gic_overspot = 2,
   gic_root = 1,
   gic_hidden = 0,
   gic_orlesser = 4,
   gic_type = 3
-};
+} GIC_Style;
 
 typedef struct ginput_context GIC;
 
-enum draw_func
+typedef enum draw_func
 {
-  df_copy,
+  df_copy = 0,
   df_xor
-};
+} DrawFunc;
 
 typedef struct ggc
 {
@@ -141,7 +145,7 @@ typedef struct gtextbounds
      be totally different. FIXME: WHAT DOES THIS COMMENT MEAN? */
 } GTextBounds;
 
-enum selnames
+typedef enum selnames
 {
   sn_primary,
   sn_clipboard,
@@ -149,13 +153,13 @@ enum selnames
   sn_user1,
   sn_user2,
   sn_max
-};
+} SelNames;
 
 typedef struct gwindow *GWindow;
 typedef struct gdisplay GDisplay;
 typedef struct gtimer GTimer;
 
-enum keystate_mask
+typedef enum keystate_mask
 {
   ksm_shift = 1,
   ksm_capslock = 2,
@@ -178,17 +182,17 @@ enum keystate_mask
   ksm_button4 = (1 << 11), ksm_button5 = (1 << 12),
   ksm_buttons =
     (ksm_button1 | ksm_button2 | ksm_button3 | ksm_button4 | ksm_button5)
-};
+} KeystateMask;
 
-enum mnemonic_focus
+typedef enum mnemonic_focus
 {
   mf_normal = 0,
   mf_tab,
   mf_mnemonic,
   mf_shortcut
-};
+} MnemonicFocus;
 
-enum event_type
+typedef enum event_type
 {
   et_noevent = -1,
   et_char,
@@ -213,18 +217,18 @@ enum event_type
   et_lastnativeevent = et_drop,
   et_controlevent,
   et_user
-};
+} EventType;
 
-enum visibility_state
+typedef enum visibility_state
 {
-  vs_unobscured,
+  vs_unobscured = 0,
   vs_partially,
   vs_obscured
-};
+} VisibilityState;
 
-enum et_subtype
+typedef enum et_subtype
 {
-  et_buttonpress,
+  et_buttonpress = 0,
   et_buttonactivate,
   et_radiochanged,
   et_listselected,
@@ -233,11 +237,11 @@ enum et_subtype
   et_textchanged,
   et_textfocuschanged,
   et_lastsubtype
-};
+} ET_Subtype;
 
-enum sb
+typedef enum sb
 {
-  et_sb_top,
+  et_sb_top = 0,
   et_sb_uppage,
   et_sb_up,
   et_sb_left = et_sb_up,
@@ -247,122 +251,169 @@ enum sb
   et_sb_bottom,
   et_sb_thumb,
   et_sb_thumbrelease
-};
+} SB;
 
-struct sbevent
+typedef struct sbevent
 {
-  enum sb type;
+  SB type;
   int32_t pos;
-};
+} SBEvent;
+
+#define _GD_EVT_CHRLEN	10
+
+typedef struct
+{
+  char *device;                 /* for wacom devices */
+  uint32_t time;
+  uint16_t state;
+  int16_t x;
+  int16_t y;
+  uint16_t keysym;
+  int16_t autorepeat;
+  uint32_t chars[_GD_EVT_CHRLEN];
+} GEvent_chr;
+
+typedef struct
+{
+  char *device;                 /* for wacom devices */
+  uint32_t time;
+  int16_t state;
+  int16_t x;
+  int16_t y;
+  int16_t button;
+  int16_t clicks;
+  int32_t pressure;
+  int32_t xtilt;
+  int32_t ytilt;
+  int32_t separation;
+} GEvent_mouse;
+
+typedef struct
+{
+  GRect rect;
+} GEvent_expose;
+
+typedef struct
+{
+  enum visibility_state state;
+} GEvent_visibility;
+
+typedef struct
+{
+  GRect size;
+  int16_t dx;
+  int16_t dy;
+  int16_t dwidth;
+  int16_t dheight;
+  bool moved;
+  bool sized;
+} GEvent_resize;
+
+typedef struct
+{
+  char *device;                 /* for wacom devices */
+  uint32_t time;
+  int16_t state;
+  int16_t x;
+  int16_t y;
+  bool entered;
+} GEvent_crossing;
+
+typedef struct
+{
+  bool gained_focus;
+  uint8_t mnemonic_focus;
+} GEvent_focus;
+
+typedef struct
+{
+  bool is_visible;
+} GEvent_map;
+
+typedef struct
+{
+  enum selnames sel;
+} GEvent_selclear;
+
+typedef struct
+{
+  int32_t x;
+  int32_t y;
+} GEvent_drag_drop;
+
+typedef struct
+{
+  GTimer *timer;
+  void *userdata;
+} GEvent_timer;
+
+typedef struct
+{
+  int gained_focus;
+} GEvent_control_tf_focus;
+
+typedef struct
+{
+  int from_pulldown;            /* -1 normally, else index into pulldown list */
+} GEvent_control_tf_changed;
+
+typedef struct
+{
+  int clicks;
+  int16_t button;
+  int16_t state;
+} GEvent_control_button;
+
+typedef struct
+{
+  int from_mouse;
+  int changed_index;
+} GEvent_control_list;
+
+typedef union
+{
+  SBEvent sb;
+  GEvent_control_tf_focus tf_focus;
+  GEvent_control_tf_changed tf_changed;
+  GEvent_control_button button;
+  GEvent_control_list list;
+} GEvent_control_union;
+
+typedef struct
+{
+  ET_Subtype subtype;
+  struct ggadget *g;
+  GEvent_control_union u;
+} GEvent_control;
+
+typedef struct
+{
+  long subtype;
+  void *userdata;
+} GEvent_user;
+
+typedef union
+{
+  GEvent_chr chr;
+  GEvent_mouse mouse;
+  GEvent_expose expose;
+  GEvent_visibility visibility;
+  GEvent_resize resize;
+  GEvent_crossing crossing;
+  GEvent_focus focus;
+  GEvent_map map;
+  GEvent_selclear selclear;
+  GEvent_drag_drop drag_drop;
+  GEvent_timer timer;
+  GEvent_control control;
+  GEvent_user user;
+} GEvent_union;
 
 typedef struct gevent
 {
   enum event_type type;
-#define _GD_EVT_CHRLEN	10
   GWindow w;
-  union
-  {
-    struct
-    {
-      char *device;             /* for wacom devices */
-      uint32_t time;
-      uint16_t state;
-      int16_t x, y;
-      uint16_t keysym;
-      int16_t autorepeat;
-      uint32_t chars[_GD_EVT_CHRLEN];
-    } chr;
-    struct
-    {
-      char *device;             /* for wacom devices */
-      uint32_t time;
-      int16_t state;
-      int16_t x, y;
-      int16_t button;
-      int16_t clicks;
-      int32_t pressure, xtilt, ytilt, separation;
-    } mouse;
-    struct
-    {
-      GRect rect;
-    } expose;
-    struct
-    {
-      enum visibility_state state;
-    } visibility;
-    struct
-    {
-      GRect size;
-      int16_t dx, dy, dwidth, dheight;
-      bool moved;
-      bool sized;
-    } resize;
-    struct
-    {
-      char *device;             /* for wacom devices */
-      uint32_t time;
-      int16_t state;
-      int16_t x;
-      int16_t y;
-      bool entered;
-    } crossing;
-    struct
-    {
-      bool gained_focus;
-      uint8_t mnemonic_focus;
-    } focus;
-    struct
-    {
-      bool is_visible;
-    } map;
-    struct
-    {
-      enum selnames sel;
-    } selclear;
-    struct
-    {
-      int32_t x;
-      int32_t y;
-    } drag_drop;
-    struct
-    {
-      GTimer *timer;
-      void *userdata;
-    } timer;
-    struct
-    {
-      enum et_subtype subtype;
-      struct ggadget *g;
-      union
-      {
-        struct sbevent sb;
-        struct
-        {
-          int gained_focus;
-        } tf_focus;
-        struct
-        {
-          int from_pulldown;    /* -1 normally, else index into pulldown list */
-        } tf_changed;
-        struct
-        {
-          int clicks;
-          int16_t button;
-          int16_t state;
-        } button;
-        struct
-        {
-          int from_mouse;
-          int changed_index;
-        } list;
-      } u;
-    } control;
-    struct
-    {
-      long subtype;
-      void *userdata;
-    } user;
-  } u;
+  GEvent_union u;
   void *native_window;
 } GEvent;
 
