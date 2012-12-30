@@ -78,9 +78,9 @@ tools_list_check (struct gmenuitem *mi, SCM owner,
 void
 cv_tools_list_check (GWindow gw, struct gmenuitem *mi, GEvent *e)
 {
-  CharViewBase *cvb = (CharViewBase *) GDrawGetUserData (gw);
   if (cv_menu_info != NULL)
     {
+      CharViewBase *cvb = (CharViewBase *) GDrawGetUserData (gw);
       SCM view = scm_call_1 (scm_c_public_ref ("sortsmillff views",
                                                "pointer->glyph-view"),
                              scm_from_pointer (cvb, NULL));
@@ -91,9 +91,9 @@ cv_tools_list_check (GWindow gw, struct gmenuitem *mi, GEvent *e)
 void
 fv_tools_list_check (GWindow gw, struct gmenuitem *mi, GEvent *e)
 {
-  FontViewBase *fvb = (FontViewBase *) GDrawGetUserData (gw);
   if (fv_menu_info != NULL)
     {
+      FontViewBase *fvb = (FontViewBase *) GDrawGetUserData (gw);
       SCM view = scm_call_1 (scm_c_public_ref ("sortsmillff views",
                                                "pointer->font-view"),
                              scm_from_pointer (fvb, NULL));
@@ -121,9 +121,9 @@ do_action (struct gmenuitem *mi, SCM owner, menu_info *info, int menu_size)
 static void
 cv_do_action (GWindow gw, struct gmenuitem *mi, GEvent *e)
 {
-  CharViewBase *cvb = (CharViewBase *) GDrawGetUserData (gw);
   if (cv_menu_info != NULL)
     {
+      CharViewBase *cvb = (CharViewBase *) GDrawGetUserData (gw);
       SCM view = scm_call_1 (scm_c_public_ref ("sortsmillff views",
                                                "pointer->glyph-view"),
                              scm_from_pointer (cvb, NULL));
@@ -134,9 +134,9 @@ cv_do_action (GWindow gw, struct gmenuitem *mi, GEvent *e)
 static void
 fv_do_action (GWindow gw, struct gmenuitem *mi, GEvent *e)
 {
-  FontViewBase *fvb = (FontViewBase *) GDrawGetUserData (gw);
   if (fv_menu_info != NULL)
     {
+      FontViewBase *fvb = (FontViewBase *) GDrawGetUserData (gw);
       SCM view = scm_call_1 (scm_c_public_ref ("sortsmillff views",
                                                "pointer->font-view"),
                              scm_from_pointer (fvb, NULL));
