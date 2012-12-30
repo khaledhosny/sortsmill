@@ -38,7 +38,7 @@ cdef extern from "stdbool.h":
 from libcpp cimport bool
 
 cimport sortsmillff.cython.xgc as xgc
-from cpython.ref cimport PyObject, Py_XINCREF
+from cpython.ref cimport PyObject, Py_XINCREF, Py_XDECREF
 from cpython.object cimport PyObject_CallObject, PyObject_IsTrue
 from libc.stdint cimport uintptr_t
 
@@ -234,6 +234,7 @@ IF HAVE_GUI:
 
       legacy_glyph_obj = PySC_From_SC_I (<SplineChar *> sc)
       result = func (data, legacy_glyph_obj)
+      Py_XDECREF (<PyObject *> legacy_glyph_obj)
 
       # We are done with those globals.
       sc_active_in_ui = NULL
@@ -251,6 +252,7 @@ IF HAVE_GUI:
 
       legacy_font_obj = PyFV_From_FV_I (<FontViewBase *> fvb)
       result = func (data, legacy_font_obj)
+      Py_XDECREF (<PyObject *> legacy_font_obj)
 
       # We are done with those globals.
       fv_active_in_ui = NULL
