@@ -4056,16 +4056,10 @@ extern void PyFF_ErrorF3 (const char *frmt, const char *str, int size,
                           int depth);
 VISIBLE extern void PyFF_Stdin (void);
 extern void PyFF_Main (int argc, char **argv, int start);
-//extern void PyFF_ScriptFile (struct fontviewbase *fv, SplineChar *sc,
-//                             char *filename);
-//extern void PyFF_ScriptString (struct fontviewbase *fv,
-//			       SplineChar *sc, int layer, char *str);
-extern void PyFF_ScriptFile (struct fontviewbase *fv,
-			     struct charviewbase *cv,
+extern void PyFF_ScriptFile (struct fontviewbase *fv, SplineChar *sc,
                              char *filename);
-extern void PyFF_ScriptString (struct fontviewbase *fv,
-			       struct charviewbase *cv,
-			       int layer, char *str);
+VISIBLE extern void PyFF_ScriptString (struct fontviewbase *fv,
+                                       SplineChar *sc, int layer, char *str);
 VISIBLE extern void PyFF_FreeFV (struct fontviewbase *fv);
 extern void PyFF_FreeSC (SplineChar *sc);
 extern void PyFF_FreeSF (SplineFont *sf);

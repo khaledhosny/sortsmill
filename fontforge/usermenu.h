@@ -32,8 +32,6 @@
 #include <ggadget.h>
 #include <sortsmillff/usermenu.h>
 
-#include <activeinui.h>		/* FIXME: REMOVE THIS ASAP. */
-
 extern GMenuItem2 *cv_menu;
 extern GMenuItem2 *fv_menu;
 

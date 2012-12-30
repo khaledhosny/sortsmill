@@ -81,14 +81,10 @@ cv_tools_list_check (GWindow gw, struct gmenuitem *mi, GEvent *e)
   CharViewBase *cvb = (CharViewBase *) GDrawGetUserData (gw);
   if (cv_menu_info != NULL)
     {
-      sc_active_in_ui = cvb->sc;///////////////////////////////////////////////////////////////////
-      layer_active_in_ui = CVLayer (cvb);///////////////////////////////////////////////////////////////////
       SCM view = scm_call_1 (scm_c_public_ref ("sortsmillff views",
                                                "pointer->glyph-view"),
                              scm_from_pointer (cvb, NULL));
       tools_list_check (mi, view, cv_menu_info, cv_menu_size);
-      sc_active_in_ui = NULL;///////////////////////////////////////////////////////////////////
-      layer_active_in_ui = ly_fore;///////////////////////////////////////////////////////////////////
     }
 }
 
@@ -98,13 +94,10 @@ fv_tools_list_check (GWindow gw, struct gmenuitem *mi, GEvent *e)
   FontViewBase *fvb = (FontViewBase *) GDrawGetUserData (gw);
   if (fv_menu_info != NULL)
     {
-      //      fv_active_in_ui = fvb;///////////////////////////////////////////////////////////////////
-      //      layer_active_in_ui = fvb->active_layer;///////////////////////////////////////////////////////////////////
       SCM view = scm_call_1 (scm_c_public_ref ("sortsmillff views",
                                                "pointer->font-view"),
                              scm_from_pointer (fvb, NULL));
       tools_list_check (mi, view, fv_menu_info, fv_menu_size);
-      //      fv_active_in_ui = NULL;///////////////////////////////////////////////////////////////////
     }
 }
 
@@ -131,14 +124,10 @@ cv_do_action (GWindow gw, struct gmenuitem *mi, GEvent *e)
   CharViewBase *cvb = (CharViewBase *) GDrawGetUserData (gw);
   if (cv_menu_info != NULL)
     {
-      sc_active_in_ui = cvb->sc;///////////////////////////////////////////////////////////////////
-      layer_active_in_ui = CVLayer (cvb);///////////////////////////////////////////////////////////////////
       SCM view = scm_call_1 (scm_c_public_ref ("sortsmillff views",
                                                "pointer->glyph-view"),
                              scm_from_pointer (cvb, NULL));
       do_action (mi, view, cv_menu_info, cv_menu_size);
-      sc_active_in_ui = NULL;////////////////////////////////////////////////////////////////////
-      layer_active_in_ui = ly_fore;/////////////////////////////////////////////////////////////////
     }
 }
 
@@ -148,13 +137,10 @@ fv_do_action (GWindow gw, struct gmenuitem *mi, GEvent *e)
   FontViewBase *fvb = (FontViewBase *) GDrawGetUserData (gw);
   if (fv_menu_info != NULL)
     {
-      //      fv_active_in_ui = fvb;///////////////////////////////////////////////////////////////////
-      //      layer_active_in_ui = fvb->active_layer;///////////////////////////////////////////////////////////////////
       SCM view = scm_call_1 (scm_c_public_ref ("sortsmillff views",
                                                "pointer->font-view"),
                              scm_from_pointer (fvb, NULL));
       do_action (mi, view, fv_menu_info, fv_menu_size);
-      //      fv_active_in_ui = NULL;///////////////////////////////////////////////////////////////////
     }
 }
 

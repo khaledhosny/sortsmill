@@ -62,15 +62,12 @@ cdef extern from "splinefont.h":
 
 cdef extern from "activeinui.h":
   FontViewBase *fv_active_in_ui
-  CharViewBase *cv_active_in_ui
-  SplineChar *sc_active_in_ui   # FIXME: Do we need this anymore?
+  SplineChar *sc_active_in_ui
   int layer_active_in_ui
 
 cdef extern from "ffpython.h":
   object PyFV_From_FV_I (FontViewBase *)
-  object PySC_From_CV_I (CharViewBase *)
-  FontViewBase *FV_From_PyFV (object)
-  CharViewBase *CV_From_PySC (object)
+  object PySC_From_SC_I (SplineChar *)
 
 cdef extern from "fontforge.h":
   bool get_no_windowing_ui ()
@@ -212,42 +209,6 @@ IF HAVE_GUI:
   def __default_enabled (view):
     return True
 
-  def __call_with_glyph_globals_set (func, legacy_obj):
-
-    cdef CharViewBase *cvb = CV_From_PySC (legacy_obj)
-#    cdef uintptr_t cvb_uint = <uintptr_t> <void *> cvb
-#    py_cvb = fontforge_api.CharViewBase (cvb_uint)
-#    cdef SplineChar *sc = <SplineChar *> py_cvb._sc
-    cdef SplineChar *sc = cvb.sc
-
-    cv_active_in_ui = cvb
-    sc_active_in_ui = sc
-    layer_active_in_ui = CVLayer (cvb)
-
-    result = func (legacy_obj)
-
-    cv_active_in_ui = NULL
-    sc_active_in_ui = NULL
-    layer_active_in_ui = ly_fore
-
-    return result
-
-  def __call_with_font_globals_set (func, legacy_obj):
-
-    cdef FontViewBase *fvb = FV_From_PyFV (legacy_obj)
-    cdef uintptr_t fvb_uint = <uintptr_t> <void *> fvb
-    py_fvb = fontforge_api.FontViewBase (fvb_uint)
-    cdef int active_layer = py_fvb._active_layer
-
-    fv_active_in_ui = fvb
-    layer_active_in_ui = active_layer
-
-    result = func (legacy_obj)
-
-    fv_active_in_ui = NULL
-
-    return result
-
   def registerMenuItem (menu_function not None,
                         enable_function,
                         data,
@@ -263,41 +224,55 @@ IF HAVE_GUI:
         raise ValueError ("Expected 'glyph' or 'font', but got " + str (w))
       return w
 
-    def convert_glyph_view (gv):
-      cdef uintptr_t p = gv.to_internal_type().ptr
-      cdef CharViewBase *cvb = <CharViewBase *> p
-      return PySC_From_CV_I (cvb)
+    def call_with_globals_set_for_glyph (func, data, gv):
+      cdef uintptr_t cvb = gv.to_internal_type().ptr
+      cdef uintptr_t sc = fontforge_api.CharViewBase (cvb)._sc
 
-    def convert_font_view (fv):
-      cdef uintptr_t p = fv.to_internal_type().ptr
-      cdef FontViewBase *fvb = <FontViewBase *> p
-      return PyFV_From_FV_I (fvb)
+      # Set globals that are used in the legacy python.c code.
+      sc_active_in_ui = <SplineChar *> sc
+      layer_active_in_ui = CVLayer (<CharViewBase *> cvb)
+
+      legacy_glyph_obj = PySC_From_SC_I (<SplineChar *> sc)
+      result = func (data, legacy_glyph_obj)
+
+      # We are done with those globals.
+      sc_active_in_ui = NULL
+      layer_active_in_ui = ly_fore
+
+      return result
+
+    def call_with_globals_set_for_font (func, data, fv):
+      cdef uintptr_t fvb = fv.to_internal_type().ptr
+      cdef int active_layer = fontforge_api.FontViewBase (fvb)._active_layer
+
+      # Set globals that are used in the legacy python.c code.
+      fv_active_in_ui = <FontViewBase *> fvb
+      layer_active_in_ui = active_layer
+
+      legacy_font_obj = PyFV_From_FV_I (<FontViewBase *> fvb)
+      result = func (data, legacy_font_obj)
+
+      # We are done with those globals.
+      fv_active_in_ui = NULL
+
+      return result
 
     if isinstance (which_window, str):
       which_window = (which_window,)
     windows = {canonical_window (w) for w in which_window}
 
+    if enable_function is None:
+      enable_function = __default_enabled
+
     for w in windows:
 
-      convert = convert_font_view
-      call_with_globals_set = __call_with_font_globals_set
+      call_with_globals_set = call_with_globals_set_for_font
       if w == 'glyph':
-        convert = convert_glyph_view
-        call_with_globals_set = __call_with_glyph_globals_set
-      Py_XINCREF (<PyObject *> convert)
-      Py_XINCREF (<PyObject *> call_with_globals_set)
+        call_with_globals_set = call_with_globals_set_for_glyph
 
-      action_inner = lambda obj: menu_function (data, convert (obj))
-      Py_XINCREF (<PyObject *> action_inner)
-
-      enabled_inner = __default_enabled
-      if enable_function is not None:
-        enabled_inner = lambda obj: enable_function (data, convert (obj))
-      Py_XINCREF (<PyObject *> enabled_inner)
-
-      action = lambda obj: call_with_globals_set (action_inner, obj)
-      enabled = lambda obj: call_with_globals_set (enabled_inner, obj)
+      action = lambda obj: call_with_globals_set (menu_function, data, obj)
       Py_XINCREF (<PyObject *> action)
+      enabled = lambda obj: call_with_globals_set (enable_function, data, obj)
       Py_XINCREF (<PyObject *> enabled)
 
       register_fontforge_menu_entry (w, submenu_names, action, enabled,

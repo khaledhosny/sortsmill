@@ -30,7 +30,6 @@
 #define _INTERNAL_ACTIVEINUI_H
 
 extern FontViewBase *fv_active_in_ui;
-extern CharViewBase *cv_active_in_ui;
 extern SplineChar *sc_active_in_ui;
 extern int layer_active_in_ui;
 

@@ -107,17 +107,12 @@ typedef int Py_ssize_t;
 
 void FfPy_Replace_MenuItemStub (PyObject *(*func) (PyObject *, PyObject *));
 PyObject *PySC_From_SC (SplineChar *sc);
-PyObject *PySC_From_CV (CharViewBase *cv);
 PyObject *PyFV_From_FV (FontViewBase *fv);
 PyObject *PySC_From_SC_I (SplineChar *sc);
-PyObject *PySC_From_CV_I (CharViewBase *cv);
 PyObject *PyFV_From_FV_I (FontViewBase *fv);
-FontViewBase *FV_From_PyFV (PyObject *py_fv);
-CharViewBase *CV_From_PySC (PyObject *py_sc);
 int FlagsFromTuple (PyObject *tuple, struct flaglist *flags,
                     const char *flagkind);
-//void PyFF_Glyph_Set_Layer (SplineChar *sc, int layer);
-void PyFF_Glyph_Set_Layer (CharViewBase *sc, int layer);
+void PyFF_Glyph_Set_Layer (SplineChar *sc, int layer);
 
 #if PY_MAJOR_VERSION <= 2
 void initPyFontForge (void);

@@ -31,5 +31,4 @@
 
 VISIBLE FontViewBase *fv_active_in_ui = NULL;
 VISIBLE SplineChar *sc_active_in_ui = NULL;
-VISIBLE CharViewBase *cv_active_in_ui = NULL;
 VISIBLE int layer_active_in_ui = ly_fore;
