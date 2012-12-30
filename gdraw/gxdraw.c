@@ -2750,7 +2750,7 @@ return;
       case FocusIn: case FocusOut:	/* Should only get this on top level */
 	gevent.type = et_focus;
 	gevent.u.focus.gained_focus = event->type==FocusIn;
-	gevent.u.focus.mnemonic_focus = false;
+	gevent.u.focus.mnemonic_focus = mf_normal;
       break;
       case EnterNotify: case LeaveNotify: /* Should only get this on top level */
 	if ( event->xcrossing.detail == NotifyInferior )
@@ -2758,7 +2758,7 @@ return;
 	if ( gdisp->focusfollowsmouse && gw!=NULL && gw->eh!=NULL ) {
 	    gevent.type = et_focus;
 	    gevent.u.focus.gained_focus = event->type==EnterNotify;
-	    gevent.u.focus.mnemonic_focus = false;
+	    gevent.u.focus.mnemonic_focus = mf_normal;
 	    (gw->eh)((GWindow) gw, &gevent);
 	}
 	gevent.type = et_crossing;

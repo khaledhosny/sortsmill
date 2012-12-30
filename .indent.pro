@@ -57,6 +57,8 @@
 -T DeviceTable
 -T DRect
 -T BVTFunc
+-T FontRequest
+-T GFont
 -T GTextInfo
 -T GPoint
 -T IPoint
@@ -67,7 +69,9 @@
 -T GMenuItem
 -T GMenuItem2
 -T GResStruct
+-T GTextBounds
 -T GWindow
+-T GWindowAttrs
 -T GDisplay
 -T GRect
 -T GBox

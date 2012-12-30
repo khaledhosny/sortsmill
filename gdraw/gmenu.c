@@ -912,15 +912,11 @@ GMenuKeyInvoke (struct gmenu *m, int i)
   if (m->mi[i].ti.checkable)
     m->mi[i].ti.checked = !m->mi[i].ti.checked;
   if (m->mi[i].sub == NULL)
-    {
-      GMenuHideAll (m);
-    }
+    GMenuHideAll (m);
   if (m->mi[i].invoke != NULL)
     (m->mi[i].invoke) (m->owner, &m->mi[i], NULL);
   if (m->mi[i].sub == NULL)
-    {
-      GMenuDismissAll (m);
-    }
+    GMenuDismissAll (m);
   return (true);
 }
 
@@ -1301,8 +1297,8 @@ _GMenu_Create (GWindow owner, GMenuItem *mi, GPoint *where,
   m->tickoff = m->tioff = m->bp = GBoxBorderWidth (owner, m->box);
   m->line_with_mouse = -1;
 
-/* Mnemonics in menus don't work under gnome. Turning off nodecor makes them */
-/*  work, but that seems a high price to pay */
+  /* Mnemonics in menus don't work under gnome. Turning off nodecor
+     makes them work, but that seems a high price to pay. */
   pattrs.mask =
     wam_events | wam_nodecor | wam_positioned | wam_cursor | wam_transient |
     wam_verytransient;
@@ -1318,7 +1314,8 @@ _GMenu_Create (GWindow owner, GMenuItem *mi, GPoint *where,
   m->w = GDrawCreateTopWindow (disp, &pos, gmenu_eh, m, &pattrs);
   m->gic = GDrawCreateInputContext (m->w, gic_root | gic_orlesser);
   GDrawGetFontMetrics (m->w, m->font, &m->as, &ds, &ld);
-  m->fh = m->as + ds + 1;       /* I need some extra space, else mnemonic underlines look bad. */
+  m->fh = m->as + ds + 1;       /* I need some extra space, else mnemonic
+                                   underlines look bad. */
   lh = m->fh;
 
   GDrawSetFont (m->w, m->font);
