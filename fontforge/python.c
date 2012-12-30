@@ -33,6 +33,7 @@
 #include "structmember.h"
 
 #include "fontforgevw.h"
+#include "activeinui.h"
 #include "ttf.h"
 #include "utype.h"
 #include "ustring.h"
@@ -65,11 +66,6 @@
 
 static struct flaglist sfnt_name_str_ids[];
 static struct flaglist sfnt_name_mslangs[];
-
-/*** These have been moved elsewhere ***/
-/*FontViewBase *fv_active_in_ui = NULL;*/
-/*SplineChar *sc_active_in_ui = NULL;*/
-/*int layer_active_in_ui = ly_fore;*/
 
 static PyObject *hook_dict;     /* Dictionary of python hook scripts (to be activated when certain fontforge events happen) */
 static PyObject *pickler, *unpickler;   /* cPickle.dumps, cPickle.loads */
@@ -154,13 +150,21 @@ static PyTypeObject PyFF_MathKernType;
 typedef struct
 {
   PyObject_HEAD
-    /* Type-specific fields go here. */
+
+  /* Type-specific fields go here. */
   SplineChar *sc;
   PyFF_LayerArray *layers;
   PyFF_RefArray *refs;
   PyFF_MathKern *mk;
   int layer;
+
+  /* cv is a retrofitted field. This is an example of working around
+     ugliness by adding more ugliness. FIXME: This is AWFUL. Get rid
+     of python.c ! */
+  CharViewBase *cv;
+
 } PyFF_Glyph;
+
 static PyTypeObject PyFF_GlyphType;
 
 typedef struct
@@ -506,8 +510,24 @@ PySC_From_SC (SplineChar *sc)
       sc->python_sc_object = PyFF_GlyphType.tp_alloc (&PyFF_GlyphType, 0);
       ((PyFF_Glyph *) (sc->python_sc_object))->sc = sc;
       ((PyFF_Glyph *) (sc->python_sc_object))->layer = ly_fore;
+      ((PyFF_Glyph *) (sc->python_sc_object))->cv = NULL;
       Py_INCREF ((PyObject *) (sc->python_sc_object));  /* for the pointer in my fv */
     }
+  return (sc->python_sc_object);
+}
+
+VISIBLE PyObject *
+PySC_From_CV (CharViewBase *cv)
+{
+  SplineChar *sc = cv->sc;
+  if (sc->python_sc_object == NULL)
+    {
+      sc->python_sc_object = PyFF_GlyphType.tp_alloc (&PyFF_GlyphType, 0);
+      ((PyFF_Glyph *) (sc->python_sc_object))->sc = sc;
+      ((PyFF_Glyph *) (sc->python_sc_object))->layer = ly_fore;
+      Py_INCREF ((PyObject *) (sc->python_sc_object));  /* for the pointer in my fv */
+    }
+  ((PyFF_Glyph *) (sc->python_sc_object))->cv = cv;
   return (sc->python_sc_object);
 }
 
@@ -519,12 +539,40 @@ PySC_From_SC_I (SplineChar *sc)
   return (s);
 }
 
-VISIBLE void
-PyFF_Glyph_Set_Layer (SplineChar *sc, int layer)
+VISIBLE PyObject *
+PySC_From_CV_I (CharViewBase *cv)
 {
-  PyObject *pysc = PySC_From_SC (sc);
+  PyObject *s = PySC_From_CV (cv);
+  Py_INCREF (s);
+  return (s);
+}
+
+VISIBLE FontViewBase *
+FV_From_PyFV (PyObject *py_fv)
+{
+  return ((PyFF_Font *) py_fv)->fv;
+}
+
+VISIBLE CharViewBase *
+CV_From_PySC (PyObject *py_sc)
+{
+  return ((PyFF_Glyph *) py_sc)->cv;
+}
+
+//VISIBLE void
+//PyFF_Glyph_Set_Layer (SplineChar *sc, int layer)
+//{
+//  PyObject *pysc = PySC_From_SC (sc);
+//  ((PyFF_Glyph *) pysc)->layer = layer;
+//}
+
+VISIBLE void
+PyFF_Glyph_Set_Layer (CharViewBase *cv, int layer)
+{
+  PyObject *pysc = PySC_From_CV (cv);
   ((PyFF_Glyph *) pysc)->layer = layer;
 }
+
 
 #define BAD_TAG ((uint32_t)0xffffffff)
 static uint32_t
@@ -880,7 +928,8 @@ PyFF_ActiveGlyph (PyObject *UNUSED (self), PyObject *UNUSED (args))
   if (sc_active_in_ui == NULL)
     Py_RETURN_NONE;
 
-  return (PySC_From_SC_I (sc_active_in_ui));
+  //  return (PySC_From_SC_I (sc_active_in_ui));
+  return (PySC_From_CV_I (cv_active_in_ui));
 }
 
 static PyObject *
@@ -20928,7 +20977,7 @@ PyFF_FontIndex (PyObject *object, PyObject *index)
           return (NULL);
         }
       gid = fv->map->map[pos];
-      sc = gid == -1 ? NULL : sf->glyphs[gid];
+      sc = (gid == -1) ? NULL : sf->glyphs[gid];
     }
   else
     {
@@ -22268,32 +22317,32 @@ SetPythonModuleMetadata (PyObject *module)
 //#endif /* python 2.x */
 
 void
-PyFF_ScriptFile (FontViewBase *fv, SplineChar *sc, char *filename)
+PyFF_ScriptFile (FontViewBase *fv, CharViewBase *cv, char *filename)
 {
   PyObject *fp = PyFile_FromString (filename, "rb");
 
-  fv_active_in_ui = fv;         /* Make fv known to interpreter */
-  sc_active_in_ui = sc;         /* Make sc known to interpreter */
+  fv_active_in_ui = fv;
+  cv_active_in_ui = cv;
+  sc_active_in_ui = (cv == NULL) ? NULL : cv->sc;
   layer_active_in_ui = ly_fore;
   if (fv != NULL)
     layer_active_in_ui = fv->active_layer;
   if (fp == NULL)
     LogError (_("Can't open %s"), filename);
   else
-    {
-      PyRun_SimpleFile (PyFile_AsFile (fp), filename);
-    }
+    PyRun_SimpleFile (PyFile_AsFile (fp), filename);
 }
 
-void
-PyFF_ScriptString (FontViewBase *fv, SplineChar *sc, int layer, char *str)
+VISIBLE void
+PyFF_ScriptString (FontViewBase *fv, CharViewBase *cv, int layer, char *str)
 {
 
-  fv_active_in_ui = fv;         /* Make fv known to interpreter */
-  sc_active_in_ui = sc;         /* Make sc known to interpreter */
+  fv_active_in_ui = fv;
+  cv_active_in_ui = cv;
+  sc_active_in_ui = (cv == NULL) ? NULL : cv->sc;
   layer_active_in_ui = layer;
-  if (sc != NULL)
-    PyFF_Glyph_Set_Layer (sc, layer);
+  if (cv != NULL)
+    PyFF_Glyph_Set_Layer (cv, layer);
   PyRun_SimpleString (str);
 }
 

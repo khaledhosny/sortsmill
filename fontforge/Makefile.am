@@ -62,7 +62,7 @@ noinst_HEADERS = fontforgeui.h sftextfieldP.h views.h is_LIGATURE.h		\
 	nonlineartrans.h sd.h unicoderange.h bitmapcontrol.h encoding.h		\
 	ofl.h search.h usermenu.h fffreetype.h PfEd.h sfd1.h ffpython.h		\
 	import.h sflayoutP.h print.h splinefont.h annotations.h compare.h	\
-	fontimage.h
+	fontimage.h activeinui.h
 
 nobase_nodist_include_HEADERS = sortsmillff/fontforge_api.h
 

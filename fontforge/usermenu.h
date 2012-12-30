@@ -1,5 +1,5 @@
 /* Copyright (C) 2000-2012 by George Williams */
-/* Copyright (C) 2000-2012 by Barry Schwartz */
+/* Copyright (C) 2012 by Barry Schwartz */
 /*
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,9 +32,7 @@
 #include <ggadget.h>
 #include <sortsmillff/usermenu.h>
 
-extern SplineChar *sc_active_in_ui;
-extern FontViewBase *fv_active_in_ui;
-extern int layer_active_in_ui;
+#include <activeinui.h>		/* FIXME: REMOVE THIS ASAP. */
 
 extern GMenuItem2 *cv_menu;
 extern GMenuItem2 *fv_menu;

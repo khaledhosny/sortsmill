@@ -45,6 +45,7 @@ struct sd_data
 {
   int done;
   FontView *fv;
+  CharView *cv;
   SplineChar *sc;
   int layer;
   GWindow gw;
@@ -93,7 +94,8 @@ ExecPython (GGadget *g, GEvent *e)
   running_script = true;
 
   str = GGadgetGetTitle8 (GWidgetGetControl (sd->gw, CID_Script));
-  PyFF_ScriptString ((FontViewBase *) sd->fv, sd->sc, sd->layer, str);
+  PyFF_ScriptString ((FontViewBase *) sd->fv, (CharViewBase *) sd->cv,
+		     sd->layer, str);
   free (str);
   running_script = false;
 }
@@ -173,8 +175,9 @@ ScriptDlg (FontView *fv, CharView *cv)
 
   memset (&sd, 0, sizeof (sd));
   sd.fv = fv;
-  sd.sc = cv == NULL ? NULL : cv->b.sc;
-  sd.layer = cv == NULL ? ly_fore : CVLayer ((CharViewBase *) cv);
+  sd.cv = cv;
+  sd.sc = (cv == NULL) ? NULL : cv->b.sc;
+  sd.layer = (cv == NULL) ? ly_fore : CVLayer ((CharViewBase *) cv);
   sd.oldh = pos.height = GDrawPointsToPixels (NULL, SD_Height);
 
   if (gw == NULL)

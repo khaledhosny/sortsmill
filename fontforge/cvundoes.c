@@ -549,11 +549,13 @@ return( AddUndo(undo,&cv->layerheads[cv->drawmode]->undoes,
 	&cv->layerheads[cv->drawmode]->redoes));
 }
 
-int CVLayer(CharViewBase *cv) {
-    if ( cv->drawmode==dm_grid )
-return( ly_grid );
-
-return( cv->layerheads[cv->drawmode]-cv->sc->layers );
+int
+CVLayer(CharViewBase *cv)
+{
+  int layer = ly_grid;
+  if ( cv->drawmode != dm_grid )
+    layer = cv->layerheads[cv->drawmode] - cv->sc->layers;
+  return layer;
 }
 
 Undoes *CVPreserveState(CharViewBase *cv) {

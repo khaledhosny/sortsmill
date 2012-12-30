@@ -1,6 +1,5 @@
-#include <config.h>
-
-/* Copyright (C) 2007-2012 by George Williams */
+/* Copyright (C) 2000-2012 by George Williams */
+/* Copyright (C) 2012 by Barry Schwartz */
 /*
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,9 +26,12 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "fontforgeui.h"
+#ifndef _INTERNAL_ACTIVEINUI_H
+#define _INTERNAL_ACTIVEINUI_H
 
-VISIBLE FontViewBase *fv_active_in_ui = NULL;
-VISIBLE SplineChar *sc_active_in_ui = NULL;
-VISIBLE CharViewBase *cv_active_in_ui = NULL;
-VISIBLE int layer_active_in_ui = ly_fore;
+extern FontViewBase *fv_active_in_ui;
+extern CharViewBase *cv_active_in_ui;
+extern SplineChar *sc_active_in_ui;
+extern int layer_active_in_ui;
+
+#endif	/* _INTERNAL_ACTIVEINUI_H */
