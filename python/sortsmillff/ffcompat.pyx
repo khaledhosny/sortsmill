@@ -44,7 +44,7 @@ from libc.stdint cimport uintptr_t
 
 cdef extern from "baseviews.h":
   ctypedef struct CharViewBase:
-    SplineChar *sc
+    pass
   ctypedef struct FontViewBase:
     pass
   int CVLayer (CharViewBase *cv)
