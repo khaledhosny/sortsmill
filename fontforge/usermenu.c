@@ -53,8 +53,8 @@ static int fv_menu_max_size = 0;
 //-------------------------------------------------------------------------
 
 static void
-tools_list_check (struct gmenuitem *mi, SCM owner,
-                  menu_info *info, int menu_size)
+tools_list_check (struct gmenuitem *mi, SCM owner, menu_info *info,
+                  int menu_size)
 {
   if (info != NULL)
     for (mi = mi->sub; mi->ti.text != NULL || mi->ti.line; mi++)
@@ -65,14 +65,14 @@ tools_list_check (struct gmenuitem *mi, SCM owner,
           fprintf (stderr, _("Bad Menu ID in menu %d\n"), mi->mid);
           mi->ti.disabled = true;
         }
-      else if (info[mi->mid].enabled == NULL)
-        mi->ti.disabled = false;
-      else
+      else if (info[mi->mid].enabled != NULL)
         mi->ti.disabled =
           scm_is_false (scm_call_2
                         (scm_c_private_ref ("sortsmillff usermenu",
                                             "menu-entry-error-handling"),
                          info[mi->mid].enabled, owner));
+      else
+        mi->ti.disabled = false;
 }
 
 void
@@ -110,9 +110,7 @@ do_action (struct gmenuitem *mi, SCM owner, menu_info *info, int menu_size)
     ;
   else if (mi->mid < 0 || menu_size <= mi->mid)
     fprintf (stderr, _("Bad Menu ID in menu %d\n"), mi->mid);
-  else if (info[mi->mid].action == NULL)
-    ;
-  else
+  else if (info[mi->mid].action != NULL)
     scm_call_2 (scm_c_private_ref ("sortsmillff usermenu",
                                    "menu-entry-error-handling"),
                 info[mi->mid].action, owner);

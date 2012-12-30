@@ -931,7 +931,7 @@ GMenuBarKeyInvoke (struct gmenubar *mb, int i)
 
 static GMenuItem *
 GMenuSearchShortcut (GWindow gw, GMenuItem *mi, GEvent *event,
-                     int call_moveto)
+                     bool call_moveto)
 {
   int i;
   uint32_t keysym = event->u.chr.keysym;
