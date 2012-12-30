@@ -45,34 +45,6 @@ typedef enum font_style
   fs_rotated = 16
 } FontStyle;
 
-typedef enum font_type
-{
-  ft_unknown = 0,
-  ft_serif,
-  ft_sans,
-  ft_mono,
-  ft_cursive,
-  ft_max
-} FontType;
-
-typedef enum text_mods
-{
-  tm_none = 0,
-  tm_upper = 1,
-  tm_lower = 2,
-  tm_initialcaps = 4,
-  tm_showsofthyphen = 8
-} TextMods;
-
-typedef enum text_lines
-{
-  tl_none = 0,
-  tl_under = 1,
-  tl_strike = 2,
-  tl_over = 4,
-  tl_dash = 8
-} TextLines;
-
 typedef struct
 {
   const uint32_t *family_name;  /* may be more than one */
