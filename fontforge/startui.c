@@ -58,13 +58,7 @@ dousage (void)
   printf
     ("\t-allglyphs\t\t (load all glyphs in the 'glyf' table\n\t\t\t of a truetype collection)\n");
   printf ("\t-display display-name\t (sets the X display)\n");
-  printf ("\t-depth val\t\t (sets the display depth if possible)\n");
-  printf ("\t-vc val\t\t\t (sets the visual class if possible)\n");
-  printf ("\t-cmap current|copy|private\t (sets the type of colormap)\n");
-  printf ("\t-dontopenxdevices\t (in case that fails)\n");
   printf ("\t-sync\t\t\t (syncs the display, debugging)\n");
-  printf
-    ("\t-keyboard ibm|mac|sun|ppc  (generates appropriate hotkeys in menus)\n");
   printf ("\t-help\t\t\t (displays this message, and exits)\n");
   printf ("\t-version\t\t (prints the version of fontforge and exits)\n");
   printf ("\n");
@@ -159,18 +153,6 @@ event_e_h (GWindow gw, GEvent * event)
   return (true);
 }
 
-static void
-AddR (char *name, char *val)
-{
-  /* Add this command line value to this GUI resource. */
-  char *full = xmalloc (strlen (name) + strlen (val) + 4);
-  strcpy (full, name);
-  strcat (full, ": ");
-  strcat (full, val);
-  GResourceAddResourceString (full);
-  free (full);
-}
-
 //-------------------------------------------------------------------------
 
 static const char site_init_file[] = "site-init.scm";
@@ -262,17 +244,6 @@ fontforge_main_in_guile_mode (int argc, char **argv)
         ++pt;
       if (strcmp (pt, "-sync") == 0)
         GResourceAddResourceString ("Gdraw.Synchronize: true");
-      else if (strcmp (pt, "-depth") == 0 && i < argc - 1)
-        AddR ("Gdraw.Depth", argv[++i]);
-      else if (strcmp (pt, "-vc") == 0 && i < argc - 1)
-        AddR ("Gdraw.VisualClass", argv[++i]);
-      else if ((strcmp (pt, "-cmap") == 0 || strcmp (pt, "-colormap") == 0)
-               && i < argc - 1)
-        AddR ("Gdraw.Colormap", argv[++i]);
-      else if ((strcmp (pt, "-dontopenxdevices") == 0))
-        AddR ("Gdraw.DontOpenXDevices", "true");
-      else if (strcmp (pt, "-keyboard") == 0 && i < argc - 1)
-        AddR ("Gdraw.Keyboard", argv[++i]);
       else if (strcmp (pt, "-display") == 0 && i < argc - 1)
         display = argv[++i];
       else if (strcmp (pt, "-recover") == 0 && i < argc - 1)
