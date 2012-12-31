@@ -116,7 +116,7 @@
 (define (tools-list-check menu-item view menu-info)
    (let ((item (if (pointer? menu-item)
                    (pointer->GMenuItem menu-item)
-                   menu-items)))
+                   menu-item)))
       (for-each
          (lambda (mi)
             (let ((mid (GMenuItem:mid-ref mi)))
@@ -136,7 +136,7 @@
 (define (do-action menu-item view menu-info)
    (let ((item (if (pointer? menu-item)
                    (pointer->GMenuItem menu-item)
-                   menu-items)))
+                   menu-item)))
       (let ((mid (GMenuItem:mid-ref item)))
          (when (menu-info-exists? menu-info mid)
             ;; FIXME FIXME FIXME: Move the error handling to a more
