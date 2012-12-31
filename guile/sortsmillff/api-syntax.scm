@@ -388,11 +388,21 @@
                         (cons '#,tag (pointer->bytevector ptr size))))
 
                   (define #,(struct->pointer-func x #'type-name)
-                     (lambda (obj)
-                        (#,(check-struct-func x #'type-name)
-                         '#,(struct->pointer-func x #'type-name)
-                         obj)
-                        (bytevector->pointer (cdr obj))))
+                     (case-lambda
+                        ((obj)
+                         (#,(check-struct-func x #'type-name)
+                          '#,(struct->pointer-func x #'type-name)
+                          obj)
+                         (bytevector->pointer (cdr obj)))
+                        ((obj i)
+                         ;; Return a pointer to the ith structure
+                         ;; relative to this one in an array.
+                         (#,(check-struct-func x #'type-name)
+                          '#,(struct->pointer-func x #'type-name)
+                          obj)
+                         (let ((p (bytevector->pointer (cdr obj))))
+                            (make-pointer (+ (pointer-address p)
+                                             (* i size)))))))
 
                   (define #,(unchecked-struct->pointer-func x #'type-name)
                      (lambda (obj)
@@ -432,58 +442,85 @@
          ((_ field-type struct-name field-name offset size)
           #`(begin
                (maybe-export
-                  ;; Example: unchecked-SplineChar:name-ref
+                  ;; Example: unchecked-SplineChar:width-ref
                   #,(unchecked-field-ref-func x #'struct-name #'field-name)
 
-                  ;; Example: SplineChar:name-ref
+                  ;; Example: SplineChar:width-ref
                   #,(field-ref-func x #'struct-name #'field-name)
 
-                  ;; Example: unchecked-SplineChar:name-set!
+                  ;; Example: unchecked-SplineChar:width-set!
                   #,(unchecked-field-set!-func x #'struct-name #'field-name)
 
-                  ;; Example: SplineChar:name-set!
+                  ;; Example: SplineChar:width-set!
                   #,(field-set!-func x #'struct-name #'field-name)
 
-                  ;; Example: unchecked-SplineChar:name->pointer
+                  ;; Example: unchecked-SplineChar:width->pointer
                   #,(unchecked-field->pointer-func x #'struct-name #'field-name)
 
-                  ;; Example: SplineChar:name->pointer
+                  ;; Example: SplineChar:width->pointer
                   #,(field->pointer-func x #'struct-name #'field-name)
                   )
                
                (define #,(unchecked-field-ref-func x #'struct-name #'field-name)
-                  (lambda (obj)
-                     ((field-ref field-type offset size) (cdr obj))))
+                  (case-lambda
+                     ((obj)
+                      ((field-ref field-type offset size) (cdr obj)))
+                     ((obj i)
+                      ((field-ref field-type (+ offset (* i size)) size) (cdr obj)))))
 
                (define #,(field-ref-func x #'struct-name #'field-name)
-                  (lambda (obj)
-                     (#,(check-struct-func x #'struct-name)
-                      #,(field-ref-func x #'struct-name #'field-name)
-                      obj)
-                     ((field-ref field-type offset size) (cdr obj))))
+                  (case-lambda
+                     ((obj)
+                      (#,(check-struct-func x #'struct-name)
+                       #,(field-ref-func x #'struct-name #'field-name)
+                       obj)
+                      ((field-ref field-type offset size) (cdr obj)))
+                     ((obj i)
+                      (#,(check-struct-func x #'struct-name)
+                       #,(field-ref-func x #'struct-name #'field-name)
+                       obj)
+                      ((field-ref field-type (+ offset (* i size)) size) (cdr obj)))))
 
                (define #,(unchecked-field-set!-func x #'struct-name #'field-name)
-                  (lambda (obj v)
-                     ((field-set! field-type offset size) (cdr obj) v)))
+                  (case-lambda
+                     ((obj v)
+                      ((field-set! field-type offset size) (cdr obj) v))
+                     ((obj i v)
+                      ((field-set! field-type (+ offset (* i size)) size) (cdr obj) v))))
 
                (define #,(field-set!-func x #'struct-name #'field-name)
-                  (lambda (obj v)
-                     (#,(check-struct-func x #'struct-name)
-                      #,(field-set!-func x #'struct-name #'field-name)
-                      obj)
-                     ((field-set! field-type offset size) (cdr obj) v)))
+                  (case-lambda
+                     ((obj v)
+                      (#,(check-struct-func x #'struct-name)
+                       #,(field-set!-func x #'struct-name #'field-name)
+                       obj)
+                      ((field-set! field-type offset size) (cdr obj) v))
+                     ((obj i v)
+                      (#,(check-struct-func x #'struct-name)
+                       #,(field-set!-func x #'struct-name #'field-name)
+                       obj)
+                      ((field-set! field-type (+ offset (* i size)) size) (cdr obj) v))))
 
                (define #,(unchecked-field->pointer-func x #'struct-name #'field-name)
-                  (lambda (obj)
-                     ((field->pointer offset) (cdr obj))))
+                  (case-lambda
+                     ((obj)
+                      ((field->pointer offset) (cdr obj)))
+                     ((obj i)
+                      ((field->pointer (+ offset (* i size))) (cdr obj)))
 
                (define #,(field->pointer-func x #'struct-name #'field-name)
-                  (lambda (obj)
-                     (#,(check-struct-func x #'struct-name)
-                      #,(field->pointer-func x #'struct-name #'field-name)
-                      obj)
-                     ((field->pointer offset) (cdr obj))))
-               )))))
+                  (case-lambda
+                     ((obj)
+                      (#,(check-struct-func x #'struct-name)
+                       #,(field->pointer-func x #'struct-name #'field-name)
+                       obj)
+                      ((field->pointer offset) (cdr obj)))
+                     ((obj i)
+                      (#,(check-struct-func x #'struct-name)
+                       #,(field->pointer-func x #'struct-name #'field-name)
+                       obj)
+                      ((field->pointer (+ offset (* i size))) (cdr obj)))))
+               )))))))
 
 (define-syntax expand-field-dereferencing
    (lambda (x)
@@ -491,10 +528,10 @@
          ((_ (field-type field-subtype) struct-name field-name offset size)
           #`(begin
                (maybe-export
-                  ;; Example: unchecked-SplineChar:name-dref
+                  ;; Example: unchecked-CharViewBase:next-dref
                   #,(unchecked-field-dref-func x #'struct-name #'field-name)
 
-                  ;; Example: SplineChar:name-dref
+                  ;; Example: CharViewBase:next-dref
                   #,(field-dref-func x #'struct-name #'field-name)
                   )
 
@@ -504,6 +541,8 @@
                       (let ((pointer ((field-ref field-type offset size) (cdr obj))))
                          (#,(pointer->struct-func x #'field-subtype) pointer)))
                      ((obj i)
+                      (error "THIS CODE IS NOT YET IMPLEMENTED CORRECTLY")
+                      ;; FIXME: This code is WRONG.
                       (let ((pointer ((field-ref field-type (+ offset (* i size)) size) (cdr obj))))
                          (#,(pointer->struct-func x #'field-subtype) pointer)))))
 
@@ -517,7 +556,7 @@
                      ((obj i)
                       (#,(check-struct-func x #'struct-name)
                        #,(field-dref-func x #'struct-name #'field-name)
-                       obj)
+                       obj)                      
                       (#,(unchecked-field-dref-func x #'struct-name #'field-name) obj i))))
                )))))
 

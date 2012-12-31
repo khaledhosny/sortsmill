@@ -47,7 +47,7 @@
        (struct ti)
        (uint shortcut)
        (int short_mask)
-       (* sub)
+       ((* GMenuItem) sub)
        (* moveto)
        (* invoke)
        (int mid)
@@ -56,7 +56,7 @@
     (fields
        (struct ti)
        (uint shortcut)
-       (* sub)
+       ((* GMenuItem2) sub)
        (* moveto)
        (* invoke)
        (int mid)

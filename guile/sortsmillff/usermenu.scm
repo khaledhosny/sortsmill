@@ -20,8 +20,10 @@
 (use-modules
    (sortsmillff views)
    (sortsmillff notices)
-   (sortsmillff python)
+   (sortsmillff fontforge-api)
+   (sortsmillff gdraw-api)
    (system foreign)
+   (srfi srfi-69)                       ; Portable hash tables.
    )
 
 (export
@@ -30,6 +32,119 @@
    wrap-ff_menu_entry_enabled_t
    )
 
+;;-------------------------------------------------------------------------
+
+;; FIXME: Don’t explicitly go through a pointer so often, once support
+;; for other means is available. The current way is verbose and
+;; unreadable.
+
+;;-------------------------------------------------------------------------
+;;
+;; Containers where the ‘action’ and ‘enabled’ functions are stored.
+
+(define cv-menu-info (make-hash-table))
+(define fv-menu-info (make-hash-table))
+
+(define (menu-info-exists? menu-info mid)
+   (hash-table-exists? menu-info mid))
+
+;; Find a non-negative integer that is not yet used as a key in the
+;; given menu-info table.
+(define (menu-info-unused-key menu-info)
+   (letrec ((find (lambda (i) (if (menu-info-exists? menu-info i)
+                                  (find (1+ i))
+                                  i))))
+      (find 0)))
+
+(define (menu-info-ref menu-info mid)
+   (hash-table-ref menu-info mid))
+
+(define (menu-info-set! menu-info mid new-entry)
+   (hash-table-set! menu-info mid new-entry))
+
+(define get-action-func
+   (case-lambda
+      ((menu-info-entry) (car menu-info-entry))
+      ((menu-info mid) (car (menu-info-ref menu-info mid)))))
+
+(define get-enabled-func
+   (case-lambda
+      ((menu-info-entry) (cadr menu-info-entry))
+      ((menu-info mid) (cadr (menu-info-ref menu-info mid)))))
+
+(define (set-menu-info-entry-defaults menu-info-entry)
+   (list
+      (if (car menu-info-entry) (car menu-info-entry)
+          ;; Default action is ‘do nothing’.
+          (lambda (view) *unspecified*))
+      (if (cadr menu-info-entry) (cadr menu-info-entry)
+          ;; Default is ‘always enabled’.
+          (lambda (view) #t))))
+
+;; Add functions to one of the ‘menu-info’ containers. Return the key
+;; (‘mid’) of the new entry.
+(define (menu-info-add! menu-info menu-info-entry)
+   (let ((mid (menu-info-unused-key menu-info)))
+      (menu-info-set! menu-info mid
+         (set-menu-info-entry-defaults menu-info-entry))
+      mid))
+
+;;-------------------------------------------------------------------------
+
+(define (GTextInfo-null? ti)
+   (and (null-pointer? (GTextInfo:text-ref ti))
+        (null-pointer? (GTextInfo:image-ref ti))
+        (not (GTextInfo:line-ref ti))))
+
+(define (GMenuItem-null? mi)
+   (GTextInfo-null? (pointer->GTextInfo (GMenuItem:ti->pointer mi))))
+
+;; Convert a menu’s or submenu’s C array to a more usable form (a
+;; Scheme list).
+(define (GMenuItem-internal-array->list mi)
+   (letrec
+         ((collect
+             (lambda (i prior)
+                (let ((ith-element (pointer->GMenuItem
+                                      (GMenuItem->pointer mi i))))
+                   (if (GMenuItem-null? ith-element)
+                       (reverse prior)
+                       (collect (1+ i) (cons ith-element prior)))))))
+      (collect 0 '())))
+
+;; Individually enable or disable the entries in a submenu.
+(define (tools-list-check menu-item view menu-info)
+   (let ((item (if (pointer? menu-item)
+                   (pointer->GMenuItem menu-item)
+                   menu-items)))
+      (for-each
+         (lambda (mi)
+            (let ((mid (GMenuItem:mid-ref mi)))
+               (when (menu-info-exists? menu-info mid)
+                  (let ((enabled?
+                           ;; FIXME FIXME FIXME: Move the error
+                           ;; handling to a more outer level.
+                           (menu-entry-error-handling
+                              (get-enabled-func menu-info mid)
+                              view)))
+                     (GTextInfo:disabled-set!
+                        (pointer->GTextInfo (GMenuItem:ti->pointer mi))
+                        (not enabled?))))))
+         (GMenuItem-internal-array->list (GMenuItem:sub-dref item)))))
+
+;; Invoke the action for a menu entry.
+(define (do-action menu-item view menu-info)
+   (let ((item (if (pointer? menu-item)
+                   (pointer->GMenuItem menu-item)
+                   menu-items)))
+      (let ((mid (GMenuItem:mid-ref item)))
+         (when (menu-info-exists? menu-info mid)
+            ;; FIXME FIXME FIXME: Move the error handling to a more
+            ;; outer level.
+            (menu-entry-error-handling
+               (get-action-func menu-info mid) view)))))
+
+;; An error-handling wrapper for the invocation of ‘(proc view)’.
 (define (menu-entry-error-handling proc view)
    (let ((retval #f))
       (fontforge-call-with-error-handling

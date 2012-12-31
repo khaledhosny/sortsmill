@@ -566,4 +566,6 @@ VISIBLE extern void GMenuItem2ArrayFree(GMenuItem2 *mi);
 extern GMenuItem *GMenuItemArrayCopy(GMenuItem *mi, uint16_t *cnt);
 VISIBLE extern GMenuItem *GMenuItem2ArrayCopy(GMenuItem2 *mi, uint16_t *cnt);
 
+bool GMenuItem_nonempty (GMenuItem *mi);
+
 #endif

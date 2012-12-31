@@ -138,9 +138,15 @@ static int menu_grabs = true;
 static struct gmenu *most_recent_popup_menu = NULL;
 
 static bool
-menu_item_nonempty (GMenuItem *mi)
+GTextInfo_nonempty (GTextInfo *ti)
 {
-  return (mi->ti.text != NULL || mi->ti.image != NULL || mi->ti.line);
+  return (ti->text != NULL || ti->image != NULL || ti->line);
+}
+
+VISIBLE bool
+GMenuItem_nonempty (GMenuItem *mi)
+{
+  return GTextInfo_nonempty (&mi->ti);
 }
 
 static void
@@ -938,7 +944,7 @@ GMenuSearchShortcut (GWindow gw, GMenuItem *mi, GEvent *event,
 
   if (keysym < GK_Special && islower (keysym))
     keysym = toupper (keysym);  /*getkey(keysym,event->u.chr.state&0x2000 ); */
-  for (i = 0; menu_item_nonempty (&mi[i]); ++i)
+  for (i = 0; GMenuItem_nonempty (&mi[i]); ++i)
     {
       if (call_moveto && mi[i].moveto != NULL)
         (mi[i].moveto) (gw, &(mi[i]), event);
@@ -1322,7 +1328,7 @@ _GMenu_Create (GWindow owner, GMenuItem *mi, GPoint *where,
   m->hasticks = false;
   width = 0;
   keywidth = 0;
-  for (i = 0; menu_item_nonempty (&mi[i]); i++)
+  for (i = 0; GMenuItem_nonempty (&mi[i]); i++)
     {
       if (mi[i].ti.checkable)
         m->hasticks = true;
@@ -2079,7 +2085,7 @@ GMenuBarFindMid (GMenuItem *mi, int mid)
 {
   GMenuItem *retval = NULL;
   int i = 0;
-  while (retval == NULL && menu_item_nonempty (&mi[i]))
+  while (retval == NULL && GMenuItem_nonempty (&mi[i]))
     {
       if (mi[i].mid == mid)
         retval = &mi[i];

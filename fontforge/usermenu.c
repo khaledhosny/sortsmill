@@ -37,159 +37,69 @@
 GMenuItem2 *cv_menu = NULL;
 GMenuItem2 *fv_menu = NULL;
 
-typedef struct
+void
+cv_tools_list_check (GWindow gw, GMenuItem *mi, GEvent *e)
 {
-  SCM action;
-  SCM enabled;
-} menu_info;
-
-static menu_info *cv_menu_info = NULL;
-static menu_info *fv_menu_info = NULL;
-static int cv_menu_size = 0;
-static int cv_menu_max_size = 0;
-static int fv_menu_size = 0;
-static int fv_menu_max_size = 0;
-
-//-------------------------------------------------------------------------
-
-static void
-tools_list_check (struct gmenuitem *mi, SCM owner, menu_info *info,
-                  int menu_size)
-{
-  if (info != NULL)
-    for (mi = mi->sub; mi->ti.text != NULL || mi->ti.line; mi++)
-      if (mi->mid == -1)        /* Submenu */
-        ;
-      else if (mi->mid < 0 || menu_size <= mi->mid)
-        {
-          fprintf (stderr, _("Bad Menu ID in menu %d\n"), mi->mid);
-          mi->ti.disabled = true;
-        }
-      else if (info[mi->mid].enabled != NULL)
-        mi->ti.disabled =
-          scm_is_false (scm_call_2
-                        (scm_c_private_ref ("sortsmillff usermenu",
-                                            "menu-entry-error-handling"),
-                         info[mi->mid].enabled, owner));
-      else
-        mi->ti.disabled = false;
+  CharViewBase *cvb = (CharViewBase *) GDrawGetUserData (gw);
+  SCM view = scm_call_1 (scm_c_public_ref ("sortsmillff views", "pointer->glyph-view"),
+			 scm_from_pointer (cvb, NULL));
+  SCM menu_info = scm_c_private_ref ("sortsmillff usermenu", "cv-menu-info");
+  scm_call_3 (scm_c_private_ref ("sortsmillff usermenu", "tools-list-check"),
+	      scm_from_pointer (mi, NULL), view, menu_info);
 }
 
 void
-cv_tools_list_check (GWindow gw, struct gmenuitem *mi, GEvent *e)
+fv_tools_list_check (GWindow gw, GMenuItem *mi, GEvent *e)
 {
-  if (cv_menu_info != NULL)
-    {
-      CharViewBase *cvb = (CharViewBase *) GDrawGetUserData (gw);
-      SCM view = scm_call_1 (scm_c_public_ref ("sortsmillff views",
-                                               "pointer->glyph-view"),
-                             scm_from_pointer (cvb, NULL));
-      tools_list_check (mi, view, cv_menu_info, cv_menu_size);
-    }
-}
-
-void
-fv_tools_list_check (GWindow gw, struct gmenuitem *mi, GEvent *e)
-{
-  if (fv_menu_info != NULL)
-    {
-      FontViewBase *fvb = (FontViewBase *) GDrawGetUserData (gw);
-      SCM view = scm_call_1 (scm_c_public_ref ("sortsmillff views",
-                                               "pointer->font-view"),
-                             scm_from_pointer (fvb, NULL));
-      tools_list_check (mi, view, fv_menu_info, fv_menu_size);
-    }
-}
-
-//-------------------------------------------------------------------------
-
-static void
-do_action (struct gmenuitem *mi, SCM owner, menu_info *info, int menu_size)
-{
-  if (mi->mid == -1)            /* Submenu */
-    ;
-  else if (mi->mid < 0 || menu_size <= mi->mid)
-    fprintf (stderr, _("Bad Menu ID in menu %d\n"), mi->mid);
-  else if (info[mi->mid].action != NULL)
-    scm_call_2 (scm_c_private_ref ("sortsmillff usermenu",
-                                   "menu-entry-error-handling"),
-                info[mi->mid].action, owner);
+  FontViewBase *fvb = (FontViewBase *) GDrawGetUserData (gw);
+  SCM view = scm_call_1 (scm_c_public_ref ("sortsmillff views", "pointer->font-view"),
+			 scm_from_pointer (fvb, NULL));
+  SCM menu_info = scm_c_private_ref ("sortsmillff usermenu", "fv-menu-info");
+  scm_call_3 (scm_c_private_ref ("sortsmillff usermenu", "tools-list-check"),
+	      scm_from_pointer (mi, NULL), view, menu_info);
 }
 
 static void
-cv_do_action (GWindow gw, struct gmenuitem *mi, GEvent *e)
+cv_do_action (GWindow gw, GMenuItem *mi, GEvent *e)
 {
-  if (cv_menu_info != NULL)
-    {
-      CharViewBase *cvb = (CharViewBase *) GDrawGetUserData (gw);
-      SCM view = scm_call_1 (scm_c_public_ref ("sortsmillff views",
-                                               "pointer->glyph-view"),
-                             scm_from_pointer (cvb, NULL));
-      do_action (mi, view, cv_menu_info, cv_menu_size);
-    }
+  CharViewBase *cvb = (CharViewBase *) GDrawGetUserData (gw);
+  SCM view = scm_call_1 (scm_c_public_ref ("sortsmillff views", "pointer->glyph-view"),
+			 scm_from_pointer (cvb, NULL));
+  SCM menu_info = scm_c_private_ref ("sortsmillff usermenu", "cv-menu-info");
+  scm_call_3 (scm_c_private_ref ("sortsmillff usermenu", "do-action"),
+	      scm_from_pointer (mi, NULL), view, menu_info);
 }
 
 static void
-fv_do_action (GWindow gw, struct gmenuitem *mi, GEvent *e)
+fv_do_action (GWindow gw, GMenuItem *mi, GEvent *e)
 {
-  if (fv_menu_info != NULL)
-    {
-      FontViewBase *fvb = (FontViewBase *) GDrawGetUserData (gw);
-      SCM view = scm_call_1 (scm_c_public_ref ("sortsmillff views",
-                                               "pointer->font-view"),
-                             scm_from_pointer (fvb, NULL));
-      do_action (mi, view, fv_menu_info, fv_menu_size);
-    }
+  FontViewBase *fvb = (FontViewBase *) GDrawGetUserData (gw);
+  SCM view = scm_call_1 (scm_c_public_ref ("sortsmillff views", "pointer->font-view"),
+			 scm_from_pointer (fvb, NULL));
+  SCM menu_info = scm_c_private_ref ("sortsmillff usermenu", "fv-menu-info");
+  scm_call_3 (scm_c_private_ref ("sortsmillff usermenu", "do-action"),
+	      scm_from_pointer (mi, NULL), view, menu_info);
 }
-
-//-------------------------------------------------------------------------
 
 static int
 menu_info_add (int window, SCM action, SCM enabled)
 {
-  int index = INT_MIN;
-
-  /* FIXME: Here is one of several places I have been sticking
-     protections against garbage collection. One may want to be more
-     discerning, in case recovering the memory after removal of an
-     extension ever becomes important. */
-  scm_gc_protect_object (action);
-  if (enabled != 0)
-    scm_gc_protect_object (enabled);
-
+  SCM menu_info = SCM_UNSPECIFIED;
   switch (window)
     {
     case FF_GLYPH_WINDOW:
-      if (cv_menu_max_size <= cv_menu_size)
-        {
-          cv_menu_max_size += 10;
-          cv_menu_info =
-            xrealloc (cv_menu_info, cv_menu_max_size * sizeof (menu_info));
-        }
-      cv_menu_info[cv_menu_size].action = action;
-      cv_menu_info[cv_menu_size].enabled = enabled;
-      index = cv_menu_size;
-      cv_menu_size++;
+      menu_info = scm_c_private_ref ("sortsmillff usermenu", "cv-menu-info");
       break;
-
     case FF_FONT_WINDOW:
-      if (fv_menu_max_size <= fv_menu_size)
-        {
-          fv_menu_max_size += 10;
-          fv_menu_info =
-            xrealloc (fv_menu_info, fv_menu_max_size * sizeof (menu_info));
-        }
-      fv_menu_info[fv_menu_size].action = action;
-      fv_menu_info[fv_menu_size].enabled = enabled;
-      index = fv_menu_size;
-      fv_menu_size++;
+      menu_info = scm_c_private_ref ("sortsmillff usermenu", "fv-menu-info");
       break;
-
     default:
       assert (false);
     }
-
-  return index;
+  SCM menu_info_entry = scm_list_2 (action, enabled);
+  SCM mid = scm_call_2 (scm_c_private_ref ("sortsmillff usermenu", "menu-info-add!"),
+			menu_info, menu_info_entry);
+  return scm_to_int (mid);
 }
 
 static gmenuitem_moveto_t
