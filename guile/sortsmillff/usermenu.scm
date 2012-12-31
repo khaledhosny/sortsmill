@@ -122,8 +122,6 @@
             (let ((mid (GMenuItem:mid-ref mi)))
                (when (menu-info-exists? menu-info mid)
                   (let ((enabled?
-                           ;; FIXME FIXME FIXME: Move the error
-                           ;; handling to a more outer level.
                            (menu-entry-error-handling
                               (get-enabled-func menu-info mid)
                               view)))
@@ -139,8 +137,6 @@
                    menu-item)))
       (let ((mid (GMenuItem:mid-ref item)))
          (when (menu-info-exists? menu-info mid)
-            ;; FIXME FIXME FIXME: Move the error handling to a more
-            ;; outer level.
             (menu-entry-error-handling
                (get-action-func menu-info mid) view)))))
 
