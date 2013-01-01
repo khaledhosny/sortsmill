@@ -31,6 +31,7 @@
 
 #include "gdraw.h"
 #include "intl.h"
+#include <stdbool.h>
 
 struct giocontrol;
 
@@ -39,28 +40,64 @@ struct giocontrol;
 /********* FIXME: Get rid of the __aligned__ stuff ASAP. */
 /********* FIXME: Get rid of the __aligned__ stuff ASAP. */
 typedef struct gtextinfo {
-    uint32_t *text;
-    GImage *image;
-    Color fg;
-    Color bg;
-    void *userdata;
-    GFont *font;
-    bool disabled;
-    bool image_precedes;
-    bool checkable;		/* Only for menus */
-    bool checked;		/* Only for menus */
-    bool selected; /* Only for lists (used internally for menu(bar)s, when cursor is on the line) */
-    bool line;	   /* Only for menus */
-    bool text_is_1byte;	/* If passed in as 1byte (ie. iso-8859-1) text, will be converted */
-    bool text_has_mnemonic; /* the text field is actually an index into the string resource table */
-    bool changed;	    /* If a row/column widget changed this */
-    uint32_t mnemonic __attribute__ ((__aligned__ (8)));	    /* Only for menus and menubars; should
-			       really be in menuitem, but that wastes
-			       space and complicates GTextInfoDraw. */
+  uint32_t *text;
+  GImage *image;
+  Color fg;
+  Color bg;
+  void *userdata;
+  GFont *font;
+  bool disabled;
+  bool image_precedes;
+  bool checkable;		/* Only for menus */
+  bool checked;			/* Only for menus */
+  bool selected; /* Only for lists (used internally for menu(bar)s, when cursor is on the line) */
+  bool line;	 /* Only for menus */
+  bool text_is_1byte; /* If passed in as 1byte (ie. iso-8859-1) text, will be converted */
+  bool text_has_mnemonic; /* the text field is actually an index into the string resource table */
+  bool changed;		  /* If a row/column widget changed this */
+  uint32_t mnemonic;	      /* Only for menus and menubars; should
+				 really be in menuitem, but that
+				 wastes space and complicates
+				 GTextInfoDraw. */
 } GTextInfo;
 
-#define GTEXTINFO_EMPTY { NULL, NULL, 0x000000, 0x000000, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, '\0' }
-#define GTEXTINFO_LINE  { NULL, NULL, 0x000000, 0x000000, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, 0, '\0' }
+#define GTEXTINFO_EMPTY {			\
+    .text = NULL,				\
+      .image = NULL,				\
+      .fg = 0x000000,				\
+      .bg = 0x000000,				\
+      .userdata = NULL,				\
+      .font = NULL,				\
+      .disabled = false,			\
+      .image_precedes = false,			\
+      .checkable = false,			\
+      .checked = false,				\
+      .selected = false,			\
+      .line = false,				\
+      .text_is_1byte = false,			\
+      .text_has_mnemonic = false,		\
+      .changed = false,				\
+      .mnemonic = '\0'				\
+      }
+
+#define GTEXTINFO_LINE {			\
+    .text = NULL,				\
+      .image = NULL,				\
+      .fg = 0x000000,				\
+      .bg = 0x000000,				\
+      .userdata = NULL,				\
+      .font = NULL,				\
+      .disabled = false,			\
+      .image_precedes = false,			\
+      .checkable = false,			\
+      .checked = false,				\
+      .selected = false,			\
+      .line = true,				\
+      .text_is_1byte = false,			\
+      .text_has_mnemonic = false,		\
+      .changed = false,				\
+      .mnemonic = '\0'				\
+      }
 
 
 /********* FIXME: Get rid of the __aligned__ stuff ASAP. */
@@ -88,8 +125,46 @@ typedef struct gtextinfo2 {
 						/* should really be in menuitem, but that wastes space and complicates GTextInfoDraw */
 } GTextInfo2;
 
-#define GTEXTINFO2_EMPTY { NULL, NULL, 0x000000, 0x000000, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '\0' }
-#define GTEXTINFO2_LINE  { NULL, NULL, 0x000000, 0x000000, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, '\0' }
+#define GTEXTINFO2_EMPTY {			\
+    .text = NULL,				\
+      .image = NULL,				\
+      .fg = 0x000000,				\
+      .bg = 0x000000,				\
+      .userdata = NULL,				\
+      .font = NULL,				\
+      .disabled = false,			\
+      .image_precedes = false,			\
+      .checkable = false,			\
+      .checked = false,				\
+      .selected = false,			\
+      .line = false,				\
+      .text_is_1byte = false,			\
+      .text_has_mnemonic = false,		\
+      .changed = false,				\
+      .sort_me_first_in_list = false,		\
+      .mnemonic = '\0'				\
+      }
+
+#define GTEXTINFO2_LINE {			\
+    .text = NULL,				\
+      .image = NULL,				\
+      .fg = 0x000000,				\
+      .bg = 0x000000,				\
+      .userdata = NULL,				\
+      .font = NULL,				\
+      .disabled = false,			\
+      .image_precedes = false,			\
+      .checkable = false,			\
+      .checked = false,				\
+      .selected = false,			\
+      .line = true,				\
+      .text_is_1byte = false,			\
+      .text_has_mnemonic = false,		\
+      .changed = false,				\
+      .sort_me_first_in_list = false,		\
+      .mnemonic = '\0'				\
+      }
+
 
 struct gmenuitem;
 
@@ -110,8 +185,25 @@ typedef struct gmenuitem {
   int mid;
 } GMenuItem;
 
-#define GMENUITEM_EMPTY { GTEXTINFO_EMPTY, '\0', 0, NULL, NULL, NULL, 0 }
-#define GMENUITEM_LINE  { GTEXTINFO_LINE,  '\0', 0, NULL, NULL, NULL, 0 }
+#define GMENUITEM_EMPTY {			\
+    .ti = GTEXTINFO_EMPTY,			\
+      .shortcut = '\0',				\
+      .short_mask = 0,				\
+      .sub = NULL,				\
+      .moveto = NULL,				\
+      .invoke = NULL,				\
+      .mid = 0					\
+      }
+
+#define GMENUITEM_LINE {			\
+    .ti = GTEXTINFO_LINE,			\
+      .shortcut = '\0',				\
+      .short_mask = 0,				\
+      .sub = NULL,				\
+      .moveto = NULL,				\
+      .invoke = NULL,				\
+      .mid = 0					\
+      }
 
 
 /********* FIXME: Get rid of the __aligned__ stuff ASAP. */
@@ -127,8 +219,23 @@ typedef struct gmenuitem2 {
   int mid;
 } GMenuItem2;
 
-#define GMENUITEM2_EMPTY { GTEXTINFO_EMPTY, NULL, NULL, NULL, NULL, 0 }
-#define GMENUITEM2_LINE  { GTEXTINFO_LINE,  NULL, NULL, NULL, NULL, 0 }
+#define GMENUITEM2_EMPTY {			\
+    .ti = GTEXTINFO_EMPTY,			\
+      .shortcut = NULL,				\
+      .sub = NULL,				\
+      .moveto = NULL,				\
+      .invoke = NULL,				\
+      .mid = 0					\
+      }
+
+#define GMENUITEM2_LINE {			\
+    .ti = GTEXTINFO_LINE,			\
+      .shortcut = NULL,				\
+      .sub = NULL,				\
+      .moveto = NULL,				\
+      .invoke = NULL,				\
+      .mid = 0					\
+      }
 
 
 typedef struct tabinfo {
