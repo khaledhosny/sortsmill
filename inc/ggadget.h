@@ -35,10 +35,6 @@
 
 struct giocontrol;
 
-/********* FIXME: Get rid of the __aligned__ stuff ASAP. */
-/********* FIXME: Get rid of the __aligned__ stuff ASAP. */
-/********* FIXME: Get rid of the __aligned__ stuff ASAP. */
-/********* FIXME: Get rid of the __aligned__ stuff ASAP. */
 typedef struct gtextinfo {
   uint32_t *text;
   GImage *image;
@@ -100,10 +96,6 @@ typedef struct gtextinfo {
       }
 
 
-/********* FIXME: Get rid of the __aligned__ stuff ASAP. */
-/********* FIXME: Get rid of the __aligned__ stuff ASAP. */
-/********* FIXME: Get rid of the __aligned__ stuff ASAP. */
-/********* FIXME: Get rid of the __aligned__ stuff ASAP. */
 typedef struct gtextinfo2 {
     uint32_t *text;
     GImage *image;
@@ -121,7 +113,7 @@ typedef struct gtextinfo2 {
     bool text_has_mnemonic;		/* the text field is actually an index into the string resource table */
     bool changed;			/* If a row/column widget changed this */
     bool sort_me_first_in_list;	/* used for directories in file chooser widgets */
-    uint32_t mnemonic __attribute__ ((__aligned__ (8)));				/* Only for menus and menubars */
+    uint32_t mnemonic;				/* Only for menus and menubars */
 						/* should really be in menuitem, but that wastes space and complicates GTextInfoDraw */
 } GTextInfo2;
 
@@ -171,15 +163,11 @@ struct gmenuitem;
 typedef void (*gmenuitem_moveto_t) (struct gwindow *, struct gmenuitem *, GEvent *);
 typedef void (*gmenuitem_invoke_t) (struct gwindow *, struct gmenuitem *, GEvent *);
 
-/********* FIXME: Get rid of the __aligned__ stuff ASAP. */
-/********* FIXME: Get rid of the __aligned__ stuff ASAP. */
-/********* FIXME: Get rid of the __aligned__ stuff ASAP. */
-/********* FIXME: Get rid of the __aligned__ stuff ASAP. */
 typedef struct gmenuitem {
   GTextInfo ti;
-  uint32_t shortcut_char __attribute__ ((__aligned__ (8)));
-  short short_mask __attribute__ ((__aligned__ (4)));
-  struct gmenuitem *sub __attribute__ ((__aligned__ (8)));
+  uint32_t shortcut_char;
+  short short_mask;
+  struct gmenuitem *sub;
   gmenuitem_moveto_t moveto;	/* called before creating submenu */
   gmenuitem_invoke_t invoke;	/* called on mouse release */
   int mid;
@@ -206,14 +194,10 @@ typedef struct gmenuitem {
       }
 
 
-/********* FIXME: Get rid of the __aligned__ stuff ASAP. */
-/********* FIXME: Get rid of the __aligned__ stuff ASAP. */
-/********* FIXME: Get rid of the __aligned__ stuff ASAP. */
-/********* FIXME: Get rid of the __aligned__ stuff ASAP. */
 typedef struct gmenuitem2 {
   GTextInfo ti;
-  char *shortcut __attribute__ ((__aligned__ (8)));
-  struct gmenuitem2 *sub __attribute__ ((__aligned__ (8)));
+  char *shortcut;
+  struct gmenuitem2 *sub;
   gmenuitem_moveto_t moveto;	/* called before creating submenu */
   gmenuitem_invoke_t invoke;	/* called on mouse release */
   int mid;
