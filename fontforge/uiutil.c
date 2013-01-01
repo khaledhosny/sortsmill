@@ -468,19 +468,64 @@ WarnMenuClear (GWindow gw, struct gmenuitem *mi, GEvent *e)
 #define MID_Copy	1
 #define MID_Clear	2
 
+// *INDENT-OFF*
+
 GMenuItem warnpopupmenu[] = {
-  {{(uint32_t *) N_("Cu_t"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL,
-    1, 0, 0, 0, 0, 0, 1, 1, 0, 't'}, '\0', ksm_control, NULL, NULL, NULL, 0},
-  {{(uint32_t *) N_("_Copy"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL,
-    0, 0, 0, 0, 0, 0, 1, 1, 0, 'C'}, '\0', ksm_control, NULL, NULL,
-   WarnMenuCopy, MID_Copy},
-  {{(uint32_t *) N_("_Paste"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL,
-    1, 0, 0, 0, 0, 0, 1, 1, 0, 'P'}, '\0', ksm_control, NULL, NULL, NULL, 0},
-  {{(uint32_t *) N_("C_lear"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL,
-    0, 0, 0, 0, 0, 0, 1, 1, 0, 'l'}, 0, 0, NULL, NULL, WarnMenuClear,
-   MID_Clear},
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Cu_t"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .disabled = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 't'},
+    .shortcut_char = '\0',
+    .short_mask = ksm_control
+  },
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Copy"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .disabled = 0,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'C'},
+    .shortcut_char = '\0',
+    .short_mask = ksm_control,
+    .invoke = WarnMenuCopy,
+    .mid = MID_Copy
+  },
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Paste"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+            .disabled = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'P'},
+    .shortcut_char = '\0',
+    .short_mask = ksm_control
+  },
+  {
+    .ti = {
+      .text = (uint32_t *) N_("C_lear"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .disabled = 0,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'l'
+    },
+    .invoke = WarnMenuClear,
+    .mid = MID_Clear
+  },
   GMENUITEM_EMPTY
 };
+
+// *INDENT-ON*
 
 static int
 warningsv_e_h (GWindow gw, GEvent *event)
