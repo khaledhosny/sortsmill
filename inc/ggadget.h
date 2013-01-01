@@ -177,7 +177,7 @@ typedef void (*gmenuitem_invoke_t) (struct gwindow *, struct gmenuitem *, GEvent
 /********* FIXME: Get rid of the __aligned__ stuff ASAP. */
 typedef struct gmenuitem {
   GTextInfo ti;
-  uint32_t shortcut __attribute__ ((__aligned__ (8)));
+  uint32_t shortcut_char __attribute__ ((__aligned__ (8)));
   short short_mask __attribute__ ((__aligned__ (4)));
   struct gmenuitem *sub __attribute__ ((__aligned__ (8)));
   gmenuitem_moveto_t moveto;	/* called before creating submenu */
@@ -187,7 +187,7 @@ typedef struct gmenuitem {
 
 #define GMENUITEM_EMPTY {			\
     .ti = GTEXTINFO_EMPTY,			\
-      .shortcut = '\0',				\
+      .shortcut_char = '\0',			\
       .short_mask = 0,				\
       .sub = NULL,				\
       .moveto = NULL,				\
@@ -197,7 +197,7 @@ typedef struct gmenuitem {
 
 #define GMENUITEM_LINE {			\
     .ti = GTEXTINFO_LINE,			\
-      .shortcut = '\0',				\
+      .shortcut_char = '\0',			\
       .short_mask = 0,				\
       .sub = NULL,				\
       .moveto = NULL,				\

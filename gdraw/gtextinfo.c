@@ -736,8 +736,8 @@ return( NULL );
 	}
 	if ( islower(arr[i].ti.mnemonic))
 	    arr[i].ti.mnemonic = toupper(arr[i].ti.mnemonic);
-	if ( islower(arr[i].shortcut))
-	    arr[i].shortcut = toupper(arr[i].shortcut);
+	if ( islower(arr[i].shortcut_char))
+	    arr[i].shortcut_char = toupper(arr[i].shortcut_char);
 	if ( mi[i].sub!=NULL )
 	    arr[i].sub = GMenuItemArrayCopy(mi[i].sub,NULL);
     }
@@ -767,7 +767,7 @@ int GMenuItemArrayAnyUnmasked(GMenuItem *mi) {
 	    if ( GMenuItemArrayAnyUnmasked(mi[i].sub) )
 return( true );
 	} else {
-	    if ( (mi[i].short_mask&~ksm_shift)==0 && mi[i].shortcut!=0 )
+	    if ( (mi[i].short_mask&~ksm_shift)==0 && mi[i].shortcut_char!=0 )
 return( true );
 	}
     }
@@ -884,7 +884,7 @@ void GMenuItemParseShortCut(GMenuItem *mi,char *shortcut) {
     int mask, temp, i;
 
     mi->short_mask = 0;
-    mi->shortcut = '\0';
+    mi->shortcut_char = '\0';
 
     sh = dgettext(shortcut_domain,shortcut);
     /* shortcut might be "Open|Ctl+O" meaning the Open menu item is bound to ^O */
@@ -929,7 +929,7 @@ return;
     for ( i=0; i<0x100; ++i ) {
 	if ( GDrawKeysyms[i]!=NULL
 	     && u8_strcmp(x_gc_u32_to_u8 (u32_force_valid (GDrawKeysyms[i])), u8_force_valid (sh))==0 ) {
-	    mi->shortcut = 0xff00 + i;
+	    mi->shortcut_char = 0xff00 + i;
     break;
 	}
     }
@@ -941,7 +941,7 @@ return;
 		first = false;
 	    }
 	}
-	mi->shortcut = u8_get_next((const uint8_t **) &sh);
+	mi->shortcut_char = u8_get_next((const uint8_t **) &sh);
 	if ( *sh!='\0' ) {
 	    fprintf( stderr, "Unexpected characters at end of short cut: %s\n", shortcut );
 return;
@@ -978,8 +978,8 @@ return( NULL );
 	}
 	if ( islower(arr[i].ti.mnemonic))
 	    arr[i].ti.mnemonic = toupper(arr[i].ti.mnemonic);
-	if ( islower(arr[i].shortcut))
-	    arr[i].shortcut = toupper(arr[i].shortcut);
+	if ( islower(arr[i].shortcut_char))
+	    arr[i].shortcut_char = toupper(arr[i].shortcut_char);
 	if ( mi[i].sub!=NULL )
 	    arr[i].sub = GMenuItem2ArrayCopy(mi[i].sub,NULL);
     }

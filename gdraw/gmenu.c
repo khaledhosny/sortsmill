@@ -306,7 +306,7 @@ _shorttext (int shortcut, int short_mask, uint32_t *buf)
 static void
 shorttext (GMenuItem *gi, uint32_t *buf)
 {
-  _shorttext (gi->shortcut, gi->short_mask, buf);
+  _shorttext (gi->shortcut_char, gi->short_mask, buf);
 }
 
 static int
@@ -506,17 +506,17 @@ GMenuDrawMenuLine (struct gmenu *m, GMenuItem *mi, int y, GWindow pixmap)
 
   if (mi->sub != NULL)
     GMenuDrawArrow (m, fg, ybase);
-  else if (mi->shortcut != 0 && (mi->short_mask & 0xffe0) == 0
+  else if (mi->shortcut_char != 0 && (mi->short_mask & 0xffe0) == 0
            && mac_menu_icons)
     {
-      _shorttext (mi->shortcut, 0, shortbuf);
+      _shorttext (mi->shortcut_char, 0, shortbuf);
       width = GDrawGetTextWidth (pixmap, shortbuf, -1)
         + GMenuMacIconsWidth (m, mi->short_mask);
       int x = GMenuDrawMacIcons (m, fg, ybase, m->rightedge - width,
                                  mi->short_mask);
       GDrawDrawText (pixmap, x, ybase, shortbuf, -1, fg);
     }
-  else if (mi->shortcut != 0)
+  else if (mi->shortcut_char != 0)
     {
       shorttext (mi, shortbuf);
 
@@ -948,7 +948,7 @@ GMenuSearchShortcut (GWindow gw, GMenuItem *mi, GEvent *event,
     {
       if (call_moveto && mi[i].moveto != NULL)
         (mi[i].moveto) (gw, &(mi[i]), event);
-      if (mi[i].sub == NULL && mi[i].shortcut == keysym &&
+      if (mi[i].sub == NULL && mi[i].shortcut_char == keysym &&
           (menumask & event->u.chr.state) == mi[i].short_mask)
         return (&mi[i]);
       else if (mi[i].sub != NULL)
@@ -1335,10 +1335,10 @@ _GMenu_Create (GWindow owner, GMenuItem *mi, GPoint *where,
       temp = GTextInfoGetWidth (m->w, &mi[i].ti, m->font);
       if (temp > width)
         width = temp;
-      if (mi[i].shortcut != 0 && (mi[i].short_mask & 0xffe0) == 0
+      if (mi[i].shortcut_char != 0 && (mi[i].short_mask & 0xffe0) == 0
           && mac_menu_icons)
         {
-          _shorttext (mi[i].shortcut, 0, buffer);
+          _shorttext (mi[i].shortcut_char, 0, buffer);
           temp =
             GDrawGetTextWidth (m->w, buffer, -1) +
             GMenuMacIconsWidth (m, mi[i].short_mask);
@@ -2152,7 +2152,7 @@ GMenuIsCommand (GEvent *event, char *shortcut)
       GMenuItemParseShortCut (&foo, shortcut);
 
       result = ((menumask & event->u.chr.state) == foo.short_mask
-                && foo.shortcut == keysym);
+                && foo.shortcut_char == keysym);
     }
   return result;
 }

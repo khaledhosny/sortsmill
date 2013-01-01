@@ -861,7 +861,7 @@ static GMenuItem gfcpopupmenu[] = {
 	.changed = 0,
 	.mnemonic = 'H'
       },
-      .shortcut = '\0',
+      .shortcut_char = '\0',
       .short_mask = ksm_control,
       .sub = NULL,
       .moveto = NULL,
@@ -887,7 +887,7 @@ static GMenuItem gfcpopupmenu[] = {
 	.changed = 0,
 	.mnemonic = 'H'
       },
-      .shortcut = '\0',
+      .shortcut_char = '\0',
       .short_mask = ksm_control,
       .sub = NULL,
       .moveto = NULL,
@@ -913,7 +913,7 @@ static GMenuItem gfcpopupmenu[] = {
 	.changed = 0,
 	.mnemonic = 'H'
       },
-      .shortcut = '\0',
+      .shortcut_char = '\0',
       .short_mask = ksm_control,
       .sub = NULL,
       .moveto = NULL,
@@ -939,7 +939,7 @@ static GMenuItem gfcpopupmenu[] = {
 	.changed = 0,
 	.mnemonic = 'H'
       },
-      .shortcut = '\0',
+      .shortcut_char = '\0',
       .short_mask = ksm_control,
       .sub = NULL,
       .moveto = NULL,
@@ -965,7 +965,7 @@ static GMenuItem gfcpopupmenu[] = {
 	.changed = 0,
 	.mnemonic = 'H'
       },
-      .shortcut = '\0',
+      .shortcut_char = '\0',
       .short_mask = ksm_control,
       .sub = NULL,
       .moveto = NULL,
