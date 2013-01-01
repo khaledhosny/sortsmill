@@ -1292,18 +1292,107 @@ static void kernmenu_dispatch(GWindow gw, GMenuItem *mi, GEvent *e) {
     GDrawRequestExpose(kcd->gw,NULL,false);
 }
 
+// *INDENT-OFF*
+
 static GMenuItem kernpopupmenu[] = {
-    { { (uint32_t *) N_("AutoKern Row"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 't' }, '\0', ksm_control, NULL, NULL, kernmenu_dispatch, MID_AutoKernRow },
-    { { (uint32_t *) N_("AutoKern Column"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 't' }, '\0', ksm_control, NULL, NULL, kernmenu_dispatch, MID_AutoKernCol },
-    { { (uint32_t *) N_("AutoKern All"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 't' }, '\0', ksm_control, NULL, NULL, kernmenu_dispatch, MID_AutoKernAll },
-    GMENUITEM_LINE,
+  {
+    .ti = {
+      .text = (uint32_t *) N_("AutoKern Row"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 't' },
+    .shortcut_char = '\0',
+    .short_mask = ksm_control,
+    .invoke = kernmenu_dispatch,
+    .mid = MID_AutoKernRow },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("AutoKern Column"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 't' },
+    .shortcut_char = '\0',
+    .short_mask = ksm_control,
+    .invoke = kernmenu_dispatch,
+    .mid = MID_AutoKernCol },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("AutoKern All"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 't' },
+    .shortcut_char = '\0',
+    .short_mask = ksm_control,
+    .invoke = kernmenu_dispatch,
+    .mid = MID_AutoKernAll },
+
+  GMENUITEM_LINE,
+
 #define Menu_VKern_Offset 4		/* No autokerning for vertical kerning */
-    { { (uint32_t *) N_("Clear"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 't' }, '\0', ksm_control, NULL, NULL, kernmenu_dispatch, MID_Clear },
-    { { (uint32_t *) N_("Clear All"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'C' }, '\0', ksm_control, NULL, NULL, kernmenu_dispatch, MID_ClearAll },
-    { { (uint32_t *) N_("Clear Device Table"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, kernmenu_dispatch, MID_ClearDevTab },
-    { { (uint32_t *) N_("Clear All Device Tables"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o' }, '\0', ksm_control, NULL, NULL, kernmenu_dispatch, MID_ClearAllDevTab },
-    GMENUITEM_EMPTY
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Clear"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 't' },
+    .shortcut_char = '\0',
+    .short_mask = ksm_control,
+    .invoke = kernmenu_dispatch,
+    .mid = MID_Clear },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Clear All"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'C' },
+    .shortcut_char = '\0',
+    .short_mask = ksm_control,
+    .invoke = kernmenu_dispatch,
+    .mid = MID_ClearAll },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Clear Device Table"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'o' },
+    .shortcut_char = '\0',
+    .short_mask = ksm_control,
+    .invoke = kernmenu_dispatch,
+    .mid = MID_ClearDevTab },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Clear All Device Tables"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'o' },
+    .shortcut_char = '\0',
+    .short_mask = ksm_control,
+    .invoke = kernmenu_dispatch,
+    .mid = MID_ClearAllDevTab },
+
+  GMENUITEM_EMPTY
 };
+
+// *INDENT-ON*
 
 static void KCD_PopupMenu(KernClassDlg *kcd,GEvent *event,int pos) {
     kcd->st_pos = pos;
