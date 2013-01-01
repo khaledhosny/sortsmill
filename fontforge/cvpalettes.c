@@ -214,78 +214,726 @@ void cvtoollist_check(GWindow gw,struct gmenuitem *mi,GEvent *e) {
 }
 
 /* Note: If you change this ordering, change enum cvtools */
-static char *popupsres[] = { N_("Pointer"), N_("Magnify (Minify with alt)"),
-				    N_("Draw a freehand curve"), N_("Scroll by hand"),
-				    N_("Add a curve point"), N_("Add a curve point always either horizontal or vertical"),
-			            N_("Add a corner point"), N_("Add a tangent point"),
-			            N_("Add a point, then drag out its control points"), N_("Change whether spiro is active or not"),
-			            N_("Cut splines in two"), N_("Measure distance, angle between points"),
-			            N_("Scale the selection"), N_("Flip the selection"),
-			            N_("Rotate the selection"), N_("Skew the selection"),
-			            N_("Rotate the selection in 3D and project back to plain"), N_("Perform a perspective transformation on the selection"),
-			            N_("Rectangle or Ellipse"), N_("Polygon or Star"),
-			            N_("Rectangle or Ellipse"), N_("Polygon or Star")};
+static char *popupsres[] = {
+  N_("Pointer"), N_("Magnify (Minify with alt)"),
+  N_("Draw a freehand curve"), N_("Scroll by hand"),
+  N_("Add a curve point"), N_("Add a curve point always either horizontal or vertical"),
+  N_("Add a corner point"), N_("Add a tangent point"),
+  N_("Add a point, then drag out its control points"), N_("Change whether spiro is active or not"),
+  N_("Cut splines in two"), N_("Measure distance, angle between points"),
+  N_("Scale the selection"), N_("Flip the selection"),
+  N_("Rotate the selection"), N_("Skew the selection"),
+  N_("Rotate the selection in 3D and project back to plain"), N_("Perform a perspective transformation on the selection"),
+  N_("Rectangle or Ellipse"), N_("Polygon or Star"),
+  N_("Rectangle or Ellipse"), N_("Polygon or Star")
+};
+
+// *INDENT-OFF*
+
 GMenuItem2 cvtoollist[] = {
-    { { (uint32_t *) N_("_Pointer"), (GImage *) "toolspointer.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'C' }, H_("Pointer|No Shortcut"), NULL, NULL, CVMenuTool, cvt_pointer },
-    { { (uint32_t *) N_("_Magnify"), (GImage *) "toolsmagnify.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'C' }, H_("Magnify|No Shortcut"), NULL, NULL, CVMenuTool, cvt_magnify },
-    { { (uint32_t *) N_("_Freehand"), (GImage *) "toolsfreehand.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'C' }, H_("Freehand|No Shortcut"), NULL, NULL, CVMenuTool, cvt_freehand },
-    { { (uint32_t *) N_("_Scroll"), (GImage *) "toolsscroll.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'C' }, H_("Scroll|No Shortcut"), NULL, NULL, CVMenuTool, cvt_hand },
-    GMENUITEM2_LINE,
-    { { (uint32_t *) N_("_Curve"), (GImage *) "pointscurve.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'C' }, H_("Curve Tool|No Shortcut"), NULL, NULL, CVMenuTool, cvt_curve },
-    { { (uint32_t *) N_("_HVCurve"), (GImage *) "pointshvcurve.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'o' }, H_("HVCurve Tool|No Shortcut"), NULL, NULL, CVMenuTool, cvt_hvcurve },
-    { { (uint32_t *) N_("C_orner"), (GImage *) "pointscorner.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'o' }, H_("Corner Tool|No Shortcut"), NULL, NULL, CVMenuTool, cvt_corner },
-    { { (uint32_t *) N_("_Tangent"), (GImage *) "pointstangent.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Tangent Tool|No Shortcut"), NULL, NULL, CVMenuTool, cvt_tangent },
-    { { (uint32_t *) N_("P_en"), (GImage *) "toolspen.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Pen|No Shortcut"), NULL, NULL, CVMenuTool, cvt_pen },
-    GMENUITEM2_LINE,
-    { { (uint32_t *) N_("_Activate Spiro"), (GImage *) "toolsspiro.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Activate Spiro|No Shortcut"), NULL, NULL, CVMenuSpiroSet, cvt_spiro },
-    GMENUITEM2_LINE,
-    { { (uint32_t *) N_("_Knife"), (GImage *) "toolsknife.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Knife|No Shortcut"), NULL, NULL, CVMenuTool, cvt_knife },
-    { { (uint32_t *) N_("_Ruler"), (GImage *) "toolsruler.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Ruler|No Shortcut"), NULL, NULL, CVMenuTool, cvt_ruler },
-    GMENUITEM2_LINE,
-    { { (uint32_t *) N_("Sca_le"), (GImage *) "toolsscale.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Scale|No Shortcut"), NULL, NULL, CVMenuTool, cvt_scale },
-    { { (uint32_t *) N_("Flip"), (GImage *) "toolsflip.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Flip|No Shortcut"), NULL, NULL, CVMenuTool, cvt_flip },
-    { { (uint32_t *) N_("Rotate"), (GImage *) "toolsrotate.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Rotate|No Shortcut"), NULL, NULL, CVMenuTool, cvt_rotate },
-    { { (uint32_t *) N_("Ske_w"), (GImage *) "toolsskew.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Skew|No Shortcut"), NULL, NULL, CVMenuTool, cvt_skew },
-    { { (uint32_t *) N_("_3D Rotate"), (GImage *) "tools3drotate.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("3D Rotate|No Shortcut"), NULL, NULL, CVMenuTool, cvt_3d_rotate },
-    { { (uint32_t *) N_("Perspecti_ve"), (GImage *) "toolsperspective.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Perspective|No Shortcut"), NULL, NULL, CVMenuTool, cvt_perspective },
-    GMENUITEM2_LINE,
-    { { (uint32_t *) N_("Rectan_gle"), (GImage *) "toolsrect.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Rectangle|No Shortcut"), NULL, NULL, CVMenuTool, cvt_rect },
-    { { (uint32_t *) N_("Pol_ygon"), (GImage *) "toolspolygon.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Polygon|No Shortcut"), NULL, NULL, CVMenuTool, cvt_poly },
-    { { (uint32_t *) N_("Ellipse"), (GImage *) "toolselipse.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Ellipse|No Shortcut"), NULL, NULL, CVMenuTool, cvt_elipse },
-    { { (uint32_t *) N_("Star"), (GImage *) "toolsstar.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Star|No Shortcut"), NULL, NULL, CVMenuTool, cvt_star },
-    GMENUITEM2_EMPTY
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Pointer"),
+      .image = (GImage *) "toolspointer.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'C' },
+    .shortcut = H_("Pointer|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_pointer },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Magnify"),
+      .image = (GImage *) "toolsmagnify.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'C' },
+    .shortcut = H_("Magnify|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_magnify },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Freehand"),
+      .image = (GImage *) "toolsfreehand.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'C' },
+    .shortcut = H_("Freehand|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_freehand },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Scroll"),
+      .image = (GImage *) "toolsscroll.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'C' },
+    .shortcut = H_("Scroll|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_hand },
+
+  GMENUITEM2_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Curve"),
+      .image = (GImage *) "pointscurve.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'C' },
+    .shortcut = H_("Curve Tool|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_curve },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_HVCurve"),
+      .image = (GImage *) "pointshvcurve.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'o' },
+    .shortcut = H_("HVCurve Tool|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_hvcurve },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("C_orner"),
+      .image = (GImage *) "pointscorner.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'o' },
+    .shortcut = H_("Corner Tool|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_corner },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Tangent"),
+      .image = (GImage *) "pointstangent.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'T' },
+    .shortcut = H_("Tangent Tool|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_tangent },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("P_en"),
+      .image = (GImage *) "toolspen.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'T' },
+    .shortcut = H_("Pen|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_pen },
+
+  GMENUITEM2_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Activate Spiro"),
+      .image = (GImage *) "toolsspiro.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'T' },
+    .shortcut = H_("Activate Spiro|No Shortcut"),
+    .invoke = CVMenuSpiroSet,
+    .mid = cvt_spiro },
+
+  GMENUITEM2_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Knife"),
+      .image = (GImage *) "toolsknife.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'T' },
+    .shortcut = H_("Knife|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_knife },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Ruler"),
+      .image = (GImage *) "toolsruler.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'T' },
+    .shortcut = H_("Ruler|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_ruler },
+
+  GMENUITEM2_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Sca_le"),
+      .image = (GImage *) "toolsscale.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'T' },
+    .shortcut = H_("Scale|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_scale },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Flip"),
+      .image = (GImage *) "toolsflip.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'T' },
+    .shortcut = H_("Flip|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_flip },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Rotate"),
+      .image = (GImage *) "toolsrotate.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'T' },
+    .shortcut = H_("Rotate|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_rotate },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Ske_w"),
+      .image = (GImage *) "toolsskew.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'T' },
+    .shortcut = H_("Skew|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_skew },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_3D Rotate"),
+      .image = (GImage *) "tools3drotate.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'T' },
+    .shortcut = H_("3D Rotate|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_3d_rotate },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Perspecti_ve"),
+      .image = (GImage *) "toolsperspective.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'T' },
+    .shortcut = H_("Perspective|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_perspective },
+
+  GMENUITEM2_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Rectan_gle"),
+      .image = (GImage *) "toolsrect.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'T' },
+    .shortcut = H_("Rectangle|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_rect },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Pol_ygon"),
+      .image = (GImage *) "toolspolygon.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'T' },
+    .shortcut = H_("Polygon|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_poly },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Ellipse"),
+      .image = (GImage *) "toolselipse.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'T' },
+    .shortcut = H_("Ellipse|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_elipse },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Star"),
+      .image = (GImage *) "toolsstar.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'T' },
+    .shortcut = H_("Star|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_star },
+
+  GMENUITEM2_EMPTY
 };
 GMenuItem2 cvspirotoollist[] = {
-    { { (uint32_t *) N_("_Pointer"), (GImage *) "toolspointer.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'C' }, H_("Pointer|No Shortcut"), NULL, NULL, CVMenuTool, cvt_pointer },
-    { { (uint32_t *) N_("_Magnify"), (GImage *) "toolsmagnify.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'C' }, H_("Magnify|No Shortcut"), NULL, NULL, CVMenuTool, cvt_magnify },
-    { { (uint32_t *) N_("_Freehand"), (GImage *) "toolsfreehand.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'C' }, H_("Freehand|No Shortcut"), NULL, NULL, CVMenuTool, cvt_freehand },
-    { { (uint32_t *) N_("_Scroll"), (GImage *) "toolsscroll.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'C' }, H_("Scroll|No Shortcut"), NULL, NULL, CVMenuTool, cvt_hand },
-    GMENUITEM2_LINE,
-    { { (uint32_t *) N_("G_4"), (GImage *) "pointscurve.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'C' }, H_("G4 Tool|No Shortcut"), NULL, NULL, CVMenuTool, cvt_spirog4 },
-    { { (uint32_t *) N_("G_2"), (GImage *) "pointsG2curve.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'o' }, H_("G2 Tool|No Shortcut"), NULL, NULL, CVMenuTool, cvt_spirog2 },
-    { { (uint32_t *) N_("C_orner"), (GImage *) "pointscorner.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'o' }, H_("Corner Tool|No Shortcut"), NULL, NULL, CVMenuTool, cvt_spirocorner },
-    { { (uint32_t *) N_("Lef_t"), (GImage *) "pointsspiroprev.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Left Tool|No Shortcut"), NULL, NULL, CVMenuTool, cvt_spiroleft },
-    { { (uint32_t *) N_("Rig_ht"), (GImage *) "pointsspironext.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Right Tool|No Shortcut"), NULL, NULL, CVMenuTool, cvt_spiroright },
-    GMENUITEM2_LINE,
-    { { (uint32_t *) N_("De_activate Spiro"), (GImage *) "toolsspiro.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Activate Spiro|No Shortcut"), NULL, NULL, CVMenuSpiroSet, cvt_spiro },
-    GMENUITEM2_LINE,
-    { { (uint32_t *) N_("_Knife"), (GImage *) "toolsknife.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Knife|No Shortcut"), NULL, NULL, CVMenuTool, cvt_knife },
-    { { (uint32_t *) N_("_Ruler"), (GImage *) "toolsruler.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Ruler|No Shortcut"), NULL, NULL, CVMenuTool, cvt_ruler },
-    GMENUITEM2_LINE,
-    { { (uint32_t *) N_("Sca_le"), (GImage *) "toolsscale.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Scale|No Shortcut"), NULL, NULL, CVMenuTool, cvt_scale },
-    { { (uint32_t *) N_("Flip"), (GImage *) "toolsflip.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Flip|No Shortcut"), NULL, NULL, CVMenuTool, cvt_flip },
-    { { (uint32_t *) N_("Rotate"), (GImage *) "toolsrotate.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Rotate|No Shortcut"), NULL, NULL, CVMenuTool, cvt_rotate },
-    { { (uint32_t *) N_("Ske_w"), (GImage *) "toolsskew.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Skew|No Shortcut"), NULL, NULL, CVMenuTool, cvt_skew },
-    { { (uint32_t *) N_("Rotate"), (GImage *) "toolsrotate.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Rotate|No Shortcut"), NULL, NULL, CVMenuTool, cvt_rotate },
-    { { (uint32_t *) N_("_3D Rotate"), (GImage *) "tools3drotate.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("3D Rotate|No Shortcut"), NULL, NULL, CVMenuTool, cvt_3d_rotate },
-    { { (uint32_t *) N_("Perspecti_ve"), (GImage *) "toolsperspective.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Perspective|No Shortcut"), NULL, NULL, CVMenuTool, cvt_perspective },
-    GMENUITEM2_LINE,
-    { { (uint32_t *) N_("Rectan_gle"), (GImage *) "toolsrect.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Rectangle|No Shortcut"), NULL, NULL, CVMenuTool, cvt_rect },
-    { { (uint32_t *) N_("Pol_ygon"), (GImage *) "toolspolygon.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Polygon|No Shortcut"), NULL, NULL, CVMenuTool, cvt_poly },
-    { { (uint32_t *) N_("Ellipse"), (GImage *) "toolselipse.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Ellipse|No Shortcut"), NULL, NULL, CVMenuTool, cvt_elipse },
-    { { (uint32_t *) N_("Star"), (GImage *) "toolsstar.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Star|No Shortcut"), NULL, NULL, CVMenuTool, cvt_star },
-    GMENUITEM2_EMPTY
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Pointer"),
+      .image = (GImage *) "toolspointer.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'C' },
+    .shortcut = H_("Pointer|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_pointer },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Magnify"),
+      .image = (GImage *) "toolsmagnify.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'C' },
+    .shortcut = H_("Magnify|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_magnify },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Freehand"),
+      .image = (GImage *) "toolsfreehand.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'C' },
+    .shortcut = H_("Freehand|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_freehand },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Scroll"),
+      .image = (GImage *) "toolsscroll.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'C' },
+    .shortcut = H_("Scroll|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_hand },
+
+  GMENUITEM2_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("G_4"),
+      .image = (GImage *) "pointscurve.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'C' },
+    .shortcut = H_("G4 Tool|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_spirog4 },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("G_2"),
+      .image = (GImage *) "pointsG2curve.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'o' },
+    .shortcut = H_("G2 Tool|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_spirog2 },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("C_orner"),
+      .image = (GImage *) "pointscorner.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'o' },
+    .shortcut = H_("Corner Tool|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_spirocorner },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Lef_t"),
+      .image = (GImage *) "pointsspiroprev.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'T' },
+    .shortcut = H_("Left Tool|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_spiroleft },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Rig_ht"),
+      .image = (GImage *) "pointsspironext.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'T' },
+    .shortcut = H_("Right Tool|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_spiroright },
+
+  GMENUITEM2_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("De_activate Spiro"),
+      .image = (GImage *) "toolsspiro.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'T' },
+    .shortcut = H_("Activate Spiro|No Shortcut"),
+    .invoke = CVMenuSpiroSet,
+    .mid = cvt_spiro },
+
+  GMENUITEM2_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Knife"),
+      .image = (GImage *) "toolsknife.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'T' },
+    .shortcut = H_("Knife|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_knife },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Ruler"),
+      .image = (GImage *) "toolsruler.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'T' },
+    .shortcut = H_("Ruler|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_ruler },
+
+  GMENUITEM2_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Sca_le"),
+      .image = (GImage *) "toolsscale.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'T' },
+    .shortcut = H_("Scale|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_scale },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Flip"),
+      .image = (GImage *) "toolsflip.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'T' },
+    .shortcut = H_("Flip|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_flip },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Rotate"),
+      .image = (GImage *) "toolsrotate.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'T' },
+    .shortcut = H_("Rotate|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_rotate },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Ske_w"),
+      .image = (GImage *) "toolsskew.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'T' },
+    .shortcut = H_("Skew|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_skew },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Rotate"),
+      .image = (GImage *) "toolsrotate.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'T' },
+    .shortcut = H_("Rotate|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_rotate },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_3D Rotate"),
+      .image = (GImage *) "tools3drotate.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'T' },
+    .shortcut = H_("3D Rotate|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_3d_rotate },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Perspecti_ve"),
+      .image = (GImage *) "toolsperspective.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'T' },
+    .shortcut = H_("Perspective|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_perspective },
+
+  GMENUITEM2_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Rectan_gle"),
+      .image = (GImage *) "toolsrect.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'T' },
+    .shortcut = H_("Rectangle|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_rect },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Pol_ygon"),
+      .image = (GImage *) "toolspolygon.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'T' },
+    .shortcut = H_("Polygon|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_poly },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Ellipse"),
+      .image = (GImage *) "toolselipse.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'T' },
+    .shortcut = H_("Ellipse|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_elipse },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Star"),
+      .image = (GImage *) "toolsstar.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = 1,
+      .checkable = 1,
+      .text_is_1byte = 1,
+      .text_has_mnemonic = 1,
+      .mnemonic = 'T' },
+    .shortcut = H_("Star|No Shortcut"),
+    .invoke = CVMenuTool,
+    .mid = cvt_star
+  },
+
+  GMENUITEM2_EMPTY
 };
+
+// *INDENT-ON*
 
 static char *editablelayers[] = {
 /* TRANSLATORS: Foreground, make it short */
