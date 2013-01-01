@@ -839,14 +839,144 @@ static int GFileChooserUpDirButton(GGadget *g, GEvent *e) {
 return( true );
 }
 
+// *INDENT-OFF*
+
 static GMenuItem gfcpopupmenu[] = {
-    { { (uint32_t *) N_("Show Hidden Files"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 1, 0, 0, 'H' }, '\0', ksm_control, NULL, NULL, GFCHideToggle, 0 },
-    { { (uint32_t *) N_("Directories Amid Files"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 1, 0, 0, 'H' }, '\0', ksm_control, NULL, NULL, GFCDirsAmidToggle, 0 },
-    { { (uint32_t *) N_("Directories First"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 1, 0, 0, 'H' }, '\0', ksm_control, NULL, NULL, GFCDirsFirstToggle, 0 },
-    { { (uint32_t *) N_("Directories Separate"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 1, 0, 0, 'H' }, '\0', ksm_control, NULL, NULL, GFCDirsSeparateToggle, 0 },
-    { { (uint32_t *) N_("Refresh File List"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 'H' }, '\0', ksm_control, NULL, NULL, GFCRefresh, 0 },
+    {
+      .ti = {
+	.text = (uint32_t *) N_("Show Hidden Files"),
+	.image = NULL,
+	.fg = COLOR_DEFAULT,
+	.bg = COLOR_DEFAULT,
+	.userdata = NULL,
+	.font = NULL,
+	.disabled = 0,
+	.image_precedes = 0,
+	.checkable = 1,
+	.checked = 0,
+	.selected = 0,
+	.line = 0,
+	.text_is_1byte = 1,
+	.text_has_mnemonic = 0,
+	.changed = 0,
+	.mnemonic = 'H'
+      },
+      .shortcut = '\0',
+      .short_mask = ksm_control,
+      .sub = NULL,
+      .moveto = NULL,
+      .invoke = GFCHideToggle,
+      .mid = 0
+    },
+    {
+      .ti = {
+	.text = (uint32_t *) N_("Directories Amid Files"),
+	.image = NULL,
+	.fg = COLOR_DEFAULT,
+	.bg = COLOR_DEFAULT,
+	.userdata = NULL,
+	.font = NULL,
+	.disabled = 0,
+	.image_precedes = 0,
+	.checkable = 1,
+	.checked = 0,
+	.selected = 0,
+	.line = 0,
+	.text_is_1byte = 1,
+	.text_has_mnemonic = 0,
+	.changed = 0,
+	.mnemonic = 'H'
+      },
+      .shortcut = '\0',
+      .short_mask = ksm_control,
+      .sub = NULL,
+      .moveto = NULL,
+      .invoke = GFCDirsAmidToggle,
+      .mid = 0
+    },
+    {
+      .ti = {
+	.text = (uint32_t *) N_("Directories First"),
+	.image = NULL,
+	.fg = COLOR_DEFAULT,
+	.bg = COLOR_DEFAULT,
+	.userdata = NULL,
+	.font = NULL,
+	.disabled = 0,
+	.image_precedes = 0,
+	.checkable = 1,
+	.checked = 0,
+	.selected = 0,
+	.line = 0,
+	.text_is_1byte = 1,
+	.text_has_mnemonic = 0,
+	.changed = 0,
+	.mnemonic = 'H'
+      },
+      .shortcut = '\0',
+      .short_mask = ksm_control,
+      .sub = NULL,
+      .moveto = NULL,
+      .invoke = GFCDirsFirstToggle,
+      .mid = 0
+    },
+    {
+      .ti = {
+	.text = (uint32_t *) N_("Directories Separate"),
+	.image = NULL,
+	.fg = COLOR_DEFAULT,
+	.bg = COLOR_DEFAULT,
+	.userdata = NULL,
+	.font = NULL,
+	.disabled = 0,
+	.image_precedes = 0,
+	.checkable = 1,
+	.checked = 0,
+	.selected = 0,
+	.line = 0,
+	.text_is_1byte = 1,
+	.text_has_mnemonic = 0,
+	.changed = 0,
+	.mnemonic = 'H'
+      },
+      .shortcut = '\0',
+      .short_mask = ksm_control,
+      .sub = NULL,
+      .moveto = NULL,
+      .invoke = GFCDirsSeparateToggle,
+      .mid = 0
+    },
+    {
+      .ti = {
+	.text = (uint32_t *) N_("Refresh File List"),
+	.image = NULL,
+	.fg = COLOR_DEFAULT,
+	.bg = COLOR_DEFAULT,
+	.userdata = NULL,
+	.font = NULL,
+	.disabled = 0,
+	.image_precedes = 0,
+	.checkable = 0,
+	.checked = 0,
+	.selected = 0,
+	.line = 0,
+	.text_is_1byte = 1,
+	.text_has_mnemonic = 0,
+	.changed = 0,
+	.mnemonic = 'H'
+      },
+      .shortcut = '\0',
+      .short_mask = ksm_control,
+      .sub = NULL,
+      .moveto = NULL,
+      .invoke = GFCRefresh,
+      .mid = 0
+    },
     GMENUITEM_EMPTY
 };
+
+// *INDENT-ON*
+
 static int gotten=false;
 
 static void GFCPopupMenu(GGadget *g, GEvent *e) {
