@@ -163,14 +163,18 @@ struct gmenuitem;
 typedef void (*gmenuitem_moveto_t) (struct gwindow *, struct gmenuitem *, GEvent *);
 typedef void (*gmenuitem_invoke_t) (struct gwindow *, struct gmenuitem *, GEvent *);
 
+// *************** FIXME: REMOVE THESE __aligned__ ASAP.
+// *************** FIXME: REMOVE THESE __aligned__ ASAP.
+// *************** FIXME: REMOVE THESE __aligned__ ASAP.
+// *************** FIXME: REMOVE THESE __aligned__ ASAP.
 typedef struct gmenuitem {
-  GTextInfo ti;
-  uint32_t shortcut_char;
+  GTextInfo ti __attribute__((__aligned__ (8)));
+  uint32_t shortcut_char __attribute__((__aligned__ (8)));
   short short_mask;
-  struct gmenuitem *sub;
-  gmenuitem_moveto_t moveto;	/* called before creating submenu */
-  gmenuitem_invoke_t invoke;	/* called on mouse release */
-  int mid;
+  struct gmenuitem *sub __attribute__((__aligned__ (8)));
+  gmenuitem_moveto_t moveto __attribute__((__aligned__ (8)));	/* called before creating submenu */
+  gmenuitem_invoke_t invoke __attribute__((__aligned__ (8)));	/* called on mouse release */
+  int mid __attribute__((__aligned__ (8)));
 } GMenuItem;
 
 #define GMENUITEM_EMPTY {			\
@@ -194,13 +198,17 @@ typedef struct gmenuitem {
       }
 
 
+// *************** FIXME: REMOVE THESE __aligned__ ASAP.
+// *************** FIXME: REMOVE THESE __aligned__ ASAP.
+// *************** FIXME: REMOVE THESE __aligned__ ASAP.
+// *************** FIXME: REMOVE THESE __aligned__ ASAP.
 typedef struct gmenuitem2 {
-  GTextInfo ti;
-  char *shortcut;
-  struct gmenuitem2 *sub;
-  gmenuitem_moveto_t moveto;	/* called before creating submenu */
-  gmenuitem_invoke_t invoke;	/* called on mouse release */
-  int mid;
+  GTextInfo ti __attribute__((__aligned__ (8)));
+  char *shortcut __attribute__((__aligned__ (8)));
+  struct gmenuitem2 *sub __attribute__((__aligned__ (8)));
+  gmenuitem_moveto_t moveto __attribute__((__aligned__ (8)));	/* called before creating submenu */
+  gmenuitem_invoke_t invoke __attribute__((__aligned__ (8)));	/* called on mouse release */
+  int mid __attribute__((__aligned__ (8)));
 } GMenuItem2;
 
 #define GMENUITEM2_EMPTY {			\
