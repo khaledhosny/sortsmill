@@ -96,18 +96,18 @@
         (null-pointer? (GTextInfo:image-ref ti))
         (not (GTextInfo:line-ref ti))))
 
-(define (GMenuItem-null? mi)
-   (GTextInfo-null? (pointer->GTextInfo (GMenuItem:ti->pointer mi))))
+(define (GMenuItem2-null? mi)
+   (GTextInfo-null? (pointer->GTextInfo (GMenuItem2:ti->pointer mi))))
 
 ;; Convert a menu’s or submenu’s C array to a more usable form (a
 ;; Scheme list).
-(define (GMenuItem-internal-array->list mi)
+(define (GMenuItem2-internal-array->list mi)
    (letrec
          ((collect
              (lambda (i prior)
-                (let ((ith-element (pointer->GMenuItem
-                                      (GMenuItem->pointer mi i))))
-                   (if (GMenuItem-null? ith-element)
+                (let ((ith-element (pointer->GMenuItem2
+                                      (GMenuItem2->pointer mi i))))
+                   (if (GMenuItem2-null? ith-element)
                        (reverse prior)
                        (collect (1+ i) (cons ith-element prior)))))))
       (collect 0 '())))
@@ -115,27 +115,27 @@
 ;; Individually enable or disable the entries in a submenu.
 (define (tools-list-check menu-item view menu-info)
    (let ((item (if (pointer? menu-item)
-                   (pointer->GMenuItem menu-item)
+                   (pointer->GMenuItem2 menu-item)
                    menu-item)))
       (for-each
          (lambda (mi)
-            (let ((mid (GMenuItem:mid-ref mi)))
+            (let ((mid (GMenuItem2:mid-ref mi)))
                (when (menu-info-exists? menu-info mid)
                   (let ((enabled?
                            (menu-entry-error-handling
                               (get-enabled-func menu-info mid)
                               view)))
                      (GTextInfo:disabled-set!
-                        (pointer->GTextInfo (GMenuItem:ti->pointer mi))
+                        (pointer->GTextInfo (GMenuItem2:ti->pointer mi))
                         (not enabled?))))))
-         (GMenuItem-internal-array->list (GMenuItem:sub-dref item)))))
+         (GMenuItem2-internal-array->list (GMenuItem2:sub-dref item)))))
 
 ;; Invoke the action for a menu entry.
 (define (do-action menu-item view menu-info)
    (let ((item (if (pointer? menu-item)
-                   (pointer->GMenuItem menu-item)
+                   (pointer->GMenuItem2 menu-item)
                    menu-item)))
-      (let ((mid (GMenuItem:mid-ref item)))
+      (let ((mid (GMenuItem2:mid-ref item)))
          (when (menu-info-exists? menu-info mid)
             (menu-entry-error-handling
                (get-action-func menu-info mid) view)))))
