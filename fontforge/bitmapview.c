@@ -1,6 +1,5 @@
-#include <config.h>
+#include <config.h>		/* -*- coding: utf-8 -*- */
 
-/* -*- coding: utf-8 -*- */
 /* Copyright (C) 2000-2012 by George Williams */
 /*
  * Redistribution and use in source and binary forms, with or without
@@ -2071,15 +2070,69 @@ static void mtlistcheck(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     }
 }
 
+// *INDENT-OFF*
+
 static GMenuItem2 wnmenu[] = {
-    { { (uint32_t *) N_("New O_utline Window"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'u' }, H_("New Outline Window|Ctl+H"), NULL, NULL, BVMenuOpenOutline, 0 },
-    { { (uint32_t *) N_("New _Bitmap Window"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 1, 0, 0, 0, 0, 0, 1, 1, 0, 'B' }, H_("New Bitmap Window|Ctl+J"), NULL, NULL, /* No function, never avail */NULL, 0 },
-    { { (uint32_t *) N_("New _Metrics Window"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'M' }, H_("New Metrics Window|Ctl+K"), NULL, NULL, BVMenuOpenMetrics, 0 },
-	GMENUITEM2_LINE,
-    { { (uint32_t *) N_("Warnings"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'M' }, H_("Warnings|No Shortcut"), NULL, NULL, _MenuWarnings, MID_Warnings },
-	GMENUITEM2_LINE,
-    GMENUITEM2_EMPTY
+  {
+    .ti = {
+      .text = (uint32_t *) N_("New O_utline Window"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'u'
+    },
+    .shortcut = H_("New Outline Window|Ctl+H"),
+    .invoke = BVMenuOpenOutline,
+    .mid = 0
+  },
+  {
+    .ti = {
+      .text = (uint32_t *) N_("New _Bitmap Window"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .disabled = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      'B' },
+    .shortcut = H_("New Bitmap Window|Ctl+J"),
+    .invoke = NULL,
+    .mid = 0
+  },
+  {
+    .ti = {
+      .text = (uint32_t *) N_("New _Metrics Window"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      0,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'M'
+    },
+    .shortcut = H_("New Metrics Window|Ctl+K"),
+    .invoke = BVMenuOpenMetrics,
+    .mid = 0
+  },
+  GMENUITEM2_LINE,
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Warnings"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+    },
+    .shortcut = H_("Warnings|No Shortcut"),
+    .invoke = _MenuWarnings,
+    .mid = MID_Warnings
+  },
+  GMENUITEM2_LINE,
+  GMENUITEM2_EMPTY
 };
+
+// *INDENT-ON*
 
 static void BVWindowMenuBuild(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     struct gmenuitem *wmi;
