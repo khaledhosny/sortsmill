@@ -1,6 +1,5 @@
-#include <config.h>
+#include <config.h>		/* -*- coding: utf-8 -*- */
 
-/* -*- coding: utf-8 -*- */
 /* Copyright (C) 2000-2012 by George Williams */
 /*
  * Redistribution and use in source and binary forms, with or without
@@ -36,20 +35,62 @@
 
 
 GTextInfo sizes[] = {
-    { (uint32_t *) "24", NULL, 0, 0, (void *) 24, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (uint32_t *) "36", NULL, 0, 0, (void *) 36, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (uint32_t *) "48", NULL, 0, 0, (void *) 48, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (uint32_t *) "72", NULL, 0, 0, (void *) 72, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (uint32_t *) "96", NULL, 0, 0, (void *) 96, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (uint32_t *) "200", NULL, 0, 0, (void *) 200, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    GTEXTINFO_EMPTY
+  {
+    .text = (uint32_t *) "24",
+    .userdata = (void *) 24,
+    .text_is_1byte = true
+  },
+  {
+    .text = (uint32_t *) "36",
+    .userdata = (void *) 36,
+    .text_is_1byte = true
+  },
+  {
+    .text = (uint32_t *) "48",
+    .userdata = (void *) 48,
+    .text_is_1byte = true
+  },
+  {
+    .text = (uint32_t *) "72",
+    .userdata = (void *) 72,
+    .text_is_1byte = true
+  },
+  {
+    .text = (uint32_t *) "96",
+    .userdata = (void *) 96,
+    .text_is_1byte = true
+  },
+  {
+    .text = (uint32_t *) "200",
+    .userdata = (void *) 200,
+    .text_is_1byte = true
+  },
+  GTEXTINFO_EMPTY
 };
-enum sortby { sb_first, sb_second, sb_kern };
+
+enum sortby {
+  sb_first,
+  sb_second,
+  sb_kern
+};
+
 GTextInfo sortby[] = {
-    { (uint32_t *) N_("First Char"), NULL, 0, 0, (void *) sb_first, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (uint32_t *) N_("Second Char"), NULL, 0, 0, (void *) sb_second, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (uint32_t *) N_("Kern Size"), NULL, 0, 0, (void *) sb_kern, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    GTEXTINFO_EMPTY
+  {
+    .text = (uint32_t *) N_("First Char"),
+    .userdata = (void *) sb_first,
+    .text_is_1byte = true
+  },
+  {
+    .text = (uint32_t *) N_("Second Char"),
+    .userdata = (void *) sb_second,
+    .text_is_1byte = true
+  },
+  {
+    .text = (uint32_t *) N_("Kern Size"),
+    .userdata = (void *) sb_kern,
+    .text_is_1byte = true
+  },
+  GTEXTINFO_EMPTY
 };
 
 void SFShowLigatures(SplineFont *sf,SplineChar *searchfor) {
@@ -896,17 +937,65 @@ static void KPMenuACM(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     KPAC(kpd,false);
 }
 
+// *INDENT-OFF*
+
 static GMenuItem kernmenu[] = {
-    { { (uint32_t *) N_("C_lear"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 'N' }, '\177', 0, NULL, NULL, KPMenuRemove, 0 },
-    { { (uint32_t *) N_("Kern Pair Closeup"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 'N' }, '\0', 0, NULL, NULL, KPMenuKPCloseup, 0 },
+    {
+      .ti = {
+	.text = (uint32_t *) N_("C_lear"),
+	.fg = COLOR_DEFAULT,
+	.bg = COLOR_DEFAULT,
+	.text_is_1byte = true,
+	.mnemonic = 'N'
+      },
+      .shortcut_char = '\177',
+      .short_mask = 0,
+      .invoke = KPMenuRemove
+    },
+    {
+      .ti = {
+	.text = (uint32_t *) N_("Kern Pair Closeup"),
+	.fg = COLOR_DEFAULT,
+	.bg = COLOR_DEFAULT,
+	.text_is_1byte = true,
+	.mnemonic = 'N'
+      },
+      .shortcut_char = '\0',
+      .short_mask = 0,
+      .invoke = KPMenuKPCloseup
+    },
     GMENUITEM_EMPTY
 };
 
 static GMenuItem acmenu[] = {
-    { { (uint32_t *) N_("Anchor Control for Base"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 'N' }, '\0', 0, NULL, NULL, KPMenuACB, 0 },
-    { { (uint32_t *) N_("Anchor Control for Mark"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 'N' }, '\0', 0, NULL, NULL, KPMenuACM, 0 },
+    {
+      .ti = {
+	.text = (uint32_t *) N_("Anchor Control for Base"),
+	.fg = COLOR_DEFAULT,
+	.bg = COLOR_DEFAULT,
+	.text_is_1byte = true,
+	.mnemonic = 'N'
+      },
+      .shortcut_char = '\0',
+      .short_mask = 0,
+      .invoke = KPMenuACB
+    },
+    {
+      .ti = {
+	.text = (uint32_t *) N_("Anchor Control for Mark"),
+	.fg = COLOR_DEFAULT,
+	.bg = COLOR_DEFAULT,
+	.text_is_1byte = true,
+	.mnemonic = 'N'
+      },
+      .shortcut_char = '\0',
+      .short_mask = 0,
+      .invoke = KPMenuACM
+    },
     GMENUITEM_EMPTY
 };
+
+// *INDENT-ON*
 
 static uint32_t upopupbuf[100];
 
