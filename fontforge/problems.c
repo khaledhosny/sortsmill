@@ -1,4 +1,4 @@
-#include <config.h>   /* -*- coding: utf-8 -*- */
+#include <config.h>		/* -*- coding: utf-8 -*- */
 
 /* Copyright (C) 2000-2012 by George Williams */
 /*
@@ -4777,14 +4777,63 @@ static void VWMenuSelect(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     GDrawRequestExpose(fv->v,NULL,false);
 }
 
+// *INDENT-OFF*
+
 static GMenuItem vw_subselect[] = {
-    { { (uint32_t *) NC_("Select problems", "Errors"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuSelect, MID_SelectErrors },
-    { { (uint32_t *) NC_("Select problems", "Open Contours"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuSelect, MID_SelectOpen },
-    { { (uint32_t *) NC_("Select problems", "Bad Direction"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuSelect, MID_SelectDir },
-    { { (uint32_t *) NC_("Select problems", "Self Intersections"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuSelect, MID_SelectRO },
-    { { (uint32_t *) NC_("Select problems", "Missing Extrema"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuSelect, MID_SelectExtr },
-    GMENUITEM_EMPTY
+  {
+    .ti = {
+      .text = (uint32_t *) NC_("Select problems", "Errors"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .line = true
+    },
+    .invoke = VWMenuSelect,
+    .mid = MID_SelectErrors },
+
+  {
+    .ti = {
+      .text = (uint32_t *) NC_("Select problems", "Open Contours"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .line = true
+    },
+    .invoke = VWMenuSelect,
+    .mid = MID_SelectOpen },
+
+  {
+    .ti = {
+      .text = (uint32_t *) NC_("Select problems", "Bad Direction"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .line = true
+    },
+    .invoke = VWMenuSelect,
+    .mid = MID_SelectDir },
+
+  {
+    .ti = {
+      .text = (uint32_t *) NC_("Select problems", "Self Intersections"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .line = true
+    },
+    .invoke = VWMenuSelect,
+    .mid = MID_SelectRO },
+
+  {
+    .ti = {
+      .text = (uint32_t *) NC_("Select problems", "Missing Extrema"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .line = true
+    },
+    .invoke = VWMenuSelect,
+    .mid = MID_SelectExtr },
+
+  GMENUITEM_EMPTY
 };
+
+// *INDENT-ON*
 
 static void VWMenuManyConnect(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     struct val_data *vw = (struct val_data *) GDrawGetUserData(gw);
@@ -4976,38 +5025,274 @@ static void VWMenuManySimplify(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     } while ( k<vw->sf->subfontcnt );
 }
 
+// *INDENT-OFF*
+
 static GMenuItem vw_subfixup[] = {
-    { { (uint32_t *) NC_("Fixup problems", "Open Contours"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuManyConnect, 0 },
-    { { (uint32_t *) NC_("Fixup problems", "Self Intersections"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuManyOverlap, 0 },
-    { { (uint32_t *) NC_("Fixup problems", "Mark for Overlap fix before Save"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuManyMark, 0 },
-    { { (uint32_t *) NC_("Fixup problems", "Bad Directions"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuManyCorrectDir, 0 },
-    { { (uint32_t *) NC_("Fixup problems", "Missing Extrema (cautiously)"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuManyGoodExtrema, 0 },
-    { { (uint32_t *) NC_("Fixup problems", "Missing Extrema"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuManyAllExtrema, 0 },
-    { { (uint32_t *) NC_("Fixup problems", "Too Many Points"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuManySimplify, 0 },
-    GMENUITEM_EMPTY
+  {
+    .ti = {
+      .text = (uint32_t *) NC_("Fixup problems", "Open Contours"),
+      NULL,
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .line = true
+    },
+    .invoke = VWMenuManyConnect
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) NC_("Fixup problems", "Self Intersections"),
+      NULL,
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .line = true,
+      .text_is_1byte = true
+    },
+    .invoke = VWMenuManyOverlap
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) NC_("Fixup problems", "Mark for Overlap fix before Save"),
+      NULL,
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .line = true,
+      .text_is_1byte = true
+    },
+    .invoke = VWMenuManyMark
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) NC_("Fixup problems", "Bad Directions"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .line = true,
+      .text_is_1byte = true
+    },
+    .invoke = VWMenuManyCorrectDir
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) NC_("Fixup problems", "Missing Extrema (cautiously)"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .line = true,
+      .text_is_1byte = true,
+    },
+    .invoke = VWMenuManyGoodExtrema
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) NC_("Fixup problems", "Missing Extrema"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .line = true,
+      .text_is_1byte = true
+    },
+    .invoke = VWMenuManyAllExtrema
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) NC_("Fixup problems", "Too Many Points"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .line = true,
+      .text_is_1byte = true
+    },
+    .invoke = VWMenuManySimplify
+  },
+
+  GMENUITEM_EMPTY
 };
 
 static GMenuItem vw_popuplist[] = {
-    { { (uint32_t *) N_("Close Open Contours"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuConnect, 0 },
-    { { (uint32_t *) N_("Inline All References"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuInlineRefs, 0 },
-    { { (uint32_t *) N_("Remove Overlap"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuOverlap, 0 },
-    { { (uint32_t *) N_("Mark for Overlap fix before Save"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuMark, 0 },
-    { { (uint32_t *) N_("Inline Flipped References"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuInlineFlippedRefs, 0 },
-    { { (uint32_t *) N_("Correct Direction"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuCorrectDir, 0 },
-    { { (uint32_t *) N_("Add Good Extrema"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0',0, NULL, NULL, VWMenuGoodExtrema, 0 },
-    { { (uint32_t *) N_("Add All Extrema"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuAllExtrema, 0 },
-    { { (uint32_t *) N_("Simplify"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 0 }, '\0', 0, NULL, NULL, VWMenuSimplify, 0 },
-    GMENUITEM_LINE,
-    { { (uint32_t *) N_("Revalidate All"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuRevalidateAll, 0 },
-    { { (uint32_t *) N_("Revalidate"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuRevalidate, 0 },
-    { { (uint32_t *) N_("Open Glyph"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuOpenGlyph, 0 },
-    GMENUITEM_LINE,
-    { { (uint32_t *) N_("Scroll To Glyph"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, NULL, NULL, VWMenuGotoGlyph, 0 },
-    GMENUITEM_LINE,
-    { { (uint32_t *) N_("Select Glyphs With"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, vw_subselect, NULL, NULL, 0 },
-    { { (uint32_t *) N_("Try To Fix Glyphs With"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, '\0', 0, vw_subfixup, NULL, NULL, 0 },
-    GMENUITEM_EMPTY
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Close Open Contours"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .line = true
+    },
+    .invoke = VWMenuConnect
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Inline All References"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .line = true,
+      .text_is_1byte = true
+    },
+    .invoke = VWMenuInlineRefs
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Remove Overlap"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .line = true,
+      .text_is_1byte = true
+    },
+    .invoke = VWMenuOverlap
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Mark for Overlap fix before Save"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .line = true,
+      .text_is_1byte = true
+    },
+    .invoke = VWMenuMark
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Inline Flipped References"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .line = true,
+      .text_is_1byte = true
+    },
+    .invoke = VWMenuInlineFlippedRefs
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Correct Direction"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .line = true,
+      .text_is_1byte = true
+    },
+    .invoke = VWMenuCorrectDir
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Add Good Extrema"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .line = true,
+      .text_is_1byte = true
+    },
+    .invoke = VWMenuGoodExtrema
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Add All Extrema"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .line = true,
+      .text_is_1byte = true
+    },
+    .invoke = VWMenuAllExtrema
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Simplify"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .line = true,
+      .text_is_1byte = true
+    },
+    .invoke = VWMenuSimplify
+  },
+
+  GMENUITEM_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Revalidate All"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .line = true
+    },
+    .invoke = VWMenuRevalidateAll
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Revalidate"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .line = true
+    },
+    .invoke = VWMenuRevalidate
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Open Glyph"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .line = true,
+    },
+    .invoke = VWMenuOpenGlyph
+  },
+
+  GMENUITEM_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Scroll To Glyph"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .line = true
+    },
+    .invoke = VWMenuGotoGlyph
+  },
+
+  GMENUITEM_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Select Glyphs With"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .line = true
+    },
+    .sub = vw_subselect
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Try To Fix Glyphs With"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .line = true
+    },
+    .sub = vw_subfixup
+  },
+
+  GMENUITEM_EMPTY
 };
+
+// *INDENT-ON*
 
 static void VWMouse(struct val_data *vw, GEvent *e) {
     int skips;

@@ -878,16 +878,90 @@ static void DVMenuCreate(GWindow v, GMenuItem *mi,GEvent *e) {
     SavePrefs(true);
 }
 
+// *INDENT-OFF*
+
 static GMenuItem popupwindowlist[] = {
-    { { (uint32_t *) N_("Registers"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 1, 0, 0, '\0' }, '\0', 0, NULL, NULL, DVMenuCreate, MID_Registers },
-    { { (uint32_t *) N_("Stack"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 1, 0, 0, '\0' }, '\0', 0, NULL, NULL, DVMenuCreate, MID_Stack },
-    { { (uint32_t *) N_("Storage"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 1, 0, 0, '\0' }, '\0', 0, NULL, NULL, DVMenuCreate, MID_Storage },
-    { { (uint32_t *) N_("Points"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 1, 0, 0, '\0' }, '\0', 0, NULL, NULL, DVMenuCreate, MID_Points },
-    { { (uint32_t *) N_("Cvt"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 1, 0, 0, '\0' }, '\0', 0, NULL, NULL, DVMenuCreate, MID_Cvt },
-    { { (uint32_t *) N_("Raster"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 1, 0, 0, '\0' }, '\0', 0, NULL, NULL, DVMenuCreate, MID_Raster },
-    { { (uint32_t *) N_("Gloss"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 1, 0, 0, '\0' }, '\0', 0, NULL, NULL, DVMenuCreate, MID_Gloss },
-    GMENUITEM_EMPTY
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Registers"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .checkable = true,
+      .text_is_1byte = true
+    },
+    .invoke = DVMenuCreate,
+    .mid = MID_Registers },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Stack"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .checkable = true,
+      .text_is_1byte = true
+    },
+    .invoke = DVMenuCreate,
+    .mid = MID_Stack },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Storage"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .checkable = true,
+      .text_is_1byte = true
+    },
+    .invoke = DVMenuCreate,
+    .mid = MID_Storage },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Points"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .checkable = true,
+      .text_is_1byte = true
+    },
+    .invoke = DVMenuCreate,
+    .mid = MID_Points },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Cvt"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .checkable = true,
+      .text_is_1byte = true
+    },
+    .invoke = DVMenuCreate,
+    .mid = MID_Cvt },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Raster"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .checkable = true,
+      .text_is_1byte = true
+    },
+    .invoke = DVMenuCreate,
+    .mid = MID_Raster },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Gloss"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .checkable = true,
+      .text_is_1byte = true
+    },
+    .invoke = DVMenuCreate,
+    .mid = MID_Gloss },
+
+  GMENUITEM_EMPTY
 };
+
+// *INDENT-ON*
 
 static int DV_WindowMenu(GGadget *g, GEvent *e) {
     DebugView *dv;
