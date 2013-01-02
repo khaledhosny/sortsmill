@@ -3035,15 +3035,69 @@ static void MVMenuKPCloseup(GWindow gw, struct gmenuitem *UNUSED(mi), GEvent *UN
     KernPairD(mv->sf,sc1,sc2,mv->layer,mv->vertical);
 }
 
+// *INDENT-OFF*
+
 static GMenuItem2 wnmenu[] = {
-    { { (uint32_t *) N_("New O_utline Window"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'u' }, H_("New Outline Window|Ctl+H"), NULL, NULL, MVMenuOpenOutline, MID_OpenOutline },
-    { { (uint32_t *) N_("New _Bitmap Window"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'B' }, H_("New Bitmap Window|Ctl+J"), NULL, NULL, MVMenuOpenBitmap, MID_OpenBitmap },
-    { { (uint32_t *) N_("New _Metrics Window"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 1, 1, 0, 0, 0, 0, 1, 1, 0, 'M' }, H_("New Metrics Window|Ctl+K"), NULL, NULL, /* No function, never avail */NULL, 0 },
-    GMENUITEM2_LINE,
-    { { (uint32_t *) N_("Warnings"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'M' }, H_("Warnings|No Shortcut"), NULL, NULL, _MenuWarnings, MID_Warnings },
-    GMENUITEM2_LINE,
-    GMENUITEM2_EMPTY
+  {
+    .ti = {
+      .text = (uint32_t *) N_("New O_utline Window"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'u' },
+    .shortcut = H_("New Outline Window|Ctl+H"),
+    .invoke = MVMenuOpenOutline,
+    .mid = MID_OpenOutline },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("New _Bitmap Window"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'B' },
+    .shortcut = H_("New Bitmap Window|Ctl+J"),
+    .invoke = MVMenuOpenBitmap,
+    .mid = MID_OpenBitmap },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("New _Metrics Window"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .disabled = true,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'M' },
+    .shortcut = H_("New Metrics Window|Ctl+K"),
+    .invoke = NULL		/* No function; never available. */
+  },
+
+  GMENUITEM2_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Warnings"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'M' },
+    .shortcut = H_("Warnings|No Shortcut"),
+    .invoke = _MenuWarnings,
+    .mid = MID_Warnings },
+
+  GMENUITEM2_LINE,
+  GMENUITEM2_EMPTY
 };
+
+// *INDENT-ON*
 
 static void MVWindowMenuBuild(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
@@ -3073,82 +3127,636 @@ static void MVWindowMenuBuild(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     }
 }
 
+// *INDENT-OFF*
+
 static GMenuItem2 dummyitem[] = {
-    { { (uint32_t *) N_("Font|_New"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'N' }, NULL, NULL, NULL, NULL, 0 },
-    GMENUITEM2_EMPTY
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Font|_New"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'N' }
+  },
+
+  GMENUITEM2_EMPTY
 };
+
 static GMenuItem2 fllist[] = {
-    { { (uint32_t *) N_("Font|_New"), (GImage *) "filenew.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'N' }, H_("New|Ctl+N"), NULL, NULL, MenuNew, 0 },
-    { { (uint32_t *) N_("_Open"), (GImage *) "fileopen.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'O' }, H_("Open|Ctl+O"), NULL, NULL, MenuOpen, 0 },
-    { { (uint32_t *) N_("Recen_t"), (GImage *) "filerecent.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 't' }, NULL, dummyitem, MenuRecentBuild, NULL, MID_Recent },
-    { { (uint32_t *) N_("_Close"), (GImage *) "fileclose.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'C' }, H_("Close|Ctl+Shft+Q"), NULL, NULL, MVMenuClose, 0 },
-    GMENUITEM2_LINE,
-    { { (uint32_t *) N_("_Save"), (GImage *) "filesave.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'S' }, H_("Save|Ctl+S"), NULL, NULL, MVMenuSave, 0 },
-    { { (uint32_t *) N_("S_ave as..."), (GImage *) "filesaveas.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'a' }, H_("Save as...|Ctl+Shft+S"), NULL, NULL, MVMenuSaveAs, 0 },
-    { { (uint32_t *) N_("_Generate Fonts..."), (GImage *) "filegenerate.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'G' }, H_("Generate Fonts...|Ctl+Shft+G"), NULL, NULL, MVMenuGenerate, 0 },
-    { { (uint32_t *) N_("Generate Mac _Family..."), (GImage *) "filegeneratefamily.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'F' }, H_("Generate Mac Family...|Alt+Ctl+G"), NULL, NULL, MVMenuGenerateFamily, 0 },
-    { { (uint32_t *) N_("Generate TTC..."), (GImage *) "filegeneratefamily.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'F' }, H_("Generate TTC...|No Shortcut"), NULL, NULL, MVMenuGenerateTTC, 0 },
-    GMENUITEM2_LINE,
-    { { (uint32_t *) N_("_Merge Feature Info..."), (GImage *) "filemergefeature.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'M' }, H_("Merge Kern Info...|Ctl+Shft+K"), NULL, NULL, MVMenuMergeKern, 0 },
-    GMENUITEM2_LINE,
-    { { (uint32_t *) N_("_Print..."), (GImage *) "fileprint.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'P' }, H_("Print...|Ctl+P"), NULL, NULL, MVMenuPrint, 0 },
-    GMENUITEM2_LINE,
-    { { (uint32_t *) N_("Pr_eferences..."), (GImage *) "fileprefs.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'e' }, H_("Preferences...|No Shortcut"), NULL, NULL, MenuPrefs, 0 },
-    { { (uint32_t *) N_("_X Resource Editor..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'e' }, H_("X Resource Editor...|No Shortcut"), NULL, NULL, MenuXRes, 0 },
-    GMENUITEM2_LINE,
-    { { (uint32_t *) N_("_Quit"), (GImage *) "filequit.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'Q' }, H_("Quit|Ctl+Q"), NULL, NULL, MenuExit, 0 },
-    GMENUITEM2_EMPTY
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Font|_New"),
+      .image = (GImage *) "filenew.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'N' },
+    .shortcut = H_("New|Ctl+N"),
+    .invoke = MenuNew,
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Open"),
+      .image = (GImage *) "fileopen.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'O' },
+    .shortcut = H_("Open|Ctl+O"),
+    .invoke = MenuOpen,
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Recen_t"),
+      .image = (GImage *) "filerecent.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 't' },
+    .sub = dummyitem,
+    .moveto = MenuRecentBuild,
+    .mid = MID_Recent },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Close"),
+      .image = (GImage *) "fileclose.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'C' },
+    .shortcut = H_("Close|Ctl+Shft+Q"),
+    .invoke = MVMenuClose
+  },
+
+  GMENUITEM2_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Save"),
+      .image = (GImage *) "filesave.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'S' },
+    .shortcut = H_("Save|Ctl+S"),
+    .invoke = MVMenuSave
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("S_ave as..."),
+      .image = (GImage *) "filesaveas.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'a' },
+    .shortcut = H_("Save as...|Ctl+Shft+S"),
+    .invoke = MVMenuSaveAs
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Generate Fonts..."),
+      .image = (GImage *) "filegenerate.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'G' },
+    .shortcut = H_("Generate Fonts...|Ctl+Shft+G"),
+    .invoke = MVMenuGenerate
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Generate Mac _Family..."),
+      .image = (GImage *) "filegeneratefamily.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'F' },
+    .shortcut = H_("Generate Mac Family...|Alt+Ctl+G"),
+    .invoke = MVMenuGenerateFamily
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Generate TTC..."),
+      .image = (GImage *) "filegeneratefamily.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'F' },
+    .shortcut = H_("Generate TTC...|No Shortcut"),
+    .invoke = MVMenuGenerateTTC
+  },
+
+  GMENUITEM2_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Merge Feature Info..."),
+      .image = (GImage *) "filemergefeature.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'M' },
+    .shortcut = H_("Merge Kern Info...|Ctl+Shft+K"),
+    .invoke = MVMenuMergeKern
+  },
+
+  GMENUITEM2_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Print..."),
+      .image = (GImage *) "fileprint.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'P' },
+    .shortcut = H_("Print...|Ctl+P"),
+    .invoke = MVMenuPrint
+  },
+
+  GMENUITEM2_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Pr_eferences..."),
+      .image = (GImage *) "fileprefs.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'e' },
+    .shortcut = H_("Preferences...|No Shortcut"),
+    .invoke = MenuPrefs
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_X Resource Editor..."),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'e' },
+    .shortcut = H_("X Resource Editor...|No Shortcut"),
+    .invoke = MenuXRes
+  },
+
+  GMENUITEM2_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Quit"),
+      .image = (GImage *) "filequit.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'Q' },
+    .shortcut = H_("Quit|Ctl+Q"),
+    .invoke = MenuExit
+  },
+
+  GMENUITEM2_EMPTY
 };
 
 static GMenuItem2 edlist[] = {
-    { { (uint32_t *) N_("_Undo"), (GImage *) "editundo.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'U' }, H_("Undo|Ctl+Z"), NULL, NULL, MVUndo, MID_Undo },
-    { { (uint32_t *) N_("_Redo"), (GImage *) "editredo.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'R' }, H_("Redo|Ctl+Y"), NULL, NULL, MVRedo, MID_Redo },
-    GMENUITEM2_LINE,
-    { { (uint32_t *) N_("Cu_t"), (GImage *) "editcut.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 't' }, H_("Cut|Ctl+X"), NULL, NULL, MVCut, MID_Cut },
-    { { (uint32_t *) N_("_Copy"), (GImage *) "editcopy.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'C' }, H_("Copy|Ctl+C"), NULL, NULL, MVCopy, MID_Copy },
-    { { (uint32_t *) N_("C_opy Reference"), (GImage *) "editcopyref.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'o' }, H_("Copy Reference|Ctl+G"), NULL, NULL, MVMenuCopyRef, MID_CopyRef },
-    { { (uint32_t *) N_("Copy _Width"), (GImage *) "editcopywidth.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'W' }, H_("Copy Width|Ctl+W"), NULL, NULL, MVMenuCopyWidth, MID_CopyWidth },
-    { { (uint32_t *) N_("Copy _VWidth"), (GImage *) "editcopyvwidth.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'V' }, H_("Copy VWidth|No Shortcut"), NULL, NULL, MVMenuCopyWidth, MID_CopyVWidth },
-    { { (uint32_t *) N_("Co_py LBearing"), (GImage *) "editcopylbearing.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'p' }, H_("Copy LBearing|No Shortcut"), NULL, NULL, MVMenuCopyWidth, MID_CopyLBearing },
-    { { (uint32_t *) N_("Copy RBearin_g"), (GImage *) "editcopyrbearing.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'g' }, H_("Copy RBearing|No Shortcut"), NULL, NULL, MVMenuCopyWidth, MID_CopyRBearing },
-    { { (uint32_t *) N_("_Paste"), (GImage *) "editpaste.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'P' }, H_("Paste|Ctl+V"), NULL, NULL, MVPaste, MID_Paste },
-    { { (uint32_t *) N_("C_lear"), (GImage *) "editclear.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 1, 1, 0, 0, 0, 0, 1, 1, 0, 'l' }, H_("Clear|No Shortcut"), NULL, NULL, MVClear, MID_Clear },
-    { { (uint32_t *) N_("_Join"), (GImage *) "editjoin.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'J' }, H_("Join|Ctl+Shft+J"), NULL, NULL, MVMenuJoin, MID_Join },
-    GMENUITEM2_LINE,
-    { { (uint32_t *) N_("Select _All"), (GImage *) "editselect.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 1, 1, 0, 0, 0, 0, 1, 1, 0, 'A' }, H_("Select All|Ctl+A"), NULL, NULL, MVSelectAll, MID_SelAll },
-    { { (uint32_t *) N_("_Deselect All"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'D' }, H_("Clear Selection|Escape"), NULL, NULL, MVClearSelection, MID_ClearSel },
-    GMENUITEM2_LINE,
-    { { (uint32_t *) N_("U_nlink Reference"), (GImage *) "editunlink.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'U' }, H_("Unlink Reference|Ctl+U"), NULL, NULL, MVUnlinkRef, MID_UnlinkRef },
-    GMENUITEM2_EMPTY
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Undo"),
+      .image = (GImage *) "editundo.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'U' },
+    .shortcut = H_("Undo|Ctl+Z"),
+    .invoke = MVUndo,
+    .mid = MID_Undo },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Redo"),
+      .image = (GImage *) "editredo.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'R' },
+    .shortcut = H_("Redo|Ctl+Y"),
+    .invoke = MVRedo,
+    .mid = MID_Redo },
+
+  GMENUITEM2_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Cu_t"),
+      .image = (GImage *) "editcut.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 't' },
+    .shortcut = H_("Cut|Ctl+X"),
+    .invoke = MVCut,
+    .mid = MID_Cut },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Copy"),
+      .image = (GImage *) "editcopy.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'C' },
+    .shortcut = H_("Copy|Ctl+C"),
+    .invoke = MVCopy,
+    .mid = MID_Copy },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("C_opy Reference"),
+      .image = (GImage *) "editcopyref.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'o' },
+    .shortcut = H_("Copy Reference|Ctl+G"),
+    .invoke = MVMenuCopyRef,
+    .mid = MID_CopyRef },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Copy _Width"),
+      .image = (GImage *) "editcopywidth.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'W' },
+    .shortcut = H_("Copy Width|Ctl+W"),
+    .invoke = MVMenuCopyWidth,
+    .mid = MID_CopyWidth },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Copy _VWidth"),
+      .image = (GImage *) "editcopyvwidth.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'V' },
+    .shortcut = H_("Copy VWidth|No Shortcut"),
+    .invoke = MVMenuCopyWidth,
+    .mid = MID_CopyVWidth },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Co_py LBearing"),
+      .image = (GImage *) "editcopylbearing.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'p' },
+    .shortcut = H_("Copy LBearing|No Shortcut"),
+    .invoke = MVMenuCopyWidth,
+    .mid = MID_CopyLBearing },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Copy RBearin_g"),
+      .image = (GImage *) "editcopyrbearing.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'g' },
+    .shortcut = H_("Copy RBearing|No Shortcut"),
+    .invoke = MVMenuCopyWidth,
+    .mid = MID_CopyRBearing },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Paste"),
+      .image = (GImage *) "editpaste.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'P' },
+    .shortcut = H_("Paste|Ctl+V"),
+    .invoke = MVPaste,
+    .mid = MID_Paste },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("C_lear"),
+      .image = (GImage *) "editclear.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .disabled = true,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'l' },
+    .shortcut = H_("Clear|No Shortcut"),
+    .invoke = MVClear,
+    .mid = MID_Clear },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Join"),
+      .image = (GImage *) "editjoin.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'J' },
+    .shortcut = H_("Join|Ctl+Shft+J"),
+    .invoke = MVMenuJoin,
+    .mid = MID_Join },
+
+  GMENUITEM2_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Select _All"),
+      .image = (GImage *) "editselect.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .disabled = true,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'A' },
+    .shortcut = H_("Select All|Ctl+A"),
+    .invoke = MVSelectAll,
+    .mid = MID_SelAll },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Deselect All"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'D' },
+    .shortcut = H_("Clear Selection|Escape"),
+    .invoke = MVClearSelection,
+    .mid = MID_ClearSel },
+
+  GMENUITEM2_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("U_nlink Reference"),
+      .image = (GImage *) "editunlink.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'U' },
+    .shortcut = H_("Unlink Reference|Ctl+U"),
+    .invoke = MVUnlinkRef,
+    .mid = MID_UnlinkRef },
+
+  GMENUITEM2_EMPTY
 };
 
 static GMenuItem2 smlist[] = {
-    { { (uint32_t *) N_("_Simplify"), (GImage *) "elementsimplify.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'S' }, H_("Simplify|Ctl+Shft+M"), NULL, NULL, MVMenuSimplify, MID_Simplify },
-    { { (uint32_t *) N_("Simplify More..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'S' }, H_("Simplify More...|Alt+Ctl+Shft+M"), NULL, NULL, MVMenuSimplifyMore, MID_SimplifyMore },
-    { { (uint32_t *) N_("Clea_nup Glyph"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'n' }, H_("Cleanup Glyph|No Shortcut"), NULL, NULL, MVMenuCleanup, MID_CleanupGlyph },
-    GMENUITEM2_EMPTY
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Simplify"),
+      .image = (GImage *) "elementsimplify.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'S' },
+    .shortcut = H_("Simplify|Ctl+Shft+M"),
+    .invoke = MVMenuSimplify,
+    .mid = MID_Simplify },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Simplify More..."),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'S' },
+    .shortcut = H_("Simplify More...|Alt+Ctl+Shft+M"),
+    .invoke = MVMenuSimplifyMore,
+    .mid = MID_SimplifyMore },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Clea_nup Glyph"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'n' },
+    .shortcut = H_("Cleanup Glyph|No Shortcut"),
+    .invoke = MVMenuCleanup,
+    .mid = MID_CleanupGlyph },
+
+  GMENUITEM2_EMPTY
 };
 
 static GMenuItem2 rmlist[] = {
-    { { (uint32_t *) N_("_Remove Overlap"), (GImage *) "overlaprm.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 'O' }, H_("Remove Overlap|Ctl+Shft+O"), NULL, NULL, MVMenuOverlap, MID_RmOverlap },
-    { { (uint32_t *) N_("_Intersect"), (GImage *) "overlapintersection.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 'I' }, H_("Intersect|No Shortcut"), NULL, NULL, MVMenuOverlap, MID_Intersection },
-    { { (uint32_t *) N_("_Find Intersections"), (GImage *) "overlapfindinter.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 'O' }, H_("Find Intersections|No Shortcut"), NULL, NULL, MVMenuOverlap, MID_FindInter },
-    GMENUITEM2_EMPTY
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Remove Overlap"),
+      .image = (GImage *) "overlaprm.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'O' },
+    .shortcut = H_("Remove Overlap|Ctl+Shft+O"),
+    .invoke = MVMenuOverlap,
+    .mid = MID_RmOverlap },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Intersect"),
+      .image = (GImage *) "overlapintersection.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'I' },
+    .shortcut = H_("Intersect|No Shortcut"),
+    .invoke = MVMenuOverlap,
+    .mid = MID_Intersection },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Find Intersections"),
+      .image = (GImage *) "overlapfindinter.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'O' },
+    .shortcut = H_("Find Intersections|No Shortcut"),
+    .invoke = MVMenuOverlap,
+    .mid = MID_FindInter },
+
+  GMENUITEM2_EMPTY
 };
 
 static GMenuItem2 eflist[] = {
-    { { (uint32_t *) N_("_Inline"), (GImage *) "stylesinline.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 'O' }, H_("Inline|No Shortcut"), NULL, NULL, MVMenuInline, 0 },
-    { { (uint32_t *) N_("_Outline"), (GImage *) "stylesoutline.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 'I' }, H_("Outline|No Shortcut"), NULL, NULL, MVMenuOutline, 0 },
-    { { (uint32_t *) N_("_Shadow"), (GImage *) "stylesshadow.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 'S' }, H_("Shadow|No Shortcut"), NULL, NULL, MVMenuShadow, 0 },
-    { { (uint32_t *) N_("_Wireframe"), (GImage *) "styleswireframe.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, true, 0, 0, 0, 0, 1, 1, 0, 'W' }, H_("Wireframe|No Shortcut"), NULL, NULL, MVMenuWireframe, 0 },
-    GMENUITEM2_EMPTY
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Inline"),
+      .image = (GImage *) "stylesinline.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'O' },
+    .shortcut = H_("Inline|No Shortcut"),
+    .invoke = MVMenuInline
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Outline"),
+      .image = (GImage *) "stylesoutline.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'I' },
+    .shortcut = H_("Outline|No Shortcut"),
+    .invoke = MVMenuOutline
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Shadow"),
+      .image = (GImage *) "stylesshadow.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'S' },
+    .shortcut = H_("Shadow|No Shortcut"),
+    .invoke = MVMenuShadow
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Wireframe"),
+      .image = (GImage *) "styleswireframe.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'W' },
+    .shortcut = H_("Wireframe|No Shortcut"),
+    .invoke = MVMenuWireframe
+  },
+
+  GMENUITEM2_EMPTY
 };
 
 static GMenuItem2 balist[] = {
-    { { (uint32_t *) N_("_Build Accented Glyph"), (GImage *) "elementbuildaccent.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'B' }, H_("Build Accented Glyph|Ctl+Shft+A"), NULL, NULL, MVMenuBuildAccent, MID_BuildAccent },
-    { { (uint32_t *) N_("Build _Composite Glyph"), (GImage *) "elementbuildcomposite.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'B' }, H_("Build Composite Glyph|No Shortcut"), NULL, NULL, MVMenuBuildComposite, MID_BuildComposite },
-    GMENUITEM2_EMPTY
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Build Accented Glyph"),
+      .image = (GImage *) "elementbuildaccent.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'B' },
+    .shortcut = H_("Build Accented Glyph|Ctl+Shft+A"),
+    .invoke = MVMenuBuildAccent,
+    .mid = MID_BuildAccent },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Build _Composite Glyph"),
+      .image = (GImage *) "elementbuildcomposite.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'B' },
+    .shortcut = H_("Build Composite Glyph|No Shortcut"),
+    .invoke = MVMenuBuildComposite,
+    .mid = MID_BuildComposite },
+
+  GMENUITEM2_EMPTY
 };
+
+// *INDENT-ON*
 
 static void balistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
@@ -3172,36 +3780,261 @@ static void balistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     }
 }
 
+// *INDENT-OFF*
+
 static GMenuItem2 ellist[] = {
-    { { (uint32_t *) N_("_Font Info..."), (GImage *) "elementfontinfo.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'F' }, H_("Font Info...|Ctl+Shft+F"), NULL, NULL, MVMenuFontInfo, 0 },
-    { { (uint32_t *) N_("Glyph _Info..."), (GImage *) "elementglyphinfo.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'I' }, H_("Glyph Info...|Ctl+I"), NULL, NULL, MVMenuCharInfo, MID_CharInfo },
-    { { (uint32_t *) N_("S_how Dependent"), (GImage *) "elementshowdep.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'D' }, H_("Show Dependent|Alt+Ctl+I"), NULL, NULL, MVMenuShowDependents, MID_ShowDependents },
-    { { (uint32_t *) N_("Find Pr_oblems..."), (GImage *) "elementfindprobs.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'o' }, H_("Find Problems...|Ctl+E"), NULL, NULL, MVMenuFindProblems, MID_FindProblems },
-    GMENUITEM2_LINE,
-    { { (uint32_t *) N_("Bitm_ap Strikes Available..."), (GImage *) "elementbitmapsavail.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'A' }, H_("Bitmap Strikes Available...|Ctl+Shft+B"), NULL, NULL, MVMenuBitmaps, MID_AvailBitmaps },
-    { { (uint32_t *) N_("Regenerate _Bitmap Glyphs..."), (GImage *) "elementregenbitmaps.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'B' }, H_("Regenerate Bitmap Glyphs...|Ctl+B"), NULL, NULL, MVMenuBitmaps, MID_RegenBitmaps },
-    GMENUITEM2_LINE,
-    { { (uint32_t *) N_("_Transform..."), (GImage *) "elementtransform.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'T' }, H_("Transform...|Ctl+\\"), NULL, NULL, MVMenuTransform, MID_Transform },
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Font Info..."),
+      .image = (GImage *) "elementfontinfo.png",
+      .fg =  COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'F' },
+    .shortcut = H_("Font Info...|Ctl+Shft+F"),
+    .invoke = MVMenuFontInfo
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Glyph _Info..."),
+      .image = (GImage *) "elementglyphinfo.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'I' },
+    .shortcut = H_("Glyph Info...|Ctl+I"),
+    .invoke = MVMenuCharInfo,
+    .mid = MID_CharInfo },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("S_how Dependent"),
+      .image = (GImage *) "elementshowdep.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'D' },
+    .shortcut = H_("Show Dependent|Alt+Ctl+I"),
+    .invoke = MVMenuShowDependents,
+    .mid = MID_ShowDependents },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Find Pr_oblems..."),
+      .image = (GImage *) "elementfindprobs.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'o' },
+    .shortcut = H_("Find Problems...|Ctl+E"),
+    .invoke = MVMenuFindProblems,
+    .mid = MID_FindProblems },
+
+  GMENUITEM2_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Bitm_ap Strikes Available..."),
+      .image = (GImage *) "elementbitmapsavail.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'A' },
+    .shortcut = H_("Bitmap Strikes Available...|Ctl+Shft+B"),
+    .invoke = MVMenuBitmaps,
+    .mid = MID_AvailBitmaps },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Regenerate _Bitmap Glyphs..."),
+      .image = (GImage *) "elementregenbitmaps.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'B' },
+    .shortcut = H_("Regenerate Bitmap Glyphs...|Ctl+B"),
+    .invoke = MVMenuBitmaps,
+    .mid = MID_RegenBitmaps },
+
+  GMENUITEM2_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Transform..."),
+      .image = (GImage *) "elementtransform.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'T' },
+    .shortcut = H_("Transform...|Ctl+\\"),
+    .invoke = MVMenuTransform,
+    .mid = MID_Transform },
+
 #ifdef FONTFORGE_CONFIG_TILEPATH
-    { { (uint32_t *) N_("Tile _Path..."), (GImage *) "elementtilepath.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'P' }, H_("Tile Path...|No Shortcut"), NULL, NULL, MVMenuTilePath, MID_TilePath },
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Tile _Path..."),
+      .image = (GImage *) "elementtilepath.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'P' },
+    .shortcut = H_("Tile Path...|No Shortcut"),
+    .invoke = MVMenuTilePath,
+    .mid = MID_TilePath },
+
 #endif
-    { { (uint32_t *) N_("_Remove Overlap"), (GImage *) "rmoverlap.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'O' }, NULL, rmlist, NULL, NULL, MID_RmOverlap },
-    { { (uint32_t *) N_("_Simplify"), (GImage *) "elementsimplify.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'S' }, NULL, smlist, NULL, NULL, MID_Simplify },
-    { { (uint32_t *) N_("Add E_xtrema"), (GImage *) "elementaddextrema.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'x' }, H_("Add Extrema|Ctl+Shft+X"), NULL, NULL, MVMenuAddExtrema, MID_AddExtrema },
-    { { (uint32_t *) N_("To _Int"), (GImage *) "elementround.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'I' }, H_("To Int|Ctl+Shft+_"), NULL, NULL, MVMenuRound2Int, MID_Round },
-    { { (uint32_t *) N_("Effects"), (GImage *) "elementstyles.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, '\0' }, NULL, eflist, NULL, NULL, MID_Effects },
-    { { (uint32_t *) N_("Autot_race"), (GImage *) "elementautotrace.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'r' }, H_("Autotrace|Ctl+Shft+T"), NULL, NULL, MVMenuAutotrace, MID_Autotrace },
-    GMENUITEM2_LINE,
-    { { (uint32_t *) N_("_Correct Direction"), (GImage *) "elementcorrectdir.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'D' }, H_("Correct Direction|Ctl+Shft+D"), NULL, NULL, MVMenuCorrectDir, MID_Correct },
-    GMENUITEM2_LINE,
-    { { (uint32_t *) N_("B_uild"), (GImage *) "elementbuildaccent.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'B' }, NULL, balist, balistcheck, NULL, MID_BuildAccent },
-    GMENUITEM2_EMPTY
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Remove Overlap"),
+      .image = (GImage *) "rmoverlap.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'O' },
+    .sub = rmlist,
+    .mid = MID_RmOverlap },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Simplify"),
+      .image = (GImage *) "elementsimplify.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'S' },
+    .sub = smlist,
+    .mid = MID_Simplify },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Add E_xtrema"),
+      .image = (GImage *) "elementaddextrema.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'x' },
+    .shortcut = H_("Add Extrema|Ctl+Shft+X"),
+    .invoke = MVMenuAddExtrema,
+    .mid = MID_AddExtrema },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("To _Int"),
+      .image = (GImage *) "elementround.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'I' },
+    .shortcut = H_("To Int|Ctl+Shft+_"),
+    .invoke = MVMenuRound2Int,
+    .mid = MID_Round },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Effects"),
+      .image = (GImage *) "elementstyles.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = '\0' },
+    .sub = eflist,
+    .mid = MID_Effects },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Autot_race"),
+      .image = (GImage *) "elementautotrace.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'r' },
+    .shortcut = H_("Autotrace|Ctl+Shft+T"),
+    .invoke = MVMenuAutotrace,
+    .mid = MID_Autotrace },
+
+  GMENUITEM2_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Correct Direction"),
+      .image = (GImage *) "elementcorrectdir.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'D' },
+    .shortcut = H_("Correct Direction|Ctl+Shft+D"),
+    .invoke = MVMenuCorrectDir,
+    .mid = MID_Correct },
+
+  GMENUITEM2_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("B_uild"),
+      .image = (GImage *) "elementbuildaccent.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'B' },
+    .sub = balist,
+    .moveto = balistcheck,
+    .mid = MID_BuildAccent },
+
+  GMENUITEM2_EMPTY
 };
 
 static GMenuItem2 dummyall[] = {
-    { { (uint32_t *) N_("All"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 1, 1, 0, 0, 0, 0, 1, 1, 0, 'K' }, H_("All|No Shortcut"), NULL, NULL, NULL, 0 },
-    GMENUITEM2_EMPTY
+  {
+    .ti = {
+      .text = (uint32_t *) N_("All"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .disabled = true,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'K' },
+    .shortcut = H_("All|No Shortcut")
+  },
+
+  GMENUITEM2_EMPTY
 };
+
+// *INDENT-ON*
 
 /* Builds up a menu containing all the anchor classes */
 static void aplistbuild(GWindow base, struct gmenuitem *mi, GEvent *UNUSED(e)) {
@@ -3213,12 +4046,54 @@ static void aplistbuild(GWindow base, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     _aplistbuild(mi, mv->sf, MVMenuAnchorPairs);
 }
 
+// *INDENT-OFF*
+
 static GMenuItem2 cblist[] = {
-    { { (uint32_t *) N_("_Kern Pairs"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'K' }, H_("Kern Pairs|No Shortcut"), NULL, NULL, MVMenuKernPairs, MID_KernPairs },
-    { { (uint32_t *) N_("_Anchored Pairs"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'K' }, H_("Anchored Pairs|No Shortcut"), dummyall, aplistbuild, MVMenuAnchorPairs, MID_AnchorPairs },
-    { { (uint32_t *) N_("_Ligatures"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'L' }, H_("Ligatures|No Shortcut"), NULL, NULL, MVMenuLigatures, MID_Ligatures },
-    GMENUITEM2_EMPTY
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Kern Pairs"),
+      .fg =  COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'K' },
+    .shortcut = H_("Kern Pairs|No Shortcut"),
+    .invoke = MVMenuKernPairs,
+    .mid = MID_KernPairs },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Anchored Pairs"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'K' },
+    .shortcut = H_("Anchored Pairs|No Shortcut"),
+    .sub = dummyall,
+    .moveto = aplistbuild,
+    .invoke = MVMenuAnchorPairs,
+    .mid = MID_AnchorPairs },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Ligatures"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'L' },
+    .shortcut = H_("Ligatures|No Shortcut"),
+    .invoke = MVMenuLigatures,
+    .mid = MID_Ligatures },
+
+  GMENUITEM2_EMPTY
 };
+
+// *INDENT-ON*
 
 static void cblistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
@@ -3256,10 +4131,29 @@ static void cblistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     }
 }
 
+// *INDENT-OFF*
+
 static GMenuItem2 lylist[] = {
-    { { (uint32_t *) N_("Layer|Foreground"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 1, 1, 1, 1, 0, 0, 1, 1, 0, '\0' }, NULL, NULL, NULL, MVMenuChangeLayer, ly_fore },
-    GMENUITEM2_EMPTY
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Layer|Foreground"),
+      .fg =  COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .disabled = true,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .checkable = true,
+      .checked = true
+    },
+    .invoke = MVMenuChangeLayer,
+    .mid = ly_fore
+  },
+
+  GMENUITEM2_EMPTY
 };
+
+// *INDENT-ON*
 
 static void lylistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
@@ -3280,13 +4174,69 @@ static void lylistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     mi->sub = sub;
 }
 
+// *INDENT-OFF*
+
 static GMenuItem2 gdlist[] = {
-    { { (uint32_t *) N_("_Show"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'C' }, H_("Show Grid|No Shortcut"), NULL, NULL, MVMenuShowGrid, MID_ShowGrid },
-    { { (uint32_t *) N_("_Partial"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'C' }, H_("Partial Grid|No Shortcut"), NULL, NULL, MVMenuShowGrid, MID_PartialGrid },
-    { { (uint32_t *) N_("Hide when _Moving"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'C' }, H_("Hide Grid when Moving|No Shortcut"), NULL, NULL, MVMenuShowGrid, MID_HideGridWhenMoving },
-    { { (uint32_t *) N_("_Hide"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'C' }, H_("Hide Grid|No Shortcut"), NULL, NULL, MVMenuShowGrid, MID_HideGrid },
-    GMENUITEM2_EMPTY
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Show"),
+      .fg =  COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .checkable = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'C' },
+    .shortcut = H_("Show Grid|No Shortcut"),
+    .invoke = MVMenuShowGrid,
+    .mid = MID_ShowGrid },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Partial"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .checkable = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'C' },
+    .shortcut = H_("Partial Grid|No Shortcut"),
+    .invoke = MVMenuShowGrid,
+    .mid = MID_PartialGrid },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Hide when _Moving"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .checkable = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'C' },
+    .shortcut = H_("Hide Grid when Moving|No Shortcut"),
+    .invoke = MVMenuShowGrid,
+    .mid = MID_HideGridWhenMoving },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Hide"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .checkable = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'C' },
+    .shortcut = H_("Hide Grid|No Shortcut"),
+    .invoke = MVMenuShowGrid,
+    .mid = MID_HideGrid },
+
+  GMENUITEM2_EMPTY
 };
+
+// *INDENT-ON*
 
 static void gdlistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
@@ -3309,52 +4259,380 @@ static void gdlistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     }
 }
 
+// *INDENT-OFF*
+
 static GMenuItem2 vwlist[] = {
-    { { (uint32_t *) N_("Z_oom out"), (GImage *) "viewzoomout.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'o' }, H_("Zoom out|Alt+Ctl+-"), NULL, NULL, MVMenuScale, MID_ZoomOut },
-    { { (uint32_t *) N_("Zoom _in"), (GImage *) "viewzoomin.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'i' }, H_("Zoom in|Alt+Ctl+Shft++"), NULL, NULL, MVMenuScale, MID_ZoomIn },
-    GMENUITEM2_LINE,
-    { { (uint32_t *) N_("Insert Glyph _After..."), (GImage *) "viewinsertafter.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'C' }, H_("Insert Glyph After...|No Shortcut"), NULL, NULL, MVMenuInsertChar, MID_InsertCharA },
-    { { (uint32_t *) N_("Insert Glyph _Before..."), (GImage *) "viewinsertbefore.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'B' }, H_("Insert Glyph Before...|No Shortcut"), NULL, NULL, MVMenuInsertChar, MID_InsertCharB },
-    { { (uint32_t *) N_("_Replace Glyph..."), (GImage *) "viewreplace.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'R' }, H_("Replace Glyph...|Ctl+G"), NULL, NULL, MVMenuChangeChar, MID_ReplaceChar },
-    { { (uint32_t *) N_("_Next Glyph"), (GImage *) "viewnext.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'N' }, H_("Next Glyph|Ctl+]"), NULL, NULL, MVMenuChangeChar, MID_Next },
-    { { (uint32_t *) N_("_Prev Glyph"), (GImage *) "viewprev.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'P' }, H_("Prev Glyph|Ctl+["), NULL, NULL, MVMenuChangeChar, MID_Prev },
-    { { (uint32_t *) N_("Next _Defined Glyph"), (GImage *) "viewnextdef.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'D' }, H_("Next Defined Glyph|Alt+Ctl+]"), NULL, NULL, MVMenuChangeChar, MID_NextDef },
-    { { (uint32_t *) N_("Prev Defined Gl_yph"), (GImage *) "viewprevdef.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'a' }, H_("Prev Defined Glyph|Alt+Ctl+["), NULL, NULL, MVMenuChangeChar, MID_PrevDef },
-    { { (uint32_t *) N_("Find In Font _View"), (GImage *) "viewfindinfont.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'V' }, H_("Find In Font View|Ctl+Shft+<"), NULL, NULL, MVMenuFindInFontView, MID_FindInFontView },
-    GMENUITEM2_LINE,
-    { { (uint32_t *) N_("_Layers"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, '\0' }, NULL, lylist, lylistcheck, NULL, 0 },
-    GMENUITEM2_LINE,
-    { { (uint32_t *) N_("Com_binations"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'b' }, NULL, cblist, cblistcheck, NULL, 0 },
-    GMENUITEM2_LINE,
-    { { (uint32_t *) N_("Show _Grid"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'G' }, NULL, gdlist, gdlistcheck, MVMenuShowGrid, MID_ShowGrid },
-    { { (uint32_t *) N_("_Anti Alias"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'A' }, H_("Anti Alias|Ctl+="), NULL, NULL, MVMenuAA, MID_AntiAlias },
-    GMENUITEM2_LINE,
-    { { (uint32_t *) N_("_Vertical"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, '\0' }, H_("Vertical|No Shortcut"), NULL, NULL, MVMenuVertical, MID_Vertical },
-    GMENUITEM2_LINE,
-    { { (uint32_t *) N_("Size set from _Window"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'O' }, H_("Size set from Window|No Shortcut"), NULL, NULL, MVMenuSizeWindow, MID_SizeWindow },
-    { { (uint32_t *) N_("Set Point _Size"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'O' }, H_("Set Point Size|No Shortcut"), NULL, NULL, MVMenuPointSize, MID_PointSize },
-    { { (uint32_t *) N_("_Bigger Point Size"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'B' }, H_("Bigger Point Size|Ctl+Shft++"), NULL, NULL, MVMenuChangePointSize, MID_Bigger },
-    { { (uint32_t *) N_("_Smaller Point Size"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'S' }, H_("Smaller Point Size|Ctl+-"), NULL, NULL, MVMenuChangePointSize, MID_Smaller },
-    GMENUITEM2_LINE,
-    { { (uint32_t *) N_("_Outline"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'O' }, H_("Outline|No Shortcut"), NULL, NULL, MVMenuShowBitmap, MID_Outline },
-    GMENUITEM2_EMPTY,
-    /* Some extra room to show bitmaps */
-    GMENUITEM2_EMPTY, GMENUITEM2_EMPTY, GMENUITEM2_EMPTY, GMENUITEM2_EMPTY, GMENUITEM2_EMPTY, GMENUITEM2_EMPTY, GMENUITEM2_EMPTY,
-    GMENUITEM2_EMPTY, GMENUITEM2_EMPTY, GMENUITEM2_EMPTY, GMENUITEM2_EMPTY, GMENUITEM2_EMPTY, GMENUITEM2_EMPTY, GMENUITEM2_EMPTY,
-    GMENUITEM2_EMPTY, GMENUITEM2_EMPTY, GMENUITEM2_EMPTY, GMENUITEM2_EMPTY, GMENUITEM2_EMPTY, GMENUITEM2_EMPTY, GMENUITEM2_EMPTY,
-    GMENUITEM2_EMPTY
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Z_oom out"),
+      .image = (GImage *) "viewzoomout.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'o' },
+    .shortcut = H_("Zoom out|Alt+Ctl+-"),
+    .invoke = MVMenuScale,
+    .mid = MID_ZoomOut },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Zoom _in"),
+      .image = (GImage *) "viewzoomin.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'i' },
+    .shortcut = H_("Zoom in|Alt+Ctl+Shft++"),
+    .invoke = MVMenuScale,
+    .mid = MID_ZoomIn },
+
+  GMENUITEM2_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Insert Glyph _After..."),
+      .image = (GImage *) "viewinsertafter.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'C' },
+    .shortcut = H_("Insert Glyph After...|No Shortcut"),
+    .invoke = MVMenuInsertChar,
+    .mid = MID_InsertCharA },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Insert Glyph _Before..."),
+      .image = (GImage *) "viewinsertbefore.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'B' },
+    .shortcut = H_("Insert Glyph Before...|No Shortcut"),
+    .invoke = MVMenuInsertChar,
+    .mid = MID_InsertCharB },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Replace Glyph..."),
+      .image = (GImage *) "viewreplace.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'R' },
+    .shortcut = H_("Replace Glyph...|Ctl+G"),
+    .invoke = MVMenuChangeChar,
+    .mid = MID_ReplaceChar },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Next Glyph"),
+      .image = (GImage *) "viewnext.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'N' },
+    .shortcut = H_("Next Glyph|Ctl+]"),
+    .invoke = MVMenuChangeChar,
+    .mid = MID_Next },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Prev Glyph"),
+      .image = (GImage *) "viewprev.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'P' },
+    .shortcut = H_("Prev Glyph|Ctl+["),
+    .invoke = MVMenuChangeChar,
+    .mid = MID_Prev },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Next _Defined Glyph"),
+      .image = (GImage *) "viewnextdef.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'D' },
+    .shortcut = H_("Next Defined Glyph|Alt+Ctl+]"),
+    .invoke = MVMenuChangeChar,
+    .mid = MID_NextDef },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Prev Defined Gl_yph"),
+      .image = (GImage *) "viewprevdef.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'a' },
+    .shortcut = H_("Prev Defined Glyph|Alt+Ctl+["),
+    .invoke = MVMenuChangeChar,
+    .mid = MID_PrevDef },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Find In Font _View"),
+      .image = (GImage *) "viewfindinfont.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'V' },
+    .shortcut = H_("Find In Font View|Ctl+Shft+<"),
+    .invoke = MVMenuFindInFontView,
+    .mid = MID_FindInFontView },
+
+  GMENUITEM2_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Layers"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = '\0' },
+    .sub = lylist,
+    .moveto = lylistcheck
+  },
+
+  GMENUITEM2_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Com_binations"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'b' },
+    .sub = cblist,
+    .moveto = cblistcheck
+  },
+
+  GMENUITEM2_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Show _Grid"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'G' },
+    .sub = gdlist,
+    .moveto = gdlistcheck,
+    .invoke = MVMenuShowGrid,
+    .mid = MID_ShowGrid },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Anti Alias"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .checkable = true,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'A' },
+    .shortcut = H_("Anti Alias|Ctl+="),
+    .invoke = MVMenuAA,
+    .mid = MID_AntiAlias },
+
+  GMENUITEM2_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Vertical"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .checkable = true,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = '\0' },
+    .shortcut = H_("Vertical|No Shortcut"),
+    .invoke = MVMenuVertical,
+    .mid = MID_Vertical },
+
+  GMENUITEM2_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Size set from _Window"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .checkable = true,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'O' },
+    .shortcut = H_("Size set from Window|No Shortcut"),
+    .invoke = MVMenuSizeWindow,
+    .mid = MID_SizeWindow },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Set Point _Size"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .checkable = true,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'O' },
+    .shortcut = H_("Set Point Size|No Shortcut"),
+    .invoke = MVMenuPointSize,
+    .mid = MID_PointSize },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Bigger Point Size"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'B' },
+    .shortcut = H_("Bigger Point Size|Ctl+Shft++"),
+    .invoke = MVMenuChangePointSize,
+    .mid = MID_Bigger },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Smaller Point Size"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'S' },
+    .shortcut = H_("Smaller Point Size|Ctl+-"),
+    .invoke = MVMenuChangePointSize,
+    .mid = MID_Smaller },
+
+  GMENUITEM2_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Outline"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .checkable = true,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'O' },
+    .shortcut = H_("Outline|No Shortcut"),
+    .invoke = MVMenuShowBitmap,
+    .mid = MID_Outline },
+
+  /* Some extra room to show bitmaps */
+  GMENUITEM2_EMPTY,
+  GMENUITEM2_EMPTY,
+  GMENUITEM2_EMPTY,
+  GMENUITEM2_EMPTY,
+  GMENUITEM2_EMPTY,
+  GMENUITEM2_EMPTY,
+  GMENUITEM2_EMPTY,
+  GMENUITEM2_EMPTY,
+  GMENUITEM2_EMPTY,
+  GMENUITEM2_EMPTY,
+  GMENUITEM2_EMPTY,
+  GMENUITEM2_EMPTY,
+  GMENUITEM2_EMPTY,
+  GMENUITEM2_EMPTY,
+  GMENUITEM2_EMPTY,
+  GMENUITEM2_EMPTY,
+  GMENUITEM2_EMPTY,
+  GMENUITEM2_EMPTY,
+  GMENUITEM2_EMPTY,
+  GMENUITEM2_EMPTY,
+  GMENUITEM2_EMPTY,
+  GMENUITEM2_EMPTY,
+  GMENUITEM2_EMPTY
 };
+
+// *INDENT-ON*
 
 static void MVMenuContextualHelp(GWindow UNUSED(base), struct gmenuitem *UNUSED(mi), GEvent *UNUSED(e)) {
     help("metricsview.html");
 }
 
+// *INDENT-OFF*
+
 static GMenuItem2 tylist[] = {
-    { { (uint32_t *) N_("_Kerning only"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'C' }, H_("Kerning only|No Shortcut"), NULL, NULL, MVMenuWindowType, MID_KernOnly },
-    { { (uint32_t *) N_("_Advance Width only"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Advance Width Only|No Shortcut"), NULL, NULL, MVMenuWindowType, MID_WidthOnly },
-    { { (uint32_t *) N_("_Both"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 1, 0, 0, 0, 1, 1, 0, 'T' }, H_("Both|No Shortcut"), NULL, NULL, MVMenuWindowType, MID_BothKernWidth },
-    GMENUITEM2_EMPTY
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Kerning only"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .checkable = true,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'C' },
+    .shortcut = H_("Kerning only|No Shortcut"),
+    .invoke = MVMenuWindowType,
+    .mid = MID_KernOnly },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Advance Width only"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .checkable = true,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'T' },
+    .shortcut = H_("Advance Width Only|No Shortcut"),
+    .invoke = MVMenuWindowType,
+    .mid = MID_WidthOnly },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Both"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .checkable = true,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'T' },
+    .shortcut = H_("Both|No Shortcut"),
+    .invoke = MVMenuWindowType,
+    .mid = MID_BothKernWidth },
+
+  GMENUITEM2_EMPTY
 };
+
+// *INDENT-ON*
 
 static void tylistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
@@ -3374,18 +4652,109 @@ static void tylistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     }
 }
 
+// *INDENT-OFF*
+
 static GMenuItem2 mtlist[] = {
-    { { (uint32_t *) N_("_Center in Width"), (GImage *) "metricscenter.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'C' }, H_("Center in Width|No Shortcut"), NULL, NULL, MVMenuCenter, MID_Center },
-    { { (uint32_t *) N_("_Thirds in Width"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'T' }, H_("Thirds in Width|No Shortcut"), NULL, NULL, MVMenuCenter, MID_Thirds },
-    GMENUITEM2_LINE,
-    { { (uint32_t *) N_("_Window Type"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'T' }, NULL, tylist, tylistcheck, NULL, 0 },
-    GMENUITEM2_LINE,
-    { { (uint32_t *) N_("Ker_n By Classes..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'T' }, H_("Kern By Classes...|No Shortcut"), NULL, NULL, MVMenuKernByClasses, 0 },
-    { { (uint32_t *) N_("VKern By Classes..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'T' }, H_("VKern By Classes...|No Shortcut"), NULL, NULL, MVMenuVKernByClasses, MID_VKernClass },
-    { { (uint32_t *) N_("VKern From HKern"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'T' }, H_("VKern From HKern|No Shortcut"), NULL, NULL, MVMenuVKernFromHKern, MID_VKernFromHKern },
-    { { (uint32_t *) N_("Kern Pair Closeup..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'T' }, H_("Kern Pair Closeup...|No Shortcut"), NULL, NULL, MVMenuKPCloseup, 0 },
-    GMENUITEM2_EMPTY
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Center in Width"),
+      .image = (GImage *) "metricscenter.png",
+      .fg =  COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'C' },
+    .shortcut = H_("Center in Width|No Shortcut"),
+    .invoke = MVMenuCenter,
+    .mid = MID_Center },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Thirds in Width"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'T' },
+    .shortcut = H_("Thirds in Width|No Shortcut"),
+    .invoke = MVMenuCenter,
+    .mid = MID_Thirds },
+
+  GMENUITEM2_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Window Type"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'T' },
+    .sub = tylist,
+    .moveto = tylistcheck
+  },
+
+  GMENUITEM2_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Ker_n By Classes..."),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'T' },
+    .shortcut = H_("Kern By Classes...|No Shortcut"),
+    .invoke = MVMenuKernByClasses
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("VKern By Classes..."),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'T' },
+    .shortcut = H_("VKern By Classes...|No Shortcut"),
+    .invoke = MVMenuVKernByClasses,
+    .mid = MID_VKernClass },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("VKern From HKern"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'T' },
+    .shortcut = H_("VKern From HKern|No Shortcut"),
+    .invoke = MVMenuVKernFromHKern,
+    .mid = MID_VKernFromHKern },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Kern Pair Closeup..."),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'T' },
+    .shortcut = H_("Kern Pair Closeup...|No Shortcut"),
+    .invoke = MVMenuKPCloseup
+  },
+
+  GMENUITEM2_EMPTY
 };
+
+// *INDENT-ON*
 
 static void fllistcheck(GWindow UNUSED(gw), struct gmenuitem *mi, GEvent *UNUSED(e)) {
     /*MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);*/
@@ -3602,16 +4971,103 @@ static void mtlistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     }
 }
 
+// *INDENT-OFF*
+
 static GMenuItem2 mblist[] = {
-    { { (uint32_t *) N_("_File"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'F' }, NULL, fllist, fllistcheck, NULL, 0  },
-    { { (uint32_t *) N_("_Edit"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'E' }, NULL, edlist, edlistcheck, NULL, 0  },
-    { { (uint32_t *) N_("E_lement"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'l' }, NULL, ellist, ellistcheck, NULL, 0  },
-    { { (uint32_t *) N_("_View"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'V' }, NULL, vwlist, vwlistcheck, NULL, 0  },
-    { { (uint32_t *) N_("_Metrics"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'M' }, NULL, mtlist, mtlistcheck, NULL, 0  },
-    { { (uint32_t *) N_("_Window"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'W' }, NULL, wnmenu, MVWindowMenuBuild, NULL, 0 },
-    { { (uint32_t *) N_("_Help"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 1, 0, 'H' }, NULL, helplist, NULL, NULL, 0 },
-    GMENUITEM2_EMPTY
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_File"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'F' },
+    .sub = fllist,
+    .moveto = fllistcheck
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Edit"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'E' },
+    .sub = edlist,
+    .moveto = edlistcheck
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("E_lement"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'l' },
+    .sub = ellist,
+    .moveto = ellistcheck
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_View"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'V' },
+    .sub = vwlist,
+    .moveto = vwlistcheck
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Metrics"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'M' },
+    .sub = mtlist,
+    .moveto = mtlistcheck
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Window"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'W' },
+    .sub = wnmenu,
+    .moveto = MVWindowMenuBuild
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Help"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'H' },
+    .sub = helplist
+  },
+
+  GMENUITEM2_EMPTY
 };
+
+// *INDENT-ON*
 
 static void MVResize(MetricsView *mv) {
     GRect pos, wsize;
