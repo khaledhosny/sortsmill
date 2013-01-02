@@ -182,7 +182,6 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   char **remaining_args = NULL;
   GError *error = NULL;
   GOptionContext *context;
-  char summary[1024], description[1024];
 
   GRect pos;
   GWindowAttrs wattrs;
@@ -242,14 +241,14 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   };
   // *INDENT-ON*
 
-  snprintf (summary, sizeof (summary),
-            _("FontForge will read PostScript (PFA, PFB, PS, CID), OpenType (OTF),\n"
-              "TrueType (TTF, TTC), Macintosh resource fonts (dfont, bin, hqx), and\n"
-              "BDF and PCF fonts. It will also read its own format -- SFD files."));
+  const char *summary =
+    _("FontForge will read PostScript (PFA, PFB, PS, CID), OpenType (OTF),\n"
+      "TrueType (TTF, TTC), Macintosh resource fonts (dfont, bin, hqx), and\n"
+      "BDF and PCF fonts. It will also read its own format -- SFD files.");
 
-  snprintf (description, sizeof (description),
-            _("For more information see: %s\nSubmit bug reports at: %s"),
-            PACKAGE_URL, PACKAGE_BUGREPORT);
+  const char *description =
+    x_gc_strjoin (_("For more information see: "), PACKAGE_URL, "\n",
+		  _("Submit bug reports at: "), PACKAGE_BUGREPORT, NULL);
 
   context = g_option_context_new ("- Create and edit font files");
   g_option_context_add_main_entries (context, entries, FF_TEXTDOMAIN);
