@@ -960,18 +960,109 @@ return;
     _ggadget_redraw(&gt->g);
 }
 
+// *INDENT-OFF*
+
 static GMenuItem gtf_popuplist[] = {
-    { { (uint32_t *) "_Undo", NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, '\0' }, 'Z', ksm_control, NULL, NULL, GTFPopupInvoked, MID_Undo },
-    GMENUITEM_LINE,
-    { { (uint32_t *) "Cu_t", NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, '\0' }, 'X', ksm_control, NULL, NULL, GTFPopupInvoked, MID_Cut },
-    { { (uint32_t *) "_Copy", NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, '\0' }, 'C', ksm_control, NULL, NULL, GTFPopupInvoked, MID_Copy },
-    { { (uint32_t *) "_Paste", NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, '\0' }, 'V', ksm_control, NULL, NULL, GTFPopupInvoked, MID_Paste },
-    GMENUITEM_LINE,
-    { { (uint32_t *) "_Save in UTF8", NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, '\0' }, 'S', ksm_control, NULL, NULL, GTFPopupInvoked, MID_Save },
-    { { (uint32_t *) "Save in _UCS2", NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, '\0' }, '\0', ksm_control, NULL, NULL, GTFPopupInvoked, MID_SaveUCS2 },
-    { { (uint32_t *) "_Import", NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, '\0' }, 'I', ksm_control, NULL, NULL, GTFPopupInvoked, MID_Import },
-    GMENUITEM_EMPTY
+  {
+    .ti = {
+      .text = (uint32_t *) "_Undo",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true
+    },
+    .shortcut_char = 'Z',
+    .short_mask = ksm_control,
+    .invoke = GTFPopupInvoked,
+    .mid = MID_Undo },
+
+  GMENUITEM_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) "Cu_t",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true
+    },
+    .shortcut_char = 'X',
+    .short_mask = ksm_control,
+    .invoke = GTFPopupInvoked,
+    .mid = MID_Cut },
+
+  {
+    .ti = {
+      .text = (uint32_t *) "_Copy",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true
+    },
+    .shortcut_char = 'C',
+    .short_mask = ksm_control,
+    .invoke = GTFPopupInvoked,
+    .mid = MID_Copy },
+
+  {
+    .ti = {
+      .text = (uint32_t *) "_Paste",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true
+    },
+    .shortcut_char = 'V',
+    .short_mask = ksm_control,
+    .invoke = GTFPopupInvoked,
+    .mid = MID_Paste },
+
+  GMENUITEM_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) "_Save in UTF8",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true
+    },
+    .shortcut_char = 'S',
+    .short_mask = ksm_control,
+    .invoke = GTFPopupInvoked,
+    .mid = MID_Save },
+
+  {
+    .ti = {
+      .text = (uint32_t *) "Save in _UCS2",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true
+    },
+    .shortcut_char = '\0',
+    .short_mask = ksm_control,
+    .invoke = GTFPopupInvoked,
+    .mid = MID_SaveUCS2 },
+
+  {
+    .ti = {
+      .text = (uint32_t *) "_Import",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true
+    },
+    .shortcut_char = 'I',
+    .short_mask = ksm_control,
+    .invoke = GTFPopupInvoked,
+    .mid = MID_Import },
+
+  GMENUITEM_EMPTY
 };
+
+// *INDENT-ON*
+
 static int first = true;
 
 static void GTFPopupMenu(GTextField *gt, GEvent *event) {
