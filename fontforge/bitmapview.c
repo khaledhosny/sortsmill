@@ -2123,6 +2123,7 @@ static GMenuItem2 wnmenu[] = {
       .bg = COLOR_DEFAULT,
       .image_precedes = true,
       .text_is_1byte = true,
+      .text_has_mnemonic = 1,
     },
     .shortcut = H_("Warnings|No Shortcut"),
     .invoke = _MenuWarnings,
