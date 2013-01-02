@@ -9797,70 +9797,268 @@ lookupmenu_dispatch (GWindow v, GMenuItem * mi, GEvent *e)
     }
 }
 
+// *INDENT-OFF*
+
 static GMenuItem lookuppopupmenu[] = {
-  {{(uint32_t *) N_("_Top"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL,
-    0, 0, 0, 0, 0, 0, 1, 1, 0, 't'}, '\0', ksm_control, NULL, NULL,
-   lookupmenu_dispatch, CID_LookupTop},
-  {{(uint32_t *) N_("_Up"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0,
-    0, 0, 0, 0, 0, 1, 1, 0, 'C'}, '\0', ksm_control, NULL, NULL,
-   lookupmenu_dispatch, CID_LookupUp},
-  {{(uint32_t *) N_("_Down"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL,
-    0, 0, 0, 0, 0, 0, 1, 1, 0, 'o'}, '\0', ksm_control, NULL, NULL,
-   lookupmenu_dispatch, CID_LookupDown},
-  {{(uint32_t *) N_("_Bottom"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL,
-    NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o'}, '\0', ksm_control, NULL, NULL,
-   lookupmenu_dispatch, CID_LookupBottom},
-  {{(uint32_t *) N_("_Sort"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL,
-    0, 0, 0, 0, 0, 0, 1, 1, 0, 'o'}, '\0', ksm_control, NULL, NULL,
-   lookupmenu_dispatch, CID_LookupSort},
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Top"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 't'},
+    .shortcut_char = '\0',
+    .short_mask = ksm_control,
+    .invoke = lookupmenu_dispatch,
+    .mid = CID_LookupTop},
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Up"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'C'},
+    .shortcut_char = '\0',
+    .short_mask = ksm_control,
+    .invoke = lookupmenu_dispatch,
+    .mid = CID_LookupUp},
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Down"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'o'},
+    .shortcut_char = '\0',
+    .short_mask = ksm_control,
+    .invoke = lookupmenu_dispatch,
+    .mid = CID_LookupDown},
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Bottom"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'o'},
+    .shortcut_char = '\0',
+    .short_mask = ksm_control,
+    .invoke = lookupmenu_dispatch,
+    .mid = CID_LookupBottom},
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Sort"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'o'},
+    .shortcut_char = '\0',
+    .short_mask = ksm_control,
+    .invoke = lookupmenu_dispatch,
+    .mid = CID_LookupSort},
+
   GMENUITEM_LINE,
-  {{(uint32_t *) N_("Add _Lookup"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL,
-    NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o'}, '\0', ksm_control, NULL, NULL,
-   lookupmenu_dispatch, CID_AddLookup},
-  {{(uint32_t *) N_("Add Sub_table"), NULL, COLOR_DEFAULT, COLOR_DEFAULT,
-    NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o'}, '\0', ksm_control, NULL,
-   NULL, lookupmenu_dispatch, CID_AddSubtable},
-  {{(uint32_t *) N_("Edit _Metadata"), NULL, COLOR_DEFAULT, COLOR_DEFAULT,
-    NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o'}, '\0', ksm_control, NULL,
-   NULL, lookupmenu_dispatch, CID_EditMetadata},
-  {{(uint32_t *) N_("_Edit Data"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL,
-    NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o'}, '\0', ksm_control, NULL, NULL,
-   lookupmenu_dispatch, CID_EditSubtable},
-  {{(uint32_t *) N_("De_lete"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL,
-    NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o'}, '\0', ksm_control, NULL, NULL,
-   lookupmenu_dispatch, CID_DeleteLookup},
-  {{(uint32_t *) N_("_Merge"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL,
-    0, 0, 0, 0, 0, 0, 1, 1, 0, 'o'}, '\0', ksm_control, NULL, NULL,
-   lookupmenu_dispatch, CID_MergeLookup},
-  {{(uint32_t *) N_("Sa_ve Lookup..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT,
-    NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o'}, '\0', ksm_control, NULL,
-   NULL, lookupmenu_dispatch, CID_SaveLookup},
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Add _Lookup"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'o'},
+    .shortcut_char = '\0',
+    .short_mask = ksm_control,
+    .invoke = lookupmenu_dispatch,
+    .mid = CID_AddLookup},
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Add Sub_table"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'o'},
+    .shortcut_char = '\0',
+    .short_mask = ksm_control,
+    .invoke = lookupmenu_dispatch,
+    .mid = CID_AddSubtable},
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Edit _Metadata"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'o'},
+    .shortcut_char = '\0',
+    .short_mask = ksm_control,
+    .invoke = lookupmenu_dispatch,
+    .mid = CID_EditMetadata},
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Edit Data"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'o'},
+    .shortcut_char = '\0',
+    .short_mask = ksm_control,
+    .invoke = lookupmenu_dispatch,
+    .mid = CID_EditSubtable},
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("De_lete"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'o'},
+    .shortcut_char = '\0',
+    .short_mask = ksm_control,
+    .invoke = lookupmenu_dispatch,
+    .mid = CID_DeleteLookup},
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Merge"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'o'},
+    .shortcut_char = '\0',
+    .short_mask = ksm_control,
+    .invoke = lookupmenu_dispatch,
+    .mid = CID_MergeLookup},
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Sa_ve Lookup..."),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'o'},
+    .shortcut_char = '\0',
+    .short_mask = ksm_control,
+    .invoke = lookupmenu_dispatch,
+    .mid = CID_SaveLookup},
+
   GMENUITEM_LINE,
-  {{(uint32_t *) N_("Add Language to Script..."), NULL, COLOR_DEFAULT,
-    COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o'}, '\0',
-   ksm_control, NULL, NULL, lookupmenu_dispatch, CID_AddLanguage},
-  {{(uint32_t *) N_("Remove Language from Script..."), NULL, COLOR_DEFAULT,
-    COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o'}, '\0',
-   ksm_control, NULL, NULL, lookupmenu_dispatch, CID_RmLanguage},
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Add Language to Script..."),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'o'},
+    .shortcut_char = '\0',
+    .short_mask = ksm_control,
+    .invoke = lookupmenu_dispatch,
+    .mid = CID_AddLanguage},
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Remove Language from Script..."),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'o'},
+    .shortcut_char = '\0',
+    .short_mask = ksm_control,
+    .invoke = lookupmenu_dispatch,
+    .mid = CID_RmLanguage},
+
   GMENUITEM_LINE,
-  {{(uint32_t *) N_("_Add 'aalt' features"), NULL, COLOR_DEFAULT,
-    COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o'}, '\0',
-   ksm_control, NULL, NULL, lookupmenu_dispatch, CID_AddAllAlternates},
-  {{(uint32_t *) N_("Add 'D_FLT' script"), NULL, COLOR_DEFAULT, COLOR_DEFAULT,
-    NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o'}, '\0', ksm_control, NULL,
-   NULL, lookupmenu_dispatch, CID_AddDFLT},
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Add 'aalt' features"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'o'},
+    .shortcut_char = '\0',
+    .short_mask = ksm_control,
+    .invoke = lookupmenu_dispatch,
+    .mid = CID_AddAllAlternates},
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Add 'D_FLT' script"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'o'},
+    .shortcut_char = '\0',
+    .short_mask = ksm_control,
+    .invoke = lookupmenu_dispatch,
+    .mid = CID_AddDFLT},
+
   GMENUITEM_LINE,
-  {{(uint32_t *) N_("_Revert All"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL,
-    NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o'}, '\0', ksm_control, NULL, NULL,
-   lookupmenu_dispatch, CID_RevertLookups},
-  {{(uint32_t *) N_("_Import..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL,
-    NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o'}, '\0', ksm_control, NULL, NULL,
-   lookupmenu_dispatch, CID_ImportLookups},
-  {{(uint32_t *) N_("S_ave Feature File..."), NULL, COLOR_DEFAULT,
-    COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'o'}, '\0',
-   ksm_control, NULL, NULL, lookupmenu_dispatch, CID_SaveFeat},
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Revert All"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'o'},
+    .shortcut_char = '\0',
+    .short_mask = ksm_control,
+    .invoke = lookupmenu_dispatch,
+    .mid = CID_RevertLookups},
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Import..."),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'o'},
+    .shortcut_char = '\0',
+    .short_mask = ksm_control,
+    .invoke = lookupmenu_dispatch,
+    .mid = CID_ImportLookups},
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("S_ave Feature File..."),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'o'},
+    .shortcut_char = '\0',
+    .short_mask = ksm_control,
+    .invoke = lookupmenu_dispatch,
+    .mid = CID_SaveFeat},
+
   GMENUITEM_EMPTY
 };
+
+// *INDENT-ON*
 
 static void
 LookupMenu (struct gfi_data *gfi, struct lkdata *lk, int isgpos,
