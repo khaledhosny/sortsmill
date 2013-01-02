@@ -915,20 +915,138 @@ return;
     }
 }
 
+// *INDENT-OFF*
+
 static GMenuItem sftf_popuplist[] = {
-    { { (uint32_t *) N_("_Undo"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'U' }, 'Z', ksm_control, NULL, NULL, SFTFPopupInvoked, MID_Undo },
-    GMENUITEM_LINE,
-    { { (uint32_t *) N_("Cu_t"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 't' }, 'X', ksm_control, NULL, NULL, SFTFPopupInvoked, MID_Cut },
-    { { (uint32_t *) N_("_Copy"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'C' }, 'C', ksm_control, NULL, NULL, SFTFPopupInvoked, MID_Copy },
-    { { (uint32_t *) N_("_Paste"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'P' }, 'V', ksm_control, NULL, NULL, SFTFPopupInvoked, MID_Paste },
-    GMENUITEM_LINE,
-    { { (uint32_t *) N_("_Save As..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'S' }, 'S', ksm_control, NULL, NULL, SFTFPopupInvoked, MID_Save },
-    { { (uint32_t *) N_("_Import..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'I' }, 'I', ksm_control, NULL, NULL, SFTFPopupInvoked, MID_Import },
-    { { (uint32_t *) N_("_Insert Random Text..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'I' }, 'T', ksm_control, NULL, NULL, SFTFPopupInvoked, MID_Insert },
-    GMENUITEM_LINE,
-    { { (uint32_t *) N_("Save As _Image..."), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 1, 0, 'S' }, 'S', ksm_control|ksm_shift, NULL, NULL, SFTFPopupInvoked, MID_SaveImage },
-    GMENUITEM_EMPTY
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Undo"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'U'
+    },
+    .shortcut_char = 'Z',
+    .short_mask = ksm_control,
+    .invoke = SFTFPopupInvoked,
+    .mid = MID_Undo
+  },
+
+  GMENUITEM_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Cu_t"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 't'
+    },
+    .shortcut_char = 'X',
+    .short_mask = ksm_control,
+    .invoke = SFTFPopupInvoked,
+    .mid = MID_Cut
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Copy"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'C'
+    },
+    .shortcut_char = 'C',
+    .short_mask = ksm_control,
+    .invoke = SFTFPopupInvoked,
+    .mid = MID_Copy },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Paste"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'P'
+    },
+    .shortcut_char = 'V',
+    .short_mask = ksm_control,
+    .invoke = SFTFPopupInvoked,
+    .mid = MID_Paste
+  },
+
+  GMENUITEM_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Save As..."),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'S'
+    },
+    .shortcut_char = 'S',
+    .short_mask = ksm_control,
+    .invoke = SFTFPopupInvoked,
+    .mid = MID_Save
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Import..."),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'I'
+    },
+    .shortcut_char = 'I',
+    .short_mask = ksm_control,
+    .invoke = SFTFPopupInvoked,
+    .mid = MID_Import
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("_Insert Random Text..."),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'I'
+    },
+    .shortcut_char = 'T',
+    .short_mask = ksm_control,
+    .invoke = SFTFPopupInvoked,
+    .mid = MID_Insert
+  },
+
+  GMENUITEM_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Save As _Image..."),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = true,
+      .text_has_mnemonic = true,
+      .mnemonic = 'S'
+    },
+    .shortcut_char = 'S',
+    .short_mask = ksm_control|ksm_shift,
+    .invoke = SFTFPopupInvoked,
+    .mid = MID_SaveImage
+  },
+
+  GMENUITEM_EMPTY
 };
+
+// *INDENT-ON*
 
 void SFTFPopupMenu(SFTextArea *st, GEvent *event) {
     int no_sel = st->sel_start==st->sel_end;
