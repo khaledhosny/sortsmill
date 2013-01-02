@@ -6275,7 +6275,7 @@ static GMenuItem2 sllist[] = {
     },
 
     .shortcut = H_ ("Select by Color|No Shortcut"),
-    sclist,
+    .sub = sclist,
     .mid = 0},
 
   {
@@ -8616,13 +8616,11 @@ static GMenuItem2 enlist[] = {
       .image_precedes = true,
       .text_is_1byte = true,
       .text_has_mnemonic = true,
-      'E'},
+      .mnemonic = 'E'},
     .shortcut = H_ ("Reencode|No Shortcut"),
-
-    emptymenu,
-    FVEncodingMenuBuild,
-    NULL,
-    MID_Reencode},
+    .sub = emptymenu,
+    .moveto = FVEncodingMenuBuild,
+    .mid = MID_Reencode},
 
   {
     .ti = {
@@ -8633,13 +8631,10 @@ static GMenuItem2 enlist[] = {
       .image_precedes = true,
       .text_is_1byte = true,
       .text_has_mnemonic = true,
-      'C'},
+      .mnemonic = 'C'},
     .shortcut = H_ ("Compact|No Shortcut"),
-    NULL,
-
-    NULL,
-    FVMenuCompact,
-    MID_Compact},
+    .invoke = FVMenuCompact,
+    .mid = MID_Compact},
 
   {
     .ti = {
@@ -8649,14 +8644,11 @@ static GMenuItem2 enlist[] = {
       .image_precedes = true,
       .text_is_1byte = true,
       .text_has_mnemonic = true,
-      'C'},
-
+      .mnemonic = 'C'},
     .shortcut = H_ ("Force Encoding|No Shortcut"),
-    emptymenu,
-    FVForceEncodingMenuBuild,
-
-    NULL,
-    MID_ForceReencode},
+    .sub = emptymenu,
+    .moveto = FVForceEncodingMenuBuild,
+    .mid = MID_ForceReencode},
 
   GMENUITEM2_LINE,
 
@@ -8668,14 +8660,10 @@ static GMenuItem2 enlist[] = {
       .image_precedes = true,
       .text_is_1byte = true,
       .text_has_mnemonic = true,
-      'C'},
-
+      .mnemonic = 'C'},
     .shortcut = H_ ("Add Encoding Slots...|No Shortcut"),
-    NULL,
-    NULL,
-    FVMenuAddUnencoded,
-
-    MID_AddUnencoded},
+    .invoke = FVMenuAddUnencoded,
+    .mid = MID_AddUnencoded},
 
   {
     .ti = {
@@ -8685,14 +8673,10 @@ static GMenuItem2 enlist[] = {
       .image_precedes = true,
       .text_is_1byte = true,
       .text_has_mnemonic = true,
-      'C'},
-
+      .mnemonic = 'C'},
     .shortcut = H_ ("Remove Unused Slots|No Shortcut"),
-    NULL,
-    NULL,
-    FVMenuRemoveUnused,
-
-    MID_RemoveUnused},
+    .invoke = FVMenuRemoveUnused,
+    .mid = MID_RemoveUnused},
 
   {
     .ti = {
@@ -8702,14 +8686,10 @@ static GMenuItem2 enlist[] = {
       .image_precedes = true,
       .text_is_1byte = true,
       .text_has_mnemonic = true,
-      'C'},
-
+      .mnemonic = 'C'},
     .shortcut = H_ ("Detach Glyphs|No Shortcut"),
-    NULL,
-    NULL,
-    FVMenuDetachGlyphs,
-
-    MID_DetachGlyphs},
+    .invoke = FVMenuDetachGlyphs,
+    .mid = MID_DetachGlyphs},
 
   {
     .ti = {
@@ -8719,14 +8699,10 @@ static GMenuItem2 enlist[] = {
       .image_precedes = true,
       .text_is_1byte = true,
       .text_has_mnemonic = true,
-      'C'},
-
+      .mnemonic = 'C'},
     .shortcut = H_ ("Detach & Remove Glyphs...|No Shortcut"),
-    NULL,
-    NULL,
-
-    FVMenuDetachAndRemoveGlyphs,
-    MID_DetachAndRemoveGlyphs},
+    .invoke = FVMenuDetachAndRemoveGlyphs,
+    .mid = MID_DetachAndRemoveGlyphs},
 
   GMENUITEM2_LINE,
 
@@ -8738,14 +8714,10 @@ static GMenuItem2 enlist[] = {
       .image_precedes = true,
       .text_is_1byte = true,
       .text_has_mnemonic = true,
-      'C'},
-
+      .mnemonic = 'C'},
     .shortcut = H_ ("Add Encoding Name...|No Shortcut"),
-    NULL,
-    NULL,
-    FVMenuAddEncodingName,
-
-    0},
+    .invoke = FVMenuAddEncodingName,
+    .mid = 0},
 
   {
     .ti = {
@@ -8755,14 +8727,10 @@ static GMenuItem2 enlist[] = {
       .image_precedes = true,
       .text_is_1byte = true,
       .text_has_mnemonic = true,
-      'C'},
-
+      .mnemonic = 'C'},
     .shortcut = H_ ("Load Encoding...|No Shortcut"),
-    NULL,
-    NULL,
-    FVMenuLoadEncoding,
-
-    MID_LoadEncoding},
+    .invoke = FVMenuLoadEncoding,
+    .mid = MID_LoadEncoding},
 
   {
     .ti = {
@@ -8772,14 +8740,10 @@ static GMenuItem2 enlist[] = {
       .image_precedes = true,
       .text_is_1byte = true,
       .text_has_mnemonic = true,
-      'C'},
-
+      .mnemonic = 'C'},
     .shortcut = H_ ("Make From Font...|No Shortcut"),
-    NULL,
-    NULL,
-    FVMenuMakeFromFont,
-
-    MID_MakeFromFont},
+    .invoke = FVMenuMakeFromFont,
+    .mid = MID_MakeFromFont},
 
   {
     .ti = {
@@ -8789,14 +8753,10 @@ static GMenuItem2 enlist[] = {
       .image_precedes = true,
       .text_is_1byte = true,
       .text_has_mnemonic = true,
-      'C'},
-
+      .mnemonic = 'C'},
     .shortcut = H_ ("Remove Encoding...|No Shortcut"),
-    NULL,
-    NULL,
-    FVMenuRemoveEncoding,
-
-    MID_RemoveEncoding},
+    .invoke = FVMenuRemoveEncoding,
+    .mid = MID_RemoveEncoding},
 
   GMENUITEM2_LINE,
 
@@ -8808,14 +8768,10 @@ static GMenuItem2 enlist[] = {
       .image_precedes = true,
       .text_is_1byte = true,
       .text_has_mnemonic = true,
-      'C'},
-
+      .mnemonic = 'C'},
     .shortcut = H_ ("Display By Groups...|No Shortcut"),
-    NULL,
-    NULL,
-    FVMenuDisplayByGroups,
-
-    MID_DisplayByGroups},
+    .invoke = FVMenuDisplayByGroups,
+    .mid = MID_DisplayByGroups},
 
   {
     .ti = {
@@ -8826,13 +8782,10 @@ static GMenuItem2 enlist[] = {
       .image_precedes = true,
       .text_is_1byte = true,
       .text_has_mnemonic = true,
-      'C'},
-
+      .mnemonic = 'C'},
     .shortcut = H_ ("Define Groups...|No Shortcut"),
-    NULL,
-    NULL,
-    FVMenuDefineGroups,
-    0},
+    .invoke = FVMenuDefineGroups,
+    .mid = 0},
 
   GMENUITEM2_LINE,
 
@@ -8844,14 +8797,10 @@ static GMenuItem2 enlist[] = {
       .image_precedes = true,
       .text_is_1byte = true,
       .text_has_mnemonic = true,
-      'C'},
-
+      .mnemonic = 'C'},
     .shortcut = H_ ("Save Namelist of Font...|No Shortcut"),
-    NULL,
-    NULL,
-
-    FVMenuMakeNamelist,
-    MID_SaveNamelist},
+    .invoke = FVMenuMakeNamelist,
+    .mid = MID_SaveNamelist},
 
   {
     .ti = {
@@ -8861,13 +8810,10 @@ static GMenuItem2 enlist[] = {
       .image_precedes = true,
       .text_is_1byte = true,
       .text_has_mnemonic = true,
-      'C'},
-
+      .mnemonic = 'C'},
     .shortcut = H_ ("Load Namelist...|No Shortcut"),
-    NULL,
-    NULL,
-    FVMenuLoadNamelist,
-    0},
+    .invoke = FVMenuLoadNamelist,
+    .mid = 0},
 
   {
     .ti = {
@@ -8877,14 +8823,10 @@ static GMenuItem2 enlist[] = {
       .image_precedes = true,
       .text_is_1byte = true,
       .text_has_mnemonic = true,
-      'C'},
-
+      .mnemonic = 'C'},
     .shortcut = H_ ("Rename Glyphs...|No Shortcut"),
-    NULL,
-    NULL,
-    FVMenuRenameByNamelist,
-
-    MID_RenameGlyphs},
+    .invoke = FVMenuRenameByNamelist,
+    .mid = MID_RenameGlyphs},
 
   {
     .ti = {
@@ -8894,14 +8836,10 @@ static GMenuItem2 enlist[] = {
       .image_precedes = true,
       .text_is_1byte = true,
       .text_has_mnemonic = true,
-      'C'},
-
+      .mnemonic = 'C'},
     .shortcut = H_ ("Create Named Glyphs...|No Shortcut"),
-    NULL,
-    NULL,
-    FVMenuNameGlyphs,
-
-    MID_NameGlyphs},
+    .invoke = FVMenuNameGlyphs,
+    .mid = MID_NameGlyphs},
 
   GMENUITEM2_EMPTY
 };
@@ -11295,12 +11233,9 @@ static GMenuItem2 mblist[] = {
       .text_is_1byte = true,
       .text_has_mnemonic = true,
       .mnemonic = 'W'},
-    NULL,
-    wnmenu,
-    .moveto = FVWindowMenuBuild,
-
-    NULL,
-    0},
+    .sub = wnmenu,
+    .moveto = FVWindowMenuBuild
+  },
 
   {
     .ti = {
