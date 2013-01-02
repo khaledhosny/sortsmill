@@ -44,32 +44,25 @@
 #include <locale.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <canonicalize.h>
 #include <libguile.h>
+#include <glib.h>
+#define GList GList_GTK         // FIXME
+#define GMenuItem GMenuItem_GTK // FIXME
+#include <gio/gio.h>
+#undef GList
+#undef GMenuItem
 
 extern int AutoSaveFrequency;
 
 static void
-dousage (void)
+dousage (GOptionContext *context)
 {
-  printf ("fontforge [options] [fontfiles]\n");
-  printf ("\t-last\t\t\t (loads the last sfd file closed)\n");
-  printf ("\t-recover none|auto|inquire|clean (control error recovery)\n");
-  printf
-    ("\t-allglyphs\t\t (load all glyphs in the 'glyf' table\n\t\t\t of a truetype collection)\n");
-  printf ("\t-display display-name\t (sets the X display)\n");
-  printf ("\t-sync\t\t\t (syncs the display, debugging)\n");
-  printf ("\t-help\t\t\t (displays this message, and exits)\n");
-  printf ("\t-version\t\t (prints the version of fontforge and exits)\n");
-  printf ("\n");
-  printf
-    ("FontForge will read postscript (pfa, pfb, ps, cid), opentype (otf),\n");
-  printf
-    ("\ttruetype (ttf,ttc), macintosh resource fonts (dfont,bin,hqx),\n");
-  printf ("\tand bdf and pcf fonts. It will also read its own format --\n");
-  printf ("\tsfd files.\n");
-  printf ("For more information see:\n\t%s\n", PACKAGE_URL);
-  printf ("Submit bug reports at:\t%s\n", PACKAGE_BUGREPORT);
+  char *help;
+  help = g_option_context_get_help (context, true, NULL);
+  printf ("%s", help);
+  free (help);
   exit (0);
 }
 
@@ -93,11 +86,10 @@ DelayEvent (void (*func) (void *), void *data)
 }
 
 static void
-DoDelayedEvents (GEvent * event)
+DoDelayedEvents (GEvent *event)
 {
   GTimer *t = event->u.timer.timer;
-  struct delayed_event *info =
-    (struct delayed_event *) (event->u.timer.userdata);
+  struct delayed_event *info = (struct delayed_event *) (event->u.timer.userdata);
 
   if (info != NULL)
     {
@@ -108,7 +100,7 @@ DoDelayedEvents (GEvent * event)
 }
 
 static int
-event_e_h (GWindow gw, GEvent * event)
+event_e_h (GWindow gw, GEvent *event)
 {
   switch (event->type)
     {
@@ -160,7 +152,8 @@ static const char site_init_file[] = "site-init.scm";
 static void
 site_init (void)
 {
-  char *init_script = x_gc_strjoin (SHAREDIR, "/guile/", site_init_file, NULL);
+  char *init_script = x_gc_strjoin (SHAREDIR,
+                                    "/guile/", site_init_file, NULL);
   FILE *f = fopen (init_script, "r");
   if (f != NULL)
     {
@@ -176,29 +169,24 @@ static int
 fontforge_main_in_guile_mode (int argc, char **argv)
 {
   const char *load_prefs = getenv ("FONTFORGE_LOADPREFS");
-  int i;
-  int recover = 2;
-  int any;
-  int next_recent = 0;
+  int recovery_mode = 2;
+  int openflags = 0;
+  bool no_font_loaded = true;
+
+  bool open_last = false;
+  bool all_glyphs = false;
+  bool sync = false;
+  bool show_version = false;
+  char *recover = NULL;
+  char *display = NULL;
+  char **remaining_args = NULL;
+  GError *error = NULL;
+  GOptionContext *context;
+  char summary[1024], description[1024];
+
   GRect pos;
   GWindowAttrs wattrs;
-  char *display = NULL;
-  int openflags = 0;
-  int doopen = 0;
   extern int navigation_mask;
-
-  fprintf (stderr,
-           "Copyright (c) 2000-2012 by George Williams and others.\n%s"
-#ifdef FREETYPE_HAS_DEBUGGER
-           "-TtfDb"
-#endif
-#ifdef _NO_PYTHON
-           "-NoPython"
-#endif
-#ifdef FONTFORGE_CONFIG_USE_DOUBLE
-           "-D"
-#endif
-           ".\n", PACKAGE_STRING);
 
   FF_SetUiInterface (&gdraw_ui_interface);
   FF_SetPrefsInterface (&gdraw_prefs_interface);
@@ -228,58 +216,92 @@ fontforge_main_in_guile_mode (int argc, char **argv)
 
   if (load_prefs != NULL && strcasecmp (load_prefs, "Always") == 0)
     LoadPrefs ();
+
   if (default_encoding == NULL)
     default_encoding = FindOrMakeEncoding ("ISO8859-1");
+
   if (default_encoding == NULL)
     default_encoding = &custom; /* In case iconv is broken */
 
   if (load_prefs == NULL || (strcasecmp (load_prefs, "Always") != 0 &&  /* Already loaded */
                              strcasecmp (load_prefs, "Never") != 0))
     LoadPrefs ();
+
   navigation_mask = GMenuItemParseMask (H_ ("NavigationMask|None"));
-  for (i = 1; i < argc; ++i)
+
+  // *INDENT-OFF*
+  GOptionEntry entries[] = {
+    { "version", 'v', 0, G_OPTION_ARG_NONE, &show_version, N_("Show version information and exit"), NULL },
+    { "all-glyphs", 'a', 0, G_OPTION_ARG_NONE, &all_glyphs, N_("Load all glyphs in the 'glyf' table of a truetype collection"), NULL },
+    { "last", 'l', 0, G_OPTION_ARG_NONE, &open_last, N_("Load the last font closed"), NULL },
+    { "recover", 'r', 0, G_OPTION_ARG_STRING, &recover, N_("Control error recovery"), "none|auto|inquire|clean" },
+    { "display", '\0', 0, G_OPTION_ARG_STRING, &display, N_("X display to use"), N_("DISPLAY") },
+    { "sync", '\0', 0, G_OPTION_ARG_NONE, &sync, N_("Make X calls synchronous"), NULL },
+    { G_OPTION_REMAINING, '\0', 0, G_OPTION_ARG_FILENAME_ARRAY, &remaining_args, NULL, N_("[FILE...]") },
+    { NULL }
+  };
+  // *INDENT-ON*
+
+  snprintf (summary, sizeof (summary),
+            _("FontForge will read PostScript (PFA, PFB, PS, CID), OpenType (OTF),\n"
+              "TrueType (TTF, TTC), Macintosh resource fonts (dfont, bin, hqx), and\n"
+              "BDF and PCF fonts. It will also read its own format -- SFD files."));
+
+  snprintf (description, sizeof (description),
+            _("For more information see: %s\nSubmit bug reports at: %s"),
+            PACKAGE_URL, PACKAGE_BUGREPORT);
+
+  context = g_option_context_new ("- Create and edit font files");
+  g_option_context_add_main_entries (context, entries, FF_TEXTDOMAIN);
+  g_option_context_set_summary (context, summary);
+  g_option_context_set_description (context, description);
+
+  if (!g_option_context_parse (context, &argc, &argv, &error))
     {
-      char *pt = argv[i];
-      if (pt[0] == '-' && pt[1] == '-')
-        ++pt;
-      if (strcmp (pt, "-sync") == 0)
-        GResourceAddResourceString ("Gdraw.Synchronize: true");
-      else if (strcmp (pt, "-display") == 0 && i < argc - 1)
-        display = argv[++i];
-      else if (strcmp (pt, "-recover") == 0 && i < argc - 1)
+      fprintf (stderr, "Option parsing failed: %s\n", error->message);
+      exit (1);
+    }
+
+  if (show_version)
+    {
+      printf ("%s\n", PACKAGE_STRING);
+      exit (0);
+    }
+
+  if (recover != NULL)
+    {
+      if (strcmp (recover, "none") == 0)
+        recovery_mode = 0;
+      else if (strcmp (recover, "clean") == 0)
+        recovery_mode = -1;
+      else if (strcmp (recover, "auto") == 0)
+        recovery_mode = 1;
+      else if (strcmp (recover, "inquire") == 0)
+        recovery_mode = 2;
+      else
         {
-          ++i;
-          if (strcmp (argv[i], "none") == 0)
-            recover = 0;
-          else if (strcmp (argv[i], "clean") == 0)
-            recover = -1;
-          else if (strcmp (argv[i], "auto") == 0)
-            recover = 1;
-          else if (strcmp (argv[i], "inquire") == 0)
-            recover = 2;
-          else
-            {
-              fprintf (stderr,
-                       "Invalid argument to -recover, must be none, auto, inquire or clean\n");
-              dousage ();
-            }
-        }
-      else if (strcmp (pt, "-recover=none") == 0)
-        recover = 0;
-      else if (strcmp (pt, "-recover=clean") == 0)
-        recover = -1;
-      else if (strcmp (pt, "-recover=auto") == 0)
-        recover = 1;
-      else if (strcmp (pt, "-recover=inquire") == 0)
-        recover = 2;
-      else if (strcmp (pt, "-help") == 0)
-        dousage ();
-      else if (strcmp (pt, "-version") == 0)
-        {
-          printf ("%s\n", PACKAGE_STRING);
-          exit (0);
+          fprintf (stderr, "Invalid argument to --recover, must be none, auto, inquire or clean\n");
+          dousage (context);
         }
     }
+
+  if (all_glyphs)
+    openflags |= of_all_glyphs_in_ttc;
+
+  if (sync)
+    GResourceAddResourceString ("Gdraw.Synchronize: true");
+
+  fprintf (stderr, "Copyright (c) 2000-2012 by George Williams and others.\n%s"
+#ifdef FREETYPE_HAS_DEBUGGER
+           "-TtfDb"
+#endif
+#ifdef _NO_PYTHON
+           "-NoPython"
+#endif
+#ifdef FONTFORGE_CONFIG_USE_DOUBLE
+           "-D"
+#endif
+           ".\n", PACKAGE_STRING);
 
   GDrawCreateDisplays (display, argv[0]);
   default_background = GDrawGetDefaultBackground (screen_display);
@@ -301,114 +323,78 @@ fontforge_main_in_guile_mode (int argc, char **argv)
                                         AutoSaveFrequency * 1000, NULL);
   GDrawProcessPendingEvents (NULL);
 
-  any = 0;
-  if (recover == -1)
+  if (recovery_mode == -1)
     CleanAutoRecovery ();
-  else if (recover)
-    any = DoAutoRecovery (recover - 1);
+  else if (recovery_mode)
+    no_font_loaded = !DoAutoRecovery (recovery_mode - 1);
 
-  openflags = 0;
-  for (i = 1; i < argc; ++i)
+  if (open_last)
     {
-      char *pt = argv[i];
+      if (RecentFiles[0] != NULL && ViewPostScriptFont (RecentFiles[0], openflags))
+        no_font_loaded = false;
+    }
 
-      GDrawProcessPendingEvents (NULL);
-      if (pt[0] == '-' && pt[1] == '-')
-        ++pt;
-      if (strcmp (pt, "-last") == 0)
+  if (remaining_args != NULL)
+    {
+      for (int i = 0; remaining_args[i] != NULL; i++)
         {
-          if (next_recent < RECENT_MAX && RecentFiles[next_recent] != NULL)
-            if (ViewPostScriptFont (RecentFiles[next_recent++], openflags))
-              any = 1;
-        }
-      else if (strcmp (pt, "-sync") == 0 || strcmp (pt, "-memory") == 0
-               || strcmp (pt, "-recover=none") == 0
-               || strcmp (pt, "-recover=clean") == 0
-               || strcmp (pt, "-recover=auto") == 0
-               || strcmp (pt, "-dontopenxdevices") == 0)
-        /* Already done, needed to be before display opened */ ;
-      else if ((strcmp (pt, "-depth") == 0 || strcmp (pt, "-vc") == 0 ||
-                strcmp (pt, "-cmap") == 0 || strcmp (pt, "-colormap") == 0 ||
-                strcmp (pt, "-keyboard") == 0 ||
-                strcmp (pt, "-display") == 0 || strcmp (pt, "-recover") == 0)
-               && i < argc - 1)
-        ++i;                    /* Already done, needed to be before display opened */
-      else if (strcmp (pt, "-allglyphs") == 0)
-        openflags |= of_all_glyphs_in_ttc;
-      else if (strcmp (pt, "-open") == 0)
-        doopen = true;
-      else
-        {
-          char *buffer;
+          GFile *file;
+          char *path;
 
-          if (strstr (argv[i], "://") != NULL)  /* FIXME: This is
-                                                   broken. There is
-                                                   regular expression
-                                                   code elsewhere to
-                                                   re-use here. */
-            /* Assume an absolute URL */
-            buffer = xstrdup (argv[i]);
-          else
-            buffer =
-              XDIE_ON_NULL (canonicalize_filename_mode
-                            (argv[i], CAN_MISSING));
+          GDrawProcessPendingEvents (NULL);
 
-          if (GFileIsDir (buffer) || (strstr (buffer, "://") != NULL    /* FIXME: This is
-                                                                           broken. There is
-                                                                           regular expression
-                                                                           code elsewhere to
-                                                                           re-use here. */
-                                      && buffer[strlen (buffer) - 1] == '/'))
+          file = g_file_new_for_commandline_arg (remaining_args[i]);
+          path = g_file_get_path (file);
+
+          if (GFileIsDir (path))
             {
-              char *fname = xmalloc (strlen (buffer) +
-                                     strlen ("/glyphs/contents.plist") + 1);
-              strcpy (fname, buffer);
-              strcat (fname, "/glyphs/contents.plist");
-              if (GFileExists (fname))
+              GFile *sfdir, *ufo;
+              sfdir = g_file_get_child (file, "font.props");
+              ufo = g_file_get_child (file, "fontinfo.plist");
+              if (g_file_query_exists (sfdir, NULL) || g_file_query_exists (ufo, NULL))
                 {
-                  /* It's probably a Unified Font Object directory */
-                  free (fname);
-                  if (ViewPostScriptFont (buffer, openflags))
-                    any = 1;
+                  /* It's probably a Unified Font Object directory or sf dir collection */
+                  if (ViewPostScriptFont (path, openflags))
+                    no_font_loaded = false;
+
+                  g_object_unref (sfdir);
+                  g_object_unref (ufo);
                 }
               else
                 {
-                  strcpy (fname, buffer);
-                  strcat (fname, "/font.props");
-                  if (GFileExists (fname))
+                  /* bring open file dialog */
+                  if (path[strlen (path) - 1] != '/')
                     {
-                      /* It's probably a sf dir collection */
-                      free (fname);
-                      if (ViewPostScriptFont (buffer, openflags))
-                        any = 1;
+                      /* If dirname doesn't end in "/" we'll be looking in parent dir */
+                      path[strlen (path) + 1] = '\0';
+                      path[strlen (path)] = '/';
                     }
-                  else
-                    {
-                      free (fname);
-                      if (buffer[strlen (buffer) - 1] != '/')
-                        {
-                          /* If dirname doesn't end in "/" we'll be looking in parent dir */
-                          buffer[strlen (buffer) + 1] = '\0';
-                          buffer[strlen (buffer)] = '/';
-                        }
-                      fname = GetPostScriptFontName (buffer, false);
-                      if (fname != NULL)
-                        ViewPostScriptFont (fname, openflags);
-                      any = 1;  /* Even if we didn't get a font, don't bring up dlg again */
-                      free (fname);
-                    }
+
+                  char *fname = GetPostScriptFontName (path, false);
+                  if (fname != NULL)
+                    ViewPostScriptFont (fname, openflags);
+
+                  no_font_loaded = false;       /* Even if we didn't get a font, don't bring up dlg again */
+                  free (fname);
                 }
             }
-          else if (ViewPostScriptFont (buffer, openflags) != 0)
-            any = 1;
-          free (buffer);
+          else if (ViewPostScriptFont (path, openflags) != 0)
+            no_font_loaded = false;
+
+          free (path);
+          g_object_unref (file);
         }
     }
-  if (doopen || !any)
+
+  if (no_font_loaded)
     FontNew ();
+
   GDrawEventLoop (NULL);
 
   uninm_names_db_close (names_db);
+
+  g_option_context_free (context);
+
   return 0;
 }
 
