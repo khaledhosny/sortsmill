@@ -1,6 +1,5 @@
-#include <config.h>
+#include <config.h>		/* -*- coding: utf-8 -*- */
 
-/* -*- coding: utf-8 -*- */
 /* Copyright (C) 2003-2012 by George Williams */
 /*
  * Redistribution and use in source and binary forms, with or without
@@ -2374,10 +2373,25 @@ static void AttSaveM(GWindow gw, GMenuItem *mi,GEvent *e) {
     AttSave(att);
 }
 
+// *INDENT-OFF*
+
 static GMenuItem att_popuplist[] = {
-    { { (uint32_t *) N_("Save"), NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, 'S' }, 'S', ksm_control, NULL, NULL, AttSaveM, 0 },
-    GMENUITEM_EMPTY
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Save"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = true,
+      .mnemonic = 'S'
+    },
+    .shortcut_char = 'S',
+    .short_mask = ksm_control,
+    .invoke = AttSaveM
+  },
+  GMENUITEM_EMPTY
 };
+
+// *INDENT-ON*
 
 static FontView *FVVerify(FontView *fv) {
     FontView *test;
