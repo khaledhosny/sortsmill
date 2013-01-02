@@ -3107,24 +3107,25 @@ static void MVWindowMenuBuild(GWindow gw,struct gmenuitem *mi,GEvent *e) {
 
     WindowMenuBuild(gw,mi,e);
 
-    for ( i=mv->glyphcnt-1; i>=0; --i )
-	if ( mv->perchar[i].selected )
-    break;
-    if ( i==-1 ) sc = NULL; else sc = mv->glyphs[i].sc;
+    i = mv->glyphcnt - 1;
+    while (0 <= i && !mv->perchar[i].selected)
+      i--;
+    sc = (i == -1) ? NULL : mv->glyphs[i].sc;
 
-    for ( wmi = mi->sub; wmi->ti.text!=NULL || wmi->ti.line ; ++wmi ) {
+    for ( wmi = mi->sub; (wmi->ti.text!=NULL || wmi->ti.line) ; ++wmi )
+      {
 	switch ( wmi->mid ) {
-	  case MID_OpenOutline:
-	    wmi->ti.disabled = sc==NULL;
+	case MID_OpenOutline:
+	  wmi->ti.disabled = (sc == NULL);
 	  break;
-	  case MID_OpenBitmap:
-	    mi->ti.disabled = mv->sf->bitmaps==NULL || sc==NULL;
+	case MID_OpenBitmap:
+	  wmi->ti.disabled = (mv->sf->bitmaps == NULL || sc == NULL);
 	  break;
-	  case MID_Warnings:
-	    wmi->ti.disabled = ErrorWindowExists();
+	case MID_Warnings:
+	  wmi->ti.disabled = ErrorWindowExists();
 	  break;
 	}
-    }
+      }
 }
 
 // *INDENT-OFF*
