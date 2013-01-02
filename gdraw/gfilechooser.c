@@ -1120,15 +1120,73 @@ static void GFCPath(GWindow gw,struct gmenuitem *mi,GEvent *e) {
 	GFileChooserScanDir(gfc,gfc->paths[mi->mid]);
 }
 
+// *INDENT-OFF*
+
 static GMenuItem gfcbookmarkmenu[] = {
-    { { (uint32_t *) N_("Directory|Back"), (GImage *) "chooserback.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 0, 0, '\0' }, '\0', ksm_control, NULL, NULL, GFCBack, 0 },
-    { { (uint32_t *) N_("Directory|Forward"), (GImage *) "chooserforward.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 0, 0, '\0' }, '\0', ksm_control, NULL, NULL, GFCForward, 0 },
-    GMENUITEM_LINE,
-    { { (uint32_t *) N_("Bookmark Current Dir"), (GImage *) "chooserbookmark.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 0, 0, '\0' }, '\0', ksm_control, NULL, NULL, GFCAddCur, 0 },
-    { { (uint32_t *) N_("Remove Bookmark..."), (GImage *) "choosernobookmark.png", COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 1, 0, 0, 0, 0, 1, 0, 0, '\0' }, '\0', ksm_control, NULL, NULL, GFCRemoveBook, 0 },
-    GMENUITEM_LINE,
-    GMENUITEM_EMPTY
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Directory|Back"),
+      .image = (GImage *) "chooserback.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true
+    },
+    .shortcut_char = '\0',
+    .short_mask = ksm_control,
+    .invoke = GFCBack
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Directory|Forward"),
+      .image = (GImage *) "chooserforward.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true
+    },
+    .shortcut_char = '\0',
+    .short_mask = ksm_control,
+    .invoke = GFCForward
+  },
+
+  GMENUITEM_LINE,
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Bookmark Current Dir"),
+      .image = (GImage *) "chooserbookmark.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true
+    },
+    .shortcut_char = '\0',
+    .short_mask = ksm_control,
+    .invoke = GFCAddCur
+  },
+
+  {
+    .ti = {
+      .text = (uint32_t *) N_("Remove Bookmark..."),
+      .image = (GImage *) "choosernobookmark.png",
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .image_precedes = true,
+      .text_is_1byte = true
+    },
+    .shortcut_char = '\0',
+    .short_mask = ksm_control,
+    .invoke = GFCRemoveBook
+  },
+
+  GMENUITEM_LINE,
+  GMENUITEM_EMPTY
 };
+
+// *INDENT-ON*
+
 static int bgotten=false;
 
 static int GFileChooserBookmarks(GGadget *g, GEvent *e) {
