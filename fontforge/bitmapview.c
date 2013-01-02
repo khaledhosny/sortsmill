@@ -2746,8 +2746,6 @@ static GMenuItem2 ellist[] = {
       .mnemonic = 'A'
     },
     .shortcut = H_("Bitmap Strikes Available...|Ctl+Shft+B"),
-    NULL,
-    NULL,
     .invoke = BVMenuBitmaps,
     .mid = MID_AvailBitmaps
   },
