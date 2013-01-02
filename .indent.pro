@@ -4,6 +4,7 @@
 
 --gnu-style
 --no-tabs
+--line-length100
 
 -T FILE
 -T int8_t
@@ -115,6 +116,8 @@
 -T PyFF_Font
 -T PyFF_Glyph
 -T PyObject
+
+-T GOptionContext
 
 // Internal to sfd.c. FIXME: Get rid of this type.
 -T __longlong
