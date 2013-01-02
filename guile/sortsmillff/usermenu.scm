@@ -117,18 +117,19 @@
    (let ((item (if (pointer? menu-item)
                    (pointer->GMenuItem2 menu-item)
                    menu-item)))
-      (for-each
-         (lambda (mi)
-            (let ((mid (GMenuItem2:mid-ref mi)))
-               (when (menu-info-exists? menu-info mid)
-                  (let ((enabled?
-                           (menu-entry-error-handling
-                              (get-enabled-func menu-info mid)
-                              view)))
-                     (GTextInfo:disabled-set!
-                        (pointer->GTextInfo (GMenuItem2:ti->pointer mi))
-                        (not enabled?))))))
-         (GMenuItem2-internal-array->list (GMenuItem2:sub-dref item)))))
+      (when (not (null-pointer? (GMenuItem2:sub-ref item)))
+         (for-each
+            (lambda (mi)
+               (let ((mid (GMenuItem2:mid-ref mi)))
+                  (when (menu-info-exists? menu-info mid)
+                     (let ((enabled?
+                              (menu-entry-error-handling
+                                 (get-enabled-func menu-info mid)
+                                 view)))
+                        (GTextInfo:disabled-set!
+                           (pointer->GTextInfo (GMenuItem2:ti->pointer mi))
+                           (not enabled?))))))
+            (GMenuItem2-internal-array->list (GMenuItem2:sub-dref item))))))
 
 ;; Invoke the action for a menu entry.
 (define (do-action menu-item view menu-info)
