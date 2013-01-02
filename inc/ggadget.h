@@ -57,44 +57,8 @@ typedef struct gtextinfo {
 				 GTextInfoDraw. */
 } GTextInfo;
 
-#define GTEXTINFO_EMPTY {			\
-    .text = NULL,				\
-      .image = NULL,				\
-      .fg = 0x000000,				\
-      .bg = 0x000000,				\
-      .userdata = NULL,				\
-      .font = NULL,				\
-      .disabled = false,			\
-      .image_precedes = false,			\
-      .checkable = false,			\
-      .checked = false,				\
-      .selected = false,			\
-      .line = false,				\
-      .text_is_1byte = false,			\
-      .text_has_mnemonic = false,		\
-      .changed = false,				\
-      .mnemonic = '\0'				\
-      }
-
-#define GTEXTINFO_LINE {			\
-    .text = NULL,				\
-      .image = NULL,				\
-      .fg = 0x000000,				\
-      .bg = 0x000000,				\
-      .userdata = NULL,				\
-      .font = NULL,				\
-      .disabled = false,			\
-      .image_precedes = false,			\
-      .checkable = false,			\
-      .checked = false,				\
-      .selected = false,			\
-      .line = true,				\
-      .text_is_1byte = false,			\
-      .text_has_mnemonic = false,		\
-      .changed = false,				\
-      .mnemonic = '\0'				\
-      }
-
+#define GTEXTINFO_EMPTY { .line = false }
+#define GTEXTINFO_LINE { .line = true }
 
 typedef struct gtextinfo2 {
     uint32_t *text;
@@ -117,45 +81,8 @@ typedef struct gtextinfo2 {
 						/* should really be in menuitem, but that wastes space and complicates GTextInfoDraw */
 } GTextInfo2;
 
-#define GTEXTINFO2_EMPTY {			\
-    .text = NULL,				\
-      .image = NULL,				\
-      .fg = 0x000000,				\
-      .bg = 0x000000,				\
-      .userdata = NULL,				\
-      .font = NULL,				\
-      .disabled = false,			\
-      .image_precedes = false,			\
-      .checkable = false,			\
-      .checked = false,				\
-      .selected = false,			\
-      .line = false,				\
-      .text_is_1byte = false,			\
-      .text_has_mnemonic = false,		\
-      .changed = false,				\
-      .sort_me_first_in_list = false,		\
-      .mnemonic = '\0'				\
-      }
-
-#define GTEXTINFO2_LINE {			\
-    .text = NULL,				\
-      .image = NULL,				\
-      .fg = 0x000000,				\
-      .bg = 0x000000,				\
-      .userdata = NULL,				\
-      .font = NULL,				\
-      .disabled = false,			\
-      .image_precedes = false,			\
-      .checkable = false,			\
-      .checked = false,				\
-      .selected = false,			\
-      .line = true,				\
-      .text_is_1byte = false,			\
-      .text_has_mnemonic = false,		\
-      .changed = false,				\
-      .sort_me_first_in_list = false,		\
-      .mnemonic = '\0'				\
-      }
+#define GTEXTINFO2_EMPTY { .line = false }
+#define GTEXTINFO2_LINE { .line = true }
 
 
 struct gmenuitem;
