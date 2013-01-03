@@ -2182,7 +2182,7 @@ return;
     }
 }
 
-static void GTimerSetNext(GTimer *timer,int32_t time_from_now) {
+static void GTimerSetNext(GDTimer *timer,int32_t time_from_now) {
     struct timeval tv;
 
     gettimeofday(&tv,NULL);
@@ -2194,8 +2194,8 @@ static void GTimerSetNext(GTimer *timer,int32_t time_from_now) {
     }
 }
 
-static void GTimerInsertOrdered(GXDisplay *gdisp,GTimer *timer) {
-    GTimer *prev, *test;
+static void GTimerInsertOrdered(GXDisplay *gdisp,GDTimer *timer) {
+    GDTimer *prev, *test;
 
     if ( gdisp->timers==NULL ) {
 	gdisp->timers = timer;
@@ -2215,8 +2215,8 @@ static void GTimerInsertOrdered(GXDisplay *gdisp,GTimer *timer) {
     }
 }
 
-static int GTimerRemove(GXDisplay *gdisp,GTimer *timer) {
-    GTimer *prev, *test;
+static int GTimerRemove(GXDisplay *gdisp,GDTimer *timer) {
+    GDTimer *prev, *test;
 
     if ( gdisp->timers==timer )
 	gdisp->timers = timer->next;
@@ -2233,7 +2233,7 @@ return( true );
 }
 
 static void GTimerRemoveWindowTimers(GXWindow gw) {
-    GTimer *prev, *test, *next;
+    GDTimer *prev, *test, *next;
     GXDisplay *gdisp = gw->display;
 
     while ( gdisp->timers && gdisp->timers->owner==(GWindow) gw )
@@ -2252,8 +2252,8 @@ return;
     }
 }
 
-static int GTimerInList(GXDisplay *gdisp,GTimer *timer) {
-    GTimer *test;
+static int GTimerInList(GXDisplay *gdisp,GDTimer *timer) {
+    GDTimer *test;
 
     for ( test=gdisp->timers; test!=NULL; test = test->next )
 	if ( test==timer )
@@ -2262,7 +2262,7 @@ return( true );
 return( false );
 }
 
-static void GTimerReinstall(GXDisplay *gdisp,GTimer *timer) {
+static void GTimerReinstall(GXDisplay *gdisp,GDTimer *timer) {
 
     GTimerRemove(gdisp,timer);
     if ( timer->repeat_time!=0 ) {
@@ -2272,9 +2272,9 @@ static void GTimerReinstall(GXDisplay *gdisp,GTimer *timer) {
 	free(timer);
 }
 
-GTimer *GDrawRequestTimer(GWindow w,int32_t time_from_now,int32_t frequency,
+GDTimer *GDrawRequestTimer(GWindow w,int32_t time_from_now,int32_t frequency,
 	void *userdata) {
-    GTimer *timer = xcalloc(1,sizeof(GTimer));
+    GDTimer *timer = xcalloc(1,sizeof(GDTimer));
 
     GTimerSetNext(timer,time_from_now);
 
@@ -2286,7 +2286,7 @@ GTimer *GDrawRequestTimer(GWindow w,int32_t time_from_now,int32_t frequency,
 return( timer );
 }
 
-void GDrawCancelTimer(GTimer *timer) {
+void GDrawCancelTimer(GDTimer *timer) {
     if ( timer==NULL )
 	return;
 
@@ -2344,7 +2344,7 @@ void GDrawSyncThread(GDisplay *gd, void (*func)(void *), void *data) {
 
 #endif
 
-static int GXDrawProcessTimerEvent(GXDisplay *gdisp,GTimer *timer) {
+static int GXDrawProcessTimerEvent(GXDisplay *gdisp,GDTimer *timer) {
     struct gevent gevent;
     GWindow o;
     int ret = false;
@@ -2379,7 +2379,7 @@ return(ret);
 
 static void GXDrawCheckPendingTimers(GXDisplay *gdisp) {
     struct timeval tv;
-    GTimer *timer, *next;
+    GDTimer *timer, *next;
 
     gettimeofday(&tv,NULL);
     for ( timer = gdisp->timers; timer!=NULL; timer=next ) {

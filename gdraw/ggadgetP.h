@@ -234,7 +234,7 @@ typedef struct gscrollbar {		/* and slider */
     int16_t arrowsize;		
     int16_t thumbsize;		/* Current thumb size, refigured after every call to setbounds */
     int16_t thumbpos;		/* Current thumb pos */
-    GTimer *pressed;
+    GDTimer *pressed;
     GBox *thumbbox;
 } GScrollBar;
 
@@ -260,10 +260,10 @@ typedef struct glist {
     bool sameheight;		/* all lines are the same height */
     bool always_show_sb;	/* display scrollbar even if we don't need it */
     uint32_t *sofar;			/* user input */
-    GTimer *enduser;
-    GTimer *pressed;
+    GDTimer *enduser;
+    GDTimer *pressed;
     void (*popup_callback)(GGadget *g,int pos);
-} GList;
+} GDList;
 
 typedef struct gtextfield {
     GGadget g;
@@ -293,15 +293,15 @@ typedef struct gtextfield {
     int16_t dd_cursor_pos;
     uint32_t *text, *oldtext;
     FontInstance *font;
-    GTimer *pressed;
-    GTimer *cursor;
+    GDTimer *pressed;
+    GDTimer *cursor;
     GCursor old_cursor;
     GScrollBar *hsb, *vsb;
     int16_t lcnt, lmax;
     int32_t *lines;		/* offsets in text to the start of the nth line */
     int16_t xmax;
     GIC *gic;
-    GTimer *numeric_scroll;
+    GDTimer *numeric_scroll;
     char *utf8_text;		/* For Pango */
     int32_t *lines8;		/* offsets in utf8_text */
 } GTextField;
@@ -379,7 +379,7 @@ struct gdirentry;
 typedef struct gfilechooser {
     struct ggadget g;
     GTextField *name;
-    GList *files, *subdirs;
+    GDList *files, *subdirs;
     GListButton *directories;
     GButton *ok, *filterb;	/* Not created by us, can be set by user to give chooser a better appearance */
     char **mimetypes;
