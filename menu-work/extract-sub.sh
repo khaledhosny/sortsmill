@@ -4,8 +4,8 @@ export LC_ALL
 LC_ALL=C
 
 for i in *.menu_fields; do
-    sed -e '/\.sub[ \t]*=/p;d' $i \
-        | sed -e 's/^.*=[ \t]\([A-Z_a-z][A-Z_a-z0-9]*\).*/\1/' \
+    sed -e '/\.sub *=/p;d' $i \
+        | sed -e 's/^.*= *\([A-Z_a-z][A-Z_a-z0-9]*\).*/\1/' \
         | sort -u \
         | sed -e '/^NULL$/d' \
         > `basename ${i} .menu_fields`.sub
