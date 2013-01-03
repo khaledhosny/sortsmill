@@ -21,26 +21,7 @@
        (bool text_has_mnemonic)
        (bool changed)
        (uint mnemonic)
-       ))
- (struct GTextInfo2
-    (fields
-       (* text)
-       (* image)
-       (uint fg)
-       (uint bg)
-       (* userdata)
-       (* font)
-       (bool disabled)
-       (bool image_precedes)
-       (bool checkable)
-       (bool checked)
-       (bool selected)
-       (bool line)
-       (bool text_is_1byte)
-       (bool text_has_mnemonic)
-       (bool changed)
        (bool sort_me_first_in_list)
-       (uint mnemonic)
        ))
  (struct GMenuItem
     (fields

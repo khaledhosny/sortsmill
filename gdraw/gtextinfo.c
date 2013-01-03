@@ -652,11 +652,9 @@ return;
 
 int GTextInfoCompare(GTextInfo *ti1, GTextInfo *ti2)
 {
-  GTextInfo2 *_ti1 = (GTextInfo2 *) ti1, *_ti2 = (GTextInfo2 *) ti2;
-
-  if ( _ti1->sort_me_first_in_list != _ti2->sort_me_first_in_list )
+  if ( ti1->sort_me_first_in_list != ti2->sort_me_first_in_list )
     {
-      if ( _ti1->sort_me_first_in_list )
+      if ( ti1->sort_me_first_in_list )
 	return( -1 );
       else
 	return( 1 );

@@ -332,8 +332,8 @@ static void GFileChooserFillList(GFileChooser *gfc,GDirEntry *first,
 		ti[len]->disabled = e->fcdata==fc_showdisabled;
 		ti[len]->image_precedes = true;
 		ti[len]->checked = e->isdir;
-		if ( dir_placement==dirs_first && e->isdir )
-		    ((GTextInfo2 *) ti[len])->sort_me_first_in_list = true;
+		ti[len]->sort_me_first_in_list =
+		  (dir_placement == dirs_first && e->isdir);
 		++len;
 	    }
 	}

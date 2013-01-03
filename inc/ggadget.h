@@ -55,34 +55,17 @@ typedef struct gtextinfo {
 				 really be in menuitem, but that
 				 wastes space and complicates
 				 GTextInfoDraw. */
+
+  //
+  // `sort_me_first_in_list' must come after the other fields, because
+  // they may appear in C89-style, order-dependent struct
+  // initializers.
+  //
+  bool sort_me_first_in_list;	/* used for directories in file chooser widgets */
 } GTextInfo;
 
 #define GTEXTINFO_EMPTY { .line = false }
 #define GTEXTINFO_LINE { .line = true }
-
-typedef struct gtextinfo2 {
-    uint32_t *text;
-    GImage *image;
-    Color fg;
-    Color bg;
-    void *userdata;
-    GFont *font;
-    bool disabled;
-    bool image_precedes;
-    bool checkable;			/* Only for menus */
-    bool checked;			/* Only for menus */
-    bool selected;			/* Only for lists (used internally for menu(bar)s, when cursor is on the line) */
-    bool line;			/* Only for menus */
-    bool text_is_1byte;		/* If passed in as 1byte (ie. iso-8859-1) text, will be converted */
-    bool text_has_mnemonic;		/* the text field is actually an index into the string resource table */
-    bool changed;			/* If a row/column widget changed this */
-    bool sort_me_first_in_list;	/* used for directories in file chooser widgets */
-    uint32_t mnemonic;				/* Only for menus and menubars */
-						/* should really be in menuitem, but that wastes space and complicates GTextInfoDraw */
-} GTextInfo2;
-
-#define GTEXTINFO2_EMPTY { .line = false }
-#define GTEXTINFO2_LINE { .line = true }
 
 
 struct gmenuitem;
