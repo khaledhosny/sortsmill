@@ -37,6 +37,7 @@
 #include "lookups.h"
 #include <null_passthru.h>
 #include <xunistring.h>
+#include <invoke_funcs.h>
 #include <sortsmillff/ps_number.h>
 
 extern int _GScrollBar_Width;
@@ -9612,7 +9613,7 @@ AALTCreateNew (SplineFont *sf, struct lkdata *lk)
   SllkFree (sllk, sllk_cnt);
 }
 
-static void
+VISIBLE void
 lookupmenu_dispatch (GWindow v, GMenuItem * mi, GEvent *e)
 {
   GEvent dummy;

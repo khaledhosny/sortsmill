@@ -70,8 +70,13 @@ typedef struct gtextinfo {
 
 struct gmenuitem;
 
-typedef void (*gmenuitem_moveto_t) (struct gwindow *, struct gmenuitem *, GEvent *);
-typedef void (*gmenuitem_invoke_t) (struct gwindow *, struct gmenuitem *, GEvent *);
+typedef void (*gmenuitem_func_t) (GWindow, struct gmenuitem *, GEvent *);
+typedef gmenuitem_func_t gmenuitem_moveto_t;
+typedef gmenuitem_func_t gmenuitem_invoke_t;
+
+// Use this to declare a prototype for a function whose address is a
+// gmenuitem_func_t.
+#define _FF_GMENUITEM_FUNC(F) void F (GWindow, struct gmenuitem *, GEvent *)
 
 typedef struct gmenuitem {
   GTextInfo ti;

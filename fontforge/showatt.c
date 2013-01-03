@@ -34,6 +34,7 @@
 #include <utype.h>
 #include <ustring.h>
 #include <gkeysym.h>
+#include <invoke_funcs.h>
 
 #include "ttf.h"
 
@@ -2368,7 +2369,7 @@ return;
     fclose(file);
 }
 
-static void AttSaveM(GWindow gw, GMenuItem *mi,GEvent *e) {
+VISIBLE void AttSaveM(GWindow gw, GMenuItem *mi,GEvent *e) {
     struct att_dlg *att = (struct att_dlg *) GDrawGetUserData(gw);
     AttSave(att);
 }

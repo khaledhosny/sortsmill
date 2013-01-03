@@ -34,6 +34,7 @@
 #include "gfile.h"
 #include "ustring.h"
 #include "utype.h"
+#include <invoke_funcs.h>
 
 #include <stdlib.h>
 #include <xgetcwd.h>
@@ -725,7 +726,7 @@ return(true);
 return( true );
 }
 
-static void GFCHideToggle(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void GFCHideToggle(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     GFileChooser *gfc = (GFileChooser *) (mi->ti.userdata);
     uint32_t *dir;
 
@@ -746,7 +747,7 @@ static void GFCRemetric(GFileChooser *gfc) {
     GGadgetResize(&gfc->topbox->g,size.width,size.height);
 }
 
-static void GFCDirsAmidToggle(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void GFCDirsAmidToggle(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     GFileChooser *gfc = (GFileChooser *) (mi->ti.userdata);
     uint32_t *dir;
 
@@ -764,7 +765,7 @@ static void GFCDirsAmidToggle(GWindow gw,struct gmenuitem *mi,GEvent *e) {
 	(prefs_changed)(prefs_changed_data);
 }
 
-static void GFCDirsFirstToggle(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void GFCDirsFirstToggle(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     GFileChooser *gfc = (GFileChooser *) (mi->ti.userdata);
     uint32_t *dir;
 
@@ -782,7 +783,7 @@ static void GFCDirsFirstToggle(GWindow gw,struct gmenuitem *mi,GEvent *e) {
 	(prefs_changed)(prefs_changed_data);
 }
 
-static void GFCDirsSeparateToggle(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void GFCDirsSeparateToggle(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     GFileChooser *gfc = (GFileChooser *) (mi->ti.userdata);
     uint32_t *dir;
 
@@ -800,7 +801,7 @@ static void GFCDirsSeparateToggle(GWindow gw,struct gmenuitem *mi,GEvent *e) {
 	(prefs_changed)(prefs_changed_data);
 }
 
-static void GFCRefresh(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void GFCRefresh(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     GFileChooser *gfc = (GFileChooser *) (mi->ti.userdata);
     uint32_t *dir;
 
@@ -1012,7 +1013,7 @@ static int GFileChooserConfigure(GGadget *g, GEvent *e) {
 return( true );
 }
 
-static void GFCBack(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void GFCBack(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     GFileChooser *gfc = (GFileChooser *) (mi->ti.userdata);
 
     if ( gfc->hpos<=0 )
@@ -1021,7 +1022,7 @@ return;
     GFileChooserScanDir(gfc,gfc->history[gfc->hpos]);
 }
 
-static void GFCForward(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void GFCForward(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     GFileChooser *gfc = (GFileChooser *) (mi->ti.userdata);
 
     if ( gfc->hpos+1>=gfc->hcnt )
@@ -1030,7 +1031,7 @@ return;
     GFileChooserScanDir(gfc,gfc->history[gfc->hpos]);
 }
 
-static void GFCAddCur(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void GFCAddCur(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     GFileChooser *gfc = (GFileChooser *) (mi->ti.userdata);
     uint32_t *dir;
     int bcnt;
@@ -1047,7 +1048,7 @@ static void GFCAddCur(GWindow gw,struct gmenuitem *mi,GEvent *e) {
 	(prefs_changed)(prefs_changed_data);
 }
 
-static void
+VISIBLE void
 GFCRemoveBook(GWindow gw,struct gmenuitem *mi,GEvent *e)
 {
   int i, bcnt;

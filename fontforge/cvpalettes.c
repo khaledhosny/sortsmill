@@ -42,6 +42,7 @@ extern int interpCPsOnMotion;
 #include <ustring.h>
 #include <utype.h>
 #include <gresource.h>
+#include <invoke_funcs.h>
 
 extern GDevEventMask input_em[];
 extern const int input_em_cnt;
@@ -182,7 +183,7 @@ return;
     GDrawRaise(palette);
 }
 
-static void CVMenuTool(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void CVMenuTool(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     CharView *cv = (CharView *) GDrawGetUserData(gw);
     cv->b1_tool = mi->mid;
     if ( cvtools!=NULL )
@@ -191,7 +192,8 @@ static void CVMenuTool(GWindow gw,struct gmenuitem *mi,GEvent *e) {
 }
 
 static void CVChangeSpiroMode(CharView *cv);
-static void CVMenuSpiroSet(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+
+VISIBLE void CVMenuSpiroSet(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     CharView *cv = (CharView *) GDrawGetUserData(gw);
     CVChangeSpiroMode(cv);
 }

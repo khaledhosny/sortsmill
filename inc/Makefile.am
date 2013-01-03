@@ -29,9 +29,9 @@ include $(top_srcdir)/mk/layout.am
 
 noinst_HEADERS = config.h config-extra.h intl.h basics.h gmpy.h			\
 	null_passthru.h xunistring.h chardata.h gdraw.h gfile.h ggadget.h	\
-	gimage.h gio.h gkeysym.h gprogress.h gresedit.h			\
-	gresource.h gwidget.h ustring.h utype.h annotations_base.h			\
-	ffthread.h precomputed_polyspline_data.h contour_interface.h
+	gimage.h gio.h gkeysym.h gprogress.h gresedit.h gresource.h			\
+	gwidget.h ustring.h utype.h annotations_base.h ffthread.h			\
+	precomputed_polyspline_data.h contour_interface.h invoke_funcs.h
 
 nobase_include_HEADERS = sortsmillff/attributes.h			\
 	sortsmillff/null_passthru.h sortsmillff/xdie_on_null.h	\

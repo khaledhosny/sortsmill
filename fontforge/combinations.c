@@ -32,6 +32,7 @@
 #include <gkeysym.h>
 #include <utype.h>
 #include <unistd.h>
+#include <invoke_funcs.h>
 
 
 GTextInfo sizes[] = {
@@ -887,7 +888,7 @@ static int KP_Cancel(GGadget *g, GEvent *e) {
 return( true );
 }
 
-static void KPMenuRemove(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void KPMenuRemove(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     KPData *kpd = GDrawGetUserData(gw);
     KPRemove(kpd);
 }
@@ -922,17 +923,17 @@ static void KPAC(KPData *kpd, int base) {
     }
 }
 
-static void KPMenuKPCloseup(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void KPMenuKPCloseup(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     KPData *kpd = GDrawGetUserData(gw);
     KPKPCloseup(kpd);
 }
 
-static void KPMenuACB(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void KPMenuACB(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     KPData *kpd = GDrawGetUserData(gw);
     KPAC(kpd,true);
 }
 
-static void KPMenuACM(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void KPMenuACM(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     KPData *kpd = GDrawGetUserData(gw);
     KPAC(kpd,false);
 }

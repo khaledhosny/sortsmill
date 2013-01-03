@@ -26,8 +26,8 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "fontforgeui.h"
-#include "annotations.h"
+#include <fontforgeui.h>
+#include <annotations.h>
 #include <gkeysym.h>
 #include <utype.h>
 #include <ustring.h>
@@ -35,6 +35,7 @@
 #include <locale.h>
 #include <gresource.h>
 #include <gresedit.h>
+#include <invoke_funcs.h>
 
 int bv_width = 270, bv_height=250;
 
@@ -1540,57 +1541,57 @@ return( true );
 
 #define MID_Warnings	3000
 
-static void BVMenuClose(GWindow gw,struct gmenuitem *mi,GEvent *g) {
+VISIBLE void BVMenuClose(GWindow gw,struct gmenuitem *mi,GEvent *g) {
     GDrawDestroyWindow(gw);
 }
 
-static void BVMenuOpenOutline(GWindow gw,struct gmenuitem *mi,GEvent *g) {
+VISIBLE void BVMenuOpenOutline(GWindow gw,struct gmenuitem *mi,GEvent *g) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
 
     CharViewCreate(bv->bc->sc,bv->fv,bv->map_of_enc==bv->fv->b.map?bv->enc:-1);
 }
 
-static void BVMenuOpenMetrics(GWindow gw,struct gmenuitem *mi,GEvent *g) {
+VISIBLE void BVMenuOpenMetrics(GWindow gw,struct gmenuitem *mi,GEvent *g) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
     MetricsViewCreate(bv->fv,bv->bc->sc,bv->bdf);
 }
 
-static void BVMenuSave(GWindow gw,struct gmenuitem *mi,GEvent *g) {
+VISIBLE void BVMenuSave(GWindow gw,struct gmenuitem *mi,GEvent *g) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
     _FVMenuSave(bv->fv);
 }
 
-static void BVMenuSaveAs(GWindow gw,struct gmenuitem *mi,GEvent *g) {
+VISIBLE void BVMenuSaveAs(GWindow gw,struct gmenuitem *mi,GEvent *g) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
     _FVMenuSaveAs(bv->fv);
 }
 
-static void BVMenuGenerate(GWindow gw,struct gmenuitem *mi,GEvent *g) {
+VISIBLE void BVMenuGenerate(GWindow gw,struct gmenuitem *mi,GEvent *g) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
     _FVMenuGenerate(bv->fv,false);
 }
 
-static void BVMenuGenerateFamily(GWindow gw,struct gmenuitem *mi,GEvent *g) {
+VISIBLE void BVMenuGenerateFamily(GWindow gw,struct gmenuitem *mi,GEvent *g) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
     _FVMenuGenerate(bv->fv,gf_macfamily);
 }
 
-static void BVMenuGenerateTTC(GWindow gw,struct gmenuitem *mi,GEvent *g) {
+VISIBLE void BVMenuGenerateTTC(GWindow gw,struct gmenuitem *mi,GEvent *g) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
     _FVMenuGenerate(bv->fv,gf_ttc);
 }
 
-static void BVMenuExport(GWindow gw,struct gmenuitem *mi,GEvent *g) {
+VISIBLE void BVMenuExport(GWindow gw,struct gmenuitem *mi,GEvent *g) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
     BVExport(bv);
 }
 
-static void BVMenuImport(GWindow gw,struct gmenuitem *mi,GEvent *g) {
+VISIBLE void BVMenuImport(GWindow gw,struct gmenuitem *mi,GEvent *g) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
     BVImport(bv);
 }
 
-static void BVMenuRevert(GWindow gw,struct gmenuitem *mi,GEvent *g) {
+VISIBLE void BVMenuRevert(GWindow gw,struct gmenuitem *mi,GEvent *g) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
     FVDelay(bv->fv,(void (*)(FontView *)) FVRevert);
 			    /* The revert command can potentially */
@@ -1638,7 +1639,7 @@ static void BVMagnify(BitmapView *bv, int midx, int midy, int bigger) {
     BVNewScale(bv);
 }
 
-static void BVMenuScale(GWindow gw,struct gmenuitem *mi,GEvent *g) {
+VISIBLE void BVMenuScale(GWindow gw,struct gmenuitem *mi,GEvent *g) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
 
     if ( mi->mid == MID_Fit ) {
@@ -1650,7 +1651,7 @@ static void BVMenuScale(GWindow gw,struct gmenuitem *mi,GEvent *g) {
     }
 }
 
-static void BVMenuChangeChar(GWindow gw,struct gmenuitem *mi,GEvent *g) {
+VISIBLE void BVMenuChangeChar(GWindow gw,struct gmenuitem *mi,GEvent *g) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
     SplineFont *sf = bv->bc->sc->parent;
     EncMap *map = bv->fv->b.map;
@@ -1679,7 +1680,7 @@ return;
 	BVChangeChar(bv,pos,false);
 }
 
-static void BVMenuChangePixelSize(GWindow gw,struct gmenuitem *mi,GEvent *g) {
+VISIBLE void BVMenuChangePixelSize(GWindow gw,struct gmenuitem *mi,GEvent *g) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
     BDFFont *best=NULL, *bdf;
     /* Bigger will find either a bigger pixelsize or a font with same pixelsize and greater depth */
@@ -1698,7 +1699,7 @@ static void BVMenuChangePixelSize(GWindow gw,struct gmenuitem *mi,GEvent *g) {
     }
 }
 
-static void BVMenuGotoChar(GWindow gw,struct gmenuitem *mi,GEvent *g) {
+VISIBLE void BVMenuGotoChar(GWindow gw,struct gmenuitem *mi,GEvent *g) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
     int pos = GotoChar(bv->fv->b.sf,bv->fv->b.map,NULL);
 
@@ -1706,7 +1707,7 @@ static void BVMenuGotoChar(GWindow gw,struct gmenuitem *mi,GEvent *g) {
 	BVChangeChar(bv,pos,false);
 }
 
-static void BVMenuFindInFontView(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void BVMenuFindInFontView(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
 
     FVChangeChar(bv->fv,bv->bc->sc->orig_pos);
@@ -1714,17 +1715,17 @@ static void BVMenuFindInFontView(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     GDrawRaise(bv->fv->gw);
 }
 
-static void BVMenuPalettesDock(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void BVMenuPalettesDock(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     PalettesChangeDocking();
 }
 
-static void BVMenuPaletteShow(GWindow gw,struct gmenuitem *mi,GEvent *g) {
+VISIBLE void BVMenuPaletteShow(GWindow gw,struct gmenuitem *mi,GEvent *g) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
 
     BVPaletteSetVisible(bv, mi->mid==MID_Tools?1:mi->mid==MID_Shades?2:0, !BVPaletteIsVisible(bv, mi->mid==MID_Tools?1:mi->mid==MID_Shades?2:0));
 }
 
-static void BVUndo(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void BVUndo(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
     if ( bv->bc->undoes==NULL )
 return;
@@ -1745,7 +1746,7 @@ return( NULL );
 return( sf->glyphs[cid] );
 }
 
-static void BVMenuSetWidth(GWindow gw,struct gmenuitem *mi,GEvent *g) {
+VISIBLE void BVMenuSetWidth(GWindow gw,struct gmenuitem *mi,GEvent *g) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
     char buffer[10];
     char *ret;
@@ -1786,7 +1787,7 @@ return;
     }
 }
 
-static void BVRedo(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void BVRedo(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
     if ( bv->bc->redoes==NULL )
 return;
@@ -1814,23 +1815,23 @@ static void _BVUnlinkRef(BitmapView *bv) {
     }
 }
 
-static void BVUnlinkRef(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void BVUnlinkRef(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
     _BVUnlinkRef(bv);
 }
 
-static void BVRemoveUndoes(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void BVRemoveUndoes(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
     UndoesFree(bv->bc->undoes); bv->bc->undoes = NULL;
     UndoesFree(bv->bc->redoes); bv->bc->redoes = NULL;
 }
 
-static void BVCopy(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void BVCopy(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
     BCCopySelected(bv->bc,bv->bdf->pixelsize,BDFDepth(bv->bdf));
 }
 
-static void BVCopyRef(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void BVCopyRef(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
     BCCopyReference(bv->bc,bv->bdf->pixelsize,BDFDepth(bv->bdf));
 }
@@ -1861,24 +1862,24 @@ static void BVDoClear(BitmapView *bv) {
     }
 }
 
-static void BVClear(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void BVClear(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
     BVDoClear(bv);
 }
 
-static void BVPaste(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void BVPaste(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
     if ( CopyContainsBitmap())
 	PasteToBC(bv->bc,bv->bdf->pixelsize,BDFDepth(bv->bdf));
 }
 
-static void BVCut(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void BVCut(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
     BVCopy(gw,mi,e);
     BVDoClear(bv);
 }
 
-static void BVSelectAll(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void BVSelectAll(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
     BDFChar *bc = bv->bc;
 
@@ -1886,27 +1887,27 @@ static void BVSelectAll(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     BCCharUpdate(bc);
 }
 
-static void BVMenuFontInfo(GWindow gw,struct gmenuitem *mi,GEvent *g) {
+VISIBLE void BVMenuFontInfo(GWindow gw,struct gmenuitem *mi,GEvent *g) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
     DelayEvent(FontMenuFontInfo,bv->fv);
 }
 
-static void BVMenuBDFInfo(GWindow gw,struct gmenuitem *mi,GEvent *g) {
+VISIBLE void BVMenuBDFInfo(GWindow gw,struct gmenuitem *mi,GEvent *g) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
     SFBdfProperties(bv->bdf->sf,bv->fv->b.map,bv->bdf);
 }
 
-static void BVMenuGetInfo(GWindow gw,struct gmenuitem *mi,GEvent *g) {
+VISIBLE void BVMenuGetInfo(GWindow gw,struct gmenuitem *mi,GEvent *g) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
     SCCharInfo(bv->bc->sc,bv->fv->b.active_layer,bv->fv->b.map,BVCurEnc(bv));
 }
 
-static void BVMenuBitmaps(GWindow gw,struct gmenuitem *mi,GEvent *g) {
+VISIBLE void BVMenuBitmaps(GWindow gw,struct gmenuitem *mi,GEvent *g) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
     BitmapDlg(bv->fv,bv->bc->sc,mi->mid==MID_AvailBitmaps );
 }
 
-static void BVMenuRmGlyph(GWindow gw,struct gmenuitem *mi,GEvent *g) {
+VISIBLE void BVMenuRmGlyph(GWindow gw,struct gmenuitem *mi,GEvent *g) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
     BitmapView *bvs, *bvnext;
     BDFFont *bdf = bv->bdf;

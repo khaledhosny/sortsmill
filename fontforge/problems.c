@@ -34,6 +34,7 @@
 #include <ustring.h>
 #include <math.h>
 #include <gkeysym.h>
+#include <invoke_funcs.h>
 
 /* ************************************************************************** */
 /* ***************************** Problems Dialog **************************** */
@@ -4481,7 +4482,7 @@ static void VW_Remetric(struct val_data *vw) {
     GDrawRequestExpose(vw->v,NULL,false);
 }
 
-static void VWMenuConnect(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void VWMenuConnect(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     struct val_data *vw = (struct val_data *) GDrawGetUserData(gw);
     SplineChar *sc = vw->sc;
     int vs = sc->layers[vw->layer].validation_state;
@@ -4506,7 +4507,7 @@ static void VWMenuConnect(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     }
 }
 
-static void VWMenuInlineRefs(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void VWMenuInlineRefs(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     struct val_data *vw = (struct val_data *) GDrawGetUserData(gw);
     SplineChar *sc = vw->sc;
     int vs = sc->layers[vw->layer].validation_state;
@@ -4529,7 +4530,7 @@ static void VWMenuInlineRefs(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     }
 }
 
-static void VWMenuOverlap(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void VWMenuOverlap(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     struct val_data *vw = (struct val_data *) GDrawGetUserData(gw);
     SplineChar *sc = vw->sc;
     int vs = sc->layers[vw->layer].validation_state;
@@ -4544,7 +4545,7 @@ static void VWMenuOverlap(GWindow gw,struct gmenuitem *mi,GEvent *e) {
 	VW_Remetric(vw);
 }
 
-static void VWMenuMark(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void VWMenuMark(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     struct val_data *vw = (struct val_data *) GDrawGetUserData(gw);
     SplineChar *sc = vw->sc;
 
@@ -4553,7 +4554,7 @@ static void VWMenuMark(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     VW_Remetric(vw);
 }
 
-static void VWMenuInlineFlippedRefs(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void VWMenuInlineFlippedRefs(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     struct val_data *vw = (struct val_data *) GDrawGetUserData(gw);
     SplineChar *sc = vw->sc;
     int vs = sc->layers[vw->layer].validation_state;
@@ -4579,7 +4580,7 @@ static void VWMenuInlineFlippedRefs(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     }
 }
 
-static void VWMenuCorrectDir(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void VWMenuCorrectDir(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     struct val_data *vw = (struct val_data *) GDrawGetUserData(gw);
     SplineChar *sc = vw->sc;
     int vs = sc->layers[vw->layer].validation_state;
@@ -4594,7 +4595,7 @@ static void VWMenuCorrectDir(GWindow gw,struct gmenuitem *mi,GEvent *e) {
 	VW_Remetric(vw);
 }
 
-static void VWMenuGoodExtrema(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void VWMenuGoodExtrema(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     struct val_data *vw = (struct val_data *) GDrawGetUserData(gw);
     SplineFont *sf = vw->sf;
     int emsize = sf->ascent+sf->descent;
@@ -4610,7 +4611,7 @@ static void VWMenuGoodExtrema(GWindow gw,struct gmenuitem *mi,GEvent *e) {
 	VW_Remetric(vw);
 }
 
-static void VWMenuAllExtrema(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void VWMenuAllExtrema(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     struct val_data *vw = (struct val_data *) GDrawGetUserData(gw);
     SplineFont *sf = vw->sf;
     int emsize = sf->ascent+sf->descent;
@@ -4626,7 +4627,7 @@ static void VWMenuAllExtrema(GWindow gw,struct gmenuitem *mi,GEvent *e) {
 	VW_Remetric(vw);
 }
 
-static void VWMenuSimplify(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void VWMenuSimplify(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     struct val_data *vw = (struct val_data *) GDrawGetUserData(gw);
     SplineChar *sc = vw->sc;
     int vs = sc->layers[vw->layer].validation_state;
@@ -4641,7 +4642,7 @@ static void VWMenuSimplify(GWindow gw,struct gmenuitem *mi,GEvent *e) {
 	VW_Remetric(vw);
 }
 
-static void VWMenuRevalidateAll(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void VWMenuRevalidateAll(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     struct val_data *vw = (struct val_data *) GDrawGetUserData(gw);
     SplineChar *sc;
     int k, gid;
@@ -4659,7 +4660,7 @@ static void VWMenuRevalidateAll(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     VW_Remetric(vw);
 }
 
-static void VWMenuRevalidate(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void VWMenuRevalidate(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     struct val_data *vw = (struct val_data *) GDrawGetUserData(gw);
     int vs = vw->sc->layers[vw->layer].validation_state;
     SCValidate(vw->sc,vw->layer,true);
@@ -4707,12 +4708,12 @@ static void VWReuseCV(struct val_data *vw, SplineChar *sc) {
 	DummyFindProblems(cv);
 }
 
-static void VWMenuOpenGlyph(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void VWMenuOpenGlyph(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     struct val_data *vw = (struct val_data *) GDrawGetUserData(gw);
     VWReuseCV(vw,vw->sc);
 }
 
-static void VWMenuGotoGlyph(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void VWMenuGotoGlyph(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     struct val_data *vw = (struct val_data *) GDrawGetUserData(gw);
     FontView *fv = (FontView *) (vw->sf->fv);
     int enc = GotoChar(vw->sf,fv->b.map,NULL);
@@ -4753,7 +4754,7 @@ return;
 #define MID_SelectExtr	105
 #define MID_SelectErrors	106
 
-static void VWMenuSelect(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void VWMenuSelect(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     struct val_data *vw = (struct val_data *) GDrawGetUserData(gw);
     FontView *fv = (FontView *) (vw->sf->fv);
     int mask = mi->mid == MID_SelectErrors ? vw->mask :
@@ -4835,7 +4836,7 @@ static GMenuItem vw_subselect[] = {
 
 // *INDENT-ON*
 
-static void VWMenuManyConnect(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void VWMenuManyConnect(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     struct val_data *vw = (struct val_data *) GDrawGetUserData(gw);
     SplineChar *sc;
     int k, gid;
@@ -4870,7 +4871,7 @@ static void VWMenuManyConnect(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     } while ( k<vw->sf->subfontcnt );
 }
 
-static void VWMenuManyOverlap(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void VWMenuManyOverlap(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     struct val_data *vw = (struct val_data *) GDrawGetUserData(gw);
     SplineChar *sc;
     int k, gid;
@@ -4897,7 +4898,7 @@ static void VWMenuManyOverlap(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     } while ( k<vw->sf->subfontcnt );
 }
 
-static void VWMenuManyMark(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void VWMenuManyMark(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     struct val_data *vw = (struct val_data *) GDrawGetUserData(gw);
     SplineChar *sc;
     int k, gid;
@@ -4918,7 +4919,7 @@ static void VWMenuManyMark(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     } while ( k<vw->sf->subfontcnt );
 }
 
-static void VWMenuManyCorrectDir(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void VWMenuManyCorrectDir(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     struct val_data *vw = (struct val_data *) GDrawGetUserData(gw);
     SplineChar *sc;
     int k, gid;
@@ -4953,7 +4954,7 @@ static void VWMenuManyCorrectDir(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     } while ( k<vw->sf->subfontcnt );
 }
 
-static void VWMenuManyGoodExtrema(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void VWMenuManyGoodExtrema(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     struct val_data *vw = (struct val_data *) GDrawGetUserData(gw);
     SplineChar *sc;
     int k, gid;
@@ -4977,7 +4978,7 @@ static void VWMenuManyGoodExtrema(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     } while ( k<vw->sf->subfontcnt );
 }
 
-static void VWMenuManyAllExtrema(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void VWMenuManyAllExtrema(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     struct val_data *vw = (struct val_data *) GDrawGetUserData(gw);
     SplineChar *sc;
     int k, gid;
@@ -5001,7 +5002,7 @@ static void VWMenuManyAllExtrema(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     } while ( k<vw->sf->subfontcnt );
 }
 
-static void VWMenuManySimplify(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void VWMenuManySimplify(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     struct val_data *vw = (struct val_data *) GDrawGetUserData(gw);
     SplineChar *sc;
     int k, gid;

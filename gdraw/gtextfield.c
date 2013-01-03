@@ -34,6 +34,7 @@
 #include "ggadgetP.h"
 #include "ustring.h"
 #include "utype.h"
+#include <invoke_funcs.h>
 #include <math.h>
 #include <xunistring.h>
 #include <unistr.h>
@@ -925,7 +926,7 @@ return;
 
 static GTextField *popup_kludge;
 
-static void GTFPopupInvoked(GWindow v, GMenuItem *mi,GEvent *e) {
+VISIBLE void GTFPopupInvoked(GWindow v, GMenuItem *mi,GEvent *e) {
     GTextField *gt;
     if ( popup_kludge==NULL )
 return;

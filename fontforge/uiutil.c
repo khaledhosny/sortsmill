@@ -47,10 +47,11 @@
 #include <gkeysym.h>
 #include <sys/types.h>
 #include <sortsmillff/rexp.h>
-#include "trim.h"
-#include "filename.h"
-#include "filenamecat.h"
-#include "findprog.h"
+#include <invoke_funcs.h>
+#include <trim.h>
+#include <filename.h>
+#include <filenamecat.h>
+#include <findprog.h>
 
 #define ACTIVE_BORDER   (_ggadget_Default_Box.active_border)
 #define MAIN_FOREGROUND (_ggadget_Default_Box.main_foreground)
@@ -441,7 +442,7 @@ MouseToPos (GEvent *event, int *_l, int *_c)
   *_c = c;
 }
 
-static void
+VISIBLE void
 WarnMenuCopy (GWindow gw, struct gmenuitem *mi, GEvent *e)
 {
   GDrawGrabSelection (gw, sn_clipboard);
@@ -451,7 +452,7 @@ WarnMenuCopy (GWindow gw, struct gmenuitem *mi, GEvent *e)
                          sizeof (char), genutf8data, noop);
 }
 
-static void
+VISIBLE void
 WarnMenuClear (GWindow gw, struct gmenuitem *mi, GEvent *e)
 {
   int i;

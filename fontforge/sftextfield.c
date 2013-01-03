@@ -36,6 +36,7 @@
 #include <utype.h>
 #include <chardata.h>
 #include <xunistring.h>
+#include <invoke_funcs.h>
 
 static GBox sftextarea_box = GBOX_EMPTY; /* Don't initialize here */
 static int sftextarea_inited = false;
@@ -878,7 +879,7 @@ return;
 
 static SFTextArea *popup_kludge;
 
-static void SFTFPopupInvoked(GWindow v, GMenuItem *mi,GEvent *e) {
+VISIBLE void SFTFPopupInvoked(GWindow v, GMenuItem *mi,GEvent *e) {
     SFTextArea *st;
     if ( popup_kludge==NULL )
 return;

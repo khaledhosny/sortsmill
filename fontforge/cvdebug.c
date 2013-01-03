@@ -33,6 +33,7 @@
 #include <ustring.h>
 #include <ctype.h>		/* must use ctype here because freetype headers include it (prior to 2.3.5) */
 #include <gresource.h>
+#include <invoke_funcs.h>
 
 #define MAIN_FOREGROUND (_ggadget_Default_Box.main_foreground)
 
@@ -865,7 +866,7 @@ static struct { int flag; void (*create)(DebugView *); } wcreat[] = {
     { 0, NULL }
 };
 
-static void DVMenuCreate(GWindow v, GMenuItem *mi,GEvent *e) {
+VISIBLE void DVMenuCreate(GWindow v, GMenuItem *mi,GEvent *e) {
     DebugView *dv = (DebugView *) GDrawGetUserData(v);
 
     if ( (&dv->regs)[mi->mid-MID_Registers]==NULL ) {

@@ -49,6 +49,7 @@
 #include <sortsmillff/xdie_on_null.h>
 #include <canonicalize.h>
 #include <xunistring.h>
+#include <invoke_funcs.h>
 
 int OpenCharsInNewWindow = 1;
 char *RecentFiles[RECENT_MAX] = { NULL };
@@ -673,7 +674,7 @@ _FVMenuGenerate (FontView *fv, int family)
            fv->b.normal == NULL ? fv->b.map : fv->b.normal));
 }
 
-static void
+VISIBLE void
 FVMenuGenerate (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -681,7 +682,7 @@ FVMenuGenerate (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
   _FVMenuGenerate (fv, gf_none);
 }
 
-static void
+VISIBLE void
 FVMenuGenerateFamily (GWindow gw, struct gmenuitem *UNUSED (mi),
                       GEvent *UNUSED (e))
 {
@@ -690,7 +691,7 @@ FVMenuGenerateFamily (GWindow gw, struct gmenuitem *UNUSED (mi),
   _FVMenuGenerate (fv, gf_macfamily);
 }
 
-static void
+VISIBLE void
 FVMenuGenerateTTC (GWindow gw, struct gmenuitem *UNUSED (mi),
                    GEvent *UNUSED (e))
 {
@@ -820,7 +821,7 @@ _FVMenuSaveAs (FontView *fv)
   return (ok);
 }
 
-static void
+VISIBLE void
 FVMenuSaveAs (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -861,7 +862,7 @@ _FVMenuSave (FontView *fv)
   return (ret);
 }
 
-static void
+VISIBLE void
 FVMenuSave (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -1038,7 +1039,7 @@ MenuNew (GWindow UNUSED (gw), struct gmenuitem *UNUSED (mi),
   FontNew ();
 }
 
-static void
+VISIBLE void
 FVMenuClose (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -1105,14 +1106,14 @@ FV_ReattachCVs (SplineFont *old, SplineFont *new)
     }
 }
 
-static void
+VISIBLE void
 FVMenuRevert (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontViewBase *fv = (FontViewBase *) GDrawGetUserData (gw);
   FVRevert (fv);
 }
 
-static void
+VISIBLE void
 FVMenuRevertBackup (GWindow gw, struct gmenuitem *UNUSED (mi),
                     GEvent *UNUSED (e))
 {
@@ -1120,7 +1121,7 @@ FVMenuRevertBackup (GWindow gw, struct gmenuitem *UNUSED (mi),
   FVRevertBackup (fv);
 }
 
-static void
+VISIBLE void
 FVMenuRevertGlyph (GWindow gw, struct gmenuitem *UNUSED (mi),
                    GEvent *UNUSED (e))
 {
@@ -1176,7 +1177,7 @@ _MenuExit (void *UNUSED (junk))
   exit (0);
 }
 
-static void
+VISIBLE void
 FVMenuExit (GWindow UNUSED (base), struct gmenuitem *UNUSED (mi),
             GEvent *UNUSED (e))
 {
@@ -1229,7 +1230,7 @@ MergeKernInfo (SplineFont *sf, EncMap *map)
   free (temp);
 }
 
-static void
+VISIBLE void
 FVMenuMergeKern (GWindow gw, struct gmenuitem *UNUSED (mi),
                  GEvent *UNUSED (e))
 {
@@ -1277,7 +1278,7 @@ MenuOpen (GWindow UNUSED (base), struct gmenuitem *UNUSED (mi),
   while (fvtest == fvcnt);      /* did the load fail for some reason? try again */
 }
 
-static void
+VISIBLE void
 FVMenuContextualHelp (GWindow UNUSED (base), struct gmenuitem *UNUSED (mi),
                       GEvent *UNUSED (e))
 {
@@ -1486,7 +1487,7 @@ MenuAbout (GWindow UNUSED (base), struct gmenuitem *UNUSED (mi),
   ShowAboutScreen ();
 }
 
-static void
+VISIBLE void
 FVMenuImport (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -1524,7 +1525,7 @@ FVSelCount (FontView *fv)
   return (true);
 }
 
-static void
+VISIBLE void
 FVMenuOpenOutline (GWindow gw, struct gmenuitem *UNUSED (mi),
                    GEvent *UNUSED (e))
 {
@@ -1545,7 +1546,7 @@ FVMenuOpenOutline (GWindow gw, struct gmenuitem *UNUSED (mi),
       }
 }
 
-static void
+VISIBLE void
 FVMenuOpenBitmap (GWindow gw, struct gmenuitem *UNUSED (mi),
                   GEvent *UNUSED (e))
 {
@@ -1576,7 +1577,7 @@ _MenuWarnings (GWindow UNUSED (gw), struct gmenuitem *UNUSED (mi),
   ShowErrorWindow ();
 }
 
-static void
+VISIBLE void
 FVMenuOpenMetrics (GWindow gw, struct gmenuitem *UNUSED (mi),
                    GEvent *UNUSED (e))
 {
@@ -1586,7 +1587,7 @@ FVMenuOpenMetrics (GWindow gw, struct gmenuitem *UNUSED (mi),
   MetricsViewCreate (fv, NULL, fv->filled == fv->show ? NULL : fv->show);
 }
 
-static void
+VISIBLE void
 FVMenuPrint (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -1597,7 +1598,7 @@ FVMenuPrint (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 }
 
 #if !defined(_NO_PYTHON)
-static void
+VISIBLE void
 FVMenuExecute (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -1606,7 +1607,7 @@ FVMenuExecute (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 }
 #endif
 
-static void
+VISIBLE void
 FVMenuFontInfo (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -1615,14 +1616,14 @@ FVMenuFontInfo (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
   FontMenuFontInfo (fv);
 }
 
-static void
+VISIBLE void
 FVMenuMATHInfo (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
   SFMathDlg (fv->b.sf, fv->b.active_layer);
 }
 
-static void
+VISIBLE void
 FVMenuFindProblems (GWindow gw, struct gmenuitem *UNUSED (mi),
                     GEvent *UNUSED (e))
 {
@@ -1630,14 +1631,14 @@ FVMenuFindProblems (GWindow gw, struct gmenuitem *UNUSED (mi),
   FindProblems (fv, NULL, NULL);
 }
 
-static void
+VISIBLE void
 FVMenuValidate (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
   SFValidationWindow (fv->b.sf, fv->b.active_layer, ff_none);
 }
 
-static void
+VISIBLE void
 FVMenuSetExtremumBound (GWindow gw, struct gmenuitem *UNUSED (mi),
                         GEvent *UNUSED (e))
 {
@@ -1670,21 +1671,21 @@ FVMenuSetExtremumBound (GWindow gw, struct gmenuitem *UNUSED (mi),
   free (ret);
 }
 
-static void
+VISIBLE void
 FVMenuEmbolden (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
   EmboldenDlg (fv, NULL);
 }
 
-static void
+VISIBLE void
 FVMenuItalic (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
   ItalicDlg (fv, NULL);
 }
 
-static void
+VISIBLE void
 FVMenuSmallCaps (GWindow gw, struct gmenuitem *UNUSED (mi),
                  GEvent *UNUSED (e))
 {
@@ -1692,7 +1693,7 @@ FVMenuSmallCaps (GWindow gw, struct gmenuitem *UNUSED (mi),
   GlyphChangeDlg (fv, NULL, gc_smallcaps);
 }
 
-static void
+VISIBLE void
 FVMenuChangeXHeight (GWindow gw, struct gmenuitem *UNUSED (mi),
                      GEvent *UNUSED (e))
 {
@@ -1700,7 +1701,7 @@ FVMenuChangeXHeight (GWindow gw, struct gmenuitem *UNUSED (mi),
   ChangeXHeightDlg (fv, NULL);
 }
 
-static void
+VISIBLE void
 FVMenuChangeGlyph (GWindow gw, struct gmenuitem *UNUSED (mi),
                    GEvent *UNUSED (e))
 {
@@ -1708,7 +1709,7 @@ FVMenuChangeGlyph (GWindow gw, struct gmenuitem *UNUSED (mi),
   GlyphChangeDlg (fv, NULL, gc_generic);
 }
 
-static void
+VISIBLE void
 FVMenuSubSup (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -1716,14 +1717,14 @@ FVMenuSubSup (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
   /*AddSubSupDlg(fv); */
 }
 
-static void
+VISIBLE void
 FVMenuOblique (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
   ObliqueDlg (fv, NULL);
 }
 
-static void
+VISIBLE void
 FVMenuCondense (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -1963,7 +1964,7 @@ FVAllSelected (FontView *fv)
   return fv_all_selected (&fv->b);
 }
 
-static void
+VISIBLE void
 FVMenuCopyFrom (GWindow UNUSED (gw), struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   /*FontView *fv = (FontView *) GDrawGetUserData(gw); */
@@ -1977,7 +1978,7 @@ FVMenuCopyFrom (GWindow UNUSED (gw), struct gmenuitem *mi, GEvent *UNUSED (e))
   SavePrefs (true);
 }
 
-static void
+VISIBLE void
 FVMenuCopy (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -1986,7 +1987,7 @@ FVMenuCopy (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
   FVCopy ((FontViewBase *) fv, ct_fullcopy);
 }
 
-static void
+VISIBLE void
 FVMenuCopyLookupData (GWindow gw, struct gmenuitem *UNUSED (mi),
                       GEvent *UNUSED (e))
 {
@@ -1996,7 +1997,7 @@ FVMenuCopyLookupData (GWindow gw, struct gmenuitem *UNUSED (mi),
   FVCopy ((FontViewBase *) fv, ct_lookups);
 }
 
-static void
+VISIBLE void
 FVMenuCopyRef (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -2005,7 +2006,7 @@ FVMenuCopyRef (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
   FVCopy ((FontViewBase *) fv, ct_reference);
 }
 
-static void
+VISIBLE void
 FVMenuCopyWidth (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -2020,7 +2021,7 @@ FVMenuCopyWidth (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
                MID_CopyLBearing ? ut_lbearing : ut_rbearing);
 }
 
-static void
+VISIBLE void
 FVMenuPaste (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -2029,7 +2030,7 @@ FVMenuPaste (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
   PasteIntoFV ((FontViewBase *) fv, false, NULL);
 }
 
-static void
+VISIBLE void
 FVMenuPasteInto (GWindow gw, struct gmenuitem *UNUSED (mi),
                  GEvent *UNUSED (e))
 {
@@ -2039,7 +2040,7 @@ FVMenuPasteInto (GWindow gw, struct gmenuitem *UNUSED (mi),
   PasteIntoFV ((FontViewBase *) fv, true, NULL);
 }
 
-static void
+VISIBLE void
 FVMenuPasteAfter (GWindow gw, struct gmenuitem *UNUSED (mi),
                   GEvent *UNUSED (e))
 {
@@ -2050,7 +2051,7 @@ FVMenuPasteAfter (GWindow gw, struct gmenuitem *UNUSED (mi),
   PasteIntoFV (&fv->b, 2, NULL);
 }
 
-static void
+VISIBLE void
 FVMenuSameGlyphAs (GWindow gw, struct gmenuitem *UNUSED (mi),
                    GEvent *UNUSED (e))
 {
@@ -2059,21 +2060,21 @@ FVMenuSameGlyphAs (GWindow gw, struct gmenuitem *UNUSED (mi),
   GDrawRequestExpose (fv->v, NULL, false);
 }
 
-static void
+VISIBLE void
 FVMenuCopyFgBg (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
   FVCopyFgtoBg ((FontViewBase *) fv);
 }
 
-static void
+VISIBLE void
 FVMenuCopyL2L (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
   FVCopyLayerToLayer (fv);
 }
 
-static void
+VISIBLE void
 FVMenuCompareL2L (GWindow gw, struct gmenuitem *UNUSED (mi),
                   GEvent *UNUSED (e))
 {
@@ -2081,14 +2082,14 @@ FVMenuCompareL2L (GWindow gw, struct gmenuitem *UNUSED (mi),
   FVCompareLayerToLayer (fv);
 }
 
-static void
+VISIBLE void
 FVMenuClear (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
   FVClear ((FontViewBase *) fv);
 }
 
-static void
+VISIBLE void
 FVMenuClearBackground (GWindow gw, struct gmenuitem *UNUSED (mi),
                        GEvent *UNUSED (e))
 {
@@ -2096,14 +2097,14 @@ FVMenuClearBackground (GWindow gw, struct gmenuitem *UNUSED (mi),
   FVClearBackground ((FontViewBase *) fv);
 }
 
-static void
+VISIBLE void
 FVMenuJoin (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
   FVJoin ((FontViewBase *) fv);
 }
 
-static void
+VISIBLE void
 FVMenuUnlinkRef (GWindow gw, struct gmenuitem *UNUSED (mi),
                  GEvent *UNUSED (e))
 {
@@ -2111,7 +2112,7 @@ FVMenuUnlinkRef (GWindow gw, struct gmenuitem *UNUSED (mi),
   FVUnlinkRef ((FontViewBase *) fv);
 }
 
-static void
+VISIBLE void
 FVMenuRemoveUndoes (GWindow gw, struct gmenuitem *UNUSED (mi),
                     GEvent *UNUSED (e))
 {
@@ -2119,21 +2120,21 @@ FVMenuRemoveUndoes (GWindow gw, struct gmenuitem *UNUSED (mi),
   SFRemoveUndoes (fv->b.sf, fv->b.selected, fv->b.map);
 }
 
-static void
+VISIBLE void
 FVMenuUndo (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
   FVUndo ((FontViewBase *) fv);
 }
 
-static void
+VISIBLE void
 FVMenuRedo (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
   FVRedo ((FontViewBase *) fv);
 }
 
-static void
+VISIBLE void
 FVMenuCut (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -2141,7 +2142,7 @@ FVMenuCut (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
   FVClear (&fv->b);
 }
 
-static void
+VISIBLE void
 FVMenuSelectAll (GWindow gw, struct gmenuitem *UNUSED (mi),
                  GEvent *UNUSED (e))
 {
@@ -2150,7 +2151,7 @@ FVMenuSelectAll (GWindow gw, struct gmenuitem *UNUSED (mi),
   FVSelectAll (fv);
 }
 
-static void
+VISIBLE void
 FVMenuInvertSelection (GWindow gw, struct gmenuitem *UNUSED (mi),
                        GEvent *UNUSED (e))
 {
@@ -2159,7 +2160,7 @@ FVMenuInvertSelection (GWindow gw, struct gmenuitem *UNUSED (mi),
   FVInvertSelection (fv);
 }
 
-static void
+VISIBLE void
 FVMenuDeselectAll (GWindow gw, struct gmenuitem *UNUSED (mi),
                    GEvent *UNUSED (e))
 {
@@ -2681,7 +2682,7 @@ FVSelectByScript (FontView *fv, int merge)
   GDrawRequestExpose (fv->v, NULL, false);
 }
 
-static void
+VISIBLE void
 FVMenuSelectByScript (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *e)
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -2708,7 +2709,7 @@ FVSelectColor (FontView *fv, uint32_t col, int merge)
   GDrawRequestExpose (fv->v, NULL, false);
 }
 
-static void
+VISIBLE void
 FVMenuSelectColor (GWindow gw, struct gmenuitem *mi, GEvent *e)
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -2798,7 +2799,7 @@ FVSelectByName (FontView *fv, char *ret, int merge)
   return (true);
 }
 
-static void
+VISIBLE void
 FVMenuSelectByName (GWindow _gw, struct gmenuitem *UNUSED (mi), GEvent *e)
 {
   FontView *fv = (FontView *) GDrawGetUserData (_gw);
@@ -2966,7 +2967,7 @@ FVMenuSelectByName (GWindow _gw, struct gmenuitem *UNUSED (mi), GEvent *e)
   GDrawDestroyWindow (gw);
 }
 
-static void
+VISIBLE void
 FVMenuSelectWorthOutputting (GWindow gw, struct gmenuitem *UNUSED (mi),
                              GEvent *e)
 {
@@ -2986,7 +2987,7 @@ FVMenuSelectWorthOutputting (GWindow gw, struct gmenuitem *UNUSED (mi),
   GDrawRequestExpose (fv->v, NULL, false);
 }
 
-static void
+VISIBLE void
 FVMenuGlyphsRefs (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *e)
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -3007,7 +3008,7 @@ FVMenuGlyphsRefs (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *e)
   GDrawRequestExpose (fv->v, NULL, false);
 }
 
-static void
+VISIBLE void
 FVMenuGlyphsSplines (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *e)
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -3028,7 +3029,7 @@ FVMenuGlyphsSplines (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *e)
   GDrawRequestExpose (fv->v, NULL, false);
 }
 
-static void
+VISIBLE void
 FVMenuGlyphsBoth (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *e)
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -3049,7 +3050,7 @@ FVMenuGlyphsBoth (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *e)
   GDrawRequestExpose (fv->v, NULL, false);
 }
 
-static void
+VISIBLE void
 FVMenuGlyphsWhite (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *e)
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -3070,7 +3071,7 @@ FVMenuGlyphsWhite (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *e)
   GDrawRequestExpose (fv->v, NULL, false);
 }
 
-static void
+VISIBLE void
 FVMenuSelectChanged (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *e)
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -3090,7 +3091,7 @@ FVMenuSelectChanged (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *e)
   GDrawRequestExpose (fv->v, NULL, false);
 }
 
-static void
+VISIBLE void
 FVMenuSelectHintingNeeded (GWindow gw, struct gmenuitem *UNUSED (mi),
                            GEvent *e)
 {
@@ -3119,7 +3120,7 @@ FVMenuSelectHintingNeeded (GWindow gw, struct gmenuitem *UNUSED (mi),
   GDrawRequestExpose (fv->v, NULL, false);
 }
 
-static void
+VISIBLE void
 FVMenuSelectAutohintable (GWindow gw, struct gmenuitem *UNUSED (mi),
                           GEvent *e)
 {
@@ -3139,7 +3140,7 @@ FVMenuSelectAutohintable (GWindow gw, struct gmenuitem *UNUSED (mi),
   GDrawRequestExpose (fv->v, NULL, false);
 }
 
-static void
+VISIBLE void
 FVMenuSelectByPST (GWindow gw, struct gmenuitem *UNUSED (mi),
                    GEvent *UNUSED (e))
 {
@@ -3148,7 +3149,7 @@ FVMenuSelectByPST (GWindow gw, struct gmenuitem *UNUSED (mi),
   FVSelectByPST (fv);
 }
 
-static void
+VISIBLE void
 FVMenuFindRpl (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -3156,7 +3157,7 @@ FVMenuFindRpl (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
   SVCreate (fv);
 }
 
-static void
+VISIBLE void
 FVMenuReplaceWithRef (GWindow gw, struct gmenuitem *UNUSED (mi),
                       GEvent *UNUSED (e))
 {
@@ -3165,7 +3166,7 @@ FVMenuReplaceWithRef (GWindow gw, struct gmenuitem *UNUSED (mi),
   FVReplaceOutlineWithReference (fv, .001);
 }
 
-static void
+VISIBLE void
 FVMenuCorrectRefs (GWindow gw, struct gmenuitem *UNUSED (mi),
                    GEvent *UNUSED (e))
 {
@@ -3174,7 +3175,7 @@ FVMenuCorrectRefs (GWindow gw, struct gmenuitem *UNUSED (mi),
   FVCorrectReferences (fv);
 }
 
-static void
+VISIBLE void
 FVMenuCharInfo (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -3189,7 +3190,7 @@ FVMenuCharInfo (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
               fv->b.map, pos);
 }
 
-static void
+VISIBLE void
 FVMenuBDFInfo (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -3201,7 +3202,7 @@ FVMenuBDFInfo (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
     SFBdfProperties (fv->b.sf, fv->b.map, NULL);
 }
 
-static void
+VISIBLE void
 FVMenuBaseHoriz (GWindow gw, struct gmenuitem *UNUSED (mi),
                  GEvent *UNUSED (e))
 {
@@ -3211,7 +3212,7 @@ FVMenuBaseHoriz (GWindow gw, struct gmenuitem *UNUSED (mi),
   SFBaseSort (sf);
 }
 
-static void
+VISIBLE void
 FVMenuBaseVert (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -3220,7 +3221,7 @@ FVMenuBaseVert (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
   SFBaseSort (sf);
 }
 
-static void
+VISIBLE void
 FVMenuJustify (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -3228,7 +3229,7 @@ FVMenuJustify (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
   JustifyDlg (sf);
 }
 
-static void
+VISIBLE void
 FVMenuMassRename (GWindow gw, struct gmenuitem *UNUSED (mi),
                   GEvent *UNUSED (e))
 {
@@ -3250,7 +3251,7 @@ FVSetColor (FontView *fv, uint32_t col)
   GDrawRequestExpose (fv->v, NULL, false);
 }
 
-static void
+VISIBLE void
 FVMenuSetColor (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -3271,7 +3272,7 @@ FVMenuSetColor (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
   FVSetColor (fv, col);
 }
 
-static void
+VISIBLE void
 FVMenuShowDependentRefs (GWindow gw, struct gmenuitem *UNUSED (mi),
                          GEvent *UNUSED (e))
 {
@@ -3287,7 +3288,7 @@ FVMenuShowDependentRefs (GWindow gw, struct gmenuitem *UNUSED (mi),
   SCRefBy (sc);
 }
 
-static void
+VISIBLE void
 FVMenuShowDependentSubs (GWindow gw, struct gmenuitem *UNUSED (mi),
                          GEvent *UNUSED (e))
 {
@@ -3334,7 +3335,7 @@ FVDoTransform (FontView *fv)
   TransformDlgCreate (fv, FVTransFunc, getorigin, flags, cvt_none);
 }
 
-static void
+VISIBLE void
 FVMenuTransform (GWindow gw, struct gmenuitem *UNUSED (mi),
                  GEvent *UNUSED (e))
 {
@@ -3342,7 +3343,7 @@ FVMenuTransform (GWindow gw, struct gmenuitem *UNUSED (mi),
   FVDoTransform (fv);
 }
 
-static void
+VISIBLE void
 FVMenuPOV (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -3354,7 +3355,7 @@ FVMenuPOV (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
   FVPointOfView ((FontViewBase *) fv, &pov_data);
 }
 
-static void
+VISIBLE void
 FVMenuNLTransform (GWindow gw, struct gmenuitem *UNUSED (mi),
                    GEvent *UNUSED (e))
 {
@@ -3364,7 +3365,7 @@ FVMenuNLTransform (GWindow gw, struct gmenuitem *UNUSED (mi),
   NonLinearDlg (fv, NULL);
 }
 
-static void
+VISIBLE void
 FVMenuBitmaps (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -3373,7 +3374,7 @@ FVMenuBitmaps (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
                                                   MID_AvailBitmaps));
 }
 
-static void
+VISIBLE void
 FVMenuStroke (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -3381,14 +3382,14 @@ FVMenuStroke (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 }
 
 #ifdef FONTFORGE_CONFIG_TILEPATH
-static void
+VISIBLE void
 FVMenuTilePath (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
   FVTile (fv);
 }
 
-static void
+VISIBLE void
 FVMenuPatternTile (GWindow gw, struct gmenuitem *UNUSED (mi),
                    GEvent *UNUSED (e))
 {
@@ -3397,7 +3398,7 @@ FVMenuPatternTile (GWindow gw, struct gmenuitem *UNUSED (mi),
 }
 #endif
 
-static void
+VISIBLE void
 FVMenuOverlap (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -3415,7 +3416,7 @@ FVMenuOverlap (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
              MID_Intersection ? over_intersect : over_findinter);
 }
 
-static void
+VISIBLE void
 FVMenuInline (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -3423,7 +3424,7 @@ FVMenuInline (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
   OutlineDlg (fv, NULL, NULL, true);
 }
 
-static void
+VISIBLE void
 FVMenuOutline (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -3431,7 +3432,7 @@ FVMenuOutline (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
   OutlineDlg (fv, NULL, NULL, false);
 }
 
-static void
+VISIBLE void
 FVMenuShadow (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -3439,7 +3440,7 @@ FVMenuShadow (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
   ShadowDlg (fv, NULL, NULL, false);
 }
 
-static void
+VISIBLE void
 FVMenuWireframe (GWindow gw, struct gmenuitem *UNUSED (mi),
                  GEvent *UNUSED (e))
 {
@@ -3474,47 +3475,47 @@ FVSimplify (FontView *fv, int type)
   _FVSimplify ((FontViewBase *) fv, smpl);
 }
 
-static void
+VISIBLE void
 FVMenuSimplify (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FVSimplify ((FontView *) GDrawGetUserData (gw), false);
 }
 
-static void
+VISIBLE void
 FVMenuSimplifyMore (GWindow gw, struct gmenuitem *UNUSED (mi),
                     GEvent *UNUSED (e))
 {
   FVSimplify ((FontView *) GDrawGetUserData (gw), true);
 }
 
-static void
+VISIBLE void
 FVMenuCleanup (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FVSimplify ((FontView *) GDrawGetUserData (gw), -1);
 }
 
-static void
+VISIBLE void
 FVMenuCanonicalStart (GWindow gw, struct gmenuitem *UNUSED (mi),
                       GEvent *UNUSED (e))
 {
   FVCanonicalStart ((FontViewBase *) GDrawGetUserData (gw));
 }
 
-static void
+VISIBLE void
 FVMenuCanonicalContours (GWindow gw, struct gmenuitem *UNUSED (mi),
                          GEvent *UNUSED (e))
 {
   FVCanonicalContours ((FontViewBase *) GDrawGetUserData (gw));
 }
 
-static void
+VISIBLE void
 FVMenuAddExtrema (GWindow gw, struct gmenuitem *UNUSED (mi),
                   GEvent *UNUSED (e))
 {
   FVAddExtrema ((FontViewBase *) GDrawGetUserData (gw), false);
 }
 
-static void
+VISIBLE void
 FVMenuCorrectDir (GWindow gw, struct gmenuitem *UNUSED (mi),
                   GEvent *UNUSED (e))
 {
@@ -3522,27 +3523,27 @@ FVMenuCorrectDir (GWindow gw, struct gmenuitem *UNUSED (mi),
   FVCorrectDir ((FontViewBase *) fv);
 }
 
-static void
+VISIBLE void
 FVMenuRound2Int (GWindow gw, struct gmenuitem *UNUSED (mi),
                  GEvent *UNUSED (e))
 {
   FVRound2Int ((FontViewBase *) GDrawGetUserData (gw), 1.0);
 }
 
-static void
+VISIBLE void
 FVMenuRound2Hundredths (GWindow gw, struct gmenuitem *UNUSED (mi),
                         GEvent *UNUSED (e))
 {
   FVRound2Int ((FontViewBase *) GDrawGetUserData (gw), 100.0);
 }
 
-static void
+VISIBLE void
 FVMenuCluster (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FVCluster ((FontViewBase *) GDrawGetUserData (gw));
 }
 
-static void
+VISIBLE void
 FVMenuAutotrace (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *e)
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -3560,21 +3561,21 @@ FVMenuAutotrace (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *e)
     GDrawSetCursor (fv->v, ct);
 }
 
-static void
+VISIBLE void
 FVMenuBuildAccent (GWindow gw, struct gmenuitem *UNUSED (mi),
                    GEvent *UNUSED (e))
 {
   FVBuildAccent ((FontViewBase *) GDrawGetUserData (gw), true);
 }
 
-static void
+VISIBLE void
 FVMenuBuildComposite (GWindow gw, struct gmenuitem *UNUSED (mi),
                       GEvent *UNUSED (e))
 {
   FVBuildAccent ((FontViewBase *) GDrawGetUserData (gw), false);
 }
 
-static void
+VISIBLE void
 FVMenuBuildDuplicate (GWindow gw, struct gmenuitem *UNUSED (mi),
                       GEvent *UNUSED (e))
 {
@@ -3582,7 +3583,7 @@ FVMenuBuildDuplicate (GWindow gw, struct gmenuitem *UNUSED (mi),
 }
 
 #ifdef KOREAN
-static void
+VISIBLE void
 FVMenuShowGroup (GWindow gw, struct gmenuitem *UNUSED (mi),
                  GEvent *UNUSED (e))
 {
@@ -3590,7 +3591,7 @@ FVMenuShowGroup (GWindow gw, struct gmenuitem *UNUSED (mi),
 }
 #endif
 
-static void
+VISIBLE void
 FVMenuCompareFonts (GWindow gw, struct gmenuitem *UNUSED (mi),
                     GEvent *UNUSED (e))
 {
@@ -3598,7 +3599,7 @@ FVMenuCompareFonts (GWindow gw, struct gmenuitem *UNUSED (mi),
   FontCompareDlg (fv);
 }
 
-static void
+VISIBLE void
 FVMenuMergeFonts (GWindow gw, struct gmenuitem *UNUSED (mi),
                   GEvent *UNUSED (e))
 {
@@ -3606,7 +3607,7 @@ FVMenuMergeFonts (GWindow gw, struct gmenuitem *UNUSED (mi),
   FVMergeFonts (fv);
 }
 
-static void
+VISIBLE void
 FVMenuInterpFonts (GWindow gw, struct gmenuitem *UNUSED (mi),
                    GEvent *UNUSED (e))
 {
@@ -3763,7 +3764,7 @@ _FVMenuChangeChar (FontView *fv, int mid)
     FVChangeChar (fv, pos);
 }
 
-static void
+VISIBLE void
 FVMenuChangeChar (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -3817,7 +3818,7 @@ FVShowSubFont (FontView *fv, SplineFont *new)
   GDrawRequestExpose (fv->v, NULL, true);
 }
 
-static void
+VISIBLE void
 FVMenuGotoChar (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -3857,7 +3858,7 @@ FVMenuGotoChar (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
     }
 }
 
-static void
+VISIBLE void
 FVMenuLigatures (GWindow gw, struct gmenuitem *UNUSED (mi),
                  GEvent *UNUSED (e))
 {
@@ -3865,7 +3866,7 @@ FVMenuLigatures (GWindow gw, struct gmenuitem *UNUSED (mi),
   SFShowLigatures (fv->b.sf, NULL);
 }
 
-static void
+VISIBLE void
 FVMenuKernPairs (GWindow gw, struct gmenuitem *UNUSED (mi),
                  GEvent *UNUSED (e))
 {
@@ -3875,21 +3876,21 @@ FVMenuKernPairs (GWindow gw, struct gmenuitem *UNUSED (mi),
   SFKernCleanup (fv->b.sf, false);
 }
 
-static void
+VISIBLE void
 FVMenuAnchorPairs (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
   SFShowKernPairs (fv->b.sf, NULL, mi->ti.userdata, fv->b.active_layer);
 }
 
-static void
+VISIBLE void
 FVMenuShowAtt (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
   ShowAtt (fv->b.sf, fv->b.active_layer);
 }
 
-static void
+VISIBLE void
 FVMenuDisplaySubs (GWindow gw, struct gmenuitem *UNUSED (mi),
                    GEvent *UNUSED (e))
 {
@@ -4095,7 +4096,7 @@ md_e_h (GWindow gw, GEvent *e)
   return (true);
 }
 
-static void
+VISIBLE void
 FVMenuShowMetrics (GWindow fvgw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (fvgw);
@@ -4214,14 +4215,14 @@ FVMenuShowMetrics (GWindow fvgw, struct gmenuitem *mi, GEvent *UNUSED (e))
   GDrawRequestExpose (fv->v, NULL, false);
 }
 
-static void
+VISIBLE void
 FV_ChangeDisplayBitmap (FontView *fv, BDFFont *bdf)
 {
   FVChangeDisplayFont (fv, bdf);
   fv->b.sf->display_size = fv->show->pixelsize;
 }
 
-static void
+VISIBLE void
 FVMenuSize (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -4341,7 +4342,7 @@ FV_LayerChanged (FontView *fv)
   BDFFontFree (old);
 }
 
-static void
+VISIBLE void
 FVMenuChangeLayer (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -4351,7 +4352,7 @@ FVMenuChangeLayer (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
   FV_LayerChanged (fv);
 }
 
-static void
+VISIBLE void
 FVMenuMagnify (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -4381,7 +4382,7 @@ FVMenuMagnify (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
   free (ret);
 }
 
-static void
+VISIBLE void
 FVMenuWSize (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -4413,7 +4414,7 @@ FVMenuWSize (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
   SavePrefs (true);
 }
 
-static void
+VISIBLE void
 FVMenuGlyphLabel (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -4425,7 +4426,7 @@ FVMenuGlyphLabel (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
   SavePrefs (true);
 }
 
-static void
+VISIBLE void
 FVMenuShowBitmap (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -4446,14 +4447,14 @@ FV_ShowFilled (FontView *fv)
   fv->b.active_bitmap = NULL;
 }
 
-static void
+VISIBLE void
 FVMenuCenter (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   FontViewBase *fv = (FontViewBase *) GDrawGetUserData (gw);
   FVMetricsCenter (fv, mi->mid == MID_Center);
 }
 
-static void
+VISIBLE void
 FVMenuSetWidth (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -4469,7 +4470,7 @@ FVMenuSetWidth (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
               MID_SetBearings ? wt_bearings : wt_vwidth);
 }
 
-static void
+VISIBLE void
 FVMenuAutoWidth (GWindow gw, struct gmenuitem *UNUSED (mi),
                  GEvent *UNUSED (e))
 {
@@ -4478,7 +4479,7 @@ FVMenuAutoWidth (GWindow gw, struct gmenuitem *UNUSED (mi),
   FVAutoWidth2 (fv);
 }
 
-static void
+VISIBLE void
 FVMenuKernByClasses (GWindow gw, struct gmenuitem *UNUSED (mi),
                      GEvent *UNUSED (e))
 {
@@ -4487,7 +4488,7 @@ FVMenuKernByClasses (GWindow gw, struct gmenuitem *UNUSED (mi),
   ShowKernClasses (fv->b.sf, NULL, fv->b.active_layer, false);
 }
 
-static void
+VISIBLE void
 FVMenuVKernByClasses (GWindow gw, struct gmenuitem *UNUSED (mi),
                       GEvent *UNUSED (e))
 {
@@ -4496,7 +4497,7 @@ FVMenuVKernByClasses (GWindow gw, struct gmenuitem *UNUSED (mi),
   ShowKernClasses (fv->b.sf, NULL, fv->b.active_layer, true);
 }
 
-static void
+VISIBLE void
 FVMenuRemoveKern (GWindow gw, struct gmenuitem *UNUSED (mi),
                   GEvent *UNUSED (e))
 {
@@ -4505,7 +4506,7 @@ FVMenuRemoveKern (GWindow gw, struct gmenuitem *UNUSED (mi),
   FVRemoveKerns (&fv->b);
 }
 
-static void
+VISIBLE void
 FVMenuRemoveVKern (GWindow gw, struct gmenuitem *UNUSED (mi),
                    GEvent *UNUSED (e))
 {
@@ -4514,7 +4515,7 @@ FVMenuRemoveVKern (GWindow gw, struct gmenuitem *UNUSED (mi),
   FVRemoveVKerns (&fv->b);
 }
 
-static void
+VISIBLE void
 FVMenuKPCloseup (GWindow gw, struct gmenuitem *UNUSED (mi),
                  GEvent *UNUSED (e))
 {
@@ -4530,7 +4531,7 @@ FVMenuKPCloseup (GWindow gw, struct gmenuitem *UNUSED (mi),
              fv->b.active_layer, false);
 }
 
-static void
+VISIBLE void
 FVMenuVKernFromHKern (GWindow gw, struct gmenuitem *UNUSED (mi),
                       GEvent *UNUSED (e))
 {
@@ -4539,14 +4540,14 @@ FVMenuVKernFromHKern (GWindow gw, struct gmenuitem *UNUSED (mi),
   FVVKernFromHKern (&fv->b);
 }
 
-static void
+VISIBLE void
 FVMenuAutoHint (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
   FVAutoHint (&fv->b);
 }
 
-static void
+VISIBLE void
 FVMenuAutoHintSubs (GWindow gw, struct gmenuitem *UNUSED (mi),
                     GEvent *UNUSED (e))
 {
@@ -4554,7 +4555,7 @@ FVMenuAutoHintSubs (GWindow gw, struct gmenuitem *UNUSED (mi),
   FVAutoHintSubs (&fv->b);
 }
 
-static void
+VISIBLE void
 FVMenuAutoCounter (GWindow gw, struct gmenuitem *UNUSED (mi),
                    GEvent *UNUSED (e))
 {
@@ -4562,7 +4563,7 @@ FVMenuAutoCounter (GWindow gw, struct gmenuitem *UNUSED (mi),
   FVAutoCounter (&fv->b);
 }
 
-static void
+VISIBLE void
 FVMenuDontAutoHint (GWindow gw, struct gmenuitem *UNUSED (mi),
                     GEvent *UNUSED (e))
 {
@@ -4570,7 +4571,7 @@ FVMenuDontAutoHint (GWindow gw, struct gmenuitem *UNUSED (mi),
   FVDontAutoHint (&fv->b);
 }
 
-static void
+VISIBLE void
 FVMenuDeltas (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -4580,7 +4581,7 @@ FVMenuDeltas (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
   DeltaSuggestionDlg (fv, NULL);
 }
 
-static void
+VISIBLE void
 FVMenuAutoInstr (GWindow gw, struct gmenuitem *UNUSED (mi),
                  GEvent *UNUSED (e))
 {
@@ -4588,7 +4589,7 @@ FVMenuAutoInstr (GWindow gw, struct gmenuitem *UNUSED (mi),
   FVAutoInstr (&fv->b);
 }
 
-static void
+VISIBLE void
 FVMenuEditInstrs (GWindow gw, struct gmenuitem *UNUSED (mi),
                   GEvent *UNUSED (e))
 {
@@ -4601,7 +4602,7 @@ FVMenuEditInstrs (GWindow gw, struct gmenuitem *UNUSED (mi),
   SCEditInstructions (sc);
 }
 
-static void
+VISIBLE void
 FVMenuEditTable (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -4612,7 +4613,7 @@ FVMenuEditTable (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
                : CHR ('c', 'v', 't', ' '));
 }
 
-static void
+VISIBLE void
 FVMenuRmInstrTables (GWindow gw, struct gmenuitem *UNUSED (mi),
                      GEvent *UNUSED (e))
 {
@@ -4626,7 +4627,7 @@ FVMenuRmInstrTables (GWindow gw, struct gmenuitem *UNUSED (mi),
     }
 }
 
-static void
+VISIBLE void
 FVMenuClearInstrs (GWindow gw, struct gmenuitem *UNUSED (mi),
                    GEvent *UNUSED (e))
 {
@@ -4634,7 +4635,7 @@ FVMenuClearInstrs (GWindow gw, struct gmenuitem *UNUSED (mi),
   FVClearInstrs (&fv->b);
 }
 
-static void
+VISIBLE void
 FVMenuClearHints (GWindow gw, struct gmenuitem *UNUSED (mi),
                   GEvent *UNUSED (e))
 {
@@ -4642,7 +4643,7 @@ FVMenuClearHints (GWindow gw, struct gmenuitem *UNUSED (mi),
   FVClearHints (&fv->b);
 }
 
-static void
+VISIBLE void
 FVMenuHistograms (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -4716,7 +4717,7 @@ FontViewSetTitles (SplineFont *sf)
     FontViewSetTitle (fv);
 }
 
-static void
+VISIBLE void
 FVMenuShowSubFont (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -4724,7 +4725,7 @@ FVMenuShowSubFont (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
   FVShowSubFont (fv, new);
 }
 
-static void
+VISIBLE void
 FVMenuConvert2CID (GWindow gw, struct gmenuitem *UNUSED (mi),
                    GEvent *UNUSED (e))
 {
@@ -4777,7 +4778,7 @@ CMapFilter (GGadget *g, GDirEntry * ent, const uint32_t *dir)
   return (ret);
 }
 
-static void
+VISIBLE void
 FVMenuConvertByCMap (GWindow gw, struct gmenuitem *UNUSED (mi),
                      GEvent *UNUSED (e))
 {
@@ -4796,7 +4797,7 @@ FVMenuConvertByCMap (GWindow gw, struct gmenuitem *UNUSED (mi),
   free (cmapfilename);
 }
 
-static void
+VISIBLE void
 FVMenuFlatten (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -4807,7 +4808,7 @@ FVMenuFlatten (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
   SFFlatten (cidmaster);
 }
 
-static void
+VISIBLE void
 FVMenuFlattenByCMap (GWindow gw, struct gmenuitem *UNUSED (mi),
                      GEvent *UNUSED (e))
 {
@@ -4828,7 +4829,7 @@ FVMenuFlattenByCMap (GWindow gw, struct gmenuitem *UNUSED (mi),
   free (cmapname);
 }
 
-static void
+VISIBLE void
 FVMenuInsertFont (GWindow gw, struct gmenuitem *UNUSED (mi),
                   GEvent *UNUSED (e))
 {
@@ -4881,7 +4882,7 @@ FVMenuInsertFont (GWindow gw, struct gmenuitem *UNUSED (mi),
   CIDMasterAsDes (new);
 }
 
-static void
+VISIBLE void
 FVMenuInsertBlank (GWindow gw, struct gmenuitem *UNUSED (mi),
                    GEvent *UNUSED (e))
 {
@@ -4909,7 +4910,7 @@ FVMenuInsertBlank (GWindow gw, struct gmenuitem *UNUSED (mi),
   FVInsertInCID ((FontViewBase *) fv, sf);
 }
 
-static void
+VISIBLE void
 FVMenuRemoveFontFromCID (GWindow gw, struct gmenuitem *UNUSED (mi),
                          GEvent *UNUSED (e))
 {
@@ -4977,7 +4978,7 @@ FVMenuRemoveFontFromCID (GWindow gw, struct gmenuitem *UNUSED (mi),
   SplineFontFree (sf);
 }
 
-static void
+VISIBLE void
 FVMenuCIDFontInfo (GWindow gw, struct gmenuitem *UNUSED (mi),
                    GEvent *UNUSED (e))
 {
@@ -4989,7 +4990,7 @@ FVMenuCIDFontInfo (GWindow gw, struct gmenuitem *UNUSED (mi),
   FontInfo (cidmaster, fv->b.active_layer, -1, false);
 }
 
-static void
+VISIBLE void
 FVMenuChangeSupplement (GWindow gw, struct gmenuitem *UNUSED (mi),
                         GEvent *UNUSED (e))
 {
@@ -5047,7 +5048,7 @@ FVFindACharInDisplay (FontView *fv)
   return (NULL);
 }
 
-static void
+VISIBLE void
 FVMenuReencode (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -5070,7 +5071,7 @@ FVMenuReencode (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
     }
 }
 
-static void
+VISIBLE void
 FVMenuForceEncode (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -5099,7 +5100,7 @@ FVMenuForceEncode (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
   FontViewReformatOne (&fv->b);
 }
 
-static void
+VISIBLE void
 FVMenuDisplayByGroups (GWindow gw, struct gmenuitem *UNUSED (mi),
                        GEvent *UNUSED (e))
 {
@@ -5108,7 +5109,7 @@ FVMenuDisplayByGroups (GWindow gw, struct gmenuitem *UNUSED (mi),
   DisplayGroups (fv);
 }
 
-static void
+VISIBLE void
 FVMenuDefineGroups (GWindow gw, struct gmenuitem *UNUSED (mi),
                     GEvent *UNUSED (e))
 {
@@ -5117,7 +5118,7 @@ FVMenuDefineGroups (GWindow gw, struct gmenuitem *UNUSED (mi),
   DefineGroups (fv);
 }
 
-static void
+VISIBLE void
 FVMenuMMValid (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -5128,14 +5129,14 @@ FVMenuMMValid (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
   MMValid (mm, true);
 }
 
-static void
+VISIBLE void
 FVMenuCreateMM (GWindow UNUSED (gw), struct gmenuitem *UNUSED (mi),
                 GEvent *UNUSED (e))
 {
   MMWizard (NULL);
 }
 
-static void
+VISIBLE void
 FVMenuMMInfo (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -5146,7 +5147,7 @@ FVMenuMMInfo (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
   MMWizard (mm);
 }
 
-static void
+VISIBLE void
 FVMenuChangeMMBlend (GWindow gw, struct gmenuitem *UNUSED (mi),
                      GEvent *UNUSED (e))
 {
@@ -5158,7 +5159,7 @@ FVMenuChangeMMBlend (GWindow gw, struct gmenuitem *UNUSED (mi),
   MMChangeBlend (mm, fv, false);
 }
 
-static void
+VISIBLE void
 FVMenuBlendToNew (GWindow gw, struct gmenuitem *UNUSED (mi),
                   GEvent *UNUSED (e))
 {
@@ -8243,7 +8244,7 @@ FVEncodingMenuBuild (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
   mi->sub = GetEncodingMenu (FVMenuReencode, fv->b.map->enc);
 }
 
-static void
+VISIBLE void
 FVMenuAddUnencoded (GWindow gw, struct gmenuitem *UNUSED (mi),
                     GEvent *UNUSED (e))
 {
@@ -8269,7 +8270,7 @@ FVMenuAddUnencoded (GWindow gw, struct gmenuitem *UNUSED (mi),
   FVAddUnencoded ((FontViewBase *) fv, cnt);
 }
 
-static void
+VISIBLE void
 FVMenuRemoveUnused (GWindow gw, struct gmenuitem *UNUSED (mi),
                     GEvent *UNUSED (e))
 {
@@ -8277,7 +8278,7 @@ FVMenuRemoveUnused (GWindow gw, struct gmenuitem *UNUSED (mi),
   FVRemoveUnused ((FontViewBase *) fv);
 }
 
-static void
+VISIBLE void
 FVMenuCompact (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 {
   FontView *fv = (FontView *) GDrawGetUserData (gw);
@@ -8293,7 +8294,7 @@ FVMenuCompact (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
     }
 }
 
-static void
+VISIBLE void
 FVMenuDetachGlyphs (GWindow gw, struct gmenuitem *UNUSED (mi),
                     GEvent *UNUSED (e))
 {
@@ -8301,7 +8302,7 @@ FVMenuDetachGlyphs (GWindow gw, struct gmenuitem *UNUSED (mi),
   FVDetachGlyphs ((FontViewBase *) fv);
 }
 
-static void
+VISIBLE void
 FVMenuDetachAndRemoveGlyphs (GWindow gw, struct gmenuitem *UNUSED (mi),
                              GEvent *UNUSED (e))
 {
@@ -8336,7 +8337,7 @@ FVForceEncodingMenuBuild (GWindow gw, struct gmenuitem *mi,
   mi->sub = GetEncodingMenu (FVMenuForceEncode, fv->b.map->enc);
 }
 
-static void
+VISIBLE void
 FVMenuAddEncodingName (GWindow UNUSED (gw), struct gmenuitem *UNUSED (mi),
                        GEvent *UNUSED (e))
 {
@@ -8356,14 +8357,14 @@ FVMenuAddEncodingName (GWindow UNUSED (gw), struct gmenuitem *UNUSED (mi),
   free (ret);
 }
 
-static void
+VISIBLE void
 FVMenuLoadEncoding (GWindow UNUSED (gw), struct gmenuitem *UNUSED (mi),
                     GEvent *UNUSED (e))
 {
   LoadEncodingFile ();
 }
 
-static void
+VISIBLE void
 FVMenuMakeFromFont (GWindow gw, struct gmenuitem *UNUSED (mi),
                     GEvent *UNUSED (e))
 {
@@ -8371,14 +8372,14 @@ FVMenuMakeFromFont (GWindow gw, struct gmenuitem *UNUSED (mi),
   (void) MakeEncoding (fv->b.sf, fv->b.map);
 }
 
-static void
+VISIBLE void
 FVMenuRemoveEncoding (GWindow UNUSED (gw), struct gmenuitem *UNUSED (mi),
                       GEvent *UNUSED (e))
 {
   RemoveEncoding ();
 }
 
-static void
+VISIBLE void
 FVMenuMakeNamelist (GWindow gw, struct gmenuitem *UNUSED (mi),
                     GEvent *UNUSED (e))
 {
@@ -8406,7 +8407,7 @@ FVMenuMakeNamelist (GWindow gw, struct gmenuitem *UNUSED (mi),
   fclose (file);
 }
 
-static void
+VISIBLE void
 FVMenuLoadNamelist (GWindow UNUSED (gw), struct gmenuitem *UNUSED (mi),
                     GEvent *UNUSED (e))
 {
@@ -8493,7 +8494,7 @@ FVMenuLoadNamelist (GWindow UNUSED (gw), struct gmenuitem *UNUSED (mi),
   fclose (new);
 }
 
-static void
+VISIBLE void
 FVMenuRenameByNamelist (GWindow gw, struct gmenuitem *UNUSED (mi),
                         GEvent *UNUSED (e))
 {
@@ -8528,7 +8529,7 @@ FVMenuRenameByNamelist (GWindow gw, struct gmenuitem *UNUSED (mi),
   GDrawRequestExpose (fv->v, NULL, false);
 }
 
-static void
+VISIBLE void
 FVMenuNameGlyphs (GWindow gw, struct gmenuitem *UNUSED (mi),
                   GEvent *UNUSED (e))
 {

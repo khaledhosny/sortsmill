@@ -32,6 +32,7 @@
 #include <ustring.h>
 #include <utype.h>
 #include <math.h>
+#include <invoke_funcs.h>
 
 #define ACTIVE_BORDER   (_ggadget_Default_Box.active_border)
 #define MAIN_FOREGROUND (_ggadget_Default_Box.main_foreground)
@@ -1252,7 +1253,7 @@ return( true );
 #define MID_AutoKernCol		1005
 #define MID_AutoKernAll		1006
 
-static void kernmenu_dispatch(GWindow gw, GMenuItem *mi, GEvent *e) {
+VISIBLE void kernmenu_dispatch(GWindow gw, GMenuItem *mi, GEvent *e) {
     KernClassDlg *kcd = GDrawGetUserData(gw);
     int i;
 
