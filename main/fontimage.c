@@ -40,11 +40,14 @@
 #include <progname.h>
 #include <sortsmillff/xgc.h>
 #include <libguile.h>
+#include <glib.h>
+#define GMenuItem GMenuItem_GTK // FIXME
+#include <gio/gio.h>
+#undef GMenuItem
 
 #include <fontforge.h>
 #include <fontimage.h>
 #include <basics.h>
-#include "fontimage_opts.h"
 
 #ifndef _NO_PYTHON
 #include <ffpython.h>
@@ -57,8 +60,7 @@ char *default_text = "<fontname>";
 //-------------------------------------------------------------------------
 
 static void
-make_default_image (char *filename, char *font, int width, int height,
-                    int pixelsize)
+make_default_image (char *filename, char *font, int width, int height, int pixelsize)
 {
   SplineFont *sf = LoadSplineFont (font, of_fstypepermitted);
   if (sf == NULL)
@@ -79,9 +81,9 @@ make_default_image (char *filename, char *font, int width, int height,
 }
 
 static void
-make_image (char *filename, char *font, int width, int height, int pixelsize,
-            size_t line_count, char **lines)
+make_image (char *filename, char *font, int width, int height, int pixelsize, char **lines)
 {
+  size_t line_count;
   SplineFont *sf = LoadSplineFont (font, of_fstypepermitted);
   if (sf == NULL)
     {
@@ -90,6 +92,9 @@ make_image (char *filename, char *font, int width, int height, int pixelsize,
     }
   if (filename[0] == '\0')
     filename = x_gc_strjoin (sf->fontname, ".png", NULL);
+
+  for (line_count = 0; lines[line_count] != NULL;)
+    line_count++;
 
   Val v[2 * line_count];
   for (size_t i = 0; i < line_count; i++)
@@ -117,46 +122,66 @@ my_main (int argc, char **argv)
   strcpy (progname, program_name);
   argv[0] = progname;
 
-  struct gengetopt_args_info args_info;
-  int errval = cmdline_parser (argc, argv, &args_info);
-  if (errval != 0)
-    exit (1);
-
   int width = -1;
   int height = -1;
   int pixelsize = 24;
   char *output = "";
+  char **text = NULL;
+  char **remaining_args = NULL;
+  GError *error = NULL;
+  GOptionContext *context;
 
-  if (args_info.width_given)
-    width = args_info.width_arg;
-  if (args_info.height_given)
-    height = args_info.height_arg;
-  if (args_info.pixelsize_given)
-    pixelsize = args_info.pixelsize_arg;
-  if (args_info.output_given)
-    output = args_info.output_arg;
+  initialize ();
 
-  if (args_info.inputs_num != 1)
+  // *INDENT-OFF*
+  GOptionEntry entries[] = {
+    { "width", 'W', 0, G_OPTION_ARG_INT, &width, N_("Set the width of output image in pixels. If omitted (or -1) the image will be as wide as needed."), "INT" },
+    { "height", 'H', 0, G_OPTION_ARG_INT, &height, N_("Set the height of output image in pixels. If omitted (or -1) the image will be as high as needed."), "INT" },
+    { "pixel-size", 'P', 0, G_OPTION_ARG_INT, &pixelsize, N_("Set the size of text in pixels."), "INT" },
+    { "text", 't', 0, G_OPTION_ARG_STRING_ARRAY, &text, N_("A comma-separated lines of text to be used. Use '\\,' for literal comma.\n\t\t\t   If STRING is `<fontname>', the fontname will be used instead. May be specified multiple times."), N_("STRING") },
+    { "output", 'o', 0, G_OPTION_ARG_STRING, &output, N_("Set the name of the output file. If omitted, font name will be used."), N_("STRING") },
+    { G_OPTION_REMAINING, '\0', 0, G_OPTION_ARG_FILENAME_ARRAY, &remaining_args, NULL, N_("[FILE...]") },
+    { NULL }
+  };
+  // *INDENT-ON*
+
+  context = g_option_context_new
+    ("- Produce an image containing representative glyphs of the font");
+  g_option_context_add_main_entries (context, entries, FF_TEXTDOMAIN);
+
+  if (!g_option_context_parse (context, &argc, &argv, &error))
+    {
+      fprintf (stderr, "Option parsing failed: %s\n", error->message);
+      exit (1);
+    }
+
+  if (remaining_args == NULL || remaining_args[1] != NULL)
     {
       printf ("%s: you must specify exactly one font file\n", program_name);
       exit (1);
     }
 
-  char *font = args_info.inputs[0];
+  GFile *file = g_file_new_for_commandline_arg (remaining_args[0]);
+  char *font = g_file_get_path (file);
+  g_object_unref (file);
+
+  if (output[0] != '\0')
+    {
+      file = g_file_new_for_commandline_arg (output);
+      output = g_file_get_path (file);
+      g_object_unref (file);
+    }
 
   width = imax (width, -1);
   height = imax (height, -1);
   pixelsize = imax (pixelsize, 0);
 
-  initialize ();
-
-  if (args_info.text_given == 0)
+  if (text == NULL)
     make_default_image (output, font, width, height, pixelsize);
   else
-    make_image (output, font, width, height, pixelsize, args_info.text_given,
-                args_info.text_arg);
+    make_image (output, font, width, height, pixelsize, text);
 
-  cmdline_parser_free (&args_info);
+  g_option_context_free (context);
 
   return 0;
 }
@@ -175,6 +200,8 @@ initialize (void)
 
   no_windowing_ui = true;
   running_script = false;
+
+  g_type_init ();               // for glib
 
 #ifndef _NO_PYTHON
   /* This ugly hack initializes the SFD unpickler. */
