@@ -1,0 +1,9 @@
+    .ti = {
+      .text = (uint32_t *) N_("Save"),
+      .fg = COLOR_DEFAULT,
+      .bg = COLOR_DEFAULT,
+      .text_is_1byte = true,
+      .mnemonic = 'S'
+    .shortcut_char = 'S',
+    .short_mask = ksm_control,
+    .invoke = AttSaveM

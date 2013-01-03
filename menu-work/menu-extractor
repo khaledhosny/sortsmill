@@ -1,0 +1,25 @@
+#!/usr/bin/perl
+
+foreach $filename (@ARGV) {
+    open (F, $filename);
+    $contains = 0;
+    while (<F>) {
+        $contains = 1 if /^\s*\.(ti|text|image|fg|bg|userdata|font|disabled|image_precedes|checkable|checked|selected|line|text_is_1byte|text_has_mnemonic|changed|mnemonic|sort_me_first_in_list|shortcut|shortcut_char|short_mask|sub|moveto|invoke|mid)/;
+    }
+    close (F);
+    open (F, $filename);
+    if ($contains) {
+        open (G, ">" . $filename . ".menu_fields");
+        while (<F>) {
+            print G $_ if /^\s*\.(ti|text|image|fg|bg|userdata|font|disabled|image_precedes|checkable|checked|selected|line|text_is_1byte|text_has_mnemonic|changed|mnemonic|sort_me_first_in_list|shortcut|shortcut_char|short_mask|sub|moveto|invoke|mid)/;
+        }
+        close (G);
+    }
+    close (F);
+}
+
+#while (<>) {
+#    print if /^\s*\.(ti|text|image|fg|bg|userdata|font|disabled|image_precedes|checkable|checked|selected|line|text_is_1byte|text_has_mnemonic|changed|mnemonic|sort_me_first_in_list|shortcut|shortcut_char|short_mask|sub|moveto|invoke|mid)/;
+#}
+
+
