@@ -129,7 +129,7 @@ typedef enum selnames
 
 typedef struct gwindow *GWindow;
 typedef struct gdisplay GDisplay;
-typedef struct gtimer GTimer;
+typedef struct gtimer GDTimer;
 
 typedef enum keystate_mask
 {
@@ -315,7 +315,7 @@ typedef struct
 
 typedef struct
 {
-  GTimer *timer;
+  GDTimer *timer;
   void *userdata;
 } GEvent_timer;
 
@@ -680,9 +680,9 @@ VISIBLE extern void GDrawPostEvent (GEvent *e);
 VISIBLE extern void GDrawPostDragEvent (GWindow gw, GEvent *e,
                                         enum event_type);
 
-VISIBLE extern GTimer *GDrawRequestTimer (GWindow w, int32_t time_from_now,
+VISIBLE extern GDTimer *GDrawRequestTimer (GWindow w, int32_t time_from_now,
                                           int32_t frequency, void *userdata);
-VISIBLE extern void GDrawCancelTimer (GTimer * timer);
+VISIBLE extern void GDrawCancelTimer (GDTimer * timer);
 
 VISIBLE extern void GDrawSyncThread (GDisplay *gd, void (*func) (void *),
                                      void *data);

@@ -60,12 +60,12 @@ typedef struct sftextarea {
     int16_t dd_cursor_pos;
     uint32_t *pointless_text, *pointless_oldtext;
     FontInstance *font;		/* pointless */
-    GTimer *pressed;
-    GTimer *cursor;
+    GDTimer *pressed;
+    GDTimer *cursor;
     GCursor old_cursor;
     GScrollBar *hsb, *vsb;
     GIC *gic;
-    GTimer *numeric_scroll;
+    GDTimer *numeric_scroll;
     struct layoutinfo li;
     void *cbcontext;
     void (*changefontcallback)(void *,SplineFont *,enum sftf_fonttype,int size,int aa,

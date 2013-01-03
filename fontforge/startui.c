@@ -48,10 +48,8 @@
 #include <canonicalize.h>
 #include <libguile.h>
 #include <glib.h>
-#define GList GList_GTK         // FIXME
 #define GMenuItem GMenuItem_GTK // FIXME
 #include <gio/gio.h>
-#undef GList
 #undef GMenuItem
 
 extern int AutoSaveFrequency;
@@ -73,7 +71,7 @@ struct delayed_event
 };
 
 static GWindow eventw;
-static GTimer *autosave_timer;
+static GDTimer *autosave_timer;
 
 void
 DelayEvent (void (*func) (void *), void *data)
@@ -88,7 +86,7 @@ DelayEvent (void (*func) (void *), void *data)
 static void
 DoDelayedEvents (GEvent *event)
 {
-  GTimer *t = event->u.timer.timer;
+  GDTimer *t = event->u.timer.timer;
   struct delayed_event *info = (struct delayed_event *) (event->u.timer.userdata);
 
   if (info != NULL)

@@ -54,10 +54,8 @@
 # endif
 #  include <cairo/cairo.h>
 #  include <cairo/cairo-xlib.h>
-#  define GTimer GTimer_GTK
 #  include <pango/pango.h>
 #  include <pango/pangocairo.h>
-#  undef GTimer
 #endif
 
 #include "gdrawP.h"
@@ -266,7 +264,7 @@ typedef struct gxdisplay /* : GDisplay */ {
     Pixmap fence_stipple;
     int32_t mycontext;
     int16_t top_window_count;
-    GTimer *timers;
+    GDTimer *timers;
     Time last_event_time;
     struct gxselinfo selinfo[sn_max];
     int amax, alen;

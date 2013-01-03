@@ -633,7 +633,7 @@ static int GFileChooserFListSelected(GGadget *gl,GEvent *e) {
 	    ( e->u.control.subtype!=et_listselected &&
 	      e->u.control.subtype!=et_listdoubleclick ))
 return( true );
-    if ( ((GList *) gl)->multiple_sel ) {
+    if ( ((GDList *) gl)->multiple_sel ) {
 	all = GGadgetGetList(gl,&listlen);
 	len = cnt = 0;
 	dirpos = apos = -1;
@@ -1740,8 +1740,8 @@ static void GFileChooserCreateChildren(GFileChooser *gfc, int flags) {
     gfc->directories = (GListButton *) gcd[dirsk].ret;
     gfc->up          = (GButton *)     gcd[upk  ].ret;
     gfc->config      = (GButton *)     gcd[confk].ret;
-    gfc->subdirs     = (GList *)       gcd[subdirsk].ret;
-    gfc->files       = (GList *)       gcd[filesk].ret;
+    gfc->subdirs     = (GDList *)      gcd[subdirsk].ret;
+    gfc->files       = (GDList *)      gcd[filesk].ret;
     gfc->name        = (GTextField *)  gcd[textk].ret;
 
     gfc->home->g.contained = true;

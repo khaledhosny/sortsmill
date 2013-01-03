@@ -4173,7 +4173,7 @@ struct val_data {
     enum validation_state mask;
     int need_to_check_with_user_on_mask;
     int needs_blue;
-    GTimer *recheck;
+    GDTimer *recheck;
     int laststart;
     int finished_first_pass;
     int as,fh;

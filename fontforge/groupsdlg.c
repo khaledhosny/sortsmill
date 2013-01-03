@@ -79,7 +79,7 @@ struct groupdlg {
     GFont *font;
     FontView *fv;
     void (*select_callback)(struct groupdlg *);
-    GTimer *showchange;
+    GDTimer *showchange;
 };
 
 extern int _GScrollBar_Width;
