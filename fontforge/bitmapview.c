@@ -2072,7 +2072,7 @@ static void mtlistcheck(GWindow gw,struct gmenuitem *mi,GEvent *e) {
 
 // *INDENT-OFF*
 
-static GMenuItem2 wnmenu[] = {
+static GMenuItem wnmenu[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("New O_utline Window"),
@@ -2115,7 +2115,7 @@ static GMenuItem2 wnmenu[] = {
     .invoke = BVMenuOpenMetrics,
     .mid = 0
   },
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
   {
     .ti = {
       .text = (uint32_t *) N_("Warnings"),
@@ -2129,8 +2129,8 @@ static GMenuItem2 wnmenu[] = {
     .invoke = _MenuWarnings,
     .mid = MID_Warnings
   },
-  GMENUITEM2_LINE,
-  GMENUITEM2_EMPTY
+  GMENUITEM_LINE,
+  GMENUITEM_EMPTY
 };
 
 // *INDENT-ON*
@@ -2161,7 +2161,7 @@ char *BVFlipNames[] = { N_("Flip Horizontally"), N_("Flip Vertically"),
 
 // *INDENT-OFF*
 
-static GMenuItem2 dummyitem[] = {
+static GMenuItem dummyitem[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("Font|_New"),
@@ -2173,10 +2173,10 @@ static GMenuItem2 dummyitem[] = {
       .mnemonic = 'N'
     },
   },
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 fllist[] = {
+static GMenuItem fllist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("Font|_New"),
@@ -2234,7 +2234,7 @@ static GMenuItem2 fllist[] = {
     .shortcut = H_("Close|Ctl+Shft+Q"),
     .invoke = BVMenuClose
   },
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
   {
     .ti = {
       .text = (uint32_t *) N_("_Save"),
@@ -2328,7 +2328,7 @@ static GMenuItem2 fllist[] = {
     .mid = 0
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -2362,7 +2362,7 @@ static GMenuItem2 fllist[] = {
     .mid = MID_Revert
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -2395,7 +2395,7 @@ static GMenuItem2 fllist[] = {
     .mid = 0
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -2413,10 +2413,10 @@ static GMenuItem2 fllist[] = {
     .mid = 0
   },
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 edlist[] = {
+static GMenuItem edlist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_Undo"),
@@ -2449,7 +2449,7 @@ static GMenuItem2 edlist[] = {
     .mid = MID_Redo
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -2531,7 +2531,7 @@ static GMenuItem2 edlist[] = {
     .mid = MID_Clear
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -2549,7 +2549,7 @@ static GMenuItem2 edlist[] = {
     .mid = MID_SelAll
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -2566,7 +2566,7 @@ static GMenuItem2 edlist[] = {
     .mid = MID_RemoveUndoes
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -2584,10 +2584,10 @@ static GMenuItem2 edlist[] = {
     .mid = MID_UnlinkRef
   },
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 trlist[] = {
+static GMenuItem trlist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("Flip _Horizontally"),
@@ -2680,10 +2680,10 @@ static GMenuItem2 trlist[] = {
     .invoke = BVMenuRotateInvoked,
     .mid = bvt_skew
   },
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 ellist[] = {
+static GMenuItem ellist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_Font Info..."),
@@ -2732,7 +2732,7 @@ static GMenuItem2 ellist[] = {
     .mid = 0
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -2781,7 +2781,7 @@ static GMenuItem2 ellist[] = {
     .mid = 0
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -2798,10 +2798,10 @@ static GMenuItem2 ellist[] = {
     .sub = trlist,
     .mid = 0
   },
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 pllist[] = {
+static GMenuItem pllist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_Tools"),
@@ -2847,7 +2847,7 @@ static GMenuItem2 pllist[] = {
     .invoke = BVMenuPaletteShow,
     .mid = MID_Shades
   },
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
   {
     .ti = {
       .text = (uint32_t *) N_("_Docked Palettes"),
@@ -2864,10 +2864,10 @@ static GMenuItem2 pllist[] = {
     .mid = MID_DockPalettes
   },
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 vwlist[] = {
+static GMenuItem vwlist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_Fit"),
@@ -2914,7 +2914,7 @@ static GMenuItem2 vwlist[] = {
     .mid = MID_ZoomIn
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -3007,7 +3007,7 @@ static GMenuItem2 vwlist[] = {
     .mid = 0
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -3040,7 +3040,7 @@ static GMenuItem2 vwlist[] = {
     .mid = MID_Smaller
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -3058,10 +3058,10 @@ static GMenuItem2 vwlist[] = {
     .mid = 0
   },
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 mtlist[] = {
+static GMenuItem mtlist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("Set _Width..."),
@@ -3094,10 +3094,10 @@ static GMenuItem2 mtlist[] = {
     .mid = MID_SetVWidth
   },
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 mblist[] = {
+static GMenuItem mblist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_File"),
@@ -3203,7 +3203,7 @@ static GMenuItem2 mblist[] = {
     .sub = helplist
   },
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
 // *INDENT-ON*

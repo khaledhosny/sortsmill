@@ -889,7 +889,7 @@ extern void MenuNew (GWindow gw, struct gmenuitem *mi, GEvent *e);
 extern void WindowMenuBuild (GWindow base, struct gmenuitem *mi, GEvent *);
 extern void MenuRecentBuild (GWindow base, struct gmenuitem *mi, GEvent *);
 extern void MenuScriptsBuild (GWindow base, struct gmenuitem *mi, GEvent *);
-extern void mb2DoGetText (GMenuItem2 *mb);
+extern void mb2DoGetText (GMenuItem *mb);
 extern void mbDoGetText (GMenuItem * mb);
 extern int RecentFilesAny (void);
 extern void _aplistbuild (struct gmenuitem *mi, SplineFont *sf,
@@ -1344,7 +1344,7 @@ extern void SFBdfProperties (SplineFont *sf, EncMap *map, BDFFont *thisone);
 
 
 
-extern GMenuItem2 helplist[];
+extern GMenuItem helplist[];
 extern BasePoint last_ruler_offset[];
 
 extern void CVCopyLayerToLayer (CharView *cv);

@@ -9053,7 +9053,7 @@ CVMenuImplicit (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
   _CVMenuImplicit (cv, mi);
 }
 
-static GMenuItem2 spiroptlist[], ptlist[];
+static GMenuItem spiroptlist[], ptlist[];
 static void
 cv_ptlistcheck (CharView *cv, struct gmenuitem *mi)
 {
@@ -9070,7 +9070,7 @@ cv_ptlistcheck (CharView *cv, struct gmenuitem *mi)
   if (cv->showing_spiro_pt_menu != (cv->b.sc->inspiro && hasspiro ()))
     {
       GMenuItemArrayFree (mi->sub);
-      mi->sub = GMenuItem2ArrayCopy (cv->b.sc->inspiro
+      mi->sub = GMenuItemArrayCopy (cv->b.sc->inspiro
                                      && hasspiro ()? spiroptlist : ptlist,
                                      &junk);
       cv->showing_spiro_pt_menu = cv->b.sc->inspiro && hasspiro ();
@@ -12082,7 +12082,7 @@ CVMenuAnchorsAway (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 
 // *INDENT-OFF*
 
-static GMenuItem2 wnmenu[] = {
+static GMenuItem wnmenu[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("New O_utline Window"),
@@ -12126,7 +12126,7 @@ static GMenuItem2 wnmenu[] = {
     .invoke = CVMenuOpenMetrics,
     .mid = 0
   },
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
   {
     .ti = {
       .text = (uint32_t *) N_("Warnings"),
@@ -12140,8 +12140,8 @@ static GMenuItem2 wnmenu[] = {
     .invoke = _MenuWarnings,
     .mid = MID_Warnings
   },
-  GMENUITEM2_LINE,
-  GMENUITEM2_EMPTY
+  GMENUITEM_LINE,
+  GMENUITEM_EMPTY
 };
 
 // *INDENT-ON*
@@ -12180,7 +12180,7 @@ CVWindowMenuBuild (GWindow gw, struct gmenuitem *mi, GEvent *e)
 
 // *INDENT-OFF*
 
-static GMenuItem2 dummyitem[] = {
+static GMenuItem dummyitem[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("Font|_New"),
@@ -12193,10 +12193,10 @@ static GMenuItem2 dummyitem[] = {
     },
   },
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 fllist[] = {
+static GMenuItem fllist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("Font|_New"),
@@ -12276,7 +12276,7 @@ static GMenuItem2 fllist[] = {
     .mid = MID_CloseTab
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -12372,7 +12372,7 @@ static GMenuItem2 fllist[] = {
     .mid = 0
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -12421,7 +12421,7 @@ static GMenuItem2 fllist[] = {
     .mid = MID_RevertGlyph
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -12439,7 +12439,7 @@ static GMenuItem2 fllist[] = {
     .mid = 0
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
 #if !defined(_NO_PYTHON)
   {
@@ -12458,7 +12458,7 @@ static GMenuItem2 fllist[] = {
     .mid = 0
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
 #endif
 
@@ -12493,7 +12493,7 @@ static GMenuItem2 fllist[] = {
     .mid = 0
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -12511,10 +12511,10 @@ static GMenuItem2 fllist[] = {
     .mid = MID_Quit
   },
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 sllist[] = {
+static GMenuItem sllist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("Select _All"),
@@ -12560,7 +12560,7 @@ static GMenuItem2 sllist[] = {
     .mid = MID_SelNone
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -12682,7 +12682,7 @@ static GMenuItem2 sllist[] = {
     .mid = MID_SelPointAt
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -12759,7 +12759,7 @@ static GMenuItem2 sllist[] = {
     .mid = MID_SelectVWidth
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -12776,10 +12776,10 @@ static GMenuItem2 sllist[] = {
     .mid = MID_SelectHM
   },
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 edlist[] = {
+static GMenuItem edlist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_Undo"),
@@ -12812,7 +12812,7 @@ static GMenuItem2 edlist[] = {
     .mid = MID_Redo
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -13068,7 +13068,7 @@ static GMenuItem2 edlist[] = {
     .mid = MID_CopyGridFit
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -13086,7 +13086,7 @@ static GMenuItem2 edlist[] = {
     .mid = 0
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -13104,7 +13104,7 @@ static GMenuItem2 edlist[] = {
     .mid = MID_UnlinkRef
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -13121,10 +13121,10 @@ static GMenuItem2 edlist[] = {
     .mid = MID_RemoveUndoes
   },
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 ptlist[] = {
+static GMenuItem ptlist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_Curve"),
@@ -13193,7 +13193,7 @@ static GMenuItem2 ptlist[] = {
     .mid = MID_Tangent
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   /* TRANSLATORS: Make this (selected) point the first point in the glyph */
   {
@@ -13212,7 +13212,7 @@ static GMenuItem2 ptlist[] = {
     .mid = MID_MakeFirst
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -13261,7 +13261,7 @@ static GMenuItem2 ptlist[] = {
     .mid = MID_CenterCP
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -13279,7 +13279,7 @@ static GMenuItem2 ptlist[] = {
     .mid = MID_AddAnchor
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -13297,7 +13297,7 @@ static GMenuItem2 ptlist[] = {
     .mid = MID_AcceptableExtrema
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -13377,7 +13377,7 @@ static GMenuItem2 ptlist[] = {
     .mid = MID_ClipPath
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -13394,10 +13394,10 @@ static GMenuItem2 ptlist[] = {
     .mid = MID_Tools
   },
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 spiroptlist[] = {
+static GMenuItem spiroptlist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("G4 _Curve"),
@@ -13483,7 +13483,7 @@ static GMenuItem2 spiroptlist[] = {
     .mid = MID_SpiroRight
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   /* TRANSLATORS: Make this (selected) point the first point in the glyph */
   {
@@ -13503,7 +13503,7 @@ static GMenuItem2 spiroptlist[] = {
     .mid = MID_SpiroMakeFirst
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -13521,7 +13521,7 @@ static GMenuItem2 spiroptlist[] = {
     .mid = MID_AddAnchor
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -13539,7 +13539,7 @@ static GMenuItem2 spiroptlist[] = {
     .mid = MID_NameContour
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -13556,10 +13556,10 @@ static GMenuItem2 spiroptlist[] = {
     .mid = MID_Tools
   },
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 allist[] = {
+static GMenuItem allist[] = {
   /* TRANSLATORS: Align these points to their average position */
   {
     .ti = {
@@ -13606,7 +13606,7 @@ static GMenuItem2 allist[] = {
     .mid = MID_SpaceRegion
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -13623,10 +13623,10 @@ static GMenuItem2 allist[] = {
     .mid = MID_MakeParallel
   },
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 smlist[] = {
+static GMenuItem smlist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_Simplify"),
@@ -13704,7 +13704,7 @@ static GMenuItem2 smlist[] = {
     .mid = MID_CanonicalContours
   },
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
 // *INDENT-ON*
@@ -13738,7 +13738,7 @@ smlistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 
 // *INDENT-OFF*
 
-static GMenuItem2 orlist[] = {
+static GMenuItem orlist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_First"),
@@ -13799,7 +13799,7 @@ static GMenuItem2 orlist[] = {
     .mid = MID_Last
   },
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
 // *INDENT-ON*
@@ -13849,7 +13849,7 @@ orlistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 
 // *INDENT-OFF*
 
-static GMenuItem2 rmlist[] = {
+static GMenuItem rmlist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_Remove Overlap"),
@@ -13908,10 +13908,10 @@ static GMenuItem2 rmlist[] = {
     .invoke = CVMenuOverlap,
     .mid = MID_FindInter},
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 eflist[] = {
+static GMenuItem eflist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("Change _Weight..."),
@@ -13997,7 +13997,7 @@ static GMenuItem2 eflist[] = {
     .invoke = CVMenuChangeGlyph,
     .mid = MID_ChangeGlyph},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -14055,10 +14055,10 @@ static GMenuItem2 eflist[] = {
     .invoke = CVMenuWireframe,
     .mid = 0},
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 balist[] = {
+static GMenuItem balist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_Build Accented Glyph"),
@@ -14087,10 +14087,10 @@ static GMenuItem2 balist[] = {
     .invoke = CVMenuBuildComposite,
     .mid = MID_BuildComposite},
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 delist[] = {
+static GMenuItem delist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_References..."),
@@ -14118,10 +14118,10 @@ static GMenuItem2 delist[] = {
     .invoke = CVMenuShowDependentSubs,
     .mid = MID_ShowDependentSubs},
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 trlist[] = {
+static GMenuItem trlist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_Transform..."),
@@ -14165,10 +14165,10 @@ static GMenuItem2 trlist[] = {
     .invoke = CVMenuNLTransform,
     .mid = 0},
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 rndlist[] = {
+static GMenuItem rndlist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("To _Int"),
@@ -14211,10 +14211,10 @@ static GMenuItem2 rndlist[] = {
     .invoke = CVMenuCluster,
     .mid = MID_RoundToCluster},
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 ellist[] = {
+static GMenuItem ellist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_Font Info..."),
@@ -14291,7 +14291,7 @@ static GMenuItem2 ellist[] = {
     .invoke = CVMenuFindProblems,
     .mid = MID_FindProblems},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -14338,7 +14338,7 @@ static GMenuItem2 ellist[] = {
     .invoke = CVMenuBitmaps,
     .mid = MID_RemoveBitmaps},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -14470,7 +14470,7 @@ static GMenuItem2 ellist[] = {
     .invoke = CVMenuAutotrace,
     .mid = MID_Autotrace},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -14514,7 +14514,7 @@ static GMenuItem2 ellist[] = {
     .moveto = orlistcheck,
     .mid = 0},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -14607,7 +14607,7 @@ static GMenuItem2 ellist[] = {
     .invoke = CVMenuReverseDir,
     .mid = MID_ReverseDir},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -14623,7 +14623,7 @@ static GMenuItem2 ellist[] = {
     .invoke = CVMenuInsertText,
     .mid = MID_InsertText},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -14639,7 +14639,7 @@ static GMenuItem2 ellist[] = {
     .moveto = balistcheck,
     .mid = MID_BuildAccent},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -14656,10 +14656,10 @@ static GMenuItem2 ellist[] = {
     .invoke = CVMenuCompareL2L,
     .mid = 0},
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 htlist[] = {
+static GMenuItem htlist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("Auto_Hint"),
@@ -14719,7 +14719,7 @@ static GMenuItem2 htlist[] = {
     .invoke = CVMenuDontAutoHint,
     .mid = MID_DontAutoHint},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -14775,7 +14775,7 @@ static GMenuItem2 htlist[] = {
     .invoke = CVMenuDeltas,
     .mid = MID_Deltas},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -14836,7 +14836,7 @@ static GMenuItem2 htlist[] = {
     .invoke = CVMenuClearInstrs,
     .mid = MID_ClearInstr},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -14911,7 +14911,7 @@ static GMenuItem2 htlist[] = {
     .invoke = CVMenuCreateHint,
     .mid = MID_CreateVHint},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -14928,11 +14928,11 @@ static GMenuItem2 htlist[] = {
     .invoke = CVMenuReviewHints,
     .mid = MID_ReviewHints},
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 ap2list[] = {
-  GMENUITEM2_EMPTY
+static GMenuItem ap2list[] = {
+  GMENUITEM_EMPTY
 };
 
 // *INDENT-ON*
@@ -14985,7 +14985,7 @@ ap2listbuild (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 
 // *INDENT-OFF*
 
-static GMenuItem2 mtlist[] = {
+static GMenuItem mtlist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_Center in Width"),
@@ -15074,7 +15074,7 @@ static GMenuItem2 mtlist[] = {
     .invoke = CVMenuSetWidth,
     .mid = MID_SetBearings},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -15091,7 +15091,7 @@ static GMenuItem2 mtlist[] = {
     .invoke = CVMenuSetWidth,
     .mid = MID_SetVWidth},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -15135,10 +15135,10 @@ static GMenuItem2 mtlist[] = {
     .invoke = CVMenuKPCloseup,
     .mid = MID_KPCloseup},
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 pllist[] = {
+static GMenuItem pllist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_Tools"),
@@ -15167,7 +15167,7 @@ static GMenuItem2 pllist[] = {
     .invoke = CVMenuPaletteShow,
     .mid = MID_Layers},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -15184,10 +15184,10 @@ static GMenuItem2 pllist[] = {
     .invoke = CVMenuPalettesDock,
     .mid = MID_DockPalettes},
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 aplist[] = {
+static GMenuItem aplist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_Detach"),
@@ -15201,7 +15201,7 @@ static GMenuItem2 aplist[] = {
     .invoke = CVMenuAPDetach,
     0},
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
 // *INDENT-ON*
@@ -15213,7 +15213,7 @@ aplistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
   SplineChar *sc = cv->b.sc, **glyphs;
   SplineFont *sf = sc->parent;
   AnchorPoint *ap, *found;
-  GMenuItem2 *mit;
+  GMenuItem *mit;
   int cnt;
 
   found = NULL;
@@ -15239,13 +15239,13 @@ aplistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
     glyphs = GlyphsMatchingAP (sf, found);
   if (glyphs == NULL)
     {
-      mi->sub = GMenuItem2ArrayCopy (aplist, NULL);
+      mi->sub = GMenuItemArrayCopy (aplist, NULL);
       mi->sub->ti.disabled = (cv->apmine == NULL);
       return;
     }
 
   for (cnt = 0; glyphs[cnt] != NULL; ++cnt);
-  mit = xcalloc (cnt + 2, sizeof (GMenuItem2));
+  mit = xcalloc (cnt + 2, sizeof (GMenuItem));
   mit[0] = aplist[0];
   mit[0].ti.text = (uint32_t *) xstrdup_or_null ((char *) mit[0].ti.text);
   mit[0].ti.disabled = (cv->apmine == NULL);
@@ -15260,13 +15260,13 @@ aplistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
         mit[cnt + 1].ti.checked = mit[cnt + 1].ti.checkable = true;
     }
   free (glyphs);
-  mi->sub = GMenuItem2ArrayCopy (mit, NULL);
-  GMenuItem2ArrayFree (mit);
+  mi->sub = GMenuItemArrayCopy (mit, NULL);
+  GMenuItemArrayFree (mit);
 }
 
 // *INDENT-OFF*
 
-static GMenuItem2 cblist[] = {
+static GMenuItem cblist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_Kern Pairs"),
@@ -15334,10 +15334,10 @@ static GMenuItem2 cblist[] = {
     .invoke = CVMenuLigatures,
     .mid = MID_Ligatures},
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 nplist[] = {
+static GMenuItem nplist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("PointNumbers|_None"),
@@ -15394,10 +15394,10 @@ static GMenuItem2 nplist[] = {
     .invoke = CVMenuNumberPoints,
     .mid = MID_PtsSVG},
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 gflist[] = {
+static GMenuItem gflist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("Show _Grid Fit..."),
@@ -15472,10 +15472,10 @@ static GMenuItem2 gflist[] = {
     .invoke = CVMenuChangePointSize,
     .mid = MID_GridFitOff},
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 swlist[] = {
+static GMenuItem swlist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_Points"),
@@ -15637,7 +15637,7 @@ static GMenuItem2 swlist[] = {
     .invoke = CVMenuPreview,
     .mid = MID_Preview},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -15681,7 +15681,7 @@ static GMenuItem2 swlist[] = {
     .invoke = CVMenuShowHideRulers,
     .mid = MID_HideRulers},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -15760,7 +15760,7 @@ static GMenuItem2 swlist[] = {
     .invoke = CVMenuShowHints,
     .mid = MID_ShowFamilyBlues},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -15776,7 +15776,7 @@ static GMenuItem2 swlist[] = {
     .invoke = CVMenuShowHints,
     .mid = MID_ShowAnchors},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -15793,7 +15793,7 @@ static GMenuItem2 swlist[] = {
     .invoke = CVMenuShowHints,
     .mid = MID_ShowDebugChanges},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -15825,7 +15825,7 @@ static GMenuItem2 swlist[] = {
     .invoke = CVMenuShowHints,
     .mid = MID_ShowVMetrics},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -15842,10 +15842,10 @@ static GMenuItem2 swlist[] = {
     .invoke = CVMenuSnapOutlines,
     .mid = MID_SnapOutlines},
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 vwlist[] = {
+static GMenuItem vwlist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_Fit"),
@@ -15894,7 +15894,7 @@ static GMenuItem2 vwlist[] = {
     .invoke = CVMenuScale,
     .mid = MID_ZoomIn},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -16008,7 +16008,7 @@ static GMenuItem2 vwlist[] = {
     .invoke = CVMenuFindInFontView,
     .mid = MID_FindInFontView},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -16052,7 +16052,7 @@ static GMenuItem2 vwlist[] = {
     .moveto = swlistcheck,
     .mid = 0},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -16068,7 +16068,7 @@ static GMenuItem2 vwlist[] = {
     .moveto = cblistcheck,
     .mid = 0},
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
 // *INDENT-ON*
@@ -16101,7 +16101,7 @@ CVMenuShowMMMask (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 
 // *INDENT-OFF*
 
-static GMenuItem2 mvlist[] = {
+static GMenuItem mvlist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("SubFonts|_All"),
@@ -16132,7 +16132,7 @@ static GMenuItem2 mvlist[] = {
     .mid = MID_MMNone
   },
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
 // *INDENT-ON*
@@ -16145,14 +16145,14 @@ mvlistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
   MMSet *mm = cv->b.sc->parent->mm;
   uint32_t submask;
   SplineFont *sub;
-  GMenuItem2 *mml;
+  GMenuItem *mml;
 
   base = 3;
   if (mm == NULL)
     mml = mvlist;
   else
     {
-      mml = xcalloc (base + mm->instance_count + 2, sizeof (GMenuItem2));
+      mml = xcalloc (base + mm->instance_count + 2, sizeof (GMenuItem));
       memcpy (mml, mvlist, sizeof (mvlist));
       mml[base - 1].ti.fg = mml[base - 1].ti.bg = COLOR_DEFAULT;
       mml[base - 1].ti.line = true;
@@ -16180,7 +16180,7 @@ mvlistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
       mml[1].ti.checked = (cv->mmvisible == 0 || cv->mmvisible == submask);
     }
   GMenuItemArrayFree (mi->sub);
-  mi->sub = GMenuItem2ArrayCopy (mml, NULL);
+  mi->sub = GMenuItemArrayCopy (mml, NULL);
   if (mml != mvlist)
     {
       for (i = base; mml[i].ti.text != NULL; ++i)
@@ -16208,7 +16208,7 @@ CVMenuReblend (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 
 // *INDENT-OFF*
 
-static GMenuItem2 mmlist[] = {
+static GMenuItem mmlist[] = {
   /* TRANSLATORS: Here (and following) MM means "MultiMaster" */
   {
     .ti = {
@@ -16225,7 +16225,7 @@ static GMenuItem2 mmlist[] = {
     .mid = MID_MMReblend
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -16242,7 +16242,7 @@ static GMenuItem2 mmlist[] = {
     .mid = 0
   },
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
 // *INDENT-ON*
@@ -16265,14 +16265,14 @@ mmlistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
   int i, base, j;
   MMSet *mm = cv->b.sc->parent->mm;
   SplineFont *sub;
-  GMenuItem2 *mml;
+  GMenuItem *mml;
 
   base = sizeof (mmlist) / sizeof (mmlist[0]);
   if (mm == NULL)
     mml = mmlist;
   else
     {
-      mml = xcalloc (base + mm->instance_count + 2, sizeof (GMenuItem2));
+      mml = xcalloc (base + mm->instance_count + 2, sizeof (GMenuItem));
       memcpy (mml, mmlist, sizeof (mmlist));
       mml[base - 1].ti.fg = mml[base - 1].ti.bg = COLOR_DEFAULT;
       mml[base - 1].ti.line = true;
@@ -16293,7 +16293,7 @@ mmlistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
   mml[0].ti.disabled = (mm == NULL || cv->b.sc->parent != mm->normal
                         || mm->apple);
   GMenuItemArrayFree (mi->sub);
-  mi->sub = GMenuItem2ArrayCopy (mml, NULL);
+  mi->sub = GMenuItemArrayCopy (mml, NULL);
   if (mml != mmlist)
     {
       for (i = base; mml[i].ti.text != NULL; ++i)
@@ -16311,7 +16311,7 @@ CVMenuContextualHelp (GWindow UNUSED (gw), struct gmenuitem *UNUSED (mi),
 
 // *INDENT-OFF*
 
-static GMenuItem2 mblist[] = {
+static GMenuItem mblist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_File"),
@@ -16457,10 +16457,10 @@ static GMenuItem2 mblist[] = {
     .sub = helplist
   },
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 mblist_nomm[] = {
+static GMenuItem mblist_nomm[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_File"),
@@ -16590,7 +16590,7 @@ static GMenuItem2 mblist_nomm[] = {
     .sub = helplist,
   },
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
 // *INDENT-ON*

@@ -34,8 +34,8 @@
 #include <stdio.h>
 #include <stdint.h>
 
-GMenuItem2 *cv_menu = NULL;
-GMenuItem2 *fv_menu = NULL;
+GMenuItem *cv_menu = NULL;
+GMenuItem *fv_menu = NULL;
 
 void
 cv_tools_list_check (GWindow gw, GMenuItem *mi, GEvent *e)
@@ -139,7 +139,7 @@ invoke_func (int window)
 }
 
 static int
-find_sub_menu (GMenuItem2 **mn, uint32_t *submenuu)
+find_sub_menu (GMenuItem **mn, uint32_t *submenuu)
 {
   int j = 0;
   bool submenu_found = false;
@@ -157,11 +157,11 @@ find_sub_menu (GMenuItem2 **mn, uint32_t *submenuu)
 
 static void
 insert_sub_menus (int window, const char **menu_path, SCM action, SCM enabled,
-                  const char *shortcut, GMenuItem2 **mn)
+                  const char *shortcut, GMenuItem **mn)
 {
   int i;
   int j;
-  GMenuItem2 *mmn;
+  GMenuItem *mmn;
 
   for (i = 0; menu_path[i] != NULL; i++)
     {
@@ -173,8 +173,8 @@ insert_sub_menus (int window, const char **menu_path, SCM action, SCM enabled,
 
       if (*mn == NULL || (*mn)[j].ti.text == NULL)
         {
-          *mn = xrealloc (*mn, (j + 2) * sizeof (GMenuItem2));
-          memset (*mn + j, 0, 2 * sizeof (GMenuItem2));
+          *mn = xrealloc (*mn, (j + 2) * sizeof (GMenuItem));
+          memset (*mn + j, 0, 2 * sizeof (GMenuItem));
         }
       mmn = *mn;
       if (mmn[j].ti.text == NULL)

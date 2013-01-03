@@ -5696,7 +5696,7 @@ infolistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 
 // *INDENT-OFF*
 
-static GMenuItem2 dummyitem[] = {
+static GMenuItem dummyitem[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("Font|_New"),
@@ -5708,10 +5708,10 @@ static GMenuItem2 dummyitem[] = {
       .mnemonic = 'N'},
   },
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 fllist[] = {
+static GMenuItem fllist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("Font|_New"),
@@ -5772,7 +5772,7 @@ static GMenuItem2 fllist[] = {
     .invoke = FVMenuClose,
     .mid = 0},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -5866,7 +5866,7 @@ static GMenuItem2 fllist[] = {
 
     .mid = MID_GenerateTTC},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -5943,7 +5943,7 @@ static GMenuItem2 fllist[] = {
     .invoke = FVMenuRevertGlyph,
     .mid = MID_RevertGlyph},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -5960,7 +5960,7 @@ static GMenuItem2 fllist[] = {
     .invoke = FVMenuPrint,
     .mid = MID_Print},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
 #if !defined(_NO_PYTHON)
   {
@@ -5980,7 +5980,7 @@ static GMenuItem2 fllist[] = {
 
 #endif
 #if !defined(_NO_PYTHON)
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
 #endif
   {
@@ -6012,7 +6012,7 @@ static GMenuItem2 fllist[] = {
     .invoke = MenuXRes,
     .mid = 0},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -6029,10 +6029,10 @@ static GMenuItem2 fllist[] = {
     .invoke = FVMenuExit,
     .mid = 0},
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 cflist[] = {
+static GMenuItem cflist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_All Fonts"),
@@ -6062,7 +6062,7 @@ static GMenuItem2 cflist[] = {
     .invoke = FVMenuCopyFrom,
     .mid = MID_DisplayedFont},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -6079,7 +6079,7 @@ static GMenuItem2 cflist[] = {
     .invoke = FVMenuCopyFrom,
     .mid = MID_CharName},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -6096,10 +6096,10 @@ static GMenuItem2 cflist[] = {
     .invoke = FVMenuCopyFrom,
     .mid = MID_TTFInstr},
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 sclist[] = {
+static GMenuItem sclist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("Color|Choose..."),
@@ -6216,10 +6216,10 @@ static GMenuItem2 sclist[] = {
     .invoke = FVMenuSelectColor,
     .mid = 0},
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 sllist[] = {
+static GMenuItem sllist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("Select _All"),
@@ -6262,7 +6262,7 @@ static GMenuItem2 sllist[] = {
     .invoke = FVMenuDeselectAll,
     .mid = 0},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -6306,7 +6306,7 @@ static GMenuItem2 sllist[] = {
     .invoke = FVMenuSelectByScript,
     .mid = 0},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -6423,7 +6423,7 @@ static GMenuItem2 sllist[] = {
     .invoke = FVMenuSelectAutohintable,
     .mid = 0},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -6449,7 +6449,7 @@ static GMenuItem2 sllist[] = {
       .mnemonic = '\0'},
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -6466,10 +6466,10 @@ static GMenuItem2 sllist[] = {
     .invoke = FVMenuSelectByPST,
     .mid = 0},
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 edlist[] = {
+static GMenuItem edlist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_Undo"),
@@ -6500,7 +6500,7 @@ static GMenuItem2 edlist[] = {
     .invoke = FVMenuRedo,
     .mid = MID_Redo},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -6755,7 +6755,7 @@ static GMenuItem2 edlist[] = {
     .invoke = FVMenuJoin,
     .mid = MID_Join},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -6816,7 +6816,7 @@ static GMenuItem2 edlist[] = {
     .invoke = FVMenuCorrectRefs,
     .mid = MID_CorrectRefs},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -6833,7 +6833,7 @@ static GMenuItem2 edlist[] = {
     .invoke = FVMenuUnlinkRef,
     .mid = MID_UnlinkRef},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -6849,7 +6849,7 @@ static GMenuItem2 edlist[] = {
     
     .mid = 0},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -6866,10 +6866,10 @@ static GMenuItem2 edlist[] = {
     .invoke = FVMenuRemoveUndoes,
     .mid = MID_RemoveUndoes},
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 smlist[] = {
+static GMenuItem smlist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_Simplify"),
@@ -6941,10 +6941,10 @@ static GMenuItem2 smlist[] = {
     .invoke = FVMenuCanonicalContours,
     .mid = MID_CanonicalContours},
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 rmlist[] = {
+static GMenuItem rmlist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_Remove Overlap"),
@@ -6989,10 +6989,10 @@ static GMenuItem2 rmlist[] = {
 
     .mid = MID_FindInter},
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 eflist[] = {
+static GMenuItem eflist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("Change _Weight..."),
@@ -7083,7 +7083,7 @@ static GMenuItem2 eflist[] = {
 
     .mid = MID_ChangeGlyph},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -7117,7 +7117,7 @@ static GMenuItem2 eflist[] = {
     .invoke = FVMenuSubSup,
     .mid = MID_SubSup},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -7175,10 +7175,10 @@ static GMenuItem2 eflist[] = {
     .invoke = FVMenuWireframe,
     .mid = 0},
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 balist[] = {
+static GMenuItem balist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_Build Accented Glyph"),
@@ -7227,7 +7227,7 @@ static GMenuItem2 balist[] = {
     .mid = MID_BuildDuplicates},
 
 #ifdef KOREAN
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -7241,10 +7241,10 @@ static GMenuItem2 balist[] = {
     .invoke = FVMenuShowGroup},
 
 #endif
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 delist[] = {
+static GMenuItem delist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_References..."),
@@ -7275,10 +7275,10 @@ static GMenuItem2 delist[] = {
 
     .mid = MID_ShowDependentSubs},
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 trlist[] = {
+static GMenuItem trlist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_Transform..."),
@@ -7324,10 +7324,10 @@ static GMenuItem2 trlist[] = {
 
     .mid = MID_NLTransform},
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 rndlist[] = {
+static GMenuItem rndlist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("To _Int"),
@@ -7371,10 +7371,10 @@ static GMenuItem2 rndlist[] = {
     .invoke = FVMenuCluster,
     .mid = 0},
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 scollist[] = {
+static GMenuItem scollist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("Color|Choose..."),
@@ -7488,10 +7488,10 @@ static GMenuItem2 scollist[] = {
     .invoke = FVMenuSetColor,
     .mid = 0},
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 infolist[] = {
+static GMenuItem infolist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_MATH Info..."),
@@ -7610,10 +7610,10 @@ static GMenuItem2 infolist[] = {
     .sub = scollist,
     .mid = MID_SetColor},
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 validlist[] = {
+static GMenuItem validlist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("Find Pr_oblems..."),
@@ -7645,7 +7645,7 @@ static GMenuItem2 validlist[] = {
     .invoke = FVMenuValidate,
     .mid = MID_Validate},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -7662,10 +7662,10 @@ static GMenuItem2 validlist[] = {
     .invoke = FVMenuSetExtremumBound,
     .mid = MID_SetExtremumBound},
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 ellist[] = {
+static GMenuItem ellist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_Font Info..."),
@@ -7726,7 +7726,7 @@ static GMenuItem2 ellist[] = {
     .moveto = validlistcheck,
     .mid = 0},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -7776,7 +7776,7 @@ static GMenuItem2 ellist[] = {
 
     .mid = MID_RemoveBitmaps},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -7927,7 +7927,7 @@ static GMenuItem2 ellist[] = {
     .invoke = FVMenuAutotrace,
     .mid = MID_Autotrace},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -7945,7 +7945,7 @@ static GMenuItem2 ellist[] = {
 
     .mid = MID_Correct},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -7962,7 +7962,7 @@ static GMenuItem2 ellist[] = {
     .moveto = balistcheck,
     .mid = MID_BuildAccent},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -8022,10 +8022,10 @@ static GMenuItem2 ellist[] = {
     .invoke = FVMenuCompareL2L,
     .mid = 0},
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 dummyall[] = {
+static GMenuItem dummyall[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("All"),
@@ -8038,7 +8038,7 @@ static GMenuItem2 dummyall[] = {
     .shortcut = H_ ("All|No Shortcut"),
   },
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
 // *INDENT-ON*
@@ -8057,7 +8057,7 @@ aplistbuild (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 
 // *INDENT-OFF*
 
-static GMenuItem2 cblist[] = {
+static GMenuItem cblist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_Kern Pairs"),
@@ -8098,7 +8098,7 @@ static GMenuItem2 cblist[] = {
     .invoke = FVMenuLigatures,
     .mid = MID_Ligatures},
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
 // *INDENT-ON*
@@ -8152,7 +8152,7 @@ cblistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 
 // *INDENT-OFF*
 
-static GMenuItem2 gllist[] = {
+static GMenuItem gllist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_Glyph Image"),
@@ -8209,7 +8209,7 @@ static GMenuItem2 gllist[] = {
     .invoke = FVMenuGlyphLabel,
     .mid = gl_encoding},
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
 // *INDENT-ON*
@@ -8225,9 +8225,9 @@ gllistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
     }
 }
 
-static GMenuItem2 emptymenu[] = {
-  GMENUITEM2_LINE,
-  GMENUITEM2_EMPTY
+static GMenuItem emptymenu[] = {
+  GMENUITEM_LINE,
+  GMENUITEM_EMPTY
 };
 
 static void
@@ -8607,7 +8607,7 @@ FVMenuNameGlyphs (GWindow gw, struct gmenuitem *UNUSED (mi),
 
 // *INDENT-OFF*
 
-static GMenuItem2 enlist[] = {
+static GMenuItem enlist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_Reencode"),
@@ -8650,7 +8650,7 @@ static GMenuItem2 enlist[] = {
     .moveto = FVForceEncodingMenuBuild,
     .mid = MID_ForceReencode},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -8704,7 +8704,7 @@ static GMenuItem2 enlist[] = {
     .invoke = FVMenuDetachAndRemoveGlyphs,
     .mid = MID_DetachAndRemoveGlyphs},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -8758,7 +8758,7 @@ static GMenuItem2 enlist[] = {
     .invoke = FVMenuRemoveEncoding,
     .mid = MID_RemoveEncoding},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -8787,7 +8787,7 @@ static GMenuItem2 enlist[] = {
     .invoke = FVMenuDefineGroups,
     .mid = 0},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -8841,7 +8841,7 @@ static GMenuItem2 enlist[] = {
     .invoke = FVMenuNameGlyphs,
     .mid = MID_NameGlyphs},
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
 // *INDENT-ON*
@@ -8905,7 +8905,7 @@ enlistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 
 // *INDENT-OFF*
 
-static GMenuItem2 lylist[] = {
+static GMenuItem lylist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("Layer|Foreground"),
@@ -8921,7 +8921,7 @@ static GMenuItem2 lylist[] = {
     .mid = ly_fore
   },
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
 // *INDENT-ON*
@@ -8950,7 +8950,7 @@ lylistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 
 // *INDENT-OFF*
 
-static GMenuItem2 vwlist[] = {
+static GMenuItem vwlist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_Next Glyph"),
@@ -9027,7 +9027,7 @@ static GMenuItem2 vwlist[] = {
     .invoke = FVMenuGotoChar
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -9043,7 +9043,7 @@ static GMenuItem2 vwlist[] = {
     .moveto = lylistcheck
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -9086,7 +9086,7 @@ static GMenuItem2 vwlist[] = {
     .moveto = cblistcheck
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -9101,7 +9101,7 @@ static GMenuItem2 vwlist[] = {
     .moveto = gllistcheck
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -9131,7 +9131,7 @@ static GMenuItem2 vwlist[] = {
     .invoke = FVMenuShowMetrics,
     .mid = MID_ShowVMetrics},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -9178,7 +9178,7 @@ static GMenuItem2 vwlist[] = {
     .invoke = FVMenuWSize,
     .mid = MID_8x2},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -9283,7 +9283,7 @@ static GMenuItem2 vwlist[] = {
     .invoke = FVMenuSize,
     .mid = MID_FitToEm},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -9301,29 +9301,29 @@ static GMenuItem2 vwlist[] = {
     .mid = MID_BitmapMag},
 
   /* Some extra room to show bitmaps */
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY
 };
 
 // *INDENT-ON*
@@ -9376,7 +9376,7 @@ vwlistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
         }
     }
   GMenuItemArrayFree (mi->sub);
-  mi->sub = GMenuItem2ArrayCopy (vwlist, NULL);
+  mi->sub = GMenuItemArrayCopy (vwlist, NULL);
 
   for (mi = mi->sub; mi->ti.text != NULL || mi->ti.line; ++mi)
     {
@@ -9479,7 +9479,7 @@ vwlistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 
 // *INDENT-OFF*
 
-static GMenuItem2 histlist[] = {
+static GMenuItem histlist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_HStem"),
@@ -9519,10 +9519,10 @@ static GMenuItem2 histlist[] = {
     .invoke = FVMenuHistograms,
     .mid = MID_BlueValuesHist},
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 htlist[] = {
+static GMenuItem htlist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("Auto_Hint"),
@@ -9583,7 +9583,7 @@ static GMenuItem2 htlist[] = {
 
     .mid = MID_DontAutoHint},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -9704,7 +9704,7 @@ static GMenuItem2 htlist[] = {
     .invoke = FVMenuDeltas,
     .mid = MID_Deltas},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -9738,7 +9738,7 @@ static GMenuItem2 htlist[] = {
 
     .mid = MID_ClearInstrs},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -9752,10 +9752,10 @@ static GMenuItem2 htlist[] = {
     .sub = histlist
   },
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 mtlist[] = {
+static GMenuItem mtlist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_Center in Width"),
@@ -9849,7 +9849,7 @@ static GMenuItem2 mtlist[] = {
 
     .mid = MID_SetBearings},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -9868,7 +9868,7 @@ static GMenuItem2 mtlist[] = {
 
     .mid = MID_SetVWidth},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -9930,7 +9930,7 @@ static GMenuItem2 mtlist[] = {
     .invoke = FVMenuKPCloseup
   },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -9977,10 +9977,10 @@ static GMenuItem2 mtlist[] = {
 
     .mid = MID_RmVKern},
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
-static GMenuItem2 cdlist[] = {
+static GMenuItem cdlist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_Convert to CID"),
@@ -10011,7 +10011,7 @@ static GMenuItem2 cdlist[] = {
 
     .mid = MID_ConvertByCMap},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -10040,7 +10040,7 @@ static GMenuItem2 cdlist[] = {
     .invoke = FVMenuFlattenByCMap,
     .mid = MID_FlattenByCMap},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -10083,7 +10083,7 @@ static GMenuItem2 cdlist[] = {
     .invoke = FVMenuRemoveFontFromCID,
     .mid = MID_RemoveFromCID},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -10114,264 +10114,264 @@ static GMenuItem2 cdlist[] = {
     .mid = MID_CIDFontInfo},
 
   /* Extra room to show sub-font names */
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY,
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY,
+  GMENUITEM_EMPTY
 };
 
 // *INDENT-ON*
@@ -10413,7 +10413,7 @@ cdlistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
         }
     }
   GMenuItemArrayFree (mi->sub);
-  mi->sub = GMenuItem2ArrayCopy (cdlist, NULL);
+  mi->sub = GMenuItemArrayCopy (cdlist, NULL);
 
   for (mi = mi->sub; mi->ti.text != NULL || mi->ti.line; ++mi)
     {
@@ -10443,7 +10443,7 @@ cdlistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 
 // *INDENT-OFF*
 
-static GMenuItem2 mmlist[] = {
+static GMenuItem mmlist[] = {
 
   /* TRANSLATORS: Here (and following) MM means "MultiMaster" */
 
@@ -10513,7 +10513,7 @@ static GMenuItem2 mmlist[] = {
     .mid = MID_ChangeMMBlend},
 
   /* Extra room to show sub-font names */
-  GMENUITEM2_EMPTY,
+  GMENUITEM_EMPTY,
 };
 
 // *INDENT-ON*
@@ -10525,7 +10525,7 @@ mmlistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
   int i, base, j;
   MMSet *mm = fv->b.sf->mm;
   SplineFont *sub;
-  GMenuItem2 *mml;
+  GMenuItem *mml;
 
   for (i = 0; mmlist[i].mid != MID_ChangeMMBlend; ++i);
   base = i + 2;
@@ -10533,7 +10533,7 @@ mmlistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
     mml = mmlist;
   else
     {
-      mml = xcalloc (base + mm->instance_count + 2, sizeof (GMenuItem2));
+      mml = xcalloc (base + mm->instance_count + 2, sizeof (GMenuItem));
       memcpy (mml, mmlist, sizeof (mmlist));
       mml[base - 1].ti.fg = mml[base - 1].ti.bg = COLOR_DEFAULT;
       mml[base - 1].ti.line = true;
@@ -10552,7 +10552,7 @@ mmlistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
         }
     }
   GMenuItemArrayFree (mi->sub);
-  mi->sub = GMenuItem2ArrayCopy (mml, NULL);
+  mi->sub = GMenuItemArrayCopy (mml, NULL);
   if (mml != mmlist)
     {
       for (i = base; mml[i].ti.text != NULL; ++i)
@@ -10581,7 +10581,7 @@ mmlistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 
 // *INDENT-OFF*
 
-static GMenuItem2 wnmenu[] = {
+static GMenuItem wnmenu[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("New O_utline Window"),
@@ -10622,7 +10622,7 @@ static GMenuItem2 wnmenu[] = {
     .invoke = FVMenuOpenMetrics,
     .mid = MID_OpenMetrics},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -10637,9 +10637,9 @@ static GMenuItem2 wnmenu[] = {
     .invoke = _MenuWarnings,
     .mid = MID_Warnings},
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
 // *INDENT-ON*
@@ -10677,7 +10677,7 @@ FVWindowMenuBuild (GWindow gw, struct gmenuitem *mi, GEvent *e)
 
 // *INDENT-OFF*
 
-GMenuItem2 helplist[] = {
+GMenuItem helplist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_Help"),
@@ -10735,7 +10735,7 @@ GMenuItem2 helplist[] = {
     .invoke = MenuAbout,
     .mid = 0},
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
 GMenuItem fvpopupmenu[] = {
@@ -11091,7 +11091,7 @@ GMenuItem fvpopupmenu[] = {
   GMENUITEM_EMPTY
 };
 
-static GMenuItem2 mblist[] = {
+static GMenuItem mblist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_File"),
@@ -11249,7 +11249,7 @@ static GMenuItem2 mblist[] = {
     .sub = helplist
   },
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
 // *INDENT-ON*

@@ -104,23 +104,6 @@ typedef struct gmenuitem {
 #define GMENUITEM_EMPTY { .ti = GTEXTINFO_EMPTY }
 #define GMENUITEM_LINE { .ti = GTEXTINFO_LINE }
 
-// FIXME: Get rid of this ASAP.
-struct gmenuitem2 {
-  GTextInfo ti;
-  char *shortcut;
-  uint32_t shortcut_char;
-  short short_mask;
-  struct gmenuitem *sub;
-  gmenuitem_moveto_t moveto;	/* called before creating submenu */
-  gmenuitem_invoke_t invoke;	/* called on mouse release */
-  int mid;
-};// GMenuItem2;
-
-typedef GMenuItem GMenuItem2;
-
-#define GMENUITEM2_EMPTY { .ti = GTEXTINFO_EMPTY }
-#define GMENUITEM2_LINE { .ti = GTEXTINFO_LINE }
-
 
 typedef struct tabinfo {
     uint32_t *text;
@@ -218,7 +201,7 @@ typedef struct ggadgetdata {
 	GTextInfo *list;	/* for List Widgets (and ListButtons, RowCols etc) */
 	GTabInfo *tabs;		/* for Tab Widgets */
 	GMenuItem *menu;	/* for menus */
-	GMenuItem2 *menu2;	/* for menus (alternate) */
+	GMenuItem *menu2;	/* for menus (alternate) */
 	struct ggadgetcreatedata **boxelements;	/* An array of things to go in the box */
 	struct matrixinit *matrix;
 	GDrawEH drawable_e_h;	/* Drawable event handler */
@@ -567,11 +550,10 @@ extern int GGadgetUndoMacEnglishOptionCombinations(GEvent *event);
 
 /* Among other things, this routine sets global icon cache up. */
 VISIBLE extern void GGadgetInit(void);
+
 VISIBLE extern int GGadgetWithin(GGadget *g, int x, int y);
 VISIBLE extern void GMenuItemArrayFree(GMenuItem *mi);
-VISIBLE extern void GMenuItem2ArrayFree(GMenuItem2 *mi);
 extern GMenuItem *GMenuItemArrayCopy(GMenuItem *mi, uint16_t *cnt);
-VISIBLE extern GMenuItem *GMenuItem2ArrayCopy(GMenuItem2 *mi, uint16_t *cnt);
 
 bool GMenuItem_nonempty (GMenuItem *mi);
 

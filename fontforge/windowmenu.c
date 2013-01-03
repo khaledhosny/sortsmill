@@ -275,7 +275,7 @@ return;
     }
 }
 
-void mb2DoGetText(GMenuItem2 *mb) {
+void mb2DoGetText(GMenuItem *mb) {
     /* perform gettext substitutions on this menu and all sub menus */
     int i;
 

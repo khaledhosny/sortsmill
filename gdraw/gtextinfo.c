@@ -552,28 +552,29 @@ return( NULL );
 return( ri );
 }
     
-void GTextInfoImageLookup(GTextInfo *ti) {
-    char *pt;
-    int any;
+void GTextInfoImageLookup(GTextInfo *ti)
+{
+  char *pt;
+  int any;
 
-    if ( ti->image==NULL )
-return;
+  if ( ti->image==NULL )
+    return;
 
-    /* Image might be an image pointer, or it might be a filename we want to */
-    /*  read and convert into an image. If it's an image it will begin with */
-    /*  a short containing a small number (usually 1), which won't look like */
-    /*  a filename */
-    any = 0;
-    for ( pt = (char *) (ti->image); *pt!='\0'; ++pt ) {
-	if ( *pt<' ' || *pt>=0x7f )
-return;
-	if ( *pt=='.' )
-	    any = 1;
-    }
-    if ( !any )		/* Must have an extension */
-return;
+  /* Image might be an image pointer, or it might be a filename we want to */
+  /*  read and convert into an image. If it's an image it will begin with */
+  /*  a short containing a small number (usually 1), which won't look like */
+  /*  a filename */
+  any = 0;
+  for ( pt = (char *) (ti->image); *pt!='\0'; ++pt ) {
+    if ( *pt<' ' || *pt>=0x7f )
+      return;
+    if ( *pt=='.' )
+      any = 1;
+  }
+  if ( !any )		/* Must have an extension */
+    return;
 
-    ti->image = GGadgetImageCache((char *) (ti->image));
+  ti->image = GGadgetImageCache((char *) (ti->image));
 }
 
 GTextInfo **GTextInfoArrayFromList(GTextInfo *ti, uint16_t *cnt) {
@@ -712,38 +713,43 @@ return;
     free(mi);
 }
 
-GMenuItem *GMenuItemArrayCopy(GMenuItem *mi, uint16_t *cnt) {
-    int i;
-    GMenuItem *arr;
+VISIBLE GMenuItem *
+GMenuItemArrayCopy(GMenuItem *mi, uint16_t *cnt)
+{
+  int i;
+  GMenuItem *arr;
 
-    if ( mi==NULL )
-return( NULL );
-    for ( i=0; mi[i].ti.text!=NULL || mi[i].ti.image!=NULL || mi[i].ti.line; ++i );
-    if ( i==0 )
-return( NULL );
-    arr = xmalloc((i+1)*sizeof(GMenuItem));
-    for ( i=0; mi[i].ti.text!=NULL || mi[i].ti.image!=NULL || mi[i].ti.line; ++i ) {
-	arr[i] = mi[i];
-	GTextInfoImageLookup(&arr[i].ti);
-	if ( mi[i].ti.text!=NULL ) {
-	    if ( mi[i].ti.text_has_mnemonic && mi[i].ti.text_is_1byte )
-		arr[i].ti.text = utf82u_mncopy((char *) mi[i].ti.text,&arr[i].ti.mnemonic);
-	    else if ( mi[i].ti.text_is_1byte )
-		arr[i].ti.text = utf82u_copy((char *) mi[i].ti.text);
-	    else
-		arr[i].ti.text = x_u32_strdup_or_null(mi[i].ti.text);
-	    arr[i].ti.text_has_mnemonic = arr[i].ti.text_is_1byte = false;
-	}
-	if ( islower(arr[i].ti.mnemonic))
-	    arr[i].ti.mnemonic = toupper(arr[i].ti.mnemonic);
-	if ( islower(arr[i].shortcut_char))
-	    arr[i].shortcut_char = toupper(arr[i].shortcut_char);
-	if ( mi[i].sub!=NULL )
-	    arr[i].sub = GMenuItemArrayCopy(mi[i].sub,NULL);
+  if ( mi==NULL )
+    return( NULL );
+  for ( i=0; mi[i].ti.text!=NULL || mi[i].ti.image!=NULL || mi[i].ti.line; ++i );
+  if ( i==0 )
+    return( NULL );
+  arr = xmalloc((i+1)*sizeof(GMenuItem));
+  for ( i=0; mi[i].ti.text!=NULL || mi[i].ti.image!=NULL || mi[i].ti.line; ++i ) {
+    arr[i] = mi[i];
+    if ( mi[i].shortcut!=NULL )
+      GMenuItemParseShortCut(&arr[i],mi[i].shortcut);
+    GTextInfoImageLookup(&arr[i].ti);
+    if ( mi[i].ti.text!=NULL ) {
+      if ( mi[i].ti.text_has_mnemonic && mi[i].ti.text_is_1byte )
+	arr[i].ti.text = utf82u_mncopy((char *) mi[i].ti.text,&arr[i].ti.mnemonic);
+      else if ( mi[i].ti.text_is_1byte )
+	arr[i].ti.text = utf82u_copy((char *) mi[i].ti.text);
+      else
+	arr[i].ti.text = x_u32_strdup_or_null(mi[i].ti.text);
+      arr[i].ti.text_has_mnemonic = arr[i].ti.text_is_1byte = false;
     }
-    memset(&arr[i],'\0',sizeof(GMenuItem));
-    if ( cnt!=NULL ) *cnt = i;
-return( arr );
+    if ( islower(arr[i].ti.mnemonic))
+      arr[i].ti.mnemonic = toupper(arr[i].ti.mnemonic);
+    if ( islower(arr[i].shortcut_char))
+      arr[i].shortcut_char = toupper(arr[i].shortcut_char);
+    if ( mi[i].sub!=NULL )
+      arr[i].sub = GMenuItemArrayCopy(mi[i].sub,NULL);
+  }
+  memset(&arr[i],'\0',sizeof(GMenuItem));
+  if ( cnt!=NULL )
+    *cnt = i;
+  return( arr );
 }
 
 int GMenuItemArrayMask(GMenuItem *mi) {
@@ -772,18 +778,6 @@ return( true );
 	}
     }
 return( false );
-}
-
-void GMenuItem2ArrayFree(GMenuItem2 *mi) {
-    int i;
-
-    if ( mi == NULL )
-return;
-    for ( i=0; mi[i].ti.text || mi[i].ti.image || mi[i].ti.line; ++i ) {
-	GMenuItem2ArrayFree(mi[i].sub);
-	free(mi[i].ti.text);
-    }
-    free(mi);
 }
 
 static const char *shortcut_domain = "shortcuts";
@@ -947,45 +941,6 @@ return;
 return;
 	}
     }
-}
-
-GMenuItem *GMenuItem2ArrayCopy(GMenuItem2 *mi, uint16_t *cnt) {
-    int i;
-    GMenuItem *arr;
-
-    if ( mi==NULL )
-return( NULL );
-    for ( i=0; mi[i].ti.text!=NULL || mi[i].ti.image!=NULL || mi[i].ti.line; ++i );
-    if ( i==0 )
-return( NULL );
-    arr = xcalloc((i+1),sizeof(GMenuItem));
-    for ( i=0; mi[i].ti.text!=NULL || mi[i].ti.image!=NULL || mi[i].ti.line; ++i ) {
-	arr[i].ti = mi[i].ti;
-	GTextInfoImageLookup(&arr[i].ti);
-	arr[i].moveto = mi[i].moveto;
-	arr[i].invoke = mi[i].invoke;
-	arr[i].mid = mi[i].mid;
-	if ( mi[i].shortcut!=NULL )
-	    GMenuItemParseShortCut(&arr[i],mi[i].shortcut);
-	if ( mi[i].ti.text!=NULL ) {
-	    if ( mi[i].ti.text_has_mnemonic && mi[i].ti.text_is_1byte )
-		arr[i].ti.text = utf82u_mncopy((char *) mi[i].ti.text,&arr[i].ti.mnemonic);
-	    else if ( mi[i].ti.text_is_1byte )
-		arr[i].ti.text = utf82u_copy((char *) mi[i].ti.text);
-	    else
-		arr[i].ti.text = x_u32_strdup_or_null(mi[i].ti.text);
-	    arr[i].ti.text_has_mnemonic = arr[i].ti.text_is_1byte = false;
-	}
-	if ( islower(arr[i].ti.mnemonic))
-	    arr[i].ti.mnemonic = toupper(arr[i].ti.mnemonic);
-	if ( islower(arr[i].shortcut_char))
-	    arr[i].shortcut_char = toupper(arr[i].shortcut_char);
-	if ( mi[i].sub!=NULL )
-	    arr[i].sub = GMenuItem2ArrayCopy(mi[i].sub,NULL);
-    }
-    memset(&arr[i],'\0',sizeof(GMenuItem));
-    if ( cnt!=NULL ) *cnt = i;
-return( arr );
 }
 
 int GIntGetResource(enum int_res index) {

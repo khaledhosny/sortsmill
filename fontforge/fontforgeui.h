@@ -48,7 +48,7 @@ extern GCursor ct_magplus, ct_magminus,
 	ct_features;
 extern GWindow logo_icon;
 
-extern GMenuItem2 cvtoollist[], cvspirotoollist[];
+extern GMenuItem cvtoollist[], cvspirotoollist[];
 
 extern GTextInfo encodingtypes[];
 extern GTextInfo *EncodingTypesFindEnc(GTextInfo *encodingtypes, Encoding *enc);

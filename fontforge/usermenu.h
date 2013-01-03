@@ -32,8 +32,8 @@
 #include <ggadget.h>
 #include <sortsmillff/usermenu.h>
 
-extern GMenuItem2 *cv_menu;
-extern GMenuItem2 *fv_menu;
+extern GMenuItem *cv_menu;
+extern GMenuItem *fv_menu;
 
 void cv_tools_list_check (GWindow gw, struct gmenuitem *mi, GEvent *e);
 void fv_tools_list_check (GWindow gw, struct gmenuitem *mi, GEvent *e);

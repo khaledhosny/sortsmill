@@ -230,7 +230,7 @@ static char *popupsres[] = {
 
 // *INDENT-OFF*
 
-GMenuItem2 cvtoollist[] = {
+GMenuItem cvtoollist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_Pointer"),
@@ -291,7 +291,7 @@ GMenuItem2 cvtoollist[] = {
     .invoke = CVMenuTool,
     .mid = cvt_hand },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -368,7 +368,7 @@ GMenuItem2 cvtoollist[] = {
     .invoke = CVMenuTool,
     .mid = cvt_pen },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -385,7 +385,7 @@ GMenuItem2 cvtoollist[] = {
     .invoke = CVMenuSpiroSet,
     .mid = cvt_spiro },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -417,7 +417,7 @@ GMenuItem2 cvtoollist[] = {
     .invoke = CVMenuTool,
     .mid = cvt_ruler },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -509,7 +509,7 @@ GMenuItem2 cvtoollist[] = {
     .invoke = CVMenuTool,
     .mid = cvt_perspective },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -571,9 +571,9 @@ GMenuItem2 cvtoollist[] = {
     .invoke = CVMenuTool,
     .mid = cvt_star },
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
-GMenuItem2 cvspirotoollist[] = {
+GMenuItem cvspirotoollist[] = {
   {
     .ti = {
       .text = (uint32_t *) N_("_Pointer"),
@@ -634,7 +634,7 @@ GMenuItem2 cvspirotoollist[] = {
     .invoke = CVMenuTool,
     .mid = cvt_hand },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -711,7 +711,7 @@ GMenuItem2 cvspirotoollist[] = {
     .invoke = CVMenuTool,
     .mid = cvt_spiroright },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -728,7 +728,7 @@ GMenuItem2 cvspirotoollist[] = {
     .invoke = CVMenuSpiroSet,
     .mid = cvt_spiro },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -760,7 +760,7 @@ GMenuItem2 cvspirotoollist[] = {
     .invoke = CVMenuTool,
     .mid = cvt_ruler },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -867,7 +867,7 @@ GMenuItem2 cvspirotoollist[] = {
     .invoke = CVMenuTool,
     .mid = cvt_perspective },
 
-  GMENUITEM2_LINE,
+  GMENUITEM_LINE,
 
   {
     .ti = {
@@ -930,7 +930,7 @@ GMenuItem2 cvspirotoollist[] = {
     .mid = cvt_star
   },
 
-  GMENUITEM2_EMPTY
+  GMENUITEM_EMPTY
 };
 
 // *INDENT-ON*
