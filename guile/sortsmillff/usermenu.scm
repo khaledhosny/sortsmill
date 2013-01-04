@@ -33,12 +33,6 @@
    )
 
 ;;-------------------------------------------------------------------------
-
-;; FIXME: Don’t explicitly go through a pointer so often, once support
-;; for other means is available. The current way is verbose and
-;; unreadable.
-
-;;-------------------------------------------------------------------------
 ;;
 ;; Containers where the ‘action’ and ‘enabled’ functions are stored.
 
@@ -97,7 +91,7 @@
         (not (GTextInfo:line-ref ti))))
 
 (define (GMenuItem-null? mi)
-   (GTextInfo-null? (pointer->GTextInfo (GMenuItem:ti->pointer mi))))
+   (GTextInfo-null? (GMenuItem:ti-ref mi)))
 
 ;; Convert a menu’s or submenu’s C array to a more usable form (a
 ;; Scheme list).
@@ -133,8 +127,7 @@
                                (get-enabled-func menu-info mid)
                                view)))
                       (GTextInfo:disabled-set!
-                         (pointer->GTextInfo (GMenuItem:ti->pointer mi))
-                         (not enabled?))))))
+                         (GMenuItem:ti-ref mi) (not enabled?))))))
           (get-GMenuItem-subentries menu-item))))
 
 ;; Invoke the action for a menu entry.

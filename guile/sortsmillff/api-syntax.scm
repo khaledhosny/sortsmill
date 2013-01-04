@@ -442,7 +442,49 @@
          ((_ field-type struct-name field-name offset size)
           #`(begin
                (expand-pointer-to-field struct-name field-name offset size)
+               (expand-ref-set!-without-dereferencing field-type struct-name
+                  field-name offset size)
+               )))))
 
+(define-syntax expand-pointer-to-field
+   (lambda (x)
+      (syntax-case x ()
+         ((_ struct-name field-name offset size)
+          #`(begin
+               (maybe-export
+                  ;; Example: unchecked-SplineChar:name->pointer
+                  #,(unchecked-field->pointer-func x #'struct-name #'field-name)
+
+                  ;; Example: SplineChar:name->pointer
+                  #,(field->pointer-func x #'struct-name #'field-name)
+                  )
+               
+               (define #,(unchecked-field->pointer-func x #'struct-name #'field-name)
+                  (case-lambda
+                     ((obj)
+                      ((field->pointer offset) (cdr obj)))
+                     ((obj i)
+                      ((field->pointer (+ offset (* i size))) (cdr obj)))))
+
+               (define #,(field->pointer-func x #'struct-name #'field-name)
+                  (case-lambda
+                     ((obj)
+                      (#,(check-struct-func x #'struct-name)
+                       #,(field->pointer-func x #'struct-name #'field-name)
+                       obj)
+                      ((field->pointer offset) (cdr obj)))
+                     ((obj i)
+                      (#,(check-struct-func x #'struct-name)
+                       #,(field->pointer-func x #'struct-name #'field-name)
+                       obj)
+                      ((field->pointer (+ offset (* i size))) (cdr obj)))))
+               )))))
+
+(define-syntax expand-ref-set!-without-dereferencing
+   (lambda (x)
+      (syntax-case x ()
+         ((_ field-type struct-name field-name offset size)
+          #`(begin
                (maybe-export
                   ;; Example: unchecked-SplineChar:width-ref
                   #,(unchecked-field-ref-func x #'struct-name #'field-name)
@@ -516,10 +558,12 @@
                      ((obj)
                       (let ((pointer ((field-ref field-type offset size) (cdr obj))))
                          (#,(pointer->struct-func x #'field-subtype) pointer)))
-                     ((obj i)
-                      (let ((p ((field-ref field-type offset size) (cdr obj)))
-                            (pointer (make-pointer (+ (pointer-address p) (* i size)))))
-                         (#,(pointer->struct-func x #'field-subtype) pointer)))))
+                     ;;((obj i) ; FIXME: Oops! We are using the pointer size,
+                     ;;         ; not the struct size as we should do.
+                     ;; (let ((p ((field-ref field-type offset size) (cdr obj)))
+                     ;;       (pointer (make-pointer (+ (pointer-address p) (* i size)))))
+                     ;;    (#,(pointer->struct-func x #'field-subtype) pointer))))
+                  ))
 
                (define #,(field-dref-func x #'struct-name #'field-name)
                   (case-lambda
@@ -535,38 +579,44 @@
                       (#,(unchecked-field-dref-func x #'struct-name #'field-name) obj i))))
                )))))
 
-(define-syntax expand-pointer-to-field
+(define-syntax expand-ref-set!-of-struct
+   ;; This is similar to de-referencing a pointer field. The
+   ;; difference is that the pointer is the address of the field, not
+   ;; its contents.
    (lambda (x)
       (syntax-case x ()
-         ((_ struct-name field-name offset size)
+         ((_ (field-type field-subtype) struct-name field-name offset size)
           #`(begin
                (maybe-export
-                  ;; Example: unchecked-SplineChar:name->pointer
-                  #,(unchecked-field->pointer-func x #'struct-name #'field-name)
+                  ;; Example: unchecked-CharViewBase:next-ref
+                  #,(unchecked-field-ref-func x #'struct-name #'field-name)
 
-                  ;; Example: SplineChar:name->pointer
-                  #,(field->pointer-func x #'struct-name #'field-name)
+                  ;; Example: CharViewBase:next-ref
+                  #,(field-ref-func x #'struct-name #'field-name)
                   )
-               
-               (define #,(unchecked-field->pointer-func x #'struct-name #'field-name)
-                  (case-lambda
-                     ((obj)
-                      ((field->pointer offset) (cdr obj)))
-                     ((obj i)
-                      ((field->pointer (+ offset (* i size))) (cdr obj)))))
 
-               (define #,(field->pointer-func x #'struct-name #'field-name)
+               (define #,(unchecked-field-ref-func x #'struct-name #'field-name)
+                  (case-lambda
+                     ((obj)
+                      (let ((pointer ((field->pointer offset) (cdr obj))))
+                         (#,(pointer->struct-func x #'field-subtype) pointer)))
+                     ((obj i)
+                      (let ((p ((field->pointer offset) (cdr obj)))
+                            (pointer (make-pointer (+ (pointer-address p) (* i size)))))
+                         (#,(pointer->struct-func x #'field-subtype) pointer)))))
+
+               (define #,(field-ref-func x #'struct-name #'field-name)
                   (case-lambda
                      ((obj)
                       (#,(check-struct-func x #'struct-name)
-                       #,(field->pointer-func x #'struct-name #'field-name)
+                       #,(field-ref-func x #'struct-name #'field-name)
                        obj)
-                      ((field->pointer offset) (cdr obj)))
+                      (#,(unchecked-field-ref-func x #'struct-name #'field-name) obj))
                      ((obj i)
                       (#,(check-struct-func x #'struct-name)
-                       #,(field->pointer-func x #'struct-name #'field-name)
-                       obj)
-                      ((field->pointer (+ offset (* i size))) (cdr obj)))))
+                       #,(field-ref-func x #'struct-name #'field-name)
+                       obj)                      
+                      (#,(unchecked-field-ref-func x #'struct-name #'field-name) obj i))))
                )))))
 
 (define-syntax expand-struct->
@@ -611,13 +661,17 @@
              (expand-field-dereferencing (field-type field-subtype) struct-name field-name offset size)))
 
          ((_ (field (field-type field-subtype) struct-name field-name offset size))
+          (or (eq? 'struct (syntax->datum #'field-type))
+              (eq? 'array (syntax->datum #'field-type)))
           #'(begin
              (expand-pointer-to-field struct-name field-name offset size)
-             ;;
-             ;; FIXME: Dereferencing for 'struct or 'array would go
-             ;; here.
-             ;;
+             (expand-ref-set!-of-struct (field-type field-subtype) struct-name field-name offset size)
              ))
+
+         ((_ (field field-type struct-name field-name offset size))
+          (or (eq? 'struct (syntax->datum #'field-type))
+              (eq? 'array (syntax->datum #'field-type)))
+          #'(expand-pointer-to-field struct-name field-name offset size))
 
          ((_ (field field-type struct-name field-name offset size))
           #'(expand-field-without-dereferencing field-type struct-name field-name offset size))
@@ -652,8 +706,6 @@
       ((_ * offset 2) (lambda (bv) (make-pointer (bytevector-u16-native-ref bv offset))))
       ((_ * offset 4) (lambda (bv) (make-pointer (bytevector-u32-native-ref bv offset))))
       ((_ * offset 8) (lambda (bv) (make-pointer (bytevector-u64-native-ref bv offset))))
-      ((_ struct _ _) (error "NOT IMPLEMENTED"))
-      ((_ array _ _) (error "NOT IMPLEMENTED"))
       ))
 
 (define-syntax field-set!
@@ -676,8 +728,6 @@
       ((_ * offset 2) (lambda (bv v) (bytevector-u16-native-set! bv offset (pointer-address v))))
       ((_ * offset 4) (lambda (bv v) (bytevector-u32-native-set! bv offset (pointer-address v))))
       ((_ * offset 8) (lambda (bv v) (bytevector-u64-native-set! bv offset (pointer-address v))))
-      ((_ struct _ _) (error "NOT IMPLEMENTED"))
-      ((_ array _ _) (error "NOT IMPLEMENTED"))
       ))
 
 (define-syntax field->pointer
@@ -688,23 +738,38 @@
    (lambda (x)
       (syntax-case x (field struct-field)
          ((_ field-name field (field-type field-subtype) offset size)
+          (eq? '* (syntax->datum #'field-type))
           #`(lambda (obj)
                (cons
                   (quote #,(datum->syntax x
                               (string->symbol (syntax->datum #'field-name))))
                   ((field-ref field-type offset size) (cdr obj)))))
+
+         ((_ field-name field (field-type field-subtype) offset size)
+          (or (eq? 'struct (syntax->datum #'field-type))
+              (eq? 'array (syntax->datum #'field-type)))
+          #`(lambda (obj)
+               (cons
+                  (quote #,(datum->syntax x
+                              (string->symbol (syntax->datum #'field-name))))
+                  ((field->pointer offset) (cdr obj)))))
+
+         ((_ field-name field field-type offset size)
+          (or (eq? 'struct (syntax->datum #'field-type))
+              (eq? 'array (syntax->datum #'field-type)))
+          #`(lambda (obj)
+               (cons
+                  (quote #,(datum->syntax x
+                              (string->symbol (syntax->datum #'field-name))))
+                  ((field->pointer offset) (cdr obj)))))
+
          ((_ field-name field field-type offset size)
           #`(lambda (obj)
                (cons
                   (quote #,(datum->syntax x
                               (string->symbol (syntax->datum #'field-name))))
                   ((field-ref field-type offset size) (cdr obj)))))
-         ((_ field-name struct-field _ offset _)
-           #`(lambda (obj)
-                (cons
-                   (quote #,(datum->syntax x
-                               (string->symbol (syntax->datum #'field-name))))
-                   ((field->pointer offset) (cdr obj))))))))
+         )))
 
 ;;-------------------------------------------------------------------------
 
