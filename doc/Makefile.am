@@ -26,9 +26,23 @@
 
 #--------------------------------------------------------------------------
 
+dist_man_MANS =
+
 info_TEXINFOS = sortsmill-fontforge.texi
 sortsmill_fontforge_TEXINFOS = psMat.interface.texi	\
 	ps_number.visible.texi
 
+if THE_PROGRAMS
+
+# FIXME: Update the manpages for the new gengetopt-based options.
+dist_man_MANS += fontlint.1 fontimage.1 sfddiff.1
+
+if HAVE_GUI
+
+dist_man_MANS += fontforge.1
+
+endif HAVE_GUI
+
+endif THE_PROGRAMS
 #--------------------------------------------------------------------------
 

@@ -28,7 +28,6 @@
 include $(top_srcdir)/mk/flags.am
 
 bin_PROGRAMS =
-dist_man_MANS =
 
 EXTRA_DIST =
 
@@ -47,7 +46,6 @@ if THE_PROGRAMS
 if HAVE_GUI
 
 bin_PROGRAMS += fontforge
-dist_man_MANS += fontforge.1
 
 fontforge_SOURCES = main.c
 fontforge_LDADD =												\
@@ -64,7 +62,6 @@ if THE_PROGRAMS
 
 # FIXME: Update the manpages for the new gengetopt-based options.
 bin_PROGRAMS += fontlint fontimage sfddiff
-dist_man_MANS += fontlint.1 fontimage.1 sfddiff.1
 
 dist_fontlint_SOURCES = $(srcdir)/fontlint.c
 
