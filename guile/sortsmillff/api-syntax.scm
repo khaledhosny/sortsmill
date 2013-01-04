@@ -441,6 +441,8 @@
       (syntax-case x ()
          ((_ field-type struct-name field-name offset size)
           #`(begin
+               (expand-pointer-to-field struct-name field-name offset size)
+
                (maybe-export
                   ;; Example: unchecked-SplineChar:width-ref
                   #,(unchecked-field-ref-func x #'struct-name #'field-name)
@@ -453,12 +455,6 @@
 
                   ;; Example: SplineChar:width-set!
                   #,(field-set!-func x #'struct-name #'field-name)
-
-                  ;; Example: unchecked-SplineChar:width->pointer
-                  #,(unchecked-field->pointer-func x #'struct-name #'field-name)
-
-                  ;; Example: SplineChar:width->pointer
-                  #,(field->pointer-func x #'struct-name #'field-name)
                   )
                
                (define #,(unchecked-field-ref-func x #'struct-name #'field-name)
@@ -500,27 +496,7 @@
                        #,(field-set!-func x #'struct-name #'field-name)
                        obj)
                       ((field-set! field-type (+ offset (* i size)) size) (cdr obj) v))))
-
-               (define #,(unchecked-field->pointer-func x #'struct-name #'field-name)
-                  (case-lambda
-                     ((obj)
-                      ((field->pointer offset) (cdr obj)))
-                     ((obj i)
-                      ((field->pointer (+ offset (* i size))) (cdr obj)))
-
-               (define #,(field->pointer-func x #'struct-name #'field-name)
-                  (case-lambda
-                     ((obj)
-                      (#,(check-struct-func x #'struct-name)
-                       #,(field->pointer-func x #'struct-name #'field-name)
-                       obj)
-                      ((field->pointer offset) (cdr obj)))
-                     ((obj i)
-                      (#,(check-struct-func x #'struct-name)
-                       #,(field->pointer-func x #'struct-name #'field-name)
-                       obj)
-                      ((field->pointer (+ offset (* i size))) (cdr obj)))))
-               )))))))
+               )))))
 
 (define-syntax expand-field-dereferencing
    (lambda (x)
@@ -559,7 +535,7 @@
                       (#,(unchecked-field-dref-func x #'struct-name #'field-name) obj i))))
                )))))
 
-(define-syntax expand-struct-field-without-dereferencing
+(define-syntax expand-pointer-to-field
    (lambda (x)
       (syntax-case x ()
          ((_ struct-name field-name offset size)
@@ -573,15 +549,24 @@
                   )
                
                (define #,(unchecked-field->pointer-func x #'struct-name #'field-name)
-                  (lambda (obj)
-                     ((field->pointer offset) (cdr obj))))
+                  (case-lambda
+                     ((obj)
+                      ((field->pointer offset) (cdr obj)))
+                     ((obj i)
+                      ((field->pointer (+ offset (* i size))) (cdr obj)))))
 
                (define #,(field->pointer-func x #'struct-name #'field-name)
-                  (lambda (obj)
-                     (#,(check-struct-func x #'struct-name)
-                      #,(field->pointer-func x #'struct-name #'field-name)
-                      obj)
-                     ((field->pointer offset) (cdr obj))))
+                  (case-lambda
+                     ((obj)
+                      (#,(check-struct-func x #'struct-name)
+                       #,(field->pointer-func x #'struct-name #'field-name)
+                       obj)
+                      ((field->pointer offset) (cdr obj)))
+                     ((obj i)
+                      (#,(check-struct-func x #'struct-name)
+                       #,(field->pointer-func x #'struct-name #'field-name)
+                       obj)
+                      ((field->pointer (+ offset (* i size))) (cdr obj)))))
                )))))
 
 (define-syntax expand-struct->
@@ -627,7 +612,7 @@
 
          ((_ (field (field-type field-subtype) struct-name field-name offset size))
           #'(begin
-             (expand-struct-field-without-dereferencing struct-name field-name offset size)
+             (expand-pointer-to-field struct-name field-name offset size)
              ;;
              ;; FIXME: Dereferencing for 'struct or 'array would go
              ;; here.
