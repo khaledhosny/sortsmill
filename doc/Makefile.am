@@ -34,7 +34,6 @@ sortsmill_fontforge_TEXINFOS = psMat.interface.texi	\
 
 if THE_PROGRAMS
 
-# FIXME: Update the manpages for the new gengetopt-based options.
 dist_man_MANS += fontlint.1 fontimage.1 fontcompare.1
 
 if HAVE_GUI
