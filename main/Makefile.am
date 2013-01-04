@@ -61,13 +61,13 @@ endif THE_PROGRAMS
 if THE_PROGRAMS
 
 # FIXME: Update the manpages for the new gengetopt-based options.
-bin_PROGRAMS += fontlint fontimage sfddiff
+bin_PROGRAMS += fontlint fontimage fontcompare
 
 dist_fontlint_SOURCES = $(srcdir)/fontlint.c
 
 dist_fontimage_SOURCES = $(srcdir)/fontimage.c
 
-dist_sfddiff_SOURCES = $(srcdir)/sfddiff.c
+dist_fontcompare_SOURCES = $(srcdir)/fontcompare.c
 
 endif THE_PROGRAMS
 
