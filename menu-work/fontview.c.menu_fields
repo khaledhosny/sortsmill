@@ -795,7 +795,7 @@
       .text_has_mnemonic = true,
       .mnemonic = 'S'},
     .sub = sllist,
-    .moveto = sllistcheck,
+    .moveto = sllistcheck_fv,
     .mid = 0},
     .ti = {
       .text = (uint32_t *) N_("F_ind / Replace..."),
@@ -853,7 +853,7 @@
       .text_has_mnemonic = true,
       .mnemonic = 'F'},
     .sub = cflist,
-    .moveto = cflistcheck,
+    .moveto = cflistcheck_fv,
     .mid = 0},
     .ti = {
       .text = (uint32_t *) N_("Remo_ve Undoes"),
@@ -1387,7 +1387,7 @@
       .text_has_mnemonic = true,
       .mnemonic = '\0'},
     .sub = delist,
-    .moveto = delistcheck,
+    .moveto = delistcheck_fv,
     .mid = 0},
     .ti = {
       .text = (uint32_t *) N_("Mass Glyph _Rename..."),
@@ -1481,7 +1481,7 @@
       .text_has_mnemonic = true,
       .mnemonic = 'I'},
     .sub = infolist,
-    .moveto = infolistcheck,
+    .moveto = infolistcheck_fv,
     .mid = 0},
     .ti = {
       .text = (uint32_t *) N_("_Validation"),
@@ -1493,7 +1493,7 @@
       .text_has_mnemonic = true,
       .mnemonic = 'I'},
     .sub = validlist,
-    .moveto = validlistcheck,
+    .moveto = validlistcheck_fv,
     .mid = 0},
     .ti = {
       .text = (uint32_t *) N_("Bitm_ap Strikes Available..."),
@@ -1552,7 +1552,7 @@
       .text_has_mnemonic = true,
       .mnemonic = 'T'},
     .sub = trlist,
-    .moveto = trlistcheck,
+    .moveto = trlistcheck_fv,
     .mid = MID_Transform},
     .ti = {
       .text = (uint32_t *) N_("_Expand Stroke..."),
@@ -1669,7 +1669,7 @@
       .text_has_mnemonic = true,
       .mnemonic = 'B'},
     .sub = balist,
-    .moveto = balistcheck,
+    .moveto = balistcheck_fv,
     .mid = MID_BuildAccent},
     .ti = {
       .text = (uint32_t *) N_("_Merge Fonts..."),
@@ -1749,7 +1749,7 @@
       .mnemonic = 'K'},
     .shortcut = H_ ("Anchored Pairs|No Shortcut"),
     .sub = dummyall,
-    .moveto = aplistbuild,
+    .moveto = aplistbuild_fv,
     .mid = MID_AnchorPairs},
     .ti = {
       .text = (uint32_t *) N_("_Ligatures"),
@@ -2080,7 +2080,7 @@
       .text_has_mnemonic = true,
       .mnemonic = '\0'},
     .sub = lylist,
-    .moveto = lylistcheck
+    .moveto = lylistcheck_fv
     .ti = {
       .text = (uint32_t *) N_("_Show ATT"),
       .fg = COLOR_DEFAULT,
@@ -2112,7 +2112,7 @@
       .text_has_mnemonic = true,
       .mnemonic = 'b'},
     .sub = cblist,
-    .moveto = cblistcheck
+    .moveto = cblistcheck_fv
     .ti = {
       .text = (uint32_t *) N_("Label Gl_yph By"),
       .fg = COLOR_DEFAULT,
@@ -2122,7 +2122,7 @@
       .text_has_mnemonic = true,
       .mnemonic = 'b'},
     .sub = gllist,
-    .moveto = gllistcheck
+    .moveto = gllistcheck_fv
     .ti = {
       .text = (uint32_t *) N_("S_how H. Metrics..."),
       .fg = COLOR_DEFAULT,
@@ -3105,7 +3105,7 @@
       .text_has_mnemonic = true,
       .mnemonic = 'F'},
     .sub = fllist,
-    .moveto = fllistcheck
+    .moveto = fllistcheck_fv
     .ti = {
       .text = (uint32_t *) N_("_Edit"),
       .fg = COLOR_DEFAULT,
@@ -3115,7 +3115,7 @@
       .text_has_mnemonic = true,
       .mnemonic = 'E'},
     .sub = edlist,
-    .moveto = edlistcheck
+    .moveto = edlistcheck_fv
     .ti = {
       .text = (uint32_t *) N_("E_lement"),
       .fg = COLOR_DEFAULT,
@@ -3125,7 +3125,7 @@
       .text_has_mnemonic = true,
       .mnemonic = 'l'},
     .sub = ellist,
-    .moveto = ellistcheck
+    .moveto = ellistcheck_fv
     .ti = {
       .text = (uint32_t *) N_("_Tools"),
       .fg = COLOR_DEFAULT,
@@ -3146,7 +3146,7 @@
       .text_has_mnemonic = true,
       .mnemonic = 'i'},
     .sub = htlist,
-    .moveto = htlistcheck
+    .moveto = htlistcheck_fv
     .ti = {
       .text = (uint32_t *) N_("E_ncoding"),
       .fg = COLOR_DEFAULT,
@@ -3156,7 +3156,7 @@
       .text_has_mnemonic = true,
       .mnemonic = 'V'},
     .sub = enlist,
-    .moveto = enlistcheck
+    .moveto = enlistcheck_fv
     .ti = {
       .text = (uint32_t *) N_("_View"),
       .fg = COLOR_DEFAULT,
@@ -3166,7 +3166,7 @@
       .text_has_mnemonic = true,
       .mnemonic = 'V'},
     .sub = vwlist,
-    .moveto = vwlistcheck
+    .moveto = vwlistcheck_fv
     .ti = {
       .text = (uint32_t *) N_("_Metrics"),
       .fg = COLOR_DEFAULT,
@@ -3176,7 +3176,7 @@
       .text_has_mnemonic = true,
       .mnemonic = 'M'},
     .sub = mtlist,
-    .moveto = mtlistcheck
+    .moveto = mtlistcheck_fv
     .ti = {
       .text = (uint32_t *) N_("_CID"),
       .fg = COLOR_DEFAULT,
@@ -3186,7 +3186,7 @@
       .text_has_mnemonic = true,
       .mnemonic = 'C'},
     .sub = cdlist,
-    .moveto = cdlistcheck
+    .moveto = cdlistcheck_fv
     .ti = {
       .text = (uint32_t *) N_("MM"),
       .fg = COLOR_DEFAULT,
@@ -3196,7 +3196,7 @@
       .text_has_mnemonic = true,
       .mnemonic = '\0'},
     .sub = mmlist,
-    .moveto = mmlistcheck
+    .moveto = mmlistcheck_fv
     .ti = {
       .text = (uint32_t *) N_("_Window"),
       .fg = COLOR_DEFAULT,

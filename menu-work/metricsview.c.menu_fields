@@ -709,7 +709,7 @@
       .text_has_mnemonic = true,
       .mnemonic = 'B' },
     .sub = balist,
-    .moveto = balistcheck,
+    .moveto = balistcheck_mv,
     .mid = MID_BuildAccent },
     .ti = {
       .text = (uint32_t *) N_("All"),
@@ -742,7 +742,7 @@
       .mnemonic = 'K' },
     .shortcut = H_("Anchored Pairs|No Shortcut"),
     .sub = dummyall,
-    .moveto = aplistbuild,
+    .moveto = aplistbuild_mv,
     .invoke = MVMenuAnchorPairs,
     .mid = MID_AnchorPairs },
     .ti = {
@@ -945,7 +945,7 @@
       .text_has_mnemonic = true,
       .mnemonic = '\0' },
     .sub = lylist,
-    .moveto = lylistcheck
+    .moveto = lylistcheck_mv
     .ti = {
       .text = (uint32_t *) N_("Com_binations"),
       .fg = COLOR_DEFAULT,
@@ -955,7 +955,7 @@
       .text_has_mnemonic = true,
       .mnemonic = 'b' },
     .sub = cblist,
-    .moveto = cblistcheck
+    .moveto = cblistcheck_mv
     .ti = {
       .text = (uint32_t *) N_("Show _Grid"),
       .fg = COLOR_DEFAULT,
@@ -965,7 +965,7 @@
       .text_has_mnemonic = true,
       .mnemonic = 'G' },
     .sub = gdlist,
-    .moveto = gdlistcheck,
+    .moveto = gdlistcheck_mv,
     .invoke = MVMenuShowGrid,
     .mid = MID_ShowGrid },
     .ti = {
@@ -1118,7 +1118,7 @@
       .text_has_mnemonic = true,
       .mnemonic = 'T' },
     .sub = tylist,
-    .moveto = tylistcheck
+    .moveto = tylistcheck_mv
     .ti = {
       .text = (uint32_t *) N_("Ker_n By Classes..."),
       .fg = COLOR_DEFAULT,
@@ -1170,7 +1170,7 @@
       .text_has_mnemonic = true,
       .mnemonic = 'F' },
     .sub = fllist,
-    .moveto = fllistcheck
+    .moveto = fllistcheck_mv
     .ti = {
       .text = (uint32_t *) N_("_Edit"),
       .fg = COLOR_DEFAULT,
@@ -1180,7 +1180,7 @@
       .text_has_mnemonic = true,
       .mnemonic = 'E' },
     .sub = edlist,
-    .moveto = edlistcheck
+    .moveto = edlistcheck_mv
     .ti = {
       .text = (uint32_t *) N_("E_lement"),
       .fg = COLOR_DEFAULT,
@@ -1190,7 +1190,7 @@
       .text_has_mnemonic = true,
       .mnemonic = 'l' },
     .sub = ellist,
-    .moveto = ellistcheck
+    .moveto = ellistcheck_mv
     .ti = {
       .text = (uint32_t *) N_("_View"),
       .fg = COLOR_DEFAULT,
@@ -1200,7 +1200,7 @@
       .text_has_mnemonic = true,
       .mnemonic = 'V' },
     .sub = vwlist,
-    .moveto = vwlistcheck
+    .moveto = vwlistcheck_mv
     .ti = {
       .text = (uint32_t *) N_("_Metrics"),
       .fg = COLOR_DEFAULT,
@@ -1210,7 +1210,7 @@
       .text_has_mnemonic = true,
       .mnemonic = 'M' },
     .sub = mtlist,
-    .moveto = mtlistcheck
+    .moveto = mtlistcheck_mv
     .ti = {
       .text = (uint32_t *) N_("_Window"),
       .fg = COLOR_DEFAULT,

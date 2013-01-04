@@ -30,6 +30,7 @@
 
 #include <ggadget.h>
 
+// Not belonging anywhere in particular.
 _FF_GMENUITEM_FUNC (MenuAbout);
 _FF_GMENUITEM_FUNC (MenuHelp);
 _FF_GMENUITEM_FUNC (MenuIndex);

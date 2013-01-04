@@ -30,6 +30,7 @@
 
 #include <ggadget.h>
 
+// Not belonging anywhere in particular.
 _FF_GMENUITEM_FUNC (MenuRecentBuild);
 
 // bitmapview.c

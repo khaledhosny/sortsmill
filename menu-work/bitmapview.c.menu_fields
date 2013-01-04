@@ -689,7 +689,7 @@
       .mnemonic = 'l' },
     .shortcut = NULL,
     .sub = pllist,
-    .moveto = pllistcheck,
+    .moveto = pllistcheck_bv,
     .mid = 0
     .ti = {
       .text = (uint32_t *) N_("Set _Width..."),
@@ -725,7 +725,7 @@
       .mnemonic = 'F'
     .shortcut = NULL,
     .sub = fllist,
-    .moveto = fllistcheck,
+    .moveto = fllistcheck_bv,
     .mid = 0
     .ti = {
       .text = (uint32_t *) N_("_Edit"),
@@ -737,7 +737,7 @@
       .mnemonic = 'E' },
     .shortcut = NULL,
     .sub = edlist,
-    .moveto = edlistcheck,
+    .moveto = edlistcheck_bv,
     .mid = 0
     .ti = {
       .text = (uint32_t *) N_("E_lement"),
@@ -749,7 +749,7 @@
       .mnemonic = 'l'
     .shortcut = NULL,
     .sub = ellist,
-    .moveto = ellistcheck,
+    .moveto = ellistcheck_bv,
     .mid = 0
     .ti = {
       .text = (uint32_t *) N_("_View"),
@@ -761,7 +761,7 @@
       .mnemonic = 'V' },
     .shortcut = NULL,
     .sub = vwlist,
-    .moveto = vwlistcheck,
+    .moveto = vwlistcheck_bv,
     .mid = 0
     .ti = {
       .text = (uint32_t *) N_("_Metrics"),
@@ -773,7 +773,7 @@
       .mnemonic = 'M'
     .shortcut = NULL,
     .sub = mtlist,
-    .moveto = mtlistcheck
+    .moveto = mtlistcheck_bv
     .ti = {
       .text = (uint32_t *) N_("_Window"),
       .fg = COLOR_DEFAULT,

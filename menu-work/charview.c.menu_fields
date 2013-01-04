@@ -674,7 +674,7 @@
       .text_has_mnemonic = 1,
       .mnemonic = 'S'
     .sub = sllist,
-    .moveto = sllistcheck,
+    .moveto = sllistcheck_cv,
     .mid = 0
     .ti = {
       .text = (uint32_t *) N_("U_nlink Reference"),
@@ -1474,7 +1474,7 @@
       .text_has_mnemonic = 1,
       .mnemonic = 'D'},
     .sub = delist,
-    .moveto = delistcheck,
+    .moveto = delistcheck_cv,
     .mid = MID_ShowDependentRefs
     .ti = {
       .text = (uint32_t *) N_("Find Proble_ms..."),
@@ -1604,7 +1604,7 @@
       .text_has_mnemonic = 1,
       .mnemonic = 'S'},
     .sub = smlist,
-    .moveto = smlistcheck,
+    .moveto = smlistcheck_cv,
     .mid = MID_Simplify},
     .ti = {
       .text = (uint32_t *) N_("Add E_xtrema"),
@@ -1640,7 +1640,7 @@
       .text_has_mnemonic = 1,
       .mnemonic = 'l'},
     .sub = allist,
-    .moveto = allistcheck,
+    .moveto = allistcheck_cv,
     .mid = MID_Align},
     .ti = {
       .text = (uint32_t *) N_("Roun_d"),
@@ -1652,7 +1652,7 @@
       .text_has_mnemonic = 1,
       .mnemonic = 'I'},
     .sub = rndlist,
-    .moveto = rndlistcheck,
+    .moveto = rndlistcheck_cv,
     .mid = MID_Round},
     .ti = {
       .text = (uint32_t *) N_("_Order"),
@@ -1664,7 +1664,7 @@
       .text_has_mnemonic = 1,
       .mnemonic = '\0'},
     .sub = orlist,
-    .moveto = orlistcheck,
+    .moveto = orlistcheck_cv,
     .mid = 0},
     .ti = {
       .text = (uint32_t *) N_("Check Self-Intersection"),
@@ -1760,7 +1760,7 @@
       .text_has_mnemonic = 1,
       .mnemonic = 'u'},
     .sub = balist,
-    .moveto = balistcheck,
+    .moveto = balistcheck_cv,
     .mid = MID_BuildAccent},
     .ti = {
       .text = (uint32_t *) N_("Compare Layers..."),
@@ -2174,7 +2174,7 @@
       .text_has_mnemonic = 1,
       .mnemonic = 'V'},
     .sub = ap2list,
-    .moveto = ap2listbuild,
+    .moveto = ap2listbuild_cv,
     .mid = MID_AnchorControl},
     .ti = {
       .text = (uint32_t *) N_("Anchor _Glyph at Point"),
@@ -2185,7 +2185,7 @@
       .text_has_mnemonic = 1,
       .mnemonic = 'A'},
     .sub = aplist,
-    .moveto = aplistcheck,
+    .moveto = aplistcheck_cv,
     .mid = MID_AnchorGlyph},
     .ti = {
       .text = (uint32_t *) N_("_Ligatures"),
@@ -2448,7 +2448,7 @@
       .text_has_mnemonic = 1,
       .mnemonic = 'P'},
     .sub = pllist,
-    .moveto = pllistcheck,
+    .moveto = pllistcheck_cv,
     .mid = 0},
     .ti = {
       .text = (uint32_t *) N_("_Glyph Tabs"),
@@ -2734,7 +2734,7 @@
       .text_has_mnemonic = 1,
       .mnemonic = 'o'},
     .sub = nplist,
-    .moveto = nplistcheck,
+    .moveto = nplistcheck_cv,
     .mid = 0},
     .ti = {
       .text = (uint32_t *) N_("Grid Fi_t"),
@@ -2746,7 +2746,7 @@
       .text_has_mnemonic = 1,
       .mnemonic = 'l'},
     .sub = gflist,
-    .moveto = gflistcheck,
+    .moveto = gflistcheck_cv,
     .mid = MID_ShowGridFit},
     .ti = {
       .text = (uint32_t *) N_("Sho_w"),
@@ -2758,7 +2758,7 @@
       .text_has_mnemonic = 1,
       .mnemonic = 'l'},
     .sub = swlist,
-    .moveto = swlistcheck,
+    .moveto = swlistcheck_cv,
     .mid = 0},
     .ti = {
       .text = (uint32_t *) N_("Com_binations"),
@@ -2770,7 +2770,7 @@
       .text_has_mnemonic = 1,
       .mnemonic = 'b'},
     .sub = cblist,
-    .moveto = cblistcheck,
+    .moveto = cblistcheck_cv,
     .mid = 0},
     .ti = {
       .text = (uint32_t *) N_("SubFonts|_All"),
@@ -2815,7 +2815,7 @@
       .text_has_mnemonic = 1,
       .mnemonic = '\0'
     .sub = mvlist,
-    .moveto = mvlistcheck,
+    .moveto = mvlistcheck_cv,
     .mid = 0
     .ti = {
       .text = (uint32_t *) N_("_File"),
@@ -2826,7 +2826,7 @@
       .text_has_mnemonic = 1,
       .mnemonic = 'F'},
     .sub = fllist,
-    .moveto = fllistcheck
+    .moveto = fllistcheck_cv
     .ti = {
       .text = (uint32_t *) N_("_Edit"),
       .fg = COLOR_DEFAULT,
@@ -2836,7 +2836,7 @@
       .text_has_mnemonic = 1,
       .mnemonic = 'E'},
     .sub = edlist,
-    .moveto = edlistcheck
+    .moveto = edlistcheck_cv
     .ti = {
       .text = (uint32_t *) N_("_Point"),
       .fg = COLOR_DEFAULT,
@@ -2846,7 +2846,7 @@
       .text_has_mnemonic = 1,
       .mnemonic = 'P'},
     .sub = ptlist,
-    .moveto = ptlistcheck
+    .moveto = ptlistcheck_cv
     .ti = {
       .text = (uint32_t *) N_("E_lement"),
       .fg = COLOR_DEFAULT,
@@ -2856,7 +2856,7 @@
       .text_has_mnemonic = 1,
       .mnemonic = 'l'},
     .sub = ellist,
-    .moveto = ellistcheck
+    .moveto = ellistcheck_cv
     .ti = {
       .text = (uint32_t *) N_("_Tools"),
       .fg = COLOR_DEFAULT,
@@ -2876,7 +2876,7 @@
       .text_has_mnemonic = 1,
       .mnemonic = 'H'},
     .sub = htlist,
-    .moveto = htlistcheck
+    .moveto = htlistcheck_cv
     .ti = {
       .text = (uint32_t *) N_("_View"),
       .fg = COLOR_DEFAULT,
@@ -2886,7 +2886,7 @@
       .text_has_mnemonic = 1,
       .mnemonic = 'V'},
     .sub = vwlist,
-    .moveto = vwlistcheck
+    .moveto = vwlistcheck_cv
     .ti = {
       .text = (uint32_t *) N_("_Metrics"),
       .fg = COLOR_DEFAULT,
@@ -2896,7 +2896,7 @@
       .text_has_mnemonic = 1,
       .mnemonic = 'M'},
     .sub = mtlist,
-    .moveto = mtlistcheck
+    .moveto = mtlistcheck_cv
     .ti = {
       .text = (uint32_t *) N_("MM"),
       .fg = COLOR_DEFAULT,
@@ -2906,7 +2906,7 @@
       .text_has_mnemonic = 1,
       .mnemonic = '\0'
     .sub = mmlist,
-    .moveto = mmlistcheck
+    .moveto = mmlistcheck_cv
     .ti = {
       .text = (uint32_t *) N_("_Window"),
       .fg = COLOR_DEFAULT,
@@ -2935,7 +2935,7 @@
       .text_has_mnemonic = 1,
       .mnemonic = 'F'},
     .sub = fllist,
-    .moveto = fllistcheck
+    .moveto = fllistcheck_cv
     .ti = {
       .text = (uint32_t *) N_("_Edit"),
       .fg = COLOR_DEFAULT,
@@ -2945,7 +2945,7 @@
       .text_has_mnemonic = 1,
       .mnemonic = 'E'},
     .sub = edlist,
-    .moveto = edlistcheck,
+    .moveto = edlistcheck_cv,
     .ti = {
       .text = (uint32_t *) N_("_Point"),
       .fg = COLOR_DEFAULT,
@@ -2955,7 +2955,7 @@
       .text_has_mnemonic = 1,
       .mnemonic = 'P'},
     .sub = ptlist,
-    .moveto = ptlistcheck,
+    .moveto = ptlistcheck_cv,
     .ti = {
       .text = (uint32_t *) N_("E_lement"),
       .fg = COLOR_DEFAULT,
@@ -2965,7 +2965,7 @@
       .text_has_mnemonic = 1,
       .mnemonic = 'l'},
     .sub = ellist,
-    .moveto = ellistcheck,
+    .moveto = ellistcheck_cv,
     .ti = {
       .text = (uint32_t *) N_("_Tools"),
       .fg = COLOR_DEFAULT,
@@ -2985,7 +2985,7 @@
       .text_has_mnemonic = 1,
       .mnemonic = 'H'},
     .sub = htlist,
-    .moveto = htlistcheck,
+    .moveto = htlistcheck_cv,
     .ti = {
       .text = (uint32_t *) N_("_View"),
       .fg = COLOR_DEFAULT,
@@ -2995,7 +2995,7 @@
       .text_has_mnemonic = 1,
       .mnemonic = 'V'},
     .sub = vwlist,
-    .moveto = vwlistcheck,
+    .moveto = vwlistcheck_cv,
     .ti = {
       .text = (uint32_t *) N_("_Metrics"),
       .fg = COLOR_DEFAULT,
@@ -3005,7 +3005,7 @@
       .text_has_mnemonic = 1,
       .mnemonic = 'M'},
     .sub = mtlist,
-    .moveto = mtlistcheck,
+    .moveto = mtlistcheck_cv,
     .ti = {
       .text = (uint32_t *) N_("_Window"),
       .fg = COLOR_DEFAULT,

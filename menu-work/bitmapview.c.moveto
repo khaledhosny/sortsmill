@@ -1,8 +1,8 @@
 BVWindowMenuBuild
 MenuRecentBuild
-edlistcheck
-ellistcheck
-fllistcheck
-mtlistcheck
-pllistcheck
-vwlistcheck
+edlistcheck_bv
+ellistcheck_bv
+fllistcheck_bv
+mtlistcheck_bv
+pllistcheck_bv
+vwlistcheck_bv
