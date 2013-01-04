@@ -1,25 +1,35 @@
 .\" Manual page for fontimage by George Williams
 .\" Copyright © 2006 by George Williams.
-.TH FONTIMAGE 1 "26 October 2006"
+.TH FONTIMAGE: "1" "January 2013"
+.
+.
 .SH NAME
+.
 .B fontimage - produce a font thumbnail image
+.
+.
 .SH SYNOPSIS
+.
 .B fontimage
-.RB [ \--help ]
-.RB [ \--width 
-.IR num ]
-.RB [ \--height
-.IR num ]
-.RB [ \--pixelsize
-.IR num ]
-.RB [ \--text
-.IR string ]
-.RB [ \--o
-.IR outputfile ]
-.RB [ \--usage ]
-.RB [ \--version ]
+.RB [ \-h,
+.BR \-\-help ]
+.RB [ \-V,
+.BR \-\-version ]
+.RB [ \-W,
+.BR \-\-width\fR=\fIINT\fR ] 
+.RB [ \-H,
+.BR \-\-height\fR=\fIINT\fR ] 
+.RB [ \-P,
+.BR \-\-pixel-size\fR=\fIINT\fR ]
+.RB [ \-t,
+.BR \-\-text\fR=\fISTRING\fR ]
+.RB [ \-\-o
+.BR \-\-output\fR=\fIoutputfile\fR ]
 .I fontfile
+.
+.
 .SH DESCRIPTION
+.
 The program
 .B fontimage
 loads a font, which may be in any format
@@ -27,42 +37,42 @@ loads a font, which may be in any format
 can read, and then produces an image showing representative glyphs of the font.
 
 .SH OPTIONS
+.
 .TP
-.B \--help
+.B \-h, \-\-help
 Provide a description with a list of the available options.
+.
 .TP
-.B \--width num
+.B \-V, \-\-version
+Display the current version.
+.
+.TP
+.B \-W, \-\-width\fR=\fIINT\fR
 Specifies the width of the output image. If this is omitted the image will
 be as wide as necessary to display the text.
 .TP
-.B \--height num
+.B \-H, \-\-height\fR=\fIINT\fR
 Specifies the height of the output image. If this is omitted the image will be
 as high as necessary to display the text.
 .TP
-.B \--pixelsize num
+.B \-P, \-\-pixelsize\fR=\fIINT\fR
 Specifies the pixelsize used to display the text. This argument may be specified
-multiple times and each refers to any \--text lines that follow it.
+multiple times and each refers to any \-\-text lines that follow it.
 .TP
-.B \--text string
+.B \-t, \-\-text\fR=\fISTRING\fR
 Specifies a line of text to be displayed. The string must be in UTF-8.
 This argument may be specified multiple times to
-provide several lines of text. If no \--text arguments are supplied
+provide several lines of text. If no \-\-text arguments are supplied
 .IR fontimage
 will examine the font, looking for various scripts it knows about, and will
 try to display something appropriate for each.
 .TP
-.B \-o " outfile"
+.B \-o, \-\-output\fR=\fIoutfile\fR
 Specifies the output filename for the image. The type of image will be determined
 by the file's extension. Currently only ".bmp" and ".png" are recognized. If
 omitted
 .IR fontimage
 will choose an output name based on the font's fontname field.
-.TP
-.B \--usage
-Display the usage description.
-.TP
-.B \--version
-Display the current version
 .\" .SH ENVIRONMENT
 .\" .SH FILES
 .\" .SH EXAMPLES

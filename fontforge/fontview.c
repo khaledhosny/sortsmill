@@ -4216,7 +4216,7 @@ FVMenuShowMetrics (GWindow fvgw, struct gmenuitem *mi, GEvent *UNUSED (e))
   GDrawRequestExpose (fv->v, NULL, false);
 }
 
-VISIBLE void
+static void
 FV_ChangeDisplayBitmap (FontView *fv, BDFFont *bdf)
 {
   FVChangeDisplayFont (fv, bdf);

@@ -9,10 +9,10 @@ INSTALLATION NOTES:
 INSTALLATION WITH DYNAMIC LIBRARIES
  contains two executables:
  	fontforge -- a font editor
-	sfddiff -- a program for comparing fonts
+	fontcompare -- a program for comparing fonts
  man pages for the above
 	fontforge.1
-	sfddiff.1
+	fontcompare.1
  two libraries
 	libgdraw.so
 	libgunicode.so

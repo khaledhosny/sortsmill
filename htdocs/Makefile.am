@@ -198,7 +198,7 @@ ROOT_DOC_LIST = AA-Comparison.html aacutebase.png aacutemid.png			\
 	scripting-alpha.html scripting.html scripting-tutorial.html			\
 	script-lang-dlg.png scriptnotes.html search.html selectbyatt.html	\
 	SelectByATT.png selections.html serif2.png serif-def.png			\
-	serif.png setwidth.png sfdchangelog.html sfddiff.html				\
+	serif.png setwidth.png sfdchangelog.html fontcompare.html			\
 	sfdformat.html sfd.html Shades2.png Shades4.png Shades.png			\
 	ShadowWireframe.png short-long-s.png showatt.html showatt.png		\
 	ShowGridFit.png sidebearings.png Sigma13x16.png Sigma28x33.png		\
