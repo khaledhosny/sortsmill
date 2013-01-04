@@ -34,6 +34,7 @@
 #include <ustring.h>
 #include <utype.h>
 #include <math.h>
+#include <moveto_funcs.h>
 #include <invoke_funcs.h>
 
 int mv_width = 800, mv_height = 300;
@@ -3100,7 +3101,7 @@ static GMenuItem wnmenu[] = {
 
 // *INDENT-ON*
 
-static void MVWindowMenuBuild(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void MVWindowMenuBuild(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
     int i;
     SplineChar *sc;
@@ -3760,7 +3761,7 @@ static GMenuItem balist[] = {
 
 // *INDENT-ON*
 
-static void balistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
+VISIBLE void balistcheck_mv(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
     int i;
     SplineChar *sc;
@@ -4013,7 +4014,7 @@ static GMenuItem ellist[] = {
       .text_has_mnemonic = true,
       .mnemonic = 'B' },
     .sub = balist,
-    .moveto = balistcheck,
+    .moveto = balistcheck_mv,
     .mid = MID_BuildAccent },
 
   GMENUITEM_EMPTY
@@ -4039,7 +4040,7 @@ static GMenuItem dummyall[] = {
 // *INDENT-ON*
 
 /* Builds up a menu containing all the anchor classes */
-static void aplistbuild(GWindow base, struct gmenuitem *mi, GEvent *UNUSED(e)) {
+VISIBLE void aplistbuild_mv(GWindow base, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     MetricsView *mv = (MetricsView *) GDrawGetUserData(base);
 
     GMenuItemArrayFree(mi->sub);
@@ -4075,7 +4076,7 @@ static GMenuItem cblist[] = {
       .mnemonic = 'K' },
     .shortcut = H_("Anchored Pairs|No Shortcut"),
     .sub = dummyall,
-    .moveto = aplistbuild,
+    .moveto = aplistbuild_mv,
     .invoke = MVMenuAnchorPairs,
     .mid = MID_AnchorPairs },
 
@@ -4097,7 +4098,7 @@ static GMenuItem cblist[] = {
 
 // *INDENT-ON*
 
-static void cblistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
+VISIBLE void cblistcheck_mv(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
     SplineFont *sf = mv->sf;
     int i, anyligs=0, anykerns=0;
@@ -4157,7 +4158,7 @@ static GMenuItem lylist[] = {
 
 // *INDENT-ON*
 
-static void lylistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
+VISIBLE void lylistcheck_mv(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
     SplineFont *sf = mv->fv->b.sf;
     int ly;
@@ -4240,7 +4241,7 @@ static GMenuItem gdlist[] = {
 
 // *INDENT-ON*
 
-static void gdlistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
+VISIBLE void gdlistcheck_mv(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
 
     for ( mi = mi->sub; mi->ti.text!=NULL || mi->ti.line ; ++mi ) {
@@ -4418,7 +4419,7 @@ static GMenuItem vwlist[] = {
       .text_has_mnemonic = true,
       .mnemonic = '\0' },
     .sub = lylist,
-    .moveto = lylistcheck
+    .moveto = lylistcheck_mv
   },
 
   GMENUITEM_LINE,
@@ -4433,7 +4434,7 @@ static GMenuItem vwlist[] = {
       .text_has_mnemonic = true,
       .mnemonic = 'b' },
     .sub = cblist,
-    .moveto = cblistcheck
+    .moveto = cblistcheck_mv
   },
 
   GMENUITEM_LINE,
@@ -4448,7 +4449,7 @@ static GMenuItem vwlist[] = {
       .text_has_mnemonic = true,
       .mnemonic = 'G' },
     .sub = gdlist,
-    .moveto = gdlistcheck,
+    .moveto = gdlistcheck_mv,
     .invoke = MVMenuShowGrid,
     .mid = MID_ShowGrid },
 
@@ -4636,7 +4637,7 @@ static GMenuItem tylist[] = {
 
 // *INDENT-ON*
 
-static void tylistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
+VISIBLE void tylistcheck_mv(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
 
     for ( mi = mi->sub; mi->ti.text!=NULL || mi->ti.line ; ++mi ) {
@@ -4696,7 +4697,7 @@ static GMenuItem mtlist[] = {
       .text_has_mnemonic = true,
       .mnemonic = 'T' },
     .sub = tylist,
-    .moveto = tylistcheck
+    .moveto = tylistcheck_mv
   },
 
   GMENUITEM_LINE,
@@ -4758,7 +4759,7 @@ static GMenuItem mtlist[] = {
 
 // *INDENT-ON*
 
-static void fllistcheck(GWindow UNUSED(gw), struct gmenuitem *mi, GEvent *UNUSED(e)) {
+VISIBLE void fllistcheck_mv(GWindow UNUSED(gw), struct gmenuitem *mi, GEvent *UNUSED(e)) {
     /*MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);*/
 
     for ( mi = mi->sub; mi->ti.text!=NULL || mi->ti.line ; ++mi ) {
@@ -4770,7 +4771,7 @@ static void fllistcheck(GWindow UNUSED(gw), struct gmenuitem *mi, GEvent *UNUSED
     }
 }
 
-static void edlistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
+VISIBLE void edlistcheck_mv(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
     int i;
 
@@ -4825,7 +4826,7 @@ static void edlistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     }
 }
 
-static void ellistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
+VISIBLE void ellistcheck_mv(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
     int i, anybuildable;
     SplineChar *sc;
@@ -4883,7 +4884,7 @@ static void ellistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     }
 }
 
-static void vwlistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
+VISIBLE void vwlistcheck_mv(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
     int i, j, base, aselection;
     BDFFont *bdf;
@@ -4960,7 +4961,7 @@ static void vwlistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     mi->sub = GMenuItemArrayCopy(vwlist,NULL);
 }
 
-static void mtlistcheck(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
+VISIBLE void mtlistcheck_mv(GWindow gw, struct gmenuitem *mi, GEvent *UNUSED(e)) {
     MetricsView *mv = (MetricsView *) GDrawGetUserData(gw);
 
     for ( mi = mi->sub; mi->ti.text!=NULL || mi->ti.line ; ++mi ) {
@@ -4986,7 +4987,7 @@ static GMenuItem mblist[] = {
       .text_has_mnemonic = true,
       .mnemonic = 'F' },
     .sub = fllist,
-    .moveto = fllistcheck
+    .moveto = fllistcheck_mv
   },
 
   {
@@ -4999,7 +5000,7 @@ static GMenuItem mblist[] = {
       .text_has_mnemonic = true,
       .mnemonic = 'E' },
     .sub = edlist,
-    .moveto = edlistcheck
+    .moveto = edlistcheck_mv
   },
 
   {
@@ -5012,7 +5013,7 @@ static GMenuItem mblist[] = {
       .text_has_mnemonic = true,
       .mnemonic = 'l' },
     .sub = ellist,
-    .moveto = ellistcheck
+    .moveto = ellistcheck_mv
   },
 
   {
@@ -5025,7 +5026,7 @@ static GMenuItem mblist[] = {
       .text_has_mnemonic = true,
       .mnemonic = 'V' },
     .sub = vwlist,
-    .moveto = vwlistcheck
+    .moveto = vwlistcheck_mv
   },
 
   {
@@ -5038,7 +5039,7 @@ static GMenuItem mblist[] = {
       .text_has_mnemonic = true,
       .mnemonic = 'M' },
     .sub = mtlist,
-    .moveto = mtlistcheck
+    .moveto = mtlistcheck_mv
   },
 
   {

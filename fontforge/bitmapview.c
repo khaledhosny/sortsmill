@@ -35,6 +35,7 @@
 #include <locale.h>
 #include <gresource.h>
 #include <gresedit.h>
+#include <moveto_funcs.h>
 #include <invoke_funcs.h>
 
 int bv_width = 270, bv_height=250;
@@ -1600,7 +1601,7 @@ VISIBLE void BVMenuRevert(GWindow gw,struct gmenuitem *mi,GEvent *g) {
 			    /* we get a crash. So delay till after the menu completes */
 }
 
-static void fllistcheck(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void fllistcheck_bv(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
 
     for ( mi = mi->sub; mi->ti.text!=NULL || mi->ti.line ; ++mi ) {
@@ -1964,7 +1965,7 @@ void BVMenuRotateInvoked(GWindow gw,struct gmenuitem *mi,GEvent *g) {
     BVRotateBitmap(bv,mi->mid);
 }
 
-static void ellistcheck(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void ellistcheck_bv(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
 
     for ( mi = mi->sub; mi->ti.text!=NULL || mi->ti.line ; ++mi ) {
@@ -1976,7 +1977,7 @@ static void ellistcheck(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     }
 }
 
-static void edlistcheck(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void edlistcheck_bv(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
     BDFRefChar *cur;
 
@@ -2009,7 +2010,7 @@ static void edlistcheck(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     }
 }
 
-static void pllistcheck(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void pllistcheck_bv(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
     extern int palettes_docked;
 
@@ -2033,7 +2034,7 @@ static void pllistcheck(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     }
 }
 
-static void vwlistcheck(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void vwlistcheck_bv(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
     BDFFont *bdf;
 
@@ -2056,7 +2057,7 @@ static void vwlistcheck(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     }
 }
 
-static void mtlistcheck(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void mtlistcheck_bv(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     BitmapView *bv = (BitmapView *) GDrawGetUserData(gw);
 
     for ( mi = mi->sub; mi->ti.text!=NULL || mi->ti.line ; ++mi ) {
@@ -2136,7 +2137,7 @@ static GMenuItem wnmenu[] = {
 
 // *INDENT-ON*
 
-static void BVWindowMenuBuild(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+VISIBLE void BVWindowMenuBuild(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     struct gmenuitem *wmi;
     WindowMenuBuild(gw,mi,e);
     for ( wmi = mi->sub; wmi->ti.text!=NULL || wmi->ti.line ; ++wmi ) {
@@ -3055,7 +3056,7 @@ static GMenuItem vwlist[] = {
       .mnemonic = 'l' },
     .shortcut = NULL,
     .sub = pllist,
-    .moveto = pllistcheck,
+    .moveto = pllistcheck_bv,
     .mid = 0
   },
 
@@ -3111,7 +3112,7 @@ static GMenuItem mblist[] = {
     },
     .shortcut = NULL,
     .sub = fllist,
-    .moveto = fllistcheck,
+    .moveto = fllistcheck_bv,
     .mid = 0
   },
 
@@ -3126,7 +3127,7 @@ static GMenuItem mblist[] = {
       .mnemonic = 'E' },
     .shortcut = NULL,
     .sub = edlist,
-    .moveto = edlistcheck,
+    .moveto = edlistcheck_bv,
     .mid = 0
   },
 
@@ -3142,7 +3143,7 @@ static GMenuItem mblist[] = {
     },
     .shortcut = NULL,
     .sub = ellist,
-    .moveto = ellistcheck,
+    .moveto = ellistcheck_bv,
     .mid = 0
   },
 
@@ -3157,7 +3158,7 @@ static GMenuItem mblist[] = {
       .mnemonic = 'V' },
     .shortcut = NULL,
     .sub = vwlist,
-    .moveto = vwlistcheck,
+    .moveto = vwlistcheck_bv,
     .mid = 0
   },
   {
@@ -3172,7 +3173,7 @@ static GMenuItem mblist[] = {
     },
     .shortcut = NULL,
     .sub = mtlist,
-    .moveto = mtlistcheck
+    .moveto = mtlistcheck_bv
   },
 
   {

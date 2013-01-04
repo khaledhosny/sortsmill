@@ -36,6 +36,7 @@
 #include <utype.h>
 #include <gresource.h>
 #include <gresedit.h>
+#include <moveto_funcs.h>
 #include <invoke_funcs.h>
 extern int _GScrollBar_Width;
 #include <gkeysym.h>
@@ -6888,8 +6889,8 @@ CVMenuExecute (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 }
 #endif /* !_NO_PYTHON */
 
-static void
-fllistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+VISIBLE void
+fllistcheck_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
   FontView *fvs;
@@ -8342,7 +8343,7 @@ CVMenuPaletteShow (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 }
 
 static void
-cv_pllistcheck (CharView *cv, struct gmenuitem *mi)
+cv_pllistcheck_cv (CharView *cv, struct gmenuitem *mi)
 {
   extern int palettes_docked;
 
@@ -8363,11 +8364,11 @@ cv_pllistcheck (CharView *cv, struct gmenuitem *mi)
     }
 }
 
-static void
-pllistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+VISIBLE void
+pllistcheck_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
-  cv_pllistcheck (cv, mi);
+  cv_pllistcheck_cv (cv, mi);
 }
 
 VISIBLE void
@@ -8837,7 +8838,7 @@ CVRemoveUndoes (GWindow gw, struct gmenuitem *UNUSED (mi), GEvent *UNUSED (e))
 /* figure out what things are possible from the edit menu before the user */
 /*  pulls it down */
 static void
-cv_edlistcheck (CharView *cv, struct gmenuitem *mi)
+cv_edlistcheck_cv (CharView *cv, struct gmenuitem *mi)
 {
   int anypoints, anyrefs, anyimages, anyanchor;
 
@@ -8909,11 +8910,11 @@ cv_edlistcheck (CharView *cv, struct gmenuitem *mi)
     }
 }
 
-static void
-edlistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+VISIBLE void
+edlistcheck_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
-  cv_edlistcheck (cv, mi);
+  cv_edlistcheck_cv (cv, mi);
 }
 
 VISIBLE void
@@ -9057,7 +9058,7 @@ CVMenuImplicit (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 static GMenuItem spiroptlist[], ptlist[];
 
 static void
-cv_ptlistcheck (CharView *cv, struct gmenuitem *mi)
+cv_ptlistcheck_cv (CharView *cv, struct gmenuitem *mi)
 {
   int type = -2, cnt = 0, ccp_cnt = 0, spline_selected = 0;
   int spirotype = -2, opencnt = 0, spirocnt = 0;
@@ -9240,11 +9241,11 @@ cv_ptlistcheck (CharView *cv, struct gmenuitem *mi)
     }
 }
 
-static void
-ptlistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+VISIBLE void
+ptlistcheck_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
-  cv_ptlistcheck (cv, mi);
+  cv_ptlistcheck_cv (cv, mi);
 }
 
 static void
@@ -10904,7 +10905,7 @@ CVMenuBitmaps (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 }
 
 static void
-cv_allistcheck (CharView *cv, struct gmenuitem *mi)
+cv_allistcheck_cv (CharView *cv, struct gmenuitem *mi)
 {
   int selpoints = 0;
   SplinePointList *spl;
@@ -10946,15 +10947,15 @@ cv_allistcheck (CharView *cv, struct gmenuitem *mi)
     }
 }
 
-static void
-allistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+VISIBLE void
+allistcheck_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
-  cv_allistcheck (cv, mi);
+  cv_allistcheck_cv (cv, mi);
 }
 
 static void
-cv_balistcheck (CharView *cv, struct gmenuitem *mi)
+cv_balistcheck_cv (CharView *cv, struct gmenuitem *mi)
 {
   int layer = CVLayer ((CharViewBase *) cv);
 
@@ -10974,15 +10975,15 @@ cv_balistcheck (CharView *cv, struct gmenuitem *mi)
     }
 }
 
-static void
-balistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+VISIBLE void
+balistcheck_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
-  cv_balistcheck (cv, mi);
+  cv_balistcheck_cv (cv, mi);
 }
 
-static void
-delistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+VISIBLE void
+delistcheck_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
 
@@ -11000,8 +11001,8 @@ delistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
     }
 }
 
-static void
-rndlistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+VISIBLE void
+rndlistcheck_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
 
@@ -11017,7 +11018,7 @@ rndlistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 }
 
 static void
-cv_ellistcheck (CharView *cv, struct gmenuitem *mi)
+cv_ellistcheck_cv (CharView *cv, struct gmenuitem *mi)
 {
   int anypoints = 0, splinepoints, dir = -2;
   int self_intersects = -2;
@@ -11200,11 +11201,11 @@ cv_ellistcheck (CharView *cv, struct gmenuitem *mi)
     }
 }
 
-static void
-ellistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+VISIBLE void
+ellistcheck_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
-  cv_ellistcheck (cv, mi);
+  cv_ellistcheck_cv (cv, mi);
 }
 
 VISIBLE void
@@ -11455,8 +11456,8 @@ CVMenuReviewHints (GWindow gw, struct gmenuitem *UNUSED (mi),
   CVReviewHints (cv);
 }
 
-static void
-htlistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+VISIBLE void
+htlistcheck_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
   BasePoint *bp[4], unit;
@@ -11528,8 +11529,8 @@ htlistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
     }
 }
 
-static void
-mtlistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+VISIBLE void
+mtlistcheck_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
   RefChar *r = HasUseMyMetrics (cv->b.sc, CVLayer ((CharViewBase *) cv));
@@ -11561,7 +11562,7 @@ mtlistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 }
 
 static void
-cv_sllistcheck (CharView *cv, struct gmenuitem *mi)
+cv_sllistcheck_cv (CharView *cv, struct gmenuitem *mi)
 {
   SplinePoint *sp;
   SplineSet *spl;
@@ -11637,15 +11638,15 @@ cv_sllistcheck (CharView *cv, struct gmenuitem *mi)
     }
 }
 
-static void
-sllistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+VISIBLE void
+sllistcheck_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
-  cv_sllistcheck (cv, mi);
+  cv_sllistcheck_cv (cv, mi);
 }
 
 static void
-cv_cblistcheck (CharView *cv, struct gmenuitem *mi)
+cv_cblistcheck_cv (CharView *cv, struct gmenuitem *mi)
 {
   int i;
   KernPair *kp;
@@ -11713,7 +11714,7 @@ cv_cblistcheck (CharView *cv, struct gmenuitem *mi)
 }
 
 static void
-cv_nplistcheck (CharView *cv, struct gmenuitem *mi)
+cv_nplistcheck_cv (CharView *cv, struct gmenuitem *mi)
 {
   SplineChar *sc = cv->b.sc;
   int order2 = cv->b.layerheads[cv->b.drawmode]->order2;
@@ -11743,8 +11744,8 @@ cv_nplistcheck (CharView *cv, struct gmenuitem *mi)
     }
 }
 
-static void
-gflistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+VISIBLE void
+gflistcheck_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
 
@@ -11774,8 +11775,8 @@ gflistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
     }
 }
 
-static void
-swlistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+VISIBLE void
+swlistcheck_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
   SplineFont *sf = cv->b.sc->parent;
@@ -11866,7 +11867,7 @@ swlistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 }
 
 static void
-cv_vwlistcheck (CharView *cv, struct gmenuitem *mi)
+cv_vwlistcheck_cv (CharView *cv, struct gmenuitem *mi)
 {
   int pos, gid;
   SplineFont *sf = cv->b.sc->parent;
@@ -11941,25 +11942,25 @@ cv_vwlistcheck (CharView *cv, struct gmenuitem *mi)
     }
 }
 
-static void
-cblistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+VISIBLE void
+cblistcheck_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
-  cv_cblistcheck (cv, mi);
+  cv_cblistcheck_cv (cv, mi);
 }
 
-static void
-nplistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+VISIBLE void
+nplistcheck_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
-  cv_nplistcheck (cv, mi);
+  cv_nplistcheck_cv (cv, mi);
 }
 
-static void
-vwlistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+VISIBLE void
+vwlistcheck_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
-  cv_vwlistcheck (cv, mi);
+  cv_vwlistcheck_cv (cv, mi);
 }
 
 VISIBLE void
@@ -12148,7 +12149,7 @@ static GMenuItem wnmenu[] = {
 
 // *INDENT-ON*
 
-static void
+VISIBLE void
 CVWindowMenuBuild (GWindow gw, struct gmenuitem *mi, GEvent *e)
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
@@ -13084,7 +13085,7 @@ static GMenuItem edlist[] = {
       .mnemonic = 'S'
     },
     .sub = sllist,
-    .moveto = sllistcheck,
+    .moveto = sllistcheck_cv,
     .mid = 0
   },
 
@@ -13711,8 +13712,8 @@ static GMenuItem smlist[] = {
 
 // *INDENT-ON*
 
-static void
-smlistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+VISIBLE void
+smlistcheck_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
 
@@ -13806,8 +13807,8 @@ static GMenuItem orlist[] = {
 
 // *INDENT-ON*
 
-static void
-orlistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+VISIBLE void
+orlistcheck_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
   SplinePointList *spl;
@@ -14274,7 +14275,7 @@ static GMenuItem ellist[] = {
       .mnemonic = 'D'},
 
     .sub = delist,
-    .moveto = delistcheck,
+    .moveto = delistcheck_cv,
     .mid = MID_ShowDependentRefs
   },
 
@@ -14439,7 +14440,7 @@ static GMenuItem ellist[] = {
       .text_has_mnemonic = 1,
       .mnemonic = 'S'},
     .sub = smlist,
-    .moveto = smlistcheck,
+    .moveto = smlistcheck_cv,
     .mid = MID_Simplify},
 
   {
@@ -14485,7 +14486,7 @@ static GMenuItem ellist[] = {
       .text_has_mnemonic = 1,
       .mnemonic = 'l'},
     .sub = allist,
-    .moveto = allistcheck,
+    .moveto = allistcheck_cv,
     .mid = MID_Align},
 
   {
@@ -14499,7 +14500,7 @@ static GMenuItem ellist[] = {
       .text_has_mnemonic = 1,
       .mnemonic = 'I'},
     .sub = rndlist,
-    .moveto = rndlistcheck,
+    .moveto = rndlistcheck_cv,
     .mid = MID_Round},
 
   {
@@ -14513,7 +14514,7 @@ static GMenuItem ellist[] = {
       .text_has_mnemonic = 1,
       .mnemonic = '\0'},
     .sub = orlist,
-    .moveto = orlistcheck,
+    .moveto = orlistcheck_cv,
     .mid = 0},
 
   GMENUITEM_LINE,
@@ -14638,7 +14639,7 @@ static GMenuItem ellist[] = {
       .text_has_mnemonic = 1,
       .mnemonic = 'u'},
     .sub = balist,
-    .moveto = balistcheck,
+    .moveto = balistcheck_cv,
     .mid = MID_BuildAccent},
 
   GMENUITEM_LINE,
@@ -14939,8 +14940,8 @@ static GMenuItem ap2list[] = {
 
 // *INDENT-ON*
 
-static void
-ap2listbuild (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+VISIBLE void
+ap2listbuild_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
   char buf[300];
@@ -15208,8 +15209,8 @@ static GMenuItem aplist[] = {
 
 // *INDENT-ON*
 
-static void
-aplistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+VISIBLE void
+aplistcheck_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
   SplineChar *sc = cv->b.sc, **glyphs;
@@ -15307,7 +15308,7 @@ static GMenuItem cblist[] = {
       .text_has_mnemonic = 1,
       .mnemonic = 'V'},
     .sub = ap2list,
-    .moveto = ap2listbuild,
+    .moveto = ap2listbuild_cv,
     .mid = MID_AnchorControl},
 
   {
@@ -15320,7 +15321,7 @@ static GMenuItem cblist[] = {
       .text_has_mnemonic = 1,
       .mnemonic = 'A'},
     .sub = aplist,
-    .moveto = aplistcheck,
+    .moveto = aplistcheck_cv,
     .mid = MID_AnchorGlyph},
 
   {
@@ -15652,7 +15653,7 @@ static GMenuItem swlist[] = {
       .text_has_mnemonic = 1,
       .mnemonic = 'P'},
     .sub = pllist,
-    .moveto = pllistcheck,
+    .moveto = pllistcheck_cv,
     .mid = 0},
 
   {
@@ -16023,7 +16024,7 @@ static GMenuItem vwlist[] = {
       .text_has_mnemonic = 1,
       .mnemonic = 'o'},
     .sub = nplist,
-    .moveto = nplistcheck,
+    .moveto = nplistcheck_cv,
     .mid = 0},
 
   {
@@ -16037,7 +16038,7 @@ static GMenuItem vwlist[] = {
       .text_has_mnemonic = 1,
       .mnemonic = 'l'},
     .sub = gflist,
-    .moveto = gflistcheck,
+    .moveto = gflistcheck_cv,
     .mid = MID_ShowGridFit},
 
   {
@@ -16051,7 +16052,7 @@ static GMenuItem vwlist[] = {
       .text_has_mnemonic = 1,
       .mnemonic = 'l'},
     .sub = swlist,
-    .moveto = swlistcheck,
+    .moveto = swlistcheck_cv,
     .mid = 0},
 
   GMENUITEM_LINE,
@@ -16067,7 +16068,7 @@ static GMenuItem vwlist[] = {
       .text_has_mnemonic = 1,
       .mnemonic = 'b'},
     .sub = cblist,
-    .moveto = cblistcheck,
+    .moveto = cblistcheck_cv,
     .mid = 0},
 
   GMENUITEM_EMPTY
@@ -16139,8 +16140,8 @@ static GMenuItem mvlist[] = {
 
 // *INDENT-ON*
 
-static void
-mvlistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+VISIBLE void
+mvlistcheck_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
   int i, base, j;
@@ -16240,7 +16241,7 @@ static GMenuItem mmlist[] = {
       .mnemonic = '\0'
     },
     .sub = mvlist,
-    .moveto = mvlistcheck,
+    .moveto = mvlistcheck_cv,
     .mid = 0
   },
 
@@ -16260,8 +16261,8 @@ CVMenuShowSubChar (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
   cv->b.layerheads[dm_grid] = &new->grid;
 }
 
-static void
-mmlistcheck (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
+VISIBLE void
+mmlistcheck_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
   int i, base, j;
@@ -16324,7 +16325,7 @@ static GMenuItem mblist[] = {
       .text_has_mnemonic = 1,
       .mnemonic = 'F'},
     .sub = fllist,
-    .moveto = fllistcheck
+    .moveto = fllistcheck_cv
   },
 
   {
@@ -16337,7 +16338,7 @@ static GMenuItem mblist[] = {
       .text_has_mnemonic = 1,
       .mnemonic = 'E'},
     .sub = edlist,
-    .moveto = edlistcheck
+    .moveto = edlistcheck_cv
   },
 
   {
@@ -16350,7 +16351,7 @@ static GMenuItem mblist[] = {
       .text_has_mnemonic = 1,
       .mnemonic = 'P'},
     .sub = ptlist,
-    .moveto = ptlistcheck
+    .moveto = ptlistcheck_cv
   },
 
   {
@@ -16363,7 +16364,7 @@ static GMenuItem mblist[] = {
       .text_has_mnemonic = 1,
       .mnemonic = 'l'},
     .sub = ellist,
-    .moveto = ellistcheck
+    .moveto = ellistcheck_cv
   },
 
   {
@@ -16389,7 +16390,7 @@ static GMenuItem mblist[] = {
       .text_has_mnemonic = 1,
       .mnemonic = 'H'},
     .sub = htlist,
-    .moveto = htlistcheck
+    .moveto = htlistcheck_cv
   },
 
   {
@@ -16402,7 +16403,7 @@ static GMenuItem mblist[] = {
       .text_has_mnemonic = 1,
       .mnemonic = 'V'},
     .sub = vwlist,
-    .moveto = vwlistcheck
+    .moveto = vwlistcheck_cv
   },
 
   {
@@ -16415,7 +16416,7 @@ static GMenuItem mblist[] = {
       .text_has_mnemonic = 1,
       .mnemonic = 'M'},
     .sub = mtlist,
-    .moveto = mtlistcheck
+    .moveto = mtlistcheck_cv
   },
 
   /* TRANSLATORS: Here (and following) MM means "MultiMaster" */
@@ -16430,7 +16431,7 @@ static GMenuItem mblist[] = {
       .mnemonic = '\0'
     },
     .sub = mmlist,
-    .moveto = mmlistcheck
+    .moveto = mmlistcheck_cv
   },
 
   {
@@ -16473,7 +16474,7 @@ static GMenuItem mblist_nomm[] = {
       .text_has_mnemonic = 1,
       .mnemonic = 'F'},
     .sub = fllist,
-    .moveto = fllistcheck
+    .moveto = fllistcheck_cv
   },
 
   {
@@ -16486,7 +16487,7 @@ static GMenuItem mblist_nomm[] = {
       .text_has_mnemonic = 1,
       .mnemonic = 'E'},
     .sub = edlist,
-    .moveto = edlistcheck,
+    .moveto = edlistcheck_cv,
   },
 
   {
@@ -16499,7 +16500,7 @@ static GMenuItem mblist_nomm[] = {
       .text_has_mnemonic = 1,
       .mnemonic = 'P'},
     .sub = ptlist,
-    .moveto = ptlistcheck,
+    .moveto = ptlistcheck_cv,
   },
 
   {
@@ -16512,7 +16513,7 @@ static GMenuItem mblist_nomm[] = {
       .text_has_mnemonic = 1,
       .mnemonic = 'l'},
     .sub = ellist,
-    .moveto = ellistcheck,
+    .moveto = ellistcheck_cv,
   },
 
   {
@@ -16538,7 +16539,7 @@ static GMenuItem mblist_nomm[] = {
       .text_has_mnemonic = 1,
       .mnemonic = 'H'},
     .sub = htlist,
-    .moveto = htlistcheck,
+    .moveto = htlistcheck_cv,
   },
 
   {
@@ -16551,7 +16552,7 @@ static GMenuItem mblist_nomm[] = {
       .text_has_mnemonic = 1,
       .mnemonic = 'V'},
     .sub = vwlist,
-    .moveto = vwlistcheck,
+    .moveto = vwlistcheck_cv,
   },
 
   {
@@ -16564,7 +16565,7 @@ static GMenuItem mblist_nomm[] = {
       .text_has_mnemonic = 1,
       .mnemonic = 'M'},
     .sub = mtlist,
-    .moveto = mtlistcheck,
+    .moveto = mtlistcheck_cv,
   },
 
   {
