@@ -39,10 +39,13 @@
 #include <string.h>
 #include <progname.h>
 #include <libguile.h>
+#include <glib.h>
+#define GMenuItem GMenuItem_GTK // FIXME
+#include <gio/gio.h>
+#undef GMenuItem
 
 #include <fontforge.h>
 #include <compare.h>
-#include "fontlint_opts.h"
 
 #ifndef _NO_PYTHON
 #include <ffpython.h>
@@ -97,8 +100,7 @@ failures_of_mask (int mask)
     printf ("  Non integral coordinates in a glyph\n");
   if (mask & 0x100000)
     {
-      printf
-        ("  A glyph uses at least one, but not all, anchor classes in a subtable\n");
+      printf ("  A glyph uses at least one, but not all, anchor classes in a subtable\n");
       printf ("   (I'm not absolutely sure this is an error)\n");
     }
   if (mask & 0x200000)
@@ -123,15 +125,13 @@ failures_of_load_state (int load_state)
   if (load_state & 0x10)
     printf ("  Bad 'cmap' table\n");
   if (load_state & 0x20)
-    printf
-      ("  Bad 'EBDT', 'bdat', 'EBLC' or 'bloc' (embedded bitmap) table\n");
+    printf ("  Bad 'EBDT', 'bdat', 'EBLC' or 'bloc' (embedded bitmap) table\n");
   if (load_state & 0x40)
     printf ("  Bad Apple GX advanced typography table\n");
   if (load_state & 0x80)
     printf ("  Bad OpenType advanced typography table\n");
   if (load_state & 0x100)
-    printf
-      ("  Bad version number in OS/2 table (must be >0, and must be >1 for OT-CFF fonts)\n");
+    printf ("  Bad version number in OS/2 table (must be >0, and must be >1 for OT-CFF fonts)\n");
   if (load_state & 0x200)
     printf ("  Bad sfnt file header\n");
 }
@@ -190,11 +190,9 @@ failures_of_blues (int blues)
   if (blues & 0x400000)
     printf ("  Bad StemSnapV entry in PostScript Private dictionary\n");
   if (blues & 0x800000)
-    printf
-      ("  StemSnapH does not contain StdHW value in PostScript Private dictionary\n");
+    printf ("  StemSnapH does not contain StdHW value in PostScript Private dictionary\n");
   if (blues & 0x1000000)
-    printf
-      ("  StemSnapV does not contain StdVW value in PostScript Private dictionary\n");
+    printf ("  StemSnapV does not contain StdVW value in PostScript Private dictionary\n");
   if (blues & 0x2000000)
     printf ("  Bad BlueShift entry in PostScript Private dictionary\n");
 }
@@ -245,21 +243,49 @@ my_main (int argc, char **argv)
   strcpy (progname, program_name);
   argv[0] = progname;
 
-  struct gengetopt_args_info args_info;
-  int errval = cmdline_parser (argc, argv, &args_info);
-  if (errval != 0)
-    exit (1);
+  bool show_version = false;
+  char **remaining_args = NULL;
+  GError *error = NULL;
+  GOptionContext *context;
 
   initialize ();
 
-  bool all_passed = true;
-  for (size_t i = 0; i < args_info.inputs_num; i++)
+  // *INDENT-OFF*
+  GOptionEntry entries[] = {
+    { "version", 'V', 0, G_OPTION_ARG_NONE, &show_version, N_("Show version information and exit"), NULL },
+    { G_OPTION_REMAINING, '\0', 0, G_OPTION_ARG_FILENAME_ARRAY, &remaining_args, NULL, N_("[FILE...]") },
+    { NULL }
+  };
+  // *INDENT-ON*
+
+  context = g_option_context_new (_("- Validate the listed font files."));
+  g_option_context_add_main_entries (context, entries, FF_TEXTDOMAIN);
+
+  if (!g_option_context_parse (context, &argc, &argv, &error))
     {
-      bool passed = validate (args_info.inputs[i]);
-      all_passed = (all_passed && passed);
+      printf (_("%s: %s\n"), program_name, error->message);
+      exit (1);
     }
 
-  cmdline_parser_free (&args_info);
+  if (show_version)
+    {
+      printf ("%s: %s\n", program_name, VERSION);
+      exit (0);
+    }
+
+  bool all_passed = true;
+  for (size_t i = 0; remaining_args[i] != NULL; i++)
+    {
+      GFile *file = g_file_new_for_commandline_arg (remaining_args[0]);
+      char *font = g_file_get_path (file);
+
+      bool passed = validate (font);
+      all_passed = (all_passed && passed);
+
+      g_object_unref (file);
+    }
+
+  g_option_context_free (context);
 
   return (all_passed ? 0 : 1);
 }
@@ -278,6 +304,8 @@ initialize (void)
 
   no_windowing_ui = true;
   running_script = false;
+
+  g_type_init ();               // for glib
 
 #ifndef _NO_PYTHON
   /* This ugly hack initializes the SFD unpickler. */
