@@ -66,27 +66,11 @@ if THE_PROGRAMS
 bin_PROGRAMS += fontlint fontimage sfddiff
 dist_man_MANS += fontlint.1 fontimage.1 sfddiff.1
 
-dist_fontlint_SOURCES = $(srcdir)/fontlint.c			\
-	$(srcdir)/fontlint_opts.c $(srcdir)/fontlint_opts.h
-$(srcdir)/fontlint.c: $(srcdir)/fontlint_opts.h
+dist_fontlint_SOURCES = $(srcdir)/fontlint.c
 
-dist_fontimage_SOURCES = $(srcdir)/fontimage.c				\
-	$(srcdir)/fontimage_opts.c $(srcdir)/fontimage_opts.h
-$(srcdir)/fontimage.c: $(srcdir)/fontimage_opts.h
+dist_fontimage_SOURCES = $(srcdir)/fontimage.c
 
-dist_sfddiff_SOURCES = $(srcdir)/sfddiff.c $(srcdir)/sfddiff_opts.c	\
-	$(srcdir)/sfddiff_opts.h
-$(srcdir)/sfddiff.c: $(srcdir)/sfddiff_opts.h
-
-$(srcdir)/%.c $(srcdir)/%.h: stamp-%-ggo
-	@if test ! -f $@; then rm -f $<; else :; fi
-	@if test ! -f $@; then $(MAKE) $(AM_MAKEFLAGS) $<; else :; fi
-
-stamp-%-ggo: %.ggo
-	$(GENGETOPT) --unamed-opts --output-dir=$(srcdir) --file-name=$* < $<
-	@touch $@
-
-EXTRA_DIST += fontlint_opts.ggo fontimage_opts.ggo sfddiff_opts.ggo
+dist_sfddiff_SOURCES = $(srcdir)/sfddiff.c
 
 endif THE_PROGRAMS
 

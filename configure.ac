@@ -146,7 +146,6 @@ FONTFORGE_PATH_PROG([UPDATE_DESKTOP_DATABASE],[update-desktop-database],
 
 # Assorted programs.
 FONTFORGE_PATH_PROG([WGET],[wget],[GNU `wget' command])
-FONTFORGE_PATH_PROG([GENGETOPT],[gengetopt],[GNU `gengetopt' command])
 GUILE_PROGS
 
 #--------------------------------------------------------------------------
