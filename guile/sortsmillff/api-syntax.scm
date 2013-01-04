@@ -541,9 +541,8 @@
                       (let ((pointer ((field-ref field-type offset size) (cdr obj))))
                          (#,(pointer->struct-func x #'field-subtype) pointer)))
                      ((obj i)
-                      (error "THIS CODE IS NOT YET IMPLEMENTED CORRECTLY")
-                      ;; FIXME: This code is WRONG.
-                      (let ((pointer ((field-ref field-type (+ offset (* i size)) size) (cdr obj))))
+                      (let ((p ((field-ref field-type offset size) (cdr obj)))
+                            (pointer (make-pointer (+ (pointer-address p) (* i size)))))
                          (#,(pointer->struct-func x #'field-subtype) pointer)))))
 
                (define #,(field-dref-func x #'struct-name #'field-name)
