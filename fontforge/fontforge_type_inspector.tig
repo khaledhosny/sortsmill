@@ -15,8 +15,7 @@
        (* active_bitmap)
        (* selected)
        (* container)
-       (int active_layer)
-       ))
+       (int active_layer)))
 
  (struct CharViewBase
     (fields
@@ -27,18 +26,23 @@
        (uint drawmode draw_mode)
        (uint ft_gridfitwidth ft_grid_fit_width)
        (* gridfit grid_fit)
-       (* container)
-       ))
+       (* container)))
 
  (struct "struct altuni" "AltUni"
     (fields
        ((* AltUni) next)
        (int unienc unicode)
        (int vs variation_selector)
-       (int fid)
-       ))
+       (int fid)))
 
- (struct SplineChar
+ (struct DBounds
+    (fields
+       (float minx x_min)
+       (float maxx x_max)
+       (float miny y_min)
+       (float maxy y_max)))
+
+(struct SplineChar
     (fields
 
        ;; FIXME: Include special support for null-terminated
@@ -117,7 +121,7 @@
 
        ;; Tiling.
        (float tile_margin)
-       (struct tile_bounds)
+       ((struct DBounds) tile_bounds)
 
        ;; Fields that are used only during certain I/O operations.
        (int lsidebearing)

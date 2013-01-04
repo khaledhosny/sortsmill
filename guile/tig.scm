@@ -12,7 +12,9 @@
 (use-modules
    (ice-9 match)
    (ice-9 regex)
-   (ice-9 format))
+   (ice-9 format)
+   (srfi srfi-26)                       ; ‘cut’ and ‘cute’.
+   )
 
 (define (write-c-source includes types)
    (format #t "#include <config.h>\n\n")
@@ -42,8 +44,10 @@
 
 (define (field-type? ft)
    (match ft
-      ((? symbol? _) #t)                ; Example: uint
-      (('* (? string-or-symbol? _)) #t) ; Example: (* SplineChar)
+      ((? symbol? _) #t)                     ; Example: uint
+      (('* (? string-or-symbol? _)) #t)      ; Example: (* SplineChar)
+      (('struct (? string-or-symbol? _)) #t) ; Example: (struct DBounds)
+      (('array (? string-or-symbol? _)) #t)  ; Example: FIXME FIXME
       (else #f)))
 
 (define (force-string s)
@@ -126,49 +130,12 @@
            (get-type-info (list 'field field-type struct-name field-name
                              struct-name field-name)))
 
-          ;; Example: (struct-field "struct gmenuitem" "ti" "GMenuItem" "textinfo")
-          (((or 'struct-field 'array-field)
-            (? string-or-symbol? struct-name)
-            (? string-or-symbol? field-name)
-            (? string-or-symbol? replacement-struct-name)
-            (? string-or-symbol? replacement-field-name))
-           (hash-set! (cdr (hash-ref type-info replacement-struct-name))
-              replacement-field-name
-              (list
-                 (cons 'kind 'struct-field)
-                 (cons 'struct-name struct-name)
-                 (cons 'field-name field-name)))
-           type-info)
-
-          ;; Example: (struct-field "GMenuItem" "ti" "textinfo")
-          (('struct-field (? string-or-symbol? struct-name)
-              (? string-or-symbol? field-name)
-              (? string-or-symbol? replacement-field-name))
-           (get-type-info
-              (list 'struct-field struct-name field-name
-                 struct-name replacement-field-name)
-              type-info))
-
-          ;; Example: (struct-field "GMenuItem" "ti")
-          (((or 'struct-field 'array-field)
-            (? string-or-symbol? struct-name)
-            (? string-or-symbol? field-name))
-           (get-type-info
-              (list 'struct-field struct-name field-name
-                 struct-name field-name)
-              type-info))
-
           ;; Example (fields "struct gmenuitem" "GMenuItem" (struct "ti") (uint "shortcut"))
           (('fields (? string-or-symbol? struct-name)
               (? string-or-symbol? replacement-struct-name) . fields)
            (get-type-info
               (cons* 'struct struct-name replacement-struct-name
-                 (map (lambda (fld)
-                         (match (car fld)
-                            ('struct (cons 'struct-field (cdr fld)))
-                            ('array  (cons 'array-field (cdr fld)))
-                            (other (cons* 'field other (cdr fld)))))
-                    fields))
+                 (map (cute cons 'field <>) fields))
               type-info))
 
           ;; Example (fields "GMenuItem" (struct "ti") (uint "shortcut"))
@@ -243,18 +210,6 @@
                 (assq-ref info 'field-name))
              (format #t "            sizeof (x.~a));\n"
                 (assq-ref info 'field-name))
-             (format #t "  }\n"))
-          ('struct-field
-             (format #t "  {\n")
-             (format #t "    ~a x;\n"
-                (assq-ref info 'struct-name))
-             (format #t "    printf (\"(struct-field \\\"~a\\\" \\\"~a\\\" %zu %zu)\\n\",\n"
-                struct field)
-             (format #t "            offsetof (~a, ~a),\n"
-                (assq-ref info 'struct-name)
-                (assq-ref info 'field-name))
-             (format #t "            sizeof (x.~a));\n"
-                (assq-ref info 'field-name))
              (format #t "  }\n")))
        (write-fields-instructions struct tail))))
 
@@ -296,16 +251,6 @@
           (? string-or-symbol? field-name))
        (list 'field field-type struct-name field-name
           replacement-struct-name field-name))
-
-      (((or 'struct-field 'array-field) (? string-or-symbol? field-name)
-          (? string-or-symbol? replacement-field-name))
-       (list 'struct-field struct-name field-name
-          replacement-struct-name replacement-field-name))
-
-      (((or 'struct-field 'array-field) (? string-or-symbol? field-name))
-       (list 'struct-field struct-name field-name
-          replacement-struct-name field-name))
-
       (('fields . fields)
        (cons* 'fields struct-name replacement-struct-name fields))
 

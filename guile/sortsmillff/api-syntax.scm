@@ -559,16 +559,16 @@
                       (#,(unchecked-field-dref-func x #'struct-name #'field-name) obj i))))
                )))))
 
-(define-syntax expand-struct-field
+(define-syntax expand-struct-field-without-dereferencing
    (lambda (x)
       (syntax-case x ()
          ((_ struct-name field-name offset size)
           #`(begin
                (maybe-export
-                   Example: unchecked-SplineChar:name->pointer
+                  ;; Example: unchecked-SplineChar:name->pointer
                   #,(unchecked-field->pointer-func x #'struct-name #'field-name)
 
-                   Example: SplineChar:name->pointer
+                  ;; Example: SplineChar:name->pointer
                   #,(field->pointer-func x #'struct-name #'field-name)
                   )
                
@@ -614,21 +614,28 @@
 
 (define-syntax api:--
    (lambda (x)
-      (syntax-case x (struct sizeof field *)
+      (syntax-case x (struct sizeof field * array)
          ((_ (sizeof type-name size)) #'(expand-sizeof type-name size))
 
          ((_ (struct type-name size)) #'(expand-struct type-name size))
 
          ((_ (field (field-type field-subtype) struct-name field-name offset size))
+          (eq? '* (syntax->datum #'field-type))
           #'(begin
              (expand-field-without-dereferencing field-type struct-name field-name offset size)
              (expand-field-dereferencing (field-type field-subtype) struct-name field-name offset size)))
 
+         ((_ (field (field-type field-subtype) struct-name field-name offset size))
+          #'(begin
+             (expand-struct-field-without-dereferencing struct-name field-name offset size)
+             ;;
+             ;; FIXME: Dereferencing for 'struct or 'array would go
+             ;; here.
+             ;;
+             ))
+
          ((_ (field field-type struct-name field-name offset size))
           #'(expand-field-without-dereferencing field-type struct-name field-name offset size))
-
-         ((_ (struct-field struct-name field-name offset size))
-          #'(expand-struct-field struct-name field-name offset size))
 
          ((_ (struct-> struct-name (field-name kind field-type offset size) ...))
           #'(expand-struct-> struct-name (field-name kind field-type offset size) ...))
@@ -641,7 +648,7 @@
 ;;-------------------------------------------------------------------------
 
 (define-syntax field-ref
-   (syntax-rules (int uint bool float *)
+   (syntax-rules (int uint bool float * struct array)
       ((_ int offset 1) (lambda (bv) (bytevector-s8-ref bv offset)))
       ((_ int offset 2) (lambda (bv) (bytevector-s16-native-ref bv offset)))
       ((_ int offset 4) (lambda (bv) (bytevector-s32-native-ref bv offset)))
@@ -660,10 +667,12 @@
       ((_ * offset 2) (lambda (bv) (make-pointer (bytevector-u16-native-ref bv offset))))
       ((_ * offset 4) (lambda (bv) (make-pointer (bytevector-u32-native-ref bv offset))))
       ((_ * offset 8) (lambda (bv) (make-pointer (bytevector-u64-native-ref bv offset))))
+      ((_ struct _ _) (error "NOT IMPLEMENTED"))
+      ((_ array _ _) (error "NOT IMPLEMENTED"))
       ))
 
 (define-syntax field-set!
-   (syntax-rules (int uint bool *)
+   (syntax-rules (int uint bool * struct array)
       ((_ int offset 1) (lambda (bv v) (bytevector-s8-set! bv offset v)))
       ((_ int offset 2) (lambda (bv v) (bytevector-s16-native-set! bv offset v)))
       ((_ int offset 4) (lambda (bv v) (bytevector-s32-native-set! bv offset v)))
@@ -682,6 +691,8 @@
       ((_ * offset 2) (lambda (bv v) (bytevector-u16-native-set! bv offset (pointer-address v))))
       ((_ * offset 4) (lambda (bv v) (bytevector-u32-native-set! bv offset (pointer-address v))))
       ((_ * offset 8) (lambda (bv v) (bytevector-u64-native-set! bv offset (pointer-address v))))
+      ((_ struct _ _) (error "NOT IMPLEMENTED"))
+      ((_ array _ _) (error "NOT IMPLEMENTED"))
       ))
 
 (define-syntax field->pointer

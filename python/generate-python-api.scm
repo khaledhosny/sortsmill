@@ -70,6 +70,15 @@
        (format #t "    return ~d\n" size)
        (format #t "\n")
        )
+      (('field (and (or 'struct 'array) field-type) (? string? struct-name)
+          (? string? field-name) (? integer? offset) (? integer? size))
+       (format #t "  def __get_~a_ptr (self):\n" field-name)
+       (format #t "    return (self.ptr + ~d)\n" offset)
+       (format #t "\n")
+       (format #t "  _~a_ptr = property (__get_~a_ptr, " field-name field-name)
+       (format #t "doc = \"The address of the `~a' field, as an unsigned integer.\")\n" field-name)
+       (format #t "\n")
+       )
       (('field (? symbol? field-type) (? string? struct-name)
           (? string? field-name) (? integer? offset) (? integer? size))
        (format #t "  def __get_~a (self):\n" field-name)
@@ -99,25 +108,17 @@
        (format #t "doc = \"The address of the `~a' field, as a ctypes.c_void_p.\")\n" field-name)
        (format #t "\n")
        )
-      (('field ((and '* field-type) (? symbol? pointer-type)) (? string? struct-name)
-          (? string? field-name) (? integer? offset) (? integer? size))
+      (('field ((and (or '* 'struct 'array) field-type) (? symbol? pointer-type))
+          (? string? struct-name) (? string? field-name) (? integer? offset)
+          (? integer? size))
        (write-instruction (list 'field field-type struct-name field-name offset size))
        ;;
        ;; FIXME: Put dereferencing and array access here.
        ;;
        )
-      (('struct-field (? string? struct-name) (? string? field-name)
-          (? integer? offset) (? integer? size))
-       (format #t "  def __get_~a_ptr (self):\n" field-name)
-       (format #t "    return (self.ptr + ~d)\n" offset)
-       (format #t "\n")
-       (format #t "  _~a_ptr = property (__get_~a_ptr, " field-name field-name)
-       (format #t "doc = \"The address of the `~a' field, as an unsigned integer.\")\n" field-name)
-       (format #t "\n")
-       )
       (('struct-> (? string? struct-name) . fields)
        (format #t "  def fields (self):\n")
-       (format #t "    \"\"\"Return a dictionary of field values and struct-field addresses.\"\"\"\n")
+       (format #t "    \"\"\"Return a dictionary of field values and struct/array-field addresses.\"\"\"\n")
        (format #t "    return \\\n")
        (format #t "      {\n")
        (for-each
@@ -129,11 +130,11 @@
                   (? integer? offset)
                   (? integer? size))
                  (format #t "        \"~a\" : " field-name)
-                 (match kind
-                    ('field (format #t "~a (self.ptr + ~d)"
-                               (get-value-function field-type size)
-                               offset))
-                    ('struct-field (format #t "self.ptr + ~d" offset)))
+                 (match (ignore-subtype field-type)
+                    ((or 'struct 'array) (format #t "self.ptr + ~d" offset))
+                    (else (format #t "~a (self.ptr + ~d)"
+                             (get-value-function field-type size)
+                             offset)))
                  (format #t ",\n" field-name))))
           fields)
        (format #t "      }\n")
@@ -146,18 +147,21 @@
 
 (define (field-type? ft)
    (match ft
-      ((? symbol? _) #t)                ; Examples: uint bool *
-      (('* (? symbol? _)) #t)           ; Example: (* SplineChar)
+      ((? symbol? _) #t)               ; Examples: uint, bool, *, etc.
+      (((or '* 'struct 'array)
+        (? symbol? _)) #t)              ; Example: (* SplineChar)
       (else #f)))
 
-(define (force-pointer-to-void ft)
+(define (ignore-subtype ft)
    (match ft
-      ((? symbol? _) ft)                ; Examples: uint bool *
-      (('* (? symbol? _)) '*)           ; Example: (* SplineChar)
+      ((? symbol? _) ft)               ; Examples: uint, bool, *, etc.
+      (('* (? symbol? _)) '*)          ; Example: (* SplineChar)
+      (('struct (? symbol? _)) 'struct) ; Example: (struct DBounds)
+      (('array (? symbol? _)) 'array)   ; Example: FIXME FIXME
       (else (assert #f))))
 
 (define (value-c-type field-type size)
-   (match (cons (force-pointer-to-void field-type) size)
+   (match (cons (ignore-subtype field-type) size)
       (('int . 1) "int8_t")
       (('int . 2) "int16_t")
       (('int . 4) "int32_t")
@@ -168,10 +172,13 @@
       (('uint . 8) "uint64_t")
       (('bool . _) "bint")
       (('float . n) (symbol->string (c-float-type n)))
-      (('* . _) "uintptr_t")))
+      (('* . _) "uintptr_t")
+      (('struct . _) (error "NOT YET IMPLEMENTED"))
+      (('array . _) (error "NOT YET IMPLEMENTED"))
+      ))
 
 (define (get-value-function field-type size)
-   (match (cons (force-pointer-to-void field-type) size)
+   (match (cons (ignore-subtype field-type) size)
       (('int . 1) "__get_int8")
       (('int . 2) "__get_int16")
       (('int . 4) "__get_int32")
@@ -190,10 +197,13 @@
       (('* . 1) "__get_ptr8")
       (('* . 2) "__get_ptr16")
       (('* . 4) "__get_ptr32")
-      (('* . 8) "__get_ptr64")))
+      (('* . 8) "__get_ptr64")
+      (('struct . _) (error "NOT YET IMPLEMENTED"))
+      (('array . _) (error "NOT YET IMPLEMENTED"))
+      ))
 
 (define (set-value-function field-type size)
-   (match (cons (force-pointer-to-void field-type) size)
+   (match (cons (ignore-subtype field-type) size)
       (('int . 1) "__set_int8")
       (('int . 2) "__set_int16")
       (('int . 4) "__set_int32")
@@ -212,7 +222,10 @@
       (('* . 1) "__set_ptr8")
       (('* . 2) "__set_ptr16")
       (('* . 4) "__set_ptr32")
-      (('* . 8) "__set_ptr64")))
+      (('* . 8) "__set_ptr64")
+      (('struct . _) (error "NOT YET IMPLEMENTED"))
+      (('array . _) (error "NOT YET IMPLEMENTED"))
+      ))
 
 (format #t "# Generated by ~s\n" (car (command-line)))
 (format #t "\n")

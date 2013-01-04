@@ -51,6 +51,10 @@
        (format #t "end interface ~a\n" struct-name)
        (format #t "\n")
        )
+      (('field (and (or 'struct 'array) field-type) (? string? struct-name)
+          (? string? field-name) (? integer? offset) (? integer? size))
+       (format (current-error-port) "Ignoring '~a in declarations\n" field-type)
+       )
       (('field (? symbol? field-type) (? string? struct-name)
           (? string? field-name) (? integer? offset) (? integer? size))
        (format #t "interface get_~a\n" field-name)
@@ -62,8 +66,9 @@
        (format #t "end interface set_~a\n" field-name)
        (format #t "\n")
        )
-      (('field ((and '* field-type) (? symbol? pointer-type)) (? string? struct-name)
-          (? string? field-name) (? integer? offset) (? integer? size))
+      (('field ((and (or '* 'struct 'array) field-type) (? symbol? pointer-type))
+          (? string? struct-name) (? string? field-name) (? integer? offset)
+          (? integer? size))
        (write-declarations-for-one-instruction
           (list 'field field-type struct-name field-name offset size))
        ;;
@@ -97,13 +102,18 @@
           (format #t "end function c_intptr_t_to_~a\n" struct-name)
           (format #t "\n")
           ))
+      (('field (and (or 'struct 'array) field-type) (? string? struct-name)
+          (? string? field-name) (? integer? offset) (? integer? size))
+       (format (current-error-port) "Ignoring '~a in definitions\n" field-type)
+       )
       (('field (? symbol? field-type) (? string? struct-name)
           (? string? field-name) (? integer? offset) (? integer? size))
        (begin
           (write-field-definitions field-type struct-name field-name offset size)
           ))
-      (('field ((and '* field-type) (? symbol? pointer-type)) (? string? struct-name)
-          (? string? field-name) (? integer? offset) (? integer? size))
+      (('field ((and (or '* 'struct 'array) field-type) (? symbol? pointer-type))
+          (? string? struct-name) (? string? field-name) (? integer? offset)
+          (? integer? size))
        (begin
           (write-definitions-for-one-instruction
              (list 'field field-type struct-name field-name offset size))

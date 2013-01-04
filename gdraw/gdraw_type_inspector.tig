@@ -1,6 +1,9 @@
 ;; -*- mode: bee -*-
 
-(<ggadget.h>)
+(
+ "<ggadget.h>"
+ "<gdraw.h>"
+ )
 
 (
  (struct GTextInfo
@@ -25,7 +28,7 @@
        ))
  (struct GMenuItem
     (fields
-       (struct ti)
+       ((struct GTextInfo) ti)
        (* shortcut)
        (uint shortcut_char)
        (int short_mask)
@@ -33,5 +36,28 @@
        (* moveto)
        (* invoke)
        (int mid)
+       ))
+ (struct GEvent_union
+    (fields
+       (struct chr)
+       (struct mouse)
+       (struct expose)
+       (struct visibility)
+       (struct resize)
+       (struct crossing)
+       (struct focus)
+       (struct map)
+       (struct selclear)
+       (struct drag_drop)
+       (struct timer)
+       (struct control)
+       (struct user)
+       ))
+ (struct GEvent
+    (fields
+       (int type)
+       (struct w)
+       ((struct GEvent_union) u)
+       (* native_window)
        ))
  )
