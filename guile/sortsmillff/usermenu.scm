@@ -97,14 +97,16 @@
 ;; Scheme list).
 (define (GMenuItem-internal-array->list mi)
    (letrec
-         ((collect
+         ;; Stack depth surely is not a problem here, but I felt like
+         ;; writing a tail-recursive function, anyway. :)
+         ((cons-the-list-tail-recursively
              (lambda (i prior)
-                (let ((ith-element (pointer->GMenuItem
-                                      (GMenuItem->pointer mi i))))
+                (let ((ith-element (GMenuItem-ref mi i)))
                    (if (GMenuItem-null? ith-element)
                        (reverse prior)
-                       (collect (1+ i) (cons ith-element prior)))))))
-      (collect 0 '())))
+                       (cons-the-list-tail-recursively
+                          (1+ i) (cons ith-element prior)))))))
+      (cons-the-list-tail-recursively 0 '())))
 
 (define (get-GMenuItem-subentries menu-item)
    (let ((sub (GMenuItem:sub-ref menu-item)))

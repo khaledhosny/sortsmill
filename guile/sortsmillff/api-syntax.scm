@@ -175,6 +175,16 @@
          (cute simple-format #f "unchecked-~A->pointer" <>)
          x type-name))
 
+   (define (struct-ref-func x type-name)
+      (build-type-related-symbol
+         (cute simple-format #f "~A-ref" <>)
+         x type-name))
+
+   (define (unchecked-struct-ref-func x type-name)
+      (build-type-related-symbol
+         (cute simple-format #f "unchecked-~A-ref" <>)
+         x type-name))
+
    (define (malloc-struct-func x type-name)
       (build-type-related-symbol
          (cute simple-format #f "malloc-~A" <>)
@@ -310,29 +320,35 @@
                      ;; Example: pointer->SplineChar
                      #,(pointer->struct-func x #'type-name)
 
+                     ;; Example: unchecked-SplineChar->pointer
+                     #,(unchecked-struct->pointer-func x #'type-name)
+
                      ;; Example: SplineChar->pointer
                      #,(struct->pointer-func x #'type-name)
 
-                     ;; Example: unchecked-SplineChar->pointer
-                     #,(unchecked-struct->pointer-func x #'type-name)
+                     ;; Example: unchecked-SplineChar-ref
+                     #,(unchecked-struct-ref-func x #'type-name)
+
+                     ;; Example: SplineChar-ref
+                     #,(struct-ref-func x #'type-name)
 
                      ;; Example: malloc-SplineChar
                      #,(malloc-struct-func x #'type-name)
 
-                     ;; Example: free-SplineChar
-                     #,(free-struct-func x #'type-name)
-
                      ;; Example: unchecked-free-SplineChar
                      #,(unchecked-free-struct-func x #'type-name)
+
+                     ;; Example: free-SplineChar
+                     #,(free-struct-func x #'type-name)
 
                      ;; Example: gc-malloc-SplineChar
                      #,(gc-malloc-struct-func x #'type-name)
 
-                     ;; Example: gc-free-SplineChar
-                     #,(gc-free-struct-func x #'type-name)
-
                      ;; Example: unchecked-gc-free-SplineChar
                      #,(unchecked-gc-free-struct-func x #'type-name)
+
+                     ;; Example: gc-free-SplineChar
+                     #,(gc-free-struct-func x #'type-name)
                      )
 
                   (define #,(struct?-func x #'type-name)
@@ -387,6 +403,15 @@
                      (lambda (ptr)
                         (cons '#,tag (pointer->bytevector ptr size))))
 
+                  (define #,(unchecked-struct->pointer-func x #'type-name)
+                     (case-lambda
+                        ((obj) (bytevector->pointer (cdr obj)))
+                        ((obj i)
+                         ;; Return a pointer to the ith structure
+                         ;; relative to this one in an array.
+                         (let ((p (bytevector->pointer (cdr obj))))
+                            (make-pointer (+ (pointer-address p) (* i size)))))))
+
                   (define #,(struct->pointer-func x #'type-name)
                      (case-lambda
                         ((obj)
@@ -400,39 +425,69 @@
                          (#,(check-struct-func x #'type-name)
                           '#,(struct->pointer-func x #'type-name)
                           obj)
-                         (let ((p (bytevector->pointer (cdr obj))))
-                            (make-pointer (+ (pointer-address p)
-                                             (* i size)))))))
+                         (#,(unchecked-struct->pointer-func x #'type-name)
+                          obj i))))
 
-                  (define #,(unchecked-struct->pointer-func x #'type-name)
-                     (lambda (obj)
-                        (bytevector->pointer (cdr obj))))
+                  (define #,(unchecked-struct-ref-func x #'type-name)
+                     (case-lambda
+                        ((obj)
+                         ;; This merely copies the tagged
+                         ;; bytevector. It exists mainly for
+                         ;; consistency with other uses of ‘-ref’ in
+                         ;; this module.
+                         (#,(pointer->struct-func x #'type-name)
+                          (bytevector->pointer (cdr obj))))
+                        ((obj i)
+                         ;; This gives the ith structure relative to
+                         ;; this one in an array.
+                         (let ((p (bytevector->pointer (cdr obj))))
+                            (#,(pointer->struct-func x #'type-name)
+                             (make-pointer (+ (pointer-address p) (* i size))))))))
+
+                  (define #,(struct-ref-func x #'type-name)
+                     (case-lambda
+                        ((obj)
+                         ;; This merely copies the tagged
+                         ;; bytevector. It exists mainly for
+                         ;; consistency with other uses of ‘-ref’ in
+                         ;; this module.
+                         (#,(check-struct-func x #'type-name)
+                          '#,(struct->pointer-func x #'type-name)
+                          obj)
+                         (#,(unchecked-struct-ref-func x #'type-name) obj))
+                        ((obj i )
+                         ;; This gives the ith structure relative to
+                         ;; this one in an array.
+                         (#,(check-struct-func x #'type-name)
+                          '#,(struct->pointer-func x #'type-name)
+                          obj)
+                         (#,(unchecked-struct-ref-func x #'type-name) obj i))))
 
                   (define #,(malloc-struct-func x #'type-name)
                      (lambda ()
                         (cons '#,tag
                            (pointer->bytevector (scm_calloc size) size))))
 
-                  (define #,(free-struct-func x #'type-name)
-                     (lambda (obj)
-                        (free (#,(struct->pointer-func x #'type-name) obj))))
-
                   (define #,(unchecked-free-struct-func x #'type-name)
                      (lambda (obj)
                         (free (#,(unchecked-struct->pointer-func x #'type-name) obj))))
+
+                  (define #,(free-struct-func x #'type-name)
+                     (lambda (obj)
+                        (free (#,(struct->pointer-func x #'type-name) obj))))
 
                   (define #,(gc-malloc-struct-func x #'type-name)
                      (lambda ()
                         (cons '#,tag
                            (pointer->bytevector (GC_malloc size) size))))
 
-                  (define #,(gc-free-struct-func x #'type-name)
-                     (lambda (obj)
-                        (GC_free (#,(struct->pointer-func x #'type-name) obj))))
-
                   (define #,(unchecked-gc-free-struct-func x #'type-name)
                      (lambda (obj)
                         (GC_free (#,(unchecked-struct->pointer-func x #'type-name) obj))))
+
+                  (define #,(gc-free-struct-func x #'type-name)
+                     (lambda (obj)
+                        (GC_free (#,(struct->pointer-func x #'type-name) obj))))
 
                   ))))))
 
