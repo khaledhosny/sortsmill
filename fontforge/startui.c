@@ -228,7 +228,7 @@ fontforge_main_in_guile_mode (int argc, char **argv)
 
   // *INDENT-OFF*
   GOptionEntry entries[] = {
-    { "version", 'v', 0, G_OPTION_ARG_NONE, &show_version, N_("Show version information and exit"), NULL },
+    { "version", 'V', 0, G_OPTION_ARG_NONE, &show_version, N_("Show version information and exit"), NULL },
     { "all-glyphs", 'a', 0, G_OPTION_ARG_NONE, &all_glyphs, N_("Load all glyphs in the 'glyf' table of a truetype collection"), NULL },
     { "last", 'l', 0, G_OPTION_ARG_NONE, &open_last, N_("Load the last font closed"), NULL },
     { "recover", 'r', 0, G_OPTION_ARG_STRING, &recover, N_("Control error recovery"), "none|auto|inquire|clean" },

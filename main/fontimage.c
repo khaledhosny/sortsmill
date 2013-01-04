@@ -122,6 +122,7 @@ my_main (int argc, char **argv)
   strcpy (progname, program_name);
   argv[0] = progname;
 
+  bool show_version = false;
   int width = -1;
   int height = -1;
   int pixelsize = 24;
@@ -135,6 +136,7 @@ my_main (int argc, char **argv)
 
   // *INDENT-OFF*
   GOptionEntry entries[] = {
+    { "version", 'V', 0, G_OPTION_ARG_NONE, &show_version, N_("Show version information and exit"), NULL },
     { "width", 'W', 0, G_OPTION_ARG_INT, &width, N_("Set the width of output image in pixels. If omitted (or -1) the image will be as wide as needed."), "INT" },
     { "height", 'H', 0, G_OPTION_ARG_INT, &height, N_("Set the height of output image in pixels. If omitted (or -1) the image will be as high as needed."), "INT" },
     { "pixel-size", 'P', 0, G_OPTION_ARG_INT, &pixelsize, N_("Set the size of text in pixels."), "INT" },
@@ -146,18 +148,24 @@ my_main (int argc, char **argv)
   // *INDENT-ON*
 
   context = g_option_context_new
-    ("- Produce an image containing representative glyphs of the font");
+    (_("- Produce an image containing representative glyphs of the font"));
   g_option_context_add_main_entries (context, entries, FF_TEXTDOMAIN);
 
   if (!g_option_context_parse (context, &argc, &argv, &error))
     {
-      fprintf (stderr, "Option parsing failed: %s\n", error->message);
+      printf (_("%s: %s\n"), program_name, error->message);
       exit (1);
+    }
+
+  if (show_version)
+    {
+      printf ("%s: %s\n", program_name, VERSION);
+	  exit (0);
     }
 
   if (remaining_args == NULL || remaining_args[1] != NULL)
     {
-      printf ("%s: you must specify exactly one font file\n", program_name);
+      printf (_("%s: you must specify exactly one font file\n"), program_name);
       exit (1);
     }
 
