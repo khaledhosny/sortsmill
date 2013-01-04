@@ -383,7 +383,7 @@ typedef union
 
 typedef struct gevent
 {
-  enum event_type type;
+  EventType type;
   GWindow w;
   GEvent_union u;
   void *native_window;
