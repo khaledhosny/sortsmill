@@ -40,11 +40,14 @@
 #include <progname.h>
 //#include <sortsmillff/xgc.h>
 #include <libguile.h>
+#include <glib.h>
+#define GMenuItem GMenuItem_GTK // FIXME
+#include <gio/gio.h>
+#undef GMenuItem
 
 #include <fontforge.h>
 #include <compare.h>
 #include <basics.h>
-#include "sfddiff_opts.h"
 
 #ifndef _NO_PYTHON
 #include <ffpython.h>
@@ -56,8 +59,7 @@ static void initialize (void);
 
 static int
 combine_flags (bool ignorehints, bool ignorenames, bool ignoregpos,
-               bool ignoregsub, bool ignorebitmaps, bool exact, bool warn,
-               bool merge)
+               bool ignoregsub, bool ignorebitmaps, bool exact, bool warn, bool merge)
 {
   int flags = 0x789;
   if (ignorehints)
@@ -112,36 +114,79 @@ my_main (int argc, char **argv)
   strcpy (progname, program_name);
   argv[0] = progname;
 
-  struct gengetopt_args_info args_info;
-  int errval = cmdline_parser (argc, argv, &args_info);
-  if (errval != 0)
-    exit (1);
+  bool show_version = false;
+  bool ignorehints = false;
+  bool ignorenames = false;
+  bool ignoregpos = false;
+  bool ignoregsub = false;
+  bool ignorebitmaps = false;
+  bool exact = false;
+  bool warn = false;
+  bool merge = false;
+  char *merged_output = NULL;
+  char **remaining_args = NULL;
+  GError *error = NULL;
+  GOptionContext *context;
 
-  if (args_info.inputs_num != 2)
+  initialize ();
+
+  // *INDENT-OFF*
+  GOptionEntry entries[] = {
+    { "version", 'V', 0, G_OPTION_ARG_NONE, &show_version, N_("Show version information and exit"), NULL },
+    { "ignore-hints", '\0', 0, G_OPTION_ARG_NONE, &ignorehints, N_("Do not compare PostScript hints or TrueType instructions."), NULL },
+    { "ignore-names", '\0', 0, G_OPTION_ARG_NONE, &ignorenames, N_("Do not compare font names."), NULL },
+    { "ignore-gpos", '\0', 0, G_OPTION_ARG_NONE, &ignoregpos, N_("Do not compare kerning, etc."), NULL },
+    { "ignore-gsub", '\0', 0, G_OPTION_ARG_NONE, &ignoregsub, N_("Do not compare ligatures, etc."), NULL },
+    { "ignore-bitmaps", '\0', 0, G_OPTION_ARG_NONE, &ignorebitmaps, N_("Do not compare bitmap strikes."), NULL },
+    { "exact", '\0', 0, G_OPTION_ARG_NONE, &exact, N_("Require outlines to match exactly."), NULL },
+    { "warn", '\0', 0, G_OPTION_ARG_NONE, &warn, N_("Provide a warning when an exact match is not found."), NULL },
+    { "merge", '\0', 0, G_OPTION_ARG_FILENAME, &merged_output, N_("Put any outline differences in the backgrounds of appropriate glyphs."), N_("FILE") },
+    { G_OPTION_REMAINING, '\0', 0, G_OPTION_ARG_FILENAME_ARRAY, &remaining_args, NULL, N_("[FILE...]") },
+    { NULL }
+  };
+  // *INDENT-ON*
+
+  context = g_option_context_new (_("- Compare two font files."));
+  g_option_context_add_main_entries (context, entries, FF_TEXTDOMAIN);
+
+  if (!g_option_context_parse (context, &argc, &argv, &error))
     {
-      printf ("%s: you must specify exactly two font files\n", program_name);
+      printf (_("%s: %s\n"), program_name, error->message);
       exit (1);
     }
 
-  bool ignorehints = args_info.ignorehints_given;
-  bool ignorenames = args_info.ignorenames_given;
-  bool ignoregpos = args_info.ignoregpos_given;
-  bool ignoregsub = args_info.ignoregsub_given;
-  bool ignorebitmaps = args_info.ignorebitmaps_given;
-  bool exact = args_info.exact_given;
-  bool warn = args_info.warn_given;
-  bool merge = args_info.merge_given;
-  char *merged_output = (merge ? args_info.merge_arg : NULL);
-  char *font1 = args_info.inputs[0];
-  char *font2 = args_info.inputs[1];
+  if (show_version)
+    {
+      printf ("%s: %s\n", program_name, VERSION);
+	  exit (0);
+    }
 
-  initialize ();
+  if (remaining_args == NULL || remaining_args[1] == NULL)
+    {
+      printf (_("%s: you must specify exactly two font file\n"), program_name);
+      exit (1);
+    }
+
+  GFile *file1 = g_file_new_for_commandline_arg (remaining_args[0]);
+  GFile *file2 = g_file_new_for_commandline_arg (remaining_args[1]);
+  char *font1 = g_file_get_path (file1);
+  char *font2 = g_file_get_path (file2);
+  g_object_unref (file1);
+  g_object_unref (file2);
+
+  if (merged_output != NULL)
+    {
+      merge = true;
+      GFile *file3 = g_file_new_for_commandline_arg (merged_output);
+      merged_output = g_file_get_path (file3);
+      g_object_unref (file3);
+    }
 
   int flags = combine_flags (ignorehints, ignorenames, ignoregpos, ignoregsub,
                              ignorebitmaps, exact, warn, merge);
   compare (font1, font2, flags, merged_output);
 
-  cmdline_parser_free (&args_info);
+  g_option_context_free (context);
 
   return 0;
 }
@@ -160,6 +205,8 @@ initialize (void)
 
   no_windowing_ui = true;
   running_script = false;
+
+  g_type_init ();               // for glib
 
 #ifndef _NO_PYTHON
   /* This ugly hack initializes the SFD unpickler. */
