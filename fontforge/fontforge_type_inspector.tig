@@ -4,6 +4,105 @@
  <fontforge.h>)
 
 (
+ (struct "struct altuni" "AltUni"
+    (fields
+       ((* AltUni) next)
+       (int unienc unicode)
+       (int vs variation_selector)
+       (int fid)))
+
+ (struct IPoint
+    (fields
+       (int x)
+       (int y)))
+
+ (struct BasePoint
+    (fields
+       (float x)
+       (float y)))
+
+ (struct DBasePoint
+    (fields
+       (float x)
+       (float y)))
+
+ (struct TPoint
+    (fields
+       (float x)
+       (float y)
+       (float t)))
+
+ (struct IBounds
+    (fields
+       (int minx x_min)
+       (int maxx x_max)
+       (int miny y_min)
+       (int maxy y_max)))
+
+ (struct DBounds
+    (fields
+       (float minx x_min)
+       (float maxx x_max)
+       (float miny y_min)
+       (float maxy y_max)))
+
+ (struct SplinePoint
+    (fields
+       ((struct BasePoint) me this_cp)
+       ((struct BasePoint) nextcp next_cp)
+       ((struct BasePoint) prevcp previous_cp)
+       (bool nonextcp no_next_cp)
+       (bool noprevcp no_previous_cp)
+       (bool nextcpdef next_cp_default)
+       (bool prevcpdef previous_cp_default)
+       (bool selected)
+       (uint pointtype)
+       (bool isintersection is_intersection)
+       (bool flexy flex_y)
+       (bool flexx flex_x)
+       (bool roundx round_x)
+       (bool roundy round_y)
+       (bool dontinterpolate do_not_interpolate)
+       (bool ticked)
+       (bool watched)
+       (uint ptindex pt_index)
+       (uint ttfindex ttf_index)
+       (uint nextcpindex next_cp_index)
+       (* next)
+       (* prev previous)
+       (* hintmask hint_mask)))
+
+ (struct SplinePointList       ; Use this to represent SplineSet, too.
+    (fields
+       ((* SplinePoint) first)
+       ((* SplinePoint) last)
+       ((* SplinePointList) next)
+       (* spiros)
+       (uint spiro_cnt spiro_count)
+       (uint spiro_max)
+       (uint ticked)
+       (uint beziers_need_optimizer)
+       (uint is_clip_path)
+       (* contour_name)))
+
+ (struct Layer
+    (fields
+       (bool background)
+       (bool order2)
+       (bool anyflexes any_flexes)
+       (bool dofill do_fill)
+       (bool dostroke do_stroke)
+       (bool fillfirst fill_first)
+       (struct fill_brush)
+       (struct stroke_pen)
+       (* splines)
+       (* images)
+       (* refs)
+       (* undoes)
+       (* redoes)
+       (uint validation_state)
+       (uint old_vs old_validation_state)))
+
  (struct FontViewBase
     (fields
        ((* FontViewBase) next)
@@ -28,20 +127,6 @@
        (* gridfit grid_fit)
        (* container)))
 
- (struct "struct altuni" "AltUni"
-    (fields
-       ((* AltUni) next)
-       (int unienc unicode)
-       (int vs variation_selector)
-       (int fid)))
-
- (struct DBounds
-    (fields
-       (float minx x_min)
-       (float maxx x_max)
-       (float miny y_min)
-       (float maxy y_max)))
-
 (struct SplineChar
     (fields
 
@@ -57,7 +142,7 @@
        (int orig_pos orig_index)
        (int width width)
        (int vwidth vwidth)
-       (* layers)
+       ((* Layer) layers)
        (int layer_cnt layer_count)
        (* hstem)
        (* vstem)
