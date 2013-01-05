@@ -1293,7 +1293,7 @@ typedef struct splinepoint
   bool nextcpdef;
   bool prevcpdef;
   bool selected;                /* for UI */
-  unsigned int pointtype:2;
+  uint8_t pointtype;
   bool isintersection;
   bool flexy;                   /* When "freetype_markup" is on in charview.c:DrawPoint */
   bool flexx;                   /* flexy means select nextcp, and flexx means draw circle around nextcp */
@@ -1302,7 +1302,6 @@ typedef struct splinepoint
   bool dontinterpolate;         /* in ttf, don't imply point by interpolating between cps */
   bool ticked;
   bool watched;
-  /* 1 bits left... */
   uint16_t ptindex;             /* Temporary value used by metafont routine */
   uint16_t ttfindex;            /* Truetype point index */
   /* Special values 0xffff => point implied by averaging control points */
