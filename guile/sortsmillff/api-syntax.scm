@@ -464,9 +464,22 @@
                          (#,(unchecked-struct-ref-func x #'type-name) obj i))))
 
                   (define #,(malloc-struct-func x #'type-name)
-                     (lambda ()
-                        (cons '#,tag
-                           (pointer->bytevector (scm_calloc size) size))))
+                     (case-lambda
+                        (() (cons '#,tag
+                               (pointer->bytevector (scm_calloc size) size)))
+                        ((n)
+                         ;; Allocate a contiguous array of n structs,
+                         ;; with the tagged bytevector pointing at the
+                         ;; first struct in the array.
+                         (unless (<= 1 n)
+                            (scm-error 'out-of-range
+                               #,(datum->syntax x (simple-format #f "malloc-~A"
+                                                     (syntax->datum #'type-name)))
+                               (string-append "the argument must be >= 1, but got "
+                                  (number->string n))
+                               (list n) (list n)))
+                         (cons '#,tag
+                            (pointer->bytevector (scm_calloc (* n size)) size)))))
 
                   (define #,(unchecked-free-struct-func x #'type-name)
                      (lambda (obj)
@@ -477,9 +490,22 @@
                         (free (#,(struct->pointer-func x #'type-name) obj))))
 
                   (define #,(gc-malloc-struct-func x #'type-name)
-                     (lambda ()
-                        (cons '#,tag
-                           (pointer->bytevector (GC_malloc size) size))))
+                     (case-lambda
+                        (() (cons '#,tag
+                               (pointer->bytevector (GC_malloc size) size)))
+                        ((n)
+                         ;; Allocate a contiguous array of n structs,
+                         ;; with the tagged bytevector pointing at the
+                         ;; first struct in the array.
+                         (unless (<= 1 n)
+                            (scm-error 'out-of-range
+                               #,(datum->syntax x (simple-format #f "gc-malloc-~A"
+                                                     (syntax->datum #'type-name)))
+                               (string-append "the argument must be >= 1, but got "
+                                  (number->string n))
+                               (list n) (list n)))
+                         (cons '#,tag
+                            (pointer->bytevector (GC_malloc (* n size)) size)))))
 
                   (define #,(unchecked-gc-free-struct-func x #'type-name)
                      (lambda (obj)
