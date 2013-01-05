@@ -153,5 +153,8 @@ gdraw/gtabset.c
 gdraw/gtextfield.c
 gdraw/gtextinfo.c
 guile/sortsmillff/sfd-to-sxml.scm
+main/fontcompare.c
+main/fontimage.c
+main/fontlint.c
 sfd2sxml/sfd2sxml.in
 sfd2sxml/sfd2xml.in
