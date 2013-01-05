@@ -273,6 +273,12 @@ my_main (int argc, char **argv)
       exit (0);
     }
 
+  if (remaining_args == NULL)
+    {
+      printf (_("%s: you must specify at least one font file\n"), program_name);
+      exit (1);
+    }
+
   bool all_passed = true;
   for (size_t i = 0; remaining_args[i] != NULL; i++)
     {
