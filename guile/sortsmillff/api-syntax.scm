@@ -302,7 +302,7 @@
                   ;; Example: sizeof-SplineChar
                   #,(type-sizeof-var x #'type-name)
                   )
-               (define #,(type-sizeof-var x #'type-name) #'size))))))
+               (define #,(type-sizeof-var x #'type-name) size))))))
 
 (define-syntax expand-struct
    (lambda (x)
@@ -613,12 +613,12 @@
                      ((obj)
                       (let ((pointer ((field-ref field-type offset size) (cdr obj))))
                          (#,(pointer->struct-func x #'field-subtype) pointer)))
-                     ;;((obj i) ; FIXME: Oops! We are using the pointer size,
-                     ;;         ; not the struct size as we should do.
-                     ;; (let ((p ((field-ref field-type offset size) (cdr obj)))
-                     ;;       (pointer (make-pointer (+ (pointer-address p) (* i size)))))
-                     ;;    (#,(pointer->struct-func x #'field-subtype) pointer))))
-                  ))
+                     ((obj i)
+                      (let* ((p ((field-ref field-type offset size) (cdr obj)))
+                             (struct-size #,(type-sizeof-var x #'field-subtype))
+                             (pointer (make-pointer
+                                         (+ (pointer-address p) (* i struct-size)))))
+                         (#,(pointer->struct-func x #'field-subtype) pointer)))))
 
                (define #,(field-dref-func x #'struct-name #'field-name)
                   (case-lambda
