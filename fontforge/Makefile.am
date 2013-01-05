@@ -108,7 +108,7 @@ libsortsmillff_fontforge_la_SOURCES = asmfpst.c autohint.c autosave.c	\
 	noprefs.c nouiutil.c nowakowskittfinstr.c ofl.c othersubrs.c		\
 	palmfonts.c parsepdf.c parsepfa.c parsettfatt.c parsettfbmf.c		\
 	parsettf.c parsettfvar.c print.c psread.c pua.c python.c			\
-	savefont.c scstyles.c search.c sfd1.c sfd.c sflayout.c spiro.c		\
+	savefont.c scstyles.c search.c sfd1.c sfd.c sflayout.c ffspiro.c	\
 	splinechar.c splinefill.c splinefont.c splineorder2.c				\
 	splineoverlap.c splinesaveafm.c splinesave.c splinestroke.c			\
 	splineutil2.c splineutil.c start.c stemdb.c svg.c tottfaat.c		\
