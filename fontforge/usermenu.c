@@ -42,10 +42,9 @@ cv_tools_list_check (GWindow gw, GMenuItem *mi, GEvent *e)
 {
   CharViewBase *cvb = (CharViewBase *) GDrawGetUserData (gw);
   SCM view = scm_call_1 (scm_c_public_ref ("sortsmillff views", "pointer->glyph-view"),
-			 scm_from_pointer (cvb, NULL));
-  SCM menu_info = scm_c_private_ref ("sortsmillff usermenu", "cv-menu-info");
-  scm_call_3 (scm_c_private_ref ("sortsmillff usermenu", "tools-list-check"),
-	      scm_from_pointer (mi, NULL), view, menu_info);
+                         scm_from_pointer (cvb, NULL));
+  scm_call_2 (scm_c_private_ref ("sortsmillff usermenu", "tools-list-check"),
+              scm_from_pointer (mi, NULL), view);
 }
 
 void
@@ -53,10 +52,9 @@ fv_tools_list_check (GWindow gw, GMenuItem *mi, GEvent *e)
 {
   FontViewBase *fvb = (FontViewBase *) GDrawGetUserData (gw);
   SCM view = scm_call_1 (scm_c_public_ref ("sortsmillff views", "pointer->font-view"),
-			 scm_from_pointer (fvb, NULL));
-  SCM menu_info = scm_c_private_ref ("sortsmillff usermenu", "fv-menu-info");
-  scm_call_3 (scm_c_private_ref ("sortsmillff usermenu", "tools-list-check"),
-	      scm_from_pointer (mi, NULL), view, menu_info);
+                         scm_from_pointer (fvb, NULL));
+  scm_call_2 (scm_c_private_ref ("sortsmillff usermenu", "tools-list-check"),
+              scm_from_pointer (mi, NULL), view);
 }
 
 static void
@@ -64,10 +62,9 @@ cv_do_action (GWindow gw, GMenuItem *mi, GEvent *e)
 {
   CharViewBase *cvb = (CharViewBase *) GDrawGetUserData (gw);
   SCM view = scm_call_1 (scm_c_public_ref ("sortsmillff views", "pointer->glyph-view"),
-			 scm_from_pointer (cvb, NULL));
-  SCM menu_info = scm_c_private_ref ("sortsmillff usermenu", "cv-menu-info");
-  scm_call_3 (scm_c_private_ref ("sortsmillff usermenu", "do-action"),
-	      scm_from_pointer (mi, NULL), view, menu_info);
+                         scm_from_pointer (cvb, NULL));
+  scm_call_2 (scm_c_private_ref ("sortsmillff usermenu", "do-action"),
+              scm_from_pointer (mi, NULL), view);
 }
 
 static void
@@ -75,30 +72,17 @@ fv_do_action (GWindow gw, GMenuItem *mi, GEvent *e)
 {
   FontViewBase *fvb = (FontViewBase *) GDrawGetUserData (gw);
   SCM view = scm_call_1 (scm_c_public_ref ("sortsmillff views", "pointer->font-view"),
-			 scm_from_pointer (fvb, NULL));
-  SCM menu_info = scm_c_private_ref ("sortsmillff usermenu", "fv-menu-info");
-  scm_call_3 (scm_c_private_ref ("sortsmillff usermenu", "do-action"),
-	      scm_from_pointer (mi, NULL), view, menu_info);
+                         scm_from_pointer (fvb, NULL));
+  scm_call_2 (scm_c_private_ref ("sortsmillff usermenu", "do-action"),
+              scm_from_pointer (mi, NULL), view);
 }
 
 static int
-menu_info_add (int window, SCM action, SCM enabled)
+menu_info_add (SCM action, SCM enabled)
 {
-  SCM menu_info = SCM_UNSPECIFIED;
-  switch (window)
-    {
-    case FF_GLYPH_WINDOW:
-      menu_info = scm_c_private_ref ("sortsmillff usermenu", "cv-menu-info");
-      break;
-    case FF_FONT_WINDOW:
-      menu_info = scm_c_private_ref ("sortsmillff usermenu", "fv-menu-info");
-      break;
-    default:
-      assert (false);
-    }
   SCM menu_info_entry = scm_list_2 (action, enabled);
-  SCM mid = scm_call_2 (scm_c_private_ref ("sortsmillff usermenu", "menu-info-add!"),
-			menu_info, menu_info_entry);
+  SCM mid = scm_call_1 (scm_c_private_ref ("sortsmillff usermenu", "menu-info-add!"),
+                        menu_info_entry);
   return scm_to_int (mid);
 }
 
@@ -192,7 +176,7 @@ insert_sub_menus (int window, const char **menu_path, SCM action, SCM enabled,
             {
               mmn[j].shortcut = xstrdup_or_null (shortcut);
               mmn[j].invoke = invoke_func (window);
-              mmn[j].mid = menu_info_add (window, action, enabled);
+              mmn[j].mid = menu_info_add (action, enabled);
             }
         }
       else
@@ -203,7 +187,7 @@ insert_sub_menus (int window, const char **menu_path, SCM action, SCM enabled,
             {
               mmn[j].shortcut = xstrdup_or_null (shortcut);
               mmn[j].invoke = invoke_func (window);
-              mmn[j].mid = menu_info_add (window, action, enabled);
+              mmn[j].mid = menu_info_add (action, enabled);
               fprintf (stderr, _("Redefining menu entry %s\n"), menu_path[i]);
               free (submenuu);
             }
@@ -219,12 +203,10 @@ register_fontforge_menu_entry (int window, const char **menu_path, SCM action,
     switch (window)
       {
       case FF_FONT_WINDOW:
-        insert_sub_menus (window, menu_path, action, enabled, shortcut,
-                          &fv_menu);
+        insert_sub_menus (window, menu_path, action, enabled, shortcut, &fv_menu);
         break;
       case FF_GLYPH_WINDOW:
-        insert_sub_menus (window, menu_path, action, enabled, shortcut,
-                          &cv_menu);
+        insert_sub_menus (window, menu_path, action, enabled, shortcut, &cv_menu);
         break;
       }
 }

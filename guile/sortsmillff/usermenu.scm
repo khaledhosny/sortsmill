@@ -36,35 +36,34 @@
 ;;
 ;; Containers where the ‘action’ and ‘enabled’ functions are stored.
 
-(define cv-menu-info (make-hash-table))
-(define fv-menu-info (make-hash-table))
+(define menu-info (make-hash-table))
 
-(define (menu-info-exists? menu-info mid)
+(define (menu-info-exists? mid)
    (hash-table-exists? menu-info mid))
 
 ;; Find a non-negative integer that is not yet used as a key in the
 ;; given menu-info table.
-(define (menu-info-unused-key menu-info)
-   (letrec ((find (lambda (i) (if (menu-info-exists? menu-info i)
+(define (menu-info-unused-key)
+   (letrec ((find (lambda (i) (if (menu-info-exists? i)
                                   (find (1+ i))
                                   i))))
       (find 0)))
 
-(define (menu-info-ref menu-info mid)
+(define (menu-info-ref mid)
    (hash-table-ref menu-info mid))
 
-(define (menu-info-set! menu-info mid new-entry)
+(define (menu-info-set! mid new-entry)
    (hash-table-set! menu-info mid new-entry))
 
-(define get-action-func
-   (case-lambda
-      ((menu-info-entry) (car menu-info-entry))
-      ((menu-info mid) (car (menu-info-ref menu-info mid)))))
+(define (get-action-func entry)
+   (if (integer? entry)
+       (get-action-func (menu-info-ref entry))
+       (car entry)))
 
-(define get-enabled-func
-   (case-lambda
-      ((menu-info-entry) (cadr menu-info-entry))
-      ((menu-info mid) (cadr (menu-info-ref menu-info mid)))))
+(define (get-enabled-func entry)
+   (if (integer? entry)
+       (get-enabled-func (menu-info-ref entry))
+       (cadr entry)))
 
 (define (set-menu-info-entry-defaults menu-info-entry)
    (list
@@ -77,10 +76,9 @@
 
 ;; Add functions to one of the ‘menu-info’ containers. Return the key
 ;; (‘mid’) of the new entry.
-(define (menu-info-add! menu-info menu-info-entry)
-   (let ((mid (menu-info-unused-key menu-info)))
-      (menu-info-set! menu-info mid
-         (set-menu-info-entry-defaults menu-info-entry))
+(define (menu-info-add! menu-info-entry)
+   (let ((mid (menu-info-unused-key)))
+      (menu-info-set! mid (set-menu-info-entry-defaults menu-info-entry))
       mid))
 
 ;;-------------------------------------------------------------------------
@@ -116,31 +114,30 @@
              (pointer->GMenuItem sub)))))
 
 ;; Individually enable or disable the entries in a submenu.
-(define (tools-list-check menu-item view menu-info)
+(define (tools-list-check menu-item view)
    ;; For menu-item, accept either a GMenuItem or a pointer to one.
    (if (pointer? menu-item)
-       (tools-list-check (pointer->GMenuItem menu-item) view menu-info)
+       (tools-list-check (pointer->GMenuItem menu-item) view)
        (for-each
           (lambda (mi)
              (let ((mid (GMenuItem:mid-ref mi)))
-                (when (menu-info-exists? menu-info mid)
+                (when (menu-info-exists? mid)
                    (let ((enabled?
                             (menu-entry-error-handling
-                               (get-enabled-func menu-info mid)
-                               view)))
+                               (get-enabled-func mid) view)))
                       (GTextInfo:disabled-set!
                          (GMenuItem:ti-ref mi) (not enabled?))))))
           (get-GMenuItem-subentries menu-item))))
 
 ;; Invoke the action for a menu entry.
-(define (do-action menu-item view menu-info)
+(define (do-action menu-item view)
    ;; For menu-item, accept either a GMenuItem or a pointer to one.
    (if (pointer? menu-item)
-       (do-action (pointer->GMenuItem menu-item) view menu-info)
+       (do-action (pointer->GMenuItem menu-item) view)
        (let ((mid (GMenuItem:mid-ref menu-item)))
-          (when (menu-info-exists? menu-info mid)
+          (when (menu-info-exists? mid)
              (menu-entry-error-handling
-                (get-action-func menu-info mid) view)))))
+                (get-action-func mid) view)))))
 
 ;; An error-handling wrapper for the invocation of ‘(proc view)’.
 (define (menu-entry-error-handling proc view)
