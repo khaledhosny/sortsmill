@@ -1421,8 +1421,6 @@ typedef struct splinepointlist
   struct splinepointlist *next;
   spiro_cp *spiros;
   uint16_t spiro_cnt, spiro_max;
-  /* These could be bit fields, but bytes are easier to access and we */
-  /*  don't need the space (yet) */
   uint8_t ticked;
   uint8_t beziers_need_optimizer;       /* If the spiros have changed in spiro mode, then reverting to bezier mode might, someday, run a simplifier */
   uint8_t is_clip_path;         /* In type3/svg fonts */
