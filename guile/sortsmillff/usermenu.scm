@@ -23,6 +23,7 @@
    (sortsmillff fontforge-api)
    (sortsmillff gdraw-api)
    (system foreign)
+   (srfi srfi-27)                       ; Random numbers.
    (srfi srfi-69)                       ; Portable hash tables.
    )
 
@@ -34,7 +35,7 @@
 
 ;;-------------------------------------------------------------------------
 ;;
-;; Containers where the ‘action’ and ‘enabled’ functions are stored.
+;; A container where the ‘action’ and ‘enabled’ functions are stored.
 
 (define menu-info (make-hash-table))
 
@@ -44,10 +45,10 @@
 ;; Find a non-negative integer that is not yet used as a key in the
 ;; given menu-info table.
 (define (menu-info-unused-key)
-   (letrec ((find (lambda (i) (if (menu-info-exists? i)
-                                  (find (1+ i))
-                                  i))))
-      (find 0)))
+   (let ((candidate (random-integer 2000000000)))
+      (if (menu-info-exists? candidate)
+          (menu-info-unused-key)
+          candidate)))
 
 (define (menu-info-ref mid)
    (hash-table-ref menu-info mid))
