@@ -248,7 +248,7 @@ void CVMouseUpKnife(CharView *cv, GEvent *event) {
 				CVPreserveState(&cv->b);
 			    ever = true;
 			    spiro_index = -1;
-			    if ( cv->b.sc->inspiro && hasspiro()) {
+			    if ( cv->b.sc->inspiro ) {
 				if ( spl->spiro_cnt!=0 )
 				    spiro_index = SplineT2SpiroIndex(s,t1s[i],spl);
 			    } else
@@ -298,7 +298,7 @@ void CVMouseUpKnife(CharView *cv, GEvent *event) {
     }
     if ( ever ) {
 	for ( spl = cv->b.layerheads[cv->b.drawmode]->splines; spl!=NULL ; spl = spl->next ) {
-	    if ( spl->ticked && spl->spiros!=NULL && cv->b.sc->inspiro && hasspiro())
+	    if ( spl->ticked && spl->spiros!=NULL && cv->b.sc->inspiro )
 		SSRegenerateFromSpiros(spl);
 	    spl->ticked = false;
 	}

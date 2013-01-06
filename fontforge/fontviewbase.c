@@ -739,7 +739,7 @@ void FVTrans(FontViewBase *fv,SplineChar *sc,real transform[6], uint8_t *sel,
 	}
     }
     /*if ( flags&fvt_round_to_int )*/
-    if ( (flags&fvt_round_to_int) && (!sc->inspiro || !hasspiro())) {
+    if ( (flags&fvt_round_to_int) && !sc->inspiro) {
     	/* Rounding the spiros might be a bad idea. */
 	/* Not rounding the spiros is also a bad idea. */
 	/* Not sure which is worse */

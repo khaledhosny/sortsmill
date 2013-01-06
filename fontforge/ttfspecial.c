@@ -648,13 +648,13 @@ return;
 }
 
 static int pfed_has_spiros(Layer *layer) {
-    SplineSet *ss;
+  SplineSet *ss;
 
-    for ( ss=layer->splines; ss!=NULL; ss=ss->next ) {
-	if ( ss->spiro_cnt>1 )
-return( true );
-    }
-return( false );
+  for ( ss=layer->splines; ss!=NULL; ss=ss->next ) {
+    if ( ss->spiro_cnt>1 )
+      return( true );
+  }
+  return( false );
 }
 
 static void PfEd_Layer(SplineFont *sf, struct glyphinfo *gi, int layer, int dospiro,

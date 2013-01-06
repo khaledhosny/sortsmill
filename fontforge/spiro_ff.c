@@ -32,23 +32,7 @@
 /* Access to Raph Levien's spiro splines */
 /* See http://www.levien.com/spiro/ */
 
-#ifdef _NO_LIBSPIRO
-
-static int has_spiro = false;
-
-SplineSet *SpiroCP2SplineSet(spiro_cp *spiros) {
-return( NULL );
-}
-
-spiro_cp *SplineSet2SpiroCP(SplineSet *ss,uint16_t *cnt) {
-return( NULL );
-}
-
-#else /* ! _NO_LIBSPIRO */
-
 #  include "bezctx_ff.h"
-
-static int has_spiro = true;
 
 SplineSet *SpiroCP2SplineSet(spiro_cp *spiros) {
     int n;
@@ -162,12 +146,6 @@ spiro_cp *SplineSet2SpiroCP(SplineSet *ss,uint16_t *_cnt) {
 return( ret );
 }
 
-#endif /* ! _NO_LIBSPIRO */
-
-int hasspiro(void) {
-    return has_spiro;
-}
-
 spiro_cp *SpiroCPCopy(spiro_cp *spiros,uint16_t *_cnt) {
     int n;
     spiro_cp *nspiros;
@@ -185,9 +163,7 @@ void SSRegenerateFromSpiros(SplineSet *spl) {
     SplineSet *temp;
 
     if ( spl->spiro_cnt<=1 )
-return;
-	if ( !has_spiro)
-return;
+      return;
 
     SplineSetBeziersClear(spl);
     temp = SpiroCP2SplineSet(spl->spiros);

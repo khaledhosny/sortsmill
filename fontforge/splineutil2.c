@@ -2104,7 +2104,7 @@ static SplinePointList *SplinePointListMerge(SplineChar *sc, SplinePointList *sp
 
     /* If the entire splineset is selected, it should merge into oblivion */
     first = NULL;
-    if ( sc->inspiro && hasspiro() ) {
+    if ( sc->inspiro ) {
 	int i,j;
 	any = false; all = true;
 	for ( i=0; i<spl->spiro_cnt-1; ++i )
@@ -4014,7 +4014,7 @@ void SplineCharAddExtrema(SplineChar *sc, SplineSet *head,enum ae_type between_s
 
     for ( ss=head; ss!=NULL; ss=ss->next ) {
 #if 0
-	if ( sc->inspiro && hasspiro() )
+	if ( sc->inspiro )
 	    SplineSetAddSpiroExtrema(sc,ss,between_selected,emsize);
 	else
 #endif

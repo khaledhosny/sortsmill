@@ -1413,7 +1413,7 @@ CVDrawSplineSetSpecialized (CharView *cv, GWindow pixmap,
           first = NULL;
           if (dopoints > 0)
             DrawDirection (cv, pixmap, spl->first);
-          if (cv->b.sc->inspiro && hasspiro ())
+          if (cv->b.sc->inspiro)
             {
               if (dopoints >= 0)
                 {
@@ -3735,20 +3735,6 @@ CVChangeSC (CharView *cv, SplineChar *sc)
         }
     }
 
-  if (sc->inspiro && !hasspiro () && !sc->parent->complained_about_spiros)
-    {
-      sc->parent->complained_about_spiros = true;
-#ifdef _NO_LIBSPIRO
-      ff_post_error (_("You may not use spiros"),
-                     _
-                     ("This glyph should display spiro points, but unfortunately this version of fontforge was not linked with the spiro library, so only normal bezier points will be displayed."));
-#else
-      ff_post_error (_("You may not use spiros"),
-                     _
-                     ("This glyph should display spiro points, but unfortunately FontForge was unable to load libspiro, spiros are not available for use, and normal bezier points will be displayed instead."));
-#endif
-    }
-
   if (was_fitted)
     CVGridFitChar (cv);
 }
@@ -3786,7 +3772,7 @@ CVChangeChar (CharView *cv, int i)
   if (gid == -1 || (sc = sf->glyphs[gid]) == NULL)
     {
       sc = SFMakeChar (sf, map, i);
-      sc->inspiro = cv->b.sc->inspiro && hasspiro ();
+      sc->inspiro = cv->b.sc->inspiro;
     }
 
   if (sc == NULL || (cv->b.sc == sc && cv->enc == i))
@@ -4074,7 +4060,7 @@ CVInfoDrawText (CharView *cv, GWindow pixmap)
     }
   sp = NULL;
   cp = NULL;
-  if (cv->b.sc->inspiro && hasspiro ())
+  if (cv->b.sc->inspiro)
     cp = cv->p.spiro != NULL ? cv->p.spiro : cv->lastselcp;
   else
     sp = cv->p.sp != NULL ? cv->p.sp : cv->lastselpt;
@@ -4455,8 +4441,7 @@ CVMouseAtSpline (CharView *cv, GEvent *event)
   SetFS (&fs, &cv->p, cv, event);
   cv->p.pressed = pressed;
   return (InSplineSet
-          (&fs, cv->b.layerheads[cv->b.drawmode]->splines, cv->b.sc->inspiro
-           && hasspiro ()));
+          (&fs, cv->b.layerheads[cv->b.drawmode]->splines, cv->b.sc->inspiro));
 }
 
 static GEvent *
@@ -4567,8 +4552,7 @@ CVDoSnaps (CharView *cv, FindSel *fs)
       fs->p = &temp;
       fs->seek_controls = false;
       if (InSplineSet
-          (fs, cv->b.layerheads[dm_grid]->splines, cv->b.sc->inspiro
-           && hasspiro ()))
+          (fs, cv->b.layerheads[dm_grid]->splines, cv->b.sc->inspiro))
         {
           if (temp.spline != NULL)
             {
@@ -4614,7 +4598,7 @@ _CVTestSelectFromEvent (CharView *cv, FindSel *fs)
 
   found =
     InSplineSet (fs, cv->b.layerheads[cv->b.drawmode]->splines,
-                 cv->b.sc->inspiro && hasspiro ());
+                 cv->b.sc->inspiro);
 
   if (!found)
     {
@@ -4626,7 +4610,7 @@ _CVTestSelectFromEvent (CharView *cv, FindSel *fs)
            rf = rf->next)
         {
           if (InSplineSet
-              (fs, rf->layers[0].splines, cv->b.sc->inspiro && hasspiro ()))
+              (fs, rf->layers[0].splines, cv->b.sc->inspiro))
             {
               cv->p.ref = rf;
               cv->p.anysel = true;
@@ -4730,7 +4714,7 @@ CVMouseDown (CharView *cv, GEvent *event)
     {
       /* Snap to points and splines */
       InSplineSet (&fs, cv->b.layerheads[cv->b.drawmode]->splines,
-                   cv->b.sc->inspiro && hasspiro ());
+                   cv->b.sc->inspiro);
       if (fs.p->sp == NULL && fs.p->spline == NULL)
         CVDoSnaps (cv, &fs);
     }
@@ -4738,7 +4722,7 @@ CVMouseDown (CharView *cv, GEvent *event)
     {
       /* Just snap to points */
       NearSplineSetPoints (&fs, cv->b.layerheads[cv->b.drawmode]->splines,
-                           cv->b.sc->inspiro && hasspiro ());
+                           cv->b.sc->inspiro);
       if (fs.p->sp == NULL && fs.p->spline == NULL)
         CVDoSnaps (cv, &fs);
     }
@@ -5078,7 +5062,6 @@ CVMouseMove (CharView *cv, GEvent *event)
   FindSel fs;
   GEvent fake;
   int stop_motion = false;
-  int has_spiro = hasspiro ();
   int spacebar_changed;
 
   spacebar_changed = update_spacebar_hand_tool (cv);
@@ -5213,16 +5196,12 @@ CVMouseMove (CharView *cv, GEvent *event)
   /*  snap to the original location, otherwise we'll keep snapping to the */
   /*  current point as it moves across the screen (jerkily) */
   if (cv->active_tool == cvt_hand || cv->active_tool == cvt_freehand)
-    /* Don't snap to points */ ;
+     ;				/* Don't snap to points */
   else if (!cv->joinvalid
-           || ((!cv->b.sc->inspiro || has_spiro)
-               && !CheckPoint (&fs, &cv->joinpos, NULL)) || (cv->b.sc->inspiro
-                                                             && has_spiro
-                                                             &&
-                                                             !CheckSpiroPoint
-                                                             (&fs,
-                                                              &cv->joincp,
-                                                              NULL, 0)))
+	   || (!cv->b.sc->inspiro
+	       && !CheckPoint (&fs, &cv->joinpos, NULL))
+	   || (cv->b.sc->inspiro
+	       && !CheckSpiroPoint (&fs, &cv->joincp, NULL, 0)))
     {
       SplinePointList *spl;
       spl = cv->b.layerheads[cv->b.drawmode]->splines;
@@ -5237,10 +5216,10 @@ CVMouseMove (CharView *cv, GEvent *event)
           if (cv->active_tool == cvt_pointer
               && (cv->p.nextcp || cv->p.prevcp))
             fs.select_controls = true;
-          NearSplineSetPoints (&fs, spl, cv->b.sc->inspiro && has_spiro);
+          NearSplineSetPoints (&fs, spl, cv->b.sc->inspiro);
         }
       else
-        InSplineSet (&fs, spl, cv->b.sc->inspiro && has_spiro);
+        InSplineSet (&fs, spl, cv->b.sc->inspiro);
     }
   /* p.sp and cv->p.sp may correspond to different undo states, thus being */
   /* different objects even while describing essentially the same point. */
@@ -8018,7 +7997,7 @@ CVSelectContours (CharView *cv)
        spl = spl->next)
     {
       sel = false;
-      if (cv->b.sc->inspiro && hasspiro ())
+      if (cv->b.sc->inspiro)
         {
           for (i = 0; i < spl->spiro_cnt - 1; ++i)
             {
@@ -8183,7 +8162,7 @@ CVNextPrevPt (CharView *cv, struct gmenuitem *mi)
   int x, y;
   spiro_cp *junk;
 
-  if (cv->b.sc->inspiro && hasspiro ())
+  if (cv->b.sc->inspiro)
     {
       CVNextPrevSpiroPt (cv, mi);
       return;
@@ -8685,7 +8664,7 @@ CVSelectOpenContours (GWindow gw, struct gmenuitem *UNUSED (mi),
       if (ss->first->prev == NULL)
         {
           changed = true;
-          if (cv->b.sc->inspiro && hasspiro ())
+          if (cv->b.sc->inspiro)
             {
               for (i = 0; i < ss->spiro_cnt; ++i)
                 SPIRO_SELECT (&ss->spiros[i]);
@@ -9009,7 +8988,7 @@ VISIBLE void
 CVMenuPointType (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
 {
   CharView *cv = (CharView *) GDrawGetUserData (gw);
-  if (cv->b.sc->inspiro && hasspiro ())
+  if (cv->b.sc->inspiro)
     _CVMenuSpiroPointType (cv, mi);
   else
     _CVMenuPointType (cv, mi);
@@ -9070,13 +9049,13 @@ cv_ptlistcheck_cv (CharView *cv, struct gmenuitem *mi)
   uint16_t junk;
   int i;
 
-  if (cv->showing_spiro_pt_menu != (cv->b.sc->inspiro && hasspiro ()))
+  if (cv->showing_spiro_pt_menu != (cv->b.sc->inspiro))
     {
       GMenuItemArrayFree (mi->sub);
-      mi->sub = GMenuItemArrayCopy (cv->b.sc->inspiro
-                                     && hasspiro ()? spiroptlist : ptlist,
-                                     &junk);
-      cv->showing_spiro_pt_menu = cv->b.sc->inspiro && hasspiro ();
+      mi->sub = GMenuItemArrayCopy (((cv->b.sc->inspiro) ?
+				     spiroptlist : ptlist),
+				    &junk);
+      cv->showing_spiro_pt_menu = cv->b.sc->inspiro;
     }
   for (spl = cv->b.layerheads[cv->b.drawmode]->splines; spl != NULL;
        spl = spl->next)
@@ -9261,7 +9240,7 @@ _CVMenuDir (CharView *cv, struct gmenuitem *mi)
     {
       first = NULL;
       splinepoints = 0;
-      if (cv->b.sc->inspiro && hasspiro ())
+      if (cv->b.sc->inspiro)
         {
           int i;
           for (i = 0; i < spl->spiro_cnt - 1; ++i)
@@ -9460,15 +9439,14 @@ CVTransFunc (CharView *cv, real transform[6], enum fvtrans_flags flags)
   Layer *ly = cv->b.layerheads[cv->b.drawmode];
   int l, cvlayer;
 
-  if (cv->b.sc->inspiro && hasspiro ())
+  if (cv->b.sc->inspiro)
     SplinePointListSpiroTransform (ly->splines, transform, !anysel);
   else
     SplinePointListTransform (ly->splines, transform,
                               !anysel ? tpt_AllPoints : interpCPsOnMotion ?
                               tpt_OnlySelectedInterpCPs : tpt_OnlySelected);
   if (flags & fvt_round_to_int)
-    SplineSetsRound2Int (ly->splines, 1.0, cv->b.sc->inspiro
-                         && hasspiro (), !anysel);
+    SplineSetsRound2Int (ly->splines, 1.0, cv->b.sc->inspiro, !anysel);
   if (ly->images != NULL)
     {
       ImageListTransform (ly->images, transform, !anysel);
@@ -9642,7 +9620,7 @@ _CVMenuRound2Int (CharView *cv, double factor)
 
   CVPreserveState (&cv->b);
   SplineSetsRound2Int (cv->b.layerheads[cv->b.drawmode]->splines, factor,
-                       cv->b.sc->inspiro && hasspiro (), anysel);
+                       cv->b.sc->inspiro, anysel);
   for (r = cv->b.layerheads[cv->b.drawmode]->refs; r != NULL; r = r->next)
     {
       if (r->selected || !anysel)
@@ -10206,7 +10184,7 @@ _CVMenuNameContour (CharView *cv)
   for (spl = cv->b.layerheads[cv->b.drawmode]->splines; spl != NULL;
        spl = spl->next)
     {
-      if (!cv->b.sc->inspiro || !hasspiro ())
+      if (!cv->b.sc->inspiro)
         {
           for (sp = spl->first;;)
             {
@@ -11011,7 +10989,7 @@ rndlistcheck_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
       switch (mi->mid)
         {
         case MID_RoundToCluster:
-          mi->ti.disabled = cv->b.sc->inspiro && hasspiro ();
+          mi->ti.disabled = cv->b.sc->inspiro;
           break;
         }
     }
@@ -11058,7 +11036,7 @@ cv_ellistcheck_cv (CharView *cv, struct gmenuitem *mi)
     {
       first = NULL;
       splinepoints = 0;
-      if (cv->b.sc->inspiro && hasspiro ())
+      if (cv->b.sc->inspiro)
         {
           for (i = 0; i < spl->spiro_cnt - 1; ++i)
             {
@@ -11175,13 +11153,13 @@ cv_ellistcheck_cv (CharView *cv, struct gmenuitem *mi)
           break;
         case MID_AddExtrema:
           mi->ti.disabled = cv->b.layerheads[cv->b.drawmode]->splines == NULL
-            || (cv->b.sc->inspiro && hasspiro ());
+            || (cv->b.sc->inspiro);
           /* Like Simplify, always available, but may not do anything if */
           /*  all extrema have points. I'm not going to check for that, too hard */
           break;
         case MID_Simplify:
           mi->ti.disabled = cv->b.layerheads[cv->b.drawmode]->splines == NULL
-            || (cv->b.sc->inspiro && hasspiro ());
+            || (cv->b.sc->inspiro);
           /* Simplify is always available (it may not do anything though) */
           /*  well, ok. Disable it if there is absolutely nothing to work on */
           break;
@@ -11195,7 +11173,7 @@ cv_ellistcheck_cv (CharView *cv, struct gmenuitem *mi)
             || cv->b.sc->layers[ly_back].images == NULL;
           break;
         case MID_Align:
-          mi->ti.disabled = cv->b.sc->inspiro && hasspiro ();
+          mi->ti.disabled = cv->b.sc->inspiro;
           break;
         }
     }
@@ -11578,8 +11556,7 @@ cv_sllistcheck_cv (CharView *cv, struct gmenuitem *mi)
         {
         case MID_NextCP:
         case MID_PrevCP:
-          mi->ti.disabled = !exactlyone || sp == NULL || (cv->b.sc->inspiro
-                                                          && hasspiro ());
+          mi->ti.disabled = !exactlyone || sp == NULL || cv->b.sc->inspiro;
           break;
         case MID_NextPt:
         case MID_PrevPt:
@@ -11787,11 +11764,11 @@ swlistcheck_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
         {
         case MID_MarkExtrema:
           mi->ti.checked = cv->markextrema;
-          mi->ti.disabled = cv->b.sc->inspiro && hasspiro ();
+          mi->ti.disabled = cv->b.sc->inspiro;
           break;
         case MID_MarkPointsOfInflection:
           mi->ti.checked = cv->markpoi;
-          mi->ti.disabled = cv->b.sc->inspiro && hasspiro ();
+          mi->ti.disabled = cv->b.sc->inspiro;
           break;
         case MID_ShowAlmostHV:
           mi->ti.checked = cv->showalmosthvlines;
@@ -13728,7 +13705,7 @@ smlistcheck_cv (GWindow gw, struct gmenuitem *mi, GEvent *UNUSED (e))
           break;
         case MID_CanonicalStart:
           mi->ti.disabled = cv->b.layerheads[cv->b.drawmode]->splines == NULL
-            || (cv->b.sc->inspiro && hasspiro ());
+            || cv->b.sc->inspiro;
           break;
         case MID_CanonicalContours:
           mi->ti.disabled = cv->b.layerheads[cv->b.drawmode]->splines == NULL
@@ -16779,19 +16756,6 @@ _CharViewCreate (CharView *cv, SplineChar *sc, FontView *fv, int enc)
 
   if ((CharView *) (sc->views) == NULL && updateflex)
     SplineCharIsFlexible (sc, CVLayer ((CharViewBase *) cv));
-  if (sc->inspiro && !hasspiro () && !sc->parent->complained_about_spiros)
-    {
-      sc->parent->complained_about_spiros = true;
-#ifdef _NO_LIBSPIRO
-      ff_post_error (_("You may not use spiros"),
-                     _
-                     ("This glyph should display spiro points, but unfortunately this version of fontforge was not linked with the spiro library, so only normal bezier points will be displayed."));
-#else
-      ff_post_error (_("You may not use spiros"),
-                     _
-                     ("This glyph should display spiro points, but unfortunately FontForge was unable to load libspiro, spiros are not available for use, and normal bezier points will be displayed instead."));
-#endif
-    }
 }
 
 void

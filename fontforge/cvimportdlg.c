@@ -636,12 +636,6 @@ static void _Import(CharView *cv,BitmapView *bv,FontView *fv) {
 	}
     }
 #endif
-    if ( !hasspiro()) {
-	for ( i=0; cur_formats[i].text!=NULL; ++i )
-	    if ( ((intptr_t) cur_formats[i].userdata)==fv_plate ||
-		    ((intptr_t) cur_formats[i].userdata)==fv_platetemplate )
-		cur_formats[i].disabled = true;
-    }
 
     memset(&wattrs,0,sizeof(wattrs));
     wattrs.mask = wam_events|wam_cursor|wam_utf8_wtitle|wam_undercursor|wam_restrict|wam_isdlg;

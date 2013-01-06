@@ -1381,31 +1381,7 @@ typedef struct spline
    */
 } Spline;
 
-#ifndef _NO_LIBSPIRO
-
 #include "spiroentrypoints.h"
-
-#else
-/***************************************************/
-/* FIXME: Include Spiro as part of the FF sources. */
-/***************************************************/
-
-#define SPIRO_OPEN_CONTOUR	'{'
-#define SPIRO_CORNER		'v'
-#define SPIRO_G4		'o'
-#define SPIRO_G2		'c'
-#define SPIRO_LEFT		'['
-#define SPIRO_RIGHT		']'
-#define SPIRO_END		'z'
-
-typedef struct
-{                               /* Taken from spiro.h because I want */
-  double x;                     /*  to be able to compile for spiro */
-  double y;                     /*  even on a system without it */
-  char ty;
-} spiro_cp;
-
-#endif
 
 #define SPIRO_SELECTED(cp)	((cp)->ty&0x80)
 #define SPIRO_DESELECT(cp)	((cp)->ty&=~0x80)
@@ -4104,7 +4080,6 @@ VISIBLE extern int SFValidate (SplineFont *sf, int layer, int force);
 VISIBLE extern int VSMaskFromFormat (SplineFont *sf, int layer,
                                      enum fontformat format);
 
-VISIBLE extern int hasspiro (void);
 extern SplineSet *SpiroCP2SplineSet (spiro_cp *spiros);
 VISIBLE extern spiro_cp *SplineSet2SpiroCP (SplineSet *ss, uint16_t *_cnt);
 extern spiro_cp *SpiroCPCopy (spiro_cp *spiros, uint16_t *_cnt);

@@ -1958,7 +1958,7 @@ SplinePointListRemoveSelected (SplineChar *sc, SplinePointList * base)
       next = base->next;
       anysel = false;
       allsel = true;
-      if (!sc->inspiro || !hasspiro ())
+      if (!sc->inspiro)
         {
           first = NULL;
           for (pt = base->first; pt != NULL && pt != first; pt = pt->next->to)
@@ -1988,7 +1988,7 @@ SplinePointListRemoveSelected (SplineChar *sc, SplinePointList * base)
         {
           continue;
         }
-      if (!sc->inspiro || !anysel || !hasspiro ())
+      if (!sc->inspiro || !anysel)
         {
           if (head == NULL)
             head = base;

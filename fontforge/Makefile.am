@@ -62,7 +62,8 @@ noinst_HEADERS = fontforgeui.h sftextfieldP.h views.h is_LIGATURE.h		\
 	nonlineartrans.h sd.h unicoderange.h bitmapcontrol.h encoding.h		\
 	ofl.h search.h usermenu.h fffreetype.h PfEd.h sfd1.h ffpython.h		\
 	import.h sflayoutP.h print.h splinefont.h annotations.h compare.h	\
-	fontimage.h activeinui.h
+	fontimage.h activeinui.h bezctx.h bezctx_intf.h spiro.h				\
+	spiroentrypoints.h zmisc.h
 
 nobase_nodist_include_HEADERS = sortsmillff/fontforge_api.h
 
@@ -108,7 +109,7 @@ libsortsmillff_fontforge_la_SOURCES = asmfpst.c autohint.c autosave.c	\
 	noprefs.c nouiutil.c nowakowskittfinstr.c ofl.c othersubrs.c		\
 	palmfonts.c parsepdf.c parsepfa.c parsettfatt.c parsettfbmf.c		\
 	parsettf.c parsettfvar.c print.c psread.c pua.c python.c			\
-	savefont.c scstyles.c search.c sfd1.c sfd.c sflayout.c ffspiro.c	\
+	savefont.c scstyles.c search.c sfd1.c sfd.c sflayout.c				\
 	splinechar.c splinefill.c splinefont.c splineorder2.c				\
 	splineoverlap.c splinesaveafm.c splinesave.c splinestroke.c			\
 	splineutil2.c splineutil.c start.c stemdb.c svg.c tottfaat.c		\
@@ -116,7 +117,9 @@ libsortsmillff_fontforge_la_SOURCES = asmfpst.c autohint.c autosave.c	\
 	unicoderange.c utils.c winfonts.c zapfnomen.c groups.c langfreq.c	\
 	autowidth2.c woff.c activeinui.c is_LIGATURE.c flaglist.c			\
 	contour_interface.c freetype.c ftdelta.c some_global_variables.c	\
-	getfontnames.c arrayfree.c
+	getfontnames.c arrayfree.c spiro_ff.c bezctx.c spiro.c				\
+	spiroentrypoints.c
+
 nodist_libsortsmillff_fontforge_la_SOURCES = fontforge_api.c
 EXTRA_libsortsmillff_fontforge_la_SOURCES = splinerefigure.c
 

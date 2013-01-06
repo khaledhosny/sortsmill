@@ -66,29 +66,6 @@ AC_DEFUN([FONTFORGE_ARG_WITH_LIBTIFF_fallback],
 ])
 
 
-dnl A macro that will not be needed if we can count on libspiro
-dnl having a pkg-config file. 
-dnl
-dnl FONTFORGE_ARG_WITH_LIBSPIRO
-dnl ---------------------------
-AC_DEFUN([FONTFORGE_ARG_WITH_LIBSPIRO],
-[
-FONTFORGE_ARG_WITH_BASE([libspiro],
-   [AS_HELP_STRING([--without-libspiro],[build without support for Spiro contours])],
-   [libspiro],
-   [FONTFORGE_WARN_PKG_NOT_FOUND([LIBSPIRO])],
-   [_NO_LIBSPIRO],
-   [
-      FONTFORGE_SEARCH_LIBS([TaggedSpiroCPsToBezier],[spiro],
-         [i_do_have_libspiro=yes
-          AC_SUBST([LIBSPIRO_CFLAGS],[""])
-          AC_SUBST([LIBSPIRO_LIBS],["${found_lib}"])
-          FONTFORGE_WARN_PKG_FALLBACK([LIBSPIRO])],
-         [i_do_have_libspiro=no])
-   ])
-])
-
-
 dnl There is no pkg-config support for giflib, at least on Gentoo. (17 Jul 2012)
 dnl
 dnl FONTFORGE_ARG_WITH_GIFLIB

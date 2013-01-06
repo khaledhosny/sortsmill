@@ -2034,12 +2034,6 @@ PyFF_Contour_get_spiros (PyFF_Contour * self, void *UNUSED (closure))
   PyObject *spirotuple;
   int i;
 
-  if (!hasspiro ())
-    {
-      PyErr_Format (PyExc_EnvironmentError,
-                    "Spiros not available. Please install libspiro before continuing");
-      return (NULL);
-    }
   if (self->spiro_cnt == 0)
     {
       SplineSet *ss;
@@ -2074,12 +2068,6 @@ PyFF_Contour_set_spiros (PyFF_Contour * self, PyObject *value,
   spiro_cp *spiros;
   SplineSet *ss;
 
-  if (!hasspiro ())
-    {
-      PyErr_Format (PyExc_EnvironmentError,
-                    "Spiros not available. Please install libspiro before continuing");
-      return (-1);
-    }
   if (!PySequence_Check (spirotuple))
     {
       PyErr_Format (PyExc_TypeError,

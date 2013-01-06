@@ -5,7 +5,6 @@
 #include <basics.h>
 #include <stdio.h>
 
-#ifndef _NO_LIBSPIRO
 #include "bezctx_ff.h"
 #include "fontforgevw.h"		/* For LogError, else splinefont.h */
 #include <math.h>
@@ -148,4 +147,3 @@ bezctx_ff_close(bezctx *z)
     free(bc);
 return( ss );
 }
-#endif

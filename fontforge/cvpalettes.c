@@ -209,7 +209,7 @@ void cvtoollist_check(GWindow gw,struct gmenuitem *mi,GEvent *e) {
 	    mi->ti.disabled = order2;
 	  break;
 	  case cvt_spiro:
-	    mi->ti.disabled = !hasspiro();
+	    mi->ti.disabled = false;
 	  break;
         }
     }
@@ -1007,7 +1007,7 @@ static void FakeShapeEvents(CharView *cv) {
     real trans[6];
 
     cv->active_tool = rectelipse ? cvt_elipse : cvt_rect;
-    if ( cv->b.sc->inspiro && hasspiro() ) {
+    if ( cv->b.sc->inspiro ) {
 	GDrawSetCursor(cv->v,spirotools[cv->active_tool]);
 	GDrawSetCursor(cvtools,spirotools[cv->active_tool]);
     } else {
@@ -1445,11 +1445,10 @@ static void ToolsExpose(GWindow pixmap, CharView *cv, GRect *r) {
     int tool = cv->cntrldown?cv->cb1_tool:cv->b1_tool;
     int dither = GDrawSetDither(NULL,false);
     GRect temp;
-    int canspiro = hasspiro(), inspiro = canspiro && cv->b.sc->inspiro;
-    char *(*buttons)[2] = inspiro ? spirobuttons : normbuttons;
-    char **smalls = inspiro ? spirosmalls : normsmalls;
+    char *(*buttons)[2] = cv->b.sc->inspiro ? spirobuttons : normbuttons;
+    char **smalls = cv->b.sc->inspiro ? spirosmalls : normsmalls;
 
-    normbuttons[4][1] = canspiro ? "palettespiroup.png" : "palettespirodisabled.png";
+    normbuttons[4][1] = "palettespiroup.png";
 
     GDrawPushClip(pixmap,r,&old);
     GDrawFillRect(pixmap,r,GDrawGetDefaultBackground(NULL));
@@ -1582,7 +1581,7 @@ void CVToolsSetCursor(CharView *cv, int state, char *device) {
 	shouldshow = cvt_minify;
     if ( shouldshow!=cv->showing_tool ) {
 	CPEndInfo(cv);
-	if ( cv->b.sc->inspiro && hasspiro()) {
+	if ( cv->b.sc->inspiro) {
 	    GDrawSetCursor(cv->v,spirotools[shouldshow]);
 	    if ( cvtools!=NULL )	/* Might happen if window owning docked palette destroyed */
 		GDrawSetCursor(cvtools,spirotools[shouldshow]);
@@ -1645,21 +1644,14 @@ static void SCCheckForSSToOptimize(SplineChar *sc, SplineSet *ss,int order2) {
 }
 
 static void CVChangeSpiroMode(CharView *cv) {
-    if ( hasspiro() ) {
-	cv->b.sc->inspiro = !cv->b.sc->inspiro;
-	cv->showing_tool = cvt_none;
-	CVClearSel(cv);
-	if ( !cv->b.sc->inspiro )
-	    SCCheckForSSToOptimize(cv->b.sc,cv->b.layerheads[cv->b.drawmode]->splines,
-		    cv->b.layerheads[cv->b.drawmode]->order2);
-	GDrawRequestExpose(cvtools,NULL,false);
-	SCUpdateAll(cv->b.sc);
-    } else
-#ifdef _NO_LIBSPIRO
-	ff_post_error(_("You may not use spiros"),_("This version of fontforge was not linked with the spiro library, so you may not use them."));
-#else
-	ff_post_error(_("You may not use spiros"),_("FontForge was unable to load libspiro, spiros are not available for use."));
-#endif
+  cv->b.sc->inspiro = !cv->b.sc->inspiro;
+  cv->showing_tool = cvt_none;
+  CVClearSel(cv);
+  if ( !cv->b.sc->inspiro )
+    SCCheckForSSToOptimize(cv->b.sc,cv->b.layerheads[cv->b.drawmode]->splines,
+			   cv->b.layerheads[cv->b.drawmode]->order2);
+  GDrawRequestExpose(cvtools,NULL,false);
+  SCUpdateAll(cv->b.sc);
 }
 
 static void ToolsMouse(CharView *cv, GEvent *event) {
@@ -1724,7 +1716,7 @@ return;			/* Not available in order2 spline mode */
 	if ( cv->pressed_tool==cvt_none && pos!=cvt_none ) {
 	    /* Not pressed */
 	    char *msg = _(popupsres[pos]);
-	    if ( cv->b.sc->inspiro && hasspiro()) {
+	    if ( cv->b.sc->inspiro ) {
 		if ( pos==cvt_spirog2 )
 		    msg = _("Add a g2 curve point");
 		else if ( pos==cvt_spiroleft )
@@ -2934,7 +2926,7 @@ void CVToolsPopup(CharView *cv, GEvent *event) {
     if( !anysel ) {
 	for ( i=0;i<=cvt_skew; ++i ) {
 	    char *msg = _(popupsres[i]);
-	    if ( cv->b.sc->inspiro && hasspiro()) {
+	    if ( cv->b.sc->inspiro ) {
 		if ( i==cvt_spirog2 )
 		    msg = _("Add a g2 curve point");
 		else if ( i==cvt_spiroleft )

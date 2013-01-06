@@ -95,7 +95,6 @@ AC_SUBST([GUILE_API])
 
 giflib_url="http://giflib.sourceforge.net/"
 libpng_url="http://www.libpng.org/"
-libspiro_url="http://libspiro.sourceforge.net/"
 libunicodenames_url="http://bitbucket.org/sortsmill/libunicodenames"
 pure_url="http://pure-lang.googlecode.com/"
 
@@ -238,7 +237,6 @@ AC_ARG_VAR([FREETYPE_SOURCE],
 FONTFORGE_ARG_WITH_GIFLIB
 FONTFORGE_ARG_WITH_LIBJPEG
 FONTFORGE_ARG_WITH_LIBTIFF
-FONTFORGE_ARG_WITH_LIBSPIRO
 FONTFORGE_ARG_WITH_LIBUNICODENAMES
 
 FONTFORGE_CONFIG_FREETYPE_DEBUGGER

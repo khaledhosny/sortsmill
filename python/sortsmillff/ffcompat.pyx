@@ -58,7 +58,6 @@ cdef extern from "splinefont.h":
     ly_back = 0
     ly_fore = 1
     ly_none = -3
-  int hasspiro ()
 
 cdef extern from "activeinui.h":
   FontViewBase *fv_active_in_ui
@@ -185,7 +184,7 @@ def hasUserInterface ():
   return not get_no_windowing_ui ()
 
 def hasSpiro ():
-  return <bool> hasspiro ()
+  return True
 
 #--------------------------------------------------------------------------
 
