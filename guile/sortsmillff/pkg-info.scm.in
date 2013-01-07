@@ -1,4 +1,4 @@
-;; -*- mode: bee; coding: utf-8 -*-
+;; -*- mode: scheme; coding: utf-8 -*-
 
 ;; Copyright (C) 2012 Barry Schwartz
 ;; 
@@ -17,21 +17,20 @@
 
 (define-module (sortsmillff pkg-info))
 
-(export
-   pkg-info:package
-   pkg-info:package-bugreport
-   pkg-info:package-name
-   pkg-info:package-string
-   pkg-info:package-tarname
-   pkg-info:package-url
-   pkg-info:package-version
+(export pkg-info:package
+        pkg-info:package-bugreport
+        pkg-info:package-name
+        pkg-info:package-string
+        pkg-info:package-tarname
+        pkg-info:package-url
+        pkg-info:package-version
 
-   pkg-info:version-major
-   pkg-info:version-minor
-   pkg-info:version-patch
-   pkg-info:version-extra
-   pkg-info:version-extra-short
-   )
+        pkg-info:version-major
+        pkg-info:version-minor
+        pkg-info:version-patch
+        pkg-info:version-extra
+        pkg-info:version-extra-short
+        )
 
 (define pkg-info:package "@PACKAGE@")
 (define pkg-info:package-bugreport "@PACKAGE_BUGREPORT@")
