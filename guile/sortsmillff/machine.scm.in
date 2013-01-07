@@ -1,4 +1,4 @@
-;; -*- mode: bee; coding: utf-8 -*-
+;; -*- mode: scheme; coding: utf-8 -*-
 
 ;; Copyright (C) 2012 Barry Schwartz
 ;; 
@@ -17,70 +17,81 @@
 
 (define-module (sortsmillff machine))
 
-(use-modules
-   ((sortsmillff math-constants) #:select (c-flt-epsilon
-                                             c-dbl-epsilon
-                                             c-flt-epsilon-exact
-                                             c-dbl-epsilon-exact))
-   (system foreign)
-   )
+(use-modules ((sortsmillff math-constants)
+              #:select (c-flt-epsilon
+                        c-dbl-epsilon
+                        c-flt-epsilon-exact
+                        c-dbl-epsilon-exact))
+             (system foreign))
 
-(re-export
-   c-flt-epsilon
-   c-dbl-epsilon
-   c-flt-epsilon-exact
-   c-dbl-epsilon-exact
-   )
+(re-export c-flt-epsilon
+           c-dbl-epsilon
+           c-flt-epsilon-exact
+           c-dbl-epsilon-exact
+           )
 
-(export
-   Bool-size                            ; sizeof(_Bool)
-   intptr_t-size                        ; sizeof(intptr_t)
-   uintptr_t-size                       ; sizeof(uintptr_t)
-   float-size                           ; sizeof(float)
-   double-size                          ; sizeof(double)
-   c-float-type
-   c-int-type
-   c-uint-type
-   )
+(export Bool-size                       ; sizeof(_Bool)
+        intptr_t-size                   ; sizeof(intptr_t)
+        uintptr_t-size                  ; sizeof(uintptr_t)
+        float-size                      ; sizeof(float)
+        double-size                     ; sizeof(double)
+        c-float-type
+        c-int-type
+        c-uint-type
+        _Bool
+        )
 
 (define-syntax Bool-size
-   (identifier-syntax @SIZEOF__BOOL@))
+  (identifier-syntax @SIZEOF__BOOL@))
 
 (define-syntax intptr_t-size
-   (identifier-syntax @SIZEOF_INTPTR_T@))
+  (identifier-syntax @SIZEOF_INTPTR_T@))
 
 (define-syntax uintptr_t-size
-   (identifier-syntax @SIZEOF_UINTPTR_T@))
+  (identifier-syntax @SIZEOF_UINTPTR_T@))
 
 (define-syntax float-size
-   (make-variable-transformer
-      (lambda (x)
-         (syntax-case x ()
-            (ident (identifier? #'ident)
-               (datum->syntax x (sizeof float)))))))
+  (make-variable-transformer
+   (lambda (x)
+     (syntax-case x ()
+       (ident (identifier? #'ident)
+              (datum->syntax x (sizeof float)))))))
 
 (define-syntax double-size
-   (make-variable-transformer
-      (lambda (x)
-         (syntax-case x ()
-            (ident (identifier? #'ident)
-               (datum->syntax x (sizeof double)))))))
+  (make-variable-transformer
+   (lambda (x)
+     (syntax-case x ()
+       (ident (identifier? #'ident)
+              (datum->syntax x (sizeof double)))))))
 
 (define (c-float-type n)
-   (cond
-      ((= n float-size) 'float)
-      ((= n double-size) 'double)))
+  (cond
+   ((= n float-size) 'float)
+   ((= n double-size) 'double)))
 
 (define (c-int-type n)
-   (case n
-      ((1) 'int8_t)
-      ((2) 'int16_t)
-      ((4) 'int32_t)
-      ((8) 'int64_t)))
+  (case n
+    ((1) 'int8_t)
+    ((2) 'int16_t)
+    ((4) 'int32_t)
+    ((8) 'int64_t)))
 
 (define (c-uint-type n)
-   (case n
-      ((1) 'uint8_t)
-      ((2) 'uint16_t)
-      ((4) 'uint32_t)
-      ((8) 'uint64_t)))
+  (case n
+    ((1) 'uint8_t)
+    ((2) 'uint16_t)
+    ((4) 'uint32_t)
+    ((8) 'uint64_t)))
+
+(define-syntax _Bool
+  (make-variable-transformer
+   (lambda (x)
+     (syntax-case x ()
+       (var (identifier? #'var)
+            (case Bool-size
+              ((1) #'uint8)         ; Probably.
+              ((2) #'uint16)        ; Very unlikely.
+              ((4) #'uint32)        ; Very, very unlikely.
+
+              ;; FIXME: Catch this at configure time.
+              (else (error "What architecture is this?"))))))))
