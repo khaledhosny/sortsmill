@@ -1,4 +1,4 @@
-;; -*- mode: bee; coding: utf-8 -*-
+;; -*- mode: scheme; coding: utf-8 -*-
 
 ;; Copyright (C) 2012 Barry Schwartz
 ;; 
@@ -17,62 +17,62 @@
 
 (define-module (sortsmillff notices))
 
-(use-modules
-   (system repl error-handling)
-   (ice-9 match)
-   (srfi srfi-26)                       ; ‘cut’ and ‘cute’.
-   )
+(use-modules (system repl error-handling)
+             (ice-9 match)
+             (srfi srfi-26)                       ; ‘cut’ and ‘cute’.
+             )
 
-(export
-   log-fontforge-warning
-   post-fontforge-notice
-   post-fontforge-error
-   fontforge-call-with-error-handling
-   )
+(export log-fontforge-warning
+        post-fontforge-notice
+        post-fontforge-error
+        fontforge-call-with-error-handling
+        )
 
 (load-extension "libguile-sortsmillff_fontforge"
-   "init_guile_sortsmillff_notices")
+                "init_guile_sortsmillff_notices")
 
-(define* (fontforge-call-with-error-handling window-title thunk
-            #:key (value-after-catch *unspecified*))
-   (let ((retval value-after-catch)
-         (*on-error* (match (getenv "FONTFORGE_GUILE_ON_ERROR")
-                        (#f 'pass)
-                        ("pass" 'pass)
-                        ("debug" 'debug)
-                        (_ 'pass))))
+(define* (fontforge-call-with-error-handling
+          window-title thunk #:key (value-after-catch *unspecified*))
+  (let ((retval value-after-catch)
+        (*on-error* (match (getenv "FONTFORGE_GUILE_ON_ERROR")
+                           (#f 'pass)
+                           ("pass" 'pass)
+                           ("debug" 'debug)
+                           (_ 'pass))))
 
-      (call-with-error-handling thunk
+    (call-with-error-handling
+     thunk
 
-         #:on-error *on-error*
+     #:on-error *on-error*
 
-         #:post-error
-         (lambda (key . args)
-            (post-fontforge-error window-title
-               (let ((in-proc (lambda (proc)
-                                 (if proc
-                                     (simple-format #f "In procedure ~A : " proc)
-                                     ""))))
-                  (match args
-                     ;; A conventional Guile-style error exception
-                     ;; without format arguments.
-                     (((? (lambda (p) (or (eq? p #f) (string? p))) proc)
-                       (? string? str)
-                       #f
-                       (? (lambda (d) (or (eq? d #f) (list? d))) data))
-                      (simple-format #f "~A~A" (in-proc proc) str))
+     #:post-error
+     (lambda (key . args)
+       (post-fontforge-error
+        window-title
+        (let ((in-proc (lambda (proc)
+                         (if proc
+                             (simple-format #f "In procedure ~A : " proc)
+                             ""))))
+          (match args
+                 ;; A conventional Guile-style error exception
+                 ;; without format arguments.
+                 (((? (lambda (p) (or (eq? p #f) (string? p))) proc)
+                   (? string? str)
+                   #f
+                   (? (lambda (d) (or (eq? d #f) (list? d))) data))
+                  (simple-format #f "~A~A" (in-proc proc) str))
 
-                     ;; A conventional Guile-style error exception
-                     ;; with format arguments.
-                     (((? (lambda (p) (or (eq? p #f) (string? p))) proc)
-                       (? string? fmt)
-                       (? list? args)
-                       (? (lambda (d) (or (eq? d #f) (list? d))) data))
-                      (simple-format #f "~A~A" (in-proc proc)
-                         (apply (cute simple-format #f fmt <...>) args)))
+                 ;; A conventional Guile-style error exception
+                 ;; with format arguments.
+                 (((? (lambda (p) (or (eq? p #f) (string? p))) proc)
+                   (? string? fmt)
+                   (? list? args)
+                   (? (lambda (d) (or (eq? d #f) (list? d))) data))
+                  (simple-format #f "~A~A" (in-proc proc)
+                                 (apply (cute simple-format #f fmt <...>) args)))
 
-                     ;; Anything else.
-                     (_ (simple-format #f
-                           "Guile exception thrown to key '~A with arguments ~A"
-                           key args)))))))
-      retval))
+                 ;; Anything else.
+                 (_ (simple-format
+                     #f "Guile exception thrown to key '~A with arguments ~A"
+                     key args)))))))
+    retval))
