@@ -37,6 +37,8 @@ extern GMenuItem *fv_menu;
 
 void cv_tools_list_check (GWindow gw, struct gmenuitem *mi, GEvent *e);
 void fv_tools_list_check (GWindow gw, struct gmenuitem *mi, GEvent *e);
+void cv_do_action (GWindow gw, struct gmenuitem *mi, GEvent *e);
+void fv_do_action (GWindow gw, struct gmenuitem *mi, GEvent *e);
 
 #endif /* _INTERNAL_USER_MENU_H */
 

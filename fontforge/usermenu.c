@@ -37,7 +37,7 @@
 GMenuItem *cv_menu = NULL;
 GMenuItem *fv_menu = NULL;
 
-void
+VISIBLE void
 cv_tools_list_check (GWindow gw, GMenuItem *mi, GEvent *e)
 {
   CharViewBase *cvb = (CharViewBase *) GDrawGetUserData (gw);
@@ -47,7 +47,7 @@ cv_tools_list_check (GWindow gw, GMenuItem *mi, GEvent *e)
               scm_from_pointer (mi, NULL), view);
 }
 
-void
+VISIBLE void
 fv_tools_list_check (GWindow gw, GMenuItem *mi, GEvent *e)
 {
   FontViewBase *fvb = (FontViewBase *) GDrawGetUserData (gw);
@@ -57,7 +57,7 @@ fv_tools_list_check (GWindow gw, GMenuItem *mi, GEvent *e)
               scm_from_pointer (mi, NULL), view);
 }
 
-static void
+VISIBLE void
 cv_do_action (GWindow gw, GMenuItem *mi, GEvent *e)
 {
   CharViewBase *cvb = (CharViewBase *) GDrawGetUserData (gw);
@@ -67,7 +67,7 @@ cv_do_action (GWindow gw, GMenuItem *mi, GEvent *e)
               scm_from_pointer (mi, NULL), view);
 }
 
-static void
+VISIBLE void
 fv_do_action (GWindow gw, GMenuItem *mi, GEvent *e)
 {
   FontViewBase *fvb = (FontViewBase *) GDrawGetUserData (gw);
@@ -77,6 +77,7 @@ fv_do_action (GWindow gw, GMenuItem *mi, GEvent *e)
               scm_from_pointer (mi, NULL), view);
 }
 
+// FIXME: Get rid of this.
 static int
 menu_info_add (SCM action, SCM enabled)
 {
@@ -86,6 +87,7 @@ menu_info_add (SCM action, SCM enabled)
   return scm_to_int (mid);
 }
 
+// FIXME: Get rid of this.
 static gmenuitem_moveto_t
 moveto_func (int window)
 {
@@ -104,6 +106,7 @@ moveto_func (int window)
   return result;
 }
 
+// FIXME: Get rid of this.
 static gmenuitem_invoke_t
 invoke_func (int window)
 {
@@ -122,6 +125,7 @@ invoke_func (int window)
   return result;
 }
 
+// FIXME: Get rid of this.
 static int
 find_sub_menu (GMenuItem **mn, uint32_t *submenuu)
 {
@@ -139,6 +143,7 @@ find_sub_menu (GMenuItem **mn, uint32_t *submenuu)
   return j;
 }
 
+// FIXME: Get rid of this.
 static void
 insert_sub_menus (int window, const char **menu_path, SCM action, SCM enabled,
                   const char *shortcut, GMenuItem **mn)
@@ -195,6 +200,7 @@ insert_sub_menus (int window, const char **menu_path, SCM action, SCM enabled,
     }
 }
 
+// FIXME: Get rid of this.
 VISIBLE void
 register_fontforge_menu_entry (int window, const char **menu_path, SCM action,
                                SCM enabled, const char *shortcut)

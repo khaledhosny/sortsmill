@@ -1,4 +1,4 @@
-;; -*- coding: utf-8 -*-
+;; -*- mode: scheme; coding: utf-8 -*-
 
 ;; Copyright (C) 2012 Barry Schwartz
 ;; 

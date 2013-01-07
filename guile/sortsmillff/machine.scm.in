@@ -89,9 +89,9 @@
      (syntax-case x ()
        (var (identifier? #'var)
             (case Bool-size
-              ((1) #'uint8)         ; Probably.
-              ((2) #'uint16)        ; Very unlikely.
-              ((4) #'uint32)        ; Very, very unlikely.
+              ((1) #'uint8)             ; Probably.
+              ((2) #'uint16)            ; Very unlikely.
+              ((4) #'uint32)            ; Very, very unlikely.
 
               ;; FIXME: Catch this at configure time.
               (else (error "What architecture is this?"))))))))

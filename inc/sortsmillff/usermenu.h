@@ -37,17 +37,11 @@ enum {
   FF_METRICS_WINDOW = 0x04	/* Reserved for future use. */
 };
 
-//typedef void (*ff_menu_entry_action_t) (SCM view, void *data);
-//typedef bool (*ff_menu_entry_enabled_t) (SCM view, void *data);
-
 void register_fontforge_menu_entry (int window,
 				    const char **menu_path,
-				    //				    ff_menu_entry_action_t action,
-				    //				    ff_menu_entry_enabled_t enabled,
 				    SCM action,
 				    SCM enabled,
 				    const char *shortcut);
-//				    void *data);
 
 #if 0
 {

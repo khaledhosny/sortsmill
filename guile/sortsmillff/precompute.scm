@@ -1,4 +1,4 @@
-;; -*- mode: bee; coding: utf-8 -*-
+;; -*- mode: scheme; coding: utf-8 -*-
 
 ;; Copyright (C) 2012 Barry Schwartz
 ;; 
@@ -17,118 +17,116 @@
 
 (define-module (sortsmillff precompute))
 
-(use-modules
-   (srfi srfi-1)                        ; List operations.
-   (srfi srfi-4)                        ; Uniform vectors.
-   ((rnrs) :version (6) #:select (assert div-and-mod))
-   (sortsmillff linalg)
-   )
+(use-modules (srfi srfi-1)              ; List operations.
+             (srfi srfi-4)              ; Uniform vectors.
+             ((rnrs) :version (6) #:select (assert div-and-mod))
+             (sortsmillff linalg)
+             )
 
-(export
-   binomial-coefficients
-   binomial-coefficients-f64vector
-   altsigns
-   altsigns-f64vector
-   binomial-coefficients-altsigns
-   binomial-coefficients-altsigns-f64vector
-   sbern-basis-in-mono
-   sbern-basis-in-mono-f64vector
-   mono-basis-in-sbern
-   mono-basis-in-sbern-f64vector
-   sbern-basis-in-spower
-   sbern-basis-in-spower-f64vector
-   spower-basis-in-sbern
-   spower-basis-in-sbern-f64vector
-   )
+(export binomial-coefficients
+        binomial-coefficients-f64vector
+        altsigns
+        altsigns-f64vector
+        binomial-coefficients-altsigns
+        binomial-coefficients-altsigns-f64vector
+        sbern-basis-in-mono
+        sbern-basis-in-mono-f64vector
+        mono-basis-in-sbern
+        mono-basis-in-sbern-f64vector
+        sbern-basis-in-spower
+        sbern-basis-in-spower-f64vector
+        spower-basis-in-sbern
+        spower-basis-in-sbern-f64vector
+        )
 
 (define (binomial-coefficients n)
-   (assert (integer? n))
-   (assert (<= 0 n))
-   (if (zero? n)
-       '(1)
-       (let ((previous (binomial-coefficients (1- n))))
-          (map + (cons 0 previous) (append previous '(0))))))
+  (assert (integer? n))
+  (assert (<= 0 n))
+  (if (zero? n)
+      '(1)
+      (let ((previous (binomial-coefficients (1- n))))
+        (map + (cons 0 previous) (append previous '(0))))))
 
 (define (binomial-coefficients-f64vector n)
-   (let ((bc (binomial-coefficients n)))
-      (list->f64vector bc)))
+  (let ((bc (binomial-coefficients n)))
+    (list->f64vector bc)))
 
 (define (altsigns n)
-   (assert (integer? n))
-   (assert (<= 0 n))
-   (if (zero? n)
-       '(1)
-       (let* ((previous (altsigns (1- n)))
-              (last (car (last-pair previous))))
-          (append previous (list (* -1 last))))))
+  (assert (integer? n))
+  (assert (<= 0 n))
+  (if (zero? n)
+      '(1)
+      (let* ((previous (altsigns (1- n)))
+             (last (car (last-pair previous))))
+        (append previous (list (* -1 last))))))
 
 (define (altsigns-f64vector n)
-   (let ((as (altsigns n)))
-      (list->f64vector as)))
+  (let ((as (altsigns n)))
+    (list->f64vector as)))
 
 (define (binomial-coefficients-altsigns n)
-   (assert (integer? n))
-   (assert (<= 0 n))
-   (map * (binomial-coefficients n) (altsigns n)))
+  (assert (integer? n))
+  (assert (<= 0 n))
+  (map * (binomial-coefficients n) (altsigns n)))
 
 (define (binomial-coefficients-altsigns-f64vector n)
-   (let ((bca (binomial-coefficients-altsigns n)))
-      (list->f64vector bca)))
+  (let ((bca (binomial-coefficients-altsigns n)))
+    (list->f64vector bca)))
 
 (define (sbern-basis-in-mono n)
-   (assert (integer? n))
-   (assert (<= 0 n))
-   (let ((row (lambda (i)
-                 (append (make-list i 0)
-                    (binomial-coefficients (- n i))))))
-      (list-tabulate (1+ n) row)))
+  (assert (integer? n))
+  (assert (<= 0 n))
+  (let ((row (lambda (i)
+               (append (make-list i 0)
+                       (binomial-coefficients (- n i))))))
+    (list-tabulate (1+ n) row)))
 
 (define (sbern-basis-in-mono-f64vector n)
-   (let ((basis (sbern-basis-in-mono n)))
-      (list->f64vector (apply append basis))))
+  (let ((basis (sbern-basis-in-mono n)))
+    (list->f64vector (apply append basis))))
 
 (define (mono-basis-in-sbern n)
-   (assert (integer? n))
-   (assert (<= 0 n))
-   (let ((row (lambda (i)
-                 (append (make-list i 0)
-                    (binomial-coefficients-altsigns (- n i))))))
-      (list-tabulate (1+ n) row)))
+  (assert (integer? n))
+  (assert (<= 0 n))
+  (let ((row (lambda (i)
+               (append (make-list i 0)
+                       (binomial-coefficients-altsigns (- n i))))))
+    (list-tabulate (1+ n) row)))
 
 (define (mono-basis-in-sbern-f64vector n)
-   (let ((basis (mono-basis-in-sbern n)))
-      (list->f64vector (apply append basis))))
+  (let ((basis (mono-basis-in-sbern n)))
+    (list->f64vector (apply append basis))))
 
 (define (sbern-basis-in-spower n)
-   (assert (integer? n))
-   (assert (<= 0 n))
-   (let* ((q (call-with-values (lambda () (div-and-mod n 2)) +))
-          (top-row
-             (lambda (i) (append (make-list i 0)
-                            (binomial-coefficients (- n (* i 2) 1))
-                            (make-list (1+ i) 0))))
-          (middle-row
-             (lambda () (append (make-list q 0)
-                           '(1)
-                           (make-list q 0))))
-          (bottom-row
-             (lambda (i) (reverse (top-row (- q i 1))))))
-      (if (even? n)
-          (append
-             (list-tabulate q top-row)
-             (list (middle-row))
-             (list-tabulate q bottom-row))
-          (append
-             (list-tabulate q top-row)
-             (list-tabulate q bottom-row)))))
+  (assert (integer? n))
+  (assert (<= 0 n))
+  (let* ((q (call-with-values (lambda () (div-and-mod n 2)) +))
+         (top-row
+          (lambda (i) (append (make-list i 0)
+                              (binomial-coefficients (- n (* i 2) 1))
+                              (make-list (1+ i) 0))))
+         (middle-row
+          (lambda () (append (make-list q 0)
+                             '(1)
+                             (make-list q 0))))
+         (bottom-row
+          (lambda (i) (reverse (top-row (- q i 1))))))
+    (if (even? n)
+        (append
+         (list-tabulate q top-row)
+         (list (middle-row))
+         (list-tabulate q bottom-row))
+        (append
+         (list-tabulate q top-row)
+         (list-tabulate q bottom-row)))))
 
 (define (sbern-basis-in-spower-f64vector n)
-   (let ((basis (sbern-basis-in-spower n)))
-      (list->f64vector (apply append basis))))
+  (let ((basis (sbern-basis-in-spower n)))
+    (list->f64vector (apply append basis))))
 
 (define (spower-basis-in-sbern n)
-   (matrix-inverse (sbern-basis-in-spower n)))
+  (matrix-inverse (sbern-basis-in-spower n)))
 
 (define (spower-basis-in-sbern-f64vector n)
-   (let ((basis (spower-basis-in-sbern n)))
-      (list->f64vector (apply append basis))))
+  (let ((basis (spower-basis-in-sbern n)))
+    (list->f64vector (apply append basis))))

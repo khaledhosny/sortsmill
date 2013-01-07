@@ -91,30 +91,6 @@ scm_register_fontforge_menu_entry (SCM window, SCM menu_path, SCM action,
   return SCM_UNSPECIFIED;
 }
 
-// FIXME: Consider putting this in a special module.
-static SCM
-scm__Bool (void)
-{
-  SCM var = SCM_UNSPECIFIED;
-  switch (sizeof (bool))
-    {
-    case 1:
-      var = scm_c_lookup ("uint8");
-      break;
-    case 2:
-      var = scm_c_lookup ("uint16");
-      break;
-    case 4:
-      var = scm_c_lookup ("uint32");
-      break;
-    default:
-      // FIXME: Catch this at configure time.
-      fprintf (stderr, "What architecture is this?\n");
-      abort ();
-    }
-  return scm_variable_ref (var);
-}
-
 //-------------------------------------------------------------------------
 
 VISIBLE void
@@ -122,7 +98,6 @@ init_guile_sortsmillff_usermenu (void)
 {
   scm_c_define_gsubr ("internal:register-fontforge-menu-entry", 5, 0, 0,
                       scm_register_fontforge_menu_entry);
-  scm_c_define_gsubr ("_Bool", 0, 0, 0, scm__Bool);
 }
 
 //-------------------------------------------------------------------------

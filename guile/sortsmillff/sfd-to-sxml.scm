@@ -1,4 +1,4 @@
-;; -*- coding: utf-8 -*-
+;; -*- mode:scheme; coding: utf-8 -*-
 
 ;; Copyright (C) 2012 Barry Schwartz
 ;; 
@@ -37,7 +37,7 @@
     (if (eof-object? line)
         (throw 'sfd-error (_ "unexpected end of file")
                (sfd-source-info port 0)) ; FIXME: Is the location we
-                                         ; want?
+                                        ; want?
         line)))
 
 (define (expect-end-keyword expected-key port)
@@ -123,7 +123,7 @@
     (if (eof-object? line)
         (throw 'sfd-error (_ "unexpected end of file")
                (sfd-source-info port 0)) ; FIXME: Is the location here
-                                         ; what we want?
+                                        ; what we want?
         (let ((m1 (regexp-exec sfd-end-quoted-string-re line)))
           (if m1
               (let ((end (match:end m1 1)))
@@ -285,7 +285,7 @@
 (define (sfd-read-private-dict contents key line start port)
   (assert (eq? key 'beginprivate))
   (let* ((num-entries (car (sfd-get-integer line start port
-                                           #:line-end #t)))
+                                            #:line-end #t)))
          (lines (map-in-order (lambda _ (expect-line port))
                               (make-list num-entries)))
          (entries (map sfd-private-dict-entry lines))
@@ -320,7 +320,7 @@
   (sfd-add-entry contents key
                  (sfd-process-escapes
                   (car (sfd-get-string-to-eol line start port)))))
-                    
+
 (define (sfd-update-contents contents line port version)
   (match
    (sfd-get-keyword line port
@@ -328,23 +328,23 @@
 
    ;; Reals.
    (((and key
-      (or 'italicangle 'strokewidth 'tilemargin 'underlineposition
-          'underlinewidth 'cidversion 'ufoascent 'ufodescent))
+          (or 'italicangle 'strokewidth 'tilemargin 'underlineposition
+              'underlinewidth 'cidversion 'ufoascent 'ufodescent))
      end)
     (sfd-read-real-entry contents key line end port))
 
    ;; Integers.
    (((and key
-      (or 'ascent 'descent 'hheadascent 'hheadaoffset 'hheaddescent
-          'hheaddoffset 'os2typoascent 'os2typoaoffset 'os2typodescent
-          'os2typodoffset 'os2winascent 'os2winaoffset 'os2windescent
-          'os2windoffset 'os2subxsize 'os2subysize 'os2subxoff 'os2subyoff
-          'os2supxsize 'os2supysize 'os2supxoff 'os2supyoff 'os2strikeysize
-          'os2strikeypos 'antialias 'displaylayer 'displaysize 'extremabound
-          'fittoem 'isextendedshape 'linegap 'macstyle 'onlybitmaps
-          'pfmfamily 'pfmweight 'topencoding 'ttfweight 'ttfwidth 'vlinegap
-          'widthseparation 'woffmajor 'woffminor
-          'os2version 'fstype))
+          (or 'ascent 'descent 'hheadascent 'hheadaoffset 'hheaddescent
+              'hheaddoffset 'os2typoascent 'os2typoaoffset 'os2typodescent
+              'os2typodoffset 'os2winascent 'os2winaoffset 'os2windescent
+              'os2windoffset 'os2subxsize 'os2subysize 'os2subxoff 'os2subyoff
+              'os2supxsize 'os2supysize 'os2supxoff 'os2supyoff 'os2strikeysize
+              'os2strikeypos 'antialias 'displaylayer 'displaysize 'extremabound
+              'fittoem 'isextendedshape 'linegap 'macstyle 'onlybitmaps
+              'pfmfamily 'pfmweight 'topencoding 'ttfweight 'ttfwidth 'vlinegap
+              'widthseparation 'woffmajor 'woffminor
+              'os2version 'fstype))
      end)
     (sfd-read-integer-entry contents key line end port))
 
