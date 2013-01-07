@@ -1,4 +1,4 @@
-;; -*- mode: bee; coding: utf-8 -*-
+;; -*- mode: scheme; coding: utf-8 -*-
 
 ;; Copyright (C) 2012 Barry Schwartz
 ;; 
@@ -17,57 +17,55 @@
 
 (define-module (ff-internal generate-types))
 
-(use-modules
-   (ice-9 popen)
-   (ice-9 match)
-   )
+(import (ice-9 popen)
+        (ice-9 match)
+        )
 
-(export
-   read-instructions-from-program-input
-   read-instruction-sources
-   read-instructions
-   underscores->hyphens
-   underscore->hyphen
-   )
+(export read-instructions-from-program-input
+        read-instruction-sources
+        read-instructions
+        underscores->hyphens
+        underscore->hyphen
+        )
 
 (define (read-instructions-from-program-input)
-   (let* ((sources (cdr (command-line)))
-          (instructions (if (null? sources)
-                            (read-instruction-sources)
-                            (read-instruction-sources sources))))
-      instructions))
+  (let* ((sources (cdr (command-line)))
+         (instructions (if (null? sources)
+                           (read-instruction-sources)
+                           (read-instruction-sources sources))))
+    instructions))
 
 (define* (read-instruction-sources
-            #:optional
-            (sources (list (current-input-port)))
-            (prior '()))
-   (match sources
-      (() prior)
-      ((source . more-sources)
-       (let ((instructions
-                (cond
-                   ((string? source) (with-input-from-file source
-                                        (lambda () (read-instructions))))
-                   ((port? source) (read-instructions source)))))
-          (read-instruction-sources more-sources
-             (append prior instructions))))))
+          #:optional
+          (sources (list (current-input-port)))
+          (prior '()))
+  (match sources
+         (() prior)
+         ((source . more-sources)
+          (let ((instructions
+                 (cond
+                  ((string? source) (with-input-from-file source
+                                      (lambda () (read-instructions))))
+                  ((port? source) (read-instructions source)))))
+            (read-instruction-sources more-sources
+                                      (append prior instructions))))))
 
 (define* (read-instructions
-            #:optional
-            (port (current-input-port))
-            (prior '()))
-   (let ((instruction (read port)))
-      (if (eof-object? instruction)
-          (reverse prior)
-          (read-instructions port (cons instruction prior)))))
+          #:optional
+          (port (current-input-port))
+          (prior '()))
+  (let ((instruction (read port)))
+    (if (eof-object? instruction)
+        (reverse prior)
+        (read-instructions port (cons instruction prior)))))
 
 ;; Convert ‘_’ to ‘-’, because hyphens are more conventional in
 ;; Scheme.
 (define (underscores->hyphens arg)
-   (match arg
-      ((? string? s) (string-map underscore->hyphen s))
-      ((a . b) (cons (underscores->hyphens a) (underscores->hyphens b)))
-      (_ arg)))
+  (match arg
+         ((? string? s) (string-map underscore->hyphen s))
+         ((a . b) (cons (underscores->hyphens a) (underscores->hyphens b)))
+         (_ arg)))
 
 (define (underscore->hyphen c)
-   (if (char=? c #\_) #\- c))
+  (if (char=? c #\_) #\- c))
