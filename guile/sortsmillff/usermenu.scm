@@ -29,8 +29,7 @@
         fill-menu-item-for-action
         )
 
-(import (only (rnrs base) assert)
-        (rnrs hashtables)
+(import (rnrs)
         (sortsmillff views)
         (sortsmillff notices)
         (sortsmillff fontforge-api)
