@@ -25,6 +25,10 @@
         (srfi srfi-26)                  ; ‘cut’ and ‘cute’.
         )
 
+(define-syntax eval-early
+  (syntax-rules ()
+    ((_ e e* ...) (eval-when (compile load eval) e e* ...))))
+
 ;; Define ‘format28’ as a format function resembling that of SRFI-28;
 ;; we will use it instead of the native format functions, to help make
 ;; this module more portable.
@@ -38,8 +42,7 @@
 ;; precision or double precision. More than likely, we will support
 ;; only machines for which this is true, but these tests should not
 ;; hurt.
-(eval-when
- (compile load eval)
+(eval-early
  (cond
   ((not (= 4 float-size))
    (error
@@ -92,10 +95,12 @@
     "bytevector length is wrong")
    (else #f)))
 
+(define (syntax-string->syntax-symbol x s)
+  (datum->syntax x (string->symbol (syntax->datum s))))
+
 (define (build-symbol x constructor . objects)
-  (datum->syntax
-   x (string->symbol
-      (apply constructor (map syntax->datum objects)))))
+  (syntax-string->syntax-symbol
+   x (apply constructor (map syntax->datum objects))))
 
 (define (type-tag x type-name)
   (build-symbol x
@@ -783,8 +788,7 @@
        (eq? '* (syntax->datum #'field-type))
        #`(lambda (obj)
            (cons
-            (quote #,(datum->syntax x
-                                    (string->symbol (syntax->datum #'field-name))))
+            '#,(syntax-string->syntax-symbol x #'field-name)
             ((field-ref field-type offset size) (cdr obj)))))
 
       ((_ field-name field (field-type field-subtype) offset size)
@@ -792,8 +796,7 @@
            (eq? 'array (syntax->datum #'field-type)))
        #`(lambda (obj)
            (cons
-            (quote #,(datum->syntax x
-                                    (string->symbol (syntax->datum #'field-name))))
+            '#,(syntax-string->syntax-symbol x #'field-name)
             ((field->pointer offset) (cdr obj)))))
 
       ((_ field-name field field-type offset size)
@@ -801,15 +804,13 @@
            (eq? 'array (syntax->datum #'field-type)))
        #`(lambda (obj)
            (cons
-            (quote #,(datum->syntax x
-                                    (string->symbol (syntax->datum #'field-name))))
+            '#,(syntax-string->syntax-symbol x #'field-name)
             ((field->pointer offset) (cdr obj)))))
 
       ((_ field-name field field-type offset size)
        #`(lambda (obj)
            (cons
-            (quote #,(datum->syntax x
-                                    (string->symbol (syntax->datum #'field-name))))
+            '#,(syntax-string->syntax-symbol x #'field-name)
             ((field-ref field-type offset size) (cdr obj)))))
       )))
 
