@@ -25,22 +25,33 @@
         (srfi srfi-26)                  ; ‘cut’ and ‘cute’.
         )
 
+;; Define ‘format28’ as a format function resembling that of SRFI-28;
+;; we will use it instead of the native format functions, to help make
+;; this module more portable.
+;;
+;; See http://srfi.schemers.org/srfi-28/srfi-28.html
+;;
+(define (format28 format-string . objects)
+  (apply (cut simple-format #f format-string <...>) objects))
+
 ;; FIXME: Really we require that floating point numbers be IEEE single
 ;; precision or double precision. More than likely, we will support
 ;; only machines for which this is true, but these tests should not
 ;; hurt.
-(eval-when (compile load eval)
-           (cond
-            ((not (= 4 float-size))
-             (error
-              (simple-format #f
-                             "The size of a C float is required to be 4 bytes, but on this machine it is ~A bytes."
-                             (number->string float-size))))
-            ((not (= 8 double-size))
-             (error
-              (simple-format #f
-                             "The size of a C double is required to be 8 bytes, but on this machine it is ~A bytes."
-                             (number->string double-size))))))
+(eval-when
+ (compile load eval)
+ (cond
+  ((not (= 4 float-size))
+   (error
+    (format28
+     "The size of a C float is required to be 4 bytes, but on this machine it is ~a bytes."
+     (number->string float-size))))
+  ((not (= 8 double-size))
+   (error
+    (format28
+     #f
+     "The size of a C double is required to be 8 bytes, but on this machine it is ~a bytes."
+     (number->string double-size))))))
 
 (export
  ;; Fluid for ‘Are API-definitions being exported?’
@@ -74,11 +85,11 @@
            (define (struct-type-error-msg tag size obj)
              (cond
               ((not (pair? obj))
-               (simple-format #f "~S is not a pair" obj))
+               (format28 "~s is not a pair" obj))
               ((not (eq? tag (car obj)))
-               (simple-format #f "(car ~S) is not ~S" obj tag))
+               (format28 "(car ~s) is not ~s" obj tag))
               ((not (bytevector? (cdr obj)))
-               (simple-format #f "(cdr ~S) is not a bytevector" obj))
+               (format28 "(cdr ~s) is not a bytevector" obj))
               ((not (= (bytevector-length (cdr obj)) size))
                "bytevector length is wrong")
               (else #f)))
@@ -96,132 +107,132 @@
 
            (define (type-tag x type-name)
              (build-type-related-symbol
-              (cute simple-format #f "tag-~A" <>)
+              (cute format28 "tag-~a" <>)
               x type-name))
 
            (define (type-sizeof-var x type-name)
              (build-type-related-symbol
-              (cute simple-format #f "sizeof-~A" <>)
+              (cute format28 "sizeof-~a" <>)
               x type-name))
 
            (define (struct?-func x type-name)
              (build-type-related-symbol
-              (cute simple-format #f "~A?" <>)
+              (cute format28 "~a?" <>)
               x type-name))
 
            (define (throw-failed-check-struct-func x type-name)
              (build-type-related-symbol
-              (cute simple-format #f "throw-failed-check-~A" <>)
+              (cute format28 "throw-failed-check-~a" <>)
               x type-name))
 
            (define (check-struct-func x type-name)
              (build-type-related-symbol
-              (cute simple-format #f "check-~A" <>)
+              (cute format28 "check-~a" <>)
               x type-name))
 
            (define (pointer->struct-func x type-name)
              (build-type-related-symbol
-              (cute simple-format #f "pointer->~A" <>)
+              (cute format28 "pointer->~a" <>)
               x type-name))
 
            (define (struct->pointer-func x type-name)
              (build-type-related-symbol
-              (cute simple-format #f "~A->pointer" <>)
+              (cute format28 "~a->pointer" <>)
               x type-name))
 
            (define (unchecked-struct->pointer-func x type-name)
              (build-type-related-symbol
-              (cute simple-format #f "unchecked-~A->pointer" <>)
+              (cute format28 "unchecked-~a->pointer" <>)
               x type-name))
 
            (define (struct-ref-func x type-name)
              (build-type-related-symbol
-              (cute simple-format #f "~A-ref" <>)
+              (cute format28 "~a-ref" <>)
               x type-name))
 
            (define (unchecked-struct-ref-func x type-name)
              (build-type-related-symbol
-              (cute simple-format #f "unchecked-~A-ref" <>)
+              (cute format28 "unchecked-~a-ref" <>)
               x type-name))
 
            (define (malloc-struct-func x type-name)
              (build-type-related-symbol
-              (cute simple-format #f "malloc-~A" <>)
+              (cute format28 "malloc-~a" <>)
               x type-name))
 
            (define (free-struct-func x type-name)
              (build-type-related-symbol
-              (cute simple-format #f "free-~A" <>)
+              (cute format28 "free-~a" <>)
               x type-name))
 
            (define (unchecked-free-struct-func x type-name)
              (build-type-related-symbol
-              (cute simple-format #f "unchecked-free-~A" <>)
+              (cute format28 "unchecked-free-~a" <>)
               x type-name))
 
            (define (gc-malloc-struct-func x type-name)
              (build-type-related-symbol
-              (cute simple-format #f "gc-malloc-~A" <>)
+              (cute format28 "gc-malloc-~a" <>)
               x type-name))
 
            (define (gc-free-struct-func x type-name)
              (build-type-related-symbol
-              (cute simple-format #f "gc-free-~A" <>)
+              (cute format28 "gc-free-~a" <>)
               x type-name))
 
            (define (unchecked-gc-free-struct-func x type-name)
              (build-type-related-symbol
-              (cute simple-format #f "unchecked-gc-free-~A" <>)
+              (cute format28 "unchecked-gc-free-~a" <>)
               x type-name))
 
            (define (field-ref-func x struct-name field-name)
              (build-type-related-symbol
-              (cute simple-format #f "~A:~A-ref" <> <>)
+              (cute format28 "~a:~a-ref" <> <>)
               x struct-name field-name))
 
            (define (unchecked-field-ref-func x struct-name field-name)
              (build-type-related-symbol
-              (cute simple-format #f "unchecked-~A:~A-ref" <> <>)
+              (cute format28 "unchecked-~a:~a-ref" <> <>)
               x struct-name field-name))
 
            (define (field-dref-func x struct-name field-name)
              (build-type-related-symbol
-              (cute simple-format #f "~A:~A-dref" <> <>)
+              (cute format28 "~a:~a-dref" <> <>)
               x struct-name field-name))
 
            (define (unchecked-field-dref-func x struct-name field-name)
              (build-type-related-symbol
-              (cute simple-format #f "unchecked-~A:~A-dref" <> <>)
+              (cute format28 "unchecked-~a:~a-dref" <> <>)
               x struct-name field-name))
 
            (define (field-set!-func x struct-name field-name)
              (build-type-related-symbol
-              (cute simple-format #f "~A:~A-set!" <> <>)
+              (cute format28 "~a:~a-set!" <> <>)
               x struct-name field-name))
 
            (define (unchecked-field-set!-func x struct-name field-name)
              (build-type-related-symbol
-              (cute simple-format #f "unchecked-~A:~A-set!" <> <>)
+              (cute format28 "unchecked-~a:~a-set!" <> <>)
               x struct-name field-name))
 
            (define (field->pointer-func x struct-name field-name)
              (build-type-related-symbol
-              (cute simple-format #f "~A:~A->pointer" <> <>)
+              (cute format28 "~a:~a->pointer" <> <>)
               x struct-name field-name))
 
            (define (unchecked-field->pointer-func x struct-name field-name)
              (build-type-related-symbol
-              (cute simple-format #f "unchecked-~A:~A->pointer" <> <>)
+              (cute format28 "unchecked-~a:~a->pointer" <> <>)
               x struct-name field-name))
 
            (define (struct->alist-func x struct-name)
              (build-type-related-symbol
-              (cute simple-format #f "~A->alist" <>)
+              (cute format28 "~a->alist" <>)
               x struct-name))
 
            (define (unchecked-struct->alist-func x struct-name)
              (build-type-related-symbol
-              (cute simple-format #f "unchecked-~A->alist" <>)
+              (cute format28 "unchecked-~a->alist" <>)
               x struct-name))
            )
 
@@ -326,8 +337,8 @@
                                 (symbol->string caller)
                                 caller)
                             (if err-msg
-                                "Expected ~A API struct of type `~A', but ~A"
-                                "Expected ~A API struct of type `~A'")
+                                "Expected ~a API struct of type `~a', but ~a"
+                                "Expected ~a API struct of type `~a'")
                             (if err-msg
                                 (list pkg-info:package-name type-name err-msg)
                                 (list pkg-info:package-name type-name))
@@ -339,17 +350,17 @@
                   ((not (pair? obj))
                    (#,(throw-failed-check-struct-func x #'type-name)
                     caller
-                    (simple-format #f "~S is not a pair" obj)
+                    (format28 "~s is not a pair" obj)
                     obj))
                   ((not (eq? '#,tag (car obj)))
                    (#,(throw-failed-check-struct-func x #'type-name)
                     caller
-                    (simple-format #f "(car ~S) is not ~S" obj '#,tag)
+                    (format28 "(car ~s) is not ~s" obj '#,tag)
                     obj))
                   ((not (bytevector? (cdr obj)))
                    (#,(throw-failed-check-struct-func x #'type-name)
                     caller
-                    (simple-format #f "(cdr ~S) is not a bytevector" obj)
+                    (format28 "(cdr ~s) is not a bytevector" obj)
                     obj))
                   ((not (= (bytevector-length (cdr obj)) size))
                    (#,(throw-failed-check-struct-func x #'type-name)
@@ -432,7 +443,7 @@
                   ;; first struct in the array.
                   (unless (<= 1 n)
                     (scm-error 'out-of-range
-                               #,(datum->syntax x (simple-format #f "malloc-~A"
+                               #,(datum->syntax x (format28 "malloc-~a"
                                                                  (syntax->datum #'type-name)))
                                (string-append "the argument must be >= 1, but got "
                                               (number->string n))
@@ -458,7 +469,7 @@
                   ;; first struct in the array.
                   (unless (<= 1 n)
                     (scm-error 'out-of-range
-                               #,(datum->syntax x (simple-format #f "gc-malloc-~A"
+                               #,(datum->syntax x (format28 "gc-malloc-~a"
                                                                  (syntax->datum #'type-name)))
                                (string-append "the argument must be >= 1, but got "
                                               (number->string n))
