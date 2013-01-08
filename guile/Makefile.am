@@ -49,11 +49,11 @@ nobase_nodist_guilemodule_DATA = $(NODIST_SCM_FILES)
 EXTRA_DIST += $(DIST_SCM_IN_FILES)
 MOSTLYCLEANFILES += $(NODIST_SCM_FILES)
 
-DIST_SCM_FILES += sortsmillff/gsl.scm sortsmillff/iconv.scm	\
-	sortsmillff/linalg.scm sortsmillff/polyspline.scm		\
-	sortsmillff/brentroot.scm sortsmillff/sfd-to-sxml.scm	\
-	sortsmillff/views.scm sortsmillff/api-syntax.scm		\
-	sortsmillff/notices.scm
+DIST_SCM_FILES += sortsmillff/alloc.scm sortsmillff/gsl.scm	\
+	sortsmillff/iconv.scm sortsmillff/linalg.scm			\
+	sortsmillff/polyspline.scm sortsmillff/brentroot.scm	\
+	sortsmillff/sfd-to-sxml.scm sortsmillff/views.scm		\
+	sortsmillff/api-syntax.scm sortsmillff/notices.scm
 #sortsmillff/precompute.scm
 if HAVE_GUI
 DIST_SCM_FILES += sortsmillff/usermenu.scm

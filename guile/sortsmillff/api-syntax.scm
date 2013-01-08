@@ -1,6 +1,6 @@
 ;; -*- mode: scheme; coding: utf-8 -*-
 
-;; Copyright (C) 2012 Barry Schwartz
+;; Copyright (C) 2012, 2013 Barry Schwartz
 ;; 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -17,13 +17,13 @@
 
 (define-module (sortsmillff api-syntax))
 
-(use-modules
- (sortsmillff machine)
- (sortsmillff pkg-info)
- (rnrs bytevectors)
- (system foreign)
- (srfi srfi-26)                       ; ‘cut’ and ‘cute’.
- )
+(import (sortsmillff machine)
+        (sortsmillff alloc)
+        (sortsmillff pkg-info)
+        (rnrs)
+        (system foreign)
+        (srfi srfi-26)                  ; ‘cut’ and ‘cute’.
+        )
 
 ;; FIXME: Really we require that floating point numbers be IEEE single
 ;; precision or double precision. More than likely, we will support
@@ -59,47 +59,6 @@
  read-api:--
 
  )
-
-;;-------------------------------------------------------------------------
-;;
-;; FIXME: Put these somewhere re-usable.
-
-(define scm_calloc
-  (pointer->procedure '*
-                      (dynamic-func "scm_calloc" (dynamic-link))
-                      (list size_t)))
-
-(define free
-  (pointer->procedure void
-                      (dynamic-func "free" (dynamic-link))
-                      (list '*)))
-
-(define _GC_malloc_error
-  (pointer->procedure void
-                      (dynamic-func "scm_memory_error" (dynamic-link))
-                      (list '*)))
-
-(define _GC_malloc_error_msg
-  (string->pointer "GC_malloc"))
-
-(define (GC-malloc-error)
-  (_GC_malloc_error _GC_malloc_error_msg))
-
-(define _GC_malloc
-  (pointer->procedure '*
-                      (dynamic-func "GC_malloc" (dynamic-link))
-                      (list size_t)))
-
-(define (GC_malloc size)
-  (let ((ptr (_GC_malloc size)))
-    (when (null-pointer? ptr)
-      (GC-malloc-error))
-    ptr))
-
-(define GC_free
-  (pointer->procedure void
-                      (dynamic-func "GC_free" (dynamic-link))
-                      (list '*)))
 
 ;;-------------------------------------------------------------------------
 
@@ -466,7 +425,7 @@
              (define #,(malloc-struct-func x #'type-name)
                (case-lambda
                  (() (cons '#,tag
-                           (pointer->bytevector (scm_calloc size) size)))
+                           (pointer->bytevector (c:zalloc size) size)))
                  ((n)
                   ;; Allocate a contiguous array of n structs,
                   ;; with the tagged bytevector pointing at the
@@ -479,20 +438,20 @@
                                               (number->string n))
                                (list n) (list n)))
                   (cons '#,tag
-                        (pointer->bytevector (scm_calloc (* n size)) size)))))
+                        (pointer->bytevector (c:zalloc (* n size)) size)))))
 
              (define #,(unchecked-free-struct-func x #'type-name)
                (lambda (obj)
-                 (free (#,(unchecked-struct->pointer-func x #'type-name) obj))))
+                 (c:free (#,(unchecked-struct->pointer-func x #'type-name) obj))))
 
              (define #,(free-struct-func x #'type-name)
                (lambda (obj)
-                 (free (#,(struct->pointer-func x #'type-name) obj))))
+                 (c:free (#,(struct->pointer-func x #'type-name) obj))))
 
              (define #,(gc-malloc-struct-func x #'type-name)
                (case-lambda
                  (() (cons '#,tag
-                           (pointer->bytevector (GC_malloc size) size)))
+                           (pointer->bytevector (c:gc-zalloc size) size)))
                  ((n)
                   ;; Allocate a contiguous array of n structs,
                   ;; with the tagged bytevector pointing at the
@@ -505,15 +464,15 @@
                                               (number->string n))
                                (list n) (list n)))
                   (cons '#,tag
-                        (pointer->bytevector (GC_malloc (* n size)) size)))))
+                        (pointer->bytevector (c:gc-zalloc (* n size)) size)))))
 
              (define #,(unchecked-gc-free-struct-func x #'type-name)
                (lambda (obj)
-                 (GC_free (#,(unchecked-struct->pointer-func x #'type-name) obj))))
+                 (c:gc-free (#,(unchecked-struct->pointer-func x #'type-name) obj))))
 
              (define #,(gc-free-struct-func x #'type-name)
                (lambda (obj)
-                 (GC_free (#,(struct->pointer-func x #'type-name) obj))))
+                 (c:gc-free (#,(struct->pointer-func x #'type-name) obj))))
 
              ))))))
 
