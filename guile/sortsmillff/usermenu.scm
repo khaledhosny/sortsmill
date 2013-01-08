@@ -36,8 +36,8 @@
         (sortsmillff gdraw-api)
         (sortsmillff machine)
         (system foreign)
-        (only (srfi srfi-1) span)
-        (only (srfi srfi-27) random-integer)
+        (only (srfi :1) span)
+        (only (srfi :27) random-integer)
         (ice-9 match)
         )
 
