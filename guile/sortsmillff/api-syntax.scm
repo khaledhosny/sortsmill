@@ -73,168 +73,159 @@
 
 ;;-------------------------------------------------------------------------
 
-(eval-when (compile load eval)
+(define %api-exported:--? (make-fluid #f))
 
-           (define %api-exported:--? (make-fluid #f))
+(define api-exported:--?
+  (case-lambda
+    (() (fluid-ref %api-exported:--?))
+    ((v) (fluid-set! %api-exported:--? (not (not v))))))
 
-           (define api-exported:--?
-             (case-lambda
-               (() (fluid-ref %api-exported:--?))
-               ((v) (fluid-set! %api-exported:--? (not (not v))))))
+(define (struct-type-error-msg tag size obj)
+  (cond
+   ((not (pair? obj))
+    (format28 "~s is not a pair" obj))
+   ((not (eq? tag (car obj)))
+    (format28 "(car ~s) is not ~s" obj tag))
+   ((not (bytevector? (cdr obj)))
+    (format28 "(cdr ~s) is not a bytevector" obj))
+   ((not (= (bytevector-length (cdr obj)) size))
+    "bytevector length is wrong")
+   (else #f)))
 
-           (define (struct-type-error-msg tag size obj)
-             (cond
-              ((not (pair? obj))
-               (format28 "~s is not a pair" obj))
-              ((not (eq? tag (car obj)))
-               (format28 "(car ~s) is not ~s" obj tag))
-              ((not (bytevector? (cdr obj)))
-               (format28 "(cdr ~s) is not a bytevector" obj))
-              ((not (= (bytevector-length (cdr obj)) size))
-               "bytevector length is wrong")
-              (else #f)))
+(define (build-symbol x constructor . objects)
+  (datum->syntax
+   x (string->symbol
+      (apply constructor (map syntax->datum objects)))))
 
-           (define build-type-related-symbol
-             (case-lambda
-               ((constructor x type-name)
-                (datum->syntax x
-                               (string->symbol (constructor (syntax->datum type-name)))))
-               ((constructor x struct-name field-name)
-                (datum->syntax x
-                               (string->symbol (constructor
-                                                (syntax->datum struct-name)
-                                                (syntax->datum field-name)))))))
+(define (type-tag x type-name)
+  (build-symbol x
+                (cute format28 "tag-~a" <>)
+                type-name))
 
-           (define (type-tag x type-name)
-             (build-type-related-symbol
-              (cute format28 "tag-~a" <>)
-              x type-name))
+(define (type-sizeof-var x type-name)
+  (build-symbol x
+                (cute format28 "sizeof-~a" <>)
+                type-name))
 
-           (define (type-sizeof-var x type-name)
-             (build-type-related-symbol
-              (cute format28 "sizeof-~a" <>)
-              x type-name))
+(define (struct?-func x type-name)
+  (build-symbol x
+                (cute format28 "~a?" <>)
+                type-name))
 
-           (define (struct?-func x type-name)
-             (build-type-related-symbol
-              (cute format28 "~a?" <>)
-              x type-name))
+(define (throw-failed-check-struct-func x type-name)
+  (build-symbol x
+                (cute format28 "throw-failed-check-~a" <>)
+                type-name))
 
-           (define (throw-failed-check-struct-func x type-name)
-             (build-type-related-symbol
-              (cute format28 "throw-failed-check-~a" <>)
-              x type-name))
+(define (check-struct-func x type-name)
+  (build-symbol x
+                (cute format28 "check-~a" <>)
+                type-name))
 
-           (define (check-struct-func x type-name)
-             (build-type-related-symbol
-              (cute format28 "check-~a" <>)
-              x type-name))
+(define (pointer->struct-func x type-name)
+  (build-symbol x
+                (cute format28 "pointer->~a" <>)
+                type-name))
 
-           (define (pointer->struct-func x type-name)
-             (build-type-related-symbol
-              (cute format28 "pointer->~a" <>)
-              x type-name))
+(define (struct->pointer-func x type-name)
+  (build-symbol x
+                (cute format28 "~a->pointer" <>)
+                type-name))
 
-           (define (struct->pointer-func x type-name)
-             (build-type-related-symbol
-              (cute format28 "~a->pointer" <>)
-              x type-name))
+(define (unchecked-struct->pointer-func x type-name)
+  (build-symbol x
+                (cute format28 "unchecked-~a->pointer" <>)
+                type-name))
 
-           (define (unchecked-struct->pointer-func x type-name)
-             (build-type-related-symbol
-              (cute format28 "unchecked-~a->pointer" <>)
-              x type-name))
+(define (struct-ref-func x type-name)
+  (build-symbol x
+                (cute format28 "~a-ref" <>)
+                type-name))
 
-           (define (struct-ref-func x type-name)
-             (build-type-related-symbol
-              (cute format28 "~a-ref" <>)
-              x type-name))
+(define (unchecked-struct-ref-func x type-name)
+  (build-symbol x
+                (cute format28 "unchecked-~a-ref" <>)
+                type-name))
 
-           (define (unchecked-struct-ref-func x type-name)
-             (build-type-related-symbol
-              (cute format28 "unchecked-~a-ref" <>)
-              x type-name))
+(define (malloc-struct-func x type-name)
+  (build-symbol x
+                (cute format28 "malloc-~a" <>)
+                type-name))
 
-           (define (malloc-struct-func x type-name)
-             (build-type-related-symbol
-              (cute format28 "malloc-~a" <>)
-              x type-name))
+(define (free-struct-func x type-name)
+  (build-symbol x
+                (cute format28 "free-~a" <>)
+                type-name))
 
-           (define (free-struct-func x type-name)
-             (build-type-related-symbol
-              (cute format28 "free-~a" <>)
-              x type-name))
+(define (unchecked-free-struct-func x type-name)
+  (build-symbol x
+                (cute format28 "unchecked-free-~a" <>)
+                type-name))
 
-           (define (unchecked-free-struct-func x type-name)
-             (build-type-related-symbol
-              (cute format28 "unchecked-free-~a" <>)
-              x type-name))
+(define (gc-malloc-struct-func x type-name)
+  (build-symbol x
+                (cute format28 "gc-malloc-~a" <>)
+                type-name))
 
-           (define (gc-malloc-struct-func x type-name)
-             (build-type-related-symbol
-              (cute format28 "gc-malloc-~a" <>)
-              x type-name))
+(define (gc-free-struct-func x type-name)
+  (build-symbol x
+                (cute format28 "gc-free-~a" <>)
+                type-name))
 
-           (define (gc-free-struct-func x type-name)
-             (build-type-related-symbol
-              (cute format28 "gc-free-~a" <>)
-              x type-name))
+(define (unchecked-gc-free-struct-func x type-name)
+  (build-symbol x
+                (cute format28 "unchecked-gc-free-~a" <>)
+                type-name))
 
-           (define (unchecked-gc-free-struct-func x type-name)
-             (build-type-related-symbol
-              (cute format28 "unchecked-gc-free-~a" <>)
-              x type-name))
+(define (field-ref-func x struct-name field-name)
+  (build-symbol x
+                (cute format28 "~a:~a-ref" <> <>)
+                struct-name field-name))
 
-           (define (field-ref-func x struct-name field-name)
-             (build-type-related-symbol
-              (cute format28 "~a:~a-ref" <> <>)
-              x struct-name field-name))
+(define (unchecked-field-ref-func x struct-name field-name)
+  (build-symbol x
+                (cute format28 "unchecked-~a:~a-ref" <> <>)
+                struct-name field-name))
 
-           (define (unchecked-field-ref-func x struct-name field-name)
-             (build-type-related-symbol
-              (cute format28 "unchecked-~a:~a-ref" <> <>)
-              x struct-name field-name))
+(define (field-dref-func x struct-name field-name)
+  (build-symbol x
+                (cute format28 "~a:~a-dref" <> <>)
+                struct-name field-name))
 
-           (define (field-dref-func x struct-name field-name)
-             (build-type-related-symbol
-              (cute format28 "~a:~a-dref" <> <>)
-              x struct-name field-name))
+(define (unchecked-field-dref-func x struct-name field-name)
+  (build-symbol x
+                (cute format28 "unchecked-~a:~a-dref" <> <>)
+                struct-name field-name))
 
-           (define (unchecked-field-dref-func x struct-name field-name)
-             (build-type-related-symbol
-              (cute format28 "unchecked-~a:~a-dref" <> <>)
-              x struct-name field-name))
+(define (field-set!-func x struct-name field-name)
+  (build-symbol x
+                (cute format28 "~a:~a-set!" <> <>)
+                struct-name field-name))
 
-           (define (field-set!-func x struct-name field-name)
-             (build-type-related-symbol
-              (cute format28 "~a:~a-set!" <> <>)
-              x struct-name field-name))
+(define (unchecked-field-set!-func x struct-name field-name)
+  (build-symbol x
+                (cute format28 "unchecked-~a:~a-set!" <> <>)
+                struct-name field-name))
 
-           (define (unchecked-field-set!-func x struct-name field-name)
-             (build-type-related-symbol
-              (cute format28 "unchecked-~a:~a-set!" <> <>)
-              x struct-name field-name))
+(define (field->pointer-func x struct-name field-name)
+  (build-symbol x
+                (cute format28 "~a:~a->pointer" <> <>)
+                struct-name field-name))
 
-           (define (field->pointer-func x struct-name field-name)
-             (build-type-related-symbol
-              (cute format28 "~a:~a->pointer" <> <>)
-              x struct-name field-name))
+(define (unchecked-field->pointer-func x struct-name field-name)
+  (build-symbol x
+                (cute format28 "unchecked-~a:~a->pointer" <> <>)
+                struct-name field-name))
 
-           (define (unchecked-field->pointer-func x struct-name field-name)
-             (build-type-related-symbol
-              (cute format28 "unchecked-~a:~a->pointer" <> <>)
-              x struct-name field-name))
+(define (struct->alist-func x struct-name)
+  (build-symbol x
+                (cute format28 "~a->alist" <>)
+                struct-name))
 
-           (define (struct->alist-func x struct-name)
-             (build-type-related-symbol
-              (cute format28 "~a->alist" <>)
-              x struct-name))
-
-           (define (unchecked-struct->alist-func x struct-name)
-             (build-type-related-symbol
-              (cute format28 "unchecked-~a->alist" <>)
-              x struct-name))
-           )
+(define (unchecked-struct->alist-func x struct-name)
+  (build-symbol x
+                (cute format28 "unchecked-~a->alist" <>)
+                struct-name))
 
 (define-syntax with-api-exported:--
   (syntax-rules ()
