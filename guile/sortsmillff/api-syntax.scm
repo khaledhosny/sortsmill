@@ -22,21 +22,13 @@
         (sortsmillff pkg-info)
         (rnrs)
         (system foreign)
-        (srfi srfi-26)                  ; ‘cut’ and ‘cute’.
+        (srfi :26)                      ; ‘cut’ and ‘cute’.
+        (ice-9 match)
         )
 
 (define-syntax eval-early
   (syntax-rules ()
     ((_ e e* ...) (eval-when (compile load eval) e e* ...))))
-
-;; Define ‘format28’ as a format function resembling that of SRFI-28;
-;; we will use it instead of the native format functions, to help make
-;; this module more portable.
-;;
-;; See http://srfi.schemers.org/srfi-28/srfi-28.html
-;;
-(define (format28 format-string . objects)
-  (apply (cut simple-format #f format-string <...>) objects))
 
 ;; FIXME: Really we require that floating point numbers be IEEE single
 ;; precision or double precision. More than likely, we will support
@@ -76,161 +68,173 @@
 
 ;;-------------------------------------------------------------------------
 
-(define %api-exported:--? (make-fluid #f))
+(eval-early
 
-(define api-exported:--?
-  (case-lambda
-    (() (fluid-ref %api-exported:--?))
-    ((v) (fluid-set! %api-exported:--? (not (not v))))))
+ ;; Define ‘format28’ as a format function resembling that of SRFI-28;
+ ;; we will use it instead of the native format functions, to help make
+ ;; this module more portable.
+ ;;
+ ;; See http://srfi.schemers.org/srfi-28/srfi-28.html
+ ;;
+ (define (format28 format-string . objects)
+   (apply (cut simple-format #f format-string <...>) objects))
 
-(define (struct-type-error-msg tag size obj)
-  (cond
-   ((not (pair? obj))
-    (format28 "~s is not a pair" obj))
-   ((not (eq? tag (car obj)))
-    (format28 "(car ~s) is not ~s" obj tag))
-   ((not (bytevector? (cdr obj)))
-    (format28 "(cdr ~s) is not a bytevector" obj))
-   ((not (= (bytevector-length (cdr obj)) size))
-    "bytevector length is wrong")
-   (else #f)))
+ (define %api-exported:--? (make-fluid #f))
 
-(define (syntax-string->syntax-symbol x s)
-  (datum->syntax x (string->symbol (syntax->datum s))))
+ (define api-exported:--?
+   (case-lambda
+     (() (fluid-ref %api-exported:--?))
+     ((v) (fluid-set! %api-exported:--? (not (not v))))))
 
-(define (build-symbol x constructor . objects)
-  (syntax-string->syntax-symbol
-   x (apply constructor (map syntax->datum objects))))
+ (define (struct-type-error-msg tag size obj)
+   (cond
+    ((not (pair? obj))
+     (format28 "~s is not a pair" obj))
+    ((not (eq? tag (car obj)))
+     (format28 "(car ~s) is not ~s" obj tag))
+    ((not (bytevector? (cdr obj)))
+     (format28 "(cdr ~s) is not a bytevector" obj))
+    ((not (= (bytevector-length (cdr obj)) size))
+     "bytevector length is wrong")
+    (else #f)))
 
-(define (type-tag x type-name)
-  (build-symbol x
-                (cute format28 "tag-~a" <>)
-                type-name))
+ (define (syntax-string->syntax-symbol x s)
+   (datum->syntax x (string->symbol (syntax->datum s))))
 
-(define (type-sizeof-var x type-name)
-  (build-symbol x
-                (cute format28 "sizeof-~a" <>)
-                type-name))
+ (define (build-symbol x constructor . objects)
+   (syntax-string->syntax-symbol
+    x (apply constructor (map syntax->datum objects))))
 
-(define (struct?-func x type-name)
-  (build-symbol x
-                (cute format28 "~a?" <>)
-                type-name))
+ (define (type-tag x type-name)
+   (build-symbol x
+                 (cute format28 "tag-~a" <>)
+                 type-name))
 
-(define (throw-failed-check-struct-func x type-name)
-  (build-symbol x
-                (cute format28 "throw-failed-check-~a" <>)
-                type-name))
+ (define (type-sizeof-var x type-name)
+   (build-symbol x
+                 (cute format28 "sizeof-~a" <>)
+                 type-name))
 
-(define (check-struct-func x type-name)
-  (build-symbol x
-                (cute format28 "check-~a" <>)
-                type-name))
+ (define (struct?-func x type-name)
+   (build-symbol x
+                 (cute format28 "~a?" <>)
+                 type-name))
 
-(define (pointer->struct-func x type-name)
-  (build-symbol x
-                (cute format28 "pointer->~a" <>)
-                type-name))
+ (define (throw-failed-check-struct-func x type-name)
+   (build-symbol x
+                 (cute format28 "throw-failed-check-~a" <>)
+                 type-name))
 
-(define (struct->pointer-func x type-name)
-  (build-symbol x
-                (cute format28 "~a->pointer" <>)
-                type-name))
+ (define (check-struct-func x type-name)
+   (build-symbol x
+                 (cute format28 "check-~a" <>)
+                 type-name))
 
-(define (unchecked-struct->pointer-func x type-name)
-  (build-symbol x
-                (cute format28 "unchecked-~a->pointer" <>)
-                type-name))
+ (define (pointer->struct-func x type-name)
+   (build-symbol x
+                 (cute format28 "pointer->~a" <>)
+                 type-name))
 
-(define (struct-ref-func x type-name)
-  (build-symbol x
-                (cute format28 "~a-ref" <>)
-                type-name))
+ (define (struct->pointer-func x type-name)
+   (build-symbol x
+                 (cute format28 "~a->pointer" <>)
+                 type-name))
 
-(define (unchecked-struct-ref-func x type-name)
-  (build-symbol x
-                (cute format28 "unchecked-~a-ref" <>)
-                type-name))
+ (define (unchecked-struct->pointer-func x type-name)
+   (build-symbol x
+                 (cute format28 "unchecked-~a->pointer" <>)
+                 type-name))
 
-(define (malloc-struct-func x type-name)
-  (build-symbol x
-                (cute format28 "malloc-~a" <>)
-                type-name))
+ (define (struct-ref-func x type-name)
+   (build-symbol x
+                 (cute format28 "~a-ref" <>)
+                 type-name))
 
-(define (free-struct-func x type-name)
-  (build-symbol x
-                (cute format28 "free-~a" <>)
-                type-name))
+ (define (unchecked-struct-ref-func x type-name)
+   (build-symbol x
+                 (cute format28 "unchecked-~a-ref" <>)
+                 type-name))
 
-(define (unchecked-free-struct-func x type-name)
-  (build-symbol x
-                (cute format28 "unchecked-free-~a" <>)
-                type-name))
+ (define (malloc-struct-func x type-name)
+   (build-symbol x
+                 (cute format28 "malloc-~a" <>)
+                 type-name))
 
-(define (gc-malloc-struct-func x type-name)
-  (build-symbol x
-                (cute format28 "gc-malloc-~a" <>)
-                type-name))
+ (define (free-struct-func x type-name)
+   (build-symbol x
+                 (cute format28 "free-~a" <>)
+                 type-name))
 
-(define (gc-free-struct-func x type-name)
-  (build-symbol x
-                (cute format28 "gc-free-~a" <>)
-                type-name))
+ (define (unchecked-free-struct-func x type-name)
+   (build-symbol x
+                 (cute format28 "unchecked-free-~a" <>)
+                 type-name))
 
-(define (unchecked-gc-free-struct-func x type-name)
-  (build-symbol x
-                (cute format28 "unchecked-gc-free-~a" <>)
-                type-name))
+ (define (gc-malloc-struct-func x type-name)
+   (build-symbol x
+                 (cute format28 "gc-malloc-~a" <>)
+                 type-name))
 
-(define (field-ref-func x struct-name field-name)
-  (build-symbol x
-                (cute format28 "~a:~a-ref" <> <>)
-                struct-name field-name))
+ (define (gc-free-struct-func x type-name)
+   (build-symbol x
+                 (cute format28 "gc-free-~a" <>)
+                 type-name))
 
-(define (unchecked-field-ref-func x struct-name field-name)
-  (build-symbol x
-                (cute format28 "unchecked-~a:~a-ref" <> <>)
-                struct-name field-name))
+ (define (unchecked-gc-free-struct-func x type-name)
+   (build-symbol x
+                 (cute format28 "unchecked-gc-free-~a" <>)
+                 type-name))
 
-(define (field-dref-func x struct-name field-name)
-  (build-symbol x
-                (cute format28 "~a:~a-dref" <> <>)
-                struct-name field-name))
+ (define (field-ref-func x struct-name field-name)
+   (build-symbol x
+                 (cute format28 "~a:~a-ref" <> <>)
+                 struct-name field-name))
 
-(define (unchecked-field-dref-func x struct-name field-name)
-  (build-symbol x
-                (cute format28 "unchecked-~a:~a-dref" <> <>)
-                struct-name field-name))
+ (define (unchecked-field-ref-func x struct-name field-name)
+   (build-symbol x
+                 (cute format28 "unchecked-~a:~a-ref" <> <>)
+                 struct-name field-name))
 
-(define (field-set!-func x struct-name field-name)
-  (build-symbol x
-                (cute format28 "~a:~a-set!" <> <>)
-                struct-name field-name))
+ (define (field-dref-func x struct-name field-name)
+   (build-symbol x
+                 (cute format28 "~a:~a-dref" <> <>)
+                 struct-name field-name))
 
-(define (unchecked-field-set!-func x struct-name field-name)
-  (build-symbol x
-                (cute format28 "unchecked-~a:~a-set!" <> <>)
-                struct-name field-name))
+ (define (unchecked-field-dref-func x struct-name field-name)
+   (build-symbol x
+                 (cute format28 "unchecked-~a:~a-dref" <> <>)
+                 struct-name field-name))
 
-(define (field->pointer-func x struct-name field-name)
-  (build-symbol x
-                (cute format28 "~a:~a->pointer" <> <>)
-                struct-name field-name))
+ (define (field-set!-func x struct-name field-name)
+   (build-symbol x
+                 (cute format28 "~a:~a-set!" <> <>)
+                 struct-name field-name))
 
-(define (unchecked-field->pointer-func x struct-name field-name)
-  (build-symbol x
-                (cute format28 "unchecked-~a:~a->pointer" <> <>)
-                struct-name field-name))
+ (define (unchecked-field-set!-func x struct-name field-name)
+   (build-symbol x
+                 (cute format28 "unchecked-~a:~a-set!" <> <>)
+                 struct-name field-name))
 
-(define (struct->alist-func x struct-name)
-  (build-symbol x
-                (cute format28 "~a->alist" <>)
-                struct-name))
+ (define (field->pointer-func x struct-name field-name)
+   (build-symbol x
+                 (cute format28 "~a:~a->pointer" <> <>)
+                 struct-name field-name))
 
-(define (unchecked-struct->alist-func x struct-name)
-  (build-symbol x
-                (cute format28 "unchecked-~a->alist" <>)
-                struct-name))
+ (define (unchecked-field->pointer-func x struct-name field-name)
+   (build-symbol x
+                 (cute format28 "unchecked-~a:~a->pointer" <> <>)
+                 struct-name field-name))
+
+ (define (struct->alist-func x struct-name)
+   (build-symbol x
+                 (cute format28 "~a->alist" <>)
+                 struct-name))
+
+ (define (unchecked-struct->alist-func x struct-name)
+   (build-symbol x
+                 (cute format28 "unchecked-~a->alist" <>)
+                 struct-name))
+ )
 
 (define-syntax with-api-exported:--
   (syntax-rules ()
@@ -824,5 +828,114 @@
          ((eof-object? instruction))
        (eval (list 'api:-- instruction)
              (interaction-environment))))))
+
+;;-------------------------------------------------------------------------
+;;-------------------------------------------------------------------------
+;;-------------------------------------------------------------------------
+;;-------------------------------------------------------------------------
+;;;
+;;; A more easily ported (one hopes) implementation, UNDER DEVELOPMENT.
+;;;
+;;; The idea here is to keep exports separate from defines, to support
+;;; module systems that do not allow a free mixture of exports and
+;;; defines, and to avoid the Guile fluids in the earlier
+;;; implementation.
+;;;
+
+(define-syntax define-public-api
+  (lambda (x)
+    (syntax-case x ()
+      ((_ . forms)
+       (let-values (((exports defines)
+                     (expand-multiple-forms x (syntax->datum #'forms))))
+         #`(begin (export #,@exports) #,@defines))))))
+
+(define-syntax define-private-api
+  (lambda (x)
+    (syntax-case x ()
+      ((_ . forms)
+       (let-values (((exports defines)
+                     (expand-multiple-forms x (syntax->datum #'forms))))
+         #`(begin #,@defines))))))
+
+(eval-early
+ (define (expand-multiple-forms x forms)
+   (let* ((expansions (fold-left
+                       (lambda (prior expans)
+                         (cons (append (car prior) (car expans))
+                               (append (cdr prior) (cdr expans))))
+                       '(() . ())
+                       (map (cut expand-form x <>) forms)))
+          (exports (car expansions))
+          (defines (cdr expansions)))
+     (values exports defines)))
+
+ (define (expand-form x form)
+  (match form
+      (('sizeof type-name size) (expand-<sizeof> x type-name size))
+      (('struct type-name size) (expand-<struct> x type-name size))
+      ))
+
+ (define (expand-<sizeof> x type-name size)
+   (let ((exports (list (type-sizeof-var x type-name)))
+         (defines (list #`(define #,(type-sizeof-var x type-name) #,size))))
+     (cons exports defines)))
+
+ (define (expand-<struct> x type-name size)
+   (let ((tag (type-tag x type-name)))
+     (cons
+      (list
+       (struct?-func x type-name)          ; Example: SplineChar?
+       (check-struct-func x type-name)     ; Example: check-SplineChar
+       (pointer->struct-func x type-name)  ; Example: pointer->SplineChar
+       (unchecked-struct->pointer-func x type-name) ; Example: unchecked-SplineChar->pointer
+       (struct->pointer-func x type-name)  ; Example: SplineChar->pointer
+       (unchecked-struct-ref-func x type-name) ; Example: unchecked-SplineChar-ref
+       (struct-ref-func x type-name)       ; Example: SplineChar-ref
+       (malloc-struct-func x type-name)    ; Example: malloc-SplineChar
+       (unchecked-free-struct-func x type-name) ; Example: unchecked-free-SplineChar
+       (free-struct-func x type-name)      ; Example: free-SplineChar
+       (gc-malloc-struct-func x type-name) ; Example: gc-malloc-SplineChar
+       (unchecked-gc-free-struct-func x type-name) ; Example: unchecked-gc-free-SplineChar
+       (gc-free-struct-func x type-name)   ; Example: gc-free-SplineChar
+       )
+      (list
+       #`(define #,(struct?-func x type-name)
+           (lambda (obj)
+             (cond
+              ((not (pair? obj)) #f)
+              ((not (eq? '#,tag (car obj))) #f)
+              ((not (bytevector? (cdr obj))) #f)
+              ((not (= (bytevector-length (cdr obj)) #,size)) #f)
+              (else #t))))
+
+       #`(define #,(throw-failed-check-struct-func x type-name)
+           (lambda (caller err-msg obj)
+             (scm-error  ; FIXME: Use a more portable error mechanism.
+              'wrong-type-arg
+              (if (symbol? caller)
+                  (symbol->string caller)
+                  caller)
+              (if err-msg
+                  "Expected ~a API struct of type `~a', but ~a"
+                  "Expected ~a API struct of type `~a'")
+              (if err-msg
+                  (list pkg-info:package-name #,type-name err-msg)
+                  (list pkg-info:package-name #,type-name))
+              (list obj))))
+       ))))
+)
+
+;;-------------------------------------------------------------------------
+
+#!
+(define-public-api
+  (sizeof "barf" 1234)
+  (struct "barf" 1234)
+  )
+
+(write sizeof-barf)
+(write barf?)
+!#
 
 ;;-------------------------------------------------------------------------
