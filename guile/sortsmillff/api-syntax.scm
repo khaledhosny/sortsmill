@@ -917,6 +917,29 @@
               (expand-<struct>:<field>-dref '* field-subtype struct-name field-name
                                             offset size)
               ))
+            (('field ((and (or 'struct 'array) field-type)
+                      (? symbol? field-subtype))
+                     (? string? struct-name) (? string? field-name)
+                     (? integer? offset) (? integer? size))
+             (combine-expansions
+              (expand-<struct>:<field>->pointer struct-name field-name offset size)
+              (expand-<struct>:<field>-ref field-type field-subtype struct-name
+                                           field-name offset size)
+              ))
+
+            (('field (and (or 'struct 'array) field-type)
+                     (? string? struct-name) (? string? field-name)
+                     (? integer? offset) (? integer? size))
+             (expand-<struct>:<field>->pointer struct-name field-name offset size))
+
+            (('field (? symbol? field-type)
+                     (? string? struct-name) (? string? field-name)
+                     (? integer? offset) (? integer? size))
+             (combine-expansions
+              (expand-<struct>:<field>->pointer struct-name field-name offset size)
+              (expand-<struct>:<field>-ref '* struct-name field-name offset size)
+              (expand-<struct>:<field>-set! '* struct-name field-name offset size)
+              ))
             )))
 
  (define (expand-<sizeof> type-name size)
@@ -1002,8 +1025,8 @@
            (case-lambda
              ((obj) (bytevector->pointer (cdr obj)))
              ((obj i)
-              ;; Return a pointer to the ith structure
-              ;; relative to this one in an array.
+              ;; Return a pointer to the ith structure relative to
+              ;; this one in an array.
               (let ((p (bytevector->pointer (cdr obj))))
                 (make-pointer (+ (pointer-address p) (* i #,size)))))))
 
@@ -1013,8 +1036,8 @@
               (#,(check-<type> (current-form) type-name) '#,(<type>->pointer (current-form) type-name) obj)
               (bytevector->pointer (cdr obj)))
              ((obj i)
-              ;; Return a pointer to the ith structure
-              ;; relative to this one in an array.
+              ;; Return a pointer to the ith structure relative to
+              ;; this one in an array.
               (#,(check-<type> (current-form) type-name) '#,(<type>->pointer (current-form) type-name) obj)
               (#,(unchecked-<type>->pointer (current-form) type-name)
                obj i))))
@@ -1022,15 +1045,14 @@
        #`(define #,(unchecked-<type>-ref (current-form) type-name)
            (case-lambda
              ((obj)
-              ;; This merely copies the tagged
-              ;; bytevector. It exists mainly for
-              ;; consistency with other uses of ‘-ref’ in
+              ;; This merely copies the tagged bytevector. It exists
+              ;; mainly for consistency with other uses of ‘-ref’ in
               ;; this module.
               (#,(pointer-><type> (current-form) type-name)
                (bytevector->pointer (cdr obj))))
              ((obj i)
-              ;; This gives the ith structure relative to
-              ;; this one in an array.
+              ;; This gives the ith structure relative to this one in
+              ;; an array.
               (let ((p (bytevector->pointer (cdr obj))))
                 (#,(pointer-><type> (current-form) type-name)
                  (make-pointer (+ (pointer-address p) (* i #,size))))))))
@@ -1038,15 +1060,14 @@
        #`(define #,(<type>-ref (current-form) type-name)
            (case-lambda
              ((obj)
-              ;; This merely copies the tagged
-              ;; bytevector. It exists mainly for
-              ;; consistency with other uses of ‘-ref’ in
+              ;; This merely copies the tagged bytevector. It exists
+              ;; mainly for consistency with other uses of ‘-ref’ in
               ;; this module.
               (#,(check-<type> (current-form) type-name) '#,(<type>->pointer (current-form) type-name) obj)
               (#,(unchecked-<type>-ref (current-form) type-name) obj))
              ((obj i )
-              ;; This gives the ith structure relative to
-              ;; this one in an array.
+              ;; This gives the ith structure relative to this one in
+              ;; an array.
               (#,(check-<type> (current-form) type-name) '#,(<type>->pointer (current-form) type-name) obj)
               (#,(unchecked-<type>-ref (current-form) type-name) obj i))))
 
@@ -1055,9 +1076,9 @@
              (() (cons '#,tag
                        (pointer->bytevector (c:zalloc #,size) #,size)))
              ((n)
-              ;; Allocate a contiguous array of n structs,
-              ;; with the tagged bytevector pointing at the
-              ;; first struct in the array.
+              ;; Allocate a contiguous array of n structs, with the
+              ;; tagged bytevector pointing at the first struct in the
+              ;; array.
               (unless (<= 1 n)
                 (assertion-violation #,(gc-malloc-<type> (current-form) type-name)
                                      "the argument must be >= 1" n))
@@ -1120,31 +1141,76 @@
               (#,bv-offset->pointer (cdr obj) (index->offset #,offset i #,size)))))
        ))))
 
- (define (expand-<struct>:<field>-ref field-type struct-name field-name offset size)
-   (let ((ref-func (bv-offset-ref field-type size))
-         (check (check-<type> (current-form) struct-name))
-         (unchecked-func (unchecked-<type>:<field>-ref (current-form) struct-name field-name))
-         (checked-func (<type>:<field>-ref (current-form) struct-name field-name)))
-     (list
-      (list unchecked-func   ; Example: unchecked-SplineChar:width-ref
-            checked-func     ; Example: SplineChar:width-ref
-            )
-      (list
-       #`(define #,unchecked-func
-           (case-lambda
-             ((obj) (#,ref-func (cdr obj) #,offset))
-             ((obj i) (#,ref-func (cdr obj) (index->offset #,offset i #,size)))))
+ (define expand-<struct>:<field>-ref
+   (case-lambda
+     ((field-type struct-name field-name offset size)
+      ;;
+      ;; Functions to get the value of a primitive type.
+      ;;
+      (let ((ref-func (bv-offset-ref field-type size))
+            (check (check-<type> (current-form) struct-name))
+            (unchecked-func (unchecked-<type>:<field>-ref (current-form) struct-name field-name))
+            (checked-func (<type>:<field>-ref (current-form) struct-name field-name)))
+        (list
+         (list unchecked-func   ; Example: unchecked-SplineChar:width-ref
+               checked-func     ; Example: SplineChar:width-ref
+               )
+         (list
+          #`(define #,unchecked-func
+              (case-lambda
+                ((obj) (#,ref-func (cdr obj) #,offset))
+;;; FIXME: This will not work, because TIG computes ‘size’ as the size
+;;; of the entire array. TIG cannot infer the size of a single array
+;;; element.
+;;;;;                ((obj i) (#,ref-func (cdr obj) (index->offset #,offset i #,size)))
+                ))
 
-       #`(define #,checked-func
-           (case-lambda
-             ((obj)
-              (#,check #,checked-func obj)
-              (#,ref-func (cdr obj) #,offset))
-             ((obj i)
-              (#,check #,checked-func obj)
-              ;; Get the contents of an array element.
-              (#,ref-func (cdr obj) (index->offset #,offset i #,size)))))
-       ))))
+          #`(define #,checked-func
+              (case-lambda
+                ((obj)
+                 (#,check #,checked-func obj)
+                 (#,ref-func (cdr obj) #,offset))
+;;; FIXME: This will not work, because TIG computes ‘size’ as the size
+;;; of the entire array. TIG cannot infer the size of a single array
+;;; element.
+;;;;;                ((obj i)
+;;;;;                 (#,check #,checked-func obj)
+;;;;;                 ;; Get the contents of an array element.
+;;;;;                 (#,ref-func (cdr obj) (index->offset #,offset i #,size)))
+                ))
+          ))))
+
+     ((field-type field-subtype struct-name field-name offset size)
+      ;;
+      ;; Functions to get the ‘value’ of a sub-structure.
+      ;;
+      (let ((to-subtype (pointer-><type> (current-form) field-subtype))
+            (subtype-size (type-sizeof-var (current-form) field-subtype))
+            (check (check-<type> (current-form) struct-name))
+            (unchecked-func (unchecked-<type>:<field>-ref (current-form) struct-name field-name))
+            (checked-func (<type>:<field>-ref (current-form) struct-name field-name)))
+        (list
+         (list unchecked-func   ; Example: unchecked-SplineChar:width-ref
+               checked-func     ; Example: SplineChar:width-ref
+               )
+         (list
+          #`(define #,unchecked-func
+              (case-lambda
+                ((obj) (#,to-subtype (#,bv-offset->pointer (cdr obj) #,offset)))
+                ((obj i) (#,to-subtype (index->pointer
+                                        (#,bv-offset->pointer (cdr obj) #,offset)
+                                        i #,subtype-size)))))
+
+          #`(define #,checked-func
+              (case-lambda
+                ((obj)
+                 (#,check #,checked-func obj)
+                 (#,unchecked-func obj))
+                ((obj i)
+                 (#,check #,checked-func obj)
+                 (#,unchecked-func obj i))))
+          ))))
+     ))
 
  (define (expand-<struct>:<field>-set! field-type struct-name field-name offset size)
    (let ((set!-func (bv-offset-set! field-type size))
@@ -1273,11 +1339,14 @@
 
 #!
 (define-public-api
+  (sizeof "goop" 20)
+  (struct "goop" 20)
   (sizeof "barf" 1234)
   (struct "barf" 1234)
   (field (* int) "barf" "fld1" 20 4)
   (field (* int) "barf" "fld2" 24 1)
   (field (* barf) "barf" "fld3" 0 8)
+  (field (struct goop) "barf" "fld4" 8 20)
   )
 
 (write sizeof-barf (current-error-port))
@@ -1292,6 +1361,7 @@
 (write barf:fld2-ref (current-error-port))
 (write barf:fld2-set! (current-error-port))
 (write barf:fld3-dref (current-error-port))
+(write barf:fld4-ref (current-error-port))
 !#
 
 ;;-------------------------------------------------------------------------
