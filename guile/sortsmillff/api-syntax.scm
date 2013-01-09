@@ -65,16 +65,6 @@
      (number->string double-size))))))
 
 ;;-------------------------------------------------------------------------
-;;;
-;;; Note: In the following, the binding ‘x’ generally represents the
-;;; syntax context. But we want to get rid of most of those
-;;; instances. See the noisy ‘FIXME’ below.
-;;;
-
-;;; FIXME FIXME FIXME:
-;;; FIXME FIXME FIXME: Use (current-form) and (current-subform) more.
-;;; FIXME FIXME FIXME:
-
 ;;; FIXME FIXME FIXME:
 ;;; FIXME FIXME FIXME: Have API instructions be made with symbols instead of strings.
 ;;; FIXME FIXME FIXME:
@@ -107,6 +97,13 @@
  (define current-subform (make-parameter #f)) ; #f or a syntax object.
 
  (define (combine-expansions-list expansions)
+   ;;
+   ;; The result will have the form:
+   ;;
+   ;;   (list (list export1 export2 ...) (list define1 define2 ...))
+   ;;
+   ;; The input is a list of objects of the same form.
+   ;;
    (fold-left (lambda (prior expans)
                 (list (append (car prior) (car expans))
                       (append (cadr prior) (cadr expans))))
@@ -116,7 +113,7 @@
    (combine-expansions-list expansions))
 
  (define (expand-multiple-forms forms)
-   (let ((expansion             ; (list (list exports) (list defines))
+   (let ((expansion
           (combine-expansions-list
            (map (cut expand-form <>) forms))))
      (values (car expansion) (cadr expansion))))
@@ -177,7 +174,7 @@
             )))
 
  (define (expand-<sizeof> type-name size)
-   (let ((sizeof-value (type-sizeof-var (current-form) type-name)))
+   (let ((sizeof-value (type-sizeof-var type-name)))
      (list
       (list sizeof-value)               ; Example: sizeof-SplineChar
       (list #`(define #,sizeof-value #,size)))))
@@ -186,25 +183,25 @@
 ;;; FIXME: Neaten up expand-<struct> like its brethren.
 ;;;
  (define (expand-<struct> type-name size)
-   (let ((tag (type-tag (current-form) type-name)))
+   (let ((tag (type-tag type-name)))
      (list
       (list
-       (<type?> (current-form) type-name)               ; Example: SplineChar?
-       (check-<type> (current-form) type-name)          ; Example: check-SplineChar
-       (pointer-><type> (current-form) type-name)       ; Example: pointer->SplineChar
-       (unchecked-<type>->pointer (current-form) type-name) ; Example: unchecked-SplineChar->pointer
-       (<type>->pointer (current-form) type-name)       ; Example: SplineChar->pointer
-       (unchecked-<type>-ref (current-form) type-name)  ; Example: unchecked-SplineChar-ref
-       (<type>-ref (current-form) type-name)            ; Example: SplineChar-ref
-       (malloc-<type> (current-form) type-name)         ; Example: malloc-SplineChar
-       (unchecked-free-<type> (current-form) type-name) ; Example: unchecked-free-SplineChar
-       (free-<type> (current-form) type-name)           ; Example: free-SplineChar
-       (gc-malloc-<type> (current-form) type-name)      ; Example: gc-malloc-SplineChar
-       (unchecked-gc-free-<type> (current-form) type-name) ; Example: unchecked-gc-free-SplineChar
-       (gc-free-<type> (current-form) type-name)        ; Example: gc-free-SplineChar
+       (<type?> type-name)               ; Example: SplineChar?
+       (check-<type> type-name)          ; Example: check-SplineChar
+       (pointer-><type> type-name)       ; Example: pointer->SplineChar
+       (unchecked-<type>->pointer type-name) ; Example: unchecked-SplineChar->pointer
+       (<type>->pointer type-name)       ; Example: SplineChar->pointer
+       (unchecked-<type>-ref type-name)  ; Example: unchecked-SplineChar-ref
+       (<type>-ref type-name)            ; Example: SplineChar-ref
+       (malloc-<type> type-name)         ; Example: malloc-SplineChar
+       (unchecked-free-<type> type-name) ; Example: unchecked-free-SplineChar
+       (free-<type> type-name)           ; Example: free-SplineChar
+       (gc-malloc-<type> type-name)      ; Example: gc-malloc-SplineChar
+       (unchecked-gc-free-<type> type-name) ; Example: unchecked-gc-free-SplineChar
+       (gc-free-<type> type-name)        ; Example: gc-free-SplineChar
        )
       (list
-       #`(define #,(<type?> (current-form) type-name)
+       #`(define #,(<type?> type-name)
            (lambda (obj)
              (cond
               ((not (pair? obj)) #f)
@@ -213,7 +210,7 @@
               ((not (= (bytevector-length (cdr obj)) #,size)) #f)
               (else #t))))
 
-       #`(define #,(throw-failed-check-<type> (current-form) type-name)
+       #`(define #,(throw-failed-check-<type> type-name)
            (lambda (caller err-msg obj)
              (assertion-violation
               caller
@@ -226,36 +223,36 @@
                    pkg-info:package-name #,type-name))
               obj)))
 
-       #`(define #,(check-<type> (current-form) type-name)
+       #`(define #,(check-<type> type-name)
            (lambda (caller obj)
              (cond
               ((not (pair? obj))
-               (#,(throw-failed-check-<type> (current-form) type-name)
+               (#,(throw-failed-check-<type> type-name)
                 caller
                 (format28 "~s is not a pair" obj)
                 obj))
               ((not (eq? '#,tag (car obj)))
-               (#,(throw-failed-check-<type> (current-form) type-name)
+               (#,(throw-failed-check-<type> type-name)
                 caller
                 (format28 "(car ~s) is not ~s" obj '#,tag)
                 obj))
               ((not (bytevector? (cdr obj)))
-               (#,(throw-failed-check-<type> (current-form) type-name)
+               (#,(throw-failed-check-<type> type-name)
                 caller
                 (format28 "(cdr ~s) is not a bytevector" obj)
                 obj))
               ((not (= (bytevector-length (cdr obj)) #,size))
-               (#,(throw-failed-check-<type> (current-form) type-name)
+               (#,(throw-failed-check-<type> type-name)
                 caller
                 "bytevector length is wrong"
                 obj))
               (else *unspecified*))))
 
-       #`(define #,(pointer-><type> (current-form) type-name)
+       #`(define #,(pointer-><type> type-name)
            (lambda (ptr)
              (cons '#,tag (pointer->bytevector ptr #,size))))
 
-       #`(define #,(unchecked-<type>->pointer (current-form) type-name)
+       #`(define #,(unchecked-<type>->pointer type-name)
            (case-lambda
              ((obj) (bytevector->pointer (cdr obj)))
              ((obj i)
@@ -264,48 +261,48 @@
               (let ((p (bytevector->pointer (cdr obj))))
                 (make-pointer (+ (pointer-address p) (* i #,size)))))))
 
-       #`(define #,(<type>->pointer (current-form) type-name)
+       #`(define #,(<type>->pointer type-name)
            (case-lambda
              ((obj)
-              (#,(check-<type> (current-form) type-name) '#,(<type>->pointer (current-form) type-name) obj)
+              (#,(check-<type> type-name) '#,(<type>->pointer type-name) obj)
               (bytevector->pointer (cdr obj)))
              ((obj i)
               ;; Return a pointer to the ith structure relative to
               ;; this one in an array.
-              (#,(check-<type> (current-form) type-name) '#,(<type>->pointer (current-form) type-name) obj)
-              (#,(unchecked-<type>->pointer (current-form) type-name)
+              (#,(check-<type> type-name) '#,(<type>->pointer type-name) obj)
+              (#,(unchecked-<type>->pointer type-name)
                obj i))))
 
-       #`(define #,(unchecked-<type>-ref (current-form) type-name)
+       #`(define #,(unchecked-<type>-ref type-name)
            (case-lambda
              ((obj)
               ;; This merely copies the tagged bytevector. It exists
               ;; mainly for consistency with other uses of ‘-ref’ in
               ;; this module.
-              (#,(pointer-><type> (current-form) type-name)
+              (#,(pointer-><type> type-name)
                (bytevector->pointer (cdr obj))))
              ((obj i)
               ;; This gives the ith structure relative to this one in
               ;; an array.
               (let ((p (bytevector->pointer (cdr obj))))
-                (#,(pointer-><type> (current-form) type-name)
+                (#,(pointer-><type> type-name)
                  (make-pointer (+ (pointer-address p) (* i #,size))))))))
 
-       #`(define #,(<type>-ref (current-form) type-name)
+       #`(define #,(<type>-ref type-name)
            (case-lambda
              ((obj)
               ;; This merely copies the tagged bytevector. It exists
               ;; mainly for consistency with other uses of ‘-ref’ in
               ;; this module.
-              (#,(check-<type> (current-form) type-name) '#,(<type>->pointer (current-form) type-name) obj)
-              (#,(unchecked-<type>-ref (current-form) type-name) obj))
+              (#,(check-<type> type-name) '#,(<type>->pointer type-name) obj)
+              (#,(unchecked-<type>-ref type-name) obj))
              ((obj i )
               ;; This gives the ith structure relative to this one in
               ;; an array.
-              (#,(check-<type> (current-form) type-name) '#,(<type>->pointer (current-form) type-name) obj)
-              (#,(unchecked-<type>-ref (current-form) type-name) obj i))))
+              (#,(check-<type> type-name) '#,(<type>->pointer type-name) obj)
+              (#,(unchecked-<type>-ref type-name) obj i))))
 
-       #`(define #,(malloc-<type> (current-form) type-name)
+       #`(define #,(malloc-<type> type-name)
            (case-lambda
              (() (cons '#,tag
                        (pointer->bytevector (c:zalloc #,size) #,size)))
@@ -314,20 +311,20 @@
               ;; tagged bytevector pointing at the first struct in the
               ;; array.
               (unless (<= 1 n)
-                (assertion-violation #,(gc-malloc-<type> (current-form) type-name)
+                (assertion-violation #,(gc-malloc-<type> type-name)
                                      "the argument must be >= 1" n))
               (cons '#,tag
                     (pointer->bytevector (c:zalloc (* n #,size)) #,size)))))
 
-       #`(define #,(unchecked-free-<type> (current-form) type-name)
+       #`(define #,(unchecked-free-<type> type-name)
            (lambda (obj)
-             (c:free (#,(unchecked-<type>->pointer (current-form) type-name) obj))))
+             (c:free (#,(unchecked-<type>->pointer type-name) obj))))
 
-       #`(define #,(free-<type> (current-form) type-name)
+       #`(define #,(free-<type> type-name)
            (lambda (obj)
-             (c:free (#,(<type>->pointer (current-form) type-name) obj))))
+             (c:free (#,(<type>->pointer type-name) obj))))
 
-       #`(define #,(gc-malloc-<type> (current-form) type-name)
+       #`(define #,(gc-malloc-<type> type-name)
            (case-lambda
              (() (cons '#,tag
                        (pointer->bytevector (c:gc-zalloc #,size) #,size)))
@@ -336,24 +333,24 @@
               ;; tagged bytevector pointing at the first struct in the
               ;; array.
               (unless (<= 1 n)
-                (assertion-violation #,(gc-malloc-<type> (current-form) type-name)
+                (assertion-violation #,(gc-malloc-<type> type-name)
                                      "the argument must be >= 1" n))
               (cons '#,tag
                     (pointer->bytevector (c:gc-zalloc (* n #,size)) #,size)))))
 
-       #`(define #,(unchecked-gc-free-<type> (current-form) type-name)
+       #`(define #,(unchecked-gc-free-<type> type-name)
            (lambda (obj)
-             (c:gc-free (#,(unchecked-<type>->pointer (current-form) type-name) obj))))
+             (c:gc-free (#,(unchecked-<type>->pointer type-name) obj))))
 
-       #`(define #,(gc-free-<type> (current-form) type-name)
+       #`(define #,(gc-free-<type> type-name)
            (lambda (obj)
-             (c:gc-free (#,(<type>->pointer (current-form) type-name) obj))))
+             (c:gc-free (#,(<type>->pointer type-name) obj))))
        ))))
 
  (define (expand-<struct>:<field>->pointer struct-name field-name offset size)
-   (let ((check (check-<type> (current-form) struct-name))
-         (unchecked-func (unchecked-<type>:<field>->pointer (current-form) struct-name field-name))
-         (checked-func (<type>:<field>->pointer (current-form) struct-name field-name)))
+   (let ((check (check-<type> struct-name))
+         (unchecked-func (unchecked-<type>:<field>->pointer struct-name field-name))
+         (checked-func (<type>:<field>->pointer struct-name field-name)))
      (list
       (list unchecked-func ; Example: unchecked-SplineChar:name->pointer
             checked-func   ; Example: SplineChar:name->pointer
@@ -382,9 +379,9 @@
       ;; Functions to get the value of a primitive type.
       ;;
       (let ((ref-func (bv-offset-ref field-type size))
-            (check (check-<type> (current-form) struct-name))
-            (unchecked-func (unchecked-<type>:<field>-ref (current-form) struct-name field-name))
-            (checked-func (<type>:<field>-ref (current-form) struct-name field-name)))
+            (check (check-<type> struct-name))
+            (unchecked-func (unchecked-<type>:<field>-ref struct-name field-name))
+            (checked-func (<type>:<field>-ref struct-name field-name)))
         (list
          (list unchecked-func   ; Example: unchecked-SplineChar:width-ref
                checked-func     ; Example: SplineChar:width-ref
@@ -418,11 +415,11 @@
       ;;
       ;; Functions to get the ‘value’ of a sub-structure.
       ;;
-      (let ((to-subtype (pointer-><type> (current-form) field-subtype))
-            (subtype-size (type-sizeof-var (current-form) field-subtype))
-            (check (check-<type> (current-form) struct-name))
-            (unchecked-func (unchecked-<type>:<field>-ref (current-form) struct-name field-name))
-            (checked-func (<type>:<field>-ref (current-form) struct-name field-name)))
+      (let ((to-subtype (pointer-><type> field-subtype))
+            (subtype-size (type-sizeof-var field-subtype))
+            (check (check-<type> struct-name))
+            (unchecked-func (unchecked-<type>:<field>-ref struct-name field-name))
+            (checked-func (<type>:<field>-ref struct-name field-name)))
         (list
          (list unchecked-func   ; Example: unchecked-SplineChar:width-ref
                checked-func     ; Example: SplineChar:width-ref
@@ -448,9 +445,9 @@
 
  (define (expand-<struct>:<field>-set! field-type struct-name field-name offset size)
    (let ((set!-func (bv-offset-set! field-type size))
-         (check (check-<type> (current-form) struct-name))
-         (unchecked-func (unchecked-<type>:<field>-set! (current-form) struct-name field-name))
-         (checked-func (<type>:<field>-set! (current-form) struct-name field-name)))
+         (check (check-<type> struct-name))
+         (unchecked-func (unchecked-<type>:<field>-set! struct-name field-name))
+         (checked-func (<type>:<field>-set! struct-name field-name)))
      (list
       (list unchecked-func  ; Example: unchecked-SplineChar:width-set!
             checked-func    ; Example: SplineChar:width-set!
@@ -475,11 +472,11 @@
  (define (expand-<struct>:<field>-dref field-type field-subtype
                                        struct-name field-name offset size)
    (let ((ref-func (bv-offset-ref field-type size))
-         (to-subtype (pointer-><type> (current-form) field-subtype))
-         (subtype-size (type-sizeof-var (current-form) field-subtype))
-         (check (check-<type> (current-form) struct-name))
-         (unchecked-func (unchecked-<type>:<field>-dref (current-form) struct-name field-name))
-         (checked-func (<type>:<field>-dref (current-form) struct-name field-name)))
+         (to-subtype (pointer-><type> field-subtype))
+         (subtype-size (type-sizeof-var field-subtype))
+         (check (check-<type> struct-name))
+         (unchecked-func (unchecked-<type>:<field>-dref struct-name field-name))
+         (checked-func (<type>:<field>-dref struct-name field-name)))
      (list
       (list unchecked-func ; Example: unchecked-CharViewBase:next-dref
             checked-func   ; Example: CharViewBase:next-dref
@@ -569,141 +566,115 @@
      "bytevector length is wrong")
     (else #f)))
 
- (define (syntax-string->syntax-symbol x s)
-   (datum->syntax x (string->symbol (syntax->datum s))))
-
- (define (build-symbol x constructor . objects)
+ (define (build-symbol constructor . objects)
    (syntax-string->syntax-symbol
-    x (apply constructor (map syntax->datum objects))))
+    (apply constructor (map syntax->datum objects))))
 
- (define (type-tag x type-name)
-   (build-symbol x
-                 (cute format28 "tag-~a" <>)
+ (define (syntax-string->syntax-symbol s)
+   (datum->syntax (current-form) (string->symbol (syntax->datum s))))
+
+ (define (type-tag type-name)
+   (build-symbol (cute format28 "tag-~a" <>)
                  type-name))
 
- (define (type-sizeof-var x type-name)
-   (build-symbol x
-                 (cute format28 "sizeof-~a" <>)
+ (define (type-sizeof-var type-name)
+   (build-symbol (cute format28 "sizeof-~a" <>)
                  type-name))
 
- (define (<type?> x type-name)
-   (build-symbol x
-                 (cute format28 "~a?" <>)
+ (define (<type?> type-name)
+   (build-symbol (cute format28 "~a?" <>)
                  type-name))
 
- (define (throw-failed-check-<type> x type-name)
-   (build-symbol x
-                 (cute format28 "throw-failed-check-~a" <>)
+ (define (throw-failed-check-<type> type-name)
+   (build-symbol (cute format28 "throw-failed-check-~a" <>)
                  type-name))
 
- (define (check-<type> x type-name)
-   (build-symbol x
-                 (cute format28 "check-~a" <>)
+ (define (check-<type> type-name)
+   (build-symbol (cute format28 "check-~a" <>)
                  type-name))
 
- (define (pointer-><type> x type-name)
-   (build-symbol x
-                 (cute format28 "pointer->~a" <>)
+ (define (pointer-><type> type-name)
+   (build-symbol (cute format28 "pointer->~a" <>)
                  type-name))
 
- (define (<type>->pointer x type-name)
-   (build-symbol x
-                 (cute format28 "~a->pointer" <>)
+ (define (<type>->pointer type-name)
+   (build-symbol (cute format28 "~a->pointer" <>)
                  type-name))
 
- (define (unchecked-<type>->pointer x type-name)
-   (build-symbol x
-                 (cute format28 "unchecked-~a->pointer" <>)
+ (define (unchecked-<type>->pointer type-name)
+   (build-symbol (cute format28 "unchecked-~a->pointer" <>)
                  type-name))
 
- (define (<type>-ref x type-name)
-   (build-symbol x
-                 (cute format28 "~a-ref" <>)
+ (define (<type>-ref type-name)
+   (build-symbol (cute format28 "~a-ref" <>)
                  type-name))
 
- (define (unchecked-<type>-ref x type-name)
-   (build-symbol x
-                 (cute format28 "unchecked-~a-ref" <>)
+ (define (unchecked-<type>-ref type-name)
+   (build-symbol (cute format28 "unchecked-~a-ref" <>)
                  type-name))
 
- (define (malloc-<type> x type-name)
-   (build-symbol x
-                 (cute format28 "malloc-~a" <>)
+ (define (malloc-<type> type-name)
+   (build-symbol (cute format28 "malloc-~a" <>)
                  type-name))
 
- (define (free-<type> x type-name)
-   (build-symbol x
-                 (cute format28 "free-~a" <>)
+ (define (free-<type> type-name)
+   (build-symbol (cute format28 "free-~a" <>)
                  type-name))
 
- (define (unchecked-free-<type> x type-name)
-   (build-symbol x
-                 (cute format28 "unchecked-free-~a" <>)
+ (define (unchecked-free-<type> type-name)
+   (build-symbol (cute format28 "unchecked-free-~a" <>)
                  type-name))
 
- (define (gc-malloc-<type> x type-name)
-   (build-symbol x
-                 (cute format28 "gc-malloc-~a" <>)
+ (define (gc-malloc-<type> type-name)
+   (build-symbol (cute format28 "gc-malloc-~a" <>)
                  type-name))
 
- (define (gc-free-<type> x type-name)
-   (build-symbol x
-                 (cute format28 "gc-free-~a" <>)
+ (define (gc-free-<type> type-name)
+   (build-symbol (cute format28 "gc-free-~a" <>)
                  type-name))
 
- (define (unchecked-gc-free-<type> x type-name)
-   (build-symbol x
-                 (cute format28 "unchecked-gc-free-~a" <>)
+ (define (unchecked-gc-free-<type> type-name)
+   (build-symbol (cute format28 "unchecked-gc-free-~a" <>)
                  type-name))
 
- (define (<type>:<field>-ref x struct-name field-name)
-   (build-symbol x
-                 (cute format28 "~a:~a-ref" <> <>)
+ (define (<type>:<field>-ref struct-name field-name)
+   (build-symbol (cute format28 "~a:~a-ref" <> <>)
                  struct-name field-name))
 
- (define (unchecked-<type>:<field>-ref x struct-name field-name)
-   (build-symbol x
-                 (cute format28 "unchecked-~a:~a-ref" <> <>)
+ (define (unchecked-<type>:<field>-ref struct-name field-name)
+   (build-symbol (cute format28 "unchecked-~a:~a-ref" <> <>)
                  struct-name field-name))
 
- (define (<type>:<field>-dref x struct-name field-name)
-   (build-symbol x
-                 (cute format28 "~a:~a-dref" <> <>)
+ (define (<type>:<field>-dref struct-name field-name)
+   (build-symbol (cute format28 "~a:~a-dref" <> <>)
                  struct-name field-name))
 
- (define (unchecked-<type>:<field>-dref x struct-name field-name)
-   (build-symbol x
-                 (cute format28 "unchecked-~a:~a-dref" <> <>)
+ (define (unchecked-<type>:<field>-dref struct-name field-name)
+   (build-symbol (cute format28 "unchecked-~a:~a-dref" <> <>)
                  struct-name field-name))
 
- (define (<type>:<field>-set! x struct-name field-name)
-   (build-symbol x
-                 (cute format28 "~a:~a-set!" <> <>)
+ (define (<type>:<field>-set! struct-name field-name)
+   (build-symbol (cute format28 "~a:~a-set!" <> <>)
                  struct-name field-name))
 
- (define (unchecked-<type>:<field>-set! x struct-name field-name)
-   (build-symbol x
-                 (cute format28 "unchecked-~a:~a-set!" <> <>)
+ (define (unchecked-<type>:<field>-set! struct-name field-name)
+   (build-symbol (cute format28 "unchecked-~a:~a-set!" <> <>)
                  struct-name field-name))
 
- (define (<type>:<field>->pointer x struct-name field-name)
-   (build-symbol x
-                 (cute format28 "~a:~a->pointer" <> <>)
+ (define (<type>:<field>->pointer struct-name field-name)
+   (build-symbol (cute format28 "~a:~a->pointer" <> <>)
                  struct-name field-name))
 
- (define (unchecked-<type>:<field>->pointer x struct-name field-name)
-   (build-symbol x
-                 (cute format28 "unchecked-~a:~a->pointer" <> <>)
+ (define (unchecked-<type>:<field>->pointer struct-name field-name)
+   (build-symbol (cute format28 "unchecked-~a:~a->pointer" <> <>)
                  struct-name field-name))
 
- (define (<type>->alist x struct-name)
-   (build-symbol x
-                 (cute format28 "~a->alist" <>)
+ (define (<type>->alist struct-name)
+   (build-symbol (cute format28 "~a->alist" <>)
                  struct-name))
 
- (define (unchecked-<type>->alist x struct-name)
-   (build-symbol x
-                 (cute format28 "unchecked-~a->alist" <>)
+ (define (unchecked-<type>->alist struct-name)
+   (build-symbol (cute format28 "unchecked-~a->alist" <>)
                  struct-name))
 
  ) ;; end of eval-early
