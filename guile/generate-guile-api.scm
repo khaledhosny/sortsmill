@@ -44,6 +44,8 @@
     (format #t "\n")
     (pretty-print '(import (sortsmillff api-syntax)))
     (format #t "\n")
-    (pretty-print `(with-api-exported:--
-                    (api:--
-                     ,@(map underscores->hyphens instructions))))))
+;;;    (pretty-print `(with-api-exported:--
+;;;                    (api:--
+;;;                     ,@(map underscores->hyphens instructions))))))
+    (pretty-print `(define-public-api
+                     ,@(map underscores->hyphens instructions)))))
