@@ -22,7 +22,7 @@
         (sortsmillff pkg-info)
         (rnrs)
         (system foreign)
-        (srfi :26)                      ; ‘cut’ and ‘cute’.
+        (only (srfi :26) cut cute)
         (ice-9 match)
         )
 
@@ -737,53 +737,9 @@
 
 ;;-------------------------------------------------------------------------
 
-(define-syntax field-ref
-  (syntax-rules (int uint bool float * struct array)
-    ((_ int offset 1) (lambda (bv) (bytevector-s8-ref bv offset)))
-    ((_ int offset 2) (lambda (bv) (bytevector-s16-native-ref bv offset)))
-    ((_ int offset 4) (lambda (bv) (bytevector-s32-native-ref bv offset)))
-    ((_ int offset 8) (lambda (bv) (bytevector-s64-native-ref bv offset)))
-    ((_ uint offset 1) (lambda (bv) (bytevector-u8-ref bv offset)))
-    ((_ uint offset 2) (lambda (bv) (bytevector-u16-native-ref bv offset)))
-    ((_ uint offset 4) (lambda (bv) (bytevector-u32-native-ref bv offset)))
-    ((_ uint offset 8) (lambda (bv) (bytevector-u64-native-ref bv offset)))
-    ((_ bool offset 1) (lambda (bv) (not (zero? (bytevector-u8-ref bv offset)))))
-    ((_ bool offset 2) (lambda (bv) (not (zero? (bytevector-u16-native-ref bv offset)))))
-    ((_ bool offset 4) (lambda (bv) (not (zero? (bytevector-u32-native-ref bv offset)))))
-    ((_ bool offset 8) (lambda (bv) (not (zero? (bytevector-u64-native-ref bv offset)))))
-    ((_ float offset 4) (lambda (bv) (bytevector-ieee-single-native-ref bv offset)))
-    ((_ float offset 8) (lambda (bv) (bytevector-ieee-double-native-ref bv offset)))
-    ((_ * offset 1) (lambda (bv) (make-pointer (bytevector-u8-ref bv offset))))
-    ((_ * offset 2) (lambda (bv) (make-pointer (bytevector-u16-native-ref bv offset))))
-    ((_ * offset 4) (lambda (bv) (make-pointer (bytevector-u32-native-ref bv offset))))
-    ((_ * offset 8) (lambda (bv) (make-pointer (bytevector-u64-native-ref bv offset))))
-    ))
-
-(define-syntax field-set!
-  (syntax-rules (int uint bool * struct array)
-    ((_ int offset 1) (lambda (bv v) (bytevector-s8-set! bv offset v)))
-    ((_ int offset 2) (lambda (bv v) (bytevector-s16-native-set! bv offset v)))
-    ((_ int offset 4) (lambda (bv v) (bytevector-s32-native-set! bv offset v)))
-    ((_ int offset 8) (lambda (bv v) (bytevector-s64-native-set! bv offset v)))
-    ((_ uint offset 1) (lambda (bv v) (bytevector-u8-set! bv offset v)))
-    ((_ uint offset 2) (lambda (bv v) (bytevector-u16-native-set! bv offset v)))
-    ((_ uint offset 4) (lambda (bv v) (bytevector-u32-native-set! bv offset v)))
-    ((_ uint offset 8) (lambda (bv v) (bytevector-u64-native-set! bv offset v)))
-    ((_ bool offset 1) (lambda (bv v) (bytevector-u8-set! bv offset (if v 1 0))))
-    ((_ bool offset 2) (lambda (bv v) (bytevector-u16-native-set! bv offset (if v 1 0))))
-    ((_ bool offset 4) (lambda (bv v) (bytevector-u32-native-set! bv offset (if v 1 0))))
-    ((_ bool offset 8) (lambda (bv v) (bytevector-u64-native-set! bv offset (if v 1 0))))
-    ((_ float offset 4) (lambda (bv v) (bytevector-ieee-single-native-set! bv offset v)))
-    ((_ float offset 8) (lambda (bv v) (bytevector-ieee-double-native-set! bv offset v)))
-    ((_ * offset 1) (lambda (bv v) (bytevector-u8-set! bv offset (pointer-address v))))
-    ((_ * offset 2) (lambda (bv v) (bytevector-u16-native-set! bv offset (pointer-address v))))
-    ((_ * offset 4) (lambda (bv v) (bytevector-u32-native-set! bv offset (pointer-address v))))
-    ((_ * offset 8) (lambda (bv v) (bytevector-u64-native-set! bv offset (pointer-address v))))
-    ))
-
-(define-syntax field->pointer
-  (syntax-rules ()
-    ((_ offset) (lambda (bv) (bytevector->pointer bv offset)))))
+;;;;;(define-syntax field->pointer
+;;;;;  (syntax-rules ()
+;;;;;    ((_ offset) (lambda (bv) (bytevector->pointer bv offset)))))
 
 (define-syntax unchecked-field->alist-entry
   (lambda (x)
@@ -820,6 +776,56 @@
 
 ;;-------------------------------------------------------------------------
 
+(define-syntax field->pointer
+  (syntax-rules ()
+    ((_ offset) (lambda (bv) (bytevector->pointer bv offset)))))
+
+(define-syntax field-ref
+  (syntax-rules (int uint bool float *)
+    ((_ int offset 1) (lambda (bv) (bytevector-s8-ref bv offset)))
+    ((_ int offset 2) (lambda (bv) (bytevector-s16-native-ref bv offset)))
+    ((_ int offset 4) (lambda (bv) (bytevector-s32-native-ref bv offset)))
+    ((_ int offset 8) (lambda (bv) (bytevector-s64-native-ref bv offset)))
+    ((_ uint offset 1) (lambda (bv) (bytevector-u8-ref bv offset)))
+    ((_ uint offset 2) (lambda (bv) (bytevector-u16-native-ref bv offset)))
+    ((_ uint offset 4) (lambda (bv) (bytevector-u32-native-ref bv offset)))
+    ((_ uint offset 8) (lambda (bv) (bytevector-u64-native-ref bv offset)))
+    ((_ bool offset 1) (lambda (bv) (not (zero? (bytevector-u8-ref bv offset)))))
+    ((_ bool offset 2) (lambda (bv) (not (zero? (bytevector-u16-native-ref bv offset)))))
+    ((_ bool offset 4) (lambda (bv) (not (zero? (bytevector-u32-native-ref bv offset)))))
+    ((_ bool offset 8) (lambda (bv) (not (zero? (bytevector-u64-native-ref bv offset)))))
+    ((_ float offset 4) (lambda (bv) (bytevector-ieee-single-native-ref bv offset)))
+    ((_ float offset 8) (lambda (bv) (bytevector-ieee-double-native-ref bv offset)))
+    ((_ * offset 1) (lambda (bv) (make-pointer (bytevector-u8-ref bv offset))))
+    ((_ * offset 2) (lambda (bv) (make-pointer (bytevector-u16-native-ref bv offset))))
+    ((_ * offset 4) (lambda (bv) (make-pointer (bytevector-u32-native-ref bv offset))))
+    ((_ * offset 8) (lambda (bv) (make-pointer (bytevector-u64-native-ref bv offset))))
+    ))
+
+(define-syntax field-set!
+  (syntax-rules (int uint bool float *)
+    ((_ int offset 1) (lambda (bv v) (bytevector-s8-set! bv offset v)))
+    ((_ int offset 2) (lambda (bv v) (bytevector-s16-native-set! bv offset v)))
+    ((_ int offset 4) (lambda (bv v) (bytevector-s32-native-set! bv offset v)))
+    ((_ int offset 8) (lambda (bv v) (bytevector-s64-native-set! bv offset v)))
+    ((_ uint offset 1) (lambda (bv v) (bytevector-u8-set! bv offset v)))
+    ((_ uint offset 2) (lambda (bv v) (bytevector-u16-native-set! bv offset v)))
+    ((_ uint offset 4) (lambda (bv v) (bytevector-u32-native-set! bv offset v)))
+    ((_ uint offset 8) (lambda (bv v) (bytevector-u64-native-set! bv offset v)))
+    ((_ bool offset 1) (lambda (bv v) (bytevector-u8-set! bv offset (if v 1 0))))
+    ((_ bool offset 2) (lambda (bv v) (bytevector-u16-native-set! bv offset (if v 1 0))))
+    ((_ bool offset 4) (lambda (bv v) (bytevector-u32-native-set! bv offset (if v 1 0))))
+    ((_ bool offset 8) (lambda (bv v) (bytevector-u64-native-set! bv offset (if v 1 0))))
+    ((_ float offset 4) (lambda (bv v) (bytevector-ieee-single-native-set! bv offset v)))
+    ((_ float offset 8) (lambda (bv v) (bytevector-ieee-double-native-set! bv offset v)))
+    ((_ * offset 1) (lambda (bv v) (bytevector-u8-set! bv offset (pointer-address v))))
+    ((_ * offset 2) (lambda (bv v) (bytevector-u16-native-set! bv offset (pointer-address v))))
+    ((_ * offset 4) (lambda (bv v) (bytevector-u32-native-set! bv offset (pointer-address v))))
+    ((_ * offset 8) (lambda (bv v) (bytevector-u64-native-set! bv offset (pointer-address v))))
+    ))
+
+;;-------------------------------------------------------------------------
+
 (define read-api:--
   (case-lambda
     (() (read-api:-- (current-input-port)))
@@ -842,48 +848,86 @@
 ;;; implementation.
 ;;;
 
+;;;
+;;; Note: In the following, the binding ‘x’ generally represents the
+;;; syntax context. But we want to get rid of most of those
+;;; instances. See the noisy ‘FIXME’ below.
+;;;
+
+;;; FIXME FIXME FIXME:
+;;; FIXME FIXME FIXME: Use (current-form) and (current-subform) more.
+;;; FIXME FIXME FIXME:
+
 (define-syntax define-public-api
   (lambda (x)
     (syntax-case x ()
       ((_ . forms)
-       (let-values (((exports defines)
-                     (expand-multiple-forms x (syntax->datum #'forms))))
-         #`(begin (export #,@exports) #,@defines))))))
+       (parameterize ((current-form x)
+                      (current-subform #f))
+         (let-values (((exports defines)
+                       (expand-multiple-forms (syntax->datum #'forms))))
+           #`(begin (export #,@exports) #,@defines)))))))
 
 (define-syntax define-private-api
   (lambda (x)
     (syntax-case x ()
       ((_ . forms)
-       (let-values (((exports defines)
-                     (expand-multiple-forms x (syntax->datum #'forms))))
-         #`(begin #,@defines))))))
+       (parameterize ((current-form x))
+         (let-values (((exports<--these-are-ignored defines)
+                       (expand-multiple-forms (syntax->datum #'forms))))
+           #`(begin #,@defines)))))))
 
 (eval-early
- (define (expand-multiple-forms x forms)
-   (let* ((expansions (fold-left
-                       (lambda (prior expans)
-                         (cons (append (car prior) (car expans))
-                               (append (cdr prior) (cdr expans))))
-                       '(() . ())
-                       (map (cut expand-form x <>) forms)))
-          (exports (car expansions))
-          (defines (cdr expansions)))
-     (values exports defines)))
 
- (define (expand-form x form)
-  (match form
-      (('sizeof type-name size) (expand-<sizeof> x type-name size))
-      (('struct type-name size) (expand-<struct> x type-name size))
-      ))
+ ;; Dynamically scoped bindings to avoid passing around a lot of
+ ;; syntax context.
+ (define current-form (make-parameter #f))    ; A syntax object.
+ (define current-subform (make-parameter #f)) ; #f or a syntax object.
 
- (define (expand-<sizeof> x type-name size)
-   (let ((exports (list (type-sizeof-var x type-name)))
-         (defines (list #`(define #,(type-sizeof-var x type-name) #,size))))
-     (cons exports defines)))
+ (define (combine-expansions-list expansions)
+   (fold-left (lambda (prior expans)
+                (list (append (car prior) (car expans))
+                      (append (cadr prior) (cadr expans))))
+              '(() ()) expansions))
 
- (define (expand-<struct> x type-name size)
-   (let ((tag (type-tag x type-name)))
-     (cons
+ (define (combine-expansions . expansions)
+   (combine-expansions-list expansions))
+
+ (define (expand-multiple-forms forms)
+   (let ((expansion             ; (list (list exports) (list defines))
+          (combine-expansions-list
+           (map (cut expand-form <>) forms))))
+     (values (car expansion) (cadr expansion))))
+
+ (define (expand-form form)
+   (parameterize ((current-form (datum->syntax (current-form) form))
+                  (current-subform #f))
+     (match form
+            (('sizeof (? string? type-name) (? integer? size))
+             (expand-<sizeof> type-name size))
+            (('struct (? string? type-name) (? integer? size))
+             (expand-<struct> type-name size))
+            (('field ('* (? symbol? field-subtype))
+                     (? string? struct-name) (? string? field-name)
+                     (? integer? offset) (? integer? size))
+             (combine-expansions
+              (expand-<struct>:<field>->pointer struct-name field-name offset size)
+              (expand-<struct>:<field>-ref '* struct-name field-name offset size)
+              (expand-<struct>:<field>-set! '* struct-name field-name offset size)
+              ))
+;;;;;;;       (expand-field-dereferencing (field-type field-subtype) struct-name field-name offset size))
+            )))
+
+ (define (expand-<sizeof> type-name size)
+   (let ((x (current-form)))
+     (list
+      (list (type-sizeof-var x type-name)) ; Example: sizeof-SplineChar
+      (list #`(define #,(type-sizeof-var x type-name) #,size)))))
+
+ (define (expand-<struct> type-name size)
+   (let* ((x (current-form))
+          (tag (type-tag x type-name)))
+     (list
       (list
        (<type?> x type-name)               ; Example: SplineChar?
        (check-<type> x type-name)          ; Example: check-SplineChar
@@ -911,18 +955,16 @@
 
        #`(define #,(throw-failed-check-<type> x type-name)
            (lambda (caller err-msg obj)
-             (scm-error  ; FIXME: Use a more portable error mechanism.
-              'wrong-type-arg
-              (if (symbol? caller)
-                  (symbol->string caller)
-                  caller)
+             (assertion-violation
+              caller
               (if err-msg
-                  "Expected ~a API struct of type `~a', but ~a"
-                  "Expected ~a API struct of type `~a'")
-              (if err-msg
-                  (list pkg-info:package-name #,type-name err-msg)
-                  (list pkg-info:package-name #,type-name))
-              (list obj))))
+                  (format28
+                   "Expected ~a API struct of type `~a', but ~a"
+                   pkg-info:package-name #,type-name err-msg)
+                  (format28
+                   "Expected ~a API struct of type `~a'"
+                   pkg-info:package-name #,type-name))
+              obj)))
 
        #`(define #,(check-<type> x type-name)
            (lambda (caller obj)
@@ -1013,13 +1055,8 @@
               ;; with the tagged bytevector pointing at the
               ;; first struct in the array.
               (unless (<= 1 n)
-                (scm-error ; FIXME: Use a more portable error mechanism.
-                 'out-of-range
-                 #,(datum->syntax x (format28 "malloc-~a"
-                                              (syntax->datum #'type-name)))
-                 (string-append "the argument must be >= 1, but got "
-                                (number->string n))
-                 (list n) (list n)))
+                (assertion-violation #,(gc-malloc-<type> x type-name)
+                                     "the argument must be >= 1" n))
               (cons '#,tag
                     (pointer->bytevector (c:zalloc (* n #,size)) #,size)))))
 
@@ -1036,17 +1073,12 @@
              (() (cons '#,tag
                        (pointer->bytevector (c:gc-zalloc #,size) #,size)))
              ((n)
-              ;; Allocate a contiguous array of n structs,
-              ;; with the tagged bytevector pointing at the
-              ;; first struct in the array.
+              ;; Allocate a contiguous array of n structs, with the
+              ;; tagged bytevector pointing at the first struct in the
+              ;; array.
               (unless (<= 1 n)
-                (scm-error ; FIXME: Use a more portable error mechanism.
-                 'out-of-range
-                 #,(datum->syntax x (format28 "gc-malloc-~a"
-                                              (syntax->datum #'type-name)))
-                 (string-append "the argument must be >= 1, but got "
-                                (number->string n))
-                 (list n) (list n)))
+                (assertion-violation #,(gc-malloc-<type> x type-name)
+                                     "the argument must be >= 1" n))
               (cons '#,tag
                     (pointer->bytevector (c:gc-zalloc (* n #,size)) #,size)))))
 
@@ -1058,7 +1090,157 @@
            (lambda (obj)
              (c:gc-free (#,(<type>->pointer x type-name) obj))))
        ))))
- )
+
+ (define (expand-<struct>:<field>->pointer struct-name field-name offset size)
+   (let* ((x (current-form))
+          (check (check-<type> x struct-name))
+          (unchecked-func (unchecked-<type>:<field>->pointer
+                           x struct-name field-name))
+          (checked-func (<type>:<field>->pointer x struct-name field-name)))
+     (list
+      (list
+       (unchecked-<type>:<field>->pointer x struct-name field-name) ; Example: unchecked-SplineChar:name->pointer
+       (<type>:<field>->pointer x struct-name field-name) ; Example: SplineChar:name->pointer
+       )
+      (list
+       #`(define #,unchecked-func
+           (case-lambda
+             ((obj) (#,offset->pointer (cdr obj) #,offset))
+             ((obj i) (#,offset->pointer (cdr obj) (index->offset #,offset i #,size)))))
+
+       #`(define #,checked-func
+           (case-lambda
+             ((obj)
+              (#,check #,checked-func obj)
+              (#,offset->pointer (cdr obj) #,offset))
+             ((obj i)
+              (#,check #,checked-func obj)
+              ;; Get a pointer to an array element.
+              (#,offset->pointer (cdr obj) (index->offset #,offset i #,size)))))
+   ))))
+
+ (define (expand-<struct>:<field>-ref field-type struct-name field-name offset size)
+   (let* ((x (current-form))
+          (ref-func (offset-ref field-type size))
+          (check (check-<type> x struct-name))
+          (unchecked-func (unchecked-<type>:<field>-ref x struct-name field-name))
+          (checked-func (<type>:<field>-ref x struct-name field-name)))
+     (list
+      (list
+       (unchecked-<type>:<field>-ref x struct-name field-name) ; Example: unchecked-SplineChar:width-ref
+       (<type>:<field>-ref x struct-name field-name) ; Example: SplineChar:width-ref
+       )
+      (list
+       #`(define #,unchecked-func
+           (case-lambda
+             ((obj) (#,ref-func (cdr obj) #,offset))
+             ((obj i) (#,ref-func (cdr obj) (index->offset #,offset i #,size)))))
+
+     #`(define #,checked-func
+         (case-lambda
+           ((obj)
+            (#,check #,checked-func obj)
+            (#,ref-func (cdr obj) #,offset))
+           ((obj i)
+            (#,check #,checked-func obj)
+            ;; Get the contents of an array element.
+            (#,ref-func (cdr obj) (index->offset #,offset i #,size)))))
+     ))))
+
+ (define (expand-<struct>:<field>-set! field-type struct-name field-name offset size)
+   (let* ((x (current-form))
+          (set!-func (offset-set! field-type size))
+          (check (check-<type> x struct-name))
+          (unchecked-func (unchecked-<type>:<field>-set! x struct-name field-name))
+          (checked-func (<type>:<field>-set! x struct-name field-name)))
+     (list
+      (list
+       (unchecked-<type>:<field>-set! x struct-name field-name) ; Example: unchecked-SplineChar:width-set!
+       (<type>:<field>-set! x struct-name field-name) ; Example: SplineChar:width-set!
+       )
+      (list
+       #`(define #,unchecked-func
+           (case-lambda
+             ((obj v) (#,set!-func (cdr obj) #,offset v))
+             ((obj i v) (#,set!-func (cdr obj) (index->offset #,offset i #,size) v))))
+
+     #`(define #,checked-func
+         (case-lambda
+           ((obj v)
+            (#,check #,checked-func obj)
+            (#,set!-func (cdr obj) #,offset v))
+           ((obj i v)
+            (#,check #,checked-func obj)
+            ;; Get the contents of an array element.
+            (#,set!-func (cdr obj) (index->offset #,offset i #,size) v))))
+     ))))
+
+ (define offset->pointer
+   #'(lambda (bv offset) (bytevector->pointer bv offset)))
+
+ (define (offset-ref field-type size)
+   (match
+    (list field-type size)
+    (('int 1) #'(lambda (bv offset) (bytevector-s8-ref bv offset)))
+    (('int 2) #'(lambda (bv offset) (bytevector-s16-native-ref bv offset)))
+    (('int 4) #'(lambda (bv offset) (bytevector-s32-native-ref bv offset)))
+    (('int 8) #'(lambda (bv offset) (bytevector-s64-native-ref bv offset)))
+    (('uint 1) #'(lambda (bv offset) (bytevector-u8-ref bv offset)))
+    (('uint 2) #'(lambda (bv offset) (bytevector-u16-native-ref bv offset)))
+    (('uint 4) #'(lambda (bv offset) (bytevector-u32-native-ref bv offset)))
+    (('uint 8) #'(lambda (bv offset) (bytevector-u64-native-ref bv offset)))
+    (('bool 1) #'(lambda (bv offset) (not (zero? (bytevector-u8-ref bv offset)))))
+    (('bool 2) #'(lambda (bv offset) (not (zero? (bytevector-u16-native-ref bv offset)))))
+    (('bool 4) #'(lambda (bv offset) (not (zero? (bytevector-u32-native-ref bv offset)))))
+    (('bool 8) #'(lambda (bv offset) (not (zero? (bytevector-u64-native-ref bv offset)))))
+    (('float 4) #'(lambda (bv offset) (bytevector-ieee-single-native-ref bv offset)))
+    (('float 8) #'(lambda (bv offset) (bytevector-ieee-double-native-ref bv offset)))
+    (('* 1) #'(lambda (bv offset) (make-pointer (bytevector-u8-ref bv offset))))
+    (('* 2) #'(lambda (bv offset) (make-pointer (bytevector-u16-native-ref bv offset))))
+    (('* 4) #'(lambda (bv offset) (make-pointer (bytevector-u32-native-ref bv offset))))
+    (('* 8) #'(lambda (bv offset) (make-pointer (bytevector-u64-native-ref bv offset))))
+    (else (syntax-violation #f "illegal field type or size in API instruction"
+                            (syntax->datum (current-form))
+                            (syntax->datum (current-subform))))
+    ))
+
+ (define (offset-set! field-type size)
+   (match
+    (list field-type size)
+    (('int 1) #'(lambda (bv offset v) (bytevector-s8-set! bv offset v)))
+    (('int 2) #'(lambda (bv offset v) (bytevector-s16-native-set! bv offset v)))
+    (('int 4) #'(lambda (bv offset v) (bytevector-s32-native-set! bv offset v)))
+    (('int 8) #'(lambda (bv offset v) (bytevector-s64-native-set! bv offset v)))
+    (('uint 1) #'(lambda (bv offset v) (bytevector-u8-set! bv offset v)))
+    (('uint 2) #'(lambda (bv offset v) (bytevector-u16-native-set! bv offset v)))
+    (('uint 4) #'(lambda (bv offset v) (bytevector-u32-native-set! bv offset v)))
+    (('uint 8) #'(lambda (bv offset v) (bytevector-u64-native-set! bv offset v)))
+    (('bool 1) #'(lambda (bv offset v) (not (zero? (bytevector-u8-set! bv offset v)))))
+    (('bool 2) #'(lambda (bv offset v) (not (zero? (bytevector-u16-native-set! bv offset v)))))
+    (('bool 4) #'(lambda (bv offset v) (not (zero? (bytevector-u32-native-set! bv offset v)))))
+    (('bool 8) #'(lambda (bv offset v) (not (zero? (bytevector-u64-native-set! bv offset v)))))
+    (('float 4) #'(lambda (bv offset v) (bytevector-ieee-single-native-set! bv offset v)))
+    (('float 8) #'(lambda (bv offset v) (bytevector-ieee-double-native-set! bv offset v)))
+    (('* 1) #'(lambda (bv offset v) (make-pointer (bytevector-u8-set! bv offset v))))
+    (('* 2) #'(lambda (bv offset v) (make-pointer (bytevector-u16-native-set! bv offset v))))
+    (('* 4) #'(lambda (bv offset v) (make-pointer (bytevector-u32-native-set! bv offset v))))
+    (('* 8) #'(lambda (bv offset v) (make-pointer (bytevector-u64-native-set! bv offset v))))
+    (else (syntax-violation #f "illegal field type or size in API instruction"
+                            (syntax->datum (current-form))
+                            (syntax->datum (current-subform))))
+    ))
+
+) ;; end of eval-early
+
+;;-------------------------------------------------------------------------
+
+(define-syntax index->offset
+  (syntax-rules ()
+    ((_ offset i size) (+ offset (* i size)))))
+
+(define-syntax index->pointer
+  (syntax-rules ()
+    ((_ p i size) (make-pointer (+ (pointer-address p) (* i size))))))
 
 ;;-------------------------------------------------------------------------
 
@@ -1066,11 +1248,21 @@
 (define-public-api
   (sizeof "barf" 1234)
   (struct "barf" 1234)
+  (field (* int) "barf" "fld1" 20 4)
+  (field (* int) "barf" "fld2" 24 1)
   )
 
-(write sizeof-barf)
-(write barf?)
-(write gc-free-barf)
+(write sizeof-barf (current-error-port))
+(write barf? (current-error-port))
+(write gc-free-barf (current-error-port))
+(write (gc-malloc-barf 30) (current-error-port))
+;;(barf-ref 3)
+(write unchecked-barf:fld1->pointer (current-error-port))
+(write barf:fld1->pointer (current-error-port))
+(write unchecked-barf:fld1-ref (current-error-port))
+(write barf:fld1-ref (current-error-port))
+(write barf:fld2-ref (current-error-port))
+(write barf:fld2-set! (current-error-port))
 !#
 
 ;;-------------------------------------------------------------------------
