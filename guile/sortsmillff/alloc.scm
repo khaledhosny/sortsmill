@@ -17,47 +17,47 @@
 
 (define-module (sortsmillff alloc))
 
-(export (rename (scm_calloc c:zalloc) ; Allocate and fill with zeroes.
-                (free       c:free)
-                (GC_malloc  c:gc-zalloc) ; Garbage-collected.
-                (GC_free    c:gc-free)))
+(export c:zalloc ;; Allocate and fill with zeroes.
+        c:free
+        c:gc-zalloc ;; Garbage-collected.
+        c:gc-free)
 
 (import (rnrs base)
         (system foreign))
 
-(define scm_calloc
+(define c:zalloc
   (pointer->procedure '*
                       (dynamic-func "scm_calloc" (dynamic-link))
                       (list size_t)))
 
-(define free
+(define c:free
   (pointer->procedure void
                       (dynamic-func "free" (dynamic-link))
                       (list '*)))
 
-(define _GC_malloc_error
+(define GC_malloc_error_
   (pointer->procedure void
                       (dynamic-func "scm_memory_error" (dynamic-link))
                       (list '*)))
 
-(define _GC_malloc_error_msg
+(define GC_malloc_error_msg_
   (string->pointer "GC_malloc"))
 
 (define (GC-malloc-error)
-  (_GC_malloc_error _GC_malloc_error_msg))
+  (GC_malloc_error_ GC_malloc_error_msg_))
 
-(define _GC_malloc
+(define GC_malloc
   (pointer->procedure '*
                       (dynamic-func "GC_malloc" (dynamic-link))
                       (list size_t)))
 
-(define (GC_malloc size)
-  (let ((ptr (_GC_malloc size)))
+(define (c:gc-zalloc size)
+  (let ((ptr (GC_malloc size)))
     (when (null-pointer? ptr)
       (GC-malloc-error))
     ptr))
 
-(define GC_free
+(define c:gc-free
   (pointer->procedure void
                       (dynamic-func "GC_free" (dynamic-link))
                       (list '*)))
