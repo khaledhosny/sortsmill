@@ -18,6 +18,7 @@
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 (import (ff-internal generate-types)
+        (sortsmillff api-syntax)
         (rnrs)
         (ice-9 format)
         (ice-9 match)
@@ -40,9 +41,12 @@
   (format #t ";;\n")
   (format #t "\n")
   (let ((instructions (read-instruction-sources instruction-sources)))
-    (pretty-print `(define-module ,(call-with-input-string module-name read)))
-    (format #t "\n")
-    (pretty-print '(import (sortsmillff api-syntax)))
-    (format #t "\n")
-    (pretty-print `(define-public-api
-                     ,@(map underscores->hyphens instructions)))))
+    (let-values (((exports defines)
+                  (expand-api (map underscores->hyphens instructions))))
+      (pretty-print
+       `(library ,(call-with-input-string module-name read)
+                 (export ,@exports)
+                 (import (sortsmillff alloc)
+                         (rnrs)
+                         (system foreign))
+                 ,@defines)))))

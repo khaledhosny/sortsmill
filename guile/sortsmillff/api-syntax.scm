@@ -18,7 +18,9 @@
 (define-module (sortsmillff api-syntax))
 
 (export define-public-api
-        define-private-api)
+        define-private-api
+        expand-api-syntax
+        expand-api)
 
 (import (sortsmillff machine)
         (sortsmillff alloc)
@@ -206,8 +208,7 @@
              ((not (= (bytevector-length (cdr obj)) #,size))
               (#,(throw-failed-check-<type> type-name)
                caller "bytevector length is wrong" obj))
-
-             (else *unspecified*))))
+             )))
 
       #`(define #,(pointer-><type> type-name)
           (lambda (ptr)
@@ -221,7 +222,7 @@
              ;; Return a pointer to the ith structure relative to
              ;; this one in an array.
              (let ((p (bytevector->pointer (cdr obj))))
-               (index->pointer p i #,size)))))
+               #,(index->pointer #'p #'i size)))))
 
       #`(define #,(<type>->pointer type-name)
           (case-lambda
@@ -242,14 +243,13 @@
              ;; This merely copies the tagged bytevector. It exists
              ;; mainly for consistency with other uses of ‘-ref’ in
              ;; this module.
-             (#,(pointer-><type> type-name)
-              (bytevector->pointer (cdr obj))))
+             (#,(pointer-><type> type-name) (bytevector->pointer (cdr obj))))
 
             ((obj i)
              ;; This gives the ith structure relative to this one in
              ;; an array.
              (let ((p (bytevector->pointer (cdr obj))))
-               (#,(pointer-><type> type-name) (index->pointer p i #,size))))))
+               (#,(pointer-><type> type-name) #,(index->pointer #'p #'i size))))))
 
       #`(define #,(<type>-ref type-name)
           (case-lambda
@@ -323,7 +323,7 @@
       #`(define #,unchecked-func
           (case-lambda
             ((obj) (#,offset->pointer (cdr obj) #,offset))
-            ((obj i) (#,offset->pointer (cdr obj) (index->offset #,offset i #,size)))))
+            ((obj i) (#,offset->pointer (cdr obj) #,(index->offset offset #'i size)))))
 
       #`(define #,checked-func
           (case-lambda
@@ -334,7 +334,7 @@
             ((obj i)
              (#,check #,checked-func obj)
              ;; Get a pointer to an array element.
-             (#,offset->pointer (cdr obj) (index->offset #,offset i #,size)))))
+             (#,offset->pointer (cdr obj) #,(index->offset offset #'i size)))))
       ))))
 
 (define expand-<struct>:<field>-ref
@@ -380,9 +380,9 @@
          #`(define #,unchecked-func
              (case-lambda
                ((obj) (#,to-subtype (#,offset->pointer (cdr obj) #,offset)))
-               ((obj i) (#,to-subtype (index->pointer
-                                       (#,offset->pointer (cdr obj) #,offset)
-                                       i #,subtype-size)))))
+               ((obj i) (#,to-subtype #,(index->pointer
+                                         #`(#,offset->pointer (cdr obj) #,offset)
+                                         #'i subtype-size)))))
 
          #`(define #,checked-func
              (case-lambda
@@ -409,7 +409,7 @@
       #`(define #,unchecked-func
           (case-lambda
             ((obj v) (#,set!-func (cdr obj) #,offset v))
-            ((obj i v) (#,set!-func (cdr obj) (index->offset #,offset i #,size) v))))
+            ((obj i v) (#,set!-func (cdr obj) #,(index->offset offset #'i size) v))))
 
       #`(define #,checked-func
           (case-lambda
@@ -420,7 +420,7 @@
             ((obj i v)
              (#,check #,checked-func obj)
              ;; Get the contents of an array element.
-             (#,set!-func (cdr obj) (index->offset #,offset i #,size) v))))
+             (#,set!-func (cdr obj) #,(index->offset offset #'i size) v))))
       ))))
 
 (define (expand-<struct>:<field>-dref field-type field-subtype
@@ -439,9 +439,9 @@
       #`(define #,unchecked-func
           (case-lambda
             ((obj) (#,to-subtype (#,ref-func (cdr obj) #,offset)))
-            ((obj i) (#,to-subtype (index->pointer
-                                    (#,ref-func (cdr obj) #,offset)
-                                    i #,subtype-size)))))
+            ((obj i) (#,to-subtype #,(index->pointer
+                                      #`(#,ref-func (cdr obj) #,offset)
+                                      #'i subtype-size)))))
 
       #`(define #,checked-func
           (case-lambda
@@ -520,6 +520,12 @@
    ((not (= (bytevector-length (cdr obj)) size))
     "bytevector length is wrong")
    (else #f)))
+
+(define (index->pointer p i size)
+  #`(make-pointer (+ (pointer-address #,p) (* #,i #,size))))
+
+(define (index->offset offset i size)
+  #`(+ #,offset (* #,i #,size)))
 
 (define (build-symbol constructor . objects)
   (syntax-string->syntax-symbol
@@ -634,32 +640,67 @@
 
 ;;-------------------------------------------------------------------------
 
+;; define-public-api
+;;
+;; On-the-fly creation of an API, exporting the identifiers.
+;;
+;;    (define-public-api
+;;     api-instruction-1
+;;     api-instruction-2
+;;     ... )
+;;
 (define-syntax define-public-api
-  (lambda (x)
-    (syntax-case x ()
-      ((_ . forms)
-       (parameterize ((current-form x)
-                      (current-subform #f))
-         (let-values (((exports defines)
-                       (expand-multiple-forms (syntax->datum #'forms))))
-           #`(begin (export #,@exports) #,@defines)))))))
+  (lambda (syntax-context)
+    (let-values (((exports defines)
+                  (expand-api-syntax syntax-context)))
+      #`(begin (export #,@exports) #,@defines))))
 
+;; define-private-api
+;;
+;; On-the-fly creation of an API, without exporting the identifiers.
+;;
+;;    (define-private-api
+;;     api-instruction-1
+;;     api-instruction-2
+;;     ... )
+;;
 (define-syntax define-private-api
-  (lambda (x)
-    (syntax-case x ()
-      ((_ . forms)
-       (parameterize ((current-form x)
-                      (current-subform #f))
-         (let-values (((exports<--these-are-ignored defines)
-                       (expand-multiple-forms (syntax->datum #'forms))))
-           #`(begin #,@defines)))))))
+  (lambda (syntax-context)
+    (let-values (((exports defines)
+                  (expand-api-syntax syntax-context)))
+      #`(begin #,@defines))))
 
-(define-syntax index->offset
-  (syntax-rules ()
-    ((_ offset i size) (+ offset (* i size)))))
+;; expand-api-syntax
+;;
+;; As input takes a form like
+;;
+;;    (my-form
+;;     api-instruction-1
+;;     api-instruction-2
+;;     ... )
+;;
+;; and returns lists of ‘exports’ syntax objects and ‘defines’ syntax
+;; objects.
+;;
+(define (expand-api-syntax outer-form)
+  (syntax-case outer-form ()
+    ((_ . forms)
+     (parameterize ((current-form outer-form)
+                    (current-subform #f))
+       (expand-multiple-forms (syntax->datum #'forms))))))
 
-(define-syntax index->pointer
-  (syntax-rules ()
-    ((_ p i size) (make-pointer (+ (pointer-address p) (* i size))))))
+;; expand-api
+;;
+;; Like expand-api-syntax, but taking a list of API instructions in
+;; ‘datum’ form as input, and returning lists of ‘exports’ and
+;; ‘defines’ in datum form.
+;;
+;;    (expand-api (list api-instruction-1 api-instruction-2 ... )
+;;
+(define (expand-api forms)
+  (parameterize ((current-form (car (generate-temporaries '(1))))
+                 (current-subform #f))
+    (let-values (((exports defines) (expand-multiple-forms forms)))
+      (values (syntax->datum exports) (syntax->datum defines)))))
 
 ;;-------------------------------------------------------------------------
