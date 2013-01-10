@@ -25,41 +25,41 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 #include "spiroentrypoints.h"
 
 void
-SpiroCPsToBezier (spiro_cp *spiros, int n, int isclosed, bezctx * bc)
+SpiroCPsToBezier (spiro_cp *spiros, int n, int isclosed, bezctx *bc)
 {
-  spiro_seg *s;
-
-  if (n < 1)
-    return;
-  if (!isclosed)
+  if (1 <= n)
     {
-      char oldty_start = spiros[0].ty;
-      char oldty_end = spiros[n - 1].ty;
-      spiros[0].ty = '{';
-      spiros[n - 1].ty = '}';
-      s = run_spiro (spiros, n);
-      spiros[n - 1].ty = oldty_end;
-      spiros[0].ty = oldty_start;
+      spiro_seg *s;
+      if (!isclosed)
+        {
+          char oldty_start = spiros[0].ty;
+          char oldty_end = spiros[n - 1].ty;
+          spiros[0].ty = '{';
+          spiros[n - 1].ty = '}';
+          s = run_spiro (spiros, n);
+          spiros[n - 1].ty = oldty_end;
+          spiros[0].ty = oldty_start;
+        }
+      else
+        s = run_spiro (spiros, n);
+      spiro_to_bpath (s, n, bc);
+      free_spiro (s);
     }
-  else
-    s = run_spiro (spiros, n);
-  spiro_to_bpath (s, n, bc);
-  free_spiro (s);
 }
 
 void
-TaggedSpiroCPsToBezier (spiro_cp *spiros, bezctx * bc)
+TaggedSpiroCPsToBezier (spiro_cp *spiros, bezctx *bc)
 {
-  spiro_seg *s;
-  int n;
-
-  for (n = 0; spiros[n].ty != 'z' && spiros[n].ty != '}'; ++n);
+  int n = 0;
+  while (spiros[n].ty != 'z' && spiros[n].ty != '}')
+    n++;
   if (spiros[n].ty == '}')
-    ++n;
+    n++;
 
-  if (n < 1)
-    return;
-  s = run_spiro (spiros, n);
-  spiro_to_bpath (s, n, bc);
-  free_spiro (s);
+  if (1 <= n)
+    {
+      spiro_seg *s = run_spiro (spiros, n);
+      spiro_to_bpath (s, n, bc);
+      free_spiro (s);
+    }
 }

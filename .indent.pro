@@ -42,6 +42,7 @@
 -T menu_info
 -T spiro_cp
 -T spiro_seg
+-T bezctx
 -T ui_interface_t
 -T ImageList
 -T ASM
