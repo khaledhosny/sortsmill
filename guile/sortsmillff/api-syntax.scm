@@ -181,12 +181,12 @@
             (assertion-violation
              caller
              (if err-msg
-                 (format28 (string-append "Expected ~a API struct of type `"
-                                          #,(symbol->string type-name)
-                                          "', but ~a")
+                 (format28 #,(string-append "Expected ~a API struct of type `"
+                                            (symbol->string type-name)
+                                            "', but ~a")
                            pkg-info:package-name err-msg)
-                 (format28 (string-append "Expected ~a API struct of type `"
-                                          #,(symbol->string type-name) "'")
+                 (format28 #,(string-append "Expected ~a API struct of type `"
+                                            (symbol->string type-name) "'")
                            pkg-info:package-name))
              obj)))
 
