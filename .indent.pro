@@ -43,6 +43,7 @@
 -T spiro_cp
 -T spiro_seg
 -T bezctx
+-T bandmat
 -T ui_interface_t
 -T ImageList
 -T ASM

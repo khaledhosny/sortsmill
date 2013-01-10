@@ -47,11 +47,7 @@ typedef struct
   double al[5];                 /* lower part of band-diagonal decomposition */
 } bandmat;
 
-#ifndef M_PI
-#define M_PI            3.14159265358979323846  /* pi */
-#endif
-
-int n = 4;
+static int n = 4;
 
 #ifndef ORDER
 #define ORDER 12
@@ -664,15 +660,15 @@ banbks11 (const bandmat * m, const int *perm, double *v, int n)
 static int
 compute_jinc (char ty0, char ty1)
 {
+  int result = 0;
   if (ty0 == 'o' || ty1 == 'o' || ty0 == ']' || ty1 == '[')
-    return 4;
+    result = 4;
   else if (ty0 == 'c' && ty1 == 'c')
-    return 2;
+    result = 2;
   else if (((ty0 == '{' || ty0 == 'v' || ty0 == '[') && ty1 == 'c') ||
            (ty0 == 'c' && (ty1 == '}' || ty1 == 'v' || ty1 == ']')))
-    return 1;
-  else
-    return 0;
+    result = 1;
+  return result;
 }
 
 static int
@@ -703,7 +699,7 @@ add_mat_line (bandmat * m, double *v,
         {
           joff = 2 + (j + 3 - jj + nmat) % nmat;
         }
-#ifdef VERBOSE
+#ifdef _SPIRO_VERBOSE
       printf ("add_mat_line j=%d jj=%d jinc=%d nmat=%d joff=%d\n", j, jj, jinc, nmat, joff);
 #endif
       v[jj] += x;
@@ -820,10 +816,7 @@ spiro_iter (spiro_seg *s, bandmat * m, int *perm, double *v, int n)
       n_invert = nmat;
       j = 0;
     }
-/*
-#define VERBOSE
-*/
-#ifdef VERBOSE
+#ifdef _SPIRO_VERBOSE
   for (i = 0; i < n; i++)
     {
       int k;
@@ -847,7 +840,7 @@ spiro_iter (spiro_seg *s, bandmat * m, int *perm, double *v, int n)
         {
           double dk = v[j++];
 
-#ifdef VERBOSE
+#ifdef _SPIRO_VERBOSE
           printf ("s[%d].ks[%d] += %f\n", i, k, dk);
 #endif
           s[i].ks[k] += dk;
@@ -882,7 +875,7 @@ solve_spiro (spiro_seg *s, int nseg)
   for (i = 0; i < 10; i++)
     {
       norm = spiro_iter (s, m, perm, v, nseg);
-#ifdef VERBOSE
+#ifdef _SPIRO_VERBOSE
       printf ("%% norm = %g\n", norm);
 #endif
       if (norm < 1e-12)
@@ -897,7 +890,7 @@ solve_spiro (spiro_seg *s, int nseg)
 
 static void
 spiro_seg_to_bpath (const double ks[4],
-                    double x0, double y0, double x1, double y1, bezctx * bc, int depth)
+                    double x0, double y0, double x1, double y1, bezctx *bc, int depth)
 {
   double bend = fabs (ks[0]) + fabs (.5 * ks[1]) + fabs (.125 * ks[2]) + fabs ((1. / 48) * ks[3]);
 
@@ -976,7 +969,7 @@ free_spiro (spiro_seg *s)
 }
 
 void
-spiro_to_bpath (const spiro_seg *s, int n, bezctx * bc)
+spiro_to_bpath (const spiro_seg *s, int n, bezctx *bc)
 {
   int i;
   int nsegs = s[n - 1].ty == '}' ? n - 1 : n;
@@ -1012,7 +1005,8 @@ get_knot_th (const spiro_seg *s, int i)
     }
 }
 
-#ifdef UNIT_TEST
+#ifdef _SPIRO_UNIT_TEST
+
 #include <stdio.h>
 #include <sys/time.h>           /* for gettimeofday */
 
@@ -1052,7 +1046,7 @@ test_integ (void)
         integrate_spiro (ks, xy);
       en = get_time ();
       err = hypot (xy[0] - xynom[0], xy[1] - xynom[1]);
-#ifdef VERBOSE
+#ifdef _SPIRO_VERBOSE
       printf ("%d %d %g %g\n", ORDER, n, (en - st) / n_iter, err);
 #endif
       ch = hypot (xy[0], xy[1]);
@@ -1073,7 +1067,7 @@ print_seg (const double ks[4], double x0, double y0, double x1, double y1)
 
   if (bend < 1e-8)
     {
-#ifdef VERBOSE
+#ifdef _SPIRO_VERBOSE
       printf ("%g %g lineto\n", x1, y1);
 #endif
     }
@@ -1101,7 +1095,7 @@ print_seg (const double ks[4], double x0, double y0, double x1, double y1)
           vl = (scale * (1. / 3)) * sin (th_even - th_odd);
           ur = (scale * (1. / 3)) * cos (th_even + th_odd);
           vr = (scale * (1. / 3)) * sin (th_even + th_odd);
-#ifdef VERBOSE
+#ifdef _SPIRO_VERBOSE
           printf ("%g %g %g %g %g %g curveto\n", x0 + ul, y0 + vl, x1 - ur, y1 - vr, x1, y1);
 #endif
 
@@ -1195,4 +1189,5 @@ main (int argc, char **argv)
 {
   return test_curve ();
 }
-#endif
+
+#endif // _SPIRO_UNIT_TEST
