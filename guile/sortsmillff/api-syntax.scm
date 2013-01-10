@@ -150,9 +150,6 @@
      (list sizeof-value)               ; Example: sizeof-SplineChar
      (list #`(define #,sizeof-value #,size)))))
 
-;;;
-;;; FIXME: Neaten up expand-<struct> like its brethren.
-;;;
 (define (expand-<struct> type-name size)
   (let ((tag (type-tag type-name)))
     (list
@@ -199,24 +196,20 @@
             (cond
              ((not (pair? obj))
               (#,(throw-failed-check-<type> type-name)
-               caller
-               (format28 "~s is not a pair" obj)
-               obj))
+               caller (format28 "~s is not a pair" obj) obj))
+
              ((not (eq? '#,tag (car obj)))
               (#,(throw-failed-check-<type> type-name)
-               caller
-               (format28 "(car ~s) is not ~s" obj '#,tag)
-               obj))
+               caller (format28 "(car ~s) is not ~s" obj '#,tag) obj))
+
              ((not (bytevector? (cdr obj)))
               (#,(throw-failed-check-<type> type-name)
-               caller
-               (format28 "(cdr ~s) is not a bytevector" obj)
-               obj))
+               caller (format28 "(cdr ~s) is not a bytevector" obj) obj))
+
              ((not (= (bytevector-length (cdr obj)) #,size))
               (#,(throw-failed-check-<type> type-name)
-               caller
-               "bytevector length is wrong"
-               obj))
+               caller "bytevector length is wrong" obj))
+
              (else *unspecified*))))
 
       #`(define #,(pointer-><type> type-name)
@@ -226,17 +219,19 @@
       #`(define #,(unchecked-<type>->pointer type-name)
           (case-lambda
             ((obj) (bytevector->pointer (cdr obj)))
+
             ((obj i)
              ;; Return a pointer to the ith structure relative to
              ;; this one in an array.
              (let ((p (bytevector->pointer (cdr obj))))
-               (make-pointer (+ (pointer-address p) (* i #,size)))))))
+               (index->pointer p i #,size)))))
 
       #`(define #,(<type>->pointer type-name)
           (case-lambda
             ((obj)
              (#,(check-<type> type-name) '#,(<type>->pointer type-name) obj)
              (bytevector->pointer (cdr obj)))
+
             ((obj i)
              ;; Return a pointer to the ith structure relative to
              ;; this one in an array.
@@ -252,12 +247,12 @@
              ;; this module.
              (#,(pointer-><type> type-name)
               (bytevector->pointer (cdr obj))))
+
             ((obj i)
              ;; This gives the ith structure relative to this one in
              ;; an array.
              (let ((p (bytevector->pointer (cdr obj))))
-               (#,(pointer-><type> type-name)
-                (make-pointer (+ (pointer-address p) (* i #,size))))))))
+               (#,(pointer-><type> type-name) (index->pointer p i #,size))))))
 
       #`(define #,(<type>-ref type-name)
           (case-lambda
@@ -267,6 +262,7 @@
              ;; this module.
              (#,(check-<type> type-name) '#,(<type>->pointer type-name) obj)
              (#,(unchecked-<type>-ref type-name) obj))
+
             ((obj i )
              ;; This gives the ith structure relative to this one in
              ;; an array.
@@ -337,6 +333,7 @@
             ((obj)
              (#,check #,checked-func obj)
              (#,bv-offset->pointer (cdr obj) #,offset))
+
             ((obj i)
              (#,check #,checked-func obj)
              ;; Get a pointer to an array element.
@@ -359,32 +356,19 @@
               )
         (list
          #`(define #,unchecked-func
-             (case-lambda
-               ((obj) (#,ref-func (cdr obj) #,offset))
-;;; FIXME: This will not work, because TIG computes ‘size’ as the size
-;;; of the entire array. TIG cannot infer the size of a single array
-;;; element.
-;;;;;                ((obj i) (#,ref-func (cdr obj) (index->offset #,offset i #,size)))
-               ))
+             (lambda (obj)
+               (#,ref-func (cdr obj) #,offset)))
 
          #`(define #,checked-func
-             (case-lambda
-               ((obj)
-                (#,check #,checked-func obj)
-                (#,ref-func (cdr obj) #,offset))
-;;; FIXME: This will not work, because TIG computes ‘size’ as the size
-;;; of the entire array. TIG cannot infer the size of a single array
-;;; element.
-;;;;;                ((obj i)
-;;;;;                 (#,check #,checked-func obj)
-;;;;;                 ;; Get the contents of an array element.
-;;;;;                 (#,ref-func (cdr obj) (index->offset #,offset i #,size)))
-               ))
+             (lambda (obj)
+               (#,check #,checked-func obj)
+               (#,ref-func (cdr obj) #,offset)))
          ))))
 
     ((field-type field-subtype struct-name field-name offset size)
      ;;
-     ;; Functions to get the ‘value’ of a sub-structure.
+     ;; Functions to get the ‘value’ of a sub-structure; more
+     ;; precisely, to get a bytevector at the address of the field.
      ;;
      (let ((to-subtype (pointer-><type> field-subtype))
            (subtype-size (type-sizeof-var field-subtype))
@@ -408,6 +392,7 @@
                ((obj)
                 (#,check #,checked-func obj)
                 (#,unchecked-func obj))
+
                ((obj i)
                 (#,check #,checked-func obj)
                 (#,unchecked-func obj i))))
@@ -434,6 +419,7 @@
             ((obj v)
              (#,check #,checked-func obj)
              (#,set!-func (cdr obj) #,offset v))
+
             ((obj i v)
              (#,check #,checked-func obj)
              ;; Get the contents of an array element.
@@ -465,6 +451,7 @@
             ((obj)
              (#,check #,checked-func obj)
              (#,unchecked-func obj))
+
             ((obj i)
              (#,check #,checked-func obj)
              (#,unchecked-func obj i))))
