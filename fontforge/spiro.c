@@ -568,7 +568,7 @@ setup_path (const spiro_cp *src, int n)
 }
 
 static void
-bandec11 (bandmat * m, int *perm, int n)
+bandec11 (bandmat *m, int *perm, int n)
 {
   int i, j, k;
   int l;
@@ -623,7 +623,7 @@ bandec11 (bandmat * m, int *perm, int n)
 }
 
 static void
-banbks11 (const bandmat * m, const int *perm, double *v, int n)
+banbks11 (const bandmat *m, const int *perm, double *v, int n)
 {
   int i, k, l;
 
@@ -683,8 +683,8 @@ count_vec (const spiro_seg *s, int nseg)
 }
 
 static void
-add_mat_line (bandmat * m, double *v,
-              double derivs[4], double x, double y, int j, int jj, int jinc, int nmat)
+add_mat_line (bandmat *m, double *v, double derivs[4], double x, double y, int j, int jj, int jinc,
+              int nmat)
 {
   int k;
 
@@ -709,7 +709,7 @@ add_mat_line (bandmat * m, double *v,
 }
 
 static double
-spiro_iter (spiro_seg *s, bandmat * m, int *perm, double *v, int n)
+spiro_iter (spiro_seg *s, bandmat *m, int *perm, double *v, int n)
 {
   int cyclic = s[0].ty != '{' && s[0].ty != 'v';
   int i, j, jj;
