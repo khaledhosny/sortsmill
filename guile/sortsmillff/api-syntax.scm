@@ -24,8 +24,11 @@
         (sortsmillff alloc)
         (sortsmillff pkg-info)
         (rnrs)
-        (system foreign)
+        (only (system foreign)
+              pointer->bytevector bytevector->pointer
+              make-pointer pointer-address)
         (only (srfi :26) cut cute)
+        (only (srfi :39) make-parameter parameterize)
         (ice-9 match) ;; Alex Shinn’s public-domain matcher.
         )
 
