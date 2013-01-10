@@ -189,9 +189,9 @@
           (write-instructions tail))))
 
 (define (write-struct-instruction struct c-struct)
-  (format #t "  printf (\"(struct \\\"~a\\\" %zu)\\n\", sizeof (~a));\n"
+  (format #t "  printf (\"(struct ~a %zu)\\n\", sizeof (~a));\n"
           struct c-struct)
-  (format #t "  printf (\"(sizeof \\\"~a\\\" %zu)\\n\", sizeof (~a));\n"
+  (format #t "  printf (\"(sizeof ~a %zu)\\n\", sizeof (~a));\n"
           struct c-struct))
 
 (define (write-fields-instructions struct fields)
@@ -203,7 +203,7 @@
                   (format #t "  {\n")
                   (format #t "    ~a x;\n"
                           (assq-ref info 'struct-name))
-                  (format #t "    printf (\"(field ~a \\\"~a\\\" \\\"~a\\\" %zu %zu)\\n\",\n"
+                  (format #t "    printf (\"(field ~a ~a ~a %zu %zu)\\n\",\n"
                           (assq-ref info 'field-type)
                           struct field)
                   (format #t "            offsetof (~a, ~a),\n"
@@ -217,12 +217,12 @@
 (define (write-struct->-instruction struct c-struct fields)
   (format #t "  {\n")
   (format #t "    ~a x;\n" c-struct)
-  (format #t "    printf (\"(struct-> \\\"~a\\\" \");\n" struct)
+  (format #t "    printf (\"(struct-> ~a \");\n" struct)
   (for-each
    (lambda (f)
      (match f
             ((fld . info)
-             (format #t "    printf (\"(\\\"~a\\\" ~a ~a %zu %zu\",\n"
+             (format #t "    printf (\"(~a ~a ~a %zu %zu\",\n"
                      fld
                      (assq-ref info 'kind)
                      (assq-ref info 'field-type))

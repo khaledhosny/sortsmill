@@ -26,7 +26,7 @@
 
 (define (write-instruction instruction)
   (match instruction
-         (('struct (? string? struct-name) (? integer? size))
+         (('struct (? symbol? struct-name) (? integer? size))
           (format #t "cdef class ~a (object):\n" struct-name)
           (format #t "\n")
           (format #t "  # The base address of the C object, as an unsigned integer.\n")
@@ -63,14 +63,14 @@
           (format #t "    GC_free (<void *> self.ptr)\n")
           (format #t "\n")
           )
-         (('sizeof (? string? struct-name) (? integer? size))
+         (('sizeof (? symbol? struct-name) (? integer? size))
           (format #t "  def sizeof (self):\n")
           (format #t "    \"\"\"The size of the C object.\"\"\"\n")
           (format #t "    return ~d\n" size)
           (format #t "\n")
           )
-         (('field (and (or 'struct 'array) field-type) (? string? struct-name)
-                  (? string? field-name) (? integer? offset) (? integer? size))
+         (('field (and (or 'struct 'array) field-type) (? symbol? struct-name)
+                  (? symbol? field-name) (? integer? offset) (? integer? size))
           (format #t "  def __get_~a_ptr (self):\n" field-name)
           (format #t "    return (self.ptr + ~d)\n" offset)
           (format #t "\n")
@@ -78,8 +78,8 @@
           (format #t "doc = \"The address of the `~a' field, as an unsigned integer.\")\n" field-name)
           (format #t "\n")
           )
-         (('field (? symbol? field-type) (? string? struct-name)
-                  (? string? field-name) (? integer? offset) (? integer? size))
+         (('field (? symbol? field-type) (? symbol? struct-name)
+                  (? symbol? field-name) (? integer? offset) (? integer? size))
           (format #t "  def __get_~a (self):\n" field-name)
           (format #t "    return ~a (self.ptr + ~d)\n"
                   (get-value-function field-type size)
@@ -108,14 +108,14 @@
           (format #t "\n")
           )
          (('field ((and (or '* 'struct 'array) field-type) (? symbol? pointer-type))
-                  (? string? struct-name) (? string? field-name) (? integer? offset)
+                  (? symbol? struct-name) (? symbol? field-name) (? integer? offset)
                   (? integer? size))
           (write-instruction (list 'field field-type struct-name field-name offset size))
           ;;
           ;; FIXME: Put dereferencing and array access here.
           ;;
           )
-         (('struct-> (? string? struct-name) . fields)
+         (('struct-> (? symbol? struct-name) . fields)
           (format #t "  def fields (self):\n")
           (format #t "    \"\"\"Return a dictionary of field values and struct/array-field addresses.\"\"\"\n")
           (format #t "    return \\\n")
@@ -123,7 +123,7 @@
           (for-each
            (lambda (flds)
              (match flds
-                    (((? string? field-name)
+                    (((? symbol? field-name)
                       (? symbol? kind)
                       (? (lambda (x) (or (not x) (field-type? x))) field-type)
                       (? integer? offset)

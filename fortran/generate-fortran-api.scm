@@ -38,7 +38,7 @@
 
 (define (write-declarations-for-one-instruction instruction)
    (match instruction
-      (('struct (? string? struct-name) (? integer? size))
+      (('struct (? symbol? struct-name) (? integer? size))
        (format #t "type ~a\n" struct-name)
        (format #t "  ! Represent a C struct or union as a bytevector.\n")
        (format #t "  integer(c_int8_t), dimension(:), pointer :: bv\n")
@@ -51,12 +51,12 @@
        (format #t "end interface ~a\n" struct-name)
        (format #t "\n")
        )
-      (('field (and (or 'struct 'array) field-type) (? string? struct-name)
-          (? string? field-name) (? integer? offset) (? integer? size))
+      (('field (and (or 'struct 'array) field-type) (? symbol? struct-name)
+          (? symbol? field-name) (? integer? offset) (? integer? size))
        (format (current-error-port) "Ignoring '~a in declarations\n" field-type)
        )
-      (('field (? symbol? field-type) (? string? struct-name)
-          (? string? field-name) (? integer? offset) (? integer? size))
+      (('field (? symbol? field-type) (? symbol? struct-name)
+          (? symbol? field-name) (? integer? offset) (? integer? size))
        (format #t "interface get_~a\n" field-name)
        (format #t "  module procedure get_~a_~a\n" struct-name field-name)
        (format #t "end interface get_~a\n" field-name)
@@ -67,7 +67,7 @@
        (format #t "\n")
        )
       (('field ((and (or '* 'struct 'array) field-type) (? symbol? pointer-type))
-          (? string? struct-name) (? string? field-name) (? integer? offset)
+          (? symbol? struct-name) (? symbol? field-name) (? integer? offset)
           (? integer? size))
        (write-declarations-for-one-instruction
           (list 'field field-type struct-name field-name offset size))
@@ -87,7 +87,7 @@
 
 (define (write-definitions-for-one-instruction instruction)
    (match instruction
-      (('struct (? string? struct-name) (? integer? size))
+      (('struct (? symbol? struct-name) (? integer? size))
        (begin
           (format #t "type(~a) function c_ptr_to_~a (p) result(q)\n"
              struct-name struct-name)
@@ -102,17 +102,17 @@
           (format #t "end function c_intptr_t_to_~a\n" struct-name)
           (format #t "\n")
           ))
-      (('field (and (or 'struct 'array) field-type) (? string? struct-name)
-          (? string? field-name) (? integer? offset) (? integer? size))
+      (('field (and (or 'struct 'array) field-type) (? symbol? struct-name)
+          (? symbol? field-name) (? integer? offset) (? integer? size))
        (format (current-error-port) "Ignoring '~a in definitions\n" field-type)
        )
-      (('field (? symbol? field-type) (? string? struct-name)
-          (? string? field-name) (? integer? offset) (? integer? size))
+      (('field (? symbol? field-type) (? symbol? struct-name)
+          (? symbol? field-name) (? integer? offset) (? integer? size))
        (begin
           (write-field-definitions field-type struct-name field-name offset size)
           ))
       (('field ((and (or '* 'struct 'array) field-type) (? symbol? pointer-type))
-          (? string? struct-name) (? string? field-name) (? integer? offset)
+          (? symbol? struct-name) (? symbol? field-name) (? integer? offset)
           (? integer? size))
        (begin
           (write-definitions-for-one-instruction

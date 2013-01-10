@@ -64,6 +64,8 @@
 (define (underscores->hyphens arg)
   (match arg
          ((? string? s) (string-map underscore->hyphen s))
+         ((? symbol? s) (string->symbol
+                         (underscores->hyphens (symbol->string s))))
          ((a . b) (cons (underscores->hyphens a) (underscores->hyphens b)))
          (_ arg)))
 

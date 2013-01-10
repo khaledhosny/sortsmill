@@ -58,10 +58,6 @@
     "The size of a C double is required to be 8 bytes, but on this machine it is ~a bytes."
     (number->string double-size)))))
 
-;;; FIXME FIXME FIXME:
-;;; FIXME FIXME FIXME: Have API instructions be made with symbols instead of strings.
-;;; FIXME FIXME FIXME:
-
 ;; Dynamically scoped bindings to avoid passing around a lot of
 ;; syntax context.
 (define current-form (make-parameter #f))    ; A syntax object.
@@ -93,14 +89,14 @@
   (parameterize ((current-form (datum->syntax (current-form) form))
                  (current-subform #f))
     (match form
-           (('sizeof (? string? type-name) (? integer? size))
+           (('sizeof (? symbol? type-name) (? integer? size))
             (expand-<sizeof> type-name size))
 
-           (('struct (? string? type-name) (? integer? size))
+           (('struct (? symbol? type-name) (? integer? size))
             (expand-<struct> type-name size))
 
            (('field ('* (? symbol? field-subtype))
-                    (? string? struct-name) (? string? field-name)
+                    (? symbol? struct-name) (? symbol? field-name)
                     (? integer? offset) (? integer? size))
             (combine-expansions
              (expand-<struct>:<field>->pointer struct-name field-name offset size)
@@ -111,7 +107,7 @@
 
            (('field ((and (or 'struct 'array) field-type)
                      (? symbol? field-subtype))
-                    (? string? struct-name) (? string? field-name)
+                    (? symbol? struct-name) (? symbol? field-name)
                     (? integer? offset) (? integer? size))
             (combine-expansions
              (expand-<struct>:<field>->pointer struct-name field-name offset size)
@@ -119,20 +115,20 @@
                                           field-name offset size)))
 
            (('field (and (or 'struct 'array) field-type)
-                    (? string? struct-name) (? string? field-name)
+                    (? symbol? struct-name) (? symbol? field-name)
                     (? integer? offset) (? integer? size))
             (expand-<struct>:<field>->pointer struct-name field-name offset size))
 
            (('field (? symbol? field-type)
-                    (? string? struct-name) (? string? field-name)
+                    (? symbol? struct-name) (? symbol? field-name)
                     (? integer? offset) (? integer? size))
             (combine-expansions
              (expand-<struct>:<field>->pointer struct-name field-name offset size)
              (expand-<struct>:<field>-ref field-type struct-name field-name offset size)
              (expand-<struct>:<field>-set! field-type struct-name field-name offset size)))
 
-           (('struct-> (? string? struct-name)
-                       ((? string? field-name) (? symbol? kind)
+           (('struct-> (? symbol? struct-name)
+                       ((? symbol? field-name) (? symbol? kind)
                         field-type
                         (? integer? offset) (? integer? size)) ...)
             ;; For now, ignore struct-> instructions. They have many
@@ -183,12 +179,13 @@
             (assertion-violation
              caller
              (if err-msg
-                 (format28
-                  "Expected ~a API struct of type `~a', but ~a"
-                  pkg-info:package-name #,type-name err-msg)
-                 (format28
-                  "Expected ~a API struct of type `~a'"
-                  pkg-info:package-name #,type-name))
+                 (format28 (string-append "Expected ~a API struct of type `"
+                                          #,(symbol->string type-name)
+                                          "', but ~a")
+                           pkg-info:package-name err-msg)
+                 (format28 (string-append "Expected ~a API struct of type `"
+                                          #,(symbol->string type-name) "'")
+                           pkg-info:package-name))
              obj)))
 
       #`(define #,(check-<type> type-name)
@@ -325,19 +322,19 @@
      (list
       #`(define #,unchecked-func
           (case-lambda
-            ((obj) (#,bv-offset->pointer (cdr obj) #,offset))
-            ((obj i) (#,bv-offset->pointer (cdr obj) (index->offset #,offset i #,size)))))
+            ((obj) (#,offset->pointer (cdr obj) #,offset))
+            ((obj i) (#,offset->pointer (cdr obj) (index->offset #,offset i #,size)))))
 
       #`(define #,checked-func
           (case-lambda
             ((obj)
              (#,check #,checked-func obj)
-             (#,bv-offset->pointer (cdr obj) #,offset))
+             (#,offset->pointer (cdr obj) #,offset))
 
             ((obj i)
              (#,check #,checked-func obj)
              ;; Get a pointer to an array element.
-             (#,bv-offset->pointer (cdr obj) (index->offset #,offset i #,size)))))
+             (#,offset->pointer (cdr obj) (index->offset #,offset i #,size)))))
       ))))
 
 (define expand-<struct>:<field>-ref
@@ -346,7 +343,7 @@
      ;;
      ;; Functions to get the value of a primitive type.
      ;;
-     (let ((ref-func (bv-offset-ref field-type size))
+     (let ((ref-func (offset-ref field-type size))
            (check (check-<type> struct-name))
            (unchecked-func (unchecked-<type>:<field>-ref struct-name field-name))
            (checked-func (<type>:<field>-ref struct-name field-name)))
@@ -382,9 +379,9 @@
         (list
          #`(define #,unchecked-func
              (case-lambda
-               ((obj) (#,to-subtype (#,bv-offset->pointer (cdr obj) #,offset)))
+               ((obj) (#,to-subtype (#,offset->pointer (cdr obj) #,offset)))
                ((obj i) (#,to-subtype (index->pointer
-                                       (#,bv-offset->pointer (cdr obj) #,offset)
+                                       (#,offset->pointer (cdr obj) #,offset)
                                        i #,subtype-size)))))
 
          #`(define #,checked-func
@@ -400,7 +397,7 @@
     ))
 
 (define (expand-<struct>:<field>-set! field-type struct-name field-name offset size)
-  (let ((set!-func (bv-offset-set! field-type size))
+  (let ((set!-func (offset-set! field-type size))
         (check (check-<type> struct-name))
         (unchecked-func (unchecked-<type>:<field>-set! struct-name field-name))
         (checked-func (<type>:<field>-set! struct-name field-name)))
@@ -428,7 +425,7 @@
 
 (define (expand-<struct>:<field>-dref field-type field-subtype
                                       struct-name field-name offset size)
-  (let ((ref-func (bv-offset-ref field-type size))
+  (let ((ref-func (offset-ref field-type size))
         (to-subtype (pointer-><type> field-subtype))
         (subtype-size (type-sizeof-var field-subtype))
         (check (check-<type> struct-name))
@@ -457,10 +454,10 @@
              (#,unchecked-func obj i))))
       ))))
 
-(define bv-offset->pointer
+(define offset->pointer
   #'(lambda (bv offset) (bytevector->pointer bv offset)))
 
-(define (bv-offset-ref field-type size)
+(define (offset-ref field-type size)
   (match
    (list field-type size)
    (('int 1) #'(lambda (bv offset) (bytevector-s8-ref bv offset)))
@@ -486,7 +483,7 @@
                            (syntax->datum (current-subform))))
    ))
 
-(define (bv-offset-set! field-type size)
+(define (offset-set! field-type size)
   (match
    (list field-type size)
    (('int 1) #'(lambda (bv offset v) (bytevector-s8-set! bv offset v)))

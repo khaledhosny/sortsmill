@@ -25,7 +25,7 @@
 
 (define (write-instruction instruction)
   (match instruction
-         (('struct (? string? struct-name) (? integer? size))
+         (('struct (? symbol? struct-name) (? integer? size))
           (format #t "inline void *malloc_ff_~a (void);\n" struct-name)
           (format #t "inline void *malloc_ff_~a (void) { return xdie_on_null (calloc (1, ~d)); }\n"
                   struct-name size)
@@ -41,21 +41,21 @@
           (format #t "inline void gc_free_ff_~a (void *p) { GC_FREE (p); }\n" struct-name)
           (format #t "\n")
           )
-         (('sizeof (? string? struct-name) (? integer? size))
+         (('sizeof (? symbol? struct-name) (? integer? size))
           (format #t "inline size_t sizeof_ff_~a (void);\n" struct-name)
           (format #t "inline size_t sizeof_ff_~a (void) { return ~d; };\n" struct-name size)
           (format #t "\n")
           )
-         (('field (and (or 'struct 'array) field-type) (? string? struct-name)
-                  (? string? field-name) (? integer? offset) (? integer? size))
+         (('field (and (or 'struct 'array) field-type) (? symbol? struct-name)
+                  (? symbol? field-name) (? integer? offset) (? integer? size))
           (format #t "inline void *ptr_ff_~a_~a (void *);\n"
                   struct-name field-name)
           (format #t "inline void *ptr_ff_~a_~a (void *p) { return (void *) &((char *) p)[~d]; }\n"
                   struct-name field-name offset)
           (format #t "\n")
           )
-         (('field (? symbol? field-type) (? string? struct-name)
-                  (? string? field-name) (? integer? offset) (? integer? size))
+         (('field (? symbol? field-type) (? symbol? struct-name)
+                  (? symbol? field-name) (? integer? offset) (? integer? size))
           (format #t "inline ~a get_ff_~a_~a (void *);\n"
                   (value-c-type field-type size) struct-name field-name)
           (format #t "inline ~a get_ff_~a_~a (void *p) { return ~a; }\n"
@@ -75,7 +75,7 @@
           (format #t "\n")
           )
          (('field ((and (or '* 'struct 'array) field-type) (? symbol? field-subtype))
-                  (? string? struct-name) (? string? field-name) (? integer? offset) (? integer? size))
+                  (? symbol? struct-name) (? symbol? field-name) (? integer? offset) (? integer? size))
           (write-instruction (list 'field field-type struct-name field-name offset size))
           ;;
           ;; FIXME: Dereferencing and array procedures go here.

@@ -24,25 +24,25 @@
 
 (define (write-instruction instruction)
   (match instruction
-         (('struct (? string? struct-name) (? integer? size))
+         (('struct (? symbol? struct-name) (? integer? size))
           (format #t "VISIBLE void *malloc_ff_~a (void);\n" struct-name)
           (format #t "VISIBLE void free_ff_~a (void *);\n" struct-name)
           (format #t "VISIBLE void *gc_malloc_ff_~a (void);\n" struct-name)
           (format #t "VISIBLE void gc_free_ff_~a (void *);\n" struct-name)
           (format #t "\n")
           )
-         (('sizeof (? string? struct-name) (? integer? size))
+         (('sizeof (? symbol? struct-name) (? integer? size))
           (format #t "VISIBLE size_t sizeof_ff_~a (void);\n" struct-name)
           (format #t "\n")
           )
-         (('field (and (or 'struct 'array) field-type) (? string? struct-name)
-                  (? string? field-name) (? integer? offset) (? integer? size))
+         (('field (and (or 'struct 'array) field-type) (? symbol? struct-name)
+                  (? symbol? field-name) (? integer? offset) (? integer? size))
           (format #t "VISIBLE void *ptr_ff_~a_~a (void *);\n"
                   struct-name field-name)
           (format #t "\n")       
           )
-         (('field (? symbol? field-type) (? string? struct-name)
-                  (? string? field-name) (? integer? offset) (? integer? size))
+         (('field (? symbol? field-type) (? symbol? struct-name)
+                  (? symbol? field-name) (? integer? offset) (? integer? size))
           (format #t "VISIBLE ~a get_ff_~a_~a (void *);\n"
                   (value-c-type field-type size) struct-name field-name)
           (format #t "VISIBLE void set_ff_~a_~a (void *, ~a);\n"
@@ -52,7 +52,7 @@
           (format #t "\n")
           )
          (('field ((and (or '* 'struct 'array ) field-type) (? symbol? pointer-type))
-                  (? string? struct-name) (? string? field-name) (? integer? offset)
+                  (? symbol? struct-name) (? symbol? field-name) (? integer? offset)
                   (? integer? size))
           (write-instruction (list 'field field-type struct-name field-name offset size))
           ;;
