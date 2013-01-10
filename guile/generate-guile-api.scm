@@ -47,6 +47,7 @@
        `(library ,(call-with-input-string module-name read)
                  (export ,@exports)
                  (import (sortsmillff alloc)
+                         (sortsmillff pkg-info)
                          (rnrs)
                          (system foreign)
                          (ice-9 format))
