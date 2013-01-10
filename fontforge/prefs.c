@@ -2998,7 +2998,7 @@ DoPrefs (void)
 void
 RecentFilesRemember (char *filename)
 {
-  int i, j;
+  int i;
 
   for (i = 0; i < RECENT_MAX && RecentFiles[i] != NULL; ++i)
     if (strcmp (RecentFiles[i], filename) == 0)
@@ -3009,8 +3009,7 @@ RecentFilesRemember (char *filename)
       if (i != 0)
         {
           filename = RecentFiles[i];
-          for (j = i; j > 0; --j)
-            RecentFiles[j] = RecentFiles[j - 1];
+          RecentFiles[i] = RecentFiles[0];
           RecentFiles[0] = filename;
         }
     }
