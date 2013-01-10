@@ -23,6 +23,7 @@
         (ice-9 format)
         (ice-9 match)
         (ice-9 pretty-print)
+        (only (srfi :26) cut)
         )
 
 (let-values
@@ -37,7 +38,9 @@
   (format #t ";;\n")
   (format #t ";;    ~a \\\n" command-name)
   (format #t ";;       '~a' \\\n" module-name)
-  (format #t ";;       '~a'\n" instruction-sources)
+  (format #t ";;      ")
+  (for-each (cut format #t " '~a'" <>) instruction-sources)
+  (format #t "\n")
   (format #t ";;\n")
   (format #t "\n")
   (let ((instructions (read-instruction-sources instruction-sources)))
