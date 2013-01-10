@@ -31,17 +31,9 @@
               make-pointer pointer-address)
         (only (srfi :26) cut cute)
         (only (srfi :39) make-parameter parameterize)
+        (ice-9 format)
         (ice-9 match) ;; Alex Shinn’s public-domain matcher.
         )
-
-;; Define ‘format28’ as a format function resembling that of SRFI-28;
-;; we will use it instead of the native format functions, to help make
-;; this module more portable.
-;;
-;; See http://srfi.schemers.org/srfi-28/srfi-28.html
-;;
-(define (format28 format-string . objects)
-  (apply (cut simple-format #f format-string <...>) objects))
 
 ;; FIXME: Really we require that floating point numbers be IEEE single
 ;; precision or double precision. More than likely, we will support
@@ -50,12 +42,13 @@
 (cond
  ((not (= 4 float-size))
   (error
-   (format28
+   (format
+    #f
     "The size of a C float is required to be 4 bytes, but on this machine it is ~a bytes."
     (number->string float-size))))
  ((not (= 8 double-size))
   (error
-   (format28
+   (format
     #f
     "The size of a C double is required to be 8 bytes, but on this machine it is ~a bytes."
     (number->string double-size)))))
@@ -181,13 +174,13 @@
             (assertion-violation
              caller
              (if err-msg
-                 (format28 #,(string-append "Expected ~a API struct of type `"
-                                            (symbol->string type-name)
-                                            "', but ~a")
-                           pkg-info:package-name err-msg)
-                 (format28 #,(string-append "Expected ~a API struct of type `"
-                                            (symbol->string type-name) "'")
-                           pkg-info:package-name))
+                 (format #f #,(string-append "Expected ~a API struct of type `"
+                                             (symbol->string type-name)
+                                             "', but ~a")
+                         pkg-info:package-name err-msg)
+                 (format #f #,(string-append "Expected ~a API struct of type `"
+                                             (symbol->string type-name) "'")
+                         pkg-info:package-name))
              obj)))
 
       #`(define #,(check-<type> type-name)
@@ -195,15 +188,15 @@
             (cond
              ((not (pair? obj))
               (#,(throw-failed-check-<type> type-name)
-               caller (format28 "~s is not a pair" obj) obj))
+               caller (format #f "~s is not a pair" obj) obj))
 
              ((not (eq? '#,tag (car obj)))
               (#,(throw-failed-check-<type> type-name)
-               caller (format28 "(car ~s) is not ~s" obj '#,tag) obj))
+               caller (format #f "(car ~s) is not ~s" obj '#,tag) obj))
 
              ((not (bytevector? (cdr obj)))
               (#,(throw-failed-check-<type> type-name)
-               caller (format28 "(cdr ~s) is not a bytevector" obj) obj))
+               caller (format #f "(cdr ~s) is not a bytevector" obj) obj))
 
              ((not (= (bytevector-length (cdr obj)) #,size))
               (#,(throw-failed-check-<type> type-name)
@@ -512,11 +505,11 @@
 (define (struct-type-error-msg tag size obj)
   (cond
    ((not (pair? obj))
-    (format28 "~s is not a pair" obj))
+    (format #f "~s is not a pair" obj))
    ((not (eq? tag (car obj)))
-    (format28 "(car ~s) is not ~s" obj tag))
+    (format #f "(car ~s) is not ~s" obj tag))
    ((not (bytevector? (cdr obj)))
-    (format28 "(cdr ~s) is not a bytevector" obj))
+    (format #f "(cdr ~s) is not a bytevector" obj))
    ((not (= (bytevector-length (cdr obj)) size))
     "bytevector length is wrong")
    (else #f)))
@@ -535,107 +528,107 @@
   (datum->syntax (current-form) (string->symbol (syntax->datum s))))
 
 (define (type-tag type-name)
-  (build-symbol (cute format28 "tag-~a" <>)
+  (build-symbol (cute format #f "tag-~a" <>)
                 type-name))
 
 (define (type-sizeof-var type-name)
-  (build-symbol (cute format28 "sizeof-~a" <>)
+  (build-symbol (cute format #f "sizeof-~a" <>)
                 type-name))
 
 (define (<type?> type-name)
-  (build-symbol (cute format28 "~a?" <>)
+  (build-symbol (cute format #f "~a?" <>)
                 type-name))
 
 (define (throw-failed-check-<type> type-name)
-  (build-symbol (cute format28 "throw-failed-check-~a" <>)
+  (build-symbol (cute format #f "throw-failed-check-~a" <>)
                 type-name))
 
 (define (check-<type> type-name)
-  (build-symbol (cute format28 "check-~a" <>)
+  (build-symbol (cute format #f "check-~a" <>)
                 type-name))
 
 (define (pointer-><type> type-name)
-  (build-symbol (cute format28 "pointer->~a" <>)
+  (build-symbol (cute format #f "pointer->~a" <>)
                 type-name))
 
 (define (<type>->pointer type-name)
-  (build-symbol (cute format28 "~a->pointer" <>)
+  (build-symbol (cute format #f "~a->pointer" <>)
                 type-name))
 
 (define (unchecked-<type>->pointer type-name)
-  (build-symbol (cute format28 "unchecked-~a->pointer" <>)
+  (build-symbol (cute format #f "unchecked-~a->pointer" <>)
                 type-name))
 
 (define (<type>-ref type-name)
-  (build-symbol (cute format28 "~a-ref" <>)
+  (build-symbol (cute format #f "~a-ref" <>)
                 type-name))
 
 (define (unchecked-<type>-ref type-name)
-  (build-symbol (cute format28 "unchecked-~a-ref" <>)
+  (build-symbol (cute format #f "unchecked-~a-ref" <>)
                 type-name))
 
 (define (malloc-<type> type-name)
-  (build-symbol (cute format28 "malloc-~a" <>)
+  (build-symbol (cute format #f "malloc-~a" <>)
                 type-name))
 
 (define (free-<type> type-name)
-  (build-symbol (cute format28 "free-~a" <>)
+  (build-symbol (cute format #f "free-~a" <>)
                 type-name))
 
 (define (unchecked-free-<type> type-name)
-  (build-symbol (cute format28 "unchecked-free-~a" <>)
+  (build-symbol (cute format #f "unchecked-free-~a" <>)
                 type-name))
 
 (define (gc-malloc-<type> type-name)
-  (build-symbol (cute format28 "gc-malloc-~a" <>)
+  (build-symbol (cute format #f "gc-malloc-~a" <>)
                 type-name))
 
 (define (gc-free-<type> type-name)
-  (build-symbol (cute format28 "gc-free-~a" <>)
+  (build-symbol (cute format #f "gc-free-~a" <>)
                 type-name))
 
 (define (unchecked-gc-free-<type> type-name)
-  (build-symbol (cute format28 "unchecked-gc-free-~a" <>)
+  (build-symbol (cute format #f "unchecked-gc-free-~a" <>)
                 type-name))
 
 (define (<type>:<field>-ref struct-name field-name)
-  (build-symbol (cute format28 "~a:~a-ref" <> <>)
+  (build-symbol (cute format #f "~a:~a-ref" <> <>)
                 struct-name field-name))
 
 (define (unchecked-<type>:<field>-ref struct-name field-name)
-  (build-symbol (cute format28 "unchecked-~a:~a-ref" <> <>)
+  (build-symbol (cute format #f "unchecked-~a:~a-ref" <> <>)
                 struct-name field-name))
 
 (define (<type>:<field>-dref struct-name field-name)
-  (build-symbol (cute format28 "~a:~a-dref" <> <>)
+  (build-symbol (cute format #f "~a:~a-dref" <> <>)
                 struct-name field-name))
 
 (define (unchecked-<type>:<field>-dref struct-name field-name)
-  (build-symbol (cute format28 "unchecked-~a:~a-dref" <> <>)
+  (build-symbol (cute format #f "unchecked-~a:~a-dref" <> <>)
                 struct-name field-name))
 
 (define (<type>:<field>-set! struct-name field-name)
-  (build-symbol (cute format28 "~a:~a-set!" <> <>)
+  (build-symbol (cute format #f "~a:~a-set!" <> <>)
                 struct-name field-name))
 
 (define (unchecked-<type>:<field>-set! struct-name field-name)
-  (build-symbol (cute format28 "unchecked-~a:~a-set!" <> <>)
+  (build-symbol (cute format #f "unchecked-~a:~a-set!" <> <>)
                 struct-name field-name))
 
 (define (<type>:<field>->pointer struct-name field-name)
-  (build-symbol (cute format28 "~a:~a->pointer" <> <>)
+  (build-symbol (cute format #f "~a:~a->pointer" <> <>)
                 struct-name field-name))
 
 (define (unchecked-<type>:<field>->pointer struct-name field-name)
-  (build-symbol (cute format28 "unchecked-~a:~a->pointer" <> <>)
+  (build-symbol (cute format #f "unchecked-~a:~a->pointer" <> <>)
                 struct-name field-name))
 
 (define (<type>->alist struct-name)
-  (build-symbol (cute format28 "~a->alist" <>)
+  (build-symbol (cute format #f "~a->alist" <>)
                 struct-name))
 
 (define (unchecked-<type>->alist struct-name)
-  (build-symbol (cute format28 "unchecked-~a->alist" <>)
+  (build-symbol (cute format #f "unchecked-~a->alist" <>)
                 struct-name))
 
 ;;-------------------------------------------------------------------------

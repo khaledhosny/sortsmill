@@ -48,5 +48,6 @@
                  (export ,@exports)
                  (import (sortsmillff alloc)
                          (rnrs)
-                         (system foreign))
+                         (system foreign)
+                         (ice-9 format))
                  ,@defines)))))
