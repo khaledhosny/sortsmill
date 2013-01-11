@@ -515,10 +515,18 @@
    (else #f)))
 
 (define (index->pointer p i size)
-  #`(make-pointer (+ (pointer-address #,p) (* #,i #,size))))
+  (let ((size-one-expression #`(make-pointer (+ (pointer-address #,p) #,i)))
+        (size-any-expression #`(make-pointer (+ (pointer-address #,p) (* #,i #,size)))))
+    (if (integer? size)
+        (if (= size 1) size-one-expression size-any-expression)
+        size-any-expression)))
 
 (define (index->offset offset i size)
-  #`(+ #,offset (* #,i #,size)))
+  (let ((size-one-expression #`(+ #,offset #,i))
+        (size-any-expression #`(+ #,offset (* #,i #,size))))
+    (if (integer? size)
+        (if (= size 1) size-one-expression size-any-expression)
+        size-any-expression)))
 
 (define (build-symbol constructor . objects)
   (syntax-string->syntax-symbol
