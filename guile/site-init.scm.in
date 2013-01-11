@@ -16,87 +16,87 @@
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 (use-modules
-   (system foreign)
-   (sortsmillff notices)
-   )
+ (system foreign)
+ (sortsmillff notices)
+ )
 
 ;;
 ;; Try to ensure access to Sorts Mill FontForge’s Guile modules.
 ;;
 (eval-when (compile load eval)
-   (let ((guilemoduledir "@guilemoduledir@"))
-      (unless (member guilemoduledir %load-path)
-         (add-to-load-path guilemoduledir))))
+           (let ((guilemoduledir "@guilemoduledir@"))
+             (unless (member guilemoduledir %load-path)
+               (add-to-load-path guilemoduledir))))
 (eval-when (compile load eval)
-   (let ((guileobjmoduledir "@guileobjmoduledir@"))
-      (unless (member guileobjmoduledir %load-compiled-path)
-         (set! %load-compiled-path
-            (cons guileobjmoduledir %load-compiled-path)))))
+           (let ((guileobjmoduledir "@guileobjmoduledir@"))
+             (unless (member guileobjmoduledir %load-compiled-path)
+               (set! %load-compiled-path
+                     (cons guileobjmoduledir %load-compiled-path)))))
 
 (fontforge-call-with-error-handling
-   "site-init.scm"
-   (lambda ()
+ "site-init.scm"
+ (lambda ()
 
-      ;;
-      ;; Link in our Guile extensions. At least some of them include
-      ;; useful C routines.
-      ;;
-      ;(dynamic-link "libguile-sortsmillff_iconv")
-      ;;(dynamic-link "libguile-sortsmillff_python") ; FIXME: Is this one needed?
-      ;(dynamic-link "libguile-sortsmillff_aux")
-      ;(dynamic-link "libguile-sortsmillff_fontforge")
-      ;(dynamic-link "libguile-sortsmillff_fontforgeexe")
+   ;;
+   ;; Link in our Guile extensions. At least some of them include
+   ;; useful C routines.
+   ;;
+                                        ;(dynamic-link "libguile-sortsmillff_iconv")
+   ;;(dynamic-link "libguile-sortsmillff_python") ; FIXME: Is this one needed?
+                                        ;(dynamic-link "libguile-sortsmillff_aux")
+                                        ;(dynamic-link "libguile-sortsmillff_fontforge")
+                                        ;(dynamic-link "libguile-sortsmillff_fontforgeexe")
 
-      ;;
-      ;; Load local-init.scm.
-      ;;
-      (let ((local-init "@sysconfdir@/@PACKAGE@/local-init.scm"))
-         (if (file-exists? local-init)
-             (fontforge-call-with-error-handling
-                "local-init.scm"
-                (lambda () (primitive-load local-init)))))
+   ;;
+   ;; Load local-init.scm.
+   ;;
+   (let ((local-init "@sysconfdir@/@PACKAGE@/local-init.scm"))
+     (if (file-exists? local-init)
+         (fontforge-call-with-error-handling
+          "local-init.scm"
+          (lambda () (primitive-load local-init)))))
 
-      ;;
-      ;; Load user-init.scm.
-      ;;
-      (let* ((xdg-config-home (getenv "XDG_CONFIG_HOME"))
-             (home (getenv "HOME"))
-             (user-config-dir
-                (cond
-                   (xdg-config-home)
-                   (home (string-append (getenv "HOME") "/.config"))
-                   (else #f))))
-         (if user-config-dir
-             (let ((user-init (string-append user-config-dir
-                                 "/@PACKAGE@/user-init.scm")))
-                (if (file-exists? user-init)
-                    (fontforge-call-with-error-handling
-                       "user-init.scm"
-                       (lambda () (primitive-load user-init)))))))
+   ;;
+   ;; Load user-init.scm.
+   ;;
+   (let* ((xdg-config-home (getenv "XDG_CONFIG_HOME"))
+          (home (getenv "HOME"))
+          (user-config-dir
+           (cond
+            (xdg-config-home)
+            (home (string-append (getenv "HOME") "/.config"))
+            (else #f))))
+     (if user-config-dir
+         (let ((user-init (string-append user-config-dir
+                                         "/@PACKAGE@/user-init.scm")))
+           (if (file-exists? user-init)
+               (fontforge-call-with-error-handling
+                "user-init.scm"
+                (lambda () (primitive-load user-init)))))))
 
-      (if #@have_python_scripting@
-          ;;
-          ;; Load site_init.py.
-          ;;
-          (let ((py-init "@pkgpythondatadir@/site_init.py"))
-             (if (file-exists? py-init)
-                 (let* ((this (dynamic-link))
-                        (fopen
-                           (pointer->procedure '*
-                              (dynamic-func "fopen" this)
-                              '(* *)))
-                        (fclose
-                           (pointer->procedure int
-                              (dynamic-func "fclose" this)
-                              '(*)))
-                        (PyRun_SimpleFile
-                           (pointer->procedure int
-                              (dynamic-func "PyRun_SimpleFile" this)
-                              '(* *)))
-                        (f (fopen (string->pointer py-init)
+   (if #@have_python_scripting@
+       ;;
+       ;; Load site_init.py.
+       ;;
+       (let ((py-init "@pkgpythondatadir@/site_init.py"))
+         (if (file-exists? py-init)
+             (let* ((this (dynamic-link))
+                    (fopen
+                     (pointer->procedure '*
+                                         (dynamic-func "fopen" this)
+                                         '(* *)))
+                    (fclose
+                     (pointer->procedure int
+                                         (dynamic-func "fclose" this)
+                                         '(*)))
+                    (PyRun_SimpleFile
+                     (pointer->procedure int
+                                         (dynamic-func "PyRun_SimpleFile" this)
+                                         '(* *)))
+                    (f (fopen (string->pointer py-init)
                               (string->pointer "r"))))
-                    (if (not (null-pointer? f))
-                        (PyRun_SimpleFile f (string->pointer py-init))
-                        (fclose f))))))
+               (if (not (null-pointer? f))
+                   (PyRun_SimpleFile f (string->pointer py-init))
+                   (fclose f))))))
 
-      ))
+   ))
