@@ -147,6 +147,12 @@ FONTFORGE_PATH_PROG([UPDATE_DESKTOP_DATABASE],[update-desktop-database],
 FONTFORGE_PATH_PROG([WGET],[wget],[GNU `wget' command])
 GUILE_PROGS
 
+if test `${GUILE} -c "(import (system foreign)) (write (defined? 'procedure->pointer))"` != "#t"; then
+   AC_MSG_ERROR([${PACKAGE_NAME} requires that Guile support `procedure->pointer'.
+                 The Guile found by configure seems not to. See
+                 http://www.gnu.org/software/guile/manual/guile.html@%:@Dynamic-FFI])
+fi
+
 #--------------------------------------------------------------------------
 
 FONTFORGE_ARG_ENABLE_REAL
