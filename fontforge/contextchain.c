@@ -1175,7 +1175,8 @@ CCD_ClassSelected (GGadget *g, int r, int c)
   struct matrix_data *classes = GMatrixEditGet (g, &rows);
   GGadget *tf = GWidgetGetControl (ccd->gw, CID_ClassNumbers + off);
   char buf[20];
-  uint32_t ubuf[80];
+  uint32_t ubuf_why_is_this_necessary_please_FIXME[81];
+  uint32_t *ubuf = ubuf_why_is_this_necessary_please_FIXME + 1;
 
   if (r < 0 || r >= rows)
     return;
@@ -1188,6 +1189,7 @@ CCD_ClassSelected (GGadget *g, int r, int c)
   else
     {
       ubuf[0] = ' ';
+      // FIXME: Why is there a ‘ubuf - 1’ here?
       utf82u_strncpy (ubuf - 1, classes[cols * r + 0].u.md_str,
                       sizeof (ubuf) / sizeof (ubuf[0]) - 2);
       ubuf[sizeof (ubuf) / sizeof (ubuf[0]) - 2] = '\0';
