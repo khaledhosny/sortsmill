@@ -1190,9 +1190,8 @@ CCD_ClassSelected (GGadget *g, int r, int c)
     {
       ubuf[0] = ' ';
       // FIXME: Why is there a ‘ubuf - 1’ here?
-      utf82u_strncpy (ubuf - 1, classes[cols * r + 0].u.md_str,
-                      sizeof (ubuf) / sizeof (ubuf[0]) - 2);
-      ubuf[sizeof (ubuf) / sizeof (ubuf[0]) - 2] = '\0';
+      utf82u_strncpy (ubuf - 1, classes[cols * r + 0].u.md_str, 78);
+      ubuf[78] = '\0';
       u32_strcat (ubuf, x_gc_u8_to_u32 (" "));
     }
   GTextFieldReplace (tf, ubuf);
