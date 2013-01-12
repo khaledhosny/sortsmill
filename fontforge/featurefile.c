@@ -1706,6 +1706,8 @@ return;
 	for ( script=axis->scripts; script!=NULL; script=script->next ) {
 	    uint32_t scrtag = script->script;
 	    fprintf( out, "\t%c%c%c%c", scrtag>>24, scrtag>>16, scrtag>>8, scrtag );
+	}
+    }
 #endif
 }
 
