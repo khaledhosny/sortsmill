@@ -34,47 +34,57 @@
 #include <stdio.h>
 #include <stdint.h>
 
-GMenuItem *cv_menu = NULL;
-GMenuItem *fv_menu = NULL;
+VISIBLE GMenuItem *cv_menu = NULL;
+VISIBLE GMenuItem *fv_menu = NULL;
 
+static gmenuitem_moveto_t
+moveto_func (int window)
+{
+  return (gmenuitem_moveto_t)
+    scm_to_pointer (scm_call_1
+                    (scm_c_private_ref ("sortsmillff usermenu", "moveto-proc-ptr"),
+                     scm_from_int (window)));
+}
+
+static gmenuitem_invoke_t
+invoke_func (int window)
+{
+  return (gmenuitem_invoke_t)
+    scm_to_pointer (scm_call_1
+                    (scm_c_private_ref ("sortsmillff usermenu", "invoke-proc-ptr"),
+                     scm_from_int (window)));
+}
+
+// FIXME: Get rid of this. It is needed now only because the menus are
+// initialized at compile time, in C.
 VISIBLE void
 cv_tools_list_check (GWindow gw, GMenuItem *mi, GEvent *e)
 {
-  CharViewBase *cvb = (CharViewBase *) GDrawGetUserData (gw);
-  SCM view = scm_call_1 (scm_c_public_ref ("sortsmillff views", "pointer->glyph-view"),
-                         scm_from_pointer (cvb, NULL));
-  scm_call_2 (scm_c_private_ref ("sortsmillff usermenu", "tools-list-check"),
-              scm_from_pointer (mi, NULL), view);
+  moveto_func (FF_GLYPH_WINDOW) (gw, mi, e);
 }
 
+// FIXME: Get rid of this. It is needed now only because the menus are
+// initialized at compile time, in C.
 VISIBLE void
 fv_tools_list_check (GWindow gw, GMenuItem *mi, GEvent *e)
 {
-  FontViewBase *fvb = (FontViewBase *) GDrawGetUserData (gw);
-  SCM view = scm_call_1 (scm_c_public_ref ("sortsmillff views", "pointer->font-view"),
-                         scm_from_pointer (fvb, NULL));
-  scm_call_2 (scm_c_private_ref ("sortsmillff usermenu", "tools-list-check"),
-              scm_from_pointer (mi, NULL), view);
+  moveto_func (FF_FONT_WINDOW) (gw, mi, e);
 }
 
+// FIXME: Get rid of this. It is needed now only because the menus are
+// initialized at compile time, in C.
 VISIBLE void
 cv_do_action (GWindow gw, GMenuItem *mi, GEvent *e)
 {
-  CharViewBase *cvb = (CharViewBase *) GDrawGetUserData (gw);
-  SCM view = scm_call_1 (scm_c_public_ref ("sortsmillff views", "pointer->glyph-view"),
-                         scm_from_pointer (cvb, NULL));
-  scm_call_2 (scm_c_private_ref ("sortsmillff usermenu", "do-action"),
-              scm_from_pointer (mi, NULL), view);
+  invoke_func (FF_GLYPH_WINDOW) (gw, mi, e);
 }
 
+// FIXME: Get rid of this. It is needed now only because the menus are
+// initialized at compile time, in C.
 VISIBLE void
 fv_do_action (GWindow gw, GMenuItem *mi, GEvent *e)
 {
-  FontViewBase *fvb = (FontViewBase *) GDrawGetUserData (gw);
-  SCM view = scm_call_1 (scm_c_public_ref ("sortsmillff views", "pointer->font-view"),
-                         scm_from_pointer (fvb, NULL));
-  scm_call_2 (scm_c_private_ref ("sortsmillff usermenu", "do-action"),
-              scm_from_pointer (mi, NULL), view);
+  invoke_func (FF_FONT_WINDOW) (gw, mi, e);
 }
 
 // FIXME: Get rid of this.
@@ -85,44 +95,6 @@ menu_info_add (SCM action, SCM enabled)
   SCM mid = scm_call_1 (scm_c_private_ref ("sortsmillff usermenu", "menu-info-add!"),
                         menu_info_entry);
   return scm_to_int (mid);
-}
-
-// FIXME: Get rid of this.
-static gmenuitem_moveto_t
-moveto_func (int window)
-{
-  gmenuitem_moveto_t result = NULL;
-  switch (window)
-    {
-    case FF_GLYPH_WINDOW:
-      result = cv_tools_list_check;
-      break;
-    case FF_FONT_WINDOW:
-      result = fv_tools_list_check;
-      break;
-    default:
-      assert (false);
-    }
-  return result;
-}
-
-// FIXME: Get rid of this.
-static gmenuitem_invoke_t
-invoke_func (int window)
-{
-  gmenuitem_invoke_t result = NULL;
-  switch (window)
-    {
-    case FF_GLYPH_WINDOW:
-      result = cv_do_action;
-      break;
-    case FF_FONT_WINDOW:
-      result = fv_do_action;
-      break;
-    default:
-      assert (false);
-    }
-  return result;
 }
 
 // FIXME: Get rid of this.

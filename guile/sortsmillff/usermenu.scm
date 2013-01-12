@@ -27,18 +27,20 @@
         font-view-user-menu
         add-menu-entry
         fill-menu-item-for-action
+        fill-menu-item
+        menu-entry-list->menu-items
         )
 
-(import (rnrs)
-        (sortsmillff views)
+(import (sortsmillff views)
         (sortsmillff notices)
         (sortsmillff fontforge-api)
         (sortsmillff gdraw-api)
         (sortsmillff machine)
-        (system foreign)
-        (only (srfi :1) span)
+        (rnrs)
+        (srfi :1)
         (only (srfi :27) random-integer)
         (ice-9 match)
+        (system foreign)
         )
 
 ;;-------------------------------------------------------------------------
@@ -158,149 +160,233 @@
     retval))
 
 ;;-------------------------------------------------------------------------
+
+(define font-window-flag 1)
+(define glyph-window-flag 2)
+(define metrics-window-flag 4)     ; Reserved for possible future use.
+
+(define glyph-view-menu-internal
+  (pointer->bytevector
+   (dynamic-pointer "cv_menu" (dynamic-link)) (sizeof '*)))
+
+(define font-view-menu-internal
+  (pointer->bytevector
+   (dynamic-pointer "fv_menu" (dynamic-link)) (sizeof '*)))
+
+(define GDrawGetUserData
+  (pointer->procedure
+   '* (dynamic-func "GDrawGetUserData" (dynamic-link)) '(*)))
+
+(define (glyph-view-moveto window-ptr menu-item-ptr event)
+  (tools-list-check
+   menu-item-ptr
+   (pointer->glyph-view (GDrawGetUserData window-ptr))))
+
+(define (font-view-moveto window-ptr menu-item-ptr event)
+  (tools-list-check
+   menu-item-ptr
+   (pointer->font-view (GDrawGetUserData window-ptr))))
+
+(define (glyph-view-invoke window-ptr menu-item-ptr event)
+  (do-action
+   menu-item-ptr
+   (pointer->glyph-view (GDrawGetUserData window-ptr))))
+
+(define (font-view-invoke window-ptr menu-item-ptr event)
+  (do-action
+   menu-item-ptr
+   (pointer->font-view (GDrawGetUserData window-ptr))))
+
+(define glyph-view-moveto-ptr
+  (procedure->pointer void glyph-view-moveto '(* * *)))
+
+(define font-view-moveto-ptr
+  (procedure->pointer void font-view-moveto '(* * *)))
+
+(define glyph-view-invoke-ptr
+  (procedure->pointer void glyph-view-invoke '(* * *)))
+
+(define font-view-invoke-ptr
+  (procedure->pointer void font-view-invoke '(* * *)))
+
+(define (menu-proc-ptr caller glyph-proc-ptr font-proc-ptr flag)
+  (cond
+   ((= flag glyph-window-flag) glyph-proc-ptr)
+   ((= flag font-window-flag) font-proc-ptr)
+   (else (assertion-violation
+          caller
+          (simple-format #f "expected ~d or ~d"
+                         font-window-flag glyph-window-flag)
+          flag))))
+  
+(define (moveto-proc-ptr flag)
+  (menu-proc-ptr
+   'moveto-proc-ptr glyph-view-moveto-ptr font-view-moveto-ptr flag))
+
+(define (invoke-proc-ptr flag)
+  (menu-proc-ptr
+   'invoke-proc-ptr glyph-view-invoke-ptr font-view-invoke-ptr flag))
+
+;;-------------------------------------------------------------------------
 ;;;;;
 ;;;;; Higher-level menu handling.
 ;;;;;
 ;;;;; UNDER DEVELOPMENT.
 ;;;;;
 
-(define color-default #xfffffffe)
+;;;(define cv_do_action
+;;;  (pointer->procedure
+;;;   void (dynamic-func "cv_do_action" (dynamic-link)) '(* * *)))
+;;;
+;;;(define fv_do_action
+;;;  (pointer->procedure
+;;;   void (dynamic-func "fv_do_action" (dynamic-link)) '(* * *)))
 
-;; A menu entry (including a menu itself) is a pair. The car is a
-;; header specifying the general character of the entry; for example,
-;; if it is a submenu, and what is its name. The cdr is an associative
-;; list of attributes.
-
-(define glyph-view-user-menu '((menu "Tools") . ()))
-(define font-view-user-menu '((menu "Tools") . ()))
-
-(define (choose-by-window-name window-name glyph-thing font-thing)
-  (cond
-   ((string-ci=? window-name "glyph") glyph-thing)
-   ((string-ci=? window-name "char") glyph-thing)
-   ((string-ci=? window-name "font") font-thing)
-   (else (error (string-append
-                 "expected \"glyph\" or \"font\" for window name, but got"
-                 window-name)))))
-
-(define (choose-user-menu window-name)
-  (choose-by-window-name
-   window-name glyph-view-user-menu font-view-user-menu))
-
-(define (menu-entry-head? head)
-  (match head
-         (((? symbol? kind) (? string? name) . rest) #t)
-         (else #f)))
-
-(define (menu-entry? entry)
-  (if (pair? entry)
-      (and (menu-entry-head? (car entry))
-           (list? (cdr entry)))
-      #f))
-
-(define (menu-entry-head=? head1 head2)
-  (assert (menu-entry-head? head1))
-  (assert (menu-entry-head? head2))
-  (and (eq? (car head1) (car head2))
-       (string=? (cadr head1) (cadr head2))))
-
-(define (menu-entry-head-is-kind? kind head)
-  (assert (symbol? kind))
-  (assert (menu-entry-head? head))
-  (eq? (car head) kind))
-
-(define (menu-entry-is-kind? kind entry)
-  (menu-entry-head-is-kind? kind (car entry)))
-
-(define (add-menu-entry menu menu-path new-entry)
-  (assert (menu-entry-is-kind? 'menu menu))
-  (assert (list? menu-path))
-  (assert (for-all string? menu-path))
-  (assert (menu-entry? new-entry))
-  (match menu-path
-         (() (cons (car menu)
-                   (append (cdr menu) (list new-entry))))
-         ((submenu-name . more-menu-path)
-          (let*-values
-              (((before remaining)
-                (span (lambda (entry) (menu-entry-head=?
-                                       (list 'menu submenu-name)
-                                       (car entry)))
-                      (cdr menu)))
-
-               ((submenu after)
-                (if (null? remaining)
-                    (values (cons (list 'menu submenu-name) '())
-                            '())
-                    (if (menu-entry-is-kind? 'menu (car remaining))
-                        (values (car remaining) ; Existing submenu.
-                                (cdr remaining))
-                        (values (cons (list 'menu submenu-name) '())
-                                '())
-                        ))))
-            (append (list (car menu))
-                    before
-                    (list (add-menu-entry submenu more-menu-path
-                                          new-entry))
-                    after)))))
-
-(define cv_tools_list_check
-  (pointer->procedure
-   void (dynamic-func "cv_tools_list_check" (dynamic-link)) '(* * *)))
-
-(define fv_tools_list_check
-  (pointer->procedure
-   void (dynamic-func "fv_tools_list_check" (dynamic-link)) '(* * *)))
-
-(define cv_do_action
-  (pointer->procedure
-   void (dynamic-func "cv_do_action" (dynamic-link)) '(* * *)))
-
-(define fv_do_action
-  (pointer->procedure
-   void (dynamic-func "fv_do_action" (dynamic-link)) '(* * *)))
-
-(define (choose-moveto window-name)
-  (choose-by-window-name
-   window-name cv_tools_list_check fv_tools_list_check))
-
-(define (choose-invoke window-name)
-  (choose-by-window-name
-   window-name cv_do_action fv_do_action))
-
-;; Take the high-level menu representation of an ‘enabled/action’ menu
-;; entry, and use that to fill in a GMenuInfo struct.
-(define (fill-menu-item-for-action window-name menu-item menu-entry)
-  (assert (menu-entry-is-kind? 'action menu-entry))
-  (let ((ti (GMenuItem:ti-ref menu-item))
-        (contents (cdr menu-entry)))
-    (let ((text      (assq 'text contents))
-          (image     (assq 'image contents))
-          (fg-color  (assq 'fg-color contents))
-          (bg-color  (assq 'bg-color contents))
-          (disabled  (assq 'disabled contents))
-          (checkable (assq 'checkable contents))
-          (checked   (assq 'checked contents))
-          (shortcut  (assq 'shortcut contents))
-          (action    (assq 'action contents))
-          (enabled   (assq 'enabled contents)))
-      (GTextInfo:text-is-1byte-set! ti #t)
-      (GTextInfo:text-has-mnemonic! ti #t)
-      (when text (GTextInfo:text-set! ti (string->pointer (cdr text) "UTF-8")))
-      (when image (GTextInfo:image-set! ti (string->pointer (cdr image))))
-      (GTextInfo:fg-set! ti (if fg-color (cdr fg-color) color-default))
-      (GTextInfo:bg-set! ti (if bg-color (cdr bg-color) color-default))
-      (when disabled (GTextInfo:disabled-set! ti (cdr disabled)))
-      (when checkable (GTextInfo:checkable-set! ti (cdr checkable)))
-      (when checked (GTextInfo:checked-set! ti (cdr checked)))
-      (when shortcut (GMenuItem:shortcut-set!
-                      menu-item (string->pointer (cdr shortcut) "UTF-8")))
-      (GMenuItem:invoke->set! menu-item (choose-invoke window-name))
-      (let ((enab (if enabled (cdr enabled) (lambda (view) #t)))
-            (act  (if action (cdr action) (lambda (view) *unspecified*))))
-        (GMenuItem:mid->set! menu-item (menu-info-add! (cons act enab))))
-      )))
-
+;;;;(define color-default #xfffffffe)
+;;;;
+;;;;;; A menu entry (including a menu itself) is a pair. The car is a
+;;;;;; header specifying the general character of the entry; for example,
+;;;;;; if it is a submenu, and what is its name. The cdr is an associative
+;;;;;; list of attributes.
+;;;;
+;;;;(define glyph-view-user-menu '((menu "Tools") . ()))
+;;;;(define font-view-user-menu '((menu "Tools") . ()))
+;;;;
+;;;;(define (choose-by-window-name window-name glyph-thing font-thing)
+;;;;  (cond
+;;;;   ((string-ci=? window-name "glyph") glyph-thing)
+;;;;   ((string-ci=? window-name "char") glyph-thing)
+;;;;   ((string-ci=? window-name "font") font-thing)
+;;;;   (else (error (string-append
+;;;;                 "expected \"glyph\" or \"font\" for window name, but got"
+;;;;                 window-name)))))
+;;;;
+;;;;(define (choose-user-menu window-name)
+;;;;  (choose-by-window-name
+;;;;   window-name glyph-view-user-menu font-view-user-menu))
+;;;;
+;;;;(define (menu-entry-head? head)
+;;;;  (match head
+;;;;         (((? symbol? kind) (? string? name) . rest) #t)
+;;;;         (else #f)))
+;;;;
+;;;;(define (menu-entry? entry)
+;;;;  (if (pair? entry)
+;;;;      (and (menu-entry-head? (car entry))
+;;;;           (list? (cdr entry)))
+;;;;      #f))
+;;;;
+;;;;(define (menu-entry-head=? head1 head2)
+;;;;  (assert (menu-entry-head? head1))
+;;;;  (assert (menu-entry-head? head2))
+;;;;  (and (eq? (car head1) (car head2))
+;;;;       (string=? (cadr head1) (cadr head2))))
+;;;;
+;;;;(define (menu-entry-head-is-kind? kind head)
+;;;;  (assert (symbol? kind))
+;;;;  (assert (menu-entry-head? head))
+;;;;  (eq? (car head) kind))
+;;;;
+;;;;(define (menu-entry-is-of-kind? kind entry)
+;;;;  (menu-entry-head-is-kind? kind (car entry)))
+;;;;
+;;;;(define (add-menu-entry menu menu-path new-entry)
+;;;;  (assert (menu-entry-is-of-kind? 'menu menu))
+;;;;  (assert (list? menu-path))
+;;;;  (assert (for-all string? menu-path))
+;;;;  (assert (menu-entry? new-entry))
+;;;;  (match menu-path
+;;;;         (() (cons (car menu)
+;;;;                   (append (cdr menu) (list new-entry))))
+;;;;         ((submenu-name . more-menu-path)
+;;;;          (let*-values
+;;;;              (((before remaining)
+;;;;                (span (lambda (entry) (menu-entry-head=?
+;;;;                                       (list 'menu submenu-name)
+;;;;                                       (car entry)))
+;;;;                      (cdr menu)))
+;;;;
+;;;;               ((submenu after)
+;;;;                (if (null? remaining)
+;;;;                    (values (cons (list 'menu submenu-name) '())
+;;;;                            '())
+;;;;                    (if (menu-entry-is-of-kind? 'menu (car remaining))
+;;;;                        (values (car remaining) ; Existing submenu.
+;;;;                                (cdr remaining))
+;;;;                        (values (cons (list 'menu submenu-name) '())
+;;;;                                '())
+;;;;                        ))))
+;;;;            (append (list (car menu))
+;;;;                    before
+;;;;                    (list (add-menu-entry submenu more-menu-path
+;;;;                                          new-entry))
+;;;;                    after)))))
+;;;;
+;;;;(define (choose-moveto window-name)
+;;;;  (choose-by-window-name
+;;;;   window-name cv_tools_list_check fv_tools_list_check))
+;;;;
+;;;;(define (choose-invoke window-name)
+;;;;  (choose-by-window-name
+;;;;   window-name cv_do_action fv_do_action))
+;;;;
+;;;;;; Take the high-level menu representation of an ‘enabled/action’ menu
+;;;;;; entry, and use that to fill in a GMenuInfo struct.
+;;;;(define (fill-menu-item-for-action window-name menu-item menu-entry)
+;;;;  (assert (menu-entry-is-of-kind? 'action menu-entry))
+;;;;  (let ((ti (GMenuItem:ti-ref menu-item))
+;;;;        (contents (cdr menu-entry)))
+;;;;    (let ((text      (assq 'text contents))
+;;;;          (image     (assq 'image contents))
+;;;;          (fg-color  (assq 'fg-color contents))
+;;;;          (bg-color  (assq 'bg-color contents))
+;;;;          (disabled  (assq 'disabled contents))
+;;;;          (checkable (assq 'checkable contents))
+;;;;          (checked   (assq 'checked contents))
+;;;;          (shortcut  (assq 'shortcut contents))
+;;;;          (action    (assq 'action contents))
+;;;;          (enabled   (assq 'enabled contents)))
+;;;;      (GTextInfo:text-is-1byte-set! ti #t)
+;;;;      (GTextInfo:text-has-mnemonic-set! ti #t)
+;;;;      (when text (GTextInfo:text-set! ti (string->pointer (cdr text) "UTF-8")))
+;;;;      (when image (GTextInfo:image-set! ti (string->pointer (cdr image))))
+;;;;      (GTextInfo:fg-set! ti (if fg-color (cdr fg-color) color-default))
+;;;;      (GTextInfo:bg-set! ti (if bg-color (cdr bg-color) color-default))
+;;;;      (when disabled (GTextInfo:disabled-set! ti (cdr disabled)))
+;;;;      (when checkable (GTextInfo:checkable-set! ti (cdr checkable)))
+;;;;      (when checked (GTextInfo:checked-set! ti (cdr checked)))
+;;;;      (when shortcut (GMenuItem:shortcut-set!
+;;;;                      menu-item (string->pointer (cdr shortcut) "UTF-8")))
+;;;;      (GMenuItem:invoke-set! menu-item (procedure->pointer
+;;;;                                        void
+;;;;                                        (choose-invoke window-name)
+;;;;                                        '(* * *)))
+;;;;      (let ((enab (if enabled (cdr enabled) (lambda (view) #t)))
+;;;;            (act  (if action (cdr action) (lambda (view) *unspecified*))))
+;;;;        (GMenuItem:mid-set! menu-item (menu-info-add! (list act enab))))
+;;;;      )))
+;;;;
+;;;;(define (fill-menu-item window-name menu-item menu-entry)
+;;;;  (match (caar menu-entry)
+;;;;    ('action (fill-menu-item-for-action window-name menu-item menu-entry))
+;;;;    ;;;
+;;;;    ;;; FIXME: Implement other menu entry kinds, and catch erroneous
+;;;;    ;;; entries rather than ignore them.
+;;;;    ;;;
+;;;;    (else *unspecified*)
+;;;;    ))
+;;;;
+;;;;(define (menu-entry-list->menu-items window-name menu-entry-list)
+;;;;  (assert (menu-entry-is-of-kind? 'menu menu))
+;;;;  (let* ((menu-size (length menu))
+;;;;         (mi-array (gc-malloc-GMenuItem (+ menu-size 1))))
+;;;;    (for-each
+;;;;     (match-lambda ((i menu-entry)
+;;;;                    (fill-menu-item window-name
+;;;;                                    (GMenuItem-ref mi-array i)
+;;;;                                    menu-entry)))
+;;;;     (zip (iota menu-size) (cdr (assq 'sub (cdr menu)))))
+;;;;    mi-array))
 
 ;;-------------------------------------------------------------------------
 ;;;;;
