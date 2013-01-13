@@ -1171,31 +1171,24 @@ CCD_ClassSelected (GGadget *g, int r, int c)
 {
   struct contextchaindlg *ccd = GDrawGetUserData (GGadgetGetWindow (g));
   int off = GGadgetGetCid (g) - CID_ClassList;
-  int rows, cols = GMatrixEditGetColCnt (g);
+  int cols = GMatrixEditGetColCnt (g);
+  int rows;
   struct matrix_data *classes = GMatrixEditGet (g, &rows);
   GGadget *tf = GWidgetGetControl (ccd->gw, CID_ClassNumbers + off);
-  char buf[20];
-  uint32_t ubuf_why_is_this_necessary_please_FIXME[81];
-  uint32_t *ubuf = ubuf_why_is_this_necessary_please_FIXME + 1;
 
-  if (r < 0 || r >= rows)
-    return;
-  if (classes[cols * r + 0].u.md_str == NULL
-      || classes[cols * r + 0].u.md_str[0] == '\0')
+  if (0 <= r && r < rows)
     {
-      sprintf (buf, " %d ", r);
-      u32_strcpy (ubuf, x_gc_u8_to_u32 (buf));
+      char *s;
+      if (classes[cols * r + 0].u.md_str == NULL
+	  || classes[cols * r + 0].u.md_str[0] == '\0')
+	{
+	  s = x_gc_malloc_atomic (20 * sizeof (char));
+	  snprintf (s, 20, " %d ", r);
+	}
+      else
+	s = x_gc_strjoin (" ", classes[cols * r + 0].u.md_str, " ", NULL);
+      GTextFieldReplace (tf, x_gc_u8_to_u32 ((uint8_t *) s));
     }
-  else
-    {
-      ubuf[0] = ' ';
-      // FIXME: Why is there a ‘ubuf - 1’ here?
-      utf82u_strncpy (ubuf - 1, classes[cols * r + 0].u.md_str, 78);
-      ubuf[78] = '\0';
-      u32_strcat (ubuf, x_gc_u8_to_u32 (" "));
-    }
-  GTextFieldReplace (tf, ubuf);
-  return;
 }
 
 static void
