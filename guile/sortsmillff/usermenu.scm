@@ -18,17 +18,15 @@
 (define-module (sortsmillff usermenu))
 
 (export register-fontforge-menu-entry
+
         wrap-ff_menu_entry_action_t
         wrap-ff_menu_entry_enabled_t
 
-        ;; FIXME: Decide what really to export.
-        color-default
-        glyph-view-user-menu
-        font-view-user-menu
-        add-menu-entry
-        fill-menu-item-for-action
-        fill-menu-item
-        menu-entry-list->menu-items
+        glyph-view-tools
+        font-view-tools
+        activate-gui-tools
+        activate-glyph-view-tools
+        activate-font-view-tools
         )
 
 (import (sortsmillff views)
@@ -36,8 +34,10 @@
         (sortsmillff fontforge-api)
         (sortsmillff gdraw-api)
         (sortsmillff machine)
+        (sortsmillff i18n)
         (rnrs)
         (srfi :1)
+        (only (srfi :26) cut)
         (only (srfi :27) random-integer)
         (ice-9 match)
         (system foreign)
@@ -171,8 +171,8 @@
    ((string-ci=? window-name "char") glyph-window-flag)
    ((string-ci=? window-name "font") font-window-flag)
    (else (error 'window-name->flag
-                "expected \"glyph\" or \"font\" for window name"
-                 window-name))))
+                (_ "expected \"glyph\" or \"font\" for window name")
+                window-name))))
 
 (define GDrawGetUserData
   (pointer->procedure
@@ -223,10 +223,10 @@
    ((= flag font-window-flag) font-proc-ptr)
    (else (assertion-violation
           caller
-          (simple-format #f "expected ~d or ~d"
-                         font-window-flag glyph-window-flag)
+          (format #f (_ "expected ~d or ~d")
+                  font-window-flag glyph-window-flag)
           flag))))
-  
+
 (define (moveto-proc-ptr flag)
   (menu-proc-ptr
    'moveto-proc-ptr glyph-view-moveto-ptr font-view-moveto-ptr flag))
@@ -239,48 +239,103 @@
 
 (define color-default #xfffffffe)
 
-(define glyph-view-menu-internal
+(define glyph-view-tools #f)
+(define font-view-tools #f)
+
+(define (tools-ref window-name)
+  (let ((flag (window-name->flag window-name)))
+    (cond
+     ((= flag glyph-window-flag) glyph-view-tools)
+     ((= flag font-window-flag) font-view-tools))))
+
+(define (tools-set! window-name new-tools)
+  (let ((flag (window-name->flag window-name)))
+    (cond
+     ((= flag glyph-window-flag) (set! glyph-view-tools new-tools))
+     ((= flag font-window-flag) (set! font-view-tools new-tools)))))
+
+(define glyph-view-tools-internal
   (pointer->bytevector
    (dynamic-pointer "cv_menu" (dynamic-link)) (sizeof '*)))
 
-(define font-view-menu-internal
+(define font-view-tools-internal
   (pointer->bytevector
    (dynamic-pointer "fv_menu" (dynamic-link)) (sizeof '*)))
+
+(define-syntax bytevector-address-native-set!
+  (lambda (x)
+    (syntax-case x ()
+      ((_ bv index value)
+       (match (sizeof '*)
+         (4 #'(bytevector-u32-native-set! bv index value))
+         (8 #'(bytevector-u64-native-set! bv index value))
+         (else (error
+                'bytevector-address-native-set!
+                ;; Do not bother putting this in translation files.
+                "we do not know how to handle addresses of this size"
+                (sizeof '*))
+               #'#f))))))
+
+(define (bytevector-pointer-native-set! bv index p)
+  (bytevector-address-native-set! bv index (pointer-address p)))
+
+(define (set-pointer! bv p)
+  (bytevector-pointer-native-set! bv 0 p))
+
+(define (activate-gui-tools)
+  (activate-glyph-view-tools)
+  (activate-font-view-tools))
+
+(define (activate-glyph-view-tools)
+  (let ((p (if glyph-view-tools
+               (GMenuItem->pointer
+                (menu-entry-list->menu-items "glyph" glyph-view-tools))
+               %null-pointer)))
+    (set-pointer! glyph-view-tools-internal p)))
+
+(define (activate-font-view-tools)
+  (let ((p (if font-view-tools
+               (GMenuItem->pointer
+                (menu-entry-list->menu-items "font" font-view-tools))
+               %null-pointer)))
+    (set-pointer! font-view-tools-internal p)))
 
 ;;
 ;; FIXME: More thorough and better modularized error checking.
 ;;
 (define (fill-menu-item! window-name menu-item menu-entry)
+  (check-menu-entry menu-entry)
   (set-menu-item-defaults! menu-item)
   (let ((window-flag (window-name->flag window-name))
         (action (assq 'action menu-entry))
         (enabled (assq 'enabled menu-entry)))
     (when (and enabled (not action))
       (error 'fill-menu-item!
-             "a menu entry has an 'enabled field but no 'action field"
+             (_ "a menu entry has an 'enabled field but no 'action field")
              menu-entry))
     (if action
         (begin
           (when (or (assq 'invoke menu-entry) (assq 'moveto menu-entry))
             (error 'fill-menu-item!
-                   "a menu entry has both an 'action field and an 'invoke or 'moveto field"
+                   (_ "a menu entry has both an 'action field and an 'invoke or 'moveto field")
                    menu-entry))
           (let ((integer-key (menu-info-add!
-                              (list (cdr action)
-                                    (if enabled (cdr enabled) #f)))))
+                              (list (cadr action)
+                                    (if enabled (cadr enabled) #f)))))
             
-          (for-each
-           (match-lambda ((key . value) (set-menu-item-value! key value)))
-           `((integer-key ,integer-key)
-             (moveto ,(moveto-proc-ptr window-flag))
-             (invoke ,(invoke-proc-ptr window-flag))
-             ,@menu-entry))))
+            (for-each
+             (match-lambda ((key . value) (set-menu-item-value!
+                                           window-name menu-item key value)))
+             `((integer-key ,integer-key)
+               (invoke ,(invoke-proc-ptr window-flag))
+               ,@menu-entry))))
         (for-each
-         (match-lambda ((key . value) (set-menu-item-value! key value)))
+         (match-lambda ((key . value) (set-menu-item-value!
+                                       window-name menu-item key value)))
          menu-entry))))
 
 (define (set-menu-item-defaults! menu-item)
-  (bytevector-fill! menu-item 0)
+  (bytevector-fill! (cdr menu-item) 0)
   (let ((ti (GMenuItem:ti-ref menu-item)))
     (GTextInfo:fg-set! ti color-default)
     (GTextInfo:bg-set! ti color-default)
@@ -288,27 +343,51 @@
     (GTextInfo:text-has-mnemonic-set! ti #t)
     (GTextInfo:image-precedes-set! ti #t)))
 
-(define (set-menu-item-value! key value)
+(define (set-menu-item-value! window-name menu-item key value)
   (let ((mi menu-item)
-        (ti (GMenuItem:ti-ref menu-item)))
+        (ti (GMenuItem:ti-ref menu-item))
+        (v (car value)))
     (match key
-      ('text (GTextInfo:text-set! ti (string->pointer value "UTF-8")))
-      ('image (GTextInfo:image-set! ti (string->pointer value)))
-      ('foreground-color (GTextInfo:fg-set! ti value))
-      ('background-color (GTextInfo:bg-set! ti value))
-      ('disabled (GTextInfo:disabled-set! ti value))
-      ('image-precedes-text (GTextInfo:image-precedes-set! ti value))
-      ('checkable (GTextInfo:checkable-set! ti value))
-      ('checked (GTextInfo:checked-set! ti value))
-      ('is-line (GTextInfo:line-set! ti value))
-      ('shortcut (GMenuItem:shortcut-set! mi (string->pointer value "UTF-8")))
-      ('integer-key (GMenuItem:mid-set! mi value))
-      ('moveto (GMenuItem:moveto-set! mi (force-to-menu-func-pointer value)))
-      ('invoke (GMenuItem:invoke-set! mi (force-to-menu-func-pointer value)))
-      ;;;
-      ;;; FIXME: Submenu support.
-      ;;;
+      ('text (GTextInfo:text-set! ti (string->pointer v "UTF-8")))
+      ('image (GTextInfo:image-set! ti (string->pointer v)))
+      ('foreground-color (GTextInfo:fg-set! ti v))
+      ('background-color (GTextInfo:bg-set! ti v))
+      ('disabled (GTextInfo:disabled-set! ti v))
+      ('image-precedes-text (GTextInfo:image-precedes-set! ti v))
+      ('checkable (GTextInfo:checkable-set! ti v))
+      ('checked (GTextInfo:checked-set! ti v))
+      ('is-line (GTextInfo:line-set! ti v))
+      ('shortcut (GMenuItem:shortcut-set! mi (string->pointer v "UTF-8")))
+      ('integer-key (GMenuItem:mid-set! mi v))
+      ('moveto (GMenuItem:moveto-set! mi (force-to-menu-func-pointer v)))
+      ('invoke (GMenuItem:invoke-set! mi (force-to-menu-func-pointer v)))
+      ('enabled *unspecified*)
+      ('action *unspecified*)
+      ('submenu (GMenuItem:sub-set!
+                 mi (GMenuItem->pointer
+                     (menu-entry-list->menu-items window-name v))))
+      (else (format (current-error-port)
+                    (_ "Ignoring menu entry field ~s\n") key))
       )))
+
+(define (check-menu-entry menu-entry)
+  (unless (if (list? menu-entry) (for-all pair? menu-entry) #f)
+    (error 'check-menu-entry
+           (_ "expected an association list") menu-entry))
+  (for-each (match-lambda ((key . value)
+                           (check-menu-entry-key key)
+                           (check-menu-entry-value value)))
+            menu-entry))
+
+(define (check-menu-entry-key key)
+  (unless (symbol? key)
+    (error 'check-menu-entry-key (_ "expected a symbol") key)))
+
+(define (check-menu-entry-value value)
+  (unless (list? value)
+    (error 'check-menu-entry-value (_ "expected a list") value))
+  (unless (= 1 (length value))
+    (error 'check-menu-entry-value (_ "expected a list of length 1") value)))
 
 (define (force-to-menu-func-pointer proc-or-pointer)
   (if (pointer? proc-or-pointer)
@@ -331,20 +410,77 @@
 ;;;;; FIXME: Get rid of these.
 ;;;;;
 
-;;;
-;;; FIXME: Get rid of this.
-;;;
 (load-extension "libguile-sortsmillff_fontforgeexe"
                 "init_guile_sortsmillff_usermenu")
 
-;;;
-;;; FIXME: Get rid of this.
-;;;
 (define* (register-fontforge-menu-entry #:key window menu-path action
                                         (enabled (lambda (view) #t))
                                         (shortcut #f))
-  (internal:register-fontforge-menu-entry window menu-path
-                                          action enabled shortcut))
+  (let ((window-name (symbol->string window))
+        (submenus (drop-right menu-path 1))
+        (entry-name (last menu-path)))
+    (let ((tools (tools-ref window-name))
+          (moveto (moveto-proc-ptr (window-name->flag window-name)))
+          (new-entry (if shortcut
+                         `[(text     ,entry-name)
+                           (enabled  ,enabled)
+                           (action   ,action)
+                           (shortcut ,shortcut)]
+                         `[(text     ,entry-name)
+                           (enabled  ,enabled)
+                           (action   ,action)])))
+      (tools-set! window-name
+                  (insert-menu-entry moveto
+                                     (if tools tools '())
+                                     new-entry submenus))
+      (activate-gui-tools))))
+
+(define (insert-menu-entry moveto tools new-entry submenus)
+  (match submenus
+
+    ;; Replacement of a menu entry is not supported.
+    (() (append tools (list new-entry)))
+
+    ((submenu-name . more-submenus)
+     (let ((is-the-submenu? (cut menu-entry-is-submenu-named?
+                                 submenu-name <>)))
+       (if (any is-the-submenu? tools)
+           [let* ((before (take-while (negate is-the-submenu?) tools))
+                  (tail (find-tail is-the-submenu? tools))
+                  (the-submenu (car tail))
+                  (submenu-tools (cadr (assq 'submenu the-submenu)))
+                  (new-submenu-tools (insert-menu-entry
+                                      moveto submenu-tools new-entry
+                                      more-submenus))
+                  (new-submenu (replace-submenu-tools the-submenu
+                                                      new-submenu-tools))
+                  (after (cdr tail)))
+             (append before (list new-submenu) after)]
+           [insert-menu-entry
+            moveto
+            (append tools (list `[(text    ,submenu-name)
+                                  (moveto  ,moveto)
+                                  (submenu ())]))
+            new-entry submenus])))))
+
+(define (replace-submenu-tools the-submenu new-tools)
+  (append
+   (remp (match-lambda ((key . _) (eq? key 'submenu))) the-submenu)
+   `[(submenu ,new-tools)]))
+
+(define (menu-entry-is-submenu-named? name menu-entry)
+  (if (menu-entry-is-submenu? menu-entry)
+      (menu-entry-text=? name menu-entry)
+      #f))
+
+(define (menu-entry-is-submenu? menu-entry)
+  (not (not (assq 'submenu menu-entry))))
+
+(define (menu-entry-text=? text menu-entry)
+  (let ((text-field (assq 'text menu-entry)))
+    (if text-field
+        (string=? (cadr text-field) text)
+        #f)))
 
 ;;-------------------------------------------------------------------------
 ;;
@@ -397,5 +533,13 @@
 (define closure_maker__
   (lambda (cython-func py-func)
     (lambda (view) (cython-func view py-func))))
+
+(define (register-fontforge-menu-entry-from-c-code
+         window menu-path action enabled shortcut)
+  (register-fontforge-menu-entry #:window window
+                                 #:menu-path menu-path
+                                 #:action action
+                                 #:enabled enabled
+                                 #:shortcut shortcut))
 
 ;;-------------------------------------------------------------------------

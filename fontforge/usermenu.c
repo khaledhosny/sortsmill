@@ -30,9 +30,7 @@
 #include <sortsmillff/guile/views.h>
 #include <fontforgeui.h>
 #include <usermenu.h>
-#include <ustring.h>
 #include <stdio.h>
-#include <stdint.h>
 
 VISIBLE GMenuItem *cv_menu = NULL;
 VISIBLE GMenuItem *fv_menu = NULL;
@@ -87,104 +85,33 @@ fv_do_action (GWindow gw, GMenuItem *mi, GEvent *e)
   invoke_func (FF_FONT_WINDOW) (gw, mi, e);
 }
 
-// FIXME: Get rid of this.
-static int
-menu_info_add (SCM action, SCM enabled)
+static SCM
+make_string_list (const char **strings)
 {
-  SCM menu_info_entry = scm_list_2 (action, enabled);
-  SCM mid = scm_call_1 (scm_c_private_ref ("sortsmillff usermenu", "menu-info-add!"),
-                        menu_info_entry);
-  return scm_to_int (mid);
+  SCM list = SCM_EOL;
+  for (unsigned int i = 0; strings[i] != NULL; i++)
+    list = scm_cons (scm_from_utf8_string (strings[i]), list);
+  return scm_reverse (list);
 }
 
-// FIXME: Get rid of this.
-static int
-find_sub_menu (GMenuItem **mn, uint32_t *submenuu)
-{
-  int j = 0;
-  bool submenu_found = false;
-  while (!submenu_found && ((*mn)[j].ti.text != NULL || (*mn)[j].ti.line))
-    {
-      if ((*mn)[j].ti.text != NULL
-          // FIXME: Should this be a normalized comparison?
-          && u32_strcmp ((*mn)[j].ti.text, submenuu) == 0)
-        submenu_found = true;
-      else
-        j++;
-    }
-  return j;
-}
-
-// FIXME: Get rid of this.
-static void
-insert_sub_menus (int window, const char **menu_path, SCM action, SCM enabled,
-                  const char *shortcut, GMenuItem **mn)
-{
-  int i;
-  int j;
-  GMenuItem *mmn;
-
-  for (i = 0; menu_path[i] != NULL; i++)
-    {
-      uint32_t *submenuu = utf82u_copy (menu_path[i]);
-
-      j = 0;
-      if (*mn != NULL)
-        j = find_sub_menu (mn, submenuu);
-
-      if (*mn == NULL || (*mn)[j].ti.text == NULL)
-        {
-          *mn = xrealloc (*mn, (j + 2) * sizeof (GMenuItem));
-          memset (*mn + j, 0, 2 * sizeof (GMenuItem));
-        }
-      mmn = *mn;
-      if (mmn[j].ti.text == NULL)
-        {
-          mmn[j].ti.text = submenuu;
-          mmn[j].ti.fg = COLOR_DEFAULT;
-          mmn[j].ti.bg = COLOR_DEFAULT;
-          if (menu_path[i + 1] != NULL)
-            {
-              mmn[j].mid = -1;
-              mmn[j].moveto = moveto_func (window);
-              mn = &mmn[j].sub;
-            }
-          else
-            {
-              mmn[j].shortcut = xstrdup_or_null (shortcut);
-              mmn[j].invoke = invoke_func (window);
-              mmn[j].mid = menu_info_add (action, enabled);
-            }
-        }
-      else
-        {
-          if (menu_path[i + 1] != NULL)
-            mn = &mmn[j].sub;
-          else
-            {
-              mmn[j].shortcut = xstrdup_or_null (shortcut);
-              mmn[j].invoke = invoke_func (window);
-              mmn[j].mid = menu_info_add (action, enabled);
-              fprintf (stderr, _("Redefining menu entry %s\n"), menu_path[i]);
-              free (submenuu);
-            }
-        }
-    }
-}
-
-// FIXME: Get rid of this.
 VISIBLE void
 register_fontforge_menu_entry (int window, const char **menu_path, SCM action,
                                SCM enabled, const char *shortcut)
 {
-  if (!no_windowing_ui)
-    switch (window)
-      {
-      case FF_FONT_WINDOW:
-        insert_sub_menus (window, menu_path, action, enabled, shortcut, &fv_menu);
-        break;
-      case FF_GLYPH_WINDOW:
-        insert_sub_menus (window, menu_path, action, enabled, shortcut, &cv_menu);
-        break;
-      }
+  SCM window_symbol = SCM_UNSPECIFIED;
+  switch (window)
+    {
+    case FF_GLYPH_WINDOW:
+      window_symbol = scm_from_latin1_symbol ("glyph");
+      break;
+    case FF_FONT_WINDOW:
+      window_symbol = scm_from_latin1_symbol ("font");
+      break;
+    }
+
+  SCM shortcut_object = (shortcut != NULL) ? scm_from_utf8_string (shortcut) : SCM_BOOL_F;
+
+  scm_call_5 (scm_c_private_ref ("sortsmillff usermenu",
+                                 "register-fontforge-menu-entry-from-c-code"),
+              window_symbol, make_string_list (menu_path), action, enabled, shortcut_object);
 }
