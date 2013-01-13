@@ -38,17 +38,17 @@ lib_LTLIBRARIES =
 #      #:window 'glyph
 #      #:menu-path '("Tools" "Useless tools"
 #                    "Glyph view extension written in C")
-#      #:action (wrap-ff_menu_entry_action_t
+#      #:action (c-menu-entry-action->procedure
 #                  (dynamic-func "glyph_menu_action" dll)
 #                  (string->pointer
 #                     "This is a glyph view, and the glyph is not 'question'."))
-#      #:enabled (wrap-ff_menu_entry_enabled_t
+#      #:enabled (c-menu-entry-enabled->procedure
 #                   (dynamic-func "glyph_menu_enabled" dll)))
 #
 #   (register-fontforge-menu-entry
 #      #:window 'font
 #      #:menu-path '("Tools" "Font view extension written in C")
-#      #:action (wrap-ff_menu_entry_action_t
+#      #:action (c-menu-entry-action->procedure
 #                  (dynamic-func "font_menu_action" dll)
 #                  (string->pointer "This is a font view."))))
 #
@@ -74,17 +74,17 @@ if FORTRAN_API
 #      #:window 'glyph
 #      #:menu-path '("Tools" "Useless tools"
 #                    "Glyph view extension written in Fortran")
-#      #:action (wrap-ff_menu_entry_action_t
+#      #:action (c-menu-entry-action->procedure
 #                  (dynamic-func "glyph_menu_action" dll)
 #                  (string->pointer
 #                     "This is a glyph view, and the glyph is not 'question'."))
-#      #:enabled (wrap-ff_menu_entry_enabled_t
+#      #:enabled (c-menu-entry-enabled->procedure
 #                   (dynamic-func "glyph_menu_enabled" dll)))
 #
 #   (register-fontforge-menu-entry
 #      #:window 'font
 #      #:menu-path '("Tools" "Font view extension written in Fortran")
-#      #:action (wrap-ff_menu_entry_action_t
+#      #:action (c-menu-entry-action->procedure
 #                  (dynamic-func "font_menu_action" dll)
 #                  (string->pointer "This is a font view."))))
 #

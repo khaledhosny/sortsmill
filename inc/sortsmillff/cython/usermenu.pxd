@@ -43,13 +43,3 @@ cdef extern from "sortsmillff/usermenu.h":
                                       constp.const_char_ptr_ptr menu_path,
                                       SCM action, SCM enabled,
                                       constp.const_char_ptr shortcut)
-
-#  ctypedef void (*ff_menu_entry_action_t) (void *obj, void *data)
-#  ctypedef bool (*ff_menu_entry_enabled_t) (void *obj, void *data)
-#
-#  void register_fontforge_menu_entry (int window,
-#                                      constp.const_char_ptr_ptr menu_path,
-#                                      ff_menu_entry_action_t action,
-#                                      ff_menu_entry_enabled_t enabled,
-#                                      constp.const_char_ptr shortcut,
-#                                      void *data)

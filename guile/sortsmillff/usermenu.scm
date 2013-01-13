@@ -19,8 +19,8 @@
 
 (export register-fontforge-menu-entry
 
-        wrap-ff_menu_entry_action_t
-        wrap-ff_menu_entry_enabled_t
+        c-menu-entry-action->procedure
+        c-menu-entry-enabled->procedure
 
         glyph-view-tools
         font-view-tools
@@ -492,23 +492,23 @@
 ;;      (register-fontforge-menu-entry
 ;;            #:window 'glyph
 ;;            #:menu-path '("Tools" "My action")
-;;            #:action (wrap-ff_menu_entry_action_t
+;;            #:action (c-menu-entry-action->procedure
 ;;                        (dynamic-func "my_action" dll) my-data-ptr)
-;;            #:enabled (wrap-ff_menu_entry_enabled_t
+;;            #:enabled (c-menu-entry-enabled->procedure
 ;;                         (dynamic-func "my_enabled" dll) my-data-ptr)
 ;;            #:shortcut "My action|F10"))
 
-(define wrap-ff_menu_entry_action_t
+(define c-menu-entry-action->procedure
   (case-lambda
-    ((c-action) (wrap-ff_menu_entry_action_t c-action %null-pointer))
+    ((c-action) (c-menu-entry-action->procedure c-action %null-pointer))
     ((c-action data)
      (let* ((proc (pointer->procedure void c-action (list '* '*)))
             (wrapped-action (lambda (view) (proc (view->pointer view) data))))
        wrapped-action))))
 
-(define wrap-ff_menu_entry_enabled_t
+(define c-menu-entry-enabled->procedure
   (case-lambda
-    ((c-enabled) (wrap-ff_menu_entry_enabled_t c-enabled %null-pointer))
+    ((c-enabled) (c-menu-entry-enabled->procedure c-enabled %null-pointer))
     ((c-enabled data)
      (let* ((proc (pointer->procedure _Bool c-enabled (list '* '*)))
             (wrapped-enabled (lambda (view) (not (zero? (proc (view->pointer view) data))))))
