@@ -28,6 +28,7 @@
 #define _BASEVIEWS_H
 
 #include "splinefont.h"
+#include <sortsmillff/usermenu.h>
 
 enum widthtype
 {
@@ -210,8 +211,15 @@ struct cvcontainer_funcs
   SplineFont *(*sf_of_container) (struct cvcontainer * cvc);
 };
 
+typedef struct
+{
+  int tag;	     /* Identifies which kind of view base this is. */
+} ViewBase;
+
 typedef struct charviewbase
 {
+  int tag;  /* == FF_GLYPH_WINDOW. This field must come first and must
+	       be set. */
   struct charviewbase *next;
   struct fontviewbase *fv;
   SplineChar *sc;
@@ -219,7 +227,7 @@ typedef struct charviewbase
   uint8_t drawmode;
   uint16_t ft_gridfitwidth;
   SplineSet *gridfit;
-  struct cvcontainer *container;        /* The sv (or whatever) within which this view is embedded (if it is embedded) */
+  struct cvcontainer *container; /* The sv (or whatever) within which this view is embedded (if it is embedded) */
 } CharViewBase;
 
 struct fvcontainer
@@ -247,11 +255,13 @@ struct fvcontainer_funcs
 
 typedef struct fontviewbase
 {
-  struct fontviewbase *next;    /* Next on list of open fontviews. */
+  int tag;   /* == FF_FONT_WINDOW. This field must come first and must
+		be set. */
+  struct fontviewbase *next;	 /* Next on list of open fontviews. */
   struct fontviewbase *nextsame; /* Next fv looking at this font. */
-  EncMap *map;                  /* Current encoding info. */
-  EncMap *normal;               /* If this is not NULL then we have a
-				   compacted encoding in map, and this
+  EncMap *map;			 /* Current encoding info. */
+  EncMap *normal;		 /* If this is not NULL then we have a
+				    compacted encoding in map, and this
 				   is the original. */
   SplineFont *sf;               /* Current font. */
   SplineFont *cidmaster;        /* If CID keyed, contains master font. */

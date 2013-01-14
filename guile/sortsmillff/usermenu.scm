@@ -17,22 +17,26 @@
 
 (define-module (sortsmillff usermenu))
 
-(export register-fontforge-menu-entry
-
-        c-menu-entry-action->procedure
-        c-menu-entry-enabled->procedure
-
-        glyph-view-tools
+(export glyph-view-tools
         font-view-tools
         activate-gui-tools
         activate-glyph-view-tools
         activate-font-view-tools
+
+        action-entry
+        separator-line
+
+        c-menu-entry-action->procedure
+        c-menu-entry-enabled->procedure
+
+        register-fontforge-menu-entry   ; FIXME: Get rid of this.
         )
 
 (import (sortsmillff views)
         (sortsmillff notices)
         (sortsmillff fontforge-api)
         (sortsmillff gdraw-api)
+        (sortsmillff python)
         (sortsmillff machine)
         (sortsmillff i18n)
         (rnrs)
@@ -161,79 +165,37 @@
 
 ;;-------------------------------------------------------------------------
 
-(define font-window-flag 1)
-(define glyph-window-flag 2)
-(define metrics-window-flag 4)     ; Reserved for possible future use.
-
 (define (window-name->flag window-name)
-  (cond
-   ((string-ci=? window-name "glyph") glyph-window-flag)
-   ((string-ci=? window-name "char") glyph-window-flag)
-   ((string-ci=? window-name "font") font-window-flag)
-   (else (error 'window-name->flag
-                (_ "expected \"glyph\" or \"font\" for window name")
-                window-name))))
+  (if (symbol? window-name)
+      (window-name->flag (symbol->string window-name))
+      (cond
+       ((string-ci=? window-name "glyph") glyph-view-flag)
+       ((string-ci=? window-name "char") glyph-view-flag)
+       ((string-ci=? window-name "font") font-view-flag)
+       (else (error 'window-name->flag
+                    (_ "expected \"glyph\" or \"font\" for window name")
+                    window-name)))))
 
 (define GDrawGetUserData
   (pointer->procedure
    '* (dynamic-func "GDrawGetUserData" (dynamic-link)) '(*)))
 
-(define (any-view-moveto pointer->view window-ptr menu-item-ptr event)
+(define (moveto-proc window-ptr menu-item-ptr event)
   (tools-list-check menu-item-ptr
                     (pointer->view (GDrawGetUserData window-ptr))))
 
-(define (any-view-invoke pointer->view window-ptr menu-item-ptr event)
+(define (invoke-proc window-ptr menu-item-ptr event)
   (do-action menu-item-ptr
-             (pointer->view (GDrawGetUserData window-ptr))))  
-
-(define (glyph-view-moveto window-ptr menu-item-ptr event)
-  (any-view-moveto pointer->glyph-view
-                   window-ptr menu-item-ptr event))
-
-(define (font-view-moveto window-ptr menu-item-ptr event)
-  (any-view-moveto pointer->font-view
-                   window-ptr menu-item-ptr event))
-
-(define (glyph-view-invoke window-ptr menu-item-ptr event)
-  (any-view-invoke pointer->glyph-view
-                   window-ptr menu-item-ptr event))
-
-(define (font-view-invoke window-ptr menu-item-ptr event)
-  (any-view-invoke pointer->font-view
-                   window-ptr menu-item-ptr event))
+             (pointer->view (GDrawGetUserData window-ptr))))
 
 (define (procedure->menu-func-pointer proc)
   (procedure->pointer void proc '(* * *)))
 
-(define glyph-view-moveto-ptr
-  (procedure->menu-func-pointer glyph-view-moveto))
+(define moveto-proc-ptr
+  (procedure->menu-func-pointer moveto-proc))
 
-(define font-view-moveto-ptr
-  (procedure->menu-func-pointer font-view-moveto))
-
-(define glyph-view-invoke-ptr
-  (procedure->menu-func-pointer glyph-view-invoke))
-
-(define font-view-invoke-ptr
-  (procedure->menu-func-pointer font-view-invoke))
-
-(define (menu-proc-ptr caller glyph-proc-ptr font-proc-ptr flag)
-  (cond
-   ((= flag glyph-window-flag) glyph-proc-ptr)
-   ((= flag font-window-flag) font-proc-ptr)
-   (else (assertion-violation
-          caller
-          (format #f (_ "expected ~d or ~d")
-                  font-window-flag glyph-window-flag)
-          flag))))
-
-(define (moveto-proc-ptr flag)
-  (menu-proc-ptr
-   'moveto-proc-ptr glyph-view-moveto-ptr font-view-moveto-ptr flag))
-
-(define (invoke-proc-ptr flag)
-  (menu-proc-ptr
-   'invoke-proc-ptr glyph-view-invoke-ptr font-view-invoke-ptr flag))
+(define invoke-proc-ptr
+  (procedure->menu-func-pointer invoke-proc))
 
 ;;-------------------------------------------------------------------------
 
@@ -245,14 +207,14 @@
 (define (tools-ref window-name)
   (let ((flag (window-name->flag window-name)))
     (cond
-     ((= flag glyph-window-flag) glyph-view-tools)
-     ((= flag font-window-flag) font-view-tools))))
+     ((= flag glyph-view-flag) glyph-view-tools)
+     ((= flag font-view-flag) font-view-tools))))
 
 (define (tools-set! window-name new-tools)
   (let ((flag (window-name->flag window-name)))
     (cond
-     ((= flag glyph-window-flag) (set! glyph-view-tools new-tools))
-     ((= flag font-window-flag) (set! font-view-tools new-tools)))))
+     ((= flag glyph-view-flag) (set! glyph-view-tools new-tools))
+     ((= flag font-view-flag) (set! font-view-tools new-tools)))))
 
 (define glyph-view-tools-internal
   (pointer->bytevector
@@ -306,7 +268,7 @@
 (define (fill-menu-item! window-name menu-item menu-entry)
   (check-menu-entry menu-entry)
   (set-menu-item-defaults! menu-item)
-  (let ((window-flag (window-name->flag window-name))
+  (let ((view-flag (window-name->flag window-name))
         (action (assq 'action menu-entry))
         (enabled (assq 'enabled menu-entry)))
     (when (and enabled (not action))
@@ -327,7 +289,7 @@
              (match-lambda ((key . value) (set-menu-item-value!
                                            window-name menu-item key value)))
              `((integer-key ,integer-key)
-               (invoke ,(invoke-proc-ptr window-flag))
+               (invoke      ,invoke-proc-ptr)
                ,@menu-entry))))
         (for-each
          (match-lambda ((key . value) (set-menu-item-value!
@@ -406,6 +368,37 @@
     mi-array))
 
 ;;-------------------------------------------------------------------------
+
+(define* (action-entry #:key text action
+                       (enabled (lambda (view) #t))
+                       (shortcut #f)
+                       (image #f)
+                       (foreground-color color-default)
+                       (background-color color-default)
+                       (disabled? #f)
+                       (checkable? #f)
+                       (checked? #f)
+                       (image-precedes-text? #t))
+  ;;
+  ;; FIXME: Check types of input parameters.
+  ;;
+  (append `[(text      ,text)
+            (action    ,action)
+            (enabled   ,enabled)
+            (foreground-color ,foreground-color)
+            (background-color ,background-color)
+            (disabled  ,disabled?)
+            (checkable ,checkable?)
+            (checked   ,checked?)
+            (image-precedes-text ,image-precedes-text?)]
+          [if image
+              `((image ,image))
+              '()]))
+
+(define (separator-line)
+  `[(is-line #t)])
+
+;;-------------------------------------------------------------------------
 ;;;;;
 ;;;;; FIXME: Get rid of these.
 ;;;;;
@@ -420,7 +413,6 @@
         (submenus (drop-right menu-path 1))
         (entry-name (last menu-path)))
     (let ((tools (tools-ref window-name))
-          (moveto (moveto-proc-ptr (window-name->flag window-name)))
           (new-entry (if shortcut
                          `[(text     ,entry-name)
                            (enabled  ,enabled)
@@ -430,12 +422,11 @@
                            (enabled  ,enabled)
                            (action   ,action)])))
       (tools-set! window-name
-                  (insert-menu-entry moveto
-                                     (if tools tools '())
+                  (insert-menu-entry (if tools tools '())
                                      new-entry submenus))
       (activate-gui-tools))))
 
-(define (insert-menu-entry moveto tools new-entry submenus)
+(define (insert-menu-entry tools new-entry submenus)
   (match submenus
 
     ;; Replacement of a menu entry is not supported.
@@ -450,16 +441,15 @@
                   (the-submenu (car tail))
                   (submenu-tools (cadr (assq 'submenu the-submenu)))
                   (new-submenu-tools (insert-menu-entry
-                                      moveto submenu-tools new-entry
+                                      submenu-tools new-entry
                                       more-submenus))
                   (new-submenu (replace-submenu-tools the-submenu
                                                       new-submenu-tools))
                   (after (cdr tail)))
              (append before (list new-submenu) after)]
            [insert-menu-entry
-            moveto
             (append tools (list `[(text    ,submenu-name)
-                                  (moveto  ,moveto)
+                                  (moveto  ,moveto-proc-ptr)
                                   (submenu ())]))
             new-entry submenus])))))
 
@@ -485,7 +475,7 @@
 ;;-------------------------------------------------------------------------
 ;;
 ;; Example use of wrappers to register C, Fortran (using BIND(C)), or
-;; similar menu functions from Guile.
+;; similar menu functions.
 ;;
 ;;   (let ((dll (dynamic-link "my_extensions"))
 ;;        ((my-data-ptr (bytevector->pointer my-data-bytevector))))
@@ -513,6 +503,16 @@
      (let* ((proc (pointer->procedure _Bool c-enabled (list '* '*)))
             (wrapped-enabled (lambda (view) (not (zero? (proc (view->pointer view) data))))))
        wrapped-enabled))))
+
+;;-------------------------------------------------------------------------
+
+;;;;;; FIXME: Get rid of the need for window-name.
+;;;;(define (python-menu-entry-action->procedure python-proc-name window-name)
+;;;;  (lambda (view)
+;;;;    (let* ((args (py-autoref (PyTuple_New 1)))
+;;;;           ??????????????????????????????????
+;;;;           (retval<--ignored (PyObject_CallObject python-proc args)))
+;;;;      *unspecified*)))
 
 ;;-------------------------------------------------------------------------
 ;;

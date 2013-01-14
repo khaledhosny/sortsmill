@@ -12954,31 +12954,22 @@ fv_e_h (GWindow gw, GEvent *event)
 static void
 FontViewOpenKids (FontView *fv)
 {
-  int k, i;
-  SplineFont *sf = fv->b.sf, *_sf;
-#if defined(__Mac)
-  int cnt = 0;
-#endif
+  SplineFont *sf = fv->b.sf;
 
   if (sf->cidmaster != NULL)
     sf = sf->cidmaster;
 
-  k = 0;
+  int k = 0;
   do
     {
-      _sf = sf->subfontcnt == 0 ? sf : sf->subfonts[k];
-      for (i = 0; i < _sf->glyphcnt; ++i)
+      SplineFont *_sf = sf->subfontcnt == 0 ? sf : sf->subfonts[k];
+      for (int i = 0; i < _sf->glyphcnt; i++)
         if (_sf->glyphs[i] != NULL && _sf->glyphs[i]->wasopen)
           {
             _sf->glyphs[i]->wasopen = false;
-#if defined(__Mac)
-            /* If we open a bunch of charviews all at once on the mac, X11 */
-            /*  crashes *//* But opening one seems ok */
-            if (++cnt == 1)
-#endif
-              CharViewCreate (_sf->glyphs[i], fv, -1);
+	    CharViewCreate (_sf->glyphs[i], fv, -1);
           }
-      ++k;
+      k++;
     }
   while (k < sf->subfontcnt);
 }
@@ -12986,8 +12977,11 @@ FontViewOpenKids (FontView *fv)
 static FontView *
 __FontViewCreate (SplineFont *sf)
 {
-  FontView *fv = xcalloc (1, sizeof (FontView));
   int i;
+
+  FontView *fv = (FontView *) xzalloc (sizeof (FontView));
+  fv->b.tag = FF_FONT_WINDOW;
+
   int ps =
     sf->display_size < 0 ? -sf->display_size : sf->display_size ==
     0 ? default_fv_font_size : sf->display_size;

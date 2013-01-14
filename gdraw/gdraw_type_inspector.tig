@@ -1,4 +1,4 @@
-;; -*- mode: scheme -*-
+;; -*- mode: scheme; geiser-scheme-implementation: guile; coding: utf-8 -*-
 
 (<ggadget.h>
  <gdraw.h>)

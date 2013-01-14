@@ -110,7 +110,6 @@ lib_LTLIBRARIES += libguile-sortsmillff_iconv.la
 libguile_sortsmillff_iconv_la_SOURCES = guile_iconv.c
 libguile_sortsmillff_iconv_la_LIBADD = $(top_builddir)/lib/libgnu.la
 
-# FIXME: Is python.scm needed?
 lib_LTLIBRARIES += libguile-sortsmillff_python.la
 libguile_sortsmillff_python_la_SOURCES = guile_python.c
 libguile_sortsmillff_python_la_LDFLAGS = -module -release $(VERSION)	\

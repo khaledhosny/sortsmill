@@ -36,21 +36,17 @@ VISIBLE GMenuItem *cv_menu = NULL;
 VISIBLE GMenuItem *fv_menu = NULL;
 
 static gmenuitem_moveto_t
-moveto_func (int window)
+moveto_func (void)
 {
   return (gmenuitem_moveto_t)
-    scm_to_pointer (scm_call_1
-                    (scm_c_private_ref ("sortsmillff usermenu", "moveto-proc-ptr"),
-                     scm_from_int (window)));
+    scm_to_pointer (scm_c_private_ref ("sortsmillff usermenu", "moveto-proc-ptr"));
 }
 
 static gmenuitem_invoke_t
-invoke_func (int window)
+invoke_func (void)
 {
-  return (gmenuitem_invoke_t)
-    scm_to_pointer (scm_call_1
-                    (scm_c_private_ref ("sortsmillff usermenu", "invoke-proc-ptr"),
-                     scm_from_int (window)));
+  return (gmenuitem_moveto_t)
+    scm_to_pointer (scm_c_private_ref ("sortsmillff usermenu", "invoke-proc-ptr"));
 }
 
 // FIXME: Get rid of this. It is needed now only because the menus are
@@ -58,7 +54,7 @@ invoke_func (int window)
 VISIBLE void
 cv_tools_list_check (GWindow gw, GMenuItem *mi, GEvent *e)
 {
-  moveto_func (FF_GLYPH_WINDOW) (gw, mi, e);
+  moveto_func () (gw, mi, e);
 }
 
 // FIXME: Get rid of this. It is needed now only because the menus are
@@ -66,7 +62,7 @@ cv_tools_list_check (GWindow gw, GMenuItem *mi, GEvent *e)
 VISIBLE void
 fv_tools_list_check (GWindow gw, GMenuItem *mi, GEvent *e)
 {
-  moveto_func (FF_FONT_WINDOW) (gw, mi, e);
+  moveto_func () (gw, mi, e);
 }
 
 // FIXME: Get rid of this. It is needed now only because the menus are
@@ -74,7 +70,7 @@ fv_tools_list_check (GWindow gw, GMenuItem *mi, GEvent *e)
 VISIBLE void
 cv_do_action (GWindow gw, GMenuItem *mi, GEvent *e)
 {
-  invoke_func (FF_GLYPH_WINDOW) (gw, mi, e);
+  invoke_func () (gw, mi, e);
 }
 
 // FIXME: Get rid of this. It is needed now only because the menus are
@@ -82,7 +78,7 @@ cv_do_action (GWindow gw, GMenuItem *mi, GEvent *e)
 VISIBLE void
 fv_do_action (GWindow gw, GMenuItem *mi, GEvent *e)
 {
-  invoke_func (FF_FONT_WINDOW) (gw, mi, e);
+  invoke_func () (gw, mi, e);
 }
 
 static SCM

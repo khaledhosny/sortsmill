@@ -1,4 +1,4 @@
-;; -*- mode: scheme -*-
+;; -*- mode: scheme; geiser-scheme-implementation: guile; coding: utf-8 -*-
 
 (<baseviews.h>
  <fontforge.h>)
@@ -93,8 +93,23 @@
                  (uint validation_state)
                  (uint old_vs old_validation_state)))
 
+ (struct ViewBase
+         (fields (int tag)))
+
+ (struct CharViewBase
+         (fields (int tag)
+                 ((* CharViewBase) next)
+                 ((* FontViewBase) fv)
+                 ((* SplineChar) sc)
+                 (array layerheads layer_heads)
+                 (uint drawmode draw_mode)
+                 (uint ft_gridfitwidth ft_grid_fit_width)
+                 (* gridfit grid_fit)
+                 (* container)))
+
  (struct FontViewBase
-         (fields ((* FontViewBase) next)
+         (fields (int tag)
+                 ((* FontViewBase) next)
                  ((* FontViewBase) nextsame next_same)
                  (* map)
                  (* normal normal_map)
@@ -105,17 +120,7 @@
                  (* container)
                  (int active_layer)))
 
- (struct CharViewBase
-         (fields ((* CharViewBase) next)
-                 ((* FontViewBase) fv)
-                 ((* SplineChar) sc)
-                 (array layerheads layer_heads)
-                 (uint drawmode draw_mode)
-                 (uint ft_gridfitwidth ft_grid_fit_width)
-                 (* gridfit grid_fit)
-                 (* container)))
-
- (struct SplineChar
+  (struct SplineChar
          (fields
 
           ;; FIXME: Include special support for null-terminated

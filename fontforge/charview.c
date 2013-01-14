@@ -16592,6 +16592,8 @@ _CharViewCreate (CharView *cv, SplineChar *sc, FontView *fv, int enc)
   if (!cvcolsinited)
     CVColInit ();
 
+  cv->b.tag = FF_GLYPH_WINDOW;
+
   cv->b.sc = sc;
   cv->scale = .5;
   cv->xoff = cv->yoff = 20;
@@ -16819,6 +16821,8 @@ CharViewCreate (SplineChar *sc, FontView *fv, int enc)
   char buf[300];
 
   CharViewInit ();
+
+  cv->b.tag = FF_GLYPH_WINDOW;
 
   cv->b.sc = sc;
   cv->b.fv = &fv->b;

@@ -154,6 +154,7 @@ gdraw/gtextfield.c
 gdraw/gtextinfo.c
 guile/sortsmillff/sfd-to-sxml.scm
 guile/sortsmillff/usermenu.scm
+guile/sortsmillff/views.scm
 main/fontcompare.c
 main/fontimage.c
 main/fontlint.c
