@@ -25,6 +25,7 @@
 
         action-entry
         separator-line
+        submenu-entry
 
         c-menu-entry-action->procedure
         c-menu-entry-enabled->procedure
@@ -391,12 +392,31 @@
             (checkable ,checkable?)
             (checked   ,checked?)
             (image-precedes-text ,image-precedes-text?)]
-          [if image
-              `((image ,image))
-              '()]))
+          [if image `((image ,image)) '()]))
 
 (define (separator-line)
   `[(is-line #t)])
+
+(define* (submenu-entry #:key text entries
+                        (moveto moveto-proc)
+                        (image #f)
+                        (foreground-color color-default)
+                        (background-color color-default)
+                        (disabled? #f)
+                        (image-precedes-text? #t))
+  ;;
+  ;; FIXME: Check types of input parameters.
+  ;;
+  (let ((moveto-proc-ptr (if (pointer? moveto-proc)
+                             moveto-proc
+                             (procedure->menu-func-pointer moveto-proc))))
+    (append `[(text      ,text)
+              (foreground-color ,foreground-color)
+              (background-color ,background-color)
+              (disabled  ,disabled?)
+              (image-precedes-text ,image-precedes-text?)
+              (submenu ,entries)]
+            [if image `((image ,image)) '()])))
 
 ;;-------------------------------------------------------------------------
 ;;;;;
@@ -503,16 +523,6 @@
      (let* ((proc (pointer->procedure _Bool c-enabled (list '* '*)))
             (wrapped-enabled (lambda (view) (not (zero? (proc (view->pointer view) data))))))
        wrapped-enabled))))
-
-;;-------------------------------------------------------------------------
-
-;;;;;; FIXME: Get rid of the need for window-name.
-;;;;(define (python-menu-entry-action->procedure python-proc-name window-name)
-;;;;  (lambda (view)
-;;;;    (let* ((args (py-autoref (PyTuple_New 1)))
-;;;;           ??????????????????????????????????
-;;;;           (retval<--ignored (PyObject_CallObject python-proc args)))
-;;;;      *unspecified*)))
 
 ;;-------------------------------------------------------------------------
 ;;
