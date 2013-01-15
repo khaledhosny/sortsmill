@@ -62,11 +62,13 @@ endif HAVE_GUI
 
 DIST_SCM_IN_FILES += sortsmillff/machine.scm.in						\
 	sortsmillff/pkg-info.scm.in sortsmillff/math-constants.scm.in	\
-	sortsmillff/i18n.scm.in sortsmillff/python.scm.in
+	sortsmillff/i18n.scm.in sortsmillff/python.scm.in				\
+	sortsmillff/pure.scm.in
 
 NODIST_SCM_FILES += sortsmillff/machine.scm sortsmillff/pkg-info.scm	\
 	sortsmillff/math-constants.scm sortsmillff/i18n.scm					\
-	sortsmillff/fontforge-api.scm sortsmillff/python.scm
+	sortsmillff/fontforge-api.scm sortsmillff/python.scm				\
+	sortsmillff/pure.scm
 
 sortsmillff/fontforge-api.scm:							\
 		$(top_builddir)/fontforge/fontforge.types.apii	\
@@ -109,6 +111,15 @@ lib_LTLIBRARIES =
 lib_LTLIBRARIES += libguile-sortsmillff_iconv.la
 libguile_sortsmillff_iconv_la_SOURCES = guile_iconv.c
 libguile_sortsmillff_iconv_la_LIBADD = $(top_builddir)/lib/libgnu.la
+
+if PURE_API
+lib_LTLIBRARIES += libguile-sortsmillff_pure.la
+libguile_sortsmillff_pure_la_SOURCES = guile_pure.c
+libguile_sortsmillff_pure_la_CFLAGS = $(AM_CFLAGS) $(PURE_CFLAGS)
+libguile_sortsmillff_pure_la_LDFLAGS = -module -release $(VERSION)	\
+	$(PURE_LIBS)
+libguile_sortsmillff_pure_la_LIBADD = $(top_builddir)/lib/libgnu.la
+endif PURE_API
 
 lib_LTLIBRARIES += libguile-sortsmillff_python.la
 libguile_sortsmillff_python_la_SOURCES = guile_python.c

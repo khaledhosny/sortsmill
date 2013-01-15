@@ -106,6 +106,7 @@ if test x"${i_do_have_pure_api}" = xyes; then
       AC_MSG_RESULT([${PURE}])
    fi
 fi
+AC_SUBST([i_do_have_pure_api])
 AM_CONDITIONAL([PURE_API],[test x"${i_do_have_pure_api}" = xyes])
 ])
 

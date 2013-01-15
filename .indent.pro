@@ -4,7 +4,7 @@
 
 --gnu-style
 --no-tabs
---line-length100
+--line-length80
 
 -T FILE
 -T int8_t
