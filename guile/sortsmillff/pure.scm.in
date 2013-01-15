@@ -92,9 +92,10 @@
          pure-expr->complex
          pure-expr-is-complex?
 
-         pure-pointer
+         pointer->pointer-pure-expr
+         pointer-pure-expr->pointer
 
-         pure-expr-pointer
+         pure-expr-pointer ;; FIXME: Needs a better name.
 
          string->pure-expr
 
@@ -174,7 +175,11 @@
                 '* (dynamic-func "pure_symbol" pure-dll)
                 `(,int32))))
      (compose pointer->pure-expr proc)))
- 
+
+ ;;
+ ;; FIXME: Rewrite this in C so it is not weighted down with
+ ;; bytevectors.
+ ;;
  (define pure-symbolx
    (let ((proc (pointer->procedure
                 '* (dynamic-func "pure_symbolx" pure-dll)
@@ -211,8 +216,10 @@
       ((pure-expr->big-integer-or-f x))
       ((pure-expr->rational-or-f x))
       ((pure-expr->complex-or-f x))
-      (else (error 'pure-expr->number
-                   (_ "not a number") x)))))
+      (else
+       (error 'pure-expr->number
+              (_ "the Pure expression is not a number")
+              x)))))
 
  (define pure-expr-is-number?
    (lambda (x)
@@ -240,8 +247,11 @@
      (cond
       ((pure-expr->small-integer-or-f x))
       ((pure-expr->big-integer-or-f x))
-      (else (error 'pure-expr->integer
-                   (_ "not an integer") x)))))
+      (else
+       (error
+        'pure-expr->integer
+        (_ "the Pure expression is not an integer")
+        x)))))
 
  (define pure-expr->small-integer
    (lambda (x)
@@ -250,7 +260,7 @@
       (else
        (error
         'pure-expr->small-integer
-        (_ "not an integer in the range -2147483648 to 2147483647")
+        (_ "the Pure expression is not an integer in the range -2147483648 to 2147483647")
         x)))))
 
  (define pure-expr->big-integer
@@ -260,7 +270,7 @@
       (else
        (error
         'pure-expr->big-integer
-        (_ "not an integer outside the range -2147483648 to 2147483647")
+        (_ "the Pure expression is not an integer outside the range -2147483648 to 2147483647")
         x)))))
 
  (define pure-expr-is-integer?
@@ -280,9 +290,11 @@
    (lambda (x)
      (cond
       ((pure-expr->rational-or-f x))
-      (else (error 'pure-expr->rational
-                   (_ "not a rational number")
-                   x)))))
+      (else
+       (error
+        'pure-expr->rational
+        (_ "the Pure expression is not a rational number")
+        x)))))
 
  (define pure-expr-is-rational?
    (compose not not pure-expr->rational-or-f))
@@ -300,9 +312,11 @@
    (lambda (x)
      (cond
       ((pure-expr->inexact-or-f x))
-      (else (error 'pure-expr->inexact
-                   (_ "not a floating point number")
-                   x)))))
+      (else
+       (error
+        'pure-expr->inexact
+        (_ "the Pure expression is not a floating point number")
+        x)))))
 
  (define-syntax pure-expr->flonum
    (identifier-syntax pure-expr->inexact))
@@ -317,19 +331,28 @@
    (lambda (x)
      (cond
       ((pure-expr->complex-or-f x))
-      (else (error 'pure-expr->complex
-                   (_ "not a complex number")
-                   x)))))
+      (else
+       (error 'pure-expr->complex
+              (_ "the Pure expression is not a complex number")
+              x)))))
 
  (define pure-expr-is-complex?
    (compose not not pure-expr->complex-or-f))
 
- (define pure-pointer
+ (define pointer->pointer-pure-expr
    (let ((proc (pointer->procedure
                 '* (dynamic-func "pure_pointer" pure-dll)
                 `(*))))
      (compose pointer->pure-expr proc)))
 
+ (define pointer-pure-expr->pointer
+   (lambda (x)
+     (cond
+      ((pointer-pure-expr->pointer-or-f x))
+      (else
+       (error 'pure-expr->complex
+              (_ "the Pure expression is not a pointer")
+              x)))))
 
  (define pure-expr-pointer
    (let ((proc (pointer->procedure

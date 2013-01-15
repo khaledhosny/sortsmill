@@ -178,6 +178,14 @@ scm_pure_expr_to_complex_or_f (SCM x)
   return result;
 }
 
+static SCM
+scm_pure_expr_to_pointer_or_f (SCM x)
+{
+  void *p;
+  bool success = pure_is_pointer (scm_pure_expr_to_pointer (x), &p);
+  return (success) ? scm_from_pointer (p, NULL) : SCM_BOOL_F;
+}
+
 VISIBLE void
 init_guile_sortsmillff_pure (void)
 {
@@ -197,4 +205,6 @@ init_guile_sortsmillff_pure (void)
   scm_c_define_gsubr ("complex->pure-expr", 1, 0, 0, scm_complex_to_pure_expr);
   scm_c_define_gsubr ("pure-expr->complex-or-f", 1, 0, 0,
                       scm_pure_expr_to_complex_or_f);
+  scm_c_define_gsubr ("pointer-pure-expr->pointer-or-f", 1, 0, 0,
+		      scm_pure_expr_to_pointer_or_f);
 }
