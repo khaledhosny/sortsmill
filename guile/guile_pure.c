@@ -186,6 +186,67 @@ scm_pure_expr_to_pointer_or_f (SCM x)
   return (success) ? scm_from_pointer (p, NULL) : SCM_BOOL_F;
 }
 
+static SCM
+scm_pure_expr_to_string_or_f (SCM x)
+{
+  scm_dynwind_begin (0);
+
+  char *s;
+  bool success = pure_is_string_dup (scm_pure_expr_to_pointer (x), &s);
+  SCM result = SCM_BOOL_F;
+  if (success)
+    {
+      scm_dynwind_free (s);
+      result = scm_from_utf8_string (s);
+    }
+
+  scm_dynwind_end ();
+
+  return result;
+}
+
+static SCM
+scm_pure_expr_is_string (SCM x)
+{
+  const char *s;
+  bool success = pure_is_string (scm_pure_expr_to_pointer (x), &s);
+  return scm_from_bool (success);
+}
+
+static SCM
+scm_symbol_pure_expr_to_small_integer_or_f (SCM x)
+{
+  int32_t sym;
+  bool success = pure_is_symbol (scm_pure_expr_to_pointer (x), &sym);
+  return (success) ? scm_from_int32 (sym) : SCM_BOOL_F;
+}
+
+static SCM
+scm_eval_pure_symbol (SCM string)
+{
+  SCM result = SCM_BOOL_F;
+  
+  scm_dynwind_begin (0);
+
+  char *s = scm_to_utf8_stringn (string, NULL);
+  scm_dynwind_free (s);
+
+  int32_t sym = pure_getsym (s);
+  if (sym != 0)
+    {
+      pure_expr *exception;
+      pure_expr *x = pure_symbolx (sym, &exception);
+      SCM car = (x != NULL) ? scm_pointer_to_pure_expr (x) : SCM_BOOL_F;
+      SCM cdr =
+        (exception != NULL) ? scm_pointer_to_pure_expr (exception) : SCM_BOOL_F;
+      result = scm_cons (car, cdr);
+    }
+
+  scm_dynwind_end ();
+
+  return result;
+}
+
 VISIBLE void
 init_guile_sortsmillff_pure (void)
 {
@@ -206,5 +267,12 @@ init_guile_sortsmillff_pure (void)
   scm_c_define_gsubr ("pure-expr->complex-or-f", 1, 0, 0,
                       scm_pure_expr_to_complex_or_f);
   scm_c_define_gsubr ("pointer-pure-expr->pointer-or-f", 1, 0, 0,
-		      scm_pure_expr_to_pointer_or_f);
+                      scm_pure_expr_to_pointer_or_f);
+  scm_c_define_gsubr ("pure-expr->string-or-f", 1, 0, 0,
+                      scm_pure_expr_to_string_or_f);
+  scm_c_define_gsubr ("pure-expr-is-string?", 1, 0, 0,
+		      scm_pure_expr_is_string);
+  scm_c_define_gsubr ("symbol-pure-expr->small-integer-or-f", 1, 0, 0,
+                      scm_symbol_pure_expr_to_small_integer_or_f);
+  scm_c_define_gsubr ("private:eval-pure-symbol", 1, 0, 0, scm_eval_pure_symbol);
 }
