@@ -60,7 +60,7 @@ simple_menu_extension_in_C_la_CPPFLAGS = -I$(top_builddir)/inc	\
 simple_menu_extension_in_C_la_LDFLAGS = -prefer-pic -module -shared	\
 	''-avoid-version
 
-if FORTRAN_API
+if HAVE_FORTRAN_API
 
 # To try 'simple_menu_extension_in_Fortran' without installing it,
 # use the full path to
@@ -100,10 +100,10 @@ simple_menu_extension_in_Fortran_la_LDFLAGS = -prefer-pic -module	\
 mostlyclean-modules:
 	-test -z "$(FC_MODEXT)" || rm -f *.$(FC_MODEXT)
 
-else !FORTRAN_API
+else !HAVE_FORTRAN_API
 
 mostlyclean-modules:
 
-endif !FORTRAN_API
+endif !HAVE_FORTRAN_API
 
 mostlyclean-local: mostlyclean-modules

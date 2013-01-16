@@ -41,7 +41,6 @@ fi
 if test x"${i_do_have_python_scripting}" != xyes; then
    AC_DEFINE([_NO_PYTHON],1,[Define if not using Python.])
 fi
-AM_CONDITIONAL([PYTHON_SCRIPTING],[test x"${i_do_have_python_scripting}" = xyes])
 ])
 
 
@@ -59,7 +58,6 @@ AC_ARG_ENABLE([python-compatibility],
         [i_do_have_python_compatibility=yes])
 PYTHON_COMPATIBILITY="${i_do_have_python_compatibility}"
 AC_SUBST([PYTHON_COMPATIBILITY])
-AM_CONDITIONAL([PYTHON_COMPATIBILITY],[test x"${i_do_have_python_compatibility}" = xyes])
 ])
 
 
@@ -71,7 +69,6 @@ AC_ARG_ENABLE([fortran-api],
         [AS_HELP_STRING([--enable-fortran-api],[build the API for Fortran])],
         [i_do_have_fortran_api="${enableval}"],
         [i_do_have_fortran_api=no])
-AM_CONDITIONAL([FORTRAN_API],[test x"${i_do_have_fortran_api}" = xyes])
 ])
 
 
@@ -107,7 +104,6 @@ if test x"${i_do_have_pure_api}" = xyes; then
    fi
 fi
 AC_SUBST([i_do_have_pure_api])
-AM_CONDITIONAL([PURE_API],[test x"${i_do_have_pure_api}" = xyes])
 ])
 
 

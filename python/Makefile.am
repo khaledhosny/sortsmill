@@ -56,9 +56,9 @@ FFINCLDIRS = '-I$(top_builddir)/fontforge'		\
 
 nodist_pkgpythondata_PYTHON = site_init.py
 
-if PYTHON_COMPATIBILITY
+if HAVE_PYTHON_COMPATIBILITY
 nodist_python_PYTHON = fontforge.py psMat.py
-endif PYTHON_COMPATIBILITY
+endif HAVE_PYTHON_COMPATIBILITY
 
 nobase_dist_python_PYTHON = ffContrib/__init__.py	\
 	ffContrib/excepthook.py ffContrib/allow_core.py

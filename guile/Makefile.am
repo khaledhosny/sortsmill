@@ -107,22 +107,22 @@ lib_LTLIBRARIES += libguile-sortsmillff_iconv.la
 libguile_sortsmillff_iconv_la_SOURCES = guile_iconv.c
 libguile_sortsmillff_iconv_la_LIBADD = $(top_builddir)/lib/libgnu.la
 
-if PURE_API
+if HAVE_PURE_API
 lib_LTLIBRARIES += libguile-sortsmillff_pure.la
 libguile_sortsmillff_pure_la_SOURCES = guile_pure.c
 libguile_sortsmillff_pure_la_CFLAGS = $(AM_CFLAGS) $(PURE_CFLAGS)
 libguile_sortsmillff_pure_la_LDFLAGS = -module -release $(VERSION)	\
 	$(PURE_LIBS)
 libguile_sortsmillff_pure_la_LIBADD = $(top_builddir)/lib/libgnu.la
-endif PURE_API
+endif HAVE_PURE_API
 
-if HAVE_PYTHON_SCRIPTING
+if HAVE_PYTHON_API
 lib_LTLIBRARIES += libguile-sortsmillff_python.la
 libguile_sortsmillff_python_la_SOURCES = guile_python.c
 libguile_sortsmillff_python_la_LDFLAGS = -module -release $(VERSION)	\
 	$(PYTHON_LIBS)
 libguile_sortsmillff_python_la_LIBADD = $(top_builddir)/lib/libgnu.la
-endif HAVE_PYTHON_SCRIPTING
+endif HAVE_PYTHON_API
 
 lib_LTLIBRARIES += libguile-sortsmillff_aux.la
 libguile_sortsmillff_aux_la_SOURCES = guile_polyspline.c	\

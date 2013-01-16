@@ -51,7 +51,7 @@ nobase_include_HEADERS += sortsmillff/guile/polyspline.h				\
 	sortsmillff/guile/views.h sortsmillff/guile/internal-structures.h	\
 	sortsmillff/guile/notices.h
 
-if PYTHON_SCRIPTING
+if HAVE_PYTHON_API
 nobase_include_HEADERS += sortsmillff/__init__.pxd						\
 	sortsmillff/cython/__init__.pxd										\
 	sortsmillff/cython/const_pointers.pxd								\
@@ -62,7 +62,7 @@ nobase_include_HEADERS += sortsmillff/__init__.pxd						\
 	sortsmillff/cython/xgc.pxd sortsmillff/cython/config.pxi			\
 	sortsmillff/cython/gmpy.pxd sortsmillff/cython/gsl.pxd				\
 	sortsmillff/cython/polyspline.pxd sortsmillff/cython/usermenu.pxd
-endif PYTHON_SCRIPTING
+endif HAVE_PYTHON_API
 
 #--------------------------------------------------------------------------
 

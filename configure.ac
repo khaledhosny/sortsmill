@@ -128,6 +128,7 @@ AC_PROG_MAKE_SET
 AC_PROG_MKDIR_P
 AC_PROG_SED
 PKG_PROG_PKG_CONFIG
+m4_ifdef([AM_PATH_PYTHON],[AM_PATH_PYTHON])
 
 # Code quality programs.
 FONTFORGE_PATH_PROG([INDENT],[indent],[GNU `indent' command])
@@ -417,7 +418,10 @@ AH_BOTTOM([#include <config-extra.h>])
 
 #--------------------------------------------------------------------------
 
-AM_CONDITIONAL([HAVE_PYTHON_SCRIPTING],[test x"${i_do_have_python_scripting}" = xyes])
+AM_CONDITIONAL([HAVE_PYTHON_API],[test x"${i_do_have_python_scripting}" = xyes])
+AM_CONDITIONAL([HAVE_PYTHON_COMPATIBILITY],[test x"${i_do_have_python_compatibility}" = xyes])
+AM_CONDITIONAL([HAVE_PURE_API],[test x"${i_do_have_pure_api}" = xyes])
+AM_CONDITIONAL([HAVE_FORTRAN_API],[test x"${i_do_have_fortran_api}" = xyes])
 AM_CONDITIONAL([HAVE_GUI],[test x"${i_do_have_gui}" = xyes])
 AM_CONDITIONAL([MACINTOSH],[test x"${gww_ismac}" = xyes])
 AM_CONDITIONAL([HAVE_FORTRAN_MODFILES],[test x"${FC_MODEXT}" != x])
@@ -437,8 +441,35 @@ AM_GLIB_GNU_GETTEXT
 
 FONTFORGE_SET_MY_CFLAGS
 FONTFORGE_SET_MY_LIBS
-FONTFORGE_CREATE_MAKEFILES
-FONTFORGE_CREATE_INDENT_PRO
+
+AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([lib/Makefile])
+AC_CONFIG_FILES([inc/Makefile])
+AC_CONFIG_FILES([auxiliary/Makefile])
+AC_CONFIG_FILES([gutils/Makefile])
+AC_CONFIG_FILES([gdraw/Makefile])
+AC_CONFIG_FILES([fontforge/Makefile])
+AC_CONFIG_FILES([main/Makefile])
+AC_CONFIG_FILES([po/Makefile.in])
+AC_CONFIG_FILES([mackeys/Makefile])
+AC_CONFIG_FILES([doc/Makefile])
+AC_CONFIG_FILES([htdocs/Makefile])
+AC_CONFIG_FILES([python/Makefile])
+AC_CONFIG_FILES([tests/Makefile])
+AC_CONFIG_FILES([data/Makefile])
+AC_CONFIG_FILES([data/cidmap/Makefile])
+AC_CONFIG_FILES([data/cursors/Makefile])
+AC_CONFIG_FILES([data/pixmaps/Makefile])
+AC_CONFIG_FILES([fonttools/Makefile])
+AC_CONFIG_FILES([guile/Makefile])
+AC_CONFIG_FILES([sfd2sxml/Makefile])
+AC_CONFIG_FILES([fortran/Makefile])
+AC_CONFIG_FILES([pure/Makefile])
+AC_CONFIG_FILES([examples/Makefile])
+
+# Makefile snippets for use with "include".
+AC_CONFIG_FILES([mk/xgettext_search.mk])
+
 AC_CONFIG_FILES([inc/config-extra.h])
 AC_CONFIG_COMMANDS([fontforge/sortsmillff],[AS_MKDIR_P([fontforge/sortsmillff])])
 AC_CONFIG_FILES([inc/sortsmillff/cython/config.pxi])
@@ -449,7 +480,9 @@ AC_CONFIG_FILES([python/sortsmillff/fontforge_compat.py])
 AC_CONFIG_FILES([python/sortsmillff/legacy/__init__.py])
 AC_CONFIG_FILES([guile/sortsmillff/machine.scm])
 AC_CONFIG_FILES([guile/sortsmillff/math-constants.scm])
+
 FONTFORGE_CONFIG_TESTSUITE
+FONTFORGE_CREATE_INDENT_PRO        
 FONTFORGE_CREATE_SUMMARY
 
 AC_OUTPUT
