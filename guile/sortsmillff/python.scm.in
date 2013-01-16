@@ -17,8 +17,8 @@
 
 (define-module (sortsmillff python))
 
-(use-modules (system foreign)
-             (ice-9 match))
+(import (system foreign)
+        (ice-9 match))
 
 (export if-fontforge-has-python-api)
 
@@ -67,6 +67,8 @@
          PyLong_AsVoidPtr
          PyTuple_New
          PyTuple_SetItem
+         Py_Initialize
+         Py_Finalize
          )
 
  (define python-dll
@@ -98,52 +100,52 @@
  (define Py_IncRef
    (pointer->procedure void
                        (dynamic-func "Py_IncRef" python-dll)
-                       '(*)))
+                       `(*)))
 
  (define Py_DecRef
    (pointer->procedure void
                        (dynamic-func "Py_DecRef" python-dll)
-                       '(*)))
+                       `(*)))
 
  (define PyErr_Occurred
    (pointer->procedure '*
                        (dynamic-func "PyErr_Occurred" python-dll)
-                       '()))
+                       `()))
 
  (define PyErr_Print
    (pointer->procedure void
                        (dynamic-func "PyErr_Print" python-dll)
-                       '()))
+                       `()))
 
  (define PyErr_Clear
    (pointer->procedure void
                        (dynamic-func "PyErr_Clear" python-dll)
-                       '()))
+                       `()))
 
  (define PyEval_GetBuiltins
    (pointer->procedure '*
                        (dynamic-func "PyEval_GetBuiltins" python-dll)
-                       '()))
+                       `()))
  
  (define PyEval_GetGlobals
    (pointer->procedure '*
                        (dynamic-func "PyEval_GetGlobals" python-dll)
-                       '()))
+                       `()))
  
  (define PyEval_GetLocals
    (pointer->procedure '*
                        (dynamic-func "PyEval_GetLocals" python-dll)
-                       '()))
+                       `()))
  
  (define PyRun_SimpleString
    (pointer->procedure int
                        (dynamic-func "PyRun_SimpleString" python-dll)
-                       '(*)))
+                       `(*)))
 
  (define PyRun_SimpleFile
    (pointer->procedure int
                        (dynamic-func "PyRun_SimpleFile" python-dll)
-                       '(* *)))
+                       `(* *)))
 
  (define PyRun_String
    (pointer->procedure '*
@@ -163,12 +165,12 @@
  (define PyEval_EvalCode
    (pointer->procedure '*
                        (dynamic-func "PyEval_EvalCode" python-dll)
-                       '(* * *)))
+                       `(* * *)))
 
  (define PyObject_CallObject
    (pointer->procedure '*
                        (dynamic-func "PyObject_CallObject" python-dll)
-                       '(* *)))
+                       `(* *)))
 
  (define Py_False (get-Py_False))
  (define Py_True (get-Py_True))
@@ -181,12 +183,12 @@
  (define PyObject_IsTrue
    (pointer->procedure int
                        (dynamic-func "PyObject_IsTrue" python-dll)
-                       '(*)))
+                       `(*)))
 
  (define PyObject_Not
    (pointer->procedure int
                        (dynamic-func "PyObject_Not" python-dll)
-                       '(*)))
+                       `(*)))
 
  (define PyLong_FromUnsignedLong
    (pointer->procedure '*
@@ -201,12 +203,12 @@
  (define PyLong_FromVoidPtr
    (pointer->procedure '*
                        (dynamic-func "PyLong_FromVoidPtr" python-dll)
-                       '(*)))
+                       `(*)))
 
  (define PyLong_AsVoidPtr
    (pointer->procedure '*
                        (dynamic-func "PyLong_AsVoidPtr" python-dll)
-                       '(*)))
+                       `(*)))
 
  (define PyTuple_New
    (pointer->procedure '*
@@ -218,4 +220,13 @@
                        (dynamic-func "PyTuple_SetItem" python-dll)
                        `(* ,size_t *)))
 
+ (define Py_Initialize
+   (pointer->procedure void
+                       (dynamic-func "Py_Initialize" python-dll)
+                       `()))
+
+  (define Py_Finalize
+   (pointer->procedure void
+                       (dynamic-func "Py_Finalize" python-dll)
+                       `()))
  )

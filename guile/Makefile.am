@@ -93,12 +93,6 @@ EXTRA_DIST += generate-guile-api.scm ff-internal/generate-types.scm
 
 nodist_pkgguiledata_DATA = site-init.scm site-final.scm
 
-if HAVE_PYTHON_SCRIPTING
-have_python_scripting = t
-else !HAVE_PYTHON_SCRIPTING
-have_python_scripting = f
-endif !HAVE_PYTHON_SCRIPTING
-
 EXTRA_DIST += site-init.scm.in site-final.scm.in
 MOSTLYCLEANFILES += site-init.scm site-final.scm
 
@@ -121,11 +115,13 @@ libguile_sortsmillff_pure_la_LDFLAGS = -module -release $(VERSION)	\
 libguile_sortsmillff_pure_la_LIBADD = $(top_builddir)/lib/libgnu.la
 endif PURE_API
 
+if HAVE_PYTHON_SCRIPTING
 lib_LTLIBRARIES += libguile-sortsmillff_python.la
 libguile_sortsmillff_python_la_SOURCES = guile_python.c
 libguile_sortsmillff_python_la_LDFLAGS = -module -release $(VERSION)	\
 	$(PYTHON_LIBS)
 libguile_sortsmillff_python_la_LIBADD = $(top_builddir)/lib/libgnu.la
+endif HAVE_PYTHON_SCRIPTING
 
 lib_LTLIBRARIES += libguile-sortsmillff_aux.la
 libguile_sortsmillff_aux_la_SOURCES = guile_polyspline.c	\

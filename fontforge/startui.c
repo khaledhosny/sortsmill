@@ -211,9 +211,6 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   FF_SetFIInterface (&gdraw_fi_interface);
   FF_SetMVInterface (&gdraw_mv_interface);
   FF_SetClipInterface (&gdraw_clip_interface);
-#ifndef _NO_PYTHON
-  Py_Initialize ();
-#endif
 
   InitSimpleStuff ();
 

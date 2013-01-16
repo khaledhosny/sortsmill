@@ -15,12 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-#ifdef _NO_PYTHON
-
-static int there_is_nothing_in_this_unit = 0;
-
-#else // Python
-
 #include <Python.h>
 #include <libguile.h>
 
@@ -44,6 +38,3 @@ init_guile_sortsmillff_python (void)
   scm_c_define_gsubr ("get-Py_False", 0, 0, 0, _scm_get_Py_False);
   scm_c_define_gsubr ("get-Py_True", 0, 0, 0, _scm_get_Py_True);
 }
-
-#endif // Python
-
