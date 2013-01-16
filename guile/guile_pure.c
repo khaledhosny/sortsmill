@@ -21,6 +21,8 @@
 
 void init_guile_sortsmillff_pure (void);
 
+static SCM value_and_exception (pure_expr * value, pure_expr * exception);
+
 static void
 pure_expr_finalizer (void *x)
 {
@@ -225,7 +227,7 @@ static SCM
 scm_eval_pure_symbol (SCM string)
 {
   SCM result = SCM_BOOL_F;
-  
+
   scm_dynwind_begin (0);
 
   char *s = scm_to_utf8_stringn (string, NULL);
@@ -235,16 +237,48 @@ scm_eval_pure_symbol (SCM string)
   if (sym != 0)
     {
       pure_expr *exception;
-      pure_expr *x = pure_symbolx (sym, &exception);
-      SCM car = (x != NULL) ? scm_pointer_to_pure_expr (x) : SCM_BOOL_F;
-      SCM cdr =
-        (exception != NULL) ? scm_pointer_to_pure_expr (exception) : SCM_BOOL_F;
-      result = scm_cons (car, cdr);
+      pure_expr *value = pure_symbolx (sym, &exception);
+      result = value_and_exception (value, exception);
     }
 
   scm_dynwind_end ();
 
   return result;
+}
+
+static SCM
+scm_pure_str (SCM x)
+{
+  scm_dynwind_begin (0);
+
+  char *s = str (scm_pure_expr_to_pointer (x));
+  scm_dynwind_free (s);
+
+  SCM result = scm_from_utf8_string (s);
+
+  scm_dynwind_end ();
+
+  return result;
+}
+
+static SCM
+scm_pure_eval (SCM x)
+{
+  SCM result = SCM_BOOL_F;
+  pure_expr *exception = NULL;
+  pure_expr *value = pure_evalx (scm_pure_expr_to_pointer (x), &exception);
+  if (value != NULL || exception != NULL)
+    result = value_and_exception (value, exception);
+  return result;
+}
+
+static SCM
+value_and_exception (pure_expr * value, pure_expr * exception)
+{
+  SCM car = (value != NULL) ? scm_pointer_to_pure_expr (value) : SCM_BOOL_F;
+  SCM cdr =
+    (exception != NULL) ? scm_pointer_to_pure_expr (exception) : SCM_BOOL_F;
+  return scm_cons (car, cdr);
 }
 
 VISIBLE void
@@ -270,9 +304,11 @@ init_guile_sortsmillff_pure (void)
                       scm_pure_expr_to_pointer_or_f);
   scm_c_define_gsubr ("pure-expr->string-or-f", 1, 0, 0,
                       scm_pure_expr_to_string_or_f);
-  scm_c_define_gsubr ("pure-expr-is-string?", 1, 0, 0,
-		      scm_pure_expr_is_string);
+  scm_c_define_gsubr ("pure-expr-is-string?", 1, 0, 0, scm_pure_expr_is_string);
   scm_c_define_gsubr ("symbol-pure-expr->small-integer-or-f", 1, 0, 0,
                       scm_symbol_pure_expr_to_small_integer_or_f);
-  scm_c_define_gsubr ("private:eval-pure-symbol", 1, 0, 0, scm_eval_pure_symbol);
+  scm_c_define_gsubr ("private:eval-pure-symbol", 1, 0, 0,
+                      scm_eval_pure_symbol);
+  scm_c_define_gsubr ("pure-str", 1, 0, 0, scm_pure_str);
+  scm_c_define_gsubr ("private:pure-eval", 1, 0, 0, scm_pure_eval);
 }

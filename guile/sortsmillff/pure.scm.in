@@ -29,12 +29,12 @@
 (define-syntax if-fontforge-has-pure-api
   (lambda (x)
     (match '@i_do_have_pure_api@
-           ('yes
-            (syntax-case x ()
-              ((_ e e* ...) #'(begin e e* ...))))
-           ('no
-            (syntax-case x ()
-              ((_ _ _ ...) #'*unspecified*))))))
+      ('yes
+       (syntax-case x ()
+         ((_ e e* ...) #'(begin e e* ...))))
+      ('no
+       (syntax-case x ()
+         ((_ _ _ ...) #'*unspecified*))))))
 
 (if-fontforge-has-pure-api
 
@@ -56,7 +56,7 @@
          symbol-pure-expr->string
          pure-closing-symbol
          pure-fixity
-         eval-pure-symbol
+         pure-eval-symbol
 
          pure-expr?
          pointer->pure-expr
@@ -97,6 +97,17 @@
          string->pure-expr
          pure-expr->string
          pure-expr-is-string?
+
+         pure-lasterr
+         pure-clear-lasterr
+         pure-lasterr-pos
+         pure-val
+         pure-eval
+         pure-evalcmd
+         pure-interp-compile
+
+         pure-str                       ; Returns a Guile string.
+         pure-str-pure-expr             ; Returns a Pure string.
 
          pure-interp?
          pointer->pure-interp
@@ -140,13 +151,13 @@
 
  (define symbol-pure-expr->small-integer
    (lambda (caller x)
-   (cond
-    ((symbol-pure-expr->small-integer-or-f x))
-    (else
-     (error caller
-            (_ "the Pure expression is not a symbol")
-            x)))))
-            
+     (cond
+      ((symbol-pure-expr->small-integer-or-f x))
+      (else
+       (error caller
+              (_ "the Pure expression is not a symbol")
+              x)))))
+ 
  (define symbol-pure-expr->string
    (let ((proc (pointer->procedure
                 '* (dynamic-func "pure_sym_pname" pure-dll)
@@ -174,26 +185,24 @@
        (let ((sym (symbol-pure-expr->small-integer 'pure-fixity x)))
          (proc sym)))))
 
-(define eval-pure-symbol
-  (lambda (string)
-    (let ((result-pair (private:eval-pure-symbol string)))
-      (if result-pair
-          (match-lambda
-           ((result . pure-exception)
-            (if pure-exception
-                (throw 'pure-exception pure-exception)
-                result)))
-          (error 'eval-pure-symbol
-                 (_ "the Pure symbol does not exist") string)))))
+ (define pure-eval-symbol
+   (lambda (string)
+     (let ((result-pair (private:eval-pure-symbol string)))
+       (match result-pair
+         (#f (error 'eval-pure-symbol
+                    (_ "the Pure symbol does not exist")
+                    string))
+         ([result . pure-exception]
+          (if pure-exception
+              (throw 'pure-exception pure-exception)
+              result))))))
 
-;;;;;;;
-;;;;;;; FIXME: Actually print the Pure expression.
-;;;;;;;
  (define-wrapped-pointer-type pure-expr
    pure-expr?
    private:pointer->pure-expr pure-expr->pointer
    (lambda (expr port)
-     (format port "#<pure-expr 0x~x>"
+     (format port "#<pure-expr ~s 0x~x>"
+             (pure-str expr)
              (pointer-address (pure-expr->pointer expr)))))
 
  (define pointer->pure-expr
@@ -381,6 +390,74 @@
               (_ "the Pure expression is not a string")
               x)))))
 
+ (define pure-lasterr
+   (let ((proc (pointer->procedure
+                '* (dynamic-func "lasterr" pure-dll) `())))
+     (lambda () (pointer->string (proc) -1 "UTF-8"))))
+
+ (define pure-clear-lasterr
+   (pointer->procedure
+    void (dynamic-func "clear_lasterr" pure-dll) `()))
+
+ (define pure-lasterr-pos
+   (let ((proc (pointer->procedure
+                '* (dynamic-func "lasterrpos" pure-dll) `())))
+     (lambda () (pointer->pure-expr (proc)))))
+
+ (define pure-val
+   ;; Converts Pure syntax from string to pure-expr. Returns #f and
+   ;; sets (pure-lasterr) if the string is not legal.
+   (let ((proc (pointer->procedure
+                '* (dynamic-func "pure_val" pure-dll) `(*))))
+     (lambda (s)
+       (let ((result (proc (string->pointer s "UTF-8"))))
+         (if (null-pointer? result)
+             #f (pointer->pure-expr result))))))
+
+ (define pure-eval
+   (let ((eval-proc (pointer->procedure
+                     '* (dynamic-func "pure_eval" pure-dll) `(*))))
+     (lambda (x)
+       (let ((result-pair
+              (cond
+               ([string? x]             ; Evaluate a string.
+                (let ((value (eval-proc (string->pointer x "UTF-8"))))
+                  (if (null-pointer? value) #f
+                      (cons (pointer->pure-expr value) #f))))
+               ([pure-expr? x]         ; Evaluate a quoted expression.
+                (private:pure-eval x))
+               (else (assertion-violation
+                      'pure-eval "expected a string or pure-expr"
+                      x)))))
+         (match result-pair
+           (#f #f)
+           ([result . pure-exception]
+            (if pure-exception
+                (throw 'pure-exception pure-exception)
+                result)))))))
+
+ (define pure-evalcmd
+   (let ((proc (pointer->procedure
+                '* (dynamic-func "pure_evalcmd" pure-dll) `(*))))
+     (lambda (s)
+       (let ((output (proc (string->pointer s "UTF-8"))))
+         (if (null-pointer? output) #f
+             (pointer->string output -1 "UTF-8"))))))
+
+ (define pure-interp-compile
+   (let ((proc (pointer->procedure
+                void (dynamic-func "pure_interp_compile" pure-dll)
+                `(* ,int32))))
+     (case-lambda
+       ([interp]                        ; Compile @emph{everything}.
+        (pure-interp-compile interp #f))
+       ([interp function-symbol]
+        (if function-symbol
+            (proc (pure-interp->pointer interp)
+                  (symbol-pure-expr->small-integer
+                   'pure-interp-compile function-symbol))
+            (proc (pure-interp->pointer interp) 0))))))
+
  (define-wrapped-pointer-type pure-interp
    pure-interp? pointer->pure-interp pure-interp->pointer
    (lambda (interp port)
@@ -420,6 +497,14 @@
                 '* (dynamic-func "pure_quoted_symbol" pure-dll)
                 `(,int32))))
      (compose pointer->pure-expr proc)))
+
+ (define pure-str-pure-expr
+   (let ((proc (pointer->procedure
+                '* (dynamic-func "pure_str" pure-dll) `(*))))
+     (lambda (x)
+       (let ((result (proc (pure-expr->pointer x))))
+         (if (null-pointer? result) #f
+             (pointer->pure-expr result))))))
 
  ;; FIXME: This could be useful more generally.
  (define (string-list->argv args)
