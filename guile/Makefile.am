@@ -53,7 +53,8 @@ DIST_SCM_FILES += sortsmillff/alloc.scm sortsmillff/gsl.scm	\
 	sortsmillff/iconv.scm sortsmillff/linalg.scm			\
 	sortsmillff/polyspline.scm sortsmillff/brentroot.scm	\
 	sortsmillff/sfd-to-sxml.scm sortsmillff/views.scm		\
-	sortsmillff/api-syntax.scm sortsmillff/notices.scm
+	sortsmillff/api-syntax.scm sortsmillff/notices.scm		\
+	sortsmillff/strings.scm
 #sortsmillff/precompute.scm
 if HAVE_GUI
 DIST_SCM_FILES += sortsmillff/usermenu.scm
