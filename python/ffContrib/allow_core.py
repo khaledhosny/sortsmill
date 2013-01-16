@@ -7,6 +7,12 @@
 #
 # To use a core file, say something like ‘gdb fontforge core’
 # or ‘gdb -c core fontforge’.
+#
+# NOTE: This module is unnecessary. You can instead just put
+#
+#   (setrlimit 'core #f #f)
+#
+# in your user-init.scm file.
 
 import resource
 
