@@ -91,7 +91,7 @@ EXTRA_DIST += generate-guile-api.scm ff-internal/generate-types.scm
 
 #--------------------------------------------------------------------------
 
-nodist_pkgguiledata_DATA = site-init.scm
+nodist_pkgguiledata_DATA = site-init.scm site-final.scm
 
 if HAVE_PYTHON_SCRIPTING
 have_python_scripting = t
@@ -99,8 +99,8 @@ else !HAVE_PYTHON_SCRIPTING
 have_python_scripting = f
 endif !HAVE_PYTHON_SCRIPTING
 
-EXTRA_DIST += site-init.scm.in
-MOSTLYCLEANFILES += site-init.scm
+EXTRA_DIST += site-init.scm.in site-final.scm.in
+MOSTLYCLEANFILES += site-init.scm site-final.scm
 
 #--------------------------------------------------------------------------
 

@@ -33,6 +33,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
+#include <setjmp.h>
 #include <intl.h>
 #include "splinefont.h"
 #include "uiinterface.h"
@@ -74,6 +75,8 @@ void set_no_windowing_ui (bool);
 
 bool get_running_script (void);
 void set_running_script (bool);
+
+extern jmp_buf exit_jmp_buf;
 
 // FIXME: Eliminate this.
 #define SCRIPT_MENU_MAX	10

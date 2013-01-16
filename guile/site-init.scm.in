@@ -15,10 +15,11 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-(use-modules
- (system foreign)
- (sortsmillff notices)
- )
+(import (sortsmillff notices)
+        (sortsmillff pure)
+        (system foreign))
+
+(define current-pure-interpreter (make-fluid #f))
 
 ;;
 ;; Try to ensure access to Sorts Mill FontForge’s Guile modules.
@@ -46,6 +47,10 @@
                                         ;(dynamic-link "libguile-sortsmillff_aux")
                                         ;(dynamic-link "libguile-sortsmillff_fontforge")
                                         ;(dynamic-link "libguile-sortsmillff_fontforgeexe")
+
+   (if-fontforge-has-pure-api
+    (fluid-set! current-pure-interpreter
+                (pure-create-interp '("fontforge"))))
 
    ;;
    ;; Load local-init.scm.

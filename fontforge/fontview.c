@@ -1175,7 +1175,7 @@ _MenuExit (void *UNUSED (junk))
           GDrawProcessPendingEvents (NULL);
         }
     }
-  exit (0);
+  longjmp (exit_jmp_buf, 1);
 }
 
 VISIBLE void

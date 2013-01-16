@@ -116,6 +116,8 @@
          pure-delete-interp
          pure-switch-interp
          pure-current-interp
+
+         pure-finalize
          )
 
  (define pure-dll
@@ -506,7 +508,11 @@
          (if (null-pointer? result) #f
              (pointer->pure-expr result))))))
 
- ;; FIXME: This could be useful more generally.
+ (define pure-finalize
+   (pointer->procedure
+    void (dynamic-func "pure_finalize" pure-dll) `()))
+
+;; FIXME: This could be useful more generally.
  (define (string-list->argv args)
    (let* ((n (length args))
           (pointer-size (sizeof '*))

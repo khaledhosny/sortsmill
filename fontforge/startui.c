@@ -146,12 +146,13 @@ event_e_h (GWindow gw, GEvent *event)
 //-------------------------------------------------------------------------
 
 static const char site_init_file[] = "site-init.scm";
+static const char site_final_file[] = "site-final.scm";
 
 static void
 site_init (void)
 {
-  char *init_script = x_gc_strjoin (SHAREDIR,
-                                    "/guile/", site_init_file, NULL);
+  char *init_script =
+    x_gc_strjoin (SHAREDIR, "/guile/", site_init_file, NULL);
   FILE *f = fopen (init_script, "r");
   if (f != NULL)
     {
@@ -161,7 +162,23 @@ site_init (void)
     }
 }
 
+static void
+site_final (void)
+{
+  char *final_script =
+    x_gc_strjoin (SHAREDIR, "/guile/", site_final_file, NULL);
+  FILE *f = fopen (final_script, "r");
+  if (f != NULL)
+    {
+      // There is a readable final script.
+      fclose (f);
+      scm_c_primitive_load (final_script);
+    }
+}
+
 //-------------------------------------------------------------------------
+
+jmp_buf exit_jmp_buf;
 
 static int
 fontforge_main_in_guile_mode (int argc, char **argv)
@@ -386,7 +403,11 @@ fontforge_main_in_guile_mode (int argc, char **argv)
   if (no_font_loaded)
     FontNew ();
 
-  GDrawEventLoop (NULL);
+  int longjmp_val = setjmp (exit_jmp_buf);
+  if (longjmp_val == 0)
+    GDrawEventLoop (NULL);
+
+  site_final ();
 
   uninm_names_db_close (names_db);
 
