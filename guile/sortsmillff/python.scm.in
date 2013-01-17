@@ -17,10 +17,14 @@
 
 (define-module (sortsmillff python))
 
-(import (system foreign)
+(import (sortsmillff strings)
+        (system foreign)
         (ice-9 match))
 
 (export if-fontforge-has-python-api)
+
+(re-export enable-hash-guillemet-strings
+           disable-hash-guillemet-strings)
 
 (define-syntax if-fontforge-has-python-api
   (lambda (x)
