@@ -49,8 +49,7 @@
         )
 
 (if-fontforge-has-pure-api
- (export pure-menu-entry-action->procedure
-         pure-menu-entry-enabled->procedure))
+ (export pure-menu-entry-function->procedure))
 
 ;;-------------------------------------------------------------------------
 ;;
@@ -546,22 +545,25 @@
              ((font-view? v) (pure-pointer-cast font-view-pointer-tag p))
              (else (assert #f))))))
 
- (define pure-menu-entry-action->procedure
-   (lambda (pure-action-func)
+ (define pure-menu-entry-function->procedure
+   (lambda (f)
+     "Wrap either an ‘action’ or an ‘enabled’ function. The return
+value of the wrapped function is always a boolean."
      (lambda (view)
-       (pure-apply pure-action-func (view->pure-view view)))))
-
- (define pure-menu-entry-enabled->procedure
-   (lambda (pure-enabled-func)
-     (lambda (view)
-       (let ((result
-              (pure-apply pure-enabled-func (view->pure-view view))))
-         (unless (pure-expr-is-small-integer? result)
-           (error
-            (pure-str pure-enabled-func)
-            (_ "return value is not a Pure `boolean' (small integer)")
-            result))
-         (not (fxzero? (pure-expr->small-integer result)))))))
+       (let ((result (pure-apply f (view->pure-view view))))
+         (cond
+          ((pure-expr-is-small-integer? result)
+           ;; The return value is a small integer, which in Pure
+           ;; doubles service as a boolean. (That is unfortunate; see
+           ;; http://en.wikipedia.org/wiki/Therac-25 for an example of
+           ;; what can happen when integers are used to represent
+           ;; booleans.)
+           (not (fxzero? (pure-expr->small-integer result))))
+          (else
+           ;; The return value is not a boolean. Return #f to make it
+           ;; more likely, perhaps, that breakage of an ‘enabled’
+           ;; function will be noticed.
+           #f))))))
  
  ) ;; end of if-fontforge-has-pure-api
 
