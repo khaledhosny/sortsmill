@@ -20,7 +20,7 @@
 (import (sortsmillff i18n)
         (sortsmillff strings)
         (rnrs)
-        (srfi :1)
+        (except (srfi :1) map)
         (ice-9 match)
         (ice-9 format)
         (system foreign))
@@ -544,13 +544,19 @@
  (define pure-apply
    ;; Application of a curried Pure function, as if it were an
    ;; uncurried (that is, multiple-argument) Scheme function.
-   (let* ((proc (pointer->procedure
-                 '* (dynamic-func "pure_app" pure-dll) `(* *)))
-          (apply-pure-func (lambda (f arg) (proc f arg))))
-     (lambda (pure-func arg . rest)
-       ;; Repeatedly derive and apply new Pure functions, until we
-       ;; reach the result.
-       (fold-left apply-pure-func pure-func (cons arg rest)))))
+   (let ((proc (pointer->procedure
+                 '* (dynamic-func "pure_app" pure-dll) `(* *))))
+     (case-lambda
+       [(f arg)  ; Treat this as a special case for (perhaps) speed.
+        (pointer->pure-expr (proc (pure-expr->pointer f)
+                                  (pure-expr->pointer arg)))]
+       [(f arg . rest)
+        (let ((apply-pure-func (lambda (g x) (proc g x))))
+          ;; Repeatedly derive and apply new Pure functions, until we
+          ;; reach the result.
+          (pointer->pure-expr
+           (fold-left apply-pure-func (pure-expr->pointer f)
+                      (map pure-expr->pointer (cons arg rest)))))])))
 
  (define-wrapped-pointer-type pure-interp
    pure-interp? pointer->pure-interp pure-interp->pointer
