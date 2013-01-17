@@ -416,6 +416,10 @@ FONTFORGE_ICONV_TOCODE_SUFFIX([MY_ICONV_SUFFIX_IGNORE],[//IGNORE],[ISO-8859-1],[
 
 AH_BOTTOM([#include <config-extra.h>])
 
+if test x"${i_do_have_pure_api}" = xyes; then
+   FONTFORGE_CHECK_PURE_MODULE([ffi],[http://docs.pure-lang.googlecode.com/hg/pure-ffi.html])
+fi
+
 #--------------------------------------------------------------------------
 
 AM_CONDITIONAL([HAVE_PYTHON_API],[test x"${i_do_have_python_scripting}" = xyes])
