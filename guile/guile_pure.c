@@ -32,7 +32,7 @@ pure_expr_finalizer (void *x)
 static SCM
 scm_pure_new (SCM p)
 {
-  return scm_from_pointer (scm_to_pointer (p), pure_expr_finalizer);
+  return scm_from_pointer (pure_new (scm_to_pointer (p)), pure_expr_finalizer);
 }
 
 static SCM
