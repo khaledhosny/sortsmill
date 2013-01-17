@@ -33,13 +33,13 @@
         register-fontforge-menu-entry   ; FIXME: Get rid of this.
         )
 
-(import (sortsmillff views)
-        (sortsmillff notices)
-        (sortsmillff fontforge-api)
+(import (sortsmillff fontforge-api)
         (sortsmillff gdraw-api)
-        (sortsmillff python)
-        (sortsmillff machine)
         (sortsmillff i18n)
+        (sortsmillff machine)
+        (sortsmillff notices)
+        (sortsmillff pure)
+        (sortsmillff views)
         (rnrs)
         (srfi :1)
         (only (srfi :26) cut)
@@ -47,6 +47,10 @@
         (ice-9 match)
         (system foreign)
         )
+
+(if-fontforge-has-pure-api
+ (export pure-menu-entry-action->procedure
+         pure-menu-entry-enabled->procedure))
 
 ;;-------------------------------------------------------------------------
 ;;
@@ -523,6 +527,43 @@
      (let* ((proc (pointer->procedure _Bool c-enabled (list '* '*)))
             (wrapped-enabled (lambda (view) (not (zero? (proc (view->pointer view) data))))))
        wrapped-enabled))))
+
+;;-------------------------------------------------------------------------
+
+(if-fontforge-has-pure-api
+
+ (define glyph-view-pointer-type "CharViewBase*")
+ (define glyph-view-pointer-tag (pure-pointer-tag glyph-view-pointer-type))
+
+ (define font-view-pointer-type "FontViewBase*")
+ (define font-view-pointer-tag (pure-pointer-tag font-view-pointer-type))
+
+ (define view->pure-view
+   (lambda (v)
+     (assert (view? v))
+     (let ((p (pointer->pointer-pure-expr (view->pointer v))))
+       (cond ((glyph-view? v) (pure-pointer-cast glyph-view-pointer-tag p))
+             ((font-view? v) (pure-pointer-cast font-view-pointer-tag p))
+             (else (assert #f))))))
+
+ (define pure-menu-entry-action->procedure
+   (lambda (pure-action-func)
+     (lambda (view)
+       (pure-apply pure-action-func (view->pure-view view)))))
+
+ (define pure-menu-entry-enabled->procedure
+   (lambda (pure-enabled-func)
+     (lambda (view)
+       (let ((result
+              (pure-apply pure-enabled-func (view->pure-view view))))
+         (unless (pure-expr-is-small-integer? result)
+           (error
+            (pure-str pure-enabled-func)
+            (_ "return value is not a Pure `boolean' (small integer)")
+            result))
+         (not (fxzero? (pure-expr->small-integer result)))))))
+ 
+ ) ;; end of if-fontforge-has-pure-api
 
 ;;-------------------------------------------------------------------------
 ;;

@@ -97,6 +97,7 @@
 
          pointer->pointer-pure-expr
          pointer-pure-expr->pointer
+         pure-expr-is-pointer?
 
          string->pure-expr
          pure-expr->string
@@ -110,8 +111,14 @@
          pure-evalcmd
          pure-interp-compile
 
+         pure-apply
+
          pure-str                       ; Returns a Guile string.
          pure-str-pure-expr             ; Returns a Pure string.
+
+         pure-pointer-tag
+         pure-pointer-type
+         pure-pointer-cast
 
          pure-interp?
          pointer->pure-interp
@@ -250,6 +257,7 @@
  (define pure-expr-is-number?
    (lambda (x)
      (cond
+      ((not (pure-expr? x)) #f)
       ((pure-expr-is-integer? x) #t)
       ((pure-expr-is-inexact? x) #t)
       ((pure-expr-is-rational? x) #t)
@@ -300,17 +308,26 @@
         x)))))
 
  (define pure-expr-is-integer?
-   (lambda (n)
+   (lambda (x)
      (cond
-      ((pure-expr-is-small-integer? n) #t)
-      ((pure-expr-is-big-integer? n) #t)
+      ((not (pure-expr? x)) #f)
+      ((pure-expr-is-small-integer? x) #t)
+      ((pure-expr-is-big-integer? x) #t)
       (else #f))))
 
  (define pure-expr-is-small-integer?
-   (compose not not pure-expr->small-integer-or-f))
+   (lambda (x)
+     (cond
+      ((not (pure-expr? x)) #f)
+      ((pure-expr->small-integer-or-f x) #t)
+      (else #f))))
 
  (define pure-expr-is-big-integer?
-   (compose not not pure-expr->big-integer-or-f))
+   (lambda (x)
+     (cond
+      ((not (pure-expr? x)) #f)
+      ((pure-expr->big-integer-or-f x) #t)
+      (else #f))))
 
  (define pure-expr->rational
    (lambda (x)
@@ -323,7 +340,11 @@
         x)))))
 
  (define pure-expr-is-rational?
-   (compose not not pure-expr->rational-or-f))
+   (lambda (x)
+     (cond
+      ((not (pure-expr? x)) #f)
+      ((pure-expr->rational-or-f x) #t)
+      (else #f))))
 
  (define inexact->pure-expr
    (let ((proc (pointer->procedure
@@ -348,7 +369,11 @@
    (identifier-syntax pure-expr->inexact))
 
  (define pure-expr-is-inexact?
-   (compose not not pure-expr->inexact-or-f))
+   (lambda (x)
+     (cond
+      ((not (pure-expr? x)) #f)
+      ((pure-expr->inexact-or-f x) #t)
+      (else #f))))
 
  (define-syntax pure-expr-is-flonum?
    (identifier-syntax pure-expr-is-inexact?))
@@ -363,7 +388,11 @@
               x)))))
 
  (define pure-expr-is-complex?
-   (compose not not pure-expr->complex-or-f))
+   (lambda (x)
+     (cond
+      ((not (pure-expr? x)) #f)
+      ((pure-expr->complex-or-f x) #t)
+      (else #f))))
 
  (define pointer->pointer-pure-expr
    (let ((proc (pointer->procedure
@@ -380,6 +409,13 @@
               (_ "the Pure expression is not a pointer")
               x)))))
 
+ (define pure-expr-is-pointer?
+   (lambda (x)
+     (cond
+      ((not (pure-expr? x)) #f)
+      ((pointer-pure-expr->pointer-or-f x) #t)
+      (else #f))))
+
  (define string->pure-expr
    (let ((proc (pointer->procedure
                 '* (dynamic-func "pure_string_dup" pure-dll)
@@ -395,6 +431,13 @@
        (error 'pure-expr->complex
               (_ "the Pure expression is not a string")
               x)))))
+
+  (define pure-expr-is-string?
+    (lambda (x)
+     (cond
+      ((not (pure-expr? x)) #f)
+      ((pure-expr->string-or-f x) #t)
+      (else #f))))
 
  (define pure-lasterr
    (let ((proc (pointer->procedure
@@ -450,6 +493,40 @@
          (if (null-pointer? output) #f
              (pointer->string output -1 "UTF-8"))))))
 
+ (define pure-pointer-tag
+   (let ((proc (pointer->procedure
+                int (dynamic-func "pure_pointer_tag" pure-dll)
+                `(*))))
+     (lambda (s)
+       (cond
+        ((string? s) (proc (string->pointer s)))
+        ((pure-expr-is-string? s) (proc (string->pointer
+                                         (pure-expr->string s))))
+        (else (assertion-violation
+               'pure-pointer-tag
+               (_ "expected a string or a string pure-expr")
+               s))))))
+
+ (define pure-pointer-cast
+   (let* ((proc (pointer->procedure
+                 '* (dynamic-func "pure_pointer_cast" pure-dll)
+                 `(,int *)))
+          (cast (lambda (tag x)
+                  (if (pure-pointer-type tag)
+                      [pointer->pure-expr
+                       (proc tag (pure-expr->pointer x))]
+                      [assertion-violation
+                       'pure-pointer-cast
+                       (_ "expected a valid Pure pointer tag")
+                       tag]))))
+     (lambda (tag x)
+       (unless (pure-expr-is-pointer? x)
+         (assertion-violation
+          'pure-pointer-cast (_ "expected a pointer pure-expr") x))
+       (if (or (string? tag) (pure-expr-is-string? tag))
+           (cast (pure-pointer-tag tag) x)
+           (cast tag x)))))
+
  (define pure-interp-compile
    (let ((proc (pointer->procedure
                 void (dynamic-func "pure_interp_compile" pure-dll)
@@ -463,6 +540,17 @@
                   (symbol-pure-expr->small-integer
                    'pure-interp-compile function-symbol))
             (proc (pure-interp->pointer interp) 0))))))
+
+ (define pure-apply
+   ;; Application of a curried Pure function, as if it were an
+   ;; uncurried (that is, multiple-argument) Scheme function.
+   (let* ((proc (pointer->procedure
+                 '* (dynamic-func "pure_app" pure-dll) `(* *)))
+          (apply-pure-func (lambda (f arg) (proc f arg))))
+     (lambda (pure-func arg . rest)
+       ;; Repeatedly derive and apply new Pure functions, until we
+       ;; reach the result.
+       (fold-left apply-pure-func pure-func (cons arg rest)))))
 
  (define-wrapped-pointer-type pure-interp
    pure-interp? pointer->pure-interp pure-interp->pointer

@@ -273,6 +273,13 @@ scm_pure_eval (SCM x)
 }
 
 static SCM
+scm_pure_pointer_type (SCM tag)
+{
+  const char *s = pure_pointer_type (scm_to_int (tag));
+  return (s == NULL) ? SCM_BOOL_F : scm_from_utf8_string (s);
+}
+
+static SCM
 value_and_exception (pure_expr * value, pure_expr * exception)
 {
   SCM car = (value != NULL) ? scm_pointer_to_pure_expr (value) : SCM_BOOL_F;
@@ -311,4 +318,5 @@ init_guile_sortsmillff_pure (void)
                       scm_eval_pure_symbol);
   scm_c_define_gsubr ("pure-str", 1, 0, 0, scm_pure_str);
   scm_c_define_gsubr ("private:pure-eval", 1, 0, 0, scm_pure_eval);
+  scm_c_define_gsubr ("pure-pointer-type", 1, 0, 0, scm_pure_pointer_type);
 }
