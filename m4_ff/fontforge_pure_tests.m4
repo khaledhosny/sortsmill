@@ -4,7 +4,7 @@ dnl FONTFORGE_CHECK_PURE_MODULE(MODULE)
 dnl -----------------------------------
 AC_DEFUN([FONTFORGE_CHECK_PURE_MODULE],
 [
-AC_MSG_CHECKING([whether Pure module $1 is present])
+AC_MSG_CHECKING([for Pure module $1])
 echo "using $1;" > conftest.pure
 ${PURE} -x conftest.pure > conftest.out 2> conftest.err
 if grep . conftest.err > /dev/null 2> /dev/null; then
