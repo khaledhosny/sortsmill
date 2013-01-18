@@ -578,14 +578,14 @@ immediately."
            (let ((result (pure-apply f-wrapped (view->pure-view view))))
              (cond
               ((pure-expr-is-small-integer? result)
-               ;; The return value is a small integer, which in Pure
-               ;; doubles service as a boolean. (That is unfortunate. See
-               ;; http://en.wikipedia.org/wiki/Therac-25 for an example of
-               ;; what can happen when integers are used to represent
-               ;; booleans.)
+               ;; The ‘result’ is a small integer, which in Pure
+               ;; doubles service as a boolean. (That is unfortunate.
+               ;; See http://en.wikipedia.org/wiki/Therac-25 for an
+               ;; example of what can happen when integers are used to
+               ;; represent booleans.)
                (not (fxzero? (pure-expr->small-integer result))))
               (else
-               ;; The return value is not a boolean. Return #f to make it
+               ;; The ‘result’ is not a boolean. Return #f to make it
                ;; more likely, perhaps, that breakage of an ‘enabled’
                ;; function will be noticed.
                #f)))))])))
