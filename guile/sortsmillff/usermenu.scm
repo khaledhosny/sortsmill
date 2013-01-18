@@ -547,23 +547,29 @@
 
  (define pure-menu-entry-function->procedure
    (lambda (f)
-     "Wrap either an ‘action’ or an ‘enabled’ function. The return
-value of the wrapped function is always a boolean."
-     (lambda (view)
-       (let ((result (pure-apply f (view->pure-view view))))
-         (cond
-          ((pure-expr-is-small-integer? result)
-           ;; The return value is a small integer, which in Pure
-           ;; doubles service as a boolean. (That is unfortunate; see
-           ;; http://en.wikipedia.org/wiki/Therac-25 for an example of
-           ;; what can happen when integers are used to represent
-           ;; booleans.)
-           (not (fxzero? (pure-expr->small-integer result))))
-          (else
-           ;; The return value is not a boolean. Return #f to make it
-           ;; more likely, perhaps, that breakage of an ‘enabled’
-           ;; function will be noticed.
-           #f))))))
+     "Wrap either an ‘action’ or an ‘enabled’ function that is written
+in Pure. If the function is specified as a string, it will first be
+evaluated as Pure source code. The Guile return value of the wrapped
+function is always a boolean. Optionally the function can be compiled
+immediately."
+     (cond
+      [(string? f) (pure-menu-entry-function->procedure (pure-eval f))]
+      [else
+       (lambda (view)
+         (let ((result (pure-apply f (view->pure-view view))))
+           (cond
+            ((pure-expr-is-small-integer? result)
+             ;; The return value is a small integer, which in Pure
+             ;; doubles service as a boolean. (That is unfortunate. See
+             ;; http://en.wikipedia.org/wiki/Therac-25 for an example of
+             ;; what can happen when integers are used to represent
+             ;; booleans.)
+             (not (fxzero? (pure-expr->small-integer result))))
+            (else
+             ;; The return value is not a boolean. Return #f to make it
+             ;; more likely, perhaps, that breakage of an ‘enabled’
+             ;; function will be noticed.
+             #f))))])))
  
  ) ;; end of if-fontforge-has-pure-api
 

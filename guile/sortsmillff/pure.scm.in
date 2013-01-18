@@ -25,10 +25,10 @@
         (ice-9 format)
         (system foreign))
 
-(export if-fontforge-has-pure-api)
-
 (re-export enable-hash-guillemet-strings
            disable-hash-guillemet-strings)
+
+(export if-fontforge-has-pure-api)
 
 (define-syntax if-fontforge-has-pure-api
   (lambda (x)
@@ -532,14 +532,21 @@
                 void (dynamic-func "pure_interp_compile" pure-dll)
                 `(* ,int32))))
      (case-lambda
-       ([interp]                        ; Compile @emph{everything}.
-        (pure-interp-compile interp #f))
-       ([interp function-symbol]
+       [() (pure-interp-compile (pure-current-interp) #f)]
+       [(interp-or-function-symbol)
+        (cond
+         [(pure-interp? interp-or-function-symbol)
+          ;; Compile @emph{everything}.
+          (pure-interp-compile interp-or-function-symbol #f)]
+         [else
+          (pure-interp-compile (pure-current-interp)
+                               interp-or-function-symbol)])]
+       [(interp function-symbol)
         (if function-symbol
             (proc (pure-interp->pointer interp)
                   (symbol-pure-expr->small-integer
                    'pure-interp-compile function-symbol))
-            (proc (pure-interp->pointer interp) 0))))))
+            (proc (pure-interp->pointer interp) 0))])))
 
  (define pure-apply
    ;; Application of a curried Pure function, as if it were an

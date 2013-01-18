@@ -20,8 +20,6 @@
         (sortsmillff python)
         (system foreign))
 
-(define current-pure-interpreter (make-fluid #f))
-
 ;;
 ;; Try to ensure access to Sorts Mill FontForge’s Guile modules.
 ;;
@@ -40,8 +38,7 @@
  (lambda ()
 
    (if-fontforge-has-pure-api
-    (fluid-set! current-pure-interpreter
-                (pure-create-interp '("fontforge"))))
+    (pure-create-interp '("fontforge")))
 
    (if-fontforge-has-python-api
     (Py_Initialize))
