@@ -128,7 +128,6 @@ return;
     }
     SplineMake(last,cv->active_shape->first,false);
     cv->active_shape->last = cv->active_shape->first;
-    SCUpdateAll(cv->b.sc);
 }
 
 static void SetCorner(SplinePoint *sp,real x, real y) {
@@ -309,7 +308,7 @@ return;
       break;
     }
     RedoActiveSplineSet(cv->active_shape);
-    SCUpdateAll(cv->b.sc);
+    GDrawRequestExpose(cv->v,NULL,false);
 }
 
 void CVMouseUpShape(CharView *cv) {
@@ -365,4 +364,5 @@ return;
 	cv->active_shape->spiro_max = cv->active_shape->spiro_cnt;
     }
     cv->active_shape = NULL;
+    CVCharChangedUpdate(&cv->b);
 }
