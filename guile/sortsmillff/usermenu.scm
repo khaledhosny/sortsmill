@@ -545,6 +545,24 @@
              ((font-view? v) (pure-pointer-cast font-view-pointer-tag p))
              (else (assert #f))))))
 
+ ;;
+ ;; FIXME: Write a better exception handler.
+ ;;
+ (define pure-menu-entry-exc-handler
+   (pure-eval
+    #«
+      using system;
+
+      (\menu_entry_func ->
+          (\view ->
+              catch handler (menu_entry_func view)
+              with
+                handler exc = fprintf stderr "Pure exception: %s\n" (str exc)
+                              $$ false;
+              end))
+    »#
+    ))
+
  (define pure-menu-entry-function->procedure
    (lambda (f)
      "Wrap either an ‘action’ or an ‘enabled’ function that is written
@@ -555,21 +573,22 @@ immediately."
      (cond
       [(string? f) (pure-menu-entry-function->procedure (pure-eval f))]
       [else
-       (lambda (view)
-         (let ((result (pure-apply f (view->pure-view view))))
-           (cond
-            ((pure-expr-is-small-integer? result)
-             ;; The return value is a small integer, which in Pure
-             ;; doubles service as a boolean. (That is unfortunate. See
-             ;; http://en.wikipedia.org/wiki/Therac-25 for an example of
-             ;; what can happen when integers are used to represent
-             ;; booleans.)
-             (not (fxzero? (pure-expr->small-integer result))))
-            (else
-             ;; The return value is not a boolean. Return #f to make it
-             ;; more likely, perhaps, that breakage of an ‘enabled’
-             ;; function will be noticed.
-             #f))))])))
+       (let ((f-wrapped (pure-apply pure-menu-entry-exc-handler f)))
+         (lambda (view)
+           (let ((result (pure-apply f-wrapped (view->pure-view view))))
+             (cond
+              ((pure-expr-is-small-integer? result)
+               ;; The return value is a small integer, which in Pure
+               ;; doubles service as a boolean. (That is unfortunate. See
+               ;; http://en.wikipedia.org/wiki/Therac-25 for an example of
+               ;; what can happen when integers are used to represent
+               ;; booleans.)
+               (not (fxzero? (pure-expr->small-integer result))))
+              (else
+               ;; The return value is not a boolean. Return #f to make it
+               ;; more likely, perhaps, that breakage of an ‘enabled’
+               ;; function will be noticed.
+               #f)))))])))
  
  ) ;; end of if-fontforge-has-pure-api
 

@@ -36,3 +36,5 @@
 
 (define (disable-hash-guillemet-strings)
   (read-hash-extend #\« #f))
+
+(enable-hash-guillemet-strings)
