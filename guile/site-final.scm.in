@@ -15,19 +15,14 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-;;;
-;;; FIXME: Add local-final.scm and user-final.scm support.
-;;;
-
-
-(display "Leaving FontForge... (This message is here temporarily to test finalization.)\n" (current-error-port))
+;;;;;
+;;;;; FIXME: Add local-final.scm and user-final.scm support.
+;;;;;
 
 (if-fontforge-has-pure-api
- (display "Finalizing Pure... (This message is here temporarily to test finalization.)\n" (current-error-port))
- (pure-finalize)
- )
+ (pure-finalize))
 
 (if-fontforge-has-python-api
- (display "Finalizing Python... (This message is here temporarily to test finalization.)\n" (current-error-port))
- (Py_Initialize)
- )
+ (py-finalize))
+
+(display "Leaving FontForge... (This message is here temporarily to test finalization.)\n" (current-error-port))

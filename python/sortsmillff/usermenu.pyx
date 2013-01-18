@@ -159,10 +159,6 @@ cdef void __registerMenuItem (int c_window,
   cdef SCM scm_action = __create_action_closure (action_function)
   cdef SCM scm_enabled = __create_enabled_closure (enable_function)
 
-  # These are ‘protected’ rather than ‘permanent’ so they can be freed
-  # by a ‘remove menu item’ feature. FIXME: FREEING NOT YET
-  # IMPLEMENTED even though you already can at least replace a menu
-  # entry.
   scm_gc_protect_object (scm_action)
   scm_gc_protect_object (scm_enabled)
 

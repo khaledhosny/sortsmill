@@ -17,7 +17,10 @@
 
 (define-module (sortsmillff python))
 
-(import (sortsmillff strings)
+(import (sortsmillff i18n)
+        (sortsmillff strings)
+        (rnrs)
+        (only (srfi :26) cut)
         (system foreign)
         (ice-9 match))
 
@@ -29,16 +32,41 @@
 (define-syntax if-fontforge-has-python-api
   (lambda (x)
     (match '@i_do_have_python_scripting@
-           ('yes
-            (syntax-case x ()
-              ((_ e e* ...) #'(begin e e* ...))))
-           ('no
-            (syntax-case x ()
-              ((_ _ _ ...) #'*unspecified*))))))
+      ('yes
+       (syntax-case x ()
+         ((_ e e* ...) #'(begin e e* ...))))
+      ('no
+       (syntax-case x ()
+         ((_ _ _ ...) #'*unspecified*))))))
 
 (if-fontforge-has-python-api
 
  (export python-dll
+
+         py-initialize
+         py-finalize
+
+         pyobject?
+         pointer->pyobject
+         borrowed-pointer->pyobject
+         pyobject->pointer
+
+         py-false                ; This is a function, not a constant.
+         py-true                 ; This is a function, not a constant.
+         boolean->pyobject
+         pyobject->boolean
+
+         pyrun
+         pyrun-filename
+
+         ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+         ;;;; FIXME: Everything exported from here down should be
+         ;;;; gotten rid of or revised.
+
+         Py_single_input
+         Py_file_input
+         Py_eval_input
+
          py-incref
          py-decref
          py-autoref
@@ -51,17 +79,10 @@
          PyEval_GetBuiltins
          PyEval_GetGlobals
          PyEval_GetLocals
-         PyRun_SimpleString
-         PyRun_SimpleFile
          PyRun_String
-         Py_single_input
-         Py_file_input
-         Py_eval_input
          Py_CompileString
          PyEval_EvalCode
          PyObject_CallObject
-         Py_False
-         Py_True
          PyBool_FromLong
          PyObject_IsTrue
          PyObject_Not
@@ -71,8 +92,6 @@
          PyLong_AsVoidPtr
          PyTuple_New
          PyTuple_SetItem
-         Py_Initialize
-         Py_Finalize
          )
 
  (define python-dll
@@ -80,9 +99,95 @@
 
  (dynamic-call "init_guile_sortsmillff_python" python-dll)
 
+ (define py-initialize
+   (pointer->procedure
+    void (dynamic-func "Py_Initialize" python-dll) `()))
+
+ (define py-finalize
+   (pointer->procedure
+    void (dynamic-func "Py_Finalize" python-dll) `()))
+
+ (define-wrapped-pointer-type pyobject
+   pyobject?
+   private:pointer->pyobject pyobject->pointer
+   (lambda (obj port)
+     ;; FIXME: Print the __repr__ of the Python object.
+     (format port "#<pyobject 0x~x>"
+             (pointer-address (pyobject->pointer obj)))))
+
+ (define pointer->pyobject
+   (lambda (p)
+     (private:pointer->pyobject (grab-pyobject-reference p))))
+
+ (define borrowed-pointer->pyobject 
+   (lambda (p)
+     (private:pointer->pyobject (grab-borrowed-pyobject-reference p))))
+
+ (define boolean->pyobject
+   (match-lambda
+    (#f (py-false))
+    (#t (py-true))
+    (other
+     (assertion-violation
+      'boolean->pyobject (_ "expected #f or #t") other))))
+
+ (define pyobject->boolean
+   (let ((proc (pointer->procedure
+                int (dynamic-func "PyObject_IsTrue" python-dll)
+                `(*))))
+     (lambda (obj)
+       (match (proc obj)
+         (0 #f)
+         (1 #t)
+         (other (py-failure 'pyobject->boolean other))))))
+
+
+ (define pyrun
+   (let ((proc (pointer->procedure
+                int (dynamic-func "PyRun_SimpleString" python-dll)
+                `(*))))
+     (match-lambda
+       [(? string? s)
+        (let ((errval (proc (string->pointer s))))
+          (unless (zero? errval) (py-failure 'pyrun s)))]
+       [other (assertion-failure
+               'pyrun (_ "expected a string") other)])))
+
+ (define pyrun-filename
+   (let ((fopen (pointer->procedure
+                 '* (dynamic-func "fopen" (dynamic-link))
+                 '(* *)))
+         (fclose (pointer->procedure
+                  int (dynamic-func "fclose" (dynamic-link))
+                  '(*)))
+         (run (pointer->procedure
+               int (dynamic-func "PyRun_SimpleFile" python-dll)
+               `(* *))))
+     (lambda (filename)
+       (let* ((filename-ptr (string->pointer filename))
+              (f (fopen filename-ptr (string->pointer "r"))))
+         (if (null-pointer? f)
+             (error 'pyrun-filename
+                    (_ "failed to open file")
+                    filename)
+             (begin
+               (run f filename-ptr)
+               (fclose f)))))))
+
+
+
+ (define (py-failure caller . irritants)
+   (apply (cut error caller (_ "Python failure") <...>) irritants))
+ 
+ 
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ ;;;; FIXME: Everything from here down should be gotten rid of or
+ ;;;; revised.
+
  (define Py_single_input @Py_single_input@)
  (define Py_file_input @Py_file_input@)
  (define Py_eval_input @Py_eval_input@)
+
 
  (define (py-incref pyobj)
    (Py_IncRef pyobj)
@@ -141,16 +246,6 @@
                        (dynamic-func "PyEval_GetLocals" python-dll)
                        `()))
  
- (define PyRun_SimpleString
-   (pointer->procedure int
-                       (dynamic-func "PyRun_SimpleString" python-dll)
-                       `(*)))
-
- (define PyRun_SimpleFile
-   (pointer->procedure int
-                       (dynamic-func "PyRun_SimpleFile" python-dll)
-                       `(* *)))
-
  (define PyRun_String
    (pointer->procedure '*
                        (dynamic-func "PyRun_String" python-dll)
@@ -175,9 +270,6 @@
    (pointer->procedure '*
                        (dynamic-func "PyObject_CallObject" python-dll)
                        `(* *)))
-
- (define Py_False (get-Py_False))
- (define Py_True (get-Py_True))
 
  (define PyBool_FromLong
    (pointer->procedure '*
@@ -224,13 +316,4 @@
                        (dynamic-func "PyTuple_SetItem" python-dll)
                        `(* ,size_t *)))
 
- (define Py_Initialize
-   (pointer->procedure void
-                       (dynamic-func "Py_Initialize" python-dll)
-                       `()))
-
-  (define Py_Finalize
-   (pointer->procedure void
-                       (dynamic-func "Py_Finalize" python-dll)
-                       `()))
- )
+ ) ;; end of if-fontforge-has-python-api
