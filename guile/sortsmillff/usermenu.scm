@@ -554,12 +554,12 @@
       using system;
 
       (\menu_entry_func ->
-          (\view ->
-              catch handler (menu_entry_func view)
-              with
-                handler exc = fprintf stderr "Pure exception: %s\n" (str exc)
-                              $$ false;
-              end))
+        (\view ->
+            catch handler (menu_entry_func view)
+            with
+              handler exc = fprintf stderr "Pure exception: %s\n" (str exc)
+                            $$ false;
+            end))
     »#
     ))
 
