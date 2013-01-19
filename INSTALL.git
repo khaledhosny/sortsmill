@@ -10,8 +10,6 @@ git clone git://bitbucket.org/sortsmill/sortsmill-fontforge.git
 git clone git://git.sv.gnu.org/gnulib.git
 ln -s `pwd`/gnulib/gnulib-tool ${HOME}/bin/
 cd sortsmill-fontforge
-gnulib-tool --update
-intltoolize --copy --force --automake
-autoreconf --install --verbose
+./autogen.sh
 
 Then follow the instructions in ‘INSTALL’.
