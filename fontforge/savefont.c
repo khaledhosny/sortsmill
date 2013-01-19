@@ -60,15 +60,7 @@ char *savefont_extensions[] = { ".pfa", ".pfb", ".bin", "%s.pfb", ".pfa", ".pfb"
 	".cid", ".cff", ".cid.cff",
 	".t42", ".t11",
 	".ttf", ".ttf", ".ttf.bin", ".ttc", ".dfont", ".otf", ".otf.dfont", ".otf",
-	".otf.dfont", ".svg",
-#if VMS
-/* this is a directory format, and under vms directories must end in .dir */
-	"_ufo",
-#else
-	".ufo",
-#endif
-	".woff",
-NULL };
+	".otf.dfont", ".svg", ".ufo", ".woff", NULL };
 char *bitmapextensions[] = { "-*.bdf", ".ttf", ".dfont", ".ttf", ".otb", ".bmap.bin", ".fon", "-*.fnt", ".pdb", "-*.pt3", ".none", NULL };
 #endif
 
@@ -92,7 +84,7 @@ static int WriteAfmFile(char *filename,SplineFont *sf, int formattype,
 	strcat(buf,".afm");
     else
 	strcpy(pt,".afm");
-    ff_progress_change_line1(_("Saving AFM File"));
+    ff_progress_change_line1(_("Generating AFM File"));
     ff_progress_change_line2(buf);
     if ( strstr(buf,"://")==NULL )
 	afm = fopen(buf,"w");
@@ -171,7 +163,7 @@ static int WriteTfmFile(char *filename,SplineFont *sf, int formattype, EncMap *m
 	strcat(buf,".tfm");
     else
 	strcpy(pt,".tfm");
-    ff_progress_change_line1(_("Saving TFM File"));
+    ff_progress_change_line1(_("Generating TFM File"));
     ff_progress_change_line2(buf);
     ff_progress_next();	/* Forces a refresh */
     tfm = fopen(buf,"wb");
@@ -234,7 +226,7 @@ static int WriteOfmFile(char *filename,SplineFont *sf, int formattype, EncMap *m
 	strcat(buf,".ofm");
     else
 	strcpy(pt,".ofm");
-    ff_progress_change_line1(_("Saving OFM File"));
+    ff_progress_change_line1(_("Generating OFM File"));
     ff_progress_change_line2(buf);
     ff_progress_next();	/* Forces a refresh */
     tfm = fopen(buf,"wb");
@@ -349,7 +341,7 @@ static int WriteBitmaps(char *filename,SplineFont *sf, int32_t *sizes,int res,
 		(bdf->pixelsize!=(sizes[i]&0xffff) || BDFDepth(bdf)!=(sizes[i]>>16));
 		bdf=bdf->next );
 	if ( bdf==NULL ) {
-	    ff_post_notice(_("Missing Bitmap"),_("Attempt to save a pixel size that has not been created (%d@%d)"),
+	    ff_post_notice(_("Missing Bitmap"),_("Attempt to generate a pixel size that has not been created (%d@%d)"),
 		    sizes[i]&0xffff, sizes[i]>>16);
 	    free(buf);
 return( false );
@@ -665,16 +657,16 @@ return( 0 );
 
     err = !WritePSFont(filename,&temp,subtype,old_ps_flags,&encmap,sf,layer);
     if ( err )
-	ff_post_error(_("Save Failed"),_("Save Failed"));
+	ff_post_error(_("Generation Failed"),_("Generation Failed"));
     if ( !err && (old_ps_flags&ps_flag_afm) && ff_progress_next_stage()) {
 	if ( !WriteAfmFile(filename,&temp,oldformatstate,&encmap,old_ps_flags,sf,layer)) {
-	    ff_post_error(_("Afm Save Failed"),_("Afm Save Failed"));
+	    ff_post_error(_("AFM Generation Failed"),_("AFM Generation Failed"));
 	    err = true;
 	}
     }
     if ( !err && (old_ps_flags&ps_flag_tfm) ) {
 	if ( !WriteTfmFile(filename,&temp,oldformatstate,&encmap,layer)) {
-	    ff_post_error(_("Tfm Save Failed"),_("Tfm Save Failed"));
+	    ff_post_error(_("TFM Generation Failed"),_("TFM Generation Failed"));
 	    err = true;
 	}
     }
@@ -738,8 +730,8 @@ return( 1 );
 	++filecnt;
 #endif
     path = x_u8_strconv_from_locale (newname);
-    ff_progress_start_indicator(10,_("Saving font"),
-	    _("Saving Multiple PostScript Fonts"),
+    ff_progress_start_indicator(10,_("Generating font"),
+	    _("Generating Multiple PostScript Fonts"),
 	    path,256,(max+1)*filecnt, true);
     free(path);
 
@@ -799,16 +791,16 @@ return( WriteMultiplePSFont(sf,newname,sizes,res,subfontdefinition,map,layer));
     if ( oldformatstate<=ff_cffcid && oldbitmapstate==bf_otb )
 	flags = old_psotb_flags;
 
-    ff_progress_start_indicator(10,_("Saving font"),
+    ff_progress_start_indicator(10,_("Generating font"),
 				oldformatstate==ff_ttf || oldformatstate==ff_ttfsym ||
-				oldformatstate==ff_ttfmacbin ?_("Saving TrueType Font") :
-				oldformatstate==ff_otf || oldformatstate==ff_otfdfont ?_("Saving OpenType Font"):
+				oldformatstate==ff_ttfmacbin ?_("Generating TrueType Font") :
+				oldformatstate==ff_otf || oldformatstate==ff_otfdfont ?_("Generating OpenType Font"):
 				oldformatstate==ff_cid || oldformatstate==ff_cffcid ||
-				oldformatstate==ff_otfcid || oldformatstate==ff_otfciddfont ?_("Saving CID keyed font") :
-				oldformatstate==ff_mma || oldformatstate==ff_mmb ?_("Saving multi-master font") :
-				oldformatstate==ff_svg ?_("Saving SVG font") :
-				oldformatstate==ff_ufo ?_("Saving Unified Font Object") :
-				_("Saving PostScript Font"),
+				oldformatstate==ff_otfcid || oldformatstate==ff_otfciddfont ?_("Generating CID keyed font") :
+				oldformatstate==ff_mma || oldformatstate==ff_mmb ?_("Generating multi-master font") :
+				oldformatstate==ff_svg ?_("Generating SVG font") :
+				oldformatstate==ff_ufo ?_("Generating Unified Font Object") :
+				_("Generating PostScript Font"),
 				x_gc_u8_strconv_from_locale (newname), sf->glyphcnt, 1, true);
     if ( oldformatstate!=ff_none ) {
 	int oerr = 0;
@@ -816,10 +808,10 @@ return( WriteMultiplePSFont(sf,newname,sizes,res,subfontdefinition,map,layer));
 	if ( bmap==bf_otb ) bmap = bf_none;
 	if ( strstr(newname,"://")!=NULL ) {
 	    if ( oldformatstate==ff_pfbmacbin || oldformatstate==ff_ttfmacbin ) {
-		ff_post_error(_("Mac Resource Not Remote"),_("You may not save a mac resource file to a remote location"));
+		ff_post_error(_("Mac Resource Not Remote"),_("You may not generate a mac resource file to a remote location"));
 		oerr = true;
 	    } else if ( oldformatstate==ff_ufo ) {
-		ff_post_error(_("Directory Not Remote"),_("You may not save ufo directory to a remote location"));
+		ff_post_error(_("Directory Not Remote"),_("You may not generate ufo directory to a remote location"));
 		oerr = true;
 	    }
 	}
@@ -857,26 +849,26 @@ return( true );
 	  break;
 	}
 	if ( oerr ) {
-	    ff_post_error(_("Save Failed"),_("Save Failed"));
+	    ff_post_error(_("Generation Failed"),_("Generation Failed"));
 	    err = true;
 	}
     }
     if ( !err && (flags&ps_flag_tfm) ) {
 	if ( !WriteTfmFile(newname,sf,oldformatstate,map,layer)) {
-	    ff_post_error(_("Tfm Save Failed"),_("Tfm Save Failed"));
+	    ff_post_error(_("TFM Generation Failed"),_("TFM Generation Failed"));
 	    err = true;
 	}
     }
     if ( !err && (flags&ttf_flag_ofm) ) {
 	if ( !WriteOfmFile(newname,sf,oldformatstate,map,layer)) {
-	    ff_post_error(_("Ofm Save Failed"),_("Ofm Save Failed"));
+	    ff_post_error(_("OFM Generation Failed"),_("OFM Generation Failed"));
 	    err = true;
 	}
     }
     if ( !err && (flags&ps_flag_afm) ) {
 	ff_progress_increment(-sf->glyphcnt);
 	if ( !WriteAfmFile(newname,sf,oldformatstate,map,flags,NULL,layer)) {
-	    ff_post_error(_("Afm Save Failed"),_("Afm Save Failed"));
+	    ff_post_error(_("AFM Generation Failed"),_("AFM Generation Failed"));
 	    err = true;
 	}
     }
@@ -888,10 +880,10 @@ return( true );
 	}
     }
     if ( !err && (flags&ps_flag_pfm) && !iscid ) {
-	ff_progress_change_line1(_("Saving PFM File"));
+	ff_progress_change_line1(_("Generating PFM File"));
 	ff_progress_increment(-sf->glyphcnt);
 	if ( !WritePfmFile(newname,sf,oldformatstate==ff_ptype0,map,layer)) {
-	    ff_post_error(_("Pfm Save Failed"),_("Pfm Save Failed"));
+	    ff_post_error(_("PFM Generation Failed"),_("PFM Generation Failed"));
 	    err = true;
 	}
     }
@@ -919,7 +911,7 @@ return( true );
 	    free(temp);
     } else if ( (oldbitmapstate==bf_bdf || oldbitmapstate==bf_fnt ||
 	    oldbitmapstate==bf_ptype3 ) && !err ) {
-	ff_progress_change_line1(_("Saving Bitmap Font(s)"));
+	ff_progress_change_line1(_("Generating Bitmap Font(s)"));
 	ff_progress_increment(-sf->glyphcnt);
 	if ( !WriteBitmaps(newname,sf,sizes,res,oldbitmapstate,map))
 	    err = true;
