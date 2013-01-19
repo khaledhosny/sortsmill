@@ -121,7 +121,9 @@ lib_LTLIBRARIES += libguile-sortsmillff_python.la
 libguile_sortsmillff_python_la_SOURCES = guile_python.c
 libguile_sortsmillff_python_la_LDFLAGS = -module -release $(VERSION)	\
 	$(PYTHON_LIBS)
-libguile_sortsmillff_python_la_LIBADD = $(top_builddir)/lib/libgnu.la
+libguile_sortsmillff_python_la_LIBADD =				\
+	$(top_builddir)/auxiliary/libsortsmillff_aux.la	\
+	$(top_builddir)/lib/libgnu.la
 endif HAVE_PYTHON_API
 
 lib_LTLIBRARIES += libguile-sortsmillff_aux.la

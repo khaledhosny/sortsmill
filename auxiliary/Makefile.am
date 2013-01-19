@@ -39,7 +39,8 @@ dist_libsortsmillff_aux_la_SOURCES = ArabicForms.c alphabet.c			\
 	combiners.h xdie_on_null.c xgc.c xgc_strjoin.c xunicase.c			\
 	xuniconv.c xuninorm.c xunistr.c xunistr_strjoin.c ps_number.c		\
 	rexp.c brentroot.c qbrentroot.c gmp_constants.c gmp_gc.c linalg.c	\
-	precomputed_gmp_polyspline_data.c polyspline_data.c polyspline.c
+	precomputed_gmp_polyspline_data.c polyspline_data.c polyspline.c	\
+	rnrs_conditions.c
 
 nodist_libsortsmillff_aux_la_SOURCES = precomputed_polyspline_data.c
 

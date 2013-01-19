@@ -207,6 +207,8 @@
                     string))
          ([result . pure-exception]
           (if pure-exception
+              ;; FIXME: Consider raising a ‘&pure-exception’ R6RS
+              ;; condition instead.
               (throw 'pure-exception pure-exception)
               result))))))
 
