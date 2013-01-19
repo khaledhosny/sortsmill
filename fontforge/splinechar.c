@@ -1745,7 +1745,7 @@ int SCValidate(SplineChar *sc, int layer, int force) {
 	sc->layers[layer].validation_state |= vs_missinganchor;
 
     sc->layers[layer].validation_state |= vs_known;
-    if ( sc->unlink_rm_ovrlp_save_undo )
+    if ( sc->unlink_rm_ovrlp_generate_undo )
 return( sc->layers[layer].validation_state&~(vs_known|vs_selfintersects) );
 
 return( sc->layers[layer].validation_state&~vs_known );
@@ -1790,7 +1790,7 @@ return( -1 );
 	    } else if ( SCValidateAnchors(sc)!=NULL )
 		sc->layers[layer].validation_state |= vs_missinganchor;
 	    
-	    if ( sc->unlink_rm_ovrlp_save_undo )
+	    if ( sc->unlink_rm_ovrlp_generate_undo )
 		any |= sc->layers[layer].validation_state&~vs_selfintersects;
 	    else
 		any |= sc->layers[layer].validation_state;

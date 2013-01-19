@@ -25,10 +25,10 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-VISIBLE extern char *savefont_extensions[], *bitmapextensions[];
+VISIBLE extern char *generatefont_extensions[], *bitmapextensions[];
 
 VISIBLE void PrepareUnlinkRmOvrlp(SplineFont *sf,char *filename,int layer);
 VISIBLE void RestoreUnlinkRmOvrlp(SplineFont *sf,char *filename,int layer);
-VISIBLE int _DoSave(SplineFont *sf,char *newname,int32_t *sizes,int res,
+VISIBLE int _DoGenerate(SplineFont *sf,char *newname,int32_t *sizes,int res,
 	EncMap *map, char *subfontdefinition,int layer);
 int CheckIfTransparent(SplineFont *sf);

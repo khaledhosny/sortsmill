@@ -1603,8 +1603,8 @@ SFDDumpChar (FILE *sfd, SplineChar *sc, EncMap * map, int *newgids, int todir)
     fprintf (sfd, "VWidth: %d\n", sc->vwidth);
   if (sc->glyph_class != 0)
     fprintf (sfd, "GlyphClass: %d\n", sc->glyph_class);
-  if (sc->unlink_rm_ovrlp_save_undo)
-    fprintf (sfd, "UnlinkRmOvrlpSave: %d\n", sc->unlink_rm_ovrlp_save_undo);
+  if (sc->unlink_rm_ovrlp_generate_undo)
+    fprintf (sfd, "UnlinkRmOvrlpSave: %d\n", sc->unlink_rm_ovrlp_generate_undo);
   if (sc->inspiro)
     fprintf (sfd, "InSpiro: %d\n", sc->inspiro);
   if (sc->lig_caret_cnt_fixed)
@@ -5308,7 +5308,7 @@ SFDGetChar (FILE *sfd, SplineFont *sf, int had_sf_layer_cnt)
       else if (strcasecmp (tok, "UnlinkRmOvrlpSave:") == 0)
         {
           getint (sfd, &temp);
-          sc->unlink_rm_ovrlp_save_undo = temp;
+          sc->unlink_rm_ovrlp_generate_undo = temp;
         }
       else if (strcasecmp (tok, "InSpiro:") == 0)
         {

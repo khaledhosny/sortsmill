@@ -40,7 +40,7 @@
 #include <gkeysym.h>
 #include <sortsmillff/xgc.h>
 #include "psfont.h"
-#include "savefont.h"
+#include "generatefont.h"
 
 int ask_user_for_resolution = true;
 int old_fontlog = false;
@@ -635,7 +635,7 @@ OptSetDefaults (GWindow gw, struct gfc_data *d, int which, int iscid)
 #define OPT_Height	233
 
 static void
-SaveOptionsDlg (struct gfc_data *d, int which, int iscid)
+GenerationOptionsDlg (struct gfc_data *d, int which, int iscid)
 {
   int k, fontlog_k, group, group2;
   GWindow gw;
@@ -1559,7 +1559,7 @@ AnyRefs (RefChar * refs)
 }
 
 static void
-DoSave (struct gfc_data *d, uint32_t *path)
+DoGenerate (struct gfc_data *d, uint32_t *path)
 {
   int err = false;
   char *temp;
@@ -1627,7 +1627,7 @@ DoSave (struct gfc_data *d, uint32_t *path)
       if (gwwv_ask
           (_("Not a CID format"), (const char **) buts, 0, 1,
            _
-           ("You are attempting to save a CID font in a non-CID format. This is ok, but it means that only the current sub-font will be saved.\nIs that what you want?"))
+           ("You are attempting to generate a CID font in a non-CID format. This is ok, but it means that only the current sub-font will be generated.\nIs that what you want?"))
           == 1)
         return;
     }
@@ -1748,7 +1748,7 @@ DoSave (struct gfc_data *d, uint32_t *path)
       if (gwwv_ask
           (_("Encoding Too Large"), (const char **) buts, 0, 1,
            _
-           ("Your font has a 2 byte encoding, but you are attempting to save it in a format that only supports one byte encodings. This means that you won't be able to access anything after the first 256 characters without reencoding the font.\n\nDo you want to proceed anyway?"))
+           ("Your font has a 2 byte encoding, but you are attempting to generate a format that only supports one byte encodings. This means that you won't be able to access anything after the first 256 characters without reencoding the font.\n\nDo you want to proceed anyway?"))
           == 1)
         return;
     }
@@ -1845,7 +1845,7 @@ DoSave (struct gfc_data *d, uint32_t *path)
               ret =
                 gwwv_ask (_("Errors detected"), rsb, 0, 0,
                           _
-                          ("The font contains errors.\n%sWould you like to review the errors or save the font anyway?"),
+                          ("The font contains errors.\n%sWould you like to review the errors or generate the font anyway?"),
                           errs);
               free (errs);
               if (ret == 0)
@@ -1930,7 +1930,7 @@ DoSave (struct gfc_data *d, uint32_t *path)
             }
         }
       if (res != -2)
-        err = _DoSave (d->sf, temp, sizes, res, d->map, wernersfdname, layer);
+        err = _DoGenerate (d->sf, temp, sizes, res, d->map, wernersfdname, layer);
       if (err && old_fontlog)
         {
           free (d->sf->fontlog);
@@ -1984,7 +1984,7 @@ GFD_doesnt (GIOControl * gio)
 {
   /* The filename the user chose doesn't exist, so everything is happy */
   struct gfc_data *d = gio->userdata;
-  DoSave (d, gio->path);
+  DoGenerate (d, gio->path);
   GFileChooserReplaceIO (d->gfc, NULL);
 }
 
@@ -2002,12 +2002,12 @@ GFD_exists (GIOControl * gio)
   if (gwwv_ask
       (_("File Exists"), rcb, 0, 1, _("File, %s, exists. Replace it?"),
        x_gc_u32_to_u8 (u32_GFileBaseName (gio->path))) == 0)
-    DoSave (d, gio->path);
+    DoGenerate (d, gio->path);
   GFileChooserReplaceIO (d->gfc, NULL);
 }
 
 static void
-_GFD_SaveOk (struct gfc_data *d)
+_GFD_GenerateOk (struct gfc_data *d)
 {
   GGadget *tf;
   uint32_t *ret;
@@ -2028,12 +2028,12 @@ _GFD_SaveOk (struct gfc_data *d)
 }
 
 static int
-GFD_SaveOk (GGadget *g, GEvent *e)
+GFD_GenerateOk (GGadget *g, GEvent *e)
 {
   if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
     {
       struct gfc_data *d = GDrawGetUserData (GGadgetGetWindow (g));
-      _GFD_SaveOk (d);
+      _GFD_GenerateOk (d);
     }
   return (true);
 }
@@ -2088,7 +2088,7 @@ GFD_Options (GGadget *g, GEvent *e)
       int iscid = fs == ff_cid || fs == ff_cffcid || fs == ff_otfcid ||
         fs == ff_otfciddfont || fs == ff_type42cid;
       GFD_FigureWhich (d);
-      SaveOptionsDlg (d, d->sod_which, iscid);
+      GenerationOptionsDlg (d, d->sod_which, iscid);
     }
   return (true);
 }
@@ -2232,7 +2232,7 @@ GFD_Format (GGadget *g, GEvent *e)
         pt -= 2;
       if (u8_strncmp (x_gc_u32_to_u8 (pt - 2), "-*", 2) == 0)
         pt -= 2;
-      u32_strcpy (pt, x_gc_u8_to_u32 (savefont_extensions[format]));
+      u32_strcpy (pt, x_gc_u8_to_u32 (generatefont_extensions[format]));
       GGadgetSetTitle (d->gfc, dup);
       free (dup);
 
@@ -2358,7 +2358,7 @@ e_h (GWindow gw, GEvent *event)
                 event->u.chr.keysym == 'G') &&
                (event->u.chr.state & ksm_control))
         {
-          _GFD_SaveOk (GDrawGetUserData (gw));
+          _GFD_GenerateOk (GDrawGetUserData (gw));
           return (true);
         }
       return (false);
@@ -2746,7 +2746,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
   label[1].text_is_1byte = true;
   label[1].text_has_mnemonic = true;
   gcd[1].gd.label = &label[1];
-  gcd[1].gd.handle_controlevent = GFD_SaveOk;
+  gcd[1].gd.handle_controlevent = GFD_GenerateOk;
   gcd[1].creator = GButtonCreate;
   harray[0] = GCD_Glue;
   harray[1] = &gcd[1];
@@ -3052,7 +3052,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
   gcd[k].gd.popup_msg =
     (uint32_t *)
     _
-    ("In the saved font, force all glyph names to match those in the specified namelist");
+    ("In the generated font, force all glyph names to match those in the specified namelist");
   gcd[k++].creator = GLabelCreate;
   hvarray[8] = &gcd[k - 1];
   hvarray[9] = GCD_ColSpan;
@@ -3065,7 +3065,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
   gcd[k].gd.popup_msg =
     (uint32_t *)
     _
-    ("In the saved font, force all glyph names to match those in the specified namelist");
+    ("In the generated font, force all glyph names to match those in the specified namelist");
   gcd[k].creator = GListButtonCreate;
   nlnames = AllNamelistNames ();
   for (cnt = 0; nlnames[cnt] != NULL; ++cnt);
@@ -3107,7 +3107,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
       gcd[k].gd.popup_msg =
         (uint32_t *)
         _
-        ("In the saved font, force all glyph names to match those in the specified namelist");
+        ("In the generated font, force all glyph names to match those in the specified namelist");
       gcd[k++].creator = GLabelCreate;
 
       gcd[k].gd.pos.x = gcd[k - 2].gd.pos.x;
@@ -3115,7 +3115,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
       gcd[k].gd.pos.width = gcd[k - 2].gd.pos.width;
       gcd[k].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
       gcd[k].gd.popup_msg =
-        (uint32_t *) _("Save a font based on the specified layer");
+        (uint32_t *) _("Generate a font based on the specified layer");
       gcd[k].creator = GListButtonCreate;
       gcd[k].gd.cid = CID_Layers;
       gcd[k++].gd.u.list = lynames = SFUsableLayerNames (sf, layer);
@@ -3133,7 +3133,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
       /* Too time consuming to validate lots of fonts, and what UI would I use? */
       /*  so only do this if not family */
       vk = k;
-      label[k].text = (uint32_t *) _("Validate Before Saving");
+      label[k].text = (uint32_t *) _("Validate Before Generating");
       label[k].text_is_1byte = true;
       gcd[k].gd.label = &label[k];
       gcd[k].gd.pos.x = 8;
@@ -3148,7 +3148,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
       gcd[k].gd.popup_msg =
         (uint32_t *)
         _
-        ("Check the glyph outlines for standard errors before saving\nThis can be slow.");
+        ("Check the glyph outlines for standard errors before generating\nThis can be slow.");
       gcd[k++].creator = GCheckBoxCreate;
       hvarray[hvi++] = &gcd[k - 1];
       hvarray[hvi++] = GCD_ColSpan;
@@ -3358,8 +3358,8 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
     uint32_t *temp = xmalloc (sizeof (uint32_t) * (strlen (fn) + 30));
     u32_strcpy (temp, x_gc_u8_to_u32 (fn));
     u32_strcat (temp,
-                x_gc_u8_to_u32 (savefont_extensions[ofs] !=
-                                NULL ? savefont_extensions[ofs] :
+                x_gc_u8_to_u32 (generatefont_extensions[ofs] !=
+                                NULL ? generatefont_extensions[ofs] :
                                 bitmapextensions[old]));
     GGadgetSetTitle (gcd[0].ret, temp);
     free (temp);

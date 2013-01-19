@@ -97,13 +97,13 @@ extern int prefer_cjk_encodings;        /* in parsettf */
 extern int onlycopydisplayed, copymetadata, copyttfinstr;
 extern struct cvshows CVShows;
 extern int infowindowdistance;  /* in cvruler.c */
-extern int oldformatstate;      /* in savefontdlg.c */
-extern int oldbitmapstate;      /* in savefontdlg.c */
+extern int oldformatstate;      /* in generatefontdlg.c */
+extern int oldbitmapstate;      /* in generatefontdlg.c */
 static int old_ttf_flags = 0, old_otf_flags = 0;
-extern int old_sfnt_flags;      /* in savefont.c */
-extern int old_ps_flags;        /* in savefont.c */
-extern int old_validate;        /* in savefontdlg.c */
-extern int old_fontlog;         /* in savefontdlg.c */
+extern int old_sfnt_flags;      /* in generatefont.c */
+extern int old_ps_flags;        /* in generatefont.c */
+extern int old_validate;        /* in generatefontdlg.c */
+extern int old_fontlog;         /* in generatefontdlg.c */
 extern int oldsystem;           /* in bitmapdlg.c */
 extern int preferpotrace;       /* in autotrace.c */
 extern int autotrace_ask;       /* in autotrace.c */
@@ -111,7 +111,7 @@ extern int mf_ask;              /* in autotrace.c */
 extern int mf_clearbackgrounds; /* in autotrace.c */
 extern int mf_showerrors;       /* in autotrace.c */
 extern char *mf_args;           /* in autotrace.c */
-static int glyph_2_name_map = 0;        /* was in tottf.c, now a flag in savefont options dlg */
+static int glyph_2_name_map = 0;        /* was in tottf.c, now a flag in generatefont options dlg */
 extern int coverageformatsallowed;      /* in tottfgpos.c */
 extern int debug_wins;          /* in cvdebug.c */
 extern int gridfit_dpi, gridfit_depth;  /* in cvgridfit.c */

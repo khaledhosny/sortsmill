@@ -56,7 +56,7 @@ LDADD = $(LIBADD) $(GUILIBADD)
 
 noinst_HEADERS = fontforgeui.h sftextfieldP.h views.h is_LIGATURE.h		\
 	flaglist.h namelist_data.h autowidth2.h fontforge.h psfont.h		\
-	stemdb.h autowidth.h delta.h fontforgevw.h lookups.h savefont.h		\
+	stemdb.h autowidth.h delta.h fontforgevw.h lookups.h generatefont.h		\
 	ttf.h baseviews.h fvmetrics.h mm.h ttfinstrs.h edgelist2.h			\
 	namehash.h uiinterface.h bezctx_ff.h edgelist.h groups.h			\
 	nonlineartrans.h sd.h unicoderange.h bitmapcontrol.h encoding.h		\
@@ -109,7 +109,7 @@ libsortsmillff_fontforge_la_SOURCES = asmfpst.c autohint.c autosave.c	\
 	noprefs.c nouiutil.c nowakowskittfinstr.c ofl.c othersubrs.c		\
 	palmfonts.c parsepdf.c parsepfa.c parsettfatt.c parsettfbmf.c		\
 	parsettf.c parsettfvar.c print.c psread.c pua.c python.c			\
-	savefont.c scstyles.c search.c sfd1.c sfd.c sflayout.c				\
+	generatefont.c scstyles.c search.c sfd1.c sfd.c sflayout.c				\
 	splinechar.c splinefill.c splinefont.c splineorder2.c				\
 	splineoverlap.c splinesaveafm.c splinesave.c splinestroke.c			\
 	splineutil2.c splineutil.c start.c stemdb.c svg.c tottfaat.c		\
@@ -177,7 +177,7 @@ libsortsmillff_fontforgeexe_la_SOURCES = alignment.c anchorsaway.c		\
 	encodingui.c fontinfo.c fontview.c freetypeui.c fvfontsdlg.c		\
 	fvmetricsdlg.c gotodlg.c groupsdlg.c histograms.c kernclass.c		\
 	layer2layer.c lookupui.c macencui.c math.c metricsview.c mmdlg.c	\
-	nonlineartransui.c openfontdlg.c prefs.c problems.c savefontdlg.c	\
+	nonlineartransui.c openfontdlg.c prefs.c problems.c generatefontdlg.c	\
 	scriptingdlg.c scstylesui.c searchview.c sftextfield.c showatt.c	\
 	simplifydlg.c startui.c statemachine.c tilepath.c transform.c		\
 	ttfinstrsui.c uiutil.c windowmenu.c justifydlg.c deltaui.c			\
