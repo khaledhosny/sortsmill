@@ -9,7 +9,7 @@ gettext, and GNU gperf.
 git clone git://bitbucket.org/sortsmill/sortsmill-fontforge.git
 git clone git://git.sv.gnu.org/gnulib.git
 ln -s `pwd`/gnulib/gnulib-tool ${HOME}/bin/
-cd fontforge
+cd sortsmill-fontforge
 gnulib-tool --update
 intltoolize --copy --force --automake
 autoreconf --install --verbose
