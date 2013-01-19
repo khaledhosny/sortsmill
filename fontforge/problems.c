@@ -4275,7 +4275,7 @@ static int VSModMask(SplineChar *sc, struct val_data *vw) {
     int vs = 0;
     if ( sc!=NULL ) {
 	vs = sc->layers[vw->layer].validation_state;
-	if ( sc->unlink_rm_ovrlp_save_undo )
+	if ( sc->unlink_rm_ovrlp_generate_undo )
 	    vs &= ~vs_selfintersects;
 	/* if doing a truetype eval, then I'm told it's ok for references */
 	/*  to overlap. And if refs can overlap, then we can't figure out */
@@ -4549,7 +4549,7 @@ VISIBLE void VWMenuMark(GWindow gw,struct gmenuitem *mi,GEvent *e) {
     struct val_data *vw = (struct val_data *) GDrawGetUserData(gw);
     SplineChar *sc = vw->sc;
 
-    sc->unlink_rm_ovrlp_save_undo = true;
+    sc->unlink_rm_ovrlp_generate_undo = true;
 
     VW_Remetric(vw);
 }
@@ -4912,7 +4912,7 @@ VISIBLE void VWMenuManyMark(GWindow gw,struct gmenuitem *mi,GEvent *e) {
 		sc->layers[vw->layer].refs!=NULL &&
 		sc->layers[vw->layer].refs->next!=NULL &&
 		sc->layers[vw->layer].splines==NULL ) {
-	    sc->unlink_rm_ovrlp_save_undo = true;
+	    sc->unlink_rm_ovrlp_generate_undo = true;
 	    VW_Remetric(vw);
 	}
 	++k;

@@ -7195,7 +7195,7 @@ static PyObject *
 PyFF_Glyph_get_unlinkRmOvrlpSave (PyFF_Glyph *self, void *UNUSED (closure))
 {
 
-  return (Py_BuildValue ("i", self->sc->unlink_rm_ovrlp_save_undo));
+  return (Py_BuildValue ("i", self->sc->unlink_rm_ovrlp_generate_undo));
 }
 
 static int
@@ -7207,7 +7207,7 @@ PyFF_Glyph_set_unlinkRmOvrlpSave (PyFF_Glyph *self, PyObject *value,
   val = PyInt_AsLong (value);
   if (PyErr_Occurred () != NULL)
     return (-1);
-  self->sc->unlink_rm_ovrlp_save_undo = val;
+  self->sc->unlink_rm_ovrlp_generate_undo = val;
   return (0);
 }
 

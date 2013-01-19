@@ -1230,7 +1230,7 @@ static SplineChar *CI_SCDuplicate(SplineChar *sc) {
     newsc->unicodeenc = sc->unicodeenc;
     newsc->orig_pos = sc->orig_pos;
     newsc->comment = xstrdup_or_null(sc->comment);
-    newsc->unlink_rm_ovrlp_save_undo = sc->unlink_rm_ovrlp_save_undo;
+    newsc->unlink_rm_ovrlp_generate_undo = sc->unlink_rm_ovrlp_generate_undo;
     newsc->glyph_class = sc->glyph_class;
     newsc->color = sc->color;
     if ( sc->countermask_cnt!=0 ) {
@@ -1467,7 +1467,7 @@ return( false );
 	free(hicdt); free(vicdt);
 return( false );
     }
-    ci->cachedsc->unlink_rm_ovrlp_save_undo = GGadgetIsChecked(GWidgetGetControl(ci->gw,CID_UnlinkRmOverlap));
+    ci->cachedsc->unlink_rm_ovrlp_generate_undo = GGadgetIsChecked(GWidgetGetControl(ci->gw,CID_UnlinkRmOverlap));
     ci->cachedsc->glyph_class = GGadgetGetFirstListSelectedItem(GWidgetGetControl(ci->gw,CID_GClass));
     val = GGadgetGetFirstListSelectedItem(GWidgetGetControl(ci->gw,CID_Color));
     if ( val!=-1 )
@@ -1567,7 +1567,7 @@ static void CI_ApplyAll(CharInfo *ci) {
 	    sc->unicodeenc = cached->unicodeenc;
 	}
 	free(sc->comment); sc->comment = xstrdup_or_null(cached->comment);
-	sc->unlink_rm_ovrlp_save_undo = cached->unlink_rm_ovrlp_save_undo;
+	sc->unlink_rm_ovrlp_generate_undo = cached->unlink_rm_ovrlp_generate_undo;
 	sc->glyph_class = cached->glyph_class;
 	if ( sc->color != cached->color )
 	    refresh_fvdi = true;
@@ -3940,7 +3940,7 @@ static void CIFillup(CharInfo *ci) {
 
     GGadgetSelectOneListItem(GWidgetGetControl(ci->gw,CID_Color),0);
 
-    GGadgetSetChecked(GWidgetGetControl(ci->gw,CID_UnlinkRmOverlap),sc->unlink_rm_ovrlp_save_undo);
+    GGadgetSetChecked(GWidgetGetControl(ci->gw,CID_UnlinkRmOverlap),sc->unlink_rm_ovrlp_generate_undo);
 
     GGadgetSetTitle8(GWidgetGetControl(ci->gw,CID_Comment),
 	    sc->comment?sc->comment:"");
@@ -4300,12 +4300,12 @@ return;
 	uhvarray[19] = &ugcd[11]; uhvarray[20] = NULL;
 
 	ugcd[12].gd.flags = gg_visible | gg_enabled | gg_utf8_popup;
-	ulabel[12].text = (uint32_t *) _("Mark for Unlink, Remove Overlap Before Save");
+	ulabel[12].text = (uint32_t *) _("Mark for Unlink, Remove Overlap Before Generating");
 	ulabel[12].text_is_1byte = true;
 	ulabel[12].text_has_mnemonic = true;
 	ugcd[12].gd.label = &ulabel[12];
 	ugcd[12].gd.cid = CID_UnlinkRmOverlap;
-	ugcd[12].gd.popup_msg = (uint32_t *) _("A few glyphs, like Aring, Ccedilla, Eogonek\nare composed of two overlapping references.\nOften it is desirable to retain the references\n(so that changes made to the base glyph are\nreflected in the composed glyph), but that\nmeans you are stuck with overlapping contours.\nThis flag means that just before saving the\nfont, fontforge will unlink the references,\nand run remove overlap on them, then just\nafter saving it will undo the operation\nthereby retaining the references.");
+	ugcd[12].gd.popup_msg = (uint32_t *) _("A few glyphs, like Aring, Ccedilla, Eogonek\nare composed of two overlapping references.\nOften it is desirable to retain the references\n(so that changes made to the base glyph are\nreflected in the composed glyph), but that\nmeans you are stuck with overlapping contours.\nThis flag means that just before generating the\nfont, fontforge will unlink the references,\nand run remove overlap on them, then just\nafter generating it will undo the operation\nthereby retaining the references.");
 	ugcd[12].creator = GCheckBoxCreate;
 	uhvarray[21] = &ugcd[12]; uhvarray[22] = GCD_ColSpan; uhvarray[23] = NULL;
 	uhvarray[24] = GCD_Glue; uhvarray[25] = GCD_Glue; uhvarray[26] = NULL;

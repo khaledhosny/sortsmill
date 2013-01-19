@@ -1745,7 +1745,7 @@ typedef struct splinechar
   bool instructions_out_of_date;
   bool complained_about_ptnums;
   bool vs_open;
-  bool unlink_rm_ovrlp_save_undo;
+  bool unlink_rm_ovrlp_generate_undo;
   bool inspiro;
   bool lig_caret_cnt_fixed;
   struct splinecharlist *dependents;    /* The dependents list is a list

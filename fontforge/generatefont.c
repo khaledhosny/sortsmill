@@ -946,7 +946,7 @@ void PrepareUnlinkRmOvrlp(SplineFont *sf,char *filename,int layer) {
 
     if ( maxundoes==0 ) maxundoes = 1;		/* Force undoes */
 
-    for ( gid=0; gid<sf->glyphcnt; ++gid ) if ( (sc=sf->glyphs[gid])!=NULL && sc->unlink_rm_ovrlp_save_undo ) {
+    for ( gid=0; gid<sf->glyphcnt; ++gid ) if ( (sc=sf->glyphs[gid])!=NULL && sc->unlink_rm_ovrlp_generate_undo ) {
 	if ( autohint_before_generate && sc!=NULL &&
 		sc->changedsincelasthinted && !sc->manualhints ) {
 	    no_windowing_ui = true;
@@ -973,7 +973,7 @@ void RestoreUnlinkRmOvrlp(SplineFont *sf,char *filename,int layer) {
     int gid;
     SplineChar *sc;
 
-    for ( gid=0; gid<sf->glyphcnt; ++gid ) if ( (sc=sf->glyphs[gid])!=NULL && sc->unlink_rm_ovrlp_save_undo ) {
+    for ( gid=0; gid<sf->glyphcnt; ++gid ) if ( (sc=sf->glyphs[gid])!=NULL && sc->unlink_rm_ovrlp_generate_undo ) {
 	SCDoUndo(sc,layer);
 	if ( !sc->manualhints )
 	    sc->changedsincelasthinted = false;
