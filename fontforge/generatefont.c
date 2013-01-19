@@ -40,7 +40,7 @@
 #include <math.h>
 #include <string.h>
 #include "psfont.h"
-#include "savefont.h"
+#include "generatefont.h"
 
 VISIBLE int old_sfnt_flags = ttf_flag_otmode;
 VISIBLE int old_ps_flags = ps_flag_afm|ps_flag_round;
@@ -49,14 +49,14 @@ VISIBLE int old_psotb_flags = ps_flag_afm;
 VISIBLE int oldformatstate = ff_pfb;
 VISIBLE int oldbitmapstate = 0;
 #if __Mac
-char *savefont_extensions[] = { ".pfa", ".pfb", ".res", "%s.pfb", ".pfa", ".pfb", ".pt3", ".ps",
+char *generatefont_extensions[] = { ".pfa", ".pfb", ".res", "%s.pfb", ".pfa", ".pfb", ".pt3", ".ps",
 	".cid", ".cff", ".cid.cff",
 	".t42", ".t11",
 	".ttf", ".ttf", ".suit", ".ttc", ".dfont", ".otf", ".otf.dfont", ".otf",
 	".otf.dfont", ".svg", ".ufo", ".woff", NULL };
 char *bitmapextensions[] = { "-*.bdf", ".ttf", ".dfont", ".ttf", ".otb", ".bmap", ".dfont", ".fon", "-*.fnt", ".pdb", "-*.pt3", ".none", NULL };
 #else
-char *savefont_extensions[] = { ".pfa", ".pfb", ".bin", "%s.pfb", ".pfa", ".pfb", ".pt3", ".ps",
+char *generatefont_extensions[] = { ".pfa", ".pfb", ".bin", "%s.pfb", ".pfa", ".pfb", ".pt3", ".ps",
 	".cid", ".cff", ".cid.cff",
 	".t42", ".t11",
 	".ttf", ".ttf", ".ttf.bin", ".ttc", ".dfont", ".otf", ".otf.dfont", ".otf",
@@ -526,7 +526,7 @@ return( NULL );
 return( mapping );
 }
 
-static int SaveSubFont(SplineFont *sf,char *newname,int32_t *sizes,int res,
+static int GenerateSubFont(SplineFont *sf,char *newname,int32_t *sizes,int res,
 	int32_t *mapping, int subfont, char **names,EncMap *map,int layer) {
     SplineFont temp;
     SplineChar *chars[256], **newchars;
@@ -682,7 +682,7 @@ return( 0 );
     free( temp.fullname );
     free( filename );
 
-    /* SaveSubFont messes up the parent and orig_pos fields. Fix 'em up */
+    /* GenerateSubFont messes up the parent and orig_pos fields. Fix 'em up */
     /* Do this after every save, else afm,tfm files might produce extraneous kerns */
     k = 0;
     do {
@@ -736,7 +736,7 @@ return( 1 );
     free(path);
 
     for ( i=0; i<=max && !err; ++i )
-	err = SaveSubFont(sf,newname,sizes,res,mapping,i,names,map,layer);
+	err = GenerateSubFont(sf,newname,sizes,res,mapping,i,names,map,layer);
 
     free(mapping);
     for ( i=0; names[i]!=NULL; ++i ) free(names[i]);
@@ -770,7 +770,7 @@ return( false );
 return( false );
 }
 
-int _DoSave(SplineFont *sf,char *newname,int32_t *sizes,int res,
+int _DoGenerate(SplineFont *sf,char *newname,int32_t *sizes,int res,
 	EncMap *map, char *subfontdefinition,int layer) {
     int err=false;
     int iscid = oldformatstate==ff_cid || oldformatstate==ff_cffcid ||
@@ -1029,10 +1029,10 @@ int GenerateScript(SplineFont *sf,char *filename,char *bitmaptype, int fmflags,
     }
     oldbitmapstate = i;
 
-    for ( i=0; savefont_extensions[i]!=NULL; ++i ) {
-	if ( strlen( savefont_extensions[i])>0 &&
-		end-filename>=strlen(savefont_extensions[i]) &&
-		strcasecmp(end-strlen(savefont_extensions[i]),savefont_extensions[i])==0 )
+    for ( i=0; generatefont_extensions[i]!=NULL; ++i ) {
+	if ( strlen( generatefont_extensions[i])>0 &&
+		end-filename>=strlen(generatefont_extensions[i]) &&
+		strcasecmp(end-strlen(generatefont_extensions[i]),generatefont_extensions[i])==0 )
     break;
     }
     if ( end-filename>8 && strcasecmp(end-strlen(".ttf.bin"),".ttf.bin")==0 )
@@ -1057,7 +1057,7 @@ int GenerateScript(SplineFont *sf,char *filename,char *bitmaptype, int fmflags,
 	i = ff_multiple;
     else if (( i==ff_pfa || i==ff_pfb ) && strstr(filename,"%s")!=NULL )
 	i = ff_multiple;
-    if ( savefont_extensions[i]==NULL ) {
+    if ( generatefont_extensions[i]==NULL ) {
 	for ( i=0; bitmaps[i]!=NULL; ++i ) {
 	    if ( end-filename>strlen(bitmaps[i]) &&
 		    strcasecmp(end-strlen(bitmaps[i]),bitmaps[i])==0 )
@@ -1225,7 +1225,7 @@ int GenerateScript(SplineFont *sf,char *filename,char *bitmaptype, int fmflags,
 	    flags = old_sfnt_flags;
 	ret = WriteMacFamily(filename,sfs,oldformatstate,oldbitmapstate,flags,layer);
     } else {
-	ret = !_DoSave(sf,filename,sizes,res,map,subfontdefinition,layer);
+	ret = !_DoGenerate(sf,filename,sizes,res,map,subfontdefinition,layer);
     }
     free(freeme);
 
