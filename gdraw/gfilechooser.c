@@ -1334,7 +1334,7 @@ return;
 	else
 	  dir = x_gc_u32_grabstr (curdir);
 
-	free(curdir);
+	//free(curdir); // FIXME: why is this resulting in a double free?
       }
     GFileChooserScanDir(gfc,dir);
 }
