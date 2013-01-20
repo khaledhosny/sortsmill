@@ -1,4 +1,4 @@
-#! @GUILE@ \           -*- mode: scheme; coding: utf-8 -*-
+#! @GUILE@ \ -*- mode: scheme; geiser-scheme-implementation: guile; coding: utf-8 -*-
 --no-auto-compile -s
 !#
 
@@ -19,212 +19,207 @@
 
 (import (ff-internal generate-types)
         (sortsmillff machine)
+        (rnrs)
         (ice-9 match)
-        (ice-9 format)
-        (only (rnrs) assert)
-        )
+        (ice-9 format))
 
 (define (write-instruction instruction)
   (match instruction
-         (('struct (? symbol? struct-name) (? integer? size))
-          (format #t "cdef class ~a (object):\n" struct-name)
-          (format #t "\n")
-          (format #t "  # The base address of the C object, as an unsigned integer.\n")
-          (format #t "  cdef readonly uintptr_t ptr\n")
-          (format #t "\n")
-          (format #t "  def __cinit__ (self):\n")
-          (format #t "    self.ptr = <uintptr_t> NULL\n")
-          (format #t "\n")
-          (format #t "  def __init__ (self, uintptr_t ptr):\n")
-          (format #t "    self.ptr = ptr\n")
-          (format #t "\n")
-          (format #t "  def __get_c_void_p (self):\n")
-          (format #t "    return ctypes.c_void_p (self.ptr)\n")
-          (format #t "\n")
-          (format #t "  c_void_p = property (__get_c_void_p,\n")
-          (format #t "                       doc = 'The base address of the C object as a ctypes.c_void_p.')\n")
-          (format #t "\n")
-          (format #t "  @classmethod\n")
-          (format #t "  def malloc (cls):\n")
-          (format #t "    \"\"\"Create a new C object, using malloc and filling with zeros.\"\"\"\n")
-          (format #t "    return cls (<uintptr_t> xzalloc (~d))\n" size)
-          (format #t "\n")
-          (format #t "  @classmethod\n")
-          (format #t "  def gc_malloc (cls):\n")
-          (format #t "    \"\"\"Create a new C object, using the Boehm GC and filling with zeros.\"\"\"\n")
-          (format #t "    return cls (<uintptr_t> x_gc_malloc (~d))\n" size)
-          (format #t "\n")
-          (format #t "  def __free__ (self):\n")
-          (format #t "    \"\"\"Reclaim the C object, assuming it was allocated with malloc. (Dangerous.)\"\"\"\n")
-          (format #t "    free (<void *> self.ptr)\n")
-          (format #t "\n")
-          (format #t "  def __gc_free__ (self):\n")
-          (format #t "    \"\"\"Reclaim the C object, assuming it was allocated with the Boehm GC. (Dangerous.)\"\"\"\n")
-          (format #t "    GC_free (<void *> self.ptr)\n")
-          (format #t "\n")
-          )
-         (('sizeof (? symbol? struct-name) (? integer? size))
-          (format #t "  def sizeof (self):\n")
-          (format #t "    \"\"\"The size of the C object.\"\"\"\n")
-          (format #t "    return ~d\n" size)
-          (format #t "\n")
-          )
-         (('field (and (or 'struct 'array) field-type) (? symbol? struct-name)
-                  (? symbol? field-name) (? integer? offset) (? integer? size))
-          (format #t "  def __get_~a_ptr (self):\n" field-name)
-          (format #t "    return (self.ptr + ~d)\n" offset)
-          (format #t "\n")
-          (format #t "  _~a_ptr = property (__get_~a_ptr, " field-name field-name)
-          (format #t "doc = \"The address of the `~a' field, as an unsigned integer.\")\n" field-name)
-          (format #t "\n")
-          )
-         (('field (? symbol? field-type) (? symbol? struct-name)
-                  (? symbol? field-name) (? integer? offset) (? integer? size))
-          (format #t "  def __get_~a (self):\n" field-name)
-          (format #t "    return ~a (self.ptr + ~d)\n"
-                  (get-value-function field-type size)
-                  offset)
-          (format #t "\n")
-          (format #t "  def __set_~a (self, ~a v):\n"
-                  field-name (value-c-type field-type size))
-          (format #t "    ~a (self.ptr + ~d, v)\n"
-                  (set-value-function field-type size)
-                  offset)
-          (format #t "\n")
-          (format #t "  _~a = property (__get_~a, __set_~a, " field-name field-name field-name)
-          (format #t "doc = \"The `~a' field of the C object.\")\n" field-name)
-          (format #t "\n")
-          (format #t "  def __get_~a_ptr (self):\n" field-name)
-          (format #t "    return (self.ptr + ~d)\n" offset)
-          (format #t "\n")
-          (format #t "  _~a_ptr = property (__get_~a_ptr, " field-name field-name)
-          (format #t "doc = \"The address of the `~a' field, as an unsigned integer.\")\n" field-name)
-          (format #t "\n")
-          (format #t "  def __get_~a_c_void_p (self):\n" field-name)
-          (format #t "    return ctypes.c_void_p (self.ptr + ~d)\n" offset)
-          (format #t "\n")
-          (format #t "  _~a_c_void_p = property (__get_~a_c_void_p, " field-name field-name)
-          (format #t "doc = \"The address of the `~a' field, as a ctypes.c_void_p.\")\n" field-name)
-          (format #t "\n")
-          )
-         (('field ((and (or '* 'struct 'array) field-type) (? symbol? pointer-type))
-                  (? symbol? struct-name) (? symbol? field-name) (? integer? offset)
-                  (? integer? size))
-          (write-instruction (list 'field field-type struct-name field-name offset size))
-          ;;
-          ;; FIXME: Put dereferencing and array access here.
-          ;;
-          )
-         (('struct-> (? symbol? struct-name) . fields)
-          (format #t "  def fields (self):\n")
-          (format #t "    \"\"\"Return a dictionary of field values and struct/array-field addresses.\"\"\"\n")
-          (format #t "    return \\\n")
-          (format #t "      {\n")
-          (for-each
-           (lambda (flds)
-             (match flds
-                    (((? symbol? field-name)
-                      (? symbol? kind)
-                      (? (lambda (x) (or (not x) (field-type? x))) field-type)
-                      (? integer? offset)
-                      (? integer? size))
-                     (format #t "        \"~a\" : " field-name)
-                     (match (ignore-subtype field-type)
-                            ((or 'struct 'array) (format #t "self.ptr + ~d" offset))
-                            (else (format #t "~a (self.ptr + ~d)"
-                                          (get-value-function field-type size)
-                                          offset)))
-                     (format #t ",\n" field-name))))
-           fields)
-          (format #t "      }\n")
-          (format #t "\n")
-          )
+    [('struct (? symbol? struct-name) (? integer? size))
+     (format #t "cdef class ~a (object):\n" struct-name)
+     (format #t "\n")
+     (format #t "  # The base address of the C object, as an unsigned integer.\n")
+     (format #t "  cdef readonly uintptr_t ptr\n")
+     (format #t "\n")
+     (format #t "  def __cinit__ (self):\n")
+     (format #t "    self.ptr = <uintptr_t> NULL\n")
+     (format #t "\n")
+     (format #t "  def __init__ (self, uintptr_t ptr):\n")
+     (format #t "    self.ptr = ptr\n")
+     (format #t "\n")
+     (format #t "  def __get_c_void_p (self):\n")
+     (format #t "    return ctypes.c_void_p (self.ptr)\n")
+     (format #t "\n")
+     (format #t "  c_void_p = property (__get_c_void_p,\n")
+     (format #t "                       doc = 'The base address of the C object as a ctypes.c_void_p.')\n")
+     (format #t "\n")
+     (format #t "  @classmethod\n")
+     (format #t "  def malloc (cls):\n")
+     (format #t "    \"\"\"Create a new C object, using malloc and filling with zeros.\"\"\"\n")
+     (format #t "    return cls (<uintptr_t> xzalloc (~d))\n" size)
+     (format #t "\n")
+     (format #t "  @classmethod\n")
+     (format #t "  def gc_malloc (cls):\n")
+     (format #t "    \"\"\"Create a new C object, using the Boehm GC and filling with zeros.\"\"\"\n")
+     (format #t "    return cls (<uintptr_t> x_gc_malloc (~d))\n" size)
+     (format #t "\n")
+     (format #t "  def __free__ (self):\n")
+     (format #t "    \"\"\"Reclaim the C object, assuming it was allocated with malloc. (Dangerous.)\"\"\"\n")
+     (format #t "    free (<void *> self.ptr)\n")
+     (format #t "\n")
+     (format #t "  def __gc_free__ (self):\n")
+     (format #t "    \"\"\"Reclaim the C object, assuming it was allocated with the Boehm GC. (Dangerous.)\"\"\"\n")
+     (format #t "    GC_free (<void *> self.ptr)\n")
+     (format #t "\n")]
 
-         ((instruction-symbol . _)
-          (format (current-error-port) "Ignoring '~a\n" instruction-symbol))
-         ))
+    [('sizeof (? symbol? struct-name) (? integer? size))
+     (format #t "  def sizeof (self):\n")
+     (format #t "    \"\"\"The size of the C object.\"\"\"\n")
+     (format #t "    return ~d\n" size)
+     (format #t "\n")]
+
+    [('field (and (or 'struct 'array) field-type) (? symbol? struct-name)
+             (? symbol? field-name) (? integer? offset) (? integer? size))
+     (format #t "  def __get_~a_ptr (self):\n" field-name)
+     (format #t "    return (self.ptr + ~d)\n" offset)
+     (format #t "\n")
+     (format #t "  _~a_ptr = property (__get_~a_ptr, " field-name field-name)
+     (format #t "doc = \"The address of the `~a' field, as an unsigned integer.\")\n" field-name)
+     (format #t "\n")]
+
+    [('field (? symbol? field-type) (? symbol? struct-name)
+             (? symbol? field-name) (? integer? offset) (? integer? size))
+     (format #t "  def __get_~a (self):\n" field-name)
+     (format #t "    return ~a (self.ptr + ~d)\n"
+             (get-value-function field-type size)
+             offset)
+     (format #t "\n")
+     (format #t "  def __set_~a (self, ~a v):\n"
+             field-name (value-c-type field-type size))
+     (format #t "    ~a (self.ptr + ~d, v)\n"
+             (set-value-function field-type size)
+             offset)
+     (format #t "\n")
+     (format #t "  _~a = property (__get_~a, __set_~a, " field-name field-name field-name)
+     (format #t "doc = \"The `~a' field of the C object.\")\n" field-name)
+     (format #t "\n")
+     (format #t "  def __get_~a_ptr (self):\n" field-name)
+     (format #t "    return (self.ptr + ~d)\n" offset)
+     (format #t "\n")
+     (format #t "  _~a_ptr = property (__get_~a_ptr, " field-name field-name)
+     (format #t "doc = \"The address of the `~a' field, as an unsigned integer.\")\n" field-name)
+     (format #t "\n")
+     (format #t "  def __get_~a_c_void_p (self):\n" field-name)
+     (format #t "    return ctypes.c_void_p (self.ptr + ~d)\n" offset)
+     (format #t "\n")
+     (format #t "  _~a_c_void_p = property (__get_~a_c_void_p, " field-name field-name)
+     (format #t "doc = \"The address of the `~a' field, as a ctypes.c_void_p.\")\n" field-name)
+     (format #t "\n")]
+
+    [('field ((and (or '* 'struct 'array) field-type) (? symbol? pointer-type))
+             (? symbol? struct-name) (? symbol? field-name) (? integer? offset)
+             (? integer? size))
+     (write-instruction (list 'field field-type struct-name field-name offset size))
+     ;;
+     ;; FIXME: Put dereferencing and array access here.
+     ;;
+     ]
+
+    [('struct-> (? symbol? struct-name) . fields)
+     (format #t "  def fields (self):\n")
+     (format #t "    \"\"\"Return a dictionary of field values and struct/array-field addresses.\"\"\"\n")
+     (format #t "    return \\\n")
+     (format #t "      {\n")
+     (for-each
+      (lambda (flds)
+        (match flds
+          [[(? symbol? field-name)
+            (? symbol? kind)
+            (? (lambda (x) (or (not x) (field-type? x))) field-type)
+            (? integer? offset)
+            (? integer? size)]
+           (format #t "        \"~a\" : " field-name)
+           (match (ignore-subtype field-type)
+             [(or 'struct 'array) (format #t "self.ptr + ~d" offset)]
+             [else (format #t "~a (self.ptr + ~d)"
+                           (get-value-function field-type size)
+                           offset)] )
+           (format #t ",\n" field-name)] ))
+      fields)
+     (format #t "      }\n")
+     (format #t "\n")]
+    
+    [(instruction-symbol . _)
+     (format (current-error-port) "Ignoring '~a\n" instruction-symbol)] ))
 
 (define (field-type? ft)
   (match ft
-         ((? symbol? _) #t)               ; Examples: uint, bool, *, etc.
-         (((or '* 'struct 'array)
-           (? symbol? _)) #t)              ; Example: (* SplineChar)
-         (else #f)))
+    [(? symbol? _) #t]                 ; Examples: uint, bool, *, etc.
+    [((or '* 'struct 'array)
+      (? symbol? _)) #t]                ; Example: (* SplineChar)
+    [else #f] ))
 
 (define (ignore-subtype ft)
   (match ft
-         ((? symbol? _) ft)               ; Examples: uint, bool, *, etc.
-         (('* (? symbol? _)) '*)          ; Example: (* SplineChar)
-         (('struct (? symbol? _)) 'struct) ; Example: (struct DBounds)
-         (('array (? symbol? _)) 'array)   ; Example: FIXME FIXME
-         (else (assert #f))))
+    [(? symbol? _) ft]                 ; Examples: uint, bool, *, etc.
+    [('* (? symbol? _)) '*]            ; Example: (* SplineChar)
+    [('struct (? symbol? _)) 'struct]  ; Example: (struct DBounds)
+    [('array (? symbol? _)) 'array]    ; Example: FIXME FIXME
+    [else (assert #f)] ))
 
 (define (value-c-type field-type size)
   (match (cons (ignore-subtype field-type) size)
-         (('int . 1) "int8_t")
-         (('int . 2) "int16_t")
-         (('int . 4) "int32_t")
-         (('int . 8) "int64_t")
-         (('uint . 1) "uint8_t")
-         (('uint . 2) "uint16_t")
-         (('uint . 4) "uint32_t")
-         (('uint . 8) "uint64_t")
-         (('bool . _) "bint")
-         (('float . n) (symbol->string (c-float-type n)))
-         (('* . _) "uintptr_t")
-         (('struct . _) (error "NOT YET IMPLEMENTED"))
-         (('array . _) (error "NOT YET IMPLEMENTED"))
-         ))
+    [('int . 1) "int8_t"]
+    [('int . 2) "int16_t"]
+    [('int . 4) "int32_t"]
+    [('int . 8) "int64_t"]
+    [('uint . 1) "uint8_t"]
+    [('uint . 2) "uint16_t"]
+    [('uint . 4) "uint32_t"]
+    [('uint . 8) "uint64_t"]
+    [('bool . _) "bint"]
+    [('float . n) (symbol->string (c-float-type n))]
+    [('* . _) "uintptr_t"]
+    [('struct . _) (error "NOT YET IMPLEMENTED")]
+    [('array . _) (error "NOT YET IMPLEMENTED")] ))
 
 (define (get-value-function field-type size)
   (match (cons (ignore-subtype field-type) size)
-         (('int . 1) "__get_int8")
-         (('int . 2) "__get_int16")
-         (('int . 4) "__get_int32")
-         (('int . 8) "__get_int64")
-         (('uint . 1) "__get_uint8")
-         (('uint . 2) "__get_uint16")
-         (('uint . 4) "__get_uint32")
-         (('uint . 8) "__get_uint64")
-         (('bool . 1) "__get_bool8")
-         (('bool . 2) "__get_bool16")
-         (('bool . 4) "__get_bool32")
-         (('bool . 8) "__get_bool64")
-         (('float . n) (cond
-                        ((= n float-size) "__get_float")
-                        ((= n double-size) "__get_double")))
-         (('* . 1) "__get_ptr8")
-         (('* . 2) "__get_ptr16")
-         (('* . 4) "__get_ptr32")
-         (('* . 8) "__get_ptr64")
-         (('struct . _) (error "NOT YET IMPLEMENTED"))
-         (('array . _) (error "NOT YET IMPLEMENTED"))
-         ))
+    [('int . 1) "__get_int8"]
+    [('int . 2) "__get_int16"]
+    [('int . 4) "__get_int32"]
+    [('int . 8) "__get_int64"]
+    [('uint . 1) "__get_uint8"]
+    [('uint . 2) "__get_uint16"]
+    [('uint . 4) "__get_uint32"]
+    [('uint . 8) "__get_uint64"]
+    [('bool . 1) "__get_bool8"]
+    [('bool . 2) "__get_bool16"]
+    [('bool . 4) "__get_bool32"]
+    [('bool . 8) "__get_bool64"]
+    [('float . n) (cond
+                   ((= n float-size) "__get_float")
+                   ((= n double-size) "__get_double"))]
+    [('* . 1) "__get_ptr8"]
+    [('* . 2) "__get_ptr16"]
+    [('* . 4) "__get_ptr32"]
+    [('* . 8) "__get_ptr64"]
+    [('struct . _) (error "NOT YET IMPLEMENTED")]
+    [('array . _) (error "NOT YET IMPLEMENTED")] ))
 
 (define (set-value-function field-type size)
   (match (cons (ignore-subtype field-type) size)
-         (('int . 1) "__set_int8")
-         (('int . 2) "__set_int16")
-         (('int . 4) "__set_int32")
-         (('int . 8) "__set_int64")
-         (('uint . 1) "__set_uint8")
-         (('uint . 2) "__set_uint16")
-         (('uint . 4) "__set_uint32")
-         (('uint . 8) "__set_uint64")
-         (('bool . 1) "__set_bool8")
-         (('bool . 2) "__set_bool16")
-         (('bool . 4) "__set_bool32")
-         (('bool . 8) "__set_bool64")
-         (('float . n) (cond
-                        ((= n float-size) "__set_float")
-                        ((= n double-size) "__set_double")))
-         (('* . 1) "__set_ptr8")
-         (('* . 2) "__set_ptr16")
-         (('* . 4) "__set_ptr32")
-         (('* . 8) "__set_ptr64")
-         (('struct . _) (error "NOT YET IMPLEMENTED"))
-         (('array . _) (error "NOT YET IMPLEMENTED"))
-         ))
+    [('int . 1) "__set_int8"]
+    [('int . 2) "__set_int16"]
+    [('int . 4) "__set_int32"]
+    [('int . 8) "__set_int64"]
+    [('uint . 1) "__set_uint8"]
+    [('uint . 2) "__set_uint16"]
+    [('uint . 4) "__set_uint32"]
+    [('uint . 8) "__set_uint64"]
+    [('bool . 1) "__set_bool8"]
+    [('bool . 2) "__set_bool16"]
+    [('bool . 4) "__set_bool32"]
+    [('bool . 8) "__set_bool64"]
+    [('float . n) (cond
+                   ((= n float-size) "__set_float")
+                   ((= n double-size) "__set_double"))]
+    [('* . 1) "__set_ptr8"]
+    [('* . 2) "__set_ptr16"]
+    [('* . 4) "__set_ptr32"]
+    [('* . 8) "__set_ptr64"]
+    [('struct . _) (error "NOT YET IMPLEMENTED")]
+    [('array . _) (error "NOT YET IMPLEMENTED")] ))
 
 (format #t "# Generated by ~s\n" (car (command-line)))
 (format #t "\n")
