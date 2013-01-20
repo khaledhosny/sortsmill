@@ -51,6 +51,8 @@ fontforge/fvfonts.c
 fontforge/fvfontsdlg.c
 fontforge/fvimportbdf.c
 fontforge/fvmetricsdlg.c
+fontforge/generatefont.c
+fontforge/generatefontdlg.c
 fontforge/glyphcomp.c
 fontforge/gotodlg.c
 fontforge/groups.c
@@ -92,8 +94,6 @@ fontforge/print.c
 fontforge/problems.c
 fontforge/psread.c
 fontforge/python.c
-fontforge/savefont.c
-fontforge/savefontdlg.c
 fontforge/scriptingdlg.c
 fontforge/scstyles.c
 fontforge/scstylesui.c

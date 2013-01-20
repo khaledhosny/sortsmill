@@ -24,12 +24,17 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-GUILE_ENV =															\
+GUILE_ENV = GUILE_AUTO_COMPILE=0									\
 	LTDL_LIBRARY_PATH="$(top_builddir)/guile:$${LTDL_LIBRARY_PATH}"
 
 GUILE_FLAGS = -L $(top_builddir)/guile -L $(top_srcdir)/guile
 
 GUILE_INTERPRET = $(GUILE_ENV) $(GUILE) $(GUILE_FLAGS) --no-auto-compile -s
+
+GUILE_COMPILE = $(GUILE_ENV) $(GUILE_TOOLS) compile $(GUILE_FLAGS)
+
+%.go: %.scm
+	$(GUILE_COMPILE) $< -o $@
 
 %.scm: %.scm.in
 	$(AM_V_GEN)

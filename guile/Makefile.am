@@ -42,12 +42,15 @@ EXTRA_DIST += tig.scm
 
 DIST_SCM_FILES =
 DIST_SCM_IN_FILES =
-NODIST_SCM_FILES =
+CONFIGURE_GENERATED_SCM_FILES =
+MAKEFILE_GENERATED_SCM_FILES =
+GO_FILES =
 
 nobase_dist_guilemodule_DATA = $(DIST_SCM_FILES)
-nobase_nodist_guilemodule_DATA = $(NODIST_SCM_FILES)
+nobase_nodist_guilemodule_DATA = $(CONFIGURE_GENERATED_SCM_FILES)	\
+	$(MAKEFILE_GENERATED_SCM_FILES)
 EXTRA_DIST += $(DIST_SCM_IN_FILES)
-MOSTLYCLEANFILES += $(NODIST_SCM_FILES)
+MOSTLYCLEANFILES += $(MAKEFILE_GENERATED_SCM_FILES) $(GO_FILES)
 
 DIST_SCM_FILES += sortsmillff/alloc.scm sortsmillff/gsl.scm	\
 	sortsmillff/iconv.scm sortsmillff/linalg.scm			\
@@ -56,20 +59,37 @@ DIST_SCM_FILES += sortsmillff/alloc.scm sortsmillff/gsl.scm	\
 	sortsmillff/api-syntax.scm sortsmillff/notices.scm		\
 	sortsmillff/strings.scm
 #sortsmillff/precompute.scm
-if HAVE_GUI
-DIST_SCM_FILES += sortsmillff/usermenu.scm
-NODIST_SCM_FILES += sortsmillff/gdraw-api.scm
-endif HAVE_GUI
+GO_FILES += sortsmillff/alloc.go sortsmillff/gsl.go		\
+	sortsmillff/iconv.go sortsmillff/linalg.go			\
+	sortsmillff/polyspline.go sortsmillff/brentroot.go	\
+	sortsmillff/sfd-to-sxml.go sortsmillff/views.go		\
+	sortsmillff/api-syntax.go sortsmillff/notices.go	\
+	sortsmillff/strings.go
 
-DIST_SCM_IN_FILES += sortsmillff/machine.scm.in						\
-	sortsmillff/pkg-info.scm.in sortsmillff/math-constants.scm.in	\
-	sortsmillff/i18n.scm.in sortsmillff/python.scm.in				\
+DIST_SCM_IN_FILES += sortsmillff/i18n.scm.in						\
+	sortsmillff/machine.scm.in sortsmillff/math-constants.scm.in	\
+	sortsmillff/pkg-info.scm.in sortsmillff/python.scm.in			\
 	sortsmillff/pure.scm.in
-
-NODIST_SCM_FILES += sortsmillff/machine.scm sortsmillff/pkg-info.scm	\
-	sortsmillff/math-constants.scm sortsmillff/i18n.scm					\
-	sortsmillff/fontforge-api.scm sortsmillff/python.scm				\
+CONFIGURE_GENERATED_SCM_FILES += sortsmillff/i18n.scm		\
+	sortsmillff/machine.scm sortsmillff/math-constants.scm	\
+	sortsmillff/pkg-info.scm sortsmillff/python.scm			\
 	sortsmillff/pure.scm
+GO_FILES += sortsmillff/i18n.go sortsmillff/machine.go		\
+	sortsmillff/math-constants.go sortsmillff/pkg-info.go	\
+	sortsmillff/python.go sortsmillff/pure.go
+
+MAKEFILE_GENERATED_SCM_FILES += sortsmillff/fontforge-api.scm
+GO_FILES += sortsmillff/fontforge-api.go
+
+if HAVE_GUI
+
+DIST_SCM_FILES += sortsmillff/usermenu.scm
+GO_FILES += sortsmillff/usermenu.go
+
+MAKEFILE_GENERATED_SCM_FILES += sortsmillff/gdraw-api.scm
+GO_FILES += sortsmillff/gdraw-api.go
+
+endif HAVE_GUI
 
 sortsmillff/fontforge-api.scm:							\
 		$(top_builddir)/fontforge/fontforge.types.apii	\
@@ -157,27 +177,31 @@ endif HAVE_GUI
 
 #--------------------------------------------------------------------------
 
-install-data-hook: uninstall-guile-object-files
-	@$(MKDIR_P) '$(DESTDIR)$(guileobjmoduledir)/sortsmillff'
-	@echo '   Compiling Guile modules ...'
-	@for f in $(DIST_SCM_FILES) $(NODIST_SCM_FILES); do						\
-		f_go=`echo "$${f}" | $(SED) -e 's/\.scm$$/.go/'`;					\
-		full_go="$(DESTDIR)$(guileobjmoduledir)/$${f_go}";					\
-		cd '$(DESTDIR)$(guilemoduledir)' && 								\
-			LTDL_LIBRARY_PATH='$(abs_top_builddir)/guile'					\
-				$(GUILE_TOOLS) compile -o "$${full_go}" "$${f}"; 			\
-	done
-	@echo '   ... done compiling Guile modules.'
+all-local: $(GO_FILES)
 
-uninstall-local: uninstall-guile-object-files
+# The following rule is unpleasant but avoids having to keep track of
+# dependencies. Consolation: it is no worse than if we used a
+# whole-program compiler.
+$(GO_FILES): $(DIST_SCM_FILES) $(CONFIGURE_GENERATED_SCM_FILES)	\
+	$(MAKEFILE_GENERATED_SCM_FILES)
 
-uninstall-guile-object-files:
-	@for f in $(DIST_SCM_FILES) $(NODIST_SCM_FILES); do						\
-		f_go=`echo "$${f}" | $(SED) -e 's/\.scm$$/.go/'`;					\
-		if test -f $(DESTDIR)$(guileobjmoduledir)/"$${f_go}"; then 			\
-			echo 'rm -f $(DESTDIR)$(guileobjmoduledir)/'"$${f_go}";			\
-			rm -f $(DESTDIR)$(guileobjmoduledir)/"$${f_go}";				\
-		fi																	\
-	done
+# Try to ensure that the installed bitcode files are newer than the
+# installed source files, by installing the bitcode files with this
+# hook.
+install-data-hook: $(GO_FILES)
+	@(for f in $(GO_FILES); do									\
+		path="$(DESTDIR)$(guileobjmoduledir)/$${f}";			\
+		d=`echo "$${path}" | LC_ALL=C $(SED) -e 's|[^/]*$$||'`;	\
+		$(MKDIR_P) "$${d}";										\
+		echo "$(INSTALL_DATA) $${f} $${d}";						\
+		$(INSTALL_DATA) "$${f}" "$${d}";						\
+	done)
+
+uninstall-local:
+	@(for f in $(GO_FILES); do								\
+		path="$(DESTDIR)$(guileobjmoduledir)/$${f}";		\
+		echo "rm -f $${path}";								\
+		rm -f "$${path}" || : ;								\
+	done)
 
 #--------------------------------------------------------------------------

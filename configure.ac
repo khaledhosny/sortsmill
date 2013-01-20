@@ -482,8 +482,12 @@ AC_CONFIG_FILES([python/psMat.py])
 AC_CONFIG_FILES([python/sortsmillff/__init__.py])
 AC_CONFIG_FILES([python/sortsmillff/fontforge_compat.py])
 AC_CONFIG_FILES([python/sortsmillff/legacy/__init__.py])
+AC_CONFIG_FILES([guile/sortsmillff/i18n.scm])
 AC_CONFIG_FILES([guile/sortsmillff/machine.scm])
 AC_CONFIG_FILES([guile/sortsmillff/math-constants.scm])
+AC_CONFIG_FILES([guile/sortsmillff/pkg-info.scm])
+AC_CONFIG_FILES([guile/sortsmillff/pure.scm])
+AC_CONFIG_FILES([guile/sortsmillff/python.scm])
 
 FONTFORGE_CONFIG_TESTSUITE
 FONTFORGE_CREATE_INDENT_PRO        
