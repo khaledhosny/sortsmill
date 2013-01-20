@@ -37,8 +37,10 @@ DISTCLEANFILES =
 
 AM_CPPFLAGS += -I$(top_builddir)/fontforge -I$(top_srcdir)/fontforge
 AM_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS)
-LDADD = $(top_builddir)/fontforge/libsortsmillff_fontforge.la	\
-	$(top_builddir)/lib/libgnu.la
+LDADD = $(top_builddir)/fontforge/libsortsmillff_fontforge.la \
+		$(top_builddir)/auxiliary/libsortsmillff_aux.la \
+		$(top_builddir)/gutils/libsortsmillff_gutils.la \
+		$(top_builddir)/lib/libgnu.la
 
 #--------------------------------------------------------------------------
 
