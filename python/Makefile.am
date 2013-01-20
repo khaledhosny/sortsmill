@@ -114,7 +114,7 @@ sortsmillff_pkg_info_la_LIBADD = $(AUXLIBADD)
 
 nobase_pyexec_LTLIBRARIES += sortsmillff/guile.la
 sortsmillff_guile_la_SOURCES = sortsmillff/guile.c
-sortsmillff_guile_la_LIBADD = $(AUXLIBADD)
+sortsmillff_guile_la_LIBADD = $(AUXLIBADD) $(GUILE_LIBS)
 
 nobase_pyexec_LTLIBRARIES += sortsmillff/linalg.la
 sortsmillff_linalg_la_SOURCES = sortsmillff/linalg.c
