@@ -76,6 +76,8 @@
        ;;
        )
 
+      (('struct-> . _) *unspecified*)   ; Ignore 'struct-> silently.
+
       ((instruction-symbol . _)
        (format (current-error-port) "Ignoring '~a in declarations\n" instruction-symbol))
       ))
@@ -121,6 +123,8 @@
           ;; FIXME: Dereferencing and array procedures go here.
           ;;
           ))
+
+      (('struct-> . _) *unspecified*)   ; Ignore 'struct-> silently.
 
       ((instruction-symbol . _)
        (format (current-error-port) "Ignoring '~a in definitions\n" instruction-symbol))

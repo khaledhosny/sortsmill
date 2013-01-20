@@ -82,6 +82,8 @@
           ;;
           )
 
+         (('struct-> . _) *unspecified*)   ; Ignore 'struct-> silently.
+
          ((instruction-symbol . _)
           (format (current-error-port) "Ignoring '~a\n" instruction-symbol))
          ))
