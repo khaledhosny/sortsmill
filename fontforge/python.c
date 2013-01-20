@@ -22018,7 +22018,6 @@ PyInit_fontforge (void)
 void
 FontForge_PythonInit (void)
 {
-  Py_SetProgramName (L"fontforge");
   PyImport_AppendInittab ("fontforge", _PyInit_fontforge);
   PyImport_AppendInittab ("__FontForge_Internals___",
                           _PyInit___FontForge_Internals___);
@@ -22110,7 +22109,6 @@ initPyFontForge (void)
 void
 FontForge_PythonInit (void)
 {
-  Py_SetProgramName ("fontforge");
 #ifdef MAC
   PyMac_Initialize ();
 #else

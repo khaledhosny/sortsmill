@@ -315,7 +315,6 @@ initialize (void)
 
 #ifndef _NO_PYTHON
   /* This ugly hack initializes the SFD unpickler. */
-  Py_SetProgramName ((char *) program_name);
   Py_Initialize ();
   initPyFontForge ();
 #endif

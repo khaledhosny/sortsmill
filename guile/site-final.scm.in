@@ -24,5 +24,3 @@
 
 (if-fontforge-has-python-api
  (py-finalize))
-
-(display "Leaving FontForge... (This message is here temporarily to test finalization.)\n" (current-error-port))
