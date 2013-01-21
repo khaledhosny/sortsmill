@@ -17,6 +17,7 @@
 
 #include <Python.h>
 #include <libguile.h>
+#include <gmpy.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <assert.h>
@@ -32,6 +33,26 @@ void init_guile_sortsmillff_python (void);
 // comprehensible names.
 static SCM PyObject_ptr_to_scm_pyobject (PyObject *p);
 static SCM borrowed_PyObject_ptr_to_scm_pyobject (PyObject *p);
+
+//-------------------------------------------------------------------------
+
+static volatile AO_t gmpy_pymodule_is_initialized = false;
+static pthread_mutex_t gmpy_pymodule_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+static void
+initialize_gmpy_pymodule_if_necessary (void)
+{
+  if (!AO_load_acquire_read (&gmpy_pymodule_is_initialized))
+    {
+      pthread_mutex_lock (&gmpy_pymodule_mutex);
+      if (!gmpy_pymodule_is_initialized)
+        {
+          import_gmpy ();
+          AO_store_release_write (&gmpy_pymodule_is_initialized, true);
+        }
+      pthread_mutex_unlock (&gmpy_pymodule_mutex);
+    }
+}
 
 //-------------------------------------------------------------------------
 
@@ -215,22 +236,22 @@ scm_is_pyobject (SCM obj)
     return scm_from_bool (result);				\
   }
 
+#define _FF_PYSTRING_CHECK(py_obj)			\
+  (PyUnicode_Check (py_obj) || PyBytes_Check (py_obj))
+
 _SCM_TYPECHECK_P (scm_pybool_p, PyBool_Check);
 _SCM_TYPECHECK_P (scm_pyint_p, PyInt_Check);
 _SCM_TYPECHECK_P (scm_pylong_p, PyLong_Check);
+_SCM_TYPECHECK_P (scm_pympz_p_core, Pympz_Check);
 _SCM_TYPECHECK_P (scm_pyunicode_p, PyUnicode_Check);
 _SCM_TYPECHECK_P (scm_pybytes_p, PyBytes_Check);
+_SCM_TYPECHECK_P (scm_pystring_p, _FF_PYSTRING_CHECK);
 
 static SCM
-scm_pystring_p (SCM obj)
+scm_pympz_p (SCM obj)
 {
-  bool result = false;
-  if (scm_is_pyobject (obj))
-    {
-      PyObject *py_obj = pyobject_to_PyObject_ptr (obj);
-      result = PyUnicode_Check (py_obj) || PyBytes_Check (py_obj);
-    }
-  return scm_from_bool (result);
+  initialize_gmpy_pymodule_if_necessary ();
+  return scm_pympz_p_core (obj);
 }
 
 static SCM
@@ -254,6 +275,53 @@ scm_pybool_to_boolean (SCM obj)
   if (is_true == -1)
     scm_c_py_failure ("scm_pybool_to_boolean", scm_list_1 (obj));
   return (is_true) ? SCM_BOOL_T : SCM_BOOL_F;
+}
+
+static SCM
+scm_integer_to_pyint (SCM obj)
+{
+  return PyObject_ptr_to_scm_pyobject (PyInt_FromLong (scm_to_long (obj)));
+}
+
+static SCM
+scm_pyint_to_integer (SCM obj)
+{
+  PyObject *py_obj = pyobject_to_PyObject_ptr (obj);
+  if (!PyInt_Check (py_obj))
+    rnrs_raise_condition
+      (scm_list_4
+       (rnrs_make_assertion_violation (),
+        rnrs_c_make_who_condition ("scm_pyint_to_integer"),
+        rnrs_c_make_message_condition (_("expected a Python int")),
+        rnrs_make_irritants_condition (scm_list_1 (obj))));
+  long int n = PyInt_AsLong (py_obj);
+  if (n == -1 && PyErr_Occurred ())
+    scm_c_py_failure ("scm_pyint_to_integer", scm_list_1 (obj));
+  return scm_from_long (n);
+}
+
+static SCM
+scm_integer_to_pympz (SCM obj)
+{
+  initialize_gmpy_pymodule_if_necessary ();
+  PympzObject *z = Pympz_new ();
+  scm_to_mpz (obj, Pympz_AS_MPZ (z));
+  return PyObject_ptr_to_scm_pyobject ((PyObject *) z);
+}
+
+static SCM
+scm_pympz_to_integer (SCM obj)
+{
+  initialize_gmpy_pymodule_if_necessary ();
+  PyObject *py_obj = pyobject_to_PyObject_ptr (obj);
+  if (!Pympz_Check (py_obj))
+    rnrs_raise_condition
+      (scm_list_4
+       (rnrs_make_assertion_violation (),
+        rnrs_c_make_who_condition ("scm_pympz_to_integer"),
+        rnrs_c_make_message_condition (_("expected a Python mpz object")),
+        rnrs_make_irritants_condition (scm_list_1 (obj))));
+  return scm_from_mpz (Pympz_AS_MPZ (py_obj));
 }
 
 static SCM
@@ -385,11 +453,16 @@ init_guile_sortsmillff_python (void)
   scm_c_define_gsubr ("pybool?", 1, 0, 0, scm_pybool_p);
   scm_c_define_gsubr ("pyint?", 1, 0, 0, scm_pyint_p);
   scm_c_define_gsubr ("pylong?", 1, 0, 0, scm_pylong_p);
+  scm_c_define_gsubr ("pympz?", 1, 0, 0, scm_pympz_p);
   scm_c_define_gsubr ("pyunicode?", 1, 0, 0, scm_pyunicode_p);
   scm_c_define_gsubr ("pybytes?", 1, 0, 0, scm_pybytes_p);
   scm_c_define_gsubr ("pystring?", 1, 0, 0, scm_pystring_p);
   scm_c_define_gsubr ("boolean->pybool", 1, 0, 0, scm_boolean_to_pybool);
   scm_c_define_gsubr ("pybool->boolean", 1, 0, 0, scm_pybool_to_boolean);
+  scm_c_define_gsubr ("integer->pyint", 1, 0, 0, scm_integer_to_pyint);
+  scm_c_define_gsubr ("pyint->integer", 1, 0, 0, scm_pyint_to_integer);
+  scm_c_define_gsubr ("integer->pympz", 1, 0, 0, scm_integer_to_pympz);
+  scm_c_define_gsubr ("pympz->integer", 1, 0, 0, scm_pympz_to_integer);
   scm_c_define_gsubr ("pointer->pylong", 1, 0, 0, scm_pointer_to_pylong);
   scm_c_define_gsubr ("pylong->pointer", 1, 0, 0, scm_pylong_to_pointer);
   scm_c_define_gsubr ("pyimport", 1, 0, 0, scm_pyimport);

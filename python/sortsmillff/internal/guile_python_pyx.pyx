@@ -22,10 +22,10 @@
 cdef extern from 'config.h':
   pass
 
-####################################################################from cpython.ref cimport PyObject
 cimport sortsmillff.cython.xgc as xgc
 
 import sys
+import gmpy
 
 cdef public object __c_eval_python (char *python_code):
   py_code = python_code
@@ -43,6 +43,15 @@ cdef public object __c_string_to_python_string (char *s):
 cdef public object __current_python_module ():
   return sys.modules[__name__]
 
+cdef public object __pylong_to_pympz (object obj):
+  return gmpy.mpz (obj)
+
+cdef public object __pympz_to_pylong (object obj):
+  return long (obj)
+
+###cdef public object __is_pympz (object obj):
+###  return isinstance (obj, gmpy.mpz)
+
 cdef public object __py_repr (object obj):
   return repr (obj)
 
@@ -54,3 +63,9 @@ cdef public object __py_name (object obj):
 
 cdef public object __py_dict (object obj):
   return obj.__dict__
+
+cdef public object __py_dict_ref (object obj, object i):
+  return obj[i]
+
+cdef public object __py_dict_set (object obj, object i, object v):
+  obj[i] = v

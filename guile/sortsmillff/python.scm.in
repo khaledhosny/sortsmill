@@ -1,4 +1,4 @@
-;; -*- mode: scheme; coding: utf-8 -*-
+;; -*- mode: scheme; geiser-scheme-implementation: guile; coding: utf-8 -*-
 
 ;; Copyright (C) 2012 Barry Schwartz
 ;; 
@@ -60,6 +60,9 @@
          borrowed-pointer->pyobject
          pyobject->pointer
 
+         scheme->pyobject
+         pyobject->scheme
+
          py-false ;; This is a function, not a constant.
          py-true  ;; This is a function, not a constant.
          py-not
@@ -68,8 +71,17 @@
          pybool->boolean
          pybool?
 
+         integer->pyint
+         integer->pylong
+         integer->pympz
+         pyint->integer
+         pylong->integer
+         pympz->integer
+         pylong->pympz
+         pympz->pylong
          pyint?
          pylong?
+         pympz?
 
          pointer->pylong ;; Big integers to represent addresses.
          pylong->pointer
@@ -170,6 +182,24 @@
                (run f filename-ptr)
                (fclose f)))))))
 
+ (define scheme->pyobject
+   (match-lambda
+    [(? string? s)  (string->pystring s)]
+    [(? boolean? b) (boolean->pybool b)]
+    [(? integer? n) (if (and (<= -2147483648 n) (<= n 2147483647))
+                        (integer->pyint n)
+                        (integer->pylong n))]
+    ))
+
+ (define pyobject->scheme
+   (match-lambda
+    [(? pystring? s) (pystring->string s)]
+    [(? pybool? b)   (pybool->boolean b)]
+    [(? pyint? n)    (pyint->integer n)]
+    [(? pylong? n)   (pylong->integer n)]
+    [(? pympz? n)    (pympz->integer n)]
+    ))
+
  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
  (eval-when
@@ -223,19 +253,47 @@
                                  (_ "expected a Python object") obj)] ))]
        )))
 
+ #|
+  (define-syntax define-py-item-ref
+   (lambda (x)
+     (syntax-case x ()
+       [(_ filter-name c-func)
+        #`(define (filter-name obj i)
+            (cond
+             [(pyobject? obj)
+              (let ((result ((c-func) (pyobject->pointer obj))))
+                (if (null-pointer? result)
+                    (py-failure (quote c-func) (list obj))
+                    (pointer->pyobject result)))]
+             [else
+              (assertion-failure (quote filter-name)
+                                 (_ "expected a Python object") obj)] ))]
+       )))
+ |#
+
  (define-guile-python-pyx-procedure '* "__c_string_to_python_string" '(*))
  (define-guile-python-pyx-procedure '* "__python_string_to_c_string" '(*))
  (define-guile-python-pyx-procedure '* "__c_eval_python" '(*))
  (define-guile-python-pyx-procedure '* "__current_python_module" '())
+ (define-guile-python-pyx-procedure '* "__pylong_to_pympz" '(*))
+ (define-guile-python-pyx-procedure '* "__pympz_to_pylong" '(*))
+ (define-guile-python-pyx-procedure '* "__is_pympz" '(*))
  (define-guile-python-pyx-procedure '* "__py_repr" '(*))
  (define-guile-python-pyx-procedure '* "__py_str" '(*))
  (define-guile-python-pyx-procedure '* "__py_name" '(*))
  (define-guile-python-pyx-procedure '* "__py_dict" '(*))
+ (define-guile-python-pyx-procedure '* "__py_dict_ref" '(* *))
+ (define-guile-python-pyx-procedure '* "__py_dict_set" '(* * *))
 
+ (define-py-to-py-filter pylong->pympz __pylong_to_pympz)
+ (define-py-to-py-filter pympz->pylong __pympz_to_pylong)
  (define-py-to-py-filter py-repr __py_repr)
  (define-py-to-py-filter py-str __py_str)
  (define-py-to-py-filter py-name __py_name)
  (define-py-to-py-filter py-dict __py_dict)
+
+ (define integer->pylong (compose pympz->pylong integer->pympz))
+ (define pylong->integer (compose pympz->integer pylong->pympz))
 
  (define string->pystring
    (match-lambda
