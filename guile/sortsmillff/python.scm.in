@@ -62,6 +62,10 @@
 
          scheme->pyobject
          pyobject->scheme
+         scheme->pyobject-add-first!
+         pyobject->scheme-add-first!
+         scheme->pyobject-add-last!
+         pyobject->scheme-add-last!
 
          py-false ;; This is a function, not a constant.
          py-true  ;; This is a function, not a constant.
@@ -182,24 +186,6 @@
                (run f filename-ptr)
                (fclose f)))))))
 
- (define scheme->pyobject
-   (match-lambda
-    [(? string? s)  (string->pystring s)]
-    [(? boolean? b) (boolean->pybool b)]
-    [(? integer? n) (if (and (<= -2147483648 n) (<= n 2147483647))
-                        (integer->pyint n)
-                        (integer->pylong n))]
-    ))
-
- (define pyobject->scheme
-   (match-lambda
-    [(? pystring? s) (pystring->string s)]
-    [(? pybool? b)   (pybool->boolean b)]
-    [(? pyint? n)    (pyint->integer n)]
-    [(? pylong? n)   (pylong->integer n)]
-    [(? pympz? n)    (pympz->integer n)]
-    ))
-
  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
  (eval-when
@@ -319,6 +305,62 @@
  (define (current-pymodule)
    (pointer->pyobject ((__current_python_module))))
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-       
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ 
+ (define lookup:scheme->pyobject '())
+ (define lookup:pyobject->scheme '())
+
+ (define (scheme->pyobject obj)
+   (let* ([check-type (lambda (pred) (pred obj))]
+          [type-match (assp check-type lookup:scheme->pyobject)])
+     (if type-match
+         [(cdr type-match) obj]
+         [assertion-violation 'scheme->pyobject
+                              "cannot convert the Scheme object to a pyobject"
+                              obj])))
+
+ (define (pyobject->scheme obj)
+   (let* ([check-type (lambda (pred) (pred obj))]
+          [type-match (assp check-type lookup:pyobject->scheme)])
+     (if type-match
+         [(cdr type-match) obj]
+         [assertion-violation 'scheme->pyobject
+                              "cannot convert the Scheme object to a pyobject"
+                              obj])))
+
+ (define (scheme->pyobject-add-first! predicate conversion)
+   (set! lookup:scheme->pyobject (cons (cons predicate conversion)
+                                       lookup:scheme->pyobject)))
+ 
+ (define (pyobject->scheme-add-first! predicate conversion)
+   (set! lookup:scheme->pyobject (cons (cons predicate conversion)
+                                       lookup:pyobject->scheme)))
+
+ (define (scheme->pyobject-add-last! predicate conversion)
+   (set! lookup:scheme->pyobject
+         (reverse! (cons (cons predicate conversion)
+                         (reverse! lookup:scheme->pyobject)))))
+ 
+ (define (pyobject->scheme-add-last! predicate conversion)
+   (set! lookup:pyobject->scheme
+         (reverse! (cons (cons predicate conversion)
+                         (reverse! lookup:pyobject->scheme)))))
+
+ (scheme->pyobject-add-last! string? string->pystring)
+ (scheme->pyobject-add-last! boolean? boolean->pybool)
+ (scheme->pyobject-add-last! integer?
+                             (lambda (n)
+                               (if (and (<= -2147483648 n)
+                                        (<= n 2147483647))
+                                   (integer->pyint n)
+                                   (integer->pylong n))))
+
+ (pyobject->scheme-add-last! pystring? pystring->string)
+ (pyobject->scheme-add-last! pybool? pybool->boolean)
+ (pyobject->scheme-add-last! pyint? pyint->integer)
+ (pyobject->scheme-add-last! pylong? pylong->integer)
+ (pyobject->scheme-add-last! pympz? pympz->integer)
+ 
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
  ) ;; end of if-fontforge-has-python-api
