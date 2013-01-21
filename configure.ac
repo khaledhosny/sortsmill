@@ -256,18 +256,18 @@ if test x"${i_do_have_python_scripting}" = xyes; then
    FONTFORGE_REQUIRE_PYTHON_MODULE([gmpy])
    FONTFORGE_PROG_CYTHON_WORKS
 
-   __cflags="${CFLAGS}"
-   __libs="${LIBS}"
-   CFLAGS="${CFLAGS} ${PYTHON_CFLAGS}"
-   LIBS="${LIBS} ${PYTHON_LIBS}"
-   FONTFORGE_C_CONST([Py_single_input],[fontforge_cv_c_const_Py_single_input],["%d"],[#include <Python.h>])
-   FONTFORGE_C_CONST([Py_file_input],[fontforge_cv_c_const_Py_file_input],["%d"],[#include <Python.h>])
-   FONTFORGE_C_CONST([Py_eval_input],[fontforge_cv_c_const_Py_eval_input],["%d"],[#include <Python.h>])
-   AC_SUBST([Py_single_input],["${fontforge_cv_c_const_Py_single_input}"])
-   AC_SUBST([Py_file_input],["${fontforge_cv_c_const_Py_file_input}"])
-   AC_SUBST([Py_eval_input],["${fontforge_cv_c_const_Py_eval_input}"])
-   CFLAGS="${__cflags}"
-   LIBS="${__libs}"
+#   __cflags="${CFLAGS}"
+#   __libs="${LIBS}"
+#   CFLAGS="${CFLAGS} ${PYTHON_CFLAGS}"
+#   LIBS="${LIBS} ${PYTHON_LIBS}"
+#   FONTFORGE_C_CONST([Py_single_input],[fontforge_cv_c_const_Py_single_input],["%d"],[#include <Python.h>])
+#   FONTFORGE_C_CONST([Py_file_input],[fontforge_cv_c_const_Py_file_input],["%d"],[#include <Python.h>])
+#   FONTFORGE_C_CONST([Py_eval_input],[fontforge_cv_c_const_Py_eval_input],["%d"],[#include <Python.h>])
+#   AC_SUBST([Py_single_input],["${fontforge_cv_c_const_Py_single_input}"])
+#   AC_SUBST([Py_file_input],["${fontforge_cv_c_const_Py_file_input}"])
+#   AC_SUBST([Py_eval_input],["${fontforge_cv_c_const_Py_eval_input}"])
+#   CFLAGS="${__cflags}"
+#   LIBS="${__libs}"
 fi
 
 #--------------------------------------------------------------------------
@@ -482,6 +482,7 @@ AC_CONFIG_FILES([python/psMat.py])
 AC_CONFIG_FILES([python/sortsmillff/__init__.py])
 AC_CONFIG_FILES([python/sortsmillff/fontforge_compat.py])
 AC_CONFIG_FILES([python/sortsmillff/legacy/__init__.py])
+AC_CONFIG_FILES([python/sortsmillff/internal/__init__.py])
 AC_CONFIG_FILES([guile/sortsmillff/i18n.scm])
 AC_CONFIG_FILES([guile/sortsmillff/machine.scm])
 AC_CONFIG_FILES([guile/sortsmillff/math-constants.scm])

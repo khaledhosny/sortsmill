@@ -28,6 +28,12 @@
 #ifndef _CONFIG_EXTRA_H
 #define _CONFIG_EXTRA_H
 
+// Cython code declared ‘cdef public’ is translated to C code
+// declared DL_EXPORT().
+#if ! defined DL_EXPORT
+#define DL_EXPORT(Type) VISIBLE Type
+#endif
+
 // This should have been arranged by the Gnulib configuration.
 #if ! defined MALLOC_0_IS_NONNULL || ! MALLOC_0_IS_NONNULL
 #error @PACKAGE_STRING@ requires that malloc(0) return non-NULL.

@@ -63,8 +63,8 @@ endif HAVE_PYTHON_COMPATIBILITY
 nobase_dist_python_PYTHON = ffContrib/__init__.py	\
 	ffContrib/excepthook.py ffContrib/allow_core.py
 
-nobase_nodist_python_PYTHON = sortsmillff/__init__.py	\
-	sortsmillff/legacy/__init__.py
+nobase_nodist_python_PYTHON = sortsmillff/__init__.py				\
+	sortsmillff/legacy/__init__.py sortsmillff/internal/__init__.py
 #sortsmillff/fontforge_compat.py
 
 nobase_pyexec_LTLIBRARIES =
@@ -128,11 +128,17 @@ nobase_pyexec_LTLIBRARIES += sortsmillff/brentroot.la
 sortsmillff_brentroot_la_SOURCES = sortsmillff/brentroot.c
 sortsmillff_brentroot_la_LIBADD = $(AUXLIBADD)
 
+nobase_pyexec_LTLIBRARIES += sortsmillff/internal/guile_python_pyx.la
+sortsmillff_internal_guile_python_pyx_la_SOURCES =	\
+	sortsmillff/internal/guile_python_pyx.c
+sortsmillff_internal_guile_python_pyx_la_LIBADD = $(BASELIBADD)
+
 PYX_FILES = sortsmillff/views.pyx sortsmillff/ffcompat.pyx	\
 	sortsmillff/psMat.pyx sortsmillff/pkg_info.pyx			\
 	sortsmillff/notices.pyx sortsmillff/guile.pyx			\
 	sortsmillff/linalg.pyx sortsmillff/polyspline.pyx		\
-	sortsmillff/brentroot.pyx
+	sortsmillff/brentroot.pyx								\
+	sortsmillff/internal/guile_python_pyx.pyx
 if HAVE_GUI
 PYX_FILES += sortsmillff/usermenu.pyx
 endif HAVE_GUI
@@ -183,7 +189,7 @@ MOSTLYCLEANFILES = site_init.py sortsmillff/fontforge_api.pyx			\
 	sortsmillff/usermenu.c sortsmillff/ffcompat.c sortsmillff/psMat.c	\
 	sortsmillff/pkg_info.c sortsmillff/notices.c sortsmillff/guile.c	\
 	sortsmillff/linalg.c sortsmillff/polyspline.c						\
-	sortsmillff/brentroot.c
+	sortsmillff/brentroot.c sortsmillff/internal/guile_python_pyx.c
 
 AM_LDFLAGS = -prefer-pic -module -shared -avoid-version
 AM_CFLAGS += $(CYTHON_EXTRA_CFLAGS)
@@ -195,6 +201,10 @@ sortsmillff/legacy/%.so: sortsmillff/legacy/%.la
 	-rm -f $@
 	cp sortsmillff/legacy/$(LT_OBJDIR)$*.so $@
 
+sortsmillff/internal/%.so: sortsmillff/internal/%.la
+	-rm -f $@
+	cp sortsmillff/internal/$(LT_OBJDIR)$*.so $@
+
 sortsmillff/%.so: sortsmillff/%.la
 	-rm -f $@
 	cp sortsmillff/$(LT_OBJDIR)$*.so $@
@@ -205,7 +215,8 @@ all-local: all-local-HAVE_GUI sortsmillff/psMat.so						\
 	sortsmillff/views.so sortsmillff/pkg_info.so						\
 	sortsmillff/notices.so sortsmillff/guile.so sortsmillff/linalg.so	\
 	sortsmillff/polyspline.so sortsmillff/brentroot.so					\
-	sortsmillff/legacy/fontforge.so
+	sortsmillff/legacy/fontforge.so										\
+	sortsmillff/internal/guile_python_pyx.so
 if HAVE_GUI
 all-local-HAVE_GUI: sortsmillff/usermenu.so
 else !HAVE_GUI

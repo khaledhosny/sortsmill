@@ -15,7 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-cdef extern from 'config.h': pass
+cdef extern from 'config.h':
+  pass
 
 from . import (views, notices)
 

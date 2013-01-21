@@ -59,7 +59,4 @@ CONFIGURE_SCHEME =														\
 		-e 's|@''SIZEOF_INTPTR_T''@|$(SIZEOF_INTPTR_T)|g'				\
 		-e 's|@''SIZEOF_UINTPTR_T''@|$(SIZEOF_UINTPTR_T)|g'				\
 		-e 's|@''i_do_have_python_scripting''@|$(i_do_have_python_scripting)|g'	\
-		-e 's|@''Py_single_input''@|$(Py_single_input)|g'				\
-		-e 's|@''Py_file_input''@|$(Py_file_input)|g'					\
-		-e 's|@''Py_eval_input''@|$(Py_eval_input)|g'					\
 		-e 's|@''i_do_have_pure_api''@|$(i_do_have_pure_api)|g'

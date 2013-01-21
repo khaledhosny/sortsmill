@@ -17,9 +17,14 @@
 
 #include <Python.h>
 #include <libguile.h>
+#include <stdio.h>
+#include <stdbool.h>
 #include <assert.h>
 #include <sortsmillff/guile/rnrs_conditions.h>
 #include <intl.h>
+
+#include <atomic_ops.h>
+#include <sortsmillff/xgc.h>    // Includes gc.h and pthreads.h in the right order.
 
 void init_guile_sortsmillff_python (void);
 
@@ -188,6 +193,34 @@ scm_py_not_not (SCM obj)
   return (is_true) ? scm_py_true () : scm_py_false ();
 }
 
+static bool
+scm_is_pyobject (SCM obj)
+{
+  return
+    scm_is_true (scm_call_1
+                 (scm_c_private_ref
+                  ("sortsmillff python", "procedure:pyobject?"), obj));
+}
+
+#define _SCM_TYPECHECK_P(NAME, TYPECHECK)			\
+  static SCM							\
+  NAME (SCM obj)						\
+  {								\
+    bool result = false;					\
+    if (scm_is_pyobject (obj))					\
+      {								\
+	PyObject *py_obj = pyobject_to_PyObject_ptr (obj);	\
+	result = TYPECHECK (py_obj);				\
+      }								\
+    return scm_from_bool (result);				\
+  }
+
+_SCM_TYPECHECK_P (scm_pybool_p, PyBool_Check);
+_SCM_TYPECHECK_P (scm_pyint_p, PyInt_Check);
+_SCM_TYPECHECK_P (scm_pylong_p, PyLong_Check);
+_SCM_TYPECHECK_P (scm_pyunicode_p, PyUnicode_Check);
+_SCM_TYPECHECK_P (scm_pybytes_p, PyBytes_Check);
+
 static SCM
 scm_boolean_to_pybool (SCM obj)
 {
@@ -202,7 +235,7 @@ scm_pybool_to_boolean (SCM obj)
     rnrs_raise_condition
       (scm_list_4
        (rnrs_make_assertion_violation (),
-        rnrs_c_make_who_condition (_("scm_pybool_to_boolean")),
+        rnrs_c_make_who_condition ("scm_pybool_to_boolean"),
         rnrs_c_make_message_condition (_("expected a Python bool")),
         rnrs_make_irritants_condition (scm_list_1 (obj))));
   int is_true = PyObject_IsTrue (py_obj);
@@ -228,12 +261,102 @@ scm_pylong_to_pointer (SCM obj)
     rnrs_raise_condition
       (scm_list_4
        (rnrs_make_assertion_violation (),
-        rnrs_c_make_who_condition (_("scm_pylong_to_pointer")),
+        rnrs_c_make_who_condition ("scm_pylong_to_pointer"),
         rnrs_c_make_message_condition (_("expected a Python long or int")),
         rnrs_make_irritants_condition (scm_list_1 (obj))));
   void *p = PyLong_AsVoidPtr (py_obj);
   return scm_from_pointer (p, NULL);
 }
+
+static SCM
+scm_pyimport (SCM obj)
+{
+  scm_dynwind_begin (0);
+
+  char *s = scm_to_utf8_stringn (obj, NULL);
+  scm_dynwind_free (s);
+
+  PyObject *py_string = PyUnicode_FromString (s);
+  if (py_string == NULL)
+    scm_c_py_failure ("scm_c_pyimport", scm_list_1 (obj));
+
+  PyObject *module = PyImport_Import (py_string);
+  Py_DECREF (py_string);
+  if (module == NULL)
+    scm_c_py_failure ("scm_c_pyimport", scm_list_1 (obj));
+
+  scm_dynwind_end ();
+
+  return PyObject_ptr_to_scm_pyobject (module);
+}
+
+// FIXME: This function should be written differently for Python 3.2+,
+// because PyModule_GetFilename is deprecated then. Wrapping
+// PyModule_GetFilenameObject to look like PyModule_GetFilename seems
+// a good approach.
+static SCM
+scm_pymodule_get_file_name (SCM obj)
+{
+  PyObject *py_obj = pyobject_to_PyObject_ptr (obj);
+  if (!PyModule_Check (py_obj))
+    rnrs_raise_condition
+      (scm_list_4
+       (rnrs_make_assertion_violation (),
+        rnrs_c_make_who_condition ("scm_pymodule_get_file_name"),
+        rnrs_c_make_message_condition (_("expected a Python module")),
+        rnrs_make_irritants_condition (scm_list_1 (obj))));
+  char *file_name = PyModule_GetFilename (py_obj);
+  if (file_name == NULL)
+    scm_c_py_failure ("scm_pymodule_get_file_name", scm_list_1 (obj));
+  return scm_from_utf8_string (file_name);
+}
+
+//-------------------------------------------------------------------------
+//
+// Access to the sortsmillff.internal.guile_python_pyx Cython module.
+// The module will be imported the first time it is accessed.
+//
+
+// FIXME: Come up with a way to do this more directly in Guile, and
+// more generally.
+static volatile AO_t guile_python_pyx_pymodule_is_initialized = false;
+static pthread_mutex_t guile_python_pyx_pymodule_mutex =
+  PTHREAD_MUTEX_INITIALIZER;
+static SCM guile_python_pyx_pymodule = SCM_BOOL_F;
+
+// This function returns a Cython module we use in the implmentation
+// of (sortsmillff python).
+static SCM
+scm_guile_python_pyx_pymodule (void)
+{
+  if (!AO_load_acquire_read (&guile_python_pyx_pymodule_is_initialized))
+    {
+      pthread_mutex_lock (&guile_python_pyx_pymodule_mutex);
+      if (!guile_python_pyx_pymodule_is_initialized)
+        {
+          guile_python_pyx_pymodule =
+            scm_pyimport (scm_from_utf8_string
+                          ("sortsmillff.internal.guile_python_pyx"));
+          if (scm_is_true (guile_python_pyx_pymodule))
+            scm_permanent_object (guile_python_pyx_pymodule);
+          AO_store_release_write (&guile_python_pyx_pymodule_is_initialized,
+                                  scm_is_true (guile_python_pyx_pymodule));
+        }
+      pthread_mutex_unlock (&guile_python_pyx_pymodule_mutex);
+      if (scm_is_false (guile_python_pyx_pymodule))
+        rnrs_raise_condition
+          (scm_list_4
+           (rnrs_make_error (),
+            rnrs_c_make_who_condition ("scm_guile_python_pyx_pymodule"),
+            rnrs_c_make_message_condition
+            (_
+             ("failed to import Python module sortsmillff.internal.guile_python_pyx")),
+            rnrs_make_irritants_condition (SCM_EOL)));
+    }
+  return guile_python_pyx_pymodule;
+}
+
+//-------------------------------------------------------------------------
 
 VISIBLE void
 init_guile_sortsmillff_python (void)
@@ -247,8 +370,20 @@ init_guile_sortsmillff_python (void)
   scm_c_define_gsubr ("py-true", 0, 0, 0, scm_py_true);
   scm_c_define_gsubr ("py-not", 1, 0, 0, scm_py_not);
   scm_c_define_gsubr ("py-not-not", 1, 0, 0, scm_py_not_not);
+  scm_c_define_gsubr ("pybool?", 1, 0, 0, scm_pybool_p);
+  scm_c_define_gsubr ("pyint?", 1, 0, 0, scm_pyint_p);
+  scm_c_define_gsubr ("pylong?", 1, 0, 0, scm_pylong_p);
+  scm_c_define_gsubr ("pyunicode?", 1, 0, 0, scm_pyunicode_p);
+  scm_c_define_gsubr ("pybytes?", 1, 0, 0, scm_pybytes_p);
   scm_c_define_gsubr ("boolean->pybool", 1, 0, 0, scm_boolean_to_pybool);
   scm_c_define_gsubr ("pybool->boolean", 1, 0, 0, scm_pybool_to_boolean);
   scm_c_define_gsubr ("pointer->pylong", 1, 0, 0, scm_pointer_to_pylong);
   scm_c_define_gsubr ("pylong->pointer", 1, 0, 0, scm_pylong_to_pointer);
+  scm_c_define_gsubr ("pyimport", 1, 0, 0, scm_pyimport);
+  scm_c_define_gsubr ("pymodule-get-file-name", 1, 0, 0,
+                      scm_pymodule_get_file_name);
+  scm_c_define_gsubr ("guile-python-pyx-pymodule", 0, 0, 0,
+                      scm_guile_python_pyx_pymodule);
 }
+
+//-------------------------------------------------------------------------

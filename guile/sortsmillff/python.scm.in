@@ -60,18 +60,33 @@
          borrowed-pointer->pyobject
          pyobject->pointer
 
-         py-false                ; This is a function, not a constant.
-         py-true                 ; This is a function, not a constant.
+         py-false ;; This is a function, not a constant.
+         py-true  ;; This is a function, not a constant.
          py-not
-         py-not-not  ; Use this to convert a Python value to a pybool.
+         py-not-not ;; Use this to convert a Python value to a pybool.
          boolean->pybool
          pybool->boolean
+         pybool?
 
-         pointer->pylong
+         pyint?
+         pylong?
+
+         pointer->pylong ;; Big integers to represent addresses.
          pylong->pointer
 
+         string->pystring ;; Converts to a unicode object.
+         pystring->string ;; Converts from a unicode or UTF-8 bytes object.
+         pyunicode?
+         pybytes?
+
+         py-repr
+         py-str
+
          pyrun
-         pyrun-filename
+         pyrun-file-name
+         pyimport
+         pymodule-get-file-name
+         pyeval
          )
 
  (define python-dll
@@ -97,8 +112,7 @@
    pyobject?
    private:pointer->pyobject pyobject->pointer
    (lambda (obj port)
-     ;; FIXME: Print the __repr__ of the Python object.
-     (format port "#<pyobject 0x~x>"
+     (format port "#<pyobject ~s 0x~x>" (py-repr obj)
              (pointer-address (pyobject->pointer obj)))))
 
  (define pointer->pyobject
@@ -108,6 +122,11 @@
  (define borrowed-pointer->pyobject 
    (lambda (p)
      (private:pointer->pyobject (grab-borrowed-pyobject-reference p))))
+
+ (define procedure:pyobject?
+   ;; Wrap the syntax transformer @var{pyobject?} in a
+   ;; procedure, so C code can use it.
+   (lambda (x) (pyobject? x)))
 
  (define procedure:pyobject->pointer
    ;; Wrap the syntax transformer @var{pyobject->pointer} in a
@@ -125,13 +144,13 @@
        [other (assertion-failure
                'pyrun (_ "expected a string") other)])))
 
- (define pyrun-filename
+ (define pyrun-file-name
    (let ((fopen (pointer->procedure
                  '* (dynamic-func "fopen" (dynamic-link))
-                 '(* *)))
+                 `(* *)))
          (fclose (pointer->procedure
                   int (dynamic-func "fclose" (dynamic-link))
-                  '(*)))
+                  `(*)))
          (run (pointer->procedure
                int (dynamic-func "PyRun_SimpleFile" python-dll)
                `(* *))))
@@ -139,91 +158,88 @@
        (let* ((filename-ptr (string->pointer filename))
               (f (fopen filename-ptr (string->pointer "r"))))
          (if (null-pointer? f)
-             (error 'pyrun-filename
+             (error 'pyrun-file-name
                     (_ "failed to open file")
                     filename)
              (begin
                (run f filename-ptr)
                (fclose f)))))))
 
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;; ;;;; FIXME: Everything from here down should be gotten rid of or
-;;;; ;;;; revised.
-;;;;
-;;;; (define Py_single_input @Py_single_input@)
-;;;; (define Py_file_input @Py_file_input@)
-;;;; (define Py_eval_input @Py_eval_input@)
-;;;;
-;;;;
-;;;; (define PyEval_GetBuiltins
-;;;;   (pointer->procedure '*
-;;;;                       (dynamic-func "PyEval_GetBuiltins" python-dll)
-;;;;                       `()))
-;;;; 
-;;;; (define PyEval_GetGlobals
-;;;;   (pointer->procedure '*
-;;;;                       (dynamic-func "PyEval_GetGlobals" python-dll)
-;;;;                       `()))
-;;;; 
-;;;; (define PyEval_GetLocals
-;;;;   (pointer->procedure '*
-;;;;                       (dynamic-func "PyEval_GetLocals" python-dll)
-;;;;                       `()))
-;;;; 
-;;;; (define PyRun_String
-;;;;   (pointer->procedure '*
-;;;;                       (dynamic-func "PyRun_String" python-dll)
-;;;;                       `(* ,int * *)))
-;;;;
-;;;; (define PyRun_File
-;;;;   (pointer->procedure '*
-;;;;                       (dynamic-func "PyRun_File" python-dll)
-;;;;                       `(* * ,int * *)))
-;;;;
-;;;; (define Py_CompileString
-;;;;   (pointer->procedure '*
-;;;;                       (dynamic-func "Py_CompileString" python-dll)
-;;;;                       `(* * ,int)))
-;;;;
-;;;; (define PyEval_EvalCode
-;;;;   (pointer->procedure '*
-;;;;                       (dynamic-func "PyEval_EvalCode" python-dll)
-;;;;                       `(* * *)))
-;;;;
-;;;; (define PyObject_CallObject
-;;;;   (pointer->procedure '*
-;;;;                       (dynamic-func "PyObject_CallObject" python-dll)
-;;;;                       `(* *)))
-;;;;
-;;;; (define PyLong_FromUnsignedLong
-;;;;   (pointer->procedure '*
-;;;;                       (dynamic-func "PyLong_FromUnsignedLong" python-dll)
-;;;;                       `(,unsigned-long)))
-;;;;
-;;;; (define PyLong_FromSize_t
-;;;;   (pointer->procedure '*
-;;;;                       (dynamic-func "PyLong_FromSize_t" python-dll)
-;;;;                       `(,size_t)))
-;;;;
-;;;; (define PyLong_FromVoidPtr
-;;;;   (pointer->procedure '*
-;;;;                       (dynamic-func "PyLong_FromVoidPtr" python-dll)
-;;;;                       `(*)))
-;;;;
-;;;; (define PyLong_AsVoidPtr
-;;;;   (pointer->procedure '*
-;;;;                       (dynamic-func "PyLong_AsVoidPtr" python-dll)
-;;;;                       `(*)))
-;;;;
-;;;; (define PyTuple_New
-;;;;   (pointer->procedure '*
-;;;;                       (dynamic-func "PyTuple_New" python-dll)
-;;;;                       `(,size_t)))
-;;;;
-;;;; (define PyTuple_SetItem
-;;;;   (pointer->procedure int
-;;;;                       (dynamic-func "PyTuple_SetItem" python-dll)
-;;;;                       `(* ,size_t *)))
+ (eval-when
+  (compile eval load)
+  [define (guile-python-pyx-func func-name)
+    (dynamic-func func-name
+                  (dynamic-link (pymodule-get-file-name
+                                 (guile-python-pyx-pymodule))))] )
 
+ (define-syntax define-guile-python-pyx-procedure
+   (lambda (x)
+     (syntax-case x ()
+       [(_ return-type c-func arg-types)
+        (let* ([my-fluid
+                (datum->syntax
+                 x (make-symbol
+                    (string-append "*" (syntax->datum #'c-func) "*")))]
+               [get-my-proc
+                (datum->syntax
+                 x (string->symbol (syntax->datum #'c-func)))])
+          #`(begin
+              ;; Thread local storage for the procedure, once we have
+              ;; created it.
+              (define #,my-fluid (make-fluid #f))
+
+              (define #,get-my-proc
+                (lambda ()
+                  (let ((my-proc (fluid-ref #,my-fluid)))
+                    (if my-proc my-proc
+                        [let ((new-proc
+                               [pointer->procedure
+                                return-type
+                                (guile-python-pyx-func c-func)
+                                arg-types]))
+                          (fluid-set! #,my-fluid new-proc)
+                          new-proc] ))))))] )))
+
+ (define-guile-python-pyx-procedure '* "__c_string_to_python_string" '(*))
+ (define-guile-python-pyx-procedure '* "__python_string_to_c_string" '(*))
+ (define-guile-python-pyx-procedure '* "__c_repr" '(*))
+ (define-guile-python-pyx-procedure '* "__c_str" '(*))
+ (define-guile-python-pyx-procedure '* "__c_eval_python" '(*))
+
+ (define string->pystring
+   (match-lambda
+    [(? string? s) (pointer->pyobject
+                    ((__c_string_to_python_string) (string->pointer s)))]
+    [other (assertion-failure 'string->pystring (_ "expected a string") other)] ))
+
+ (define (pystring->string obj)
+   (cond
+    [(or (pyunicode? obj) (pybytes? obj))
+     (pointer->string ((__python_string_to_c_string) (pyobject->pointer obj)))]
+    [else
+     (assertion-failure 'pystring->string
+                        (_ "expected a Python Unicode or bytes object") obj)] ))
+
+ (define (py-repr obj)
+   (cond
+    [(pyobject? obj) (pointer->string ((__c_repr) (pyobject->pointer obj)))]
+    [else
+     (assertion-failure 'py-repr (_ "expected a Python object") obj)] ))
+
+ (define (py-str obj)
+   (cond
+    [(pyobject? obj) (pointer->string ((__c_str) (pyobject->pointer obj)))]
+    [else
+     (assertion-failure 'py-str (_ "expected a Python object") obj)] ))
+
+ (define pyeval
+   (match-lambda
+    [(? string? s) (pointer->pyobject
+                    ((__c_eval_python) (string->pointer s)))]
+    [other (assertion-failure 'pyeval (_ "expected a string") other)] ))
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+       
  ) ;; end of if-fontforge-has-python-api
