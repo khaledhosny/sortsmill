@@ -222,6 +222,18 @@ _SCM_TYPECHECK_P (scm_pyunicode_p, PyUnicode_Check);
 _SCM_TYPECHECK_P (scm_pybytes_p, PyBytes_Check);
 
 static SCM
+scm_pystring_p (SCM obj)
+{
+  bool result = false;
+  if (scm_is_pyobject (obj))
+    {
+      PyObject *py_obj = pyobject_to_PyObject_ptr (obj);
+      result = PyUnicode_Check (py_obj) || PyBytes_Check (py_obj);
+    }
+  return scm_from_bool (result);
+}
+
+static SCM
 scm_boolean_to_pybool (SCM obj)
 {
   return (scm_to_bool (obj)) ? scm_py_true () : scm_py_false ();
@@ -375,6 +387,7 @@ init_guile_sortsmillff_python (void)
   scm_c_define_gsubr ("pylong?", 1, 0, 0, scm_pylong_p);
   scm_c_define_gsubr ("pyunicode?", 1, 0, 0, scm_pyunicode_p);
   scm_c_define_gsubr ("pybytes?", 1, 0, 0, scm_pybytes_p);
+  scm_c_define_gsubr ("pystring?", 1, 0, 0, scm_pystring_p);
   scm_c_define_gsubr ("boolean->pybool", 1, 0, 0, scm_boolean_to_pybool);
   scm_c_define_gsubr ("pybool->boolean", 1, 0, 0, scm_pybool_to_boolean);
   scm_c_define_gsubr ("pointer->pylong", 1, 0, 0, scm_pointer_to_pylong);

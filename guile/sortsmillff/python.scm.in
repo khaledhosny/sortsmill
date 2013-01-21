@@ -78,15 +78,19 @@
          pystring->string ;; Converts from a unicode or UTF-8 bytes object.
          pyunicode?
          pybytes?
+         pystring?
 
          py-repr
          py-str
+         py-name
+         py-dict
 
          pyrun
          pyrun-file-name
          pyimport
          pymodule-get-file-name
          pyeval
+         current-pymodule
          )
 
  (define python-dll
@@ -112,7 +116,8 @@
    pyobject?
    private:pointer->pyobject pyobject->pointer
    (lambda (obj port)
-     (format port "#<pyobject ~s 0x~x>" (py-repr obj)
+     (format port "#<pyobject ~s 0x~x>"
+             (pystring->string (py-repr obj))
              (pointer-address (pyobject->pointer obj)))))
 
  (define pointer->pyobject
@@ -202,11 +207,35 @@
                           (fluid-set! #,my-fluid new-proc)
                           new-proc] ))))))] )))
 
+ (define-syntax define-py-to-py-filter
+   (lambda (x)
+     (syntax-case x ()
+       [(_ filter-name c-func)
+        #`(define (filter-name obj)
+            (cond
+             [(pyobject? obj)
+              (let ((result ((c-func) (pyobject->pointer obj))))
+                (if (null-pointer? result)
+                    (py-failure (quote c-func) (list obj))
+                    (pointer->pyobject result)))]
+             [else
+              (assertion-failure (quote filter-name)
+                                 (_ "expected a Python object") obj)] ))]
+       )))
+
  (define-guile-python-pyx-procedure '* "__c_string_to_python_string" '(*))
  (define-guile-python-pyx-procedure '* "__python_string_to_c_string" '(*))
- (define-guile-python-pyx-procedure '* "__c_repr" '(*))
- (define-guile-python-pyx-procedure '* "__c_str" '(*))
  (define-guile-python-pyx-procedure '* "__c_eval_python" '(*))
+ (define-guile-python-pyx-procedure '* "__current_python_module" '())
+ (define-guile-python-pyx-procedure '* "__py_repr" '(*))
+ (define-guile-python-pyx-procedure '* "__py_str" '(*))
+ (define-guile-python-pyx-procedure '* "__py_name" '(*))
+ (define-guile-python-pyx-procedure '* "__py_dict" '(*))
+
+ (define-py-to-py-filter py-repr __py_repr)
+ (define-py-to-py-filter py-str __py_str)
+ (define-py-to-py-filter py-name __py_name)
+ (define-py-to-py-filter py-dict __py_dict)
 
  (define string->pystring
    (match-lambda
@@ -222,23 +251,15 @@
      (assertion-failure 'pystring->string
                         (_ "expected a Python Unicode or bytes object") obj)] ))
 
- (define (py-repr obj)
-   (cond
-    [(pyobject? obj) (pointer->string ((__c_repr) (pyobject->pointer obj)))]
-    [else
-     (assertion-failure 'py-repr (_ "expected a Python object") obj)] ))
-
- (define (py-str obj)
-   (cond
-    [(pyobject? obj) (pointer->string ((__c_str) (pyobject->pointer obj)))]
-    [else
-     (assertion-failure 'py-str (_ "expected a Python object") obj)] ))
-
  (define pyeval
    (match-lambda
     [(? string? s) (pointer->pyobject
                     ((__c_eval_python) (string->pointer s)))]
+    [(? pystring? s) (pyeval (pystring->string s))]
     [other (assertion-failure 'pyeval (_ "expected a string") other)] ))
+
+ (define (current-pymodule)
+   (pointer->pyobject ((__current_python_module))))
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
        

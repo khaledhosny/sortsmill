@@ -22,7 +22,10 @@
 cdef extern from 'config.h':
   pass
 
+####################################################################from cpython.ref cimport PyObject
 cimport sortsmillff.cython.xgc as xgc
+
+import sys
 
 cdef public object __c_eval_python (char *python_code):
   py_code = python_code
@@ -37,8 +40,17 @@ cdef public object __c_string_to_python_string (char *s):
   py_s = s
   return py_s.decode ('UTF-8')
 
-cdef public char *__c_repr (object obj):
-  return __python_string_to_c_string (repr (obj))
+cdef public object __current_python_module ():
+  return sys.modules[__name__]
 
-cdef public char *__c_str (object obj):
-  return __python_string_to_c_string (str (obj))
+cdef public object __py_repr (object obj):
+  return repr (obj)
+
+cdef public object __py_str (object obj):
+  return str (obj)
+
+cdef public object __py_name (object obj):
+  return obj.__name__
+
+cdef public object __py_dict (object obj):
+  return obj.__dict__
