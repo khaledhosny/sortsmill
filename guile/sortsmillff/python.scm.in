@@ -67,6 +67,13 @@
          scheme->pyobject-add-last!
          pyobject->scheme-add-last!
 
+         list->pytuple
+         list->pylist
+         alist->pydict
+
+         pyindexed-ref
+         pyindexed-set!
+
          py-false ;; This is a function, not a constant.
          py-true  ;; This is a function, not a constant.
          py-not
@@ -239,24 +246,6 @@
                                  (_ "expected a Python object") obj)] ))]
        )))
 
- #|
-  (define-syntax define-py-item-ref
-   (lambda (x)
-     (syntax-case x ()
-       [(_ filter-name c-func)
-        #`(define (filter-name obj i)
-            (cond
-             [(pyobject? obj)
-              (let ((result ((c-func) (pyobject->pointer obj))))
-                (if (null-pointer? result)
-                    (py-failure (quote c-func) (list obj))
-                    (pointer->pyobject result)))]
-             [else
-              (assertion-failure (quote filter-name)
-                                 (_ "expected a Python object") obj)] ))]
-       )))
- |#
-
  (define-guile-python-pyx-procedure '* "__c_string_to_python_string" '(*))
  (define-guile-python-pyx-procedure '* "__python_string_to_c_string" '(*))
  (define-guile-python-pyx-procedure '* "__c_eval_python" '(*))
@@ -268,8 +257,8 @@
  (define-guile-python-pyx-procedure '* "__py_str" '(*))
  (define-guile-python-pyx-procedure '* "__py_name" '(*))
  (define-guile-python-pyx-procedure '* "__py_dict" '(*))
- (define-guile-python-pyx-procedure '* "__py_dict_ref" '(* *))
- (define-guile-python-pyx-procedure '* "__py_dict_set" '(* * *))
+ (define-guile-python-pyx-procedure '* "__pyindexed_ref" '(*))
+ (define-guile-python-pyx-procedure '* "__pyindexed_set" '(*))
 
  (define-py-to-py-filter pylong->pympz __pylong_to_pympz)
  (define-py-to-py-filter pympz->pylong __pympz_to_pylong)
@@ -277,9 +266,19 @@
  (define-py-to-py-filter py-str __py_str)
  (define-py-to-py-filter py-name __py_name)
  (define-py-to-py-filter py-dict __py_dict)
+ (define-py-to-py-filter pyindexed-ref-core __pyindexed_ref)
+ (define-py-to-py-filter pyindexed-set!-core __pyindexed_set)
 
  (define integer->pylong (compose pympz->pylong integer->pympz))
  (define pylong->integer (compose pympz->integer pylong->pympz))
+
+ (define (pyindexed-ref obj i)
+   (assert (pyobject? obj))
+   (pyindexed-ref-core (list->pytuple (list obj i))))
+
+ (define (pyindexed-set! obj i v)
+   (assert (pyobject? obj))
+   (pyindexed-set!-core (list->pytuple (list obj i v))))
 
  (define string->pystring
    (match-lambda
@@ -329,23 +328,26 @@
                               obj])))
 
  (define (scheme->pyobject-add-first! predicate conversion)
-   (set! lookup:scheme->pyobject (cons (cons predicate conversion)
-                                       lookup:scheme->pyobject)))
+   (let ([new-list (cons (cons predicate conversion)
+                         lookup:scheme->pyobject)])
+     (set! lookup:scheme->pyobject new-list)))
  
  (define (pyobject->scheme-add-first! predicate conversion)
-   (set! lookup:scheme->pyobject (cons (cons predicate conversion)
-                                       lookup:pyobject->scheme)))
+   (let ([new-list (cons (cons predicate conversion)
+                         lookup:pyobject->scheme)])
+     (set! lookup:pyobject->scheme new-list)))
 
- (define (scheme->pyobject-add-last! predicate conversion)
-   (set! lookup:scheme->pyobject
-         (reverse! (cons (cons predicate conversion)
-                         (reverse! lookup:scheme->pyobject)))))
- 
- (define (pyobject->scheme-add-last! predicate conversion)
-   (set! lookup:pyobject->scheme
-         (reverse! (cons (cons predicate conversion)
-                         (reverse! lookup:pyobject->scheme)))))
+  (define (scheme->pyobject-add-last! predicate conversion)
+    (let ([new-list (append! lookup:scheme->pyobject
+                             (list (cons predicate conversion)))])
+      (set! lookup:scheme->pyobject new-list)))
 
+  (define (pyobject->scheme-add-last! predicate conversion)
+   (let ([new-list (append! lookup:pyobject->scheme
+                            (list (cons predicate conversion)))])
+     (set! lookup:pyobject->scheme new-list)))
+
+ (scheme->pyobject-add-first! pyobject? identity)
  (scheme->pyobject-add-last! string? string->pystring)
  (scheme->pyobject-add-last! boolean? boolean->pybool)
  (scheme->pyobject-add-last! integer?
@@ -354,7 +356,9 @@
                                         (<= n 2147483647))
                                    (integer->pyint n)
                                    (integer->pylong n))))
+ (scheme->pyobject-add-last! list? list->pylist)
 
+ (pyobject->scheme-add-first! (negate pyobject?) identity)
  (pyobject->scheme-add-last! pystring? pystring->string)
  (pyobject->scheme-add-last! pybool? pybool->boolean)
  (pyobject->scheme-add-last! pyint? pyint->integer)

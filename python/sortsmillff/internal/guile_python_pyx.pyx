@@ -49,9 +49,6 @@ cdef public object __pylong_to_pympz (object obj):
 cdef public object __pympz_to_pylong (object obj):
   return long (obj)
 
-###cdef public object __is_pympz (object obj):
-###  return isinstance (obj, gmpy.mpz)
-
 cdef public object __py_repr (object obj):
   return repr (obj)
 
@@ -64,8 +61,10 @@ cdef public object __py_name (object obj):
 cdef public object __py_dict (object obj):
   return obj.__dict__
 
-cdef public object __py_dict_ref (object obj, object i):
+cdef public object __pyindexed_ref (object args):
+  (obj, i) = args
   return obj[i]
 
-cdef public object __py_dict_set (object obj, object i, object v):
+cdef public object __pyindexed_set (object args):
+  (obj, i, v) = args
   obj[i] = v
