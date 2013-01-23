@@ -5443,19 +5443,6 @@ void _LookupSubtableContents(SplineFont *sf, struct lookup_subtable *sub,
 	sub->fpst->subtable = sub;
 	sub->fpst->next = sf->possub;
 	sf->possub = sub->fpst;
-    } else if ( (lookup_type == morx_indic ||
-		lookup_type == morx_context ||
-		lookup_type == morx_insert ||
-		lookup_type == kern_statemachine) &&
-	    sub->sm==NULL ) {
-	sub->sm = (ASM *) xzalloc(sizeof (ASM));
-	sub->sm->type = lookup_type == morx_indic ? asm_indic :
-		lookup_type == morx_context ? asm_context :
-		lookup_type == morx_insert ? asm_insert :
-		 asm_kern;
-	sub->sm->subtable = sub;
-	sub->sm->next = sf->sm;
-	sf->sm = sub->sm;
     } else if ( lookup_type==gpos_pair &&
 		sub->kc==NULL &&
 		!sub->per_glyph_pst_or_kern ) {
@@ -5530,8 +5517,6 @@ return;
 
     if ( sub->fpst && sf->fontinfo!=NULL ) {
 	ContextChainEdit(sf,sub->fpst,sf->fontinfo,NULL,def_layer);
-    } else if ( sub->sm && sf->fontinfo!=NULL ) {
-	StateMachineEdit(sf,sub->sm,sf->fontinfo);
     } else if ( sub->kc!=NULL ) {
 	KernClassD(sub->kc,sf,def_layer,sub->vertical_kerning);
     } else if ( sub->lookup->lookup_type>=gpos_cursive &&

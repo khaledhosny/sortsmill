@@ -179,7 +179,7 @@ libsortsmillff_fontforgeexe_la_SOURCES = alignment.c anchorsaway.c		\
 	layer2layer.c lookupui.c macencui.c math.c metricsview.c mmdlg.c	\
 	nonlineartransui.c openfontdlg.c prefs.c problems.c generatefontdlg.c	\
 	scriptingdlg.c scstylesui.c searchview.c sftextfield.c showatt.c	\
-	simplifydlg.c startui.c statemachine.c tilepath.c transform.c		\
+	simplifydlg.c startui.c tilepath.c transform.c		\
 	ttfinstrsui.c uiutil.c windowmenu.c justifydlg.c deltaui.c			\
 	usermenu.c
 

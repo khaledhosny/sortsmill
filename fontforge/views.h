@@ -34,7 +34,6 @@
 
 struct gfi_data;
 struct contextchaindlg;
-struct statemachinedlg;
 
 extern struct cvshows
 {
@@ -1269,10 +1268,6 @@ extern void ContextChainEdit (SplineFont *sf, FPST *fpst,
                               struct gfi_data *gfi, uint32_t *newname,
                               int layer);
 extern char *cu_copybetween (const uint32_t *start, const uint32_t *end);
-
-extern void StateMachineEdit (SplineFont *sf, ASM *sm, struct gfi_data *d);
-extern void GFI_FinishSMNew (struct gfi_data *d, ASM *sm, int success,
-                             int isnew);
 
 extern void MMChangeBlend (MMSet *mm, FontView *fv, int tonew);
 extern void MMWizard (MMSet *mm);

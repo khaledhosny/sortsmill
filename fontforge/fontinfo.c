@@ -8572,44 +8572,6 @@ GFI_FinishContextNew (struct gfi_data *d, FPST * fpst, int success)
     }
 }
 
-void
-GFI_FinishSMNew (struct gfi_data *d, ASM * sm, int success, int isnew)
-{
-  OTLookup *otl;
-  struct lookup_subtable *sub, *prev;
-  ASM *smtest, *smprev;
-
-  if (!success && isnew)
-    {
-      /* We can't allow incomplete state machines floating around */
-      /* If they didn't fill it in, delete it */
-      otl = sm->subtable->lookup;
-      prev = NULL;
-      for (sub = otl->subtables; sub != NULL && sub != sm->subtable;
-           prev = sub, sub = sub->next);
-      if (sub != NULL)
-        {
-          if (prev == NULL)
-            otl->subtables = sub->next;
-          else
-            prev->next = sub->next;
-          free (sub->subtable_name);
-          free (sub);
-        }
-      smprev = NULL;
-      for (smtest = d->sf->sm; smtest != NULL && smtest != sm;
-           smprev = smtest, smtest = smtest->next);
-      if (smtest != NULL)
-        {
-          if (smprev == NULL)
-            d->sf->sm = sm->next;
-          else
-            smprev->next = sm->next;
-        }
-      free (sm);
-    }
-}
-
 static void
 LookupSubtableContents (struct gfi_data *gfi, int isgpos)
 {
