@@ -409,11 +409,6 @@ sod_e_h (GWindow gw, GEvent *event)
               if (GGadgetIsChecked
                   (GWidgetGetControl (gw, CID_TTF_DummyDSIG)))
                 d->sfnt_flags |= ttf_flag_dummyDSIG;
-#if 0
-              if (GGadgetIsChecked
-                  (GWidgetGetControl (gw, CID_TTF_BrokenSize)))
-                d->sfnt_flags |= ttf_flag_brokensize;
-#endif
               if (GGadgetIsChecked
                   (GWidgetGetControl (gw, CID_TTF_PfEdComments)))
                 d->sfnt_flags |= ttf_flag_pfed_comments;
@@ -570,10 +565,6 @@ OptSetDefaults (GWindow gw, struct gfc_data *d, int which, int iscid)
                      flags & ttf_flag_TeXtable);
   GGadgetSetChecked (GWidgetGetControl (gw, CID_TTF_GlyphMap),
                      flags & ttf_flag_glyphmap);
-#if 0
-  GGadgetSetChecked (GWidgetGetControl (gw, CID_TTF_BrokenSize),
-                     flags & ttf_flag_brokensize);
-#endif
   GGadgetSetChecked (GWidgetGetControl (gw, CID_TTF_OldKern),
                      (flags & ttf_flag_oldkern)
                      &&
@@ -2582,10 +2573,6 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
       old_sfnt_flags |= ttf_flag_applemode;
       old_sfnt_flags &= ~ttf_flag_otmode;
     }
-
-  /* Let's not support broken size any more */
-  old_sfnt_flags &= ~ttf_flag_brokensize;
-  old_psotb_flags &= ~ttf_flag_brokensize;
 
   if (family)
     {
