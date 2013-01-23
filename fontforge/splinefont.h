@@ -3693,9 +3693,6 @@ extern int ClassesMatch (int cnt1, char **classes1, int cnt2,
                          char **classes2);
 VISIBLE extern FPST *FPSTGlyphToClass (FPST *fpst);
 
-extern ASM *ASMFromOpenTypeForms (SplineFont *sf, uint32_t script);
-extern ASM *ASMFromFPST (SplineFont *sf, FPST *fpst, int ordered);
-
 extern char *utf8_verify_copy (const char *str);
 
 VISIBLE extern char *MacStrToUtf8 (const char *str, int macenc, int maclang);

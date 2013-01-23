@@ -2037,6 +2037,19 @@ static void dumpg___ContextChainGlyphs(FILE *lfile,SplineFont *sf,
 	at->os2.maxContext = maxcontext;
 }
 
+
+static int ClassesMatch(int cnt1,char **classes1,int cnt2,char **classes2) {
+    int i;
+
+    if ( cnt1!=cnt2 )
+return( false );
+    for ( i=1; i<cnt2; ++i )
+       if ( strcmp(classes1[i],classes2[i])!=0 )
+return( false );
+
+return( true );
+}
+
 static void dumpg___ContextChainClass(FILE *lfile,SplineFont *sf,
 	struct lookup_subtable *sub, struct alltabs *at) {
     FPST *fpst = sub->fpst;

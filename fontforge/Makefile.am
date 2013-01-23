@@ -99,7 +99,7 @@ CLEANFILES += fontforge_type_inspector.c fontforge.types.apii
 
 lib_LTLIBRARIES += libsortsmillff_fontforge.la
 
-libsortsmillff_fontforge_la_SOURCES = asmfpst.c autohint.c autosave.c	\
+libsortsmillff_fontforge_la_SOURCES = autohint.c autosave.c	\
 	autotrace.c autowidth.c bezctx_ff.c bitmapchar.c bitmapcontrol.c	\
 	bvedit.c clipnoui.c crctab.c cvexport.c cvimages.c cvundoes.c		\
 	dumpbdf.c dumppfa.c effects.c encoding.c featurefile.c				\
