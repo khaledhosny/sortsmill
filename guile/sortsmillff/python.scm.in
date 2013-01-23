@@ -60,19 +60,33 @@
          borrowed-pointer->pyobject
          pyobject->pointer
 
-         scheme->pyobject
-         pyobject->scheme
-         scheme->pyobject-add-first!
-         pyobject->scheme-add-first!
-         scheme->pyobject-add-last!
-         pyobject->scheme-add-last!
+         ;; ‘pyguile’ is an opaque representation of Guile objects in
+         ;; Python.
+         scm->pyguile
+         pyguile->scm
+         pyguile?
 
+         ;; Elements are converted by ‘scm->pyguile’ by default, but a
+         ;; different converter can be specified as an optional second
+         ;; argument.
          list->pytuple
          list->pylist
          alist->pydict
 
+         ;; Elements are converted by ‘pointer->pyobject’ by default,
+         ;; but a different converter can be specified as an optional
+         ;; second argument.
+         pytuple->list
+         pylist->list
+
+         pytuple?
+         pylist?
+
          pyindexed-ref
          pyindexed-set!
+
+         py-none ;; This is a function, not a constant.
+         pynone?
 
          py-false ;; This is a function, not a constant.
          py-true  ;; This is a function, not a constant.
@@ -110,6 +124,7 @@
 
          pyrun
          pyrun-file-name
+         pyexec
          pyimport
          pymodule-get-file-name
          pyeval
@@ -140,7 +155,7 @@
    private:pointer->pyobject pyobject->pointer
    (lambda (obj port)
      (format port "#<pyobject ~s 0x~x>"
-             (pystring->string (py-repr obj))
+             (pystring->string (py-str obj))
              (pointer-address (pyobject->pointer obj)))))
 
  (define pointer->pyobject
@@ -161,6 +176,8 @@
    ;; procedure, so C code can use it.
    (lambda (x) (pyobject->pointer x)))
 
+ ;;; FIXME: Either get rid of this or change its name to
+ ;;; pyexec-without-catch.
  (define pyrun
    (let ((proc (pointer->procedure
                 int (dynamic-func "PyRun_SimpleString" python-dll)
@@ -172,6 +189,8 @@
        [other (assertion-failure
                'pyrun (_ "expected a string") other)])))
 
+ ;;; FIXME: Either get rid of this or change its name to
+ ;;; pyexec-file-name-without-catch.
  (define pyrun-file-name
    (let ((fopen (pointer->procedure
                  '* (dynamic-func "fopen" (dynamic-link))
@@ -246,6 +265,11 @@
                                  (_ "expected a Python object") obj)] ))]
        )))
 
+ (define-guile-python-pyx-procedure '* "__c_pyguile_make" '(* *))
+ (define-guile-python-pyx-procedure '* "__c_pyguile_address" '(*))
+ (define-guile-python-pyx-procedure '* "__pyguile_check" '(*))
+ (define-guile-python-pyx-procedure '* "__exec_python" '(*))
+ (define-guile-python-pyx-procedure '* "__exec_python_file_name" '(*))
  (define-guile-python-pyx-procedure '* "__c_string_to_python_string" '(*))
  (define-guile-python-pyx-procedure '* "__python_string_to_c_string" '(*))
  (define-guile-python-pyx-procedure '* "__c_eval_python" '(*))
@@ -260,6 +284,9 @@
  (define-guile-python-pyx-procedure '* "__pyindexed_ref" '(*))
  (define-guile-python-pyx-procedure '* "__pyindexed_set" '(*))
 
+ (define-py-to-py-filter pyguile?-base __pyguile_check)
+ (define-py-to-py-filter pyexec-base __exec_python)
+ (define-py-to-py-filter pyexec-file-name-base __exec_python)
  (define-py-to-py-filter pylong->pympz __pylong_to_pympz)
  (define-py-to-py-filter pympz->pylong __pympz_to_pylong)
  (define-py-to-py-filter py-repr __py_repr)
@@ -268,6 +295,44 @@
  (define-py-to-py-filter py-dict __py_dict)
  (define-py-to-py-filter pyindexed-ref-core __pyindexed_ref)
  (define-py-to-py-filter pyindexed-set!-core __pyindexed_set)
+
+ (define (scm->pyguile obj)
+   (cond [(pyguile? obj) obj]
+         [else (pointer->pyobject
+                ((__c_pyguile_make) (scm->pointer obj) pyguile-stringifier))]))
+
+ (define pyguile-stringifier
+   (procedure->pointer
+    '*
+    (lambda (p) (pyobject->pointer
+                 (string->pystring (with-output-to-string
+                                    [lambda () (write (pointer->scm p))]))))
+    '(*)))
+
+ (define (pyguile->scm obj)
+   (cond [(pyguile? obj)
+          (pointer->scm ((__c_pyguile_address) (pyobject->pointer obj)))]
+         [else (assertion-violation 'pyguile->scm
+                                    (_ "expected a pyguile object")
+                                    obj)]))
+
+ (define (pyguile? obj)
+   (if (pyobject? obj) (pyguile?-base obj) #f))
+
+ (define (pyexec s)
+   (cond
+    [(or (string? s) (pystring? s))
+     (let* ([str (if (string? s) (string->pystring s) s)]
+            [retval (pyexec-base str)])
+       (cond [(pynone? retval) *unspecified*]
+             [else (raise
+                    (condition
+                     (apply make-python-error
+                            (pytuple->list (cadr (pytuple->list retval))))
+                     (make-who-condition 'pyexec)
+                     (make-irritants-condition (list s))))] ))]
+    [other (assertion-failure
+            'pyexec (_ "expected a string or Python string") other)]))
 
  (define integer->pylong (compose pympz->pylong integer->pympz))
  (define pylong->integer (compose pympz->integer pylong->pympz))
@@ -304,67 +369,6 @@
  (define (current-pymodule)
    (pointer->pyobject ((__current_python_module))))
 
- ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
- 
- (define lookup:scheme->pyobject '())
- (define lookup:pyobject->scheme '())
-
- (define (scheme->pyobject obj)
-   (let* ([check-type (lambda (pred) (pred obj))]
-          [type-match (assp check-type lookup:scheme->pyobject)])
-     (if type-match
-         [(cdr type-match) obj]
-         [assertion-violation 'scheme->pyobject
-                              "cannot convert the Scheme object to a pyobject"
-                              obj])))
-
- (define (pyobject->scheme obj)
-   (let* ([check-type (lambda (pred) (pred obj))]
-          [type-match (assp check-type lookup:pyobject->scheme)])
-     (if type-match
-         [(cdr type-match) obj]
-         [assertion-violation 'scheme->pyobject
-                              "cannot convert the Scheme object to a pyobject"
-                              obj])))
-
- (define (scheme->pyobject-add-first! predicate conversion)
-   (let ([new-list (cons (cons predicate conversion)
-                         lookup:scheme->pyobject)])
-     (set! lookup:scheme->pyobject new-list)))
- 
- (define (pyobject->scheme-add-first! predicate conversion)
-   (let ([new-list (cons (cons predicate conversion)
-                         lookup:pyobject->scheme)])
-     (set! lookup:pyobject->scheme new-list)))
-
-  (define (scheme->pyobject-add-last! predicate conversion)
-    (let ([new-list (append! lookup:scheme->pyobject
-                             (list (cons predicate conversion)))])
-      (set! lookup:scheme->pyobject new-list)))
-
-  (define (pyobject->scheme-add-last! predicate conversion)
-   (let ([new-list (append! lookup:pyobject->scheme
-                            (list (cons predicate conversion)))])
-     (set! lookup:pyobject->scheme new-list)))
-
- (scheme->pyobject-add-first! pyobject? identity)
- (scheme->pyobject-add-last! string? string->pystring)
- (scheme->pyobject-add-last! boolean? boolean->pybool)
- (scheme->pyobject-add-last! integer?
-                             (lambda (n)
-                               (if (and (<= -2147483648 n)
-                                        (<= n 2147483647))
-                                   (integer->pyint n)
-                                   (integer->pylong n))))
- (scheme->pyobject-add-last! list? list->pylist)
-
- (pyobject->scheme-add-first! (negate pyobject?) identity)
- (pyobject->scheme-add-last! pystring? pystring->string)
- (pyobject->scheme-add-last! pybool? pybool->boolean)
- (pyobject->scheme-add-last! pyint? pyint->integer)
- (pyobject->scheme-add-last! pylong? pylong->integer)
- (pyobject->scheme-add-last! pympz? pympz->integer)
- 
  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
  ) ;; end of if-fontforge-has-python-api

@@ -22,10 +22,80 @@
 cdef extern from 'config.h':
   pass
 
+from libc.stdint cimport uintptr_t
 cimport sortsmillff.cython.xgc as xgc
 
 import sys
 import gmpy
+
+ctypedef object (*stringifier_t) (void *)
+
+# ‘pyguile’ objects stay in this container until they are destroyed,
+# to help ensure that the Boehm GC does not collect them. FIXME: Is
+# this container needed, and is it adequate?
+__pyguile_objects = set ()
+
+cdef class pyguile (object):
+  """A opaque representation of Guile objects."""
+
+  # These addresses should be kept in uintptr_t format rather than as
+  # a Python long, so the Boehm GC can recognize them
+  cdef public uintptr_t address
+  cdef uintptr_t stringifier_address
+
+  def __cinit__ (self):
+    self.stringifier_address = <uintptr_t> NULL
+    self.address = <uintptr_t> NULL
+
+  def __init__ (self, uintptr_t address, uintptr_t stringifier_address):
+    global __pyguile_objects
+    self.address = address
+    self.stringifier_address = stringifier_address
+    __pyguile_objects.add (self)
+
+  def __del__ (self):
+    global __pyguile_objects
+    __pyguile_objects.remove (self)
+
+  def __repr__ (self):
+    return ("pyguile(0x{:x},0x{:x})"
+            .format (long (self.address), long (self.stringifier_address)))
+
+  def __str__ (self):
+    cdef void *stringifier_pointer = <void *> self.stringifier_address
+    cdef stringifier_t stringifier = <stringifier_t> stringifier_pointer
+    cdef void *pointer = <void *> self.address
+    string = stringifier (pointer)
+    return "<pyguile {} 0x{:x}>".format (string, long (self.address))
+
+cdef public object __c_pyguile_make (void *pointer, void *stringifier_pointer):
+  cdef uintptr_t address = <uintptr_t> pointer
+  cdef uintptr_t stringifier_address = <uintptr_t> stringifier_pointer
+  return pyguile (address, stringifier_address)
+
+cdef public void *__c_pyguile_address (object obj):
+  cdef uintptr_t address = obj.address
+  cdef void *pointer = <void *> address
+  return pointer
+
+cdef public object __pyguile_check (object obj):
+  return isinstance (obj, pyguile)
+
+cdef public object __exec_python (object python_code):
+  retval = None
+  try:
+    exec (python_code)
+  except (object, BaseException, Exception) as exc:
+    retval = (exc, sys.exc_info ())
+  return retval
+
+cdef public object __exec_python_file_name (object file_name):
+  retval = None
+  try:
+    execfile (file_name)
+  except (object, BaseException, Exception) as exc:
+    retval = (exc, sys.exc_info ())
+  return retval
 
 cdef public object __c_eval_python (char *python_code):
   py_code = python_code
