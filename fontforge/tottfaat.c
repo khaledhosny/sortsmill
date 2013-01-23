@@ -289,7 +289,7 @@ return( false );
       case gsub_context:
       case gsub_contextchain: case gsub_reversecchain:
       case gpos_context: case gpos_contextchain:
-	if ( sf==NULL || sf->sm!=NULL )
+	if ( sf==NULL )
 return( false );
 	/* Else fall through into the test on the feature tag */;
     /* These two can be expressed in both, and might be either */

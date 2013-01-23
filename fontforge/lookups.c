@@ -741,7 +741,7 @@ void SFFindUnusedLookups(SplineFont *sf) {
     for ( gpos=0; gpos<2; ++gpos ) {
 	for ( test = gpos ? _sf->gpos_lookups : _sf->gsub_lookups; test!=NULL; test = test->next ) {
 	    for ( sub = test->subtables; sub!=NULL; sub=sub->next ) {
-		if ( sub->kc!=NULL || sub->fpst!=NULL || sub->sm!=NULL ) {
+		if ( sub->kc!=NULL || sub->fpst!=NULL ) {
 		    sub->unused = false;
 	    continue;
 		}
@@ -945,24 +945,11 @@ static void RemoveNestedReferences(SplineFont *sf,int isgpos,OTLookup *dying) {
     int i,j,k;
 
     for ( otl = isgpos ? sf->gpos_lookups : sf->gsub_lookups; otl!=NULL; otl = otl->next ) {
-	if ( otl->lookup_type==morx_context ) {
-	    for ( sub=otl->subtables; sub!=NULL; sub=sub->next ) {
-		ASM *sm = sub->sm;
-		if ( sm->type==asm_context ) {
-		    for ( i=0; i<sm->state_cnt*sm->class_cnt; ++i ) {
-			struct asm_state *state = &sm->state[i];
-			if ( state->u.context.mark_lookup == otl )
-			    state->u.context.mark_lookup = NULL;
-			if ( state->u.context.cur_lookup == otl )
-			    state->u.context.cur_lookup = NULL;
-		    }
-		}
-	    }
 	/* Reverse chaining tables do not reference lookups. The match pattern*/
 	/*  is a (exactly one) coverage table, and each glyph in that table   */
 	/*  as an inline replacement. There is no lookup to do the replacement*/
 	/* (so we ignore it here) */
-	} else if ( otl->lookup_type==gsub_context || otl->lookup_type==gsub_contextchain ||
+	if ( otl->lookup_type==gsub_context || otl->lookup_type==gsub_contextchain ||
 		otl->lookup_type==gpos_context || otl->lookup_type==gpos_contextchain ) {
 	    for ( sub=otl->subtables; sub!=NULL; sub=sub->next ) {
 		FPST *fpst = sub->fpst;
@@ -1047,17 +1034,7 @@ void SFRemoveLookupSubTable(SplineFont *sf,struct lookup_subtable *sub) {
 
     if ( sf->cidmaster!=NULL ) sf = sf->cidmaster;
 
-    if ( sub->sm!=NULL ) {
-	ASM *prev = NULL, *test;
-	for ( test=sf->sm; test!=NULL && test!=sub->sm; prev=test, test=test->next );
-	if ( prev==NULL )
-	    sf->sm = sub->sm->next;
-	else
-	    prev->next = sub->sm->next;
-	sub->sm->next = NULL;
-	ASMFree(sub->sm);
-	sub->sm = NULL;
-    } else if ( sub->fpst!=NULL ) {
+    if ( sub->fpst!=NULL ) {
 	FPST *prev = NULL, *test;
 	for ( test=sf->possub; test!=NULL && test!=sub->fpst; prev=test, test=test->next );
 	if ( prev==NULL )
@@ -2079,42 +2056,6 @@ static FPST *SF_AddFPST(struct sfmergecontext *mc,FPST *fpst,
 return( newfpst );
 }
 
-static ASM *SF_AddASM(struct sfmergecontext *mc,ASM *sm, struct lookup_subtable *sub ) {
-    ASM *newsm;
-    int i;
-
-    newsm = (ASM *) xzalloc(sizeof (ASM));
-    *newsm = *sm;
-    newsm->subtable = sub;
-    newsm->next = mc->sf_to->sm;
-    mc->sf_to->sm = newsm;
-    mc->sf_to->changed = true;
-    newsm->classes = ClassCopy(newsm->class_cnt, newsm->classes);
-    newsm->state = xmalloc(newsm->class_cnt*newsm->state_cnt*sizeof(struct asm_state));
-    memcpy(newsm->state,sm->state,
-	    newsm->class_cnt*newsm->state_cnt*sizeof(struct asm_state));
-    if ( newsm->type == asm_kern ) {
-	for ( i=newsm->class_cnt*newsm->state_cnt-1; i>=0; --i ) {
-	    newsm->state[i].u.kern.kerns = xmalloc(newsm->state[i].u.kern.kcnt*sizeof(int16_t));
-	    memcpy(newsm->state[i].u.kern.kerns,sm->state[i].u.kern.kerns,newsm->state[i].u.kern.kcnt*sizeof(int16_t));
-	}
-    } else if ( newsm->type == asm_insert ) {
-	for ( i=0; i<newsm->class_cnt*newsm->state_cnt; ++i ) {
-	    struct asm_state *this = &newsm->state[i];
-	    this->u.insert.mark_ins = xstrdup_or_null(this->u.insert.mark_ins);
-	    this->u.insert.cur_ins = xstrdup_or_null(this->u.insert.cur_ins);
-	}
-    } else if ( newsm->type == asm_context ) {
-	for ( i=0; i<newsm->class_cnt*newsm->state_cnt; ++i ) {
-	    newsm->state[i].u.context.mark_lookup = OTLookupCopyNested(mc,
-		    newsm->state[i].u.context.mark_lookup);
-	    newsm->state[i].u.context.cur_lookup = OTLookupCopyNested(mc,
-		    newsm->state[i].u.context.cur_lookup);
-	}
-    }
-return( newsm );
-}
-
 static SplineChar *SCFindOrMake(SplineFont *into,SplineChar *fromsc) {
     int to_index;
 
@@ -2486,8 +2427,6 @@ return( otl );
 	    sub->kc = SF_AddKernClass(mc, from_sub->kc, sub);
 	else if ( from_sub->fpst!=NULL )
 	    sub->fpst = SF_AddFPST(mc, from_sub->fpst, sub);
-	else if ( from_sub->sm!=NULL )
-	    sub->sm = SF_AddASM(mc, from_sub->sm, sub);
 	else if ( from_sub->anchor_classes )
 	    SF_AddAnchorClasses(mc, from_sub, sub);
 	else
@@ -2520,15 +2459,6 @@ return( true );
 			if ( NeedsPrefix(into_sf,from_sf, sublist))
 return( true );
 		    }
-		}
-	    } else if ( from_sub->sm!=NULL && from_sub->sm->type==asm_context ) {
-		for ( i=0; i<from_sub->sm->class_cnt*from_sub->sm->state_cnt; ++i ) {
-		    sublist[0] = from_sub->sm->state[i].u.context.mark_lookup;
-		    if ( NeedsPrefix(into_sf,from_sf,sublist))
-return( true );
-		    sublist[0] = from_sub->sm->state[i].u.context.cur_lookup;
-		    if ( NeedsPrefix(into_sf,from_sf,sublist))
-return( true );
 		}
 	    }
 	}
@@ -2613,277 +2543,6 @@ return( true );
     }
 
 return( false );
-}
-
-/* ************************************************************************** */
-/* ************************ Apply Apple State Machines ********************** */
-/* ************************************************************************** */
-
-static void ApplyMacIndicRearrangement(struct lookup_data *data,int verb,
-	int first_pos,int last_pos) {
-    struct opentype_str temp, temp2, temp3, temp4;
-    int i;
-
-    if ( first_pos==-1 || last_pos==-1 || last_pos <= first_pos )
-return;
-    switch ( verb ) {
-      case 1: /* Ax => xA */
-	temp = data->str[first_pos];
-	for ( i= first_pos; i<last_pos; ++i )
-	    data->str[i] = data->str[i+1];
-	data->str[last_pos] = temp;
-      break;
-      case 2: /* xD => Dx */
-	temp = data->str[last_pos];
-	for ( i= last_pos; i>first_pos; --i )
-	    data->str[i] = data->str[i-1];
-	data->str[first_pos] = temp;
-      break;
-      case 3: /* AxD => DxA */
-	temp = data->str[last_pos];
-	data->str[last_pos] = data->str[first_pos];
-	data->str[first_pos] = temp;
-      break;
-      case 4: /* ABx => xAB */
-	temp = data->str[first_pos];
-	temp2 = data->str[first_pos+1];
-	for ( i= first_pos; i<last_pos-1; ++i )
-	    data->str[i] = data->str[i+21];
-	data->str[last_pos-1] = temp;
-	data->str[last_pos] = temp2;
-      break;
-      case 5: /* ABx => xBA */
-	temp = data->str[first_pos];
-	temp2 = data->str[first_pos+1];
-	for ( i= first_pos; i<last_pos-1; ++i )
-	    data->str[i] = data->str[i+21];
-	data->str[last_pos-1] = temp2;
-	data->str[last_pos] = temp;
-      break;
-      case 6: /* xCD => CDx */
-	temp = data->str[last_pos];
-	temp2 = data->str[last_pos-1];
-	for ( i= last_pos; i>first_pos+1; --i )
-	    data->str[i] = data->str[i-2];
-	data->str[first_pos+1] = temp;
-	data->str[first_pos] = temp2;
-      break;
-      case 7: /* xCD => DCx */
-	temp = data->str[last_pos];
-	temp2 = data->str[last_pos-1];
-	for ( i= last_pos; i>first_pos+1; --i )
-	    data->str[i] = data->str[i-2];
-	data->str[first_pos+1] = temp2;
-	data->str[first_pos] = temp;
-      break;
-      case 8: /* AxCD => CDxA */
-	temp = data->str[first_pos];
-	temp2 = data->str[last_pos-1];
-	temp3 = data->str[last_pos];
-	for ( i= last_pos-1; i>first_pos; --i )
-	    data->str[i] = data->str[i-1];
-	data->str[first_pos+1] = temp2;
-	data->str[first_pos] = temp3;
-	data->str[last_pos] = temp;
-      break;
-      case 9: /* AxCD => DCxA */
-	temp = data->str[first_pos];
-	temp2 = data->str[last_pos-1];
-	temp3 = data->str[last_pos];
-	for ( i= last_pos-1; i>first_pos; --i )
-	    data->str[i] = data->str[i-1];
-	data->str[first_pos+1] = temp3;
-	data->str[first_pos] = temp2;
-	data->str[last_pos] = temp;
-      break;
-      case 10: /* ABxD => DxAB */
-	temp = data->str[first_pos];
-	temp2 = data->str[first_pos+1];
-	temp3 = data->str[last_pos];
-	for ( i= first_pos+1; i<last_pos; ++i )
-	    data->str[i] = data->str[i+1];
-	data->str[first_pos] = temp3;
-	data->str[last_pos-1] = temp;
-	data->str[last_pos] = temp2;
-      break;
-      case 11: /* ABxD => DxBA */
-	temp = data->str[first_pos];
-	temp2 = data->str[first_pos+1];
-	temp3 = data->str[last_pos];
-	for ( i= first_pos+1; i<last_pos; ++i )
-	    data->str[i] = data->str[i+1];
-	data->str[first_pos] = temp3;
-	data->str[last_pos-1] = temp2;
-	data->str[last_pos] = temp;
-      break;
-      case 12: /* ABxCD => CDxAB */
-	temp = data->str[first_pos];
-	temp2 = data->str[first_pos+1];
-	temp3 = data->str[last_pos-1];
-	temp4 = data->str[last_pos];
-	data->str[last_pos] = temp2;
-	data->str[last_pos-1] = temp;
-	data->str[first_pos+1] = temp4;
-	data->str[first_pos] = temp3;
-      break;
-      case 13: /* ABxCD => CDxBA */
-	temp = data->str[first_pos];
-	temp2 = data->str[first_pos+1];
-	temp3 = data->str[last_pos-1];
-	temp4 = data->str[last_pos];
-	data->str[last_pos] = temp;
-	data->str[last_pos-1] = temp2;
-	data->str[first_pos+1] = temp4;
-	data->str[first_pos] = temp3;
-      break;
-      case 14: /* ABxCD => DCxAB */
-	temp = data->str[first_pos];
-	temp2 = data->str[first_pos+1];
-	temp3 = data->str[last_pos-1];
-	temp4 = data->str[last_pos];
-	data->str[last_pos] = temp2;
-	data->str[last_pos-1] = temp;
-	data->str[first_pos+1] = temp3;
-	data->str[first_pos] = temp4;
-      break;
-      case 15: /* ABxCD => DCxBA */
-	temp = data->str[first_pos];
-	temp2 = data->str[first_pos+1];
-	temp3 = data->str[last_pos-1];
-	temp4 = data->str[last_pos];
-	data->str[last_pos] = temp;
-	data->str[last_pos-1] = temp2;
-	data->str[first_pos+1] = temp3;
-	data->str[first_pos] = temp4;
-      break;
-    }
-}
-
-static int ApplyMacInsert(struct lookup_data *data,int ipos,int cnt,
-	char *glyphnames, int orig_index) {
-    SplineChar *inserts[32];
-    char *start, *pt;
-    int i, ch;
-
-    if ( cnt==0 || glyphnames==NULL || ipos == -1 )
-return( 0 );
-
-    for ( i=0, start = glyphnames; i<cnt; ) {
-	while ( *start==' ' ) ++start;
-	if ( *start=='\0' )
-    break;
-	for ( pt = start; *pt!=' ' && *pt!='\0'; ++pt );
-	ch = *pt; *pt = '\0';
-	inserts[i] = SFGetChar(data->sf,-1,start);
-	*pt = ch;
-	if ( inserts[i]!=NULL )
-	    ++i;
-    }
-    cnt = i;
-    if ( i==0 )
-return( 0 );
-    for ( i= data->cnt; i>=ipos; --i )
-	data->str[i+cnt] = data->str[i];
-    memset(data->str+ipos,0,cnt*sizeof(struct opentype_str));
-    for ( i=0; i<cnt; ++i ) {
-	data->str[ipos+i].sc = inserts[i];
-	data->str[ipos+i].orig_index = orig_index;
-    }
-return( cnt );
-}
-
-static void ApplyAppleStateMachine(uint32_t tag, OTLookup *otl,struct lookup_data *data) {
-    struct lookup_subtable *sub;
-    int state, class, pos, mark_pos, markend_pos, i;
-    ASM *sm;
-    int cnt_cur, cnt_mark;
-    struct asm_state *entry;
-    int kern_stack[8], kcnt;		/* Kerning state machines handle at most 8 glyphs */
-    /* Flaws: Line processing has not been done yet, so we are never in the */
-    /*  start of line state and we never get an end of line token. We never */
-    /*  get deleted tokens either, those glyphs are just gone */
-    /* Class 0: End of text */
-    /* Class 1: Glyph not in any classes */
-    /* Class 2: Deleted (we never see) */
-    /* Class 3: End of line (we never see) */
-
-    /* Mac doesn't have the concept of subtables, but a user could create one */
-    /*  it will get flattened out into its own "lookup" when written to a file*/
-    /*  So if there are multiple subtables, just process them all */
-    for ( sub=otl->subtables; sub!=NULL; sub=sub->next ) {
-	sm = sub->sm;
-
-	state = 0;
-	mark_pos = markend_pos = -1;
-	for ( pos = 0; pos<=data->cnt; ) {
-	    if ( pos==data->cnt )
-		class = 0;
-	    else {
-		for ( class = sm->class_cnt-1; class>3; --class )
-		    if ( GlyphNameInClass(data->str[i].sc->name,sm->classes[class]) )
-		break;
-		if ( class==3 )
-		    class = 1;		/* Glyph not in any class */;
-	    }
-	    entry = &sm->state[state*sm->class_cnt+class];
-	    switch ( otl->lookup_type ) {
-	      case morx_context:
-		if ( entry->u.context.cur_lookup!=NULL )
-		    ApplyLookupAtPos(0,entry->u.context.cur_lookup,data,pos);
-		if ( entry->u.context.mark_lookup!=NULL && mark_pos!=-1 ) {
-		    ApplyLookupAtPos(0,entry->u.context.mark_lookup,data,mark_pos);
-		    mark_pos = -1;
-		}
-	      break;
-	      case morx_indic:
-		if ( entry->flags & 0x2000 )
-		    markend_pos = pos;
-		if ( (entry->flags&0xf)!=0 ) {
-		    ApplyMacIndicRearrangement(data,entry->flags&0xf,mark_pos,markend_pos);
-		    mark_pos = markend_pos = -1;
-		}
-	      break;
-	      case morx_insert:
-		/* I live in total ignorance of what I should do if the glyph */
-		/*  "is Kashida like"... so I ignore those flags. */
-		cnt_cur = (entry->flags>>5)&0x1f;
-		cnt_mark = (entry->flags&0x1f);
-		if ( data->cnt + cnt_cur + cnt_mark >= data->max )
-		    data->str = xrealloc(data->str,(data->max = data->cnt + cnt_cur + cnt_mark +20)*sizeof(struct opentype_str));
-		if ( cnt_cur!=0 )
-		    cnt_cur = ApplyMacInsert(data,(entry->flags& 0x0800)? pos : pos+1,
-			    cnt_cur,entry->u.insert.cur_ins,data->str[pos].orig_index);
-		if ( cnt_mark!=0 && mark_pos!=-1 ) {
-		    cnt_mark = ApplyMacInsert(data,(entry->flags& 0x0800)? mark_pos : mark_pos+1,
-			    cnt_mark,entry->u.insert.mark_ins,data->str[mark_pos].orig_index);
-		    mark_pos = -1;
-		} else
-		    cnt_mark = 0;
-		pos += cnt_cur+cnt_mark;
-	      break;
-	      case kern_statemachine:
-		if ( entry->u.kern.kcnt!=0 ) {
-		    for ( i=0; i<kcnt && i<entry->u.kern.kcnt; ++i )
-			data->str[kern_stack[i]].vr.h_adv_off +=
-				entry->u.kern.kerns[i];
-		    kcnt = 0;
-		}
-		if ( entry->flags & 0x8000 ) {
-		    for ( i=6; i>=0; --i )
-			kern_stack[i+1] = kern_stack[i];
-		    kern_stack[0] = pos;
-		    if ( ++kcnt>8 ) kcnt = 8;
-		}
-	      break;
-	    }
-	    if ( entry->flags & 0x8000 )
-		mark_pos = pos;		/* The docs do not state whether this happens before or after substitutions are applied at the mark */
-					/* after is more useful. So assume that */
-	    if ( !(entry->flags & 0x4000) )
-		++pos;
-	    state = entry->next_state;
-	}
-    }
 }
 
 /* ************************************************************************** */
@@ -3610,12 +3269,7 @@ return( 0 );
 
 static void ApplyLookup(uint32_t tag, OTLookup *otl,struct lookup_data *data) {
     int pos, npos;
-    int lt = otl->lookup_type;
 
-    if ( lt == morx_indic || lt == morx_context || lt == morx_insert ||
-	    lt == kern_statemachine )
-	ApplyAppleStateMachine(tag,otl,data);
-    else {
 	/* OpenType */
 	for ( pos = 0; pos<data->cnt; ) {
 	    npos = ApplyLookupAtPos(tag,otl,data,pos);
@@ -3623,7 +3277,6 @@ static void ApplyLookup(uint32_t tag, OTLookup *otl,struct lookup_data *data) {
 		npos = pos+1;
 	    pos = npos;
 	}
-    }
 }
 
 static uint32_t FSLLMatches(FeatureScriptLangList *fl,uint32_t *flist,uint32_t script,uint32_t lang) {
@@ -3849,7 +3502,6 @@ void SFGlyphRenameFixup(SplineFont *sf, char *old, char *new) {
     PST *pst;
     FPST *fpst;
     KernClass *kc;
-    ASM *sm;
 
     CVGlyphRenameFixup(sf,old,new);
     if ( sf->cidmaster!=NULL )
@@ -3922,14 +3574,6 @@ void SFGlyphRenameFixup(SplineFont *sf, char *old, char *new) {
 		if ( fpst->format==pst_reversecoverage )
 		    rplstr(&rule->u.rcoverage.replacements,old,new,true);
 	    }
-	}
-    }
-
-    /* Now look for contextual apple state machines which might use the name */
-    for ( sm = master->sm; sm!=NULL; sm=sm->next ) {
-	for ( i=0; i<sm->class_cnt; ++i ) if ( sm->classes[i]!=NULL ) {
-	    if ( rplstr(&sm->classes[i],old,new,false))
-	break;
 	}
     }
 
@@ -4051,14 +3695,6 @@ int LookupUsedNested(SplineFont *sf,OTLookup *checkme) {
 			if ( rule->lookups[c].lookup == checkme )
 return( true );
 		    }
-		}
-	    } else if ( otl->lookup_type==morx_context ) {
-		for ( c = 0; c<sub->sm->class_cnt*sub->sm->state_cnt; ++c ) {
-		    struct asm_state *state = &sub->sm->state[c];
-		    if ( state->u.context.mark_lookup==checkme )
-return( true );
-		    if ( state->u.context.cur_lookup==checkme )
-return( true );
 		}
 	    }
 	}

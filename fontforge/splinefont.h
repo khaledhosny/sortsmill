@@ -553,7 +553,6 @@ struct lookup_subtable
   bool dontautokern;            /* for kerning classes */
   struct kernclass *kc;
   struct generic_fpst *fpst;
-  struct generic_asm *sm;
   /* Each time an item is added to a lookup we must place it into a */
   /*  subtable. If it's a kerning class, fpst or state machine it has */
   /*  a subtable all to itself. If it's an anchor class it can share */
@@ -600,7 +599,7 @@ typedef struct otlookup
   char *tempname;
 } OTLookup;
 
-#define LOOKUP_SUBTABLE_EMPTY { NULL, NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, 0, NULL }
+#define LOOKUP_SUBTABLE_EMPTY { NULL, NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 0, NULL }
 #define OTLOOKUP_EMPTY { NULL, 0, 0, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL }
 
 
@@ -878,54 +877,6 @@ struct asm_state
     } kern;
   } u;
 };
-
-typedef struct generic_asm
-{                               /* Apple State Machine */
-  struct generic_asm *next;
-  uint16_t /*enum asm_type */ type;
-  struct lookup_subtable *subtable;     /* Lookup contains feature setting info */
-  uint16_t flags;               /* 0x8000=>vert, 0x4000=>r2l, 0x2000=>hor&vert */
-  uint8_t ticked;
-
-  uint16_t class_cnt, state_cnt;
-  char **classes;
-  struct asm_state *state;
-#if 0
-  uint32_t opentype_tag;        /* If converted from opentype */
-#endif
-} ASM;
-
-/* State Flags:
- Indic:
-	0x8000	mark current glyph as first in rearrangement
-	0x4000	don't advance to next glyph
-	0x2000	mark current glyph as last
-	0x000f	verb
-		0 = no change		8 = AxCD => CDxA
-		1 = Ax => xA		9 = AxCD => DCxA
-		2 = xD => Dx		a = ABxD => DxAB
-		3 = AxD => DxA		b = ABxD => DxBA
-		4 = ABx => xAB		c = ABxCD => CDxAB
-		5 = ABx => xBA		d = ABxCD => CDxBA
-		6 = xCD => CDx		e = ABxCD => DCxAB
-		7 = xCD => DCx		f = ABxCD => DCxBA
- Contextual:
-	0x8000	mark current glyph
-	0x4000	don't advance to next glyph
- Insert:
-	0x8000	mark current glyph
-	0x4000	don't advance to next glyph
-	0x2000	current is Kashida like
-	0x1000	mark is Kashida like
-	0x0800	current insert before
-	0x0400	mark insert before
-	0x03e0	count of chars to be inserted at current (31 max)
-	0x001f	count of chars to be inserted at mark (31 max)
- Kern:
-	0x8000	add current glyph to kerning stack
-	0x4000	don't advance to next glyph
-	0x3fff	value offset
-*/
 
 struct jstf_prio
 {
@@ -2172,7 +2123,6 @@ typedef struct splinefont
   AnchorClass *anchor;
   KernClass *kerns, *vkerns;
   FPST *possub;
-  ASM *sm;                      /* asm is a keyword */
   MacFeat *features;
   char *chosenname;             /* Set for files with multiple fonts in them */
   struct mmset *mm;             /* If part of a multiple master set */
@@ -2752,7 +2702,6 @@ VISIBLE extern void FPSTClassesFree (FPST *fpst);
 VISIBLE extern void FPSTRulesFree (struct fpst_rule *r,
                                    enum fpossub_format format, int rcnt);
 VISIBLE extern void FPSTFree (FPST *fpst);
-extern void ASMFree (ASM *sm);
 VISIBLE extern struct macname *MacNameCopy (struct macname *mn);
 VISIBLE extern void MacNameListFree (struct macname *mn);
 VISIBLE extern void MacSettingListFree (struct macsetting *ms);
@@ -3359,8 +3308,6 @@ extern const char *EncName (Encoding *encname);
 extern const char *FindUnicharName (void);
 VISIBLE extern Encoding *_FindOrMakeEncoding (const char *name, int make_it);
 VISIBLE extern Encoding *FindOrMakeEncoding (const char *name);
-VISIBLE extern void SFDDumpMacFeat (FILE *sfd, MacFeat *mf);
-VISIBLE extern MacFeat *SFDParseMacFeatures (FILE *sfd, char *tok);
 VISIBLE extern int SFDWrite (char *filename, SplineFont *sf, EncMap *map,
                              EncMap *normal, int todir);
 VISIBLE extern int SFDWriteBak (SplineFont *sf, EncMap *map, EncMap *normal);
@@ -3689,9 +3636,6 @@ extern int SFRenameTheseFeatureTags (SplineFont *sf, uint32_t tag, int sli,
                                      int flags, uint32_t totag, int tosli,
                                      int toflags, int ismac);
 extern int SFRemoveUnusedNestedFeatures (SplineFont *sf);
-extern int ClassesMatch (int cnt1, char **classes1, int cnt2,
-                         char **classes2);
-VISIBLE extern FPST *FPSTGlyphToClass (FPST *fpst);
 
 extern char *utf8_verify_copy (const char *str);
 

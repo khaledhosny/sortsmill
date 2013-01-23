@@ -7743,39 +7743,6 @@ MacFeatListFree (MacFeat * mf)
 }
 
 void
-ASMFree (ASM * sm)
-{
-  ASM *next;
-  int i;
-
-  while (sm != NULL)
-    {
-      next = sm->next;
-      if (sm->type == asm_insert)
-        {
-          for (i = 0; i < sm->class_cnt * sm->state_cnt; ++i)
-            {
-              free (sm->state[i].u.insert.mark_ins);
-              free (sm->state[i].u.insert.cur_ins);
-            }
-        }
-      else if (sm->type == asm_kern)
-        {
-          for (i = 0; i < sm->class_cnt * sm->state_cnt; ++i)
-            {
-              free (sm->state[i].u.kern.kerns);
-            }
-        }
-      for (i = 4; i < sm->class_cnt; ++i)
-        free (sm->classes[i]);
-      free (sm->state);
-      free (sm->classes);
-      free (sm);
-      sm = next;
-    }
-}
-
-void
 OtfNameListFree (struct otfname *on)
 {
   struct otfname *on_next;
@@ -8122,7 +8089,6 @@ SplineFontFree (SplineFont *sf)
   KernClassListFree (sf->kerns);
   KernClassListFree (sf->vkerns);
   FPSTFree (sf->possub);
-  ASMFree (sf->sm);
   OtfNameListFree (sf->fontstyle_name);
   OtfFeatNameListFree (sf->feat_names);
   MarkClassFree (sf->mark_class_cnt, sf->mark_classes, sf->mark_class_names);

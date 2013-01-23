@@ -73,12 +73,6 @@ typedef struct generic_fpst1 {
     uint32_t tag;
 } FPST1;
 
-typedef struct generic_asm1 {		/* Apple State Machine */
-    ASM sm;
-    uint16_t feature, setting;
-    uint32_t opentype_tag;		/* If converted from opentype */
-} ASM1;
-
 struct table_ordering {
     uint32_t table_tag;
     uint32_t *ordered_features;

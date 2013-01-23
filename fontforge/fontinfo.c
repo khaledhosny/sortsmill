@@ -8080,8 +8080,7 @@ LookupParseSelection (struct lkdata *lk, struct selection_bits *sel)
                   if (j == lk->all[i].subtable_cnt - 1)
                     any_last = true;
                   if (lk->all[i].subtables[j].subtable->kc != NULL ||
-                      lk->all[i].subtables[j].subtable->fpst != NULL ||
-                      lk->all[i].subtables[j].subtable->sm != NULL)
+                      lk->all[i].subtables[j].subtable->fpst != NULL)
                     sub_mergeable = false;
                   if (all_one_lookup == -1)
                     all_one_lookup = i;

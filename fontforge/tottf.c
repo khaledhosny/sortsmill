@@ -2808,8 +2808,7 @@ void cvt_unix_to_1904( long time, int32_t result[2]) {
 static void sethead(struct head *head,SplineFont *sf,struct alltabs *at,
 	enum fontformat format, int32_t *bsizes) {
     time_t now;
-    int i, lr, rl, indic_rearrange, arabic;
-    ASM *sm;
+    int i, lr, rl, arabic;
     struct ttflangname *useng;
     float vn;
 
@@ -2884,16 +2883,8 @@ static void sethead(struct head *head,SplineFont *sf,struct alltabs *at,
     /* Bit 6 must be zero */
     if ( arabic )
 	head->flags |= (1<<7);
-    if ( sf->sm )
-	head->flags |= (1<<8);		/* has metamorphesis effects */
     if ( rl )
 	head->flags |= (1<<9);
-    indic_rearrange = 0;
-    for ( sm = sf->sm; sm!=NULL; sm=sm->next )
-	if ( sm->type == asm_indic )
-	    indic_rearrange = true;
-    if ( indic_rearrange )
-	head->flags |= (1<<10);
 /* End apple flags */
     if ( sf->head_optimized_for_cleartype )
 	head->flags |= (1<<13);

@@ -834,18 +834,6 @@ ParseMacMapping (char *pt, struct macsettingname *ms)
 }
 
 static void
-ParseNewMacFeature (FILE *p, char *line)
-{
-  fseek (p, -(strlen (line) - strlen ("MacFeat:")), SEEK_CUR);
-  line[strlen ("MacFeat:")] = '\0';
-  default_mac_feature_map = SFDParseMacFeatures (p, line);
-  fseek (p, -strlen (line), SEEK_CUR);
-  if (user_mac_feature_map != NULL)
-    MacFeatListFree (user_mac_feature_map);
-  user_mac_feature_map = default_mac_feature_map;
-}
-
-static void
 NOUI_LoadPrefs (void)
 {
   char *prefs = getPfaEditPrefs ();
@@ -929,10 +917,6 @@ NOUI_LoadPrefs (void)
                        == 0 && msp < msc)
                 {
                   ParseMacMapping (pt, &user_macfeat_otftag[msp++]);
-                }
-              else if (strncmp (line, "MacFeat:", strlen ("MacFeat:")) == 0)
-                {
-                  ParseNewMacFeature (p, line);
                 }
               continue;
             }
@@ -1091,8 +1075,6 @@ NOUI_SavePrefs (int not_if_script)
         }
     }
 
-  if (UserFeaturesDiffer ())
-    SFDDumpMacFeat (p, default_mac_feature_map);
 
   fclose (p);
 }

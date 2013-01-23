@@ -655,124 +655,6 @@ static void BuildFPST(struct node *node,struct att_dlg *att) {
     }
 }
 
-static void BuildASM(struct node *node,struct att_dlg *att) {
-    ASM *sm = node->u.sub->sm;
-    int len, i, j, k, scnt = 0;
-    struct node *lines;
-    char buf[200], *space;
-    static char *type[] = { N_("Indic Reordering"), N_("Contextual Substitution"),
-	    N_("Ligatures"), N_("<undefined>"), N_("Simple Substitution"),
-	    N_("Glyph Insertion"), N_("<undefined>"),  N_("<undefined>"), N_("<undefined>"),
-	    N_("<undefined>"), N_("<undefined>"), N_("<undefined>"),N_("<undefined>"),
-	    N_("<undefined>"), N_("<undefined>"), N_("<undefined>"), N_("<undefined>"),
-	    N_("Kern by State") };
-    OTLookup **used;
-
-    if ( sm->type == asm_context ) {
-	used = xmalloc(sm->class_cnt*sm->state_cnt*2*sizeof(OTLookup *));
-	for ( i=scnt=0; i<sm->class_cnt*sm->state_cnt; ++i ) {
-	    OTLookup *otl;
-	    otl = sm->state[i].u.context.mark_lookup;
-	    if ( otl!=NULL ) {
-		for ( k=0; k<scnt && used[k]!=otl; ++k );
-		if ( k==scnt ) used[scnt++] = otl;
-	    }
-	    otl = sm->state[i].u.context.cur_lookup;
-	    if ( otl!=NULL ) {
-		for ( k=0; k<scnt && used[k]!=otl; ++k );
-		if ( k==scnt ) used[scnt++] = otl;
-	    }
-	}
-    }
-
-    lines = NULL;
-    space = xmalloc( 81*sm->class_cnt+40 );
-    for ( i=0; i<2; ++i ) {
-	len = 0;
-
-	if ( i ) {
-	    lines[len].label = xstrdup_or_null(_(type[sm->type]));
-	    lines[len].parent = node;
-	}
-	++len;
-	for ( j=4; j<sm->class_cnt ; ++j ) {
-	    if ( i ) {
-		sprintf(buf, _("Class %d: "), j);
-		lines[len].label = xmalloc((strlen(buf)+strlen(sm->classes[j])+1));
-		strcpy(lines[len].label,buf);
-		strcat(lines[len].label,sm->classes[j]);
-		lines[len].parent = node;
-	    }
-	    ++len;
-	}
-	for ( j=0; j<sm->state_cnt; ++j ) {
-	    if ( i ) {
-/* TRANSLATORS: You're in a state machine, and this is describing the %4d'th state of */
-/* that machine. From the state the next state will be a list of */
-/* state-numbers which are appended to this string. */
-		sprintf(space, _("State %4d Next: "), j );
-		for ( k=0; k<sm->class_cnt; ++k )
-		    sprintf( space+strlen(space), "%5d", sm->state[j*sm->class_cnt+k].next_state );
-		lines[len].label = xstrdup_or_null(space);
-		lines[len].parent = node;
-		lines[len].monospace = true;
-	    }
-	    ++len;
-	    if ( i ) {
-		sprintf(space, _("State %4d Flags:"), j );
-		for ( k=0; k<sm->class_cnt; ++k )
-		    sprintf( space+strlen(space), " %04x", sm->state[j*sm->class_cnt+k].flags );
-		lines[len].label = xstrdup_or_null(space);
-		lines[len].parent = node;
-		lines[len].monospace = true;
-	    }
-	    ++len;
-	    if ( sm->type==asm_context ) {
-		if ( i ) {
-		    sprintf(space, _("State %4d Mark: "), j );
-		    for ( k=0; k<sm->class_cnt; ++k )
-			if ( sm->state[j*sm->class_cnt+k].u.context.mark_lookup==NULL )
-			    strcat(space,"     ");
-			else
-			    sprintf( space+strlen(space), " %.80s", sm->state[j*sm->class_cnt+k].u.context.mark_lookup->lookup_name );
-		    lines[len].label = xstrdup_or_null(space);
-		    lines[len].parent = node;
-		    lines[len].monospace = true;
-		}
-		++len;
-		if ( i ) {
-		    sprintf(space, _("State %4d Cur:  "), j );
-		    for ( k=0; k<sm->class_cnt; ++k )
-			if ( sm->state[j*sm->class_cnt+k].u.context.cur_lookup==NULL )
-			    strcat(space,"     ");
-			else
-			    sprintf( space+strlen(space), " %.80s", sm->state[j*sm->class_cnt+k].u.context.cur_lookup->lookup_name );
-		    lines[len].label = xstrdup_or_null(space);
-		    lines[len].parent = node;
-		    lines[len].monospace = true;
-		}
-		++len;
-	    }
-	}
-	for ( j=0; j<scnt; ++j ) {
-	    if ( i ) {
-		sprintf(buf, _("Nested Substitution %.80s"), used[j]->lookup_name );
-		lines[len].label = xstrdup_or_null(buf);
-		lines[len].parent = node;
-		lines[len].u.otl = used[j];
-		lines[len].build = BuildGSUBlookups;
-	    }
-	    ++len;
-	}
-	if ( i==0 ) {
-	    node->children = lines = xcalloc(len+1,sizeof(struct node));
-	    node->cnt = len;
-	}
-    }
-    free(space);
-    free(used);
-}
-
 static void BuildKern2(struct node *node,struct att_dlg *att) {
     struct lookup_subtable *sub = node->parent->u.sub;
     SplineChar *base = node->u.sc;
@@ -1002,10 +884,6 @@ return;
       case gpos_single:
       case gsub_single: case gsub_multiple: case gsub_alternate: case gsub_ligature:
 	BuildPST(node,att);
-return;
-      case morx_indic: case morx_context: case morx_insert:
-      case kern_statemachine:
-	BuildASM(node,att);
 return;
     }
     IError( "Unknown lookup type in BuildDispatch");

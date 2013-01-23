@@ -260,7 +260,6 @@ struct ttfinfo {
 
     struct ttf_table *tabs;
     FPST *possub;
-    ASM *sm;
     MacFeat *features;
     char *chosenname;
     int macstyle;

@@ -1671,8 +1671,6 @@ CIDFlatten (SplineFont *cidmaster, SplineChar **glyphs, int charcnt)
   new->texdata = cidmaster->texdata;
   new->possub = cidmaster->possub;
   cidmaster->possub = NULL;
-  new->sm = cidmaster->sm;
-  cidmaster->sm = NULL;
   new->features = cidmaster->features;
   cidmaster->features = NULL;
   new->macstyle = cidmaster->macstyle;

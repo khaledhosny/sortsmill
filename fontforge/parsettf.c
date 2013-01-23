@@ -6105,7 +6105,6 @@ static SplineFont *SFFillFromTTF(struct ttfinfo *info) {
     sf->kerns = info->khead;
     sf->vkerns = info->vkhead;
     sf->possub = info->possub;
-    sf->sm = info->sm;
     sf->features = info->features;
     sf->gpos_lookups = info->gpos_lookups;
     sf->gsub_lookups = info->gsub_lookups;
