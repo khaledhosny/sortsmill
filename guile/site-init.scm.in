@@ -78,7 +78,7 @@
     ;;
     (let ((py-init "@pkgpythondatadir@/site_init.py"))
       (if (file-exists? py-init)
-          (pyrun-file-name py-init))))
+          (pyexec-file-name py-init))))
 
    ) ;; end of thunk.
  )   ;; end of fontforge-call-with-error-handling.

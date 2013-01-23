@@ -39,7 +39,7 @@ cdef class pyguile (object):
   """A opaque representation of Guile objects."""
 
   # These addresses should be kept in uintptr_t format rather than as
-  # a Python long, so the Boehm GC can recognize them
+  # a Python long, so the Boehm GC can recognize them.
   cdef public uintptr_t address      # The Guile ‘object-address’.
   cdef uintptr_t stringifier_address # A function __str__ calls to
                                      # ‘stringify’ the object.
@@ -85,7 +85,7 @@ cdef public object __pyguile_check (object obj):
 cdef public object __exec_python (object python_code):
   retval = None
   try:
-    exec (python_code)
+    exec python_code in globals (), {}
   except (object, BaseException, Exception) as exc:
     retval = (exc, sys.exc_info ())
   return retval
@@ -93,7 +93,7 @@ cdef public object __exec_python (object python_code):
 cdef public object __exec_python_file_name (object file_name):
   retval = None
   try:
-    execfile (file_name)
+    execfile (file_name, globals (), {})
   except (object, BaseException, Exception) as exc:
     retval = (exc, sys.exc_info ())
   return retval
