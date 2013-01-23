@@ -1024,9 +1024,6 @@ return( 0 );			/* Not version 1 of true type, nor Open Type */
 	  case CHR('B','A','S','E'):
 	    info->base_start = offset;
 	  break;
-	  case CHR('b','s','l','n'):
-	    info->bsln_start = offset;
-	  break;
 	  case CHR('C','F','F',' '):
 	    info->cff_start = offset;
 	    info->cff_length = length;
@@ -1123,30 +1120,6 @@ return( 0 );			/* Not version 1 of true type, nor Open Type */
 	    info->math_length = length;
 	  break;
 	      /* Apple stuff */
-#if 0
-	  case CHR('a','c','n','t'):
-	    info->acnt_start = offset;
-	  break;
-#endif
-	  case CHR('f','e','a','t'):
-	    info->feat_start = offset;
-	  break;
-	  case CHR('l','c','a','r'):
-	    info->lcar_start = offset;
-	  break;
-	  case CHR('m','o','r','t'):
-	    info->mort_start = offset;
-	  break;
-	  case CHR('m','o','r','x'):
-	    info->morx_start = offset;
-	  break;
-	  case CHR('o','p','b','d'):
-	    info->opbd_start = offset;
-	  break;
-	  case CHR('p','r','o','p'):
-	    info->prop_start = offset;
-	  break;
-	      /* to make sense of instrs */
 	  case CHR('c','v','t',' '):
 	    info->cvt_start = offset;
 	    info->cvt_len = length;
@@ -1223,10 +1196,6 @@ return( 0 );			/* Not version 1 of true type, nor Open Type */
 	LogError( _("This font contains multiple glyph descriptions\n  only one will be used.\n"));
     if ( info->gpos_start!=0 && info->kern_start!=0 )
 	LogError( _("This font contains both a 'kern' table and a 'GPOS' table.\n  The 'kern' table will only be read if there is no 'kern' feature in 'GPOS'.\n"));
-    if ( (info->mort_start!=0 || info->morx_start!=0) && info->gsub_start!=0 )
-	LogError( _("This font contains both a 'mor[tx]' table and a 'GSUB' table.\n  FF will only read feature/settings in 'morx' which do not match features\n  found in 'GSUB'.\n"));
-    if ( info->base_start!=0 && info->bsln_start!=0 )
-	LogError( _("This font contains both a 'BASE' table and a 'bsln' table.\n  FontForge will only read one of them ('BASE').\n"));
 return( true );
 }
 
@@ -1711,8 +1680,6 @@ static void readttfcopyrights(FILE *ttf,struct ttfinfo *info) {
     int i, cnt, tableoff;
     int platform, specific, language, name, str_len, stroff;
 
-    if ( info->feat_start!=0 )
-	readmacfeaturemap(ttf,info);
     if ( info->copyright_start!=0 ) {
 	fseek(ttf,info->copyright_start,SEEK_SET);
 	/* format selector = */ getushort(ttf);
@@ -2297,8 +2264,6 @@ static void readttfglyphs(FILE *ttf,struct ttfinfo *info) {
 	    readttfgsubUsed(ttf,info);
 	if ( info->math_start!=0 )
 	    otf_read_math_used(ttf,info);
-	if ( info->morx_start!=0 || info->mort_start!=0 )
-	    readttfmort_glyphsused(ttf,info);
 	anyread = true;
 	while ( anyread ) {
 	    anyread = false;
@@ -5585,16 +5550,8 @@ return( 0 );
     readttfpostnames(ttf,info);		/* If no postscript table we'll guess at names */
     if ( info->gdef_start!=0 )		/* ligature caret positioning info */
 	readttfgdef(ttf,info);
-    else {
-	if ( info->prop_start!=0 )
-	    readttfprop(ttf,info);
-	if ( info->lcar_start!=0 )
-	    readttflcar(ttf,info);
-    }
     if ( info->base_start!=0 )
 	readttfbase(ttf,info);
-    else if ( info->bsln_start!=0 )
-	readttfbsln(ttf,info);
     if ( info->gasp_start!=0 )
 	readttfgasp(ttf,info);
     /* read the cvt table before reading variation data */
@@ -5618,12 +5575,8 @@ return( 0 );
     /*  contain any kerning info */
     if ( info->kern_start!=0 && !LookupListHasFeature(info->gpos_lookups,CHR('k','e','r','n')))
 	readttfkerns(ttf,info);
-    if ( info->opbd_start!=0 && !LookupListHasFeature(info->gpos_lookups,CHR('l','f','b','d')))
-	readttfopbd(ttf,info);
     if ( info->gsub_start!=0 )
 	readttfgpossub(ttf,info,false);
-    if ( info->morx_start!=0 || info->mort_start!=0 )
-	readttfmort(ttf,info);
     if ( info->jstf_start!=0 )
 	readttfjstf(ttf,info);
 

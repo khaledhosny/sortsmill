@@ -220,16 +220,6 @@ struct ttfinfo {
 		/* FFTM -- FontForge timestamps */
     uint32_t fftm_start;
 
-		/* Apple Advanced Typography Tables */
-    uint32_t prop_start;
-    uint32_t lcar_start;
-    uint32_t opbd_start;
-    uint32_t acnt_start;
-    uint32_t feat_start;
-    uint32_t mort_start;
-    uint32_t morx_start;
-    uint32_t bsln_start;
-
 		/* MATH Table */
     uint32_t math_start;
     uint32_t math_length;
@@ -883,14 +873,7 @@ extern void otf_read_math_used(FILE *ttf,struct ttfinfo *info);
 extern void GuessNamesFromMATH(FILE *ttf,struct ttfinfo *info);
 
     /* Parsing advanced typography */
-extern void readmacfeaturemap(FILE *ttf,struct ttfinfo *info);
 extern void readttfkerns(FILE *ttf,struct ttfinfo *info);
-extern void readttfmort(FILE *ttf,struct ttfinfo *info);
-extern void readttfmort_glyphsused(FILE *ttf,struct ttfinfo *info);
-extern void readttfopbd(FILE *ttf,struct ttfinfo *info);
-extern void readttflcar(FILE *ttf,struct ttfinfo *info);
-extern void readttfprop(FILE *ttf,struct ttfinfo *info);
-extern void readttfbsln(FILE *ttf,struct ttfinfo *info);
 extern void readttfgsubUsed(FILE *ttf,struct ttfinfo *info);
 extern void GuessNamesFromGSUB(FILE *ttf,struct ttfinfo *info);
 extern void readttfgpossub(FILE *ttf,struct ttfinfo *info,int gpos);
