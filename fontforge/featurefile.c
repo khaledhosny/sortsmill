@@ -1167,10 +1167,11 @@ return;
 			    else if ( ap->lig_index==li ) {
 				if ( li!=0 && !any )
 				    fprintf( out, "\n    ligComponent\n      " );
+				else
+				    fprintf (out, "\n      ");
 				dump_anchorpoint(out,ap);
 				fprintf( out, " mark @");
 				dump_ascii(out, ap->anchor->name );
-				putc( ' ',out );
 			        any = true;
 			    }
 			}
@@ -1180,6 +1181,7 @@ return;
 			    fprintf( out, "<anchor NULL>" );	/* In adobe's example no anchor class is given */
 			}
 		    }
+		    fprintf(out,";\n");
 		}
 	    }
 	}
