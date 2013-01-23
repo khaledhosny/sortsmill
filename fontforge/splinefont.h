@@ -451,10 +451,6 @@ enum otlookup_type
   gsub_contextchain = 0x006,
   /* GSUB extension 7 */
   gsub_reversecchain = 0x008,
-  /* mac state machines */
-  morx_indic = 0x0fd,
-  morx_context = 0x0fe,
-  morx_insert = 0x0ff,
   /* ********************* */
   gpos_start = 0x100,           /* Not a lookup type */
 
@@ -481,9 +477,6 @@ enum otlookup_typemasks
   gsub_context_mask = 0x00010,
   gsub_contextchain_mask = 0x00020,
   gsub_reversecchain_mask = 0x00040,
-  morx_indic_mask = 0x00080,
-  morx_context_mask = 0x00100,
-  morx_insert_mask = 0x00200,
   /* ********************* */
   gpos_single_mask = 0x00400,
   gpos_pair_mask = 0x00800,

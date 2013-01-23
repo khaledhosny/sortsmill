@@ -271,37 +271,6 @@ static int PSTHasTag(PST *pst, uint32_t tag);
 struct transition { uint16_t next_state, dontconsume, ismark, trans_ent; LigList *l; };
 struct trans_entries { uint16_t next_state, flags, act_index; LigList *l; };
 
-int Macable(SplineFont *sf, OTLookup *otl) {
-    int ft, fs;
-    FeatureScriptLangList *features;
-
-    switch ( otl->lookup_type ) {
-    /* These lookup types are mac only */
-      case kern_statemachine: case morx_indic: case morx_context: case morx_insert:
-return( true );
-    /* These lookup types or OpenType only */
-      case gsub_multiple: case gsub_alternate:
-      case gpos_single: case gpos_cursive: case gpos_mark2base:
-      case gpos_mark2ligature: case gpos_mark2mark:
-return( false );
-    /* These are OpenType only, but they might be convertable to a state */
-    /*  machine */
-      case gsub_context:
-      case gsub_contextchain: case gsub_reversecchain:
-      case gpos_context: case gpos_contextchain:
-	if ( sf==NULL )
-return( false );
-	/* Else fall through into the test on the feature tag */;
-    /* These two can be expressed in both, and might be either */
-      case gsub_single: case gsub_ligature: case gpos_pair:
-	for ( features = otl->features; features!=NULL; features = features->next ) {
-	    if ( features->ismac || OTTagToMacFeature(features->featuretag,&ft,&fs))
-return( true );
-	}
-    }
-return( false );
-}
-
 /* ************************************************************************** */
 /* *************************    The 'opbd' table    ************************* */
 /* ************************************************************************** */

@@ -3086,21 +3086,16 @@ static void OTLRemove(struct ttfinfo *info,OTLookup *otl,int gpos) {
     OTLookupFree(otl);
 }
 
-static OTLookup *NewMacLookup(struct ttfinfo *info,int gpos) {
+static OTLookup *NewMacLookup(struct ttfinfo *info) {
     OTLookup *otl;
 
     otl = (OTLookup *) xzalloc(sizeof (OTLookup));
-    otl->lookup_type = gpos ? kern_statemachine : morx_context;
+    otl->lookup_type = kern_statemachine;
     otl->subtables = (struct lookup_subtable *) xzalloc(sizeof (struct lookup_subtable));
     otl->subtables->lookup = otl;
     otl->features = (FeatureScriptLangList *) xzalloc(sizeof (FeatureScriptLangList));
-    if ( gpos ) {
-	otl->features->featuretag = CHR('k','e','r','n');
-    } else {
-	otl->features->featuretag = (info->mort_feat<<16) | (info->mort_setting);
-	otl->features->ismac = true;
-    }
-    OTLAppend(info,otl,gpos);
+    otl->features->featuretag = CHR('k','e','r','n');
+    OTLAppend(info,otl,true);
 return( otl );
 }
 
@@ -3200,7 +3195,7 @@ return;
 	}
 	otl = NULL;
 	if ( flags_good ) {
-	    otl = NewMacLookup(info,true);
+	    otl = NewMacLookup(info);
 	    otl->lookup_type = gpos_pair;
 	    if ( isv ) {
 		otl->features->featuretag = CHR('v','k','r','n');

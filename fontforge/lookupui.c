@@ -141,10 +141,6 @@ static GTextInfo gsub_lookuptypes[] = {
     { (uint32_t *) NC_("Lookup Type", "Contextual Substitution"), NULL, 0, 0, (void *) gsub_context, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) NC_("Lookup Type", "Contextual Chaining Substitution"), NULL, 0, 0, (void *) gsub_contextchain, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) NC_("Lookup Type", "Reverse Chaining Substitution"), NULL, 0, 0, (void *) gsub_reversecchain, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-	GTEXTINFO_LINE,
-    { (uint32_t *) NC_("Lookup Type", "Mac Indic State Machine"), NULL, 0, 0, (void *) morx_indic, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (uint32_t *) NC_("Lookup Type", "Mac Contextual State Machine"), NULL, 0, 0, (void *) morx_context, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-    { (uint32_t *) NC_("Lookup Type", "Mac Insertion State Machine"), NULL, 0, 0, (void *) morx_insert, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo gpos_lookuptypes[] = {
@@ -1469,8 +1465,6 @@ static int MaskFromLookupType(int lookup_type ) {
 return( 1<<(lookup_type-1));
       case gsub_reversecchain:
 return( gsub_reversecchain_mask );
-      case morx_indic: case morx_context: case morx_insert:
-return( morx_indic_mask<<(lookup_type-morx_indic) );
       case gpos_single: case gpos_pair: case gpos_cursive:
       case gpos_mark2base: case gpos_mark2ligature: case gpos_mark2mark:
       case gpos_context: case gpos_contextchain:

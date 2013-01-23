@@ -9346,18 +9346,7 @@ LookupPopup (GWindow gw, OTLookup * otl, struct lookup_subtable *sub,
   struct scriptlanglist *sl;
   int l;
 
-  if ((otl->lookup_type & 0xff) >= 0xf0)
-    {
-      if (otl->lookup_type == kern_statemachine)
-        lookuptype = _("Kerning State Machine");
-      else if (otl->lookup_type == morx_indic)
-        lookuptype = _("Indic State Machine");
-      else if (otl->lookup_type == morx_context)
-        lookuptype = _("Contextual State Machine");
-      else
-        lookuptype = _("Contextual State Machine");
-    }
-  else if ((otl->lookup_type >> 8) < 2 && (otl->lookup_type & 0xff) < 10)
+  if ((otl->lookup_type >> 8) < 2 && (otl->lookup_type & 0xff) < 10)
     lookuptype =
       _(lookup_type_names[otl->lookup_type >> 8][otl->lookup_type & 0xff]);
   else
@@ -10112,15 +10101,6 @@ LookupMenu (struct gfi_data *gfi, struct lkdata *lk, int isgpos,
         case CID_SaveLookup:
           lookuppopupmenu[i].ti.disabled = sel.lookup_cnt != 1
             || sel.sub_cnt != 0;
-          for (j = 0; j < lk->cnt; ++j)
-            if (lk->all[j].selected)
-              {
-                int type = lk->all[j].lookup->lookup_type;
-                if (type == kern_statemachine || type == morx_indic ||
-                    type == morx_context || type == morx_insert)
-                  lookuppopupmenu[i].ti.disabled = true;
-                break;
-              }
           break;
         case CID_AddDFLT:
           lookuppopupmenu[i].ti.disabled = lk->cnt == 0;

@@ -251,13 +251,6 @@ struct ttfinfo {
 
     OTLookup *gpos_lookups, *gsub_lookups, *cur_lookups;
 
-    OTLookup *mort_subs_lookup, *mort_pos_lookup2;
-    int mort_r2l, mort_tag_mac, mort_feat, mort_setting, mort_is_nested;
-    uint16_t *morx_classes;
-    uint16_t *bsln_values;
-
-    int mort_max;
-
     struct ttf_table *tabs;
     FPST *possub;
     MacFeat *features;
@@ -282,7 +275,6 @@ struct ttfinfo {
     int mark_set_cnt;
     char **mark_sets;			/* glyph name list */
     char **mark_set_names;		/* used within ff (utf8) */
-    uint8_t warned_morx_out_of_bounds_glyph;
     int badgid_cnt, badgid_max;		/* Used when parsing apple morx tables*/
     SplineChar **badgids;		/* which use out of range glyph IDs as temporary flags */
 #ifdef HAVE_LONG_LONG_INT
@@ -797,7 +789,6 @@ VISIBLE extern int gdefclass(SplineChar *sc);
 extern void ttf_dumpkerns(struct alltabs *at, SplineFont *sf);
 extern int LookupHasDefault(OTLookup *otl);
 VISIBLE extern int scriptsHaveDefault(struct scriptlanglist *sl);
-extern int FPSTisMacable(SplineFont *sf, FPST *fpst);
 extern uint32_t MacFeatureToOTTag(int featureType,int featureSetting);
 VISIBLE extern int OTTagToMacFeature(uint32_t tag, int *featureType,int *featureSetting);
 VISIBLE extern uint16_t *props_array(SplineFont *sf,struct glyphinfo *gi);
@@ -828,7 +819,6 @@ extern int TTF__getcvtval(SplineFont *sf,int val);
 extern int TTF_getcvtval(SplineFont *sf,int val);
 extern void SCinitforinstrs(SplineChar *sc);
 extern int SSAddPoints(SplineSet *ss,int ptcnt,BasePoint *bp, char *flags);
-extern int Macable(SplineFont *sf, OTLookup *otl);
 
     /* Used by both otf and apple */
 extern int LigCaretCnt(SplineChar *sc);
