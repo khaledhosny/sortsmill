@@ -3199,7 +3199,6 @@ return;
 	    otl->lookup_type = gpos_pair;
 	    if ( isv ) {
 		otl->features->featuretag = CHR('v','k','r','n');
-		otl->features->ismac = false;
 	    }
 	    otl->subtables->per_glyph_pst_or_kern = true;
 	    otl->subtables->vertical_kerning = isv;

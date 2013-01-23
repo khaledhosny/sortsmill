@@ -524,10 +524,9 @@ PyFF_Glyph_Set_Layer (SplineChar *sc, int layer)
 
 #define BAD_TAG ((uint32_t)0xffffffff)
 static uint32_t
-StrToTag (char *tag_name, int *was_mac)
+StrToTag (char *tag_name)
 {
   uint8_t foo[4];
-  int feat, set;
 
   if (tag_name == NULL)
     {
@@ -536,21 +535,6 @@ StrToTag (char *tag_name, int *was_mac)
       return (BAD_TAG);
     }
 
-  if (was_mac != NULL && sscanf (tag_name, "<%d,%d>", &feat, &set) == 2)
-    {
-      if (feat < 0 || set < 0)
-        {
-          PyErr_Format (PyExc_ValueError,
-                        "OpenType tag feature or set number must not be negative: %s",
-                        tag_name);
-          return (BAD_TAG);
-        }
-      *was_mac = true;
-      return ((((uint32_t) feat) << 16) | set);
-    }
-
-  if (was_mac)
-    *was_mac = false;
   foo[0] = foo[1] = foo[2] = foo[3] = ' ';
   if (*tag_name != '\0')
     {
@@ -579,22 +563,16 @@ StrToTag (char *tag_name, int *was_mac)
 }
 
 static PyObject *
-TagToPythonString (uint32_t tag, int ismac)
+TagToPythonString (uint32_t tag)
 {
   char foo[30];
 
-  if (ismac)
-    {
-      sprintf (foo, "<%d,%d>", tag >> 16, tag & 0xffff);
-    }
-  else
-    {
-      foo[0] = tag >> 24;
-      foo[1] = tag >> 16;
-      foo[2] = tag >> 8;
-      foo[3] = tag;
-      foo[4] = '\0';
-    }
+  foo[0] = tag >> 24;
+  foo[1] = tag >> 16;
+  foo[2] = tag >> 8;
+  foo[3] = tag;
+  foo[4] = '\0';
+
   return (STRING_TO_PY (foo));
 }
 
@@ -8075,7 +8053,7 @@ PyFF_Glyph_get_script (PyFF_Glyph *self, void *UNUSED (closure))
 {
   uint32_t script = SCScriptFromUnicode (self->sc);
 
-  return (TagToPythonString (script, false));
+  return (TagToPythonString (script));
 }
 
 static PyObject *
@@ -14189,7 +14167,7 @@ PyFF_Font_get_baseline (PyFF_Font *self, void *UNUSED (closure),
   PyTuple_SetItem (ret, 0, tags);
   for (i = 0; i < base->baseline_cnt; ++i)
     PyTuple_SetItem (tags, i,
-                     TagToPythonString (base->baseline_tags[i], false));
+                     TagToPythonString (base->baseline_tags[i]));
 
   for (bs = base->scripts, cnt = 0; bs != NULL; bs = bs->next, ++cnt);
   scripts = PyTuple_New (cnt);
@@ -14198,7 +14176,7 @@ PyFF_Font_get_baseline (PyFF_Font *self, void *UNUSED (closure),
     {
       script = PyTuple_New (4);
       PyTuple_SetItem (scripts, i, script);
-      PyTuple_SetItem (script, 0, TagToPythonString (bs->script, false));
+      PyTuple_SetItem (script, 0, TagToPythonString (bs->script));
       if (base->baseline_cnt == 0)
         {
           Py_INCREF (Py_None);
@@ -14210,7 +14188,7 @@ PyFF_Font_get_baseline (PyFF_Font *self, void *UNUSED (closure),
         {
           PyTuple_SetItem (script, 1,
                            TagToPythonString (base->baseline_tags
-                                              [bs->def_baseline], false));
+                                              [bs->def_baseline]));
           poses = PyTuple_New (base->baseline_cnt);
           for (j = 0; j < base->baseline_cnt; ++j)
             PyTuple_SetItem (poses, j, PyInt_FromLong (bs->baseline_pos[j]));
@@ -14223,7 +14201,7 @@ PyFF_Font_get_baseline (PyFF_Font *self, void *UNUSED (closure),
         {
           lang = PyTuple_New (4);
           PyTuple_SetItem (langs, j, lang);
-          PyTuple_SetItem (lang, 0, TagToPythonString (bl->lang, false));
+          PyTuple_SetItem (lang, 0, TagToPythonString (bl->lang));
           PyTuple_SetItem (lang, 1, PyInt_FromLong (bl->descent));
           PyTuple_SetItem (lang, 2, PyInt_FromLong (bl->ascent));
           for (k = 0, feat = bl->features; feat != NULL;
@@ -14236,7 +14214,7 @@ PyFF_Font_get_baseline (PyFF_Font *self, void *UNUSED (closure),
               feature = PyTuple_New (3);
               PyTuple_SetItem (features, k, feature);
               PyTuple_SetItem (feature, 0,
-                               TagToPythonString (feat->lang, false));
+                               TagToPythonString (feat->lang));
               PyTuple_SetItem (feature, 1, PyInt_FromLong (feat->descent));
               PyTuple_SetItem (feature, 2, PyInt_FromLong (feat->ascent));
             }
@@ -14305,7 +14283,7 @@ PyFF_Font_set_baseline (PyFF_Font *self, PyObject *value,
           BaseFree (base);
           return (-1);
         }
-      base->baseline_tags[i] = StrToTag (PyBytes_AsString (str), NULL);
+      base->baseline_tags[i] = StrToTag (PyBytes_AsString (str));
       if (base->baseline_tags[i] == BAD_TAG)
         {
           BaseFree (base);
@@ -14338,7 +14316,7 @@ PyFF_Font_set_baseline (PyFF_Font *self, PyObject *value,
       else
         lastbs->next = bs;
       lastbs = bs;
-      bs->script = StrToTag (scripttag, NULL);
+      bs->script = StrToTag (scripttag);
       if (bs->script == BAD_TAG)
         {
           BaseFree (base);
@@ -14349,7 +14327,7 @@ PyFF_Font_set_baseline (PyFF_Font *self, PyObject *value,
       else if (basecnt != 0 && (def_baseln != NULL && offsets != NULL))
         {
           /* Also reasonable */ ;
-          uint32_t tag = StrToTag (def_baseln, NULL);
+          uint32_t tag = StrToTag (def_baseln);
           if (tag == BAD_TAG)
             {
               BaseFree (base);
@@ -14428,7 +14406,7 @@ PyFF_Font_set_baseline (PyFF_Font *self, PyObject *value,
           else
             lastln->next = ln;
           lastln = ln;
-          ln->lang = StrToTag (tag, NULL);
+          ln->lang = StrToTag (tag);
           if (ln->lang == BAD_TAG)
             {
               PyErr_Format (PyExc_TypeError,
@@ -14469,7 +14447,7 @@ PyFF_Font_set_baseline (PyFF_Font *self, PyObject *value,
               else
                 lastft->next = ft;
               lastln = ln;
-              ft->lang = StrToTag (tag, NULL);
+              ft->lang = StrToTag (tag);
               if (ft->lang == BAD_TAG)
                 {
                   BaseFree (base);
@@ -15974,7 +15952,7 @@ PyFFFont_GetTableData (PyFF_Font *self, PyObject *args)
     return (NULL);
   if (!PyArg_ParseTuple (args, "s", &table_name))
     return (NULL);
-  tag = StrToTag (table_name, NULL);
+  tag = StrToTag (table_name);
   if (tag == BAD_TAG)
     return (NULL);
 
@@ -16058,7 +16036,7 @@ PyFFFont_SetTableData (PyFF_Font *self, PyObject *args)
     return (NULL);
   if (!PyArg_ParseTuple (args, "sO", &table_name, &tuple))
     return (NULL);
-  tag = StrToTag (table_name, NULL);
+  tag = StrToTag (table_name);
   if (tag == BAD_TAG)
     return (NULL);
 
@@ -17547,7 +17525,6 @@ PyParseFeatureList (PyObject *tuple)
   FeatureScriptLangList *flhead = NULL, *fltail, *fl;
   struct scriptlanglist *sltail, *sl;
   int f, s, l, cnt;
-  int wasmac;
   PyObject *scripts, *langs;
 
   if (!PySequence_Check (tuple))
@@ -17584,14 +17561,13 @@ PyParseFeatureList (PyObject *tuple)
         }
       fl = (FeatureScriptLangList *) xzalloc (sizeof (FeatureScriptLangList));
       fl->featuretag =
-        StrToTag (PyBytes_AsString (PySequence_GetItem (subs, 0)), &wasmac);
+        StrToTag (PyBytes_AsString (PySequence_GetItem (subs, 0)));
       if (fl->featuretag == BAD_TAG)
         {
           free (fl);
           FeatureScriptLangListFree (flhead);
           return (BAD_FEATURE_LIST);
         }
-      fl->ismac = wasmac;
       if (flhead == NULL)
         flhead = fl;
       else
@@ -17642,8 +17618,7 @@ PyParseFeatureList (PyObject *tuple)
             (struct scriptlanglist *)
             xzalloc (sizeof (struct scriptlanglist));
           sl->script =
-            StrToTag (PyBytes_AsString (PySequence_GetItem (scriptsubs, 0)),
-                      NULL);
+            StrToTag (PyBytes_AsString (PySequence_GetItem (scriptsubs, 0)));
           if (sl->script == BAD_TAG)
             {
               free (sl);
@@ -17658,7 +17633,7 @@ PyParseFeatureList (PyObject *tuple)
           langs = PySequence_GetItem (scriptsubs, 1);
           if (STRING_CHECK (langs))
             {
-              uint32_t lang = StrToTag (PyBytes_AsString (langs), NULL);
+              uint32_t lang = StrToTag (PyBytes_AsString (langs));
               if (lang == BAD_TAG)
                 {
                   FeatureScriptLangListFree (flhead);
@@ -17689,7 +17664,7 @@ PyParseFeatureList (PyObject *tuple)
                 {
                   uint32_t lang =
                     StrToTag (PyBytes_AsString
-                              (PySequence_GetItem (langs, l)), NULL);
+                              (PySequence_GetItem (langs, l)));
                   if (lang == BAD_TAG)
                     {
                       FeatureScriptLangListFree (flhead);
@@ -18029,17 +18004,17 @@ PyFFFont_getLookupInfo (PyFF_Font *self, PyObject *args)
                              TagToPythonString (l <
                                                 MAX_LANG ? sl->
                                                 langs[l] : sl->morelangs[l -
-                                                                         MAX_LANG],
-                                                false));
+                                                                         MAX_LANG]
+                                                ));
           PyTuple_SetItem (sarray, scnt,
                            Py_BuildValue ("(OO)",
-                                          TagToPythonString (sl->script,
-                                                             false), larray));
+                                          TagToPythonString (sl->script
+                                                             ), larray));
         }
       PyTuple_SetItem (farray, fcnt,
                        Py_BuildValue ("(OO)",
-                                      TagToPythonString (fl->featuretag,
-                                                         fl->ismac), sarray));
+                                      TagToPythonString (fl->featuretag
+                                                         ), sarray));
     }
   return (Py_BuildValue ("(sOO)", type, flags_tuple, farray));
 }
@@ -19562,10 +19537,10 @@ PyFFFont_randomText (PyFF_Font *self, PyObject *args)
   fv = self->fv;
   if (!PyArg_ParseTuple (args, "s|s", &script, &lang))
     return (NULL);
-  stag = StrToTag (script, NULL);
+  stag = StrToTag (script);
   if (lang != NULL)
     {
-      ltag = StrToTag (lang, NULL);
+      ltag = StrToTag (lang);
       txt = RandomParaFromScriptLang (stag, ltag, fv->sf, NULL);
     }
   else

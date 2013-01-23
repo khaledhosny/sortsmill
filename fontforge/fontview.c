@@ -11405,14 +11405,6 @@ FVMakeChar (FontView *fv, int enc)
         {
           feat_sc->name = strconcat (base_sc->name, ".unknown");
         }
-      else if (fl->ismac)
-        {
-          /* mac feature/setting */
-          feat_sc->name = xmalloc (strlen (base_sc->name) + 14);
-          sprintf (feat_sc->name, "%s.m%d_%d", base_sc->name,
-                   (int) (fl->featuretag >> 16),
-                   (int) ((fl->featuretag) & 0xffff));
-        }
       else
         {
           /* OpenType feature tag */

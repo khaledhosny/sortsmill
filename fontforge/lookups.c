@@ -346,8 +346,6 @@ a GPOS, but he says the GPOS won't work without a GSUB.)
 	    if ( test->unused )
 	continue;
 	    for ( fl=test->features; fl!=NULL; fl=fl->next ) {
-		if ( fl->ismac )
-	    continue;
 		for ( sl=fl->scripts ; sl!=NULL; sl=sl->next ) {
 		    for ( i=0; i<cnt; ++i ) {
 			if ( sl->script==scripts[i] )
@@ -454,8 +452,6 @@ uint32_t *SFFeaturesInScriptLang(SplineFont *sf,int gpos,uint32_t script,uint32_
 	    if ( test->unused )
 	continue;
 	    for ( fl=test->features; fl!=NULL; fl=fl->next ) {
-		if ( fl->ismac && gpos!=-2 )
-	    continue;
 		if ( script==0xffffffff ) {
 		    for ( i=0; i<cnt; ++i ) {
 			if ( fl->featuretag==features[i] )
@@ -469,9 +465,7 @@ uint32_t *SFFeaturesInScriptLang(SplineFont *sf,int gpos,uint32_t script,uint32_
 		} else for ( sl=fl->scripts ; sl!=NULL; sl=sl->next ) {
 		    if ( sl->script==script ) {
 			int matched = false;
-			if ( fl->ismac && gpos==-2 )
-			    matched = true;
-			else for ( l=0; l<sl->lang_cnt; ++l ) {
+			for ( l=0; l<sl->lang_cnt; ++l ) {
 			    int testlang;
 			    if ( l<MAX_LANG )
 				testlang = sl->langs[l];
@@ -1425,21 +1419,10 @@ return;
 	friendlies[i].friendlyname = _(friendlies[i].friendlyname);
 }
 
-char *TagFullName(SplineFont *sf,uint32_t tag, int ismac, int onlyifknown) {
-    char ubuf[200], *end = ubuf+sizeof(ubuf), *setname;
+char *TagFullName(SplineFont *sf,uint32_t tag, int onlyifknown) {
+    char ubuf[200], *end = ubuf+sizeof(ubuf);
     int k;
 
-    if ( ismac==-1 )
-	/* Guess */
-	ismac = (tag>>24)<' ' || (tag>>24)>0x7e;
-
-    if ( ismac ) {
-	sprintf( ubuf, "<%d,%d> ", (int) (tag>>16),(int) (tag&0xffff) );
-	if ( (setname = PickNameFromMacName(FindMacSettingName(sf,tag>>16,tag&0xffff)))!=NULL ) {
-	    strcat( ubuf, setname );
-	    free( setname );
-	}
-    } else {
 	int stag = tag;
 	if ( tag==CHR('n','u','t','f') )	/* early name that was standardize later as... */
 	    stag = CHR('a','f','r','c');	/*  Stood for nut fractions. "nut" meaning "fits in an en" in old typography-speak => vertical fractions rather than diagonal ones */
@@ -1465,7 +1448,6 @@ return( NULL );
 	    else
 		ubuf[7]='\0';
 	}
-    }
 return( xstrdup_or_null( ubuf ));
 }
 
@@ -1485,7 +1467,7 @@ void NameOTLookup(OTLookup *otl,SplineFont *sf) {
 	    for ( fl=otl->features; fl!=NULL ; fl=fl->next ) {
 		/* look first for a feature attached to a default language */
 		if ( k==1 || DefaultLangTagInScriptList(fl->scripts,false)!=NULL ) {
-		    userfriendly = TagFullName(sf,fl->featuretag, fl->ismac, true);
+		    userfriendly = TagFullName(sf,fl->featuretag, true);
 		    if ( userfriendly!=NULL )
 	    break;
 		}
@@ -1500,7 +1482,7 @@ void NameOTLookup(OTLookup *otl,SplineFont *sf) {
 		lookuptype = _(lookup_type_names[otl->lookup_type>>8][otl->lookup_type&0xff]);
 	    else
 		lookuptype = C_("LookupType", "Unknown");
-	    for ( fl=otl->features; fl!=NULL && !fl->ismac; fl=fl->next );
+	    for ( fl=otl->features; fl!=NULL; fl=fl->next );
 	    if ( fl==NULL )
 		userfriendly = xstrdup_or_null(lookuptype);
 	    else {
@@ -3294,8 +3276,6 @@ return( 0 );
 	if ( flist[i]!=0 ) {
 	    for ( sl=fl->scripts; sl!=NULL; sl=sl->next ) {
 		if ( sl->script == script ) {
-		    if ( fl->ismac )	/* Language irrelevant on macs (scripts too, but we pretend they matter) */
-return( fl->featuretag );
 		    for ( l=0; l<sl->lang_cnt; ++l )
 			if ( (l<MAX_LANG && sl->langs[l]==lang) ||
 				(l>=MAX_LANG && sl->morelangs[l-MAX_LANG]==lang))

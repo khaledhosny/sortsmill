@@ -1195,19 +1195,13 @@ static FeatureScriptLangList *LK_ParseFL(struct matrix_data *strings, int rows )
     unsigned char foo[4];
     uint32_t *langs=NULL;
     int lmax=0, lcnt=0;
-    int feature, setting;
 
     fhead = flast = NULL;
     for ( i=0; i<rows; ++i ) {
 	fl = (FeatureScriptLangList *) xzalloc(sizeof (FeatureScriptLangList));
-	if ( sscanf(strings[2*i+0].u.md_str,"<%d,%d>", &feature, &setting )== 2 ) {
-	    fl->ismac = true;
-	    fl->featuretag = (feature<<16)|setting;
-	} else {
-	    memset(foo,' ',sizeof(foo));
-	    for ( j=0, pt = strings[2*i+0].u.md_str; j<4 && *pt; foo[j++] = *pt++ );
-	    fl->featuretag = (foo[0]<<24) | (foo[1]<<16) | (foo[2]<<8) | foo[3];
-	}
+	memset(foo,' ',sizeof(foo));
+	for ( j=0, pt = strings[2*i+0].u.md_str; j<4 && *pt; foo[j++] = *pt++ );
+	fl->featuretag = (foo[0]<<24) | (foo[1]<<16) | (foo[2]<<8) | foo[3];
 	if ( flast==NULL )
 	    fhead = fl;
 	else
@@ -1366,10 +1360,7 @@ static void LKMatrixInit(struct matrixinit *mi,OTLookup *otl) {
 	cnt = 0;
 	for ( fl=otl->features; fl!=NULL; fl=fl->next ) {
 	    if ( k ) {
-		if ( fl->ismac )
-		    sprintf( featbuf, "<%d,%d>", fl->featuretag>>16, fl->featuretag&0xffff );
-		else
-		    sprintf( featbuf, "%c%c%c%c", fl->featuretag>>24, fl->featuretag>>16,
+		sprintf( featbuf, "%c%c%c%c", fl->featuretag>>24, fl->featuretag>>16,
 			    fl->featuretag>>8, fl->featuretag );
 		md[2*cnt+0].u.md_str = xstrdup_or_null(featbuf);
 		bpos=0;

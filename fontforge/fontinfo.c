@@ -10016,7 +10016,7 @@ LookupMenu (struct gfi_data *gfi, struct lkdata *lk, int isgpos,
             GEvent *event)
 {
   struct selection_bits sel;
-  int i, j;
+  int i;
   static int initted = false;
 
   if (!initted)

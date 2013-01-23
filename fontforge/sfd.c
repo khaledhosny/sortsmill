@@ -2450,11 +2450,7 @@ SFD_Dump (FILE *sfd, SplineFont *sf, EncMap * map, EncMap * normal, int todir,
           fprintf (sfd, "} [");
           for (fl = otl->features; fl != NULL; fl = fl->next)
             {
-              if (fl->ismac)
-                fprintf (sfd, "<%d,%d> (", (int) (fl->featuretag >> 16),
-                         (int) (fl->featuretag & 0xffff));
-              else
-                fprintf (sfd, "'%c%c%c%c' (", (int) (fl->featuretag >> 24),
+              fprintf (sfd, "'%c%c%c%c' (", (int) (fl->featuretag >> 24),
                          (int) ((fl->featuretag >> 16) & 0xff),
                          (int) ((fl->featuretag >> 8) & 0xff),
                          (int) (fl->featuretag & 0xff));
@@ -7397,7 +7393,6 @@ SFDParseLookup (FILE *sfd, SplineFont *sf, OTLookup * otl)
             {
               int ft = 0, fs = 0;
               fscanf (sfd, "%d,%d>", &ft, &fs);
-              fl->ismac = true;
               fl->featuretag = (ft << 16) | fs;
             }
           else if (ch == '\'')

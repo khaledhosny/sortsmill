@@ -516,7 +516,6 @@ typedef struct featurescriptlanglist
   uint32_t featuretag;
   struct scriptlanglist *scripts;
   struct featurescriptlanglist *next;
-  bool ismac;                   /* treat the featuretag as a mac feature/setting */
 } FeatureScriptLangList;
 
 enum pst_flags
@@ -3751,7 +3750,7 @@ extern int RefDepth (RefChar *ref, int layer);
 
 extern SplineChar *SCHasSubs (SplineChar *sc, uint32_t tag);
 
-VISIBLE extern char *TagFullName (SplineFont *sf, uint32_t tag, int ismac,
+VISIBLE extern char *TagFullName (SplineFont *sf, uint32_t tag,
                                   int onlyifknown);
 
 VISIBLE extern uint32_t *SFScriptsInLookups (SplineFont *sf, int gpos);
