@@ -40,8 +40,9 @@ cdef class pyguile (object):
 
   # These addresses should be kept in uintptr_t format rather than as
   # a Python long, so the Boehm GC can recognize them
-  cdef public uintptr_t address
-  cdef uintptr_t stringifier_address
+  cdef public uintptr_t address      # The Guile ‘object-address’.
+  cdef uintptr_t stringifier_address # A function __str__ calls to
+                                     # ‘stringify’ the object.
 
   def __cinit__ (self):
     self.stringifier_address = <uintptr_t> NULL
