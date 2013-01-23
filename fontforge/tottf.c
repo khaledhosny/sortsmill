@@ -5382,17 +5382,7 @@ static void initATTables(struct alltabs *at, SplineFont *sf,
     }
     if ( at->dovariations )
 	ttf_dumpvariations(at,sf);
-    if ( at->applemode ) {
-	if ( !at->opentypemode )
-	    SFFindUnusedLookups(sf);
-	ttf_dumpkerns(at,sf);
-	aat_dumplcar(at,sf);
-	aat_dumpmorx(at,sf);		/* Sets the feat table too */
-	aat_dumpopbd(at,sf);
-	aat_dumpprop(at,sf);
-	aat_dumpbsln(at,sf);
-    }
-    if ( !at->applemode && (!at->opentypemode || (at->gi.flags&ttf_flag_oldkern)) )
+    if (!at->opentypemode || (at->gi.flags&ttf_flag_oldkern))
 	ttf_dumpkerns(at,sf);		/* everybody supports a mimimal kern table */
 
     dumpnames(at,sf,format);		/* Must be after dumpmorx which may create extra names */

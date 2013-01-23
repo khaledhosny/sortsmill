@@ -805,14 +805,7 @@ extern void otf_dumpjstf(struct alltabs *at, SplineFont *sf);
 extern void otf_dump_dummydsig(struct alltabs *at, SplineFont *sf);
 VISIBLE extern int gdefclass(SplineChar *sc);
 
-    /* Apple Advanced Typography Tables */
-extern void aat_dumpacnt(struct alltabs *at, SplineFont *sf);
 extern void ttf_dumpkerns(struct alltabs *at, SplineFont *sf);
-extern void aat_dumplcar(struct alltabs *at, SplineFont *sf);
-extern void aat_dumpmorx(struct alltabs *at, SplineFont *sf);
-extern void aat_dumpopbd(struct alltabs *at, SplineFont *sf);
-extern void aat_dumpprop(struct alltabs *at, SplineFont *sf);
-extern void aat_dumpbsln(struct alltabs *at, SplineFont *sf);
 extern int LookupHasDefault(OTLookup *otl);
 VISIBLE extern int scriptsHaveDefault(struct scriptlanglist *sl);
 extern int FPSTisMacable(SplineFont *sf, FPST *fpst);
