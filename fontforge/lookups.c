@@ -111,7 +111,7 @@ VISIBLE struct opentype_feature_friendlynames friendlies[] = {
     { CHR('j','p','7','8'),	"jp78", N_("JIS78 Forms"),		gsub_single_mask|gsub_alternate_mask },
     { CHR('j','p','8','3'),	"jp83", N_("JIS83 Forms"),		gsub_single_mask },
     { CHR('j','p','9','0'),	"jp90", N_("JIS90 Forms"),		gsub_single_mask },
-    { CHR('k','e','r','n'),	"kern", N_("Horizontal Kerning"),	gpos_pair_mask|gpos_context_mask|gpos_contextchain_mask|kern_statemachine_mask },
+    { CHR('k','e','r','n'),	"kern", N_("Horizontal Kerning"),	gpos_pair_mask|gpos_context_mask|gpos_contextchain_mask },
     { CHR('l','f','b','d'),	"lfbd", N_("Left Bounds"),		gpos_single_mask },
     { CHR('l','i','g','a'),	"liga", N_("Standard Ligatures"),	gsub_ligature_mask },
     { CHR('l','j','m','o'),	"ljmo", N_("Leading Jamo Forms"),	gsub_ligature_mask },
@@ -190,7 +190,7 @@ VISIBLE struct opentype_feature_friendlynames friendlies[] = {
     { CHR('v','h','a','l'),	"vhal", N_("Alternate Vertical Half Metrics"),	gpos_single_mask },
     { CHR('v','j','m','o'),	"vjmo", N_("Vowel Jamo Forms"),		gsub_ligature_mask },
     { CHR('v','k','n','a'),	"vkna", N_("Vertical Kana Alternates"),	gsub_single_mask },
-    { CHR('v','k','r','n'),	"vkrn", N_("Vertical Kerning"),		gpos_pair_mask|gpos_context_mask|gpos_contextchain_mask|kern_statemachine_mask },
+    { CHR('v','k','r','n'),	"vkrn", N_("Vertical Kerning"),		gpos_pair_mask|gpos_context_mask|gpos_contextchain_mask },
     { CHR('v','p','a','l'),	"vpal", N_("Proportional Alternate Vertical Metrics"),	gpos_single_mask },
     { CHR('v','r','t','2'),	"vrt2", N_("Vertical Rotation & Alternates"),	gsub_single_mask },
     { CHR('z','e','r','o'),	"zero", N_("Slashed Zero"),		gsub_single_mask },
@@ -1476,9 +1476,7 @@ void NameOTLookup(OTLookup *otl,SplineFont *sf) {
 	break;
 	}
 	if ( userfriendly==NULL ) {
-	    if ( (otl->lookup_type&0xff)>= 0xf0 )
-		lookuptype = _("State Machine");
-	    else if ( (otl->lookup_type>>8)<2 && (otl->lookup_type&0xff)<10 )
+	    if ( (otl->lookup_type>>8)<2 && (otl->lookup_type&0xff)<10 )
 		lookuptype = _(lookup_type_names[otl->lookup_type>>8][otl->lookup_type&0xff]);
 	    else
 		lookuptype = C_("LookupType", "Unknown");
@@ -3237,7 +3235,6 @@ return( 0 );
 		newpos = ApplyContextual(sub,data,pos);
 	      break;
 	      default:
-		/* apple state machines */
 		newpos = 0;
 	      break;
 	    }

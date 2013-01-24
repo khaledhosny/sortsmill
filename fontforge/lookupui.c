@@ -153,8 +153,6 @@ static GTextInfo gpos_lookuptypes[] = {
     { (uint32_t *) NC_("Lookup Type", "Mark to Mark Position"), NULL, 0, 0, (void *) gpos_mark2mark, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) NC_("Lookup Type", "Contextual Position"), NULL, 0, 0, (void *) gpos_context, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     { (uint32_t *) NC_("Lookup Type", "Contextual Chaining Position"), NULL, 0, 0, (void *) gpos_contextchain, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
-	GTEXTINFO_LINE,
-    { (uint32_t *) NC_("Lookup Type", "Mac Kerning State Machine"), NULL, 0, 0, (void *) kern_statemachine, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
 static GTextInfo *lookuptypes[2] = { gsub_lookuptypes, gpos_lookuptypes };
@@ -1460,8 +1458,6 @@ return( gsub_reversecchain_mask );
       case gpos_mark2base: case gpos_mark2ligature: case gpos_mark2mark:
       case gpos_context: case gpos_contextchain:
 return( gpos_single_mask<<(lookup_type-gpos_single) );
-      case kern_statemachine:
-return( kern_statemachine_mask );
       default:
 return( 0 );
     }

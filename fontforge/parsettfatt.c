@@ -3086,19 +3086,6 @@ static void OTLRemove(struct ttfinfo *info,OTLookup *otl,int gpos) {
     OTLookupFree(otl);
 }
 
-static OTLookup *NewMacLookup(struct ttfinfo *info) {
-    OTLookup *otl;
-
-    otl = (OTLookup *) xzalloc(sizeof (OTLookup));
-    otl->lookup_type = kern_statemachine;
-    otl->subtables = (struct lookup_subtable *) xzalloc(sizeof (struct lookup_subtable));
-    otl->subtables->lookup = otl;
-    otl->features = (FeatureScriptLangList *) xzalloc(sizeof (FeatureScriptLangList));
-    otl->features->featuretag = CHR('k','e','r','n');
-    OTLAppend(info,otl,true);
-return( otl );
-}
-
 static void InfoNameOTLookup(OTLookup *otl,struct ttfinfo *info) {
     SplineFont sf;
 
@@ -3195,13 +3182,18 @@ return;
 	}
 	otl = NULL;
 	if ( flags_good ) {
-	    otl = NewMacLookup(info);
+	    otl = (OTLookup *) xzalloc(sizeof (OTLookup));
 	    otl->lookup_type = gpos_pair;
-	    if ( isv ) {
-		otl->features->featuretag = CHR('v','k','r','n');
-	    }
+	    otl->subtables = (struct lookup_subtable *) xzalloc(sizeof (struct lookup_subtable));
+	    otl->subtables->lookup = otl;
 	    otl->subtables->per_glyph_pst_or_kern = true;
 	    otl->subtables->vertical_kerning = isv;
+	    otl->features = (FeatureScriptLangList *) xzalloc(sizeof (FeatureScriptLangList));
+	    if (isv)
+		otl->features->featuretag = CHR('v','k','r','n');
+	    else
+		otl->features->featuretag = CHR('k','e','r','n');
+	    OTLAppend(info,otl,true);
 	}
 	if ( flags_good && format==0 ) {
 	    /* format 0, horizontal kerning data (as pairs) not perpendicular */

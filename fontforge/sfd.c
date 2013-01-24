@@ -2419,7 +2419,7 @@ SFD_Dump (FILE *sfd, SplineFont *sf, EncMap * map, EncMap * normal, int todir,
   if (sf->macstyle != -1)
     fprintf (sfd, "MacStyle: %d\n", sf->macstyle);
   /* Must come before any kerning classes, anchor classes, conditional psts */
-  /* state machines, psts, kerning pairs, etc. */
+  /* psts, kerning pairs, etc. */
   for (isgpos = 0; isgpos < 2; ++isgpos)
     {
       for (otl = isgpos ? sf->gpos_lookups : sf->gsub_lookups; otl != NULL;

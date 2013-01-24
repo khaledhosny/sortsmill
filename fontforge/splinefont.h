@@ -463,7 +463,6 @@ enum otlookup_type
   gpos_context = 0x107,
   gpos_contextchain = 0x108,
   /* GPOS extension 9 */
-  kern_statemachine = 0x1ff
     /* otlookup&0xff == lookup type for the appropriate table */
     /* otlookup>>8:     0=>GSUB, 1=>GPOS */
 };
@@ -486,7 +485,6 @@ enum otlookup_typemasks
   gpos_mark2mark_mask = 0x08000,
   gpos_context_mask = 0x10000,
   gpos_contextchain_mask = 0x20000,
-  kern_statemachine_mask = 0x40000
 };
 
 #define MAX_LANG 		4       /* If more than this we allocate more_langs in chunks of MAX_LANG */

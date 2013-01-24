@@ -17453,7 +17453,6 @@ static struct flaglist lookup_types[] = {
   {"gpos_mark2mark", gpos_mark2mark},
   {"gpos_context", gpos_context},
   {"gpos_contextchain", gpos_contextchain},
-  {"kern_statemachine", kern_statemachine},
   FLAGLIST_EMPTY                /* Sentinel */
 };
 
