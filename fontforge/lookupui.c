@@ -155,7 +155,7 @@ static GTextInfo gpos_lookuptypes[] = {
     { (uint32_t *) NC_("Lookup Type", "Contextual Chaining Position"), NULL, 0, 0, (void *) gpos_contextchain, NULL, 0, 0, 0, 0, 0, 0, 1, 0, 0, '\0'},
     GTEXTINFO_EMPTY
 };
-static GTextInfo *lookuptypes[2] = { gsub_lookuptypes, gpos_lookuptypes };
+static GTextInfo *lookuptypes[3] = { gsub_lookuptypes, gpos_lookuptypes, NULL};
 
     /* see also list in tottfgpos.c mapping code points to scripts */
     /* see also list in lookups.c for non-ui access to these data */
