@@ -789,8 +789,6 @@ VISIBLE extern int gdefclass(SplineChar *sc);
 extern void ttf_dumpkerns(struct alltabs *at, SplineFont *sf);
 extern int LookupHasDefault(OTLookup *otl);
 VISIBLE extern int scriptsHaveDefault(struct scriptlanglist *sl);
-extern uint32_t MacFeatureToOTTag(int featureType,int featureSetting);
-VISIBLE extern int OTTagToMacFeature(uint32_t tag, int *featureType,int *featureSetting);
 VISIBLE extern uint16_t *props_array(SplineFont *sf,struct glyphinfo *gi);
 VISIBLE extern int haslrbounds(SplineChar *sc, PST **left, PST **right);
 VISIBLE extern int16_t *PerGlyphDefBaseline(SplineFont *sf,int *def_baseline);
@@ -807,8 +805,6 @@ struct macsettingname {
     int mac_feature_setting;
     uint32_t otf_tag;
 };
-
-VISIBLE extern struct macsettingname macfeat_otftag[], *user_macfeat_otftag;
 
     /* TrueType instructions */
 VISIBLE extern struct ttf_table *SFFindTable(SplineFont *sf,uint32_t tag);

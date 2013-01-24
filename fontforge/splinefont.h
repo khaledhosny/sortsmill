@@ -3640,11 +3640,6 @@ extern int MacLangFromLocale (void);
 extern char *MacLanguageFromCode (int code);
 extern char *FindEnglishNameInMacName (struct macname *mn);
 VISIBLE extern char *PickNameFromMacName (struct macname *mn);
-extern MacFeat *FindMacFeature (SplineFont *sf, int feat,
-                                MacFeat **secondary);
-extern struct macsetting *FindMacSetting (SplineFont *sf, int feat, int set,
-                                          struct macsetting **secondary);
-extern struct macname *FindMacSettingName (SplineFont *sf, int feat, int set);
 
 VISIBLE extern int32_t UniFromEnc (int enc, Encoding *encname);
 VISIBLE extern int32_t EncFromUni (int32_t uni, Encoding *encname);

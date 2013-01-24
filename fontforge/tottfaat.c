@@ -521,40 +521,6 @@ void FigureBaseOffsets(SplineFont *sf,int def_bsln,int offsets[32]) {
 /* *************************    utility routines    ************************* */
 /* ************************************************************************** */
 
-uint32_t MacFeatureToOTTag(int featureType,int featureSetting) {
-    int i;
-    struct macsettingname *msn = user_macfeat_otftag ? user_macfeat_otftag : macfeat_otftag;
-
-    for ( i=0; msn[i].otf_tag!=0; ++i )
-	if ( msn[i].mac_feature_type == featureType &&
-		msn[i].mac_feature_setting == featureSetting )
-return( msn[i].otf_tag );
-
-return( 0 );
-}
-
-int OTTagToMacFeature(uint32_t tag, int *featureType,int *featureSetting) {
-    int i;
-    struct macsettingname *msn = user_macfeat_otftag ? user_macfeat_otftag : macfeat_otftag;
-
-    for ( i=0; msn[i].otf_tag!=0; ++i )
-	if ( msn[i].otf_tag == tag ) {
-	    *featureType = msn[i].mac_feature_type;
-	    *featureSetting = msn[i].mac_feature_setting;
-return( true );
-	}
-    *featureType = (tag >> 16);
-    *featureSetting = (tag & 0xFFFF);
-	/* Ranges taken from Apple Font Registry. An OT tag without a 
-    corresponding mac feature should fail this test.*/
-    if (*featureType >= 0 && *featureType < 105 && *featureSetting < 16)
-        return ( true );
-
-    *featureType = 0;
-    *featureSetting = 0;
-return( false );
-}
-
 static int PSTHasTag(PST *pst, uint32_t tag) {
     FeatureScriptLangList *fl;
 
