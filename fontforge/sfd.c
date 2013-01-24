@@ -7321,25 +7321,28 @@ SFDParseLookup (FILE *sfd, SplineFont *sf, OTLookup * otl)
           while ((ch = nlgetc (sfd)) == ' ');
           if (ch == ']')
             break;
-          fl =
-            (FeatureScriptLangList *)
-            xzalloc (sizeof (FeatureScriptLangList));
+
+          if (ch == '<')
+            {
+              int ft = 0, fs = 0;
+              fscanf (sfd, "%d,%d>", &ft, &fs);
+              LogError (_("AAT-style feature tags are no longer supported: \"<%d,%d>\" tag ignored"), ft, fs);
+              break;
+            }
+
+          fl = (FeatureScriptLangList *) xzalloc (sizeof (FeatureScriptLangList));
           if (lastfl == NULL)
             otl->features = fl;
           else
             lastfl->next = fl;
           lastfl = fl;
-          if (ch == '<')
-            {
-              int ft = 0, fs = 0;
-              fscanf (sfd, "%d,%d>", &ft, &fs);
-              fl->featuretag = (ft << 16) | fs;
-            }
-          else if (ch == '\'')
+
+          if (ch == '\'')
             {
               ungetc (ch, sfd);
               fl->featuretag = gettag (sfd);
             }
+
           while ((ch = nlgetc (sfd)) == ' ');
           if (ch == '(')
             {
@@ -8588,7 +8591,7 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
                || strcasecmp (tok, "MacInsert:") == 0
 			   || strcasecmp (tok, "MacFeat:") == 0)
         {
-			LogError ("AAT features are no longer supported, \"%s\" ignored", tok);
+          LogError (_("AAT features are no longer supported: \"%s\" ignored"), tok);
         }
       else if (strcasecmp (tok, "TeXData:") == 0)
         {
