@@ -787,12 +787,6 @@ extern void otf_dump_dummydsig(struct alltabs *at, SplineFont *sf);
 VISIBLE extern int gdefclass(SplineChar *sc);
 
 extern void ttf_dumpkerns(struct alltabs *at, SplineFont *sf);
-extern int LookupHasDefault(OTLookup *otl);
-VISIBLE extern int scriptsHaveDefault(struct scriptlanglist *sl);
-VISIBLE extern uint16_t *props_array(SplineFont *sf,struct glyphinfo *gi);
-VISIBLE extern int haslrbounds(SplineChar *sc, PST **left, PST **right);
-VISIBLE extern int16_t *PerGlyphDefBaseline(SplineFont *sf,int *def_baseline);
-VISIBLE extern void FigureBaseOffsets(SplineFont *sf,int def_bsln,int offsets[32]);
 
     /* Apple variation tables */
 extern int ContourPtNumMatch(MMSet *mm, int gid);
