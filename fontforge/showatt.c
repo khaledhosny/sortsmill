@@ -48,7 +48,6 @@ struct node {
     bool open;
     bool children_checked;
     bool used;
-    bool macfeat;
     bool monospace;
     bool horizontal;
     uint16_t cnt;

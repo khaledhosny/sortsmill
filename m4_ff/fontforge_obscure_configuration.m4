@@ -64,18 +64,6 @@ AC_DEFINE_UNQUOTED([FONTFORGE_CONFIG_WRITE_PFM],
          for this, but he provided a patch. Set this to 1 to
          enable his patch.])
 
-test x"${FONTFORGE_CONFIG_CVT_OLD_MAC_FEATURES}" = x && FONTFORGE_CONFIG_CVT_OLD_MAC_FEATURES=0
-AC_DEFINE_UNQUOTED([FONTFORGE_CONFIG_CVT_OLD_MAC_FEATURES],
-        [${FONTFORGE_CONFIG_CVT_OLD_MAC_FEATURES}],
-        [Prior to late Sept of 2003 FontForge converted certain Mac
-         feature/settings into opentype-like tags. Some features could
-         be converted directly but for a few I made up tags.  Now
-         FontForge is capable of using the Mac feature settings
-         directly. If you set this flag to 1, then, when FontForge loads in
-         an sfd file with these non-standard opentype tags, it will
-         convert them into the appropriate Mac feature/setting
-         combinations.])
-
 test x"${FONTFORGE_CONFIG_PS_REFS_GET_SUBRS}" = x && FONTFORGE_CONFIG_PS_REFS_GET_SUBRS=0
 AC_DEFINE_UNQUOTED([FONTFORGE_CONFIG_PS_REFS_GET_SUBRS],
         [${FONTFORGE_CONFIG_PS_REFS_GET_SUBRS}],

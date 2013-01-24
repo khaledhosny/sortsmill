@@ -253,7 +253,6 @@ struct ttfinfo {
 
     struct ttf_table *tabs;
     FPST *possub;
-    MacFeat *features;
     char *chosenname;
     int macstyle;
     int lookup_cnt;		/* Max lookup in current GPOS/GSUB table */

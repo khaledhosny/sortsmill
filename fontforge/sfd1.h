@@ -60,7 +60,6 @@ typedef struct kernclass1 {
 
 typedef struct generic_pst1 {
     PST pst;
-    uint8_t macfeature;		/* tag should be interpretted as <feature,setting> rather than 'abcd' */
     uint16_t flags;
     uint16_t script_lang_index;		/* 0xffff means none */
     uint32_t tag;

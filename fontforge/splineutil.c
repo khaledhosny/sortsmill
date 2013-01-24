@@ -7728,21 +7728,6 @@ MacSettingListFree (struct macsetting *ms)
 }
 
 void
-MacFeatListFree (MacFeat * mf)
-{
-  MacFeat *next;
-
-  while (mf != NULL)
-    {
-      next = mf->next;
-      MacNameListFree (mf->featname);
-      MacSettingListFree (mf->settings);
-      free (mf);
-      mf = next;
-    }
-}
-
-void
 OtfNameListFree (struct otfname *on)
 {
   struct otfname *on_next;
@@ -8070,7 +8055,6 @@ SplineFontFree (SplineFont *sf)
   free (sf->xuid);
   free (sf->cidregistry);
   free (sf->ordering);
-  MacFeatListFree (sf->features);
   /* We don't free the EncMap. That field is only a temporary pointer. Let the FontViewBase free it, that's where it really lives */
   SplinePointListsFree (sf->grid.splines);
   AnchorClassesFree (sf->anchor);

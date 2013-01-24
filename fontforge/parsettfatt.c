@@ -3090,7 +3090,6 @@ static void InfoNameOTLookup(OTLookup *otl,struct ttfinfo *info) {
     SplineFont sf;
 
     memset(&sf,0,sizeof(sf));
-    sf.features = info->features;
     NameOTLookup(otl,&sf);
 }
 

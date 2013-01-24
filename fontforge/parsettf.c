@@ -1334,66 +1334,6 @@ return( NULL );
 return( base );
 }
 
-static struct macname *AddMacName(FILE *ttf,
-	int strlen, int stroff,int spec,int language, struct macname *last) {
-    struct macname *new = (struct macname *) xzalloc(sizeof (struct macname));
-    long pos = ftell(ttf);
-    char *pt;
-    int i;
-
-    new->next = last;
-    new->enc = spec;
-    new->lang = language;
-    new->name = pt = xmalloc(strlen+1);
-
-    fseek(ttf,stroff,SEEK_SET);
-
-    for ( i=0; i<strlen; ++i )
-	*pt++ = getc(ttf);
-    *pt = '\0';
-
-    fseek(ttf,pos,SEEK_SET);
-return( new );
-}
-
-static void MacFeatureAdd(FILE *ttf, struct ttfinfo *info, int id,
-	int strlen, int stroff,int spec,int language) {
-    MacFeat *f;
-    struct macsetting *s;
-
-    for ( f=info->features; f!=NULL; f=f->next ) {
-	if ( f->strid==id ) {
-	    f->featname = AddMacName(ttf,strlen,stroff,spec,language,f->featname);
-return;
-	} else {
-	    for ( s=f->settings; s!=NULL; s=s->next ) {
-		if ( s->strid==id ) {
-		    s->setname = AddMacName(ttf,strlen,stroff,spec,language,s->setname);
-return;
-		}
-	    }
-	}
-    }
-    /* Well, there are some things in the name table other than feature/setting*/
-    /*  names. Let's keep track of everything just in case.... */
-    if ( info->fvar_start!=0 ) {
-	struct macidname *mi, *p;
-	for ( p=NULL, mi=info->macstrids; mi!=NULL && mi->id!=id; p = mi, mi=mi->next );
-	if ( mi==NULL ) {
-	    mi = (struct macidname *) xzalloc(sizeof (struct macidname));
-	    mi->id = id;
-	    mi->last = mi->head = AddMacName(ttf,strlen,stroff,spec,language,NULL);
-	    if ( p==NULL )
-		info->macstrids = mi;
-	    else
-		p->next = mi;
-	} else {
-	    mi->last->next = AddMacName(ttf,strlen,stroff,spec,language,NULL);
-	    mi->last = mi->last->next;
-	}
-    }
-}
-
 static void ValidatePostScriptFontName(struct ttfinfo *info, char *str) {
     char *end, *pt, *npt;
     int complained = false;
@@ -1499,10 +1439,7 @@ static void TTFAddLangStr(FILE *ttf, struct ttfinfo *info, int id,
     struct ttflangname *cur, *prev;
     char *str;
 
-    if ( plat==1 && id>=256 && (info->features!=NULL || info->fvar_start!=0)) {
-	MacFeatureAdd(ttf,info,id,strlen,stroff,spec,language);
-return;
-    } else if ( id<0 || id>=ttf_namemax )
+    if ( id<0 || id>=ttf_namemax )
 return;
 
     str = _readencstring(ttf,stroff,strlen,plat,spec,language);
@@ -1659,23 +1596,6 @@ struct otfname *FindAllLangEntries(FILE *ttf, struct ttfinfo *info, int id ) {
 return( head );
 }
 
-static struct macname *reversemacnames(struct macname *mn) {
-    struct macname *next, *prev=NULL;
-
-    if ( mn==NULL )
-return( NULL );
-
-    next = mn->next;
-    while ( next!=NULL ) {
-	mn->next = prev;
-	prev = mn;
-	mn = next;
-	next = mn->next;
-    }
-    mn->next = prev;
-return( mn );
-}
-
 static void readttfcopyrights(FILE *ttf,struct ttfinfo *info) {
     int i, cnt, tableoff;
     int platform, specific, language, name, str_len, stroff;
@@ -1739,16 +1659,6 @@ static void readttfcopyrights(FILE *ttf,struct ttfinfo *info) {
 	    info->fontname = stripspaces(xstrdup_or_null(info->familyname));
 	if ( info->fontname!=NULL )
 	    ValidatePostScriptFontName(info,info->fontname);
-    }
-
-    if ( info->features ) {
-	MacFeat *mf;
-	struct macsetting *ms;
-	for ( mf=info->features; mf!=NULL; mf = mf->next ) {
-	    mf->featname = reversemacnames(mf->featname);
-	    for ( ms=mf->settings; ms!=NULL; ms=ms->next )
-		ms->setname = reversemacnames(ms->setname);
-	}
     }
 }
 
@@ -6105,7 +6015,6 @@ static SplineFont *SFFillFromTTF(struct ttfinfo *info) {
     sf->kerns = info->khead;
     sf->vkerns = info->vkhead;
     sf->possub = info->possub;
-    sf->features = info->features;
     sf->gpos_lookups = info->gpos_lookups;
     sf->gsub_lookups = info->gsub_lookups;
 

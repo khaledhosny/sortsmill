@@ -951,17 +951,6 @@ struct macsetting
   bool initially_enabled;
 };
 
-typedef struct macfeat
-{
-  struct macfeat *next;
-  uint16_t feature;
-  uint8_t ismutex;
-  uint8_t default_setting;      /* Apple's docs say both that this is a byte and a short. It's a byte */
-  uint16_t strid;               /* Temporary value, used when reading in */
-  struct macname *featname;
-  struct macsetting *settings;
-} MacFeat;
-
 typedef struct refbdfc
 {
   bool checked;
@@ -2113,7 +2102,6 @@ typedef struct splinefont
   AnchorClass *anchor;
   KernClass *kerns, *vkerns;
   FPST *possub;
-  MacFeat *features;
   char *chosenname;             /* Set for files with multiple fonts in them */
   struct mmset *mm;             /* If part of a multiple master set */
   int16_t macstyle;
@@ -2695,7 +2683,6 @@ VISIBLE extern void FPSTFree (FPST *fpst);
 VISIBLE extern struct macname *MacNameCopy (struct macname *mn);
 VISIBLE extern void MacNameListFree (struct macname *mn);
 VISIBLE extern void MacSettingListFree (struct macsetting *ms);
-VISIBLE extern void MacFeatListFree (MacFeat *mf);
 VISIBLE extern void GlyphVariantsFree (struct glyphvariants *gv);
 VISIBLE extern struct glyphvariants *GlyphVariantsCopy (struct glyphvariants
                                                         *gv);
