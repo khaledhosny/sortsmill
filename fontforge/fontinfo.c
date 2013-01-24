@@ -2898,10 +2898,6 @@ static struct langstyle *stylelist[] =
     outlines, NULL
 };
 
-#define CID_Features	101     /* Mac stuff */
-#define CID_FeatureDel	103
-#define CID_FeatureEdit	105
-
 #define CID_Family	1002
 #define CID_Weight	1003
 #define CID_ItalicAngle	1004
@@ -3992,8 +3988,6 @@ GFI_CancelClose (struct gfi_data *d)
 {
   int isgpos, i, j;
 
-  MacFeatListFree (GGadgetGetUserData
-                   ((GWidgetGetControl (d->gw, CID_Features))));
   for (isgpos = 0; isgpos < 2; ++isgpos)
     {
       struct lkdata *lk = &d->tables[isgpos];
@@ -6760,9 +6754,6 @@ GFI_OK (GGadget *g, GEvent *e)
                 GDrawRequestExpose (cv->v, NULL, false);
               }
           }
-      MacFeatListFree (sf->features);
-      sf->features =
-        GGadgetGetUserData (GWidgetGetControl (d->gw, CID_Features));
       last_aspect = d->old_aspect;
 
       /* Class 0 is unused */
@@ -10680,16 +10671,16 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   GRect pos;
   GWindow gw;
   GWindowAttrs wattrs;
-  GTabInfo aspects[26], vaspects[6], lkaspects[3];
+  GTabInfo aspects[25], vaspects[6], lkaspects[3];
   GGadgetCreateData mgcd[10], ngcd[19], psgcd[30], tngcd[8],
     pgcd[12], vgcd[19], pangcd[23], comgcd[4], txgcd[23], floggcd[4],
-    mfgcd[8], mcgcd[8], szgcd[19], mkgcd[7], metgcd[29], vagcd[3], ssgcd[23],
+    mcgcd[8], szgcd[19], mkgcd[7], metgcd[29], vagcd[3], ssgcd[23],
     xugcd[8], dgcd[6], ugcd[6], gaspgcd[5], gaspgcd_def[2], lksubgcd[2][4],
     lkgcd[2], lkbuttonsgcd[15], cgcd[12], lgcd[20], msgcd[7], ssngcd[8],
     woffgcd[8], privategcd_def[4];
   GGadgetCreateData mb[2], mb2, nb[2], nb2, nb3, xub[2], psb[2], psb2[3],
     ppbox[4], vbox[4], metbox[2], ssbox[2], panbox[2], combox[2], mkbox[3],
-    txbox[5], ubox[3], dbox[2], flogbox[2], mcbox[3], mfbox[3], szbox[6],
+    txbox[5], ubox[3], dbox[2], flogbox[2], mcbox[3], szbox[6],
     tnboxes[4], gaspboxes[3], lkbox[7], cbox[6], lbox[8], msbox[3],
     ssboxes[4], woffbox[2];
   GGadgetCreateData *marray[7], *marray2[9], *narray[29], *narray2[7],
@@ -10697,14 +10688,14 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
     *pparray[6], *vradio[5], *varray[38], *metarray[46], *ssarray[58],
     *panarray[40], *comarray[3], *flogarray[3], *mkarray[6], *msarray[6],
     *txarray[5], *txarray2[30], *txarray3[6], *txarray4[6], *uarray[5],
-    *darray[10], *mcarray[13], *mcarray2[7], *mfarray[14], *szarray[7],
+    *darray[10], *mcarray[13], *mcarray2[7], *szarray[7],
     *szarray2[5], *szarray3[7], *szarray4[4], *tnvarray[4], *tnharray[6],
     *tnharray2[5], *gaspharray[6], *gaspvarray[3], *lkarray[2][7],
     *lkbuttonsarray[17], *lkharray[3], *charray1[4], *charray2[4],
     *charray3[4], *cvarray[9], *cvarray2[4], *larray[16], *larray2[25],
     *larray3[6], *larray4[5], *uharray[4], *ssvarray[4], *woffarray[16];
   GTextInfo mlabel[10], nlabel[18], pslabel[30], tnlabel[7], plabel[12],
-    vlabel[19], panlabel[22], comlabel[3], txlabel[23], mflabel[8],
+    vlabel[19], panlabel[22], comlabel[3], txlabel[23],
     mclabel[8], szlabel[17], mklabel[7], metlabel[28], sslabel[23],
     xulabel[8], dlabel[5], ulabel[3], gasplabel[5], lkbuttonslabel[14],
     clabel[11], floglabel[3], llabel[20], mslabel[7], ssnlabel[7],
@@ -14153,15 +14144,6 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   lkbox[5].gd.u.boxelements = lkharray;
   lkbox[5].creator = GHBoxCreate;
 
-
-/******************************************************************************/
-  memset (&mfgcd, 0, sizeof (mfgcd));
-  memset (&mflabel, '\0', sizeof (mflabel));
-  memset (mfbox, 0, sizeof (mfbox));
-
-  GCDFillMacFeat (mfgcd, mflabel, 250, sf->features, false, mfbox, mfarray);
-/******************************************************************************/
-
   memset (&dlabel, 0, sizeof (dlabel));
   memset (&dgcd, 0, sizeof (dgcd));
 
@@ -14400,10 +14382,6 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   aspects[i].text_is_1byte = true;
   aspects[i++].gcd = mcbox;
 
-  aspects[i].text = (uint32_t *) _("Mac Features");
-  aspects[i].text_is_1byte = true;
-  aspects[i++].gcd = mfbox;
-
   aspects[i].text = (uint32_t *) _("Dates");
   aspects[i].text_is_1byte = true;
   aspects[i++].gcd = dbox;
@@ -14580,9 +14558,6 @@ FontInfo (SplineFont *sf, int deflayer, int defaspect, int sync)
   GHVBoxSetExpandableRow (mcbox[0].ret, gb_expandglue);
   GHVBoxSetExpandableCol (mcbox[0].ret, 1);
   GHVBoxSetExpandableRow (mcbox[2].ret, gb_expandglue);
-
-  GHVBoxSetExpandableRow (mfbox[0].ret, 0);
-  GHVBoxSetExpandableRow (mfbox[2].ret, gb_expandglue);
 
   GHVBoxSetExpandableRow (dbox[0].ret, gb_expandglue);
   GHVBoxSetExpandableCol (dbox[0].ret, 1);
