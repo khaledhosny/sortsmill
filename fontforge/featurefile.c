@@ -1178,6 +1178,8 @@ return;
 			if ( !any && anymore ) {
 			    if ( li!=0 )
 				fprintf( out, "\n    ligComponent\n      " );
+			    else
+				fprintf (out, "\n      ");
 			    fprintf( out, "<anchor NULL>" );	/* In adobe's example no anchor class is given */
 			}
 		    }
