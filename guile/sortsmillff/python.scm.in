@@ -66,22 +66,29 @@
          pyguile->scm
          pyguile?
 
-         ;; Elements are converted by ‘scm->pyguile’ by default, but a
-         ;; different converter can be specified as an optional second
-         ;; argument.
+         ;; scm->pyobject is like scm->pyguile, but passes pyobjects
+         ;; unaltered. Other objects are converted to pyguile.
+         scm->pyobject
+
+         pair->pytuple
          list->pytuple
          list->pylist
+         alist->python-alist
+         python-alist->pydict
          alist->pydict
+         make-pytuple
+         make-pylist
+         make-pydict
 
-         ;; Elements are converted by ‘pointer->pyobject’ by default,
-         ;; but a different converter can be specified as an optional
-         ;; second argument.
          pytuple->list
          pylist->list
 
          pytuple?
          pylist?
 
+         pytuple-map
+         pylist-map
+         
          pyindexed-ref
          pyindexed-set!
 
@@ -112,7 +119,7 @@
          pylong->pointer
 
          string->pystring ;; Converts to a unicode object.
-         pystring->string ;; Converts from a unicode or UTF-8 bytes object.
+         pystring->string ;; Converts from a unicode or UTF-8-encoded bytes object.
          pyunicode?
          pybytes?
          pystring?
@@ -122,6 +129,10 @@
          py-name
          py-dict
 
+         procedure->pycallable
+         pycallable?
+
+         pyapply
          pyexec
          pyexec-file-name
          pyimport
@@ -151,29 +162,48 @@
 
  (define-wrapped-pointer-type pyobject
    pyobject?
-   private:pointer->pyobject pyobject->pointer
+   private:pointer->pyobject private:pyobject->pointer
    (lambda (obj port)
-     (format port "#<pyobject ~s 0x~x>"
-             (pystring->string (py-str obj))
-             (pointer-address (pyobject->pointer obj)))))
+     (let ([repr (pystring->string (py-repr obj))]
+           [str  (pystring->string (py-str obj))])
+       (if (string=? repr str)
+           (format port "#<pyobject repr:~a 0x~x>" repr
+                   (pointer-address (pyobject->pointer obj)))
+           (format port "#<pyobject repr:~a str:~s 0x~x>" repr str
+                   (pointer-address (pyobject->pointer obj)))))))
 
- (define pointer->pyobject
-   (lambda (p)
-     (private:pointer->pyobject (grab-pyobject-reference p))))
+ (define (pointer->pyobject p)
+   (private:pointer->pyobject (grab-pyobject-reference p)))
 
- (define borrowed-pointer->pyobject 
-   (lambda (p)
-     (private:pointer->pyobject (grab-borrowed-pyobject-reference p))))
+ (define (borrowed-pointer->pyobject p)
+   (private:pointer->pyobject (grab-borrowed-pyobject-reference p)))
+
+ (define (pyobject->pointer obj)
+   (unless (pyobject? obj)
+     (assertion-violation 'pyobject->pointer (_ "expected a Python object") obj))
+   (private:pyobject->pointer obj))
 
  (define procedure:pyobject?
    ;; Wrap the syntax transformer @var{pyobject?} in a
    ;; procedure, so C code can use it.
-   (lambda (x) (pyobject? x)))
+   (lambda (obj) (pyobject? obj)))
 
- (define procedure:pyobject->pointer
-   ;; Wrap the syntax transformer @var{pyobject->pointer} in a
-   ;; procedure, so C code can use it.
-   (lambda (x) (pyobject->pointer x)))
+ (define (pair->pytuple pair)
+   (list->pytuple (list (car pair) (cdr pair))))
+
+ (define (make-pytuple . elements)
+   (list->pytuple elements))
+
+ (define (make-pylist . elements)
+   (list->pylist elements))
+
+ (define (make-pydict . key-value-pairs)
+   (alist->pydict key-value-pairs))
+
+ ;; These could ‘easily’ be re-implemented in C if necessary for
+ ;; performance.
+ (define pytuple-map (compose list->pytuple map pytuple->list))
+ (define pylist-map (compose list->pylist map pylist->list))
 
  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -205,10 +235,9 @@
                   (let ((my-proc (fluid-ref #,my-fluid)))
                     (if my-proc my-proc
                         [let ((new-proc
-                               [pointer->procedure
-                                return-type
-                                (guile-python-pyx-func c-func)
-                                arg-types]))
+                               [pointer->procedure return-type
+                                                   (guile-python-pyx-func c-func)
+                                                   arg-types]))
                           (fluid-set! #,my-fluid new-proc)
                           new-proc] ))))))] )))
 
@@ -233,6 +262,8 @@
  (define-guile-python-pyx-procedure '* "__pyguile_check" '(*))
  (define-guile-python-pyx-procedure '* "__exec_python" '(*))
  (define-guile-python-pyx-procedure '* "__exec_python_file_name" '(*))
+ (define-guile-python-pyx-procedure '* "__c_py_wrap_function" '(*))
+  (define-guile-python-pyx-procedure '* "__apply_python_callable" '(* * *))
  (define-guile-python-pyx-procedure '* "__c_string_to_python_string" '(*))
  (define-guile-python-pyx-procedure '* "__python_string_to_c_string" '(*))
  (define-guile-python-pyx-procedure '* "__c_eval_python" '(*))
@@ -246,6 +277,7 @@
  (define-guile-python-pyx-procedure '* "__py_dict" '(*))
  (define-guile-python-pyx-procedure '* "__pyindexed_ref" '(*))
  (define-guile-python-pyx-procedure '* "__pyindexed_set" '(*))
+ (define-guile-python-pyx-procedure '* "__python_alist_to_pydict" '(*))
 
  (define-py-to-py-filter pyguile?-base __pyguile_check)
  (define-py-to-py-filter pyexec-base __exec_python)
@@ -258,9 +290,38 @@
  (define-py-to-py-filter py-dict __py_dict)
  (define-py-to-py-filter pyindexed-ref-core __pyindexed_ref)
  (define-py-to-py-filter pyindexed-set!-core __pyindexed_set)
+ (define-py-to-py-filter python-alist->pydict __python_alist_to_pydict)
+
+ (define (procedure->pycallable proc)
+   (let* ([wrapped-proc
+           (lambda (args)
+             (pyobject->pointer
+              (apply proc (pytuple->list (pointer->pyobject args)))))]
+          [func (procedure->pointer '* wrapped-proc '(*))])
+     (pointer->pyobject ((__c_py_wrap_function) func))))
+
+ (define pyapply
+   (case-lambda
+     [(func args) (pyapply func args (py-none))]
+     [(func args keyword-args)
+      (cond
+       [(not (pyobject? args)) (pyapply func (list->pytuple args) keyword-args)]
+       [(not (pyobject? keyword-args)) (pyapply func args
+                                                (alist->pydict keyword-args))]
+       [else
+        (unless (pycallable? func)
+          (assertion-failure 'pyapply (_ "expected a Python callable") func))
+        (pointer->pyobject ((__apply_python_callable)
+                            (pyobject->pointer func)
+                            (pyobject->pointer args) 
+                            (pyobject->pointer keyword-args)))] )] ))
 
  (define (scm->pyguile obj)
-   (cond [(pyguile? obj) obj]
+   (pointer->pyobject
+    ((__c_pyguile_make) (scm->pointer obj) pyguile-stringifier)))
+
+ (define (scm->pyobject obj)
+   (cond [(pyobject? obj) obj]
          [else (pointer->pyobject
                 ((__c_pyguile_make) (scm->pointer obj) pyguile-stringifier))]))
 
@@ -279,7 +340,7 @@
                                     (_ "expected a pyguile object")
                                     obj)]))
 
- (define (pyguile? obj)
+  (define (pyguile? obj)
    (if (pyobject? obj) (pyguile?-base obj) #f))
 
  (define (pyexec s)
@@ -349,6 +410,12 @@
 
  (define (current-pymodule)
    (pointer->pyobject ((__current_python_module))))
+
+ (define (alist->python-alist alist)
+   (list->pylist (map pair->pytuple alist)))
+
+ (define alist->pydict
+   (compose python-alist->pydict alist->python-alist))
 
  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

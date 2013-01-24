@@ -22,13 +22,18 @@
 cdef extern from 'config.h':
   pass
 
+from cpython.ref cimport PyObject
 from libc.stdint cimport uintptr_t
+from sortsmillff.cython.guile cimport SCM
 cimport sortsmillff.cython.xgc as xgc
+
+cdef extern PyObject *pyobject_to_PyObject_ptr (SCM obj)
 
 import sys
 import gmpy
 
 ctypedef object (*stringifier_t) (void *)
+ctypedef object (*tuple_func_t) (object)
 
 # ‘pyguile’ objects stay in this container until they are destroyed,
 # to help ensure that the Boehm GC does not collect them. FIXME: Is
@@ -102,6 +107,27 @@ cdef public object __c_eval_python (char *python_code):
   py_code = python_code
   return eval (py_code.decode ('UTF-8'))
 
+def __py_wrap_function (uintptr_t func_address):
+  def wrapped_func (*args):
+    cdef object args_tuple = tuple (args)
+    cdef void *func_pointer = <void *> func_address
+    cdef tuple_func_t tuple_func = <tuple_func_t> func_pointer
+    cdef object retval = tuple_func (args_tuple)
+    return retval
+  return wrapped_func
+
+cdef public object __c_py_wrap_function (void *func):
+  return __py_wrap_function (<uintptr_t> func)
+
+cdef public object __apply_python_callable (object func, object args, object keyword_args):
+  assert (func is not None)
+  assert (args is not None)
+  if keyword_args is None:
+    retval = func (*args)
+  else:
+    retval = func (*args, **keyword_args)
+  return retval
+
 cdef public char *__python_string_to_c_string (object s):
   py_s = s.encode ('UTF-8') if isinstance (s, unicode) else s
   cdef char *c_s = py_s
@@ -139,3 +165,6 @@ cdef public object __pyindexed_ref (object args):
 cdef public object __pyindexed_set (object args):
   (obj, i, v) = args
   obj[i] = v
+
+cdef public object __python_alist_to_pydict (object alist):
+  return { key: value for (key, value) in alist }

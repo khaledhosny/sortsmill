@@ -23,14 +23,15 @@ cdef extern from "stdbool.h":
 from libcpp cimport bool
 
 cimport sortsmillff.cython.const_pointers as constp
+from sortsmillff.cython.guile cimport SCM
 
-cdef extern from "libguile.h":
-  # FIXME: THIS ASSUMES SCM_DEBUG_TYPING_STRICTNESS == 1
-  # FIXME: Either provide support for the other levels, or
-  # FIXME: force this level more carefully.
-  cdef struct scm_unused_struct:
-    pass
-  ctypedef scm_unused_struct *SCM
+#cdef extern from "libguile.h":
+#  # FIXME: THIS ASSUMES SCM_DEBUG_TYPING_STRICTNESS == 1
+#  # FIXME: Either provide support for the other levels, or
+#  # FIXME: force this level more carefully.
+#  cdef struct scm_unused_struct:
+#    pass
+#  ctypedef scm_unused_struct *SCM
 
 cdef extern from "sortsmillff/usermenu.h":
   enum:
