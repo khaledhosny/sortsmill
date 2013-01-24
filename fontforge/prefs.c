@@ -138,8 +138,6 @@ extern int loaded_fonts_same_as_new;    /* in splineutil2.c */
 extern int use_second_indic_scripts;    /* in tottfgpos.c */
 extern char *helpdir;           /* in uiutil.c */
 static char *othersubrsfile = NULL;
-extern MacFeat *default_mac_feature_map,        /* from macenc.c */
- *user_mac_feature_map;
 extern int updateflex;          /* in charview.c */
 extern int default_autokern_dlg;        /* in lookupui.c */
 extern int allow_utf8_glyphnames;       /* in lookupui.c */
@@ -181,15 +179,6 @@ static char *gfc_bookmarks = NULL;
 
 static int pointless;
 
-    /* These first three must match the values in macenc.c */
-#define CID_Features	101
-#define CID_FeatureDel	103
-#define CID_FeatureEdit	105
-
-#define CID_Mapping	102
-#define CID_MappingDel	104
-#define CID_MappingEdit	106
-
 #define CID_ScriptMNameBase	200
 #define CID_ScriptMFileBase	(200+SCRIPT_MENU_MAX)
 #define CID_ScriptMBrowseBase	(200+2*SCRIPT_MENU_MAX)
@@ -197,51 +186,6 @@ static int pointless;
 #define CID_PrefsBase	1000
 #define CID_PrefsOffset	100
 #define CID_PrefsBrowseOffset	(CID_PrefsOffset/2)
-
-/* ************************************************************************** */
-/* *****************************    mac data    ***************************** */
-/* ************************************************************************** */
-
-extern struct macsettingname macfeat_otftag[], *user_macfeat_otftag;
-
-static void
-UserSettingsFree (void)
-{
-
-  free (user_macfeat_otftag);
-  user_macfeat_otftag = NULL;
-}
-
-static int
-UserSettingsDiffer (void)
-{
-  int i, j;
-
-  if (user_macfeat_otftag == NULL)
-    return (false);
-
-  for (i = 0; user_macfeat_otftag[i].otf_tag != 0; ++i)
-    ;
-  for (j = 0; macfeat_otftag[j].otf_tag != 0; ++j)
-    ;
-  if (i != j)
-    return (true);
-  for (i = 0; user_macfeat_otftag[i].otf_tag != 0; ++i)
-    {
-      for (j = 0; macfeat_otftag[j].otf_tag != 0; ++j)
-        {
-          if (macfeat_otftag[j].mac_feature_type ==
-              user_macfeat_otftag[i].mac_feature_type
-              && macfeat_otftag[j].mac_feature_setting ==
-              user_macfeat_otftag[i].mac_feature_setting
-              && macfeat_otftag[j].otf_tag == user_macfeat_otftag[i].otf_tag)
-            break;
-        }
-      if (macfeat_otftag[j].otf_tag == 0)
-        return (true);
-    }
-  return (false);
-}
 
 /**************************************************************************** */
 
@@ -1211,29 +1155,12 @@ PrefsUI_SetDefaults (void)
 }
 
 static void
-ParseMacMapping (char *pt, struct macsettingname *ms)
-{
-  char *end;
-
-  ms->mac_feature_type = strtol (pt, &end, 10);
-  if (*end == ',')
-    ++end;
-  ms->mac_feature_setting = strtol (end, &end, 10);
-  if (*end == ' ')
-    ++end;
-  ms->otf_tag =
-    ((end[0] & 0xff) << 24) | ((end[1] & 0xff) << 16) | ((end[2] & 0xff) << 8)
-    | (end[3] & 0xff);
-}
-
-static void
 PrefsUI_LoadPrefs (void)
 {
   char *prefs = getPfaEditPrefs ();
   FILE *p;
   char line[1100];
   int i, j, ri = 0, mn = 0, ms = 0, fn = 0, ff = 0, filt_max = 0;
-  int msp = 0, msc = 0;
   char *pt;
   struct prefs_list *pl;
 
@@ -1296,19 +1223,6 @@ PrefsUI_LoadPrefs (void)
                 {
                   if (ff < filt_max)
                     user_font_filters[ff++].filter = xstrdup_or_null (pt);
-                }
-              else if (strncmp (line, "MacMapCnt:", strlen ("MacSetCnt:")) ==
-                       0)
-                {
-                  sscanf (pt, "%d", &msc);
-                  msp = 0;
-                  user_macfeat_otftag =
-                    xcalloc (msc + 1, sizeof (struct macsettingname));
-                }
-              else if (strncmp (line, "MacMapping:", strlen ("MacMapping:"))
-                       == 0 && msp < msc)
-                {
-                  ParseMacMapping (pt, &user_macfeat_otftag[msp++]);
                 }
               continue;
             }
@@ -1461,21 +1375,6 @@ PrefsUI_SavePrefs (int not_if_script)
           fprintf (p, "FontFilter:\t%s\n", user_font_filters[i].filter);
         }
     }
-  if (user_macfeat_otftag != NULL && UserSettingsDiffer ())
-    {
-      for (i = 0; user_macfeat_otftag[i].otf_tag != 0; ++i);
-      fprintf (p, "MacMapCnt: %d\n", i);
-      for (i = 0; user_macfeat_otftag[i].otf_tag != 0; ++i)
-        {
-          fprintf (p, "MacMapping: %d,%d %c%c%c%c\n",
-                   user_macfeat_otftag[i].mac_feature_type,
-                   user_macfeat_otftag[i].mac_feature_setting,
-                   (int) (user_macfeat_otftag[i].otf_tag >> 24),
-                   (int) ((user_macfeat_otftag[i].otf_tag >> 16) & 0xff),
-                   (int) ((user_macfeat_otftag[i].otf_tag >> 8) & 0xff),
-                   (int) (user_macfeat_otftag[i].otf_tag & 0xff));
-        }
-    }
 
   fclose (p);
 }
@@ -1532,31 +1431,6 @@ Prefs_BrowseFile (GGadget *g, GEvent *e)
   return (true);
 }
 
-static GTextInfo *
-Pref_MappingList (int use_user)
-{
-  struct macsettingname *msn = use_user
-    && user_macfeat_otftag != NULL ? user_macfeat_otftag : macfeat_otftag;
-  GTextInfo *ti;
-  int i;
-  char buf[60];
-
-  for (i = 0; msn[i].otf_tag != 0; ++i);
-  ti = xcalloc (i + 1, sizeof (GTextInfo));
-
-  for (i = 0; msn[i].otf_tag != 0; ++i)
-    {
-      sprintf (buf, "%3d,%2d %c%c%c%c", msn[i].mac_feature_type,
-               msn[i].mac_feature_setting,
-               (int) ((msn[i].otf_tag >> 24) & 0x7f),
-               (int) ((msn[i].otf_tag >> 16) & 0x7f),
-               (int) ((msn[i].otf_tag >> 8) & 0x7f),
-               (int) (msn[i].otf_tag & 0x7f));
-      ti[i].text = x_u8_to_u32 (buf);
-    }
-  return (ti);
-}
-
 void
 GListAddStr (GGadget *list, uint32_t *str, void *ud)
 {
@@ -1598,376 +1472,6 @@ GListReplaceStr (GGadget *list, int index, uint32_t *str, void *ud)
   GGadgetSetList (list, replace, false);
 }
 
-struct setdata
-{
-  GWindow gw;
-  GGadget *list;
-  GGadget *flist;
-  GGadget *feature;
-  GGadget *set_code;
-  GGadget *otf;
-  GGadget *ok;
-  GGadget *cancel;
-  int index;
-  int done;
-  uint32_t *ret;
-};
-
-static int
-set_e_h (GWindow gw, GEvent *event)
-{
-  struct setdata *sd = GDrawGetUserData (gw);
-  int i;
-  int32_t len;
-  GTextInfo **ti;
-  const uint32_t *ret1;
-  uint32_t *end;
-  int on, feat, val1, val2;
-  uint32_t ubuf[4];
-  char buf[40];
-
-  if (event->type == et_close)
-    sd->done = true;
-  else if (event->type == et_char)
-    {
-      if (event->u.chr.keysym == GK_F1 || event->u.chr.keysym == GK_Help)
-        {
-          help ("prefs.html#Features");
-          return (true);
-        }
-      return (false);
-    }
-  else if (event->type == et_controlevent
-           && event->u.control.subtype == et_buttonactivate)
-    {
-      if (event->u.control.g == sd->cancel)
-        sd->done = true;
-      else if (event->u.control.g == sd->ok)
-        {
-          ret1 = _GGadgetGetTitle (sd->set_code);
-          on = u32_strtol (ret1, &end, 10);
-          if (*end != '\0')
-            {
-              ff_post_error (_("Bad Number"), _("Bad Number"));
-              return (true);
-            }
-          ret1 = _GGadgetGetTitle (sd->feature);
-          feat = u32_strtol (ret1, &end, 10);
-          if (*end != '\0' && *end != ' ')
-            {
-              ff_post_error (_("Bad Number"), _("Bad Number"));
-              return (true);
-            }
-          ti = GGadgetGetList (sd->list, &len);
-          for (i = 0; i < len; ++i)
-            if (i != sd->index)
-              {
-                val1 = u32_strtol (ti[i]->text, &end, 10);
-                val2 = u32_strtol (end + 1, NULL, 10);
-                if (val1 == feat && val2 == on)
-                  {
-                    static char *buts[3];
-                    buts[0] = _("_Yes");
-                    buts[1] = _("_No");
-                    buts[2] = NULL;
-                    if (gwwv_ask
-                        (_
-                         ("This feature, setting combination is already used"),
-                         (const char **) buts, 0, 1,
-                         _
-                         ("This feature, setting combination is already used\nDo you really wish to reuse it?"))
-                        == 1)
-                      return (true);
-                  }
-              }
-
-          ret1 = _GGadgetGetTitle (sd->otf);
-          if ((ubuf[0] = ret1[0]) == 0)
-            ubuf[0] = ubuf[1] = ubuf[2] = ubuf[3] = ' ';
-          else if ((ubuf[1] = ret1[1]) == 0)
-            ubuf[1] = ubuf[2] = ubuf[3] = ' ';
-          else if ((ubuf[2] = ret1[2]) == 0)
-            ubuf[2] = ubuf[3] = ' ';
-          else if ((ubuf[3] = ret1[3]) == 0)
-            ubuf[3] = ' ';
-          len = u32_strlen (ret1);
-          if (len < 2 || len > 4 || ubuf[0] >= 0x7f || ubuf[1] >= 0x7f
-              || ubuf[2] >= 0x7f || ubuf[3] >= 0x7f)
-            {
-              ff_post_error (_("Tag too long"),
-                             _
-                             ("Feature tags must be exactly 4 ASCII characters"));
-              return (true);
-            }
-          sprintf (buf, "%3d,%2d %c%c%c%c", feat, on, ubuf[0], ubuf[1],
-                   ubuf[2], ubuf[3]);
-          sd->done = true;
-          sd->ret = x_u8_to_u32 (buf);
-        }
-    }
-  return (true);
-}
-
-static uint32_t *
-AskSetting (struct macsettingname *temp, GGadget *list, int index,
-            GGadget *flist)
-{
-  GRect pos;
-  GWindow gw;
-  GWindowAttrs wattrs;
-  GGadgetCreateData gcd[17];
-  GTextInfo label[17];
-  struct setdata sd;
-  char buf[20];
-  uint32_t ubuf3[6];
-  int32_t len, i;
-  GTextInfo **ti;
-
-  memset (&sd, 0, sizeof (sd));
-  sd.list = list;
-  sd.flist = flist;
-  sd.index = index;
-
-  memset (&wattrs, 0, sizeof (wattrs));
-  wattrs.mask =
-    wam_events | wam_cursor | wam_utf8_wtitle | wam_undercursor | wam_restrict
-    | wam_isdlg;
-  wattrs.event_masks = ~(1 << et_charup);
-  wattrs.restrict_input_to_me = 1;
-  wattrs.is_dlg = 1;
-  wattrs.undercursor = 1;
-  wattrs.cursor = ct_pointer;
-  wattrs.utf8_window_title = _("Mapping");
-  pos.x = pos.y = 0;
-  pos.width = GGadgetScale (GDrawPointsToPixels (NULL, 240));
-  pos.height = GDrawPointsToPixels (NULL, 120);
-  gw = GDrawCreateTopWindow (NULL, &pos, set_e_h, &sd, &wattrs);
-  sd.gw = gw;
-
-  memset (gcd, 0, sizeof (gcd));
-  memset (label, 0, sizeof (label));
-
-  label[0].text = (uint32_t *) _("_Feature:");
-  label[0].text_is_1byte = true;
-  label[0].text_has_mnemonic = true;
-  gcd[0].gd.label = &label[0];
-  gcd[0].gd.pos.x = 5;
-  gcd[0].gd.pos.y = 5 + 4;
-  gcd[0].gd.flags = gg_enabled | gg_visible;
-  gcd[0].creator = GLabelCreate;
-
-  gcd[1].gd.pos.x = 50;
-  gcd[1].gd.pos.y = 5;
-  gcd[1].gd.pos.width = 170;
-  gcd[1].gd.flags = gg_enabled | gg_visible;
-  gcd[1].creator = GListButtonCreate;
-
-  label[2].text = (uint32_t *) _("Setting");
-  label[2].text_is_1byte = true;
-  gcd[2].gd.label = &label[2];
-  gcd[2].gd.pos.x = 5;
-  gcd[2].gd.pos.y = gcd[0].gd.pos.y + 26;
-  gcd[2].gd.flags = gg_enabled | gg_visible;
-  gcd[2].creator = GLabelCreate;
-
-  sprintf (buf, "%d", temp->mac_feature_setting);
-  label[3].text = (uint32_t *) buf;
-  label[3].text_is_1byte = true;
-  gcd[3].gd.label = &label[3];
-  gcd[3].gd.pos.x = gcd[1].gd.pos.x;
-  gcd[3].gd.pos.y = gcd[2].gd.pos.y - 4;
-  gcd[3].gd.pos.width = 50;
-  gcd[3].gd.flags = gg_enabled | gg_visible;
-  gcd[3].creator = GTextFieldCreate;
-
-  label[4].text = (uint32_t *) _("_Tag:");
-  label[4].text_is_1byte = true;
-  label[4].text_has_mnemonic = true;
-  gcd[4].gd.label = &label[4];
-  gcd[4].gd.pos.x = 5;
-  gcd[4].gd.pos.y = gcd[3].gd.pos.y + 26;
-  gcd[4].gd.flags = gg_enabled | gg_visible;
-  gcd[4].creator = GLabelCreate;
-
-  ubuf3[0] = temp->otf_tag >> 24;
-  ubuf3[1] = (temp->otf_tag >> 16) & 0xff;
-  ubuf3[2] = (temp->otf_tag >> 8) & 0xff;
-  ubuf3[3] = temp->otf_tag & 0xff;
-  ubuf3[4] = 0;
-  label[5].text = ubuf3;
-  gcd[5].gd.label = &label[5];
-  gcd[5].gd.pos.x = gcd[3].gd.pos.x;
-  gcd[5].gd.pos.y = gcd[4].gd.pos.y - 4;
-  gcd[5].gd.pos.width = 50;
-  gcd[5].gd.flags = gg_enabled | gg_visible;
-  /*gcd[5].gd.u.list = tags; */
-  gcd[5].creator = GTextFieldCreate;
-
-  gcd[6].gd.pos.x = 13 - 3;
-  gcd[6].gd.pos.y = gcd[5].gd.pos.y + 30;
-  gcd[6].gd.pos.width = -1;
-  gcd[6].gd.pos.height = 0;
-  gcd[6].gd.flags = gg_visible | gg_enabled | gg_but_default;
-  label[6].text = (uint32_t *) _("_OK");
-  label[6].text_is_1byte = true;
-  label[6].text_has_mnemonic = true;
-  gcd[6].gd.label = &label[6];
-  /*gcd[6].gd.handle_controlevent = Prefs_Ok; */
-  gcd[6].creator = GButtonCreate;
-
-  gcd[7].gd.pos.x = -13;
-  gcd[7].gd.pos.y = gcd[7 - 1].gd.pos.y + 3;
-  gcd[7].gd.pos.width = -1;
-  gcd[7].gd.pos.height = 0;
-  gcd[7].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
-  label[7].text = (uint32_t *) _("_Cancel");
-  label[7].text_is_1byte = true;
-  label[7].text_has_mnemonic = true;
-  gcd[7].gd.label = &label[7];
-  gcd[7].creator = GButtonCreate;
-
-  GGadgetsCreate (gw, gcd);
-  sd.feature = gcd[1].ret;
-  sd.set_code = gcd[3].ret;
-  sd.otf = gcd[5].ret;
-  sd.ok = gcd[6].ret;
-  sd.cancel = gcd[7].ret;
-
-  ti = GGadgetGetList (flist, &len);
-  GGadgetSetList (sd.feature, ti, true);
-  for (i = 0; i < len; ++i)
-    {
-      int val = u32_strtol (ti[i]->text, NULL, 10);
-      if (val == temp->mac_feature_type)
-        {
-          GGadgetSetTitle (sd.feature, ti[i]->text);
-          break;
-        }
-    }
-
-  GDrawSetVisible (gw, true);
-  GWidgetIndicateFocusGadget (gcd[1].ret);
-  while (!sd.done)
-    GDrawProcessOneEvent (NULL);
-  GDrawDestroyWindow (gw);
-
-  return (sd.ret);
-}
-
-static void
-ChangeSetting (GGadget *list, int index, GGadget *flist)
-{
-  struct macsettingname temp;
-  int32_t len;
-  GTextInfo **ti = GGadgetGetList (list, &len);
-  char *str;
-  uint32_t *ustr;
-
-  str = x_u32_to_u8 (u32_force_valid (ti[index]->text));
-  ParseMacMapping (str, &temp);
-  free (str);
-  if ((ustr = AskSetting (&temp, list, index, flist)) == NULL)
-    return;
-  GListReplaceStr (list, index, ustr, NULL);
-}
-
-static int
-Pref_NewMapping (GGadget *g, GEvent *e)
-{
-  if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
-    {
-      GWindow gw = GGadgetGetWindow (g);
-      GGadget *list = GWidgetGetControl (gw, CID_Mapping);
-      GGadget *flist =
-        GWidgetGetControl (GDrawGetParentWindow (gw), CID_Features);
-      struct macsettingname temp;
-      uint32_t *str;
-
-      memset (&temp, 0, sizeof (temp));
-      temp.mac_feature_type = -1;
-      if ((str = AskSetting (&temp, list, -1, flist)) == NULL)
-        return (true);
-      GListAddStr (list, str, NULL);
-      /*free(str); */
-    }
-  return (true);
-}
-
-static int
-Pref_DelMapping (GGadget *g, GEvent *e)
-{
-  if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
-    {
-      GWindow gw = GGadgetGetWindow (g);
-      GListDelSelected (GWidgetGetControl (gw, CID_Mapping));
-      GGadgetSetEnabled (GWidgetGetControl (gw, CID_MappingDel), false);
-      GGadgetSetEnabled (GWidgetGetControl (gw, CID_MappingEdit), false);
-    }
-  return (true);
-}
-
-static int
-Pref_EditMapping (GGadget *g, GEvent *e)
-{
-  if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
-    {
-      GWindow gw = GDrawGetParentWindow (GGadgetGetWindow (g));
-      GGadget *list = GWidgetGetControl (gw, CID_Mapping);
-      GGadget *flist = GWidgetGetControl (gw, CID_Features);
-      ChangeSetting (list, GGadgetGetFirstListSelectedItem (list), flist);
-    }
-  return (true);
-}
-
-static int
-Pref_MappingSel (GGadget *g, GEvent *e)
-{
-  if (e->type == et_controlevent && e->u.control.subtype == et_listselected)
-    {
-      int32_t len;
-      GTextInfo **ti = GGadgetGetList (g, &len);
-      GWindow gw = GGadgetGetWindow (g);
-      int i, sel_cnt = 0;
-      for (i = 0; i < len; ++i)
-        if (ti[i]->selected)
-          ++sel_cnt;
-      GGadgetSetEnabled (GWidgetGetControl (gw, CID_MappingDel),
-                         sel_cnt != 0);
-      GGadgetSetEnabled (GWidgetGetControl (gw, CID_MappingEdit),
-                         sel_cnt == 1);
-    }
-  else if (e->type == et_controlevent
-           && e->u.control.subtype == et_listdoubleclick)
-    {
-      GGadget *flist =
-        GWidgetGetControl (GDrawGetParentWindow (GGadgetGetWindow (g)),
-                           CID_Features);
-      ChangeSetting (g,
-                     e->u.control.u.list.changed_index !=
-                     -1 ? e->u.control.u.
-                     list.changed_index : GGadgetGetFirstListSelectedItem (g),
-                     flist);
-    }
-  return (true);
-}
-
-static int
-Pref_DefaultMapping (GGadget *g, GEvent *e)
-{
-  if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
-    {
-      GGadget *list = GWidgetGetControl (GGadgetGetWindow (g), CID_Mapping);
-      GTextInfo *ti, **arr;
-      uint16_t cnt;
-
-      ti = Pref_MappingList (false);
-      arr = GTextInfoArrayFromList (ti, &cnt);
-      GGadgetSetList (list, arr, false);
-      GTextInfoListFree (ti);
-    }
-  return (true);
-}
-
 static int
 Prefs_Ok (GGadget *g, GEvent *e)
 {
@@ -1978,9 +1482,6 @@ Prefs_Ok (GGadget *g, GEvent *e)
   const uint32_t *ret;
   const uint32_t *names[SCRIPT_MENU_MAX], *scripts[SCRIPT_MENU_MAX];
   struct prefs_list *pl;
-  GTextInfo **list;
-  int32_t len;
-  int maxl, t;
   real dangle;
 
   if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
@@ -2171,32 +1672,6 @@ Prefs_Ok (GGadget *g, GEvent *e)
           script_filenames[i] = u2def_copy (scripts[i]);
         }
 
-      list = GGadgetGetList (GWidgetGetControl (gw, CID_Mapping), &len);
-      UserSettingsFree ();
-      user_macfeat_otftag =
-        xmalloc ((len + 1) * sizeof (struct macsettingname));
-      user_macfeat_otftag[len].otf_tag = 0;
-      maxl = 0;
-      for (i = 0; i < len; ++i)
-        {
-          t = u32_strlen (list[i]->text);
-          if (t > maxl)
-            maxl = t;
-        }
-      for (i = 0; i < len; ++i)
-        {
-          char *utf8 =
-            XDIE_ON_NULL (NULL_PASSTHRU
-                          (list[i]->text, x_u32_to_u8 (list[i]->text)));
-          char *str = xstr_iconv (utf8, MY_ICONV_UTF8_STRING,
-                                  MY_ICONV_MAC_STRING);
-          ParseMacMapping (str, &user_macfeat_otftag[i]);
-          free (str);
-          free (utf8);
-        }
-
-      Prefs_ReplaceMacFeatures (GWidgetGetControl (gw, CID_Features));
-
       if (xuid != NULL)
         {
           char *pt;
@@ -2233,12 +1708,9 @@ Prefs_Cancel (GGadget *g, GEvent *e)
   if (e->type == et_controlevent && e->u.control.subtype == et_buttonactivate)
     {
       struct pref_data *p = GDrawGetUserData (GGadgetGetWindow (g));
-      MacFeatListFree (GGadgetGetUserData
-                       ((GWidgetGetControl
-                         (GGadgetGetWindow (g), CID_Features))));
       p->done = true;
     }
-  return (true);
+  return true;
 }
 
 static int
@@ -2248,11 +1720,6 @@ e_h (GWindow gw, GEvent *event)
     {
       struct pref_data *p = GDrawGetUserData (gw);
       p->done = true;
-      if (GWidgetGetControl (gw, CID_Features))
-        {
-          MacFeatListFree (GGadgetGetUserData
-                           ((GWidgetGetControl (gw, CID_Features))));
-        }
     }
   else if (event->type == et_char)
     {
@@ -2285,14 +1752,11 @@ DoPrefs (void)
   GRect pos;
   GWindow gw;
   GWindowAttrs wattrs;
-  GGadgetCreateData *pgcd, gcd[5], sgcd[45], mgcd[3], mfgcd[9], msgcd[9];
-  GGadgetCreateData mfboxes[3], *mfarray[14];
-  GGadgetCreateData mpboxes[3], *mparray[14];
+  GGadgetCreateData *pgcd, gcd[5], sgcd[45];
   GGadgetCreateData sboxes[2], *sarray[50];
   GGadgetCreateData mboxes[3], *varray[5], *harray[8];
-  GTextInfo *plabel, **list, label[5], slabel[45], *plabels[TOPICS + 5],
-    mflabels[9], mslabels[9];
-  GTabInfo aspects[TOPICS + 5], subaspects[3];
+  GTextInfo *plabel, **list, label[5], slabel[45], *plabels[TOPICS + 5];
+  GTabInfo aspects[TOPICS + 4];
   GGadgetCreateData **hvarray, boxes[2 * TOPICS];
   struct pref_data p;
   int i, gc, sgc, j, k, line, line_max, y, y2, ii, si;
@@ -2350,104 +1814,8 @@ DoPrefs (void)
 
   memset (sgcd, 0, sizeof (sgcd));
   memset (slabel, 0, sizeof (slabel));
-  memset (&mfgcd, 0, sizeof (mfgcd));
-  memset (&msgcd, 0, sizeof (msgcd));
-  memset (&mflabels, 0, sizeof (mflabels));
-  memset (&mslabels, 0, sizeof (mslabels));
-  memset (&mfboxes, 0, sizeof (mfboxes));
-  memset (&mpboxes, 0, sizeof (mpboxes));
   memset (&sboxes, 0, sizeof (sboxes));
   memset (&boxes, 0, sizeof (boxes));
-
-  GCDFillMacFeat (mfgcd, mflabels, 250, default_mac_feature_map, true,
-                  mfboxes, mfarray);
-
-  sgc = 0;
-
-  msgcd[sgc].gd.pos.x = 6;
-  msgcd[sgc].gd.pos.y = 6;
-  msgcd[sgc].gd.pos.width = 250;
-  msgcd[sgc].gd.pos.height = 16 * 12 + 10;
-  msgcd[sgc].gd.flags =
-    gg_visible | gg_enabled | gg_list_alphabetic | gg_list_multiplesel;
-  msgcd[sgc].gd.cid = CID_Mapping;
-  msgcd[sgc].gd.u.list = Pref_MappingList (true);
-  msgcd[sgc].gd.handle_controlevent = Pref_MappingSel;
-  msgcd[sgc++].creator = GListCreate;
-  mparray[0] = &msgcd[sgc - 1];
-
-  msgcd[sgc].gd.pos.x = 6;
-  msgcd[sgc].gd.pos.y =
-    msgcd[sgc - 1].gd.pos.y + msgcd[sgc - 1].gd.pos.height + 10;
-  msgcd[sgc].gd.flags = gg_visible | gg_enabled;
-  mslabels[sgc].text = (uint32_t *) C_ ("MacMap", "_New...");
-  mslabels[sgc].text_is_1byte = true;
-  mslabels[sgc].text_has_mnemonic = true;
-  msgcd[sgc].gd.label = &mslabels[sgc];
-  msgcd[sgc].gd.handle_controlevent = Pref_NewMapping;
-  msgcd[sgc++].creator = GButtonCreate;
-  mparray[4] = GCD_Glue;
-  mparray[5] = &msgcd[sgc - 1];
-
-  msgcd[sgc].gd.pos.x =
-    msgcd[sgc - 1].gd.pos.x + 10 +
-    GIntGetResource (_NUM_Buttonsize) * 100 /
-    GIntGetResource (_NUM_ScaleFactor);
-  msgcd[sgc].gd.pos.y = msgcd[sgc - 1].gd.pos.y;
-  msgcd[sgc].gd.flags = gg_visible;
-  mslabels[sgc].text = (uint32_t *) _("_Delete");
-  mslabels[sgc].text_is_1byte = true;
-  mslabels[sgc].text_has_mnemonic = true;
-  msgcd[sgc].gd.label = &mslabels[sgc];
-  msgcd[sgc].gd.cid = CID_MappingDel;
-  msgcd[sgc].gd.handle_controlevent = Pref_DelMapping;
-  msgcd[sgc++].creator = GButtonCreate;
-  mparray[5] = GCD_Glue;
-  mparray[6] = &msgcd[sgc - 1];
-
-  msgcd[sgc].gd.pos.x =
-    msgcd[sgc - 1].gd.pos.x + 10 +
-    GIntGetResource (_NUM_Buttonsize) * 100 /
-    GIntGetResource (_NUM_ScaleFactor);
-  msgcd[sgc].gd.pos.y = msgcd[sgc - 1].gd.pos.y;
-  msgcd[sgc].gd.flags = gg_visible;
-  mslabels[sgc].text = (uint32_t *) _("_Edit...");
-  mslabels[sgc].text_is_1byte = true;
-  mslabels[sgc].text_has_mnemonic = true;
-  msgcd[sgc].gd.label = &mslabels[sgc];
-  msgcd[sgc].gd.cid = CID_MappingEdit;
-  msgcd[sgc].gd.handle_controlevent = Pref_EditMapping;
-  msgcd[sgc++].creator = GButtonCreate;
-  mparray[7] = GCD_Glue;
-  mparray[8] = &msgcd[sgc - 1];
-
-  msgcd[sgc].gd.pos.x =
-    msgcd[sgc - 1].gd.pos.x + 10 +
-    GIntGetResource (_NUM_Buttonsize) * 100 /
-    GIntGetResource (_NUM_ScaleFactor);
-  msgcd[sgc].gd.pos.y = msgcd[sgc - 1].gd.pos.y;
-  msgcd[sgc].gd.flags = gg_visible | gg_enabled;
-  mslabels[sgc].text = (uint32_t *) C_ ("MacMapping", "Default");
-  mslabels[sgc].text_is_1byte = true;
-  mslabels[sgc].text_has_mnemonic = true;
-  msgcd[sgc].gd.label = &mslabels[sgc];
-  msgcd[sgc].gd.handle_controlevent = Pref_DefaultMapping;
-  msgcd[sgc++].creator = GButtonCreate;
-  mparray[9] = GCD_Glue;
-  mparray[10] = &msgcd[sgc - 1];
-  mparray[11] = GCD_Glue;
-  mparray[12] = NULL;
-
-  mpboxes[2].gd.flags = gg_enabled | gg_visible;
-  mpboxes[2].gd.u.boxelements = mparray + 4;
-  mpboxes[2].creator = GHBoxCreate;
-  mparray[1] = GCD_Glue;
-  mparray[2] = &mpboxes[2];
-  mparray[3] = NULL;
-
-  mpboxes[0].gd.flags = gg_enabled | gg_visible;
-  mpboxes[0].gd.u.boxelements = mparray;
-  mpboxes[0].creator = GVBoxCreate;
 
   sgc = 0;
   y2 = 5;
@@ -2530,9 +1898,6 @@ DoPrefs (void)
   sboxes[0].gd.u.boxelements = sarray;
   sboxes[0].creator = GHVBoxCreate;
 
-  memset (&mgcd, 0, sizeof (mgcd));
-  memset (&mgcd, 0, sizeof (mgcd));
-  memset (&subaspects, '\0', sizeof (subaspects));
   memset (&label, 0, sizeof (label));
   memset (&gcd, 0, sizeof (gcd));
   memset (&aspects, '\0', sizeof (aspects));
@@ -2810,26 +2175,6 @@ DoPrefs (void)
   aspects[k].text_is_1byte = true;
   aspects[k++].gcd = sboxes;
 
-  subaspects[0].text = (uint32_t *) _("Features");
-  subaspects[0].text_is_1byte = true;
-  subaspects[0].gcd = mfboxes;
-
-  subaspects[1].text = (uint32_t *) _("Mapping");
-  subaspects[1].text_is_1byte = true;
-  subaspects[1].gcd = mpboxes;
-
-  mgcd[0].gd.pos.x = 4;
-  gcd[0].gd.pos.y = 6;
-  mgcd[0].gd.pos.width = GDrawPixelsToPoints (NULL, pos.width) - 20;
-  mgcd[0].gd.pos.height = y2;
-  mgcd[0].gd.u.tabs = subaspects;
-  mgcd[0].gd.flags = gg_visible | gg_enabled;
-  mgcd[0].creator = GTabSetCreate;
-
-  aspects[k].text = (uint32_t *) _("Mac");
-  aspects[k].text_is_1byte = true;
-  aspects[k++].gcd = mgcd;
-
   gc = 0;
 
   gcd[gc].gd.pos.x = gcd[gc].gd.pos.y = 2;
@@ -2899,22 +2244,14 @@ DoPrefs (void)
   gcd[0].gd.pos.height = y - 4;
 
   GGadgetsCreate (gw, mboxes);
-  GTextInfoListFree (mfgcd[0].gd.u.list);
-  GTextInfoListFree (msgcd[0].gd.u.list);
 
   GHVBoxSetExpandableRow (mboxes[0].ret, 0);
   GHVBoxSetExpandableCol (mboxes[2].ret, gb_expandgluesame);
-  GHVBoxSetExpandableRow (mfboxes[0].ret, 0);
-  GHVBoxSetExpandableCol (mfboxes[2].ret, gb_expandgluesame);
-  GHVBoxSetExpandableRow (mpboxes[0].ret, 0);
-  GHVBoxSetExpandableCol (mpboxes[2].ret, gb_expandgluesame);
   GHVBoxSetExpandableRow (sboxes[0].ret, gb_expandglue);
   for (k = 0; k < TOPICS; ++k)
     GHVBoxSetExpandableRow (boxes[2 * k].ret, gb_expandglue);
 
   font = GDrawNewFont (gw, "monospace", 12, 400, fs_none);
-  GGadgetSetFont (mfgcd[0].ret, font);
-  GGadgetSetFont (msgcd[0].ret, font);
   GHVBoxFitWindow (mboxes[0].ret);
 
   for (k = 0; visible_prefs_list[k].tab_name != 0; ++k)
@@ -3159,13 +2496,11 @@ PrefsSubSetDlg (CharView * cv, char *windowTitle, struct prefs_list *plist)
   GRect pos;
   GWindow gw;
   GWindowAttrs wattrs;
-  GGadgetCreateData *pgcd, gcd[20], sgcd[45], mgcd[3], mfgcd[9], msgcd[9];
-  GGadgetCreateData mfboxes[3], *mfarray[14];
-  GGadgetCreateData mpboxes[3];
+  GGadgetCreateData *pgcd, gcd[20], sgcd[45];
   GGadgetCreateData sboxes[2];
   GGadgetCreateData mboxes[3], mboxes2[5], *varray[5], *harray[8];
-  GTextInfo *plabel, label[20], slabel[45], mflabels[9], mslabels[9];
-  GTabInfo aspects[TOPICS + 5], subaspects[3];
+  GTextInfo *plabel, label[20], slabel[45];
+  GTabInfo aspects[TOPICS + 4];
   GGadgetCreateData **hvarray, boxes[2 * TOPICS];
   struct pref_data p;
   int line, line_max = 3;
@@ -3190,22 +2525,11 @@ PrefsSubSetDlg (CharView * cv, char *windowTitle, struct prefs_list *plist)
   memset (&wattrs, 0, sizeof (wattrs));
   memset (sgcd, 0, sizeof (sgcd));
   memset (slabel, 0, sizeof (slabel));
-  memset (&mfgcd, 0, sizeof (mfgcd));
-  memset (&msgcd, 0, sizeof (msgcd));
-  memset (&mflabels, 0, sizeof (mflabels));
-  memset (&mslabels, 0, sizeof (mslabels));
-  memset (&mfboxes, 0, sizeof (mfboxes));
-  memset (&mpboxes, 0, sizeof (mpboxes));
   memset (&sboxes, 0, sizeof (sboxes));
   memset (&boxes, 0, sizeof (boxes));
-  memset (&mgcd, 0, sizeof (mgcd));
-  memset (&mgcd, 0, sizeof (mgcd));
-  memset (&subaspects, '\0', sizeof (subaspects));
   memset (&label, 0, sizeof (label));
   memset (&gcd, 0, sizeof (gcd));
   memset (&aspects, '\0', sizeof (aspects));
-  GCDFillMacFeat (mfgcd, mflabels, 250, default_mac_feature_map, true,
-                  mfboxes, mfarray);
 
   p.plist = plist;
   wattrs.mask =
