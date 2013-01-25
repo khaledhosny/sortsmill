@@ -2,12 +2,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <sortsmillff/xgc.h>
+#include <sortsmill/xgc.h>
 #include <locale.h>
 #include <float.h>
 #include <math.h>
 #include <gmp.h>
-#include <sortsmillff/qbrentroot.h>
+#include <sortsmill/qbrentroot.h>
 
 //
 // FIXME: This test is far from adequate.

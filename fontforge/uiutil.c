@@ -46,7 +46,7 @@
 #include <sys/time.h>
 #include <gkeysym.h>
 #include <sys/types.h>
-#include <sortsmillff/rexp.h>
+#include <sortsmill/rexp.h>
 #include <invoke_funcs.h>
 #include <trim.h>
 #include <filename.h>

@@ -41,12 +41,12 @@ MOSTLYCLEANFILES =
 CLEANFILES =
 DISTCLEANFILES =
 
-LIBADD = $(top_builddir)/auxiliary/libsortsmillff_aux.la	\
-	$(top_builddir)/gutils/libsortsmillff_gutils.la
+LIBADD = $(top_builddir)/auxiliary/libsortsmill_aux.la	\
+	$(top_builddir)/gutils/libsortsmill_gutils.la
 
 GUILIBADD =
 if HAVE_GUI
-GUILIBADD += $(top_builddir)/gdraw/libsortsmillff_gdraw.la	\
+GUILIBADD += $(top_builddir)/gdraw/libsortsmill_gdraw.la	\
 	$(XINPUT_LIBS) $(XKB_LIBS)
 endif HAVE_GUI
 
@@ -65,11 +65,11 @@ noinst_HEADERS = fontforgeui.h sftextfieldP.h views.h is_LIGATURE.h		\
 	fontimage.h activeinui.h bezctx.h bezctx_intf.h spiro.h				\
 	spiroentrypoints.h zmisc.h
 
-nobase_nodist_include_HEADERS = sortsmillff/fontforge_api.h
+nobase_nodist_include_HEADERS = sortsmill/fontforge_api.h
 
 CLEANFILES += $(nobase_nodist_include_HEADERS)
 
-sortsmillff/fontforge_api.h: fontforge.types.apii			\
+sortsmill/fontforge_api.h: fontforge.types.apii			\
 		$(srcdir)/generate-c-api.h.scm						\
 		$(top_srcdir)/guile/ff-internal/generate-types.scm
 	$(AM_V_GEN)
@@ -97,9 +97,9 @@ CLEANFILES += fontforge_type_inspector.c fontforge.types.apii
 
 #--------------------------------------------------------------------------
 
-lib_LTLIBRARIES += libsortsmillff_fontforge.la
+lib_LTLIBRARIES += libsortsmill_fontforge.la
 
-libsortsmillff_fontforge_la_SOURCES = asmfpst.c autohint.c autosave.c	\
+libsortsmill_fontforge_la_SOURCES = asmfpst.c autohint.c autosave.c	\
 	autotrace.c autowidth.c bezctx_ff.c bitmapchar.c bitmapcontrol.c	\
 	bvedit.c clipnoui.c crctab.c cvexport.c cvimages.c cvundoes.c		\
 	dumpbdf.c dumppfa.c effects.c encoding.c featurefile.c				\
@@ -120,13 +120,13 @@ libsortsmillff_fontforge_la_SOURCES = asmfpst.c autohint.c autosave.c	\
 	getfontnames.c arrayfree.c spiro_ff.c bezctx.c spiro.c				\
 	spiroentrypoints.c
 
-nodist_libsortsmillff_fontforge_la_SOURCES = fontforge_api.c
-EXTRA_libsortsmillff_fontforge_la_SOURCES = splinerefigure.c
+nodist_libsortsmill_fontforge_la_SOURCES = fontforge_api.c
+EXTRA_libsortsmill_fontforge_la_SOURCES = splinerefigure.c
 
-libsortsmillff_fontforge_la_LIBADD = splinerefigure.lo $(LIBADD)	\
+libsortsmill_fontforge_la_LIBADD = splinerefigure.lo $(LIBADD)	\
 	$(top_builddir)/lib/libgnu.la
-libsortsmillff_fontforge_la_LDFLAGS = $(call ldflags)
-libsortsmillff_fontforge_la_DEPENDENCIES = splinerefigure.lo	\
+libsortsmill_fontforge_la_LDFLAGS = $(call ldflags)
+libsortsmill_fontforge_la_DEPENDENCIES = splinerefigure.lo	\
 	$(top_builddir)/lib/libgnu.la
 
 # In splinerefigure.c, the slight error introduced occasionally by
@@ -139,7 +139,7 @@ splinerefigure.lo: $(srcdir)/splinerefigure.c $(srcdir)/splinefont.h
 
 EXTRA_SCRIPTS += generate_codepoint_selector.py
 
-fontforge_api.c: fontforge.types.apii sortsmillff/fontforge_api.h	\
+fontforge_api.c: fontforge.types.apii sortsmill/fontforge_api.h	\
 		$(srcdir)/generate-c-api.c.scm								\
 		$(top_srcdir)/guile/ff-internal/generate-types.scm
 	$(AM_V_GEN)
@@ -163,11 +163,11 @@ is_LIGATURE:
 
 #--------------------------------------------------------------------------
 
-lib_LTLIBRARIES += libsortsmillff_fontforgeexe.la
+lib_LTLIBRARIES += libsortsmill_fontforgeexe.la
 
 if HAVE_GUI
 
-libsortsmillff_fontforgeexe_la_SOURCES = alignment.c anchorsaway.c		\
+libsortsmill_fontforgeexe_la_SOURCES = alignment.c anchorsaway.c		\
 	autowidth2dlg.c basedlg.c bdfinfo.c bitmapdlg.c bitmapview.c		\
 	charinfo.c charview.c clipui.c combinations.c contextchain.c		\
 	cursors.c cvaddpoints.c cvdebug.c cvdgloss.c cvexportdlg.c			\
@@ -185,12 +185,12 @@ libsortsmillff_fontforgeexe_la_SOURCES = alignment.c anchorsaway.c		\
 
 else !HAVE_GUI
 
-libsortsmillff_fontforgeexe_la_SOURCES = fontforgeexe_stub.c
+libsortsmill_fontforgeexe_la_SOURCES = fontforgeexe_stub.c
 
 endif !HAVE_GUI
 
-libsortsmillff_fontforgeexe_la_LIBADD = libsortsmillff_fontforge.la		\
+libsortsmill_fontforgeexe_la_LIBADD = libsortsmill_fontforge.la		\
 	$(LTDLDEPS) $(LIBADD) $(GUILIBADD) $(top_builddir)/lib/libgnu.la
-libsortsmillff_fontforgeexe_la_LDFLAGS = $(call ldflags)
+libsortsmill_fontforgeexe_la_LDFLAGS = $(call ldflags)
 
 #--------------------------------------------------------------------------

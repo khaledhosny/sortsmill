@@ -28,9 +28,9 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <sortsmillff/polyspline.h>
+#include <sortsmill/polyspline.h>
 #include <precomputed_polyspline_data.h>
-#include <sortsmillff/xgc.h>
+#include <sortsmill/xgc.h>
 #include <stdio.h>
 #include <string.h>
 

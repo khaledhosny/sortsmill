@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-#include <sortsmillff/linalg.h>
+#include <sortsmill/linalg.h>
 
 VISIBLE void
 _GMP_TYPE (_matrix_memcpy) (unsigned int m, unsigned int n,

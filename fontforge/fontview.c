@@ -46,7 +46,7 @@
 #include <xunistring.h>
 #include <stdlib.h>
 #include <xalloc.h>
-#include <sortsmillff/xdie_on_null.h>
+#include <sortsmill/xdie_on_null.h>
 #include <canonicalize.h>
 #include <xunistring.h>
 #include <moveto_funcs.h>

@@ -1,8 +1,8 @@
 #! /bin/env python
 #-*- coding:utf-8; python-indent: 2; -*-
 
-from sortsmillff.brentroot import qbrentroot
-from sortsmillff.brentroot import qbrentroot_values
+from sortsmill.brentroot import qbrentroot
+from sortsmill.brentroot import qbrentroot_values
 from gmpy import mpq
 import sys
 import math

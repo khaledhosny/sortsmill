@@ -2,12 +2,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <sortsmillff/xgc.h>
+#include <sortsmill/xgc.h>
 #include <locale.h>
 #include <float.h>
 #include <math.h>
 #include <libguile.h>
-#include <sortsmillff/polyspline.h>
+#include <sortsmill/polyspline.h>
 
 #include <main_with_guile.x>
 

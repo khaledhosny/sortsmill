@@ -15,11 +15,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-#include <sortsmillff/guile/polyspline.h>
-#include <sortsmillff/polyspline.h>
+#include <sortsmill/guile/polyspline.h>
+#include <sortsmill/polyspline.h>
 #include <xalloc.h>
 
-void init_guile_sortsmillff_polyspline (void);
+void init_guile_sortsmill_polyspline (void);
 
 static SCM
 change_basis (SCM spline,
@@ -160,7 +160,7 @@ scm_f64vector_subdiv_bern (SCM spline, SCM t)
 }
 
 VISIBLE void
-init_guile_sortsmillff_polyspline (void)
+init_guile_sortsmill_polyspline (void)
 {
   scm_c_define_gsubr ("f64vector-sbern->bern", 1, 0, 0,
                       scm_f64vector_sbern_to_bern);

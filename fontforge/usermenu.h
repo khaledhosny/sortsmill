@@ -30,7 +30,7 @@
 #define _INTERNAL_USER_MENU_H
 
 #include <ggadget.h>
-#include <sortsmillff/usermenu.h>
+#include <sortsmill/usermenu.h>
 
 extern GMenuItem *cv_menu;
 extern GMenuItem *fv_menu;

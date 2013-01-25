@@ -1,6 +1,6 @@
 #! /bin/env python
 
-import sortsmillff.psMat as psMat
+import sortsmill.psMat as psMat
 from math import tan, pi
 import sys
 

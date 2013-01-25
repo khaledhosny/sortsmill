@@ -32,9 +32,9 @@ POLYSPLINE_PRECOMPUTED_DEGREE_MAX = 19
 
 #--------------------------------------------------------------------------
 
-lib_LTLIBRARIES = libsortsmillff_aux.la
+lib_LTLIBRARIES = libsortsmill_aux.la
 
-dist_libsortsmillff_aux_la_SOURCES = ArabicForms.c alphabet.c			\
+dist_libsortsmill_aux_la_SOURCES = ArabicForms.c alphabet.c			\
 	backtrns.c cjk.c ucharmap.c unialt.c ustring.c utype.c				\
 	combiners.h xdie_on_null.c xgc.c xgc_strjoin.c xunicase.c			\
 	xuniconv.c xuninorm.c xunistr.c xunistr_strjoin.c ps_number.c		\
@@ -42,13 +42,13 @@ dist_libsortsmillff_aux_la_SOURCES = ArabicForms.c alphabet.c			\
 	precomputed_gmp_polyspline_data.c polyspline_data.c polyspline.c	\
 	rnrs_conditions.c
 
-nodist_libsortsmillff_aux_la_SOURCES = precomputed_polyspline_data.c
+nodist_libsortsmill_aux_la_SOURCES = precomputed_polyspline_data.c
 
-libsortsmillff_aux_la_CFLAGS = $(AM_CFLAGS) '-I$(srcdir)'						\
+libsortsmill_aux_la_CFLAGS = $(AM_CFLAGS) '-I$(srcdir)'						\
 	'-D_POLYSPLINE_PRECOMPUTED_DEGREE_MAX=$(POLYSPLINE_PRECOMPUTED_DEGREE_MAX)'
-libsortsmillff_aux_la_LIBADD = $(top_builddir)/lib/libgnu.la
-libsortsmillff_aux_la_LDFLAGS = $(call ldflags)
-libsortsmillff_aux_la_DEPENDENCIES = Makefile $(libsortsmillff_aux_la_LIBADD)
+libsortsmill_aux_la_LIBADD = $(top_builddir)/lib/libgnu.la
+libsortsmill_aux_la_LDFLAGS = $(call ldflags)
+libsortsmill_aux_la_DEPENDENCIES = Makefile $(libsortsmill_aux_la_LIBADD)
 
 LINALG_EXTRAS = linalg_matrix_init.c linalg_matrix_set.c			\
 	linalg_matrix_copy.c linalg_matrix_swap.c linalg_matrix_mult.c

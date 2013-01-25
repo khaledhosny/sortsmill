@@ -27,11 +27,11 @@
 
 include $(top_srcdir)/mk/flags.am
 
-lib_LTLIBRARIES = libsortsmillff_gutils.la
+lib_LTLIBRARIES = libsortsmill_gutils.la
 
 #--------------------------------------------------------------------------
 
-libsortsmillff_gutils_la_SOURCES = divisors.c gfile.c gcol.c gimage.c	\
+libsortsmill_gutils_la_SOURCES = divisors.c gfile.c gcol.c gimage.c	\
 	gimagereadbmp.c gimageread.c gimagereadgif.c gimagereadjpeg.c		\
 	gimagereadpng.c gimagereadras.c gimagereadrgb.c gimagereadtiff.c	\
 	gimagereadxbm.c gimagereadxpm.c gimagewritebmp.c					\
@@ -40,9 +40,9 @@ libsortsmillff_gutils_la_SOURCES = divisors.c gfile.c gcol.c gimage.c	\
 	giohosts.c giomime.c giotrans.c gimagebmpP.h			\
 	giofuncP.h gioP.h
 
-libsortsmillff_gutils_la_LIBADD = $(top_builddir)/auxiliary/libsortsmillff_aux.la	\
+libsortsmill_gutils_la_LIBADD = $(top_builddir)/auxiliary/libsortsmill_aux.la	\
 	$(top_builddir)/lib/libgnu.la
-libsortsmillff_gutils_la_LDFLAGS = $(call ldflags)
-libsortsmillff_gutils_la_DEPENDENCIES = Makefile $(libsortsmillff_gutils_la_LIBADD)
+libsortsmill_gutils_la_LDFLAGS = $(call ldflags)
+libsortsmill_gutils_la_DEPENDENCIES = Makefile $(libsortsmill_gutils_la_LIBADD)
 
 #--------------------------------------------------------------------------

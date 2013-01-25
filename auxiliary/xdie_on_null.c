@@ -27,7 +27,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <sortsmillff/xdie_on_null.h>
+#include <sortsmill/xdie_on_null.h>
 #include <xalloc.h>
 
 // This should result in a non-inline version being generated.

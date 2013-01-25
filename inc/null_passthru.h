@@ -29,7 +29,7 @@
 #ifndef _INTERNAL_NULL_PASSTHRU_H
 #define _INTERNAL_NULL_PASSTHRU_H
 
-#include <sortsmillff/null_passthru.h>
+#include <sortsmill/null_passthru.h>
 
 #define NULL_PASSTHRU _FF_NULL_PASSTHRU
 

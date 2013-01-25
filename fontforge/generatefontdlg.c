@@ -38,7 +38,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <gkeysym.h>
-#include <sortsmillff/xgc.h>
+#include <sortsmill/xgc.h>
 #include "psfont.h"
 #include "generatefont.h"
 

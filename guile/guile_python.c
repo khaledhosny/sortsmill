@@ -21,13 +21,13 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <assert.h>
-#include <sortsmillff/guile/rnrs_conditions.h>
+#include <sortsmill/guile/rnrs_conditions.h>
 #include <intl.h>
 
 #include <atomic_ops.h>
-#include <sortsmillff/xgc.h>    // Includes gc.h and pthreads.h in the right order.
+#include <sortsmill/xgc.h>    // Includes gc.h and pthreads.h in the right order.
 
-void init_guile_sortsmillff_python (void);
+void init_guile_sortsmill_python (void);
 
 // FIXME: Put these in the auxiliary library, but with more
 // comprehensible names.
@@ -68,7 +68,7 @@ initialize_gmpy_pymodule_if_necessary (void)
 static SCM
 rnrs_make_python_error (SCM ptype, SCM pvalue, SCM ptraceback)
 {
-  return scm_call_3 (scm_c_public_ref ("sortsmillff python",
+  return scm_call_3 (scm_c_public_ref ("sortsmill python",
                                        "make-python-error"),
                      ptype, pvalue, ptraceback);
 }
@@ -173,14 +173,14 @@ scm_grab_borrowed_pyobject_reference (SCM p)
 static SCM
 scm_pointer_to_scm_pyobject (SCM p)
 {
-  return scm_call_1 (scm_c_public_ref ("sortsmillff python",
+  return scm_call_1 (scm_c_public_ref ("sortsmill python",
                                        "pointer->pyobject"), p);
 }
 
 static SCM
 scm_borrowed_pointer_to_scm_pyobject (SCM p)
 {
-  return scm_call_1 (scm_c_public_ref ("sortsmillff python",
+  return scm_call_1 (scm_c_public_ref ("sortsmill python",
                                        "borrowed-pointer->pyobject"), p);
 }
 
@@ -200,7 +200,7 @@ static SCM
 scm_pyobject_to_scm_pointer (SCM obj)
 {
   return
-    scm_call_1 (scm_c_public_ref ("sortsmillff python", "pyobject->pointer"),
+    scm_call_1 (scm_c_public_ref ("sortsmill python", "pyobject->pointer"),
                 obj);
 }
 
@@ -255,7 +255,7 @@ scm_is_pyobject (SCM obj)
   return
     scm_is_true (scm_call_1
                  (scm_c_private_ref
-                  ("sortsmillff python", "procedure:pyobject?"), obj));
+                  ("sortsmill python", "procedure:pyobject?"), obj));
 }
 
 #define _SCM_TYPECHECK_P(NAME, TYPECHECK)			\
@@ -541,7 +541,7 @@ scm_pymodule_get_file_name (SCM obj)
 
 //-------------------------------------------------------------------------
 //
-// Access to the sortsmillff.internal.guile_python_pyx Cython module.
+// Access to the sortsmill.internal.guile_python_pyx Cython module.
 // The module will be imported the first time it is accessed.
 //
 
@@ -553,7 +553,7 @@ static pthread_mutex_t guile_python_pyx_pymodule_mutex =
 static SCM guile_python_pyx_pymodule = SCM_BOOL_F;
 
 // This function returns a Cython module we use in the implementation
-// of (sortsmillff python).
+// of (sortsmill python).
 static SCM
 scm_guile_python_pyx_pymodule (void)
 {
@@ -564,7 +564,7 @@ scm_guile_python_pyx_pymodule (void)
         {
           guile_python_pyx_pymodule =
             scm_pyimport (scm_from_utf8_string
-                          ("sortsmillff.internal.guile_python_pyx"));
+                          ("sortsmill.internal.guile_python_pyx"));
           if (scm_is_true (guile_python_pyx_pymodule))
             scm_permanent_object (guile_python_pyx_pymodule);
           AO_store_release_write (&guile_python_pyx_pymodule_is_initialized,
@@ -578,7 +578,7 @@ scm_guile_python_pyx_pymodule (void)
             rnrs_c_make_who_condition ("scm_guile_python_pyx_pymodule"),
             rnrs_c_make_message_condition
             (_
-             ("failed to import Python module sortsmillff.internal.guile_python_pyx")),
+             ("failed to import Python module sortsmill.internal.guile_python_pyx")),
             rnrs_make_irritants_condition (SCM_EOL)));
     }
   return guile_python_pyx_pymodule;
@@ -587,7 +587,7 @@ scm_guile_python_pyx_pymodule (void)
 //-------------------------------------------------------------------------
 
 VISIBLE void
-init_guile_sortsmillff_python (void)
+init_guile_sortsmill_python (void)
 {
   scm_c_define_gsubr ("py-failure", 2, 0, 0, scm_py_failure);
 

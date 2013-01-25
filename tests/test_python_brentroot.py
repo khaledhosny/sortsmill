@@ -1,8 +1,8 @@
 #! /bin/env python
 #-*- coding:utf-8; python-indent: 2; -*-
 
-from sortsmillff.brentroot import brentroot
-from sortsmillff.brentroot import brentroot_values
+from sortsmill.brentroot import brentroot
+from sortsmill.brentroot import brentroot_values
 import sys
 import math
 

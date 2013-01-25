@@ -37,9 +37,9 @@ DISTCLEANFILES =
 
 AM_CPPFLAGS += -I$(top_builddir)/fontforge -I$(top_srcdir)/fontforge
 AM_LDFLAGS = $(MY_CFLAGS) $(MY_LIBS)
-LDADD = $(top_builddir)/fontforge/libsortsmillff_fontforge.la \
-		$(top_builddir)/auxiliary/libsortsmillff_aux.la \
-		$(top_builddir)/gutils/libsortsmillff_gutils.la \
+LDADD = $(top_builddir)/fontforge/libsortsmill_fontforge.la \
+		$(top_builddir)/auxiliary/libsortsmill_aux.la \
+		$(top_builddir)/gutils/libsortsmill_gutils.la \
 		$(top_builddir)/lib/libgnu.la
 
 #--------------------------------------------------------------------------
@@ -51,7 +51,7 @@ bin_PROGRAMS += fontforge
 
 fontforge_SOURCES = main.c
 fontforge_LDADD =												\
-	$(top_builddir)/fontforge/libsortsmillff_fontforgeexe.la	\
+	$(top_builddir)/fontforge/libsortsmill_fontforgeexe.la	\
 	$(top_builddir)/lib/libgnu.la
 fontforge_LDFLAGS = $(AM_LDFLAGS) -export-dynamic
 

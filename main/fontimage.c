@@ -38,7 +38,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <progname.h>
-#include <sortsmillff/xgc.h>
+#include <sortsmill/xgc.h>
 #include <libguile.h>
 #include <glib.h>
 #define GMenuItem GMenuItem_GTK // FIXME

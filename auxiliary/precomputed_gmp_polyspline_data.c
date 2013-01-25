@@ -30,9 +30,9 @@
 
 #include <precomputed_polyspline_data.h>
 #include <atomic_ops.h>
-#include <sortsmillff/xgc.h>    /* Includes pthread.h and gc.h in the
+#include <sortsmill/xgc.h>    /* Includes pthread.h and gc.h in the
                                    correct order. */
-#include <sortsmillff/gmp_gc.h>
+#include <sortsmill/gmp_gc.h>
 #include <stddef.h>
 #include <stdbool.h>
 #include <assert.h>

@@ -63,7 +63,7 @@ accompanies the source code.
 @node Implementation
 @chapter The implementation of Sorts Mill FontForge
 
-@section @file{libsortsmillff_aux.la} (subdirectory @file{auxiliary})
+@section @file{libsortsmill_aux.la} (subdirectory @file{auxiliary})
 
 @subsection Handling of PostScript numbers
 @include ps_number.visible.texi

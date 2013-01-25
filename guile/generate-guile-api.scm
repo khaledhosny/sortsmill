@@ -18,7 +18,7 @@
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 (import (ff-internal generate-types)
-        (sortsmillff api-syntax)
+        (sortsmill api-syntax)
         (rnrs)
         (ice-9 format)
         (ice-9 match)
@@ -48,8 +48,8 @@
       (pretty-print
        `(library ,(call-with-input-string module-name read)
                  (export ,@exports)
-                 (import (sortsmillff alloc)
-                         (sortsmillff pkg-info)
+                 (import (sortsmill alloc)
+                         (sortsmill pkg-info)
                          (rnrs)
                          (system foreign)
                          (ice-9 format))

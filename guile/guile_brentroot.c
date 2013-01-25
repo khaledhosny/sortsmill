@@ -15,13 +15,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-#include <sortsmillff/guile/brentroot.h>
-#include <sortsmillff/brentroot.h>
-#include <sortsmillff/qbrentroot.h>
+#include <sortsmill/guile/brentroot.h>
+#include <sortsmill/brentroot.h>
+#include <sortsmill/qbrentroot.h>
 #include <math.h>
 #include <gmp.h>
 
-void init_guile_sortsmillff_brentroot (void);
+void init_guile_sortsmill_brentroot (void);
 
 //-------------------------------------------------------------------------
 
@@ -127,7 +127,7 @@ scm_mpq_brentroot (SCM max_iters, SCM tol, SCM epsilon, SCM t1, SCM t2,
 //-------------------------------------------------------------------------
 
 VISIBLE void
-init_guile_sortsmillff_brentroot (void)
+init_guile_sortsmill_brentroot (void)
 {
   scm_c_define_gsubr ("f64-brentroot", 5, 0, 0, scm_f64_brentroot);
   scm_c_define_gsubr ("mpq-brentroot", 6, 0, 0, scm_mpq_brentroot);

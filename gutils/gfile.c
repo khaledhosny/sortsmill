@@ -40,7 +40,7 @@
 #include <glib/gstdio.h>
 #include <stdarg.h>
 #include <xalloc.h>
-#include <sortsmillff/xgc.h>
+#include <sortsmill/xgc.h>
 #include <xunistring.h>
 #include <xunistring.h>
 #include <filenamecat.h>

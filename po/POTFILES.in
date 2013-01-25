@@ -154,11 +154,11 @@ gdraw/gtabset.c
 gdraw/gtextfield.c
 gdraw/gtextinfo.c
 guile/guile_python.c
-guile/sortsmillff/sfd-to-sxml.scm
-guile/sortsmillff/usermenu.scm
-guile/sortsmillff/views.scm
-guile/sortsmillff/pure.scm.in
-guile/sortsmillff/python.scm.in
+guile/sortsmill/sfd-to-sxml.scm
+guile/sortsmill/usermenu.scm
+guile/sortsmill/views.scm
+guile/sortsmill/pure.scm.in
+guile/sortsmill/python.scm.in
 main/fontcompare.c
 main/fontimage.c
 main/fontlint.c

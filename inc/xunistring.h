@@ -32,7 +32,7 @@
 #include <config.h>
 
 #include <xalloc.h>
-#include <sortsmillff/xunistring.h>
+#include <sortsmill/xunistring.h>
 #include <unistring/version.h>
 
 #endif // _INTERNAL_XUNISTRING_H

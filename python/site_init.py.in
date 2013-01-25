@@ -27,18 +27,18 @@
 
 import sys
 import traceback
-import sortsmillff.notices
+import sortsmill.notices
 
 # FIXME: Get rid of this dependency.
-import sortsmillff.ffcompat
+import sortsmill.ffcompat
 
 try:
 
   if "@PYTHON_COMPATIBILITY@" == "yes":
     import fontforge
-  sortsmillff.ffcompat.__windowing_ui (True)
-  sortsmillff.ffcompat.__running_script (False)
-  import sortsmillff.psMat
+  sortsmill.ffcompat.__windowing_ui (True)
+  sortsmill.ffcompat.__running_script (False)
+  import sortsmill.psMat
   if "@PYTHON_COMPATIBILITY@" == "yes":
     import psMat
   import ffContrib.excepthook
@@ -61,8 +61,8 @@ try:
     except:
       tb = ''.join (traceback.format_exc ())
       msg = ''.join (traceback.format_exception_only (sys.exc_type, sys.exc_value))
-      sortsmillff.notices.log_fontforge_warning (tb.replace ('%', '%%'))
-      sortsmillff.notices.post_fontforge_error ('Unhandled exception in local_init.py',
+      sortsmill.notices.log_fontforge_warning (tb.replace ('%', '%%'))
+      sortsmill.notices.post_fontforge_error ('Unhandled exception in local_init.py',
                                                 msg.replace ('%','%%'))
 
   if os.path.exists (user_init):
@@ -71,13 +71,13 @@ try:
     except:
       tb = ''.join (traceback.format_exc ())
       msg = ''.join (traceback.format_exception_only (sys.exc_type, sys.exc_value))
-      sortsmillff.notices.log_fontforge_warning (tb.replace ('%', '%%'))
-      sortsmillff.notices.post_fontforge_error ('Unhandled exception in user_init.py',
+      sortsmill.notices.log_fontforge_warning (tb.replace ('%', '%%'))
+      sortsmill.notices.post_fontforge_error ('Unhandled exception in user_init.py',
                                                 msg.replace ('%','%%'))
 
 except:
   tb = ''.join (traceback.format_exc ())
   msg = ''.join (traceback.format_exception_only (sys.exc_type, sys.exc_value))
-  sortsmillff.notices.log_fontforge_warning (tb.replace ('%', '%%'))
-  sortsmillff.notices.post_fontforge_error ('Unhandled exception in site_init.py',
+  sortsmill.notices.log_fontforge_warning (tb.replace ('%', '%%'))
+  sortsmill.notices.post_fontforge_error ('Unhandled exception in site_init.py',
                                             msg.replace ('%','%%'))

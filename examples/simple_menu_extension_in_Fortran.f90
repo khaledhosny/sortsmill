@@ -15,7 +15,7 @@
 !    gfortran -fPIC -shared -I/usr/include \
 !          simple_menu_extension_in_Fortran.f90 \
 !          -o simple_menu_extension_in_Fortran.so \
-!          -lsortsmillff_fortran_api
+!          -lsortsmill_fortran_api
 !
 ! Add something like the following to
 ! ${HOME}/.config/sortsmill-fontforge/user-init.scm:
@@ -51,7 +51,7 @@
 
 module simple_menu_extension_in_Fortran
   use iso_c_binding
-  use sortsmillff_fontforge_api
+  use sortsmill_fontforge_api
   implicit none
 
   interface

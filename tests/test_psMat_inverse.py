@@ -6,7 +6,7 @@
 # random number generator happens to create some very ill-conditioned
 # matrix.
 
-import sortsmillff.psMat as psMat
+import sortsmill.psMat as psMat
 import random
 import sys
 

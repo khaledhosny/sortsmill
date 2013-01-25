@@ -18,8 +18,8 @@
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 (use-modules
- (sortsmillff sfd-to-sxml)
- (sortsmillff i18n)
+ (sortsmill sfd-to-sxml)
+ (sortsmill i18n)
  (ice-9 match)
  (ice-9 receive)
  (srfi srfi-26)

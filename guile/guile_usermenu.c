@@ -15,14 +15,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-#include <sortsmillff/guile/usermenu.h>
-#include <sortsmillff/usermenu.h>
-#include <sortsmillff/xgc.h>
+#include <sortsmill/guile/usermenu.h>
+#include <sortsmill/usermenu.h>
+#include <sortsmill/xgc.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <assert.h>
 
-void init_guile_sortsmillff_usermenu (void);
+void init_guile_sortsmill_usermenu (void);
 
 //-------------------------------------------------------------------------
 
@@ -94,7 +94,7 @@ scm_register_fontforge_menu_entry (SCM window, SCM menu_path, SCM action,
 //-------------------------------------------------------------------------
 
 VISIBLE void
-init_guile_sortsmillff_usermenu (void)
+init_guile_sortsmill_usermenu (void)
 {
   scm_c_define_gsubr ("internal:register-fontforge-menu-entry", 5, 0, 0,
                       scm_register_fontforge_menu_entry);

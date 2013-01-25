@@ -34,40 +34,37 @@ noinst_HEADERS = config.h config-extra.h intl.h basics.h gmpy.h			\
 	precomputed_polyspline_data.h contour_interface.h moveto_funcs.h	\
 	invoke_funcs.h
 
-nobase_include_HEADERS = sortsmillff/attributes.h			\
-	sortsmillff/null_passthru.h sortsmillff/xdie_on_null.h	\
-	sortsmillff/xgc.h sortsmillff/gmp_gc.h					\
-	sortsmillff/gmp_constants.h sortsmillff/linalg.h		\
-	sortsmillff/xunicase.h sortsmillff/xuniconv.h			\
-	sortsmillff/xuninorm.h sortsmillff/xunistr.h			\
-	sortsmillff/xunistring.h sortsmillff/ps_number.h		\
-	sortsmillff/brentroot.h sortsmillff/qbrentroot.h		\
-	sortsmillff/rexp.h sortsmillff/polyspline.h				\
-	sortsmillff/usermenu.h sortsmillff/fontforge_main.h
+nobase_include_HEADERS = sortsmill/attributes.h						\
+	sortsmill/null_passthru.h sortsmill/xdie_on_null.h				\
+	sortsmill/xgc.h sortsmill/gmp_gc.h sortsmill/gmp_constants.h	\
+	sortsmill/linalg.h sortsmill/xunicase.h sortsmill/xuniconv.h	\
+	sortsmill/xuninorm.h sortsmill/xunistr.h sortsmill/xunistring.h	\
+	sortsmill/ps_number.h sortsmill/brentroot.h						\
+	sortsmill/qbrentroot.h sortsmill/rexp.h sortsmill/polyspline.h	\
+	sortsmill/usermenu.h sortsmill/fontforge_main.h
 
 # FIXME: These headers need to be examined for relevance and for
 # whether the functions they declare need to be moved into the
 # auxiliary library. If they are declared here, they probably should
 # be moved, rather than left in DLLs.
-nobase_include_HEADERS += sortsmillff/guile/polyspline.h				\
-	sortsmillff/guile/brentroot.h sortsmillff/guile/iconv.h				\
-	sortsmillff/guile/gsl.h sortsmillff/guile/usermenu.h				\
-	sortsmillff/guile/views.h sortsmillff/guile/internal-structures.h	\
-	sortsmillff/guile/notices.h
+nobase_include_HEADERS += sortsmill/guile/polyspline.h				\
+	sortsmill/guile/brentroot.h sortsmill/guile/iconv.h				\
+	sortsmill/guile/gsl.h sortsmill/guile/usermenu.h				\
+	sortsmill/guile/views.h sortsmill/guile/internal-structures.h	\
+	sortsmill/guile/notices.h
 
-nobase_include_HEADERS += sortsmillff/guile/rnrs_conditions.h
+nobase_include_HEADERS += sortsmill/guile/rnrs_conditions.h
 
 if HAVE_PYTHON_API
-nobase_include_HEADERS += sortsmillff/__init__.pxd						\
-	sortsmillff/cython/__init__.pxd										\
-	sortsmillff/cython/const_pointers.pxd								\
-	sortsmillff/cython/brentroot.pxd									\
-	sortsmillff/cython/contour_interface.pxd							\
-	sortsmillff/cython/gmpy.pxi sortsmillff/cython/guile.pxd			\
-	sortsmillff/cython/linalg.pxd sortsmillff/cython/splinefont.pxd		\
-	sortsmillff/cython/xgc.pxd sortsmillff/cython/config.pxi			\
-	sortsmillff/cython/gmpy.pxd sortsmillff/cython/gsl.pxd				\
-	sortsmillff/cython/polyspline.pxd sortsmillff/cython/usermenu.pxd
+nobase_include_HEADERS += sortsmill/__init__.pxd						\
+	sortsmill/cython/__init__.pxd sortsmill/cython/const_pointers.pxd	\
+	sortsmill/cython/brentroot.pxd										\
+	sortsmill/cython/contour_interface.pxd sortsmill/cython/gmpy.pxi	\
+	sortsmill/cython/guile.pxd sortsmill/cython/linalg.pxd				\
+	sortsmill/cython/splinefont.pxd sortsmill/cython/xgc.pxd			\
+	sortsmill/cython/config.pxi sortsmill/cython/gmpy.pxd				\
+	sortsmill/cython/gsl.pxd sortsmill/cython/polyspline.pxd			\
+	sortsmill/cython/usermenu.pxd
 endif HAVE_PYTHON_API
 
 #--------------------------------------------------------------------------
@@ -75,7 +72,7 @@ endif HAVE_PYTHON_API
 extract_text = $(PERL) -n -e											\
 	'print $$_ if (s|^\s*(//\|[*])\s*$(1)--\s*(.*)\s*|\2\n|)'
 
-$(top_srcdir)/doc/%.visible.texi: sortsmillff/%.h
+$(top_srcdir)/doc/%.visible.texi: sortsmill/%.h
 	$(call extract_text,vis) $< > $@
 
 extract-text: $(top_srcdir)/doc/ps_number.visible.texi
