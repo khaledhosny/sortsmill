@@ -1147,24 +1147,6 @@ return( 0 );			/* Not version 1 of true type, nor Open Type */
 	    info->bdf_start = offset;
 	  break;
 
-	    /* Apple's mm fonts */
-	  case CHR('g','v','a','r'):
-	    info->gvar_start = offset;
-	    info->gvar_len = length;
-	  break;
-	  case CHR('f','v','a','r'):
-	    info->fvar_start = offset;
-	    info->fvar_len = length;
-	  break;
-	  case CHR('a','v','a','r'):
-	    info->avar_start = offset;
-	    info->avar_len = length;
-	  break;
-	  case CHR('c','v','a','r'):
-	    info->cvar_start = offset;
-	    info->cvar_len = length;
-	  break;
-
 	  default:
 	    for ( j=0; j<info->savecnt; ++j ) if ( info->savetab[j].tag == tag ) {
 		info->savetab[j].offset = offset;
@@ -5411,10 +5393,6 @@ return( 0 );
     } else if ( info->glyphlocations_start!=0 && info->glyph_start!=0 ) {
 	info->to_order2 = (!loaded_fonts_same_as_new ||
 		(loaded_fonts_same_as_new && new_fonts_are_order2));
-	/* If it's an apple mm font, then we don't want to change the order */
-	/*  This messes up the point count */
-	if ( info->gvar_start!=0 && info->fvar_start!=0 )
-	    info->to_order2 = true;
 	readttfglyphs(ttf,info);
     } else if ( info->cff_start!=0 ) {
 	info->to_order2 = (loaded_fonts_same_as_new && new_fonts_are_order2);
@@ -5476,9 +5454,6 @@ return( 0 );
     }
     for ( i=0; i<info->savecnt; ++i ) if ( info->savetab[i].offset!=0 )
 	TtfCopyTableBlindly(info,ttf,info->savetab[i].offset,info->savetab[i].len,info->savetab[i].tag);
-    /* Do this before reading kerning info */
-    if ( info->to_order2 && info->gvar_start!=0 && info->fvar_start!=0 )
-	readttfvariations(info,ttf);
     if ( info->gpos_start!=0 )		/* kerning info may live in the gpos table too */
 	readttfgpossub(ttf,info,true);
     /* Load the 'kern' table if the GPOS table either didn't exist or didn't */
@@ -5649,142 +5624,6 @@ static void UseGivenEncoding(SplineFont *sf,struct ttfinfo *info) {
     sf->uni_interp = info->uni_interp;
     AltUniFigure(sf,sf->map,false);
     NameConsistancyCheck(sf, sf->map);
-}
-
-static char *AxisNameConvert(uint32_t tag) {
-    char buffer[8];
-
-    if ( tag==CHR('w','g','h','t'))
-return( xstrdup("Weight"));
-    if ( tag==CHR('w','d','t','h'))
-return( xstrdup("Width"));
-    if ( tag==CHR('o','p','s','z'))
-return( xstrdup("OpticalSize"));
-    if ( tag==CHR('s','l','n','t'))
-return( xstrdup("Slant"));
-
-    buffer[0] = tag>>24;
-    buffer[1] = tag>>16;
-    buffer[2] = tag>>8;
-    buffer[3] = tag&0xff;
-    buffer[4] = 0;
-return( xstrdup_or_null(buffer ));
-}
-
-static struct macname *FindMacName(struct ttfinfo *info, int strid) {
-    struct macidname *sid;
-
-    for ( sid=info->macstrids; sid!=NULL; sid=sid->next ) {
-	if ( sid->id == strid )
-return( sid->head );
-    }
-return( NULL );
-}
-
-static SplineFont *SFFromTuple(SplineFont *basesf,struct variations *v,int tuple,
-	MMSet *mm, struct ttfinfo *info) {
-    SplineFont *sf;
-    int i;
-    RefChar *r;
-
-    sf = SplineFontEmpty();
-    sf->display_size = basesf->display_size;
-    sf->display_antialias = basesf->display_antialias;
-
-    sf->fontname = MMMakeMasterFontname(mm,tuple,&sf->fullname);
-    sf->familyname = xstrdup_or_null(basesf->familyname);
-    sf->weight = xstrdup("All");
-    sf->italicangle = basesf->italicangle;
-    sf->strokewidth = basesf->strokewidth;
-    sf->strokedfont = basesf->strokedfont;
-    sf->upos = basesf->upos;
-    sf->uwidth = basesf->uwidth;
-    sf->ascent = basesf->ascent;
-    sf->hasvmetrics = basesf->hasvmetrics;
-    sf->descent = basesf->descent;
-    sf->kerns = v->tuples[tuple].khead;
-    sf->vkerns = v->tuples[tuple].vkhead;
-    sf->map = basesf->map;
-    sf->mm = mm;
-    sf->glyphmax = sf->glyphcnt = basesf->glyphcnt;
-    sf->glyphs = v->tuples[tuple].chars;
-    sf->layers[ly_fore].order2 = sf->layers[ly_back].order2 = true;
-    for ( i=0; i<sf->glyphcnt; ++i ) if ( basesf->glyphs[i]!=NULL ) {
-	SplineChar *sc = sf->glyphs[i];
-	sc->orig_pos = i;
-	sc->parent = sf;
-	sc->layers[ly_fore].order2 = sc->layers[ly_back].order2 = true;
-    }
-    sf->grid.order2 = true;
-    for ( i=0; i<sf->glyphcnt; ++i ) if ( sf->glyphs[i]!=NULL ) {
-	for ( r=sf->glyphs[i]->layers[ly_fore].refs; r!=NULL; r=r->next )
-	    SCReinstanciateRefChar(sf->glyphs[i],r,ly_fore);
-    }
-
-    sf->ttf_tables = v->tuples[tuple].cvt;
-
-    v->tuples[tuple].chars = NULL;
-    v->tuples[tuple].khead = NULL;
-    v->tuples[tuple].vkhead = NULL;
-    v->tuples[tuple].cvt = NULL;
-return( sf );
-}
-
-static void MMFillFromVAR(SplineFont *sf, struct ttfinfo *info) {
-    MMSet *mm = (MMSet *) xzalloc(sizeof (MMSet));
-    struct variations *v = info->variations;
-    int i,j;
-
-    sf->mm = mm;
-    mm->normal = sf;
-    mm->apple = true;
-    mm->axis_count = v->axis_count;
-    mm->instance_count = v->tuple_count;
-    mm->instances = xmalloc(v->tuple_count*sizeof(SplineFont *));
-    mm->positions = xmalloc(v->tuple_count*v->axis_count*sizeof(real));
-    for ( i=0; i<v->tuple_count; ++i ) for ( j=0; j<v->axis_count; ++j )
-	mm->positions[i*v->axis_count+j] = v->tuples[i].coords[j];
-    mm->defweights = xcalloc(v->tuple_count,sizeof(real));	/* Doesn't apply */
-    mm->axismaps = xcalloc(v->axis_count,sizeof(struct axismap));
-    for ( i=0; i<v->axis_count; ++i ) {
-	mm->axes[i] = AxisNameConvert(v->axes[i].tag);
-	mm->axismaps[i].min = v->axes[i].min;
-	mm->axismaps[i].def = v->axes[i].def;
-	mm->axismaps[i].max = v->axes[i].max;
-	if ( v->axes[i].paircount==0 ) {
-	    mm->axismaps[i].points = 3;
-	    mm->axismaps[i].blends = xmalloc(3*sizeof(real));
-	    mm->axismaps[i].designs = xmalloc(3*sizeof(real));
-	    mm->axismaps[i].blends[0] = -1; mm->axismaps[i].designs[0] = mm->axismaps[i].min;
-	    mm->axismaps[i].blends[1] =  0; mm->axismaps[i].designs[1] = mm->axismaps[i].def;
-	    mm->axismaps[i].blends[2] =  1; mm->axismaps[i].designs[2] = mm->axismaps[i].max;
-	} else {
-	    mm->axismaps[i].points = v->axes[i].paircount;
-	    mm->axismaps[i].blends = xmalloc(v->axes[i].paircount*sizeof(real));
-	    mm->axismaps[i].designs = xmalloc(v->axes[i].paircount*sizeof(real));
-	    for ( j=0; j<v->axes[i].paircount; ++j ) {
-		if ( v->axes[i].mapfrom[j]<=0 ) {
-		    mm->axismaps[i].designs[j] = mm->axismaps[i].def +
-			    v->axes[i].mapfrom[j]*(mm->axismaps[i].def-mm->axismaps[i].min);
-		} else {
-		    mm->axismaps[i].designs[j] = mm->axismaps[i].def +
-			    v->axes[i].mapfrom[j]*(mm->axismaps[i].max-mm->axismaps[i].def);
-		}
-		mm->axismaps[i].blends[j] = v->axes[i].mapto[j];
-	    }
-	}
-	mm->axismaps[i].axisnames = MacNameCopy(FindMacName(info, v->axes[i].nameid));
-    }
-    mm->named_instance_count = v->instance_count;
-    mm->named_instances = xmalloc(v->instance_count*sizeof(struct named_instance));
-    for ( i=0; i<v->instance_count; ++i ) {
-	mm->named_instances[i].coords = v->instances[i].coords;
-	v->instances[i].coords = NULL;
-	mm->named_instances[i].names = MacNameCopy(FindMacName(info, v->instances[i].nameid));
-    }
-    for ( i=0; i<mm->instance_count; ++i )
-	mm->instances[i] = SFFromTuple(sf,v,i,mm,info);
-    VariationFree(info);
 }
 
 static void PsuedoEncodeUnencoded(EncMap *map,struct ttfinfo *info) {
@@ -6103,9 +5942,6 @@ static SplineFont *SFFillFromTTF(struct ttfinfo *info) {
 	for ( otl= isgpos? sf->gpos_lookups:sf->gsub_lookups; otl!=NULL; otl=otl->next )
 	    otl->features = FLOrder(otl->features);
     }
-
-    if ( info->variations!=NULL )
-	MMFillFromVAR(sf,info);
 
     if ( info->cff_length!=0 && !sf->layers[ly_fore].order2 ) {
 	/* Clean up the hint masks, We create an initial hintmask whether we */

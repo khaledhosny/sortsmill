@@ -108,7 +108,7 @@ libsortsmillff_fontforge_la_SOURCES = autohint.c autosave.c	\
 	mathconstants.c mm.c namelist.c namelist_data.c nonlineartrans.c	\
 	noprefs.c nouiutil.c nowakowskittfinstr.c ofl.c othersubrs.c		\
 	palmfonts.c parsepdf.c parsepfa.c parsettfatt.c parsettfbmf.c		\
-	parsettf.c parsettfvar.c print.c psread.c pua.c python.c			\
+	parsettf.c print.c psread.c pua.c python.c			\
 	generatefont.c scstyles.c search.c sfd1.c sfd.c sflayout.c				\
 	splinechar.c splinefill.c splinefont.c splineorder2.c				\
 	splineoverlap.c splinesaveafm.c splinesave.c splinestroke.c			\

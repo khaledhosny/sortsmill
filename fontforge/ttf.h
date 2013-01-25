@@ -173,11 +173,6 @@ struct ttfinfo {
 		/* EBLT, bloc */
     uint32_t bitmaploc_start;	/* Offset to start of bitmap locator data */
     uint32_t bitmaploc_length;
-		/* gvar, etc. */
-    uint32_t gvar_start, gvar_len;
-    uint32_t fvar_start, fvar_len;
-    uint32_t avar_start, avar_len;
-    uint32_t cvar_start, cvar_len;
 		/* head */
     uint32_t head_start;
 		/* hhea */
@@ -858,9 +853,6 @@ extern void readttfgpossub(FILE *ttf,struct ttfinfo *info,int gpos);
 extern void readttfgdef(FILE *ttf,struct ttfinfo *info);
 extern void readttfbase(FILE *ttf,struct ttfinfo *info);
 extern void readttfjstf(FILE *ttf,struct ttfinfo *info);
-
-extern void VariationFree(struct ttfinfo *info);
-extern void readttfvariations(struct ttfinfo *info, FILE *ttf);
 
 extern struct otfname *FindAllLangEntries(FILE *ttf, struct ttfinfo *info, int id );
 
