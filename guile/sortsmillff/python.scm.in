@@ -257,7 +257,7 @@
                                  (_ "expected a Python object") obj)] ))]
        )))
 
- (define-guile-python-pyx-procedure '* "__c_pyguile_make" '(* *))
+ (define-guile-python-pyx-procedure '* "__c_pyguile_make" '(*))
  (define-guile-python-pyx-procedure '* "__c_pyguile_address" '(*))
  (define-guile-python-pyx-procedure '* "__pyguile_check" '(*))
  (define-guile-python-pyx-procedure '* "__exec_python" '(*))
@@ -265,6 +265,7 @@
  (define-guile-python-pyx-procedure '* "__c_py_wrap_function" '(*))
  (define-guile-python-pyx-procedure '* "__apply_python_callable" '(* * *))
  (define-guile-python-pyx-procedure '* "__py_raise_guile_exception" '(*))
+ (define-guile-python-pyx-procedure '* "__py_exception_description" '(*))
  (define-guile-python-pyx-procedure '* "__c_string_to_python_string" '(*))
  (define-guile-python-pyx-procedure '* "__python_string_to_c_string" '(*))
  (define-guile-python-pyx-procedure '* "__c_eval_python" '(*))
@@ -284,6 +285,7 @@
  (define-py-to-py-filter pyexec-base __exec_python)
  (define-py-to-py-filter pyexec-file-name-base __exec_python_file_name)
  (define-py-to-py-filter py-raise-guile-exception __py_raise_guile_exception)
+ (define-py-to-py-filter py-exception-description-base __py_exception_description)
  (define-py-to-py-filter pylong->pympz __pylong_to_pympz)
  (define-py-to-py-filter pympz->pylong __pympz_to_pylong)
  (define-py-to-py-filter py-repr __py_repr)
@@ -297,30 +299,29 @@
  (define (procedure->pycallable proc)
    (let* ([wrapped-proc
            (lambda (args)
-             (catch #t (lambda ()
-                         (pyobject->pointer
-                          (apply proc (pytuple->list (pointer->pyobject args)))))
-               pycallable-catch-handler))]
+             (pyobject->pointer (apply proc (pytuple->list
+                                             (pointer->pyobject args)))))]
           [func (procedure->pointer '* wrapped-proc '(*))])
      (pointer->pyobject ((__c_py_wrap_function) func))))
+
+;;;;;
+;;;;; This version that catches Guile exceptions and wraps them in
+;;;;; Python exceptions seems not to be worth the trouble.
+;;;;;
+;;; (define (procedure->pycallable proc)
+;;;   (let* ([wrapped-proc
+;;;           (lambda (args)
+;;;             (catch #t (lambda ()
+;;;                         (pyobject->pointer
+;;;                          (apply proc (pytuple->list (pointer->pyobject args)))))
+;;;               pycallable-catch-handler))]
+;;;          [func (procedure->pointer '* wrapped-proc '(*))])
+;;;     (pointer->pyobject ((__c_py_wrap_function) func))))
 
  (define (pycallable-catch-handler key . args)
    (let ([py-key (string->pystring (symbol->string key))]
          [py-args (list->pytuple (map scm->pyguile args))])
      (py-raise-guile-exception (make-pytuple py-key py-args))))
-
-;;;;;; (define (py-guile-exception-string key . args)
-;;;;;;   (let ([write-arg (lambda (arg)
-;;;;;;                      (write (scm->pyguile (pointer->scm (make-pointer arg)))))])
-;;;;;;     (string-append "<guile exception: '"
-;;;;;;                    (with-output-to-string (lambda () (write key)))
-;;;;;;                    (fold-left
-;;;;;;                     [lambda (s arg)
-;;;;;;                       (string-append s " "
-;;;;;;                                      (with-output-to-string
-;;;;;;                                       (lambda () (write-arg arg))))]
-;;;;;;                     "" args)
-;;;;;;                    ">")))
 
  (define pyapply
    (case-lambda
@@ -339,21 +340,11 @@
                             (pyobject->pointer keyword-args)))] )] ))
 
  (define (scm->pyguile obj)
-   (pointer->pyobject
-    ((__c_pyguile_make) (scm->pointer obj) pyguile-stringifier)))
+   (pointer->pyobject ((__c_pyguile_make) (scm->pointer obj))))
 
  (define (scm->pyobject obj)
    (cond [(pyobject? obj) obj]
-         [else (pointer->pyobject
-                ((__c_pyguile_make) (scm->pointer obj) pyguile-stringifier))]))
-
- (define pyguile-stringifier
-   (procedure->pointer
-    '*
-    (lambda (p) (pyobject->pointer
-                 (string->pystring (with-output-to-string
-                                    [lambda () (write (pointer->scm p))]))))
-    '(*)))
+         [else (pointer->pyobject ((__c_pyguile_make) (scm->pointer obj)))]))
 
  (define (pyguile->scm obj)
    (cond [(pyguile? obj)
@@ -362,33 +353,33 @@
                                     (_ "expected a pyguile object")
                                     obj)]))
 
-  (define (pyguile? obj)
+ (define (pyguile? obj)
    (if (pyobject? obj) (pyguile?-base obj) #f))
+
+ (set-exception-printer!
+  'python-exception
+  (lambda (port key args default-printer)
+    (match args
+      [[who exc-info . rest]
+       (when who (format port "In procedure ~a:\n" who))
+       (format port "~a" (py-exception-description exc-info))]
+      [_ (default-printer)] )))
+
+ (define (py-exception-description exc-info)
+   (apply string-append
+          "ERROR: Python exception:\n"
+          (map pystring->string
+               (pylist->list (py-exception-description-base exc-info)))))
 
  (define (pyexec s)
    (cond
-    [(or (string? s) (pystring? s))
-     (let ([retval (pyexec-base (string->pystring s))])
-       (cond [(pynone? retval) *unspecified*]
-             [else (raise
-                    (condition
-                     (apply make-python-error
-                            (pytuple->list (cadr (pytuple->list retval))))
-                     (make-who-condition 'pyexec)
-                     (make-irritants-condition (list s))))] ))]
+    [[or (string? s) (pystring? s)] (pyexec-base (string->pystring s))]
     [else (string-or-pystring-failure 'pyexec s)]))
 
  (define (pyexec-file-name file-name)
    (cond
-    [(or (string? file-name) (pystring? file-name))
-     (let ([retval (pyexec-file-name-base (string->pystring file-name))])
-       (cond [(pynone? retval) *unspecified*]
-             [else (raise
-                    (condition
-                     (apply make-python-error
-                            (pytuple->list (cadr (pytuple->list retval))))
-                     (make-who-condition 'pyexec-file-name)
-                     (make-irritants-condition (list file-name))))] ))]
+    [[or (string? file-name) (pystring? file-name)]
+     (pyexec-file-name-base (string->pystring file-name))]
     [else (string-or-pystring-failure 'pyexec-file-name file-name)]))
 
  (define integer->pylong (compose pympz->pylong integer->pympz))

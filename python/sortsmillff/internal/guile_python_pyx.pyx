@@ -36,6 +36,7 @@ ctypedef object (*tuple_func_t) (object)
 
 import sys
 import gmpy
+import traceback
 
 #--------------------------------------------------------------------------
 
@@ -45,22 +46,18 @@ import gmpy
 __pyguile_objects = set ()
 
 cdef class pyguile (object):
-  """A opaque representation of Guile objects."""
+  """An opaque representation of Guile objects."""
 
-  # These addresses should be kept in uintptr_t format rather than as
-  # a Python long, so the Boehm GC can recognize them.
-  cdef public uintptr_t address      # The Guile ‘object-address’.
-  cdef uintptr_t stringifier_address # A function __str__ calls to
-                                     # ‘stringify’ the object.
+  # This address should be kept in uintptr_t format rather than as a
+  # Python long, so the Boehm GC can recognize it
+  cdef public uintptr_t address # The Guile ‘object-address’.
 
   def __cinit__ (self):
-    self.stringifier_address = <uintptr_t> NULL
     self.address = <uintptr_t> NULL
 
-  def __init__ (self, uintptr_t address, uintptr_t stringifier_address = 0):
+  def __init__ (self, uintptr_t address):
     global __pyguile_objects
     self.address = address
-    self.stringifier_address = stringifier_address
     __pyguile_objects.add (self)
 
   def __del__ (self):
@@ -68,20 +65,20 @@ cdef class pyguile (object):
     __pyguile_objects.remove (self)
 
   def __repr__ (self):
-    return ("pyguile(0x{:x},0x{:x})"
-            .format (long (self.address), long (self.stringifier_address)))
+    return "pyguile(0x{:x})".format (long (self.address))
 
   def __str__ (self):
-    cdef void *stringifier_pointer = <void *> self.stringifier_address
-    cdef stringifier_t stringifier = <stringifier_t> stringifier_pointer
-    cdef void *pointer = <void *> self.address
-    string = stringifier (pointer)
+    cdef SCM obj = <SCM> <void *> self.address
+    cdef SCM port = scm.scm_open_output_string ()
+    scm.scm_write (obj, port)
+    cdef SCM scm_string = scm.scm_get_output_string (port)
+    scm.scm_close_port (port)
+    cdef char *string = xgc.x_gc_grabstr (scm.scm_to_utf8_stringn (scm_string, NULL))
     return "<pyguile {} 0x{:x}>".format (string, long (self.address))
 
-cdef public object __c_pyguile_make (void *pointer, void *stringifier_pointer):
+cdef public object __c_pyguile_make (void *pointer):
   cdef uintptr_t address = <uintptr_t> pointer
-  cdef uintptr_t stringifier_address = <uintptr_t> stringifier_pointer
-  return pyguile (address, stringifier_address)
+  return pyguile (address)
 
 cdef public void *__c_pyguile_address (object obj):
   cdef uintptr_t address = obj.address
@@ -99,56 +96,43 @@ class guile_exception (Exception):
     self.key = key
     self.args = args
 
-###  def __repr__ (self):
-###    return "guile_exception({},{})".format (repr (self.key), repr (self.args))
-###
-###  def __str__ (self):
-###    scm.scm_dynwind_begin (<scm.scm_t_dynwind_flags> 0)
-###
-###    cdef char *key = __python_string_to_c_string (self.key)
-###
-###    cdef SCM args = scm.scm_eol ()
-###    cdef SCM obj
-###    for arg in self.args:
-###      obj = scm.scm_from_uintmax (<uintmax_t> arg.address)
-###      args = scm.scm_cons (obj, args)
-###    args = scm.scm_reverse (args)
-###
-###    cdef SCM guile_string = \
-###        scm.scm_apply_1 (scm.scm_c_private_ref ("sortsmillff python",
-###                                                "py-guile-exception-string"),
-###                         scm.scm_from_utf8_symbol (key), args)
-###
-###    cdef char *s = scm.scm_to_utf8_stringn (guile_string, NULL)
-###    scm.scm_dynwind_free (s)
-###
-###    python_string = __c_string_to_python_string (s)
-###
-###    scm.scm_dynwind_end ()
-###
-###    return python_string
-
-cdef public object __py_raise_guile_exception (object key_and_args):
-  (key, args) = key_and_args
+cdef public object __py_raise_guile_exception (object data):
+  (key, args) = data
   raise guile_exception (key, args)
 
 #--------------------------------------------------------------------------
 
+cdef public object __py_exception_description (object exc_info):
+  description = traceback.format_exception (*exc_info)
+  return description
+
+#--------------------------------------------------------------------------
+
 cdef public object __exec_python (object python_code):
-  retval = None
+  cdef SCM scm_info
   try:
     exec python_code in globals (), {}
   except (object, BaseException, Exception) as exc:
-    retval = (exc, sys.exc_info ())
-  return retval
+    info = sys.exc_info ()
+    scm_info = scm.scm_call_1 (scm.scm_c_public_ref ("sortsmillff python",
+                                                     "pointer->pyobject"),
+                               scm.scm_from_pointer (<PyObject *> info, NULL))
+    scm.scm_throw (scm.scm_from_utf8_symbol ("python-exception"),
+                   scm.scm_list_2 (scm.scm_from_utf8_symbol ("pyexec"),
+                                   scm_info))
 
 cdef public object __exec_python_file_name (object file_name):
-  retval = None
+  cdef SCM scm_info
   try:
     execfile (file_name, globals (), {})
   except (object, BaseException, Exception) as exc:
-    retval = (exc, sys.exc_info ())
-  return retval
+    info = sys.exc_info ()
+    scm_info = scm.scm_call_1 (scm.scm_c_public_ref ("sortsmillff python",
+                                                     "pointer->pyobject"),
+                               scm.scm_from_pointer (<PyObject *> info, NULL))
+    scm.scm_throw (scm.scm_from_utf8_symbol ("python-exception"),
+                   scm.scm_list_2 (scm.scm_from_utf8_symbol ("pyexec-file-name"),
+                                   scm_info))
 
 cdef public object __c_eval_python (char *python_code):
   py_code = python_code

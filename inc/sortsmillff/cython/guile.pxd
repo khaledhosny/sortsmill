@@ -226,7 +226,15 @@ cdef extern from "libguile.h":
   void* scm_to_pointer (SCM obj)
   
   SCM scm_read_hash_extend (SCM chr, SCM proc)
+
+  SCM scm_close_port (SCM port)
   SCM scm_read (SCM port)
+  SCM scm_write (SCM value, SCM port)
+  SCM scm_call_with_output_string (SCM proc)
+  SCM scm_call_with_input_string (SCM string, SCM proc)
+  SCM scm_open_input_string (SCM str)
+  SCM scm_open_output_string ()
+  SCM scm_get_output_string (SCM port)
 
   SCM scm_c_public_ref (const_char_ptr module_name, const_char_ptr name)
   SCM scm_c_private_ref (const_char_ptr module_name, const_char_ptr name)

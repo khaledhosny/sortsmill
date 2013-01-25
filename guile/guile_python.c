@@ -63,6 +63,7 @@ initialize_gmpy_pymodule_if_necessary (void)
 
 //-------------------------------------------------------------------------
 
+/*
 // FIXME: Put this in the auxiliary library.
 static SCM
 rnrs_make_python_error (SCM ptype, SCM pvalue, SCM ptraceback)
@@ -81,6 +82,7 @@ rnrs_c_make_python_error (PyObject *ptype, PyObject *pvalue,
                                  PyObject_ptr_to_scm_pyobject (pvalue),
                                  PyObject_ptr_to_scm_pyobject (ptraceback));
 }
+*/
 
 static SCM
 scm_py_failure (SCM who, SCM irritants)
@@ -94,18 +96,36 @@ scm_py_failure (SCM who, SCM irritants)
       PyObject *pvalue;
       PyObject *ptraceback;
       PyErr_Fetch (&ptype, &pvalue, &ptraceback);
+      SCM scm_ptype = PyObject_ptr_to_scm_pyobject (ptype);
+      SCM scm_pvalue = PyObject_ptr_to_scm_pyobject (pvalue);
+      SCM scm_ptraceback = PyObject_ptr_to_scm_pyobject (ptraceback);
+      SCM exc_info = scm_list_to_pytuple (scm_list_3 (scm_ptype, scm_pvalue, scm_ptraceback));
+      scm_throw (scm_from_utf8_symbol ("python-exception"),
+		 scm_list_2 (scm_from_utf8_string ("scm_py_failure"), exc_info));
+      /*
+      scm_error_scm (scm_from_utf8_symbol ("python-error"), who,
+		     scm_from_utf8_string (_("Python error: ~a")),
+		     scm_list_3 (PyObject_ptr_to_scm_pyobject (ptype),
+				 PyObject_ptr_to_scm_pyobject (pvalue),
+				 PyObject_ptr_to_scm_pyobject (ptraceback)),
+		     scm_list_3 (PyObject_ptr_to_scm_pyobject (ptype),
+				 PyObject_ptr_to_scm_pyobject (pvalue),
+				 PyObject_ptr_to_scm_pyobject (ptraceback)));
+      */
+      /*
       rnrs_raise_condition
         (scm_list_3
          (rnrs_c_make_python_error (ptype, pvalue, ptraceback),
           rnrs_make_who_condition (who),
           rnrs_make_irritants_condition (irritants)));
+      */
     }
   else
     rnrs_raise_condition
       (scm_list_4
        (rnrs_make_error (),
         rnrs_make_who_condition (who),
-        rnrs_c_make_message_condition (_("Python failure")),
+        rnrs_c_make_message_condition (_("Python error")),
         rnrs_make_irritants_condition (irritants)));
 
   return SCM_UNSPECIFIED;

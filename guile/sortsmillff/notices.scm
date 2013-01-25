@@ -56,6 +56,10 @@
       (let ([in-proc (lambda (proc)
                        (if proc (format #f "In procedure ~a : " proc) ""))])
         (match args
+          ;;;;
+          ;;;; FIXME FIXME FIXME: Add a case for R⁶RS exceptions. Or use Guile internals more.
+          ;;;;
+
           ;; A conventional Guile-style error exception
           ;; without format arguments.
           [[(? (lambda (p) (or (eq? p #f) (string? p))) proc)
