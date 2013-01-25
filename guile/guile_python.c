@@ -31,8 +31,15 @@ void init_guile_sortsmillff_python (void);
 
 // FIXME: Put these in the auxiliary library, but with more
 // comprehensible names.
-static SCM PyObject_ptr_to_scm_pyobject (PyObject *p);
-static SCM borrowed_PyObject_ptr_to_scm_pyobject (PyObject *p);
+SCM PyObject_ptr_to_scm_pyobject (PyObject *p);
+SCM borrowed_PyObject_ptr_to_scm_pyobject (PyObject *p);
+PyObject *pyobject_to_PyObject_ptr (SCM obj);
+
+// FIXME: Put these (and much more) in the auxiliary library.
+SCM scm_list_to_pytuple (SCM obj);
+SCM scm_pytuple_to_list (SCM obj);
+SCM scm_list_to_pylist (SCM obj);
+SCM scm_pylist_to_list (SCM obj);
 
 //-------------------------------------------------------------------------
 
@@ -157,13 +164,13 @@ scm_borrowed_pointer_to_scm_pyobject (SCM p)
                                        "borrowed-pointer->pyobject"), p);
 }
 
-static SCM
+SCM
 PyObject_ptr_to_scm_pyobject (PyObject *p)
 {
   return scm_pointer_to_scm_pyobject (scm_from_pointer (p, NULL));
 }
 
-static SCM
+SCM
 borrowed_PyObject_ptr_to_scm_pyobject (PyObject *p)
 {
   return scm_borrowed_pointer_to_scm_pyobject (scm_from_pointer (p, NULL));
@@ -176,8 +183,6 @@ scm_pyobject_to_scm_pointer (SCM obj)
     scm_call_1 (scm_c_public_ref ("sortsmillff python", "pyobject->pointer"),
                 obj);
 }
-
-extern PyObject *pyobject_to_PyObject_ptr (SCM obj);
 
 PyObject *
 pyobject_to_PyObject_ptr (SCM obj)
@@ -365,7 +370,7 @@ scm_pylong_to_pointer (SCM obj)
   return scm_from_pointer (p, NULL);
 }
 
-static SCM
+SCM
 scm_list_to_pytuple (SCM obj)
 {
   const char *who = "scm_list_to_pytuple";
@@ -397,7 +402,7 @@ scm_list_to_pytuple (SCM obj)
   return PyObject_ptr_to_scm_pyobject (tup);
 }
 
-static SCM
+SCM
 scm_pytuple_to_list (SCM obj)
 {
   PyObject *py_obj = pyobject_to_PyObject_ptr (obj);
@@ -418,7 +423,7 @@ scm_pytuple_to_list (SCM obj)
   return p;
 }
 
-static SCM
+SCM
 scm_list_to_pylist (SCM obj)
 {
   const char *who = "scm_list_to_pylist";
@@ -450,7 +455,7 @@ scm_list_to_pylist (SCM obj)
   return PyObject_ptr_to_scm_pyobject (lst);
 }
 
-static SCM
+SCM
 scm_pylist_to_list (SCM obj)
 {
   PyObject *py_obj = pyobject_to_PyObject_ptr (obj);

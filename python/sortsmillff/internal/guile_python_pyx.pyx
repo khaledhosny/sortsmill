@@ -19,21 +19,25 @@
 ## Some internals of the Guile-Python interface.
 ##
 
+include "sortsmillff/cython/config.pxi"
+
 cdef extern from 'config.h':
   pass
 
 from cpython.ref cimport PyObject
-from libc.stdint cimport uintptr_t
-from sortsmillff.cython.guile cimport SCM
+from libc.stdint cimport uintptr_t, uintmax_t
 cimport sortsmillff.cython.xgc as xgc
 
-cdef extern PyObject *pyobject_to_PyObject_ptr (SCM obj)
+from sortsmillff.cython.guile cimport SCM
+cimport sortsmillff.cython.guile as scm
+
+ctypedef object (*stringifier_t) (void *)
+ctypedef object (*tuple_func_t) (object)
 
 import sys
 import gmpy
 
-ctypedef object (*stringifier_t) (void *)
-ctypedef object (*tuple_func_t) (object)
+#--------------------------------------------------------------------------
 
 # ‘pyguile’ objects stay in this container until they are destroyed,
 # to help ensure that the Boehm GC does not collect them. FIXME: Is
@@ -53,7 +57,7 @@ cdef class pyguile (object):
     self.stringifier_address = <uintptr_t> NULL
     self.address = <uintptr_t> NULL
 
-  def __init__ (self, uintptr_t address, uintptr_t stringifier_address):
+  def __init__ (self, uintptr_t address, uintptr_t stringifier_address = 0):
     global __pyguile_objects
     self.address = address
     self.stringifier_address = stringifier_address
@@ -86,6 +90,49 @@ cdef public void *__c_pyguile_address (object obj):
 
 cdef public object __pyguile_check (object obj):
   return isinstance (obj, pyguile)
+
+#--------------------------------------------------------------------------
+
+class guile_exception (Exception):
+
+  def __init__ (self, key, args):
+    self.key = key
+    self.args = args
+
+###  def __repr__ (self):
+###    return "guile_exception({},{})".format (repr (self.key), repr (self.args))
+###
+###  def __str__ (self):
+###    scm.scm_dynwind_begin (<scm.scm_t_dynwind_flags> 0)
+###
+###    cdef char *key = __python_string_to_c_string (self.key)
+###
+###    cdef SCM args = scm.scm_eol ()
+###    cdef SCM obj
+###    for arg in self.args:
+###      obj = scm.scm_from_uintmax (<uintmax_t> arg.address)
+###      args = scm.scm_cons (obj, args)
+###    args = scm.scm_reverse (args)
+###
+###    cdef SCM guile_string = \
+###        scm.scm_apply_1 (scm.scm_c_private_ref ("sortsmillff python",
+###                                                "py-guile-exception-string"),
+###                         scm.scm_from_utf8_symbol (key), args)
+###
+###    cdef char *s = scm.scm_to_utf8_stringn (guile_string, NULL)
+###    scm.scm_dynwind_free (s)
+###
+###    python_string = __c_string_to_python_string (s)
+###
+###    scm.scm_dynwind_end ()
+###
+###    return python_string
+
+cdef public object __py_raise_guile_exception (object key_and_args):
+  (key, args) = key_and_args
+  raise guile_exception (key, args)
+
+#--------------------------------------------------------------------------
 
 cdef public object __exec_python (object python_code):
   retval = None
@@ -168,3 +215,5 @@ cdef public object __pyindexed_set (object args):
 
 cdef public object __python_alist_to_pydict (object alist):
   return { key: value for (key, value) in alist }
+
+#--------------------------------------------------------------------------
