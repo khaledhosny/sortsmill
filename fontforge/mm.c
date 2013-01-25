@@ -66,57 +66,20 @@ return(axismap->designs[axismap->points-1]);
 static char *_MMMakeFontname(MMSet *mm,real *normalized,char **fullname) {
     char *pt, *pt2, *hyphen=NULL;
     char *ret = NULL;
-    int i,j;
+    int i;
 
-    if ( mm->apple ) {
-	for ( i=0; i<mm->named_instance_count; ++i ) {
-	    for ( j=0; j<mm->axis_count; ++j ) {
-		if (( normalized[j] == -1 &&
-			RealApprox(mm->named_instances[i].coords[j],mm->axismaps[j].min) ) ||
-		    ( normalized[j] ==  0 &&
-			RealApprox(mm->named_instances[i].coords[j],mm->axismaps[j].def) ) ||
-		    ( normalized[j] ==  1 &&
-			RealApprox(mm->named_instances[i].coords[j],mm->axismaps[j].max) ))
-		    /* A match so far */;
-		else
-	    break;
-	    }
-	    if ( j==mm->axis_count )
-	break;
-	}
-	if ( i!=mm->named_instance_count ) {
-	    char *styles = PickNameFromMacName(mm->named_instances[i].names);
-	    if ( styles==NULL )
-		styles = FindEnglishNameInMacName(mm->named_instances[i].names);
-	    if ( styles!=NULL ) {
-		ret = xmalloc(strlen(mm->normal->familyname)+ strlen(styles)+3 );
-		strcpy(ret,mm->normal->familyname);
-		hyphen = ret+strlen(ret);
-		strcpy(hyphen," ");
-		strcpy(hyphen+1,styles);
-		free(styles);
-	    }
-	}
-    }
-
-    if ( ret==NULL ) {
 	pt = ret = xmalloc(strlen(mm->normal->familyname)+ mm->axis_count*15 + 1);
 	strcpy(pt,mm->normal->familyname);
 	pt += strlen(pt);
 	*pt++ = '_';
 	for ( i=0; i<mm->axis_count; ++i ) {
-	    if ( !mm->apple )
-		sprintf( pt, " %d%s", (int) rint(MMAxisUnmap(mm,i,normalized[i])),
-			MMAxisAbrev(mm->axes[i]));
-	    else
-		sprintf( pt, " %.1f%s", (double) MMAxisUnmap(mm,i,normalized[i]),
+	    sprintf( pt, " %d%s", (int) rint(MMAxisUnmap(mm,i,normalized[i])),
 			MMAxisAbrev(mm->axes[i]));
 	    pt += strlen(pt);
 	}
 	if ( pt>ret && pt[-1]==' ' )
 	    --pt;
 	*pt = '\0';
-    }
 
     *fullname = ret;
 
@@ -895,25 +858,6 @@ return( false );
 return( true );
 }
 
-static int RefTransformsMatch(SplineChar *sc1, SplineChar *sc2) {
-    /* Apple only provides a means to change the translation of a reference */
-    /*  so if rotation, skewing, scaling, etc. differ then we can't deal with */
-    /*  it. */
-    RefChar *r1 = sc1->layers[ly_fore].refs;
-    RefChar *r2 = sc2->layers[ly_fore].refs;
-
-    while ( r1!=NULL && r2!=NULL ) {
-	if ( r1->transform[0]!=r2->transform[0] ||
-		r1->transform[1]!=r2->transform[1] ||
-		r1->transform[2]!=r2->transform[2] ||
-		r1->transform[3]!=r2->transform[3] )
-return( false );
-	r1 = r1->next;
-	r2 = r2->next;
-    }
-return( true );
-}
-
 static int HintsMatch(StemInfo *h1,StemInfo *h2) {
     while ( h1!=NULL && h2!=NULL ) {
 #if 0		/* Nope. May conflict in one instance and not in another */
@@ -982,19 +926,15 @@ return( false );
     for ( i=0; i<mm->instance_count; ++i )
 	if ( mm->instances[i]->layers[ly_fore].order2 != mm->apple ) {
 	    if ( complain ) {
-		if ( mm->apple )
-		    ff_post_error(_("Bad Multiple Master Font"),_("The font %.30s contains cubic splines. It must be converted to quadratic splines before it can be used in an apple distortable font"),
-			    mm->instances[i]->fontname);
-		else
-		    ff_post_error(_("Bad Multiple Master Font"),_("The font %.30s contains quadratic splines. It must be converted to cubic splines before it can be used in a multiple master"),
+		ff_post_error(_("Bad Multiple Master Font"),_("The font %.30s contains quadratic splines. It must be converted to cubic splines before it can be used in a multiple master"),
 			    mm->instances[i]->fontname);
 	    }
 return( false );
 	}
 
-    sf = mm->apple ? mm->normal : mm->instances[0];
+    sf = mm->instances[0];
 
-    if ( !mm->apple && PSDictHasEntry(sf->private,"ForceBold")!=NULL &&
+    if ( PSDictHasEntry(sf->private,"ForceBold")!=NULL &&
 	    PSDictHasEntry(mm->normal->private,"ForceBoldThreshold")==NULL) {
 	if ( complain )
 	    ff_post_error(_("Bad Multiple Master Font"),_("There is no ForceBoldThreshold entry in the weighted font, but there is a ForceBold entry in font %30s"),
@@ -1002,7 +942,7 @@ return( false );
 return( false );
     }
 
-    for ( j=mm->apple ? 0 : 1; j<mm->instance_count; ++j ) {
+    for ( j=1; j<mm->instance_count; ++j ) {
 	if ( sf->glyphcnt!=mm->instances[j]->glyphcnt ) {
 	    if ( complain )
 		ff_post_error(_("Bad Multiple Master Font"),_("The fonts %1$.30s and %2$.30s have a different number of glyphs or different encodings"),
@@ -1014,7 +954,6 @@ return( false );
 			sf->fontname, mm->instances[j]->fontname);
 return( false );
 	}
-	if ( !mm->apple ) {
 	    if ( PSDictHasEntry(mm->instances[j]->private,"ForceBold")!=NULL &&
 		    PSDictHasEntry(mm->normal->private,"ForceBoldThreshold")==NULL) {
 		if ( complain )
@@ -1031,11 +970,10 @@ return( false );
 return( false );
 		}
 	    }
-	}
     }
 
     for ( i=0; i<sf->glyphcnt; ++i ) {
-	for ( j=mm->apple?0:1; j<mm->instance_count; ++j ) {
+	for ( j=1; j<mm->instance_count; ++j ) {
 	    if ( SCWorthOutputting(sf->glyphs[i])!=SCWorthOutputting(mm->instances[j]->glyphs[i]) ) {
 		if ( complain ) {
 		    FVChangeGID( sf->fv,i);
@@ -1050,24 +988,7 @@ return( false );
 	    }
 	}
 	if ( SCWorthOutputting(sf->glyphs[i]) ) {
-	    if ( mm->apple && sf->glyphs[i]->layers[ly_fore].refs!=NULL && sf->glyphs[i]->layers[ly_fore].splines!=NULL ) {
-		if ( complain ) {
-		    FVChangeGID( sf->fv,i);
-		    ff_post_error(_("Bad Multiple Master Font"),_("The glyph %1$.30s in %2$.30s has both references and contours. This is not supported in a font with variations"),
-			    sf->glyphs[i]->name,sf->fontname);
-		}
-return( false );
-	    }
-	    for ( j=mm->apple?0:1; j<mm->instance_count; ++j ) {
-		if ( mm->apple && mm->instances[j]->glyphs[i]->layers[ly_fore].refs!=NULL &&
-			mm->instances[j]->glyphs[i]->layers[ly_fore].splines!=NULL ) {
-		    if ( complain ) {
-			FVChangeGID( sf->fv,i);
-			ff_post_error(_("Bad Multiple Master Font"),_("The glyph %1$.30s in %2$.30s has both references and contours. This is not supported in a font with variations"),
-				sf->glyphs[i]->name,mm->instances[j]->fontname);
-		    }
-return( false );
-		}
+	    for ( j=1; j<mm->instance_count; ++j ) {
 		if ( ContourCount(sf->glyphs[i])!=ContourCount(mm->instances[j]->glyphs[i])) {
 		    if ( complain ) {
 			FVChangeGID( sf->fv,i);
@@ -1075,7 +996,7 @@ return( false );
 				sf->glyphs[i]->name,sf->fontname, mm->instances[j]->fontname);
 		    }
 return( false );
-		} else if ( !mm->apple && !ContourPtMatch(sf->glyphs[i],mm->instances[j]->glyphs[i])) {
+		} else if ( !ContourPtMatch(sf->glyphs[i],mm->instances[j]->glyphs[i])) {
 		    if ( complain ) {
 			FVChangeGID( sf->fv,i);
 			ff_post_error(_("Bad Multiple Master Font"),_("The glyph %1$.30s in font %2$.30s has a different number of points (or control points) on its contours than in %3$.30s"),
@@ -1096,14 +1017,7 @@ return( false );
 				sf->glyphs[i]->name,sf->fontname, mm->instances[j]->fontname);
 		    }
 return( false );
-		} else if ( mm->apple && !RefTransformsMatch(sf->glyphs[i],mm->instances[j]->glyphs[i])) {
-		    if ( complain ) {
-			FVChangeGID( sf->fv,i);
-			ff_post_error(_("Bad Multiple Master Font"),_("The glyph %1$.30s in font %2$.30s has references with different scaling or rotation (etc.) than in %3$.30s"),
-				sf->glyphs[i]->name,sf->fontname, mm->instances[j]->fontname);
-		    }
-return( false );
-		} else if ( !mm->apple && !KernsMatch(sf->glyphs[i],mm->instances[j]->glyphs[i])) {
+		} else if ( !KernsMatch(sf->glyphs[i],mm->instances[j]->glyphs[i])) {
 		    if ( complain ) {
 			FVChangeGID( sf->fv,i);
 			ff_post_error(_("Bad Multiple Master Font"),_("The glyph %1$.30s in font %2$.30s has a different set of kern pairs than in %3$.30s"),
@@ -1112,15 +1026,6 @@ return( false );
 return( false );
 		}
 	    }
-	    if ( mm->apple && !ContourPtNumMatch(mm,i)) {
-		if ( complain ) {
-		    FVChangeGID( sf->fv,i);
-		    ff_post_error(_("Bad Multiple Master Font"),_("The glyph %1$.30s has a different numbering of points (and control points) on its contours than in the various instances of the font"),
-			    sf->glyphs[i]->name);
-		}
-return( false );
-	    }
-	    if ( !mm->apple ) {
 		for ( j=1; j<mm->instance_count; ++j ) {
 		    if ( !HintsMatch(sf->glyphs[i]->hstem,mm->instances[j]->glyphs[i]->hstem)) {
 			if ( complain ) {
@@ -1148,41 +1053,6 @@ return( false );
 return( false );
 		    }
 		}
-	    }
-	}
-    }
-    if ( mm->apple ) {
-	struct ttf_table *cvt;
-	for ( cvt = mm->normal->ttf_tables; cvt!=NULL && cvt->tag!=CHR('c','v','t',' '); cvt=cvt->next );
-	if ( cvt==NULL ) {
-	    for ( j=0; j<mm->instance_count; ++j ) {
-		if ( mm->instances[j]->ttf_tables!=NULL ) {
-		    if ( complain )
-			ff_post_error(_("Bad Multiple Master Font"),_("The default font does not have a 'cvt ' table, but the instance %.30s does"),
-				mm->instances[j]->fontname);
-return( false );
-		}
-	    }
-	} else {
-	    /* Not all instances are required to have cvts, but any that do */
-	    /*  must be the same size */
-	    for ( j=0; j<mm->instance_count; ++j ) {
-		if ( mm->instances[j]->ttf_tables!=NULL &&
-			(mm->instances[j]->ttf_tables->next!=NULL ||
-			 mm->instances[j]->ttf_tables->tag!=CHR('c','v','t',' '))) {
-		    if ( complain )
-			ff_post_error(_("Bad Multiple Master Font"),_("Instance fonts may only contain a 'cvt ' table, but %.30s has some other truetype table as well"),
-				mm->instances[j]->fontname);
-return( false );
-		}
-		if ( mm->instances[j]->ttf_tables!=NULL &&
-			mm->instances[j]->ttf_tables->len!=cvt->len ) {
-		    if ( complain )
-			ff_post_error(_("Bad Multiple Master Font"),_("The 'cvt ' table in instance %.30s is a different size from that in the default font"),
-				mm->instances[j]->fontname);
-return( false );
-		}
-	    }
 	}
     }
 
