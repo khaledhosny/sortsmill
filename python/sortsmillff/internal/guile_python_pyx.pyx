@@ -118,8 +118,7 @@ cdef public object __exec_python (object python_code):
                                                      "pointer->pyobject"),
                                scm.scm_from_pointer (<PyObject *> info, NULL))
     scm.scm_throw (scm.scm_from_utf8_symbol ("python-exception"),
-                   scm.scm_list_2 (scm.scm_from_utf8_symbol ("pyexec"),
-                                   scm_info))
+                   scm.scm_list_2 (scm.scm_from_utf8_symbol ("pyexec"), scm_info))
 
 cdef public object __exec_python_file_name (object file_name):
   cdef SCM scm_info
@@ -131,12 +130,19 @@ cdef public object __exec_python_file_name (object file_name):
                                                      "pointer->pyobject"),
                                scm.scm_from_pointer (<PyObject *> info, NULL))
     scm.scm_throw (scm.scm_from_utf8_symbol ("python-exception"),
-                   scm.scm_list_2 (scm.scm_from_utf8_symbol ("pyexec-file-name"),
-                                   scm_info))
+                   scm.scm_list_2 (scm.scm_from_utf8_symbol ("pyexec-file-name"), scm_info))
 
 cdef public object __c_eval_python (char *python_code):
-  py_code = python_code
-  return eval (py_code.decode ('UTF-8'))
+  try:
+    py_code = python_code
+    retval = eval (py_code.decode ('UTF-8'))
+  except (object, BaseException, Exception) as exc:
+    info = sys.exc_info ()
+    scm_info = scm.scm_call_1 (scm.scm_c_public_ref ("sortsmillff python",
+                                                     "pointer->pyobject"),
+                               scm.scm_from_pointer (<PyObject *> info, NULL))
+    scm.scm_throw (scm.scm_from_utf8_symbol ("python-exception"),
+                   scm.scm_list_2 (scm.scm_from_utf8_symbol ("pyeval"), scm_info))
 
 def __py_wrap_function (uintptr_t func_address):
   def wrapped_func (*args):

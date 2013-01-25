@@ -413,8 +413,7 @@
 
  (define pyeval
    (match-lambda
-    [(? string? s) (pointer->pyobject
-                    ((__c_eval_python) (string->pointer s)))]
+    [(? string? s) (pointer->pyobject ((__c_eval_python) (string->pointer s)))]
     [(? pystring? s) (pyeval (pystring->string s))]
     [other (string-or-pystring-failure 'pyeval other)] ))
 
