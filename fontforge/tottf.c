@@ -71,25 +71,12 @@ Required for bitmaps
 	bhed		for apple bitmap only fonts, replaces head
 Optional for bitmaps
 	EBSC		bitmap scaling table (used in windows "bitmap-only" fonts)
-"Advanced Typograpy"
-  Apple
-	feat		(mapping between morx features and 'name' names)
-	kern		(if data are present)
-	lcar		(ligature caret, if data present)
-	morx		(substitutions, if data present)
-	prop		(glyph properties, if data present)
-	opbd		(optical bounds, if data present)
-  OpenType
+OpenType
 	GPOS		(opentype, if kern,anchor data are present)
 	GSUB		(opentype, if ligature (other subs) data are present)
 	GDEF		(opentype, if anchor data are present)
 MATH
 	MATH		(MS proposal, if math data present)
-Apple variation tables (for distortable (multiple master type) fonts)
-	fvar		(font variations)
-	gvar		(glyph variations)
-	cvar		(cvt variations)
-	avar		(axis variations)
 additional tables
 	cvt		for hinting
 	gasp		to control when things should be hinted
@@ -4081,7 +4068,6 @@ static void dumpnames(struct alltabs *at, SplineFont *sf,enum fontformat format)
     int i,j;
     struct ttflangname dummy, *cur, *useng = NULL;
     struct macname *mn;
-    struct other_names *on, *onn;
     NamTab nt;
     struct otfname *otfn;
     struct otffeatname *fn;
@@ -4128,13 +4114,6 @@ static void dumpnames(struct alltabs *at, SplineFont *sf,enum fontformat format)
 		AddMacName(&nt,mn,at->feat_name[i].strid);
 #endif
 	}
-    }
-    /* And the names used by the fvar table aren't mac unicode either */
-    for ( on = at->other_names; on!=NULL; on=onn ) {
-	for ( mn = on->mn; mn!=NULL ; mn = mn->next )
-	    AddMacName(&nt,mn,on->strid);
-	onn = on->next;
-	free(on);
     }
     /* Wow, the GPOS 'size' feature uses the name table in a very mac-like way*/
     if ( at->fontstyle_name_strid!=0 && sf->fontstyle_name!=NULL ) {
@@ -5224,15 +5203,6 @@ static void AbortTTF(struct alltabs *at, SplineFont *sf) {
     if ( at->tex!=NULL )
 	fclose(at->tex);
 
-    if ( at->gvar!=NULL )
-	fclose(at->gvar);
-    if ( at->fvar!=NULL )
-	fclose(at->fvar);
-    if ( at->cvar!=NULL )
-	fclose(at->cvar);
-    if ( at->avar!=NULL )
-	fclose(at->avar);
-
     for ( i=0; i<sf->subfontcnt; ++i ) {
 	if ( at->fds[i].private!=NULL )
 	    fclose(at->fds[i].private);
@@ -5371,8 +5341,6 @@ static void initATTables(struct alltabs *at, SplineFont *sf,
 	if ( at->gi.flags & ttf_flag_dummyDSIG )
 	    otf_dump_dummydsig(at,sf);
     }
-    if ( at->dovariations )
-	ttf_dumpvariations(at,sf);
     if (!at->opentypemode || (at->gi.flags&ttf_flag_oldkern))
 	ttf_dumpkerns(at,sf);		/* everybody supports a mimimal kern table */
 
@@ -5690,27 +5658,6 @@ static void buildtablestructures(struct alltabs *at, SplineFont *sf,
 	at->tabdir.tabs[i].tag = CHR('v','m','t','x');
 	at->tabdir.tabs[i].data = at->gi.vmtx;
 	at->tabdir.tabs[i++].length = at->gi.vmtxlen;
-    }
-
-    if ( at->fvar!=NULL ) {
-	at->tabdir.tabs[i].tag = CHR('f','v','a','r');
-	at->tabdir.tabs[i].data = at->fvar;
-	at->tabdir.tabs[i++].length = at->fvarlen;
-    }
-    if ( at->gvar!=NULL ) {
-	at->tabdir.tabs[i].tag = CHR('g','v','a','r');
-	at->tabdir.tabs[i].data = at->gvar;
-	at->tabdir.tabs[i++].length = at->gvarlen;
-    }
-    if ( at->cvar!=NULL ) {
-	at->tabdir.tabs[i].tag = CHR('c','v','a','r');
-	at->tabdir.tabs[i].data = at->cvar;
-	at->tabdir.tabs[i++].length = at->cvarlen;
-    }
-    if ( at->avar!=NULL ) {
-	at->tabdir.tabs[i].tag = CHR('a','v','a','r');
-	at->tabdir.tabs[i].data = at->avar;
-	at->tabdir.tabs[i++].length = at->avarlen;
     }
 
     if ( i>=MAX_TAB )
@@ -6142,14 +6089,6 @@ static void ATinit(struct alltabs *at,SplineFont *sf,EncMap *map,int flags, int 
     at->isotf = format==ff_otf || format==ff_otfcid;
     at->format = format;
     at->next_strid = 256;
-    if ( at->applemode && sf->mm!=NULL && sf->mm->apple &&
-	    (format==ff_ttf || format==ff_ttfsym ||  format==ff_ttfmacbin ||
-			format==ff_ttfdfont) &&
-	    MMValid(sf->mm,false)) {
-	at->dovariations = true;
-	at->gi.dovariations = true;
-	sf = sf->mm->normal;
-    }
     at->sf = sf;
     at->map = map;
 }

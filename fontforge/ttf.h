@@ -546,7 +546,6 @@ struct glyphinfo {
     int flags;
     int fixed_width;
     int32_t *bsizes;
-    bool dovariations;
     bool onlybitmaps;
     bool has_instrs;
     bool is_ttf;
@@ -574,12 +573,6 @@ struct vorg {
 struct feat_name {
     int strid;
     struct macname *mn, *smn;
-};
-
-struct other_names {
-    int strid;
-    struct macname *mn;
-    struct other_names *next;
 };
 
 struct alltabs {
@@ -669,14 +662,6 @@ struct alltabs {
     int texlen;
     FILE *bdf;
     int bdflen;
-    FILE *gvar;
-    int gvarlen;
-    FILE *fvar;
-    int fvarlen;
-    FILE *cvar;
-    int cvarlen;
-    FILE *avar;
-    int avarlen;
     FILE *fftmf;
     int fftmlen;
     FILE *dsigf;
@@ -696,7 +681,6 @@ struct alltabs {
     bool applebitmaps;
     bool otbbitmaps;
     bool isotf;
-    bool dovariations;	/* Output Apple *var tables (for mm fonts) */
     bool error;
     struct glyphinfo gi;
     int isfixed;
@@ -704,7 +688,6 @@ struct alltabs {
     int next_strid;
 
     struct feat_name *feat_name;
-    struct other_names *other_names;
     struct macname2 *ordered_feat;
 
     int next_lookup;	/* for doing nested lookups in contextual features */
@@ -786,7 +769,6 @@ extern void ttf_dumpkerns(struct alltabs *at, SplineFont *sf);
 extern int ContourPtNumMatch(MMSet *mm, int gid);
 VISIBLE extern int16_t **SCFindDeltas(MMSet *mm, int gid, int *_ptcnt);
 VISIBLE extern int16_t **CvtFindDeltas(MMSet *mm, int *_ptcnt);
-extern void ttf_dumpvariations(struct alltabs *at, SplineFont *sf);
 
 struct macsettingname {
     int mac_feature_type;
