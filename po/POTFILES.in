@@ -159,8 +159,8 @@ guile/sortsmill/usermenu.scm
 guile/sortsmill/views.scm
 guile/sortsmill/pure.scm.in
 guile/sortsmill/python.scm.in
-main/fontcompare.c
-main/fontimage.c
-main/fontlint.c
+main/compare.c
+main/image.c
+main/lint.c
 sfd2sxml/sfd2sxml.in
 sfd2sxml/sfd2xml.in
