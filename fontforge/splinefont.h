@@ -48,7 +48,6 @@ typedef double extended;
 #define CHR(ch1,ch2,ch3,ch4) (((ch1)<<24)|((ch2)<<16)|((ch3)<<8)|(ch4))
 
 #define MmMax		16      /* PS says at most this many instances for type1/2 mm fonts */
-#define AppleMmMax	26      /* Apple sort of has a limit of 4095, but we only support this many */
 
 typedef struct ipoint
 {
@@ -2186,7 +2185,6 @@ struct named_instance
 /*  to bother the user with specifying it. */
 /* (NormalizeDesignVector is fairly basic and shouldn't need user help ever) */
 /*  (As long as they want piecewise linear) */
-/* I'm not going to support intermediate designs at all for apple var tables */
 typedef struct mmset
 {
   int axis_count;
@@ -2196,7 +2194,6 @@ typedef struct mmset
   SplineFont *normal;
   real *positions;              /* array[instance][axis] saying where each instance lies on each axis */
   real *defweights;             /* array[instance] saying how much of each instance makes the normal font */
-  /* for adobe */
   struct axismap *axismaps;     /* array[axis] */
   char *cdv, *ndv;              /* for adobe */
   int named_instance_count;

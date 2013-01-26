@@ -176,7 +176,7 @@ libsortsmillff_fontforgeexe_la_SOURCES = alignment.c anchorsaway.c		\
 	cvshapes.c cvstroke.c cvtranstools.c displayfonts.c effectsui.c		\
 	encodingui.c fontinfo.c fontview.c freetypeui.c fvfontsdlg.c		\
 	fvmetricsdlg.c gotodlg.c groupsdlg.c histograms.c kernclass.c		\
-	layer2layer.c lookupui.c macencui.c math.c metricsview.c mmdlg.c	\
+	layer2layer.c lookupui.c math.c metricsview.c mmdlg.c	\
 	nonlineartransui.c openfontdlg.c prefs.c problems.c generatefontdlg.c	\
 	scriptingdlg.c scstylesui.c searchview.c sftextfield.c showatt.c	\
 	simplifydlg.c startui.c tilepath.c transform.c		\

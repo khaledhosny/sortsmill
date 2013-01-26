@@ -1168,10 +1168,6 @@ extern void PointerDlg (CharView *cv);
 extern void GListAddStr (GGadget *list, uint32_t *str, void *ud);
 extern void GListReplaceStr (GGadget *list, int index, uint32_t *str,
                              void *ud);
-extern struct macname *NameGadgetsGetNames (GWindow gw);
-extern void NameGadgetsSetEnabled (GWindow gw, int enable);
-extern int GCDBuildNames (GGadgetCreateData *gcd, GTextInfo *label, int pos,
-                          struct macname *names);
 
 extern uint32_t *FVOpenFont (char *title, const char *defaultfile, int mult);
 
