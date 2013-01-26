@@ -765,11 +765,6 @@ VISIBLE extern int gdefclass(SplineChar *sc);
 
 extern void ttf_dumpkerns(struct alltabs *at, SplineFont *sf);
 
-    /* Apple variation tables */
-extern int ContourPtNumMatch(MMSet *mm, int gid);
-VISIBLE extern int16_t **SCFindDeltas(MMSet *mm, int gid, int *_ptcnt);
-VISIBLE extern int16_t **CvtFindDeltas(MMSet *mm, int *_ptcnt);
-
 struct macsettingname {
     int mac_feature_type;
     int mac_feature_setting;

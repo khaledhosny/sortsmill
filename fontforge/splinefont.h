@@ -2199,7 +2199,6 @@ typedef struct mmset
   int named_instance_count;
   struct named_instance *named_instances;
   bool changed;
-  bool apple;
 } MMSet;
 
 /* mac styles. Useful idea we'll just steal it */

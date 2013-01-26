@@ -1121,8 +1121,6 @@ static void dumpcomposite(SplineChar *sc, struct glyphinfo *gi) {
     int i, ptcnt, ctcnt, flags, sptcnt, rd;
     SplineSet *ss;
     RefChar *ref;
-    SplineChar *isc = sc->ttf_instrs==NULL && sc->parent->mm!=NULL && sc->parent->mm->apple ?
-		sc->parent->mm->normal->glyphs[sc->orig_pos] : sc;
     int arg1, arg2;
 
 #if 0
@@ -1157,7 +1155,7 @@ static void dumpcomposite(SplineChar *sc, struct glyphinfo *gi) {
 	    flags |= _USE_MY_METRICS;
 	if ( ref->next!=NULL )
 	    flags |= _MORE;		/* More components */
-	else if ( isc->ttf_instrs_len!=0 )	/* Composits also inherit instructions */
+	else if ( sc->ttf_instrs_len!=0 )	/* Composits also inherit instructions */
 	    flags |= _INSTR;		/* Instructions appear after last ref */
 	if ( ref->transform[1]!=0 || ref->transform[2]!=0 )
 	    flags |= _MATRIX;		/* Need a full matrix */
@@ -1220,8 +1218,8 @@ static void dumpcomposite(SplineChar *sc, struct glyphinfo *gi) {
 	    gi->maxp->maxcomponentdepth = rd;
     }
 
-    if ( isc->ttf_instrs_len!=0 )
-	dumpinstrs(gi,isc->ttf_instrs,isc->ttf_instrs_len);
+    if ( sc->ttf_instrs_len!=0 )
+	dumpinstrs(gi,sc->ttf_instrs,sc->ttf_instrs_len);
 
     gi->pointcounts[gi->next_glyph++] = ptcnt;
     if ( gi->maxp->maxnumcomponents<i ) gi->maxp->maxnumcomponents = i;
@@ -1240,8 +1238,6 @@ static void dumpglyph(SplineChar *sc, struct glyphinfo *gi) {
     int contourcnt, ptcnt, origptcnt;
     BasePoint *bp;
     char *fs;
-    SplineChar *isc = sc->ttf_instrs==NULL && sc->parent->mm!=NULL && sc->parent->mm->apple ?
-		sc->parent->mm->normal->glyphs[sc->orig_pos] : sc;
 
     /* This must have been an error on my part, can't just remove points */
     /* they might be matched to anchors or something */
@@ -1286,7 +1282,7 @@ return;
 	IError( "Point count wrong calculated=%d, actual=%d in %.20s", origptcnt, ptcnt, sc->name );
     gi->pointcounts[gi->next_glyph++] = ptcnt;
 
-    dumpinstrs(gi,isc->ttf_instrs,isc->ttf_instrs_len);
+    dumpinstrs(gi,sc->ttf_instrs,sc->ttf_instrs_len);
 	
     dumppointarrays(gi,bp,fs,ptcnt);
     SplinePointListsFree(ttfss);
@@ -5220,9 +5216,6 @@ static void AbortTTF(struct alltabs *at, SplineFont *sf) {
 int SFHasInstructions(SplineFont *sf) {
     int i;
 
-    if ( sf->mm!=NULL && sf->mm->apple )
-	sf = sf->mm->normal;
-
     if ( sf->subfontcnt!=0 )
 return( false );		/* Truetype doesn't support cid keyed fonts */
 
@@ -5239,8 +5232,6 @@ static void MaxpFromTable(struct alltabs *at,SplineFont *sf) {
     struct ttf_table *maxp;
 
     maxp = SFFindTable(sf,CHR('m','a','x','p'));
-    if ( maxp==NULL && sf->mm!=NULL && sf->mm->apple )
-	maxp = SFFindTable(sf->mm->normal,CHR('m','a','x','p'));
     if ( maxp==NULL || maxp->len<13*sizeof(uint16_t) )
 return;
     /* We can figure out the others ourselves, but these depend on the contents */
@@ -5257,8 +5248,6 @@ static FILE *dumpstoredtable(SplineFont *sf,uint32_t tag,int *len) {
     struct ttf_table *tab = SFFindTable(sf,tag);
     FILE *out;
 
-    if ( tab==NULL && sf->mm!=NULL && sf->mm->apple )
-	tab = SFFindTable(sf->mm->normal,tag);
     if ( tab==NULL ) {
 	*len = 0;
 return( NULL );

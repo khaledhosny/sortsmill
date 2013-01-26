@@ -18626,8 +18626,6 @@ PyFFFont_Save (PyFF_Font *self, PyObject *args)
             strcat (locfilename, "CID");
           else if (sf->mm == NULL)
             ;
-          else if (sf->mm->apple)
-            strcat (locfilename, "Var");
           else
             strcat (locfilename, "MM");
           strcat (locfilename, ".sfd");

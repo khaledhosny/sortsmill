@@ -2959,7 +2959,7 @@ SFD_MMDump (FILE *sfd, SplineFont *sf, EncMap * map, EncMap * normal,
   int err = false;
 
   fprintf (sfd, "MMCounts: %d %d %d %d\n", mm->instance_count, mm->axis_count,
-           mm->apple, mm->named_instance_count);
+           false /*mm->apple*/, mm->named_instance_count);
   fprintf (sfd, "MMAxis:");
   for (i = 0; i < mm->axis_count; ++i)
     fprintf (sfd, " %s", mm->axes[i]);
@@ -6966,31 +6966,6 @@ SFDParseMMSubroutine (FILE *sfd)
 }
 
 static void
-MMInferStuff (MMSet *mm)
-{
-  int i, j;
-
-  if (mm == NULL)
-    return;
-  if (mm->apple)
-    {
-      for (i = 0; i < mm->axis_count; ++i)
-        {
-          for (j = 0; j < mm->axismaps[i].points; ++j)
-            {
-              real val = mm->axismaps[i].blends[j];
-              if (val == -1.)
-                mm->axismaps[i].min = mm->axismaps[i].designs[j];
-              else if (val == 0)
-                mm->axismaps[i].def = mm->axismaps[i].designs[j];
-              else if (val == 1)
-                mm->axismaps[i].max = mm->axismaps[i].designs[j];
-            }
-        }
-    }
-}
-
-static void
 SFDSizeMap (EncMap * map, int glyphcnt, int enccnt)
 {
   if (glyphcnt > map->backmax)
@@ -7121,7 +7096,6 @@ SFD_FigureDirType (SplineFont *sf, char *tok, char *dirname, Encoding * enc,
       MMSet *mm = sf->mm;
       int ipos, i = 0;
 
-      MMInferStuff (sf->mm);
       ff_progress_change_stages (2 * (mm->instance_count + 1));
       while ((ent = readdir (dir)) != NULL)
         {
@@ -8589,7 +8563,7 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
                || strcasecmp (tok, "MacSimple:") == 0
                || strcasecmp (tok, "MacKern:") == 0
                || strcasecmp (tok, "MacInsert:") == 0
-			   || strcasecmp (tok, "MacFeat:") == 0)
+               || strcasecmp (tok, "MacFeat:") == 0)
         {
           LogError (_("AAT features are no longer supported: \"%s\" ignored"), tok);
         }
@@ -8804,7 +8778,7 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
             {
               int temp;
               getint (sfd, &temp);
-              mm->apple = temp;
+              /* ignore; mm->apple = temp; */
               getint (sfd, &mm->named_instance_count);
             }
           mm->instances = xcalloc (mm->instance_count, sizeof (SplineFont *));
@@ -8916,7 +8890,6 @@ SFD_GetFont (FILE *sfd, SplineFont *cidmaster, char *tok, int fromdir,
           getint (sfd, &realcnt);
           ff_progress_change_stages (cnt);
           ff_progress_change_total (realcnt);
-          MMInferStuff (sf->mm);
           break;
         }
       else if (strcasecmp (tok, "BeginSubFonts:") == 0)

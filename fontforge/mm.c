@@ -670,8 +670,7 @@ SplineFont *_MMNewFont(MMSet *mm,int index,char *familyname,real *normalized) {
     int i;
 
     sf = SplineFontNew();
-    sf->layers[ly_fore].order2 = sf->layers[ly_back].order2 = sf->grid.order2 =
-	    mm->apple;
+    sf->layers[ly_fore].order2 = sf->layers[ly_back].order2 = sf->grid.order2 = false;
     free(sf->fontname); free(sf->familyname); free(sf->fullname); free(sf->weight);
     sf->familyname = xstrdup_or_null(familyname);
     if ( index==-1 ) {
@@ -924,7 +923,7 @@ int MMValid(MMSet *mm,int complain) {
 return( false );
 
     for ( i=0; i<mm->instance_count; ++i )
-	if ( mm->instances[i]->layers[ly_fore].order2 != mm->apple ) {
+	if ( mm->instances[i]->layers[ly_fore].order2) {
 	    if ( complain ) {
 		ff_post_error(_("Bad Multiple Master Font"),_("The font %.30s contains quadratic splines. It must be converted to cubic splines before it can be used in a multiple master"),
 			    mm->instances[i]->fontname);

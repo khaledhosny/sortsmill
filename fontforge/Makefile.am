@@ -113,7 +113,7 @@ libsortsmillff_fontforge_la_SOURCES = autohint.c autosave.c	\
 	splinechar.c splinefill.c splinefont.c splineorder2.c				\
 	splineoverlap.c splinesaveafm.c splinesave.c splinestroke.c			\
 	splineutil2.c splineutil.c start.c stemdb.c svg.c tottfaat.c		\
-	tottfgpos.c tottf.c tottfvar.c ttfinstrs.c ttfspecial.c ufo.c		\
+	tottfgpos.c tottf.c ttfinstrs.c ttfspecial.c ufo.c		\
 	unicoderange.c utils.c winfonts.c zapfnomen.c groups.c langfreq.c	\
 	autowidth2.c woff.c activeinui.c is_LIGATURE.c flaglist.c			\
 	contour_interface.c freetype.c ftdelta.c some_global_variables.c	\

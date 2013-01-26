@@ -2826,7 +2826,7 @@ SFGenerateFont (SplineFont *sf, int layer, int family, EncMap * map)
     formattypes[i].disabled = !any;
   formattypes[ff_ptype0].disabled = sf->onlybitmaps || map->enc->only_1byte;
   formattypes[ff_mma].disabled = formattypes[ff_mmb].disabled =
-    sf->mm == NULL || sf->mm->apple || !MMValid (sf->mm, false);
+    sf->mm == NULL || !MMValid (sf->mm, false);
   formattypes[ff_cffcid].disabled = sf->cidmaster == NULL;
   formattypes[ff_cid].disabled = sf->cidmaster == NULL;
   formattypes[ff_otfcid].disabled = sf->cidmaster == NULL;
