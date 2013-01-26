@@ -209,7 +209,7 @@ CYCLO_SOURCEFILES = $(top_srcdir)/inc/*.[ch]					\
 	$(top_srcdir)/auxiliary/*.[ch] $(top_srcdir)/gutils/*.[ch]	\
 	$(top_srcdir)/gdraw/*.[ch] $(top_srcdir)/fontforge/*.[ch]
 
-cyclo-fontforge.html: $(CYCLO_SOURCEFILES)
+cyclo-tools.html: $(CYCLO_SOURCEFILES)
 	$(PMCCABE) $(CYCLO_SOURCEFILES) \
 		| sort -n -r \
 		| $(AWK) -f $(top_srcdir)/config/pmccabe2html \

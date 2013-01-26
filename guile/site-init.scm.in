@@ -21,7 +21,7 @@
         (system foreign))
 
 ;;
-;; Try to ensure access to Sorts Mill FontForge’s Guile modules.
+;; Try to ensure access to Sorts Mill Tools’s Guile modules.
 ;;
 (eval-when (compile load eval)
            (let ((guilemoduledir "@guilemoduledir@"))
@@ -38,14 +38,14 @@
  (lambda () ;; start of thunk.
 
    (if-fontforge-has-pure-api
-    (pure-create-interp '("fontforge")))
+    (pure-create-interp '("sortsmill-editor")))
 
    (if-fontforge-has-python-api
     (py-initialize))
 
    ;;
    ;; Load local-init.scm, which typically is in
-   ;; /etc/sortsmill-fontforge/
+   ;; /etc/sortsmill-tools/
    ;;
    (let ((local-init "@sysconfdir@/@PACKAGE@/local-init.scm"))
      (if (file-exists? local-init)
@@ -55,7 +55,7 @@
 
    ;;
    ;; Load user-init.scm, which typically is in
-   ;; ${HOME}/.config/sortsmill-fontforge/
+   ;; ${HOME}/.config/sortsmill-tools/
    ;;
    (let* ((xdg-config-home (getenv "XDG_CONFIG_HOME"))
           (home (getenv "HOME"))

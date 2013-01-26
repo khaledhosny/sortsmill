@@ -1,16 +1,33 @@
 .\" Manual page for fontimage by George Williams
 .\" Copyright © 2006 by George Williams.
-.TH FONTIMAGE: "1" "January 2013"
+.TH SORTSMILL-IMAGE: "1" "January 2013"
 .
 .
 .SH NAME
 .
-.B fontimage - produce a font thumbnail image
+.B sortsmill-image - produce a font thumbnail image
 .
 .
 .SH SYNOPSIS
 .
-.B fontimage
+.B sortsmill-image
+.RB [ \-h,
+.BR \-\-help ]
+.RB [ \-V,
+.BR \-\-version ]
+.RB [ \-W,
+.BR \-\-width\fR=\fIINT\fR ] 
+.RB [ \-H,
+.BR \-\-height\fR=\fIINT\fR ] 
+.RB [ \-P,
+.BR \-\-pixel-size\fR=\fIINT\fR ]
+.RB [ \-t,
+.BR \-\-text\fR=\fISTRING\fR ]
+.RB [ \-\-o
+.BR \-\-output\fR=\fIoutputfile\fR ]
+.I fontfile
+.sp
+.B smimage
 .RB [ \-h,
 .BR \-\-help ]
 .RB [ \-V,
@@ -31,7 +48,7 @@
 .SH DESCRIPTION
 .
 The program
-.B fontimage
+.B sortsmill-image
 loads a font, which may be in any format
 .IR fontforge (1)
 can read, and then produces an image showing representative glyphs of the font.
@@ -63,7 +80,7 @@ multiple times and each refers to any \-\-text lines that follow it.
 Specifies a line of text to be displayed. The string must be in UTF-8.
 This argument may be specified multiple times to
 provide several lines of text. If no \-\-text arguments are supplied
-.IR fontimage
+.IR sortsmill-image
 will examine the font, looking for various scripts it knows about, and will
 try to display something appropriate for each.
 .TP
@@ -71,14 +88,14 @@ try to display something appropriate for each.
 Specifies the output filename for the image. The type of image will be determined
 by the file's extension. Currently only ".bmp" and ".png" are recognized. If
 omitted
-.IR fontimage
+.IR sortsmill-image
 will choose an output name based on the font's fontname field.
 .\" .SH ENVIRONMENT
 .\" .SH FILES
 .\" .SH EXAMPLES
 .\" .SH DIAGNOSTICS
 .SH "SEE ALSO"
-.BR fontforge (1)
+.BR sortsmill-editor (1)
 .LP
 The HTML version of the
 .I fontforge

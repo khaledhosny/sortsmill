@@ -2,17 +2,32 @@
 .\" Copyright © 2000-2002 by George Williams.
 .\" Re-edited to use standard -man macros by RPC Rodgers, 23 October 2002.
 .ds Ps P\s-2OST\s+2S\s-2CRIPT\s+2
-.TH FONTFORGE: "1" "January 2013"
+.TH SORTSMILL-EDITOR: "1" "January 2013"
 .
 .
 .SH NAME
 .
-.B FontForge \- create and modify PostScript, TrueType and SVG fonts
+.B sortsmill-editor \- create and modify PostScript, TrueType and SVG fonts
 .
 .
 .SH SYNOPSIS
 .
-.B fontforge
+.B sortsmill-editor
+.RB [ \-h,
+.BR \-\-help ]
+.RB [ \-V,
+.BR \-\-version ]
+.RB [ \-a,
+.BR \-\-all-glyphs ]
+.RB [ \-l,
+.BR \-\-last ]
+.RB [ \-r,
+.BR \-\-recover\fR=\fImode\fR ]
+.RB [ \-\-display\fR=\fIDISPLAY\fR ]
+.RB [ \-\-sync ]
+.I fontfile ...
+.sp
+.B smed
 .RB [ \-h,
 .BR \-\-help ]
 .RB [ \-V,
@@ -27,11 +42,10 @@
 .RB [ \-\-sync ]
 .I fontfile ...
 .
-.
 .SH DESCRIPTION
 .
 The program
-.I FontForge
+.I sortsmill-editor
 allows you to create and modify font files,
 accepting input in the following formats
 (with associated file extensions appearing in parentheses):
@@ -42,7 +56,7 @@ Macintosh resource fonts (.dfont, .bin, .hqx)
 .TP
 OpenType (.otf)
 .TP
-.IR FontForge " spline font database (.sfd)"
+.IR sortsmill-editor " spline font database (.sfd)"
 .TP
 \*(Ps, which includes:
 .RS
@@ -67,7 +81,7 @@ TrueType (.ttf, .ttc)
 X11 bitmap (.pcf)
 .LP
 If the argument list contains a font file name (or several),
-.I FontForge
+.I sortsmill-editor
 opens a
 .B fontview
 window for each font displaying the characters of the that font.
@@ -95,7 +109,7 @@ Load all glyphs in the 'glyf' table of a truetype collection.
 .TP
 .B \-l, \-\-last
 Opens whatever font you last edited with
-.I FontForge.
+.I sortsmill-editor.
 .TP
 .B \-r, \-\-recover\fR=\fImode\fR
 Control the crash recovery mechanism
@@ -131,7 +145,7 @@ If any of the following environment variables exist,
 they are used:
 .TP
 .B AUTOTRACE
-Specifies the location of the autotrace program (usually FontForge can figure
+Specifies the location of the autotrace program (usually sortsmill-editor can figure
 this out without help, but not always).
 .TP
 .B MF
@@ -149,7 +163,7 @@ optional location for online documentation.
 from \fChttp://fontforge.sourceforge.net/cidmaps.tgz\fP
 .\"
 .SH "SEE ALSO"
-.BR fontcompare (1)
+.BR sortsmill-compare (1)
 .LP
 The HTML version of the
 .I FontForge

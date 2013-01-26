@@ -46,7 +46,7 @@ AC_DEFINE_UNQUOTED([FONTFORGE_CONFIG_BDF_GLYPH_RANGES],
          bdf/pcf) fonts which gave a quick view about what glyphs were
          in a bdf font. From what I gather this property has been
          dropped because it was redundant.  If you would like
-         FontForge to generate it, set this to 1.])
+         Sorts Mill Tools to generate it, set this to 1.])
 
 test x"${FONTFORGE_CONFIG_NON_SYMMETRIC_QUADRATIC_CONVERSION}" = x && FONTFORGE_CONFIG_NON_SYMMETRIC_QUADRATIC_CONVERSION=0
 AC_DEFINE_UNQUOTED([FONTFORGE_CONFIG_NON_SYMMETRIC_QUADRATIC_CONVERSION],
@@ -70,8 +70,8 @@ AC_DEFINE_UNQUOTED([FONTFORGE_CONFIG_CVT_OLD_MAC_FEATURES],
         [Prior to late Sept of 2003 FontForge converted certain Mac
          feature/settings into opentype-like tags. Some features could
          be converted directly but for a few I made up tags.  Now
-         FontForge is capable of using the Mac feature settings
-         directly. If you set this flag to 1, then, when FontForge loads in
+         Sorts Mill Tools is capable of using the Mac feature settings
+         directly. If you set this flag to 1, then, when Sorts Mill Tools loads in
          an sfd file with these non-standard opentype tags, it will
          convert them into the appropriate Mac feature/setting
          combinations.])

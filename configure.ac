@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 # Copyright (C) 2000-2012 by George Williams
-# Copyright (C) 2012 by Barry Schwartz
+# Copyright (C) 2012, 2013 by Barry Schwartz
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -29,10 +29,10 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 AC_PREREQ([2.69])
-AC_INIT([Sorts Mill FontForge],
+AC_INIT([Sorts Mill Tools],
         [2.0.0_alpha1],
         [http://bitbucket.org/sortsmill/sortsmill-fontforge/issues],
-        [sortsmill-fontforge],
+        [sortsmill-tools],
         [http://bitbucket.org/sortsmill/sortsmill-fontforge])
 
 AC_CONFIG_SRCDIR([fontforge/splinerefigure.c])
@@ -159,7 +159,7 @@ fi
 FONTFORGE_ARG_ENABLE_REAL
 
 AC_ARG_ENABLE([programs],
-        [AS_HELP_STRING([--disable-programs],[do not build `fontforge' and related programs
+        [AS_HELP_STRING([--disable-programs],[do not build `sortsmill-editor' and related programs
                                               (but do build libraries and possibly the Python extensions)])],
         [i_do_have_programs="${enableval}"],
         [i_do_have_programs=yes])
@@ -173,8 +173,8 @@ FONTFORGE_ARG_ENABLE_PURE_API
 
 AC_ARG_ENABLE([freetype-debugger],
         [AS_HELP_STRING([--enable-freetype-debugger[[=DIR]]],
-                [use internal freetype debugger within fontforge; requires source code of the
-                 freetype library with which fontforge will be linked.
+                [use internal freetype debugger within sortsmill-editor; requires source code of the
+                 freetype library with which sortsmill-editor will be linked.
                  You need to set DIR to the top directory of the freetype sources,
                  or alternatively set the environment variable FREETYPE_SOURCE (see below)])],
         [i_do_have_freetype_debugger="${enableval}"],

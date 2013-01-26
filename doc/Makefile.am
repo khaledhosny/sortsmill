@@ -1,4 +1,4 @@
-# Copyright (C) 2012 by Barry Schwartz
+# Copyright (C) 2012, 2013 by Barry Schwartz
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -28,17 +28,31 @@
 
 dist_man_MANS =
 
-info_TEXINFOS = sortsmill-fontforge.texi
-sortsmill_fontforge_TEXINFOS = psMat.interface.texi	\
+info_TEXINFOS = sortsmill-tools.texi
+sortsmill_tools_TEXINFOS = psMat.interface.texi	\
 	ps_number.visible.texi
 
 if THE_PROGRAMS
 
-dist_man_MANS += fontlint.1 fontimage.1 fontcompare.1
+dist_man_MANS += sortsmill-lint.1 sortsmill-image.1 sortsmill-compare.1
+dist_man_MANS += smlint.1 smimage.1 smcompare.1
+
+smlint.1: Makefile
+	echo '.so man1/sortsmill-lint.1' > $@
+
+smimage.1: Makefile
+	echo '.so man1/sortsmill-image.1' > $@
+
+smcompare.1: Makefile
+	echo '.so man1/sortsmill-compare.1' > $@
 
 if HAVE_GUI
 
-dist_man_MANS += fontforge.1
+dist_man_MANS += sortsmill-editor.1
+dist_man_MANS += smed.1
+
+smed.1: Makefile
+	echo '.so man1/sortsmill-editor.1' > $@
 
 endif HAVE_GUI
 

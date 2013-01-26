@@ -1,6 +1,6 @@
 /*
- * This is a tiny example of how to write a FontForge menu extension
- * in C.
+ * This is a tiny example of how to write a sortsmill-editor menu
+ * extension in C.
  *
  * Copying and distribution of this file, with or without
  * modification, are permitted in any medium without royalty. This
@@ -8,7 +8,7 @@
  *
  *-------------------------------------------------------------------------
  *
- * Install Sorts Mill FontForge. Then compile your extension into a
+ * Install Sorts Mill Tools. Then compile your extension into a
  * dynamically loadable library -- preferably using autoconf,
  * automake, and libtool, but on GNU/Linux it is likely you can do
  * this:
@@ -17,7 +17,7 @@
  *          -o simple_menu_extension_in_C.so
  *
  * Add something like the following to
- * ${HOME}/.config/sortsmill-fontforge/user-init.scm:
+ * ${HOME}/.config/sortsmill-tools/user-init.scm:
  *
  * (let ((dll (dynamic-link
  *              "/full/path/to/simple_menu_extension_in_C.so")))
@@ -44,7 +44,7 @@
  * install the shared module somewhere that libltdl can find it. See
  * http://www.gnu.org/software/libtool/manual/html_node/Using-libltdl.html
  *
- * Now run Sorts Mill FontForge from the command line; there should be
+ * Now run sortsmill-editor from the command line; there should be
  * some new menu entries, and clicking on them should print some stuff
  * to your terminal emulator.
  *

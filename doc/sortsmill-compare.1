@@ -1,17 +1,33 @@
 .\" Manual page for fontcompare by George Williams
 .\" Copyright © 2000-2002 by George Williams.
 .\" Re-edited to use standard -man macros by RPC Rodgers, 23 October 2002.
-.TH FONTCOMPARE: "1" "January 2013"
+.TH SORTSMILL-COMPARE: "1" "January 2013"
 .
 .
 .SH NAME
 .
-.B fontcompare \- compare two font files
+.B sortsmill-compare \- compare two font files
 .
 .
 .SH SYNOPSIS
 .
-.B fontcompare
+.B sortsmill-compare
+.RB [ \-h,
+.BR \-\-help ]
+.RB [ \-V,
+.BR \-\-version ]
+.RB [ \-\-ignore\-hints ]
+.RB [ \-\-ignore\-names ]
+.RB [ \-\-ignore\-gpos ]
+.RB [ \-\-ignore\-gsub ]
+.RB [ \-\-ignore\-bitmaps ]
+.RB [ \-\-exact ]
+.RB [ \-\-warn ]
+.RB [ \-\-merge\fR=\fIoutfile\fR ]
+.I fontfile1
+.I fontfile2 
+.sp
+.B smcompare
 .RB [ \-h,
 .BR \-\-help ]
 .RB [ \-V,
@@ -31,9 +47,9 @@
 .SH DESCRIPTION
 .
 The program
-.B fontcompare
+.B sortsmill-compare
 compares two font files, which may be in any format
-.BR fontforge (1)
+.BR sortsmill-editor (1)
 can read.
 It will notice the following differences:
 .
@@ -115,11 +131,15 @@ Suppress the reporting of bitmap differences.
 .
 .TP
 .B \-\-exact
-Require outlines to match exactly. Normally fontcompare will match contours which
+Require outlines to match exactly. Normally
+.B sortsmill-compare
+will match contours which
 are not exact but where the differences are slight (so you could compare
-TrueType and PostScript and get reasonable answers). Also normally fontcompare will
-unlink references before it compares (so you can compare a PostScript font
-[with no references] to the original source [which does have references]).
+TrueType and PostScript and get reasonable answers). Also normally
+.B sortsmill-compare
+will unlink references before it compares (so you can compare a
+PostScript font [with no references] to the original source [which
+does have references]).
 .
 .TP
 .B \-\-warn
@@ -153,7 +173,7 @@ added).
 .
 .SH "SEE ALSO"
 .
-.BR fontforge (1)
+.BR sortsmill-editor (1)
 .LP
 The HTML version of the
 .I fontforge
