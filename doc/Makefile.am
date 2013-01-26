@@ -27,6 +27,9 @@
 #--------------------------------------------------------------------------
 
 dist_man_MANS =
+nodist_man_MANS =
+
+DISTCLEANFILES = $(nodist_man_MANS)
 
 info_TEXINFOS = sortsmill-tools.texi
 sortsmill_tools_TEXINFOS = psMat.interface.texi	\
@@ -35,7 +38,7 @@ sortsmill_tools_TEXINFOS = psMat.interface.texi	\
 if THE_PROGRAMS
 
 dist_man_MANS += sortsmill-lint.1 sortsmill-image.1 sortsmill-compare.1
-dist_man_MANS += smlint.1 smimage.1 smcompare.1
+nodist_man_MANS += smlint.1 smimage.1 smcompare.1
 
 smlint.1: Makefile
 	echo '.so man1/sortsmill-lint.1' > $@
@@ -49,7 +52,7 @@ smcompare.1: Makefile
 if HAVE_GUI
 
 dist_man_MANS += sortsmill-editor.1
-dist_man_MANS += smed.1
+nodist_man_MANS += smed.1
 
 smed.1: Makefile
 	echo '.so man1/sortsmill-editor.1' > $@
