@@ -36,6 +36,7 @@ ctypedef object (*tuple_func_t) (object)
 
 import sys
 import gmpy
+import importlib
 import traceback
 
 #--------------------------------------------------------------------------
@@ -173,6 +174,13 @@ cdef public char *__python_string_to_c_string (object s):
 cdef public object __c_string_to_python_string (char *s):
   py_s = s
   return py_s.decode ('UTF-8')
+
+cdef public object __python_module (object module_name):
+  try:
+    module = sys.modules[module_name]
+  except:
+    module = importlib.import_module (module_name)
+  return module
 
 cdef public object __current_python_module ():
   return sys.modules[__name__]

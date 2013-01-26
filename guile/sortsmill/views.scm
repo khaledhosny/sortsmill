@@ -46,15 +46,13 @@
         ViewBase->CharViewBase
         CharViewBase->ViewBase
         ViewBase->FontViewBase
-        FontViewBase->ViewBase
-        )
+        FontViewBase->ViewBase)
 
 (import (sortsmill fontforge-api)
         (sortsmill i18n)
         (rnrs)
         (system foreign)
-        (ice-9 format)
-        )
+        (ice-9 format))
 
 (define font-view-flag 1)
 (define glyph-view-flag 2)

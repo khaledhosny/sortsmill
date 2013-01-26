@@ -85,6 +85,9 @@ cdef extern from "libguile.h":
   SCM scm_from_intmax (intmax_t x)
   SCM scm_from_uintmax (uintmax_t x)
 
+  SCM scm_from_bool (int val)
+  int scm_to_bool (SCM x)
+
   SCM scm_from_latin1_string (const_char_ptr str)
   SCM scm_from_utf8_string (const_char_ptr str)
   SCM scm_from_latin1_stringn (const_char_ptr str, size_t len)
@@ -218,7 +221,55 @@ cdef extern from "libguile.h":
   void scm_dynwind_free (void *mem)
 
   SCM scm_with_continuation_barrier (SCM proc)
-  void * scm_c_with_continuation_barrier (void *(*func) (void *), void *data)
+  void *scm_c_with_continuation_barrier (void *(*func) (void *), void *data)
+
+  SCM scm_object_address (SCM obj)
+  SCM scm_gc_stats ()
+  SCM scm_gc_live_object_stats ()
+  SCM scm_gc ()
+  #void scm_gc_for_alloc (struct scm_t_cell_type_statistics *freelist)
+  #SCM scm_gc_for_newcell (struct scm_t_cell_type_statistics *master, SCM *freelist)
+  void scm_i_gc (const_char_ptr what)
+  void scm_gc_mark (SCM p)
+  void scm_gc_mark_dependencies (SCM p)
+  #void scm_mark_locations (SCM_STACKITEM x[], unsigned long n)
+  int scm_in_heap_p (SCM value)
+  void scm_gc_sweep ()
+  void *scm_malloc (size_t size)
+  void *scm_calloc (size_t size)
+  void *scm_realloc (void *mem, size_t size)
+  char *scm_strdup (const_char_ptr str)
+  char *scm_strndup (const_char_ptr str, size_t n)
+  void scm_gc_register_collectable_memory (void *mem, size_t size,
+                                           const_char_ptr what)
+  void scm_gc_unregister_collectable_memory (void *mem, size_t size,
+                                             const_char_ptr what)
+  void *scm_gc_calloc (size_t size, const_char_ptr what)
+  void *scm_gc_malloc (size_t size, const_char_ptr what)
+  void *scm_gc_realloc (void *mem, size_t old_size, 
+                        size_t new_size, const_char_ptr what)
+  void scm_gc_free (void *mem, size_t size, const_char_ptr what)
+  char *scm_gc_strdup (const_char_ptr str, const_char_ptr what)
+  char *scm_gc_strndup (const_char_ptr str, size_t n, const_char_ptr what)
+  void scm_remember_upto_here_1 (SCM obj)
+  void scm_remember_upto_here_2 (SCM obj1, SCM obj2)
+  void scm_remember_upto_here (SCM obj1, ...)
+  SCM scm_return_first (SCM elt, ...)
+  int scm_return_first_int (int x, ...)
+  SCM scm_permanent_object (SCM obj)
+  SCM scm_gc_protect_object (SCM obj)
+  SCM scm_gc_unprotect_object (SCM obj)
+  void scm_gc_register_root (SCM *p)
+  void scm_gc_unregister_root (SCM *p)
+  void scm_gc_register_roots (SCM *b, unsigned long n)
+  void scm_gc_unregister_roots (SCM *b, unsigned long n)
+  void scm_storage_prehistory ()
+  int scm_init_storage ()
+  void *scm_get_stack_base ()
+  void scm_init_gc ()
+  SCM scm_gc_stats ()
+  SCM scm_gc_live_object_stats ()
+  void scm_gc_mark (SCM x)
 
   SCM scm_dynamic_pointer (SCM name, SCM dobj)
   SCM scm_pointer_address (SCM pointer)
@@ -267,6 +318,9 @@ cdef extern from "libguile.h":
   SCM scm_nconc2last (SCM lst)
 
   SCM scm_primitive_eval (SCM exp)
+
+  SCM scm_c_make_gsubr (const_char_ptr name, int req, int opt, int rst, void *fcn)
+  SCM scm_c_define_gsubr (const_char_ptr name, int req, int opt, int rst, void *fcn)
 
   # Initialization.
   void *scm_with_guile (void *(*func)(void *), void *data)

@@ -22,16 +22,8 @@ cdef extern from "stdbool.h":
   pass
 from libcpp cimport bool
 
-cimport sortsmill.cython.const_pointers as constp
+from sortsmill.cython.const_pointers cimport const_char_ptr, const_char_ptr_ptr
 from sortsmill.cython.guile cimport SCM
-
-#cdef extern from "libguile.h":
-#  # FIXME: THIS ASSUMES SCM_DEBUG_TYPING_STRICTNESS == 1
-#  # FIXME: Either provide support for the other levels, or
-#  # FIXME: force this level more carefully.
-#  cdef struct scm_unused_struct:
-#    pass
-#  ctypedef scm_unused_struct *SCM
 
 cdef extern from "sortsmill/usermenu.h":
   enum:
@@ -41,6 +33,6 @@ cdef extern from "sortsmill/usermenu.h":
     FF_METRICS_WINDOW = 0x03
 
   void register_fontforge_menu_entry (int window,
-                                      constp.const_char_ptr_ptr menu_path,
+                                      const_char_ptr_ptr menu_path,
                                       SCM action, SCM enabled,
-                                      constp.const_char_ptr shortcut)
+                                      const_char_ptr shortcut)

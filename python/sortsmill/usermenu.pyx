@@ -18,61 +18,41 @@
 cdef extern from 'config.h':
   pass
 
-from . import (views, notices)
-
 cdef extern from "stdbool.h":
   pass
 from libcpp cimport bool
 
 cimport sortsmill.cython.usermenu as c_usermenu
-cimport sortsmill.cython.const_pointers as constp
+cimport sortsmill.cython.guile as scm
+from sortsmill.cython.guile cimport SCM
 cimport sortsmill.cython.xgc as xgc
-from sortsmill.cython.usermenu cimport SCM
+from sortsmill.cython.const_pointers cimport const_char_ptr, const_char_ptr_ptr
 from cpython.ref cimport PyObject, Py_XINCREF, Py_XDECREF
 from cpython.object cimport PyObject_IsTrue
 from libc.stdint cimport uintptr_t
 
-cdef extern from "libguile.h":
-  ctypedef void (*scm_t_pointer_finalizer) (void *)
-  SCM scm_c_private_variable (constp.const_char_ptr module_name, constp.const_char_ptr name)
-  SCM scm_variable_ref (SCM var)
-  SCM scm_from_pointer (void *, scm_t_pointer_finalizer)
-  void* scm_to_pointer (SCM)
-  SCM scm_call_1 (SCM proc, SCM arg1)
-  SCM scm_call_2 (SCM proc, SCM arg1, SCM arg2)
-  SCM scm_eval_string (SCM)
-  SCM scm_from_latin1_string (constp.const_char_ptr str)
-  SCM scm_from_bool (int val)
-  int scm_to_bool (SCM x)
-  SCM scm_c_make_gsubr (constp.const_char_ptr name, int req, int opt, int rst, void *fcn)
-  SCM scm_gc_protect_object (SCM obj)
-  SCM scm_permanent_object (SCM obj)
-
 cdef extern from "fontforge.h":
   bool get_no_windowing_ui ()
 
+from . import (views, notices)
 import sys
 import traceback
 
 cdef bint __scm_is_font_view (SCM obj):
-  cdef SCM font_view_p = \
-      scm_variable_ref (scm_c_private_variable ("sortsmill usermenu", "font_view_p__"))
-  return scm_to_bool (scm_call_1 (font_view_p, obj))
+  cdef SCM font_view_p = scm.scm_c_private_ref ("sortsmill usermenu", "font_view_p__")
+  return scm.scm_to_bool (scm.scm_call_1 (font_view_p, obj))
 
 cdef bint __scm_is_glyph_view (SCM obj):
-  cdef SCM glyph_view_p = \
-      scm_variable_ref (scm_c_private_variable ("sortsmill usermenu", "glyph_view_p__"))
-  return scm_to_bool (scm_call_1 (glyph_view_p, obj))
+  cdef SCM glyph_view_p = scm.scm_c_private_ref ("sortsmill usermenu", "glyph_view_p__")
+  return scm.scm_to_bool (scm.scm_call_1 (glyph_view_p, obj))
 
 cdef void *__scm_c_font_view_to_pointer (SCM obj):
-  cdef SCM font_view_to_pointer = \
-      scm_variable_ref (scm_c_private_variable ("sortsmill usermenu", "font_view_to_pointer__"))
-  return scm_to_pointer (scm_call_1 (font_view_to_pointer, obj))
+  cdef SCM font_view_to_pointer = scm.scm_c_private_ref ("sortsmill usermenu", "font_view_to_pointer__")
+  return scm.scm_to_pointer (scm.scm_call_1 (font_view_to_pointer, obj))
 
 cdef void *__scm_c_glyph_view_to_pointer (SCM obj):
-  cdef SCM glyph_view_to_pointer = \
-      scm_variable_ref (scm_c_private_variable ("sortsmill usermenu", "glyph_view_to_pointer__"))
-  return scm_to_pointer (scm_call_1 (glyph_view_to_pointer, obj))
+  cdef SCM glyph_view_to_pointer = scm.scm_c_private_ref ("sortsmill usermenu", "glyph_view_to_pointer__")
+  return scm.scm_to_pointer (scm.scm_call_1 (glyph_view_to_pointer, obj))
 
 def __c_window (window):
   message = "expected 'glyph' or 'font'"
@@ -119,32 +99,32 @@ cdef object __scm_view_to_py_view (SCM scm_view):
 
 cdef SCM __scm_do_action (SCM scm_view, SCM py_action):
   py_view = __scm_view_to_py_view (scm_view)
-  action = <object> <PyObject *> scm_to_pointer (py_action)
+  action = <object> <PyObject *> scm.scm_to_pointer (py_action)
   retval = call_python_action (action, py_view)
   cdef char *unspecified = "*unspecified*"
-  return scm_eval_string (scm_from_latin1_string (unspecified))
+  return scm.scm_eval_string (scm.scm_from_latin1_string (unspecified))
 
 cdef SCM __scm_check_enabled (SCM scm_view, SCM py_enabled):
   py_view = __scm_view_to_py_view (scm_view)
-  enabled = <object> <PyObject *> scm_to_pointer (py_enabled)
+  enabled = <object> <PyObject *> scm.scm_to_pointer (py_enabled)
   retval = call_python_enabled (enabled, py_view)
   cdef bint is_enabled = PyObject_IsTrue (retval) 
-  return scm_from_bool (is_enabled)
+  return scm.scm_from_bool (is_enabled)
 
-cdef SCM __cython_action_func = scm_c_make_gsubr ("ff-python-do-action", 2, 0, 0, <void *> __scm_do_action)
-scm_permanent_object (__cython_action_func)
-cdef SCM __cython_enabled_func = scm_c_make_gsubr ("ff-python-check-enabled", 2, 0, 0, <void *> __scm_check_enabled)
-scm_permanent_object (__cython_enabled_func)
+cdef SCM __cython_action_func = scm.scm_c_make_gsubr ("ff-python-do-action", 2, 0, 0, <void *> __scm_do_action)
+scm.scm_permanent_object (__cython_action_func)
+cdef SCM __cython_enabled_func = scm.scm_c_make_gsubr ("ff-python-check-enabled", 2, 0, 0, <void *> __scm_check_enabled)
+scm.scm_permanent_object (__cython_enabled_func)
 
 cdef SCM __create_action_closure (object py_action):
-  cdef SCM closure_maker = scm_variable_ref (scm_c_private_variable ("sortsmill usermenu", "closure_maker__"))
-  cdef SCM py_func = scm_from_pointer (<PyObject *> py_action, NULL)
-  return scm_call_2 (closure_maker, __cython_action_func, py_func)
+  cdef SCM closure_maker = scm.scm_c_private_ref ("sortsmill usermenu", "closure_maker__")
+  cdef SCM py_func = scm.scm_from_pointer (<PyObject *> py_action, NULL)
+  return scm.scm_call_2 (closure_maker, __cython_action_func, py_func)
 
 cdef SCM __create_enabled_closure (object py_enabled):
-  cdef SCM closure_maker = scm_variable_ref (scm_c_private_variable ("sortsmill usermenu", "closure_maker__"))
-  cdef SCM py_func = scm_from_pointer (<PyObject *> py_enabled, NULL)
-  return scm_call_2 (closure_maker, __cython_enabled_func, py_func)
+  cdef SCM closure_maker = scm.scm_c_private_ref ("sortsmill usermenu", "closure_maker__")
+  cdef SCM py_func = scm.scm_from_pointer (<PyObject *> py_enabled, NULL)
+  return scm.scm_call_2 (closure_maker, __cython_enabled_func, py_func)
 
 cdef void __registerMenuItem (int c_window,
                               object action_function,
@@ -160,13 +140,13 @@ cdef void __registerMenuItem (int c_window,
   cdef SCM scm_action = __create_action_closure (action_function)
   cdef SCM scm_enabled = __create_enabled_closure (enable_function)
 
-  scm_gc_protect_object (scm_action)
-  scm_gc_protect_object (scm_enabled)
+  scm.scm_gc_protect_object (scm_action)
+  scm.scm_gc_protect_object (scm_enabled)
 
   c_usermenu.register_fontforge_menu_entry (c_window,
-                                            <constp.const_char_ptr_ptr> c_menu_path,
+                                            <const_char_ptr_ptr> c_menu_path,
                                             scm_action, scm_enabled,                                            
-                                            <constp.const_char_ptr> c_shortcut)
+                                            <const_char_ptr> c_shortcut)
 
 #--------------------------------------------------------------------------
 

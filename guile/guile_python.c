@@ -288,6 +288,7 @@ _SCM_TYPECHECK_P (scm_pytuple_p, PyTuple_Check);
 _SCM_TYPECHECK_P (scm_pylist_p, PyList_Check);
 _SCM_TYPECHECK_P (scm_pydict_p, PyDict_Check);
 _SCM_TYPECHECK_P (scm_pycallable_p, PyCallable_Check);
+_SCM_TYPECHECK_P (scm_pymodule_p, PyModule_Check);
 
 static SCM
 scm_pympz_p (SCM obj)
@@ -523,19 +524,19 @@ scm_pyimport (SCM obj)
 // PyModule_GetFilenameObject to look like PyModule_GetFilename seems
 // a good approach.
 static SCM
-scm_pymodule_get_file_name (SCM obj)
+scm_python_module_get_file_name (SCM obj)
 {
   PyObject *py_obj = pyobject_to_PyObject_ptr (obj);
   if (!PyModule_Check (py_obj))
     rnrs_raise_condition
       (scm_list_4
        (rnrs_make_assertion_violation (),
-        rnrs_c_make_who_condition ("scm_pymodule_get_file_name"),
+        rnrs_c_make_who_condition ("scm_python_module_get_file_name"),
         rnrs_c_make_message_condition (_("expected a Python module")),
         rnrs_make_irritants_condition (scm_list_1 (obj))));
   char *file_name = PyModule_GetFilename (py_obj);
   if (file_name == NULL)
-    scm_c_py_failure ("scm_pymodule_get_file_name", scm_list_1 (obj));
+    scm_c_py_failure ("scm_python_module_get_file_name", scm_list_1 (obj));
   return scm_from_utf8_string (file_name);
 }
 
@@ -614,6 +615,7 @@ init_guile_sortsmill_python (void)
   scm_c_define_gsubr ("pylist?", 1, 0, 0, scm_pylist_p);
   scm_c_define_gsubr ("pydict?", 1, 0, 0, scm_pydict_p);
   scm_c_define_gsubr ("pycallable?", 1, 0, 0, scm_pycallable_p);
+  scm_c_define_gsubr ("pymodule?", 1, 0, 0, scm_pymodule_p);
 
   scm_c_define_gsubr ("boolean->pybool", 1, 0, 0, scm_boolean_to_pybool);
   scm_c_define_gsubr ("pybool->boolean", 1, 0, 0, scm_pybool_to_boolean);
@@ -634,8 +636,8 @@ init_guile_sortsmill_python (void)
   scm_c_define_gsubr ("pylist->list", 1, 0, 0, scm_pylist_to_list);
 
   scm_c_define_gsubr ("pyimport", 1, 0, 0, scm_pyimport);
-  scm_c_define_gsubr ("pymodule-get-file-name", 1, 0, 0,
-                      scm_pymodule_get_file_name);
+  scm_c_define_gsubr ("python-module-get-file-name", 1, 0, 0,
+                      scm_python_module_get_file_name);
   scm_c_define_gsubr ("guile-python-pyx-pymodule", 0, 0, 0,
                       scm_guile_python_pyx_pymodule);
 }
