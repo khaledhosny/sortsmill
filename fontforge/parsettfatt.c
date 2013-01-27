@@ -3131,54 +3131,28 @@ void readttfkerns(FILE *ttf,struct ttfinfo *info) {
     KernClass *kc;
     uint32_t begin_table;
     uint16_t *class1, *class2;
-    int tupleIndex;
     int isv;
-    SplineChar **chars;
     OTLookup *otl;
 
     fseek(ttf,info->kern_start,SEEK_SET);
     version = getushort(ttf);
     tabcnt = getushort(ttf);
     if ( version!=0 ) {
-	fseek(ttf,info->kern_start,SEEK_SET);
-	version = getlong(ttf);
-	tabcnt = getlong(ttf);
-	if ( version!=0x10000 ) {
-	    LogError(_("Invalid or unsupported version (0x%x) for 'kern' table"), version );
-	    info->bad_gx = true;
+	LogError(_("Invalid or unsupported version (0x%x) for 'kern' table"), version );
+	info->bad_gx = true;
 return;
-	}
     }
     if ( tabcnt<0 || tabcnt>0x1000 )
 	LogError(_("Warning: Unlikely number of subtables (%d) for 'kern' table"), tabcnt );
     for ( tab=0; tab<tabcnt; ++tab ) {
 	begin_table = ftell(ttf);
-	if ( version==0 ) {
-	    /* version = */ getushort(ttf);
-	    len = getushort(ttf);
-	    coverage = getushort(ttf);
-	    format = coverage>>8;
-	    flags_good = ((coverage&7)<=1);
-	    isv = !(coverage&1);
-	    tupleIndex = -1;
-	    header_size = 6;
-	} else {
-	    len = getlong(ttf);
-	    coverage = getushort(ttf);
-	    /* Apple has reordered the bits */
-	    format = (coverage&0xff);
-	    flags_good = ((coverage&0xdf00)==0 || (coverage&0xdf00)==0x8000);
-	    isv = coverage&0x8000? 1 : 0;
-	    tupleIndex = getushort(ttf);
-	    if ( coverage&0x2000 ) {
-		if ( info->variations==NULL )
-		    flags_good = false;	/* Ignore if we failed to load the tuple data */
-		else if ( tupleIndex>=info->variations->tuple_count )
-		    flags_good = false;	/* Bad tuple */
-	    } else
-		tupleIndex = -1;
-	    header_size = 8;
-	}
+	/* version = */ getushort(ttf);
+	len = getushort(ttf);
+	coverage = getushort(ttf);
+	format = coverage>>8;
+	flags_good = ((coverage&7)<=1);
+	isv = !(coverage&1);
+	header_size = 6;
 	otl = NULL;
 	if ( flags_good ) {
 	    otl = (OTLookup *) xzalloc(sizeof (OTLookup));
@@ -3196,9 +3170,8 @@ return;
 	}
 	if ( flags_good && format==0 ) {
 	    /* format 0, horizontal kerning data (as pairs) not perpendicular */
-	    chars = tupleIndex==-1 ? info->chars : info->variations->tuples[tupleIndex].chars;
 	    npairs = getushort(ttf);
-	    if ( version==0 && (len-14 != 6*npairs || npairs>10920 )) {
+	    if (len-14 != 6*npairs || npairs>10920) {
 		LogError( _("In the 'kern' table, a subtable's length does not match the number of kerning pairs.") );
 		info->bad_gx = true;
 	    }
@@ -3220,24 +3193,24 @@ return;
 		    LogError( _("Bad kern pair: glyphs %d & %d must be less than %d\n"),
 			    left, right, info->glyph_cnt );
 		    info->bad_gx = true;
-		} else if (chars[left]==NULL || chars[right]==NULL ) {
+		} else if (info->chars[left]==NULL || info->chars[right]==NULL ) {
                     /* Shouldn't happen. */
 		    LogError( _("Bad kern pair: glyphs at %d & %d are null\n"),
 			    left, right);
 		    info->bad_gx = true;
 		} else {
 		    kp = (KernPair *) xzalloc(sizeof (KernPair));
-		    kp->sc = chars[right];
+		    kp->sc = info->chars[right];
 		    kp->off = offset;
 		    kp->subtable = otl->subtables;
-		    FListsAppendScriptLang(otl->features,SCScriptFromUnicode(chars[left]),
+		    FListsAppendScriptLang(otl->features,SCScriptFromUnicode(info->chars[left]),
 			    DEFAULT_LANG);
 		    if ( isv ) {
-			kp->next = chars[left]->vkerns;
-			chars[left]->vkerns = kp;
+			kp->next = info->chars[left]->vkerns;
+			info->chars[left]->vkerns = kp;
 		    } else {
-			kp->next = chars[left]->kerns;
-			chars[left]->kerns = kp;
+			kp->next = info->chars[left]->kerns;
+			info->chars[left]->kerns = kp;
 		    }
 		}
 	    }
@@ -3245,18 +3218,12 @@ return;
 	} else if ( flags_good && (format==2 || format==3 )) {
 	    /* two class based formats */
 	    KernClass **khead, **klast;
-	    if ( isv && tupleIndex==-1 ) {
+	    if ( isv ) {
 		khead = &info->vkhead;
 		klast = &info->vklast;
-	    } else if ( tupleIndex==-1 ) {
+	    } else {
 		khead = &info->khead;
 		klast = &info->klast;
-	    } else if ( isv ) {
-		khead = &info->variations->tuples[tupleIndex].vkhead;
-		klast = &info->variations->tuples[tupleIndex].vklast;
-	    } else {
-		khead = &info->variations->tuples[tupleIndex].khead;
-		klast = &info->variations->tuples[tupleIndex].klast;
 	    }
 	    if ( *khead==NULL )
 		*khead = kc = (KernClass *) xzalloc(sizeof (KernClass));
