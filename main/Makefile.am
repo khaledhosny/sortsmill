@@ -77,7 +77,6 @@ endif THE_PROGRAMS
 
 if THE_PROGRAMS
 
-# FIXME: Update the manpages for the new gengetopt-based options.
 bin_PROGRAMS += sortsmill-lint sortsmill-image sortsmill-compare
 
 dist_sortsmill_lint_SOURCES = $(srcdir)/lint.c

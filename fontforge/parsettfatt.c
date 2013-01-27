@@ -5616,6 +5616,8 @@ return;
 			}
 		    }
 		    free(coords);
+		} else {
+		    curScript->baseline_pos = xcalloc (curBase->baseline_cnt, sizeof (int16_t));
 		}
 		lastLang = NULL;
 		if ( defminmax!=0 )
