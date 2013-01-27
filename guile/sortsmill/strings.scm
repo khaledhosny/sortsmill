@@ -95,6 +95,6 @@
 
  ;;-------------------------------------------------------------------------
 
- ) ;; end of library.
+ (enable-hash-guillemet-strings)
 
-(enable-hash-guillemet-strings)
+ ) ;; end of library.
