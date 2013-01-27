@@ -269,7 +269,6 @@ struct ttfinfo {
     int mark_set_cnt;
     char **mark_sets;			/* glyph name list */
     char **mark_set_names;		/* used within ff (utf8) */
-    int badgid_cnt, badgid_max;		/* Used when parsing apple morx tables*/
     SplineChar **badgids;		/* which use out of range glyph IDs as temporary flags */
 #ifdef HAVE_LONG_LONG_INT
     long long creationtime;		/* seconds since 1970 */
@@ -642,20 +641,6 @@ struct alltabs {
     int bloclen;
     FILE *ebsc;
     int ebsclen;
-    FILE *prop;
-    int proplen;
-    FILE *opbd;
-    int opbdlen;
-    FILE *acnt;
-    int acntlen;
-    FILE *lcar;
-    int lcarlen;
-    FILE *feat;
-    int featlen;
-    FILE *morx;
-    int morxlen;
-    FILE *bsln;
-    int bslnlen;
     FILE *pfed;
     int pfedlen;
     FILE *tex;

@@ -5181,19 +5181,6 @@ static void AbortTTF(struct alltabs *at, SplineFont *sf) {
     if ( at->ebsc!=NULL )
 	fclose(at->ebsc);
 
-    if ( at->prop!=NULL )
-	fclose(at->prop);
-    if ( at->opbd!=NULL )
-	fclose(at->opbd);
-    if ( at->acnt!=NULL )
-	fclose(at->acnt);
-    if ( at->lcar!=NULL )
-	fclose(at->lcar);
-    if ( at->feat!=NULL )
-	fclose(at->feat);
-    if ( at->morx!=NULL )
-	fclose(at->morx);
-
     if ( at->pfed!=NULL )
 	fclose(at->pfed);
     if ( at->tex!=NULL )
@@ -5333,7 +5320,7 @@ static void initATTables(struct alltabs *at, SplineFont *sf,
     if (!at->opentypemode || (at->gi.flags&ttf_flag_oldkern))
 	ttf_dumpkerns(at,sf);		/* everybody supports a mimimal kern table */
 
-    dumpnames(at,sf,format);		/* Must be after dumpmorx which may create extra names */
+    dumpnames(at,sf,format);
 					    /* GPOS 'size' can also create names (so must be after that too) */
     redoos2(at);
 }
@@ -5370,12 +5357,6 @@ static void buildtablestructures(struct alltabs *at, SplineFont *sf,
 	at->tabdir.tabs[i].tag = CHR('B','A','S','E');
 	at->tabdir.tabs[i].data = at->base;
 	at->tabdir.tabs[i++].length = at->baselen;
-    }
-
-    if ( at->bsln!=NULL ) {
-	at->tabdir.tabs[i].tag = CHR('b','s','l','n');
-	at->tabdir.tabs[i].data = at->bsln;
-	at->tabdir.tabs[i++].length = at->bslnlen;
     }
 
     if ( at->bdf!=NULL ) {
@@ -5477,12 +5458,6 @@ static void buildtablestructures(struct alltabs *at, SplineFont *sf,
 	at->tabdir.tabs[i++].length = at->vorglen;
     }
 
-    if ( at->acnt!=NULL ) {
-	at->tabdir.tabs[i].tag = CHR('a','c','n','t');
-	at->tabdir.tabs[i].data = at->acnt;
-	at->tabdir.tabs[i++].length = at->acntlen;
-    }
-
     if ( at->bdat!=NULL && at->applebitmaps ) {
 	at->tabdir.tabs[i].tag = CHR('b','d','a','t');
 	if ( !at->msbitmaps ) {
@@ -5526,12 +5501,6 @@ static void buildtablestructures(struct alltabs *at, SplineFont *sf,
 	    at->tabdir.tabs[i].data = at->cvtf;
 	    at->tabdir.tabs[i++].length = at->cvtlen;
 	}
-    }
-
-    if ( at->feat!=NULL ) {
-	at->tabdir.tabs[i].tag = CHR('f','e','a','t');
-	at->tabdir.tabs[i].data = at->feat;
-	at->tabdir.tabs[i++].length = at->featlen;
     }
 
     if ( at->fpgmf!=NULL ) {
@@ -5585,12 +5554,6 @@ static void buildtablestructures(struct alltabs *at, SplineFont *sf,
 	at->tabdir.tabs[i++].length = at->kernlen;
     }
 
-    if ( at->lcar!=NULL ) {
-	at->tabdir.tabs[i].tag = CHR('l','c','a','r');
-	at->tabdir.tabs[i].data = at->lcar;
-	at->tabdir.tabs[i++].length = at->lcarlen;
-    }
-
     if ( at->loca!=NULL ) {
 	at->tabdir.tabs[i].tag = CHR('l','o','c','a');
 	at->tabdir.tabs[i].data = at->loca;
@@ -5601,22 +5564,10 @@ static void buildtablestructures(struct alltabs *at, SplineFont *sf,
     at->tabdir.tabs[i].data = at->maxpf;
     at->tabdir.tabs[i++].length = at->maxplen;
 
-    if ( at->morx!=NULL ) {
-	at->tabdir.tabs[i].tag = CHR('m','o','r','x');
-	at->tabdir.tabs[i].data = at->morx;
-	at->tabdir.tabs[i++].length = at->morxlen;
-    }
-
     if ( at->name!=NULL ) {
 	at->tabdir.tabs[i].tag = CHR('n','a','m','e');
 	at->tabdir.tabs[i].data = at->name;
 	at->tabdir.tabs[i++].length = at->namelen;
-    }
-
-    if ( at->opbd!=NULL ) {
-	at->tabdir.tabs[i].tag = CHR('o','p','b','d');
-	at->tabdir.tabs[i].data = at->opbd;
-	at->tabdir.tabs[i++].length = at->opbdlen;
     }
 
     if ( at->post!=NULL ) {
@@ -5631,12 +5582,6 @@ static void buildtablestructures(struct alltabs *at, SplineFont *sf,
 	    at->tabdir.tabs[i].data = at->prepf;
 	    at->tabdir.tabs[i++].length = at->preplen;
 	}
-    }
-
-    if ( at->prop!=NULL ) {
-	at->tabdir.tabs[i].tag = CHR('p','r','o','p');
-	at->tabdir.tabs[i].data = at->prop;
-	at->tabdir.tabs[i++].length = at->proplen;
     }
 
     if ( at->vheadf!=NULL ) {

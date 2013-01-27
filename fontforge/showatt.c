@@ -40,7 +40,7 @@
 
 extern int _GScrollBar_Width;
 
-/* This file contains routines to build a dialog showing GPOS/GSUB/morx */
+/* This file contains routines to build a dialog showing GPOS/GSUB */
 /*  tables and their contents */
 
 struct att_dlg;

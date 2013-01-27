@@ -5146,8 +5146,6 @@ static void readttfpostnames(FILE *ttf,struct ttfinfo *info) {
     /*  for example if we have a vrt2 substitution of A to <unencoded> */
     /*  we could name the unencoded "A.vrt2" (though in this case we might */
     /*  try A.vert instead */ /* Werner suggested this */
-    /* We could try this from morx too, except that apple features don't */
-    /*  use meaningful ids. That is A.15,3 isn't very readable */
     for ( i=info->glyph_cnt-1; i>=0 ; --i )
 	if ( info->chars[i]!=NULL && info->chars[i]->name==NULL )
     break;

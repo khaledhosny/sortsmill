@@ -1634,11 +1634,8 @@ typedef struct splinechar
                                    upon a time, but no longer) a TTF
                                    font with vert metrics where it is
                                    the ymax value when we had a
-                                   font-wide vertical offset or when
-                                   generating morx where it is the
-                                   mask of tables in which the glyph
-                                   occurs.  Always a temporary
-                                   value */
+                                   font-wide vertical offset.
+								   Always a temporary value */
   int ttf_glyph;                /* only used when writing out a ttf or otf font */
   Layer *layers;                /* layer[0] is background, layer[1]
                                    foreground. In type3 fonts 2-n are
@@ -2097,7 +2094,6 @@ typedef struct splinefont
   struct kernclassdlg *kcd;
   struct texdata texdata;
   OTLookup *gsub_lookups, *gpos_lookups;
-  /* Apple morx subtables become gsub, and kern subtables become gpos */
   AnchorClass *anchor;
   KernClass *kerns, *vkerns;
   FPST *possub;
