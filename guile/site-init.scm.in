@@ -85,7 +85,7 @@
       (if (file-exists? local-init)
           (fontforge-call-with-error-handling
            "local_init.py"
-           (lambda () (pyexec-file-name-in-mail local-init)))))]
+           (lambda () (pyexec-file-name-in-main local-init)))))]
 
    ;;
    ;; Load user-init.scm, which typically is in
