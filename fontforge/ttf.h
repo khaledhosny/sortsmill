@@ -37,36 +37,6 @@ struct dup {
     struct dup *prev;
 };
 
-struct taxis {
-    uint32_t tag;
-    real min, def, max;	/* in user design space */
-    int nameid;
-    int paircount;
-    real *mapfrom;		/* after conversion from [-1,1] */
-    real *mapto;		/* secondary conversiont to [-1,1] */
-};
-
-struct tinstance {
-    int nameid;
-    real *coords;	/* Location along axes array[axis_count] */
-};
-
-struct tuples {
-    real *coords;	/* Location along axes array[axis_count] */
-    SplineChar **chars;	/* Varied glyphs, array parallels one in info */
-    struct ttf_table *cvt;
-    KernClass *khead, *klast, *vkhead, *vklast; /* Varied kern classes */
-};
-
-struct variations {
-    int axis_count;
-    struct taxis *axes;		/* Array of axis_count entries */
-    int instance_count;	/* Not master designs, but named interpolations in design space */
-    struct tinstance *instances;
-    int tuple_count;
-    struct tuples *tuples;
-};
-
 enum gsub_inusetype { git_normal, git_justinuse, git_findnames };
 	
 struct savetab {
@@ -246,7 +216,6 @@ struct ttfinfo {
     int macstyle;
     int lookup_cnt;		/* Max lookup in current GPOS/GSUB table */
     int feature_cnt;		/* Max feature in current GPOS/GSUB table */
-    struct variations *variations;
     struct fontdict *fd;	/* For reading in Type42 fonts. Glyph names in postscript section must be associated with glyphs in TTF section */
     int savecnt;
     struct savetab *savetab;
