@@ -153,9 +153,7 @@
          current-python-module
          python-module-get-file-name
          pyimport
-         pymodule?
-
-         sortsmill-init-files-for-python)
+         pymodule?)
 
  (define python-dll
    (dynamic-link "libguile-sortsmill_python"))

@@ -153,6 +153,7 @@ gdraw/gscrollbar.c
 gdraw/gtabset.c
 gdraw/gtextfield.c
 gdraw/gtextinfo.c
+guile/site-init.scm.in
 guile/guile_python.c
 guile/sortsmill/sfd-to-sxml.scm
 guile/sortsmill/usermenu.scm
