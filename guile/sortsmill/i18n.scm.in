@@ -31,13 +31,15 @@
 
  (define ff_textdomain "@FF_TEXTDOMAIN@")
 
- (define (_ msg)
-   (dgettext ff_textdomain msg))
+ (define _
+   (lambda (msg) (dgettext ff_textdomain msg)))
 
- (define (C_ context msg)
-   (dpgettext ff_textdomain
-              (string-append context "\x04" msg)
-              (+ 1 (string-length context))))
+ (define C_
+   (let ([separator (string #\eot)])
+     (lambda (context msg)
+       (dpgettext ff_textdomain
+                  (string-append context separator msg)
+                  (+ 1 (string-length context))))))
 
  (define dgettext
    (let ([proc (pointer->procedure
