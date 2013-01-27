@@ -18,7 +18,10 @@
 (define-module (sortsmill pure))
 
 (import (sortsmill i18n)
-        (sortsmill strings)
+        (only (sortsmill strings)
+              enable-hash-guillemet-strings
+              disable-hash-guillemet-strings
+              lines-begin-with)
         (rnrs)
         (except (srfi :1) map)
         (ice-9 match)
@@ -26,7 +29,8 @@
         (system foreign))
 
 (re-export enable-hash-guillemet-strings
-           disable-hash-guillemet-strings)
+           disable-hash-guillemet-strings
+           lines-begin-with)
 
 (export if-fontforge-has-pure-api)
 

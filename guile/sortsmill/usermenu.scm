@@ -570,18 +570,20 @@
   ;;
   (define pure-menu-entry-exc-handler
     (pure-eval
-     #«
-     using system;
-
-     (\menu_entry_func ->
-      (\view ->
-       catch handler (menu_entry_func view)
-       with
-       handler exc = fprintf stderr "Pure exception: %s\n" (str exc)
-       $$ false;
-       end))
-     »#
-     ))
+     (lines-begin-with
+      ";;"
+      #«
+      ;; using system;
+      ;;
+      ;; (\menu_entry_func ->
+      ;;   (\view ->
+      ;;     catch handler (menu_entry_func view)
+      ;;       with
+      ;;          handler exc = fprintf stderr "Pure exception: %s\n" (str exc)
+      ;;          $$ false;
+      ;;       end))
+      »#
+      )))
 
   (define pure-menu-entry-function->procedure
     (lambda (f)

@@ -15,26 +15,86 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-(define-module (sortsmill strings))
+(library
+ (sortsmill strings)
+ 
+ (export enable-hash-guillemet-strings
+         disable-hash-guillemet-strings
+         lines-begin-with)
 
-(export enable-hash-guillemet-strings
-        disable-hash-guillemet-strings)
+ (import (rnrs)
+         (guile))
 
-(define (read-chars-until s port)
-  (letrec ((read-more
-            (lambda (prior)
-              (let* ((c (read-char port))
-                     (new-string (string-append prior (string c))))
-                (if (string-suffix? s new-string)
-                    (string-drop-right new-string (string-length s))
-                    (read-more new-string))))))
-    (read-more "")))
+ ;;-------------------------------------------------------------------------
 
-(define (enable-hash-guillemet-strings)
-  (read-hash-extend #\« (lambda (c port)
-                          (read-chars-until "»#" port))))
+ (define (read-chars-until s port)
+   (letrec ((read-more
+             (lambda (prior)
+               (let* ((c (read-char port))
+                      (new-string (string-append prior (string c))))
+                 (if (string-suffix? s new-string)
+                     (string-drop-right new-string (string-length s))
+                     (read-more new-string))))))
+     (read-more "")))
 
-(define (disable-hash-guillemet-strings)
-  (read-hash-extend #\« #f))
+ (define (enable-hash-guillemet-strings)
+   (read-hash-extend #\« (lambda (c port)
+                           (read-chars-until "»#" port))))
+
+ (define (disable-hash-guillemet-strings)
+   (read-hash-extend #\« #f))
+
+ ;;-------------------------------------------------------------------------
+ ;;
+ ;; FIXME: This certainly cannot be the fastest implementation of
+ ;; @var{lines-begin-with}. A version using regexps might be better,
+ ;; for instance. (I am waiting, perhaps, until I have made a
+ ;; ‘rexp’-like PCRE interface for Guile, rather than use Guile’s own
+ ;; regexp support. See <sortsmill/rexp.h>.)
+
+ (define chars-to-ignore-at-beginning (char-set #\space #\tab))
+
+ (define (skip-chars-at-beginning s i)
+   (if (< i (string-length s))
+       (let ([c (string-ref s i)])
+         (if (char-set-contains? chars-to-ignore-at-beginning c)
+             (skip-chars-at-beginning s (+ i 1))
+             i))
+       i))
+
+ (define (skip-to-end-of-line s i)
+   (if (< i (string-length s))
+       (let ([c (string-ref s i)])
+         (if (char=? c #\newline)
+             (+ i 1)
+             (skip-to-end-of-line s (+ i 1))))
+       i))
+
+ (define (delimit-altered-line s marker i)
+   (let ([j (skip-chars-at-beginning s i)])
+     (if (< j (string-length s))
+         (if (string-prefix? marker (substring s j))
+             (let ([n (string-length marker)])
+               (values (+ j n) (skip-to-end-of-line s (+ j n))))
+             (values i (skip-to-end-of-line s i)))
+         (values i j))))
+
+ (define (get-altered-line s marker i)
+   (let-values ([(j k) (delimit-altered-line s marker i)])
+     (let ([line (substring s j k)])
+       (values line k))))
+
+ (define (lines-begin-with marker s)
+   (letrec ([get-lines
+             (lambda (prior i)
+               (if (< i (string-length s))
+                   (let-values ([(line j) (get-altered-line s marker i)])
+                     (get-lines (string-append prior line) j))
+                   prior))])
+     (get-lines "" 0)))
+
+ ;;-------------------------------------------------------------------------
+
+ ) ;; end of library.
 
 (enable-hash-guillemet-strings)

@@ -18,7 +18,10 @@
 (define-module (sortsmill python))
 
 (import (sortsmill i18n)
-        (sortsmill strings)
+        (only (sortsmill strings)
+              enable-hash-guillemet-strings
+              disable-hash-guillemet-strings
+              lines-begin-with)
         (rnrs)
         (only (srfi :26) cut)
         (system foreign)
@@ -27,7 +30,8 @@
 (export if-fontforge-has-python-api)
 
 (re-export enable-hash-guillemet-strings
-           disable-hash-guillemet-strings)
+           disable-hash-guillemet-strings
+           lines-begin-with)
 
 (define-syntax if-fontforge-has-python-api
   (lambda (x)
