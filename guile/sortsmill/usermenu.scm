@@ -328,6 +328,7 @@
          (ti (GMenuItem:ti-ref menu-item))
          (v (car value)))
      (match key
+       ('id *unspecified*)
        ('text (GTextInfo:text-set! ti (string->pointer v "UTF-8")))
        ('image (GTextInfo:image-set! ti (string->pointer v)))
        ('foreground-color (GTextInfo:fg-set! ti v))
@@ -388,6 +389,7 @@
  ;;-------------------------------------------------------------------------
 
  (define* (action-entry #:key text action
+                        (id #f)
                         (enabled (lambda (view) #t))
                         (shortcut #f)
                         (image #f)
@@ -406,7 +408,8 @@
      ;;
      ;; FIXME: Check types of input parameters.
      ;;
-     (append `[(text      ,text)
+     (append `[(id        ,id)
+               (text      ,text)
                (action    ,action^)
                (enabled   ,enabled^)
                (foreground-color ,foreground-color)
@@ -417,10 +420,12 @@
                (image-precedes-text ,image-precedes-text?)]
              [if image `((image ,image)) '()]) ))
 
- (define (separator-line)
-   `[(is-line #t)])
+ (define* (separator-line #:key (id #f))
+   `[(id ,id)
+     (is-line #t)])
 
  (define* (submenu-entry #:key text entries
+                         (id #f)
                          (moveto moveto-proc)
                          (image #f)
                          (foreground-color color-default)
@@ -433,12 +438,13 @@
    (let ((moveto-proc-ptr (if (pointer? moveto-proc)
                               moveto-proc
                               (procedure->menu-func-pointer moveto-proc))))
-     (append `[(text      ,text)
+     (append `[(id       ,id)
+               (text     ,text)
                (foreground-color ,foreground-color)
                (background-color ,background-color)
-               (disabled  ,disabled?)
+               (disabled ,disabled?)
                (image-precedes-text ,image-precedes-text?)
-               (submenu ,entries)]
+               (submenu  ,entries)]
              [if image `((image ,image)) '()])))
 
  ;;-------------------------------------------------------------------------
